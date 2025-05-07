@@ -1,171 +1,165 @@
-Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2134.outbound.protection.outlook.com [40.107.103.134])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0711F8755;
-	Wed,  7 May 2025 05:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.134
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746594561; cv=fail; b=PSiMURT1hoAw0L0mxrkugP81k3UIR04SI0NMGSthacpRiTskAqSaNNXKH/WWjwIfpkSUlIsDwi43PkPcchB2PU3TXr3dTElGo6afxlZOh++kS6UBYIYeHK/5HSRtq2qsFuA2Vhcyb4fw5jJLMi/LNo7hlPuhJSAFWCAGOjT1184=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746594561; c=relaxed/simple;
-	bh=PpdLQDa2rJNzGzV36apev1EIaJ+YOBtQgTV9cEBgLm8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tUTw3XtIOYEMAPKqCx8EyHscpNBkjmDsXgVLckVA4X2Hn/XHfTsasGzx9RuYytr/xzGmfIMV5RbidX9t1/BvwMynp+Xvf/vG1zcw5vuFlU2prfQuALnoXVhBH+Vnl2OyH1nPM8ksTp0T+yt0MM2MGIqFCP1bM9avO9NOKhq9se0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=onkcy2C4; arc=fail smtp.client-ip=40.107.103.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0665B1DE3A7;
+	Wed,  7 May 2025 05:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746594615; cv=none; b=HgE+T7z8yaSm2JmhxDfximUIhLdV9eeTzvDichEOWUOvZIP3QHiY7daxSKfLqwb5I5bS9/dHy0IgH86L8cj2S6sEOeH008wR+la6aM1eYy6Dj3N0kYfQnvscYP77Yr5uLvmyQ6SdfhWgGC9vdUQ88aXBWvV7cFehmM6bJC+M2CI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746594615; c=relaxed/simple;
+	bh=lQRBfRC32IDAASPS7Geerd3Dn5IGKAhisipapRsgEZg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZFRPg9Cy4bkcr0NTqHcjwgYm8WhfktnQxg9eYwx7MPKI8QN+BhJshv0xwOwIBnqyaANPaf15k6/KNuYoT0FrGgCGHFSi8GG6fzrYPQacFv0+4A6o09VJ2d6Lk2gUxEIUCTe6zf+EqJa8QyGw5u+vh34YRmwIi78fcwmTUlbNEvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=En3QKUn1; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="onkcy2C4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DXjesv0MvE09DSTILVkZcMwEBmIYJkgHlWqIjsWWDVLe/+u3Xec2Yjvqb+rAXfLdvJ+Ai1gQL0sxn4fD6R9LgUIslJ3AFW2oYtXhOqOo4MW3U5mSKKaWsmwdrym2VkvZLnm7XPJZo9v7FYgI51Khpris3zzvZMW1yYFaeRngrytNvIhbO1hi2ud97fTco7FfzPI/8qU5NUQdvOBHQ9phwKRbqksv0QOEfvmInWQIOINySOlpjVazPpkLH2G8AHNpNxb0/WyxFkb4Vys1z4fidJWn/uk8YmPU0btBJv0oSpsvA5B2ziOjNUD0l7+ZYeoWSZak16MtZXlhE7xUNsPfbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cHtRmPdkzFbViIdOiyA2SUuk1b7tN0nFAxUis/Jn6ug=;
- b=SfZnUKGVw0Xk/PbK4nGgb6pJnSsm1hipzAp1m1YVobYobQGckVQ0gphwKDi1998rly9Q+wRDPGXbg567zYUJ5nu8pHMuEjPJVihfwMC7vsIdn3SVfgLDdyrKxsJYo7cAQn+uWzGWlygSIoBhsd7QBVz1XzZ1zePRHoa9lGWGO03jtH+20JOLQdFRCzXC+xCyh79lmxGf5LPPHDfZ276ZARBryBqvbggfLP4DA1HlXjCLUFr+ts+B7eB2hdzfSNcZH7mYAlJ2x9riNBxXYShYmB+z7J09zBUpNg9rdgjk3Ft4PmB8Yo2z/gsAMaNO5QCtEFfJyjmWxGF35wnnKP/HYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 91.26.50.189) smtp.rcpttodomain=ti.com smtp.mailfrom=phytec.de; dmarc=fail
- (p=quarantine sp=quarantine pct=100) action=quarantine header.from=phytec.de;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cHtRmPdkzFbViIdOiyA2SUuk1b7tN0nFAxUis/Jn6ug=;
- b=onkcy2C488RJ6zKHPemvBIiX7+XyxdrAze9TppLqORJV19gdHteN9xVmCvRJrXacuasWDkCxLdWi5Lzp5/l81/OPeN7jDGDHkYZJyJaKMtIQQN7CFYyo4f6onViX3IOwoX5eZ/jwlbLSvP1nuQM7NUJWg7zymxG/ItxehxB2F32A4FHTWOO3WWQcGGYVxp/IYR7YPtLHZJ4vM5LPc6wnql80ETuuLb30KXVYn/QMeuXVD3p3NeJ9ADaPR4/zbNSuZoMu+W2boQ3/mwzHO3qCV/5x+61+9tO0Rj2UjRVpwsp0N+TMn3Dg1SLtgk1bm+D9Rnl2ygN5twOkcwAYMF7Olw==
-Received: from DU7PR01CA0007.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:50f::7) by PA2P195MB2533.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:102:406::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Wed, 7 May
- 2025 05:09:15 +0000
-Received: from DB1PEPF00050A01.eurprd03.prod.outlook.com
- (2603:10a6:10:50f:cafe::ad) by DU7PR01CA0007.outlook.office365.com
- (2603:10a6:10:50f::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.21 via Frontend Transport; Wed,
- 7 May 2025 05:09:13 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is 91.26.50.189)
- smtp.mailfrom=phytec.de; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=phytec.de;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- phytec.de discourages use of 91.26.50.189 as permitted sender)
-Received: from Diagnostix.phytec.de (91.26.50.189) by
- DB1PEPF00050A01.mail.protection.outlook.com (10.167.242.43) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Wed, 7 May 2025 05:09:14 +0000
-Received: from Florix.phytec.de (172.25.0.13) by Diagnostix.phytec.de
- (172.25.0.14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Wed, 7 May
- 2025 07:09:13 +0200
-Received: from ls-radium.phytec (172.25.39.17) by Florix.phytec.de
- (172.25.0.13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Wed, 7 May
- 2025 07:09:10 +0200
-From: Daniel Schultz <d.schultz@phytec.de>
-To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <robertcnelson@gmail.com>,
-	<francesco.dolcini@toradex.com>
-CC: <upstream@lists.phytec.de>, <w.egorov@phytec.de>, Daniel Schultz
-	<d.schultz@phytec.de>
-Subject: [PATCH 4/4] arm64: dts: ti: k3-am62a7-*: Specify Temperature Grade
-Date: Tue, 6 May 2025 22:08:47 -0700
-Message-ID: <20250507050847.912756-4-d.schultz@phytec.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250507050847.912756-1-d.schultz@phytec.de>
-References: <20250507050847.912756-1-d.schultz@phytec.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="En3QKUn1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746594614; x=1778130614;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lQRBfRC32IDAASPS7Geerd3Dn5IGKAhisipapRsgEZg=;
+  b=En3QKUn140L+BMtcnmkr673OwBVA681iluJp7SGcI8dmmcojTRWmTnZ4
+   elmuT207PxI+oB3aRUFNrI/uB8hfax0o6t764jq3fbhXj+BQoxMViwk8i
+   L/ieMvAvbGxoR/7+PXPM5B+1unSY+0uXmr/UCanIqGTk7DddY/+HxuBn1
+   SrRrO9dVGrc4sYYOyqgyGy++dyF/qU7ooi0BJqbo0RHIW73gpOKamIFk0
+   qrtHUMSKpgDqMcCKonI+dMwRuXpUp8BP/6n+RotscRvK/Z4l7vQDUqb79
+   UO1CZgWDZUJcAKXC8bKF8fw0RFMrYm0ShPOTidKXeYvPyEQgzQ6+gl3AT
+   A==;
+X-CSE-ConnectionGUID: /bVB5i8+QS+Rc32AEGh9Sg==
+X-CSE-MsgGUID: xGbkgiYeRnKRqTh06V29YA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="65833192"
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="65833192"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 22:10:13 -0700
+X-CSE-ConnectionGUID: cpHomlQ+SACF0PCVTupp2A==
+X-CSE-MsgGUID: 64pk8ejJTDSPEx0DqAtPeA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="139894940"
+Received: from yungchua-mobl2.ccr.corp.intel.com (HELO [10.246.105.120]) ([10.246.105.120])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 22:10:10 -0700
+Message-ID: <405eaed5-0671-4dc0-a7bc-c4dab8be5e8f@linux.intel.com>
+Date: Wed, 7 May 2025 13:09:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Diagnostix.phytec.de (172.25.0.14) To Florix.phytec.de
- (172.25.0.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB1PEPF00050A01:EE_|PA2P195MB2533:EE_
-X-MS-Office365-Filtering-Correlation-Id: 24a9a4df-92e8-44f0-16d6-08dd8d254fb9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|7416014|376014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?RKo7PxdBREHElMFuPqJpYQj9/2SZa08WQSZQhInqBhQBW9Y6OgRB2SYMOlzk?=
- =?us-ascii?Q?RRl7rYpGYArfOvAvyue8Ni4nft239lzH/LUJkmuSO3Pc0bhW2pFGZ6FA6Ptk?=
- =?us-ascii?Q?Np3JvSyhWTiaF4tyPyQcdiiTaFv1YDiY77WgU3DMiFltrhd9YjHPenjgEZsr?=
- =?us-ascii?Q?KCgWtW4gcnUQMus+bRspPf/VhMHeC0LEeuMcVqIJWht1rbC66g0hz7ivfRIg?=
- =?us-ascii?Q?y08iPJnCs4heRoC+/0iNsZErRzAVCSVcacDHtA3fPpLy5k9xUNvTKMmdKkZK?=
- =?us-ascii?Q?BQzBMclWFxCM3USA2+/NKUSeP05mxvJkbX7W6rl/Q9vKcfqJ/sKYyjTnUhEZ?=
- =?us-ascii?Q?RxB5kWBMmArmLLsZdZz7SS39IiQKvCz8Fw1SADC61QR6Ma7W7cXS6FzehKOA?=
- =?us-ascii?Q?O4kDDlvqcGF2bt9DW62njYbu/tyLg7JXvtkbHcl8Yt2Jgb/wrJfe8OMORXJm?=
- =?us-ascii?Q?iIs1N4IU8WCwmk9am6MVKuES1R70f1YRVE47Xp1yNiG0IrFIHNQWdxiTdl3L?=
- =?us-ascii?Q?l5uD0q+w9TrgY7mTQ5y5sVAEfX3VmW3MA8JMloq22Z1nUPwCZsbsqVXmkffX?=
- =?us-ascii?Q?RKjbjq8WVFUv6UaWc0xUJcmrrNAlop9E9H1iztqN9r112gPkMsE4aM+Vqg0H?=
- =?us-ascii?Q?N01k+dSlRecfkRwPfijWE9iNDmzrlciyHaYrcWy2Z/LYNNgajG3x5/4C/Nmo?=
- =?us-ascii?Q?e34u0ZTyAu6jFtMZ/XhJC15huF73rF731NBIEgb/mtkJfHh6aFUZyD09Fy5i?=
- =?us-ascii?Q?68gnbGRC8Y5qK3w+81y2G6oMGk4ssLtwTl2POaDlrB4r5nTUicNiCMEfnuTM?=
- =?us-ascii?Q?x54u35bpbHg7fcPOBHmmLNWrpOjPtOaLrXWaFg/ayW2DSAM1NaRnGR793IBl?=
- =?us-ascii?Q?Dzuiq2+lLQ7d2ODAfsuSMT5tHcrs3omaKXKi4b7kNBz+yWEd9PLJ1VTcDKPf?=
- =?us-ascii?Q?V79HIRTl8J5orEqcpvrvAf123VOY/CMTB2F8Cf8tugQaNw8cMfmOFxiscCnk?=
- =?us-ascii?Q?2khIeJh3CUJW8YcdR3IViVEYqqL/hN4E7swLcIy05NAU27L1Cr0iwfgq7J8i?=
- =?us-ascii?Q?dqq8ra+2HDU/5Azq65DIKiKyINOh1boggXi490EDo0Y7uI5VozZKPV2qIF03?=
- =?us-ascii?Q?u2lS3RVVjPGqbQBjUGlcxx0dm4qzCH3JKrK5cVjS1pMhApipTcxJkpSuhE7A?=
- =?us-ascii?Q?5uVxN0hT7TgWOVIAi6wkFGQ1sO1H7ZpZX1W6T5GwXA/7QZmq4LI4KbV9qCR4?=
- =?us-ascii?Q?FTFMf/MIWyWXGmnYwX4OsvyOEG3xqhuCKdEOC49LFvTTiT0cTqapb0yWIuQn?=
- =?us-ascii?Q?0R0pCuW3bpFEOWuf8W2X5k0FAMyaEzCcfKJDVi1OLX0BaELPSWb1oSnRST+N?=
- =?us-ascii?Q?pjMLMfb27rmOGntqqcfFX6R3/66/ua1XG8mCHpq033K2bFdJ1jDhdp+0v1JH?=
- =?us-ascii?Q?Qsh88X3QOF1ccM1BIoWJc1eeYO41R8oklYwg9K+33askSZhZQC7xi5/3tS2K?=
- =?us-ascii?Q?jdGoKTfxvS+rcncHVcRoiSH6n796KBeq6I7eowW+PJcyOn/XYGFXB4zrnw?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:91.26.50.189;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:Diagnostix.phytec.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(7416014)(376014)(921020);DIR:OUT;SFP:1102;
-X-OriginatorOrg: phytec.de
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 05:09:14.6597
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24a9a4df-92e8-44f0-16d6-08dd8d254fb9
-X-MS-Exchange-CrossTenant-Id: e609157c-80e2-446d-9be3-9c99c2399d29
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e609157c-80e2-446d-9be3-9c99c2399d29;Ip=[91.26.50.189];Helo=[Diagnostix.phytec.de]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF00050A01.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2P195MB2533
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v2] ASoC: SOF: Intel: hda: Fix UAF when reloading
+ module
+To: Tavian Barnes <tavianator@tavianator.com>, linux-sound@vger.kernel.org
+Cc: Liam Girdwood <lgirdwood@gmail.com>,
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>,
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Brent Lu <brent.lu@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, sound-open-firmware@alsa-project.org,
+ linux-kernel@vger.kernel.org, bard.liao@intel.com
+References: <5aaee9fdfe8437ef2566b200bea45e4baaba3fcb.1745426811.git.tavianator@tavianator.com>
+Content-Language: en-US
+From: "Liao, Bard" <yung-chuan.liao@linux.intel.com>
+In-Reply-To: <5aaee9fdfe8437ef2566b200bea45e4baaba3fcb.1745426811.git.tavianator@tavianator.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Specify the temperature grade in the base device tree to ensure
-correct trip points are applied for each board.
 
-Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
----
- arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts | 1 +
- arch/arm64/boot/dts/ti/k3-am62a7-sk.dts                | 1 +
- 2 files changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts
-index 77e5fef618ba..7d2e4694ed8e 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts
-@@ -10,6 +10,7 @@
- #include "k3-am62a7.dtsi"
- #include "k3-am62a-phycore-som.dtsi"
- #include "k3-am62x-phyboard-lyra.dtsi"
-+#include "k3-am62a-thermal-industrial.dtsi"
- 
- / {
- 	compatible = "phytec,am62a7-phyboard-lyra-rdk",
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-index 1c9d95696c83..125e812fbb86 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-@@ -11,6 +11,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/net/ti-dp83867.h>
- #include "k3-am62a7.dtsi"
-+#include "k3-am62a-thermal-automative.dtsi"
- 
- / {
- 	compatible = "ti,am62a7-sk", "ti,am62a7";
--- 
-2.25.1
+On 5/6/2025 11:12 PM, Tavian Barnes wrote:
+> hda_generic_machine_select() appends -idisp to the tplg filename by
+> allocating a new string with devm_kasprintf(), then stores the string
+> right back into the global variable snd_soc_acpi_intel_hda_machines.
+> When the module is unloaded, this memory is freed, resulting in a global
+> variable pointing to freed memory.  Reloading the modules then triggers
+> a use-after-free:
+> 
+> BUG: KFENCE: use-after-free read in string+0x48/0xe0
+> 
+> Use-after-free read at 0x00000000967e0109 (in kfence-#99):
+>  string+0x48/0xe0
+>  vsnprintf+0x329/0x6e0
+>  devm_kvasprintf+0x54/0xb0
+>  devm_kasprintf+0x58/0x80
+>  hda_machine_select.cold+0x198/0x17a2 [snd_sof_intel_hda_generic]
+>  sof_probe_work+0x7f/0x600 [snd_sof]
+>  process_one_work+0x17b/0x330
+>  worker_thread+0x2ce/0x3f0
+>  kthread+0xcf/0x100
+>  ret_from_fork+0x31/0x50
+>  ret_from_fork_asm+0x1a/0x30
+> 
+> kfence-#99: 0x00000000198a940f-0x00000000ace47d9d, size=64, cache=kmalloc-64
+> 
+> allocated by task 333 on cpu 8 at 17.798069s (130.453553s ago):
+>  devm_kmalloc+0x52/0x120
+>  devm_kvasprintf+0x66/0xb0
+>  devm_kasprintf+0x58/0x80
+>  hda_machine_select.cold+0x198/0x17a2 [snd_sof_intel_hda_generic]
+>  sof_probe_work+0x7f/0x600 [snd_sof]
+>  process_one_work+0x17b/0x330
+>  worker_thread+0x2ce/0x3f0
+>  kthread+0xcf/0x100
+>  ret_from_fork+0x31/0x50
+>  ret_from_fork_asm+0x1a/0x30
+> 
+> freed by task 1543 on cpu 4 at 141.586686s (6.665010s ago):
+>  release_nodes+0x43/0xb0
+>  devres_release_all+0x90/0xf0
+>  device_unbind_cleanup+0xe/0x70
+>  device_release_driver_internal+0x1c1/0x200
+>  driver_detach+0x48/0x90
+>  bus_remove_driver+0x6d/0xf0
+>  pci_unregister_driver+0x42/0xb0
+>  __do_sys_delete_module+0x1d1/0x310
+>  do_syscall_64+0x82/0x190
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> Fix it by saving the filename in pdata->tplg_filename instead, just like
+> every other code path that appends to the tplg filename.
+> 
+> Fixes: 5458411d7594 ("ASoC: SOF: Intel: hda: refactoring topology name fixup for HDA mach")
+> Signed-off-by: Tavian Barnes <tavianator@tavianator.com>
+> ---
+> v2: Fix typo
+> 
+>  sound/soc/sof/intel/hda.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+> index b34e5fdf10f1..1767977e7cff 100644
+> --- a/sound/soc/sof/intel/hda.c
+> +++ b/sound/soc/sof/intel/hda.c
+> @@ -1069,7 +1069,7 @@ static void hda_generic_machine_select(struct snd_sof_dev *sdev,
+>  				if (!tplg_filename)
+>  					return;
+>  
+> -				hda_mach->sof_tplg_filename = tplg_filename;
+> +				pdata->tplg_filename = tplg_filename;
+
+It will break the existing tplg name fixup mechanism. Please see below
+in hda_machine_select()
+		if (!sof_pdata->tplg_filename) {
+			/* remove file extension if it exists */
+			tplg_filename = remove_file_ext(mach->sof_tplg_filename);
+			if (!tplg_filename)
+				return NULL;
+
+			sof_pdata->tplg_filename = tplg_filename;
+			tplg_fixup = true;
+		}
+With the change, sof_pdata->tplg_filename will be set and we won't do
+tplg fixup for other components.
+
+>  			}
+>  
+>  			if (codec_num == 2 ||
 
