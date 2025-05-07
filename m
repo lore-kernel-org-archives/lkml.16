@@ -1,135 +1,121 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DD72165E9;
-	Wed,  7 May 2025 07:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D150212FBE;
+	Wed,  7 May 2025 07:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746601666; cv=none; b=oP54GXvPbxY9B96xyLiRHXaHb5vMPGjsXsTT8P+27FQ2X0eaj3k1bdSyJOcMjyq0vfPkqJff1dgetkKpAHWe0TXzKkyhOtjImE73GxsmRjc6hgfUNmVRS9EtfQeYHDFxKOVmotDN74w3q+hNJTf//VIplpczTrd9EKcmTSv1VZk=
+	t=1746601706; cv=none; b=NFfiH0QvmgFPNkcNXqPExrMiJ2ScTsDgeDFVgAW3GnVAeRg7B8Kld+64kC7EmULoTnBsCZ77JcI45I50g35zMywqdFot6yLa3bYSXYYVogIJjmCB+LG+nv38f2m28L36IKv27Jwxo+gaMOh5Q2H2EQX3nbNms5g+JjcSdxqGJfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746601666; c=relaxed/simple;
-	bh=cRIStsaa0AZh2Bu8bbYl44E6frjm/72zgUBqPYFB9/0=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pX9mYgbmamUxS0OTt4+NTk4ZKJZ2FvcbhgfOiVNW0qVx83dDTnx3bVkn1D2630pF+79ARyBwwerBz6mYWH62FYSS8ObUw+cE6e2DRrBR36kAfcFy9HN1pXEYCt8WFYg7cEDAZnNleGh8xdpVCRgfGSilqrqDfAzffDtMnNGIq8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=EYUatmxy; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1746601706; c=relaxed/simple;
+	bh=FfcO1bmJ9TwVyGmwWvdOKtV4qaOdRW/kxoyTI2FoTcM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E+Fm8BQv6G/OUKTGTT/DL0KIuDF62t55cKQ+qKL67rgrn6Tf83Jqil7AhKTdEgX+gDgC3M9Eh52oQguRyD+MR6VBa7JxWzvqR/fCOmEqgYGpO4Y4V+TyR5XY5gPgMyZYPoD0j+aZRT0rwHWlMkWuqA5dRKSwLkxQyUFsmOlaZgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PgWa8GUl; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="EYUatmxy"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 04D7225F40;
-	Wed,  7 May 2025 09:07:35 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id NK8Ks1rz7fSl; Wed,  7 May 2025 09:07:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1746601652; bh=cRIStsaa0AZh2Bu8bbYl44E6frjm/72zgUBqPYFB9/0=;
-	h=Date:From:To:Subject:References:In-Reply-To;
-	b=EYUatmxy4Ns11dDZA5E/dquOhEu3sUWpXXHIIMyj7V8Wm3jnPshfH10TA1iQjF9qy
-	 0pQGNZHY2zOsSyQvE+6nAlX2mkV6J9ys1QYyXPVZWTwRrfcGplflYel9kGgdjYzfwq
-	 tzQE/K/4pSTATPD7WvwlLCgO8pXlNCj0E7FMTXsn3UGr4GDDvyOburIr+Mq3kKyXPk
-	 w5wY6OdzvG8D2uvE+n60CtvmGY3FX7sQnH//pC4DYQSSQ2voea99EuwJHD5nLz9LWz
-	 W2qJOVElt+XR2gFv6EzM2pwG6+Ff8WQ55Ybvt5UWwBrzFbgW04TwwxB88mJQT9chfY
-	 8l5MfviK6OTTw==
-Date: Wed, 7 May 2025 07:07:15 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Yanteng Si <si.yanteng@linux.dev>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH 2/4] dt-bindings: LoongArch: Add CTCISZ Ninenine Pi
-Message-ID: <aBsGozWwg_WQfe4R@pie>
-References: <20250501044239.9404-2-ziyao@disroot.org>
- <20250501044239.9404-4-ziyao@disroot.org>
- <7e56091d-0e91-44ef-b314-facb102ee468@linux.dev>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PgWa8GUl"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471HAQ1021674;
+	Wed, 7 May 2025 07:08:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=rE1RR5SpAq6CGFJwO2E2zk
+	Hp8UtvOPLpNZiWJ8e/wvE=; b=PgWa8GUlHTOq+xPAsJBz6vF2YfkyFgp0l871k3
+	Xh7gPmmpsm9v9DhRgVoATMc1HO3Xvk0/RZZsefpzHlmuv78yeNnEjeQX4atDloWK
+	4o7tYMEBO4q0kIe2ENSO1dvnbHGCS7mXPmpudO9bocdLbf9/LMBKQGTE4FX1AqWY
+	aARDd2NFMFiZsOmyoAAJLHXzk8Uy0MayNVnnadBO280v2f1qkcUBIkxYJekEjRQE
+	lDS+x4ecRLPGlHDg0TDWsg3M/2W4HsOiTUWmm+KPH2If95FCHIfEbiWijOprzz58
+	aky/L1qJi7ZzuwpQkSifzppEkhRPwctSzCss59b6dMLPix+w==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46fdwtuhnh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 07:08:19 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54778Ili009518
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 7 May 2025 07:08:18 GMT
+Received: from maow2-gv.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 7 May 2025 00:07:56 -0700
+From: Kassey Li <quic_yingangl@quicinc.com>
+To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+        <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+CC: <quic_yingangl@quicinc.com>
+Subject: [PATCH] scsi: trace: change the rtn log in hex format
+Date: Wed, 7 May 2025 15:07:14 +0800
+Message-ID: <20250507070714.2387602-1-quic_yingangl@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7e56091d-0e91-44ef-b314-facb102ee468@linux.dev>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=VPPdn8PX c=1 sm=1 tr=0 ts=681b06e3 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=BHyZBowvuSOj8lr59awA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: DNku1E5f6o6xlmQLYLVuw0UBWXxl-rQX
+X-Proofpoint-ORIG-GUID: DNku1E5f6o6xlmQLYLVuw0UBWXxl-rQX
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA2NSBTYWx0ZWRfX5aaex1hIECWg
+ SKxNtxhz6wReChrG//xir3VItYZzuyawsnj/7cqby8O8DDko3Hqg8O+ARv0SBOUhH2ml0YdzSOs
+ J664je4LJepbWtJq1gCRHnKxbZpH2EJmiB54LFeFvKnhopoOFOoiRjCjalZtBvS5ASKA7vUyWUS
+ U3zyWrIy2oAmqyt7oxRB5CjEyBdSldqk+OyEdgKhpK+EcyeQlfNOgTSPo2JsqO9e3AzrdrD4F3C
+ VruygE58+ecy29HMSD1xgF6fFvLMTEMwcuc493K1MaVxKQHCDUOX5eZ62F3o6Mvnyi0LdFoTNZQ
+ DnnNUvlEcHTyxj+4pSXmMnMQalFS6gVHsC1crGc44HIrClyq5iWwnKV/jdnM4YkOBRpbZbThebz
+ TpseqwYujiobjNkDwiqktkY57TSfsoc0uDs9XlxiP6RKkJWJtTZZ+kv5ecRsxK8buXshcvT7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_02,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 spamscore=0 suspectscore=0 adultscore=0 mlxscore=0
+ bulkscore=0 clxscore=1011 lowpriorityscore=0 impostorscore=0 malwarescore=0
+ mlxlogscore=999 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505070065
 
-On Tue, May 06, 2025 at 04:58:50PM +0800, Yanteng Si wrote:
-> 在 5/1/25 12:42 PM, Yao Zi 写道:
-> > Ninenine Pi is an Loongson 2K0300-based development board produced by
-> I think "Ninenine Pi" doesn't make sense. I browsed
-> <https://bbs.ctcisz.com/forum.php?mod=forumdisplay&fid=2> and found that the
-> Chinese name of this development board is "久久派". Interestingly, its
-> selling price is 99 yuan. In Chinese, the Roman numeral "9" has the same
-> pronunciation as the Chinese character "久".
+In default it showed rtn in decimal.
 
-> It seems that you intended to name the development board after its
-> selling price.
+kworker/3:1H-183 [003] ....  51.035474: scsi_dispatch_cmd_error: host_no=0 channel=0 id=0 lun=4 data_sgl=1  prot_sgl=0 prot_op=SCSI_PROT_NORMAL cmnd=(READ_10 lba=3907214  txlen=1 protect=0 raw=28 00 00 3b 9e 8e 00 00 01 00) rtn=4181
 
-I've confirmed with the vendor that they call the board "99pi" in
-English which is rewritten as "Ninenine Pi" to avoid possibly unexpected
-problems with a name starting with digits. This has nothing to do with
-the price.
+In source code we define these possible value as hexadecimal:
 
-> But shouldn't it be
-> "Ninety-nine Pi" in English? Or "99 Pi"? Perhaps "Jiujiu Pi" is a better
-> option?
+include/scsi/scsi.h
 
-"Ninety-nine Pi" sounds too complicated for a board name and I don't
-think "99" in "99pi" is meant to represent a number. Thus I'd like to
-stick with "ninenine pi".
+SCSI_MLQUEUE_HOST_BUSY   0x1055
+SCSI_MLQUEUE_DEVICE_BUSY 0x1056
+SCSI_MLQUEUE_EH_RETRY    0x1057
+SCSI_MLQUEUE_TARGET_BUSY 0x1058
 
-> 
-> 
-> Thanks,
-> Yanteng
+This change converts the rtn in hexadecimal.
 
-Best regards,
-Yao Zi
+Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
+---
+ include/trace/events/scsi.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> > CTCISZ. Features include,
-> > 
-> > - 512MiB DDR4 RAM
-> > - On-board eMMC storage
-> > - Optional SD Card support
-> > - 2 USB 2.0 Ports (OTG and HOST)
-> > - 1 GbE Ethernet port
-> > - Optional WiFi/BT support
-> > - Audio output through 3.5mm phone connector
-> > - Optional display output through RAW RGB interface
-> > 
-> > Add compatible string for the board.
-> > 
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > ---
-> >   Documentation/devicetree/bindings/loongarch/loongson.yaml | 5 +++++
-> >   1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/loongarch/loongson.yaml b/Documentation/devicetree/bindings/loongarch/loongson.yaml
-> > index e1a4a97b7576..aac4af9ee97a 100644
-> > --- a/Documentation/devicetree/bindings/loongarch/loongson.yaml
-> > +++ b/Documentation/devicetree/bindings/loongarch/loongson.yaml
-> > @@ -14,6 +14,11 @@ properties:
-> >       const: '/'
-> >     compatible:
-> >       oneOf:
-> > +      - description: CTCISZ Ninenine Pi
-> > +        items:
-> > +          - const: ctcisz,ninenine-pi
-> > +          - const: loongson,ls2k0300
-> > +
-> >         - description: Loongson-2K0500 processor based boards
-> >           items:
-> >             - const: loongson,ls2k0500-ref
-> 
-> 
+diff --git a/include/trace/events/scsi.h b/include/trace/events/scsi.h
+index bf6cc98d9122..a4c089ac834c 100644
+--- a/include/trace/events/scsi.h
++++ b/include/trace/events/scsi.h
+@@ -240,7 +240,7 @@ TRACE_EVENT(scsi_dispatch_cmd_error,
+ 
+ 	TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
+ 		  " prot_op=%s driver_tag=%d scheduler_tag=%d cmnd=(%s %s raw=%s)" \
+-		  " rtn=%d",
++		  " rtn=0x%x",
+ 		  __entry->host_no, __entry->channel, __entry->id,
+ 		  __entry->lun, __entry->data_sglen, __entry->prot_sglen,
+ 		  show_prot_op_name(__entry->prot_op), __entry->driver_tag,
+-- 
+2.34.1
+
