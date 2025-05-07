@@ -1,127 +1,176 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A533E21481D;
-	Wed,  7 May 2025 07:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83942217F46
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 07:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746602961; cv=none; b=IsWSJGzv8nlNA+kHiF1GhhXrIm+q4blaUBoeLQkJUsOOkyJJu69Lmo4I3MbuBZJ/XaNKBGPzCFr8vso59s935Kq66lNGdpPU8dnQ1NScbJUYVU1yHUpZZrp72RajBtepoxxeGFDboujQM6X9L7xohfNdxcxLExOXZ5R1icbUnR8=
+	t=1746602971; cv=none; b=YbQ609LGk/Iz6YYTQDWjIVt8BZPoXQbADauGO2Je2p4FNjPcd4WbQTgoHNBR8E9DC1D2pF+akxkbovTwxLqs9hCZ+CaJ47c+gFftMbAl+4O+rpb8Okxv1HhNqUZ62iaNEKbquFA2kVWWIYHn35tzKkT5R9GuxwS9m9+KzOcXFwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746602961; c=relaxed/simple;
-	bh=yHf9/ftT8R0NcVDJ1hfNI2qi/CtPmDvZv+p8tcq8me0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XOc36Hsteyj9fM8eCUEsZxaFPquWi1I5YpVmj0wb3Js5tcTLvehyW+79kFJYbLCnCJEHJXZIvVykfE/U/KIgFYUWbXFOsvJ0Io5MX2hpRcH1RKvObt5E+raTTWNJUQxONiRPA9nmONv7onM17x10kGTSB1YkLR+PFjP1tQd6RaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XjZPvZpg; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746602971; c=relaxed/simple;
+	bh=3ofFTovtnJvX5M/xuhvl18Z0GfLNgQGP2MJvinEcTik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CpeODfDuzNZ3dFOp5X7QPqpq2lI0rsNpX7mh+7Dbuv9E+Oan+gEtOHPZmnAjJjXmF3w23aOTHHG7jHJxucSa0H3alhKls8AQmPJ02g0BxpMsGtgXUAMKsVcQ42iSL4NWAFZqawl62D5TT9mOcOOCHogAmQK25rXPMSX6o46E3Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lqcX8HWj; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XjZPvZpg"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-441d1ed82faso10350625e9.0;
-        Wed, 07 May 2025 00:29:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lqcX8HWj"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39ee651e419so3438488f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 00:29:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746602958; x=1747207758; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=iR2zA0EdcdHsgk0AyQDnICvVvY4Gi25oEb1LErzmdKk=;
-        b=XjZPvZpg7JD4Zf/3eRDQfL/MUu1skKioHGszV4yuHYq9oCsAxdinM7IDlcAJj0Rc9B
-         EuBXQcQCFpKqNAfOJ0bYBKs9ChJOvmGwURjZ6vA7D77HBtIEBPFiVutXwXT94iYw6lIL
-         lHe1ZBawghwTxjZK/1bYmkzRYDWseV3NX9asCLwkiQvV1oM1AjY227QI7X76/LvgFpvk
-         8rwpgIYTMsd4FoZ5XAYpN1unEs/nBNA8sD4Jn+/x/aRUSMJCxHsV5zgL0T33eViJGQh7
-         diDMAZ2jt8uumBd+00rhXwQd8xiP8m3nlYiSupIHdWdZJljnsR7wwCHpm457m3aEv35j
-         DVqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746602958; x=1747207758;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=linaro.org; s=google; t=1746602968; x=1747207768; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=iR2zA0EdcdHsgk0AyQDnICvVvY4Gi25oEb1LErzmdKk=;
-        b=e2XuukMX4W7BGunHQ8tS2cnDWP03qCrWbeYEbMAOXwnkH5O9t8eT7wW0J4fnXs19U2
-         HJPfldWsEbwVfajjN9j+5Y9wk4ss6NT8aijLtk+akejO64PWhvK978OaplZJzEENmSBf
-         77unrS6u/NY8Z9mvdEEcBursRq1a4fCEVHZ/DFPFYzPxYH0U4BG8ofe331z78IQE4s1t
-         /T6wB/yR1A5c3sfEDGF6JO2lPdQSSvzy4qyG0zqL+fl5vwrDaM/7Ud8B1NepFJSJxExW
-         bPut1Te22LK98qq4uJqbS85a/wPrJcBbIKQz4XYf3yi6Dou6i7oAdq3JKFoN/QhGczCq
-         DanQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJUHFDLCMu3shMfiOkHIwAhLAVH//GG9URKrTjey3OJxjBbtuDBhR8T1irwcq/3ozsObbMSx7wM2Y=@vger.kernel.org, AJvYcCXSZI3Y+YyO8t4uWdE55MI1zQyC8q/IuAJkGTr9b5eal5KHLiMqP2Vq5s7HO3l2625btdmGR6Dblfnty/eR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1RFrq5RfhHqfIsKPCZHiSi4K+XkQCF7DOJWqMwZd+rGupXKSw
-	xVMtZpS3YCXnxbWtAeOAou0DBSuR4DRM35FVPmvrfqgoZ0cdiGao
-X-Gm-Gg: ASbGncu2ebgaC48THC/FHLnuTDbg1EFV/vkdnSVvXoHrcFfK3e/lhzlbLTclxWNI5Ni
-	WR1iTmZjgoRdRUzuOnVxUfVjqbxNYQWdF336d6ba9IQU2hnViyOl1PYN4hN89I9FT6LRtyUTu8P
-	XDPnQ+KH+AjtC2yjFIei3eTToKA7trw7doa3TFHre6CUvEY41ozYd62+VJdp2IkLQOZuVBlFvuA
-	R8flgGXQpUxNZjTB4uQRG1ryA9L712xUjr5GBeZ4CINl1vsYIsjKeVX77yg5ovXVtkbn+27imVf
-	JtOG+mNa3yQA8V/ygxOSrpJosaTdnk6lyYxmdfZh2ewjX2sQm6QYw9c12Nx8hQiWS6RjkhABjYi
-	m7H37EWQoQUCGtHE=
-X-Google-Smtp-Source: AGHT+IGGaL+rl/74nMAHw73kbNQ4stZN3O4aJfmM7No/pxs2x5k2i6dSgRLIWAu6ib9gbXsfdqUuwA==
-X-Received: by 2002:a05:600c:1d8f:b0:43d:2230:303b with SMTP id 5b1f17b1804b1-441d44dd262mr13902825e9.20.1746602957701;
-        Wed, 07 May 2025 00:29:17 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441d43d0b41sm20443695e9.11.2025.05.07.00.29.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 00:29:17 -0700 (PDT)
-Message-ID: <dd7dda31525f2947060386a2b605300cf02677f2.camel@gmail.com>
-Subject: Re: [PATCH] iio: adc: ad7944: max high bits on direct read
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
- <nuno.sa@analog.com>,  Jonathan Cameron <jic23@kernel.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- linux-iio@vger.kernel.org,  linux-kernel@vger.kernel.org
-Date: Wed, 07 May 2025 07:29:41 +0100
-In-Reply-To: <20250505-iio-adc-ad7944-max-high-bits-on-direct-read-v1-1-b173facceefe@baylibre.com>
-References: 
-	<20250505-iio-adc-ad7944-max-high-bits-on-direct-read-v1-1-b173facceefe@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+        bh=exh3b5R7L77rlGB9XDLUTNFBk7LtXN6j6kHQ/wrFppg=;
+        b=lqcX8HWjoX36WHrfdPUWIjNj0BPu4jxR/vDN0sjAWhBJQ7QMdXwwwRn20Na67XyaNs
+         zHRWU9RdQEm52VDinC1WP3zhufhSSap2ix1APn4UVW706vlBGsTTSr7E1kOYi/Z0yrHb
+         TTYmpP3N0NXBHnieEZKmqSuC9UsAvDTniQz82qqKpTkd+wKP8fiHBBQR3gWkSjKtXjaE
+         u1K0iGAv7JdeeqgIYPqdeTRQ2q6VfzsWxDU1vLI/y+pkJZ5YicQstZdEmoPGpih70KZ5
+         IpzulRQDCE2YGYLBW6+NN+uJmfQmESsHDdaVmVMcnOWUgDLz7gFX//YoL6mv3zx4Q++8
+         9xoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746602968; x=1747207768;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=exh3b5R7L77rlGB9XDLUTNFBk7LtXN6j6kHQ/wrFppg=;
+        b=spOUEC+XGmgGdqQzXKO4PaEdyJp8DiN3SEGIk1t0lUQGyiBVm+m9C4ADN1KC51qf9s
+         QjFaHWtMSCO5Ffoapxu3sXFeJ+pOjVt3x4TfZTYkajNM4BhMpSDZf111nx+HQXqYhdA1
+         ErC8zcPZiStEGkCIEVQv+bfibL0ZITLDzuVKnZMbcc8HFn9tJKO4N1D7pbLwNheX5ANn
+         +q8/VRHmuIAQLeZBYrVQR/dX5uWykKupym7S/BVYu7QMWHmNKpHg2EySiTKRumLNCMu4
+         UB7pYNy6E3KmVeVS92ighfF+dhw/45i1SQfI1+eYu2UJlXkPREGMpJqVvVaI7D6qAfHi
+         QF3g==
+X-Forwarded-Encrypted: i=1; AJvYcCV9ZvWto4rN2HzkAWtyPHh0/RRI74FexFIXPaiHM5yranGLrq4oR366TPs2T4qL6sgSdts9wz34TRqjY7g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAaOPrATx5qTcl7pJ89o92MbrNh3pcyBOZPviB/5YsKPeT8v6y
+	EY1cmWTJGa9r+/dDIYeYg0MZakrcSCZud08sYRookFSPgtWKWgYDp9EOK3inDTI=
+X-Gm-Gg: ASbGncudHcNJy3s2VOkwOR//se50mAhrlK+D0Pa3bjfltssIyUEd0hBB55T5kBaLhzD
+	LTdyDrLS+LZe7V+QGZlWFILPk+gqrIp8BkAo+zxoH5IzJnz3RFGgwGB5f627Mi4M8zlctPS+F90
+	dEfWmKfX9dVPbWoT+0ZIOfQGvD0QJokDrQxCv0ycGdkKEa5PdX7HE/CejFoyCjUOsRiHz4KpXJS
+	mPaknH0S0Bd/wgrhSGeZxSwYBbM4RYQcGNfiPujN/TrTdWtzyyM2ejAlO9yyyB1cemqDZr2EGIF
+	FrRvnLRZ0oTywt///sJnktbmI4A6bhi236zDS7qAeUvOLZcSvQLfuC6gFMTnLfdsjVWXR3/o2bJ
+	LtP2r
+X-Google-Smtp-Source: AGHT+IEH+UhigDV51ycf06z5unZsxUS1KzhCHNWdikOd5Jo+ShmTKo/P+eDgWolx1p8pfsovDvmOIg==
+X-Received: by 2002:a5d:64e7:0:b0:38d:b325:471f with SMTP id ffacd0b85a97d-3a0b4a16497mr2004847f8f.15.1746602967790;
+        Wed, 07 May 2025 00:29:27 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a0b350f604sm2547973f8f.21.2025.05.07.00.29.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 May 2025 00:29:27 -0700 (PDT)
+Message-ID: <c0e9a395-41d1-4edc-a759-f958ea10387a@linaro.org>
+Date: Wed, 7 May 2025 09:29:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/2] thermal: Add support for Airoha EN7581 thermal
+ sensor
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250226003608.8973-1-ansuelsmth@gmail.com>
+ <20250226003608.8973-2-ansuelsmth@gmail.com>
+ <a9f58437-5992-4042-85cd-b9150c4855ff@linaro.org>
+ <6814de0d.7b0a0220.2add1a.0689@mx.google.com>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <6814de0d.7b0a0220.2add1a.0689@mx.google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2025-05-05 at 13:28 -0500, David Lechner wrote:
-> Apply a mask to the raw value received over the SPI bus for unsigned
-> direct reads. As we found recently, SPI controllers may not set unused
-> bits to 0 when reading with bits_per_word !=3D {8,16,32}. The ad7944 uses
-> bits_per_word of 14 and 18, so we need to mask the value to be sure we
-> returning the correct value to userspace during a direct read.
->=20
-> Fixes: d1efcf8871db ("iio: adc: ad7944: add driver for AD7944/AD7985/AD79=
-86")
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
-> The sign_extend32() already takes care of signed reads in case that
-> isn't obvious - it overwrites the unknown bits with the sign bit.
-> ---
+On 02/05/2025 17:00, Christian Marangi wrote:
+> On Fri, May 02, 2025 at 03:30:56PM +0200, Daniel Lezcano wrote:
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+[ ... ]
 
-> =C2=A0drivers/iio/adc/ad7944.c | 2 ++
-> =C2=A01 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/iio/adc/ad7944.c b/drivers/iio/adc/ad7944.c
-> index
-> 2f949fe5587318957f2e423029294ced0a6f803d..37a137bd83571b055e970a8cd483d87=
-26972d637
-> 100644
-> --- a/drivers/iio/adc/ad7944.c
-> +++ b/drivers/iio/adc/ad7944.c
-> @@ -377,6 +377,8 @@ static int ad7944_single_conversion(struct ad7944_adc=
- *adc,
-> =C2=A0
-> =C2=A0	if (chan->scan_type.sign =3D=3D 's')
-> =C2=A0		*val =3D sign_extend32(*val, chan->scan_type.realbits - 1);
-> +	else
-> +		*val &=3D GENMASK(chan->scan_type.realbits - 1, 0);
-> =C2=A0
-> =C2=A0	return IIO_VAL_INT;
-> =C2=A0}
->=20
-> ---
-> base-commit: b72f1157bfb9b92b0439e11469f7f94e47363460
-> change-id: 20250505-iio-adc-ad7944-max-high-bits-on-direct-read-b358289d0=
-337
->=20
-> Best regards,
+>>> +static int airoha_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
+>>> +{
+>>> +	struct airoha_thermal_priv *priv = thermal_zone_device_priv(tz);
+>>> +	int min, max, avg_temp, temp_adc;
+>>> +	int i;
+>>> +
+>>> +	/* Get the starting temp */
+>>> +	temp_adc = airoha_get_thermal_ADC(priv);
+>>> +	min = temp_adc;
+>>> +	max = temp_adc;
+>>> +	avg_temp = temp_adc;
+>>> +
+>>> +	/* Make 5 more measurement and average the temp ADC difference */
+>>> +	for (i = 0; i < 5; i++) {
+>>> +		temp_adc = airoha_get_thermal_ADC(priv);
+>>> +		avg_temp += temp_adc;
+>>> +		if (temp_adc > max)
+>>> +			max = temp_adc;
+>>> +		if (temp_adc < min)
+>>> +			min = temp_adc;
+>>> +	}
+>>> +	avg_temp = avg_temp - max - min;
+>>> +	avg_temp /= 4;
 
+Why 4 ? There is 5 samples no ? one before the loop and 4 with the loop
+
+>>> +	*temp = RAW_TO_TEMP(priv, avg_temp);
+
+Does RAW_TO_TEMP() on a average raw adc value report the same value as 
+an average of the temperature after their conversion ?
+
+>>> +	return 0;
+>>> +}
+
+The routine is a bit confusing because of the initial adc read.
+
+avg_value = 0;
+min_value = INT_MAX;
+max_value = INT_MIN;
+
+for (i = 0; i < AIROHA_MAX_SAMPLES; i++) {
+	value = airoha_get_thermal_ADC(priv);
+	min_value = min(value, min_value);
+	max_value = max(value, max_value);
+	avg_value += value;
+}
+
+avg_value -= (min_value + max_value);
+avg_value /= AIROHA_MAX_SAMPLES;
+
+>> Does this chip support the averaging with the filtered mode which prevent to
+>> do this expensive calls when getting the temperature ?
+>>
+> 
+> If you notice in this function we read directly from the ADC sensor to
+> have a more precise and realtime temperature.
+> 
+> Yes the thermal module support averaging (and this is what is set for
+> the critical temperature monitor) but since we base everything on
+> interrupt the expensive call is called only when the user poll the
+> temperature with sysfs.
+
+When the temperature reaches the threshold, the interrupt is fired which 
+in turn calls thermal_zone_device_update(). This lead to a polling from 
+the kernel at a higher rate with the governor taking cooling decision.
+
+> Do you prefer to use the thermal module entirely?
+
+It is up to you. I would say if the sensor has a hardware assistance to 
+compute the averaging while the CPU does something else it is better. 
+But if the filtered mode has the same issues than the LVTS, then it is 
+probably not worth it.
+
+
+[ ... ]
+
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
