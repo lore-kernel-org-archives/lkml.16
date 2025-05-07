@@ -1,63 +1,155 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5050288CB3;
-	Wed,  7 May 2025 14:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EF028C85A
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 14:04:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746626634; cv=none; b=W7LrVhe0haTZkCK3FiyoePGpwaIESi7kfpezEJb6bDTQZ/At3XiZGsvMUBhoTqC9bV5lFCLunebDtBo88VgdTaiuwD+N3ActWXEFsdtnBKY4OYNpI/DomBTbW5LmBpgzEkpE0JzT/maYzfbtnmRM5vbbgvzTJi/MgwK33290fPg=
+	t=1746626640; cv=none; b=jbKfm8tQJ8UsAA0Us3ckN8SotcExIYPtrJn4U4HOF2ZO8a+aSCLY2jixzRrNyPPdeekHyI6w0ACGDCe3FDXJ7+DFbpkinYqVgL/AqejbwH93mhgUq8ukRz2W8x0wK3xv8HbHuQByT31I8Tpm/DHOtekbeo42L9Kjhs8Jn2N9d2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746626634; c=relaxed/simple;
-	bh=6XsXebDpsjazR5speYQbXEo86c9N1sKVIft3y+kCwcw=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=btiFEr4LIy6tmc1ZOb68+K4JHaDISqSeOLrOev/eDmCWmK5EoWxfNUX24mtP6qW9XEpbtynJoRicu6T5zNPo//YOhAn/oKCL4fcx5Hx6dfyEOkt/koI60eQuh80uz6LqymhgwP9wXiTENXf164BpvnoFISAidLgqgZ//L5TRBUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UElt6Ea5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746626640; c=relaxed/simple;
+	bh=cPAiWqaxzmrEcflp3jNSxIq1z1vYc2M/r9eccZySA2o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tta25MTgjgfdKWL8/3W+Ga5ij4rmG8BR4GzF7D2Nn6WPMx+K4oxJ+inoVat2dvcQwjz1tbTPoDedGQFKRL2rxhKnbpWwzp0IURW5+rAqqhcOAZAlqr/QAa+s58EjdFp2hHORgQNy4aD7Zu4MI/ydeIltp1dNJ5dNQKvrZkl8ylc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NtxnFrYz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UElt6Ea5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2519AC4CEE2;
-	Wed,  7 May 2025 14:03:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NtxnFrYz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D964C4CEEE
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 14:04:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746626634;
-	bh=6XsXebDpsjazR5speYQbXEo86c9N1sKVIft3y+kCwcw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=UElt6Ea5TW7faS7nCyrqstUNmxhW/Zl++JkdPSCwUj8jxQKuAza274lxYRot0TFNN
-	 oZRxjtJxHOKuMse9Egd9tN5WSc6ZjMscDk+Hqjwwq6oFurKd/IgUzl44msOeuOT6m5
-	 AuWRm/Gkzphg+SWO1ZS7DET0+8WE/fRdtQh8XlygxMjTNzoQcv/VJILg+p0JBMa7ku
-	 +QIYzZ1vdjoDUyBMFvgbXhcYCO64PF4Ulagyqw3CRS/6/FJcvXywdgI9BNt/bMictT
-	 W1lXN4RiNjB27wXqVtzSooSiguF1JmIwzpIOVM1hfxDwA3x2ZBxjubSCLDNh7g/qaF
-	 3pbeda8qUDj9A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3416B380AA70;
-	Wed,  7 May 2025 14:04:34 +0000 (UTC)
-Subject: Re: [GIT PULL for v6.15-rc6] media fixes
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250507110246.1cf54e65@foz.lan>
-References: <20250507110246.1cf54e65@foz.lan>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250507110246.1cf54e65@foz.lan>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media.git media/v6.15-2
-X-PR-Tracked-Commit-Id: d51adf038ebe59b592005166209b70218b1da849
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 707df3375124b51048233625a7e1c801e8c8a7fd
-Message-Id: <174662667294.2242128.1591227197624092477.pr-tracker-bot@kernel.org>
-Date: Wed, 07 May 2025 14:04:32 +0000
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+	s=k20201202; t=1746626640;
+	bh=cPAiWqaxzmrEcflp3jNSxIq1z1vYc2M/r9eccZySA2o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NtxnFrYzH/TQD41otaORYFAx+WcD1glvVrwP04w+XUu33kEL2xDy5fDa1FKIfnDFJ
+	 nE1EebkgoEfMnrrgnaK3l7Vn7EtSu9mP0l/3bfpvdZ0hKq5BGwlT08Wjh0vzsP5C6Z
+	 8l2JXpRorw8L0miaC6TlzCqz35V6lJSpEWqrtmrzx9JXD0aDuvkJt5LjyLUllmX+3o
+	 AcYRx+TOYnzTD7fu7mUdkS1e6CExFhKb5vj9+5t6Itf/1zlr1G+nwi8dxfCr6Apet9
+	 QTTdNH/3JBXkSvApLabnH4Ccq4RqNOyfjUTRrXZX3NIIBDnaTC+kwOEhSwK7BEv0Pu
+	 QR/BBoyRZsoNw==
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39ee5ac4321so8383086f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 07:04:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVEsMjDdhcZES5ZA3/uj4nxaSL28+I+jLO1n5QYbq4W7FpRX9u3oF9Hgk3p2A71GrJUT2uX1diMC1yG68M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYW0OV8TR6/JzzFPxSNYJY5KGIWD6nLUKRmfvREwkFmN+iVWiA
+	lZ5ZapWc08fxKpnQCjpC756kg+lnnadQ6DSOu4CK+c31b8oYUATguNCHzs6UobGzKtEQXb5T8jx
+	yAhKCebhe10J95Pq9Ke0Ry3AgvJE=
+X-Google-Smtp-Source: AGHT+IGeZURpUcczy0dcfIEPPTUD5WpzPzvDAVjDBUov0uWFAtMzcSVCJS9AfYe5zVbjUedAsJhdILw4cDvOJkMaABI=
+X-Received: by 2002:a05:6000:3107:b0:3a0:83b5:f4c1 with SMTP id
+ ffacd0b85a97d-3a0b49ac3ebmr2747534f8f.24.1746626638548; Wed, 07 May 2025
+ 07:03:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250507100624.8925-1-zhangtianyang@loongson.cn>
+In-Reply-To: <20250507100624.8925-1-zhangtianyang@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 7 May 2025 22:03:47 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5+kb4xiiSanFpx=xfyOuCxi5AdyF5cJ8rV9vm7UEBJPg@mail.gmail.com>
+X-Gm-Features: ATxdqUGiJi4oX7jknYaNLqIq09DM6zJU6qZXSErH6DXge3UDYwR023AWCnRtThE
+Message-ID: <CAAhV-H5+kb4xiiSanFpx=xfyOuCxi5AdyF5cJ8rV9vm7UEBJPg@mail.gmail.com>
+Subject: Re: [PATCH] Loongarch:Prevent cond_resched occurring within kernel-fpu
+To: Tianyang Zhang <zhangtianyang@loongson.cn>
+Cc: kernel@xen0n.name, bigeasy@linutronix.de, clrkwllms@kernel.org, 
+	rostedt@goodmis.org, loongarch@lists.linux.dev, 
+	linux-rt-devel@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Wed, 7 May 2025 11:02:46 +0200:
+Hi, Tianyang,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media.git media/v6.15-2
+LoongArch is not Loongarch in the title.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/707df3375124b51048233625a7e1c801e8c8a7fd
+On Wed, May 7, 2025 at 6:06=E2=80=AFPM Tianyang Zhang <zhangtianyang@loongs=
+on.cn> wrote:
+>
+> When CONFIG_PREEMPT_COUNT is not configured, preempt_disable/preempt_enab=
+le
+> merely acts as a barrier. However, cond_resched can still trigger a
+> context switch and modify the EUEN, resulting in do_fpu being activated
+> within kernel-fpu critical section, as demonstrated in the following path=
+:
+>
+> dcn32_calculate_wm_and_dlg
+>     DC_FP_START
+>         dcn32_calculate_wm_and_dlg_fpu
+>             dcn32_find_dummy_latency_index_for_fw_based_mclk_switch
+>                 dcn32_internal_validate_bw
+>                     dcn32_enable_phantom_stream
+>                         dc_create_stream_for_sink
+>                            kzalloc(GFP_KERNEL)
+>                                 __kmem_cache_alloc_node
+>                                     __cond_resched
+>     DC_FP_END
+>
+> This patch is similar to d02198550423a0b695e7a24ec77153209ad45b09
+> (x86/fpu: Improve crypto performance by making kernel-mode FPU reliably
+> usablein softirqs),to avoids the issue, and extends kernel-fpu applicatio=
+n
+> scenarios to softirq.
+>
 
-Thank you!
+You need to Cc the stable list here.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> ---
+>  arch/loongarch/kernel/kfpu.c | 22 ++++++++++++++++++++--
+>  1 file changed, 20 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/kfpu.c b/arch/loongarch/kernel/kfpu.c
+> index ec5b28e570c9..e60bbaca357a 100644
+> --- a/arch/loongarch/kernel/kfpu.c
+> +++ b/arch/loongarch/kernel/kfpu.c
+> @@ -18,11 +18,28 @@ static unsigned int euen_mask =3D CSR_EUEN_FPEN;
+>  static DEFINE_PER_CPU(bool, in_kernel_fpu);
+>  static DEFINE_PER_CPU(unsigned int, euen_current);
+>
+> +static inline void fpu_lock(void)
+The x86 naming, fpregs_lock() is better than fpu_lock(), we can keep the sa=
+me.
+
+To save time, I have fixed them [1], you can fetch it to send V2.
+[1] https://github.com/chenhuacai/linux/commit/fa0952bb7667b138a8941bb3e867=
+75adc9f4731f
+
+Huacai
+
+> +{
+> +       if (!IS_ENABLED(CONFIG_PREEMPT_RT))
+> +               local_bh_disable();
+> +       else
+> +               preempt_disable();
+> +}
+> +
+> +static inline void fpu_unlock(void)
+> +{
+> +       if (!IS_ENABLED(CONFIG_PREEMPT_RT))
+> +               local_bh_enable();
+> +       else
+> +               preempt_enable();
+> +}
+> +
+>  void kernel_fpu_begin(void)
+>  {
+>         unsigned int *euen_curr;
+>
+> -       preempt_disable();
+> +       if (!irqs_disabled())
+> +               fpu_lock();
+>
+>         WARN_ON(this_cpu_read(in_kernel_fpu));
+>
+> @@ -73,7 +90,8 @@ void kernel_fpu_end(void)
+>
+>         this_cpu_write(in_kernel_fpu, false);
+>
+> -       preempt_enable();
+> +       if (!irqs_disabled())
+> +               fpu_unlock();
+>  }
+>  EXPORT_SYMBOL_GPL(kernel_fpu_end);
+>
+> --
+> 2.20.1
+>
