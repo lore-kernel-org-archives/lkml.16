@@ -1,187 +1,159 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5133D8248C
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F5220298C
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746611337; cv=none; b=dCA1rtL4N4DD66+tj8MjW1MqRIO9CD1Ds3544Y5FuQ/DdmwaLjPCcq54BPxAfRdWmdk4EIMuRaxxEttXFH//9fMt29xdVfM5JgCBd0QGjRUPzOlaxSL6BXKG9mrbRMfLWYIZntMbvZTE0y/lYYY//G8bmQzOmRMKqWPMlaUgrw8=
+	t=1746611341; cv=none; b=Zae/g2zE2Lnh125gULgtYPZyjjWfR06OudSDRyuXtZu3aLYg9WEAD1YfzN4qPekh0b/FMaYIJvfvS6n3BbNq6GQq6/1yMI+iOJs7fM4vzWuE2cVXxqSpczZAFdU7LvZsHDttLiUsHdD+W7e45Fsbgq2Y/OxyLtYFrP4XQmZs1O8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746611337; c=relaxed/simple;
-	bh=HE0/xP+xIw59ri6RKynRpIPzxrML6Nv79Aap3Q8gQg8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EZdzj1K22r4+XpkfsYNCoMCgJFp4mL0HqNm428he+S4l4SGx8WmAOg8hiGyAx0iQLy1HBviY3HdT99RQSvG+QA3BSX1dKhtVE+Lc2o/7HB/s8duJwpKv/KoIvM4ZkmNkKpZh5SgbHv5+sfmtB7hSTZXtu7FBqIkrB4opB7ikI6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=o09JeHSt; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="o09JeHSt"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1746611324; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=V0O8cm6bffSFegRdIrSugEF6D3zwGb4jo+mv6tMRPJg=;
-	b=o09JeHSt3UErHbWQXbD+lFBtjGBspo7C5mNrIPZLFGssBCfgFA1kj1UDWt64SzodqrV0/73FJQeFXBxEsYuqvYNaEJXJGVVVIdq/NO7AQWnJKxxSTSjrCFz1ExEH6Ii7omDRV26gHNscQnK978wDpWG7ToV4i0QAfi9tqDCk5ZQ=
-Received: from 30.74.144.111(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WZp3AbP_1746611321 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 07 May 2025 17:48:41 +0800
-Message-ID: <6a8418ba-dbd1-489f-929b-e31831bea0cf@linux.alibaba.com>
-Date: Wed, 7 May 2025 17:48:40 +0800
+	s=arc-20240116; t=1746611341; c=relaxed/simple;
+	bh=g9aEaqfbTnilVwvxFFtp0xkTCacv9+qYLQ7a6NZYGzQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=l5SyKjgIFW3oid+Ki04p8LOhnODW1UwAYP5yEnStTCPxGNKT8DUMyBX2UcU3l2UXrP9lLL/sNyYkQ7mVHtl2rwVnllNeEMR/TykvtPZMQCtd98xpV1+lSxBZ0EQfnXal9tej/0PQozvUAO116e1I8q0SyotPNF4D4ZtlbubVEfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Zsr6l1ZVGz2TSDk;
+	Wed,  7 May 2025 17:48:15 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id A5FF91A016C;
+	Wed,  7 May 2025 17:48:49 +0800 (CST)
+Received: from huawei.com (10.67.174.162) by kwepemo500009.china.huawei.com
+ (7.202.194.199) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 7 May
+ 2025 17:48:49 +0800
+From: Hongbo Li <lihongbo22@huawei.com>
+To: <xiang@kernel.org>, <chao@kernel.org>, <huyue2@coolpad.com>,
+	<jefflexu@linux.alibaba.com>
+CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<lihongbo22@huawei.com>
+Subject: [PATCH v4] erofs: fix file handle encoding for 64-bit NIDs
+Date: Wed, 7 May 2025 09:40:15 +0000
+Message-ID: <20250507094015.14007-1-lihongbo22@huawei.com>
+X-Mailer: git-send-email 2.22.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mm: mincore: use folio_pte_batch() to batch process
- large folios
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org, hughd@google.com
-Cc: willy@infradead.org, david@redhat.com, 21cnbao@gmail.com,
- ryan.roberts@arm.com, ziy@nvidia.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <cover.1742960003.git.baolin.wang@linux.alibaba.com>
- <7ad05bc9299de5d954fb21a2da57f46dd6ec59d0.1742960003.git.baolin.wang@linux.alibaba.com>
- <17289428-894a-4397-9d61-c8500d032b28@arm.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <17289428-894a-4397-9d61-c8500d032b28@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
 
+EROFS uses NID to indicate the on-disk inode offset, which can
+exceed 32 bits. However, the default encode_fh uses the ino32,
+thus it doesn't work if the image is larger than 128GiB.
 
+Let's introduce our own helpers to encode file handles.
 
-On 2025/5/7 13:12, Dev Jain wrote:
-> 
-> 
-> On 26/03/25 9:08 am, Baolin Wang wrote:
->> When I tested the mincore() syscall, I observed that it takes longer with
->> 64K mTHP enabled on my Arm64 server. The reason is the 
->> mincore_pte_range()
->> still checks each PTE individually, even when the PTEs are contiguous,
->> which is not efficient.
->>
->> Thus we can use folio_pte_batch() to get the batch number of the present
->> contiguous PTEs, which can improve the performance. I tested the 
->> mincore()
->> syscall with 1G anonymous memory populated with 64K mTHP, and observed an
->> obvious performance improvement:
->>
->> w/o patch        w/ patch        changes
->> 6022us            1115us            +81%
->>
->> Moreover, I also tested mincore() with disabling mTHP/THP, and did not
->> see any obvious regression.
->>
->> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->> ---
->>   mm/mincore.c | 27 ++++++++++++++++++++++-----
->>   1 file changed, 22 insertions(+), 5 deletions(-)
->>
->> diff --git a/mm/mincore.c b/mm/mincore.c
->> index 832f29f46767..88be180b5550 100644
->> --- a/mm/mincore.c
->> +++ b/mm/mincore.c
->> @@ -21,6 +21,7 @@
->>   #include <linux/uaccess.h>
->>   #include "swap.h"
->> +#include "internal.h"
->>   static int mincore_hugetlb(pte_t *pte, unsigned long hmask, unsigned 
->> long addr,
->>               unsigned long end, struct mm_walk *walk)
->> @@ -105,6 +106,7 @@ static int mincore_pte_range(pmd_t *pmd, unsigned 
->> long addr, unsigned long end,
->>       pte_t *ptep;
->>       unsigned char *vec = walk->private;
->>       int nr = (end - addr) >> PAGE_SHIFT;
->> +    int step, i;
->>       ptl = pmd_trans_huge_lock(pmd, vma);
->>       if (ptl) {
->> @@ -118,16 +120,31 @@ static int mincore_pte_range(pmd_t *pmd, 
->> unsigned long addr, unsigned long end,
->>           walk->action = ACTION_AGAIN;
->>           return 0;
->>       }
->> -    for (; addr != end; ptep++, addr += PAGE_SIZE) {
->> +    for (; addr != end; ptep += step, addr += step * PAGE_SIZE) {
->>           pte_t pte = ptep_get(ptep);
->> +        step = 1;
->>           /* We need to do cache lookup too for pte markers */
->>           if (pte_none_mostly(pte))
->>               __mincore_unmapped_range(addr, addr + PAGE_SIZE,
->>                            vma, vec);
->> -        else if (pte_present(pte))
->> -            *vec = 1;
->> -        else { /* pte is a swap entry */
->> +        else if (pte_present(pte)) {
->> +            if (pte_batch_hint(ptep, pte) > 1) {
->> +                struct folio *folio = vm_normal_folio(vma, addr, pte);
->> +
->> +                if (folio && folio_test_large(folio)) {
->> +                    const fpb_t fpb_flags = FPB_IGNORE_DIRTY |
->> +                                FPB_IGNORE_SOFT_DIRTY;
->> +                    int max_nr = (end - addr) / PAGE_SIZE;
->> +
->> +                    step = folio_pte_batch(folio, addr, ptep, pte,
->> +                            max_nr, fpb_flags, NULL, NULL, NULL);
->> +                }
->> +            }
-> 
-> Can we go ahead with this along with [1], that will help us generalize 
-> for all arches.
-> 
-> [1] https://lore.kernel.org/all/20250506050056.59250-3-dev.jain@arm.com/
-> (Please replace PAGE_SIZE with 1)
+It's easy to reproduce:
+  1. prepare an erofs image with nid bigger than U32_MAX
+  2. mount -t erofs foo.img /mnt/erofs
+  3. set exportfs with configuration: /mnt/erofs *(rw,sync,
+     no_root_squash)
+  4. mount -t nfs $IP:/mnt/erofs /mnt/nfs
+  5. md5sum /mnt/nfs/foo # foo is the file which nid bigger
+     than U32_MAX.  # you will get ESTALE error.
 
-As discussed with Ryan, we don’t need to call folio_pte_batch() 
-(something like the code below), so your patch seems unnecessarily 
-complicated. However, David is unhappy about the open-coded 
-pte_batch_hint().
+In the case of overlayfs, the underlying filesystem's file
+handle is encoded in ovl_fb.fid, which is similar to NFS's
+case. If the NID of file is larger than U32_MAX, the overlay
+will get -ESTALE error when calls exportfs_decode_fh.
 
-  static int mincore_hugetlb(pte_t *pte, unsigned long hmask, unsigned 
-long addr,
-                         unsigned long end, struct mm_walk *walk)
-@@ -105,6 +106,7 @@ static int mincore_pte_range(pmd_t *pmd, unsigned 
-long addr, unsigned long end,
-         pte_t *ptep;
-         unsigned char *vec = walk->private;
-         int nr = (end - addr) >> PAGE_SHIFT;
-+       int step, i;
+Fixes: 3e917cc305c6 ("erofs: make filesystem exportable")
+Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+---
+v3: https://lore.kernel.org/all/20250429134257.690176-1-lihongbo22@huawei.com/
+  - Improve commit message readability as suggested by Xiang.
+  - Remove extra variable to make the code simpler as suggested
+    by Xiang.
 
-         ptl = pmd_trans_huge_lock(pmd, vma);
-         if (ptl) {
-@@ -118,16 +120,21 @@ static int mincore_pte_range(pmd_t *pmd, unsigned 
-long addr, unsigned long end,
-                 walk->action = ACTION_AGAIN;
-                 return 0;
-         }
--       for (; addr != end; ptep++, addr += PAGE_SIZE) {
-+       for (; addr != end; ptep += step, addr += step * PAGE_SIZE) {
-                 pte_t pte = ptep_get(ptep);
+v2: https://lore.kernel.org/all/20250429074109.689075-1-lihongbo22@huawei.com/
+  - Assign parent nid with correct value.
 
-+               step = 1;
-                 /* We need to do cache lookup too for pte markers */
-                 if (pte_none_mostly(pte))
-                         __mincore_unmapped_range(addr, addr + PAGE_SIZE,
-                                                  vma, vec);
--               else if (pte_present(pte))
--                       *vec = 1;
--               else { /* pte is a swap entry */
-+               else if (pte_present(pte)) {
-+                       unsigned int max_nr = (end - addr) / PAGE_SIZE;
+v1: https://lore.kernel.org/all/20250429011139.686847-1-lihongbo22@huawei.com/
+   - Encode generation into file handle and minor clean code.
+   - Update the commiti's title.
+---
+ fs/erofs/super.c | 44 ++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 36 insertions(+), 8 deletions(-)
+
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index cadec6b1b554..727e2fbaa168 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -511,24 +511,52 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+ 	return 0;
+ }
+ 
+-static struct inode *erofs_nfs_get_inode(struct super_block *sb,
+-					 u64 ino, u32 generation)
++static int erofs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
++			   struct inode *parent)
+ {
+-	return erofs_iget(sb, ino);
++	erofs_nid_t nid = EROFS_I(inode)->nid;
++	int len = parent ? 6 : 3;
 +
-+                       step = min(pte_batch_hint(ptep, pte), max_nr);
-+                       for (i = 0; i < step; i++)
-+                               vec[i] = 1;
-+               } else { /* pte is a swap entry */
-                         swp_entry_t entry = pte_to_swp_entry(pte);
++	if (*max_len < len) {
++		*max_len = len;
++		return FILEID_INVALID;
++	}
++
++	fh[0] = (u32)(nid >> 32);
++	fh[1] = (u32)(nid & 0xffffffff);
++	fh[2] = inode->i_generation;
++
++	if (parent) {
++		nid = EROFS_I(parent)->nid;
++
++		fh[3] = (u32)(nid >> 32);
++		fh[4] = (u32)(nid & 0xffffffff);
++		fh[5] = parent->i_generation;
++	}
++
++	*max_len = len;
++	return parent ? FILEID_INO64_GEN_PARENT : FILEID_INO64_GEN;
+ }
+ 
+ static struct dentry *erofs_fh_to_dentry(struct super_block *sb,
+ 		struct fid *fid, int fh_len, int fh_type)
+ {
+-	return generic_fh_to_dentry(sb, fid, fh_len, fh_type,
+-				    erofs_nfs_get_inode);
++	if ((fh_type != FILEID_INO64_GEN &&
++	     fh_type != FILEID_INO64_GEN_PARENT) || fh_len < 3)
++		return NULL;
++
++	return d_obtain_alias(erofs_iget(sb,
++		((u64)fid->raw[0] << 32) | fid->raw[1]));
+ }
+ 
+ static struct dentry *erofs_fh_to_parent(struct super_block *sb,
+ 		struct fid *fid, int fh_len, int fh_type)
+ {
+-	return generic_fh_to_parent(sb, fid, fh_len, fh_type,
+-				    erofs_nfs_get_inode);
++	if (fh_type != FILEID_INO64_GEN_PARENT || fh_len < 6)
++		return NULL;
++
++	return d_obtain_alias(erofs_iget(sb,
++		((u64)fid->raw[3] << 32) | fid->raw[4]));
+ }
+ 
+ static struct dentry *erofs_get_parent(struct dentry *child)
+@@ -544,7 +572,7 @@ static struct dentry *erofs_get_parent(struct dentry *child)
+ }
+ 
+ static const struct export_operations erofs_export_ops = {
+-	.encode_fh = generic_encode_ino32_fh,
++	.encode_fh = erofs_encode_fh,
+ 	.fh_to_dentry = erofs_fh_to_dentry,
+ 	.fh_to_parent = erofs_fh_to_parent,
+ 	.get_parent = erofs_get_parent,
+-- 
+2.22.0
 
-                         if (non_swap_entry(entry)) {
-@@ -146,7 +153,7 @@ static int mincore_pte_range(pmd_t *pmd, unsigned 
-long addr, unsigned long end,
-  #endif
-                         }
-                 }
--               vec++;
-+               vec += step;
-         }
-         pte_unmap_unlock(ptep - 1, ptl);
-  out:
