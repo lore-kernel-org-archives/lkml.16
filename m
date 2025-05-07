@@ -1,29 +1,36 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF3B4B1E7D;
-	Wed,  7 May 2025 15:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CABA18E02A;
+	Wed,  7 May 2025 15:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746633277; cv=none; b=Z2aFEWl7lX6E1YGfBig/10gyAMTn54KMGjdjiVFVjOnyJ/s3SdoLc/ObZJjOhUVh2NLKu+MruH2eG1EX9sxGVJmrRrOuYOKs+DmV3RniW3b1iHIAonrR9umwkT71e4EL8m/DrURMmU3FwxNlYsSOhNYrUXdlqRi++iXV6cG19KE=
+	t=1746633295; cv=none; b=iHB9cXnECTwxOdG8zwil+d+LmsfmVaJXF3Dpf9IgQiNBCZJltfS7NlRD9JiDwsqIG1DtAdh+xQNjjTgeHPa2wa8sv8rCJOicVrGUKj964gdK61/9W9WOGDxs2gtGPluvQ6GRi44e4lvDcoCp23vFbleMJ6mgkHTpFHgULYt7dEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746633277; c=relaxed/simple;
-	bh=9lwfyyEGkoBX6ds3JiV79GSpr/yBVbLN0v8+3hr7bkw=;
+	s=arc-20240116; t=1746633295; c=relaxed/simple;
+	bh=zW0RWInMNx5/I7PV4AOVLi7xHPAV51zOFBu+ZZh6dHM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QrsD9Q5dHtRAQIh5M8Oh0pWpLlcpq9OzZhlO09Y/fB6IepeMoGcR7cb7XSioeqT3VF0Nz7XdFEA8tHjfz8qY0z8KvyFNz/p4fEmMvkTW1SmyvHKy1VR58cbIxbpfhThDm7kbRnRljL1uO2Xp1/e8satvOtDK5wrqb+woHU+ynvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C7A5C4CEE2;
-	Wed,  7 May 2025 15:54:36 +0000 (UTC)
-Date: Wed, 7 May 2025 11:54:46 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Kassey Li <quic_yingangl@quicinc.com>
-Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scsi: trace: change the rtn log in hex format
-Message-ID: <20250507115446.55e09c7f@gandalf.local.home>
-In-Reply-To: <20250507070714.2387602-1-quic_yingangl@quicinc.com>
-References: <20250507070714.2387602-1-quic_yingangl@quicinc.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	 MIME-Version:Content-Type; b=jpkq3ieJglJpqo8Dpp6L1DeqN975X1ZmUM8H5zepFybWk9kokDjdbVqIEM4+TfVD8Mg+uCb6Jj15ZLRSc1OL9MaENGWH28zbz343iANLrBMKh3qNayTVifTtcqEB+Sog7Ad0ktIogD7kDBkkvlCFUAMqyvFUJR6BIzPe+bXn3Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 472E916F2;
+	Wed,  7 May 2025 08:54:43 -0700 (PDT)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A29E3F58B;
+	Wed,  7 May 2025 08:54:52 -0700 (PDT)
+Date: Wed, 7 May 2025 16:54:47 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: serial: Convert arm,sbsa-uart to DT schema
+Message-ID: <20250507165447.7e340d47@donnerap.manchester.arm.com>
+In-Reply-To: <20250506220016.2545637-1-robh@kernel.org>
+References: <20250506220016.2545637-1-robh@kernel.org>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,48 +40,93 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 7 May 2025 15:07:14 +0800
-Kassey Li <quic_yingangl@quicinc.com> wrote:
+On Tue,  6 May 2025 17:00:15 -0500
+"Rob Herring (Arm)" <robh@kernel.org> wrote:
 
-
-This patch is fine with me, but it needs to go through the scsi maintainers.
-
-I don't see them Cc'd.
-
--- Steve
-
-
-> In default it showed rtn in decimal.
+> Convert the Arm SBSA UART binding to DT schema. It is a straight-forward
+> conversion.
 > 
-> kworker/3:1H-183 [003] ....  51.035474: scsi_dispatch_cmd_error: host_no=0 channel=0 id=0 lun=4 data_sgl=1  prot_sgl=0 prot_op=SCSI_PROT_NORMAL cmnd=(READ_10 lba=3907214  txlen=1 protect=0 raw=28 00 00 3b 9e 8e 00 00 01 00) rtn=4181
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > 
-> In source code we define these possible value as hexadecimal:
-> 
-> include/scsi/scsi.h
-> 
-> SCSI_MLQUEUE_HOST_BUSY   0x1055
-> SCSI_MLQUEUE_DEVICE_BUSY 0x1056
-> SCSI_MLQUEUE_EH_RETRY    0x1057
-> SCSI_MLQUEUE_TARGET_BUSY 0x1058
-> 
-> This change converts the rtn in hexadecimal.
-> 
-> Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
 > ---
->  include/trace/events/scsi.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../bindings/serial/arm,sbsa-uart.yaml        | 38 +++++++++++++++++++
+>  .../bindings/serial/arm_sbsa_uart.txt         | 10 -----
+>  2 files changed, 38 insertions(+), 10 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/serial/arm,sbsa-uart.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/serial/arm_sbsa_uart.txt
 > 
-> diff --git a/include/trace/events/scsi.h b/include/trace/events/scsi.h
-> index bf6cc98d9122..a4c089ac834c 100644
-> --- a/include/trace/events/scsi.h
-> +++ b/include/trace/events/scsi.h
-> @@ -240,7 +240,7 @@ TRACE_EVENT(scsi_dispatch_cmd_error,
->  
->  	TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
->  		  " prot_op=%s driver_tag=%d scheduler_tag=%d cmnd=(%s %s raw=%s)" \
-> -		  " rtn=%d",
-> +		  " rtn=0x%x",
->  		  __entry->host_no, __entry->channel, __entry->id,
->  		  __entry->lun, __entry->data_sglen, __entry->prot_sglen,
->  		  show_prot_op_name(__entry->prot_op), __entry->driver_tag,
+> diff --git a/Documentation/devicetree/bindings/serial/arm,sbsa-uart.yaml b/Documentation/devicetree/bindings/serial/arm,sbsa-uart.yaml
+> new file mode 100644
+> index 000000000000..68e3fd64b1d8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/arm,sbsa-uart.yaml
+> @@ -0,0 +1,38 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +---
+> +$id: http://devicetree.org/schemas/serial/arm,sbsa-uart.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARM SBSA UART
+> +
+> +maintainers:
+> +  - Andre Przywara <andre.przywara@arm.com>
+> +
+> +description:
+> +  This UART uses a subset of the PL011 registers and consequently lives in the
+> +  PL011 driver. It's baudrate and other communication parameters cannot be
+
+He said "driver" in a binding document!! ;-) I think you can remove that
+part, or maybe rephrase it to say it could be supported by the same driver
+that supports a PL011.
+
+Other than that it looks alright, thanks for the conversion!
+
+With that fixed:
+
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+
+Cheers,
+Andre
+
+> +  adjusted at runtime, so it lacks a clock specifier here.
+> +
+> +allOf:
+> +  - $ref: /schemas/serial/serial.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: arm,sbsa-uart
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  current-speed:
+> +    description: fixed baud rate set by the firmware
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - current-speed
+> +
+> +unevaluatedProperties: false
+> diff --git a/Documentation/devicetree/bindings/serial/arm_sbsa_uart.txt b/Documentation/devicetree/bindings/serial/arm_sbsa_uart.txt
+> deleted file mode 100644
+> index 4163e7eb7763..000000000000
+> --- a/Documentation/devicetree/bindings/serial/arm_sbsa_uart.txt
+> +++ /dev/null
+> @@ -1,10 +0,0 @@
+> -* ARM SBSA defined generic UART
+> -This UART uses a subset of the PL011 registers and consequently lives
+> -in the PL011 driver. It's baudrate and other communication parameters
+> -cannot be adjusted at runtime, so it lacks a clock specifier here.
+> -
+> -Required properties:
+> -- compatible: must be "arm,sbsa-uart"
+> -- reg: exactly one register range
+> -- interrupts: exactly one interrupt specifier
+> -- current-speed: the (fixed) baud rate set by the firmware
 
