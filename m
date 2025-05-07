@@ -1,98 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B64C21322F
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 07:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603D71D61BC;
+	Wed,  7 May 2025 07:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746601570; cv=none; b=OOvuOwfdPCCHUmns2qEgAjzu6dOPSQ2n4Zqxa134Gi3xhGECw7Y7LmjrYRHLwyPqwAlPiLF4CB9Q30AqNHt2Y8NKETfnvuiqr7C6XN5sMXWwyFxWIYBBXJPOPB8AQTlDbjbRuXi0ePX/m+Ions4bi+61LMFBzpFi+Gp6gylUjio=
+	t=1746601597; cv=none; b=qasHV6IxuSbYuJx0Rg9w2dRRVrFjannp9YqSv4BCjRcu+vxmeIyRahaq0hZSKvByqrYJdoZkQeuz+izCUbclq1+nyR+84zet3LFVDk8yuA24hQcHytYLAerOUodkuzVTUMGuiNZ8FHUUDA2DKCTEFPi8WH9++5rIYaD0HRRCKbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746601570; c=relaxed/simple;
-	bh=FpwjGacwhaY9kZl59YWuCAhiL+olHRZOUpT5HisyEJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HGBEsdSL00FENx1tmEvxsK6YtPW6V97Uez9guNC7/bomBsWyyEk7sKZxjZhVacWGxrg6RvKxhilDNIjAvH+Uvt969OkUycpBaSIE8vmgm7AmX/cJtT8/zzKyDlhKxKB/ZYsE1nWmdXXxglMyJJkoBOsKhrYVWxrVgl8UVvfjZ90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ryOHF0Vl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746601597; c=relaxed/simple;
+	bh=0VP44LIsfvXHFLJCB9EqdA30bEZ2cAzjbZQOu7dK0lQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=TrkqlT+CvayTfZ/05F1zR4zJJqdmOXzN+dokTGr6Nabn91jATgiUVUw4iVBtDWH7pxd5GWD8UQGnLx+rZ3cm5G1vLq+eXC5gt2R/QGFEZ+TI6Wv0X5Sn8G2n5SGj4gP/9nqdiSZGuKjdJjk8v9SuLnkSW7WrUZMVWIcbQv8m/NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ByL42GEn; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ryOHF0Vl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73CCEC4CEE7;
-	Wed,  7 May 2025 07:06:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746601569;
-	bh=FpwjGacwhaY9kZl59YWuCAhiL+olHRZOUpT5HisyEJI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ryOHF0VlY+5ct3A928IV4oRJhllRsR+f/AYziw6maq+C58FF/+fAMk851I7ikHgRu
-	 wVEYoMNiAPxWD7I6G2nsKEN9XbXJy7EsO4PbaXIM9lVEaN8Kcq0MeNHjZ7Hm7e/TyA
-	 rJ0YFVtPtEl1Pfaw28Gvv3649vPwmcGP4Fm7fTKCfUDaZzM6vKLYkQIYBwMLFQBM3g
-	 A8sjcGZcUdjJ6+pqH/txhE75nO75pjFJOHaTqP2L5BVtw72tJI8p5yI5Hq8MLujzHu
-	 MannzQp7slurCqeHhu+ZAlzVKCoKSzhGUmb/ZydhR9njOpB4cUa7n5jyId3HsB57Eg
-	 u0t1zyGP4TyIw==
-Date: Wed, 7 May 2025 09:06:04 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Yafang Shao <laoar.shao@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: ardb@kernel.org, arnd@arndb.de, bp@alien8.de, dwmw@amazon.co.uk,
-	hpa@zytor.com, linux-kernel@vger.kernel.org,
-	michal.lkml@markovi.net, peterz@infradead.org, tglx@linutronix.de,
-	torvalds@linux-foundation.org, vkuznets@redhat.com,
-	yamada.masahiro@socionext.com
-Subject: Re: [PATCH 13/15] x86/kconfig/64: Enable popular scheduler, cgroups
- and namespaces options in the defconfig
-Message-ID: <aBsGXCKX8-2_Cn9x@gmail.com>
-References: <20250506170924.3513161-14-mingo@kernel.org>
- <9b31f1df-7dc6-468b-9418-0b13239df8bc@gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ByL42GEn"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471HmDc017086;
+	Wed, 7 May 2025 07:06:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	pwAXZ6oFJZA1jpvnUjc3W1LL1+v8v2BsGnfm0cjmKls=; b=ByL42GEnWmN7wdx3
+	XQ2hXEjh2B+GshswqW4Cm7AzWGz2A81BC8B+Qtl20bX+xzUG7gXh2S6QXJ9UROWA
+	JpCbcPldjza05Ku10axJXfCxGMOtrgzwOxkfg5Tjun3TDX4nHtcxbq7s4oMuygLI
+	TjbmhZduyNRNvdpXNpHh1oClWxtQSA8NmtD/Ai6cvBfmQm08tvZYvIO3EBVuWnDT
+	Mkc8VkxCmTg3aMo0Re6oE5zvw7zbHJ8A0gZ0nODPEAt5EE4IQ5oevk5JdD+AIC85
+	+FGVDAIPnajHQodNaXbnmu4fh6SXkm40a75w/ZFhSeq3g3jPRF9KwIJDiw2EsmHZ
+	UE+Qlw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5u44thq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 07:06:26 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54776PHO007795
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 7 May 2025 07:06:25 GMT
+Received: from [10.239.133.242] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 7 May 2025
+ 00:06:22 -0700
+Message-ID: <458a0c34-27a6-4aff-a6a7-0788af16359f@quicinc.com>
+Date: Wed, 7 May 2025 15:06:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9b31f1df-7dc6-468b-9418-0b13239df8bc@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/7] coresight: Add coresight TGU driver
+To: Trilok Soni <quic_tsoni@quicinc.com>,
+        Suzuki K Poulose
+	<suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>, James Clark
+	<james.clark@arm.com>,
+        Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        "Bjorn
+ Andersson" <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20250423101054.954066-1-quic_songchai@quicinc.com>
+ <20250423101054.954066-3-quic_songchai@quicinc.com>
+ <37df3ce3-2161-4c42-a658-d36fc4208ee8@quicinc.com>
+Content-Language: en-US
+From: songchai <quic_songchai@quicinc.com>
+In-Reply-To: <37df3ce3-2161-4c42-a658-d36fc4208ee8@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=KcfSsRYD c=1 sm=1 tr=0 ts=681b0672 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=S5aUIBQ7irhDI9zSZmMA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: -L4_WesosIgaq_09ZI61eil4cBlgvJP0
+X-Proofpoint-ORIG-GUID: -L4_WesosIgaq_09ZI61eil4cBlgvJP0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA2NCBTYWx0ZWRfX8wpPyfIxHx7X
+ EyBX2Oiba7KiYOSSMGziwzZYUqNdY9T+kF0bSI5W+XX1BP5q/78QSoRqO1kzw4MmcBZmpJA8lzr
+ 7fQpnajPoPMUR8waYeWRqGIlOdTsVTAwkoMwvMjgT4GM9VYGbcDo9pN03rXDm59ytRuoLwnaJ4F
+ Xd4vCz1DtGEFgFZHtMWhfiIcA7urck+mdgavwl6duKpniZscKFGHjmIVXh6QomjwzW69culeEZ0
+ Aon7NmvPsZru/pK0eHrAPT/7l8Ty8FFI5Sng4XbydbnxuCclgCuS6C/n0j4BpWQxA0LRt1ep3bU
+ t3jol6yO8w/sJRDP9ZLEobsCjnNqgoaWt0+vrrCIeRPpervgD1wcbgaARN9hT2x4k5C0y/EgM7j
+ xbSV0xVuNUAdvITxDTcPrk9uBDdG3zYdBvKvAwt/SyA2oIoK0p/3/rqW2u9IFUBLgcf2ENBQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_02,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 spamscore=0 suspectscore=0 bulkscore=0 mlxlogscore=954
+ phishscore=0 impostorscore=0 priorityscore=1501 malwarescore=0 adultscore=0
+ clxscore=1015 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505070064
 
+Thanks for reminder, Trilok.
 
-* Yafang Shao <laoar.shao@gmail.com> wrote:
+Will pay attention to it in the next version.
 
-> Hello Mingo,
-> 
-> > +CONFIG_VIRT_CPU_ACCOUNTING_GEN=y
-> > +CONFIG_IRQ_TIME_ACCOUNTING=y
-> 
-> Enabling CONFIG_IRQ_TIME_ACCOUNTING=y can lead to user-visible behavioral
-> changes. For more context, please refer to the related discussion here:
-> https://lore.kernel.org/all/20241222024734.63894-1-laoar.shao@gmail.com/ .
-
-Yeah. I actually agree with your series. It (re-)includes IRQ/softirq 
-time in task CPU usage statistics even under IRQ_TIME_ACCOUNTING=y, 
-while still keeping the finegrained IRQ/softirq statistics as well, 
-correct?
-
-The Kconfig option is also arguably rather misleading:
-
-config IRQ_TIME_ACCOUNTING
-        bool "Fine granularity task level IRQ time accounting"
-        depends on HAVE_IRQ_TIME_ACCOUNTING && !VIRT_CPU_ACCOUNTING_NATIVE
-        help
-          Select this option to enable fine granularity task irq time
-          accounting. This is done by reading a timestamp on each
-          transitions between softirq and hardirq state, so there can be a
-          small performance impact.
-
-It only warns about a small performance impact, but doesn't warn that 
-CPU accounting is changed in an incompatible fashion that surprises 
-tooling...
-
-But I think we should probably treat this as a bug, not as lack of 
-documentation. Peter, do you concur?
-
-> If we decide to enable it by default, we should clearly document this 
-> behavior change. Below is the patch I wrote earlier but haven’t sent 
-> out for review yet.
-
-Note that it's not enabled by default - this patch is just about the 
-x86 defconfig.
-
-Thanks,
-
-	Ingo
+On 4/25/2025 12:32 AM, Trilok Soni wrote:
+> On 4/23/2025 3:10 AM, Songwei Chai wrote:
+>> +Date:		February 2025
+> If you are sending new revision then please update month and kernel version.
+>
+>> +KernelVersion	6.15
+>> +Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Sam Chai (QUIC) <quic_songchai@quicinc.com>
+>
