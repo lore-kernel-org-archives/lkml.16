@@ -1,52 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918E372632;
-	Wed,  7 May 2025 21:59:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0950428CF59;
+	Wed,  7 May 2025 21:59:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746655160; cv=none; b=oFaXD2RlIKaEbByQPsMLkxBITvdKyKoctQhro/6Tj0GSkEZ4qsInRA7jtnAWugWPi9lt4hV8en0gLcU+Iho81gL7ZgjdFVDQ34OSnBnKQUHM3chhHHSJLXU1y+g8PTpGO8+JmhQ1lLALdLcLKtDas0abZNBslHVLHQx7W6k7wis=
+	t=1746655181; cv=none; b=rLaH8iwYafd9jrZnGnwIxu8WMVpVTI/iVUh/wln4IcyLih18s84w6WpCHFCrtnr9ZxUAmF08o3FwrgOcaC0oAcCz/rcP+E9AT8qYwb08Y+FRs2XCPiuCJvYicwqkf9zcdGZrRS4PvIv0huBamYd2LYdJHeLAoR+AK+nRjK5X5AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746655160; c=relaxed/simple;
-	bh=Cni/pdWt9cIp+mXSH/rdXfKlwgkpc0+yATONdzAnZ/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F0goMZNB5tPr09SIQhJ5bKQP+2OS9o6wbpfRTQh+u5YS8dw8Xo77Um9+MHQg4go/twEOIpo7G1ZE5CuS8St/uo2dCJUtdmsTYbE/YAudNT9nUr+mGfOq6roFSFVaajR+dT0GJjN84shH9mlzrNCuTI6NkpvTxTU2ycKLLn08ex0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=et2XrWBc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746655181; c=relaxed/simple;
+	bh=TT+ZhlfU17P7rtGMqpc/JbcqHghTj5R4sNFzYpzUxJ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F3vy+wsKMdyg9vZoRzuakOxEPSAj7G7Gf8CeN5/vt+YGVCx5iBYY5ZFHWB26HVxP4CbglR85zcgLvBZRggqCTWZvQTOOUyn15ZL0aLlZiJ0xxWLbwOxbAgWS+Q3PAkKEaV/9JC1T73bdC6k72sZm4nVDw9a6kht0j4kGq13oeYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8n96NQk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="et2XrWBc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3041C4CEE2;
-	Wed,  7 May 2025 21:59:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8n96NQk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33F8EC4CEE2;
+	Wed,  7 May 2025 21:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746655159;
-	bh=Cni/pdWt9cIp+mXSH/rdXfKlwgkpc0+yATONdzAnZ/k=;
+	s=k20201202; t=1746655180;
+	bh=TT+ZhlfU17P7rtGMqpc/JbcqHghTj5R4sNFzYpzUxJ4=;
 	h=From:To:Cc:Subject:Date:From;
-	b=et2XrWBcXB0vQxxivC3De8795+Bcn71ukrJG8s/ytct8YVrQJtRd3h2BjreH2Nywv
-	 MWkJfnAxgfYHvL/1M+6epLXyjjqzg3qgbA429FyR9H646S/56Ax2WfcDxBVkdI7Imb
-	 0PFSxw7hfHM5B4an/L8UGw/bMVcBs2jqupntMaGMtNhlRtye8QW37guotxPHPYv6xy
-	 Agc1vIDuB2ROE3XZRUxie7rqSDYWkJUxhzxktqaVga4cBAspCj3B+602P3Ozi3C7LH
-	 YnkWMW/sl1FD5yYJ4cQmuXg2iyZILTamXmejfNHDJcD4v0EnqiE70uw02tXjAH5BHv
-	 figz6GvjKR8CA==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Rob Clark <robdclark@gmail.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: display/msm: hdmi: Fix constraints on additional 'port' properties
-Date: Wed,  7 May 2025 16:59:12 -0500
-Message-ID: <20250507215912.2748964-1-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	b=r8n96NQkUiRI3LGb/gIPV4wQm61WsdAnrOvwvUdFZS+KqnUYhlZr0tTuQZ1pmWVLd
+	 uPswdv+rGVFfKMr3beKywCm9eZJRK4iKg5PjLZ42hBGmNgm3ybzpHToQS/BtEZoDK7
+	 Ts/qUMX5RRemF9HNfKDeK2OaS3M7cGsUeO8Ddf3VTplyKpmHMJratmsExejCneNo0W
+	 kAjhgIzL/VrCeKs2scSNKKkfjLqpXLF18ikCFV+Nq69dslFuf+AJP9sjSvV5jgwhmk
+	 WDsOClkppvXNgsprWadMdu8clNAwICf49+FTvEqTApZbOZMXpSOEZ6tI39IaeSt8t4
+	 wbasAVIlODQEQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v2] perf pmu: Use available core PMU for raw events
+Date: Wed,  7 May 2025 14:59:39 -0700
+Message-ID: <20250507215939.54399-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.49.0.987.g0cc8ee98dc-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,35 +47,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The MSM HDMI port nodes are missing any restrictions on additional
-properties. The $ref should be to "/properties/port" rather than
-"/$defs/port-base" as there are not additional properties in the nodes
-to define.
+When it finds a matching pmu for a legacy event, it should look for
+core pmus.  The raw events also refers to core events so it should be
+handled similarly.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+On x86, PERF_TYPE_RAW should match with the existing cpu PMU.  But on
+ARM, there's no PMU with the matching type so it'll pick the first core
+PMU for it.
+
+Suggested-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- Documentation/devicetree/bindings/display/msm/hdmi.yaml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/pmus.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/hdmi.yaml b/Documentation/devicetree/bindings/display/msm/hdmi.yaml
-index d4a2033afea8..099274d35680 100644
---- a/Documentation/devicetree/bindings/display/msm/hdmi.yaml
-+++ b/Documentation/devicetree/bindings/display/msm/hdmi.yaml
-@@ -89,12 +89,12 @@ properties:
-     $ref: /schemas/graph.yaml#/properties/ports
-     properties:
-       port@0:
--        $ref: /schemas/graph.yaml#/$defs/port-base
-+        $ref: /schemas/graph.yaml#/properties/port
-         description: |
-           Input endpoints of the controller.
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index b99292de76693dbb..3bbd26fec78a10e2 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -727,14 +727,21 @@ struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
+ 	legacy_core_type =
+ 		evsel->core.attr.type == PERF_TYPE_HARDWARE ||
+ 		evsel->core.attr.type == PERF_TYPE_HW_CACHE;
+-	if (!pmu && legacy_core_type) {
+-		if (perf_pmus__supports_extended_type()) {
+-			u32 type = evsel->core.attr.config >> PERF_PMU_TYPE_SHIFT;
++	if (!pmu && legacy_core_type && perf_pmus__supports_extended_type()) {
++		u32 type = evsel->core.attr.config >> PERF_PMU_TYPE_SHIFT;
  
-       port@1:
--        $ref: /schemas/graph.yaml#/$defs/port-base
-+        $ref: /schemas/graph.yaml#/properties/port
-         description: |
-           Output endpoints of the controller.
- 
+-			pmu = perf_pmus__find_by_type(type);
+-		} else {
+-			pmu = perf_pmus__find_core_pmu();
+-		}
++		pmu = perf_pmus__find_by_type(type);
++	}
++	if (!pmu && (legacy_core_type || evsel->core.attr.type == PERF_TYPE_RAW)) {
++		/*
++		 * For legacy events, if there was no extended type info then
++		 * assume the PMU is the first core PMU.
++		 *
++		 * On architectures like ARM there is no sysfs PMU with type
++		 * PERF_TYPE_RAW, assume the RAW events are going to be handled
++		 * by the first core PMU.
++		 */
++		pmu = perf_pmus__find_core_pmu();
+ 	}
+ 	((struct evsel *)evsel)->pmu = pmu;
+ 	return pmu;
 -- 
-2.47.2
+2.49.0.987.g0cc8ee98dc-goog
 
