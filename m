@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94253235362;
-	Wed,  7 May 2025 07:58:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91F5221DB2;
+	Wed,  7 May 2025 07:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746604699; cv=none; b=fKflHGIiUTJA2SQI+0NREHGwuCwG47PxI6lh8SZoozkDbUVU9qkew8N65QelapYg1hUdrrIY5QFutpJ2VIQHHxYlPd332q2CEqGkLGkOAxW6tTQ8ZxfxzPcM1DjhkyQsmg77IPJvACtkHGFTAUBMNyFyLquGQyLRdf3dORQ4dOI=
+	t=1746604700; cv=none; b=fnWrTzdQxKr3EtYcnwrKSkR57KsTDVnSeS7vOb7NYlSmP0WN6GrGxzcmQU0UR+kiHnAw4llXQh8Kn4TJDN8OzhY/gJUIpUTk1/NhgOBCyEfJwUwuhZ6BWCTHzUuW4Hqz73Dy7lRERj1Y5LPRAsOnIoipVBG2UtbmeHC9uodQsn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746604699; c=relaxed/simple;
-	bh=EAFoBx47XIH4Wfci77huexky9RtpfvlGW1ApOOp3Lqc=;
+	s=arc-20240116; t=1746604700; c=relaxed/simple;
+	bh=/CA2wRXmd9QRjouZ5bpvj9Lter1b2zaaompOiAUkZuo=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=lCdyTmLdtl++ql+TXKMeojn4M/P7pOYoJtbW+xUHvGdpHheWnnKxOGX6MpO4xgej0l4luqElvS1wt0eap3T/G329lxIzHQM73YWqkMf7rTinxsDItMdCjMVGdKmdmsMfy6tRRZTcDRlszX/RYswKoRhN+snlW4mB5g2Lh80GDCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FY1+Da+q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EME0cFbp; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=kkEMpZhvTrJf7gFj45YcxNsO/untYqaYWm8HxTPRtMumubvMpoLFLPCY9cc3fVHW3mOt8wgoT7ifkSnfTD6vUB0XO6IbGHQi75V854k3IC1xNGdcgzCqH/PIWxtMjWn4gV/p6hRrOOBwF0hZmKpXjecFRUKGIg/x0eiuiZizqV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QIU+hVIp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WXoy+BoV; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FY1+Da+q";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EME0cFbp"
-Date: Wed, 07 May 2025 07:58:14 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QIU+hVIp";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WXoy+BoV"
+Date: Wed, 07 May 2025 07:58:16 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746604695;
+	s=2020; t=1746604697;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xZgyd7iyNMHcCGsLiuD3QYfPizeFiTMUHr+h+gL/0o4=;
-	b=FY1+Da+qAiHTl5oufDftUpVMNCnzS2605Oui1Di3HnF6fpXMXpmjQur1pmB9fLYndtUC8Y
-	IqbRh4TLvAqW8iT8O85Opau2a274j6aLKnP4Gn+A7E7Vmez8bsxMB8RhmKShaT5imQdx25
-	U3Ah6i4YZQB+X+RquyHbbReQEGvzE0UZYMgbbzBjpVVh9KX4H2ucZaNIHRetOlMhoDg3pa
-	CH22EknEhx+MpcpBHtzg1GAQ+yy78Z9s4+1jDALFedyjtSk52jSF5hHxc1c/H27PF4F6Xe
-	m8U+NmNjE0waCB10Spxz1lc4lzcBRyLxalYA//DS2c0DQlX6BzJA7ZiAl6hhvw==
+	bh=kkwicZIO6+q8EIXJL3H09GDABrLaWA3pum3ayG/bXWs=;
+	b=QIU+hVIpZ55pyTlEuSd1q9u0Y/LG0ROMd/FzK5ebCrCojDcXA3/R6aw2ZNOjzcHEXf4uRx
+	RJ9AtJL/LW2hICBR5MWSSdWzDoUdU41h9PBYiAD0cqnB8TYRgMPT2PUJpeollwDz5Nmozh
+	CDkk08zxq7W8f6EN0gOtFj+0hm8hx16yU4NYH0jofB7+CuVwSy5bjLCW5/+bI565bQ5w4Q
+	NO3RKJu6UVUz3ALhDI3CdeiD3K3eTxpxWaNRNjpeh9S5Onz8FfbeDDfliq4WCU9LSw6WKX
+	hjlTqpHXOOJ7nkL2uNNSMpAgQb1F/ZT4Jir6tW2jq/CXfjPjHGuvX4x/Pbhtsg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746604695;
+	s=2020e; t=1746604697;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xZgyd7iyNMHcCGsLiuD3QYfPizeFiTMUHr+h+gL/0o4=;
-	b=EME0cFbpji7r+8CRDvsUwhcEjO5fGLRlXU/GchymTaNcDSXg0hO9O/YpoZGyO/0zzFSSxy
-	DKu7ZZmvpwNm8IBQ==
+	bh=kkwicZIO6+q8EIXJL3H09GDABrLaWA3pum3ayG/bXWs=;
+	b=WXoy+BoVs4BiA5WK38is2cbtSdKFq97gAenKjm1EZavN+ODbtzzVzzwBst1nKENht+CcNf
+	dwAkefND1/cPcTAA==
 From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/cleanups] ARC: Switch to irq_domain_create_linear()
+Subject: [tip: irq/cleanups] x86/io_apic: Switch to of_fwnode_handle()
 Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
  Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250319092951.37667-14-jirislaby@kernel.org>
-References: <20250319092951.37667-14-jirislaby@kernel.org>
+In-Reply-To: <20250319092951.37667-11-jirislaby@kernel.org>
+References: <20250319092951.37667-11-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174660469426.406.10866979434291357053.tip-bot2@tip-bot2>
+Message-ID: <174660469650.406.2516302492664269760.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,78 +67,39 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/cleanups branch of tip:
 
-Commit-ID:     8afd2253df98c9d3d1baae662f51bdea17fd101e
-Gitweb:        https://git.kernel.org/tip/8afd2253df98c9d3d1baae662f51bdea17fd101e
+Commit-ID:     bd7833adad5037ea3690e64b11892f90f1b50878
+Gitweb:        https://git.kernel.org/tip/bd7833adad5037ea3690e64b11892f90f1b50878
 Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Wed, 19 Mar 2025 10:29:06 +01:00
+AuthorDate:    Wed, 19 Mar 2025 10:29:03 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 07 May 2025 09:53:22 +02:00
+CommitterDate: Wed, 07 May 2025 09:53:21 +02:00
 
-ARC: Switch to irq_domain_create_linear()
+x86/io_apic: Switch to of_fwnode_handle()
 
-irq_domain_add_linear() is going away as being obsolete now. Switch to
-the preferred irq_domain_create_linear(). That differs in the first
-parameter: It takes more generic struct fwnode_handle instead of struct
-device_node. Therefore, of_fwnode_handle() is added around the
-parameter.
-
-Note some of the users can likely use dev->fwnode directly instead of
-indirect of_fwnode_handle(dev->of_node). But dev->fwnode is not
-guaranteed to be set for all, so this has to be investigated on case to
-case basis (by people who can actually test with the HW).
+of_node_to_fwnode() is irqdomain's reimplementation of the "officially"
+defined of_fwnode_handle(). The former is in the process of being
+removed, so use the latter instead.
 
 [ tglx: Fix up subject prefix ]
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250319092951.37667-14-jirislaby@kernel.org
+Link: https://lore.kernel.org/all/20250319092951.37667-11-jirislaby@kernel.org
 
 ---
- arch/arc/kernel/intc-arcv2.c   | 2 +-
- arch/arc/kernel/intc-compact.c | 5 +++--
- arch/arc/kernel/mcip.c         | 3 ++-
- 3 files changed, 6 insertions(+), 4 deletions(-)
+ arch/x86/kernel/apic/io_apic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arc/kernel/intc-arcv2.c b/arch/arc/kernel/intc-arcv2.c
-index fea29d9..809edc5 100644
---- a/arch/arc/kernel/intc-arcv2.c
-+++ b/arch/arc/kernel/intc-arcv2.c
-@@ -170,7 +170,7 @@ init_onchip_IRQ(struct device_node *intc, struct device_node *parent)
- 	if (parent)
- 		panic("DeviceTree incore intc not a root irq controller\n");
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index eebc360..487992c 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -2225,7 +2225,7 @@ static int mp_irqdomain_create(int ioapic)
  
--	root_domain = irq_domain_add_linear(intc, nr_cpu_irqs, &arcv2_irq_ops, NULL);
-+	root_domain = irq_domain_create_linear(of_fwnode_handle(intc), nr_cpu_irqs, &arcv2_irq_ops, NULL);
- 	if (!root_domain)
- 		panic("root irq domain not avail\n");
- 
-diff --git a/arch/arc/kernel/intc-compact.c b/arch/arc/kernel/intc-compact.c
-index 1d2ff1c..1b159e9 100644
---- a/arch/arc/kernel/intc-compact.c
-+++ b/arch/arc/kernel/intc-compact.c
-@@ -112,8 +112,9 @@ init_onchip_IRQ(struct device_node *intc, struct device_node *parent)
- 	if (parent)
- 		panic("DeviceTree incore intc not a root irq controller\n");
- 
--	root_domain = irq_domain_add_linear(intc, NR_CPU_IRQS,
--					    &arc_intc_domain_ops, NULL);
-+	root_domain = irq_domain_create_linear(of_fwnode_handle(intc),
-+					       NR_CPU_IRQS,
-+					       &arc_intc_domain_ops, NULL);
- 	if (!root_domain)
- 		panic("root irq domain not avail\n");
- 
-diff --git a/arch/arc/kernel/mcip.c b/arch/arc/kernel/mcip.c
-index cdd370e..02b28a9 100644
---- a/arch/arc/kernel/mcip.c
-+++ b/arch/arc/kernel/mcip.c
-@@ -391,7 +391,8 @@ idu_of_init(struct device_node *intc, struct device_node *parent)
- 
- 	pr_info("MCIP: IDU supports %u common irqs\n", nr_irqs);
- 
--	domain = irq_domain_add_linear(intc, nr_irqs, &idu_irq_ops, NULL);
-+	domain = irq_domain_create_linear(of_fwnode_handle(intc), nr_irqs,
-+					  &idu_irq_ops, NULL);
- 
- 	/* Parent interrupts (core-intc) are already mapped */
- 
+ 	/* Handle device tree enumerated APICs proper */
+ 	if (cfg->dev) {
+-		fn = of_node_to_fwnode(cfg->dev);
++		fn = of_fwnode_handle(cfg->dev);
+ 	} else {
+ 		fn = irq_domain_alloc_named_id_fwnode("IO-APIC", mpc_ioapic_id(ioapic));
+ 		if (!fn)
