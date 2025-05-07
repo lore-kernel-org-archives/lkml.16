@@ -1,92 +1,98 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD1328C00D;
-	Wed,  7 May 2025 16:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD7B28B401;
+	Wed,  7 May 2025 16:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746634445; cv=none; b=YL8mGEo5MsC7Te2yA2PiQw4xBdrlmSIrsKiPyjG8bVAMwtuE4020ahzmWBS2grObQ9/trOqci+aa+oggdPUiNA3zoQ/7JNnuNTaCVOoZ4rOOoH7V0aK6RW0P4Eyw26Z5wkOUvqsbpO5xyvnoG3TCIqpWBsheIKFbIspJoFMcaA0=
+	t=1746634450; cv=none; b=ZdqyKcBOHVQMy2yhFbOvtG5JeO59u63+bzYEPXA8VJt1ag8vbxvs9hMukjYjBsvsJahIoFHTnhS7bj5lja747oG580K8T2EinufuUnVpDMmCfPhtqfkZ06muien86SjssJpxHYc2ZRBck4FkET16e/25lw9neIukut3b3o9NBD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746634445; c=relaxed/simple;
-	bh=UKO/g83ghC3Bu1DE8s6oQ5sS7O3tZvT5JVduKAolUys=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WdlfAMJX5CvA3F18gHkLDiQ9nGO8MTdIIMCcTVqndPLmHdvpLyiH0XZW7HlEaZhDslapnJFbx7xCjf0eQk3s0usuntevim7oANRVjgNwvWSm7fPYEAxjs0a6xrs/9NH3AFqOPIfyj1mgVI1ElYf6rYIZ1XR/nWSXlRNqRdgqNEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=Se9SVE5g; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1746634450; c=relaxed/simple;
+	bh=2MVV8xINyxCNm/DS575JJnXRJ+nCXL26E2Elr/M0Iw4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fS4OvXUGnwh68q7vIO5p4QHSvcIb5xXvIKNdNxZFGTtD0A8fv579W8eHgnRGgNA0qThqGLJ59m+RjomK5MIBvEqOsT2HFnNHTaaW4AIoPIxhdsq3zGUM5y+q8tgyB1G+gEUk73jvk83wx080HOtcCMzb0lpk4ndx1UFZpsIy5mI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KU1N0ClI; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="Se9SVE5g"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=MqGIOCVMPo1HNFOMfB65N3JXumwu7kUo9lvLDc+biAw=;
-	t=1746634444; x=1747844044; b=Se9SVE5g/GmuCEJmJymENdPpXSpY/h6V7LglPGu0yMubI5Q
-	Zr8zvugwMdeQCs1AAQStHbZj/k6XO1shNS5l4yKifk7fTqyA+m7YaXDY6jjHfO2/zSJEjITCv7t4O
-	MYQxCR3t2Dpq0xnA5pBU+yhRx1NwNznS45SvgvRAP83b8kJAHFVSAuog8vmR+2XlfTPEUCOrtxlQv
-	xlday0DlTifsa2gXwt6osMZcOL3osTHr0/iabYCEiJmyENi2bFVI6Mnl83F3ZBkK8IxCFfQIvpxKw
-	WTjbfbFxiH3GhTUz43cu+NpSdPCzyigUO40EkQKCM337HeKHJ4hiYut7kowvWu9A==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.1)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uChPE-00000008Jel-2P8T;
-	Wed, 07 May 2025 18:14:00 +0200
-Message-ID: <7a92e3eb5947837d16f8b7f1adec9ffc4fda397d.camel@sipsolutions.net>
-Subject: Re: [PATCH] um: let 'make clean' properly clean underlying SUBARCH
- as well
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>, 
- Anton Ivanov <anton.ivanov@cambridgegreys.com>, Richard Weinberger
- <richard@nod.at>, 	linux-um@lists.infradead.org
-Date: Wed, 07 May 2025 18:13:59 +0200
-In-Reply-To: <20250507074936.486648-1-masahiroy@kernel.org>
-References: <20250507074936.486648-1-masahiroy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KU1N0ClI"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e78e3200bb2so47052276.3;
+        Wed, 07 May 2025 09:14:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746634447; x=1747239247; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ilTmrFewRq0VMvQLuBvVxexC2kYGKl/rJuTFHOR7rQk=;
+        b=KU1N0ClIDQpVLhCsIRMLUafm2ej9SfQ/RlfWCCN5Q18406QJ9PJ/E6nNH1GApDuW88
+         W1anXhwqi4yyPu+Qigb65jGOxqscp2QJmzti0iI2wCWHPHJv9pS/sRd9ix9hHgL4AQZX
+         goZ3LRjZkVQS97BZzhPjhrNV64FaphPGcpL8u1wYNHeZ/VlEn3kThzvEVyOUCXSP6IcR
+         YmrEItm7UZsEmSD0NPa7NWPStnZksXNy8qNlWN019Jlavdd7ncfV41QrkpxKp88gjayi
+         6IzERaTV4AS5my12Knw0BDLtmt3YhX9/VebaWnWNlmvh1q/QQ6dNcjilHrIXdWNWO/sE
+         6e/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746634447; x=1747239247;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ilTmrFewRq0VMvQLuBvVxexC2kYGKl/rJuTFHOR7rQk=;
+        b=RrrD85jL2/yqnWkmVjhbk65W+5G85LaXdySGEOLTvcGj/M59yVfJhLyXUZvDWjSbMZ
+         nsv2HshAN210XQ1Jr+VE6pdIQZcMUujQdOUfWw173lheREKKZdK/LGA9Y/5XokwRvipW
+         JUVcp5nfkURvIl1xi+PIPNtS3UnGmccEaJ8nollu+Fh96gMmfbYDOxscPQslXz6AFx5s
+         p9omm0v6Qvt/hSpfSjKm+1EUitndwFQckaWPARDasOGsTF9aqWXZZYfzcNAGxRA1FZnp
+         udXdWp0anFoc4HMyrRa71wqGV1lcA/8ft79baF4n4yJ4i+g50oeMzh/6zPx1RwBO71Rr
+         etNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUg3oGO6RSFC1c8xNCk4YnTCdruYMQNdYrVYMAhP+kpMtV8+nZRtMkUxnxeM/fHn6u4p16V/IvM@vger.kernel.org, AJvYcCWh2eDO9pqJNzqIPomkhD978pvhKjoAgDr9N1FRDI46nqP9sgVO875wQOAZZV1FI/hoJPiNlznomRgD/Gs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTQTmlxZ9T0m9b0l2jViTIETU3nCtg5IaqEBvj/vO5c3+ui19R
+	vdFz0Zmtdinq/NVyE1isjWvPGF+H8Yt3F2Yx84CJDri10x0GQJkl08QZiB7sB2EzQkq1Tuvnmz2
+	4dJdNJtazzdQXDIe+hxc6aNcnfA==
+X-Gm-Gg: ASbGncsg+B3sKlzELgYhjeMuIAxOhguwQeJ0qaMrtMFHCzU9dHZhNE5tBg1r8v5I/qO
+	ahzt/DrHAcAzVDQvxZIlhcWZIj7HxsNORV6TL0djZEhpwdOI8KSlPguLB3vlv0NPeAIJDJhLQrj
+	oftmD9GGN65Y5Gbd3fMDfJ22rM0FcOQ89bmDoz266RR9k1u2WUsXPr41yricNUHqHECg==
+X-Google-Smtp-Source: AGHT+IE8pK7i1kt1Hdo2bzTWVwb0MpJS9kz4YeaspNF3UemE633NGvAFwz2d2ctRmJQGwYBYHMhb8/QvfYDcrBVbAPo=
+X-Received: by 2002:a05:6902:1882:b0:e72:eed4:ff91 with SMTP id
+ 3f1490d57ef6-e78810d203amr4707494276.24.1746634447424; Wed, 07 May 2025
+ 09:14:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+References: <CALjTZvYKHWrD5m+RXimjxODvpFPw7Cq_EOEuzRi1PZT9_JxF+g@mail.gmail.com>
+ <CALs4sv2vN3+MOzRnK=nQ_uMXbR4Fi8xW9H8LdX79vYA7tHx+2g@mail.gmail.com>
+In-Reply-To: <CALs4sv2vN3+MOzRnK=nQ_uMXbR4Fi8xW9H8LdX79vYA7tHx+2g@mail.gmail.com>
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Wed, 7 May 2025 17:13:56 +0100
+X-Gm-Features: ATxdqUFB6URjFpy44M0SJum4t6pDOiD8FK8mxckY_gJ-grbPxIxF4oj0UAjwz6o
+Message-ID: <CALjTZvbopTcm9P7Hp1ep54R3_7yODg7r4j=OR2y3WOA1X84e2Q@mail.gmail.com>
+Subject: Re: [REGRESSION] tg3 is broken since 6.13-rc1
+To: Pavan Chebbi <pavan.chebbi@broadcom.com>
+Cc: mchan@broadcom.com, kuba@kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 2025-05-07 at 16:49 +0900, Masahiro Yamada wrote:
-> Building the kernel with O=3D is affected by stale in-tree build artifact=
-s.
->=20
-> So, if the source tree is not clean, Kbuild displays the following:
->=20
->   $ make ARCH=3Dum O=3Dbuild defconfig
->   make[1]: Entering directory '/.../linux/build'
->   ***
->   *** The source tree is not clean, please run 'make ARCH=3Dum mrproper'
->   *** in /.../linux
->   ***
->   make[2]: *** [/.../linux/Makefile:673: outputmakefile] Error 1
->   make[1]: *** [/.../linux/Makefile:248: __sub-make] Error 2
->   make[1]: Leaving directory '/.../linux/build'
->   make: *** [Makefile:248: __sub-make] Error 2
->=20
-> Usually, running 'make mrproper' is sufficient for cleaning the source
-> tree for out-of-tree builds.
->=20
-> However, building UML generates build artifacts not only in arch/um/,
-> but also in the SUBARCH directory (i.e., arch/x86/). If in-tree stale
-> files remain under arch/x86/, Kbuild will reuse them instead of creating
-> new ones under the specified build directory.
->=20
-> This commit makes 'make ARCH=3Dum clean' recurse into the SUBARCH directo=
-ry.
+Hi, Pavan,
 
-Do you want to take that through your tree? I'm not sure we'd get it
-into 6.15 at this point via uml, if you have some other material feel
-free to take it:
 
-Acked-by: Johannes Berg <johannes@sipsolutions.net>
+On Mon, 9 Dec 2024 at 16:30, Pavan Chebbi <pavan.chebbi@broadcom.com> wrote:
+>
+> Thanks Rui for the report. Sorry, I did not expect this side effect.
+> I will check and post a fix/revert patch.
 
-Otherwise we can take it via uml tree for 6.16 too, let us know.
+Any news about this? The patch you sent me off-list is most definitely
+required for my machine's tg3-supported Ethernet controller to work at
+all. I reverted it and did a quick test build, the result being...
 
-johannes
+rui@happymeal:~$ uname -a
+Linux happymeal 6.15.0-rc5+ #169 SMP PREEMPT Wed May  7 15:05:44 WEST
+2025 x86_64 x86_64 x86_64 GNU/Linux
+rui@happymeal:~$ dmesg | grep tg3
+[    1.226623] tg3 0000:01:00.0: Unable to obtain 64 bit DMA for
+consistent allocations
+[    1.226718] tg3 0000:01:00.0: probe with driver tg3 failed with error -5
+rui@happymeal:~$
+
+
+Kind regards,
+
+Rui Salvaterra
