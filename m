@@ -1,696 +1,254 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761D121504D;
-	Wed,  7 May 2025 11:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746615792; cv=none; b=eqBZCRXkQ7Qy4mZEd42KBVlT2xkkkR+eTRK/wacdZSaqjy1KxsbImC5RZZWjfapaiPTZmPeiyyO2PFYMC8ZQOdC+LfFxFm9lR2Nu3FmhHBJhPkcON59Z2NtrQGV8aqkz3gj3DBBdKAPeMrRs0HarJ9KIXr+JodxpELGhnKwqiTo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746615792; c=relaxed/simple;
-	bh=r0E/6u4JWkefuT+mFl4Ms/omJqZxnIW/IFr6MMSs/bk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=thT47FPmUX30wzkAGIgpYlj9/rs2Jnh5s2Rqzy/Ofk4z4oiyReUQBOwQb0shdxFwozwFwRxAR4Erl3tzetW+vamgZOlG36JMamSERcIv+8ov6HLn9Nvm+xWTqak+lt8qQDdlD7sNziGMQg0WijVXRRAEVp4VZtU0Kw9STgm+xeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=iRvrMwOX; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06650215F49;
+	Wed,  7 May 2025 11:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746615883; cv=fail; b=JMcwVaREoA85HgyfuTW3AHspHDLQmFjqgF0L5JgydSa9Wo2Y01ESUOjAAoKc9vAjNiBIUHWTV1B4Kw5G7eQTfr0e+uWxqmUMcv5w+LT1xSWlD2H36JOeD7du8bcfdZnonLNY1n8Fdxhd+hvKJPxx76JULpYZuRERgisI0gzKZkg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746615883; c=relaxed/simple;
+	bh=K9T/wVVLV8cNRXHBSr/FaW5aLK5Geea7NU3v8/pRCio=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sZs0flL5OGMHeFVXKLunWfbX4QvC+5x6F+7A67jG/Mq/1y3Ejq5BQ+Lr96+I14gPQSz2dEBxFRgIE8gChJBU7heOFm36kJOaJbFt9M7oo2Mbfpf9Ym2zsvf8FmN5qqILNw8hmy0wyYXDBAPqS54TKw9nwBt8S54GaH+ewkabxRU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ZvhRGheV; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=C9EwmNVs; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="iRvrMwOX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Cc:From:References:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=AWNHa3xgd3Sr/ggkT06X81rSZJFRU/DXIKiItzUVpq0=; t=1746615789;
-	x=1747047789; b=iRvrMwOXGv0IwFHeTLndl2rppT3ogcWR1zd6o0cmPwYa3vMQqkLZsBml9467+
-	VZLih+UGaYoUnZP74RmVuBW7t0OOYmOFkQ6vwD4O8S+Mhw7AxRxCZHRNFv7mt1dNymAQArvrKEt6f
-	mtpWdASJIf5CmlTEV37ncIbjwk32fJRxZBexkjNlwb7gTOr9jVA+TXe1SApuWfQIMyw5SP2nLwo5o
-	Vm/XmeTR/H2AFGBGqxNI/ZMCfKsrwCLMpACsbZB4yNObYCj3WqPS3Z7UdJcgAA2qYis4u0Fv7m5uo
-	iV20zhwApVnW5X8UlhC8zybOT2YRZx35IyiNhjN+1RjYul1g0Q==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1uCcYM-000gC8-2e;
-	Wed, 07 May 2025 13:03:06 +0200
-Message-ID: <242ebbf1-4ef0-41c3-83cb-a055c262ba4a@leemhuis.info>
-Date: Wed, 7 May 2025 13:03:06 +0200
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZvhRGheV";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="C9EwmNVs"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 547A77UV016464;
+	Wed, 7 May 2025 11:04:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=rahkyNLXBWHQwG9Mnt5zLDF/RjGw1PYJNiw9Os1ziUE=; b=
+	ZvhRGheVmvoBF0kayaqf+/9t4LMjLoqUCd/m45ZI/jq2/84FsGrusxA1d8RVPrFn
+	FbdDF0cYYbdKR0wzpZVUPfVU+fkwO9hv+mAPy2afU1HB2jG7esX3kDjAVKxV7EZW
+	BZqIMcslOgQ739fqlQ6wMERlELmdp1GbjeQs32GFrYH/XTYzDnnlxI4E+gnUpgVn
+	wxvfiJhhoACnmwLFxAwcmPs2KS3Obx0g7SzC93Dp7vqKuT9UQk/2/1m6AilD4npm
+	Y4NzhTOcxPtJFpACgeKNfNSOZuzeV2VuYKKCa+q2rRT914WEoClM3wClkUgGybzD
+	oNF7K1FND9JvakhP4Uagsw==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46g5fy03wd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 07 May 2025 11:04:16 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 547AAeAQ035527;
+	Wed, 7 May 2025 11:04:13 GMT
+Received: from dm1pr04cu001.outbound.protection.outlook.com (mail-centralusazlp17010005.outbound.protection.outlook.com [40.93.13.5])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46d9kggjqs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 07 May 2025 11:04:13 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vfIFcwO/uzC1dWLdm+3IyI7ay4RjM9rYmZQAKzNCjST6s2JAMX4shqcPPr9/Vi3w4JuGrBJR1R0vZ6Tc1mw302mX7YID8WEcvXOl4oE2jF1aHfxTyeqxVvJMD+MIJCMVFK/6ooBfGlOgTb+yCw7TUimKYB/lnvRGfyV+rNLv02edbhuf6FY6YABMa1QchiOH6bE9pank1+Om/grB5hANCi0JU0zmWaFyO1E5sEz7Ba8SfuBXE02JcGg4fd0V0j7stiZP6x9KUOzu9uwwKWeMlLjjpfxh+jFSBfdhuvgSWT5ee027IcIpZQj9qY66TOW3pYrrNHcI2mW30hQ5Ngba/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rahkyNLXBWHQwG9Mnt5zLDF/RjGw1PYJNiw9Os1ziUE=;
+ b=YXPxeTv+4GwPNYwmcRzHfPCH+m3X3r5+q2v5+cfM6vqTrMQOlxiHivUzX75lPJkZdKJm18GX2BO3R+2G04WU90Pvg3Pv4JtEjq72/7eD2N5WsNKMPKKm5XHLyQtR2B1aA7BVhDwRjLKZq8PGWwWQvpzJGwIPg/MMJnQTUbkjTM75Kc3MJN6ckQmucunJiUFOLsv+4E/+t5o/tNkYxOKzTp903husJtwn/EmadVKlS3GQ2EZTe4SDlUu8ZpY6Dt2Ern7/rHfiuxGIn2n1ax+GLmohBaVhp6t30cv27vz//UcmAJ6TMnY/0wKZA5jH5ILwIhUXIw/wnOsp3fZUQX/42g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rahkyNLXBWHQwG9Mnt5zLDF/RjGw1PYJNiw9Os1ziUE=;
+ b=C9EwmNVsEUBLzyJ3ZvoPDtXRQlFIq7M89wGRZUkCf5qJpGC6xsT+6XzWi8lerdsKT9GVpsd/w43sez7sj0cDyprvt1RxkiLiZCeOeaHI71va+2pyNtOexW0btjXpBBVqbuxOZ26/i2P0tNSvKcsY/4vIDSutKZAESGr8fB9O2Uc=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by PH7PR10MB6251.namprd10.prod.outlook.com (2603:10b6:510:211::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 7 May
+ 2025 11:04:04 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8699.022; Wed, 7 May 2025
+ 11:04:04 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH 3/3] mm/vma: remove mmap() retry merge
+Date: Wed,  7 May 2025 12:03:36 +0100
+Message-ID: <e18be1070e9fcd7a43cd72ac45f19cf1080e73b5.1746615512.git.lorenzo.stoakes@oracle.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1746615512.git.lorenzo.stoakes@oracle.com>
+References: <cover.1746615512.git.lorenzo.stoakes@oracle.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO2P123CA0070.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1::34) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v4 PATCH 11/11] crypto: lib/poly1305 - Use block-only interface
-To: Herbert Xu <herbert@gondor.apana.org.au>,
- Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-References: <cover.1745815528.git.herbert@gondor.apana.org.au>
- <915c874caf5451d560bf26ff59f58177aa8b7c17.1745815528.git.herbert@gondor.apana.org.au>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: de-DE, en-US
-Autocrypt: addr=linux@leemhuis.info; keydata=
- xsFNBFJ4AQ0BEADCz16x4kl/YGBegAsYXJMjFRi3QOr2YMmcNuu1fdsi3XnM+xMRaukWby47
- JcsZYLDKRHTQ/Lalw9L1HI3NRwK+9ayjg31wFdekgsuPbu4x5RGDIfyNpd378Upa8SUmvHik
- apCnzsxPTEE4Z2KUxBIwTvg+snEjgZ03EIQEi5cKmnlaUynNqv3xaGstx5jMCEnR2X54rH8j
- QPvo2l5/79Po58f6DhxV2RrOrOjQIQcPZ6kUqwLi6EQOi92NS9Uy6jbZcrMqPIRqJZ/tTKIR
- OLWsEjNrc3PMcve+NmORiEgLFclN8kHbPl1tLo4M5jN9xmsa0OZv3M0katqW8kC1hzR7mhz+
- Rv4MgnbkPDDO086HjQBlS6Zzo49fQB2JErs5nZ0mwkqlETu6emhxneAMcc67+ZtTeUj54K2y
- Iu8kk6ghaUAfgMqkdIzeSfhO8eURMhvwzSpsqhUs7pIj4u0TPN8OFAvxE/3adoUwMaB+/plk
- sNe9RsHHPV+7LGADZ6OzOWWftk34QLTVTcz02bGyxLNIkhY+vIJpZWX9UrfGdHSiyYThHCIy
- /dLz95b9EG+1tbCIyNynr9TjIOmtLOk7ssB3kL3XQGgmdQ+rJ3zckJUQapLKP2YfBi+8P1iP
- rKkYtbWk0u/FmCbxcBA31KqXQZoR4cd1PJ1PDCe7/DxeoYMVuwARAQABzSdUaG9yc3RlbiBM
- ZWVtaHVpcyA8bGludXhAbGVlbWh1aXMuaW5mbz7CwZQEEwEKAD4CGwMFCwkIBwMFFQoJCAsF
- FgIDAQACHgECF4AWIQSoq8a+lZZX4oPULXVytubvTFg9LQUCX31PIwUJFmtPkwAKCRBytubv
- TFg9LWsyD/4t3g4i2YVp8RoKAcOut0AZ7/uLSqlm8Jcbb+LeeuzjY9T3mQ4ZX8cybc1jRlsL
- JMYL8GD3a53/+bXCDdk2HhQKUwBJ9PUDbfWa2E/pnqeJeX6naLn1LtMJ78G9gPeG81dX5Yq+
- g/2bLXyWefpejlaefaM0GviCt00kG4R/mJJpHPKIPxPbOPY2REzWPoHXJpi7vTOA2R8HrFg/
- QJbnA25W55DzoxlRb/nGZYG4iQ+2Eplkweq3s3tN88MxzNpsxZp475RmzgcmQpUtKND7Pw+8
- zTDPmEzkHcUChMEmrhgWc2OCuAu3/ezsw7RnWV0k9Pl5AGROaDqvARUtopQ3yEDAdV6eil2z
- TvbrokZQca2808v2rYO3TtvtRMtmW/M/yyR233G/JSNos4lODkCwd16GKjERYj+sJsW4/hoZ
- RQiJQBxjnYr+p26JEvghLE1BMnTK24i88Oo8v+AngR6JBxwH7wFuEIIuLCB9Aagb+TKsf+0c
- HbQaHZj+wSY5FwgKi6psJxvMxpRpLqPsgl+awFPHARktdPtMzSa+kWMhXC4rJahBC5eEjNmP
- i23DaFWm8BE9LNjdG8Yl5hl7Zx0mwtnQas7+z6XymGuhNXCOevXVEqm1E42fptYMNiANmrpA
- OKRF+BHOreakveezlpOz8OtUhsew9b/BsAHXBCEEOuuUg87BTQRSeAENARAAzu/3satWzly6
- +Lqi5dTFS9+hKvFMtdRb/vW4o9CQsMqL2BJGoE4uXvy3cancvcyodzTXCUxbesNP779JqeHy
- s7WkF2mtLVX2lnyXSUBm/ONwasuK7KLz8qusseUssvjJPDdw8mRLAWvjcsYsZ0qgIU6kBbvY
- ckUWkbJj/0kuQCmmulRMcaQRrRYrk7ZdUOjaYmjKR+UJHljxLgeregyiXulRJxCphP5migoy
- ioa1eset8iF9fhb+YWY16X1I3TnucVCiXixzxwn3uwiVGg28n+vdfZ5lackCOj6iK4+lfzld
- z4NfIXK+8/R1wD9yOj1rr3OsjDqOaugoMxgEFOiwhQDiJlRKVaDbfmC1G5N1YfQIn90znEYc
- M7+Sp8Rc5RUgN5yfuwyicifIJQCtiWgjF8ttcIEuKg0TmGb6HQHAtGaBXKyXGQulD1CmBHIW
- zg7bGge5R66hdbq1BiMX5Qdk/o3Sr2OLCrxWhqMdreJFLzboEc0S13BCxVglnPqdv5sd7veb
- 0az5LGS6zyVTdTbuPUu4C1ZbstPbuCBwSwe3ERpvpmdIzHtIK4G9iGIR3Seo0oWOzQvkFn8m
- 2k6H2/Delz9IcHEefSe5u0GjIA18bZEt7R2k8CMZ84vpyWOchgwXK2DNXAOzq4zwV8W4TiYi
- FiIVXfSj185vCpuE7j0ugp0AEQEAAcLBfAQYAQoAJgIbDBYhBKirxr6Vllfig9QtdXK25u9M
- WD0tBQJffU8wBQkWa0+jAAoJEHK25u9MWD0tv+0P/A47x8r+hekpuF2KvPpGi3M6rFpdPfeO
- RpIGkjQWk5M+oF0YH3vtb0+92J7LKfJwv7GIy2PZO2svVnIeCOvXzEM/7G1n5zmNMYGZkSyf
- x9dnNCjNl10CmuTYud7zsd3cXDku0T+Ow5Dhnk6l4bbJSYzFEbz3B8zMZGrs9EhqNzTLTZ8S
- Mznmtkxcbb3f/o5SW9NhH60mQ23bB3bBbX1wUQAmMjaDQ/Nt5oHWHN0/6wLyF4lStBGCKN9a
- TLp6E3100BuTCUCrQf9F3kB7BC92VHvobqYmvLTCTcbxFS4JNuT+ZyV+xR5JiV+2g2HwhxWW
- uC88BtriqL4atyvtuybQT+56IiiU2gszQ+oxR/1Aq+VZHdUeC6lijFiQblqV6EjenJu+pR9A
- 7EElGPPmYdO1WQbBrmuOrFuO6wQrbo0TbUiaxYWyoM9cA7v7eFyaxgwXBSWKbo/bcAAViqLW
- ysaCIZqWxrlhHWWmJMvowVMkB92uPVkxs5IMhSxHS4c2PfZ6D5kvrs3URvIc6zyOrgIaHNzR
- 8AF4PXWPAuZu1oaG/XKwzMqN/Y/AoxWrCFZNHE27E1RrMhDgmyzIzWQTffJsVPDMQqDfLBhV
- ic3b8Yec+Kn+ExIF5IuLfHkUgIUs83kDGGbV+wM8NtlGmCXmatyavUwNCXMsuI24HPl7gV2h n7RI
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-In-Reply-To: <915c874caf5451d560bf26ff59f58177aa8b7c17.1745815528.git.herbert@gondor.apana.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1746615789;54dfe2fd;
-X-HE-SMSGID: 1uCcYM-000gC8-2e
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|PH7PR10MB6251:EE_
+X-MS-Office365-Filtering-Correlation-Id: fe4fa9be-bab8-4cb8-0da8-08dd8d56e164
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?q8ksNl/uiMCxykmdN5m4Kf/+1s3RclTsJ/5/r9Tc6640eXlTcCVf1YZVDicn?=
+ =?us-ascii?Q?Uxw+jx8fSdEQj4E0sA3jg1z56YoOpJe4zGxawMI2s8KogFAVcvV3LjvyV4HW?=
+ =?us-ascii?Q?2Hw4y3v0v5TpCjSzZtBx55HGmnmgFnf+pHX0e79mYuqJfyL2T3TUi1FrBkCd?=
+ =?us-ascii?Q?uOajuX+F/YnyEmy1sAWTG40snuhuPHuVe0ecegouZSpxueo8z7FIog/epgLN?=
+ =?us-ascii?Q?9L22ORHTQzhgRu3RAeBS/ORezaCAMzYY8vMACOmZZ+uGhSxR8c8ZoSfQtmT9?=
+ =?us-ascii?Q?T2B6GiG5FzKFYHXiCaTjFy9Se1NSCgLvEJssCgCn7+D5os70FDAeJz1/lR1N?=
+ =?us-ascii?Q?r5eb0wid0+dwJcOZ+E2c5YkZAjMiGRhH9JSx+0fVLpfbJn48ZTtMRU+wC1uP?=
+ =?us-ascii?Q?vGKWyEo/bggIde0N15CzrmNdtiJhhp983pBEMl/BxbBXnWc0bgNeRUJ7Vole?=
+ =?us-ascii?Q?LwpyeT5JaRCXelEdpR0ih9T2aSEeYhSuNnNayQ9DyFbx9jisFWPwJk4Lyl1o?=
+ =?us-ascii?Q?vJ0HXvEy/c2JY0u88Bnb6lzgyE1mp5/VXlUs6lWamiYBmhK0HZEmpIENq/SR?=
+ =?us-ascii?Q?/wSYPGIBLws65UFaWL8o+BnaNwY27GtHp0g+TZFAIf0PPVK2CSeFeZ35dx5g?=
+ =?us-ascii?Q?5kmLeNjFzM26J5aKzcGPyETtFI27RV6aX2MdVFHHaCEFUKM3LGv+5ifZOL13?=
+ =?us-ascii?Q?8ZwOtFYD5BcpMxrWqpuCCsfjdYDaqrNjNE0eAOZnpWUoA4oQORuE8QxaKMg3?=
+ =?us-ascii?Q?siYCPQZeqXg57Rey5uyJq3KnXy+9zVQsRzfv+4bpyCG8jSGqbYmMIYPvCXbr?=
+ =?us-ascii?Q?y5/6GkTk82QrZnll+SC6DP9Wvnrq40YG/3PPUM2j8Wqbv5K1JzPxp/aOtQpB?=
+ =?us-ascii?Q?rXhfECwQM0k3EcN/g69peSgwNzwwAuTiEfyPwIeoemIQksUk3Bjkago2nROJ?=
+ =?us-ascii?Q?Qq0GWkYHFVNYMj1AAWjBxUHI4KQtA4TTkDiZq9A3Lphml0iVHJO+QqMGL4KW?=
+ =?us-ascii?Q?1BhCMPnbZsxYHPFdGQ8k2kriHvWklOq4Vo5Qm/lre9JzUlWLkLY66dPwzrrm?=
+ =?us-ascii?Q?lQOB2eosdUsHX/C9Ajj0M/pgNeejQEaLk3Egr7B6qAcPzxHUdYELOTVjGlDy?=
+ =?us-ascii?Q?fXdYsZI+HE6uHCwlCx3CvZQOpiRSNLZgcRXZaiDdtMnW3a3vDY6hsY+MBUTZ?=
+ =?us-ascii?Q?nBkCCNqjoyTfXKFWe0CKicPLXRW2UKSL0Sxp+PDWStRBRR61HYBVuj6wAOza?=
+ =?us-ascii?Q?fWXbm9cy3yjvMnAM8tNFPrt4Xw+2vKoSeeQBD9pZrhMHAJxcdhdxX2Ia7LiE?=
+ =?us-ascii?Q?VVghMVYDM8ywk1DRmwMftcTDT5JdjdCS+ik/gYthcI5f+ncws9i1DZYyVA5L?=
+ =?us-ascii?Q?x79LFgooUK/MdxiORlHXVYoOpGdH6QzyNYozxTBYKKWYqFimDyKBTCE9YFbs?=
+ =?us-ascii?Q?O1nPJfwvF3k=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Y//GAES3/vj4yrSVSybjOKPo5D16AD0m58AeVdyXJ3BYhXrRIFuZAAwuX1ZH?=
+ =?us-ascii?Q?SfI9NbQYokfesTJJXhV56VefsZ9FbpdMa13LyAfp7q6/Nu8NQXgzKQzilIwL?=
+ =?us-ascii?Q?JB/VsWPx3uoZvcC6yge4s/uQgqoVgXSMikJr5xiDBYnQTGBn2tYebzgxwhmo?=
+ =?us-ascii?Q?RXq7xk17GTsfwA0M4rVbqzsEbg7VlSvMDx/LU5trTmySH8e5rL1q+Lw6QaSZ?=
+ =?us-ascii?Q?qorek8/T9VD36Sycvk19EjImPdrV9IVcT5tNQgbj3lcFZg5Zb2qq7UvAx2ov?=
+ =?us-ascii?Q?Bl0yMedan7PDa8NSOfs75HSssnJBq0lfyWVZFvmXWhAcy1/UrXMGwYN9syQt?=
+ =?us-ascii?Q?W4mRAKvRtTpZ/aCRP2RR9bPK5glrzvF11EwDZN1VARQvxphqkF8r00hqWfwn?=
+ =?us-ascii?Q?LtDoDTQQba2dkMp0mH/bJmsIxn5T8isCtJPndSH6V8SPWM0v9Ko//HCCnhKW?=
+ =?us-ascii?Q?KxmjsT4Xs7JvlHCFCe1cmuBsGLSo0oo2d/uPvwV7zqVThSMLi42ObfThQJtS?=
+ =?us-ascii?Q?z8c+UfV7qH8w/Kkfl8tWlI057B/DLrPVAGJk2juTd/g+W1XKgDRalCt2/qVP?=
+ =?us-ascii?Q?QYRcMQtYzMefjCnspcJ7YhjXVkHzCpEOGcXm5zF+sfDye8IlUBy+B9HP07/U?=
+ =?us-ascii?Q?2xF3QdOfkoX2I2qI/L2t/cvTyWWcOrOPVs3Id4hsI3187yz3CC7yhwj+A56c?=
+ =?us-ascii?Q?EQYkl5FHOKz19/HBujI/h2F4QaFgBEQESKbUs5ARk555v/uWiNYXLsRiIVxw?=
+ =?us-ascii?Q?yXnrwbJ03JXDHcjupHIo844S46D8PcNyuTgS+Lm5SetwUtkyFhjL7aMNWFwp?=
+ =?us-ascii?Q?i5uNTRRh/YCCQltjbStZF9j47kq3Vzg2rDTpJp0mDgTorW7XhF0jWlL0mXe2?=
+ =?us-ascii?Q?BveMj1S6t0rGgFyPdTjjbJeZPMsBwkJB0OuQ4MZBnTuTXNeMQNGwU6PWOC3x?=
+ =?us-ascii?Q?VrpyrTTww0D4o5rR0CwDORLZXB51TaCp+Vu/CYWJmeRwEQC3UgD4FjDQs26B?=
+ =?us-ascii?Q?2UAmvN+UvNkBCCFYQXmyQsmhgR4mx1W1s0SJsRePagrDA/kWk8XnqLf+Eb6M?=
+ =?us-ascii?Q?npqqTEPWi/sTFI/PDxMgye4JgjUH4xw6960p8EMa0dT0gNz9IGX9KJ/BrYRT?=
+ =?us-ascii?Q?LINlQlLGn9kPpwZ6PXWSsRLbPYfXnexQ86LxBUaJNFQ7MrokcIUYeWtwwaUK?=
+ =?us-ascii?Q?XOzA9OM+uMQJjw7kmMCcZGzf3sVTbHPpG0BPbNiP4L9G2M7wX66sYLq6i4wj?=
+ =?us-ascii?Q?n6Dlc3O6/L/MU8fD4FOkrXDmJ0yTM7pFaCROc/+YKLIYDrSE67nFgdnrubPK?=
+ =?us-ascii?Q?I1F8wjVN1PUz9B/WUqwckY/+SqEUG49zOda2UDn60TNd7pz9dbHm631XZ5qT?=
+ =?us-ascii?Q?OStJKp9VRA17wE2pEOjMLUZLG/78QcGh2rSFp3gm6+mTySD+RE5RqBTyB9/9?=
+ =?us-ascii?Q?NLBPxbhEbGzjKKMjec5rOcRk0OFXKHO5D2LAihWckcf59tx6TY+s0FPiZRsy?=
+ =?us-ascii?Q?+oMorAm8JXi88m1M1f2odB3+Wsm/sHh5CTaDw1cut2eQFvc/f0v35LZ8weUx?=
+ =?us-ascii?Q?iyW+a5OnQuX6Y7DCHOVOlfrTOKimPPCI+MfzOJqSOudfsTG0BdiJlUoF8/HX?=
+ =?us-ascii?Q?WA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	T2vyZDofi/3QN1wrLxTtNN4vAx22zkLYIWh2V0Ccweyrvw85bWtB0f95TMbgcMB/q8vtXUhkoB90xHMoNIrK4dUhBBYAFnYKetso0ZBLA7Xt18myFeddh13O2fYpdSu8sQH4QZsYjytHImYYu0rgwSJDZ2ZmyeTULcZ7umvH5qpalUJghYKDL9GRia2o3JRrw5ZkXauHpYpfP2uwBaE9TwqA1vWqTx5MPaz7guP3r59JWCIs/UUqFzijPkosZFlO/Ub3cGiYwQMxKRPH9kpy+XuAcHv7Jvah3C9Jpsr+utZ1AfpgljiLRrOV5S0Yh02MjJurDmu33zk9zpN62e3xlKBuZqs7U9ycR3YF7c3ymWAU/LoFOV0hrwVnsU+gQVWWRBQC20L2ZLRHEARH8S2L7gVaK7y8bQHPxGW3kwtCC3i4Haqe3pUKZPP3KLmjOCMMa5M9HBzXfv6A1vdPoJOvT9hkgVhMgnC2oF/RRhEKnetQuOIoxS7oFVogqmMoLW9hCe7nWrEhFEWOrlKU8JCh0dvY3FZFOgzR0XSxMQpS5xOqBppqvuzNbcvktvc3IvpvNIomaauM7r1C9pc9xPGSWULTkKrZmo+NAT8cn00whFo=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe4fa9be-bab8-4cb8-0da8-08dd8d56e164
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 11:04:04.5332
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8tA1X+jK5NmclsrWORlkC7ZnxvypuB4M+FOkYJIs9RkQUOA6rXH7xZQqm5zpLa82oO+euvwj9RtFW9357bZJTfXAc1cGFeBjlFjpErbpjGI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6251
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_03,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
+ malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+ definitions=main-2505070103
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDEwMyBTYWx0ZWRfX0xYCRm9/xduC GA8vkQ60zd04o0vDyh0fQwB2UaoQCBU+erfUhvkP9XpNBBuErjLiRqJ+7A02FS8jNy43Byhl6C9 yqPm++nBOy+E7blyL0h72FYfXh2TIF0TM+CrAEXXejTH0UGbeZgQW2QtXkCwB9W67XUrl4ZkK2V
+ AWGZ4ReLBZM6RuFBboRbRmOeZeOYU1TK78M4uS2gZEt8mr85Vbyo4EtxdoSAvGTbrVocFs5ZsqM e8MxwCmJeyL5Cb84Ikp45m5/O8El8LNidl7O6ztueUsDJfBSzKUpqAE1J/+qYoXUOQO6GOCGHwl YcFwMNzflpJIdTMiaK3pSKe9KWbqQFEqEkx8dPZcwe0iGx8yhlXNi6P/wpnp9t59TiByq0q88Rm
+ d0+Z6pnxj8bPdfhMWi6DKt1D6ChwKDz7B5TRj0hkNsneWm/gMBOWf8uN9xzsCLdxvXRWwJ6m
+X-Proofpoint-GUID: oQfAsyE6enlIFKKNNexIq_YdLhdE1ulP
+X-Proofpoint-ORIG-GUID: oQfAsyE6enlIFKKNNexIq_YdLhdE1ulP
+X-Authority-Analysis: v=2.4 cv=BOGzrEQG c=1 sm=1 tr=0 ts=681b3e30 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=KWrF3PiNL9PbMbJVJAMA:9 cc=ntf awl=host:13186
 
-On 28.04.25 06:56, Herbert Xu wrote:
-> Now that every architecture provides a block function, use that
-> to implement the lib/poly1305 and remove the old per-arch code.
-> 
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+We have now introduced a mechanism that obviates the need for a reattempted
+merge via the mmap_prepare() file hook, so eliminate this functionality
+altogether.
 
-I ran into a problem today when building -next rpms for ppc64le Fedora
-using the approach and configuration used to build the kernel rpms 
-shipped in Fedora rawhide. I did not investigate yet, but I wonder if is
-was caused by the quoted change or some other change in this series
-which showed up in -next today.
+The retry merge logic has been the cause of a great deal of complexity in
+the past and required a great deal of careful manoeuvring of code to ensure
+its continued and correct functionality.
 
-"""
-ld: warning: discarding dynamic section .glink
-ld: warning: discarding dynamic section .plt
-ld: linkage table error against `poly1305_emit_arch'
-ld: stubs don't match calculated size
-ld: can not build stubs: bad value
-ld: lib/crypto/poly1305.o: in function `poly1305_final':
-/builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250507/linux-6.15.0-0.0.next.20250507.443.vanilla.fc43.ppc64le/lib/crypto/poly1305.c:65:(.text+0x2dc): undefined reference to `poly1305_emit_arch'
-ld: /builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250507/linux-6.15.0-0.0.next.20250507.443.vanilla.fc43.ppc64le/lib/crypto/poly1305.c:65:(.text+0x378): undefined reference to `poly1305_emit_arch'
-make[2]: *** [scripts/Makefile.vmlinux:91: vmlinux] Error 1
-make[1]: *** [/builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250507/linux-6.15.0-0.0.next.20250507.443.vanilla.fc43.ppc64le/Makefile:1250: vmlinux] Error 2
-"""
+It has also recently been involved in an issue surrounding maple tree
+state, which again points to its problematic nature.
 
-Full build log:
-https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/fedora-rawhide-ppc64le/09006679-next-next-all/builder-live.log.gz
+We make it much easier to reason about mmap() logic by eliminating this and
+simply writing a VMA once. This also opens the doors to future optimisation
+and improvement in the mmap() logic.
 
-Same problem occured on Fedora 40, 41 and 42 as well.
+For any device or file system which encounters unwanted VMA fragmentation
+as a result of this change (that is, having not implemented .mmap_prepare
+hooks), the issue is easily resolvable by doing so.
 
-Ciao, Thorsten
+Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+---
+ mm/vma.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-> ---
->  arch/arm/lib/crypto/poly1305-glue.c         | 57 -------------------
->  arch/arm64/lib/crypto/poly1305-glue.c       | 58 -------------------
->  arch/mips/lib/crypto/poly1305-glue.c        | 60 --------------------
->  arch/powerpc/lib/crypto/poly1305-p10-glue.c | 63 ---------------------
->  arch/x86/lib/crypto/poly1305_glue.c         | 60 --------------------
->  include/crypto/poly1305.h                   | 53 ++---------------
->  lib/crypto/poly1305.c                       | 39 ++++++++-----
->  7 files changed, 32 insertions(+), 358 deletions(-)
-> 
-> diff --git a/arch/arm/lib/crypto/poly1305-glue.c b/arch/arm/lib/crypto/poly1305-glue.c
-> index 3ee16048ec7c..91da42b26d9c 100644
-> --- a/arch/arm/lib/crypto/poly1305-glue.c
-> +++ b/arch/arm/lib/crypto/poly1305-glue.c
-> @@ -12,7 +12,6 @@
->  #include <linux/jump_label.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> -#include <linux/string.h>
->  #include <linux/unaligned.h>
->  
->  asmlinkage void poly1305_block_init_arch(
-> @@ -35,17 +34,6 @@ void __weak poly1305_blocks_neon(struct poly1305_block_state *state,
->  
->  static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_neon);
->  
-> -void poly1305_init_arch(struct poly1305_desc_ctx *dctx, const u8 key[POLY1305_KEY_SIZE])
-> -{
-> -	dctx->s[0] = get_unaligned_le32(key + 16);
-> -	dctx->s[1] = get_unaligned_le32(key + 20);
-> -	dctx->s[2] = get_unaligned_le32(key + 24);
-> -	dctx->s[3] = get_unaligned_le32(key + 28);
-> -	dctx->buflen = 0;
-> -	poly1305_block_init_arch(&dctx->state, key);
-> -}
-> -EXPORT_SYMBOL(poly1305_init_arch);
-> -
->  void poly1305_blocks_arch(struct poly1305_block_state *state, const u8 *src,
->  			  unsigned int len, u32 padbit)
->  {
-> @@ -67,51 +55,6 @@ void poly1305_blocks_arch(struct poly1305_block_state *state, const u8 *src,
->  }
->  EXPORT_SYMBOL_GPL(poly1305_blocks_arch);
->  
-> -void poly1305_update_arch(struct poly1305_desc_ctx *dctx, const u8 *src,
-> -			  unsigned int nbytes)
-> -{
-> -	if (unlikely(dctx->buflen)) {
-> -		u32 bytes = min(nbytes, POLY1305_BLOCK_SIZE - dctx->buflen);
-> -
-> -		memcpy(dctx->buf + dctx->buflen, src, bytes);
-> -		src += bytes;
-> -		nbytes -= bytes;
-> -		dctx->buflen += bytes;
-> -
-> -		if (dctx->buflen == POLY1305_BLOCK_SIZE) {
-> -			poly1305_blocks_arch(&dctx->state, dctx->buf,
-> -					     POLY1305_BLOCK_SIZE, 1);
-> -			dctx->buflen = 0;
-> -		}
-> -	}
-> -
-> -	if (likely(nbytes >= POLY1305_BLOCK_SIZE)) {
-> -		poly1305_blocks_arch(&dctx->state, src, nbytes, 1);
-> -		src += round_down(nbytes, POLY1305_BLOCK_SIZE);
-> -		nbytes %= POLY1305_BLOCK_SIZE;
-> -	}
-> -
-> -	if (unlikely(nbytes)) {
-> -		dctx->buflen = nbytes;
-> -		memcpy(dctx->buf, src, nbytes);
-> -	}
-> -}
-> -EXPORT_SYMBOL(poly1305_update_arch);
-> -
-> -void poly1305_final_arch(struct poly1305_desc_ctx *dctx, u8 *dst)
-> -{
-> -	if (unlikely(dctx->buflen)) {
-> -		dctx->buf[dctx->buflen++] = 1;
-> -		memset(dctx->buf + dctx->buflen, 0,
-> -		       POLY1305_BLOCK_SIZE - dctx->buflen);
-> -		poly1305_blocks_arch(&dctx->state, dctx->buf, POLY1305_BLOCK_SIZE, 0);
-> -	}
-> -
-> -	poly1305_emit_arch(&dctx->h, dst, dctx->s);
-> -	*dctx = (struct poly1305_desc_ctx){};
-> -}
-> -EXPORT_SYMBOL(poly1305_final_arch);
-> -
->  bool poly1305_is_arch_optimized(void)
->  {
->  	/* We always can use at least the ARM scalar implementation. */
-> diff --git a/arch/arm64/lib/crypto/poly1305-glue.c b/arch/arm64/lib/crypto/poly1305-glue.c
-> index d66a820e32d5..681c26557336 100644
-> --- a/arch/arm64/lib/crypto/poly1305-glue.c
-> +++ b/arch/arm64/lib/crypto/poly1305-glue.c
-> @@ -12,7 +12,6 @@
->  #include <linux/jump_label.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> -#include <linux/string.h>
->  #include <linux/unaligned.h>
->  
->  asmlinkage void poly1305_block_init_arch(
-> @@ -30,17 +29,6 @@ EXPORT_SYMBOL_GPL(poly1305_emit_arch);
->  
->  static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_neon);
->  
-> -void poly1305_init_arch(struct poly1305_desc_ctx *dctx, const u8 key[POLY1305_KEY_SIZE])
-> -{
-> -	dctx->s[0] = get_unaligned_le32(key + 16);
-> -	dctx->s[1] = get_unaligned_le32(key + 20);
-> -	dctx->s[2] = get_unaligned_le32(key + 24);
-> -	dctx->s[3] = get_unaligned_le32(key + 28);
-> -	dctx->buflen = 0;
-> -	poly1305_block_init_arch(&dctx->state, key);
-> -}
-> -EXPORT_SYMBOL(poly1305_init_arch);
-> -
->  void poly1305_blocks_arch(struct poly1305_block_state *state, const u8 *src,
->  			  unsigned int len, u32 padbit)
->  {
-> @@ -61,52 +49,6 @@ void poly1305_blocks_arch(struct poly1305_block_state *state, const u8 *src,
->  }
->  EXPORT_SYMBOL_GPL(poly1305_blocks_arch);
->  
-> -void poly1305_update_arch(struct poly1305_desc_ctx *dctx, const u8 *src,
-> -			  unsigned int nbytes)
-> -{
-> -	if (unlikely(dctx->buflen)) {
-> -		u32 bytes = min(nbytes, POLY1305_BLOCK_SIZE - dctx->buflen);
-> -
-> -		memcpy(dctx->buf + dctx->buflen, src, bytes);
-> -		src += bytes;
-> -		nbytes -= bytes;
-> -		dctx->buflen += bytes;
-> -
-> -		if (dctx->buflen == POLY1305_BLOCK_SIZE) {
-> -			poly1305_blocks_arch(&dctx->state, dctx->buf,
-> -					     POLY1305_BLOCK_SIZE, 1);
-> -			dctx->buflen = 0;
-> -		}
-> -	}
-> -
-> -	if (likely(nbytes >= POLY1305_BLOCK_SIZE)) {
-> -		poly1305_blocks_arch(&dctx->state, src, nbytes, 1);
-> -		src += round_down(nbytes, POLY1305_BLOCK_SIZE);
-> -		nbytes %= POLY1305_BLOCK_SIZE;
-> -	}
-> -
-> -	if (unlikely(nbytes)) {
-> -		dctx->buflen = nbytes;
-> -		memcpy(dctx->buf, src, nbytes);
-> -	}
-> -}
-> -EXPORT_SYMBOL(poly1305_update_arch);
-> -
-> -void poly1305_final_arch(struct poly1305_desc_ctx *dctx, u8 *dst)
-> -{
-> -	if (unlikely(dctx->buflen)) {
-> -		dctx->buf[dctx->buflen++] = 1;
-> -		memset(dctx->buf + dctx->buflen, 0,
-> -		       POLY1305_BLOCK_SIZE - dctx->buflen);
-> -		poly1305_blocks_arch(&dctx->state, dctx->buf,
-> -				     POLY1305_BLOCK_SIZE, 0);
-> -	}
-> -
-> -	poly1305_emit_arch(&dctx->h, dst, dctx->s);
-> -	memzero_explicit(dctx, sizeof(*dctx));
-> -}
-> -EXPORT_SYMBOL(poly1305_final_arch);
-> -
->  bool poly1305_is_arch_optimized(void)
->  {
->  	/* We always can use at least the ARM64 scalar implementation. */
-> diff --git a/arch/mips/lib/crypto/poly1305-glue.c b/arch/mips/lib/crypto/poly1305-glue.c
-> index 2fea4cacfe27..764a38a65200 100644
-> --- a/arch/mips/lib/crypto/poly1305-glue.c
-> +++ b/arch/mips/lib/crypto/poly1305-glue.c
-> @@ -9,7 +9,6 @@
->  #include <linux/cpufeature.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> -#include <linux/string.h>
->  #include <linux/unaligned.h>
->  
->  asmlinkage void poly1305_block_init_arch(
-> @@ -24,65 +23,6 @@ asmlinkage void poly1305_emit_arch(const struct poly1305_state *state,
->  				   const u32 nonce[4]);
->  EXPORT_SYMBOL_GPL(poly1305_emit_arch);
->  
-> -void poly1305_init_arch(struct poly1305_desc_ctx *dctx, const u8 key[POLY1305_KEY_SIZE])
-> -{
-> -	dctx->s[0] = get_unaligned_le32(key + 16);
-> -	dctx->s[1] = get_unaligned_le32(key + 20);
-> -	dctx->s[2] = get_unaligned_le32(key + 24);
-> -	dctx->s[3] = get_unaligned_le32(key + 28);
-> -	dctx->buflen = 0;
-> -	poly1305_block_init_arch(&dctx->state, key);
-> -}
-> -EXPORT_SYMBOL(poly1305_init_arch);
-> -
-> -void poly1305_update_arch(struct poly1305_desc_ctx *dctx, const u8 *src,
-> -			  unsigned int nbytes)
-> -{
-> -	if (unlikely(dctx->buflen)) {
-> -		u32 bytes = min(nbytes, POLY1305_BLOCK_SIZE - dctx->buflen);
-> -
-> -		memcpy(dctx->buf + dctx->buflen, src, bytes);
-> -		src += bytes;
-> -		nbytes -= bytes;
-> -		dctx->buflen += bytes;
-> -
-> -		if (dctx->buflen == POLY1305_BLOCK_SIZE) {
-> -			poly1305_blocks_arch(&dctx->state, dctx->buf,
-> -					     POLY1305_BLOCK_SIZE, 1);
-> -			dctx->buflen = 0;
-> -		}
-> -	}
-> -
-> -	if (likely(nbytes >= POLY1305_BLOCK_SIZE)) {
-> -		unsigned int len = round_down(nbytes, POLY1305_BLOCK_SIZE);
-> -
-> -		poly1305_blocks_arch(&dctx->state, src, len, 1);
-> -		src += len;
-> -		nbytes %= POLY1305_BLOCK_SIZE;
-> -	}
-> -
-> -	if (unlikely(nbytes)) {
-> -		dctx->buflen = nbytes;
-> -		memcpy(dctx->buf, src, nbytes);
-> -	}
-> -}
-> -EXPORT_SYMBOL(poly1305_update_arch);
-> -
-> -void poly1305_final_arch(struct poly1305_desc_ctx *dctx, u8 *dst)
-> -{
-> -	if (unlikely(dctx->buflen)) {
-> -		dctx->buf[dctx->buflen++] = 1;
-> -		memset(dctx->buf + dctx->buflen, 0,
-> -		       POLY1305_BLOCK_SIZE - dctx->buflen);
-> -		poly1305_blocks_arch(&dctx->state, dctx->buf,
-> -				     POLY1305_BLOCK_SIZE, 0);
-> -	}
-> -
-> -	poly1305_emit_arch(&dctx->h, dst, dctx->s);
-> -	*dctx = (struct poly1305_desc_ctx){};
-> -}
-> -EXPORT_SYMBOL(poly1305_final_arch);
-> -
->  bool poly1305_is_arch_optimized(void)
->  {
->  	return true;
-> diff --git a/arch/powerpc/lib/crypto/poly1305-p10-glue.c b/arch/powerpc/lib/crypto/poly1305-p10-glue.c
-> index 708435beaba6..50ac802220e0 100644
-> --- a/arch/powerpc/lib/crypto/poly1305-p10-glue.c
-> +++ b/arch/powerpc/lib/crypto/poly1305-p10-glue.c
-> @@ -10,7 +10,6 @@
->  #include <linux/jump_label.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> -#include <linux/string.h>
->  #include <linux/unaligned.h>
->  
->  asmlinkage void poly1305_p10le_4blocks(struct poly1305_block_state *state, const u8 *m, u32 mlen);
-> @@ -45,17 +44,6 @@ void poly1305_block_init_arch(struct poly1305_block_state *dctx,
->  }
->  EXPORT_SYMBOL_GPL(poly1305_block_init_arch);
->  
-> -void poly1305_init_arch(struct poly1305_desc_ctx *dctx, const u8 key[POLY1305_KEY_SIZE])
-> -{
-> -	dctx->s[0] = get_unaligned_le32(key + 16);
-> -	dctx->s[1] = get_unaligned_le32(key + 20);
-> -	dctx->s[2] = get_unaligned_le32(key + 24);
-> -	dctx->s[3] = get_unaligned_le32(key + 28);
-> -	dctx->buflen = 0;
-> -	poly1305_block_init_arch(&dctx->state, key);
-> -}
-> -EXPORT_SYMBOL(poly1305_init_arch);
-> -
->  void poly1305_blocks_arch(struct poly1305_block_state *state, const u8 *src,
->  			  unsigned int len, u32 padbit)
->  {
-> @@ -76,57 +64,6 @@ void poly1305_blocks_arch(struct poly1305_block_state *state, const u8 *src,
->  }
->  EXPORT_SYMBOL_GPL(poly1305_blocks_arch);
->  
-> -void poly1305_update_arch(struct poly1305_desc_ctx *dctx,
-> -			  const u8 *src, unsigned int srclen)
-> -{
-> -	unsigned int bytes;
-> -
-> -	if (!static_key_enabled(&have_p10))
-> -		return poly1305_update_generic(dctx, src, srclen);
-> -
-> -	if (unlikely(dctx->buflen)) {
-> -		bytes = min(srclen, POLY1305_BLOCK_SIZE - dctx->buflen);
-> -		memcpy(dctx->buf + dctx->buflen, src, bytes);
-> -		src += bytes;
-> -		srclen -= bytes;
-> -		dctx->buflen += bytes;
-> -		if (dctx->buflen < POLY1305_BLOCK_SIZE)
-> -			return;
-> -		poly1305_blocks_arch(&dctx->state, dctx->buf,
-> -				     POLY1305_BLOCK_SIZE, 1);
-> -		dctx->buflen = 0;
-> -	}
-> -
-> -	if (likely(srclen >= POLY1305_BLOCK_SIZE)) {
-> -		poly1305_blocks_arch(&dctx->state, src, srclen, 1);
-> -		src += srclen - (srclen % POLY1305_BLOCK_SIZE);
-> -		srclen %= POLY1305_BLOCK_SIZE;
-> -	}
-> -
-> -	if (unlikely(srclen)) {
-> -		dctx->buflen = srclen;
-> -		memcpy(dctx->buf, src, srclen);
-> -	}
-> -}
-> -EXPORT_SYMBOL(poly1305_update_arch);
-> -
-> -void poly1305_final_arch(struct poly1305_desc_ctx *dctx, u8 *dst)
-> -{
-> -	if (!static_key_enabled(&have_p10))
-> -		return poly1305_final_generic(dctx, dst);
-> -
-> -	if (dctx->buflen) {
-> -		dctx->buf[dctx->buflen++] = 1;
-> -		memset(dctx->buf + dctx->buflen, 0,
-> -		       POLY1305_BLOCK_SIZE - dctx->buflen);
-> -		poly1305_blocks_arch(&dctx->state, dctx->buf,
-> -				     POLY1305_BLOCK_SIZE, 0);
-> -	}
-> -
-> -	poly1305_emit_arch(&dctx->h, dst, dctx->s);
-> -}
-> -EXPORT_SYMBOL(poly1305_final_arch);
-> -
->  bool poly1305_is_arch_optimized(void)
->  {
->  	return static_key_enabled(&have_p10);
-> diff --git a/arch/x86/lib/crypto/poly1305_glue.c b/arch/x86/lib/crypto/poly1305_glue.c
-> index d98764ec3b47..f799828c5809 100644
-> --- a/arch/x86/lib/crypto/poly1305_glue.c
-> +++ b/arch/x86/lib/crypto/poly1305_glue.c
-> @@ -10,7 +10,6 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/sizes.h>
-> -#include <linux/string.h>
->  #include <linux/unaligned.h>
->  
->  struct poly1305_arch_internal {
-> @@ -96,65 +95,6 @@ void poly1305_emit_arch(const struct poly1305_state *ctx,
->  }
->  EXPORT_SYMBOL_GPL(poly1305_emit_arch);
->  
-> -void poly1305_init_arch(struct poly1305_desc_ctx *dctx, const u8 key[POLY1305_KEY_SIZE])
-> -{
-> -	dctx->s[0] = get_unaligned_le32(&key[16]);
-> -	dctx->s[1] = get_unaligned_le32(&key[20]);
-> -	dctx->s[2] = get_unaligned_le32(&key[24]);
-> -	dctx->s[3] = get_unaligned_le32(&key[28]);
-> -	dctx->buflen = 0;
-> -	poly1305_block_init_arch(&dctx->state, key);
-> -}
-> -EXPORT_SYMBOL(poly1305_init_arch);
-> -
-> -void poly1305_update_arch(struct poly1305_desc_ctx *dctx, const u8 *src,
-> -			  unsigned int srclen)
-> -{
-> -	unsigned int bytes;
-> -
-> -	if (unlikely(dctx->buflen)) {
-> -		bytes = min(srclen, POLY1305_BLOCK_SIZE - dctx->buflen);
-> -		memcpy(dctx->buf + dctx->buflen, src, bytes);
-> -		src += bytes;
-> -		srclen -= bytes;
-> -		dctx->buflen += bytes;
-> -
-> -		if (dctx->buflen == POLY1305_BLOCK_SIZE) {
-> -			poly1305_blocks_arch(&dctx->state, dctx->buf,
-> -					     POLY1305_BLOCK_SIZE, 1);
-> -			dctx->buflen = 0;
-> -		}
-> -	}
-> -
-> -	if (likely(srclen >= POLY1305_BLOCK_SIZE)) {
-> -		bytes = round_down(srclen, POLY1305_BLOCK_SIZE);
-> -		poly1305_blocks_arch(&dctx->state, src, bytes, 1);
-> -		src += bytes;
-> -		srclen -= bytes;
-> -	}
-> -
-> -	if (unlikely(srclen)) {
-> -		dctx->buflen = srclen;
-> -		memcpy(dctx->buf, src, srclen);
-> -	}
-> -}
-> -EXPORT_SYMBOL(poly1305_update_arch);
-> -
-> -void poly1305_final_arch(struct poly1305_desc_ctx *dctx, u8 *dst)
-> -{
-> -	if (unlikely(dctx->buflen)) {
-> -		dctx->buf[dctx->buflen++] = 1;
-> -		memset(dctx->buf + dctx->buflen, 0,
-> -		       POLY1305_BLOCK_SIZE - dctx->buflen);
-> -		poly1305_blocks_arch(&dctx->state, dctx->buf,
-> -				     POLY1305_BLOCK_SIZE, 0);
-> -	}
-> -
-> -	poly1305_emit_arch(&dctx->h, dst, dctx->s);
-> -	memzero_explicit(dctx, sizeof(*dctx));
-> -}
-> -EXPORT_SYMBOL(poly1305_final_arch);
-> -
->  bool poly1305_is_arch_optimized(void)
->  {
->  	return static_key_enabled(&poly1305_use_avx);
-> diff --git a/include/crypto/poly1305.h b/include/crypto/poly1305.h
-> index 027d74842cd5..e54abda8cfe9 100644
-> --- a/include/crypto/poly1305.h
-> +++ b/include/crypto/poly1305.h
-> @@ -55,55 +55,14 @@ struct poly1305_desc_ctx {
->  	unsigned int buflen;
->  	/* finalize key */
->  	u32 s[4];
-> -	union {
-> -		struct {
-> -			struct poly1305_state h;
-> -			union {
-> -				struct poly1305_key opaque_r[CONFIG_CRYPTO_LIB_POLY1305_RSIZE];
-> -				struct poly1305_core_key core_r;
-> -			};
-> -		};
-> -		struct poly1305_block_state state;
-> -	};
-> +	struct poly1305_block_state state;
->  };
->  
-> -void poly1305_init_arch(struct poly1305_desc_ctx *desc,
-> -			const u8 key[POLY1305_KEY_SIZE]);
-> -void poly1305_init_generic(struct poly1305_desc_ctx *desc,
-> -			   const u8 key[POLY1305_KEY_SIZE]);
-> -
-> -static inline void poly1305_init(struct poly1305_desc_ctx *desc, const u8 *key)
-> -{
-> -	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305))
-> -		poly1305_init_arch(desc, key);
-> -	else
-> -		poly1305_init_generic(desc, key);
-> -}
-> -
-> -void poly1305_update_arch(struct poly1305_desc_ctx *desc, const u8 *src,
-> -			  unsigned int nbytes);
-> -void poly1305_update_generic(struct poly1305_desc_ctx *desc, const u8 *src,
-> -			     unsigned int nbytes);
-> -
-> -static inline void poly1305_update(struct poly1305_desc_ctx *desc,
-> -				   const u8 *src, unsigned int nbytes)
-> -{
-> -	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305))
-> -		poly1305_update_arch(desc, src, nbytes);
-> -	else
-> -		poly1305_update_generic(desc, src, nbytes);
-> -}
-> -
-> -void poly1305_final_arch(struct poly1305_desc_ctx *desc, u8 *digest);
-> -void poly1305_final_generic(struct poly1305_desc_ctx *desc, u8 *digest);
-> -
-> -static inline void poly1305_final(struct poly1305_desc_ctx *desc, u8 *digest)
-> -{
-> -	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305))
-> -		poly1305_final_arch(desc, digest);
-> -	else
-> -		poly1305_final_generic(desc, digest);
-> -}
-> +void poly1305_init(struct poly1305_desc_ctx *desc,
-> +		   const u8 key[POLY1305_KEY_SIZE]);
-> +void poly1305_update(struct poly1305_desc_ctx *desc,
-> +		     const u8 *src, unsigned int nbytes);
-> +void poly1305_final(struct poly1305_desc_ctx *desc, u8 *digest);
->  
->  #if IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305)
->  bool poly1305_is_arch_optimized(void);
-> diff --git a/lib/crypto/poly1305.c b/lib/crypto/poly1305.c
-> index 9fec64a599c1..4c9996864090 100644
-> --- a/lib/crypto/poly1305.c
-> +++ b/lib/crypto/poly1305.c
-> @@ -22,47 +22,60 @@ void poly1305_block_init_generic(struct poly1305_block_state *desc,
->  }
->  EXPORT_SYMBOL_GPL(poly1305_block_init_generic);
->  
-> -void poly1305_init_generic(struct poly1305_desc_ctx *desc,
-> -			   const u8 key[POLY1305_KEY_SIZE])
-> +void poly1305_init(struct poly1305_desc_ctx *desc,
-> +		   const u8 key[POLY1305_KEY_SIZE])
->  {
->  	desc->s[0] = get_unaligned_le32(key + 16);
->  	desc->s[1] = get_unaligned_le32(key + 20);
->  	desc->s[2] = get_unaligned_le32(key + 24);
->  	desc->s[3] = get_unaligned_le32(key + 28);
->  	desc->buflen = 0;
-> -	poly1305_block_init_generic(&desc->state, key);
-> +	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305))
-> +		poly1305_block_init_arch(&desc->state, key);
-> +	else
-> +		poly1305_block_init_generic(&desc->state, key);
->  }
-> -EXPORT_SYMBOL_GPL(poly1305_init_generic);
-> +EXPORT_SYMBOL(poly1305_init);
->  
->  static inline void poly1305_blocks(struct poly1305_block_state *state,
->  				   const u8 *src, unsigned int len)
->  {
-> -	poly1305_blocks_generic(state, src, len, 1);
-> +	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305))
-> +		poly1305_blocks_arch(state, src, len, 1);
-> +	else
-> +		poly1305_blocks_generic(state, src, len, 1);
->  }
->  
-> -void poly1305_update_generic(struct poly1305_desc_ctx *desc, const u8 *src,
-> -			     unsigned int nbytes)
-> +void poly1305_update(struct poly1305_desc_ctx *desc,
-> +		     const u8 *src, unsigned int nbytes)
->  {
->  	desc->buflen = BLOCK_HASH_UPDATE(poly1305_blocks, &desc->state,
->  					 src, nbytes, POLY1305_BLOCK_SIZE,
->  					 desc->buf, desc->buflen);
->  }
-> -EXPORT_SYMBOL_GPL(poly1305_update_generic);
-> +EXPORT_SYMBOL(poly1305_update);
->  
-> -void poly1305_final_generic(struct poly1305_desc_ctx *desc, u8 *dst)
-> +void poly1305_final(struct poly1305_desc_ctx *desc, u8 *dst)
->  {
->  	if (unlikely(desc->buflen)) {
->  		desc->buf[desc->buflen++] = 1;
->  		memset(desc->buf + desc->buflen, 0,
->  		       POLY1305_BLOCK_SIZE - desc->buflen);
-> -		poly1305_blocks_generic(&desc->state, desc->buf,
-> -					POLY1305_BLOCK_SIZE, 0);
-> +		if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305))
-> +			poly1305_blocks_arch(&desc->state, desc->buf,
-> +					     POLY1305_BLOCK_SIZE, 0);
-> +		else
-> +			poly1305_blocks_generic(&desc->state, desc->buf,
-> +						POLY1305_BLOCK_SIZE, 0);
->  	}
->  
-> -	poly1305_emit_generic(&desc->h, dst, desc->s);
-> +	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305))
-> +		poly1305_emit_arch(&desc->state.h, dst, desc->s);
-> +	else
-> +		poly1305_emit_generic(&desc->state.h, dst, desc->s);
->  	*desc = (struct poly1305_desc_ctx){};
->  }
-> -EXPORT_SYMBOL_GPL(poly1305_final_generic);
-> +EXPORT_SYMBOL(poly1305_final);
->  
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("Martin Willi <martin@strongswan.org>");
+diff --git a/mm/vma.c b/mm/vma.c
+index acd5b98fe087..95696eb44365 100644
+--- a/mm/vma.c
++++ b/mm/vma.c
+@@ -24,7 +24,6 @@ struct mmap_state {
+ 	void *vm_private_data;
+ 
+ 	unsigned long charged;
+-	bool retry_merge;
+ 
+ 	struct vm_area_struct *prev;
+ 	struct vm_area_struct *next;
+@@ -2417,8 +2416,6 @@ static int __mmap_new_file_vma(struct mmap_state *map,
+ 			!(map->flags & VM_MAYWRITE) &&
+ 			(vma->vm_flags & VM_MAYWRITE));
+ 
+-	/* If the flags change (and are mergeable), let's retry later. */
+-	map->retry_merge = vma->vm_flags != map->flags && !(vma->vm_flags & VM_SPECIAL);
+ 	map->flags = vma->vm_flags;
+ 
+ 	return 0;
+@@ -2624,17 +2621,6 @@ static unsigned long __mmap_region(struct file *file, unsigned long addr,
+ 	if (have_mmap_prepare)
+ 		set_vma_user_defined_fields(vma, &map);
+ 
+-	/* If flags changed, we might be able to merge, so try again. */
+-	if (map.retry_merge) {
+-		struct vm_area_struct *merged;
+-		VMG_MMAP_STATE(vmg, &map, vma);
+-
+-		vma_iter_config(map.vmi, map.addr, map.end);
+-		merged = vma_merge_existing_range(&vmg);
+-		if (merged)
+-			vma = merged;
+-	}
+-
+ 	__mmap_complete(&map, vma);
+ 
+ 	return addr;
+-- 
+2.49.0
 
