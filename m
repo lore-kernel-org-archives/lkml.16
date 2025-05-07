@@ -1,138 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABB5222574
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789A624B28
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746610198; cv=none; b=IElKiuHFRB7w8vYu9TsJjLd8Ujyob+8xICqEONZbSTvbSZej3OzFqDxhTQjUC7SaWgRlMz2lx3NLUX0WVa0uN+/hE0N1U9QNAwBZz7TEVjQA4LiP3IZvQUnFpa5whCLIMweMN6kDgKvrNf+XfGBu5f0cHYOXA6pNE+kaIXHiIDI=
+	t=1746610301; cv=none; b=H16IUxcQ4Ip3gnz0LG5LSpWK73lq8J+oNFnuccgHdNgMJexkit2xqMbLXm8tYWZb9XTIEaKs4sqm/5dF2G9nCoAPD2K7WAp18j+pv4paODDP6OfJoWgYOFE4cjWtR8k5C0spkYZ0WA7ah09cRSGTJ+put4rUF2/OS6Yd8oXH3Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746610198; c=relaxed/simple;
-	bh=+0Q/JhboznQZo1rGKcw6U4n9SViK9yo2ElyuyoLGTaQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=McdiG44CZi/h34AJjgeY+J+U6kRgC5vXkGjOcXt/cB36tXRbp4UgLKALmHej+BhPhsLMjqX1fyWOLRT7fZx1JLSEvEphPsPDO3Jsw2eGbjkX1ftDGRIv4RXMocliejCURiyRCPGz8W98wKQiMPjNNIUG4rKT5QIGwSMmf98cnvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aBHY0aN0; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746610301; c=relaxed/simple;
+	bh=K9X9Nn/7fufwUGnClucrIwI28bxVDHFEpQ+W4zTrDek=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gy7UnsyFs2SBxtpFwX8BqFFyBLwMOpUeWMO0IK8vmhd8mZ0/WwVdxBeYVDSXOVjFpM12E3dW6JGI/EX2cVWDNnGTulcEzcmIyrFsk6JTiEzz5Npu+H04vgaGXw+TBGpEtmC2IY6FGFpv2pVCXY95ZDRh05EaRCo2AnYjr/t/mWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=VtYv1Tn+; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aBHY0aN0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746610196; x=1778146196;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+0Q/JhboznQZo1rGKcw6U4n9SViK9yo2ElyuyoLGTaQ=;
-  b=aBHY0aN0Zn/ThgkW49tKKA9Rio2zYC3QumPWDc2Hz4fnKjsvV5pg2Qnb
-   +mGSbu67tdhS4wraUyVNxmc9HtmZYIBaDgumouv8i+aeJiVl7ysZXEJEq
-   TJCLGCcWBbjIbaa5Dl/KCW5/PbcNIcp+OxsT8xPnVwen9ZgOY++nXRc1C
-   JurKy2tjjR9qrghntoiEBxCeqNSVUftCpw8cgJxohgW6XepPJwA63dvj+
-   wlOk7cvnISVeQYwxNkb7IlCeCDNXR9WXE7NPqTtXwlv4IVJ2yuIyMTAe7
-   oqcr7HnzY1Fx0e//Pf7KBsY4jGgRafHZU6EGZ38jX0yKD8C5lTxLvYkJF
-   A==;
-X-CSE-ConnectionGUID: UKEEBogTT7OpEETa0SesIA==
-X-CSE-MsgGUID: UCXFiZQRRuaZLnaw5grr8Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="70834520"
-X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="70834520"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 02:29:55 -0700
-X-CSE-ConnectionGUID: Cw+4xhxiTIyonVp0hoI9cw==
-X-CSE-MsgGUID: 3WuguzWFSae0wZUpNdo44g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="140640306"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 07 May 2025 02:29:53 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCb67-0007VR-01;
-	Wed, 07 May 2025 09:29:51 +0000
-Date: Wed, 7 May 2025 17:29:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Brahmajit Das <brahmajit.xyz@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, bp@alien8.de,
-	dave.hansen@linux.intel.com, linux-kernel@vger.kernel.org,
-	pawan.kumar.gupta@linux.intel.com, tony.luck@intel.com
-Subject: Re: [PATCH v2 1/1] regulator: hi6421v530: fix building with GCC 15
-Message-ID: <202505071639.PQ4TVkSG-lkp@intel.com>
-References: <20250416121305.13469-1-listout@listout.xyz>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="VtYv1Tn+"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1746610295; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=XmgMg6STtlyinvSAL5WS1Sr98izqTtA9oefqvb3PDJw=;
+	b=VtYv1Tn+xj27V3HA/bTINb5xGD/kYwuRJtWBHUcGB2X1Ot1P99eTvORe3twKSTcdklPuY3NQSQxyTi8X9+Pf7BGrhPpCcYE87T3finWyQTGzz1z2RZHZsyO3JBHxNMhvMrCGlx5WEylrFzqVfAd6q2kRN2VXGnQYQExaS+XXKi0=
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WZpDwwa_1746609976 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 07 May 2025 17:26:17 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org,
+	willy@infradead.org,
+	david@redhat.com
+Cc: hannes@cmpxchg.org,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	npache@redhat.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	ziy@nvidia.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] mm: khugepaged: convert set_huge_pmd() to take a folio
+Date: Wed,  7 May 2025 17:26:12 +0800
+Message-ID: <8e33c8a65b46170dfd8ba6715d2115856a55b8f6.1746609191.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416121305.13469-1-listout@listout.xyz>
+Content-Transfer-Encoding: 8bit
 
-Hi Brahmajit,
+We've already gotten the stable locked folio in collapse_pte_mapped_thp(),
+so just use folio for set_huge_pmd() to set the PMD entry, which is more
+straightforward.
 
-kernel test robot noticed the following build errors:
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+---
+ mm/khugepaged.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.15-rc5 next-20250506]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Brahmajit-Das/regulator-hi6421v530-fix-building-with-GCC-15/20250416-211351
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250416121305.13469-1-listout%40listout.xyz
-patch subject: [PATCH v2 1/1] regulator: hi6421v530: fix building with GCC 15
-config: nios2-allmodconfig (https://download.01.org/0day-ci/archive/20250507/202505071639.PQ4TVkSG-lkp@intel.com/config)
-compiler: nios2-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071639.PQ4TVkSG-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505071639.PQ4TVkSG-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from scripts/mod/file2alias.c:123:
->> scripts/mod/../../include/linux/mod_devicetable.h:608:39: error: expected ':', ',', ';', '}' or '__attribute__' before '__nonstring'
-     608 |         char name[PLATFORM_NAME_SIZE] __nonstring;
-         |                                       ^~~~~~~~~~~
-   scripts/mod/file2alias.c: In function 'do_platform_entry':
->> scripts/mod/file2alias.c:143:35: error: 'struct platform_device_id' has no member named 'name'
-     143 |         typeof(((struct devid *)0)->f) *f = ((m) + OFF_##devid##_##f)
-         |                                   ^~
-   scripts/mod/file2alias.c:932:9: note: in expansion of macro 'DEF_FIELD_ADDR'
-     932 |         DEF_FIELD_ADDR(symval, platform_device_id, name);
-         |         ^~~~~~~~~~~~~~
-   scripts/mod/../../include/linux/mod_devicetable.h:605:33: warning: format '%s' expects argument of type 'char *', but argument 4 has type 'int' [-Wformat=]
-     605 | #define PLATFORM_MODULE_PREFIX  "platform:"
-         |                                 ^~~~~~~~~~~
-   scripts/mod/file2alias.c:934:41: note: in expansion of macro 'PLATFORM_MODULE_PREFIX'
-     934 |         module_alias_printf(mod, false, PLATFORM_MODULE_PREFIX "%s", *name);
-         |                                         ^~~~~~~~~~~~~~~~~~~~~~
-   scripts/mod/file2alias.c:934:66: note: format string is defined here
-     934 |         module_alias_printf(mod, false, PLATFORM_MODULE_PREFIX "%s", *name);
-         |                                                                 ~^
-         |                                                                  |
-         |                                                                  char *
-         |                                                                 %d
-   make[3]: *** [scripts/Makefile.host:131: scripts/mod/file2alias.o] Error 1
-   make[3]: Target 'scripts/mod/' not remade because of errors.
-   make[2]: *** [Makefile:1279: prepare0] Error 2
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:248: __sub-make] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:248: __sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
-
-
-vim +608 scripts/mod/../../include/linux/mod_devicetable.h
-
-   606	
-   607	struct platform_device_id {
- > 608		char name[PLATFORM_NAME_SIZE] __nonstring;
-   609		kernel_ulong_t driver_data;
-   610	};
-   611	
-
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index b04b6a770afe..0215ef6095d9 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1467,7 +1467,7 @@ static void collect_mm_slot(struct khugepaged_mm_slot *mm_slot)
+ #ifdef CONFIG_SHMEM
+ /* hpage must be locked, and mmap_lock must be held */
+ static int set_huge_pmd(struct vm_area_struct *vma, unsigned long addr,
+-			pmd_t *pmdp, struct page *hpage)
++			pmd_t *pmdp, struct folio *folio)
+ {
+ 	struct vm_fault vmf = {
+ 		.vma = vma,
+@@ -1476,13 +1476,13 @@ static int set_huge_pmd(struct vm_area_struct *vma, unsigned long addr,
+ 		.pmd = pmdp,
+ 	};
+ 
+-	VM_BUG_ON(!PageTransHuge(hpage));
++	VM_BUG_ON(!folio_test_large(folio));
+ 	mmap_assert_locked(vma->vm_mm);
+ 
+-	if (do_set_pmd(&vmf, hpage))
++	if (do_set_pmd(&vmf, &folio->page))
+ 		return SCAN_FAIL;
+ 
+-	get_page(hpage);
++	folio_get(folio);
+ 	return SCAN_SUCCEED;
+ }
+ 
+@@ -1689,7 +1689,7 @@ int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
+ maybe_install_pmd:
+ 	/* step 5: install pmd entry */
+ 	result = install_pmd
+-			? set_huge_pmd(vma, haddr, pmd, &folio->page)
++			? set_huge_pmd(vma, haddr, pmd, folio)
+ 			: SCAN_SUCCEED;
+ 	goto drop_folio;
+ abort:
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.5
+
