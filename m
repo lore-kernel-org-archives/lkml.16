@@ -1,96 +1,95 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48CF2C9D;
-	Wed,  7 May 2025 17:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0DA2C9D;
+	Wed,  7 May 2025 17:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746638147; cv=none; b=TrqRmcxPjOyW6ByKPv7PGnIueSKpWlOkC2LCnTaG8iq5SpVvrfTSUWRAK4l4IbT+mLgxUI/n/W9Gqlsie/AQfuBrTxS702xpCmzezfAq3vsSj4jNGAAB62Sn4sh1xrU3pBjEQf5oqXE+FL+MCmOaMWNXQdXL21lwY8Ri9pLX06I=
+	t=1746638198; cv=none; b=SimvnoTYKme2PtMoC7vDIWBnbcWp7coLQptYK3TuozEkLByZCyHaYCe4AiAduZs3nnh3j1eLlwLzqJB2VMeIl9DHjWlwGwrc1BAoY7kLjQMCrqW2gZfPCrz/aQdNLUG8ySlV6Pb0BpBohSIKXucbiXb8on/jhVpjzu+Pw3I+xaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746638147; c=relaxed/simple;
-	bh=EodWvoVBr9X0H3RmTywHuGYU76j0rL2oQlt9Tkhfqc4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JxsJKf4OsYlDSqJWJ634rAGNjxV7pki4tt7s9LJOfBMEQrYMNtJkLB+RwipS+NhAhypr2ayqsIaefbH7ZbmS5eSTp7uy19Vt/H2zpXyeE90BHyiEmcGTFPbC2hGh7q3d/q2lHcRf4SMG3pyQ5P61jRi+E9yK3Bx/XAvZEPjVJCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-5242f137a1eso23058e0c.1;
-        Wed, 07 May 2025 10:15:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746638144; x=1747242944;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tjssFlw1FzpH4B0sQSNz2YHpp3SvNlCS+DZZcEssn9M=;
-        b=MIrGMvnItV69H0BBspd71AvQ2gDXSDgTjieOzJU1OLfD2QdMKjO3v/6DD83YNf5Yej
-         yM17R89TqlPYgBzCLGgKiyQVeZUnbtpLHAFWdMKQcxhCAgmPl8PkLPH0w5xqJrYkFnIj
-         twOXdVxYUYF1V9uKfrkpmPtMvpZzuDRTQ4UJ39VL+eq6A9D91BeXOjBrQG1JsnoSWQMb
-         kvvv3B7laSN8Fao8o8bZSB43pqf+nevJqrMwA32Hg59xr6j+1PoowVgwRbnpacQ92EM1
-         LbZiykYbpOojdPjLfG1X0DdyGAcDBQUbxkFJmoX1zpUUQ5T5raByOrKcSBWYpgxb+tJu
-         xYGg==
-X-Forwarded-Encrypted: i=1; AJvYcCVG2iDBZ1zME/1OB+3aRModeXjkR4kWzIS8NwYOIxCHCiByTsFGbgZs6faBrCagO9NoeOo2ZGEoFxN8@vger.kernel.org, AJvYcCVPmwvF8UrhHmG2fbR1S8+vyz73KX0GGsRDhsJLiWh+4a3Oipv9DRMyXUkwgyDUeBw6TOfX4LR6/+2gCEs+Xk/s7H4=@vger.kernel.org, AJvYcCVQ158jo6Dw3SD8b/kmSDskCizEYZrxM9XfrXrzphwTj4qpoPq+SzjSfhfzgkUyNaK9mAiboewg3SCEi9ib@vger.kernel.org, AJvYcCXBoeYlW5zU+r6tq9VWoKzNDgAhSwRnN1SV/qwwnkv02FTYuJj0OziA+xaAxFHDIZxOcpkGckkVnK8N@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0n+H4OekdhhQQritL+/aiyd6DbaBtUvhgYfmwxYtCkyUUZIac
-	dunUd4/rn4GRbLK3/zlfJIQ9EIFYfEvK5OyxQZF+bcZtQPw4/YYvCg3jfke1
-X-Gm-Gg: ASbGnctcomxj+rkHES7aU/rfGYMmCqXvW4NEK029nPdh+sGyQpWn+l1AAsqhwDmmEG8
-	Mymxau7fa1FNjoncu2ibSEyxglDcPDfT56vZk6HdMqaZTCVtFBJYFeUN1o5SbOp+Pfl8BGY0l8Q
-	a/7Jqs72UaVThrbgD3RxswF57U1xyp6i4qjJs3PawhxMJiCDR5GwY0vKFLHO1ToUVse48GqRhcf
-	OalRfFwx3mKVHzMxJCs+3+OBDoam4zqECG7tvVAAkUEc8uYQlxx3g/xG7qazat6cri/OInEPtU6
-	qp3jb3eVVflWJTbOSsQU1qhgpcOtgDFuL7NJno8YM1FuPkG4KiuQ5vi20Bb+rboww6rfRZW6//E
-	VgkM=
-X-Google-Smtp-Source: AGHT+IH3aVDhaWRFn4FB9MgDrcU6nndPWSx0YZkPnyqHM0aXOplfWvBDjOvj6bwuy5TjEiSf1oOVvQ==
-X-Received: by 2002:a05:6122:4692:b0:529:995:5aec with SMTP id 71dfb90a1353d-52c379ccb4cmr3336141e0c.4.1746638144092;
-        Wed, 07 May 2025 10:15:44 -0700 (PDT)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52ae41eb5d7sm2455492e0c.39.2025.05.07.10.15.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 10:15:43 -0700 (PDT)
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4c326617e6cso21764137.1;
-        Wed, 07 May 2025 10:15:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVB1+9wyrdrUm5hK3gvdbG7dnTe2vQ3GxXm1Ydmm7nMfCrqYo/bVPOY5ZRqpujolMNZcVIUjNREw9XhFYyh9zNKA3A=@vger.kernel.org, AJvYcCVCokQ6l2Daa0ZvE35e2yu6ImXytKsqTmtZHXObIZJ9cXvqBS2X5+eR8gvrP5tZ3IcOV4o2H/hjQQWd@vger.kernel.org, AJvYcCW5GGzOWJ5NWXCwfjkSkiBjikT9XydSgGOkNTMvmrAZlNQEHMnjzeMnHxTPrNFljuI19jOi7ojgyDzF71CE@vger.kernel.org, AJvYcCXoYhraIgs/iU+sgENE9bvx2bp6KhmvH1Pm2/+Lha//PZdJeQes58j5U7W18O/SyMN+6nUR+eGDjBQ3@vger.kernel.org
-X-Received: by 2002:a05:6102:5e82:b0:4c1:76a4:aee4 with SMTP id
- ada2fe7eead31-4dc73896351mr3305611137.19.1746638143350; Wed, 07 May 2025
- 10:15:43 -0700 (PDT)
+	s=arc-20240116; t=1746638198; c=relaxed/simple;
+	bh=ZkVo3XCJP7aTzyXcH76H1fv7+RhSJ+RWRQ4A7ntDDkQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nmmJNr859P3MVvQVJZX+Ce6UmxA2qxbO1WQX0NrgJPkv0QDgQ66Q39kszSWPWgbVc6j/GpZk2bs2OMeTuVpnIqYowJuuUVwAdOBOBb6sNYHTMKXVPgN/ngLjdHq20u5DV7VeX0kM10+uROh8/Mpb+e690h9BUqt1cXm6WXc1q60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=CYrxyyYm; arc=none smtp.client-ip=80.12.242.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="CYrxyyYm"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id CiMZuIeFmUxKYCiMZu1ZE6; Wed, 07 May 2025 19:15:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1746638121;
+	bh=+0ykhHojT69RVsplWj2aWmMhC2Tvr/5jv5CrtnYrBuM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=CYrxyyYmDhGIsB+Jw6pW2GT3o3WBA3xZRhDDOWlq+w59EOAguncrEpZcckWkHXMpQ
+	 8QypKOdWozn98LZuru+X1XOqgh5QIErAzwPaU7mdbVpCc7hxUDVKpcwYMqhP2brWVc
+	 NZUp4wfr5nvQ/7bZfF2xW1qb5obV9NrK+mUo21+CV71vJIJQBqTs9a+6Y8vhILYFtw
+	 nIloVyZ9409AHoETMb7uChjbS2UQlHQZ4zwLLSbmGanux47j0QUs1dl9AwGguNHPdf
+	 BqQGXkEgGTm0LYxNPqpZzLQb0FfXBXW4cLDucZ1W74d5g76GRrFIZmdoJ8Xe+1XIGI
+	 j0dIfmmtIgbrw==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Wed, 07 May 2025 19:15:21 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <5ab1af21-ebe4-43a4-bb70-fa25c442e24f@wanadoo.fr>
+Date: Wed, 7 May 2025 19:15:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410140628.4124896-1-claudiu.beznea.uj@bp.renesas.com> <20250410140628.4124896-6-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20250410140628.4124896-6-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 7 May 2025 19:15:31 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXcUCsa-c0oHz20huEG0cvv6zVq4OwONfrcMVSQC84XbQ@mail.gmail.com>
-X-Gm-Features: ATxdqUFFIBTCxfle3eXYQu4EEydjHa0Zh6WAfCUTIuL1cqOuLd_-RqXuGIJbNNw
-Message-ID: <CAMuHMdXcUCsa-c0oHz20huEG0cvv6zVq4OwONfrcMVSQC84XbQ@mail.gmail.com>
-Subject: Re: [PATCH 5/7] clk: renesas: rzg2l-cpg: Drop MSTOP based power
- domain support
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] ASoC: rt712-sdca: remove redundant else path of if
+ statement
+To: Colin Ian King <colin.i.king@gmail.com>,
+ Oder Chiou <oder_chiou@realtek.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+ linux-sound@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250507140907.255562-1-colin.i.king@gmail.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250507140907.255562-1-colin.i.king@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 10 Apr 2025 at 16:06, Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Since the configuration order between the individual MSTOP and CLKON bits
-> cannot be preserved with the power domain abstraction, drop the power
-> domain core code.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Le 07/05/2025 à 16:09, Colin Ian King a écrit :
+> There is an if/else check where the else part is executed if
+> adc_vol_flag is true, this else path checks if adc_vol_flag
+> is true (which is a redundant second check) and the if path is
+> always taken. Remove the redundant check and remove the else
+> path since that can never occur.
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+>   sound/soc/codecs/rt712-sdca.c | 8 ++------
+>   1 file changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/rt712-sdca.c b/sound/soc/codecs/rt712-sdca.c
+> index 19d99b9d4ab2..570c2af1245d 100644
+> --- a/sound/soc/codecs/rt712-sdca.c
+> +++ b/sound/soc/codecs/rt712-sdca.c
+> @@ -1065,12 +1065,8 @@ static int rt712_sdca_dmic_set_gain_get(struct snd_kcontrol *kcontrol,
+>   
+>   		if (!adc_vol_flag) /* boost gain */
+>   			ctl = regvalue / 0x0a00;
+> -		else { /* ADC gain */
+> -			if (adc_vol_flag)
+> -				ctl = p->max - (((0x1e00 - regvalue) & 0xffff) / interval_offset);
+> -			else
+> -				ctl = p->max - (((0 - regvalue) & 0xffff) / interval_offset);
+> -		}
+> +		else /* ADC gain */
+> +			ctl = p->max - (((0x1e00 - regvalue) & 0xffff) / interval_offset);
+>   
+>   		ucontrol->value.integer.value[i] = ctl;
+>   	}
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hi,
 
-Gr{oetje,eeting}s,
+apparently the same pattern is in rt712-sdca-dmic.c.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+CJ
