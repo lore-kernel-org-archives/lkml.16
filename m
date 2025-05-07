@@ -1,295 +1,277 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9C528C011;
-	Wed,  7 May 2025 16:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C280C1B87D5
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746637007; cv=none; b=a/kAkOR3i+sCLbA6QFhgY5ZMxrVSbuz9kSeOdK6tWcTk4MrYGeaM+4IszjJicZgyRxAu4unocIMTiVZ+JWSLLsHNsLeQ+V6UiCz8Jzkn/+uzJWp5ZrlXbJA1H6wtaVq3nW5V7LPDnoOXHRuvSAbq/qiohK8QzQMPeULy166SrfA=
+	t=1746637061; cv=none; b=VOOANsQstrKG6u2qqXtVxG7NMhYAXH/uRn6OOHgaa1WFkuwdwm2TyP+m8UUkBFJTAsL5kSuHnwrWK8Slt2G9aF2J9g7+r2UallTh+rz7fNxzwahvcwP+xHVvg77YAx2qCbo/aeQ/buWL5CTQcT1vIGXnR33j2W05bCWyx5pk0UA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746637007; c=relaxed/simple;
-	bh=M8hqAuafWKlzWJxl30NzD8kz2WfTnQJN5wvmWCfhGHM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rg0ioNPfQAG4gxt/qWUtcHM4zigwcm/rdiOjU42kJ/xoGDobtjz8KIU6eEGF/s1aTAvJIuZIrpsEuRQWheXxMSwSsBlZlptzkY6R5xiN6JAS+9vX5ADrBsdIhMelJ7NBjlF1FXkc/Xuxi4Ns2EEa9kY+f0wHRZYnHf8nGzrsVeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hBLZblBv; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746637061; c=relaxed/simple;
+	bh=czj8zK3iUyV8d5pg2hXGm9XDWCOqd+CVj2BjA34Jx3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VLpgbPQcFTGRXRFDerzGIX9GdXaTMz3bVFBFFjtgJtzmwSHAXkIlX/6Mec29HWFlrbZvj4TyI5pIBSu2fVbXWtU51KJ/6jgpMXJpBz//oEV4iPti7hxNc8JERAnlvSexCTabd4Yqx1/FfLkboxJnvtgAC8xZRs5UtWmCBZqG4Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YrLTtI1r; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBLZblBv"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so78171a12.0;
-        Wed, 07 May 2025 09:56:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YrLTtI1r"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-30a9cd61159so149923a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 09:57:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746637003; x=1747241803; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bbQgJe6mi5e6seyWphPc3GG0/Me0mvQbZgaUQ7DeMw0=;
-        b=hBLZblBvjG82ts+k2aQmeNrFpJ6XBrHI1a8xJcyyMWJ2kHwtDDnz6HCOWKVcmwk3ui
-         RN4mst1cB6zVJnHLj4irmEctSd35enY1+yICotU/NlfwnMtPmXY1rglGs3Z1CleocP45
-         L0CckTNgS9wK64lp0xQoqSloVoFXgzpq6ncNn+ibyeDYpkWDLrq7UwVKNH8pwqZJ643s
-         s4CEzYsTIx8KpaWEtpJFjNNrQqavykrrBea3GQISCkjuS8Zmpt7lh0wY8eGWVGGfZ4ZT
-         79yt7gHyPFD411bFRIvBr6MG+s8plnM51lL2aXfmRFT3xds8HRw68S8VNCGGVR03Snke
-         3oOg==
+        d=linaro.org; s=google; t=1746637059; x=1747241859; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tmbroDZ+juh6uiII9hBcIBA74Uu8yPFGlkERS+BA/nE=;
+        b=YrLTtI1rZmUin/OiTk4Gsv8iYM3Up2sVQ10G0y80gnqpryX94AMnpW0/CZb0ecLVnv
+         88Cs9Fh0y5UCfMu2w13JpczDOrID9DweD1ypPWoPphXK8Zywv6T4uKc36tDyEwXihHaA
+         e8y64fKV09Bc4P93jc33KVfRvaykL1YZqhvfRCNkXFd+aO7LC2VlY5W+y2mTf411Q5jx
+         c8/iQuWGIVPv3JSevz08sKOt7XVdiTGWRHrGFG4+LIIckXIm0B2GYHrq4ljS5pr0LJcD
+         h5ZJsZlVwTj9bH9ZpNjwu2iOO0IAgmW9PX6YfpYDMm4v3N1vtiJyYzM3Ab5wSQBmtSaD
+         VQeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746637003; x=1747241803;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bbQgJe6mi5e6seyWphPc3GG0/Me0mvQbZgaUQ7DeMw0=;
-        b=JM5U0vfi384nL+hUVPVWAocJn1AGSRiZidHxgVrMYoToFYgXWMZzhGhmQnZrLlUBQA
-         RogDIVaTGf9tCHZIrgByX5+ZNa+svAkWmgcwFsjb8UPUlfdMXG9AgF6Ipb1bDk0KW0RO
-         SRWcMRje5dq8XugVTf3bZhVxVi2nklsa1RHMDdsgugR97b1r50jqL26P8lA4UJbVRF2Q
-         D1UKh7gee2jXfuiTX0piq5QmmFsiRl3piooiZgSgY9EqF3Wu+R2bavFlXK9+glsVxvGP
-         GnezcdjhMNYniBb9ujEFQ2oxvwz58yCnTvS4j9twz7Bh15RboB7votFEbTJrnAjPSwdF
-         d86Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUCh0VEcnAzjbYqdKmW89sgwEbtup4ZG4w16Z0T+r13hOmMetMgEvsxBG0phdbPWQr+UaYHIimbfs9Jnf+d@vger.kernel.org, AJvYcCVtFoDc1fqegfS71bwhOFwEMuIsBLC8GYWN1JqHVzFgnMRb8kpvc7OEJDqYY0uPWjZMTfTLJwGti788Xcmq@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGlMJiZxxal4Yxlg76tbdDjby9mSjSN6ZSl6DVFLzMydIIeWNF
-	CP19MCXnRVX2IuNDwwB/DOUlS+vTDSXVODS6eDtSNNwIFw6dS6OdkkLzfKwgtX5S7B7wnrcriQZ
-	m5zFWQhOyAlPvf70sc1HC8mUlQH4=
-X-Gm-Gg: ASbGncsWGD3gFDznOqpPsMmr6S1nJz/6C9JSdUUmliEuAMK1NKHBNkT0mMT16CNQn8b
-	YkQTx4pW8hACYDiUb+7FKge6jI9vXYb3uZShAc0vILaChdYp4ZBGxNTbx0Q/bTn5y5ZZBjviWtd
-	HDeK7amBLlOBykRmS5a6OPMg==
-X-Google-Smtp-Source: AGHT+IEpiSm+Lms2NGKnrMl4I9FeMG7u5NOy/L1fcvTs161jhL2q8timDPhGlcJ+3eXzBu017BBrz9g29yNfLxIjetw=
-X-Received: by 2002:a17:906:fe0c:b0:acb:b9db:aa22 with SMTP id
- a640c23a62f3a-ad1e8978112mr379989066b.0.1746637003080; Wed, 07 May 2025
- 09:56:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746637059; x=1747241859;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tmbroDZ+juh6uiII9hBcIBA74Uu8yPFGlkERS+BA/nE=;
+        b=ZyLRn/1YlZhYLRitizBkaDmXZdDtpp4pXxgQFqkL1eINZg+lESELbnau/T3n2h1rmi
+         T83bpBHmo2qtmlWIDO0NwWnbxOfwtzg7iq8jFUJNG0Tcgr+hO6zXiCozJi5KvXuDP58h
+         RatJnC5Icz/uS1QyJ4XYGrSQblgLQoG6n1SgKK11XR3jRrReEehAzXqlnbF/dhpY1T/w
+         RJvvb+4RMaHxNnXaJGUctcaarKc9KuJjm7ODZhwkWHqKY5+A5opriHpPmuQq/6kR42XY
+         hi45wQLLImAcIELkTXRFqWSYiPNBHBIveMB4U/RwqJd55b5HIy8zNmxLfVdS7JssRNs7
+         6fkw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXwJGoIpCcSf+Sd147jQSCTzaDjJdimmEFs49nzQPbxj+5oE3C2kkj96/9K1X7Ed0wFX3b3C9uY9A2cDE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwL67X7e0JjBLtFPdJO3PNrGlHVKQ/f62ECO4+hcYIW55IJWEuZ
+	No8Skj+f/dMxl+YfFz80rRLKF2vPp7XPN/4FuAvAPUa182rJ0lyK3D7c5b1+n1M=
+X-Gm-Gg: ASbGncsoTZjWgS3ndgx1oVB/yOXQKZPXe6KPTWzjkG998j7AL4sw+0Ps97fMSwXleqj
+	crVYy0MaLTe3WeCAQgdBPrD2NJ+E1lhSblimIXkME32OjQeYbq702j2CAe115g/BAVfGSi7qBRO
+	iO+Me64tmivnJHEm4bZNsXUjLxKnG8VWbD1roCz1F/yk5fbXgKse/bToN/kSWAZlfhBbEkCZTM9
+	03HfwzIUF/+1VWgqyh0F2aiACIeJRrHZ0RIfBg1xKtKQvB0Vei51KUAZDz1xSDjNNylXRfwq3g5
+	Gy4/iEm8T5f/q7YAgVXG4jCmQjbOWfdMIS+P61W8CMOO
+X-Google-Smtp-Source: AGHT+IGxXUaGxfyyE3GygRPHDO80N6o85rgikZ9Ncx5TB24ADQ0xq3YG8V+CK95O1+HnuuoJgKZlZg==
+X-Received: by 2002:a17:90b:2b4d:b0:2fa:2268:1af4 with SMTP id 98e67ed59e1d1-30adbf1163emr326433a91.7.1746637058949;
+        Wed, 07 May 2025 09:57:38 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:d6b9:fb9b:e26b:ab43])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ad4b40e4asm445248a91.13.2025.05.07.09.57.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 09:57:38 -0700 (PDT)
+Date: Wed, 7 May 2025 10:57:36 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Beleswar Padhi <b-padhi@ti.com>
+Cc: andersson@kernel.org, afd@ti.com, hnagalla@ti.com, u-kumar1@ti.com,
+	jm@ti.com, jan.kiszka@siemens.com, christophe.jaillet@wanadoo.fr,
+	jkangas@redhat.com, eballetbo@redhat.com,
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 10/35] remoteproc: k3-m4: Use k3_rproc_mem_data
+ structure for memory info
+Message-ID: <aBuRAOlEvvAuBgOy@p14s>
+References: <20250425104135.830255-1-b-padhi@ti.com>
+ <20250425104135.830255-11-b-padhi@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507032926.377076-2-chenlinxuan@uniontech.com>
- <CAOQ4uxjKFXOKQxPpxtS6G_nR0tpw95w0GiO68UcWg_OBhmSY=Q@mail.gmail.com> <CAC1kPDP4oO29B_TM-2wvzt1+Gc6hWTDGMfHSJhOax4_Cg2dEkg@mail.gmail.com>
-In-Reply-To: <CAC1kPDP4oO29B_TM-2wvzt1+Gc6hWTDGMfHSJhOax4_Cg2dEkg@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 7 May 2025 18:56:31 +0200
-X-Gm-Features: ATxdqUEbY-81fyoPFOCtlc2Ubdm-cLABAOgs-Dxmf27FuHMDDx780lEoG71SZYY
-Message-ID: <CAOQ4uxgS3OUy9tpphAJKCQFRAn2zTERXXa0QN_KvP6ZOe2KVBw@mail.gmail.com>
-Subject: Re: [RFC PATCH] fs: fuse: add backing_files control file
-To: Chen Linxuan <chenlinxuan@uniontech.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425104135.830255-11-b-padhi@ti.com>
 
-On Wed, May 7, 2025 at 2:34=E2=80=AFPM Chen Linxuan <chenlinxuan@uniontech.=
-com> wrote:
->
-> On Wed, May 7, 2025 at 7:03=E2=80=AFPM Amir Goldstein <amir73il@gmail.com=
-> wrote:
-> >
-> > On Wed, May 7, 2025 at 5:29=E2=80=AFAM Chen Linxuan <chenlinxuan@uniont=
-ech.com> wrote:
-> > >
-> > > Add a new FUSE control file "/sys/fs/fuse/connections/*/backing_files=
-"
-> > > that exposes the paths of all backing files currently being used in
-> > > FUSE mount points. This is particularly valuable for tracking and
-> > > debugging files used in FUSE passthrough mode.
-> > >
-> > > This approach is similar to how fixed files in io_uring expose their
-> > > status through fdinfo, providing administrators with visibility into
-> > > backing file usage. By making backing files visible through the FUSE
-> > > control filesystem, administrators can monitor which files are being
-> > > used for passthrough operations and can force-close them if needed by
-> > > aborting the connection.
-> > >
-> > > This exposure of backing files information is an important step towar=
-ds
-> > > potentially relaxing CAP_SYS_ADMIN requirements for certain passthrou=
-gh
-> > > operations in the future, allowing for better security analysis of
-> > > passthrough usage patterns.
-> > >
-> > > The control file is implemented using the seq_file interface for
-> > > efficient handling of potentially large numbers of backing files.
-> > > Access permissions are set to read-only (0400) as this is an
-> > > informational interface.
-> > >
-> > > FUSE_CTL_NUM_DENTRIES has been increased from 5 to 6 to accommodate t=
-he
-> > > additional control file.
-> > >
-> > > Some related discussions can be found at:
-> > >
-> > > Link: https://lore.kernel.org/all/4b64a41c-6167-4c02-8bae-3021270ca51=
-9@fastmail.fm/T/#mc73e04df56b8830b1d7b06b5d9f22e594fba423e
-> > > Link: https://lore.kernel.org/linux-fsdevel/CAOQ4uxhAY1m7ubJ3p-A3rSuf=
-w_53WuDRMT1Zqe_OC0bP_Fb3Zw@mail.gmail.com/
-> > >
-> >
-> > remove newline
-> >
-> > > Cc: Amir Goldstein <amir73il@gmail.com>
-> > > Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
-> > >
-> > > ---
-> > > Please review this patch carefully. I am new to kernel development an=
-d
-> > > I am not quite sure if I have followed the best practices, especially
-> > > in terms of seq_file, error handling and locking. I would appreciate
-> > > any feedback.
-> >
-> > Very nice work!
-> >
-> > >
-> > > I have do some simply testing using libfuse example [1]. It seems to
-> > > work well.
-> >
-> > It would be great if you could add basic sanity tests to libfuse
-> > maybe in test_passthrough_hp(), but I do not see any tests for
-> > /sys/fs/fuse/connections.
-> >
-> > I also see that there is one kernel selftest that mounts a fuse fs
-> > tools/testing/selftests/memfd
-> > maybe that is an easier way to write a simple test to verify the
-> > /sys/fs/fuse/connections functionally.
-> >
-> > Anyway, I do not require that you do that as a condition for merging th=
-is patch,
-> > but I may require that for removing CAP_SYS_ADMIN ;)
-> >
-> > >
-> > > [1]: https://github.com/libfuse/libfuse/blob/master/example/passthrou=
-gh_hp.cc
-> > > ---
-> > >  fs/fuse/control.c | 129 ++++++++++++++++++++++++++++++++++++++++++++=
-+-
-> > >  fs/fuse/fuse_i.h  |   2 +-
-> > >  2 files changed, 129 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/fs/fuse/control.c b/fs/fuse/control.c
-> > > index 2a730d88cc3bd..4d1e0acc5030f 100644
-> > > --- a/fs/fuse/control.c
-> > > +++ b/fs/fuse/control.c
-> > > @@ -11,6 +11,7 @@
-> > >  #include <linux/init.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/fs_context.h>
-> > > +#include <linux/seq_file.h>
-> > >
-> > >  #define FUSE_CTL_SUPER_MAGIC 0x65735543
-> > >
-> > > @@ -180,6 +181,129 @@ static ssize_t fuse_conn_congestion_threshold_w=
-rite(struct file *file,
-> > >         return ret;
-> > >  }
-> > >
-> > > +struct fuse_backing_files_seq_state {
-> > > +       struct fuse_conn *fc;
-> > > +       int pos;
-> >
-> > It will be more clear to call this 'backing_id'.
-> > It is more than an abstract pos in this context.
-> >
-> > > +};
-> > > +
-> > > +static void *fuse_backing_files_seq_start(struct seq_file *seq, loff=
-_t *pos)
-> > > +{
-> > > +       struct fuse_backing_files_seq_state *state =3D seq->private;
-> > > +       struct fuse_conn *fc =3D state->fc;
-> > > +
-> > > +       if (!fc)
-> > > +               return NULL;
-> > > +
-> > > +       spin_lock(&fc->lock);
-> > > +
-> > > +       if (*pos > idr_get_cursor(&fc->backing_files_map)) {
-> >
-> > This won't do after the ida allocator has wrapped up back to 1,
-> > it will not iterate the high ids.
-> >
-> > Please look at using idr_get_next() iteration, like bpf_prog_seq_ops.
-> >
-> > With that change, I don't think that you need to take the spin lock
-> > for iteration.
-> > I think that you can use rcu_read_lock() for the scope of each
-> > start(). next(), show()
-> > because we do not need to promise a "snapshot" of the backing_file at a=
- specific
-> > time. If backing files are added/removed while iterating it is undefine=
-d if they
-> > are listed or not, just like readdir.
-> >
-> > > +               spin_unlock(&fc->lock);
-> > > +               return NULL;
-> >
-> > Not critical, but if you end up needing a "scoped" unlock for the
-> > entire iteration, you can use
-> > the unlock in stop() if you return ERR_PTR(ENOENT) instead of NULL in
-> > those error conditions.
-> >
-> > > +       }
-> > > +
-> > > +       state->pos =3D *pos;
-> > > +       return state;
-> > > +}
-> > > +
-> > > +static void *fuse_backing_files_seq_next(struct seq_file *seq, void =
-*v,
-> > > +                                        loff_t *pos)
-> > > +{
-> > > +       struct fuse_backing_files_seq_state *state =3D seq->private;
-> > > +
-> > > +       (*pos)++;
-> > > +       state->pos =3D *pos;
-> > > +
-> > > +       if (state->pos > idr_get_cursor(&state->fc->backing_files_map=
-)) {
-> > > +               spin_unlock(&state->fc->lock);
-> > > +               return NULL;
-> > > +       }
-> > > +
-> > > +       return state;
-> > > +}
-> > > +
-> > > +static int fuse_backing_files_seq_show(struct seq_file *seq, void *v=
-)
-> > > +{
-> > > +       struct fuse_backing_files_seq_state *state =3D seq->private;
-> > > +       struct fuse_conn *fc =3D state->fc;
-> > > +       struct fuse_backing *fb;
-> > > +
-> > > +       fb =3D idr_find(&fc->backing_files_map, state->pos);
-> >
-> > You must fuse_backing_get/put(fb) around dereferencing fb->file
-> > if not holding the fc->lock.
-> > See fuse_passthrough_open().
-> >
-> > > +       if (!fb || !fb->file)
-> > > +               return 0;
-> > > +
-> > > +       seq_file_path(seq, fb->file, " \t\n\\");
-> >
-> > Pls print the backing id that is associated with the open file.
->
-> Does the backing id means anything in user space?
-> I think maybe we shouldn't expose kernel details to userspace.
->
+On Fri, Apr 25, 2025 at 04:11:10PM +0530, Beleswar Padhi wrote:
+> The ti_k3_m4_remoteproc.c driver previously hardcoded device memory
+> region addresses and names. Change this to use the k3_rproc_mem_data
+> structure to store memory information. This aligns with DSP and R5
+> drivers, and can be refactored out later.
+> 
+> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
+> Tested-by: Judith Mendez <jm@ti.com>
+> ---
+> v11: Changelog:
+> 1. Carried T/B tag.
+> 
+> Link to v10:
+> https://lore.kernel.org/all/20250417182001.3903905-11-b-padhi@ti.com/
+> 
+> v10: Changelog:
+> None
+> 
+> Link to v9:
+> https://lore.kernel.org/all/20250317120622.1746415-6-b-padhi@ti.com/
+> 
+>  drivers/remoteproc/ti_k3_m4_remoteproc.c | 60 ++++++++++++++++++------
+>  1 file changed, 45 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/ti_k3_m4_remoteproc.c b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+> index d0ee7a8d460d4..e83bef7cfddfd 100644
+> --- a/drivers/remoteproc/ti_k3_m4_remoteproc.c
+> +++ b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+> @@ -20,9 +20,6 @@
+>  #include "remoteproc_internal.h"
+>  #include "ti_sci_proc.h"
+>  
+> -#define K3_M4_IRAM_DEV_ADDR 0x00000
+> -#define K3_M4_DRAM_DEV_ADDR 0x30000
+> -
+>  /**
+>   * struct k3_m4_rproc_mem - internal memory structure
+>   * @cpu_addr: MPU virtual address of the memory region
+> @@ -38,15 +35,29 @@ struct k3_m4_rproc_mem {
+>  };
+>  
+>  /**
+> - * struct k3_m4_rproc_mem_data - memory definitions for a remote processor
+> + * struct k3_m4_mem_data - memory definitions for a remote processor
+>   * @name: name for this memory entry
+>   * @dev_addr: device address for the memory entry
+>   */
+> -struct k3_m4_rproc_mem_data {
+> +struct k3_m4_mem_data {
+>  	const char *name;
+>  	const u32 dev_addr;
+>  };
+>  
+> +/**
+> + * struct k3_m4_dev_data - device data structure for a M4 core
+> + * @mems: pointer to memory definitions for a M4 core
+> + * @num_mems: number of memory regions in @mems
+> + * @boot_align_addr: boot vector address alignment granularity
+> + * @uses_lreset: flag to denote the need for local reset management
+> + */
+> +struct k3_m4_dev_data {
+> +	const struct k3_m4_mem_data *mems;
+> +	u32 num_mems;
+> +	u32 boot_align_addr;
+> +	bool uses_lreset;
+> +};
+> +
+>  /**
+>   * struct k3_m4_rproc - k3 remote processor driver structure
+>   * @dev: cached device pointer
+> @@ -56,6 +67,7 @@ struct k3_m4_rproc_mem_data {
+>   * @rmem: reserved memory regions data
+>   * @num_rmems: number of reserved memory regions
+>   * @reset: reset control handle
+> + * @data: pointer to M4-specific device data
+>   * @tsp: TI-SCI processor control handle
+>   * @ti_sci: TI-SCI handle
+>   * @ti_sci_id: TI-SCI device identifier
+> @@ -71,6 +83,7 @@ struct k3_m4_rproc {
+>  	struct k3_m4_rproc_mem *rmem;
+>  	int num_rmems;
+>  	struct reset_control *reset;
+> +	const struct k3_m4_dev_data *data;
+>  	struct ti_sci_proc *tsp;
+>  	const struct ti_sci_handle *ti_sci;
+>  	u32 ti_sci_id;
+> @@ -336,14 +349,13 @@ static void *k3_m4_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len, bool
+>  static int k3_m4_rproc_of_get_memories(struct platform_device *pdev,
+>  				       struct k3_m4_rproc *kproc)
+>  {
+> -	static const char * const mem_names[] = { "iram", "dram" };
+> -	static const u32 mem_addrs[] = { K3_M4_IRAM_DEV_ADDR, K3_M4_DRAM_DEV_ADDR };
+> +	const struct k3_m4_dev_data *data = kproc->data;
+>  	struct device *dev = &pdev->dev;
+>  	struct resource *res;
+>  	int num_mems;
+>  	int i;
+>  
+> -	num_mems = ARRAY_SIZE(mem_names);
+> +	num_mems = kproc->data->num_mems;
+>  	kproc->mem = devm_kcalloc(kproc->dev, num_mems,
+>  				  sizeof(*kproc->mem), GFP_KERNEL);
+>  	if (!kproc->mem)
+> @@ -351,17 +363,17 @@ static int k3_m4_rproc_of_get_memories(struct platform_device *pdev,
+>  
+>  	for (i = 0; i < num_mems; i++) {
+>  		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> -						   mem_names[i]);
+> +						   data->mems[i].name);
+>  		if (!res) {
+>  			dev_err(dev, "found no memory resource for %s\n",
+> -				mem_names[i]);
+> +				data->mems[i].name);
+>  			return -EINVAL;
+>  		}
+>  		if (!devm_request_mem_region(dev, res->start,
+>  					     resource_size(res),
+>  					     dev_name(dev))) {
+>  			dev_err(dev, "could not request %s region for resource\n",
+> -				mem_names[i]);
+> +				data->mems[i].name);
+>  			return -EBUSY;
+>  		}
+>  
+> @@ -369,15 +381,15 @@ static int k3_m4_rproc_of_get_memories(struct platform_device *pdev,
+>  							 resource_size(res));
+>  		if (!kproc->mem[i].cpu_addr) {
+>  			dev_err(dev, "failed to map %s memory\n",
+> -				mem_names[i]);
+> +				data->mems[i].name);
+>  			return -ENOMEM;
+>  		}
+>  		kproc->mem[i].bus_addr = res->start;
+> -		kproc->mem[i].dev_addr = mem_addrs[i];
+> +		kproc->mem[i].dev_addr = data->mems[i].dev_addr;
+>  		kproc->mem[i].size = resource_size(res);
+>  
+>  		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%zx va %pK da 0x%x\n",
+> -			mem_names[i], &kproc->mem[i].bus_addr,
+> +			data->mems[i].name, &kproc->mem[i].bus_addr,
+>  			kproc->mem[i].size, kproc->mem[i].cpu_addr,
+>  			kproc->mem[i].dev_addr);
+>  	}
+> @@ -563,12 +575,17 @@ static int k3_m4_rproc_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct k3_m4_rproc *kproc;
+> +	const struct k3_m4_dev_data *data;
 
-It means everything to userspace.
-backing ids are part of the userspace UAPI - you have documented it yoursel=
-f.
-The fuse server used backing ids to manage access to backing files
-https://github.com/libfuse/libfuse/blob/master/example/passthrough_hp.cc#L8=
-55
+Please move to the top of the variable declarations, i.e before struct device.
 
-> >
-> > I wonder out loud if we should also augment the backing fd
-> > information in fdinfo of specific open fuse FOPEN_PASSTHROUGH files?
->
-> Or do you mean that we should display backing id and fuse connection id h=
-ere?
->
-
-This is extra and nice to have.
-It can show admin which files are using fuse passthrough.
-It cannot replace displaying all backing ids under connection
-because server can register backing ids without using them to open files
-and most importantly server can leak backing ids, which is a good
-reason to kill it.
-
-Thanks,
-Amir.
+>  	struct rproc *rproc;
+>  	const char *fw_name;
+>  	bool r_state = false;
+>  	bool p_state = false;
+>  	int ret;
+>  
+> +	data = of_device_get_match_data(dev);
+> +	if (!data)
+> +		return -ENODEV;
+> +
+>  	ret = rproc_of_parse_firmware(dev, 0, &fw_name);
+>  	if (ret)
+>  		return dev_err_probe(dev, ret, "failed to parse firmware-name property\n");
+> @@ -583,6 +600,7 @@ static int k3_m4_rproc_probe(struct platform_device *pdev)
+>  	kproc = rproc->priv;
+>  	kproc->dev = dev;
+>  	kproc->rproc = rproc;
+> +	kproc->data = data;
+>  	platform_set_drvdata(pdev, rproc);
+>  
+>  	kproc->ti_sci = devm_ti_sci_get_by_phandle(dev, "ti,sci");
+> @@ -650,8 +668,20 @@ static int k3_m4_rproc_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct k3_m4_mem_data am64_m4_mems[] = {
+> +	{ .name = "iram", .dev_addr = 0x0 },
+> +	{ .name = "dram", .dev_addr = 0x30000 },
+> +};
+> +
+> +static const struct k3_m4_dev_data am64_m4_data = {
+> +	.mems = am64_m4_mems,
+> +	.num_mems = ARRAY_SIZE(am64_m4_mems),
+> +	.boot_align_addr = SZ_1K,
+> +	.uses_lreset = true,
+> +};
+> +
+>  static const struct of_device_id k3_m4_of_match[] = {
+> -	{ .compatible = "ti,am64-m4fss", },
+> +	{ .compatible = "ti,am64-m4fss", .data = &am64_m4_data, },
+>  	{ /* sentinel */ },
+>  };
+>  MODULE_DEVICE_TABLE(of, k3_m4_of_match);
+> -- 
+> 2.34.1
+> 
