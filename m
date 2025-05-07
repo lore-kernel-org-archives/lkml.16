@@ -1,155 +1,62 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E006B171A1
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 06:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F791FE47D
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 06:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746597805; cv=none; b=o/OMfK+SXwtf8ro9u/jyJClFv74FB0M2FFr8MJ9djJfKKXOCk9cmuo+TYzzb0QHqkxb/w95ge4dNxzN8Z54x8r57QefBWztKt5qdYdcJBX+TNULxhQHWhS+jbqfgtvP0I6EamfSXd2HlnayBt7JIq9b1tHDTN2c1VQcO1tvG8Kw=
+	t=1746597809; cv=none; b=EiOknvxKmGe0Oi2cALBM+Uud7rqDPTXA2TVvx4dcJ4ffabR2JIa8FemaBB7t1OQfGyTfMSCNBnB4h/9lk+JdkKnej7PsJtnEOh2RcAUd+eDuozyj+/5WDPaGy2vTFrYtgfRpIcGc3Ck+LDdskDVw2b1wtZd1CIoQR2s8x113gng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746597805; c=relaxed/simple;
-	bh=1rzIk3HDc69ZVvM2Yq0wR/w7H2IoP9h3wfbPJyiAL58=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iMIJcA9XO6fKmy61ry0GWOAR29inY2l6qFufGTq/NGQLvLM9aio5IDLtLas90MBKyTXIei9WS3Om/OIKsu7pZMfzfvk3k3sE3iQQqf24LPS8B23UqwesSFU2IGy6Io+Kg/FIGqQ0E3vVEVltTy0hDozGJP+1Sqr7TjNbu03Z0y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 26684339;
-	Tue,  6 May 2025 23:03:10 -0700 (PDT)
-Received: from K4MQJ0H1H2.emea.arm.com (K4MQJ0H1H2.blr.arm.com [10.162.43.22])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B7EAA3F5A1;
-	Tue,  6 May 2025 23:03:12 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: akpm@linux-foundation.org
-Cc: Liam.Howlett@oracle.com,
-	lorenzo.stoakes@oracle.com,
-	vbabka@suse.cz,
-	jannh@google.com,
-	pfalcato@suse.de,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	david@redhat.com,
-	peterx@redhat.com,
-	ryan.roberts@arm.com,
-	mingo@kernel.org,
-	libang.li@antgroup.com,
-	maobibo@loongson.cn,
-	zhengqi.arch@bytedance.com,
-	baohua@kernel.org,
-	anshuman.khandual@arm.com,
-	willy@infradead.org,
-	ioworker0@gmail.com,
-	yang@os.amperecomputing.com,
-	baolin.wang@linux.alibaba.com,
-	ziy@nvidia.com,
-	hughd@google.com,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v2 1/2] mm: Call pointers to ptes as ptep
-Date: Wed,  7 May 2025 11:32:55 +0530
-Message-Id: <20250507060256.78278-2-dev.jain@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20250507060256.78278-1-dev.jain@arm.com>
-References: <20250507060256.78278-1-dev.jain@arm.com>
+	s=arc-20240116; t=1746597809; c=relaxed/simple;
+	bh=OSvCPQUA/n3VEDwNBMvCGbsPCdrkhEv83kJ4kQDEFRQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=tuMA6PjUimpNmRgQDnT+rI53pHEWKsB2mt4+/5cLLef7HpkNcn2esvSGwyoxg1djOD6+tCddvTIg8CNo5GgI0UodstpqzClOgSCIBUamao3E9yWtDtxQRsWGt+0tzvUrBuMHSLIJA2oXFPToLPKJAB0nbuTZs+RW8QAlxmBqXSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3da76423b9cso851945ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 23:03:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746597806; x=1747202606;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OSvCPQUA/n3VEDwNBMvCGbsPCdrkhEv83kJ4kQDEFRQ=;
+        b=QA/1GBBdx/QeHI3Bw16A7zxySFdmxHtH4RAqqkjYCjj0Xua8d9faDgUMPagR19P2MJ
+         cnFnN4QGQnx03PACoC77fN6XiVSRcD74yM1ei+0uktE1OPvjRRaIx3fwYyIldF9RxApk
+         XktwMhvknfgUW6gEIk8r6ywjA+WodoOFwfLsfSPeLUtS+NMJYWwXtmHMH+Ou6lvoxfI5
+         HlQwKAat7ziU2xz8EycaHumtb9jH8TfEpjXiJs4VUaqi7gp1UJD0VDSUFqYuKTRF+lh2
+         jML9aJYb8vblXhNHvtL/P+UqYMTIAPwLcmkGphLPhIqqZ9FlFF+Cb8VRxPDrCkEcMiq2
+         Kp9w==
+X-Gm-Message-State: AOJu0Yy4p+FBoH5pJXCB92Uzhms+bSTr+UkV61Rg8p5b2n+Dcm7fUXf0
+	uBvpgXxIfw0i26wCAbwHcjbRmZSBx3Dyxwz+S6i6iCKELGLi2TommcYg2deFYBIXccZ7D0U1n5y
+	lqiD6UpGXsywr+gOrO/QhE+g6TUKDX2wDUsCdmQPaD9eyrbrjJrkZPQA=
+X-Google-Smtp-Source: AGHT+IHkoK1v9UPscg/8YEZ5HQuS5ImnWNM6zK6MkoKd82ohPxxamu1wknhGSQPvOO/7uFsJYGJbhR0TiHjo6b03NZcz8id2qdTx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:220b:b0:3d0:2fcb:e7f with SMTP id
+ e9e14a558f8ab-3da7386d8f5mr20040995ab.0.1746597806695; Tue, 06 May 2025
+ 23:03:26 -0700 (PDT)
+Date: Tue, 06 May 2025 23:03:26 -0700
+In-Reply-To: <68186340.a70a0220.254cdc.0047.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <681af7ae.050a0220.a19a9.001a.GAE@google.com>
+Subject: Re: [syzbot] #syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+ 0d8d44db295ccad20052d6301ef49ff01fb8ae2d
+From: syzbot <syzbot+7fb8a372e1f6add936dd@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Avoid confusion between pte_t* and pte_t data types by suffixing pointer
-type variables with p. No functional change.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Signed-off-by: Dev Jain <dev.jain@arm.com>
----
- mm/mremap.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+***
 
-diff --git a/mm/mremap.c b/mm/mremap.c
-index 7db9da609c84..0163e02e5aa8 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -176,7 +176,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 	struct vm_area_struct *vma = pmc->old;
- 	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
- 	struct mm_struct *mm = vma->vm_mm;
--	pte_t *old_pte, *new_pte, pte;
-+	pte_t *old_ptep, *new_ptep;
-+	pte_t pte;
- 	pmd_t dummy_pmdval;
- 	spinlock_t *old_ptl, *new_ptl;
- 	bool force_flush = false;
-@@ -211,8 +212,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 	 * We don't have to worry about the ordering of src and dst
- 	 * pte locks because exclusive mmap_lock prevents deadlock.
- 	 */
--	old_pte = pte_offset_map_lock(mm, old_pmd, old_addr, &old_ptl);
--	if (!old_pte) {
-+	old_ptep = pte_offset_map_lock(mm, old_pmd, old_addr, &old_ptl);
-+	if (!old_ptep) {
- 		err = -EAGAIN;
- 		goto out;
- 	}
-@@ -223,10 +224,10 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 	 * mmap_lock, so this new_pte page is stable, so there is no need to get
- 	 * pmdval and do pmd_same() check.
- 	 */
--	new_pte = pte_offset_map_rw_nolock(mm, new_pmd, new_addr, &dummy_pmdval,
-+	new_ptep = pte_offset_map_rw_nolock(mm, new_pmd, new_addr, &dummy_pmdval,
- 					   &new_ptl);
--	if (!new_pte) {
--		pte_unmap_unlock(old_pte, old_ptl);
-+	if (!new_ptep) {
-+		pte_unmap_unlock(old_ptep, old_ptl);
- 		err = -EAGAIN;
- 		goto out;
- 	}
-@@ -235,12 +236,12 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 	flush_tlb_batched_pending(vma->vm_mm);
- 	arch_enter_lazy_mmu_mode();
- 
--	for (; old_addr < old_end; old_pte++, old_addr += PAGE_SIZE,
--				   new_pte++, new_addr += PAGE_SIZE) {
--		if (pte_none(ptep_get(old_pte)))
-+	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
-+				   new_ptep++, new_addr += PAGE_SIZE) {
-+		if (pte_none(ptep_get(old_ptep)))
- 			continue;
- 
--		pte = ptep_get_and_clear(mm, old_addr, old_pte);
-+		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
- 		/*
- 		 * If we are remapping a valid PTE, make sure
- 		 * to flush TLB before we drop the PTL for the
-@@ -258,7 +259,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 		pte = move_soft_dirty_pte(pte);
- 
- 		if (need_clear_uffd_wp && pte_marker_uffd_wp(pte))
--			pte_clear(mm, new_addr, new_pte);
-+			pte_clear(mm, new_addr, new_ptep);
- 		else {
- 			if (need_clear_uffd_wp) {
- 				if (pte_present(pte))
-@@ -266,7 +267,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 				else if (is_swap_pte(pte))
- 					pte = pte_swp_clear_uffd_wp(pte);
- 			}
--			set_pte_at(mm, new_addr, new_pte, pte);
-+			set_pte_at(mm, new_addr, new_ptep, pte);
- 		}
- 	}
- 
-@@ -275,8 +276,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 		flush_tlb_range(vma, old_end - len, old_end);
- 	if (new_ptl != old_ptl)
- 		spin_unlock(new_ptl);
--	pte_unmap(new_pte - 1);
--	pte_unmap_unlock(old_pte - 1, old_ptl);
-+	pte_unmap(new_ptep - 1);
-+	pte_unmap_unlock(old_ptep - 1, old_ptl);
- out:
- 	if (pmc->need_rmap_locks)
- 		drop_rmap_locks(vma);
--- 
-2.30.2
+Subject: #syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 0d8d44db295ccad20052d6301ef49ff01fb8ae2d
+Author: dmantipov@yandex.ru
 
+#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 0d8d44db295ccad20052d6301ef49ff01fb8ae2d
