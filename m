@@ -1,247 +1,114 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AD9221286;
-	Wed,  7 May 2025 07:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0E7222568
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 07:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746603903; cv=none; b=CIHOhBnrCXFTM6KqbtWDCgdlRS8TU9noUENFSLgbtwdBYCfOEe7qc1pofKCJryTsj3XxlJfubleSBBZWrklcRaNLFnySljQ1im+y+rOHtiVo99Oc4+RbZ00yNqKJyqF9fmAWqmUxEpcD9XTxfIFB9mzXOqQ6L/s8xNVvi0NJsVg=
+	t=1746603904; cv=none; b=hmTJTX9rBqgnIsfyKUMpFPSKI34t9JrYumlirOhg3bN1J3uroKRiZjNPTTDEjg6Tp6plgoawBjf5f3P382pPq9h9RJcV4C8mZgNy4rKGmXdY5n8hz7NWo2RyOlTYy4JYoplxHMcHrj13o/Hq7hHy34vlUoa9k1Juxdly0p2j10g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746603903; c=relaxed/simple;
-	bh=SQsRYLRdU71LaJ3wdeA+W6LRxPDPNV2wGe+Mwnyowgo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Nbe/d09VuzATvEXbT6h1pMmVwYrmQizchoQI9xxW0odOGFYyebDwHKLC0dX3rfbVZ6FeysqroLB4YpZx30uxrYhif87Fqhstl+VDEIhTn8cxfp6K3TzIhWs6cQNXYnCpJPUP0gH7WT+XE3VnhdFjossNYLyu7SeDys0EykvovS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eIK7M34k; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746603904; c=relaxed/simple;
+	bh=iu1EOTLAhb020bpCSuvHHrgL15BOnipScV+aaqIQksM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GxzDlOQm7NSmBWnV5pAYPKCiISU7aitSsCBiWg11dwcp7nT4VC+B52pKalun9sOpEqYgNLzTysCBOI96nEkUlnzZy5P5k2TXVmM/gGN2qZBxf87j097AoGFjqxAPSmPghloy/XuEWJYEslE/UNnHoIKeywixe4sIOP0I3+rM63g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W6y4niVW; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eIK7M34k"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3876A4419B;
-	Wed,  7 May 2025 07:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746603893;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h0HW6CbY74NioaSQ8ld8M44cztZr/A/kw8B41kCDVZo=;
-	b=eIK7M34kbOGrSDj67RJbY66sYJfkjUMO8K0CZTog3FdE2x5vlRgAcon+h/SWdCKOxhnmZa
-	lloNynWr58xtnndahT5HViyWiwzyZW44D4zpCJiGrtGS8ar/oNCcSV89NdU3q4XLiBriNW
-	An+emOeh1BrqFpwpyDxSBN3JdccXNUk3FqrrmuCbhE9146GEHcxJXMFgCZtlFMhgTr0OUd
-	NRln1YjsbIUpeXo43BszMw83V6hIAmBFHSJ1g57p5tqyMB0z3XDVFMdkUYkIn6xfL6n72W
-	IkYBxjpo4GXf7+lAoxNrMpk8c/oRhZmxNpHLwuMIqkDaGaUYh6qD4FI56yOU+A==
-Date: Wed, 7 May 2025 09:44:49 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: <Tristram.Ha@microchip.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Woojung Huh <woojung.huh@microchip.com>,
- Russell King <linux@armlinux.org.uk>, Vladimir Oltean <olteanv@gmail.com>,
- Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2] net: dsa: microchip: Add SGMII port support
- to KSZ9477 switch
-Message-ID: <20250507094449.60885752@fedora.home>
-In-Reply-To: <20250507000911.14825-1-Tristram.Ha@microchip.com>
-References: <20250507000911.14825-1-Tristram.Ha@microchip.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W6y4niVW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746603903; x=1778139903;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=iu1EOTLAhb020bpCSuvHHrgL15BOnipScV+aaqIQksM=;
+  b=W6y4niVWsDPISM1qMWqgbLNusPqGfYEWogo1MTjlkou7f9JiHZByrKE2
+   9I3TCJlk3zVBr0LnbVs/v9ubrl+0rwp1O2ICsDfVKEQ5oXexhXdpdVxCs
+   BVO7SpujnM2MyjZRmN5bsRxdMkH+TEsGnrCzVxtXN6yuGVRHz458YksWG
+   i53M7s0KYlIcJZBPE710P+tCZNInw5JPsteipGcz/cMMc0U2EhkpTt7yl
+   rPUWnkevr2XXmrtfZMo3nXMYRXNo4occRza5VLKQZZlYsW7o1DcPH1WW4
+   S3PlJ3TakVEdyduFzDAxfEUAW+9nhF5ls37R2Sq3hiHyjG2nW9YkSBfQu
+   w==;
+X-CSE-ConnectionGUID: IHHyD+P2QcyO/aJp2t9lSw==
+X-CSE-MsgGUID: 3fhnk7bwSzKEugOFQQ2u+A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="52133187"
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="52133187"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 00:45:02 -0700
+X-CSE-ConnectionGUID: k/FupIOJSfuvz0pC7u2qRw==
+X-CSE-MsgGUID: nVYJ+ab8SVqxndgaV2iasA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="135875085"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 07 May 2025 00:44:52 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCZSU-0007LR-02;
+	Wed, 07 May 2025 07:44:50 +0000
+Date: Wed, 7 May 2025 15:44:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Marcus Folkesson <marcus.folkesson@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	David Lechner <david@lechnology.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	Marcus Folkesson <marcus.folkesson@gmail.com>
+Subject: Re: [PATCH] drm/sitronix: move tiny Sitronix drivers to their own
+ subdir
+Message-ID: <202505071503.faytuvgs-lkp@intel.com>
+References: <20250428-sitronix-v1-1-4e7cc0a8195a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeifedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeeftdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepleehgeevfeejgfduledtlefhlefgveelkeefffeuiedtteejheduueegiedvveehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopefvrhhishhtrhgrmhdrjfgrsehmihgtrhhotghhihhprdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepf
- ihoohhjuhhnghdrhhhuhhesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepohhlthgvrghnvhesghhmrghilhdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomh
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428-sitronix-v1-1-4e7cc0a8195a@gmail.com>
 
-Hi Tristram,
+Hi Marcus,
 
-On Tue, 6 May 2025 17:09:11 -0700
-<Tristram.Ha@microchip.com> wrote:
+kernel test robot noticed the following build warnings:
 
-> From: Tristram Ha <tristram.ha@microchip.com>
-> 
-> The KSZ9477 switch driver uses the XPCS driver to operate its SGMII
-> port.  However there are some hardware bugs in the KSZ9477 SGMII
-> module so workarounds are needed.  There was a proposal to update the
-> XPCS driver to accommodate KSZ9477, but the new code is not generic
-> enough to be used by other vendors.  It is better to do all these
-> workarounds inside the KSZ9477 driver instead of modifying the XPCS
-> driver.
-> 
-> There are 3 hardware issues.  The first is the MII_ADVERTISE register
-> needs to be write once after reset for the correct code word to be
-> sent.  The XPCS driver disables auto-negotiation first before
-> configuring the SGMII/1000BASE-X mode and then enables it back.  The
-> KSZ9477 driver then writes the MII_ADVERTISE register before enabling
-> auto-negotiation.  In 1000BASE-X mode the MII_ADVERTISE register will
-> be set, so KSZ9477 driver does not need to write it.
-> 
-> The second issue is the MII_BMCR register needs to set the exact speed
-> and duplex mode when running in SGMII mode.  During link polling the
-> KSZ9477 will check the speed and duplex mode are different from
-> previous ones and update the MII_BMCR register accordingly.
-> 
-> The last issue is 1000BASE-X mode does not work with auto-negotiation
-> on.  The cause is the local port hardware does not know the link is up
-> and so network traffic is not forwarded.  The workaround is to write 2
-> additional bits when 1000BASE-X mode is configured.
-> 
-> Note the SGMII interrupt in the port cannot be masked.  As that
-> interrupt is not handled in the KSZ9477 driver the SGMII interrupt bit
-> will not be set even when the XPCS driver sets it.
->
-> Signed-off-by: Tristram Ha <tristram.ha@microchip.com>
+[auto build test WARNING on ef6517ac5cf971cfeaccea4238d9da7e2425b8b1]
 
-[...]
+url:    https://github.com/intel-lab-lkp/linux/commits/Marcus-Folkesson/drm-sitronix-move-tiny-Sitronix-drivers-to-their-own-subdir/20250428-144721
+base:   ef6517ac5cf971cfeaccea4238d9da7e2425b8b1
+patch link:    https://lore.kernel.org/r/20250428-sitronix-v1-1-4e7cc0a8195a%40gmail.com
+patch subject: [PATCH] drm/sitronix: move tiny Sitronix drivers to their own subdir
+config: m68k-randconfig-r121-20250429 (https://download.01.org/0day-ci/archive/20250507/202505071503.faytuvgs-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 7.5.0
+reproduce: (https://download.01.org/0day-ci/archive/20250507/202505071503.faytuvgs-lkp@intel.com/reproduce)
 
-> +
-> +static int ksz9477_pcs_read(struct mii_bus *bus, int phy, int mmd, int reg)
-> +{
-> +	struct ksz_device *dev = bus->priv;
-> +	int port = ksz_get_sgmii_port(dev);
-> +	u16 val;
-> +
-> +	port_sgmii_r(dev, port, mmd, reg, &val);
-> +
-> +	/* Simulate a value to activate special code in the XPCS driver if
-> +	 * supported.
-> +	 */
-> +	if (mmd == MDIO_MMD_PMAPMD) {
-> +		if (reg == MDIO_DEVID1)
-> +			val = 0x9477;
-> +		else if (reg == MDIO_DEVID2)
-> +			val = 0x22 << 10;
-> +	} else if (mmd == MDIO_MMD_VEND2) {
-> +		struct ksz_port *p = &dev->ports[port];
-> +
-> +		/* Need to update MII_BMCR register with the exact speed and
-> +		 * duplex mode when running in SGMII mode and this register is
-> +		 * used to detect connected speed in that mode.
-> +		 */
-> +		if (reg == MMD_SR_MII_AUTO_NEG_STATUS) {
-> +			int duplex, speed;
-> +
-> +			if (val & SR_MII_STAT_LINK_UP) {
-> +				speed = (val >> SR_MII_STAT_S) & SR_MII_STAT_M;
-> +				if (speed == SR_MII_STAT_1000_MBPS)
-> +					speed = SPEED_1000;
-> +				else if (speed == SR_MII_STAT_100_MBPS)
-> +					speed = SPEED_100;
-> +				else
-> +					speed = SPEED_10;
-> +
-> +				if (val & SR_MII_STAT_FULL_DUPLEX)
-> +					duplex = DUPLEX_FULL;
-> +				else
-> +					duplex = DUPLEX_HALF;
-> +
-> +				if (!p->phydev.link ||
-> +				    p->phydev.speed != speed ||
-> +				    p->phydev.duplex != duplex) {
-> +					u16 ctrl;
-> +
-> +					p->phydev.link = 1;
-> +					p->phydev.speed = speed;
-> +					p->phydev.duplex = duplex;
-> +					port_sgmii_r(dev, port, mmd, MII_BMCR,
-> +						     &ctrl);
-> +					ctrl &= BMCR_ANENABLE;
-> +					ctrl |= mii_bmcr_encode_fixed(speed,
-> +								      duplex);
-> +					port_sgmii_w(dev, port, mmd, MII_BMCR,
-> +						     ctrl);
-> +				}
-> +			} else {
-> +				p->phydev.link = 0;
-> +			}
-> +		} else if (reg == MII_BMSR) {
-> +			p->phydev.link = (val & BMSR_LSTATUS);
-> +		}
-> +	}
-> +	return val;
-> +}
-> +
-> +static int ksz9477_pcs_write(struct mii_bus *bus, int phy, int mmd, int reg,
-> +			     u16 val)
-> +{
-> +	struct ksz_device *dev = bus->priv;
-> +	int port = ksz_get_sgmii_port(dev);
-> +
-> +	if (mmd == MDIO_MMD_VEND2) {
-> +		struct ksz_port *p = &dev->ports[port];
-> +
-> +		if (reg == MMD_SR_MII_AUTO_NEG_CTRL) {
-> +			u16 sgmii_mode = SR_MII_PCS_SGMII << SR_MII_PCS_MODE_S;
-> +
-> +			/* Need these bits for 1000BASE-X mode to work with
-> +			 * AN on.
-> +			 */
-> +			if (!(val & sgmii_mode))
-> +				val |= SR_MII_SGMII_LINK_UP |
-> +				       SR_MII_TX_CFG_PHY_MASTER;
-> +
-> +			/* SGMII interrupt in the port cannot be masked, so
-> +			 * make sure interrupt is not enabled as it is not
-> +			 * handled.
-> +			 */
-> +			val &= ~SR_MII_AUTO_NEG_COMPLETE_INTR;
-> +		} else if (reg == MII_BMCR) {
-> +			/* The MII_ADVERTISE register needs to write once
-> +			 * before doing auto-negotiation for the correct
-> +			 * config_word to be sent out after reset.
-> +			 */
-> +			if ((val & BMCR_ANENABLE) && !p->sgmii_adv_write) {
-> +				u16 adv;
-> +
-> +				/* The SGMII port cannot disable flow contrl
-> +				 * so it is better to just advertise symmetric
-> +				 * pause.
-> +				 */
-> +				port_sgmii_r(dev, port, mmd, MII_ADVERTISE,
-> +					     &adv);
-> +				adv |= ADVERTISE_1000XPAUSE;
-> +				adv &= ~ADVERTISE_1000XPSE_ASYM;
-> +				port_sgmii_w(dev, port, mmd, MII_ADVERTISE,
-> +					     adv);
-> +				p->sgmii_adv_write = 1;
-> +			} else if (val & BMCR_RESET) {
-> +				p->sgmii_adv_write = 0;
-> +			}
-> +		} else if (reg == MII_ADVERTISE) {
-> +			/* XPCS driver writes to this register so there is no
-> +			 * need to update it for the errata.
-> +			 */
-> +			p->sgmii_adv_write = 1;
-> +		}
-> +	}
-> +	port_sgmii_w(dev, port, mmd, reg, val);
-> +	return 0;
-> +}
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505071503.faytuvgs-lkp@intel.com/
 
-I'm a bit confused here, are you intercepting r/w ops that are supposed
-to be handled by xpcs ?
+sparse warnings: (new ones prefixed by >>)
+>> drivers/gpu/drm/sitronix/st7571-i2c.c:965:26: sparse: sparse: symbol 'st7571_config' was not declared. Should it be static?
 
-Russell has sent a series [1] (not merged yet, I think we were waiting
-on some feedback from Synopsys folks ?) to properly support the XPCS
-version that's in KSZ9477, and you also had a patchset that didn't
-require all this sgmii_r/w snooping [2].
+vim +/st7571_config +965 drivers/gpu/drm/sitronix/st7571-i2c.c
 
-I've been running your previous patchset on top of Russell's for a few
-months, if works fine with SGMII as well as 1000BaseX :)
+4b35f0f41ee2950 drivers/gpu/drm/tiny/st7571-i2c.c Marcus Folkesson 2025-04-23  964  
+4b35f0f41ee2950 drivers/gpu/drm/tiny/st7571-i2c.c Marcus Folkesson 2025-04-23 @965  struct st7571_panel_data st7571_config = {
+4b35f0f41ee2950 drivers/gpu/drm/tiny/st7571-i2c.c Marcus Folkesson 2025-04-23  966  	.init = st7571_lcd_init,
+4b35f0f41ee2950 drivers/gpu/drm/tiny/st7571-i2c.c Marcus Folkesson 2025-04-23  967  	.constraints = {
+4b35f0f41ee2950 drivers/gpu/drm/tiny/st7571-i2c.c Marcus Folkesson 2025-04-23  968  		.min_nlines = 1,
+4b35f0f41ee2950 drivers/gpu/drm/tiny/st7571-i2c.c Marcus Folkesson 2025-04-23  969  		.max_nlines = 128,
+4b35f0f41ee2950 drivers/gpu/drm/tiny/st7571-i2c.c Marcus Folkesson 2025-04-23  970  		.min_ncols = 128,
+4b35f0f41ee2950 drivers/gpu/drm/tiny/st7571-i2c.c Marcus Folkesson 2025-04-23  971  		.max_ncols = 128,
+4b35f0f41ee2950 drivers/gpu/drm/tiny/st7571-i2c.c Marcus Folkesson 2025-04-23  972  		.support_grayscale = true,
+4b35f0f41ee2950 drivers/gpu/drm/tiny/st7571-i2c.c Marcus Folkesson 2025-04-23  973  	},
+4b35f0f41ee2950 drivers/gpu/drm/tiny/st7571-i2c.c Marcus Folkesson 2025-04-23  974  };
+4b35f0f41ee2950 drivers/gpu/drm/tiny/st7571-i2c.c Marcus Folkesson 2025-04-23  975  
 
-Can we maybe focus on getting pcs-xpcs to properly support this version
-of the IP instead of these 2 R/W functions ? Or did I miss something in
-the previous discussions ?
-
-Maxime
-
-[1] : https://lore.kernel.org/netdev/Z6NnPm13D1n5-Qlw@shell.armlinux.org.uk/ 
-[2] : https://lore.kernel.org/netdev/20250208002417.58634-1-Tristram.Ha@microchip.com/
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
