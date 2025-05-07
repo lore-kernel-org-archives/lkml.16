@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029D124BCEA;
-	Wed,  7 May 2025 09:07:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A5A231C91;
+	Wed,  7 May 2025 09:07:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746608870; cv=none; b=OCkb6qqCb0x3JMPVMEs7ZjA0T5/VYQpnGT5q6SUu9bC6coE7Pm8OgAetjoiVk4y7Y0dbxsSGDFU495zsCR2WeUBLrR8XUTATcnf8gDdq+b5Qkf+TgAvGAxP4FAHYzwTIooAVayA2VSDHlM4MSP+rRuSdFxGZm5oHzyN3DLP97QM=
+	t=1746608870; cv=none; b=boHlVmRKKJg1GOa6+2ZNSO5HY80a8olNkgQREFIkXtaiNuEG9m0lFq8N1Z0d1KqMlA/M53S2/LIc1HiY/glVJAxstNMvAIbYWGqe8RQ1VYu0iq90p5Z5ua2fcasrCFcNdlXEPJQKzJp8SmufB10bzQq4MA6n4hqiVwmcJvXxrLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746608870; c=relaxed/simple;
-	bh=9mbMpiOqTGAMfouuLbdGlvFnaQVdOLN924bn/Ago4Wg=;
+	bh=cOJwyN6CY9qOytdVJQB4MQxfk/L5s1blYdtRbcFl5ic=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=C8XQdtTVFxrAVV3GVO9vkh+QlWFVr36TT+/3UfPSx7a0UoBgk4K5cPgoYkcl89CCMhKFnuLLSYcxGlxHiDK/mhz2nYaZ7KPZnQM5VZObX9kAWlQLIWxGXoVTedpmHJN2QJPKwM61DehamZ2SZ7p77uSV1xMVa3NRR6lALhixZNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cHt0HGHn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s9ay7RVG; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=oZcxX7JhUum+4GSBoStcCvvGsMkkCNS2mCC5tiugE0BBEuUXzpnBg7ZVGuSqS5HqmNwv4z+m87ju2elnsc1B3vmQeEEqMgX0uCEyGpSbR0EPDtPSWepzGSDjOHE27BIMNfQpzb+xAoXDWdSXrqozAGZP/UI+G+gVmNQG+DlsK+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PM05slSt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DWba5SMq; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cHt0HGHn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s9ay7RVG"
-Date: Wed, 07 May 2025 09:07:45 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PM05slSt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DWba5SMq"
+Date: Wed, 07 May 2025 09:07:46 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746608866;
+	s=2020; t=1746608867;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=N7IHuXO3I35yYSaFLLBd3g8nSPAFJKoJxTI4IyY+dzI=;
-	b=cHt0HGHncLqMMCSQ9TsGcdlGdaJtJp3hgN2EejF0a6At3bNqamstZwEdMtkZHYwcgdN1zC
-	LkLOAUIPjt5bGwdXQrbuI+9ORPKuznBVZbwhdQr+YP5VHxWGEMAuRQgcfSIEbqBJhtu4Y2
-	gmPM4AYWNn9ygAg8JYcir4fMGjN9wCtORu7KEXoR4EODHiS2gYlPKZWm2O45ZFevK+QzGt
-	Zq2YX4t9J4aFtPrlGZWvv6nZDEGLtVm+nj91BroHW4IdM//RScrW4XZGqXPZ/dKjZTk2Nj
-	/zCVz2lBSMN7ECUfh3xJC3hsusnJ+jQWldqrCto0IW7uW4w1d7OBCHZq0Hr4zg==
+	bh=x+22fnk4G6DcHII25HjysqkpBrWaOsNu5lO/O9k1dmA=;
+	b=PM05slStJH3WAQGCW6tRlFPZyaCEVa+77d6QQ3jV3FXL4VKSyCiJ+MypBvchng6cU4z9SX
+	llLOPL8+hLy5uNdNdAxAdQJFHmZVOrEwgBJQ7ZL1Pjt6Vy0PLDrFHNYflGItyh6ofkm+l8
+	ZivcwAQ1Hm+9ccvqAI0QRp18hU+T/359+AbetxYFDfsBgMj+ZdmmiUTfSaL/dNJ02jmxtR
+	hfrWlUyzBOaMhw9efH/m5aGlEYT2XvRYuVM1nJlUhwTjAvaMUHE/dQody1e5HDcPIYs96t
+	KHoNyFfagk+Vl8eMdUCBK6gnfUd/Jfo1EQdjE2Gj5moQf/3PQEc3p5D0y9xJ6g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746608866;
+	s=2020e; t=1746608867;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=N7IHuXO3I35yYSaFLLBd3g8nSPAFJKoJxTI4IyY+dzI=;
-	b=s9ay7RVGjLJrbbTXlxeVEduxwVpFiNN4w8vaSO8suPzUVEqBAFkTNmS4ZuamC69IBw4VbQ
-	NyUcy6EOkE4eOtCQ==
+	bh=x+22fnk4G6DcHII25HjysqkpBrWaOsNu5lO/O9k1dmA=;
+	b=DWba5SMqxyEuDGoy7n/k85TZ/cTTGRuplXN1BNoI44tVR7DxIwj7ueBWRWRazcWwBx5cU3
+	soGCzVFBSPq8kCBQ==
 From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] genirq/resend: Switch to lock guards
+Subject: [tip: irq/core] genirq/pm: Switch to lock guards
 Cc: Thomas Gleixner <tglx@linutronix.de>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20250429065420.312487167@linutronix.de>
-References: <20250429065420.312487167@linutronix.de>
+In-Reply-To: <20250429065420.251299112@linutronix.de>
+References: <20250429065420.251299112@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174660886573.406.5468656845246012068.tip-bot2@tip-bot2>
+Message-ID: <174660886640.406.12794172100477264760.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,14 +67,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     4bcdf07467fab54a5dfbb0fb8546b5e59c87c497
-Gitweb:        https://git.kernel.org/tip/4bcdf07467fab54a5dfbb0fb8546b5e59c87c497
+Commit-ID:     19b4b14428338775d8c0d0e725ecfb14e10121c3
+Gitweb:        https://git.kernel.org/tip/19b4b14428338775d8c0d0e725ecfb14e10121c3
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Tue, 29 Apr 2025 08:54:55 +02:00
+AuthorDate:    Tue, 29 Apr 2025 08:54:53 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 07 May 2025 09:08:11 +02:00
 
-genirq/resend: Switch to lock guards
+genirq/pm: Switch to lock guards
 
 Convert all lock/unlock pairs to guards and tidy up the code.
 
@@ -82,105 +82,93 @@ No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/all/20250429065420.312487167@linutronix.de
+Link: https://lore.kernel.org/all/20250429065420.251299112@linutronix.de
 
 
 ---
- kernel/irq/resend.c | 50 ++++++++++++++++++--------------------------
- 1 file changed, 21 insertions(+), 29 deletions(-)
+ kernel/irq/pm.c | 38 +++++++++++++-------------------------
+ 1 file changed, 13 insertions(+), 25 deletions(-)
 
-diff --git a/kernel/irq/resend.c b/kernel/irq/resend.c
-index 1b7fa72..ca9cc1b 100644
---- a/kernel/irq/resend.c
-+++ b/kernel/irq/resend.c
-@@ -30,18 +30,17 @@ static DEFINE_RAW_SPINLOCK(irq_resend_lock);
-  */
- static void resend_irqs(struct tasklet_struct *unused)
- {
--	struct irq_desc *desc;
--
--	raw_spin_lock_irq(&irq_resend_lock);
-+	guard(raw_spinlock_irq)(&irq_resend_lock);
- 	while (!hlist_empty(&irq_resend_list)) {
--		desc = hlist_entry(irq_resend_list.first, struct irq_desc,
--				   resend_node);
-+		struct irq_desc *desc;
-+
-+		desc = hlist_entry(irq_resend_list.first, struct irq_desc,  resend_node);
- 		hlist_del_init(&desc->resend_node);
-+
- 		raw_spin_unlock(&irq_resend_lock);
- 		desc->handle_irq(desc);
- 		raw_spin_lock(&irq_resend_lock);
+diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
+index c556bc4..445912d 100644
+--- a/kernel/irq/pm.c
++++ b/kernel/irq/pm.c
+@@ -46,8 +46,7 @@ void irq_pm_install_action(struct irq_desc *desc, struct irqaction *action)
+ 		desc->cond_suspend_depth++;
+ 
+ 	WARN_ON_ONCE(desc->no_suspend_depth &&
+-		     (desc->no_suspend_depth +
+-			desc->cond_suspend_depth) != desc->nr_actions);
++		     (desc->no_suspend_depth + desc->cond_suspend_depth) != desc->nr_actions);
+ }
+ 
+ /*
+@@ -134,14 +133,12 @@ void suspend_device_irqs(void)
+ 	int irq;
+ 
+ 	for_each_irq_desc(irq, desc) {
+-		unsigned long flags;
+ 		bool sync;
+ 
+ 		if (irq_settings_is_nested_thread(desc))
+ 			continue;
+-		raw_spin_lock_irqsave(&desc->lock, flags);
+-		sync = suspend_device_irq(desc);
+-		raw_spin_unlock_irqrestore(&desc->lock, flags);
++		scoped_guard(raw_spinlock_irqsave, &desc->lock)
++			sync = suspend_device_irq(desc);
+ 
+ 		if (sync)
+ 			synchronize_irq(irq);
+@@ -186,18 +183,15 @@ static void resume_irqs(bool want_early)
+ 	int irq;
+ 
+ 	for_each_irq_desc(irq, desc) {
+-		unsigned long flags;
+-		bool is_early = desc->action &&
+-			desc->action->flags & IRQF_EARLY_RESUME;
++		bool is_early = desc->action &&	desc->action->flags & IRQF_EARLY_RESUME;
+ 
+ 		if (!is_early && want_early)
+ 			continue;
+ 		if (irq_settings_is_nested_thread(desc))
+ 			continue;
+ 
+-		raw_spin_lock_irqsave(&desc->lock, flags);
++		guard(raw_spinlock_irqsave)(&desc->lock);
+ 		resume_irq(desc);
+-		raw_spin_unlock_irqrestore(&desc->lock, flags);
  	}
--	raw_spin_unlock_irq(&irq_resend_lock);
  }
  
- /* Tasklet to handle resend: */
-@@ -75,19 +74,18 @@ static int irq_sw_resend(struct irq_desc *desc)
- 	}
- 
- 	/* Add to resend_list and activate the softirq: */
--	raw_spin_lock(&irq_resend_lock);
--	if (hlist_unhashed(&desc->resend_node))
--		hlist_add_head(&desc->resend_node, &irq_resend_list);
--	raw_spin_unlock(&irq_resend_lock);
-+	scoped_guard(raw_spinlock, &irq_resend_lock) {
-+		if (hlist_unhashed(&desc->resend_node))
-+			hlist_add_head(&desc->resend_node, &irq_resend_list);
-+	}
- 	tasklet_schedule(&resend_tasklet);
- 	return 0;
- }
- 
- void clear_irq_resend(struct irq_desc *desc)
- {
--	raw_spin_lock(&irq_resend_lock);
-+	guard(raw_spinlock)(&irq_resend_lock);
- 	hlist_del_init(&desc->resend_node);
--	raw_spin_unlock(&irq_resend_lock);
- }
- 
- void irq_resend_init(struct irq_desc *desc)
-@@ -172,30 +170,24 @@ int check_irq_resend(struct irq_desc *desc, bool inject)
+@@ -207,22 +201,16 @@ static void resume_irqs(bool want_early)
   */
- int irq_inject_interrupt(unsigned int irq)
+ void rearm_wake_irq(unsigned int irq)
  {
--	struct irq_desc *desc;
 -	unsigned long flags;
--	int err;
-+	int err = -EINVAL;
- 
- 	/* Try the state injection hardware interface first */
- 	if (!irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING, true))
- 		return 0;
- 
- 	/* That failed, try via the resend mechanism */
--	desc = irq_get_desc_buslock(irq, &flags, 0);
--	if (!desc)
--		return -EINVAL;
-+	scoped_irqdesc_get_and_buslock(irq, 0) {
+-	struct irq_desc *desc = irq_get_desc_buslock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
++	scoped_irqdesc_get_and_buslock(irq, IRQ_GET_DESC_CHECK_GLOBAL) {
 +		struct irq_desc *desc = scoped_irqdesc;
  
--	/*
--	 * Only try to inject when the interrupt is:
--	 *  - not NMI type
--	 *  - activated
--	 */
--	if (irq_is_nmi(desc) || !irqd_is_activated(&desc->irq_data))
--		err = -EINVAL;
--	else
--		err = check_irq_resend(desc, true);
+-	if (!desc)
+-		return;
 -
+-	if (!(desc->istate & IRQS_SUSPENDED) ||
+-	    !irqd_is_wakeup_set(&desc->irq_data))
+-		goto unlock;
+-
+-	desc->istate &= ~IRQS_SUSPENDED;
+-	irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
+-	__enable_irq(desc);
++		if (!(desc->istate & IRQS_SUSPENDED) || !irqd_is_wakeup_set(&desc->irq_data))
++			return;
+ 
+-unlock:
 -	irq_put_desc_busunlock(desc, flags);
-+		/*
-+		 * Only try to inject when the interrupt is:
-+		 *  - not NMI type
-+		 *  - activated
-+		 */
-+		if (!irq_is_nmi(desc) && irqd_is_activated(&desc->irq_data))
-+			err = check_irq_resend(desc, true);
++		desc->istate &= ~IRQS_SUSPENDED;
++		irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
++		__enable_irq(desc);
 +	}
- 	return err;
  }
- EXPORT_SYMBOL_GPL(irq_inject_interrupt);
+ 
+ /**
