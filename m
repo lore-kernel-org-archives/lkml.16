@@ -1,92 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0DB2AE84;
-	Wed,  7 May 2025 00:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1310ABA34;
+	Wed,  7 May 2025 00:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746578599; cv=none; b=nazGXT2AKR6QKgRZOab7oa+DxsYQ69HGsAkMpvl7uF+teVYCkaTdYmwHPzZKHi+jdZLW34IlDXsvIQnRa3DGo0qzgpPlulb1nTE721Oe1tR2WH8PVpX/EJ1DEjsqAEVvKMgtXq5MF2JEeyjXC6Pxkx12tFhcT7Pa63NXPg71cWo=
+	t=1746578794; cv=none; b=UJrWIdWiMwc53Fzv9KbhA2lVKoeXEgU96jQyM/uclhus8K/5yfOUfb6ys50iZaJuEes8/cpuY1o9Ov4Zh+niIwyDr2rVGe8Nm3DyncXpaqWSIyYtSOzi886bmXxp7IhuKYCKJ33uk/z7rh6l/bKnVJgPwcTy7t6U+Nw4HPoEAzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746578599; c=relaxed/simple;
-	bh=1Mqy/kljIpeIqD8Jbhrs2lkLPGlh44MkqaVQ/428QIg=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=INMG3J3tuHFms8GIMtn3ihKK4qdLJKKP1KgmBYZy5q2i4WeYXiVSvkVmWnlHk7SLHJzRM7p3jEAB1KBqO59ttvvF5vGsLHlqGs4m1V9LRVz3jJ9SoVbQeEExx3avYsv2eGzmlmMuqPXJJ3TbJZ3WT6RASWJOeeb0wm+a8RXxPPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T4INu7m7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746578794; c=relaxed/simple;
+	bh=+A5NJ5+jxCm9l0AgQ7gorxymnsY8EJzbQp8wownW+dc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sceNDLIMM5LK+Wn5iWDReXUrO3T8//qbJKNqM2tQAi+erPTXjAjY2TjmfYEDg6I+VTyIgFlJ4kOkK1LIeLpmoD+HiVaEXSt38pb4Ww/gGoBaLkTBhgC/qmxZbXDMXEI/KXAJdcUsIQ7d2oFybKZqRzRCZzT7zfw3JBohs09epbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fcQnjx4K; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T4INu7m7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2487BC4CEE4;
-	Wed,  7 May 2025 00:43:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746578599;
-	bh=1Mqy/kljIpeIqD8Jbhrs2lkLPGlh44MkqaVQ/428QIg=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=T4INu7m7SCfthuUP6iuS+ww1iqGb9i6pgwYQPXM4k4IPYv7JCIxea05M5hN57VsvI
-	 26sraN5olF/vBv3d52sa6tR3nPh+QWasFs+tPq43vYIEYMrGwnU2yQuo5sv9j41YIr
-	 BoYSYtlPlY400LIgo/pBxnYVJeyFlrHP65uVRwyXvC6aCAyh6xqcXPEcwUQ2Kd6Hbs
-	 pzaWgBs4v6iJP7Qm9t8hVxxoMo8RdScnKZovUerXcz4aFKlRR61e1RV8kr81ON2+Sa
-	 FITCZVs6yOeVkO+7iIGMfTp5pa4odshsHEG8kyBLsE++P9ASiTFPhbKuRAaVZuGJRy
-	 uTuo5FxVGomwA==
-Date: Tue, 06 May 2025 19:43:17 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fcQnjx4K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746578793; x=1778114793;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+A5NJ5+jxCm9l0AgQ7gorxymnsY8EJzbQp8wownW+dc=;
+  b=fcQnjx4KEQNvH4+v5rvCkCODezS14upNzyGV4QEqx5tVCusqkJj6Z3ke
+   pI2P8tQuegBBp/j9T6VyzeaXQAeqPY+puY6pD3QQHfuvf16ZV2fQlA1Ye
+   w+Yy6yFJYw37eC+AEIhJCC1IZE6yM14FP2aJnlRi2Ik5kBaKq2hwALVaS
+   df8qFEewHlXKv0aJPqt5kEQ7ASvvEOgB7Qg/mGzvrI3BE9OPCOea0hrwo
+   W/XaRTdCWzwabRf0qmRMx1T6hKm9S0n45bUnv2yo6JmUEPEmfhSJO+WCV
+   O64uz1PbTbOgGSB16bWXPa7nQSBXWSSRLOj2t2sr3+XSY+K8ZlORGc03q
+   A==;
+X-CSE-ConnectionGUID: xwwEusAMRFOa8zInuDacdw==
+X-CSE-MsgGUID: 0nnmH39fQSy03iGF2yNfyg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="51932183"
+X-IronPort-AV: E=Sophos;i="6.15,267,1739865600"; 
+   d="scan'208";a="51932183"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 17:46:33 -0700
+X-CSE-ConnectionGUID: E4wGvNi4Tl+mgOx7GOxyag==
+X-CSE-MsgGUID: mTwCQj6CSNiurqeHblQLPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,267,1739865600"; 
+   d="scan'208";a="136305613"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 17:46:26 -0700
+Message-ID: <faacb266-4b2a-4b96-b324-9b6aa3379830@linux.intel.com>
+Date: Wed, 7 May 2025 08:46:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>, 
- Chandra Mandal <purna.mandal@microchip.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-serial@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Andrei Pistirica <andrei.pistirica@microchip.com>, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-To: "Rob Herring (Arm)" <robh@kernel.org>
-In-Reply-To: <20250506220034.2546370-1-robh@kernel.org>
-References: <20250506220034.2546370-1-robh@kernel.org>
-Message-Id: <174657859727.3211905.5051377478699644321.robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: serial: Convert microchip,pic32mzda-uart
- to DT schema
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 00/38] Mediated vPMU 4.0 for x86
+To: Sean Christopherson <seanjc@google.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+ Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
+ Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
+ Shukla Manali <Manali.Shukla@amd.com>,
+ Nikunj Dadhania <nikunj.dadhania@amd.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <827cc30b-35e0-4a63-a993-484d4616091d@linux.intel.com>
+ <aBpmycjTn4Xo4Hc4@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aBpmycjTn4Xo4Hc4@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-On Tue, 06 May 2025 17:00:33 -0500, Rob Herring (Arm) wrote:
-> Convert the Microchip PIC32 UART binding to DT schema. The binding was
-> unclear there are 3 interrupts. The functions were determined from the
-> driver. The 'cts-gpios' property is covered by serial.yaml schema.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  .../bindings/serial/microchip,pic32-uart.txt  | 29 ----------
->  .../serial/microchip,pic32mzda-uart.yaml      | 53 +++++++++++++++++++
->  2 files changed, 53 insertions(+), 29 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/serial/microchip,pic32-uart.txt
->  create mode 100644 Documentation/devicetree/bindings/serial/microchip,pic32mzda-uart.yaml
-> 
+On 5/7/2025 3:45 AM, Sean Christopherson wrote:
+> On Tue, May 06, 2025, Dapeng Mi wrote:
+>> Hi Sean,
+>>
+>> Not sure if you have bandwidth to review this mediated vPMU v4 patchset?
+> I'm getting there.  I wanted to get through all the stuff I thought would likely
+> be ready for 6.16 as-is before moving onto the larger series.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Got it. Thanks.
 
-yamllint warnings/errors:
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/serial/microchip,pic32mzda-uart.example.dtb: serial@1f822000 (microchip,pic32mzda-uart): Unevaluated properties are not allowed ('cts-gpios' was unexpected)
-	from schema $id: http://devicetree.org/schemas/microchip,pic32mzda-uart.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250506220034.2546370-1-robh@kernel.org
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+>
