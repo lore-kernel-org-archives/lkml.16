@@ -1,189 +1,94 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7042125745C;
-	Wed,  7 May 2025 15:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746631034; cv=pass; b=XkFuY5NbtkqhQANt6CrwxmP7SB3Hp9YftKRiPfNeBc13aXBKqpAVExOe3wy3Q7FtCiy85s8KnXNa0oeYDPpTRqxPxzoj787CQtu8kqlMd4qblUVYdLjr0drA9E7ApfoylbZRqpIdFzRFIbLOlmt2U2PchitHSOd5ULybEpg8H2Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746631034; c=relaxed/simple;
-	bh=Sqx0yL7BE1jCO2+4D2T7D5c+b/VDhVCx8QxsFhIGjGY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Tap4I/qinv2tbuE6Vak7F5rZYZUslN/55EPPkiheoaFeOyQH2uv1bWEIefIRuDgUPQ2j5xqdrzuwt2EzVxbd0HBU9nOZh3mikERTDyqaZH+hF+H9k/o3P+TL2MRW+wv4RXbqO0DhPTIUB5JpbX/bNynjUH+qinrChtWAyHYzpRs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b=XR7SYh5l; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A6C155CBD;
+	Wed,  7 May 2025 15:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746631117; cv=none; b=VROW0D7/DrHs/OTEdbbbjEI9niHkUm0tKZrKDJ2jWZaexbuBp3kS/1CwRwg3DuDRAHlRAp6M8VfJlb+whB+D+BovOexYIJEE/7tLEsEhPMDl9ldxCBo57ULhL9JM1RaWkc3Ssnr3wX7szTKVG7R9Q2FaJ0oUkktnOVtL1/JPzwg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746631117; c=relaxed/simple;
+	bh=XKcJueuFpqD8GYZ9LLQB/CLJN3H6ACFCEdW05J9NxMk=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=cNtwxgoHS9yY83mQ+M1by7FQ+MWC+SUcdZ7ka+POs2LQLCJoW4ubyC9ZxzFdAoybZtR8bRfGojCD+QjCQpsaWHnUF3ldTN+IsQKHleAaFpTEnMqjBctcB1hJeInPZKE1IhKwBE7Oy0BL8cpd4v6kZXJr2LPxu9JeaJVLebCaHmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UBrwAS5s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b="XR7SYh5l"
-ARC-Seal: i=1; a=rsa-sha256; t=1746631000; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Wg0GsqTIi2WUqM+S4ZQJ0PFw2vZghyG4eFRQmY08WE+u9za5lByrXpBHOyF+vSh6o5eXwn8nJqOoIrBVrmdX7ckItcyeK1F6gWux5sfVERBNqyg0dNnpw5DpU6yX1lslVxDx6XynhB9WCpKyvFA/j8bdQ2gG2NUD5SpvnyDdqZU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746631000; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=k61aakEccaP7dZAOfkTgPdzYRsNFVOmjLmKD7nlhJdY=; 
-	b=h7uDFf97tViIaryte4cAzXT5dcEr/ysUgOKhsJZHUnDvdwKVkYvz/N8QO+MC25NwuBVEXimsOfwbsJU43AScZ2uGaVIcoJNzT2MhlILYVxuJOsJqoYP03VBnhY1ieIiF/2G1PcoLrXjtDf5yig6/uQHQmCuS4/DdcVyB/RYtC7M=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=louisalexis.eyraud@collabora.com;
-	dmarc=pass header.from=<louisalexis.eyraud@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746631000;
-	s=zohomail; d=collabora.com; i=louisalexis.eyraud@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=k61aakEccaP7dZAOfkTgPdzYRsNFVOmjLmKD7nlhJdY=;
-	b=XR7SYh5l2PJzLny4oQvUQ8bEe+lCTQaEY6Fkb3p34c3fLf29+HPmF+1Ga3W7BbP/
-	cZmTkCcLRXIZOGN1+x7u2xvw39dw4kE0mMCXnDAttZJ/1pUMP4ZQhESUhdzQr/NsQCE
-	4uJ0C43JpUyus/6Fi4hXjK3Xd/HssKfBi56Bl3PA=
-Received: by mx.zohomail.com with SMTPS id 1746630997699833.1928376577795;
-	Wed, 7 May 2025 08:16:37 -0700 (PDT)
-Message-ID: <381091848a72424a333bb28006d83235068a9e33.camel@collabora.com>
-Subject: Re: [PATCH v5 2/3] drm/panfrost: Add support for Mali on the MT8370
- SoC
-From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-To: Steven Price <steven.price@arm.com>, Maarten Lankhorst	
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Rob Herring	 <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley	 <conor+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,  AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Boris Brezillon
- <boris.brezillon@collabora.com>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Date: Wed, 07 May 2025 17:16:31 +0200
-In-Reply-To: <2b85071a-e3e7-4cfc-a471-e81e463b7c37@arm.com>
-References: <20250502-mt8370-enable-gpu-v5-0-98e247b30151@collabora.com>
-	 <20250502-mt8370-enable-gpu-v5-2-98e247b30151@collabora.com>
-	 <2b85071a-e3e7-4cfc-a471-e81e463b7c37@arm.com>
-Organization: Collabora Ltd
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UBrwAS5s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A5D9C4CEE2;
+	Wed,  7 May 2025 15:18:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746631116;
+	bh=XKcJueuFpqD8GYZ9LLQB/CLJN3H6ACFCEdW05J9NxMk=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=UBrwAS5sHH3KMHQGQFmz/tQNAcTWVQ6gycxf8zZXfonRFcf2/Bk7DS+my1SrkvYGg
+	 81+mByHAKymqFZEPZlLnRZ8c7hKDGXQJM16qj4R2Z7735wcdtZieALcUEf2osn4NeB
+	 Ik+taf0+vjFJmNZeHSp/ZpvND6xGyDqiPwpDwEc/B9VKG1soj1pg46ucLH8BmM4gW/
+	 vBMlh17LZsZQYtufBAngX3C1JMB8kXT1IBOwfo9Wtx7nuR13vL/JOrOtkCdsb/o2X6
+	 F6CdUVVxpg0+q66JUiN/6WHSxcbBvKgpHRDhYYYKDfLc6lNEYYvmfOnJmOPCF/M9Ow
+	 X0jkC9rB5pY/Q==
+Date: Wed, 07 May 2025 10:18:34 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ Lars-Peter Clausen <lars@metafoo.de>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
+ linux-kernel@vger.kernel.org, 
+ Mikael Gonella-Bolduc <m.gonella.bolduc@gmail.com>
+To: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+In-Reply-To: <20250507135147.1328639-1-dario.binacchi@amarulasolutions.com>
+References: <20250507135147.1328639-1-dario.binacchi@amarulasolutions.com>
+Message-Id: <174663111457.1398857.14653136407863606416.robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: iio: light: apds9160: add missing type
+ definition
 
-Hi,
 
-On Wed, 2025-05-07 at 15:06 +0100, Steven Price wrote:
-> On 02/05/2025 13:17, Louis-Alexis Eyraud wrote:
-> > Add a compatible for the MediaTek MT8370 SoC, with an integrated
-> > ARM
-> > Mali G57 MC2 GPU (Valhall-JM, dual core), with new platform data
-> > for
-> > its support in the panfrost driver.
-> > It uses the same data as MT8186 for the power management features
-> > to
-> > describe power supplies, pm_domains and enablement (one regulator,
-> > two
-> > power domains) but also sets the FORCE_AARCH64_PGTABLE flag in the
-> > GPU
-> > configuration quirks bitfield to enable AARCH64 4K page table
-> > format
-> > mode.
-> > As MT8186 and MT8370 SoC have different GPU architecture (Mali G52
-> > 2EE
-> > MC2 for MT8186), making them not compatible, and this mode is only
-> > enabled for Mediatek SoC that are Mali G57 based (compatible with
-> > mediatek,mali-mt8188 or mediatek,mali-8192), having specific
-> > platform
-> > data allows to set this flag for MT8370 without modifying MT8186
-> > configuration and behaviour.
-> >=20
-> > Signed-off-by: Louis-Alexis Eyraud
-> > <louisalexis.eyraud@collabora.com>
->=20
-> With one minor comment fixed below:
->=20
-> Reviewed-by: Steven Price <steven.price@arm.com>
->=20
-> > ---
-> > =C2=A0drivers/gpu/drm/panfrost/panfrost_drv.c | 11 +++++++++++
-> > =C2=A01 file changed, 11 insertions(+)
-> >=20
-> > diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c
-> > b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> > index
-> > f1ec3b02f15a0029d20c7d81046ded59854e885c..8e0a1ae6940c73b7b60233950
-> > ae3abdfa843cc8e 100644
-> > --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-> > +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> > @@ -846,6 +846,16 @@ static const struct panfrost_compatible
-> > mediatek_mt8192_data =3D {
-> > =C2=A0	.gpu_quirks =3D BIT(GPU_QUIRK_FORCE_AARCH64_PGTABLE),
-> > =C2=A0};
-> > =C2=A0
-> > +/* MT8370 uses the same power domains and power supplies as MT8186
-> > */
->=20
-> This comment is not correct - you've got the power domains of MT8186,
-> but the supplies of MT8183. The comment doesn't actually add much so
-> you=20
-> could just drop it.
->=20
-I'll remove it.
+On Wed, 07 May 2025 15:51:38 +0200, Dario Binacchi wrote:
+> Fix the following warning:
+> 
+>  Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml: ps-cancellation-current-picoamp: missing type definition
+> 
+> raised by command:
+> 
+>  make dt_binding_check  DT_SCHEMA_FILES=fsl.yaml
+> 
+> Fixes: be464661e7532 ("dt-bindings: iio: light: Add APDS9160 binding")
+> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> ---
+> 
+>  Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-> If you're feeling adventurous then one option here is to actually
-> clean=20
-> up the mediatek entries a little. Instead of referring to particular=20
-> part numbers we could have:
->=20
-> static const char * const mediatek_2_pm_domains[] =3D { "core0",
-> "core1" };
-> static const char * const mediatek_3_pm_domains[] =3D { "core0",
-> "core1", "core2" };
-> static const char * const mediatek_5_pm_domains[] =3D { "core0",
-> "core1", "core2",
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 "core3",
-> "core4" };
->=20
-> Or even just have the mediatek_5_domains[] array (dropping the '5' in
-> the name) and not use ARRAY_SIZE().
->=20
-> Equally the supplies arrays could be renamed. We have the one with=20
-> "sram" for legacy and everything else uses {"mali", NULL} but we have
-> two definitions for it (mt8183_b and mt8192).
->=20
-> Thanks,
-> Steve
-I'll do the array cleaning as well in a separate patch in the v6.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Regards,
-Louis-Alexis
->=20
-> > +static const struct panfrost_compatible mediatek_mt8370_data =3D {
-> > +	.num_supplies =3D ARRAY_SIZE(mediatek_mt8183_b_supplies) -
-> > 1,
-> > +	.supply_names =3D mediatek_mt8183_b_supplies,
-> > +	.num_pm_domains =3D ARRAY_SIZE(mediatek_mt8186_pm_domains),
-> > +	.pm_domain_names =3D mediatek_mt8186_pm_domains,
-> > +	.pm_features =3D BIT(GPU_PM_CLK_DIS) | BIT(GPU_PM_VREG_OFF),
-> > +	.gpu_quirks =3D BIT(GPU_QUIRK_FORCE_AARCH64_PGTABLE),
-> > +};
-> > +
-> > =C2=A0static const struct of_device_id dt_match[] =3D {
-> > =C2=A0	/* Set first to probe before the generic compatibles */
-> > =C2=A0	{ .compatible =3D "amlogic,meson-gxm-mali",
-> > @@ -868,6 +878,7 @@ static const struct of_device_id dt_match[] =3D {
-> > =C2=A0	{ .compatible =3D "mediatek,mt8186-mali", .data =3D
-> > &mediatek_mt8186_data },
-> > =C2=A0	{ .compatible =3D "mediatek,mt8188-mali", .data =3D
-> > &mediatek_mt8188_data },
-> > =C2=A0	{ .compatible =3D "mediatek,mt8192-mali", .data =3D
-> > &mediatek_mt8192_data },
-> > +	{ .compatible =3D "mediatek,mt8370-mali", .data =3D
-> > &mediatek_mt8370_data },
-> > =C2=A0	{ .compatible =3D "allwinner,sun50i-h616-mali", .data =3D
-> > &allwinner_h616_data },
-> > =C2=A0	{}
-> > =C2=A0};
-> >=20
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/light/brcm,apds9160.example.dtb: light-sensor@53 (brcm,apds9160): ps-cancellation-current-picoamp: 62400 is not of type 'array'
+	from schema $id: http://devicetree.org/schemas/property-units.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250507135147.1328639-1-dario.binacchi@amarulasolutions.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
