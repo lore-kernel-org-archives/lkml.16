@@ -1,114 +1,133 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4863F2F44
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60545258CD7;
+	Wed,  7 May 2025 12:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746621741; cv=none; b=JkWCE3WLoW6myRyYJOArqyITRMZUalsLOFK7/baS2a12opijIL1IuagKMmNITpZ23TvPe71JEEq31W6Y8EThq6qOMX84/FwW/aZ2CFo+k7Oc90XI+DuN1kcAHWG7sE66RZA+cJFGzW0oQbZ/68alc2tcaCtOoZZ1yhjADSjVUyA=
+	t=1746621742; cv=none; b=s9XHXZkHml4tCeWqBalCe9ZeAQwTwSj2YwKHhuC0sqI5yRXz9TdxxHbuSuOqR36viimkPp4l34XnHqWIJnO4YH6nWYS0xTVjbMqj9OkP/yi88I7lLSo/itkzp2auropgSRhuPswAOYUmQxEmSQLjpRxc0pExEwMQQXM6EqIB8Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746621741; c=relaxed/simple;
-	bh=29PmLEqS9rYUerAzIeBWl6BPxYcfGJYmg9/Yb6ohn0Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qjmu0JvjYcgOgbLEFBEomkcUDL6xcJB8fWRi+/EZDjt1606IbWWuyw+uKXpnXSuqwYLqGoMTYsgLn1NFumkarxOh4SGIZXQx8/eeXeNjb942YjmtB1Cv3f9bHPYaLZ3dXcXNdYIJplgxSEvzZhleoEJWLqpaPUiKQMwWK/M2Trc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=rgbRYpRq; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1746621742; c=relaxed/simple;
+	bh=xcl+DVUCBVGwS4tk7tt7JhUeBoLQFsx0goUXJ9bECFw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=b/5dDw9zcO02PBWRgDPJEc1fMzxaBY6UhFkr4OZpEooOD7Q6jvDizyhsuQvGbSpmXWn28BAyVfiPbMsecATRVZaDqLsRJaFvESDVSLEa6wAzbnDR/cJidMcVQS+zABzgiOgQG1ANOvlXM+XEu+8Hv98glTsg9DsPQAdv/yRowQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=Ythp8r9N; arc=none smtp.client-ip=52.119.213.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="rgbRYpRq"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1746621734; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=iksVT4KdA3eRwi4f/udJVWEktX0tvkyCe8oTkZzS2Yk=;
-	b=rgbRYpRqoGWeffFc3pRPkVim32WsIGD9B4KTBVsByfTqDwGbH7ymZavnfJGgFDnI1XnvGue/fvs8MUqJet/4glRSjnbop6t8+I1E1TMC6079XJ40RiJkG0HALo9zG5BeP2SJsqCCojSyDNwZEjWOYA6CERTNup+kuapldxAYNzU=
-Received: from 30.0.158.159(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WZqoxFK_1746621414 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 07 May 2025 20:36:55 +0800
-Message-ID: <88060373-d0b8-404a-b53b-9b5a54f5ba6f@linux.alibaba.com>
-Date: Wed, 7 May 2025 20:36:54 +0800
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="Ythp8r9N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1746621741; x=1778157741;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:mime-version:
+   content-transfer-encoding;
+  bh=xcl+DVUCBVGwS4tk7tt7JhUeBoLQFsx0goUXJ9bECFw=;
+  b=Ythp8r9NFNWU0HswYy6+5MjFhorzIDW3THx9mlfCKmqShQGVU1JMUuXI
+   U3V8+Smp2tU9Aeks1RF/IvtPlurMkHa27jrVUbegNdjAqZ6anaQdUvR/K
+   fJR0of2Ohto2EIC6E7Dpwt6Lf7irLizN8Qfdkz5k8MLUieghue9DtKkdS
+   AtHRqFsDcE/glkJvShhgf9+xInByPRdJsqb+Fj1X3aM8il8sR/EyHigaJ
+   BgxcasdS0ZGJMUGKwCByKLZwuEdfI48/vo98GEhQZ6BuD0aps5DN3xLx/
+   iHjb5p664rWxtzR8xNkeC0S3vcUs0pWgWSOAv/X38Pdw7RzqQbSQx0tUc
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.15,269,1739836800"; 
+   d="scan'208";a="295395097"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 12:42:18 +0000
+Received: from EX19MTAEUA001.ant.amazon.com [10.0.10.100:1686]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.12.172:2525] with esmtp (Farcaster)
+ id f6c7f54a-6d1b-4037-8a4a-1376fe21f347; Wed, 7 May 2025 12:42:15 +0000 (UTC)
+X-Farcaster-Flow-ID: f6c7f54a-6d1b-4037-8a4a-1376fe21f347
+Received: from EX19D008EUC001.ant.amazon.com (10.252.51.165) by
+ EX19MTAEUA001.ant.amazon.com (10.252.50.50) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 7 May 2025 12:42:15 +0000
+Received: from EX19D008EUC001.ant.amazon.com (10.252.51.165) by
+ EX19D008EUC001.ant.amazon.com (10.252.51.165) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 7 May 2025 12:42:15 +0000
+Received: from EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1]) by
+ EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1%3]) with mapi id
+ 15.02.1544.014; Wed, 7 May 2025 12:42:14 +0000
+From: "Heyne, Maximilian" <mheyne@amazon.de>
+To: Sudeep Holla <sudeep.holla@arm.com>
+CC: "stable@vger.kernel.org" <stable@vger.kernel.org>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, Len Brown <lenb@kernel.org>, Ard Biesheuvel
+	<ardb@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Catalin Marinas
+	<catalin.marinas@arm.com>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
+Thread-Topic: [PATCH] ACPI/PPTT: fix off-by-one error
+Thread-Index: AQHbv0114M7qx/B8dkqeDaMIhaZebQ==
+Date: Wed, 7 May 2025 12:42:14 +0000
+Message-ID: <20250507-autumn-phrase-4a1eddef@mheyne-amazon>
+References: <20250506-draco-taped-15f475cd@mheyne-amazon>
+ <20250506-shapeless-merciful-inchworm-7bfdb4@sudeepholla>
+ <20250506-dialog-57th-c4e70064@mheyne-amazon>
+ <20250507-mysterious-emu-of-fertility-951c69@sudeepholla>
+ <20250507-blend-revel-3d94099b@mheyne-amazon>
+ <20250507-quantum-solid-ibex-218f1b@sudeepholla>
+In-Reply-To: <20250507-quantum-solid-ibex-218f1b@sudeepholla>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <75972120DDD3DE4084D8C4FBFE95DF15@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mm: convert do_set_pmd() to take a folio
-To: Matthew Wilcox <willy@infradead.org>
-Cc: akpm@linux-foundation.org, david@redhat.com, hannes@cmpxchg.org,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, dev.jain@arm.com, ziy@nvidia.com, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <8e33c8a65b46170dfd8ba6715d2115856a55b8f6.1746609191.git.baolin.wang@linux.alibaba.com>
- <a2faee74256c22cff2238487a86b154d5520c334.1746609191.git.baolin.wang@linux.alibaba.com>
- <aBtNrQNlL7hjLrTZ@casper.infradead.org>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <aBtNrQNlL7hjLrTZ@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, May 07, 2025 at 01:30:53PM +0100, Sudeep Holla wrote:
+> On Wed, May 07, 2025 at 11:56:48AM +0000, Heyne, Maximilian wrote:
+> > On Wed, May 07, 2025 at 12:52:18PM +0100, Sudeep Holla wrote:
+> > > =
+
+> > > Just to understand, this node is absolutely processor node with no
+> > > private resources ? I find it hard to trust this as most of the CPUs
+> > > do have L1 I&D caches. If they were present the table can't abruptly =
+end
+> > > like this.
+> > =
+
+> > Yes looks like it. In our case the ACPI subtable has length 0x14 which =
+is
+> > exactly sizeof(acpi_pptt_processor).
+> > =
+
+> =
+
+> OK, this seem like it is emulated platform with no private resources as
+> it is specified in the other similar patch clearly(QEMU/VM). So this
+> doesn't match real platforms. Your PPTT is wrong if it is real hardware
+> platform as you must have private resources.
+> =
+
+> Anyways if we allow emulation to present CPUs without private resources
+> we may have to consider allowing this as the computed pointer will match
+> the table end.
+
+Is there a need by the ACPI specification that the Cache information
+must come after the processor information? Because on our platform there
+is Cache and it's described but at a different location seemingly. It
+looks like caches are described first and then the CPUs.
+
+I can try to drill even deeper here if you insist. As said I'm no
+subject matter expert here. But is there something obviously wrong with
+my patch or would it be ok to just take it?
 
 
 
-On 2025/5/7 20:10, Matthew Wilcox wrote:
-> On Wed, May 07, 2025 at 05:26:13PM +0800, Baolin Wang wrote:
->> In do_set_pmd(), we always use the folio->page to build PMD mappings for
->> the entire folio. Since all callers of do_set_pmd() already hold a stable
->> folio, converting do_set_pmd() to take a folio is safe and more straightforward.
-> 
-> What testing did you do of this?
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
 
-I did mm selftests, tmpfs/xfs PMD-sized mmap() tests.
-
-> 
->> -vm_fault_t do_set_pmd(struct vm_fault *vmf, struct page *page)
->> +vm_fault_t do_set_pmd(struct vm_fault *vmf, struct folio *folio)
->>   {
->> -	struct folio *folio = page_folio(page);
->>   	struct vm_area_struct *vma = vmf->vma;
->>   	bool write = vmf->flags & FAULT_FLAG_WRITE;
->>   	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
->>   	pmd_t entry;
->>   	vm_fault_t ret = VM_FAULT_FALLBACK;
->> +	struct page *page;
-> 
-> Because I see nowhere in this patch that you initialise 'page'.
-
-Please look at the following code in do_set_pmd(), and the 'page' will 
-be initialized before using.
-
-         if (thp_disabled_by_hw() || vma_thp_disabled(vma, vma->vm_flags))
-                 return ret;
-
-         if (!thp_vma_suitable_order(vma, haddr, PMD_ORDER))
-                 return ret;
-
-         if (folio_order(folio) != HPAGE_PMD_ORDER)
-                 return ret;
-         page = &folio->page;
-
-
-> And that's really the important part.  You seem to be assuming that a
-> folio will never be larger than PMD size, and I'm not comfortable with
-
-No, I have no this assumption. But do_set_pmd() is used to establish PMD 
-mappings for the PMD-sized folios, and we already have PMD-sized checks 
-to validate the folio size:
-
-         if (!thp_vma_suitable_order(vma, haddr, PMD_ORDER))
-                 return ret;
-
-         if (folio_order(folio) != HPAGE_PMD_ORDER)
-                 return ret;
-
-> that assumption.  It's a limitation I put in place a few years ago so we
-> didn't have to find and fix all those assumptions immediately, but I
-> imagine that some day we'll want to have larger folios.
-> 
-> So unless you can derive _which_ page in the folio we want to map from
-
-IMO, for PMD mapping of a PMD-sized folio, we do not need to know 
-_which_ page in the folio we want to map, because we'll always map the 
-entire PMD-sized folio.
-
-> the vmf, NACK this patch.
