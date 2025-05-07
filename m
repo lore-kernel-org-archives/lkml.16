@@ -1,84 +1,93 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49A49205E02;
-	Wed,  7 May 2025 09:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D24421171D;
+	Wed,  7 May 2025 09:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746611897; cv=none; b=q9/2BNMttrxNsCyNwsIm3szCtLRWsLxCm2bjxsnFfuUGKGwggdM4DjPgsjIteknN88kAcxDf4xTZUEfhtkZo164wmUez+wrK42wnNkHMm9T7e5qLxhcczPlS9QkbMA/iJAzM11GMToIeikrGi7mfKChMcFJvMpQVvwadI85si6g=
+	t=1746611899; cv=none; b=JwYGytw/QpQRNhpBNTFe3vuGLdodtxCvsHgDfvfWaRty6QrfquxKBtcmSagO1jsEh0R0n/Ln1TiDLhNVL1GWpQwUQpehX25D69rRiuAEknDj4Q+gmbOcDl7vW6J3lV8pYeoShsQYsISwoY2Vl82g+BQI4+Nf7Fj3JM6GXKW4doA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746611897; c=relaxed/simple;
-	bh=YVJN70PPzT45Ed+Rn7QD3cSXjFB9D3eO316oNojiBiM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ma97KteGwRdrgmcv47ZKh8gDWw4gfTjhSNfMetf2XYfB1elRAaZQjpfwRe4iBitkS4/z2vGS+h3WhYmkmw4eT7OeOPr9TQ5qPLY0gHkV1eIdjUy6dzzjuGs9urDIh5+EZCzekv+dYi0UCPUfNScS1JNsLT4ro87grgc+69wQMf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58D98339;
-	Wed,  7 May 2025 02:58:05 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 608953F5A1;
-	Wed,  7 May 2025 02:58:12 -0700 (PDT)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: catalin.marinas@arm.com,
-	pcc@google.com,
-	will@kernel.org,
-	broonie@kernel.org,
-	anshuman.khandual@arm.com,
-	joey.gouly@arm.com,
-	yury.khrustalev@arm.com,
-	maz@kernel.org,
-	oliver.upton@linux.dev,
-	frederic@kernel.org,
-	shmeerali.kolothum.thodi@huawei.com,
-	james.morse@arm.com,
-	mark.rutland@arm.com,
-	huangxiaojia2@huawei.com,
-	akpm@linux-foundation.org,
-	surenb@google.com,
-	robin.murphy@arm.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v4 3/6] tools/kselftest: add MTE_FAR hwcap test
-Date: Wed,  7 May 2025 10:57:54 +0100
-Message-Id: <20250507095757.1663684-4-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250507095757.1663684-1-yeoreum.yun@arm.com>
-References: <20250507095757.1663684-1-yeoreum.yun@arm.com>
+	s=arc-20240116; t=1746611899; c=relaxed/simple;
+	bh=vuEFNCY+tWWCETEmTOXpsR3v2z6yRVWaOyJU5sL0l2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kZiw33wiqaFgxi4q8bw/yJ+jX1oJoYZb5vWt9aPULUNesnaKEbEUgwFw2GSO40HWH1dTqWCCjAsiOvcOf48Lv+pG+O7XG9AqnC48OEWxpYU+4nq6SwdMJ9KJcnFEX4PqR1uYqPRGgVLdomn0Mq/laBOhrEUtoD/bQ+rt8GlOgh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=GmmzQ1Ka; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="GmmzQ1Ka"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 26D6940E01FA;
+	Wed,  7 May 2025 09:58:16 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 1D33ZZGcJmh5; Wed,  7 May 2025 09:58:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746611891; bh=GVf4RoAqYoi1vRwmugZ9f4u/hX2lI0oCWwhhT5Q/hPY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GmmzQ1Kactg7nmX/rGEWozSHQq9U74UACCllTaDCunPjIY2+WkGVqvi+hvsyN9uM7
+	 CL1cGHLDrGWyF4QrxxsfFhy8DHI1X19K/POwJHyTwJlOYP5VtU8HY8Q3uB2KTAuyjg
+	 /1kR3AlCBJisihVeWL+qPNaAY4nMoXbgH7jL3rTu5DbRMlubruP18bUIsmRiS6TPh/
+	 3a4AfuCbR9u4sApH2jNKiaWt9iz8noVpn3XVlH+2H/ootUeW1QTOIafW60YcK2rxHa
+	 1xtP0AeQ9wXKXkFZLLDR29WSLgaPO+euMJHZmW3yyZHoCknZYqZQjR2FV51LWTL9JC
+	 gJhtuj33zWi3jnV07QyBVoZl6GVKgob9+crqwFXQnqibJJ5cojgTP5x4DB46ZjQaKt
+	 ZXlbxI605cybPpwyaWLVyQB8urPXeCW47PNw7BXmzpoTTrddQnJH/aE3sNbY1Z7e2c
+	 VsdWtPuCj+wEdzbdYtybWuPlutuLzyqoUxD0uYStKRyd9sCPbFxxoBfMvsz2SbEhVC
+	 YhBa18YeSdtqkvtqHd66Afm+jel8HZcK+5HML3MzAuH+0ObSRPZp1WJdk+B/SrJwFr
+	 BIGYOIvobGVs+KFJM4on8TFPoYrgJCUhfUmVicBiV8n3gnTo2A+pbbITYTg8AegeEf
+	 rXOlb2snquQRP1DX5ieBLvpA=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8386040E0222;
+	Wed,  7 May 2025 09:58:02 +0000 (UTC)
+Date: Wed, 7 May 2025 11:58:01 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [RFT PATCH v2 05/23] x86/sev: Move instruction decoder into
+ separate source file
+Message-ID: <20250507095801.GNaBsuqd7m15z0kHji@fat_crate.local>
+References: <20250504095230.2932860-25-ardb+git@google.com>
+ <20250504095230.2932860-30-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250504095230.2932860-30-ardb+git@google.com>
 
-add MTE_FAR hwcap test on kselftest.
+On Sun, May 04, 2025 at 11:52:35AM +0200, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
+> 
+> As a first step towards disentangling the SEV #VC handling code -which
+> is shared between the decompressor and the core kernel- from the SEV
+> startup code, move the decompressor's copy of the instruction decoder
+> into a separate source file.
 
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-Reviewed-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/arm64/abi/hwcap.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Why?
 
-diff --git a/tools/testing/selftests/arm64/abi/hwcap.c b/tools/testing/selftests/arm64/abi/hwcap.c
-index 35f521e5f41c..e60bfb798ba2 100644
---- a/tools/testing/selftests/arm64/abi/hwcap.c
-+++ b/tools/testing/selftests/arm64/abi/hwcap.c
-@@ -1098,6 +1098,12 @@ static const struct hwcap_data {
- 		.sigill_fn = hbc_sigill,
- 		.sigill_reliable = true,
- 	},
-+	{
-+		.name = "MTE_FAR",
-+		.at_hwcap = AT_HWCAP3,
-+		.hwcap_bit = HWCAP3_MTE_FAR,
-+		.cpuinfo = "mtefar",
-+	},
- };
- 
- typedef void (*sighandler_fn)(int, siginfo_t *, void *);
+I'm still unclear why that happens.
+
+I'd like to read some blurb in those commit messages which explains the big
+picture: the insn decoder bits are going to be in the bla mapping because...
+, and because... and this is wonderful because ...
+
+Thx.
+
 -- 
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
