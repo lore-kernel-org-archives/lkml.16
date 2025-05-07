@@ -1,185 +1,145 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA01215F58;
-	Wed,  7 May 2025 11:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6806072628;
+	Wed,  7 May 2025 11:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746616279; cv=none; b=d/ZUi4DWCm1BEmlIRhuzRcNtiEBeYgg3fqFMYe/+/UTWOlz7V9eqrVzcyAgz2ssQCwrP469Qa16mtEGnqjZ6eQa+AwkfLp10iXP3NTXcEh8lY4npHhrabIwT32epbflk1i1pGjaH7O5IrQn/yodf97AD6a7+xOMw1wIWf6n0RGU=
+	t=1746616334; cv=none; b=RO0q0OAZhRPhyHm4DEG2htvrLrQmYlFsgQBZBRkcBqDY1kPMZwh+TfmS6mKMCkZZreGK0D8EtxMwOE73GWs0n0txR7PeYOFVNLEJl0UdI9m7p9ijhIsG8hLmkwYjZshS4uoxufLJQmV9vX+UTOrEiD3jdWl5SYskPMQ+U8aYbiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746616279; c=relaxed/simple;
-	bh=ZntyQpw2zi5iOaOV9k2HOzNU8KHguQzDjhm53vtJw5s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=P26zHFgK05nn/dCr3A02YWv4LMadZQrvNDOUFsBv8z3H8+gjukaxH+wdqiIqVH0h3OH8qAOR0hSbrXQtIRyk1vClX9EvSDeDUCIa9JQkNG6t5KFNAnnVQCAT8E/b4YIGZTw2AZ03mnU7diGMLUko+NPsdgTa2cpzkRvedgGyT2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KutWJ/g1; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746616334; c=relaxed/simple;
+	bh=AWug2EJD8Zb0BHxi2TAv1N/jAtrFEH1V7Ij6zoalq0I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=u7wQ12Uc8kazdLb6jWfFNsuIjmGQZW3wiYcT5RA+LYz76gqbW/pavtmsvwWnzQcpCVOoBfU4gBZndGmT45CpUQpyuntgcu/vM13vyOZ6i0fxCD6NHY8QSQ56rd4XIrMqVzMzb3yvBHgx9+omIZwu59syzvfncmWCP2liuBHtd9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mh78cifO; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KutWJ/g1"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 547A8WUS009115;
-	Wed, 7 May 2025 11:10:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	uA25O6r9wDpkNxGF6Ry+LoJMfYqYXfcqAr/9W7fDnIw=; b=KutWJ/g1BpPBlKHq
-	KSbVyDM0pWsutBvxtipM9QV63jddzbuSK0SChD0LtY2Q+9qyR/RHuGknIoG/K9lF
-	n0zM2b9MKEqFiE9ySEXmPpvSGuC7Xfl/kWelt2Id7emxd2wzKT03aCpgUsTbSCew
-	PYkC7cYgjLVxR1FBCj8m6Ii7hECf0Fi8VZ/O1zGDKifgXfC86S8zN2EF3qEtM1/0
-	JAEGEmV5S0iSN9YHWQF1I4sxGjyMpiJcEElYN3QnI6tTZ7BfEFgZwakWY42YOuQH
-	dTHLqrzMasmDqzWDLh3orvqbGhi05dl756vgeZsDWBfiSC24AvT+qeoHi6/INBzT
-	MsNBVQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46g5gh85cy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 11:10:55 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 547BAsIu003195
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 7 May 2025 11:10:54 GMT
-Received: from [10.216.37.183] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 7 May 2025
- 04:10:48 -0700
-Message-ID: <1a83e239-7cd7-4230-7117-54c9d97f1ed3@quicinc.com>
-Date: Wed, 7 May 2025 16:40:45 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mh78cifO"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af6a315b491so6097377a12.1;
+        Wed, 07 May 2025 04:12:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746616332; x=1747221132; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CsBfD4Pb9OMNX/WaFeLXYdbl+5f37DSDVYvpAffwCyU=;
+        b=mh78cifOutAHTfVnDmaOhEUuZTaKAMQnFWgX4mn8RzTc09wU0/+gh5HkfUQbc6Zyqr
+         TBEL9faImAP1gfHXuNoKi2mYD0oQDnUqflcHJU8PsnmkrxCnqG/koMeuHCXyFs0BRsG+
+         7PDgzqDmUPCX+E8H+SR1U6hkVusPgygpmI4WJZntydT9y1h7nhBu+KVboSdL7lFe7AEK
+         OAQdk7WVzz5aYUO9CHWQPJdy/sKQiPq0RUq9YlW9ekewwQBe2hSlRP6FFypIXwO4DFhT
+         Z6N5/6OqZ2OcS+u0aEuZWwaOmkddXKZ6UHLmvrO0U/5Jt2TZE9CFcCV3PxBzQW59kID6
+         Nefg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746616332; x=1747221132;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CsBfD4Pb9OMNX/WaFeLXYdbl+5f37DSDVYvpAffwCyU=;
+        b=Vf1jjc+kjz3imly/MKvrAYt3sJZ25vjcYbj3JaewKaf0wbOAie0cyLB25MZLW/1KLc
+         +MxEU0d0+IZ34T9dVQ+FarmHCntfZzTFx7gkKkGuyz9PWNr29rrTS20tKfVtjatZc/AB
+         b6DSTU3ZWvWlDnjvnJO6OOVl+byJAFlyhPQLU6ZIFIPLVmUza/+rkIgOZp1PIvH6GzH/
+         kgjToAz74E2VAMH7jAf28wTnvdkSrnZJ7Hi4eRUmPHgWRNhkXtU+qpTStsSzXA9hShv/
+         +0dluhAZgsFcVl1DF48V0V+4fkE4dsgF0APObc9pHEr82+pCesn9lp2J5eVxk5lOXr1i
+         nVaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFFv/z/uuh+RPaysG0dMf03wNvil2q8nWnODWkQdCtgJO11c0FLnqX4N0Ik7DDvFBt9YyB+4oKWM1mPSY=@vger.kernel.org, AJvYcCWBtPWiFBdMZXTnTj2SaC2ChdfuWqsJ9+qj770ODva99wPh+aOyrGIFp0seUMEjgUmIQOYVVlNHW67jw8DDwI/wa1smeLMl@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtCDyE0tI44+oxpE6t5Y5DArkb/jHzRdfMws8tAKgw/q0PbWes
+	dpAEYdzOAt4AMOtwkFEtJ/s55xamsh2Fjmto1bU9EgRLzFEcGx15
+X-Gm-Gg: ASbGncupaWKuMQy/uEYAglPwx0Cyf4MTQkJzk8gNb4a0vIqXakUnZJrE50lv/4X+vI3
+	nN6VZBYh/d673m52KVJSwQPCud8GbmARXUXlTDhmra3zWXp5e/GdN2VATkWM7Km2n8MlYu5e9KE
+	EdY8exuGMfUAUYtaDLQuAvdguMmDmcZ7lRP5sXrbg8JqPZQr660I+LsjHR0BGAQjMIm7maT6KQm
+	4v6XJ5EtZwH+kb4ILJqMSXHZQucWn128W73/U9gjTPMYMZ3Qo5r4HX/etUooz4jabFbEsxrFL+6
+	dcMLE2Q6W56xjFWq3ii+oy3tlh/C6HN68anRFwQhh+Nw19Q1l1HhtH5EmWoEPbfzpYHSKw3FNae
+	bpoRZnUzghGnXDw==
+X-Google-Smtp-Source: AGHT+IG/CCghFGRg+QmTrGaDvtys9QtKLenO0TPTE91OHTJx6hqL4uN/Huw3HaDc+dTeyr0qlGbDFw==
+X-Received: by 2002:a17:902:f381:b0:22e:663f:c4b with SMTP id d9443c01a7336-22e663f0fcamr17324135ad.26.1746616332484;
+        Wed, 07 May 2025 04:12:12 -0700 (PDT)
+Received: from localhost.localdomain ([14.22.11.163])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e6612e8e1sm11326985ad.132.2025.05.07.04.12.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 04:12:11 -0700 (PDT)
+From: alexjlzheng@gmail.com
+X-Google-Original-From: alexjlzheng@tencent.com
+To: paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com
+Cc: greg@kroah.com,
+	chrisw@osdl.org,
+	linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jinliang Zheng <alexjlzheng@tencent.com>
+Subject: [PATCH v2] securityfs: fix missing of d_delete() in securityfs_remove()
+Date: Wed,  7 May 2025 19:12:04 +0800
+Message-Id: <20250507111204.2585739-1-alexjlzheng@tencent.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] PCI: dwc: Chain the set IRQ affinity request back to the
- parent
-Content-Language: en-US
-To: Tsai Sung-Fu <danielsftsai@google.com>
-CC: Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>,
-        Andrew Chant <achant@google.com>,
-        Brian Norris
-	<briannorris@google.com>,
-        Sajid Dalvi <sdalvi@google.com>, Mark Cheng
-	<markcheng@google.com>,
-        Ben Cheng <bccheng@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Thomas Gleixner
-	<tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>
-References: <20250303070501.2740392-1-danielsftsai@google.com>
- <87a5a2cwer.ffs@tglx>
- <CAK7fddD4Y5CJ3hKQvppGB2Bof4ibYDX4mBK3N1y8qt-NVoBb7w@mail.gmail.com>
- <87eczd6scg.ffs@tglx>
- <CAK7fddAqDPw1CuvBDUsQApbs1ZSE_ruyTAdsp+c4116C0ZjvVw@mail.gmail.com>
- <878qpi61sk.ffs@tglx>
- <CAK7fddCG6-Q0s-jh5GE7LG+Kf6nON8u9BS4Ame9Xa7VF1=ujiw@mail.gmail.com>
- <878qpg4o4t.ffs@tglx>
- <CAK7fddBSJk61h2t73Ly9gxNX22cGAF46kAP+A2T5BU8VKENceQ@mail.gmail.com>
- <874izz1x42.ffs@tglx>
- <CAK7fddBidt90Yjh=fjj=w8uovjEyes6Qe1U0m7k5XWGYZm+GHA@mail.gmail.com>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <CAK7fddBidt90Yjh=fjj=w8uovjEyes6Qe1U0m7k5XWGYZm+GHA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 76dWRpRUk8RBuH2Ouo3XaVN9F_2LJn9D
-X-Authority-Analysis: v=2.4 cv=TqPmhCXh c=1 sm=1 tr=0 ts=681b3fbf cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=AMFphiw-AAAA:8
- a=wQ3t4f8JpbTjhMOd9qAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=2bb41rcl4DbygUh6CoKr:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDEwNCBTYWx0ZWRfX96SS2ppmYpc4
- rIiDV1wvb4eWN26/6GbfAgsuEShLxXAixEgMuPb7vIS6Qu10+RCcpn0+DqgeF4PNqvBPUdc4D9/
- ZnjT6TUlnxV86sT2FXTH7aOK7kfxtJ8aTCcFpdSsa6uc2JMYue+UZ4N9y8ZvpdEGqiqLZPKkYiM
- We1BJgDOU9iIvShTLENpIwDTkLtPN3CZ3ORcDucOy9XeL1BGMj64JuN+qt3UQK95DKhejdhBb40
- EetCzJ4p4cpkwgIuhEeS5iSvcnWxwUD8hBRFe/0jUQOZiCbvIZm9YGRxjeiC8C01k1WqHyqD/aH
- TByaV34utTNP/lCKEECgDSqfm5sVlngLgeGrjuWO6t1MbTX6mgdTiLINhv6igQ2jn84DnRvZhqq
- Awk7BOSNCNBG7DeE8F+JKKTrWgEhhWFr62udUs0zh60txZxGGH66CjkP04cUNJkuYViGRpkj
-X-Proofpoint-ORIG-GUID: 76dWRpRUk8RBuH2Ouo3XaVN9F_2LJn9D
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_03,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
- priorityscore=1501 phishscore=0 suspectscore=0 impostorscore=0 clxscore=1011
- lowpriorityscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505070104
 
+From: Jinliang Zheng <alexjlzheng@tencent.com>
 
+Consider the following module code (just an example to make it easier to
+illustrate the problem, in fact the LSM module will not be dynamically
+unloaded):
 
-On 3/25/2025 12:08 PM, Tsai Sung-Fu wrote:
-> On Tue, Mar 11, 2025 at 10:05 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->> On Tue, Mar 11 2025 at 17:52, Tsai Sung-Fu wrote:
->>
->> Please do not top-post and trim your replies.
->>
->>> Running some basic tests with this patch (
->>> https://tglx.de/~tglx/patches.tar ) applied on my device, at first
->>> glance, the affinity feature is working.
->>>
->>> I didn't run stress test to test the stability, and the Kernel version
->>> we used is a bit old, so I only applied change in this 2 patches
->>
->> I don't care about old kernels and what you can apply or not. Kernel
->> development happens against upstream and not against randomly chosen
->> private kernel versions.
->>
->>> And adding if check on irq_chip_redirect_set_affinity() and
->>> irq_set_redirect_target() to avoid cpumask_first() return nr_cpu_ids
->>
->> I assume you know how diff works.
->>
->>> May I ask, would this patch be officially added to the 6.14 kernel ?
->>
->> You may ask. But you should know the answer already, no?
->>
->> The merge window for 6.14 closed on February 2nd with the release of
->> 6.14-rc1. Anything which goes into Linus tree between rc1 and the final
->> release is fixes only.
->>
->> This is new infrastructure, which has neither been posted nor reviewed
->> nor properly tested. There are also no numbers about the overhead and
->> no analysis whether that overhead causes regressions on existing setups.
->>
->> These changes want to be:
->>
->>     1) Put into a series with proper change logs
->>
->>     2) Posted on the relevant mailing list
->>
->>     3) Tested and proper numbers provided
->>
->> So they are not even close to be ready for the 6.15 merge window, simply
->> because the irq tree is going to freeze at 6.14-rc7, i.e. by the end of
->> this week.
->>
->> I'm not planning to work on them. Feel free to take the PoC patches,
->> polish them up and post them according to the documented process.
->>
-> I really appreciate the patches from you, I am quite new to the
-> upstream and IRQ framework. So would you help to share
-> some experiences on how this kind of new infrastructure of IRQ
-> framework should be tested if you don't mind ?
-QCOM is also interested in this feature, if you need any help
-we can support it. Please let us know the status of this
-patch to take it forward.
+  static struct dentry *dentry;
 
-- Krishna Chaitanya.
->> Thanks,
->>
->>          tglx
-> 
-> Thanks
-> 
+  static int __init securityfs_test_init(void)
+  {
+          dentry = securityfs_create_dir("standon", NULL);
+          return PTR_ERR(dentry);
+  }
+
+  static void __exit securityfs_test_exit(void)
+  {
+          securityfs_remove(dentry);
+  }
+
+  module_init(securityfs_test_init);
+  module_exit(securityfs_test_exit);
+
+and then:
+
+  insmod /path/to/thismodule
+  cd /sys/kernel/security/standon     <- we hold 'standon'
+  rmmod thismodule                    <- 'standon' don't go away
+  insmod /path/to/thismodule          <- Failed: File exists!
+
+Although the LSM module will not be dynamically added or deleted after
+the kernel is started, it may dynamically add or delete pseudo files
+for status export or function configuration in userspace according to
+different status, which we are not prohibited from doing so.
+
+In addition, securityfs_recursive_remove() avoids this problem by calling
+__d_drop() directly. As a non-recursive version, it is somewhat strange
+that securityfs_remove() does not clean up the deleted dentry.
+
+Fix this by adding d_delete() in securityfs_remove().
+
+Fixes: b67dbf9d4c198 ("[PATCH] add securityfs for all LSMs to use")
+Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
+---
+changelog:
+v2: Modify the commit message to make it clearer
+v1: https://lore.kernel.org/all/20250426150931.2840-1-alexjlzheng@tencent.com/
+---
+ security/inode.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/security/inode.c b/security/inode.c
+index da3ab44c8e57..d99baf26350a 100644
+--- a/security/inode.c
++++ b/security/inode.c
+@@ -306,6 +306,7 @@ void securityfs_remove(struct dentry *dentry)
+ 			simple_rmdir(dir, dentry);
+ 		else
+ 			simple_unlink(dir, dentry);
++		d_delete(dentry);
+ 		dput(dentry);
+ 	}
+ 	inode_unlock(dir);
+-- 
+2.49.0
+
