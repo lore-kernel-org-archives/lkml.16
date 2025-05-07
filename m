@@ -1,127 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD47F217F40;
-	Wed,  7 May 2025 08:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED6A221708
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 08:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746606503; cv=none; b=CbbMpMnJbY9rQ/lWj31Ks7HvKQLaa889oGZGYT7kMy41uFL2bpNvWEgWpFolieWI/3hp8n4vkgshSOB84xcJ4M3GCu6BNGXI0bxB0tMR7pt6eRUAfjK4iQWGyJgG51dhEXYVyoQLesxSwHxaMVHovL4q529y6tcC2fvBiOBNrxA=
+	t=1746606513; cv=none; b=Ec0G6rRE82lkxVqyar6zzg+7JKYpE6tK30RH0kFMd/DuHtPxkgkSIFHbk7nyy1yBaKoDoDeJMOoMcEEso5PG+7dTGA2yfUK1xUolCq8v3KK2PsP9gS80K+/2D8hkjas9fINSGcTB4hniLRpNDxjHHL0Vi5kxAOXX5DWThK+U4V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746606503; c=relaxed/simple;
-	bh=/6zoEkQ0lo1XuA4K+Km6yLk8x1QoBH8K7XBJwf6FiMQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VBc11DwL5SyrhKbam5ElnMkplhU1FRFCwpj0PwvLOrN1jLt8WG429kUVOYTPogevpxK2WCe9aNzKbrywXRU/iDKDpA+CDgrQphMtB1hMUfj5LgvBKl13mYva4VgDHMhCzK0JUfG+GrExH+3mmhEnjJARnJna7XyhEpL8ebiNtQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cIJkU8hf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746606513; c=relaxed/simple;
+	bh=LQLDtHyEMv6WC5tvlSF6xAtjEa1TBJ6NL16bqwQ1zBY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BhJZ0KftbJSckFrKUSu0lFT3y24QaJ2s+s/Dn5URCU4F+H2Rz97vtBGSQbvZUhkGZ48truPPQHGSM6eBJwNob+r9KPuXSSfXY7tQq/wAJ5+Hmv3YffV2luLIBlWjk8oEDT5HULIyiYIPYKrHPF6NlVM8qiDm1dDYCe1tVT/dhUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UiscVOSE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cIJkU8hf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 952C9C4CEF1;
-	Wed,  7 May 2025 08:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746606503;
-	bh=/6zoEkQ0lo1XuA4K+Km6yLk8x1QoBH8K7XBJwf6FiMQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cIJkU8hfhMdDBPvbbZA6/upzqsWRFL4U8FummycAokXNJBjRVlNhRKF1Va6UIijEg
-	 I85wdxkk4Q7ZgRSuRj/ZHpEWE5Rb9z3kMXsjgRSKCnv+mV5qrBLGiQwz6yhsBJF1oO
-	 Ld8XhAcxixCeSLNrfgjN9FmCrbjQa3DxXvk/FOPfIhFJxKLXnw2m1b1Cqj2gcgXpDz
-	 J/H7wzU2Gsy4ejnAEGfGfXFeT8NmEW7wD++UzaxXFRDAwYF/mHVze2giHsyGq/DVQd
-	 1AJfO0tdl8ob8at7Nj40aP9QoU3sOr6Xj7uBShJu74ftO34MS9cqdMJyk6GJ6Nkciq
-	 tNuQ9ShTR6V7g==
-Message-ID: <1f7760c6-0fdf-48b0-9c13-85fa5e01cddd@kernel.org>
-Date: Wed, 7 May 2025 10:28:17 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UiscVOSE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746606511;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VxMpeAEp5/qbopqS26YNMKfIvvwVGQ66Rj7oYRD3BHo=;
+	b=UiscVOSEf0aNJIri7oSEsaymd54y+S/GOjOOuY9/5Yz0WhhYp/fAaYeK//gaFdAOEZpw3i
+	YbOIIKuJZQcCx7Ksvom4EEJNfDyqqv/YpUlLcUClU6Bficdw+wOH08LpnqmcUOIPHEDhcG
+	BWbtAncpcx239TOg/6gktX+f0JhRPqA=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-356-CuZZ52rhOlqxuf7sqjYhSA-1; Wed,
+ 07 May 2025 04:28:27 -0400
+X-MC-Unique: CuZZ52rhOlqxuf7sqjYhSA-1
+X-Mimecast-MFC-AGG-ID: CuZZ52rhOlqxuf7sqjYhSA_1746606506
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D61E0180045C;
+	Wed,  7 May 2025 08:28:25 +0000 (UTC)
+Received: from sirius.home.kraxel.org (unknown [10.45.224.80])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B7A4D19560AA;
+	Wed,  7 May 2025 08:28:24 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+	id 6EDA318000B2; Wed, 07 May 2025 10:28:21 +0200 (CEST)
+From: Gerd Hoffmann <kraxel@redhat.com>
+To: dri-devel@lists.freedesktop.org
+Cc: Gerd Hoffmann <kraxel@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Eric Auger <eric.auger@redhat.com>,
+	David Airlie <airlied@redhat.com>,
+	Gurchetan Singh <gurchetansingh@chromium.org>,
+	Chia-I Wu <olvaffe@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Simona Vetter <simona@ffwll.ch>,
+	virtualization@lists.linux.dev (open list:VIRTIO GPU DRIVER),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/virtio: implement virtio_gpu_shutdown
+Date: Wed,  7 May 2025 10:28:21 +0200
+Message-ID: <20250507082821.2710706-1-kraxel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 0/4] Add STM32MP25 SPI NOR support
-To: Patrice Chotard <patrice.chotard@foss.st.com>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Gatien Chevallier <gatien.chevallier@foss.st.com>
-Cc: christophe.kerello@foss.st.com, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
-References: <20250507-upstream_ospi_v6-v13-0-32290b21419a@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250507-upstream_ospi_v6-v13-0-32290b21419a@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 07/05/2025 09:25, Patrice Chotard wrote:
-> This series adds SPI NOR support for STM32MP25 SoCs from STMicroelectronics.
-> 
-> On STM32MP25 SoCs family, an Octo Memory Manager block manages the muxing,
-> the memory area split, the chip select override and the time constraint
-> between its 2 Octo SPI children.
-> 
-> Due to these depedencies, this series adds support for:
->   - Octo Memory Manager driver.
->   - Octo SPI driver.
->   - yaml schema for Octo Memory Manager and Octo SPI drivers.
-> 
-> The device tree files adds Octo Memory Manager and its 2 associated Octo
-> SPI chidren in stm32mp251.dtsi and adds SPI NOR support in stm32mp257f-ev1
-> board.
->     
-> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
-> 
-> Changes in v13:
-> - Make firewall prototypes always exposed.
+Calling drm_dev_unplug() is the drm way to say the device
+is gone and can not be accessed any more.
 
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Tested-by: Eric Auger <eric.auger@redhat.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_drv.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-I do not see any changes here.
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+index e32e680c7197..71c6ccad4b99 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.c
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+@@ -130,10 +130,10 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
+ 
+ static void virtio_gpu_shutdown(struct virtio_device *vdev)
+ {
+-	/*
+-	 * drm does its own synchronization on shutdown.
+-	 * Do nothing here, opt out of device reset.
+-	 */
++	struct drm_device *dev = vdev->priv;
++
++	/* stop talking to the device */
++	drm_dev_unplug(dev);
+ }
+ 
+ static void virtio_gpu_config_changed(struct virtio_device *vdev)
+-- 
+2.49.0
 
-b4 diff suggests this is the same as v11 so I expect the same failures.
-
-Best regards,
-Krzysztof
