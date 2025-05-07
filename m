@@ -1,148 +1,138 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B9B28980B;
-	Wed,  7 May 2025 16:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5FB28A705
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746635086; cv=none; b=reJqCCsE6Q9DidFv3i59Ms/1j8EC3zuWpKxvvD64etc5fBppFFri7DX1FLrTL4y4InEUdMGDR72lnl45WMgxZJoC9w/zcHEZlEAuOD5ySZvu32xh4u81g+F4MK80lqf71X5NPrzb/zLu26bc7RIX5NgWbI+0FZT6K6wCNIiGxB8=
+	t=1746635089; cv=none; b=U/Q6co38WIHCqTcao3CTThze1rHDWv+hGWdlbpu3ukHIyeilpLgP2za29vGklBo2OOVo1JS9lblfh5b86XIvpqMe+ji6zD7MGWjEJ1+qeo80RQ66WxFir4jvwbPaxzIVQBZrkKC2jy64r9bEJ2TufBwDpuZnkh0CwWuqa6hHNt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746635086; c=relaxed/simple;
-	bh=oBYNTIRvr0qn3RLc15igFSD5nLZ7U8eh2ms4fvyrDJQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UksrhAmFr8/NbIWlf52VZX1lKiHfD3suEOACc6ZZNhSyJcnigRhfqlqukEEIr96pFplDd97KAug1c7fpfrF3fg6ND8VEYPAAu7wDC9i1qgxO49LCTgHoJvDv3k/a3TBTQOMSYAa0xZX0qnmL0QBPNdHTmGi7YsBKZe8PU+ujwAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zt0pv0HkCz6M4d4;
-	Thu,  8 May 2025 00:20:07 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 50B6C140518;
-	Thu,  8 May 2025 00:24:38 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 7 May
- 2025 18:24:37 +0200
-Date: Wed, 7 May 2025 17:24:36 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-CC: <dan.j.williams@intel.com>, <rppt@kernel.org>, <rafael@kernel.org>,
-	<lenb@kernel.org>, <akpm@linux-foundation.org>, <alison.schofield@intel.com>,
-	<rrichter@amd.com>, <bfaccini@nvidia.com>, <haibo1.xu@intel.com>,
-	<david@redhat.com>, <chenhuacai@kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <chenbaozi@phytium.com.cn>, <loongarch@lists.linux.dev>
-Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
-Message-ID: <20250507172436.00003888@huawei.com>
-In-Reply-To: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
-References: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1746635089; c=relaxed/simple;
+	bh=nqpCCru5vpj7hrOWoi3hKzRDHzM59HnACs2LIao0n5o=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=H8PKpnyXP4gFFnXfg6Xu7L7k6HbI8xLjGmrW0ApGVeHyptYCOQdyYqhUg4BjVAzxMrXqioLcI+r6QswJ1kt+zbYMtMh33umdIYsmpQda/1XDEEb4fNRxfzM78FlKZv2IPag9NovKRiTzmmw/1S/UBPtANZZccC5tu6E3zcAM434=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1uChZU-0001RP-2W; Wed, 07 May 2025 18:24:36 +0200
+Message-ID: <4e1600a7-24d4-454a-87d6-6528b1c4c88d@pengutronix.de>
+Date: Wed, 7 May 2025 18:24:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US, de-DE, de-BE
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Subject: [RFC] block: Make MMC respect REQ_NOUNMAP?
+To: "Darrick J. Wong" <djwong@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Jens Axboe <axboe@kernel.dk>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>,
+ "kernel@pengutronix.de" <kernel@pengutronix.de>,
+ linux-block@vger.kernel.org, linux-mmc@vger.kernel.org,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Tue, 6 May 2025 14:22:45 +0800
-Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+Hi,
 
-> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
-> with the expectation that numa_cleanup_meminfo moves them to
-> numa_reserved_meminfo. There is no need for that indirection when it is
-> known in advance that these unpopulated ranges are meant for
-> numa_reserved_meminfo in support of future hotplug / CXL provisioning.
-> 
-> Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
-> ranges directly.
-> 
-> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-This is v2 take 2.  There were tags on the previous version (pre longarch
-change).
+We would like to tell storage (mostly eMMC, but not exclusively though) to
+discard a block range, so it reads back zeroes and is preferably unmapped
+to give the storage device the most flexibility. For eMMCs, this is possible
+right now with blkdiscard -z (BLKZEROOUT), but digging through the code with Jan,
+I am starting to question whether eMMC is correctly implementing REQ_OP_WRITE_ZEROES
+(granted, the expected semantics seem to be spelt out nowhere).
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-(Also Dan Williams).
-
-Easiest option when this happens is spin a v3 with a change log to
-say the loongarch issue is resolved and you picked up tags.
+Read along for what MMC does, what semantics BLKZEROOUT seems to should have,
+and what I think might need to be done to address this.
 
 
-> ---
-> 
-> Changes in v2 (Thanks to Dan & Alison):
-> - Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
-> - Add comments to describe the usage of numa_add_reserved_memblk()
-> - Updating the commit message to clarify the purpose of the patch
-> 
-> By the way, "LoongArch: Introduce the numa_memblks conversion" is in linux-next.
-> 
->  drivers/acpi/numa/srat.c     |  2 +-
->  include/linux/numa_memblks.h |  1 +
->  mm/numa_memblks.c            | 22 ++++++++++++++++++++++
->  3 files changed, 24 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> index 0a725e46d017..751774f0b4e5 100644
-> --- a/drivers/acpi/numa/srat.c
-> +++ b/drivers/acpi/numa/srat.c
-> @@ -453,7 +453,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  		return -EINVAL;
->  	}
->  
-> -	if (numa_add_memblk(node, start, end) < 0) {
-> +	if (numa_add_reserved_memblk(node, start, end) < 0) {
->  		/* CXL driver must handle the NUMA_NO_NODE case */
->  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
->  			node, start, end);
-> diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
-> index dd85613cdd86..991076cba7c5 100644
-> --- a/include/linux/numa_memblks.h
-> +++ b/include/linux/numa_memblks.h
-> @@ -22,6 +22,7 @@ struct numa_meminfo {
->  };
->  
->  int __init numa_add_memblk(int nodeid, u64 start, u64 end);
-> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
->  void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
->  
->  int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
-> diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
-> index ff4054f4334d..541a99c4071a 100644
-> --- a/mm/numa_memblks.c
-> +++ b/mm/numa_memblks.c
-> @@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
->  	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
->  }
->  
-> +/**
-> + * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
-> + * @nid: NUMA node ID of the new memblk
-> + * @start: Start address of the new memblk
-> + * @end: End address of the new memblk
-> + *
-> + * Add a new memblk to the numa_reserved_meminfo.
-> + *
-> + * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
-> + * against memblock_type information and moves any that intersect reserved
-> + * ranges to numa_reserved_meminfo. However, when that information is known
-> + * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
-> + * to numa_reserved_meminfo directly.
-> + *
-> + * RETURNS:
-> + * 0 on success, -errno on failure.
-> + */
-> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
-> +{
-> +	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
-> +}
-> +
->  /**
->   * numa_cleanup_meminfo - Cleanup a numa_meminfo
->   * @mi: numa_meminfo to clean up
+eMMC supports a number of different commands for erasing/discarding data[1].
+Relevant to my question are two commands:
+
+  DISCARD: Host no longer needs the data and doesn't care about value
+           read from it. Card may remove or unmap portions or all of it.
+
+  TRIM:    implies DISCARD and additionally guarantees to
+           return all-zero or all-ones on read.
+
+These are made available to the block layer as follows:
+
+  REQ_OP_DISCARD      -> DISCARD
+  REQ_OP_WRITE_ZEROES -> TRIM (if erased_byte == 0, otherwise
+  if all-ones, blk_queue_max_write_zeroes_sectors() is not called)
+
+Looking at it from the ioctl side:
+
+blkdev_common_ioctl(..., BLKZEROOUT, ...)
+    blk_ioctl_zeroout
+        blkdev_issue_zeroout(..., BLKDEV_ZERO_NOUNMAP)
+            __blkdev_issue_write_zeroes(..., BLKDEV_ZERO_NOUNMAP)
+	    submit_bio_wait(bio->bi_opf = REQ_NOUNMAP)
+
+__REQ_NOUNMAP has comment saying 'do not free blocks when zeroing',
+but as shown above, TRIM allows the card to unmap the indicated region.
+
+REQ_NOUNMAP has no other documentation, but virtio inverts it and translates
+it to VIRTIO_BLK_WRITE_ZEROES_FLAG_UNMAP, which is documented as follows[2]:
+
+"For write zeroes commands, if the unmap is set, the device MAY deallocate
+the specified range of sectors in the device backend storage, as if the
+discard command had been sent.".
+
+I.e. REQ_NOUNMAP -> device MAY NOT deallocate
+
+This is at odds with the MMC implementation, which ignores REQ_NOUNMAP
+completely it seems. I don't believe there is a MMC command for write zeroes
+without discard short of actually writing zeroes, so it sounds like the
+correct implementation for MMC would be:
+
+	if (req->cmd_flags & REQ_NOUNMAP)
+		// or w/e causes fallback to __blkdev_issue_zero_pages
+		return -EOPNOTSUPP;
+	// do TRIM as before
+
+Of course, this will change user visible behavior: blkdiscard -z will start
+taking much longer for most users. These users will have to migrate to
+using fallocate instead:
+
+blkdev_fallocate(mode = FALLOC_FL_ZERO_RANGE):
+	blkdev_issue_zeroout(..., BLKDEV_ZERO_NOUNMAP)
+
+blkdev_fallocate(mode = FALLOC_FL_PUNCH_HOLE)
+	blkdev_issue_zeroout(..., BLKDEV_ZERO_NOFALLBACK)
+
+So, it's not a drop-in replacement. I guess user code can punch hole
+with fallback to BLKZEROOUT if it fails in order to get back the old
+behavior.
+
+I must admit I don't even know why one would write zeroes and care about
+them remaining mapped on the storage device, but that seems to be
+what's expected with BLKZEROOUT.
+
+
+Thoughts? What did I miss?
+
+Thanks,
+Ahmad
+
+[1]: For a short and incomplete summary, see:
+     https://github.com/barebox/barebox/commit/91a11c7d50df91
+[1]: https://docs.oasis-open.org/virtio/virtio/v1.2/csd01/virtio-v1.2-csd01.html
+     5.2.6.2 Device Requirements: Device Operation
+
+
+-- 
+Pengutronix e.K.                  |                             |
+Steuerwalder Str. 21              | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany         | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686  | Fax:   +49-5121-206917-5555 |
 
