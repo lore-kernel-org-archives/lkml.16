@@ -1,170 +1,144 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37840241689
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE01243951
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746618157; cv=none; b=efl6rYX1N3KpAgOSwdUrh/sNBy4QzMI4VfGx0v4BZpuMgqVmg4usNTViXF4hWth9w6Em0fql9XPclo2kslrgGsgM3WVTDth0Xr3Pz7p1q7dtjP4twbjRhu4YX7eYvrNzOn8u8Mrk0MXTaCS5xczB+h5CJYLQswztXN4/fbvwI7E=
+	t=1746618160; cv=none; b=CArNg7gKdkdBvocbviFWIHKYmEt96/8hekX9EIoDefnr1twZZJ0IYzoAQ7JoAx0dceU2l7nKQPzf6z/cwZCbKCOza8qRqFW7LuEyU2viiwsKHAVBOFpTnmLVCwN9ycfaAt6cu1k/E7k/oNzNHjQghQhDjbseMt6nRkLRgTB9rug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746618157; c=relaxed/simple;
-	bh=/Bh3jW1bNzFgkJnbT2NX6ZtY9kjOWTe3mvKAmdAXJ4Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T1W4yp6xKsyPDv9gLOJEhg42ELRxGOQ4HhS/mInBpjL0JAOdiSXEzMiW8D/9Ba/+xl/fL8BjJM4Rbc0QK00PTIkHtSLTotXs1JcWRhNY1ejkxYT2sn2SS7mtzH7LPXbtt1zl/QYnqhIpHw6cGU0omwNKGqI5+UbAMhJJFrgoGMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0Vs0EHE2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=yIpHJvFt; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hBp9QEAI; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rn7ktXyD; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1746618160; c=relaxed/simple;
+	bh=Mh5ONYQAaIxwhfDiAcBJ2ep+eU/1VKQfzw6VJVH6Eqs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PKKrWkV3B5ky+/o3UXwlf9RDv5npgxxjojl7sGcVYS0CKLGL3W9gR0TvRzV8hn0KoWElN0B5LVQdffUPPBX72v+eMcyKtda9t4VzJIGk5pbvWGYDFTa0BgMq2ivxU4SyCJ+HR1/CreBlmx45cpb2HMFAq044bdR5bjxHS8ICu5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m1VATUE6; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0Vs0EHE2";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="yIpHJvFt";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hBp9QEAI";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rn7ktXyD"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 620051F393;
-	Wed,  7 May 2025 11:42:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746618154; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fcYaw+phsHmb4CGjsUuKwwWNlP8Li19pE0M34m/c9G0=;
-	b=0Vs0EHE244sqvREDBAkoVSSnEa9OI5gy5G0DfJgtPF4OukOQgCxxgqJ3RdutiCUvimU29o
-	WrBt7QHlNbRIFH60nR6D9OOLczkLwspzoyPK4gY5wJo1A6V9jN0ZUuaoP8qYe/9Vuqy+uf
-	213Ap+emco6ovEzha7P3pDX3kj1FVqw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746618154;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fcYaw+phsHmb4CGjsUuKwwWNlP8Li19pE0M34m/c9G0=;
-	b=yIpHJvFtWUUasSt0l91z4u3dP3B5HxWS5hllAtCM9xkgJvaBCWFuw86276sWka5uayhoFA
-	jqtUdZph2o1TI4BQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=hBp9QEAI;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=rn7ktXyD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746618153; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fcYaw+phsHmb4CGjsUuKwwWNlP8Li19pE0M34m/c9G0=;
-	b=hBp9QEAIcq4vHt5+ICzOYvdzia4ggsVcKpscnwcNIs2eoiNFmPaS0V1Zro+1Ba6Gk5CcDg
-	Of6NAIYpzg552hdPaq9MXIS4yYZXgc0JAUvUaJQdZL97YLM6xAqoZJP7MItRmXQVcD+16E
-	rJtw0aq/cW/HwOIozKxCvh4UawHD3rc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746618153;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fcYaw+phsHmb4CGjsUuKwwWNlP8Li19pE0M34m/c9G0=;
-	b=rn7ktXyD+voIbvaXlQd7Ie8eb1CRs2GRi+ZNfzpG7Kbn0sYISqGp1QSpPVPcY2vZuMj2rL
-	05T1c5z1ZdmsI5AQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 493DD13882;
-	Wed,  7 May 2025 11:42:33 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cheRESlHG2iqIwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 07 May 2025 11:42:33 +0000
-Message-ID: <a2925f3d-9af0-4299-aafa-70dfaf0f3230@suse.cz>
-Date: Wed, 7 May 2025 13:43:06 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m1VATUE6"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e8f6970326so70013246d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 04:42:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746618157; x=1747222957; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rg3f/Tg5SjzCfWpyeO6mKlvZkFNAOCxWB2ctnK8uuws=;
+        b=m1VATUE6KBpPb3hBc0TNdJbiX1n1/zv3z0ubOXrqU71+e8gvLDRH+co1M/ncKHBsg0
+         Y14maJZQQLZCFDnHDgEXH03am2/kQbJhvT/rsG1BsTHdMcP9VJxRDpFk6VXLWzmA+XxG
+         4qBqssegwAbhMUxYDMP4gw+Dg0SWQ31IH6rPkgPFj2p9NfrxgMcUjXqY/n0CoZx7bTWa
+         YLMoFpLjRlSJlbcsrkzh4SCmBZtVSrE1RMEEoM3NxFGCLR0JD3eE1kTBQbMnnMHUL1o0
+         3myV6XUZM41t9OjK/14NmNQAV6f3Pb0kZDEgXEogB1KgLiG70+MXl5ZHr0l/UrTq5qV1
+         IPxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746618157; x=1747222957;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rg3f/Tg5SjzCfWpyeO6mKlvZkFNAOCxWB2ctnK8uuws=;
+        b=F4Xtgm5u99P1JVoCM3hUwKPH52+9I5aUPzTiL0qJaSLCNbdE69WZSv7LAVQ3/1moVz
+         b7jirmvAoQf//YAOfItAwba+J4OaiJ3Pyc6XVAPz+Mx5sMU3y+0vCoMkFkI+eQkC5JbZ
+         usjjGUTWr7zssaKP172rfkx5h5xJzPVQOusKy0t1QV5G29qGLSUCDIZ2DxvfrWiFghW5
+         XtJPM9qDrgtgUnU/wJqWRdilLnLKLqYn8vCjUxmmoljc6X7JsEOVURRQFjCIOd1hlo27
+         eU15pQYfTmBtbUp9b28XM4SjQBPhQf0Uk0OEOFtrgfekr9LQ3lLNNaJO1NrLsOowQq8b
+         FBTg==
+X-Forwarded-Encrypted: i=1; AJvYcCURKi1R0cIXmcM0ADAk85wiB5LcDHVhdbSZBrkPt5B0hmKS9jHbej3fFwHr+DB4IEexVn4vneYdMdnxmNI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGgX8f0YNFrnzHlpJh7Fuw6t37rgTOVAM0s46BNPA5S3LDdG/W
+	vxBvJ9Z6MOudicukscpUUBWM/IyrZh84FKvg71mnp2J3sulNqiDMiMISUhbvfmH0PVzyNvtZJJb
+	HcnTghys14MuG/t96xReF5Tjn9VxyTctkp+Y=
+X-Gm-Gg: ASbGncsCuv9T3jIGx92KPMfqt3A2bTA6apZMc4hHkbLdqVZ6olCDbLvGc6SHwQTjxiZ
+	3cxwTt9M8AxNWKylxZcNJsZEEMAy5geotDV2wh12vbvdyNvQ0QqkF49qXpxDlOzqilcoUepl/OG
+	cEIFuwVpZcSC68kLvsNmDD7Ds=
+X-Google-Smtp-Source: AGHT+IGhmGCl/Qabfe6PF2gVG2FCXlv75JhOYiHCAmg2KP/kTgXiDpq2L5Oqn7Mw6g4ZxBz1ascOoWHSoGFt3D66+Dw=
+X-Received: by 2002:a05:6214:caa:b0:6f2:d264:aaa8 with SMTP id
+ 6a1803df08f44-6f542a661b4mr46907126d6.19.1746618157189; Wed, 07 May 2025
+ 04:42:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] memcg: simplify consume_stock
-To: Shakeel Butt <shakeel.butt@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Muchun Song <muchun.song@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
- linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, netdev@vger.kernel.org,
- Meta kernel team <kernel-team@meta.com>
-References: <20250506225533.2580386-1-shakeel.butt@linux.dev>
- <20250506225533.2580386-2-shakeel.butt@linux.dev>
-From: Vlastimil Babka <vbabka@suse.cz>
-Content-Language: en-US
-In-Reply-To: <20250506225533.2580386-2-shakeel.butt@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 620051F393
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:email,suse.cz:mid,suse.cz:dkim,linux.dev:email];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from]
-X-Spam-Score: -3.51
+References: <20250506170924.3513161-14-mingo@kernel.org> <9b31f1df-7dc6-468b-9418-0b13239df8bc@gmail.com>
+ <aBsGXCKX8-2_Cn9x@gmail.com>
+In-Reply-To: <aBsGXCKX8-2_Cn9x@gmail.com>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Wed, 7 May 2025 19:42:01 +0800
+X-Gm-Features: ATxdqUEtyqfJKw_PG_rAbh1TtHCwAdQSdIY0FbZtDOs8b0D97olgkHo0RcguHCM
+Message-ID: <CALOAHbDGSpDnzQ7AKiMci0708DwYr8gmruVGdJZ_Nt9rmnbxNg@mail.gmail.com>
+Subject: Re: [PATCH 13/15] x86/kconfig/64: Enable popular scheduler, cgroups
+ and namespaces options in the defconfig
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, ardb@kernel.org, arnd@arndb.de, bp@alien8.de, 
+	dwmw@amazon.co.uk, hpa@zytor.com, linux-kernel@vger.kernel.org, 
+	michal.lkml@markovi.net, tglx@linutronix.de, torvalds@linux-foundation.org, 
+	vkuznets@redhat.com, yamada.masahiro@socionext.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/7/25 12:55 AM, Shakeel Butt wrote:
-> The consume_stock() does not need to check gfp_mask for spinning and can
-> simply trylock the local lock to decide to proceed or fail. No need to
-> spin at all for local lock.
-> 
-> One of the concern raised was that on PREEMPT_RT kernels, this trylock
-> can fail more often due to tasks having lock_lock can be preempted. This
-> can potentially cause the task which have preempted the task having the
-> local_lock to take the slow path of memcg charging.
-> 
-> However this behavior will only impact the performance if memcg charging
-> slowpath is worse than two context switches and possibly scheduling
-> delay behavior of current code. From the network intensive workload
-> experiment it does not seem like the case.
-> 
-> We ran varying number of netperf clients in different cgroups on a 72 CPU
-> machine for PREEMPT_RT config.
-> 
->  $ netserver -6
->  $ netperf -6 -H ::1 -l 60 -t TCP_SENDFILE -- -m 10K
-> 
-> number of clients | Without series | With series
->   6               | 38559.1 Mbps   | 38652.6 Mbps
->   12              | 37388.8 Mbps   | 37560.1 Mbps
->   18              | 30707.5 Mbps   | 31378.3 Mbps
->   24              | 25908.4 Mbps   | 26423.9 Mbps
->   30              | 22347.7 Mbps   | 22326.5 Mbps
->   36              | 20235.1 Mbps   | 20165.0 Mbps
-> 
-> We don't see any significant performance difference for the network
-> intensive workload with this series.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+On Wed, May 7, 2025 at 3:06=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wrote=
+:
+>
+>
+> * Yafang Shao <laoar.shao@gmail.com> wrote:
+>
+> > Hello Mingo,
+> >
+> > > +CONFIG_VIRT_CPU_ACCOUNTING_GEN=3Dy
+> > > +CONFIG_IRQ_TIME_ACCOUNTING=3Dy
+> >
+> > Enabling CONFIG_IRQ_TIME_ACCOUNTING=3Dy can lead to user-visible behavi=
+oral
+> > changes. For more context, please refer to the related discussion here:
+> > https://lore.kernel.org/all/20241222024734.63894-1-laoar.shao@gmail.com=
+/ .
+>
+> Yeah. I actually agree with your series. It (re-)includes IRQ/softirq
+> time in task CPU usage statistics even under IRQ_TIME_ACCOUNTING=3Dy,
+> while still keeping the finegrained IRQ/softirq statistics as well,
+> correct?
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Correct.
 
+>
+> The Kconfig option is also arguably rather misleading:
+>
+> config IRQ_TIME_ACCOUNTING
+>         bool "Fine granularity task level IRQ time accounting"
+>         depends on HAVE_IRQ_TIME_ACCOUNTING && !VIRT_CPU_ACCOUNTING_NATIV=
+E
+>         help
+>           Select this option to enable fine granularity task irq time
+>           accounting. This is done by reading a timestamp on each
+>           transitions between softirq and hardirq state, so there can be =
+a
+>           small performance impact.
+>
+> It only warns about a small performance impact, but doesn't warn that
+> CPU accounting is changed in an incompatible fashion that surprises
+> tooling...
+
+Yes, this breaks our userspace tools.
+
+
+>
+> But I think we should probably treat this as a bug, not as lack of
+> documentation. Peter, do you concur?
+>
+> > If we decide to enable it by default, we should clearly document this
+> > behavior change. Below is the patch I wrote earlier but haven=E2=80=99t=
+ sent
+> > out for review yet.
+>
+> Note that it's not enabled by default - this patch is just about the
+> x86 defconfig.
+>
+> Thanks,
+>
+>         Ingo
+
+
+
+--
+Regards
+Yafang
