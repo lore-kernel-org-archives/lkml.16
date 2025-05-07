@@ -1,134 +1,169 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7685C289358;
-	Wed,  7 May 2025 15:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E55A28A702
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746631490; cv=none; b=p1trb4gfc69VgW6F6Ool6UzVyxFXiILuT4lh5jqj5TC0iKtgX9SeKBcwvbNpnKuNGuaeeXO0KPak+UjWL58SLOX+fV6gmMK7BuESwwDR067EY1kZxuYe3Gc1afwo5oq5jjKGHa1C2dVl1v9x/nULhfvEaziCAn38MVEs+HVN9yQ=
+	t=1746631520; cv=none; b=rFeoHKOt2srSHskX7X584ZwfrhHoseQ5Z5c+eTd1/3s/GsrlWG5AamRTQnXdjis+ghw3wAsbQLu/+bVXhaAC/itGr2svdEHJsRIfw7hYdZxciav4M403xTWEunnB1/Bo2Qbi7OPRwk+t7yLeJ0weS3pTSLC4s4ZmBnhz1U84Wlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746631490; c=relaxed/simple;
-	bh=qlUKMUPRHRDxzF0c5YLpw/5NZAb2ZuLEL2hMf+1LwoY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gnginmYDgD+CffyOElxdc8LYvvlLPVlMrOAm+LUShokM2sOBQTHEsN0jrnQ82jojRo/LbwevcCvqlMJE966r0gWoLisGISwOFrDd51MiFo/kW35MLSJddKmwTE8cXKH8HHroNN6f7fbBgcGY7KtX/MrqzREwxEXmGqG5WY3ouBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZbLDeWdL; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746631520; c=relaxed/simple;
+	bh=K9BRDIL0CVS4oITjOHrWKVkCotibvzU+S8xnmOlOKZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tzL+hgQhc96q0RA0Zb1aO6SNVipJCGcbBgu+jN7V/qe6vNmaLTQcH/khpUxgJf+6u397c+TYObXhhM7MAVYw9ODEolYjnkuynYy7ZMM1+ZDlnPvj70WpT4Sb4FUxwvB7OCMwI98X0/983FaE8HMejDqSN2brOijhA6h64nGZ1LM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hr6CafEF; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZbLDeWdL"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ace94273f0dso588232566b.3;
-        Wed, 07 May 2025 08:24:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746631487; x=1747236287; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BjTfpMyCbC7ZGV4L2K6+VXP1MZQ6g2K6pUzf1ty2wFI=;
-        b=ZbLDeWdLsfZwuhSKk4IFix3W8dwwyKnxbqWxoXgGq575EgAGhKmSD6iJealwfEReUX
-         s+CR9p1oBS8MIpImVd5SW/16OhljaJLLb2tyllNwIcsLVQpH1z81Da3US9o7B852b41k
-         uOQG6gAC+FHNtTxCWQ44lI7bFxhWNA3xZ5ZS5LiIV2eLr1nlGqcvf25Ono7PRHjE4YLN
-         9kTKdVk9GASDjDrZ119XMd1gAzLEDsWmXeJrbmysN8gs8df+qPzjLu36qQ2mxsJXmMqH
-         d6ZDp2NDBkx/cnXtYJG0O3kTzRh8OHGLOon9PERp2bb00IHxCw/fwI1ZJF3Mp07Fh8RQ
-         sCXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746631487; x=1747236287;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BjTfpMyCbC7ZGV4L2K6+VXP1MZQ6g2K6pUzf1ty2wFI=;
-        b=Ip3E+Sm1GD+QQpFTQ4A6M8Vg1YmWy6sMDCe4e22Cr/58IZosYiP67ekJLFNPP5VT0A
-         Q90uvwppgZEHqZELeFPVtbe87+p+ri3qAzo8pvGNDyd+UBUzUqx+YNMpid4Qutlql8ps
-         Ib4MX7I1T3RetxnsbSxuDiRKjjSPa0YGIFSLCmPgVQAdEUAgUrsZBT4GSTLqic0vXNE+
-         K0WXDEXc0CyUI4lh7Zov5RCw3vZ8cHaF69D98YdE++k97vK8JODaEJE1KdVLJT8dXnXB
-         2iPv45bJIN/MnIcnQfzAbbHU4hCYIUU8hkeghkWgbqFjuO2rQn70Fwopev1JP5HkfQ6G
-         S8XQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwVA7s106e/v/Zso6T7CSwj0u+qQtfThuSBFwMZN8Kv6qZM6zqwnKWYYNdzobNBcf2hFblmsKb6t5mzfAbYcfp@vger.kernel.org, AJvYcCWpk8fuA+1xEuy6JamXsgx21mWe+0lhr6kAMTjM28TbXwWzddSoaL7HMI5TFMDp/pYJkvOkzsCrYt2KtXsi@vger.kernel.org, AJvYcCX3ahSFpBXunza6VvQCmEgigci8sGVJA2I5HX35r2O7cdQR9MtrahYo1Tmck9xBdhB1njh+Eq50Ou04@vger.kernel.org
-X-Gm-Message-State: AOJu0YytTXQq4vYuwjTn44Kl/9zSeG3pI7BL54ETe10mg/7r6D7MhrEF
-	TH8e4TM7WF1Pud6vC55tmstb+6tZ1m0DviVChCyZTG/B5+jeBHfdw63tYQzhxyFjkjbkxYOEg/J
-	2vzYi4UKV8V2cCfsGxym150uQYMg=
-X-Gm-Gg: ASbGncsM9nyI+VVeoehAxv6XDCk3gZDgUDpoTkOUCB2eXqj6kvqdNWk13daNkAINHFE
-	KvJf42ZDFJ/gzsx5HSMxR/NPTBwtRoZay2h6qh3jB3KnAD+frxdxV9jGXe2oUG9FcpzAGzcXyst
-	u3XzmygrN8lnwaHtruikZJ9/dJ
-X-Google-Smtp-Source: AGHT+IGf4kNQ2ncZC4SUR4quAuwY6hnOh9zLUjX8zJpF7Yi4yNcuTOZ/fYV1gITbWIC3a61oDCyp5FWBztrK84CqGRI=
-X-Received: by 2002:a17:907:2d23:b0:ac7:4d45:f13e with SMTP id
- a640c23a62f3a-ad1e8bc3151mr407094666b.13.1746631486406; Wed, 07 May 2025
- 08:24:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hr6CafEF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746631518;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PUIklBSjevHpLqEddNRNlR2otYrePkDDS5il9MiLCxc=;
+	b=Hr6CafEFxeqr2a+5dyUifoIaqmarzAQ7n5XxamlQZzeidPxO+6ruDgFiAeJcHlBwMaeTzl
+	s5C6lmRIz5b/YxOQJzOXym2pt3toPLl2bpP3brGoX6ZTB0FBgUrmbWenJTsH0pHHu/Utgn
+	JCLrUHWzhVtFbAIkCzPLhhXYrvypQZc=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-74-oUgHaqJyM3esGBBJ2G8R-w-1; Wed,
+ 07 May 2025 11:25:14 -0400
+X-MC-Unique: oUgHaqJyM3esGBBJ2G8R-w-1
+X-Mimecast-MFC-AGG-ID: oUgHaqJyM3esGBBJ2G8R-w_1746631512
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9294B1800360;
+	Wed,  7 May 2025 15:25:11 +0000 (UTC)
+Received: from p16v.luc.cera.cz (unknown [10.44.33.91])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 444BC30001B9;
+	Wed,  7 May 2025 15:25:06 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Michal Schmidt <mschmidt@redhat.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH net-next v8 0/8] Add Microchip ZL3073x support (part 1)
+Date: Wed,  7 May 2025 17:24:56 +0200
+Message-ID: <20250507152504.85341-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-9-3906529757d2@bootlin.com>
- <CAHp75Vdg2LE885+qjpYLkQrdNqaahJc3=Ki7op=6jJUJfJM+sw@mail.gmail.com>
- <c3b9c494-599e-4d99-8645-589c1c0c106c@bootlin.com> <CAHp75VcKsq5_+uwwVKeq8++H+Rw1giH-TKUErsFmdKPiu5kY+A@mail.gmail.com>
- <2f02284d-2922-4bc3-ab2a-8848023019b7@bootlin.com>
-In-Reply-To: <2f02284d-2922-4bc3-ab2a-8848023019b7@bootlin.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 7 May 2025 18:24:10 +0300
-X-Gm-Features: ATxdqUE389k0N8BcUEdTuflLxWVNjLT-z5iYHSfkAHl7belQvCoIPA9_iMIzhd4
-Message-ID: <CAHp75VdZuqP_ga_i1=kERQbscu55GFShPK_AhYF1jigoBz8wpg@mail.gmail.com>
-Subject: Re: [PATCH v5 09/12] gpio: aggregator: handle runtime registration of
- gpio_desc in gpiochip_fwd
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Wed, May 7, 2025 at 4:54=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
-> On 5/7/25 15:24, Andy Shevchenko wrote:
-> > On Wed, May 7, 2025 at 1:10=E2=80=AFPM Thomas Richard
-> > <thomas.richard@bootlin.com> wrote:
-> >> On 5/7/25 08:34, Andy Shevchenko wrote:
-> >>> On Tue, May 6, 2025 at 6:21=E2=80=AFPM Thomas Richard
-> >>> <thomas.richard@bootlin.com> wrote:
+Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
+provides DPLL and PTP functionality. This series bring first part
+that adds the common MFD driver that provides an access to the bus
+that can be either I2C or SPI.
 
-...
+The next part of the series is bringing the DPLL driver that will
+covers DPLL functionality. Another series will bring PTP driver and
+flashing capability via devlink in the MFD driver will follow soon.
 
-> >>>> +       /*
-> >>>> +        * get_direction() is called during gpiochip registration, r=
-eturn input
-> >>>> +        * direction if there is no descriptor for the line.
-> >>>> +        */
-> >>>> +       if (!test_bit(offset, fwd->valid_mask))
-> >>>> +               return GPIO_LINE_DIRECTION_IN;
-> >>>
-> >>> Can you remind me why we choose a valid return for invalid line? From
-> >>> a pure code perspective this should return an error.
-> >>
-> >> I reproduced gpiolib behavior. During gpiochip registration, we get th=
-e
-> >> direction of all lines. In the case the line is not valid, it is marke=
-d
-> >> as input if direction_input operation exists, otherwise it is marked a=
-s
-> >> output. [1]
-> >>
-> >> But in fact we could return an error and the core will mark the line a=
-s
-> >> input. Maybe ENODEV ?
-> >
-> > I am fine with this error code, but do we have similar cases already
-> > in the kernel? Do they use the same or different error code(s)?
->
-> I dumped all get_direction() operations in drivers/gpio and
-> drivers/pinctrl and returned values are:
-> - GPIO_LINE_DIRECTION_OUT and GPIO_LINE_DIRECTION_IN (make sense).
-> - -EINVAL (for example [1]).
-> - -EBADE in gpiochip_get_direction() [2].
-> - regmap_read() return code.
->
-> But from my point of view -EINVAL and -EBADE do not match our case.
+Testing was done by myself and by Prathosh Satish on Microchip EDS2
+development board with ZL30732 DPLL chip connected over I2C bus.
 
-Hmm... I believe we need a GPIO maintainer to have a look at this.
+Patch breakdown
+===============
+Patch 1 - Common DT schema for DPLL device and pin
+Patch 2 - DT bindings for microchip,zl3073* devices
+Patch 3 - Basic support for I2C, SPI and regmap configuration
+Patch 4 - Devlink device registration and info
+Patch 5 - Helpers for reading and writing register mailboxes
+Patch 6 - Fetch invariant register values used by DPLL/PTP sub-drivers
+Patch 7 - Clock ID generation for DPLL driver
+Patch 8 - Register/create DPLL device cells
 
---=20
-With Best Regards,
-Andy Shevchenko
+---
+v7->v8:
+* replaced zl3073x_pdata array ZL3073X_PDATA macro in patch 8
+v6->v7:
+* pass channel number using platform data instead of mfd_cell->id
+v5->v6:
+* fixed devlink info firmware version to be running instead of fixed
+* added documentation for devlink info versions
+v4->v5:
+* fixed DT patches description
+* dropped mailbox API
+* added type-safe register access functions
+* added an ability to protect multi-op accesses
+v3->v4:
+* fixed shortcomings in DT patches
+* completely reworked register access
+* removed a need to manage locking during mailbox accesses by callers
+* regcache switched to maple
+* dev_err_probe() in probe path
+* static mfd cells during sub-devices registration
+v1->v3:
+* dropped macros for generating register access functions
+* register access functions are provided in <linux/mfd/zl3073x_regs.h>
+* fixed DT descriptions and compatible wildcard usage
+* reworked regmap locking
+  - regmap uses implicit locking
+  - mailbox registers are additionally protected by extra mutex
+* fixed regmap virtual address range
+* added regmap rbtree cache (only for page selector now)
+* dropped patches for exporting strnchrnul and for supporting mfg file
+  this will be maybe added later
+
+Ivan Vecera (8):
+  dt-bindings: dpll: Add DPLL device and pin
+  dt-bindings: dpll: Add support for Microchip Azurite chip family
+  mfd: Add Microchip ZL3073x support
+  mfd: zl3073x: Add support for devlink device info
+  mfd: zl3073x: Protect operations requiring multiple register accesses
+  mfd: zl3073x: Fetch invariants during probe
+  mfd: zl3073x: Add clock_id field
+  mfd: zl3073x: Register DPLL sub-device during init
+
+ .../devicetree/bindings/dpll/dpll-device.yaml |  76 ++
+ .../devicetree/bindings/dpll/dpll-pin.yaml    |  45 +
+ .../bindings/dpll/microchip,zl30731.yaml      | 115 +++
+ Documentation/networking/devlink/index.rst    |   1 +
+ Documentation/networking/devlink/zl3073x.rst  |  37 +
+ MAINTAINERS                                   |  11 +
+ drivers/mfd/Kconfig                           |  32 +
+ drivers/mfd/Makefile                          |   5 +
+ drivers/mfd/zl3073x-core.c                    | 872 ++++++++++++++++++
+ drivers/mfd/zl3073x-i2c.c                     |  68 ++
+ drivers/mfd/zl3073x-regs.h                    |  54 ++
+ drivers/mfd/zl3073x-spi.c                     |  68 ++
+ drivers/mfd/zl3073x.h                         |  31 +
+ include/linux/mfd/zl3073x-regs.h              |  88 ++
+ include/linux/mfd/zl3073x.h                   | 202 ++++
+ 15 files changed, 1705 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+ create mode 100644 Documentation/networking/devlink/zl3073x.rst
+ create mode 100644 drivers/mfd/zl3073x-core.c
+ create mode 100644 drivers/mfd/zl3073x-i2c.c
+ create mode 100644 drivers/mfd/zl3073x-regs.h
+ create mode 100644 drivers/mfd/zl3073x-spi.c
+ create mode 100644 drivers/mfd/zl3073x.h
+ create mode 100644 include/linux/mfd/zl3073x-regs.h
+ create mode 100644 include/linux/mfd/zl3073x.h
+
+-- 
+2.49.0
+
