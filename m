@@ -1,73 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78C6204F90
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2DA145B16;
+	Wed,  7 May 2025 15:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746630291; cv=none; b=bOMhFi6zu6JKoK+nnFkFA2Pz+ThWI0/gSgq7DDw98veeL9vFW5ZIrpD/VgogE6ANC0GH9Y2++paWOZQh9l5OYrsFwzs75l3MvvAsiv0eK4aIYRF+ZhXpISDtAO35K8k+CbsIUG0XOKfY4VaR4PoY5b2KuDA8kvYkHX/npiWUltQ=
+	t=1746630328; cv=none; b=qaAcnRE/bRIy7RJI+Dj2RnQL/4uu7S9aPIuJsq0la0CVpr3xuu9I6ImlObyHfV6DzJrBxCqppkxfkKTZKx4HX3mgShA6p0hNLzTdNhzqB0ZhfelMZz65A1dhA+PZII4oYfCYA1aQHdeO5hsEfVsnU091LWhwIczNdpZw1VHzlyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746630291; c=relaxed/simple;
-	bh=GB8r2IYlcUIEDfVXK79roXlHmBlyosBuWT/Js4sHkKE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c9FScQMQ1IvqFHAPMfesH0yuvnMJlBuoIAQypi48lhj3gE5LdwoWGd8+HImDfUFeE850vOyC81cQzsjzenraSiOCM1DD9FAv+V59BczcUphm/C+Z4otprnnZInEPb/oAJYGVXkhCM8uAjPsWnJRF1rqgDF+pwJezl5CkskcqjuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QEJhWAsX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746630328; c=relaxed/simple;
+	bh=JyV8xkCMJ/2t26KujPnEhLvHfnrJWNgCXzBZHePh3xY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=VDWBnuPA2lD734uD4mj29xf8uxQW+HOkkYiVgwQShKYjbzgGhawJjJqRKGRM47sFUocKNRnfS5I25u3IG0HECHs8Jm5lsETwm7z/YO0r0/qalT0i0m5AhejBoAFzJPtsDXqJdsgUTjfLow3g401Cej4I9JUpOG0cCTBeMlcMVGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=d02d3X7i; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QEJhWAsX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746630287;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=09Nk/paC4oHAq+HrwjoefJow3FdzL+r3GhqOj5IvEiY=;
-	b=QEJhWAsXre8cGG4V4LUJlonvI+4VxBYpDJxbKMAghAQ1pNlZJZuCLSaZDjziIX/bFvVTFH
-	Obin/BBxtXWreFR3pOtygI6uyswYGVd8NNUaf4BQ2+clbvBd/3svzuTVRBJjt2lEfZSJSw
-	L8CXpWZYTXr5lnZaZYWTHagcWUjL8rI=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-616-yX3X9GK4PBuYeufbcUoXmw-1; Wed, 07 May 2025 11:04:46 -0400
-X-MC-Unique: yX3X9GK4PBuYeufbcUoXmw-1
-X-Mimecast-MFC-AGG-ID: yX3X9GK4PBuYeufbcUoXmw_1746630285
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a0b63ca572so355196f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 08:04:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746630285; x=1747235085;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=09Nk/paC4oHAq+HrwjoefJow3FdzL+r3GhqOj5IvEiY=;
-        b=Vy8pZ/mhycxK2A5z3fZA5oxhVFyHhdcU24d8ZrwHtTc10oSSkiyTklmXJBIiawvjuE
-         lal2JdErGRmrqSisnZ/cnT81LFQGSAqSJspcaIpNz7SnuEKN01HaWOJYaDBHRPZOKD3q
-         UGxlz7UTSvyKXokiRLoJq6e1TXDc2ZZWwY7gNEF+385hafzCnsFhtjzvdd7fv8FspzqD
-         6eyB80ymPbkJMuS432KudvsqUscl8buLIcmnoTYku/N3qrmefPi1RTBWBRRT77IWoV18
-         oMqgpgccLMB+NLw9w3o7He32s2OJPo+EPTUPwcMVBDkVM91x4lPfnHLNEUmhG2WYOGt5
-         WGQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSIS5I/HqkQIn2ZBhuytizSXScpuaIj+8c67C++owhstZ2xXCZxA4epHUliDyxa7YY1alLStDnDX8zfkg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdmhLAbkMe1WQKx1X71xnCtfcYUxLDZiGA8pkJLFNyscmtv9RS
-	/1ubPTXJ+ExbTtUVk2/7/oz+iPQPzs69forP8f7ZQlg7Z+Lc31r4KIZOx0jakMrmSsb9BiqhJi4
-	SpYhTVWYJpivGmG5eXHNTXy4Juubz+5VKKEWkSkgAkTXTtfz0HUFP5CGMNCFt4w==
-X-Gm-Gg: ASbGnctvJU1DQWcJwJW2H8De4NJ3oECguBoK4K/mXxkcMY5lMWXlyS86o9MwlZs+DKQ
-	b9fpNS+VCrGThXwXYl52pMJOmrx9tN1nRE+bC0/jq83p3xAR2bJlADPGDtvQDXAtDf2JRVgqnBE
-	o1f8aZnGUtK6VFMH26QgTHFO2XtDep04hCor0s0jib/6zKDEFIusO4Dw+gMw9/PkUE3KI0e2aBG
-	/aQh1uMtq+yW8TQi0dbJDoWE82ewfKcOy5JcS+r7Vse+gpIc/CDt1MWxU8gMgBjaGTxs3nSqdA1
-	KRdi+Z8gJdR2xvSB9GgsA2pp/CELx/KlnHz7ZxEtdb94wk7SFpYyogATYMzK+VZkl4TORIXmh4K
-	0w4z84kgkfMLAQrujyKmTRiON2v0Up0FiAJ+UYQ==
-X-Received: by 2002:a05:6000:144c:b0:39c:30fc:20 with SMTP id ffacd0b85a97d-3a0b4a0357cmr3083832f8f.37.1746630284801;
-        Wed, 07 May 2025 08:04:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHWJct5fS3FR+EJaVH+2zafad2NE7TDM+3UWkBHmKOD7kfFfYEd5iEAoTIEd2jhgactXzmoRw==
-X-Received: by 2002:a05:6000:144c:b0:39c:30fc:20 with SMTP id ffacd0b85a97d-3a0b4a0357cmr3083719f8f.37.1746630283887;
-        Wed, 07 May 2025 08:04:43 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f12:d400:ed3c:fb0c:1ec0:c628? (p200300d82f12d400ed3cfb0c1ec0c628.dip0.t-ipconnect.de. [2003:d8:2f12:d400:ed3c:fb0c:1ec0:c628])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b17748sm16984356f8f.100.2025.05.07.08.04.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 08:04:43 -0700 (PDT)
-Message-ID: <1d9ad008-6bcb-4ded-8e9a-0af0fd68ea2f@redhat.com>
-Date: Wed, 7 May 2025 17:04:42 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="d02d3X7i"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 547AKt8J005104;
+	Wed, 7 May 2025 15:04:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	cFLfz+n3dUXli7hBsRzY0wxWQxf03ZGrvo/57nmAkAU=; b=d02d3X7imkstiFin
+	HSbLBfMEEilFbDvkEqpxopSB89rGhNAuEWladcMgqTSkyoPrleyhATyqUszBqsDY
+	xPMDiiNF6vvEYWEM6yZasKy+a5EVo/syJjLUzHCF9u0Nk4Lk2Xkug8uLs6TpHLmD
+	NJ0XrnywB7db2GE3V+2khUV6P8yzpNeXZgL/kMXryLr3n2ArnOJTn6HsG5ng/j3n
+	rLu8YQUvyRJCd9+GDhdnkZP76HbWZv6D4d5yhIwda91s6utJjrH70G0BtP7u3ryd
+	X9L/5cYFeHqIxVy7AxasN9/TioE+2OutWfmNylFJVDYcqQdyUimpL9i+f/MrkM4J
+	UIMDvA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5sv69uh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 15:04:57 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 547F4ub4023886
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 7 May 2025 15:04:56 GMT
+Received: from [10.216.23.216] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 7 May 2025
+ 08:04:51 -0700
+Message-ID: <9974cf1d-6929-4c7f-8472-fd19c7a40b12@quicinc.com>
+Date: Wed, 7 May 2025 20:34:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,95 +50,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: Add myself as vmalloc co-maintainer
-To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Baoquan He <bhe@redhat.com>,
- Christoph Hellwig <hch@infradead.org>,
- Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-References: <20250507150257.61485-1-urezki@gmail.com>
-From: David Hildenbrand <david@redhat.com>
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+Subject: Re: [PATCH V2 1/3] scsi: ufs: dt-bindings: Document UFS Disable LPM
+ property
+To: Krzysztof Kozlowski <krzk@kernel.org>, <alim.akhtar@samsung.com>,
+        <avri.altman@wdc.com>, <bvanassche@acm.org>, <krzk+dt@kernel.org>,
+        <robh@kernel.org>, <mani@kernel.org>, <conor+dt@kernel.org>,
+        <James.Bottomley@HansenPartnership.com>, <martin.petersen@oracle.com>,
+        <beanhuo@micron.com>, <peter.wang@mediatek.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20250506163705.31518-1-quic_nitirawa@quicinc.com>
+ <20250506163705.31518-2-quic_nitirawa@quicinc.com>
+ <667e43a7-a33c-491b-83ca-fe06a2a5d9c3@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250507150257.61485-1-urezki@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <667e43a7-a33c-491b-83ca-fe06a2a5d9c3@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: TYTFDam9UZu2-D5HKDMvEKHVDWXLxeQi
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDE0MCBTYWx0ZWRfX9MA3jKqXIrTN
+ 3YaW9kKuwWD8utor78J4Y+SqhagKFXkmhvnazIqW/u5zSjHc2L0xUD0sfSFT5XOrjbRffftXFkA
+ 7AlDdYULYrZ46INmLEpXcapBOLuOm2EDe2X2Su/Aq1thodKzJl7nCGEoIXaJ/qwmmh+mOi0DWKx
+ e6ipFhR6e5FsTtvLw46OZOihv/h/OB0oQ9efhDjq7l1SCkRD3500QvaAolGslHYKpI88DFhzh5M
+ c99zKpNg7odFR2k6T1XN5QN+IDhMxCXksZKtkpclmagwJioJwL4QrJb6sU13MRR88SFYtGtu4hZ
+ 4FHNPe/AV1EYmR7gWBBGV5Y7el4iVTWOdvwY3MfcC/5eMAkmmQgYd05whymA53MUEVR09j4k8UQ
+ x3OVqle0vWYYwqN+EaUQ3A+LGLBUhYUryCI5fpmqIlHXxG8Ox+pgJRhaEL+cP/+oGAUuvkJH
+X-Authority-Analysis: v=2.4 cv=cOXgskeN c=1 sm=1 tr=0 ts=681b7699 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=NJ1Z62h-ssRt74_nPL4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: TYTFDam9UZu2-D5HKDMvEKHVDWXLxeQi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_04,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 clxscore=1011 suspectscore=0 priorityscore=1501 bulkscore=0
+ mlxlogscore=977 adultscore=0 impostorscore=0 malwarescore=0 spamscore=0
+ phishscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505070140
 
-On 07.05.25 17:02, Uladzislau Rezki (Sony) wrote:
-> I have been working on the vmalloc code for several years,
-> contributing to improvements and fixes. Add myself as
-> co-maintainer ("M") alongside Andrew Morton.
+
+
+On 5/6/2025 11:46 PM, Krzysztof Kozlowski wrote:
+> On 06/05/2025 18:37, Nitin Rawat wrote:
+>> Disable UFS low power mode on emulation FPGA platforms or other platforms
 > 
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> ---
->   MAINTAINERS | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> Why wouldn't you like to test LPM also on FPGA designs? I do not see
+> here correlation.
+
+Hi Krzysztof,
+
+Since the FPGA platform doesn't support UFS Low Power Modes (such as the 
+AutoHibern8 feature specified in the UFS specification), I have included 
+this information in the hardware description (i.e dts).
+
+Thanks,
+Nitin
+
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b2c3be5f61314..0aa8db9d0fb52 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -25983,7 +25983,7 @@ F:	tools/testing/vsock/
->   
->   VMALLOC
->   M:	Andrew Morton <akpm@linux-foundation.org>
-> -R:	Uladzislau Rezki <urezki@gmail.com>
-> +M:	Uladzislau Rezki <urezki@gmail.com>
->   L:	linux-mm@kvack.org
->   S:	Maintained
->   W:	http://www.linux-mm.org
-
-Thanks!
-
-Acked-by: David Hildenbrand <david@redhat.com>
-
--- 
-Cheers,
-
-David / dhildenb
+>> where it is either unsupported or power efficiency is not a critical
+>> requirement.
+> 
+> That's a policy, not hardware, thus not suitable for DT.
+> 
+> Best regards,
+> Krzysztof
 
