@@ -1,96 +1,103 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E33A21505C
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 10:43:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBE42744E;
+	Wed,  7 May 2025 10:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746614616; cv=none; b=ZzeAlUqLrf6+K/+VHOuaScEDgBURAn9JmQIULx61IfV1a5fQX6/+biLGOK50fWyqR53L3WVRsO9Rnxd9TLXlt+evBaft/wEwYxx5LeRvUgvY0Vjh7lMhnPZL2rbBV9aC4LWLF9Tbk3D+1ZCrunduiVNfzS/UdLC1UAZd9CjB3h4=
+	t=1746614643; cv=none; b=GWC1xRhAOFsVwCbxNjc/s6GEKD0pvB615JivG21VpSQcqPG6aVTsqj7syyHc+Mqic3ZQr83wWaw6cDQ13Fmcfq6t89aPEZB5qkG6aF+yP2pArGGuOoKOL/xd+LhfjDcg4IF0qiC6PsuOavwoOuzY3BbbzNqkxB+DFy4OCVjoMKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746614616; c=relaxed/simple;
-	bh=Qo/ZrceoQTXto2/HZEMEwY9kyey3PehYg+COl4yhazc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=L6GGMCmCQtg9Zd0qe6RoLUCwEKZTj/75iOv6f0pIqiArqr5aXbyN8X39frRawvxZVdlPOCWGwqrJWbjMlTHW5GWPe3G3WoINPY5SIrlGeXBTPs1fpbSn2FToHGq+j0T7McUf4sPgM4ghT/ebqntceZJjSdq4trJvoqIkbM5W8+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=P7sLMU/h; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1746614643; c=relaxed/simple;
+	bh=HFi+6saGj2XzkZ0BZnY0WRBXo0MnaeqWEtbw18D63IE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bAv+Vq6a+/3AEBss8d5QmODEXYhDtpnUQFpPnHj/9xAjfUpgtaLyszCaFfg3C7j/JuOeitxICiveqwMK28kxlvZrcs9DH6NXqHJ4wrLorfFVhQxYgfiQUyUFIHYUs9zfYKXJ2kjARin35ZR2+5K4mdKZF0MCNTIo4KkkHAD68q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IltRAHdz; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="P7sLMU/h"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1746614605; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=jZyeNUllhEjWwZXWgeTBRRxB9T75NXtWWR44tfcSckE=;
-	b=P7sLMU/hKClolkviU21p+2v7Ma1g3Lf5jW/gC+aLpGszbUJY1b0KijLYqve3AueEhwDAh0I9RiPP7HvWQPvgtUnfOr38PpJjfQGIQ3VULbC9piv8vdzKHAv1i0lmGA4I+jFJTX+w7TsmLC6DbiV137a/IgRJusxoAbV6Emyqbg8=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WZpa-8q_1746614604 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 07 May 2025 18:43:25 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Lance Yang <ioworker0@gmail.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IltRAHdz"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ace94273f0dso525827366b.3;
+        Wed, 07 May 2025 03:44:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746614640; x=1747219440; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X5BiF+obK77Q4Mt7wT43ch3emsGuKkwCPOShuFXZSoU=;
+        b=IltRAHdzoUblYHpJ5VzGTkX7V5viFg5Pduv7SzhuBj1nwRsNzFoJz70619x0Sk6jaQ
+         NbxSwa/tLQ8zGGbKgstjsmcmNKQJuinNOriYqOR//hFLIoHXBI665jU/rQ0kO4RHggm2
+         Or1xysy13ZmHLxy1IUXOjv2mmFUrY5FnyC2L/dVAHTYOcxKLBUkNGjjRNr79ZT9qxsIG
+         73VHiUQ1tVels7QUQVh210uXm2Vc9DFS+LDDJ9Ibqv5x00skaEKYZkpyBSQ+MwOSjdXs
+         JvQGvXPXzhI/Vo8B8cTi31bs480rVfTjCCv5UKhNLY2A+Y13Ya/77htVAOnrIgu9Ai5N
+         NwNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746614640; x=1747219440;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X5BiF+obK77Q4Mt7wT43ch3emsGuKkwCPOShuFXZSoU=;
+        b=tdx2k1VHAyeqfKwmUxoKDJ2Zoy8kqD34kp1Vj9lcPS+2HzDmg66dyTn7Wv4gTfOhiZ
+         u1E1Z+cHCP75MZ5DRqkQGOe+4NDZ9fiAtl9aU/hAZTK1HNCyTWXXWnrRWFQVAnUlsxs5
+         wDJFdaXmkjVVL663WCJ4dZK2p4myUb8fv7XajV3MlR1Yw/UhPhXNbyM89PQdPxy0TgK5
+         WSj3JselcuShCoZEFpp55hg2GaTMD1sKLJkL1sZPDtjfKkN6bJptDrXCJy8StnoUhxGr
+         0okL/p/U7PtFOgvmSOhZOMpcpPdF8Yb5EjPb0aiB6i7eJhgrEOjGRF55Z5S2KpNo+llL
+         LNfw==
+X-Forwarded-Encrypted: i=1; AJvYcCWcQDqItqjxwzi2Ao4PCatj7mtGloi+0hOPr+UC9GooxZOgCBDYxHhvrUHL7GIb3Ojb1/fmx90mPw2gXNI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqGQdaS8ZgxfxxTEzYvaA/g5wSF//cBWKrFpnjoiiNkA/e7RyG
+	1a/hhziZgXwaDB+2BuZvj1OBuG/w7297x7PFWmTOZvpCczRbecjlHfx/6XUWhWwv0g==
+X-Gm-Gg: ASbGncve2y+VMjgo7mpLzjvdSJqJdngsesxPOLagWwO2n2sa0kPDX2bWXK9dyURHoqz
+	w0qr3z/ZVVFMbOCH0iR+HZr6HJvbBcvTmA+yuYmq4wwNJ62qLJ6grpcRXeTj3vOGYOQxaf2O/d3
+	Pg+5lKxnbeN2Xafp654gYZ9Uz/TB5kzsfLerrUdQlRnlEZWCa/4ANkGVW549R8el4sb+8d8cD3V
+	rmqme2/n2ym+vYmJ5lAFTU88J9rawRK1EHSMO5xFzh7G9+p3RD+N4S+oSL1incQJnN7edrIvHii
+	60N0AAVpnJkDbKYYXoQgE+AMg4NqXqG4BTjUVPY=
+X-Google-Smtp-Source: AGHT+IHkq4eJWAWxiFp01qWIcmgv+HhQAeecubFhnLc304MQuXWevI6GcbIy3qwNBtMpLe5u39LKHQ==
+X-Received: by 2002:a17:907:2d90:b0:acb:b966:3a7c with SMTP id a640c23a62f3a-ad1e8cd6b41mr286749566b.47.1746614629550;
+        Wed, 07 May 2025 03:43:49 -0700 (PDT)
+Received: from localhost ([87.254.1.131])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ad189146fcbsm883780866b.34.2025.05.07.03.43.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 03:43:49 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	kgdb-bugreport@lists.sourceforge.net
+Cc: kernel-janitors@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Feng Tang <feng.tang@linux.alibaba.com>
-Subject: [PATCH RFC 3/3] kernel/watchdog: add option to dump system info when system is locked up
-Date: Wed,  7 May 2025 18:43:22 +0800
-Message-Id: <20250507104322.30700-4-feng.tang@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250507104322.30700-1-feng.tang@linux.alibaba.com>
-References: <20250507104322.30700-1-feng.tang@linux.alibaba.com>
+Subject: [PATCH][next] kdb: remove redundant check for scancode 0xe0
+Date: Wed,  7 May 2025 11:43:37 +0100
+Message-ID: <20250507104337.201695-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Kernel panic code utilizes sys_show_info() to dump needed system
-information to help debugging. Similarly, add this debug option for
-software/hardware lockup cases, and 'lockup_print' is the knob to
-control what information should be printed out.
+The check for scancode 0xe0 is always false because earlier on
+the scan code is masked with 0x7f so there are never going to
+be values greater than 0x7f. Remove the redundant check.
 
-Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 ---
- kernel/watchdog.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ kernel/debug/kdb/kdb_keyboard.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 9fa2af9dbf2c..60afcb0247ab 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -52,6 +52,14 @@ static int __read_mostly watchdog_hardlockup_available;
- struct cpumask watchdog_cpumask __read_mostly;
- unsigned long *watchdog_cpumask_bits = cpumask_bits(&watchdog_cpumask);
- 
-+/*
-+ * A bitmask to control what kinds of system info to be printed when a
-+ * software/hardware lockup is detected, it could be task, memory, lock etc.
-+ * Refer panic.h for details of bit definition.
-+ */
-+unsigned long lockup_print;
-+core_param(lockup_print, lockup_print, ulong, 0644);
-+
- #ifdef CONFIG_HARDLOCKUP_DETECTOR
- 
- # ifdef CONFIG_SMP
-@@ -212,6 +220,7 @@ void watchdog_hardlockup_check(unsigned int cpu, struct pt_regs *regs)
- 				clear_bit_unlock(0, &hard_lockup_nmi_warn);
- 		}
- 
-+		sys_show_info(lockup_print);
- 		if (hardlockup_panic)
- 			nmi_panic(regs, "Hard LOCKUP");
- 
-@@ -774,6 +783,8 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 		}
- 
- 		add_taint(TAINT_SOFTLOCKUP, LOCKDEP_STILL_OK);
-+
-+		sys_show_info(lockup_print);
- 		if (softlockup_panic)
- 			panic("softlockup: hung tasks");
+diff --git a/kernel/debug/kdb/kdb_keyboard.c b/kernel/debug/kdb/kdb_keyboard.c
+index 3a74604fdb8a..386d30e530b7 100644
+--- a/kernel/debug/kdb/kdb_keyboard.c
++++ b/kernel/debug/kdb/kdb_keyboard.c
+@@ -145,9 +145,6 @@ int kdb_get_kbd_char(void)
+ 		return CTRL('F');
  	}
+ 
+-	if (scancode == 0xe0)
+-		return -1;
+-
+ 	/*
+ 	 * For Japanese 86/106 keyboards
+ 	 * 	See comment in drivers/char/pc_keyb.c.
 -- 
-2.39.5 (Apple Git-154)
+2.49.0
 
