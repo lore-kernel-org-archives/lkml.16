@@ -1,114 +1,106 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB5328EA42
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 20:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF0528ECCB;
+	Wed,  7 May 2025 20:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746649304; cv=none; b=uUDyJiX6FvYq4w+QIHt93uUisWsjxsWmb9hD2qBgCKE3TewKaMyphh7mR6c+Vow+ictw0+S7oA97dBY+m7WfjDZtwANRomxDFGsJ5rrxXS1nBAjcZi3a2bj9hxgTIR6HPv8HlalvSySPjTpGTpmXQmHUAa/ITzSHPzouDmAl8x0=
+	t=1746649356; cv=none; b=lLXcO4ab3ma+ZDIWumBxcwRCOxjcor/JgTeU/jroUlYY4mVgQY5rNnwT887XfmdgokdjRl86q1gN4Ay16VQkACqowE/oOH5OC3Auzw8HH9zLqEHFih2n36UOnHBvrubMr1jyKPeyKuPF2JIy0/7HnJOjC6RYQrhnMaCaWwABd2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746649304; c=relaxed/simple;
-	bh=kmy2mO6Ztn6qNHvc650CO/TU77xJs8QmHOrwIvavFW0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EYI7rpqG8yyCWuRN26xnTWimU3/r3WDHbWMHg8G2BRWlrVGi4CmVo006rFhUEju9xcs/Qam0w/3087XAC/ITmxglCERBWfE5RjFhKpdCwE2o302r8LOBVe76DfvMg3k2wVSgAqfRDTqV7xDf7cxDWgXu9nBst8pVhIIYVrVChng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ii9kHMeM; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746649356; c=relaxed/simple;
+	bh=ciZk+xzvWcfZ7+r0pbXbKYyfhFmvz0llK0OmkK7d/sM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uKL+v44nYKSkBy0B2dXC65h92xpZrqZ8+/VhQJoQ284o/Sc8UqC4Txqk4IIUYaMvolLaqpC5TBbVK3U4Du5NmS0bDyUI1kub9pEwshHMd23v3jJkZT8SNX3LaeYfS0JAAmG+21yUlT1JG03a2rYNIbyexp5nLr08pgpujjjgsXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MhjgPwuF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ii9kHMeM"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-309d2e8c20cso422437a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 13:21:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746649300; x=1747254100; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kmy2mO6Ztn6qNHvc650CO/TU77xJs8QmHOrwIvavFW0=;
-        b=Ii9kHMeMctS492xmSTaclibCC3DCqty9v0JMq+cm3YNisVKGVOkTIURueoKGlRmPX9
-         4UZni1hM8ngpI+VjTrAKzhbRPAHx7ANNzfLQaf1ohn0IjVM7/4YvXRfsUTjZ9uzX8b2A
-         oOkxEfqklSlZQeuFNqCUIEs4nJ+fBKPp9DjrIaCxpEOmZ/BKuKHhpeTG4B+MBWZmYQtz
-         rdsnfpngSFNO2H27ROPT4GEbGXJK9zYrZTsKl0+y810+hi5TQB4SZMxG0mS+jcBB1ds7
-         zU94B9BiK+oGCU2j02tIwnZPmEuQLH5F9BfV/9Zf8tddnP97Vv1h7OCMRw0SxQqgNTrX
-         Ug+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746649300; x=1747254100;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kmy2mO6Ztn6qNHvc650CO/TU77xJs8QmHOrwIvavFW0=;
-        b=QAiX9kgtA/ickj9qma2k/+HGco/ctsbK7a4NVQ15cmd/fX6+IZ8XIbhlyQdApsQoSq
-         otTUU97Ct4xaLVu8iVY8s45kyjkJ8L332Q1Mfd1rlrhmRCG3LR6XOAc6Vkkln4ywaw+o
-         /9Sbzjj6Wntk4C9kRjmomQHPCdhSyx4B2lYK+GlOfXwO69rktpZpnmPKl4Lzn3VUhz/g
-         I+5qQ8990DBIYyWVxs08bJVWfsNPM/trJ34bkHCCkz1+Mt1kDlDF6Sw2vwjq5QFwInnW
-         ccKRfbaSaZm9mkPvMseXhzmFIKRSAo2KyigwLKdx6E4xyU6S8Jxe2RLTLSZXSXnmATqb
-         uz5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWzbzGIAxrwn1i9M2wPsT5ojkpvu0KY+6pE/JIxbvt0sukVs39tlpA9peKUNkbBV3y8lJyfFKFvnAI1QDM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYapDzVP2JRqbZbfgyHl839u5KWDJK30+435kdNlDook/TpCeQ
-	lFrGWTiyh7Lubx6uukAA8DQWTwLxe/SolhsBJsvUpgoqbdUCuqbOc93Erw==
-X-Gm-Gg: ASbGncuzaXSo8UP+qVWcDbfRr2sBlVZIOxaMnyLWzXY/m4hUIJh1mc8nVVyLakS+N/O
-	eQoOMff8TwTlM9JbGHwLCXmc7/hv0qwsbBbecVUSBn7tT4eaLid/CWPjkz/cTzHGCJL7LTPsstb
-	IybUBdXexHtxSsfbzqyqmdSADGlsG9EAVVXwDL7R7SeN2CueSNDHIqDnURuCZoWzoJMSDWaB9gd
-	MyKcylx8ZAo30bGgn9wdFythtpCGv7PISDbGpSQtMhCgjGlU1mDirXQpIpod+QT+0lGOX/HaBlR
-	Dq8waAOrI19dXGlMer5tTHpOFn1gQuE7oCB4bcEd+lh7lumaje6yaoGHH2+FsJGX3/Xwdpd3/C3
-	2aKJ6Y0/I0U2wl3bnuzMEVATG98yr
-X-Google-Smtp-Source: AGHT+IH50ZmiNGVsjt2Zye2X/K7EjFUlpoPhg/I1GJs+zyuQ58zFo4jUoSiEL3C5E0IuAAmPzn6ZHQ==
-X-Received: by 2002:a05:6870:e995:b0:2b7:bd7f:f4d6 with SMTP id 586e51a60fabf-2db5c133eb2mr2810783fac.37.1746649289308;
-        Wed, 07 May 2025 13:21:29 -0700 (PDT)
-Received: from ?IPV6:2600:100c:b2a7:c99a:12d7:b0e2:f546:4c3b? ([2600:100c:b2a7:c99a:12d7:b0e2:f546:4c3b])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2db5d0e53dfsm858669fac.45.2025.05.07.13.21.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 13:21:28 -0700 (PDT)
-Message-ID: <7e6ffff3-30ec-49ff-b6a8-f36b61119ae0@gmail.com>
-Date: Wed, 7 May 2025 14:56:42 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MhjgPwuF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BA76C4AF0B;
+	Wed,  7 May 2025 20:22:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746649355;
+	bh=ciZk+xzvWcfZ7+r0pbXbKYyfhFmvz0llK0OmkK7d/sM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MhjgPwuFH+7DBpOqYm32xk99kKFmA4jpsHEk7mqQj34YfIWemSeMT01gvO1Q3nDl8
+	 /WE0i/TEkulifvYOh7TRHFDnG+s4HpvXEA4+L7r3RgEOXPdUuiR75xd1Pd5XxRxnWh
+	 o52h4fdFyqgHIH1vyvJfZ8VbxBLhB+Qkb2rpwYhZHzaPXVRhTev4hI9tY29ebyydtt
+	 pK+wrXBuotkg9P26axhg+36cbl/mge1YiJl7W0ytfh/fV4hDVSO2HtvG4VZF26h9ns
+	 qJW1RgDEn5EGYOfXTyaQdjwqIL3RA6ctv/g05JdGvryWvZ2hh4UBTgazbLHRB10WHt
+	 GW2keA5vrEHOA==
+Date: Wed, 7 May 2025 21:22:30 +0100
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Saurav Kashyap <skashyap@marvell.com>, Javed Hasan <jhasan@marvell.com>,
+	GR-QLogic-Storage-Upstream@marvell.com,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org, WangYuli <wangyuli@uniontech.com>,
+	Mark Brown <broonie@kernel.org>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] scsi: qedf: Use designated initializer for struct
+ qed_fcoe_cb_ops
+Message-ID: <20250507202230.GA3536142@ax162>
+References: <20250502224156.work.617-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] x86/panic: Add x86_panic_handler as default
- post-panic behavior
-To: John Ogness <john.ogness@linutronix.de>, carlos.bilbao@kernel.org,
- tglx@linutronix.de, seanjc@google.com, jan.glauber@gmail.com
-Cc: bilbao@vt.edu, pmladek@suse.com, akpm@linux-foundation.org,
- jani.nikula@intel.com, linux-kernel@vger.kernel.org,
- gregkh@linuxfoundation.org, takakura@valinux.co.jp
-References: <20250428215952.1332985-1-carlos.bilbao@kernel.org>
- <20250428215952.1332985-3-carlos.bilbao@kernel.org>
- <84ldri7vv0.fsf@jogness.linutronix.de>
- <781ef1d7-f9c6-4a15-b94d-c735e83e7d01@gmail.com>
- <84bjseozci.fsf@jogness.linutronix.de>
-Content-Language: en-US
-From: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
-In-Reply-To: <84bjseozci.fsf@jogness.linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502224156.work.617-kees@kernel.org>
 
-Hello,
+On Fri, May 02, 2025 at 03:41:57PM -0700, Kees Cook wrote:
+> Recent fixes to the randstruct GCC plugin allowed it to notice
+> that this structure is entirely function pointers and is therefore
+> subject to randomization, but doing so requires that it always use
+> designated initializers. Explicitly specify the "common" member as being
+> initialized. Silences:
+> 
+> drivers/scsi/qedf/qedf_main.c:702:9: error: positional initialization of field in 'struct' declared with 'designated_init' attribute [-Werror=designated-init]
+>   702 |         {
+>       |         ^
+> 
+> Fixes: c2ea09b193d2 ("randstruct: gcc-plugin: Remove bogus void member")
 
-On 4/30/25 02:58, John Ogness wrote:
-> On 2025-04-29, Carlos Bilbao <carlos.bilbao.osdev@gmail.com> wrote:
->>> I see no reason why you don't just use safe_halt() as your panic
->>> handler.
->> Yes, in my original implementation I simply used halt, but I was
->> trying to be cautious in case any remaining messages hadn't flushed. I
->> wonder, can we be certain that, as you said, all output (e.g., a
->> backtrace) has already been displayed on screen at this point? I'm not
->> sure.
-> Well, without this series, the kernel goes into an infinite loop. So if
-> the messages are not all out, they won't magically appear during the
-> infinite loop either.
+For the record, this is also needed after your recent change to clang to
+do the same thing as the plugin:
 
+  drivers/scsi/qedf/qedf_main.c:702:2: error: a randomized struct can only be initialized with a designated initializer
+  702 |         {
+      |         ^
 
-I thought there may be some async stuff going on :)
+so this should probably have
 
+  Cc: stable@vger.kernel.org
+  Fixes: 035f7f87b729 ("randstruct: Enable Clang support")
 
->
-> John
-
-
-Thanks,
-
-Carlos
-
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Saurav Kashyap <skashyap@marvell.com>
+> Cc: Javed Hasan <jhasan@marvell.com>
+> Cc: <GR-QLogic-Storage-Upstream@marvell.com>
+> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> Cc: <linux-scsi@vger.kernel.org>
+> ---
+>  drivers/scsi/qedf/qedf_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/scsi/qedf/qedf_main.c b/drivers/scsi/qedf/qedf_main.c
+> index 436bd29d5eba..6b1ebab36fa3 100644
+> --- a/drivers/scsi/qedf/qedf_main.c
+> +++ b/drivers/scsi/qedf/qedf_main.c
+> @@ -699,7 +699,7 @@ static u32 qedf_get_login_failures(void *cookie)
+>  }
+>  
+>  static struct qed_fcoe_cb_ops qedf_cb_ops = {
+> -	{
+> +	.common = {
+>  		.link_update = qedf_link_update,
+>  		.bw_update = qedf_bw_update,
+>  		.schedule_recovery_handler = qedf_schedule_recovery_handler,
+> -- 
+> 2.34.1
+> 
