@@ -1,41 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1927F25E467;
-	Wed,  7 May 2025 21:59:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918E372632;
+	Wed,  7 May 2025 21:59:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746655150; cv=none; b=NWN46i2OzNuSujZ8w8sNllHmMXVKp4aXfWwX6TUJG7eBoBgluvxfC7/hRb0WHzXLgSgvsT57h4lQAMcfDPf7pG6BtQnkfiibCXTJ0hJem4CKypnjhhzDAOkW0bg6BHuL/rh30wvvWDJ+lqJ3kipKvrv0/a9BRzD2Hv/vJpE3QT4=
+	t=1746655160; cv=none; b=oFaXD2RlIKaEbByQPsMLkxBITvdKyKoctQhro/6Tj0GSkEZ4qsInRA7jtnAWugWPi9lt4hV8en0gLcU+Iho81gL7ZgjdFVDQ34OSnBnKQUHM3chhHHSJLXU1y+g8PTpGO8+JmhQ1lLALdLcLKtDas0abZNBslHVLHQx7W6k7wis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746655150; c=relaxed/simple;
-	bh=9858hxWVasl9qYR0rBtvA66gC6j5dx4PpfDs0u1OvTo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o9087Rh0KmzRz9qi7XmTcJjRVkWPlvbizZDb2BMEps81kBUeYogw8OcIgblF2IilExLlJyFNo0bpwxK3L550JrikdnbBF+eBZkTzpn4M4irsTq9FneTXX/R/fzWPl4wBpw+/ZFehZvhL1iWZXML0bDb6AOYsfcl7xuFcgjO10QI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ReoGpdNa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746655160; c=relaxed/simple;
+	bh=Cni/pdWt9cIp+mXSH/rdXfKlwgkpc0+yATONdzAnZ/k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F0goMZNB5tPr09SIQhJ5bKQP+2OS9o6wbpfRTQh+u5YS8dw8Xo77Um9+MHQg4go/twEOIpo7G1ZE5CuS8St/uo2dCJUtdmsTYbE/YAudNT9nUr+mGfOq6roFSFVaajR+dT0GJjN84shH9mlzrNCuTI6NkpvTxTU2ycKLLn08ex0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=et2XrWBc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ReoGpdNa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63634C4CEE2;
-	Wed,  7 May 2025 21:59:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="et2XrWBc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3041C4CEE2;
+	Wed,  7 May 2025 21:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746655149;
-	bh=9858hxWVasl9qYR0rBtvA66gC6j5dx4PpfDs0u1OvTo=;
+	s=k20201202; t=1746655159;
+	bh=Cni/pdWt9cIp+mXSH/rdXfKlwgkpc0+yATONdzAnZ/k=;
 	h=From:To:Cc:Subject:Date:From;
-	b=ReoGpdNaV5J7M/aCOifp9gSt3dnm3MrMaoL4K91pjhOLRSU/MSTjKzXEJEOZPUrMB
-	 bEO7tYLv6aGRy1OLdB4B8dNIpZ3uizXyjpt/73Tk18bZZqH6WnWlRKdsKI38H477uL
-	 Xx3ufl0khAamWDDgwChmGJRugic2nWxDh3F8Wkmm9FqPufQN3cRAlenH+pW+KU1Ni8
-	 8MSyuqbtgLY3wp8u9SFXFfQsdljbkJz7oh1DjJZGNn4TiimV8Qc1Ta9UxKJfQYsfL7
-	 2vEb9nE4rNOUWQ9t1MBp8GklCqynV4pp0p5rtXaOSgEYF0+5twoNP/dgHTgJKDpUTg
-	 OjPdicqxlYkvw==
+	b=et2XrWBcXB0vQxxivC3De8795+Bcn71ukrJG8s/ytct8YVrQJtRd3h2BjreH2Nywv
+	 MWkJfnAxgfYHvL/1M+6epLXyjjqzg3qgbA429FyR9H646S/56Ax2WfcDxBVkdI7Imb
+	 0PFSxw7hfHM5B4an/L8UGw/bMVcBs2jqupntMaGMtNhlRtye8QW37guotxPHPYv6xy
+	 Agc1vIDuB2ROE3XZRUxie7rqSDYWkJUxhzxktqaVga4cBAspCj3B+602P3Ozi3C7LH
+	 YnkWMW/sl1FD5yYJ4cQmuXg2iyZILTamXmejfNHDJcD4v0EnqiE70uw02tXjAH5BHv
+	 figz6GvjKR8CA==
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
+To: Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org,
+Cc: linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: soc: fsl,ls1028a-reset: Drop extra "/" in $id
-Date: Wed,  7 May 2025 16:59:02 -0500
-Message-ID: <20250507215903.2748698-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: display/msm: hdmi: Fix constraints on additional 'port' properties
+Date: Wed,  7 May 2025 16:59:12 -0500
+Message-ID: <20250507215912.2748964-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -45,26 +55,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The $id value has a double "//". Drop it.
+The MSM HDMI port nodes are missing any restrictions on additional
+properties. The $ref should be to "/properties/port" rather than
+"/$defs/port-base" as there are not additional properties in the nodes
+to define.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../devicetree/bindings/soc/fsl/fsl,ls1028a-reset.yaml          | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/display/msm/hdmi.yaml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/soc/fsl/fsl,ls1028a-reset.yaml b/Documentation/devicetree/bindings/soc/fsl/fsl,ls1028a-reset.yaml
-index 31295be91013..558a8c7aab9c 100644
---- a/Documentation/devicetree/bindings/soc/fsl/fsl,ls1028a-reset.yaml
-+++ b/Documentation/devicetree/bindings/soc/fsl/fsl,ls1028a-reset.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas//soc/fsl/fsl,ls1028a-reset.yaml#
-+$id: http://devicetree.org/schemas/soc/fsl/fsl,ls1028a-reset.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/Documentation/devicetree/bindings/display/msm/hdmi.yaml b/Documentation/devicetree/bindings/display/msm/hdmi.yaml
+index d4a2033afea8..099274d35680 100644
+--- a/Documentation/devicetree/bindings/display/msm/hdmi.yaml
++++ b/Documentation/devicetree/bindings/display/msm/hdmi.yaml
+@@ -89,12 +89,12 @@ properties:
+     $ref: /schemas/graph.yaml#/properties/ports
+     properties:
+       port@0:
+-        $ref: /schemas/graph.yaml#/$defs/port-base
++        $ref: /schemas/graph.yaml#/properties/port
+         description: |
+           Input endpoints of the controller.
  
- title: Freescale Layerscape Reset Registers Module
+       port@1:
+-        $ref: /schemas/graph.yaml#/$defs/port-base
++        $ref: /schemas/graph.yaml#/properties/port
+         description: |
+           Output endpoints of the controller.
+ 
 -- 
 2.47.2
 
