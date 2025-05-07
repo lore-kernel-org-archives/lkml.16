@@ -1,264 +1,216 @@
-Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2077.outbound.protection.outlook.com [40.107.236.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FE028C5CB;
-	Wed,  7 May 2025 14:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746627348; cv=none; b=OynGhBVM45hXMdoGxnOYjm/Qn0iqkFgCg29bUO4pBYN+nPzlePOoUYW8pnpiLGy6n1qoKLAlOp5dQ2r9EFS7R+guPKP1wlm3g2Sb7ODbHLH2JBhrxZRZWDDRlK7kG2x9lZsl0zmvNiWE72GHLoYVvW8D7drPUlXXr+oI7N9gE8g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746627348; c=relaxed/simple;
-	bh=CFMSo8fFi8h4sxS0Jy++gqAt1TaJvChkaWTHteXNxu8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PlnnVnhOIDnnwOZ6ueqNsRUxoW2C9+333sbKJBO2AG8NhXnSjLHqgc1rUjYcYjcgOCdXJSE/T3HD6a3zylPiDE9v7GBUpnwyL8ipJH2CZemsFwVP56WBbiL1VOqjwkdxFzIr5uHVNznOKRz6PAGJHaRTwKPDG1Nqq82K+cDtdig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=b4MhVvlU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Z3C8uOaf; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81347289372;
+	Wed,  7 May 2025 14:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746627379; cv=fail; b=YpPGFW3vIo5bJ0a0rn2OrmjrJxMaB3VmIShQr3BeRnOscTxhsxaOIAFwOJIcYuqyCv8/3zKgXW76/GlanYoRRilC3bReGr4TKySk6pgoajEpqv+uCOlHUSB6uV7hlEXlWqNOO689N+m1LpmneZyScyNWJ1A6GAN5k7tf1BecPKk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746627379; c=relaxed/simple;
+	bh=UbNQDOpFDWiNHxTATPHFUZ/XOypXRpqMWdC2WrlLGXU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bBPoWO2KG3kBXgngMUnaaCLmJwiteIETzSU8XK/V+jzQ9O37KX1+qMUppJZ2PFsAFvD6J7PkxJ0WnzZ9oH0Ce9kfnFlTKlHP0QLUU19B8SUOD63ycEKk4n1ukN+kJcuMQ+MRt3LdGIswNdRjxhs7VwpfeKP6kCN7Dz7E5wu5X8g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NLKDcr3K; arc=fail smtp.client-ip=40.107.236.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="b4MhVvlU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Z3C8uOaf"
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id BDA04114014E;
-	Wed,  7 May 2025 10:15:43 -0400 (EDT)
-Received: from phl-frontend-01 ([10.202.2.160])
-  by phl-compute-03.internal (MEProxy); Wed, 07 May 2025 10:15:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1746627343;
-	 x=1746713743; bh=lobH8vUSiJ5yxjFwSsceR9+MPZ6tQ3OZZfMY+aWJhpg=; b=
-	b4MhVvlUBkMIegsy0H60VjOpS2LduPWUWZ82ayQnnRSz4Fx9tRxRyl5IV7c+Wo+X
-	KHL+cncAsxOboufqfAkBLUFE4ewQh6tgUbbcfTULOtzAhDmDR/ooXf64QAj+OlFP
-	N/g7jofRxXBfM5lcuv1ndZUJU0jD/q16MEYUkaHXjuSPckn7gPiKD3H1D602JxY9
-	8xpOAznvDWlqzb+OM4fDSqYBqzeth+q8nhOO87brX3BPumJsGasj5KS70H6H82jA
-	h15cOwRn8UMBTsgavw47s7k+ilM+++a+1mYFinC889YLDzxLSdc38oFFVY4NTjen
-	mXC8xYug/v/YR/nP1+k1ug==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746627343; x=
-	1746713743; bh=lobH8vUSiJ5yxjFwSsceR9+MPZ6tQ3OZZfMY+aWJhpg=; b=Z
-	3C8uOaf61vknaIaVm/ctkjTBbQNWEouECdTVZRvIcSePQKussQrXfu8lXPF0t/Tw
-	koKwlup928RP9+3PTIILto5PmmqMIlwCr27oUHXJ2yUIiOtZw9dZBG0X6MAVBvvZ
-	3nrdOetuQjFyvdQMYVoyV1eHPWbwcLUAPd8SOGvUjpLF9q4J5HFkVSxOUk/fjPkK
-	oskWxSHEBeslgB5TRyis2VULCVr8xXHQdD1zpielSphFmEHcoXHzn5JbTyWf7ftt
-	FKn91rhanP47O4HPMBD2VRx3krXcZVBe2kZgR2LY1H2kOFAo54BlsmHPHSZe7os2
-	Sj2HX/TOSVsAa/+I+IczA==
-X-ME-Sender: <xms:D2sbaEp3wkEp6K6gxGVRtnC4BhQc8ez2vyKfz3X0nXuueJ6WOJpy-A>
-    <xme:D2sbaKpiJyOsvytQ7DLSWlr-u1EWaAifanztKx10Wc24rNNk_1pEarB4kgYQsHiOA
-    0UZyPTK2vn7HVjOqRU>
-X-ME-Received: <xmr:D2sbaJMWgrKYrdUPS-UPJRqXW4iqRVjEyDF1uNqkgrdxxI7wm3WadI_owsyC1vMtpU5q914J2WVIZpwurJFTzFTKuQiYpwITfGznW5nE0f3c6Ys0fg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejtdejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhggtgfgsehtkeertder
-    tdejnecuhfhrohhmpefpihgtohhlrghsucfrihhtrhgvuceonhhitghosehflhhugihnih
-    gtrdhnvghtqeenucggtffrrghtthgvrhhnpedufedvleehffethffhffelkeekieekgeev
-    ffelleejteehieeghfeluedvvdehieenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehnihgtohesfhhluhignhhitgdrnhgvthdpnhgspghrtghp
-    thhtohephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepnhhpihhtrhgvsegsrg
-    ihlhhisghrvgdrtghomhdprhgtphhtthhopehjihhrihhslhgrsgihsehkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdroh
-    hrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehlihhnuhigqdhsvghrihgrlhesvhhgvghrrdhkvghrnhgvlh
-    drohhrgh
-X-ME-Proxy: <xmx:D2sbaL4aE3BrMXJ3RJAsE6c3AA4B6NHxmRUK8TJRVaLqVvj2GFjBMg>
-    <xmx:D2sbaD7blIkFza5gtW3OzEPnltAjkHr58rJGaZggnErKLJ4e4JgK1g>
-    <xmx:D2sbaLipabORwDTilPciiTB5w6rm03HDmxwyQrrSm-eSOEQqhJbZXw>
-    <xmx:D2sbaN4ktsrmgpMNcQQLE35puyoMgzn7CZSDPh3kRqUQg3audTHaTg>
-    <xmx:D2sbaALVdnWWH8IJSx7wsG2JtaOdhj6ViPFGlSx9tl3nB_PUtKmEYBAN>
-Feedback-ID: i58514971:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 7 May 2025 10:15:43 -0400 (EDT)
-Received: from xanadu.lan (OpenWrt.lan [192.168.1.1])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id B41061189EAC;
-	Wed, 07 May 2025 10:15:42 -0400 (EDT)
-From: Nicolas Pitre <nico@fluxnic.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Cc: Nicolas Pitre <npitre@baylibre.com>,
-	linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 8/8] vt: process the full-width ASCII fallback range programmatically
-Date: Wed,  7 May 2025 10:13:23 -0400
-Message-ID: <20250507141535.40655-9-nico@fluxnic.net>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250507141535.40655-1-nico@fluxnic.net>
-References: <20250507141535.40655-1-nico@fluxnic.net>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NLKDcr3K"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TyNUR+rcMnB+nOxbNkngNhvQcn1zTDbHg/VjNLdPzbarGylPj83x81hNgHajFj/qHeCyyEKUpm3e8NbPQFklrA0FwZU6qImnNk4kWwbS/eYVZ3eluofnKJYOPvrVuuXVHvsXZKTSiswdeN1fdEgVTZGvvVEwKEg/2eG0aqAaZA4vQc0U77QztUgMA8PD2p1jEKLi6/6FQkCeO/BkCrL2/ZpLau6g8to00hoUpo7flLIYXPC1XOGuCnfZksCeuxvnxAAgxN3m2IH2Amic3BUVGVKvxiX6Va8z9D+ztQ/aWir/CH/f97dy52p9n4a1omHPh3OCW80rrStLmyWkdEgOaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uXJ8CCsNS1QaMcsfn0m+y5P6NyFMLI02JABXfdkwrY0=;
+ b=JhW+UrIwO1H2jKbXvGi0HjIbxPplNl4f1l++FACt8Lk8W/0huqkY5REk98ZtKdZ4BskdOp9t4mQ0/jjElrZfi7tZAojKZyzkDRWAtyXNJ9RIcy1KU9GQZZHD+oXwTdwCEK1TAwUw3wdjze4jjKIbN8JXm2/pWGngVA0fuQJRTrI8V4qcxMTrMEzc9uZWGDtaQyEJa/u5xdUsZDadQ2Vo0Yx8P15Q4fzA3pPjLx/OhzRjHGT4UTwYVFHolhPxdwC/Yb9Mhl69Dwusk29yix8j3CBeDr8reotrbSFvYp3kBzLO+V1dPj1AWc3MrIM89WAOihcQLmDCHLmw3fbdtkA2yg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=suse.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uXJ8CCsNS1QaMcsfn0m+y5P6NyFMLI02JABXfdkwrY0=;
+ b=NLKDcr3KGA9jkafoNrvDy7iLmh9RE6JWfDqjw43hbUzIWxOoDG4ZyU+nnGqItQ4O1kPLt7ZcT2qf4VnFADIyPjwhsfQ38t2UJGjpKx5GK9ayL3pjEb35XBPw+eysvKMjA6/wZsDSi9o9yvDHDPZF3nACRYZVPw4WegOvkBhO6/c=
+Received: from SJ0PR13CA0233.namprd13.prod.outlook.com (2603:10b6:a03:2c1::28)
+ by CY8PR12MB8265.namprd12.prod.outlook.com (2603:10b6:930:72::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 7 May
+ 2025 14:16:05 +0000
+Received: from SA2PEPF000015C6.namprd03.prod.outlook.com
+ (2603:10b6:a03:2c1:cafe::ac) by SJ0PR13CA0233.outlook.office365.com
+ (2603:10b6:a03:2c1::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.19 via Frontend Transport; Wed,
+ 7 May 2025 14:16:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ SA2PEPF000015C6.mail.protection.outlook.com (10.167.241.196) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Wed, 7 May 2025 14:16:05 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 7 May
+ 2025 09:16:04 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 7 May
+ 2025 09:16:03 -0500
+Received: from [172.18.31.235] (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Wed, 7 May 2025 09:16:03 -0500
+Message-ID: <6452909d-94f8-4df3-87fc-d8ee0bdba01a@amd.com>
+Date: Wed, 7 May 2025 10:16:03 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] xenbus: Use kref to track req lifetime
+To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>, Stefano Stabellini
+	<sstabellini@kernel.org>, Oleksandr Tyshchenko
+	<oleksandr_tyshchenko@epam.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>
+CC: =?UTF-8?Q?Marek_Marczykowski-G=C3=B3recki?=
+	<marmarek@invisiblethingslab.com>, <stable@vger.kernel.org>,
+	<xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>
+References: <20250506210935.5607-1-jason.andryuk@amd.com>
+ <6b17cb41-a4f1-4055-966a-54301493085c@suse.com>
+Content-Language: en-US
+From: Jason Andryuk <jason.andryuk@amd.com>
+In-Reply-To: <6b17cb41-a4f1-4055-966a-54301493085c@suse.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+Received-SPF: None (SATLEXMB05.amd.com: jason.andryuk@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015C6:EE_|CY8PR12MB8265:EE_
+X-MS-Office365-Filtering-Correlation-Id: 782e647a-322d-42aa-67f2-08dd8d71b468
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026|13003099007|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cGJnMnZ5S1dOeS9tMkhrcTA0WVBVS2xReHV5SXNwcTJCYXNpcHlEZ0tpY0p3?=
+ =?utf-8?B?ZkExMlhGeWJidlpOQS8rNmNsWjM3WUdaWitQVXpUUndQZG45MkdsVnd4Vlgw?=
+ =?utf-8?B?TGt6NXhLMEJEQ3hwamFlc01Jd0dXTTJ5Um5LM2xxQkhuMFBiUGY1QXJyWnho?=
+ =?utf-8?B?bXpqZnowaFUyUmtLUmlkY1lPREFHNnluM2lwZGRtQVd3NGFaZjYvRmM4Z1VY?=
+ =?utf-8?B?bEk4RXU3bjBNU2dKOUlFYUV4SWdmOEE0TjR2RTF4YVNZT2ltNm5ITi9SODhi?=
+ =?utf-8?B?N09lWGhIV0lpREVwRWY5NC92THNwMWtTUFoxMUtEQ25kenZ4dkJSM25MRFlC?=
+ =?utf-8?B?QTVwTXBFNG5YRk9HSVFLditTRGhnL3p0NFZxQzJLRmFyT0Ixc0MzdHptSkxp?=
+ =?utf-8?B?bTZnOUNHOWFEdEVVUjU1aDAvY2tqNDZKaTJUbHBMTXh5ZzhFNXJ1Ry9Odytr?=
+ =?utf-8?B?R3p0TmpQeWpXdVlPckgzM1BMT3JMQTlIbGVMUVRjNXdaK3JPS09JdS9VQVlp?=
+ =?utf-8?B?YmJoKzBiQ09pcGNlUzE0M2RaQkFRcy83ek1nbGNxbE5qRHZyMm90aXJJSEVK?=
+ =?utf-8?B?ZjFvQ05RRktGRGhYK0N0MzdGVGNIV0VwRlQ1ZDdrT0NGQ3VIT2o5Wm8yQ0s4?=
+ =?utf-8?B?L2M4OTJQZzQyRlJleUNlN2p2cjA5WGFJdnNjQ09FRTUxcDB4b05jSTdZZkNp?=
+ =?utf-8?B?VXUrbmlaVm90YUxtZkxDN2psMUNNWFBBTnhRckwzbmxHRXVDV2ppWHpiZk1n?=
+ =?utf-8?B?dm81a1hrdjljeVQvYzh6d2xNUnUzNmxhMEdxekwycDhjUEVmNStZTnJwa2tV?=
+ =?utf-8?B?NWpRNlBnSk5TVUFVQis3MHZGR09tMnozWWdKNXJ6ZUMwTTdtMmhoRU1ya3NF?=
+ =?utf-8?B?bHhkWGpPSENGaVdIYWV0QThrZmp3dFNhNG82alhmQTYrRDdQUC9VZm9OUlo1?=
+ =?utf-8?B?V3dXd2svSGpvNjNmWERLNlBsMGxYWUdyQlpYZmNnamxRamxCeGsrQlZNNW5U?=
+ =?utf-8?B?eXJHalNSVmtOWGQ5SnRDenBMRGlkaGdLTzh5THFPK0VCUmZFT21IZWJvQ3VB?=
+ =?utf-8?B?T2lkdE5abzZ3Nm1ZcmN6ek8ycVFMTjEyMCtYUk5DS2tYY0xVU2lqbmFRYnlm?=
+ =?utf-8?B?alRwckFhZ1hNWEZZQXNzM0szY2VQM01LN1NhVUtTbGdJcmgwN1ZZQ2RBMWZ2?=
+ =?utf-8?B?V1pOaHN5b21kc2daejNVcHVkWTh2U3RTWmxHbVFSTlFscUEvT0RhSllqTk9K?=
+ =?utf-8?B?LzNTZjVhY0cwTFJlNktvSVJMNmpzUnlJWk1DZ0ZxZzFSaTQ1bGFBRDgwYWh0?=
+ =?utf-8?B?WHBISEhVVlhienk5Y1ZOU2hwTjV6dlA5aTZyTThYNzU5S1JiQTZCekIwWHVC?=
+ =?utf-8?B?ZnNJZEpSRjIzYmhPTkJJNXdhVW83VVcrRnBCRFF1NTBOaWpBSEUrMUxtdEx5?=
+ =?utf-8?B?Ukg4WUVVMUtidko5K3JyZXYxVHIrSkhBUjd6ZmJsR3FuMnlNNmFFUzN2VW96?=
+ =?utf-8?B?MGJUcDhobjBhNW11ZTFraFNZdTBMSTlPRmh5Sm03L0c0T1NSQWhTZmluUVVW?=
+ =?utf-8?B?TUJJVVNDcVJrcFFva0U5MWVNVEpjOTB5RjRLQmE0QytkY2M3QStFN1hRTkR5?=
+ =?utf-8?B?L2NhNW9nKzNiU3dnbFRVRDdqRlNCelJkWDRDTkFWNWJSSUlKOFFuRUxyNVE5?=
+ =?utf-8?B?NjVZcTczNjVWUUdKeVBVdkt1NFNSYWYrU2FEQXMzSnJHN2taL092bno3SnI0?=
+ =?utf-8?B?YU1iaXg0UU42QVpJWUZ5T3hNbXJyRGZnWW1kOWZxVUlnUVZDYVFQVERmbEJL?=
+ =?utf-8?B?U21jWVF2RXc3Y1ExcUluTXFjU3JZQm1VZUJsZHNScjdVZkl5UUowNjFGeisy?=
+ =?utf-8?B?V21QZ2dBZUZ6T2Raa1czZTJNTnJRQklCbnRiZ1BKMDdHNEp1L2dYTWFHRmlM?=
+ =?utf-8?B?aWhOZ2VqcTFkVEJTZEtIVE4waHJwVVhISnhjMENLZ3VSeTk3OUcwaHlCNnI4?=
+ =?utf-8?B?bFJnWGUrYTVlaHR1QW4xdFpNaWtieUpzcEh0TTIrUGsrbEpqRStmemxDR1h3?=
+ =?utf-8?B?OHVFbElzUC9UTkdTcWFvU3puM3lGeEFOVkRaQT09?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026)(13003099007)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 14:16:05.3321
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 782e647a-322d-42aa-67f2-08dd8d71b468
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015C6.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8265
 
-From: Nicolas Pitre <npitre@baylibre.com>
+On 2025-05-07 05:27, Jürgen Groß wrote:
+> On 06.05.25 23:09, Jason Andryuk wrote:
+>> Marek reported seeing a NULL pointer fault in the xenbus_thread
+>> callstack:
+>> BUG: kernel NULL pointer dereference, address: 0000000000000000
+>> RIP: e030:__wake_up_common+0x4c/0x180
+>> Call Trace:
+>>   <TASK>
+>>   __wake_up_common_lock+0x82/0xd0
+>>   process_msg+0x18e/0x2f0
+>>   xenbus_thread+0x165/0x1c0
+>>
+>> process_msg+0x18e is req->cb(req).  req->cb is set to xs_wake_up(), a
+>> thin wrapper around wake_up(), or xenbus_dev_queue_reply().  It seems
+>> like it was xs_wake_up() in this case.
+>>
+>> It seems like req may have woken up the xs_wait_for_reply(), which
+>> kfree()ed the req.  When xenbus_thread resumes, it faults on the zero-ed
+>> data.
+>>
+>> Linux Device Drivers 2nd edition states:
+>> "Normally, a wake_up call can cause an immediate reschedule to happen,
+>> meaning that other processes might run before wake_up returns."
+>> ... which would match the behaviour observed.
+>>
+>> Change to keeping two krefs on each request.  One for the caller, and
+>> one for xenbus_thread.  Each will kref_put() when finished, and the last
+>> will free it.
+>>
+>> This use of kref matches the description in
+>> Documentation/core-api/kref.rst
+>>
+>> Link: https://lore.kernel.org/xen-devel/ZO0WrR5J0xuwDIxW@mail-itl/
+>> Reported-by: "Marek Marczykowski-Górecki" 
+>> <marmarek@invisiblethingslab.com>
+>> Fixes: fd8aa9095a95 ("xen: optimize xenbus driver for multiple 
+>> concurrent xenstore accesses")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Jason Andryuk <jason.andryuk@amd.com>
+> 
+> Reviewed-by: Juergen Gross <jgross@suse.com>
 
-This shaves about 170 bytes from ucs.o.
+Thanks
 
-Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
----
- drivers/tty/vt/gen_ucs_fallback_table.py    |  8 ++
- drivers/tty/vt/ucs.c                        |  8 ++
- drivers/tty/vt/ucs_fallback_table.h_shipped | 96 +--------------------
- 3 files changed, 17 insertions(+), 95 deletions(-)
+>> ---
+>> Kinda RFC-ish as I don't know if it fixes Marek's issue.  This does seem
+>> like the correct approach if we are seeing req free()ed out from under
+>> xenbus_thread.
+> 
+> I think your analysis is correct. When writing this code I didn't think
+> of wake_up() needing to access req->wq _after_ having woken up the waiter.
 
-diff --git a/drivers/tty/vt/gen_ucs_fallback_table.py b/drivers/tty/vt/gen_ucs_fallback_table.py
-index 80257c6df440..6e09c1cb6d4b 100755
---- a/drivers/tty/vt/gen_ucs_fallback_table.py
-+++ b/drivers/tty/vt/gen_ucs_fallback_table.py
-@@ -197,6 +197,14 @@ def get_special_overrides():
-     # Exclude U+2028 (LINE SEPARATOR)
-     overrides[0x2028] = 0  # LINE SEPARATOR (unidecode: '\n')
- 
-+    # Full-width to ASCII mapping (covering all printable ASCII 33-126)
-+    # 0xFF01 (！) to 0xFF5E (～) -> ASCII 33 (!) to 126 (~)
-+    # Those are excluded here to reduce the table size.
-+    # It is more efficient to process them programmatically in
-+    # ucs.c:ucs_get_fallback().
-+    for cp in range(0xFF01, 0xFF5E + 1):
-+        overrides[cp] = 0  # Double-width ASCII characters
-+
-     return overrides
- 
- def organize_by_pages(fallback_map):
-diff --git a/drivers/tty/vt/ucs.c b/drivers/tty/vt/ucs.c
-index 6c15c5deda5b..6ead622b7713 100644
---- a/drivers/tty/vt/ucs.c
-+++ b/drivers/tty/vt/ucs.c
-@@ -224,6 +224,14 @@ u32 ucs_get_fallback(u32 cp)
- 	if (!UCS_IS_BMP(cp))
- 		return 0;
- 
-+	/*
-+	 * Full-width to ASCII mapping (covering all printable ASCII 33-126)
-+	 * 0xFF01 (！) to 0xFF5E (～) -> ASCII 33 (!) to 126 (~)
-+	 * We process them programmatically to reduce the table size.
-+	 */
-+	if (cp >= 0xFF01 && cp <= 0xFF5E)
-+		return cp - 0xFF01 + 33;
-+
- 	page = __inline_bsearch(&page_idx, ucs_fallback_pages,
- 				ARRAY_SIZE(ucs_fallback_pages),
- 				sizeof(*ucs_fallback_pages),
-diff --git a/drivers/tty/vt/ucs_fallback_table.h_shipped b/drivers/tty/vt/ucs_fallback_table.h_shipped
-index 7fa803511eb5..2da5a8fe1cf1 100644
---- a/drivers/tty/vt/ucs_fallback_table.h_shipped
-+++ b/drivers/tty/vt/ucs_fallback_table.h_shipped
-@@ -60,7 +60,7 @@ static const struct ucs_page_desc ucs_fallback_pages[] = {
- 	{ 0xC7, 1, 3105 },
- 	{ 0xFB, 35, 3106 },
- 	{ 0xFE, 37, 3141 },
--	{ 0xFF, 144, 3178 },
-+	{ 0xFF, 50, 3178 },
- };
- 
- /* Page entries array (referenced by page descriptors) */
-@@ -3291,100 +3291,6 @@ static const struct ucs_page_entry ucs_fallback_entries[] = {
- 	{ 0x6A, 0x25 }, /* SMALL PERCENT SIGN -> '%' */
- 	{ 0x6B, 0x40 }, /* SMALL COMMERCIAL AT -> '@' */
- 	/* Entries for page 0xFF */
--	{ 0x01, 0x21 }, /* FULLWIDTH EXCLAMATION MARK -> '!' */
--	{ 0x02, 0x22 }, /* FULLWIDTH QUOTATION MARK -> '"' */
--	{ 0x03, 0x23 }, /* FULLWIDTH NUMBER SIGN -> '#' */
--	{ 0x04, 0x24 }, /* FULLWIDTH DOLLAR SIGN -> '$' */
--	{ 0x05, 0x25 }, /* FULLWIDTH PERCENT SIGN -> '%' */
--	{ 0x06, 0x26 }, /* FULLWIDTH AMPERSAND -> '&' */
--	{ 0x07, 0x27 }, /* FULLWIDTH APOSTROPHE -> ''' */
--	{ 0x08, 0x28 }, /* FULLWIDTH LEFT PARENTHESIS -> '(' */
--	{ 0x09, 0x29 }, /* FULLWIDTH RIGHT PARENTHESIS -> ')' */
--	{ 0x0A, 0x2A }, /* FULLWIDTH ASTERISK -> '*' */
--	{ 0x0B, 0x2B }, /* FULLWIDTH PLUS SIGN -> '+' */
--	{ 0x0C, 0x2C }, /* FULLWIDTH COMMA -> ',' */
--	{ 0x0D, 0x2D }, /* FULLWIDTH HYPHEN-MINUS -> '-' */
--	{ 0x0E, 0x2E }, /* FULLWIDTH FULL STOP -> '.' */
--	{ 0x0F, 0x2F }, /* FULLWIDTH SOLIDUS -> '/' */
--	{ 0x10, 0x30 }, /* FULLWIDTH DIGIT ZERO -> '0' */
--	{ 0x11, 0x31 }, /* FULLWIDTH DIGIT ONE -> '1' */
--	{ 0x12, 0x32 }, /* FULLWIDTH DIGIT TWO -> '2' */
--	{ 0x13, 0x33 }, /* FULLWIDTH DIGIT THREE -> '3' */
--	{ 0x14, 0x34 }, /* FULLWIDTH DIGIT FOUR -> '4' */
--	{ 0x15, 0x35 }, /* FULLWIDTH DIGIT FIVE -> '5' */
--	{ 0x16, 0x36 }, /* FULLWIDTH DIGIT SIX -> '6' */
--	{ 0x17, 0x37 }, /* FULLWIDTH DIGIT SEVEN -> '7' */
--	{ 0x18, 0x38 }, /* FULLWIDTH DIGIT EIGHT -> '8' */
--	{ 0x19, 0x39 }, /* FULLWIDTH DIGIT NINE -> '9' */
--	{ 0x1A, 0x3A }, /* FULLWIDTH COLON -> ':' */
--	{ 0x1B, 0x3B }, /* FULLWIDTH SEMICOLON -> ';' */
--	{ 0x1C, 0x3C }, /* FULLWIDTH LESS-THAN SIGN -> '<' */
--	{ 0x1D, 0x3D }, /* FULLWIDTH EQUALS SIGN -> '=' */
--	{ 0x1E, 0x3E }, /* FULLWIDTH GREATER-THAN SIGN -> '>' */
--	{ 0x1F, 0x3F }, /* FULLWIDTH QUESTION MARK -> '?' */
--	{ 0x20, 0x40 }, /* FULLWIDTH COMMERCIAL AT -> '@' */
--	{ 0x21, 0x41 }, /* FULLWIDTH LATIN CAPITAL LETTER A -> 'A' */
--	{ 0x22, 0x42 }, /* FULLWIDTH LATIN CAPITAL LETTER B -> 'B' */
--	{ 0x23, 0x43 }, /* FULLWIDTH LATIN CAPITAL LETTER C -> 'C' */
--	{ 0x24, 0x44 }, /* FULLWIDTH LATIN CAPITAL LETTER D -> 'D' */
--	{ 0x25, 0x45 }, /* FULLWIDTH LATIN CAPITAL LETTER E -> 'E' */
--	{ 0x26, 0x46 }, /* FULLWIDTH LATIN CAPITAL LETTER F -> 'F' */
--	{ 0x27, 0x47 }, /* FULLWIDTH LATIN CAPITAL LETTER G -> 'G' */
--	{ 0x28, 0x48 }, /* FULLWIDTH LATIN CAPITAL LETTER H -> 'H' */
--	{ 0x29, 0x49 }, /* FULLWIDTH LATIN CAPITAL LETTER I -> 'I' */
--	{ 0x2A, 0x4A }, /* FULLWIDTH LATIN CAPITAL LETTER J -> 'J' */
--	{ 0x2B, 0x4B }, /* FULLWIDTH LATIN CAPITAL LETTER K -> 'K' */
--	{ 0x2C, 0x4C }, /* FULLWIDTH LATIN CAPITAL LETTER L -> 'L' */
--	{ 0x2D, 0x4D }, /* FULLWIDTH LATIN CAPITAL LETTER M -> 'M' */
--	{ 0x2E, 0x4E }, /* FULLWIDTH LATIN CAPITAL LETTER N -> 'N' */
--	{ 0x2F, 0x4F }, /* FULLWIDTH LATIN CAPITAL LETTER O -> 'O' */
--	{ 0x30, 0x50 }, /* FULLWIDTH LATIN CAPITAL LETTER P -> 'P' */
--	{ 0x31, 0x51 }, /* FULLWIDTH LATIN CAPITAL LETTER Q -> 'Q' */
--	{ 0x32, 0x52 }, /* FULLWIDTH LATIN CAPITAL LETTER R -> 'R' */
--	{ 0x33, 0x53 }, /* FULLWIDTH LATIN CAPITAL LETTER S -> 'S' */
--	{ 0x34, 0x54 }, /* FULLWIDTH LATIN CAPITAL LETTER T -> 'T' */
--	{ 0x35, 0x55 }, /* FULLWIDTH LATIN CAPITAL LETTER U -> 'U' */
--	{ 0x36, 0x56 }, /* FULLWIDTH LATIN CAPITAL LETTER V -> 'V' */
--	{ 0x37, 0x57 }, /* FULLWIDTH LATIN CAPITAL LETTER W -> 'W' */
--	{ 0x38, 0x58 }, /* FULLWIDTH LATIN CAPITAL LETTER X -> 'X' */
--	{ 0x39, 0x59 }, /* FULLWIDTH LATIN CAPITAL LETTER Y -> 'Y' */
--	{ 0x3A, 0x5A }, /* FULLWIDTH LATIN CAPITAL LETTER Z -> 'Z' */
--	{ 0x3B, 0x5B }, /* FULLWIDTH LEFT SQUARE BRACKET -> '[' */
--	{ 0x3C, 0x5C }, /* FULLWIDTH REVERSE SOLIDUS -> '\' */
--	{ 0x3D, 0x5D }, /* FULLWIDTH RIGHT SQUARE BRACKET -> ']' */
--	{ 0x3E, 0x5E }, /* FULLWIDTH CIRCUMFLEX ACCENT -> '^' */
--	{ 0x3F, 0x5F }, /* FULLWIDTH LOW LINE -> '_' */
--	{ 0x40, 0x60 }, /* FULLWIDTH GRAVE ACCENT -> '`' */
--	{ 0x41, 0x61 }, /* FULLWIDTH LATIN SMALL LETTER A -> 'a' */
--	{ 0x42, 0x62 }, /* FULLWIDTH LATIN SMALL LETTER B -> 'b' */
--	{ 0x43, 0x63 }, /* FULLWIDTH LATIN SMALL LETTER C -> 'c' */
--	{ 0x44, 0x64 }, /* FULLWIDTH LATIN SMALL LETTER D -> 'd' */
--	{ 0x45, 0x65 }, /* FULLWIDTH LATIN SMALL LETTER E -> 'e' */
--	{ 0x46, 0x66 }, /* FULLWIDTH LATIN SMALL LETTER F -> 'f' */
--	{ 0x47, 0x67 }, /* FULLWIDTH LATIN SMALL LETTER G -> 'g' */
--	{ 0x48, 0x68 }, /* FULLWIDTH LATIN SMALL LETTER H -> 'h' */
--	{ 0x49, 0x69 }, /* FULLWIDTH LATIN SMALL LETTER I -> 'i' */
--	{ 0x4A, 0x6A }, /* FULLWIDTH LATIN SMALL LETTER J -> 'j' */
--	{ 0x4B, 0x6B }, /* FULLWIDTH LATIN SMALL LETTER K -> 'k' */
--	{ 0x4C, 0x6C }, /* FULLWIDTH LATIN SMALL LETTER L -> 'l' */
--	{ 0x4D, 0x6D }, /* FULLWIDTH LATIN SMALL LETTER M -> 'm' */
--	{ 0x4E, 0x6E }, /* FULLWIDTH LATIN SMALL LETTER N -> 'n' */
--	{ 0x4F, 0x6F }, /* FULLWIDTH LATIN SMALL LETTER O -> 'o' */
--	{ 0x50, 0x70 }, /* FULLWIDTH LATIN SMALL LETTER P -> 'p' */
--	{ 0x51, 0x71 }, /* FULLWIDTH LATIN SMALL LETTER Q -> 'q' */
--	{ 0x52, 0x72 }, /* FULLWIDTH LATIN SMALL LETTER R -> 'r' */
--	{ 0x53, 0x73 }, /* FULLWIDTH LATIN SMALL LETTER S -> 's' */
--	{ 0x54, 0x74 }, /* FULLWIDTH LATIN SMALL LETTER T -> 't' */
--	{ 0x55, 0x75 }, /* FULLWIDTH LATIN SMALL LETTER U -> 'u' */
--	{ 0x56, 0x76 }, /* FULLWIDTH LATIN SMALL LETTER V -> 'v' */
--	{ 0x57, 0x77 }, /* FULLWIDTH LATIN SMALL LETTER W -> 'w' */
--	{ 0x58, 0x78 }, /* FULLWIDTH LATIN SMALL LETTER X -> 'x' */
--	{ 0x59, 0x79 }, /* FULLWIDTH LATIN SMALL LETTER Y -> 'y' */
--	{ 0x5A, 0x7A }, /* FULLWIDTH LATIN SMALL LETTER Z -> 'z' */
--	{ 0x5B, 0x7B }, /* FULLWIDTH LEFT CURLY BRACKET -> '{' */
--	{ 0x5C, 0x7C }, /* FULLWIDTH VERTICAL LINE -> '|' */
--	{ 0x5D, 0x7D }, /* FULLWIDTH RIGHT CURLY BRACKET -> '}' */
--	{ 0x5E, 0x7E }, /* FULLWIDTH TILDE -> '~' */
- 	{ 0x61, 0x2E }, /* HALFWIDTH IDEOGRAPHIC FULL STOP -> '.' */
- 	{ 0x62, 0x5B }, /* HALFWIDTH LEFT CORNER BRACKET -> '[' */
- 	{ 0x63, 0x5D }, /* HALFWIDTH RIGHT CORNER BRACKET -> ']' */
--- 
-2.49.0
+Yes, this was tricky.
 
+One other thing that makes me think this is correct.  If this is the 
+same underlying issue: 
+https://lore.kernel.org/xen-devel/Z_lJTyVipJJEpWg2@mail-itl/
+
+The failure is in the unlock:
+
+pvqspinlock: lock 0xffff8881029af110 has corrupted value 0x0!
+WARNING: CPU: 1 PID: 118 at kernel/locking/qspinlock_paravirt.h:504 
+__pv_queued_spin_unlock_slowpath+0xdc/0x120
+
+Which makes me think the req was fine entering wake_up(), and it's only 
+found to be corrupt on the way out.
+
+Regards,
+Jason
