@@ -1,263 +1,236 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA5B2147F8;
-	Wed,  7 May 2025 14:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746628366; cv=none; b=AwaQMYwUQimp4cN+04Bnj+UE8u/sJEV/cWBuZZOy0HD6vsV5DxbmETpYRmOTwBkMVKK9dT0B7T6cLfPpmvLIWWd/HRdtR8hrfztz855pmYpzfIIh9ywGPW0GZMJ+oGV8V7JfQZtGJ1qqx4+TwWQEXQ8NviD3v/AUBtk6Ul9YSTU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746628366; c=relaxed/simple;
-	bh=k8VxWdT15ZCGUBD08umgsWJWBsYRFN1feRspCzB3m3k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N0aFWzYDOHU07YAglqSmC5HgOpOYvwAz7aM5dYkKGWEQMVsmXsnq9GEUHtLkdonzDQjDCW33XhDH+bTCVj89opFFUiRbZlb/SDKU77YkrDNa3aTqpY0lrGR+Y0oTyBxxJm6Nn5LLheja4deTIRnaaXDUc56bFen/iQ1IvAAMIbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SLcmGi8b; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C50623;
+	Wed,  7 May 2025 14:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746628449; cv=fail; b=LZFrqyB13fT4QF/CeaUV4F5npUCAEayL6Ny1D94OTnFIMLRUq9Ikexwr049Zz3lEy3pPWQ8p4XODkrb453wxyyJ4V5jF/ecS2JQkOvHdWXtw3BwH6RONUqjgsWNsMDWizjR+Sh9CDnj8NYnND1AjT4TlGNt0nujukNDFuHi3Hc4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746628449; c=relaxed/simple;
+	bh=KF/xwZBDXGFDfXFLX+bKPwOjvdbkehqNzIpo+8NHVdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=pqVOTHws3OBQ6dM9QIYVgDJyeRVR8cYaQKzzOT7HzNfRcUE1iUdhFGpJqpq3C2kgt1fBQLmjAtdS1lnzHcnlobVLdgdAtDm2T/iCDsOoWcTK2VN27zqQdmdGUUSY+gQSZiLLakuo58aFkJWgSCwheHItDW+kvi3u7jrXt0wv97c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=WsjhIu6a; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=vjeScAUI; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SLcmGi8b"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54792K4t007062;
-	Wed, 7 May 2025 14:32:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=6NZBjr
-	aWg04a3F3U6UoqxbFTAm5n2ZxQNrJCvMcoBnI=; b=SLcmGi8botoVhF9MGmYvpT
-	7MDXgtLp8bGCHinPSM7vBDxrLShf8LMb3Dqd7a91BTNl97hXHjDZnatDk7UBmGvZ
-	eOJQM72mBejoSPCvtZkB5N5Bhej2/CGcRjpc4EHfOo941JLxInbJpoiWmgAeIODs
-	rJfC6NaWUPyz1jE+8XWRIp5o53tpYeHTX/d+/+Nl80msJtcUU8CUPKl98Y9Qw5AZ
-	qKEncxoLs1Fzzggz5dMkRWPCvJZgg1oamLYSd2FuWHD32JZjcLoiN1QFvK/tRwDU
-	9oCtoWxctR15SS0VzKYYjRpcX3k0NbOV3g6Ug38EPZQbfBqcSUJPrDSdIG5YS4tw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46fth8c4aj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 14:32:14 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 547ECkoV022517;
-	Wed, 7 May 2025 14:32:13 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46fth8c4ag-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 14:32:13 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 547CpC3r004218;
-	Wed, 7 May 2025 14:32:12 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46fjb25sjf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 14:32:12 +0000
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 547EW8Zh29753872
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 7 May 2025 14:32:09 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AE99A5805A;
-	Wed,  7 May 2025 14:32:11 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 848865805E;
-	Wed,  7 May 2025 14:32:05 +0000 (GMT)
-Received: from [9.61.241.123] (unknown [9.61.241.123])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  7 May 2025 14:32:05 +0000 (GMT)
-Message-ID: <363632bc-ce31-4a6d-8271-ecae6f6c2d0a@linux.ibm.com>
-Date: Wed, 7 May 2025 20:02:03 +0530
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WsjhIu6a";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="vjeScAUI"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 547EExIj019186;
+	Wed, 7 May 2025 14:33:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=JxAHbjOEoFVsXKngJN
+	uWdQkk4J2DsgIM1CULu0GrQp8=; b=WsjhIu6avmeUHpEGA4nBZU4oeZtMXedWD9
+	bXRgtBaQ9f5TpIaMxrZxvsUN1S8FSSI6o34G11M9Fe3OnQnY4dC8utl7rBdY8qPl
+	5iUqiB7mfeAiCGdlSyV6hpkcoSr+vpKYcpoG8qZTDJHyohc8al1Pc/U5NGwRwE26
+	/xH2Qy0wq7Q80QPflHd2fOXrocxmbaIIneWO/WTp1DyXdrgg0nJ6RCqs8TRMatjv
+	8OlYVV1fdYpwti9k0hDNkCv4vRPFUbajL1lRMCNzF9VieYgFvRY29fWdnUWG4bJU
+	/C9o+7j6iowEfJiTzEKAxHmtxj2kMpfK+mEM2BI7DnS5QFCO6r/g==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46g9448294-10
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 07 May 2025 14:33:14 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 547DEdcH036019;
+	Wed, 7 May 2025 14:27:41 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2041.outbound.protection.outlook.com [104.47.58.41])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46d9kag919-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 07 May 2025 14:27:41 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oc9O2fxE2I6U0UtBvl8kx7CQQJPmtR2sNdBggYu6SbyPc89ENDehz5eEAQ0L9ZNBHKrSA/7m7EvGfoB8L8zAe0fX70n4FNIE1An4oK8jxLDy6KokAUhLC0iDNZg1WZ50RsI/yYVPFD8XNC/Nl7dqfQZWiyJ6yUlcu1dRxCBhXaAHetvZhi6CiXQkoC+tL/pgJz7dND0b4Hw9zrgLqjXgI1ZPp4wyutU3oKorRqpEVKkeKBYzFJ4AMHFPTiqV41M16WeevbJt1OyQgVKWlnInw6qBJqF9pS2kxnOtykf4viHsuLePRZKATA5zy6BqNsNMzX2z1y+0kKGYYf0+3tVWPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JxAHbjOEoFVsXKngJNuWdQkk4J2DsgIM1CULu0GrQp8=;
+ b=ODJIH/xiBOh4iTm5+1TR4iYPjCWQCZymnfNc6rsWuecnfF7cibF3MFXgAEIiVH4IG/yWPdgKzC20V6mlbecPQAqZLsbYHzPCELvsmkJ4L5NMwl3WMkji6EVI4c1mB/t1335zfaG5nfo4Vse4QEhaZOFBoCvgO7mrc4GRdN1o3S8EYh1vnVMeYbGsYlsU4S5GkO6JUFXp3jb0uRo86s3EQX8UgX204PspgXaRSFF/QfiqNK51fQ2kHQ8Kd7FSeb9XRjBV+Dh4XTrjVNtpaaEhBovEod1kTUITyIhrunqvVp8KDZllbj6R95qwQm55d0DZj9rXRNcZN3L9y/FpsT3bpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JxAHbjOEoFVsXKngJNuWdQkk4J2DsgIM1CULu0GrQp8=;
+ b=vjeScAUIjwTtTCZjHA1UDpSqFAR1ZHoZrNJqmtlfA3Fh5qaH9XfsNk5mYsZv6p99alTbyZvGXJfSaBdQETd3A6MMlS9Ha+EEfrWPBMfxhfsOnRWgECy11x9+LHN/4Brttgr/wseNw7ltbc9LOVEd4vJQQmN0FE84wMYQHzLV8Vc=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by BLAPR10MB4979.namprd10.prod.outlook.com (2603:10b6:208:30d::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 7 May
+ 2025 14:27:38 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8699.022; Wed, 7 May 2025
+ 14:27:38 +0000
+Date: Wed, 7 May 2025 15:27:36 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-trace-kernel@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tursulin@ursulin.net>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v1 05/11] mm: convert VM_PFNMAP tracking to
+ pfnmap_track() + pfnmap_untrack()
+Message-ID: <5c8809f0-c6f9-4151-b075-937f29c5db22@lucifer.local>
+References: <20250425081715.1341199-1-david@redhat.com>
+ <20250425081715.1341199-6-david@redhat.com>
+ <b92e3a0d-b878-43cf-9b68-9f7c228e45fa@lucifer.local>
+ <7035fb14-c9f6-4281-9f65-b220aaa8f5c3@redhat.com>
+ <6fa60c1d-ccbe-4bf4-a572-39711ac379ee@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6fa60c1d-ccbe-4bf4-a572-39711ac379ee@redhat.com>
+X-ClientProxiedBy: LO4P123CA0189.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1a4::14) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] sched/numa: add statistics of numa balance task
- migration
-Content-Language: en-GB
-To: Chen Yu <yu.c.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc: mkoutny@suse.com, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-        Jonathan Corbet <corbet@lwn.net>, Mel Gorman <mgorman@suse.de>,
-        Michal Hocko <mhocko@kernel.org>, Muchun Song <muchun.song@linux.dev>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Shakeel Butt <shakeel.butt@linux.dev>,
-        "Chen, Tim C" <tim.c.chen@intel.com>, Aubrey Li <aubrey.li@intel.com>,
-        Libo Chen <libo.chen@oracle.com>,
-        K Prateek Nayak <kprateek.nayak@amd.com>,
-        Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
-        "Jain, Ayush"
- <ayushjai@amd.com>, cgroups@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Chen Yu <yu.chen.surf@foxmail.com>
-References: <cover.1746611892.git.yu.c.chen@intel.com>
-From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-In-Reply-To: <cover.1746611892.git.yu.c.chen@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 8HlXnsLWlB6qXxzfDmY_XnfrvLAgCWNd
-X-Proofpoint-ORIG-GUID: 2pmrzjyH8KKf9GP3Jq5PDuD73Gp3NIoY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDEzMyBTYWx0ZWRfX7sl4M65zR3sX m89ZBdpVkIiq9x25H/+3zgHzu0FrZsJLP8FKx1XSSh/XT6yuPJ7LFfYWLzRwd4iEsH65LfQjvKp cZbOcSACwGGtjb0p1mnfzI6d0wijK0+hkNQhEU+6MrsDnRJX22tmESZt35vXYOA6l5lrqNeOMNx
- 2xko7ixhyPSkPzvQ3sv+PbJpHV/A2aSXVLkvskOr9yJa65g5KpSDQzuZWJ5YJKwz7FspxiAXRhL WsTr+I4Pkri7ZwN56ZtO5u2ab/MGaEgBdpijUQc9JTVJXcXLg+gbLlAJQ9Tg2H90VI0D4IH8DxP yCcOu2m+HunJvUUM0jo9cToksq8k2ayX4of0vA+tSYAY0DsFOdPHmfkLoYdoaHxsPop4wxM2p9r
- nebNTK/q0qpgk22b+tenFz9vLI321mnDa0TRsZ4cB1hI+JR8qwdTF0I+izC7Q1HmBT3qsHTt
-X-Authority-Analysis: v=2.4 cv=KOlaDEFo c=1 sm=1 tr=0 ts=681b6eee cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=VnNF1IyMAAAA:8 a=zd2uoN0lAAAA:8 a=iox4zFpeAAAA:8
- a=yPCof4ZbAAAA:8 a=IN_1ItaQYsxyJibhnwMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=WzC6qhA0u3u7Ye7llzcV:22
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|BLAPR10MB4979:EE_
+X-MS-Office365-Filtering-Correlation-Id: a2465abf-f476-4a83-e38f-08dd8d73519c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?jBrP2r1fyxjQyjTyhR/PpUgGp55LWPle1ZiOcUscJeIdv61JuYE3o5AWNBMz?=
+ =?us-ascii?Q?uKKgssNf2wDxcI74hUSldOk+vDcveRsH75PQbDWRKZr1j3A+HvlmJ0P1ki92?=
+ =?us-ascii?Q?w6MnWCav6IezNWx2tlETKhKPKE38l/qa2C6gpq/W7vn6n/37/jGPFF5UrSWF?=
+ =?us-ascii?Q?w28BxaFA0vDvniMQdTqnJ0Bhcd+W8Zx4twixSEAGCF+gwF00lM5DRWukG9iN?=
+ =?us-ascii?Q?S5BVsAyoNNycPv0lv5GFnoodxt6Gu7o/NAQWs6VtTNpz+LtFe4CRZKv0m6ey?=
+ =?us-ascii?Q?O+9jjOoU6AGd3JWD5R/OeBT/BeXsKmfb+LQYgFH4KW8aX6CENwEfftwehuLP?=
+ =?us-ascii?Q?qfM8WxoKbmGlKVAe3SJu9a2UbSf8rAL3p7u7puG29GpiCFkhufTGffyySO5C?=
+ =?us-ascii?Q?1WSoaW9YZwzH3I9Dn+vG2WY+OwuMUIFc7+2WK0g65NobksQxzmfI4A0VgwT1?=
+ =?us-ascii?Q?ONPu34n2Nauj/IdgPE7Rl/ItTgAMACUq2kfmy0l9yCbupvIdfIOajrOlW7Wj?=
+ =?us-ascii?Q?J22NXtN31bUjT6PGeFuiYF0lNkLz1iP2YZKgOlJVnJrdhwJBKXXr6DOWBH+r?=
+ =?us-ascii?Q?QpP7l0Kol/mtwYJyYbNal8MTBgbRbSaGgvZeogqDEkEpm8GuUjaJQP/BmR7d?=
+ =?us-ascii?Q?SavEMASbJwotoalTvC3MPbR8vdnM++paxrMEO4Kew6MzC6DtdgRzHm7ry0IV?=
+ =?us-ascii?Q?stGGLsRdadsdH/Bh5BoNGtlJjxdr61SBSttyeA3LQKvCmiddJuUf2cntm4F/?=
+ =?us-ascii?Q?WfilYEQu4nefYs1ln1YdJJ5LkhyP/KbnIfvlrwYWbqK9kC5vXC654toimLy5?=
+ =?us-ascii?Q?0gVDYyvRFrFDfdcL0SfdBORhf7nAYNXeJw/9Cp3CPHwKdsyNxPR10A9uWYv4?=
+ =?us-ascii?Q?+LhZjS4d5Hu3naZFM/MVyPsIBqgnbORQOjxA0zorUj+vgjAKWc3c1HBg7W9a?=
+ =?us-ascii?Q?70Olk7RGH2OgaAXfIrlP/xtzIwfh329SPUJVJUiYQGuv3fhP1V4AlAvDiVa9?=
+ =?us-ascii?Q?hfk8GnooNcRHKDNQ+VZ+CXwZRsSqG5WZgJEOVs2zQ4Plv9CYXlMtkSszTsvz?=
+ =?us-ascii?Q?7L8KshLzIaOTnEnzUWv1X96Qhn9b1UorQYnxyvbUsDp53dTw4B5/sl820xbO?=
+ =?us-ascii?Q?ZANfVRErIfw51qPv/bxcc0jC1Uu3wTGFsMPcpJAexSCSY3qWl3MR5ckzlYI+?=
+ =?us-ascii?Q?i4zyTja6aiQy0RODNsihzanVbgctavM2/Dsj+3voFm0tjHq26Jx1JMo6IVsx?=
+ =?us-ascii?Q?EWapHwNX1MVQSNcRZOgbHz33fmuakxZyhPYNUZMNPrv42OO7gWHGUvb2mCQ7?=
+ =?us-ascii?Q?Hoj58l5OQqyOJwRXXRhDaBNG8mQ6UqUXJPiHTaaYa56gfi+3wje9N6etFGwD?=
+ =?us-ascii?Q?itXKyLh1JhM4UiPbhFEE5Pm6+rxArjV+D2bR5HJzeuqS9f6ntePwlG4nvyuV?=
+ =?us-ascii?Q?QHbThKsHb7w=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?KqA2KWbsPKJn9thWsLvz7CJ7BirRx8ZZPaTX3KFAN4EflWH77qtYvI3TmbEp?=
+ =?us-ascii?Q?m3DnHlWYd3Ig56HcJDgMzv4dBQYLxHLDI3PWHKt2JkrUYgI9g+v/MYOTfj6E?=
+ =?us-ascii?Q?po7EJaSKs1umO5ebkA46untfkEiX2g6w+mOy5Ilj+RM/UWjZa+9N4Qu4F6s9?=
+ =?us-ascii?Q?R49ksvlTFyh1/aI4j7Hk+LgvT9ALbVI9XrtgwxR6ebmdfd+kk9WfW9HD5Pnz?=
+ =?us-ascii?Q?XGhYpRP5nGuaTyIOmw5lRYYv4z3QHojRpJelXFDJVOUco0rvWCRinIjbkYba?=
+ =?us-ascii?Q?0F7SAjPqspgD/5Cr4eh/WyynU+wBaBpqwWMeon8VAfYa51koMn7aBJcm/DQO?=
+ =?us-ascii?Q?HbTl5MkvnkdVsYPwAJkG+8LlOanOup/osNN55wv/kVpKzCWRve/J/H7PCh8J?=
+ =?us-ascii?Q?dC1+taWxilow7chshH4EJYDjUkC0z6RCIR9j1Dtw8FwxULzE5OoPJVmzvHKQ?=
+ =?us-ascii?Q?6EihFZRY7kSCOKiUJcrbodWSR7iZyKhhauhnjRfajjbfSr4WNrGVr/l4tcY9?=
+ =?us-ascii?Q?7NA5j0DYc0+/R4nKjrOJQz84k5CIgbxMb4ajGYditD3RwlS53bD1WGYKSFei?=
+ =?us-ascii?Q?vWOs3q2mNhOJ0KibFuVAqKiu+kbeZ5wRFhuoR21MR7oUxQ+1McUaC0f/dui6?=
+ =?us-ascii?Q?4LXIphOUIqd8zT7FpdI80Aiq0DoAF4OS2JmOcNbp7h0bjSkszDkyuuAR+Blm?=
+ =?us-ascii?Q?MxqrPzp2Ezz6wxQERQhYeVeTY8bYUS7/Xbxj1TjSpkGFsf5a8i4oRS9FHSCK?=
+ =?us-ascii?Q?Idc7sivqpogHJZ8Sx+YnYl3qePgK6qkf3+/eyVP+qAB5RiWhBoRS+nsn5BCJ?=
+ =?us-ascii?Q?p4+SCwy3m2BZykfOVBoYIeblZnkCYYDBggBELd5RDxs1FMPKujZ5HtPQSX+G?=
+ =?us-ascii?Q?Klk6EtErE2C9FpjL2WaR2M8YGH4fzXfTiCvld+4xgxp4ut8QvzaQzc7hovBa?=
+ =?us-ascii?Q?5d87Uv3kPFbdx4T92KQuo3uCSPcbLDDU/p+G0VkQuc+yK6uXjXLUaHGLX8wU?=
+ =?us-ascii?Q?DooM/c/hNkdZxf+34dHgGeq7uy1QWL+8tYi8UU++Psm2UMv02L0pDhTvYJHy?=
+ =?us-ascii?Q?8mmmWFWaq0yEkJHAJwtM7OHAoJ3FpssyQx50Np8YxIGszeajeyxGk7A8a1TY?=
+ =?us-ascii?Q?+Aulz5dVaxoTIgL1JgZXIudZcvQhn4dolMl41OUjK3BLb60wu9OHuNiyS7K7?=
+ =?us-ascii?Q?HVtIWtpu1qlD/4E/eQiZlYEtu7aJZzEHdwzPnLXpa0/PFE+Ah/ETEcaa9UDo?=
+ =?us-ascii?Q?0Lwh9VFN00c3XCeVPMkLZinY5sJpNWS+sbYICGm1K0TXzu+wv7Npe66y0RxQ?=
+ =?us-ascii?Q?QSf4l60/N14+u//U9t980fIdaFRG7KDtA/CQy/ner7Im+T4iXxrcvMhTJIWQ?=
+ =?us-ascii?Q?1oFEP7jy9JRug0WlvX44byejfLJnLp1FNzIDrF1JmQQtKteE9MydV+fLMfaQ?=
+ =?us-ascii?Q?d8x6QfuKh2+i6OdfmQmNYgcsOqYMK4NCxXRb4z+WqhIWASYIZWxf8uemnbKJ?=
+ =?us-ascii?Q?vTuFiJTO//Iv7y0JSnOKrPKnA7IVqtMBT1fm+QR+7E2jpKuhnEuw4ZuzmFlR?=
+ =?us-ascii?Q?gtsfP/TdbrlpbP5oHTwrnyK/egwqeJefzhrG1CZYNgzQCb8NGnxooa2nGhiX?=
+ =?us-ascii?Q?/Q=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	Tz4C5zrs5t/6o/JIyy6h9rmjQlncqQu1wsyQHt968SRLuokzNUFvpK8HudvpweIiJA+diNE/b0f6uSn+Qvn5qnQGyFo+JTmPm97basIPpnsxS8nnK7jloX05Ln38s41lipW/6mbTyeET0otBjMr12pClDdXlfAXIpXQS9PIGQmbRAhdMZR7R91/PWPcHVLnCTy78EsrymcOTThEQrjdEzlspxrrW16TcdbE0cK4qoH4lCN2thh8G0Z7pprSTbx+L404ywh4phPbxyTlbe0gsaN+tnNKd7VKf0AScuVsWZO9TwkUP/PVmSQV9X9SvUDnXxj2GW6uuHoeRGrFMhjul9mO7U6LPomXENDJSoqvd19pVVzjxacogl8tIj02WCapOuzkvinWaGfVtHCL2SL9hO8rbJO33/4cQ5lGx54eV9FbrNuOlsafquohNzAymmnTHWyKw+NZSqFWxpZrKzURgdL2IqNZnlmiX+/nIpAAWOtX6CBAUALsViZ2POlEwhoJrEUm9TiOfhn5XgeCtSAP5YTRhY2VZnHhqaYonfvurLjhE9hsCSb6G57rap2e8aanWiYIVjbkiun6sTx4zPk4XKLMYPeftjEGNDQlk6Ry3zg4=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a2465abf-f476-4a83-e38f-08dd8d73519c
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 14:27:38.7439
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yGZEmIXujVprgBoQbK7Nvm791/7o4plWIWHL5lRiaYB55RFMxx6S+FHBV5Kl5JriYnJSTYIsK6+K7GQoZwBmJBTTZI3ernyfM+zxlhUfUiw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB4979
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-07_04,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- bulkscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
- mlxlogscore=999 clxscore=1015 spamscore=0 lowpriorityscore=0 phishscore=0
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505070133
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ malwarescore=0 spamscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2504070000 definitions=main-2505070135
+X-Proofpoint-GUID: jihUFgeo0rhGvInNPcI84Zdc7NuRRJVy
+X-Proofpoint-ORIG-GUID: jihUFgeo0rhGvInNPcI84Zdc7NuRRJVy
+X-Authority-Analysis: v=2.4 cv=esDfzppX c=1 sm=1 tr=0 ts=681b6f2a b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=h_XL6v5M2B3L0u4WpLsA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDEzNyBTYWx0ZWRfXzh+12hkeHiEB WhBZc3lg8E1Rx59aC41w5WP81g8bi7ddNIdAYPfUFG0m6Q9DlgdSU9fnQ8lge3KYARZ6F/vuIMr mOT2tSnxxMDFK5I/aEuoK7d5Zztsh/i/Its0hMF4jmTl4zS/RJoL5mkYmDPVGqVsWdAar1U7Dee
+ zyBYqQXAKhW8JRWtyMb3dIDu/I5XRH0FuelYSM/Q8X1uBL8roQJTIybC7dCbYVGlV8xJHjjIenq wnHgvJARirS0RaWJOxr09OVnab5RM5FUy85T0Bpt5QAuTzcPrz40Fo8nAzfibpd98ReLk0IDkqr YZdzOAmzJGTKWYWMNZdWqPuyAZUjg9bac1VXJYdLMHD2qmcC3q7LFCMkK3hDHnDK9lN8p9vs8xv
+ nruPjn3+M4+unD9xKYOLplyBoK18Xj4VQMxdOxcFWtxHgeAaQAsKiJcSJ24arMWuiEt5q+ZT
 
-Hello Chenyu,
-
-
-On 07/05/25 4:44 pm, Chen Yu wrote:
-> Introducing the task migration and swap statistics in the following places:
-> /sys/fs/cgroup/{GROUP}/memory.stat
-> /proc/{PID}/sched
-> /proc/vmstat
+On Wed, May 07, 2025 at 03:25:42PM +0200, David Hildenbrand wrote:
+> > >
+> > > Obviously my series will break this but should be _fairly_ trivial to
+> > > update.
+> > >
+> > > You will however have to make sure to update tools/testing/vma/* to handle
+> > > the new functions in userland testing (they need to be stubbed otu).
 >
-> These statistics facilitate a rapid evaluation of the performance and resource
-> utilization of the target workload.
+> Hmm, seems to compile. I guess, because we won't have
+> "__HAVE_PFNMAP_TRACKING" defined in the test environment, so
+> the existing stubs in there already seem to do the trick.
 >
-> Patch 1 is a fix from Libo to avoid task swapping for kernel threads,
-> because Numa balance only cares about the user pages via VMA.
 >
-> Patch 2 is the major change to expose the statistics of task migration and
-> swapping in corresponding files.
->
-> The reason to fold patch 1 and patch 2 into 1 patch set is that patch 1 is
-> necessary for patch 2 to avoid accessing a NULL mm_struct from a kernel
-> thread, which causes NULL pointer exception.
->
-> The Tested-by and Acked-by tags are preserved, because these tags are provided
-> in version 1 which has the p->mm check.
-
-I see below tags from version 1 are missing. I think, its contridicting 
-to the above line. Please correct me, If I am wrong.
-
-
-Tested-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-
-Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
-
->
-> Previous version:
-> v3:
-> https://lore.kernel.org/lkml/20250430103623.3349842-1-yu.c.chen@intel.com/
-> v2:
-> https://lore.kernel.org/lkml/20250408101444.192519-1-yu.c.chen@intel.com/
-> v1:
-> https://lore.kernel.org/lkml/20250402010611.3204674-1-yu.c.chen@intel.com/
->
-> Chen Yu (1):
->    sched/numa: add statistics of numa balance task migration
->
-> Libo Chen (1):
->    sched/numa: fix task swap by skipping kernel threads
->
->   Documentation/admin-guide/cgroup-v2.rst | 6 ++++++
->   include/linux/sched.h                   | 4 ++++
->   include/linux/vm_event_item.h           | 2 ++
->   kernel/sched/core.c                     | 9 +++++++--
->   kernel/sched/debug.c                    | 4 ++++
->   kernel/sched/fair.c                     | 3 ++-
->   mm/memcontrol.c                         | 2 ++
->   mm/vmstat.c                             | 2 ++
->   8 files changed, 29 insertions(+), 3 deletions(-)
+> +#else
+> +static inline int vma_pfnmap_track_ctx_dup(struct vm_area_struct *orig,
+> +              struct vm_area_struct *new)
+> +{
+> +      return 0;
+>  }
+> +static inline void vma_pfnmap_track_ctx_release(struct vm_area_struct *vma)
+> +{
+> +}
+> +#endif
 >
 
-For some reason, I am not able to apply this patch on top of 
-next-20250506. I see patch002 fails to apply. Please find the errors below.
+OK cool! Then we're good :>)
 
-
-Also, I see tags are changed. Specially Tested-by
-
-
-Errors:
-
-
-b4 am cover.1746611892.git.yu.c.chen@intel.com
-Grabbing thread from 
-lore.kernel.org/all/cover.1746611892.git.yu.c.chen@intel.com/t.mbox.gz
-Analyzing 3 messages in the thread
-Looking for additional code-review trailers on lore.kernel.org
-Analyzing 0 code-review messages
-Checking attestation on all messages, may take a moment...
----
-   ✓ [PATCH v4 1/2] sched/numa: fix task swap by skipping kernel threads
-   ✓ [PATCH v4 2/2] sched/numa: add statistics of numa balance task 
-migration
-   ---
-   ✓ Signed: DKIM/intel.com
----
-Total patches: 2
----
-Cover: 
-./v4_20250507_yu_c_chen_sched_numa_add_statistics_of_numa_balance_task_migration.cover
-  Link: https://lore.kernel.org/r/cover.1746611892.git.yu.c.chen@intel.com
-  Base: not specified
-        git am 
-./v4_20250507_yu_c_chen_sched_numa_add_statistics_of_numa_balance_task_migration.mbx
-
-# git am -i 
-v4_20250507_yu_c_chen_sched_numa_add_statistics_of_numa_balance_task_migration.mbx
-Commit Body is:
---------------------------
-sched/numa: fix task swap by skipping kernel threads
-
-Task swapping is triggered when there are no idle CPUs in
-task A's preferred node. In this case, the NUMA load balancer
-chooses a task B on A's preferred node and swaps B with A. This
-helps improve NUMA locality without introducing load imbalance
-between nodes.
-
-In the current implementation, B's NUMA node preference is not
-mandatory, and it aims not to increase load imbalance. That is
-to say, a kernel thread might be chosen as B. However, kernel
-threads are not supposed to be covered by NUMA balancing because
-NUMA balancing only considers user pages via VMAs.
-
-Fix this by not considering kernel threads as swap targets in
-task_numa_compare(). This can be extended beyond kernel threads
-in the future by checking if a swap candidate has a valid NUMA
-preference through checking the candidate's numa_preferred_nid
-and numa_faults. For now, keep the code simple.
-
-Suggested-by: Michal Koutny <mkoutny@suse.com>
-Tested-by: Ayush Jain <Ayush.jain3@amd.com>
-Signed-off-by: Libo Chen <libo.chen@oracle.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
---------------------------
-Apply? [y]es/[n]o/[e]dit/[v]iew patch/[a]ccept all: a
-Applying: sched/numa: fix task swap by skipping kernel threads
-Applying: sched/numa: add statistics of numa balance task migration
-error: patch failed: Documentation/admin-guide/cgroup-v2.rst:1670
-error: Documentation/admin-guide/cgroup-v2.rst: patch does not apply
-error: patch failed: include/linux/sched.h:549
-error: include/linux/sched.h: patch does not apply
-error: patch failed: include/linux/vm_event_item.h:66
-error: include/linux/vm_event_item.h: patch does not apply
-error: patch failed: kernel/sched/core.c:3352
-error: kernel/sched/core.c: patch does not apply
-error: patch failed: kernel/sched/debug.c:1206
-error: kernel/sched/debug.c: patch does not apply
-error: patch failed: mm/memcontrol.c:463
-error: mm/memcontrol.c: patch does not apply
-error: patch failed: mm/vmstat.c:1347
-error: mm/vmstat.c: patch does not apply
-Patch failed at 0002 sched/numa: add statistics of numa balance task 
-migration
-
-
-
-Am I missing anything? Please suggest.
-
-
-Regards,
-
-Venkat.
-
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
