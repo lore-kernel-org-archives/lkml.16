@@ -1,174 +1,380 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA5C28E59C;
-	Wed,  7 May 2025 19:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0D620C029;
+	Wed,  7 May 2025 19:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746647705; cv=none; b=kDIP3jtzdiO7kyskiSfIBqk6VDgVu3B+U+WeMNprOWzIva+LRGByg6W2XBv4nIav1EQCAiQyI05pGREuFLHpqwh5WrwsTaDPz2BZpTqGIhNx7NkZPQFj/a1+JcIAWFhht5j3tzQ+JVs6hnvUq4FSXpdEU4LKUIGPw2a2L9dT55M=
+	t=1746647791; cv=none; b=d+c+nfHH3odJ3ddubknKXL58nRbira0eaO0MVy3mAeg7wg9YsgsKfqGDXgh7PVTqdFQ+Qt1Rnb38u4er1iGoXeosr9u4+3AI+lRcl3NE7LU30I4YSFctgraL71u5P8rj5FLgkX0Baa2BCBwvpezV9JozParTbRY7xXZDtGpHi/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746647705; c=relaxed/simple;
-	bh=rPyZzqsMRMqtnqdmdnjavXkrIbpF8/qLDdeqsOJ9Ios=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HRrzKFlGvw6vH6nZKQRt7Kam1e2Qv0iphu71kweoBEtKcEFwSjxGTnbc8VeeHNrE89CIU5i7T6Ckc17eEd8pgAaa5W3ZzFsZ6wDTukU82WLl8vExvqpZ9hwLEyaHfYG48/2GLcTYWVhk4togI6r/zgEHrdBe4GC/u/vgu5xLBMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tldOHEht; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746647791; c=relaxed/simple;
+	bh=jP7cwJb7BQXpptavncYVB1y333BBlp7ZMaJKzFRSX8M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FUypl0IuamDUJ1nFRA5fOTinBYDbVM8NY4v87KAd3DW7dHlVU6Xwf/EV5j5t+2cFAmoeBkJTzhgXi9ZiiGXiAHiWu1kTMfPyU4q7O41tiLZAWq8yELm7D4zlm7ZMPNebtOkoHaz6TDIchbi/AcBYefSRci4tCbPs0N9SDDkXux0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LxGWozlx; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tldOHEht"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C45D0C4CEE2;
-	Wed,  7 May 2025 19:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746647705;
-	bh=rPyZzqsMRMqtnqdmdnjavXkrIbpF8/qLDdeqsOJ9Ios=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tldOHEhthjMki3eUjuhheaxEcBuzlj5cDaf9AK4eVn2lFYyiSMZEzt9CSx6VxqWUW
-	 +zwyNEUGEyawvkXVqh3rRK7PDfn9prDKTfGS5UcoWk425i0gTuGlnRIBlylI74S3k8
-	 uh98tdssW9lpqNZZ50oiLbh3UzXb/lLYxklSMxF80KdufATy2oytA3HrrKTgOBsn7D
-	 ztjVlTv5/bDRaOV8F4Ni36RkKXJ8FxBhNWxW1akNTK8YatcXJcHB/OKmB/v5WaPtQy
-	 176O2ZTvlsbr4HFRj6e3BvQVt6sdeJzMIPowkLI9pKtfz6RBC72mNHjqhEIBMw1WCM
-	 9oEUleD95ckaA==
-Date: Wed, 7 May 2025 20:54:54 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Eugen
- Hristev <eugen.hristev@linaro.org>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Trevor Gamblin
- <tgamblin@baylibre.com>
-Subject: Re: [PATCH v5 0/7] iio: introduce IIO_DECLARE_BUFFER_WITH_TS
-Message-ID: <20250507205454.56cbf6e2@jic23-huawei>
-In-Reply-To: <ec7c00c640b0b359bfd98d460d067aee64ca069f.camel@gmail.com>
-References: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-0-814b72b1cae3@baylibre.com>
-	<ec7c00c640b0b359bfd98d460d067aee64ca069f.camel@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LxGWozlx"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso212586f8f.1;
+        Wed, 07 May 2025 12:56:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746647788; x=1747252588; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=25rSMDMLx7blmHqby0vCgZmhAkbft50207hfiKZb/RM=;
+        b=LxGWozlxVIT5c84E/s073QbsERxHBZ/x+I82dcKKzfO8GTc6lA7uy/5wR4W3KtxlwO
+         CLX47c/dhZDLSlUQqGZSEiAsxbE4Et8104rBaTorShC0ti2YLI1w03Sd7s0h1jokOmce
+         f8jr4HgIqBRqqwohg6EPDm63zEuJt0B1QWrdDZeIeDtvyjBtyJgvA2XkhTJjssNc21QR
+         PNhkZOnDeXedMtlpKRUnalkgsv5RoA3wE03IgxK7hVNfEyKuj+xHJvYA7075INfNF5W2
+         yD0PcvKWpWM1L9XH8rXzXo+M2vk6szj3i9Iyt+bvgwSxaiF6mJUGf0UN4pGOQpO2pIKV
+         DY/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746647788; x=1747252588;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=25rSMDMLx7blmHqby0vCgZmhAkbft50207hfiKZb/RM=;
+        b=HF31IuvjMa+XaGJiLyXgEF+8nQp/GgomYCKVixpwTORGOkusO6KM3/QU0nOl97hWwR
+         HeDrCGFE0wxXqGQ1vMY8CcHojXTdfb0r8TTcnf2Jrqbq+9X/YzkbsCYQiNKK7H5EzmQr
+         ZItNSWFgZoOB+ISdrUPiXfxJ2n7MOPJj0fa7XTr6ctMOliaHgd3SAQ5LoMo32H8KVXIY
+         k6iWtKrAFAcppCgIWiLjDQ8UU7GyRdqEJltrgUUTU42330Gpxswk5aXemsxf3XFPKGMa
+         L/IZtyfxmaC9ftMqdXUqm1Bwjd+x421R4XTedbC9L9emMm47XeY6eW6trp0pJDspqSJd
+         U+4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVrOwSQ3/w5JkNW/TW943LCMIXU4jocmLGQe1T/PUDmdmzgBSsTZ5yJkrLUVz5TqzoviPzQlzQx0wMO@vger.kernel.org, AJvYcCXFe5lSDsv3n5xRxbcQYaxF5c0k05VeUX6h7954EE/LbxvQrES55gmVff+EPBeumktJOpKvI8qUfZ7gFC8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXwuPLVqN3JlbvRVfuTm53quLMMxSA73NS+Fl6zIRUtNdZnDJ8
+	IjpF/njt4LgFZHqjJNAopDRPa9DsOetQpmHtBxm4P+ks2C081Xze
+X-Gm-Gg: ASbGncvQ2Jo493JBlf3scZJBIniPe8MVRH0SZjP7YUVRxtGL7061Z9TRlWJZccxTNpc
+	HczkDWvtgnEcvq1wOelrcTFj7kH+qtxsukYjKoOU+OqvTrLGIR8BRbssdwarEnRw6VEdeAdK+Ot
+	0vPcyRCSnee/+MPrvWwtdKG1+8q2+RPyq+LthaUJ5Q0gRYMaZmbLCe8378+WlNFsdP36NUy14tZ
+	QU0NR4bUy3C8dR+PxybooUYk8437NfvrHFLwCm9cxTNIcscCrvDl8czPHNlc63JBg2aG3PgdRyZ
+	ZZYGH1MtrsRUvIMA0YqtAHzh7ShCcDcCDyOMJa2cmK0vbhd+Dw3PFw==
+X-Google-Smtp-Source: AGHT+IEWGVunRe1T+TMBgKQkGEPuCsjWQh9IifYPVQbjPao9tYBd3DmTHFoXcA2n5FJUeK60pB0IgA==
+X-Received: by 2002:a5d:5c84:0:b0:3a0:b8ba:849f with SMTP id ffacd0b85a97d-3a0b990852emr670708f8f.4.1746647787692;
+        Wed, 07 May 2025 12:56:27 -0700 (PDT)
+Received: from giga-mm.. ([2a02:1210:8608:9200:82ee:73ff:feb8:99e3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b170e7sm17468159f8f.86.2025.05.07.12.56.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 12:56:27 -0700 (PDT)
+From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+To: sophgo@lists.linux.dev,
+	linux-rtc@vger.kernel.org
+Cc: Jingbao Qiu <qiujingbao.dlmu@gmail.com>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-kernel@vger.kernel.org,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Subject: [PATCH v15] rtc: sophgo: add rtc support for Sophgo CV1800 SoC
+Date: Wed,  7 May 2025 21:56:20 +0200
+Message-ID: <20250507195626.502240-1-alexander.sverdlin@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, 07 May 2025 07:39:07 +0100
-Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
+From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
 
-> On Mon, 2025-05-05 at 11:31 -0500, David Lechner wrote:
-> > Creating a buffer of the proper size and correct alignment for use with
-> > iio_push_to_buffers_with_ts() is commonly used and not easy to get
-> > right (as seen by a number of recent fixes on the mailing list).
-> >=20
-> > In general, we prefer to use this pattern for creating such buffers:
-> >=20
-> > struct {
-> > =C2=A0=C2=A0=C2=A0 u16 data[2];
-> > =C2=A0=C2=A0=C2=A0 aligned_s64 timestamp;
-> > } buffer;
-> >=20
-> > However, there are many cases where a driver may have a large number of
-> > channels that can be optionally enabled or disabled in a scan or the
-> > driver might support a range of chips that have different numbers of
-> > channels or different storage sizes for the data. In these cases, the
-> > timestamp may not always be at the same place relative to the data. To
-> > handle these, we allocate a buffer large enough for the largest possible
-> > case and don't care exactly where the timestamp ends up in the buffer.
-> >=20
-> > For these cases, we propose to introduce new macros to make it easier
-> > it easier for both the authors to get it right and for readers of the
-> > code to not have to do all of the math to verify that it is correct.
-> >=20
-> > I have just included a few examples of drivers that can make use of this
-> > new macro, but there are dozens more.
-> >=20
-> > --- =20
->=20
-> LGTM
->=20
-> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+Implement the RTC driver for CV1800, which able to provide time alarm.
 
-Thanks,
+Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+---
+Changelog:
+v15:
+- the only patch in the series left
+- dropped changes to MAINTAINERS file
+v14:
+- https://lore.kernel.org/lkml/gztsdu5p4tzt7emlwiuc3z74f4tfgkclcyrl324prqzp6dqhhf@ezrdmmhvf2nm/T/
+- platform device name "cv1800-rtc" -> "cv1800b-rtc"
+v13:
+- Change in the Kconfig dependency caused by the move of the previous
+  patch from MFD into SOC
+v12:
+- added MAINTAINERS entry
+- depends on cv1800-rtcsys MFD driver
+- use syscon for regmap
+- get named clock from parent MFD
+- corresponding platform device is expected to be instantiated by MFD stub
+Changes since v10:
+- only start RTC on set_time;
+Changes since v9:
+- further simplified bitmask macros;
+- unconditional RTC start (rtc_enable_sec_counter()), otherwise
+didn't start on SG2000;
+- dropped ANA_CALIB modification (has been forgotten in v8 with
+the drop of SW calibration to switch to HW calibration);
+- successfully tested on SG2000;
 
-Still time for additional comments, but given where we are in the
-cycle I'm keen to get this at least undergoing build tests.
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-those build tests.
+ drivers/rtc/Kconfig      |  12 +++
+ drivers/rtc/Makefile     |   1 +
+ drivers/rtc/rtc-cv1800.c | 218 +++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 232 insertions(+)
+ create mode 100644 drivers/rtc/rtc-cv1800.c
 
-Thanks,
-
-Jonathan
-
->=20
-> > Changes in v5:
-> > - Add new patch to set minimum alignment to 8 for IIO_DMA_MINALIGN.
-> > - Adjust IIO_DECLARE_DMA_BUFFER_WITH_TS() macro for above change.
-> > - Drop one ad4695 patch that was already applied.
-> > - Link to v4:
-> > https://lore.kernel.org/r/20250428-iio-introduce-iio_declare_buffer_wit=
-h_ts-v4-0-6f7f6126f1cb@baylibre.com
-> >=20
-> > Changes in v4:
-> > - Dropped static_assert()s from the first patch.
-> > - Handle case when IIO_DMA_MINALIGN < sizeof(timestamp).
-> > - Added one more patch for ad4695 to rename a confusing macro.
-> > - Link to v3:
-> > https://lore.kernel.org/r/20250425-iio-introduce-iio_declare_buffer_wit=
-h_ts-v3-0-f12df1bff248@baylibre.com
-> >=20
-> > Changes in v3:
-> > - Fixed a few mistakes, style issues and incorporate other feedback (see
-> > =C2=A0 individual commit message changelogs for details).
-> > - Link to v2:
-> > https://lore.kernel.org/r/20250422-iio-introduce-iio_declare_buffer_wit=
-h_ts-v2-0-3fd36475c706@baylibre.com
-> >=20
-> > Changes in v2:
-> > - Add 2nd macro for case where we need DMA alignment.
-> > - Add new patch for ad4695 to convert buffer from u8 to u16 before
-> > =C2=A0 making use of the new macro.
-> > - Drop the bmp280 patch since it was determined to have a better
-> > =C2=A0 alternative not using these macros.
-> > - Add a few more examples to show the non-DMA case, both in a struct and
-> > =C2=A0 stack allocated.
-> > - Link to v1:
-> > https://lore.kernel.org/r/20250418-iio-introduce-iio_declare_buffer_wit=
-h_ts-v1-0-ee0c62a33a0f@baylibre.com
-> >=20
-> > ---
-> > David Lechner (7):
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: make IIO_DMA_MINALIGN minimum of 8 =
-bytes
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: introduce IIO_DECLARE_BUFFER_WITH_T=
-S macros
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad4695: use IIO_DECLARE_DMA_BU=
-FFER_WITH_TS
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad4695: rename AD4695_MAX_VIN_=
-CHANNELS
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad7380: use IIO_DECLARE_DMA_BU=
-FFER_WITH_TS
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: accel: sca3300: use IIO_DECLARE_BUF=
-FER_WITH_TS
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: at91-sama5d2: use IIO_DECLARE_=
-BUFFER_WITH_TS
-> >=20
-> > =C2=A0drivers/iio/accel/sca3300.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 18 ++--------------
-> > =C2=A0drivers/iio/adc/ad4695.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 | 11 +++++-----
-> > =C2=A0drivers/iio/adc/ad7380.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 3 +--
-> > =C2=A0drivers/iio/adc/at91-sama5d2_adc.c | 13 ++----------
-> > =C2=A0include/linux/iio/iio.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | 42 ++++++++++++++++++++++++++++++++++++++
-> > =C2=A05 files changed, 52 insertions(+), 35 deletions(-)
-> > ---
-> > base-commit: 7e9a82ab5b861d3c33c99a22c1245a5b262ee502
-> > change-id: 20250418-iio-introduce-iio_declare_buffer_with_ts-2f8773f7da=
-d6
-> >=20
-> > Best regards, =20
->=20
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 0bbbf778ecfa..46593103db11 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1395,6 +1395,18 @@ config RTC_DRV_ASM9260
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called rtc-asm9260.
+ 
++config RTC_DRV_CV1800
++	tristate "Sophgo CV1800 RTC"
++	depends on SOPHGO_CV1800_RTCSYS || COMPILE_TEST
++	select MFD_SYSCON
++	select REGMAP
++	help
++	  If you say yes here you get support the RTC driver for Sophgo CV1800
++	  series SoC.
++
++	  This driver can also be built as a module. If so, the module will be
++	  called rtc-cv1800.
++
+ config RTC_DRV_DIGICOLOR
+ 	tristate "Conexant Digicolor RTC"
+ 	depends on ARCH_DIGICOLOR || COMPILE_TEST
+diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+index 489b4ab07068..621b30a33dda 100644
+--- a/drivers/rtc/Makefile
++++ b/drivers/rtc/Makefile
+@@ -44,6 +44,7 @@ obj-$(CONFIG_RTC_DRV_CADENCE)	+= rtc-cadence.o
+ obj-$(CONFIG_RTC_DRV_CMOS)	+= rtc-cmos.o
+ obj-$(CONFIG_RTC_DRV_CPCAP)	+= rtc-cpcap.o
+ obj-$(CONFIG_RTC_DRV_CROS_EC)	+= rtc-cros-ec.o
++obj-$(CONFIG_RTC_DRV_CV1800)	+= rtc-cv1800.o
+ obj-$(CONFIG_RTC_DRV_DA9052)	+= rtc-da9052.o
+ obj-$(CONFIG_RTC_DRV_DA9055)	+= rtc-da9055.o
+ obj-$(CONFIG_RTC_DRV_DA9063)	+= rtc-da9063.o
+diff --git a/drivers/rtc/rtc-cv1800.c b/drivers/rtc/rtc-cv1800.c
+new file mode 100644
+index 000000000000..18bc542bbdb8
+--- /dev/null
++++ b/drivers/rtc/rtc-cv1800.c
+@@ -0,0 +1,218 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * rtc-cv1800.c: RTC driver for Sophgo cv1800 RTC
++ *
++ * Author: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
++ */
++
++#include <linux/clk.h>
++#include <linux/irq.h>
++#include <linux/kernel.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/rtc.h>
++
++#define SEC_PULSE_GEN          0x1004
++#define ALARM_TIME             0x1008
++#define ALARM_ENABLE           0x100C
++#define SET_SEC_CNTR_VAL       0x1010
++#define SET_SEC_CNTR_TRIG      0x1014
++#define SEC_CNTR_VAL           0x1018
++
++/*
++ * When in VDDBKUP domain, this MACRO register
++ * does not power down
++ */
++#define MACRO_RO_T             0x14A8
++#define MACRO_RG_SET_T         0x1498
++
++#define ALARM_ENABLE_MASK      BIT(0)
++#define SEL_SEC_PULSE          BIT(31)
++
++struct cv1800_rtc_priv {
++	struct rtc_device *rtc_dev;
++	struct regmap *rtc_map;
++	struct clk *clk;
++	int irq;
++};
++
++static bool cv1800_rtc_enabled(struct device *dev)
++{
++	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
++	u32 reg;
++
++	regmap_read(info->rtc_map, SEC_PULSE_GEN, &reg);
++
++	return (reg & SEL_SEC_PULSE) == 0;
++}
++
++static void cv1800_rtc_enable(struct device *dev)
++{
++	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
++
++	/* Sec pulse generated internally */
++	regmap_update_bits(info->rtc_map, SEC_PULSE_GEN, SEL_SEC_PULSE, 0);
++}
++
++static int cv1800_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
++{
++	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
++
++	regmap_write(info->rtc_map, ALARM_ENABLE, enabled);
++
++	return 0;
++}
++
++static int cv1800_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
++{
++	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
++	unsigned long alarm_time;
++
++	alarm_time = rtc_tm_to_time64(&alrm->time);
++
++	cv1800_rtc_alarm_irq_enable(dev, 0);
++
++	regmap_write(info->rtc_map, ALARM_TIME, alarm_time);
++
++	cv1800_rtc_alarm_irq_enable(dev, alrm->enabled);
++
++	return 0;
++}
++
++static int cv1800_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
++{
++	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
++	u32 enabled;
++	u32 time;
++
++	if (!cv1800_rtc_enabled(dev)) {
++		alarm->enabled = 0;
++		return 0;
++	}
++
++	regmap_read(info->rtc_map, ALARM_ENABLE, &enabled);
++
++	alarm->enabled = enabled & ALARM_ENABLE_MASK;
++
++	regmap_read(info->rtc_map, ALARM_TIME, &time);
++
++	rtc_time64_to_tm(time, &alarm->time);
++
++	return 0;
++}
++
++static int cv1800_rtc_read_time(struct device *dev, struct rtc_time *tm)
++{
++	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
++	u32 sec;
++
++	if (!cv1800_rtc_enabled(dev))
++		return -EINVAL;
++
++	regmap_read(info->rtc_map, SEC_CNTR_VAL, &sec);
++
++	rtc_time64_to_tm(sec, tm);
++
++	return 0;
++}
++
++static int cv1800_rtc_set_time(struct device *dev, struct rtc_time *tm)
++{
++	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
++	unsigned long sec;
++
++	sec = rtc_tm_to_time64(tm);
++
++	regmap_write(info->rtc_map, SET_SEC_CNTR_VAL, sec);
++	regmap_write(info->rtc_map, SET_SEC_CNTR_TRIG, 1);
++
++	regmap_write(info->rtc_map, MACRO_RG_SET_T, sec);
++
++	cv1800_rtc_enable(dev);
++
++	return 0;
++}
++
++static irqreturn_t cv1800_rtc_irq_handler(int irq, void *dev_id)
++{
++	struct cv1800_rtc_priv *info = dev_id;
++
++	rtc_update_irq(info->rtc_dev, 1, RTC_IRQF | RTC_AF);
++
++	regmap_write(info->rtc_map, ALARM_ENABLE, 0);
++
++	return IRQ_HANDLED;
++}
++
++static const struct rtc_class_ops cv1800_rtc_ops = {
++	.read_time = cv1800_rtc_read_time,
++	.set_time = cv1800_rtc_set_time,
++	.read_alarm = cv1800_rtc_read_alarm,
++	.set_alarm = cv1800_rtc_set_alarm,
++	.alarm_irq_enable = cv1800_rtc_alarm_irq_enable,
++};
++
++static int cv1800_rtc_probe(struct platform_device *pdev)
++{
++	struct cv1800_rtc_priv *rtc;
++	int ret;
++
++	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
++	if (!rtc)
++		return -ENOMEM;
++
++	rtc->rtc_map = device_node_to_regmap(pdev->dev.parent->of_node);
++	if (IS_ERR(rtc->rtc_map))
++		return dev_err_probe(&pdev->dev, PTR_ERR(rtc->rtc_map),
++				     "cannot get parent regmap\n");
++
++	rtc->irq = platform_get_irq(pdev, 0);
++	if (rtc->irq < 0)
++		return rtc->irq;
++
++	rtc->clk = devm_clk_get_enabled(pdev->dev.parent, "rtc");
++	if (IS_ERR(rtc->clk))
++		return dev_err_probe(&pdev->dev, PTR_ERR(rtc->clk),
++				     "rtc clk not found\n");
++
++	platform_set_drvdata(pdev, rtc);
++
++	device_init_wakeup(&pdev->dev, 1);
++
++	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(rtc->rtc_dev))
++		return PTR_ERR(rtc->rtc_dev);
++
++	rtc->rtc_dev->ops = &cv1800_rtc_ops;
++	rtc->rtc_dev->range_max = U32_MAX;
++
++	ret = devm_request_irq(&pdev->dev, rtc->irq, cv1800_rtc_irq_handler,
++			       IRQF_TRIGGER_HIGH, "rtc alarm", rtc);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret,
++				     "cannot register interrupt handler\n");
++
++	return devm_rtc_register_device(rtc->rtc_dev);
++}
++
++static const struct platform_device_id cv1800_rtc_id[] = {
++	{ .name = "cv1800b-rtc" },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(platform, cv1800_rtc_id);
++
++static struct platform_driver cv1800_rtc_driver = {
++	.driver = {
++		.name = "sophgo-cv1800-rtc",
++	},
++	.probe = cv1800_rtc_probe,
++	.id_table = cv1800_rtc_id,
++};
++
++module_platform_driver(cv1800_rtc_driver);
++MODULE_AUTHOR("Jingbao Qiu");
++MODULE_DESCRIPTION("Sophgo cv1800 RTC Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.48.1
 
