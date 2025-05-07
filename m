@@ -1,104 +1,114 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12122820D2;
-	Wed,  7 May 2025 13:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94EE725E809
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746623930; cv=none; b=Ar3sXRkon5ae6pAacoMLJwq236oobHm9FSNla9MrJnvlfhhZFUQLy04/zOmKGndN1QCj8XgVV8mUVT2vkBg1kdIlLGzfa83VDMDiDj88RJLfEBBcgAgpc2pbYsV32NsysoVyfmR9r3efoTc0t7lI+al/YCzF5+i5Ls3b7po3LvY=
+	t=1746623945; cv=none; b=dzp14JDf6jTazS/btD4kK44xxAoT+TYjCUAUK4KVg3KG4u5RhTIz5g0IsxSfu+nDX3y/fSsKSrHymCu9p/wZ9yK61m0TTizcZ0CSVinjVghBCJfSlTc0mWiOe8xV00nauLwc6gNt6S0Xqhx4yLW+wId5DBaSVdtEL5k5yoDVKjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746623930; c=relaxed/simple;
-	bh=5R0F1GGFzfTgOH/FF+ArtieoiEis+zmCQJM6z0vvjBE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=imoPlvWBfc7DnhiIAyaR7kJkPvXqw0UD8C5OV583ELzbbqkf3cGechOERPIhLxMBhN14wpcKgg34Hkz3Qo50voh7b9jWjBFcdGWF60liylWjXp8Qczb/P984BTzHFvWLB7Or1oAoVcBIoMVRj8sG5i7uqfQrG8oNAgcD8L8BkDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TVOcGfWy; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746623945; c=relaxed/simple;
+	bh=0aeeZzBAboUCL2dYAAmEo32zpolosp3HiSeGVBJnS+Q=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=kXfubhgoEZRtJ5pDf6d+NtHOFGLo1EfNCXrJ3/py6qta//HRLGEN+RxPVd3Pnq2RpXYQ7bva0FrLS2CagEjCQmYCezCTteORZyM5BumPg02K49oMGzqMuwNscDn3styivhXeSCAE5zda/JAAZ/3B7lsGhwFCN3G92AYigoi54vA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PysQpbFs; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TVOcGfWy"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad1a87d93f7so657176966b.0;
-        Wed, 07 May 2025 06:18:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PysQpbFs"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b0e5f28841dso4360822a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:19:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746623927; x=1747228727; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XG4gYw/os44VieuMBGo0LazKtq45QTUEHPt6CBsKz9g=;
-        b=TVOcGfWyE0k4UBl7fmRifZJoTRLFqxkDDqt2/X/Pnnqo5lcKPm/ZMysdv4VP7+BQUw
-         AisQkCyUwMBT4JYFIFNFjIyfQ/kTDdIUYBvDwGM3B+VJcX+bDzEXrmNleu9gUcRUqtLW
-         Rv50Q3rftb935wwIsC+o87035EHoETj4mj22yjUjzIiX5+GVwo8s3Yy+kEhHY50nhivm
-         U4QqxCFCh0WSi6c03tSakNsfNOUJtFSArB3J/t2Hs4Qbnr/+mB4mevX6FByPLQhTsyxq
-         MFZf6s9RbiBif8JRC2meB996THFLF6fqQFcGscx6+uOUt5Xq24udjXuH9UXymegOY3Rw
-         Iq2w==
+        d=google.com; s=20230601; t=1746623943; x=1747228743; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZiDDof4wiRjH13eU8HS600kti+qoQv7U6EC7ECLTvXQ=;
+        b=PysQpbFsLvNideaj9JwoHeW2LfCx1qvAp/bICsQVWkKz0xu2sxgPubKmKGhDW9ovFS
+         Z2OSc4RS/dsR5+p1S26Rq7gM9JExvc7PN6hXI0WPQkpRRtj7d/Z3FHRMwOWc+gU6lPU/
+         GaTSoqxEAMOb65Q8wSyXi11ao5ncXdqsshnASOi2LdG6nuwhic8QR/42dlzQBnsM2+1p
+         GQjUod/hJt7BAzn0zmd7X4UJ++WLTvlAu0FINp/4S85FZhPVfAmINHXlN2JLc4T+k5+2
+         VRB2U72Eg5Qj9H3raIiOOHaRHa3HNXd063tCDe9opJTzh42zl3NEo8jgeglexg89Vtcq
+         3c0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746623927; x=1747228727;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XG4gYw/os44VieuMBGo0LazKtq45QTUEHPt6CBsKz9g=;
-        b=k6zeT1JccjMhHS0tABhxY7Bq7a6F1tDA+fyL6hnqGcwDp6/ZKdH692JqrI4xUTJcVt
-         RacW/hHcepVOLrTUV7Dqd4dJzpN3GFe3yFS+YJNJS0FICWkhZUPTnLCuj3HP/1fTJjvc
-         BrpVWakCV+eKQ1GOe3ZL4fwN4fSBif1CkXkIQ1zgSB4VH/Qgtp+sqwnkqMidk6uaIt8z
-         2qxnoYJ1WbzYPK0a0r5hfDV89viSpUujLz5gGRtMeIblG9wz2krmWXyCHHnqREwPZowO
-         xZuV7RNml3LhsGhzpnjI0JJcswAilS41SVYPFFnAEK25B767UzpT0CUKFR/uG9Xu0MUg
-         tuKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQVAOQfuDYzwLj6lIpkYEcRo15fRuDs++fzX382ziZwY/jWjuhvBiTDsGdwvOBlP3ossmP1OHUTlCVgw==@vger.kernel.org, AJvYcCWbzuFK4QRZxRQicKidaBHYpRtNHergd2NArg5uFtXXA8DQr2Ot2lLcIu9072nvwIszSBTXuQ1LHKZy6Ro=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywu46zsl+XNaMGQ+lRwqVxhpjqsqfUHgVVLQhtK1rMUloTg/48W
-	PIRRUQLFtdWXQQS19+G79PHJEMIg97icEL2ZBdV58bXxJHKDQMD6a8RCOtsCWZFMRg==
-X-Gm-Gg: ASbGncsILlsNNzCXqvmiyp6orN4nglUI0atsC7pamv1O0bxCz67ON9GoSIwFAnvEFeM
-	MGqBE/zLqFjfrAL5LG40TkiTTAmyWhvebi3KCdd2rr2m5gDrT8TzdgivWuSDDU77S+qZ3VLiOvo
-	QqtQrAS9NUI6KiO5LERYTH4ljEtBFY9gFC/LlMMsGcQLmW5ITdZhvucIvB3uL8YP5o7uj1Btbbp
-	6ZNiPsSpJ969G/ZOomB2rVc0j/an3dr+B82JbEpZKZsIWQvv16PDrWVUXRwU3cMCNt9bZGg9YLy
-	CMdLQ3oqMfk77c91C3bpYJ3Mz++OC7zyqDb6P9Y=
-X-Google-Smtp-Source: AGHT+IGb2mTqtTr9/4na4ydOpBoJ20121LDJwcMxvmIv8RwYC/nsRM+pfVB6P8wstG0+WES23PVlCQ==
-X-Received: by 2002:a17:907:7fa7:b0:ac2:88d5:770b with SMTP id a640c23a62f3a-ad1e8c91ed4mr378798366b.25.1746623926666;
-        Wed, 07 May 2025 06:18:46 -0700 (PDT)
-Received: from localhost ([87.254.1.131])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ad189147375sm908159366b.12.2025.05.07.06.18.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 06:18:46 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Bernard Metzler <bmt@zurich.ibm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	linux-rdma@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] RDMA/siw: replace redundant ternary operator with just rv
-Date: Wed,  7 May 2025 14:18:34 +0100
-Message-ID: <20250507131834.253823-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1746623943; x=1747228743;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZiDDof4wiRjH13eU8HS600kti+qoQv7U6EC7ECLTvXQ=;
+        b=qsHI7P89qXVO3kg08N8IObjQLMvSk3M17tbNRfj42TGD7AMp3z3CLnFk3yayppQ2s5
+         jh6WiEUAgWaPbmpIFxhzzNPPWA4jb5C5aYm2GbSPFMEclp8xO2h31d8PAbn1BOvK7D2B
+         8oapLHC4wdEEgZtCmN63rIs7ChAnxTHFoYHhNIc4bralkvI3MIrUp9nUIHfACB39+lKB
+         JIkCGUmBHc/mnvUlc/nFJUgm+U9RyxehKJmo95JyEw+Fh46WWnrMu2IahnV4TdMg8TVD
+         V86xyKGNRKdU+xYP8EAh95LpxOdLviduhtRFNk4cyz7EEZQ2K2IKeEM9cI/9j4eZx//u
+         newg==
+X-Forwarded-Encrypted: i=1; AJvYcCXVXtD9atG4mYOEQ+AMcqOnSuGqdlfGL1b1ZW+YR4ZCPB5KiCD2mk/FtsTGCcvasLi8SVFVlrjnrnyBuUQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaCW4tJp8Wv8dEzHLs0BZ4132sUB39ttK1lasBmYSJvfT+Hgeb
+	osgR+TFfSTbAhNeu4kCFsa5K6dmZn6hU392HA/Sb67f6QdcU1l7u/M+iAwULXmy4s4M1SPBW0xi
+	TxQ==
+X-Google-Smtp-Source: AGHT+IG0pbnqCOzrdthF9M4ba5aUOwNn28h6yygWEFPEB7MG/opmaX+QYIEbz4HJ6A2roFeeeso4RABRwXI=
+X-Received: from pjbse11.prod.google.com ([2002:a17:90b:518b:b0:2fe:7f7a:74b2])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3e84:b0:2ff:5357:1c7f
+ with SMTP id 98e67ed59e1d1-30aac28b3bcmr4899205a91.30.1746623942825; Wed, 07
+ May 2025 06:19:02 -0700 (PDT)
+Date: Wed, 7 May 2025 06:19:01 -0700
+In-Reply-To: <aBsGNPvG75KspVmp@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250505180300.973137-1-seanjc@google.com> <aBnbBL8Db0rHXxFX@google.com>
+ <aBoZpr2HNPysavjd@google.com> <aBoc0MhlvO4hR03u@google.com>
+ <aBoxcOPWRWyFIgVE@google.com> <aBsGNPvG75KspVmp@google.com>
+Message-ID: <aBtc7Y8odYFGGLrt@google.com>
+Subject: Re: [PATCH v2] KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1
+ VM count transitions
+From: Sean Christopherson <seanjc@google.com>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Michael Larabel <Michael@michaellarabel.com>, Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="us-ascii"
 
-The use of the ternary operator on rv is redundant, rv is
-either the initialized value of 0 or a negative error return
-code, so it can never be greater than zero, and hence the
-zero assignment in ternary operator is redundant. Just return
-rv instead.
+On Wed, May 07, 2025, Yosry Ahmed wrote:
+> On Tue, May 06, 2025 at 08:57:36AM -0700, Sean Christopherson wrote:
+> > Sleepable spinlocks aside, the lockdep_assert_irqs_enabled() in
+> > smp_call_function_many_cond() already provides sufficient of coverage for that
+> > case.  And if code is using some other form of IPI communication *and* taking raw
+> > spinlocks, then I think it goes without saying that developers would need to be
+> > very, very careful.
+> 
+> I think we are not talking about the same thing, or I am
+> misunderstanding you. The lockdep_assert_irqs_enabled() assertion in
+> smp_call_function_many_cond() does not protect against this case AFAICT.
+> 
+> Basically imagine that a new code path is added that does:
+> 
+> 	spin_lock_irq(&srso_lock);
+> 	/* Some trivial logic, no IPI sending */
+> 	spin_unlock_irq(&srso_lock);
+> 
+> I believe spin_lock_irq() will disable IRQs (at least on some setups)
+> then spin on the lock.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/infiniband/sw/siw/siw_verbs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, because the most common use case for spin_lock_irq() is to prevent deadlock
+due to the lock being taken in IRQ context.
 
-diff --git a/drivers/infiniband/sw/siw/siw_verbs.c b/drivers/infiniband/sw/siw/siw_verbs.c
-index 7ce0035c54fa..2b2a7b8e93b0 100644
---- a/drivers/infiniband/sw/siw/siw_verbs.c
-+++ b/drivers/infiniband/sw/siw/siw_verbs.c
-@@ -1102,7 +1102,7 @@ int siw_post_receive(struct ib_qp *base_qp, const struct ib_recv_wr *wr,
- 		siw_dbg_qp(qp, "error %d\n", rv);
- 		*bad_wr = wr;
- 	}
--	return rv > 0 ? 0 : rv;
-+	return rv;
- }
- 
- int siw_destroy_cq(struct ib_cq *base_cq, struct ib_udata *udata)
--- 
-2.49.0
+> Now imagine svm_srso_vm_destroy() is already holding the lock and sends
+> the IPI from CPU 1, while CPU 2 is executing the above code with IRQs
+> already disabled and spinning on the lock.
+> 
+> This is the deadlock scenario I am talking about. The lockdep assertion
+> in smp_call_function_many_cond() doesn't help because IRQs are enabled
+> on CPU 1, the problem is that they are disabled on CPU 2.
+> 
+> Lockdep can detect this by keeping track of the fact that some code
+> paths acquire the lock with IRQs off while some code paths acquire the
+> lock and send IPIs, I think.
 
+I understand the scenario, I just don't see any meaningful risk in this case,
+which in turn means I don't see any reason to use an inferior lock type (for this
+particular case) to protect the count.  
+
+spin_lock_irq() isn't a tool that's used willy-nilly, and the usage of srso_lock
+is extremely limited.  If we manage to merge code that does spin_lock_irq(&srso_lock),
+you have my full permission to mock my ineptitude :-)
