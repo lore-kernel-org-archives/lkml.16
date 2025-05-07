@@ -1,116 +1,169 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from mail.tkos.co.il (golan.tkos.co.il [84.110.109.230])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47F57A13A
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 03:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474C81B422A;
+	Wed,  7 May 2025 03:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.110.109.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746589047; cv=none; b=ns86ujG4i2vtzaP8rTZY0Cbsjrcq5zN173WOAg7NxYBZBNEPtbkUC5/ku2vA+PHXoSURE6szgTidUyCRbvJ5KgX1T5QAZ/yK3rOVRDNbSYE5VGZhyGo5R4j5O2nt+g6e16dJ6r5SlBh3JVnq+sLOA+4w1xiscefv2vmncd08tPU=
+	t=1746589424; cv=none; b=c5EuSE6lV60Ho5QmV1Zpb9rI9xRUHbhGIzHDt9Qm+0FKZK6ohKf+uukXazD5PzgP7ESNgRbv7bwjkOLC8bhHpjXNqpPB28vibERK5qNuRg62PRhy1vKloDmagX5Bz2BSEg4z6zohD73y3O2pTQ0r+e9YeFmu/s11RNpzDIhwpdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746589047; c=relaxed/simple;
-	bh=Ii2HsbsJCi+o1eq0rP0UpxufBNOzNtLUmYan93+sP2g=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=EPiXPjMfEbutLwkYjdLxfOG8u96nNUA5rli/OQ+Zuqe9POWRJo4G4t/k9fZiZhtrOtXPdvhaFkJmi3i6B/PtaOs1YHzGkfw+B50sj8MO0OnSuhINce5Z5/baEwJeg11Z4VKo0BrmwG78E7WStRdk4zCjkqmswGeUYwjSANkgehA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=t8fcsH4n; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746589424; c=relaxed/simple;
+	bh=Aed/X3ndFGxW3Cv/Mmx0GvVxagOhwtAd9qDxrnSW1W4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=BdVImOzTIWSBDhjngv+gkBO0XTuoBh/2KV9EGY0Ko87GsInlOFJEEilPEVynW0Z0piu7//Ij/vSZd8LJy4f9oEyBwzuztPYhWaqeyONPNyn/u/tDzYv2q1XJzAiwZcPJz1WcNOoSOuFE5PEuQIml913zecefdM4yBPRNmBmuWX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il; spf=pass smtp.mailfrom=tkos.co.il; dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b=JA9vqH9d; arc=none smtp.client-ip=84.110.109.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tkos.co.il
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t8fcsH4n"
+	dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b="JA9vqH9d"
+Received: from localhost (unknown [10.0.8.2])
+	by mail.tkos.co.il (Postfix) with ESMTP id 0599A440758;
+	Wed,  7 May 2025 06:43:23 +0300 (IDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
+	s=default; t=1746589403;
+	bh=Aed/X3ndFGxW3Cv/Mmx0GvVxagOhwtAd9qDxrnSW1W4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=JA9vqH9dNiRJAb04g3xMN2FZ5MlRAPpYW6VFuRa1wUgBJsIkmEXj0eLdnPxVBKmOD
+	 rVHf0doxKFbF5OWm6tEOkwE8/ey9MbR0WSTG2+OGwG+CrImazH4hP04lIl/qqJcDaR
+	 DiU3EhDlo/7ffReeP8FQ+8Uq1jds6Pidv3tBZcQr5RkqinKG67BZC8Wn/zjNpmHN1U
+	 OiqPtp4Os8IB1GYbDnsciGtCfv8tvKzoGV1OWr216MDbExxKfi5qesQrUnZ/cZyJ98
+	 4L8d+ikEwi3aWxGmA20iJBPKVRddYoJ7XYHeIRri9Iz2mfKbnR/Jn5vGYNKw5q+Ewe
+	 8vcHZUlVfoy4Q==
+From: Baruch Siach <baruch@tkos.co.il>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,  Jiri Slaby
+ <jirislaby@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor
+ Dooley <conor+dt@kernel.org>,  linux-kernel@vger.kernel.org,
+  linux-serial@vger.kernel.org,  devicetree@vger.kernel.org,
+  linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: serial: Convert cnxt,cx92755-usart to DT
+ schema
+In-Reply-To: <20250506220025.2545995-1-robh@kernel.org> (Rob Herring's message
+	of "Tue, 6 May 2025 17:00:24 -0500")
+References: <20250506220025.2545995-1-robh@kernel.org>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Wed, 07 May 2025 06:43:30 +0300
+Message-ID: <878qn9ytjx.fsf@tarshish>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746589043;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IOssk0YASQZK9VWKknBMj0km7yOvtPSfKPB8Te1c8xg=;
-	b=t8fcsH4ncz3hp4xC8IN8nYQxChcrR/9K7LXfLj5pSoCyMwqDfK0zkrDcD4dgBhDdFU32+V
-	OYLw8RFVkTH4rqkZ6eVerBlUINPBNGJJULrzKvPye4zPmVJCx8mSdHFx5UJUFv4ICUDMfs
-	ka7pWGMieySXEoO4RrQPC7xViWVdBoY=
-Date: Wed, 07 May 2025 03:37:21 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <9c311d9944fa57cec75e06cde94496d782fe4980@linux.dev>
-TLS-Required: No
-Subject: Re: [RESEND PATCH bpf-next v4 1/2] bpf, sockmap: Introduce tracing
- capability for sockmap
-To: "Martin KaFai Lau" <martin.lau@linux.dev>, "Jakub Sitnicki"
- <jakub@cloudflare.com>, "John Fastabend" <john.fastabend@gmail.com>
-Cc: "Cong Wang" <xiyou.wangcong@gmail.com>, "Steven Rostedt"
- <rostedt@goodmis.org>, "Alexei Starovoitov" <ast@kernel.org>, "Daniel
- Borkmann" <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>,
- "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>,
- "Yonghong Song" <yonghong.song@linux.dev>, "KP Singh"
- <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo"
- <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>, "Masami Hiramatsu"
- <mhiramat@kernel.org>, "Mathieu Desnoyers"
- <mathieu.desnoyers@efficios.com>, "David S. Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Simon
- Horman" <horms@kernel.org>, "Jesper Dangaard Brouer" <hawk@kernel.org>,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <b776fa07-de4b-44be-ae68-8bc8c362ea81@linux.dev>
-References: <20250506025131.136929-1-jiayuan.chen@linux.dev>
- <b776fa07-de4b-44be-ae68-8bc8c362ea81@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
-May 7, 2025 at 04:24, "Martin KaFai Lau" <martin.lau@linux.dev> wrote:
+Hi Rob,
 
->=20
->=20On 5/5/25 7:51 PM, Jiayuan Chen wrote:
->=20
->=20>=20
->=20> Sockmap has the same high-performance forwarding capability as XDP,=
- but
-> >=20
->=20>  operates at Layer 7.
-> >=20
->=20>  Introduce tracing capability for sockmap, to trace the execution r=
-esults
-> >=20
->=20>  of BPF programs without modifying the programs themselves, similar=
- to
-> >=20
->=20>  the existing trace_xdp_redirect{_map}.
-> >=20
->=20
-> There were advancements in bpf tracing since the trace_xdp_xxx addition=
-s.
->=20
->=20Have you considered the fexit bpf prog and why it is not sufficient ?
->=20
+On Tue, May 06 2025, Rob Herring (Arm) wrote:
 
-1.This=20patchset prints a large amount of information (e.g. inode ID, et=
-c.),
-some of which require kernel-internal helpers to access. These helpers ar=
-e
-not currently available as kfuncs, making it difficult to implement
-equivalent functionality with fentry/fexit.
+> Convert the Conexant Digicolor USART binding to DT schema. It is a
+> straight-forward conversion.
+>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-2. skb->_sk_redir implicitly stores both a redir action and the socket ad=
-dress
-in a single field. Decoding this structure in fentry/fexit would require
-duplicating kernel-internal logic in BPF programs. This creates maintenan=
-ce
-risks, as any future changes to the kernel's internal representation woul=
-d
-necessitate corresponding updates to the BPF programs.
+Acked-by: Baruch Siach <baruch@tkos.co.il>
 
-3. Similar to the debate between using built-in tracepoints vs kprobes/fe=
-ntry,
-each approach has its tradeoffs. The key advantage of a built-in tracepoi=
-nt is
-seamless integration with existing tools like perf and bpftrace, which na=
-tively
-support tracepoint-based tracing. For example, simply executing
-'perf trace -e 'sockmap:*' ./producer' could provide sufficient visibilit=
-y
-without custom BPF programs.
+Thanks,
+baruch
+
+> ---
+>  .../bindings/serial/cnxt,cx92755-usart.yaml   | 48 +++++++++++++++++++
+>  .../bindings/serial/digicolor-usart.txt       | 27 -----------
+>  2 files changed, 48 insertions(+), 27 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/serial/cnxt,cx92755-usart.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/serial/digicolor-usart.txt
+>
+> diff --git a/Documentation/devicetree/bindings/serial/cnxt,cx92755-usart.yaml
+> b/Documentation/devicetree/bindings/serial/cnxt,cx92755-usart.yaml
+> new file mode 100644
+> index 000000000000..720229455330
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/cnxt,cx92755-usart.yaml
+> @@ -0,0 +1,48 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/serial/cnxt,cx92755-usart.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Conexant Digicolor USART
+> +
+> +maintainers:
+> +  - Baruch Siach <baruch@tkos.co.il>
+> +
+> +description: >
+> +  Note: this binding is only applicable for using the USART peripheral as UART.
+> +  USART also support synchronous serial protocols like SPI and I2S.
+> +  Use the binding that matches the wiring of your system.
+> +
+> +allOf:
+> +  - $ref: /schemas/serial/serial.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: cnxt,cx92755-usart
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - interrupts
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    serial@f0000740 {
+> +        compatible = "cnxt,cx92755-usart";
+> +        reg = <0xf0000740 0x20>;
+> +        clocks = <&main_clk>;
+> +        interrupts = <44>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/serial/digicolor-usart.txt
+> b/Documentation/devicetree/bindings/serial/digicolor-usart.txt
+> deleted file mode 100644
+> index 2d3ede66889d..000000000000
+> --- a/Documentation/devicetree/bindings/serial/digicolor-usart.txt
+> +++ /dev/null
+> @@ -1,27 +0,0 @@
+> -Binding for Conexant Digicolor USART
+> -
+> -Note: this binding is only applicable for using the USART peripheral as
+> -UART. USART also support synchronous serial protocols like SPI and I2S. Use
+> -the binding that matches the wiring of your system.
+> -
+> -Required properties:
+> -- compatible : should be "cnxt,cx92755-usart".
+> -- reg: Should contain USART controller registers location and length.
+> -- interrupts: Should contain a single USART controller interrupt.
+> -- clocks: Must contain phandles to the USART clock
+> -  See ../clocks/clock-bindings.txt for details.
+> -
+> -Note: Each UART port should have an alias correctly numbered
+> -in "aliases" node.
+> -
+> -Example:
+> -	aliases {
+> -		serial0 = &uart0;
+> -	};
+> -
+> -	uart0: uart@f0000740 {
+> -		compatible = "cnxt,cx92755-usart";
+> -		reg = <0xf0000740 0x20>;
+> -		clocks = <&main_clk>;
+> -		interrupts = <44>;
+> -	};
+
+-- 
+                                                     ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
