@@ -1,101 +1,102 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic316-54.consmr.mail.gq1.yahoo.com (sonic316-54.consmr.mail.gq1.yahoo.com [98.137.69.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB18D1D9346;
-	Wed,  7 May 2025 19:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8428728E56F
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 19:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.69.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746646301; cv=none; b=cVK+xb2vrbumFnOS5+3ZM2Vca04t1pYsr6ANJo5xB05CgIGBU6+wIHvZwah00qq4AJVW24xwpn/eu3nFr1vG/A4hMJxMheE3TNZ6NIIEuXr0noXXpi9R2o9GLI7fiug2+Od81ieymbl/2lGMR0M1yc6xLr2Wm1xVRxrxppL1RCA=
+	t=1746646545; cv=none; b=Hm6aBgHWeHW7XdlmwjsAKGuoeTXBvuAaJPS/7BO9v86ypb7HeRQQOoJGkl0QfuGjfj7YKibAJ+ubJU+OuA1h59nG+Fp/ZS1crct631KGSzKuJ292wxblN0zwMj2LPmHYDKk9PVn6ZA+SwMO5NfczdjAGjZIGnEh79IADtdCi8xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746646301; c=relaxed/simple;
-	bh=XkT3rf/GhFkQ/rhyKTyqEyqJNDGvu/1GzX9MJDAJu64=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OYDGpw9WBU3/fucJqrX/RvC+QAlSOQ9rivLM79WhRIfH22QSPB10A6KaBMnovo/9COnjFUHh1UccsBWe6blFb0HUGdz02tihTJLG8z1/FJnZ48X6mj4p2/FaCMrEl9wHhNQV4emxmrUD7ZydhfZ5SqKUClydJM1+zhMUPvFxcKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=m+buex5R; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1746646545; c=relaxed/simple;
+	bh=/ibJ+ZdIq4NSJpcnXBtJz4+mTK5QylfZENGb9T8Fi8o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=aROPB9xPxwot6Of5m5ZMg/hovXqJd+Lnhqqs6IsnWzWoPzP09U/5CJpc+oOGnOCXpyWXsHGgxYDfhjU1fxkiBDDFg1NtW1KGtuEWGCgVgvOS9569fMfJ0BlQeLjehco0pPvxeOrr3nG9pmOgVLxcS9ux7G5fna2HRGLjAfbnI0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com; spf=pass smtp.mailfrom=aol.com; dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b=WBhdGvGO; arc=none smtp.client-ip=98.137.69.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aol.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="m+buex5R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1746646297;
-	bh=XkT3rf/GhFkQ/rhyKTyqEyqJNDGvu/1GzX9MJDAJu64=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m+buex5RPLqc5Lxi+5UspQuvlsrpHUCgfknhkggqX56fSWjdqwBNQemBl+XLqGlNx
-	 T9ajjjib1yET3HT2K6UZs0EaU3SxQPlhqtRnBte3crUksQL+6QRLMLBz9lHmwUY4v6
-	 IyAPxzdMR5aiMRlJTFEOxHUwJMznAIrFl4EgAd9RUDpSi6hgyMUDs4ok0pDQcdOMwV
-	 dnHCVaUZ6aYQ3K5V6apNvxzzLFp6+QgFjQeIAaSUsA3qraAx6IZyhqiRr4avwTWAWH
-	 yTqd8Ym24aUYBQfQF9FENZ8whUsdWyMt7K/GgVoSBjIihkX+d4SX+Y4AA1jF/TOaw4
-	 2sU1W6+UAP80g==
-Received: from notapiano (unknown [70.107.117.78])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C2A4917E04C0;
-	Wed,  7 May 2025 21:31:34 +0200 (CEST)
-Date: Wed, 7 May 2025 15:31:32 -0400
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Arnd Bergmann <arnd@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Alexandre Mergnat <amergnat@baylibre.com>,
-	Zoran Zhan <zoran.zhan@mediatek.com>, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] ASoC: mediatek: mt8188-mt6359: select
- CONFIG_SND_SOC_MT6359_ACCDET
-Message-ID: <5e45cf78-ea88-4a93-83e6-9022feed0421@notapiano>
-References: <20250505052106.1811802-1-arnd@kernel.org>
- <d9642581-3fed-47d8-9661-4335ec1e9c27@notapiano>
- <86a3a0ab-be37-4b4d-a5a5-32d09c1a75ce@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="WBhdGvGO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1746646543; bh=lmga7zKv8+wZUarLSSX0s6Q7CJ3U6AGRqKJhtN6JNfo=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=WBhdGvGOpFqNNissheUddh7dNq7WIdjxGB7lKqcf4wD0EzHOYIV7FnAjQZNG6T14onTZGi/CajL20ftR4aMJMq/4yMGtAywTfnfmritIAAwfLbJO5NmvBNQQglzyV7vYv0VMVwBcdgijrExf62lkpzrWpBmzx/LmLsL3GTnBbthp19xfqD40QVBJweeqygCgzZOiFb4D1c3Q0dgQvPyDlzzoA3dZigpIOv+vhHmxQItxhPRsBMkbPzybo+UDCFdqMnl3TDWGmV2Crl8Trdw/eZy0TPrvcDJ6joJGiGvGiso9zqCoaJbzFcVitCF3B0ROdtdMcISoY0V1XjvMcjeZbQ==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1746646543; bh=+FUTSJKU36OlC5KtC8XxzrJw3knNe9t88rza3HeSRck=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=ITt/M1onpNikuhDgeuQRI76KCmrlWlRQOS22outWcPhX4A7Bml0+dZN4/xDVPk2ZqJvnhUHbEKMzR/uPv2iibnGOEHSJUXn8njzITj/6bScqYbohwJWWUhXxRBW+IL0678l0o839GyevsOEuyQxio+l3zxIlXFGZOqEAP9febIej5M14Paf2+nckRyfAXuOMy8pqXj5CJi5hFMsriNeI+5Woo8/Zw9ei3DUNr2AEgOb+tM6ab4UWpCyYqUJoI6RfEmVx61cx27SQJ9dp0y48kOWTwLvz0682uBUisYzMonR9zwaRcMAZajXQs8otrZNIU/qBL0PG495/LoCTyNKW4g==
+X-YMail-OSG: r98ej.sVM1k38Qf03FFb9in0YlqEhRuo.SbCZAqOGUf7tmKaSlBz1niZj03gNAR
+ rF68RuvP7P_Tfj2mtJLpxtCOxri75414SU26i39Sv908k14MOCt7AVgBBat95S2lEje.TYGpakCk
+ Ta_pn6jPMCYikra9TeyKMAXunfqOvA7mBJNkcjR_TuJTVHePehMhL2HeidqoVapc45fdaQQzu0Ui
+ VUpLak8.ysBvm0U3u9Wbbc8WrnCaBtJwY_I4.3aH_PzktrVzZ7JlCH4aH1UIWEn45SvLRudHYth1
+ T3abILqb1LbFNHyUVU.ZnZvNoIKE1Neu2bicy7jxWyCbqftYLcCPuGa41R.1U3ZAZBhWMCwLIga8
+ .lF1BE_He_sBaRA8E4tfPacEIiXyFnzTqNcjmGy8akNl56FJNLTcQn2Bk1CdRMTZYUH7.rU1QJs.
+ k6CQhF.ikJE9cWBi6WmxymDHSJwoi1YY1NSmGll7tR.unxToqvkW_5MCwOnQx6.xDPPLqHEPdkac
+ md6hOM4nQRnXbuEXwtT7zuzHyx3FCuC44wOmqc63XNoWaMNPyyFUSPtahLNQJo4N.U6mxTgDFD1F
+ fRpHxBvuHTZr8E17CnIBJNAm0LRzl.5HDJkWCGZpPdLxPxerKhGL4gZpsjtW24SzvEeXjqalfbRJ
+ X.cXfIu55yxce11YGUI7Y3qyIcry5a.Bsv9hslYQiruVS6b0hl4gyhu4k4cMutfHp3TO0I3v7Mbu
+ yVd3_c3CLyLVfkQ5SpOnEcSx5irHkrn0Gw5LI_S36Grq9IMXee5s58HTLfu40xFj1udrwVT3RdVK
+ 6ehddzN0arB94MxYmNSUllTK9q9_YfBPHUecMt80WGBwU.OhSoyN7OEOjPbtQ2Kp_uMXou9ltgX0
+ 2e4HTh.bPszDmnQuJXWF9MbabHLHD8lkmTemsWEDqqT5murniYF8_ezU0HWYu9AEqMxLJTRZEQQK
+ RFCBsGmInqzmu_MIWi.pAS_YL52wpXRx7PIQ91vtJ1LOz8pTL37TdUw.tRunhvhlBF1FHLSPzdE6
+ 7GVehiqutA7_sqEmX.AsHJjfhTnQQod6Y4JruH4feAxfu491pxbOfrvWRmwmT_JzeRQdMHR9B3sW
+ 1RHycUbZ5cdPtST6KGA.9GW09Dre0GI8K.rczUZy5_hcOjESVmo_KOe24UE8ztfWZzyuM33zS_z3
+ BVppYdKag2wAByslR.hsz6Z7mNhX9TFACVVBxgukQqjQKxDH9ix2YKVm_YQwPQID17IagODf9L64
+ UNRUh_uB9gbki_H_FKRvxxE3oc9pLd_9hDuP0zlxxk.fguvXF9JGLM19tiCv79Fk7S476lGwvtUp
+ eKxnAshQb.i3ebdfAjBAn2PXmg5sw8tLk5IJ9VV49Dbh9AVQQN.i0y3.yJ1m6fn93RAsL6uPhGk6
+ dChiuazrvm3teCNUqQUqKyG6F_leQ8Wx56ivQEgLiNFzpTWeGJRhmZ52sb1AoCiqMe4uHJ1AXAES
+ jupJFGn1BoaWqbTcLZ6JFkeFSp.64sxXR.yINFQnvmP5IiuBWXo2dudOtLIM4F5dxe38uhrGM9yJ
+ QxxJybzyHSCLQJtpo.Ry8v_dhFozoa2d1DHXw9AjLCNcGMADiysM8TmgpK4BwzA7QJaItQ3Cb9w_
+ ZudOGD6M5SsfeSeblD5_PX6kptJnwNQdaKJ0uifi_WTu8KeFyBanWTHuztXTIZJe4Ou_vMyi4JR_
+ AX1HCpHUVy1I3338qBQI1dHPVLP.2eb3S3ERHSQaZEEwAlpdrjmWXD6RFyKquBIU4WFVxje4ksCo
+ Glk7Wx6QQ15AHnlPFb3LZrvansBFALRdfNqYd3Cj9EYxW.5vPn_I._HMu2PSB2xmwEUTZI5S7efz
+ bFl.OzTHl_5U_hImmImE4WqM4sbPEFlVZ7ucuyif5rrujZo5h034QDGp.D1ujflzpUsk4_ox5x82
+ Po9rP1VBMcNqK6r5YsDP2k6xx6bWWXcUcpTpsLi4y4_2iSToVggiq4sLs5EvFJ1qjlstU7.SUMfw
+ boM49TstsyHp1ggknVnKi.CRXFJwd_WXs6yLaYlntpSyUBGmp83bRH8M4.PUiLUB8JNHpRDdW06R
+ 6TMRn39tnM9mKjzsgTqgMhhOvz_bgJTpTg1wngix9zJUi7CHBC6MWF8NdxHlmhWnFxuo8xkVbFrE
+ tjQk8j9Hxyoz.78O_1PcpvD3CSrs1ekv8LPqVZFopylcViYf_H_mZwJHsQVzDPKsl61N5NJs_x3B
+ 2FSCqQxFUCa8XsR4pxzZgOb8ul2KCMqouT82Hz8JZOyuEUhm6nEf8jGxVP1cgm94Z
+X-Sonic-MF: <rubenru09@aol.com>
+X-Sonic-ID: 5588d6e7-8905-487b-99f4-71023ca18f2b
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.gq1.yahoo.com with HTTP; Wed, 7 May 2025 19:35:43 +0000
+Received: by hermes--production-ir2-858bd4ff7b-mp79t (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 0ce168842b6194365513fec4b9b0872e;
+          Wed, 07 May 2025 18:55:10 +0000 (UTC)
+From: Ruben Wauters <rubenru09@aol.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org
+Cc: Ruben Wauters <rubenru09@aol.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/cpu/intel: replace deprecated strcpy with strscpy
+Date: Wed,  7 May 2025 19:51:36 +0100
+Message-ID: <20250507185459.8769-1-rubenru09@aol.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <86a3a0ab-be37-4b4d-a5a5-32d09c1a75ce@app.fastmail.com>
+References: <20250507185459.8769-1-rubenru09.ref@aol.com>
 
-On Wed, May 07, 2025 at 07:10:54PM +0200, Arnd Bergmann wrote:
-> On Wed, May 7, 2025, at 18:41, Nícolas F. R. A. Prado wrote:
-> > On Mon, May 05, 2025 at 07:20:52AM +0200, Arnd Bergmann wrote:
-> >> From: Arnd Bergmann <arnd@arndb.de>
-> >> 
-> >> The driver support was added without selecting the codec, which leads to
-> >> a link failure:
-> >> 
-> >> aarch64-linux-ld: sound/soc/mediatek/mt8188/mt8188-mt6359.o: in function `mt8188_mt6359_init':
-> >> mt8188-mt6359.c:(.text+0x19f0): undefined reference to `mt6359_accdet_enable_jack_detect'
-> >
-> > Hm, I cannot seem to reproduce this. I just tried to build on today's next with
-> > CONFIG_SND_SOC_MT6359_ACCDET disabled and have tried
-> > CONFIG_SND_SOC_MT8188_MT6359 both =m and =y, but in both cases it compiles fine.
-> 
-> The config that failed for me had CONFIG_SND_SOC_MT6359_ACCDET.
-> 
-> > I wonder if somehow your tree was missing "ASoC: mediatek: mt6359: Add stub for
-> > mt6359_accdet_enable_jack_detect" [1]
-> 
-> > https://lore.kernel.org/all/20250306-mt8188-accdet-v3-3-7828e835ff4b@collabora.com/
-> 
-> I had not seen that patch, but with that applied, my patch needs to
-> be revised as well. If the idea is that CONFIG_SND_SOC_MT8188_MT6359
-> can work correctly without CONFIG_SND_SOC_MT6359_ACCDET, it should be
-> 
->       depends on SND_SOC_MT6359_ACCDET || !SND_SOC_MT6359_ACCDET
-> 
-> in order to force SND_SOC_MT8188_MT6359=m if the ACCDET portion
-> is in a loadable module.
+strcpy is deprecated due to lack of bounds checking.
+This patch replaces strcpy with strscpy, the recommended alternative for
+null terminated strings, to follow best practices.
 
-Ah indeed, that's it. The stub was added to allow MT8188_MT6359 to work without 
-ACCDET, but we still need to prevent the MT8188_MT6359=y and ACCDET=m case, like
-you suggest. I can send that patch right away.
+Signed-off-by: Ruben Wauters <rubenru09@aol.com>
+---
+ arch/x86/kernel/cpu/intel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Nícolas
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 584dd55bf739..b49bba30434d 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -607,7 +607,7 @@ static void init_intel(struct cpuinfo_x86 *c)
+ 		}
+ 
+ 		if (p)
+-			strcpy(c->x86_model_id, p);
++			strscpy(c->x86_model_id, p);
+ 	}
+ #endif
+ 
+-- 
+2.48.1
+
