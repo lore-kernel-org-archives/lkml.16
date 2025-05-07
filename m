@@ -1,155 +1,120 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D8C1DED7C;
-	Wed,  7 May 2025 06:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A261ADC7E
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 06:57:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746600877; cv=none; b=U7XevG2G30te3Q3EOXucJbxUhM8gwQcV2qBqE0zdPX1sgJ+/zeoltY+5wYheygGAdPB2RcwpqkTqGX9AAS3kANxpFEyV1n4gHlO92q0qLASLW/4HXd+5yB5rQ/jLyRYAfi6fez8xhzsy6qBFoBpPNVO0Q4i0wbMsVyrY/RZi7cA=
+	t=1746601040; cv=none; b=q2k6tFXjdpfeEpLw2VT4UTo8cGqasT19u3ttswIYbOO/Xm+by5wNWdy/tdjm/94EbQ+qihcmL32/mAa6IOjc7sbQ5yJMajEhIieKRz9mxg/ZK/0B2pk13z5kN7QiplyKrrpafQYDA+rGt5f2oYAq8TT5mENNyG8eOp6pGoB9mXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746600877; c=relaxed/simple;
-	bh=7bKuOA+lRfOkeodVvD3JgPIzEky9dmK85zmk7GTZdM4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lrFfOUbpyvXdqnwmfTup4CegFtqBKehHx/1X4V5/lmzyi2E87CIvWNW33vbQXVDMSHroJfL0K4+1IN2E9cjnN9EB0HG/NlVzcBKWKpdFLaVPYK94wSnQAYddpJjGc1SlrmhIG2JPhoO3XBHp//yvW9Ljfp4MXd90D0uJIqipbHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZVQtn99q; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1746601040; c=relaxed/simple;
+	bh=r55W1+Azblwt/qcrr3OwtnoxqrfaQjMZNR5YExu+2sg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lLDdixjCNgrU8kPCqKieZIvHY+hOqZwQGiB2GZjY6jeGnndLDKOEXWVUvkgx6kAHk+Oqw5gIge/uGF08OMZlf0vrVdzhFepOYdyjIpvmvyX9KIW1e33t4IqwEt9ztX/YQihlswfUpVyTU/RdswG5i/I4stDaAip9OoL95FMpt2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MD+NQ9Of; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZVQtn99q"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5474Xr84014092;
-	Wed, 7 May 2025 06:54:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=Bk/KMFIiMdA
-	he5dhMs5+Pstsb3YM10/TgGloIi2WsB8=; b=ZVQtn99qOfa5MNF4csWqgG/WONC
-	KHXaMTRqLOhKCGSLB2hHRilD2DTjQ3GUa1VeS9MRQ+UzM+0XOBuXanXB/VHcNONd
-	FoscNWjKh4rZZ1GGFBenxRbDWwbEJibBEWEAcobffVctK68odGnuB4dT5pfDjGqj
-	DBrwKGmdmHx/uP3xZVS9SctZWvDTCDY1caGJUTRsGJeTHtcTWQA+j4FoenNaB2FU
-	skN6Ee00BBWZukLzXe0Cj8t1ZGEo8IF9sQSjMkLIBUSnDdcG07BthllVXqURjncm
-	exaA24upiCSYMaGD6Nuq/ZgHAlCra43x78neQLJ3R5vsJhqsefT5/WlsTtA==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46g0kh09vs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 06:54:30 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5476sQHZ011862;
-	Wed, 7 May 2025 06:54:26 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 46dc7ms9s6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 06:51:26 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5476pOuo009456;
-	Wed, 7 May 2025 06:51:26 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-wasimn-hyd.qualcomm.com [10.147.246.180])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 5476pPYO009541
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 06:51:26 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3944840)
-	id 4E49F5B9; Wed,  7 May 2025 12:21:23 +0530 (+0530)
-From: Wasim Nazir <quic_wasimn@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        kernel@quicinc.com, kernel@oss.qualcomm.com,
-        Wasim Nazir <quic_wasimn@quicinc.com>
-Subject: [PATCH 8/8] arm64: dts: qcom: qcs9100: Introduce QCS9100M SOM
-Date: Wed,  7 May 2025 12:21:16 +0530
-Message-ID: <20250507065116.353114-9-quic_wasimn@quicinc.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250507065116.353114-1-quic_wasimn@quicinc.com>
-References: <20250507065116.353114-1-quic_wasimn@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MD+NQ9Of"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746601039; x=1778137039;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=r55W1+Azblwt/qcrr3OwtnoxqrfaQjMZNR5YExu+2sg=;
+  b=MD+NQ9Ofv2t/gOH3Pt8fHeA5epo5hcqPB5OU4Xiu2HiM5DocHKSm5FSj
+   zllBbDK0IcOtNgx11PhouL9ieJT6Dlck/hiPAE8TJTvYwmx1IArD8h1yz
+   7E7lpG65jy0dV+K9f3yTMLBy8nNZtyTmsNKuLo1hcd5NMA5Ox/1NjaMpq
+   iRM4noxZJXDxSKU4Eq2VYOsWlaPj16Dm8k6/uTrnRV4LUod/hghLBX/KZ
+   7DcTtXkYYUFM1o/xde464vAE+9ajOBdxZDxwaHmNXOOy8Ix9CTbcQeQWo
+   rnmPGHCra7PB/SC3/9XUFWDL3frORaBZvwZizcyPvppe+Mkpjq8bWgWAw
+   w==;
+X-CSE-ConnectionGUID: WvsZF4LCTGiUnJfP8PsZjA==
+X-CSE-MsgGUID: DWxPuiI8QcWp0AE///LUjA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="48429604"
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="48429604"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 23:57:19 -0700
+X-CSE-ConnectionGUID: 73rnZ4X8SOWfAmRN3WWJBQ==
+X-CSE-MsgGUID: JguopFDRQXm9q2aSZCS0ww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="139916698"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 06 May 2025 23:57:17 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCYiR-0007Ez-0K;
+	Wed, 07 May 2025 06:57:15 +0000
+Date: Wed, 7 May 2025 14:56:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Dhaval Giani (AMD)" <dhaval@gianis.ca>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Dhaval Giani <dhaval.giani@amd.com>,
+	Gautham Shenoy <gautham.shenoy@amd.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	"Dhaval Giani (AMD)" <dhaval@gianis.ca>
+Subject: Re: [PATCH 1/3] sched/fair: Introduce a new debugfs directory for
+ EEVDF tests
+Message-ID: <202505071441.9cwPFBsc-lkp@intel.com>
+References: <20250422-b4-eevdf-tests-v1-post-v1-1-5b174f040f55@gianis.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA2MyBTYWx0ZWRfXyIvNy+MzI4Sd
- HDHHtsLibeGXiPSIFOiXR/fs1JIwP13qq29r/uCWXSoXNnd9bT2jj1VGVIKc3tkjWzNRes0LFTT
- ZFpWQpwY+LQbu7a82eh1hv5/WMxwSjil/HCY2RBZ83t2esIHMl/p/CBPfSIYt+7plGu8bdksqiZ
- cBOt4dAsw+AT41iL4yOdEPueomBljjDDrD2Pqum1JIWAfDEtE/gh1sSLsShmohCAiEJs/v+obgd
- 7VXgAmk8v3DbQpyeBgoVVzUZz3hbHvOEEs2j2KPWeZ5FnnGHs0HALqpy7Iy3Fq0WnomwAgLUtYB
- 6fD+fixnHaH/RGVBDeNEY4voEAcpkEX0LyiMFjofRKF1mTJbq4pfHIQ/lp5ikRFPWjBQYORB/mr
- 5FJI2q3s8gKpKjgsHOTOYlNJP0Sd30hxdQqSiIMVgkApeTPQyjpKdcIhTm0q70qNfSl2Npw3
-X-Authority-Analysis: v=2.4 cv=PNUP+eqC c=1 sm=1 tr=0 ts=681b03a6 cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=u6l1T9LvMDkyw8qJF6gA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: ovuvLgLx_0NV8-b2VMDXppGt020qpTMw
-X-Proofpoint-GUID: ovuvLgLx_0NV8-b2VMDXppGt020qpTMw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_02,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 phishscore=0 mlxlogscore=943 malwarescore=0 spamscore=0
- clxscore=1015 impostorscore=0 suspectscore=0 lowpriorityscore=0 bulkscore=0
- adultscore=9 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505070063
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422-b4-eevdf-tests-v1-post-v1-1-5b174f040f55@gianis.ca>
 
-qcs9100 SOC is IOT variant of sa8775p SOC and it supports safety
-monitoring feature of Safety Island(SAIL) subsystem.
-qcs9100-som.dtsi specifies qcs9100 based SOM having SOC, PMICs
-& Memory-map updates (not added currently as part of code refactoring).
-qcs9100-ride-r3 board is based on QCS9100M SOM.
-qcs9100-ride-r3 also supports 2.5G ethernet phy i.e aqr115c.
+Hi Dhaval,
 
-Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
----
- arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dts | 10 +++++++---
- arch/arm64/boot/dts/qcom/qcs9100-som.dtsi    |  9 +++++++++
- 2 files changed, 16 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm64/boot/dts/qcom/qcs9100-som.dtsi
+kernel test robot noticed the following build errors:
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dts b/arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dts
-index 759d1ec694b2..aadf9e4a8a05 100644
---- a/arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dts
-@@ -1,11 +1,15 @@
- // SPDX-License-Identifier: BSD-3-Clause
- /*
-- * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
-+ * Copyright (c) 2024-2025, Qualcomm Innovation Center, Inc. All rights reserved.
-  */
- /dts-v1/;
+[auto build test ERROR on tip/sched/core]
+[also build test ERROR on linus/master v6.15-rc5 next-20250506]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
--#include "sa8775p-ride-r3.dts"
-+#include "qcs9100-som.dtsi"
-+
-+#include "sa8775p-ride-common.dtsi"
-+#include "sa8775p-ride-ethernet-aqr115c.dtsi"
-+
- / {
- 	model = "Qualcomm QCS9100 Ride Rev3";
--	compatible = "qcom,qcs9100-ride-r3", "qcom,qcs9100", "qcom,sa8775p";
-+	compatible = "qcom,qcs9100-ride-r3", "qcom,qcs9100-som", "qcom,qcs9100", "qcom,sa8775p";
- };
-diff --git a/arch/arm64/boot/dts/qcom/qcs9100-som.dtsi b/arch/arm64/boot/dts/qcom/qcs9100-som.dtsi
-new file mode 100644
-index 000000000000..92adebb2e18f
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/qcs9100-som.dtsi
-@@ -0,0 +1,9 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2025, Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+/dts-v1/;
-+
-+#include "sa8775p.dtsi"
-+#include "sa8775p-pmics.dtsi"
---
-2.49.0
+url:    https://github.com/intel-lab-lkp/linux/commits/Dhaval-Giani-AMD/sched-fair-Add-a-test-to-test-that-a-task-selected-to-run-has-positive-lag/20250423-081648
+base:   tip/sched/core
+patch link:    https://lore.kernel.org/r/20250422-b4-eevdf-tests-v1-post-v1-1-5b174f040f55%40gianis.ca
+patch subject: [PATCH 1/3] sched/fair: Introduce a new debugfs directory for EEVDF tests
+config: arc-allnoconfig (https://download.01.org/0day-ci/archive/20250507/202505071441.9cwPFBsc-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071441.9cwPFBsc-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505071441.9cwPFBsc-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from kernel/sched/build_utility.c:71:
+   kernel/sched/debug.c: In function 'sched_init_debug':
+>> kernel/sched/debug.c:539:9: error: implicit declaration of function 'debugfs_eevdf_testing_init' [-Wimplicit-function-declaration]
+     539 |         debugfs_eevdf_testing_init(debugfs_sched);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/debugfs_eevdf_testing_init +539 kernel/sched/debug.c
+
+   534	
+   535		debugfs_create_file("debug", 0444, debugfs_sched, NULL, &sched_debug_fops);
+   536	
+   537		debugfs_fair_server_init();
+   538	
+ > 539		debugfs_eevdf_testing_init(debugfs_sched);
+   540	
+   541		return 0;
+   542	}
+   543	late_initcall(sched_init_debug);
+   544	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
