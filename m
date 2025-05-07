@@ -1,135 +1,117 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA13A209F2E
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C6D156C40;
+	Wed,  7 May 2025 13:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746624512; cv=none; b=HzKkQO4LnQrzIRXkoRdvet304adSvXhY4F4k7IkKwEGZS7cgD+VcheFB1qLrtelYUqs2crUa0vERzh9WlwxCFcYVJuXgndiL954mYHv7orXKJHqleZL4WjQJO323lT90+We9Q2NaXmo4XbTUZVCEh0PSWRyj2vMoAVnuwXR9r+A=
+	t=1746624584; cv=none; b=IzUyYdYiubZPGo3gZMq70McFalyf4Li7yJ5oBflPsuvHiPoRjK+fRCdpBWXGK0Dd1cb9AaEizwXPqZMzQWVegc465TyZS0XRxRd5nP8e9NtMR2YxlEgmwYteOPibGmqQRXgjjhwxGDRkVAMfLTCh8qMNVwzIs/VqXe2ll/goAIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746624512; c=relaxed/simple;
-	bh=SKO83lrLPvLSrF0yvTjpxd10hpm9cNWWzdkME6QznkM=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=KoCkJLWZw/HTNPWzUSzj0/jrMmkBLrSI0+ymXCq4kxOyBzVfWNGmBiGGqyu2atW+z1Hgu4byWXvpYmxp9uMHXvrjiDJDVHslwN8oeugp/G8oOuLrQB6nBOFNCAvJC4dvMUb129ZrAHijdj/sIw+aXFlMESFcZAxn4LIURuAv5Kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=qSqkbLQX; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746624584; c=relaxed/simple;
+	bh=wQpDaP/Vr9UYsJ8lKwfHUee/hDol1chqzTFEAP6Mchs=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=jaTM/vwXt6azSxRm+Fvd7XVuIJ64wpwBkPHajvHDb9eBsHKUEu5KYGRolmWseDR8JFYq+KnUdf4rZNR+UJkW8QngfG9pidGEaWZC10cltIQYyYX2Lf58NoVvnD8bDNGbRmTqlmvzYzsPyMhvBRNfA/kM14B3tUnv0no7cX0ZhvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JqPRFpGN; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qSqkbLQX"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso61364525e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:28:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JqPRFpGN"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4767e969b94so31982241cf.2;
+        Wed, 07 May 2025 06:29:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746624508; x=1747229308; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/xS6ETeJO5OOeAvcPqqiLsohwdJ2YixHGZA6tkjlU0Q=;
-        b=qSqkbLQXOLHXRxpof2oo2bp2TThJJlzrPTOJSKiru91QD5kl93KaW6azcZZ46jEx0e
-         5BQD7GNHeeDt09Gabgv94zwyZOPWT1JyYA1IVD6c1cHfaHw7XNqZSE1MN9lYSUlftBzT
-         5TKd3G+bLZEi+DFazrNn697sbxynlTEfuLVeZENqflsLU8IgQCQqZmR1W+j9Z7bdD2Cd
-         TcOvJ0Qp0bbggwa/Zd0GMb2dk5PfVpCwfo6Bov7/evkzmtKSXe3SGDCRFOoS+TySgx25
-         5ThKqs7tjMRH6WMIURaMKb+xiTInUJdGWmS084Mx9tz0XBQWQ0IkevIEoe84oM+W9Pnh
-         pgGQ==
+        d=gmail.com; s=20230601; t=1746624582; x=1747229382; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vTjiQ++FppghVzFe39984SJc83lrdjMGrmnekzjKbFo=;
+        b=JqPRFpGNyNGbkgnItafKcTBOyj8qP8LIIl2PHtrnwPwhDfv0H2gHuxxRBHesVT2kYe
+         +WI9Cd3/POdjKb83pLD03pfBaDG6nyVdTpVaqjRElk73bfm7D6UqA+Nnm4i/FSwqv3Wj
+         +Kjq17paAWM+B+nr4UWmTk2gZx2pb8MncRcIXTdC95AjLEyD1fCloTxrR4vuj5t1W4//
+         JRdGpkOKGxsJ+MMvemnt7Cpfnhdjcuf7/Jlmu6lmkYAK8PWxL5C18kiMfADSeGo7ySQ+
+         qBjA5hrUauFGhBSL3zrD01D/vsr7aryV/LyKX3J6pe6wtNB28j36vwqrn42UUXZM/mpc
+         py9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746624508; x=1747229308;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/xS6ETeJO5OOeAvcPqqiLsohwdJ2YixHGZA6tkjlU0Q=;
-        b=I7rYn7XMTTQnybIgAlmV2gEgea+eHfhJ2iB9vjJabXthVjZJW1VZp0WellRbZ1763k
-         +6AxFOE5HBqFPHxBBBbHToN/faWs1OV52MyFI1mTG0Kvx87Mors/nUx8UUFis4JixULv
-         jqcq9ulN6++yxE6tWYs46308zgfDgh+FtNCjjSB61tUQBCbJOSgGZ4p0pVxN64sVBEt9
-         A97B3OFJsPNHNtcQbl+xwfjDvLKQXO11GBnWE8ebgJlkajAhKY5mqUjRL+dydt2ZEVuX
-         7ambwSrjSFAhiQBcG/69hHi1o8FDPrDyIhnbOZcnpJW6/He0xToyA8HmOnlgO8It9IAZ
-         obrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4rsZtTXXzggBvtTnl3BPSj5sdLpYm0luRRC8TmwHWlkkdsv9jhEV3HseXtrcJ9GrdR7chUqfHnYGtkT4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNiUBdJWdhdNyQ+RxrN2MPtPIm12d7SJFLnR1aMC7KGqkUQ8Nt
-	yMxO6jiTOaNc5RqDXPwYcC6S3MX5rwd04QS8pd6VJoqdZQiMqme0LYDOsJNNqmI=
-X-Gm-Gg: ASbGncvVKiXsxJ64yzPFj1jUp8FTb/QkjbeU8HI4gAn/fL3nv4HyHKKdw48SptFMFYh
-	+kqpGUKkcYKv/yMbAKc1Cu5iMbjJmVNUSASUkJi5nGgI69xEkXzXcx9NBrUE3fwhz+Etfdmn+Xk
-	uMeRg3zl2eqesC5kqRQWpLbw21BkFlH5UAx7lnE6/Mk1ZDa5LOILNj3OYYol2IVACRkYuGtf+3J
-	MXO1bOeeKlQu5r+4Dv5r8h5OjUYGEmC4KpTFbL7ILLHTBO5U1xWDaobbu9t/8GrpeqgpOquaLRn
-	egsqWBjCHFXHb0Qn/B/jZ1PBJqN7a8Qsv4OkoL6JwdDOEHLqWAIW3q+rRdiZDFn7lvvJYXXbHrZ
-	uayqaCrcii301jimMQW5uvC0=
-X-Google-Smtp-Source: AGHT+IF9bN7HF5C+wDfG9X0dS/E0vyZNUnflXtn/dJ+qoLVi6CW6CxKO2dfUEyTuyw8A+h4DJSAqyA==
-X-Received: by 2002:a05:600c:1ca3:b0:43d:2230:300f with SMTP id 5b1f17b1804b1-441d44734e6mr28815835e9.0.1746624507957;
-        Wed, 07 May 2025 06:28:27 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e50:3860:705c:8900:5dbf:b4ab? ([2a01:e0a:e50:3860:705c:8900:5dbf:b4ab])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd33103dsm1051115e9.10.2025.05.07.06.28.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 06:28:27 -0700 (PDT)
-Message-ID: <b1949ec7-a0b3-4c4c-a439-93afced7bb0c@baylibre.com>
-Date: Wed, 7 May 2025 15:28:26 +0200
+        d=1e100.net; s=20230601; t=1746624582; x=1747229382;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vTjiQ++FppghVzFe39984SJc83lrdjMGrmnekzjKbFo=;
+        b=bhIybbl9v4cB0H91EkzYXjM3e15E1ccbliJZcsUA/xooOREJruerotQqM+VQXatx+0
+         uLcQvqMVVRUIHHMI8A7dhCVqMkbHsT+LmIKYF6Z+wv2ed3SYozPOynwV3ICy/x9fxJK6
+         jKiNvFl/ZqfGPdVIlH5l0tpQe26DRud7qFomWJ8sWgrQbTo8QeTN3tVhXKlbBEZUDErh
+         YaMaS1S7GDtulkNo0rSBOG0fzysJxTO/1d8Kwx4qDD+/1d3D+/SS4CwAsFhIfbe8loMv
+         +Asd7Nz/SFDRlyYQXHR0a+UGnyxRJgXSieQA5Xu3D1tu3hgtRo1bV/6FCakldJuCB9eM
+         VNKA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbYfvM3423t9UZzD+nBVuLWBViuSk3DfyJJ7Virmn2vOGFc69FugGPs1P6os3/WqS6h4p+txfC@vger.kernel.org, AJvYcCW2zjChXDavxnW1+/CNI8VYQflwovIIRgjSgdwuesesXSb3iPxzpaTpTaKzx2okJFZdbZvx/ndn5XIniork@vger.kernel.org, AJvYcCX2pmnBvtkcecbIulI0aopEHydPMtcBdtfD8ZoHo9MUQcCowQn7cT4VuqwYk5Cgw7qI0QY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybajaBBAIkDnm4KvJZWPfgHUBPH3zPJqKv2YVPXdLzky3QZcVH
+	haxjA48ZfmhcRigZQVYlDFTaeiwXKJpWhYEnpNmHlJ1zvC/wFkvUtR0cVQ==
+X-Gm-Gg: ASbGncuc+5nOwKTYVc8OkovzlPY6KnZh3W2bpyPvS++Ngao0f81/wfE1RM7MbxyjkDt
+	tfUD50YG+zvuib0nHwnpdMKkOdn4mB2RyxRD1pk0xWtSyyUZ3crMr0VXiI6M8fplm7Ct5yeeOOi
+	htXTqn4dyGfpkSWQmKIucPD54eLeCDA88cwkl/gduZwkWW1K0ZZQYS36pzXRf+6rV98AOJ9olMx
+	rZv/s44WH9LQio0i0E6Lason/d2EKbyv+gQnzIaaLim3+LjQxUyiMB9d/D554HbZwbfImTiUT/o
+	9mn+Ctmbqsg4l/R/JDI/y8C1nAccclgAp9wHRGLQvZ5Ba1cygfAFkqfSqONwwAI7jyEZevgNajX
+	oGiz7u/2STId177IAD7MM
+X-Google-Smtp-Source: AGHT+IEbHWi7wInP6wPATPO+pMHOSFq1YMBs1FDO6+6rZ6d9L46DFJQAU+/a6+u59/ecQb98pTs9OA==
+X-Received: by 2002:a05:622a:50:b0:48c:b30a:7714 with SMTP id d75a77b69052e-4922795df04mr59435951cf.50.1746624571631;
+        Wed, 07 May 2025 06:29:31 -0700 (PDT)
+Received: from localhost (141.139.145.34.bc.googleusercontent.com. [34.145.139.141])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f542780cc6sm13643016d6.83.2025.05.07.06.29.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 06:29:31 -0700 (PDT)
+Date: Wed, 07 May 2025 09:29:30 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Stanislav Fomichev <stfomichev@gmail.com>, 
+ Jon Kohler <jon@nutanix.com>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jason Wang <jasowang@redhat.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ Jesper Dangaard Brouer <hawk@kernel.org>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Simon Horman <horms@kernel.org>, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, 
+ Jacob Keller <jacob.e.keller@intel.com>
+Message-ID: <681b603ac8473_1e4406294a6@willemb.c.googlers.com.notmuch>
+In-Reply-To: <aBpKLNPct95KdADM@mini-arch>
+References: <20250506125242.2685182-1-jon@nutanix.com>
+ <aBpKLNPct95KdADM@mini-arch>
+Subject: Re: [PATCH net-next v3] xdp: Add helpers for head length, headroom,
+ and metadata length
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: Re: [PATCH] arm64: Kconfig.platforms: remove useless select for
- ARCH_K3
-To: Nishanth Menon <nm@ti.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Andrew Davis <afd@ti.com>, vishalm@ti.com, linux-omap@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250504-kconfig-v1-1-ab0216f4fa98@baylibre.com>
- <20250505123615.yqzdv7dlel7kyojf@degrease>
- <fa33b7d6-8e28-40bc-9219-41dab643e88f@baylibre.com>
-Content-Language: en-US, fr
-In-Reply-To: <fa33b7d6-8e28-40bc-9219-41dab643e88f@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Hi Nishanth,
+Stanislav Fomichev wrote:
+> On 05/06, Jon Kohler wrote:
+> > Introduce new XDP helpers:
+> > - xdp_headlen: Similar to skb_headlen
+> > - xdp_headroom: Similar to skb_headroom
+> > - xdp_metadata_len: Similar to skb_metadata_len
+> > 
+> > Integrate these helpers into tap, tun, and XDP implementation to start.
+> > 
+> > No functional changes introduced.
+> > 
+> > Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+> > Signed-off-by: Jon Kohler <jon@nutanix.com>
+> > ---
+> > v2->v3: Integrate feedback from Stanislav
+> > https://patchwork.kernel.org/project/netdevbpf/patch/20250430201120.1794658-1-jon@nutanix.com/
+> 
+> Acked-by: Stanislav Fomichev <sdf@fomichev.me>
 
-if i remove MAILBOX it's  enabled by some  non TI drivers and/or 
-ARCH_XXX which have it in deps so all TI drivers are still enabled 
-properly but not sure it's safe.
-and PM_GENERIC_DOMAINS look OK to remove it.
+Reviewed-by: Willem de Bruijn <willemb@google.com>
 
-if i try a defconfig based on android defconfig (more simple than 
-default defconfig) with only ARCH_K3 enabled i need to set 
-CONFIG_MAILBOX flag to still have same TI drivers enabled.
-let me know what you want to do.
-
-Guillaume
-Le 05/05/2025 à 15:15, Guillaume La Roque a écrit :
-> Hi,
->
-> Le 05/05/2025 à 14:36, Nishanth Menon a écrit :
->> On 13:24-20250504, Guillaume La Roque wrote:
->>> After patch done on TI_MESSAGE_MANAGER[1] and TI_SCI_PROTOCOL[2] driver
->>> select on ARCH_K3 are not needed anymore.
->>>
->>> Remove it and give possibility to enable this driver in modules.
->>>
->>> [1] https://lore.kernel.org/all/20180828005311.8529-1-nm@ti.com/
->>> [2] 
->>> https://lore.kernel.org/all/20250220-ti-firmware-v2-1-ff26883c6ce9@baylibre.com/
->>>
->>> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
->>> ---
->>>   arch/arm64/Kconfig.platforms | 2 --
->>>   1 file changed, 2 deletions(-)
->>>
->>> diff --git a/arch/arm64/Kconfig.platforms 
->>> b/arch/arm64/Kconfig.platforms
->>> index 8b76821f190f..5b63a42c4dff 100644
->>> --- a/arch/arm64/Kconfig.platforms
->>> +++ b/arch/arm64/Kconfig.platforms
->>> @@ -138,8 +138,6 @@ config ARCH_K3
->>>       select PM_GENERIC_DOMAINS if PM
->>>       select MAILBOX
->>>       select SOC_TI
->>> -    select TI_MESSAGE_MANAGER
->>> -    select TI_SCI_PROTOCOL
->>>       select TI_K3_SOCINFO
->>>       help
->>>         This enables support for Texas Instruments' K3 multicore SoC
->>>
->> While at this, is it possible to remove MAILBOX and PM_GENERIC_DOMAINS
->> from select and make them as modules?
->>
-> good point i will confirm  and come back to you.
