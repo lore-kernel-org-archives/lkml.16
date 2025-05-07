@@ -1,95 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA6D28D846;
-	Wed,  7 May 2025 19:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476847263D;
+	Wed,  7 May 2025 19:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746646004; cv=none; b=H2WQIOobvuPBBk5dtvPmam8DH+3J6aSGdnISJeEh/RZCT9ze6LfggcMAqTk9Q0Q0a84CzOyxD4eVcVVOIbCnVZAKUzvBDS7ff9TVVdcDPhF0dGkChIFLMSTkKDGDp+TBkK1Kfn64tnnhZgqDCybC89bgUeaTZl7k9k4r5ClVvWA=
+	t=1746646095; cv=none; b=N59KD5ajYIE2VLWeKHiNSq2UO3QvSXPkrSZVaTO+xx4OJ6i2jT9r7eAnT9IoOMcqwAxmMHe1qLY8Sabfoc/9sVPhD0iqwluGhvVIGXGwZkuUwqVnyXgqRNsRPv661eGlucusbZ/eJW/mYv8/ZdqIzMI8jF2pc7aTSQFjKpOhyDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746646004; c=relaxed/simple;
-	bh=y6iGwsGU9RA/MktTdMq8U8TsMT9apZrCokqE7QsRSDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PmykfgpaRBpxXiRiQMlrabsusy6LOedIjjTu+BNRLo5fF8cd0sD/CXz57EL0d58NNA9SLudFIRBkpUDbLNbKuDSoTM1oc9tmg7CC4REPXSxpENKSMxbo5A7c0rDeSQ8mnkTX1jyo7gqmP4M7JMN6dGVNqFuud4fkRHszCSE3teY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2360C4CEE2;
-	Wed,  7 May 2025 19:26:42 +0000 (UTC)
-Date: Wed, 7 May 2025 15:26:53 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ayush Jain <Ayush.jain3@amd.com>
-Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <Naveen.Rao@amd.com>,
- <Kalpana.Shetty@amd.com>, <Narasimhan.V@amd.com>, Shuah Khan
- <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v2] selftests/ftrace: Convert poll to a gen_file
-Message-ID: <20250507152653.4af2549a@gandalf.local.home>
-In-Reply-To: <20250409124855.4dc8fd58@gandalf.local.home>
-References: <20250409044632.363285-1-Ayush.jain3@amd.com>
-	<20250409124855.4dc8fd58@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746646095; c=relaxed/simple;
+	bh=ktcsDSMPQ+uFejH/2Mt2M7aBB0QDCgfvcowEvGROfmc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=gn8W2T8+gdE2Tahcsc91BfGO8w/E0Xb1Ajos9y65QuEseVMpVpYZtx6gIRkKuwI67YioOSDkUt/R5slFhqePSVNC3vCZLh77aPEF87l2F6CtBwL8QU4/ebQgpGrFncw7a29x/sgiCCsBhYCZjRjwUlFWK1knlk8ej3LpFmK19KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=mrggc/i/; arc=none smtp.client-ip=199.89.3.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="mrggc/i/"
+Received: from localhost (localhost [127.0.0.1])
+	by 003.mia.mailroute.net (Postfix) with ESMTP id 4Zt4zq5Z2DzlvRxg;
+	Wed,  7 May 2025 19:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1746646086; x=1749238087; bh=ktcsDSMPQ+uFejH/2Mt2M7aB
+	B0QDCgfvcowEvGROfmc=; b=mrggc/i/H6MNLEMlYkKBIWpC2GxJ8wrhEROOsJVj
+	C2u2AXrX03z5ndmrX3kkdhapy2ybwGqT+TfKCRHWauoIMvgFvonUPWB+ToXsIxLc
+	h+vTsVhtRHF3yQ+zFG43uztoVH+SX//ca8Dn9CorRLHXgLAN9qvPjc8l24vGsRz7
+	yfJApjo6WwGIWjtuBthwP6p+ZcPDkj0Mk0XvwJT6IsRN1ko39R+ERH/t4W4i/srG
+	OUqP1CLstusk+NuWJBXcGmbajDEdx6IbjMlT6qBhrwDJYBSH7Bbf9da9gimfD8LE
+	/jhGNe6NXVNUWcQrlmF0NjBwvtjM5/ZkW40arnDh37RGoQ==
+X-Virus-Scanned: by MailRoute
+Received: from 003.mia.mailroute.net ([127.0.0.1])
+ by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id I0AqQzcsbx-3; Wed,  7 May 2025 19:28:06 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4Zt4zl1GrkzlvRxc;
+	Wed,  7 May 2025 19:28:01 +0000 (UTC)
+Message-ID: <3b41510d-cd82-4c80-9651-ba9744f6ffc6@acm.org>
+Date: Wed, 7 May 2025 12:28:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ufs: core: Print error value as hex format on
+ ufshcd_err_handler()
+To: wkon-kim <wkon.kim@samsung.com>, James.Bottomley@HansenPartnership.com,
+ martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <CGME20250507020722epcas1p1171c5e96ef474d587a1a35af8d6931bf@epcas1p1.samsung.com>
+ <20250507020718.7446-1-wkon.kim@samsung.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250507020718.7446-1-wkon.kim@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+On 5/6/25 7:07 PM, wkon-kim wrote:
+> It is better to print saved_err and saved_uic_err in hex format.
+> Integer format is hard to spot.
 
-Shuah,
+spot -> decode
 
-Can you take this through your tree?
+Anyway:
 
--- Steve
-
-
-On Wed, 9 Apr 2025 12:48:55 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Wed, 9 Apr 2025 04:46:32 +0000
-> Ayush Jain <Ayush.jain3@amd.com> wrote:
-> 
-> > Poll program is a helper to ftracetest, thus make it a
-> > generic file and remove it from being run as a test.
-> > 
-> > Currently when executing tests using
-> >     $ make run_tests
-> >       CC       poll
-> >     TAP version 13
-> >     1..2
-> >     # timeout set to 0
-> >     # selftests: ftrace: poll
-> >     # Error: Polling file is not specified
-> >     not ok 1 selftests: ftrace: poll # exit=255
-> > 
-> > Fix this by using TEST_GEN_FILES to build the 'poll' binary as a helper
-> > rather than as a test.
-> > 
-> > Fixes: 80c3e28528ff ("selftests/tracing: Add hist poll() support test")
-> > 
-> > Signed-off-by: Ayush Jain <Ayush.jain3@amd.com>  
-> 
-> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> 
-> -- Steve
-> 
-> > ---
-> >  tools/testing/selftests/ftrace/Makefile | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/testing/selftests/ftrace/Makefile b/tools/testing/selftests/ftrace/Makefile
-> > index 49d96bb16355..7c12263f8260 100644
-> > --- a/tools/testing/selftests/ftrace/Makefile
-> > +++ b/tools/testing/selftests/ftrace/Makefile
-> > @@ -6,6 +6,6 @@ TEST_PROGS := ftracetest-ktap
-> >  TEST_FILES := test.d settings
-> >  EXTRA_CLEAN := $(OUTPUT)/logs/*
-> >  
-> > -TEST_GEN_PROGS = poll
-> > +TEST_GEN_FILES := poll
-> >  
-> >  include ../lib.mk  
-> 
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
