@@ -1,122 +1,181 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211687263D;
-	Wed,  7 May 2025 18:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083C028D846;
+	Wed,  7 May 2025 18:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746641916; cv=none; b=XE6QTurLnqTY6GQ6mXZ7m4QTvmvGCa4O3/pw5S/xTPWicyPoi1jBkQTO5mjNtVhH9SQZeCDNu5sG6IVO8mlHa3btRNHG/V1ubolfFYCLafoHDDITaMmbLvtBfN/eThClzMmoW4UCCoQSij1Et25sDwdYyn+eSTV1i5dT4RVCnuA=
+	t=1746641934; cv=none; b=YashmdrhAX5cSQ7cQz9+GENaOcJpEJY7otnxewlTyjLZl49BB/xPCAMfMePYwGOrPxfOxg2S6mILrT4Ko787swujBQdQbh65gLF15MRQQMD05suKJq37i0R0FnItRHc1xMn2tX5Cw3cKJ0/hbCs5rH25HTgXngxGGpH85PLfby4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746641916; c=relaxed/simple;
-	bh=KMYWzqgC8ALedbSK7njrAUiFbyvgeOiiKXcBjlb8zD8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rwis+/xyQVsiowmf7PuFKjHYJP1vY3WlRMwPRuLsM3ixc1kAyqnLX8/ULqqp1JZ7O6JarNRXm8ScULc7lQ7uEftznCTYCsdI6aiHBnjYdkqMPqaM2oA64uepcdYZVc9Cp2JZJMOyDKlKKftFvkzEZV90Yvo7x2sPahMrR6NvWcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fbRtG7Q2; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746641934; c=relaxed/simple;
+	bh=Cb7lPfa1I+nXXHsCAj5RVedGy/8u1X7OZXT0Y0ZEGu0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qdAb5x/jHCWnvjOb+wYYpmIwSm+tz1b38sgHkhqPc9sCM1bL3sJjv6tvcOmY7D6ldRLBlEp+5DyL+Tasa1IF5dOEebbznZVGywFghmR3L6ttNcl7C1Hy/KmpYVRe63hxU0Vn5HU6Jo2V7wPDHjSXztFM1X1l57FvEGaOdPONkkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=qnTrhkQc; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fbRtG7Q2"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736aaeed234so245732b3a.0;
-        Wed, 07 May 2025 11:18:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746641914; x=1747246714; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y/b9kLOJyNOOgXTAvMvRZx+q9I+LG3sxWJKTuz4qb4Y=;
-        b=fbRtG7Q2oQIcCWGOsk6hf1VvLVp80Pr+FHl6vZkUII44UghULt2O2i6HsZpLrxsEV9
-         O6cgtTSqtPmkPconeVYr3i+nw1JKZBErZye82IEdxHpMinUTpt0Tc2WD0Okm5G1wyDKX
-         d/aJM2oJkT3thODK6OcWzpIPvUk3xLFEdOzJfZJTEkCnirBFEqR1ytCOQdgmcZRU0ucY
-         UxQpr/CpCEdMFKjGY2tTzlkWu3nhaiRZmbRT2noUHvxKXIWcG5UVlLhShLXF3HXrG6id
-         bK8JpmVydqu1+mIW69nres1W2Kv/aKOdwdotEbtpKC5rZqNd0RiAnLy9+MSl6KuIh+mM
-         8nXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746641914; x=1747246714;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y/b9kLOJyNOOgXTAvMvRZx+q9I+LG3sxWJKTuz4qb4Y=;
-        b=p9GWRRI3onIailsiXd5djRXxZIZr0+lM3R1lnoeQ6JBYBQNxKsG+FnEf9r+1ybh7q1
-         ut5RNR6kd+3kzn14cSb6WE6g6nfxBnHrfwqvTslCa1AslWCcTvwn8UHUMx/l5vqdQkOJ
-         N5YazeiJ/h0YY0cM+uhUx6AJoh4+hhyk2f9gV0Uxn8JF11KwkbIxBVn0vds6rXwJ/Z5p
-         UNVveYn2oGsWqGWSxxLxu4+XDQsr3uNQRlu62zDojvHEak9nVYA/WxRhDefcq/A4nZLl
-         6J57KPxscF+BmKfgeN0vAdjsjb83uNELaAZfIo3ESiF2M/P/g4uUwnpk3D1iR0KkmOZh
-         gh9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUTo+Z1+zh2pvqCxrEc3DgYBzd9MbFmhItUR4UsexFLTW/bueeFrdwh9ZAl5jsc6QWjkJ8=@vger.kernel.org, AJvYcCV9Db6OvNaWKr4P53xUDcwtUpWhE649cj/eYy1pWyb4yfGWIeNmj/FgE12dEB33G3doPbqPA4x8lYeFb7K4mliq@vger.kernel.org, AJvYcCWK3ejLdzjd8G3a1qsIab5rRqIZvNIDdDBuHEDx4QRxltxEDrKHOalnV7FWzY2P+LvTm7RYzQxjspFKpg==@vger.kernel.org, AJvYcCWYYRPOmzi4lzYEVYaPP+Kn7afE1ZyPiMiq/o81mvOd07Nssdt3NnP2kj3ePe36gn7Q7Zr+J9ErxxOhcbgK@vger.kernel.org
-X-Gm-Message-State: AOJu0YztFnW6QWM6NjOkmJowxeSAmtvN1SWz2pOTO1wWIYiJmIhePH6c
-	jtCGLsXvkDhqE2mUBurAYPY2uxRyj23ZFuNUkN2+G/mqkMbL+irydlaPQhtGptBA6+F3vTEQZyE
-	OUZPDwIHWdbvCd6xvQLpsOog0bKE=
-X-Gm-Gg: ASbGncvMyWe9ofj7unepjYOmwibk+dptpSuYga+w7AaHUgt+WHuOqlqJHy/RnF8LLVn
-	fE5fodTXYvHCBvEhNNEADY2Y92xJyfedrQORKSRvS6Qz2fs0Cv6zM26zaf5wOWu0HRIeDIW3Xvb
-	bbq89lLjVN8I6qmTtEHAdvBYvXTOQ3MvE5p+ZSzxYkykGSjuRY
-X-Google-Smtp-Source: AGHT+IErQi2Er7r17YhBc/+o6xGPrWkIlSLUIKchIAzkOkxgoMQkvfSEziYBzRgcNHcxELm+ZTC0AxHxR340ziV44Pc=
-X-Received: by 2002:a05:6a20:c706:b0:1f5:87a0:60ed with SMTP id
- adf61e73a8af0-2159af9c759mr321957637.19.1746641914136; Wed, 07 May 2025
- 11:18:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="qnTrhkQc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=6ugXgSCQEYTAHRBy/pD+R4TTEhjYrAi8FqkY7a1ivXI=; b=qnTrhkQcB1dfrE1kXPGtGpVrFt
+	qGCJCIC0kkV+Y7VfZu+XyDXpp4Eioep2xWINz8URTXXIMODcmALdeUvRqdK0Fu/XhCnFCMhivS0lM
+	WtWOh6dZUWbYID+BA/neL2UiEHWHdV1p2Yn9y9wZCLlcezA1Db1M0t3gIKKVRVvVVNhkmbYOSkbO4
+	srC480Dfszwlflq2bO8+26GxBVMACaVmL6evD8yyZ6c4haNcrJVyKwizXCJKGHgWUrr/VmFPputQQ
+	IWqeRAYoHIWCHIKt0m8mn430fwNTWEZkSd6z2Z7nVg7lqnxWDxmozRo+Co3SUEMhPIb6RZujZN0c4
+	Z3mZnM4A==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56908)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uCjLt-0007y2-0i;
+	Wed, 07 May 2025 19:18:41 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uCjLp-0005zp-0X;
+	Wed, 07 May 2025 19:18:37 +0100
+Date: Wed, 7 May 2025 19:18:37 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Hutterer <peter.hutterer@who-t.net>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [BUG] Stuck key syndrome (was: Re: [PATCH net-next v2] net: dsa:
+ microchip: Add SGMII port support to KSZ9477 switch)
+Message-ID: <aBuj_ftDDNSnW4yF@shell.armlinux.org.uk>
+References: <20250507000911.14825-1-Tristram.Ha@microchip.com>
+ <20250507094449.60885752@fedora.home>
+ <aBsadO2IB_je91Jx@shell.armlinux.org.uk>
+ <20250507105457.25a3b9cb@fedora.home>
+ <aBsmhfI45zMltjcy@shell.armlinux.org.uk>
+ <aBsu-WBlPQy5g-Jn@shell.armlinux.org.uk>
+ <20250507153236.5303be86@fedora.home>
+ <aBtHmNGRTVP9SttE@shell.armlinux.org.uk>
+ <20250507135126.7d34d18f@fedora.home>
+ <5pqtpt3o7swty6mxdsnitultixnemfiix3zuxsxzhjb7edaylu@4d3fe7agyeuv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505-vmlinux-mmap-v3-0-5d53afa060e8@isovalent.com>
- <20250505-vmlinux-mmap-v3-2-5d53afa060e8@isovalent.com> <CAEf4BzboH-au2bNCWYk1nYbQ61kGbUXuvTxftDPAEGF1Pc=TLw@mail.gmail.com>
- <CAN+4W8gcquJRkZw+Knt=vqwR4YM8w5RbRNO-XyfE+DAyiEWANw@mail.gmail.com>
-In-Reply-To: <CAN+4W8gcquJRkZw+Knt=vqwR4YM8w5RbRNO-XyfE+DAyiEWANw@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 7 May 2025 11:18:20 -0700
-X-Gm-Features: ATxdqUHkJPgp2jd7mdL1fCg-FDYV5M7we5uV-H2O4mH6XB9PR-oIz2Kv8LBAT2o
-Message-ID: <CAEf4BzZ85DyEj2ey7y46tRHd=kP4xvqn5z8H3NO3bRTXZ2Mbaw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 2/3] selftests: bpf: add a test for mmapable
- vmlinux BTF
-To: Lorenz Bauer <lmb@isovalent.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5pqtpt3o7swty6mxdsnitultixnemfiix3zuxsxzhjb7edaylu@4d3fe7agyeuv>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, May 7, 2025 at 2:14=E2=80=AFAM Lorenz Bauer <lmb@isovalent.com> wro=
-te:
->
-> On Tue, May 6, 2025 at 10:39=E2=80=AFPM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
->
-> > > +       raw_data =3D mmap(NULL, end, PROT_READ, MAP_PRIVATE, fd, 0);
-> > > +       if (!ASSERT_NEQ(raw_data, MAP_FAILED, "mmap_btf"))
-> >
-> > ASSERT_OK_PTR()?
->
-> Don't think that mmap follows libbpf_get_error conventions? I'd keep
-> it as it is.
+On Wed, May 07, 2025 at 10:45:48AM -0700, Dmitry Torokhov wrote:
+> On Wed, May 07, 2025 at 01:51:26PM +0200, Maxime Chevallier wrote:
+> > On Wed, 7 May 2025 12:44:24 +0100
+> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> > 
+> > > Hi Maxime,
+> > > 
+> > > On Wed, May 07, 2025 at 03:32:36PM +0200, Maxime Chevallier wrote:
+> > > > Hi Russell,
+> > > > 
+> > > > On Wed, 7 May 2025 10:59:21 +0100
+> > > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> > > >   
+> > > > > On Wed, May 07, 2025 at 10:23:17AM +0100, Russell King (Oracle) wrote:  
+> > > > > > [Sorry for going off topic here - changed the Cc list, added Linus,
+> > > > > > changed the subject.]
+> > > > > > 
+> > > > > > On Wed, May 07, 2025 at 10:54:57AM +0200, Maxime Chevallier wrote:    
+> > > > > > > On Wed, 7 May 2025 09:31:48 +0100
+> > > > > > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:    
+> > > > > > > > [rest of the email got deleted because Linux / X11 / KDE got confused
+> > > > > > > > about the state the backspace key and decided it was going to be
+> > > > > > > > continuously pressed and doing nothing except shutting the laptop
+> > > > > > > > down would stop it.]    
+> > > > > > > 
+> > > > > > > Funny how I have the same exact issue on my laptop as well...     
+> > > > > > 
+> > > > > > I've had the "stuck key" behaviour with the HP Pavilion 15-au185sa
+> > > > > > laptop I had previously (normally with ctrl-F keys). However, hitting
+> > > > > > ctrl/shift/alt would stop it.
+> > > > > > 
+> > > > > > This is the first time I've seen the behaviour with the Carbon X1
+> > > > > > laptop, but this was way more severe. No key would stop it. Trying to
+> > > > > > move the focus using the trackpad/nipple had any effect. Meanwhile
+> > > > > > the email was being deleted one character at a time. So I shut the
+> 
+> If we indeed lost a key release event somewhere the way to "restore" it
+> is to hit the stuck key again. Then we should get press/release with
+> press most likely being ignored and release achieving the desired
+> result. Of course that will not help if embedded controller is confused.
 
-ASSERT_OK_PTR() isn't libbpf specific (and libbpf is actually
-returning a NULL or valid pointer for all public APIs, since libbpf
-1.0). But if you look at the implementation, "an OK" pointer is a
-non-NULL pointer that is also not a small negative value. NULL is a
-bad pointer, -1 (MAP_FAILED) is a bad pointer, and so on. So it's a
-pretty universal check for anything pointer-related. Please do use
-OK_PTR, it's semantically better in tests
+I tried pressing every key...
 
->
-> > > +       btf =3D btf__new_split(raw_data, btf_size, base);
-> > > +       if (!ASSERT_NEQ(btf, NULL, "parse_btf"))
-> >
-> > ASSERT_OK_PTR()
->
-> Ack.
->
-> > Do you intend to add more subtests? if not, why even using a subtest st=
-ructure
->
-> The original intention was to add kmod support, but that didn't pan
-> out, see my discussion with Alexei. I can drop the subtest if you
-> want, but I'd probably keep the helper as it is.
+> > > > > The mysterious thing is "Keylock active" - clearly it isn't because I
+> > > > > can write this email typing on that very keyboard. However, I wonder
+> > > > > if it needs i8042_unlock=1 to set I8042_CTR_IGNKEYLOCK.
+> 
+> Just ignore this message, it is harmless and trying to flip the bit
+> might confuse the emulation even more. Maybe we should lower the
+> severity of it to debug.
+> 
+> That said I do not see it on my Carbon (neither v5 nor v12, can't check
+> v9 because it is at home)... What version of Carbon do you have? Do you
+> have up-to-date BIOS/EC?
 
-yeah, let's drop the subtest, it's a bit easier to work with
-non-subtest tests, IMO
+Neither did I see a problem until today, and I've been using the laptop
+since October 2024, and this is the first time it's had an issue.
+
+Looking at fwupd, it has an Intel ME update pending (1.32.2418 to
+1.35.2557). I can't find a way to get any update history beyond
+that out of fwupd and fwupd doesn't seem to log to journald what
+it's doing.
+
+> > > > It just happened to me as I was typing this very email (key 'd' got
+> > > > stuck, nothing could un-stick it, couldn't move the mouse cursor but
+> > > > mouse-click events did work, had to suspend/resume the laptop to fix
+> > > > that)
+> 
+> This is weird and suggests that the breakage happens up the stack from
+> the kernel (or down in the firmware). Mouse clicks and mouse movement is
+> delivered as part of a mouse packet, so if there are button clicks there
+> will also be movement, they are not separate. If the cursor is not
+> reacting that means desktop environment is not handling input properly.
+
+So could we be looking at an Xorg bug?
+
+> The kernel does drop input events if userspace is unable to read buffers
+> quickly enough. It notifies userspace by queuing special
+> EV_SYN/SYN_DROPPED event and userspace is supposed to query the full
+> device state upon receiving it to figure out what to do. I doubt we are
+> running into this with keyboards, but maybe we should add some logging
+> there to rule this out.
+> 
+> I'll add Peter and Benjamin to this thread in case they have ideas.
+
+I'm thinking of leaving evtest running in a terminal, so its output
+can be inspected if it happens again. One issue though is the
+timestamps aren't readable, but I'm sure with a bit of perl
+post-processing that could be fixed.
+
+That would allow an answer to "is it kernel or firmware" vs
+"userspace".
+
+The problem is - if it's taken 7-ish months to show for me, it's
+likely that evtest won't be running when it next happens (as there
+will be needs to reboot for kernel upgrades/firmware upgrades in
+that time.) Really, it needs to be something like an automatically
+started at boot e.g. evtest inside a detached screen session.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
