@@ -1,181 +1,146 @@
-Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11931EE7B9;
-	Wed,  7 May 2025 12:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517971B0402;
+	Wed,  7 May 2025 12:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746620252; cv=none; b=OEPGrlXKu6tgiZ1UYc/0i3YVndkZ+s8xzytX2X3n5mxk7KrNFedeodB/kwIXY8BVraa9X3KwhsHL2lq9h8StknsUmI1Nz50CNMGUihqTD27JEJf0s5qHQSVlPLfhQvQbeAGK1r5WVx9iIDjmzUB3KjPb5yrE3ohPOyRR5KZ6upU=
+	t=1746620366; cv=none; b=e8yvTOq4eoRaZc1wzghj5DMjqyDOh53la+CsfxS80nhhXUhJNHcU2dP8sQwGu0FN1uO0CF/l2ivVqxzEIaJRG3uR+Vxo2FSryzx8bAEyfYikl5cN0wBIqNjqthVq4GOcyL+HtL21p3Iw74v7RlGSvm5WRGG3pUds/OgtQqc3nYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746620252; c=relaxed/simple;
-	bh=0WVuc/bIsAlAczB+iA0KhssxfdnHwoMHZCTR0ENK7Bo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=EAVqdomVwNUqla0h/drHfwJai+mFcdM/ckBF6WeclJLA51Ll0NGUEulZtIVVmFBAAibP1q8hkjSrH79egfKFi3IankOTKFEtJHmdETZ1j7V+XqTYICna8RUCdFC/FcT5Xuv5A6pvjxukScDERoPQ9Ubn3Z8lnTRqXzgxVv2SmUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=imvaQUSu; arc=none smtp.client-ip=52.95.48.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1746620366; c=relaxed/simple;
+	bh=CKMRTnS0B4bvNBSSaYh+mIAjQrBFREvL62azq950quk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hcqRkZWw8hoLpb0M3X3Viejzf2blgNNBkVwNGAGAbHPJyIdUZP/rMV1PKPDgLHMwt5aIXUa2y5lkH4COCjcAfu6EsGhL+yRAsfxUzqH4u1G6L1SdsvwXAOpy+HMLMu5UVq5hDeCdNHaSsECLgCy8yTyqFAoFiXZoBMy1BYHN2KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SRRCq/Rl; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="imvaQUSu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRRCq/Rl"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5fbeadf2275so1547478a12.2;
+        Wed, 07 May 2025 05:19:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1746620250; x=1778156250;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:mime-version:
-   content-transfer-encoding;
-  bh=UfyImMnMFjKQVq6DhjDkJEAaGyvs/fA8oMIw3bn/0mI=;
-  b=imvaQUSuk3Mg9x5DaPpvW3teXKeKGS/00g4grGQ4af6MwE3B6Ej8eFTo
-   p6F1jFZvBBjHDhuB6e6aXOoakIGm1l/55ggDp/+C/GFCI8U9ljPRoKw24
-   KIgA8HbSrF0Z/GyWwEolle07st3dP2pfXjNzBtIV6vMnGz6t8C9F1jy34
-   WLKB8Quw0+lzuODqF2ROd0orcmCeIyCf0paVP/mWqB+4qjus5ZUSz4ptQ
-   bOOgxCS/3MisactHosURihSXyu92vbwe/c8KZmsXYI4w4m/DseLJ0TF4P
-   bLEi4dYcmSh81h3O2GNmDuIgy6f1CXIKBVdj0Z2ZzLsoJqodtnBq6sEzl
-   A==;
-X-IronPort-AV: E=Sophos;i="6.15,269,1739836800"; 
-   d="scan'208";a="487565859"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 12:17:24 +0000
-Received: from EX19MTAEUA001.ant.amazon.com [10.0.10.100:15948]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.24.17:2525] with esmtp (Farcaster)
- id dc0efbea-8ae5-4ee4-925f-a59bad1bdfcc; Wed, 7 May 2025 12:17:22 +0000 (UTC)
-X-Farcaster-Flow-ID: dc0efbea-8ae5-4ee4-925f-a59bad1bdfcc
-Received: from EX19D008EUC001.ant.amazon.com (10.252.51.165) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 7 May 2025 12:17:22 +0000
-Received: from EX19D008EUC001.ant.amazon.com (10.252.51.165) by
- EX19D008EUC001.ant.amazon.com (10.252.51.165) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 7 May 2025 12:17:22 +0000
-Received: from EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1]) by
- EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1%3]) with mapi id
- 15.02.1544.014; Wed, 7 May 2025 12:17:22 +0000
-From: "Heyne, Maximilian" <mheyne@amazon.de>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: Jeremy Linton <jeremy.linton@arm.com>, Sudeep Holla
-	<sudeep.holla@arm.com>, "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Len Brown <lenb@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, "Catalin
- Marinas" <catalin.marinas@arm.com>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
-Thread-Topic: [PATCH] ACPI/PPTT: fix off-by-one error
-Thread-Index: AQHbv0n8fZxPDOFC/UiP9w75yZUSNw==
-Date: Wed, 7 May 2025 12:17:22 +0000
-Message-ID: <20250507-bruin-gavel-d3a9c0c0@mheyne-amazon>
-References: <20250506-draco-taped-15f475cd@mheyne-amazon>
- <20250506-shapeless-merciful-inchworm-7bfdb4@sudeepholla>
- <35895e57-bbe2-4ff9-b1d4-4b70e28ed8a1@arm.com>
- <20250507-argue-rant-9f48ba38@mheyne-amazon>
- <CAJZ5v0gTRcivKKVOx8YhrPyfXJBwL0x+zay9wXrWeod4Lf_Kwg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gTRcivKKVOx8YhrPyfXJBwL0x+zay9wXrWeod4Lf_Kwg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F5C51FEF26083A4B9BAEF0A47B47B1F8@amazon.com>
+        d=gmail.com; s=20230601; t=1746620362; x=1747225162; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kV+KjlfLL/cADUTBqt3WXEfFAs0DbcGPIboT/FQzAro=;
+        b=SRRCq/Rlqf7G1+jwbq+YA2DHdhdH52EdTkQ1JtV+IpWwBDT5QcKZhAQAWDDgdKTD4G
+         grNnXZMWs8wlJ19zwz7kJ7Xzao6t921bRZ58JXDthIaCeRCvAXqyUTxjoJz4gurom1iJ
+         BsL7nebZc/5ybJVZQNrYbWSMH2iydbNVbqd/4w0kVrB55s8PODQyRo9P5ZhmvGDydj2d
+         ECZR+kS2RjKZbLarmheYzRAqSQu11yOo1dXL4Ajir/WkCLFccvyaPRrR+ys8fy4NAmAf
+         DcU+4y+GbPMOMb9zPbHUqHv2ZpcL9+gAm2SLFApNDOgRLhZC3V0ln8vUVwDt/Xzq+WVj
+         Iyyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746620362; x=1747225162;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kV+KjlfLL/cADUTBqt3WXEfFAs0DbcGPIboT/FQzAro=;
+        b=fk36lnAjXG8DulNydErgxxCD78VHgBv0p5z6Qb+5YUyrdwmBobIN6gEPx5o1dLzT5d
+         6YUKMliHzuId16JTVYR2A0sHA73KqGMfSAwRtITNk4L8z1dLWc1IRhV0rDGnnTMHOej/
+         +VcyVQo2M40F2gsUJc6DhyfyYvU165WjVoMGcTp7wfzXMc0zdpKtBNKpn/3Iwn6XkHHe
+         Jvx1m8SkdcV76F3W8UxGrP+aA9WeiYgN7fBhdMsKWFVp3TZKUbgThBNyojKeQbmAGYKb
+         5xACUQSzYHEExTFI9CEoQVn9ivwCq2ZlbEPcurQ+Ip5OF6bfXxiLGpBUa+FdpPhS1ALv
+         yk9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWV4lYd5oyAyMqLgfKiaFVgWGxESry8JHu5/Wa0f+jC2HyF5h27fdHb0K+TzqTEQyiUH6MEEYGEffM=@vger.kernel.org, AJvYcCWgJc7KWRtz1A+b5aZV1pMN8CkKi5VBrtucGhNyoFPKWuPEBqpKLQ6cZkzh98eQ6iPix81GxfW02NFgQIY=@vger.kernel.org, AJvYcCXRiYao6DTSp+ZhGyzeyJzM/qp18uS8Dyk34Vdzl8yV5r0NOctSEkM0UW0/fN1C9vKNzelm2JeuVCCus/Zu@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzg1vVALkfB3Su5Lsl1Qd+2MkEPRBXY6s87MtoPwa4ML9yXUYy/
+	m3bjiLMk3YU0XiCy4YXe9e9upuM3draMBtR0EdKsOuwUF9ea6TUI
+X-Gm-Gg: ASbGncsBopArdPyLkpIGp/7JccrWyyvcUse+0eLA0AzgsoEpUUGv68zBD3Kgn34qveO
+	Bz1hEYc8j9AHLx6Ygu+cUNmx27UVja8+Yqe7IrYa+qVyxOFyx8lidx6LCR2vKTEYiiPzXNBELL6
+	Qi7Kym5VO6ljCVwg92OPFzU+xbh+PGrbPKnF5h+eShb5rlqbb1S6x7JG1AC2Lo7B9Gv35E/6bfj
+	nKn94btkVUnRePFF5kLE5DKAEqFuc25xDirOPIljU7lwwNkrYksao9Kwp4vjVH018a4G/oSAx8l
+	N8Mn7dDfHHgype0xGTCmG1iikb0kCvovkpyCK9EPUdRZTvwzUBpb
+X-Google-Smtp-Source: AGHT+IEqa0eIvs9J2+yFgAMTJ+c01AQk+1L/p7LFOztMr/qgDUejaP47ibyyXFy6eMTqQBvUVBkwXQ==
+X-Received: by 2002:a05:6402:2712:b0:5fb:165:2a95 with SMTP id 4fb4d7f45d1cf-5fbe9dfbfaemr2722828a12.13.1746620362385;
+        Wed, 07 May 2025 05:19:22 -0700 (PDT)
+Received: from demon-pc.localdomain ([188.27.128.5])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa777557b9sm9350002a12.10.2025.05.07.05.19.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 05:19:21 -0700 (PDT)
+From: Cosmin Tanislav <demonsingur@gmail.com>
+To: 
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Romain Gantois <romain.gantois@bootlin.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	Cosmin Tanislav <demonsingur@gmail.com>
+Subject: [PATCH v5 0/9] i2c: atr: allow usage of nested ATRs
+Date: Wed,  7 May 2025 15:19:06 +0300
+Message-ID: <20250507121917.2364416-1-demonsingur@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 07, 2025 at 01:59:12PM +0200, Rafael J. Wysocki wrote:
-> On Wed, May 7, 2025 at 1:53???PM Heyne, Maximilian <mheyne@amazon.de> wro=
-te:
-> >
-> > On Tue, May 06, 2025 at 03:11:20PM -0500, Jeremy Linton wrote:
-> > > Hi,
-> > >
-> > > On 5/6/25 8:43 AM, Sudeep Holla wrote:
-> > > > On Tue, May 06, 2025 at 01:13:02PM +0000, Heyne, Maximilian wrote:
-> > > > > Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple =
-of
-> > > > > sizeof() calls") corrects the processer entry size but unmasked a=
- longer
-> > > > > standing bug where the last entry in the structure can get skippe=
-d due
-> > > > > to an off-by-one mistake if the last entry ends exactly at the en=
-d of
-> > > > > the ACPI subtable.
-> > > > >
-> > > >
-> > > > Unless the firmware has populated an incorrect value for the header=
- length, I
-> > > > don't see how this is possible. The table_end should point to the a=
-ddress
-> > > > immediately following the last byte of the table. None of the heade=
-rs are only
-> > > > one byte long, so what am I missing that could explain this apparent
-> > > > off-by-one issue?.
-> > >
-> > > More likely its because the sizeof() fix was merged without proper re=
-view
-> > > and is wrong because the type isn't actually known on the object unti=
-l the
-> > > header is checked.
-> >
-> > I agree that the type might not be known at this point but the condition
-> >
-> >         proc_sz =3D sizeof(struct acpi_pptt_processor);
-> >           while((unsigned long)entry + proc_sz <=3D table_end)
-> >
-> > would make sure that there could potentially be a node of type
-> > acpi_pptt_processor because there is at least space for it. If the entry
-> > can't be of that size because it would go over table_end then it can't
-> > be an acpi_pptt_processor.
-> =
+For upcoming GMSL drivers, we need to be able to use nested ATRs.
+The deserializer changes the address of the serializers, and can only
+do that for the serializers, while the serializers have proper address
+translation hardware, and can translate the address of its children.
 
-> I don't follow.
-> =
+To achieve this, add a static flag and a passthrough flag.
+The static flag prevents usage of dynamic remapping by disallowing
+creation of new mappings outside of the attach_addr() function.
+The passthrough flag prevents messages coming from non-direct children
+(which don't have a local mapping) to be treated as erroneous.
 
-> If it is an acpi_pptt_processor entry, the original condition would be
-> sufficient (assuming the correctness of the table header), wouldn't
-> it?
+This series also contains various fixes to the logic observed during
+development.
 
-On our hardware we have the following situation:
-For CPU 63, the acpi_pptt_processor starts at 0xCAA and it has a length
-of 0x14. The PPTT table has length 0xCBE. This is exactly the case I'm
-describing. You're traversing the entries in the table and arrive at the
-last entry but currently you exit the loop because 0xCAA + 0x14 =3D=3D
-0xCBE (it's not < 0xCBE which is table_end). So you skip over the last
-CPU node.
+The previous version is at:
+https://lore.kernel.org/lkml/20250428102516.933571-1-demonsingur@gmail.com
 
-> =
+V5:
+ * pick up Reviewed-by tags
+ * expand the I2C_ATR_F_STATIC description
+ * place i2c_atr_create_mapping_by_addr() before
+   i2c_atr_replace_mapping_by_addr()
 
-> > Therefore, I don't think the sizeof() fix is that wrong but we just need
-> > to adjust the while condition.
-> =
+V4:
+ * rebase on latest merged changes, and latest submitted fixes
 
-> The sizeof() fix is correct, it makes the code work as designed.
-> =
+V3:
+ * remove i2c_atr_new_flags(), add flags parameter to i2c_atr_new() in
+   a new patch
+ * remove "i2c: atr: unlock mutex after c2a access" patch as it will
+   be moved into the base series
+ * remove alias_pairs variable used only once
+ * remove err_del_c2a label used only once
+ * add lockdep_assert_held to i2c_atr_create_mapping_by_addr()
+ * I2C_ATR_STATIC -> I2C_ATR_F_STATIC
+ * I2C_ATR_PASSTHROUGH -> I2C_ATR_F_PASSTHROUGH
+ * add passthrough check to i2c_atr_smbus_xfer()
 
-> > Alternatively, we could at least make sure that we can safely access
-> > (without crossing table_end) the acpi_subtable_header to check the type.
-> =
+V2:
+ * rename and split up i2c_atr_find_mapping_by_addr() to allow for
+   usage of parts of its logic where applicable
 
-> Yes.
-> =
+Cosmin Tanislav (8):
+  i2c: atr: find_mapping() -> get_mapping()
+  i2c: atr: split up i2c_atr_get_mapping_by_addr()
+  i2c: atr: do not create mapping in detach_addr()
+  i2c: atr: deduplicate logic in attach_addr()
+  i2c: atr: allow replacing mappings in attach_addr()
+  i2c: atr: add flags parameter to i2c_atr_new()
+  i2c: atr: add static flag
+  i2c: atr: add passthrough flag
 
-> > But the current approach seems cleaner to me.
-> =
+Tomi Valkeinen (1):
+  i2c: atr: Fix lockdep for nested ATRs
 
-> Why do you think so?
+ drivers/i2c/i2c-atr.c         | 197 ++++++++++++++++++++++------------
+ drivers/media/i2c/ds90ub960.c |   2 +-
+ drivers/misc/ti_fpc202.c      |   2 +-
+ include/linux/i2c-atr.h       |  19 +++-
+ 4 files changed, 146 insertions(+), 74 deletions(-)
 
-Because the first line in the loop casts straight to
-acpi_pptt_processor. That's why I think it makes sense to check the
-entry at which you arrived can actually be a acpi_pptt_processor
-space-wise.
-
-
-
-Amazon Web Services Development Center Germany GmbH
-Tamara-Danz-Str. 13
-10243 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-Sitz: Berlin
-Ust-ID: DE 365 538 597
+-- 
+2.49.0
 
