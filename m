@@ -1,61 +1,77 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8698D20CCED
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3041120CCED;
+	Wed,  7 May 2025 11:22:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746616929; cv=none; b=Wuu8DN5GjA+7dVu36akhnO1U9+1pZYE2zsC7pGALwDz6Jh+dNOu2oqpFvY3PFIAofImfQY6e1DvIYpNjQIlaXQMjXoklNFEbOeu9Ixco0j1AkASXtSNwBfkiSEO2lC1t5yYZ6OxVlQjVw0LjmgZCOTpMRzVHdolH2S26fxHibqY=
+	t=1746616934; cv=none; b=eQuzosE1kYszZHY26HlaTn0GBusAlvX1USr5Wigt0OJVc387rvbH7z+I/2w/yZfkVrgNX4oRKTYDraKjUrbl5FXIqceO7yNW2T+bk0RvYqZ25i1XVwR2/HDvdbD95OgzT8aahkb6BGkupNTYfYp100fB9SaSsKFC6LzxPAhxzCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746616929; c=relaxed/simple;
-	bh=NNo8O3O7I8xKI9r4pwRS0x6i00//1Wj7e63uNSkMrU4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cxDnlUZKHSiFKuGgFBAUJuIZjPUdCT5+3G1bplJIYvGafQRYf6/ksV36zuIKXm8xmZlVh0EQ5G84D267d+42vhuF7K9+r96vQIArFNqTBcazRG07sinsVjTewWkxNF8qUyMy23WdaXVC0+SMCypuv+9oULU1OEdi/ZkLoEQnm84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf58eea0fso30862385e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 04:22:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746616925; x=1747221725;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZWC9bs3J+fotQKN+Pvu1nWrnqjUtpAFHf8gyq7Cydsg=;
-        b=W5kleO2+HESCyZlc97EtZgi7pcf+QRvwGvOlc0Fc3z7sjOr1Uii/t/WP19b6QZEc6m
-         WRGVh6faK99UBtu5dfHULHazHZWj6IrbqdTq+G0Iu2VGtAyUN6DbEZ7mqxphAUn7r0gY
-         FkS84TXhQSsHFxjEY0QDRUCeB1q/oswB+zj3YJouq0BPm1rd5z+DwWI6SZJSyp1BFb6S
-         BZ+o1vBZ3RThq7uZ3z5RaT2Ddtm3U2DCy5MWiDQ7HcspMBKF+/B8D6bHr1ikEIM8S4rX
-         E86UAuWnQlQZCvWib1KaVdpmSiHtmjX1vD/2Sse8eC2tel2k2/8m38z+fdYeAR0RBaFT
-         DDuA==
-X-Gm-Message-State: AOJu0Yyv2lU6vGINtVa3MbWjY14OpbbRx7k6gLwIoXIJsmNpU9aHs59X
-	qORAu5aPdrlUeYI9fR/rE6gE9nh3y3NoTLgCnaJ5vBkQnzOGwZeu2QB5HQ==
-X-Gm-Gg: ASbGnctH9hdGWtYtzQsYTVxgmHtKwXY/AWen0BkbBeToDPH5Oqp+S04m2c55P1JPDTk
-	n0tHcypwa8EBjNF6GBS5Y3sG2p/HLH1THP6J75RBGRFfXl2Hn/+zi+lIlVyBVPIzN7Xkanmomk0
-	V8GUrc5oRdfRY0le0BcrNJ5eAsCd4s5wKFQjkHQPUo4ba32KGN1fCQ0xpwWwU9NZf5i1+AhaEJK
-	5Io5y5jy8qHB1opIg1k2lJ6e1XdnTZuA8o2NM3YUoq2IomGks8fBLgRv5UlpeReSNGDMirV1aKH
-	PLSeUrErzW46WSNHsnu53YeB/l5np/zIWKPWG/5qMMFZSmRjR0aYFD2+FIyrwyNZ1rhdJG3s3Sn
-	vFg==
-X-Google-Smtp-Source: AGHT+IGRWvY8rXW6dhn155ZAXsXvmGuf7LheNdjj6dzmGatIJg0UzjRGoVu2EsyA9CH4JuUihSF83g==
-X-Received: by 2002:a05:600c:35cf:b0:43b:cc42:c54f with SMTP id 5b1f17b1804b1-441d44c4642mr21809675e9.14.1746616924512;
-        Wed, 07 May 2025 04:22:04 -0700 (PDT)
-Received: from ramallet.home (cst-prg-46-162.cust.vodafone.cz. [46.135.46.162])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441d43a802csm28373955e9.39.2025.05.07.04.22.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 04:22:04 -0700 (PDT)
-From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-To: linux-kernel@vger.kernel.org
-Cc: Tomeu Vizoso <tomeu@tomeuvizoso.net>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Russell King <linux+etnaviv@armlinux.org.uk>,
-	Christian Gmeiner <christian.gmeiner@gmail.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	etnaviv@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm/etnaviv: Fix flush sequence logic
-Date: Wed,  7 May 2025 13:21:30 +0200
-Message-ID: <20250507112131.3686966-1-tomeu@tomeuvizoso.net>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1746616934; c=relaxed/simple;
+	bh=keSFJ17byZIacrkA9Q+V/bwj92nFNZoHf+fY/qM0Me0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YMQmt56Gm7vT9W0R/oVAOgcHOwbTRXID2W6LNyG0jGjykrAFIFB9MNuWqhG9m7PnttlCo0qSOglXeZgqEQLixDIj7ntDnIQy7SWz/CgXNPqUmAMG8CE46EX0PXB7Y+WxM2XuF42lwq0u3t0L8da6/nbpfjhuTCpLsSZXAwbypGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k7lU0qj1; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k7lU0qj1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746616933; x=1778152933;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=keSFJ17byZIacrkA9Q+V/bwj92nFNZoHf+fY/qM0Me0=;
+  b=k7lU0qj1/I3oO66APas+JruigaBfXaP5LVobdSZZtamaVKXmupfTCydy
+   uOni5hshBq1jUl3ns4keypNrDNbTeVgU7K/OMfRPk6NAxqy+0/Xjn6Xht
+   LV3QF8OJ0Of6fkvq2rezfHWKAPyHPDiEd/of/uyARxfI/8ySYR5Jr1wo1
+   A+vTPF1zem6rfE5Mirz94Qmy/OCLahuafqUF2UXAantSEpncSpyxb0MT5
+   Arad9QDo7w/3s95+eEQJ/Xp3BWchZRd6MP/L5ir0b7FN+Z/QZJDF+yB5f
+   E14FE/dHGy1ereMPZHo5SKjR6XakmWpC8qs8lw0lHqcrJSZie/SqtU3DU
+   A==;
+X-CSE-ConnectionGUID: YluFXpkeQaqp/1aiWmMK3Q==
+X-CSE-MsgGUID: uR24XAleQvWsIy7A1njhNg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="52155806"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="52155806"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 04:22:11 -0700
+X-CSE-ConnectionGUID: jFtpUtg3R3G77mWFegnbEA==
+X-CSE-MsgGUID: tJLTWUbyT1SwHxuf0Oe82Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="166974025"
+Received: from chenyu-dev.sh.intel.com ([10.239.62.107])
+  by fmviesa001.fm.intel.com with ESMTP; 07 May 2025 04:22:06 -0700
+From: Chen Yu <yu.c.chen@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: mkoutny@suse.com,
+	Ingo Molnar <mingo@redhat.com>,
+	Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mel Gorman <mgorman@suse.de>,
+	Michal Hocko <mhocko@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	"Chen, Tim C" <tim.c.chen@intel.com>,
+	Aubrey Li <aubrey.li@intel.com>,
+	Libo Chen <libo.chen@oracle.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
+	Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+	"Jain, Ayush" <ayushjai@amd.com>,
+	cgroups@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Chen Yu <yu.chen.surf@foxmail.com>,
+	Chen Yu <yu.c.chen@intel.com>
+Subject: [PATCH v4 0/2] sched/numa: add statistics of numa balance task migration
+Date: Wed,  7 May 2025 19:14:53 +0800
+Message-Id: <cover.1746611892.git.yu.c.chen@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,38 +80,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We should be comparing the last submitted sequence number with that of
-the address space we may be switching to.
+Introducing the task migration and swap statistics in the following places:
+/sys/fs/cgroup/{GROUP}/memory.stat
+/proc/{PID}/sched
+/proc/vmstat
 
-And we should be using the latter as the last submitted sequence number
-afterwards.
+These statistics facilitate a rapid evaluation of the performance and resource
+utilization of the target workload.
 
-Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
----
- drivers/gpu/drm/etnaviv/etnaviv_buffer.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Patch 1 is a fix from Libo to avoid task swapping for kernel threads,
+because Numa balance only cares about the user pages via VMA.
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-index b13a17276d07..865b07b14b38 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-@@ -347,7 +347,7 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, u32 exec_state,
- 	u32 link_target, link_dwords;
- 	bool switch_context = gpu->exec_state != exec_state;
- 	bool switch_mmu_context = gpu->mmu_context != mmu_context;
--	unsigned int new_flush_seq = READ_ONCE(gpu->mmu_context->flush_seq);
-+	unsigned int new_flush_seq = READ_ONCE(mmu_context->flush_seq);
- 	bool need_flush = switch_mmu_context || gpu->flush_seq != new_flush_seq;
- 	bool has_blt = !!(gpu->identity.minor_features5 &
- 			  chipMinorFeatures5_BLT_ENGINE);
-@@ -399,6 +399,7 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, u32 exec_state,
- 			struct etnaviv_iommu_context *old_context = gpu->mmu_context;
- 
- 			gpu->mmu_context = etnaviv_iommu_context_get(mmu_context);
-+			gpu->flush_seq = new_flush_seq;
- 			etnaviv_iommu_context_put(old_context);
- 		}
- 
+Patch 2 is the major change to expose the statistics of task migration and
+swapping in corresponding files.
+
+The reason to fold patch 1 and patch 2 into 1 patch set is that patch 1 is
+necessary for patch 2 to avoid accessing a NULL mm_struct from a kernel
+thread, which causes NULL pointer exception.
+
+The Tested-by and Acked-by tags are preserved, because these tags are provided
+in version 1 which has the p->mm check.
+
+Previous version:
+v3:
+https://lore.kernel.org/lkml/20250430103623.3349842-1-yu.c.chen@intel.com/
+v2:
+https://lore.kernel.org/lkml/20250408101444.192519-1-yu.c.chen@intel.com/
+v1:
+https://lore.kernel.org/lkml/20250402010611.3204674-1-yu.c.chen@intel.com/
+
+Chen Yu (1):
+  sched/numa: add statistics of numa balance task migration
+
+Libo Chen (1):
+  sched/numa: fix task swap by skipping kernel threads
+
+ Documentation/admin-guide/cgroup-v2.rst | 6 ++++++
+ include/linux/sched.h                   | 4 ++++
+ include/linux/vm_event_item.h           | 2 ++
+ kernel/sched/core.c                     | 9 +++++++--
+ kernel/sched/debug.c                    | 4 ++++
+ kernel/sched/fair.c                     | 3 ++-
+ mm/memcontrol.c                         | 2 ++
+ mm/vmstat.c                             | 2 ++
+ 8 files changed, 29 insertions(+), 3 deletions(-)
+
 -- 
-2.49.0
+2.25.1
 
