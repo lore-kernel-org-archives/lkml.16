@@ -1,153 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC30221D83;
-	Wed,  7 May 2025 07:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36092221FD8
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 07:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746604342; cv=none; b=A2Be+MASb327ibHpGY4e8V3pVgFRMBgFwFbsCilkzb/sy6vkqW0YyJLZmP1EPjD61JQ4Jt0AG0lF9gejxKJU2iTVoIZJM5zBpdvB6ypK42F4/w7cIte4KSI93OkC0YOkIgtBl9ikgzLe7HksKeUxffAa5TYXL/U3ROXbVRm83LA=
+	t=1746604345; cv=none; b=anajEeGVex5L1xuB+9kCnRc56iFS/Fq1r3nL7e74aSLX4qeCu3PxQl5GVKgXPEEHa6HiC8VcXzGArWmNyCc77e8jbPVk9uRk9ChxOwajg/QeFh8vo2yJcLQUft+xsdJHXM9GrcPtUjBwkvKmYPfP250uusWdwSLYsSRBbePQa4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746604342; c=relaxed/simple;
-	bh=GwAJbtPkRHjKJSJXD8je918r9KcSpVtLEPvHlE3Ftbo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sY/WVGTGLD2HCEeFEvbig8RjpL5V0fYEU4Z0Myww2YfW9Hq+pG9zF68wZT1qrjp/nMEQrEdsk6agSziiSHIsjF5Ai5wUkfV7B1KfdhMGt83SxhakOx1I/kUH/kKODQdcRZAQbQ9cpfwdSmBre01Ov0syueSo/zVZ5sT0XCrj4QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=zPzu92A2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746604345; c=relaxed/simple;
+	bh=Si1QvVZW2cyZhFItNCPhnZgDqOaPxdjxwEHoeO/uyhQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ep986k/x/yr0Vb+vYQjhQaIemKwz6LRl8uXAjVBLMfKPxRke3YUllSO65QO4TiOJ1VRPvH3T4/24B0g4+wOFh1d+Fhq75mBo88ZX18B24/omTVJbNVtoFMrCblFzoBYC0hjlH6VJdKrqBQczOxIiD0N3VVD9q8DqP73zwtKwpp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gO1ho51U; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="zPzu92A2"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E1E88C4CEFE;
-	Wed,  7 May 2025 07:52:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux.dev; s=korg;
-	t=1746604341; bh=GwAJbtPkRHjKJSJXD8je918r9KcSpVtLEPvHlE3Ftbo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=zPzu92A2zbQ1giPlEA/lHKJ2nrC4UZiYSiMY53Zs9XF/rT0uYC2iuuQ575o6zF8PY
-	 PR1F8//XNZtwGaMmxYmsCrMutXLen4prVBLeknxvR6owoULCLoyx/gXn3Kzgn+/Cla
-	 J6KOKTwbEynnMetdmeFyPyo4EHezTGjAbA1WErB0=
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE55C3ABC9;
-	Wed,  7 May 2025 07:52:21 +0000 (UTC)
-From: Richard Leitner <richard.leitner@linux.dev>
-Date: Wed, 07 May 2025 09:51:37 +0200
-Subject: [PATCH v4 08/10] media: i2c: ov9282: add strobe_duration v4l2
- control
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gO1ho51U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746604342;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lRVyImEnQpTkFTjBNjAdsm9T3PFY6JNS8zC6D6rKBZg=;
+	b=gO1ho51UEIFMxQhxlMSEuGOGwOzDdpyDlHrpQdEfCiySw4ApqvxoSViHOxaxZWYMAyTr4S
+	aoRMDTy9yQ3SytlGo8UgUP8Vc4vCVWi6kWHCdkdqFhgPpSlTdfPqgwe6rDD95qydsDgc0g
+	QGYXll1lvhfy11QAbgBBAvN3STYbYQU=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-440-8idlgT8EPBWM-RQaBj7EPg-1; Wed, 07 May 2025 03:52:20 -0400
+X-MC-Unique: 8idlgT8EPBWM-RQaBj7EPg-1
+X-Mimecast-MFC-AGG-ID: 8idlgT8EPBWM-RQaBj7EPg_1746604340
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d0830c3f7so47998545e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 00:52:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746604339; x=1747209139;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lRVyImEnQpTkFTjBNjAdsm9T3PFY6JNS8zC6D6rKBZg=;
+        b=sg0Lb21Jki1gKmIUNIRr3RkfoVI50RDvb7jZKAQ0RJCwhBrI1NXMl7REYLmDvZhQNI
+         5mPJ5hlp+PZdHPohClPQlQXbAZogIwYDZAUYmKS5eTz0BqIfxpOlg8qN3We7vCsgoC69
+         tWH6OphfEPU7uADjW6XCJFwdUHzWuIJL6m7293C08nby/1J2lNXO7uWkw6D1r3k03XYP
+         u0ptaiTCVNs3Exi8ZqperReqbEIbJKUIuiFfw/bnyhqo4T13ouhRWnrZV8tGSekW9nbh
+         R61J4J5uEOM5akzH8A2NgMyr6dXEo7EO4Jh8eSp9wA/IV+e2SRZFAPI4PA5e3ZaXKAnW
+         z3Rw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUcPq/Y1hdtk+uyM9CkgAEM3aa3CO8i0QfBOI8hjXLmhyqhzXk7O2S8/1ljuAmeu7N2dwmrc14wX9qpoE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcA/RvB+yJSv0kFnm38Tm2CyyiuXumyH8wd3E8N1Q6ZRBdh3wn
+	oCSoWBa0YXLmHhM4xRR77Aw7BDREly8rGRMy3U/coRPTfcdFBjoUPCmAb0QzK5Fh4m0UvtIWL7J
+	JIMuy7cfVUxkauha8l2qOjWz7K14wghzdXF1EwJ0XYqR7qNQAIhjhpM+zusa845FauMmB5w==
+X-Gm-Gg: ASbGncudd7MWI5+AkMcZMq5x4P+J/MTmABAjyDw3RLT1NDtUkmSbVMBa5DKTu03N27J
+	ggy0n5c1scZeeIOpXn1p9KQSsBIJM51pgt2pawXsNxLozAbrXvzRWf9/p0sWPy7pkyFjp3o9Q5p
+	CYUc4FC2A2kRqu5ZOxUdlpxdstfT72795Bh5WXzu/iCh6qnX1sdRVfvaBuffRYTE9BlLvZdTX4B
+	1ecU9bihsa2yuh7HqeHj44Q8tOjHYkhNtZWUBjO+uwdnzhKZuLbFndTL92ywExNnCYpSepybQaT
+	iZnClysdgUsw55PcTmLUwdkAF8nplCegLnPtFnB2OR9XZSlDaa7HdbX6pw==
+X-Received: by 2002:a05:600c:4f12:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-441d44e0919mr17543315e9.30.1746604339058;
+        Wed, 07 May 2025 00:52:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH6bbFfoJUlE32ZpjhY8SNYfXA9NoideZRSClq3CU4H3TaCkDCmJ5dagaVohFcNt3ifY5S59g==
+X-Received: by 2002:a05:600c:4f12:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-441d44e0919mr17543005e9.30.1746604338689;
+        Wed, 07 May 2025 00:52:18 -0700 (PDT)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e01:ef00:b52:2ad9:f357:f709])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441d43a802csm21562885e9.39.2025.05.07.00.52.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 00:52:18 -0700 (PDT)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: =?UTF-8?q?Micha=C5=82=20Kope=C4=87?= <michal.kopec@3mdeb.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH] MAINTAINERS: rectify file entry in DASHARO ACPI PLATFORM DRIVER
+Date: Wed,  7 May 2025 09:52:05 +0200
+Message-ID: <20250507075214.36729-1-lukas.bulwahn@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250507-ov9282-flash-strobe-v4-8-72b299c1b7c9@linux.dev>
-References: <20250507-ov9282-flash-strobe-v4-0-72b299c1b7c9@linux.dev>
-In-Reply-To: <20250507-ov9282-flash-strobe-v4-0-72b299c1b7c9@linux.dev>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Lee Jones <lee@kernel.org>, 
- Pavel Machek <pavel@kernel.org>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
- Richard Leitner <richard.leitner@linux.dev>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746604340; l=3465;
- i=richard.leitner@linux.dev; s=20250225; h=from:subject:message-id;
- bh=GwAJbtPkRHjKJSJXD8je918r9KcSpVtLEPvHlE3Ftbo=;
- b=YLTqVL/QOzefO13jNk2snq6EPLc1gQYk/jRaF7MdoabQc56jJxDsp3dZPGm+VYAMBmUcvksZM
- Oc0rzOjl5PsDSGR34GRO0/oFN6BzPXisC+JFSwmJxXqwTInSSJ46LPo
-X-Developer-Key: i=richard.leitner@linux.dev; a=ed25519;
- pk=8hZNyyyQFqZ5ruVJsSGBSPIrmJpfDm5HwHU4QVOP1Pk=
-X-Endpoint-Received: by B4 Relay for richard.leitner@linux.dev/20250225
- with auth_id=350
 
-Add V4L2_CID_FLASH_DURATION support using the "strobe_frame_span"
-feature of the sensor. This is implemented by transforming the given µs
-value by an interpolated formula to a "span step width" value and
-writing it to register PWM_CTRL_25, PWM_CTRL_26, PWM_CTRL_27,
-PWM_CTRL_28 (0x3925, 0x3926, 0x3927, 0x3928).
+From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-The maximum control value is set to the period of the current default
-framerate.
+Commit 2dd40523b7e2 ("platform/x86: Introduce dasharo-acpi platform
+driver") adds the platform driver drivers/platform/x86/dasharo-acpi.c and
+a new file entry referring to the non-existent file
+drivers/platform/x86/dasharo_acpi.c in section DASHARO ACPI PLATFORM DRIVER
+rather than referring to the file added with this commit.
 
-All register values are based on the OV9281 datasheet v1.53 (jan 2019)
-and tested using an ov9281 VisionComponents module.
+Adjust the file reference to the intended file.
 
-Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 ---
- drivers/media/i2c/ov9282.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
-index b6de96997426f7225a061bfdc841aa062e8d0891..0bbdf08d7cda8f72e05fdc292aa69a4c821e4e03 100644
---- a/drivers/media/i2c/ov9282.c
-+++ b/drivers/media/i2c/ov9282.c
-@@ -97,6 +97,10 @@
- #define OV9282_REG_MIPI_CTRL00	0x4800
- #define OV9282_GATED_CLOCK	BIT(5)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 34a55e3ff863..82e7b053ea76 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6576,7 +6576,7 @@ DASHARO ACPI PLATFORM DRIVER
+ M:	Michał Kopeć <michal.kopec@3mdeb.com>
+ S:	Maintained
+ W:	https://docs.dasharo.com/
+-F:	drivers/platform/x86/dasharo_acpi.c
++F:	drivers/platform/x86/dasharo-acpi.c
  
-+/* Flash/Strobe control registers */
-+#define OV9282_REG_FLASH_DURATION	0x3925
-+#define OV9282_FLASH_DURATION_DEFAULT	0x0000001A
-+
- /* Input clock rate */
- #define OV9282_INCLK_RATE	24000000
- 
-@@ -687,6 +691,25 @@ static int ov9282_set_ctrl_flash_led_mode(struct ov9282 *ov9282, int mode)
- 				current_val);
- }
- 
-+static int ov9282_set_ctrl_flash_duration(struct ov9282 *ov9282, int value)
-+{
-+	/*
-+	 * Calculate "strobe_frame_span" increments from a given value (µs).
-+	 * This is quite tricky as "The step width of shift and span is
-+	 * programmable under system clock domain.", but it's not documented
-+	 * how to program this step width (at least in the datasheet available
-+	 * to the author at time of writing).
-+	 * The formula below is interpolated from different modes/framerates
-+	 * and should work quite well for most settings.
-+	 */
-+	u32 val = value * 192 / (ov9282->cur_mode->width + ov9282->hblank_ctrl->val);
-+
-+	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION, 1, (val >> 24) & 0xff);
-+	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 1, 1, (val >> 16) & 0xff);
-+	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 2, 1, (val >> 8) & 0xff);
-+	return ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 3, 1, val & 0xff);
-+}
-+
- /**
-  * ov9282_set_ctrl() - Set subdevice control
-  * @ctrl: pointer to v4l2_ctrl structure
-@@ -756,6 +779,9 @@ static int ov9282_set_ctrl(struct v4l2_ctrl *ctrl)
- 	case V4L2_CID_FLASH_LED_MODE:
- 		ret = ov9282_set_ctrl_flash_led_mode(ov9282, ctrl->val);
- 		break;
-+	case V4L2_CID_FLASH_DURATION:
-+		ret = ov9282_set_ctrl_flash_duration(ov9282, ctrl->val);
-+		break;
- 	default:
- 		dev_err(ov9282->dev, "Invalid control %d", ctrl->id);
- 		ret = -EINVAL;
-@@ -1346,7 +1372,7 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
- 	u32 lpfr;
- 	int ret;
- 
--	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 11);
-+	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 12);
- 	if (ret)
- 		return ret;
- 
-@@ -1418,6 +1444,9 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
- 			       (1 << V4L2_FLASH_LED_MODE_TORCH),
- 			       V4L2_FLASH_LED_MODE_NONE);
- 
-+	v4l2_ctrl_new_std(ctrl_hdlr, &ov9282_ctrl_ops, V4L2_CID_FLASH_DURATION,
-+			  0, 13900, 1, 8);
-+
- 	ret = v4l2_fwnode_device_parse(ov9282->dev, &props);
- 	if (!ret) {
- 		/* Failure sets ctrl_hdlr->error, which we check afterwards anyway */
-
+ DATA ACCESS MONITOR
+ M:	SeongJae Park <sj@kernel.org>
 -- 
-2.47.2
-
+2.49.0
 
