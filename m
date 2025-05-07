@@ -1,214 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E63A214A82;
-	Wed,  7 May 2025 11:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E8623C38C
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746618235; cv=none; b=PPV1fP9U5OUQmt4zQZ4443y2iLzymfdglC5wVxgIgXaReDWA7lLNtEX7u5ZaafpPi15zQW34ZDft6/d6fLrkUNG6mrft0zmR8nkNxpktubJ37kGEirzKg5gEv4SPnHkEmfLflJTrbA71YrYL/ZA/L7gVKa56lFauVyDy1Sd039w=
+	t=1746618246; cv=none; b=kYsi5Ddg47BLuHj6GeYOYFyIBqTHNQzyzdHpOc4qR5CIBxuBqS7Ltmdfyk5md6qKZj71IaLvM8kXtz2mxsRqXfe6OzHSVL0zPeaZ2wFied/a0tb0YZunQqha/qla8hBs6oa//o56nWedFkSpP6wpOw6zgwixMSc/FH/L8DfSt7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746618235; c=relaxed/simple;
-	bh=YGUKIY6MsniKGGoVznlGheoqVG6lXYDoidfAZzwwlgY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XdNMx7Lg8N0OrfW+s54eI3orNBTdUR7qjLLwCfOPrBWxwp/td8mAxHKuaW3wIqeH0OByF4f7fMuiUPmt1NeTN6KfUFRmlcGPvwen/u9Wa/UlIUdeUN+Tysz2pNS1XSBdtvHO6zsLjD1QBk+qkW72QkOdAaBerp5ePtOdcIiZmd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VFgsvQb8; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746618246; c=relaxed/simple;
+	bh=qEEBf/EvhFb5+S8vt2g6XJwST6O0nTQJRpn12U1g7EA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z536eqA9/a21J2VvK+di/QFvM/1qddG4wnJ3RY9iZlwUHjPs93o7um8YBavwvADy8sPurEa9zAgwgtYd+y8c0kHQchR1/gX1tZvDLdvzRSV3BTFLv0IuDQS/L7Syn45AWcRCwa68NPxAyvkhhlLjNGKG04VMUeJsPTwkLx94+p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=gU1jYMHt; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VFgsvQb8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746618233; x=1778154233;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=YGUKIY6MsniKGGoVznlGheoqVG6lXYDoidfAZzwwlgY=;
-  b=VFgsvQb8QVl94CYkk5VEn8cifHSpaUVH6tunzHEOO3Pv3kmPJlKBrsL/
-   6Qy+3bj9xbT9GDENTpGsJe2DkgdSWjJC96mtzMGwDoUj/7pUyW+OGcHRb
-   iKx3mkyEXQWeEtSDj1EjGUSmR9EnXJ4XpRVsw1qR7eHQk28woHmTSr+pc
-   c0KKggPS6CKOQE3G9dBCH0RtVsZIwP+2Djq9NZjYwqVR6Qd/W6LcB7tsF
-   7ldUnPfq77A2gumvrmpkXyk8wA5kKVsPbYnl3QpbEFs+GNygbhXnhtNk4
-   VAJ3UkQ5lGuwfyV45uajrbsD0nDgSlcC4UDfcEXcECSnt6bgP3Jho4Lff
-   g==;
-X-CSE-ConnectionGUID: JaqzB9JBRN+fBQki3EGYSg==
-X-CSE-MsgGUID: XOqrkm62Q82LXNQ9p8CRcA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="47442143"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="47442143"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 04:43:52 -0700
-X-CSE-ConnectionGUID: oPY4ZS6MTq6rF9bnZTWGCw==
-X-CSE-MsgGUID: Oo1duMMwShKiM1ihegtnEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="136945496"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 04:43:51 -0700
-Date: Wed, 7 May 2025 04:48:57 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: Re: [PATCH v3 06/13] dt-bindings: reserved-memory: Wakeup Mailbox
- for Intel processors
-Message-ID: <20250507114857.GB27839@ranerica-svr.sc.intel.com>
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
- <20250503191515.24041-7-ricardo.neri-calderon@linux.intel.com>
- <CAJZ5v0j262Jorbb5--WY6KedR7CWvdTTYP10ZRZTqXhTNJ1GiA@mail.gmail.com>
- <20250506055054.GG25533@ranerica-svr.sc.intel.com>
- <CAJZ5v0gC8p1kwVpd8vZkWKoyVaT7Udzj0X5ux03TdJ3=2b8gyg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="gU1jYMHt"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3da7642b5deso2536695ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 04:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1746618243; x=1747223043; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bVz2E+K/uMAryK5WXZfBalhzFkygNbdnQ6nqZ/JT97Y=;
+        b=gU1jYMHtLBX/bg6svOh/7/0bsT6Z+HrtMQzz7sSs+MZt1TfP1dglBLOf69poDnGZKN
+         rGGzzdWiMTgzVDiLw7vgrMpVRWE+1J74dwaV1KTqsnVjik5t+NuxzGiSUQ2ZGnqCIxNp
+         VXa8wyN+oH6CKLiCNzpnoxi88jnA5qACOS3BAagy2svsLUdUYPbe0PBSU/678M5grmac
+         CP5jSi5Y9JDkKVdXRfHqwNXY0OaiOG6skPI2gvMB0phNILSWNOhUn67LfSapnmwMlbbb
+         8BndgiZM/syqMYPm2tzvwYob1FQfT31nsoj5ZY9u9SQYiL6abQjzgCQ33ZczPsfdMsXE
+         Ar0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746618243; x=1747223043;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bVz2E+K/uMAryK5WXZfBalhzFkygNbdnQ6nqZ/JT97Y=;
+        b=aAQY4oG5Thikd4RgSZ3ttWYvMe8Bre9lrfeHZWUY1o3vOvD9P704oDGJwCxw4Dh8vj
+         19N0Hspv2DXphIRSR82lwLZ45VodmiBp/nJZwEusNqMyDrt2FUQboQq3emnn3S3/4HSk
+         m6hr1bDpwtXQt9XkBEjui4n/uZuPMrcCazkH/Att5aS43ue6EMUbKujvDLDBDPBt3krm
+         rs9wZWKJcTs1DX77vJOR4HnZL7S+RxscGiU2fYbXQIXlQzrHYcq7DMDB8Rg5CxtV4otD
+         YO1GnWCRxXyxLLVE5uNkTOXI1nOmjndiKDVlOz8wak2LJsfQnsnTkG7j8gNQ0bbZJlQt
+         o1lg==
+X-Forwarded-Encrypted: i=1; AJvYcCVuBeBfxWHTeUzyB3FiXm948P45ScJNszguIzPerrDwp9l6DR51NW8fSVYwhlqtmuPRgWC8K7ZcJ6nfwOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXSjPV/DMRwQJq0cwDgW4f+taicHqMvBCwoF90V3Nn4jAjIya5
+	0STtbRe8o2PKgWkVR6uDxs4BYOkzBdl55Tt6koBQO319U1+XTcI67iUnlta4R6bN+KX/iA5q0y1
+	uXvyf217kjfCZ2YhELWP/rjhj4S8F/mrk4oHuJA==
+X-Gm-Gg: ASbGncsoBIVKmkRMG4auuZEFucMNibPryb+LwBsAGpJGNJQIFcaN3EdM+hEPIQNPvQz
+	cp/VNMbd5RpUigkHL6gERNCW0hnhYvQyAc83E8ViJgn2JzBodfWK+wsiZcg2g/yjLOZq5oIBTwW
+	YrBPRkYvWF6wpmSu0BOpwfJIfUMFVfqU2MBQ==
+X-Google-Smtp-Source: AGHT+IEqTEU3gW24Jmigd2cIa8Pl0Ves+lUOw1f5tu/7B6fJK/PzbflFbxkax13tPvkDxDTPwZvRy4srBUyjnSLHpH0=
+X-Received: by 2002:a05:6e02:1529:b0:3d8:21ae:d9c with SMTP id
+ e9e14a558f8ab-3da738e9934mr32539925ab.5.1746618242847; Wed, 07 May 2025
+ 04:44:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0gC8p1kwVpd8vZkWKoyVaT7Udzj0X5ux03TdJ3=2b8gyg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com> <20250403112522.1566629-4-rkrcmar@ventanamicro.com>
+In-Reply-To: <20250403112522.1566629-4-rkrcmar@ventanamicro.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Wed, 7 May 2025 17:13:51 +0530
+X-Gm-Features: ATxdqUETEm-yQn1qrwlBDD0f3dy7uLqyAaalj3uycXV7-PAmSrqpx552FKWRajk
+Message-ID: <CAAhSdy0XBTW1FUuUwSBanspDwpHMRbBL-8oSiRR1R=5SgF1+hw@mail.gmail.com>
+Subject: Re: [PATCH 1/5] KVM: RISC-V: refactor vector state reset
+To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>, 
+	Mayuresh Chitale <mchitale@ventanamicro.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06, 2025 at 04:00:56PM +0200, Rafael J. Wysocki wrote:
-> On Tue, May 6, 2025 at 7:46 AM Ricardo Neri
-> <ricardo.neri-calderon@linux.intel.com> wrote:
-> >
-> > On Mon, May 05, 2025 at 03:07:43PM +0200, Rafael J. Wysocki wrote:
-> > > On Sat, May 3, 2025 at 9:10 PM Ricardo Neri
-> > > <ricardo.neri-calderon@linux.intel.com> wrote:
-> > > >
-> > > > Add DeviceTree bindings for the wakeup mailbox used on Intel processors.
-> > > >
-> > > > x86 platforms commonly boot secondary CPUs using an INIT assert, de-assert
-> > > > followed by Start-Up IPI messages. The wakeup mailbox can be used when this
-> > > > mechanism unavailable.
-> > > >
-> > > > The wakeup mailbox offers more control to the operating system to boot
-> > > > secondary CPUs than a spin-table. It allows the reuse of same wakeup vector
-> > > > for all CPUs while maintaining control over which CPUs to boot and when.
-> > > > While it is possible to achieve the same level of control using a spin-
-> > > > table, it would require to specify a separate cpu-release-addr for each
-> > > > secondary CPU.
-> > > >
-> > > > Originally-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
-> > > > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> > > > ---
-> > > > Changes since v2:
-> > > >  - Implemented the mailbox as a reserved-memory node. Add to it a
-> > > >    `compatible` property. (Krzysztof)
-> > > >  - Explained the relationship between the mailbox and the `enable-mehod`
-> > > >    property of the CPU nodes.
-> > > >  - Expanded the documentation of the binding.
-> > > >
-> > > > Changes since v1:
-> > > >  - Added more details to the description of the binding.
-> > > >  - Added requirement a new requirement for cpu@N nodes to add an
-> > > >    `enable-method`.
-> > > > ---
-> > > >  .../reserved-memory/intel,wakeup-mailbox.yaml | 87 +++++++++++++++++++
-> > > >  1 file changed, 87 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/reserved-memory/intel,wakeup-mailbox.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/reserved-memory/intel,wakeup-mailbox.yaml b/Documentation/devicetree/bindings/reserved-memory/intel,wakeup-mailbox.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..d97755b4673d
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/reserved-memory/intel,wakeup-mailbox.yaml
-> > > > @@ -0,0 +1,87 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/reserved-memory/intel,wakeup-mailbox.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Wakeup Mailbox for Intel processors
-> > > > +
-> > > > +description: |
-> > > > +  The Wakeup Mailbox provides a mechanism for the operating system to wake up
-> > > > +  secondary CPUs on Intel processors. It is an alternative to the INIT-!INIT-
-> > > > +  SIPI sequence used on most x86 systems.
-> > > > +
-> > > > +  Firmware must define the enable-method property in the CPU nodes as
-> > > > +  "intel,wakeup-mailbox" to use the mailbox.
-> > > > +
-> > > > +  Firmware implements the wakeup mailbox as a 4KB-aligned memory region of size
-> > > > +  of 4KB. It is memory that the firmware reserves so that each secondary CPU can
-> > > > +  have the operating system send a single message to them. The firmware is
-> > > > +  responsible for putting the secondary CPUs in a state to check the mailbox.
-> > > > +
-> > > > +  The structure of the mailbox is as follows:
-> > > > +
-> > > > +  Field           Byte   Byte  Description
-> > > > +                 Length Offset
-> > > > +  ------------------------------------------------------------------------------
-> > > > +  Command          2      0    Command to wake up the secondary CPU:
-> > > > +                                        0: Noop
-> > > > +                                        1: Wakeup: Jump to the wakeup_vector
-> > > > +                                        2-0xFFFF: Reserved:
-> > > > +  Reserved         2      2    Must be 0.
-> > > > +  APIC_ID          4      4    APIC ID of the secondary CPU to wake up.
-> > > > +  Wakeup_Vector    8      8    The wakeup address for the secondary CPU.
-> > > > +  ReservedForOs 2032     16    Reserved for OS use.
-> > > > +  ReservedForFW 2048   2048    Reserved for firmware use.
-> > > > +  ------------------------------------------------------------------------------
-> > > > +
-> > > > +  To wake up a secondary CPU, the operating system 1) prepares the wakeup
-> > > > +  routine; 2) populates the address of the wakeup routine address into the
-> > > > +  Wakeup_Vector field; 3) populates the APIC_ID field with the APIC ID of the
-> > > > +  secondary CPU; 4) writes Wakeup in the Command field. Upon receiving the
-> > > > +  Wakeup command, the secondary CPU acknowledges the command by writing Noop in
-> > > > +  the Command field and jumps to the Wakeup_Vector. The operating system can
-> > > > +  send the next command only after the Command field is changed to Noop.
-> > > > +
-> > > > +  The secondary CPU will no longer check the mailbox after waking up. The
-> > > > +  secondary CPU must ignore the command if its APIC_ID written in the mailbox
-> > > > +  does not match its own.
-> > > > +
-> > > > +  When entering the Wakeup_Vector, interrupts must be disabled and 64-bit
-> > > > +  addressing mode must be enabled. Paging mode must be enabled. The virtual
-> > > > +  address of the Wakeup_Vector page must be equal to its physical address.
-> > > > +  Segment selectors are not used.
-> > >
-> > > This interface is defined in the ACPI specification and all of the
-> > > above information is present there.
-> > >
-> > > Why are you copying it without acknowledging the source of it instead
-> > > of just saying where this interface is defined and pointing to its
-> > > definition?
-> >
-> > There was a discussion in the past about preferring a full description of
-> > the mailbox instead of references to ACPI [1]. I am happy to acknowledge
-> > the source in the changeset description. I explicitly acknowledge the ACPI
-> > specification in the cover letter.
-> >
-> > [1]. https://lore.kernel.org/all/20240809232928.GB25056@yjiang5-mobl.amr.corp.intel.com/
-> 
-> In which I clearly was not involved.
-> 
-> Acknowledgement in the cover letter is fine, but insufficient.
+On Thu, Apr 3, 2025 at 5:02=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar=
+@ventanamicro.com> wrote:
+>
+> Do not depend on the reset structures.
+>
+> vector.datap is a kernel memory pointer that needs to be preserved as it
+> is not a part of the guest vector data.
+>
+> Signed-off-by: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.com>
 
-I see.
+Queued this patch for Linux-6.16
 
-> 
-> Also, there is the question regarding what happens when the ASWG
-> decides to update this part of the ACPI specification.  Is the DT
-> binding going to be updated too?
+Thanks,
+Anup
 
-That was my plan. The ACPI Multiprocessor Wakeup Structure has a version
-field that I could have used.
-
-But, it looks like these bindings will not be needed after all.
-
-I will drop this patch.
-
-Thanks and BR,
-Ricardo
+> ---
+>  arch/riscv/include/asm/kvm_vcpu_vector.h |  6 ++----
+>  arch/riscv/kvm/vcpu.c                    |  5 ++++-
+>  arch/riscv/kvm/vcpu_vector.c             | 13 +++++++------
+>  3 files changed, 13 insertions(+), 11 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/kvm_vcpu_vector.h b/arch/riscv/includ=
+e/asm/kvm_vcpu_vector.h
+> index 27f5bccdd8b0..57a798a4cb0d 100644
+> --- a/arch/riscv/include/asm/kvm_vcpu_vector.h
+> +++ b/arch/riscv/include/asm/kvm_vcpu_vector.h
+> @@ -33,8 +33,7 @@ void kvm_riscv_vcpu_guest_vector_restore(struct kvm_cpu=
+_context *cntx,
+>                                          unsigned long *isa);
+>  void kvm_riscv_vcpu_host_vector_save(struct kvm_cpu_context *cntx);
+>  void kvm_riscv_vcpu_host_vector_restore(struct kvm_cpu_context *cntx);
+> -int kvm_riscv_vcpu_alloc_vector_context(struct kvm_vcpu *vcpu,
+> -                                       struct kvm_cpu_context *cntx);
+> +int kvm_riscv_vcpu_alloc_vector_context(struct kvm_vcpu *vcpu);
+>  void kvm_riscv_vcpu_free_vector_context(struct kvm_vcpu *vcpu);
+>  #else
+>
+> @@ -62,8 +61,7 @@ static inline void kvm_riscv_vcpu_host_vector_restore(s=
+truct kvm_cpu_context *cn
+>  {
+>  }
+>
+> -static inline int kvm_riscv_vcpu_alloc_vector_context(struct kvm_vcpu *v=
+cpu,
+> -                                                     struct kvm_cpu_cont=
+ext *cntx)
+> +static inline int kvm_riscv_vcpu_alloc_vector_context(struct kvm_vcpu *v=
+cpu)
+>  {
+>         return 0;
+>  }
+> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> index 60d684c76c58..2fb75288ecfe 100644
+> --- a/arch/riscv/kvm/vcpu.c
+> +++ b/arch/riscv/kvm/vcpu.c
+> @@ -57,6 +57,7 @@ static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
+>         struct kvm_vcpu_csr *reset_csr =3D &vcpu->arch.guest_reset_csr;
+>         struct kvm_cpu_context *cntx =3D &vcpu->arch.guest_context;
+>         struct kvm_cpu_context *reset_cntx =3D &vcpu->arch.guest_reset_co=
+ntext;
+> +       void *vector_datap =3D cntx->vector.datap;
+>         bool loaded;
+>
+>         /**
+> @@ -79,6 +80,8 @@ static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
+>
+>         kvm_riscv_vcpu_fp_reset(vcpu);
+>
+> +       /* Restore datap as it's not a part of the guest context. */
+> +       cntx->vector.datap =3D vector_datap;
+>         kvm_riscv_vcpu_vector_reset(vcpu);
+>
+>         kvm_riscv_vcpu_timer_reset(vcpu);
+> @@ -143,7 +146,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+>         cntx->hstatus |=3D HSTATUS_SPV;
+>         spin_unlock(&vcpu->arch.reset_cntx_lock);
+>
+> -       if (kvm_riscv_vcpu_alloc_vector_context(vcpu, cntx))
+> +       if (kvm_riscv_vcpu_alloc_vector_context(vcpu))
+>                 return -ENOMEM;
+>
+>         /* By default, make CY, TM, and IR counters accessible in VU mode=
+ */
+> diff --git a/arch/riscv/kvm/vcpu_vector.c b/arch/riscv/kvm/vcpu_vector.c
+> index d92d1348045c..a5f88cb717f3 100644
+> --- a/arch/riscv/kvm/vcpu_vector.c
+> +++ b/arch/riscv/kvm/vcpu_vector.c
+> @@ -22,6 +22,9 @@ void kvm_riscv_vcpu_vector_reset(struct kvm_vcpu *vcpu)
+>         struct kvm_cpu_context *cntx =3D &vcpu->arch.guest_context;
+>
+>         cntx->sstatus &=3D ~SR_VS;
+> +
+> +       cntx->vector.vlenb =3D riscv_v_vsize / 32;
+> +
+>         if (riscv_isa_extension_available(isa, v)) {
+>                 cntx->sstatus |=3D SR_VS_INITIAL;
+>                 WARN_ON(!cntx->vector.datap);
+> @@ -70,13 +73,11 @@ void kvm_riscv_vcpu_host_vector_restore(struct kvm_cp=
+u_context *cntx)
+>                 __kvm_riscv_vector_restore(cntx);
+>  }
+>
+> -int kvm_riscv_vcpu_alloc_vector_context(struct kvm_vcpu *vcpu,
+> -                                       struct kvm_cpu_context *cntx)
+> +int kvm_riscv_vcpu_alloc_vector_context(struct kvm_vcpu *vcpu)
+>  {
+> -       cntx->vector.datap =3D kmalloc(riscv_v_vsize, GFP_KERNEL);
+> -       if (!cntx->vector.datap)
+> +       vcpu->arch.guest_context.vector.datap =3D kzalloc(riscv_v_vsize, =
+GFP_KERNEL);
+> +       if (!vcpu->arch.guest_context.vector.datap)
+>                 return -ENOMEM;
+> -       cntx->vector.vlenb =3D riscv_v_vsize / 32;
+>
+>         vcpu->arch.host_context.vector.datap =3D kzalloc(riscv_v_vsize, G=
+FP_KERNEL);
+>         if (!vcpu->arch.host_context.vector.datap)
+> @@ -87,7 +88,7 @@ int kvm_riscv_vcpu_alloc_vector_context(struct kvm_vcpu=
+ *vcpu,
+>
+>  void kvm_riscv_vcpu_free_vector_context(struct kvm_vcpu *vcpu)
+>  {
+> -       kfree(vcpu->arch.guest_reset_context.vector.datap);
+> +       kfree(vcpu->arch.guest_context.vector.datap);
+>         kfree(vcpu->arch.host_context.vector.datap);
+>  }
+>  #endif
+> --
+> 2.48.1
+>
