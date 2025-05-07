@@ -1,94 +1,93 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1068623;
-	Wed,  7 May 2025 12:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76B41FF7B4;
+	Wed,  7 May 2025 12:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746619377; cv=none; b=FHV+vBTV9L83d7sSv7dNtaAY+ehRWy3nyulMQhUzQeHR3vNedDSlJ0E1lZnoOLrnhFpABGrQtzowCjTPS3gXdg87JcUWa8gK4QYYhmmd1YcPM/RpvLnFvrB/cyQo3kuma2wDtVhug7tSZUwauMLInO0erat+6alaPU39qrR5r4s=
+	t=1746619421; cv=none; b=B7buI/9BLs/+sJKqGJtlYLbkzZ8psNWB4v/KJcMSTGiMDnpp64ToADujAGzBLv4GQeO3bk4ZEfmzZp0+/KE3DbhnJOgrsVbXkmkQoDgA3dAanxqVoArF5Agm5HV3YVwvTFigwNjHeC1AdUyMSvkC0Jp5H24bSxu63M6ScSVcgPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746619377; c=relaxed/simple;
-	bh=RP5a2DXYCc4NkXftdYvHqTpKJQbNZ20V9GPvzZyBXLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c1ZXtwnG2KyTfg2JL08hApQqg1xAGYXTwcn+qldzNei5cpNOVlUc/idvmBTa8USYBchTRSfxlh48IK49FTYFpPQpSYarel0hX4l9rUjMS1uPkpL9MRYb+cNKv6sRdGqA0JIh/Dr6UoIR+UzCMfRRxabNv2r4ACqVMtEORjcvXdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DIzxHI8e; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746619421; c=relaxed/simple;
+	bh=XQ/rIt1s2mOL0+ga7HTjobxdM7XRJ3LDtydxR0plKbE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fuC+VWlEhFFtQN9N8357EeuOZxVxvM6HGjBlR4cysw+RN1fRZSippnNYBh8oFK4epFJJ4finhhjVIyLJELPLKN4KdkXDRyJ+cWEBaAWM++btBmIRc+cte1YhhX/Faxd+tTypeYFU96v6MeuWqk3Ncd752/FtRYgXuTPaUK4qPDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=amRANy8W; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DIzxHI8e"
-Date: Wed, 7 May 2025 14:02:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746619372;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lHpBgnMWGjdZKdQrg4rQ9wQFeDbCjxDr7o/BymUk+1Y=;
-	b=DIzxHI8e+tNQs5EzOib3d/NvXOcIOCYvnv5u2uU6y2k2vJQ7QVKcw5MbVhMxdIr29E1/D0
-	aKuDWXfz5kVpcquPcCsxUob8d4zaG+G9K2pt8xE40Lqmtf/uEXOtfbmCGNCsluP/iGxPtd
-	TZt0a5EbRPl3pKVBDmfitITi2NVODcU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Nicolas Schier <nicolas.schier@linux.dev>
-To: Kees Cook <kees@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Justin Stitt <justinstitt@google.com>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	kasan-dev@googlegroups.com, llvm@lists.linux.dev
-Subject: Re: [PATCH v3 0/3] Detect changed compiler dependencies for full
- rebuild
-Message-ID: <20250507-mature-idealistic-toad-59c15f@l-nschier-aarch64>
-References: <20250503184001.make.594-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="amRANy8W"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1746619407; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=ShXk2Ny+OfZP5082cR19VWEAQCtfhGVK83M3eG6Emmc=;
+	b=amRANy8W+6m3Zw+h1199J1IABJDbD8K7m3qhWMqrY+qStB/RTPTEbgwcXtuSVsJ4TuuPJ6PbY1/X3+5zsjN9/drQ9r3SB3VzmHSF6S9zRuS5XB2KgKWHRQQVQr6R20B3ijRfchUKhJk7K41JQXmTexWRJDIVO6WIdNDIr+sRz1A=
+Received: from 30.246.160.110(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WZqjoua_1746619403 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 07 May 2025 20:03:25 +0800
+Message-ID: <16fd041f-0c51-4c1f-941d-0906fcc6885c@linux.alibaba.com>
+Date: Wed, 7 May 2025 20:03:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250503184001.make.594-kees@kernel.org>
-Organization: AVM GmbH
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7] PCI: hotplug: Add a generic RAS tracepoint for hotplug
+ event
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: rostedt@goodmis.org, lukas@wunner.de, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, helgaas@kernel.org, bhelgaas@google.com,
+ tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+ davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
+ peterz@infradead.org, tianruidong@linux.alibaba.com
+References: <20250507011535.43800-1-xueshuai@linux.alibaba.com>
+ <20250507120914.000001c8@huawei.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20250507120914.000001c8@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, 03 May 2025, Kees Cook wrote:
 
->  v3: move to include/generated, add touch helper
->  v2: https://lore.kernel.org/lkml/20250502224512.it.706-kees@kernel.org/
->  v1: https://lore.kernel.org/lkml/20250501193839.work.525-kees@kernel.org/
-> 
-> Hi,
-> 
-> This is my attempt to introduce dependencies that track the various
-> compiler behaviors that may globally change the build that aren't
-> represented by either compiler flags nor the compiler version
-> (CC_VERSION_TEXT). Namely, this is to detect when the contents of a
-> file the compiler uses changes. We have 3 such situations currently in
-> the tree:
-> 
-> - If any of the GCC plugins change, we need to rebuild everything that
->   was built with them, as they may have changed their behavior and those
->   behaviors may need to be synchronized across all translation units.
->   (The most obvious of these is the randstruct GCC plugin, but is true
->   for most of them.)
-> 
-> - If the randstruct seed itself changes (whether for GCC plugins or
->   Clang), the entire tree needs to be rebuilt since the randomization of
->   structures may change between compilation units if not.
-> 
-> - If the integer-wrap-ignore.scl file for Clang's integer wrapping
->   sanitizer changes, a full rebuild is needed as the coverage for wrapping
->   types may have changed, once again cause behavior differences between
->   compilation units.
 
-I am unsure if it is too much detail, but I'd like to see some of these 
-infos in include/linux/compiler-version.h, too.
+在 2025/5/7 19:09, Jonathan Cameron 写道:
+> On Wed,  7 May 2025 09:15:35 +0800
+> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+> 
+>> Hotplug events are critical indicators for analyzing hardware health,
+>> particularly in AI supercomputers where surprise link downs can
+>> significantly impact system performance and reliability.
+>>
+>> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
+>> tracepoint for hotplug event to help healthy check, and generate
+>> tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
+>> include/uapi/linux/pci.h so applications like rasdaemon can register
+>> tracepoint event handlers for it.
+>>
+>> The output like below:
+>>
+>> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+>> $ cat /sys/kernel/debug/tracing/trace_pipe
+>>      <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
+>>
+>>      <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
+>>
+>> Suggested-by: Lukas Wunner <lukas@wunner.de>
+>> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+>> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> FWIW looks good to me.
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Kind regards,
-Nicolas
+Thanks :)
+
+> 
+> Any userspace tooling planned for this?
+
+Yep, we plan to monitor this tracepoint in rasdaemon after this patch merged.
+
+Best Regards,
+Shuai
+
