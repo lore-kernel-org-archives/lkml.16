@@ -1,89 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207E528B7C8;
-	Wed,  7 May 2025 15:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB911283C9E
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746632906; cv=none; b=OZczqEoHE102Y55cPRJlsiTcnD+3F5jxb/K8IEo6XyzziCsiwXWt4OkBXJN+Unsl2A6AH82rkldcXs1K6kYnf3zQS1p0K7TUyAsAy39zJP3fgLCZuGRxbi8m/BKNiQUPpqgSpNoBCYQ47ywF/NnVO7Zfctj5hvhmWOeATh4essU=
+	t=1746632920; cv=none; b=A26uugDz4EXzpjkp5fit8RJH3brJFKIs8vwtPeP5GakhkL++NUOjuJXPQdEshHvVP9MiZY2H2wLkg8xkVRE+p7wpSoJKKB4MeGYlR427OT0bDMfY69poDJsaI6rGRxtKGe85no6Y7vjoFyyDXfrCQn3bgHT5OshoRj202IJBSRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746632906; c=relaxed/simple;
-	bh=+nifJ1mcgdFZ8EQHTT9wprTRUK74+bCGpuEhl19I9hQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jtugFiX8krgE3ptiG1PXnh3qVZT0d26ENB4bf5s9GREkudXxe6jP/e7Fa2xCgAS0xUu9FQ/SIYwoRqoJ1R8s3x10pGNa8i+PSq1cxJEdYljIz224FvwYuh5Uz2vxhAL/TD2QVNsqvpYBkmbcZ8a5+4zdnH9+i+DuCEP5mGT90LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KumkK6FP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746632920; c=relaxed/simple;
+	bh=RmNN38IOqGOxQw3vAObUst92tVyWxds+Q/EvUHM6Nys=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=k/VhK3u5mAQWBEftV+l9kYaB0AihPKkqtc3ZjkMK8EYD/WP6QH1X3pyaWnw95KowfGvQ2t6MKJG3na6E7vuQj5aODfWDnf3UoRR/dr+gBUNaD0aODjuZvxrlybCheqVgfZv4zqr3YN05wQMJSz6h9odUWzeCsAY9Pp98xc959Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=gxemlVfV; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KumkK6FP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 818E0C4CEE2;
-	Wed,  7 May 2025 15:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746632905;
-	bh=+nifJ1mcgdFZ8EQHTT9wprTRUK74+bCGpuEhl19I9hQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KumkK6FP8mLHEoo+i2rNeZK2niwKQ3cSDNcDqMHEZgZGTc1+czCzAhv4mix2mxK73
-	 L2JB582kCNCrSo6M32QqIwkLZVlZLqTBxzoed3Tt/cgCmL9Cn5VQWwi143b9fbeCFq
-	 65bfbrfyNwV+UcvlrqDgxaSYEVy0mDdgiT9+bqxg4VDq37rbGQPCtR5mVDLpM16Y3L
-	 9LQ5tHZCfI4mAypRnWjG8JHkOmCZJAfbbonq4ormQC3n+uJyLJT7QFRGILaf8yvNfJ
-	 /HaRCWKY40P97VWOlE4B7trwZtQztaGKaKsL7C69Ly2kOZnjEV1kBwiBeQH0acca4L
-	 3/kOMWSn6cyBQ==
-Date: Wed, 7 May 2025 17:48:18 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 20/25] irqchip/gic-v5: Add GICv5 PPI support
-Message-ID: <aBuAwjiSJ+01vJL+@lpieralisi>
-References: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
- <20250506-gicv5-host-v3-20-6edd5a92fd09@kernel.org>
- <87zffpn5rk.ffs@tglx>
- <86a57ohjey.wl-maz@kernel.org>
- <87ecx0mt9p.ffs@tglx>
- <867c2sh6jx.wl-maz@kernel.org>
- <874ixwmpto.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="gxemlVfV"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acb5ec407b1so1254099466b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 08:48:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1746632916; x=1747237716; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RmNN38IOqGOxQw3vAObUst92tVyWxds+Q/EvUHM6Nys=;
+        b=gxemlVfVoBl7+qwuAAfXdnfEC4PCoEsQvHmbq2PbITpWinmZwsLdK0O17HuF8DYrFd
+         JqbX9TrHEppVDvHIZXpm2b4e5exFSQjkKocgHwNjXG2mMNGqtNB2jBGNkeMbqtjOurTW
+         lxQ5VUFYmfkvSl7aEoo0JoBaap2IQpGafQn8UR9hvyuFXpJCeyRtp3HgP4gNUE7YBIBN
+         5yDPcO4ru+NLNDGc5vDgUIXF2zvaqn/I2XeG+55snh3RLtXofINsUngsFkoK3VW5O4O2
+         YeUoocoiJ6N0fS/fABPQs/edaBcSifRd1VeaGt3eG+ogZrKgQAygtly1NSS9qb6CBvzD
+         OtJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746632916; x=1747237716;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RmNN38IOqGOxQw3vAObUst92tVyWxds+Q/EvUHM6Nys=;
+        b=og4tW9CByAaqLseuvszt2VsCQ2BqGpwm/0dN3QTX9KB7pfewtDokCG2H5aPP/rjRmm
+         zJYI+ldifAFPzdy6uy1am4h3ziAub49k0hxUoiRF+SqmP8SjECl5BV9dpysKiMcEy1es
+         /ETD/WCpJAC8QBDKbqbmmqNg84M0gLe1p3xV26Xem4X/rulDspJZEj8uJzC7TMH5d6bj
+         d/fhjgRG0q+brkmNGVue4sJ79QDZ1lCWMq5j3aVcv0H0pu6BsJYhTTjNv/y7XJCZc74y
+         6xYjhvPMYUiDGDX4e+uIATrcBY9RiKj0hUuSa9qv1rf/hIr0JZrHmzSIDTKP52sxn/QO
+         ZMCA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCEQv9+7JUlslBgSmlCB/nF2bOFH8lGPal7CnNVvVtoESsAL3CbcGd6O/8WdkGyO3fxaGovmBQ1Vwb1RI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjG5BUwFnEpecSanSY1aaHjQ2Y0nmabljAzoBrwrNobYGREZSc
+	KYuSL8ACGYPaZxb6QxE6wQ0vOoW/QgGb+JsYaC2xbuZODP+1lDDvtgT9HZyKNsV8REPdGBXEKdp
+	6EqgzH5OZJj6dA4zZCXjDD8LiLmj2BSEz6WHidVVjoGTz947Uo8riqw==
+X-Gm-Gg: ASbGncsdmXDkW7cwEtvWLTjsj6owLPD0RuMQLl595Qsxrlsu3i+xGSAFJnwxaqsSwMJ
+	ws4rEBYVWKU2NoOe1JWcw0MgAnt02majL0k2ryhFzxn+jTIh9Bi+h5gWXFQfO6DTCtXRRbcjVHr
+	lFWKLoGPpQgZ/SxbrDY8ZHFNVPddD04wPOuz1/ErfFkSjCIe1+PH8Pcj29jwFw2A==
+X-Google-Smtp-Source: AGHT+IEAltjxdalh/5XKuPwAg0pv1b4lg33oCEm/9+0ThGBN1Qpg5xKiNbvqIrHXaTlQhgG7QhMV/i8ffK6cBVRnyqw=
+X-Received: by 2002:a17:907:874e:b0:ace:cb59:6c4d with SMTP id
+ a640c23a62f3a-ad1e8d545eemr366290466b.43.1746632916020; Wed, 07 May 2025
+ 08:48:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874ixwmpto.ffs@tglx>
+References: <20250428154859.3228933-1-max.kellermann@ionos.com> <202505071602.yJrZsTiu-lkp@intel.com>
+In-Reply-To: <202505071602.yJrZsTiu-lkp@intel.com>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Wed, 7 May 2025 17:48:24 +0200
+X-Gm-Features: ATxdqUHZtrIZ4qATIqCPYmFI3WbE7fVjUqBiwmJIjt8Br1WsR1D-K7F_EFAuSc0
+Message-ID: <CAKPOu+-y6vng-hc7HN=+0U0cuEZCWm-BuYC3GOGGTwJHrJMDjw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] fs/netfs: convert `netfs_io_request.error` to a `short
+To: dhowells@redhat.com, netfs@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 07, 2025 at 04:57:07PM +0200, Thomas Gleixner wrote:
-> On Wed, May 07 2025 at 14:52, Marc Zyngier wrote:
-> > On Wed, 07 May 2025 14:42:42 +0100,
-> > Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> 
-> >> On Wed, May 07 2025 at 10:14, Marc Zyngier wrote:
-> >> > On Tue, 06 May 2025 16:00:31 +0100,
-> >> > Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> >> 
-> >> >> How does this test distinguish between LEVEL_LOW and LEVEL_HIGH? It only
-> >> >> tests for level, no? So the test is interesting at best ...
-> >> >
-> >> > There is no distinction between HIGH and LOW, RISING and FALLING, in
-> >> > any revision of the GIC architecture.
-> >> 
-> >> Then pretending that there is a set_type() functionality is pretty daft
-> >
-> > You still need to distinguish between level and edge when this is
-> > programmable (which is the case for a subset of the PPIs).
-> 
-> Fair enough, but can we please add a comment to this function which
-> explains this oddity.
+On Wed, May 7, 2025 at 11:01=E2=80=AFAM kernel test robot <lkp@intel.com> w=
+rote:
 
-GICv5 PPIs handling mode is fixed (ie ICC_PPI_HMR<n>_EL1 is RO), can't be
-programmed, I removed the irq_set_type() function (for the PPI irqchip).
+> All errors (new ones prefixed by >>, old ones prefixed by <<):
+>
+> >> ERROR: modpost: "__cmpxchg_called_with_bad_pointer" [fs/netfs/netfs.ko=
+] undefined!
 
-Lorenzo
+Okay, not all architectures support cmpxchg() with a short. I can drop
+this patch, but I'm curious why netfs_read_to_pagecache() uses
+cmpxchg() when everybody else simply assigns the value. Maybe, if
+cmpxchg() turns out to be unnecessary, we can keep this patch? David,
+can you explain? You added it in commit ee4cdf7ba857a ("netfs: Speed
+up buffered reading").
+
+Max
