@@ -1,110 +1,266 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out199-4.us.a.mail.aliyun.com (out199-4.us.a.mail.aliyun.com [47.90.199.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A898F5E
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 01:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A0CF4E2;
+	Wed,  7 May 2025 01:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746580555; cv=none; b=XE6o/LCoL8TGlYBOMxH24WoeIs8ep+e30joiHtc7H5Hli6wJERPogaK+5N/CnN6vZBDBmhE//SLsrwxn0QqBAX9m856KsBY3K1aW9H+qF6PQZoJuU0bFwGGcIPoUGJod8JCANX5vcovsnByd10YPIa1p9RVUicsjbpB+3m40glg=
+	t=1746580577; cv=none; b=GoEt/44dVKoEVSCSJ0ELjiRF6i9FWVt6Uzse4gDJL8AgvZ7vgQGqlR0tagwc7CIEjh/6x5Jfnvo1vdogWuIoU7PJO7C4XnNJgQ/eu/6VwttW2gt44OjkGXhW5U825gvFXg89B5HLRIktKF/Ijaxm2+yrJMRNjrrT3BSO2lTpEyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746580555; c=relaxed/simple;
-	bh=PJGXADhPgftHf4790J6bTo3LvncDFYONRNlduMuQnLQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dPEG7j9iaNRgkvrLIzS4EBKcsCQioFx205UlSp1A7+zX2Xru69iZf+VT08PZvFSH7K2lewSjvEmRtl2jZoiQPFptCA6hWV+N0EThUDB4JwglcfJDcIZCMQlXMy9oHNkM59JiQjHowu6Kgs3YKEsiMdN1Uzg1xOH7JEgnDKqweSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ghv7mB+/; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746580577; c=relaxed/simple;
+	bh=4Y/wfHCD/JmJfE1SBEtkQtHX5ZUN0fh0CH1uktm6L4k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o5Gu46vtGRB7AUZ0ag2jd5MI8mci85cXrJE5uW59a77zbAWYFkOdnEjCWLh3Xmf2uJuDDOc4tl7+FxXoH48269/Wg0N0BkyXvpB7nR9Upd/JmhGTr3s3I89wXKHMnEOzbCDRtKKSVgVfz+la7ifXp74NmaRwnPt5EZr6ZkiwmKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=UjPwzL2e; arc=none smtp.client-ip=47.90.199.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ghv7mB+/"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22e39fbad5fso53605ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 18:15:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746580553; x=1747185353; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oI9dvuYFSW41PetZu8+C11r8U9aYDixgfsHjUdZoR8Q=;
-        b=Ghv7mB+/SjUpHzvJNIUSJUBfDP9d/j42r/qarfES45zUEoFJkNTd90LRgUyCV04Z53
-         qq9bSk4pVAhIFJQVVTNBVNZpcf8PZhVg1pOAy/TBpOEzAKUKvf0hjXy8Yau/MM6pid3j
-         WtLnatOe8v24pZRsbwrbGHJFxY524lRZJrT1B8hIIHVvERxBlf+O7F7rUO5RI4uwCnfc
-         IdzE4tdUUhcBk63XjXmryYfxZ1PD4anlgQ2Se/7OV1HAQj+AWILuuvoC89sRKrgcdOdu
-         THXQ+e2sb0eF3c7Et95ljooJPwsaqBpgrreMhYb/VHSM6jGWmslmpnGFg+abhKGM3xD2
-         F5vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746580553; x=1747185353;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oI9dvuYFSW41PetZu8+C11r8U9aYDixgfsHjUdZoR8Q=;
-        b=uBId36fqw4Z3okgXFvVHnaly7kSWv/vT02lqfJ4QLURvsKQlcJDNlfkXkTDob0QqOW
-         edVds6hQ19uYXKJJlXSyHAVOshT1n57YFUJyHyFeFvpa70RAFjLarN8kYv6NfADNx5U1
-         EXpaVeItra/Yv0IVDsA6E1Ko5Lpahq2RjHRH4K7VsjEGvLouewxkmJr946e1Dg7bACks
-         PH8JXPXh3yJjmhpMjIv+bV0W2KoF8ezKBNN2dxpVEGrdNugA8qq6ZjtgBGf/7cs8vN+o
-         O2vU2Uixb2jPmksDESPh3GBQQx6AcPBip9/eY6lGmSTudqnfDkY/ihnx8C7QeK4KewZi
-         8rKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXn5z0TF8+yECSVJL1u1HHE9Bm8I6UoyJK+qYANcbt8WegVd40+3tgDRpZXe6LlODzj1fReFdEYQN5czB0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG1UpPKT9JtzG0vgWg10zrsMpRgwagDTdlDV6xnrgcj/hLzs+r
-	PlpzceFCdswXLgLLe0F7nWuGs+HwZLT8FajH3/aPNaOBFWrkb1qO+cm15km2yzMFgpQTRRToani
-	SG83y4tE1EFImGbv9MyYPyttmtLxqjosLZgjf
-X-Gm-Gg: ASbGncsULc5JFEr5RWJlbFefKtFoLuMSeqpengxIp1rQS4PV7hqQdnRwJ9dgvvyiYtq
-	tV+crACWb7sVyizppcrw11EwMjkWfhsBf74tp8srQ1TkBR6t+oM7ogjxywP7nWDZmgnN0UEhIIK
-	4ahleCQ9s4d+VYGO/USLDEWc2yh+FtTxEhr6V0BVhSbCSCDlaYgtc=
-X-Google-Smtp-Source: AGHT+IF64r1XV/UTd8/0ODGcdklsJP9ZXTT9L0J+KnSI3mOMSiLbsNkGeaQ+3WDmuLUAtwcZxubdXugCorUmCh9N7IU=
-X-Received: by 2002:a17:903:198d:b0:216:6ecd:8950 with SMTP id
- d9443c01a7336-22e62a2f82dmr714135ad.19.1746580552732; Tue, 06 May 2025
- 18:15:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="UjPwzL2e"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1746580551; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=BhkBg8BHNtFzJ9+ijMhzKHUaq64bGU+JAPv//d4vJvM=;
+	b=UjPwzL2exoui+xntVmaD82fl9MKZRNmHOtzVksh1TLNxVdxY4N84oZHz2hT8Rcez93C/JymMNeKTIPnURCMQu6cqg9V+40KUnFtUR+O+ULUnuexQlxq3ElaLqPb/fVPnRMOtrk9nQRSiF9EOzsZkSfMx20zkrFc7Usfp5opzjII=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WZh9L8X_1746580536 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 07 May 2025 09:15:49 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: rostedt@goodmis.org,
+	lukas@wunner.de,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	helgaas@kernel.org
+Cc: bhelgaas@google.com,
+	tony.luck@intel.com,
+	bp@alien8.de,
+	xueshuai@linux.alibaba.com,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	oleg@redhat.com,
+	naveen@kernel.org,
+	davem@davemloft.net,
+	anil.s.keshavamurthy@intel.com,
+	mark.rutland@arm.com,
+	peterz@infradead.org,
+	tianruidong@linux.alibaba.com
+Subject: [PATCH v7] PCI: hotplug: Add a generic RAS tracepoint for hotplug event
+Date: Wed,  7 May 2025 09:15:35 +0800
+Message-ID: <20250507011535.43800-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
- <20250502130828.4071412-6-kirill.shutemov@linux.intel.com>
- <55c1c173bfb13d897eaaabcc04f38d010608a7e3.camel@intel.com> <aBqxBmHtpSipnULS@yzhao56-desk.sh.intel.com>
-In-Reply-To: <aBqxBmHtpSipnULS@yzhao56-desk.sh.intel.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Tue, 6 May 2025 18:15:40 -0700
-X-Gm-Features: ATxdqUFj6OOGJl4u4NDEeHbj2QFi6gwUbyBFBzHWdPZhV4mq2dQvBXHS3gCPlyY
-Message-ID: <CAGtprH9GvBd0QLksKGan0V-RPsbJVPrsZ9PE=PPgHx11x4z1aA@mail.gmail.com>
-Subject: Re: [RFC, PATCH 05/12] KVM: TDX: Add tdx_pamt_get()/put() helpers
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: "Huang, Kai" <kai.huang@intel.com>, 
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "seanjc@google.com" <seanjc@google.com>, 
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "bp@alien8.de" <bp@alien8.de>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 6, 2025 at 6:04=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com> wrot=
-e:
->
-> On Mon, May 05, 2025 at 08:44:26PM +0800, Huang, Kai wrote:
-> > On Fri, 2025-05-02 at 16:08 +0300, Kirill A. Shutemov wrote:
-> > > +static int tdx_pamt_add(atomic_t *pamt_refcount, unsigned long hpa,
-> > > +                   struct list_head *pamt_pages)
-> > > +{
-> > > +   u64 err;
-> > > +
-> > > +   hpa =3D ALIGN_DOWN(hpa, SZ_2M);
-> > > +
-> > > +   spin_lock(&pamt_lock);
-> >
-> > Just curious, Can the lock be per-2M-range?
-> Me too.
-> Could we introduce smaller locks each covering a 2M range?
->
-> And could we deposit 2 pamt pages per-2M hpa range no matter if it's fina=
-lly
-> mapped as a huge page or not?
->
+Hotplug events are critical indicators for analyzing hardware health,
+particularly in AI supercomputers where surprise link downs can
+significantly impact system performance and reliability.
 
-Are you suggesting to keep 2 PAMT pages allocated for each private 2M
-page even if it's mapped as a hugepage? It will lead to wastage of
-memory of 4 MB per 1GB of guest memory range. For large VM sizes that
-will amount to high values.
+To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
+tracepoint for hotplug event to help healthy check, and generate
+tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
+include/uapi/linux/pci.h so applications like rasdaemon can register
+tracepoint event handlers for it.
+
+The output like below:
+
+$ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+$ cat /sys/kernel/debug/tracing/trace_pipe
+    <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
+
+    <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
+
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+---
+changes since v6:
+- move defination of tracepoint enum back to trace.h. Otherwise, it will
+  cause a build error when CONFIG_UAPI_HEADER_TEST=y. The problem is that
+  the PCI_HOTPLUG_EVENT macro needs to include "linux/tracepoint.h" but it
+  is not allowed in userspace.
+- No code changes compared to v5.
+
+change since v5: 
+- move define of enum to include/uapi/linux/pci.h
+- link: https://lore.kernel.org/lkml/202501190108.tRReJA1Z-lkp@intel.com/
+
+v5:
+- link: https://patchwork.kernel.org/project/linux-pci/patch/20250109025543.56830-1-xueshuai@linux.alibaba.com/
+
+---
+ drivers/pci/hotplug/pciehp_ctrl.c | 33 ++++++++++++---
+ drivers/pci/hotplug/trace.h       | 68 +++++++++++++++++++++++++++++++
+ include/uapi/linux/pci.h          |  7 ++++
+ 3 files changed, 102 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/pci/hotplug/trace.h
+
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index d603a7aa7483..f9beb4d3a9b8 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -23,6 +23,9 @@
+ #include "../pci.h"
+ #include "pciehp.h"
+ 
++#define CREATE_TRACE_POINTS
++#include "trace.h"
++
+ /* The following routines constitute the bulk of the
+    hotplug controller logic
+  */
+@@ -244,12 +247,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 	case ON_STATE:
+ 		ctrl->state = POWEROFF_STATE;
+ 		mutex_unlock(&ctrl->state_lock);
+-		if (events & PCI_EXP_SLTSTA_DLLSC)
++		if (events & PCI_EXP_SLTSTA_DLLSC) {
+ 			ctrl_info(ctrl, "Slot(%s): Link Down\n",
+ 				  slot_name(ctrl));
+-		if (events & PCI_EXP_SLTSTA_PDC)
++			trace_pci_hp_event(pci_name(ctrl->pcie->port),
++					   slot_name(ctrl),
++					   PCI_HOTPLUG_LINK_DOWN);
++		}
++		if (events & PCI_EXP_SLTSTA_PDC) {
+ 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+ 				  slot_name(ctrl));
++			trace_pci_hp_event(pci_name(ctrl->pcie->port),
++					   slot_name(ctrl),
++					   PCI_HOTPLUG_CARD_NOT_PRESENT);
++		}
+ 		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
+ 		break;
+ 	default:
+@@ -269,6 +280,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 					      INDICATOR_NOOP);
+ 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+ 				  slot_name(ctrl));
++			trace_pci_hp_event(pci_name(ctrl->pcie->port),
++					   slot_name(ctrl),
++					   PCI_HOTPLUG_CARD_NOT_PRESENT);
+ 		}
+ 		mutex_unlock(&ctrl->state_lock);
+ 		return;
+@@ -281,12 +295,19 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 	case OFF_STATE:
+ 		ctrl->state = POWERON_STATE;
+ 		mutex_unlock(&ctrl->state_lock);
+-		if (present)
++		if (present) {
+ 			ctrl_info(ctrl, "Slot(%s): Card present\n",
+ 				  slot_name(ctrl));
+-		if (link_active)
+-			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+-				  slot_name(ctrl));
++			trace_pci_hp_event(pci_name(ctrl->pcie->port),
++					   slot_name(ctrl),
++					   PCI_HOTPLUG_CARD_PRESENT);
++		}
++		if (link_active) {
++			ctrl_info(ctrl, "Slot(%s): Link Up\n", slot_name(ctrl));
++			trace_pci_hp_event(pci_name(ctrl->pcie->port),
++					   slot_name(ctrl),
++					   PCI_HOTPLUG_LINK_UP);
++		}
+ 		ctrl->request_result = pciehp_enable_slot(ctrl);
+ 		break;
+ 	default:
+diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
+new file mode 100644
+index 000000000000..5b60cd7bcffb
+--- /dev/null
++++ b/drivers/pci/hotplug/trace.h
+@@ -0,0 +1,68 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_HW_EVENT_PCI_HP_H
++
++#include <linux/tracepoint.h>
++
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM pci
++
++#define PCI_HOTPLUG_EVENT					\
++	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
++	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
++	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
++	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
++
++/* Enums require being exported to userspace, for user tool parsing */
++#undef EM
++#undef EMe
++#define EM(a, b)	TRACE_DEFINE_ENUM(a);
++#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
++
++PCI_HOTPLUG_EVENT
++
++/*
++ * Now redefine the EM() and EMe() macros to map the enums to the strings
++ * that will be printed in the output.
++ */
++#undef EM
++#undef EMe
++#define EM(a, b)	{a, b},
++#define EMe(a, b)	{a, b}
++
++TRACE_EVENT(pci_hp_event,
++
++	TP_PROTO(const char *port_name,
++		 const char *slot,
++		 const int event),
++
++	TP_ARGS(port_name, slot, event),
++
++	TP_STRUCT__entry(
++		__string(	port_name,	port_name	)
++		__string(	slot,		slot		)
++		__field(	int,		event	)
++	),
++
++	TP_fast_assign(
++		__assign_str(port_name);
++		__assign_str(slot);
++		__entry->event = event;
++	),
++
++	TP_printk("%s slot:%s, event:%s\n",
++		__get_str(port_name),
++		__get_str(slot),
++		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
++	)
++);
++
++#endif /* _TRACE_HW_EVENT_PCI_HP_H */
++
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH  ../../drivers/pci/hotplug
++#undef TRACE_INCLUDE_FILE
++#define TRACE_INCLUDE_FILE trace
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
+index a769eefc5139..4f150028965d 100644
+--- a/include/uapi/linux/pci.h
++++ b/include/uapi/linux/pci.h
+@@ -39,4 +39,11 @@
+ #define PCIIOC_MMAP_IS_MEM	(PCIIOC_BASE | 0x02)	/* Set mmap state to MEM space. */
+ #define PCIIOC_WRITE_COMBINE	(PCIIOC_BASE | 0x03)	/* Enable/disable write-combining. */
+ 
++enum pci_hotplug_event {
++	PCI_HOTPLUG_LINK_UP,
++	PCI_HOTPLUG_LINK_DOWN,
++	PCI_HOTPLUG_CARD_PRESENT,
++	PCI_HOTPLUG_CARD_NOT_PRESENT,
++};
++
+ #endif /* _UAPILINUX_PCI_H */
+-- 
+2.39.3
+
