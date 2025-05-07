@@ -1,70 +1,89 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2B821147F;
-	Wed,  7 May 2025 08:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C36019D087;
+	Wed,  7 May 2025 08:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746605334; cv=none; b=HQy5a+aVngF9QwTlbbinTMd2v9vmzqO6DRiGXeVIFg5c4EF5eXCv4GQDifSRJI5SLolJbzOff7grETroLWORQDem1guCwprIe9p4RCpZum14mpVNoY1Iez5pyDBLQ63e6QPFLdiv83Dml6Ec8Mx4bPHUi8kysr9TPgkMzeMbZ/k=
+	t=1746605356; cv=none; b=q2y75LtD26cNiemBpGbBue1+I3ddi6f+ljzgDEePAQfDgQszPDyU/o1CUMjSZhRQ4ciZqccEpLrZeTeq9+fHsEI88P8kNve9oyFi3SzRBo30b0gEO0gI8r4TPdP1KE8LPOfF/UTKSEyF/IF+ISWtLa0RyMeDcq/jpXyqrWtYtm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746605334; c=relaxed/simple;
-	bh=DJOvH8mDWrpwPpnJ49SB0pWorTULYK1h+RYw8ATbCk0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=sMB95DroPexRqeEQo82T6WFIwlz/8dpAGl3yHJT+Adlfgb4vYWyKzB9rYyHjWRBo1eIOQdlX/bkbxLpCwAw/J0H9xzmLksDDf2w5SBY2yjzajaJXOxyFd983tMIJHRDoORW5e19UXJr64wASHGmLaIDzGj4D2RqXyHa5KaJAYQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U9OJdnun; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2mJssq9n; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746605356; c=relaxed/simple;
+	bh=QE7e2KY0A+q2dpAbO61o5sBZfaxAZhLRk3k9BFApyzw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QJt5BgKrzXMVCNdn1hkHxAXODgiZy3iHNleIi+OWUtBEcNSJ1frwt6UGIZKSdwQrWinaJUcyOH9p1AHWK4MGxpBmCZyFXifGRy8ZMxd9f8+cJCKY2aOb8a4ofeOAPQ0yMm8eBsfEBnOHRcnrv0406KC6Fa+zsR4N1N+vES6Z2fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LTHbY5Xu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U9OJdnun";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2mJssq9n"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746605331;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DJOvH8mDWrpwPpnJ49SB0pWorTULYK1h+RYw8ATbCk0=;
-	b=U9OJdnunMdz1+EI/1y8j9I1Jx+Y3/gfks0KmWt+U22PsHeNsUM6qkIQaHAPZ1KLAM6Ywdr
-	uQ+9Nhr/tErKIW1mqmNSgUJoCnrM3lPLXtTRIIUbsYu1hSneVo/8sps7pAroFsaAQpUA8Q
-	ur72fL/sWsWzuOXC/9yiWIPQ013MR4kvcv/LOcUNBYwZ+iPWYe5dgtR/lJ3vgMPs20e4ZC
-	USavLlpCm/CYNusrMVkypR0+ZmQWB9p81rHIVdcGyfNGW6F0M6N68sDp1vo9LDWmAA1JzK
-	tVuqqzBchveuSKHz9Xu6XyVf5jcqMV9xu8MgYw+U28B/ZgSf9ICzHEjXMcGCqg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746605331;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DJOvH8mDWrpwPpnJ49SB0pWorTULYK1h+RYw8ATbCk0=;
-	b=2mJssq9nO/iunEuhDHcY5B91/WvQI4fJ38yBn2SyFZS7A1bcin2QdJERIQNgixfs1iwm/u
-	p0R51ADOwYQiPhBA==
-To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, linux-kernel@vger.kernel.org
-Cc: bp@alien8.de, mingo@redhat.com, dave.hansen@linux.intel.com,
- Thomas.Lendacky@amd.com, nikunj@amd.com, Santosh.Shukla@amd.com,
- Vasant.Hegde@amd.com, Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com,
- x86@kernel.org, hpa@zytor.com, peterz@infradead.org, seanjc@google.com,
- pbonzini@redhat.com, kvm@vger.kernel.org, kirill.shutemov@linux.intel.com,
- huibo.wang@amd.com, naveen.rao@amd.com, francescolavra.fl@gmail.com
-Subject: Re: [PATCH v5 02/20] x86: apic: Move apic_update_irq_cfg() calls to
- apic_update_vector()
-In-Reply-To: <20250429061004.205839-3-Neeraj.Upadhyay@amd.com>
-References: <20250429061004.205839-1-Neeraj.Upadhyay@amd.com>
- <20250429061004.205839-3-Neeraj.Upadhyay@amd.com>
-Date: Wed, 07 May 2025 10:08:50 +0200
-Message-ID: <87r010n8q5.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LTHbY5Xu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41DA6C4CEE7;
+	Wed,  7 May 2025 08:09:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746605356;
+	bh=QE7e2KY0A+q2dpAbO61o5sBZfaxAZhLRk3k9BFApyzw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LTHbY5XurQEDiBofBKW8WiSyrtIO2pcmDH9VCHGwB3qiimPrcNVxJUfSPtpXyXvhA
+	 q8XgDDj2e919Pgw9PfyoXQBLNhN5RVvUL2f0d4IpQCYWvB3pOnFwBigDCgi0tSr9qw
+	 tf1q+EFef6627grKzj9u2TN+UOiQVDFCtEK8AmRENF6652sl7G4Lv0wXthZ1/2RI3A
+	 tqFltVgdbp0D5YPZ8AdXaHxpnCZDrwxqW1kEMHfbwwmVffjBIKc8W0evyaTb9o5kd1
+	 lOkQq/hTC4mwckyrqEFotoK/R/Q50JIombVSMvpVC8BV0of+MWBJy7m/DbwCtxqZ3u
+	 hraE1Ih5+3Iew==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>,
+	stable@vger.kernel.org,
+	Christoph Hellwig <hch@lst.de>
+Subject: [PATCH] f2fs: fix to return correct error number in f2fs_sync_node_pages()
+Date: Wed,  7 May 2025 16:08:38 +0800
+Message-ID: <20250507080838.882657-1-chao@kernel.org>
+X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 29 2025 at 11:39, Neeraj Upadhyay wrote:
+If __write_node_folio() failed, it will return AOP_WRITEPAGE_ACTIVATE,
+the incorrect return value may be passed to userspace in below path,
+fix it.
 
-$Subject: x86/apic: .....
+- sync_filesystem
+ - sync_fs
+  - f2fs_issue_checkpoint
+   - block_operations
+    - f2fs_sync_node_pages
+     - __write_node_folio
+     : return AOP_WRITEPAGE_ACTIVATE
 
-> All callers of apic_update_vector() also call apic_update_irq_cfg()
-> after it. So, simplify code by moving all such apic_update_irq_cfg()
+Cc: stable@vger.kernel.org
+Reported-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+ fs/f2fs/node.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-..simplify the code...
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index ec74eb9982a5..69308523c34e 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -2092,10 +2092,14 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
+ 
+ 			ret = __write_node_folio(folio, false, &submitted,
+ 						wbc, do_balance, io_type, NULL);
+-			if (ret)
++			if (ret) {
+ 				folio_unlock(folio);
+-			else if (submitted)
++				folio_batch_release(&fbatch);
++				ret = -EIO;
++				goto out;
++			} else if (submitted) {
+ 				nwritten++;
++			}
+ 
+ 			if (--wbc->nr_to_write == 0)
+ 				break;
+-- 
+2.49.0
 
