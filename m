@@ -1,117 +1,117 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603D71D61BC;
-	Wed,  7 May 2025 07:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86CF2101B3;
+	Wed,  7 May 2025 07:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746601597; cv=none; b=qasHV6IxuSbYuJx0Rg9w2dRRVrFjannp9YqSv4BCjRcu+vxmeIyRahaq0hZSKvByqrYJdoZkQeuz+izCUbclq1+nyR+84zet3LFVDk8yuA24hQcHytYLAerOUodkuzVTUMGuiNZ8FHUUDA2DKCTEFPi8WH9++5rIYaD0HRRCKbQ=
+	t=1746601659; cv=none; b=rSRjsC0ZDwGQyUp7OwDOGAfGOSQHFQujoHoaZdyFefo37FlVvibf+0RvV3lYjqldmWNoNs+k144LASz2eZ21EAOEsmgY6D7H7yCtKtWTcOfkpwpvJ2S5oAl84JgLPT2H2XXFjrNi5N66Bfayhjqx8FnD+kf8fnLY+leKwQ2C7s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746601597; c=relaxed/simple;
-	bh=0VP44LIsfvXHFLJCB9EqdA30bEZ2cAzjbZQOu7dK0lQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TrkqlT+CvayTfZ/05F1zR4zJJqdmOXzN+dokTGr6Nabn91jATgiUVUw4iVBtDWH7pxd5GWD8UQGnLx+rZ3cm5G1vLq+eXC5gt2R/QGFEZ+TI6Wv0X5Sn8G2n5SGj4gP/9nqdiSZGuKjdJjk8v9SuLnkSW7WrUZMVWIcbQv8m/NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ByL42GEn; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746601659; c=relaxed/simple;
+	bh=4g1meUY7nXGsLmA3ICMv283OhsmrHmNHTC3hWxkVC9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bwKgML+nzqYAorZAinQe6dfKOM5F05nanDkNvCxVXquRbgs+tGhMv89ewG8Rxuo1PQ9R2hXeHkdbTn2HEaAIB2p8xAJNJ3x1Nsg+3zpU1tkPJKgtCEoSUg9RyASQGRcD6srTN6e5WNGVQ1qj/DQz5q2RPg3+Teq99ylPBIWfvCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nmlOy1s8; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ByL42GEn"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471HmDc017086;
-	Wed, 7 May 2025 07:06:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	pwAXZ6oFJZA1jpvnUjc3W1LL1+v8v2BsGnfm0cjmKls=; b=ByL42GEnWmN7wdx3
-	XQ2hXEjh2B+GshswqW4Cm7AzWGz2A81BC8B+Qtl20bX+xzUG7gXh2S6QXJ9UROWA
-	JpCbcPldjza05Ku10axJXfCxGMOtrgzwOxkfg5Tjun3TDX4nHtcxbq7s4oMuygLI
-	TjbmhZduyNRNvdpXNpHh1oClWxtQSA8NmtD/Ai6cvBfmQm08tvZYvIO3EBVuWnDT
-	Mkc8VkxCmTg3aMo0Re6oE5zvw7zbHJ8A0gZ0nODPEAt5EE4IQ5oevk5JdD+AIC85
-	+FGVDAIPnajHQodNaXbnmu4fh6SXkm40a75w/ZFhSeq3g3jPRF9KwIJDiw2EsmHZ
-	UE+Qlw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5u44thq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 07:06:26 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54776PHO007795
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 7 May 2025 07:06:25 GMT
-Received: from [10.239.133.242] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 7 May 2025
- 00:06:22 -0700
-Message-ID: <458a0c34-27a6-4aff-a6a7-0788af16359f@quicinc.com>
-Date: Wed, 7 May 2025 15:06:20 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nmlOy1s8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746601658; x=1778137658;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4g1meUY7nXGsLmA3ICMv283OhsmrHmNHTC3hWxkVC9U=;
+  b=nmlOy1s87hyw4VmAmRUSCh+IdTw3/DuYbTBDmBxAULC+aVgA7rg4sMYD
+   +mN/r50Hpw+43b063UQATs6tc7gN7ltlPuE27SPVlVUIqCluCSX0Enpzf
+   G6HOax9Bbgxsicdyj+pjY5gDL2tggE9+GkTVbz5xDzqkgBZRz1q5lguzd
+   qlOepO19K1Ke9GHluMiYfrM9+2XUcUoSRfW71wyZIYUkarpcB4xGT98k9
+   xoe2r+2qTdOrDN5vZSdmem8mk+jtnKh3VcCQvkJyKm+dC9rDu5dR9VMVT
+   GJF1u/WNS4Mwez4bjZ3t3Ab2PdQpbxZ7WtpHSKuawFprlLsLFvitGkZ56
+   w==;
+X-CSE-ConnectionGUID: AIBkOdDnSJu6dicLZsgM9Q==
+X-CSE-MsgGUID: wQv1mhoiQICh4e5FGkj6yA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="73702382"
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="73702382"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 00:07:37 -0700
+X-CSE-ConnectionGUID: zCSCCDRrTdSJsRd7DdL1/Q==
+X-CSE-MsgGUID: fYVDb9S2SfyCD34yU9tWOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="135767280"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 07 May 2025 00:07:31 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCYsK-0007GF-2A;
+	Wed, 07 May 2025 07:07:28 +0000
+Date: Wed, 7 May 2025 15:07:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	andriy.shevchenko@intel.com,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Subject: Re: [PATCH v7 08/11] gpio: max7360: Add MAX7360 gpio support
+Message-ID: <202505071411.RPLesOGz-lkp@intel.com>
+References: <20250428-mdb-max7360-support-v7-8-4e0608d0a7ff@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/7] coresight: Add coresight TGU driver
-To: Trilok Soni <quic_tsoni@quicinc.com>,
-        Suzuki K Poulose
-	<suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>, James Clark
-	<james.clark@arm.com>,
-        Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20250423101054.954066-1-quic_songchai@quicinc.com>
- <20250423101054.954066-3-quic_songchai@quicinc.com>
- <37df3ce3-2161-4c42-a658-d36fc4208ee8@quicinc.com>
-Content-Language: en-US
-From: songchai <quic_songchai@quicinc.com>
-In-Reply-To: <37df3ce3-2161-4c42-a658-d36fc4208ee8@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=KcfSsRYD c=1 sm=1 tr=0 ts=681b0672 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=S5aUIBQ7irhDI9zSZmMA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: -L4_WesosIgaq_09ZI61eil4cBlgvJP0
-X-Proofpoint-ORIG-GUID: -L4_WesosIgaq_09ZI61eil4cBlgvJP0
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA2NCBTYWx0ZWRfX8wpPyfIxHx7X
- EyBX2Oiba7KiYOSSMGziwzZYUqNdY9T+kF0bSI5W+XX1BP5q/78QSoRqO1kzw4MmcBZmpJA8lzr
- 7fQpnajPoPMUR8waYeWRqGIlOdTsVTAwkoMwvMjgT4GM9VYGbcDo9pN03rXDm59ytRuoLwnaJ4F
- Xd4vCz1DtGEFgFZHtMWhfiIcA7urck+mdgavwl6duKpniZscKFGHjmIVXh6QomjwzW69culeEZ0
- Aon7NmvPsZru/pK0eHrAPT/7l8Ty8FFI5Sng4XbydbnxuCclgCuS6C/n0j4BpWQxA0LRt1ep3bU
- t3jol6yO8w/sJRDP9ZLEobsCjnNqgoaWt0+vrrCIeRPpervgD1wcbgaARN9hT2x4k5C0y/EgM7j
- xbSV0xVuNUAdvITxDTcPrk9uBDdG3zYdBvKvAwt/SyA2oIoK0p/3/rqW2u9IFUBLgcf2ENBQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_02,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 spamscore=0 suspectscore=0 bulkscore=0 mlxlogscore=954
- phishscore=0 impostorscore=0 priorityscore=1501 malwarescore=0 adultscore=0
- clxscore=1015 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505070064
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428-mdb-max7360-support-v7-8-4e0608d0a7ff@bootlin.com>
 
-Thanks for reminder, Trilok.
+Hi Mathieu,
 
-Will pay attention to it in the next version.
+kernel test robot noticed the following build warnings:
 
-On 4/25/2025 12:32 AM, Trilok Soni wrote:
-> On 4/23/2025 3:10 AM, Songwei Chai wrote:
->> +Date:		February 2025
-> If you are sending new revision then please update month and kernel version.
->
->> +KernelVersion	6.15
->> +Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Sam Chai (QUIC) <quic_songchai@quicinc.com>
->
+[auto build test WARNING on b4432656b36e5cc1d50a1f2dc15357543add530e]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Mathieu-Dubois-Briand/dt-bindings-mfd-gpio-Add-MAX7360/20250428-221705
+base:   b4432656b36e5cc1d50a1f2dc15357543add530e
+patch link:    https://lore.kernel.org/r/20250428-mdb-max7360-support-v7-8-4e0608d0a7ff%40bootlin.com
+patch subject: [PATCH v7 08/11] gpio: max7360: Add MAX7360 gpio support
+config: alpha-randconfig-r111-20250429 (https://download.01.org/0day-ci/archive/20250507/202505071411.RPLesOGz-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 12.4.0
+reproduce: (https://download.01.org/0day-ci/archive/20250507/202505071411.RPLesOGz-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505071411.RPLesOGz-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/gpio/gpio-max7360.c:30:31: sparse: sparse: symbol 'max7360_gpio_port_plat' was not declared. Should it be static?
+>> drivers/gpio/gpio-max7360.c:31:31: sparse: sparse: symbol 'max7360_gpio_col_plat' was not declared. Should it be static?
+
+vim +/max7360_gpio_port_plat +30 drivers/gpio/gpio-max7360.c
+
+    29	
+  > 30	struct max7360_gpio_plat_data max7360_gpio_port_plat = { .function = MAX7360_GPIO_PORT };
+  > 31	struct max7360_gpio_plat_data max7360_gpio_col_plat = { .function = MAX7360_GPIO_COL };
+    32	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
