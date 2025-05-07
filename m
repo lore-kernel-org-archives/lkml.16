@@ -1,118 +1,247 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA91C28C039;
-	Wed,  7 May 2025 16:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FD228A73F
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746635790; cv=none; b=moz9/QK+kN8jEYHzzR6i6w2Mn0w40+kWUgDYg4LMUZ4tPqSFnBf8+VFhP7CebthqhVhq3ekRJ4usycddJ5Vera+Sy0y6wPJHiDuq1mCT+IUiFukU4Nx4eCwXmmDtDUMcxHxc2jBjdx7dtBYTobVsLfwnDw8Gd29Mv5VoPZqIjLk=
+	t=1746635903; cv=none; b=aIfmTi2AEYvVXmcehw+ucGwNTM6I/w7n+DPW5Ovhkd65mAVXvbRlau/lMH5pxT9R+YEVmuDEbyUCBXKjbiR3M699kSvP7S1tL8om7KxhDAiLo+8pEjv0woaUwL6iDruelIfPQiqk5NCe6WuraRu5yAJ7IbcGVCTjCzF3yNTXucY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746635790; c=relaxed/simple;
-	bh=jodQBOUHL1Gt952eiPBvOHE9pzfV95ZMyn2l0xgzhNI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DuSLf7VWnPY+2EGXXrX99PHEHlub57OqPDWko8jlydnRCMMpTpaf1Znutdff/YDBmSmcEhbe6KA6hiFzycmzfZktLwwyocAAK7tJAl5NmCYv0drpgeAWmsrhR6PeuDMcJbgcGE/RLs1hQIYrtE5q/HnwEiKL3287VH15MvEgMDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X+di1bRy; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746635903; c=relaxed/simple;
+	bh=Pjs80y8eHu5bjBIh65bwbOhNCtjNmJR7kP6EndofUzA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ns/V56GauuFVtvns71tT8J3bz1qslXF//HasJkvRu3u7ZBBT2X+z6y+ntrAYgdpionEgQbUPm4UGXc5VdYHMGciU9qDvHHfjfEXzaoZdaDjW2sz+5bSgU23pBR2kGWBfg1kKgCeBTAVyL4m5H9QTOJmtS2RWEIJD596LtY3OjVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=aNUubDDJ; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X+di1bRy"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a0b933f214so60373f8f.0;
-        Wed, 07 May 2025 09:36:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="aNUubDDJ"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c559b3eb0bso3775785a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 09:38:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746635787; x=1747240587; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=axt5Qbp2mD3JDBMkh2CUDM68i+V3fWWqBODx7JRunlE=;
-        b=X+di1bRy4H0E1YI5jauGFNQ2Nmsz5RbAd2Po/39/HscWNC+omMPJN6NyiluKdYKClS
-         gKkdIlLYadh0beLMtDIxP1GzyPn6LIH5Wbd2QdolQ4A3RZB8+O8O9X+HahHdousyWiIj
-         U4mTdT28rKE34v3Av0RbbkW0zPiFOjCAdzmnKQev5pocoZb1y1zUTbFnhxVWuvkBwYnD
-         QtbRlE2AU6cEU/ODVwqnT0QDAoIc4htRV6BZPJYIb4y6SgfiGOqCqXRq95j5KWvtHpNC
-         NnbErISEVvDiW/O9NFWNBVMa8S0neqVpao5JKZZEQfPUbdMvMCWEnFcsWN+6XaYrAuzj
-         YVQQ==
+        d=gourry.net; s=google; t=1746635901; x=1747240701; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FNwnXaMBa9hDs8yRXt3IkZX2NwxNzCzlBs/R2yeu/pc=;
+        b=aNUubDDJEaeYr82EseATTD0fiGIH1nopOS7mLkeA5Jh2dQ9KvOtRFfRQLE9yK0wzbx
+         ANktdUA3CSC6L++L9C8b9uggtSK0nHoZKykikhhsZ9gmOqAtKOXXYLnQAEXDxNWblGuD
+         t2SiojHv9qsM+SMpiznoCsr9vqsSaDTuHqhqZ1Tyc7OFX6lStT0SW0EmTgFnHbpCwo/s
+         xx7gBiw6ttfPwx2Y3UrHCGKER49aBOjtdOb7GZErkAxC31t5AExD/knUsUqEyky5A+tM
+         jION/haVKHDgQUqUVp9Jqu56+JmxJl/PdU7FrJTrZM6VZFrDSACCLSBwS2IqDeZBJPmO
+         k+Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746635787; x=1747240587;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=axt5Qbp2mD3JDBMkh2CUDM68i+V3fWWqBODx7JRunlE=;
-        b=oGYWXg4zOhmrpsDg0GDSL+7ISVVTzskCjMdZj50Cs9WJz4vNfIenYVN5e36qjIPBJb
-         K4ozJh02B1OChkZ59hVovv+fBfDCdeDv5R2voVhDhAcg5swe6OKbgdgXQWU8dRtQNwB9
-         oQPhVrBE/RbmdY5nDqz+6wcq3jxgniR/mAFF6SQKujbzXQMuUJZqlzCTRJX0M4gtemVB
-         4GdgtCp3oFTMuUPondULodJ8XQ/8G4DFFL437BXbalA9o9Yw8RlZVO7FCtmh/dIksYjk
-         R8/Nghwmtc1XVRZGvditLDHo2aKPS/7q75x5yPzkq2iXzJouLwlU4b7p1IqInTSwTflS
-         jS0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUU/l9xpj43IXDZwluuB4X1YeBvAoqgBgE9vApoUgu/v1h7BfMpjy5+2WyF8qu0oNW6VW2KN8osvKl3@vger.kernel.org, AJvYcCV1YILll0+0qjPfsxh8p+0L/2ouF4tnG687rWtiY8IJ7I6RVcqiP9bjh/vRHZDSrYnSpLPACWu9urM5Lrjf@vger.kernel.org, AJvYcCXVo9uOL3Tcw3gUvXR0+moQiPBq24DurF4hwytIKw5yXwNymTjAatwtXh6wxtQ+jCMoPyW+841oBWFH@vger.kernel.org, AJvYcCXsuFCoZyqNsqUEgs3Mbz1OPuEYocLt0yN7nLjsjIzhhfCp+MbfDH534pwv2AHLCJ3eUSB+21TlQqs1BM/gPQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw07RrKca0qwJnjsamrP//gkrViFUNi1MzF9xBhcENUXwv/KpSU
-	IsZ5ZGLV5o6WYu7ZCCtdVE/DVgPn8fwMsSHZeFWH0JHeIW8d9g58wZBP44y2Y4K3/YwH3fktb9C
-	pe4ocT/ivr7wiejQBYnJcFPcEjg==
-X-Gm-Gg: ASbGncv/qXHWYRzHrbkYH8EzT1qfdGbvaTJrJShP0jdK4v0O750/e7yaz661b0AMTcx
-	NaWR+FLOEhtEBUGtuaRaI0qDZzKMo2QfjNwl792e/2DiBSC8XH8ycMHTE0y0GvlGdR1/HcG1TWe
-	Enfm8thxJRZKWmgPKb7cYKMaA=
-X-Google-Smtp-Source: AGHT+IG4TtEc4UHcL2gxaRWi5FT3jZwhYmsgKbgjQKUE4+xfZUIUK784DIMLSgMmX34KKba9PPpbydZq1seoxRWbt+U=
-X-Received: by 2002:a05:6000:ec6:b0:3a0:b4fa:e594 with SMTP id
- ffacd0b85a97d-3a0b4fae636mr3071542f8f.33.1746635786642; Wed, 07 May 2025
- 09:36:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746635901; x=1747240701;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FNwnXaMBa9hDs8yRXt3IkZX2NwxNzCzlBs/R2yeu/pc=;
+        b=bYo+U0W2BLhWIsp1EuTbIinf8hZBfmjZxZbIk2ygOBUhpqUI3ZmSEaJDDJwFvuz7Qa
+         B6khL6BVUr75jmqxXzHARFD0SeswLKwR0n++fsJAcZ3mZaChB7TvvWL1S7jSe7hTIb0n
+         6illVlzMNM/1pAnoLVQvn80vwZRH+6G5p9zm+1LGZGqEx+qIiuUevuFl5vffuUEZM0i+
+         tHQOoXy4kmtJ+cMDJUfpi4C/l+hmbTXQl3JJoqFk5o2Qdz1LSln2xZSPY6C5UD4wWC9d
+         ZYqmRek4vc3yxO3s0Hx3pyn0+QWVMHrKN2elJBbLNFU4VEaGt/a7gcwc8ou5z5XT0IU1
+         GTxw==
+X-Forwarded-Encrypted: i=1; AJvYcCV1tPoWTawOdx94RiVHd4sT+itzrDAE85LHR/HiWCdmOfMBpzY6JuF7LZVGjKsdvmbTgZlKbQbEce6zCaE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/3zLeeUC7ouf+D2MsCehQEAjlnkNcj0UClAuxYjsbRvP8vzAH
+	lFg5+E9c0X6tzvDb4Azid7vME+RMjKA3JuD/ehb3tQOw9mJA1cxtFw8ZN0mcrcs=
+X-Gm-Gg: ASbGncs2RWfEuWBNumxL8Dl7hyhmA/k1eu3uI4tSPBURj3TUBl7wH6VVeRb0V/Bt9/Z
+	8R10zrTjDcb58mtSes888S7k44r6bboFEvmtaKMOsW5WMjCiVAfvepfvLfjKdTB12RHNuXCq8Of
+	eUEpyYQBYdT+Yf4GsjpBy6yW1bWpmJByx4p5gFFhotLXlqV+f6Tot7gGYIbvmobgv9TSpmnqGmx
+	XPUidQxRiap1q363Qrj8MV+xTBT1mGYd8czzP9IentGRH0Sa9wS3QLvq0uH0FPRVOLQkRVXpI5c
+	EWnvrCoQYDBfKUVJtgBrDnDyl7Ru1gZwGxbNhvYNsW/pj/Vv0sVB3XsJ55/k3zSmcHZvoH7JInF
+	JFQgiPkt/JloPe1+a75Av
+X-Google-Smtp-Source: AGHT+IF0xHUJtr97towfcTvdfSOQ4JyJPdVT4WVEd27PBR1E81nlMSzfNE409MAkSdrttE1G0v49TQ==
+X-Received: by 2002:a05:620a:4621:b0:7c7:a5c9:d109 with SMTP id af79cd13be357-7caf74188e8mr542999885a.50.1746635900579;
+        Wed, 07 May 2025 09:38:20 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7caf75b8841sm171484285a.69.2025.05.07.09.38.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 09:38:20 -0700 (PDT)
+Date: Wed, 7 May 2025 12:38:18 -0400
+From: Gregory Price <gourry@gourry.net>
+To: rakie.kim@sk.com
+Cc: joshua.hahnjy@gmail.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	dan.j.williams@intel.com, ying.huang@linux.alibaba.com,
+	kernel_team@skhynix.com, honggyu.kim@sk.com, yunjeong.mun@sk.com
+Subject: Re: [RFC] Add per-socket weight support for multi-socket systems in
+ weighted interleave
+Message-ID: <aBuMet_S1ONS1pOT@gourry-fedora-PF4VCD3F>
+References: <20250507093517.184-1-rakie.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250426130203.37659-1-alex.vinarskis@gmail.com> <174659505811.5380.3561194017032215136.b4-ty@kernel.org>
-In-Reply-To: <174659505811.5380.3561194017032215136.b4-ty@kernel.org>
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Date: Wed, 7 May 2025 18:36:12 +0200
-X-Gm-Features: ATxdqUGYO_K7swrC_4mSQOoLVgxcVoKQsspTBMQaet4mxzcKeI5SjbJ6I6HJ0wA
-Message-ID: <CAMcHhXq1-=JeNspAZ61W0JqtjPkoKSi2W1sL07hoVsqFu5T--Q@mail.gmail.com>
-Subject: Re: (subset) [PATCH v4 0/4] X1E Asus Zenbook A14 support
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Abel Vesa <abel.vesa@linaro.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, maud_spierings@hotmail.com, 
-	dmitry.baryshkov@oss.qualcomm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507093517.184-1-rakie.kim@sk.com>
 
-On Wed, 7 May 2025 at 07:18, Bjorn Andersson <andersson@kernel.org> wrote:
+On Wed, May 07, 2025 at 06:35:16PM +0900, rakie.kim@sk.com wrote:
+> Hi Gregory, Joshua,
+> 
+> I hope this message finds you well. I'm writing to discuss a feature I
+> believe would enhance the flexibility of the weighted interleave policy:
+> support for per-socket weighting in multi-socket systems.
+> 
+> ---
+> 
+> <Background and prior design context>
+> 
+> While reviewing the early versions of the weighted interleave patches,
+> I noticed that a source-aware weighting structure was included in v1:
+> 
+>   https://lore.kernel.org/all/20231207002759.51418-1-gregory.price@memverge.com/
+> 
+> However, this structure was removed in a later version:
+> 
+>   https://lore.kernel.org/all/20231209065931.3458-1-gregory.price@memverge.com/
+> 
+> Unfortunately, I was unable to participate in the discussion at that
+> time, and I sincerely apologize for missing it.
+> 
+> From what I understand, there may have been valid reasons for removing
+> the source-relative design, including:
+> 
+> 1. Increased complexity in mempolicy internals. Adding source awareness
+>    introduces challenges around dynamic nodemask changes, task policy
+>    sharing during fork(), mbind(), rebind(), etc.
+> 
+> 2. A lack of concrete, motivating use cases. At that stage, it might
+>    have been more pragmatic to focus on a 1D flat weight array.
+> 
+> If there were additional reasons, I would be grateful to learn them.
 >
+
+x. task local weights would have required additional syscalls, and there
+   was insufficient active users to warrant the extra complexity.
+
+y. numa interfaces don't capture cross-socket interconnect information,
+   and as a result actually hides "True" bandwidth values from the
+   perspective of a given socket.
+
+As a result, mempolicy just isn't well positioned to deal with this
+as-designed, and introducing the per-task weights w/ the additional
+extensions just was a bridge too far.  Global weights are sufficient
+if you combine cpusets/core-pinning and a nodemask that excludes
+cross-socket nodes (i.e.: Don't use cross-socket memory).
+
+For workloads that do scale up to use both sockets and both devices,
+you either want to spread it out according to global weights or use
+region-specific (mbind) weighted interleave anyway.
+
+> ---
+> 
+> Scenario 1: Adapt weighting based on the task's execution node
+> 
+> Many applications can achieve reasonable performance just by using the
+> CXL memory on their local socket. However, most workloads do not pin
+> tasks to a specific CPU node, and the current implementation does not
+> adjust weights based on where the task is running.
+> 
+
+"Most workloads don't..." - but they can, and fairly cleanly via
+cgroups/cpusets.
+
+> If per-source-node weighting were available, the following matrix could
+> be used:
+> 
+>          0     1     2     3
+>      0   3     0     1     0
+>      1   0     3     0     1
 >
-> On Sat, 26 Apr 2025 14:57:56 +0200, Aleksandrs Vinarskis wrote:
-> > Introduce support for the mentioned laptop.
-> >
-> > Particular device exists in two model numbers:
-> > * UX3407QA: X1P-42-100 or X1-26-100 (as tested)
-> > * UX3407RA: X1E-78-100
-> >
-> > Mostly similar to other X1-based laptops. Notable differences are:
-> > * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
-> >   and Qualcomm FastConnect 7800 on UX3407RA
-> > * USB Type-C retimers are Parade PS8833, appear to behave identical
-> >   to Parade PS8830
-> > * gpio90 is TZ protected
-> >
-> > [...]
+> This flexibility is currently not possible with a single flat weight
+> array.
+
+This can be done with a mempolicy that omits undesired nodes from the
+nodemask - without requiring any changes.
+
+> 
+> Scenario 2: Reflect relative memory access performance
+> 
+> Remote memory access (e.g., from node0 to node3) incurs a real bandwidth
+> penalty. Ideally, weights should reflect this. For example:
+> 
+> Bandwidth-based matrix:
+> 
+>          0     1     2     3
+>      0   6     3     2     1
+>      1   3     6     1     2
+> 
+> Or DRAM + local CXL only:
+> 
+>          0     1     2     3
+>      0   6     0     2     1
+>      1   0     6     1     2
+> 
+> While scenario 1 is probably more common in practice, both can be
+> expressed within the same design if per-socket weights are supported.
+> 
+
+The core issue here is actually that NUMA doesn't have a good way to
+represent the cross-socket interconnect bandwidth - and the fact that it
+abstracts all devices behind it (both DRAM and CXL).
+
+So reasoning about this problem in terms of NUMA is trying to fit a
+square peg in a round hole.  I think it's the wrong tool - maybe we need
+a new one.  I don't know what this looks like.
+
+> ---
+> 
+> <Proposed approach>
+> 
+> Instead of removing the current sysfs interface or flat weight logic, I
+> propose introducing an optional "multi" mode for per-socket weights.
+> This would allow users to opt into source-aware behavior.
+> (The name 'multi' is just an example and should be changed to a more
+> appropriate name in the future.)
+> 
+> Draft sysfs layout:
+> 
+>   /sys/kernel/mm/mempolicy/weighted_interleave/
+>     +-- multi         (bool: enable per-socket mode)
+>     +-- node0         (flat weight for legacy/default mode)
+>     +-- node_groups/
+>         +-- node0_group/
+>         |   +-- node0  (weight of node0 when running on node0)
+>         |   +-- node1
+>         +-- node1_group/
+>             +-- node0
+>             +-- node1
+> 
+
+This is starting to look like memory-tiers.c, which is largely useless
+at the moment.  Maybe we implement such logic in memory-tiers, and then 
+extend mempolicy to have a MPOL_MEMORY_TIER or MPOL_F_MEMORY_TIER?
+
+That would give us better flexibility to design the mempolicy interface
+without having to be bound by the NUMA infrastructure it presently
+depends on.  We can figure out how to collect cross-socket interconnect
+information in memory-tiers, and see what issues we'll have with
+engaging that information from the mempolicy/page allocator path.
+
+You'll see in very very early versions of weighted interleave I
+originally implemented it via memory-tiers.  You might look there for
+inspiration.
+
+> <Additional implementation considerations>
+> 
+> 1. Compatibility: The proposal avoids breaking the current interface or
+>    behavior and remains backward-compatible.
+> 
+> 2. Auto-tuning: Scenario 1 (local CXL + DRAM) likely works with minimal
+>    change. Scenario 2 (bandwidth-aware tuning) would require more
+>    development, and I would welcome Joshua's input on this.
+> 
+> 3. Zero weights: Currently the minimum weight is 1. We may want to allow
+>    zero to fully support asymmetric exclusion.
 >
-> Applied, thanks!
->
-> [2/4] dt-bindings: arm: qcom: Add Asus Zenbook A14
->       commit: 9f2ae52acd5e6c95ddc55d1cc67f44860940a21b
 
+I think we need to explore different changes here - it's become fairly
+clear when discussing tiering at LSFMM that NUMA is a dated abstraction
+that is showing its limits here.  Lets ask what information we want and
+how to structure/interact with it first, before designing the sysfs
+interface for it.
 
-Thanks!
-
-I saw 2/4, 3/4 were applied. Is there a reason 4/4 was left behind,
-eg. Does it have to go through different trees like 1/4?
-I also saw that another later series with dtb changes for x1e devices
-[1] has landed, so 4/4 of the current series won't apply anymore...
-Would you like me to rebase & respin?
-
-Regards,
-Alex
-
-[1] https://lore.kernel.org/all/174659597008.7675.2301017495937908497.b4-ty@kernel.org/
->
-> Best regards,
-> --
-> Bjorn Andersson <andersson@kernel.org>
+~Gregory
