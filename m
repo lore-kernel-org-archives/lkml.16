@@ -1,264 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EEC125D20E;
-	Wed,  7 May 2025 12:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66896259CAD
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746619899; cv=none; b=Nfx1kXaUpT+AZ9pWuWia4Gdj01jQZf5wH5SxWL/bwl+xzXdeY3kuze1Xj3/vcegQlw5dNpCv+E6Y6VcZm2yeniwELhEQq8pzOQh5VMaU+xDEyxO7ZVlVKPBiwQINRbftZ9kmB3OrbuyUEHoCFE6oqpLuUpIASMPjOZLiW30yWnc=
+	t=1746619938; cv=none; b=OaOC9QdiEpprfDFbUbwRwdxiH41G0KrFWRjLGyP6tDoepC/ngo4GeQ8nEgyhEDCjZVP+DFO4l+7jVHtJKvOtQGhotC9q++eePcpASDWxtRFcQdgd3A/kkypoAmeOigRYkljPRuCPVwOr5kVUXmET45QwrI4psK3wsaJoHHvwUE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746619899; c=relaxed/simple;
-	bh=cSo6FStu8b5zTsbjRZmWUY84qNUjg6csdXKm1ISmQ4w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oF8kqqqbPpPOjDMKcJkZKE4irNO7GHdBw8o0sGcdAf+w8oiAJpq393Ah0CpcCAOUF4fvsKG6FapHZ6RvdLOm2XS2JIgFFZiBOmyBUwuFdp0maNz884wNt0M7Ho4y5kQ1pfPa0S5rNY7N2Yvf28+17pqxqxBm7R2+Su0fpgj2OiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TyUyxHKp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746619938; c=relaxed/simple;
+	bh=uIs8J8TAolvkoMCl71is1jxlWb8HZlMXJNpvhI0wHXg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tzKaCf/bMjTzm/iQNptIjYrjxTSUho2kr47idzlmjN467Vnc44//4F/+PsX5UNnCNVEdXqRzV49V0wFgKt7Eym1k5PVnCMI6L468a/J0D7iMigt+mv64FQYhYZNPhZj9Hz2HIYcUH1NtHlhq9/yKoQBtNFhbunBZyNs/yIr+ejI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=gDHXoQvs; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TyUyxHKp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EFFCC4CEE7;
-	Wed,  7 May 2025 12:11:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746619898;
-	bh=cSo6FStu8b5zTsbjRZmWUY84qNUjg6csdXKm1ISmQ4w=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TyUyxHKpdMXb5VkrfKTlhYrSc2Pp3Y0PmmReFW5iTtCd+4Rd+beq1YBmPsLAo69h3
-	 XpZsjRackyQM0njfUKu0SaG/UQshXZasebbkKLKdC8HE7rbfd6ODhLFxqAIeqT+l1l
-	 zTFzRWFYso5v7osjq4rEkgRnSZMwGZfi61AwHQp1rdBPpr730z+9U3wu1V63sSAaIB
-	 CUHxQOz5nXLgkWM3wNzXn3vq7ZvAQ6kn+ljiSGMKHPslX9qj7rX38ek/qLXw9YDXbv
-	 f7Z6hai7ztv79Dl2KnMr7//h3pGw7EOJYMDzY/UrM03gl8mCl9lJPUJNbMqty/sVmU
-	 uDMNhDzcVwOHA==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uCdce-00000001KgE-043m;
-	Wed, 07 May 2025 14:11:36 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: conf.py: drop backward support for old Sphinx versions
-Date: Wed,  7 May 2025 14:11:17 +0200
-Message-ID: <20250507121117.317810-1-mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="gDHXoQvs"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5faaddb09feso8013061a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 05:12:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1746619934; x=1747224734; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=om7oxz58ErunXunVagFusPsxHO+ymwEeUcfbgeIERHg=;
+        b=gDHXoQvscfSxC4cv9kOvIrvJQqEoxJ30mXevrvoH4N0OpEgESS0Ai3UNKem91xkCZ9
+         1v88zEfntid3OYqdBohhjxT3SwpefJ4VxsvI26c8ml2v6PQRQI7bvKTh/lGkU1Yuu+Y7
+         t86+RtGHr0cxzTYm/7t3VMZE2HhmLHWVMgeCwBWzXMGFp3k+Rzz8WN3hpoeLeaReSfB5
+         k5Nc/YFXmo5rrlmZgGEWY8F5wASiIJHRYLLQdZNK93prpz7eJU6kV77a+9MB2hCPhEzS
+         z9l9oMK0xwWo2rka1eKmQFsZ8GBDr2m57NSbTPcnqSXV1ihmxCEcRrz8mP49WmDh81l5
+         e67w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746619934; x=1747224734;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=om7oxz58ErunXunVagFusPsxHO+ymwEeUcfbgeIERHg=;
+        b=Ijm/4FTAmhA7EsYCoja2XlXdH3XODT0aOkS0A1AyMyd6WCEFjXc95ayBXGpPRceqE7
+         nTpioc3DEUbOp/l1g0wcFJy6Sxf7h1jzLBlvkHyrle/O/EwQklsuoPn9211Lr3xrVzlC
+         2JsQ6Dy4fSwwG+l/Vums6Urg/aMA7RC1MOpx8vZ5DitBf8jcf9y2J/WU/vg1ESNZvV/1
+         SJZb5bR0qg6Qis6MGsEv0Mxtwaw0MYduBakykCEdL8Ng6JNhEF2Q2XN6/pwdsfnMRUpL
+         3wANShqJRO2o2puH7ViIkZuxs/lRbJBwEpwwJaKJMYSgLTdwUBVb9zrxeP7ExFpbbQmO
+         RBDA==
+X-Forwarded-Encrypted: i=1; AJvYcCXeRAaV2Jye3dkL4x/PpDGUpZSq6y0kIGkv4E8+pesluNeqoEiWAARow5nh3N3rK01XrQr6vA7buocj0Uk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzllfeMEDGnEAtJgpvErle+cCplGySJD9OxutKEohsHHkprUOsn
+	G/OR6Xa28k5+Bwpuumhuuq/ADYkDByFebcEKljMcV6AakjSHKaXO/zdA8nXkSXk=
+X-Gm-Gg: ASbGncuoRC5/s9o3DQ1nvzZ/5J8p02XrWqSLBjZwXKwCrSIW1wSCuCYTh8QJDtVuY1V
+	YKeJrCBJhvCtoD8kDcOUwCBzmUShogkSUMnfLlFW/oUVSvxFY7h3BvAIVlhwYeImHqLNVmIiaSA
+	wAJhroAkqUo/fL6jEtP4viojj3TB+mBDxfWQKSpLht8GkdpzIHKxyA26EFewjKAKgKvdEz02jey
+	ZGYmApEBnNuvtgTZNa6nF4jVR8d/Sk0xdnJRpXktKEfqUzvTEMNj9SJEeT8166jH1AY1DiiXsYi
+	OwRNMABKqwUyTzncrrJzCT+AyflhDnq6+NoU3+cfsRhAbUZiAQ==
+X-Google-Smtp-Source: AGHT+IF48ijHwhb+prKlciJYrp91ZouEQg6tU7MenRCxXDs9b8jde3XxqSXhLBFuS0IMKl9YSMBjHQ==
+X-Received: by 2002:a05:6402:42cb:b0:5f6:c638:c72d with SMTP id 4fb4d7f45d1cf-5fbe9d77ce2mr2895742a12.7.1746619934400;
+        Wed, 07 May 2025 05:12:14 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.147])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa77bf3f01sm9392974a12.70.2025.05.07.05.12.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 May 2025 05:12:13 -0700 (PDT)
+Message-ID: <df05d999-8eba-4fbd-93f6-7919f73da11a@tuxon.dev>
+Date: Wed, 7 May 2025 15:12:11 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] clk: renesas: rzg2l-cpg: Skip lookup of clock when
+ searching for a sibling
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com,
+ linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250410140628.4124896-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250410140628.4124896-2-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdWx9Xk5QksoGFvCyo2HLXZ_+WRBCe3bDrZx=bfPoXHJgg@mail.gmail.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <CAMuHMdWx9Xk5QksoGFvCyo2HLXZ_+WRBCe3bDrZx=bfPoXHJgg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Since commit 5e25b972a22b ("docs: changes: update Python minimal version"),
-the minimal Sphinx version is 3.4.3.
+Hi, Geert,
 
-Drop support for older versions from the config file.
+On 05.05.2025 18:52, Geert Uytterhoeven wrote:
+> Hi Claudiu,
+> 
+> On Thu, 10 Apr 2025 at 16:06, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> Since the sibling data is filled after the priv->clks[] array entry is
+>> populated, the first clock that is probed and has a sibling will
+>> temporarily behave as its own sibling until its actual sibling is
+>> populated. To avoid any issues, skip this clock when searching for a
+>> sibling.
+>>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> Thanks for your patch!
+> 
+>> --- a/drivers/clk/renesas/rzg2l-cpg.c
+>> +++ b/drivers/clk/renesas/rzg2l-cpg.c
+>> @@ -1324,6 +1324,9 @@ static struct mstp_clock
+>>
+>>                 hw = __clk_get_hw(priv->clks[priv->num_core_clks + i]);
+>>                 clk = to_mod_clock(hw);
+>> +               if (clk == clock)
+>> +                       continue;
+>> +
+>>                 if (clock->off == clk->off && clock->bit == clk->bit)
+>>                         return clk;
+>>         }
+> 
+> Why not move the whole block around the call to
+> rzg2l_mod_clock_get_sibling() up instead?
+> 
+>             ret = devm_clk_hw_register(dev, &clock->hw);
+>             if (ret) {
+>                     clk = ERR_PTR(ret);
+>                     goto fail;
+>             }
+> 
+>     -       clk = clock->hw.clk;
+>     -       dev_dbg(dev, "Module clock %pC at %lu Hz\n", clk,
+> clk_get_rate(clk));
+>     -       priv->clks[id] = clk;
+>     -
+>             if (mod->is_coupled) {
+>                     struct mstp_clock *sibling;
+> 
+>                     clock->enabled = rzg2l_mod_clock_is_enabled(&clock->hw);
+>                     sibling = rzg2l_mod_clock_get_sibling(clock, priv);
+>                     if (sibling) {
+>                             clock->sibling = sibling;
+>                             sibling->sibling = clock;
+>                     }
+>             }
+> 
+>     +       clk = clock->hw.clk;
+>     +       dev_dbg(dev, "Module clock %pC at %lu Hz\n", clk,
+> clk_get_rate(clk));
+>     +       priv->clks[id] = clk;
+>     +
+>             return;
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/conf.py | 162 +++++++++++++++++-------------------------
- 1 file changed, 65 insertions(+), 97 deletions(-)
+This should work as well. I considered the proposed patch generates less
+diff. Please let me know if you prefer it addressed as you proposed.
 
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index b126f6760b5f..12de52a2b17e 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -28,16 +28,6 @@ def have_command(cmd):
-     """
-     return shutil.which(cmd) is not None
- 
--# Get Sphinx version
--major, minor, patch = sphinx.version_info[:3]
--
--#
--# Warn about older versions that we don't want to support for much
--# longer.
--#
--if (major < 2) or (major == 2 and minor < 4):
--    print('WARNING: support for Sphinx < 2.4 will be removed soon.')
--
- # If extensions (or modules to document with autodoc) are in another directory,
- # add these directories to sys.path here. If the directory is relative to the
- # documentation root, use os.path.abspath to make it absolute, like shown here.
-@@ -57,76 +47,71 @@ extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include',
-               'maintainers_include', 'sphinx.ext.autosectionlabel',
-               'kernel_abi', 'kernel_feat', 'translations']
- 
--if major >= 3:
--    if (major > 3) or (minor > 0 or patch >= 2):
--        # Sphinx c function parser is more pedantic with regards to type
--        # checking. Due to that, having macros at c:function cause problems.
--        # Those needed to be scaped by using c_id_attributes[] array
--        c_id_attributes = [
--            # GCC Compiler types not parsed by Sphinx:
--            "__restrict__",
--
--            # include/linux/compiler_types.h:
--            "__iomem",
--            "__kernel",
--            "noinstr",
--            "notrace",
--            "__percpu",
--            "__rcu",
--            "__user",
--            "__force",
--            "__counted_by_le",
--            "__counted_by_be",
--
--            # include/linux/compiler_attributes.h:
--            "__alias",
--            "__aligned",
--            "__aligned_largest",
--            "__always_inline",
--            "__assume_aligned",
--            "__cold",
--            "__attribute_const__",
--            "__copy",
--            "__pure",
--            "__designated_init",
--            "__visible",
--            "__printf",
--            "__scanf",
--            "__gnu_inline",
--            "__malloc",
--            "__mode",
--            "__no_caller_saved_registers",
--            "__noclone",
--            "__nonstring",
--            "__noreturn",
--            "__packed",
--            "__pure",
--            "__section",
--            "__always_unused",
--            "__maybe_unused",
--            "__used",
--            "__weak",
--            "noinline",
--            "__fix_address",
--            "__counted_by",
--
--            # include/linux/memblock.h:
--            "__init_memblock",
--            "__meminit",
--
--            # include/linux/init.h:
--            "__init",
--            "__ref",
--
--            # include/linux/linkage.h:
--            "asmlinkage",
--
--            # include/linux/btf.h
--            "__bpf_kfunc",
--        ]
--
--else:
--    extensions.append('cdomain')
-+# Since Sphinx version 3, the C function parser is more pedantic with regards
-+# to type checking. Due to that, having macros at c:function cause problems.
-+# Those needed to be escaped by using c_id_attributes[] array
-+c_id_attributes = [
-+    # GCC Compiler types not parsed by Sphinx:
-+    "__restrict__",
-+
-+    # include/linux/compiler_types.h:
-+    "__iomem",
-+    "__kernel",
-+    "noinstr",
-+    "notrace",
-+    "__percpu",
-+    "__rcu",
-+    "__user",
-+    "__force",
-+    "__counted_by_le",
-+    "__counted_by_be",
-+
-+    # include/linux/compiler_attributes.h:
-+    "__alias",
-+    "__aligned",
-+    "__aligned_largest",
-+    "__always_inline",
-+    "__assume_aligned",
-+    "__cold",
-+    "__attribute_const__",
-+    "__copy",
-+    "__pure",
-+    "__designated_init",
-+    "__visible",
-+    "__printf",
-+    "__scanf",
-+    "__gnu_inline",
-+    "__malloc",
-+    "__mode",
-+    "__no_caller_saved_registers",
-+    "__noclone",
-+    "__nonstring",
-+    "__noreturn",
-+    "__packed",
-+    "__pure",
-+    "__section",
-+    "__always_unused",
-+    "__maybe_unused",
-+    "__used",
-+    "__weak",
-+    "noinline",
-+    "__fix_address",
-+    "__counted_by",
-+
-+    # include/linux/memblock.h:
-+    "__init_memblock",
-+    "__meminit",
-+
-+    # include/linux/init.h:
-+    "__init",
-+    "__ref",
-+
-+    # include/linux/linkage.h:
-+    "asmlinkage",
-+
-+    # include/linux/btf.h
-+    "__bpf_kfunc",
-+]
- 
- # Ensure that autosectionlabel will produce unique names
- autosectionlabel_prefix_document = True
-@@ -149,10 +134,6 @@ if 'SPHINX_IMGMATH' in os.environ:
-     else:
-         sys.stderr.write("Unknown env SPHINX_IMGMATH=%s ignored.\n" % env_sphinx_imgmath)
- 
--# Always load imgmath for Sphinx <1.8 or for epub docs
--load_imgmath = (load_imgmath or (major == 1 and minor < 8)
--                or 'epub' in sys.argv)
--
- if load_imgmath:
-     extensions.append("sphinx.ext.imgmath")
-     math_renderer = 'imgmath'
-@@ -322,14 +303,6 @@ if "DOCS_CSS" in os.environ:
-     for l in css:
-         html_css_files.append(l)
- 
--if major <= 1 and minor < 8:
--    html_context = {
--        'css_files': [],
--    }
--
--    for l in html_css_files:
--        html_context['css_files'].append('_static/' + l)
--
- if  html_theme == 'alabaster':
-     html_theme_options = {
-         'description': get_cline_version(),
-@@ -409,11 +382,6 @@ latex_elements = {
-     ''',
- }
- 
--# Fix reference escape troubles with Sphinx 1.4.x
--if major == 1:
--    latex_elements['preamble']  += '\\renewcommand*{\\DUrole}[2]{ #2 }\n'
--
--
- # Load kerneldoc specific LaTeX settings
- latex_elements['preamble'] += '''
-         % Load kerneldoc specific LaTeX settings
--- 
-2.49.0
+Thank you for your review,
+Claudiu
+
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
