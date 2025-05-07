@@ -1,153 +1,127 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BA582E40E
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE6C281369
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746623917; cv=none; b=IcZvbXL1LOQpGl62VYY7jJQ5nzK7Oa9R2uuSDTvtpBD4rQ1kL+51WeOm+/AK6dhszsdEt0777/D+ixClxfS2kcHzdDQLCqZMiZ5hI6+pVVQZJ0YNHRWsew5Qb6R6hAM6p8/8KXdQSvip6rPNVVoFtJDnCl0R6FdwKeV0YlDLmp8=
+	t=1746623921; cv=none; b=V+GQ+eByrA8inIueO48aQnQBTYTVngwXT0/wuYr2wiAlLyfoRrZN6XI6pXnYs20zgz063Jx/jAr1XYbFoPnmM69pFvMdYqc6v2SjKGpIEONvGEDXeFaROsSctKQTKGjZb0xI6DfEKRPa84QVXC2l6SsqcJ+Loi9XFl8ehjDTqms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746623917; c=relaxed/simple;
-	bh=rC8MjQhwGQeqZYtvOetoLdpalN10pzZdQu0YjQOOTjE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tFesbcljThGC6wTMXT70KrNxp79R4goUuryIKBN38vTQWXEG1gRNGxoHDuYST6LvGkhIzpLeBMoJvHqeALqpR/UEenSXzY7qC2ibARhK3ONXAr2U1zyc/ESfNzcWfbGknTSuAzlmaEUwbjATtWSexotAZjUBL6eGdobT7X0ny/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2361F339;
-	Wed,  7 May 2025 06:18:24 -0700 (PDT)
-Received: from [10.57.20.214] (unknown [10.57.20.214])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 334C63F58B;
-	Wed,  7 May 2025 06:18:32 -0700 (PDT)
-Message-ID: <24ee069c-b66a-4810-b8aa-4aa88d8fdab4@arm.com>
-Date: Wed, 7 May 2025 14:18:30 +0100
+	s=arc-20240116; t=1746623921; c=relaxed/simple;
+	bh=vANADi+020FCH5I2njw3FMWd3fKb5Ttxnfby5ZW9V8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BVR0CJMfeN/7tU/GYkuaagi1U5ha163hPx6UysdbNVoFA+ckB3MoKFH+UXuFbVwwjEl0cZKUlG6bXa/cVJExbUnU/8kFWKfpEHJh4nLfEOkMIf9uquDgH5Lvb/Ed25UD1oJwzOUcLfYio6y/R+GjNwlcMDQCxJGgDgLmTzQw1bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sOQUj9rH; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sOQUj9rH"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso66656755e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:18:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746623918; x=1747228718; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mMwJyAtJK/aLIyT6CLn61d8dMsByyOcrMzhv12s06BY=;
+        b=sOQUj9rH/JgpwIXZKDU0vxXibY7ngcB5Zhta1Ld9Tw0B+eqV//1Tfnvu1x229JHoyd
+         C1FCWmHeVXCv1W4HuqLOUbbI6UeHytrLg8zOd6GYrckEooLWXGPHG8pDCqn9Hfvz9CXz
+         um+kfAPh7+R+ve7rLwQlpaUInSmHus7lOeE2GONq/k+45lrjIcmGdsUoU6mY3HZeQIpz
+         58J9aIpYZVs7sdLhnwIxCEoKXQukEsn5/U2ZE/ERjC2K5z3F5HXOuWjL5SW4fhYuLQwz
+         0qdyaQfhWPwe0wqOAuumot/HrDgedba6t5rd3+AeMW0eh9uLFqEPaTkuTavgfXDBcP4X
+         t8Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746623918; x=1747228718;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mMwJyAtJK/aLIyT6CLn61d8dMsByyOcrMzhv12s06BY=;
+        b=IE29yqC69gSymHMKfxVTTklW71VMikdlK5gDNKtOZiAt0uHJW4dz8ZkUcFqU+o9EYq
+         e8mbN3ywSAPJ8XNH+OAzoRqBNdZPtoAxS+s28zU5h05XFiRfmJR9gxvslujjLNJlqQTO
+         VdoeoVxIIMw1GH+EmbP1u5RCXwFsTY64P7pZ6BfHOgpx6R/BjjEJRItwATUlg6ogUiPq
+         GjcWJy7vciOotsujGksfrmtL+lavbTVRP6+qO79Q9g9Xj1wy4XUDz/1UxBAVX661J7AB
+         m3AEnvUKlODmFzb/7hcSKQFOn7gk60odUChoG8LmyS5LFrn5NshHN9vDX3rbWNXYQzEu
+         MSSA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6ZKgVY6OpAdhz0ELm6XKdoNFpJrkN/FH2aG7/gNwT8BiXk3s/Jbc1pM9DZA297KnGdAbBczUYNE1cuUg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGVWTQrGAgm1gt/w/0cVN4yhfW0o6tmZXMmIBAbBBtaiw40Alk
+	W5z5bXyFi08YxnXPAd8Z5rf5p/QS0mQnBFKz6G2rAe8H7qda3HVtBKoIgQlflG4=
+X-Gm-Gg: ASbGncuo9kOliM6Tf/SW+E1X4HuI4A9KsAk/Rd79+1Bal2NKdAON1+7aTi8DZTOIeTu
+	QdsDCayOdlcUrai/BtHwMdOVqYJv6o1TO2CEKZ3QvJnXy6AGToAbGKStNVF6coWglpFIHHleNWV
+	cAusxg59XibFe76UeG1uPQDaoSMS5xr6shbqgnwkIFcHYtNaaGlaf3oh8Mbp6hQ9nQd7VilHCdc
+	eyvlJBaZ6rF6SvQX5fKOWmc9QTS2AXqW4SdYSZ2AHDCoUDSsFYUiPRFeHa9e+kiH0sZDG2/9bUs
+	FeXE6hGt7t5os7/z5j0AmL06LsUV820PDxq4FdXFoiCRvA==
+X-Google-Smtp-Source: AGHT+IH3Qorr4/m1vHEg7Ot9UQ5uCqOCNeK+Gmt1pu97YiZ6JvL10Fw4EinSPUDzBFREtrSqd0/vwg==
+X-Received: by 2002:a05:600c:6085:b0:439:643a:c8d5 with SMTP id 5b1f17b1804b1-441d448ca1bmr37445495e9.0.1746623918101;
+        Wed, 07 May 2025 06:18:38 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442cd380ca4sm629535e9.36.2025.05.07.06.18.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 06:18:37 -0700 (PDT)
+Date: Wed, 7 May 2025 16:18:34 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: Mike Tipton <quic_mdtipton@quicinc.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@oss.nxp.com>,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v3] cpufreq: scmi: Skip SCMI devices that aren't used by
+ the CPUs
+Message-ID: <aBtdqvyT4Ded8Lht@stanley.mountain>
+References: <20250428144728.871404-1-quic_mdtipton@quicinc.com>
+ <aBtLMYqcnwacGJuy@pluto>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] drm/panfrost: Add BO labelling to Panfrost
-To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
- linux-kernel@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org,
- Boris Brezillon <boris.brezillon@collabora.com>, kernel@collabora.com,
- Rob Herring <robh@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-References: <20250424022138.709303-1-adrian.larumbe@collabora.com>
- <20250424022138.709303-2-adrian.larumbe@collabora.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250424022138.709303-2-adrian.larumbe@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBtLMYqcnwacGJuy@pluto>
 
-On 24/04/2025 03:21, Adrián Larumbe wrote:
-> Unlike in Panthor, from where this change is based on, there is no need
-> to support tagging of BO's other than UM-exposed ones, so all strings
-> can be freed with kfree().
+On Wed, May 07, 2025 at 12:59:45PM +0100, Cristian Marussi wrote:
+> > +static bool scmi_dev_used_by_cpus(struct device *scmi_dev)
+> > +{
+> > +	struct device_node *scmi_np = dev_of_node(scmi_dev);
+> > +	struct device_node *np;
+> > +	struct device *cpu_dev;
+> > +	int cpu, idx;
+> > +
+> > +	if (!scmi_np)
+> > +		return false;
+> > +
+> > +	for_each_possible_cpu(cpu) {
+> > +		cpu_dev = get_cpu_device(cpu);
+> > +		if (!cpu_dev)
+> > +			continue;
+> > +
+> > +		np = dev_of_node(cpu_dev);
+> > +
+> > +		if (of_parse_phandle(np, "clocks", 0) == scmi_np)
 > 
-> This commit is done in preparation of a following one that will allow
-> UM to set BO labels through a new ioctl().
+> Shouldn't this, on Success, be released by an of_node_put() (or, BETTER,
+> by some OF-related cleanup.h magic...)
 > 
-> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+The cleanup.h magic is __free(of_node_put) but dev_of_node() doesn't
+take a reference so I don't think it's required.
 
-But one comment below
+regards,
+dan carpenter
 
-> ---
->  drivers/gpu/drm/panfrost/panfrost_gem.c | 19 +++++++++++++++++++
->  drivers/gpu/drm/panfrost/panfrost_gem.h | 16 ++++++++++++++++
->  2 files changed, 35 insertions(+)
+> > +			return true;
+> > +
+> > +		idx = of_property_match_string(np, "power-domain-names", "perf");
+> > +
+> > +		if (of_parse_phandle(np, "power-domains", idx) == scmi_np)
 > 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c b/drivers/gpu/drm/panfrost/panfrost_gem.c
-> index 963f04ba2de6..a7a29974d8b1 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gem.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /* Copyright 2019 Linaro, Ltd, Rob Herring <robh@kernel.org> */
->  
-> +#include <linux/cleanup.h>
->  #include <linux/err.h>
->  #include <linux/slab.h>
->  #include <linux/dma-buf.h>
-> @@ -35,6 +36,9 @@ static void panfrost_gem_free_object(struct drm_gem_object *obj)
->  	 */
->  	WARN_ON_ONCE(!list_empty(&bo->mappings.list));
->  
-> +	kfree(bo->label.str);
-> +	mutex_destroy(&bo->label.lock);
-> +
->  	if (bo->sgts) {
->  		int i;
->  		int n_sgt = bo->base.base.size / SZ_2M;
-> @@ -260,6 +264,7 @@ struct drm_gem_object *panfrost_gem_create_object(struct drm_device *dev, size_t
->  	mutex_init(&obj->mappings.lock);
->  	obj->base.base.funcs = &panfrost_gem_funcs;
->  	obj->base.map_wc = !pfdev->coherent;
-> +	mutex_init(&obj->label.lock);
->  
->  	return &obj->base.base;
->  }
-> @@ -302,3 +307,17 @@ panfrost_gem_prime_import_sg_table(struct drm_device *dev,
->  
->  	return obj;
->  }
-> +
-> +void
-> +panfrost_gem_set_label(struct drm_gem_object *obj, const char *label)
-> +{
-> +	struct panfrost_gem_object *bo = to_panfrost_bo(obj);
-> +	const char *old_label;
-> +
-> +	scoped_guard(mutex, &bo->label.lock) {
-> +		old_label = bo->label.str;
-> +		bo->label.str = label;
-> +	}
-> +
-> +	kfree(old_label);
-> +}
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.h b/drivers/gpu/drm/panfrost/panfrost_gem.h
-> index 7516b7ecf7fe..c0be2934f229 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gem.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.h
-> @@ -41,6 +41,20 @@ struct panfrost_gem_object {
->  	 */
->  	size_t heap_rss_size;
->  
-> +	/**
-> +	 * @label: BO tagging fields. The label can be assigned within the
-> +	 * driver itself or through a specific IOCTL.
-
-From the commit message (about the use of kfree()) I assume we are not
-expecting this to be assigned "within the driver itself"?
-
-Thanks,
-Steve
-
-> +	 */
-> +	struct {
-> +		/**
-> +		 * @label.str: Pointer to NULL-terminated string,
-> +		 */
-> +		const char *str;
-> +
-> +		/** @lock.str: Protects access to the @label.str field. */
-> +		struct mutex lock;
-> +	} label;
-> +
->  	bool noexec		:1;
->  	bool is_heap		:1;
->  };
-> @@ -89,4 +103,6 @@ void panfrost_gem_teardown_mappings_locked(struct panfrost_gem_object *bo);
->  int panfrost_gem_shrinker_init(struct drm_device *dev);
->  void panfrost_gem_shrinker_cleanup(struct drm_device *dev);
->  
-> +void panfrost_gem_set_label(struct drm_gem_object *obj, const char *label);
-> +
->  #endif /* __PANFROST_GEM_H__ */
+> Same.
+> 
+> > +			return true;
+> > +	}
+> > +
+> > +	return false;
+> > +}
 
