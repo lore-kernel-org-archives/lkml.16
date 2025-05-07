@@ -1,121 +1,83 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7416E172BD5;
-	Wed,  7 May 2025 02:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B50412B73;
+	Wed,  7 May 2025 02:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746586156; cv=none; b=bj74EQrOj2a2lNs2Fm25WnPsx6IzAobDpDpI+/6SOfDVmFVZ+VMXKgfqIo0RLrB05m3dOG6IwVeOK4xgfAPYYbFDIw6DY2P12UyFQotGLTWG/XnMRq/jyTdZsjA8k3lwtvblYwVnCK//Re86hn0HIWCCgVL6UpwFbNBS9SGoblM=
+	t=1746586333; cv=none; b=BBiemmtlXDtMwaN1mAXN7GGrO0fOjaqHpP1c3OklWedqAKvOdYIVXOIIv90ZHpGX+yp4Kt9MPzBv6umNR+631EaCE17UtDHgswIWHoC4Oz+8QxNcMybPq1gWNBeGkQlWF+oP/P1g68zya9wBCD3i1zQaqf8tyOeccpGZcQwr8oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746586156; c=relaxed/simple;
-	bh=uymnc1ltsgShhsH06V7rrYc0WTXAor1D1tmY64y7a20=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=WBTPA0yNhCnvDU4Gj9yz5A9vUgO4JSgtP/OLSKKeFBq08ci0B1ip90eNd2hDeVuiAFXr7W142etUK3Eut/+R9DoWlYmrsqSyoOsu6L9swDstxvQzdtHzfulynQRMM6lVEMTZbMF1uwRzOmkDQg/IOkJEMkEdzf/sBOv7y0EyAWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Xx7FW2W7; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746586333; c=relaxed/simple;
+	bh=jla9KNrIyCdQo3DzfEhy08PcQH+6cSQg16Xv+U233AU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OOF9sw2gmb5M1wgBJE4XknrW3gYR0kAmWsH5oL4XEXpXwMtIUvM67od9714eaAzRXTsa4r6BSSv5HBzC+xiGUWBlzlpqGuLnorcVzNqQtjSKkymc5OxPFWQbMsqWKNmQvQTTf4ISeNKzXsAr2UrVeJiFsf/Uby33pR4SJ4ylyGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=DEAxXyIW; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Xx7FW2W7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746586143;
-	bh=5ZtQidN6t6pZN6NQ4jAauR/nh3kZzvNrzL3ii6tWoU4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Xx7FW2W7vg+zZcqlRl+NpXdOt/VGH5heoaNYhEVQwr5cs5HEWPPUsDmDwfWDhC1DF
-	 uyudaE5jCjAgpCdNu8rPA55PN7ulZE7uukHGRQUJItx99KMptjCdUSHFUEI/h1gD3N
-	 b6StBuptpGMRJpSFb+MqkJyvcmlHcGZAHlSPczZ/mf4y0m10ManStcdLVemRQs6VCX
-	 JqDBB3mrh+03M5Dj58W5Go6g1BeLIouqV7OYrIoQ6PY9smgeabTgE/hkvqHuQBQ4PR
-	 1H9tadQjEagQMCc473zLFjn5KS4lgofNIT9v7hlY4pYhH0n30bLDMWT7hk3fDhlpSM
-	 h0zvnKthsuScw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zsfq15WMvz4wnp;
-	Wed,  7 May 2025 12:49:01 +1000 (AEST)
-Date: Wed, 7 May 2025 12:49:00 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>
-Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, Mengyuan Lou
- <mengyuanlou@net-swift.com>, Networking <netdev@vger.kernel.org>, Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the tip tree with the net-next tree
-Message-ID: <20250507124900.4dad50d4@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="DEAxXyIW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1746586329;
+	bh=jla9KNrIyCdQo3DzfEhy08PcQH+6cSQg16Xv+U233AU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=DEAxXyIW/x7MxY0+7oDOoLYtt8LXGz1pQqcEmy/0HTyKS8dm4l8erumNwzO07H7K4
+	 n0vWuEVTc/pZZxYQEapnu9D8kulboSld91j2dGSHH8U+m38Tyf5JspN5j9ZYgxJ8pr
+	 e/Bx+K+Rlpgdulin/WuxhXSTfhXeC/h/jVrNa6nOPYS4OFKmfC8Gmk7y7SRvbUKQdT
+	 /mrzZLZFagMzN1+9UCl5pvflJtjYJZD0Y3l5nDgLjdcrN3MFjzbF9MjWf1/xWQeOle
+	 U2mzLOuF71sPUsRmesGjqbTYFJtsrRh0r3dZQFCpjvWjwR3mNHpqOBsOnNxaZVz1jm
+	 D11auCpKfOHkA==
+Received: from [192.168.68.112] (unknown [180.150.112.225])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id E93E764473;
+	Wed,  7 May 2025 10:52:08 +0800 (AWST)
+Message-ID: <2ed50b1463f62a829f863b889ab818f492b73946.camel@codeconstruct.com.au>
+Subject: Re: [PATCH] arm64: dts: nuvoton: Add EDAC controller
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: "William A. Kennington III" <william@wkennington.com>, Avi Fishman
+ <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, Tali Perry
+ <tali.perry1@gmail.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 07 May 2025 12:22:08 +0930
+In-Reply-To: <20250415233403.2052913-1-william@wkennington.com>
+References: <20250415233403.2052913-1-william@wkennington.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Lwo4oWK66gWmwmhOTn8cOzA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
 
---Sig_/Lwo4oWK66gWmwmhOTn8cOzA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+T24gVHVlLCAyMDI1LTA0LTE1IGF0IDE2OjM0IC0wNzAwLCBXaWxsaWFtIEEuIEtlbm5pbmd0b24g
+SUlJIHdyb3RlOgo+IFdlIGhhdmUgdGhlIGRyaXZlciBzdXBwb3J0IGJ1dCBuZWVkIGEgY29tbW9u
+IG5vZGUgZm9yIGFsbCB0aGUgOHh4Cj4gcGxhdGZvcm1zIHRoYXQgY29udGFpbiB0aGlzIGRldmlj
+ZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBXaWxsaWFtIEEuIEtlbm5pbmd0b24gSUlJIDx3aWxsaWFt
+QHdrZW5uaW5ndG9uLmNvbT4KPiAtLS0KPiDCoGFyY2gvYXJtNjQvYm9vdC9kdHMvbnV2b3Rvbi9u
+dXZvdG9uLWNvbW1vbi1ucGNtOHh4LmR0c2kgfCA3ICsrKysrKysKPiDCoDEgZmlsZSBjaGFuZ2Vk
+LCA3IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9u
+dXZvdG9uL251dm90b24tY29tbW9uLW5wY204eHguZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMv
+bnV2b3Rvbi9udXZvdG9uLWNvbW1vbi1ucGNtOHh4LmR0c2kKPiBpbmRleCA0ZGE2MjMwOGIyNzQu
+LmNjZWJjYjExYzA1ZSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL251dm90b24v
+bnV2b3Rvbi1jb21tb24tbnBjbTh4eC5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9u
+dXZvdG9uL251dm90b24tY29tbW9uLW5wY204eHguZHRzaQo+IEBAIC01Niw2ICs1NiwxMyBAQCBj
+bGs6IHJzdGM6IHJlc2V0LWNvbnRyb2xsZXJAZjA4MDEwMDAgewo+IMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCNjbG9jay1jZWxscyA9IDwxPjsKPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH07Cj4gwqAKPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgbWM6IG1lbW9yeS1jb250cm9sbGVyQGYwODI0MDAwIHsKPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvbXBhdGlibGUgPSAibnV2b3Rv
+bixucGNtODQ1LW1lbW9yeS1jb250cm9sbGVyIjsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJlZyA9IDwweDAgMHhmMDgyNDAwMCAweDAgMHgyMDAwPjsK
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGludGVycnVw
+dHMgPSA8R0lDX1NQSSAyNSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH07Cj4gKwoKVGhlIHBhdGNoIGZhaWxzIHRvIGFw
+cGx5IGR1ZSB0byBmdXp6LCBkbyB5b3UgbWluZCByZWJhc2luZyBpdCBvbgpudXZvdG9uL2FybTY0
+L2R0IGZyb20gWzFdPwoKWzFdOiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgv
+a2VybmVsL2dpdC9hcmovYm1jLmdpdAoKUG9zc2libHkgaXQncyB0aGUgcmVzdWx0IG9mIGFwcGx5
+aW5nIG90aGVyIHBhdGNoZXMgb2YgeW91cnMgYXMgdGhleQp3ZXJlIHNlbnQgaW5kZXBlbmRlbnRs
+eS4gSXQgbWlnaHQgYmUgYmVzdCB0byBzZW5kIHRoZW0gYXMgYSBzZXJpZXMgZXZlbgppZiB0aGV5
+IGFyZSBjb25jZXB0dWFsbHkgaW5kZXBlbmRlbnQuCgpBbmRyZXcK
 
-Hi all,
-
-Today's linux-next merge of the tip tree got a conflict in:
-
-  drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
-
-between commit:
-
-  a9843689e2de ("net: txgbe: add sriov function support")
-
-from the net-next tree and commit:
-
-  567b0a520912 ("net: Switch to irq_domain_create_*()")
-
-from the tip tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
-index 3b9e831cf0ef,f2c2bd257e39..000000000000
---- a/drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
-+++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
-@@@ -198,9 -183,9 +198,9 @@@ int txgbe_setup_misc_irq(struct txgbe *
-  	if (wx->mac.type =3D=3D wx_mac_aml)
-  		goto skip_sp_irq;
- =20
- -	txgbe->misc.nirqs =3D 1;
- +	txgbe->misc.nirqs =3D TXGBE_IRQ_MAX;
-- 	txgbe->misc.domain =3D irq_domain_add_simple(NULL, txgbe->misc.nirqs, 0,
-- 						   &txgbe_misc_irq_domain_ops, txgbe);
-+ 	txgbe->misc.domain =3D irq_domain_create_simple(NULL, txgbe->misc.nirqs,=
- 0,
-+ 						      &txgbe_misc_irq_domain_ops, txgbe);
-  	if (!txgbe->misc.domain)
-  		return -ENOMEM;
- =20
-
---Sig_/Lwo4oWK66gWmwmhOTn8cOzA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgayhwACgkQAVBC80lX
-0Gwk+gf9HhS7VLW5VY+i7AoR6LLtszPJjibhtiyE7IJ70SdfbMYSxCosHJZ6F5Yc
-gTL8qxffg2DGny7rByijfcyCWhyd4LKp04r2I9+ufiMS7IA0gdpNV02T2Ut/ZwI4
-V4H1uUzLEjzYJyvkB1U4J+KhGuKHNdaFtnRGPDdSg8irLoGsqp7fEIF1aBS855tS
-cewh6l3iChcHhDMugVB0TJd/qSZ5Jd2Zz+PBcbp89xhb0urE8tj7NgM2radeS1N/
-R5CYVtIDgoAM4c0RM/PrcS9R6IYswRpwGNjTzvP9xoCp3RgaU/XagnTM6njejxDu
-M4H4lMT0aXa0UtqvO1swJLaLRDjixg==
-=6nvI
------END PGP SIGNATURE-----
-
---Sig_/Lwo4oWK66gWmwmhOTn8cOzA--
