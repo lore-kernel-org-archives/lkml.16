@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3065230BDF;
-	Wed,  7 May 2025 07:58:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A2A232365;
+	Wed,  7 May 2025 07:58:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746604694; cv=none; b=MyaPCT0iVm46hK+SKL2fD3P1r+sO1qQMUxCR22+/WpEWmzQxOKv5VbE0U7806tlbpdpsjIDNYzji/caG+0z9YSMKGx/HPr3b5DNvLVPyoBTtKKruyoWeWxOHVOwJuY+9BBcpmoAO1tu+vgv6Zq0UCPltC1T2XvEVVSNkYO/q7fo=
+	t=1746604696; cv=none; b=eytmQi/s5Tu2GrDLrAgSwwl7dkKa17Lfq3UkOyxGGH7vZA4MeFObz5L6mGgjdMr4SyCJ/k6jKZe2q1mpj63o1EL0ZuxOLdMbYdgFX8J7GPQHY3cj+fxJKNhG7u7ZDKOzFJL8QK6n6sWOyaPZ54AlpmEtycBd+LH9LV8p9Qka9os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746604694; c=relaxed/simple;
-	bh=kNirQiiDuAzLNNxeJDzVsCQIpRHVM/zy0eXODRtUdfw=;
+	s=arc-20240116; t=1746604696; c=relaxed/simple;
+	bh=0QvySyo76U1/K5hV/bCXp41cJPeZnpei0bM6qYSy2+c=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=j3ICijRQ3x3t4kDPkMJDQgvXz4I6v8a0+L5zZ4RwjQUM5/eJ24fGs+aXu+XrTKhryyiS/SkJN4wuJqQ4MOGedOlrL+3KvOfbJ2BENL7MgipeRTi0CZTKtPOqqZlSsDtp0mzlnYiqkIku2CbSb4aAYmi7Zqa0+9P6zloSoQ1HK/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xeNL+u+f; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Vh8iywYL; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=bh0J4XLrRuAXmajJ/w7m9mGrRZQtLl9JtZQ0M6k/OhAZW4DEzPi1XjzQ8loOuIHOJ0SxcdDWEeasDLmg2oS6CV8mUwzXwhgAFt1EgULhIOaLWYT4QMJwU3ogchr+paNrze26fWvcVlkPRvGaCpt3dWC0coh7nStOjCDWVwuIrBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BnokOu4k; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q0lSETdZ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xeNL+u+f";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Vh8iywYL"
-Date: Wed, 07 May 2025 07:58:09 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BnokOu4k";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q0lSETdZ"
+Date: Wed, 07 May 2025 07:58:12 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746604690;
+	s=2020; t=1746604693;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aYpvkibfhN1TnAd5+DCcD26ICzasRxp43hcPypeyoqk=;
-	b=xeNL+u+fe26RScV8oq+cjyTb9WH1wOCKwARC4qLv0Q88NYIOeOSacmTAVjXWXmXehpuweG
-	1nMzuXF1Gl6Vr5WXf6zQ3V2CfxIaVW1uCFZDmH0xZbOkDYDlZPokdSI3USuFRw5kwiyzS5
-	22U3zTzBraM+TufsO2NgawZYMgTF/deGEpC+cglszzyViqLDry0dl5Xwc7B0Toj3dmgESr
-	huYDqYJL9nnhO6ggUDwvWVEg4UTbn6oB9MEp8xQ4cgGJc1Dfj5iS1nw0jEpuS1N3Qc80SO
-	BcBTRO2jM3Kz3ASBpTcUy/WI5NQHx9i7eTd7Vy0mloW35Zxyc1s3hhAtk8zS1Q==
+	bh=IhU7O4PxKRSBUdere4V0ilCF8KuXhdmoAu2UQPH3I0M=;
+	b=BnokOu4k29PINfMIDIe6UqamW+vxl+buU5D+RNytumpE1wFK7N8eQPjx9E+MwwEJ7hntv4
+	8Bw/LdiCxPt2vyzyLromthWtH78f2W2zfllj1AcKh1bZvBv8PNCUT+xMKFe8zWvph4+c1c
+	HRijGDzcpef4RtRq7vsnAdXq31IIPnP0CBs5JJUUogZDgKTdRPJv0DPU67Lg0Vgob+wR7o
+	//8WdRdWfab/uJ7Wt9sWHChVWjzVmXiCm3DrKE4wO2jz5w6e6MgvJeLQG44ZbZTDPiGEwI
+	69qfml0qgNE7znUzxNu3Vdek7Mu4dvs0sGjKGroifKrJTSMoAL7YmqD+Vyg5jQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746604690;
+	s=2020e; t=1746604693;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aYpvkibfhN1TnAd5+DCcD26ICzasRxp43hcPypeyoqk=;
-	b=Vh8iywYLn/p6Mzq+ZtlDNeDTz0M97BAdTWhd6FEFwb3JNzQqjaZBmAy4Q2wXsihOqCeLT4
-	dfUetgvP9k/5rrCw==
+	bh=IhU7O4PxKRSBUdere4V0ilCF8KuXhdmoAu2UQPH3I0M=;
+	b=Q0lSETdZED6sNwX0yPoz2TD5xNB25sdcMiTOK47mnPUEsWPdC9Uj8gxZE2TA5QBFeHlV8c
+	6lb3z1ffPKLqYgAg==
 From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/cleanups] i2c: Switch to irq_domain_create_linear()
+Subject: [tip: irq/cleanups] EDAC/altera: Switch to irq_domain_create_linear()
 Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
  Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250319092951.37667-20-jirislaby@kernel.org>
-References: <20250319092951.37667-20-jirislaby@kernel.org>
+In-Reply-To: <20250319092951.37667-17-jirislaby@kernel.org>
+References: <20250319092951.37667-17-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174660468997.406.12538065500461337827.tip-bot2@tip-bot2>
+Message-ID: <174660469223.406.6275979660220592630.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,14 +67,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/cleanups branch of tip:
 
-Commit-ID:     417e5bf879988bcd61adde878254f9ecf9015052
-Gitweb:        https://git.kernel.org/tip/417e5bf879988bcd61adde878254f9ecf9015052
+Commit-ID:     137c278c39e845185670b3c09b94457d0c0bf468
+Gitweb:        https://git.kernel.org/tip/137c278c39e845185670b3c09b94457d0c0bf468
 Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Wed, 19 Mar 2025 10:29:12 +01:00
+AuthorDate:    Wed, 19 Mar 2025 10:29:09 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 07 May 2025 09:53:22 +02:00
 
-i2c: Switch to irq_domain_create_linear()
+EDAC/altera: Switch to irq_domain_create_linear()
 
 irq_domain_add_linear() is going away as being obsolete now. Switch to
 the preferred irq_domain_create_linear(). That differs in the first
@@ -91,40 +91,24 @@ case basis (by people who can actually test with the HW).
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250319092951.37667-20-jirislaby@kernel.org
+Link: https://lore.kernel.org/all/20250319092951.37667-17-jirislaby@kernel.org
 
 ---
- drivers/i2c/busses/i2c-cht-wc.c     | 2 +-
- drivers/i2c/muxes/i2c-mux-pca954x.c | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/edac/altera_edac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht-wc.c
-index 26a36a6..606ac07 100644
---- a/drivers/i2c/busses/i2c-cht-wc.c
-+++ b/drivers/i2c/busses/i2c-cht-wc.c
-@@ -467,7 +467,7 @@ static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	/* Alloc and register client IRQ */
--	adap->irq_domain = irq_domain_add_linear(NULL, 1, &irq_domain_simple_ops, NULL);
-+	adap->irq_domain = irq_domain_create_linear(NULL, 1, &irq_domain_simple_ops, NULL);
- 	if (!adap->irq_domain)
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index 3e971f9..47cea64 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -2130,8 +2130,8 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
+ 	edac->irq_chip.name = pdev->dev.of_node->name;
+ 	edac->irq_chip.irq_mask = a10_eccmgr_irq_mask;
+ 	edac->irq_chip.irq_unmask = a10_eccmgr_irq_unmask;
+-	edac->domain = irq_domain_add_linear(pdev->dev.of_node, 64,
+-					     &a10_eccmgr_ic_ops, edac);
++	edac->domain = irq_domain_create_linear(of_fwnode_handle(pdev->dev.of_node),
++						64, &a10_eccmgr_ic_ops, edac);
+ 	if (!edac->domain) {
+ 		dev_err(&pdev->dev, "Error adding IRQ domain\n");
  		return -ENOMEM;
- 
-diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
-index db95113..5bb26af 100644
---- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-+++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-@@ -442,9 +442,9 @@ static int pca954x_irq_setup(struct i2c_mux_core *muxc)
- 
- 	raw_spin_lock_init(&data->lock);
- 
--	data->irq = irq_domain_add_linear(client->dev.of_node,
--					  data->chip->nchans,
--					  &irq_domain_simple_ops, data);
-+	data->irq = irq_domain_create_linear(of_fwnode_handle(client->dev.of_node),
-+					     data->chip->nchans,
-+					     &irq_domain_simple_ops, data);
- 	if (!data->irq)
- 		return -ENODEV;
- 
