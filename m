@@ -1,63 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7522C22D794;
-	Wed,  7 May 2025 07:58:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B4222DF84;
+	Wed,  7 May 2025 07:58:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746604687; cv=none; b=A5Z0E6SFPmcv/f/maV3JWgujQxkfpKfv4fn9LzNlvowxEkymjsUezZYJkHCeuTP/4wgjuIfQghdBcSmm3c939vXvYO1hgp6XF6JxVB3u8UuCVUGQAv7+KfHqbUPmIAo65/q33gCdXwbMATumMDjvWms2rNAJ1leG97iMiBPAoeA=
+	t=1746604689; cv=none; b=KOY4zE8xVR83b69eBq5FijdHsSP5BJRCN0qVrEAiNipShPKqR/lBsQ+894K4DTFx1G5H0fxoKRdd8c/ozD3XgVEgGYzkrYf/ApoR0/T5jgUVvaOJ03PN9z0UZJ82PZcOwvFjYVVAfcxeoKUdLFxRww57SbrFv5izrk8mten8K/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746604687; c=relaxed/simple;
-	bh=8xCq5AOQ4fP+CDPys9f5AUlYm7dsXu8bYs1YJlIK78g=;
+	s=arc-20240116; t=1746604689; c=relaxed/simple;
+	bh=r+L1H9Xaaqk1RUAy+xfg/ZkD9sVHA2w5me5cmB1sMFI=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=QAqn2d07v3SnAKC9MTWRPl7Q4Gkac9SpGzTzNdIF5+zE05LRuWhJQcizIruA1ruo9gsyqDbOByT4Ccd8gTXuW78wDzVr17U0N6K1dNDFQ0ZXXsTU8g9Kb1dPdX7OD3UoK1eDEZw4DDPBndSV1FluSeIlc/bY9esKkATgvhcpyTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MvEO1L9a; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GdS4Z5so; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=Bd2XMclqzFgI7udNeTe9ikzFDRPtMuE5AAyfThxYZ1rj8wL9rveg0xb/dcZcnWTbOxDrJiGMt2ApM0TxVhP1Nb85s2Qu5WMRaDUgrIFRXZV5giPznMCtArGiMPju5KkcshQwboNebQeQsh9owoiMCHSh5A/GrMDDrqHByWyso5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rj2e9TXH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qszJp0yS; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MvEO1L9a";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GdS4Z5so"
-Date: Wed, 07 May 2025 07:58:03 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rj2e9TXH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qszJp0yS"
+Date: Wed, 07 May 2025 07:58:04 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746604684;
+	s=2020; t=1746604685;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dG1dPqZBUuHezEeA4HOJDtmT22DW98Tbh2v/oHMxaQQ=;
-	b=MvEO1L9aiSAHHikRMwcUieyG8aBkaVPdGtOpHq6YEf44Hk/qR0e/XdY4zd7GzNqzMSQ4J8
-	7gXI2lcn7uEBKgViVCMJP+1EHx3II98f1enTzPjk3KI5qggtFy1VEIXIJpLhVmTsJAey34
-	fkzfF3D5P6dfrZpGNMxluZmqi5jXWmkme69W1ZDh8X+M31GhA6j0I5lXhwGLVp/1ttjVAK
-	lSFxWduty6y1YqHa0qwMHatwq9rU0HivB/W8h2BPlxHWWa/hH2I/O+5jJf7rvDAjgwabPx
-	BOoUvZ0avx/PoGDoigqHu8yj5wh/xUgAMnke5+Iy56SzRjp/x7jBfCzI7yTmuQ==
+	bh=2NN35M9DUuTyS73d19CD5gF2VN+/bsqIvAuWlHHhq7s=;
+	b=rj2e9TXHTCJc3OmwcG9R5B7vXInfPFKZ5BjQNziTOj16OtDDXUX/wujSl4Ef6AmR2kfGaw
+	Soj5ne3sOgZX6IiIR5499f7qyE6hl8mmRyAFSV3n1rC671w4GkEwH+96PXiSKuQBhSsB7/
+	qz8Jq53lugR5Mqv8Tli4AHQ7Jen21W6zUaLO9iU5MvHJw+jmwAin5JCIELYDYCkAeAOrBP
+	w+kogq8ORySOg9qdnfXSZG23urRR5KI5S+6Pymo7KwRyTTgJx3v8sqJJFcX0HINRS3fkr0
+	U/A9Om6F+UwcZTOii1RToCs+8OnY1Ch/etUIB3PTJYQOcs/2ekMJbQp+UHHp/g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746604684;
+	s=2020e; t=1746604685;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dG1dPqZBUuHezEeA4HOJDtmT22DW98Tbh2v/oHMxaQQ=;
-	b=GdS4Z5sogAWyJFhVTgBspHJSrRVpe1BMjOMxIZFOMRAieWOEkpILy5Gq4CKPANbC5h3b2H
-	FW5qYqR/T0XFFOAg==
+	bh=2NN35M9DUuTyS73d19CD5gF2VN+/bsqIvAuWlHHhq7s=;
+	b=qszJp0ySQqBfatq3eiO8kk/BOLsyTpqxA01Sttc2CvruFud7LCOxzX8E3zMAXfRdOFDoag
+	zZyYxCb2D6KTqHAw==
 From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/cleanups] nios2: Switch to irq_domain_create_linear()
+Subject: [tip: irq/cleanups] misc: hi6421-spmi-pmic: Switch to
+ irq_domain_create_simple()
 Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
  Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250319092951.37667-29-jirislaby@kernel.org>
-References: <20250319092951.37667-29-jirislaby@kernel.org>
+In-Reply-To: <20250319092951.37667-27-jirislaby@kernel.org>
+References: <20250319092951.37667-27-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174660468318.406.14694139099563404271.tip-bot2@tip-bot2>
+Message-ID: <174660468465.406.16203652900581735313.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,17 +68,17 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/cleanups branch of tip:
 
-Commit-ID:     6013f019b0cd0080fc4367ec5feeb0cfecae29eb
-Gitweb:        https://git.kernel.org/tip/6013f019b0cd0080fc4367ec5feeb0cfecae29eb
+Commit-ID:     a77cf24fe19c8f54f4845697caf74e4d9499b489
+Gitweb:        https://git.kernel.org/tip/a77cf24fe19c8f54f4845697caf74e4d9499b489
 Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Wed, 19 Mar 2025 10:29:21 +01:00
+AuthorDate:    Wed, 19 Mar 2025 10:29:19 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 07 May 2025 09:53:23 +02:00
 
-nios2: Switch to irq_domain_create_linear()
+misc: hi6421-spmi-pmic: Switch to irq_domain_create_simple()
 
-irq_domain_add_linear() is going away as being obsolete now. Switch to
-the preferred irq_domain_create_linear(). That differs in the first
+irq_domain_add_simple() is going away as being obsolete now. Switch to
+the preferred irq_domain_create_simple(). That differs in the first
 parameter: It takes more generic struct fwnode_handle instead of struct
 device_node. Therefore, of_fwnode_handle() is added around the
 parameter.
@@ -87,25 +88,29 @@ indirect of_fwnode_handle(dev->of_node). But dev->fwnode is not
 guaranteed to be set for all, so this has to be investigated on case to
 case basis (by people who can actually test with the HW).
 
+[ tglx: Fix up subject prefix ]
+
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250319092951.37667-29-jirislaby@kernel.org
+Link: https://lore.kernel.org/all/20250319092951.37667-27-jirislaby@kernel.org
 
 ---
- arch/nios2/kernel/irq.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/misc/hi6421v600-irq.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/nios2/kernel/irq.c b/arch/nios2/kernel/irq.c
-index 8fa2806..73568d8 100644
---- a/arch/nios2/kernel/irq.c
-+++ b/arch/nios2/kernel/irq.c
-@@ -69,7 +69,8 @@ void __init init_IRQ(void)
+diff --git a/drivers/misc/hi6421v600-irq.c b/drivers/misc/hi6421v600-irq.c
+index 69ee4f3..187c5bc 100644
+--- a/drivers/misc/hi6421v600-irq.c
++++ b/drivers/misc/hi6421v600-irq.c
+@@ -254,8 +254,9 @@ static int hi6421v600_irq_probe(struct platform_device *pdev)
+ 	if (!priv->irqs)
+ 		return -ENOMEM;
  
- 	BUG_ON(!node);
- 
--	domain = irq_domain_add_linear(node, NIOS2_CPU_NR_IRQS, &irq_ops, NULL);
-+	domain = irq_domain_create_linear(of_fwnode_handle(node),
-+					  NIOS2_CPU_NR_IRQS, &irq_ops, NULL);
- 	BUG_ON(!domain);
- 
- 	irq_set_default_domain(domain);
+-	priv->domain = irq_domain_add_simple(np, PMIC_IRQ_LIST_MAX, 0,
+-					     &hi6421v600_domain_ops, priv);
++	priv->domain = irq_domain_create_simple(of_fwnode_handle(np),
++						PMIC_IRQ_LIST_MAX, 0,
++						&hi6421v600_domain_ops, priv);
+ 	if (!priv->domain) {
+ 		dev_err(dev, "Failed to create IRQ domain\n");
+ 		return -ENODEV;
