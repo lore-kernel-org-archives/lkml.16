@@ -1,75 +1,141 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC651F1905
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C2F23F40F;
+	Wed,  7 May 2025 09:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746609333; cv=none; b=EB5woJG2nEtdSwCFVw6yZd/vtGXF/sjCUgQmlTh2v8PkmnJvz4uMY8MKvhconWcrgx/Eq1o8TOkBIxNZZT1vm1LhDFoOQuTTxi0RKZBIS3OJVQ8sgbwSwTbt9se/hNt3AN+QQvv816kdf+WtYZ8GFRHbkA1G+IoxxbLR5mPvJaE=
+	t=1746609338; cv=none; b=TwdH3lTySK1uzjENcwP32Z23JvuIi1D3vVh3gKTAoy3SWSlBUj5NZCGba/sEBM59uglF0HTGpQLfEzow8CGGDC2yZkjOWZdVUCZpe6ambgHaOGFrkJicU3/rvtzBDBoo9Njlya4KZfbQSMpCM7PzuKDHLNYpU7zE/7LzVi8XKqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746609333; c=relaxed/simple;
-	bh=G2/2XpBOhsww7ORMVPPsSJT8mP0ZzF2Yf1LmkHm/5Bc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kon5HalMGO6AS26X1z1fWUpsLViSpW1hKCkoHQQQfdzgCTSqkssiqT/6S18lrI3u2tYlCyLh6UDEneGR26Kf/vGz/dBLoMzdwIN6mvURyooy05bAYJ26e/o47nU+JmD4JvclWQsCVeJq3AMtiajvTKtFCAHz1ZsTh1JPJOMSV+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y+zvK4NN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zl+p1P4U; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746609338; c=relaxed/simple;
+	bh=9z++eVUjo5Nt6P9zv3aLaT+qA0f6xjadJ4gnXukQoHQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=BrTNSL29qXUO0tnyIi0adq5yWIbjQqlNAlKb3wcaYxMIaxrrz4ziuYPt8GhJG2HzSO0rcPWh8jU2PYhbzFIR72/rauKNIwfYJfR/n7uy9bbS2buCQ/umPM59ZVgV3WlRlRr2jd1Mrwzw3f82FLlMZZ5tMr6L7rvwqVfWCYkPg+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tyrPsxfX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y+zvK4NN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zl+p1P4U"
-Date: Wed, 7 May 2025 11:15:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746609330;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JimTckZl2BytKdqLsH9N1Q1dX2kn4sCMUIjmguZkJvY=;
-	b=Y+zvK4NNmknV76UVFiqZN3mPtZo3aWbNlmdQZFwycoDt7M7xnub04pVGttX1VZ7YUd4M3Q
-	4hrKyWPZ3Bl8XBEjHq5fWQMV1Eg47TSoq1EnC8nKV/W/EfVGntP6hqh6xPSNVBlvGmfRHF
-	l5RFpwNl9VvyDIxcOsQs7zB38FQoahRYO5uzK+aFW3EfRS92nnjyWr45FtXVzhN3o5S2/C
-	F1BXcAwt98UeVBxSNVANpnlksw6ZrgVbl41mXV3wNsNWHn2hy3dbeRuXUWHVmC+uU15Dip
-	TSVuI7r4dGWYSK21j9bb8o4admMQwj9YIRyvD7JZQXXg7PqDbiQarNL/y3V+bA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746609330;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JimTckZl2BytKdqLsH9N1Q1dX2kn4sCMUIjmguZkJvY=;
-	b=zl+p1P4UFM8IXQIqgb6kwcNnZJ908mbDXslHmV+fZ692VHLSMlEi+Ve+TPW866fkm+7A56
-	TaPf6niGtCv1zvDQ==
-From: "Ahmed S. Darwish" <darwi@linutronix.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
-	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 17/26] x86/cpuid: Remove direct CPUID(0x2) query API
-Message-ID: <aBsksJx4URuKYGXQ@lx-t490>
-References: <20250506050437.10264-1-darwi@linutronix.de>
- <20250506050437.10264-18-darwi@linutronix.de>
- <aBnPVj9NZlROyA0W@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tyrPsxfX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07FF4C4CEEE;
+	Wed,  7 May 2025 09:15:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746609337;
+	bh=9z++eVUjo5Nt6P9zv3aLaT+qA0f6xjadJ4gnXukQoHQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=tyrPsxfXjyHj3ItkcRhJIoeIeE8vRiwZxU+LKjOJf4zVEECLepFyq91CH867FCzVw
+	 NGLgRR6eAlMBpH2nOp21RUrBUuCsW0V0oh95BWZT6TnqSaE9qFBTCvjGefvaBT6SZK
+	 WSbV5tj1gJwhj9NZtFI34Pegg70mtePnLWD1rwctfzmns4V6LgcFVY33OqLNC20a3R
+	 6nMJaEyEw2ftHtx+A/JfuVO9yXjNEA1QEFr9e9L3RwxqFn5mX2yJTZN5vuWIJ3Aa8S
+	 UZkafOw8f6DD+QRNVH8GqEZR0O2eNAzxo6rzN0n4EJcCqlnVumDxj5rykWzRi8c4gk
+	 llS6pFyj/eyZg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
+  "Masahiro Yamada" <masahiroy@kernel.org>,  "Nathan Chancellor"
+ <nathan@kernel.org>,  "Luis Chamberlain" <mcgrof@kernel.org>,  "Danilo
+ Krummrich" <dakr@kernel.org>,  "Nicolas Schier"
+ <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,  "Adam
+ Bratschi-Kaye" <ark.email@gmail.com>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-kbuild@vger.kernel.org>,  "Petr
+ Pavlu" <petr.pavlu@suse.com>,  "Sami Tolvanen" <samitolvanen@google.com>,
+  "Daniel Gomez" <da.gomez@samsung.com>,  "Simona Vetter"
+ <simona.vetter@ffwll.ch>,  "Greg KH" <gregkh@linuxfoundation.org>,  "Fiona
+ Behrens" <me@kloenk.dev>,  "Daniel Almeida"
+ <daniel.almeida@collabora.com>,  <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v12 1/3] rust: str: add radix prefixed integer parsing
+ functions
+In-Reply-To: <D9PSYQMCW74W.39JB3NDCWB2H3@kernel.org> (Benno Lossin's message
+	of "Wed, 07 May 2025 10:58:08 +0200")
+References: <20250506-module-params-v3-v12-0-c04d80c8a2b1@kernel.org>
+	<20250506-module-params-v3-v12-1-c04d80c8a2b1@kernel.org>
+	<UfD3pllWu8O_qAKsi04IMH1WGszkDe31KpLs7oMvDsUC-tryEbrYKmtDAPj5w-BO2CyZ8_S_G5lWBE2Ud72n8w==@protonmail.internalid>
+	<D9PSYQMCW74W.39JB3NDCWB2H3@kernel.org>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Wed, 07 May 2025 11:15:19 +0200
+Message-ID: <87ldr8pys8.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBnPVj9NZlROyA0W@gmail.com>
+Content-Type: text/plain
 
-On Tue, 06 May 2025, Ingo Molnar wrote:
->
-> There's one mention of this API orphaned in the
-> for_each_leaf_0x2_entry() comment section:
->
->   arch/x86/include/asm/cpuid/leaf_0x2_api.h: *    for_each_scanned_leaf_0x2_entry(regs, ptr, entry) {
->
+"Benno Lossin" <lossin@kernel.org> writes:
 
-Nice catch; will fix.
+> On Tue May 6, 2025 at 3:02 PM CEST, Andreas Hindborg wrote:
+>> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+>> index 878111cb77bc..174e70397305 100644
+>> --- a/rust/kernel/str.rs
+>> +++ b/rust/kernel/str.rs
+>> @@ -573,7 +573,6 @@ macro_rules! c_str {
+>>  }
+>>
+>>  #[cfg(test)]
+>> -#[expect(clippy::items_after_test_module)]
+>>  mod tests {
+>>      use super::*;
+>>
+>> @@ -946,3 +945,174 @@ fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+>>  macro_rules! fmt {
+>>      ($($f:tt)*) => ( core::format_args!($($f)*) )
+>>  }
+>> +
+>> +/// Integer parsing functions for parsing signed and unsigned integers
+>> +/// potentially prefixed with `0x`, `0o`, or `0b`.
+>> +pub mod parse_int {
+>
+> Why not make this its own file? It's 172 lines long already.
 
-Thanks,
-Ahmed
+Sure. I'm really hoping to land this series for this cycle though, so if
+it's OK I would move the code next cycle.
+
+>
+>> +    pub trait ParseInt: private::FromStrRadix + TryFrom<u64> {
+>> +        /// Parse a string according to the description in [`Self`].
+>> +        fn from_str(src: &BStr) -> Result<Self> {
+>> +            match src.deref() {
+>> +                [b'-', rest @ ..] => {
+>> +                    let (radix, digits) = strip_radix(rest.as_ref());
+>> +                    // 2's complement values range from -2^(b-1) to 2^(b-1)-1.
+>> +                    // So if we want to parse negative numbers as positive and
+>> +                    // later multiply by -1, we have to parse into a larger
+>> +                    // integer. We choose `u64` as sufficiently large.
+>> +                    //
+>> +                    // NOTE: 128 bit integers are not available on all
+>> +                    // platforms, hence the choice of 64 bits.
+>> +                    let val = u64::from_str_radix(
+>> +                        core::str::from_utf8(digits).map_err(|_| EINVAL)?,
+>> +                        radix,
+>> +                    )
+>> +                    .map_err(|_| EINVAL)?;
+>> +
+>> +                    if val > Self::abs_min() {
+>> +                        return Err(EINVAL);
+>> +                    }
+>> +
+>> +                    if val == Self::abs_min() {
+>> +                        return Ok(Self::MIN);
+>> +                    }
+>> +
+>> +                    // SAFETY: We checked that `val` will fit in `Self` above.
+>> +                    let val: Self = unsafe { val.try_into().unwrap_unchecked() };
+>> +
+>> +                    Ok(val.complement())
+>
+> You're allowing to parse `u32` with a leading `-`? I'd expect an error
+> in that case. Maybe `complement` should be named `negate` and return a
+> `Result`?
+
+You would get `Err(EINVAL)` in that case, hitting this:
+
+  if val > Self::abs_min() {
+      return Err(EINVAL);
+  }
+
+
+Best regards,
+Andreas Hindborg
+
