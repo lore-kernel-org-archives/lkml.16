@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC43828DF2D
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 17:53:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001142B9AA
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 17:53:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746640434; cv=none; b=aoT+LD5ZpOZZIEYquN9uRw70kQPazPsHoWsi9Fyk8freP2qDfKL1iZ8W/2NqcjJYWnG3yYAFDMofc2ItIFRNqaDB8lFWMHYCA/QScJtpKlgcrVcGUdkWGeltsxV7Hy6Tdf6Cg3BSyaDWy3JS5CetKObnfCuu/KxWkhXeCQkfNQs=
+	t=1746640438; cv=none; b=gIEIT2ma9L7RUSDeq9pH+XGi9TFmpBtfUbgiWLV0P3HdblZPne7g6gXaPBBaXhI6SRZV3PSNiSJ9NI9RDPpjTT682DZuYFpMM2d1REMTM0n0hHavylXdny/4wCsXxZ+o70CawErxbmdz4M2u+4OwbxR4M98mvSDaLCn6qumhP0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746640434; c=relaxed/simple;
-	bh=xvTwSpO9mtwbO7NdIjbnbBCvodmkZvbJ+4H0t47CdAg=;
+	s=arc-20240116; t=1746640438; c=relaxed/simple;
+	bh=/Oay1m1Lqy0o6VaIeajKiSi5MpuO3UoYueUu4BxLZ9s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Sgc1bMAOjCWmZ4+SM5jT2jMrl0lkg8v1/Z9dSgP1Pmz+rJxZ8cpgx5PkIb/S1TTejbdF1Tw6QQabZuKFKuhylGL8pdj6SoyQiAVGtaSHTumjEN9laISFPyldxEPmKoMoqmdc+nazoyQzACdRJNShEkcroe4PH7Bdl4NBuB59o3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kP3fTOrm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FBFfUBtEqNRcqdFfADY3bkLqUW77M47xkieV0JvdEMYis445NvC/KwlYGpL0tE6KHNwJ63c5dTmOkcep6Nx6p22FkomzoFTuF9CK16XI7heu6sFhRj+h9k6SwXlwiiA+ji7nktZDC5r5q+Xg6MH6DDQPSKWDZ5PApz63pf0eUOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bhgKknFo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kP3fTOrm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B4D2C4CEF0;
-	Wed,  7 May 2025 17:53:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bhgKknFo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5C40C4CEEF;
+	Wed,  7 May 2025 17:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746640434;
-	bh=xvTwSpO9mtwbO7NdIjbnbBCvodmkZvbJ+4H0t47CdAg=;
+	s=k20201202; t=1746640436;
+	bh=/Oay1m1Lqy0o6VaIeajKiSi5MpuO3UoYueUu4BxLZ9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kP3fTOrm5TiFtStQb+USdKZO9ds+NzsZYKbbLsd/BZz4BCQGUjPI/fYfbnfPBDSA9
-	 sdrg9fw2VA8UZqVS1i8l9ChuwP1hNd5oO6CHyOCs9EjdXCIBlmE+EDXgw8t5F2uHqC
-	 blh1lYL1TfqWSljxDNysgGXB3hD8DcbZqJfqqzow2azgTMJ/R/2d0hj9+VzPB/1Dj8
-	 e2BDJIoAMa7AXvvl2jC54Bdzc1Hgl3mNpmMXnOtu5xi4yQc6GfQGynFGjWcf1m3zs/
-	 FFqJWolvoekwqXjBjBeWNC5e8XY+BQ9DKe7QWFycugj/6CzPMPsE909K9gWLb4Jk72
-	 s6j4OekNTYFqg==
+	b=bhgKknFoSu4AZahTtZ00B94XHqNl/uXg6Uya23tfb1pdQpFmFR7Jv06EjTvXKilIy
+	 5ANihydSIVAU4DlkLJR0iaYg5QkWtdrCpLWrJwgdTjgPxLA6fSx0sm7pBOjgOQi0jI
+	 DMIRj88jr2kOEPOJkFLU2kvEkpcl6cGYcSoyr9VMI8zf2Lv2t6w0zcnI3PhiFVwHab
+	 3FqreKmiq+S6C4+cdW4VgLCpByRmC4a7+kkkIXD5pfjGjR/BXxSqnv883NJxyso/NN
+	 J4hTsPfwQehAJEzqHBuSOEcRwcf7uflsNWJFOFXHILdk5/dyPvqev6dkCnfI52iADt
+	 MA818Up51xVww==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -34,9 +34,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 04/10] timers: Rename __init_timer() => __timer_init()
-Date: Wed,  7 May 2025 19:53:32 +0200
-Message-ID: <20250507175338.672442-5-mingo@kernel.org>
+Subject: [PATCH 05/10] timers: Rename __init_timer_on_stack() => __timer_init_on_stack()
+Date: Wed,  7 May 2025 19:53:33 +0200
+Message-ID: <20250507175338.672442-6-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250507175338.672442-1-mingo@kernel.org>
 References: <20250507175338.672442-1-mingo@kernel.org>
@@ -57,48 +57,48 @@ Signed-off-by: Ingo Molnar <mingo@kernel.org>
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/include/linux/timer.h b/include/linux/timer.h
-index 31127e8de010..11e1fac18f0e 100644
+index 11e1fac18f0e..4e1237ff4b24 100644
 --- a/include/linux/timer.h
 +++ b/include/linux/timer.h
-@@ -88,7 +88,7 @@ static inline void timer_init_key_on_stack(struct timer_list *timer,
- #endif
+@@ -94,7 +94,7 @@ static inline void timer_init_key_on_stack(struct timer_list *timer,
+ 		timer_init_key((_timer), (_fn), (_flags), #_timer, &__key);\
+ 	} while (0)
  
- #ifdef CONFIG_LOCKDEP
--#define __init_timer(_timer, _fn, _flags)				\
-+#define __timer_init(_timer, _fn, _flags)				\
+-#define __init_timer_on_stack(_timer, _fn, _flags)			\
++#define __timer_init_on_stack(_timer, _fn, _flags)			\
  	do {								\
  		static struct lock_class_key __key;			\
- 		timer_init_key((_timer), (_fn), (_flags), #_timer, &__key);\
-@@ -101,7 +101,7 @@ static inline void timer_init_key_on_stack(struct timer_list *timer,
- 					#_timer, &__key);		 \
- 	} while (0)
+ 		timer_init_key_on_stack((_timer), (_fn), (_flags),	\
+@@ -103,7 +103,7 @@ static inline void timer_init_key_on_stack(struct timer_list *timer,
  #else
--#define __init_timer(_timer, _fn, _flags)				\
-+#define __timer_init(_timer, _fn, _flags)				\
+ #define __timer_init(_timer, _fn, _flags)				\
  	timer_init_key((_timer), (_fn), (_flags), NULL, NULL)
- #define __init_timer_on_stack(_timer, _fn, _flags)			\
+-#define __init_timer_on_stack(_timer, _fn, _flags)			\
++#define __timer_init_on_stack(_timer, _fn, _flags)			\
  	timer_init_key_on_stack((_timer), (_fn), (_flags), NULL, NULL)
-@@ -118,7 +118,7 @@ static inline void timer_init_key_on_stack(struct timer_list *timer,
-  * be used and must be balanced with a call to destroy_timer_on_stack().
-  */
- #define timer_setup(timer, callback, flags)			\
--	__init_timer((timer), (callback), (flags))
-+	__timer_init((timer), (callback), (flags))
+ #endif
+ 
+@@ -121,7 +121,7 @@ static inline void timer_init_key_on_stack(struct timer_list *timer,
+ 	__timer_init((timer), (callback), (flags))
  
  #define timer_setup_on_stack(timer, callback, flags)		\
- 	__init_timer_on_stack((timer), (callback), (flags))
+-	__init_timer_on_stack((timer), (callback), (flags))
++	__timer_init_on_stack((timer), (callback), (flags))
+ 
+ #ifdef CONFIG_DEBUG_OBJECTS_TIMERS
+ extern void destroy_timer_on_stack(struct timer_list *timer);
 diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
-index b0dc957c3e56..985f69f8fb99 100644
+index 985f69f8fb99..c84da78878d9 100644
 --- a/include/linux/workqueue.h
 +++ b/include/linux/workqueue.h
-@@ -316,7 +316,7 @@ static inline unsigned int work_static(struct work_struct *work) { return 0; }
- #define __INIT_DELAYED_WORK(_work, _func, _tflags)			\
+@@ -324,7 +324,7 @@ static inline unsigned int work_static(struct work_struct *work) { return 0; }
+ #define __INIT_DELAYED_WORK_ONSTACK(_work, _func, _tflags)		\
  	do {								\
- 		INIT_WORK(&(_work)->work, (_func));			\
--		__init_timer(&(_work)->timer,				\
-+		__timer_init(&(_work)->timer,				\
- 			     delayed_work_timer_fn,			\
- 			     (_tflags) | TIMER_IRQSAFE);		\
+ 		INIT_WORK_ONSTACK(&(_work)->work, (_func));		\
+-		__init_timer_on_stack(&(_work)->timer,			\
++		__timer_init_on_stack(&(_work)->timer,			\
+ 				      delayed_work_timer_fn,		\
+ 				      (_tflags) | TIMER_IRQSAFE);	\
  	} while (0)
 -- 
 2.45.2
