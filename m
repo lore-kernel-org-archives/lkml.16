@@ -1,181 +1,308 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083C028D846;
-	Wed,  7 May 2025 18:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658F57263D
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 18:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746641934; cv=none; b=YashmdrhAX5cSQ7cQz9+GENaOcJpEJY7otnxewlTyjLZl49BB/xPCAMfMePYwGOrPxfOxg2S6mILrT4Ko787swujBQdQbh65gLF15MRQQMD05suKJq37i0R0FnItRHc1xMn2tX5Cw3cKJ0/hbCs5rH25HTgXngxGGpH85PLfby4=
+	t=1746641971; cv=none; b=ejzor6lsdq66n05GhSQJ9F+6F1fKjMjvUQAMPgQu2FxF8D+nuLzmOLtf/c2irhryf1jd0q+bfmb5jcyPzu86yGWeIryIBo2qc5yFUU5xbhQLthHDonNrDDB54Oz/t5bt/kbSdlSMqUdVu0goaiOwnBpuIX4ZqsgyB7K47h6TbKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746641934; c=relaxed/simple;
-	bh=Cb7lPfa1I+nXXHsCAj5RVedGy/8u1X7OZXT0Y0ZEGu0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qdAb5x/jHCWnvjOb+wYYpmIwSm+tz1b38sgHkhqPc9sCM1bL3sJjv6tvcOmY7D6ldRLBlEp+5DyL+Tasa1IF5dOEebbznZVGywFghmR3L6ttNcl7C1Hy/KmpYVRe63hxU0Vn5HU6Jo2V7wPDHjSXztFM1X1l57FvEGaOdPONkkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=qnTrhkQc; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1746641971; c=relaxed/simple;
+	bh=OgHrWq4xLDulgcrrBBiptq/JSvgZJjDMx4jTGBTNveI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W6SGU0AiH1WC9TzAPMzXBnPYBBNIE/uMvL3ZaAod1w61O0q0snt5hWfljfiHOe2bhvGYTIb551qDlok9EBCUtlkw7EvMWSyee8Z/k/7kWANGb71VUQ+5qUt3hhFkPGT/CMtQnk0JJ98RHuJ54YUnWswfqFUibfAK4mScKUJcWP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e+GKT1ap; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="qnTrhkQc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=6ugXgSCQEYTAHRBy/pD+R4TTEhjYrAi8FqkY7a1ivXI=; b=qnTrhkQcB1dfrE1kXPGtGpVrFt
-	qGCJCIC0kkV+Y7VfZu+XyDXpp4Eioep2xWINz8URTXXIMODcmALdeUvRqdK0Fu/XhCnFCMhivS0lM
-	WtWOh6dZUWbYID+BA/neL2UiEHWHdV1p2Yn9y9wZCLlcezA1Db1M0t3gIKKVRVvVVNhkmbYOSkbO4
-	srC480Dfszwlflq2bO8+26GxBVMACaVmL6evD8yyZ6c4haNcrJVyKwizXCJKGHgWUrr/VmFPputQQ
-	IWqeRAYoHIWCHIKt0m8mn430fwNTWEZkSd6z2Z7nVg7lqnxWDxmozRo+Co3SUEMhPIb6RZujZN0c4
-	Z3mZnM4A==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56908)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uCjLt-0007y2-0i;
-	Wed, 07 May 2025 19:18:41 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uCjLp-0005zp-0X;
-	Wed, 07 May 2025 19:18:37 +0100
-Date: Wed, 7 May 2025 19:18:37 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Hutterer <peter.hutterer@who-t.net>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [BUG] Stuck key syndrome (was: Re: [PATCH net-next v2] net: dsa:
- microchip: Add SGMII port support to KSZ9477 switch)
-Message-ID: <aBuj_ftDDNSnW4yF@shell.armlinux.org.uk>
-References: <20250507000911.14825-1-Tristram.Ha@microchip.com>
- <20250507094449.60885752@fedora.home>
- <aBsadO2IB_je91Jx@shell.armlinux.org.uk>
- <20250507105457.25a3b9cb@fedora.home>
- <aBsmhfI45zMltjcy@shell.armlinux.org.uk>
- <aBsu-WBlPQy5g-Jn@shell.armlinux.org.uk>
- <20250507153236.5303be86@fedora.home>
- <aBtHmNGRTVP9SttE@shell.armlinux.org.uk>
- <20250507135126.7d34d18f@fedora.home>
- <5pqtpt3o7swty6mxdsnitultixnemfiix3zuxsxzhjb7edaylu@4d3fe7agyeuv>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e+GKT1ap"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso1496a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 11:19:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746641968; x=1747246768; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y6RWkibYvTDos/q8cARoD72Lyukyk0pL7dyIDsIbmwk=;
+        b=e+GKT1apYgNwDOljGWYWH28EHsU627fvUaDvFj6Sk8i7TVgueXcAfLU7DI3vKvmVVU
+         suTYibfQJ8BV9CF7OBje4saBtWX5CR26u4UCeNKmA2om3vCZ7qiI6eAKbDRi4DgEM4Hy
+         ch5yWN4jSlGXrWpE/8WKfhlVWRMRuhKO2+LBrzLy/nxpDLSWlkh/z7t5WwO9m8JQvh/g
+         GPpd+YUFaTlgqmR2jmswNc01uc41INt9/m1CkQSpaZ773C1UhjtJKxtPp2ZVht6EJPCs
+         VYjwasxeRS8qvo2enG8B5Iq1RClTrS6/Nxz00BX4z+Uut+BV71BrLy7KVptTJzBOtz0L
+         E3aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746641968; x=1747246768;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y6RWkibYvTDos/q8cARoD72Lyukyk0pL7dyIDsIbmwk=;
+        b=b1+mqzHKLf3mhXTin7+Hydbt39fZC22UFSQHLk/heppyfRaE4ZerfQyJj6ilt6v2bi
+         Aww39gdi+71N9w+/aUxGWILcyW0z7lrxJtbTVHoT26VId0V8HNHVD8DF/dB3a5lr/DXV
+         5XjjzstNDtt0KX5CXM3JFu6OQH/ufvXIEC9DAXHYNIAResCoOzhyhfKa6QYL03k3IxaQ
+         7wzTMpihU/GPk2WjQFVkAJk8kTr5Nvo0hUan4yz/7r0HMV8ae7VE8zZnJeujKKd2dnWa
+         X42FfHIF/dTjVzEDvexTE5dX7kPPRd/fxruHZ4NYG4a7jluDwAvsSZo68nMQQ+86CeAU
+         07zw==
+X-Gm-Message-State: AOJu0Yx1zw3X88qz3YDv+8fXg6JBj1GrpLDo4PwHFtH6m7YZjCNQBHTF
+	Bbs1ULyOJ6SkhCUF7nablUnXO5q/b/YfUf3CXnKq0/YfhlUlpAP14n+X1qv38JMPswm73PF1vH5
+	2+qJ+0kA1Av3+ar6IP556cyBNjKHptB7oQ/kZs41yoJka6SKsHCzE
+X-Gm-Gg: ASbGncsVIzbO2FZKPpE1AXLja+z0nP7B/VgFkz+mymuOWeLaVTPAwvoN04Atiyy1v9h
+	4BaV7O+rYDvB7C+A+qeRIdF8DncFxs2Kl6hGVVo2nBv5zZiL2KruRkB4IGLQV8OegGkWFDrgP63
+	ujjsdKJq2KKVQPJjWJorfvAA==
+X-Google-Smtp-Source: AGHT+IEf+G7T5D3uQzkvIA/W55itfVcAmrLpH3EUnAX7l4ayNtrku4NOk+UP8hPgrNXjTaPfArXR0/ooSR9qAjnc/Ew=
+X-Received: by 2002:a05:6402:7c2:b0:5fa:af3b:337b with SMTP id
+ 4fb4d7f45d1cf-5fc4c1f2801mr2925a12.7.1746641967413; Wed, 07 May 2025 11:19:27
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5pqtpt3o7swty6mxdsnitultixnemfiix3zuxsxzhjb7edaylu@4d3fe7agyeuv>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <20250321221444.2449974-1-jmattson@google.com> <20250321221444.2449974-3-jmattson@google.com>
+ <aBAqzZOiCCYWgOrM@google.com>
+In-Reply-To: <aBAqzZOiCCYWgOrM@google.com>
+From: Jim Mattson <jmattson@google.com>
+Date: Wed, 7 May 2025 11:19:15 -0700
+X-Gm-Features: ATxdqUHHSEPnh5rNXSyppCmjkYfGd-fa3GqzOZRvOlCWraBySvK8zDgRFCC2Ays
+Message-ID: <CALMp9eS5hqD-F8k=4YOGFedOWjgc=rDvqP+98gOrn9ne68NNpA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] KVM: selftests: Test behavior of KVM_X86_DISABLE_EXITS_APERFMPERF
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 07, 2025 at 10:45:48AM -0700, Dmitry Torokhov wrote:
-> On Wed, May 07, 2025 at 01:51:26PM +0200, Maxime Chevallier wrote:
-> > On Wed, 7 May 2025 12:44:24 +0100
-> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> > 
-> > > Hi Maxime,
-> > > 
-> > > On Wed, May 07, 2025 at 03:32:36PM +0200, Maxime Chevallier wrote:
-> > > > Hi Russell,
-> > > > 
-> > > > On Wed, 7 May 2025 10:59:21 +0100
-> > > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> > > >   
-> > > > > On Wed, May 07, 2025 at 10:23:17AM +0100, Russell King (Oracle) wrote:  
-> > > > > > [Sorry for going off topic here - changed the Cc list, added Linus,
-> > > > > > changed the subject.]
-> > > > > > 
-> > > > > > On Wed, May 07, 2025 at 10:54:57AM +0200, Maxime Chevallier wrote:    
-> > > > > > > On Wed, 7 May 2025 09:31:48 +0100
-> > > > > > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:    
-> > > > > > > > [rest of the email got deleted because Linux / X11 / KDE got confused
-> > > > > > > > about the state the backspace key and decided it was going to be
-> > > > > > > > continuously pressed and doing nothing except shutting the laptop
-> > > > > > > > down would stop it.]    
-> > > > > > > 
-> > > > > > > Funny how I have the same exact issue on my laptop as well...     
-> > > > > > 
-> > > > > > I've had the "stuck key" behaviour with the HP Pavilion 15-au185sa
-> > > > > > laptop I had previously (normally with ctrl-F keys). However, hitting
-> > > > > > ctrl/shift/alt would stop it.
-> > > > > > 
-> > > > > > This is the first time I've seen the behaviour with the Carbon X1
-> > > > > > laptop, but this was way more severe. No key would stop it. Trying to
-> > > > > > move the focus using the trackpad/nipple had any effect. Meanwhile
-> > > > > > the email was being deleted one character at a time. So I shut the
-> 
-> If we indeed lost a key release event somewhere the way to "restore" it
-> is to hit the stuck key again. Then we should get press/release with
-> press most likely being ignored and release achieving the desired
-> result. Of course that will not help if embedded controller is confused.
+On Mon, Apr 28, 2025 at 6:26=E2=80=AFPM Sean Christopherson <seanjc@google.=
+com> wrote:
+>
+> On Fri, Mar 21, 2025, Jim Mattson wrote:
+> > +#include <fcntl.h>
+> > +#include <limits.h>
+> > +#include <pthread.h>
+> > +#include <sched.h>
+> > +#include <stdbool.h>
+> > +#include <stdio.h>
+> > +#include <stdint.h>
+> > +#include <unistd.h>
+> > +#include <asm/msr-index.h>
+> > +
+> > +#include "kvm_util.h"
+> > +#include "processor.h"
+> > +#include "test_util.h"
+> > +
+> > +#define NUM_ITERATIONS 100
+> > +
+> > +static void pin_thread(int cpu)
+> > +{
+> > +     cpu_set_t cpuset;
+> > +     int rc;
+> > +
+> > +     CPU_ZERO(&cpuset);
+> > +     CPU_SET(cpu, &cpuset);
+> > +
+> > +     rc =3D pthread_setaffinity_np(pthread_self(), sizeof(cpuset), &cp=
+uset);
+> > +     TEST_ASSERT(rc =3D=3D 0, "%s: Can't set thread affinity", __func_=
+_);
+>
+> Heh, you copy-pasted this from hardware_disable_test.c, didn't you?  :-)
 
-I tried pressing every key...
+Probably.
 
-> > > > > The mysterious thing is "Keylock active" - clearly it isn't because I
-> > > > > can write this email typing on that very keyboard. However, I wonder
-> > > > > if it needs i8042_unlock=1 to set I8042_CTR_IGNKEYLOCK.
-> 
-> Just ignore this message, it is harmless and trying to flip the bit
-> might confuse the emulation even more. Maybe we should lower the
-> severity of it to debug.
-> 
-> That said I do not see it on my Carbon (neither v5 nor v12, can't check
-> v9 because it is at home)... What version of Carbon do you have? Do you
-> have up-to-date BIOS/EC?
+> Would it make sense to turn this into a generic API that takes care of th=
+e entire
+> sched_getcpu() =3D> pthread_setaffinity_np()?  E.g. kvm_pin_task_to_curre=
+nt_cpu().
+> I suspect there are other (potential) tests that don't care about what CP=
+U they
+> run on, so long as the test is pinned.
 
-Neither did I see a problem until today, and I've been using the laptop
-since October 2024, and this is the first time it's had an issue.
+Sure.
 
-Looking at fwupd, it has an Intel ME update pending (1.32.2418 to
-1.35.2557). I can't find a way to get any update history beyond
-that out of fwupd and fwupd doesn't seem to log to journald what
-it's doing.
+> > +}
+> > +
+> > +static int open_dev_msr(int cpu)
+> > +{
+> > +     char path[PATH_MAX];
+> > +     int msr_fd;
+> > +
+> > +     snprintf(path, sizeof(path), "/dev/cpu/%d/msr", cpu);
+> > +     msr_fd =3D open(path, O_RDONLY);
+> > +     __TEST_REQUIRE(msr_fd >=3D 0, "Can't open %s for read", path);
+>
+> Please use open_path_or_exit().
 
-> > > > It just happened to me as I was typing this very email (key 'd' got
-> > > > stuck, nothing could un-stick it, couldn't move the mouse cursor but
-> > > > mouse-click events did work, had to suspend/resume the laptop to fix
-> > > > that)
-> 
-> This is weird and suggests that the breakage happens up the stack from
-> the kernel (or down in the firmware). Mouse clicks and mouse movement is
-> delivered as part of a mouse packet, so if there are button clicks there
-> will also be movement, they are not separate. If the cursor is not
-> reacting that means desktop environment is not handling input properly.
+TIL.
 
-So could we be looking at an Xorg bug?
+> Hmm, and I'm planning on posting a small series to add a variant that tak=
+es an
+> ENOENT message, and spits out a (hopefully) helpful message for the EACCE=
+S case.
+> It would be nice to have this one spit out something like "Is msk.ko load=
+ed?",
+> but I would say don't worry about trying to coordinate anything.  Worst c=
+ase
+> scenario we can add a help message when the dust settles.
+>
+> > +     return msr_fd;
+> > +}
+> > +
+> > +static uint64_t read_dev_msr(int msr_fd, uint32_t msr)
+> > +{
+> > +     uint64_t data;
+> > +     ssize_t rc;
+> > +
+> > +     rc =3D pread(msr_fd, &data, sizeof(data), msr);
+> > +     TEST_ASSERT(rc =3D=3D sizeof(data), "Read of MSR 0x%x failed", ms=
+r);
+> > +
+> > +     return data;
+> > +}
+> > +
+> > +static void guest_code(void)
+> > +{
+> > +     int i;
+> > +
+> > +     for (i =3D 0; i < NUM_ITERATIONS; i++) {
+> > +             uint64_t aperf =3D rdmsr(MSR_IA32_APERF);
+> > +             uint64_t mperf =3D rdmsr(MSR_IA32_MPERF);
+> > +
+> > +             GUEST_SYNC2(aperf, mperf);
+>
+> Does the test generate multiple RDMSR per MSR if you do:
+>
+>                 GUEST_SYNC2(rdmsr(MSR_IA32_APERF), rdmsr(MSR_IA32_MPERF))=
+;
+>
+> If the code generation comes out
 
-> The kernel does drop input events if userspace is unable to read buffers
-> quickly enough. It notifies userspace by queuing special
-> EV_SYN/SYN_DROPPED event and userspace is supposed to query the full
-> device state upon receiving it to figure out what to do. I doubt we are
-> running into this with keyboards, but maybe we should add some logging
-> there to rule this out.
-> 
-> I'll add Peter and Benjamin to this thread in case they have ideas.
+I'll have to check.
 
-I'm thinking of leaving evtest running in a terminal, so its output
-can be inspected if it happens again. One issue though is the
-timestamps aren't readable, but I'm sure with a bit of perl
-post-processing that could be fixed.
+>
+> > +     }
+> > +
+> > +     GUEST_DONE();
+> > +}
+> > +
+> > +static bool kvm_can_disable_aperfmperf_exits(struct kvm_vm *vm)
+> > +{
+> > +     int flags =3D vm_check_cap(vm, KVM_CAP_X86_DISABLE_EXITS);
+> > +
+> > +     return flags & KVM_X86_DISABLE_EXITS_APERFMPERF;
+> > +}
+>
+> Please don't add one-off helpers like this, especially when they're the c=
+ondition
+> for TEST_REQUIRE().  I *want* the gory details if the test is skipped, so=
+ that I
+> don't have to go look at the source code to figure out what's missing.
+>
+> And it's literally more code.
 
-That would allow an answer to "is it kernel or firmware" vs
-"userspace".
+Okay.
 
-The problem is - if it's taken 7-ish months to show for me, it's
-likely that evtest won't be running when it next happens (as there
-will be needs to reboot for kernel upgrades/firmware upgrades in
-that time.) Really, it needs to be something like an automatically
-started at boot e.g. evtest inside a detached screen session.
+> > +
+> > +int main(int argc, char *argv[])
+> > +{
+> > +     uint64_t host_aperf_before, host_mperf_before;
+> > +     int cpu =3D sched_getcpu();
+> > +     struct kvm_vcpu *vcpu;
+> > +     struct kvm_vm *vm;
+> > +     int msr_fd;
+> > +     int i;
+> > +
+> > +     pin_thread(cpu);
+> > +
+> > +     msr_fd =3D open_dev_msr(cpu);
+> > +
+> > +     /*
+> > +      * This test requires a non-standard VM initialization, because
+> > +      * KVM_ENABLE_CAP cannot be used on a VM file descriptor after
+> > +      * a VCPU has been created.
+>
+> Hrm, we should really sort this out.  Every test that needs to enable a c=
+apability
+> is having to copy+paste this pattern.  I don't love the idea of expanding
+> __vm_create_with_one_vcpu(), but there's gotta be a solution that isn't h=
+orrible,
+> and anything is better than endly copy paste.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+This is all your fault, I believe. But, I'll see what I can do.
+
+> > +      */
+> > +     vm =3D vm_create(1);
+> > +
+> > +     TEST_REQUIRE(kvm_can_disable_aperfmperf_exits(vm));
+>
+>         TEST_REQUIRE(vm_check_cap(vm, KVM_CAP_X86_DISABLE_EXITS) &
+>                      KVM_X86_DISABLE_EXITS_APERFMPERF);
+> > +
+> > +     vm_enable_cap(vm, KVM_CAP_X86_DISABLE_EXITS,
+> > +                   KVM_X86_DISABLE_EXITS_APERFMPERF);
+> > +
+> > +     vcpu =3D vm_vcpu_add(vm, 0, guest_code);
+> > +
+> > +     host_aperf_before =3D read_dev_msr(msr_fd, MSR_IA32_APERF);
+> > +     host_mperf_before =3D read_dev_msr(msr_fd, MSR_IA32_MPERF);
+> > +
+> > +     for (i =3D 0; i < NUM_ITERATIONS; i++) {
+> > +             uint64_t host_aperf_after, host_mperf_after;
+> > +             uint64_t guest_aperf, guest_mperf;
+> > +             struct ucall uc;
+> > +
+> > +             vcpu_run(vcpu);
+> > +             TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
+> > +
+> > +             switch (get_ucall(vcpu, &uc)) {
+> > +             case UCALL_DONE:
+> > +                     break;
+> > +             case UCALL_ABORT:
+> > +                     REPORT_GUEST_ASSERT(uc);
+> > +             case UCALL_SYNC:
+> > +                     guest_aperf =3D uc.args[0];
+> > +                     guest_mperf =3D uc.args[1];
+> > +
+> > +                     host_aperf_after =3D read_dev_msr(msr_fd, MSR_IA3=
+2_APERF);
+> > +                     host_mperf_after =3D read_dev_msr(msr_fd, MSR_IA3=
+2_MPERF);
+> > +
+> > +                     TEST_ASSERT(host_aperf_before < guest_aperf,
+> > +                                 "APERF: host_before (%lu) >=3D guest =
+(%lu)",
+> > +                                 host_aperf_before, guest_aperf);
+>
+> Honest question, is decimal really better than hex for these?
+
+They are just numbers, so any base should be fine. I guess it depends
+on which base you're most comfortable with. I could add a command-line
+parameter.
+
+> > +                     TEST_ASSERT(guest_aperf < host_aperf_after,
+> > +                                 "APERF: guest (%lu) >=3D host_after (=
+%lu)",
+> > +                                 guest_aperf, host_aperf_after);
+> > +                     TEST_ASSERT(host_mperf_before < guest_mperf,
+> > +                                 "MPERF: host_before (%lu) >=3D guest =
+(%lu)",
+> > +                                 host_mperf_before, guest_mperf);
+> > +                     TEST_ASSERT(guest_mperf < host_mperf_after,
+> > +                                 "MPERF: guest (%lu) >=3D host_after (=
+%lu)",
+> > +                                 guest_mperf, host_mperf_after);
+> > +
+> > +                     host_aperf_before =3D host_aperf_after;
+> > +                     host_mperf_before =3D host_mperf_after;
+> > +
+> > +                     break;
+> > +             }
+> > +     }
+> > +
+> > +     TEST_ASSERT_EQ(i, NUM_ITERATIONS);
+>
+> Why?
+
+I think this was leftover from a version where it was possible to
+break out of the loop early. I'll get rid of it.
+
+V4 this week, I hope.
