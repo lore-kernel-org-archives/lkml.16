@@ -1,129 +1,101 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C441118EB0;
-	Wed,  7 May 2025 15:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B372E28A3F3
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746631358; cv=none; b=VPiZqeaOZJR6Gbu3p1aW1OB/mYs7ZKYufZgzmI/cc1y0j/wc+bM+62D9hDj8BsMnVKbJDgqeaoTOqKEBSQ3Ovz+ejljy66vfGwEhv6wyrTNcjp9INUrPeNcjytOSVJkSWeY83HwzFoiIdOsMa1SlSeF/1BfXZy7UnUDyISmZE78=
+	t=1746631368; cv=none; b=PXRHaIaGEn+3KVxY7kzIR1sjDyTuIeLT4iGB7rjOWA2gJvTuer/gle0Nu7sVzOxTvWjKWU9goTb0P4UKhLDt0x8bnaSo68hAYPer6XjXCyMD9u+zF25lYmkw4xqKaT5aRMXHyTj/F9KM5UC+PBDyoY1SLNRRn5A0A7IygrWf2LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746631358; c=relaxed/simple;
-	bh=G6GIobQZjGbAv136r9m+tdpjpUDEpPUBOIo+rwGG/qE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BfdULuT2ElLYtGRv9poViQWfMfQo5E/08+0Zo0aO9i9A2iDSloJiM6Th2AOi0WdBPkUZ/wn/Z2cSWQW8hlp3xuYgqJKMQ+u34PU7xaEV+Oj6CaGBZfQPpqTyjTD6DklR3xCE0Ed54U10R5kvCe1VxveJwwvm61xoq8Zxm6lZcFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J7uU6SRX; arc=none smtp.client-ip=209.85.208.42
+	s=arc-20240116; t=1746631368; c=relaxed/simple;
+	bh=KsXBCAzYAm7pVlD0gbTLEZssWdGKKtfQ2zkhoFDxo/U=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Soxr5y236tGEARERy8kMXi5H8kLDpQdsY1OSJVxDFgzsJyr6FXNIEtCjXokQBklBs5fYI1sBHd+dN/ICccAUxnG2zgnkNlktJpPjJIJP1haf6sJ9YxniCshLqb2qTned0vhFDf4MMgg5VZe8Td2VPoT0wCqPPMCpJc2oCqGETq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+dgEpUD; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7uU6SRX"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5fbe7a65609so2196524a12.0;
-        Wed, 07 May 2025 08:22:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+dgEpUD"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-549b159c84cso7937569e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 08:22:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746631355; x=1747236155; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QLt5UoHo/uyFct2KVPgAYy9QmHAyTkt3+bUdcit5PVs=;
-        b=J7uU6SRXzQE6EccKmf+j9MC5sVrPjP/hHsf/+5oUdQMT2wUU+UQNETSuasmGSBfliJ
-         cBTitvTwzNzrT2+iQPC1SnlZV5QySgocAodPI6/zApjgXWkk2L2iKFHGJKORj8YzETrS
-         C7u9JXnUfqYCRSHCld63rwpfV2bI8eXaEkPFbt73xm/7a94HyUo513a3yRn2hVj8U8cm
-         cJH4z0WkjuFjUToZGzOYXHyrsfkZfJ4uoDXTFT3xZGsjEuEmDr82uUhJyrBRZvOvXNas
-         YRZyrZCL5cXfiAI76Fz40SCEIwhPMX/URTy6m50iNS9+vapAqZYn0fkvQVe+fQk5aU6T
-         0JqQ==
+        d=gmail.com; s=20230601; t=1746631365; x=1747236165; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LBdHNH+wijP0uK7dXxU2Rf8QEIBUEILv5ndDAujqTqs=;
+        b=P+dgEpUD3uWgjwdxsiXDRxxvMrqbF8NlUq60DAG2v0x3ilnsNURDKbWgcAaJ3rRSNP
+         v/o4ukrDKrd1KqC/sdMWHIaHl5Hh6z1eTmdVma3VV4+zKH4L4ZT+/hs5gCABArfi0YPE
+         8sgw+FIzOz8LQjCFOwQJzqibl35kzsLMh/UofGuUMlaUOPRXeuw/kxS8BfmOIRobIPgj
+         +9AsEABhCLldtCm3zij+q9frQF8c8ZAgM+SP7D2hM9qBbIFpJbrqGL2whVfd5a01Duy+
+         tyA6Dm5lreFDkL+S/LWnZUrxXoUt7MEYamtHWG3Tjt5mPmMDRj+aJbrcjefQYG8baqjx
+         s9vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746631355; x=1747236155;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QLt5UoHo/uyFct2KVPgAYy9QmHAyTkt3+bUdcit5PVs=;
-        b=mTSt8fDbvGD5ui+4Gts8PeifmPNGQ72+GYkI+aVJxMHuKU2gwC/Mh0krQyWBHg2afN
-         fWHTgravKDAkP81VUTU3Kh6SiGyBcafQW6I7ekdk4BZaTW98dDbfDkiOF69DdLtFBrFa
-         SbLBpjHEokpaXavDHM/rbX0ak4E1N2IniI2SMTdMJpDOxaqG3wfPDg4JvdwTfISSEqGd
-         go5HKMAekyZVTH0OSXwQSz9PPnnAvghFLzl8cimCgWcOcJ4GVCWwlReb7mt3PtMNDU+x
-         H9+EyR4HGixPmw/N0uApenTe27sVYLkvtdmOwnJMtSHcYahlqSRpdTAYMCIcClSyqqqR
-         MrNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUH0fRzwwKuUgmm3SSxyWa2SGAwtRUWS9JHwZDVX66fn2msknHi/yFjM6HMn0cwPsjczbFd0I6GVDeBJ7a23i17@vger.kernel.org, AJvYcCVk9Yko2L8Xa73xHa+y2Wd+GktuJeq/HiACPBsI3vLo8HEx/YTS9Zzk8Xeyd8IQ9n3whRxeN8OCDAbje6yZ@vger.kernel.org, AJvYcCW9TA6WQWdBHBUa91OHE4d1evuzaq5vdwYNGPdlKSs2CEYcuZ/AvAV8+SGlGYIP70AZvQ3FmNw1h1xk@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBCbTCt9I+LJKm+VLWO2hngHvac/tEw61Q9IFgjB71VEvPpVc+
-	4adzpY4d8Y24ZpdGb/xaFoSd+7Ih8cAOQkDOHcAdsrz3cUDMSI+s2JprQ2CgQnQHmnK1VLEdFhA
-	yN4pq7wcZ66dAYKQqA6F9NOyZVEc=
-X-Gm-Gg: ASbGncshpWr9BKs9Zum60GEc+sfcC4RJzKvUltFMO2oj/opeL7BQJiZe8AR6+AyAa6B
-	9Lc1AqmHNEhOycEIABQLYwclpb46P9JTbeVo6XFYnMZhH9iU3hNBelvlosbZ/zO87v/3CVYm48e
-	1iY0oxFN/DWwUggDTmhc0MtdgG
-X-Google-Smtp-Source: AGHT+IENrHBhDJ6QmCIALW/trOZbo+S+uz/FTJiKIkupIyaB84PssD8rkhzD5vVURdYtZ1ValTicpx4mnni9dTZkiMw=
-X-Received: by 2002:a17:907:7f1f:b0:acb:88ac:e30f with SMTP id
- a640c23a62f3a-ad1e8bd008dmr427685966b.20.1746631354904; Wed, 07 May 2025
- 08:22:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746631365; x=1747236165;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LBdHNH+wijP0uK7dXxU2Rf8QEIBUEILv5ndDAujqTqs=;
+        b=XvcEn1OqV9FSqiGBnHFhVQEAkhJo74yCv/X7yDZjJAgGsNu0Rbgx07vY4sX4+BSM28
+         15FJ1hqwLqc8RESvFyWeN+L4NPPHvqws+SmhyTBlb/aypG+F9eJ+rRycugq/izi1AlJA
+         3hBjI6u3GPDzro75phe+jCz36w7EpjYdvWbebNkw98Q8fnK91XgN4y7p/TNmQaxF5PwP
+         c+WQEyIF/1dc7OZZCgNjymsmDesCOSRJbanEkeKSWPwx9/2RUDpUHCdD1ex5qJwKH6Ps
+         mI/c/Sk4hyiVytHNY+SVRmdIVEEEKhSYXgPBz38ui1B4DBClVubhpV2bDSbxIkBqRYzp
+         kfXw==
+X-Forwarded-Encrypted: i=1; AJvYcCUmRB0D7Qfa+MLxOT37CkSUs0bLYigZPMm0Qy1AwNy+SBrf8ClT+OuAatKhXEjmFrh0DtH4/knbDvmtljg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWGxHpec/vZN2+LNnRpZiRhGi1y0r5lsQQLOkemRVGvVvqFat7
+	SD1wy5X2Uj3qZ/AqYLzrbw8Ev497BfdswEOHqStYxVbvgsnWtRKh
+X-Gm-Gg: ASbGncuFLBzohBd4SlJ0CAo1SLPTUaSn5//H2SniiD9JoMMcga2CFkLSxmoWoKPJqaa
+	1VSqxtzMS2NZ3wN1KNhN3cdCA8kpI0FkLUhGUUUgH6Sb4cr4p14sUAm2pW+8jWljF5X+8SPjyTk
+	MJpqHUE7xEsFsfIS9qwvIxEw47Y9iRB3yucBaAC3OwHx5QQiA0B0BcOZaSjxzcHriIklZirjbsr
+	Ns2FsIBDObjjh05GljZ6Z+T3f48JRw7VhAV9lSqXGwH0KHAvUy2YGqPducoilmFrK9po3M7UT0R
+	rY1XKdbZ6m42B+nLj3mhWKz1M6MMTgBmRmjdI3u4aAAJo+wYIZy7WgALUqBlHwesQle7
+X-Google-Smtp-Source: AGHT+IFYCONGk6yUZbJnMblegVh62d9CkAE7qLluLxjADFGfOZMr0lygyWdyLCwlzCLb0YOIu4j2OA==
+X-Received: by 2002:a05:6512:3e1e:b0:54e:a2f8:73da with SMTP id 2adb3069b0e04-54fb95fb807mr1369658e87.18.1746631364462;
+        Wed, 07 May 2025 08:22:44 -0700 (PDT)
+Received: from pc636 (host-95-203-26-253.mobileonline.telia.com. [95.203.26.253])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94ee121sm2360264e87.131.2025.05.07.08.22.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 08:22:43 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Wed, 7 May 2025 17:22:41 +0200
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	David Hildenbrand <david@redhat.com>, Baoquan He <bhe@redhat.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH] MAINTAINERS: Add myself as vmalloc co-maintainer
+Message-ID: <aBt6wSI_kwwrjjzy@pc636>
+References: <20250507150257.61485-1-urezki@gmail.com>
+ <08c24a55-ef7a-462f-9296-f3b0374d885a@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
- <CAHp75VdRp7RG-YCAL2Jx4uXsT2RVQNeu-MxPB5pWRq8TqtsSXw@mail.gmail.com> <cb98bec7-748c-4e00-aa9f-b5075bebb5b2@bootlin.com>
-In-Reply-To: <cb98bec7-748c-4e00-aa9f-b5075bebb5b2@bootlin.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 7 May 2025 18:21:58 +0300
-X-Gm-Features: ATxdqUGUzY3A4zHzeU_ubjrnOY2zfB9ZK-KToR7BIUdNK8ReLiEBIkmZ9i8rOpA
-Message-ID: <CAHp75Ve_oM6NyvLGsBK4CddEEv=cafw_VfONKwEBX2CBdNxJmA@mail.gmail.com>
-Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
- forwarder library
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <08c24a55-ef7a-462f-9296-f3b0374d885a@lucifer.local>
 
-On Wed, May 7, 2025 at 5:53=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
-> On 5/7/25 08:29, Andy Shevchenko wrote:
-> >> +/**
-> >> + * gpio_fwd_gpio_add - Add a GPIO in the forwarder
+On Wed, May 07, 2025 at 04:06:04PM +0100, Lorenzo Stoakes wrote:
+> On Wed, May 07, 2025 at 05:02:57PM +0200, Uladzislau Rezki (Sony) wrote:
+> > I have been working on the vmalloc code for several years,
+> > contributing to improvements and fixes. Add myself as
+> > co-maintainer ("M") alongside Andrew Morton.
+> 
+> Thanks for your great work there :)
+> 
+Thanks :)
+
 > >
-> > forwarder
->
-> Sorry I do not see the typo :)
+> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> 
+> Acked-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> 
+Thank you!
 
-Your original piece of the code. Please look better.
-
--static int gpiochip_fwd_gpio_add(struct gpiochip_fwd *fwd,
--                                struct gpio_desc *desc,
--                                unsigned int offset)
-+/**
-+ * gpio_fwd_gpio_add - Add a GPIO in the forwader
-
-
-> >> + * @fwd: GPIO forwarder
-> >> + * @desc: GPIO decriptor to register
-> >
-> > descriptor
-
-Ditto.
-
-> >> + * @offset: offset for the GPIO in the forwarder
-> >> + *
-> >> + * Returns: 0 on success, or negative errno on failure.
-> >> + */
-> >
-> > Please, spellcheck all of the comments.
->
-> Ditto
-
-See above and spell check. Thank you.
-
-...
-
-> > + struct gpio_chip;
->
-> And also struct gpio_desc;
-
-Yes. :-)
-
---=20
-With Best Regards,
-Andy Shevchenko
+--
+Uladzislau Rezki
