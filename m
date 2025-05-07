@@ -1,97 +1,149 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3649A202C26
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A1A28A70B;
+	Wed,  7 May 2025 13:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746625790; cv=none; b=Uepvtg3lanQ5o1PcZc1KsbH/FSCDgs2MUXIJID83bhBx69ia12+dWN8h7zxUg2ecXew4mREDJmJkiXBAzOmsAULzFlwFjJM4/ckzuaiYBlkyjqvvGZTwnVaVeM6oCsmZk5BHMq89sD7/HLKyrs1BjvJfzi+eBltjF6q235cJirs=
+	t=1746625798; cv=none; b=QITtTaJ3cLbxL593Dc0stJ0en/mDiaFDe4wHUF3wWjGUpCpvv98EDEKrv8gtohsOEtFhg05jNYTxXzixpMcaTmXb321BzO7ae9UA8HKpinV0u7pBAG59yq1WjNYk1NMMyfyzOtDbuQ5Q4+yKLZ+5WokKa+5AEuAjw/Tm/FxIWOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746625790; c=relaxed/simple;
-	bh=w9dJJZAfLFUz4sepGZ4yAHD92WyyzbYRQNOBLcVmWcs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c0Ch8qaAvoz+z+hflW204wxrW+T0zhIpxgKSb6evyaPfmjnv5hbEQaVp/8KApcNyf6Veim6s15WsmXduGUIoNs47ro0sIMl80la1M6WjTJ+CpPpU20Hh3DKzVAIYTNjkiCyReWT5DRzYkMvfZOFOcpIVoUgbTANI3b+Nrdxs1cY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=xMOwG7NA; arc=none smtp.client-ip=209.85.167.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746625798; c=relaxed/simple;
+	bh=wpf1mvl8J9ZWAnzeW4nk5FXAObJeyfts+D9xDzXCJGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=COSDLPbaGZ5Fohlt4RafFzF7QIQCKfa5DdVnVg6Z3C4OiaxSxObP9BN4wxCfTCw5D7d6F7WrUBTtz0a5uEmte9/1hhQpjps+rKSK/Y/+9+NZ0y8yL3dv2leGD5Rcj9Z3ay6b35NmKYkA1a36ovruIeT+pLzR5AKYD/8ch8kN23I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n12kzImp; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="xMOwG7NA"
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-401f6513cb2so524379b6e.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:49:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746625787; x=1747230587; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=N2E3azbVaCRVDrY4UnTVOScgZIlfU9ExUYdpv0XY9P0=;
-        b=xMOwG7NAiSA4M9iwSSzzquNz/WWG7vxM4jBE+hXIPioIrtEFMqxV7FD9O57Pdc6SZO
-         gOLxTBFvr/Ficn3HfyB+izDOblNKOtc64bzwzSjlqlXSXMZwe4+UsjZP8THsXj6x5gOs
-         vwsyrdnV9IrD/S84OtsH49vuaUeBaEPb5TWiAE7IVVahjO99L/oqd1DYYiamucXtfKal
-         enjJyHLZJ9OvnnWkpJE5bD0eg3Po120jv14zqsWw9zlkZfQsm6QCEcqPVxmFQJqY+AL6
-         VHXrTkqCpGfsxiKXlHnWMrGUhRw8vv9tIhIuhzn8qO8s99MRV4V1179SvO0llEH1Wx18
-         B/kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746625787; x=1747230587;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N2E3azbVaCRVDrY4UnTVOScgZIlfU9ExUYdpv0XY9P0=;
-        b=K8/tGJ9aY4LioPe56Z89w9zWtWvII1aRk960gkFJGMmtm7P9KNlFRu8iFSH3nkLi8u
-         DzhXLaoddIF/CbBWo/2/48CEru0A7oWLS+JICBojYPVMx3b0UMcH3098WDIs+suuWwC2
-         RhnCdQOIWaJbXyQdLAX7YkmRuRQ112R9IkV6ttRRgMEeHwOFR7hlWuJiHR5IYLzzPx/o
-         /fYGY380cNLahg+6YEeDw2nENyQ3Tg5jZ6h+EukK5w/X4nSzuIipjPt6DOo1ycyKnYmR
-         2RPEd5rqxXt3gJwMnMirGV0/uANAVOffrGEkVAAxhSzwYsmYd2U3tn3bxDP3cdGgxMT0
-         TG3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWuGiaz0PYMxhlz/k9gg4HdSzrjTo9KWL7dtWh33XvLYiOXzCowLgsTwHkmsoPKhxi8EaumjeraN2GjB+s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTcxmydN8/2L+LOS2/oBDLhjzxWc50VT2zqU5d8BY+iLrHvCGZ
-	wM5IPskbv4KgkXHGJgWY1aIaG/tyzJnxCO9dwyE5D+Oda9a80HSdKELZ49uNEXs=
-X-Gm-Gg: ASbGncsLGT3Jm9HYeILy9ZOz7YwmI+J/SNqoeoXwj0CfyoDlobTqjSPZh4+tAUi9akf
-	UU2Dk3G9GBtZGHODXhLAbkdj0eKqifSepTvjuqbbKN0xxKWNXIMp7uewCA5C8Tl2In7hcomi8wo
-	KX0/hGafTZ/bh6rmSb2MMHMzJlUybMZFOb0ryaYNSis+7HC4OqctlHH+73qpjx6qKdPf09e8HdZ
-	t5ZmojU8QNgo9IUFLaA8gbyCnAwGJBGw49+OoA8v9b2BZhmu7YhSyQT54Ew+t3HiuI2aOGupoRG
-	XJWXCnhJRacBbRhqyFjNZHgCdx+huAmVH3OW1QC47fssgDKqS+LHidxJDuvUJqDhLIMyfdlwfGK
-	Sb9aJQ/yHSJeukd8=
-X-Google-Smtp-Source: AGHT+IEkqfDH15pjFTL4cZA58InYNRqoavGNSUddgSHwMO1Pw7iWYqyvF5hpJ5MLza2jpw+neoIdHg==
-X-Received: by 2002:a05:6808:178c:b0:3f6:ab0d:8db1 with SMTP id 5614622812f47-4036ea41ecamr2103982b6e.3.1746625787217;
-        Wed, 07 May 2025 06:49:47 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:3356:f6f6:bf76:a32? ([2600:8803:e7e4:1d00:3356:f6f6:bf76:a32])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-607e7fe84a8sm2683429eaf.36.2025.05.07.06.49.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 06:49:46 -0700 (PDT)
-Message-ID: <fbf6c7ef-3680-40ec-8c90-121e6a635b8d@baylibre.com>
-Date: Wed, 7 May 2025 08:49:46 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n12kzImp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746625796; x=1778161796;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wpf1mvl8J9ZWAnzeW4nk5FXAObJeyfts+D9xDzXCJGQ=;
+  b=n12kzImpZAf10ODZifZASYKlrB817nLnePxN2HZr4c4JhCSZBpvohSqM
+   j+p/960uC+iEe9cZ2XdSjNL4hSOG1E1iHPT716z6fq1HOwlH3Aj2RKnDS
+   of6obJStpSrEabd2nt9SilnK+a4EvTXOeXUDn8uuvoq+t00oFyPAyY5TA
+   PQctAkjrjdVTt69iEZoxK61REaM+1QxKFd0Usu2Cp6+XSMhLrpGp4Na4j
+   HxkRqbVV9buGrDWOG3JlsrJX2zdPxcNcD2gE2L0GAPyWObKuGwKk1tPUD
+   asjOsJXXfZSUOKaJEaAIQN/iG2GhjppZ0nU+HGkTfO5n3J+YicG4QXMIP
+   g==;
+X-CSE-ConnectionGUID: jITjY44HSqW7VDQ5SyEa5g==
+X-CSE-MsgGUID: boxpjO7JQDKhPqrIAIWMNw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52011212"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="52011212"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 06:49:55 -0700
+X-CSE-ConnectionGUID: ZysioNgiRyqBOl23ETAa7Q==
+X-CSE-MsgGUID: gMVbvhDLRFqCMIHnN8DMkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="135825861"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 06:49:54 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uCf9j-00000003kIS-1vAm;
+	Wed, 07 May 2025 16:49:51 +0300
+Date: Wed, 7 May 2025 16:49:51 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Subject: Re: [PATCH v1 1/1] Input: ALPS - bail out when device path can't fit
+ buffer
+Message-ID: <aBtk_zBywXqhU-YU@smile.fi.intel.com>
+References: <20250422185645.1949391-1-andriy.shevchenko@linux.intel.com>
+ <ybenmz2fmjxjpo3zhnrh2ptquikxrtb63664qbhhfv5d4ezx5n@c3p2tbosx2tz>
+ <aBBdFoBbdl8GI6da@surfacebook.localdomain>
+ <aBTOMzlitljoDAob@smile.fi.intel.com>
+ <2blm4mirspwgcukwnybfgqhiozhtkcqjl2e7g2onxp6ms4ex4a@l4jayj4i6fti>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] iio: admv1013: replace redundant ternary operator
- with just len
-To: Colin Ian King <colin.i.king@gmail.com>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Antoniu Miclaus <antoniu.miclaus@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250507134502.254736-1-colin.i.king@gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250507134502.254736-1-colin.i.king@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2blm4mirspwgcukwnybfgqhiozhtkcqjl2e7g2onxp6ms4ex4a@l4jayj4i6fti>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 5/7/25 8:45 AM, Colin Ian King wrote:
-> The variable ret is being assigned a return value and non-zero error
-> return paths are taken at all stages. At the end of the function ret
-> is always zero, so the ternary operator checking for zero ret is
-> redundant and can be replaced with just len instead.
+On Mon, May 05, 2025 at 10:34:56PM -0700, Dmitry Torokhov wrote:
+> On Fri, May 02, 2025 at 04:52:51PM +0300, Andy Shevchenko wrote:
+> > On Tue, Apr 29, 2025 at 08:01:10AM +0300, Andy Shevchenko wrote:
+> > > Mon, Apr 28, 2025 at 04:30:13PM -0700, Dmitry Torokhov kirjoitti:
+> > > > On Tue, Apr 22, 2025 at 09:56:45PM +0300, Andy Shevchenko wrote:
+
+...
+
+> > > > > +		n = snprintf(priv->phys2, sizeof(priv->phys2), "%s/input1",
+> > > > > +			     psmouse->ps2dev.serio->phys);
+> > > > > +		if (n >= sizeof(priv->phys2)) {
+> > > > > +			psmouse_err(psmouse,
+> > > > > +				    "failed to prepare path to the trackstick device\n");
+> > > > > +			error = -E2BIG;
+> > > > > +			goto init_fail;
+> > > > 
+> > > > So you just broke touchpad of some poor guy who had it working just fine 
+> > > > for many years. For maximum impact you should add BUG() or panic()
+> > > > here.
+> > > 
+> > > Ha-ha. You know that your speculation most likely so far from the truth.
 > 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> ---
+> If your code is not a noop that is precisely what happened.
+> 
+> > And actually what you are telling about is not true at all. If the device was
+> > working it means that the file node name is not cut, and hence this patch won't
+> > anyhow change this behaviour. Otherwise, provide an example which can fail this
+> > and still be working in the user space.
+> 
+> "phys" is not a name of a device node. It is a string available via
+> /proc/bus/input/devices, sysfs /sys/class/input/input<N>/phys and also
+> EVIOCGPHYS ioctl. A driver is free to not set it at all and everything
+> will be working fine.
 
-Reviewed-by: David Lechner <dlechner@baylibre.com>
+Okay, this is then indeed a problematic in the cases when strings are shorten
+than supposed to be.
+
+> Actually, input devices themselves to not have device nodes, it is evdev
+> interface that provides /dev/input/event<N>.
+> 
+> > > > In all seriousness, it is OK to have truncated phys, rarely anyone looks
+> > > > at it and if we get a report of it being truncated then we can consider
+> > > > addressing the size (or we can decide to live with it truncated).
+> > > 
+> > > In all seriousness, while I agree on the statement, the 4 drivers in Input
+> > > subsystem break the build. It's the biggest obstacle now to enable WERROR=y,
+> > > which is default, builds on `make W=1`. So, I already gave you chance to fix,
+> > > instead I hear nothing back for a months (to be precise 2 months and a day
+> > > passed from my first attempt that you didn't like), the problem still exists.
+> > > Please, address this the way you like.
+> > 
+> > For the reference, the first approach:
+> > https://lore.kernel.org/r/20250228121147.242115-1-andriy.shevchenko@linux.intel.com
+> > where I also asked about this one, ano got no answer.
+> 
+> Sorry I was busy with other projects.
+> 
+> > I really don't want to try anything new as it seems a big pushback to whatever
+> > I propose. So, please consider fixing the issues rather sooner. I will be more
+> > than happy to test.
+> 
+> Have you considered that this warning is bogus and it should be disabled
+> instead? Or maybe GCC should see if there are followup writes to the
+> same buffer before emitting the warning? 
+
+I considered this warning as a problem that prevents me compiling the code.
+Since there are only few issues over the kernel left with some maintainers
+who are definitely busy, I consider the disabling warning wouldn't make it
+better. And if so, this should be send not by me, I have no good arguments
+against it. Perhaps you have?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
