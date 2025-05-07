@@ -1,173 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199DA2747B;
-	Wed,  7 May 2025 09:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC03017A2E3;
+	Wed,  7 May 2025 09:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746609775; cv=none; b=t+4q/C328ODd+lke32Nz0rVCdbP9wccxmlLlXiaLyb6C37POCpcfZIrvbm1lVAUYvyFLFUOrqh/D74BQjdAxEb+RDQlXSkiIUTCsQ2MHYMwBeWrjZK35l9/ba6BZ/cIBX0skKQUhGvPnRc4SbHkhZsifoRNZvz9zV4OsWLNGKZo=
+	t=1746609812; cv=none; b=izMB87kxZXwJlQvIWBdkfFmjizzHNZdPyiudQHsELO7FzqczKRYISidcgynZZkh9D91CyQ76bU8XM4pavb/qYxTe424u2DnWhhaoBVaQ6k6Rx2802jdhTOHfiP6+SFonRebXxkxicZ2qZFKKdQPejg/p2pXH1qa5J8VxA3kznMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746609775; c=relaxed/simple;
-	bh=yNe/yghsog/b5Puwx6JCvObC6eqIzd/4ueq2VaAB2yU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bX598xDlUNCYclkKPpzJJEuA8RQQrRV+GdHGlkmLMYWj+4WN8AJGmJuZm5ATNYR1jlf97OXU8/ElVQKg07ClvYuOrvSdTeSMKA8o81q0EXQJ9kl+K+4cq5MrfNek76fFjQt3sxp7YpQsUCrmgft0BV11VNzfu6nSXDwom2lEf8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9k+UWsu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746609812; c=relaxed/simple;
+	bh=s7tBVy/4yRPxvQTxRMP3pUOBkZ+UDB0qWnP2HwoNlng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e05OIThJnD4tHxCT30ASi8mohletis30Y9AgII+LvBv8Y3BeQP1wJ8p/YO65HmhiQ17o3618cDbWLQZ5INWM1l0Lp62jAWx341/upnE0jN9acHZBFxoK5ZGy0KLi8+upUE0YMD+O1PwzLRrxP/vzS+7rm5kELDaTccchNkOIBbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=iZ/pVfEY; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9k+UWsu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DA74C4CEE7;
-	Wed,  7 May 2025 09:22:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746609774;
-	bh=yNe/yghsog/b5Puwx6JCvObC6eqIzd/4ueq2VaAB2yU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n9k+UWsugyDH/IF579694s5FyZt8jd6vyF0dbaGZ3G41pVvUE0jqAgUCuoaXdK+Of
-	 BWR8HRi5W9FHaMdDxYZHZ0uJWnFsL6qUgeWVuvfbTXZv5uEBRaKuJRfMOP5ihZHtLc
-	 v9GvG+ES3VDQI73i9//Rlc6o1nNSgnuN0thWlVEWoM/dQWNE9GbUF5ONA+f+QVvdfM
-	 Ih11WnnRaYooheZbMHVSeSu8j7wOhca06kOmriCjJl4jTBPrDoAPnEEePEzvxrwD33
-	 sINnLw5lyivWCX/3okKLrmuwrkn9KUi/pwNf0KMU15lhHFofVNVGAwSgXVs+CARSVH
-	 TKZCzywJk75YA==
-Message-ID: <7b344f05-70b6-4c59-9b5f-611dde59c09b@kernel.org>
-Date: Wed, 7 May 2025 11:22:49 +0200
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="iZ/pVfEY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=k8F60xDzoxPgiF6ANkypIdXoaa0fUeOYplHB5ihSYa4=; b=iZ/pVfEYtUo/ZYCC81cBYkeUE0
+	v5B+qBDLW+Kxc8jpMG7INT+oTVo1iksD9JRrMjh3CKwG7qrF0q2CIFJgnrDYbYo+5flu5Gd8pq2yK
+	i7NRz79F+VZPPJnV42vzK7e37+gGeYByrq0VHJykhFdgBQkGM02Oz9Zo+VmIxQnwiU+jWumxwfA9q
+	5sijO/b3oLTT6MOS0QRAZNQt9vQ09vFxTqSvLIOhc+OEV2S49QFYK6EmmlV86bVElw9w1xIY7hcv2
+	Z8GHnE7eJsP8/n5gagcCaH5UsYE0kId0pOiidN30MVtI+IwkLlZdbsKDnAAtkmiiImz2RKuI277Y6
+	/dUXJ6Aw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44182)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uCazo-0007Hw-1K;
+	Wed, 07 May 2025 10:23:20 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uCazl-0005fV-2W;
+	Wed, 07 May 2025 10:23:17 +0100
+Date: Wed, 7 May 2025 10:23:17 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Woojung Huh <woojung.huh@microchip.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [BUG] Stuck key syndrome (was: Re: [PATCH net-next v2] net: dsa:
+ microchip: Add SGMII port support to KSZ9477 switch)
+Message-ID: <aBsmhfI45zMltjcy@shell.armlinux.org.uk>
+References: <20250507000911.14825-1-Tristram.Ha@microchip.com>
+ <20250507094449.60885752@fedora.home>
+ <aBsadO2IB_je91Jx@shell.armlinux.org.uk>
+ <20250507105457.25a3b9cb@fedora.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 1/4] firewall: Always expose firewall prototype
-To: Patrice Chotard <patrice.chotard@foss.st.com>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Gatien Chevallier <gatien.chevallier@foss.st.com>
-Cc: christophe.kerello@foss.st.com, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
-References: <20250507-upstream_ospi_v6-v13-0-32290b21419a@foss.st.com>
- <20250507-upstream_ospi_v6-v13-1-32290b21419a@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250507-upstream_ospi_v6-v13-1-32290b21419a@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507105457.25a3b9cb@fedora.home>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On 07/05/2025 09:25, Patrice Chotard wrote:
-> In case CONFIG_STM32_FIREWALL is not set, prototype are not visible
-> which leads to following errors when enabling, for example, COMPILE_TEST
-> and STM32_OMM:
-> 
-> stm32_firewall_device.h:117:5: error: no previous prototype for
-> ‘stm32_firewall_get_firewall’ [-Werror=missing-prototypes]
->   117 | int stm32_firewall_get_firewall(struct device_node *np, struct
-> stm32_firewall *firewall,
->       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/bus/stm32_firewall_device.h:123:5:
-> error: no previous prototype for ‘stm32_firewall_grant_access’
-> [-Werror=missing-prototypes]
->   123 | int stm32_firewall_grant_access(struct stm32_firewall *firewall)
->       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/bus/stm32_firewall_device.h:128:6:
-> error: no previous prototype for ‘stm32_firewall_release_access’
-> [-Werror=missing-prototypes]
->   128 | void stm32_firewall_release_access(struct stm32_firewall *firewall)
->       |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/bus/stm32_firewall_device.h:132:5:
-> error: no previous prototype for ‘stm32_firewall_grant_access_by_id’
-> [-Werror=missing-prototypes]
->   132 | int stm32_firewall_grant_access_by_id(struct stm32_firewall *firewall, u32 subsystem_id)
->       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/bus/stm32_firewall_device.h:137:6:
-> error: no previous prototype for ‘stm32_firewall_release_access_by_id’
-> [-Werror=missing-prototypes]
->   137 | void stm32_firewall_release_access_by_id(struct stm32_firewall *firewall, u32 subsystem_id)
->       |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Make prototypes always exposed to fix this issue.
-> 
-> Cc: <stable@vger.kernel.org>
-> Fixes: 5c9668cfc6d7 ("firewall: introduce stm32_firewall framework")
-> 
-> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
-> ---
->  include/linux/bus/stm32_firewall_device.h | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/bus/stm32_firewall_device.h b/include/linux/bus/stm32_firewall_device.h
-> index 5178b72bc920986bb6c55887453d146f382a8e77..ba6ef4468a0a8dfeb3e146ec90502e2f35172edc 100644
-> --- a/include/linux/bus/stm32_firewall_device.h
-> +++ b/include/linux/bus/stm32_firewall_device.h
-> @@ -35,7 +35,6 @@ struct stm32_firewall {
->  	u32 firewall_id;
->  };
->  
-> -#if IS_ENABLED(CONFIG_STM32_FIREWALL)
->  /**
->   * stm32_firewall_get_firewall - Get the firewall(s) associated to given device.
->   *				 The firewall controller reference is always the first argument
-> @@ -112,6 +111,15 @@ int stm32_firewall_grant_access_by_id(struct stm32_firewall *firewall, u32 subsy
->   */
->  void stm32_firewall_release_access_by_id(struct stm32_firewall *firewall, u32 subsystem_id);
->  
-> +#if IS_ENABLED(CONFIG_STM32_FIREWALL)
-> +
-> +extern int stm32_firewall_get_firewall(struct device_node *np, struct stm32_firewall *firewall,
-> +				unsigned int nb_firewall);
+[Sorry for going off topic here - changed the Cc list, added Linus,
+changed the subject.]
 
-That's duplicated with earlier declaration. If you need to duplicate
-declarations means your code is not correct. That's not a fix at all and
-you are again masking the real problem which I asked to understand and
-learn.
+On Wed, May 07, 2025 at 10:54:57AM +0200, Maxime Chevallier wrote:
+> On Wed, 7 May 2025 09:31:48 +0100
+> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> > [rest of the email got deleted because Linux / X11 / KDE got confused
+> > about the state the backspace key and decided it was going to be
+> > continuously pressed and doing nothing except shutting the laptop
+> > down would stop it.]
+> 
+> Funny how I have the same exact issue on my laptop as well... 
 
-This is something solved already in all other common interfaces (ones
-with stubs) and it confuses me why here it takes so much time. I'll just
-fix it myself and I will apply v11.
+I've had the "stuck key" behaviour with the HP Pavilion 15-au185sa
+laptop I had previously (normally with ctrl-F keys). However, hitting
+ctrl/shift/alt would stop it.
 
-Best regards,
-Krzysztof
+This is the first time I've seen the behaviour with the Carbon X1
+laptop, but this was way more severe. No key would stop it. Trying to
+move the focus using the trackpad/nipple had any effect. Meanwhile
+the email was being deleted one character at a time. So I shut the
+laptop lid causing it to suspend, and wondered what to do... on
+re-opening the laptop, it didn't restart and is back to normal.
+
+This suggests that the entire input subsystem in the software stack
+collapsed just after the backspace key was pressed, and Xorg never
+saw the key-release event. So Xorg duitifully did its key-repeat
+processing, causing the email to be deleted one character at a time.
+
+The problem is, not only did this destroy the email reply, but it
+also destroyed my train of thought for the reply as well through
+the panic of trying to stop the entire email being deleted.
+
+I don't think this is a hardware issue - I think there's a problem
+in the input handling somewhere in the stack of kernel, Xorg,
+whatever multiple input libraries make up modern systems, and KDE.
+
+I did check the logs. Nothing in the kernel messages that suggests
+a problem. Nothing in Xorg's logs (which are difficult to tie up
+because it doesn't use real timestamps that one can relate to real
+time.) There's no longer any ~/.xsession-errors logfile for logging
+the stuff below Xorg.
+
+I'm running Debian Stable here - kernel 6.1.0-34-amd64, X.Org X Server
+1.21.1.7, KDE Plasma (5.27.5, frameworks 5.103.0, QT 5.15.8).
+
+Anyone else seeing this kind of behaviour - if so, what are you
+using?
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
