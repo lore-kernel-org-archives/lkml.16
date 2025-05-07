@@ -1,92 +1,300 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2074.outbound.protection.outlook.com [40.107.243.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0CF28A1E4;
-	Wed,  7 May 2025 13:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746625960; cv=none; b=mEpkIbkwR5AYaZgRbdmMLA9MoReQW50exCC07NNytZZySoWeSSsoYpF/9yXCGSEOr/xcJwGa79wDLEwEll7bOjmzCYMFMmc+4eJfi1OeO219YeTh5/mGogHwfr48vLojHP/k33mGJySuOLMPYl0LU29QN8o0lWsd1tNCEYx9BoM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746625960; c=relaxed/simple;
-	bh=FFX+dl/GhsusXaQJ5VK1uk9708RlbzuTFb6DU2mI0N4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kRwa78BrLzccqfBbLHrvbMuk4svBWZJeO//p2TSpVJY5WTtXPIO4/qRq3KNHZwh9iTnLhS7rgHCak8nypsYP3Fywjin9vO5Gbv3qlm2ttEGc/SuGT5YIvAJIt1o8qOURwdzBN92NPwjaVNKYj+IoDr+cFNhRtbBTgwWXYd5seYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aLlV+rCS; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF71828B417;
+	Wed,  7 May 2025 13:52:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746625968; cv=fail; b=bGymNGElzHmkgvHQy1L8iLrmE/PI21hcAgb+Az7pNNnASMgUPh3Dy2YCQy52cAY6g48YFM88ihwJtT977NcUpbYYdHy+JJ8CLu0cZXFQ75FzokrEUlUDhSQhAKpYYPH2sTdAJJfHj4t9H+E33oRZ+6d/obQcREe5TfTn1jcJDpY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746625968; c=relaxed/simple;
+	bh=Um+71arYxuQPvCYRfPV9DkuEbpQEYWUuYQEnNy2g0/0=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=R8hcr/sjL0o5DQXoOa4+z2SuWJ96GMgF7wShrQ0NiEGRMkt0GkP+HmyV0jsPGsWblYv9/aHQPF36eUeDq2UORszNQ0XHZ4sV/5Ldm8RSpEPCa+hs98v2nAtok6dCBq80qqqAxPnvyvz8qNrAnCcNIgE+/jtAMAlO3gBcQCdeH04=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=fa3KGcXL; arc=fail smtp.client-ip=40.107.243.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aLlV+rCS"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 547DqEwB828907
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 7 May 2025 08:52:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746625934;
-	bh=qjPNmdnxXBiIPY12FlXpuGsba5Ly/JzhgqEh19IK/qs=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=aLlV+rCS4UXbBRkkQGHsgQTtC8TBe08x9WPBgrBV7dGGYurJQ79bZtmlgY4nZDPn5
-	 rQyhSYA5xFwtBFO+XheQdWIysa51siZ0+ItsG1uwoUtyNB5Fk8UHDZUXH8k/sQv192
-	 AOmfc8HVi50LfduXmpxtKNcHQoeXVhUiI/pzg/xA=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 547DqEno009511
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 7 May 2025 08:52:14 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 7
- May 2025 08:52:13 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 7 May 2025 08:52:13 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 547DqDpr032312;
-	Wed, 7 May 2025 08:52:13 -0500
-Date: Wed, 7 May 2025 08:52:13 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Guillaume La Roque <glaroque@baylibre.com>
-CC: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-        Andrew Davis <afd@ti.com>, <vishalm@ti.com>,
-        <linux-omap@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: Kconfig.platforms: remove useless select for
- ARCH_K3
-Message-ID: <20250507135213.g6li6ufp3cosxoys@stinging>
-References: <20250504-kconfig-v1-1-ab0216f4fa98@baylibre.com>
- <20250505123615.yqzdv7dlel7kyojf@degrease>
- <fa33b7d6-8e28-40bc-9219-41dab643e88f@baylibre.com>
- <b1949ec7-a0b3-4c4c-a439-93afced7bb0c@baylibre.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="fa3KGcXL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UQWHKwEM98OCqkQzx7iU8Dsxu0Jt0R2akcuCYuXlBQLmrKCcn5eXvu8f3IixLqNoq6CNrb5tNf93RkJZelObWN1CQFLyXPQxpxaCiYXqQCYVQPwrDcEGSy6rIKD5AtjqNzlyFCqw7O4I547YLN5BiiX5Al1/ptqJ4yA0WRBPXZ3qBG+x0cXI9iT0FuCpmOwik+JrHJrBEITXf/7r64tYoFiiJGYuV2B7MSiQFpTtc2tWRTMRFXec3IUbW87sleN+D1LpjqvwfSACBGEoyCnEwCTHTv3SEjV+t3sESYs2XfsiFY2gnB1Jy8lEKoQt2F+SChYXAJTqr8ZdZgWNfUZF1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IDSo59IzNRWHur41WY3MmrutaWcQUB0WKDrFypUNdL0=;
+ b=DrSQ9WMaoU4y1hyrixxx54NicLQMb2B7Taf54Z+IuS6w/5gK8Q6ynQdabU/9yxXQxQBWibM/h0AgnYJaf2JFtvNdGTPFupPcghwNw+hHdvdXkt7YLKhIb6Yacwt6+SQXdgSmU9OpKEMHu3lUBwjetG+hiPP4C18Jtlo3Z/oVo90TDP8qAXA5qvMwvab34sY3TC/XUr2VLs5VzqTJuuObJTY9O5EKU5i/jX6VtRxXFuNkr2jk1tvaTgF1Xe1eN1wh1U3B0gJqBFudkSkAPGJ+hFl7H1MwzdZTjDQHg7DPhDZbYnQzz+REriurD7kT5worGrF5vdInL97hWRCFrbaJ1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IDSo59IzNRWHur41WY3MmrutaWcQUB0WKDrFypUNdL0=;
+ b=fa3KGcXLtaR1Un7qmZwUpMFg7pUVBBWYBgeQTgiPXD5YVT4GxPKyLuM0e/bhxo27xVnYYQxpxQQeOJHAZfg5PwvuTOmc4ERFIb3zJVvg9t9YG04QThEMqua6jvqtu1Bhihm+NBvatgL2m7jnktgretvhq0bXH/FRiLcSB8yYZX6wuQEkyDSJzbCgeYYQni1F7IQzdIFyzWw3nWS6x2SR2jphbD5x4RFU66B6YeT8m0powT/epK1u59IiljSXbbRDzSlBT+j7M/ezeMxIjpuWYdx7lzas898lbx0QpV6cZSsJMjJTvMts4ncAvd6LR/SfKcoEd6g0EfR1KP6i7WUhTg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by PH7PR12MB6761.namprd12.prod.outlook.com (2603:10b6:510:1ab::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 7 May
+ 2025 13:52:42 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8699.026; Wed, 7 May 2025
+ 13:52:42 +0000
+From: Alexandre Courbot <acourbot@nvidia.com>
+Subject: [PATCH v3 00/19] nova-core: run FWSEC-FRTS to perform first stage
+ of GSP initialization
+Date: Wed, 07 May 2025 22:52:27 +0900
+Message-Id: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJtlG2gC/1WNQQ6CMBBFr0K6tqadAk1deQ/jopRBZmHRFhsN4
+ e4WNBGX72fem4lFDISRHYqJBUwUafAZ1K5grrf+gpzazAwEVKKUmvshWd6FMXJTYwfG2AbBsXx
+ /C9jRc22dzh8OeH/k5Pgbe4rjEF7rvySX9ZsGsUknyQVH10rnLChTq6NP1JLdu+HKlkyCn1oJu
+ VUhq01ppdJSV0rpP3We5zcKeJ3x8wAAAA==
+X-Change-ID: 20250417-nova-frts-96ef299abe2c
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>, 
+ Joel Fernandes <joelagnelf@nvidia.com>, Timur Tabi <ttabi@nvidia.com>, 
+ Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org, 
+ rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
+ dri-devel@lists.freedesktop.org, Alexandre Courbot <acourbot@nvidia.com>, 
+ Shirish Baskaran <sbaskaran@nvidia.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: TYCP286CA0349.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:7c::18) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b1949ec7-a0b3-4c4c-a439-93afced7bb0c@baylibre.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|PH7PR12MB6761:EE_
+X-MS-Office365-Filtering-Correlation-Id: 581eef4c-f8ba-4797-e7b2-08dd8d6e6ffe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|10070799003|376014|7416014|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SXNjcHA4bk5QUGNZWXIzZk55QUQrM09wY1JyZ3ovYnR2Si85cUF1dVpGNHo0?=
+ =?utf-8?B?RkFaYUlwc0dFVnkySzhrOC8yT3ZRc2VMdUV1NVV2Z0lkNlFoS1R4TkVERm1t?=
+ =?utf-8?B?OWEvYTZ1aEhCY2lyRVhwOGdvRFJoQ01RaWdoZnpLaUNHVkY4UEJmSm1nWTM2?=
+ =?utf-8?B?TzhCSFY5VDdEVUFMQ0J6eE4zUE9rUEhGRFFoeWZhT2FTWW9tOU9idWNtdmYx?=
+ =?utf-8?B?USttYVRPaERRMndPNUlJN3BYU1ZCZ2pmZDlaMlFYQ3dzS1Y4TmJxa1BFZUhV?=
+ =?utf-8?B?ZDBnWmI5eForWHlvaXhET0JJeDNWUU01TGFJQVp4YUtGaDhITE5yZ3lHamhs?=
+ =?utf-8?B?aVA1c3Y5c3c0LzMzS3dWRHRvRk5PUmpTZk1WSHFsb1RxalZZTmRzVnVIaDZL?=
+ =?utf-8?B?dWlIU1ZTQjV2M2x4WmRCTTF2UlMrNWZPaldtbktoRDArZk5Ec2FObEc2TXo3?=
+ =?utf-8?B?aTI0WEN3dDgyOUxCMnVJcWxyRWpXNSs5N3NtUmtHdGdTT09LK1k3VG9IQ3Zo?=
+ =?utf-8?B?QWdYenNJRnNwTWNZYVpMbTJZSEJMRWtpbUhYMm9ydDlQQ3JJaXZWUDdLcnZU?=
+ =?utf-8?B?ZVoydHc1Mm5FMW9VQ2JCU3l2R1R1TkhTOTl1em5BcXpYN2l5WGlQNVRNRU1C?=
+ =?utf-8?B?dEJZZ0MzaG16WGJ5dTNPZXU5ZXczNVJYK0FocHFIMWhKWi9FamNUTXFLcW94?=
+ =?utf-8?B?TDI4alIxTEFFR0VwM3BTenJJc3UvYW1mRm01OUxaNitDUTBaQXNxWVBGNTcz?=
+ =?utf-8?B?TURFdDJTRzY3eU9vYUl4VWdJdTZqQ2pXNnhwK0FxalZGQXFtNUlCMmVZcVNv?=
+ =?utf-8?B?QkpEczdHbmhTRk1SV2c4SGFwS3lUZUFadWRqTnZidHQvd1JOSklKTitubE1U?=
+ =?utf-8?B?Tk0yQTRxN3YzWEtENnA2cGZmd2hOVWtSMk53WEIzelU2NlE3cmtXK2hDb01L?=
+ =?utf-8?B?QWlwckVrNGxEemFpTENmdFhJZjhVZk12dEYxTVVuNzU3RE4xUC96Qkp0ZDRp?=
+ =?utf-8?B?V3Zsa09NZ0JGc256TytSQk9KSHd0KzhhL0dTWlBLMjhpUzluQ2RudTBQSnQ0?=
+ =?utf-8?B?Qy80T3QySThJYk1XQnFwbmI3N2xVdEJnQUVGNjQ5MEg4N1RHOW0zajg2TUJw?=
+ =?utf-8?B?Z01LbW5WNUdLQncyTGpKamszU1g1YmZWV3piSTNWcmw5b1RYc21vQ28xbzlP?=
+ =?utf-8?B?dEZVZ2ZPNHV1NFJPTHhDZGF2b3AxRzRZelVwVDcxR2gxREpwREdpS3M5MGtl?=
+ =?utf-8?B?OXhOVVQ4RHhzTWlycUhidFdKRklVbUFUTTEvL1NXQnZtYzhzdk1tem5NMHJp?=
+ =?utf-8?B?WktkUHhQZStLckxtQVgvVk9HeFE5N0VKNU1iU21kdGFHcnJCbVhIZytCdjNG?=
+ =?utf-8?B?Y2pqajFzenYwQWdONDhmUUl4N1dwd3VJSGxRK0IwcXZpek85QWVOUFRmUGRQ?=
+ =?utf-8?B?ZzZrSFAzRURlM1Z5aFExdDJ2QkhMUFErWFQ4V2hvbkllSFJHUkdBcUlLRzYv?=
+ =?utf-8?B?cTF5bzdISHBZMnZuWHNUb3NPYk02elpPWEFjaEExVlpReStxNm41ZHBjSTE2?=
+ =?utf-8?B?cHZnRzVSVnY0b0R0aVZZOWdqR3FIVkpVUzR3TEFBZ0psRzZ1MDNFZkdyaDBN?=
+ =?utf-8?B?SGlsVGJ6akE1VkVlMGNRTEhnR2hKbXkvcGltZXU0Z1k5UFV6b1EvaitWODJV?=
+ =?utf-8?B?OVE1OTFySDZwWFM0aTI5eUNJVkdTcEZLa1JKR1Rnd3VGKzFtVTNmMFk3MW92?=
+ =?utf-8?B?NDVJVW0xU0VHclowWlJvR01EdGpHcTdPa1N0dVByS1dUYWJNcGtpclUxdzNH?=
+ =?utf-8?B?a0psVUV4MGJHaVp6NkovUnVHWDJMQVB1UkZra3I4RHFDZVJwaGpxSzY2NHNo?=
+ =?utf-8?B?ZDFpTVBrejF6TGFMQVZNaGtXeUV6RWRnR1Z5VnE3TGVkN0FFcXE3RFhuQ2tP?=
+ =?utf-8?B?NWF0ZjFmMFdhTjZwK2dHSkp4RjlNWjRQSFRUOVVKWUh1MHYxUjdDMmpoVCti?=
+ =?utf-8?Q?T3XKsw07K/SQ/DtQdsTPmaTcE4FlIA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(376014)(7416014)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MEV4a21iNUhodWxOTjRPampWVDFaK05CUXErUlBaS2NiL2ZkcjRkQXpnSjZY?=
+ =?utf-8?B?OEs5YnNncjJ0c2duWU5Ic1dZdWQ4dGV3MXE5bVVadktjbUxRR0F5UUZvZFRm?=
+ =?utf-8?B?aW9DakdXRlNDTDRYWTgva1JNd3pWcjIzZ25pTCtoNkx6elB4TmdERFBRTVBm?=
+ =?utf-8?B?dzJoU3ZxNGtIbXEyeHNjYUFPMnBHTEFZb0hENnA3d2lMWjhtdlNJeDJyVnl2?=
+ =?utf-8?B?dWlKNlhvL1ZCQW52QTQ5dWpSWVorbjYxbldHTGZlbzM3NHh1cE9MMFFkeVNs?=
+ =?utf-8?B?UE5yNlROWlQyQzFMaE5CbElLeG9YdUc5dzhYQVpCVFc5TVB6UVg5M0Zsclg1?=
+ =?utf-8?B?amtYOUd0SHRGemd0VWdPMHNPb2YvaTFSdjVMNnQ4b0w4dDl0bW1uV2t0SnJY?=
+ =?utf-8?B?V0RwWWxTMFl4Smh6bXY3RHhMbzJJY1pFRVBOTUl2cjZwZ2hRZm1VcUJoSERn?=
+ =?utf-8?B?OFV6VExyaUNHTGhjbit4Mlk5c2E5QVcxTlcwcW83NmlJWk1Nb2RaWGZXTmhv?=
+ =?utf-8?B?c2EyaS9QN3plOHFJQTgwWFZ0T3pPUlZPbCtaQXRvVG4wbEhmUkozK29TV1Nj?=
+ =?utf-8?B?bklQSmhicXZtYktLWWpwaWgzeU9pVlFrZWFYMEswMS9BcEdzTmpGNk5ibWho?=
+ =?utf-8?B?elUzU1pqbmY1cmZVcm5tTnNMc0RUbm96ZFoyQm5MSkV5T1JaNHBxSTk5Ty9Y?=
+ =?utf-8?B?anIxN0NuK3V1L1RQeWZGc0xMVG1UWXNtOTJvdUxybnhrSzZkSlhFeHdpRnd3?=
+ =?utf-8?B?WHFzbnVsbXp1WkJNS3BsNjJLb2F4WUdBZFlGWDJRTmFERDlFREVuR0Z0RUg1?=
+ =?utf-8?B?WGhDL1Zic01KVEQ2VWNpMkQxd2xCK3k0cXA4T1ZDdUE4ZFR3bW5mSElZblIw?=
+ =?utf-8?B?N282aVVqUXZ6VTVZVGlEYVpGbExmS1ZSV3k0Z2pUZm83UzJDRmdZSXpuYkZ6?=
+ =?utf-8?B?ckdsaHdMUFZYNEthZGF6SkpQNWxjdGJ6Y1k2ZzZvbk4ySmphZzltdWNqT0hk?=
+ =?utf-8?B?SlRObW91cCticVJCK2Q3RkxkQTVyYUZQNlN3RG1rVDd5V2h4SjN6NW42a3hB?=
+ =?utf-8?B?c3JSUU0vOFJJcXZya2lLYzU2ME93OVRQTFZMZFJIKzNqOSsxQ3hYQmlLRVhn?=
+ =?utf-8?B?NlZmVlo3TldrbllqbnN1L1lXTDduREVyMjN0emd0SEMvc2phaCs4dUhOa3Zr?=
+ =?utf-8?B?ZkFHR3lRMVNFQi93dDVSVDFNM0FLRmNzeWVXZ0V3TmJ1YlNDOXMrczhJRm9C?=
+ =?utf-8?B?blpML3ZRZW9Pc0xSc0lreGhPR2MzU0F6bWpoOFBVSGNXSzY2NWpxbVkxeEdn?=
+ =?utf-8?B?QzJxWUIzM2wzL3JQS0dNZkhiT0RQQ0dPRitlY1ZGeVRLUWhSSDJKOHZ2ME9L?=
+ =?utf-8?B?cWEvdFRDMW01WG9QNnphTW9CYjNaeUJKRnQ1QjF1WjBNaG5rMWFSZ24vWGxU?=
+ =?utf-8?B?OWhFOW03TGlGSi9aY0hKS2J4OVVUTGIwTzdoWjZZZDh1aHlYM3QwTjQ0SlNY?=
+ =?utf-8?B?Mks0Y2ZYNWMxYUgrbHZkM0kwNlhCSCtHTGVQd3I2ZThoR1ZiSjVMR0dHUUxi?=
+ =?utf-8?B?VWJSVlhJMEx0YXY2dlVXYVBtS1RRUWdRUnY4TjNKZ1NTK0Rvbk9iaG1jRHN3?=
+ =?utf-8?B?MUtwdHpoclU3MTdzOHhQV2x2RXVuZjBNcCtuTDcwVUVVdVFhSlpRTGRwYVpr?=
+ =?utf-8?B?aWhDZDBCWkNRcGwxSU9TZ2M3TDZ4akVnNzN2QmFKSS9YV1NxYmo2TjNKWHpR?=
+ =?utf-8?B?dk9CVk5SQ29HR0FpY2xuenJ1WC8raE5sNmo2bExiRjFuREF0bVN0cE85YmxT?=
+ =?utf-8?B?VVI2Y2lkaFVEaVAyM09QRWt4eFkxTklGM2Q3V3ZzS3ltTVBkajR3ZzdwMEpu?=
+ =?utf-8?B?MDN6N09BZEZqcDhmbDFwZkJvYURQUCtEaHJHZG9ZQURJTVJzZGh3ZDRlZDU4?=
+ =?utf-8?B?UFNpaGpiQjF3T3hoNEFJNWVwM0xzZkQ0elJBbGVhMlA4LzcwQmdxUzJuK3ZK?=
+ =?utf-8?B?dE5iVnNvT2xmNHlqeEVvMGhQbTl4R01rUVMvTmJkVTIxckVydnIwTkg3Qk9m?=
+ =?utf-8?B?amRBTnU4UW12R2NRNWd1c3FrcDF0a243enJIcWJwT2lxU3JvR0JCaGxnVkNW?=
+ =?utf-8?B?Lzl2YWV2TnhFS0R0YmR5cmVpU01SMmRUTjRoVjgzWFFVSnVvWVJiQ2o0ZkVW?=
+ =?utf-8?Q?hxt5ejN0T1+W1eVC4B7m7kqQEsupN5CaPFtUuIl9Ibfd?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 581eef4c-f8ba-4797-e7b2-08dd8d6e6ffe
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 13:52:42.4182
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6eakS7rggWMPZBw+wJcBzUsS7h6ZkOdZbaG2CPFuIP9nk6+xlC4MFWb+Gs/xFGbH0qfSBk2FcMAN7CPomHNyaw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6761
 
-On 15:28-20250507, Guillaume La Roque wrote:
-> Hi Nishanth,
-> 
-> if i remove MAILBOX it's  enabled by some  non TI drivers and/or ARCH_XXX
-> which have it in deps so all TI drivers are still enabled properly but not
-> sure it's safe.
-> and PM_GENERIC_DOMAINS look OK to remove it.
-> 
-> if i try a defconfig based on android defconfig (more simple than default
-> defconfig) with only ARCH_K3 enabled i need to set CONFIG_MAILBOX flag to
-> still have same TI drivers enabled.
-> let me know what you want to do.
+Hi everyone,
 
+I have respinned this series due to the introduction of
+`Devres::access()` in nova-next - this addition seriously simplifies the
+way we access the BAR and justifies sending a new version, although
+there are also more minor changes.
 
-Let us drop both from the select statement - from our K3 perspective
-there is no longer a need for them to be built-in. Thank you for working
-through this.
+While this series is still far from bringing the GPU into a state where
+it can do anything useful, it sets up the basic layout of the driver
+upon which we can build in order to continue with the next steps of GSP
+booting, as well as supporting more chipsets.
 
+Upon successful probe, the driver will display the range of the WPR2
+region constructed by FWSEC-FRTS:
+
+  [   95.436000] NovaCore 0000:01:00.0: WPR2: 0xffc00000-0xffce0000
+  [   95.436002] NovaCore 0000:01:00.0: GPU instance built
+
+This code is based on nova-next.
+
+There are bits of documentation still missing, these are addressed by
+Joel in his own documentation patch series [1]. I'll also double-check
+and send follow-up patches if anything is still missing after that.
+
+I have also tried to look at ways to split the patch adding falcon
+support, but couldn't find any that would not be awkward. Starting
+review from `falcon.rs` and going down to the HAL should be the logical
+order for a smooth review.
+
+[1] https://lore.kernel.org/rust-for-linux/20250503040802.1411285-1-joelagnelf@nvidia.com/
+
+Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+---
+Changes in v3:
+- Rebased on top of latest nova-next.
+- Use the new Devres::access() and remove the now unneeded with_bar!()
+  macro.
+- Dropped `rust: devres: allow to borrow a reference to the resource's
+  Device` as it is not needed anymore.
+- Fixed more erroneous uses of `ERANGE` error.
+- Optimized alignment computations of the FB layout a bit.
+- Link to v2: https://lore.kernel.org/r/20250501-nova-frts-v2-0-b4a137175337@nvidia.com
+
+Changes in v2:
+- Rebased on latest nova-next.
+- Fixed all clippy warnings.
+- Added `count` and `size` methods to `CoherentAllocation`.
+- Added method to obtain a reference to the `Device` from a `Devres`
+  (this is super convenient).
+- Split `DmaObject` into its own patch and added `Deref` implementation.
+- Squashed field names from [3] into "extract FWSEC from BIOS".
+- Fixed erroneous use of `ERANGE` error.
+- Reworked `register!()` macro towards a more intuitive syntax, moved
+  its helper macros into internal rules to avoid polluting the macro
+  namespace.
+- Renamed all registers to capital snake case to better match OpenRM.
+- Removed declarations for registers that are not used yet.
+- Added more documentation for items not covered by Joel's documentation
+  patches.
+- Removed timer device and replaced it with a helper function using
+  `Ktime`. This also made [4] unneeded so it is dropped.
+- Unregister the sysmem flush page upon device destruction.
+- ... probably more that I forgot. >_<
+- Link to v1: https://lore.kernel.org/r/20250420-nova-frts-v1-0-ecd1cca23963@nvidia.com
+
+[3] https://lore.kernel.org/all/20250423225405.139613-6-joelagnelf@nvidia.com/
+[4] https://lore.kernel.org/lkml/20250420-nova-frts-v1-1-ecd1cca23963@nvidia.com/
+
+---
+Alexandre Courbot (17):
+      rust: dma: expose the count and size of CoherentAllocation
+      gpu: nova-core: derive useful traits for Chipset
+      gpu: nova-core: add missing GA100 definition
+      gpu: nova-core: take bound device in Gpu::new
+      gpu: nova-core: define registers layout using helper macro
+      gpu: nova-core: fix layout of NV_PMC_BOOT_0
+      gpu: nova-core: move Firmware to firmware module
+      rust: make ETIMEDOUT error available
+      gpu: nova-core: wait for GFW_BOOT completion
+      gpu: nova-core: add DMA object struct
+      gpu: nova-core: register sysmem flush page
+      gpu: nova-core: add helper function to wait on condition
+      gpu: nova-core: add falcon register definitions and base code
+      gpu: nova-core: firmware: add ucode descriptor used by FWSEC-FRTS
+      gpu: nova-core: compute layout of the FRTS region
+      gpu: nova-core: extract FWSEC from BIOS and patch it to run FWSEC-FRTS
+      gpu: nova-core: load and run FWSEC-FRTS
+
+Joel Fernandes (2):
+      rust: num: Add an upward alignment helper for usize
+      nova-core: Add support for VBIOS ucode extraction for boot
+
+ Documentation/gpu/nova/core/todo.rst      |    6 +
+ drivers/gpu/nova-core/devinit.rs          |   38 +
+ drivers/gpu/nova-core/dma.rs              |   57 ++
+ drivers/gpu/nova-core/driver.rs           |    2 +-
+ drivers/gpu/nova-core/falcon.rs           |  537 ++++++++++++++
+ drivers/gpu/nova-core/falcon/gsp.rs       |   22 +
+ drivers/gpu/nova-core/falcon/hal.rs       |   56 ++
+ drivers/gpu/nova-core/falcon/hal/ga102.rs |  120 +++
+ drivers/gpu/nova-core/falcon/sec2.rs      |    8 +
+ drivers/gpu/nova-core/firmware.rs         |  105 ++-
+ drivers/gpu/nova-core/firmware/fwsec.rs   |  359 +++++++++
+ drivers/gpu/nova-core/gpu.rs              |  223 ++++--
+ drivers/gpu/nova-core/gsp.rs              |    3 +
+ drivers/gpu/nova-core/gsp/fb.rs           |  108 +++
+ drivers/gpu/nova-core/nova_core.rs        |    5 +
+ drivers/gpu/nova-core/regs.rs             |  259 +++++--
+ drivers/gpu/nova-core/regs/macros.rs      |  380 ++++++++++
+ drivers/gpu/nova-core/util.rs             |   29 +
+ drivers/gpu/nova-core/vbios.rs            | 1144 +++++++++++++++++++++++++++++
+ rust/kernel/dma.rs                        |   14 +
+ rust/kernel/error.rs                      |    1 +
+ rust/kernel/lib.rs                        |    1 +
+ rust/kernel/num.rs                        |   44 ++
+ 23 files changed, 3427 insertions(+), 94 deletions(-)
+---
+base-commit: b75a99e1077b12c5631fef7ac36970a89f6021f7
+change-id: 20250417-nova-frts-96ef299abe2c
+
+Best regards,
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+Alexandre Courbot <acourbot@nvidia.com>
+
