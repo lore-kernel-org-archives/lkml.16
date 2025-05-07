@@ -1,50 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5063F28C2A6;
-	Wed,  7 May 2025 16:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E216828A419;
+	Wed,  7 May 2025 16:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746635490; cv=none; b=tnC70eT0UKMZHoxsFYk0OqFCTiiS3BRRlEpa2Iru9qoORGc+bEGs1Cu/h9Fr6ZdyzAt1As/40ryOKmYZDvsdRpO0owqAnA396QWdu8iJVh6TZF0nCu+Jgr55/vxS0kqM5IEwl1Zs8lnoBUPl5N0Plwy4+/QVvsNLlETGx60EOP0=
+	t=1746635509; cv=none; b=XU6366Bqqo98WbQBk7ILsHy6bImBrg7lP8e55CNLfgLNi3Vowo/nO6fBs+GjtUM15AYgTY8QTUFMQiquSYKmyb0qdpa0Y5fV6q6Vu+VHKF0fV7PTsI/iIiNuZ3YNp7+oLZSSiDH2OmzQNXsvyAbnVVd8OlxX9br2vQLo3ZGcIgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746635490; c=relaxed/simple;
-	bh=kI07jhygPEF3cA5Ef6FeyQHLic0l3rHSGi2QY3xRrek=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KIOGL0D5W93P/+ISLMkiZOHwiywABDNfAku+ZEGPHNmaUUIHLdxxr3nhEzvhTU07GGauJYDCcQXE2t8Sa5t1VV5tNDU7uZwZuB7GXzbQDtkQLAui/cd525y8b5E0yxpOdcCb8EOmjDES+Wd1jTQMBkktlEZDy5W4DTTFKyOB/j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rw6boklE; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746635509; c=relaxed/simple;
+	bh=J7zUAtlGwiwO/WIy81WUiaijUl2DgI8V4ukSV13GD4U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Xb5X5u0jmHPVNhfZxgzDBT/7G0YREg0vATtx+4/n2r24UqCujqk4UjHsd1FiCWFJf/9LBYlB0Pto2258wC0ZsZoPCqZFq6m8Q0K/aMBhe0av92MqZAK4TDVR7PQ+7QPD7/Drs7FRpHbLPHCKJEhxZ4qWYCk1gZP/FBWuZqxjPFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=helrUNnD; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rw6boklE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746635489; x=1778171489;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=kI07jhygPEF3cA5Ef6FeyQHLic0l3rHSGi2QY3xRrek=;
-  b=Rw6boklEMPXhPSRzOY2DQyv+0+yxTZcyst3suj9zifJQZhjPHMg9T5lZ
-   NpIZK3YgLoOjPortPJTLwYlfOLXRhVT7OCCN8LrbgECrxcfu//d0HOm5t
-   a7VpHZsxJs2wVhQGjGNuYVs92abNe+3wM2QYyRU6GqXiYdl18/pQrH08y
-   lmWLcmYUhN9sWd1YpM+dPndHTnf9bsmVyEEJAiZoxB3cLqFh5l0PGA0A/
-   wPONMVgW4daDNgFY7h0jgaEnxcurG/GPefzSfASJy+70hT6FKDzX5tfna
-   nR4kNfyV/BUFkeK7z6c8Vt4pZ1a88xfPuKWE7vwJiV/NUw9MWGefQvKsH
-   w==;
-X-CSE-ConnectionGUID: GViu6ml2TvWDz1mw6+lvJg==
-X-CSE-MsgGUID: 2q2rwL9pSWSB2+oBTdoSuw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48537014"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="48537014"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 09:31:26 -0700
-X-CSE-ConnectionGUID: SFzmCAJVSYW+77whoDEDOA==
-X-CSE-MsgGUID: Q3BU1n1UT6G7LyUKm8xK6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="141132112"
-Received: from tfalcon-desk.amr.corp.intel.com (HELO [10.124.222.63]) ([10.124.222.63])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 09:31:25 -0700
-Message-ID: <4bb2119a-ff6d-42b6-acf4-86d87b0e9939@intel.com>
-Date: Wed, 7 May 2025 09:31:22 -0700
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="helrUNnD"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 547GVSR21426205
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 7 May 2025 11:31:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746635488;
+	bh=T5HdIX4Eagvu+H1MhZGppYcNn1F0MPYiO0LJscqQoS0=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=helrUNnDcX8ZBFLiV/JattiHtRMgbRJucIJHH0ZMZNfxWLQRe0zEf1ENwnqpwWI+1
+	 IadWicWNHSemEtS0lmE6D2WY53XePKp6AZPsvfzyXTPQLJLWpE1HmqeceI4l3a5zCt
+	 3jVbkTxutRUhSp9iPOAPbkSKh64t2HXrgZh/3M78=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 547GVSEG052668
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 7 May 2025 11:31:28 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 7
+ May 2025 11:31:27 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 7 May 2025 11:31:27 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 547GVRia102625;
+	Wed, 7 May 2025 11:31:27 -0500
+Message-ID: <ba88a5c0-a8b8-4e48-9752-76881fa8e94e@ti.com>
+Date: Wed, 7 May 2025 11:31:27 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,97 +51,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC, PATCH 05/12] KVM: TDX: Add tdx_pamt_get()/put() helpers
-To: "Huang, Kai" <kai.huang@intel.com>,
- "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "seanjc@google.com" <seanjc@google.com>
-Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
- "Zhao, Yan Y" <yan.y.zhao@intel.com>, "tglx@linutronix.de"
- <tglx@linutronix.de>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
- "Yamahata, Isaku" <isaku.yamahata@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
- <20250502130828.4071412-6-kirill.shutemov@linux.intel.com>
- <55c1c173bfb13d897eaaabcc04f38d010608a7e3.camel@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH RFC 0/2] Introduce PRU UART driver
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kevin Hilman
+	<khilman@baylibre.com>,
+        Jiri Slaby <jirislaby@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, Hari Nagalla
+	<hnagalla@ti.com>
+References: <20250501003113.1609342-1-jm@ti.com>
+ <aBSSpsT_7UsqN6bl@smile.fi.intel.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <55c1c173bfb13d897eaaabcc04f38d010608a7e3.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <aBSSpsT_7UsqN6bl@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 5/5/25 05:44, Huang, Kai wrote:
->> +static int tdx_pamt_add(atomic_t *pamt_refcount, unsigned long hpa,
->> +			struct list_head *pamt_pages)
->> +{
->> +	u64 err;
->> +
->> +	hpa = ALIGN_DOWN(hpa, SZ_2M);
->> +
->> +	spin_lock(&pamt_lock);
-> Just curious, Can the lock be per-2M-range?
+Hi Andy,
 
-Folks, please keep it simple.
+On 5/2/25 4:38 AM, Andy Shevchenko wrote:
+> On Wed, Apr 30, 2025 at 07:31:11PM -0500, Judith Mendez wrote:
+>> This patch series is sent as an RFC to get some initial comments
+>> on the PRU UART driver.
+>>
+>> The ICSSM modules on am64x SoC and the PRUSS module on am62 SoC or am335x
+>> SoCs have a UART sub-module. This patch series introduces the driver and the
+>> corresponding binding documentation for this sub-module.
+>>
+>> The DTS patches for adding PRU nodes and enabling PRU UART will be added
+>> in a later v1 version of the series if accepted.
+>>
+>> This driver has been previously tested on the following boards:
+>> am64x SK, am62x SK, and am335x SK boards.
+> 
+> The first and main question here: Have you checked the existing zillion of
+> drivers and become with an idea that none of them not even close to this one
+> (based on RTL)?
+> 
 
-If there's lock contention on this, we'll fix the lock contention, or
-hash the physical address into a fixed number of locks. But having it be
-per-2M-range sounds awful. Then you have to size it, and allocate it and
-then resize it if there's ever hotplug, etc...
+Thanks for reviewing.
 
-Kirill, could you put together some kind of torture test for this,
-please? I would imagine a workload which is sitting in a loop setting up
-and tearing down VMs on a bunch of CPUs would do it.
+I have looked through the drivers in tty/serial/8250 and I believe there
+are no drivers we could leverage, especially since this driver has a
+dependency on the PRU drivers for clock and power. This PORT_16550A UART
+is in PRU module which is specific to TI, so besides simplifying the
+driver a bit further, I don't think we can use another driver.
 
-That ^ would be the worst possible case, I think. If you don't see lock
-contention there, you'll hopefully never see it on real systems.
+~ Judith
 
-I *suspect* that real systems will get bottlenecked somewhere in the
-page conversion process rather than on this lock. But it should be a
-pretty simple experiment to run.
+
+
