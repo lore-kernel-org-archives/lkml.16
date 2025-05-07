@@ -1,115 +1,114 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC74D2144CD;
-	Wed,  7 May 2025 15:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455CF289358
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746631287; cv=none; b=e0K6i3YI5yS+CDaeXuZgdOr6qMafXVa/+23NBnhViCX6Qs1rPawfMc7dD/H5NIJSDwuQyG0OVGtm3TvfBCQDsXPMOdOtdoQ7KU6fE3Re7OAx73mMHUhOiceA5BXX8aENgBKP6BppZZSaHKc8dT3XzyJsSbq9xvJ0PnWavszkYgs=
+	t=1746631304; cv=none; b=q/LbhUSCBrgE+szflHNFbKebgE6omTfefemJEkWVvJpeH6Mj4RnIqWF1bA7KNoMyFsG1UnR/PBlxQBGOV1N+AK1aP/yrgrcPAbr/1W9swC0LjFNw4QDwicK6/SsqtZpvxVGUhCzpXOpb8e1KDg3nVFHdP50yHS3MmAteQVBH23I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746631287; c=relaxed/simple;
-	bh=Rp2RWQ2SmfrP/wcKdEEy5VWXzW6C7wbaPad+wRFEvEc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ePzaBfMnXuFjXYGWqYbpPEFJYfhHbnNON0F4KFdxtKZ/tlj0Qs806v770gTyLhXcW8g7c5DwBf3exzzeMOZX7pPrWViSUQKytnPeje7+upX1hAQqOeUei5KroBssq9leuMtbMGp/VGCPBtFeuyH5dOG2P8aHI6W67spOTS1Pj68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S03gyzyH; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1746631304; c=relaxed/simple;
+	bh=RuPcJ8+62ptByxwSA6xBoV3f01Qkg9O1ik7rkHELBAs=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e4g2TgjS3aLLK5gJPGKWVsIoaoZiSUjuD+OTw7XXOo34pgA3Q6EFmu9fva2t1v8gtTj1r1Mmdp7CZ3JeilSWApu1ccy+0Poo9L5Kl3doNslwtLVVb1GL5m7bN0KGSz1A/NNWMbo2fNRdtBP7yDVaIU8xy3rY94E0UfPVfXc20js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YiUeXFmf; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S03gyzyH"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22423adf751so80062275ad.2;
-        Wed, 07 May 2025 08:21:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YiUeXFmf"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54d6f93316dso6064482e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 08:21:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746631285; x=1747236085; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FHYXpGSD8xf0POifLdqzvkcg78XfISduLF2AQceCFVg=;
-        b=S03gyzyHAop54EyMzDzN/4TznHBg6eXllPGcydI2FEHRIu8/UIrAAj1CyaeIwRnhZr
-         4JXE8PKQD6hNlmYBNppGb/qefv7KNuR4VCDx64y5Aef5XXqr1Ev39diFUX/m/Slrlo9L
-         iumhfTni1ckZeJfoxqs4s0OT5lFLTkq4iM0WvtZNGcP5HZk95QrdFYlXtYrz3SCyJzU6
-         eItJHXfGpiJ+LqwIZmU/SAbarDgok28jcafN8Sh5aTi6LInVm19nJNrd+yKijzeGK4zn
-         XU7jAjaUCgJWOJifr1hCmaAxGUcksBUdV26OzpUSj3UqQo9yL6vIxVj4gOfqUXtpHlSR
-         02SA==
+        d=gmail.com; s=20230601; t=1746631301; x=1747236101; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JcZMQJ48a23nsqfPl8Za/rHO4yb4Vx62XUCuYrapSzE=;
+        b=YiUeXFmfxqOUQmt+vKxNHfLj7vbBkfnYS1iZTzirfCptki37t048iH75vvTwi2sJua
+         6uQTcEB2kGqsyDbJA/EI4O48q3XZzO88CIKHum3XBbuZJLKBdco6qZmpFIc1T+FrIasp
+         CiNC82YdFla4lJxqCM/fSwmHYtQb3Y3JhrGWOnxYBb5/lGsmMbVGuHc7tVfRxyspDc/N
+         RinJzDdchBNgpJ+Lkt05lGuI/YpXpXR7y9L261PXU3cRN4hv36LS+fPH7yjE61RD517F
+         /xXbhAS53fuNZXuYKS5cQni6us0fEv8zbHwIVAF5SnLlUdT4JTMKpFBWocbt3BF3Ymgr
+         1kOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746631285; x=1747236085;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FHYXpGSD8xf0POifLdqzvkcg78XfISduLF2AQceCFVg=;
-        b=eMusnHs6NpcQYmzn9xwaBRJmRvjtGfYNDBCitK19pI8jgBU3TlySajDHeWU9ARO1vH
-         wjWI5rOVVA6P0wnovHwNYrmLh4IjMOyo5+8d6MadmJPcXUWHFMSF5viK7s6cKL/kdSAN
-         rsYHKG6X7iyr0OCarmYWzvSC5mvQQ1JHxzvw5AH69aRQtlQnUGacDsWVQ6jPSWq7fi5Q
-         p+G+kuYiI4lraFALsHhbCU6idRIuXg9UFUOBaEIZRKRG9JBuRhyhxsDSudwUsT23Gb0u
-         OUVqj4DPB8i1Zc36D39clY5WG95K72iDexCI52vnbdjGYSj0l6OGwEmWXHwo9jxNXdSR
-         ztPw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0kAWsLGFFiBQ8mxPgXiom4TiUf1hBaGCJx0oMaapatHzy8xEubswOM0gEeV9IrHaIOy0AJvjww9e7REE=@vger.kernel.org, AJvYcCWxCi01+2Ty6TgjbCGZe4VIyPMLMIbRpueRumP4/lQBrlrsXBIoef75Zjp4EY5v6r8XJzThke9M@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd7g6SDcnmixPsKyC++U7ysITcMQsvss8rrpYGdHKPhkW1/jF1
-	fmeMur1hTzpftro7fjf9xFCY61EVkWGhMUwITVU6/ziAra4n+fHD
-X-Gm-Gg: ASbGncsOWtezl7+IXr+LGX1z5db/OQDzf4b6AHIaIBGkMdE8n73e85cwIYFbtKExXqo
-	tkuTiFFgkeYV/h2QvHzNvys3uSyRnIGeYR0tQAAQYdtVVF7Zqt44QbN/sQR/vD3CBbUE8iZFCrL
-	lmvwdvqCu0RHIa+0cZ/suD2sF+xVOtW+tE5KxKdqUga+sSb006Lu3KyZf8qP2+74wQC9WjSFPpM
-	Ne2bdj8oOR6OeLjI5mfiRD7vygqUfyr5OQCObMG9JSY7ZsmOntVZ9VLohxFQK3MouuE7u8+OaY/
-	AGm0t8n0zw5dczZXv75CPvPyu72D/s6lIUxy/Y2ZnoANFP2eO7DDzw==
-X-Google-Smtp-Source: AGHT+IHFUiFNkkCbXkCtoDYGospKz+U/fHm+dGtocIkZN5tVhCqe60E9zpNrlEWkcod4loYukr8TJQ==
-X-Received: by 2002:a17:903:198d:b0:224:24d3:60f4 with SMTP id d9443c01a7336-22e5ea792a6mr49831435ad.15.1746631284997;
-        Wed, 07 May 2025 08:21:24 -0700 (PDT)
-Received: from localhost.localdomain ([49.37.223.8])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-22e15228f62sm94771405ad.168.2025.05.07.08.21.19
+        d=1e100.net; s=20230601; t=1746631301; x=1747236101;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JcZMQJ48a23nsqfPl8Za/rHO4yb4Vx62XUCuYrapSzE=;
+        b=UpFqTtHOmINaF35VB13CHx8s5wTvnuvSXpCoLMhgP7dIQL6SR2D6wIsZtM+xcKsetT
+         aqLF0W7j1oaItGxa7paklVHNDukDMyJAz3Y2Aem8DqE2e5UT4oQiAZABYRxfVsvPDnIW
+         Z4YOkOp6N24r3WnVSSV8JRbzeFi9Amh7IzkTZPus2AsCP4vnj45zO6UExn1bffLbknlt
+         PgMTv4FRDNqKdo8zXh+qEoEPNhnmvOQxpHFHfh3Gezyalney+f1gUcA+71R2UQZPokjc
+         j7l6f7QhoUTnOezXg3Uq2mMXlF6qpLq1XDngtm1aHY7cASCDN5CjtKKy9DpOdyYSb/OF
+         1iIg==
+X-Forwarded-Encrypted: i=1; AJvYcCWwIyqu3eU4BFMRcSiEFtcxChQRQ+JWSir1EjuQIF7mv+HQ6zPTAe3GsjtR8z534yghVplhG7dewXQjrGc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqdbwzbdvoLrRBTdi8BNxcIwqAZjed9kq94FZmZ11Dhpiuk+cD
+	2s5b0XxnrulqeIKpxJmfWF+vQO4oV/B7RAGGMaGRF0JcTOIlyVs9
+X-Gm-Gg: ASbGncspD0WtNPCiHgz7fEErCLKPOsnccfglxsDD0F58ZnOhU+jBDaAO/AOuxc2U5dc
+	3u6kEbK7QR/f5lats29RWFArd9FNZrHASrySg41oXeXDCe6gFOeKft8G1Z/4dtnmmXnCgBBQGww
+	2Z5GgoMeDrkLMvOCqFCgxwrG7XWj+ahl55mhFHLvcbjYTUha3f1O9Ebk81hMqt/EYiDkcJzucHK
+	Zuk8HH/j7ZnSvQA6RUOp9TZTepyzc5QNey9NBWr79hjdLoo7q8KD8Q8BNsKE3QZTJEmlRLizb8s
+	6100V2A3TOZ/TqGMN8nQIBNsGUndEJc1LMULGm0ishnZEf92aIgErxil5TonzW+ADb2M
+X-Google-Smtp-Source: AGHT+IFIiwjt+MQcUgajEsNcryZQeg3qsqttcn7ZD4pDU3U+fVtIhwgynkxBDXgoThIF40pJQUonZQ==
+X-Received: by 2002:a05:6512:1245:b0:54b:1055:f4c3 with SMTP id 2adb3069b0e04-54fb928b30dmr1406759e87.11.1746631301195;
+        Wed, 07 May 2025 08:21:41 -0700 (PDT)
+Received: from pc636 (host-95-203-26-253.mobileonline.telia.com. [95.203.26.253])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94f2043sm2342432e87.179.2025.05.07.08.21.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 08:21:24 -0700 (PDT)
-From: Abdun Nihaal <abdun.nihaal@gmail.com>
-To: shshaikh@marvell.com
-Cc: Abdun Nihaal <abdun.nihaal@gmail.com>,
-	manishc@marvell.com,
-	GR-Linux-NIC-Dev@marvell.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	rajesh.borundia@qlogic.com,
-	sucheta.chakraborty@qlogic.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net] qlcnic: fix memory leak in qlcnic_sriov_channel_cfg_cmd()
-Date: Wed,  7 May 2025 20:51:00 +0530
-Message-ID: <20250507152102.53783-1-abdun.nihaal@gmail.com>
-X-Mailer: git-send-email 2.47.2
+        Wed, 07 May 2025 08:21:40 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Wed, 7 May 2025 17:21:38 +0200
+To: David Hildenbrand <david@redhat.com>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Baoquan He <bhe@redhat.com>, Christoph Hellwig <hch@infradead.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH] MAINTAINERS: Add myself as vmalloc co-maintainer
+Message-ID: <aBt6giHddIxL5VtW@pc636>
+References: <20250507150257.61485-1-urezki@gmail.com>
+ <1d9ad008-6bcb-4ded-8e9a-0af0fd68ea2f@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1d9ad008-6bcb-4ded-8e9a-0af0fd68ea2f@redhat.com>
 
-In one of the error paths in qlcnic_sriov_channel_cfg_cmd(), the memory
-allocated in qlcnic_sriov_alloc_bc_mbx_args() for mailbox arguments is
-not freed. Fix that by jumping to the error path that frees them, by
-calling qlcnic_free_mbx_args().
+On Wed, May 07, 2025 at 05:04:42PM +0200, David Hildenbrand wrote:
+> On 07.05.25 17:02, Uladzislau Rezki (Sony) wrote:
+> > I have been working on the vmalloc code for several years,
+> > contributing to improvements and fixes. Add myself as
+> > co-maintainer ("M") alongside Andrew Morton.
+> > 
+> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > ---
+> >   MAINTAINERS | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index b2c3be5f61314..0aa8db9d0fb52 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -25983,7 +25983,7 @@ F:	tools/testing/vsock/
+> >   VMALLOC
+> >   M:	Andrew Morton <akpm@linux-foundation.org>
+> > -R:	Uladzislau Rezki <urezki@gmail.com>
+> > +M:	Uladzislau Rezki <urezki@gmail.com>
+> >   L:	linux-mm@kvack.org
+> >   S:	Maintained
+> >   W:	http://www.linux-mm.org
+> 
+> Thanks!
+> 
+> Acked-by: David Hildenbrand <david@redhat.com>
+> 
+Thank you!
 
-Fixes: f197a7aa6288 ("qlcnic: VF-PF communication channel implementation")
-Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
----
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c
-index 28d24d59efb8..d57b976b9040 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c
-@@ -1484,8 +1484,11 @@ static int qlcnic_sriov_channel_cfg_cmd(struct qlcnic_adapter *adapter, u8 cmd_o
- 	}
- 
- 	cmd_op = (cmd.rsp.arg[0] & 0xff);
--	if (cmd.rsp.arg[0] >> 25 == 2)
--		return 2;
-+	if (cmd.rsp.arg[0] >> 25 == 2) {
-+		ret = 2;
-+		goto out;
-+	}
-+
- 	if (cmd_op == QLCNIC_BC_CMD_CHANNEL_INIT)
- 		set_bit(QLC_BC_VF_STATE, &vf->state);
- 	else
--- 
-2.47.2
-
+--
+Uladzislau Rezki
