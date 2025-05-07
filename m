@@ -1,64 +1,112 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7420F25DCFE
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388FF258CC1
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746619571; cv=none; b=p024Heqir6MMYQg/LiiWxhqT+R6SzdH1VPZwu7HYxqhMBhjqRO2kl2uj+esk46zLFAxjCE9ycWxqv2wLqidTa9BaIlNSvfDbl6Jcns0jCApD5AevcaGaknlPvOCh270vIJfmtU7zUTiAA5lkK6T9aFNxRWts+Yx05orbKmXZVZg=
+	t=1746619600; cv=none; b=PE1sa12lhLKtr24hrqug8zqZND0Pr3ufGprUmWcROXXtd8x7jTEJ0eZF7nDKD+0shxihBu8Qo8GkrF7TMqbmbKq02mt6ZUAqd0FWwmq4cPRPrnKwfW1oTvLG9EZ/bCFUudPnFZjHL4r552ADE1MYVbkSCHp1G2JyDpZ8tR/pGLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746619571; c=relaxed/simple;
-	bh=5PYQq9flUB/B85ax7GJ6DVCpLppA6FUrBFrM0euAV0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yjq1CoWbdUJMavu4qvWdKTyOqp0ACyNKWDQeatQYYgjr+MacBRhJ8dYMbr1ov4YBI2MYYObuHgaXjLqF+RTpl4MwxdMy4UdLYp/Lf/kCBufJYr+6y2Ilf6Ix3ttKTszvYyz07A6W2yrCMkJ9x2M5wRkiHZ1kpzayZSIonEqMXss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TEovlvPC; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746619600; c=relaxed/simple;
+	bh=bZoO2jxC64CtB3eROZHBgf0N4kFEXtsSReBN+E/atLw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oLVRSW/roHq3ldEk2W7J1GDUYgWbc33r4ZaeJshvvZAssgXEgzhHCeB+JmzdeQOvfupo1Tq0V/2E6obOQRLxq/KHi2UTIjyFyQEUpXzz38dY/w1gj3OGzBetV9SLjck7GkhgjbrM1u6oP7RfUg3qNIIJBXqUCsOlB3BnrvWq/3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yh/jWaDV; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TEovlvPC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Wfi8zDqJeKm+TpJFOzJJcwP0H7sHmszS6OiiTXY8kN4=; b=TEovlvPCjbkfdh/+tLVWTQwbRY
-	kQ6i1GdRE7WE6IewFS72g+H4B6BNlD7y0NAtdrnPJTTc5ZC0JeXYgBzdcJXsu1brvVcCaRQpr8Ri9
-	Z+eEaStCh/OvbXKsJJE7JhVPrYqcZoKZVOoA7H4GzalUQ7uafP8Ia0LUSc+4I7UjViQji14tKVHus
-	52KOSEJqfrSe2fkVh6S53jeJYufx7iZHL1VfENbpAGg06W1m5hh7wpdnt0IKenKXK0eQjCFq8H8H/
-	1b/pcJ0av3AfPF0g3odG8hHVmDIqVLdm2WBy97VwqMDICugvPaxouA63S3NkewiwtWsVp7iOoiwyY
-	+nhSvoiw==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCdW4-00000004E8Y-2h7R;
-	Wed, 07 May 2025 12:04:48 +0000
-Date: Wed, 7 May 2025 13:04:48 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, david@redhat.com, hannes@cmpxchg.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
-	npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com,
-	ziy@nvidia.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
-	mhocko@suse.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm: khugepaged: convert set_huge_pmd() to take a
- folio
-Message-ID: <aBtMYHE9BgiT8nT-@casper.infradead.org>
-References: <8e33c8a65b46170dfd8ba6715d2115856a55b8f6.1746609191.git.baolin.wang@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yh/jWaDV"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfecdd8b2so45278425e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 05:06:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746619597; x=1747224397; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o9kghykG29WfM/5QurOmGS2Z0jr56p5eKv8MqxmLHkg=;
+        b=Yh/jWaDViPSV7CGPQSmt3+a1xq34T8we1Y6c6MD8tZ1PSZ1x2ZLXaJ3I8Yf2AkE3fH
+         3x2TfCCB0CflQk1dSwkHnl7kkIpm4KIp9xrTWfU1Pq1A4kqnJ4bv++4No2rVek7fsgOr
+         6xOEBAfN4tJZdFQo9Fmp8GaLr5IsCLDnB5Vag/2KfqdaNYPXCiBeiyIbk4dOYrtdnI6y
+         gVxel2APIgUxd1/TzXFDBz8PMXOarHqI9VLpKLEdxi6+I3dg1XoSpXIwjuNgaEAnpI4X
+         s1TPf+PbimANNzc/R/TNOxIoG+/0IcZyNhO1QvAhLwGpKSHrLI1UG91IC4Dajo6XFQBW
+         ++og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746619597; x=1747224397;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o9kghykG29WfM/5QurOmGS2Z0jr56p5eKv8MqxmLHkg=;
+        b=aSK4WZJbmMBk/oEeEkmWPBfyeroWald9yUf5F+5uOOzwFckXqrG0eySFECtFLDZMqa
+         AZHZd6+pm1m1t3m+rd7miGm1TtyuNIOvaPGem3rQraQPJb5GSYLeYv0flL6PDVNT99j6
+         xEAEF8NCc6nRYxbnPN2Y7HRON1yK7QOTHiqJMUnsGe6ZyCOi9VzY4ynW54cxfm+ThqA+
+         clLkcAHHEC2yAlTVxZ99tEDFmRO7wivdkiMNaSGJ7qubf14ESCSXn/zx+PbnUwELLbrg
+         1Uadhi70vsv8Rxs+mYpFkGpyg7MoiEhJSsxcbU7kXH2E9bfGBa9vMdu+VH8Om3Mlk2bR
+         jp1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV+z+jfOybMDjIivQa4CAp1iTATR4C0T504a5RmzBXAC5E9eSRexwbX6veHl/2Hi9D7mcSij+1VwFgdGWs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFfBRwI+c0oCMCT1W4sqILnyok634UhfIa89AEyqON9FDp14yn
+	Ol5QHbF07wvEmXVO1aewwbusSrhfof2dCsJHJJKj63YDRYQO/HutCaSZUw==
+X-Gm-Gg: ASbGnct7a0DG4ZuEEIWXXivkcTf0YeywLhiMUhQZC5Wm8SGxKhGHbovqwGydXPO9JZu
+	p/b6yfpohn+ZLQsuMZLZ8E7JSQhQU2BG82VHwwkCi73SsESKBKEo7FD/leBu/1zooGblcaShXTX
+	zMttk4nqnq8Pld43mF6jVQFBhX3+iQ0tYc2e7zcZgRO4F7zfhFJmZoBqxDOVruBvb8AD2aUKrrm
+	uYnWF3WHc3Pq3zcscZaGPCWxTsS3BMS17VpisAXyEr5+EXJym/uypLG5wJWgX0YcZFQis3Ob9ZK
+	CWtl/w/rMG97imsFrvMuayCtznkrNTaiug/chdjYB5fsnu5U4Dig1sKM8IJ/tcKRRpm1tdTaQK9
+	4olw145PzQWFGLA==
+X-Google-Smtp-Source: AGHT+IEMRpmzlKt1cCPCQn4bwWAH2byEnhm2IIX4fgH353B/MjznTc9F7tqWGUWyfRjHfvwdQmyLKA==
+X-Received: by 2002:a05:600c:3ca1:b0:43d:aed:f7d0 with SMTP id 5b1f17b1804b1-441d44d8107mr19706025e9.28.1746619597160;
+        Wed, 07 May 2025 05:06:37 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441d43d6ee7sm29247575e9.20.2025.05.07.05.06.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 05:06:36 -0700 (PDT)
+Date: Wed, 7 May 2025 13:06:29 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: WangYuli <wangyuli@uniontech.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, yuzhao@google.com,
+ stevensd@chromium.org, kaleshsingh@google.com, zhanjun@uniontech.com,
+ niecheng1@uniontech.com, guanwentao@uniontech.com
+Subject: Re: [PATCH] mm: vmscan: Avoid signedness error for GCC 5.4
+Message-ID: <20250507130629.303b01f8@pumpkin>
+In-Reply-To: <aBo3W5HNMxLdtV2p@casper.infradead.org>
+References: <85050791B887DC13+20250506160238.799984-1-wangyuli@uniontech.com>
+	<aBo3W5HNMxLdtV2p@casper.infradead.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e33c8a65b46170dfd8ba6715d2115856a55b8f6.1746609191.git.baolin.wang@linux.alibaba.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 07, 2025 at 05:26:12PM +0800, Baolin Wang wrote:
-> @@ -1476,13 +1476,13 @@ static int set_huge_pmd(struct vm_area_struct *vma, unsigned long addr,
->  		.pmd = pmdp,
->  	};
->  
-> -	VM_BUG_ON(!PageTransHuge(hpage));
-> +	VM_BUG_ON(!folio_test_large(folio));
+On Tue, 6 May 2025 17:22:51 +0100
+Matthew Wilcox <willy@infradead.org> wrote:
 
-I don't think this is aterribly useful assertion to keep in a static
-function with one caller, do you?
+> On Wed, May 07, 2025 at 12:02:38AM +0800, WangYuli wrote:
+> > To the compiler, (MAX_NR_TIERS - 1) (i.e., (4U - 1)) is unsigned,
+> > whereas tier is a signed integer.
+> > 
+> > GCC 5.4 does not permit the minimum operation on such
+> > type-inconsistent operands.  
+> 
+> 1. This has nothing to do with the compiler version; the type-checking
+> is built into min().
+> 2. We have min_t for a reason
 
+Mostly historical - to match the original inline function min().
+min_t() is definitely overused, it should be the 'last resort'
+for a type mismatch, not the first.
+
+> 3. Why is a signed min the right answer instead of an unsigned min?
+> 
+
+I don't seem to have the patch itself, but I' guessing it is for:
+
+for (i = tier % MAX_NR_TIERS; i <= min(tier, MAX_NR_TIERS - 1); i++) {
+
+which seems to have been added for 6.14-rc1 - so why is it only an issue now.
+
+Looks closer, I bet the function is usually inlined.
+
+	David
