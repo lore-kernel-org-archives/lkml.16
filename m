@@ -1,127 +1,108 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0E21A00E7;
-	Wed,  7 May 2025 05:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433401A00E7;
+	Wed,  7 May 2025 05:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746596832; cv=none; b=V2Ro0dOp8FS2aDxwsWixhssGIhSriHZvrVE0cHhuypArqd5MjJN2xat10yQuctA4c59dCmBXIMsgqhZOAkl94kcZWSmE3H8PJ1W/qUK5cNlRiQ5m8d5KmmUGqs1c7U/9e1W4f6XtiEsXkIbFy7ZS+tii42rV6WnOzlXcc8wKhaU=
+	t=1746596913; cv=none; b=aKDlW088z3yFSYPdwJEzGnPkle5h2uErv4ltpHnuTHYDcFNTK3s6WaH0NorxMbVsw0vuKIWDRITFtDVC7IfrUzXiRp7nkHM8yfr2BVYAFK4hKESm5LBc7KmoPvu6epq6dc0tCRx2FGsRZ10I1IwvhFSKd5F8HTLdZMWIp8abuBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746596832; c=relaxed/simple;
-	bh=O3d7vwCPdLbhv5EPV1ky2qGUrqEyeP/U/PqjnMu36Ik=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cMunRWKqPGZEFnFrqeQ+N/V3B8ioqUX9ZCyZi8XG2iWKQwgJQemzD8X5X7d9zPVfK81z9t4a+JKChYJ3liFPpYhFEWPkQ6Kknq3Ivlti6Xen8zeHWZpV9fVYgptn6vhd5tKiglGoQKLW5j8Pf7oFkIJNnhFGyfhikRZu/EkhvFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AUHhDQwM; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746596913; c=relaxed/simple;
+	bh=ajKkmLBQHltQ3aT5vOIXwjpiHq5xNEDklbkdv09yMlg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=K0m1xJ0KI/vppnNEsRUozxuvyted1Agbt0E/yArhpJjYiO99Ip+YoUb2pgzbwfxiNuJl2MmGD4Wmeeh9vKXIri6GvmcYmbU5Groi29ALTgs3yq303IjtulkXgXuHI39vzXA6qgtYl2khxostbFpAJsN3IPip2GqnxUeZUsXTFdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=pNXiYJ5S; arc=none smtp.client-ip=15.184.224.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUHhDQwM"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6ecf0e07954so101632336d6.1;
-        Tue, 06 May 2025 22:47:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746596829; x=1747201629; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Sr/EBTQG4/UwFZx/KYi2kLPC/6miYByKQl01Eq8yNq0=;
-        b=AUHhDQwMdy351X3lE2Evr7TFTttGh42VfhNsOXHyzK9vILeH7C6s+YFQ46hHivOb1m
-         sI2etstyRczyArkyfxDv3u2WwgjC2/WUjIrHOI0UCcJsWhpu7+RHdgvGjY90XgPZNRyH
-         1wmYJwd4zvcvMN9aUuqlNP4qWNXXAh7ahL3AGDofNRSlWWg126QfHbKkfTJ2kMyQapYA
-         vFzsJ7j5k4pfz1LpUX4621fCcnjcWC/ZW0WMekwWBSaWbUlq6KnujOfuqZc0TUZxails
-         /28ZSwvUpLKsStge9z4LSvlWJ/T4N/QEXY0gUGCIxeLj/uZpZk/S0dcb7GiEIcdCLBTw
-         2FHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746596829; x=1747201629;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Sr/EBTQG4/UwFZx/KYi2kLPC/6miYByKQl01Eq8yNq0=;
-        b=dDqBRK67JGYKRXiojpK6+aLnE+mki07v/+JOqIUslYeNW1jQGC/Pj+1km+KuflFnEh
-         M57ZsS6wNhhXDBcQDrf37z4p8xC2BFK1nUYviyd2R+luHoAJPyFYtAKEPEhcIodhEvqJ
-         ulg434CewTtZv53ej5BQI1JKOdU7ZRmljBHrw/y+19T14Zw3IMhFxNuLqY4/gmilIr9L
-         P/TZ5PMxxHmdxKLSX0orDx+P9Y+tqm66Z6SeGfXqXNbJGZ8GG6AYXQ4okgjc32tCEnym
-         3dbrA+pFJCcHKELSCYmQ8JZnj8s6xedQjPjrSwAXzWFjWjgdRCv2Po39Fxmma8XLo0vq
-         qPzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOvfJPgxeurZSrYt1d/SnY7dBD+xMPAa9qy7V5bw625WzamWos+4N+D/tFJyiMWcdkOXnr2qI3bw7P@vger.kernel.org, AJvYcCXAJSbMdjnZk6qFWgDkYNwdJZG+YcTDpNqHM1MgIsS0zANXju46EcSi1zRrXU99zcie/ej7pnK7d715p3J9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2dQB6l3RZhZoWaFF6vCPPbTH2Je7qnZHsXYFUikcNst04y/3s
-	0xVh4Hrbgjv/OK3GeKyOQjtOhdVd67GXUUiCeVn77bfR/eFCEYaNJAn8IRl6H6Q1xmJAlirMDK9
-	bAeK517a/08cn0z9e2VmzzIoVd5QfD39DgkRTfw==
-X-Gm-Gg: ASbGnctfhzyjQvg8UghfrxLm9ozlq2QYWt+phjLVVfD+NOLjDAIRvbd9PrErf32CSX4
-	jl8OJlzUniLIKJ7xDyfHKcEMqUv570J7n9NQEanFDKCXg3Msb0r4bzKMptANMuw9LbplWpFk4lf
-	tCJdLr/5zkp+XiEYiil2cK2h2duq7Lbi0=
-X-Google-Smtp-Source: AGHT+IH+l73WkllP0u4r7uaSDidXOWDrfnL+BIbC9V9jeSezy4B7RZaNnCkLw7jvUCpMubvtnuETSM/JFB2R3NarJkU=
-X-Received: by 2002:a05:622a:410f:b0:48d:8053:df56 with SMTP id
- d75a77b69052e-4922795ddb7mr32129241cf.48.1746596817909; Tue, 06 May 2025
- 22:46:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="pNXiYJ5S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1746596880;
+	bh=RR1o4h1D7RP+bPdxjng3MvYjCb48F+Na98fT4d1P2gU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=pNXiYJ5SV3/q5ixiaQwHyDwW0P0kS9mUlp7z7/2h2JE0n5dlEXn0oNYa+0pCptSKo
+	 bvd2K3Njfgr0JKM0WstlrWr6HpurNN7qFKPpWXU1u6LY2vYxTncxXR4bwUwOBvyukf
+	 1PQmhnWnZhNXxIOY6qAefNyPGkXCeOkcSYhe5gDU=
+X-QQ-mid: zesmtpip4t1746596836tfa752b55
+X-QQ-Originating-IP: GUD0Ib9eO0p6JFXKSx5eJadelh7ZUQJDvk8upfg5mMM=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 07 May 2025 13:47:13 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 813654498485384309
+EX-QQ-RecipientCnt: 9
+From: WangYuli <wangyuli@uniontech.com>
+To: masahiroy@kernel.org,
+	nathan@kernel.org,
+	nicolas.schier@linux.dev
+Cc: linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH] extrawarn: Use cc-disable-warning for shift-negative-value
+Date: Wed,  7 May 2025 13:47:05 +0800
+Message-ID: <70AA6123A55FEA70+20250507054705.1196184-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507-vt8500-timer-updates-v1-0-6b76f7f340a6@gmail.com>
- <20250507-vt8500-timer-updates-v1-2-6b76f7f340a6@gmail.com> <e05151a1-2112-497b-affa-d0e95c71b627@kernel.org>
-In-Reply-To: <e05151a1-2112-497b-affa-d0e95c71b627@kernel.org>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Wed, 7 May 2025 09:46:47 +0400
-X-Gm-Features: ATxdqUH29QtBVUIdEBGgpphpU7Cm3yGDAmRazAqGvFsGpNIyRjeSFbKTUq_yrS0
-Message-ID: <CABjd4YzmbQj2eDKS1YvdZFzwzP0v=2dwPsPUqZqL9=Gc6zatFw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] clocksource/drivers/timer-vt8500: Add watchdog functionality
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MSrLYp2Q5Rma2GHgAMHmrBi7+2meX3Iu4okAg93eZClj9stk/pg9Vk7B
+	z/30zrA7fOf1r+ovGfTv58Wi30QoArbzi67csbYxfkv5bsvGlxnRTZNdHWqfRe6HRxJ5X/T
+	Gj+BOSvWtYBIcmwzk3fIWKr5OmbhJri7DAtu5qNlh+ACXklxOZgcDgFA0zxHewen2q3AqYu
+	c5ZHM6qc3r+D+hfpok0EHDkoK/toNzGwFqR7IR6BmYDMC+XqcYBJiLXlnrvWLDM6x1HucXQ
+	jWJ2ewgKa1fctm2ofLoxrbyaWu3TmIFrYA0b1OZYIMq9UL8R0A4xKw7rdrJiXit+tsbYrhr
+	KRFKzObiMa8ETV1RkXduyaNISwogRlsk4qK2ZXTO3ffvE+q5zt9dKbO8TjmjnseeiacMaHl
+	R9rg5aQaFzsSEjdN/JQ4A6sPIz5SNXAcJBnkpEieWGy/Ae08ywNvLZFom9+egQkFoANJo+r
+	s2p19KDIlty/sY0kaVbWUlbL7FKAjIart8b+YaLNJxSt8LjruCGeUBBOS1k/abQHR+94Y1y
+	8YLXUlRSC2oWoxiF2K0csFH54k2nlwdw2oC9eOQ+zjs/epdIdpP2C2ccisp/5Pa63K7cUUD
+	9Ued4IWNw7UYMrLIF9KB8x6cebPKb+dP/9RZYpOr7oJtr2XPr6j3ORQWqoTvqb3q94FTz7u
+	ii8JUj9B7WGIz4dUm1PMI+TDCY8jWpQ5MA6x+WbM7HYOTl0S9Wa19Tc8yUXYGee057vLdMu
+	SoZTxkG6eiVqpKFMwtuhb6rkGP6La4ohwWfQssN2RTBSfQVc7eDII9Ow9N+sQELbvd7cPBV
+	9sXNWHxmq/vO/inCZDYqli8NiVzE86tQwFH4qA6Sk6D+ftQkFs9dmELHP3vXes5djJIuaJ6
+	Ikstc1zVU08SrOoKpYN+0eH7Tpg3T8So2x+8voeDpjlqoZKhcb+Ar/FOHUGSp5GURco8jdm
+	ognAFR5YKcRqdZx1M77rgj2//9PKy/f9xGvXEFmvZhJX++SBn52+xxtr8VSMfu3r0wwyYaf
+	mhY6ZgILCYJQOM7CcresmoG7j0x9nJlkc5rT5Vc3mLtPTPBPbkrHVRlRlRGjk=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
 
-On Wed, May 7, 2025 at 8:33=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
->
-> On 06/05/2025 22:06, Alexey Charkov wrote:
-> > VIA/WonderMedia system timer IP can generate a watchdog reset when its
-> > clocksource counter matches the value in the match register 0 and
-> > watchdog function is enabled. For this to work, obvously the clock even=
-t
-> > device must use a different match register (1~3) and respective interru=
-pt.
-> >
-> > Check if at least two interrupts are provided by the device tree, then =
-use
-> > match register 1 for system clock events and match register 0 for watch=
-dog
-> > respectively.
-> >
-> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> > ---
-> >  drivers/clocksource/Kconfig        |  6 +++-
-> >  drivers/clocksource/timer-vt8500.c | 58 ++++++++++++++++++++++++++++++=
-++++----
-> >  2 files changed, 58 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> > index 487c8525996724fbf9c6e9726dabb478d86513b9..e4f9aade058af1adc279274=
-c6c711658f9f4cd0a 100644
-> > --- a/drivers/clocksource/Kconfig
-> > +++ b/drivers/clocksource/Kconfig
-> > @@ -177,9 +177,13 @@ config TEGRA186_TIMER
-> >
-> >  config VT8500_TIMER
-> >       bool "VT8500 timer driver" if COMPILE_TEST
-> > +     depends on ARCH_VT8500 || COMPILE_TEST
->
-> Does not look related to this patch.
+The -Wno-shift-negative-value option is not supported by GCC 5.4.0.
 
-Will drop in v2.
+This could potentially result in extra warnings under certain
+circumstances.
 
-> >       depends on HAS_IOMEM
-> > +     select WATCHDOG
->
-> Drivers are not supposed to select user-visible symbols.
+Utilize cc-disable-warning to prevent the following from occurring:
+  mm/vmscan.c: At top level:
+  cc1: error: unrecognized command line option ‘-Wno-shift-negative-value’ [-Werror]
+  cc1: all warnings being treated as errors
 
-Fair enough, thanks. Will add a separate nested user selectable option
-for the watchdog function and make it depend on both the driver itself
-and the watchdog core.
+Link: https://lore.kernel.org/all/62726950F697595A+20250507040827.1147510-1-wangyuli@uniontech.com/
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ scripts/Makefile.extrawarn | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards,
-Alexey
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index d88acdf40855..375475e7b3bd 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -158,7 +158,7 @@ else
+ # The following turn off the warnings enabled by -Wextra
+ KBUILD_CFLAGS += -Wno-missing-field-initializers
+ KBUILD_CFLAGS += -Wno-type-limits
+-KBUILD_CFLAGS += -Wno-shift-negative-value
++KBUILD_CFLAGS += $(call cc-disable-warning, shift-negative-value)
+ 
+ ifdef CONFIG_CC_IS_CLANG
+ KBUILD_CFLAGS += -Wno-enum-enum-conversion
+-- 
+2.49.0
+
