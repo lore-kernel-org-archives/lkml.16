@@ -1,205 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA66FBF6
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 04:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310E22AD20;
+	Wed,  7 May 2025 04:26:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746591894; cv=none; b=oQaq0IatBc4RQp5e3e8JKR3bV2Q14+BgGRGnjTvGaKbqBXZb+3OWDbFUEweViv1UPTmP3M4lJmb7xPCI93vJlYR145UyquInEwogkP4bE9KeRe7KJoumsBfjM8pEtTcBNXw4vZXQIK86hze08I7zTSnAWy12OwZ46e3fs/l2A04=
+	t=1746591990; cv=none; b=n1SGkuiCL6dbFwn0MxT1ldxULWmKlnnBZalHqSKWkShtsYbvYbXrcwYw7WUAf7AtO3dsJwjZFVUf6Qw2S2VAB4iaYd9+C4rFUueszKeWP+HoqvU3y3Sy6W+7hK2adaYUnfTVuEsqPRrJrHj5aPXpv3pz2NVlnDvYKSThUex8lFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746591894; c=relaxed/simple;
-	bh=kcwpV41BC4KW8ihl8UMz+kyj/Wxk6AUGPfE92GZwFHM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Sm6FIrq32N+1LKvZ+w/BBPu8WYcUIYzEitPWCZen3T7DbJNIQYuewp/VFsT3SrqT+V/JumT1qJi+p8qY6pDmNVnR4bpAgfUvGoLMMjgdN/fqjhxtMbakEW1fxnoOSFR7J2OYJrvZjVCA/+mU/vNm3RwLQRBvrmlV0ZvJOelBm74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0Od9s6B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746591990; c=relaxed/simple;
+	bh=biF5yZ3vpTesxPZQ/tMvL//RmTWjtQ1ORzVQuydb0NQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UB0s17UYoMdEyOY2vsYdyNiUU2r5NuHuVP1YgDQyRSir4U4kbO6ykeZychK6liv7rI+eJsfTGZhcPOK7lC7fB8X60URjgac1hm7wlY/BmgDWAoADpRH1zBwZYq2n/VKX9CQJBNSWhpZFGdmbGeM5dMbFRCg2cH3JQ+Ujew9DJpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cYsthnEg; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0Od9s6B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB604C4CEE9
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 04:24:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746591893;
-	bh=kcwpV41BC4KW8ihl8UMz+kyj/Wxk6AUGPfE92GZwFHM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=L0Od9s6BxAMJ6t9plvCt3NLz5Gv/v8NbaK1Je9eWKJdht8IvSjU1gXSgH5c+AlKxO
-	 yxzOYzSgDfuZajrhlbArQNRLJPqnIL+4trJ6TIA9aZv7OV3wdtAh9RC8JRCS1MT09b
-	 1qRlbuUZAhcWliDcvPv95EoBQZT4FER1aSAMZC6owQXmPYlUEyN8rsHlwME06T4t3T
-	 NIlnrmKHYOSZJuFWC1oRiNs/5CI8iTlhIfPbpL8lejB6B4GAvLKLE9QMZ1hZLuzcZC
-	 m0sDnZejTWg7wG8WDEzasa6DgFsoa6TSsoF1VJxlpsxHrZlRv8gDobbHNHFzj9OpLO
-	 xDUo/l2svR63A==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5fbcd9088a7so1108423a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 21:24:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXNyxaCJ2jntCix3uTD+p5wmGR/Dy0IsUA6UNtMJcSMd6XOaX21nOQe9gsc2OLZB3bKlUj59mRSMFxyfiI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4rQhpD1N9b0L7ASwZtQX8sz6tgb8EboL1LAR2yGKSWhKTdffs
-	2jdTbAGlL6OSoLEZxG22MLtag8rF8G5PY6OVj8j9clxQ427xA+/d27RGoY2at8frcQQQPkYgKiu
-	20hef6HxKXh8d3n3LQlLGcr1FZbI=
-X-Google-Smtp-Source: AGHT+IHs9xp6ZZFIlEX52LdyK+HCC1QbH+Imhzalre8iOTVBs48o+DUZbbjDkhFQskHdxEgTAd8W62cG5mdEbhALLak=
-X-Received: by 2002:a05:6402:430b:b0:5f6:22ca:8aae with SMTP id
- 4fb4d7f45d1cf-5fbe7621160mr1942455a12.2.1746591892471; Tue, 06 May 2025
- 21:24:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cYsthnEg"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471H7as022467;
+	Wed, 7 May 2025 04:26:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	w5+yz2q+hUjul7s+z3seVWpaNFf3JvMrntHxV3Q7ywU=; b=cYsthnEgQT6uuH85
+	voUoWZX9T64x/CmZfJIsMuSk+jtd0lhIB0416//UWsT1hlzD5fR2VepAo/O5VYBg
+	ruRxySyVdsdkP1BsQtXtc5IgqGdqxyGekrLu1Si0iTVHdceA1YA5iBUux6psAw4V
+	ihA/LhTzd9SCsJ1RPrnoNPVZkGNUwbRvtSV6m1kKXXRR3xiPVeil8lSqkxFT+AWe
+	VFiunBxKhC3M7qPJ/VxQXjrxE6H4/cLQMaU82r+G84gN8zkpqCHZLSH7KE4P9M7q
+	8twsANwqRlT9GNHFqJWj1si04dNWjDQSw7jo1Aviyonk7fLtZRXIHyIxL2Y0UiaM
+	ilm6Rg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5uuvf4h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 04:26:16 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5474QFb8006724
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 7 May 2025 04:26:15 GMT
+Received: from [10.239.133.114] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 6 May 2025
+ 21:26:12 -0700
+Message-ID: <4a6a8bad-e5d9-4613-a839-5a21491ef7c4@quicinc.com>
+Date: Wed, 7 May 2025 12:26:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430131516.24287-1-yangtiezhu@loongson.cn> <CAAhV-H4VpYVEhwnhh4s083FuNsfEhGwrYxtceFDKD_imnBBrjw@mail.gmail.com>
-In-Reply-To: <CAAhV-H4VpYVEhwnhh4s083FuNsfEhGwrYxtceFDKD_imnBBrjw@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 7 May 2025 12:24:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5yvrfd0aH=AuFwYQzFcnQAMBekO0frvwhThaPKx6p1RQ@mail.gmail.com>
-X-Gm-Features: ATxdqUGzUKwc5G2b9kAUUSS2cXN8V_gP2ST8jxsM7RU_R7fUlzKBmiQfZhTnYJA
-Message-ID: <CAAhV-H5yvrfd0aH=AuFwYQzFcnQAMBekO0frvwhThaPKx6p1RQ@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Enable some configs in loongson3_defconfig
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] coresight: add coresight Trace Network On Chip
+ driver
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>
+CC: <kernel@oss.qualcomm.com>, <linux-arm-msm@vger.kernel.org>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250411-trace-noc-v3-0-1f19ddf7699b@quicinc.com>
+ <20250411-trace-noc-v3-2-1f19ddf7699b@quicinc.com>
+ <23d02991-3bc6-41e2-bb8b-a38786071c43@arm.com>
+ <257fb0a5-7bf7-4a04-9f8d-d8759351584c@quicinc.com>
+ <9b75b9d1-a9ed-46c9-9dba-8e3eb261dcc0@arm.com>
+Content-Language: en-US
+From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+In-Reply-To: <9b75b9d1-a9ed-46c9-9dba-8e3eb261dcc0@arm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi, Tiezhu,
-
-On Wed, Apr 30, 2025 at 9:41=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
->
-> Hi, Tiezhu,
->
-> When I enable these options:
-> CONFIG_FTRACE=3Dy
-> CONFIG_FUNCTION_TRACER=3Dy
-> CONFIG_FUNCTION_GRAPH_TRACER=3Dy
-> CONFIG_DYNAMIC_FTRACE=3Dy
-> CONFIG_DYNAMIC_FTRACE_WITH_REGS=3Dy
-> CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS=3Dy
-> CONFIG_DYNAMIC_FTRACE_WITH_ARGS=3Dy
-> CONFIG_KPROBES=3Dy
-> CONFIG_UPROBES=3Dy
-> CONFIG_KPROBE_EVENTS=3Dy
-> CONFIG_UPROBE_EVENTS=3Dy
->
-> Then your above commands will hang (or get a SIGTRAP), which options I
-> am missing?
->
-> I haven't tried your patches, maybe it works, but I want to know the
-> exactly needed options.
-Have you investigated this? I have tried your patchset, but still get
-a SIGTRAP or system hang.
-
-I think I know why your tests "success":
-
-sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
-sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery
-/opt/tongsuo/bin/openssl speed sm2
-
-In the first step you probe the OpenSSL library, and in the second
-step you are running "Tongsuo".
-
-Have you tried (both OpenSSL)
-
-sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
-sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery openssl speed sm2
-
-or (both Tongsuo)
-
-sudo ./perf probe -x /opt/tongsuo/lib/libcrypto.so BN_mod_mul_montgomery
-sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery
-/opt/tongsuo/bin/openssl speed sm2
-
-and still success?
-
-I tried, and both got a SIGTRAP or system hang.
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=L9cdQ/T8 c=1 sm=1 tr=0 ts=681ae0e8 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=8OJl2JkUM1ULYFJJg_AA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: kIw5FctbMkclmRq0boSizRbNIFFYcxRX
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDAzOCBTYWx0ZWRfX7DEhrK4ha02a
+ otfpaBPjG9HTwWMRjm99Wtn+0dYOimkZd+rNDcRZJEVJtvXkEKks21o6IDvUnC804FZZt9TuzPf
+ BDU4wfBEPIacRrAMiHoJQE8OEbbipMmN4N9vIAEBBGiCOgSOQPbFHsqepeOGt0/yPF9o8+YgzpZ
+ fyco5V+MbdIcvGKt7ITQCL3YXcFgUFUuOF67ThJMeciF86jQOmAUHMMD26cab/aOhcV5gnjvoUM
+ DJBEDw4eHCHGr/r05169oX0BC5o9XvY6OdEPhp7+O6mAp/9mUnTYNDugH2kjU11XkEsqeyoU675
+ ICDQdJNfU89az8rmdshWvSbub5CAninyNYPXZwl/7nEeSNsr35JJ0XwOIbLjFuG7Bn+hQFj6kGc
+ yRebftKHoxCnPKSwRKAzDZZH64Tvmnzx3/XzuxZPLiC8QszAvIVHUUW9fhFRpmPKeqyyKm9U
+X-Proofpoint-ORIG-GUID: kIw5FctbMkclmRq0boSizRbNIFFYcxRX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_01,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 mlxlogscore=999 spamscore=0 suspectscore=0 impostorscore=0
+ mlxscore=0 priorityscore=1501 clxscore=1015 bulkscore=0 lowpriorityscore=0
+ adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505070038
 
 
-Huacai
 
->
-> Huacai
->
->
-> On Wed, Apr 30, 2025 at 9:15=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.=
-cn> wrote:
-> >
-> > This is a small patchset based on 6.15-rc4, each patch is a
-> > single logical change to better describe the problem and make
-> > it easier to review.
-> >
-> > If the changes make sense, all of them can be squashed into one
-> > single patch, I think that would be fine as well, let us see if
-> > other people have concern about it.
-> >
-> > By the way, I received many compile-time error reports about tools,
-> > most are related with configs, this is the motivation of this series.
-> >
-> > Additionally, I also received one run-time bug report about uprobe,
-> > but it works fine on my test environment. If somebody can reproduce
-> > it, please let me know, maybe I am missing something.
-> >
-> > 1. How to reproduce
-> >
-> > (1) Compile and install Tongsuo
-> >
-> > git clone https://github.com/Tongsuo-Project/Tongsuo.git
-> > cd Tongsuo && ./config --prefix=3D/opt/tongsuo -Wl,-rpath,/opt/tongsuo/=
-lib
-> > make && sudo make install
-> >
-> > https://www.tongsuo.net/docs/compilation/source-compilation
-> >
-> > (2) Compile and update kernel
-> >
-> > Apply this series based on 6.15-rc4, then use the loongson3_defconfig,
-> > CONFIG_UPROBE_EVENTS is already set.
-> >
-> > (3) Probe "openssl speed sm2"
-> >
-> > cd tools/perf && make
-> > sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
-> > sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery /opt/tongsuo/=
-bin/openssl speed sm2
-> >
-> > 2. My test results
-> >
-> > fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf probe -x /usr/lib64/l=
-ibcrypto.so BN_mod_mul_montgomery
-> > Added new event:
-> >   probe_libcrypto:BN_mod_mul_montgomery (on BN_mod_mul_montgomery in /u=
-sr/lib64/libcrypto.so.3.2.2)
-> >
-> > You can now use it in all perf tools, such as:
-> >
-> >         perf record -e probe_libcrypto:BN_mod_mul_montgomery -aR sleep =
-1
-> >
-> > fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf stat -e probe_libcryp=
-to:BN_mod_mul_montgomery /opt/tongsuo/bin/openssl speed sm2
-> > Doing 256 bits sign CurveSM2's for 10s: 7463 256 bits CurveSM2 signs in=
- 10.00s
-> > Doing 256 bits verify CurveSM2's for 10s: 9681 256 bits CurveSM2 verify=
- in 9.98s
-> > ...
-> >                               sign    verify    sign/s verify/s
-> >  256 bits SM2 (CurveSM2)   0.0013s   0.0010s    746.3    970.0
-> >
-> >  Performance counter stats for '/opt/tongsuo/bin/openssl speed sm2':
-> >
-> >                  0      probe_libcrypto:BN_mod_mul_montgomery
-> >
-> >       20.007539877 seconds time elapsed
-> >
-> >       19.990010000 seconds user
-> >        0.000000000 seconds sys
-> >
-> > Thanks,
-> > Tiezhu
-> >
-> > Tiezhu Yang (5):
-> >   LoongArch: Clean up loongson3_defconfig
-> >   LoongArch: Enable tracing infrastructure in defconfig
-> >   LoongArch: Enable tracing syscalls in defconfig
-> >   LoongArch: Enable debug information in defconfig
-> >   LoongArch: Enable kprobe and ftrace in defconfig
-> >
-> >  arch/loongarch/configs/loongson3_defconfig | 74 +++++-----------------
-> >  1 file changed, 16 insertions(+), 58 deletions(-)
-> >
-> > --
-> > 2.42.0
-> >
+On 5/6/2025 7:20 PM, Suzuki K Poulose wrote:
+> On 14/04/2025 10:16, Yuanfang Zhang wrote:
+>>
+>>
+>> On 4/11/2025 5:59 PM, Suzuki K Poulose wrote:
+>>> On 11/04/2025 09:57, Yuanfang Zhang wrote:
+>>>> Add a driver to support Coresight device Trace Network On Chip (TNOC),
+>>>> which is an integration hierarchy integrating functionalities of TPDA
+>>>> and funnels. It aggregates the trace and transports to coresight trace
+>>>> bus.
+>>>>
+>>>> Compared to current configuration, it has the following advantages:
+>>>> 1. Reduce wires between subsystems.
+>>>> 2. Continue cleaning the infrastructure.
+>>>> 3. Reduce Data overhead by transporting raw data from source to target.
+>>>>
+>>>>     +------------------------+                +-------------------------+
+>>>>     | Video Subsystem        |                |Video Subsystem          |
+>>>>     |       +-------------+  |                |       +------------+    |
+>>>>     |       | Video TPDM  |  |                |       | Video TPDM |    |
+>>>>     |       +-------------+  |                |       +------------+    |
+>>>>     |            |           |                |              |          |
+>>>>     |            v           |                |              v          |
+>>>>     |   +---------------+    |                |        +-----------+    |
+>>>>     |   | Video funnel  |    |                |        |Video TNOC |    |
+>>>>     |   +---------------+    |                |        +-----------+    |
+>>>>     +------------|-----------+                +------------|------------+
+>>>>                  |                                         |
+>>>>                  v-----+                                   |
+>>>> +--------------------|---------+                         |
+>>>> |  Multimedia        v         |                         |
+>>>> |  Subsystem   +--------+      |                         |
+>>>> |              |  TPDA  |      |                         v
+>>>> |              +----|---+      |              +---------------------+
+>>>> |                   |          |              |    Aggregator TNOC  |
+>>>> |                   |          |              +----------|----------+
+>>>> |                   +--        |                         |
+>>>> |                     |        |                         |
+>>>> |                     |        |                         |
+>>>> |              +------v-----+  |                         |
+>>>> |              |  Funnel    |  |                         |
+>>>> |              +------------+  |                         |
+>>>> +----------------|-------------+                         |
+>>>>                    |                                       |
+>>>>                    v                                       v
+>>>>         +--------------------+                    +------------------+
+>>>>         |   Coresight Sink   |                    |  Coresight Sink  |
+>>>>         +--------------------+                    +------------------+
+>>>
+>>> If each NOC has TraceID, how do you reliably decode the trace ?
+>>> Is there a single NOC/TPDA in the path from Source to sink ?
+>>
+>> Not each TNOC has TraceID, there is only one TNOC has TraceID for one path
+>> from Source to sink. In the example, only the aggregator TNOC has traceID.
+>> Decode trace relying on TraceID + Inport number.
+>> It can has mutiple TNOC/TPDA in one path.
+> 
+> So do we only describe the TNOCs that need traceId in the DT ? (e.g., Aggregator TNOC above ?) How about Video TNOC ? Don't we allocate a
+> trace id for it by default, when it is described ?
+> 
+> Suzuki
+> 
+yes, now only describe the TNOCs which need traceID, Video TNOC is another type, it is interconnect TNOC which collects trace from subsystems
+and transfers Aggr TNOC, it doesn't have ATID. Its driver is different from this patch, I want to describe it when upstream its driver.
+
+Yuanfang
+
+
+
+
+
+
