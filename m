@@ -1,71 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AC719CC0A;
-	Wed,  7 May 2025 19:44:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5389C79E1;
+	Wed,  7 May 2025 19:46:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746647094; cv=none; b=DfPk902Xcbbmkobr/2d9ObOeLQgshaqd6mYlL/7as1iuogfG5qpTRpzH1z6utp6M+oRD4YGXY+wH1VtUBqBAJSsgc86i7PmezAXNW6s+YJ8FXGfem+kWe8hU8yxYnE6n03veRZ4fF0bnNE9mC1QVSnzLv4odl7emBJ/QjaYd50o=
+	t=1746647195; cv=none; b=FOLgow6T4RuhI16r3aZ7c3/adoAauG+Pg9HlodYVyYngnxmt3yRtCbPB2wheahlsGddFjH9+t87yDY9Ms1CxnQDfi6Of2+RQgY6LXB5WlWC3OHAp0LFnKQYW4Mk3V/F3f+AiCVe7rTQeb9h9M3taJN/P3MlvM9YBcEl4h4lmu1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746647094; c=relaxed/simple;
-	bh=q4hIvtoNu1oOGcAKyK/6LoLwv0LjCdfMt4xNiihRoZs=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=erNPT2NAmtzPrNhQpD2OvoY1hShV81fUCRUaVXn2XuY+5RuxIG2C7VdEwso4SnMGArH57eoM/uKYMn7i8BIS/keuY3jKzCb/Oj5HPLFl5jlpPV5nghTFbDCle35G4UjjuS3HHWR9wT5HaXvXa69fWa8e0RGQa5uO+d5j9A+l9u4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qPlzZc0V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746647195; c=relaxed/simple;
+	bh=+huMUCEEnaDT5lX704UojfexBqvHbN5oYGY2yGXWQ30=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GBsA10QSRHR8m0ZHUAnIOn1DdxaecMYLp0UHXkVg4TToDRZcaQ4uBzfoclLr2Ig620tdasK2cC7CkKMQz7knDGa/3W/VlFN8LjgaF7e9CndE4sSNnx0Wr5A3koD9VOPLjqcjUHh+zkDwl98u7yQqM9ZBlyzTtK6D4O4gUlHDkLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mCLmN5LI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qPlzZc0V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B39BC4CEE2;
-	Wed,  7 May 2025 19:44:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mCLmN5LI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3B0FC4CEE2;
+	Wed,  7 May 2025 19:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746647092;
-	bh=q4hIvtoNu1oOGcAKyK/6LoLwv0LjCdfMt4xNiihRoZs=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=qPlzZc0VbmcBh/IBRlviaOz38xt5NO496/SGC3ggUSWMOx+oBrVl2jObCeavNvfQ+
-	 R2Yi7Nlm9rfbJgoaXwyCKj2+ORCv6v0HaZJ0vqGuwN7Es/6uNpXxzd6A98Oqag6/4Q
-	 KLKfNStxTE+v7NgktYd/xEvLRGaIYYxg8sv8f65ld+ldjyPrDGSxRLJDlxz/jXV73e
-	 fgZWLjaXcVfUI2r95d5TaZJEvSNNaR5PzP6cwA0c9orH+RhqEOdelSyuxSVp3PCvp2
-	 O4B+hWoqwNALx3co7BWGW3jVCf/SnTxgH2PwTHEn19aVaECO8D2/8vMdJ6+gFGt4gf
-	 D5t4O/WiNTw+g==
-Message-ID: <8513c30f597f757a199e4f9a565b0bf5@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1746647194;
+	bh=+huMUCEEnaDT5lX704UojfexBqvHbN5oYGY2yGXWQ30=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mCLmN5LInegKEB5CvhHT7hQQMTkjbAYsHXveeurSYr72atvkLvJHqABRhqEqo5YJC
+	 BlkUKj9xzln0fg2D/TwqN/9H0fLa4FKyIP1GUfoGogihnwfK5Cx2LLhmjZu2+4xlZb
+	 tJHwyCJh6EHZ0I9pR76wlDxigsU9dyfSWs//UbuNplniCoD8NZa45BKDswEiYRC3Hz
+	 2fwGDeqzj6KImgIQOAqeYsRgX5PtA6K07rlIkfsHatStUI/vFmLmrLnYmfc1sMuL+j
+	 rjmJSmgmwO+/skNd7S7emoa2xF5WJgWGd9mxGbicFVjEG3EI7HwJ9Qb//jEniIqrvI
+	 OpPWuTzXp2xRA==
+Date: Wed, 7 May 2025 20:46:30 +0100
+From: Simon Horman <horms@kernel.org>
+To: Sagi Maimon <maimon.sagi@gmail.com>
+Cc: jonathan.lemon@gmail.com, vadim.fedorenko@linux.dev,
+	richardcochran@gmail.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v1] ptp: ocp: Limit SMA/signal/freq counts in show/store
+ functions
+Message-ID: <20250507194630.GJ3339421@horms.kernel.org>
+References: <20250506080647.116702-1-maimon.sagi@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <aBprHfQ7Afx1cxPe@apocalypse>
-References: <cover.1745347417.git.andrea.porta@suse.com> <e8a9c2cd6b4b2af8038048cda179ebbf70891ba7.1745347417.git.andrea.porta@suse.com> <aBprHfQ7Afx1cxPe@apocalypse>
-Subject: Re: [PATCH v9 -next 04/12] clk: rp1: Add support for clocks provided by RP1
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof Wilczynski <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>, Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
-To: Andrea della Porta <andrea.porta@suse.com>
-Date: Wed, 07 May 2025 12:44:50 -0700
-User-Agent: alot/0.12.dev8+g17a99a841c4b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506080647.116702-1-maimon.sagi@gmail.com>
 
-Quoting Andrea della Porta (2025-05-06 13:03:41)
-> Hi Stephen,
->=20
-> On 20:53 Tue 22 Apr     , Andrea della Porta wrote:
-> > RaspberryPi RP1 is an MFD providing, among other peripherals, several
-> > clock generators and PLLs that drives the sub-peripherals.
-> > Add the driver to support the clock providers.
->=20
-> Since subsequent patches in the set depends on this one and as the next
-> merge window is approaching, assuming there are no blockers can I kindly =
-ask
-> if you can merge it on your tree for the upcoming pull request?
->=20
-> This patch should apply cleanly to your clk-next branch except for some f=
-uzz
-> lines on MAINTAINERS. Please let me know if you want me to adjust it.
->=20
+On Tue, May 06, 2025 at 11:06:47AM +0300, Sagi Maimon wrote:
+> The sysfs show/store operations could access uninitialized elements in
+> the freq_in[], signal_out[], and sma[] arrays, leading to NULL pointer
+> dereferences. This patch introduces u8 fields (nr_freq_in, nr_signal_out,
+> nr_sma) to track the actual number of initialized elements, capping the
+> maximum at 4 for each array. The affected show/store functions are updated to
+> respect these limits, preventing out-of-bounds access and ensuring safe
+> array handling.
+> 
+> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
 
-I need to take the dt-binding header as well so it compiles. What's the
-plan there? Do you want me to provide a branch with the clk driver and
-binding header? Or do you want to send a PR to clk tree with the clk
-driver and the binding header and then base your DTS patches on the
-binding header and send that to the soc maintainers? I'm also happy to
-give a Reviewed-by tag if that works for you and then you can just take
-it through the soc tree.
+Hi Sagi,
+
+With this patch applied GCC 14.2.0 reports:
+
+  .../ptp_ocp.c: In function 'ptp_ocp_summary_show':
+  .../ptp_ocp.c:4052:28: warning: '%d' directive writing between 1 and 11 bytes into a region of size 5 [-Wformat-overflow=]
+   4052 |         sprintf(label, "GEN%d", nr + 1);
+        |                            ^~
+  In function '_signal_summary_show',
+      inlined from 'ptp_ocp_summary_show' at drivers/ptp/ptp_ocp.c:4215:4:
+  .../ptp_ocp.c:4052:24: note: directive argument in the range [-2147483639, 2147483647]
+   4052 |         sprintf(label, "GEN%d", nr + 1);
+        |                        ^~~~~~~
+  .../ptp_ocp.c:4052:9: note: 'sprintf' output between 5 and 15 bytes into a destination of size 8
+   4052 |         sprintf(label, "GEN%d", nr + 1);
+        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  .../ptp_ocp.c: In function 'ptp_ocp_summary_show':
+  .../ptp_ocp.c:4077:29: warning: '%d' directive writing between 1 and 11 bytes into a region of size 4 [-Wformat-overflow=]
+   4077 |         sprintf(label, "FREQ%d", nr + 1);
+        |                             ^~
+  In function '_frequency_summary_show',
+      inlined from 'ptp_ocp_summary_show' at drivers/ptp/ptp_ocp.c:4219:4:
+  .../ptp_ocp.c:4077:24: note: directive argument in the range [-2147483640, 2147483647]
+   4077 |         sprintf(label, "FREQ%d", nr + 1);
+        |                        ^~~~~~~~
+  .../ptp_ocp.c:4077:9: note: 'sprintf' output between 6 and 16 bytes into a destination of size 8
+   4077 |         sprintf(label, "FREQ%d", nr + 1);
+        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I think this is because before this patch it could work out, based on the
+use of constants, that nr is never greater than 3, so the formatted
+string will fit in the available space.
+
+But now, although in practice that is still true, GCC can't see it
+
+I wonder if the following is appropriate to add, either as squashed
+into your patch as a separate patch. Arguably it is correct as
+it allows provides enough space in the label buffer for all possible
+values of nr, even though in practice only rather small values are used.
+
+diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+index c723d6fe3d31..ce52b4080a19 100644
+--- a/drivers/ptp/ptp_ocp.c
++++ b/drivers/ptp/ptp_ocp.c
+@@ -4044,7 +4044,7 @@ _signal_summary_show(struct seq_file *s, struct ptp_ocp *bp, int nr)
+ {
+ 	struct signal_reg __iomem *reg = bp->signal_out[nr]->mem;
+ 	struct ptp_ocp_signal *signal = &bp->signal[nr];
+-	char label[8];
++	char label[16];
+ 	bool on;
+ 	u32 val;
+ 
+@@ -4067,7 +4067,7 @@ static void
+ _frequency_summary_show(struct seq_file *s, int nr,
+ 			struct frequency_reg __iomem *reg)
+ {
+-	char label[8];
++	char label[16];
+ 	bool on;
+ 	u32 val;
+ 
