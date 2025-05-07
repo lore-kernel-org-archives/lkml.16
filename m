@@ -1,139 +1,90 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC86156F3C
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 03:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3035E18C31;
+	Wed,  7 May 2025 03:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746586850; cv=none; b=JKF5HZtNnrGT+MFonjZXqUnoJQFwhHMzDCPopOkb/lcgaREpDxyaMlh0kCYaXXJheiPRCwB1UkWC3mZafhlLOxbmFhp+N/YO/YCPn09l5o5phiZz1YdKdMGjxeURHEx0pF+YA9xss0qrek0jkVCu3Hn1eJrZNmPfdCaQCVW7Ujo=
+	t=1746587088; cv=none; b=og3bpLh6g8QPqUbIzOOc+g83pu1WtNFs7etUs5ALB5/k+rvwvG2qAB8crkJOfOrzQvCjiX7qAbWdBbFcbnXLJGm+45XmW433ZS9wl/UC8gwNhLzuiQshgVP7XbfIFEJy6c69NBHxeEHg7AmgyBQfPlnf7Dvjxsf1z4dzG8vDPuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746586850; c=relaxed/simple;
-	bh=uE60/wLPpi5RSXTHpuVLwf7zEV5Re38wJRpo94mtqyo=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=hpcLuAhnQn/0YSC2oHrUVpc+cI40nT+HE1vwavYDjLducUOzwfUkfUmc81Y15zJYRS9+Ig7EsQ1zS+IOcAWe6sl5mAt+pgBIeMEz6iLrbVyFLCGlmGKoQMD/VKE1jIWQEmLVlU6QV6xnzsO9F3xGzVN8BPAKtxOFtYa/o1sNHqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gGvejne1; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gGvejne1"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-30a8fd40723so1444626a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 20:00:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746586848; x=1747191648; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R7nqiTmIni6KvwJhq6FCkQ+xSAotgbtUANeN+7C0U3I=;
-        b=gGvejne1KRRPSsqbA34zHr1ba8NbhUkJq/JWNVNe4L929ax0faz8r27ooLixkj8rgY
-         DGc5N0mdrn58RUlF3XT9z3XkAO5EaMq12hypN50LXiihfTMb8pDllJK3AQbLBMeB06ax
-         VA6bhK0+YJBjzd95zzl3Uh2oRA8Yl6cO5l3IhT5iFFQ11Wd5ZbD8inqeaaduj8qlZf+j
-         rYnkUmodtocenJpasHdQAIE8nrBlUQHURC19NVZN9XAY4Coc0T3awFU938UFCdUzalwq
-         PjNSIqasXs/pyfroumNyqX6e6ktBdAsrCX75bwK3I3vHxtEdbu/vNQbzXvsni1meUP8h
-         vB8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746586848; x=1747191648;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=R7nqiTmIni6KvwJhq6FCkQ+xSAotgbtUANeN+7C0U3I=;
-        b=o94kz+5eEeUq2sSl8wXJAKdQ9MBZDNFQ/JvSsv5n0rY/nX03ve5HDoMccuJLJtt6kH
-         EmJEM9wi/9+XpoiwBankeOZjQ0jFCdw5ICCuxmqMisJzeyT/Xcm37lBE1GkJHP4Z0w6E
-         LtLF7FIgxRzmHT4cBW6ZHW1LWyoC1GEuHYtkjdFTzIZ9ALk02F8JFFy8yoW0Nos4MLc9
-         ecirOyNdjiEpf42Bqd5ZpXxUx8usErRPsferpxdKDZf14sF7W0x9qC5Vj808zG5Hlprh
-         3f1WUeoZ+Kr/R3LFI7bwKtnY1Mgnxd8F0Yhl+2cbUdMIlBcu7Ww7By1HfipgCASmFGMG
-         Bt9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWQcOgOmgI78qSO+tWv6H89+WaREN5k/OmQO/1ZM/MRftcjC2oFVbAeb7Czp7Z/U/rc2T95oYVxAnun/qU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP+xjPHs4nW2Kmc/ZwMx0Qm00ZXQ4ndEXM7zhR1+RT+0IE8Kpf
-	sAPFjFK2M+4UXc2Lm5js7PFpyGC08P3AaVUfQzyLrDpGXGfMe7Kt
-X-Gm-Gg: ASbGnctVHCxVhZWiRNKD2BITPXV0Ahb/xODTaC2CpR61TMUveqAvqjqVNtrJRE/tDdb
-	jEU8YyeZ8NAf/A8gdkk8k4wf+lLWyp1ko5L65OEqP+HkD/qD+6bCWlaHTf1uL8kpfart/y9+TII
-	pYK7MN1L38EHwc8bz7O/+C1KAVmEficUL9MwZnJFBO/KjNDtiTZo8dJWEnCkmFfa8KYyGnaNOqW
-	wqQdH/pF8CF+NFxReD9SOUpg1+s/YtQGpAOn41Zc0LBorSXGgo04EoPEzE4C/J5RdeiFyQIe30R
-	6yb6xWFOS+CS7Skl6eGcviL3nXTuBg3vQgoPtpvpTYAXHeZHaxE9kycPzg==
-X-Google-Smtp-Source: AGHT+IHI0vkS5a4iv5MkTSIpcl61PUH5z2XJqahN4auEkYPwfgfW587WNCREcR44kaSibQ4Uhdwrog==
-X-Received: by 2002:a17:90b:3d86:b0:301:c5cb:7b13 with SMTP id 98e67ed59e1d1-30aac184d83mr2518229a91.3.1746586847984;
-        Tue, 06 May 2025 20:00:47 -0700 (PDT)
-Received: from [192.168.43.144] ([39.144.45.240])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e66a973e9sm1950065ad.167.2025.05.06.20.00.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 20:00:47 -0700 (PDT)
-Message-ID: <9b31f1df-7dc6-468b-9418-0b13239df8bc@gmail.com>
-Date: Wed, 7 May 2025 11:00:38 +0800
+	s=arc-20240116; t=1746587088; c=relaxed/simple;
+	bh=QwIKkKxpNb7iwHp9WW3P27A3tZtJzLdwiQneLX2HKs8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VIW2KJLx+WXKpDW8Xv4fcVreocee8UjX3JMJuOxcUrRhn5fqfGTRlm0rc3zhC78kdIU0D+4htrS+BSFfBxNZk0vFi2g7Ume7cQXrnydFhJSx1S9lpdNikXzfPfxz5d2aTs/2x/tofnPWTZgNSVhev3B/27XWkFUjCjWWwDs34U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 02df348c2af011f0b29709d653e92f7d-20250507
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:d7deef24-acd2-4a9a-86d8-db3bb7a87288,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:eba71daf2742749ccda461fe3bf9477b,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
+	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
+	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 02df348c2af011f0b29709d653e92f7d-20250507
+Received: from node2.com.cn [(10.44.16.197)] by mailgw.kylinos.cn
+	(envelope-from <hehuiwen@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1610368035; Wed, 07 May 2025 11:04:37 +0800
+Received: from node2.com.cn (localhost [127.0.0.1])
+	by node2.com.cn (NSMail) with SMTP id 6E096B804EBC;
+	Wed,  7 May 2025 11:04:37 +0800 (CST)
+X-ns-mid: postfix-681ACDC5-199025431
+Received: from localhost.localdomain (unknown [10.42.12.16])
+	by node2.com.cn (NSMail) with ESMTPA id 87482B80758A;
+	Wed,  7 May 2025 03:04:36 +0000 (UTC)
+From: Huiwen He <hehuiwen@kylinos.cn>
+To: tangchengchang@huawei.com
+Cc: huangjunxian6@hisilicon.com,
+	jgg@ziepe.ca,
+	leon@kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Huiwen He <hehuiwen@kylinos.cn>
+Subject: [PATCH] RDMA/hns: fix trace TRACE_INCLUDE_PATH
+Date: Wed,  7 May 2025 11:04:33 +0800
+Message-Id: <20250507030433.599021-1-hehuiwen@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: mingo@kernel.org
-Cc: ardb@kernel.org, arnd@arndb.de, bp@alien8.de, dwmw@amazon.co.uk,
- hpa@zytor.com, linux-kernel@vger.kernel.org, michal.lkml@markovi.net,
- peterz@infradead.org, tglx@linutronix.de, torvalds@linux-foundation.org,
- vkuznets@redhat.com, yamada.masahiro@socionext.com
-References: <20250506170924.3513161-14-mingo@kernel.org>
-Subject: Re: [PATCH 13/15] x86/kconfig/64: Enable popular scheduler, cgroups
- and namespaces options in the defconfig
-Content-Language: en-US
-From: Yafang Shao <laoar.shao@gmail.com>
-In-Reply-To: <20250506170924.3513161-14-mingo@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-Hello Mingo,
+TRACE_INCLUDE_PATH should be a path relative to define_trace.h, not the
+file including it. (See the comment in include/trace/define_trace.h.)
 
- > +CONFIG_VIRT_CPU_ACCOUNTING_GEN=y
- > +CONFIG_IRQ_TIME_ACCOUNTING=y
+Fixes build error found with CONFIG_INFINIBAND_HNS_HIP08=3Dm:
+  CC [M]  drivers/infiniband/hw/hns/hns_roce_hw_v2.o
+In file included from drivers/infiniband/hw/hns/hns_roce_trace.h:213,
+                 from drivers/infiniband/hw/hns/hns_roce_hw_v2.c:53:
+./include/trace/define_trace.h:110:42: fatal error: ./hns_roce_trace.h: N=
+o such file or directory
+  110 | #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
 
-Enabling CONFIG_IRQ_TIME_ACCOUNTING=y can lead to user-visible 
-behavioral changes. For more context, please refer to the related 
-discussion here: 
-https://lore.kernel.org/all/20241222024734.63894-1-laoar.shao@gmail.com/ .
-
-If we decide to enable it by default, we should clearly document this 
-behavior change. Below is the patch I wrote earlier but haven’t sent out 
-for review yet.
-
-----
-
-Subject: [PATCH] init/Kconfig: document behavior change when enabling
-  IRQ_TIME_ACCOUNTING
-
-After we enabled CONFIG_IRQ_TIME_ACCOUNTING, we noticed that the IRQ
-usage is not accounted to the tasks and thus not accounted to the CPU
-cgroup neither. This behavior change results in issues [0] in our
-production servers and finally we have to revert it.
-
-We'd better clearly document this behavior change in case it might
-matter to the user.
-
-Link: 
-https://lore.kernel.org/all/20241222024734.63894-1-laoar.shao@gmail.com/ [0]
-Suggested-by: "Michal Koutný" <mkoutny@suse.com>
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Huiwen He <hehuiwen@kylinos.cn>
 ---
-  init/Kconfig | 8 ++++++++
-  1 file changed, 8 insertions(+)
+ drivers/infiniband/hw/hns/hns_roce_trace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/init/Kconfig b/init/Kconfig
-index a20e6efd3f0f..191df0b5cf1c 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -563,6 +563,14 @@ config IRQ_TIME_ACCOUNTING
-        transitions between softirq and hardirq state, so there can be a
-        small performance impact.
+diff --git a/drivers/infiniband/hw/hns/hns_roce_trace.h b/drivers/infinib=
+and/hw/hns/hns_roce_trace.h
+index 23cbdbaeffaa..19bd3c0eec47 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_trace.h
++++ b/drivers/infiniband/hw/hns/hns_roce_trace.h
+@@ -209,5 +209,5 @@ DEFINE_EVENT(cmdq, hns_cmdq_resp,
+ #undef TRACE_INCLUDE_FILE
+ #define TRACE_INCLUDE_FILE hns_roce_trace
+ #undef TRACE_INCLUDE_PATH
+-#define TRACE_INCLUDE_PATH .
++#define TRACE_INCLUDE_PATH ../../drivers/infiniband/hw/hns
+ #include <trace/define_trace.h>
+--=20
+2.25.1
 
-+      Enabling IRQ_TIME_ACCOUNTING excludes IRQ usage from the CPU usage
-+      statistics of individual tasks and, consequently, it is not accounted
-+      for in CPU cgroups. As a result, a task's CPU usage will accurately
-+      reflect only its user time and system time. IRQ usage is instead
-+      attributed at the global level and can be observed in metrics such as
-+      /proc/stat or, potentially, at the cgroup level in files like
-+      irq.pressure.
-+
-        If in doubt, say N here.
-
-  config HAVE_SCHED_AVG_IRQ
