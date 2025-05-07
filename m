@@ -1,128 +1,126 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50D51D516C;
-	Wed,  7 May 2025 03:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3061DE2DE;
+	Wed,  7 May 2025 03:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746587783; cv=none; b=tBoV2ho7tPJEQD6+jeraCYn8PYF4AxEWTVVO3F0We/9lknSP8jUaQYC3dVfTuf9RtUcyLjPa4gBQwDImGiM3mTsl2e+/ccLHTdO2tWnp3BtEGoYMQnakCLG1kwMtEQhkIc9VCfuSbjwMyWUVhdKZgBRswfbOmf+2DUm7fpAOdcM=
+	t=1746587784; cv=none; b=fVDuuoYcSyrV0ycmbubiGkaz/rES4u4faDXxcb89MsV/AvAqWTdYEqJwKhr2uYInZUvmFWx3i+/vBxIrbyHlYGdHYX2UjgxmvcLTEGDXxMW6yNAV3gI5C/R5xvFVH4cUsL6iB/r5l8XSgSnCbXT+8PhSzYvhLAX4aavWU4PTtz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746587783; c=relaxed/simple;
-	bh=qnih2Q3fDdHNxkI+GRo65pjwV5RPh3Ol6SJVr1A8jHc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=h9WqU4OGpjDxpUXib1aUaKLirG81A7TE4oM7K7PgXzUCkHxdCTFBNGhj2/LTpVLIZWICVLMVwiei6zMZSUglEKqdp4NfnmwWlJ1Oo1XXXar9dNoPXQYkBU8907P72z6Wa7HoZSzuWdecLRLl9XT6Wrr/m4Nipj8++YA3qx1cLRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=miPKMmkE; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1746587784; c=relaxed/simple;
+	bh=32WlCO71OjiYT2aoyhlntKR9ovKyf9vnH96JdQigswI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dsf25ugwTspw74u8aiVEbPRT5FLtX6ixhenFTPTMwRNgSqdQF3VcX8bSmHZICoAXBDmvTX2/ymqHESmLg9czFFI4DOY2Kjm9hwN1G31Vg99U/9O9S+hqgQsf8CM105dqnMtgRJEhbfLSL+VViWxzlQWhljEuKcdeRSUbz+h+DIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1c4o8RZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="miPKMmkE"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471HA0A028443;
-	Wed, 7 May 2025 03:16:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=mBH+GfjC+j4
-	rk6f5spyQReEfLrRh87IzYlgQYCkCLVE=; b=miPKMmkE7IUbIRNtQ7ExES3qVRT
-	y6VNjiJtvtNmkDONqoq8t3pFbnqsBS6Q07IxeTvet3r9/jjsBtZRMheds1l/mpty
-	e36Z1EqANEAL8zevTGkKyy6EvS7Dl8VyyzrzBt5AEiL8cCLZJ4d0pM5T21Ifvq1S
-	OBpCKKt6BNjgR4WzAwH/aQNU79tCY6CO02FtJHgAebdlKIGFg+jm8GzwFUg04yId
-	ZIomBxHBNwG5MqkRStkS5gg9CwxXPkQ3QWovSTmVGo4bF1ecUCUOzDszx5kotrJy
-	CQ3YzOgN6C5LhCcJNXwnLLTpyVg14wwyw7Z/hu8zMFpHus/HXG+haEIxz5A==
-Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46fguujdm8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 03:16:08 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5473G6Wh012882;
-	Wed, 7 May 2025 03:16:06 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 46dc7m60u7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 03:16:06 +0000
-Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5473G6Fd012872;
-	Wed, 7 May 2025 03:16:06 GMT
-Received: from cse-cd02-lnx.ap.qualcomm.com (cse-cd02-lnx.qualcomm.com [10.64.75.246])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 5473G5UT012850
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 03:16:05 +0000
-Received: by cse-cd02-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
-	id 6E1DC2F3B; Wed,  7 May 2025 11:16:04 +0800 (CST)
-From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-To: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, dmitry.baryshkov@linaro.org,
-        neil.armstrong@linaro.org, abel.vesa@linaro.org,
-        manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
-        bhelgaas@google.com, andersson@kernel.org, konradybcio@kernel.org
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, quic_qianyu@quicinc.com,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-        Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Subject: [PATCH v4 5/5] PCI: qcom: Add support for QCS615 SoC
-Date: Wed,  7 May 2025 11:15:59 +0800
-Message-Id: <20250507031559.4085159-6-quic_ziyuzhan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250507031559.4085159-1-quic_ziyuzhan@quicinc.com>
-References: <20250507031559.4085159-1-quic_ziyuzhan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1c4o8RZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDB29C4CEF8;
+	Wed,  7 May 2025 03:16:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746587783;
+	bh=32WlCO71OjiYT2aoyhlntKR9ovKyf9vnH96JdQigswI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=o1c4o8RZdJlLclWm5TxXkFl/BRqAbrNpGURmvXPllf0vZcQUGCX0LY5fxyALR7IDs
+	 YER9d2Fb3NUDtZxWwQzNbnrlHLXdpULL79qSC1B2mIIQQv6xABU+cDOncIQZaOBifb
+	 nMG2jeKOJAo2YHCCNlzhVhjvQowqW1nIi5mMuBve4ips9xg7tzy9+e0nNUM0MobN9d
+	 6Vs9UkTTjfqJUQO/nmfma8Bno+xKLy3Tw66Iu9pMp0jcliiDl6K8psYmQUJ60HWtla
+	 GxziLenaLcc/51dVL7imu2cPX7jgFsZ0JWHhZrPEL9TzDXKAfRDx8rbBTiYbgwuXTo
+	 mO+9Nk9FOmAEQ==
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-af548cb1f83so6132264a12.3;
+        Tue, 06 May 2025 20:16:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWTV+HTlOfWnZ0E+jGcpdJo8A9G9BRCW3Qr77+8tK2bFMEBhtfQjoprX4RP5zhXwj587OfyvnW+kec14roP42KYZnu3OaJB@vger.kernel.org, AJvYcCXgBpJ/VkQUJu6nr1jDyrJFYTscKw7EAI8995foa79BzzkuivQnXFH+YSfnVsVzG9f35zh9H3G00APwaAk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcHeDxvtu3rNkd0vCPjx03FKvBmgBMtmdaF0so+vEOt0B5/7Z9
+	jdjP8jrPbjnODg8zRZ3Gvi6m2vnPVcUf0V5w7XZy6YLrWfqlohpOz4trbpi6xrrl5mrgp62Fjsd
+	Ek7jpS9llZUFPJz1Un1yI0GQMVqI=
+X-Google-Smtp-Source: AGHT+IEXC3Vsr2Rgr65O8kyUpKpYF3B44exSqyI1j/ooaXaFLZkr4cb5MPWzkviMbzeR3GEzlF8cg3G6JIm6ZI+Fz0U=
+X-Received: by 2002:a17:90a:ec8c:b0:2ee:f687:6acb with SMTP id
+ 98e67ed59e1d1-30aac1947a5mr3125622a91.13.1746587783328; Tue, 06 May 2025
+ 20:16:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=UJPdHDfy c=1 sm=1 tr=0 ts=681ad078 cx=c_pps
- a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=esfGit-853AAzAUiwWkA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: 3WpzF2Oqrl6K4vRWJJuGu_l1uO9H_uRi
-X-Proofpoint-GUID: 3WpzF2Oqrl6K4vRWJJuGu_l1uO9H_uRi
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDAyOCBTYWx0ZWRfXwquaN+suwMwz
- 3T79lXxS3Epo1Xg2nKksU3X9jrwz4Y7oluD9axJgGJSFEoD95q/JXwzJoSkumMCKDvOGDluZloQ
- eiX8s4HnuaXX+PxkamHcNfdEiTzxyYS3xfox5UBu7mPBYJboPOBMGrZ7YyHIGi5eMhiZlbwv5wF
- sOLhlUWS7nI614ZcTZ0Y83MrZa9KAFSAWuCx1PiQCW+IWhPcvrPLwlIOjJRu7nhgjVW6iVLKXop
- hAYtejsHJhWZaU7vbaFTd1CQjGZKVFZ8ZbQVbIGqwJTxZVESVNirjSZqKOPVRJCrpRBF5xUxNZ6
- xlTBrxsNGMfUHXkgtJPvJJBw6n00q/qoVIkFxoGDRYDEqeXiBl9VmtTmnVorx6GZOZ+tzd6xujK
- 2mxLk3FtcZrp11+QWBxFySVFLyWn0HFoWFHa3BzLHLt0+Fep11xgAX9L/BM3bj2rcc/D7DnE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_01,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 adultscore=0 clxscore=1015 phishscore=0 spamscore=0
- impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0 bulkscore=0
- malwarescore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505070028
+References: <20250306082615.174777-1-max.kellermann@ionos.com>
+ <20250309151907.GA178120@mail.hallyn.com> <CAKPOu+_vTuZqsBLfRH+kyphiWAtRfWq=nKAcAYu=Wn2JBAkkYg@mail.gmail.com>
+ <20250506132158.GA682102@mail.hallyn.com> <CAKPOu+9JCLVpJ-g_0WwLm5oy=9sq=c9rmoAJD6kNatpMZbbw9w@mail.gmail.com>
+In-Reply-To: <CAKPOu+9JCLVpJ-g_0WwLm5oy=9sq=c9rmoAJD6kNatpMZbbw9w@mail.gmail.com>
+From: "Andrew G. Morgan" <morgan@kernel.org>
+Date: Tue, 6 May 2025 20:16:12 -0700
+X-Gmail-Original-Message-ID: <CACmP8U+aLY7wmEqdb=a_tpDCY5LaPGb46DU+jSD3bCXX=JUAuA@mail.gmail.com>
+X-Gm-Features: ATxdqUFmZ2s_ZlLLimKgjcARTYd5C_qFYoCyepjYfWpeDu4uUNFd_ukk0NjhmpY
+Message-ID: <CACmP8U+aLY7wmEqdb=a_tpDCY5LaPGb46DU+jSD3bCXX=JUAuA@mail.gmail.com>
+Subject: Re: [PATCH] security/commoncap: don't assume "setid" if all ids are identical
+To: Max Kellermann <max.kellermann@ionos.com>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>, Andy Lutomirski <luto@kernel.org>, paul@paul-moore.com, 
+	jmorris@namei.org, kees@kernel.org, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add the compatible and the driver data for QCS615 PCIe controller.
-There is only one controller instance found on this platform, which
-is capable of up to 8.0GT/s.
-The version of the controller is 1.38.0 which is compatible with 1.9.0
-config.
+On Tue, May 6, 2025 at 7:51=E2=80=AFAM Max Kellermann <max.kellermann@ionos=
+.com> wrote:
+> To me, the current implementation looks weird and buggy (but that's
+> just my opinion). The code figures that that it's a set-id exec when
+> effective!=3Dreal, which is indeed how set-id execution looks like, but
+> still that check is slightly off:
+>
+> 1. it's really only set-id when new!=3Dold; checking real!=3Deffective is
+> conceptually the wrong angle
+> 2. there may be other reasons why real!=3Deffective
+>
+> My patch is an attempt to fix this in an unintrusive way, by not
+> rewriting it but adding another check to rule out some special case.
+> If I were to rewrite this from scratch, I'd do it differently (only
+> compare new!=3Dold), but I don't want to mess too much with security
+> code that I'm not very familiar with. I believe the guy who initially
+> wrote it made wrong assumptions, but maybe I'm just wrong, I'm not the
+> expert here.
+>
+> > Note also that so far I'm only asking about the intent of the patch.
+>
+> In a shared webhosting environment, we want to run an Apache (or
+> nginx) in each website's container. If the website owner does "chmod
+> 600", the Apache should not be able to read the file; but PHP
+> processes spawned by the Apache should have full access. Therefore, we
+> run Apache with a different fsuid; when Apache executes PHP, the fsuid
+> is reverted.
 
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 1 +
- 1 file changed, 1 insertion(+)
+[...]
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index dc98ae63362d..0ed934b0d1be 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1862,6 +1862,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
- 	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
- 	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_sc8280xp },
-+	{ .compatible = "qcom,qcs615-pcie", .data = &cfg_1_9_0 },
- 	{ }
- };
- 
--- 
-2.34.1
+> > Apart from that, I do think the implementation is wrong, because you
+> > are impacting non-NO_NEW_PRIVS behavior as well, such as calculation
+> > of cap_permitted and the clearing of ambient capabilities.
+>
+> You are right, it affects all three code blocks that are checking
+> "is_setid", but why do you believe it's wrong?
+> I can move the new check to the bottom, covering only the
+> "secureexec=3D1" line, if that worries you.
 
+If a setuid program execs itself, does the presence of this code undo
+any protection the kernel afforded it on its first invocation? It
+feels like changing that could easily turn out to be exploitable in
+some context. Programs re-exec themselves all the time.
+
+> > And, I'm not sure the has_identical_uids_gids() is quite right, as I'm
+> > not sure what the bprm->cred->fsuid and suid make sense, though the
+> > process's fsuid and suid of course need to be checked.
+>
+> Sorry, I don't get that. What do you mean?
+
+I suspect Serge is noting that s*id and f*uid are forced to be the
+corresponding e*id later in the code (indeed you mention this feature
+above where I've put [...]), so comparing the values before that takes
+effect isn't really comparing the right values in your added code.
+
+FWIW I ran the libcap quicktest.sh script against your change and it
+doesn't break any capability thing I test for when making libcap
+releases. That being said, in general this whole zoo of *[ug]id values
+and their subtle behavior is not casually obvious. I'd recommend using
+a userspace workaround for your use case, and not changing the legacy
+behavior of the kernel.
+
+Cheers
+
+Andrew
