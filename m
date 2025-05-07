@@ -1,143 +1,184 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415A1213E66
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 10:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E2620B1F4;
+	Wed,  7 May 2025 10:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746612253; cv=none; b=TeVGLTxbQmTGHb5xAPJ3EGD4avZTkXmeCv0EJTr+cVoloEplrjWF47GrBytY2JE71iQ9c82/BLDlOkFc19Omse2cCSyqqs1Rafeya15lSj/l4X1frviQ9+dFlBOrR80owbtlnxllj5W8eL1oObOmX+CLgg4HCAQvOoSloJRtjg8=
+	t=1746612254; cv=none; b=ayN5UTCAUp7bCmclS/2rtOxaRz9ll2KL1pdYTXr1f0XQjUE7Gz36+jpLug08/WYr4ZbYq0nwseOLqHsS5z5Qqiuwusx4Uf78wvStgppfPpMYIH710mogiUIP0LEr4mKCf+ou1lO8hIRZuf3zWXhJPIH4QalQ1bDuVXZpmf7c5IM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746612253; c=relaxed/simple;
-	bh=KKDPdf+RYih2MpxRJbdswI13umMtHPKoTSKbUwdg2SQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=OkzUECpGeHpCT89wLdRZL/5J7218aLIJeLcqBT7fLkwIUlTZm553B0SljNk9NGpDB+fZmxOsRhrGqS9ZzP9vYhb7kQ4z70LUPKnooBTRTEqpnrWJ1jKIM1SaweiC9AgT33rYtpfdB24Blwn2NWStHe/ABS8vG+xu1Bvpi7GBdjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JkPLRVWu; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1746612254; c=relaxed/simple;
+	bh=iUuS42Uclw9FLIubzIFhbyfjGtzW0hUtKf7lNPTgtgs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kj3hqkifYpwdpU6H5SS1Q4H4hdG01Q0edivVTK7AhIp07iCfWwHfL963kVtd3mIlCuJ+JPpXTHWljDn4x7593eHX4KbIGKStlEqAeCNEr9cKOVJwdiARxghngo1wg0OqZ93H6bZyWUsIoPWfLlNgCc+yHvOaiFEHLhsuTtj0O8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cEX+Oco9; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JkPLRVWu"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250507100403euoutp01612ba194b53756c58ff997548e8a6885~9NpT5d5eT1175611756euoutp01J
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 10:04:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250507100403euoutp01612ba194b53756c58ff997548e8a6885~9NpT5d5eT1175611756euoutp01J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1746612243;
-	bh=N32TfHVqNTkje4PcTK07rh/HIsJBsQBWcN1H8kWn9js=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=JkPLRVWuHBDbxns/R/3DK8w87IPCtNOg2sGMoqr4GavTq/yF0viOnzZnBTs8ZrWI6
-	 lYvhnCAFyq59EGWlnhGYpCXwQzDsHeXwqOD/orpLzP+waygrJJjzqYthmqoUeCMMKg
-	 PCaedNImP5Y/Dbgr/zZOR/RRE7Oq68itdkMfRpGQ=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250507100403eucas1p1c31cf23f55512589a7663132f9f50778~9NpTWWOeV1269412694eucas1p11;
-	Wed,  7 May 2025 10:04:03 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250507100402eusmtip2f16f3da88a0473dad88a4f960a19539c~9NpSR_l2o2857428574eusmtip2I;
-	Wed,  7 May 2025 10:04:02 +0000 (GMT)
-Message-ID: <91ecca14-2102-4c29-9252-025ce6b6a07f@samsung.com>
-Date: Wed, 7 May 2025 12:04:01 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cEX+Oco9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746612252; x=1778148252;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=iUuS42Uclw9FLIubzIFhbyfjGtzW0hUtKf7lNPTgtgs=;
+  b=cEX+Oco9cAt1sLOmTSsKIGRae9wpLW02sliWiEoV0FvVB+1RJw3xyO47
+   fojwDsdtKBOSlY/EcUFqxiHjERVw0VAuqZnFhfUCYgrVi+KlIZRMrunPF
+   z6DEVBvEgQggjdDDxRa9z5r8oBzWrLvcjc7/+XdXSU2iq9bNXrFYdaJVL
+   MR/m02iFGd29sooUul15pEftpCTGQvl83pz5RwwuENq4sATxnOcX7ARLu
+   uZxhZqDtAv4e+fYfdsrHo7e4AnYE0gWoBRyeRNWQRlhtmvPw4EU8lafGb
+   /Z09YUfpC6aR2v3EYtY+6fJ3r6/bxtLt4L8sEpG2kJcDcCIX5yGEzxYOq
+   A==;
+X-CSE-ConnectionGUID: tTVUZIHfRAqkW+UxodhgmA==
+X-CSE-MsgGUID: Pu7PSK5sR92TviCHg3unjA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="59730221"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="59730221"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 03:04:11 -0700
+X-CSE-ConnectionGUID: PSOJ5DJ7R72t6hsb+akvyA==
+X-CSE-MsgGUID: OSW7vIWNT0+TQ5dev9D0YA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="135816401"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 07 May 2025 03:04:05 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCbdC-0007Ys-1g;
+	Wed, 07 May 2025 10:04:02 +0000
+Date: Wed, 7 May 2025 18:03:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tanmay Jagdale <tanmay@marvell.com>, bbrezillon@kernel.org,
+	arno@natisbad.org, schalla@marvell.com, herbert@gondor.apana.org.au,
+	davem@davemloft.net, sgoutham@marvell.com, lcherian@marvell.com,
+	gakula@marvell.com, jerinj@marvell.com, hkelam@marvell.com,
+	sbhatta@marvell.com, andrew+netdev@lunn.ch, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, bbhushan2@marvell.com,
+	bhelgaas@google.com, pstanner@redhat.com,
+	gregkh@linuxfoundation.org, peterz@infradead.org, linux@treblig.org,
+	krzysztof.kozlowski@linaro.org, giovanni.cabiddu@intel.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, rkannoth@marvell.com, sumang@marvell.com,
+	gcherian@marvell.com, Tanmay Jagdale <tanmay@marvell.com>
+Subject: Re: [net-next PATCH v1 10/15] octeontx2-pf: ipsec: Setup NIX HW
+ resources for inbound flows
+Message-ID: <202505071739.xTGCCtUx-lkp@intel.com>
+References: <20250502132005.611698-11-tanmay@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 3/3] riscv: dts: thead: Add device tree VO clock
- controller
-To: Stephen Boyd <sboyd@kernel.org>, Drew Fustini <drew@pdp7.com>
-Cc: mturquette@baylibre.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, guoren@kernel.org, wefu@redhat.com,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	alex@ghiti.fr, jszhang@kernel.org, p.zabel@pengutronix.de,
-	m.szyprowski@samsung.com, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <c46de621e098b7873a00c1af4ca550a1@kernel.org>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250507100403eucas1p1c31cf23f55512589a7663132f9f50778
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250403094433eucas1p2da03e00ef674c1f5aa8d41f2a7371319
-X-EPHeader: CA
-X-CMS-RootMailID: 20250403094433eucas1p2da03e00ef674c1f5aa8d41f2a7371319
-References: <20250403094425.876981-1-m.wilczynski@samsung.com>
-	<CGME20250403094433eucas1p2da03e00ef674c1f5aa8d41f2a7371319@eucas1p2.samsung.com>
-	<20250403094425.876981-4-m.wilczynski@samsung.com> <Z/BoQIXKEhL3/q50@x1>
-	<17d69810-9d1c-4dd9-bf8a-408196668d7b@samsung.com>
-	<9ce45e7c1769a25ea1abfaeac9aefcfb@kernel.org>
-	<475c9a27-e1e8-4245-9ca0-74c9ed663920@samsung.com>
-	<c46de621e098b7873a00c1af4ca550a1@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502132005.611698-11-tanmay@marvell.com>
+
+Hi Tanmay,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on net-next/main]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Tanmay-Jagdale/crypto-octeontx2-Share-engine-group-info-with-AF-driver/20250502-213203
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20250502132005.611698-11-tanmay%40marvell.com
+patch subject: [net-next PATCH v1 10/15] octeontx2-pf: ipsec: Setup NIX HW resources for inbound flows
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250507/202505071739.xTGCCtUx-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071739.xTGCCtUx-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505071739.xTGCCtUx-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c:488:6: warning: variable 'pool' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+     488 |         if (err)
+         |             ^~~
+   drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c:512:23: note: uninitialized use occurs here
+     512 |         qmem_free(pfvf->dev, pool->stack);
+         |                              ^~~~
+   drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c:488:2: note: remove the 'if' if its condition is always false
+     488 |         if (err)
+         |         ^~~~~~~~
+     489 |                 goto pool_fail;
+         |                 ~~~~~~~~~~~~~~
+   drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c:466:24: note: initialize the variable 'pool' to silence this warning
+     466 |         struct otx2_pool *pool;
+         |                               ^
+         |                                = NULL
+   1 warning generated.
 
 
+vim +488 drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c
 
-On 5/6/25 23:30, Stephen Boyd wrote:
-> Quoting Michal Wilczynski (2025-04-30 00:52:29)
->>
->> In the v2 version of the patchset, there was no reset controller yet, so
->> I thought your comment was made referring to that earlier version.
->> This representation clearly describes the hardware correctly, which is
->> the requirement for the Device Tree.
->>
->> The manual, in section 5.4.1.6 VO_SUBSYS, describes the reset registers
->> starting at 0xFF_EF52_8000:
->>
->> GPU_RST_CFG             0x00
->> DPU_RST_CFG             0x04
->> MIPI_DSI0_RST_CFG       0x8
->> MIPI_DSI1_RST_CFG       0xc
->> HDMI_RST_CFG            0x14
->> AXI4_VO_DW_AXI          0x18
->> X2H_X4_VOSYS_DW_AXI_X2H 0x20
->>
->> And the clock registers for VO_SUBSYS, manual section 4.4.1.6 start at offset 0x50:
->> VOSYS_CLK_GATE          0x50
->> VOSYS_CLK_GATE1         0x54
->> VOSYS_DPU_CCLK_CFG0     0x64
->> TEST_CLK_FREQ_STAT      0xc4
->> TEST_CLK_CFG            0xc8
->>
->> So I considered this back then and thought it was appropriate to divide
->> it into two nodes, as the reset node wasn't being considered at that
->> time.
->>
->> When looking for the reference [1], I didn't notice if you corrected
->> yourself later, but I do remember considering the single-node approach
->> at the time.
->>
-> 
-> If the two register ranges don't overlap then this is probably OK. I
-> imagine this is one device shipped by the hardware engineer, VO_SUBSYS,
-> which happens to be a clock and reset controller. This is quite common,
-> and we usually have one node with both #clock-cells and #reset-cells in
-> it. Then we use the auxiliary bus to create the reset device from the
-> clk driver with the same node. This helps match the device in the
-> datasheet to the node and compatible in DT without making the compatible
-> provider specific (clk or reset postfix).
-> 
-> That's another reason why we usually have one node. DT doesn't describe
-> software, i.e. the split between clk and reset frameworks may not exist
-> in other operating systems. We don't want to put the software design
-> decisions into the DT.
-> 
-> It may also be that a device like this consumes shared power resources
-> like clks or regulators that need to be enabled to drive the device, or
-> an IOMMU is used to translate the register mappings. We wouldn't want to
-> split the device in DT in that case so we can easily manage the power
-> resources or memory mappings for the device.
-> 
-> TL;DR: This is probably OK, but I'd be careful to not make it a thing.
+   461	
+   462	static int cn10k_ipsec_setup_nix_rx_hw_resources(struct otx2_nic *pfvf)
+   463	{
+   464		struct otx2_hw *hw = &pfvf->hw;
+   465		int stack_pages, pool_id;
+   466		struct otx2_pool *pool;
+   467		int err, ptr, num_ptrs;
+   468		dma_addr_t bufptr;
+   469	
+   470		num_ptrs = 256;
+   471		pool_id = pfvf->ipsec.inb_ipsec_pool;
+   472		stack_pages = (num_ptrs + hw->stack_pg_ptrs - 1) / hw->stack_pg_ptrs;
+   473	
+   474		mutex_lock(&pfvf->mbox.lock);
+   475	
+   476		/* Initialize aura context */
+   477		err = cn10k_ipsec_ingress_aura_init(pfvf, pool_id, pool_id, num_ptrs);
+   478		if (err)
+   479			goto fail;
+   480	
+   481		/* Initialize pool */
+   482		err = otx2_pool_init(pfvf, pool_id, stack_pages, num_ptrs, pfvf->rbsize, AURA_NIX_RQ);
+   483		if (err)
+   484			goto fail;
+   485	
+   486		/* Flush accumulated messages */
+   487		err = otx2_sync_mbox_msg(&pfvf->mbox);
+ > 488		if (err)
+   489			goto pool_fail;
+   490	
+   491		/* Allocate pointers and free them to aura/pool */
+   492		pool = &pfvf->qset.pool[pool_id];
+   493		for (ptr = 0; ptr < num_ptrs; ptr++) {
+   494			err = otx2_alloc_rbuf(pfvf, pool, &bufptr, pool_id, ptr);
+   495			if (err) {
+   496				err = -ENOMEM;
+   497				goto pool_fail;
+   498			}
+   499			pfvf->hw_ops->aura_freeptr(pfvf, pool_id, bufptr + OTX2_HEAD_ROOM);
+   500		}
+   501	
+   502		/* Initialize RQ and map buffers from pool_id */
+   503		err = cn10k_ipsec_ingress_rq_init(pfvf, pfvf->ipsec.inb_ipsec_rq, pool_id);
+   504		if (err)
+   505			goto pool_fail;
+   506	
+   507		mutex_unlock(&pfvf->mbox.lock);
+   508		return 0;
+   509	
+   510	pool_fail:
+   511		mutex_unlock(&pfvf->mbox.lock);
+   512		qmem_free(pfvf->dev, pool->stack);
+   513		qmem_free(pfvf->dev, pool->fc_addr);
+   514		page_pool_destroy(pool->page_pool);
+   515		devm_kfree(pfvf->dev, pool->xdp);
+   516		pool->xsk_pool = NULL;
+   517	fail:
+   518		otx2_mbox_reset(&pfvf->mbox.mbox, 0);
+   519		return err;
+   520	}
+   521	
 
-Thank you very much for the comprehensive explanation. Because the
-registers don’t overlap, it’s fine in this case. Since Drew also seem to
-agree, we can probably push these patches forward, while keeping in mind
-that for future SoCs it would be better to use a single node.
-
-> 
-
-Best regards,
 -- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
