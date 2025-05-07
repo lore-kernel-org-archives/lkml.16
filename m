@@ -1,178 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B872B28B7FD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD1328C00D;
 	Wed,  7 May 2025 16:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746634444; cv=none; b=DZmg4Qdvyq8zc+QphwJpO+HR4yUAQwKejvMJIJZg05bQ8KFLsIcLefbZ1kt9c5Fu4GIQvvYgcWdR2lyKg7/QDP1uFMIvmnXwGkKaM0UHxEm6zbEucH/HSqBNsRzkTLRB7pWcZwYwxbU4TTSpx/MSDjWhdmU9jLnHYXxOPDfDf+I=
+	t=1746634445; cv=none; b=YL8mGEo5MsC7Te2yA2PiQw4xBdrlmSIrsKiPyjG8bVAMwtuE4020ahzmWBS2grObQ9/trOqci+aa+oggdPUiNA3zoQ/7JNnuNTaCVOoZ4rOOoH7V0aK6RW0P4Eyw26Z5wkOUvqsbpO5xyvnoG3TCIqpWBsheIKFbIspJoFMcaA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746634444; c=relaxed/simple;
-	bh=6J3+jrH8mLatCxA+26NtJ7WY3BN4ZJ2WICN0zEMs5IE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IxxFBpdcqP/Cfx2c1e9MRYRyXUDelSFV+Dr5ybjAaxniLhOiH+2ihNovyD8AvAHCVL3ZLal550Uaf13oP7p1Tca5HU/d7epPWlqLPX14ynstVkdrLSMS34j/tUSUNTnNQqlTeLRSzk16Gw9HVtJsxWBYNceov/yZNALb+53IwcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o2QrKJDu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746634445; c=relaxed/simple;
+	bh=UKO/g83ghC3Bu1DE8s6oQ5sS7O3tZvT5JVduKAolUys=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WdlfAMJX5CvA3F18gHkLDiQ9nGO8MTdIIMCcTVqndPLmHdvpLyiH0XZW7HlEaZhDslapnJFbx7xCjf0eQk3s0usuntevim7oANRVjgNwvWSm7fPYEAxjs0a6xrs/9NH3AFqOPIfyj1mgVI1ElYf6rYIZ1XR/nWSXlRNqRdgqNEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=Se9SVE5g; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o2QrKJDu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CF4AC4CEE2;
-	Wed,  7 May 2025 16:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746634444;
-	bh=6J3+jrH8mLatCxA+26NtJ7WY3BN4ZJ2WICN0zEMs5IE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=o2QrKJDuR/ZGZkE/LfJdLcIIS/yYUihQhuNTFg1fw55MATOaDR8PpJ0oT/B28/XSa
-	 gOBoMZWAGblA+Sx2z92HTcJ9G8/YIq0mD7OiiA2oEuUHKXlpj1vfcobf/3va2cSe01
-	 9MIBg6eAvTnQygya/vNThN3PMpU9TcsVyZO9accKgFUHEfIGZ0ywD7M/5QV3C/bDrw
-	 3F927yjPfVHdGpPmSP1YkbLNzOlQYTFERIrUkgYBZ5HB02i5pVBftkMopf98erf/nr
-	 686U8WsIZgoTUP7VCJuqrAIZu0IzzPK+ZWgxvYhUNPbP+QWyYcxBvFXWR7ZS7T+/d1
-	 mw8tplQHM1XWQ==
-From: Christian Brauner <brauner@kernel.org>
-Date: Wed, 07 May 2025 18:13:37 +0200
-Subject: [PATCH v4 04/11] net: reserve prefix
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="Se9SVE5g"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=MqGIOCVMPo1HNFOMfB65N3JXumwu7kUo9lvLDc+biAw=;
+	t=1746634444; x=1747844044; b=Se9SVE5g/GmuCEJmJymENdPpXSpY/h6V7LglPGu0yMubI5Q
+	Zr8zvugwMdeQCs1AAQStHbZj/k6XO1shNS5l4yKifk7fTqyA+m7YaXDY6jjHfO2/zSJEjITCv7t4O
+	MYQxCR3t2Dpq0xnA5pBU+yhRx1NwNznS45SvgvRAP83b8kJAHFVSAuog8vmR+2XlfTPEUCOrtxlQv
+	xlday0DlTifsa2gXwt6osMZcOL3osTHr0/iabYCEiJmyENi2bFVI6Mnl83F3ZBkK8IxCFfQIvpxKw
+	WTjbfbFxiH3GhTUz43cu+NpSdPCzyigUO40EkQKCM337HeKHJ4hiYut7kowvWu9A==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uChPE-00000008Jel-2P8T;
+	Wed, 07 May 2025 18:14:00 +0200
+Message-ID: <7a92e3eb5947837d16f8b7f1adec9ffc4fda397d.camel@sipsolutions.net>
+Subject: Re: [PATCH] um: let 'make clean' properly clean underlying SUBARCH
+ as well
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>, 
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>, Richard Weinberger
+ <richard@nod.at>, 	linux-um@lists.infradead.org
+Date: Wed, 07 May 2025 18:13:59 +0200
+In-Reply-To: <20250507074936.486648-1-masahiroy@kernel.org>
+References: <20250507074936.486648-1-masahiroy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250507-work-coredump-socket-v4-4-af0ef317b2d0@kernel.org>
-References: <20250507-work-coredump-socket-v4-0-af0ef317b2d0@kernel.org>
-In-Reply-To: <20250507-work-coredump-socket-v4-0-af0ef317b2d0@kernel.org>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>, linux-fsdevel@vger.kernel.org, 
- Jann Horn <jannh@google.com>
-Cc: Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Daan De Meyer <daan.j.demeyer@gmail.com>, 
- David Rheinsberg <david@readahead.eu>, Jakub Kicinski <kuba@kernel.org>, 
- Jan Kara <jack@suse.cz>, Lennart Poettering <lennart@poettering.net>, 
- Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- =?utf-8?q?Zbigniew_J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- Christian Brauner <brauner@kernel.org>, 
- Alexander Mikhalitsyn <alexander@mihalicyn.com>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4000; i=brauner@kernel.org;
- h=from:subject:message-id; bh=6J3+jrH8mLatCxA+26NtJ7WY3BN4ZJ2WICN0zEMs5IE=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRIt2394+H4NHb1vOXct9kWnu++5NtrouDsvL/X8PwHq
- 4ufF/Ws6ShlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZhIcRTDH15Ne2e1idPfhvMV
- a/Ynffx1bVKYL9OHn4sOaf/8Nm32Sm6G/4WavWJNrEvf9/cFT9yhJ775wu5EocmF2VeMJ/IJ6ab
- x8QIA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+X-malware-bazaar: not-scanned
 
-Add the reserved "linuxafsk/" prefix for AF_UNIX sockets and require
-CAP_NET_ADMIN in the owning user namespace of the network namespace to
-bind it. This will be used in next patches to support the coredump
-socket but is a generally useful concept.
+On Wed, 2025-05-07 at 16:49 +0900, Masahiro Yamada wrote:
+> Building the kernel with O=3D is affected by stale in-tree build artifact=
+s.
+>=20
+> So, if the source tree is not clean, Kbuild displays the following:
+>=20
+>   $ make ARCH=3Dum O=3Dbuild defconfig
+>   make[1]: Entering directory '/.../linux/build'
+>   ***
+>   *** The source tree is not clean, please run 'make ARCH=3Dum mrproper'
+>   *** in /.../linux
+>   ***
+>   make[2]: *** [/.../linux/Makefile:673: outputmakefile] Error 1
+>   make[1]: *** [/.../linux/Makefile:248: __sub-make] Error 2
+>   make[1]: Leaving directory '/.../linux/build'
+>   make: *** [Makefile:248: __sub-make] Error 2
+>=20
+> Usually, running 'make mrproper' is sufficient for cleaning the source
+> tree for out-of-tree builds.
+>=20
+> However, building UML generates build artifacts not only in arch/um/,
+> but also in the SUBARCH directory (i.e., arch/x86/). If in-tree stale
+> files remain under arch/x86/, Kbuild will reuse them instead of creating
+> new ones under the specified build directory.
+>=20
+> This commit makes 'make ARCH=3Dum clean' recurse into the SUBARCH directo=
+ry.
 
-The collision risk is so low that we can just start using it. Userspace
-must already be prepared to retry if a given abstract address isn't
-usable anyway.
+Do you want to take that through your tree? I'm not sure we'd get it
+into 6.15 at this point via uml, if you have some other material feel
+free to take it:
 
-Signed-off-by: Christian Brauner <brauner@kernel.org>
----
- include/uapi/linux/un.h |  2 ++
- net/unix/af_unix.c      | 39 +++++++++++++++++++++++++++++++++++----
- 2 files changed, 37 insertions(+), 4 deletions(-)
+Acked-by: Johannes Berg <johannes@sipsolutions.net>
 
-diff --git a/include/uapi/linux/un.h b/include/uapi/linux/un.h
-index 0ad59dc8b686..bbd5ad508dfa 100644
---- a/include/uapi/linux/un.h
-+++ b/include/uapi/linux/un.h
-@@ -5,6 +5,8 @@
- #include <linux/socket.h>
- 
- #define UNIX_PATH_MAX	108
-+/* reserved AF_UNIX socket namespace. */
-+#define UNIX_SOCKET_NAMESPACE "linuxafsk/"
- 
- struct sockaddr_un {
- 	__kernel_sa_family_t sun_family; /* AF_UNIX */
-diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-index 472f8aa9ea15..148d008862e7 100644
---- a/net/unix/af_unix.c
-+++ b/net/unix/af_unix.c
-@@ -114,6 +114,13 @@ static atomic_long_t unix_nr_socks;
- static struct hlist_head bsd_socket_buckets[UNIX_HASH_SIZE / 2];
- static spinlock_t bsd_socket_locks[UNIX_HASH_SIZE / 2];
- 
-+static const struct sockaddr_un linuxafsk_addr = {
-+	.sun_family = AF_UNIX,
-+	.sun_path = "\0"UNIX_SOCKET_NAMESPACE,
-+};
-+
-+#define UNIX_SOCKET_NAMESPACE_ADDR_LEN (offsetof(struct sockaddr_un, sun_path) + sizeof(UNIX_SOCKET_NAMESPACE))
-+
- /* SMP locking strategy:
-  *    hash table is protected with spinlock.
-  *    each socket state is protected by separate spinlock.
-@@ -436,6 +443,30 @@ static struct sock *__unix_find_socket_byname(struct net *net,
- 	return NULL;
- }
- 
-+static int unix_may_bind_name(struct net *net, struct sockaddr_un *sunname,
-+			      int len, unsigned int hash)
-+{
-+	struct sock *s;
-+
-+	s = __unix_find_socket_byname(net, sunname, len, hash);
-+	if (s)
-+		return -EADDRINUSE;
-+
-+	/*
-+	 * Check whether this is our reserved prefix and if so ensure
-+	 * that only privileged processes can bind it.
-+	 */
-+	if (UNIX_SOCKET_NAMESPACE_ADDR_LEN <= len &&
-+	    !memcmp(&linuxafsk_addr, sunname, UNIX_SOCKET_NAMESPACE_ADDR_LEN)) {
-+		/* Don't bind the namespace itself. */
-+		if (UNIX_SOCKET_NAMESPACE_ADDR_LEN == len)
-+			return -ECONNREFUSED;
-+		if (!ns_capable(net->user_ns, CAP_NET_ADMIN))
-+			return -ECONNREFUSED;
-+	}
-+	return 0;
-+}
-+
- static inline struct sock *unix_find_socket_byname(struct net *net,
- 						   struct sockaddr_un *sunname,
- 						   int len, unsigned int hash)
-@@ -1258,10 +1289,10 @@ static int unix_autobind(struct sock *sk)
- 	new_hash = unix_abstract_hash(addr->name, addr->len, sk->sk_type);
- 	unix_table_double_lock(net, old_hash, new_hash);
- 
--	if (__unix_find_socket_byname(net, addr->name, addr->len, new_hash)) {
-+	if (unix_may_bind_name(net, addr->name, addr->len, new_hash)) {
- 		unix_table_double_unlock(net, old_hash, new_hash);
- 
--		/* __unix_find_socket_byname() may take long time if many names
-+		/* unix_may_bind_name() may take long time if many names
- 		 * are already in use.
- 		 */
- 		cond_resched();
-@@ -1379,7 +1410,8 @@ static int unix_bind_abstract(struct sock *sk, struct sockaddr_un *sunaddr,
- 	new_hash = unix_abstract_hash(addr->name, addr->len, sk->sk_type);
- 	unix_table_double_lock(net, old_hash, new_hash);
- 
--	if (__unix_find_socket_byname(net, addr->name, addr->len, new_hash))
-+	err = unix_may_bind_name(net, addr->name, addr->len, new_hash);
-+	if (err)
- 		goto out_spin;
- 
- 	__unix_set_addr_hash(net, sk, addr, new_hash);
-@@ -1389,7 +1421,6 @@ static int unix_bind_abstract(struct sock *sk, struct sockaddr_un *sunaddr,
- 
- out_spin:
- 	unix_table_double_unlock(net, old_hash, new_hash);
--	err = -EADDRINUSE;
- out_mutex:
- 	mutex_unlock(&u->bindlock);
- out:
+Otherwise we can take it via uml tree for 6.16 too, let us know.
 
--- 
-2.47.2
-
+johannes
