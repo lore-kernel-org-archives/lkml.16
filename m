@@ -1,136 +1,235 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E315231C9F;
-	Wed,  7 May 2025 11:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DD12153C5
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746616010; cv=none; b=G/We1SFmmcqdPvwHhoaaXpSFSlWSoIkMxyCit9ekVyK4WURYxLRt190QdgyvW1KjRnqTiXaKB2Ra5pKOpVklIb2KaF3nYJtDNLhnw3Xn6wietywY/nPPRQ2VOllo8821aWH4M6q7319HL70gplFLE00yYzuh0jw478aPBAx9qSc=
+	t=1746616112; cv=none; b=r71MyWCV24wpB+sD682gIqXyjlmFvH/Dyt0NIZvU5JE8Adpz5Tt4DsbJ2I3yc70sRfTFfuJN7mhu2GweiTjI4JPrEWMsdEA3H3ayTghEsiNV+zuzymwXmrhQUyoYn4vYjBxSgKw6mWS5yYSxmPeittDpSqdup7d3TQoKI1Je0zA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746616010; c=relaxed/simple;
-	bh=aOkcXIBKJAR9llayqzp+OuFfdvHH0nZj+heQRjsae+o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gpmKkXlNLRC2gt42VFYWMIQ1uEwtRbSJQr1JFq6fhy1SAiQaRZ29jCtJWc4UgAJWE7wtc5j7zV0jEU/f409mXfGd6dhzPlm6iukIQFBYX7u/AbiGhmnGd40UuhCc2GD2vLlznxnCzmBfu4Dl8PoqZCkB3X8mB3B1CW3fEIbOrUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y/pgV53M; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746616112; c=relaxed/simple;
+	bh=TFtAvhGPCjH1vQkg0Kk4DxEheOg80Nt8ZeP3uBHqlMc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GEwMIdfkHm5NTFKD7lfwWhCdRIaIm7qvVj18ZkHH3XZdNretBGg+ixHilJcxmmPUPb6cJ1vHJEP5warQGf8BznZeGseJeoVZb3bPmAH4Bk8+Wv2JGzEbvGoftXUCx/5VC4Zy84MH5U+iaPF0oXSkRO1oq7QPEs1lWkALQtwYr/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VgttKnPC; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fRfToGMn; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=p2sSrdbt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AJUMJSCz; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/pgV53M"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5f6222c6c4cso10048366a12.1;
-        Wed, 07 May 2025 04:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746616007; x=1747220807; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=duDxhGSUaa+DKP3WsDW9rwdEeqUl14A6M/ImrV8wnQY=;
-        b=Y/pgV53M1LUsw7oxKzlx3Kp4xxGli1l8THui/VYrbzdGZecy5CjVoO/bDh8bWxV1Hg
-         nwX1OYnsxNcPkQt4qFErseVO+KZiq6DBDnNQFaNp/LoroperWm8BIKZXgIopGKJl3i4s
-         toaCtUMu5TFDqe2OUsXgmKgX+S3UaLLsmAHOJH/JkcRDLm6/KpQpqdoWEnFqyp4+/yTH
-         QUFWaF2eDbyZxyjYGddAmEhN+HgksTAdHQF7B9ycvn6UyWVYHIHaWWSWZ08l4cQcxzG3
-         8JOq3YmmA/GRIcOsaEHoe4DGpWVe9Ce74mgk3Suh3Mcb+0U0HEtwfRR3GtXgNsv/VFqu
-         YO7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746616007; x=1747220807;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=duDxhGSUaa+DKP3WsDW9rwdEeqUl14A6M/ImrV8wnQY=;
-        b=mlp36XTjszEp04XJOJS/rNZkb8OmO2aN+Fwt9GtHBj1IAyl2YRnGNB7HmJt4rJTBCZ
-         r3s+fE2387rEqyeHM6xiJhqXNYKjbRhXUNvQSeP6wQoTxNga0VzQ2XwTV8hPMR2wqjmX
-         F3RnrGdZU1bRvXvnJFYTWhVpwJB888U66mF2VcDgs8vcFBFbbz3JzRTlykM3ct7MzcnQ
-         7itIlp+hIiLpYWlyTpVa6hH8lGlF/kHFrPjyBNMhsdV047tWa9idluReOQA6veu5wqNJ
-         wX+/YwHw7xbfE+Yxx52EnjyNhSLz0I9wL9bSijxZgyH+xomoWLH7EFElRQZWY0ARvqsE
-         qVWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVyXyAsJALMU4taCvczYUHJJ+V2AOAA5s+GZw304+PBSjzcjLjCQDup4g6jA1mj8kPTXIjMRZahiIuMB1cG@vger.kernel.org, AJvYcCWywCNWBw0T57BIFfS+YEN0DKOdRR3hcEBSDoUCv/tNKre5hjbbEk2oOF5P4v65U9CLpM22sdnV/Kg2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQgjfZGSDbYVX1fRnSs0DuHm01999Ct+tURO0Lqdxni2tXoVR6
-	nNWX5tSxXbxS9jT7JusdzLgFEHiZKvllVZF/xqx72FmM6DXv+fnV
-X-Gm-Gg: ASbGncvw2Do7JrYul8C6mFxx6qItR/jkB3PSwrx3B26opaCyzTcNFYLvnjMmHoCv9hZ
-	QNhnbSAgoAOnZwamNZh6mhCNYfJ2Ej1r0geIBTCeKH+LUxWGBDd0CzcTSL5oDEUtmW4sxZddcak
-	haFWKOVxu6WiPm1C3xxiG9fZ11Ve7oYnBt0rs73mBIjzkR5PdOLISeNIF8WE9iyfhOvZTF/+Rrj
-	i8H1i017j7xJITGgoPf1Su63XMy+6vHSsL5DoyYESIYx8R6T2WkmHIrsxfNmKqqoLP36JtJIW8C
-	1oe+fJg2AwRWgEsd3z+FcjO3vRNFrWtqKhCzj/uDlQuSAtTWug==
-X-Google-Smtp-Source: AGHT+IHUTGuZKxGzeUHzGfykWA8vb3hzItLyZnesCtBXdESu0mFRGfHYDE/15YKTQH60qIZWWmK6oA==
-X-Received: by 2002:a17:907:c388:b0:ace:d3f0:e51d with SMTP id a640c23a62f3a-ad1e8d89b0cmr288549566b.54.1746616006898;
-        Wed, 07 May 2025 04:06:46 -0700 (PDT)
-Received: from [192.168.1.130] ([188.193.103.108])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad18914d067sm888907766b.3.2025.05.07.04.06.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 04:06:46 -0700 (PDT)
-Message-ID: <63665c17-da37-4b5b-9c2d-28d5a669680f@gmail.com>
-Date: Wed, 7 May 2025 13:06:44 +0200
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VgttKnPC";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fRfToGMn";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="p2sSrdbt";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AJUMJSCz"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id F24891F395;
+	Wed,  7 May 2025 11:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746616108; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fFEUUmten1TD6D9lybLOMxeEWKfyYel0DbgWwF/eDV4=;
+	b=VgttKnPCL+3uxScODxoZE6rRTI0CYyLnjJP0R5QzIWFmPSYWEdEL1D8+lPl3qlJtLjkx+g
+	nSUNAh31gkW8iTzZFdfnuYN3VnbEpC7g7oOviJqJbEc8p0c5fZl+JJl9PA/2hKEwLwKsEU
+	uw40FAbsXLhZyLYzDyc4isLtcNniryE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746616108;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fFEUUmten1TD6D9lybLOMxeEWKfyYel0DbgWwF/eDV4=;
+	b=fRfToGMnGAob1D1LzD3IifHSYLNKzmMd+Dwxm9iqRpSRGu/ad6hPvBKI4AL6lZvghusHuX
+	hoSiW5aqT7ngh+Bw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746616107; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fFEUUmten1TD6D9lybLOMxeEWKfyYel0DbgWwF/eDV4=;
+	b=p2sSrdbt23q3b2Rvq6uDIdHM1P/4+IFYzmDqO/23ydHY88dTHA52v9/qh6/8mFBysOd+fl
+	c6W9ZBgxlwQIx+XPf/pr52E0NvnWhCJ9aFrbltPZHRpXp2u97HlAuvDQJloIyqcFW7vQaC
+	NvG62kfSwXPzixxhJmhEFkJ6XxhQavQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746616107;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fFEUUmten1TD6D9lybLOMxeEWKfyYel0DbgWwF/eDV4=;
+	b=AJUMJSCzGEu0XKMcg51iF6nGs3z3i8ZyYDS2maSWN4Hdt8lszXVaGlu66nsPHvgzgl5T3+
+	y5Va8XSVMNcE7zCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E636413882;
+	Wed,  7 May 2025 11:08:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0aAwOCs/G2jgGQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 07 May 2025 11:08:27 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 83A91A09BE; Wed,  7 May 2025 13:08:23 +0200 (CEST)
+Date: Wed, 7 May 2025 13:08:23 +0200
+From: Jan Kara <jack@suse.cz>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Matthew Bobrowski <repnop@google.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] fanotify: Avoid a couple of
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <42nltwupsu4567oc5hioa4djga5yoqqoq3h7j3dj6vjr6hv4kt@54wdcs2wwefj>
+References: <aBqdlxlBtb9s7ydc@kspp>
+ <CAOQ4uxj-tsr5XWXfu3BHRygubA5kzZVsb_x6ELb_U_N77AA96A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/4] ARM: dts: stm32: add initial support for
- stm32mp157-ultra-fly-sbc board
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- =?UTF-8?B?QsO2cmdlIFN0csO8bXBmZWw=?= <boerge.struempfel@gmail.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250505115827.29593-1-goran.radni@gmail.com>
- <20250505115827.29593-5-goran.radni@gmail.com>
- <2d0ff289-06f6-4bde-a238-097d22573d4e@lunn.ch>
-Content-Language: en-US
-From: Goran Radenovic <goran.radni@gmail.com>
-In-Reply-To: <2d0ff289-06f6-4bde-a238-097d22573d4e@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxj-tsr5XWXfu3BHRygubA5kzZVsb_x6ELb_U_N77AA96A@mail.gmail.com>
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.993];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -2.80
 
-Hi Andrew,
-
-thank You very much for Your comments.
-
-Andrew Lunn wrote:
->> +&ethernet0 {
->> +	status = "okay";
->> +	pinctrl-0 = <&ethernet0_ux_rgmii_pins_a>;
->> +	pinctrl-1 = <&ethernet0_ux_rgmii_pins_sleep_a>;
->> +	pinctrl-names = "default", "sleep";
->> +	phy-mode = "rgmii-id";
->> +	max-speed = <1000>;
+On Wed 07-05-25 07:56:21, Amir Goldstein wrote:
+> On Wed, May 7, 2025 at 1:39 AM Gustavo A. R. Silva
+> <gustavoars@kernel.org> wrote:
+> >
+> > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> > getting ready to enable it, globally.
+> >
+> > Modify FANOTIFY_INLINE_FH() macro, which defines a struct containing a
+> > flexible-array member in the middle (struct fanotify_fh::buf), to use
+> > struct_size_t() to pre-allocate space for both struct fanotify_fh and
+> > its flexible-array member. Replace the struct with a union and relocate
+> > the flexible structure (struct fanotify_fh) to the end.
+> >
+> > See the memory layout of struct fanotify_fid_event before and after
+> > changes below.
+> >
+> > pahole -C fanotify_fid_event fs/notify/fanotify/fanotify.o
+> >
+> > BEFORE:
+> > struct fanotify_fid_event {
+> >         struct fanotify_event      fae;                  /*     0    48 */
+> >         __kernel_fsid_t            fsid;                 /*    48     8 */
+> >         struct {
+> >                 struct fanotify_fh object_fh;            /*    56     4 */
+> >                 unsigned char      _inline_fh_buf[12];   /*    60    12 */
+> >         };                                               /*    56    16 */
+> >
+> >         /* size: 72, cachelines: 2, members: 3 */
+> >         /* last cacheline: 8 bytes */
+> > };
+> >
+> > AFTER:
+> > struct fanotify_fid_event {
+> >         struct fanotify_event      fae;                  /*     0    48 */
+> >         __kernel_fsid_t            fsid;                 /*    48     8 */
+> >         union {
+> >                 unsigned char      _inline_fh_buf[16];   /*    56    16 */
+> >                 struct fanotify_fh object_fh __attribute__((__aligned__(1))); /*    56     4 */
 > 
-> max-speed is probably pointless, rgmii cannot do more than 1G.
+> I'm not that familiar with pahole, but I find it surprising to see this member
+> aligned(1), when struct fanotify_fh is defined as __aligned(4).
 
-Agreed. I'll drop the `max-speed` property in the next revision.
+Yeah.
 
-
->> +	phy-handle = <&phy1>;
->> +
->> +	mdio {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		compatible = "snps,dwmac-mdio";
->> +		phy1: ethernet-phy@1 {
->> +			reg = <1>;
->> +			interrupt-parent = <&gpiod>;
->> +			interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
+> >         } __attribute__((__aligned__(1)));               /*    56    16 */
+> >
+> >         /* size: 72, cachelines: 2, members: 3 */
+> >         /* forced alignments: 1 */
+> >         /* last cacheline: 8 bytes */
+> > } __attribute__((__aligned__(8)));
+> >
+> > So, with these changes, fix the following warnings:
+> >
+> > fs/notify/fanotify/fanotify.h:317:28: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > fs/notify/fanotify/fanotify.h:289:28: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> >
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > ---
+> >  fs/notify/fanotify/fanotify.h | 12 ++++++------
+> >  1 file changed, 6 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/fs/notify/fanotify/fanotify.h b/fs/notify/fanotify/fanotify.h
+> > index b44e70e44be6..91c26b1c1d32 100644
+> > --- a/fs/notify/fanotify/fanotify.h
+> > +++ b/fs/notify/fanotify/fanotify.h
+> > @@ -275,12 +275,12 @@ static inline void fanotify_init_event(struct fanotify_event *event,
+> >         event->pid = NULL;
+> >  }
+> >
+> > -#define FANOTIFY_INLINE_FH(name, size)                                 \
+> > -struct {                                                               \
+> > -       struct fanotify_fh name;                                        \
+> > -       /* Space for object_fh.buf[] - access with fanotify_fh_buf() */ \
+> > -       unsigned char _inline_fh_buf[size];                             \
+> > -}
+> > +#define FANOTIFY_INLINE_FH(name, size)                                               \
+> > +union {                                                                                      \
+> > +       /* Space for object_fh and object_fh.buf[] - access with fanotify_fh_buf() */ \
+> > +       unsigned char _inline_fh_buf[struct_size_t(struct fanotify_fh, buf, size)];   \
 > 
-> PHY interrupts are 99% time level, not edge.
+> The name _inline_fh_buf is confusing in this setting
+> better use bytes[] as in DEFINE_FLEX() or maybe even consider
+> a generic helper DEFINE_FLEX_MEMBER() to use instead of
+> FANOTIFY_INLINE_FH(), because this is not fanotify specific,
+> except maybe for alignment (see below).
 
-That is correct, but I am facing strange behavior, when I set 
-IRQ_TYPE_LEVEL_LOW.
-My board stops booting at:
+Yes, I guess a generic helper for this would be nice but if fanotify is the
+only place that plays these tricks, we can keep it specific for now. I
+agree naming the "space-buffer" field "bytes" would be less confusing.
 
-[    2.343233] Waiting for root device /dev/mmcblk0p4...
-[   12.638818] platform 5a006000.usbphyc: deferred probe pending
-[   12.643192] platform 49000000.usb-otg: deferred probe pending
-[   12.649029] platform 48003000.adc: deferred probe pending
-[   12.654277] platform 5800d000.usb: deferred probe pending
-[   12.659744] platform 5800c000.usb: deferred probe pending
-[   12.665089] amba 58005000.mmc: deferred probe pending
-[   12.670239] amba 58007000.mmc: deferred probe pending
-[   12.675185] platform 50025000.vrefbuf: deferred probe pending
+> 
+> > +       struct fanotify_fh name;                                                      \
+> > +} __packed
+> 
+> Why added __packed?
+> 
+> The fact that struct fanotify_fh is 4 bytes aligned could end up with less
+> bytes reserved for the inline buffer if the union is not also 4 bytes aligned.
+> 
+> So maybe something like this:
+> 
+> #define FANOTIFY_INLINE_FH(name, size) \
+>     DEFINE_FLEX_MEMBER(struct fanotify_fh, name, size) __aligned(4)
 
-I must investigate this. If You have any idea, You are welcome to share it.
+I guess you need to provide the "member" information to
+DEFINE_FLEX_MEMBER() somewhere as well.
 
-> 	Andrew
+								Honza
 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
