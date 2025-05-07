@@ -1,165 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BED428BA82;
-	Wed,  7 May 2025 16:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA91C28C039;
+	Wed,  7 May 2025 16:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746635784; cv=none; b=dWTZJP/t5z/BOf19xmjo7ZxzhaKpOIqhorig7shEMWR+DczbPbflmlG34BcgGjvIdV9uRtHUKxuZPC6d1Y1VjkNhlKJn0Hxn6bxmE28d6V4IA85DCowUgRkeTLZnqgMGt2uufGRI2R2ilZDaqoWngagxWfBxs9Im0NwN57h29fw=
+	t=1746635790; cv=none; b=moz9/QK+kN8jEYHzzR6i6w2Mn0w40+kWUgDYg4LMUZ4tPqSFnBf8+VFhP7CebthqhVhq3ekRJ4usycddJ5Vera+Sy0y6wPJHiDuq1mCT+IUiFukU4Nx4eCwXmmDtDUMcxHxc2jBjdx7dtBYTobVsLfwnDw8Gd29Mv5VoPZqIjLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746635784; c=relaxed/simple;
-	bh=cjO4ygzINjwIC1ncU+oe4aI5LkAeIM5Tar8FVF/MIo8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eIuor3st3po05pquCMC7EtSpuGpZ6OAR/oq0sGPP4Wu/zuwu5s2c0Xsg3Jj9E/8WEVu8yzyO2J+9bJolYThUf20su6P11jl0ag1s4EvRdu05IAeCT8fMPF7blMIn+k0NbLgbEl9s8aU9Zh7r2LXB4eY0QdM0v/Somh594MtA6cY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W4xVl3aS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746635790; c=relaxed/simple;
+	bh=jodQBOUHL1Gt952eiPBvOHE9pzfV95ZMyn2l0xgzhNI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DuSLf7VWnPY+2EGXXrX99PHEHlub57OqPDWko8jlydnRCMMpTpaf1Znutdff/YDBmSmcEhbe6KA6hiFzycmzfZktLwwyocAAK7tJAl5NmCYv0drpgeAWmsrhR6PeuDMcJbgcGE/RLs1hQIYrtE5q/HnwEiKL3287VH15MvEgMDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X+di1bRy; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W4xVl3aS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5089C4CEE2;
-	Wed,  7 May 2025 16:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746635784;
-	bh=cjO4ygzINjwIC1ncU+oe4aI5LkAeIM5Tar8FVF/MIo8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W4xVl3aSH4fNvgokVYKqSMtjFz8SUI1ZllOCWtTjUmLBm+mzmmK79sTUQgS/Z7/8h
-	 vUR24xkBtrdqW6gDOYL/p/7PhStwZupg3enNxZoAiEfJ5rrfJHqKjElqf1+gxfbxOC
-	 sklrsBJ7ynRb7IfS6eHq0aWNLlqY1MiE4ngk6mhc8wBhQUVbhihA7ZiMdIqKl7lbbE
-	 jnhNQvqZJrEqEdsTzAzoTgKh+HWWiWn65umxq8q4ezBMENpkAyX5bx0vAAP3LT/W1c
-	 YXGglVvg3MoiU+ZDLlk+bOZXdsT+CLuWhLATlFRubj/lFyAqFngYhVzmu+7i06CAO/
-	 lSfNYb9vACEQA==
-Received: by pali.im (Postfix)
-	id 8C20E5F1; Wed,  7 May 2025 18:36:20 +0200 (CEST)
-Date: Wed, 7 May 2025 18:36:20 +0200
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-	heiko@sntech.de, manivannan.sadhasivam@linaro.org,
-	yue.wang@Amlogic.com, neil.armstrong@linaro.org, robh@kernel.org,
-	jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
-	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v3 3/3] PCI: aardvark: Remove redundant MPS configuration
-Message-ID: <20250507163620.53v5djmhj3ywrge2@pali>
-References: <20250506173439.292460-1-18255117159@163.com>
- <20250506173439.292460-4-18255117159@163.com>
- <20250506174110.63ayeqc4scmwjj6e@pali>
- <8a6adc24-5f40-4f22-9842-b211e1ef5008@163.com>
- <ff6abbf6-e464-4929-96e6-16e43c62db06@163.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X+di1bRy"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a0b933f214so60373f8f.0;
+        Wed, 07 May 2025 09:36:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746635787; x=1747240587; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=axt5Qbp2mD3JDBMkh2CUDM68i+V3fWWqBODx7JRunlE=;
+        b=X+di1bRy4H0E1YI5jauGFNQ2Nmsz5RbAd2Po/39/HscWNC+omMPJN6NyiluKdYKClS
+         gKkdIlLYadh0beLMtDIxP1GzyPn6LIH5Wbd2QdolQ4A3RZB8+O8O9X+HahHdousyWiIj
+         U4mTdT28rKE34v3Av0RbbkW0zPiFOjCAdzmnKQev5pocoZb1y1zUTbFnhxVWuvkBwYnD
+         QtbRlE2AU6cEU/ODVwqnT0QDAoIc4htRV6BZPJYIb4y6SgfiGOqCqXRq95j5KWvtHpNC
+         NnbErISEVvDiW/O9NFWNBVMa8S0neqVpao5JKZZEQfPUbdMvMCWEnFcsWN+6XaYrAuzj
+         YVQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746635787; x=1747240587;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=axt5Qbp2mD3JDBMkh2CUDM68i+V3fWWqBODx7JRunlE=;
+        b=oGYWXg4zOhmrpsDg0GDSL+7ISVVTzskCjMdZj50Cs9WJz4vNfIenYVN5e36qjIPBJb
+         K4ozJh02B1OChkZ59hVovv+fBfDCdeDv5R2voVhDhAcg5swe6OKbgdgXQWU8dRtQNwB9
+         oQPhVrBE/RbmdY5nDqz+6wcq3jxgniR/mAFF6SQKujbzXQMuUJZqlzCTRJX0M4gtemVB
+         4GdgtCp3oFTMuUPondULodJ8XQ/8G4DFFL437BXbalA9o9Yw8RlZVO7FCtmh/dIksYjk
+         R8/Nghwmtc1XVRZGvditLDHo2aKPS/7q75x5yPzkq2iXzJouLwlU4b7p1IqInTSwTflS
+         jS0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUU/l9xpj43IXDZwluuB4X1YeBvAoqgBgE9vApoUgu/v1h7BfMpjy5+2WyF8qu0oNW6VW2KN8osvKl3@vger.kernel.org, AJvYcCV1YILll0+0qjPfsxh8p+0L/2ouF4tnG687rWtiY8IJ7I6RVcqiP9bjh/vRHZDSrYnSpLPACWu9urM5Lrjf@vger.kernel.org, AJvYcCXVo9uOL3Tcw3gUvXR0+moQiPBq24DurF4hwytIKw5yXwNymTjAatwtXh6wxtQ+jCMoPyW+841oBWFH@vger.kernel.org, AJvYcCXsuFCoZyqNsqUEgs3Mbz1OPuEYocLt0yN7nLjsjIzhhfCp+MbfDH534pwv2AHLCJ3eUSB+21TlQqs1BM/gPQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw07RrKca0qwJnjsamrP//gkrViFUNi1MzF9xBhcENUXwv/KpSU
+	IsZ5ZGLV5o6WYu7ZCCtdVE/DVgPn8fwMsSHZeFWH0JHeIW8d9g58wZBP44y2Y4K3/YwH3fktb9C
+	pe4ocT/ivr7wiejQBYnJcFPcEjg==
+X-Gm-Gg: ASbGncv/qXHWYRzHrbkYH8EzT1qfdGbvaTJrJShP0jdK4v0O750/e7yaz661b0AMTcx
+	NaWR+FLOEhtEBUGtuaRaI0qDZzKMo2QfjNwl792e/2DiBSC8XH8ycMHTE0y0GvlGdR1/HcG1TWe
+	Enfm8thxJRZKWmgPKb7cYKMaA=
+X-Google-Smtp-Source: AGHT+IG4TtEc4UHcL2gxaRWi5FT3jZwhYmsgKbgjQKUE4+xfZUIUK784DIMLSgMmX34KKba9PPpbydZq1seoxRWbt+U=
+X-Received: by 2002:a05:6000:ec6:b0:3a0:b4fa:e594 with SMTP id
+ ffacd0b85a97d-3a0b4fae636mr3071542f8f.33.1746635786642; Wed, 07 May 2025
+ 09:36:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ff6abbf6-e464-4929-96e6-16e43c62db06@163.com>
-User-Agent: NeoMutt/20180716
+References: <20250426130203.37659-1-alex.vinarskis@gmail.com> <174659505811.5380.3561194017032215136.b4-ty@kernel.org>
+In-Reply-To: <174659505811.5380.3561194017032215136.b4-ty@kernel.org>
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Date: Wed, 7 May 2025 18:36:12 +0200
+X-Gm-Features: ATxdqUGYO_K7swrC_4mSQOoLVgxcVoKQsspTBMQaet4mxzcKeI5SjbJ6I6HJ0wA
+Message-ID: <CAMcHhXq1-=JeNspAZ61W0JqtjPkoKSi2W1sL07hoVsqFu5T--Q@mail.gmail.com>
+Subject: Re: (subset) [PATCH v4 0/4] X1E Asus Zenbook A14 support
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Abel Vesa <abel.vesa@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, maud_spierings@hotmail.com, 
+	dmitry.baryshkov@oss.qualcomm.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wednesday 07 May 2025 23:06:51 Hans Zhang wrote:
-> On 2025/5/7 23:03, Hans Zhang wrote:
-> > On 2025/5/7 01:41, Pali Rohár wrote:
-> > > On Wednesday 07 May 2025 01:34:39 Hans Zhang wrote:
-> > > > The Aardvark PCIe controller enforces a fixed 512B payload size via
-> > > > PCI_EXP_DEVCTL_PAYLOAD_512B, overriding hardware capabilities and PCIe
-> > > > core negotiations.
-> > > > 
-> > > > Remove explicit MPS overrides (PCI_EXP_DEVCTL_PAYLOAD and
-> > > > PCI_EXP_DEVCTL_PAYLOAD_512B). MPS is now determined by the PCI core
-> > > > during device initialization, leveraging root port configurations and
-> > > > device-specific capabilities.
-> > > > 
-> > > > Aligning Aardvark with the unified MPS framework ensures consistency,
-> > > > avoids artificial constraints, and allows the hardware to operate at
-> > > > its maximum supported payload size while adhering to PCIe
-> > > > specifications.
-> > > > 
-> > > > Signed-off-by: Hans Zhang <18255117159@163.com>
-> > > > ---
-> > > >   drivers/pci/controller/pci-aardvark.c | 2 --
-> > > >   1 file changed, 2 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/pci-aardvark.c
-> > > > b/drivers/pci/controller/pci-aardvark.c
-> > > > index a29796cce420..d8852892994a 100644
-> > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > @@ -549,9 +549,7 @@ static void advk_pcie_setup_hw(struct
-> > > > advk_pcie *pcie)
-> > > >       reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
-> > > >       reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
-> > > >       reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
-> > > > -    reg &= ~PCI_EXP_DEVCTL_PAYLOAD;
-> > > >       reg &= ~PCI_EXP_DEVCTL_READRQ;
-> > > > -    reg |= PCI_EXP_DEVCTL_PAYLOAD_512B;
-> > > >       reg |= PCI_EXP_DEVCTL_READRQ_512B;
-> > > >       advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
-> > > > -- 
-> > > > 2.25.1
-> > > > 
-> > > 
-> > > Please do not remove this code. It is required part of the
-> > > initialization of the aardvark PCI controller at the specific phase,
-> > > as defined in the Armada 3700 Functional Specification.
-> > > 
-> > > There were reported more issues with those Armada PCIe controllers for
-> > > which were already sent patches to mailing list in last 5 years. But
-> > > unfortunately not all fixes were taken / applied yet.
-> > 
-> > Hi Pali,
-> > 
-> > I replied to you in version v2.
-> > 
-> > Is the maximum MPS supported by Armada 3700 512 bytes?
+On Wed, 7 May 2025 at 07:18, Bjorn Andersson <andersson@kernel.org> wrote:
+>
+>
+> On Sat, 26 Apr 2025 14:57:56 +0200, Aleksandrs Vinarskis wrote:
+> > Introduce support for the mentioned laptop.
+> >
+> > Particular device exists in two model numbers:
+> > * UX3407QA: X1P-42-100 or X1-26-100 (as tested)
+> > * UX3407RA: X1E-78-100
+> >
+> > Mostly similar to other X1-based laptops. Notable differences are:
+> > * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
+> >   and Qualcomm FastConnect 7800 on UX3407RA
+> > * USB Type-C retimers are Parade PS8833, appear to behave identical
+> >   to Parade PS8830
+> > * gpio90 is TZ protected
+> >
+> > [...]
+>
+> Applied, thanks!
+>
+> [2/4] dt-bindings: arm: qcom: Add Asus Zenbook A14
+>       commit: 9f2ae52acd5e6c95ddc55d1cc67f44860940a21b
 
-IIRC yes, 512-byte mode is supported. And I think in past I was testing
-some PCIe endpoint card which required 512-byte long payload and did not
-worked in 256-byte long mode (not sure if the card was not able to split
-transaction or something other was broken, it is quite longer time).
 
-> > What are the default values of DevCap.MPS and DevCtl.MPS?
+Thanks!
 
-Do you mean values in the PCI-to-PCI bridge device of PCIe Root Port
-type?
+I saw 2/4, 3/4 were applied. Is there a reason 4/4 was left behind,
+eg. Does it have to go through different trees like 1/4?
+I also saw that another later series with dtb changes for x1e devices
+[1] has landed, so 4/4 of the current series won't apply anymore...
+Would you like me to rebase & respin?
 
-Aardvark controller does not have the real HW PCI-to-PCI bridge device.
-There is only in-kernel emulation drivers/pci/pci-bridge-emul.c which
-create fake kernel PCI device in the hierarchy to make kernel and
-userspace happy. Yes, this is deviation from the PCIe standard but well,
-buggy HW is also HW.
+Regards,
+Alex
 
-And same applies for the pci-mvebu.c driver for older Marvell PCIe HW.
-
-> > Because the default value of DevCtl.MPS is not 512 bytes, it needs to be
-> > configured here, right?
-> > 
-> > If it's my guess, RK3588 also has the same requirements as you, just
-> > like the first patch I submitted.
-> > 
-> > Please take a look at the communication history:
-> > https://patchwork.kernel.org/project/linux-pci/patch/20250416151926.140202-1-18255117159@163.com/
-> And this:
-> https://patchwork.kernel.org/project/linux-pci/patch/20250425095708.32662-2-18255117159@163.com/
-
-These changes are referring the to root ports PCI devices, which are not
-applicable for aardvark PCIe controller.
-
-> > 
-> > Please test it using patch 1/3 of this series. If there are any
-> > problems, please let me know.
-> > 
-> > 
-> > Best regards,
-> > Hans
-> 
-
-Sorry, but I stopped doing any testing of the aardvark driver with the
-mainline kernel after PCI maintainers stopped taking fixes for the
-driver and stopped responding.
-
-I'm not going to debug same issues again, which I have analyzed,
-prepared fixes, sent patches and see no progress there.
-
-Seems that there is a status quo, and I'm not going to change it.
+[1] https://lore.kernel.org/all/174659597008.7675.2301017495937908497.b4-ty@kernel.org/
+>
+> Best regards,
+> --
+> Bjorn Andersson <andersson@kernel.org>
