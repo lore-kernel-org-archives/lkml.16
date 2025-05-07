@@ -1,186 +1,169 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE83290D80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DBD28937C
 	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746626083; cv=none; b=Axst6CRJPjY2bXbGAYtyonLmiylVUkVlVJ9FjxJNU18YPdPjKpYp/xpfk4wjxLPPYLOYvVqMPFSLRScXKlgeXyOD12fcX+pyZxbGoYGXO37jCDnko54OjkPVK48nu+VHxO4ZJ12lbVyme8aLRsrWD49FpCoiMiMkPT3J7E/uhEs=
+	t=1746626083; cv=none; b=DsCA0Ad1UwEQL6uWW6hnVPg6hQwrAlkSdqZEpO9qoojiNlfSkPLflFQVWq1/+/9+m0E7WqPUvaZQ/Ml2eijMr8iXUbynlCdSUp4heopg0N8U9iNSmrYXzkiIhU2mPxIOrZ5op4pG7/vinHhirwoOe3qpv4xmHuneQuiMj9LOKqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746626083; c=relaxed/simple;
-	bh=dqfyGBkgVcKt2KJMbjQNkQOr+DyqZSfUQL2BBua9awA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SCgeGrb28Hr3les2Jja8cUtvGxnpZhNXcgzNITnoxJzGDibAmY/hvWwhuzp1EMvvheHfFqNwAac/JMQU/eB4rJ39H15fTN5oiFUeQH/NFXHLZY2nK1iQBtYmjiZCpipMgZqWrBHM1lTonEeComXvZxZrbKpvZ4lOFc5nLxO3fS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j16QeABr; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=gDezvb+lG+PJ+vyrdK/H0gkWDsWOcy2gDnIeDCkdU3w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VsEv2WwsWz8k2xYsD3uLmpuJKeniFzY4RqtFqSRRCgB2oA7RBUpTb8s8s0OpqYC0hzgHIinNiMfLIu4obRwd4s8q2EKpoQ3UQ0xduYj/gI4ACtcHbyhrqOu1ioJSPbQlntI0C86n6SLpgLNu1OQHXbmcnyTtQrip+G2sL61CVoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IHCdpcgs; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j16QeABr"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-441d1ed827cso12690885e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:54:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746626080; x=1747230880; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=revvLaJxQIsk5Gmv9SK/V5e8fpLQQcfcA31+6NgbB0U=;
-        b=j16QeABrPUxRB8qxXd8sk+BBl9TLlJxVMTb82lVDWPeBmwTUkq2IxbrKo4uzpM5VSt
-         QZD6KqjpHgHKsnuic+OisxgSgSt0nPgGrKJfMp9I84bLkjc2seii7+kkKKADjKYgB1aJ
-         jm07iHR9CjAnCHGztDsq++h5Y3SpENTJuZsZTYRuZ6rk7UQ/KgNGVZXLYIkqSm4h/6UA
-         LKkTiyVyQfYNqhzkIP0S5+gu16p5TAbkP4Xb1skaNv6ED/T8+zfBM6BM7PZoSEhEtIVd
-         EY+OpytxjbJlqFU4lipepVfI21S/V7ki8IpY4mduijblYDlJyJKvE4GD69BVZZxD3QvJ
-         UEyg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IHCdpcgs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746626080;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gDezvb+lG+PJ+vyrdK/H0gkWDsWOcy2gDnIeDCkdU3w=;
+	b=IHCdpcgscnMQpBcpYQzMw/kTL8Ix7oyef46TVUHJgzullwG0IKiJhCbQgWVaUs/K1lYXhk
+	eaCyKLf1Z+ADzwc7tyTuKPuGwf97H/lHqYO0kF7nH0K8wJHwrKnF6kC1cVjSfD0Ha2w0Ji
+	05cZqZAgJk1/qRkupcfVvVT77qe0TAI=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-90-QyMav7CTPVyYGo2Y8rnolg-1; Wed, 07 May 2025 09:54:36 -0400
+X-MC-Unique: QyMav7CTPVyYGo2Y8rnolg-1
+X-Mimecast-MFC-AGG-ID: QyMav7CTPVyYGo2Y8rnolg_1746626075
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a064c45f03so537662f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:54:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746626080; x=1747230880;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=revvLaJxQIsk5Gmv9SK/V5e8fpLQQcfcA31+6NgbB0U=;
-        b=JPUONfEB3gSIc/me6CXXfp7X+yMhXj2JEsd65IZ8o6FcAV5ZyAzS4wkMGoW1JMHzVn
-         e7PXI+5MMTbBFflLv2PvaYZbV2x06D2CLtvUID5C12wonEPNE7ba7mjpUVtMaSy8/aag
-         L7uWMalI2T8Yrh3EJTSV487tih+/Mu4p23v0qbMGfY/CQYt4cIjzfp09uKZrQU4YnUri
-         OvKO2ixmycVzmi7LIJMKN4ksDPkGER8z1HI80v5kV0mJpcJKgRw2HEApuzbETWyOu3Sr
-         LhPu08MvxGqIcx1TcKCH0D7R/kFYfT23WfObuvOmNArB9PERH71xP5L8HP4kldOTaR8s
-         uqvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVIUq1gAohqu4o7tDJ+mee5NaG+jbHieXOYNfsN5okvWglfqV3YMWCChVRg6MPBo6nXLc8tmqueojUgH28=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJ+i9WfaeaLRRbhTXGUOKN7YuGcWgG0o8eZi1InHv5yWULZzvW
-	K9r63lEYCs1sXCrZrQMNSQb2BtWqHBK0/EJO+yA4zHs/RX/jIu4M
-X-Gm-Gg: ASbGncsOHiziU9mrLSsYrUhcYOBkQDKJlioQRG0uTi9rrnsQSOkUSVgJfTJOcwk5v4K
-	OcaI10F7ZKA2zDauDYyS0N5wDO7eYxalwfC7OsPpCaGEjLoV1ko17B6+7VziJhUvN20VmJIu3Or
-	0N395KDz0XIDkhi5TKoSnR0kA/+KBFCG7pIrNbPSbtroydXtPdnWQ+HiGJ0wHv4ALrFke/+H1Ua
-	N/oltCC9nWfnpj1KBw7p/bu4tWCxtsPNnZtJYgcjxsTIYiQsXI54t2JIg99ba7Yq7QT7ym+zutx
-	ac8tZdnKHd217TQI5lD7jgEtKEqaPHinGpcD1XgVZ2fQjJ70688f
-X-Google-Smtp-Source: AGHT+IFM2cUAeZfIFBOSxl3VH6utrOqI2LAEVzXdvefWHLgUAnUSzvYO0BzOjfZP721jAF09vl6/OQ==
-X-Received: by 2002:a05:600c:3845:b0:43c:fa52:7d2d with SMTP id 5b1f17b1804b1-441d44ddba7mr29173265e9.20.1746626079620;
-        Wed, 07 May 2025 06:54:39 -0700 (PDT)
-Received: from fedora.. ([94.73.35.165])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32f1eesm1894295e9.9.2025.05.07.06.54.38
+        d=1e100.net; s=20230601; t=1746626075; x=1747230875;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gDezvb+lG+PJ+vyrdK/H0gkWDsWOcy2gDnIeDCkdU3w=;
+        b=xS5IqSx48IVJXZoHPmpnJP1kGeGE9/es1tMHFXq+Kg1lwNELfC27Mjw2UsZI0hufBF
+         rEuCpeHIVXCwuJJTb8WSOQ0zrO/S8kL4AEwtAcbVsjhpg3JQN5WC5RBPuxm6KR53Ckzo
+         W3GEwqP9EDOa7QvZXi5LH8i+3XZzYsIAK7p88T4mmteTOsde53VgQCtjQbYivtD5gALw
+         8UesHWTKTByCapytM/CWAIhO2lamVvEEO27cjvijQtWcZgzJ0P9zduCLZrNsFmb77xlB
+         ZxXT4619yfqoLWXY2MTg/h7gz2rV2szefxqq1dN1mZ/GWUXaeJL5FmbaHU4o0j7qg4JB
+         Y6+Q==
+X-Gm-Message-State: AOJu0YyzI1V3iFU+t3fpMQuw88SbAwJt+uxcmNQm7GRm+igTTmSvXgw1
+	chuVbVChRbQF6av5j/c/ucPOTp2pAcwlO/1dyKKfF+RGcR6FIsxlc0rz6hg8Qqbkl+hBkwVq7lg
+	NvQb+cAXXPvSAs1i5ZuAA3CiP1HnUp82BkZ1EgVG7HcaRrQW3RbIV4g0SaQ7eEHzeNXaf51Aq
+X-Gm-Gg: ASbGncs9vf7spdrlbI3hXrt4GKDDPGxk1OsMi39jI+fikcQ3HawPyMmJJj/7/K3qJDv
+	PqU+tV3f2lIEa7nM8eGNivUI2uOThZCLmeF3pA/XfF5eMl8T43iVVPMlCCMetPoKOAaccKyF+i/
+	fONaVkGesbLeJaeRWjNbNhvA26kNwFf2C7Jres15fQyCCfWlo3yYdGjCXXQZdkvs1ufEU4te6F5
+	6+9213TofXQca8kZrhKY44avlzA4khigUzH/tNwRVzOqQMILX8AxSKVbaf611lqlBJei82Zr7mC
+	gUs1VQX/FguYvj30l9mITZNFs868w9XzM4otXg==
+X-Received: by 2002:adf:f28a:0:b0:3a0:b56a:c256 with SMTP id ffacd0b85a97d-3a0b56ac2aamr1938319f8f.28.1746626074989;
+        Wed, 07 May 2025 06:54:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHdqBYBd1i9XRqKE/sahoAtiebVaCz1MPuXCrb6x28xleKAlXNlXKxmlbs2cjQNDNk3pszYpg==
+X-Received: by 2002:adf:f28a:0:b0:3a0:b56a:c256 with SMTP id ffacd0b85a97d-3a0b56ac2aamr1938311f8f.28.1746626074626;
+        Wed, 07 May 2025 06:54:34 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae0d15sm17362729f8f.13.2025.05.07.06.54.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 06:54:38 -0700 (PDT)
-From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-To: louis.chauvet@bootlin.com
-Cc: hamohammed.sa@gmail.com,
-	simona@ffwll.ch,
-	melissa.srw@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-Subject: [PATCH v5 04/16] drm/vkms: Allow to configure the plane type via configfs
-Date: Wed,  7 May 2025 15:54:19 +0200
-Message-ID: <20250507135431.53907-5-jose.exposito89@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250507135431.53907-1-jose.exposito89@gmail.com>
-References: <20250507135431.53907-1-jose.exposito89@gmail.com>
+        Wed, 07 May 2025 06:54:34 -0700 (PDT)
+Message-ID: <dfb2721b2619130a3b3ed45c3e6d18916faf5ccb.camel@redhat.com>
+Subject: Re: [PATCH v4 2/5] timers: Add the available mask in timer migration
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+ Waiman Long <longman@redhat.com>
+Date: Wed, 07 May 2025 15:54:32 +0200
+In-Reply-To: <aBtix0VHFCRI_Y-c@localhost.localdomain>
+References: <20250506091534.42117-7-gmonaco@redhat.com>
+	 <20250506091534.42117-9-gmonaco@redhat.com>
+	 <aBozrJ0C6yzW7oB_@localhost.localdomain>
+	 <3f54534266f4405fc3c6943599edd9be88becd57.camel@redhat.com>
+	 <aBtRSSCxyHcypo4b@localhost.localdomain>
+	 <9b96acdb43b80f067a34b83c5fe9fc3e79f1e3a4.camel@redhat.com>
+	 <aBtix0VHFCRI_Y-c@localhost.localdomain>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-From: Louis Chauvet <louis.chauvet@bootlin.com>
 
-When a plane is created, add a `type` file to allow to set the type:
 
- - 0 overlay
- - 1 primary
- - 2 cursor
+On Wed, 2025-05-07 at 15:40 +0200, Frederic Weisbecker wrote:
+> Le Wed, May 07, 2025 at 02:46:39PM +0200, Gabriele Monaco a =C3=A9crit :
+> >=20
+> > I'm not so sure about this one though.
+> > As far as I understand [1], is preventing the user from setting
+> > different CPUs while doing isolcpus=3Dnohz, and nohz_full=3D (which is
+> > now
+> > equivalent). But I seem to be able to do isolcpus=3D0-3 and
+> > nohz_full=3D4-7
+> > without any problem and I believe I'd hit the issue you're
+> > mentioning.
+>=20
+> Duh!
+>=20
+> > (The same would work if I swap the masks as 0 cannot be nohz_full).
+>=20
+> Unfortunately 0 can be nohz_full...
 
-Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
-Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-Co-developed-by: José Expósito <jose.exposito89@gmail.com>
-Signed-off-by: José Expósito <jose.exposito89@gmail.com>
----
- Documentation/gpu/vkms.rst           |  5 +++
- drivers/gpu/drm/vkms/vkms_configfs.c | 46 ++++++++++++++++++++++++++++
- 2 files changed, 51 insertions(+)
+Well, I haven't found what enforces it, but I wasn't able to set 0 as
+nohz_full, no matter what I tried on x86 and arm64. Not sure if 0 was
+just by chance in this case (I'm guessing it has something to do with
+tick_do_timer_cpu, I'm not quite familiar with this code).
 
-diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
-index bf23d0da33fe..a87e0925bebb 100644
---- a/Documentation/gpu/vkms.rst
-+++ b/Documentation/gpu/vkms.rst
-@@ -84,6 +84,11 @@ Start by creating one or more planes::
- 
-   sudo mkdir /config/vkms/my-vkms/planes/plane0
- 
-+Planes have 1 configurable attribute:
-+
-+- type: Plane type: 0 overlay, 1 primary, 2 cursor (same values as those
-+  exposed by the "type" property of a plane)
-+
- Once you are done configuring the VKMS instance, enable it::
- 
-   echo "1" | sudo tee /config/vkms/my-vkms/enabled
-diff --git a/drivers/gpu/drm/vkms/vkms_configfs.c b/drivers/gpu/drm/vkms/vkms_configfs.c
-index a7c705e00e4c..398755127759 100644
---- a/drivers/gpu/drm/vkms/vkms_configfs.c
-+++ b/drivers/gpu/drm/vkms/vkms_configfs.c
-@@ -55,6 +55,51 @@ struct vkms_configfs_plane {
- #define plane_item_to_vkms_configfs_plane(item) \
- 	container_of(to_config_group((item)), struct vkms_configfs_plane, group)
- 
-+static ssize_t plane_type_show(struct config_item *item, char *page)
-+{
-+	struct vkms_configfs_plane *plane;
-+	enum drm_plane_type type;
-+
-+	plane = plane_item_to_vkms_configfs_plane(item);
-+
-+	scoped_guard(mutex, &plane->dev->lock)
-+		type = vkms_config_plane_get_type(plane->config);
-+
-+	return sprintf(page, "%u", type);
-+}
-+
-+static ssize_t plane_type_store(struct config_item *item, const char *page,
-+				size_t count)
-+{
-+	struct vkms_configfs_plane *plane;
-+	enum drm_plane_type type;
-+
-+	plane = plane_item_to_vkms_configfs_plane(item);
-+
-+	if (kstrtouint(page, 10, &type))
-+		return -EINVAL;
-+
-+	if (type != DRM_PLANE_TYPE_OVERLAY && type != DRM_PLANE_TYPE_PRIMARY &&
-+	    type != DRM_PLANE_TYPE_CURSOR)
-+		return -EINVAL;
-+
-+	scoped_guard(mutex, &plane->dev->lock) {
-+		if (plane->dev->enabled)
-+			return -EBUSY;
-+
-+		vkms_config_plane_set_type(plane->config, type);
-+	}
-+
-+	return (ssize_t)count;
-+}
-+
-+CONFIGFS_ATTR(plane_, type);
-+
-+static struct configfs_attribute *plane_item_attrs[] = {
-+	&plane_attr_type,
-+	NULL,
-+};
-+
- static void plane_release(struct config_item *item)
- {
- 	struct vkms_configfs_plane *plane;
-@@ -74,6 +119,7 @@ static struct configfs_item_operations plane_item_operations = {
- };
- 
- static const struct config_item_type plane_item_type = {
-+	.ct_attrs	= plane_item_attrs,
- 	.ct_item_ops	= &plane_item_operations,
- 	.ct_owner	= THIS_MODULE,
- };
--- 
-2.49.0
+I was trying to see if we can make some assumption in the tmigr but
+what you propose (enforce fully housekeeping CPUs everywhere) seems
+much neater.
+
+>=20
+> >=20
+> > =C2=A0 # vng -a isolcpus=3D0-7 -a nohz_full=3D8-15 head
+> > /sys/devices/system/cpu/{isolated,nohz_full}
+> >=20
+> > =C2=A0 =3D=3D> /sys/devices/system/cpu/isolated <=3D=3D
+> > =C2=A0 0-7
+> >=20
+> > =C2=A0 =3D=3D> /sys/devices/system/cpu/nohz_full <=3D=3D
+> > =C2=A0 8-15
+> >=20
+> > (where probably some CPUs are set up to do housekeeping stuff
+> > anyway,
+> > but if we just look at the masks, we won't notice)
+> >=20
+> > Then I assume this should not be allowed either, should it?
+> > Or am I missing something here?
+>=20
+> Exactly then. housekeeping_setup() already handles cases when
+> there is no housekeeping left. I guess that section could be
+> made aware of nohz_full + isolcpus not leaving any housekeeping left.
+>=20
+> >=20
+> > >=20
+> > > But if nohz_full=3D is passed on boot and cpusets later create an
+> > > isolated
+> > > partition which spans the housekeeping set, then the isolated
+> > > partition must
+> > > be rejected.
+> >=20
+> > Mmh, that would make things easier actually.
+> > I assume there's no real use case for that kind of hybrid setup
+> > with
+> > half CPUs nohz_full and half domain isolated..
+>=20
+> I guess we can accept nohz_full + isolated partition as long as a
+> housekeeping
+> CPU remains.
+
+Yeah makes sense, I'll explore that.
+
+Thanks,
+Gabriele
 
