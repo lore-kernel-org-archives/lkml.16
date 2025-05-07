@@ -1,65 +1,66 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593252144D8;
-	Wed,  7 May 2025 06:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418511DF980;
+	Wed,  7 May 2025 06:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746601133; cv=none; b=hzNVhcdrVw6HijCYbs+JoPW3cSdmtOv8leGLa8G1tPpQH860hik1Z6OrB+hKmKjdenw/1tGcdQhssi9DpP7lFLmMBbJuftEN/d+5R1XEOJM2nVmA/Ibxz0uH3/tsmaPuIqJiydxw0P7aVPtEtuLIpzvHjKNLwJ4whPZKVRqnzNw=
+	t=1746601134; cv=none; b=sqKKMefgHIkOIoxk2vCMAaQUuXxQwEhf7U8DRaYucKMGfooUwXwglC9snqgH0kbtxbB4+qgWnU1BBNC2Vch3RUlqRMmaFtrOyAkA795mhvmzFNlEKY1X8qEwaxBJ1t6/mvg9pQ1g+lDOK0F84W7PLARYH6gmc6Ex6i3ntS/oKck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746601133; c=relaxed/simple;
-	bh=CJdFR5JtlDtikPD4OrMiZayMUaCskl6VAbLParxDykI=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rFlECIfA14mHGnnz7waaZlCUeTXd8WBtQ2A2WtLZFTvzF7y3DgJKJEHKBm6hZHhvdkZ0MVISnCsozbclSr6qudZ/C+mUka7NFEuS9/YTBkZUDRmv4Q4CrQHIXby8072IGFTM33bYV7Vt4/1b4wNHWUZ5JhPlQPxgXBttrzfzgTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U2ucT4cz; arc=none smtp.client-ip=209.85.160.177
+	s=arc-20240116; t=1746601134; c=relaxed/simple;
+	bh=4CyYsnhnKma2xppJbhsHsOk6fmvNYSaorpOr7AaIMyg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=muqIfLa+zCs/vyftHdZ3rJVoT/o//Pr0h7EA2eTvpg0v/kIyJJydwldBeplo2HEcuHhN0BRthQ+60O/p2u3pI2zql7HC+1TGgYQC2KROWp91UR46W1I1sD8gOCJhFMukdVCpBPOhtYPY9sHfsVV1wqjReu2CqO38WE67BQwMxcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NiesUOp6; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2ucT4cz"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-476ab588f32so104331771cf.2;
-        Tue, 06 May 2025 23:58:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NiesUOp6"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so5376613a91.3;
+        Tue, 06 May 2025 23:58:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746601131; x=1747205931; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jIOpltPILeInSwqFzp6wxXo2CyfMdnE8s6AQHz0yqWI=;
-        b=U2ucT4czKJe9YtP/LYjtduMIjthktEJHZSyUhGPTfDITJE0b7qjBO9Bq261mRhTnAU
-         KqevOKvr6D/Bfoc3UEo6fthkTeEgSYe8YNpLTiDE2rSSCckgBWL+thlEh+REqzUVbMx7
-         L1NsgVMNQdQgVfwGhmJhBlotM6xot6+p2n1lXPzX5NgzgwkxXtlhtMDhTzDkm8QdG6P1
-         r908njOW//LZ894nubXWYbZZKYDquMSn5qZRA3ddo17+vyzxddK4ZXOZknHNNMb4fj9C
-         ufeQJqJ99fG8g9OR5xF5I6t83Zq60FIkwsMOmIkY2IRk2jYETwwDo51qeREhfFnmjEmK
-         jATg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746601131; x=1747205931;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1746601132; x=1747205932; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=jIOpltPILeInSwqFzp6wxXo2CyfMdnE8s6AQHz0yqWI=;
-        b=mGbANwj71zGKXLazFs2VfxLl7vpQeI1Lo2CSmrmC1DWG9JRKWC/Wjw4AKAe3YOGbDi
-         aZT4USJ4vIZor9wevnv0xiAOgo5jg4dr6I98Ueb5IY6FtEVQ5CAbxjEBnzBUnncC9t12
-         /fcOm8bSw11DMLxf+bjoWBgaNKFzv3AQq0N5k+GGTCMmr8Q/JxQWZY/VjsLUpgqcM/cg
-         iVVIAc9Aw1LXTcEA5ZV3hkaP/rKtRgQGF65mQnx8CGqFG2iyAp5XM1O5GNAbevZRSrPt
-         D4xYA16hlLdYQOGvu2JaArrV9KoF0qyKhp0gSFiOadBQId4Wr9as7uZHBXRS41WlLvKi
-         twCg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/a5AEHPEbPNW9RcQkgL/GGWnfBRqWdoOXImPbFZrzYnY7NmYcPkDRnkbtGskGKjPfe616oSk0L6XI@vger.kernel.org, AJvYcCURmdgHrI2mRh9vd4BOZs3E11iwUdmnI48/rfVzKWkgbuudzOCbxn3JW7QEUcLjwlrQDlByEH+hJ3l99Ws7@vger.kernel.org
-X-Gm-Message-State: AOJu0YysMcQYKyTaesMixBePIWxJTqQLZ4gtwgql+/UVmxKVlohPiicI
-	8tQTxu8EI1MlaQVUfogvh82BOyqV0lEzqyHZBulyCxH9N04bog+1/LwvZrCeLuUMwQ==
-X-Gm-Gg: ASbGnct0uhrjjzkgFBraDICMWb3ZJHOEjdNMyFXYBHEFS6dEzSxA9vUszh0YX4BX8kd
-	Zr0yFlxPT7oMeVaSuksBJ/cw3iaS5YFKTjBvLGHvO84m+CawUft8AWUD7BX9nBdL135sh1DnmQo
-	5AVcrXp759qEhgqA1ey2SudN+Rh8yh0ICZ0Px30JQ7nBtadykzpfdIoomULZc2acHfiwZkzmsTO
-	guWp8+O7ErFWce+qVJdYgednXsxxvJ0ZV/KKV9aJUksnvDCOs7jhGTHYgj8e4ij+4XlRY8VUscD
-	YcdyFMDXkOIZqfMBoh1m5zgThRWFN80KlmkjCkKXPDoMyytRa8RPZ2GRz1kYT8s=
-X-Google-Smtp-Source: AGHT+IEuH9gQXJVdRcbH2dTIbJ9oZxHTm9KD4cWN5untak0N55vRPUL7OXKYZ7KaeTcHEvqoW9uAlQ==
-X-Received: by 2002:a17:90b:3945:b0:2f2:a664:df20 with SMTP id 98e67ed59e1d1-30aac179364mr3888974a91.7.1746601120438;
-        Tue, 06 May 2025 23:58:40 -0700 (PDT)
+        bh=K/YRE9eWWpFH2r4v7/hrx7dmjRCdICuJbKw6jMjRMZw=;
+        b=NiesUOp6+bqlV6N5Hw4axchsYFi1K6O+2PHApVkWf2dGHDcuV5Xx6GHtMOBkkBO41e
+         bmTy7LQ3TqzDXoeBKLcURvblekG3SJwjyK4IrGQ/DVn1F8KzIOYLGPIOCxLzpI0Ni1rL
+         byfEMFyWWovEjClDrjYdiYXa3zDsz/IoW9mqi3cbV8uuSOYmtIKEyabgJh6KlgdjVh1B
+         jv2F9RM+Wvq8sXB+G2R8fylNOoAcFJpPiNRKrqIQ94XWtUS3g26tOe+0o2ZOQ9rutP5W
+         nY7QfeNXsOvgZYXWxdk5QYZEPTVsufBmrEB2jIhevMrHst6IXVNmUXVBDJSKiXS9wN9J
+         iRpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746601132; x=1747205932;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K/YRE9eWWpFH2r4v7/hrx7dmjRCdICuJbKw6jMjRMZw=;
+        b=rRo3YanukP99g7neCMfDBl3PdMrlYdvl/Tz3woQcgqhUuw1JbL8h7u8JjOIIlcjekz
+         z9wSZkhzobkOQ7j9Lncl3jNj9h4qqayb7S08keFimhpVE0pJFhI6Vd+bwqDKL4H8SlCP
+         uvzZMwfpWUDP5r6SHkPE85/zlvwSomNBYf3PPPNQWXWz1o3BWCq7KCdpX8DAl693a2Nq
+         eJiuNjRVzSP/kEEeJ1CRmIOBf0H5X3NFiWp0j8tAh/Q/Lb6uWDNvz5LsmqEA8xUOat7d
+         XzZmsjw7HUapkeKcaprnZbHVKbLw35kUpdbcHElCcuHUnU6PmRuYByK6H1v1gPvurLNU
+         FK0A==
+X-Forwarded-Encrypted: i=1; AJvYcCUPUNZ1FFpqEUgbzjJHKQP/d96ubgJrA434/74zhkNsttvhWZ5FK1aKRiBvytuqTXrfvd0pxdTEWRkUvxE5@vger.kernel.org, AJvYcCVkighEU4i3qCbfS8GzpHl2QbSnIQRUF+NBc2nuiekILnZtCQ+kNJFSttU87cLplyuOeM94Q0gCWDrn@vger.kernel.org
+X-Gm-Message-State: AOJu0YydyASwVJ3PE/nSr+W86Tm40NZO/dJF8vxiruRfdvuArVqSgiGC
+	hsha4dplDHgQyuwfDjbmWRTQtaXtWJM7ZVFfeb+eNnLc4R7jQV6op1VlaDM58fUqtA==
+X-Gm-Gg: ASbGncvKdV2guVL58qQtQybv7YLUqlYRCZ+b0b1uisxG8X2sw7WXB/V4GLbZTRaN/c8
+	61KkhkXeu6issmjM2IzODPSwcco8csMHXjtzKHg8Gxxk1KVp88poka+i0oO0dMrOdumFygvnGqq
+	tXmduByZLTRjZhWnmwLM8vqXVM1AgrFnjeAJJwDSfxsj+QvU450KXgjk4pvXBf9z/OzU3r8EKdw
+	FAAEN8CFNJftfwVTF+/xbi4hQ4FAYXCpU84gkj/ERcx3EQnv0ysFdm80B1rJuBYzRdYPsDQwjNT
+	xniNieHWKSyYaux0+39KMoo1gNWJTKGGYCvuS6WeTV3k1APZBggIbYkWv/3h67o=
+X-Google-Smtp-Source: AGHT+IE1R0+xD8YFgg8XOD5hEde7Pqr3UAxJ1fPGWosaZ3JgY//JiBJll/02wER6xo3fdxcyyvsHNA==
+X-Received: by 2002:a17:90a:e7ce:b0:2ef:67c2:4030 with SMTP id 98e67ed59e1d1-30aac26b86cmr3332750a91.27.1746601132185;
+        Tue, 06 May 2025 23:58:52 -0700 (PDT)
 Received: from NB-GIGA003.letovo.school ([5.194.95.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30aae525db4sm1315529a91.22.2025.05.06.23.58.34
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30aae525db4sm1315529a91.22.2025.05.06.23.58.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 23:58:40 -0700 (PDT)
+        Tue, 06 May 2025 23:58:51 -0700 (PDT)
 From: Alexey Charkov <alchark@gmail.com>
-Subject: [PATCH v2 0/4] clocksource/drivers/timer-vt8500: clean up and add
- watchdog function
-Date: Wed, 07 May 2025 10:58:29 +0400
-Message-Id: <20250507-vt8500-timer-updates-v2-0-65e5d1b0855e@gmail.com>
+Date: Wed, 07 May 2025 10:58:31 +0400
+Subject: [PATCH v2 2/4] clocksource/drivers/timer-vt8500: Add defines for
+ magic constants
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,11 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJUEG2gC/22NywrCMBBFf6XM2pFpbBNx5X9IF7GZtgP2QRKDU
- vrvxoI7l+fAPXeFwF44wKVYwXOSIPOUQR0KaAc79YziMoMiVVNNGlM810QYZWSPz8XZyAGrypJ
- TqnVGEeTp4rmT1569NZkHCXH27/0llV/7C5r/wVQiob4b3ZnuVJHV13608ji28wjNtm0ftmOkx
- rgAAAA=
-X-Change-ID: 20250506-vt8500-timer-updates-44a0d22cd720
+Message-Id: <20250507-vt8500-timer-updates-v2-2-65e5d1b0855e@gmail.com>
+References: <20250507-vt8500-timer-updates-v2-0-65e5d1b0855e@gmail.com>
+In-Reply-To: <20250507-vt8500-timer-updates-v2-0-65e5d1b0855e@gmail.com>
 To: Krzysztof Kozlowski <krzk@kernel.org>, 
  Daniel Lezcano <daniel.lezcano@linaro.org>, 
  Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
@@ -81,53 +80,142 @@ To: Krzysztof Kozlowski <krzk@kernel.org>,
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
  devicetree@vger.kernel.org, Alexey Charkov <alchark@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746601114; l=2013;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746601114; l=4723;
  i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=CJdFR5JtlDtikPD4OrMiZayMUaCskl6VAbLParxDykI=;
- b=vn6WIN2+S1/nDLbOVRpn67Dhf7fJCqQf3bu10iaHHYgZ2sWifYO/4cVgZ8GSSBKZWPk7w8dAq
- hgW+lOK4owGBqom9MxYcnK3dDD12j+gr5i56ZVJq2sGzhAr4Fmoi2M7
+ bh=4CyYsnhnKma2xppJbhsHsOk6fmvNYSaorpOr7AaIMyg=;
+ b=2hmYsIIl3JTTzoNlkemuEqYWoJwtX02w1BOyvcRaRz0UXM/UX9q+mlX+UPe6goxwY67GNIrnI
+ C5lJS7thZ5yCGiPc1qogRSL1ukycQShkcrEdQjnvsiEyLYVQV/ILE0y
 X-Developer-Key: i=alchark@gmail.com; a=ed25519;
  pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-Add named defines for all registers and bits in timer-vt8500.
-Move the system events timer from channel 0 to channel 1 when enough
-information is provided by the device tree (i.e. more than one IRQ).
-Use channel 0 for the system watchdog
+Add defines for all known registers and their bits to make the code more
+self-explanatory. While at that, replace _VAL suffixes with more
+intuitive _REG suffixes on register offsets.
+
+No functional changes.
 
 Signed-off-by: Alexey Charkov <alchark@gmail.com>
 ---
-Changes in v2:
-- Included the previously reviewed binding change that is directly related
-  to this series as the first patch here (thanks Krzysztof)
-- Created a separate config symbol for the watchdog function to let users
-  build a kernel without forcing watchdog functionality upon them
-  (thanks Krzysztof)
-- Link to the previous binding submission: https://lore.kernel.org/all/20250506-via_vt8500_timer_binding-v3-1-88450907503f@gmail.com/
-- Link to v1: https://lore.kernel.org/r/20250507-vt8500-timer-updates-v1-0-6b76f7f340a6@gmail.com
+ drivers/clocksource/timer-vt8500.c | 65 ++++++++++++++++++++++++--------------
+ 1 file changed, 42 insertions(+), 23 deletions(-)
 
----
-Alexey Charkov (4):
-      dt-bindings: timer: via,vt8500-timer: Convert to YAML
-      clocksource/drivers/timer-vt8500: Add defines for magic constants
-      clocksource/drivers/timer-vt8500: Add watchdog functionality
-      ARM: dts: vt8500: list all four timer interrupts
+diff --git a/drivers/clocksource/timer-vt8500.c b/drivers/clocksource/timer-vt8500.c
+index a469b1b5f97233202bf01298b9f612e07026c20c..9f28f30dcaf83ab4e9c89952175b0d4c75bd6b40 100644
+--- a/drivers/clocksource/timer-vt8500.c
++++ b/drivers/clocksource/timer-vt8500.c
+@@ -24,15 +24,31 @@
+ 
+ #define VT8500_TIMER_OFFSET	0x0100
+ #define VT8500_TIMER_HZ		3000000
+-#define TIMER_MATCH_VAL		0x0000
+-#define TIMER_COUNT_VAL		0x0010
+-#define TIMER_STATUS_VAL	0x0014
+-#define TIMER_IER_VAL		0x001c		/* interrupt enable */
+-#define TIMER_CTRL_VAL		0x0020
+-#define TIMER_AS_VAL		0x0024		/* access status */
+-#define TIMER_COUNT_R_ACTIVE	(1 << 5)	/* not ready for read */
+-#define TIMER_COUNT_W_ACTIVE	(1 << 4)	/* not ready for write */
+-#define TIMER_MATCH_W_ACTIVE	(1 << 0)	/* not ready for write */
++
++#define TIMER_MATCH_REG(x)	(4 * (x))
++#define TIMER_COUNT_REG		0x0010	 /* clocksource counter */
++
++#define TIMER_STATUS_REG	0x0014
++#define TIMER_STATUS_MATCH(x)	BIT((x))
++#define TIMER_STATUS_CLEARALL	(TIMER_STATUS_MATCH(0) | \
++				 TIMER_STATUS_MATCH(1) | \
++				 TIMER_STATUS_MATCH(2) | \
++				 TIMER_STATUS_MATCH(3))
++
++#define TIMER_WATCHDOG_EN_REG	0x0018
++#define TIMER_WD_EN		BIT(0)
++
++#define TIMER_INT_EN_REG	0x001c	 /* interrupt enable */
++#define TIMER_INT_EN_MATCH(x)	BIT((x))
++
++#define TIMER_CTRL_REG		0x0020
++#define TIMER_CTRL_ENABLE	BIT(0)	 /* enable clocksource counter */
++#define TIMER_CTRL_RD_REQ	BIT(1)	 /* request counter read */
++
++#define TIMER_ACC_STS_REG	0x0024	 /* access status */
++#define TIMER_ACC_WR_MATCH(x)	BIT((x)) /* writing Match (x) value */
++#define TIMER_ACC_WR_COUNTER	BIT(4)	 /* writing clocksource counter */
++#define TIMER_ACC_RD_COUNTER	BIT(5)	 /* reading clocksource counter */
+ 
+ #define msecs_to_loops(t) (loops_per_jiffy / 1000 * HZ * t)
+ 
+@@ -43,11 +59,12 @@ static void __iomem *regbase;
+ static u64 vt8500_timer_read(struct clocksource *cs)
+ {
+ 	int loops = msecs_to_loops(10);
+-	writel(3, regbase + TIMER_CTRL_VAL);
+-	while ((readl((regbase + TIMER_AS_VAL)) & TIMER_COUNT_R_ACTIVE)
+-						&& --loops)
++
++	writel(TIMER_CTRL_ENABLE | TIMER_CTRL_RD_REQ, regbase + TIMER_CTRL_REG);
++	while (readl(regbase + TIMER_ACC_STS_REG) & TIMER_ACC_RD_COUNTER
++	     && --loops)
+ 		cpu_relax();
+-	return readl(regbase + TIMER_COUNT_VAL);
++	return readl(regbase + TIMER_COUNT_REG);
+ }
+ 
+ static struct clocksource clocksource = {
+@@ -63,23 +80,25 @@ static int vt8500_timer_set_next_event(unsigned long cycles,
+ {
+ 	int loops = msecs_to_loops(10);
+ 	u64 alarm = clocksource.read(&clocksource) + cycles;
+-	while ((readl(regbase + TIMER_AS_VAL) & TIMER_MATCH_W_ACTIVE)
+-						&& --loops)
++
++	while (readl(regbase + TIMER_ACC_STS_REG) & TIMER_ACC_WR_MATCH(0)
++	       && --loops)
+ 		cpu_relax();
+-	writel((unsigned long)alarm, regbase + TIMER_MATCH_VAL);
++	writel((unsigned long)alarm, regbase + TIMER_MATCH_REG(0));
+ 
+ 	if ((signed)(alarm - clocksource.read(&clocksource)) <= MIN_OSCR_DELTA)
+ 		return -ETIME;
+ 
+-	writel(1, regbase + TIMER_IER_VAL);
++	writel(TIMER_INT_EN_MATCH(0), regbase + TIMER_INT_EN_REG);
+ 
+ 	return 0;
+ }
+ 
+ static int vt8500_shutdown(struct clock_event_device *evt)
+ {
+-	writel(readl(regbase + TIMER_CTRL_VAL) | 1, regbase + TIMER_CTRL_VAL);
+-	writel(0, regbase + TIMER_IER_VAL);
++	writel(readl(regbase + TIMER_CTRL_REG) | TIMER_CTRL_ENABLE,
++	       regbase + TIMER_CTRL_REG);
++	writel(0, regbase + TIMER_INT_EN_REG);
+ 	return 0;
+ }
+ 
+@@ -95,7 +114,7 @@ static struct clock_event_device clockevent = {
+ static irqreturn_t vt8500_timer_interrupt(int irq, void *dev_id)
+ {
+ 	struct clock_event_device *evt = dev_id;
+-	writel(0xf, regbase + TIMER_STATUS_VAL);
++	writel(TIMER_STATUS_CLEARALL, regbase + TIMER_STATUS_REG);
+ 	evt->event_handler(evt);
+ 
+ 	return IRQ_HANDLED;
+@@ -119,9 +138,9 @@ static int __init vt8500_timer_init(struct device_node *np)
+ 		return -EINVAL;
+ 	}
+ 
+-	writel(1, regbase + TIMER_CTRL_VAL);
+-	writel(0xf, regbase + TIMER_STATUS_VAL);
+-	writel(~0, regbase + TIMER_MATCH_VAL);
++	writel(TIMER_CTRL_ENABLE, regbase + TIMER_CTRL_REG);
++	writel(TIMER_STATUS_CLEARALL, regbase + TIMER_STATUS_REG);
++	writel(~0, regbase + TIMER_MATCH_REG(0));
+ 
+ 	ret = clocksource_register_hz(&clocksource, VT8500_TIMER_HZ);
+ 	if (ret) {
 
- .../devicetree/bindings/timer/via,vt8500-timer.txt |  15 ---
- .../bindings/timer/via,vt8500-timer.yaml           |  51 +++++++++
- MAINTAINERS                                        |   1 +
- arch/arm/boot/dts/vt8500/vt8500.dtsi               |   2 +-
- arch/arm/boot/dts/vt8500/wm8505.dtsi               |   2 +-
- arch/arm/boot/dts/vt8500/wm8650.dtsi               |   2 +-
- arch/arm/boot/dts/vt8500/wm8750.dtsi               |   2 +-
- arch/arm/boot/dts/vt8500/wm8850.dtsi               |   2 +-
- drivers/clocksource/Kconfig                        |  11 ++
- drivers/clocksource/timer-vt8500.c                 | 118 ++++++++++++++++-----
- 10 files changed, 162 insertions(+), 44 deletions(-)
----
-base-commit: 0a00723f4c2d0b273edd0737f236f103164a08eb
-change-id: 20250506-vt8500-timer-updates-44a0d22cd720
-
-Best regards,
 -- 
-Alexey Charkov <alchark@gmail.com>
+2.49.0
 
