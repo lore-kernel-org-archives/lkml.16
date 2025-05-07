@@ -1,66 +1,65 @@
-Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9773232
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 00:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B0610E0
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 00:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746576230; cv=none; b=QTFLAlEqKVkY0XmPjAHwkayM2zfxm690ioJi8hhjyzJgNaK4FVkWZ5QQvUsI+HdGKrYixjrK7HPxxqfFKA783f7hDrnvj8yQX0z9joPwPwZ3ogDhpkfjG0KuQbyRElil9GWjsju1BiIyxfatd4K9+uofeykWjKiC1vQuFLvjbKs=
+	t=1746576354; cv=none; b=im1QsPC/64zi296YNRaxwMv8Q5fwnRuAhxTZO3Mbt1ALumkC3wpmo9562jo3X9S2uocPjo2FhA9RNlLyOlZ1TjmnDH//k9KFRtSdInibeVNS8jlrRtJD/Mgl3ozPrUbTUE9EXcCkZWunhkkpKSJwD9sDa0d6PQ2EYCSaDw+CNT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746576230; c=relaxed/simple;
-	bh=VrNSbBLOCr7NEwSbl8xm2RoaraSzVHKq/zWcp73SSJo=;
+	s=arc-20240116; t=1746576354; c=relaxed/simple;
+	bh=yaCcykgp16u3flZaJJz5SvxS7btAI9N+qBqGdItQ0JU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HcR7Av/F8HxXZZ+0M/iV+Wtbpvlu7e76whkS53f9nzuh51Zf6DetSc0XRSo/BfyXO+z8tB36teWl7qh3O7at/0FU2IOslTUkkinQRmnlru+92T4If+GKd3XN1heP0zlKF3WyrOZNg0EC/F9HRik0E0mgqBQfklotnVWg3wPUHKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aabWa0EG; arc=none smtp.client-ip=209.85.166.202
+	 To:Cc:Content-Type; b=q7Z0RBp6kk+lBfaeMR/YszlJkSUCxKPDFU9gE1vILuAihWZISTV67rHyYi5ui6aIAKQWprUAQ1UeIjPOd3xTz/JaPszktPhR0JA3zxvOp5xaRmiMidGrCN3k/amCioReFhXyT2laRVHap+ZaunHrfzng9nEqsjTa+c9tSWUGiVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eF2tOBbz; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aabWa0EG"
-Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3da707dea42so18950885ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 17:03:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eF2tOBbz"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff68033070so5609535a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 17:05:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746576228; x=1747181028; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746576352; x=1747181152; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5+m6HPDtb0R18pUg/qJCD2U+j03ktvX2ktaHxXO8cS8=;
-        b=aabWa0EGqFraZVj2f8JBisYEwblooDOXUH0b/LeTzrFuWxsvDOQ4RqqKzfnTdMjapn
-         VbqrStzCf31MjiERtVH76ksPfk9KbgzesLu308Nl1sPGee2qZDD05yuRivaJ56huYXbr
-         2Pm9XmZzhb3ElORTCWuVw9frvmr8Ia80stlIHGtVHM+8fMn6pTPa6kJzY4P026262dpf
-         Lgh88FI8IgarVYi6PxQ3TOEDekVZ2sFHIM9EDNyMkLOOBubQ9USFO8y1NnK0OR3TnEGX
-         wSr9FuTGBfF8Jfjtc0Kcw5TK5NvZc6qLpGy9iuGklA8+cSv12fS24kHeQYXiKZtlngKe
-         uonw==
+        bh=kf6t6m3UzjOjQqBtIkrrADeHvo58X2zFNTMCoBeF4hc=;
+        b=eF2tOBbzGZO6vUIE3oglN2kxjSIr39BC7rYQf1YTL8IDzJ7+717anzomy6Jbj69ieJ
+         K8F95fCv8Q+xh8QZQOQ/Ia65J0eFHbZZ7erEIjRW4dOueXq8TZ6TEcQa2bKZtg/nDyuu
+         IR+3DYhWrmirYmOAyJHRBJHS696TlGWcAJ2clUOVp4cbjEtcx3LA307l5aPWBP9R/SU8
+         9wbwFSvwy9gk34l/fUbxa98H67qigFMvwBoOq1gNUZg4083j5yzn55MY57XCngVIz16o
+         0X9s4C6QA7dcwF4CDE0e96MieV5H+dvvQQyo+IFF88dTCwN/0GVQZcxG1eKIuQKQZzaB
+         0afA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746576228; x=1747181028;
+        d=1e100.net; s=20230601; t=1746576352; x=1747181152;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5+m6HPDtb0R18pUg/qJCD2U+j03ktvX2ktaHxXO8cS8=;
-        b=OlaCwYJmYKqP776Bdr6LlUwXR2SXimhgj7Xw44trrsPzJSf1qPIvPjNSjkXrYF6Ihh
-         lLjPzeO6desRw64WiRenvzmd1UWBj55kgCstyM9jTkSPmJGXQYrMwegl1RtYsLOsGJ1T
-         buzuKyHuQM5BbKsgfdhhP2r9+hfLm2zNcTG/7Qp7lUOkSQVMWLFDF+lqFD/Z/L3YkHYj
-         L/PN6A6S5bK7WzNlM6gtUkM99uZO1HL2KNeqOFRuNTCivF31QzYJdYAbnmXNRiKye6V+
-         eEZJvIVeG4cGBqwf8gBoH29rSVXwJjVvnLj1zt+SQnjiB8pqeiZk3oBUburQBDShRPwd
-         QqfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWMIBnXNnLPZ0j8Ipr4GtL1l6UKUYgiRs9U7bmRNmmD7ZvPnkbyJ67wDuDEqyNjFhUaVfhogkfmgW6VHUo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEqLCXFXpkTqJvRb8dLTcMsHwb9UHN8biuRTvM+rx1qOA56dJM
-	df5m9i4qqYHpi19CkJvpfDb+SWrWhHUTAfbVXzDP11FX+S7EEe01gWuGpPtDXtPq91EUAVafB5i
-	N6w==
-X-Google-Smtp-Source: AGHT+IG6Fxa93Bz0YoXvtTYguCqgLiKUWD1kixt49zVH2HtfKhQptZBHYIAFUFv7wo+hSUraRC2rqINWD4c=
-X-Received: from pjbnb1.prod.google.com ([2002:a17:90b:35c1:b0:30a:7c16:a1aa])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3d8c:b0:2f2:a664:df1a
- with SMTP id 98e67ed59e1d1-30aac156361mr2370837a91.2.1746576217154; Tue, 06
- May 2025 17:03:37 -0700 (PDT)
-Date: Tue, 6 May 2025 17:03:35 -0700
-In-Reply-To: <20250109204929.1106563-4-jthoughton@google.com>
+        bh=kf6t6m3UzjOjQqBtIkrrADeHvo58X2zFNTMCoBeF4hc=;
+        b=v4bH9K4W6G3kLa41V8FzWT/o8K+iWgt9v04SFHoD6SGCZgK4YC0sKlZhdIGoJiwg72
+         oJuPEQDOc70V3MO/07IThdZfQPhwHRZdVHYl7hA5NsxzSy/MyrjC8m//2KIl9CsDl5u7
+         pjYyjy9Op/eZNRG3ZKfl97UqgIoTQMSvXepSdOs2nMWQeijaBZFtGsGbs3Rnqi8xB9fP
+         RAxBC/iJQX1sn0RETTVD1GlB2b3HtpD8Qgks/8F0NVaCEWMHRQapvjI75SdJmrWUkblU
+         AnIC8JmlyTcyA5Hu2vevzH/bqk826oFgucOlwwhQWACvZLp6T2cqyc4CsYSVBhsF7Mi9
+         WnAA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4xugDrpn6dKo4IvXZqXwYSXldxV/Y4igEFrsE2JJMJ0A8qrDgpq8NgtPQULrIyJdqUkuDRk8L/X/UwMs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzT2ozDo/kwN7jaGAzLxRVmsxgwPxyews2WAe38EXenqT2EYzpN
+	flc3sTQySvbuxHeLcem5vLJUlx+0wEqL9ec/+RG4SAr0QAa3T35f/+y23aRKcSbtsOOXOxOD8ER
+	EEw==
+X-Google-Smtp-Source: AGHT+IFMFJ1FHxkmhNJJNI7L8Ht1/2Wzfj8wbIGxb39Uyx2QJZM+bpzpV88A2XUmDg8f6OQLimWa7W0pTy4=
+X-Received: from pjbnd2.prod.google.com ([2002:a17:90b:4cc2:b0:2f5:63a:4513])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:da87:b0:2fe:b907:3b05
+ with SMTP id 98e67ed59e1d1-30aac29bf2bmr1865902a91.29.1746576352169; Tue, 06
+ May 2025 17:05:52 -0700 (PDT)
+Date: Tue, 6 May 2025 17:05:50 -0700
+In-Reply-To: <20250109204929.1106563-6-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250109204929.1106563-1-jthoughton@google.com> <20250109204929.1106563-4-jthoughton@google.com>
-Message-ID: <aBqjV40pb-s9gvsz@google.com>
-Subject: Re: [PATCH v2 03/13] KVM: Allow late setting of KVM_MEM_USERFAULT on
- guest_memfd memslot
+References: <20250109204929.1106563-1-jthoughton@google.com> <20250109204929.1106563-6-jthoughton@google.com>
+Message-ID: <aBqj3s8THH9SFzLO@google.com>
+Subject: Re: [PATCH v2 05/13] KVM: x86/mmu: Add support for KVM_MEM_USERFAULT
 From: Sean Christopherson <seanjc@google.com>
 To: James Houghton <jthoughton@google.com>
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
@@ -73,81 +72,108 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Marc 
 Content-Type: text/plain; charset="us-ascii"
 
 On Thu, Jan 09, 2025, James Houghton wrote:
-> Currently guest_memfd memslots can only be deleted. Slightly change the
-> logic to allow KVM_MR_FLAGS_ONLY changes when the only flag being
-> changed is KVM_MEM_USERFAULT.
+> Adhering to the requirements of KVM Userfault:
+> 
+> 1. Zap all sptes for the memslot when KVM_MEM_USERFAULT is toggled on
+>    with kvm_arch_flush_shadow_memslot().
+> 2. Only all PAGE_SIZE sptes when KVM_MEM_USERFAULT is enabled (for both
+>    normal/GUP memory and guest_memfd memory).
+> 3. Reconstruct huge mappings when KVM_MEM_USERFAULT is toggled off with
+>    kvm_mmu_recover_huge_pages(). This is the behavior when dirty logging
+>    is disabled; remain consistent with it.
+> 
+> With the new logic in kvm_mmu_slot_apply_flags(), I've simplified the
+> two dirty-logging-toggle checks into one, and I have dropped the
+> WARN_ON() that was there.
 > 
 > Signed-off-by: James Houghton <jthoughton@google.com>
 > ---
->  virt/kvm/kvm_main.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
+>  arch/x86/kvm/Kconfig            |  1 +
+>  arch/x86/kvm/mmu/mmu.c          | 27 +++++++++++++++++++++----
+>  arch/x86/kvm/mmu/mmu_internal.h | 20 +++++++++++++++---
+>  arch/x86/kvm/x86.c              | 36 ++++++++++++++++++++++++---------
+>  include/linux/kvm_host.h        |  5 ++++-
+>  5 files changed, 71 insertions(+), 18 deletions(-)
 > 
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 4bceae6a6401..882c1f7b4aa8 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -2015,9 +2015,6 @@ int __kvm_set_memory_region(struct kvm *kvm,
->  		if ((kvm->nr_memslot_pages + npages) < kvm->nr_memslot_pages)
->  			return -EINVAL;
->  	} else { /* Modify an existing slot. */
-> -		/* Private memslots are immutable, they can only be deleted. */
-> -		if (mem->flags & KVM_MEM_GUEST_MEMFD)
-> -			return -EINVAL;
->  		if ((mem->userspace_addr != old->userspace_addr) ||
->  		    (npages != old->npages) ||
->  		    ((mem->flags ^ old->flags) & KVM_MEM_READONLY))
-> @@ -2031,6 +2028,16 @@ int __kvm_set_memory_region(struct kvm *kvm,
->  			return 0;
->  	}
+> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+> index ea2c4f21c1ca..286c6825cd1c 100644
+> --- a/arch/x86/kvm/Kconfig
+> +++ b/arch/x86/kvm/Kconfig
+> @@ -47,6 +47,7 @@ config KVM_X86
+>  	select KVM_GENERIC_PRE_FAULT_MEMORY
+>  	select KVM_GENERIC_PRIVATE_MEM if KVM_SW_PROTECTED_VM
+>  	select KVM_WERROR if WERROR
+> +	select HAVE_KVM_USERFAULT
+>  
+>  config KVM
+>  	tristate "Kernel-based Virtual Machine (KVM) support"
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 2401606db260..5cab2785b97f 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4280,14 +4280,19 @@ static inline u8 kvm_max_level_for_order(int order)
+>  	return PG_LEVEL_4K;
+>  }
+>  
+> -static u8 kvm_max_private_mapping_level(struct kvm *kvm, kvm_pfn_t pfn,
+> -					u8 max_level, int gmem_order)
+> +static u8 kvm_max_private_mapping_level(struct kvm *kvm,
+> +					struct kvm_memory_slot *slot,
+> +					kvm_pfn_t pfn, u8 max_level,
+> +					int gmem_order)
+>  {
+>  	u8 req_max_level;
+>  
+>  	if (max_level == PG_LEVEL_4K)
+>  		return PG_LEVEL_4K;
+>  
+> +	if (kvm_memslot_userfault(slot))
+
+Unless I'm missing something, this can go in kvm_mmu_hugepage_adjust():
+
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index a4439e9e0726..49eb6b9b268c 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -3304,7 +3304,7 @@ void kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
+        if (is_error_noslot_pfn(fault->pfn))
+                return;
+ 
+-       if (kvm_slot_dirty_track_enabled(slot))
++       if (kvm_slot_dirty_track_enabled(slot) || kvm_is_userfault_memslot(slot))
+                return;
+ 
+>  static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 1b04092ec76a..2abb425a6514 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -13053,12 +13053,36 @@ static void kvm_mmu_slot_apply_flags(struct kvm *kvm,
+>  	u32 new_flags = new ? new->flags : 0;
+>  	bool log_dirty_pages = new_flags & KVM_MEM_LOG_DIRTY_PAGES;
 >  
 > +	/*
-> +	 * Except for being able to set KVM_MEM_USERFAULT, private memslots are
-> +	 * immutable, they can only be deleted.
+> +	 * When toggling KVM Userfault on, zap all sptes so that userfault-ness
+> +	 * will be respected at refault time. All new faults will only install
+> +	 * small sptes. Therefore, when toggling it off, recover hugepages.
+> +	 *
+> +	 * For MOVE and DELETE, there will be nothing to do, as the old
+> +	 * mappings will have already been deleted by
+> +	 * kvm_arch_flush_shadow_memslot().
+> +	 *
+> +	 * For CREATE, no mappings will have been created yet.
 > +	 */
-> +	if (mem->flags & KVM_MEM_GUEST_MEMFD &&
-> +	    !(change == KVM_MR_CREATE ||
-> +	      (change == KVM_MR_FLAGS_ONLY &&
-> +	       (mem->flags ^ old->flags) == KVM_MEM_USERFAULT)))
-> +		return -EINVAL;
 
-Oof.  I don't even want to decipher this.  Let's just drop the blankent immutable
-restriction, and simply say guest_memfd slots can't be MOVED.  guest_memfd doesn't
-support RO memslots (and never will), and doesn't support dirty logging, so this
-is effectively dead code anyways.  Then the diff is much nicer:
+Eh, trim this down and the reference the comment below to explain why FLAGS_ONLY
+is the only case that needs to be handled.
 
-@@ -2012,14 +2027,15 @@ static int kvm_set_memory_region(struct kvm *kvm,
-                if ((kvm->nr_memslot_pages + npages) < kvm->nr_memslot_pages)
-                        return -EINVAL;
-        } else { /* Modify an existing slot. */
--               /* Private memslots are immutable, they can only be deleted. */
--               if (mem->flags & KVM_MEM_GUEST_MEMFD)
--                       return -EINVAL;
-                if ((mem->userspace_addr != old->userspace_addr) ||
-                    (npages != old->npages) ||
-                    ((mem->flags ^ old->flags) & KVM_MEM_READONLY))
-                        return -EINVAL;
- 
-+               /* Moving a guest_memfd memslot isn't supported. */
-+               if (base_gfn != old->base_gfn && mem->flags & KVM_MEM_GUEST_MEMFD)
-+                       return -EINVAL;
-+
-                if (base_gfn != old->base_gfn)
-                        change = KVM_MR_MOVE;
-                else if (mem->flags != old->flags)
+> +	if ((old_flags ^ new_flags) & KVM_MEM_USERFAULT &&
+> +	    (change == KVM_MR_FLAGS_ONLY)) {
+> +		if (old_flags & KVM_MEM_USERFAULT)
+> +			kvm_mmu_recover_huge_pages(kvm, new);
+> +		else
+> +			kvm_arch_flush_shadow_memslot(kvm, old);
 
-> +
->  	if ((change == KVM_MR_CREATE || change == KVM_MR_MOVE) &&
->  	    kvm_check_memslot_overlap(slots, id, base_gfn, base_gfn + npages))
->  		return -EEXIST;
-> @@ -2046,7 +2053,7 @@ int __kvm_set_memory_region(struct kvm *kvm,
->  	new->npages = npages;
->  	new->flags = mem->flags;
->  	new->userspace_addr = mem->userspace_addr;
-> -	if (mem->flags & KVM_MEM_GUEST_MEMFD) {
-> +	if (mem->flags & KVM_MEM_GUEST_MEMFD && change == KVM_MR_CREATE) {
->  		r = kvm_gmem_bind(kvm, new, mem->guest_memfd, mem->guest_memfd_offset);
->  		if (r)
->  			goto out;
-> -- 
-> 2.47.1.613.gc27f4b7a9f-goog
-> 
+The call to kvm_arch_flush_shadow_memslot() should definitely go in common code.
+The fancy recovery logic is arch specific, but blasting the memslot when userfault
+is toggled on is not.
