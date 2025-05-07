@@ -1,148 +1,125 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F392288CB0;
-	Wed,  7 May 2025 18:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B957428DF47
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 18:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746643250; cv=none; b=B++FwPPe4Iq4PEpK1VC2qMiN+62lAGquLk2oC43J1aAJoj8YrWOH0AZ17agMQqlfshtUmVoYjxk7bF/QEIYdlzE8XsBmmI+mVvEoYSDo2Fe0nkCrYVt+EMbnxtHOBogUrMdb7BxQrIB5a0la5l1hVH5gxRQjMnYZLDM+SNi6fP8=
+	t=1746643278; cv=none; b=bO4NDiuYqKW5/e/lYdDr2ejfzwDrDn5u6OoVpU+FP62FgEVfAsrtmAwBgBsYAnMWsFYYMHwKb7RzMPxK8Y37bfOjKPqvI+AEsrhpbe37ZXw/q/69GG7YNLpQLMlKLDAhoNzOocq+Oc0lGt6ojqe5H5kBzeqc+mhFk0PJVIUXMzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746643250; c=relaxed/simple;
-	bh=E0qjmsWUdUbvc5RjAooSlVu2JYIj2X51o6YLUv8ALt8=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=C9VUfHYZggy+g3YGXSMC0l9XqHjSXtIpncZxVmgCwJMhcxNzTPmzLR/cmMQqDNnxnyIB8KZ8KI9Acse/hifjBtGI8IlkfVAVJDalkFqIcuAaCIorn0tlVnN1BCmJwqDyuFTITuprPJCHxt28MXqqU5NHvEHkYSVlzUNbQhffo54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RgIKYUYu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rTqUZ3AM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746643278; c=relaxed/simple;
+	bh=HZe78NtNOEeWzc6bIg2m6Fj5rRasr/I4okqe59f+dLo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P2gDLLuVSQ8gO/y7+aXYjYLCnRo9BG1qAD/Eg2KxvoCtnHejAHKOtDBz7UFowoHns9lShHlXvK+yerxYgstx2WXXQaNOKz94ap1c8L/1u4wFb+YpzX2OEROMbda/UAH8dvQUQm9HE0YMDChNH/bfSu5DUeAZyy/RqqaGLtQ/0qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UtDQLosk; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RgIKYUYu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rTqUZ3AM"
-Date: Wed, 07 May 2025 18:40:45 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746643246;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wvdjdutKbIZItgd7xV8+18F8sRzhoQdyBXPiWKeJphE=;
-	b=RgIKYUYuonWdNkJ+BO1QaGXQ5vJmMN7NWe9uLQTlSrA6Md8k4xyBRjou5jq8qyBDCAAB8W
-	oykqz2DpgibuP7y2+/Ox92T83eqCmEuOACAcrKyKu9qMXIEju3cN3plA8jR+Dys8a4Y50C
-	vSl2nG9oO14hp9irvy+GTLliMcZX0E/9KB3bJO0YBb1cyx/MVEPhz166zK5+gukzn3Cpvn
-	k0NPXHcgEwQ4ZZwstULlC4iZUiJ4HdiVeiPe602wQ6kcolpnj01FLjKvdZMojooNDXaHIv
-	GqmNR/cjl2gi2GNIG0GXSgV5MG5bHmf/dY1f5M0Jk0MFjDXMMWnFCPErgRptqw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746643246;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wvdjdutKbIZItgd7xV8+18F8sRzhoQdyBXPiWKeJphE=;
-	b=rTqUZ3AMsLWFpjb6XTL9PFjvqXSYrBQFZlPQ58GlRaox2vuGSXGjpt+Bhe0VBZ4sSPkGoK
-	IZ3G56rW7pNK80AA==
-From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/msr] um: Add UML version of <asm/tsc.h> to define rdtsc()
-Cc: kernel test robot <lkp@intel.com>, Ingo Molnar <mingo@kernel.org>,
- Johannes Berg <johannes.berg@intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <202505080003.0t7ewxGp-lkp@intel.com>
-References: <202505080003.0t7ewxGp-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UtDQLosk"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f6214f189bso255381a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 11:41:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1746643273; x=1747248073; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QQcufmYmGlYXbTUSfmkiThdQ5Pnfz5q4bUd1Pt0wtBw=;
+        b=UtDQLosk4bfP8A6kbKZZK34Aah18zgBVYJPcoZeYH7j8upO6YjsHKoo38DQEqRN+zt
+         yaad8BMX4ZJ2LdmSLcWfg83ZfNRN4aftlnxpPXPY7ghVvL7u3BNLImzw6vAbkl8dTA2/
+         apjYPiaigq91LyQ9lpXQLGbU/Kw0rx6U1kmDSSX9dW+BpxRHHe6YMYVBTyqriIBve22c
+         X4E4MyEAQ6AUBDiKIcABPN0n9TBcZuLeS/5Q7ssj84HC7KT14j9wVe8hEQfPOSr49dYs
+         W8PrIT0u/MV8wrW3tgKG1lx7VSkxEJFEFdeKmKrQMvJHM0+yrCmvEzpZrmZ8rpGkW8ov
+         0MSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746643273; x=1747248073;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QQcufmYmGlYXbTUSfmkiThdQ5Pnfz5q4bUd1Pt0wtBw=;
+        b=enHYQQacExOG9gCVNNuOPlaWWxuG4Rq2AfjDoBFjmnV5a4GwMHSoQcw3XLWEKF2ZZB
+         DDTaPmuXHrACeuTzVuTjQ9WrkX1G33EgorwENyIg9AkRAtWdA/7aAuBG8UzKxZd1oHew
+         82GiKIZEIPbI1kP4+DktydEeQ53Wt/0AJe2twQjnygDaEx/bUEq80vQTbnvezBxwe6be
+         3v/S4sw5BfckHQNNlXuv431LPzmG7JjpkKoLoILWjB8vlryaDrh76FqrTBAl9I0XxOhK
+         HIoMoVxF+lFLoiOwRiz4lkUtHUFR2QIR4CWH9KZEiTwE+CCz+hl6nU7zZfdHTZWMmdrd
+         TdjA==
+X-Forwarded-Encrypted: i=1; AJvYcCWI0FMvqbkcTTXOfevo2dL3hJuPrSokRUR8Kf4KqP2F33IpvZDLXLn3lw+xvI8prmQ+fOAatLKPvql3o7g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+YCHYz6WBaK7AKCVoX28TT9NXSxqPhdrKEn4g9MYdsty5KGT2
+	Y8Bxb3X28UCfARJAziyz0b6mricCE9AcA7ksEkI/W/Ogkx7E6ewFnck3FxUm10I=
+X-Gm-Gg: ASbGnctFqpSvcN6Fk/JtRs59m9osl3y8/IOtmCU4SOrAm1waZosLIrOGLT2QY736i8T
+	XDP0h1jPSFfXhtXjRI17xx9Xe9CaYXzn3l+v6IVK/jYwdgkvYFg2Hzhcdkg0cJloMi118YdZLmn
+	xduBXzN71tuLy9Qv7GhLHuqIFg9CMUP6Do8bjT6JljujJjss3fyjXCXKzDbiY+DdyoSW+3I8WL8
+	BWSofRpmIqaVXdBq+lnZYMRnXfCVjydhuKD73hFeoagocvrCjp7/rD353pz2c0Pl0P+qWLWFEvm
+	7RTulvSE4I2j8rG1okKbo9/3MRKRVa4OcVtRt7BwZDM=
+X-Google-Smtp-Source: AGHT+IH/PR+Zz06sUuayKqpZNJEokZEr3n/LHOx8nH3XGM8ECywA5vvQjzQ7Bc4R025bd9OEt8DW4w==
+X-Received: by 2002:a17:907:944e:b0:acb:ae3b:b424 with SMTP id a640c23a62f3a-ad1e8cd77a4mr480650666b.38.1746643272908;
+        Wed, 07 May 2025 11:41:12 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a24a4sm950681466b.41.2025.05.07.11.41.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 11:41:12 -0700 (PDT)
+Date: Wed, 7 May 2025 20:41:11 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Waiman Long <longman@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cgroup/cpuset: Extend kthread_is_per_cpu() check to all
+ PF_NO_SETAFFINITY tasks
+Message-ID: <yghzleu6pvqzmie77muujhc4ac3dmtjmies3pcwjikrbwp7vvq@qpxo4qmxzhcs>
+References: <20250507183011.550307-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174664324585.406.10812098910624084030.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4yycbdszh5z422i5"
+Content-Disposition: inline
+In-Reply-To: <20250507183011.550307-1-longman@redhat.com>
+
+
+--4yycbdszh5z422i5
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] cgroup/cpuset: Extend kthread_is_per_cpu() check to all
+ PF_NO_SETAFFINITY tasks
+MIME-Version: 1.0
 
-The following commit has been merged into the x86/msr branch of tip:
+Hello.
 
-Commit-ID:     24b58adaa7508d9d2cdb6bca44803954baf24459
-Gitweb:        https://git.kernel.org/tip/24b58adaa7508d9d2cdb6bca44803954baf=
-24459
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Wed, 07 May 2025 20:18:22 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 07 May 2025 20:30:39 +02:00
+On Wed, May 07, 2025 at 02:30:11PM -0400, Waiman Long <longman@redhat.com> =
+wrote:
+> Commit ec5fbdfb99d1 ("cgroup/cpuset: Enable update_tasks_cpumask()
+> on top_cpuset") enabled us to pull CPUs dedicated to child partitions
+> from tasks in top_cpuset by ignoring per cpu kthreads. However, there
+> can be other kthreads that are not per cpu but have PF_NO_SETAFFINITY
+> flag set to indicate that we shouldn't mess with their CPU affinity.
+>=20
+> As all the per cpu kthreads have PF_NO_SETAFFINITY set, fix this
+> issue by dropping the kthread_is_per_cpu() check and checking the
+> PF_NO_SETAFFINITY flag instead.
 
-um: Add UML version of <asm/tsc.h> to define rdtsc()
+I think there's a reason for existence of kthread_is_per_cpu(), so I'd
+stick with more robust
 
-In the x86 tree rdtsc() methods got moved out of <asm/msr.h>, but this
-broke UML, as the x86 version of <asm/tsc.h> cannot be used by UML as-is:
+-			if (kthread_is_per_cpu(task))
++			if (kthread_is_per_cpu(task) || task->flags & PF_NO_SETAFFINITY)
 
-	  CC [M]  drivers/accel/habanalabs/common/habanalabs_ioctl.o
-	In file included from drivers/accel/habanalabs/common/habanalabs_ioctl.c:20:
-	./arch/x86/include/asm/tsc.h:70:28: error: conflicting types for =E2=80=98cy=
-cles_t=E2=80=99; have =E2=80=98long long unsigned int=E2=80=99
-	   70 | typedef unsigned long long cycles_t;
-	      |                            ^~~~~~~~
-	In file included from ./arch/um/include/asm/timex.h:7,
-	                 from ./include/linux/timex.h:67,
-	                 from ./include/linux/time32.h:13,
-	                 from ./include/linux/time.h:60,
-	                 from ./include/linux/skbuff.h:15,
-	                 from ./include/linux/if_ether.h:19,
-	                 from ./include/linux/habanalabs/cpucp_if.h:12,
-	                 from drivers/accel/habanalabs/common/habanalabs.h:11,
-	                 from drivers/accel/habanalabs/common/habanalabs_ioctl.c:11:
-	./include/asm-generic/timex.h:8:23: note: previous declaration of =E2=80=98c=
-ycles_t=E2=80=99 with type =E2=80=98cycles_t=E2=80=99 {aka =E2=80=98long unsi=
-gned int=E2=80=99}
-	    8 | typedef unsigned long cycles_t;
-	      |                       ^~~~~~~~
+Perhaps with a comment that illuminates the kthread_is_per_cpu vs
+PF_NO_SETAFFINITY difference.
 
-To resolve these kinds of problems and to allow <asm/tsc.h> to be included on=
- UML,
-add a simplified version of <asm/tsc.h>, which only adds the rdtsc() definiti=
-on.
+0.02=E2=82=AC,
+Michal
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Johannes Berg <johannes.berg@intel.com>
-Link: https://lore.kernel.org/r/202505080003.0t7ewxGp-lkp@intel.com
----
- arch/um/include/asm/tsc.h | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 arch/um/include/asm/tsc.h
+--4yycbdszh5z422i5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/arch/um/include/asm/tsc.h b/arch/um/include/asm/tsc.h
-new file mode 100644
-index 0000000..a52b0e4
---- /dev/null
-+++ b/arch/um/include/asm/tsc.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_UM_TSC_H
-+#define _ASM_UM_TSC_H
-+
-+#include <asm/asm.h>
-+
-+/**
-+ * rdtsc() - returns the current TSC without ordering constraints
-+ *
-+ * rdtsc() returns the result of RDTSC as a 64-bit integer.  The
-+ * only ordering constraint it supplies is the ordering implied by
-+ * "asm volatile": it will put the RDTSC in the place you expect.  The
-+ * CPU can and will speculatively execute that RDTSC, though, so the
-+ * results can be non-monotonic if compared on different CPUs.
-+ */
-+static __always_inline u64 rdtsc(void)
-+{
-+	EAX_EDX_DECLARE_ARGS(val, low, high);
-+
-+	asm volatile("rdtsc" : EAX_EDX_RET(val, low, high));
-+
-+	return EAX_EDX_VAL(val, low, high);
-+}
-+
-+#endif /* _ASM_UM_TSC_H */
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaBupRAAKCRAt3Wney77B
+ScbLAQCNzzhTKInQ/O6giMRTLySRKJbbtyc+gFqTTOJTan310wD9HdMX42se2kCU
++Nc3gA8HKYQXvOjy/bEz1By6fqPUQQc=
+=Ng6m
+-----END PGP SIGNATURE-----
+
+--4yycbdszh5z422i5--
