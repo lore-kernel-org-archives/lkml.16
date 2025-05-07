@@ -1,105 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out0-222.mail.aliyun.com (out0-222.mail.aliyun.com [140.205.0.222])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6B0272E57
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F80C25EFB5;
+	Wed,  7 May 2025 12:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.222
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746620622; cv=none; b=OJBPp8Azo0IPYdDn6tKvQXPbSdUQlssAFQRAdIJo7Yah/IY1rVHYBT9+PrvszpHZNWSDdtlmgYQv/QiVisaHQjRB5PmD4XMXlE4IZoMu/RWqN3QlTxdqFL+jbCoi4TZ4mN/9UmdWXHNp1f9z+O1gECm2FvBKvFQ63TqOkmFILOg=
+	t=1746620622; cv=none; b=ZN8XkobhLDbLMzRAg6Gk7kpJm/UbJpnNTbro5nP5k71o5kHFz5qkmJ3WCaovKAOs8F1aOPYuTexA/IgIeSojqs/sy1jmCBiZ5Ukb2o8lG9cPriGGdyH9cEkdwvDpQDAkjL17/Olyda2/Xu9huBlSWMpBag2QkSQfaZe+ZXILKuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746620622; c=relaxed/simple;
-	bh=/cLfvZPaGaKqTv5rGWJ2lfAMdaEHdJl7YqBZZkkNksw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fSf+uNwWQZoAK8CedesgfFYhTKmgnLfiCYEmpq2nHE1FwZtnnSCgkdYC+WKBY6hNFLuXkN1ZiHnjqIQvXrjIpo7MqJpPAM7AE357qcuBtQ1IU8hJWINXnH8L5YTUJ+WOBvBU91Fchmqpi5aLr0SrPXNctigs2efiVa2+RRfaIG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WGa0vt5O; arc=none smtp.client-ip=10.30.226.201
+	bh=VX5Y48Mu89dzAbsuakWMa787AtgPl0MehdbZ14cTgOU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jY4aKo/rEgtSEsgaGNQGY86WEnZBvPikBavyb7OjanWdx3aeHXo1u54LvNvDLxJMeul5sHloAz1uFBHeA5x3Qr1AfbwA2TSMcwCKueDSqsZr3x5zy+WZaxra/a8FiGHxfvKBLMQK8xXi75fwX7StrawQ+vigPKCoq52cHOV8aJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=k1mjTvSd; arc=none smtp.client-ip=140.205.0.222
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGa0vt5O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43838C4CEEB;
-	Wed,  7 May 2025 12:23:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746620622;
-	bh=/cLfvZPaGaKqTv5rGWJ2lfAMdaEHdJl7YqBZZkkNksw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=WGa0vt5OBWRnroe+ljbi0hm8kLENjCa2GQPPN7XKp6V0BBiTF19H8tqSTfh7CRZWx
-	 WYwWCcxEoZFuKpoSoHFB3DiCJv5RpwKtdJhYkcI+6Qegd1ByKOw+obuvZudtLGOAgI
-	 X53WtNr2YSdLCJOJEqZzwnphYNQKQOOlPJvhBjcc8eai8x2bZAraNjQg69wMo3QNuT
-	 Dk5HDEdUHsH1C9pxYmD8WectqcO5UycNxlEFm+mbo9tEkV7Fz2qt0azC8FwABN3vYb
-	 g3ORnXhOrzHXDdZ9TdsndFHh5Ab0vT0DRhb5UdOEkrOc93TlniHwGAsX0jTn0HTMqs
-	 d7nNqEdUw4MAA==
-From: Daniel Wagner <wagi@kernel.org>
-Date: Wed, 07 May 2025 14:23:10 +0200
-Subject: [PATCH v6 14/14] nvme-fc: do not reference lsrsp after failure
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="k1mjTvSd"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1746620614; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=IdnAOnCRq90p308A+UdFioQ4SgHht6IUlP0dVVbjW0U=;
+	b=k1mjTvSdiRQGabCLqY7DpLN5zgkv6lLVGusybQBx+fpKILtndgW9FSH5RP9GjQM5pX6si+isSq/nGcq8CSFxhIEmpsdd6XuhapjuIGcOsPKjfWBzafeQtr3edTmeW8u/ngnn9bgSHJoyFtLbiuI1IOxzT92swYhqXvVHhy8HZbI=
+Received: from 30.174.106.64(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.cgyj98E_1746618744 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Wed, 07 May 2025 19:52:35 +0800
+Message-ID: <2ac70b02-7841-4355-ae71-5b57a6ce15e2@antgroup.com>
+Date: Wed, 07 May 2025 19:52:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: remove obsolete file entry in TUN/TAP DRIVER
+To: Lukas Bulwahn <lbulwahn@redhat.com>, Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>, linux-um@lists.infradead.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Lukas Bulwahn <lukas.bulwahn@redhat.com>
+References: <20250507071004.35120-1-lukas.bulwahn@redhat.com>
+Content-Language: en-US
+From: "Tiwei Bie" <tiwei.btw@antgroup.com>
+In-Reply-To: <20250507071004.35120-1-lukas.bulwahn@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250507-nvmet-fcloop-v6-14-ca02e16fb018@kernel.org>
-References: <20250507-nvmet-fcloop-v6-0-ca02e16fb018@kernel.org>
-In-Reply-To: <20250507-nvmet-fcloop-v6-0-ca02e16fb018@kernel.org>
-To: James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>, 
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Daniel Wagner <wagi@kernel.org>
-X-Mailer: b4 0.14.2
 
-The lsrsp object is maintained by the LLDD. The lifetime of the lsrsp
-object is implicit. Because there is no explicit cleanup/free call into
-the LLDD, it is not safe to assume after xml_rsp_fails, that the lsrsp
-is still valid. The LLDD could have freed the object already.
+On 2025/5/7 15:10, Lukas Bulwahn wrote:
+> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> 
+> Commit 65eaac591b75 ("um: Remove obsolete legacy network transports")
+> removes the directory arch/um/os-Linux/drivers/, but misses to remove the
+> file entry in TUN/TAP DRIVER referring to that directory.
+> 
+> Remove this obsolete file entry. While at it, put the section name in
+> capital letters.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> ---
+>  MAINTAINERS | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9c166503cc6b..34a55e3ff863 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -24981,13 +24981,12 @@ L:	linux-parisc@vger.kernel.org
+>  S:	Orphan
+>  F:	drivers/net/ethernet/dec/tulip/
+>  
+> -TUN/TAP driver
+> +TUN/TAP DRIVER
+>  M:	Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+>  M:	Jason Wang <jasowang@redhat.com>
+>  S:	Maintained
+>  W:	http://vtun.sourceforge.net/tun
+>  F:	Documentation/networking/tuntap.rst
+> -F:	arch/um/os-Linux/drivers/
+>  F:	drivers/net/tap.c
+>  F:	drivers/net/tun*
+>  
 
-With the recent changes how fcloop tracks the resources, this is the
-case. Thus don't access lsrsp after xml_rsp_fails.
+I missed that. Thanks for the fix!
 
-Signed-off-by: Daniel Wagner <wagi@kernel.org>
----
- drivers/nvme/host/fc.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+Reviewed-by: Tiwei Bie <tiwei.btw@antgroup.com>
 
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index 2257c3c96dd2da11097d2d0d4a5bb8ece1bebc6a..fdafa3e9e66fa9b8954209efa14d3b207cb8653c 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -1410,9 +1410,8 @@ nvme_fc_xmt_disconnect_assoc(struct nvme_fc_ctrl *ctrl)
- }
- 
- static void
--nvme_fc_xmt_ls_rsp_done(struct nvmefc_ls_rsp *lsrsp)
-+nvme_fc_xmt_ls_rsp_free(struct nvmefc_ls_rcv_op *lsop)
- {
--	struct nvmefc_ls_rcv_op *lsop = lsrsp->nvme_fc_private;
- 	struct nvme_fc_rport *rport = lsop->rport;
- 	struct nvme_fc_lport *lport = rport->lport;
- 	unsigned long flags;
-@@ -1433,6 +1432,14 @@ nvme_fc_xmt_ls_rsp_done(struct nvmefc_ls_rsp *lsrsp)
- 	nvme_fc_rport_put(rport);
- }
- 
-+static void
-+nvme_fc_xmt_ls_rsp_done(struct nvmefc_ls_rsp *lsrsp)
-+{
-+	struct nvmefc_ls_rcv_op *lsop = lsrsp->nvme_fc_private;
-+
-+	nvme_fc_xmt_ls_rsp_free(lsop);
-+}
-+
- static void
- nvme_fc_xmt_ls_rsp(struct nvmefc_ls_rcv_op *lsop)
- {
-@@ -1450,7 +1457,7 @@ nvme_fc_xmt_ls_rsp(struct nvmefc_ls_rcv_op *lsop)
- 		dev_warn(lport->dev,
- 			"LLDD rejected LS RSP xmt: LS %d status %d\n",
- 			w0->ls_cmd, ret);
--		nvme_fc_xmt_ls_rsp_done(lsop->lsrsp);
-+		nvme_fc_xmt_ls_rsp_free(lsop);
- 		return;
- 	}
- }
-
--- 
-2.49.0
-
+Regards,
+Tiwei
