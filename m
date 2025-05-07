@@ -1,151 +1,155 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE4528B7FB;
-	Wed,  7 May 2025 15:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDFCC28C2BE;
+	Wed,  7 May 2025 15:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746632954; cv=none; b=MQWjbgICco4SZVGeQ4wK894lS7f6o5NePpoofS3BUSlNPQmRh7fMzvWtPyvy0qxUMsAxYh85YoAfBHCD01gmfyLEQxwkctfTKbTZSILm1/BmvSryONS98KdhkhJKmIN4FnVhuY2n/qKQrsubR+fJ+XAx7U+JSW0HcVHEmWz5Z/U=
+	t=1746632961; cv=none; b=ZWYNJTzYzw9NScYKtwAoy2J54P3npd/x0TABMxOyqOBYAc/9hPBmqcBXOP37qoPXJrwSYmFBEs4jcNWxYq5VAn6t58cIKH5IHSLAVkla/gIQdja0vimtLL+UdVSRhQJA3S3oRDixe7ZP/+jaVhpR70v3o+xIdGRKEggvIZ8UTM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746632954; c=relaxed/simple;
-	bh=xZnKGEo9gN2J5vqHkqMj2J3kGI6Zq/gW1MHVVy4ApYw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jO3WghBU/z1Oeq5wCEB3CJDiczkHZN/clQ7tw4N4otA+gYC1kSdYu4sY3iOIwZhbsLFsDuvyGVr01r+1Ncj2zRckeDBsSoE0q/bpPS7/KiIZZ3SWzj1NhIbTBvFctA0iyj3aeq3GrKV7ybclJ7BVBH8qLt9FzYjwd70eVoBFPDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FU7Og6M1; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1746632961; c=relaxed/simple;
+	bh=Qz2S8MvbXorS/O9W3+q+a20k0SMmkwl6OV3DS1CxKVA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u/IbX3YNUO+ujBiBqsEyPcJYefKr2uLe1FAqp2ZcIYBNEyxXR3U9W7dU5NSRT3PTmiCO+aGnMxI8zx/UgHZs9h9sdgBF1x3r2na/JUk9NgyxizuPEWRC7W84LrKTmIfBOcTYYZZN10A0J4izGDEcOeEMPBA4qfcrBPmBp+s5yqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQOwPYQP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FU7Og6M1"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 547AWSCu016688;
-	Wed, 7 May 2025 15:48:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=rxNYkF
-	WtHwpUdB6qVUY8sUHqnKrrwew+/mCMWWdHo04=; b=FU7Og6M1cbvnL7VjCmQNIM
-	B+6cJQYZ6H9MPhMEWpe2cHNrqxyAwuhQPqpuqGqXYwK40Q7ZU5NoPSJ5v1tvLyzH
-	bGbDqm3BljWPNXEdrsuSLnc+hRlP2Xl5mQQpkDqyvS1cbQGlooosfeG78AjxgTbA
-	LOd0bn45JRXUYDGBCAhdT5NJqqReHDyGzw4HluiBXNTJ9h5ZVfC0fPPMMEBamKXH
-	I5txNMLh+ooRXMRrY58MwtUEnDp27yX7zc3MLH62sBmZLjaxOYNGJTPCKORf6ksx
-	g144BObN0Slnb52ST/2aWPPsgXzv2GLMC1fW/BPdBfBaXOuzCCfoUn4bdPs3Ew3Q
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46fvd0m3m5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 15:48:56 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 547FdLwr031187;
-	Wed, 7 May 2025 15:48:55 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46fvd0m3m0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 15:48:55 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 547Es3BY013765;
-	Wed, 7 May 2025 15:48:55 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46e062h22v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 15:48:55 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 547FmrYS24248944
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 7 May 2025 15:48:53 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 76C6758056;
-	Wed,  7 May 2025 15:48:53 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E3DDF58054;
-	Wed,  7 May 2025 15:48:46 +0000 (GMT)
-Received: from [9.39.20.214] (unknown [9.39.20.214])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  7 May 2025 15:48:46 +0000 (GMT)
-Message-ID: <e80c83a1-77db-452e-8a5d-d435e61bd544@linux.ibm.com>
-Date: Wed, 7 May 2025 21:18:44 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQOwPYQP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23F86C4CEE2;
+	Wed,  7 May 2025 15:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746632960;
+	bh=Qz2S8MvbXorS/O9W3+q+a20k0SMmkwl6OV3DS1CxKVA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tQOwPYQPWO8QO6iseBgX7DZEX9/efEiZcN9Badmeq7zIDV4oJiTMhlfRiNzAzvhN5
+	 GjKBccWxwAkL01vzj0TbjpESdKKkgLkG3NW9nMHs6w2PPz1TRm7XKx3iujk3p6MbrX
+	 5Y34I2CCmURnXjTtQy952lpMlAwzfx53Fk5zYyzI0y7GiNyU1GuW5gb4ZxXJs/C67Z
+	 6xiBpx/VBoSBW+o81Fl3m9eVXKRmQM4X88CdrqgyP88HJ7/fNq6MajH7JqE9PCIk4M
+	 1p7pZBMyjYNfgOmRjQKyj0Wqs3aw0p0yWAZXybMNeq1mdhkYEBu8tRAf60BF7ZMTwP
+	 bLF2a4SgBLFnw==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vineet Gupta <vgupta@kernel.org>
+Cc: Thierry Reding <treding@nvidia.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: serial: Convert snps,arc-uart to DT schema
+Date: Wed,  7 May 2025 10:49:08 -0500
+Message-ID: <20250507154909.1602497-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] powerpc/pseries: Correct secvar format representation
- for static key management
-To: Andrew Donnellan <ajd@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, naveen@kernel.org, zohar@linux.ibm.com,
-        nayna@linux.ibm.com, linux-kernel@vger.kernel.org
-References: <20250430090350.30023-1-ssrish@linux.ibm.com>
- <20250430090350.30023-2-ssrish@linux.ibm.com>
- <87e1185273ce21e5fd69ff071a1be986c2a0301a.camel@linux.ibm.com>
- <2b7145a2-1cfb-4b1a-929c-10a03747119e@linux.ibm.com>
- <24106430db9693f580c3765206257677c10e4375.camel@linux.ibm.com>
-Content-Language: en-US
-From: Srish Srinivasan <ssrish@linux.ibm.com>
-In-Reply-To: <24106430db9693f580c3765206257677c10e4375.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 0n5xQSiBnbuu_XS3icD9NCdQqM7XK_al
-X-Proofpoint-GUID: 3_6RqbKZ8aCNXmUSTH6QTnv6Mad-dn-p
-X-Authority-Analysis: v=2.4 cv=LYc86ifi c=1 sm=1 tr=0 ts=681b80e8 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=1mVJ_uiqAAAA:8 a=Icq07P0Zc9DzbdNrBL8A:9 a=QEXdDO2ut3YA:10
- a=h67g7WpEjx8dfGT80pje:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDE0NyBTYWx0ZWRfXxxc3J+kuXBEW vDq3iyDNIp7Lkc9l1c+nvDqkLncWa25YVHUuE48n/g/AXgzqbqVO69RQ18/JN0g/MJQS6gTx5I1 sya3QVQphs/LevEM7OJpd41I5/3Z0u33DS5VTAFbzTU8j7RSE3I9ozCRKO5/YHSxHTvYhH5RvfI
- 6DHEkWYYgktPeqMOmy9LFCa0D85sq39pq8xt3aJACxoPTu2MNcU2qGyxCTKYtuqDvhI8DBRb05S 6anCcgSDlDIQRFixpTXLxE9QUpmi/WkZjy2lRDobubqIGVF4SihgqwFPckaVlsV733SxUueIl+l dd420VYlRkV2XnUPycHa6uHOVqP+1Y/mG3BA5z+KbAKu1zIFOQanHofrVVdEj3+npAgLPTHGLt/
- Dovdd6CzUtklrE6rFYuc0frWAbUKBiXvyryFo9qvn0fwWie4ntvP8LSn30AtE1eJ2WEdJOqn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_05,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- impostorscore=0 priorityscore=1501 spamscore=0 clxscore=1015 phishscore=0
- adultscore=0 bulkscore=0 suspectscore=0 malwarescore=0 lowpriorityscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505070147
+Content-Transfer-Encoding: 8bit
 
+Convert the Synopsys ARC UART binding to DT schema. Drop the "aliases"
+portion which is not relevant to this schema.
 
-On 5/7/25 11:47 AM, Andrew Donnellan wrote:
-> On Wed, 2025-05-07 at 00:29 +0530, Srish Srinivasan wrote:
->>>> +	rc = plpks_read_fw_var(&var);
->>>> +	if (rc) {
->>>> +		pr_info("Error %ld reading SB_VERSION from
->>>> firmware\n", rc);
->>> We need to check for -ENOENT, otherwise this message is going to be
->>> printed every time you boot a machine in static mode.
->> Yes, I agree with your concern. I just want to add that, as per my
->> understanding, we need to check for both -ENOENT and -EPERM,
->> as explained below:
->>
->> As per H_PKS_READ_OBJECT semantics described in the PAPR v10.60
->> (https://files.openpower.foundation/s/XFgfMaqLMD5Bcm8),
->>
->> * If the object is not world readable, verify that the consumer
->> password
->> matches the stored value in the hypervisor. Else return H_AUTHORITY.
->> * Verify if the object exists, else return H_NOT_FOUND.
->> * Verify if the policy for the object is met, else return
->> H_AUTHORITY.
->>
->> So, the hypervisor returns H_NOT_FOUND only for the authenticated
->> consumer. For unauthenticated consumers, which is the case here,
->> it would return H_AUTHORITY.
-> We expect SB_VERSION to always be world-readable, I think? In which
-> case it shouldn't return H_AUTHORITY / -EPERM, ever, and if it does
-> that's an error which should be handled as an error. Or am I
-> misinterpreting the spec here?
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+v2:
+ - Fix $id path
+---
+ .../devicetree/bindings/serial/arc-uart.txt   | 25 ---------
+ .../bindings/serial/snps,arc-uart.yaml        | 51 +++++++++++++++++++
+ 2 files changed, 51 insertions(+), 25 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/serial/arc-uart.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/snps,arc-uart.yaml
 
-Yes, SB_VERSION is world-readable and should not return H_AUTHORITY in 
-the case of dynamic key management mode. However, in
-the case of static key management mode, when SB_VERSION does not exist, 
-the hypervisor tries to authenticate the consumer. If the
-authentication is successful, H_NOT_FOUND is returned, else H_AUTHORITY 
-is returned. The intention behind authenticating the
-consumer when the object is not found is to ensure that a 
-non-authenticated consumer is unable to conclude on the absence of
-the object. Here, when the kernel tries to read the non-existent 
-SB_VERSION, it fails the authentication check and therefore,
-gets the H_AUTHORITY error code.
+diff --git a/Documentation/devicetree/bindings/serial/arc-uart.txt b/Documentation/devicetree/bindings/serial/arc-uart.txt
+deleted file mode 100644
+index 256cc150ca7e..000000000000
+--- a/Documentation/devicetree/bindings/serial/arc-uart.txt
++++ /dev/null
+@@ -1,25 +0,0 @@
+-* Synopsys ARC UART : Non standard UART used in some of the ARC FPGA boards
+-
+-Required properties:
+-- compatible		: "snps,arc-uart"
+-- reg			: offset and length of the register set for the device.
+-- interrupts		: device interrupt
+-- clock-frequency	: the input clock frequency for the UART
+-- current-speed		: baud rate for UART
+-
+-e.g.
+-
+-arcuart0: serial@c0fc1000 {
+-	compatible = "snps,arc-uart";
+-	reg = <0xc0fc1000 0x100>;
+-	interrupts = <5>;
+-	clock-frequency = <80000000>;
+-	current-speed = <115200>;
+-};
+-
+-Note: Each port should have an alias correctly numbered in "aliases" node.
+-
+-e.g.
+-aliases {
+-	serial0 = &arcuart0;
+-};
+diff --git a/Documentation/devicetree/bindings/serial/snps,arc-uart.yaml b/Documentation/devicetree/bindings/serial/snps,arc-uart.yaml
+new file mode 100644
+index 000000000000..dd3096fbfb6a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/snps,arc-uart.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/serial/snps,arc-uart.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Synopsys ARC UART
++
++maintainers:
++  - Vineet Gupta <vgupta@kernel.org>
++
++description:
++  Synopsys ARC UART is a non-standard UART used in some of the ARC FPGA boards.
++
++allOf:
++  - $ref: /schemas/serial/serial.yaml#
++
++properties:
++  compatible:
++    const: snps,arc-uart
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clock-frequency:
++    description: the input clock frequency for the UART
++
++  current-speed:
++    description: baud rate for UART
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clock-frequency
++  - current-speed
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    serial@c0fc1000 {
++        compatible = "snps,arc-uart";
++        reg = <0xc0fc1000 0x100>;
++        interrupts = <5>;
++        clock-frequency = <80000000>;
++        current-speed = <115200>;
++    };
+-- 
+2.47.2
 
->
->
