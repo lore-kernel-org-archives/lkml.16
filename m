@@ -1,130 +1,199 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866A426B08C
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435BD257AF6;
+	Wed,  7 May 2025 12:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746621341; cv=none; b=audTjaQ4JJRVdDcaxKC32ouWG22+wOJzg104sGbsfbd41KYGkUhCle9QmEpYzMJbwKnYd/mqpfPJygQrsDXmxucTjTPhIr6B8LW0VzuSp9iSpMsyS0BiES2kNz1w5zRRYx/j7Rb4r83O/j/HZBa1hkBxQUx7ZclBIlBrNFJBzUQ=
+	t=1746621390; cv=none; b=r/a84wLqZaOpkENZ3BheIcfTM5wTJRHIGXxAbuFN+5igqyCGPdoRyzTkglmxTzr9yxDk6o5zTf6rkP8EksNeJq+XOuBzAe9hBLiMf6HoLsBS78Sha2zO1YYPMgjtZXnNc2MgSirV9tV5DrYup21WtKArfp1xb9xuuSEeQpAbq6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746621341; c=relaxed/simple;
-	bh=W/jXllp7QKxqo10uYHex1yrZDnuxG/dHXbYSQf58jCA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Py27gJO+EKMUGBM4XKWzaJyKpqhyibMpznPIvCj21yS+whzEHzaKW3lu8x3y2xjHwBeRCCGpTxIiLedTH3V577S1M++0i+6eK7zVOTS37yvNzpPx2RJAZUrw2PhddLjXZ0zy6E+1obBN4gyN3lwCfvATk/LjDLAUUz2fx2M2INw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VMNOgP8b; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746621390; c=relaxed/simple;
+	bh=MwSEEjKCjF/7nGabal+tGMtp0qVnx0UYQgD2hVtyBfk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gASyehfRM8U7b/dLowJq7RYrj60YoMtyCKEFSQ3+5dgVvvyBeAkckHm0G6PyapY88O1CZOjCp9lzAZKblxDNMpng0k/U/lmxqpVPXl7IxPkRagYdowDo58FspKx13CTAhKHGV1STd4aQaY2xqm14BgPkXbAYdFYVGHVuOON3Yos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nh4etkXD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VMNOgP8b"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-acacb8743a7so162485366b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 05:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746621338; x=1747226138; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xWON9I4ameGxWiEKwkDziYc8iN3l6k5w6SWR59IgmyI=;
-        b=VMNOgP8bLj4AVsSyMG7GFjNj1ljxv5Qc9LFV+17zVZa+eKaVQazoUTb7SLBLoZUzXD
-         R7XwvHGU7dOWl+uLp2gmVDvMj9uYT/WsuE9e2ffY7eQ9dn0bGLotWYIjSgQrUEayAay6
-         YgoI9h319Ppx1K55O8GZi9zsJ5Wr0PONOC/weaqKTCQ6GgSikFRmngzuiSc1l/3SnWlL
-         KyFbc3pjLKXRU8luFAU2lm5jITtDS+Wipwtaj06DKmI27jekC1FBA3DUHccgYG7jyC13
-         CgRjd6pIqMfGjrQZQ554UeSCYXVqHtBD7ZdbTBCuv+fAUKvdrO/qHTqe0RiBpIFneqcU
-         ap0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746621338; x=1747226138;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xWON9I4ameGxWiEKwkDziYc8iN3l6k5w6SWR59IgmyI=;
-        b=rclRrKZZdQLvAyqr9nkZBXbjTa7hyiA2QVPjyqAiDINHfCw6ltk3W11GAQkZ7v/gUC
-         Oohg2y19X2az6aZp95fPH5tbl/42bhTMqhdevC39DYfC/xB0/v+Upz0NnPzPQcPI8g9x
-         bym5CUu398qp1SbJ9al9RoraUnM1vHHMo0HTlSDfP+Aq3eLHMl7QNobkLkyx464o1YZ0
-         syhQq2tILLtjHC2SJ+Dme/dLwdz80gX9IXuasnWcSeZawymj/8BFjOab7W7hcLJHRHH2
-         YB+0fVCl8fXEDhBZUvbbtj0f/q8Pc4mSh4HCILD6k/Cp1XIkwAis45jksI8c3wqI1lju
-         vlLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcZLBzM2qv/PLedbtV9zRdrOtI5W8RaROI9xIa2XfSLsLRa8nC6nBU+sNX6DUlA1gCZAVY86jO78mPFmI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx97bBU2ioeJmu/1nVthfgLwggBRtLxYzATcPZnAFA374F2Huh8
-	EDvqZVNpyIMmqo4uCT0iPQbGSXe3g6MTHI2bXuTIaJvPjNgeokYVU6jlLYe0XoY=
-X-Gm-Gg: ASbGncubsNxvHWYWxS78b+0HfLGSFzu8YyPJZ5VKFUEjxA9FeYGbKsZBrJR2IZbWTqJ
-	GXHcVpU1MdbZMqEsGWshIx77xN83Z0oYkdeDlHdwRSkETeM/pVMw4z5/l7ZoCXR0LcTpkI+S29o
-	WE5dZukQSSmqpjCa0dkZF1ziI8OmpnuHZ/B8dyl1KNos9weXsdNKLb/VMF/Q2Hx31HRwQwrenB3
-	3pnzMyDWDP4N/BcZlRMybtGixyAWRqQVHBwpGoszIwDVW31FBwYCSyYx3HqpG6KvMQYpviLGPFf
-	l0Y3zfQkyqB2i+P7Pgz9kG4EHvmLxvZg3Ss6CIk=
-X-Google-Smtp-Source: AGHT+IEMmTi4bmJFoUPDT0YBq0AgR9RZuiis3rxqwa+boAiz7GJ/sZbLrp/zC5X9/7Njxkr4VGX0Ww==
-X-Received: by 2002:a17:907:6eaa:b0:ac7:b1eb:8283 with SMTP id a640c23a62f3a-ad1e7830348mr370649066b.17.1746621337789;
-        Wed, 07 May 2025 05:35:37 -0700 (PDT)
-Received: from hackbox.lan ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891f04absm897883966b.78.2025.05.07.05.35.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 05:35:36 -0700 (PDT)
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Mike Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: imx@lists.linux.dev,
-	NXP Linux Team <linux-imx@nxp.com>,
-	linux-clk@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] clk: imx: Updates for v6.16
-Date: Wed,  7 May 2025 15:35:28 +0300
-Message-Id: <20250507123528.585447-1-abel.vesa@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nh4etkXD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CF24C4CEE7;
+	Wed,  7 May 2025 12:36:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746621389;
+	bh=MwSEEjKCjF/7nGabal+tGMtp0qVnx0UYQgD2hVtyBfk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Nh4etkXD2QmdXeFIxepaVQ36xE/CnoqL71J4FagfBBbAJsZH9WfLTDXPDHB7PMjNQ
+	 0Ey6JCc5Cty+Ne91cafy6vhdUgF9t/0UDambHAc0jt0Y+7lmZdzxXzwivE1+MCffeA
+	 /l4MHYO9yaCaueOyI/2h2/CMqptIWq7QNgHMKXVkeazg/LdYmjcORZh/kQqQ8VQINx
+	 4QlwnqJVsaIqTYShXwG+epsnC9Pj1pRvyHmnM8BK6E1WlbkCLGoJ7CWk5Mr3Zb/EiN
+	 Mwlpzt5drHPEuaRZYEAeSyIV+SYm6FFHiN3FPuMB3vO+/EXKF2g3yPIAwjFbQ6fgvo
+	 zmzfu0CrynEvg==
+Date: Wed, 7 May 2025 13:36:22 +0100
+From: Simon Horman <horms@kernel.org>
+To: Tanmay Jagdale <tanmay@marvell.com>
+Cc: bbrezillon@kernel.org, arno@natisbad.org, schalla@marvell.com,
+	herbert@gondor.apana.org.au, davem@davemloft.net,
+	sgoutham@marvell.com, lcherian@marvell.com, gakula@marvell.com,
+	jerinj@marvell.com, hkelam@marvell.com, sbhatta@marvell.com,
+	andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, bbhushan2@marvell.com, bhelgaas@google.com,
+	pstanner@redhat.com, gregkh@linuxfoundation.org,
+	peterz@infradead.org, linux@treblig.org,
+	krzysztof.kozlowski@linaro.org, giovanni.cabiddu@intel.com,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, rkannoth@marvell.com, sumang@marvell.com,
+	gcherian@marvell.com, Rakesh Kudurumalla <rkudurumalla@marvell.com>
+Subject: Re: [net-next PATCH v1 06/15] octeontx2-af: Add support for CPT
+ second pass
+Message-ID: <20250507123622.GB3339421@horms.kernel.org>
+References: <20250502132005.611698-1-tanmay@marvell.com>
+ <20250502132005.611698-7-tanmay@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502132005.611698-7-tanmay@marvell.com>
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+On Fri, May 02, 2025 at 06:49:47PM +0530, Tanmay Jagdale wrote:
+> From: Rakesh Kudurumalla <rkudurumalla@marvell.com>
+> 
+> Implemented mailbox to add mechanism to allocate a
+> rq_mask and apply to nixlf to toggle RQ context fields
+> for CPT second pass packets.
+> 
+> Signed-off-by: Rakesh Kudurumalla <rkudurumalla@marvell.com>
+> Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+...
 
-are available in the Git repository at:
+> diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cn10k.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cn10k.c
+> index 7fa98aeb3663..18e2a48e2de1 100644
+> --- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cn10k.c
+> +++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cn10k.c
+> @@ -544,6 +544,7 @@ void rvu_program_channels(struct rvu *rvu)
+>  
+>  void rvu_nix_block_cn10k_init(struct rvu *rvu, struct nix_hw *nix_hw)
+>  {
+> +	struct rvu_hwinfo *hw = rvu->hw;
+>  	int blkaddr = nix_hw->blkaddr;
+>  	u64 cfg;
+>  
+> @@ -558,6 +559,16 @@ void rvu_nix_block_cn10k_init(struct rvu *rvu, struct nix_hw *nix_hw)
+>  	cfg = rvu_read64(rvu, blkaddr, NIX_AF_CFG);
+>  	cfg |= BIT_ULL(1) | BIT_ULL(2);
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/abelvesa/linux.git/ tags/clk-imx-6.16
+As per my comments on an earlier patch in this series:
+bits 1 and 2 have meaning. It would be nice to use a #define to
+convey this meaning to the reader.
 
-for you to fetch changes up to 6a55647af3334f1d935ece67de4a838a864b53fc:
+>  	rvu_write64(rvu, blkaddr, NIX_AF_CFG, cfg);
+> +
+> +	cfg = rvu_read64(rvu, blkaddr, NIX_AF_CONST);
+> +
+> +	if (!(cfg & BIT_ULL(62))) {
+> +		hw->cap.second_cpt_pass = false;
+> +		return;
+> +	}
+> +
+> +	hw->cap.second_cpt_pass = true;
+> +	nix_hw->rq_msk.total = NIX_RQ_MSK_PROFILES;
+>  }
+>  
+>  void rvu_apr_block_cn10k_init(struct rvu *rvu)
+> diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
+> index 6bd995c45dad..b15fd331facf 100644
+> --- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
+> +++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
+> @@ -6612,3 +6612,123 @@ int rvu_mbox_handler_nix_mcast_grp_update(struct rvu *rvu,
+>  
+>  	return ret;
+>  }
+> +
+> +static inline void
+> +configure_rq_mask(struct rvu *rvu, int blkaddr, int nixlf,
+> +		  u8 rq_mask, bool enable)
+> +{
+> +	u64 cfg, reg;
+> +
+> +	cfg = rvu_read64(rvu, blkaddr, NIX_AF_LFX_RX_IPSEC_CFG1(nixlf));
+> +	reg = rvu_read64(rvu, blkaddr, NIX_AF_LFX_CFG(nixlf));
+> +	if (enable) {
+> +		cfg |= BIT_ULL(43);
+> +		reg = (reg & ~GENMASK_ULL(36, 35)) | ((u64)rq_mask << 35);
+> +	} else {
+> +		cfg &= ~BIT_ULL(43);
+> +		reg = (reg & ~GENMASK_ULL(36, 35));
+> +	}
 
-  dt-bindings: clock: imx8m-clock: add PLLs (2025-05-05 10:48:56 +0300)
+Likewise for the bit, mask, and shift here.
 
-----------------------------------------------------------------
-i.MX clock changes for 6.16
+And I think that using FIELD_PREP with another mask in place of the shift
+is also appropriate here.
 
-- Add video PLL clocks to both i.MX8MM and i.MX8MP
-  while dropping the numeral suffix.
-- Add imx_anatop_get_clk_hw helper
-- Add anatop clock providers for i.MX8M[MNP]
-- Drop ccm_ prefix from base in i.MX8MP clock provider
-- Document bindings for PLLs in imx8m-clock schema
+> +	rvu_write64(rvu, blkaddr, NIX_AF_LFX_RX_IPSEC_CFG1(nixlf), cfg);
+> +	rvu_write64(rvu, blkaddr, NIX_AF_LFX_CFG(nixlf), reg);
+> +}
+> +
+> +static inline void
+> +configure_spb_cpt(struct rvu *rvu, int blkaddr, int nixlf,
+> +		  struct nix_rq_cpt_field_mask_cfg_req *req, bool enable)
+> +{
+> +	u64 cfg;
+> +
+> +	cfg = rvu_read64(rvu, blkaddr, NIX_AF_LFX_RX_IPSEC_CFG1(nixlf));
+> +	if (enable) {
+> +		cfg |= BIT_ULL(37);
+> +		cfg &= ~GENMASK_ULL(42, 38);
+> +		cfg |= ((u64)req->ipsec_cfg1.spb_cpt_sizem1 << 38);
+> +		cfg &= ~GENMASK_ULL(63, 44);
+> +		cfg |= ((u64)req->ipsec_cfg1.spb_cpt_aura << 44);
+> +	} else {
+> +		cfg &= ~BIT_ULL(37);
+> +		cfg &= ~GENMASK_ULL(42, 38);
+> +		cfg &= ~GENMASK_ULL(63, 44);
+> +	}
 
-----------------------------------------------------------------
-Dario Binacchi (11):
-      dt-bindings: clock: imx8mm: add VIDEO_PLL clocks
-      clk: imx8mm: rename video_pll1 to video_pll
-      dt-bindings: clock: imx8mp: add VIDEO_PLL clocks
-      clk: imx8mp: rename video_pll1 to video_pll
-      dt-bindings: clock: imx8m-anatop: add oscillators and PLLs
-      clk: imx: add hw API imx_anatop_get_clk_hw
-      clk: imx: add support for i.MX8MM anatop clock driver
-      clk: imx: add support for i.MX8MN anatop clock driver
-      clk: imx: add support for i.MX8MP anatop clock driver
-      clk: imx8mp: rename ccm_base to base
-      dt-bindings: clock: imx8m-clock: add PLLs
+And here too.
 
- .../bindings/clock/fsl,imx8m-anatop.yaml           |  53 +-
- .../devicetree/bindings/clock/imx8m-clock.yaml     |  27 +-
- drivers/clk/imx/Makefile                           |   6 +-
- drivers/clk/imx/clk-imx8mm-anatop.c                | 287 +++++++++
- drivers/clk/imx/clk-imx8mm.c                       | 262 ++++----
- drivers/clk/imx/clk-imx8mn-anatop.c                | 283 +++++++++
- drivers/clk/imx/clk-imx8mn.c                       | 183 +++---
- drivers/clk/imx/clk-imx8mp-anatop.c                | 306 ++++++++++
- drivers/clk/imx/clk-imx8mp.c                       | 672 ++++++++++-----------
- drivers/clk/imx/clk.c                              |  15 +
- drivers/clk/imx/clk.h                              |   2 +
- include/dt-bindings/clock/imx8mm-clock.h           |  76 ++-
- include/dt-bindings/clock/imx8mn-clock.h           |  64 ++
- include/dt-bindings/clock/imx8mp-clock.h           |  80 ++-
- 14 files changed, 1711 insertions(+), 605 deletions(-)
- create mode 100644 drivers/clk/imx/clk-imx8mm-anatop.c
- create mode 100644 drivers/clk/imx/clk-imx8mn-anatop.c
- create mode 100644 drivers/clk/imx/clk-imx8mp-anatop.c
+> +	rvu_write64(rvu, blkaddr, NIX_AF_LFX_RX_IPSEC_CFG1(nixlf), cfg);
+> +}
+
+...
+
+> +int rvu_mbox_handler_nix_lf_inline_rq_cfg(struct rvu *rvu,
+> +					  struct nix_rq_cpt_field_mask_cfg_req *req,
+> +					  struct msg_rsp *rsp)
+
+It would be nice to reduce this to 80 columns wide or less.
+Perhaps like this?
+
+int
+rvu_mbox_handler_nix_lf_inline_rq_cfg(struct rvu *rvu,
+				      struct nix_rq_cpt_field_mask_cfg_req *req,
+				      struct msg_rsp *rsp)
+
+Or perhaps by renaming nix_rq_cpt_field_mask_cfg_req to be shorter.
+
+...
+
+> diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h b/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h
+> index 245e69fcbff9..e5e005d5d71e 100644
+> --- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h
+> +++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h
+> @@ -433,6 +433,8 @@
+>  #define NIX_AF_MDQX_IN_MD_COUNT(a)	(0x14e0 | (a) << 16)
+>  #define NIX_AF_SMQX_STATUS(a)		(0x730 | (a) << 16)
+>  #define NIX_AF_MDQX_OUT_MD_COUNT(a)	(0xdb0 | (a) << 16)
+> +#define NIX_AF_RX_RQX_MASKX(a, b)       (0x4A40 | (a) << 16 | (b) << 3)
+> +#define NIX_AF_RX_RQX_SETX(a, b)        (0x4A80 | (a) << 16 | (b) << 3)
+
+FIELD_PREP could be used here in conjunction with #defines
+for appropriate masks here too.
+
+>  
+>  #define NIX_PRIV_AF_INT_CFG		(0x8000000)
+>  #define NIX_PRIV_LFX_CFG		(0x8000010)
+
+...
