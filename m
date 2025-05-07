@@ -1,112 +1,107 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BADC1A841B
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 06:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6311E1A841B
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 06:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746599672; cv=none; b=fnosOYvyXIPfGwtIkE/CZKn2QxN4xZqfKYo0Od0CWO2lhNHG8MG35HlcGrlXxvdeleHg7JHs29cnAogso+zd1TI8bAaapBL18sUsYIv1WyAEU9MzU06Y7VIES4PkeLcnxk/emJc7M2cbpFRKQE2hivf5j22hLhar74n5z1o1Njs=
+	t=1746599711; cv=none; b=cMeV5pVlLMJZdew85hukthZXMFD8Nq8YCa6WRpWXO9fe55Pf79/XnVk6agMujkkwMc6G9SpGc8sxAHmndoXUuFWICIxSnGgxxWNYyADrqotd041wMs7TBqCQiOBSYUDSGBdDKYG0GGbXVxnwRkbGlcO7I1GBp9y7zNafAeZ03UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746599672; c=relaxed/simple;
-	bh=g2T4JaX1PQVtaJym4rSRe7C5rjrjNOPBhBVkp6Ld+9g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Vm8goa9q+BN5N3vhzjIDIfBgFAcMPheOvG+xK+CTgrRmefNc80nOM8U+0g3WO98BAIgxx3ejAWFlGcN1bVXZgvDmMRhtCqvzpk1Y5L76GMQ0DFEWshLErBjC1JRQb1SGvOUfICvOjViHC+Dqkqn74unRMeqNQ/NWCPyAQuonXdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZslLV1kzgz1R7Yj;
-	Wed,  7 May 2025 14:13:06 +0800 (CST)
-Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
-	by mail.maildlp.com (Postfix) with ESMTPS id 21A4F140113;
-	Wed,  7 May 2025 14:15:12 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 7 May 2025 14:15:11 +0800
-Message-ID: <40f2f891-bd09-4600-9540-b6e6fa977958@huawei.com>
-Date: Wed, 7 May 2025 14:15:10 +0800
+	s=arc-20240116; t=1746599711; c=relaxed/simple;
+	bh=aw40nhVq4qGCb1FGtJLCrkrXQEqvvRfwD3kXfxz9VU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fF5ocBdnHwT+WSTip92oW+jecTjLFgb/QsHOFcyNph0KE9o8AXSikXoRizIFSDOg0nuj4avYICuZ3eyjSD+XhZJbQFDIOr5SCixv6VRMAUAgkdP3IDWT99hiGjZ4Dh0X8Gz5xwipu86dPBSbuDZaAfdZflxuv29YEpyEK7Pru6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sFnCL0ta; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sFnCL0ta"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F23BC4CEE7;
+	Wed,  7 May 2025 06:35:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746599710;
+	bh=aw40nhVq4qGCb1FGtJLCrkrXQEqvvRfwD3kXfxz9VU0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sFnCL0taaEa1cy4cOV2pECs3UQInUbvEt5yJP50ku4p4re7ZvbCUuxnI17XiNgZ1C
+	 CqUf5zqyL2UUFMzfJtVf8nypWA62jxVMPEZzq6exDiTnW/6tt86kTQhAjzGbjMn8AR
+	 BVAH4UVrXsytFhuqdWCdzVOE+5K54ZgTTnncRbTTVyUyDzuGcvv1GEt6Ka1h939zEQ
+	 lc9Op8rwgZRNC4pz3qQcltAedez8135qze74Tf2Zndlmq3NvpOZvwdUMZBjTZtzGDf
+	 vv1e+06X4ilMNp7vRf8SQUiziItjBMtTT4Xc5tLHSKNrRWfu+c5oT/ju1Zz+NXNXFq
+	 vHzglZgwNLF4g==
+Date: Wed, 7 May 2025 08:35:05 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Masahiro Yamada <yamada.masahiro@socionext.com>,
+	Michal Marek <michal.lkml@markovi.net>
+Subject: Re: [PATCH 04/15] x86/kbuild: Introduce the 'x86_32' subarchitecture
+Message-ID: <aBr_GZ9P7k_I7RU6@gmail.com>
+References: <20250506170924.3513161-1-mingo@kernel.org>
+ <20250506170924.3513161-5-mingo@kernel.org>
+ <cd541739-4ec5-4772-9cef-e3527fc69e26@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] erofs: fix file handle encoding for 64-bit NIDs
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, <xiang@kernel.org>,
-	<chao@kernel.org>, <zbestahu@gmail.com>, <jefflexu@linux.alibaba.com>
-CC: <dhavale@google.com>, <linux-erofs@lists.ozlabs.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250429134257.690176-1-lihongbo22@huawei.com>
- <18d272ce-6a80-4fdc-b67b-ddc2ffa522d4@linux.alibaba.com>
- <3e068311-9223-4c1b-9091-15eb2d867ede@huawei.com>
- <1151f059-fd08-4dba-9448-c8c535ea8700@linux.alibaba.com>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <1151f059-fd08-4dba-9448-c8c535ea8700@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemo500009.china.huawei.com (7.202.194.199)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd541739-4ec5-4772-9cef-e3527fc69e26@app.fastmail.com>
 
 
+* Arnd Bergmann <arnd@arndb.de> wrote:
 
-On 2025/5/7 10:42, Gao Xiang wrote:
+> On Tue, May 6, 2025, at 19:09, Ingo Molnar wrote:
+> > 
+> >  # Additional ARCH settings for x86
+> > -ifeq ($(ARCH),i386)
+> > +ifeq ($(ARCH),x86_64)
+> >          SRCARCH := x86
+> >  endif
+> > -ifeq ($(ARCH),x86_64)
+> > +ifeq ($(ARCH),x86_32)
+> > +        SRCARCH := x86
+> > +endif
+> > +ifeq ($(ARCH),i386)
+> >          SRCARCH := x86
+> >  endif
 > 
-> 
-> On 2025/5/7 09:53, Hongbo Li wrote:
->>
->>
->> On 2025/5/6 23:10, Gao Xiang wrote:
->>> Hi Hongbo,
->>>
->>> On 2025/4/29 21:42, Hongbo Li wrote:
->>>> In erofs, the inode number has the location information of
->>>> files. The default encode_fh uses the ino32, this will lack
->>>> of some information when the file is too big. So we need
->>>> the internal helpers to encode filehandle.
->>>
->>> EROFS uses NID to indicate the on-disk inode offset, which can
->>> exceed 32 bits. However, the default encode_fh uses the ino32,
->>> thus it doesn't work if the image is large than 128GiB.
->>>
->> Thanks for helping me correct my description.
->>
->> Here, an image larger than 128GiB won't trigger NID reversal. It 
->> requires a 128GiB file inside, and the NID of the second file may 
->> exceed U32 during formatting. So here can we change it to "However, 
->> the default encode_fh uses the ino32, thus it may not work if there 
->> exist a file which is large than 128GiB." ?
-> 
-> Why? Currently EROFS doesn't arrange inode metadata
-> together, but close to its data (or its directory)
-> if possible for data locality.
-> 
-> So NIDs can exceed 32-bit for images larger than
-> 128 GiB.
-> 
+> Would it be possible to just remove the entire SRCARCH hack for x86? 
+> It's not clear from the changelog what the intention was in 2007 when 
+> it was added, but my impression was that this should be a temporary 
+> workaround to users doing 'make defconfig' on i386 would still get a 
+> 32-bit config by default and didn't have to change there scripts.
 
-Ok, I see your point, and you are right. It doesn't have to be a 128GiB 
-file, but it is easy to construct this kind of EROFS image by large 
-file. Such as:
+Correct, this was done during the x86 unification: a significant number 
+of kernel developers were still using 32-bit x86 systems, and they 
+expected the host architecture to be used by default like it was when 
+it lived in arch/i386/.
 
-mkfs.erofs -d7 --tar=f --clean=data foo.erofs 128g-file.tar  # the nid 
-of 128g-file is 39.
-mkfs.erofs -d7 --tar=f --incremental=data 1b-file.tar  # the nid of 
-1b-file is 4294967425.
+Ie. it was a 'seamless x86 unification' build feature.
 
-Thank you again for your review, I will send the next version of the 
-patch later.
+I'd be glad to add a tested patch for SRCARCH hack removal, which 
+should simplify things a bit.
+
+> Also, I don't think there are any systems that return 'x86_32' from 
+> 'uname -m', so your added special case would never be used by 
+> default, only when cross-compiling from some other architecture.
+
+No, on most 32-bit systems 'uname -m' returns 'i686', which we cannot 
+use straight away anyway. And it looked a bit silly to me for us to 
+fudge over the architecture from 'i686' to 'i386', when we haven't 
+supported i386 for quite some while and are now working on i486 
+removal...
+
+Let's just have x86_32 as the internal primary subarchitecture name, 
+with support for historic aliases like 'i386'. That it cleans up things 
+for defconfig naming is a bonus.
 
 Thanks,
-Hongbo
 
-> Thanks,
-> Gao Xiang
-> 
->>
->> Thanks,
->> Hongbo
->>
-> 
+	Ingo
