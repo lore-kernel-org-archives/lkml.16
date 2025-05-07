@@ -1,192 +1,290 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C612323535B;
-	Wed,  7 May 2025 09:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED0F231A42
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746609566; cv=none; b=Ml31mExI4PmKwNxXTCzcoEEX0KyTvfgx8KNGdPfEoDvJEsy3/qyWG7xrvnn6yHk8qDQ5y+tCfXf0SXx18K1+HkDaSOpZF5ILQRYTwa7HtKbzXZCAuQYBpycPPJcx4pt1PxHbJEp8xERDKjnFqcCy2Vr9w7XlwNcoyQtPghyYLKw=
+	t=1746609567; cv=none; b=tFaBgI1OPVrVPgqQlZHqcXhd5ELPFMnwVpNG/gv0/YgphkB4tMXsfrbGipISBoDDvo6obBX2lhm4xjR7d6bUBlsDrS/Bz6159Ap59L7WF4i7dA8zvCmb94Bo0aZ9NYXDyoC3OjbzQ856hpYFOGrtZy6vtgvJ+81vNdlIf5oCHR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746609566; c=relaxed/simple;
-	bh=xWzxV0NL2hKfTdmxVr7+NPAKQTfC6jKi+qpbaYgNWvY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sXvEe8kwm0lzI3PyOf+KOvsQfj4bAUJ9oPVUAetFVD5Nc4p0u3JBKyb6+9AAuvlO4xlVdAkRpfXyqFqJ+xLdnTgVGyAVTSyJJVztBOM6KghzzDP1iRy0hiqWud6/A9utRofUAok6n8yI4tmBDOCaM/KZ7nrZQJV4zokx6X4sHfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oFEWpuKE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746609567; c=relaxed/simple;
+	bh=UxGCvkld7rOE9IR9At0Des8iISWDF25JcndyslWXFkw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pqjMQs43IA2mMC0JCcvW98kviIqMS5vBF1hMtpbzxLV3XdPUChnwxrbJYHj+U1eI9uMn9R8pZZqKNS65vxRuCIp65tvfui5lcPwQmpglNynRwziOAD8HJlK55gejjYpq2jrx+FnlIPu2Ngr9LnvCaYbeJDyHfJLSVdUm1+fnbXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=neg6Ah1+; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oFEWpuKE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09782C4CEE7;
-	Wed,  7 May 2025 09:19:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746609566;
-	bh=xWzxV0NL2hKfTdmxVr7+NPAKQTfC6jKi+qpbaYgNWvY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oFEWpuKEGI89faBWoqvs7ujFsrFWCmfPMqcfFjdDl8AWpGvX7oiTZQO71RNmjd14s
-	 dX0WQFYyVG//xYFxUbCN/27O6gETEm1jX55W2vhZme43PKIgG9KdLutb2wtwvjJVbx
-	 Ynhz02nWsG+xdgfvmaW2+X6wZUBFZpnyLttiCFMQmLgKxlo2vGyiVUXM+qs+72XCy9
-	 2AaHqchsrWVvazIDDUD6Qm6IVgWGDE/w2qN4G9xMzgtbpbt/5lV5Nppof7iBXNJchJ
-	 wrsm9aBXChh63y57uDyDfY5IpwdoDQ2ydUkbDf/el3nby/EEAur3fslrNcttn4p0bK
-	 pQ5Su+hCnTLyg==
-Date: Wed, 7 May 2025 10:19:18 +0100
-From: Simon Horman <horms@kernel.org>
-To: Tanmay Jagdale <tanmay@marvell.com>
-Cc: bbrezillon@kernel.org, arno@natisbad.org, schalla@marvell.com,
-	herbert@gondor.apana.org.au, davem@davemloft.net,
-	sgoutham@marvell.com, lcherian@marvell.com, gakula@marvell.com,
-	jerinj@marvell.com, hkelam@marvell.com, sbhatta@marvell.com,
-	andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, bbhushan2@marvell.com, bhelgaas@google.com,
-	pstanner@redhat.com, gregkh@linuxfoundation.org,
-	peterz@infradead.org, linux@treblig.org,
-	krzysztof.kozlowski@linaro.org, giovanni.cabiddu@intel.com,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, rkannoth@marvell.com, sumang@marvell.com,
-	gcherian@marvell.com
-Subject: Re: [net-next PATCH v1 04/15] octeontx2-af: Handle inbound inline
- ipsec config in AF
-Message-ID: <20250507091918.GZ3339421@horms.kernel.org>
-References: <20250502132005.611698-1-tanmay@marvell.com>
- <20250502132005.611698-5-tanmay@marvell.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="neg6Ah1+"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-440685d6afcso58592725e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 02:19:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746609563; x=1747214363; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3/En6vdzgdU/iKm8vh0HoRLUrBBmDBKnE2RqcAzid30=;
+        b=neg6Ah1+6O0S5LW6cJDmkQ91dss5H+s5gdcR4t1uvQ3+Qs0XKZrUL8pmcFnR4tZ1jG
+         b44gNC1W+v6M3ann5GHdMJCBcnrT9NAVdu4DyopKtS4KjBLwlKZDcio/3wr6P8PcapLB
+         M4WLOuN1zGF/0bd9taJcA+f0LPHK0NcmtN5WQ7IkQI9cgMheA2+x5bVYgQS6pQgt0Se0
+         JYTAehke8bsTd0gUNG/OdXOZLX3os5wzt6/n4mWyjwMwSwLES1Ju6Yi9fP3RAZLJNVY0
+         Nu76F5i0BlG3yY2mkYjr0h1KrSdVeNqmVIWAO+YNr/pmbTYL011w/VBUSsXJQKNYTFfx
+         AJ0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746609563; x=1747214363;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3/En6vdzgdU/iKm8vh0HoRLUrBBmDBKnE2RqcAzid30=;
+        b=nTj+XPlZJfrCTBwGytlJ3pm5t4kSLo8u/eOrh2WoBcysfY3qabztjlJ8TSeH61vjsb
+         rByo1/GmjOhbmUq57ZWP98J+gIsdlzJhkiKk59oxGJMrNmT515E4A+0rU2Zqw7uaAo03
+         +lRu8F4JeEI83cQ/AHnUZD6oQZLB8X+Bz8VuED4sCee+o6V2TZw5zm3gkJ0s/gZeeUr0
+         DqdQXN1N+Oia2xYaDdZMxpfX7IIqxbaB1PqUkMXVlE4/Y1/mK09hsVJLeXMSMB39Tmio
+         5WmR2ayRpor1uuZViDnAN+oPO5Vwx2qA1sKqLDnlLFf+wPyPPr6rnl5i/sAStpC/LjeV
+         DzCA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3ZvmUFLxdgU34B5F6uzf/yW0rLy1qV8Ma+r/tSW9QyXPxnS1c+BuREtwKFC/2D0RNYs5TNg9ep98+I2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywbg5bnFSYmm9JVdsVflNuu3NOqQ0epX/LR5xyL/lGQOoPMVzr7
+	Vu4R8EcDARbOHE6DUwZHrIDZwgAU1aATvsEsvIbgi8k7NQUiCQbds05n27mv9xGTCbRBw09+foY
+	W
+X-Gm-Gg: ASbGncsgLBgAEM8r8ntkDQuiGWxK4Agi4tEs6nH6uz4GH/50Fuv7ZRuKSrxzrFzcgXL
+	i3Rc05bRSxcCLfadBjIVubicdT2rwHjzhqlkR0tcS1UN5vEAYYlmWao0ivlBKxiXk3Rt6eAwZ3Z
+	OM06jPH6lgFfBPVjG4rIlLQ80CapqZUiMgJojns8ZtBkcdPqINarhj8kNYRAxjpImr5CBCw1et8
+	vQYijlmr+6PB26kfF0ZqmdNmBQi8FTNjK9JB/xyfIPoM6MRekTjcn1++lPdVy9/BUVEldcHlGOR
+	VQenljc7SBnCHG/5QcW9YmIbV4vklAWJO0o3MKpwlt48R3P7OOW+PgPOSDqFRur4Es/sOBki
+X-Google-Smtp-Source: AGHT+IEHH5xBffxb0R3XLxp8uHLZIlorCruskW5FKPqhfNz2pI2ADxJQ0xN6n3MHd0G8eOyy3jg2Ag==
+X-Received: by 2002:a05:600c:5122:b0:441:d437:e3b8 with SMTP id 5b1f17b1804b1-441d44ddc10mr17025915e9.23.1746609563158;
+        Wed, 07 May 2025 02:19:23 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441d43d07fbsm24463255e9.10.2025.05.07.02.19.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 02:19:22 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Wed, 07 May 2025 11:19:21 +0200
+Subject: [PATCH] dt-bindings: display: panel: convert truly,nt35597.txt to
+ dt-schema
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502132005.611698-5-tanmay@marvell.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250507-topic-misc-truly-nt35597-yaml-v1-1-bc719ad8dfff@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAJglG2gC/x3MQQqDMBAAwK/Inl1YrUHjV8RDmq52IYmSxFIR/
+ 97Q41zmgsRROMFYXRD5I0m2UNDUFdi3CSujvIqhpVaRoh7ztotFL8lijoc7MeSHUrrH03iHT9P
+ RoDV3eiAoxx55ke//n+b7/gHJADmhbwAAAA==
+X-Change-ID: 20250507-topic-misc-truly-nt35597-yaml-ba40899e4980
+To: Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5748;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=UxGCvkld7rOE9IR9At0Des8iISWDF25JcndyslWXFkw=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBoGyWalBNRg5DjLTUMvfOrTrrgSHDbOjl/SPvt94Up
+ 5X5d28KJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCaBslmgAKCRB33NvayMhJ0SEVEA
+ CmAuSohWsqyVwZz+jMNrcqMNMcvsGhU2XbuTz3wqk91ggEqetk2w/DzfMppOvXXoTqqPj9mz+uwjqh
+ 0uefR6SseOtSfdGZMUpo/nxswLi/tel6+2kJTCQMEiUkdMw6ttGIeb0gLrfGihldAu9WwZIGXDBMkX
+ GcDFDqySHH0XRxGoLmSL/oiNSvNoz6BGMT9XmjUjpwmWXGrbhbnhUnFaMKVLhMj5FumDThXamSG6Ra
+ rnVveiPbjOkiySbCNL2O7yhi0u+c/6HLdrIJoWwysLnYFxmXV/6WexP4z7+AEN1WrFsXD4Y2g8Sa7k
+ rX5OHfRSCxpRl57iak9/PIJOETv0ELhJfXXKb4VBcu45R+YfNpsjz0OVadBzZcwR/jjbL/cOx2NBRQ
+ 80eZH2v0iPlzgGDTeBeCXd8dsbIXbIUAdqx02HCNG9JVR4tP1TI+SVf7fk2Q+rmosfrS9kIA1Zc5hJ
+ aPfGfw0rgW+sA3EZGQBw32CLtcKHKsLBx2/8A1dBml2gU9snJtNLnp5Mqu3PNO7ak0KHS6MaLHajr4
+ 5n5V4aY97cSq3rV46MOL+QA4gS34phRIigZq/5aQss3CC7iLkStZp97Y9ruYpPUGn0qAjxZfViy9uL
+ ZuKRk4oZwWjU4bVDoVl0r8nthJB4nuP04rlknR6+itQaI1WdmMl1rphaw2cw==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-On Fri, May 02, 2025 at 06:49:45PM +0530, Tanmay Jagdale wrote:
-> From: Bharat Bhushan <bbhushan2@marvell.com>
-> 
-> Now CPT context flush can be handled in AF as CPT LF
-> can be attached to it. With that AF driver can completely
-> handle inbound inline ipsec configuration mailbox, so
-> forward this mailbox to AF driver.
-> 
-> Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
-> Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
-> ---
->  .../marvell/octeontx2/otx2_cpt_common.h       |  1 -
->  .../marvell/octeontx2/otx2_cptpf_mbox.c       |  3 -
->  .../net/ethernet/marvell/octeontx2/af/mbox.h  |  2 +
->  .../ethernet/marvell/octeontx2/af/rvu_cpt.c   | 67 +++++++++----------
->  .../ethernet/marvell/octeontx2/af/rvu_reg.h   |  1 +
->  5 files changed, 34 insertions(+), 40 deletions(-)
-> 
-> diff --git a/drivers/crypto/marvell/octeontx2/otx2_cpt_common.h b/drivers/crypto/marvell/octeontx2/otx2_cpt_common.h
-> index df735eab8f08..27a2dd997f73 100644
-> --- a/drivers/crypto/marvell/octeontx2/otx2_cpt_common.h
-> +++ b/drivers/crypto/marvell/octeontx2/otx2_cpt_common.h
-> @@ -33,7 +33,6 @@
->  #define BAD_OTX2_CPT_ENG_TYPE OTX2_CPT_MAX_ENG_TYPES
->  
->  /* Take mbox id from end of CPT mbox range in AF (range 0xA00 - 0xBFF) */
-> -#define MBOX_MSG_RX_INLINE_IPSEC_LF_CFG 0xBFE
->  #define MBOX_MSG_GET_ENG_GRP_NUM        0xBFF
->  #define MBOX_MSG_GET_CAPS               0xBFD
->  #define MBOX_MSG_GET_KVF_LIMITS         0xBFC
-> diff --git a/drivers/crypto/marvell/octeontx2/otx2_cptpf_mbox.c b/drivers/crypto/marvell/octeontx2/otx2_cptpf_mbox.c
-> index 5e6f70ac35a7..222419bd5ac9 100644
-> --- a/drivers/crypto/marvell/octeontx2/otx2_cptpf_mbox.c
-> +++ b/drivers/crypto/marvell/octeontx2/otx2_cptpf_mbox.c
-> @@ -326,9 +326,6 @@ static int cptpf_handle_vf_req(struct otx2_cptpf_dev *cptpf,
->  	case MBOX_MSG_GET_KVF_LIMITS:
->  		err = handle_msg_kvf_limits(cptpf, vf, req);
->  		break;
-> -	case MBOX_MSG_RX_INLINE_IPSEC_LF_CFG:
-> -		err = handle_msg_rx_inline_ipsec_lf_cfg(cptpf, req);
-> -		break;
->  
->  	default:
->  		err = forward_to_af(cptpf, vf, req, size);
+Convert the Truly NT35597 2K display panel bindings to dt-schema.
 
-This removes the only caller of handle_msg_rx_inline_ipsec_lf_cfg()
-Which in turn removes the only caller of rx_inline_ipsec_lf_cfg(),
-and in turn send_inline_ipsec_inbound_msg().
+The vdispp-supply & vdispn-supply are not marked as required since
+in practice they are not defined in sdm845-mtp.dts which is the
+only used of these bindings.
 
-Those functions should be removed by the same patch that makes the changes
-above.  Which I think could be split into a separate patch from the changes
-below.
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+ .../display/panel/truly,nt35597-2K-display.yaml    | 97 ++++++++++++++++++++++
+ .../devicetree/bindings/display/truly,nt35597.txt  | 59 -------------
+ 2 files changed, 97 insertions(+), 59 deletions(-)
 
-> diff --git a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
+diff --git a/Documentation/devicetree/bindings/display/panel/truly,nt35597-2K-display.yaml b/Documentation/devicetree/bindings/display/panel/truly,nt35597-2K-display.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..36be09c900f2fc4696b47d08e2052b13ba07f77e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/truly,nt35597-2K-display.yaml
+@@ -0,0 +1,97 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/truly,nt35597-2K-display.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Truly NT35597 DSI 2K display
++
++maintainers:
++  - Neil Armstrong <neil.armstrong@linaro.org>
++
++description: |
++  Truly NT35597 DSI 2K display is used on the Qualcomm SDM845 MTP board.
++
++allOf:
++  - $ref: panel-common-dual.yaml#
++
++properties:
++  compatible:
++    const: truly,nt35597-2K-display
++
++  reg:
++    maxItems: 1
++
++  vdda-supply:
++    description: regulator that provides the supply voltage Power IC supply
++
++  vdispp-supply:
++    description: regulator that provides the supply voltage for positive LCD bias
++
++  vdispn-supply:
++    description: regulator that provides the supply voltage for negative LCD bias
++
++  reset-gpios: true
++
++  mode-gpios:
++    description:
++      Gpio for choosing the mode of the display for single DSI or Dual DSI.
++      This should be low for dual DSI and high for single DSI mode.
++
++  ports:
++    required:
++      - port@0
++      - port@1
++
++required:
++  - compatible
++  - reg
++  - vdda-supply
++  - reset-gpios
++  - mode-gpios
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    dsi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        panel@0 {
++            compatible = "truly,nt35597-2K-display";
++            reg = <0>;
++
++            vdda-supply = <&pm8998_l14>;
++            vdispp-supply = <&lab_regulator>;
++            vdispn-supply = <&ibb_regulator>;
++
++            reset-gpios = <&tlmm 6 GPIO_ACTIVE_LOW>;
++            mode-gpios = <&tlmm 52 GPIO_ACTIVE_HIGH>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++
++                    panel0_in: endpoint {
++                        remote-endpoint = <&dsi0_out>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++
++                    panel1_in: endpoint {
++                        remote-endpoint = <&dsi1_out>;
++                    };
++                };
++            };
++        };
++    };
++...
+diff --git a/Documentation/devicetree/bindings/display/truly,nt35597.txt b/Documentation/devicetree/bindings/display/truly,nt35597.txt
+deleted file mode 100644
+index f39c77ee36ea57ce6f3f9bdc00506b8ac7c918bd..0000000000000000000000000000000000000000
+--- a/Documentation/devicetree/bindings/display/truly,nt35597.txt
++++ /dev/null
+@@ -1,59 +0,0 @@
+-Truly model NT35597 DSI display driver
+-
+-The Truly NT35597 is a generic display driver, currently only configured
+-for use in the 2K display on the Qualcomm SDM845 MTP board.
+-
+-Required properties:
+-- compatible: should be "truly,nt35597-2K-display"
+-- vdda-supply: phandle of the regulator that provides the supply voltage
+-  Power IC supply
+-- vdispp-supply: phandle of the regulator that provides the supply voltage
+-  for positive LCD bias
+-- vdispn-supply: phandle of the regulator that provides the supply voltage
+-  for negative LCD bias
+-- reset-gpios: phandle of gpio for reset line
+-  This should be 8mA, gpio can be configured using mux, pinctrl, pinctrl-names
+-  (active low)
+-- mode-gpios: phandle of the gpio for choosing the mode of the display
+-  for single DSI or Dual DSI
+-  This should be low for dual DSI and high for single DSI mode
+-- ports: This device has two video ports driven by two DSIs. Their connections
+-  are modeled using the OF graph bindings specified in
+-  Documentation/devicetree/bindings/graph.txt.
+-  - port@0: DSI input port driven by master DSI
+-  - port@1: DSI input port driven by secondary DSI
+-
+-Example:
+-
+-	dsi@ae94000 {
+-		panel@0 {
+-			compatible = "truly,nt35597-2K-display";
+-			reg = <0>;
+-			vdda-supply = <&pm8998_l14>;
+-			vdispp-supply = <&lab_regulator>;
+-			vdispn-supply = <&ibb_regulator>;
+-			pinctrl-names = "default", "suspend";
+-			pinctrl-0 = <&dpu_dsi_active>;
+-			pinctrl-1 = <&dpu_dsi_suspend>;
+-
+-			reset-gpios = <&tlmm 6 GPIO_ACTIVE_LOW>;
+-			mode-gpios = <&tlmm 52 GPIO_ACTIVE_HIGH>;
+-			ports {
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				port@0 {
+-					reg = <0>;
+-					panel0_in: endpoint {
+-						remote-endpoint = <&dsi0_out>;
+-					};
+-				};
+-
+-				port@1 {
+-					reg = <1>;
+-					panel1_in: endpoint {
+-						remote-endpoint = <&dsi1_out>;
+-					};
+-				};
+-			};
+-		};
+-	};
 
-...
+---
+base-commit: 08710e696081d58163c8078e0e096be6d35c5fad
+change-id: 20250507-topic-misc-truly-nt35597-yaml-ba40899e4980
 
-> diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.c
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
 
-...
-
-> @@ -1253,20 +1258,36 @@ int rvu_cpt_lf_teardown(struct rvu *rvu, u16 pcifunc, int blkaddr, int lf, int s
->  	return 0;
->  }
->  
-> +static void cn10k_cpt_inst_flush(struct rvu *rvu, u64 *inst, u64 size)
-> +{
-> +	u64 val = 0, tar_addr = 0;
-> +	void __iomem *io_addr;
-> +	u64 blkaddr = BLKADDR_CPT0;
-
-nit: Please use reverse xmas tree order - longest line to shortest -
-     for local variable declarations in new Networking code.
-
-     Edward Cree's tool can be useful here.
-     https://github.com/ecree-solarflare/xmastree/
-
-> +
-> +	io_addr	= rvu->pfreg_base + CPT_RVU_FUNC_ADDR_S(blkaddr, 0, CPT_LF_NQX);
-> +
-> +	/* Target address for LMTST flush tells HW how many 128bit
-> +	 * words are present.
-> +	 * tar_addr[6:4] size of first LMTST - 1 in units of 128b.
-> +	 */
-> +	tar_addr |= (__force u64)io_addr | (((size / 16) - 1) & 0x7) << 4;
-
-I see this pattern elsewhere. But, FWIIW, I don't think it
-is entirely desirable to:
-
-1) Cast away the __iomem annotation
-2) Treat a u64 as an (io?) address
-3) Open code the calculation of tar_addr, which
-   also seems to appear in several other places.
-
-If these things are really necessary then I would
-put them in some combination of cn10k_lmt_flush(),
-helpers, and wrappers.
-
-But as this is consistent with code elsewhere,
-perhaps that is a topic for another time.
-
-> +	dma_wmb();
-> +	memcpy((u64 *)rvu->rvu_cpt.lmt_addr, inst, size);
-
-FWIIW, I'm not sure that treating a u64 (the type of lmt_addr) as
-an address is best either.
-
-> +	cn10k_lmt_flush(val, tar_addr);
-> +	dma_wmb();
-> +}
-> +
->  #define CPT_RES_LEN    16
->  #define CPT_SE_IE_EGRP 1ULL
->  
->  static int cpt_inline_inb_lf_cmd_send(struct rvu *rvu, int blkaddr,
->  				      int nix_blkaddr)
->  {
-> -	int cpt_pf_num = rvu->cpt_pf_num;
-> -	struct cpt_inst_lmtst_req *req;
->  	dma_addr_t res_daddr;
->  	int timeout = 3000;
->  	u8 cpt_idx;
-> -	u64 *inst;
-> +	u64 inst[8];
->  	u16 *res;
-> -	int rc;
-
-nit: reverse xmas tree here too.
-
->  
->  	res = kzalloc(CPT_RES_LEN, GFP_KERNEL);
->  	if (!res)
-
-...
