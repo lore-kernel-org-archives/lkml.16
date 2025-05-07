@@ -1,32 +1,32 @@
 Received: from mail.cjdns.fr (mail.cjdns.fr [5.135.140.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D79F280A57;
-	Wed,  7 May 2025 13:45:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54E4223DF1;
+	Wed,  7 May 2025 13:45:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.135.140.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746625530; cv=none; b=S7EyKZTZ/Sb3Z/XKb4k9SqYA9nzzpJlGvLxSPT4FkwjmI9UNeUG2ZmHHkFJ+cfhosdkC62g3LwvQmEZAVvC50fFQm8jpZvDcNk/RWm8z5+OvyhUWMdAqbis/zCG6yNMJVEk7hSfTUYFTQNUBCHw/RISRHWP+IqTx3TxjE2v2XIg=
+	t=1746625529; cv=none; b=L3lnNxNaXeTPsm3doY4wsoFvMWCNqOStRJSz55fr6iMFPcKMnIBHIuZdjQKWAAPPPScUlKHhf4G852x1uoHMOYDlW5Sk0DOia1qM3n9Wo5o6XewYPZ9gOWtUYCuYtBcembNm3azvVOPgcP6RlmkkVDgknZduWo5DPtN8XZgqx5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746625530; c=relaxed/simple;
-	bh=f2oLBUqEKwI8nm4Ixf3s6Ljc+BL+7kIYtFBoN6/s6Zc=;
+	s=arc-20240116; t=1746625529; c=relaxed/simple;
+	bh=E/Q/2B/8HGFcYfTNIcOEC+iIF57GHPFB6Ji15bPzudk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DRgkSNbcKovsFv/H38oq15OAOScoEcTc1DwHv54TaTW+I7SH+Chuga2sPpAlnkkawAM1tdz6NTvgsQmLz+u1SZWQjNSFeD0gVj4ypARZrp8P70t6HVIl7N2An7wqF2z5CltzmQYkMCq1g6vTh+Plus/ROM4Y/0Rk+nHkrindCDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=lxqmvzjo; arc=none smtp.client-ip=5.135.140.105
+	 MIME-Version; b=Tqllx5gBqSKjIBMOncqZ56BUGskSOBQmdC9KMLBxmst6uAlAy2zbQ5bkC01oCCdy1nM4n1QMLnW5cK8HR/PEU9u3aaxvipLPnws+z9K/m1ASxLWxHCEO8c9l0u1dR+lBt54C8RBMPKRzbOIo1GL4UPYELhJ6py4La7gr3KGBQDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=IpSWT+Aj; arc=none smtp.client-ip=5.135.140.105
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cjdns.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="lxqmvzjo"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9B862DBBF0;
-	Wed,  7 May 2025 15:45:18 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="IpSWT+Aj"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id F2051DAE5F;
+	Wed,  7 May 2025 15:45:23 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjdns.fr; s=dkim;
-	t=1746625519; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1746625525; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=8xUpIOJ31WmrvP6c37F2pwlE8Ac11OcAayqXYM/2Q9s=;
-	b=lxqmvzjoFgZLMi822BVsm9RiDf5rQRpnWcGwXR0/wTbx3RI3y+g2muifdAnNxGypE90F5i
-	a+8LQQ6ueobNUJEULWGWyvW+pwz96QXShkASCtikjaArtC0utAd7R8xM2tGCMZ2dEjAsVn
-	qL00emLbzpeh3XuE9H1d04aRdJieyvZf75+j66h5uCwhWuyttS6XUxWC0FChOc5q1NxMaH
-	ONcEjHCRCZxwiglcOQEuSv0YE/kjpYfpZGGZzxJdNXjffGCmxNLFC6KPf0tgFFBvMsgZI6
-	+vIZLPoMAcfIxz6ckWJB7NCoZlLlNOA9j2JNwwrATQShIqJhs2xIzgvR542/WQ==
+	bh=1zx7YDdH6fuEhBMxor2eO5pbMGS8qLPBBpxZ7MXsTD8=;
+	b=IpSWT+Aj5LZg37tlEwSK9bNtzYj4ltYKJlgRUOKgX3Ju3wuw2kkdgtFERZC5WMy62kAzU4
+	JXGHJw2Kv9Rxm3OcWlsKvKElLpaoSc9vs4lGtpRgX6wkPQFRtaDD3yKg549fVao4zGQPgG
+	GG4DAgNnGo5vs018M324bo/pEpnCbuW1s5FyH4cVgJbkn9r1Y+fMynqzaE45CbhAwqTJTn
+	d7Y51jb9F9ISt/BSMy5g+Ym1ScNFd45qZG4vo3jH5dgc/XWVd7Dg2Haa9BkDtFHCJnslEF
+	X7DJsa8nTvYUW9tK83WfDCcKhzHeQ6ScKIkZKlEK7kKOoWgDl1GKKnHEfxh3Jw==
 From: Caleb James DeLisle <cjd@cjdns.fr>
 To: linux-mips@vger.kernel.org
 Cc: tglx@linutronix.de,
@@ -39,11 +39,10 @@ Cc: tglx@linutronix.de,
 	linux-kernel@vger.kernel.org,
 	benjamin.larsson@genexis.eu,
 	linux-mediatek@lists.infradead.org,
-	cjd@cjdns.fr,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v5 1/7] dt-bindings: timer: Add EcoNet EN751221 "HPT" CPU Timer
-Date: Wed,  7 May 2025 13:44:54 +0000
-Message-Id: <20250507134500.390547-2-cjd@cjdns.fr>
+	cjd@cjdns.fr
+Subject: [PATCH v5 4/7] mips: Add EcoNet MIPS platform support
+Date: Wed,  7 May 2025 13:44:57 +0000
+Message-Id: <20250507134500.390547-5-cjd@cjdns.fr>
 In-Reply-To: <20250507134500.390547-1-cjd@cjdns.fr>
 References: <20250507134500.390547-1-cjd@cjdns.fr>
 Precedence: bulk
@@ -55,102 +54,240 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-Add device tree bindings for the so-called high-precision timer (HPT)
-in the EcoNet EN751221 SoC.
+Add platform support for EcoNet MIPS SoCs.
 
 Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- .../bindings/timer/econet,en751221-timer.yaml | 80 +++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml
+ arch/mips/Kbuild.platforms             |  1 +
+ arch/mips/Kconfig                      | 25 +++++++++
+ arch/mips/boot/compressed/uart-16550.c |  5 ++
+ arch/mips/econet/Kconfig               | 37 ++++++++++++
+ arch/mips/econet/Makefile              |  2 +
+ arch/mips/econet/Platform              |  5 ++
+ arch/mips/econet/init.c                | 78 ++++++++++++++++++++++++++
+ 7 files changed, 153 insertions(+)
+ create mode 100644 arch/mips/econet/Kconfig
+ create mode 100644 arch/mips/econet/Makefile
+ create mode 100644 arch/mips/econet/Platform
+ create mode 100644 arch/mips/econet/init.c
 
-diff --git a/Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml b/Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml
+diff --git a/arch/mips/Kbuild.platforms b/arch/mips/Kbuild.platforms
+index bca37ddf974b..41a00fa860c1 100644
+--- a/arch/mips/Kbuild.platforms
++++ b/arch/mips/Kbuild.platforms
+@@ -11,6 +11,7 @@ platform-$(CONFIG_CAVIUM_OCTEON_SOC)	+= cavium-octeon/
+ platform-$(CONFIG_EYEQ)			+= mobileye/
+ platform-$(CONFIG_MIPS_COBALT)		+= cobalt/
+ platform-$(CONFIG_MACH_DECSTATION)	+= dec/
++platform-$(CONFIG_ECONET)		+= econet/
+ platform-$(CONFIG_MIPS_GENERIC)		+= generic/
+ platform-$(CONFIG_MACH_JAZZ)		+= jazz/
+ platform-$(CONFIG_LANTIQ)		+= lantiq/
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index e0e6ce2592b4..c3dbdc808664 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -391,6 +391,30 @@ config MACH_DECSTATION
+ 
+ 	  otherwise choose R3000.
+ 
++config ECONET
++	bool "EcoNet MIPS family"
++	select BOOT_RAW
++	select CPU_BIG_ENDIAN
++	select DEBUG_ZBOOT
++	select EARLY_PRINTK_8250
++	select ECONET_EN751221_TIMER
++	select SERIAL_OF_PLATFORM
++	select SYS_SUPPORTS_BIG_ENDIAN
++	select SYS_HAS_CPU_MIPS32_R1
++	select SYS_HAS_CPU_MIPS32_R2
++	select SYS_HAS_EARLY_PRINTK
++	select SYS_SUPPORTS_32BIT_KERNEL
++	select SYS_SUPPORTS_MIPS16
++	select SYS_SUPPORTS_ZBOOT_UART16550
++	select USE_GENERIC_EARLY_PRINTK_8250
++	select USE_OF
++	help
++	  EcoNet EN75xx MIPS devices are big endian MIPS machines used
++	  in XPON (fiber) and DSL applications. They have SPI, PCI, USB,
++	  GPIO, and Ethernet, with optional XPON, DSL, and VoIP DSP cores.
++	  Don't confuse these with the Airoha ARM devices sometimes referred
++	  to as "EcoNet", this family is for MIPS based devices only.
++
+ config MACH_JAZZ
+ 	bool "Jazz family of machines"
+ 	select ARC_MEMORY
+@@ -1021,6 +1045,7 @@ source "arch/mips/ath79/Kconfig"
+ source "arch/mips/bcm47xx/Kconfig"
+ source "arch/mips/bcm63xx/Kconfig"
+ source "arch/mips/bmips/Kconfig"
++source "arch/mips/econet/Kconfig"
+ source "arch/mips/generic/Kconfig"
+ source "arch/mips/ingenic/Kconfig"
+ source "arch/mips/jazz/Kconfig"
+diff --git a/arch/mips/boot/compressed/uart-16550.c b/arch/mips/boot/compressed/uart-16550.c
+index db618e72a0c4..529e77a6487c 100644
+--- a/arch/mips/boot/compressed/uart-16550.c
++++ b/arch/mips/boot/compressed/uart-16550.c
+@@ -20,6 +20,11 @@
+ #define PORT(offset) (CKSEG1ADDR(INGENIC_UART_BASE_ADDR) + (4 * offset))
+ #endif
+ 
++#ifdef CONFIG_ECONET
++#define EN75_UART_BASE	0x1fbf0003
++#define PORT(offset)	(CKSEG1ADDR(EN75_UART_BASE) + (4 * (offset)))
++#endif
++
+ #ifndef IOTYPE
+ #define IOTYPE char
+ #endif
+diff --git a/arch/mips/econet/Kconfig b/arch/mips/econet/Kconfig
 new file mode 100644
-index 000000000000..c1e7c2b6afde
+index 000000000000..d03f90f3daa4
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/econet,en751221-timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/arch/mips/econet/Kconfig
+@@ -0,0 +1,37 @@
++# SPDX-License-Identifier: GPL-2.0
++if ECONET
 +
-+title: EcoNet EN751221 High Precision Timer (HPT)
++choice
++	prompt "EcoNet SoC selection"
++	default SOC_ECONET_EN751221
++	help
++	  Select EcoNet MIPS SoC type. Individual SoCs within a family are
++	  very similar, so is it enough to select the right family, and
++	  then customize to the specific SoC using the device tree only.
 +
-+maintainers:
-+  - Caleb James DeLisle <cjd@cjdns.fr>
++	config SOC_ECONET_EN751221
++		bool "EN751221 family"
++		select COMMON_CLK
++		select ECONET_EN751221_INTC
++		select IRQ_MIPS_CPU
++		select SMP
++		select SMP_UP
++		select SYS_SUPPORTS_SMP
++		help
++		  The EN751221 family includes EN7512, RN7513, EN7521, EN7526.
++		  They are based on single core MIPS 34Kc processors. To boot
++		  this kernel, you will need a device tree such as
++		  MIPS_RAW_APPENDED_DTB=y, and a root filesystem.
++endchoice
 +
-+description:
-+  The EcoNet High Precision Timer (HPT) is a timer peripheral found in various
-+  EcoNet SoCs, including the EN751221 and EN751627 families. It provides per-VPE
-+  count/compare registers and a per-CPU control register, with a single interrupt
-+  line using a percpu-devid interrupt mechanism.
++choice
++	prompt "Devicetree selection"
++	default DTB_ECONET_NONE
++	help
++	  Select the devicetree.
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: econet,en751221-timer
-+      - items:
-+          - const: econet,en751627-timer
-+          - const: econet,en751221-timer
++	config DTB_ECONET_NONE
++		bool "None"
++endchoice
 +
-+  reg:
-+    minItems: 1
-+    maxItems: 2
++endif
+diff --git a/arch/mips/econet/Makefile b/arch/mips/econet/Makefile
+new file mode 100644
+index 000000000000..7e4529e7d3d7
+--- /dev/null
++++ b/arch/mips/econet/Makefile
+@@ -0,0 +1,2 @@
 +
-+  interrupts:
-+    maxItems: 1
-+    description: A percpu-devid timer interrupt shared across CPUs.
++obj-y := init.o
+diff --git a/arch/mips/econet/Platform b/arch/mips/econet/Platform
+new file mode 100644
+index 000000000000..ea5616447bcd
+--- /dev/null
++++ b/arch/mips/econet/Platform
+@@ -0,0 +1,5 @@
++# To address a 7.2MB kernel size limit in the EcoNet SDK bootloader,
++# we put the load address well above where the bootloader loads and then use
++# zboot. So please set CONFIG_ZBOOT_LOAD_ADDRESS to the address where your
++# bootloader actually places the kernel.
++load-$(CONFIG_ECONET)	+= 0xffffffff81000000
+diff --git a/arch/mips/econet/init.c b/arch/mips/econet/init.c
+new file mode 100644
+index 000000000000..6f43ffb209cb
+--- /dev/null
++++ b/arch/mips/econet/init.c
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * EcoNet setup code
++ *
++ * Copyright (C) 2025 Caleb James DeLisle <cjd@cjdns.fr>
++ */
 +
-+  clocks:
-+    maxItems: 1
++#include <linux/init.h>
++#include <linux/of_clk.h>
++#include <linux/irqchip.h>
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
++#include <asm/addrspace.h>
++#include <asm/io.h>
++#include <asm/bootinfo.h>
++#include <asm/time.h>
++#include <asm/prom.h>
++#include <asm/smp-ops.h>
++#include <asm/reboot.h>
 +
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: econet,en751627-timer
-+    then:
-+      properties:
-+        reg:
-+          items:
-+            - description: VPE timers 0 and 1
-+            - description: VPE timers 2 and 3
-+    else:
-+      properties:
-+        reg:
-+          items:
-+            - description: VPE timers 0 and 1
++#define CR_AHB_RSTCR		((void __iomem *)CKSEG1ADDR(0x1fb00040))
++#define RESET			BIT(31)
 +
-+additionalProperties: false
++#define UART_BASE		CKSEG1ADDR(0x1fbf0003)
++#define UART_REG_SHIFT		2
 +
-+examples:
-+  - |
-+    timer@1fbf0400 {
-+        compatible = "econet,en751627-timer", "econet,en751221-timer";
-+        reg = <0x1fbf0400 0x100>, <0x1fbe0000 0x100>;
-+        interrupt-parent = <&intc>;
-+        interrupts = <30>;
-+        clocks = <&hpt_clock>;
-+    };
-+  - |
-+    timer@1fbf0400 {
-+        compatible = "econet,en751221-timer";
-+        reg = <0x1fbe0400 0x100>;
-+        interrupt-parent = <&intc>;
-+        interrupts = <30>;
-+        clocks = <&hpt_clock>;
-+    };
-+...
++static void hw_reset(char *command)
++{
++	iowrite32(RESET, CR_AHB_RSTCR);
++}
++
++/* 1. Bring up early printk. */
++void __init prom_init(void)
++{
++	setup_8250_early_printk_port(UART_BASE, UART_REG_SHIFT, 0);
++	_machine_restart = hw_reset;
++}
++
++/* 2. Parse the DT and find memory */
++void __init plat_mem_setup(void)
++{
++	void *dtb;
++
++	set_io_port_base(KSEG1);
++
++	dtb = get_fdt();
++	if (!dtb)
++		panic("no dtb found");
++
++	__dt_setup_arch(dtb);
++
++	early_init_dt_scan_memory();
++}
++
++/* 3. Overload __weak device_tree_init(), add SMP_UP ops */
++void __init device_tree_init(void)
++{
++	unflatten_and_copy_device_tree();
++
++	register_up_smp_ops();
++}
++
++const char *get_system_type(void)
++{
++	return "EcoNet-EN75xx";
++}
++
++/* 4. Initialize the IRQ subsystem */
++void __init arch_init_irq(void)
++{
++	irqchip_init();
++}
++
++/* 5. Timers */
++void __init plat_time_init(void)
++{
++	of_clk_init(NULL);
++	timer_probe();
++}
 -- 
 2.39.5
 
