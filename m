@@ -1,147 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A57C72626;
-	Wed,  7 May 2025 21:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2F172626
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 21:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746651896; cv=none; b=o8gdMlzzW3seDGyksxn3OOYbsrf/uRP/bOCMsPtdi2OgCWtJA0KzNjupn03x27Lby6fOizjxDJ2Wjnov9zpwiINV7q5xL+pMtTDI+23keZdi/fyOKwGsVo+yaQKFan0QswXY+IiLuD04m3CLhngK16N+PGksjs58u+ldCYY1Bcs=
+	t=1746651981; cv=none; b=Q/ru0Y1N6FPZM+ZVRO8huR6fwvD9cW1uGSl/i/VxzHu3sUz0XaQtER2mizLaTuGnvg+zZ6iHriEqNHEhJ1wynJfo6Gvhj66aSg8rdiSmQp33akYL0E6o4ss09lX/zrr3ggPmXd3FCFy/DR76wfStoFe9aEFOb7qntPj5npvT5NU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746651896; c=relaxed/simple;
-	bh=GUkW1g+uu5m2dJXuV+B31jajok8+HhqfJ3ZrY3GzlsU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P1SVCNGV7gyltr1+HdoK5N7bTm2z25uRfziMl79VNSIi8bT7U+nAR+It6eAITCgchJKasnyXOouCKk+pGuHDDo2go2pXlXmuhPXti0YASYY3toL7R3Iy3fS4rrmGy5+PWlFxGMPM7k0mpWwtsKuKvurOaSY/fq8hzweFme5umeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vPdqcoG5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746651981; c=relaxed/simple;
+	bh=XtTsVAtq5Aa/qds/mZ03c/a2dVfCPxnBWxrBVfFn9qg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KOF3Tff5VY3RTKsNcTUcnqqyIE6YL3BnW9OChttuAGLqTKdz3DNYoucsubujz+ObFVBFvVMVaWkyujZAygA91nSe75paW4GzJF1vnkDCULrMXZ2po5GVnr2+RQH7DaUfVmbbNDipXF9+CIwWneDcewQgl3Y4vU0W0Pc2X0OXMhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fWa8zeS2; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vPdqcoG5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7646C4CEE2;
-	Wed,  7 May 2025 21:04:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746651895;
-	bh=GUkW1g+uu5m2dJXuV+B31jajok8+HhqfJ3ZrY3GzlsU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=vPdqcoG5iK9nvfPzTH9P+D/xvgm3IWSRl8yqWRKm/0j4bs/1mi7oPomqjM+8J7QtX
-	 siig0RYleR3haPF1yddi0hoUm5d/BINA1pBpDsN6qNS+bi1dAt/nBM0je3w7Xaf4Sg
-	 Nay0jmhYboXriDCNcPTt56FLSV18AaYbbUrbqjw18BFy/hD4/M9nBRysI9lPrL5pRY
-	 639OoZtjgJYmEcg1ocI/5kd2zCT9sQGUo2DDjjHEYHyDUnsahr3Sgzldgln8U4nkKd
-	 cZ8zOWjqMMBSe6c6QIrQvnhlP5PD2FNHcs2BrkzrGquVMHJ79HQmy9eE+Elzyo0l9E
-	 1BjBTP3sUNggw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 81363CE077B; Wed,  7 May 2025 14:04:55 -0700 (PDT)
-Date: Wed, 7 May 2025 14:04:55 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Zqiang <qiang.zhang1211@gmail.com>
-Cc: frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
-	urezki@gmail.com, boqun.feng@gmail.com, rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcutorture: Fix rcutorture_one_extend_check() splat in
- RT kernels
-Message-ID: <c5b6ab90-82de-437e-b608-7de6b21c9586@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250507112605.20910-1-qiang.zhang1211@gmail.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fWa8zeS2"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3d817bc6eb0so1245195ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 14:06:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1746651977; x=1747256777; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gt0PzsH7dWP1Jv9XAe02KqpL+75JPfquQQIOm1GgXlY=;
+        b=fWa8zeS2HzgeRMgxZn7qxzvcXL+ZMJp8IlbLWmKvLBt3IrpSPkEYY8iFfy+1D/jwzm
+         ZxY2a/Xlq7O2DcsYFcRc+S35ONMzd+B3/3m5HQ/dIam5IlqnQNjI1KWOIvT1cEC5jMbm
+         c+RVNH53YoPxQ45BP7CWP8i2po4P/I7i8+rRs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746651977; x=1747256777;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gt0PzsH7dWP1Jv9XAe02KqpL+75JPfquQQIOm1GgXlY=;
+        b=JhO7cxWoxCUb6T7oarduXq41H/s79RSSuwILbaCqpTagzoRmCQJSAa030qxHMhD0RB
+         r2yuiEgSaLaTpzp/HFwgogML9gsPgMrrVaxVstIxTtcwrDYn1q4nXRwvM2rqOkDjBZuo
+         vWPGYyQtxEZ/RxYkBulwgvlWyVno7OYgDXVJQookKRXLR5kNwAxBai9M6yVbuzkuuyKg
+         M3U7IA7pDjq3hX9q5r2sEJ4v57preVupGCbZeIHHBifiZ3ueFwLqGirUYBdIVHyF20V9
+         n23uZ87SuAgZvVjnwbDqg2MlavwS5Wo6u/x6iUSwx56t5mI7K20yBc+BI+68N+WgrtWc
+         42NA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBa7ftGUymIsaEQUwMyzSf7OUzEgGOchn+wOchTr82y5o1ZQUusL9IQcSAQ/9t0c58vnUbEd6rqiegTc4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNruXWJTW3uop0nXPSRwB1is0UUOW2D5sQmp9NwCzbEXkatE0s
+	OZZ2L5Eu2OdGTwiWKofxmimsigKPiKY2fbKX30vrrgx73FAfWBYMmPA2lcFuvxE=
+X-Gm-Gg: ASbGncuF2EO6djnuZxykc3/2Odufv5FNTGksKMfMuEyMLJkAQntJcIGSdB3RYnFmJTr
+	1joBVf8SkXMFUEcp8jjYVmTw/AV+cpNbiFv4/Ac7Ott/ntvPFbc/oMxuqXjIHW6wHcqVGjtFNJ0
+	uAyz/Mrudpv/KMdwhUEmLIqCWECQwU1yGJKrUl/BRP4sZPLrqpBIlJYL3Fd+ZoNMl2qAiM4MwqG
+	mAmDHfr6xmJj66X1n1hdCUMpLudrS8uGOjUxY2xSepo1jqYEkxtEV6O0h9oXQTemvjKIcqZHGSK
+	ReZGIres/udZTGrFPCHNRs48BPEx05FfwjRvF3919FHcYTsFYuo=
+X-Google-Smtp-Source: AGHT+IHil6UBUd1d2VFVV3oLh2+dvDjnd7fFqJ7qiYmhGGigtFWjtbpZGojq+iOGKz2limwEmfyriw==
+X-Received: by 2002:a05:6e02:1aae:b0:3d4:337f:121c with SMTP id e9e14a558f8ab-3da738f9f2cmr51404305ab.10.1746651977014;
+        Wed, 07 May 2025 14:06:17 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f88aa8e16dsm2886817173.114.2025.05.07.14.06.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 May 2025 14:06:16 -0700 (PDT)
+Message-ID: <5609c6de-e5cf-4f6d-8412-71149fae2580@linuxfoundation.org>
+Date: Wed, 7 May 2025 15:06:16 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507112605.20910-1-qiang.zhang1211@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] selftests/timens: Print TAP headers
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Shuah Khan <shuah@kernel.org>, "Bird, Timothy" <Tim.Bird@sony.com>
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250502-selftests-timens-fixes-v1-0-fb517c76f04d@linutronix.de>
+ <20250502-selftests-timens-fixes-v1-1-fb517c76f04d@linutronix.de>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250502-selftests-timens-fixes-v1-1-fb517c76f04d@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 07, 2025 at 07:26:03PM +0800, Zqiang wrote:
-> For built with CONFIG_PREEMPT_RT=y kernels, running rcutorture
-> tests resulted in the following splat:
+On 5/2/25 06:03, Thomas Weißschuh wrote:
+> The TAP specification requires that the output begins with a header line.
+> These headers lines are missing in the timens tests.
 > 
-> [   68.797425] rcutorture_one_extend_check during change: Current 0x1  To add 0x1  To remove 0x0  preempt_count() 0x0
-> [   68.797533] WARNING: CPU: 2 PID: 512 at kernel/rcu/rcutorture.c:1993 rcutorture_one_extend_check+0x419/0x560 [rcutorture]
-> [   68.797601] Call Trace:
-> [   68.797602]  <TASK>
-> [   68.797619]  ? lockdep_softirqs_off+0xa5/0x160
-> [   68.797631]  rcutorture_one_extend+0x18e/0xcc0 [rcutorture 2466dbd2ff34dbaa36049cb323a80c3306ac997c]
-> [   68.797646]  ? local_clock+0x19/0x40
-> [   68.797659]  rcu_torture_one_read+0xf0/0x280 [rcutorture 2466dbd2ff34dbaa36049cb323a80c3306ac997c]
-> [   68.797678]  ? __pfx_rcu_torture_one_read+0x10/0x10 [rcutorture 2466dbd2ff34dbaa36049cb323a80c3306ac997c]
-> [   68.797804]  ? __pfx_rcu_torture_timer+0x10/0x10 [rcutorture 2466dbd2ff34dbaa36049cb323a80c3306ac997c]
-> [   68.797815] rcu-torture: rcu_torture_reader task started
-> [   68.797824] rcu-torture: Creating rcu_torture_reader task
-> [   68.797824]  rcu_torture_reader+0x238/0x580 [rcutorture 2466dbd2ff34dbaa36049cb323a80c3306ac997c]
-> [   68.797836]  ? kvm_sched_clock_read+0x15/0x30
-> 
-> Disable BH does not change the SOFTIRQ corresponding bits in
-> preempt_count() for RT kernels, this commit therefore use
-> softirq_count() to check the if BH is disabled.
-> 
-> Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
-> ---
->  kernel/rcu/rcutorture.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> index 373c65a6e103..ef439569f979 100644
-> --- a/kernel/rcu/rcutorture.c
-> +++ b/kernel/rcu/rcutorture.c
-> @@ -471,7 +471,7 @@ rcu_read_delay(struct torture_random_state *rrsp, struct rt_read_seg *rtrsp)
->  	    !(torture_random(rrsp) % (nrealreaders * 2000 * longdelay_ms))) {
->  		started = cur_ops->get_gp_seq();
->  		ts = rcu_trace_clock_local();
-> -		if (preempt_count() & (SOFTIRQ_MASK | HARDIRQ_MASK))
-> +		if ((preempt_count() & HARDIRQ_MASK) || softirq_count())
->  			longdelay_ms = 5; /* Avoid triggering BH limits. */
->  		mdelay(longdelay_ms);
->  		rtrsp->rt_delay_ms = longdelay_ms;
-> @@ -1990,7 +1990,7 @@ static void rcutorture_one_extend_check(char *s, int curstate, int new, int old,
->  		return;
->  
->  	WARN_ONCE((curstate & (RCUTORTURE_RDR_BH | RCUTORTURE_RDR_RBH)) &&
-> -		  !(preempt_count() & SOFTIRQ_MASK), ROEC_ARGS);
-> +		  !softirq_count(), ROEC_ARGS);
->  	WARN_ONCE((curstate & (RCUTORTURE_RDR_PREEMPT | RCUTORTURE_RDR_SCHED)) &&
->  		  !(preempt_count() & PREEMPT_MASK), ROEC_ARGS);
->  	WARN_ONCE(cur_ops->readlock_nesting &&
-> @@ -2004,7 +2004,7 @@ static void rcutorture_one_extend_check(char *s, int curstate, int new, int old,
->  
->  	WARN_ONCE(cur_ops->extendables &&
->  		  !(curstate & (RCUTORTURE_RDR_BH | RCUTORTURE_RDR_RBH)) &&
-> -		  (preempt_count() & SOFTIRQ_MASK), ROEC_ARGS);
-> +		  softirq_count(), ROEC_ARGS);
+> Print such a line.
 
-Given that softirq_count is defined as (preempt_count() & SOFTIRQ_MASK)
-for CONFIG_PREEMPT_RT=n, the above don't change anything in that case,
-so good.  For CONFIG_PREEMPT_RT=y, softirq_count() looks to be the way
-to check BH-disable nesting, so that is good as well.
+There is no cover letter for this - so I will respond to the first
+patch. The TAP information is added by the kselftest wrapper if
+you were to run the test using ksefltest.
 
->  	/*
->  	 * non-preemptible RCU in a preemptible kernel uses preempt_disable()
-> @@ -2025,6 +2025,9 @@ static void rcutorture_one_extend_check(char *s, int curstate, int new, int old,
->  	if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
->  		mask |= RCUTORTURE_RDR_PREEMPT | RCUTORTURE_RDR_SCHED;
->  
-> +	if (IS_ENABLED(CONFIG_PREEMPT_RT) && softirq_count())
-> +		mask |= RCUTORTURE_RDR_BH | RCUTORTURE_RDR_RBH;
+The following will add the TAP header or if you use make kselftest
+command from the main Makefile.
 
-At this point in the code, we are complaining if something is disabled
-when it is not supposed to be.  So if I understand this correctly, this
-added code would suppress complaints (but only in CONFIG_PREEMPT_RT=y
-kernels) when there is an unexpected rcu_read_lock() in the case where
-there was either local_bh_disable() or rcu_read_lock_bh() in effect.
+make -C timens run_tests
 
-So I would expect that the CONFIG_PREEMPT_RT=y version of both
-local_bh_disable() and rcu_read_lock_bh() would contain rcu_read_lock().
+cd timens; make run_tests (will also add TAP header)
 
-And in fact, rcu_read_lock_bh() invokes local_bh_disable(),
-which, for CONFIG_PREEMPT_RT=y invokes __local_bh_disable_ip() in
-kernel/softirq.c, which on the outermost local_bh_disabe() really does
-invoke rcu_read_lock().
+The only time you won't see the TAP headers is when you run the test
+from the test directory just as a command. Is this what you need
+to do? I would rather not see TAP headers added to invidual tests
+unless there is a good reason for it.
 
-So this one looks good as well!
+The problem with adding TAP headers is two-fold:
 
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+1. It becomes hard to read the ouptput if test is run using
+    the framework a. make -C timens run_tests b. cd timens; make run_tests
+2. These headers become bested and TAP doesn't like nested TAP headers.
+    My undestansing is parses will have problems.
 
-> +
->  	WARN_ONCE(cur_ops->readlock_nesting && !(curstate & mask) &&
->  		  cur_ops->readlock_nesting() > 0, ROEC_ARGS);
->  }
-> -- 
-> 2.17.1
-> 
+I am adding Tim Bird to the discussion.
+
+Tim, is this still an issue? Are nested TAP headers still a problem.
+
+Even if they aren't there is the issue of multiple TAP headers for
+each test when we run the test using framework.
+
+thanks,
+-- Shuah
