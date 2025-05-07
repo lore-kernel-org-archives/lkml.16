@@ -1,95 +1,135 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3262D14884C
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 05:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2707114884C
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 05:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746596645; cv=none; b=BApLU8CCPp/JCxSutYzvhZXuOzPq9ot9s0qtJCbHNsXgSjrI1/o97VjhdL3h2pjfYYXieHNfp20mZaAAepTJFamnVj2kaBI8/DZ1n1AqNFg8Kdue15/DbFfao5rMEBCGQ3eFRCLsmvHXAG3fFd5qd24Gtnw2NmwTi4t5Mx3g7LY=
+	t=1746596671; cv=none; b=SWMkJjYb1TA1zCWEFxY0JCRO0g/6x73k+iqnEP7CGBlSGf0/MUFbxa6XDmNigWNeMyrxAE07S4la3wn3QXqRRhyXWugmLpqT5FhrZzBNN4tFzvhRvExSw1AUT5/kWo05amBss19UK66/k/VLcocAbdQF1RmZJI54lwPp/ep44TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746596645; c=relaxed/simple;
-	bh=NLq6IcrIA7bbejn7My2UmE29tSIURl/ZkjR0TBTpBvE=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=tFObgHHJ8oxqetHKTOicpZEIu4rTfq4d0YTBPv5gXi4CVhAMbVPN4gbcfTlOISNqAOY9bWowodSSUOSRMwt3ahlMjBq8BAmdi7/0Gh4ip1+yTo0/oDibKl3ADWb2jrv+sUtvfQt3VaThBXAi6Ja2C66aMX3Ixr3WWsTAT0T3t58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L8G8BJYY; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746596671; c=relaxed/simple;
+	bh=KPBoQL0ylIAnLG0wRYS21DXL8j+LIo3GFqd0/PZ2T2U=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=FawQrV+3tVKnLC2KraSez1nwFC4rfL7PpsHNQXT6xdYuAVEQKtPllc89EeGcfI/G7inkbgJGqLjOvmHJ6t8c1ZTCBv7YGksSlKeqx5oOCF7UqlWa54voCJl+bsBq+gtgPk14hpCNUVAoULJLGXGRe3P0EgELrLDQVsRMHI3sejk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=or9V5GoJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WvjP0AnB; arc=none smtp.client-ip=103.168.172.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L8G8BJYY"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a0b0d8090dso127715f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 22:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746596642; x=1747201442; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iVlAmV+4PvVpRGlSzk2lDcvbBX7uD4IVAP1PZ8ZHerc=;
-        b=L8G8BJYYuIZ4gWjl7Y852FqPpIMGBEDukZARriW6+yBkTgIIctHYD4caUeoyiEQpvD
-         fC/KeXByuqo5YlYlB8I+EPy3PHK80cz8YoUKFh21ga8XfEWG6lw4O19nUQOq25tLQxep
-         scTZ0hV1d6D2kPfWhQjDNjtFxUTQP3rEsMRmxDZAfpE4dkMywezUILtQUxKYAspBKqN5
-         Qu0PfhSfzJYVnMbNU9xrDmLcx7VGzHI7aA2sPHTNx7K5sRhBiBwHS8uf6fcxMABWzy0w
-         /du5EXiu40zG2xIwDV/tNm9oYJeQgPa7BELmcWb6nKeV/GqrNirquZnFZn9fcTgE5yVH
-         3p+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746596642; x=1747201442;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iVlAmV+4PvVpRGlSzk2lDcvbBX7uD4IVAP1PZ8ZHerc=;
-        b=F5fEypk49mKfIr49oxLNlqkVJisS1Yhl/b/xEQsMdcTSqewAnmxyp+ToM/GgKSCGqF
-         8rSMUcKcg94662HG0RdfxQ5RSlHODpiCV+6mcitLorJMVK0cSMHNJjDF9yex+pHy0L4b
-         /ffb3MO3fZ9mkA6SyHNDaY//zM1zrw/bhlOCWC4YlKhyhG3XK0AziB4EnvdeUtNBh9U7
-         NFrGqMlZAMHmYUS5oQvHmvGONtYgpeKVmh/4EtovcNdgGmyFBwo/L/1U9bDnDx700xFS
-         FMcZH09MYhmjBx1pT8WrGxzC+IfKiQh+Ljw5Q3Xjv51iyWYfW6yr3g0giK34GFITjKpM
-         lhiA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxnqH9a/MAREiggPL6hiztgILNamv9Gf05ZQWP5wKW5Fqzq82HpMMgj93x/KKFsd4ZEvFFynJv+/3ck7w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypA+AyVImeuClcxrcJmjd0Lhof0crl8wmDBwR4ts+ehPLaDEHX
-	SiynMFow5oK65HG3zNQ+yhfvCwuzCLiF5P99LXCOoxtCySdiqrhIhzWGQKWWgmY=
-X-Gm-Gg: ASbGnctsnSV6KVYW5mxHB7D16boOK2+X55mZNI5Q43cZObxe0E+8a6AgzuFkFdKyZTZ
-	1rtghVPcVx5iPLgSa0Cnc57U874Sze6AcKj/QUgLIruFga5hZnHVkq5vDa1xBiPx1NUIaZ2kNtU
-	5fvRvAFjYTe2VMSeVyTh84Q4AJM+ElkXCaPWs9+F2X3zNGIZFPoOgwL+dJr8yM4NDImaNK8otfU
-	T2gdhM94r5erRIgTLCgf25RFf4Dmzi95L5eOGYTAvFyXXYJFtPGy00nGgUBwnpz2FxzAdkfExBv
-	Ae4CAsTN+3bH/efVmET/s3/qDV3Q8jSKzSXb7rH7xZHdqIY19DQg/5AcxNk=
-X-Google-Smtp-Source: AGHT+IE3z1oVZimr6AGK04ZWNVqN5SAAqWpH0frAglGMolegj67mq9irgEkkuxa9TtQIRihRK7YyTA==
-X-Received: by 2002:a5d:4410:0:b0:39f:728:4324 with SMTP id ffacd0b85a97d-3a0b4a36d73mr410032f8f.9.1746596642400;
-        Tue, 06 May 2025 22:44:02 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0b6d0e1ebsm126353f8f.80.2025.05.06.22.44.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 22:44:01 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, 
- Salah Triki <salah.triki@gmail.com>
-In-Reply-To: <aBkw_p9GkH2fm2UJ@pc>
-References: <aBkw_p9GkH2fm2UJ@pc>
-Subject: Re: [PATCH] drivers: memory: bt1-l2-ctl: replace scnprintf() with
- sysfs_emit()
-Message-Id: <174659664137.29039.12798572123642598206.b4-ty@linaro.org>
-Date: Wed, 07 May 2025 07:44:01 +0200
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="or9V5GoJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WvjP0AnB"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 05A0511401D4;
+	Wed,  7 May 2025 01:44:29 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Wed, 07 May 2025 01:44:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1746596669;
+	 x=1746683069; bh=LKBIs/dRAt14qDvy0dxUZojjV4ghFeutXbz3h4nTrKE=; b=
+	or9V5GoJc0Z6S6oxIWoJakZSoQSPhkg552t2/QAYvZUytGoDOB4q5up7sALJDjSu
+	t810N784i2Sk1eDq7yprZcrnBF7wV8qengH+GUHGS588yH+qkG/t8zp11odFh6tZ
+	GTacQKt/j+iIN1ySRZ5zYWvhUrVF8lBLMY/E2kF4K1QHQ1utRT5vefsDYU/sPIYo
+	XXcZ8pX92fznG1jLAXsgzwRsmuDg7vPyhWEavSCoUu4/yrPcB+AtwiQKwVGyp1hi
+	JsSfLDomWeLgfdwAa8eLK8lMiPnRYJYs/93KXhnKHS41burxmSx/4I3wdYKF9eJP
+	sFCjomZBGHpHbN0YSEGdfA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746596669; x=
+	1746683069; bh=LKBIs/dRAt14qDvy0dxUZojjV4ghFeutXbz3h4nTrKE=; b=W
+	vjP0AnBCLSX9vyvKfmv1oaRaaYYx90zhfR77wxemtKWBjREOa3nIXi28DZo7MV5H
+	mXZCrkld/iuoRVnDzTKcgh/irt9azaCxfGYtdMgubfkiylYKU4y9qorPWGU6++JH
+	/Yuis9ETLzsv6iw/GKPFQDIpXxSimWo+eyCOAjQV7PfylPbHombPtk4xUNrpwlkX
+	UsO7b8fFP3Iqr/7tPCiZ9rNScose7znuNnC2PF6eoErFAFu6rBlUXuUwC1hK3kqR
+	x8LppJV0Zze3E+Lj3CxTsBsf6QLnfzJPtVeo35Cb7rsWH4Uh0P47uNMQuRbC5QBU
+	2L6B9uuAd+pzH0irCSVjA==
+X-ME-Sender: <xms:PPMaaIs_O6ZRZtYKp4EvPYM2IkayejYsPuBizLCV5XID6N5uXA-Fnw>
+    <xme:PPMaaFcMa2iQt7Oc0hZ7qqnuhveNCTjSG2y_NhIXJyDmLEVmVRjca3X16Q1J-U3WF
+    oxMShDC-lpEWlj3sI8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeitdehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    uddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
+    dprhgtphhtthhopegufihmfiesrghmrgiiohhnrdgtohdruhhkpdhrtghpthhtohepphgv
+    thgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheprghruggssehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehmihhnghhosehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehtohhrvhgrlh
+    gusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepmhhitghh
+    rghlrdhlkhhmlhesmhgrrhhkohhvihdrnhgvthdprhgtphhtthhopehvkhhuiihnvghtsh
+    esrhgvughhrghtrdgtohhm
+X-ME-Proxy: <xmx:PPMaaDzDPmx2h-aCJSg6UyglHEZiqsFPoEwgyqOZN92ZFqqUDbFgYw>
+    <xmx:PPMaaLN0VMJ7SlnfouQgYQLVNHcwuygzMgeY_zLXM6t7jcPIVA4ywg>
+    <xmx:PPMaaI9GFqrkSGTXXN98fqvSkOiPnVg7thfWMq2xCLGx2NE0_eXOuw>
+    <xmx:PPMaaDUhm_2p4W5aqFAYvtYz9dVA5GWSSbEcApQSK5flvU1W-hQOUA>
+    <xmx:PPMaaOXIRnKzkqB82ZO-1vGmFSI8fjXj9drw3E8J6gLlvJtghL-fDJnU>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 99C3D1C20067; Wed,  7 May 2025 01:44:28 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-ThreadId: T29c54119c216f9b9
+Date: Wed, 07 May 2025 07:44:06 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Ingo Molnar" <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Borislav Petkov" <bp@alien8.de>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "Vitaly Kuznetsov" <vkuznets@redhat.com>, "Ard Biesheuvel" <ardb@kernel.org>,
+ "David Woodhouse" <dwmw@amazon.co.uk>,
+ "Masahiro Yamada" <yamada.masahiro@socionext.com>,
+ "Michal Marek" <michal.lkml@markovi.net>
+Message-Id: <cd541739-4ec5-4772-9cef-e3527fc69e26@app.fastmail.com>
+In-Reply-To: <20250506170924.3513161-5-mingo@kernel.org>
+References: <20250506170924.3513161-1-mingo@kernel.org>
+ <20250506170924.3513161-5-mingo@kernel.org>
+Subject: Re: [PATCH 04/15] x86/kbuild: Introduce the 'x86_32' subarchitecture
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
 
-
-On Mon, 05 May 2025 22:43:26 +0100, Salah Triki wrote:
-> Documentation/filesystems/sysfs.rst mentions that show() should only
-> use sysfs_emit() or sysfs_emit_at() when formating the value to be
-> returned to user space. So replace scnprintf() with sysfs_emit().
+On Tue, May 6, 2025, at 19:09, Ingo Molnar wrote:
 > 
-> 
+>  # Additional ARCH settings for x86
+> -ifeq ($(ARCH),i386)
+> +ifeq ($(ARCH),x86_64)
+>          SRCARCH := x86
+>  endif
+> -ifeq ($(ARCH),x86_64)
+> +ifeq ($(ARCH),x86_32)
+> +        SRCARCH := x86
+> +endif
+> +ifeq ($(ARCH),i386)
+>          SRCARCH := x86
+>  endif
 
-Applied, thanks!
+Would it be possible to just remove the entire SRCARCH hack
+for x86? It's not clear from the changelog what the intention
+was in 2007 when it was added, but my impression was that
+this should be a temporary workaround to users doing
+'make defconfig' on i386 would still get a 32-bit config
+by default and didn't have to change there scripts.
 
-[1/1] drivers: memory: bt1-l2-ctl: replace scnprintf() with sysfs_emit()
-      https://git.kernel.org/krzk/linux-mem-ctrl/c/03d0d7f0ef05ddd791eb37d35dcc5ca2a53d8b93
+I would guess that even in a 'setarch --32bit' environment,
+most users today would want to build a 64-bit kernel, having
+the special case for that seems to add more confusion that
+it avoids.
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Also, I don't think there are any systems that return
+'x86_32' from 'uname -m', so your added special case
+would never be used by default, only when cross-compiling
+from some other architecture.
 
+      Arnd
