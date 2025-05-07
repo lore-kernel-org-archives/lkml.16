@@ -1,123 +1,146 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D52039ACF
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0841F4CB0
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746610356; cv=none; b=ZtMwJ8SFtFKGlP/tzEN17ORF9+GadO3rwkUwtCxedgg5Yb4003R8dnmdgw5eBJYYkjwgL0I1Ep/KdGffJ9ksxIrOWt+jYXsQct8RiCmk0+b2yJXaxSmO33AilfQQ5ER3qMtyefBBhKniNB1NgUOvviUkQV01uY0cp04RpzegZa4=
+	t=1746610357; cv=none; b=KGBfLMiyGm5/H4BHBB0WsP9WOKiKUawfAfTY5ITYoiHrpsYCUIz/sDgfo+gmbuvYMDTXsSLU9+s28875DPqm6IGK2OmPaxnxV4vACAnXc6JDo1fKu72s3qxQiNaP+780YBcrqSkgmCRz+ZBi4A1apZzU3Z1kiN9XuL9XyDMlXI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746610356; c=relaxed/simple;
-	bh=J2R93UzTVb7CbyhVllcTkTkUf/7r32WFKlNat9suHEE=;
+	s=arc-20240116; t=1746610357; c=relaxed/simple;
+	bh=+dcoGM/MPnQ7gR2bwDmEC4W4glqMT6D4Z27/zHMAu6c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=msmTJmaUt7TIVQFx0VNmAPeFdKuklSbxtz5OnEgRA2HRL+j91HA4gcYI4+Eomiy5lWhGEuybOhtEDVC9SOpmNGA/6DHgnlLCiGlr4H0nn+HyJdvot9eJC+hv2RYWKQb5GeN+OrRQsd1J0/OjEFuaSdH2u+ihYYiDoxN0Wxuky7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YM+qO1S7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bX0s/o+8; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=mbnPGWmG9SvZianCQeKXZIIa2ABk5xFoArlYAbCbsQnNW5Oou6ZVIr6V9MFYrrVA0OtCKn7ztizBCZ1zQZYYUxaHCFazj3RPzwO8yaXK6hYKgD1kCjaKvUuzxCfAk/x+nbPRhVEHeZzQb1ZNzZEV/4SP+UrcQUh9mszmQDrC4zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EAVaGMkW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YM+qO1S7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bX0s/o+8"
-Date: Wed, 7 May 2025 11:32:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746610353;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EAVaGMkW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746610354;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hJU9gUSyqy/IDG+zmBgqBXltz9wtMMR6YwuF4WrvREY=;
-	b=YM+qO1S7y8UcIAx7/Yr9PTPVU3sw88wBpiXsAFLXI/ZfZQ63rWJ0Y1PNBA+gMh+qX4WAMc
-	gleLRCAxt+EfdhP5Q/QmqH7ygNRCxZ0OQcQcca0ZSpruDcNjGLlEdmi/a457DSltbzlMCi
-	1iVnIIOiXfc0mCALyY7ZbJWHd4gfiQ0OWoRSZy4Ie8AzWwzasdXCEoPTxBqN2zS9DaeCLo
-	qKsx9Q6dhZWuiCO1BPD7uUoJLuzpYRCEhbCAVSW3KDX4toG+U06hvQT9HWiHqScDWtAbzb
-	GOJMgOzYhTV8KUS8OVSGm9oWmE6XtJpWfQDx27JUG+0vcX4xtvdn3j6JTZXkNw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746610353;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hJU9gUSyqy/IDG+zmBgqBXltz9wtMMR6YwuF4WrvREY=;
-	b=bX0s/o+8UhuakGN82OFZ27mfHRTwrYekQ4boP8E4+ncWGk9ztlOyFwuJ58UhVWszX1dPEv
-	OxnHfnLp/jawboBQ==
-From: "Ahmed S. Darwish" <darwi@linutronix.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
-	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 00/26] x86: Introduce centralized CPUID model
-Message-ID: <aBsor3iOb0SJsLSQ@lx-t490>
-References: <20250506050437.10264-1-darwi@linutronix.de>
- <aBnSgu_JyEi8fvog@gmail.com>
+	bh=89g+uUbAmI4s1rHApPcoGavOskeIK/6Orkxfvy6zQ+0=;
+	b=EAVaGMkWRfNyHu+JNCLBg5grhE+9T9x6WnYJIdHxj8mluF+ovs2uLMEqwL/CASWY9SLBn3
+	aAevD6ev+hfInM9/1VgWpBq5zUQqZ+iwIB8dBNtpWUI68bNhLore8sRr32WAmm+HpT7LEK
+	fMpVbnLQ0c696uD6CAm8LZY6156y0hQ=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-324-Qv26vmtvPQOFmP_m5T87Rg-1; Wed, 07 May 2025 05:32:32 -0400
+X-MC-Unique: Qv26vmtvPQOFmP_m5T87Rg-1
+X-Mimecast-MFC-AGG-ID: Qv26vmtvPQOFmP_m5T87Rg_1746610351
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac25852291cso602274666b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 02:32:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746610351; x=1747215151;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=89g+uUbAmI4s1rHApPcoGavOskeIK/6Orkxfvy6zQ+0=;
+        b=oa7X8x/1Ie4fiFxNpnI5RbOmejnFD9mGGhg+FoO37uSTocbFeFMlht4kuMMECJUbQe
+         Onbe4Tc7FN00SjdbTtJpbnPaOt3kujDi8C2biKSZTcE7q9FVvqCpHzscF7W1yiSu9PFV
+         DGKK18jQgNZPny6ehNDeDO5cUufLD1kiHJFb45tbtmvkv9NME1dQUTNCwZLPxdQNZ9C+
+         MKmvzc33F8BU5HTUIw41b6gOzUODc5/GM3XgaPijL+f4riGwMgxl/AA3myqaFNWzjLhH
+         j9Al0918n5NzEIhetJfCnf9fn7XG+ALhG0/S+6DCLT//BNXrDXA7K+Etq9Lv8hItxVxN
+         +soQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOSMfNx6xeROWjl7Ob4hrmbiMxz4tfBHDB07QmUrv9NKqc+x1btKTazlsMUAtcV28vDGswSTKstKpphKg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzO2FtgV/8v80eU2weIeYscchNYs9cVMmGwIZQ4lRPL/8VGpuYO
+	wYVLlv8VzXG6oa/oCn4Lj2WT40Dvm4thCA5wCRAgrW/1RCbVqHoy8mHIKWk2VUaRiUFIKDfwKyF
+	RVl640+s7RWGhbesK1Mb5wOizPV+A3K0szBi535L08K9Et5kGxFvvl2Dcdo55Qw==
+X-Gm-Gg: ASbGnctdKIYWN6lsqyrmn9J5jOGBTav7DixPvcRaKEjxjklO0A0Kh0oLiwGJXFfX5l0
+	wXgjxrOcFtZdpjxX/c1yPJYAuDvRm/l56v1x68fTwq9pdkdwBS8QYAaF9a4laSqY26fv63lrBwK
+	oARmE01kahbTvCe2sFttTUP9/Mb4HAhABKtMK32V5enL2Lubprt19xooaa0eTRk3gX1uXrZJwTK
+	hpcUGwsRevUe7gxijIwqHWDB0I7k7eHI8XHeIeTKPE4Wl3gOPESliDbFWQp+AI3H76+fRzzUDN4
+	YuO23nYt6UyDVf5K
+X-Received: by 2002:a17:906:d54d:b0:aca:9615:3c90 with SMTP id a640c23a62f3a-ad1e8d0ba2bmr267000866b.52.1746610350919;
+        Wed, 07 May 2025 02:32:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFB9GITuMuYoSYN8HyavQFo2/J56H0NB7QS0JaWBQv+IFH3p+ygglDzNeMYFn+SDDKrajLukA==
+X-Received: by 2002:a17:906:d54d:b0:aca:9615:3c90 with SMTP id a640c23a62f3a-ad1e8d0ba2bmr266997766b.52.1746610350328;
+        Wed, 07 May 2025 02:32:30 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.165.32])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189147329sm869562066b.1.2025.05.07.02.32.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 02:32:29 -0700 (PDT)
+Date: Wed, 7 May 2025 11:32:10 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, 
+	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca, 
+	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de, Yinggang Gu <guyinggang@loongson.cn>, 
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v9 4/5] tpm: Add a driver for Loongson TPM device
+Message-ID: <CAGxU2F6m2=+07sUoy4PKVs1vMR6Yr--pgkOG3SEGg8gi=HRf+g@mail.gmail.com>
+References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
+ <20250506031947.11130-5-zhaoqunqin@loongson.cn>
+ <2nuadbg5awe6gvagxg7t5ewvxsbmiq4qrcrycvnrmt2etzq2ke@6oyzavctwrma>
+ <0b148f09-d20d-b6be-d31b-6c8a553658c9@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aBnSgu_JyEi8fvog@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0b148f09-d20d-b6be-d31b-6c8a553658c9@loongson.cn>
 
-On Tue, 06 May, Ingo Molnar wrote:
+On Wed, 7 May 2025 at 03:35, Qunqin Zhao <zhaoqunqin@loongson.cn> wrote:
 >
-> Wrt. <asm/cpuid/api.h>, we'll need a few followup cleanups there too
-> I think, such as migrating to the cpuid_*() namespace:
 >
-
-Perfect, then I'll move ahead and do a "CPUID headers cleanup" patch
-queue /before/ moving into a v2 of this series.
-
-Any other wishes in that domain?
-
-> Rename have_cpuid_p() to cpuid_feature() or so.
-
-ACK.
-
-> I find the cpudata_cpuid_ namespace a bit confusing:
+> 在 2025/5/6 下午10:13, Stefano Garzarella 写道:
+> > On Tue, May 06, 2025 at 11:19:46AM +0800, Qunqin Zhao wrote:
+> >> Loongson Security Engine supports random number generation, hash,
+> >> symmetric encryption and asymmetric encryption. Based on these
+> >> encryption functions, TPM2 have been implemented in the Loongson
+> >> Security Engine firmware. This driver is responsible for copying data
+> >> into the memory visible to the firmware and receiving data from the
+> >> firmware.
+> >>
+> >> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> >> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> >> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> >> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> >> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> >> ---
+> >> v9: "tpm_loongson_driver" --> "tpm_loongson"
+> >>    "depends on CRYPTO_DEV_LOONGSON_SE" --> "depends on MFD_LOONGSON_SE"
+> >>
+> ...
+> >> +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t
+> >> count)
+> >> +{
+> >> +    struct loongson_se_engine *tpm_engine =
+> >> dev_get_drvdata(&chip->dev);
+> >> +    struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
+> >> +
+> >> +    memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
+> >
+> > Should we limit the memcpy to `count`?
+> >
+> > I mean, can happen that `count` is less than `cmd_ret->data_len`?
 >
->	__cpudata_cpuid_subleaf_idx(__table, __leaf, __subleaf, __idx)
->	__cpudata_cpuid_subleaf(__table, __leaf, __subleaf)
->	cpudata_cpuid_subleaf(_cpuinfo, _leaf, _subleaf)
->	cpudata_cpuid(_cpuinfo, _leaf)
->	cpudata_cpuid_nr_entries(_cpuinfo, _leaf)
->	cpudata_cpuid_index(_cpuinfo, _leaf, _idx)
->	cpudata_cpuid_regs(_cpuinfo, _leaf)
->	cpudata_cpuid_index_regs(_cpuinfo, _leaf, _idx)
+> Hi, Stefan, thanks for your comment.
 >
+> Firmware ensures "cmd_ret->data_len" will be less than TPM_BUFSIZE,  so
+> this would never happen.
 
-> All of CPUID processing is related to 'data', and we don't
-> really have any 'cpudata' primitives, so the cpudata_ prefix is
-> confusing to me.
->
-> It's particularly confusing for methods like cpudata_cpuid(),
-> which sounds like a generic method, while in reality it accesses
-> subleaf 0, right? Why not name it cpuid_subleaf_0() or so?
->
-> My suggestion would be to use a structure like this:
->
->	__cpuid_subleaf_idx(__table, __leaf, __subleaf, __idx)
->	__cpuid_subleaf(__table, __leaf, __subleaf)
->	cpuid_subleaf(_cpuinfo, _leaf, _subleaf)
->	cpuid_subleaf_0(_cpuinfo, _leaf)
->	cpuid_leaf_nr_entries(_cpuinfo, _leaf)
->	cpuid_leaf_index(_cpuinfo, _leaf, _idx)
->	cpuid_leaf_regs(_cpuinfo, _leaf)
->	cpuid_leaf_index_regs(_cpuinfo, _leaf, _idx)
->
-> Or so?
+I see, but I meant the opposite, if `count` (size of `buf`) is less than 
+`cmd_ret->data_len`.
 
-Yeah, that's honestly much much better.
+I mean, should we add something like this:
 
-(cpuid_subleaf() is already a raw CPUID OP at <asm/cpuid/api.h> now, but
- luckily it has one external call site, so it'll be easy to rename.)
+	if (count < cmd_ret->data_len) {
+		return -EIO;
+	}
 
-> In my book it's a nice bonus that they thus become part of the overall
-> cpuid_*() API family. Note how these accessors still are all still
-> either cpuid_leaf_ or cpuid_subleaf_ prefixed.
+I see we do this in other drivers as well (e.g. crb, ftpm), so I'm 
+trying to understand why here is not the case.
 
-Yeah, now a single <asm/cpuid/api.h> makes full sense as well :)
+Thanks,
+Stefano
 
-Thanks!
-Ahmed
