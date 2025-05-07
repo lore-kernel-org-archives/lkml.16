@@ -1,199 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435BD257AF6;
-	Wed,  7 May 2025 12:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429C7280CD0
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746621390; cv=none; b=r/a84wLqZaOpkENZ3BheIcfTM5wTJRHIGXxAbuFN+5igqyCGPdoRyzTkglmxTzr9yxDk6o5zTf6rkP8EksNeJq+XOuBzAe9hBLiMf6HoLsBS78Sha2zO1YYPMgjtZXnNc2MgSirV9tV5DrYup21WtKArfp1xb9xuuSEeQpAbq6g=
+	t=1746621398; cv=none; b=oE+SumYqJD/kqdw3czoBM5u05alaro7tRwZu4EXwfxTIvXnBWBc8K3BVrJps3HwPTTn1PYZ4/89Y6FUDYJe3t7pGjaJeHYfZWJn3vC4pb60U4AjBbbInbthm/69kOy2o7nIfuEaOyS4qPg2Wlc7BS+U3kCyEpsuq5x6Br2WcjLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746621390; c=relaxed/simple;
-	bh=MwSEEjKCjF/7nGabal+tGMtp0qVnx0UYQgD2hVtyBfk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gASyehfRM8U7b/dLowJq7RYrj60YoMtyCKEFSQ3+5dgVvvyBeAkckHm0G6PyapY88O1CZOjCp9lzAZKblxDNMpng0k/U/lmxqpVPXl7IxPkRagYdowDo58FspKx13CTAhKHGV1STd4aQaY2xqm14BgPkXbAYdFYVGHVuOON3Yos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nh4etkXD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746621398; c=relaxed/simple;
+	bh=ANQL2Z2mMkbXRvzftivNBYyTpd2FsjheCIMPkPyIky0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ChAiw9KACofcty3L2+punD4qhEjGTZopIly2fwZl/6I5Gb2sb25vRaOGli+l0SdbLiD7EJxPDqMiLFARUN4/pAZbYXzjPdArGN4KxSGxgS8519h/a2q2lzWd+ZVIQ/RTax++4k2vLh9rT2jtSdsAchspWoeTfOlTgOYc/Z99rds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HyTpaWuP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nh4etkXD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CF24C4CEE7;
-	Wed,  7 May 2025 12:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746621389;
-	bh=MwSEEjKCjF/7nGabal+tGMtp0qVnx0UYQgD2hVtyBfk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Nh4etkXD2QmdXeFIxepaVQ36xE/CnoqL71J4FagfBBbAJsZH9WfLTDXPDHB7PMjNQ
-	 0Ey6JCc5Cty+Ne91cafy6vhdUgF9t/0UDambHAc0jt0Y+7lmZdzxXzwivE1+MCffeA
-	 /l4MHYO9yaCaueOyI/2h2/CMqptIWq7QNgHMKXVkeazg/LdYmjcORZh/kQqQ8VQINx
-	 4QlwnqJVsaIqTYShXwG+epsnC9Pj1pRvyHmnM8BK6E1WlbkCLGoJ7CWk5Mr3Zb/EiN
-	 Mwlpzt5drHPEuaRZYEAeSyIV+SYm6FFHiN3FPuMB3vO+/EXKF2g3yPIAwjFbQ6fgvo
-	 zmzfu0CrynEvg==
-Date: Wed, 7 May 2025 13:36:22 +0100
-From: Simon Horman <horms@kernel.org>
-To: Tanmay Jagdale <tanmay@marvell.com>
-Cc: bbrezillon@kernel.org, arno@natisbad.org, schalla@marvell.com,
-	herbert@gondor.apana.org.au, davem@davemloft.net,
-	sgoutham@marvell.com, lcherian@marvell.com, gakula@marvell.com,
-	jerinj@marvell.com, hkelam@marvell.com, sbhatta@marvell.com,
-	andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, bbhushan2@marvell.com, bhelgaas@google.com,
-	pstanner@redhat.com, gregkh@linuxfoundation.org,
-	peterz@infradead.org, linux@treblig.org,
-	krzysztof.kozlowski@linaro.org, giovanni.cabiddu@intel.com,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, rkannoth@marvell.com, sumang@marvell.com,
-	gcherian@marvell.com, Rakesh Kudurumalla <rkudurumalla@marvell.com>
-Subject: Re: [net-next PATCH v1 06/15] octeontx2-af: Add support for CPT
- second pass
-Message-ID: <20250507123622.GB3339421@horms.kernel.org>
-References: <20250502132005.611698-1-tanmay@marvell.com>
- <20250502132005.611698-7-tanmay@marvell.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HyTpaWuP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746621395;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=R4OangMaKmpfQS75O4hoSdU6AYI1lR2PZPMYPMmrmQc=;
+	b=HyTpaWuPCNivfzvqfScWsns6YFYFqhDBXVFr/1THkbPC2YSJ1ocd+wPUD13mgE+DFXEskx
+	1CQi8AhwASvlES3AWZRCsvco762ApxoS5qEa0i+fJXRuW7v+vJQHcm9C+wrb3T887rIXhR
+	6hGQuo1c5eCDfcCwGb4M4Gzc/OWAiZg=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-301-TZ32l5kDOH2JZUq_QcgFLg-1; Wed,
+ 07 May 2025 08:36:30 -0400
+X-MC-Unique: TZ32l5kDOH2JZUq_QcgFLg-1
+X-Mimecast-MFC-AGG-ID: TZ32l5kDOH2JZUq_QcgFLg_1746621388
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 52F141955DE8;
+	Wed,  7 May 2025 12:36:28 +0000 (UTC)
+Received: from [10.44.33.91] (unknown [10.44.33.91])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C65371953B85;
+	Wed,  7 May 2025 12:36:22 +0000 (UTC)
+Message-ID: <ef8ae196-84c9-447e-98ff-071d347531d5@redhat.com>
+Date: Wed, 7 May 2025 14:36:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502132005.611698-7-tanmay@marvell.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v6 8/8] mfd: zl3073x: Register DPLL sub-device
+ during init
+To: Lee Jones <lee@kernel.org>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20250430101126.83708-1-ivecera@redhat.com>
+ <20250430101126.83708-9-ivecera@redhat.com>
+ <20250501132201.GP1567507@google.com>
+ <a699035f-3e8d-44d7-917d-13c693feaf2e@redhat.com>
+ <20250507110621.GJ3865826@google.com>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <20250507110621.GJ3865826@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Fri, May 02, 2025 at 06:49:47PM +0530, Tanmay Jagdale wrote:
-> From: Rakesh Kudurumalla <rkudurumalla@marvell.com>
+On 07. 05. 25 1:06 odp., Lee Jones wrote:
+> On Fri, 02 May 2025, Ivan Vecera wrote:
 > 
-> Implemented mailbox to add mechanism to allocate a
-> rq_mask and apply to nixlf to toggle RQ context fields
-> for CPT second pass packets.
+>>
+>>
+>> On 01. 05. 25 3:22 odp., Lee Jones wrote:
+>>> On Wed, 30 Apr 2025, Ivan Vecera wrote:
+>>>
+>>>> Register DPLL sub-devices to expose the functionality provided
+>>>> by ZL3073x chip family. Each sub-device represents one of
+>>>> the available DPLL channels.
+>>>>
+>>>> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+>>>> ---
+>>>> v4->v6:
+>>>> * no change
+>>>> v3->v4:
+>>>> * use static mfd cells
+>>>> ---
+>>>>    drivers/mfd/zl3073x-core.c | 19 +++++++++++++++++++
+>>>>    1 file changed, 19 insertions(+)
+>>>>
+>>>> diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
+>>>> index 050dc57c90c3..3e665cdf228f 100644
+>>>> --- a/drivers/mfd/zl3073x-core.c
+>>>> +++ b/drivers/mfd/zl3073x-core.c
+>>>> @@ -7,6 +7,7 @@
+>>>>    #include <linux/device.h>
+>>>>    #include <linux/export.h>
+>>>>    #include <linux/math64.h>
+>>>> +#include <linux/mfd/core.h>
+>>>>    #include <linux/mfd/zl3073x.h>
+>>>>    #include <linux/module.h>
+>>>>    #include <linux/netlink.h>
+>>>> @@ -755,6 +756,14 @@ static void zl3073x_devlink_unregister(void *ptr)
+>>>>    	devlink_unregister(ptr);
+>>>>    }
+>>>> +static const struct mfd_cell zl3073x_dpll_cells[] = {
+>>>> +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 0),
+>>>> +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 1),
+>>>> +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 2),
+>>>> +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 3),
+>>>> +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 4),
+>>>> +};
+>>>
+>>> What other devices / subsystems will be involved when this is finished?
+>>
+>> Lee, btw. I noticed from another discussion that you mentioned that
+>> mfd_cell->id should not be used outside MFD.
+>>
+>> My sub-drivers uses this to get DPLL channel number that should be used
+>> for the particular sub-device.
+>>
+>> E.g.
+>> 1) MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 2);
+>> 2) MFD_CELL_BASIC("zl3073x-phc", NULL, NULL, 0, 3);
+>>
+>> In these cases dpll_zl3073x sub-driver will use DPLL channel 2 for this
+>> DPLL sub-device and ptp_zl3073x sub-driver will use DPLL channel 3 for
+>> this PHC sub-device.
+>>
+>> platform_device->id cannot be used for this purpose in conjunction with
+>> PLATFORM_DEVID_AUTO as that ->id can be arbitrary.
+>>
+>> So if I cannot use mfd_cell->id what should I use for that case?
+>> Platform data per cell with e.g. the DPLL channel number?
 > 
-> Signed-off-by: Rakesh Kudurumalla <rkudurumalla@marvell.com>
-> Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
+> Yes, using the device ID for anything other than enumeration is a hack.
+> 
+> Channel numbers and the like should be passed as platform data.
 
-...
+OK, I will send v7 quickly.
 
-> diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cn10k.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cn10k.c
-> index 7fa98aeb3663..18e2a48e2de1 100644
-> --- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cn10k.c
-> +++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cn10k.c
-> @@ -544,6 +544,7 @@ void rvu_program_channels(struct rvu *rvu)
->  
->  void rvu_nix_block_cn10k_init(struct rvu *rvu, struct nix_hw *nix_hw)
->  {
-> +	struct rvu_hwinfo *hw = rvu->hw;
->  	int blkaddr = nix_hw->blkaddr;
->  	u64 cfg;
->  
-> @@ -558,6 +559,16 @@ void rvu_nix_block_cn10k_init(struct rvu *rvu, struct nix_hw *nix_hw)
->  	cfg = rvu_read64(rvu, blkaddr, NIX_AF_CFG);
->  	cfg |= BIT_ULL(1) | BIT_ULL(2);
+Ivan
 
-As per my comments on an earlier patch in this series:
-bits 1 and 2 have meaning. It would be nice to use a #define to
-convey this meaning to the reader.
-
->  	rvu_write64(rvu, blkaddr, NIX_AF_CFG, cfg);
-> +
-> +	cfg = rvu_read64(rvu, blkaddr, NIX_AF_CONST);
-> +
-> +	if (!(cfg & BIT_ULL(62))) {
-> +		hw->cap.second_cpt_pass = false;
-> +		return;
-> +	}
-> +
-> +	hw->cap.second_cpt_pass = true;
-> +	nix_hw->rq_msk.total = NIX_RQ_MSK_PROFILES;
->  }
->  
->  void rvu_apr_block_cn10k_init(struct rvu *rvu)
-> diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-> index 6bd995c45dad..b15fd331facf 100644
-> --- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-> +++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-> @@ -6612,3 +6612,123 @@ int rvu_mbox_handler_nix_mcast_grp_update(struct rvu *rvu,
->  
->  	return ret;
->  }
-> +
-> +static inline void
-> +configure_rq_mask(struct rvu *rvu, int blkaddr, int nixlf,
-> +		  u8 rq_mask, bool enable)
-> +{
-> +	u64 cfg, reg;
-> +
-> +	cfg = rvu_read64(rvu, blkaddr, NIX_AF_LFX_RX_IPSEC_CFG1(nixlf));
-> +	reg = rvu_read64(rvu, blkaddr, NIX_AF_LFX_CFG(nixlf));
-> +	if (enable) {
-> +		cfg |= BIT_ULL(43);
-> +		reg = (reg & ~GENMASK_ULL(36, 35)) | ((u64)rq_mask << 35);
-> +	} else {
-> +		cfg &= ~BIT_ULL(43);
-> +		reg = (reg & ~GENMASK_ULL(36, 35));
-> +	}
-
-Likewise for the bit, mask, and shift here.
-
-And I think that using FIELD_PREP with another mask in place of the shift
-is also appropriate here.
-
-> +	rvu_write64(rvu, blkaddr, NIX_AF_LFX_RX_IPSEC_CFG1(nixlf), cfg);
-> +	rvu_write64(rvu, blkaddr, NIX_AF_LFX_CFG(nixlf), reg);
-> +}
-> +
-> +static inline void
-> +configure_spb_cpt(struct rvu *rvu, int blkaddr, int nixlf,
-> +		  struct nix_rq_cpt_field_mask_cfg_req *req, bool enable)
-> +{
-> +	u64 cfg;
-> +
-> +	cfg = rvu_read64(rvu, blkaddr, NIX_AF_LFX_RX_IPSEC_CFG1(nixlf));
-> +	if (enable) {
-> +		cfg |= BIT_ULL(37);
-> +		cfg &= ~GENMASK_ULL(42, 38);
-> +		cfg |= ((u64)req->ipsec_cfg1.spb_cpt_sizem1 << 38);
-> +		cfg &= ~GENMASK_ULL(63, 44);
-> +		cfg |= ((u64)req->ipsec_cfg1.spb_cpt_aura << 44);
-> +	} else {
-> +		cfg &= ~BIT_ULL(37);
-> +		cfg &= ~GENMASK_ULL(42, 38);
-> +		cfg &= ~GENMASK_ULL(63, 44);
-> +	}
-
-And here too.
-
-> +	rvu_write64(rvu, blkaddr, NIX_AF_LFX_RX_IPSEC_CFG1(nixlf), cfg);
-> +}
-
-...
-
-> +int rvu_mbox_handler_nix_lf_inline_rq_cfg(struct rvu *rvu,
-> +					  struct nix_rq_cpt_field_mask_cfg_req *req,
-> +					  struct msg_rsp *rsp)
-
-It would be nice to reduce this to 80 columns wide or less.
-Perhaps like this?
-
-int
-rvu_mbox_handler_nix_lf_inline_rq_cfg(struct rvu *rvu,
-				      struct nix_rq_cpt_field_mask_cfg_req *req,
-				      struct msg_rsp *rsp)
-
-Or perhaps by renaming nix_rq_cpt_field_mask_cfg_req to be shorter.
-
-...
-
-> diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h b/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h
-> index 245e69fcbff9..e5e005d5d71e 100644
-> --- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h
-> +++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h
-> @@ -433,6 +433,8 @@
->  #define NIX_AF_MDQX_IN_MD_COUNT(a)	(0x14e0 | (a) << 16)
->  #define NIX_AF_SMQX_STATUS(a)		(0x730 | (a) << 16)
->  #define NIX_AF_MDQX_OUT_MD_COUNT(a)	(0xdb0 | (a) << 16)
-> +#define NIX_AF_RX_RQX_MASKX(a, b)       (0x4A40 | (a) << 16 | (b) << 3)
-> +#define NIX_AF_RX_RQX_SETX(a, b)        (0x4A80 | (a) << 16 | (b) << 3)
-
-FIELD_PREP could be used here in conjunction with #defines
-for appropriate masks here too.
-
->  
->  #define NIX_PRIV_AF_INT_CFG		(0x8000000)
->  #define NIX_PRIV_LFX_CFG		(0x8000010)
-
-...
