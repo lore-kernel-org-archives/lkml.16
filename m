@@ -1,193 +1,160 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 643C928B7EC;
-	Wed,  7 May 2025 16:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EBA1917FB;
+	Wed,  7 May 2025 16:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746636116; cv=none; b=FyjxLvsrUZ0PGf9PdoQ0MXfM6xpuNgTbxJg33WMbQVAa5UTiuI2FSiQvbQ2HxgAnArPy0uWtNQHb/bgIwDtVbcjrBDHQYURDrxpX5yzWBM7xuZbn30EaB1MFk/vDbsb80Q187qCbxpj5+vLTPKga2Yhc0lPCuczUQ3wlZtBFjBw=
+	t=1746636168; cv=none; b=hTjXHL52yq+CSmY1UDa7yfir0vx1qg2tpbk2Uur+LBzH9aHgLYk6xWHRI2Kn+xEnS7PGSKQhetN52fPma3WHVRNbJgPdl78EpCm5mrqGCm0bKSUFPoZAijItltaxRi++Brr2rNRRvibKKCyEIaSJK0SPPykulGuWPrH9ilOYiPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746636116; c=relaxed/simple;
-	bh=Ogw0DFLSrTYjT3Ruuf+27tuiTdHS43qmK0Cb8CUCaZg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Lcf6/lpVYQC8QBhpWvEIUbUIdVWa512vXKqnDlA2iFnyWHX1KD7ZSkAmKON3E1Ussjn0YoADu+E7wZ7mn2dUN/raionBU2diIfZsu/LMC+9F6/NU8C3WApye0K8dLjFaA8FqcZfAtm97L7hZKAAwjcAOm9j4WUw9k0GVt6nAP04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DFDC16F2;
-	Wed,  7 May 2025 09:41:43 -0700 (PDT)
-Received: from [192.168.20.57] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F30CE3F58B;
-	Wed,  7 May 2025 09:41:51 -0700 (PDT)
-Message-ID: <25aa77b9-0077-4021-b55c-e94327b7847b@arm.com>
-Date: Wed, 7 May 2025 11:41:47 -0500
+	s=arc-20240116; t=1746636168; c=relaxed/simple;
+	bh=GmqF0ZJgeQ9wyOYD0SQ2yXd+3NM8zKWnJXpW3wgTe6k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Biz+WBPZlzX/7d7J+yO6jZWj3YP863o7FF7IyZPvIEp4w29VrgUM+Lo6tWD7pR1Hbtxsdt4J7amkIhl/eUlMTv/UsZAAYJyWbC1Foe76B4Mr2R12HcafO1RCpu+LLNMEkMFQcCZm/9rEEzk/WH1AcdO8Zc9avD3bYH5wGQpvcyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QLE2837F; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QLE2837F"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736c1cf75e4so128577b3a.2;
+        Wed, 07 May 2025 09:42:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746636166; x=1747240966; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UrpAv5wRm5tVkVdVuPsn72RSEtYGripQsP5MpQKGhfk=;
+        b=QLE2837F05EnFqzcMIEe4W0awmV58aZUIWbjn0RALdRvxGqjIsZUaV2somrK2NeZWB
+         8ezf5iJYBrJtELFkSDYcgj/+qvQf+SVegqmX5lGQVHMcIZKmf1Y4s0Gt1z9nhFHhRK1n
+         tkiAq8UicHHUSKmkJXhrVAAvgDyIhFcampm/r3Irf5iWdgmfTeqlZevjiYsPFEJjAjpU
+         OHjU4SA0HtG5M2yv4DLx3Sqzek8xcHgxGCDq/bYM8zglj0c2zCmq8GddpJs8uhs4eZJK
+         o0qhRGOiTu4VRNSFPqjyAwETD/MqbObexa4WViqcGV6r67Yxneb22mJ5GnZSYwy1LlwO
+         HVfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746636166; x=1747240966;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UrpAv5wRm5tVkVdVuPsn72RSEtYGripQsP5MpQKGhfk=;
+        b=Fxe2/cLR8kwVxZ+NxVGjiDGsCwLzUVYK2Vch8Y3hOnHMo8nruGodTFGRuKlMsdcFhs
+         czgpGoPEJp+rys6PStAyxahA3OCDlCLm8yMFdJ6nB+ypaiHwopk5uwYOH+7qYhJfQok9
+         iaU0oR/2+LuqNwGng6h8otBVgu08pvszOyrddN638EDwQC09yTlbeah/8a64qvgQNd68
+         6sAhEV8UQNEgY1MSS/lQLbAu01NiQa/qEAFDxnOcdmWQgK7HnhkeYVtBDkPzF2WtfV7W
+         dfi/oAKL2ERXRRVaK5TEqTJG12Nq6S3xjITC01/SYKQcGW0IYJs7PJOMAi+51rqVNf4w
+         oLbA==
+X-Forwarded-Encrypted: i=1; AJvYcCVngyCpFWdC04dksZpeXM3yNBmb1EtCYMh1pVOXLqnOaw6MGnYVOWfEbb/brTEoDAeHcZK2pvLpisiakR2j@vger.kernel.org, AJvYcCVqaljU537LUESNlFqG+um6wx5I6ANXiea46Dt3gaDciCqbyLmpzSx/2EgcbvXgUI1PDa1mgEzeissy@vger.kernel.org, AJvYcCXfKgAJlPz5J5DC+IsZ5x9Cp+1sA6afEbJqVhzEftwUEsfw+2FEA50k58tLVjqIBGy8MeMlDeUX7cVm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3qCXCgjtuxjjUsCqyePedyMPin7RExsbYGG++IPzmW7lUGCBp
+	nCRUH+wX9D2zoekFSd1JHBQ6g7/abtxLFQf1voUc6JbBG9zdCD2x
+X-Gm-Gg: ASbGncuWWVIksRIJbflVsd5OTh4pxckBACg3ntj3EsaSFOT88B6dI11vqT0E1LQMKXj
+	5yA1HdS8GJ8H8P999WtdTP2rgioOe0RE6WnMyPRcEzpQuQX6qOxOyw4ipyCsWvMiWcCxUgpMeuQ
+	vMt4s86RtcPEThPsTlnM3gsRyCmMtknkV1EM39tq71wmGrdH8YjuwAr4nzs3WrPkbiW69VqDUZZ
+	UAjDCIAcXHzExwOKou4Mw3KhqcXvTI3OjIHyi/Vj1D8nIzE5r4ebHNNAsojEDaivkWu9Veq7jpb
+	x7gJN+Zq1R3KtdOjyOTr4nD/mTb2xJbIHIr7QEbiijTb7A7KnnbytJolxxyhv8rp
+X-Google-Smtp-Source: AGHT+IGJIkVx5zZt6zXCROkjsSU2I7/c8Y4B6zDviETofWcquGoGsY4tXjVou0oNL4hYBjlYRPpCgQ==
+X-Received: by 2002:a05:6a00:8d96:b0:73f:ebb:6cb2 with SMTP id d2e1a72fcca58-740a9966d64mr34295b3a.3.1746636165785;
+        Wed, 07 May 2025 09:42:45 -0700 (PDT)
+Received: from localhost.localdomain ([123.16.133.44])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058d7b1c1sm11528004b3a.6.2025.05.07.09.42.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 09:42:45 -0700 (PDT)
+From: Nam Tran <trannamatk@gmail.com>
+To: andy@kernel.org
+Cc: geert@linux-m68k.org,
+	pavel@ucw.cz,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	christophe.jaillet@wanadoo.fr,
+	corbet@lwn.net,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	florian.fainelli@broadcom.com,
+	bcm-kernel-feedback-list@broadcom.com,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v8 0/5] auxdisplay: add support for TI LP5812 4x3 Matrix LED driver
+Date: Wed,  7 May 2025 23:42:19 +0700
+Message-Id: <20250507164219.10083-1-trannamatk@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAHp75VcVmTwS-zw=o5=m1-x0XC67BKBVWae2mMKZQH=qLCxZwg@mail.gmail.com>
+References: <CAHp75VcVmTwS-zw=o5=m1-x0XC67BKBVWae2mMKZQH=qLCxZwg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
-From: Jeremy Linton <jeremy.linton@arm.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Heyne, Maximilian" <mheyne@amazon.de>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Len Brown <lenb@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
- Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250506-draco-taped-15f475cd@mheyne-amazon>
- <214c2a2d-e0ea-4ec6-9925-05e39319e813@arm.com>
- <CAJZ5v0jvWXDQQ++4wmWJ+i=jds+MZ68bRB9+26WM4tAPHFxALw@mail.gmail.com>
- <1911d3b6-f328-40a6-aa03-cde3d79554de@arm.com>
- <CAJZ5v0ii9HLfqfgcp=1qRRX6M1yThf7ZPNkSLVc5GGFhv=N-Lg@mail.gmail.com>
- <ad04d07b-d610-4355-bd47-1d2fb49711f3@arm.com>
- <fb2e3c60-1171-4f5c-852d-a5bfdc4f9c2a@arm.com>
-Content-Language: en-US
-In-Reply-To: <fb2e3c60-1171-4f5c-852d-a5bfdc4f9c2a@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 5/7/25 11:38 AM, Jeremy Linton wrote:
-> On 5/7/25 11:31 AM, Jeremy Linton wrote:
->> On 5/7/25 11:12 AM, Rafael J. Wysocki wrote:
->>> On Wed, May 7, 2025 at 5:51 PM Jeremy Linton <jeremy.linton@arm.com> 
->>> wrote:
->>>>
->>>> On 5/7/25 10:42 AM, Rafael J. Wysocki wrote:
->>>>> On Wed, May 7, 2025 at 5:25 PM Jeremy Linton 
->>>>> <jeremy.linton@arm.com> wrote:
->>>>>>
->>>>>> Hi,
->>>>>>
->>>>>> On 5/6/25 8:13 AM, Heyne, Maximilian wrote:
->>>>>>> Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple of
->>>>>>> sizeof() calls") corrects the processer entry size but unmasked a 
->>>>>>> longer
->>>>>>> standing bug where the last entry in the structure can get 
->>>>>>> skipped due
->>>>>>> to an off-by-one mistake if the last entry ends exactly at the 
->>>>>>> end of
->>>>>>> the ACPI subtable.
->>>>>>>
->>>>>>> The error manifests for instance on EC2 Graviton Metal instances 
->>>>>>> with
->>>>>>>
->>>>>>>      ACPI PPTT: PPTT table found, but unable to locate core 63 (63)
->>>>>>>      [...]
->>>>>>>      ACPI: SPE must be homogeneous
->>>>>>>
->>>>>>> Fixes: 2bd00bcd73e5 ("ACPI/PPTT: Add Processor Properties 
->>>>>>> Topology Table parsing")
->>>>>>> Cc: stable@vger.kernel.org
->>>>>>> Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
->>>>>>> ---
->>>>>>>     drivers/acpi/pptt.c | 4 ++--
->>>>>>>     1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
->>>>>>> index f73ce6e13065d..4364da90902e5 100644
->>>>>>> --- a/drivers/acpi/pptt.c
->>>>>>> +++ b/drivers/acpi/pptt.c
->>>>>>> @@ -231,7 +231,7 @@ static int acpi_pptt_leaf_node(struct 
->>>>>>> acpi_table_header *table_hdr,
->>>>>>>                              sizeof(struct acpi_table_pptt));
->>>>>>>         proc_sz = sizeof(struct acpi_pptt_processor);
->>>>>>
->>>>>> This isn't really right, it should be struct acpi_subtable_header, 
->>>>>> then
->>>>>> once the header is safe, pull the length from it.
->>>>>>
->>>>>> But then, really if we are trying to fix the original bug that the 
->>>>>> table
->>>>>> could be shorter than the data in it suggests, the struct
->>>>>> acpi_pptt_processor length plus its resources needs to be checked 
->>>>>> once
->>>>>> the subtype is known to be a processor node.
->>>>>>
->>>>>> Otherwise the original sizeof * change isn't really fixing anything.
->>>>>
->>>>> Sorry, what sense did it make to do
->>>>>
->>>>> proc_sz = sizeof(struct acpi_pptt_processor *);
->>>>>
->>>>> here?  As much as proc_sz = 0 I suppose?
->>>>
->>>> No, I agree, I think the original checks were simplified along the way
->>>> to that. It wasn't 'right' either.
->>>>
->>>> The problem is that there are three subtypes of which processor is only
->>>> one, and that struct acpi_pptt_processor doesn't necessarily reflect 
->>>> the
->>>> actual size of the processor structure in the table because it has
->>>> optional private resources tagged onto the end.
->>>
->>> Right.
->>>
->>>> So if the bug being fixed is that the length check is validating that
->>>> the table length is less than the data in the table, that's still a
->>>> problem because its only validating the processor node without 
->>>> resources.
->>>
->>> Admittedly, it is not my code, but I understand this check as a
->>> termination condition for the loop: If there's not enough space in the
->>> table to hold a thing that I'm looking for, I may as well bail out.
->>>
->>>> AKA the return is still potentially returning a pointer to a structure
->>>> which may not be entirely contained in the table.
->>>
->>> Right, but this check should be made anyway before comparing
->>> cpu_node->parent to node_entry, when it is known to be a CPU entry
->>> because otherwise why bother.
->>
->> Right, but then there is a clarity because really its walking the 
->> table+subtypes looking for the cpu node. Exiting early because its not 
->> big enough for a cpu node makes sense but you still need the cpu node 
->> check to avoid a variation on the original bug.
->>
->>
->>
->>>
->>> Roughly something like this:
->>>
->>> proc_sz = sizeof(struct acpi_pptt_processor);
->>>
->>> while ((unsigned long)entry + entry->length <= table_end) {
->>
->> Here your reading the entry, without knowing its long enough. For the 
->> leaf check just using struct acpi_pptt_processor is fine, but for the 
->> acpi_find_processor_node():
->>
->> proc_sz = sizeof(struct acpi_subtable_type);
-> 
-> Although, maybe I just wrote code that justifies using 
-> acpi_pptt_processor here because the entry->num_of_priv_resources length 
-> check isn't being made without it. So ok, use proc_sz = sizeof(struct 
-> acpi_subtable_type) and assume that we don't care if the subtable type 
-> is less than proc_sz.
+On Tue, 29 Apr 2025 Andy Shevchenko wrote:
 
-Sorry for the noise, scratch that, a better solution is just to swap the 
-length checking in the 'if' statement. Then its clear its iterating 
-subtable types not processor nodes.
-
-
+> On Tue, Apr 29, 2025 at 8:02 PM Nam Tran <trannamatk@gmail.com> wrote:
+> > On Mon, 28 Apr 2025 Pavel Machek wrote:
+> > > > On Mon, 28 Apr 2025 Geert Uytterhoeven wrote:
+> > >
+> > > > > > > > - Move driver to drivers/auxdisplay/ instead of drivers/leds/.
+> > > > > > > > - Rename files from leds-lp5812.c/.h to lp5812.c/.h.
+> > > > > > > > - Move ti,lp5812.yaml binding to auxdisplay/ directory,
+> > > > > > > >   and update the title and $id to match new path.
+> > > > > > > > - No functional changes to the binding itself (keep Reviewed-by).
+> > > > > > > > - Update commit messages and patch titles to reflect the move.
+> > > > > > > > - Link to v7: https://lore.kernel.org/linux-leds/20250422190121.46839-1-trannamatk@gmail.com/
+> > > > > > >
+> > > > > > > Out of sudden without discussing with auxdisplay maintainers/reviewers?
+> > > > > > > Thanks, no.
+> > > > > > > Please, put into the cover letter the meaningful summary of what's
+> > > > > > > going on and why this becomes an auxdisplay issue. Brief review of the
+> > > > > > > bindings sounds more likely like LEDS or PWM subsystems.
+> > > > > >
+> > > > > > It is 4x3 matrix. That means it is not suitable for LEDs. I don't
+> > > > > > believe it is suitable for PWM, either -- yes, it is 36 PWM outputs,
+> > > > > > but...
+> > > > >
+> > > > > Is it intended to be used as a 4x3 matrix, or is this just an internal
+> > > > > wiring detail, and should it be exposed as 12 individual LEDs instead?
+> > > >
+> > > > The 4×3 matrix is a real and fundamental aspect of the LP5812’s operation.
+> > > > It is not just an internal wiring detail.
+> > > > The device adopts a Time-Cross-Multiplexing (TCM) structure, where 4 output
+> > > > pins control 12 LED dots individually through scanning. Each pin includes
+> > > > both high-side and low-side drive circuits, meaning matrix multiplexing is
+> > > > required for proper operation — it cannot be treated as 12 completely
+> > > > independent LEDs.
+> > >
+> > > Scanning is really a detail.
+> > >
+> > > If this is used as rectangular 4x3 display, then it goes to auxdisplay.
+> > >
+> > > If this is used as a power LED, SD activity LED, capslock and numlock
+> > > ... placed randomly all around the device, then it goes LED subsystem.
+> >
+> > The LP5812 is used for LED status indication in devices like smart speakers,
+> > wearables, and routers, not as a structured rectangular display.
+> >
+> > Given that, it seems to match the LED subsystem better than auxdisplay, doesn't it?
 > 
-> 
->>
->> while ((unsigned long)entry + proc_sz <= table_end) {
->>   if (entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
->>   entry->length == sizeof(struct acpi_pptt_processor) +
->>      entry->number_of_priv_resources * sizeof(u32) &&
->>   entry + entry->length <= table_end &&
->>   acpi_pptt_leaf_node(...))
->>      return (...)entry;
->>
->>
->> Although at this point the while loops entry + proc_sz could just be < 
->> table_end under the assumption that entry->length will be > 0 but 
->> whichever makes more sense.
->>
->>
->>
-> 
+> I have mixed feelings about all this. As per hardware organisation it
+> sounds more like a matrix (for example. keyboard), where all entities
+> are accessed on a scanline, but at the same time each of the entities
+> may have orthogonal functions to each other. Have you checked with DRM
+> for the sake of completeness?
+> Personally I lean more to the something special, which doesn't fit
+> existing subsystems. Auxdisplay subsystem more or less about special
+> alphanumeric displays (with the exception of some FB kinda devices,
+> that were even discussed to have drivers be removed). Also maybe FB
+> might have something suitable, but in any case it looks quite
+> non-standard...
 
+I understand your mixed feelings about where the LP5812 fits within
+the existing subsystems.
+
+While the LP5812 uses a matrix-based structure for controlling LEDs,
+it is not intended for displaying structured text or graphics. Instead,
+it controls up to 4 RGB LEDs for status indication, where each RGB LED
+consists of 3 individual color LEDs: red, green, and blue. Based on this,
+I think it aligns more closely with the LED subsystem rather than DRM or FB.
+
+Best regards,
+Nam Tran
