@@ -1,215 +1,182 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011000.outbound.protection.outlook.com [52.101.70.0])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406441A9B53;
-	Wed,  7 May 2025 07:31:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.0
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746603069; cv=fail; b=CpULupuxD644pezYeU41L8ietvprRh6wPI7ZpHsTFaMLqek1mpLXruCEW2srNws9zqx+JfBopiaBbY2hSHnisZe/nmPhcRpcTzsUuJvWNJcTgJP1L2bY9kFvKHwUTrT7vKaBeEjGBbVl10ccCFRr8U5cWhrgOvOeq7ot3MBLhtc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746603069; c=relaxed/simple;
-	bh=cykKM++N7Ttmq3ukYFSEoWq+NhPW8db3E4xyCfrdNUk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=J57sIzLO9NUsiIwrjZsNUndNgBQN8IYqsru+zoH9ULk3bi0VqgRFiDRHXXTTl9EekhyQWz8jyRaSFPjPxKKoySsl+rPW+SZYlrKEcL4A5UVbhzs4zp1VxqudDpYy8oXgpuaSWeXOqrgZiMdX5Ah88p0pBd07vg5Tye3PRQ1yhXs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Ll2r1LwP; arc=fail smtp.client-ip=52.101.70.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5416121519F;
+	Wed,  7 May 2025 07:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746603111; cv=none; b=kixPVN+CKkk7oCFD7V+Ucdk6fTqhlVFG4gpRidzVChetDl06arzLexRhbnbaHiNbhuxn/JRYGckngcSWWLHTh8DfxqZB86lkDoo7yqBhhJitHus9Lr+8I5Lrwi9eUNmvc4bbdEkXENPas8k/NkXmRBIPJI9GmnKY0bwVdL5y5fI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746603111; c=relaxed/simple;
+	bh=J8vV48whjFWoJfoLKNP11HaSqljdUTAPOGpdU7CDSwA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DgPtOjtaZGO0EZyJq6xJPnSTq7Qg5uXJQCPiyWxbAjAK/awZoGIJPtdJL/Xz/sMRaF0uKM8Dmr8HfIEtVhwg5A99v62vpgrlqbLlvfPw//VyPZG6qDpPDPHB5GkHZ/z1PTUkuqqu5vzFYiQFR5k2cSt/hwpEMwa0A1IdP/LyTvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HtlMRhcQ; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ll2r1LwP"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MtPh1zEE1lcFJmUHyn0sweh6+/BAbWd5L8hwcyTos6SxV/pGkQ7X4M4NFahpMY3XZg/VedqNMIoE6TtITLDhTyoN1XeOoIcvPW3Hy3HuLv+JwxYibHx3iZFZ5tSk3h9cfawJuMG0AwsLvtbijCjn9DigRbSbYr3bvTp7pCTH80corTDloK1gb/nmPaIc7Ak9WD6qhp7TGKHsWI4EtzMfNnjbnSB9sFN286tpCEiBBMP66JungzrUlQMI3AFCAt16alsrHq0bf1oB8KUrCjESc/yhQK9nJ2jhPhdKqJxmjTn4Bj7Tqb+xSTejwhTD9E8MsybCeljLD5ggwXu0sXk1gQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NGbLxZ8EhTAK70ThQ1nQhNeC0hgX/SeK9N1oN2gffBE=;
- b=aN0IfZq+oeyHoNb67TweAXfwsZUxmbPCGM33w2l25KkRjCHsbNeSldKU6YkFsx0enUdcnr0ZVVklBdJtx/D76RpKXjlG2iIVzD+CAGA4Mn5D2SdnlybmZKW6lcf2csgZGEjgjTck1BXpmchSzcPotvRv5jlIjxP35OoOCbEe4RuTmpNIK6pbjqLNyNQRdGIKNGLi5gcG4zEkGBCf2nZ6nb737N7eS4ZU/IRxxUDMTKFo7hAl2/eTGAXg9XId1X27ueziLrhxOhTafw8WejxwRXPxgS3xiV7HhgThm+3/CoI3mx0+5yrzBfNPxbgsnWzsU7MIC06KL0DoE9WmM7ngbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NGbLxZ8EhTAK70ThQ1nQhNeC0hgX/SeK9N1oN2gffBE=;
- b=Ll2r1LwPak7OjtDjHTKiS74xlhLBbgfQTqIOUu7QYbhPcj55eB9DYLbGJ3pUhRdX/LRNlY9rYGRRfNeZ1Qz/GEubj3yp7kRyxm/nxx3Em7IobE3hA2/CbRxPA/kUpFuEyjeULIQZUXUx88xKBjorFR8QPU3ezJSYOJdJHHfZ0CrghogihUIgbxuMD6InrD5EgFoaMjq0+mIAD4HyBvCfLgksuabr3MAF7Tvu85spMMnpQWOhVk94+zb9wucvP7NpVAOBpV4gpLJd2VhVNMqlqRCQ8BR+wBotc/fvAl51dhlGZTaGf2uHmrVyz07oOo6KVwuBE9RHvGbMg7KCuvY2UQ==
-Received: from AM0PR04MB6515.eurprd04.prod.outlook.com (2603:10a6:208:16f::10)
- by PA4PR04MB7854.eurprd04.prod.outlook.com (2603:10a6:102:c2::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 7 May
- 2025 07:31:04 +0000
-Received: from AM0PR04MB6515.eurprd04.prod.outlook.com
- ([fe80::ca11:63b8:aeea:8043]) by AM0PR04MB6515.eurprd04.prod.outlook.com
- ([fe80::ca11:63b8:aeea:8043%5]) with mapi id 15.20.8699.024; Wed, 7 May 2025
- 07:31:04 +0000
-From: Pankit Garg <pankit.garg@nxp.com>
-To: Conor Dooley <conor@kernel.org>
-CC: "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, "robh@kernel.org"
-	<robh@kernel.org>, "alexandre.belloni@bootlin.com"
-	<alexandre.belloni@bootlin.com>, Vikash Bansal <vikash.bansal@nxp.com>,
-	Priyanka Jain <priyanka.jain@nxp.com>, Daniel Aguirre
-	<daniel.aguirre@nxp.com>, Shashank Rebbapragada
-	<shashank.rebbapragada@nxp.com>, Aman Kumar Pandey <aman.kumarpandey@nxp.com>
-Subject: RE: [EXT] Re: [PATCH v2 1/2] dt-bindings: rtc: Add pcf85053a support
-Thread-Topic: [EXT] Re: [PATCH v2 1/2] dt-bindings: rtc: Add pcf85053a support
-Thread-Index: AQHbvmwEyq44ngbwY0OGh1sJZwWSkbPFv9cAgAEGdbA=
-Date: Wed, 7 May 2025 07:31:03 +0000
-Message-ID:
- <AM0PR04MB65156BE2EE9C7EF14991892CE788A@AM0PR04MB6515.eurprd04.prod.outlook.com>
-References: <20250506094815.3765598-1-pankit.garg@nxp.com>
- <20250506-durable-cryptic-24119a6e7dbd@spud>
-In-Reply-To: <20250506-durable-cryptic-24119a6e7dbd@spud>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AM0PR04MB6515:EE_|PA4PR04MB7854:EE_
-x-ms-office365-filtering-correlation-id: 46ce92b5-d6a1-4b2e-ade4-08dd8d391fb8
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?drjRmyKl4tqgg9KXcsponZYWgZl+/05/cWqS14QyyaDh8/qCDT109IsREy6G?=
- =?us-ascii?Q?6GoHDk7b9ycPzxDsHH4mCYkc929cJW070AnQ48zxf5Mv9XnUeQHCP0zpXyik?=
- =?us-ascii?Q?wEV9YXswLcGn+/TcdFlJ0+PoRjz1n6qqcggJUA4mhCo0W342IlRKUfSwu+mO?=
- =?us-ascii?Q?BCswhzY5jFg2M2kDos3eGP+pE+1cv8y6rl1BXimpInnf0aUMZFxvEtT7f1lV?=
- =?us-ascii?Q?DvQJ3jbhSjeQY/OOyKndLS1bQAsfCmAMyY3b89cj6e/3ApY1jeSAjLwkF5vq?=
- =?us-ascii?Q?myQMGX/m6wutzKctggbnqvkY80/Idjo4QK2UdYpkNCPcmV9OBvgQAj6FOdpB?=
- =?us-ascii?Q?Sa6qtPkti+J1gkSd5ASpL1M0ZhJ2aji5kXGufwSWv84EPGAN5KtbaYvloTJo?=
- =?us-ascii?Q?npDGTaXXYS0v7Cgpdy7fii8CLqizJ2/3LVXcmS1nvTbIhqcGHk/ebAyEFK4x?=
- =?us-ascii?Q?KJHzdZ+xk4K55PBaKhbdEF+SZcDD9zZ/aGwaWk6WBQn0T83Ro0mFlB+aQtJR?=
- =?us-ascii?Q?oOoRjzBDK4TAqRgUeqU+sprBhps53f+kyzQiIz4CEjDfIX4HB7W0U4fow1Qo?=
- =?us-ascii?Q?jSyd7FIyIJxpZ3nlDpxCpriMbonSjGBaxZzaHX91dZR9kduz+qBJoj96w1Cc?=
- =?us-ascii?Q?1R7ZokgjvSmNkCyhrCM44mFizt8IHBa39xDvEUPdEePPr8SOjJs2Ue4pTZZ6?=
- =?us-ascii?Q?3scU76SvpDDUfistltAJ4zP3zVLOFMYjfY6m5ip4XOp1aq0MssbYOftlGxy8?=
- =?us-ascii?Q?kcefpNTlxqd4xbDLcaK3Rx3zQNX/UnjeJX28jn2Bo6I7cIpRhkAgGSIc8wJZ?=
- =?us-ascii?Q?l8GHon854B+tVljAhNcPRRh5MkmUXhPyTOKoYlKuVPtko1zj73SqWWqzYlRK?=
- =?us-ascii?Q?+XXwaTPmVquZZxlSpkJn+QgX/6BKx3AmdT5x+VyMmE4WT9IJkqVBXjAYPsty?=
- =?us-ascii?Q?+xz9/9Up4ZQU5p/oC9p6JZGxhBozvQMPmVa2yYjezXXutZxcz9yzfwZ1p8LM?=
- =?us-ascii?Q?ailqj2173pfeqxijAA2oNeMJUYuldWCUmLMAEhnOX9itxfZvF2vdOVQ326NC?=
- =?us-ascii?Q?6r3N2gNCRp1JfOxi3d38y6OWCO5syiMut8p3rofIu/h7J2gAS0tOeViMIsAz?=
- =?us-ascii?Q?59xMqz+XzP1favcse9X+LEJc/yN8XPsEa4jwc0VXPUNID5NVJd0Maj/eZg4t?=
- =?us-ascii?Q?5vH8PT/MdIPKJ1ievdN1VpN3iOkWcaJrP+aqicW2Vzpe7ghSW4azQ3YHsaEC?=
- =?us-ascii?Q?QFVWA9JSt9SgSaIuKa1Vp0ny5ZZsiJJBAsSuaMKlsIoP4zijH0DKfGLZRJbD?=
- =?us-ascii?Q?wnNiXkF5Kf9MZX7g+eGpCcjfJf6ctKXlON/FO5V47JQRDuOLuN7S6d2uMyvy?=
- =?us-ascii?Q?o5BPcyK31ixfpiiT87Ed1UB5IGmj064+BX/9wAxoYyE6rYlMFctdp3ksBAkU?=
- =?us-ascii?Q?1ByA6MFcaqen1XikZVMZp6dYbsuM6zPt9pNLQGuX+hyNZfbekSyv5mB8gJYn?=
- =?us-ascii?Q?ER4Hkk7c/8MU5Rg=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6515.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?9SNLuFJwPHq5v2Cf8XfSsskMbUFGJUG3BFzwhuSsdEwrDNGM/Y0M6XJSuDWv?=
- =?us-ascii?Q?5eHksH3kayfJay7GllX+CCJFp5R1QS8345s2UnRv+yCrJ0190dTLrZ3H0i9H?=
- =?us-ascii?Q?685CYZS8NAMkwYA/wjTmynq00y/ifompNumzwT16dDE/Y7Ca7GLcFzzzK5K9?=
- =?us-ascii?Q?BLxfJxilvfVr8c48Ve72d1oqYaR0ypRnjWX0K/Q60mcHmn/5c+ntJj2k4RAz?=
- =?us-ascii?Q?laAY/0pAYF6JWZv4QRH/ppZQHonQE59tEVypm1isQ/UmRSP4s39GQBZoRGDu?=
- =?us-ascii?Q?W9ra/5WLzvCnWwci+9Uy6QDndjFAjtYG1FCQosVB5xxTaoVGv0f+KakMYusU?=
- =?us-ascii?Q?F43fNgB2jKnDWLOmLTVXIMwcU+RwHaQFVvSmYZ0DgdmQJQh2SRF8DVuvSOdR?=
- =?us-ascii?Q?B/5HhlNOwh6hoeOEAaz3VonJau7O1HdGSItIXwkt3rfK00W9BGYNbRraB5jC?=
- =?us-ascii?Q?WSKufHj1zX+hulNvXodG8Vw2koyvhOqJSfv8p5CypJapGCy+NZfVRW61/27A?=
- =?us-ascii?Q?D8yoOsArCFiyOi40aBfcfXJVrgr4OncVh3z+Iy2QdHxKJ92QM9CL70trXk/o?=
- =?us-ascii?Q?CWQ0FMuE5uqxy9SrEXaHCj6hDYWX62TzjpUPhEgdIEN07EJVhdvcLX3KfLD5?=
- =?us-ascii?Q?eIQ+9NfEKxrVu12OniFoOcu36WBpFT8Idnq7ABJGwZoyVLBBDcRPYgdyNsuD?=
- =?us-ascii?Q?7npGgYJRoVQfRA7Oa+BnVUM+dbzqwUKhUXsBQjf2O3xFq12pKiUocVcMZBuy?=
- =?us-ascii?Q?JPKLECwujkW8ZjTjf8nLVq4s9T/Q2NVNvpOEV81n3Ovfw05rNYLBW3R8kpSq?=
- =?us-ascii?Q?TZkuNGa5eBtqgXxRzuhTvNiotZozlxyypCwKxtgQplsuZwnlAsnf8I/UEV+s?=
- =?us-ascii?Q?FsJWogcuHd3xQxCL0iNEm+DrP+T3ArxF4SqpqNB7JoY2dp4nbWhduzRtB9Me?=
- =?us-ascii?Q?peZKNoOHzIz1LJe28z0tLm9bcXDMLgGzMEu9kFq29AUwciGmiBlXqDTE2Cfq?=
- =?us-ascii?Q?0p1rAk8tvXODuBFc7k2cUwFpt9FRbf/l2LC1QJyVjoOiy6RnOqynSTnkmgua?=
- =?us-ascii?Q?bYGr0I/eajaUDfkpShrw/tZbr7ln4Z2xgcke7C9UofzdzLRvkdplIP5lGVhV?=
- =?us-ascii?Q?5MooDwhqlh73cFHnOQ8Yf3XrbRdbeJnjPoz7JRX5OLPMOzJtPzQDgdwQFcvI?=
- =?us-ascii?Q?ujI/tppgmvMo6Ota5h7qjmDp4Ykng0+U0NXTSWhYTx1APM1sXoBsmurOIR5e?=
- =?us-ascii?Q?g9NlbfjV9CuHr24Z5lOBMh1pJvTxst4lm6/Ik1vDBKwlqae+TltnXRy2EuqM?=
- =?us-ascii?Q?MLxKejRCh0US54UYlOenu8w5aNmNdr5hU1yA0IvKIk1SZHJ0F8ALLERFMsnF?=
- =?us-ascii?Q?I2Nx2CL+122WLuZ2ykDpXOp8Fie9BZY3bEjHnyAmZnpgG7LLZzRqTK8Vga+Z?=
- =?us-ascii?Q?AcfNpYUYBUgmaJzYAbwZwQg2Kp9JBJWvW3sf97LoXuOXZAu9/5FsNomTQRX9?=
- =?us-ascii?Q?1ZGH1KRYiQ8MK/mougi99lhQG7ba28Mw90oQBqvOvjHXmhCS7yt8N6+LGG7r?=
- =?us-ascii?Q?2xDeS78ReEO2z/cK90M/vgnF/bv9ofTKDrAxQMrL?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HtlMRhcQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746603109; x=1778139109;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=J8vV48whjFWoJfoLKNP11HaSqljdUTAPOGpdU7CDSwA=;
+  b=HtlMRhcQM1syCLlvaKyZcXu0adYGbBBcvDc1O0b9JbxezlTe0LOhq0cx
+   B+LG1lsVi17KSDLendGescE8yDabxTxUlsHXh9zK2jpQ+B4u+NB7bJvkv
+   O7zuLbGAn49JyIcdZtCsaFsEh46eSjAbVAL+MAOiWL0sgSJV9IBg4/HZe
+   I9cHLo/GtjFEXNs8ak0Lcbwoh+OEucqTVMOO+nESDMJjLomHH8LrkNKp6
+   xYKUL9jMYkyGelc2fBfHvPx5jc27h6Coa54owuW7zAGL1M0ZWQqMw46mX
+   Ngf3iDt3dvIv8SBWxY+zce4rU7n6jCFNtfWuDpwxTpGUFjJzSoxwfHh31
+   A==;
+X-CSE-ConnectionGUID: g23Lhqp9QmyrdwU6ZBuLWA==
+X-CSE-MsgGUID: yfQ9tPSlSZGD0QLphZkCpQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="47413842"
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="47413842"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 00:31:43 -0700
+X-CSE-ConnectionGUID: RZKoYAW6S7ujDcZSfSTVYg==
+X-CSE-MsgGUID: N0vZmk0ySu6yU0VhwUgSwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="140830302"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 07 May 2025 00:31:41 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCZFi-0007JT-1F;
+	Wed, 07 May 2025 07:31:38 +0000
+Date: Wed, 7 May 2025 15:31:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Rand Deeb <rand.sec96@gmail.com>, Finn Thain <fthain@linux-m68k.org>,
+	Michael Schmitz <schmitzmic@gmail.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, deeb.rand@confident.ru,
+	lvc-project@linuxtesting.org, voskresenski.stanislav@confident.ru,
+	Rand Deeb <rand.sec96@gmail.com>
+Subject: Re: [PATCH] scsi: NCR5380: Prevent potential out-of-bounds read in
+ spi_print_msg()
+Message-ID: <202505071504.SVF8vs1h-lkp@intel.com>
+References: <20250430115926.6335-1-rand.sec96@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6515.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46ce92b5-d6a1-4b2e-ade4-08dd8d391fb8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2025 07:31:04.0864
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cZ09XNHt6lZe9I/N7Ebj7Pdz+DZk4o4eNVxeeRCfyk88GVgsWsy57FHJFFdgGzlAlv4NLSM4Ag3+PsT19Dt2zg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7854
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430115926.6335-1-rand.sec96@gmail.com>
+
+Hi Rand,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on jejb-scsi/for-next]
+[also build test ERROR on mkp-scsi/for-next linus/master v6.15-rc5 next-20250506]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Rand-Deeb/scsi-NCR5380-Prevent-potential-out-of-bounds-read-in-spi_print_msg/20250430-200221
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git for-next
+patch link:    https://lore.kernel.org/r/20250430115926.6335-1-rand.sec96%40gmail.com
+patch subject: [PATCH] scsi: NCR5380: Prevent potential out-of-bounds read in spi_print_msg()
+config: alpha-randconfig-r072-20250501 (https://download.01.org/0day-ci/archive/20250507/202505071504.SVF8vs1h-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 11.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071504.SVF8vs1h-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505071504.SVF8vs1h-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/scsi/g_NCR5380.c:691:
+   drivers/scsi/NCR5380.c: In function 'NCR5380_reselect':
+>> drivers/scsi/NCR5380.c:2107:51: error: 'len' undeclared (first use in this function); did you mean 'lun'?
+    2107 |                 if (msg[0] == EXTENDED_MESSAGE && len >= 3) {
+         |                                                   ^~~
+         |                                                   lun
+   drivers/scsi/NCR5380.c:2107:51: note: each undeclared identifier is reported only once for each function it appears in
 
 
+vim +2107 drivers/scsi/NCR5380.c
 
-> -----Original Message-----
-> From: Conor Dooley <conor@kernel.org>
-> Sent: Tuesday, May 6, 2025 9:19 PM
-> To: Pankit Garg <pankit.garg@nxp.com>
-> Cc: linux-rtc@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; conor+dt@kernel.org; robh@kernel.org;
-> alexandre.belloni@bootlin.com; Vikash Bansal <vikash.bansal@nxp.com>;
-> Priyanka Jain <priyanka.jain@nxp.com>; Daniel Aguirre
-> <daniel.aguirre@nxp.com>; Shashank Rebbapragada
-> <shashank.rebbapragada@nxp.com>; Aman Kumar Pandey
-> <aman.kumarpandey@nxp.com>
-> Subject: [EXT] Re: [PATCH v2 1/2] dt-bindings: rtc: Add pcf85053a support
->=20
-> On Tue, May 06, 2025 at 03:18:14PM +0530, Pankit Garg wrote:
-> > Add device tree bindings for NXP PCF85053a RTC chip.
-> >
-> > Signed-off-by: Pankit Garg <pankit.garg@nxp.com>
-> > ---
-> > V1 -> V2: Handled dt-bindings by trivial-rtc.yaml
-> >
-> > ---
-> >  Documentation/devicetree/bindings/rtc/trivial-rtc.yaml | 2 ++
-> >  MAINTAINERS                                            | 5 +++++
-> >  2 files changed, 7 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> > b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> > index 7330a7200831..47be7bbbfedd 100644
-> > --- a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> > +++ b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> > @@ -65,6 +65,8 @@ properties:
-> >        - microcrystal,rv8523
-> >        # NXP LPC32xx SoC Real-time Clock
-> >        - nxp,lpc3220-rtc
-> > +      # NXP PCF85053A Real Time Clock Module with I2C-Bus
-> > +      - nxp,pcf85053a
->=20
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
->=20
-> >        # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> >        - ricoh,r2025sd
-> >        # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
->=20
-> > diff --git a/MAINTAINERS b/MAINTAINERS index
-> > 0737dcb2e411..d39fc05c6454 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -17782,6 +17782,11 @@ S:	Maintained
-> >  F:	Documentation/devicetree/bindings/sound/nxp,tfa989x.yaml
-> >  F:	sound/soc/codecs/tfa989x.c
-> >
-> > +NXP RTC PCF85053A DRIVER
-> > +M:	Pankit Garg<pankit.garg@nxp.com>
-> > +L:	linux-kernel@vger.kernel.org
-> > +S:	Maintained
->=20
-> This looks like a hang-over from your v1 and should really be moved to th=
-e
-> patch adding the driver.
+  2099	
+  2100		if (!(msg[0] & 0x80)) {
+  2101			shost_printk(KERN_ERR, instance, "expecting IDENTIFY message, got ");
+  2102	
+  2103			/*
+  2104			 * Defensive check before calling spi_print_msg():
+  2105			 * Avoid buffer overrun if msg claims extended length.
+  2106			 */
+> 2107			if (msg[0] == EXTENDED_MESSAGE && len >= 3) {
+  2108				int expected_len = 2 + msg[1];
+  2109	
+  2110				if (expected_len == 2)
+  2111					expected_len += 256;
+  2112	
+  2113				if (len >= expected_len)
+  2114					spi_print_msg(msg);
+  2115				else
+  2116					pr_warn("spi_print_msg: skipping malformed extended message (len=%d, expected=%d)\n",
+  2117						len, expected_len);
+  2118			} else {
+  2119				spi_print_msg(msg);
+  2120			}
+  2121	
+  2122			printk("\n");
+  2123			do_abort(instance, 0);
+  2124			return;
+  2125		}
+  2126		lun = msg[0] & 0x07;
+  2127	
+  2128		/*
+  2129		 * We need to add code for SCSI-II to track which devices have
+  2130		 * I_T_L_Q nexuses established, and which have simple I_T_L
+  2131		 * nexuses so we can chose to do additional data transfer.
+  2132		 */
+  2133	
+  2134		/*
+  2135		 * Find the command corresponding to the I_T_L or I_T_L_Q  nexus we
+  2136		 * just reestablished, and remove it from the disconnected queue.
+  2137		 */
+  2138	
+  2139		tmp = NULL;
+  2140		list_for_each_entry(ncmd, &hostdata->disconnected, list) {
+  2141			struct scsi_cmnd *cmd = NCR5380_to_scmd(ncmd);
+  2142	
+  2143			if (target_mask == (1 << scmd_id(cmd)) &&
+  2144			    lun == (u8)cmd->device->lun) {
+  2145				list_del(&ncmd->list);
+  2146				tmp = cmd;
+  2147				break;
+  2148			}
+  2149		}
+  2150	
+  2151		if (tmp) {
+  2152			dsprintk(NDEBUG_RESELECTION | NDEBUG_QUEUES, instance,
+  2153			         "reselect: removed %p from disconnected queue\n", tmp);
+  2154		} else {
+  2155			int target = ffs(target_mask) - 1;
+  2156	
+  2157			shost_printk(KERN_ERR, instance, "target bitmask 0x%02x lun %d not in disconnected queue.\n",
+  2158			             target_mask, lun);
+  2159			/*
+  2160			 * Since we have an established nexus that we can't do anything
+  2161			 * with, we must abort it.
+  2162			 */
+  2163			if (do_abort(instance, 0) == 0)
+  2164				hostdata->busy[target] &= ~(1 << lun);
+  2165			return;
+  2166		}
+  2167	
 
-Thanks for reviewing the patch. I have pushed v3, in which I have handled t=
-his thing.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
