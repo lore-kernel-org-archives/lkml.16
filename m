@@ -1,201 +1,174 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F353072612
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC1B20CCC9
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746611955; cv=none; b=b+4HhAFDYWsFlmTdE7nPaUTcWcxxQikch3cpCbsjgIILOeH8Ji6rkLD9yalzhK3epfVF0COAuEHms8XSVHdaB3QZGSeRVFybSB8O36vu63z187Gz5q7X4mTM8yy28INhOjXNBOa7usNzneF7r+RI5EXhCynoKvsLFLNHmcDdeOs=
+	t=1746611966; cv=none; b=ochAKDfm5327hVxS4GrTENz7weG0pzl0CwDuZBs6c4UdA4xAQg94nE1Wcz6M4t0gScnn7EKrwxsj5vam9MrSTOg0CdX+GTrZMpawttemzubQHRMVIGhwApY4+xA7SNps+13h9jT0bhkEislWaeVxQERkolwrCzyM19SpuY3gcwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746611955; c=relaxed/simple;
-	bh=hctf9fUxOwZ2dleu00wJef0Orl9bGT+3ecqQluILZ24=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tq8ZS4GQ+8MxNePmOhnK9eVVj0Vk9ojPXlRFfZpQWnNp4Gt7EwcFw1bcYJQFzTNWAUmm/k6ly5hhoK0aAwGaWlIkguY3YnwiKXsnmb8PyO6AFVlYFy33W4ShhbPPTXrnzd7ViYfV6TBzm+NdvrDNm+x5gtesUeTOSl2AMESK5gM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UNCQXLc9; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746611966; c=relaxed/simple;
+	bh=CVOjiks63kN4nyx81zcnv5yZgTHTFsD0uSpOBIumpbQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=QJqdmVQQ//Uu1qwkM0Rb3167tbftxnkcCpqpRZgO7dAchEKRv/dupCp2THPfIBrGUl2u9fBwJn86XnjesbUVIWS2Ph3pt7UXMHGPzU9SRfd6WWiwTdYWNpLhqvhjX+IQE85+ynvTm+/cpgInRsXrPuvseAs7V7e8U5IiEafvAq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=nMYfWa+6; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UNCQXLc9"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54993c68ba0so8550574e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 02:59:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="nMYfWa+6"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad1b94382b8so617481866b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 02:59:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746611952; x=1747216752; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3im7oKq6DmunvNsoANerEugtk0ANjYR+KXw8czHW92E=;
-        b=UNCQXLc9IOhqZKs7fuLn7YbgroGRtD8EYw3YZHNqrXev/8HYTUapUs6rCk4p4CzvcI
-         sI2jT+54zdEJ/IjgqU9XmlcIHjdYdSjazfYtRbGdd/Q8R2FIKLX0fTrWYLx/jwxYYrLQ
-         GN6ff5Y5RrAWnTyKxkkKQH4yq8LskklfSv5t4UraRZPNH5sLuV60owsBlxEP0ArWpS6U
-         pP7H/MopA6p5EQ5ejs9gEB8Wz2qY4RTTbrAeL2pD8FXaBby602Z05GmkXzURd3TBVv1A
-         BPGJf8iSXVbQ/3fgYdt8NYhd0DUfs/m8UjilYpoMaL+fnNfnUEHc1viOtd9LsdjHOmmj
-         yKZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746611952; x=1747216752;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=fairphone.com; s=fair; t=1746611961; x=1747216761; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3im7oKq6DmunvNsoANerEugtk0ANjYR+KXw8czHW92E=;
-        b=P7UZ/4i3yfS0RrYAcBPGO/MX3i6KGDNliDgf+jUPJV+Jm9Nf754UIBMCa6MUIYAAuD
-         eQboeixLG1zzjb/Jbod2SBNPzLbgX/BJ/mEj1pR2PZO/yNCXdqR8jTjMCprWPneXIuYj
-         Rd22vSaDN7Mm9zd8HfwDAoQeb/9kMHx61VDz/7EpSxzpQRSphQ2LbXQhZtYYZygzN+Qu
-         PrWEcORbMFSxvIoDYs1Y/aDASaMi2WfTjwnoosY3FL3M4m90bklM5vlCfmFh1teVbN7a
-         AvRV2KRc4a/rxA9uqqyBs7HzMsfH1GC33/qT2bHXm2mFHsic/zp1mWf5B8B781R6KElC
-         PgWw==
-X-Forwarded-Encrypted: i=1; AJvYcCWDxWADJP8FIOoGQrSVN5EoGjElQS7YfPpjUdBZisTZLB8mdxUEIKV7ioqY8BlGeAwoEOpxz9/4sU4Lh30=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkYVp2qkA59VTnfRKI6bYuM14itp7gk4+QPDHDYLLc9SOn2pdm
-	EK2nx37333ik+PNjbwwUXCR+GUTEc06C+3F3j5YJsCEfOrsKMDvu
-X-Gm-Gg: ASbGnctB5yiF5Pp68VvOCNPwhL0ApQ5Tc7khvdLsBNynmtutohonkTDD1Z5CwWxSHKg
-	Ai9RW/n1kZDGs6a0SsGTGMHyy96Wz197vM6fCAbdeWrhkrq9LqvEkAfln9O9X8YBdLlncBNQUwy
-	TmWsNJErCqA5ocwpaB91EdlMEXFN6deRmwS5iXOzL1bL0MW0G9cC9bHbn6kI0Lc77h8fpg3GY1D
-	ypPO9X7/DTkwbL4au9tvE/e6i1fotrCphGXIW94rO2SCVCebjqsqWqdaJRXOEFRQ+PqCct38joA
-	BaO+gpf5VQr9BYKcrg5ZMT0rNbOKc3zopvdDTHhgacClIxCttZQULQmXZuOFd6BTQwm4
-X-Google-Smtp-Source: AGHT+IFbx6JULmkgFfScHp/VGvgyxdZmSckFXgpz3acQYOzG7NKBRoL1GFgQOF3vN2udAsuwjkOlwQ==
-X-Received: by 2002:a05:6512:12cf:b0:549:7394:2ce5 with SMTP id 2adb3069b0e04-54fb963cbcamr957466e87.41.1746611951780;
-        Wed, 07 May 2025 02:59:11 -0700 (PDT)
-Received: from pc636 (host-95-203-26-253.mobileonline.telia.com. [95.203.26.253])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94f6996sm2260787e87.236.2025.05.07.02.59.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 02:59:11 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Wed, 7 May 2025 11:59:08 +0200
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	David Hildenbrand <david@redhat.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] MAINTAINERS: add mm GUP section
-Message-ID: <aBsu7FnLjpF5rx3P@pc636>
-References: <20250506173601.97562-1-lorenzo.stoakes@oracle.com>
- <20250506162113.f8fa0c00e76722a1789ec56a@linux-foundation.org>
- <c4258dfd-14ee-411a-9fa7-c4a1fa4fad1c@redhat.com>
- <aBshiBX_N6hhExmS@pc636>
- <13a32f52-dc5c-45ef-b45a-585586868509@lucifer.local>
+        bh=gRBnlzG3csY3q59CrD+HieNRPhlOZlDO/35hP9x7Gow=;
+        b=nMYfWa+6GVUJ2BdwZE1phw3EIG0XJ+Q9ZKMBbk9RA6BptuZZhd8r7gPWbRJzFqZ1j0
+         ahRnaAH+Uc/dVroauVBs2nJnIYFCDGrM2YU85os6stQB8ieKGKmXTvUJJug1iMX724dp
+         WcgzjWHs4NxO58j+ffCnfuWQHEGX+rkEIcO54FE0s6tiXD+gIjNU1mzMlbzsIpKKl49i
+         GoW+ljFiwkK558SmCGrs9r3ZNz694BWHIWCbaX5mNCWbYWe5rJQmSO+HsRoNVjfLBE8x
+         YYka+lDq8VXpG5QuNdZTLZ2TYQ2qMPQD2CpLPg+dbkJ096T9naQAO+Z19YWDRb89psBj
+         QTLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746611961; x=1747216761;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=gRBnlzG3csY3q59CrD+HieNRPhlOZlDO/35hP9x7Gow=;
+        b=QomcUjEtKOAZ8QeF5jvoQTBLxEQp4jNKXxBa7Qs91R5toTjvRvawUu6j2f3553xMUJ
+         Sj2sLHu3xUFJV5aSpV1StdrK+4AtMSVXPDTI98P8OBLfwg9Lp05Yji2vUYxGLKBKIhae
+         W817WRuwUnR7aS5u6vn++1U/7vCmKZHqkn+146Rx2m/6gTUKZ0ptn+JTh/0oSHx/B9Gh
+         5uHpQ+QPIxhjrpepV/h5EsykL3JW3cMlENvJEF57BlYv+g0J53ejy8T10bS7A2sw+59L
+         /JsZiv5bcLWJLJq4OGklMG010yzGCJDHRhifyfHzeSIEyMxWloFaQVeeecwte39mJlkk
+         GZvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWC5aEr+Rb+2/HZSPODnBq8r9pguljYS4VrpKUNrgRHaTcUlmbl5IIDXpyVMy3p/AgzhN3ahd4U6klApD8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNBILN80h5SYlzlLzCf8CS3LP4j7sZ+u8az+TU8WhV7MuVrV1h
+	RBo2vWxakELdAhjnaR49G5ApTAh16B0+IC0fQXnHiIbiOdASzQQlN2mnT9k++sc=
+X-Gm-Gg: ASbGncuKwj8RN+tbj8GZbczg33GOOwvHo/FRKehdm19tLoI00oEZS0YQ1vLAwhsY9lT
+	1cqt5B0v2CsX4HkdVCVFRCzr19UDqQTW2mbvWicnAxRHKR25PHDmFcYsIfxOSrBqslqqtugbMT6
+	1ZVP3YgO+iyRfzJe5a9w2+U9lXypLP72EIVJBlVAtfRjkDKi/V2iHrxm4icqDtG1DupVUJszOPN
+	SnOLmBgy8Q+sUOvzUVBN5v4hxpIZhQvCa4w13YkVIz1LsZEklg0oXEahS5J2o/pnO6lafqNjGeD
+	hzwUmTH5Y2xQr8K5TuaXCErY1jviTmKBV2DSGmDTl6T7o+qhpywFO96Eip6pP0xksAFDK+x4yzm
+	M32yvdIt2fA==
+X-Google-Smtp-Source: AGHT+IETi13rF9ppf4Lq9nZexKfgosA14aFfsxFA6IPZoLnGnfZ4smw0IgYrqh4falCvDOZVHa7FtA==
+X-Received: by 2002:a17:907:9814:b0:ad1:8dde:5b7a with SMTP id a640c23a62f3a-ad1e8d055a7mr240311766b.43.1746611961036;
+        Wed, 07 May 2025 02:59:21 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891490afsm874478866b.23.2025.05.07.02.59.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 May 2025 02:59:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <13a32f52-dc5c-45ef-b45a-585586868509@lucifer.local>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 07 May 2025 11:59:19 +0200
+Message-Id: <D9PU9LEA7CLT.37IBLZRP90E9S@fairphone.com>
+Cc: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+ "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>, "James E.J.
+ Bottomley" <James.Bottomley@hansenpartnership.com>, "open list"
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] scsi: ufs: qcom: Map devfreq OPP freq to UniPro
+ Core Clock freq
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Ziqi Chen" <quic_ziqichen@quicinc.com>, <quic_cang@quicinc.com>,
+ <bvanassche@acm.org>, <mani@kernel.org>, <beanhuo@micron.com>,
+ <avri.altman@wdc.com>, <junwoo80.lee@samsung.com>,
+ <martin.petersen@oracle.com>, <quic_nguyenb@quicinc.com>,
+ <quic_nitirawa@quicinc.com>, <quic_rampraka@quicinc.com>,
+ <neil.armstrong@linaro.org>, <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250507074415.2451940-1-quic_ziqichen@quicinc.com>
+ <20250507074415.2451940-3-quic_ziqichen@quicinc.com>
+ <D9PS51XVRKLP.1AHMCRH9CZFWU@fairphone.com>
+ <7c74a395-a8b8-4a12-9ddb-691f28c90885@quicinc.com>
+In-Reply-To: <7c74a395-a8b8-4a12-9ddb-691f28c90885@quicinc.com>
 
-On Wed, May 07, 2025 at 10:23:34AM +0100, Lorenzo Stoakes wrote:
-> +cc Vlastimil for page_alloc.c stuff.
-> 
-> On Wed, May 07, 2025 at 11:02:00AM +0200, Uladzislau Rezki wrote:
-> > On Wed, May 07, 2025 at 10:05:58AM +0200, David Hildenbrand wrote:
-> > > On 07.05.25 01:21, Andrew Morton wrote:
-> > > > On Tue,  6 May 2025 18:36:01 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
-> > > >
-> > > > > As part of the ongoing efforts to sub-divide memory management
-> > > > > maintainership and reviewership, establish a section for GUP (Get User
-> > > > > Pages) support and add appropriate maintainers and reviewers.
-> > > > >
-> > > >
-> > > > Thanks, I was wondering about that.
-> > >
-> > > Thanks Lorenzo for driving this!
-> > >
-> > > Acked-by: David Hildenbrand <david@redhat.com>
-> 
-> Thanks David!
-> 
-> Am trying to strike while the iron is hot post-lsf and discuss with people and
-> set things in motion :)
-> 
-> > >
-> > > >
-> > > > (looks at vmscan.c)
-> > >
-> > > Current maintainers (mm/unstable) on 20 biggest files in mm, Andrew is
-> > > implicit:
-> > >
-> > >  $ find mm -name "*.c" -type f | xargs wc -l | sort -n -r | head -20
-> > >  198195 total
-> > >    7937 mm/hugetlb.c		# Muchun
-> > >    7881 mm/slub.c		# Christoph/David/Vlastimil
-> > >    7745 mm/vmscan.c		#
-> 
-> This is, as Andrew rightly points out, a key one, I will have a look around
-> the git history and put something together here. I'm not sure if we will
-> get an M here, but at least can populate some reviewers.
-> 
-> > >    7424 mm/page_alloc.c		#
-> 
-> Yeah Vlastimil put effort into sorting out reviewers here (thanks
-> Vlastimil!) but nobody's stepped up for an M yet :)
-> 
-> > >    7166 mm/memory.c		# David
-> > >    5962 mm/shmem.c		# Hugh
-> > >    5553 mm/memcontrol.c		# Johannes/Roman/Shakeel
-> > >    5245 mm/vmalloc.c		#
-> 
-> As discussed below 100% Ulad is very clearly the right guy for M (and who
-> has graciously offered his services as such) :>)
-> 
-> Ulad - do you want to send a patch upgrading yourself there? cc me and
-> David, I will happily ack of course, and I suspect David as well!
-> 
-I will :)
+On Wed May 7, 2025 at 11:09 AM CEST, Ziqi Chen wrote:
+> Hi Luca,
+>
+> On 5/7/2025 4:19 PM, Luca Weiss wrote:
+>> Hi Ziqi,
+>>=20
+>> On Wed May 7, 2025 at 9:44 AM CEST, Ziqi Chen wrote:
+>>> From: Can Guo <quic_cang@quicinc.com>
+>>>
+>>> On some platforms, the devfreq OPP freq may be different than the unipr=
+o
+>>> core clock freq. Implement ufs_qcom_opp_freq_to_clk_freq() and use it t=
+o
+>>> find the unipro core clk freq.
+>>>
+>>> Signed-off-by: Can Guo <quic_cang@quicinc.com>
+>>> Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+>>> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+>>> ---
+>>>   drivers/ufs/host/ufs-qcom.c | 81 ++++++++++++++++++++++++++++++++----=
+-
+>>>   1 file changed, 71 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+>>> index 7f10926100a5..804c8ccd8d03 100644
+>>> --- a/drivers/ufs/host/ufs-qcom.c
+>>> +++ b/drivers/ufs/host/ufs-qcom.c
+>>>  =20
+>>> +static unsigned long ufs_qcom_opp_freq_to_clk_freq(struct ufs_hba *hba=
+,
+>>> +												   unsigned long freq, char *name)
+>>> +{
+>>> +	struct ufs_clk_info *clki;
+>>> +	struct dev_pm_opp *opp;
+>>> +	unsigned long clk_freq;
+>>> +	int idx =3D 0;
+>>> +	bool found =3D false;
+>>> +
+>>> +	opp =3D dev_pm_opp_find_freq_exact_indexed(hba->dev, freq, 0, true);
+>>> +	if (IS_ERR(opp)) {
+>>> +		dev_err(hba->dev, "Failed to find OPP for exact frequency %lu\n", fr=
+eq);
+>>=20
+>> I'm hitting this print on bootup:
+>>=20
+>> [    0.512515] ufshcd-qcom 1d84000.ufshc: Failed to find OPP for exact f=
+requency 18446744073709551615
+>> [    0.512571] ufshcd-qcom 1d84000.ufshc: Failed to find OPP for exact f=
+requency 18446744073709551615
+>>=20
+>> Doesn't look like it's intended? The number is (2^64 - 1)
+>>=20
+> Yes, this is expected. During link startup, the frequency
+> ULONG_MAX will be passed to ufs_qcom_set_core_clk_ctrl() and
+> ufs_qcom_cfg_timer(). This frequency cannot be found through the API
+> dev_pm_opp_find_freq_exact_indexed(). Therefore, we handle the
+> frequency ULONG_MAX separately within Ufs_qcom_set_core_clk_ctrl()
+> and ufs_qcom_cfg_timer().
+>
+> This print only be print twice during link startup. If you think print
+> such print during bootup is not make sense, I can improve the code and
+> update a new vwesion.
 
-> > >    4703 mm/huge_memory.c	# David
-> > >    4538 mm/filemap.c		# Willy
-> > >    3964 mm/swapfile.c		#
-> 
-> The various discussions at LSF lend themselves to suggesting people here,
-> can take a look at this also.
-> 
-> > >    3871 mm/ksm.c		#
-> 
-> As per discussion below, thanks for suggesting yourself David, I hope this
-> is a case of 'well de facto I am maintaining this' rather than taking
-> anything new on, as I worry about how much your workload involves :P
-> 
-> I will sniff around the git history too and put something together.
-> 
-> > >    3720 mm/gup.c		# David
-> > >    3675 mm/mempolicy.c		#
-> 
-> Ack below, and will take a look here also.
-> 
-> > >    3371 mm/percpu.c		# Dennis/Tejun/Christoph
-> > >    3370 mm/compaction.c		#
-> 
-> As you say lots of R's which is good.
-> 
-> As per below would you want M for this?
-> 
-> I will take a look also.
-> 
-> > >    3197 mm/page-writeback.c	# Willy
-> > >    3097 mm/vma.c		# Liam/Lorenzo
-> > >    2988 mm/rmap.c		# David/Lorenzo
-> 
-> > >
-> > > I've been messing with KSM for a long time, so I could easily jump in as
-> > > maintainer for that. Probably we want page migration (incl. mempolicy?) as a
-> > > separate entry. I've been messing with that as well (and will be messing
-> > > more), so I could jump in for that as well.
-> > >
-> > > For page allocator stuff (incl. compaction) we at least have plenty of
-> > > reviewers now. For vmalloc we at least have Uladzislau as single reviewer.
-> > >
-> > > vmscan.c and vmalloc.c really need some love.
-> > >
-> > As for "vmalloc.c" i can jump in as an extra maintainer aside with
-> > Andrew if no objections.
-> 
-> Entirely the opposite of an objection, I'd be aghast if you weren't a
-> maintainer there, thank you for your excellent work in vmalloc, you're a
-> top chap and we're very lucky to have you working on this!
-> 
-Thank you i send out that patch today and put into CC you and David!
+I'll let others comment on what should happen but certainly this large
+number looks more like a mistake, like an integer overflow, if you don't
+dig into what this number is supposed to represent.
 
---
-Uladzislau Rezki
+Perhaps an idea could be to just skip the print (or even more code) for
+ULONG_MAX since an opp for that is not supposed to exist anyways?
+
+I didn't check the code now but for other frequencies this would be an
+actual error I imagine where it should be visible.
+
+Regards
+Luca
+
+>
+> BRs.
+> Ziqi
+>
+>> Regards
+>> Luca
+>>=20
+
