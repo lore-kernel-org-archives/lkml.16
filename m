@@ -1,203 +1,182 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BEC215184;
-	Wed,  7 May 2025 23:49:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7125F1B422A;
+	Wed,  7 May 2025 23:51:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746661800; cv=none; b=JnsFpS7trmrMqTF8QUiyCglO9+IUfzDkyHncwKn//Eq8rmoJrLZsv9SMlXhPI479Y5kfvNvJftV2wP0APHu8K9g+PbCl18P3rN3GJGR5bL1zPTVX1BnTJzmvOx1Vw7P7GzicTkGBDq/Sx4SnzyuSfLimHT/yJiJZ/9F8yDLhjJ0=
+	t=1746661882; cv=none; b=lH+XFkNi/EtO9YFBMvRDFLjR8FU2O7Bw/QRT9BcPrz41TI79n87C2VJ0eS7SKij8T05TRJwjWTWxbRMHMLaSyTWn9K2uHVrB53fVoM8J02d19qDShxNd8YskdWZwbmU/D4M/pFEqyURvCh8Q0L5QG22wgVOAr5buU2Dhc1kN/U8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746661800; c=relaxed/simple;
-	bh=PVmj7NJyGeK45hmVPi9ligxBtZ3ZO1Bg3hX7jXbGtO8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OckQwGoVcfcYAQC3Q4KFFAy2qo/8qBtk2eoM9B/l4JFV8SgcVsNLx25fY84H+dWkycnFEdXwyl2sumVIeIjLD6nycJJhBs+9V5BUoaNhdM1jbt4A8tLhdJSC2RQtGPOc3jvAW0bpim5FUKyptQHx2SFjhaQhK28znyJ2Y/whcz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hBsiBKAU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746661882; c=relaxed/simple;
+	bh=sF8Abmh/+6fn/FzOe0l/7dwwjCJ6ZpSgaatciwZCwM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jFaUIYUE9g/cjT2ryAG0gS8UXojcvR3Zq+mzq40TRTsp3LELQ1XxnJdcE32w4kifE5tk7bkWYYdqIclkWcwb/MmiCVDJHb1xRvt67U2BZ7mreKTbUdaEd9DXUl05XPmdFIZa746CbQ4MElcqlrcJN0ogK0WsjoCnqmTbmPpIpbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b8XWq6E6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hBsiBKAU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ED2DC4CEEE;
-	Wed,  7 May 2025 23:49:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b8XWq6E6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79E64C4CEE2;
+	Wed,  7 May 2025 23:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746661798;
-	bh=PVmj7NJyGeK45hmVPi9ligxBtZ3ZO1Bg3hX7jXbGtO8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hBsiBKAUDAXzgSmpSbpGdkNylmRIgkbK4/Hj+Ve7zJtcUQvgigt/XtrN+K1LIiPmH
-	 PDRV7f2CvAG+e8ptJw34NUUIbaVKSSUrJTNUsgjaph9lLic/h4jc0fgDpI8Kv+e7eW
-	 5QdJAuAY9kHsbUFBp298uOBt8AyEbBaOvhcYNJCH7al+nyRn1wlHbLx5oHVowhChnO
-	 kJ+zen5xT0RxKMYzarCbYa0N13MAlbtJ4Pj9Cta89X0cRv2UqxQO0NUA6zyLcfRONp
-	 i/0oTHvVRmjej7YEM5WS8zbdSPWIR8lpxCQfB7NQ9NIRinzCoiX2C38T8vR9rmM934
-	 RiRpCmQynwb5w==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54e7967cf67so530768e87.0;
-        Wed, 07 May 2025 16:49:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVussF3hplz8lxqJtw6m/YeIRiL4HX9CIokD4Kh7kbwoaiDYE8AGaKhc+aIYybKCSWjCzL8E7RAIQ6cDIw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzqh3DPZyRMXR9E018BOibuyb38/C6v6tZzKhrOyI6uKckDSkY4
-	37NR0SrVbkuOMsQBzYiAaBUbgoVoptI0QLXf8TGsCcP/h5rc/x3PuBD7PLbmReub6g//Ep7spYR
-	AtJWvqoZFvgJJUrrWA4WEq4Mmg08=
-X-Google-Smtp-Source: AGHT+IFRdcpdVRskCoXAlzXvWCXXYRP4Q/wNsCbxpdTtK57XXn4nA18MqRrP5CC+45nMFjK7JUCyvRyniMzrCrngk3U=
-X-Received: by 2002:ac2:4c50:0:b0:54e:81c9:6117 with SMTP id
- 2adb3069b0e04-54fbfc40c95mr303374e87.46.1746661796733; Wed, 07 May 2025
- 16:49:56 -0700 (PDT)
+	s=k20201202; t=1746661881;
+	bh=sF8Abmh/+6fn/FzOe0l/7dwwjCJ6ZpSgaatciwZCwM8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b8XWq6E6Fhd0ULmPTVFTj4GAo4U7W1WSw+Tgr2FixGFlU2im2Tr8PQ5lr2LXCajn+
+	 dfbC+dx91Xnu9Mv57Vsi1aCm898OAJodB4WDbP3uQG1QbRibxQ0JOhYH9HivAHZf72
+	 gR6NfI1vfPVyTKDWnDprCQ+ceSWgAsrxZYP7bUmyzcUfcN/fasrh8YUy9jZagwMRnp
+	 j5/qUc8LtMOayJgzsCnOVlpdHw4HNqCs1BdZkWfgAHgl69Kx6uVOCrGTC36iCoXAYc
+	 VidQzDdLOpqPvhq/JXGjrUOqi/s2pPHUuvFf4j9cnaO+BcBr00+Vh/0c7wFjnvwRxi
+	 emvTDFOIFdcTA==
+Date: Wed, 7 May 2025 16:51:20 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Dmitry Vyukov <dvyukov@google.com>, Ingo Molnar <mingo@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [RFC/PATCH] perf report: Support latency profiling in
+ system-wide mode
+Message-ID: <aBvx-J-ISifmw0NS@google.com>
+References: <20250503003620.45072-1-namhyung@kernel.org>
+ <aBcjwoINtWRWKMIJ@gmail.com>
+ <aBfFlT0l05yBbZBj@google.com>
+ <CACT4Y+YvWYFBkZ9jQ2kuTOHb6pZQwWXc9sOJ5Km0Wr1fLi-94A@mail.gmail.com>
+ <aBojTzsa5mSAGziP@x1>
+ <aBo_z8Q87gflYyuX@x1>
+ <CACT4Y+YG61CUPG1WRSGWgv00eP9aPYLELvDVmjK9ULJwNiiMgw@mail.gmail.com>
+ <aBuAjt5PyBsN65R9@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507074936.486648-1-masahiroy@kernel.org> <9ec50ce0-f60b-4d87-bc44-adaf2a1a97a1@linuxfoundation.org>
-In-Reply-To: <9ec50ce0-f60b-4d87-bc44-adaf2a1a97a1@linuxfoundation.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Thu, 8 May 2025 08:49:20 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARF=ANEEeENSwcWeayympi6Svci+ScWGpWQimyWm8xUzA@mail.gmail.com>
-X-Gm-Features: ATxdqUEgEyaivNEkUxgddjCMDWte50zHAOMye87izKfRKe3dxwgVuXd7oBJ8YTk
-Message-ID: <CAK7LNARF=ANEEeENSwcWeayympi6Svci+ScWGpWQimyWm8xUzA@mail.gmail.com>
-Subject: Re: [PATCH] um: let 'make clean' properly clean underlying SUBARCH as well
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Richard Weinberger <richard@nod.at>, linux-um@lists.infradead.org, 
-	David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aBuAjt5PyBsN65R9@x1>
 
-On Thu, May 8, 2025 at 6:38=E2=80=AFAM Shuah Khan <skhan@linuxfoundation.or=
-g> wrote:
->
-> On 5/7/25 01:49, Masahiro Yamada wrote:
-> > Building the kernel with O=3D is affected by stale in-tree build artifa=
-cts.
-> >
-> > So, if the source tree is not clean, Kbuild displays the following:
-> >
-> >    $ make ARCH=3Dum O=3Dbuild defconfig
-> >    make[1]: Entering directory '/.../linux/build'
-> >    ***
-> >    *** The source tree is not clean, please run 'make ARCH=3Dum mrprope=
-r'
-> >    *** in /.../linux
-> >    ***
-> >    make[2]: *** [/.../linux/Makefile:673: outputmakefile] Error 1
-> >    make[1]: *** [/.../linux/Makefile:248: __sub-make] Error 2
-> >    make[1]: Leaving directory '/.../linux/build'
-> >    make: *** [Makefile:248: __sub-make] Error 2
-> >
-> > Usually, running 'make mrproper' is sufficient for cleaning the source
-> > tree for out-of-tree builds.
-> >
-> > However, building UML generates build artifacts not only in arch/um/,
-> > but also in the SUBARCH directory (i.e., arch/x86/). If in-tree stale
-> > files remain under arch/x86/, Kbuild will reuse them instead of creatin=
-g
-> > new ones under the specified build directory.
-> >
-> > This commit makes 'make ARCH=3Dum clean' recurse into the SUBARCH direc=
-tory.
-> >
-> > Reported-by: Shuah Khan <skhan@linuxfoundation.org>
-> > Closes: https://lore.kernel.org/lkml/20250502172459.14175-1-skhan@linux=
-foundation.org/
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->
-> It doesn't solve the problem. I still see arch/x86/realmode/rm/pasyms.h
-> after running make ARCH=3Dum mrproper
+On Wed, May 07, 2025 at 12:47:26PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, May 07, 2025 at 11:58:10AM +0200, Dmitry Vyukov wrote:
+> > On Tue, 6 May 2025 at 18:58, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > > So maybe when we notice that cycles was used 'perf report/top' should
+> > > > use the term 'wall-clock' for the column name?
+> 
+> > > > So instead of having a --latency we could have a hint that would tell
+> > > > the user that if this knob was set:
+> 
+> > > >   $ perf config report.wall-clock=true
+>  
+> > I am not sure it can be as simple as a single global knob.
+> 
+> > First, record needs to collect additional info and that may be
+> > somewhat expensive.
+>  
+> > Second, report now has several modes:
+> >  - it can show latency, but order by the current overhead
+> >  - it can also show latency, and order by latency
+> > A user wants one or another depending on what they are optimizing
+> > (possibly looking at both).
+>  
+> > I also feel that global config switches are even less discoverable by
+> > median users (read -- ~nobody will know about that). If these things
+> > are normal flags with a help description, then some users may
+> > eventually discover them.
+> 
+> So, the addition of:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e9cbc854d8b148e3491291fb615e94261970fb54
+> 
+>   perf config: Add a function to set one variable in .perfconfig
+> 
+>   To allow for setting a variable from some other tool, like with the
+>   "wallclock" patchset needs to allow the user to opt-in to having
+>   that key in the sort order for 'perf report'.
+> 
+>   Cc: Dmitriy Vyukov <dvyukov@google.com>
+> 
+> 
+> Was to tell the user about the new possibilities of profiling, once,
+> with something like:
+> 
+> root@number:~# perf report
+>              ┌─────────────────────────────────────────────────────┐
+>              │Do you want to use latency mode?                     │
+>              │That will add a 'Latency' column that would mean     │
+>              │'wall-clock' time when used with cycles, for instance│
+>              │                                                     │
+>              │                                                     │
+>              │Enter: Yes, ESC: No                                  │
+>              └─────────────────────────────────────────────────────┘
+>  
+> The working should inform if the current perf.data has what is needed
+> and thus this would take immediate effect, and if not, inform that as
+> well and what is needed to be able to use that, things like you
+> described above:
 
+Looks useful!  Maybe we want to add it to interactive TUI only..
 
-Why not?
+> 
+> > First, record needs to collect additional info and that may be
+> > somewhat expensive.
+> 
+> If the user says that the feature is desired by pressing Enter, follow
+> up questions can be asked as well, like you described:
 
-This patch allows 'make ARCH=3Dum mrproper'
-to clean up both arch/um and arch/x86/.
+I'm afraid it can have a long chain of questions when a new user starts
+to use the perf tool with any config.  Maybe we need to limit it somehow.
 
-It is really simple to test the behavior.
+> 
+> > Second, report now has several modes:
+> 
+> >  - it can show latency, but order by the current overhead
+> >  - it can also show latency, and order by latency
+> 
+> > A user wants one or another depending on what they are optimizing
+> > (possibly looking at both).
+> 
+> Once these are answered, the questions goes away, as they are now
+> recorded in the user's ~/.perfconfig file and will be used when what is
+> needed is present in perf.data file.
 
+Sounds good.
 
-[Without this patch]
+> 
+> The user should also be informed that to change that knob, 'perf config'
+> is your friend.
+> 
+> Additionally some hotkey could be made available to change that
+> behaviour, on the fly, with the option of turning the new mode the new
+> default, again writing to ~/.perfconfig.
+> 
+> Sometimes this "on the fly" needs reprocessing of the whole perf.data
+> file, sometimes it may be a matter of just showing extra available
+> fields, like the 'V' key now, that goes on bumping the verbosity in the
+> 'perf report' and 'perf top' browsers (they share the hists browser), or
+> 'j' that toogles showing the lines from jump sources to jump targets in
+> the annotate browser, 'J' to show how many jumps target a particular
+> jump target, also in the annotate browser, etc.
+> 
+> This could help experimenting with the various modes of doing profiling,
+> interactively, to see the problem from different angles, without having
+> to restart the whole process by exiting the 'perf report' to add new
+> command line options, then restart, etc, reusing computation sometimes
+> when switching views, etc.
+> 
+> To get default behaviour its just a matter of renaming ~/.perfconfig to
+> ~/.perfconfig.some_suitabe_name_for_later_use.
+> 
+> This way interesting new features like this don't get buried behind
+> either command line options nor man pages, giving the user at least an
+> opportunity to be informed about it.
+> 
+> That is what the patch below barely starts sketching, not doing all I
+> just described.
 
-masahiro@zoe:~/workspace/linux-kbuild(master)$ touch
-arch/x86/realmode/rm/pasyms.h
-masahiro@zoe:~/workspace/linux-kbuild(master)$ make ARCH=3Dum mrproper
-masahiro@zoe:~/workspace/linux-kbuild(master)$ ls arch/x86/realmode/rm/pasy=
-ms.h
-arch/x86/realmode/rm/pasyms.h
+Sounds like a good idea.
 
-[With this patch]
+Thanks,
+Namhyung
 
-masahiro@zoe:~/workspace/linux-kbuild(kbuild)$ touch
-arch/x86/realmode/rm/pasyms.h
-masahiro@zoe:~/workspace/linux-kbuild(kbuild)$ make ARCH=3Dum mrproper
-  CLEAN   arch/x86/realmode/rm
-masahiro@zoe:~/workspace/linux-kbuild(kbuild)$ ls arch/x86/realmode/rm/pasy=
-ms.h
-ls: cannot access 'arch/x86/realmode/rm/pasyms.h': No such file or director=
-y
-
-
-
-
-
-> A subsequent kunit run on x86_64 fails. make ARCH=3Dx86_64 mrproper
-> will remove the headers for x86_64 properly. The patch I proposed
-> prompts user run mrproper on the arch in compile.h - It works now
-> for the case where compile.h doesn't exist. I can send that out
-> unless you have other ideas on how to fix this.
-
-No.
-
-If you still see a problem, please explain the bad scenario,
-please explain without kunit.
-
-
-
-
-
-
-
-
-
-> My workflow:
->
-> - Build kernel on x86_64 with CONFIG_AMD_MEM_ENCRYPT enabled
->
-> - Check for arch/x86/realmode/rm/pasyms.h
->    ls arch/x86/realmode/rm/pasyms.h
->       arch/x86/realmode/rm/pasyms.h
->
-> - make ARCH=3Dum O=3D/linux/build
->
->    This patch cleans the source tree, but doesn't remove
->    arch/x86/realmode/rm/pasyms.h
->
-> - ls arch/x86/realmode/rm/pasyms.h
->       arch/x86/realmode/rm/pasyms.h
->
-> - ./tools/testing/kunit/kunit.py run --alltests --arch x86_64
-> [15:26:35] Configuring KUnit Kernel ...
-> Regenerating .config ...
-> Populating config with:
-> $ make ARCH=3Dx86_64 O=3D.kunit olddefconfig
-> [15:26:37] Building KUnit Kernel ...
-> Populating config with:
-> $ make ARCH=3Dx86_64 O=3D.kunit olddefconfig
-> Building with:
-> $ make all compile_commands.json scripts_gdb ARCH=3Dx86_64 O=3D.kunit --j=
-obs=3D16
-> ERROR:root:ld:arch/x86/realmode/rm/realmode.lds:236: undefined symbol `se=
-v_es_trampoline_start' referenced in expression
-> make[6]: *** [../arch/x86/realmode/rm/Makefile:49: arch/x86/realmode/rm/r=
-ealmode.elf] Error 1
-> make[5]: *** [../arch/x86/realmode/Makefile:22: arch/x86/realmode/rm/real=
-mode.bin] Error 2
-> make[4]: *** [../scripts/Makefile.build:461: arch/x86/realmode] Error 2
-> make[4]: *** Waiting for unfinished jobs....
-> make[3]: *** [../scripts/Makefile.build:461: arch/x86] Error 2
-> make[3]: *** Waiting for unfinished jobs....
-> make[2]: *** [/linux/linux_kselftest/Makefile:2009: .] Error 2
-> make[1]: *** [/linux/linux_kselftest/Makefile:248: __sub-make] Error 2
-> make: *** [Makefile:248: __sub-make] Error 2
->
-> thanks,
-> -- Shuah
-
-
-
---
-Best Regards
-
-Masahiro Yamada
