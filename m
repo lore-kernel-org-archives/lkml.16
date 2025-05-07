@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5BD1F956;
-	Wed,  7 May 2025 04:54:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20A31CCB4B;
+	Wed,  7 May 2025 04:56:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746593683; cv=none; b=Kk17OgeeEYmvmY6tSb8cVyU8QUfruBzK/RYsqgCW8yBkE5dbFNBqFCOivZf4b5KMxak1bN9fYM+zrTHoVvQg9Q9OS2ruB0eRfE4v2VR0NJ8SEBUMgFOJpuc7MrZgRn7s6Kxse1tcIaGvNOaSCfL5MRw15C92hCgkxAZK0aZWdBI=
+	t=1746593766; cv=none; b=BBV/Q5invojCQd0vUZgAlgiutdTHeNert1AXsv/hHUBM99+jadD92zf/vd+bzpajB6enL+PHq1R36wjjCV6DcV7+9X9CnIfCeU3qmMOHlnAlGupkceLdLoy/6hzLcWYJDnTzvVf6K31kLJ57YGCFCC7ubhCHfcyQCdOacEg6rPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746593683; c=relaxed/simple;
-	bh=VjMGNiOaNwQRcGd7A82aQtYXwsISpvwqy8WrbWZjDH0=;
+	s=arc-20240116; t=1746593766; c=relaxed/simple;
+	bh=QCuW5NH1T2M/o6Jr1yHAeqbYOFeEHiPe4yZYKvfSHGo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jXaWmkZ3Y5gS9AA9JDV89ijCpzefu8P+BgmPvPjO9GnqtH7cYpldvF6fXct4gBtnA+CmQ05wV5O5dXjXCaJ/5IFvKdCo2aKAJpEA6ibca470EgXiJ/Mt6cRFKeM8qs3BxkrrKyq+8KK36WpGuSKeUhxNxKQ+qOW+jLc8AOwCTKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IUSbpOdB; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=rFiuP6GKOrDvcb03ulsMpyXZH8QqREv1ZYIdYQNeKXwLtDZfZjo9cRNBUQMPGCa4Y13TVhDMAPVDI6mF/G+iBe1bl1pEM5hiwvjGd5j8j7tianYUE/5tNPGXrLPvXQRhnRD6Q4kiVaMjYdi2nMgZ8WbTd47TeflPGSiwiqr0B5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCJxrTDP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IUSbpOdB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FC05C4CEE7;
-	Wed,  7 May 2025 04:54:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCJxrTDP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D9E8C4CEE7;
+	Wed,  7 May 2025 04:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746593682;
-	bh=VjMGNiOaNwQRcGd7A82aQtYXwsISpvwqy8WrbWZjDH0=;
+	s=k20201202; t=1746593766;
+	bh=QCuW5NH1T2M/o6Jr1yHAeqbYOFeEHiPe4yZYKvfSHGo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IUSbpOdBLMbnQ7P9bffYc+g9mKMnbfFpJBDk6ZvwvyHPEy2Tlnx00RtC9AmpUu4n+
-	 HToMcO8fwebBVx1Ss37BNCvvIhd3Z+NJJrPoQntaiZbQdSnctnYT/73goMpT5R3Fyx
-	 BjFaJfC1srilLBNAmB601DuGEHj5A5RkI+lK1edqmmn0MutcqUuzSzb7xja54NjykE
-	 DyX3j3MPkCeUeAr/QxIwwARoxM+uGzSK0dZb0el4Rxkffo6WBBGLF5Ovb0yrU86gPC
-	 v0gH49YdOg377WXJ74X7SxBHM3u8Wl0yviQb0zV7kBhDKC1dpU+AElj5wkZkwuxyO0
-	 IFQuhekZ6vv8Q==
-Message-ID: <8ec115f7-1a35-4506-a20a-b4de27f10960@kernel.org>
-Date: Wed, 7 May 2025 06:54:38 +0200
+	b=WCJxrTDPUnAJFhAuHRhHtcLnLUT+xJ3eomn5H/uqToMWGhKchJzKROEVT+zjcHBFI
+	 B8yOEYaRDvlInEiUibdo9Ax6X5/WBHVa+QDj/i23rDX6IiS4oZTVHALkRAylJm5PdR
+	 Ho39ZHI+xQ5v/mpJ5l+8x27rz3gAh5ZFPDNksxRjbZoN7UcdWI3syxNT/qiTTQVFsH
+	 Y380oBubxEkJ1GLOGAGzgF1CbMayWy8k/NtdyG2XSrhBHYat56syjg1dcixz621IDs
+	 cAeSF9sei2jM9slPn6jOrTSchaXSjhRAFRznq0QlOKhGk/0t3FuTpPl/aytWBtTvJw
+	 +Ggo+Ahk/4Q7g==
+Message-ID: <128b0ef7-cf0f-41d6-855a-cb3ea70eca18@kernel.org>
+Date: Wed, 7 May 2025 06:56:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,19 +35,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] arm64: dts: ls1028a-qds: make the QIXIS CPLD use the
- simple-mfd-i2c.c driver
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: add bindings for QIXIS CPLD
 To: Ioana Ciornei <ioana.ciornei@nxp.com>
 Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- Vladimir Oltean <vladimir.oltean@nxp.com>
+ linux-arm-kernel@lists.infradead.org
 References: <20250430153634.2971736-1-ioana.ciornei@nxp.com>
- <20250430153634.2971736-6-ioana.ciornei@nxp.com>
- <20250502-savvy-eccentric-hog-b4fed5@kuoka>
- <smfuskvhdhrfrgbpjflgymoadms6vfiwgjmipsmkrxldtor6we@tyvafv626bwr>
+ <20250430153634.2971736-2-ioana.ciornei@nxp.com>
+ <20250502-meticulous-bulky-wildebeest-c1a8b6@kuoka>
+ <wna3loahthqbn5hnw2pbt3yznmzzv3zppi7f2nblvq3t22jdc2@7cse4r4p6q5z>
+ <959b56f0-ff63-485b-86eb-96ae32bdeb88@kernel.org>
+ <miuxxgv73fmsl5plcoso73dk6bnuwgmlydzupnb7fcz6ub72ra@dro4cqbn67jt>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -93,59 +93,82 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <smfuskvhdhrfrgbpjflgymoadms6vfiwgjmipsmkrxldtor6we@tyvafv626bwr>
+In-Reply-To: <miuxxgv73fmsl5plcoso73dk6bnuwgmlydzupnb7fcz6ub72ra@dro4cqbn67jt>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 06/05/2025 16:21, Ioana Ciornei wrote:
-> On Fri, May 02, 2025 at 09:04:03AM +0200, Krzysztof Kozlowski wrote:
->> On Wed, Apr 30, 2025 at 06:36:33PM GMT, Ioana Ciornei wrote:
->>> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+On 06/05/2025 16:16, Ioana Ciornei wrote:
+> On Tue, May 06, 2025 at 04:05:46PM +0200, Krzysztof Kozlowski wrote:
+>> On 06/05/2025 15:57, Ioana Ciornei wrote:
+>>> On Fri, May 02, 2025 at 09:01:59AM +0200, Krzysztof Kozlowski wrote:
+>>>> On Wed, Apr 30, 2025 at 06:36:29PM GMT, Ioana Ciornei wrote:
+>>>>> This adds device tree bindings for the board management controller -
+>>>>> QIXIS CPLD - found on some Layerscape based boards such as LX2160A-RDB,
+>>>>> LX2160AQDS, LS1028AQDS etc.
+>>>>>
+>>>>> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+>>>>> ---
+>>>>>  .../bindings/mfd/fsl,qixis-i2c.yaml           | 65 +++++++++++++++++++
+>>>>>  1 file changed, 65 insertions(+)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml b/Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
+>>>>> new file mode 100644
+>>>>> index 000000000000..562878050916
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
+>>>>
+>>>> Filename matching compatible.
 >>>
->>> The MDIO mux on the LS1028A-QDS never worked in mainline. The device
->>> tree was submitted as-is, and there is a downstream driver for the QIXIS
->>> FPGA:
->>>
->>> https://github.com/nxp-qoriq/linux/blob/lf-6.12.y/drivers/soc/fsl/qixis_ctrl.c
->>>
->>> That driver is very similar to the already existing drivers/mfd/simple-mfd-i2c.c,
->>> and the hardware works with the simple-mfd-i2c driver, so there isn't
->>> any reason to upstream the other one.
->>>
->>> Adapt the compatible string and child node format of the FPGA node, so
->>> that the simple-mfd-i2c driver accepts it.
+>>> How to choose one if there are multiple compatible strings?
 >>
->> Why do you break the users based on some driver differences? Fix the
->> drivers, not the DTS.
+>> The fallback or the oldest or the lowest number or whichever you prefer
+>> as a base.
 >>
 >>>
->>> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
->>> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
->>> ---
->>>  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 9 +++++----
->>>  1 file changed, 5 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
->>> index 0bb2f28a0441..58b54d521d75 100644
->>> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
->>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
->>> @@ -338,17 +338,18 @@ sgtl5000: audio-codec@a {
->>>  	};
->>>  
->>>  	fpga@66 {
->>> -		compatible = "fsl,ls1028aqds-fpga", "fsl,fpga-qixis-i2c",
->>> -			     "simple-mfd";
->>> +		compatible = "fsl,ls1028a-qds-qixis-i2c";
+>>>>
+>>>>> @@ -0,0 +1,65 @@
+>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>>> +%YAML 1.2
+>>>>> +---
+>>>>> +$id: http://devicetree.org/schemas/mfd/fsl,qixis-i2c.yaml
+>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml
+>>>>> +
+>>>>> +title: NXP's QIXIS CPLD board management controller
+>>>>> +
+>>>>> +maintainers:
+>>>>> +  - Ioana Ciornei <ioana.ciornei@nxp.com>
+>>>>> +
+>>>>> +description: |
+>>>>> +  The board management controller found on some Layerscape boards contains
+>>>>> +  different IP blocks like GPIO controllers, interrupt controllers, reg-muxes
+>>>>> +  etc.
+>>>>> +
+>>>>> +properties:
+>>>>> +  compatible:
+>>>>> +    enum:
+>>>>> +      - fsl,lx2160a-qds-qixis-i2c
+>>>>> +      - fsl,lx2162a-qds-qixis-i2c
+>>>>> +      - fsl,ls1028a-qds-qixis-i2c
+>>>>
+>>>> Keep alphabetical order.
+>>>>
+>>>> What is actual device name? I2C? Is this an I2C controller or device?
 >>
->> This breaks all the existing users. NAK.
+>> I assume you will then drop the redundant part.
 > 
-> Using a mainline kernel, this DT node was never used or probed by a
-> driver since that driver was never submitted. I am not breaking any user
-> of the mainline kernel.
-1. Users of DTS is plural, so what about all other projects and out of
-tree users?
-2. Did you remove simple-mfd from kernel or what? How can you claim
-there is no driver for simple-mfd?
+> Ok, I will drop the i2c part. Are you ok with the below compatible
+> strings?
+> 
+> 	- fsl,lx2160a-qds-qixis-cpld
+> 	- fsl,lx2162a-qds-qixis-cpld
+> 	- fsl,ls1028a-qds-qixis-cpld
+
+
+Not really, because you keep ignoring comments. What is the device name?
+Can qixis be anything else than i2c or cpld? Use that name for the
+compatible.
+
 
 Best regards,
 Krzysztof
