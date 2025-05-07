@@ -1,150 +1,92 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33731289E30
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0CF28A1E4;
+	Wed,  7 May 2025 13:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746625941; cv=none; b=M3libgPEurHL4cJKJg5yLZqmPL/55euSg0q4ZuWqIsfc9gtuWKQtBJ/u/JLbnOd1wPhVrunB1W75zyYT3qesO114uyqja7d7uEK7I3xirYNHN0Tsuw79jcurDmRhbGa2FsHLMG14OmMS35z/76S7EQ53hjePjHLEId9/X/zOSaM=
+	t=1746625960; cv=none; b=mEpkIbkwR5AYaZgRbdmMLA9MoReQW50exCC07NNytZZySoWeSSsoYpF/9yXCGSEOr/xcJwGa79wDLEwEll7bOjmzCYMFMmc+4eJfi1OeO219YeTh5/mGogHwfr48vLojHP/k33mGJySuOLMPYl0LU29QN8o0lWsd1tNCEYx9BoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746625941; c=relaxed/simple;
-	bh=KZXnhnVlS3ZpCIW8/m7DHyBauUv8UN31Uqw5kc9B10M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mfNhjDjXEo66Z4hcsKIjk834ANIzZGq0H77zLolpn2bvagNd3hs7y3h2+HpzrNFlIV3MR0Os+Kkz9qNVKLCvPk5PIIj4bP3KwhMBLbZhdGnQZ7EPTyu4ytx3cAF/pRV3+jnonogyRA13SP4deLSq7mAjE4/sPdXiZEZ1URFRm30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2GiHouZb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sdtGOSM9; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2GiHouZb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sdtGOSM9; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1746625960; c=relaxed/simple;
+	bh=FFX+dl/GhsusXaQJ5VK1uk9708RlbzuTFb6DU2mI0N4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kRwa78BrLzccqfBbLHrvbMuk4svBWZJeO//p2TSpVJY5WTtXPIO4/qRq3KNHZwh9iTnLhS7rgHCak8nypsYP3Fywjin9vO5Gbv3qlm2ttEGc/SuGT5YIvAJIt1o8qOURwdzBN92NPwjaVNKYj+IoDr+cFNhRtbBTgwWXYd5seYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aLlV+rCS; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2GiHouZb";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sdtGOSM9";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2GiHouZb";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sdtGOSM9"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1A59F211FE;
-	Wed,  7 May 2025 13:52:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746625938; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mrm0LSgf0T7+vZehFw5e/fA0qycFUxwAcsUfEA9Tu5E=;
-	b=2GiHouZbu/TlRGvEdr9zCHXJwY8+Auhs+BJVOmXCAIrMjdV3/kBbywt/dZAdsNdYYw57Cs
-	fHkfIaE7dqrzPOSRuzl4isRUoZyiOA0EkjyIqAr4hVPzRFHOQcv2K80GuxfWXamw687o22
-	UY4CQKfYM/TUVta6MzcgeQLXPMGcZWk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746625938;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mrm0LSgf0T7+vZehFw5e/fA0qycFUxwAcsUfEA9Tu5E=;
-	b=sdtGOSM9yYADlYW2cbb7Nk1RQHUxOgGd53cKK7L1JJDaAoQ/S5n8ZZFL9pzoVHiiQYxHFv
-	VnOjEg3M4jjs1ZAg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=2GiHouZb;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=sdtGOSM9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746625938; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mrm0LSgf0T7+vZehFw5e/fA0qycFUxwAcsUfEA9Tu5E=;
-	b=2GiHouZbu/TlRGvEdr9zCHXJwY8+Auhs+BJVOmXCAIrMjdV3/kBbywt/dZAdsNdYYw57Cs
-	fHkfIaE7dqrzPOSRuzl4isRUoZyiOA0EkjyIqAr4hVPzRFHOQcv2K80GuxfWXamw687o22
-	UY4CQKfYM/TUVta6MzcgeQLXPMGcZWk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746625938;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mrm0LSgf0T7+vZehFw5e/fA0qycFUxwAcsUfEA9Tu5E=;
-	b=sdtGOSM9yYADlYW2cbb7Nk1RQHUxOgGd53cKK7L1JJDaAoQ/S5n8ZZFL9pzoVHiiQYxHFv
-	VnOjEg3M4jjs1ZAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E1BF1139D9;
-	Wed,  7 May 2025 13:52:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Z7lKNpFlG2hcTAAAD6G6ig
-	(envelope-from <hare@suse.de>); Wed, 07 May 2025 13:52:17 +0000
-Message-ID: <61024777-f640-4455-8f96-aa81c48f710b@suse.de>
-Date: Wed, 7 May 2025 15:52:17 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aLlV+rCS"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 547DqEwB828907
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 7 May 2025 08:52:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746625934;
+	bh=qjPNmdnxXBiIPY12FlXpuGsba5Ly/JzhgqEh19IK/qs=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=aLlV+rCS4UXbBRkkQGHsgQTtC8TBe08x9WPBgrBV7dGGYurJQ79bZtmlgY4nZDPn5
+	 rQyhSYA5xFwtBFO+XheQdWIysa51siZ0+ItsG1uwoUtyNB5Fk8UHDZUXH8k/sQv192
+	 AOmfc8HVi50LfduXmpxtKNcHQoeXVhUiI/pzg/xA=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 547DqEno009511
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 7 May 2025 08:52:14 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 7
+ May 2025 08:52:13 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 7 May 2025 08:52:13 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 547DqDpr032312;
+	Wed, 7 May 2025 08:52:13 -0500
+Date: Wed, 7 May 2025 08:52:13 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Guillaume La Roque <glaroque@baylibre.com>
+CC: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+        Andrew Davis <afd@ti.com>, <vishalm@ti.com>,
+        <linux-omap@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: Kconfig.platforms: remove useless select for
+ ARCH_K3
+Message-ID: <20250507135213.g6li6ufp3cosxoys@stinging>
+References: <20250504-kconfig-v1-1-ab0216f4fa98@baylibre.com>
+ <20250505123615.yqzdv7dlel7kyojf@degrease>
+ <fa33b7d6-8e28-40bc-9219-41dab643e88f@baylibre.com>
+ <b1949ec7-a0b3-4c4c-a439-93afced7bb0c@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 07/14] nvmet-fcloop: access fcpreq only when holding
- reqlock
-To: Daniel Wagner <wagi@kernel.org>, James Smart <james.smart@broadcom.com>,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
- Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250507-nvmet-fcloop-v6-0-ca02e16fb018@kernel.org>
- <20250507-nvmet-fcloop-v6-7-ca02e16fb018@kernel.org>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20250507-nvmet-fcloop-v6-7-ca02e16fb018@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 1A59F211FE
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -3.51
+In-Reply-To: <b1949ec7-a0b3-4c4c-a439-93afced7bb0c@baylibre.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 5/7/25 14:23, Daniel Wagner wrote:
-> The abort handling logic expects that the state and the fcpreq are only
-> accessed when holding the reqlock lock.
+On 15:28-20250507, Guillaume La Roque wrote:
+> Hi Nishanth,
 > 
-> While at it, only handle the aborts in the abort handler.
+> if i remove MAILBOX it's  enabled by some  non TI drivers and/or ARCH_XXX
+> which have it in deps so all TI drivers are still enabled properly but not
+> sure it's safe.
+> and PM_GENERIC_DOMAINS look OK to remove it.
 > 
-> Signed-off-by: Daniel Wagner <wagi@kernel.org>
-> ---
->   drivers/nvme/target/fcloop.c | 31 ++++++++++++++++---------------
->   1 file changed, 16 insertions(+), 15 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@kernel.org>
+> if i try a defconfig based on android defconfig (more simple than default
+> defconfig) with only ARCH_K3 enabled i need to set CONFIG_MAILBOX flag to
+> still have same TI drivers enabled.
+> let me know what you want to do.
 
-Cheers,
 
-Hannes
+Let us drop both from the select statement - from our K3 perspective
+there is no longer a need for them to be built-in. Thank you for working
+through this.
+
 -- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 NÃ¼rnberg
-HRB 36809 (AG NÃ¼rnberg), GF: I. Totev, A. McDonald, W. Knoblich
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
