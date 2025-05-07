@@ -1,88 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C570A20FA86;
-	Wed,  7 May 2025 07:38:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBAD17A2E3
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 07:38:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746603489; cv=none; b=DzTaXfrygeujofGGsNPg9PecPlXlpKTk5R3fFUn6UoqiCb3dGxdbD95LnvZP5G5PEU+vv77fEn5Ji+qgvGYoany3T+MeV84OkMFXPaLKhZGV2QokD0lhCx0+Pq5t6Cj6eZyxvFowquxiKem7g7EfRNQSAy8MDmc8Ryts0u9zUUM=
+	t=1746603507; cv=none; b=qqP5A9BUUjlSdCzA1TYCZ1ulsagC6EK+eLmH9DSLMhifIrdDf289BeIadtscvSWOhH/e/CSNHNCPp0tVn0ptMyFKNJ7oQNcpft+aDgDVm26c7lChdGpEenK/o3tJIc6JR/tThRnhXLYKdYc1lWNxCy+pBlFzDyAUtqZ1TZDJdEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746603489; c=relaxed/simple;
-	bh=u+94YTkIK1yodzp++T2HMB+oePCPOpIrqtliTXH6QBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YGvrDKoKw/f8ODjkTituDrbsaD5qw3sbllJEv3U79mBXiHLiIJBZp+ec+pLTg2W5nZlP8U+uA5Jw6YLRYDf2gMBG7nUxMILrpIisj1rG6yq86/o/5uExq67t703KfXdtQG6cUjNo0OoKNTW9TE4krBa2hoyu6sZyUrweOpGc5Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jyVJurje; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746603507; c=relaxed/simple;
+	bh=OQNVDW+Or51VukOrXMnIsaIqPxIvjVsqNhnia7ZvKKU=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=eIwJxyfZl5uFE6Unhdb+t653zFrDpXE+/A7C9sslLCobdhfbJ+tf3kljDESZGydJrJc8FmjAR2H59gHDH+WsEg2U4x55bf1/vmSrqWtWqKEd9NZNQz5XmxwALzltLbrqLCqLymDnRX0IW2MIOYSCnBihk5zOlSc3JzNnCkkxgu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lX9kRX+f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jyVJurje"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB7A2C4CEE7;
-	Wed,  7 May 2025 07:38:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lX9kRX+f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E141C4CEE7;
+	Wed,  7 May 2025 07:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746603489;
-	bh=u+94YTkIK1yodzp++T2HMB+oePCPOpIrqtliTXH6QBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jyVJurjeBVyWd0G4t6kNsd8et1PSYUrBGqs3MV3TTtICVDqAPr1gZrx094VjLWDPk
-	 S1RHk810ExOMe3Plnpi/9lAoeGTwFcSOqjzcfHXAJmJ7VvllQ4kRLt6V5lDIhirnCG
-	 ayPbPG5iFPwEFPD/0sbOGcniB0tkc3uJURu1rXFsnN0jYdEooMQHvgIdL/BPdNCJzS
-	 zUCCV72YUsIzuaSVGk1+1RGJ2M85dEfzB/HVz72Hm0RC4pYgQtYszjDkqRI9TL5usf
-	 qYo0Gdh/ulmD9cwhOOIvH1+8pwt6FhazSFU6pwVosm3T1ltDep5tY6IRvhxDDiaP1I
-	 W5upt/sdhcU9g==
-Date: Wed, 7 May 2025 09:38:03 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-	heiko@sntech.de, manivannan.sadhasivam@linaro.org,
-	yue.wang@amlogic.com, pali@kernel.org, neil.armstrong@linaro.org,
-	robh@kernel.org, jingoohan1@gmail.com, khilman@baylibre.com,
-	jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v3 1/3] PCI: Configure root port MPS during host probing
-Message-ID: <aBsN2_YG0RsH4RPA@ryzen>
-References: <20250506173439.292460-1-18255117159@163.com>
- <20250506173439.292460-2-18255117159@163.com>
+	s=k20201202; t=1746603506;
+	bh=OQNVDW+Or51VukOrXMnIsaIqPxIvjVsqNhnia7ZvKKU=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=lX9kRX+f3tNfG8qYW8VH+Zmoaez5JKKR5ZaBYAHAXZo1zIeU1h3VGqXsvwPjYt8NU
+	 H+3c0ICicoGJ3VjmkwHv+bkFKHwMOUmJEZ5IcB6hOe5+YuuAzSQX/+TZQ1C9qbd+eN
+	 YPZLWxi3pTFbsbHEd+doTFDrko51eJ4w0nPf2+nXXnSyjhiSogQtWgwFZP6Poxldnj
+	 NY+uqnxVeyyKn/JA5P2gUW1dFeycXonduN3APHznzlO9tJ7Rgd8OyJryNacKr+hvED
+	 /5wvyIzXFfdM5OnnQP33/6fxW7gDhyPdau7fqCvJ3ei1wcZmhpi6HVfPDXJ5havIMa
+	 AupA2pZfwgSPw==
+Message-ID: <43d55ab4-c490-4f3d-8331-dc47f427d06d@kernel.org>
+Date: Wed, 7 May 2025 15:38:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506173439.292460-2-18255117159@163.com>
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org
+Subject: Re: cleanup AOP_WRITEPAGE_ACTIVATE use in f2fs
+To: Christoph Hellwig <hch@lst.de>, Jaegeuk Kim <jaegeuk@kernel.org>
+References: <20250505092613.3451524-1-hch@lst.de>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250505092613.3451524-1-hch@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 07, 2025 at 01:34:37AM +0800, Hans Zhang wrote:
+On 5/5/25 17:25, Christoph Hellwig wrote:
+> Hi all,
+> 
+> this almost entirely cleans up usage of AOP_WRITEPAGE_ACTIVATE in f2fs.
+> 
+> f2fs_sync_node_pages can still return it in a way that is not handled
+> by any caller and eventually is propagated to userspace.  This does look
+> like a bug and needs attention by someone who actually knows the code.
 
-(snip)
+Oh, I guess this is a bug, thanks for catching this.
 
->  static void pci_configure_mps(struct pci_dev *dev)
->  {
->  	struct pci_dev *bridge = pci_upstream_bridge(dev);
-> @@ -2178,6 +2209,10 @@ static void pci_configure_mps(struct pci_dev *dev)
->  		return;
->  	}
+Anyway, let me fix this based on your patchset.
 
-We should probably add a comment explaining why we are doing this here.
+Thanks,
 
-Perhaps something like:
+> 
+> Diffstat:
+>  checkpoint.c |   22 +++++++++++-----------
+>  compress.c   |    5 +----
+>  data.c       |   13 ++++---------
+>  node.c       |   43 ++++++++++++++++++++-----------------------
+>  4 files changed, 36 insertions(+), 47 deletions(-)
 
-/*
- * Unless MPS strategy is PCIE_BUS_TUNE_OFF (don't touch MPS at all),
- * start off by setting root ports' MPS to MPSS. Depending on the MPS
- * strategy, and the MPSS of the devices below the root port, the MPS
- * of the root port might get overriden later.
- */
-
-
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
-> +	    pcie_bus_config != PCIE_BUS_TUNE_OFF)
-> +		pcie_write_mps(dev, 128 << dev->pcie_mpss);
-> +
->  	if (!bridge || !pci_is_pcie(bridge))
->  		return;
->  
-
-
-Kind regards,
-Niklas
