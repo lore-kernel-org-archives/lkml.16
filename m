@@ -1,151 +1,259 @@
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1035C13AF2
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:08:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E0B289824
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746634125; cv=none; b=VdCDdiaDS1mpngED4Ip4y9+3lpnjs2vJnDSn7IWaXw690/ZLPP/buWhXC0n+4l2O9ggPEw1emd1STgK6Xdo8xaoFllYwaVo6aq40IQogoA9/eWXjsBjS9zBC54S+d09WZZ7yhzu8MFy1WOqEO1PyuOHhAlDey6GATjByhgjFiJc=
+	t=1746634176; cv=none; b=N97tC96ZOubwGJhIVohOMHb0QEMF4LRBY9+EpJdWOfYebqU8rn/Rcbc+wg5FA+5zkR5iBELafXoARGTXTjiC+B0M6ZP8hfpFCaeI2lUb3En1uRyHeNegGHPs4oopa6MK2/zKHSoO0/94RbGTrKqYZwuDMt8Lj/+X5HhqIaSRWWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746634125; c=relaxed/simple;
-	bh=mlnnCW7IHjCAEgRBhdsidNc1tK2Ui7lRyZeuljTOhSA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KynwLro119YSwHLIC1BIiyxxKLZ5Z9vr1eNlHzcd1YEKOPeJiiZfHDr2W9a0AnmG4yJJh9UXiIOtQGy/xm/XocVFqi5wo12YYpVMUxO70aYLKh+sBQbide7j8a2KkdNuliPR/36/IVhecZsozIxl8q6fxSGkuN/1030pIkUl9EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=QhMACibK; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mkxzDmZ8; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
+	s=arc-20240116; t=1746634176; c=relaxed/simple;
+	bh=a9auzZSL5Kq/PdECtuk7WTXM/HrGNFDZL7se90kWKNo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qsBW/nKxu5KCZ+QlPBz4tegJHTIGlzvWB3+3fmP1rqTxK+82jQ/oi0OwTAt71UhDECzKy8M2Cc785qQxslfU5/YZ7rqafK4oKU2ciXVfd3V9D3yFF0TJO/z/QRF0RkUMGCTidYW3sX9iul3yc7qtlLKHbX5jvdqDC6kCvtPnk1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bfRogJFH; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="QhMACibK";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mkxzDmZ8"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id 01F8F1380109;
-	Wed,  7 May 2025 12:08:42 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Wed, 07 May 2025 12:08:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
-	:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to; s=fm1; t=1746634121; x=1746720521; bh=SPLHEnL32V
-	Mztrcnb47sdOOIp8DhV7sAw4bVApA3vKY=; b=QhMACibKXCS8SvOVvp9KFMJlP1
-	MdVstuoK/2maW98xhdrSHmGTefSHzOafHR6zmnfhUFNkbL6EaTtno5pGGcfYFzHR
-	r7yJsjSzRZS2cwII8Bp2fjnO8FUPcyD5sXRUPoLjyQ7seupCQG8E6ao57DomT9F8
-	V7Ije9Gkz8xidSbA9/8uKgV1mGHoUXVqAbqH9wg35Oky0h6yffY3y+ciOeVHsb/v
-	PD01ln6VdrTOqU8AR4+AyI//ZQSIOAs8tQQEdFN2pBFQlm5dWE0G3LSK15PeWRje
-	nuKWiKRCKfpGAd8biDyNuC4jyLxctrsSDX1OS5+vWlfdG7JlcMeYMhBbVk1w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1746634121; x=1746720521; bh=SPLHEnL32VMztrcnb47sdOOIp8DhV7sAw4b
-	VApA3vKY=; b=mkxzDmZ8c5cNiWRimD4kpXn6TbwfU9L2hM4u8KzEaDWkStygyXW
-	amvVUFC4CWtBk679jVeXvjJy7n0LLPiDq7SqmQudZns12koLJxC4oNhb+ervOgTY
-	vhv8l0r+7OONw+nhTooXYmE5MurVv0ii/+S1fvuyKI7WpBvh0SBiQ+yh3tVMBta6
-	BBxfBCeEGFXXWa/xD/YafG2pd7VF2LPtpSo8qAUcbhINvMl+RVahXZBY5RPIjHRD
-	U3Mim/2Oi+ZG/fVVIzLm/frDGHw3lsjxCBqAQFg1z/uYdKCg8zpnHmOqosg0SFtD
-	NBpGxvLE0kXaKy+UYtLDa4Fv2HHseOPQm/g==
-X-ME-Sender: <xms:iYUbaJ-f4ynyr0duQ0NK1-s_20X7n5hea9NM_3uWC5RVHwdpFBnZpA>
-    <xme:iYUbaNvs3adPGwEt8GcFVnRlEmPmkcV3GG3kcNwzcLLYD_LeuIykFFUbhRIA64Awu
-    bCQehxRYnyAFkYXJQc>
-X-ME-Received: <xmr:iYUbaHDzjhc2aSkqmnTZo9kgIt9oKh84dzhQMOfhMD1RZyJya5CLLJXdCXVDC5J9ZBk6WFpGx6zqGl_HUSVu7a3r6BRBTJykoyHt6LDA-t6HWhJ5JkOYkD33cwm-BmA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejfedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvf
-    evufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuvhgvnhcurfgvthgvrhcuoehs
-    vhgvnhesshhvvghnphgvthgvrhdruggvvheqnecuggftrfgrthhtvghrnhepudeiiefhge
-    etgfektdeiffekhfejgeeikefftdfghfegveegkeegjeetueffvdeinecuffhomhgrihhn
-    pehgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehsvhgvnhesshhvvghnphgvthgvrhdruggvvhdpnhgspghrtghpthht
-    ohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepshhotgeslhhishhtshdrlh
-    hinhhugidruggvvhdprhgtphhtthhopegrshgrhhhisehlihhsthhsrdhlihhnuhigrdgu
-    vghvpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinh
-    hfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgv
-    rhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:iYUbaNeyt0ZG1Q8MCrTSfYOCJ0NcDgwxgzdgbYft1MROwcE33qAH_Q>
-    <xmx:iYUbaOMTXLPi46aDtpUhs8FjnitPBOerVKyj1PpWiT9Vo_Mkn6K34Q>
-    <xmx:iYUbaPkFPchA1eIDLOg5XMsREvxHAHUqyCIvlfgVvwdX_orjJfJGlQ>
-    <xmx:iYUbaIvSgveeEMG-gH1--iA_vVQ5bcA34jBf2pcP8e05_dsspQx7pA>
-    <xmx:iYUbaGadBcbcWUBvCbatA9_Gf59U8DfRjDasAWulVFf-Ktdl2uCimStI>
-Feedback-ID: i51094778:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 7 May 2025 12:08:40 -0400 (EDT)
-From: Sven Peter <sven@svenpeter.dev>
-To: soc@lists.linux.dev
-Cc: asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Apple SoC device tree updates for v6.16
-Date: Wed,  7 May 2025 18:08:27 +0200
-Message-Id: <20250507160827.87725-1-sven@svenpeter.dev>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bfRogJFH"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad1a87d93f7so691779966b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 09:09:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746634172; x=1747238972; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fIjEVj0DEgX91fXHT09wKDzBRPLgzhUHI19sZdE1aQM=;
+        b=bfRogJFH9cdF2W4feY82j7fEzRWMMVgk44K6WcNOBi3c8kfZYT5TBBQz5YiZJo3xm4
+         JLSfJv3F99OETvfsDHpDtv1O11I5Kr1zxGVQON3cFnwTWUS25csc5z35Fuv5xdQ/LR8A
+         RzQ372m47TJlhF6svBkhPn0GvWYTuTGIaYgpe9zIvrB8plazd9SMJxZZyGRSOusLGGXe
+         J/hdwovblTgaLAr6rvKKFsh6QVckc7kNlB5CEJhiBFhQb92Du4e2ex2XWuqh9oC6Dh1P
+         Pny/1US8dS3cIi+pBMAsZCGw/N4/0o8iPW/veNtdGuoOyYMQ05+jmEakg9gYHsmJPOwr
+         UPiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746634172; x=1747238972;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fIjEVj0DEgX91fXHT09wKDzBRPLgzhUHI19sZdE1aQM=;
+        b=waYeRSZ3LJnKByhqqD4/701O+c9lu6n/+RvUDwg6M/8cLJ9duKbAGhYwC5JJBDF74j
+         j4Waw588SntlcmSzfHnObbD62CwgVnEPTHda4x/QmusfDuJslZRRs5sshpuV3z/0BGUg
+         URudRKLUz1ystgobgZUlFMnSzMlKy7rMOEUNIlYdAhoi0LfLKWbNGfdEeSHPla3o1b/R
+         P7dD+07r0fDsuNdkBVic55zINMJogKlsepe0eczoz6UmCJglZChhx0f+lPXH9sTKs9qA
+         0lcZb4mNLEybcP0IpXrIA8j9ZlHqOoL2t5ubJQoH7RSKYr0piI8fbLlxTG0+YUG/3v+t
+         1ccg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVKm8ZHPuieP4cWHflate5gjf9JTJfvo9a5XnUuFzbRSSRyIbyJ070hyV9lMnxjI0DF5PSzZdlBflseno=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvOsuKxu/vlnbvWd1tEZA61f8aFe/UQ1oSCpWcZ0/sLo31ntmU
+	ZBuepJTBnpGCIUuMazHkHVjLL0KIA4jfaRJwDyo4UPZE3B/vApQr
+X-Gm-Gg: ASbGncsfa5uC1tE0zOyFFcoFlUIOnA1be4t2nyIssccqTC3OFAr4LXnKQLb78nQl+1e
+	cnnh+ZNrYT9yyQNoXqb6+OsneC1p/2Vi+oRlmYGlVYKg9hsuoMYR+7aEEat7t5Mh1p8qopfS0W5
+	Ju1J2LcXAU+xSqmMr/FTZWLxDSJXoCWWr8uvtBBQ0K5I/f1zxdr/32QaBy9/825I4tOW4q6M3Qr
+	65QO8+a32Be3yR9GRD7gwhYtk9H4MhTxjpuH9gQELLbmuIJ2LNiV8cJDPvk4KhCyf57R2K/oY6f
+	SlLq6DkqrmbGZyJcxhb8jqmku15iE4e9wH3yc197L7isHHxPx4ZGzqxHMR9UJunprXqMGefYFRe
+	DRFpAccTUZPzlMw==
+X-Google-Smtp-Source: AGHT+IGIMCIP/zJlWIR0g6snp1hXwheU1vJJVVQPLxWqkovc2gx1xdJ/MjalJ0Y2FNbr/emoAUdqqg==
+X-Received: by 2002:a17:907:a641:b0:ace:c5de:24cc with SMTP id a640c23a62f3a-ad1e8d9c678mr353455666b.60.1746634171909;
+        Wed, 07 May 2025 09:09:31 -0700 (PDT)
+Received: from ?IPV6:2a03:83e0:1126:4:14f7:eab6:23d5:4cab? ([2620:10d:c092:500::7:6396])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891f3c6bsm922430666b.82.2025.05.07.09.09.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 May 2025 09:09:31 -0700 (PDT)
+Message-ID: <279d29ad-cbd6-4a0e-b904-0a19326334d1@gmail.com>
+Date: Wed, 7 May 2025 17:09:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/1] prctl: allow overriding system THP policy to always
+To: Zi Yan <ziy@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
+ linux-mm@kvack.org, hannes@cmpxchg.org, shakeel.butt@linux.dev,
+ riel@surriel.com, baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com,
+ Yafang Shao <laoar.shao@gmail.com>
+References: <20250507141132.2773275-1-usamaarif642@gmail.com>
+ <293530AA-1AB7-4FA0-AF40-3A8464DC0198@nvidia.com>
+ <96eccc48-b632-40b7-9797-1b0780ea59cd@gmail.com>
+ <8E3EC5A4-4387-4839-926F-3655188C20F4@nvidia.com>
+Content-Language: en-US
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <8E3EC5A4-4387-4839-926F-3655188C20F4@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Arnd,
-
-Here are our device tree updates for 6.16, details are in the signed tag.
-As usual, these have been part of -next for a while already.
-Please pull.
 
 
-Thanks,
+On 07/05/2025 16:57, Zi Yan wrote:
+> On 7 May 2025, at 11:12, Usama Arif wrote:
+> 
+>> On 07/05/2025 15:57, Zi Yan wrote:
+>>> +Yafang, who is also looking at changing THP config at cgroup/container level.
+>>>
+>>> On 7 May 2025, at 10:00, Usama Arif wrote:
+>>>
+>>>> Allowing override of global THP policy per process allows workloads
+>>>> that have shown to benefit from hugepages to do so, without regressing
+>>>> workloads that wouldn't benefit. This will allow such types of
+>>>> workloads to be run/stacked on the same machine.
+>>>>
+>>>> It also helps in rolling out hugepages in hyperscaler configurations
+>>>> for workloads that benefit from them, where a single THP policy is
+>>>> likely to be used across the entire fleet, and prctl will help override it.
+>>>>
+>>>> An advantage of doing it via prctl vs creating a cgroup specific
+>>>> option (like /sys/fs/cgroup/test/memory.transparent_hugepage.enabled) is
+>>>> that this will work even when there are no cgroups present, and my
+>>>> understanding is there is a strong preference of cgroups controls being
+>>>> hierarchical which usually means them having a numerical value.
+>>>
+>>> Hi Usama,
+>>>
+>>> Do you mind giving an example on how to change THP policy for a set of
+>>> processes running in a container (under a cgroup)?
+>>
+>> Hi Zi,
+>>
+>> In our case, we create the processes in the cgroup via systemd. The way we will enable THP=always
+>> for processes in a cgroup is in the same way we enable KSM for the cgroup.
+>> The change in systemd would be very similar to the line in [1], where we would set prctl PR_SET_THP_ALWAYS
+>> in exec-invoke.
+>> This is at the start of the process, but you would already know at the start of the process
+>> whether you want THP=always for it or not.
+>>
+>> [1] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b28dd4ade7c6ab7be29a/src/core/exec-invoke.c#L5045
+> 
+> You also need to add a new systemd.directives, e.g., MemoryTHP, to
+> pass the THP enablement or disablement info from a systemd config file.
+> And if you find those processes do not benefit from using THPs,
+> you can just change the new "MemoryTHP" config and restart the processes.
+> 
+> Am I getting it? Thanks.
+> 
 
+Yes, thats right. They would exactly the same as what we (Meta) do
+for KSM. So have MemoryTHP similar to MemroryKSM [1] and if MemoryTHP is set,
+the ExecContext->memory_thp would be set similar to memory_ksm [2], and when
+that is set, the prctl will be called at exec_invoke of the process [3].
 
-Sven
+The systemd changes should be quite simple to do.
 
+[1] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b28dd4ade7c6ab7be29a/man/systemd.exec.xml#L1978 
+[2] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b28dd4ade7c6ab7be29a/src/core/dbus-execute.c#L2151
+[3] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b28dd4ade7c6ab7be29a/src/core/exec-invoke.c#L5045
+>>>
+>>> Yafang mentioned that the prctl approach would require restarting all running
+>>> services[1] and other inflexiblities, so he proposed to use BPF to change THP
+>>> policy[2]. I wonder if Yafang's issues also apply to your case and if you
+>>> have a solution to them.
+>>>
+>>> Thanks.
+>>>
+>>> [1] https://lore.kernel.org/linux-mm/CALOAHbCXMi2GaZdHJaNLXxGsJf-hkDTrztsQiceaBcJ8d8p3cA@mail.gmail.com/
+>>> [2] https://lore.kernel.org/linux-mm/20250429024139.34365-1-laoar.shao@gmail.com/
+>>>>
+>>>>
+>>>> The output and code of test program is below:
+>>>>
+>>>> [root@vm4 vmuser]# echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
+>>>> [root@vm4 vmuser]# echo inherit > /sys/kernel/mm/transparent_hugepage/hugepages-2048kB/enabled
+>>>> [root@vm4 vmuser]# ./a.out
+>>>> Default THP setting:
+>>>> THP is not set to 'always'.
+>>>> PR_SET_THP_ALWAYS = 1
+>>>> THP is set to 'always'.
+>>>> PR_SET_THP_ALWAYS = 0
+>>>> THP is not set to 'always'.
+>>>>
+>>>>
+>>>> #include <stdio.h>
+>>>> #include <stdlib.h>
+>>>> #include <string.h>
+>>>> #include <unistd.h>
+>>>> #include <sys/mman.h>
+>>>> #include <sys/prctl.h>
+>>>>
+>>>> #define PR_SET_THP_ALWAYS 78
+>>>> #define SIZE 12 * (2 * 1024 * 1024) // 24 MB
+>>>>
+>>>> void check_smaps(void) {
+>>>>     FILE *file = fopen("/proc/self/smaps", "r");
+>>>>     if (!file) {
+>>>>         perror("fopen");
+>>>>         return;
+>>>>     }
+>>>>
+>>>>     char line[256];
+>>>>     int is_hugepage = 0;
+>>>>     while (fgets(line, sizeof(line), file)) {
+>>>>         // if (strstr(line, "AnonHugePages:"))
+>>>>         //     printf("%s\n", line);
+>>>>         if (strstr(line, "AnonHugePages:") && strstr(line, "24576 kB"))
+>>>> {
+>>>>             // printf("%s\n", line);
+>>>>             is_hugepage = 1;
+>>>>             break;
+>>>>         }
+>>>>     }
+>>>>     fclose(file);
+>>>>     if (is_hugepage) {
+>>>>         printf("THP is set to 'always'.\n");
+>>>>     } else {
+>>>>         printf("THP is not set to 'always'.\n");
+>>>>     }
+>>>> }
+>>>>
+>>>> void test_mmap_thp(void) {
+>>>>     char *buffer = (char *)mmap(NULL, SIZE, PROT_READ | PROT_WRITE,
+>>>>                                 MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+>>>>     if (buffer == MAP_FAILED) {
+>>>>         perror("mmap");
+>>>>         return;
+>>>>     }
+>>>>     // Touch the memory to ensure it's allocated
+>>>>     memset(buffer, 0, SIZE);
+>>>>     check_smaps();
+>>>>     munmap(buffer, SIZE);
+>>>> }
+>>>>
+>>>> int main() {
+>>>>     printf("Default THP setting: \n");
+>>>>     test_mmap_thp();
+>>>>     printf("PR_SET_THP_ALWAYS = 1 \n");
+>>>>     prctl(PR_SET_THP_ALWAYS, 1, NULL, NULL, NULL);
+>>>>     test_mmap_thp();
+>>>>     printf("PR_SET_THP_ALWAYS = 0 \n");
+>>>>     prctl(PR_SET_THP_ALWAYS, 0, NULL, NULL, NULL);
+>>>>     test_mmap_thp();
+>>>>
+>>>>     return 0;
+>>>> }
+>>>>
+>>>>
+>>>> Usama Arif (1):
+>>>>   prctl: allow overriding system THP policy to always per process
+>>>>
+>>>>  include/linux/huge_mm.h                          |  3 ++-
+>>>>  include/linux/mm_types.h                         |  7 ++-----
+>>>>  include/uapi/linux/prctl.h                       |  3 +++
+>>>>  kernel/sys.c                                     | 16 ++++++++++++++++
+>>>>  tools/include/uapi/linux/prctl.h                 |  3 +++
+>>>>  .../perf/trace/beauty/include/uapi/linux/prctl.h |  3 +++
+>>>>  6 files changed, 29 insertions(+), 6 deletions(-)
+>>>>
+>>>> -- 
+>>>> 2.47.1
+>>>
+>>>
+>>> --
+>>> Best Regards,
+>>> Yan, Zi
+> 
+> 
+> --
+> Best Regards,
+> Yan, Zi
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  https://github.com/AsahiLinux/linux.git tags/asahi-soc-dt-6.16
-
-for you to fetch changes up to d8bf82081c9e5a4f0f239cdd01296377ba490471:
-
-  arm64: dts: apple: Add PMIC NVMEM (2025-05-01 12:03:53 +0200)
-
-----------------------------------------------------------------
-Apple SoC Device Tree updates for 6.16:
-
-- A-series SoCs: CPU cache information has been added to device trees
-- M-series SoCs: SPMI controller and SPMI NVMEM nodes have been added
-
-----------------------------------------------------------------
-Hector Martin (1):
-      arm64: dts: apple: Add PMIC NVMEM
-
-Nick Chan (9):
-      arm64: dts: apple: s5l8960x: Add CPU caches
-      arm64: dts: apple: t7000: Add CPU caches
-      arm64: dts: apple: t7001: Add CPU caches
-      arm64: dts: apple: s800-0-3: Add CPU caches
-      arm64: dts: apple: s8001: Add CPU caches
-      arm64: dts: apple: t8010: Add CPU caches
-      arm64: dts: apple: t8011: Add CPU caches
-      arm64: dts: apple: t8012: Add CPU caches
-      arm64: dts: apple: t8015: Add CPU caches
-
-Sasha Finkelstein (1):
-      arm64: dts: apple: Add SPMI controller nodes
-
- arch/arm64/boot/dts/apple/s5l8960x.dtsi   | 13 +++++++
- arch/arm64/boot/dts/apple/s800-0-3.dtsi   | 13 +++++++
- arch/arm64/boot/dts/apple/s8001.dtsi      | 13 +++++++
- arch/arm64/boot/dts/apple/t6001.dtsi      |  1 +
- arch/arm64/boot/dts/apple/t6002.dtsi      |  1 +
- arch/arm64/boot/dts/apple/t600x-die0.dtsi | 57 ++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/apple/t7000.dtsi      | 13 +++++++
- arch/arm64/boot/dts/apple/t7001.dtsi      | 16 +++++++++
- arch/arm64/boot/dts/apple/t8010.dtsi      | 13 +++++++
- arch/arm64/boot/dts/apple/t8011.dtsi      | 16 +++++++++
- arch/arm64/boot/dts/apple/t8012.dtsi      | 13 +++++++
- arch/arm64/boot/dts/apple/t8015.dtsi      | 32 +++++++++++++++++
- arch/arm64/boot/dts/apple/t8103.dtsi      | 58 +++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/apple/t8112.dtsi      | 57 ++++++++++++++++++++++++++++++
- 14 files changed, 316 insertions(+)
