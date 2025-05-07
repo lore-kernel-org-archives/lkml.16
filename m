@@ -1,90 +1,159 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B15821019C
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274E221019C;
+	Wed,  7 May 2025 11:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746617678; cv=none; b=g7AEaECxfKREprgs7C7jecwRiSGewKLKNdQAUNvCZgYSPTT9fUdSQKaNf2r5MpW17MIrV8Udmzjhf/ZBqg2F8MeHVwoQYnCestIm+b2/DDWvF13XsC2vTrP/X2Fotr0FFMD6QCt4Fq5+8LG9swFvyEw23qPOIq1dndHouwYoNQg=
+	t=1746617698; cv=none; b=dvoF2B3FzVAlHmIP+9bENpdV4YG1CtHs1iGUBa3krgtF+jtXclPV5iJsiJ/8pLcbm0TX5qPUlyLWwn1ZvsxVfSuNaZc/trpL1ftB4OvCpgQQe2pW7fWbZsKMcTYKfp9XWpcet712DF9ZOVhLooODB8Z3OIt5fYmg2qRgNTZp+Kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746617678; c=relaxed/simple;
-	bh=jan/G1jQO8QSF9VgW6ZR8MQYcfJJl6I5cqB21kUF2ik=;
+	s=arc-20240116; t=1746617698; c=relaxed/simple;
+	bh=SC0HTXn/LkVgrR8Tndvl49zyehmbitAVQKEPvqIXjkM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=djNO2DCwDz2o/9z28bpKoK9RieW4omBg2cIFvpWHZQGugtAgCeMmZcloP+Qs50KjfRGCMIMsyQBhrAF+odnTkA9uaPDpF5f9Z5KmT9aINoAfSnwT+gFK6RQ9WE62Ak354fIDrJmQ6Rn49lrVMzVU0nWA+ecEOAVnwjWMqJ7zbUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GBim/7vG; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=oMFKtrHfrdABWlgxHrzzsaQymgG29NW5REodDWbm/1i/jeXtMwkA98T9XM6pjoQMOtawOdZe+HIqLUOA0FHmQjWaANg2AZTHYCeAloENYvGBucr79ZHKp10aO7uB26WphNJ90pDBF4HlUdBPfdY9nW4g/5W5ddyPxIRVg8ToTR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DC5YO2Zw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GBim/7vG"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30ddad694c1so71873681fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 04:34:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746617675; x=1747222475; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jan/G1jQO8QSF9VgW6ZR8MQYcfJJl6I5cqB21kUF2ik=;
-        b=GBim/7vGi65tic4KuM57tHL9NcgcAhw5EHWXDCx3XJ7aGSYr7JIQWr7hphcjz0oHTy
-         cPpNoqL73F/rq5+AtZA1abaciUBaWQJeT2ZMgNL9nuBU4xSO2340v3j7QWwBJwolAWH5
-         xhMzboXa6No6DHqdUm5jVc/X8zxz2BwHwtHaXN1Vc4jqbRgcHmeE+FTw/WX+gUkhcyix
-         XqxjY+eYyR2rfsp/2cKe1d1PseNNAIO5oJ3rZFvJv2DYSk+SwAw4mG8yHQs4pr/tYjZc
-         BRpbZkt4nIDuiw3G+etFxHTDMNax9hxHKrfw+RdBLTRay+3siqEBPvramSDQViEnneRL
-         gOpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746617675; x=1747222475;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jan/G1jQO8QSF9VgW6ZR8MQYcfJJl6I5cqB21kUF2ik=;
-        b=LbJxDaJ5y6VhI8OVBuOPS4Sq2KMq1ViBGjRnMJLjszbfo34GmdofhsRVXLLjU5iGji
-         tc9EhebShh9cHrilJHI/eUWh8+s2SQgLi3gX6b0BxaL72Ew2H6D+bw9qHV69NG/Rj6ze
-         YPYP3WAInO1jLSwdK/intqMbN7op6YfPA4prIdP2EgydYRhLgVbNWqoD60OSxEnjUGQ3
-         2+EPXxp7+Z2tearJjk9Lm4xVbzLZy2IF9vtHXwfmUy+fS6nBl7+nhZmONa5FAhdENI0f
-         7Es71Q5BgyzxBUuDsodSjQLFUAL+zl+R8kqS/cBjsmbBl3nAbo+V4VdaQhmKg1o5kOwU
-         mcXg==
-X-Gm-Message-State: AOJu0Yx54kRcm//Dc0B7osNJONg2lYIcRQJ52dnJkxG6VZT41lZOxKqV
-	QvmXGcOdIl3YKtEAILlTEwx8Mm+MWuXAF6sVYyKPIfYTRxjQt+ZWzBohUNczSAvYwB+GA3Byltp
-	TV2XJ5baPsVZAkxqE1XgTIGHQPVQ=
-X-Gm-Gg: ASbGncsdyP8SmgQePgBDA328ckG2Avx39GkfEt+UmMGD8E0bIarW92sTlTMwlh+VqOE
-	qXOBjj3D9p1frLZK6lsR/2WsLfsXFvVXRyexVpgTnsMvdnYI+BD3bJIuI5mX9lXgj6GKHHxute3
-	WrocTlJktbP+3nlKMuC0FICUU7hUtLkQNB+uCJxSKBSb/BFCfu8CnZRw==
-X-Google-Smtp-Source: AGHT+IG7oYllQDERw2pyvJWmXVrE12zrrXKaUEIUOHTWAMUs72mMelYAuwrsPoTFhtZ/3Wy5Zk6JHEvDerw2HFlQK2c=
-X-Received: by 2002:a05:651c:3136:b0:30b:b956:53c2 with SMTP id
- 38308e7fff4ca-326ad1ba97amr10036641fa.11.1746617674951; Wed, 07 May 2025
- 04:34:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DC5YO2Zw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 919A8C4CEEB;
+	Wed,  7 May 2025 11:34:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746617697;
+	bh=SC0HTXn/LkVgrR8Tndvl49zyehmbitAVQKEPvqIXjkM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DC5YO2ZwSDGb9fivcalZdqyqqNNA1m8gKt9lE4jASbZQhX+WebeCim3aE71z+U4LL
+	 sCJ8Iupf3HJ6mpXNjvqOwNQYgB6esf0kJpPkXE/ud9VXpGJQfqO+OVjYcZpvExiHlS
+	 5IlzpDomxriyVSZRX7S3qtY/sxY+mWVNY6zyOREknDAvDShluFrW4JQMbjM7A+unHs
+	 3N16RCx5Eeb+N0X9RHd4suMFIOgSMSuW18+EyorY6ovTiTXjCxs/Z3Eag571O7eo/2
+	 XBjfoFv20heuW2N9yuvD3P9vD8CSCRrVA0hLNP+MwW+wuhwHhPWXN0XYAdUzwNOSnd
+	 r7MPzD9eLgxyA==
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-403407e998eso3363192b6e.0;
+        Wed, 07 May 2025 04:34:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXY4ZReXttkFAN5P73BRuAKHnhHbPtOZzh1j9k8+DzLmLgeLZxVHlLv3u449Bdrt035hMdtSNz34UWYdAWM@vger.kernel.org, AJvYcCXlP1Pk13+P5n7xVqRurl0QmmZK4GETVmPKXdOt18kRrLIfBuXjG7qj3GVtjJl8Iqt+u59oevhqFq73@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxf3bXXGmBMCkvoY4JRFPv01bnc0/VksXWlqEE+96LYyrlHueDq
+	LygxS8rNA2EjXZvfJyN6M4ECSh8rjBlEP7AnY61ot7Zwp9YR+RxwBm8xmSQRK1Ro420NqBWN8HJ
+	hDKJYMloRbbcMytZ2AY+51cpwAZo=
+X-Google-Smtp-Source: AGHT+IF4YK67tIpkwsZswLnC9nszcTGZb0WX1YzzFw8/i8GM8voajrlh579SmjmLL7VCIfEf+DqGnxNahUO6cTWsDj8=
+X-Received: by 2002:a05:6808:19aa:b0:403:31a4:f3fa with SMTP id
+ 5614622812f47-4036f0da2cbmr1833792b6e.35.1746617686660; Wed, 07 May 2025
+ 04:34:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507112131.3686966-1-tomeu@tomeuvizoso.net>
-In-Reply-To: <20250507112131.3686966-1-tomeu@tomeuvizoso.net>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Wed, 7 May 2025 08:34:23 -0300
-X-Gm-Features: ATxdqUF6JkkRipTIVERvqlVRf3tIXAdsBzMHDW0_XZtQPGtanxPvgGhL3Es3bl0
-Message-ID: <CAOMZO5CK11wByq3BL9XZgvfFv1_kp94CNFMYDaEJ=WxcEFATJQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/etnaviv: Fix flush sequence logic
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Cc: linux-kernel@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>, 
-	Russell King <linux+etnaviv@armlinux.org.uk>, 
-	Christian Gmeiner <christian.gmeiner@gmail.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, etnaviv@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org
+References: <20250506213814.2365788-1-zaidal@os.amperecomputing.com> <20250506213814.2365788-5-zaidal@os.amperecomputing.com>
+In-Reply-To: <20250506213814.2365788-5-zaidal@os.amperecomputing.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 7 May 2025 13:34:35 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0j-84MDP10YEL48GTPWy1SqHWAA_Dbq+X-k3PFi9brZPw@mail.gmail.com>
+X-Gm-Features: ATxdqUFo9t00Y08Bqt8BJZ0VScpKVfjmIqHn29yfFbbnRTEorhLPCSwW2nP9xUw
+Message-ID: <CAJZ5v0j-84MDP10YEL48GTPWy1SqHWAA_Dbq+X-k3PFi9brZPw@mail.gmail.com>
+Subject: Re: [PATCH v7 4/9] ACPI: APEI: EINJ: Remove redundant calls to einj_get_available_error_type
+To: Zaid Alali <zaidal@os.amperecomputing.com>
+Cc: rafael@kernel.org, lenb@kernel.org, james.morse@arm.com, 
+	tony.luck@intel.com, bp@alien8.de, robert.moore@intel.com, 
+	Jonathan.Cameron@huawei.com, ira.weiny@intel.com, Benjamin.Cheatham@amd.com, 
+	dan.j.williams@intel.com, arnd@arndb.de, Avadhut.Naik@amd.com, 
+	u.kleine-koenig@pengutronix.de, john.allen@amd.com, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	acpica-devel@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Tomeu,
+On Tue, May 6, 2025 at 11:38=E2=80=AFPM Zaid Alali
+<zaidal@os.amperecomputing.com> wrote:
+>
+> A single call to einj_get_available_error_type in init function is
+> sufficient to save the return value in a global variable to be used
+> later in various places in the code. This commit does not introduce
+> any functional changes, but only removing unnecessary redundant
+> function calls.
+>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Zaid Alali <zaidal@os.amperecomputing.com>
 
-On Wed, May 7, 2025 at 8:22=E2=80=AFAM Tomeu Vizoso <tomeu@tomeuvizoso.net>=
- wrote:
->
-> We should be comparing the last submitted sequence number with that of
-> the address space we may be switching to.
->
-> And we should be using the latter as the last submitted sequence number
-> afterwards.
->
-> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Does this patch depend on patches [1-3/7]?  If not, I can pick it up
+as an optimization.
 
-Does this need a Fixes tag?
+> ---
+>  drivers/acpi/apei/einj-core.c | 22 +++++++++-------------
+>  1 file changed, 9 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.=
+c
+> index 47abd9317fef..ada1d7026af5 100644
+> --- a/drivers/acpi/apei/einj-core.c
+> +++ b/drivers/acpi/apei/einj-core.c
+> @@ -83,6 +83,8 @@ static struct debugfs_blob_wrapper vendor_blob;
+>  static struct debugfs_blob_wrapper vendor_errors;
+>  static char vendor_dev[64];
+>
+> +static u32 available_error_type;
+> +
+>  /*
+>   * Some BIOSes allow parameters to the SET_ERROR_TYPE entries in the
+>   * EINJ table through an unpublished extension. Use with caution as
+> @@ -662,14 +664,9 @@ static struct { u32 mask; const char *str; } const e=
+inj_error_type_string[] =3D {
+>
+>  static int available_error_type_show(struct seq_file *m, void *v)
+>  {
+> -       int rc;
+> -       u32 error_type =3D 0;
+>
+> -       rc =3D einj_get_available_error_type(&error_type);
+> -       if (rc)
+> -               return rc;
+>         for (int pos =3D 0; pos < ARRAY_SIZE(einj_error_type_string); pos=
+++)
+> -               if (error_type & einj_error_type_string[pos].mask)
+> +               if (available_error_type & einj_error_type_string[pos].ma=
+sk)
+>                         seq_printf(m, "0x%08x\t%s\n", einj_error_type_str=
+ing[pos].mask,
+>                                    einj_error_type_string[pos].str);
+>
+> @@ -692,8 +689,7 @@ bool einj_is_cxl_error_type(u64 type)
+>
+>  int einj_validate_error_type(u64 type)
+>  {
+> -       u32 tval, vendor, available_error_type =3D 0;
+> -       int rc;
+> +       u32 tval, vendor;
+>
+>         /* Only low 32 bits for error type are valid */
+>         if (type & GENMASK_ULL(63, 32))
+> @@ -709,13 +705,9 @@ int einj_validate_error_type(u64 type)
+>         /* Only one error type can be specified */
+>         if (tval & (tval - 1))
+>                 return -EINVAL;
+> -       if (!vendor) {
+> -               rc =3D einj_get_available_error_type(&available_error_typ=
+e);
+> -               if (rc)
+> -                       return rc;
+> +       if (!vendor)
+>                 if (!(type & available_error_type))
+>                         return -EINVAL;
+> -       }
+>
+>         return 0;
+>  }
+> @@ -791,6 +783,10 @@ static int __init einj_probe(struct platform_device =
+*pdev)
+>                 goto err_put_table;
+>         }
+>
+> +       rc =3D einj_get_available_error_type(&available_error_type);
+> +       if (rc)
+> +               return rc;
+> +
+>         rc =3D -ENOMEM;
+>         einj_debug_dir =3D debugfs_create_dir("einj", apei_get_debugfs_di=
+r());
+>
+> --
+> 2.43.0
+>
