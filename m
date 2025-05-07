@@ -1,144 +1,196 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 599FE1E7C3B
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 05:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D02D1C84BF;
+	Wed,  7 May 2025 05:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746597356; cv=none; b=kq94uHFtFKG43YIDVKEy2vuTuot/QIiDMAnkLzT6vgM0tmXMJSgk/ZUGRSVpI9JFEEot2Usps4hSY3DoB4Qszhul7g04+NDMTNe1yULJ0+QpWy4g7JK24hp4vg/vImaOI+cDIl1Wkcux1avP7HCjmKtI1hLkHo4Va8lqNwRsFRo=
+	t=1746597397; cv=none; b=uyGfxCJr5UfkbAeA02Ck5bwyD85qzxtZoL/vsA/HB/8551Ht7RPzMsu+qrviGd4HYIUltjAiZLJizngnwhNZPBPtq/ZDh55VIJEtNa/anaQsdeAOEvJ/RO2acPStUtvKiN5sjaDWpgiGMGv19RGsTiEtFwNSByf12/UWej3PjWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746597356; c=relaxed/simple;
-	bh=XuiAf506Fax0XyampY/Ivi4BEdeVl6Y6hgJ58wAbgvc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XMrtdsq1PjlZnTETSsVUaKFrFBKDm6dq9AmIZ2DrTZNhcDFnNFXjNDUtcBWxdGLgs+UCoji/KEJ/7kq/yosm1U/U0kCTwE6Oq1axAtfLh+6s2zSACU3uBkFiP7yBfTLzEeXkWgKRUGUfD3wBe+rl4hJ4nCdOoZGRNfFA0e1CSxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72D9A2F;
-	Tue,  6 May 2025 22:55:40 -0700 (PDT)
-Received: from [192.168.0.12] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C4983F5A1;
-	Tue,  6 May 2025 22:55:45 -0700 (PDT)
-Message-ID: <eee538cf-d1ce-4444-97f4-450e4604f1ff@arm.com>
-Date: Wed, 7 May 2025 11:25:42 +0530
+	s=arc-20240116; t=1746597397; c=relaxed/simple;
+	bh=6cyED29jzbddJnC+N61WpxIYXyD6aCPF1bT78J1ef6A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A4GWmAxa9yvNRyXwzk279sEHSF5Cu+xWkqBi+473MgJJ4367qnUL2jzUSiKGORiBccc3a+IycENHSFnLtMeBKImK3sr9qxtLjZFNs5hEfUv5uOb3Av8OEtMm1xcP/CR3Nj5saxxGG2cvCD2DCBSmqkev1ynM4U1Lu0Pdf+Oybw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dc0tUcbb; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dc0tUcbb"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ace3b03c043so983967866b.2;
+        Tue, 06 May 2025 22:56:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746597393; x=1747202193; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yOgMR57k7i25Wq4gi9BHM2O3kuDXS8jsXlCOxBJd3jA=;
+        b=dc0tUcbbCoUx1jyZeK0K+iCatjTJ2IIxBWIYzv+711G/ADiXh0WuJRnupxwWSc/bgh
+         0qLovMOZNvzWxctxkcv/qNXPz0bfGIFhrD4smbisfZ3GzPEZnzkp0rw/aycnO/JcLVp7
+         qO4fjC81TkNkIi3DNmUzu8ZVnzG9Zls/IUmjPoZui6Yjmz2gnLMkateesfwdF8cD7f13
+         X865yVbl+7zQTK+AgdkZWiTyrcTqoyuFJODnVjNAzi3JAEvigycpfENSbRjukE31tnHu
+         1ScZfnt+iyEI/+V2tBSaIhLpd/nJNw76FXIfjis22uoPV/uMI0C7gH6gSLHfhO7PL5xp
+         GhIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746597393; x=1747202193;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yOgMR57k7i25Wq4gi9BHM2O3kuDXS8jsXlCOxBJd3jA=;
+        b=cS1bFRfhZDv4wAo3inq35ywqBrMiEK9qjLKB5VR6YxZaD/X8FoFTVTUOfZ9Y3D9G5J
+         QFzTClKlt4rsypQP1y1B8za+LTYlXA+2xGduXBrXhDp2pP7tQOd3D9SFZEGpR+pOEPiD
+         Hz8uadhP+2a87uZVl16i5AQJYxsRzUZGemaoJu6NhsicdXz+SahxHTRc3BdgzZH+phHq
+         zMddl5kiJ4owRXQm83eVdELVJI0kOgWZ+T2Es49qfh9l0eOHKYC4ipC1Tn+ds2hOQINE
+         uhU5Z2iip2buEdUvPIsKheFGYXdDgzozo9GAfcL22Uv8OxE7T69piWLQzV0na8wCfbt8
+         us9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUgZsyS5JBFg0OWUhJNF3Wyz1r3CP8dJ8maIn/yzc1YbmNeE/g4SM9tD2cbblSyGjugvWxa78a9wn1UbcXN@vger.kernel.org, AJvYcCVwSyvibYdhtdRDs3NIfZTYeC+XFj+Zh37/SZ2rrbLzsbjLo3W41/pykIdTPogO7zWhoFsKwqPILs6qqxeOp6GD@vger.kernel.org, AJvYcCXPu0LXeRI1C/2UKODPhl7qs6LrUfVZlQVHnA2ShltlFu9oxlInhFo9RVZgiFJLU9OmuILOLYV2bD5/h5yj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw07Hdu2LdWpmX/qjlJW5Ee6HaCRp1/6uC8I1XkjHfnl3O7vjfH
+	dYOVKJuiH592wjNjISBWubPvtCFN1h7rtOS+XNyIkCypBukZBR8e1GIH8NaeOe9ZyhOOY/ypF7Q
+	YMEQDOc6Rdjz0Opr7c9Xf5HEYr8o=
+X-Gm-Gg: ASbGncs/PjqDzBtTDJRPw59cQe8HncCcp6t2fnxaKFgRe34ti830nQtYDRxYUtH8V9G
+	JDts/8FdBEISXeVvWHiJXz12z6+nVJ6KFF1hEl511x4fLJOLJJ0Yfa7ibBYj0DPusOu1b13mLJ2
+	XdKWvgrqPrbobv0HwDiJLxwA==
+X-Google-Smtp-Source: AGHT+IFTSGPgKADIjMvGu2WpqjpfTT8QnmEBLbFDimNQmDGQsTdXiftdCYFiC30MoDZpOMrBRSziThnXKWHuiDcaFEA=
+X-Received: by 2002:a17:907:a641:b0:abf:fb78:673a with SMTP id
+ a640c23a62f3a-ad1e8bf960emr203549166b.29.1746597393032; Tue, 06 May 2025
+ 22:56:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/9] coresight: Avoid enable programming clock
- duplicately
-To: Leo Yan <leo.yan@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com
-References: <20250423151726.372561-1-leo.yan@arm.com>
- <20250423151726.372561-7-leo.yan@arm.com>
- <063577a4-1530-4658-9838-934b0606e8e0@arm.com>
- <20250506091841.GA177796@e132581.arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250506091841.GA177796@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <aBqdlxlBtb9s7ydc@kspp>
+In-Reply-To: <aBqdlxlBtb9s7ydc@kspp>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 7 May 2025 07:56:21 +0200
+X-Gm-Features: ATxdqUGTSqz3KnQdRZ3IH1yq8eYeJHK6Og4UwM0Vg4vZu3RKSGjwvBhhRCVgfdU
+Message-ID: <CAOQ4uxj-tsr5XWXfu3BHRygubA5kzZVsb_x6ELb_U_N77AA96A@mail.gmail.com>
+Subject: Re: [PATCH][next] fanotify: Avoid a couple of -Wflex-array-member-not-at-end
+ warnings
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, Matthew Bobrowski <repnop@google.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/6/25 14:48, Leo Yan wrote:
-> Hi Anshuman,
-> 
-> On Fri, May 02, 2025 at 12:08:55PM +0530, Anshuman Khandual wrote:
->> On 4/23/25 20:47, Leo Yan wrote:
->>> The programming clock is enabled by AMBA bus driver before a dynamic
->>> probe.  As a result, a CoreSight driver may redundantly enable the same
->>> clock.
->>
->> Are you sure AMBA bus driver always enables such clocks in all scenarios ?
-> 
-> Yes.  I confirmed that AMBA bus driver enables the programming clock
-> prior to calling CoreSight device's probes (see amba_probe()).
-> 
-> I checked other AMBA device drivers (e.g., drivers/dma/amba-pl08x.c)
-> never touch APB programming clock and the clock by default is covered
-> by AMAB bus driver.
+On Wed, May 7, 2025 at 1:39=E2=80=AFAM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+>
+> Modify FANOTIFY_INLINE_FH() macro, which defines a struct containing a
+> flexible-array member in the middle (struct fanotify_fh::buf), to use
+> struct_size_t() to pre-allocate space for both struct fanotify_fh and
+> its flexible-array member. Replace the struct with a union and relocate
+> the flexible structure (struct fanotify_fh) to the end.
+>
+> See the memory layout of struct fanotify_fid_event before and after
+> changes below.
+>
+> pahole -C fanotify_fid_event fs/notify/fanotify/fanotify.o
+>
+> BEFORE:
+> struct fanotify_fid_event {
+>         struct fanotify_event      fae;                  /*     0    48 *=
+/
+>         __kernel_fsid_t            fsid;                 /*    48     8 *=
+/
+>         struct {
+>                 struct fanotify_fh object_fh;            /*    56     4 *=
+/
+>                 unsigned char      _inline_fh_buf[12];   /*    60    12 *=
+/
+>         };                                               /*    56    16 *=
+/
+>
+>         /* size: 72, cachelines: 2, members: 3 */
+>         /* last cacheline: 8 bytes */
+> };
+>
+> AFTER:
+> struct fanotify_fid_event {
+>         struct fanotify_event      fae;                  /*     0    48 *=
+/
+>         __kernel_fsid_t            fsid;                 /*    48     8 *=
+/
+>         union {
+>                 unsigned char      _inline_fh_buf[16];   /*    56    16 *=
+/
+>                 struct fanotify_fh object_fh __attribute__((__aligned__(1=
+))); /*    56     4 */
 
-Alright.
+I'm not that familiar with pahole, but I find it surprising to see this mem=
+ber
+aligned(1), when struct fanotify_fh is defined as __aligned(4).
 
-> 
->> Even if that is true - why cannot coresight_get_enable_apb_pclk() ensured
->> to be called only for the platform drivers cases via code re-organization,
->> rather than changing the coresight_get_enable_apb_pclk() helper itself.
-> 
-> The purpose is to unify the clock enabling for both static probe and
-> dynamic (AMBA) probe.
-> 
-> Let us take funnel driver as an example.  With the change in this patch,
-> the clock operations will be consolidated in a central place
-> (e.g., funnel_probe()).  Therefore, we can avoid to spread the drvdata
-> allocation and clock operations into dynamic probe and static (platform)
-> probe separately.
-> 
->   funnel_probe()
->   {
->       drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-> 
->       drvdata->pclk = coresight_get_enable_apb_pclk();
->   }
-> 
->   dynamic_funnel_probe()
->   {
->       funnel_probe();
->   }
-> 
->   funnel_platform_probe()
->   {
->       funnel_probe();
->   }
+>         } __attribute__((__aligned__(1)));               /*    56    16 *=
+/
+>
+>         /* size: 72, cachelines: 2, members: 3 */
+>         /* forced alignments: 1 */
+>         /* last cacheline: 8 bytes */
+> } __attribute__((__aligned__(8)));
+>
+> So, with these changes, fix the following warnings:
+>
+> fs/notify/fanotify/fanotify.h:317:28: warning: structure containing a fle=
+xible array member is not at the end of another structure [-Wflex-array-mem=
+ber-not-at-end]
+> fs/notify/fanotify/fanotify.h:289:28: warning: structure containing a fle=
+xible array member is not at the end of another structure [-Wflex-array-mem=
+ber-not-at-end]
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  fs/notify/fanotify/fanotify.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/fs/notify/fanotify/fanotify.h b/fs/notify/fanotify/fanotify.=
+h
+> index b44e70e44be6..91c26b1c1d32 100644
+> --- a/fs/notify/fanotify/fanotify.h
+> +++ b/fs/notify/fanotify/fanotify.h
+> @@ -275,12 +275,12 @@ static inline void fanotify_init_event(struct fanot=
+ify_event *event,
+>         event->pid =3D NULL;
+>  }
+>
+> -#define FANOTIFY_INLINE_FH(name, size)                                 \
+> -struct {                                                               \
+> -       struct fanotify_fh name;                                        \
+> -       /* Space for object_fh.buf[] - access with fanotify_fh_buf() */ \
+> -       unsigned char _inline_fh_buf[size];                             \
+> -}
+> +#define FANOTIFY_INLINE_FH(name, size)                                  =
+             \
+> +union {                                                                 =
+                     \
+> +       /* Space for object_fh and object_fh.buf[] - access with fanotify=
+_fh_buf() */ \
+> +       unsigned char _inline_fh_buf[struct_size_t(struct fanotify_fh, bu=
+f, size)];   \
 
-Makes sense.
+The name _inline_fh_buf is confusing in this setting
+better use bytes[] as in DEFINE_FLEX() or maybe even consider
+a generic helper DEFINE_FLEX_MEMBER() to use instead of
+FANOTIFY_INLINE_FH(), because this is not fanotify specific,
+except maybe for alignment (see below).
 
-> 
-> Thanks,
-> Leo
-> 
->>> To avoid this, add a check for device type and skip enabling the
->>> programming clock for AMBA devices.  The returned NULL pointer will be
->>> tolerated by the drivers.
->>>
->>> Fixes: 73d779a03a76 ("coresight: etm4x: Change etm4_platform_driver driver for MMIO devices")
->>> Signed-off-by: Leo Yan <leo.yan@arm.com>
->>> ---
->>>  include/linux/coresight.h | 11 +++++++----
->>>  1 file changed, 7 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
->>> index b888f6ed59b2..26eb4a61b992 100644
->>> --- a/include/linux/coresight.h
->>> +++ b/include/linux/coresight.h
->>> @@ -476,15 +476,18 @@ static inline bool is_coresight_device(void __iomem *base)
->>>   * Returns:
->>>   *
->>>   * clk   - Clock is found and enabled
->>> + * NULL  - Clock is not needed as it is managed by the AMBA bus driver
->>>   * ERROR - Clock is found but failed to enable
->>>   */
->>>  static inline struct clk *coresight_get_enable_apb_pclk(struct device *dev)
->>>  {
->>> -	struct clk *pclk;
->>> +	struct clk *pclk = NULL;
->>>  
->>> -	pclk = devm_clk_get_enabled(dev, "apb_pclk");
->>> -	if (IS_ERR(pclk))
->>> -		pclk = devm_clk_get_enabled(dev, "apb");
->>> +	if (!dev_is_amba(dev)) {
->>> +		pclk = devm_clk_get_enabled(dev, "apb_pclk");
->>> +		if (IS_ERR(pclk))
->>> +			pclk = devm_clk_get_enabled(dev, "apb");
->>> +	}
->>>  
->>>  	return pclk;
->>>  }
+> +       struct fanotify_fh name;                                         =
+             \
+> +} __packed
+
+Why added __packed?
+
+The fact that struct fanotify_fh is 4 bytes aligned could end up with less
+bytes reserved for the inline buffer if the union is not also 4 bytes align=
+ed.
+
+So maybe something like this:
+
+#define FANOTIFY_INLINE_FH(name, size) \
+    DEFINE_FLEX_MEMBER(struct fanotify_fh, name, size) __aligned(4)
+
+Thanks,
+Amir.
