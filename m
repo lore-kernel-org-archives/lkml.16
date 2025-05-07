@@ -1,51 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F2028C027;
-	Wed,  7 May 2025 19:38:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2DE1714B3;
+	Wed,  7 May 2025 19:39:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746646695; cv=none; b=F06vSzMRpFI1GBsuLt/Sjg3neEEhHyudedTbE1KLtREBb1GGFzJlqNPKL4uQpFDWb6fRrNxv3KwngX0rUJWEs1xqdhPN/+f+lAsCfJt600T/diHlfi0HTXqYGDLVOay5Fkc7Ze0szkOabbpcNyuefpJZRkG6sOvyfIKS/misUU0=
+	t=1746646798; cv=none; b=P+loQ7Rf3ixmUZRyh/pMNnaegh7deQENdXfqFOamWbN/NyvTxXfsmJNVcW+h3kp0CCs6JmfwBTTvZstPP0gpgXYopmUZGLOMtDDy6jC6F7td4VlKhqV1utT5kvEIc0wpa/mVW18jYKLnRXhx3WPN2cxT0DTT/xVlzfM4yRA/UDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746646695; c=relaxed/simple;
-	bh=P80Uol6PvMEjz/mpG6q1B6NOrD+50bIpe2jHFHe1Zcw=;
+	s=arc-20240116; t=1746646798; c=relaxed/simple;
+	bh=5I7Y42gv0Xc24O6cWYZHG0MvTqIyPfed5hpojVV46Cs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CZ8oH9S/EDJUXoJTgwp4zjFOvZkI6afErdEI/jNG7YrkwEc/LVas7XrOACCCZaEbg/fo5VHSKQrYO2niPb/C9BVPHts2jfwUzfFsXmtTt1L0EZ2Tsj5uS/abliusFhuInWl6dlmmEDFRbErAfs0Kx9xG68hADndlE1BSuGwBViA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F06e8mAq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jXPW9zEpl8KlEWWKnwa5MunoNr+YZgmHiqsk0Ui/hwgw274qZ78fegm0CKnlrFyQihtWK8UzLCHiUc1j2pdVap2FMdUBBP4xD6dqYzZuRkpep0RdmreV2Oowf4VLp7v4cn/pm+oXxg5vFtYei3N8Bs218H19sVFLiuZedKHLYuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1SqsDxB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F06e8mAq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFCDEC4CEE2;
-	Wed,  7 May 2025 19:38:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1SqsDxB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0DA0C4CEE2;
+	Wed,  7 May 2025 19:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746646694;
-	bh=P80Uol6PvMEjz/mpG6q1B6NOrD+50bIpe2jHFHe1Zcw=;
+	s=k20201202; t=1746646796;
+	bh=5I7Y42gv0Xc24O6cWYZHG0MvTqIyPfed5hpojVV46Cs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F06e8mAqSiO13S2S1AeKWurNzZn0TPJhA5TKf9jBGrc7IrgPClJUiV1h6b28BiyLl
-	 MotF5UwE1YyRMgPIR6VPUR7khPa2RIXS1kvoIVXYd8uqqCUNTgM1crin7xLRonyGC4
-	 nxAXA57AybMHF3rs9cEh++OfW6O0yRwMGg9bihSivkbcOqCok2aKXvCSw9ppRR/3kr
-	 NpKipTRRleJc/yeygWQUYLOh1hZypFSVay0qCcw+jQddhdE86Y4xES+41hwIWkEe5f
-	 VgyP+KAN7S7pVl6rIB5ogKVOqIUg34xkyHzdMnxljQHjeKn9QhLB92xtevet3lVK49
-	 tX4rEKBkGOA6g==
-Date: Wed, 7 May 2025 21:38:09 +0200
+	b=u1SqsDxB/g600BTu4sky4DKUVjfl1oDoOHSjos3OglBUO3r5ziZEUSYrGhQEJbIGc
+	 /hgDGGywWZjMgVHBWxIKFxid7W3NlXGhudDVowJiD8A7xtMyHlDtVXGX4dR2D++Xv3
+	 BSgZR4gzpPkvKRUJ3mqOJY76mhFzdikOJ1pam4u+BpTPzRaGrv+6RT1oIQ2SfBv0eK
+	 6yflLpCPdfQXrNcxLl52iB/aS5GNE124Nm8Llx95t7b46xZUQIJi/xCMvyN/LsRTGn
+	 zqQ1gCN6R7qB0uIhywhZ7QC1LmeWo55N1MJoJW7lvm+Lhk4UkrEorBUDm9BVmEvaZj
+	 /eDEXU4AwO0ng==
+Date: Wed, 7 May 2025 21:39:48 +0200
 From: Ingo Molnar <mingo@kernel.org>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Boqun Feng <boqun.feng@gmail.com>, Lyude Paul <lyude@redhat.com>,
-	Rust ML <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH 01/10] rust: Rename timer_container_of() to
- hrtimer_container_of()
-Message-ID: <aBu2ocPIFOvq_EiA@gmail.com>
-References: <20250507175338.672442-1-mingo@kernel.org>
- <qqz686a7_ob8uzbREL3X3P-MTdPUVJo9hi33Dsv-3kgJoB1_bE0ynnuXFVLIwbZ5dNkntegTdZhkBp04syneXA==@protonmail.internalid>
- <20250507175338.672442-2-mingo@kernel.org>
- <877c2spaag.fsf@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com, sparclinux@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH 3/8] stackleak: Rename CONFIG_GCC_PLUGIN_STACKLEAK to
+ CONFIG_STACKLEAK
+Message-ID: <aBu3BNS60PEw5Uwu@gmail.com>
+References: <20250507180852.work.231-kees@kernel.org>
+ <20250507181615.1947159-3-kees@kernel.org>
+ <aBuqO9BVlIV3oA2M@gmail.com>
+ <202505071236.AC25A6CC2@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,53 +64,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <877c2spaag.fsf@kernel.org>
+In-Reply-To: <202505071236.AC25A6CC2@keescook>
 
 
-* Andreas Hindborg <a.hindborg@kernel.org> wrote:
+* Kees Cook <kees@kernel.org> wrote:
 
-> "Ingo Molnar" <mingo@kernel.org> writes:
+> On Wed, May 07, 2025 at 08:45:15PM +0200, Ingo Molnar wrote:
+> > 
+> > * Kees Cook <kees@kernel.org> wrote:
+> > 
+> > > -	  The STACKLEAK gcc plugin instruments the kernel code for tracking
+> > > +	  The STACKLEAK options instruments the kernel code for tracking
+> > 
+> > speling.
 > 
-> > This primitive is dealing with 'struct hrtimer' objects, not
-> > 'struct timer_list' objects - so clarify the name.
-> >
-> > We want to introduce the timer_container_of() symbol in the kernel
-> > for timer_list, make sure there's no clash of namespaces, at least
-> > on the conceptual plane.
+> Thanks!
 > 
-> Is this a resend?
-
-I noted the changes in the boilerplate:
-
-  Changes in -v3:
-
-    - Picked up review tags
-    - Rebased to v6.15-rc5
-
-This particular patch didn't change.
-
-> Again, I think this change is unnecessary. Please see my earlier reply [1].
+> > Also, any chance to fix this terrible name? Should be something like 
+> > KSTACKZERO or KSTACKCLEAR, to tell people that it doesn't leak the 
+> > stack but prevents leaks on the stack by clearing it, and that it's 
+> > about the kernel stack, not any other stack.
 > 
-> Best regards,
-> Andreas Hindborg
-> 
-> 
-> [1] https://lore.kernel.org/all/877c3cbdq2.fsf@kernel.org
+> Yeah, better to name it for what it does rather than want to protects
+> against. The internal naming for what it does is "stack erase", so
+> perhaps KSTACK_ERASE ?
 
-Yeah, saw that, but you said you are fine with it if I insist, and I'd 
-like to have this to free up the timer_* namespace. Since I think we'd 
-like to introduce the timer_container_of() in the future it would be 
-nice to do this rename, as:
-
-	$ git grep -w timer_container_of
-
-will have hrtimer related false positive hits in rust/ code, even 
-though the namespaces are obviously independent.
-
-The Rust method is arguably a minor misnomer as well: you have 
-work_container_of around struct work, but timer_container_of is around 
-struct hrtimer?
-
-Thanks,
+That's even better, and I like the word separation as well. Thanks!
 
 	Ingo
