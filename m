@@ -1,64 +1,165 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from unicorn.mansr.com (unicorn.mansr.com [81.2.72.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FB11CAA65
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 10:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4029020F09C;
+	Wed,  7 May 2025 10:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.2.72.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746615397; cv=none; b=WD5ovqCcvPwWki+SAUJ5g/Afzzcr3grj3ya+GvPnOcFvyZwT8tJq4C7SWSDrONhHPkqtrGrVqsoosiQFF3fBuR+mUYpqzRtlbv0x3Yuh09TprYfqlH9u4P6VilxFwc/iS8xMobxht4QFEXCjmN+ZKNYhdWgy822dtbmvLWEe7vk=
+	t=1746615421; cv=none; b=H3dYQFqc8FXj/nroq5vGd/RRydtNQC3jXNZcD5BJQnoU4c6IUutUEe57dHzbEF2tKOowqkMO86iD5eryP/lFwULInlIJYPKn0wbLTkmHVYaTwPb9JQAfAXITnHXzqw8HpDjmj+OuDEr6QmTVore7EwouVu00WppvNzq5SoFy1Gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746615397; c=relaxed/simple;
-	bh=5JFYY3a2Ru7OIQWa1DCqjC+hgh16GXpBKQhZODpXF6Q=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=RxPJinucdsTePZNMny/tZQNm4/Zd+GO0EYf4dzZWZR7Pv8JYhx9IOSbsW0VkwFYD383l/wFwK+kEf93FDSvSrDUjLAp+spLLPXold+S2K2kY8S5gzLv/StJqmZvReSk2FHf0+3ELMplJf/eCZ/iedKjKZqUDcEBIK3wXFkaPgC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3da720e0c93so26697665ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 03:56:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746615395; x=1747220195;
-        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5JFYY3a2Ru7OIQWa1DCqjC+hgh16GXpBKQhZODpXF6Q=;
-        b=HiacjRTkuEbC67Z9hvbzsYXL/7CqHLQR06CMmx4VRTp4b18XuNbFdcO/SjtJcEe2oa
-         8htpKLSRdv3BB0ubXD9SISteoU1pHWeDgZXlps9NGoSg/hfakKzNRPPsCJJeYpzUxSdm
-         lDuTyEbwi9RBX3YmSM5UryhUUcO6Q3+3XCNIw61ZfN94o8BeSs0t8XK1jc8qNJk7Y0oL
-         NO5USWLosnODOpVgTXZG7caXTT9crrmZzjjPkVV4h48kXpWAOnydp/x34Sz9d5B7UXPy
-         yW14r1/dWZRbriTt8g4ZO3yZhSOwSyMMNr7r5E9CUuEkTPbT3rPYNFoQwQH+wxKTMrSs
-         0xEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVo1OgLz1UpEx3yOQtIGZa+hMQbavx3TnPvDf6OTrFkD7BgnHZQhg6puSv0Xz2LxnJqVG9+WQR2gYu0CQE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzel7oPhJ/ynNDagajtD8Cj553+439i70PTwAe1PxTDJ8fm3QbM
-	5a+8QZYEvHQRZdRK1hZ6w6iC36dfGt8jkHNP9aRa/sY06l3CCQsyAClEvhV6n/DWH5u5tUYK3aV
-	7LK/nMM2g8cAm0oIqC6S79tH4J/6f2Puf7WBJmignZGv2s+YHyqPCxR4=
-X-Google-Smtp-Source: AGHT+IFwP/c+dY8CzFpcNdLjTCaEdwwpOk0Ht59+ft2dk1suaHAuFrEjbfYYkPvtVMgXMoQNcoaluXyq4TeXfy7EOEblmUovnkq2
+	s=arc-20240116; t=1746615421; c=relaxed/simple;
+	bh=YeFtMqNDEE5PX6B6Tj7LJQjOAiObwszJ+gN/hAA9Pyc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OsySIhz5jBOJZwkGXroB1zBQaOCvl+65zsyLnuTvQdsxSIyE4z9gKCx5AM8Fuq8IPg+HYv9OL10qGK/jtSYvaC/66ApNIcvZwM93an4cSrAM4RpYxv2q9XoSIREc/ZHeZHY4TYTFUj5mfV+W4ii691ljfZbn5MWWqnAaGeZWWWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mansr.com; spf=pass smtp.mailfrom=mansr.com; arc=none smtp.client-ip=81.2.72.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mansr.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mansr.com
+Received: from raven.mansr.com (raven.mansr.com [81.2.72.235])
+	by unicorn.mansr.com (Postfix) with ESMTPS id 0911515365;
+	Wed, 07 May 2025 11:56:57 +0100 (BST)
+Received: by raven.mansr.com (Postfix, from userid 51770)
+	id DF9E221A3DA; Wed, 07 May 2025 11:56:56 +0100 (BST)
+From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-omap@vger.kernel.org,
+ stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tty: serial: 8250_omap: fix tx with dma
+In-Reply-To: <14d13f9b-77db-4545-97d1-bc36abcb9644@kernel.org> (Jiri Slaby's
+	message of "Wed, 7 May 2025 10:09:52 +0200")
+References: <20250506150748.3162-1-mans@mansr.com>
+	<d51b4422-0c46-4b03-840b-302603b3136f@kernel.org>
+	<yw1xwmaslv1d.fsf@mansr.com>
+	<14d13f9b-77db-4545-97d1-bc36abcb9644@kernel.org>
+Date: Wed, 07 May 2025 11:56:56 +0100
+Message-ID: <yw1xselglmdj.fsf@mansr.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/29.4 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:198e:b0:3d5:deaf:b443 with SMTP id
- e9e14a558f8ab-3da738ed6ddmr28139985ab.3.1746615384395; Wed, 07 May 2025
- 03:56:24 -0700 (PDT)
-Date: Wed, 07 May 2025 03:56:24 -0700
-In-Reply-To: <4b032951-aaab-4d85-afa1-e3020ba7cad0@yandex.ru>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681b3c58.050a0220.a19a9.001f.GAE@google.com>
-Subject: Re: #syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
- 0d8d44db295ccad20052d6301ef49ff01fb8ae2d
-From: syzbot <syzbot+47321e8fd5a4c84088db@syzkaller.appspotmail.com>
-To: dmantipov@yandex.ru
-Cc: dmantipov@yandex.ru, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> #syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 0d8d44db295ccad20052d6301ef49ff01fb8ae2d
+Jiri Slaby <jirislaby@kernel.org> writes:
 
-Command #1:
-This crash does not have a reproducer. I cannot test it.
+> On 07. 05. 25, 9:49, M=E5ns Rullg=E5rd wrote:
+>> Jiri Slaby <jirislaby@kernel.org> writes:
+>>=20
+>>> On 06. 05. 25, 17:07, Mans Rullgard wrote:
+>>>> Commit 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
+>>>> introduced an error in the TX DMA handling for 8250_omap.
+>>>> When the OMAP_DMA_TX_KICK flag is set, one byte is pulled from the
+>>>> kfifo and emitted directly in order to start the DMA.  This is done
+>>>> without updating DMA tx_size which leads to uart_xmit_advance() called
+>>>> in the DMA complete callback advancing the kfifo by one too much.
+>>>> In practice, transmitting N bytes has been seen to result in the last
+>>>> N-1 bytes being sent repeatedly.
+>>>> This change fixes the problem by moving all of the dma setup after
+>>>> the OMAP_DMA_TX_KICK handling and using kfifo_len() instead of the
+>>>> dma size for the 4-byte cutoff check. This slightly changes the
+>>>> behaviour at buffer wraparound, but it still transmits the correct
+>>>> bytes somehow. At the point kfifo_dma_out_prepare_mapped is called,
+>>>> at least one byte is guaranteed to be in the fifo, so checking the
+>>>> return value is not necessary.
+>>>> Fixes: 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
+>>>> Cc: stable@vger.kernel.org
+>>>> Signed-off-by: Mans Rullgard <mans@mansr.com>
+>>>> ---
+>>>> v2: split patch in two
+>>>> ---
+>>>>    drivers/tty/serial/8250/8250_omap.c | 24 +++++++++---------------
+>>>>    1 file changed, 9 insertions(+), 15 deletions(-)
+>>>> diff --git a/drivers/tty/serial/8250/8250_omap.c
+>>>> b/drivers/tty/serial/8250/8250_omap.c
+>>>> index f1aee915bc02..180466e09605 100644
+>>>> --- a/drivers/tty/serial/8250/8250_omap.c
+>>>> +++ b/drivers/tty/serial/8250/8250_omap.c
+>>>> @@ -1173,16 +1173,6 @@ static int omap_8250_tx_dma(struct uart_8250_po=
+rt *p)
+>>>>    		return 0;
+>>>>    	}
+>>>>    -	sg_init_table(&sg, 1);
+>>>> -	ret =3D kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1,
+>>>> -					   UART_XMIT_SIZE, dma->tx_addr);
+>>>> -	if (ret !=3D 1) {
+>>>> -		serial8250_clear_THRI(p);
+>>>> -		return 0;
+>>>> -	}
+>>>> -
+>>>> -	dma->tx_size =3D sg_dma_len(&sg);
+>>>> -
+>>>>    	if (priv->habit & OMAP_DMA_TX_KICK) {
+>>>>    		unsigned char c;
+>>>>    		u8 tx_lvl;
+>>> ...
+>>>> @@ -1216,11 +1206,12 @@ static int omap_8250_tx_dma(struct uart_8250_p=
+ort *p)
+>>>>    			goto err;
+>>>>    		}
+>>>>    		skip_byte =3D c;
+>>>> -		/* now we need to recompute due to kfifo_get */
+>>>> -		kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1,
+>>>> -				UART_XMIT_SIZE, dma->tx_addr);
+>>>>    	}
+>>>>    +	sg_init_table(&sg, 1);
+>>>> +	kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1,
+>>>> +				     UART_XMIT_SIZE, dma->tx_addr);
+>>>
+>>> This can fail (note the first call to this was checked). The latter
+>>> (deliberately) not.
+>> No, it can't.  The fifo has already been checked to contain something
+>> right at the top of the function.  There is no other failure mode for
+>> kfifo_dma_out_prepare_mapped.
+>
+> That it cannot fail now does not mean it cannot in the future. Simply do =
+it
+> properly and check the retval.
+>
+>>>> +
+>>>>    	desc =3D dmaengine_prep_slave_sg(dma->txchan, &sg, 1, DMA_MEM_TO_D=
+EV,
+>>>>    			DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+>>>>    	if (!desc) {
+>>> ...
+>>>> @@ -1248,8 +1240,10 @@ static int omap_8250_tx_dma(struct uart_8250_po=
+rt *p)
+>>>>    err:
+>>>>    	dma->tx_err =3D 1;
+>>>>    out_skip:
+>>>> -	if (skip_byte >=3D 0)
+>>>> +	if (skip_byte >=3D 0) {
+>>>>    		serial_out(p, UART_TX, skip_byte);
+>>>> +		p->port.icount.tx++;
+>>>
+>>> This is still unrelated.
+>> No, it's not.  Your broken code called uart_xmit_advance with the full
+>> amount due to the incorrect tx_size value.  This compensates for that.
+>
+> Then document it properly in the commit log.
+>
+>> You made this mess.
+>
+> I can only say that I am sorry for the breakage of this driver. This TX w=
+ay
+> with one byte via FIFO and the rest via DMA, and only if > 4 chars to be
+> sent is indeed cumbersome and apparently uneasy to do right.
+>
+>> Now fix it.  I don't care how.  It's wasted enough
+>> of my time already.
+>
+> How exactly does this help to get the code in shape? You apparently have =
+the
+> HW, you spent some time debugging that, you have patches, so you deserve =
+the
+> credits.
 
-Command #2:
-This crash does not have a reproducer. I cannot test it.
+I don't care about credit, I just want it fixed, and I feel like that's
+your responsibility since you broke it.  I've pointed out where the
+problem is and provided a fix.  If that's not enough for you, then I
+give up.  I'm not paid enough to play your guessing games.
 
+--=20
+M=E5ns Rullg=E5rd
