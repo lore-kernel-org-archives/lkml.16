@@ -1,213 +1,99 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C439E4414;
-	Wed,  7 May 2025 10:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09F61C5D46
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 10:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746614555; cv=none; b=HviLTxEAm7o3XDV1Ad2uhqWT5+VAZhgt2wCBKTClAs/qf53Dv1pzdxPu2rsZW7/xqklNxRhKnFqG3eor8Nrxt30SAvzU1StLQmx+wvsFG/Or6/aOO7xK0joyZ592td7ZWRKq56YuWqUNlnuPbOaf0PxHAOcuKMzdkGyS6lpMwqo=
+	t=1746614588; cv=none; b=KIVqFKSorH3XKJPD5Se+X9kFOpYYTrscWy5UXdYbQY29pXHxsza7cvNXk6CB/tAunBR4kYfgA+0DOEwdIHq5FV7CTFux7wnA4ajDRBuT27SXfq6Ub5+ZLavjmOd7mzMvZPifIKqltvhdqO/M0DP5olPsm2J0uwLnF9OLexVf7kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746614555; c=relaxed/simple;
-	bh=K7FRUYsKa68Pm5CEDV96iYy58lhLu7ZJV05L7Jo9o1c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r5ebBKuPkFwMIUw4F0KjQe6vmTgqI71eTegaJ/DXcHMB1TuBrN3vCrbGS2wzvCS3I+Y5dM3SzZ3BMXTJRHMXTKO7VfKsntqREs0l+7cK2dnslMqT45XgLs6mB0vRRIqPgbsYSP9TsuuMRCItJvqzDU0OVq0GxE4aOOBdSolAl4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0016B339;
-	Wed,  7 May 2025 03:42:22 -0700 (PDT)
-Received: from [10.1.30.69] (unknown [10.1.30.69])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 04BF93F5A1;
-	Wed,  7 May 2025 03:42:29 -0700 (PDT)
-Message-ID: <54a21b12-2b17-4e0a-9cbf-f68406fb003a@arm.com>
-Date: Wed, 7 May 2025 11:42:29 +0100
+	s=arc-20240116; t=1746614588; c=relaxed/simple;
+	bh=LgFEdNrQuYJc9nk8hGKt1HTO+/SskVbhW41uW9jTgCo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=edvbeZNTxZTGtTTsCAm4VvgD6i4eP00VQ1r3M1xKAxB32lrWbLdiLt0Z/0Gp5T/CcbWmhwiJYYO54zii5fyfKqtdtUQ56eWtAlzVS1NUK9bdwiTMql5eIQmW3aOTDWa+MKoXNri5uJlFCpljP5eiBJSuDCxBkmhrykE0/+MjJKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sylid5+G; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sylid5+G"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-30a8cfa713fso1513880a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 03:43:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746614586; x=1747219386; darn=vger.kernel.org;
+        h=content-disposition:mime-version:reply-to:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=86uLetninWAhL43YNpZUPrWnF7wJg6W9C9rPdIemG6E=;
+        b=Sylid5+GA+9OKRhfcYu15tWedWxn4AphGrVX9OJ0xT2ud2c8ugsVq/yJRJvk1Lla4N
+         +MaMpLcreRFPfKyf9GYAboHH/1Vrs0dDlfnRmvQuU7aecldxJM0LzNy0b/s092PoUktK
+         hI9Xk9e+VAPtjvt06LpVPCo6DH0IQLq82ZejU4pyNpOzfegCm0r58rNiBSaexB9B4NDX
+         IwC8QATEzOBTB02kuvIojtvD7crMpeIMFrxZbGNJLzQ3IH4gqLMiKgUHXHRJyqFwz3g1
+         yMzDDb5NOAsI+MkUkkILZ594OK3XktS2/QE6LYrVWHQOHzqUwrg8geQLj6pbR3/IWYob
+         Jd6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746614586; x=1747219386;
+        h=content-disposition:mime-version:reply-to:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=86uLetninWAhL43YNpZUPrWnF7wJg6W9C9rPdIemG6E=;
+        b=MNo9zeg8uJpseNeOOU+uncjXuDItzLCxYXHu/bq5qQfYPjSUn2c2E8vlP6lolopOiK
+         f4T+XuflC/Hxdy96cNSvMcK38bqyTdqIqZMWzZAnNxiQrvf6w12DtM5bGeXiQWiU3I1Y
+         qd2kYXzU+NdktgA6NiGrYXjpM9HB4ZNTvv/+HHo0+P+1JCyDOOLp02HMKaXQ2K0EmmFQ
+         dz3sq8zw3oXdTJjTCs9n6TgZ5OuXzdBbkvaZVZ0Rrqtu5rmw5TOoeQ3rEuygEAVHNQXT
+         gaouAuLGOAsNvaN+DWznB1GKxZeCieXEiFDZBHbIgxXW+hgEqpl40fLM54Okj/WKWQaQ
+         MHPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVANrWC6c6SxzVnD5tijFWwfb692yIKJgBl56FYCVRL8ErEwC194x0nN26fg3a8F5UlVbRDFEinpHlZlLY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4IbI9UMLPONhG9Na/ZLWWnP0fqQpx9F2B0l5r0eaxV5O6h+b3
+	SG+mdwfw7xAKA2DPW66N+sM3irY05sl6ysUOse6CPqrthv2qfTx40We4gg==
+X-Gm-Gg: ASbGncuyXLW5aTPUSpxpZ+dT1+4rUCuBjjgXjSsLZEXFpKLPWWiGUsCiA45oxDi/WfM
+	7KpwJJq663cDeIcWVkw5neyI5JisQp9Icu9HqksAe0xc269rPnS5hl6IFv9pCYTMZ0lOTIrcY/+
+	4jXfAs5JJlDDFjJoGZ1lWv3a/hJpgiDE+UprZcW89U/Xs4vHFe99/5bLsROjm+s9zTQmqpwTj8c
+	8X5O3s5TYjd7fOyxT7N0ceXj3gIP85Su6NWnCdLyGD6yZ/0CeT0n8oVJ8bHqHk0qf+9RIMNZvuB
+	oBc2Ori4dZhQ9x4/D3aCJJb/ZOX6N8JrY+84gOV20s7YP3hUvg==
+X-Google-Smtp-Source: AGHT+IHJ+9ShVGm4mc0/1bIkX4+Bj6LZl9I6ctnXsYcXsar1zyvDwIzO+nQHqlCcWQYiwjyTkQ1rfQ==
+X-Received: by 2002:a17:90b:4acd:b0:308:5273:4df8 with SMTP id 98e67ed59e1d1-30aac183be0mr4708612a91.10.1746614585981;
+        Wed, 07 May 2025 03:43:05 -0700 (PDT)
+Received: from brak3rDesk ([115.96.77.249])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30aae525db4sm1800952a91.22.2025.05.07.03.43.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 03:43:05 -0700 (PDT)
+Date: Wed, 7 May 2025 16:12:57 +0530
+From: Rujra Bhatt <braker.noob.kernel@gmail.com>
+To: dpenkler@gmail.com, gregkh@linuxfoundation.org
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 RESEND] staging : gpib : agilent_82350b : agilent_82350b.c
+ re-checked the sizeof structure, also checkpatch.pl has shown wrong error,
+ hence now applied the right option and commited the changes, this will be
+ PATCH V2. earlier have applied void pointer only so it will take only 8
+ bytes, and not the whole structure size.
+Message-ID: <aBs5MeEdCCwiGE0B@brak3rDesk>
+Reply-To: lkp@intel.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 17/43] arm64: RME: Handle RMI_EXIT_RIPAS_CHANGE
-Content-Language: en-GB
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
- <aneesh.kumar@kernel.org>
-References: <20250416134208.383984-1-steven.price@arm.com>
- <20250416134208.383984-18-steven.price@arm.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20250416134208.383984-18-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 16/04/2025 14:41, Steven Price wrote:
-> The guest can request that a region of it's protected address space is
-> switched between RIPAS_RAM and RIPAS_EMPTY (and back) using
-> RSI_IPA_STATE_SET. This causes a guest exit with the
-> RMI_EXIT_RIPAS_CHANGE code. We treat this as a request to convert a
-> protected region to unprotected (or back), exiting to the VMM to make
-> the necessary changes to the guest_memfd and memslot mappings. On the
-> next entry the RIPAS changes are committed by making RMI_RTT_SET_RIPAS
-> calls.
-> 
-> The VMM may wish to reject the RIPAS change requested by the guest. For
-> now it can only do with by no longer scheduling the VCPU as we don't
-> currently have a usecase for returning that rejection to the guest, but
-> by postponing the RMI_RTT_SET_RIPAS changes to entry we leave the door
-> open for adding a new ioctl in the future for this purpose.
-> 
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
-> Changes since v7:
->   * Rework the loop in realm_set_ipa_state() to make it clear when the
->     'next' output value of rmi_rtt_set_ripas() is used.
-> New patch for v7: The code was previously split awkwardly between two
-> other patches.
-> ---
->   arch/arm64/kvm/rme.c | 88 ++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 88 insertions(+)
-> 
-> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-> index bee9dfe12e03..fe0d5b8703d2 100644
-> --- a/arch/arm64/kvm/rme.c
-> +++ b/arch/arm64/kvm/rme.c
-> @@ -624,6 +624,65 @@ void kvm_realm_unmap_range(struct kvm *kvm, unsigned long start,
->   		realm_unmap_private_range(kvm, start, end);
->   }
->   
-> +static int realm_set_ipa_state(struct kvm_vcpu *vcpu,
-> +			       unsigned long start,
-> +			       unsigned long end,
-> +			       unsigned long ripas,
-> +			       unsigned long *top_ipa)
-> +{
-> +	struct kvm *kvm = vcpu->kvm;
-> +	struct realm *realm = &kvm->arch.realm;
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +	phys_addr_t rd_phys = virt_to_phys(realm->rd);
-> +	phys_addr_t rec_phys = virt_to_phys(rec->rec_page);
-> +	struct kvm_mmu_memory_cache *memcache = &vcpu->arch.mmu_page_cache;
-> +	unsigned long ipa = start;
-> +	int ret = 0;
-> +
-> +	while (ipa < end) {
-> +		unsigned long next;
-> +
-> +		ret = rmi_rtt_set_ripas(rd_phys, rec_phys, ipa, end, &next);
-> +
-> +		if (RMI_RETURN_STATUS(ret) == RMI_SUCCESS) {
-> +			ipa = next;
-> +		} else if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
-> +			int walk_level = RMI_RETURN_INDEX(ret);
-> +			int level = find_map_level(realm, ipa, end);
-> +
-> +			/*
-> +			 * If the RMM walk ended early then more tables are
-> +			 * needed to reach the required depth to set the RIPAS.
-> +			 */
-> +			if (walk_level < level) {
-> +				ret = realm_create_rtt_levels(realm, ipa,
-> +							      walk_level,
-> +							      level,
-> +							      memcache);
-> +				/* Retry with RTTs created */
+Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
+---
+ drivers/staging/gpib/agilent_82350b/agilent_82350b.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-minor nit: Do we need to add a comment here, saying, we stop processing
-the request if we run out of RTT pages in this go and Realm could retry
-it.
-
-> +				if (!ret)
-> +					continue;
-> +			} else {
-> +				ret = -EINVAL;
-> +			}
-> +
-> +			break;
-> +		} else {
-> +			WARN(1, "Unexpected error in %s: %#x\n", __func__,
-> +			     ret);
-> +			ret = -ENXIO;
-> +			break;
-> +		}
-
-minor nit: Following from Gavin's comment on another patch, could
-switch() make the above code more readable and remove the continue; ?
-
-		switch (RMI_RETURN_STATUS(ret)) {
-		case RMI_SUCCESS:
-			ipa = next;
-			break;
-		case RMI_ERROR_RTT: {
-
-		
-		}
-			break;
-		default:
-			WARN(..);
-			ret = -ENXIO;
-			goto out;
-		}
-
-I am fine either way.
-
-> +	}
-> +
-
-out:
-
-> +	*top_ipa = ipa;
-> +
-> +	if (ripas == RMI_EMPTY && ipa != start)
-> +		realm_unmap_private_range(kvm, start, ipa);
-> +
-> +	return ret;
-> +}
-> +
->   static int realm_init_ipa_state(struct realm *realm,
->   				unsigned long ipa,
->   				unsigned long end)
-> @@ -863,6 +922,32 @@ void kvm_destroy_realm(struct kvm *kvm)
->   	kvm_free_stage2_pgd(&kvm->arch.mmu);
->   }
->   
-> +static void kvm_complete_ripas_change(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm *kvm = vcpu->kvm;
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +	unsigned long base = rec->run->exit.ripas_base;
-> +	unsigned long top = rec->run->exit.ripas_top;
-> +	unsigned long ripas = rec->run->exit.ripas_value;
-> +	unsigned long top_ipa;
-> +	int ret;
-> +
-> +	do {
-> +		kvm_mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache,
-> +					   kvm_mmu_cache_min_pages(vcpu->arch.hw_mmu));
-> +		write_lock(&kvm->mmu_lock);
-> +		ret = realm_set_ipa_state(vcpu, base, top, ripas, &top_ipa);
-> +		write_unlock(&kvm->mmu_lock);
-> +
-> +		if (WARN_RATELIMIT(ret && ret != -ENOMEM,
-> +				   "Unable to satisfy RIPAS_CHANGE for %#lx - %#lx, ripas: %#lx\n",
-> +				   base, top, ripas))
-> +			break;
-> +
-> +		base = top_ipa;
-> +	} while (top_ipa < top);
-> +}
-> +
-
-Rest looks good to me.
-
-Suzuki
-
+diff --git a/drivers/staging/gpib/agilent_82350b/agilent_82350b.c b/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
+index b326058a10c0..94bbb3b6576d 100644
+--- a/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
++++ b/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
+@@ -479,7 +479,7 @@ static void agilent_82350b_return_to_local(struct gpib_board *board)
+ 
+ static int agilent_82350b_allocate_private(struct gpib_board *board)
+ {
+-	board->private_data = kzalloc(sizeof(struct * board->private_data), GFP_KERNEL);
++	board->private_data = kzalloc(sizeof(struct agilent_82350b_priv), GFP_KERNEL);
+ 	if (!board->private_data)
+ 		return -ENOMEM;
+ 	return 0;
+-- 
+2.43.0
 
