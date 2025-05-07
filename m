@@ -1,106 +1,90 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C0D231A3B
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C040192D8F;
+	Wed,  7 May 2025 09:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746609256; cv=none; b=oFxrmvhD3mpvYeoHs+UV4UuhoupE/sQp3AsiPLg0fRQoP2ahBq26Qi0XH3I34Gy3cEgsq3FYC/z5uoMX0BofNeDbTfdjP78303URqxjz2GHbt1rq2vixzeFQqK302Q3PrSMyJXYOn2HkFWGxrrbg5JNjNN9JADsUUrLNpDKw1hA=
+	t=1746609273; cv=none; b=mJDUCAwLnSF21WhAQmE0bD/oaI97iX9Xyi00wqchcWOx8fsbO8HLqTBE6I7dZF5FfDhHo5V46BUOFH+ISYXcbM1dKDohXD33Pjsj3zpInz0u+uqrcrFVYJu3Zc5OmQcb10pV3g39DIpsw/Y1dGC0gtXCoPKDojjK7c63RfZSfaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746609256; c=relaxed/simple;
-	bh=5I48oKIcAHh2GX/ijoBH8labwdpNZfuRysT+WXcajI8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Za3bImDanhrNDj5Q/Jl40dOVOt/Tyl9UFMyfR+ge4pz026DfsRGZCoCfhJ9wom51EKZqfgH1JqBiP5zPRXS9K3TbzV0QwIqls7bPmUsQ2OQkR9lTaisTkT3zCwTDG7tkrth/V4o3X4qmEq7avEtr8RxUejlcblbesEtIROYeWPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com; spf=pass smtp.mailfrom=isovalent.com; dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b=NbjeaoSq; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isovalent.com
+	s=arc-20240116; t=1746609273; c=relaxed/simple;
+	bh=bMRotR6sHrHiFqd8cq3cCqa6cfuObmO7cwP+0halJek=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UQNVZOdx9IWfhSGUEKj5lF4AwwSJy203MIemEPDNEU9QQzwh+PI785bBpk/dmamY7XMR9wo5tKK240lkZeCuswS88mQbu6cZcldry/i3QiwiqerfDvNwLe/g8+vjcHcTtqin57t0+pKIj+VGZLVD2ZexUy2Uq0djo7pP46unm7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WjzGV6yC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b="NbjeaoSq"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a0b308856fso744321f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 02:14:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent.com; s=google; t=1746609253; x=1747214053; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ENAdlxNQCNsPp1Cx5U8ECxKNHpix70L4dcI8KPfbfOg=;
-        b=NbjeaoSqEClPkNMCmliMvm9U3cL8CMVHTSSTKQfp4idXY9xotgO2RsiLjHNLDQ5d7z
-         mXByncE4JOiTRaqSyyc8Oj5nmGxVxa7Atcwc/gbj3+NidFUeAr8SLD9Th+FB8sjC1oeY
-         qepsYXxQLAj9tD2cdshlzHldZTRZBeEbcTHiFnHzhoJmKjH4rAKQNaIscblBBy0Gi0xj
-         MbLwb0Bnfxg2ThfYemtwhJ999YePEaQEj6P4kPVLpxHCjgyww5oB8h4qs2pX8FfAScWe
-         frJWKIXVBvIIkzL/zB5Uyz7sgEZyjXxcO+aR74KJWczcsrRhpkimnPZQ2ArpFwIqUMXN
-         RnYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746609253; x=1747214053;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ENAdlxNQCNsPp1Cx5U8ECxKNHpix70L4dcI8KPfbfOg=;
-        b=tqOpcM1PcsERekjEuWUKO1YoU9LwsBwMTNvIiwyhS2DBvn7etFXiGBiPrJW5EWpR4P
-         x05/KZSXqJKDpnkI+hEWRy131UEZfULRpGiapZ3KVUOErhTQ8o1RwWAGL+LwAMVsMymG
-         YYe1Ny86EEDEqWczC0hPUiCl/GQnsicJ0iMAA+LDK1aVwsxdOIWdpzJAqhBcsXYHHEM2
-         IkHeEOJNqaRBgqkOZecsS8ioR0FxxDPtsfmjqaghp6DRMYUBiTMkjOWz04RGjkGQ8BjX
-         3p53FZo0t3j+y/WkkBpYTOyrGYoISkVxMm76hUpZAVVR9yQWn2WfZVkwFqRp/TT1Pii1
-         tMpA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6OYtJL6JhynIDsCo28hUy8rVnpoAZjB39iP+BRIh3A8qcLPsSQqHoEFv1C2YDhty0SngGo04hspkGS1s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRdgUiD0ZmWquhyjotaJF9QGoOdSsLTlktNGZ78fwlG3u0wa0C
-	Gx8AtXDl6sjQ8OmbHVWfzBmdNUPb4REVbcqN/TrIfTcF+6Ul3OoLiUx5woFY7rFzBwDRfphHNJi
-	4oZhtqMa+eYOBWQnM9AsZ2V4sl6Z1HIYFuf8UFg==
-X-Gm-Gg: ASbGnctzKoVPyoEYMEJl5EJouz/1L6yMb9WT1+ixx7Sqqy0WH4xV/X8W0xuyNfKiewC
-	iRD34qjIdwGLe1G7X8NuQo0WxPAZOpaGrsjn4TXCGtA2sgPLAU0m4f1dXuiD9PfQrGw6hDCHncM
-	fQBn+/K8ZFgtDNaJiGQdulqJTK961rMcPNN+A=
-X-Google-Smtp-Source: AGHT+IG55r4ND4dVvtN1+EUD95gs+uLnOj8rk8ZPFKEZxOHPG2ZvKCFr/wsjoTjPwlfHjBOMB6jQXJeqBT+RbwDRfOw=
-X-Received: by 2002:a5d:64e8:0:b0:39c:1257:ccae with SMTP id
- ffacd0b85a97d-3a0b4a1c722mr1959843f8f.57.1746609253168; Wed, 07 May 2025
- 02:14:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WjzGV6yC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C150C4CEE7;
+	Wed,  7 May 2025 09:14:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746609273;
+	bh=bMRotR6sHrHiFqd8cq3cCqa6cfuObmO7cwP+0halJek=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WjzGV6yCVCGZZCdYD4aRpjcWB/HhiFulV1TmDLmdZL+ZT2BeGwlIERfi9kHcmfUSy
+	 AfEUmYKO3x8q5rkUL3rNuR2keeslMT7PXyIWgwptyamIA4GK93lljdluNf1+8fdx0P
+	 hv++GqOsMtg4TVQV/UwM+dxd+CjU3rAvJHgtI5+N1iDgmyaPkK3F8RSLK6DxHhmFTs
+	 rBf/6R2h0wL8+e2h1Yq/yfvHHMYH1NNHCwklwkptBRu7sbrYvszX3UCfzAPgbi4n1o
+	 pwCzJImD56wpoxOBEN6JNNBX9vWJKzwMACaVIVDJeu1oeLl/ovm3KWaGTbVsS3TWOS
+	 F4HG7vMTomWnA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uCarH-00CYHp-2W;
+	Wed, 07 May 2025 10:14:31 +0100
+Date: Wed, 07 May 2025 10:14:29 +0100
+Message-ID: <86a57ohjey.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski
+ <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas
+ <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff
+ <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R.\
+ Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 20/25] irqchip/gic-v5: Add GICv5 PPI support
+In-Reply-To: <87zffpn5rk.ffs@tglx>
+References: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
+	<20250506-gicv5-host-v3-20-6edd5a92fd09@kernel.org>
+	<87zffpn5rk.ffs@tglx>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250505-vmlinux-mmap-v3-0-5d53afa060e8@isovalent.com>
- <20250505-vmlinux-mmap-v3-2-5d53afa060e8@isovalent.com> <CAEf4BzboH-au2bNCWYk1nYbQ61kGbUXuvTxftDPAEGF1Pc=TLw@mail.gmail.com>
-In-Reply-To: <CAEf4BzboH-au2bNCWYk1nYbQ61kGbUXuvTxftDPAEGF1Pc=TLw@mail.gmail.com>
-From: Lorenz Bauer <lmb@isovalent.com>
-Date: Wed, 7 May 2025 10:14:02 +0100
-X-Gm-Features: ATxdqUE4g8lO60eqVT-NBjEfrxMu9rtdzVq9hr1BOEdsu4jEty7BLc1dL2Y9oKc
-Message-ID: <CAN+4W8gcquJRkZw+Knt=vqwR4YM8w5RbRNO-XyfE+DAyiEWANw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 2/3] selftests: bpf: add a test for mmapable
- vmlinux BTF
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, lpieralisi@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, timothy.hayes@arm.com, Liam.Howlett@oracle.com, mark.rutland@arm.com, jirislaby@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, May 6, 2025 at 10:39=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
+On Tue, 06 May 2025 16:00:31 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> How does this test distinguish between LEVEL_LOW and LEVEL_HIGH? It only
+> tests for level, no? So the test is interesting at best ...
 
-> > +       raw_data =3D mmap(NULL, end, PROT_READ, MAP_PRIVATE, fd, 0);
-> > +       if (!ASSERT_NEQ(raw_data, MAP_FAILED, "mmap_btf"))
->
-> ASSERT_OK_PTR()?
+There is no distinction between HIGH and LOW, RISING and FALLING, in
+any revision of the GIC architecture.
 
-Don't think that mmap follows libbpf_get_error conventions? I'd keep
-it as it is.
+	M.
 
-> > +       btf =3D btf__new_split(raw_data, btf_size, base);
-> > +       if (!ASSERT_NEQ(btf, NULL, "parse_btf"))
->
-> ASSERT_OK_PTR()
-
-Ack.
-
-> Do you intend to add more subtests? if not, why even using a subtest stru=
-cture
-
-The original intention was to add kmod support, but that didn't pan
-out, see my discussion with Alexei. I can drop the subtest if you
-want, but I'd probably keep the helper as it is.
+-- 
+Without deviation from the norm, progress is not possible.
