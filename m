@@ -1,94 +1,76 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D940E1DF25D;
-	Wed,  7 May 2025 05:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CA91D5CFB;
+	Wed,  7 May 2025 05:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746595059; cv=none; b=P1+ZLuuhX+egrLQ1cNw6zfRjtAxRslPAB4/paqZ9LUgXTApI92P7z6VNzoAri+nzOU3rfqzASvBd6Z7x+Ldo7dxdLqfFUdpQtwtZvKsmuTtDYTSjuguGJqrZUWdxq1Mn5srUHdZHkeKa1eX0tEDifUzZcCDyuvJhu4tuiC3WWpU=
+	t=1746595094; cv=none; b=jl3LykS7gP1LnEvgzMV8OJ/my4WzMolzTQ9yEuDyPu54A1BQNKx8CSOVkTZzfwJHDhyIP9g66yuhowCcuMlJmUGRBCUT3qGqYfRBQYjUF2GzVFKmcD0HOwi/kj/JTxRmiWh8dBKxuDN75DUBBBrHiMXaqHezABvegTKlaaxvFhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746595059; c=relaxed/simple;
-	bh=2AsaNlRoc3U+x3MQpb2BPi/VzglI/tL0tT342emVsag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YLYEqHZy70y45IxQ8TQIhmLilzXC4Bx/AWQymTnaiEiCwWwnsxIrbcKOeeeVMZctOFCx2VBWix61GVh0OiVWO7qFyJMySEIDvn5PJNG5xmAbAtIrW9sJmKfKJRwdl+CPQsTPsAX6wH3UxB7//GluTwfAlEzPw8re96+B3XaQhb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M4BEZo3a; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746595094; c=relaxed/simple;
+	bh=VqLzePtK1zk4IDdSyMT4jeybzDjh3hrth6xldiD545s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=igflM85TT4wEWbUPVoE2i550ha/QdNReaU65Hjq1DojeEA4l054DVFbeTUyLb+CbxlWxCYDjB0cFrSos9MarGIkmFuVj1iv3VOuCTc7rFywMZYXjK0Ab3a1RTLOJQuMpPVGKtX5qDJZQXW9T/GfInI6AW/1NtnDEau7SBLHfwmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9T1sA47; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4BEZo3a"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a0b637db6eso58413f8f.0;
-        Tue, 06 May 2025 22:17:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746595056; x=1747199856; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GYYJWdyRGcQqxS7GxD66q5Cjpjg9FTJRCiVLRlUyTb4=;
-        b=M4BEZo3aoQ/bEQNpkgzvq4Fn/+gS8SOZTXLTIXRo7BJQ21IGaeQm9pFh57ZTW7Bu2G
-         tkOpZ98qhOedEsRNFuuGjW0rNy+Iq6xsLwI1x3PALukoCpC7qQa/aGSwZ/D7hokQ4Kp9
-         EDAx+z92rl7Ac1+PlSEvyb/9Uwy+K3EDRN32eEJXlL0/vVD3VX6ZB+dmQsvts4eJApAp
-         z2WmjeOQWSXybCTApCSgCqHMBndEETEEwCYosFQASWHlAoRJR5nqozYWbkpD8zQEpNtq
-         a6OgexXeVgSDS7qU0O1vDu7LC/J2xoY/rI05vUIPsiKAb4dtN2o6ubo7mk3H9CwK4Ve/
-         leLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746595056; x=1747199856;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GYYJWdyRGcQqxS7GxD66q5Cjpjg9FTJRCiVLRlUyTb4=;
-        b=b1DUAJ5XjsZokl/JbHAWOP1hWWrvm7RXHiWxXB8gVGyn2ZPDbXuXhxelDEu4+YwzEm
-         cZr/0BK+sNYnRC33jZ+2ryKzJ7Wdgzch81GjFjhmFhftm5ASnRWhRPj5ggh1v/lCtzUE
-         LsT16bH7f8Otc/rPEIe9s68kumLtdHKWUmo29qaVt83yqbi8evtC5tLxJqSIyMQwkUyb
-         dAirRRUI7pEqPhHzrSy6b6Vl1pW+qbvSJUavwwkiFUqZZamD1b7WyioJm1O7hT9eFrLX
-         eHGpsIcBrXounRFKDaKMiHMDFm1recg+vK1PD5waTkA/C/CxlStvbgAwri313gYWfPAZ
-         nLww==
-X-Forwarded-Encrypted: i=1; AJvYcCVHj+LDK74quEpQoDrKyWHPfXwz48sEDL0rpctF0u4i/xKYsBStxzz0WR3tRNMWuIt052WN3KmeNN1R@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV8DV4zunzyKnlOid+/cmb4MikSwEsj0EIIQuBihcCb8c4YIJX
-	QLTNJINLRcjquavSNkXpXM0ojwmhVd1A2nwkDgUfAftTbx0WG/EXRRiuDg==
-X-Gm-Gg: ASbGncvjB0M8HKROXERq3QCSSi4RorK05/u8Gh2jIYC3F3bJhSqoCY6XzJ9ElXJtIly
-	B0p8CCrJ1/Da+9l1UuO8sVemKcwHSZCiASt0njMi8SymS0PCycf9PmzTcR1xLCUrSd3dX8WkRpK
-	deQ0TMEpGZ8Rykr5YMThOBKRSFZwyKTndN6t1B9HTiY1Xl8l4XVExqf6f5+nINBkX6cRFokpz4A
-	f0vA8srrzQPHuVTy18wjaHwyCxQ3HrrQmYqMyu2d3jqtx6aNqYndHioCXC++GOD84IE8mRD5NPX
-	MekbDbllu6OYB6YYxWxreG50wpn2Mi8lCe6ie3Zq/B7GCrMRz/POiQ4ipWyHmun2rfvZ/S7t1dE
-	92dRW
-X-Google-Smtp-Source: AGHT+IGCrqBwtWEM5UFq+mkvgPc+QD9JwyY3gNJteYxxRx5zKcfW6srDTgO8L2YKcsC1tSP4jTXlgA==
-X-Received: by 2002:a5d:6591:0:b0:3a0:b5ec:f076 with SMTP id ffacd0b85a97d-3a0b5ecf107mr448983f8f.18.1746595055936;
-        Tue, 06 May 2025 22:17:35 -0700 (PDT)
-Received: from localhost (cpc1-brnt4-2-0-cust862.4-2.cable.virginm.net. [86.9.131.95])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae0cd6sm15573091f8f.5.2025.05.06.22.17.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 22:17:34 -0700 (PDT)
-Date: Wed, 7 May 2025 06:17:33 +0100
-From: Stafford Horne <shorne@gmail.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the openrisc tree
-Message-ID: <aBrs7Ukt0oEEAUcK@antec>
-References: <20250507065614.7df38178@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9T1sA47"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4C1FC4CEE9;
+	Wed,  7 May 2025 05:18:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746595094;
+	bh=VqLzePtK1zk4IDdSyMT4jeybzDjh3hrth6xldiD545s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=I9T1sA47NLqQp0xriRNa5TTyUnyd5wTkULdRLnZCsPAyljyuyBEf9miQBaGy7XaHp
+	 QYrrxYFl0bg46dYoT6yQbUkHnA0Seb9FCPAfsaZL1aZmpY8fpL0qi2+69xWRwCVM4S
+	 3XyMXguxkycbxWjIkHDCVHkEMTtDz3mIIwT+a0TFqaH/ag/xKF7lK+TKRhxxRos2jt
+	 QUl1IBIc6LG09aOIBgYknjTqZZRPMOUyOiEOejQMLHISjPxuLB9b2eiNRbFJdYmpuE
+	 Hq2w9Ag529uFJTDld1JjgybLdkOnep9hlyOmsuE3Ue5bvDMhTd59eIaa9OIyt6xa+9
+	 jR4OIWFn1nuWg==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Abel Vesa <abel.vesa@linaro.org>
+Cc: Johan Hovold <johan@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v2 0/2] arm64: dts: x1e001de-devkit: USB retimers related fixes
+Date: Tue,  6 May 2025 22:18:04 -0700
+Message-ID: <174659505820.5380.18331626591249839304.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250422-x1e001de-devkit-dts-fix-retimer-gpios-v2-0-0129c4f2b6d7@linaro.org>
+References: <20250422-x1e001de-devkit-dts-fix-retimer-gpios-v2-0-0129c4f2b6d7@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507065614.7df38178@canb.auug.org.au>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 07, 2025 at 06:56:14AM +1000, Stephen Rothwell wrote:
-> Hi all,
+
+On Tue, 22 Apr 2025 14:25:21 +0300, Abel Vesa wrote:
+> These fixes align all the USB retimer related nodes on the Devkit with the
+> CRD and T14s.
 > 
-> Commit
+> This patchset is based on Johan's:
+> https://lore.kernel.org/all/20250318074907.13903-1-johan+linaro@kernel.org/
 > 
->   218b8d897551 ("dt-bindings: interrupt-controller: Convert openrisc,ompic to DT schema")
 > 
-> is missing a Signed-off-by from its committer.
+> [...]
 
-Got it,
+Applied, thanks!
 
-I was using a new tool for applying commits and I missed a flag.  I will do
-somethign so it doesnt happen again.
+[1/2] arm64: dts: qcom: x1e001de-devkit: Describe USB retimers resets pin configs
+      commit: f76fdcd2550991c854a698a9f881b1579455fc0a
+[2/2] arm64: dts: qcom: x1e001de-devkit: Fix pin config for USB0 retimer vregs
+      commit: 635d0c8edf26994dc1dcbc09add9423aa61869b0
 
-Thanks for your checks.  The branch should fix fixed now.
-
--Stafford
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
