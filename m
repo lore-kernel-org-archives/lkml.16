@@ -1,74 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469408C1E;
-	Wed,  7 May 2025 00:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D4310E0
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 00:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746577325; cv=none; b=kOdyQXenfkxSUsuo3x/DWR1jLkvLTVsXOJrKKj+HGAMqfE6rcmnB1J61AG45aPpajv9HB91W2jnv9qzD3k4ar6Xw4QtG0kl71ZXtVZoPZjvvk33VlJN2QRfwYlo+w7gBnoYoAf0H/t0/uiKSST1Zcq8WjRTeDz9l+M5pbcA3Xo4=
+	t=1746577474; cv=none; b=CsH3chl+EYZ7L8IAH/CqxU5V9hA3QYWk4hZZQZGr2XUI5UiyoeGW4D8qopAkoR4a9k7JqoChp63Jg+ZQ6Z0tpf14MC0UunWH2RqpPeNBoiF1Qq3RQFGgqxV9eCl2yStWuYAyXrIOassS0AfM4J4U+A1WBsKWARXJ8Xp6H47VPrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746577325; c=relaxed/simple;
-	bh=sbWPtYP3AwuR5u6auCIJtWUsNJ93jmrRHAnyqZ30u+I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mm6egl03OwVHTU8+o02UYScumkkm44jGh3eTwZUQPWR+KTO6CzhKzSz6TPNewziVlHjObo3/E3Tu3zvzYIWT/ncEDTS7lRPlZST7dvPYsZGtCY4JGxOdibXY/fsvmKCUEGVwLFkSkCtsNZG3O0xXczAXpJi5OELFNlPvrFT95fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dOjB9/Gz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746577474; c=relaxed/simple;
+	bh=blzdDaQWF+zD5GRD2+ibB8jF0RCm0czDsbvus3l4bII=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hJFIte4WlADuUMFiE6sGqNajFcDM0Bc6x6NqmCdCg8YK82cVu/p9mDWbzRcmAv/D8tCXFXT0O8amg/xjZSJT5aA2epUTHiFDwlT0wKSrQbjeHW3eaV+IUmqynGsNYUgJuiDY1ikKfufruufQGWwCqsQvBs2PE08rZsQm4ndjkpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=oVFXbNiB; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dOjB9/Gz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5A19C4CEE4;
-	Wed,  7 May 2025 00:22:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746577325;
-	bh=sbWPtYP3AwuR5u6auCIJtWUsNJ93jmrRHAnyqZ30u+I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dOjB9/GzkQRYI3Xm3PhztQNRwLmNsHewGH4sG0IWDPRc5j40V8SuR1hbV0usH9T4Q
-	 Ks5TZXzeMohXYFeKaUWU1ME/Fw0lyKEQ4Fg3+LCkSHcCBgNSBxlW+eB7/OQZpGM5/Z
-	 DBB8fQGSN+gKxdYm0RV7nSVhUXm6ZfQGmgFTkN7IweZfz8lvHuh04WMp4s/Ecm7zZ9
-	 cToEUDppHf7kmN6x8/rHpHHuqRpln+YIStd5DiEVjW3dURmOP0ew/aFh6ykPiHXGYT
-	 3qu93fO0CMvI+pY7ejFL6+Mw7Df6ptz+NPFm4PILsemCcIcT9/I0mVa1w16nEfWLYB
-	 hpvtOqXeTllTw==
-Date: Tue, 6 May 2025 14:22:04 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Feng Yang <yangfeng59949@163.com>
-Cc: martin.lau@linux.dev, ast@kernel.org, daniel@iogearbox.net,
-	andrii@kernel.org, eddyz87@gmail.com, song@kernel.org,
-	yonghong.song@linux.dev, john.fastabend@gmail.com,
-	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
-	jolsa@kernel.org, mattbobrowski@google.com, rostedt@goodmis.org,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	davem@davemloft.net, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v3 bpf-next 1/2] bpf: Allow some trace helpers for all
- prog types
-Message-ID: <aBqnrBKoL35u0M_1@slm.duckdns.org>
-References: <20250506061434.94277-1-yangfeng59949@163.com>
- <20250506061434.94277-2-yangfeng59949@163.com>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="oVFXbNiB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=ZOe7yRBHh062ZypLLoU8+MZY4/JHvFw722+CD1Smm0w=; b=oVFXbNiBMV81lw9Q
+	/YpMdpnZ7ML5jXaQh8DardEFZ9GLJQxwRo99iyKhWSQ96fEuQ32VxSzmPnwOPJbt41xud/0rnDPpO
+	BqmHnLBjpYBLaK5g17pM5UZKrAfOhZr2PZb/Kgw3yaiYDwbRvY8BhHukj6slpkM1TFxylW+qo58Pt
+	FUP06nPiAHFChWBs2VWaI6el/1We8lG1vgt+MfJ3jeRAnMVlTlwadC6fnHeRk5boG9JXzFDcFi2Rk
+	0mpxDeUAuBERq/aBNyr7UYjrnJSFHfGh7ny0Wigq4gGRTxkqgbWIUT/Z33ICm5Z+q98L/T36dJkd9
+	o7mxtp2jQ3kGs8vv8Q==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uCSaH-0021Kc-2D;
+	Wed, 07 May 2025 00:24:25 +0000
+From: linux@treblig.org
+To: alexander.deucher@amd.com,
+	kenneth.feng@amd.com,
+	christian.koenig@amd.com
+Cc: airlied@gmail.com,
+	simona@ffwll.ch,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH 0/3] AMD gpu deadcoding (S)
+Date: Wed,  7 May 2025 01:24:22 +0100
+Message-ID: <20250507002425.93421-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506061434.94277-2-yangfeng59949@163.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 06, 2025 at 02:14:33PM +0800, Feng Yang wrote:
-> From: Feng Yang <yangfeng@kylinos.cn>
-> 
-> if it works under NMI and doesn't use any context-dependent things,
-> should be fine for any program type. The detailed discussion is in [1].
-> 
-> [1] https://lore.kernel.org/all/CAEf4Bza6gK3dsrTosk6k3oZgtHesNDSrDd8sdeQ-GiS6oJixQg@mail.gmail.com/
-> 
-> Suggested-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Acked-by: Tejun Heo <tj@kernel.org>
+Hi,
+  A bunch more deadcode around the AMD GPUs.
+(I've not done smu_v14 which all looks rather new
+to me, so perhaps you're still intending to use
+some of the unused functions).
 
-Ditto, please route through bpf/for-next.
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-Thanks.
+
+Dr. David Alan Gilbert (3):
+  drm/amd/pm/smu7: Remove unused smu7_copy_bytes_from_smc
+  drm/amd/pm/smu11: Remove unused smu_v11_0_get_dpm_level_range
+  drm/amd/pm/smu13: Remove unused smu_v3 functions
+
+ .../drm/amd/pm/powerplay/smumgr/smu7_smumgr.c |  36 -------
+ .../drm/amd/pm/powerplay/smumgr/smu7_smumgr.h |   2 -
+ drivers/gpu/drm/amd/pm/swsmu/inc/smu_v11_0.h  |   5 -
+ drivers/gpu/drm/amd/pm/swsmu/inc/smu_v13_0.h  |  12 ---
+ .../gpu/drm/amd/pm/swsmu/smu11/smu_v11_0.c    |  39 -------
+ .../gpu/drm/amd/pm/swsmu/smu13/smu_v13_0.c    | 101 ------------------
+ 6 files changed, 195 deletions(-)
 
 -- 
-tejun
+2.49.0
+
