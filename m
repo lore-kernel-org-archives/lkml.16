@@ -1,108 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39AB11FDE3D;
-	Wed,  7 May 2025 05:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C66D11C54A2
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 05:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746596996; cv=none; b=W0/Hd8Z5fN8xMOZOnSG6drYaWa3SGXZ0ns/rKMyiAWv3mOX80c0ezEnlBWUKbmDy11/9SbmicATmjiwYzcgoTFni24p+qwWS5TmOo2ibFolzMoEqR5lUI0g0XXvsjpsShXLMP1u4RsE+01UIpduK61ijMCknTdkYv22P0pXKJ1U=
+	t=1746597116; cv=none; b=sKbogRdAi1+DH61hupa7DUR5L4bxDjpKiQOTv+kWfqzQQ5Bm2MGbDg025f2H9004Yx2LOOtuLDY4FgU4hZO9bhGg++GAz0BHSCYznwRrBSmvbAPgfDhorkf4QRlFa6TIjh8Fzqb13MT8l+dOqJGlky4paUDcCFCxYmy82JVG2C0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746596996; c=relaxed/simple;
-	bh=gMWKuqiccB/vdz3+zeg5KDOgnOnUHr7QCke6tYWkzNo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TqwUSADVvC4x9jFHoB5okG118ghZvHrmrg0l3l3VdZAu7dOTSnXmkD8xdzyGS0CbwRlU2Tler3qDO38GeABEW+v9/eLij+VaTgaTRbjXXCf9ev07XSuC0IWMGMCwhw8A/cAF5dYEXhloVpVEB82+Y/WJFNgN/OvvKTsQn4ixd8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jXwqnIC0; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jXwqnIC0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746596995; x=1778132995;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gMWKuqiccB/vdz3+zeg5KDOgnOnUHr7QCke6tYWkzNo=;
-  b=jXwqnIC0wApU3zanhUvbLY4fTgQ0TDXwaqh/Eyw1NZELALRY0IDSkLBe
-   hUGYvY2skOvCQx7JJb6cbXxix7//BJhnRqDnILMhWUYvMUJmx1vD4G0+r
-   6TtFm8FlOCyJtQ/kULkSz9F4pF7i49wpmZRjs0iMsaXbcvbmWfXPL67Vs
-   tf1CLpuY1y/6y9rMXcAuUOudOb/pg9tlx2zvZx5FIaim7H+veNaKaxOUM
-   hvT6WAJxcmaWBa2dMZNvLU7Ri5Lju4wr7ZHJRucXGGjkKo/3dRPOCmV5C
-   WUu0raPBw6Ug/THsffUzckGWHXQBAraLjXl8i4FAn7kePgRbpkvpRT0QU
-   g==;
-X-CSE-ConnectionGUID: kNBOOjn7T+msxKcJRZe8kw==
-X-CSE-MsgGUID: mWI2RPv+QGO0XTlA4REeQg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="52120539"
-X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="52120539"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 22:49:54 -0700
-X-CSE-ConnectionGUID: Dng6zhbARaqwORnXV3pdkg==
-X-CSE-MsgGUID: o/PsYAEDSKS8dWxiGvu4sw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="140580415"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 06 May 2025 22:49:49 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCXf8-00077Q-1d;
-	Wed, 07 May 2025 05:49:46 +0000
-Date: Wed, 7 May 2025 13:49:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Praveen Talari <quic_ptalari@quicinc.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, psodagud@quicinc.com, djaggi@quicinc.com,
-	quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com,
-	quic_arandive@quicinc.com, quic_mnaresh@quicinc.com,
-	quic_shazhuss@quicinc.com
-Subject: Re: [PATCH v3 4/9] soc: qcom: geni-se: Enable QUPs on SA8255p
- Qualcomm platforms
-Message-ID: <202505071326.jjvv4tTv-lkp@intel.com>
-References: <20250502031018.1292-5-quic_ptalari@quicinc.com>
+	s=arc-20240116; t=1746597116; c=relaxed/simple;
+	bh=nSOv5rQ5SxT1Vqqk9mSgLjHBzWa93SRsnwYLo5JvTNE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qZawY/ww4oJ5YQWwtKu5VZOxGj5TMmHidN27hQwLCAuuN2zpHb6qQHaWdjnczZL8x4kPJrGIDBpSzOoiIjOTsClNxj7DhI6IyS78TLgdSzstxV4T6CXamqGi7D23YWT5wDlWSzc8IUlt2p6+tW50+yqD0MrCbddA2ysD+py8Trg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C5C92F;
+	Tue,  6 May 2025 22:51:42 -0700 (PDT)
+Received: from [192.168.0.12] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 910583F5A1;
+	Tue,  6 May 2025 22:51:48 -0700 (PDT)
+Message-ID: <b93cb084-de85-47ff-856d-c18556ec00fa@arm.com>
+Date: Wed, 7 May 2025 11:21:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502031018.1292-5-quic_ptalari@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 7/9] coresight: Consolidate clock enabling
+To: Leo Yan <leo.yan@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20250423151726.372561-1-leo.yan@arm.com>
+ <20250423151726.372561-8-leo.yan@arm.com>
+ <08690315-ce0e-4b2e-b85e-d8b9a82f4b11@arm.com>
+ <20250506105352.GE177796@e132581.arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250506105352.GE177796@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Praveen,
 
-kernel test robot noticed the following build warnings:
 
-[auto build test WARNING on 3e039dcc9c1320c0d33ddd51c372dcc91d3ea3c7]
+On 5/6/25 16:23, Leo Yan wrote:
+> On Mon, May 05, 2025 at 12:58:06PM +0530, Anshuman Khandual wrote:
+> 
+> [...]
+> 
+>>> --- a/drivers/hwtracing/coresight/coresight-core.c
+>>> +++ b/drivers/hwtracing/coresight/coresight-core.c
+>>> @@ -1645,6 +1645,51 @@ int coresight_etm_get_trace_id(struct coresight_device *csdev, enum cs_mode mode
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(coresight_etm_get_trace_id);
+>>>  
+>>> +/*
+>>> + * Attempt to find and enable programming clock (pclk) and trace clock (atclk)
+>>> + * for the given device.
+>>> + *
+>>> + * The AMBA bus driver will cover the pclk, to avoid duplicate operations,
+>>> + * skip to get and enable the pclk for an AMBA device.
+>>> + *
+>>> + * atclk is an optional clock, it will be only enabled when it is existed.
+>>> + * Otherwise, a NULL pointer will be returned to caller.
+>>> + *
+>>> + * Returns: '0' on Success; Error code otherwise.
+>>> + */
+>>> +int coresight_get_enable_clocks(struct device *dev, struct clk **pclk,
+>>> +				struct clk **atclk)
+>>
+>> These arguments probably could be arranged better as pclk and atclk are
+>> always contained inside 'xxx_drvdata' structure, which could be derived
+>> from the 'dev' structure itself, if [dev|platform]_set_drvdata() always
+>> ensured to be called earlier.
+> 
+> Seems to me, the conclusion "pclk and atclk ... could be derived from
+> the 'dev' structure itself" is not true.
+> 
+> The reason is the coresight_get_enable_clocks() function is located in
+> the CoreSight core layer, it has no knowledge for driver data
+> definitions (see etmv4_drvdata, funnel_drvdata, etc).  as a result, it
+> cannot directly access the fields "drvdata->pclk" and "drvdata->atclk".
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Praveen-Talari/opp-add-new-helper-API-dev_pm_opp_set_level/20250502-111540
-base:   3e039dcc9c1320c0d33ddd51c372dcc91d3ea3c7
-patch link:    https://lore.kernel.org/r/20250502031018.1292-5-quic_ptalari%40quicinc.com
-patch subject: [PATCH v3 4/9] soc: qcom: geni-se: Enable QUPs on SA8255p Qualcomm platforms
-config: arc-randconfig-002-20250502 (https://download.01.org/0day-ci/archive/20250507/202505071326.jjvv4tTv-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071326.jjvv4tTv-lkp@intel.com/reproduce)
+That's correct because all device's drvdata structure definitions are
+local to their drivers and not really available in the core coresight
+layer. Trying to make them available might create more code churn and
+also break the abstraction.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505071326.jjvv4tTv-lkp@intel.com/
+I guess then a struct device and two clock double pointers are needed
+for these optional clocks to be assigned and enabled as proposed here.
 
-All warnings (new ones prefixed by >>):
+> 
+>> Currently there are only two instances where a NULL is being passed to
+>> indicate that 'atclk' clock is not to be probed or enabled. Could not
+>> individual clock requirements be passed in a flag argument instead ?
+>>
+>> #define CORESIGHT_ENABLE_PCLK	0x1
+>> #define CORESIGHT_ENABLE_ATCLK	0x2
+>>
+>> coresight_get_enable_clocks(struct device *dev, unsigned long flags)
+>>
+>> - atclk/pclk derived from drdvata which in turn from dev
+>> - flags can be checked for pclk/atclk requirements
+>>
+>> Even better - as atlck is the only optional clock here, it could just
+>> have a boolean flag argument to indicate for atclk clock.
+>>
+>>> +{
+>>> +	WARN_ON(!pclk);
+>>> +
+>>> +	if (!dev_is_amba(dev)) {
+>>> +		/*
+>>> +		 * "apb_pclk" is the default clock name for an Arm Primecell
+>>> +		 * peripheral, while "apb" is used only by the CTCU driver.
+>>> +		 *
+>>> +		 * For easier maintenance, CoreSight drivers should use
+>>> +		 * "apb_pclk" as the programming clock name.
+>>> +		 */
+>>> +		*pclk = devm_clk_get_enabled(dev, "apb_pclk");
+>>> +		if (IS_ERR(*pclk))
+>>> +			*pclk = devm_clk_get_enabled(dev, "apb");
+>>> +		if (IS_ERR(*pclk))
+>>> +			return PTR_ERR(*pclk);
+>>> +	} else {
+>>> +		/* Don't enable pclk for an AMBA device */
+>>> +		*pclk = NULL;
+>>> +	}
+>>
+>> Might be better to invert this conditional check as if (dev_is_amba(dev))
+>> for better readability.
+> 
+> Will refine code for this.
 
->> Warning: drivers/soc/qcom/qcom-geni-se.c:109 struct member 'geni_se_rsc_init' not described in 'geni_se_desc'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Sure
