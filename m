@@ -1,128 +1,150 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFB01F5F6;
-	Wed,  7 May 2025 09:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4996A230BDF
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746609664; cv=none; b=KUPFkCVBqj8Xbtxkr/2stg1BamviOCJQ5EISi8hAFra4MV88l5m1MGDULUKaUs+2RnrqQ4ni4fVocnpMcPcSRDa/hLkl/7qUpX3MdsYy4DUj/CiPr0CIB+XsLtBNSB0dX57VYRFgpLoKH75YdVJdMv0CSFNDHMaiJN6hvV3cOeY=
+	t=1746609692; cv=none; b=XfKkmdYFvpc9FedvoGWqjQshRhQTbegM4GGw2qgzsRHuonUVUBqhBh+hVqs3sISx7BJtcPgl1rtER+E4I5DGr1hg8jv7JStWR1xNc53wrFSz04coYRPGfTuleUxmysemL6BesAV4YfiOJK/oaT7laoSUgZ56UOBa7gznyjAnMnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746609664; c=relaxed/simple;
-	bh=GgQoyAjaOq7NcB3FzAB+J1S62la0v6VUahEFLUNpw+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pU+VlXZsF/UH4/Ch4h+tIyL7NkXT8uS6xrWLc1GvQwF7+ldLTSBxVlVxMpsvPHyr/f5w66AZMlGFDzegalKktkSa3qIZwPr5Jvd4y2o+RgqZ90/g3HJBpRmj9NYO79v+FfjlNh/gmUohIvU6TlY06aZ2M07klm95C39OM0rEwRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=d3ar2c/T; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1746609692; c=relaxed/simple;
+	bh=Zuk4ngv1wcV3NMC95okNfizOZQtgYbFjGF2v7oWA7MU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OO/9KLIF7/tf2e3/5qljriWceYtF2OYQVeUN3E1u4dT1oi2XJyv5N5gW4kHUGOans3j2FqkBPF5+j5i9UN/3V4xgdN058SySGlQtS6oP3FTfMPtHES+I5hI2NtL3+2LR7xAsDKESViOGVFtA+t3fgJixeY+C/CUgBMdtA8OM1xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FjmklosG; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="d3ar2c/T"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id EF9AF40E01ED;
-	Wed,  7 May 2025 09:21:00 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id R7aXOelr91QN; Wed,  7 May 2025 09:20:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746609655; bh=AK6ckjogsHlVrMYShLhyH/OG65/4K2ay6m++h/7A8MQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d3ar2c/T1sJPP3RXJDtoPeVeXrjtGcyAWjNrs5rzBy0RaIFvnrh3JzwKIgQLvivMF
-	 FBgw1v0NK2C0q7ep6iVf19/hr6Vv2969pKHNwhUK8ZsNPRgUokX3FrKeblZJ4v1Mew
-	 iBL162a8SsarGuRaYFfbAmGd1csPaAOLc8v1Mo6xtIHJ8KwtR1nYHf1TLsqF/7BfZ9
-	 hDVFIv9c59pgcpDowNK6qQytJeYOG5GXYTuY2bEL+x43u9WCyoVNqfAFakiYVrbx7O
-	 Bxl5h7r/mdsUet4tFZU+kXzhNYLxw51z+o620GO2i9jk7WiVw5u/OPb997miHlKEwD
-	 sDO/hbHwuSQuCrja/imHPMr2p4kmUn3/oRlkbqq5UzNQHX7TM7vm7kXwYyQS/es3yZ
-	 narO609+QShCtPW2sic2D3qovkcd5/OCjQBR+sWa6xRjQm5w1LyAkFVeWzQcPmszQQ
-	 rLRzBq8n9jwgf473bPu6TCBIhfEfRK9etI4WlwHQwqYU+rqH7fpmaRJF5Khj1RR4q/
-	 Y4oVPzzOOgqosDeA6MM3+6B5HPFL9ofRtPxfMTOuiGxoeceyHkRHPcLm3eOq0atqPN
-	 gr0Mesq3zCknmCRXr8jFUe2j9CMBCIfLWwO6PoBwYIPPeN6bkkleaPFuI6lBH+pMyM
-	 t7kMlpDzAtZbkKW/eShYr1ZI=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9D7F740E0238;
-	Wed,  7 May 2025 09:20:48 +0000 (UTC)
-Date: Wed, 7 May 2025 11:20:42 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: x86@kernel.org, Tony Luck <tony.luck@intel.com>,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	Smita.KoralahalliChannabasappa@amd.com,
-	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH v3 13/17] x86/mce: Unify AMD DFR handler with MCA Polling
-Message-ID: <20250507092042.GLaBsl6pczL50Qdr3e@fat_crate.local>
-References: <20250415-wip-mca-updates-v3-0-8ffd9eb4aa56@amd.com>
- <20250415-wip-mca-updates-v3-13-8ffd9eb4aa56@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FjmklosG"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a0b0d8090dso147478f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 02:21:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746609688; x=1747214488; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+y8jPOzO/Gnjm1gvhE1qivFemvUWxShS+OkhHR4ZTcI=;
+        b=FjmklosGXNCndGj2Ube/jmC6+zs6C31CEDfF6sWwRVPN1zxhieEW5W7Wr1uanoQQTa
+         sLdUl7AbtV53/eE7eKArkQjeyHJmQIs6Q5sOCabusg5y1+RHxfK0cDUpfYq9o0WDjfXw
+         APd6WAnXdjwtv2IEgNevtGEmOBEbv8IsXl6IWn2U+PIXNgAY3Fk/TzvAfa4PQrxZnYFJ
+         i7MClMBXF2HZhl7ybTQnCFoMYAI3Giu5Z5P75qw0dnwGyqr2jEhL/3ydq8HJByhzNY6J
+         xxopq9DLaYu5h6Tfwhswr/2czJgGNJ9H4BLMCENWajmCJFRvPohk2SEeiJ1+2oFYgwdK
+         AePw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746609688; x=1747214488;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+y8jPOzO/Gnjm1gvhE1qivFemvUWxShS+OkhHR4ZTcI=;
+        b=NR3AGdAufAtCFTwtwd9SL8yX63I6l5B8Tuahk6Twl83wLj5i5PRWTjjnHTERIreNLG
+         gt+tkpgZwwJwEdTT1SqPE72uJkdj0Dd99uMqscS/BrcQZg4zREKOBO7IDlijYhQreb6t
+         OzQ4fO7OaZDcFCIRyi5ZUXMkuqUu/eC+iNJhqNbozzzrtWxaSLzHyS8TsQ0cJ2CR1hrD
+         yoXYc6BGdYEa4apn9vyVwhBX/PStepqO2gsrb9Myys4SNFE81t5HTNIQUQWf6L4qyHG7
+         CUJf/KKHAC358KHywrBXQgl6/HdL+591MJVPjlSU7f7CdPm0AL+7rjqOAbiScQ4H1YiI
+         b3yw==
+X-Forwarded-Encrypted: i=1; AJvYcCUqxcx/SCXKogCJsLwVEO8Bn9yPLsl/99cyTn1TCWu6GCvW+d591aIccZlD9bcKhpiKyJXaw8qmF9OpdOE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHa1nmoJD6RZZYiZRYmJ1/ziiVWFpDEXy5YhMdv9ZfiYGCsunu
+	4+ikR05Lf7xGwchXcIRKsiyXkKqKkwCXVAazIHfME6iQUvjxUmA5J2ANUiuviIoGBC+U1GhSnSo
+	i
+X-Gm-Gg: ASbGnctMyIaXE4sRWYHvhr/sW/kNcSDz/gUQFBwABebfN1i1U/PtQurcIUdfrpHYvCs
+	z+3zojrN1AHt7+v1YsbqF70zxcHWGp6fMAvti3Wgw1c8HOjR/68+ayeFmL4yocf7IXYnu+e83bv
+	AjQ5lm6EOhAtS2/jp8BTQ6PXMrY7AeALcTOf0mrJJ/BuNF1GtmdUoWHCsz2dB5mFWiAKGeSV+e6
+	vTbKeVhJLNHxW+ZBNIKY/Dm6D0FTjvOaNt6Bk1krwALkWe2qtkZoiWe7yQ/TK1caY/CJFDtXJJy
+	V5igjgCN8YJm5L6ruUkxw7n8cnx2m35pNjTfUNg9Fpy/P+ekRQ==
+X-Google-Smtp-Source: AGHT+IGj/1ahHnSJ4e2xPVwr+AuBbHJ0wuhNIZomcjtqGtlqcAu1lDRaE0pf4RUZq68YnrfTUyA8AA==
+X-Received: by 2002:a5d:47c5:0:b0:3a0:7d47:8d7e with SMTP id ffacd0b85a97d-3a0b4a363a9mr745845f8f.8.1746609688581;
+        Wed, 07 May 2025 02:21:28 -0700 (PDT)
+Received: from kuoka.. ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0b5764733sm1633431f8f.22.2025.05.07.02.21.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 02:21:27 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Gatien Chevallier <gatien.chevallier@foss.st.com>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Patrice Chotard <patrice.chotard@foss.st.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] bus: firewall: Fix missing static inline annotations for stubs
+Date: Wed,  7 May 2025 11:21:22 +0200
+Message-ID: <20250507092121.95121-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250415-wip-mca-updates-v3-13-8ffd9eb4aa56@amd.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2063; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=Zuk4ngv1wcV3NMC95okNfizOZQtgYbFjGF2v7oWA7MU=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoGyYROrndXK6jXz7UdfFDTRPGKx2tUXBG8hAo+
+ NjoRR0HvAyJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBsmEQAKCRDBN2bmhouD
+ 1yXTEACTo9Eb1/KCCY3Jd9m8bNUsYfG6kBXHtTAAFI8wXEESF8U4GhmrAvx81vwof2w0YREvtxb
+ ISMF0pjB6RnocBfCP85nQ746kCG8w4rVNu7MT0UDe2Jz018fFc7e0HVZvZYTA6jt8gJBKwCmqd/
+ OgFPMAwzCMmhAN0BMMRhei5JK5WBibxnRVJcAEQUEStj9wP5hwWVvHLNHyVpQvZfaC/8dWZBQtn
+ zmtaN+U9IM6vKJGcwlagZLSUw66zRwLh2m+JGoab8bZzlOQ14Obp0WgsNouRNXtU9sKOglP/YrK
+ Me7qo1tycDwv/7E4OHa3sRgrA68d2lbHXQc4FGvocItlGvWTu/gKzaXMeN7j0BXnWRU1GukWcOQ
+ l5QHEjIyw1Vub0gO20KmikggPtrV01IS1/6oWur1TIG6J1cQDwQrWO3sOTlviVTRx7y/vrfwuuN
+ w54+Az1E3GuM7qxNAvOY+CEG5RIzkNT/aVfRMbCZt4GBPLFctNStFxyP1qSRnD/nA+4AT9Nqy9Z
+ D+nsGkQaCaMla6U9FWlPBqK6HaD1qzIz3Wd/OF8PYatfVDMZSP1QMZGFmYK2BV1r7DZV431BQET
+ XmFwOSmhvwY44mJFyA9kdRO+00I/Vd3zISVSx8V6tEaHfIjeqV0ByI9r73KKQY17jhlYWNl1C6W qg3wA9+J6hsAWEg==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 15, 2025 at 02:55:08PM +0000, Yazen Ghannam wrote:
-> +static bool smca_should_log_poll_error(enum mcp_flags flags, struct mce_hw_err *err)
-> +{
-> +	struct mce *m = &err->m;
-> +
-> +	/*
-> +	 * If this is a deferred error found in MCA_STATUS, then clear
-> +	 * the redundant data from the MCA_DESTAT register.
-> +	 */
-> +	if (m->status & MCI_STATUS_VAL) {
-> +		if (m->status & MCI_STATUS_DEFERRED)
-> +			mce_wrmsrq(MSR_AMD64_SMCA_MCx_DESTAT(m->bank), 0);
-> +
-> +		return true;
-> +	}
-> +
-> +	/*
-> +	 * If the MCA_DESTAT register has valid data, then use
-> +	 * it as the status register.
-> +	 */
-> +	m->status = mce_rdmsrq(MSR_AMD64_SMCA_MCx_DESTAT(m->bank));
-> +
+Stubs in the header file for !CONFIG_STM32_FIREWALL case should be both
+static and inline, because they do not come with earlier declaration and
+should be inlined in every unit including the header.
 
-Superfluous newline.
+Cc: Patrice Chotard <patrice.chotard@foss.st.com>
+Cc: <stable@vger.kernel.org>
+Fixes: 5c9668cfc6d7 ("firewall: introduce stm32_firewall framework")
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ include/linux/bus/stm32_firewall_device.h | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-> +	if (!(m->status & MCI_STATUS_VAL))
-> +		return false;
-> +
-> +	/*
-> +	 * Gather all relevant data now and log the record before clearing
-> +	 * the deferred status register. This avoids needing to go back to
-> +	 * the polling function for these actions.
-> +	 */
-> +	mce_read_aux(err, m->bank);
-> +
-> +	if (m->status & MCI_STATUS_ADDRV)
-> +		m->addr = mce_rdmsrq(MSR_AMD64_SMCA_MCx_DEADDR(m->bank));
-> +
-> +	smca_extract_err_addr(m);
-> +	m->severity = mce_severity(m, NULL, NULL, false);
-> +
-> +	if (flags & MCP_QUEUE_LOG)
-> +		mce_gen_pool_add(err);
-> +	else
-> +		mce_log(err);
-
-Except you have a function which is called "should log" which also does the
-logging.
-
-And you have that same logging being done in machine_check_poll().
-
-This code needs more designing.
-
-Thx.
-
+diff --git a/include/linux/bus/stm32_firewall_device.h b/include/linux/bus/stm32_firewall_device.h
+index 5178b72bc920..eaa7a3f54450 100644
+--- a/include/linux/bus/stm32_firewall_device.h
++++ b/include/linux/bus/stm32_firewall_device.h
+@@ -114,27 +114,30 @@ void stm32_firewall_release_access_by_id(struct stm32_firewall *firewall, u32 su
+ 
+ #else /* CONFIG_STM32_FIREWALL */
+ 
+-int stm32_firewall_get_firewall(struct device_node *np, struct stm32_firewall *firewall,
+-				unsigned int nb_firewall)
++static inline int stm32_firewall_get_firewall(struct device_node *np,
++					      struct stm32_firewall *firewall,
++					      unsigned int nb_firewall)
+ {
+ 	return -ENODEV;
+ }
+ 
+-int stm32_firewall_grant_access(struct stm32_firewall *firewall)
++static inline int stm32_firewall_grant_access(struct stm32_firewall *firewall)
+ {
+ 	return -ENODEV;
+ }
+ 
+-void stm32_firewall_release_access(struct stm32_firewall *firewall)
++static inline void stm32_firewall_release_access(struct stm32_firewall *firewall)
+ {
+ }
+ 
+-int stm32_firewall_grant_access_by_id(struct stm32_firewall *firewall, u32 subsystem_id)
++static inline int stm32_firewall_grant_access_by_id(struct stm32_firewall *firewall,
++						    u32 subsystem_id)
+ {
+ 	return -ENODEV;
+ }
+ 
+-void stm32_firewall_release_access_by_id(struct stm32_firewall *firewall, u32 subsystem_id)
++static inline void stm32_firewall_release_access_by_id(struct stm32_firewall *firewall,
++						       u32 subsystem_id)
+ {
+ }
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.45.2
 
-https://people.kernel.org/tglx/notes-about-netiquette
