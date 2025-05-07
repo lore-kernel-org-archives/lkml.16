@@ -1,364 +1,178 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C04171A1;
-	Wed,  7 May 2025 06:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A513209;
+	Wed,  7 May 2025 06:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746597849; cv=none; b=dQuIPUyE8YCdVDs/82Qf1/uAaoq0OkCtq7SsipcehZ3GVzXhoGy5ZVBnJBjimrnygERXi8SyS3jLJeBGl5XF3J9wemSvY62oalcuJKKBHMrc9d8LbjogX7Byc162CXbdLyt4zcu/ZtlG3TWpNmiUQLlKJcdoVqt1BEeBdL0kgoI=
+	t=1746597939; cv=none; b=pC8hmZo1kE22gs9lcDn8dHxSthmKYPNTczEHAakJVtU7JsjZx20oPdU1KOJd4uAa3y2/tjOwaoKlNtmd9KgYZMGXNuF3W8LX41S7Y5qO7ep+AN1buzxROazPDnmWCmBoGFgyXU6mEqP2vtTIizrgtDmQSymAICMBX7IMxArNOOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746597849; c=relaxed/simple;
-	bh=xyaq7YqtvE+ZT30qrdXB0dsaGtEBVNa3sL16S2vb9n8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WCKKdbRigMhjhXVEEgY91c2rzZEjdTJoqT4yzbOhVFqyfK0Wf8DWm+Ir2SVoUGb+UpHvEU9LDimwnwwm+JSmwShxLHWQWm75ZHdVOp5J5hiO1/g9I9AiXB9sz/pgkhHSxzbbzgpnNjpl/M6j6W6gFgfQ3WG3Iw22KEux1ggokMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rxXv5jhx; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1746597939; c=relaxed/simple;
+	bh=MxaitG3CeVKWMYfeMyrLf5dhe0p3NY2WKRP6bXurY4A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J/Cjk0PkbzCpFolxhI+/ucO1Tnz6uuo8t88jUjJCuaTqYNysfYc3x1cGWaFWnX4yS6srNK2pvaujPYBXlIRUP9aGxt/PXwZDqau8Y1wfc3vUfawqRXRI/xl13Wu8azj6lQWYO75PlNcIyoufd9f5gV8KndvmuXCmahqWsbWdDxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xydg6riZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rxXv5jhx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=3Q2jDgnMElwL2BE0fmTeQle+MDZk0UfyGXf29wN2F6c=; b=rxXv5jhxkxSBm8XX7rfofA9Fql
-	KfQeT5eDDQPGG1WTvQBHjFnu36da3j/UBaKMVpT803D78G3u/PqCnCz0cSJHgfrg2KqCFY9JjrW/o
-	Lb4C+hLWCBaM24AF7IkAx868NQdtwUx8RBcvHeDXU84g5w8hfH/zPQSwNsPeG1/j7F0PUQRTp3FYZ
-	TIvtAMXkmNLCFDaNZT7tDnNlqvk0cmbjiV/pHXk39WpdnKVTnwN06OtKCRdowFAE3NWNtpobZT/yp
-	CWJvfQWjnkGO2i8dITnYQHldY8jm/eMg32uDhQ88A3QrXS0yaMCDXqC2dxOTPRkVBjR+5WEDvtGVo
-	SoyxKIWQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCXsz-0000000EKMd-1ww9;
-	Wed, 07 May 2025 06:04:05 +0000
-Date: Tue, 6 May 2025 23:04:05 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: NeilBrown <neil@brown.name>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] NFSD: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <aBr31WNad6GFOTda@infradead.org>
-References: <aBp37ZXBJM09yAXp@kspp>
- <174657431631.3924073.6654014165534485350@noble.neil.brown.name>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xydg6riZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 927D5C4CEE7;
+	Wed,  7 May 2025 06:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746597938;
+	bh=MxaitG3CeVKWMYfeMyrLf5dhe0p3NY2WKRP6bXurY4A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Xydg6riZZiopOfjrEFs9cFM5vjxkDdxaMx26gHeyNlsv+htBqzNyK7TVu8UV47g/W
+	 FyiB8SBP7pt7G4J8OkZgHtZmi96TDgsuoZAouple+rlD9GrEqkguTWHMr2DbhbSxX4
+	 9gAxC2ZFcu4W783A17jlYjR/ObGNRnbN0QZ0S1BN3qRHsZa3YxFFBTiOwHlYxoGPyr
+	 t41ThI81r1N88XNZ6lUB1DJp6DQxNkv6LxFKj77YtSa7H8gWLPG+ANoy04+v4wukif
+	 C1jtgshJvfUr5cTyxig5zIyf/uRaD40LVREPv1kz+Wm8qi+E6BnD7uZuOXzSnAcPlv
+	 DzZXeYATjqonA==
+Message-ID: <d51b4422-0c46-4b03-840b-302603b3136f@kernel.org>
+Date: Wed, 7 May 2025 08:05:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174657431631.3924073.6654014165534485350@noble.neil.brown.name>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] tty: serial: 8250_omap: fix tx with dma
+To: Mans Rullgard <mans@mansr.com>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-omap@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250506150748.3162-1-mans@mansr.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250506150748.3162-1-mans@mansr.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 07, 2025 at 09:31:56AM +1000, NeilBrown wrote:
-> struct knfsd_fh has a fixed size determined by NFS4_FHSIZE.
-> The fact that fh_fsid is "flexible" doesn't mean it is unlimited in
-> size.  So moving it to the end of other structures is silencing a
-> warning but leaving the code as potentially confusing.
+On 06. 05. 25, 17:07, Mans Rullgard wrote:
+> Commit 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
+> introduced an error in the TX DMA handling for 8250_omap.
 > 
-> Maybe just make it
->     u32 fh_fsid[4]; /* in practice the size varies but is always
->                      * limited by fh_raw above
+> When the OMAP_DMA_TX_KICK flag is set, one byte is pulled from the
+> kfifo and emitted directly in order to start the DMA.  This is done
+> without updating DMA tx_size which leads to uart_xmit_advance() called
+> in the DMA complete callback advancing the kfifo by one too much.
+> 
+> In practice, transmitting N bytes has been seen to result in the last
+> N-1 bytes being sent repeatedly.
+> 
+> This change fixes the problem by moving all of the dma setup after
+> the OMAP_DMA_TX_KICK handling and using kfifo_len() instead of the
+> dma size for the 4-byte cutoff check. This slightly changes the
+> behaviour at buffer wraparound, but it still transmits the correct
+> bytes somehow. At the point kfifo_dma_out_prepare_mapped is called,
+> at least one byte is guaranteed to be in the fifo, so checking the
+> return value is not necessary.
+> 
+> Fixes: 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Mans Rullgard <mans@mansr.com>
+> ---
+> v2: split patch in two
+> ---
+>   drivers/tty/serial/8250/8250_omap.c | 24 +++++++++---------------
+>   1 file changed, 9 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
+> index f1aee915bc02..180466e09605 100644
+> --- a/drivers/tty/serial/8250/8250_omap.c
+> +++ b/drivers/tty/serial/8250/8250_omap.c
+> @@ -1173,16 +1173,6 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
+>   		return 0;
+>   	}
+>   
+> -	sg_init_table(&sg, 1);
+> -	ret = kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1,
+> -					   UART_XMIT_SIZE, dma->tx_addr);
+> -	if (ret != 1) {
+> -		serial8250_clear_THRI(p);
+> -		return 0;
+> -	}
+> -
+> -	dma->tx_size = sg_dma_len(&sg);
+> -
+>   	if (priv->habit & OMAP_DMA_TX_KICK) {
+>   		unsigned char c;
+>   		u8 tx_lvl;
+...
+> @@ -1216,11 +1206,12 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
+>   			goto err;
+>   		}
+>   		skip_byte = c;
+> -		/* now we need to recompute due to kfifo_get */
+> -		kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1,
+> -				UART_XMIT_SIZE, dma->tx_addr);
+>   	}
+>   
+> +	sg_init_table(&sg, 1);
+> +	kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1,
+> +				     UART_XMIT_SIZE, dma->tx_addr);
 
-Don't make this more complicated than needed.  Just killing the
-magic union overlay over the raw array just complicates things, so
-just use indices into it.  Below is a simple version, but this can
-use some more work to split things up and to entirely avoid the
-not exactly natural u32-based addressing in various helpers.
+This can fail (note the first call to this was checked). The latter 
+(deliberately) not.
 
-diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index 0363720280d4..804aa679a992 100644
---- a/fs/nfsd/export.c
-+++ b/fs/nfsd/export.c
-@@ -1230,7 +1230,7 @@ rqst_exp_get_by_name(struct svc_rqst *rqstp, struct path *path)
- struct svc_export *
- rqst_exp_find(struct cache_req *reqp, struct net *net,
- 	      struct auth_domain *cl, struct auth_domain *gsscl,
--	      int fsid_type, u32 *fsidv)
-+	      int fsid_type, void *fsidv)
- {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 	struct svc_export *gssexp, *exp = ERR_PTR(-ENOENT);
-diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
-index 4d92b99c1ffd..9b2719d8a3e2 100644
---- a/fs/nfsd/export.h
-+++ b/fs/nfsd/export.h
-@@ -131,6 +131,6 @@ static inline struct svc_export *exp_get(struct svc_export *exp)
- }
- struct svc_export *rqst_exp_find(struct cache_req *reqp, struct net *net,
- 				 struct auth_domain *cl, struct auth_domain *gsscl,
--				 int fsid_type, u32 *fsidv);
-+				 int fsid_type, void *fsidv);
- 
- #endif /* NFSD_EXPORT_H */
-diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-index 290271ac4245..6dcd2c9ec15b 100644
---- a/fs/nfsd/nfs4layouts.c
-+++ b/fs/nfsd/nfs4layouts.c
-@@ -56,7 +56,7 @@ static void
- nfsd4_alloc_devid_map(const struct svc_fh *fhp)
- {
- 	const struct knfsd_fh *fh = &fhp->fh_handle;
--	size_t fsid_len = key_len(fh->fh_fsid_type);
-+	size_t fsid_len = key_len(fh->fh_raw[FH_FSID_TYPE]);
- 	struct nfsd4_deviceid_map *map, *old;
- 	int i;
- 
-@@ -64,8 +64,8 @@ nfsd4_alloc_devid_map(const struct svc_fh *fhp)
- 	if (!map)
- 		return;
- 
--	map->fsid_type = fh->fh_fsid_type;
--	memcpy(&map->fsid, fh->fh_fsid, fsid_len);
-+	map->fsid_type = fh->fh_raw[FH_FSID_TYPE];
-+	memcpy(&map->fsid, fh->fh_raw + FH_FSID, fsid_len);
- 
- 	spin_lock(&nfsd_devid_lock);
- 	if (fhp->fh_export->ex_devid_map)
-@@ -73,9 +73,9 @@ nfsd4_alloc_devid_map(const struct svc_fh *fhp)
- 
- 	for (i = 0; i < DEVID_HASH_SIZE; i++) {
- 		list_for_each_entry(old, &nfsd_devid_hash[i], hash) {
--			if (old->fsid_type != fh->fh_fsid_type)
-+			if (old->fsid_type != map->fsid_type)
- 				continue;
--			if (memcmp(old->fsid, fh->fh_fsid,
-+			if (memcmp(old->fsid, map->fsid,
- 					key_len(old->fsid_type)))
- 				continue;
- 
-diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index aef474f1b84b..f58da563d4fd 100644
---- a/fs/nfsd/nfsfh.c
-+++ b/fs/nfsd/nfsfh.c
-@@ -161,37 +161,40 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct net *net,
- 	if (fh->fh_size == 0)
- 		return nfserr_nofilehandle;
- 
--	if (fh->fh_version != 1)
-+	if (fh->fh_raw[FH_VERSION] != 1)
- 		return error;
- 
- 	if (--data_left < 0)
- 		return error;
--	if (fh->fh_auth_type != 0)
-+	if (fh->fh_raw[FH_AUTH_TYPE] != 0)
- 		return error;
--	len = key_len(fh->fh_fsid_type) / 4;
-+	len = key_len(fh->fh_raw[FH_FSID_TYPE]) / 4;
- 	if (len == 0)
- 		return error;
--	if (fh->fh_fsid_type == FSID_MAJOR_MINOR) {
-+	if (fh->fh_raw[FH_FSID_TYPE] == FSID_MAJOR_MINOR) {
- 		/* deprecated, convert to type 3 */
-+		u32 *fsidv = (u32 *)(fh->fh_raw + FH_FSID);
-+
- 		len = key_len(FSID_ENCODE_DEV)/4;
--		fh->fh_fsid_type = FSID_ENCODE_DEV;
-+		fh->fh_raw[FH_FSID_TYPE] = FSID_ENCODE_DEV;
- 		/*
- 		 * struct knfsd_fh uses host-endian fields, which are
- 		 * sometimes used to hold net-endian values. This
- 		 * confuses sparse, so we must use __force here to
- 		 * keep it from complaining.
- 		 */
--		fh->fh_fsid[0] = new_encode_dev(MKDEV(ntohl((__force __be32)fh->fh_fsid[0]),
--						      ntohl((__force __be32)fh->fh_fsid[1])));
--		fh->fh_fsid[1] = fh->fh_fsid[2];
-+		fsidv[0] = new_encode_dev(MKDEV(
-+			ntohl((__force __be32)fsidv[0]),
-+			ntohl((__force __be32)fsidv[1])));
-+		fsidv[1] = fsidv[2];
- 	}
- 	data_left -= len;
- 	if (data_left < 0)
- 		return error;
- 	exp = rqst_exp_find(rqstp ? &rqstp->rq_chandle : NULL,
- 			    net, client, gssclient,
--			    fh->fh_fsid_type, fh->fh_fsid);
--	fid = (struct fid *)(fh->fh_fsid + len);
-+			    fh->fh_raw[FH_FSID_TYPE], fh->fh_raw + FH_FSID);
-+	fid = (struct fid *)(fh->fh_raw + FH_FSID + len);
- 
- 	error = nfserr_stale;
- 	if (IS_ERR(exp)) {
-@@ -233,7 +236,7 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct net *net,
- 	 */
- 	error = nfserr_badhandle;
- 
--	fileid_type = fh->fh_fileid_type;
-+	fileid_type = fh->fh_raw[FH_FILEID_TYPE];
- 
- 	if (fileid_type == FILEID_ROOT)
- 		dentry = dget(exp->ex_path.dentry);
-@@ -463,18 +466,19 @@ static void _fh_update(struct svc_fh *fhp, struct svc_export *exp,
- {
- 	if (dentry != exp->ex_path.dentry) {
- 		struct fid *fid = (struct fid *)
--			(fhp->fh_handle.fh_fsid + fhp->fh_handle.fh_size/4 - 1);
-+			(fhp->fh_handle.fh_raw + FH_FSID +
-+			 fhp->fh_handle.fh_size - 1);
- 		int maxsize = (fhp->fh_maxsize - fhp->fh_handle.fh_size)/4;
- 		int fh_flags = (exp->ex_flags & NFSEXP_NOSUBTREECHECK) ? 0 :
- 				EXPORT_FH_CONNECTABLE;
- 		int fileid_type =
- 			exportfs_encode_fh(dentry, fid, &maxsize, fh_flags);
- 
--		fhp->fh_handle.fh_fileid_type =
-+		fhp->fh_handle.fh_raw[FH_FILEID_TYPE] =
- 			fileid_type > 0 ? fileid_type : FILEID_INVALID;
- 		fhp->fh_handle.fh_size += maxsize * 4;
- 	} else {
--		fhp->fh_handle.fh_fileid_type = FILEID_ROOT;
-+		fhp->fh_handle.fh_raw[FH_FILEID_TYPE] = FILEID_ROOT;
- 	}
- }
- 
-@@ -520,8 +524,8 @@ static void set_version_and_fsid_type(struct svc_fh *fhp, struct svc_export *exp
- retry:
- 	version = 1;
- 	if (ref_fh && ref_fh->fh_export == exp) {
--		version = ref_fh->fh_handle.fh_version;
--		fsid_type = ref_fh->fh_handle.fh_fsid_type;
-+		version = ref_fh->fh_handle.fh_raw[FH_VERSION];
-+		fsid_type = ref_fh->fh_handle.fh_raw[FH_FSID_TYPE];
- 
- 		ref_fh = NULL;
- 
-@@ -562,9 +566,9 @@ static void set_version_and_fsid_type(struct svc_fh *fhp, struct svc_export *exp
- 		fsid_type = FSID_ENCODE_DEV;
- 	else
- 		fsid_type = FSID_DEV;
--	fhp->fh_handle.fh_version = version;
-+	fhp->fh_handle.fh_raw[FH_VERSION] = version;
- 	if (version)
--		fhp->fh_handle.fh_fsid_type = fsid_type;
-+		fhp->fh_handle.fh_raw[FH_FSID_TYPE] = fsid_type;
- }
- 
- __be32
-@@ -610,18 +614,18 @@ fh_compose(struct svc_fh *fhp, struct svc_export *exp, struct dentry *dentry,
- 	fhp->fh_export = exp_get(exp);
- 
- 	fhp->fh_handle.fh_size =
--		key_len(fhp->fh_handle.fh_fsid_type) + 4;
--	fhp->fh_handle.fh_auth_type = 0;
-+		key_len(fhp->fh_handle.fh_raw[FH_FSID_TYPE]) + 4;
-+	fhp->fh_handle.fh_raw[FH_AUTH_TYPE] = 0;
- 
--	mk_fsid(fhp->fh_handle.fh_fsid_type,
--		fhp->fh_handle.fh_fsid,
-+	mk_fsid(fhp->fh_handle.fh_raw[FH_FSID_TYPE],
-+		fhp->fh_handle.fh_raw + FH_FSID,
- 		ex_dev,
- 		d_inode(exp->ex_path.dentry)->i_ino,
- 		exp->ex_fsid, exp->ex_uuid);
- 
- 	if (inode)
- 		_fh_update(fhp, exp, dentry);
--	if (fhp->fh_handle.fh_fileid_type == FILEID_INVALID) {
-+	if (fhp->fh_handle.fh_raw[FH_FILEID_TYPE] == FILEID_INVALID) {
- 		fh_put(fhp);
- 		return nfserr_stale;
- 	}
-@@ -644,11 +648,11 @@ fh_update(struct svc_fh *fhp)
- 	dentry = fhp->fh_dentry;
- 	if (d_really_is_negative(dentry))
- 		goto out_negative;
--	if (fhp->fh_handle.fh_fileid_type != FILEID_ROOT)
-+	if (fhp->fh_handle.fh_raw[FH_FILEID_TYPE] != FILEID_ROOT)
- 		return 0;
- 
- 	_fh_update(fhp, fhp->fh_export, dentry);
--	if (fhp->fh_handle.fh_fileid_type == FILEID_INVALID)
-+	if (fhp->fh_handle.fh_raw[FH_FILEID_TYPE] == FILEID_INVALID)
- 		return nfserr_stale;
- 	return 0;
- out_bad:
-@@ -776,9 +780,9 @@ char * SVCFH_fmt(struct svc_fh *fhp)
- 
- enum fsid_source fsid_source(const struct svc_fh *fhp)
- {
--	if (fhp->fh_handle.fh_version != 1)
-+	if (fhp->fh_handle.fh_raw[FH_VERSION] != 1)
- 		return FSIDSOURCE_DEV;
--	switch(fhp->fh_handle.fh_fsid_type) {
-+	switch(fhp->fh_handle.fh_raw[FH_FSID_TYPE]) {
- 	case FSID_DEV:
- 	case FSID_ENCODE_DEV:
- 	case FSID_MAJOR_MINOR:
-diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-index 5103c2f4d225..26975ede465a 100644
---- a/fs/nfsd/nfsfh.h
-+++ b/fs/nfsd/nfsfh.h
-@@ -43,22 +43,17 @@
-  *   filesystems must not use the values '0' or '0xff'. 'See enum fid_type'
-  *   in include/linux/exportfs.h for currently registered values.
-  */
--
- struct knfsd_fh {
- 	unsigned int	fh_size;	/*
- 					 * Points to the current size while
- 					 * building a new file handle.
- 					 */
--	union {
--		char			fh_raw[NFS4_FHSIZE];
--		struct {
--			u8		fh_version;	/* == 1 */
--			u8		fh_auth_type;	/* deprecated */
--			u8		fh_fsid_type;
--			u8		fh_fileid_type;
--			u32		fh_fsid[]; /* flexible-array member */
--		};
--	};
-+	char		fh_raw[NFS4_FHSIZE];
-+#define FH_VERSION		0
-+#define FH_AUTH_TYPE		1
-+#define FH_FSID_TYPE		2
-+#define FH_FILEID_TYPE		3
-+#define FH_FSID			4
- };
- 
- static inline __u32 ino_t_to_u32(ino_t ino)
-@@ -141,10 +136,12 @@ extern enum fsid_source fsid_source(const struct svc_fh *fhp);
-  * sparse from complaining. Since these values are opaque to the
-  * client, that shouldn't be a problem.
-  */
--static inline void mk_fsid(int vers, u32 *fsidv, dev_t dev, ino_t ino,
--			   u32 fsid, unsigned char *uuid)
-+static inline void mk_fsid(int vers, void *fsid, dev_t dev, ino_t ino,
-+			   u32 fsid_num, unsigned char *uuid)
- {
-+	u32 *fsidv = fsid;
- 	u32 *up;
-+
- 	switch(vers) {
- 	case FSID_DEV:
- 		fsidv[0] = (__force __u32)htonl((MAJOR(dev)<<16) |
-@@ -152,7 +149,7 @@ static inline void mk_fsid(int vers, u32 *fsidv, dev_t dev, ino_t ino,
- 		fsidv[1] = ino_t_to_u32(ino);
- 		break;
- 	case FSID_NUM:
--		fsidv[0] = fsid;
-+		fsidv[0] = fsid_num;
- 		break;
- 	case FSID_MAJOR_MINOR:
- 		fsidv[0] = (__force __u32)htonl(MAJOR(dev));
-@@ -260,9 +257,10 @@ static inline bool fh_match(const struct knfsd_fh *fh1,
- static inline bool fh_fsid_match(const struct knfsd_fh *fh1,
- 				 const struct knfsd_fh *fh2)
- {
--	if (fh1->fh_fsid_type != fh2->fh_fsid_type)
-+	if (fh1->fh_raw[FH_FSID_TYPE] != fh2->fh_raw[FH_FSID_TYPE])
- 		return false;
--	if (memcmp(fh1->fh_fsid, fh2->fh_fsid, key_len(fh1->fh_fsid_type)) != 0)
-+	if (memcmp(fh1->fh_raw + FH_FSID, fh2->fh_raw + FH_FSID,
-+			key_len(fh1->fh_raw[FH_FSID_TYPE])) != 0)
- 		return false;
- 	return true;
- }
+> +
+>   	desc = dmaengine_prep_slave_sg(dma->txchan, &sg, 1, DMA_MEM_TO_DEV,
+>   			DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+>   	if (!desc) {
+...
+> @@ -1248,8 +1240,10 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
+>   err:
+>   	dma->tx_err = 1;
+>   out_skip:
+> -	if (skip_byte >= 0)
+> +	if (skip_byte >= 0) {
+>   		serial_out(p, UART_TX, skip_byte);
+> +		p->port.icount.tx++;
+
+This is still unrelated.
+
+thanks,
+-- 
+js
+suse labs
