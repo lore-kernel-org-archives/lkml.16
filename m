@@ -1,90 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B3421480E;
-	Wed,  7 May 2025 10:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B29B1B87D5;
+	Wed,  7 May 2025 10:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746614250; cv=none; b=Vnb5KmCcGqIuHlER9e/9IbAXCSpJ5HobCU+HcIgvsXtnrwCVXHcnB6kfeaH2GQvXCKMlf0ybj6YyuaMSQELBub7NqzBa3lxASPBlcpbL9/mOniu8Ctw5gHU/uMvd3UjHxuYqqvsGKi9qTrfbLRwEqhZHzQJRBRPJNZdVAzx+oE4=
+	t=1746614337; cv=none; b=MlDzBT4/pVMyTermAh+WpJ6zE4cp40HucgrNYOVgFLEc95hqdwUYa/a6M1B0r+C8Sl6q17jvhIjNN+5AfegdtGXcDWDG5igMra7V1/XFTO1tRuoplzT1Cu/tjuPDtucTS6oOpuzqfnWJAbEU+xHEFMbYbXIDh+WSYruirCX7/TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746614250; c=relaxed/simple;
-	bh=KOxPNiWAphSmxx4fuvVj3cV4lynvxkHVXO7Dt9R7Hbg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=sd//EKwUWc46DR2Bt3tDoR/eMgAVHsRJR2ca1IBa68uVVOuR3j+x6QNjCqmXxKnCig72cuGPto+q34iEkGfVdCPCSD9K2suecuTQXua1PJY9wlYZ7jz9gSy5pjpSdwr/FxgdT+V/42ze5qEnoPfHJMpFRHZ5brwRnicKPnohgQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZmMc5VRl; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746614337; c=relaxed/simple;
+	bh=C12Kkx8kkpkqsq8XfghKSPwFlwi6qGFqHeCaSrbW3/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lLF//3jxK6zDDhrwcps/j7BA7Ni9eEWsb4gAi8uCT2EgLTnw5C6vNtPQmOHhgG2tK+N+sQlEmf+RgaCPyw3/tfxk15HxdelIKp8RqzIVYsdWAt9SuUS56CNMlwQK62FkWL3kq0U24jHA3a2FrVvZSFegP8buOpXPmlW/VB8F5wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=MMOW6rfd; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZmMc5VRl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746614249; x=1778150249;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=KOxPNiWAphSmxx4fuvVj3cV4lynvxkHVXO7Dt9R7Hbg=;
-  b=ZmMc5VRlJQrpZVbY2BUyOMICkISFlK+agRC0neK2/EvoDV+H+hkIPgvc
-   +XWiQE0kHysbFJBhSTdGGt+LnXgInbpCwf1XaE7fJROEfG6Yy39VOBMc5
-   MXkCf20DFj+9p3I7ZEUsvwnlelWpeQgwSRWgaWhzZXISUmNlujbq8Ni/A
-   4omg+mSj4m1pMecyr+fAkIh5FTphndysT94ImwniFgwdgovhljnX/9eIM
-   fuWxK4uGvuD3b/l8wPqwePbZw8eZJQE9gu24Zoqf0ZqF0WT2KXMK5ZQ8x
-   dRLaVeFF65ECyjHhBVGwyhTeO9L15t6nu9PBERjB2p+hsxo943kVQKr6Q
-   w==;
-X-CSE-ConnectionGUID: YxNgZqlKQwWACxjMiV+akg==
-X-CSE-MsgGUID: T9M9liHgSyq5freJWb+SRw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="73724297"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="73724297"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 03:37:28 -0700
-X-CSE-ConnectionGUID: ppinAvuSSsOCN+MV1RBDfw==
-X-CSE-MsgGUID: 7PUFFF9nSSWvhX6SurdX9A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="173110904"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.30])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 03:37:24 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: malattia@linux.it, hdegoede@redhat.com, linux@treblig.org
-Cc: hverkuil@xs4all.nl, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250505152558.40526-1-linux@treblig.org>
-References: <20250505152558.40526-1-linux@treblig.org>
-Subject: Re: [PATCH v2] platform/x86/sony-laptop: Remove unused sony laptop
- camera code
-Message-Id: <174661424037.2744.14327931870878423651.b4-ty@linux.intel.com>
-Date: Wed, 07 May 2025 13:37:20 +0300
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="MMOW6rfd"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A3F1040E0238;
+	Wed,  7 May 2025 10:38:52 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 5NxdQlzpfchg; Wed,  7 May 2025 10:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746614328; bh=jsxjYtuSaUYoq44jVayqHfQabpuP4aDbz6Wxb67ZlSs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MMOW6rfdk+xn01cb3BPDMCZyLZhag1dJD6GJku1/T3uMt4v5owu5Fh75UvdXXtkGf
+	 sMnxJxSidHDLibNiwb0VVED+qGBvR/i9rnjGJAR27No6ek2MPPpYhFsOhA2IasVlKq
+	 NXjrMUfUY0unL3q3dFiJTXPD/d1JOP4jNaIrL9LFvd3Z4q9wqifBXp2nnF0dDKs9Da
+	 ZRvuu87JFSPNkxWDE7BZE9AGb2r9pyPwUlbJH1Wo9HtsLj74HiTSZZncUF3hsNeJ/9
+	 fH31z+99/h/O3UBG2/sjuhkhz2ohcjYaZx9zxepRpXgtFuMXysbSdHNrY/dL5QzS1E
+	 IeiLKYEJoce1GbGtRi+IXrZZSWy2P5XS4f5A5xHohdPZz9AQAQPApMoenAKeK4/Xch
+	 EYDs42nmPoqwNMW8kcHE1ZDX/6U8O1fAUiXZ71MzfC2UjepaXOjlHF85Lrx+B6IqTp
+	 eRQKgpwyWfK44MiK+8TH2CI2l+wS+tGyIPbrBIb7Vv/bG2TDEQ+dzRW22nEu2GS5Iq
+	 LcaPh4/qhxwCg+0jNuYOxErrAKpbtzPcZUoi5po/2vwe8iqiP6lpfkYY8pflcOQvTi
+	 PNFp2ipsDY4SrPUzJMcW861uXeI3PrJgjNDQLPkFE2Z3OKy7D7oEcQzLh/EiH8hVuZ
+	 NHj2FkLsxKkl080XlGW9UkPo=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3E08440E0222;
+	Wed,  7 May 2025 10:38:27 +0000 (UTC)
+Date: Wed, 7 May 2025 12:38:21 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+Cc: Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	Thomas.Lendacky@amd.com, nikunj@amd.com, Santosh.Shukla@amd.com,
+	Vasant.Hegde@amd.com, Suravee.Suthikulpanit@amd.com,
+	David.Kaplan@amd.com, x86@kernel.org, hpa@zytor.com,
+	peterz@infradead.org, pbonzini@redhat.com, kvm@vger.kernel.org,
+	kirill.shutemov@linux.intel.com, huibo.wang@amd.com,
+	naveen.rao@amd.com, francescolavra.fl@gmail.com
+Subject: Re: [PATCH v5 01/20] KVM: x86: Move find_highest_vector() to a
+ common header
+Message-ID: <20250507103821.GOaBs4HVnMXOdzOo_y@fat_crate.local>
+References: <20250429061004.205839-1-Neeraj.Upadhyay@amd.com>
+ <20250429061004.205839-2-Neeraj.Upadhyay@amd.com>
+ <aBDlVF4qXeUltuju@google.com>
+ <62ae9c91-b62e-4bf9-8cf2-e68ddd0a1487@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <62ae9c91-b62e-4bf9-8cf2-e68ddd0a1487@amd.com>
 
-On Mon, 05 May 2025 16:25:58 +0100, linux@treblig.org wrote:
+On Tue, Apr 29, 2025 at 11:39:53PM +0530, Neeraj Upadhyay wrote:
+> My bad. I missed updating the changelog with the information about logic update.
 
-> commit ba47652ba655 ("media: meye: remove this deprecated driver")
-> removed the meye driver but left behind the code in sony-laptop.c
-> which that driver used to call.
-> 
-> Remove the sony_pic_camera_command() function, and the set of
-> defines (SONY_PIC_COMMAND_*) in a header used for the interface
-> and the static helpers it called.
-> 
-> [...]
+No, remember: when you move code like this, your first patch is *solely*
+*mechanical* move.
 
+Then, ontop, in further patches you do other changes.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+You want to keep mechanical move separate from other changes because it
+complicates review unnecessarily.
 
-The list of commits applied:
-[1/1] platform/x86/sony-laptop: Remove unused sony laptop camera code
-      commit: a7c33fd14dbcece11c053727158c72804bb65bf1
+One of the reasons I'm trying to get you guys to do review too is because then
+you'll know.
 
---
- i.
+Thx.
 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
