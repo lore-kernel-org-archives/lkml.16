@@ -1,121 +1,85 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5A119C54B
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 02:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5086119D087
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 02:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746585728; cv=none; b=l9Ef+M/PRI1XNTvMKu/+VVappb0T+bq/viYh7D2TuPMj2GwKmaeYXVDLEgGbP+avg/6AYw5ijpUKUNwBuAb7Z4yyDMTBXK5mJ3YhVoEer/mukEtl2cAN1VafC10oU6LMEDYYm31BR5WEsK7u8HUXE68cBnHgkc6qtl34lBaTJ58=
+	t=1746585757; cv=none; b=eoJo3mRgfM/r+nttKNkoPbSXns6MFX1CqnvNKIV7nNQUri1i8eAhjk9q+PE4hQ8c1DP5lX+j1SlULnoGT6tniRJwjjp8PbFVwJ9V9oGm7xZ5NSyVoSRoztVAV5JghULBhVvQtzI7gTNNhMc48Dn3h1eJ5a9n/mzAtCl/8t5sYa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746585728; c=relaxed/simple;
-	bh=6etL97QEsqJN3YZrjYchxkPsyMZOXMw61jInfbT3Xw0=;
+	s=arc-20240116; t=1746585757; c=relaxed/simple;
+	bh=JwUlvQLq/WzAJMwnBJlrke4WRFbFdY38QGDWB9cO0p0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rKx9Tp1OZBTdQfHVOtmkqd5RjSEPc1bXpoq911JzOhztbdqW88a4OVZOVU5H3I43jU49S6Sf/UUKf7fpMS7Mtzd3we+Pm3EV3IwOBJbohObLTxywfVbP0b2E+ev0b0dRRme2Uq9Y01NzSlfSOojm+sM825qnv1riAU3oUD9ukvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IObWT5zk; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=meQ5z5xYhXr+NYBz6Iqhn6Ig8XImqjQBi0GFXrR6UKps68LJCwSssEtApmKRAv2dX8cVMFuxO5qJb+7/zywwce5rlz68osns7eyZV5jMsnYSPuKjlw6sS55Dvwzv9dQKcowneuWvb2Iw7Vk3fzsYzetd7TOpDWTNQ/ttdYp4u24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QGPlT5Vi; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IObWT5zk"
-Message-ID: <87e475ca-c4db-4fe4-94df-4e29f779a383@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746585713;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jR9JKWCrpFIfn9jOgzBStj0mD3xOCH22odNml15ltfQ=;
-	b=IObWT5zkKq5EkbWwVKTGdfdlbql9PSombG1SPX7hWaaxp/EZwXp2Nl3674HN9qu9nFmHVS
-	RgIulIF+wOLmuBVb0Sv6jMyjKYDRkt7uDwC8waWe5ZIGzGz9EYnlcH9IWiJyaih6994gMd
-	OrHpRZDB6IIrblHWYWCjsyBVZ6D71g8=
-Date: Wed, 7 May 2025 10:41:46 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QGPlT5Vi"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1746585745; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=zJikcTQk9Z8vf+vv6wxs06aouJcHm5T6PfC75KHz4p8=;
+	b=QGPlT5ViuRsXG6K1KsrcaBDt1i3xyhdVAN1/hbx/vXCUlyY0+/9RtZdJY8hA79ZG5RAskRLhVkPBFrD08Cob2A+4/qjktgnA57ffUZMlk9x91U/nuf75Oj1nBABtmgAp7Foy9VQPm+Nb0wjJHncPyM8LNDFd48uoS1K1BaY7Gk8=
+Received: from 30.221.131.179(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WZkK2Sl_1746585744 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 07 May 2025 10:42:24 +0800
+Message-ID: <1151f059-fd08-4dba-9448-c8c535ea8700@linux.alibaba.com>
+Date: Wed, 7 May 2025 10:42:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v9 5/5] MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO
- DRIVER entry
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
- peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca,
- linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de,
- Huacai Chen <chenhuacai@loongson.cn>
-References: <20250506032053.11147-1-zhaoqunqin@loongson.cn>
- <a03b4963-55aa-4a75-b795-1e8f0db7ec89@linux.dev>
- <00196f77-1060-fe67-3e6b-6721092207d6@loongson.cn>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <00196f77-1060-fe67-3e6b-6721092207d6@loongson.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] erofs: fix file handle encoding for 64-bit NIDs
+To: Hongbo Li <lihongbo22@huawei.com>, xiang@kernel.org, chao@kernel.org,
+ zbestahu@gmail.com, jefflexu@linux.alibaba.com
+Cc: dhavale@google.com, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+References: <20250429134257.690176-1-lihongbo22@huawei.com>
+ <18d272ce-6a80-4fdc-b67b-ddc2ffa522d4@linux.alibaba.com>
+ <3e068311-9223-4c1b-9091-15eb2d867ede@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <3e068311-9223-4c1b-9091-15eb2d867ede@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 7bit
 
 
-在 5/6/25 8:14 PM, Qunqin Zhao 写道:
->
-> 在 2025/5/6 下午5:03, Yanteng Si 写道:
->> 在 5/6/25 11:20 AM, Qunqin Zhao 写道:
->>> Changes to Loongson TPM driver would be best reviewed by the Loongson
->>> crypto driver maintainers.
->>>
->>> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
->>> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
->>> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
->>> ---
->>> v8-v9: None
->>> v7: Added tag from Jarkko and Huacai
->>> v6: "tpm_lsse.c" -> "tpm_loongson"
->>> v4-v5: None
->>>
->>>   MAINTAINERS | 1 +
->>>   1 file changed, 1 insertion(+)
->> I'm just curious. Why is this patch kept outside the tmp_loongson 
->> patch set?
->
-> Hi, Yanteng. Thanks for your reply.
->
->
-> When sending this patch, git send-email prompted "too many commands"
->
-> and disconnected from the server. Then I sent this patch separately.
->
-> Even after setting sendemail.smtpBatchSize to 100, I still have this 
-> problem.
 
->
-> Now I am trying to find  Loongson SMTP server administrator to solve it.
+On 2025/5/7 09:53, Hongbo Li wrote:
+> 
+> 
+> On 2025/5/6 23:10, Gao Xiang wrote:
+>> Hi Hongbo,
+>>
+>> On 2025/4/29 21:42, Hongbo Li wrote:
+>>> In erofs, the inode number has the location information of
+>>> files. The default encode_fh uses the ino32, this will lack
+>>> of some information when the file is too big. So we need
+>>> the internal helpers to encode filehandle.
+>>
+>> EROFS uses NID to indicate the on-disk inode offset, which can
+>> exceed 32 bits. However, the default encode_fh uses the ino32,
+>> thus it doesn't work if the image is large than 128GiB.
+>>
+> Thanks for helping me correct my description.
+> 
+> Here, an image larger than 128GiB won't trigger NID reversal. It requires a 128GiB file inside, and the NID of the second file may exceed U32 during formatting. So here can we change it to "However, the default encode_fh uses the ino32, thus it may not work if there exist a file which is large than 128GiB." ?
 
-This is the best solution.
+Why? Currently EROFS doesn't arrange inode metadata
+together, but close to its data (or its directory)
+if possible for data locality.
 
-
->
-> Have you ever encountered this kind of problem?
-
-This seems to be a feature of the Loongson mailbox. I've observed that Yang
-
-Tiezhu also has a patch that is outside of the patch set. An interesting 
-pattern
-
-is that there are only five emails in one patch set.
-
+So NIDs can exceed 32-bit for images larger than
+128 GiB.
 
 Thanks,
+Gao Xiang
 
-Yanteng
+> 
+> Thanks,
+> Hongbo
+> 
 
-
-
->
->
-> BR, Qunqin.
->
->>
->> <https://lore.kernel.org/loongarch/20250506031947.11130-1-zhaoqunqin@loongson.cn/T/#mf09225c286a8e2b92a677720afafb9e20be57a18> 
->>
->>
->> Thanks,
->> Yanteng
->
