@@ -1,178 +1,115 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310E22AD20;
-	Wed,  7 May 2025 04:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from invmail3.skhynix.com (exvmail3.skhynix.com [166.125.252.90])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8601B3211
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 04:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746591990; cv=none; b=n1SGkuiCL6dbFwn0MxT1ldxULWmKlnnBZalHqSKWkShtsYbvYbXrcwYw7WUAf7AtO3dsJwjZFVUf6Qw2S2VAB4iaYd9+C4rFUueszKeWP+HoqvU3y3Sy6W+7hK2adaYUnfTVuEsqPRrJrHj5aPXpv3pz2NVlnDvYKSThUex8lFI=
+	t=1746592269; cv=none; b=odnCCMknXlWRZhBMleZXLQEy87ohuwtmKOZwfTKUv5bdv1wb9UtFCe+o3t0s2zXxTwfmOt0OOxGCN4HrAJbVccdLkxo/V9Oj1DN/MAExmx1/bXkzuyhL5PO8vDns5K16JNmf1BANftDLFAWHQUVepXOje6jcE6QfjxFJ4l2ZSrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746591990; c=relaxed/simple;
-	bh=biF5yZ3vpTesxPZQ/tMvL//RmTWjtQ1ORzVQuydb0NQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UB0s17UYoMdEyOY2vsYdyNiUU2r5NuHuVP1YgDQyRSir4U4kbO6ykeZychK6liv7rI+eJsfTGZhcPOK7lC7fB8X60URjgac1hm7wlY/BmgDWAoADpRH1zBwZYq2n/VKX9CQJBNSWhpZFGdmbGeM5dMbFRCg2cH3JQ+Ujew9DJpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cYsthnEg; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cYsthnEg"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471H7as022467;
-	Wed, 7 May 2025 04:26:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	w5+yz2q+hUjul7s+z3seVWpaNFf3JvMrntHxV3Q7ywU=; b=cYsthnEgQT6uuH85
-	voUoWZX9T64x/CmZfJIsMuSk+jtd0lhIB0416//UWsT1hlzD5fR2VepAo/O5VYBg
-	ruRxySyVdsdkP1BsQtXtc5IgqGdqxyGekrLu1Si0iTVHdceA1YA5iBUux6psAw4V
-	ihA/LhTzd9SCsJ1RPrnoNPVZkGNUwbRvtSV6m1kKXXRR3xiPVeil8lSqkxFT+AWe
-	VFiunBxKhC3M7qPJ/VxQXjrxE6H4/cLQMaU82r+G84gN8zkpqCHZLSH7KE4P9M7q
-	8twsANwqRlT9GNHFqJWj1si04dNWjDQSw7jo1Aviyonk7fLtZRXIHyIxL2Y0UiaM
-	ilm6Rg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5uuvf4h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 04:26:16 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5474QFb8006724
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 7 May 2025 04:26:15 GMT
-Received: from [10.239.133.114] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 6 May 2025
- 21:26:12 -0700
-Message-ID: <4a6a8bad-e5d9-4613-a839-5a21491ef7c4@quicinc.com>
-Date: Wed, 7 May 2025 12:26:10 +0800
+	s=arc-20240116; t=1746592269; c=relaxed/simple;
+	bh=srBwzWfzGP9oE8BqQI5SKV8Es886pZ8K1t81Q7jHsRI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F6f5CSvpUTB1/7QoGc334Sri5p4BWdxxoGYhW69uM1Zo8S53XbnwM+vcHWDTQCfZ0mojvX6NpWOBh+jymIDBFg537oepQ/TWiBFkQQ+bSlkQEdQ1WGME1f0iNVZ7B0c3z51DZPMJ6vKB9g835yxVn64vFnOqCXS4PV0s8ZNG/bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc59-057ff7000000aab6-05-681ae1fcd9fa
+From: "yohan.joung" <yohan.joung@sk.com>
+To: jaegeuk@kernel.org,
+	chao@kernel.org,
+	daehojeong@google.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	pilhyun.kim@sk.com,
+	"yohan.joung" <yohan.joung@sk.com>
+Subject: [PATCH v3 1/2] f2fs: add a method for calculating the remaining blocks in the current segment in LFS mode.
+Date: Wed,  7 May 2025 13:30:36 +0900
+Message-ID: <20250507043038.591-1-yohan.joung@sk.com>
+X-Mailer: git-send-email 2.49.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] coresight: add coresight Trace Network On Chip
- driver
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>
-CC: <kernel@oss.qualcomm.com>, <linux-arm-msm@vger.kernel.org>,
-        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250411-trace-noc-v3-0-1f19ddf7699b@quicinc.com>
- <20250411-trace-noc-v3-2-1f19ddf7699b@quicinc.com>
- <23d02991-3bc6-41e2-bb8b-a38786071c43@arm.com>
- <257fb0a5-7bf7-4a04-9f8d-d8759351584c@quicinc.com>
- <9b75b9d1-a9ed-46c9-9dba-8e3eb261dcc0@arm.com>
-Content-Language: en-US
-From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-In-Reply-To: <9b75b9d1-a9ed-46c9-9dba-8e3eb261dcc0@arm.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=L9cdQ/T8 c=1 sm=1 tr=0 ts=681ae0e8 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=8OJl2JkUM1ULYFJJg_AA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: kIw5FctbMkclmRq0boSizRbNIFFYcxRX
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDAzOCBTYWx0ZWRfX7DEhrK4ha02a
- otfpaBPjG9HTwWMRjm99Wtn+0dYOimkZd+rNDcRZJEVJtvXkEKks21o6IDvUnC804FZZt9TuzPf
- BDU4wfBEPIacRrAMiHoJQE8OEbbipMmN4N9vIAEBBGiCOgSOQPbFHsqepeOGt0/yPF9o8+YgzpZ
- fyco5V+MbdIcvGKt7ITQCL3YXcFgUFUuOF67ThJMeciF86jQOmAUHMMD26cab/aOhcV5gnjvoUM
- DJBEDw4eHCHGr/r05169oX0BC5o9XvY6OdEPhp7+O6mAp/9mUnTYNDugH2kjU11XkEsqeyoU675
- ICDQdJNfU89az8rmdshWvSbub5CAninyNYPXZwl/7nEeSNsr35JJ0XwOIbLjFuG7Bn+hQFj6kGc
- yRebftKHoxCnPKSwRKAzDZZH64Tvmnzx3/XzuxZPLiC8QszAvIVHUUW9fhFRpmPKeqyyKm9U
-X-Proofpoint-ORIG-GUID: kIw5FctbMkclmRq0boSizRbNIFFYcxRX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_01,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 mlxlogscore=999 spamscore=0 suspectscore=0 impostorscore=0
- mlxscore=0 priorityscore=1501 clxscore=1015 bulkscore=0 lowpriorityscore=0
- adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505070038
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJLMWRmVeSWpSXmKPExsXC9ZZnoe6/h1IZBlunWFicnnqWyWJq+15G
+	iyfrZzFbXFrkbnF51xw2B1aPBZtKPTat6mTz2L3gM5PH501yASxRXDYpqTmZZalF+nYJXBk/
+	N01hL9giWNF09C97A+Nivi5GTg4JAROJ+0dWs8DYDcfusYHYbAIaEn96e5lBbBEBJ4n/N9rZ
+	uxi5OJgF2hgl2o82sYIkhAWKJVo37gUrYhFQlXjzehpYnFfAVOLMp7mMEEM1JXZ8Oc8EEReU
+	ODnzCdgyZgF5ieats5khal6ySuzbmw5hS0ocXHGDZQIj7ywkLbOQtCxgZFrFKJKZV5abmJlj
+	rFecnVGZl1mhl5yfu4kRGGDLav9E7mD8diH4EKMAB6MSD++Bn5IZQqyJZcWVuYcYJTiYlUR4
+	798HCvGmJFZWpRblxxeV5qQWH2KU5mBREuc1+laeIiSQnliSmp2aWpBaBJNl4uCUamCU7Ape
+	I2mRt0Qpf3Xk4x6Ta7w/haNfsV5eZfTBUePmYS0e5kdfpbtEU5eF65SppmxleGtXNVO+UG/a
+	+z3/xUSyvWpTpK2SZm5fY9nLv1LsGcfUg5s2fPU6vcgq9oWZjv6MOVl9pYYb3rVPNzBc8Ejv
+	5RG5XUoWW3hyZzxy6y19Gh6W/ENVTEyJpTgj0VCLuag4EQA1FDSmLAIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmluLIzCtJLcpLzFFi42LhmqEyR/fPQ6kMg1t32CxOTz3LZDG1fS+j
+	xZP1s5gtLi1yt7i8aw6bxYS5V5ks3m+9x+jA7rFgU6nHplWdbB67F3xm8vh228Pj8ya5ANYo
+	LpuU1JzMstQifbsEroyfm6awF2wRrGg6+pe9gXExXxcjJ4eEgIlEw7F7bCA2m4CGxJ/eXmYQ
+	W0TASeL/jXb2LkYuDmaBNkaJ9qNNrCAJYYFiidaNe8GKWARUJd68ngYW5xUwlTjzaS4jxFBN
+	iR1fzjNBxAUlTs58wgJiMwvISzRvnc08gZFrFpLULCSpBYxMqxhFMvPKchMzc8z0irMzKvMy
+	K/SS83M3MQKDZlntn0k7GL9ddj/EKMDBqMTDe+CnZIYQa2JZcWXuIUYJDmYlEd7794FCvCmJ
+	lVWpRfnxRaU5qcWHGKU5WJTEeb3CUxOEBNITS1KzU1MLUotgskwcnFINjDxzu3+e+XS+eu/i
+	qMhNLdNY2J+0MTRnnO94Lza1rSQruD4r0KiPyTzAOHTfO+GzBwSXOmwXzbydKnhXfLtFweTO
+	QxsFtnk/LChJnn/5kLbrWY14Fa6nMmbvly+p1pvYkyyq+VjOMPWYR/e+hklqvw6syk5cFt7n
+	KepzaIdocOW7V7Jn2y01lFiKMxINtZiLihMBWjlxJBYCAAA=
+X-CFilter-Loop: Reflected
 
+In LFS mode, the previous segment cannot use invalid blocks,
+so the remaining blocks from the next_blkoff of the current segment
+to the end of the section are calculated.
 
+Signed-off-by: yohan.joung <yohan.joung@sk.com>
+---
+ fs/f2fs/segment.h | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-On 5/6/2025 7:20 PM, Suzuki K Poulose wrote:
-> On 14/04/2025 10:16, Yuanfang Zhang wrote:
->>
->>
->> On 4/11/2025 5:59 PM, Suzuki K Poulose wrote:
->>> On 11/04/2025 09:57, Yuanfang Zhang wrote:
->>>> Add a driver to support Coresight device Trace Network On Chip (TNOC),
->>>> which is an integration hierarchy integrating functionalities of TPDA
->>>> and funnels. It aggregates the trace and transports to coresight trace
->>>> bus.
->>>>
->>>> Compared to current configuration, it has the following advantages:
->>>> 1. Reduce wires between subsystems.
->>>> 2. Continue cleaning the infrastructure.
->>>> 3. Reduce Data overhead by transporting raw data from source to target.
->>>>
->>>>     +------------------------+                +-------------------------+
->>>>     | Video Subsystem        |                |Video Subsystem          |
->>>>     |       +-------------+  |                |       +------------+    |
->>>>     |       | Video TPDM  |  |                |       | Video TPDM |    |
->>>>     |       +-------------+  |                |       +------------+    |
->>>>     |            |           |                |              |          |
->>>>     |            v           |                |              v          |
->>>>     |   +---------------+    |                |        +-----------+    |
->>>>     |   | Video funnel  |    |                |        |Video TNOC |    |
->>>>     |   +---------------+    |                |        +-----------+    |
->>>>     +------------|-----------+                +------------|------------+
->>>>                  |                                         |
->>>>                  v-----+                                   |
->>>> +--------------------|---------+                         |
->>>> |  Multimedia        v         |                         |
->>>> |  Subsystem   +--------+      |                         |
->>>> |              |  TPDA  |      |                         v
->>>> |              +----|---+      |              +---------------------+
->>>> |                   |          |              |    Aggregator TNOC  |
->>>> |                   |          |              +----------|----------+
->>>> |                   +--        |                         |
->>>> |                     |        |                         |
->>>> |                     |        |                         |
->>>> |              +------v-----+  |                         |
->>>> |              |  Funnel    |  |                         |
->>>> |              +------------+  |                         |
->>>> +----------------|-------------+                         |
->>>>                    |                                       |
->>>>                    v                                       v
->>>>         +--------------------+                    +------------------+
->>>>         |   Coresight Sink   |                    |  Coresight Sink  |
->>>>         +--------------------+                    +------------------+
->>>
->>> If each NOC has TraceID, how do you reliably decode the trace ?
->>> Is there a single NOC/TPDA in the path from Source to sink ?
->>
->> Not each TNOC has TraceID, there is only one TNOC has TraceID for one path
->> from Source to sink. In the example, only the aggregator TNOC has traceID.
->> Decode trace relying on TraceID + Inport number.
->> It can has mutiple TNOC/TPDA in one path.
-> 
-> So do we only describe the TNOCs that need traceId in the DT ? (e.g., Aggregator TNOC above ?) How about Video TNOC ? Don't we allocate a
-> trace id for it by default, when it is described ?
-> 
-> Suzuki
-> 
-yes, now only describe the TNOCs which need traceID, Video TNOC is another type, it is interconnect TNOC which collects trace from subsystems
-and transfers Aggr TNOC, it doesn't have ATID. Its driver is different from this patch, I want to describe it when upstream its driver.
-
-Yuanfang
-
-
-
-
-
+diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+index 03c0f59be5a8..f5d30f32ebdb 100644
+--- a/fs/f2fs/segment.h
++++ b/fs/f2fs/segment.h
+@@ -102,6 +102,8 @@ static inline void sanity_check_seg_type(struct f2fs_sb_info *sbi,
+ #define CAP_SEGS_PER_SEC(sbi)					\
+ 	(SEGS_PER_SEC(sbi) -					\
+ 	BLKS_TO_SEGS(sbi, (sbi)->unusable_blocks_per_sec))
++#define GET_START_SEG_FROM_SEC(sbi, segno)			\
++	(rounddown(segno, SEGS_PER_SEC(sbi)))
+ #define GET_SEC_FROM_SEG(sbi, segno)				\
+ 	(((segno) == -1) ? -1 : (segno) / SEGS_PER_SEC(sbi))
+ #define GET_SEG_FROM_SEC(sbi, secno)				\
+@@ -582,8 +584,14 @@ static inline bool has_curseg_enough_space(struct f2fs_sb_info *sbi,
+ 		if (unlikely(segno == NULL_SEGNO))
+ 			return false;
+ 
+-		left_blocks = CAP_BLKS_PER_SEC(sbi) -
+-				get_ckpt_valid_blocks(sbi, segno, true);
++		if (f2fs_lfs_mode(sbi) && __is_large_section(sbi)) {
++			left_blocks = CAP_BLKS_PER_SEC(sbi) -
++				(segno - GET_START_SEG_FROM_SEC(sbi, segno)) * BLKS_PER_SEG(sbi) -
++				CURSEG_I(sbi, i)->next_blkoff;
++		} else {
++			left_blocks = CAP_BLKS_PER_SEC(sbi) -
++					get_ckpt_valid_blocks(sbi, segno, true);
++		}
+ 
+ 		blocks = i <= CURSEG_COLD_DATA ? data_blocks : node_blocks;
+ 		if (blocks > left_blocks)
+@@ -596,8 +604,15 @@ static inline bool has_curseg_enough_space(struct f2fs_sb_info *sbi,
+ 	if (unlikely(segno == NULL_SEGNO))
+ 		return false;
+ 
+-	left_blocks = CAP_BLKS_PER_SEC(sbi) -
+-			get_ckpt_valid_blocks(sbi, segno, true);
++	if (f2fs_lfs_mode(sbi) && __is_large_section(sbi)) {
++		left_blocks = CAP_BLKS_PER_SEC(sbi) -
++				(segno - GET_START_SEG_FROM_SEC(sbi, segno)) * BLKS_PER_SEG(sbi) -
++				CURSEG_I(sbi, CURSEG_HOT_DATA)->next_blkoff;
++	} else {
++		left_blocks = CAP_BLKS_PER_SEC(sbi) -
++				get_ckpt_valid_blocks(sbi, segno, true);
++	}
++
+ 	if (dent_blocks > left_blocks)
+ 		return false;
+ 	return true;
+-- 
+2.33.0
 
