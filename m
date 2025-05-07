@@ -1,97 +1,91 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EBD27726;
-	Wed,  7 May 2025 05:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723843398A;
+	Wed,  7 May 2025 05:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746595021; cv=none; b=jmS5di9WejcUvvHMdsCzhKSbvIYd9iGpwKObx4JtswvIkSSj5CATifZGDk7xB2Hm/iCpSAsjlE8B4GrT1+HAkwlyqz7JfYcCpJra9orWo8CJYqkOcJB2U3eKFDXdrIg2lZG1/yuVnRUlT8xjsVlbIBf/UIS6azfVx57wZtd0HuM=
+	t=1746595031; cv=none; b=ZfJVPuQ70hFp1KhutpeuHpYFNieX22OdczHBZ3U8/UATRao5/ZfhU/VNOzcMFii+1EvSxGaLOfLb2CFtC/+f8muKXeaLNtnHZrbTZRy7iUrB5bwnW6ZEkiQt24gp5VBffAdYkrUk2OKlYtxjanfoSyvBOmPAlrDSbnsKZSbdVCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746595021; c=relaxed/simple;
-	bh=cyiNYAkaoP6KbT11OpjJCnXCYx6t0Ih55Xbg9TE7zJQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NtQgpBSwZrPUYtk9jci2dF2XLwPy06S+yEl7bcvptuEeC57LXRSZWqAmLJWomZr6AtCZNXQwtHBRRg64hNst7lSo/8Wft5Fvhyfb28i8gFxg9nCsmrFpMrMQwjeOzTWhuSRCTS1ikCRm8cSnvOAv9BTkyI6K/RJ/slIwkEawDLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=L5pbCRap; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1746595031; c=relaxed/simple;
+	bh=JG4V4RAp0WdhDOtz+o//0q+asbkWJORcl/Rb+VWLtiA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DpojVPSHlkElxb0+LQw9U+SjcRab/rVz2aiHVTP5Yd5NRPn1TJ1kV5inOK/3jNJ094Bka1RlaBCCbYfVK286h39Z6a4DT5HBkl6vlIm8US0DR4tRqrKrKCTPaDJRWWxn/GjfBnOGqTb7qstvTmS/p4KrWEzW/m1KS53gOK8ISC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=seliaUvN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L5pbCRap"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=o/Ou+Hidj9xU0O3E9pkms4lLkc6uuKm7e3/PItzKl3o=; b=L5pbCRaplDtRNihR1RgNK41N5D
-	sxh13oD/MuWWEzIUut4x08sttQzdpLFtIeBEJQda4YeVmuSlheMhP81Zd56panqTnJOcYLWZluh0G
-	iuYTyByU4El+hZhvBjq0E3TInHtkAxleoBiuP9wpLG6hbD1NEURHSQguhnRZfhGn/yZ1cnTS5wYJF
-	JaT0Nmukeah53Uf0ycHyaGMd8rpObzBsJbrQ9zhNEjxQp6oC0b0HLsDqcr3W6nMgQUBG6dua6JpR5
-	/p+HlpjVfss+bDNykIZqLQM2M4IGNWntGVo+QRpfKoPQXzU00F5TIz/ArjQSmMwSgVjwjVOZqigoF
-	m6chQ0gw==;
-Received: from 2a02-8389-2341-5b80-3ba7-83fe-7065-4f0b.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:3ba7:83fe:7065:4f0b] helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCX9P-0000000EFR9-2Gtj;
-	Wed, 07 May 2025 05:17:00 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: willy@infradead.org
-Cc: akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH v2] xarray: fix kerneldoc for __xa_cmpxchg
-Date: Wed,  7 May 2025 07:16:20 +0200
-Message-ID: <20250507051656.3900864-1-hch@lst.de>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="seliaUvN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EF4DC4CEE7;
+	Wed,  7 May 2025 05:17:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746595030;
+	bh=JG4V4RAp0WdhDOtz+o//0q+asbkWJORcl/Rb+VWLtiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=seliaUvN9Z007kdddm7xTLEOgyINOOv5PHzeJ1A04mDMv9KcSGhL9W1j4CJfaVyuk
+	 yIgCpXyI+jdJMIS7xS/h27FTPrwnUNtLEMxQQ7VLP7M/roZaBmzHE/MAlQKtlzAQta
+	 FVuOPA11Ryf8FI2QigV31gIN9DSd4gzMD3erXFmyylYdnu76n0Ol6WwqL62FQIBqhm
+	 FEh9wyGD2SEqmXPZqx2dXeBKGmlraqMWjx4aPVPeL8sThmOGR+R4xbt0M4PkCUFtCi
+	 VieIIfBB6A4Yjq65pj1qXPumjar8aE84zLC8EWJ6vkBvEATFpaZisHq5AfGKuUmtE8
+	 ZhD2davJROOzg==
+Date: Wed, 7 May 2025 07:17:08 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, dmitry.baryshkov@linaro.org, 
+	neil.armstrong@linaro.org, abel.vesa@linaro.org, manivannan.sadhasivam@linaro.org, 
+	lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, andersson@kernel.org, 
+	konradybcio@kernel.org, linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+	quic_qianyu@quicinc.com, quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v4 2/5] dt-bindings: PCI: qcom: Document the QCS615 PCIe
+ Controller
+Message-ID: <20250507-astute-realistic-ferret-bcdfce@kuoka>
+References: <20250507031559.4085159-1-quic_ziyuzhan@quicinc.com>
+ <20250507031559.4085159-3-quic_ziyuzhan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250507031559.4085159-3-quic_ziyuzhan@quicinc.com>
 
-Fix the documentation for __xa_cmpxchg to actually describe the
-cmpxch-like semantics correctly, based on the version for xa_cmpxchg.
+On Wed, May 07, 2025 at 11:15:56AM GMT, Ziyue Zhang wrote:
+> From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> 
+> Add dedicated schema for the PCIe controllers found on QCS615.
+> Due to qcs615's clock-names do not match any of the existing
+> dt-bindings, a new compatible for qcs615 is needed.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
+Other bindings for QCS615 were not finished, so I have doubts this is
+done as well. Send your bindings once you finish them.
 
-Changes since v1:
- - and now the version with my fold patch actually folded in to make
-   it compile after the copy and paste.  Sigh.
+...
 
- lib/xarray.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+> +properties:
+> +  compatible:
+> +    const: qcom,qcs615-pcie
+> +
+> +  reg:
+> +    minItems: 6
+> +    maxItems: 6
+> +
+> +  reg-names:
+> +    items:
+> +      - const: parf # Qualcomm specific registers
+> +      - const: dbi # DesignWare PCIe registers
+> +      - const: elbi # External local bus interface registers
+> +      - const: atu # ATU address space
+> +      - const: config # PCIe configuration space
+> +      - const: mhi # MHI registers
+> +
+> +  clocks:
+> +    minItems: 5
 
-diff --git a/lib/xarray.c b/lib/xarray.c
-index 9644b18af18d..76dde3a1cacf 100644
---- a/lib/xarray.c
-+++ b/lib/xarray.c
-@@ -1742,20 +1742,23 @@ static inline void *__xa_cmpxchg_raw(struct xarray *xa, unsigned long index,
- 			void *old, void *entry, gfp_t gfp);
- 
- /**
-- * __xa_cmpxchg() - Store this entry in the XArray.
-+ * __xa_cmpxchg() - Conditionally replace an entry in the XArray.
-  * @xa: XArray.
-  * @index: Index into array.
-  * @old: Old value to test against.
-- * @entry: New entry.
-+ * @entry: New value to place in array.
-  * @gfp: Memory allocation flags.
-  *
-  * You must already be holding the xa_lock when calling this function.
-  * It will drop the lock if needed to allocate memory, and then reacquire
-  * it afterwards.
-  *
-+ * If the entry at @index is the same as @old, replace it with @entry.
-+ * If the return value is equal to @old, then the exchange was successful.
-+ *
-  * Context: Any context.  Expects xa_lock to be held on entry.  May
-  * release and reacquire xa_lock if @gfp flags permit.
-- * Return: The old entry at this index or xa_err() if an error happened.
-+ * Return: The old value at this index or xa_err() if an error happened.
-  */
- void *__xa_cmpxchg(struct xarray *xa, unsigned long index,
- 			void *old, void *entry, gfp_t gfp)
--- 
-2.47.2
+Drop or use correct value - 6. I don't understand why this changed and
+nothing in changelog explains this.
+
+Best regards,
+Krzysztof
 
