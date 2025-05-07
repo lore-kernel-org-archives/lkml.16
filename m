@@ -1,140 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88D4286D6C
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C2E28A1E9;
+	Wed,  7 May 2025 13:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746626213; cv=none; b=roK/hIDlyHM4EA4Dnn5TJpb42aGJPuQ5LEbO/TknrvFqh7NnmdF5n8maqpUM6m7HSKG0gjIGeTbEIXXf+YBvVDX/DZY1452KrdiVTsb7N6d28mC2VliFgG4lAC8T9NmIuSKQtZES/vm3cV8NwJyiS+/GRqniWgfLKMe4cb13PPs=
+	t=1746626238; cv=none; b=Pg633T5UPhp2Eqz76QgAAhnxrNeVDG5NgSZeMJnc1N3oWu5hLhslwCYjDRUdHr3y6Eo6NnX07wijZd8vSbM8CnRWzUZ9bhpcZnYZEJgnc3FMR8hgvtJpUI0OymctqEaf2sZIQ1uRL+V93Rad/oE48dE8fxZ6EPy8r2Es5TTwn08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746626213; c=relaxed/simple;
-	bh=sGa1g1PPLfg0IIMC8cBZToyVlaK+S6WfeD7ZsrQBI2s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MnrA2vOO9snwNdDg6qpracIUdsRxKpwyixbC/Klh4Er7CgpUpltl7LpH9CxOb4WBioKzJv3UlOaa6AhL24YPh9JLwXFU9KWpvP41khV5sVRQwDsK3TOKmQjX+35QX7twW8CGZWCFGwSN60rsEWDPvWhuFJjyiAxnL6VyoISifi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ug+uXtEn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746626238; c=relaxed/simple;
+	bh=OKJfHPXBmdW8+xUfhGMLn1XI4KC9uUIa2ymmWXJpQi4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EKGoT6DyMvV0uodccvjeaExwgCsZoSjTMuCSS1l9PFv6e7XfOgZlj+tdhKjs9vgxVdUy0+orbbWsdvxoyxh3c9mU8oEREQBzFSiAgUaZc7vletdJqSpuaGs1XsmySWOyWDTsdNJCVyi6a8S/ZIbvkv6rdcIpH5AVgrYfqvkFzeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PydtdIcB; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ug+uXtEn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746626210;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eCxlh7OLGZ6tmVtPGqGmXKkGEJLdZqILpcZUyhVzTuI=;
-	b=Ug+uXtEn+L3FTvNN+Z9rLoRjvv13bDt6qOk3rFsoBKGqLzYSmMELcuEnDONuaLrUfitp9C
-	9OODUbZIAOfC1XbFhgvOo+QpPoc6cCHqBhKQcWrpLh1Sqzgfp7U/CoFVReorRR01xPAYW/
-	wibmCboR/KA2Cw1o6WOj5d6JULg3Ebc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-496-slc2Hx5AOXe4P0uxASBc5Q-1; Wed,
- 07 May 2025 09:56:47 -0400
-X-MC-Unique: slc2Hx5AOXe4P0uxASBc5Q-1
-X-Mimecast-MFC-AGG-ID: slc2Hx5AOXe4P0uxASBc5Q_1746626205
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BE39B1800875;
-	Wed,  7 May 2025 13:56:44 +0000 (UTC)
-Received: from [10.44.33.91] (unknown [10.44.33.91])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 263381800268;
-	Wed,  7 May 2025 13:56:38 +0000 (UTC)
-Message-ID: <2e3eb9e3-151d-42ef-9043-998e762d3ba6@redhat.com>
-Date: Wed, 7 May 2025 15:56:37 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PydtdIcB"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so59197185e9.1;
+        Wed, 07 May 2025 06:57:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746626235; x=1747231035; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NVLLqnf2bJPOOCWqNSUchGPn67McCCi/UhhuQQXMf88=;
+        b=PydtdIcBX1NhiHCZpZKNATbA3WdI9euZYGB7djX4KoIWJj9Rls6Nw9hsESp6TB52Ch
+         q/O2jnzXCf1jLNlNiUIpRFyuyyIEOeZnvvWI5CbhR80V96EgC4Mj7aeJUrNyo4Lu1ZaJ
+         0sQp39loKyWGSV0vcHcrEtR/N9VQrpHiEDQM1LyKsb9/8yzbA2VSFuNjutRwqLUl1aVz
+         3b9oicsRdvgECDI+Gz+frd7ydJbgirLiK5NXKeLqLAXio4ngiRkdhmUBcGOaIsspYGSz
+         82QMsQDFkunU2M7qu8NqCFnKQt7GWuQNV40pE2WrIuRs3fzrS0l3df+kq75DitHo0XO6
+         lFJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746626235; x=1747231035;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NVLLqnf2bJPOOCWqNSUchGPn67McCCi/UhhuQQXMf88=;
+        b=H9MPSQiVGct8c8aNsoZLwxh+pHopZ7yI3j2ayMhgplRLTpeCbBlnGsjFZcvMs2FgWj
+         QVsFY/63YxwDqeqN3qIizb5RkINauPk9yyEypPa5uGY2wepajZ6iKAU4p/DzxsN6WHN+
+         Diou17LrOnOStQel5EFWefFVnx8Cl0lJmYlmQA42PGcTxz0+F9KYLyYipPc3mp/op1G4
+         +/F5KCT8gBrvP6MC4s8FUupQSXtMQZHrTQ0AUwmBdEM62arqlV6OB5iLxDS0GNRhGqqY
+         IwlDT9nRGxTxkkQJtcHwSdsAWpzf/8xn71wP+YUoxi73iixyIKL+B8oXFdin+npwnwVd
+         Ny6g==
+X-Forwarded-Encrypted: i=1; AJvYcCU6GlZrNkhwkgoY+uc4aZ+hAF8oHcGw0CJ6VEToiRXW39RJEHGVhG8Vn+Kv+hcTZGfX68R0kQmnL5PSxQ2j@vger.kernel.org, AJvYcCXEqOgN68pMPT/+9ZoSZYu3J+mUJMlUZ21diko7kjYDgd0DtRa8mpMeXClVpk8NHZBcIsEoTW2CASN+@vger.kernel.org, AJvYcCXrHNqeXG+MKWjVxWOMObKq26r430aGoXm25HjvQ6OJnYwcOGoGNY1/XO5xTuj19VKkc/UryHQVaGxNSPiD@vger.kernel.org
+X-Gm-Message-State: AOJu0YwinwDnXSJe9ocKW6zmAeO0j0aZY4S5lQRXKkFkXFH19i6akW9j
+	0jaht83S/Qc7o2/t0H0NZUnZXFWuWyDrQM75WZ39yKjeUFnJYbQv
+X-Gm-Gg: ASbGnctaktwva2k+X1rDddvGOKKHQ8TtYPuWfxvaG6C/6iPtrkZDxXiPPbRf46Vzocx
+	stzgrBeJXnL7lGH5q65LRznWOwu+mx4Zs87L271NHruCcARu+ZJvxqdVfVlhWPI6PcVNvjcGguG
+	ZKuPR/c8jRalh+nKnrOUkPCJ/aNRQpGb+7ZIydr4Cn52zPwQrQjCfdN2Ay3O7mAzhx4yVUbof22
+	xD5pS3aDGE9W+qcOYQfROEpeyft4hhbY/eXzPplUYnvPZF0qnNcwecV7n6luraje9XQnMBGico1
+	XGPZCLr3VijF1IIgezT+9VNkwE1+MMZLYLxlOlzJDL0xfLGbcrdAbsYlb01CVaErPcnlzoYXrqq
+	UcRJmInV++1fSCudKNNaeshl2xXqsx3w/U7gbYQ==
+X-Google-Smtp-Source: AGHT+IHO2frrcwS6w6CujoFa6sxVQ42LctJfbOrXd/uhQzNbEyXTh8MMSZGiJa06dRRr/eDgsHU7+g==
+X-Received: by 2002:a05:600c:528c:b0:43d:300f:fa1d with SMTP id 5b1f17b1804b1-441d44e32cfmr32926485e9.31.1746626235177;
+        Wed, 07 May 2025 06:57:15 -0700 (PDT)
+Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd34bd90sm1884605e9.21.2025.05.07.06.57.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 06:57:14 -0700 (PDT)
+Date: Wed, 7 May 2025 15:57:12 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Vineet Gupta <vgupta@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: serial: Convert snps,arc-uart to DT schema
+Message-ID: <zmoa3kgn7p43d3knajjuhxchbfkiwqvogtwftjbvycwpwzaf33@m2ucrzrkiizu>
+References: <20250506220008.2545296-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v7 8/8] mfd: zl3073x: Register DPLL sub-device
- during init
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Lee Jones <lee@kernel.org>, Andy Shevchenko <andy@kernel.org>,
- Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20250507124358.48776-1-ivecera@redhat.com>
- <20250507124358.48776-9-ivecera@redhat.com>
- <CAHp75Ven0i05QhKz2djYx0UU9E9nipb7Qw3mm4e+UN+ZSF_enA@mail.gmail.com>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <CAHp75Ven0i05QhKz2djYx0UU9E9nipb7Qw3mm4e+UN+ZSF_enA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ombmyfmzkb4wzekx"
+Content-Disposition: inline
+In-Reply-To: <20250506220008.2545296-1-robh@kernel.org>
 
 
+--ombmyfmzkb4wzekx
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] dt-bindings: serial: Convert snps,arc-uart to DT schema
+MIME-Version: 1.0
 
-On 07. 05. 25 3:41 odp., Andy Shevchenko wrote:
-> On Wed, May 7, 2025 at 3:45 PM Ivan Vecera <ivecera@redhat.com> wrote:
->>
->> Register DPLL sub-devices to expose the functionality provided
->> by ZL3073x chip family. Each sub-device represents one of
->> the available DPLL channels.
-> 
-> ...
-> 
->> +static const struct zl3073x_pdata zl3073x_pdata[ZL3073X_MAX_CHANNELS] = {
->> +       { .channel = 0, },
->> +       { .channel = 1, },
->> +       { .channel = 2, },
->> +       { .channel = 3, },
->> +       { .channel = 4, },
->> +};
-> 
->> +static const struct mfd_cell zl3073x_devs[] = {
->> +       ZL3073X_CELL("zl3073x-dpll", 0),
->> +       ZL3073X_CELL("zl3073x-dpll", 1),
->> +       ZL3073X_CELL("zl3073x-dpll", 2),
->> +       ZL3073X_CELL("zl3073x-dpll", 3),
->> +       ZL3073X_CELL("zl3073x-dpll", 4),
->> +};
-> 
->> +#define ZL3073X_MAX_CHANNELS   5
-> 
-> Btw, wouldn't be better to keep the above lists synchronised like
-> 
-> 1. Make ZL3073X_CELL() to use indexed variant
-> 
-> [idx] = ...
-> 
-> 2. Define the channel numbers
-> 
-> and use them in both data structures.
-> 
-> ...
+On Tue, May 06, 2025 at 05:00:07PM -0500, Rob Herring (Arm) wrote:
+> Convert the Synopsys ARC UART binding to DT schema. Drop the "aliases"
+> portion which is not relevant to this schema.
+>=20
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/serial/arc-uart.txt   | 25 ---------
+>  .../bindings/serial/snps,arc-uart.yaml        | 51 +++++++++++++++++++
+>  2 files changed, 51 insertions(+), 25 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/serial/arc-uart.txt
+>  create mode 100644 Documentation/devicetree/bindings/serial/snps,arc-uar=
+t.yaml
 
-WDYM?
+Reviewed-by: Thierry Reding <treding@nvidia.com>
 
-> OTOH, I'm not sure why we even need this. If this is going to be
-> sequential, can't we make a core to decide which cell will be given
-> which id?
+--ombmyfmzkb4wzekx
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Just a note that after introduction of PHC sub-driver the array will 
-look like:
-static const struct mfd_cell zl3073x_devs[] = {
-        ZL3073X_CELL("zl3073x-dpll", 0),  // DPLL sub-dev for chan 0
-        ZL3073X_CELL("zl3073x-phc", 0),   // PHC sub-dev for chan 0
-        ZL3073X_CELL("zl3073x-dpll", 1),  // ...
-        ZL3073X_CELL("zl3073x-phc", 1),
-        ZL3073X_CELL("zl3073x-dpll", 2),
-        ZL3073X_CELL("zl3073x-phc", 2),
-        ZL3073X_CELL("zl3073x-dpll", 3),
-        ZL3073X_CELL("zl3073x-phc", 3),
-        ZL3073X_CELL("zl3073x-dpll", 4),
-        ZL3073X_CELL("zl3073x-phc", 4),   // PHC sub-dev for chan 4
-};
+-----BEGIN PGP SIGNATURE-----
 
-Ivan
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmgbZrgACgkQ3SOs138+
+s6E5Hg//Qor9w0C8Esqv+qcvEEPqkmU5dkdX5OQefcsjCHVLLC7G7tiV/2GXo86d
+DiE+KJWeEx738nFf5wdtY6rw5DHFhsdbPu0k+qW6PVB1c/MP4eg4x7ZroyZCX3/M
++bI8iSQ8rtoD39aKEqeTGFGjagZly/74qfjuLXKQPFAHSpzGQF8XBHYm3BhkYQqI
+klPqIcDgvIB8lJbjYayDWH7GBgf9u19e5kJ1eGAaZ5LLyIgUaCFShTvap5ovz33K
+mYNATBxx+v1JIiAXPyMopgnwCxt34IjL4FkoGhnesaekmOMhMw48uBmSgetzQ0Yc
+c5TiSR0/ahQN0D3YnNVVHe2P1KOl2rzWSw3twVWMTxJF8T/BiKLqNscW3/bOVRXt
+6QRjOEU2pjpE0B9GcQk56v8FLt7rPJWXGvMPzdgCiG8w0U82HpU51HmQk5/f8eW4
+SmtI9fBoW9y7/A0rI3YNv9JyWPvpgzL5zId4Gd5fUtrV65M022uHlTfomAoPWit7
+HPx2PHXSldt6hcb5nAQ3dSKvz0V1WpqovRk7jJR+W7f/gejbVOq4fZIV+J1z7umj
+WusPhX1Pn0/o0ee3U5vOCwmHYpbDzvSUUsIWhGKfL4Cf2E3hr2LQ+Zfr4SKWF9IC
+hmCeyxgeWmEkYci2tENgwsbNFLTupvtXBvki0y+ThOilzABWc+Y=
+=hDGC
+-----END PGP SIGNATURE-----
 
+--ombmyfmzkb4wzekx--
