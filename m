@@ -1,28 +1,28 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9832B28B7E0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE7EB233D92;
 	Wed,  7 May 2025 15:59:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746633547; cv=none; b=LmP5kxoQWhqU0I8RXvG41fjOo+9B0NNWRqcfEzj1DA94GJUiOKFvJPYrPufDp1TVmqQj9dhl3jkkZPz/rPL6VfAQOmjuRrIhdYQuw9gZKdOqljJXb1MieQ3ugeUvKciRrgQldUoTcJkXJkOS8IldJBVAKz5383tgENcpu6qk2z8=
+	t=1746633547; cv=none; b=HMy+ZEGxF5tZhSfusCDML4skNYy9rRURzSOVYdRXAjeOjdh8SKKutjnnXkBDyRwLjuW1wu7MqRTNX36/Kn7JC9riUD2eJe6BDucsvGWhqv0TRDk56brcuyVU8XnzXm3mgdHlavHyGH7ME+n7uplctXifxK73dwxdzbzvILLfeLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746633547; c=relaxed/simple;
-	bh=IzDmB4XaeGxfl1IL0disvnRb+pm5cV9aLzWwh3Czh38=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Ks3H1f5kQACh8jC+k9KbJrwtVcCa8AQT33MgiuAeU8WJfMP36MeJZfjOO7qYftRj5vG1CI3kpMSpr0lsM4waRo6jUiyatKXuhijVL0JCAC05DCHEbuedBoG5/XlUp4uBKKoKCpA/koRGabrFC1YSQMX6gERHyKrMlPR3cHNoHEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mgBgYntT; arc=none smtp.client-ip=13.77.154.182
+	bh=/nOczs//qTOjJOXIj8TG9Bxh9tzzfPc/7rg+v5HC8/k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=HhQ2GCS1SFDA97IrY2/DqGHvbXq2MfdrFySFemsyqn54cNtcem3YNhV1qwMDu/LGB+W0Alz99Iap5H3DaWGqfzF6SkHVYqbLPQa5wJKTqXKSrf4kz3CXjpPjV5OFzKHqG+nlkfm2LVdSxeKyG06jP0S3xizXyQ7+KUKHPyGPLUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XPY2udqs; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mgBgYntT"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XPY2udqs"
 Received: by linux.microsoft.com (Postfix, from userid 1186)
-	id 3BB2321199C8; Wed,  7 May 2025 08:59:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3BB2321199C8
+	id 6379321199D1; Wed,  7 May 2025 08:59:05 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6379321199D1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1746633545;
-	bh=XwuAHLWXP3Nuwz1NnmUBtPGRtAGbF/aXt/ahOiDwN2k=;
+	bh=7yYjKoYCKk9cgdHl4tWxheQKNp85b+ROi69f+jf1OsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mgBgYntTMLe1IkPaYdpfGoPPL2kBvkPzMUi52vuswJ8bMdZl4ldkZuLmk8JXWPa67
-	 S2+KZnoTdkycHW3x6qBOdHO8SMV7RmxisegDj9yY7iBF1LdJpBNiiLyTbreRCOLzyn
-	 ia6G3y4AFbELXQEv4Hd+rB4DtqQoDFMIGydRV1fE=
+	b=XPY2udqsZlVq0NTKVFNMFzu/WfLQmOWZvJXp6rx11lDr+g9bEfyi/jlD7mrvx/yAv
+	 KSWIMoNXR8V24tkxVbjK3QK9iYmeIck+30nPr2JtfvtvyG9l+mcXRFcrFhKn/xB8Ni
+	 npta2uyXDZh4m07WHaGP+TXw02lJZPLo0e2zPoow=
 From: Konstantin Taranov <kotaranov@linux.microsoft.com>
 To: kotaranov@microsoft.com,
 	pabeni@redhat.com,
@@ -39,9 +39,9 @@ To: kotaranov@microsoft.com,
 Cc: linux-rdma@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH rdma-next v4 1/4] net: mana: Probe rdma device in mana driver
-Date: Wed,  7 May 2025 08:59:02 -0700
-Message-Id: <1746633545-17653-2-git-send-email-kotaranov@linux.microsoft.com>
+Subject: [PATCH rdma-next v4 4/4] net: mana: Add support for auxiliary device servicing events
+Date: Wed,  7 May 2025 08:59:05 -0700
+Message-Id: <1746633545-17653-5-git-send-email-kotaranov@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1746633545-17653-1-git-send-email-kotaranov@linux.microsoft.com>
 References: <1746633545-17653-1-git-send-email-kotaranov@linux.microsoft.com>
@@ -51,173 +51,279 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-From: Konstantin Taranov <kotaranov@microsoft.com>
+From: Shiraz Saleem <shirazsaleem@microsoft.com>
 
-Initialize gdma device for rdma inside mana module.
-For each gdma device, initialize an auxiliary ib device.
+Handle soc servcing events which require the rdma auxiliary device resources to
+be cleaned up during a suspend, and re-initialized during a resume.
 
+Signed-off-by: Shiraz Saleem <shirazsaleem@microsoft.com>
 Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
 ---
- .../net/ethernet/microsoft/mana/gdma_main.c   | 15 ++++++-
- drivers/net/ethernet/microsoft/mana/mana_en.c | 39 +++++++++++++++++--
- include/net/mana/mana.h                       |  3 ++
- 3 files changed, 52 insertions(+), 5 deletions(-)
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 11 ++-
+ .../net/ethernet/microsoft/mana/hw_channel.c  | 20 ++++++
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 69 +++++++++++++++++++
+ include/net/mana/gdma.h                       | 19 +++++
+ include/net/mana/hw_channel.h                 |  9 +++
+ 5 files changed, 127 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 8ee1aa3..59e7814 100644
+index 59e7814..3504507 100644
 --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
 +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -1005,7 +1005,6 @@ int mana_gd_register_device(struct gdma_dev *gd)
+@@ -391,6 +391,7 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ 	case GDMA_EQE_HWC_INIT_EQ_ID_DB:
+ 	case GDMA_EQE_HWC_INIT_DATA:
+ 	case GDMA_EQE_HWC_INIT_DONE:
++	case GDMA_EQE_HWC_SOC_SERVICE:
+ 	case GDMA_EQE_RNIC_QP_FATAL:
+ 		if (!eq->eq.callback)
+ 			break;
+@@ -1468,10 +1469,14 @@ static int mana_gd_setup(struct pci_dev *pdev)
+ 	mana_gd_init_registers(pdev);
+ 	mana_smc_init(&gc->shm_channel, gc->dev, gc->shm_base);
  
- 	return 0;
- }
--EXPORT_SYMBOL_NS(mana_gd_register_device, "NET_MANA");
- 
- int mana_gd_deregister_device(struct gdma_dev *gd)
- {
-@@ -1036,7 +1035,6 @@ int mana_gd_deregister_device(struct gdma_dev *gd)
- 
- 	return err;
- }
--EXPORT_SYMBOL_NS(mana_gd_deregister_device, "NET_MANA");
- 
- u32 mana_gd_wq_avail_space(struct gdma_queue *wq)
- {
-@@ -1579,8 +1577,14 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (err)
- 		goto cleanup_gd;
- 
-+	err = mana_rdma_probe(&gc->mana_ib);
-+	if (err)
-+		goto cleanup_mana;
++	gc->service_wq = alloc_ordered_workqueue("gdma_service_wq", 0);
++	if (!gc->service_wq)
++		return -ENOMEM;
 +
- 	return 0;
- 
-+cleanup_mana:
-+	mana_remove(&gc->mana, false);
- cleanup_gd:
- 	mana_gd_cleanup(pdev);
- unmap_bar:
-@@ -1608,6 +1612,7 @@ static void mana_gd_remove(struct pci_dev *pdev)
- {
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
- 
-+	mana_rdma_remove(&gc->mana_ib);
- 	mana_remove(&gc->mana, false);
- 
- 	mana_gd_cleanup(pdev);
-@@ -1631,6 +1636,7 @@ static int mana_gd_suspend(struct pci_dev *pdev, pm_message_t state)
- {
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
- 
-+	mana_rdma_remove(&gc->mana_ib);
- 	mana_remove(&gc->mana, true);
- 
- 	mana_gd_cleanup(pdev);
-@@ -1655,6 +1661,10 @@ static int mana_gd_resume(struct pci_dev *pdev)
- 	if (err)
- 		return err;
- 
-+	err = mana_rdma_probe(&gc->mana_ib);
-+	if (err)
-+		return err;
-+
- 	return 0;
- }
- 
-@@ -1665,6 +1675,7 @@ static void mana_gd_shutdown(struct pci_dev *pdev)
- 
- 	dev_info(&pdev->dev, "Shutdown was called\n");
- 
-+	mana_rdma_remove(&gc->mana_ib);
- 	mana_remove(&gc->mana, true);
- 
- 	mana_gd_cleanup(pdev);
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 5be0585..2013d0e 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -2944,7 +2944,7 @@ static void remove_adev(struct gdma_dev *gd)
- 	gd->adev = NULL;
- }
- 
--static int add_adev(struct gdma_dev *gd)
-+static int add_adev(struct gdma_dev *gd, const char *name)
- {
- 	struct auxiliary_device *adev;
- 	struct mana_adev *madev;
-@@ -2960,7 +2960,7 @@ static int add_adev(struct gdma_dev *gd)
- 		goto idx_fail;
- 	adev->id = ret;
- 
--	adev->name = "rdma";
-+	adev->name = name;
- 	adev->dev.parent = gd->gdma_context->dev;
- 	adev->dev.release = adev_release;
- 	madev->mdev = gd;
-@@ -3076,7 +3076,7 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- 		}
+ 	err = mana_gd_setup_irqs(pdev);
+ 	if (err) {
+ 		dev_err(gc->dev, "Failed to setup IRQs: %d\n", err);
+-		return err;
++		goto free_workqueue;
  	}
  
--	err = add_adev(gd);
-+	err = add_adev(gd, "eth");
- out:
- 	if (err) {
- 		mana_remove(gd, false);
-@@ -3150,6 +3150,39 @@ out:
- 	dev_dbg(dev, "%s succeeded\n", __func__);
+ 	err = mana_hwc_create_channel(gc);
+@@ -1497,6 +1502,8 @@ destroy_hwc:
+ 	mana_hwc_destroy_channel(gc);
+ remove_irq:
+ 	mana_gd_remove_irqs(pdev);
++free_workqueue:
++	destroy_workqueue(gc->service_wq);
+ 	dev_err(&pdev->dev, "%s failed (error %d)\n", __func__, err);
+ 	return err;
+ }
+@@ -1508,6 +1515,8 @@ static void mana_gd_cleanup(struct pci_dev *pdev)
+ 	mana_hwc_destroy_channel(gc);
+ 
+ 	mana_gd_remove_irqs(pdev);
++
++	destroy_workqueue(gc->service_wq);
+ 	dev_dbg(&pdev->dev, "mana gdma cleanup successful\n");
  }
  
-+int mana_rdma_probe(struct gdma_dev *gd)
-+{
-+	int err = 0;
-+
-+	if (gd->dev_id.type != GDMA_DEVICE_MANA_IB) {
-+		/* RDMA device is not detected on pci */
-+		return err;
-+	}
-+
-+	err = mana_gd_register_device(gd);
-+	if (err)
-+		return err;
-+
-+	err = add_adev(gd, "rdma");
-+	if (err)
-+		mana_gd_deregister_device(gd);
-+
-+	return err;
-+}
-+
-+void mana_rdma_remove(struct gdma_dev *gd)
-+{
-+	if (gd->dev_id.type != GDMA_DEVICE_MANA_IB) {
-+		/* RDMA device is not detected on pci */
-+		return;
-+	}
-+
-+	if (gd->adev)
-+		remove_adev(gd);
-+
-+	mana_gd_deregister_device(gd);
-+}
-+
- struct net_device *mana_get_primary_netdev(struct mana_context *ac,
- 					   u32 port_index,
- 					   netdevice_tracker *tracker)
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 0f78065..5857efc 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -488,6 +488,9 @@ int mana_detach(struct net_device *ndev, bool from_close);
- int mana_probe(struct gdma_dev *gd, bool resuming);
- void mana_remove(struct gdma_dev *gd, bool suspending);
+diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+index 1ba4960..60f6bc1 100644
+--- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
++++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+@@ -112,11 +112,13 @@ out:
+ static void mana_hwc_init_event_handler(void *ctx, struct gdma_queue *q_self,
+ 					struct gdma_event *event)
+ {
++	union hwc_init_soc_service_type service_data;
+ 	struct hw_channel_context *hwc = ctx;
+ 	struct gdma_dev *gd = hwc->gdma_dev;
+ 	union hwc_init_type_data type_data;
+ 	union hwc_init_eq_id_db eq_db;
+ 	u32 type, val;
++	int ret;
  
-+int mana_rdma_probe(struct gdma_dev *gd);
-+void mana_rdma_remove(struct gdma_dev *gd);
+ 	switch (event->type) {
+ 	case GDMA_EQE_HWC_INIT_EQ_ID_DB:
+@@ -199,7 +201,25 @@ static void mana_hwc_init_event_handler(void *ctx, struct gdma_queue *q_self,
+ 		}
+ 
+ 		break;
++	case GDMA_EQE_HWC_SOC_SERVICE:
++		service_data.as_uint32 = event->details[0];
++		type = service_data.type;
++		val = service_data.value;
+ 
++		switch (type) {
++		case GDMA_SERVICE_TYPE_RDMA_SUSPEND:
++		case GDMA_SERVICE_TYPE_RDMA_RESUME:
++			ret = mana_rdma_service_event(gd->gdma_context, type);
++			if (ret)
++				dev_err(hwc->dev, "Failed to schedule adev service event: %d\n",
++					ret);
++			break;
++		default:
++			dev_warn(hwc->dev, "Received unknown SOC service type %u\n", type);
++			break;
++		}
 +
- void mana_xdp_tx(struct sk_buff *skb, struct net_device *ndev);
- int mana_xdp_xmit(struct net_device *ndev, int n, struct xdp_frame **frames,
- 		  u32 flags);
++		break;
+ 	default:
+ 		dev_warn(hwc->dev, "Received unknown gdma event %u\n", event->type);
+ 		/* Ignore unknown events, which should never happen. */
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 2013d0e..39e01e2 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -2992,6 +2992,70 @@ idx_fail:
+ 	return ret;
+ }
+ 
++static void mana_handle_rdma_servicing(struct work_struct *work)
++{
++	struct mana_service_work *serv_work =
++		container_of(work, struct mana_service_work, work);
++	struct gdma_dev *gd = serv_work->gdma_dev;
++	struct device *dev = gd->gdma_context->dev;
++	int ret;
++
++	if (READ_ONCE(gd->rdma_teardown))
++		goto out;
++
++	switch (serv_work->event) {
++	case GDMA_SERVICE_TYPE_RDMA_SUSPEND:
++		if (!gd->adev || gd->is_suspended)
++			break;
++
++		remove_adev(gd);
++		gd->is_suspended = true;
++		break;
++
++	case GDMA_SERVICE_TYPE_RDMA_RESUME:
++		if (!gd->is_suspended)
++			break;
++
++		ret = add_adev(gd, "rdma");
++		if (ret)
++			dev_err(dev, "Failed to add adev on resume: %d\n", ret);
++		else
++			gd->is_suspended = false;
++		break;
++
++	default:
++		dev_warn(dev, "unknown adev service event %u\n",
++			 serv_work->event);
++		break;
++	}
++
++out:
++	kfree(serv_work);
++}
++
++int mana_rdma_service_event(struct gdma_context *gc, enum gdma_service_type event)
++{
++	struct gdma_dev *gd = &gc->mana_ib;
++	struct mana_service_work *serv_work;
++
++	if (gd->dev_id.type != GDMA_DEVICE_MANA_IB) {
++		/* RDMA device is not detected on pci */
++		return 0;
++	}
++
++	serv_work = kzalloc(sizeof(*serv_work), GFP_ATOMIC);
++	if (!serv_work)
++		return -ENOMEM;
++
++	serv_work->event = event;
++	serv_work->gdma_dev = gd;
++
++	INIT_WORK(&serv_work->work, mana_handle_rdma_servicing);
++	queue_work(gc->service_wq, &serv_work->work);
++
++	return 0;
++}
++
+ int mana_probe(struct gdma_dev *gd, bool resuming)
+ {
+ 	struct gdma_context *gc = gd->gdma_context;
+@@ -3172,11 +3236,16 @@ int mana_rdma_probe(struct gdma_dev *gd)
+ 
+ void mana_rdma_remove(struct gdma_dev *gd)
+ {
++	struct gdma_context *gc = gd->gdma_context;
++
+ 	if (gd->dev_id.type != GDMA_DEVICE_MANA_IB) {
+ 		/* RDMA device is not detected on pci */
+ 		return;
+ 	}
+ 
++	WRITE_ONCE(gd->rdma_teardown, true);
++	flush_workqueue(gc->service_wq);
++
+ 	if (gd->adev)
+ 		remove_adev(gd);
+ 
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index ffa9820..3ce56a8 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -60,6 +60,7 @@ enum gdma_eqe_type {
+ 	GDMA_EQE_HWC_INIT_DONE		= 131,
+ 	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
+ 	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
++	GDMA_EQE_HWC_SOC_SERVICE	= 134,
+ 	GDMA_EQE_RNIC_QP_FATAL		= 176,
+ };
+ 
+@@ -70,6 +71,18 @@ enum {
+ 	GDMA_DEVICE_MANA_IB	= 3,
+ };
+ 
++enum gdma_service_type {
++	GDMA_SERVICE_TYPE_NONE		= 0,
++	GDMA_SERVICE_TYPE_RDMA_SUSPEND	= 1,
++	GDMA_SERVICE_TYPE_RDMA_RESUME	= 2,
++};
++
++struct mana_service_work {
++	struct work_struct work;
++	struct gdma_dev *gdma_dev;
++	enum gdma_service_type event;
++};
++
+ struct gdma_resource {
+ 	/* Protect the bitmap */
+ 	spinlock_t lock;
+@@ -224,6 +237,8 @@ struct gdma_dev {
+ 	void *driver_data;
+ 
+ 	struct auxiliary_device *adev;
++	bool is_suspended;
++	bool rdma_teardown;
+ };
+ 
+ /* MANA_PAGE_SIZE is the DMA unit */
+@@ -409,6 +424,8 @@ struct gdma_context {
+ 	struct gdma_dev		mana_ib;
+ 
+ 	u64 pf_cap_flags1;
++
++	struct workqueue_struct *service_wq;
+ };
+ 
+ static inline bool mana_gd_is_mana(struct gdma_dev *gd)
+@@ -891,4 +908,6 @@ int mana_gd_destroy_dma_region(struct gdma_context *gc, u64 dma_region_handle);
+ void mana_register_debugfs(void);
+ void mana_unregister_debugfs(void);
+ 
++int mana_rdma_service_event(struct gdma_context *gc, enum gdma_service_type event);
++
+ #endif /* _GDMA_H */
+diff --git a/include/net/mana/hw_channel.h b/include/net/mana/hw_channel.h
+index 158b125..83cf933 100644
+--- a/include/net/mana/hw_channel.h
++++ b/include/net/mana/hw_channel.h
+@@ -49,6 +49,15 @@ union hwc_init_type_data {
+ 	};
+ }; /* HW DATA */
+ 
++union hwc_init_soc_service_type {
++	u32 as_uint32;
++
++	struct {
++		u32 value	: 28;
++		u32 type	:  4;
++	};
++}; /* HW DATA */
++
+ struct hwc_rx_oob {
+ 	u32 type	: 6;
+ 	u32 eom		: 1;
 -- 
 2.43.0
 
