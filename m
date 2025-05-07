@@ -1,65 +1,85 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C4B1A255C;
-	Wed,  7 May 2025 03:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4201AF0B4;
+	Wed,  7 May 2025 03:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746588136; cv=none; b=gO7jc+l1RwXVghpU+dX6INikaabDJ7184dZ7Sao+1lDrFSmgqgeqyFqEl+BYm7FKjlY/2wnIEYAAv4zfbjRikXupLz1/u8hv6iUgO59uqouiSmXqzx3AuX0r7ncLY36LgkTwObxFPp3vx5/RY5TdbfiZjoFSrUojoputF9HYMsA=
+	t=1746588159; cv=none; b=TcAtymeF6rhrZBOwAfoLPwFP+GMRu1FXyQU5KnRUbCOVjLTiNlAGFNRBahEoG1YgcOOwUFdyH1H9rmhT2IZ0J2o0rDs48MA0FYPDTEpbr0gzkda0YFlZTzKdEKP9eqvGwU5ym/FW0Rj+yFCJt5GMmrO269JHHt/D50unBBUCbBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746588136; c=relaxed/simple;
-	bh=WxnIZWGjyW8z4p9AhSnJJsn8ZjAdBNM5VL2W6LDw1c0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mdKqWcRbCMpbde/Bjvt6LVgttvfsIxyVjrLN0OMw87QAA5WsAw0TGzVQhbqDTu50MvUZTF4iCnp72M3WLFgVBTRtoPK4PgHCLvtqxCI9kdVFWuQe6mkFqq/QWDky231NRfSgrShd1iRtnvtgygohXmDSDvE7Hb2U+67mGXvwm8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=bCR+8fc3; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="bCR+8fc3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1746588132;
-	bh=WxnIZWGjyW8z4p9AhSnJJsn8ZjAdBNM5VL2W6LDw1c0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=bCR+8fc3LtDcSawxO4X6KapprEaFUHlDopKZmFaplYY0hg9qY2ZHxxAV725dw6TZI
-	 vMDQ4I5qCYW6aZB4ClA6mBPGWTAzsDb1q1Thuz7JM2NEN/d3IuDPcTQLqgOX/JwN49
-	 KHoX9w693tqIC2Wx8pBJhr+8PskzFyOU7AHb//tDxrGce2vfyWslb8hUjjTgbuA7VR
-	 Q5OEngX/ctCaryV+qVyYxXLfGBO3HzAYro10sfoquGFdPUUuZPvdQI5ai05jbgyxJM
-	 fT8bxI8lm3R4gU+9Se9xj6dc4oLjeMt/vfVhuQ2ToHwniIaYo/sUJ108EIsmeyRJEA
-	 xje1L/94ngvGg==
-Received: from [192.168.68.112] (unknown [180.150.112.225])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 324D864473;
-	Wed,  7 May 2025 11:22:10 +0800 (AWST)
-Message-ID: <5acf9c0afc764931f3e9e70c4085beeb95b9652d.camel@codeconstruct.com.au>
-Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert
- aspeed,ast2400-i2c-ic to DT schema
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: "Rob Herring (Arm)" <robh@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>,  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Ryan Chen
- <ryan_chen@aspeedtech.com>, Benjamin Herrenschmidt
- <benh@kernel.crashing.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
-	linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org
-Date: Wed, 07 May 2025 12:52:09 +0930
-In-Reply-To: <20250505144605.1287121-1-robh@kernel.org>
-References: <20250505144605.1287121-1-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1746588159; c=relaxed/simple;
+	bh=LxwMWPg+PFWNBv6WML1H6Mcw4NIhuvm/FTM1bIYofF8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qcfHViZGtE9XARs+Al5/nr9F8HbuqjqQor6b1RllRxYmWT3/dRUnhDzfHk2CoHK/yqFuXDrSZ8irPLTGQiqFwKXlhb4d5pO+KhToX/TB8wZSU2XZ2ySe6i+LxVvHB2MMLWhOpayeE4wG/2eumxpep85VT/R2Vud73K9YI349qGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZsgX72k43z1d023;
+	Wed,  7 May 2025 11:21:11 +0800 (CST)
+Received: from kwepemf100018.china.huawei.com (unknown [7.202.181.17])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0B244180B43;
+	Wed,  7 May 2025 11:22:28 +0800 (CST)
+Received: from [10.67.120.168] (10.67.120.168) by
+ kwepemf100018.china.huawei.com (7.202.181.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 7 May 2025 11:22:27 +0800
+Message-ID: <8a16ca96-8624-358d-39d8-e17fbf60a1b1@hisilicon.com>
+Date: Wed, 7 May 2025 11:22:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] RDMA/hns: fix trace TRACE_INCLUDE_PATH
+Content-Language: en-US
+To: Huiwen He <hehuiwen@kylinos.cn>, <tangchengchang@huawei.com>
+CC: <jgg@ziepe.ca>, <leon@kernel.org>, <linux-rdma@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20250507030433.599021-1-hehuiwen@kylinos.cn>
+From: Junxian Huang <huangjunxian6@hisilicon.com>
+In-Reply-To: <20250507030433.599021-1-hehuiwen@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemf100018.china.huawei.com (7.202.181.17)
 
-On Mon, 2025-05-05 at 09:46 -0500, Rob Herring (Arm) wrote:
-> Convert the Aspeed I2C interrupt controller binding to schema format.
->=20
-> Drop the "#address-cells" and "#size-cells" as they are unused and
-> incorrect anyways.
->=20
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+
+On 2025/5/7 11:04, Huiwen He wrote:
+> TRACE_INCLUDE_PATH should be a path relative to define_trace.h, not the
+> file including it. (See the comment in include/trace/define_trace.h.)
+> 
+> Fixes build error found with CONFIG_INFINIBAND_HNS_HIP08=m:
+>   CC [M]  drivers/infiniband/hw/hns/hns_roce_hw_v2.o
+> In file included from drivers/infiniband/hw/hns/hns_roce_trace.h:213,
+>                  from drivers/infiniband/hw/hns/hns_roce_hw_v2.c:53:
+> ./include/trace/define_trace.h:110:42: fatal error: ./hns_roce_trace.h: No such file or directory
+>   110 | #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
+> 
+> Signed-off-by: Huiwen He <hehuiwen@kylinos.cn>
+> ---
+>  drivers/infiniband/hw/hns/hns_roce_trace.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/infiniband/hw/hns/hns_roce_trace.h b/drivers/infiniband/hw/hns/hns_roce_trace.h
+> index 23cbdbaeffaa..19bd3c0eec47 100644
+> --- a/drivers/infiniband/hw/hns/hns_roce_trace.h
+> +++ b/drivers/infiniband/hw/hns/hns_roce_trace.h
+> @@ -209,5 +209,5 @@ DEFINE_EVENT(cmdq, hns_cmdq_resp,
+>  #undef TRACE_INCLUDE_FILE
+>  #define TRACE_INCLUDE_FILE hns_roce_trace
+>  #undef TRACE_INCLUDE_PATH
+> -#define TRACE_INCLUDE_PATH .
+> +#define TRACE_INCLUDE_PATH ../../drivers/infiniband/hw/hns
+>  #include <trace/define_trace.h>
+
+We've found this bug and decided to fix it by modifying Makefile, please see:
+https://lore.kernel.org/linux-next/b7dd4dda-37d8-47e4-8d78-b6585be21cfd@paulmck-laptop/T/#t
+
+Thanks anyway!
+
+Junxian
