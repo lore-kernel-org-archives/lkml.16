@@ -1,85 +1,90 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C872AD2C;
-	Wed,  7 May 2025 11:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B15821019C
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746617627; cv=none; b=HNybeK7ik0T132ll1KhIFM0guRIcx1DRdf2Y45XQcAfpxXOtoFSNf0+D7aqthr8wrLYzLXuJta2G3gMWIkBKuE1A+Lyh/TcZSoxU8KdGykiB+WpzN0ZUXXIyRFEf/RHJ+9kJuNY3VFk+uiuxnqOhwSZlFAsVoou+4/xG8lKf2lI=
+	t=1746617678; cv=none; b=g7AEaECxfKREprgs7C7jecwRiSGewKLKNdQAUNvCZgYSPTT9fUdSQKaNf2r5MpW17MIrV8Udmzjhf/ZBqg2F8MeHVwoQYnCestIm+b2/DDWvF13XsC2vTrP/X2Fotr0FFMD6QCt4Fq5+8LG9swFvyEw23qPOIq1dndHouwYoNQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746617627; c=relaxed/simple;
-	bh=TdXUW3s/bibHixgCtL5pScTc/TC3t4TyB1NBSk5rNaA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WhLeN0kNZkbVBJOJYkOZRZaYeMhxnx6CjnqrhXdD6AjG1RTtrGN8XbXz8G5AE1A3KxjQKUH36gWVtHyYdF4j5CFM0mZxyzquSWokHt9neH55/rtBARipIZfOBKeBn3Vm1lpSGmZY82zd6WLS4+QwpHdCoa8zBapN+hJ3CVharRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=MefdPJe3; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	s=arc-20240116; t=1746617678; c=relaxed/simple;
+	bh=jan/G1jQO8QSF9VgW6ZR8MQYcfJJl6I5cqB21kUF2ik=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=djNO2DCwDz2o/9z28bpKoK9RieW4omBg2cIFvpWHZQGugtAgCeMmZcloP+Qs50KjfRGCMIMsyQBhrAF+odnTkA9uaPDpF5f9Z5KmT9aINoAfSnwT+gFK6RQ9WE62Ak354fIDrJmQ6Rn49lrVMzVU0nWA+ecEOAVnwjWMqJ7zbUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GBim/7vG; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="MefdPJe3"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 1102A1C0082; Wed,  7 May 2025 13:33:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1746617616;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wpW6+F8wuTVSutm9gp06d9+r4fH5ttNuTrzJur8hwKA=;
-	b=MefdPJe3cHf2ywUxB3nHsVrBuG4R1zqlBRhNaq63wBme60pHlvBbyEOc+Fu9WPLSSa3SlH
-	rYaNwvZSpWlrFGXN1SzoZ55gYiEtl3Magca+bl6FJFJ5Ed11GxkEteppl6h86D/lNbygkU
-	tFlh01ohP04ldUs1ZiNW+URRF2MH3Ok=
-Date: Wed, 7 May 2025 13:33:35 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: hdegoede@redhat.com, bentiss@kernel.org,
-	Werner Sembach <wse@tuxedocomputers.com>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v9 0/1] platform/x86/tuxedo: Add virtual LampArray for
- TUXEDO NB04 devices
-Message-ID: <aBtFDy+Qu3RvAHur@duo.ucw.cz>
-References: <20250425210043.342288-1-wse@tuxedocomputers.com>
- <174645314692.23202.56309255974182976.b4-ty@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GBim/7vG"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30ddad694c1so71873681fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 04:34:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746617675; x=1747222475; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jan/G1jQO8QSF9VgW6ZR8MQYcfJJl6I5cqB21kUF2ik=;
+        b=GBim/7vGi65tic4KuM57tHL9NcgcAhw5EHWXDCx3XJ7aGSYr7JIQWr7hphcjz0oHTy
+         cPpNoqL73F/rq5+AtZA1abaciUBaWQJeT2ZMgNL9nuBU4xSO2340v3j7QWwBJwolAWH5
+         xhMzboXa6No6DHqdUm5jVc/X8zxz2BwHwtHaXN1Vc4jqbRgcHmeE+FTw/WX+gUkhcyix
+         XqxjY+eYyR2rfsp/2cKe1d1PseNNAIO5oJ3rZFvJv2DYSk+SwAw4mG8yHQs4pr/tYjZc
+         BRpbZkt4nIDuiw3G+etFxHTDMNax9hxHKrfw+RdBLTRay+3siqEBPvramSDQViEnneRL
+         gOpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746617675; x=1747222475;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jan/G1jQO8QSF9VgW6ZR8MQYcfJJl6I5cqB21kUF2ik=;
+        b=LbJxDaJ5y6VhI8OVBuOPS4Sq2KMq1ViBGjRnMJLjszbfo34GmdofhsRVXLLjU5iGji
+         tc9EhebShh9cHrilJHI/eUWh8+s2SQgLi3gX6b0BxaL72Ew2H6D+bw9qHV69NG/Rj6ze
+         YPYP3WAInO1jLSwdK/intqMbN7op6YfPA4prIdP2EgydYRhLgVbNWqoD60OSxEnjUGQ3
+         2+EPXxp7+Z2tearJjk9Lm4xVbzLZy2IF9vtHXwfmUy+fS6nBl7+nhZmONa5FAhdENI0f
+         7Es71Q5BgyzxBUuDsodSjQLFUAL+zl+R8kqS/cBjsmbBl3nAbo+V4VdaQhmKg1o5kOwU
+         mcXg==
+X-Gm-Message-State: AOJu0Yx54kRcm//Dc0B7osNJONg2lYIcRQJ52dnJkxG6VZT41lZOxKqV
+	QvmXGcOdIl3YKtEAILlTEwx8Mm+MWuXAF6sVYyKPIfYTRxjQt+ZWzBohUNczSAvYwB+GA3Byltp
+	TV2XJ5baPsVZAkxqE1XgTIGHQPVQ=
+X-Gm-Gg: ASbGncsdyP8SmgQePgBDA328ckG2Avx39GkfEt+UmMGD8E0bIarW92sTlTMwlh+VqOE
+	qXOBjj3D9p1frLZK6lsR/2WsLfsXFvVXRyexVpgTnsMvdnYI+BD3bJIuI5mX9lXgj6GKHHxute3
+	WrocTlJktbP+3nlKMuC0FICUU7hUtLkQNB+uCJxSKBSb/BFCfu8CnZRw==
+X-Google-Smtp-Source: AGHT+IG7oYllQDERw2pyvJWmXVrE12zrrXKaUEIUOHTWAMUs72mMelYAuwrsPoTFhtZ/3Wy5Zk6JHEvDerw2HFlQK2c=
+X-Received: by 2002:a05:651c:3136:b0:30b:b956:53c2 with SMTP id
+ 38308e7fff4ca-326ad1ba97amr10036641fa.11.1746617674951; Wed, 07 May 2025
+ 04:34:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="W+JKsxFKyzAcxaI8"
-Content-Disposition: inline
-In-Reply-To: <174645314692.23202.56309255974182976.b4-ty@linux.intel.com>
-
-
---W+JKsxFKyzAcxaI8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250507112131.3686966-1-tomeu@tomeuvizoso.net>
+In-Reply-To: <20250507112131.3686966-1-tomeu@tomeuvizoso.net>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Wed, 7 May 2025 08:34:23 -0300
+X-Gm-Features: ATxdqUF6JkkRipTIVERvqlVRf3tIXAdsBzMHDW0_XZtQPGtanxPvgGhL3Es3bl0
+Message-ID: <CAOMZO5CK11wByq3BL9XZgvfFv1_kp94CNFMYDaEJ=WxcEFATJQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/etnaviv: Fix flush sequence logic
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc: linux-kernel@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>, 
+	Russell King <linux+etnaviv@armlinux.org.uk>, 
+	Christian Gmeiner <christian.gmeiner@gmail.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, etnaviv@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+Hi Tomeu,
 
-> Thank you for your contribution, it has been applied to my local
-> review-ilpo-next branch. Note it will show up in the public
-> platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-> local branch there, which might take a while.
+On Wed, May 7, 2025 at 8:22=E2=80=AFAM Tomeu Vizoso <tomeu@tomeuvizoso.net>=
+ wrote:
+>
+> We should be comparing the last submitted sequence number with that of
+> the address space we may be switching to.
+>
+> And we should be using the latter as the last submitted sequence number
+> afterwards.
+>
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
 
-Can I ask you to Cc me with the pull request when you'll send the
-patch upstream?
-
-Thank you,
-								Pavel
---=20
-I don't work for Nazis and criminals, and neither should you.
-Boycott Putin, Trump, and Musk!
-
---W+JKsxFKyzAcxaI8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaBtFDwAKCRAw5/Bqldv6
-8ukgAJ9JPWN3q/5HPzCCEUVl6BYLgOg3/gCgnvYxOMvokW+b/2GOGUyhDWujzq8=
-=Cote
------END PGP SIGNATURE-----
-
---W+JKsxFKyzAcxaI8--
+Does this need a Fixes tag?
