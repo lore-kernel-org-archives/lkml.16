@@ -1,237 +1,252 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEE672610;
-	Wed,  7 May 2025 08:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3149A13C82E;
+	Wed,  7 May 2025 08:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746607444; cv=none; b=Y43XFMyq3fGnbLlp1P4IJNpsVd/lxORq9hQt0S1/8k6KvB0ybrzWG+X5eEjHkyB6BJN8++PSME16G3azFo/3fpa7rPfHRiEabyavOJSrEsU1PgNzk03RLcg+zrnseGieSeNU4TSTTo++3IIpu65AUi9Cyx6slXjfDT8BaDEsvMo=
+	t=1746607486; cv=none; b=fymxELGCfu7uHu6wieO346pmGAwypqFx/S6J/hP8oph4fddrlzYd8gEP/9AtPutiQ2RvEyOa0sbuWDeQzlr4+QsLzJkU2ssH/JFUy/pUeATOO74592Ey1cKwS8R6Kt6fZv/SFSBG6IgaS5aci0BZt4/dwJJ42ud8FvVUpNlbC10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746607444; c=relaxed/simple;
-	bh=u3Fb8+gokSMQzhf+2mR0lZJLnZv3ZY4xGY2UaMpzyVU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dIvuQ5ntDLZKeljdDbFM0tyR2YiXE9P5+2U13uBMSwEGK0l2TZPiroeSZL6gXTuMwI4Jg98Uslyw3vQ/m0R6v0H+icXG/UZiwAi1KNzsGAr7kSl0N3VfLgUapTKkKBOqlIG0cF+v3YvwJZgN7dmrdsFT1ZUZJ1HzkgO01HHQBIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=ojHfJixQ; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1746607486; c=relaxed/simple;
+	bh=iLPeWQJKnKT3E7jvJ1Lx4bS19Z6med6/ZvzdD94ZngQ=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=fi9JpwcMYSYo1MUS2FF+Dpx5qVH2YVFcXeFomkyEGjPxJ2EpmAI+gCS92iIhV25X3qKhQMxfngc472PXRViDlJfoKtXlwb/Ed0yrbltaqBENxrLePVUILX/Z2yRiROEapGDIkBFJJJk5+lZdYRKyotk09fHRRO0m/18xlNl5IgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iQIYEICk; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="ojHfJixQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=WUKmBmR4aG6kGIrfVbpySDx42tAvNoBV6Fg6tQriHps=; b=ojHfJixQLHaHVmpsVsNMFE7Os7
-	LIntKZ6xdR89Sdd7977O+VMgBWU+SqadN1J/VRabJ6GFemLvyQE6EkrD+4CoNn655Wl4UX/SOSQLZ
-	ouj7XKAP4LmvWKUGlU/SxtTkCFHTEtTTWsGLprrelyn5OS/ok0VpVnuI4s1gW6s/t7wjj4AiEubzV
-	FNMFAj4Hkq0Y+DcKqF8E0UKgv8s9M8qiTFnQ2lW+ULRQQHEG/AtDQkyoJ53grdKOTx7UFc117AiqB
-	5L0USZ3jHVGJgFvWz8JsAM86ydLjxBKK5vhIKZQ17NoykBC8+1FiTuEMGzRUA/Vm27y3GGYbG8WzR
-	swoLyiYA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uCaNg-004CNi-1U;
-	Wed, 07 May 2025 16:43:57 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 07 May 2025 16:43:56 +0800
-Date: Wed, 7 May 2025 16:43:56 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH] crypto: marvell/cesa - Do not chain submitted requests
-Message-ID: <aBsdTJUAcQgW4ink@gondor.apana.org.au>
-References: <38a275a4e0224266ceb9ce822e3860fe9209d50c.camel@gmail.com>
- <ZwZAExmK52txvHE8@gondor.apana.org.au>
- <7e38e34adddb14d0a23a13cf738b6b7cccbfce6f.camel@gmail.com>
- <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
- <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
- <15fadc356b73a1e8e24183f284b5c0a44a53e679.camel@gmail.com>
- <Zw31JIEyh28vK9q7@gondor.apana.org.au>
- <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
- <Zw9AsgqKHJfySScx@gondor.apana.org.au>
- <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iQIYEICk"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5475Ij2f010427;
+	Wed, 7 May 2025 08:44:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=FO0fjrYVKp8xGIN/2Gqnbgr69KrW
+	HFR/beTQuzDyhBY=; b=iQIYEICk59Wutt7kEO9PpERcRMlZOculkpuYYN49Wq1/
+	dZDDRMUyuACsZ5Op+2591XF6yLTzAwPFLkEiB7EWrNCf+VxHoRAf+AYBwwDrlGyj
+	HlYSzEnwYi+ymNTizgfUETIAX4bzSaMVA2OCiX770k+emtT63JZuGw/5otFoy+I4
+	IVEdr7CdkbiS6yaQXbny5Um0/bPe+LlQN3d0YbYerNlnVt9UGFslqgrb6iQZicTw
+	fe3YSO/kTkAo8uaM/+6OhKfx8c2AXBojUJTLZrtasQzh+/rQAWRL5es25XLHwlwm
+	UzlIS2MUQUYF7p1dP+DoKDToI4YCGgl29WMIjvaaeg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46fgbjdm2k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 08:44:40 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5478QTfl026578;
+	Wed, 7 May 2025 08:44:40 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46fgbjdm2f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 08:44:40 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5476WFr8013770;
+	Wed, 7 May 2025 08:44:39 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46e062fehx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 08:44:39 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5478iccG23593280
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 7 May 2025 08:44:38 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5DD6F58055;
+	Wed,  7 May 2025 08:44:38 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4DC815804B;
+	Wed,  7 May 2025 08:44:36 +0000 (GMT)
+Received: from [9.204.204.179] (unknown [9.204.204.179])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  7 May 2025 08:44:35 +0000 (GMT)
+Message-ID: <75b94ef2-752b-4018-9b2a-148ecda5e8f4@linux.ibm.com>
+Date: Wed, 7 May 2025 14:14:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-GB
+To: LKML <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-btrfs@vger.kernel.org, riteshh@linux.ibm.com,
+        Qu Wenruo <quwenruo.btrfs@gmx.com>, disgoel@linux.vnet.ibm.com
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Subject: [next-20250506][btrfs] Kernel OOPS while btrfs/001 TC
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: NmLre71nuBKqpkRRyNXeHHYzCJKbKSmm
+X-Proofpoint-GUID: Pt44Bp16xx9yccZZJROR44K9cdhvcQyb
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA3OSBTYWx0ZWRfX81a4ZT0S0PSv Y4t5UQCBOS8r2qqMKE8Qs1NHtmIh9wDvryUx+jH5qh/cLrUZVyzsaIilvUNcgpqB4wthqQmFbpO Qri+cJ8rvHbR24Tbl//90Ta/6OJs7/JStVhKY5D9FDT4/cIe76OVkyyVHWFTpybHXG3/JVVlytp
+ vkjWT/gZItBIWXlTrYtS9+/EOO0dea6aw5hXhf/mDJ9fZjfoY4TOOuq4RpS4tH2l+S6prejTn3k thAsGFW6sElBZeyGzJpn3WcXB50FCTG7Z6F/qSMj+6NnyxXG+jnNYzVrs1ZiuUzmKnIasHP3fQP GFoXiUrzA6G/mq/+HJs3E+ap0MvestszpHmmHlShxKI0sy7hTM/AM5/TkaBAWorwgxpVhmXJ5mc
+ itrdAxMFGIPbDWTf2YIRpyyntLq6SWZegrJHxsyKRDSgFEDlR9xJl9wG3iZu2e39dXXX3xF9
+X-Authority-Analysis: v=2.4 cv=FJcbx/os c=1 sm=1 tr=0 ts=681b1d78 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=UIzWbI13G1sJYqkSAR8A:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_03,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=812 phishscore=0 impostorscore=0 suspectscore=0 mlxscore=0
+ malwarescore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0 adultscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505070079
 
-On Tue, May 06, 2025 at 09:19:04PM +0800, Herbert Xu wrote:
->
-> I haven't figured out exactly what's wrong with tdma, although
-> the chaining IRQ completion handling looks a bit fragile in that
-> if something goes wrong it'll simply mark all queued requests as
-> complete, corrupting any requests that have not yet been sent to
-> the hardware.
+Hello,
 
-I'm fairly confident that I've found the culprit.  Please try this
-patch and see if it makes tdma work again:
 
----8<---
-This driver tries to chain requests together before submitting them
-to hardware in order to reduce completion interrupts.
+I am observing kernel OOPS, while running btrfs/001 TC, from xfstests suite.
 
-However, it even extends chains that have already been submitted
-to hardware.  This is dangerous because there is no way of knowing
-whether the hardware has already read the DMA memory in question
-or not.
 
-Fix this by splitting the chain list into two.  One for submitted
-requests and one for requests that have not yet been submitted.
-Only extend the latter.
+This issue is introduced in next-20250506. This issue is not seen on 
+next-20250505 kernel.
 
-Reported-by: Klaus Kudielka <klaus.kudielka@gmail.com>
-Fixes: 85030c5168f1 ("crypto: marvell - Add support for chaining crypto requests in TDMA mode")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
----
- drivers/crypto/marvell/cesa/cesa.c |  2 +-
- drivers/crypto/marvell/cesa/cesa.h |  9 +++--
- drivers/crypto/marvell/cesa/tdma.c | 54 ++++++++++++++++++------------
- 3 files changed, 40 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/crypto/marvell/cesa/cesa.c b/drivers/crypto/marvell/cesa/cesa.c
-index fa08f10e6f3f..9c21f5d835d2 100644
---- a/drivers/crypto/marvell/cesa/cesa.c
-+++ b/drivers/crypto/marvell/cesa/cesa.c
-@@ -94,7 +94,7 @@ static int mv_cesa_std_process(struct mv_cesa_engine *engine, u32 status)
- 
- static int mv_cesa_int_process(struct mv_cesa_engine *engine, u32 status)
- {
--	if (engine->chain.first && engine->chain.last)
-+	if (engine->chain_hw.first && engine->chain_hw.last)
- 		return mv_cesa_tdma_process(engine, status);
- 
- 	return mv_cesa_std_process(engine, status);
-diff --git a/drivers/crypto/marvell/cesa/cesa.h b/drivers/crypto/marvell/cesa/cesa.h
-index d215a6bed6bc..50ca1039fdaa 100644
---- a/drivers/crypto/marvell/cesa/cesa.h
-+++ b/drivers/crypto/marvell/cesa/cesa.h
-@@ -440,8 +440,10 @@ struct mv_cesa_dev {
-  *			SRAM
-  * @queue:		fifo of the pending crypto requests
-  * @load:		engine load counter, useful for load balancing
-- * @chain:		list of the current tdma descriptors being processed
-- *			by this engine.
-+ * @chain_hw:		list of the current tdma descriptors being processed
-+ *			by the hardware.
-+ * @chain_sw:		list of the current tdma descriptors that will be
-+ *			submitted to the hardware.
-  * @complete_queue:	fifo of the processed requests by the engine
-  *
-  * Structure storing CESA engine information.
-@@ -463,7 +465,8 @@ struct mv_cesa_engine {
- 	struct gen_pool *pool;
- 	struct crypto_queue queue;
- 	atomic_t load;
--	struct mv_cesa_tdma_chain chain;
-+	struct mv_cesa_tdma_chain chain_hw;
-+	struct mv_cesa_tdma_chain chain_sw;
- 	struct list_head complete_queue;
- 	int irq;
- };
-diff --git a/drivers/crypto/marvell/cesa/tdma.c b/drivers/crypto/marvell/cesa/tdma.c
-index 388a06e180d6..40fcc852adfa 100644
---- a/drivers/crypto/marvell/cesa/tdma.c
-+++ b/drivers/crypto/marvell/cesa/tdma.c
-@@ -38,6 +38,15 @@ void mv_cesa_dma_step(struct mv_cesa_req *dreq)
- {
- 	struct mv_cesa_engine *engine = dreq->engine;
- 
-+	spin_lock_bh(&engine->lock);
-+	if (engine->chain_sw.first == dreq->chain.first) {
-+		engine->chain_sw.first = NULL;
-+		engine->chain_sw.last = NULL;
-+	}
-+	engine->chain_hw.first = dreq->chain.first;
-+	engine->chain_hw.last = dreq->chain.last;
-+	spin_unlock_bh(&engine->lock);
-+
- 	writel_relaxed(0, engine->regs + CESA_SA_CFG);
- 
- 	mv_cesa_set_int_mask(engine, CESA_SA_INT_ACC0_IDMA_DONE);
-@@ -96,25 +105,28 @@ void mv_cesa_dma_prepare(struct mv_cesa_req *dreq,
- void mv_cesa_tdma_chain(struct mv_cesa_engine *engine,
- 			struct mv_cesa_req *dreq)
- {
--	if (engine->chain.first == NULL && engine->chain.last == NULL) {
--		engine->chain.first = dreq->chain.first;
--		engine->chain.last  = dreq->chain.last;
-+	struct mv_cesa_tdma_desc *last = engine->chain_sw.last;
-+
-+	/*
-+	 * Break the DMA chain if the request being queued needs the IV
-+	 * regs to be set before lauching the request.
-+	 */
-+	if (!last || dreq->chain.first->flags & CESA_TDMA_SET_STATE) {
-+		engine->chain_sw.first = dreq->chain.first;
-+		engine->chain_sw.last  = dreq->chain.last;
- 	} else {
--		struct mv_cesa_tdma_desc *last;
--
--		last = engine->chain.last;
- 		last->next = dreq->chain.first;
--		engine->chain.last = dreq->chain.last;
--
--		/*
--		 * Break the DMA chain if the CESA_TDMA_BREAK_CHAIN is set on
--		 * the last element of the current chain, or if the request
--		 * being queued needs the IV regs to be set before lauching
--		 * the request.
--		 */
--		if (!(last->flags & CESA_TDMA_BREAK_CHAIN) &&
--		    !(dreq->chain.first->flags & CESA_TDMA_SET_STATE))
--			last->next_dma = cpu_to_le32(dreq->chain.first->cur_dma);
-+		last->next_dma = cpu_to_le32(dreq->chain.first->cur_dma);
-+		last = dreq->chain.last;
-+		engine->chain_sw.last = last;
-+	}
-+	/*
-+	 * Break the DMA chain if the CESA_TDMA_BREAK_CHAIN is set on
-+	 * the last element of the current chain.
-+	 */
-+	if (last->flags & CESA_TDMA_BREAK_CHAIN) {
-+		engine->chain_sw.first = NULL;
-+		engine->chain_sw.last = NULL;
- 	}
- }
- 
-@@ -127,7 +139,7 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
- 
- 	tdma_cur = readl(engine->regs + CESA_TDMA_CUR);
- 
--	for (tdma = engine->chain.first; tdma; tdma = next) {
-+	for (tdma = engine->chain_hw.first; tdma; tdma = next) {
- 		spin_lock_bh(&engine->lock);
- 		next = tdma->next;
- 		spin_unlock_bh(&engine->lock);
-@@ -149,12 +161,12 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
- 								 &backlog);
- 
- 			/* Re-chaining to the next request */
--			engine->chain.first = tdma->next;
-+			engine->chain_hw.first = tdma->next;
- 			tdma->next = NULL;
- 
- 			/* If this is the last request, clear the chain */
--			if (engine->chain.first == NULL)
--				engine->chain.last  = NULL;
-+			if (engine->chain_hw.first == NULL)
-+				engine->chain_hw.last  = NULL;
- 			spin_unlock_bh(&engine->lock);
- 
- 			ctx = crypto_tfm_ctx(req->tfm);
--- 
-2.39.5
+Steps to repro:
 
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+
+1. git clone git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
+2. cd xfstests-dev/
+3. mkdir /mnt/loop-device /mnt/test /mnt/scratch
+4. for i in $(seq 0 5); do fallocate -o 0 -l 5GiB 
+/mnt/loop-device/file-$i.img; done
+5. for i in $(seq 0 5); do losetup /dev/loop$i 
+/mnt/loop-device/file-$i.img; done
+6. mkfs.btrfs -f -s 65536 -n 65536 /dev/loop0; mkfs.btrfs -f /dev/loop1; 
+mkfs.btrfs -f /dev/loop2; mkfs.btrfs -f /dev/loop3; mkfs.btrfs -f 
+/dev/loop4; mkfs.btrfs -f /dev/loop5
+8. vi local.config
+9. make
+10. ./check tools/btrfs/001
+
+
+local.config contents:
+
+
+export RECREATE_TEST_DEV=true
+export TEST_DEV=/dev/loop0
+export TEST_DIR=/mnt/test
+export SCRATCH_DEV_POOL="/dev/loop1 /dev/loop2 /dev/loop3 /dev/loop4 
+/dev/loop5"
+export SCRATCH_MNT=/mnt/scratch
+export MKFS_OPTIONS="-f -s 4096 -n 4096"
+export FSTYP=btrfs
+export MOUNT_OPTIONS=""
+
+
+Crash:
+
+
+[  953.799060] Btrfs loaded, zoned=yes, fsverity=no
+[  968.070858] BTRFS: device fsid 3813dc53-a2f3-4342-b44e-c9349f17f991 
+devid 1 transid 8 /dev/loop0 (7:0) scanned by mount (25422)
+[  968.072561] BTRFS info (device loop0): first mount of filesystem 
+3813dc53-a2f3-4342-b44e-c9349f17f991
+[  968.072584] BTRFS info (device loop0): using crc32c (crc32c-powerpc) 
+checksum algorithm
+[  968.072594] BTRFS info (device loop0): forcing free space tree for 
+sector size 4096 with page size 65536
+[  968.072599] BTRFS info (device loop0): using free-space-tree
+[  968.073867] BTRFS info (device loop0): checking UUID tree
+[  968.074000] Kernel attempted to read user page (68) - exploit 
+attempt? (uid: 0)
+[  968.074009] BUG: Kernel NULL pointer dereference on read at 0x00000068
+[  968.074013] Faulting instruction address: 0xc00800000f7fb5e0
+[  968.074019] Oops: Kernel access of bad area, sig: 11 [#1]
+[  968.074022] LE PAGE_SIZE=64K MMU=Radix  SMP NR_CPUS=8192 NUMA pSeries
+[  968.074028] Modules linked in: btrfs blake2b_generic xor raid6_pq 
+zstd_compress loop dm_mod nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib 
+nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct sunrpc 
+nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 bonding 
+tls rfkill ip_set nf_tables nfnetlink pseries_rng vmx_crypto fuse ext4 
+crc16 mbcache jbd2 sd_mod sg ibmvscsi scsi_transport_srp ibmveth
+[  968.074074] CPU: 0 UID: 0 PID: 25422 Comm: mount Kdump: loaded Not 
+tainted 6.15.0-rc5-next-20250506 #1 VOLUNTARY
+
+[  968.074087] NIP:  c00800000f7fb5e0 LR: c00800000f7fb3b4 CTR: 
+c00000000047862c
+[  968.074091] REGS: c000000154747920 TRAP: 0300   Not tainted 
+(6.15.0-rc5-next-20250506)
+[  968.074096] MSR:  800000000280b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  
+CR: 24022882  XER: 00000000
+[  968.074109] CFAR: c00800000f7fb650 DAR: 0000000000000068 DSISR: 
+40000000 IRQMASK: 0
+[  968.074109] GPR00: c00800000f7fb3b4 c000000154747bc0 c0080000099da600 
+0000000000000000
+[  968.074109] GPR04: c000000008570c20 7fffffffffffffff 0000000000000000 
+c0000000068e3a00
+[  968.074109] GPR08: 0000000000000000 0000000000000000 c0000000068e3a00 
+0000000000002000
+[  968.074109] GPR12: c00000000047862c c000000003020000 0000000000000000 
+0000000000000000
+[  968.074109] GPR16: 0000000000000000 0000000000000000 0000000000000000 
+0000000000000000
+[  968.074109] GPR20: 0000000000000000 0000000000000000 0000000000000000 
+0000000000000000
+[  968.074109] GPR24: 0000000000000000 c000000015b00000 c00000007a38ac00 
+0000000000000020
+[  968.074109] GPR28: c000000008560a00 c00000006b1784c0 0000000000000000 
+c000000063147980
+[  968.074163] NIP [c00800000f7fb5e0] btrfs_get_tree_subvol+0x32c/0x544 
+[btrfs]
+[  968.074205] LR [c00800000f7fb3b4] btrfs_get_tree_subvol+0x100/0x544 
+[btrfs]
+[  968.074241] Call Trace:
+[  968.074244] [c000000154747bc0] [c00800000f7fb3b4] 
+btrfs_get_tree_subvol+0x100/0x544 [btrfs] (unreliable)
+[  968.074282] [c000000154747cb0] [c000000000630da4] vfs_get_tree+0x48/0x15c
+[  968.074291] [c000000154747d30] [c00000000067675c] 
+do_new_mount+0x234/0x438
+[  968.074297] [c000000154747da0] [c000000000678298] sys_mount+0x164/0x1b0
+[  968.074303] [c000000154747e10] [c000000000033338] 
+system_call_exception+0x138/0x330
+[  968.074311] [c000000154747e50] [c00000000000d05c] 
+system_call_vectored_common+0x15c/0x2ec
+[  968.074319] ---- interrupt: 3000 at 0x7fff89d4edf4
+[  968.074323] NIP:  00007fff89d4edf4 LR: 00007fff89d4edf4 CTR: 
+0000000000000000
+[  968.074328] REGS: c000000154747e80 TRAP: 3000   Not tainted 
+(6.15.0-rc5-next-20250506)
+[  968.074333] MSR:  800000000280f033 
+<SF,VEC,VSX,EE,PR,FP,ME,IR,DR,RI,LE>  CR: 44022804  XER: 00000000
+[  968.074345] IRQMASK: 0
+[  968.074345] GPR00: 0000000000000015 00007fffc25e41b0 00007fff89e37d00 
+000000015e810710
+[  968.074345] GPR04: 000000015e810730 000000015e8106f0 0000000000000000 
+000000015e810690
+[  968.074345] GPR08: 000000015e8106f0 0000000000000000 0000000000000000 
+0000000000000000
+[  968.074345] GPR12: 0000000000000000 00007fff8a03c140 0000000000000000 
+0000000000000000
+[  968.074345] GPR16: 0000000000000000 0000000000000000 0000000000000000 
+0000000125d1f298
+[  968.074345] GPR20: 0000000000000000 0000000000000000 000000015e810530 
+000000015e810730
+[  968.074345] GPR24: 00007fff89f38e68 00007fff89f38e78 00007fff89f3dfe8 
+00007fff89f60240
+[  968.074345] GPR28: 000000015e8106f0 0000000000000000 000000015e810710 
+0000000000100000
+[  968.074396] NIP [00007fff89d4edf4] 0x7fff89d4edf4
+[  968.074399] LR [00007fff89d4edf4] 0x7fff89d4edf4
+[  968.074403] ---- interrupt: 3000
+[  968.074406] Code: 4bffeffd 3920f000 7c234840 7c7e1b78 41810144 
+7c7a1b78 4bfffe30 60000000 813f0088 71290001 41820068 e93d0040 
+<e8690068> 38630070 481416e1 e8410018
+[  968.074425] ---[ end trace 0000000000000000 ]---
+[  968.076694] pstore: backend (nvram) writing error (-1)
+[  968.076698]
+
+
+
+If you happent to fix this, please add below tag.
+
+
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+
+
+Regards,
+
+Venkat.
+
