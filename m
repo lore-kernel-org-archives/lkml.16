@@ -1,142 +1,110 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F363D209F45
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 20:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E5A219A7A;
+	Wed,  7 May 2025 20:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746648874; cv=none; b=EHtqsMTX96xVkegzvRkJuo6Cs1CcB6ssDR/6P/F4n/QfiLvT2xDUI33soCrWYPhq+6lJIG+QkvBKqjluCc1Aky9NBzXBHAmFADKUeAQ0KTNlrjcx3w9k9ZrYkWJCsxbJhAbXlT4FCfHQqebcbfHhcaW1SzTikJTzXrDQ6Vu0ePU=
+	t=1746648878; cv=none; b=KpdVTX4IY1ypdjezHa96+u+fmYdOf5w6YQvi7C2Sax43txIh0An7dPMHz+Zz2xA2D6I6DisUzDlkt4M+g9qrawNj/MfM29ap618FffsTICWXIYRcyq7kSdaB4WNSC/tP4mgq+9MLMS9FNgnvzx+NZmUsc57e+efN/fNi5fRQANk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746648874; c=relaxed/simple;
-	bh=61qRZmN+Q09efrT5xgxj3jNCO6jzB1dGBeY60oZbbJA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hssqAC0Jcl4fw5DYSmasndPNfmadv2W+nHPj6Y4+/inpF4qaBq72aBSNixrKKNvMd4ZQ6gAbOh1Zqn0Cxq74C7+5oxiJs5HWVaRNmYjH650h8809eCAJ+ppaA0dMcEq6Vv16pYbaPzDE22kZNmRZjnwTJWFSMQa5qfy/TFOFG7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R+Tb5fda; arc=none smtp.client-ip=209.85.210.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746648878; c=relaxed/simple;
+	bh=1wYB6g3HZmLcMhDaWBOpHrS4E4d1M7S0hY8EqdNaB7Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=T3p6lDhguuBRnHlVgj1QRRQzF79ZnX2MU3KpaIj1+SKZsq85GNlkekRC1DIhEaW75PsJbZK7ATEZIR5qEDTgKHydGOHdx6oG9L5if8FJNBAi+73OP0XR/kr8+RI7MaWFy3bt8Q+ZAZg6rCfwKGLldB4DnWa99a6bNAD7Z3tG5hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JEH0XLuo; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+Tb5fda"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-72c27166ab3so173321a34.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 13:14:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746648872; x=1747253672; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=61qRZmN+Q09efrT5xgxj3jNCO6jzB1dGBeY60oZbbJA=;
-        b=R+Tb5fda0VqI0r3HV+u/EeZp2apHkLmlMYw71iDYACwdIxAygBiWgisS1J6W0LPO6q
-         46z4xPq00pGzMKrPfsjchID08kTFS/xFfk8fGkyFw/9uenlCpjb9cTEbil2T/5ObDK/k
-         YMFVxyqAsXJwGCj/hrKL6X2o47MwA978OXx/sv9mYDdmmJeSDQC6v4GKhXyUJR966nlp
-         vFTv1xQtiSShyUdMzY5ZRqO+uvimMuT4Xa4NXLg4cFYqOppjXlAyjePd8Z9XDaJFk2vJ
-         Az8Z0iEx0YCfXsl6IAeFpgFIehDucXiIX3qApqmnr0zr060yWfyNQVRIwMg9g7Ywv7rz
-         dmcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746648872; x=1747253672;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=61qRZmN+Q09efrT5xgxj3jNCO6jzB1dGBeY60oZbbJA=;
-        b=LyuiAZmfOCKeMSPt5iksSk1SkWqGkdP+3k2WgnW3Z3XrCHFjcydhT4qW6DjAJkv7go
-         AqurmzJojvZqhhiEP7izBgQ2dUmJ33RyROYrDk5otgqLGStPpzSQdna8DUwS9f+52z+J
-         kbVPBCZqo+ayhnn8AZ5aPQkjaYGpAP/jMDZ7wrMXBLg8GSC0D7ro/HUzUQYxhoXeJIPh
-         0j4XDxjoLV9k+zm7PHVz4AYvmbJ2ef9FeaFnLoMMd69Ut5FUC+DbqfGcxdqxXKdfdRWl
-         Fo7mKI4IPdgXfQQsJw1LC/bA5nffC9JT74Sxg2HDzi/ejpFWTNQ6z3leZT1IHqV+KK6M
-         dQEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWtJIKwk3YhLFZ6tZGc+kXsWWW1xFKbpHkmA3uO2x1gnm361doDBxST9AylHc5Fa08LI5HfOAh4GWf8K3A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUZ2pQrg6A04dsEZ8Ntc07UPKiT83vfcJh95ruuzpOZEjiGltb
-	c0euh3uvtTzsdaDejbfntFVE2/xZEKWnSTn/AXHJ9tuZ2HKF2u1T
-X-Gm-Gg: ASbGncuSyikcPyfE3btPoQZhQohAzIK2nAQGzjFdzYr9nJBehteAUo6hqICg8oOAT2L
-	TJjpaneaitMlAsI4LX5GxB75UedigQI2vwYPhgED64ZWcAhV1AkestkNCadU9ZK6rn+Fx2CVX60
-	A7RV69JmyPsPpbw6CnW9208J4cEGaGkXvwOiuWM06MiqyXfyMPT9LH0nu6qKfp6movXCtxYpBGn
-	Gcfa8UVPfqw4KAnZTSWkcDFlAjM13SdzHnPriu31wwsyz9nezYu6t71DD69pt1Lf0qD2n/PdtGl
-	gWITt+9kqF2VVKzEm7k14KWkF6xdpg/pzLk9YF+MpflciuBTriTXIHZ7Sla7GqwGo0dHYI1BvsD
-	EpmaIgr1YA9QNAXoBGDTyF+Iev7g5wGATcRpmQLQ=
-X-Google-Smtp-Source: AGHT+IGbOaDLg7RwKcF4Ef5VkxSd1b6ZWl0tz3q1F21g43CpHGH8jatCPGElo0KRmPcggCubKUyYWw==
-X-Received: by 2002:a05:6830:2906:b0:72b:87bd:ad47 with SMTP id 46e09a7af769-73210a72f1emr3059099a34.3.1746648871898;
-        Wed, 07 May 2025 13:14:31 -0700 (PDT)
-Received: from ?IPV6:2600:100c:b2a7:c99a:12d7:b0e2:f546:4c3b? ([2600:100c:b2a7:c99a:12d7:b0e2:f546:4c3b])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73210a19326sm729554a34.30.2025.05.07.13.14.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 13:14:31 -0700 (PDT)
-Message-ID: <9a3f8105-1156-486d-9b6e-f444e36a271f@gmail.com>
-Date: Wed, 7 May 2025 14:49:09 -0500
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JEH0XLuo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746648874;
+	bh=1wYB6g3HZmLcMhDaWBOpHrS4E4d1M7S0hY8EqdNaB7Y=;
+	h=From:Date:Subject:To:Cc:From;
+	b=JEH0XLuos0G9N9R/Vnss9oT0gjwD78a9Zvy7mAlh49Se033+o/gsmgiu1sPhxpemC
+	 uw5xzDT4GBOS6u+JyKdAivFSP++gi0f7VTtBSzlXXQKfsOBy2Y+RAaV2C4/N4sY6Tf
+	 mB/hPIwR7bf2wN+LZjkpA+8sz1Tmxd8bmtiDJMFMEmX77sL801A4/a2rAn0gLN5WT3
+	 7Xy/3ZvWz6r/qAzkpd5cBMN06NzXB/3hfPYh6csVKN/IJSUXVGwLNT56LByTVgPWoE
+	 z0OInyp/DFrYK6q35hbjVD7i4hnBI8TJ1UmKm0S2stwd29wdSIa8H0M+SS61Sv7bdY
+	 xhcn9e/JIUdfA==
+Received: from [192.168.1.63] (unknown [70.107.117.78])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 37A0717E0707;
+	Wed,  7 May 2025 22:14:32 +0200 (CEST)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Date: Wed, 07 May 2025 16:14:14 -0400
+Subject: [PATCH] ASoC: mediatek: mt8188-mt6359: Depend on MT6359_ACCDET set
+ or disabled
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] Reduce CPU consumption after panic
-To: Peter Zijlstra <peterz@infradead.org>, Carlos Bilbao <bilbao@vt.edu>
-Cc: Andrew Morton <akpm@linux-foundation.org>, seanjc@google.com,
- carlos.bilbao@kernel.org, tglx@linutronix.de, jan.glauber@gmail.com,
- pmladek@suse.com, jani.nikula@intel.com, linux-kernel@vger.kernel.org,
- gregkh@linuxfoundation.org, takakura@valinux.co.jp,
- john.ogness@linutronix.de, x86@kernel.org
-References: <20250429150638.1446781-1-carlos.bilbao@kernel.org>
- <20250429133941.063544bb4731df0ef802440c@linux-foundation.org>
- <20250429210650.GD4439@noisy.programming.kicks-ass.net>
- <433c6561-353e-4752-b9cf-155e49e62e63@vt.edu>
- <20250429221049.GG4439@noisy.programming.kicks-ass.net>
- <94faa778-38d5-4ea5-aa0d-9259b56999a4@vt.edu>
- <20250430084852.GN4198@noisy.programming.kicks-ass.net>
- <2e075491-538c-40e1-8086-5405aecb2779@vt.edu>
- <20250501085528.GR4439@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
-In-Reply-To: <20250501085528.GR4439@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20250507-mt8188-mt6359-accdet-depend-v1-1-aad70ce62964@collabora.com>
+X-B4-Tracking: v=1; b=H4sIABW/G2gC/x3MQQqDMBBG4avIrB2I0WjqVYqLNPPbzsJUEikF8
+ e4NXT2+zTupICsKzc1JGR8t+k4VXdtQfIX0BKtUkzXWGWcm3g7feV8z9u7GIUbBwYIdSXgI0di
+ HwyAIVA97xqrf//2+XNcPhNQ/VG0AAAA=
+X-Change-ID: 20250507-mt8188-mt6359-accdet-depend-4ac02b5e4dea
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Zoran Zhan <zoran.zhan@mediatek.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: kernel@collabora.com, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, Arnd Bergmann <arnd@kernel.org>, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.14.2
 
-Hello Peter,
+Commit 0116a7d84b32 ("ASoC: mediatek: mt6359: Add stub for
+mt6359_accdet_enable_jack_detect") added a stub for
+mt6359_accdet_enable_jack_detect() in order to allow the mt8188-mt6359
+driver to be enabled without requiring the mt6359-accdet to also be
+enabled, since it is not always needed.
 
-On 5/1/25 03:55, Peter Zijlstra wrote:
-> On Wed, Apr 30, 2025 at 01:54:11PM -0500, Carlos Bilbao wrote:
->
->>> All that said... the default more or less does for(;;) { mdelay(100) },
->>> if you have a modern chip that should not end up using much power at
->>> all. That should end up in delay_halt_tpause() or delay_halt_mwaitx()
->>> (depending on you being on Intel or AMD). And spend most its time in
->>> deep idle states.
->>>
->>> Is something not working?
->> Well, in my experiments, that’s not what happened -- halting the CPU in VMs
->> reduced CPU usage by around 70%.
-> Because you're doing VMs, and VMs create problems where there weren't
-> any before. IOW you get to keep the pieces.
->
-> Specifically, VMs do VMEXIT on HLT and this is what's working for you.
->
-> On real hardware though, HLT gets you C1, while both TPAUSE and MWAITX
-> can probably get you deeper C states. As such, HLT is probably a
-> regression on power.
+However, in the case that CONFIG_SND_SOC_MT8188_MT6359=y and
+CONFIG_SND_SOC_MT6359_ACCDET=m, a link error will happen, which commit
+b19fa45715ce ("ASoC: mediatek: mt8188-mt6359: select
+CONFIG_SND_SOC_MT6359_ACCDET") solved by selecting
+CONFIG_SND_SOC_MT6359_ACCDET.
 
+In order to not require CONFIG_SND_SOC_MT6359_ACCDET as originally
+intended, but also prevent the link error, depend on ACCDET being
+enabled or disabled (which will force MT8188_MT6359=m if
+MT6359_ACCDET=m).
 
-That's a good point -- wouldn't TPAUSE achieve what I was trying to
-accomplish with HLT? Assuming there's support and wouldn't just #UD.
+Fixes: f35d834d67ad ("ASoC: mediatek: mt8188-mt6359: Add accdet headset jack detect support")
+Fixes: b19fa45715ce ("ASoC: mediatek: mt8188-mt6359: select CONFIG_SND_SOC_MT6359_ACCDET")
+Suggested-by: Arnd Bergmann <arnd@kernel.org>
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+---
+ sound/soc/mediatek/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/sound/soc/mediatek/Kconfig b/sound/soc/mediatek/Kconfig
+index e148d4d9416011252ddbc37111c3e7b9d59082f9..90e367586493d7a413efade6a8586c4770c459ab 100644
+--- a/sound/soc/mediatek/Kconfig
++++ b/sound/soc/mediatek/Kconfig
+@@ -228,8 +228,8 @@ config SND_SOC_MT8188
+ config SND_SOC_MT8188_MT6359
+ 	tristate "ASoC Audio driver for MT8188 with MT6359 and I2S codecs"
+ 	depends on SND_SOC_MT8188 && MTK_PMIC_WRAP
++	depends on SND_SOC_MT6359_ACCDET || !SND_SOC_MT6359_ACCDET
+ 	depends on I2C
+-	select SND_SOC_MT6359_ACCDET
+ 	select SND_SOC_MT6359
+ 	select SND_SOC_HDMI_CODEC
+ 	select SND_SOC_DMIC
 
->
->> How would folks feel about adding something like
->> /proc/sys/kernel/halt_after_panic, disabled by default? It would help in
->> the Linux use cases I care about (e.g., virtualized environments), without
->> affecting others.
-> What's wrong with any of the existing options? Fact remains you need to
-> configure your VMs properly.
+---
+base-commit: b19fa45715ce9cfcc597ed140df31115e969b39d
+change-id: 20250507-mt8188-mt6359-accdet-depend-4ac02b5e4dea
 
-
-See, that's the problem -- it's not _my_VMs. It's the VMs of cloud users,
-who are ultimately responsible for configuring their kernels however they
-want. We can try to educate them, as some maintainers have suggested me,
-but many people either don't know what the kernel is or don't care -- they
-just trust that Linux will have sensible defaults. I get your point that
-VM-specific problems shouldn't burden the broader kernel ecosystem, but I’d
-still like to think whether there's something we can do to improve the
-situation for VMs post-panic without negatively impacting other use cases.
-
-
-Thanks,
-
-Carlos
+Best regards,
+-- 
+Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
