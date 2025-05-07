@@ -1,176 +1,132 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA528236440;
-	Wed,  7 May 2025 11:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B57215F49;
+	Wed,  7 May 2025 11:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746615922; cv=none; b=i9k7/WhFFjZb4Ha09VUSB4m4UFw1qcGRY7B2yq7BIbtUT1JIg720qbJcTwVATZrj1v2LIzMPP9A2SRKFiDLFKUrXAM0FlVcXvykcUZh5s0xDGPpK7wf4riqxhYfRGeVmP66KiRn/Uxzk/UDymD/+Wpg1j7xFCoJNQsyYXzDsM6Y=
+	t=1746615988; cv=none; b=O5RRyaROz1EaZ5v5ovZbaxQYkKMni+rFVJForvaM13HK+IThJ/BdU2W4vCOFtCT+Wusa7T/f7HYRW2X6FOQssxrKLETIrrY86ablAMzKfAuZV9f96rAxELetF4OamiebqEsJhEdB+lXNFozW4/VODjglxw4Mv8b6a4D8jOVPQqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746615922; c=relaxed/simple;
-	bh=7XqKkySLH3XnP5dCcWNxk+0DtN1bkrte9oK/saSgtts=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NkicUFrTvhY138a/CCgpQMK24xtIgJeOUid3Fx8kFtDRyFdUQhmKy1l/n68I2grxddwLbcEtfFaL8dpG+++W/kFk+6FSHRhJRDXkRK762JniHJhmJoQiXleq8YkgQQ2hMxSNv5kLT6E002eqiqZJcg23owUX7EX/+bul+9kjeVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=c+V9v308; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1746615988; c=relaxed/simple;
+	bh=x6JZx+dOYymoRNv+YG8960djGVqVEcH0E3ay4BxKGss=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SpBjSiminz0l8BUkabq91gLLSUly8s20ZIGnDCU570hO/uFkiO8d1P2M4NmkA+XItvIFyBtjfrtkxo2zlLE/vxpOjrjYFyOsQ9oBY1axrfy3Q/YSEHm+hcUOqiz1kfl0No0UjsxXTuVoNBZ1rXRUko/dlzLcbXTWq+2JLAKz9F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TQ4UFZE7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="c+V9v308"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=51AuBhOBwcqdxbUaoVuoZuKLaFvWUDOFVfRKxcUsvBc=; b=c+V9v308TdkSpaG+OfUH7HAacT
-	9/B9haik3YVxK0Ia3scGUjrCntDrNaLtCbHYvRr2HNnjF7DVkLEicy0+dtcxdd2NlxYVC1gLPGtt7
-	n8ibJh4vHTvLTsjgyF5oXT788+GUY0ltDBPXOAhKweJeJZr5ZYypXBOVik9/+ipxGfij5ozXQoDTK
-	hMwpeT2LSMeUG3TWyYhsjTij331Vx2F16L9PFbz6qLBFUu3Dxk8ClrOAuwC/4x18wvjTy0fpXX2mZ
-	Gy1DeGH7iZnapCCKlVg5ohtDpP3yg6HJgiwRB8pBEwHHxGeHrenrerLHCVQlCVlzz73u92xCeOpdM
-	ZDzBRbYg==;
-Received: from [223.233.66.62] (helo=localhost.localdomain)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1uCcWg-004fhg-Ha; Wed, 07 May 2025 13:05:17 +0200
-From: Bhupesh <bhupesh@igalia.com>
-To: akpm@linux-foundation.org
-Cc: bhupesh@igalia.com,
-	kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	oliver.sang@intel.com,
-	lkp@intel.com,
-	laoar.shao@gmail.com,
-	pmladek@suse.com,
-	rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com,
-	arnaldo.melo@gmail.com,
-	alexei.starovoitov@gmail.com,
-	andrii.nakryiko@gmail.com,
-	mirq-linux@rere.qmqm.pl,
-	peterz@infradead.org,
-	willy@infradead.org,
-	david@redhat.com,
-	viro@zeniv.linux.org.uk,
-	keescook@chromium.org,
-	ebiederm@xmission.com,
-	brauner@kernel.org,
-	jack@suse.cz,
-	mingo@redhat.com,
-	juri.lelli@redhat.com,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com
-Subject: [PATCH v3 3/3] exec: Add support for 64 byte 'tsk->real_comm'
-Date: Wed,  7 May 2025 16:34:44 +0530
-Message-Id: <20250507110444.963779-4-bhupesh@igalia.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250507110444.963779-1-bhupesh@igalia.com>
-References: <20250507110444.963779-1-bhupesh@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TQ4UFZE7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7642AC4CEE7;
+	Wed,  7 May 2025 11:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746615988;
+	bh=x6JZx+dOYymoRNv+YG8960djGVqVEcH0E3ay4BxKGss=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TQ4UFZE7muTuWd5GcbVqwDA1zs7oSSrN0OZsKGydTQNoAe5fZ+YxTKEKXmzA0uhbs
+	 V1qlyS9BVuunskNg101PiJeI0r/gRvYL1h4PMRvC6pZRwPF3ZQ/17m1qVlnLkq+Uc/
+	 9EBbdMXYPpyjslgWDmXjlB1lCMTw7RwH0l5uAttumKzAObETzWGcs+2ddjKTxtY1AD
+	 Zco1ngz84KPnVTQ+k5YQtJX9CLvrHKdOaSc3ewX5Bfijhn358nWM9mDvoaiiIby5+x
+	 ooKVq+AT6EaXXwaRi28HX7LMXb0WJkPWcAth3keDwxcYsXRZxYc2vZ3Zm2aN4V7gWp
+	 LMyQIvlgErNMw==
+Date: Wed, 7 May 2025 12:06:21 +0100
+From: Lee Jones <lee@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH net-next v6 8/8] mfd: zl3073x: Register DPLL sub-device
+ during init
+Message-ID: <20250507110621.GJ3865826@google.com>
+References: <20250430101126.83708-1-ivecera@redhat.com>
+ <20250430101126.83708-9-ivecera@redhat.com>
+ <20250501132201.GP1567507@google.com>
+ <a699035f-3e8d-44d7-917d-13c693feaf2e@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <a699035f-3e8d-44d7-917d-13c693feaf2e@redhat.com>
 
-Historically due to the 16-byte length of TASK_COMM_LEN, the
-users of 'tsk->comm' are restricted to use a fixed-size target
-buffer also of TASK_COMM_LEN for 'memcpy()' like use-cases.
+On Fri, 02 May 2025, Ivan Vecera wrote:
 
-To fix the same, Linus suggested in [1] that we can add the
-following union inside 'task_struct':
-       union {
-               char    comm[TASK_COMM_LEN];
-               char    real_comm[REAL_TASK_COMM_LEN];
-       };
+> 
+> 
+> On 01. 05. 25 3:22 odp., Lee Jones wrote:
+> > On Wed, 30 Apr 2025, Ivan Vecera wrote:
+> > 
+> > > Register DPLL sub-devices to expose the functionality provided
+> > > by ZL3073x chip family. Each sub-device represents one of
+> > > the available DPLL channels.
+> > > 
+> > > Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+> > > ---
+> > > v4->v6:
+> > > * no change
+> > > v3->v4:
+> > > * use static mfd cells
+> > > ---
+> > >   drivers/mfd/zl3073x-core.c | 19 +++++++++++++++++++
+> > >   1 file changed, 19 insertions(+)
+> > > 
+> > > diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
+> > > index 050dc57c90c3..3e665cdf228f 100644
+> > > --- a/drivers/mfd/zl3073x-core.c
+> > > +++ b/drivers/mfd/zl3073x-core.c
+> > > @@ -7,6 +7,7 @@
+> > >   #include <linux/device.h>
+> > >   #include <linux/export.h>
+> > >   #include <linux/math64.h>
+> > > +#include <linux/mfd/core.h>
+> > >   #include <linux/mfd/zl3073x.h>
+> > >   #include <linux/module.h>
+> > >   #include <linux/netlink.h>
+> > > @@ -755,6 +756,14 @@ static void zl3073x_devlink_unregister(void *ptr)
+> > >   	devlink_unregister(ptr);
+> > >   }
+> > > +static const struct mfd_cell zl3073x_dpll_cells[] = {
+> > > +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 0),
+> > > +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 1),
+> > > +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 2),
+> > > +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 3),
+> > > +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 4),
+> > > +};
+> > 
+> > What other devices / subsystems will be involved when this is finished?
+> 
+> Lee, btw. I noticed from another discussion that you mentioned that
+> mfd_cell->id should not be used outside MFD.
+> 
+> My sub-drivers uses this to get DPLL channel number that should be used
+> for the particular sub-device.
+> 
+> E.g.
+> 1) MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 2);
+> 2) MFD_CELL_BASIC("zl3073x-phc", NULL, NULL, 0, 3);
+> 
+> In these cases dpll_zl3073x sub-driver will use DPLL channel 2 for this
+> DPLL sub-device and ptp_zl3073x sub-driver will use DPLL channel 3 for
+> this PHC sub-device.
+> 
+> platform_device->id cannot be used for this purpose in conjunction with
+> PLATFORM_DEVID_AUTO as that ->id can be arbitrary.
+> 
+> So if I cannot use mfd_cell->id what should I use for that case?
+> Platform data per cell with e.g. the DPLL channel number?
 
-and then modify '__set_task_comm()' to pass 'tsk->real_comm'
-to the existing users.
+Yes, using the device ID for anything other than enumeration is a hack.
 
-This would mean that:
-(1) The old common pattern of just printing with '%s' and tsk->comm
-    would just continue to work (as it is):
+Channel numbers and the like should be passed as platform data.
 
-        pr_alert("BUG: Bad page state in process %s  pfn:%05lx\n",
-                current->comm, page_to_pfn(page));
-
-(2) And, the memcpy() users of 'tsk->comm' would need to be made more
-    stable by ensuring that the destination buffer always has a closing
-    NUL character (done already in the preceding patch in this series).
-
-So, eventually:
-- users who want the existing 'TASK_COMM_LEN' behavior will get it
-  (existing ABIs would continue to work),
-- users who just print out 'tsk->comm' as a string will get the longer
-  new "real comm",
-- users who do 'sizeof(->comm)' will continue to get the old value
-  because of the union.
-
-[1]. https://lore.kernel.org/all/CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com
-
-Signed-off-by: Bhupesh <bhupesh@igalia.com>
----
- fs/exec.c             | 6 +++---
- include/linux/sched.h | 8 ++++++--
- 2 files changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/fs/exec.c b/fs/exec.c
-index 8e4ea5f1e64c..2b2f2dacc013 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1190,11 +1190,11 @@ static int unshare_sighand(struct task_struct *me)
-  */
- void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
- {
--	size_t len = min(strlen(buf), sizeof(tsk->comm) - 1);
-+	size_t len = min(strlen(buf), sizeof(tsk->real_comm) - 1);
- 
- 	trace_task_rename(tsk, buf);
--	memcpy(tsk->comm, buf, len);
--	memset(&tsk->comm[len], 0, sizeof(tsk->comm) - len);
-+	memcpy(tsk->real_comm, buf, len);
-+	memset(&tsk->real_comm[len], 0, sizeof(tsk->real_comm) - len);
- 	perf_event_comm(tsk, exec);
- }
- 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index cb219c6db179..2744d90badf1 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -317,6 +317,7 @@ struct user_event_mm;
-  */
- enum {
- 	TASK_COMM_LEN = 16,
-+	REAL_TASK_COMM_LEN = 64,
- };
- 
- extern void sched_tick(void);
-@@ -1162,7 +1163,10 @@ struct task_struct {
- 	 *   - logic inside set_task_comm() will ensure it is always NUL-terminated and
- 	 *     zero-padded
- 	 */
--	char				comm[TASK_COMM_LEN];
-+	union {
-+		char			comm[TASK_COMM_LEN];
-+		char			real_comm[REAL_TASK_COMM_LEN];
-+	};
- 
- 	struct nameidata		*nameidata;
- 
-@@ -2005,7 +2009,7 @@ extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec
-  */
- #define get_task_comm(buf, tsk) ({			\
- 	BUILD_BUG_ON(sizeof(buf) < TASK_COMM_LEN);	\
--	strscpy_pad(buf, (tsk)->comm);			\
-+	strscpy_pad(buf, (tsk)->real_comm);		\
- 	buf;						\
- })
- 
 -- 
-2.38.1
-
+Lee Jones [李琼斯]
