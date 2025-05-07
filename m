@@ -1,151 +1,130 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D073C28FAA9
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 20:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C694B1DE3DB;
+	Wed,  7 May 2025 20:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746650969; cv=none; b=LUOdChT3Xe99NleekEjLBF9gEOgmUCJ26U83qs4EJ1Jvr0XtLj41Y6DOLh7g1eRn2lFU9yRJ3iiLcb5q/9c4AlIyUDPlwAgOpn7zdjJrK53mk1ndO392Wj+KtXTN2rnRfdPCjxLBBcY2Xm1ImiaGfw0obWoe+0xt3+E2QXBtObQ=
+	t=1746651008; cv=none; b=TD3idrpX2tODC3jWQ/zQq/gNYubUjO2Xg/xIyfmCNvVdt9RWDCThK+X2bkapBSveHQb5iwfHXoO4weG45GoZBKExS76FaYsk4JL53S5clkYWLgeKKtoGum0p8YxINjGFdY8BIt+9tc2u6OUB2KpOURWX9kb0yr23ryIT2kr2hwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746650969; c=relaxed/simple;
-	bh=G75xtNcBa/HKc4thX1U4JClvdxzbtUn3lxLH5U+xQzk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U4dykIuwyt9XigfyO6hk8b20kLxDiDAjaCNkumYPKedxBii9GJxGB9FytOE4/8ldOPjV9DtW6RiNnMP1nc8YvjSKijJW+uuvg64vn8AgU9Ibi0akcDA+b6svQuxWATYZLSYL7hRUJ4bsCTFv2W/Ol/v5IBXsgI3H0e5GhVFOT4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UHuXWIud; arc=none smtp.client-ip=209.85.166.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1746651008; c=relaxed/simple;
+	bh=RTzFgdYqMKIy1fECYhZ21RC3nL2J+DPf1mQUp9ZRSmw=;
+	h=Date:From:To:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=K/u8YC3+xRACDULuXsI2JA+m5eovbjVdDUUCiA5lrhSLVzQ4cz1OsLH1Sls/qJPeAAZkRSmLUy/vLyPLUiLOYRKjvFmqIBs0lQI+6ItZUCU+eGJQI6XGRCDJDF4Aw1wolqFInLVCZyOBrraa2ge54mc+DWe/qttzSo5Ffs1+G04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QgZ819Tm; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UHuXWIud"
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-864a22fcdf2so13550439f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 13:49:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QgZ819Tm"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c5ba363f1aso37838485a.0;
+        Wed, 07 May 2025 13:50:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1746650967; x=1747255767; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nbrLfo/HVOEcIGm/SsMmNRXcHh8Er8SMroRu1GzttWY=;
-        b=UHuXWIudVx0iFjD1cgs/WMt7Gy9yO3wmQjyiBGzXln3lJ7WGSKiHsgxVKrlFnbg8RU
-         5Z5W0V6HBs9CygCznH005Mizq3na5geCOEAgoxhHSlLDun1G4lPLwIe20U3DiSDZ5XEg
-         eCoxbcFAOFMAcZEyOGE2st9H7RVSIXOA2HBoM=
+        d=gmail.com; s=20230601; t=1746651005; x=1747255805; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SJdYFz5H9Ac9Y1h/c2dEG8ah82bylcztNEpbEYWuC0U=;
+        b=QgZ819TmDXY5Iddg477p5LpRQQ5+DBRsyHtJ/yz6QnLEnYUZIEGJvydCycoQPAAV/o
+         PTqvmf2dkfmut7/s9jytJgyhXAjmMW7E96J1x84wnXEfPqdQdeuayMtehqI352nFJ9Nu
+         /DXv7exjkp7/erhPQH1q8i6dQ669Yqa5si2JO/bWPJFB9qCnh0ymZAfPyVSZlK98A7On
+         IJ8IeNMbt4ywzPMJeoknfyE+bvm/SC7s7TBBn9w0ElPLTfm8M/sPft5iIpe5Q3/+Fa6F
+         NvkrLQETrs/Li3touvSP8ElGMHGXJ9tFikV00BujkoUgRB3jK6VzzeFaPo+09IfckWgb
+         LulQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746650967; x=1747255767;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nbrLfo/HVOEcIGm/SsMmNRXcHh8Er8SMroRu1GzttWY=;
-        b=SqRGGVFiwfupqY0pthRdgHsJ5UqYQwnqh+uNxWK7uFTdDP9xdMgEW0NJ5s7bPO0gWB
-         UwQAL4NwjSkdE8G6+rz/+dgfFi4a3n1mmx0MMXCbnJ6p0FnGuAi5PkZ6REFrZlV8LkuB
-         E8MDeGCtbWsOAWu1qSCk90hMw0LoeD0b5nkENcVGGTRxoZNlAOvTfCiur2x8UhU4kcVq
-         XsItcp65WeorYgro7eXyRGg9nU+47d06HZES8BmsGeS+VLgkdBL1MU/GO9xHJ+NY+8L9
-         wgqx9C0SuFx1Tlf3k0Mcqs7B+6RZlaZko3y5aDiMYgDKiIZIxuhEv7YDpbZunDEW2Y5W
-         w90g==
-X-Forwarded-Encrypted: i=1; AJvYcCV/uTWELfVKJZMn0H6JtHKG73QfS1Kzo5ITgDk2GICx39LQIp5X1b9v/yLGq5GJjwc0rvnyTu0V5e6RN3Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlTy3SlfHF4R7pNcIAZpzbmJvmtgMQKfytK++4N+zIvtyZuVB1
-	DYoDTmfSQkRn9+gfoleUmf1jl6aIYMgccXp9/g+tm3p1wLEl+xrnieFCvcUgEYg=
-X-Gm-Gg: ASbGncsjbi8y61A67FQhA4smsnFMMVb3vJZTbNS2OvHJ38y65KlIHPelSHLuQBeGclL
-	lvO01mVIuWE99DlKRB1itdU2U0dmpC3uLNgXkM+dkOBIE3bonQr5RhcbXCW2tE7r4i1oe08Bc6b
-	eTrvUclP60m1XTLWnWk3AJnmOGzPVQEOhd4ZWZwAmse6pgeZFe/54l9p0HCcUGVdrB9A1WU0H+A
-	oH/vOGLYy4myvoxbq1ugj0VPYPeThOlsix8uIKUO0UlXBjRL1yeGrKvZW6fdvjqzXX6QNb/3kM3
-	KvTlydiPRskJhhclksBlnejIcT530pNFsAcRR0S68h3Ck9QVg1w=
-X-Google-Smtp-Source: AGHT+IGX4LIZdxiQGhsPmHJayBQ3t4X15bBVjp4+dG9Yr+NmPEGNWKAvicjiqoIWxW3kT3pxCS3NFg==
-X-Received: by 2002:a05:6602:29c9:b0:85e:16e9:5e8d with SMTP id ca18e2360f4ac-867550e2fdemr166032339f.7.1746650966768;
-        Wed, 07 May 2025 13:49:26 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-864aa31e07dsm271901639f.21.2025.05.07.13.49.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 13:49:26 -0700 (PDT)
-Message-ID: <efd8baf5-f30e-4e7b-af53-a75efaab12f7@linuxfoundation.org>
-Date: Wed, 7 May 2025 14:49:25 -0600
+        d=1e100.net; s=20230601; t=1746651005; x=1747255805;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SJdYFz5H9Ac9Y1h/c2dEG8ah82bylcztNEpbEYWuC0U=;
+        b=hGvaFAXk4n08T/JajN7BsHRf+PnmYV5ve262lSCYRCNSgx+6/lYpwJYyASwQFyQKGZ
+         2ocRS0P5MPZPCP1hKx2le8vEheNgJHKvGTD9I+rhgkWyEPfVXMIcax/bh2nniC3CXGW7
+         qjB0rpxgVmeshRAg7kWBWSZvE5GXNLxyhqY0upEvu8OBNkHxQqq+QRvLMBt6xWnsQzaS
+         3jPrCg/TWy9BRfGaxignBnU8In1g6+rtYH+x1THybIibjGtOaHuHYkqJaNyBF17cLqMd
+         HqQL2W+O+Xcb/m06CwkEE6Kou/oI46DYxHqpTMUD2WEv/dPtLwcu0/fM4WfIGyiuE5Ul
+         AFAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAosOkIgUCvDyO0p98Wg1YtXKm8acgsKnJNIHOiKHgmxH7drp29AyzbRCq4oO2MJFBUv0=@vger.kernel.org, AJvYcCUZTo5xT4OYwlYUlUZ86qtjrXfCcl0VlmLMVKQiSZ83MbetcDirJgOws3cvxH30I/XZjRap/wTX@vger.kernel.org, AJvYcCXNiP/rJ9aZP8fgDB7oqlTpjiiyxvRbtGfg04IZQldZBfWDahPveIJGZh0//RYMw8/KGHTLuEaakhRKl0Yd@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv8hiTiTjTwXQDK2kn0ZeON4D5qnvGPUtlyywujuZ36RvlqpHY
+	VVryOLDJEk/hwNnmX2furcB/XQGqmarvCqmMBpzBfMtVgB0z8lEk
+X-Gm-Gg: ASbGncv2Ak/U9RDLJFb6TLryAN/nVNHGERjtX3GDrWxMdKdJLElMdGpVXHnKKh3eAOv
+	mSrpDYT8rRrMd4EB3Taw1YeZS9bnmc2xGTFM/NSLZBDMwZMxaJM014n6LO2MU3Z8vSo+yatLhBw
+	XL3p6yGlMd4qAEsio9YA30e6b8WUWjfOi31TOrCV97KHXOa0qjmZEoTJptPZzr8W5XwWXMc2B4e
+	qrxzjx9mI3cfSbY6QzEJRONEpwnOWqG6dTvv7V734KkPWIKFUaZnXwf4GG+Dv8V7nvMmNHz2ClO
+	PMPQpLRvUxsvC2pO8fgMJAdXFpMOUa97Uo/BiX/X6MdL82K7IFqAugVRJfk7rbPJz0S4szdFkuC
+	lD/k87Im2dC9IMH0VwBjQ
+X-Google-Smtp-Source: AGHT+IHIENSOL5xWk2n0ZpKa2eUQ3plVdHmLfICCayO8Sn6MjIw8GtVlpnhxXvAblQvcnnj7pPvLwA==
+X-Received: by 2002:a05:620a:4491:b0:7ca:f039:7365 with SMTP id af79cd13be357-7caf736f357mr690398885a.8.1746651005517;
+        Wed, 07 May 2025 13:50:05 -0700 (PDT)
+Received: from localhost (141.139.145.34.bc.googleusercontent.com. [34.145.139.141])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7caf7529790sm211729985a.25.2025.05.07.13.50.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 13:50:04 -0700 (PDT)
+Date: Wed, 07 May 2025 16:50:04 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Jon Kohler <jon@nutanix.com>, 
+ ast@kernel.org, 
+ daniel@iogearbox.net, 
+ davem@davemloft.net, 
+ kuba@kernel.org, 
+ hawk@kernel.org, 
+ john.fastabend@gmail.com, 
+ netdev@vger.kernel.org, 
+ bpf@vger.kernel.org, 
+ jon@nutanix.com, 
+ aleksander.lobakin@intel.com, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jason Wang <jasowang@redhat.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ linux-kernel@vger.kernel.org (open list), 
+ hawk@kernel.org
+Message-ID: <681bc77c96437_20dc642942a@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20250506145530.2877229-4-jon@nutanix.com>
+References: <20250506145530.2877229-1-jon@nutanix.com>
+ <20250506145530.2877229-4-jon@nutanix.com>
+Subject: Re: [PATCH net-next 3/4] tun: use napi_build_skb in __tun_build_skb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] selftests: pidfd: add tests for PIDFD_SELF_*
-To: John Hubbard <jhubbard@nvidia.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Christian Brauner <christian@brauner.io>, Shuah Khan <shuah@kernel.org>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>,
- pedro.falcato@gmail.com, linux-kselftest@vger.kernel.org,
- linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
- linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
- Oliver Sang <oliver.sang@intel.com>, seanjc@google.com,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <cover.1729073310.git.lorenzo.stoakes@oracle.com>
- <c083817403f98ae45a70e01f3f1873ec1ba6c215.1729073310.git.lorenzo.stoakes@oracle.com>
- <a3778bea-0a1e-41b7-b41c-15b116bcbb32@linuxfoundation.org>
- <a6133831-3fc3-49aa-83c6-f9aeef3713c9@lucifer.local>
- <5b0b8e1e-6f50-4e18-bf46-39b00376c26e@nvidia.com>
- <20250501114235.GP4198@noisy.programming.kicks-ass.net>
- <17464a97-e7be-49d4-9422-96ff824dba7c@linuxfoundation.org>
- <8f765dc8-421f-420f-bd3e-1a0d889238a1@nvidia.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <8f765dc8-421f-420f-bd3e-1a0d889238a1@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
 
-On 5/6/25 15:34, John Hubbard wrote:
-> On 5/6/25 2:18 PM, Shuah Khan wrote:
->> On 5/1/25 05:42, Peter Zijlstra wrote:
->>> On Wed, Oct 16, 2024 at 07:14:34PM -0700, John Hubbard wrote:
->>>> On 10/16/24 3:06 PM, Lorenzo Stoakes wrote:
->>>>> On Wed, Oct 16, 2024 at 02:00:27PM -0600, Shuah Khan wrote:
->>>>>> On 10/16/24 04:20, Lorenzo Stoakes wrote:
->>>> ...
->>> Please fix this fucking selftests shit to just build. This is unusable
->>> garbage.
->>
+Jon Kohler wrote:
+> Use napi_build_skb for small payload SKBs that end up using the
+> tun_build_skb path.
+> 
+> Signed-off-by: Jon Kohler <jon@nutanix.com>
+> ---
+>  drivers/net/tun.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+> index f7f7490e78dc..7b13d4bf5374 100644
+> --- a/drivers/net/tun.c
+> +++ b/drivers/net/tun.c
+> @@ -1538,7 +1538,11 @@ static struct sk_buff *__tun_build_skb(struct tun_file *tfile,
+>  				       int buflen, int len, int pad,
+>  				       int metasize)
+>  {
+> -	struct sk_buff *skb = build_skb(buf, buflen);
+> +	struct sk_buff *skb;
+> +
+> +	local_bh_disable();
+> +	skb = napi_build_skb(buf, buflen);
+> +	local_bh_enable();
 
-Peter, John,
+The goal of this whole series seems to be to use the percpu skb cache
+for bulk alloc.
 
-There seems to be confusion regarding  KHDR_INCLUDES. Tests don't have
-to use KHDR_INCLUDES if they don't want to.
+As all these helpers' prefix indicates, they are meant to be used with
+NAPI. Not sure using them on a tun write() datapath is deemed
+acceptable. Or even correct. Perhaps the infrastructure authors have
+an opinion.
 
-There are 4623 test Makefiles (excluding the main Makefile) under selftests/.
-Out of those 73 Makefiles reference KHDR_INCLUDES exported by lib.mk and
-selftests/Makefile. The rest are happy with system headers.
-
-The support for this KHDR_INCLUDES was added just for the case when a new
-test depends on header change. This is the reason why only a few
-test Makefiles use it. When test rings ran into issues related to
-dependencies between header changes, we recommended installing headers
-to solve the problem and introduced KHDR_INCLUDES so test Makefiles
-can use it in their Makefiles overriding the framework defaults.
-
-If your test doesn't need it, you can simply stop referencing it or
-use the approach used in mm test.
-
-It is a manual step. Works well for developers who know what they are doing.
-This isn't ideal for test rings. This isn't an ideal solution really.
-It works for the mm developers.
-
-# In order to use newer items that haven't yet been added to the user's system
-# header files, add $(TOOLS_INCLUDES) to the compiler invocation in each
-# each selftest.
-# You may need to add files to that location, or to refresh an existing file. In
-# order to do that, run "make headers" from $(top_srcdir), then copy the
-# header file that you want from $(top_srcdir)/usr/include/... , to the matching
-# subdir in $(TOOLS_INCLUDE).
-TOOLS_INCLUDES := -isystem $(top_srcdir)/tools/include/uapi
-
-The issues Peter is seeing regarding KHDR_INCLUDES in the following
-tests can be easily fixed by simply changing the test Makefile. These
-aren't framework related.
-
-kvm/Makefile.kvm:	-I ../rseq -I.. $(EXTRA_CFLAGS) $(KHDR_INCLUDES)
-x86/Makefile:CFLAGS := -O2 -g -std=gnu99 -pthread -Wall $(KHDR_INCLUDES)
-futex/functional/Makefile:INCLUDES := -I../include -I../../ $(KHDR_INCLUDES)
-futex/functional/Makefile:CFLAGS := $(CFLAGS) -g -O2 -Wall -pthread $(INCLUDES) $(KHDR_INCLUDES)
-
-You can make the change to remove the reference to KHDR_INCLUDES.
-If don't have the time/bandwidth to do it, I will take care of it.
-
-If test build fails, you can then figure out how to address that.
-Hopefully build issues related to header changes are infrequent.
-
-thanks,
--- Shuah
+From commit 795bb1c00dd3 ("net: bulk free infrastructure for NAPI
+context, use napi_consume_skb") it does appear that technically all
+that is needed is to be called in softirq context.
