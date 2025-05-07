@@ -1,71 +1,52 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FA4A31;
-	Wed,  7 May 2025 10:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD211C6FF5;
+	Wed,  7 May 2025 10:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746612071; cv=none; b=C7Tl19k0x5+1heQTJq4MRhQYi7Wwx+YYU8gkqw//1WMlHyKtFEggoLKz4YXABwT20UELAdEFNO9EI3P1FPnPq0FL3E1+hNKfZGRfpI9bsENx5m0cTp7z/8R3+X2/3dQW6rACt35yyxtC0xsQrOH1uQlxsyVzBZbCjku6KjsOtLU=
+	t=1746612096; cv=none; b=AQvO1KNH8GCrM1cd67pzYNGB13ZNsHTHkOrJUIsZ5Ltz6LKSDZahLz5I1+soNzzAL021zrbNoWG6fwz+wDaRfnkTkG6cDP+usKUIDDsu0s9wQdrbn00gNAm5KuiKf81mtvCo6LjHBtMZWnXC20ueJ/une43YQyQeCqYY4yOogf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746612071; c=relaxed/simple;
-	bh=zs1SYKT6lv/EHt5palXhPJ9VMYIN0/AXuAq54Q0W+4Q=;
+	s=arc-20240116; t=1746612096; c=relaxed/simple;
+	bh=mGf1AsLPf5v5y8NvTo2qOGgB267TYsDCzDgn89qfu7U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HLnu7jNBDVOGsvNBuXmVJGs7qgTgnrkwcAjNZSP+UQt2to1qYBDCDISUNZhOCKHDnO6ypurZuxqqXVnL3dcVzMFI3un5j+QJ+GQI6gDfVEE8E53zZxh7a5CqGF+6uLT4ijoDU0wYbnBeN3uyAtKeBawgaWGjL/pJJNc1WE8a1tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RsyTmuvq; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QbLcVNwpShPdR2tF49xAICJU/Me6PgjsDUjjEJgYngtEn+eEid/8A8ldN3BOhjz4+OHd8/VGT8rfjG6x6ZTXgZL6NTNS+D6mSZGI9VhZ36CybuAS6l2TA7UtN5FXAWD40OBIwgwEAAU81yiZB5e+rWpNqZQuTmQiKiXb8rrsclI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ItXBZxzL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RsyTmuvq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746612069; x=1778148069;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zs1SYKT6lv/EHt5palXhPJ9VMYIN0/AXuAq54Q0W+4Q=;
-  b=RsyTmuvqLnYykY740RpidH4V/2iXnp/IAshZBuJMLPFJcftE1FriUw2E
-   wlMaSpW0IUIO0JbSnqSA+TkqvI/TXoyLkikZJtoxyjksiy3LQq05deVIE
-   Wtpf7fq9Kls720vx5a7E1RAzVrGzGEx7QjUelIMzNVFOwJ7wAD+eYbo+G
-   DqoGDsEKHTgwflM8wX10mA5B2ywX81T2WjArr4N9b0JemMOilBXkDgV4E
-   7wyHlSkJYHGSNy3wkLBsZDi5exFmwzUGPW6/pw4W8eE4c9bDuHIe+EoRz
-   XiYd5jTKDEJkLb5latazyHH32ciXxTt9cbZwZ8YCJIudilCoSe2ywFKw8
-   w==;
-X-CSE-ConnectionGUID: K70JQ8o+TO6StdrJxdxJOQ==
-X-CSE-MsgGUID: QbIyM45rQYOvCqvXFabvvg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="58527553"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="58527553"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 03:01:08 -0700
-X-CSE-ConnectionGUID: JSsk2riqRCqSl8SPZprJdg==
-X-CSE-MsgGUID: 0jgR7Dl5Q8u7mmmb2p9Msg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="159199341"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 07 May 2025 03:01:04 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCbaH-0007YL-32;
-	Wed, 07 May 2025 10:01:01 +0000
-Date: Wed, 7 May 2025 18:00:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Nick Chan <towinchenmi@gmail.com>, Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ItXBZxzL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C6ADC4CEEE;
+	Wed,  7 May 2025 10:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746612095;
+	bh=mGf1AsLPf5v5y8NvTo2qOGgB267TYsDCzDgn89qfu7U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ItXBZxzLez3WffVEhLRjWkb0m1A7x4XxacKIgzrvtNvY5q3euBOrXn+CDEm5vW6Zt
+	 rpw0Wf7x5Eb6++2SG/3J8w/3NiaHLUIuR0vBjUx7NyJ0ABD8Pek+EGk9BqJheoHBLd
+	 FeBZCGP7cYpLFmZB77J7TVaCJPooT5PfUYRaWZ8JNp+5g8AdTtCupCgh0FftyeMjrQ
+	 DhgCKhflKdb0nqC8AyPQ5DUE6CgCWvoroD5nBZSoRjARQ85KCyauh7tpt4/RSJaCYr
+	 P/D7XabeNq/owsOqZnDK3HaOJK/7UNC6R5+Q44EwDFwvKcxOOElu3feCg1vOiS2Mhi
+	 Nf6eyEvSg99tw==
+Date: Wed, 7 May 2025 12:01:28 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>
-Cc: oe-kbuild-all@lists.linux.dev, Marc Zyngier <maz@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
-	asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Nick Chan <towinchenmi@gmail.com>
-Subject: Re: [PATCH RESEND v6 03/21] drivers/perf: apple_m1: Support
- per-implementation event tables
-Message-ID: <202505071747.2b2WEajY-lkp@intel.com>
-References: <20250429-apple-cpmu-v6-3-ed21815f0c3f@gmail.com>
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 00/25] Arm GICv5: Host driver implementation
+Message-ID: <aBsveM5PqbZ9Jq4f@lpieralisi>
+References: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
+ <86frhhhm18.wl-maz@kernel.org>
+ <aBsRvOzse7z39dkh@lpieralisi>
+ <86bjs4hjmv.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,162 +55,124 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250429-apple-cpmu-v6-3-ed21815f0c3f@gmail.com>
+In-Reply-To: <86bjs4hjmv.wl-maz@kernel.org>
 
-Hi Nick,
+On Wed, May 07, 2025 at 10:09:44AM +0100, Marc Zyngier wrote:
+> On Wed, 07 May 2025 08:54:36 +0100,
+> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> > 
+> > On Tue, May 06, 2025 at 03:05:39PM +0100, Marc Zyngier wrote:
+> > > On Tue, 06 May 2025 13:23:29 +0100,
+> > > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> > > > 
+> > > > =============
+> > > > 2.5 GICv5 IWB
+> > > > =============
+> > > > 
+> > > > The IWB driver has been dropped owing to issues encountered with
+> > > > core code DOMAIN_BUS_WIRED_TO_MSI bus token handling:
+> > > > 
+> > > > https://lore.kernel.org/lkml/87tt6310hu.wl-maz@kernel.org/
+> > > 
+> > > This problem does not have much to do with DOMAIN_BUS_WIRED_TO_MSI.
+> > > 
+> > > The issues are that:
+> > > 
+> > > - the core code calls into the .prepare domain on a per-interrupt
+> > >   basis instead of on a per *device* basis. This is a complete
+> > >   violation of the MSI API, because .prepare is when you are supposed
+> > >   to perform resource reservation (in the GICv3 parlance, that's ITT
+> > >   allocation + MAPD command).
+> > > 
+> > > - the same function calls .prepare for a *single* interrupt,
+> > >   effectively telling the irqchip "my device has only one interrupt".
+> > >   Because I'm super generous (and don't like wasting precious bytes),
+> > >   I allocate 32 LPIs at the minimum. Only snag is that I could do with
+> > >   300+ interrupts, and calling repeatedly doesn't help at all, since
+> > >   we cannot *grow* an ITT.
+> > 
+> > On the IWB driver code that I could not post I noticed that it is
+> > true that the .prepare callback is called on a per-interrupt basis
+> > but the vector size is the domain size (ie number of wires) which
+> > is correct AFAICS, so the ITT size should be fine I don't get why
+> > it would need to grow.
+> 
+> Look again. The only reason you are getting something that *looks*
+> correct is that its_pmsi_prepare() has this nugget:
+> 
+> 	/* Allocate at least 32 MSIs, and always as a power of 2 */
+> 	nvec = max_t(int, 32, roundup_pow_of_two(nvec));
+> 
+> and that the IWB is, conveniently, in sets of 32. However, the caller
+> of this function (__msi_domain_alloc_irqs()) passes a  nvec value that
+> is always exactly *1* when allocating an interrupt.
 
-kernel test robot noticed the following build warnings:
+nvec is one but this does not work for the reason above, it works
+because of AFAICS (for the IWB set-up I have):
 
-[auto build test WARNING on 0af2f6be1b4281385b618cb86ad946eded089ac8]
+	msi_info = msi_get_domain_info(domain);
+	if (msi_info->hwsize > nvec)
+		nvec = msi_info->hwsize;
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Nick-Chan/dt-bindings-arm-pmu-Add-Apple-A7-A11-SoC-CPU-PMU-compatibles/20250429-114920
-base:   0af2f6be1b4281385b618cb86ad946eded089ac8
-patch link:    https://lore.kernel.org/r/20250429-apple-cpmu-v6-3-ed21815f0c3f%40gmail.com
-patch subject: [PATCH RESEND v6 03/21] drivers/perf: apple_m1: Support per-implementation event tables
-config: arm64-randconfig-004-20250501 (https://download.01.org/0day-ci/archive/20250507/202505071747.2b2WEajY-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 9.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071747.2b2WEajY-lkp@intel.com/reproduce)
+> 
+> So you're just lucky that I picked a minimum ITT size that matches the
+> IWB on your model.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505071747.2b2WEajY-lkp@intel.com/
+Not really, we test with wires above 32, we end up calling .prepare()
+with the precise number of wires, don't know why that does not work for
+the MBIgen (possibly because the interrupt-controller platform devices
+are children of the "main" MBIgen platform device ? The IWB one is created
+by OF code, MBIgen has to create children, maybe that's what is
+going wrong with the device/domain hierarchy ?).
 
-All warnings (new ones prefixed by >>):
+> Configure your IWB to be, let's say, 256 interrupts and use the last
+> one, and you'll have a very different behaviour.
 
-   include/linux/bits.h:34:2: note: (near initialization for 'm1_pmu_event_affinity[248]')
-      34 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-         |  ^
-   drivers/perf/apple_m1_cpu_pmu.c:27:23: note: in expansion of macro 'GENMASK'
-      27 | #define ONLY_2_TO_7   GENMASK(7, 2)
-         |                       ^~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:163:35: note: in expansion of macro 'ONLY_2_TO_7'
-     163 |  [M1_PMU_PERFCTR_UNKNOWN_f8]    = ONLY_2_TO_7,
-         |                                   ^~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:28:22: warning: initialized field overwritten [-Woverride-init]
-      28 | #define ONLY_2_4_6   (BIT(2) | BIT(4) | BIT(6))
-         |                      ^
-   drivers/perf/apple_m1_cpu_pmu.c:164:35: note: in expansion of macro 'ONLY_2_4_6'
-     164 |  [M1_PMU_PERFCTR_UNKNOWN_fd]    = ONLY_2_4_6,
-         |                                   ^~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:28:22: note: (near initialization for 'm1_pmu_event_affinity[253]')
-      28 | #define ONLY_2_4_6   (BIT(2) | BIT(4) | BIT(6))
-         |                      ^
-   drivers/perf/apple_m1_cpu_pmu.c:164:35: note: in expansion of macro 'ONLY_2_4_6'
-     164 |  [M1_PMU_PERFCTR_UNKNOWN_fd]    = ONLY_2_4_6,
-         |                                   ^~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:169:32: warning: initialized field overwritten [-Woverride-init]
-     169 |  [PERF_COUNT_HW_CPU_CYCLES]  = M1_PMU_PERFCTR_CORE_ACTIVE_CYCLE,
-         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:169:32: note: (near initialization for 'm1_pmu_perf_map[0]')
-   drivers/perf/apple_m1_cpu_pmu.c:170:34: warning: initialized field overwritten [-Woverride-init]
-     170 |  [PERF_COUNT_HW_INSTRUCTIONS]  = M1_PMU_PERFCTR_INST_ALL,
-         |                                  ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:170:34: note: (near initialization for 'm1_pmu_perf_map[1]')
-   drivers/perf/apple_m1_cpu_pmu.c:171:40: warning: initialized field overwritten [-Woverride-init]
-     171 |  [PERF_COUNT_HW_BRANCH_INSTRUCTIONS] = M1_PMU_PERFCTR_INST_BRANCH,
-         |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:171:40: note: (near initialization for 'm1_pmu_perf_map[4]')
-   drivers/perf/apple_m1_cpu_pmu.c:172:35: warning: initialized field overwritten [-Woverride-init]
-     172 |  [PERF_COUNT_HW_BRANCH_MISSES]  = M1_PMU_PERFCTR_BRANCH_MISPRED_NONSPEC,
-         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:172:35: note: (near initialization for 'm1_pmu_perf_map[5]')
-   drivers/perf/apple_m1_cpu_pmu.c:176:40: warning: initialized field overwritten [-Woverride-init]
-     176 |  [ARMV8_PMUV3_PERFCTR_##pmuv3_event] = M1_PMU_PERFCTR_##m1_event
-         |                                        ^~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:180:2: note: in expansion of macro 'M1_PMUV3_EVENT_MAP'
-     180 |  M1_PMUV3_EVENT_MAP(INST_RETIRED, INST_ALL),
-         |  ^~~~~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:176:40: note: (near initialization for 'm1_pmu_pmceid_map[8]')
-     176 |  [ARMV8_PMUV3_PERFCTR_##pmuv3_event] = M1_PMU_PERFCTR_##m1_event
-         |                                        ^~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:180:2: note: in expansion of macro 'M1_PMUV3_EVENT_MAP'
-     180 |  M1_PMUV3_EVENT_MAP(INST_RETIRED, INST_ALL),
-         |  ^~~~~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:176:40: warning: initialized field overwritten [-Woverride-init]
-     176 |  [ARMV8_PMUV3_PERFCTR_##pmuv3_event] = M1_PMU_PERFCTR_##m1_event
-         |                                        ^~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:181:2: note: in expansion of macro 'M1_PMUV3_EVENT_MAP'
-     181 |  M1_PMUV3_EVENT_MAP(CPU_CYCLES,  CORE_ACTIVE_CYCLE),
-         |  ^~~~~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:176:40: note: (near initialization for 'm1_pmu_pmceid_map[17]')
-     176 |  [ARMV8_PMUV3_PERFCTR_##pmuv3_event] = M1_PMU_PERFCTR_##m1_event
-         |                                        ^~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:181:2: note: in expansion of macro 'M1_PMUV3_EVENT_MAP'
-     181 |  M1_PMUV3_EVENT_MAP(CPU_CYCLES,  CORE_ACTIVE_CYCLE),
-         |  ^~~~~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:176:40: warning: initialized field overwritten [-Woverride-init]
-     176 |  [ARMV8_PMUV3_PERFCTR_##pmuv3_event] = M1_PMU_PERFCTR_##m1_event
-         |                                        ^~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:182:2: note: in expansion of macro 'M1_PMUV3_EVENT_MAP'
-     182 |  M1_PMUV3_EVENT_MAP(BR_RETIRED,  INST_BRANCH),
-         |  ^~~~~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:176:40: note: (near initialization for 'm1_pmu_pmceid_map[33]')
-     176 |  [ARMV8_PMUV3_PERFCTR_##pmuv3_event] = M1_PMU_PERFCTR_##m1_event
-         |                                        ^~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:182:2: note: in expansion of macro 'M1_PMUV3_EVENT_MAP'
-     182 |  M1_PMUV3_EVENT_MAP(BR_RETIRED,  INST_BRANCH),
-         |  ^~~~~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:176:40: warning: initialized field overwritten [-Woverride-init]
-     176 |  [ARMV8_PMUV3_PERFCTR_##pmuv3_event] = M1_PMU_PERFCTR_##m1_event
-         |                                        ^~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:183:2: note: in expansion of macro 'M1_PMUV3_EVENT_MAP'
-     183 |  M1_PMUV3_EVENT_MAP(BR_MIS_PRED_RETIRED, BRANCH_MISPRED_NONSPEC),
-         |  ^~~~~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:176:40: note: (near initialization for 'm1_pmu_pmceid_map[34]')
-     176 |  [ARMV8_PMUV3_PERFCTR_##pmuv3_event] = M1_PMU_PERFCTR_##m1_event
-         |                                        ^~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:183:2: note: in expansion of macro 'M1_PMUV3_EVENT_MAP'
-     183 |  M1_PMUV3_EVENT_MAP(BR_MIS_PRED_RETIRED, BRANCH_MISPRED_NONSPEC),
-         |  ^~~~~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c: In function 'm1_pmu_enable_event':
-   drivers/perf/apple_m1_cpu_pmu.c:422:5: warning: variable 'evt' set but not used [-Wunused-but-set-variable]
-     422 |  u8 evt;
-         |     ^~~
-   drivers/perf/apple_m1_cpu_pmu.c:421:13: warning: variable 'kernel' set but not used [-Wunused-but-set-variable]
-     421 |  bool user, kernel;
-         |             ^~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:421:7: warning: variable 'user' set but not used [-Wunused-but-set-variable]
-     421 |  bool user, kernel;
-         |       ^~~~
-   In file included from include/linux/bits.h:22,
-                    from include/linux/bitops.h:6,
-                    from include/linux/of.h:15,
-                    from drivers/perf/apple_m1_cpu_pmu.c:13:
-   drivers/perf/apple_m1_cpu_pmu.c: At top level:
->> include/linux/build_bug.h:16:44: warning: anonymous struct declared inside parameter list will not be visible outside of this definition or declaration
-      16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
-         |                                            ^~~~~~
-   include/linux/bits.h:24:35: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
-      24 | #define GENMASK_INPUT_CHECK(h, l) BUILD_BUG_ON_ZERO(const_true((l) > (h)))
-         |                                   ^~~~~~~~~~~~~~~~~
-   include/linux/bits.h:34:3: note: in expansion of macro 'GENMASK_INPUT_CHECK'
-      34 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-         |   ^~~~~~~~~~~~~~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:24:27: note: in expansion of macro 'GENMASK'
-      24 | #define M1_PMU_CFG_EVENT  GENMASK(7, 0)
-         |                           ^~~~~~~
-   drivers/perf/apple_m1_cpu_pmu.c:496:32: note: in expansion of macro 'M1_PMU_CFG_EVENT'
-     496 |     const u16 event_affinities[M1_PMU_CFG_EVENT])
-         |                                ^~~~~~~~~~~~~~~~
+See above.
 
+> > The difference with this series is that on v3 LPIs are allocated
+> > on .prepare(), we allocate them on .alloc().
+> 
+> Absolutely not. Even on v3, we never allocate LPIs in .prepare(). We
+> allocate the ITT, perform the MAPD, and that's it. That's why it's
+> called *prepare*.
 
-vim +16 include/linux/build_bug.h
+I supposed that's what its_lpi_alloc() does in its_create_device() but
+OK, won't mention that any further.
 
-bc6245e5efd70c Ian Abbott       2017-07-10   6  
-bc6245e5efd70c Ian Abbott       2017-07-10   7  #ifdef __CHECKER__
-bc6245e5efd70c Ian Abbott       2017-07-10   8  #define BUILD_BUG_ON_ZERO(e) (0)
-bc6245e5efd70c Ian Abbott       2017-07-10   9  #else /* __CHECKER__ */
-bc6245e5efd70c Ian Abbott       2017-07-10  10  /*
-bc6245e5efd70c Ian Abbott       2017-07-10  11   * Force a compilation error if condition is true, but also produce a
-8788994376d84d Rikard Falkeborn 2019-12-04  12   * result (of value 0 and type int), so the expression can be used
-bc6245e5efd70c Ian Abbott       2017-07-10  13   * e.g. in a structure initializer (or where-ever else comma expressions
-bc6245e5efd70c Ian Abbott       2017-07-10  14   * aren't permitted).
-bc6245e5efd70c Ian Abbott       2017-07-10  15   */
-8788994376d84d Rikard Falkeborn 2019-12-04 @16  #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
-527edbc18a70e7 Masahiro Yamada  2019-01-03  17  #endif /* __CHECKER__ */
-527edbc18a70e7 Masahiro Yamada  2019-01-03  18  
+> > So yes, calling .prepare on a per-interrupt basis looks like a bug
+> > but if we allow reusing a deviceID (ie the "shared" thingy) it could
+> > be harmless.
+> 
+> Harmless? No. It is really *bad*. It means you lose any sort of sane
+> tracking of what owns the ITT and how you can free things. Seeing a
+> devid twice is the admission that we have no idea of what is going on.
+> 
+> GICv3 is already in that sorry state, but I am hopeful that GICv5 can
+> be a bit less crap.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Well, GICv5 will have to cope with designs, hopefully deviceIDs sharing
+is a thing of the past I am not eulogizing the concept :)
+
+> > > So this code needs to be taken to the backyard and beaten into shape
+> > > before we can make use of it. My D05 (with its collection of MBIGENs)
+> > > only works by accident at the moment, as I found out yesterday, and
+> > > GICv5 IWB is in the same boat, since it reuses the msi-parent thing,
+> > > and therefore the same heuristic.
+> > > 
+> > > I guess not having the IWB immediately isn't too big a deal, but I
+> > > really didn't expect to find this...
+> > 
+> > To be honest, it was expected. We found these snags while designing
+> > the code (that explains how IWB was structured in v1 - by the way)
+> > but we didn't know if the behaviour above was by construction, we
+> > always thought "we must be making a mistake".
+> 
+> Then why didn't you report it? We could have caught this very early
+> on, before the fscked-up code was in a stable release...
+
+We spotted it late March - planned to discuss the IWB design while
+reviewing v5.
+
+Thanks,
+Lorenzo
