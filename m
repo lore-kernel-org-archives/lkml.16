@@ -1,205 +1,104 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BE672836A2
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12122820D2;
+	Wed,  7 May 2025 13:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746623928; cv=none; b=kFvW+c5ypUJTEl+k4aBdRZNtOwzn9zrsf5Q6+cjK/p2iDL6C8PFoxp9pnjdDmp6mkZKMbiIeLeRLq6f9orA6TSwL/bxAUu/lpjrFr5jSoB6s3AEIsD4q/5Q3ICW9zuhAjXcC1f0a3VVM50q0Eg2BjVoi1awCi5rO3fZB9snGxJk=
+	t=1746623930; cv=none; b=Ar3sXRkon5ae6pAacoMLJwq236oobHm9FSNla9MrJnvlfhhZFUQLy04/zOmKGndN1QCj8XgVV8mUVT2vkBg1kdIlLGzfa83VDMDiDj88RJLfEBBcgAgpc2pbYsV32NsysoVyfmR9r3efoTc0t7lI+al/YCzF5+i5Ls3b7po3LvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746623928; c=relaxed/simple;
-	bh=Aqxfb0D1OaZTFVrIlyE4sDxOdOo3XhRb8mptgkA+QUc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nKyPh3LJLcXJylfX4oq1yQihFf/Xo7e+xjh4a3uvFFnv5o0sMWMVXYYzN1J74FmH5h34M6cYqI3wVEBykZChd95tUoO+4KOuVMN8T7JeQYJnS/RSUSB2oBuFbbBva6Srne6ftvkjsg31Ceam4al+uA2UXyzAVvTx1YjnNNPRfoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0C0516F2;
-	Wed,  7 May 2025 06:18:35 -0700 (PDT)
-Received: from [10.57.20.214] (unknown [10.57.20.214])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8190B3F58B;
-	Wed,  7 May 2025 06:18:43 -0700 (PDT)
-Message-ID: <1cfa00a3-75ac-4fc9-bcda-d2dab688bc87@arm.com>
-Date: Wed, 7 May 2025 14:18:41 +0100
+	s=arc-20240116; t=1746623930; c=relaxed/simple;
+	bh=5R0F1GGFzfTgOH/FF+ArtieoiEis+zmCQJM6z0vvjBE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=imoPlvWBfc7DnhiIAyaR7kJkPvXqw0UD8C5OV583ELzbbqkf3cGechOERPIhLxMBhN14wpcKgg34Hkz3Qo50voh7b9jWjBFcdGWF60liylWjXp8Qczb/P984BTzHFvWLB7Or1oAoVcBIoMVRj8sG5i7uqfQrG8oNAgcD8L8BkDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TVOcGfWy; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TVOcGfWy"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad1a87d93f7so657176966b.0;
+        Wed, 07 May 2025 06:18:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746623927; x=1747228727; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XG4gYw/os44VieuMBGo0LazKtq45QTUEHPt6CBsKz9g=;
+        b=TVOcGfWyE0k4UBl7fmRifZJoTRLFqxkDDqt2/X/Pnnqo5lcKPm/ZMysdv4VP7+BQUw
+         AisQkCyUwMBT4JYFIFNFjIyfQ/kTDdIUYBvDwGM3B+VJcX+bDzEXrmNleu9gUcRUqtLW
+         Rv50Q3rftb935wwIsC+o87035EHoETj4mj22yjUjzIiX5+GVwo8s3Yy+kEhHY50nhivm
+         U4QqxCFCh0WSi6c03tSakNsfNOUJtFSArB3J/t2Hs4Qbnr/+mB4mevX6FByPLQhTsyxq
+         MFZf6s9RbiBif8JRC2meB996THFLF6fqQFcGscx6+uOUt5Xq24udjXuH9UXymegOY3Rw
+         Iq2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746623927; x=1747228727;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XG4gYw/os44VieuMBGo0LazKtq45QTUEHPt6CBsKz9g=;
+        b=k6zeT1JccjMhHS0tABhxY7Bq7a6F1tDA+fyL6hnqGcwDp6/ZKdH692JqrI4xUTJcVt
+         RacW/hHcepVOLrTUV7Dqd4dJzpN3GFe3yFS+YJNJS0FICWkhZUPTnLCuj3HP/1fTJjvc
+         BrpVWakCV+eKQ1GOe3ZL4fwN4fSBif1CkXkIQ1zgSB4VH/Qgtp+sqwnkqMidk6uaIt8z
+         2qxnoYJ1WbzYPK0a0r5hfDV89viSpUujLz5gGRtMeIblG9wz2krmWXyCHHnqREwPZowO
+         xZuV7RNml3LhsGhzpnjI0JJcswAilS41SVYPFFnAEK25B767UzpT0CUKFR/uG9Xu0MUg
+         tuKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQVAOQfuDYzwLj6lIpkYEcRo15fRuDs++fzX382ziZwY/jWjuhvBiTDsGdwvOBlP3ossmP1OHUTlCVgw==@vger.kernel.org, AJvYcCWbzuFK4QRZxRQicKidaBHYpRtNHergd2NArg5uFtXXA8DQr2Ot2lLcIu9072nvwIszSBTXuQ1LHKZy6Ro=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywu46zsl+XNaMGQ+lRwqVxhpjqsqfUHgVVLQhtK1rMUloTg/48W
+	PIRRUQLFtdWXQQS19+G79PHJEMIg97icEL2ZBdV58bXxJHKDQMD6a8RCOtsCWZFMRg==
+X-Gm-Gg: ASbGncsILlsNNzCXqvmiyp6orN4nglUI0atsC7pamv1O0bxCz67ON9GoSIwFAnvEFeM
+	MGqBE/zLqFjfrAL5LG40TkiTTAmyWhvebi3KCdd2rr2m5gDrT8TzdgivWuSDDU77S+qZ3VLiOvo
+	QqtQrAS9NUI6KiO5LERYTH4ljEtBFY9gFC/LlMMsGcQLmW5ITdZhvucIvB3uL8YP5o7uj1Btbbp
+	6ZNiPsSpJ969G/ZOomB2rVc0j/an3dr+B82JbEpZKZsIWQvv16PDrWVUXRwU3cMCNt9bZGg9YLy
+	CMdLQ3oqMfk77c91C3bpYJ3Mz++OC7zyqDb6P9Y=
+X-Google-Smtp-Source: AGHT+IGb2mTqtTr9/4na4ydOpBoJ20121LDJwcMxvmIv8RwYC/nsRM+pfVB6P8wstG0+WES23PVlCQ==
+X-Received: by 2002:a17:907:7fa7:b0:ac2:88d5:770b with SMTP id a640c23a62f3a-ad1e8c91ed4mr378798366b.25.1746623926666;
+        Wed, 07 May 2025 06:18:46 -0700 (PDT)
+Received: from localhost ([87.254.1.131])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ad189147375sm908159366b.12.2025.05.07.06.18.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 06:18:46 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Bernard Metzler <bmt@zurich.ibm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	linux-rdma@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] RDMA/siw: replace redundant ternary operator with just rv
+Date: Wed,  7 May 2025 14:18:34 +0100
+Message-ID: <20250507131834.253823-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] drm/panfrost: Add driver IOCTL for setting BO labels
-To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
- linux-kernel@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org,
- Boris Brezillon <boris.brezillon@collabora.com>, kernel@collabora.com,
- Rob Herring <robh@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-References: <20250424022138.709303-1-adrian.larumbe@collabora.com>
- <20250424022138.709303-3-adrian.larumbe@collabora.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250424022138.709303-3-adrian.larumbe@collabora.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On 24/04/2025 03:21, Adrián Larumbe wrote:
-> Allow UM to label a BO for which it possesses a DRM handle.
-> 
-> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+The use of the ternary operator on rv is redundant, rv is
+either the initialized value of 0 or a negative error return
+code, so it can never be greater than zero, and hence the
+zero assignment in ternary operator is redundant. Just return
+rv instead.
 
-Minor comments below, but otherwise:
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/infiniband/sw/siw/siw_verbs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Steven Price <steven.price@arm.com>
-
-> ---
->  drivers/gpu/drm/panfrost/panfrost_drv.c | 44 ++++++++++++++++++++++++-
->  drivers/gpu/drm/panfrost/panfrost_gem.h |  2 ++
->  include/uapi/drm/panfrost_drm.h         | 20 +++++++++++
->  3 files changed, 65 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> index b87f83e94eda..b0ab76d67e96 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> @@ -495,6 +495,46 @@ static int panfrost_ioctl_madvise(struct drm_device *dev, void *data,
->  	return ret;
->  }
->  
-> +static int panfrost_ioctl_set_label_bo(struct drm_device *ddev, void *data,
-> +				       struct drm_file *file)
-> +{
-> +	struct drm_panfrost_set_label_bo *args = data;
-> +	struct drm_gem_object *obj;
-> +	const char *label = NULL;
-> +	int ret = 0;
-> +
-> +	if (args->pad)
-> +		return -EINVAL;
-> +
-> +	obj = drm_gem_object_lookup(file, args->handle);
-> +	if (!obj)
-> +		return -ENOENT;
-> +
-> +	if (args->label) {
-> +		label = strndup_user((const char __user *)(uintptr_t)args->label,
-
-Use u64_to_user_ptr()
-
-> +				     PANFROST_BO_LABEL_MAXLEN);
-> +		if (IS_ERR(label)) {
-> +			ret = PTR_ERR(label);
-> +			if (ret == -EINVAL)
-> +				ret = -E2BIG;
-> +			goto err_put_obj;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * We treat passing a label of length 0 and passing a NULL label
-> +	 * differently, because even though they might seem conceptually
-> +	 * similar, future uses of the BO label might expect a different
-> +	 * behaviour in each case.
-> +	 */
-> +	panfrost_gem_set_label(obj, label);
-> +
-> +err_put_obj:
-> +	drm_gem_object_put(obj);
-> +
-> +	return ret;
-> +}
-> +
->  int panfrost_unstable_ioctl_check(void)
->  {
->  	if (!unstable_ioctls)
-> @@ -561,6 +601,7 @@ static const struct drm_ioctl_desc panfrost_drm_driver_ioctls[] = {
->  	PANFROST_IOCTL(PERFCNT_ENABLE,	perfcnt_enable,	DRM_RENDER_ALLOW),
->  	PANFROST_IOCTL(PERFCNT_DUMP,	perfcnt_dump,	DRM_RENDER_ALLOW),
->  	PANFROST_IOCTL(MADVISE,		madvise,	DRM_RENDER_ALLOW),
-> +	PANFROST_IOCTL(SET_LABEL_BO,	set_label_bo,	DRM_RENDER_ALLOW),
->  };
->  
->  static void panfrost_gpu_show_fdinfo(struct panfrost_device *pfdev,
-> @@ -625,6 +666,7 @@ static const struct file_operations panfrost_drm_driver_fops = {
->   * - 1.2 - adds AFBC_FEATURES query
->   * - 1.3 - adds JD_REQ_CYCLE_COUNT job requirement for SUBMIT
->   *       - adds SYSTEM_TIMESTAMP and SYSTEM_TIMESTAMP_FREQUENCY queries
-> + * - 1.4 - adds SET_LABEL_BO
->   */
->  static const struct drm_driver panfrost_drm_driver = {
->  	.driver_features	= DRIVER_RENDER | DRIVER_GEM | DRIVER_SYNCOBJ,
-> @@ -637,7 +679,7 @@ static const struct drm_driver panfrost_drm_driver = {
->  	.name			= "panfrost",
->  	.desc			= "panfrost DRM",
->  	.major			= 1,
-> -	.minor			= 3,
-> +	.minor			= 4,
->  
->  	.gem_create_object	= panfrost_gem_create_object,
->  	.gem_prime_import_sg_table = panfrost_gem_prime_import_sg_table,
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.h b/drivers/gpu/drm/panfrost/panfrost_gem.h
-> index c0be2934f229..842e025b9bdc 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gem.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.h
-> @@ -9,6 +9,8 @@
->  
->  struct panfrost_mmu;
->  
-> +#define PANFROST_BO_LABEL_MAXLEN	4096
-> +
->  struct panfrost_gem_object {
->  	struct drm_gem_shmem_object base;
->  	struct sg_table *sgts;
-> diff --git a/include/uapi/drm/panfrost_drm.h b/include/uapi/drm/panfrost_drm.h
-> index 568724be6628..b0445c5e514d 100644
-> --- a/include/uapi/drm/panfrost_drm.h
-> +++ b/include/uapi/drm/panfrost_drm.h
-> @@ -21,6 +21,7 @@ extern "C" {
->  #define DRM_PANFROST_PERFCNT_ENABLE		0x06
->  #define DRM_PANFROST_PERFCNT_DUMP		0x07
->  #define DRM_PANFROST_MADVISE			0x08
-> +#define DRM_PANFROST_SET_LABEL_BO		0x09
->  
->  #define DRM_IOCTL_PANFROST_SUBMIT		DRM_IOW(DRM_COMMAND_BASE + DRM_PANFROST_SUBMIT, struct drm_panfrost_submit)
->  #define DRM_IOCTL_PANFROST_WAIT_BO		DRM_IOW(DRM_COMMAND_BASE + DRM_PANFROST_WAIT_BO, struct drm_panfrost_wait_bo)
-> @@ -29,6 +30,7 @@ extern "C" {
->  #define DRM_IOCTL_PANFROST_GET_PARAM		DRM_IOWR(DRM_COMMAND_BASE + DRM_PANFROST_GET_PARAM, struct drm_panfrost_get_param)
->  #define DRM_IOCTL_PANFROST_GET_BO_OFFSET	DRM_IOWR(DRM_COMMAND_BASE + DRM_PANFROST_GET_BO_OFFSET, struct drm_panfrost_get_bo_offset)
->  #define DRM_IOCTL_PANFROST_MADVISE		DRM_IOWR(DRM_COMMAND_BASE + DRM_PANFROST_MADVISE, struct drm_panfrost_madvise)
-> +#define DRM_IOCTL_PANFROST_SET_LABEL_BO		DRM_IOWR(DRM_COMMAND_BASE + DRM_PANFROST_SET_LABEL_BO, struct drm_panfrost_set_label_bo)
->  
->  /*
->   * Unstable ioctl(s): only exposed when the unsafe unstable_ioctls module
-> @@ -227,6 +229,24 @@ struct drm_panfrost_madvise {
->  	__u32 retained;       /* out, whether backing store still exists */
->  };
->  
-> +/**
-> + * struct drm_panfrost_set_label_bo - ioctl argument for labelling Panfrost BOs.
-> + */
-> +struct drm_panfrost_set_label_bo {
-> +	/** @handle: Handle of the buffer object to label. */
-> +	__u32 handle;
-> +
-> +	/**  @pad: MBZ. */
-> +	__u32 pad;
-> +
-> +	/**
-> +	 * @label: User pointer to a NUL-terminated string
-> +	 *
-> +	 * Length cannot be greater than 4096
-
-NULL is permitted and means clear the label.
-
-Thanks,
-Steve
-
-> +	 */
-> +	__u64 label;
-> +};
-> +
->  /* Definitions for coredump decoding in user space */
->  #define PANFROSTDUMP_MAJOR 1
->  #define PANFROSTDUMP_MINOR 0
+diff --git a/drivers/infiniband/sw/siw/siw_verbs.c b/drivers/infiniband/sw/siw/siw_verbs.c
+index 7ce0035c54fa..2b2a7b8e93b0 100644
+--- a/drivers/infiniband/sw/siw/siw_verbs.c
++++ b/drivers/infiniband/sw/siw/siw_verbs.c
+@@ -1102,7 +1102,7 @@ int siw_post_receive(struct ib_qp *base_qp, const struct ib_recv_wr *wr,
+ 		siw_dbg_qp(qp, "error %d\n", rv);
+ 		*bad_wr = wr;
+ 	}
+-	return rv > 0 ? 0 : rv;
++	return rv;
+ }
+ 
+ int siw_destroy_cq(struct ib_cq *base_cq, struct ib_udata *udata)
+-- 
+2.49.0
 
