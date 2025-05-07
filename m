@@ -1,173 +1,536 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2085.outbound.protection.outlook.com [40.107.223.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BEA1DE3DB;
-	Wed,  7 May 2025 20:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746651123; cv=fail; b=ike2pLIhHjywfyBXUQD5Q63Oomh5XwRiA6Hn5HIF+Y6UNhHC4Ks6EfZufYGBhoHmWmdS++BewrbUcB8S7Ki22U+S+j+ebuW1unXd3Z5d518bws4HjKbXlQbcBWsPR48O6aBtNWIvK3a1ML9j4zNldq/mY5VQeBgTpGYTARnPvS0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746651123; c=relaxed/simple;
-	bh=Yc+Jr2OLMkHMin8ZCd0+w5qeuFS4rXf7C/1jsNU6gDE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OSpQLD1KqNo1hC0xzPG5ZGQFXch2NgXu7X/D1WyYAvj0ymKZezUG/JOhKAeBpSdx6EYYNDvSsUYtSlL261VTaytI3qcyTyG757kkZ2cDJUij6+DucyY87l/moh7qA8u6douR8EtVJdFTeuCS//avrPc3lIKY/IletQpSTH+I978=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ubejLry6; arc=fail smtp.client-ip=40.107.223.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3ED20469E
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 20:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746651312; cv=none; b=VWUn7sEk7x2EEY++MVh/ptvjTMBE7YJ/bTeHgqmCSujFfLI6ZWqLib05SPNxjv0S+3lvTdwZJAbtMspCaSDaLP0jvI3+je1/7SvvEHwNyQ5Q7S04cGybOCH7FIWElM1IMrdrftOBO3HQkvaDpzdHRKQ7UJ//AQGh75SmmzZghX0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746651312; c=relaxed/simple;
+	bh=ZY1u7qt8tMklUWTTqEyWmrmHUiD/u1Q9xouiNAkfGuw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=bFtRjq8l8mXorYVAWDfr8Pi2d6M0aI8CAgKzoXgm9I8FfonRMbvrTAQMtNm6w809U1u5WHKFHQ+3/HMRmsE65WdNY/P2yJhwKYP/JocHdKt+Oqd3zP2Qe5N8VyIumlQS+Ngi61Djoph3/3b/5sVA5sS4/519vz9VhXqzX4BFzuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--xur.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1Hjs416t; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--xur.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ubejLry6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KbSPLLrKYdN/7zRA+zoSyrVp+ZGA2ju+VJMRMmgDPb+4RVoXnED+GNAubKw/HqQkASeV/0KPwd7TIi/gMVigspAneGci9Z8Bk0Jtw/3eJrbEjjEYaKvsWJmLPrY2OUApURtvXznEfOghdbnAN49mf+v727dM7gn53zfqyV8MUhC5KZhzMupzY1PD342Kpd7h672nX92Z6MRgYB1frH2KzX6XFO1FdAy2FUgG73jBEtxymwyUFZjEBp5rpdWvYKXWektBe2zd9boO9od1ZZQ19WE+V7xzD9PoHP4EWzZ2jOrFs0s5hpHmVXT4LOMR55257+tcD8qE2V1YzOgZAKEaCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wVKR0I8f8dVv0OY3V11gaRYIUu1t/U8DlDvdZLegwYo=;
- b=Fm7ZpXy60OQwu8b4NUURoUKrALcdbU4t+RXwlezS/71jtrGHgeRFHDzT4QVZ6ksiJUW14Bobx06Wn10XEA1b2Vf/3LpVMTFkXVERnbHgnCeo5fn3nDsbRAQnudrcyyUtmvC9ymaPG/FhZJZeCSaDmvlCJkotfwuIDgOagtSN/SNS3uPkHSBSXIatgDTbhw0vjP5J9VTRvRAkFafq/WjldKm8q17U2XNnOqgodxDQl5ZUWurDjKxEKsUpVm589/AU1AD4lNFawpyybUJpCGANYBZephYvf/uVxhaqtszDp3VQ6yoJEBGYNNSFPtSBu+GehJKS4vmtzxp9tVCvzCJ/8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wVKR0I8f8dVv0OY3V11gaRYIUu1t/U8DlDvdZLegwYo=;
- b=ubejLry6vTYbtZ+r7OpQXOEH1vnc1rHo65f54q8Qdv/NnhTbpb+tOfCVPf0sSz9N1DMuWHl3WbHfOtXgdiu6XRSdYrrZNK5qUM+34MQgUEDGwzxli276U8YLp0ISsOMeyhdy5++zVfcuTiOseI3+0uVpfRPPbUJPygBOoigf18H7kLiS8esibeH2ANuIIL7rBlPvJoHzMcOkRaXvDL54ZqooAa9nnzGx5bP0N9sr49yJhcqPa0lTs4vJa7+BSMosxBHrD28wyuLMtbwQFQIH9USOW4mV4TlwLcVN6IunHaVCscXIsQbgBNbhVS0iQyzGztb4hxvqHkjWli3ujvwlRg==
-Received: from BL1P221CA0025.NAMP221.PROD.OUTLOOK.COM (2603:10b6:208:2c5::13)
- by LV2PR12MB5845.namprd12.prod.outlook.com (2603:10b6:408:176::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Wed, 7 May
- 2025 20:51:53 +0000
-Received: from BN3PEPF0000B073.namprd04.prod.outlook.com
- (2603:10b6:208:2c5:cafe::4b) by BL1P221CA0025.outlook.office365.com
- (2603:10b6:208:2c5::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.29 via Frontend Transport; Wed,
- 7 May 2025 20:51:53 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- BN3PEPF0000B073.mail.protection.outlook.com (10.167.243.118) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.18 via Frontend Transport; Wed, 7 May 2025 20:51:52 +0000
-Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 7 May 2025
- 13:51:36 -0700
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 7 May 2025 13:51:38 -0700
-Received: from nvidia.com (10.127.8.14) by mail.nvidia.com (10.126.190.182)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Wed, 7 May 2025 13:51:33 -0700
-Date: Wed, 7 May 2025 13:51:31 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: "Tian, Kevin" <kevin.tian@intel.com>, Vasant Hegde <vasant.hegde@amd.com>,
-	"corbet@lwn.net" <corbet@lwn.net>, "will@kernel.org" <will@kernel.org>,
-	"bagasdotme@gmail.com" <bagasdotme@gmail.com>, "robin.murphy@arm.com"
-	<robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>,
-	"thierry.reding@gmail.com" <thierry.reding@gmail.com>, "vdumpa@nvidia.com"
-	<vdumpa@nvidia.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-	"shuah@kernel.org" <shuah@kernel.org>, "jsnitsel@redhat.com"
-	<jsnitsel@redhat.com>, "nathan@kernel.org" <nathan@kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>, "Liu, Yi L"
-	<yi.l.liu@intel.com>, "mshavit@google.com" <mshavit@google.com>,
-	"praan@google.com" <praan@google.com>, "zhangzekun11@huawei.com"
-	<zhangzekun11@huawei.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
-	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
-	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
-	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, Suravee Suthikulpanit
-	<suravee.suthikulpanit@amd.com>
-Subject: Re: [PATCH v2 10/22] iommufd/viommmu: Add IOMMUFD_CMD_VCMDQ_ALLOC
- ioctl
-Message-ID: <aBvH046KK9V2YMRx@nvidia.com>
-References: <aA/exylmYJhIhEVL@Asurada-Nvidia>
- <b8338b47-6fbf-44ac-9b99-3555997c9f36@amd.com>
- <aBB1gLfahnLmn0N1@Asurada-Nvidia>
- <a3860aed-5b6b-4e68-a8fd-1a6ee28ba022@amd.com>
- <aBEI+T7P+hV8Y6tU@Asurada-Nvidia>
- <BN9PR11MB5276A00FDB2685B394FB9D4D8C892@BN9PR11MB5276.namprd11.prod.outlook.com>
- <aBptQO9VBnO2AG9V@nvidia.com>
- <BN9PR11MB527651D1ED8E6CA4677FD7678C88A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <aBsN1ZDr+jJJ5EG0@nvidia.com>
- <20250507123333.GD90261@nvidia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1Hjs416t"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3032f4eca83so274748a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 13:55:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746651309; x=1747256109; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tDe69Fa/kduEZce7WFRjGTWy43T3WMZmkU4MxoQNxyQ=;
+        b=1Hjs416t4H+hX1MLr24huk6vz7sTxcDA/m9HpfSZdKQmw0UFF6vU8Yo+kLffIu1808
+         oXVM3x0jxuh+2fqtgqamvEZo++WAo7niksjDRVYUVALm4qsKJ1hnwFfTklKPyxlH+JYw
+         OAAyde8OYKpeN3J/CabCxjQjDsgvtYxCo3i/BobYDZWiwTqMc/Zet9p1yxLb9MJ+7cHr
+         HbCwNZnUPZb3TFSq34p6E5+QfOjGcdRDCcV3Mhx3oYXEq9kki5RGJK70+F7KC5pNS+YM
+         zNGQD94ODENBkhLMNNVXevNXu2YR+ebiR7w0AFSSWcKgj11sjiropyCaJwwnKUfb9xFd
+         OVxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746651309; x=1747256109;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tDe69Fa/kduEZce7WFRjGTWy43T3WMZmkU4MxoQNxyQ=;
+        b=jWTdrvTuUIoYANpRQqpoov3+7X5N7IKtMp2S/iPapBxxhL07dOfRJiSszlLCGM+EZH
+         YIhcAHu8smETKlCo/JKvsaGxGDAapFVmClWELDoRTQ8EN7EatMtpV6Vam6cbDKfGYEWZ
+         3UXb61Vl5ltrL6BdWI5sTbMQVnqFLkliuLItt8V4qM6ZSDxo3al3LOdiZaXt1jJqg5HA
+         YqazNlBWNzQcs/dbGNsAZgR5ut3GWfYfyuM6J624xA4MKmAorSHutPHng8OR0MdDd8kc
+         OJi3aq47kIA2ItabpySYg8+KHA26ttVmxCyEYejXPkCXSN7OCTO6lB24vjmlRSiOQ5iH
+         Gt4A==
+X-Gm-Message-State: AOJu0Yx+es1bDBXaCjtdNIu8YQRHnxKpHt2ZRS4DKWqlbbVccEniWs8N
+	8iJ55Rf3GmCQWQb1QVmaV8uEuQrQu7P2O2ubk81fL9v1y+KSo8ZbAmoULxdOINiPdA==
+X-Google-Smtp-Source: AGHT+IFMzY2T+8LpJ55GlOrnlLtU9Z0I87rC+F9B1/t07fFaoQ2SEek/BXdaBjhPs9PgxucB5Tk+LUY=
+X-Received: from pjbpb5.prod.google.com ([2002:a17:90b:3c05:b0:30a:8ffa:9154])
+ (user=xur job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:278e:b0:2fa:1a23:c01d
+ with SMTP id 98e67ed59e1d1-30aac1b407amr7237008a91.21.1746651308886; Wed, 07
+ May 2025 13:55:08 -0700 (PDT)
+Date: Wed,  7 May 2025 13:55:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250507123333.GD90261@nvidia.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B073:EE_|LV2PR12MB5845:EE_
-X-MS-Office365-Filtering-Correlation-Id: 75a4f5d8-479c-42c5-3d03-08dd8da8ff25
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|82310400026|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?T/58WjCzOo7+M9ylm7OqfN0KJGKy7wmWaogLnS8yDKkoGALsU5nXIrSw5K98?=
- =?us-ascii?Q?PItnvgHUEClNmxWdBw6oy67Yp5B+NF9iNhmW078s+05R3VXQjarpML+UJzVJ?=
- =?us-ascii?Q?cCwmqgzypTBoD5p8e1c1EZ/CGVJQP4E9aJDOMUK8lT266+QY5xSd2qxFT6Tj?=
- =?us-ascii?Q?XgpBJD8bSy+RrY+MWkBoRJATCik08Hf78lFvwm1tyJGKLAgeUNqnP9RO/m/V?=
- =?us-ascii?Q?Yry4113ADtEvdqZEwYrCLfYgShlSzP2pXo8DeCogu9ep4GH8GysQ03nWCRDo?=
- =?us-ascii?Q?oq1P07IHacKcpE4Ix/HXUQl2VTepXYrk1Nm7adhPfMbJp/MDVjkoKQ4LW+uA?=
- =?us-ascii?Q?eIlPK/+nmzFx9Hx45heYAtxo+mfHJAut66YiX2Kt6ABd+toUvN+3JeArCrIk?=
- =?us-ascii?Q?tUPl+VYq2QBnJ6PzfnN20CB0/jqATif/jpWVYshzZV6Iv1SgQx+XyrzPuKDi?=
- =?us-ascii?Q?3uZSZbPgmlr2XBuKtHjJ6wiPc4D5xSHV+NVpS58C5w8j350Mlgiuq3dnx+aP?=
- =?us-ascii?Q?1C0z/KgrRdMXQCP9J2nb+DQt1x92JwAB2eMWYuutl4p0DiNv7QByMtPnwUim?=
- =?us-ascii?Q?7+clvYQprwGDBiU1Qml6yYBnJLNCphema/IMLNc6dNtgHJOBKqMNx/tWP5Ni?=
- =?us-ascii?Q?HkKMjgMfu7DXpB4xhFav5K4oX760Ojg/TLryCG9/p3TsPatG5OKrKoGM/0Wf?=
- =?us-ascii?Q?VJ6rJiYuUKAjqj8LL0+BTAQ8nWiK/581o7Y0kB62fouAWWxquHRo4UwjFEQA?=
- =?us-ascii?Q?fCKhKrUgruIXKsbJ5BXU/uL72exH6ROmPGgbpDHSztSpX/ahboU2GrTKCtF6?=
- =?us-ascii?Q?aiWM0U5tgY1PYjHcRdP+C48XZwPrMuVp/2GG8Q3cQf5aJyttp0ADQmbgF3al?=
- =?us-ascii?Q?FxkWFZfygJO5yIRlkm95oDV5PV9ugke+EH7Cnihp/Ybw36cB+LILkuBCJRgJ?=
- =?us-ascii?Q?OwmiGc5PvKx37qjXff+XJ0DlenB46HyIzD6WCpanvKcDxjgLK2VGYfyh60RJ?=
- =?us-ascii?Q?DNVuExUJlSMlAHbDPaJ1ng0afI91tKknXp4nAvmydR28KlAYHyMPDFis5tLT?=
- =?us-ascii?Q?Ffq7PgYC3pin9Mg7+jjqb7CqPdNNJ1M28hsJMKp4T0a65UeUphCxGd/QMwAD?=
- =?us-ascii?Q?abTYFvGNwCtANts35VAZrG4bm9dDNZfECq/zPuczDRXTLT2D4r20N2h5Vy4j?=
- =?us-ascii?Q?UCbsvqVRrgoK8737jAm9hSDfCK1qUHwE5WXCIgL1eN4MmZXHh9V0ibQgCOzp?=
- =?us-ascii?Q?waCsBeaYkrZcGTDALOwd9U4n2iBZEY+E9EygFoVz31HGcDLj/5srnIy7WPux?=
- =?us-ascii?Q?5/SJslP1ObqVYlJ+7TGaLPXTCUOX2piEdshYuMWbo6ay81p7kAknRlCDTwcO?=
- =?us-ascii?Q?VEvQWqPYHSMfrzIkiBXC/+5XZhDCieKdkykOYCwv41zOHmElDk4t7G7l8QUV?=
- =?us-ascii?Q?0efGfPfRpzoEAC6ipIGNh1EWx53i8tu+ehJykBsEk78Pht/+yaNej9t0PVjZ?=
- =?us-ascii?Q?GqxGqw7PWnXpREfoGG17T7izddX5Zf1DPoaA?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 20:51:52.9190
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75a4f5d8-479c-42c5-3d03-08dd8da8ff25
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B073.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5845
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.987.g0cc8ee98dc-goog
+Message-ID: <20250507205504.2017028-1-xur@google.com>
+Subject: [PATCH v2] kbuild: distributed build support for Clang ThinLTO
+From: xur@google.com
+To: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Alice Ryhl <aliceryhl@google.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, 
+	Rafael Aquini <aquini@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Stafford Horne <shorne@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Rong Xu <xur@google.com>, 
+	Teresa Johnson <tejohnson@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 07, 2025 at 09:33:33AM -0300, Jason Gunthorpe wrote:
-> You could just call it what it is, "DIRECT QUEUE" or something along
-> those lines to indicate it is mmap'd and so forth, vs being a SW queue
-> with read()/write()
-> 
-> HW QUEUE is good too
+From: Rong Xu <xur@google.com>
 
-Will do HW_QUEUE, as Kevin +1ed and it's short and understandable.
+Add distributed ThinLTO build support for the Linux kernel.
+This new mode offers several advantages: (1) Increased
+flexibility in handling user-specified build options.
+(2) Improved user-friendliness for developers. (3) Greater
+convenience for integrating with objtool and livepatch.
 
-Thanks
-Nicolin
+Note that "distributed" in this context refers to a term
+that differentiates in-process ThinLTO builds by invoking
+backend compilation through the linker, not necessarily
+building in distributed environments.
+
+Distributed ThinLTO is enabled via the
+`CONFIG_LTO_CLANG_THIN_DIST` Kconfig option. For example:
+ > make LLVM=1 defconfig
+ > scripts/config -e LTO_CLANG_THIN_DIST
+ > make LLVM=1 oldconfig
+ > make LLVM=1 vmlinux -j <..>
+
+The implementation changes the top-level Makefile with a
+macro for generating `vmlinux.o` for distributed ThinLTO
+builds. It uses the existing Kbuild infrastructure to
+perform two recursive passes through the subdirectories.
+The first pass generates LLVM IR object files, similar to
+in-process ThinLTO. Following the thin-link stage, a second
+pass compiles these IR files into the final native object
+files. The build rules and actions for this two-pass process
+are primarily implemented in `scripts/Makefile.build`.
+
+Currently, this patch focuses on building the main kernel
+image (`vmlinux`) only. Support for building kernel modules
+using this method is planned for a subsequent patch.
+
+Tested on the following arch: x86, arm64, loongarch, and
+riscv.
+
+Some implementation details can be found here:
+https://discourse.llvm.org/t/rfc-distributed-thinlto-build-for-kernel/85934
+
+Signed-off-by: Rong Xu <xur@google.com>
+---
+Changelog since v1:
+- Updated the description in arch/Kconfig based on feedback
+  from Nathan Chancellor
+- Revised file suffixes: .final_o -> .o.thinlto.native, and
+  .final_a -> .a.thinlto.native
+- Updated list of ignored files in .gitignore
+---
+ .gitignore                        |  2 ++
+ MAINTAINERS                       |  5 +++
+ Makefile                          | 40 ++++++++++++++++++++---
+ arch/Kconfig                      | 19 +++++++++++
+ scripts/Makefile.build            | 52 +++++++++++++++++++++++++++---
+ scripts/Makefile.lib              |  7 +++-
+ scripts/Makefile.vmlinux_o        | 16 +++++++---
+ scripts/Makefile.vmlinux_thinlink | 53 +++++++++++++++++++++++++++++++
+ scripts/head-object-list.txt      |  1 +
+ 9 files changed, 180 insertions(+), 15 deletions(-)
+ create mode 100644 scripts/Makefile.vmlinux_thinlink
+
+diff --git a/.gitignore b/.gitignore
+index f2f63e47fb886..4ac41950311c8 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -12,6 +12,7 @@
+ #
+ .*
+ *.a
++*.a.thinlto_native
+ *.asn1.[ch]
+ *.bin
+ *.bz2
+@@ -64,6 +65,7 @@ modules.order
+ /vmlinux
+ /vmlinux.32
+ /vmlinux.map
++/vmlinux.thinlink
+ /vmlinux.symvers
+ /vmlinux.unstripped
+ /vmlinux-gdb.py
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5f8688630c014..a492f92c4574b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5790,6 +5790,11 @@ F:	scripts/Makefile.clang
+ F:	scripts/clang-tools/
+ K:	\b(?i:clang|llvm)\b
+ 
++CLANG/LLVM THINLTO DISTRIBUTED BUILD
++M:	Rong Xu <xur@google.com>
++S:	Supported
++F:	scripts/Makefile.vmlinux_thinlink
++
+ CLK API
+ M:	Russell King <linux@armlinux.org.uk>
+ L:	linux-clk@vger.kernel.org
+diff --git a/Makefile b/Makefile
+index b29cc321ffd9c..212e093fc7411 100644
+--- a/Makefile
++++ b/Makefile
+@@ -298,7 +298,8 @@ no-dot-config-targets := $(clean-targets) \
+ 			 outputmakefile rustavailable rustfmt rustfmtcheck
+ no-sync-config-targets := $(no-dot-config-targets) %install modules_sign kernelrelease \
+ 			  image_name
+-single-targets := %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.rsi %.s %/
++single-targets := %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.rsi %.s %.o.thinlto.native \
++	          %.a.thinlto.native %.o.thinlto.bc %/
+ 
+ config-build	:=
+ mixed-build	:=
+@@ -991,10 +992,10 @@ export CC_FLAGS_SCS
+ endif
+ 
+ ifdef CONFIG_LTO_CLANG
+-ifdef CONFIG_LTO_CLANG_THIN
+-CC_FLAGS_LTO	:= -flto=thin -fsplit-lto-unit
+-else
++ifdef CONFIG_LTO_CLANG_FULL
+ CC_FLAGS_LTO	:= -flto
++else # for CONFIG_LTO_CLANG_THIN or CONFIG_LTO_CLANG_THIN_DIST
++CC_FLAGS_LTO	:= -flto=thin -fsplit-lto-unit
+ endif
+ CC_FLAGS_LTO	+= -fvisibility=hidden
+ 
+@@ -1214,8 +1215,34 @@ vmlinux.a: $(KBUILD_VMLINUX_OBJS) scripts/head-object-list.txt FORCE
+ 	$(call if_changed,ar_vmlinux.a)
+ 
+ PHONY += vmlinux_o
++ifdef CONFIG_LTO_CLANG_THIN_DIST
++vmlinux.thinlink: vmlinux.a $(KBUILD_VMLINUX_LIBS) FORCE
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.vmlinux_thinlink
++targets += vmlinux.thinlink
++
++vmlinux.a.thinlto.native := $(patsubst %.a,%.a.thinlto.native,$(KBUILD_VMLINUX_OBJS))
++quiet_cmd_ar_vmlinux.a.thinlto.native = AR      $@
++      cmd_ar_vmlinux.a.thinlto.native = \
++	rm -f $@; \
++	$(AR) cDPrST $@ $(vmlinux.a.thinlto.native); \
++	$(AR) mPiT $$($(AR) t $@ | sed -n 1p) $@ $$($(AR) t $@ | grep -F -f $(srctree)/scripts/head-object-list.txt)
++
++define rule_gen_vmlinux.a.thinlto.native
++	+$(Q)$(MAKE) $(build)=. need-builtin=1 thinlto_final_pass=1 need-modorder=1 built-in.a.thinlto.native
++	$(call cmd_and_savecmd,ar_vmlinux.a.thinlto.native)
++endef
++
++vmlinux.a.thinlto.native: vmlinux.thinlink scripts/head-object-list.txt FORCE
++	$(call if_changed_rule,gen_vmlinux.a.thinlto.native)
++
++targets += vmlinux.a.thinlto.native
++
++vmlinux_o: vmlinux.a.thinlto.native
++	$(Q)$(MAKE) thinlto_final_pass=1 -f $(srctree)/scripts/Makefile.vmlinux_o
++else
+ vmlinux_o: vmlinux.a $(KBUILD_VMLINUX_LIBS)
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.vmlinux_o
++endif
+ 
+ vmlinux.o modules.builtin.modinfo modules.builtin: vmlinux_o
+ 	@:
+@@ -1573,7 +1600,8 @@ CLEAN_FILES += vmlinux.symvers modules-only.symvers \
+ 	       modules.builtin.ranges vmlinux.o.map vmlinux.unstripped \
+ 	       compile_commands.json rust/test \
+ 	       rust-project.json .vmlinux.objs .vmlinux.export.c \
+-               .builtin-dtbs-list .builtin-dtb.S
++	       .builtin-dtbs-list .builtin-dtb.S \
++	       .vmlinux_thinlto_bc_files vmlinux.thinlink
+ 
+ # Directories & files removed with 'make mrproper'
+ MRPROPER_FILES += include/config include/generated          \
+@@ -2024,6 +2052,8 @@ clean: $(clean-dirs)
+ 		-o -name '*.symtypes' -o -name 'modules.order' \
+ 		-o -name '*.c.[012]*.*' \
+ 		-o -name '*.ll' \
++		-o -name '*.a.thinlto.native' -o -name '*.o.thinlto.native' \
++		-o -name '*.o.thinlto.bc' \
+ 		-o -name '*.gcno' \
+ 		\) -type f -print \
+ 		-o -name '.tmp_*' -print \
+diff --git a/arch/Kconfig b/arch/Kconfig
+index b0adb665041f1..5ed243ded6efa 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -810,6 +810,25 @@ config LTO_CLANG_THIN
+ 	    https://clang.llvm.org/docs/ThinLTO.html
+ 
+ 	  If unsure, say Y.
++
++config LTO_CLANG_THIN_DIST
++	bool "Clang ThinLTO in distributed mode (EXPERIMENTAL)"
++	depends on HAS_LTO_CLANG && ARCH_SUPPORTS_LTO_CLANG_THIN
++	select LTO_CLANG
++	help
++	  This option enables Clang's ThinLTO in distributed build mode.
++	  In this mode, the linker performs the thin-link, generating
++	  ThinLTO index files. Subsequently, the build system explicitly
++	  invokes ThinLTO backend compilation using these index files
++	  and pre-linked IR objects. The resulting native object files
++	  are with the .o.thinlto.native suffix.
++
++	  This build mode offers improved visibility into the ThinLTO
++	  process through explicit subcommand exposure. It also makes
++	  final native object files directly available, benefiting
++	  tools like objtool and kpatch. Additionally, it provides
++	  crucial granular control over back-end options, enabling
++	  module-specific compiler options, and simplifies debugging.
+ endchoice
+ 
+ config ARCH_SUPPORTS_AUTOFDO_CLANG
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 13dcd86e74ca8..49ea3934e80bc 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -50,18 +50,23 @@ endif
+ 
+ # ===========================================================================
+ 
++builtin_suffix := $(if $(filter %.a.thinlto.native, $(MAKECMDGOALS)),.a.thinlto.native,.a)
++ifeq ($(thinlto_final_pass),1)
++builtin_suffix :=.a.thinlto.native
++endif
++
+ # subdir-builtin and subdir-modorder may contain duplications. Use $(sort ...)
+-subdir-builtin := $(sort $(filter %/built-in.a, $(real-obj-y)))
++subdir-builtin := $(sort $(filter %/built-in$(builtin_suffix), $(real-obj-y)))
+ subdir-modorder := $(sort $(filter %/modules.order, $(obj-m)))
+ 
+ targets-for-builtin := $(extra-y)
+ 
+ ifneq ($(strip $(lib-y) $(lib-m) $(lib-)),)
+-targets-for-builtin += $(obj)/lib.a
++targets-for-builtin += $(obj)/lib$(builtin_suffix)
+ endif
+ 
+ ifdef need-builtin
+-targets-for-builtin += $(obj)/built-in.a
++targets-for-builtin += $(obj)/built-in$(builtin_suffix)
+ endif
+ 
+ targets-for-modules := $(foreach x, o mod, \
+@@ -337,6 +342,10 @@ $(obj)/%.o: $(obj)/%.S FORCE
+ targets += $(filter-out $(subdir-builtin), $(real-obj-y))
+ targets += $(filter-out $(subdir-modorder), $(real-obj-m))
+ targets += $(lib-y) $(always-y)
++ifeq ($(builtin_suffix),.a.thinlto.native)
++native_targets = $(patsubst,%.o,%.o.thinlto.native,$(targets))
++targets += $(native_targets)
++endif
+ 
+ # Linker scripts preprocessor (.lds.S -> .lds)
+ # ---------------------------------------------------------------------------
+@@ -347,6 +356,24 @@ quiet_cmd_cpp_lds_S = LDS     $@
+ $(obj)/%.lds: $(src)/%.lds.S FORCE
+ 	$(call if_changed_dep,cpp_lds_S)
+ 
++ifdef CONFIG_LTO_CLANG_THIN_DIST
++# Generate .o.thinlto.native (obj) from .o (bitcode) file
++# ---------------------------------------------------------------------------
++quiet_cmd_cc_o_bc = CC $(quiet_modtag) $@
++
++cmd_cc_o_bc      = $(if $(filter bitcode, $(shell file -b $<)),$(CC) \
++		   $(filter-out -Wp% $(LINUXINCLUDE) %.h.gch %.h -D% \
++		   -flto=thin, $(c_flags)) \
++		   -Wno-unused-command-line-argument \
++		   -x ir -fthinlto-index=$<.thinlto.bc -c -o $@ \
++		   $(if $(findstring ../,$<), \
++		   $$(realpath --relative-to=$(srcroot) $<), $<), \
++		   cp $< $@)
++
++$(obj)/%.o.thinlto.native: $(obj)/%.o FORCE
++	$(call if_changed,cc_o_bc)
++endif
++
+ # ASN.1 grammar
+ # ---------------------------------------------------------------------------
+ quiet_cmd_asn1_compiler = ASN.1   $(basename $@).[ch]
+@@ -360,7 +387,7 @@ $(obj)/%.asn1.c $(obj)/%.asn1.h: $(src)/%.asn1 $(objtree)/scripts/asn1_compiler
+ # ---------------------------------------------------------------------------
+ 
+ # To build objects in subdirs, we need to descend into the directories
+-$(subdir-builtin): $(obj)/%/built-in.a: $(obj)/% ;
++$(subdir-builtin): $(obj)/%/built-in$(builtin_suffix): $(obj)/% ;
+ $(subdir-modorder): $(obj)/%/modules.order: $(obj)/% ;
+ 
+ #
+@@ -377,6 +404,12 @@ quiet_cmd_ar_builtin = AR      $@
+ $(obj)/built-in.a: $(real-obj-y) FORCE
+ 	$(call if_changed,ar_builtin)
+ 
++ifdef CONFIG_LTO_CLANG_THIN_DIST
++# Rule to compile a set of .o.thinlto.native files into one .a.thinlto.native file.
++$(obj)/built-in.a.thinlto.native: $(patsubst %.o,%.o.thinlto.native,$(real-obj-y)) FORCE
++	$(call if_changed,ar_builtin)
++endif
++
+ # This is a list of build artifacts from the current Makefile and its
+ # sub-directories. The timestamp should be updated when any of the member files.
+ 
+@@ -394,6 +427,14 @@ $(obj)/modules.order: $(obj-m) FORCE
+ $(obj)/lib.a: $(lib-y) FORCE
+ 	$(call if_changed,ar)
+ 
++ifdef CONFIG_LTO_CLANG_THIN_DIST
++quiet_cmd_ar_native = AR      $@
++      cmd_ar_native = rm -f $@; $(AR) cDPrsT $@ $(patsubst %.o,%.o.thinlto.native,$(real-prereqs))
++
++$(obj)/lib.a.thinlto.native: $(patsubst %.o,%.o.thinlto.native,$(lib-y)) FORCE
++	$(call if_changed,ar_native)
++endif
++
+ quiet_cmd_ld_multi_m = LD [M]  $@
+       cmd_ld_multi_m = $(LD) $(ld_flags) -r -o $@ @$< $(cmd_objtool)
+ 
+@@ -459,7 +500,8 @@ $(single-subdir-goals): $(single-subdirs)
+ PHONY += $(subdir-ym)
+ $(subdir-ym):
+ 	$(Q)$(MAKE) $(build)=$@ \
+-	need-builtin=$(if $(filter $@/built-in.a, $(subdir-builtin)),1) \
++	need-builtin=$(if $(filter $@/built-in$(builtin_suffix), $(subdir-builtin)),1) \
++	thinlto_final_pass=$(if $(filter .a.thinlto.native, $(builtin_suffix)),1) \
+ 	need-modorder=$(if $(filter $@/modules.order, $(subdir-modorder)),1) \
+ 	$(filter $@/%, $(single-subdir-goals))
+ 
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 2fe73cda0bddb..8e146367f7d16 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -34,8 +34,13 @@ else
+ obj-m := $(filter-out %/, $(obj-m))
+ endif
+ 
++builtin_suffix := $(if $(filter %.a.thinlto.native, $(MAKECMDGOALS)),.a.thinlto.native,.a)
++ifeq ($(thinlto_final_pass),1)
++        builtin_suffix :=.a.thinlto.native
++endif
++
+ ifdef need-builtin
+-obj-y		:= $(patsubst %/, %/built-in.a, $(obj-y))
++obj-y		:= $(patsubst %/, %/built-in$(builtin_suffix), $(obj-y))
+ else
+ obj-y		:= $(filter-out %/, $(obj-y))
+ endif
+diff --git a/scripts/Makefile.vmlinux_o b/scripts/Makefile.vmlinux_o
+index 938c7457717ea..0330cf8e0a8c5 100644
+--- a/scripts/Makefile.vmlinux_o
++++ b/scripts/Makefile.vmlinux_o
+@@ -9,6 +9,14 @@ include $(srctree)/scripts/Kbuild.include
+ # for objtool
+ include $(srctree)/scripts/Makefile.lib
+ 
++ifeq ($(thinlto_final_pass),1)
++vmlinux_a := vmlinux.a.thinlto.native
++vmlinux_libs := $(patsubst %.a,%.a.thinlto.native,$(KBUILD_VMLINUX_LIBS))
++else
++vmlinux_a := vmlinux.a
++vmlinux_libs := $(KBUILD_VMLINUX_LIBS)
++endif
++
+ # Generate a linker script to ensure correct ordering of initcalls for Clang LTO
+ # ---------------------------------------------------------------------------
+ 
+@@ -18,7 +26,7 @@ quiet_cmd_gen_initcalls_lds = GEN     $@
+ 	$(PERL) $(real-prereqs) > $@
+ 
+ .tmp_initcalls.lds: $(srctree)/scripts/generate_initcall_order.pl \
+-		vmlinux.a $(KBUILD_VMLINUX_LIBS) FORCE
++		$(vmlinux_a) $(vmlinux_libs) FORCE
+ 	$(call if_changed,gen_initcalls_lds)
+ 
+ targets := .tmp_initcalls.lds
+@@ -59,8 +67,8 @@ quiet_cmd_ld_vmlinux.o = LD      $@
+ 	$(LD) ${KBUILD_LDFLAGS} -r -o $@ \
+ 	$(vmlinux-o-ld-args-y) \
+ 	$(addprefix -T , $(initcalls-lds)) \
+-	--whole-archive vmlinux.a --no-whole-archive \
+-	--start-group $(KBUILD_VMLINUX_LIBS) --end-group \
++	--whole-archive $(vmlinux_a) --no-whole-archive \
++	--start-group $(vmlinux_libs) --end-group \
+ 	$(cmd_objtool)
+ 
+ define rule_ld_vmlinux.o
+@@ -68,7 +76,7 @@ define rule_ld_vmlinux.o
+ 	$(call cmd,gen_objtooldep)
+ endef
+ 
+-vmlinux.o: $(initcalls-lds) vmlinux.a $(KBUILD_VMLINUX_LIBS) FORCE
++vmlinux.o: $(initcalls-lds) $(vmlinux_a) $(vmlinux_libs) FORCE
+ 	$(call if_changed_rule,ld_vmlinux.o)
+ 
+ targets += vmlinux.o
+diff --git a/scripts/Makefile.vmlinux_thinlink b/scripts/Makefile.vmlinux_thinlink
+new file mode 100644
+index 0000000000000..13e4026c7d45b
+--- /dev/null
++++ b/scripts/Makefile.vmlinux_thinlink
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++PHONY := __default
++__default: vmlinux.thinlink
++
++include include/config/auto.conf
++include $(srctree)/scripts/Kbuild.include
++
++
++# Generate a linker script to ensure correct ordering of initcalls for Clang LTO
++# ---------------------------------------------------------------------------
++
++quiet_cmd_gen_initcalls_lds = GEN     $@
++      cmd_gen_initcalls_lds = \
++	$(PYTHON3) $(srctree)/scripts/jobserver-exec \
++	$(PERL) $(real-prereqs) > $@
++
++.tmp_initcalls_thinlink.lds: $(srctree)/scripts/generate_initcall_order.pl \
++		vmlinux.a FORCE
++	$(call if_changed,gen_initcalls_lds)
++
++targets := .tmp_initcalls_thinlink.lds
++
++initcalls-lds := .tmp_initcalls_thinlink.lds
++
++quiet_cmd_ld_vmlinux.thinlink = LD      $@
++      cmd_ld_vmlinux.thinlink = \
++	$(AR) t vmlinux.a > .vmlinux_thinlto_bc_files; \
++	$(LD) ${KBUILD_LDFLAGS} -r $(addprefix -T , $(initcalls-lds)) \
++	--thinlto-index-only @.vmlinux_thinlto_bc_files; \
++	touch vmlinux.thinlink
++
++vmlinux.thinlink: vmlinux.a $(initcalls-lds) FORCE
++	$(call if_changed,ld_vmlinux.thinlink)
++
++targets += vmlinux.thinlink
++
++# Add FORCE to the prerequisites of a target to force it to be always rebuilt.
++# ---------------------------------------------------------------------------
++
++PHONY += FORCE
++FORCE:
++
++# Read all saved command lines and dependencies for the $(targets) we
++# may be building above, using $(if_changed{,_dep}). As an
++# optimization, we don't need to read them if the target does not
++# exist, we will rebuild anyway in that case.
++
++existing-targets := $(wildcard $(sort $(targets)))
++
++-include $(foreach f,$(existing-targets),$(dir $(f)).$(notdir $(f)).cmd)
++
++.PHONY: $(PHONY)
+diff --git a/scripts/head-object-list.txt b/scripts/head-object-list.txt
+index 7274dfc65af60..094a4e7c07559 100644
+--- a/scripts/head-object-list.txt
++++ b/scripts/head-object-list.txt
+@@ -18,6 +18,7 @@ arch/arm/kernel/head.o
+ arch/csky/kernel/head.o
+ arch/hexagon/kernel/head.o
+ arch/loongarch/kernel/head.o
++arch/loongarch/kernel/head.o.thinlto.native
+ arch/m68k/68000/head.o
+ arch/m68k/coldfire/head.o
+ arch/m68k/kernel/head.o
+-- 
+2.49.0.987.g0cc8ee98dc-goog
+
