@@ -1,131 +1,199 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BB82594B7
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1045A25D91E;
+	Wed,  7 May 2025 12:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746620526; cv=none; b=PKjVduB8NTKKSXpNMmbBcKrBue6FLGR9sOYHxwcbhDaRiAr3dIOwPHWLF14ZcL15PzyHJ/utUP7Em8zsfTGHY4EzvkHBzLEDG1WBNKne+3vg695+agbcAbzHKW0il+myLRdZH2rr6Ot2+9fsYBTxZpaS16jDKBnJpZeZjo1JLIQ=
+	t=1746620575; cv=none; b=er8bxiPld9t515BIGeWpMBkU/U+tJkp7xxg9KLQfx1vYaJAayenZ7xknjTpzqF4/AtouDu4wkfVKcP5YUW+tC8fihPJz7OLveOz067EpqwJWWJh5UoCCiqouzJMOWnJA92aE9Ctlfi04j7sPw4B2Iq3mWDwIt7bMcslK1eSDwHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746620526; c=relaxed/simple;
-	bh=OrVUBAduC66EM+Jy5ubOZJRLtPoNQLKUZOMruFW9g5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dXo04RnqYkPe2Qce9kYUlAfkACy6T4pHy1ZLR5Np1A2XkuofllS0e8mQiajKR1M85yX7C96mGukqP9WYtcPH9vocoV2s7qoSKOEeOJ6xq10Stkx5xlRrvdxh9aWnbHSfEpnfF/XSmRIrv54zLLavyk4Jic+mxbNd1iI5LuXqVKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=miau027A; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746620575; c=relaxed/simple;
+	bh=eqDUV+tTimUtwNQZnqu/rGVcIw1QUrUBizHGzo/A/rA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Igdhc+w7KmUbkDrhdol6dHhpQ0khFI9C//DO8pK7dV2whDFotV2GBHRCqMbPatMeYv71t/14MzDuesKmU2GPE2iDgCYFExsmBYyg4tqJ/DGOW3QcvQOvXAMmWnjTwszMU99Pm/gANN2VVBJl6zcvds0AwwlGe+GJAXNqap3e+e0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Yl0pwM/f; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="miau027A"
-Date: Wed, 7 May 2025 14:21:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746620512;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Yl0pwM/f"
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id 4C6E958871D;
+	Wed,  7 May 2025 11:51:38 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5FA6E43A0C;
+	Wed,  7 May 2025 11:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746618689;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DpPHSAGatCtkUGCaP/yd2Qyr3LuW/jp4fovDif5/S4M=;
-	b=miau027A/ds+uz1cHnS94jFw15X1wRBY3OGmNorw1Q5T0CDrb9MfiGEUwixSA4NcBf5fSh
-	U0/lnSeOScqRZQE5E5E9JVBQnkLcpbv5EELOm/sVPMXKnMgi0Dlqw0hK4bukgvlf7R6Koo
-	jScoCjrpPLs11OO6fs5Fm8t3UFHHyAo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Nicolas Schier <nicolas.schier@linux.dev>
-To: Kees Cook <kees@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	linux-kbuild@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, Petr Pavlu <petr.pavlu@suse.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v3 3/3] integer-wrap: Force full rebuild when .scl file
- changes
-Message-ID: <20250507-piquant-fascinating-pug-7ce4cd@l-nschier-aarch64>
-References: <20250503184001.make.594-kees@kernel.org>
- <20250503184623.2572355-3-kees@kernel.org>
+	bh=qvrBTRhAKJ9KBaVwiA1fHOR9OqEkbdq1vvZ72C5xK6o=;
+	b=Yl0pwM/f9Ds1z7/5HsLrO/sxKf0JCRUa1jEr6qb7rT37xs6UceFKhpc8V3KmnHoQoSc6vn
+	U7pJecCaj2VbTosJyT1lzKUCrXbZpZVqGCitexj+kTd5TK0vhHaCKS48KpNp262IMlPJEG
+	5o1M6GSSenWdXoGkQlj/hVUr9nJb0wBjV6Pn6c/zX3xzit9LIB7ACC4225UP1PsKyv8v7w
+	8LVkf5VywgzVbIdQ/OVP2nVs0WICpg+yy6xXMDOvB+7AaewRJiIPAYKsguMQtqBtYB6GLE
+	7FsubM2DcoIHuh/sWZwQdkrOINr/+LZBK7PeEByXLahQcVmrHoBdWhSBiDNwQg==
+Date: Wed, 7 May 2025 13:51:26 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Lunn
+ <andrew@lunn.ch>, Woojung Huh <woojung.huh@microchip.com>, Vladimir Oltean
+ <olteanv@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Dmitry
+ Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [BUG] Stuck key syndrome (was: Re: [PATCH net-next v2] net:
+ dsa: microchip: Add SGMII port support to KSZ9477 switch)
+Message-ID: <20250507135126.7d34d18f@fedora.home>
+In-Reply-To: <aBtHmNGRTVP9SttE@shell.armlinux.org.uk>
+References: <20250507000911.14825-1-Tristram.Ha@microchip.com>
+	<20250507094449.60885752@fedora.home>
+	<aBsadO2IB_je91Jx@shell.armlinux.org.uk>
+	<20250507105457.25a3b9cb@fedora.home>
+	<aBsmhfI45zMltjcy@shell.armlinux.org.uk>
+	<aBsu-WBlPQy5g-Jn@shell.armlinux.org.uk>
+	<20250507153236.5303be86@fedora.home>
+	<aBtHmNGRTVP9SttE@shell.armlinux.org.uk>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250503184623.2572355-3-kees@kernel.org>
-Organization: AVM GmbH
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeijeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtvdemkeeggedtmehfhedtsgemfedvheemrgeigeefmedufheiugemfhgvrgegmeegsgduieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeeggedtmehfhedtsgemfedvheemrgeigeefmedufheiugemfhgvrgegmeegsgduiedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprghnughrvgifsehluhhnn
+ hdrtghhpdhrtghpthhtohepfihoohhjuhhnghdrhhhuhhesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopeholhhtvggrnhhvsehgmhgrihhlrdgtohhmpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhm
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Sat, 03 May 2025, Kees Cook wrote:
+On Wed, 7 May 2025 12:44:24 +0100
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-> Since the integer wrapping sanitizer's behavior depends on its associated
-> .scl file, we must force a full rebuild if the file changes. If not,
-> instrumentation may differ between targets based on when they were built.
+> Hi Maxime,
 > 
-> Generate a new header file, integer-wrap.h, any time the Clang .scl
-> file changes. Include the header file in compiler-version.h when its
-> associated feature name, INTEGER_WRAP, is defined. This will be picked
-> up by fixdep and force rebuilds where needed.
+> On Wed, May 07, 2025 at 03:32:36PM +0200, Maxime Chevallier wrote:
+> > Hi Russell,
+> > 
+> > On Wed, 7 May 2025 10:59:21 +0100
+> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> >   
+> > > On Wed, May 07, 2025 at 10:23:17AM +0100, Russell King (Oracle) wrote:  
+> > > > [Sorry for going off topic here - changed the Cc list, added Linus,
+> > > > changed the subject.]
+> > > > 
+> > > > On Wed, May 07, 2025 at 10:54:57AM +0200, Maxime Chevallier wrote:    
+> > > > > On Wed, 7 May 2025 09:31:48 +0100
+> > > > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:    
+> > > > > > [rest of the email got deleted because Linux / X11 / KDE got confused
+> > > > > > about the state the backspace key and decided it was going to be
+> > > > > > continuously pressed and doing nothing except shutting the laptop
+> > > > > > down would stop it.]    
+> > > > > 
+> > > > > Funny how I have the same exact issue on my laptop as well...     
+> > > > 
+> > > > I've had the "stuck key" behaviour with the HP Pavilion 15-au185sa
+> > > > laptop I had previously (normally with ctrl-F keys). However, hitting
+> > > > ctrl/shift/alt would stop it.
+> > > > 
+> > > > This is the first time I've seen the behaviour with the Carbon X1
+> > > > laptop, but this was way more severe. No key would stop it. Trying to
+> > > > move the focus using the trackpad/nipple had any effect. Meanwhile
+> > > > the email was being deleted one character at a time. So I shut the
+> > > > laptop lid causing it to suspend, and wondered what to do... on
+> > > > re-opening the laptop, it didn't restart and is back to normal.
+> > > > 
+> > > > This suggests that the entire input subsystem in the software stack
+> > > > collapsed just after the backspace key was pressed, and Xorg never
+> > > > saw the key-release event. So Xorg duitifully did its key-repeat
+> > > > processing, causing the email to be deleted one character at a time.
+> > > > 
+> > > > The problem is, not only did this destroy the email reply, but it
+> > > > also destroyed my train of thought for the reply as well through
+> > > > the panic of trying to stop the entire email being deleted.
+> > > > 
+> > > > I don't think this is a hardware issue - I think there's a problem
+> > > > in the input handling somewhere in the stack of kernel, Xorg,
+> > > > whatever multiple input libraries make up modern systems, and KDE.
+> > > > 
+> > > > I did check the logs. Nothing in the kernel messages that suggests
+> > > > a problem. Nothing in Xorg's logs (which are difficult to tie up
+> > > > because it doesn't use real timestamps that one can relate to real
+> > > > time.) There's no longer any ~/.xsession-errors logfile for logging
+> > > > the stuff below Xorg.
+> > > > 
+> > > > I'm running Debian Stable here - kernel 6.1.0-34-amd64, X.Org X Server
+> > > > 1.21.1.7, KDE Plasma (5.27.5, frameworks 5.103.0, QT 5.15.8).    
+> > > 
+> > > I'll also add that The Carbon X1, being a laptop, its built-in keyboard
+> > > uses the i8042:
+> > > 
+> > > [    1.698156] i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
+> > > [    1.698543] i8042: Warning: Keylock active
+> > > [    1.700170] serio: i8042 KBD port at 0x60,0x64 irq 1
+> > > [    1.700174] serio: i8042 AUX port at 0x60,0x64 irq 12
+> > > [    1.700271] mousedev: PS/2 mouse device common for all mice
+> > > [    1.702951] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input0
+> > > 
+> > > I don't have the HP laptop with me to check what that was using.
+> > > 
+> > > The mysterious thing is "Keylock active" - clearly it isn't because I
+> > > can write this email typing on that very keyboard. However, I wonder
+> > > if it needs i8042_unlock=1 to set I8042_CTR_IGNKEYLOCK.
+> > > 
+> > > Unfortunately, it's probably going to take a year on the Carbon X1
+> > > to work out if this makes any difference.
+> > >  
+> > > > Anyone else seeing this kind of behaviour - if so, what are you
+> > > > using?  
+> > 
+> > It just happened to me as I was typing this very email (key 'd' got
+> > stuck, nothing could un-stick it, couldn't move the mouse cursor but
+> > mouse-click events did work, had to suspend/resume the laptop to fix
+> > that)  
 > 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nicolas Schier <nicolas.schier@linux.dev>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Andrey Konovalov <andreyknvl@gmail.com>
-> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-> Cc: <linux-kbuild@vger.kernel.org>
-> Cc: <kasan-dev@googlegroups.com>
-> Cc: <linux-hardening@vger.kernel.org>
-> ---
->  include/linux/compiler-version.h | 3 +++
->  scripts/Makefile.ubsan           | 1 +
->  scripts/basic/Makefile           | 5 +++++
->  3 files changed, 9 insertions(+)
+> 'd' can be quite disastrous if you're using vi and you're in command
+> mode!
 > 
-> diff --git a/include/linux/compiler-version.h b/include/linux/compiler-version.h
-> index 69b29b400ce2..187e749f9e79 100644
-> --- a/include/linux/compiler-version.h
-> +++ b/include/linux/compiler-version.h
-> @@ -19,3 +19,6 @@
->  #ifdef RANDSTRUCT
->  #include <generated/randstruct_hash.h>
->  #endif
-> +#ifdef INTEGER_WRAP
-> +#include <generated/integer-wrap.h>
-> +#endif
-> diff --git a/scripts/Makefile.ubsan b/scripts/Makefile.ubsan
-> index 9e35198edbf0..653f7117819c 100644
-> --- a/scripts/Makefile.ubsan
-> +++ b/scripts/Makefile.ubsan
-> @@ -15,6 +15,7 @@ ubsan-cflags-$(CONFIG_UBSAN_TRAP)		+= $(call cc-option,-fsanitize-trap=undefined
->  export CFLAGS_UBSAN := $(ubsan-cflags-y)
->  
->  ubsan-integer-wrap-cflags-$(CONFIG_UBSAN_INTEGER_WRAP)     +=	\
-> +	-DINTEGER_WRAP						\
->  	-fsanitize-undefined-ignore-overflow-pattern=all	\
->  	-fsanitize=signed-integer-overflow			\
->  	-fsanitize=unsigned-integer-overflow			\
-> diff --git a/scripts/basic/Makefile b/scripts/basic/Makefile
-> index dd289a6725ac..fb8e2c38fbc7 100644
-> --- a/scripts/basic/Makefile
-> +++ b/scripts/basic/Makefile
-> @@ -14,3 +14,8 @@ cmd_create_randstruct_seed = \
->  $(obj)/randstruct.seed: $(gen-randstruct-seed) FORCE
->  	$(call if_changed,create_randstruct_seed)
->  always-$(CONFIG_RANDSTRUCT) += randstruct.seed
-> +
-> +# integer-wrap: if the .scl file changes, we need to do a full rebuild.
-> +$(obj)/../../include/generated/integer-wrap.h: $(srctree)/scripts/integer-wrap-ignore.scl FORCE
-> +	$(call if_changed,touch)
-> +always-$(CONFIG_UBSAN_INTEGER_WRAP) += ../../include/generated/integer-wrap.h
-> -- 
-> 2.34.1
+> > Got the same "Keylock active" warning at boot :
+> > 
+> > [    0.916750] i8042: PNP: PS/2 Controller [PNP0303:PS2K,PNP0f13:PS2M] at 0x60,0x64 irq 1,12
+> > [    0.917210] i8042: Warning: Keylock active
+> > [    0.920087] serio: i8042 KBD port at 0x60,0x64 irq 1
+> > [    0.920090] serio: i8042 AUX port at 0x60,0x64 irq 12
+> > 
+> > Nothing in the kernel logs when the key got stuck.
+> > 
+> > Laptop is a Dell XPS 15 9510, Running Fedora 41 but I saw this issue
+> > before, kernel 6.14.4-200.fc41.x86_64, Wayland-based, Gnome 47.
+> > 
+> > Hopefully this helps a bit narrowing this down, I have a fairly
+> > different userspace stack and kernel version, but we do have the same
+> > driver involved and same keylock warning...  
 > 
+> Could you try booting with i8042_unlock=1 and see whether that makes any
+> difference please?
 
-Reviewed-by: Nicolas Schier <n.schier@avm.de>
+I'll try this out indeed :)
 
+> I've added that to my grub config in preparation for rebooting, but even
+> if I booted now, I suspect it'll be some time before I have any useful
+> result.
+> 
+> How often do you see the problem?
+
+It's very sporadic, sometimes I'll see this behaviour multiple times a
+day, and then nothing for weeks... This laptop has been very quirky
+ever since I got it, so I categorized that as a "yet another XPS 9510
+broken behaviour", but this has been a recurrent thing for multiple
+years...
+
+So, same as you, it'll take a long time for me to say with some amount
+of certainty that 'i8042_unlock=1' has a beneficial effect, of
+course unless I see the problem happen again in the meantime.
+
+Maxime
