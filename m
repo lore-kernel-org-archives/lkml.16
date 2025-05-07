@@ -1,110 +1,130 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61D472603;
-	Wed,  7 May 2025 09:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243441F417E;
+	Wed,  7 May 2025 09:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746610974; cv=none; b=q5n93/9+BNsFesdm6QMuGThJkEek5oIIjxvScpCxxx3EaHGpBHjkOHGdCBOlE4LFTkVPlC2i+o9FNrDcvXJVOFB9K3RfRzDZC0n/GuRsgtHNh6fpvvDxtI8FhlWrSVAnFSd57rt88GDvbuQIZ3vz7O3TofU8BhcYEmB7yOOaog4=
+	t=1746610980; cv=none; b=odNIeLobOFuRg2L34r/Dr5dxNlu8Qq4CiFGUuJiNHVlqzBkTXVqoSYonrPtjoy8sBnrFygX3kxZecP2jCtGH5cM+x53zCERcUZoBaMpc290DRfHqTpLHuPXsT7qqy6TzsRojzKDLOkuT5UTJmKuZMIofuZh85ag9jfkTP+SR/mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746610974; c=relaxed/simple;
-	bh=TJv2DgdDgD0zQ/WdFPHqdVqlx/9+4rM5yIjbLQPR+NM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MP+lTQitnv04WQcMnXdYMfjM7SGFlI+qHI5tFjpmXJMyN5NtXIcS1SiBP8qKKMZgtgn+AIzSAN1+4qJx7/cJ14fX/TS59BLTxw7ltnwzZlDuEOcyEtlKJ2K2FrxNCbA0EDus4TlaJlrROpd854dzX5WVyobiY0YmxQ9d7qx5TWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=WDFvwGaf; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1746610980; c=relaxed/simple;
+	bh=Zb8I9qtamOQr3WdX5JmtEZHYIpXXR96B8CTCp2sKA7U=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Zr/cByiIhng794SZ07B/o5Ph7b3SyUda5qTmQW7Rs5SX3t8WInleijlvFAK9anexlkYWpp0vEWaJTng3BCD7xGKFJD++1Audsdc3u2ca0V0cjdGg68N2s0f5OtnRzK6lV8BNQc2TiMxxJ5rQsa5MvfwS2urf+XUMKL7DManbj+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pZumkGex; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dGRkI0K9; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="WDFvwGaf"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A428540E01ED;
-	Wed,  7 May 2025 09:42:49 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id OinWf2BSwkrW; Wed,  7 May 2025 09:42:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746610964; bh=vd1kP3jlGsAa1/WrA5dgigKmpDxOwjsZqjH8zD+YFvM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WDFvwGafN0Th8/qo/ihTfnszbhzQn+wT+ZETp0X/to5cQgR5nTIWt3xbKH1ftbVY7
-	 cjy4PIitedWGDjA+fpImZowNHBiAcZ5QESmMuGasQTbPrCYQ7BDwEvUYzJaiyPyl4g
-	 seCRlLQpzl3EZQYZon1kJzaBG9fblD1p1RFYtGDSfHAuPW8sVXe8WSHEFTSpCrC65u
-	 jZKd48dPU++3SQsJzncG2COECZKOUA10eP5o3426AKotV8+z8TzBWkdeFtPR3N/tGP
-	 NtslWCBAg4GdIRYLn6dep7YW/SCd3/XBqTbWQ3NLpwt+ICdYWatpB6A/bJvspohFgl
-	 mD/xi6345sUpwiifTPR1ac+4gyt9qNu16X2yv2a7zy/Ebp/dZVZdgsOVkMVGyuP4SR
-	 zO1n5BedP28ExBCYusE2GdfmkuhwROkeKU+D3lQjfiqK1rVy2cDo4oZ2HjeQMVbPVJ
-	 pJazDmB3rvbUhOG6QyLslDAHLAbbI89MgvuDJFnjRan3ESUKPdlgdt87Kic4lDQSUu
-	 9E1WeyP7e0C+L3giR7kGKS7dx81KBqKgMofunNSn2J24hDzMPgxQl3HvGdlVrymepa
-	 Utc/IQUlMu+LwLcLaA61bPRMqTNqRWzJ/wjtieS6+7J+MP/w7Gw7/knBaFUQNj0jwx
-	 cpF1CZ0yZpi8cbil45Yd2WUs=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B9BA040E0238;
-	Wed,  7 May 2025 09:42:28 +0000 (UTC)
-Date: Wed, 7 May 2025 11:42:11 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, thomas.lendacky@amd.com, hpa@zytor.com,
-	michael.roth@amd.com, nikunj@amd.com, seanjc@google.com,
-	ardb@kernel.org, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev
-Subject: Re: [PATCH v5] x86/sev: Fix making shared pages private during kdump
-Message-ID: <20250507094211.GAaBsq8zEJMAuffwmh@fat_crate.local>
-References: <20250506183529.289549-1-Ashish.Kalra@amd.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pZumkGex";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dGRkI0K9"
+Date: Wed, 07 May 2025 09:42:56 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746610977;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wGXHfwkgpXaboFO6Ctes8RC8fmaMUju9m2NKietbmpA=;
+	b=pZumkGexVx+zbQHc3U7Vo1z7mCmNOJZ7pT/PWji+3B+dQX0qGpV81RQMdGxSnaWJVxdc1i
+	vV49NeaE0y0hfVVRfJUPND7ly5zpThn+w3Nla8JVl13Rj/kUMZAhfbHoOrJwHmhA6ly8Lf
+	paBwHAv7KocrrwLXY6uhYI6Jxz3T0QVStmN4DPGEudF8+iB1KgF4hoThhl+hGfLGGp76OZ
+	36hVvuvwj39Ixw7uI0oSFePQUwFv7FlofXrCPbNTwtVLuDMyAlbxbbVryupiQOoG7FuX5N
+	4jx7mRPEPPkeN4y+ucfXfjbn+QP/i4zBvESb2xNJrk6H25mwiCkLkwh0LWZj3A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746610977;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wGXHfwkgpXaboFO6Ctes8RC8fmaMUju9m2NKietbmpA=;
+	b=dGRkI0K9HkwrNbNtCffX5KOqZ7DBFRYqCvyacfImVfdzjEf/YRCzoPcHCbMkU6a061oEp7
+	EAjRvsalGTq1V0Dg==
+From: "tip-bot2 for Dr. David Alan Gilbert" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] genirq: Remove unused remove_percpu_irq()
+Cc: "Dr. David Alan Gilbert" <linux@treblig.org>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20250420164656.112641-1-linux@treblig.org>
+References: <20250420164656.112641-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250506183529.289549-1-Ashish.Kalra@amd.com>
+Message-ID: <174661097644.406.372511720519590403.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 06, 2025 at 06:35:29PM +0000, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
-> 
-> When the shared pages are being made private during kdump preparation
-> there are additional checks to handle shared GHCB pages.
-> 
-> These additional checks include handling the case of GHCB page being
-> contained within a huge page.
-> 
-> The check for handling the case of GHCB contained within a huge
-> page incorrectly skips a page just below the GHCB page from being
-> transitioned back to private during kdump preparation.
-> 
-> This skipped page causes a 0x404 #VC exception when it is accessed
-> later while dumping guest memory during vmcore generation via kdump.
-> 
-> Correct the range to be checked for GHCB contained in a huge page.
-> Also ensure that the skipped huge page containing the GHCB page is
-> transitioned back to private by applying the correct address mask
-> later when changing GHCBs to private at end of kdump preparation.
-> 
-> Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->  arch/x86/coco/sev/core.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
+The following commit has been merged into the irq/core branch of tip:
 
-Ok, I've pushed both patches here:
+Commit-ID:     aefc11550ebd08eadee6d643792c9092de2e472f
+Gitweb:        https://git.kernel.org/tip/aefc11550ebd08eadee6d643792c9092de2e472f
+Author:        Dr. David Alan Gilbert <linux@treblig.org>
+AuthorDate:    Sun, 20 Apr 2025 17:46:56 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 07 May 2025 11:35:41 +02:00
 
-https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=tip-x86-urgent-sev
+genirq: Remove unused remove_percpu_irq()
 
-Please have those who are affected by the issues test and report back.
+remove_percpu_irq() has been unused since it was added in 2011 by
+commit 31d9d9b6d830 ("genirq: Add support for per-cpu dev_id interrupts")
 
-Thx.
+Remove it.
 
--- 
-Regards/Gruss,
-    Boris.
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250420164656.112641-1-linux@treblig.org
 
-https://people.kernel.org/tglx/notes-about-netiquette
+---
+ include/linux/irq.h |  1 -
+ kernel/irq/manage.c | 15 ---------------
+ 2 files changed, 16 deletions(-)
+
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index df93b23..810e44e 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -597,7 +597,6 @@ enum {
+ 
+ struct irqaction;
+ extern int setup_percpu_irq(unsigned int irq, struct irqaction *new);
+-extern void remove_percpu_irq(unsigned int irq, struct irqaction *act);
+ 
+ #ifdef CONFIG_DEPRECATED_IRQ_CPU_ONOFFLINE
+ extern void irq_cpu_online(void);
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 827edc8..e6c6c0a 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -2378,21 +2378,6 @@ static struct irqaction *__free_percpu_irq(unsigned int irq, void __percpu *dev_
+ }
+ 
+ /**
+- * remove_percpu_irq - free a per-cpu interrupt
+- * @irq:	Interrupt line to free
+- * @act:	irqaction for the interrupt
+- *
+- * Used to remove interrupts statically setup by the early boot process.
+- */
+-void remove_percpu_irq(unsigned int irq, struct irqaction *act)
+-{
+-	struct irq_desc *desc = irq_to_desc(irq);
+-
+-	if (desc && irq_settings_is_per_cpu_devid(desc))
+-		__free_percpu_irq(irq, act->percpu_dev_id);
+-}
+-
+-/**
+  * free_percpu_irq - free an interrupt allocated with request_percpu_irq
+  * @irq:	Interrupt line to free
+  * @dev_id:	Device identity to free
