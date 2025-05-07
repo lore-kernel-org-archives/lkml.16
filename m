@@ -1,115 +1,380 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2074.outbound.protection.outlook.com [40.107.96.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1CB284B26
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746622755; cv=none; b=mZJuupB6BCPKRT6vxcQ8w7qeiAJHdi4f633GQAXT0/Yg1eoy9arA3nAw8RoYXamlBquPBhv/R2eSEeaK89QphLA6lBj2hdyRZCWG6UxWRFERNpSvRpMjth1Jrey+VhUdIwmewbsfnNmKJ91/TUIyHytia4duZaS+DVwA0b8I2Zs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746622755; c=relaxed/simple;
-	bh=lRJd4xYfa+yPRmT0PBxC1GylBGh4XflCfKIDWQV83XA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RcggXDH+nEF11BCTQ+INEL1MVw1UZFeDF1IEfc6BD5buPxQJSa0TvPqivL7nvfFEQlOB3VigfTZrnQkD2W8897oUSCLCHa/DfMFfqW/1kEN/kn9sh/eAGwOYOP9L3W0Cn7UBJRFsXCvk/ur+ecGKPtb+nJiRvjBF6njHWDoR+Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v78yZPJJ; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1029225E818
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746622787; cv=fail; b=eDr6cOxiVScqfmfMSb93NSH8IlGKyEps+T5TyZb1G/qfCPOC/XZB+6jOROmfhFf7xf4lM9IvFWJRIKeGBqr3P6vCOHqevJRFr6QD8E06Ia28MMVYy5y6gM5CJp9Yooj1TCRpMyL615GgbcnrIYY/QGmMWC3abbxY5NTVQvtVl90=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746622787; c=relaxed/simple;
+	bh=Fe7Pj8S+Iu4r4TbNY2k5dEFJ4lzQ6J2d+QVzk0nY80o=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=irb6EMylxLa3YZ9g9tXIcVR/eCeMtWhVZCc1/EMc0IFKlG49m4jXuzKiDS8OLfkj5Aj7TAPmpXfwIsL8ZQ3RjFnwq1h9e9Sd8oiJ8LlwhSu5DOO8lOnqXp0IP9v4sFIj3RbB2Gs18X1UpgvcKIUkVwnMtp7kBRw7oD73HulRA4I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FkNyEl72; arc=fail smtp.client-ip=40.107.96.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v78yZPJJ"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43edb40f357so36506735e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 05:59:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746622751; x=1747227551; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y1eEJtuq7GrzY5dXwcDM0d1snCcH02FgAiWny3L5OrE=;
-        b=v78yZPJJHdKUYE3yGUWE+QulBGFUF0KDpZyXgJUR1TORcd2xLeWvHP5eZPInbR+Pc/
-         43fcJ9bx+xJF4j1xVk4Tp7zPpWvKkZQDXwNaFbtbz8xhR0IXoA0uHRJO2vzYtZIgwQ49
-         t2CfgG/XqE8fpMnKmcV81jOYRnFloB8CjTGxnDo8EGJVCiaey0pOjqMGBSDaHT+u/RMM
-         b4Qh8QMKof8IOoSCkfPfRHbDMlXSHj+Ey+mmGdQvjMeFrhCgHCtC+My2qLpnEmv/1ab3
-         dM6DnenSakFd9JKjmbAVnzErrGAgzeE7fmaqN6QXCsZHIw+QW65KFhPGEYsSptn8BCRy
-         Rv1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746622751; x=1747227551;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y1eEJtuq7GrzY5dXwcDM0d1snCcH02FgAiWny3L5OrE=;
-        b=AXRTc5RiZFjZpvDtfXEnVMe3Zmhv1m+AMqK4Z+cyYItXfsVWcoz6jG8qxy9DDpw/cq
-         xRgjRdLDubdyjTnjChMjP/bIDApPoeDmphfDPc9oaYwRLdYpYLwEC0CXWDqnZzpokm0R
-         3u7u3L86KHV7P1wWJJP6YyiLiiFv4Up5oYgdDFdDzIgHy5gwoul52ECfj1+lhbx8q717
-         sT4sl/VsVagApWFG8la8BoLjPoap31Fb8hAZkFHsc2gL2t44uP2AOkUDKKZAlN0FI3pR
-         9xXti3eTMSO2j4HjenDukP37sXi5oE1Dc6EIznU5W6z2lSs2eaGHse4rxA43DdoglzJc
-         E6LA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCeiyzhNGPlQWLmVry6kg0+00FqBvpEAFPlweGFvXLiXX14wSW0trGfd8KZTqhabqPVCZUUPYJdQJKV6o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwssdBzm7H4ufP4k7tDS6Ct9Vzew/631LoESlrzi7q3qxEfNRu+
-	F6CnvG/JG0dwoiiKGukqGwJKGYB4mJSK0BeyC4iSjhIDQIyQq3qij6PpsYita0w=
-X-Gm-Gg: ASbGncsS624Zj0Ax957zP5fUnVG4HWHQCuTdEgkOVABg/WT6bTpwYTUiPR2XX8kMtIx
-	IBKAeBEsBQRn/zTqQ4Wihsfwvy6ylyCa7wQoXdFijJgXpjDoCVdBZtcftDawUwWykPlGkeOVmRS
-	YzKcr1Ljfr07xzAkPgehMUKM0+sszsIm71aAIElJjW2wRQye55DthexSZuWNgzwk8WH5DBiJEFc
-	CZOEYMPbuu9qyDCDevcIovEGtc/F5WAOkU1J5ZhpR/BvqqjIMPSY1dyiR7MGweoNJRwY4BrYYAb
-	uoKfNCu2CImIoX32OYxRro3NNxTrBP2epYJa4D3PP5nz/g==
-X-Google-Smtp-Source: AGHT+IEML0lGruoGaC6m/maRixPfuTBc5q9w19VGichKR29Lwl10pmR3mhwH0QBjCnQho587rdGN3g==
-X-Received: by 2002:a05:600c:4e16:b0:43b:c5a3:2e1a with SMTP id 5b1f17b1804b1-441d44bb815mr27845495e9.2.1746622751582;
-        Wed, 07 May 2025 05:59:11 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a0af111559sm4920141f8f.47.2025.05.07.05.59.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 05:59:11 -0700 (PDT)
-Date: Wed, 7 May 2025 15:59:08 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, linux-omap@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH next] regulator: tps65219: Fix erorr codes in probe()
-Message-ID: <aBtZHEkgYGK33fWk@stanley.mountain>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FkNyEl72"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kBtQftGPE35GVe9QmjRSeggwNDT0nz/opn5lojvM6x5+VjD79e3tmuVm1g5fYnwRR8PIvZhWRGv3q1b/E0D3zapUS+1kvbKwt9JnOE950tFWbrMPk/RTr9wGre+KoSNoriufREK7RmRNI+zE74NFtIiFKW487rnuUS7+DJWmF64gi4rxgdvrN07Uvad0bvbTQeSAeNuj1/EgEKXU1L/GnmAaShotq6dzo4jyEfiaSsNp3I6UQ6tD6qs7kYUa6Y7VYAoVQW8cgocLW3S0h9mB5AIGIw2peJAPg/wVnN9dPgyeveZWBT7ZXUrsBhqcwtaAFyC5hAUTCfHa0kX8ZNpUDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=I5v3rZm5uPopaBeeMYxfK9+VsOV4jnmBkLtFxr+pU7E=;
+ b=yi0Hn2C+CtZckFw1pfrDsfatnT/vK9v3RDlV8aodEQNNQO+aIxVJ2z4hUXfJbLJQQm5lcwuxL/jIAzKUcUxCLyogL1pGSwcR1A/93nTFHM87pa4M6yWGFVgySLmol7A9oSBFQ3XuUKL7T5B+WYBbHTmF8nQ/9/JQiY72MoVgBqZUhv1El+1UJvqqBp56x8Phhc69VyCSXOTSPVKxbUawyUMKZA6wgQns7HvCX7GfBcE+9lpa6n5TMSMQc85XR2T/uLIrAJnz+3eAH/jbFXwHdjD/N8NR1fA72N+mo27fQw9oFbDdyUs1JH3NyrwQ6IisljnHvZijcQbAo/eOd0I44g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I5v3rZm5uPopaBeeMYxfK9+VsOV4jnmBkLtFxr+pU7E=;
+ b=FkNyEl72m8O8oo7v/uMPgmffqNbVDt/xFGqatf6WGnIiZk67uTJHoSTVg9WRxNmB6qMnY1d+qf4nAzUeGUARANUrPu4Ha5nMFfLtCKvw3QWGjyjyooPrJFNxIQE8fQL6Ae/oTIrW5YZMpNCfrVpLFzso5fPmaRtzMLZDgmcZ4vI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by SJ2PR12MB8182.namprd12.prod.outlook.com (2603:10b6:a03:4fd::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 7 May
+ 2025 12:59:39 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8678.028; Wed, 7 May 2025
+ 12:59:38 +0000
+Message-ID: <6b1469c6-b463-44fc-bd91-bff5c5622270@amd.com>
+Date: Wed, 7 May 2025 14:59:31 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] drm/shmem-helper: Import dmabuf without mapping
+ its sg_table
+To: oushixiong1025@163.com
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Sean Paul <sean@poorly.run>, Jocelyn Falempe <jfalempe@redhat.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ Shixiong Ou <oushixiong@kylinos.cn>
+References: <20250507094728.603302-1-oushixiong1025@163.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <20250507094728.603302-1-oushixiong1025@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL1PR13CA0024.namprd13.prod.outlook.com
+ (2603:10b6:208:256::29) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SJ2PR12MB8182:EE_
+X-MS-Office365-Filtering-Correlation-Id: e06e9256-35f0-4a71-7d11-08dd8d670670
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?czhVaTNrZUZ0b09JMllJenlZODJnMDVVdzVJcXlPVHE1VEM3L0tQYkNpY0Ft?=
+ =?utf-8?B?V2xaWGFWMWdZdXRpOFFPYVlsWkJVMWtsMDdYclgvVWN3UkFSWkVLWDRYTDZD?=
+ =?utf-8?B?RE5hRkIyNkdJbjM3R2xGNGpKODE4ZTkyQ3Z6S1hPWFQ5bGNQNHg0REl4VzdT?=
+ =?utf-8?B?MTBSelEwMi9GWXFMdTF1VkVYaGJnWHY4ellTaHE5cktBdmxZZEZVUU1wd2Y1?=
+ =?utf-8?B?cjVoYnFNNTZrbkJvd25GalFTK1FWZllzOTk1aTRtZ3dWZ1JBNG1CUzNIUFdD?=
+ =?utf-8?B?RmRRd3lwUTk4K1l6dHpzaUt6MXJYYjlZRHVGd3h1MERXblF5cGxRSTlrNzNC?=
+ =?utf-8?B?NFVIcXp4cnl2dWFBS24wcVZKM3dMRzllQXNnb1prUVJaeElJbGxsSTJ3WVNr?=
+ =?utf-8?B?THFKQWZCZ1dVZGFhL1lESDhvVE9LaTROeUlzTUJranl2bythd3hQQ0VQYkQx?=
+ =?utf-8?B?MXhBMXo4U1VwTUljdmtYYkJsV2NNbTBMOXNVZTNCNWk5NnFYK2hVVTF1eTUz?=
+ =?utf-8?B?RmpHZDBJVmhEaWZVQkRCTHNReGhGcVZyQldDbUlZYVFDOFZ4U1ZmUTY2TWVi?=
+ =?utf-8?B?clZINndzT0ZpejhwYzlCWUNzV1BNcGhSSURTb3NzZGQxMkYxS3BLS2dYM2xK?=
+ =?utf-8?B?YzgvdFp6c3RLNGg3L3VVQVBiNXlLMHl4SzB3Uk5wL0J6SUpSMGRBanMvZTNV?=
+ =?utf-8?B?YUhSSGpSYmdkWW1wcVBzZm9aQWJoR3pucW8zaG1Lc0lmSXhLQm1sVXRDa3Bk?=
+ =?utf-8?B?ZHAxQ2dCM0RManplQ1F2ZUpGV01HYWhsZ1NJUjAyWE53dkxmUHF6ZWlJMENp?=
+ =?utf-8?B?N3Q2VVhVKzdscDFmL0NsVXNLLzZObDlMbGd5TVpCdnlQZjRIUDE0Uk9WKzh1?=
+ =?utf-8?B?cXRwbnhNTXZqSmJWWGtUME9QU2U3TzJoNHAySTl3SjlCVTRBZElwQXIwQXQ3?=
+ =?utf-8?B?emxPVkh1SllkUWNSQmFVekxITThOTnVmU001TXZDNWhlZHRRcy94c1RuWHU2?=
+ =?utf-8?B?R0REY3ZjQmRncWxWQlVFWUgzSUxIT2phcW1nNllxZFpXUzJQb2g0QzZURGlY?=
+ =?utf-8?B?UkJ1aEZpbGRDWUo0NDdsTjJBL0dnN0xQZWx2Z1dKcVJrQkJzMkRxY1hPY25k?=
+ =?utf-8?B?dlo3Z25jOUQvQjdEWWU4dDVrSFc3ZWdidzZ5VGl3QWwxYWZNeUZCVzJhSS9R?=
+ =?utf-8?B?dDYvdjNCL1NTZmFoT28wZ0tQazN0S1h4emJvOEpUNnFDTHpMb0tEcEpoUlNy?=
+ =?utf-8?B?Y3I4eWh2bldlUjNmU2FDcjMwdTJkUDVkdFRLeERubC9MV0ZCUkJzU1lUVVRy?=
+ =?utf-8?B?UUVTbU41N3hXb3p6TVg2elFPZSt4SHUzZ2lLeVErdXg1N2huWUZuSThkK2Qx?=
+ =?utf-8?B?NEpaSzk1bnhGc2QzUlU5WnJFNklCZEFTV2ZmbVc5Mzl6ODJsUWlwc1gxQnk4?=
+ =?utf-8?B?dG1BRG5GM2s0T3BPVmx2S0dXdXg2cFRpSlhqcWNsNU9vVWJTbTYvSUZlTDRy?=
+ =?utf-8?B?UWVVdUtBekVNdWxELy93U1M4Z0ZTTEp0Ym9UcTZiRGpSMklyemJoQkd5K3Mx?=
+ =?utf-8?B?elliN2pUR3JtYXhKRzdVMXlkRWpYWk5CNjBLcDkwM0ZUTEQyZE15T0RhTHFJ?=
+ =?utf-8?B?LzBkSjNwMno4MHBBRHRUejBFSko5OXAyUGJubDNneHVQYy9Ca1FPVUVjM3Rz?=
+ =?utf-8?B?Z1FCYUFEMDltMFVWRElJM0FDTGVtb0VmTVpjYkM1ajlKczlzbjNxeUZwSFJ6?=
+ =?utf-8?B?TSt4Z3dLZEttUTFwRGlvOEtTR2gzV3JCSy91YytNajZqbXZzZ08rY2ZidXVS?=
+ =?utf-8?B?L1VVV085ZmhXS0srY3JvbVVvSkMrbXhGRU0rVHc3NnhxQlo2aGkxd3RxbGM4?=
+ =?utf-8?B?RDFWK1JuVllnZFlmOXUzR1ZtOXFQVzl1VS9RRnBYTkVKTlVEUUpEZEs2eU4y?=
+ =?utf-8?Q?ZOr7N2Cf7l0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OWs5SWVlRXd3S1JSNjVIaXp5djN6YThmZzhDbnJnQi80MTE1am9ZaGw5ZnZK?=
+ =?utf-8?B?NVdYZlpGZmRTaUJBTTY0NWxMRHhHZEMzUjRkMTgxS3VVUEVXaFBwRWxta3Vu?=
+ =?utf-8?B?R1BaOGQ4MHY1eVpUekdSOFBYbklpSm5KS0FQSTBBcm5uUUg5aW5GM0pqbWJS?=
+ =?utf-8?B?aFZGZHJBdzFCbmIyYWNDZlNIaHIwVDZxVWQ0R0FpMmtPemZtL2E5bWI2Q0lz?=
+ =?utf-8?B?NGZxTnhOR0NydXV1ZVROZ1JGZWoyYkNERUliOXlKNVRmNk80dkJMWmtYbG5F?=
+ =?utf-8?B?SndzNGN4VDhxbGJCOVBFeHBONWNrK2s1V1ZoZlQxaHRlcmY4emRmenNOU1Bs?=
+ =?utf-8?B?MUowaHd4M0NKSUltUmRoS0JVZThPY3R1QlJ4L2daaWY3Q2MxU2luMVZyeHdF?=
+ =?utf-8?B?MHNUQTlvNzM3dnRnM3lHYkc4alMyVHJ1aXZZMWJEUE1zWTNXRjI3Mk5QZDd0?=
+ =?utf-8?B?SlNKUUl0YlNlT25UUXJMK2k2WHpXWmsrK0R6MVVxVmp5MitFenJ1V1F1Y0tE?=
+ =?utf-8?B?dkJBT2V0c2N5V25Gd1QxV3BkM0Q2blBOdk15azJraStxTTE4amppQjVWMVps?=
+ =?utf-8?B?QU9sazl5RFkyQStveXlUMTNlNWY5L0FaT3BxK0FrL1duZ1J5a3pVRWE3RUQ0?=
+ =?utf-8?B?NlRsUThDRlJPeWhNUlBPTXkzdGNmZkRSSklOdi9hQVUzamh0UFZub1lodm9s?=
+ =?utf-8?B?dDk4UmpyekVJN1VtQ0JFbEp4c0xzUTQxbGlJeUtWVDV1aUtSeERocXRkSnVH?=
+ =?utf-8?B?MVdxODVhNERMM2VPREtyQVRzZjFMKzRuc1dtU284WnlPODFPdUY1K1VaTnFW?=
+ =?utf-8?B?ZG9HelVHVGhrQklLcmhRaDQyTkd3WFhtcEhsYmtjNmVxOEJMY3JwZ3FRR08x?=
+ =?utf-8?B?bUppSVFIcG1aRThKSTdlNlY5RzQ3ZGIrTEc5UzV3VjAvc3ppZ2lMalQrek1n?=
+ =?utf-8?B?bkE2NjFZSDc5V3JSN3pWeWNVZnhac0psSi9UMFhOWjFiWHJhc1V0QVFLbE9W?=
+ =?utf-8?B?aVpqUlRvRC9hdFZnWTBGR2FZdDNlRVRmQlhHbW5uR3FuVGhBYW9oaGZjMHlz?=
+ =?utf-8?B?RXZibys5RjFwWXROQzNWOGFUNERrYllYbGlhaHQyeldvRmtOcWtNUEJrNEJY?=
+ =?utf-8?B?UE5QT3NLRFdMckhUU2YrSGpRK0NKQ0lNdFVsRHJNbXBvUnN6WnkwaEE1VlVC?=
+ =?utf-8?B?eUVFMlB1WkNxUklLUExNb0dLWHVQNkVreVhhZWhxQ0REVmcvUkRMNVFRWW5S?=
+ =?utf-8?B?OVdacktTSzUzYnA1Zlh3SW5CL291ekpmMnZ5eXBUb1dyVFdjajFlam1hdVhJ?=
+ =?utf-8?B?d0pNSWNmOWFRbWkzRWpEVHN6Ujh6bE03a2t4MWlpZTZwelE1STUyendZYWZ1?=
+ =?utf-8?B?Q2JzT1NzMDcwV2FYRlR5bC9WVVF6cjB4K1VPNlBHdVU2eGZKV0FBNlpzVW8r?=
+ =?utf-8?B?OFY3bk81b3N2K01qeUFOVnh1TFpHbVljQU1SdUtJSnJuSHpsbnBEeW5NQnlJ?=
+ =?utf-8?B?MHpGVGw1aDc1U2tKM3B5TE5KdHdaNSs3ZWdCeE9QN2hvOGhDb29ZZmVUdXV0?=
+ =?utf-8?B?TkZ5bS9FSEw3QWNJUXIzVWZkcXdwTDlhd2ZUVXNDbExxdktaRk5JZDg0ZEN2?=
+ =?utf-8?B?dElZdzg3K3U5OVJkTXdtUkNHVmxkbEl1VStWUTJkaFMxZ1dWU2VaNUliVXpu?=
+ =?utf-8?B?N0VPYmhKMVhRWG9vbHhlREVnR3BjdWdVaWUxcWNWUlRUNll3Q3hYQmxPTG1k?=
+ =?utf-8?B?dEtDLzI3R2I0WnB5MmNxM2FVdzNkcTFtZ3ZLUVR3Z2JIRjYrYUxpakVTdVJj?=
+ =?utf-8?B?NHF6elMvY2FCdmlaOHpoZDFCSjhtOXNkekMvWm5UR3pkVU9yVStST29ONjdV?=
+ =?utf-8?B?S1BjRWVCSG1qVUlzWk1CQlQvYW5ZU09qVE42TmxBNjJDUS9QMmpwV0dnK055?=
+ =?utf-8?B?aGFEZ2VhVU1uVGpDelZ4NW9WQlFBZnBlby9oL2pQdCt3WGN0ckN4bjBicFU4?=
+ =?utf-8?B?cy9iUFp1N3M1cHU1aEhObEEvVzcrekJFKzFzZXB0dzkzNXBiOVYxRUlPU0pX?=
+ =?utf-8?B?bHJIVnJSYkRSa2xJM3MwOHVsT2ZhclovRWVUWSt5N0JOYUFxQ0I2UWZhZW11?=
+ =?utf-8?Q?V7QAMv3tUVLTViTakmekiOXYw?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e06e9256-35f0-4a71-7d11-08dd8d670670
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 12:59:38.8961
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6Th+lRDSh+9aJsZa1zRnFidSYSsDlHup6CV20+Usqjc97Ut6xkHAGiXSP80QogFQ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8182
 
-There is a copy and paste error and we accidentally use "PTR_ERR(rdev)"
-instead of "error".  The "rdev" pointer is valid at this point so the
-existing code returns a positive value instead of instead of a negative
-error code.
+On 5/7/25 11:47, oushixiong1025@163.com wrote:
+> From: Shixiong Ou <oushixiong@kylinos.cn>
+> 
+> [WHY]
+> 1. Drivers using DRM_GEM_SHADOW_PLANE_HELPER_FUNCS and
+>    DRM_GEM_SHMEM_DRIVER_OPS (e.g., udl, ast) do not require
+>    sg_table import.
+>    They only need dma_buf_vmap() to access the shared buffer's
+>    kernel virtual address.
+> 
+> 2. On certain Aspeed-based boards, a dma_mask of 0xffff_ffff may
+>    trigger SWIOTLB during dmabuf import. However, IO_TLB_SEGSIZE
+>    restricts the maximum DMA streaming mapping memory, resulting in
+>    errors like:
+> 
+>    ast 0000:07:00.0: swiotlb buffer is full (sz: 3145728 bytes), total 32768 (slots), used 0 (slots)
+> 
+> [HOW]
+> Provide a gem_prime_import implementation without sg_table mapping
+> to avoid issues (e.g., "swiotlb buffer is full"). Drivers that do not
+> require sg_table can adopt this.
+> 
+> Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
 
-Fixes: 38c9f98db20a ("regulator: tps65219: Add support for TPS65215 Regulator IRQs")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/regulator/tps65219-regulator.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+At least from my side that looks clean, so feel free to add Reviewed-by: Christian König <christian.koenig@amd.com>
 
-diff --git a/drivers/regulator/tps65219-regulator.c b/drivers/regulator/tps65219-regulator.c
-index b16b300d7f45..f5cd8e33e518 100644
---- a/drivers/regulator/tps65219-regulator.c
-+++ b/drivers/regulator/tps65219-regulator.c
-@@ -454,7 +454,7 @@ static int tps65219_regulator_probe(struct platform_device *pdev)
- 						  irq_type->irq_name,
- 						  &irq_data[i]);
- 		if (error)
--			return dev_err_probe(tps->dev, PTR_ERR(rdev),
-+			return dev_err_probe(tps->dev, error,
- 					     "Failed to request %s IRQ %d: %d\n",
- 					     irq_type->irq_name, irq, error);
- 	}
-@@ -477,7 +477,7 @@ static int tps65219_regulator_probe(struct platform_device *pdev)
- 						  irq_type->irq_name,
- 						  &irq_data[i]);
- 		if (error)
--			return dev_err_probe(tps->dev, PTR_ERR(rdev),
-+			return dev_err_probe(tps->dev, error,
- 					     "Failed to request %s IRQ %d: %d\n",
- 					     irq_type->irq_name, irq, error);
- 	}
--- 
-2.47.2
+But I would like to hear other opinions, e.g. Thomas as well. If nobody objects ping me to get this merged into drm-misc-next.
+
+Regards,
+Christian.
+
+> ---
+> v1->v2:
+>         Patch rebase.
+> v2->v3:
+>         Rename the import callback function.
+>         Remove drm_gem_shmem_prime_export() and separate some codes
+>         to drm_gem_prime_import_self().
+> 
+>  drivers/gpu/drm/drm_gem_shmem_helper.c | 51 ++++++++++++++++++++++++++
+>  drivers/gpu/drm/drm_prime.c            | 46 +++++++++++++++++------
+>  include/drm/drm_gem_shmem_helper.h     | 15 ++++++++
+>  include/drm/drm_prime.h                |  3 ++
+>  4 files changed, 104 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> index aa43265f4f4f..85900ec1954a 100644
+> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> @@ -800,6 +800,57 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
+>  }
+>  EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_sg_table);
+>  
+> +/**
+> + * drm_gem_shmem_prime_import_no_sgt - Import dmabuf without mapping its sg_table
+> + * @dev: Device to import into
+> + * @dma_buf: dma-buf object to import
+> + *
+> + * Drivers that use the shmem helpers but also wants to import dmabuf without
+> + * mapping its sg_table can use this as their &drm_driver.gem_prime_import
+> + * implementation.
+> + */
+> +struct drm_gem_object *drm_gem_shmem_prime_import_no_sgt(struct drm_device *dev,
+> +							 struct dma_buf *dma_buf)
+> +{
+> +	struct dma_buf_attachment *attach;
+> +	struct drm_gem_shmem_object *shmem;
+> +	struct drm_gem_object *obj;
+> +	size_t size;
+> +	int ret;
+> +
+> +	obj = drm_gem_prime_import_self(dev, dma_buf);
+> +	if (obj)
+> +		return obj;
+> +
+> +	attach = dma_buf_attach(dma_buf, dev->dev);
+> +	if (IS_ERR(attach))
+> +		return ERR_CAST(attach);
+> +
+> +	get_dma_buf(dma_buf);
+> +
+> +	size = PAGE_ALIGN(attach->dmabuf->size);
+> +
+> +	shmem = __drm_gem_shmem_create(dev, size, true, NULL);
+> +	if (IS_ERR(shmem)) {
+> +		ret = PTR_ERR(shmem);
+> +		goto fail_detach;
+> +	}
+> +
+> +	drm_dbg_prime(dev, "size = %zu\n", size);
+> +
+> +	shmem->base.import_attach = attach;
+> +	shmem->base.resv = dma_buf->resv;
+> +
+> +	return &shmem->base;
+> +
+> +fail_detach:
+> +	dma_buf_detach(dma_buf, attach);
+> +	dma_buf_put(dma_buf);
+> +
+> +	return ERR_PTR(ret);
+> +}
+> +EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_no_sgt);
+> +
+>  MODULE_DESCRIPTION("DRM SHMEM memory-management helpers");
+>  MODULE_IMPORT_NS("DMA_BUF");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+> index d828502268b8..1e43b6022329 100644
+> --- a/drivers/gpu/drm/drm_prime.c
+> +++ b/drivers/gpu/drm/drm_prime.c
+> @@ -910,6 +910,38 @@ struct dma_buf *drm_gem_prime_export(struct drm_gem_object *obj,
+>  }
+>  EXPORT_SYMBOL(drm_gem_prime_export);
+>  
+> +
+> +/**
+> + * drm_gem_prime_import_self - Import a DMA-BUF exported from the same DRM device.
+> + * @dev: drm_device to check against
+> + * @dma_buf: dma-buf object to import
+> + *
+> + * This function checks if the DMA-BUF was exported from a GEM object belonging
+> + * to @dev. If so, it increments the GEM object's refcount and returns it directly.
+> + *
+> + * Return: GEM object if it belongs to @dev, NULL otherwise.
+> + */
+> +struct drm_gem_object *drm_gem_prime_import_self(struct drm_device *dev,
+> +						 struct dma_buf *dma_buf)
+> +{
+> +	struct drm_gem_object *obj;
+> +
+> +	if (dma_buf->ops == &drm_gem_prime_dmabuf_ops) {
+> +		obj = dma_buf->priv;
+> +		if (obj->dev == dev) {
+> +			/*
+> +			 * Importing dmabuf exported from our own gem increases
+> +			 * refcount on gem itself instead of f_count of dmabuf.
+> +			 */
+> +			drm_gem_object_get(obj);
+> +			return obj;
+> +		}
+> +	}
+> +
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL(drm_gem_prime_import_self);
+> +
+>  /**
+>   * drm_gem_prime_import_dev - core implementation of the import callback
+>   * @dev: drm_device to import into
+> @@ -933,17 +965,9 @@ struct drm_gem_object *drm_gem_prime_import_dev(struct drm_device *dev,
+>  	struct drm_gem_object *obj;
+>  	int ret;
+>  
+> -	if (dma_buf->ops == &drm_gem_prime_dmabuf_ops) {
+> -		obj = dma_buf->priv;
+> -		if (obj->dev == dev) {
+> -			/*
+> -			 * Importing dmabuf exported from our own gem increases
+> -			 * refcount on gem itself instead of f_count of dmabuf.
+> -			 */
+> -			drm_gem_object_get(obj);
+> -			return obj;
+> -		}
+> -	}
+> +	obj = drm_gem_prime_import_self(dev, dma_buf);
+> +	if (obj)
+> +		return obj;
+>  
+>  	if (!dev->driver->gem_prime_import_sg_table)
+>  		return ERR_PTR(-EINVAL);
+> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
+> index b4f993da3cae..6e8e907bc43e 100644
+> --- a/include/drm/drm_gem_shmem_helper.h
+> +++ b/include/drm/drm_gem_shmem_helper.h
+> @@ -287,6 +287,8 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
+>  				    struct sg_table *sgt);
+>  int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+>  			      struct drm_mode_create_dumb *args);
+> +struct drm_gem_object *drm_gem_shmem_prime_import_no_sgt(struct drm_device *dev,
+> +							 struct dma_buf *buf);
+>  
+>  /**
+>   * DRM_GEM_SHMEM_DRIVER_OPS - Default shmem GEM operations
+> @@ -298,4 +300,17 @@ int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+>  	.gem_prime_import_sg_table = drm_gem_shmem_prime_import_sg_table, \
+>  	.dumb_create		   = drm_gem_shmem_dumb_create
+>  
+> +/**
+> + * DRM_GEM_SHMEM_DRIVER_OPS_FOR_VMAP - shmem GEM operations
+> + * 				       without mapping sg_table on
+> + * 				       imported buffer.
+> + *
+> + * This macro provides a shortcut for setting the shmem GEM operations in
+> + * the &drm_driver structure for drivers that do not require a sg_table on
+> + * imported buffers. Only vmap is supported on imported buffer.
+> + */
+> +#define DRM_GEM_SHMEM_DRIVER_OPS_FOR_VMAP \
+> +	.gem_prime_import       = drm_gem_shmem_prime_import_no_sgt, \
+> +	.dumb_create            = drm_gem_shmem_dumb_create
+> +
+>  #endif /* __DRM_GEM_SHMEM_HELPER_H__ */
+> diff --git a/include/drm/drm_prime.h b/include/drm/drm_prime.h
+> index fa085c44d4ca..b5179a9cde93 100644
+> --- a/include/drm/drm_prime.h
+> +++ b/include/drm/drm_prime.h
+> @@ -100,6 +100,9 @@ struct dma_buf *drm_gem_prime_export(struct drm_gem_object *obj,
+>  unsigned long drm_prime_get_contiguous_size(struct sg_table *sgt);
+>  
+>  /* helper functions for importing */
+> +struct drm_gem_object *drm_gem_prime_import_self(struct drm_device *dev,
+> +						 struct dma_buf *dma_buf);
+> +
+>  struct drm_gem_object *drm_gem_prime_import_dev(struct drm_device *dev,
+>  						struct dma_buf *dma_buf,
+>  						struct device *attach_dev);
 
