@@ -1,99 +1,114 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E43528B7EB;
-	Wed,  7 May 2025 18:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D303C14A4C7;
+	Wed,  7 May 2025 18:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746643141; cv=none; b=i4pDUB5uuj7k29qydTnkfIqUB0H8dNC0a/odouvWxNMv6zItXhcsiTfvnG1uxw/CXWbVm1NzFXb5a4a43EbpBFfT8SCiJffyzVdETt9pHGQFkiP1a/hSr2eCf9Fi8BcTSw4oQqH0fmoeUZYNnHCIlfDv727bpJ9DET9yoaCB0Gg=
+	t=1746643249; cv=none; b=FvTV1+3y66H4BA+zmOaNR5zhNyI/5SJIKXa/xDbZAEJM//26SADpe8jCIw3J90WnSb9iI5eY1IIAjhdIXuTIMVpwqkAaUiP3Vl3W2U5P7YM2wlXzX6H0PzSDExse/cqc+mOT5ZqqqROG4oUg7oO2WTvH4X26umnxezPV9ZKWUVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746643141; c=relaxed/simple;
-	bh=PV737ALlxa0MeAF/NHQ8BESH0VjY7KX6yUU/8UuLB3k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p6KJi/9lQlgAecqITrHlusyGOWEF2V5QAnfHTNcc+fvDHb+ssx8UZInijDlhr8wIJXML9hVnJSM0OGU/ovHU/G04c45SnfEnvoCq2P2yJq/iw+hGtlsjprwchOqvbu72i5apsvEtyG9o1BZsxExiz/Mag2rg+V9AUuIa3NvR0R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mUyggFmA; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746643249; c=relaxed/simple;
+	bh=QaXamWI6Ia1o3+1HNsgFHiV4uFT8N95itji57fGlEik=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=skssL3n3ZFi9XvyPIKh+GVqCoglVZUp/+xaD7FYSmn8NRA3n6QcCMlIXuhGfjveMJznaUvBbP33Yp6WXP1kRSVa+ZDJHt5WIwEsV+z8BoLofBGs6C/b0PfjazKDcYdd6wfHhlUTotrh+AZwYpuU1QahvR7dSZX/b+rKcxAbUg4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MnypQ84r; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kAzmzAY1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUyggFmA"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac3b12e8518so28061466b.0;
-        Wed, 07 May 2025 11:38:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746643138; x=1747247938; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WwOZ6sM38vEmJemz8hfnEukIYKzcuyuDEhTG4BejXDQ=;
-        b=mUyggFmA7+nVI2aWg6UIjcKXlpi/3DFpnIc3l12yEKSwrsFmruvGLXUhgM6aPKtllW
-         IkW9cSmU3br68o4aXQh/Dw2EIepGpcQidzG290e7i7YRHVUf10sLBlZJHQmn/xgFWC3t
-         P3cSgfEmh5qvHXyW/GG+RYtCatVyiZGWrzV8Hdlq1O0QpzMBqGvUNF7OvnajRxRSO1iz
-         okV2Y3zKRWKhlDoiqOUiA/BWIkBj7uI6rNk/4Zg0gjR10A+QaD9FkJa3T4uwQGqKtHz/
-         5nG8ivMdPb9y1T5tFR1JUZOrrNRqlOxjmYRgJo66wpsN4U8wCRUWg+Y1jvTTQgdruwYo
-         E9Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746643138; x=1747247938;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WwOZ6sM38vEmJemz8hfnEukIYKzcuyuDEhTG4BejXDQ=;
-        b=RC5INiMT1puTcXUPny9xMskFwfPHvAlG6OPNLV6zQOJpj/UbwNMOfXS0kK9JdWryLf
-         /tpJVKRLku6loQ0hrC1A55w1fdvplXId86nFQdyooVeBCbs+pWvousLue6y0Zf59/CY8
-         l1j86Xicq5E8jpnihdhmGebyFX4IGTjqKy6ZBAGobsFGwAoQJY7A/Qgbp1gMdXVK4thH
-         mjX1GBqanNVanQBX1ch+B/ozi3qppFB+2Mn5fv4fMvLwoxp/15viG7gyN5s8LMW3I09R
-         g8AJMvvSwRwmHB+zaRbq8DxUvV0XnQPGL6dzcNQlXsIbaBb581XZCBR2exkeZC5Wo5jG
-         O9/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVIqZxw1NUzrSbrcO3VbYjRZPyJHswDE1NXIIpBrTexP5pqswU5fp8lNFZas1iMdJjoqYcf3tlnBNLWlqF5@vger.kernel.org, AJvYcCXZtU3fsw41brmrcOzS5crIduiq+uKnD20pQf2oHZe1l19qa5OPb9+xByTNRcM6h53/D3ZxSFu+sPyEkFbV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDeyUOIxtsrAV5l4apVya1G7F8jarG/h2mStIG+zrtHVRyjk3n
-	E9tJOUVUmD2Rw1tCCCNBb9ShcY9KNXn1S5ughi3cloRl6j7UG86G2ksUZ14J84YVsmdrfGbYCMY
-	8QqMXmZoLsT4rA3vnr9CiDW9d9c4EMkFk5wTRdw==
-X-Gm-Gg: ASbGncsqeLGzY5NwRhqn76hx3QMYtql8JNcV0nVaKg8zT5foVHJkmD/Cpu7qk8GtkIL
-	F9rc9ziUexb1Ntj/CDXrKhL1+U/UcYF7vyWhG8RHC+fbbR7a2IaZjI5E7lfPO95I20YhSThBeWZ
-	RIb6qzLSPVSUmGqgWWB7YPQw==
-X-Google-Smtp-Source: AGHT+IFr+3Ye5QMBuJIsFDOQ2klnsMlUpF41G2L/3TujM36UNYhyO4/udyRLjWeLjkwseybUqZhsLAI8bt4uiKLuqhQ=
-X-Received: by 2002:a17:906:d542:b0:ad1:a87d:3de8 with SMTP id
- a640c23a62f3a-ad1e8b9580emr478125966b.5.1746643137312; Wed, 07 May 2025
- 11:38:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MnypQ84r";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kAzmzAY1"
+Date: Wed, 07 May 2025 18:40:44 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746643246;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sf9QUIfPySZA9aaxh0CXI9rc7+ZuDGEkYHRKU1UQ3hQ=;
+	b=MnypQ84r5W2sPJOaB0OXwtqMByAWgWPWAUh5dxhCqQM2sqRNvGvgmXMfXQzMomUZoFqPr/
+	VjP/yjR3+7hXpBGM4ohZ4zDNDk/Zi6qqwSpX+AvdI+7kwhr8xsJ3SI26nW/C41/3TTKhSK
+	aT/rBiIPcuwyZDh7JeIzhikyfyFIiO+R5rCWSJ939BBXC0EXcjVQ/v+qgcqvRlFRsCdhKF
+	cREER04DgOfd+yqDkDLbOGG6uCOuuJ5NGkHqWFZZMwdGAWIhUIM0kcMTwAnezEkPGOaVwy
+	Gu+RIXdPARrpzRwdJl/fkwLNTZkfStar1iCFR2tmrPG1Ijyxu8MF2WL4wwFrNA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746643246;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sf9QUIfPySZA9aaxh0CXI9rc7+ZuDGEkYHRKU1UQ3hQ=;
+	b=kAzmzAY1DK+1LCG451KaOkbGOhQCbyVDH09UHHpF8tyIA6JU03XnzrMCzVvuxfvTjYNVNl
+	8MOLaD7FM/aRCMDw==
+From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/msr] accel/habanalabs: Add explicit include of <asm/tsc.h>
+ to pick up the rdtsc() definition
+Cc: kernel test robot <lkp@intel.com>, Ingo Molnar <mingo@kernel.org>,
+ Johannes Berg <johannes.berg@intel.com>, Ofir Bitton <obitton@habana.ai>,
+ Oded Gabbay <ogabbay@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <202505080003.0t7ewxGp-lkp@intel.com>
+References: <202505080003.0t7ewxGp-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507032926.377076-2-chenlinxuan@uniontech.com>
- <CAOQ4uxjKFXOKQxPpxtS6G_nR0tpw95w0GiO68UcWg_OBhmSY=Q@mail.gmail.com>
- <CAC1kPDP4oO29B_TM-2wvzt1+Gc6hWTDGMfHSJhOax4_Cg2dEkg@mail.gmail.com>
- <CAOQ4uxgS3OUy9tpphAJKCQFRAn2zTERXXa0QN_KvP6ZOe2KVBw@mail.gmail.com> <CAC1kPDPY=qpGNRO3CH6_jSMKh6RyfHPFw71gCcpBZ-ogG41psA@mail.gmail.com>
-In-Reply-To: <CAC1kPDPY=qpGNRO3CH6_jSMKh6RyfHPFw71gCcpBZ-ogG41psA@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 7 May 2025 20:38:45 +0200
-X-Gm-Features: ATxdqUHFHlh6G7irS8Pz1TUWzU4HF3KGg5Uc-QyCpr3WaPLK2uyUoX3kINubol8
-Message-ID: <CAOQ4uxg=HvoGFV+WerJcuD-qMyr-9fTBRA_+ZQRejodtBd0mnA@mail.gmail.com>
-Subject: Re: [RFC PATCH] fs: fuse: add backing_files control file
-To: Chen Linxuan <chenlinxuan@uniontech.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174664324501.406.12440553986097050520.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 7, 2025 at 7:03=E2=80=AFPM Chen Linxuan <chenlinxuan@uniontech.=
-com> wrote:
->
-> On Thu, May 8, 2025 at 12:57=E2=80=AFAM Amir Goldstein <amir73il@gmail.co=
-m> wrote:
->
-> > It means everything to userspace.
-> > backing ids are part of the userspace UAPI - you have documented it you=
-rself.
-> > The fuse server used backing ids to manage access to backing files
-> > https://github.com/libfuse/libfuse/blob/master/example/passthrough_hp.c=
-c#L855
->
-> Oh, I see.
+The following commit has been merged into the x86/msr branch of tip:
 
-For the record, I mean to print the same format as io_uring:
-                        seq_printf(m, "%5u: ", id);
-                        seq_file_path(m, f, " \t\n\\");
-                        seq_puts(m, "\n");
+Commit-ID:     b1d1720321a0fb90c918fcbb3aa15649c116130a
+Gitweb:        https://git.kernel.org/tip/b1d1720321a0fb90c918fcbb3aa15649c116130a
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Wed, 07 May 2025 20:25:59 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 07 May 2025 20:30:53 +02:00
 
-Thanks,
-Amir.
+accel/habanalabs: Add explicit include of <asm/tsc.h> to pick up the rdtsc() definition
+
+The following commit:
+
+  288a4ff0ad29 ("x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>")
+
+removed the <asm/msr.h> include from the accel/habanalabs driver, which broke
+the build on UML:
+
+   drivers/accel/habanalabs/common/habanalabs_ioctl.c:326:23: error: call to undeclared function 'rdtsc'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+
+Add an explicit <asm/tsc.h> include, now that it works on UML too.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Ofir Bitton <obitton@habana.ai>
+Cc: Oded Gabbay <ogabbay@kernel.org>
+Link: https://lore.kernel.org/r/202505080003.0t7ewxGp-lkp@intel.com
+---
+ drivers/accel/habanalabs/common/habanalabs_ioctl.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/accel/habanalabs/common/habanalabs_ioctl.c b/drivers/accel/habanalabs/common/habanalabs_ioctl.c
+index dc80ca9..af23001 100644
+--- a/drivers/accel/habanalabs/common/habanalabs_ioctl.c
++++ b/drivers/accel/habanalabs/common/habanalabs_ioctl.c
+@@ -17,6 +17,8 @@
+ #include <linux/uaccess.h>
+ #include <linux/vmalloc.h>
+ 
++#include <asm/tsc.h>
++
+ /* make sure there is space for all the signed info */
+ static_assert(sizeof(struct cpucp_info) <= SEC_DEV_INFO_BUF_SZ);
+ 
