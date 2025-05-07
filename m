@@ -1,102 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335E825E816;
-	Wed,  7 May 2025 14:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C6B623;
+	Wed,  7 May 2025 14:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746627784; cv=none; b=JCc1zUlIxe5qEanblpdpe+pA25l1NiKTUA0BiRz1CEAviuG82Cd8sBDwavJetcTDg2J3aBPSqiHoZ2sMssCDRfjVhl2SFF6omJ9hAzZbt5XHiEVaFn4FtUz9BLUCxaz4vRilPKiNJc/cKK1y1WaNFCoB7sABqw4QUN7GfYzKYHw=
+	t=1746627839; cv=none; b=KF/nwreA+r0ZLUAYx4O/VMgMZBSxNvuERbQ83yMYcI/9oUGq3cIKpFOCtPIcVVqo/wHZC4k8DoRKLsYM2u3JLbU4Bibu9t+0nT33duVPhUhu581riVmTRYs6l/aAhjc8mJf2qJCKRu/OWUQmOWnJW7sHtr9ogKbz7yINydWW3pY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746627784; c=relaxed/simple;
-	bh=SqiMRe5738eY7cluVKlqsmNjWnERIUVSiShN//tNEPk=;
+	s=arc-20240116; t=1746627839; c=relaxed/simple;
+	bh=Uv0EcW7glq4I2xOqbyY8pJU9J0d/EtIXL20dRyfGk7M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U+zfBsk1tlAShuP0M08R0OKjzttfjki+WI0lu6JHU4A+mIuJtO30VSD73+XjzFVLwdZZWWXSs1Rv3SXkOdzBYMIRKohZfIXcBzYpvGkhkItO6vGyPjjBby9RHc5XxjSkphVea7oEvfCF60XuesixbJcrLgpNuShdfg2Hj87Nr1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P2t9wL/Q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=J3CoCxRMpmcIow7mfm/WIT+ZynN7pXmonn/LPN/tBfELk1+TGYtUxvYBo7BhCbGbcFEXZAwRJkXo2ew8+80ZZyYtVVNLQ3QzJuTclZvdCCje6XyrD3DYWy0DOQLyM9kZSQH3td1GR6EMJfb3wd21STFNu7YGBW9CqStdwPrsksQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=rKlEdAv9; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P2t9wL/Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33D79C4CEE2;
-	Wed,  7 May 2025 14:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746627783;
-	bh=SqiMRe5738eY7cluVKlqsmNjWnERIUVSiShN//tNEPk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P2t9wL/QKq+lXcXzo2YLa13CmEtCsb96D/WYVVk47qQQTkcVywgwsEKt6Oh/WBH4D
-	 IBms+1NXipxhbfiZQcgzyjqO8o1fT3hfxsbFia9Oxugdac0+Mw/l22gAHWbh+C801Y
-	 8isRnFMd5ml8WAWMnhsFMwVaZYl/D5kEm9Yka3wf2w1i+rGTxWpKovcv0JifzqQyhB
-	 Xs4z4GuE5jRkexsmowVUgU4850UIYsQgsnTsNafYXIiQopPojSdNPvHJ7gUpC4Drul
-	 L3dBPtvUG4932YejH3WILJAR/UdPFTlkk0maJzWx8XlfxzeF3ZWPEflOPZt66KcSya
-	 WW4JaAilQb9lg==
-Date: Wed, 7 May 2025 15:22:58 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Pankit Garg <pankit.garg@nxp.com>
-Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, conor+dt@kernel.org, robh@kernel.org,
-	alexandre.belloni@bootlin.com, vikash.bansal@nxp.com,
-	priyanka.jain@nxp.com, daniel.aguirre@nxp.com,
-	shashank.rebbapragada@nxp.com, aman.kumarpandey@nxp.com
-Subject: Re: [PATCH v3 1/2] dt-bindings: rtc: Add pcf85053a support
-Message-ID: <20250507-zap-dyslexia-924cfd1b6ec9@spud>
-References: <20250507072618.153960-1-pankit.garg@nxp.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="rKlEdAv9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=ZYAy8h3huPEqHikgnxaieN04K7WhSCqt1OYSqSWNRlE=; b=rKlEdAv9rte4tbESf+4ajtYyGO
+	pATDuP6V8vr/V+uSDUo/e0JB1BezeHdUqzDGYjZn1q/NtDJNp9LnqErexEXf1sLKWbQvMx5SwhK91
+	NrnF1ryuC8HUGCACQbdP7jEQ9Q33dVADukzJM3nsrsCZ5C42JHvCCoxLNzBB5Pg5li1c=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uCfge-00BtPO-Nq; Wed, 07 May 2025 16:23:52 +0200
+Date: Wed, 7 May 2025 16:23:52 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Wasim Nazir <quic_wasimn@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	kernel@quicinc.com, kernel@oss.qualcomm.com
+Subject: Re: [PATCH 3/8] arm64: dts: qcom: sa8775p: Add ethernet card for
+ ride & ride-r3
+Message-ID: <c445043d-2289-455d-af62-b18704bab749@lunn.ch>
+References: <20250507065116.353114-1-quic_wasimn@quicinc.com>
+ <20250507065116.353114-4-quic_wasimn@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5nmx1imcW8zRLMjW"
-Content-Disposition: inline
-In-Reply-To: <20250507072618.153960-1-pankit.garg@nxp.com>
-
-
---5nmx1imcW8zRLMjW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250507065116.353114-4-quic_wasimn@quicinc.com>
 
-On Wed, May 07, 2025 at 12:56:17PM +0530, Pankit Garg wrote:
-> Add device tree bindings for NXP PCF85053a RTC chip.
->=20
-> Signed-off-by: Pankit Garg <pankit.garg@nxp.com>
-> ---
-> V2 -> V3: Moved MAINTAINERS file changes to the driver patch
-> V1 -> V2: Handled dt-bindings by trivial-rtc.yaml
+> +&ethernet0 {
+> +	phy-handle = <&sgmii_phy0>;
+> +	phy-mode = "sgmii";
+> +
+> +	pinctrl-0 = <&ethernet0_default>;
+> +	pinctrl-names = "default";
+> +
+> +	snps,mtl-rx-config = <&mtl_rx_setup>;
+> +	snps,mtl-tx-config = <&mtl_tx_setup>;
+> +	snps,ps-speed = <1000>;
 
-You forgot to add my ack.
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+SGMII can only go up to 1000, so why is this property needed?
 
->=20
-> ---
->  Documentation/devicetree/bindings/rtc/trivial-rtc.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml b/Doc=
-umentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> index 7330a7200831..47be7bbbfedd 100644
-> --- a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> +++ b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> @@ -65,6 +65,8 @@ properties:
->        - microcrystal,rv8523
->        # NXP LPC32xx SoC Real-time Clock
->        - nxp,lpc3220-rtc
-> +      # NXP PCF85053A Real Time Clock Module with I2C-Bus
-> +      - nxp,pcf85053a
->        # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
->        - ricoh,r2025sd
->        # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> --=20
-> 2.25.1
->=20
+> +&ethernet0 {
+> +	phy-handle = <&hsgmii_phy0>;
+> +	phy-mode = "2500base-x";
+> +
+> +	pinctrl-0 = <&ethernet0_default>;
+> +	pinctrl-names = "default";
+> +
+> +	snps,mtl-rx-config = <&mtl_rx_setup>;
+> +	snps,mtl-tx-config = <&mtl_tx_setup>;
+> +	snps,ps-speed = <1000>;
 
---5nmx1imcW8zRLMjW
-Content-Type: application/pgp-signature; name="signature.asc"
+This looks odd. 2500Base-X, yet 1000?
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBtswgAKCRB4tDGHoIJi
-0hetAQDZFb6bBTURET8u5tSP7OaxYKBO21m+kAdZypUEsonwAwD+MgiaRwDkaySB
-JhAobKfGy7iy6AN+lvsBNbBpVbS/mgI=
-=o9Ub
------END PGP SIGNATURE-----
-
---5nmx1imcW8zRLMjW--
+	Andrew
