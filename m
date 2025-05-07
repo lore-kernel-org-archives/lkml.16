@@ -1,63 +1,30 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B752135CB
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 07:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534434414;
+	Wed,  7 May 2025 07:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746603144; cv=none; b=StQSCbrIP9vcA/d67jigpIgTyvp7Ymew+DkRs92UCYO/XP5ykyIk2FWiDLICRhaMbIX14pVkrURytL8YSdg5PG25uJo2wxn0oL25UyWvX8GvSOj6HOlJysyhT8mIm6D+Dz+ybd8RoTPKBuMy4rPgg7AZ20I3tmHgUK6HFbZwaZ0=
+	t=1746603211; cv=none; b=mlff8vOTQorREuzqsgpKd4ClgJhwN4mvDC8ddV2wz3Ukva7D6FaZmGSB9g+kQ8gNJWX/rohoBbKbNI+bC8KWmFEAnbDbhNi/w3fITpPqfZiGPUVz7PjTM+mGqQVgv99tcvgAxNX0VjlSKkNH479/k0b+srFTLNqSHifpdLawNy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746603144; c=relaxed/simple;
-	bh=4GJWSGDKlJnMIWGtNQ7AH+MLDqEOVwEj8uKjnSOFYk4=;
+	s=arc-20240116; t=1746603211; c=relaxed/simple;
+	bh=yvE7hHuhZtqAdLiuiqL4X1jVqwVu03bNZyPR+Wo5Xtc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gXVvJLpF9VPPlfqrMoBmu3zWWYgEe+LUfiqDkebfF/cEp0a7o0afzHOB4KKaW8V6ed4Qr5fCtO48XlR/K5fO/K4SE+i/88PJR3Ul0CCXmRMPOMwY0w8Xe3QoDlEl5ec2fnxJt1pGEgE/oIHLaco70zXURE+7SOszYanHGf41VvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=eh+Qi/9d; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="eh+Qi/9d"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-441ab63a415so65446845e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 00:32:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1746603139; x=1747207939; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=/oowGCRlPnH53+dvEhVfbik3/aGzqGnubNjPU1FCxSc=;
-        b=eh+Qi/9d13bHoy9Z+QrOnegQRg7q/L2wXZUEj53aO3EIhbkow8+KLBRc4TSY/HLxAm
-         6QQF3jxyyZ3zRCsUqqY/SawkLhPlCPfRsUjIg+bXXrLNHtbNP82Zmm2rkRqSSYAJzAQJ
-         PiRW39Oyw9TCcbvLrOTl1nnFrl5NMOUtFXs84=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746603139; x=1747207939;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/oowGCRlPnH53+dvEhVfbik3/aGzqGnubNjPU1FCxSc=;
-        b=XhN5nZKPuSBW5zzZzh46rqnpcId9MfeExnvj52LyG5jlkb1KaUWBJ0i8UVM3c1xjM9
-         yv9zFFhZBuOLmbpPrjq/Az/AtxKm/Ybmep6Qmh40Mhbe+b7/vw9TIrLeG+KiwoJ52Xnf
-         ebryZDYxA0mRrFyQ1B2qkD1FGJ5CzpNHzMc63KjnK7jNiJz4AjDJR//Tr1lUSfbOPJBI
-         dkzNuEWTYk5dHHXzI2uPnSB8wQaNbGTTDe4yo3slzVWNgeUrk+M0FL2bRpLd+ll8iCvF
-         aISWTasmLy8Ha3ds/5v4seVEwA3QEYKd6MwpWdEXO0nZAwQy0A2FMJXBqVb1CIkJggJ1
-         XnUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJsGVVHyfr2xloExJAGhd9dI7O6ZCzHT1NxkJ3+kp2mVZ7mbEQKpIsy4sW2TlIDMhKfS4owjSuxe/25Po=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxn/TbZfrDsqhdAlGovkV6p7phlV3bUBH3sC8+KaRMPFzkoIRfu
-	XItZKrs/FIPm0YvjAngNRcAPMjzmEzL7s0FgGEjFoax2qWNab/gWxAPNsnWTuA==
-X-Gm-Gg: ASbGncvXGysjJN0np6eS6GfUhSTB+2SKjZNYFOyhHdLMgcK84lDCQXJKzCoPKBRE4Fc
-	6rc2kCjOUHt4flRcVLISBtuiRl3esjDTGDoNw2sSlUqmG2hK4wMjpFRpQ4VJGrmhPmmCZDItVz2
-	7za1egTe1kcl3FW69HAosHIH01F5z+cfPOEXkPV/RXf+cUZVC+Q69lbCC0bdgh3UhrtUroKS3zr
-	qrPzXxp2TvLrT6Mt2fMcF9XhMV2Me/W+RgKAyUHfSanSq5tuS71/tQJlAkrH8biSyiu/87qU90y
-	dmqnTn2u0GkR0l45GyVU4Q4PT1FA5BrfdP/NfFzUdUc4mLXOgUvDmIEqu65Fxr86Fx3kJ3fgddp
-	TCXi3kN1cY/Vx9I+xdfpWElK98welpVlGTAFOdw0=
-X-Google-Smtp-Source: AGHT+IHhnQ0XoKBKM5DMQ7zEqqg7TzLxsMCpqS1ZcloLnADNH5WKFeYw2vsLW0QXNRCZ5zE1p7gAJg==
-X-Received: by 2002:a05:600c:8289:b0:441:b00d:e9d1 with SMTP id 5b1f17b1804b1-441d44bbf50mr17486185e9.2.1746603139011;
-        Wed, 07 May 2025 00:32:19 -0700 (PDT)
-Received: from [192.168.1.24] (90-47-60-187.ftth.fr.orangecustomers.net. [90.47.60.187])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442c98fd955sm5285245e9.7.2025.05.07.00.32.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 00:32:16 -0700 (PDT)
-Message-ID: <96272e42-855c-4acc-ac18-1ae9c5d4617f@broadcom.com>
-Date: Wed, 7 May 2025 09:32:16 +0200
+	 In-Reply-To:Content-Type; b=gtFxrZ2F88qyLfCGV9e2lEeQMuG7dp0JmZMG5BS2f8fyy63RFaydiGU4cn3f0URejloJB58OfBuc7UVTfEEurt4G6iPsYlWJPDCn22vYuTOPyPZzzIbuchzYKRSDld+E63vuWHrbl7HheRUihgLWOZJFBhQn8relzk4hxUe3wL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zsn6g5Q4Sz4f3l26;
+	Wed,  7 May 2025 15:32:59 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id AC97A1A1912;
+	Wed,  7 May 2025 15:33:25 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP2 (Coremail) with SMTP id Syh0CgDX32LDDBtoLblhLg--.26256S3;
+	Wed, 07 May 2025 15:33:25 +0800 (CST)
+Message-ID: <a39a6612-89ac-4255-b737-37c7d16b3185@huaweicloud.com>
+Date: Wed, 7 May 2025 15:33:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,111 +32,97 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 -next 08/12] arm64: dts: bcm2712: Add external clock
- for RP1 chipset on Rpi5
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof Wilczynski <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
- <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
- Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
- <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>,
- kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
-References: <cover.1745347417.git.andrea.porta@suse.com>
- <38514415df9c174be49e72b88410d56c8de586c5.1745347417.git.andrea.porta@suse.com>
- <aBp1wye0L7swfe1H@apocalypse>
+Subject: Re: [RFC PATCH v4 07/11] fs: statx add write zeroes unmap attribute
+To: Christoph Hellwig <hch@lst.de>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, linux-fsdevel@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-block@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
+ linux-scsi@vger.kernel.org, linux-xfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, tytso@mit.edu, john.g.garry@oracle.com,
+ bmarzins@redhat.com, chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com,
+ brauner@kernel.org, yi.zhang@huawei.com, chengzhihao1@huawei.com,
+ yukuai3@huawei.com, yangerkun@huawei.com
+References: <20250421021509.2366003-1-yi.zhang@huaweicloud.com>
+ <20250421021509.2366003-8-yi.zhang@huaweicloud.com>
+ <20250505132208.GA22182@lst.de> <20250505142945.GJ1035866@frogsfrogsfrogs>
+ <c7d8d0c3-7efa-4ee6-b518-f8b09ec87b73@huaweicloud.com>
+ <20250506043907.GA27061@lst.de>
+ <64c8b62a-83ba-45be-a83e-62b6ad8d6f22@huaweicloud.com>
+ <20250506121102.GA21905@lst.de>
 Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <aBp1wye0L7swfe1H@apocalypse>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <20250506121102.GA21905@lst.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:Syh0CgDX32LDDBtoLblhLg--.26256S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxAFWkXw47uF13ZF4UWFWrGrg_yoW5WrWxpF
+	W0gFyjkF4DKr13J3s5uw40grn5ZFs5AF15Cw4vkr18uw45XF1xKFn8W3WvyFyDJry7AayD
+	JFZ0kFyUZa1xC3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	s2-5UUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
+On 2025/5/6 20:11, Christoph Hellwig wrote:
+> On Tue, May 06, 2025 at 07:16:56PM +0800, Zhang Yi wrote:
+>> Sorry, but I don't understand your suggestion. The
+>> STATX_ATTR_WRITE_ZEROES_UNMAP attribute only indicate whether the bdev
+>> and the block device that under the specified file support unmap write
+>> zeroes commoand. It does not reflect whether the bdev and the
+>> filesystems support FALLOC_FL_WRITE_ZEROES. The implementation of
+>> FALLOC_FL_WRITE_ZEROES doesn't fully rely on the unmap write zeroes
+>> commoand now, users simply refer to this attribute flag to determine
+>> whether to use FALLOC_FL_WRITE_ZEROES when preallocating a file.
+>> So, STATX_ATTR_WRITE_ZEROES_UNMAP and FALLOC_FL_WRITE_ZEROES doesn't
+>> have strong relations, why do you suggested to put this into the ext4
+>> and bdev patches that adding FALLOC_FL_WRITE_ZEROES?
+> 
+> So what is the point of STATX_ATTR_WRITE_ZEROES_UNMAP?
 
+My idea is not to strictly limiting the use of FALLOC_FL_WRITE_ZEROES to
+only bdev or files where bdev_unmap_write_zeroes() returns true. In
+other words, STATX_ATTR_WRITE_ZEROES_UNMAP and FALLOC_FL_WRITE_ZEROES
+are not consistent, they are two independent features. Even if some
+devices STATX_ATTR_WRITE_ZEROES_UNMAP are not set, users should still be
+allowed to call fallcoate(FALLOC_FL_WRITE_ZEROES). This is because some
+devices and drivers currently cannot reliably ascertain whether they
+support the unmap write zero command; however, certain devices, such as
+specific cloud storage devices, do support it. Users of these devices
+may also wish to use FALLOC_FL_WRITE_ZEROES to expedite the zeroing
+process.
 
-On 5/6/2025 10:49 PM, Andrea della Porta wrote:
-> Hi Florian,
-> 
-> On 20:53 Tue 22 Apr     , Andrea della Porta wrote:
->> The RP1 found on Raspberry Pi 5 board needs an external crystal at 50MHz.
->> Add clk_rp1_xosc node to provide that.
->>
->> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
->> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> 
-> A gentle reminder for patches 8 through 12 of this series, which I guess
-> would ideally be taken by you. Since the merge window is approaching, do
-> you think it's feasible to iterate a second pull request to Arnd with my
-> patches too?
-> 
-> With respect to your devicetree/next branch, my patches have the following
-> conflicts:
-> 
-> PATCH 9:
-> - arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts: &pcie1 and &pcie2
->    reference at the end, my patch was rebased on linux-next which has them
->    while your devicetree branch has not. This is trivial to fix too.
-> 
-> PATCH 9 and 10:
-> - arch/arm64/boot/dts/broadcom/Makefile on your branch has a line recently
->    added by Stefan's latest patch for RPi2. The fix is trivial.
-> 
-> PATCH 11 and 12:
-> - arch/arm64/configs/defconfig: just a couple of fuzz lines.
-> 
-> Please let me know if I should resend those patches adjusted for your tree.
+Therefore, I think that the current point of
+STATX_ATTR_WRITE_ZEROES_UNMAP (possibly STATX_WRITE_ZEROES_UNMAP) should
+be to just indicate whether a bdev or file supports the unmap write zero
+command (i.e., whether bdev_unmap_write_zeroes() returns true). If we
+use standard SCSI and NVMe storage devices, and the
+STATX_ATTR_WRITE_ZEROES_UNMAP attribute is set, users can be assured
+that FALLOC_FL_WRITE_ZEROES is fast and can choose to use
+fallocate(FALLOC_FL_WRITE_ZEROES) immediately.
 
-Yes please resend them today or tomorrow so I can send them the 
-following day. Thanks
--- 
-Florian
+Would you prefer to make STATX_ATTR_WRITE_ZEROES_UNMAP and
+FALLOC_FL_WRITE_ZEROES consistent, which means
+fallcoate(FALLOC_FL_WRITE_ZEROES) will return -EOPNOTSUPP if the block
+device doesn't set STATX_ATTR_WRITE_ZEROES_UNMAP ?
+
+If so, I'd suggested we need to:
+1) Remove STATX_ATTR_WRITE_ZEROES_UNMAP since users can check the
+   existence by calling fallocate(FALLOC_FL_WRITE_ZEROES) directly, this
+   statx flag seems useless.
+2) Make the BLK_FEAT_WRITE_ZEROES_UNMAP sysfs interface to RW, allowing
+   users to adjust the block device's support state according to the
+   real situation.
+
+Thanks,
+Yi.
 
