@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84AE228B405;
-	Wed,  7 May 2025 15:41:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C17B28B4EF;
+	Wed,  7 May 2025 15:41:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746632517; cv=none; b=Balof32V0dBogBacxLih1zaf5IueyHmdE3FpsnMOIBRT637kbIoyWVeLcPX8nxuf69eSVg3WF6Ca/H6jUpDC7/jXDTwCbF62qms1HDX6JOUc+l9kqusnYx99PDk65mlutbMdn1IAccobZUMT9yu4marhemHZiYSSKP2CfyC8KAs=
+	t=1746632519; cv=none; b=mrtcFKe+zCCA7OBVMtjVWfSmLh+uZ91RxgMeKyuDTL1+nA+pOjmhyXFoMf4mxvt1B/p5IpZ0uzd8V9H7PYwrePtDqzLPKBgKpAS0pEs1bbPOZwHyiXI+xBlaqEPFqI7+87IbNhFcTrAej6QmYbuG3v7nY0mhz4uGD4wN0dHPG0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746632517; c=relaxed/simple;
-	bh=ldA8r2aeb/fFWFw6fBUtA81qiav2AaAcQ+SLAQOixjI=;
+	s=arc-20240116; t=1746632519; c=relaxed/simple;
+	bh=V499VMv+rPex1wvscWee8vau59a5tTXRvhSZFocwZ3E=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=j/if+4Yo6YvZwhj7GK0yW1LjDcAQyB6xJwogi7OTs6obY0uHBhdXtsdOEThOnrNTUrlsgoHiskUrjgxG3ZSLjVRRxp8TJFmw/tj5nsdPFxfqftgkzqXmJ/iiHOqv6u2BFKrDcYLkMxTyevRmGfDiyUVpneOI9fnBHd5OoYVqPwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QuLC7MCQ; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=lBuQR7Kyrm/+vFivDUGPoADWuYI4JhJ4IZUBerITualpVR02qLSa/+iY75zVRdPBssWJvfXQEXIgzlV/+3U+ElXL0nlchILrARoZh2K6HPngxCShQAToMBVjqJZipL+V4WyfpkPTG27JgqV8vhJ23Vf5vc0Y2hDPRwG1JO/SbWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eTV07ZyL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QuLC7MCQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3330BC4CEE2;
-	Wed,  7 May 2025 15:41:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eTV07ZyL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A014C4CEE2;
+	Wed,  7 May 2025 15:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746632517;
-	bh=ldA8r2aeb/fFWFw6fBUtA81qiav2AaAcQ+SLAQOixjI=;
+	s=k20201202; t=1746632519;
+	bh=V499VMv+rPex1wvscWee8vau59a5tTXRvhSZFocwZ3E=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=QuLC7MCQc5sHxyfd5kBx784WfApjtRBZHTvpHe/9zOZeM+8Mw8goD8GedZ3lYcpVD
-	 1M2777lTptg5UatoyTFbVufiuWHCQ0es3RV1vvDVRRqpYxBN0p2x6PGjMhpj9iAQ28
-	 Sv1Ctkzfm7CJjTFKBX+jhaeGlAmW2tQKfwMLny4yGa5uZxIR8VOUmqx22ANzZ+9O3/
-	 KgS22TO596zh92Yy6Cf6w4/2ESg6KRGtQ6wMrTY6nSs+9ZXIiLJqnDQbXK1tYSL1s5
-	 APSKzoWzcMXI5VU6td8qTZV6Btv/Evg7j02H5M62HQjPY3pgqn9ISzmmFcNdOCZpe2
-	 o6TDtgxceybdA==
-Date: Wed, 07 May 2025 10:41:55 -0500
+	b=eTV07ZyLYysTTRFH5wy8M0Lo9JSlivRghPHy5tjGP8qJSAZJm7GP6MKpMuW54FCbV
+	 PjHS+VFoQOAbVhrqtrFVIy3LSPw78UCySupjxCMTfVafeGD1DiammW+4IKZogrUYB3
+	 h34qbfMbIp5yNhyeR1+Woc7wfhHd9VP36wM9lHfXYIbiXB5wizPwTIdr4fgtLUOsqb
+	 ln2Zc5Anun9B6RDd0KeiDxOfJCt4bSg4aywKioxwhLSlaf16szGuGkP48EuzjPKh60
+	 08F9O82Aa2tVq8Mhssf4EwsRAX2U+u8UiibCv7Wg/a0WZ40zjmae3sUjxGIEUbSboq
+	 7j2mV9ltnvqSA==
+Date: Wed, 07 May 2025 10:41:57 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,77 +36,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: conor+dt@kernel.org, linux-arm-msm@vger.kernel.org, krzk+dt@kernel.org, 
- kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org, 
- andersson@kernel.org, devicetree@vger.kernel.org, konradybcio@kernel.org, 
- quic_qianyu@quicinc.com, kw@linux.com, linux-phy@lists.infradead.org, 
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- dmitry.baryshkov@linaro.org, quic_vbadigan@quicinc.com, 
- manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, vkoul@kernel.org, 
- bhelgaas@google.com, quic_krichai@quicinc.com
-To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-In-Reply-To: <20250507031559.4085159-1-quic_ziyuzhan@quicinc.com>
-References: <20250507031559.4085159-1-quic_ziyuzhan@quicinc.com>
-Message-Id: <174663232869.1557279.17959008688697969533.robh@kernel.org>
-Subject: Re: [PATCH v4 0/5] pci: qcom: Add QCS615 PCIe support
+Cc: conor+dt@kernel.org, krzk+dt@kernel.org, 
+ linux-arm-kernel@lists.infradead.org, upstream@lists.phytec.de, 
+ devicetree@vger.kernel.org, robertcnelson@gmail.com, kristo@kernel.org, 
+ vigneshr@ti.com, w.egorov@phytec.de, nm@ti.com, 
+ francesco.dolcini@toradex.com, linux-kernel@vger.kernel.org
+To: Daniel Schultz <d.schultz@phytec.de>
+In-Reply-To: <20250507050847.912756-1-d.schultz@phytec.de>
+References: <20250507050847.912756-1-d.schultz@phytec.de>
+Message-Id: <174663232933.1557435.12503360883036162870.robh@kernel.org>
+Subject: Re: [PATCH 1/4] arm64: dts: ti: k3-am62-thermal: Add Files for
+ each Temp. Grade
 
 
-On Wed, 07 May 2025 11:15:54 +0800, Ziyue Zhang wrote:
-> This series adds document, phy, configs support for PCIe in QCS615.
+On Tue, 06 May 2025 22:08:44 -0700, Daniel Schultz wrote:
+> The AM62x SoC supports three temperature ranges:
+> * A: -40 to 105C - Extended Industrial
+> * H:   0 to  95C - Commercial
+> * I: -40 to 125C - Automotive
 > 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+> Add device tree include files to adjust the alert and critical trip
+> points in k3-am62-thermal based on the temperature grade.
+> 
+> Passive trip points are always set 10C below critical.
+> 
+> Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
 > ---
-> Have following changes:
-> 	- Add a new Document the QCS615 PCIe Controller
-> 	- Add configurations in devicetree for PCIe, including registers, clocks, interrupts and phy setting sequence.
-> 	- Add configurations in devicetree for PCIe, platform related gpios, PMIC regulators, etc.
-> 
-> Changes in v4:
-> - Fixed compile error found by kernel test robot(Krzysztof)
-> - Update DT format (Konrad & Krzysztof)
-> - Remove QCS8550 compatible use QCS615 compatible only (Konrad)
-> - Update phy dt bindings to fix the dtb check errors.
-> - Link to v3: https://lore.kernel.org/all/20250310065613.151598-1-quic_ziyuzhan@quicinc.com/
-> 
-> Changes in v3:
-> - Update qcs615 dt-bindings to fit the qcom-soc.yaml (Krzysztof & Dmitry)
-> - Removed the driver patch and using fallback method (Mani)
-> - Update DT format, keep it same with the x1e801000.dtsi (Konrad)
-> - Update DT commit message (Bojor)
-> - Link to v2: https://lore.kernel.org/all/20241122023314.1616353-1-quic_ziyuzhan@quicinc.com/
-> 
-> Changes in v2:
-> - Update commit message for qcs615 phy
-> - Update qcs615 phy, using lowercase hex
-> - Removed redundant function
-> - split the soc dtsi and the platform dts into two changes
-> - Link to v1: https://lore.kernel.org/all/20241118082619.177201-1-quic_ziyuzhan@quicinc.com/
-> 
-> Krishna chaitanya chundru (3):
->   dt-bindings: PCI: qcom: Document the QCS615 PCIe Controller
->   arm64: dts: qcom: qcs615: enable pcie
->   arm64: dts: qcom: qcs615-ride: Enable PCIe interface
-> 
-> Ziyue Zhang (2):
->   dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
->     for QCS615
->   PCI: qcom: Add support for QCS615 SoC
-> 
->  .../bindings/pci/qcom,qcs615-pcie.yaml        | 165 ++++++++++++++++++
->  .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |   2 +-
->  arch/arm64/boot/dts/qcom/qcs615-ride.dts      |  42 +++++
->  arch/arm64/boot/dts/qcom/qcs615.dtsi          | 146 ++++++++++++++++
->  drivers/pci/controller/dwc/pcie-qcom.c        |   1 +
->  5 files changed, 355 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/qcom,qcs615-pcie.yaml
-> 
-> 
-> base-commit: 8fd51b270d58f8b05aa58841ec38c8a6b4ab09ca
-> --
-> 2.34.1
-> 
-> 
+>  .../dts/ti/k3-am62-thermal-automotive.dtsi    | 20 +++++++++++++++++++
+>  .../dts/ti/k3-am62-thermal-commercial.dtsi    | 20 +++++++++++++++++++
+>  .../dts/ti/k3-am62-thermal-industrial.dtsi    | 20 +++++++++++++++++++
+>  3 files changed, 60 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am62-thermal-automotive.dtsi
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am62-thermal-commercial.dtsi
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am62-thermal-industrial.dtsi
 > 
 
 
@@ -125,16 +87,73 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
- Base: base-commit 8fd51b270d58f8b05aa58841ec38c8a6b4ab09ca not known, ignoring
  Base: attempting to guess base-commit...
- Base: tags/next-20250507 (best guess, 3/4 blobs matched)
+ Base: tags/v6.15-rc1-6-gf1aff4bc199c (exact match)
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250507031559.4085159-1-quic_ziyuzhan@quicinc.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/ti/' for 20250507050847.912756-1-d.schultz@phytec.de:
 
-arch/arm64/boot/dts/qcom/qcs615.dtsi:1062.4-1065.34: Warning (interrupt_map): /soc@0/pcie@1c08000:interrupt-map: Cell 12 is not a phandle(0)
+Error: arch/arm64/boot/dts/ti/k3-am62a-thermal-industrial.dtsi:6.1-13 Label or path main0_alert not found
+Error: arch/arm64/boot/dts/ti/k3-am62a-thermal-industrial.dtsi:14.1-13 Label or path main1_alert not found
+Error: arch/arm64/boot/dts/ti/k3-am62a-thermal-industrial.dtsi:22.1-13 Label or path main2_alert not found
+FATAL ERROR: Syntax error parsing input tree
+make[3]: *** [scripts/Makefile.dtbs:131: arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dtb] Error 1
+make[2]: *** [scripts/Makefile.build:461: arch/arm64/boot/dts/ti] Error 2
+make[2]: Target 'arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dtb' not remade because of errors.
+make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1475: ti/k3-am62a7-phyboard-lyra-rdk.dtb] Error 2
+arch/arm64/boot/dts/ti/k3-am62a7-sk.dts:14:10: fatal error: k3-am62a-thermal-automative.dtsi: No such file or directory
+   14 | #include "k3-am62a-thermal-automative.dtsi"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[3]: *** [scripts/Makefile.dtbs:131: arch/arm64/boot/dts/ti/k3-am62a7-sk.dtb] Error 1
+make[2]: *** [scripts/Makefile.build:461: arch/arm64/boot/dts/ti] Error 2
+make[2]: Target 'arch/arm64/boot/dts/ti/k3-am62a7-sk.dtb' not remade because of errors.
+make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1475: ti/k3-am62a7-sk.dtb] Error 2
+make: *** [Makefile:248: __sub-make] Error 2
+make: Target 'ti/k3-am625-verdin-wifi-ivy.dtb' not remade because of errors.
+make: Target 'ti/k3-am625-verdin-wifi-dahlia.dtb' not remade because of errors.
+make: Target 'ti/k3-j721e-common-proc-board.dtb' not remade because of errors.
+make: Target 'ti/k3-am625-verdin-wifi-dev.dtb' not remade because of errors.
+make: Target 'ti/k3-am642-evm.dtb' not remade because of errors.
+make: Target 'ti/k3-am625-verdin-wifi-mallow.dtb' not remade because of errors.
+make: Target 'ti/k3-am625-verdin-nonwifi-dahlia.dtb' not remade because of errors.
+make: Target 'ti/k3-j742s2-evm.dtb' not remade because of errors.
+make: Target 'ti/k3-am642-hummingboard-t.dtb' not remade because of errors.
+make: Target 'ti/k3-am625-beagleplay.dtb' not remade because of errors.
+make: Target 'ti/k3-am625-verdin-nonwifi-yavia.dtb' not remade because of errors.
+make: Target 'ti/k3-am6528-iot2050-basic-pg2.dtb' not remade because of errors.
+make: Target 'ti/k3-am68-sk-base-board.dtb' not remade because of errors.
+make: Target 'ti/k3-am62p5-sk.dtb' not remade because of errors.
+make: Target 'ti/k3-am6528-iot2050-basic.dtb' not remade because of errors.
+make: Target 'ti/k3-am6548-iot2050-advanced-m2.dtb' not remade because of errors.
+make: Target 'ti/k3-am654-base-board.dtb' not remade because of errors.
+make: Target 'ti/k3-am6548-iot2050-advanced.dtb' not remade because of errors.
+make: Target 'ti/k3-am62a7-phyboard-lyra-rdk.dtb' not remade because of errors.
+make: Target 'ti/k3-am62a7-sk.dtb' not remade because of errors.
+make: Target 'ti/k3-am625-verdin-nonwifi-dev.dtb' not remade because of errors.
+make: Target 'ti/k3-j722s-evm.dtb' not remade because of errors.
+make: Target 'ti/k3-j721e-beagleboneai64.dtb' not remade because of errors.
+make: Target 'ti/k3-am642-phyboard-electra-rdk.dtb' not remade because of errors.
+make: Target 'ti/k3-am69-sk.dtb' not remade because of errors.
+make: Target 'ti/k3-am6548-iot2050-advanced-pg2.dtb' not remade because of errors.
+make: Target 'ti/k3-am642-hummingboard-t-pcie.dtb' not remade because of errors.
+make: Target 'ti/k3-j7200-common-proc-board.dtb' not remade because of errors.
+make: Target 'ti/k3-am62-lp-sk.dtb' not remade because of errors.
+make: Target 'ti/k3-am625-verdin-wifi-yavia.dtb' not remade because of errors.
+make: Target 'ti/k3-j721s2-common-proc-board.dtb' not remade because of errors.
+make: Target 'ti/k3-am642-tqma64xxl-mbax4xxl.dtb' not remade because of errors.
+make: Target 'ti/k3-am67a-beagley-ai.dtb' not remade because of errors.
+make: Target 'ti/k3-am642-hummingboard-t-usb3.dtb' not remade because of errors.
+make: Target 'ti/k3-am642-sk.dtb' not remade because of errors.
+make: Target 'ti/k3-am6548-iot2050-advanced-sm.dtb' not remade because of errors.
+make: Target 'ti/k3-am625-verdin-nonwifi-mallow.dtb' not remade because of errors.
+make: Target 'ti/k3-am625-phyboard-lyra-rdk.dtb' not remade because of errors.
+make: Target 'ti/k3-am625-verdin-nonwifi-ivy.dtb' not remade because of errors.
+make: Target 'ti/k3-j784s4-evm.dtb' not remade because of errors.
+make: Target 'ti/k3-am625-sk.dtb' not remade because of errors.
+make: Target 'ti/k3-j721e-sk.dtb' not remade because of errors.
 
 
 
