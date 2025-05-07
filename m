@@ -1,48 +1,31 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B60413C914;
-	Wed,  7 May 2025 02:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7953C18C03F
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 02:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746583973; cv=none; b=fJCbxv5xFSfbhd1vn1o95mw96GzSJtXUe/RKrptx11Nh1Iw3r2Mb0nbU9jUbm8+9o4BC02gwvFyz9Ph+lAdfAv9zF027l58pviNCksYmJWdEk2vMWnoW33Yco/rGY3+2z5B2HfzHJSxbxbLGhm1mavE+AbgUnONxGUXKYBsBUIQ=
+	t=1746584002; cv=none; b=EK2W6A0wM8wMhZEIMRiR4HyS/hqIr1ysnTAvLIzQfmGTMTmYWIWFIa9Z+0gNnq5fypi7X8r2PjxpHZKs8872dRymvB6OkzBKnCaC98vVOK8UedOABlkKEWZ0BQYyFaDET4eJkjeOKdv9ykWpCUWikiPGlYiYupdT4+wYq9QiPXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746583973; c=relaxed/simple;
-	bh=dzrbkY4X23RipD3l3Ge3/ZqWj4593/alobH6BpDh7hA=;
+	s=arc-20240116; t=1746584002; c=relaxed/simple;
+	bh=8MmtaHjE1m9L6Pi0UOXnqnz6Er30JaPgtpmX4plA46o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=X6Q0DGitZEfE2Qnr9LW3Hsqqr+QT4Z/moJ7cuZfqK+ORoSSVPrY9T6MP+bxQN6tIrOEKKSrNBMQmAwijrUgx39ks9f0Vq3jtjNXWJfy9AwfSpJeJF+ltJh57bWsGkH8g6v+gTiRRKLgucJ3AT/pW84VnEUY93663A26PyKVDp0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nCMS3w8I; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nCMS3w8I"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471HAL8028440;
-	Wed, 7 May 2025 02:12:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LfB5xXq277MAtXzOU/9GyduFI0JF/YzAt4MvMU6xV7w=; b=nCMS3w8IqfJ5TA8o
-	irqWTzhKWUbLuRds7P1UVuOGcxrw0Gl5x+nSARKjbECtfctBO5E4bfVeOHQiyOY1
-	KgTWteypuPAAQMqIi4uEJ7tNqW+GikRe46KiIrE6Z/IZSsBe4dVI3W0MZT94khAD
-	4cEXHvEWZ4bSJG096VQC9lPXrIxf4NA3g4HAGpTZRpinPMI4NsVwJrhaZPNbKfUE
-	aFiMD7p4BVP0yap1bMHQA05rVuu2bfO0O8nt6TrQIpSnZc1K9vHSD069MlPdtVyz
-	CL2f61XNGu9823B7yF4T7g8MtF4cYJOL3pDX9ik/8nK0ogMz0KFsUbxW/ZkcMhmn
-	NKaoqQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46fguuj94k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 02:12:43 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5472CZH4018497
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 7 May 2025 02:12:35 GMT
-Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 6 May 2025
- 19:12:33 -0700
-Message-ID: <3448c268-06e6-4d82-8f6c-ec635e624fe7@quicinc.com>
-Date: Wed, 7 May 2025 10:12:30 +0800
+	 In-Reply-To:Content-Type; b=BHTrmGugsJ42p05SowcqNuyZCh6ANMJWtPlqaEZxbaxnebepXofS04Fe61B6/C80LJlimAhkCl4YSZVpUlBt5C17tivZU4szwSAFVWvIIPg3N4Qx4kIHERz9NWCV5vunfP0lz2R5bXyFuuHz/p9I5v6kzcXBXQV5llt+fGkNa5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZsdYM0z0xz13KbK;
+	Wed,  7 May 2025 09:52:07 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id D1DFD180B5A;
+	Wed,  7 May 2025 09:53:23 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 7 May 2025 09:53:23 +0800
+Message-ID: <3e068311-9223-4c1b-9091-15eb2d867ede@huawei.com>
+Date: Wed, 7 May 2025 09:53:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,72 +33,173 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] wifi: ath11k: Fix memory reuse logic
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        Muhammad Usama Anjum
-	<usama.anjum@collabora.com>,
-        Jeff Johnson <jjohnson@kernel.org>
-CC: <kernel@collabora.com>, <linux-wireless@vger.kernel.org>,
-        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250428080242.466901-1-usama.anjum@collabora.com>
- <f58075f7-f643-4e47-b774-dc529aaa01e5@oss.qualcomm.com>
- <ec0bb100-4a70-4827-86b1-e4a7e8867a2d@collabora.com>
- <b21ced75-b239-43ad-b4a1-293300b00eb4@oss.qualcomm.com>
+Subject: Re: [PATCH v3] erofs: fix file handle encoding for 64-bit NIDs
 Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-In-Reply-To: <b21ced75-b239-43ad-b4a1-293300b00eb4@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=UJPdHDfy c=1 sm=1 tr=0 ts=681ac19b cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=Ai7BlpgEY3ezrPMUgKsA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
-X-Proofpoint-ORIG-GUID: NWgPhPa3jJygoQ0xgcXFwyBiyB6pupGU
-X-Proofpoint-GUID: NWgPhPa3jJygoQ0xgcXFwyBiyB6pupGU
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDAxOSBTYWx0ZWRfXws3uU9xpFPWE
- j0V7gwbmvdtgj+ndAGlyHeyKjS9ju/E1xRUx+RSmzlqM8WHOD6Wo6WyZgbWhCGs7STGYlBr6fX0
- vEKlQVs0eV9hTrRH6JHT6+vfxQXaTVd/SReQ0CxdGrvNIj2N+k4mb3o0z0peWm/4SUAavCk2jNZ
- S1cloQoJkHu3LzclsI+My2YYtUNKShRV1NNZqBMaIpTE83nVPOft8gCSmwkRZ6E2eUHsXLJatL2
- WWESoD7psknoPj6Z/1EOmEq7C1ZPIrkeRdd1hUJVyWeNWuGuS7k590xmlsawuo2CPBpWb66lK6J
- uCvH8GuJ5i9Ptn3zSix5R5pJxD09cCMUatq1yMbIMjEOIL59f1JwzjGxoDE3ztc/6O2VtWXn1n4
- os0etMPl2aTdUSmfqXBwosl3jvILk5e90LRlEzt2Z23C2Lyxhn2UdRG/bqVg7ZsuRiivROW4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_01,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 adultscore=0 clxscore=1015 phishscore=0 spamscore=0
- impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0 bulkscore=0
- malwarescore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505070019
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, <xiang@kernel.org>,
+	<chao@kernel.org>, <zbestahu@gmail.com>, <jefflexu@linux.alibaba.com>
+CC: <dhavale@google.com>, <linux-erofs@lists.ozlabs.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20250429134257.690176-1-lihongbo22@huawei.com>
+ <18d272ce-6a80-4fdc-b67b-ddc2ffa522d4@linux.alibaba.com>
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <18d272ce-6a80-4fdc-b67b-ddc2ffa522d4@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
 
 
 
-On 5/6/2025 10:37 PM, Jeff Johnson wrote:
-> On 5/6/2025 6:10 AM, Muhammad Usama Anjum wrote:
->> On 5/6/25 12:17 AM, Jeff Johnson wrote:
->>> v2 feedback was not incorporated:
->>> For starters, can we make the subject a bit more specific, i.e.
->>> Fix MHI target memory reuse logic
->>>
->>> But don't repost for this -- I'll make that change in ath/pending
->> I'd changed again on the request of another reviewer. Please feel free
->> to change as you like. I don't have any opinion on it.
->>
->>>
->>> However, does ath12k need the same fix?
->> Looking at ath12k, there is similar code structure in
->> ath12k_qmi_alloc_chunk(). By adding some logging, we can confirm if
->> ath12k requires the fix or not. As a lot of code is similar in both
->> drivers, ath12k may require the same fix.
->>
->> I don't have access to ath12k. So I cannot test on it.
+On 2025/5/6 23:10, Gao Xiang wrote:
+> Hi Hongbo,
 > 
-> Baochen, do you want to propagate the change to ath12k?
+> On 2025/4/29 21:42, Hongbo Li wrote:
+>> In erofs, the inode number has the location information of
+>> files. The default encode_fh uses the ino32, this will lack
+>> of some information when the file is too big. So we need
+>> the internal helpers to encode filehandle.
+> 
+> EROFS uses NID to indicate the on-disk inode offset, which can
+> exceed 32 bits. However, the default encode_fh uses the ino32,
+> thus it doesn't work if the image is large than 128GiB.
+> 
+Thanks for helping me correct my description.
 
-Yeah, I can test and fix if same issue is there.
+Here, an image larger than 128GiB won't trigger NID reversal. It 
+requires a 128GiB file inside, and the NID of the second file may exceed 
+U32 during formatting. So here can we change it to "However, the default 
+encode_fh uses the ino32, thus it may not work if there exist a file 
+which is large than 128GiB." ?
 
+Thanks,
+Hongbo
+
+> Let's introduce our own helpers to encode file handles.
+> 
+>>
+>> It is easy to reproduce test:
+> 
+> It's easy to reproduce:
+> 
+>>    1. prepare an erofs image with nid bigger than UINT_MAX
+> 
+>       1. Prepare an EROFS image with NIDs larger than U32_MAX
+> 
+>>    2. mount -t erofs foo.img /mnt/erofs
+>>    3. set exportfs with configuration: /mnt/erofs *(rw,sync,
+>>       no_root_squash)
+>>    4. mount -t nfs $IP:/mnt/erofs /mnt/nfs
+>>    5. md5sum /mnt/nfs/foo # foo is the file which nid bigger
+>>       than UINT_MAX.
+>> For overlayfs case, the under filesystem's file handle is
+>> encoded in ovl_fb.fid, it is same as NFS's case.
+>>
+>> Fixes: 3e917cc305c6 ("erofs: make filesystem exportable")
+>> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+>> ---
+>> v2: 
+>> https://lore.kernel.org/all/20250429074109.689075-1-lihongbo22@huawei.com/
+>>    - Assign parent nid with correct value.
+>>
+>> v1: 
+>> https://lore.kernel.org/all/20250429011139.686847-1-lihongbo22@huawei.com/
+>>     - Encode generation into file handle and minor clean code.
+>>     - Update the commiti's title.
+>> ---
+>>   fs/erofs/super.c | 54 +++++++++++++++++++++++++++++++++++++++++-------
+>>   1 file changed, 46 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+>> index cadec6b1b554..28b3701165cc 100644
+>> --- a/fs/erofs/super.c
+>> +++ b/fs/erofs/super.c
+>> @@ -511,24 +511,62 @@ static int erofs_fc_parse_param(struct 
+>> fs_context *fc,
+>>       return 0;
+>>   }
+>> -static struct inode *erofs_nfs_get_inode(struct super_block *sb,
+>> -                     u64 ino, u32 generation)
+>> +static int erofs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
+>> +               struct inode *parent)
+>>   {
+>> -    return erofs_iget(sb, ino);
+>> +    int len = parent ? 6 : 3;
+>> +    erofs_nid_t nid;
+> 
+> Just `erofs_nid_t nid = EROFS_I(inode)->nid;`?
+> 
+> I think the compiler will optimize out `if (*max_len < len)`.
+> 
+>> +    u32 generation;
+> 
+> It seems it's unnecessary to introduce `generation` variable here?
+> 
+>> +
+>> +    if (*max_len < len) {
+>> +        *max_len = len;
+>> +        return FILEID_INVALID;
+>> +    }
+>> +
+>> +    nid = EROFS_I(inode)->nid;
+>> +    generation = inode->i_generation;
+> 
+> So drop these two lines.
+> 
+>> +    fh[0] = (u32)(nid >> 32);
+>> +    fh[1] = (u32)(nid & 0xffffffff);
+>> +    fh[2] = generation;
+>> +
+>> +    if (parent) {
+>> +        nid = EROFS_I(parent)->nid;
+>> +        generation = parent->i_generation;
+>> +
+>> +        fh[3] = (u32)(nid >> 32);
+>> +        fh[4] = (u32)(nid & 0xffffffff);
+>> +        fh[5] = generation;
+> 
+>          fh[5] = parent->i_generation;
+> 
+>> +    }
+>> +
+>> +    *max_len = len;
+>> +    return parent ? FILEID_INO64_GEN_PARENT : FILEID_INO64_GEN;
+>>   }
+>>   static struct dentry *erofs_fh_to_dentry(struct super_block *sb,
+>>           struct fid *fid, int fh_len, int fh_type)
+>>   {
+>> -    return generic_fh_to_dentry(sb, fid, fh_len, fh_type,
+>> -                    erofs_nfs_get_inode);
+>> +    erofs_nid_t nid;
+>> +
+>> +    if ((fh_type != FILEID_INO64_GEN &&
+>> +         fh_type != FILEID_INO64_GEN_PARENT) || fh_len < 3)
+>> +        return NULL;
+>> +
+>> +    nid = (u64) fid->raw[0] << 32;
+>> +    nid |= (u64) fid->raw[1];
+> 
+> Unnecessary nid variable.
+> 
+>> +    return d_obtain_alias(erofs_iget(sb, nid));
+> 
+>      return d_obtain_alias(erofs_iget(sb,
+>              ((u64)fid->raw[0] << 32) | fid->raw[1]));
+> 
+>>   }
+>>   static struct dentry *erofs_fh_to_parent(struct super_block *sb,
+>>           struct fid *fid, int fh_len, int fh_type)
+>>   {
+>> -    return generic_fh_to_parent(sb, fid, fh_len, fh_type,
+>> -                    erofs_nfs_get_inode);
+>> +    erofs_nid_t nid;
+>> +
+>> +    if (fh_type != FILEID_INO64_GEN_PARENT || fh_len < 6)
+>> +        return NULL;
+>> +
+>> +    nid = (u64) fid->raw[3] << 32;
+>> +    nid |= (u64) fid->raw[4];
+> 
+> Same here.
+> 
+> Thanks,
+> Gao Xiang
