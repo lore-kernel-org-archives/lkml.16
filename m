@@ -1,153 +1,157 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4656728A411;
-	Wed,  7 May 2025 15:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D8728A40B;
+	Wed,  7 May 2025 15:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746630916; cv=none; b=dDTPExKThYRWikAtrqPwdojGNpuONeZA5e1q5IQvWvKAJ4abvzwjjH0/ISxOtePsnEk/x6Mz7kAufmUh+2IhXKesPYiPUnuVdMCsuTj9ZtNtBBd+8Pk5+rttRKzuF08ZJ4w31jEySDHS78vF0SjhNHpH0VXaaAkjcT3WNxfoTNo=
+	t=1746630915; cv=none; b=AxrhZwAv7b5+LHuIHZM0qYvVBxM7HcTrZa6t7VXzg/nqPEb9GXWVw04QsHk89TzC3iPSIdw2v8Pah8xYaUTFrQoEB+u2uJBen3Y7CG1bDhX5g7tGnuZILFUrru+XB5RJilhw+zbx9KI3LYvXsTPNlQajFYjq+cxB5h3TT8SKAuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746630916; c=relaxed/simple;
-	bh=6aJyKwDJyYv14UMvQvqVQkM2F5iS184Hqu9roe/nEC8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lD8WBW1MGgc4hDxgurE1Wd0YKvfMh8/PJ7tZcSj4HA9lsmkfGBYWxnhXhucQP13mLJ14EYeetH72twV3zrBse0jgLVQbp1rUHYJuuIuv0fDf4rh38FyTWn2Xf5Un54WNKs2CkMBToa+IbOo0ksnlji1xCeryGMTo0YCexR0S0PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZszGm6nRfz6M53M;
-	Wed,  7 May 2025 23:10:40 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 279381402F5;
-	Wed,  7 May 2025 23:15:12 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 7 May
- 2025 17:15:11 +0200
-Date: Wed, 7 May 2025 16:15:10 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Robert Richter <rrichter@amd.com>
-CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Davidlohr
- Bueso" <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Gregory Price <gourry@gourry.net>, "Fabio M.
- De Francesco" <fabio.m.de.francesco@linux.intel.com>, Terry Bowman
-	<terry.bowman@amd.com>
-Subject: Re: [PATCH v5 05/14] cxl/region: Rename function to
- cxl_port_pick_region_decoder()
-Message-ID: <20250507161510.00001ee8@huawei.com>
-In-Reply-To: <20250429163119.00001eba@huawei.com>
-References: <20250428214318.1682212-1-rrichter@amd.com>
-	<20250428214318.1682212-6-rrichter@amd.com>
-	<20250429163119.00001eba@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1746630915; c=relaxed/simple;
+	bh=5tkF3CDM/SiahZE1ey/V/R9PuHe6xmDu1THD4EbU57Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uxi4ZLt1UdpeHux5GV2DOPFWGDcoWwq/qgLklpP6fB8spOGTzzWNSFowSyng/H8LLvzKvKNPvtm+W91swWvWYZ29nAxXoCzbDgVf6tJxtorO2/rbFvBGAa02IJSrFsYA0k7ONkl3rpVDVCgx4uQO8cMtRZDg3PMzOew2ugWxIoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lszMnzFx; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lszMnzFx"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54795ISI004107;
+	Wed, 7 May 2025 15:15:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=uNrmQhTG6hbnUeRlUgPPTB1Jk+T5FRziSefdljTfZ
+	YY=; b=lszMnzFxEynDa40P61y45fNpCk784ts7Q0wM2XHskJfIzh7YiG40jcFeK
+	/KR4oEJEbDL/mkbQgvouksvIRVcPLNM/nc9+jTCnJzRMn6U0pzjRs1fk/Flp2mJ3
+	0fdn59oeQJfZh1vGPwzaAuOj14/pvXFU/h60AF4cR2S8hWd4nKN1ed4x4sJen2Nb
+	w+Txfwt5//NswH99gmCYc790VDMmy5c75kyR8gnT9U6JDKPTw4Xra4d7b78iqyMc
+	4h2uwruZO2tNJNPNa95Oc+qK4Qcvf4toyNsIO8zCOCaL3JMZcug3tGAVmPrnwKnw
+	1ahYPYGzrrohjlB9Uh6nrKY7cRkpA==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ft0mcg2n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 15:15:08 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 547CDWaF004231;
+	Wed, 7 May 2025 15:15:07 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46fjb25ynx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 15:15:07 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 547FF2rT24707818
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 7 May 2025 15:15:03 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BB69558062;
+	Wed,  7 May 2025 15:15:05 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 848E65805E;
+	Wed,  7 May 2025 15:15:05 +0000 (GMT)
+Received: from WIN-DU0DFC9G5VV.austin.ibm.com (unknown [9.41.105.251])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  7 May 2025 15:15:05 +0000 (GMT)
+From: Konstantin Shkolnyy <kshk@linux.ibm.com>
+To: sgarzare@redhat.com
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mjrosato@linux.ibm.com,
+        Konstantin Shkolnyy <kshk@linux.ibm.com>
+Subject: [PATCH net v2] vsock/test: Fix occasional failure in SIOCOUTQ tests
+Date: Wed,  7 May 2025 10:14:56 -0500
+Message-Id: <20250507151456.2577061-1-kshk@linux.ibm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: N5VCJu82kjq3pSZkrKerxRsT73TIubyF
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDE0MiBTYWx0ZWRfX0RBznA7dB3wc o99INo9SP5+GQM+nfpXtHYE7gvSpE+8ms8Vd4ilsnLGkvSCLlUafIj256ntO9yIAdONEm8kJpvf 6DPjNmF28P/0cL6aDXBG5+8BU9rP5ABQoe12o14xDkuDwvqGHiRTGMAIR9P1OSVgudHkaHayUUq
+ y+ttoyXDhabtviVhdSnLqGSKPBB9zHycSN8RoFYwKDOOEJunWh3KmMj6+DaLnJM+oFOo1X1jgWJ CcyhHWpjGxwygDGxgzHrhP/hA5x6N76/VNH45SpvqHD7mjtK4lMZW104duVUBx/LUKG0AokBige MKH6Go8PqxHpW7J6ImEbHZJbD7APFiuaQIR9T1PbdvJuljncE2Nsb0nK59H+FafqoBP6/Iqce0b
+ Fc90gQ7qMtvE3GMmSQgobebZYFXPDgSJLK/8i+1fuCUWT3aSrWO9itYBpUp5u2l/xOw61Ah2
+X-Authority-Analysis: v=2.4 cv=U4eSDfru c=1 sm=1 tr=0 ts=681b78fc cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=3dInbp6vRfHhuKdI63AA:9
+X-Proofpoint-GUID: N5VCJu82kjq3pSZkrKerxRsT73TIubyF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_04,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ suspectscore=0 phishscore=0 spamscore=0 clxscore=1015 mlxlogscore=999
+ lowpriorityscore=0 priorityscore=1501 malwarescore=0 bulkscore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505070142
 
-On Tue, 29 Apr 2025 16:31:19 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+These tests:
+    "SOCK_STREAM ioctl(SIOCOUTQ) 0 unsent bytes"
+    "SOCK_SEQPACKET ioctl(SIOCOUTQ) 0 unsent bytes"
+output: "Unexpected 'SIOCOUTQ' value, expected 0, got 64 (CLIENT)".
 
-> On Mon, 28 Apr 2025 23:43:08 +0200
-> Robert Richter <rrichter@amd.com> wrote:
-> 
-> > Current function cxl_region_find_decoder() is used to find a port's
-> > decoder during region setup. In the region creation path the function
-> > is an allocator to find a free port. In the region assembly path, it
-> > is recalling the decoder that platform firmware picked for validation
-> > purposes.
-> > 
-> > Rename function to cxl_port_pick_region_decoder() that better
-> > describes its use and update the function's description.
-> > 
-> > The result of cxl_port_pick_region_decoder() is recorded in a 'struct
-> > cxl_region_ref' in @port for later recall when other endpoints might
-> > also be targets of the picked decoder.  
-> 
-> I'm not convinced pick is really any clearer than find as it doesn't to me
-> imply 'get the one that was already allocated'.  I'm also not seeing
-> a lot of precedence in kernel for this use of pick.
-> 
-> I don't feel that strongly either way though and I guess I'll
-> get used to the term if we go with pick.
-> 
-> Alternative might just be to make it an or...
-> 
-> cxl_region_find_or_alloc_decoder()
-> 
-Just taking a look at where this series stands and feel a clarification
-is needed.
+They test that the SIOCOUTQ ioctl reports 0 unsent bytes after the data
+have been received by the other side. However, sometimes there is a delay
+in updating this "unsent bytes" counter, and the test fails even though
+the counter properly goes to 0 several milliseconds later.
 
-Note I don't care enough on this to block the series going forwards!
+The delay occurs in the kernel because the used buffer notification
+callback virtio_vsock_tx_done(), called upon receipt of the data by the
+other side, doesn't update the counter itself. It delegates that to
+a kernel thread (via vsock->tx_work). Sometimes that thread is delayed
+more than the test expects.
 
-> 
-> > 
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > Reviewed-by: Gregory Price <gourry@gourry.net>
-> > Tested-by: Gregory Price <gourry@gourry.net>
-> > ---
-> >  drivers/cxl/core/region.c | 25 ++++++++++++++++++++-----
-> >  1 file changed, 20 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index e35209168c9c..e104035e0855 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -865,10 +865,25 @@ static int match_auto_decoder(struct device *dev, const void *data)
-> >  	return 0;
-> >  }
-> >  
-> > +/**
-> > + * cxl_port_pick_region_decoder() - assign or lookup a decoder for a region
-> > + * @port: a port in the ancestry of the endpoint implied by @cxled
-> > + * @cxled: endpoint decoder to be, or currently, mapped by @port
-> > + * @cxlr: region to establish, or validate, decode @port
-> > + *
-> > + * In the region creation path cxl_port_pick_region_decoder() is an
-> > + * allocator to find a free port. In the region assembly path, it is
-> > + * recalling the decoder that platform firmware picked for validation
-> > + * purposes.
-> > + *
-> > + * The result is recorded in a 'struct cxl_region_ref' in @port for
-> > + * later recall when other endpoints might also be targets of the picked
-> > + * decoder.
-> > + */
-> >  static struct cxl_decoder *
-> > -cxl_region_find_decoder(struct cxl_port *port,
-> > -			struct cxl_endpoint_decoder *cxled,
-> > -			struct cxl_region *cxlr)
-> > +cxl_port_pick_region_decoder(struct cxl_port *port,
-> > +			     struct cxl_endpoint_decoder *cxled,
-> > +			     struct cxl_region *cxlr)
-> >  {
-> >  	struct device *dev;
-> >  
-> > @@ -932,7 +947,7 @@ alloc_region_ref(struct cxl_port *port, struct cxl_region *cxlr,
-> >  		if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-> >  			struct cxl_decoder *cxld;
-> >  
-> > -			cxld = cxl_region_find_decoder(port, cxled, cxlr);
-> > +			cxld = cxl_port_pick_region_decoder(port, cxled, cxlr);
-> >  			if (auto_order_ok(port, iter->region, cxld))
-> >  				continue;
-> >  		}
-> > @@ -1020,7 +1035,7 @@ static int cxl_rr_alloc_decoder(struct cxl_port *port, struct cxl_region *cxlr,
-> >  {
-> >  	struct cxl_decoder *cxld;
-> >  
-> > -	cxld = cxl_region_find_decoder(port, cxled, cxlr);
-> > +	cxld = cxl_port_pick_region_decoder(port, cxled, cxlr);
-> >  	if (!cxld) {
-> >  		dev_dbg(&cxlr->dev, "%s: no decoder available\n",
-> >  			dev_name(&port->dev));  
-> 
-> 
+Change the test to poll SIOCOUTQ until it returns 0 or a timeout occurs.
+
+Signed-off-by: Konstantin Shkolnyy <kshk@linux.ibm.com>
+---
+Changes in v2:
+ - Use timeout_check() to end polling, instead of counting iterations.
+
+ tools/testing/vsock/vsock_test.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
+
+diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+index d0f6d253ac72..613551132a96 100644
+--- a/tools/testing/vsock/vsock_test.c
++++ b/tools/testing/vsock/vsock_test.c
+@@ -1264,21 +1264,25 @@ static void test_unsent_bytes_client(const struct test_opts *opts, int type)
+ 	send_buf(fd, buf, sizeof(buf), 0, sizeof(buf));
+ 	control_expectln("RECEIVED");
+ 
+-	ret = ioctl(fd, SIOCOUTQ, &sock_bytes_unsent);
+-	if (ret < 0) {
+-		if (errno == EOPNOTSUPP) {
+-			fprintf(stderr, "Test skipped, SIOCOUTQ not supported.\n");
+-		} else {
++	/* SIOCOUTQ isn't guaranteed to instantly track sent data. Even though
++	 * the "RECEIVED" message means that the other side has received the
++	 * data, there can be a delay in our kernel before updating the "unsent
++	 * bytes" counter. Repeat SIOCOUTQ until it returns 0.
++	 */
++	timeout_begin(TIMEOUT);
++	do {
++		ret = ioctl(fd, SIOCOUTQ, &sock_bytes_unsent);
++		if (ret < 0) {
++			if (errno == EOPNOTSUPP) {
++				fprintf(stderr, "Test skipped, SIOCOUTQ not supported.\n");
++				break;
++			}
+ 			perror("ioctl");
+ 			exit(EXIT_FAILURE);
+ 		}
+-	} else if (ret == 0 && sock_bytes_unsent != 0) {
+-		fprintf(stderr,
+-			"Unexpected 'SIOCOUTQ' value, expected 0, got %i\n",
+-			sock_bytes_unsent);
+-		exit(EXIT_FAILURE);
+-	}
+-
++		timeout_check("SIOCOUTQ");
++	} while (sock_bytes_unsent != 0);
++	timeout_end();
+ 	close(fd);
+ }
+ 
+-- 
+2.34.1
 
