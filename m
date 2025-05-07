@@ -1,123 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7781233145;
-	Wed,  7 May 2025 11:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6FA1F17E8;
+	Wed,  7 May 2025 11:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746618815; cv=none; b=ZaYlIqhs5ZOXwOlbLTvEgXxswEvrcakr4ruSDlsNqP+LODYq97VDxdCMW42EnJeQ5GS/tPhnTjDXf6eoHU1L7xQR6N3D96fO/8jpnpf7qjpcJ/popGm9/VUVkuQ8GcXF/uON/TYxamFowNuskoAE9b2GOqLfp92rVyOm/0/7zHk=
+	t=1746618828; cv=none; b=h2XHUZjNq3tO0cCwxqLE40tthYAUDkkjZtJMyCnXVNmtMSvwNa0qQjaYT6GEwRxKY8bZVraoIFUDLcyVs3tYHo94Og8lez5jCAR6qHoyjwLTC2ERywf/uLU9Z8qlIGVcdvGOlM64dhbyuhSCOrsheT7S87dPJm7t2BGFt7FdwhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746618815; c=relaxed/simple;
-	bh=4JcYlBsxf2ipeOFDRyF84mG5KKuYrCHrCu3pXh8h5nQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TZwIrVSwGJYDqv4nN+a8kXcUTQpIDn5C68O6wPtbuxGACgpsdAg7dgxA08t20NVof98CPYv5a/YR7fq4RRjN3LB5W6nf6tHNYfXoPbtfLH3tCT0T5s7bGjjVHM4Hl3s1lH7p1downdQH+WZBnQ2Vf3vDzFS+Wqm28nz1cKiES00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kgsvnpMT; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746618828; c=relaxed/simple;
+	bh=3Mvx4gS4UCJGhJqVQabDRGH7Ae1Hmq8fMWFbmn3ZEAQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=aEKbP7pScDTkRpyRIPNb+bupRfA4ei7shHVrF8OOyb3sNg5N0TsOZYl3VsuzCOoQoo/7V1vo73ZIdkZweXvhLR6VpluhqzeFqz0F0BXyup5imMAKehYfYohYFyD14o9p6JlOHE7JYlAjvQbhRYPr/K3qwFa+Vfi4vfMgTae5P/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=NCo5Qiel; arc=none smtp.client-ip=207.171.188.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kgsvnpMT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746618813; x=1778154813;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4JcYlBsxf2ipeOFDRyF84mG5KKuYrCHrCu3pXh8h5nQ=;
-  b=kgsvnpMTkJxNxBPBWmePTa+MVDQkHjF0l8OhOq5knmF/xIvjVcIBBauq
-   r2xa3PtFHFebLUUxkJHeouZOOM6je7KjAGWn8zSouZo90g2InMZqTDFpb
-   nQ7vGNCJzSXOQhPeQYAbK4RN35/d3Bn7+ciJszyvKnfKGZsqZ9aQTvEA5
-   eFsIztLne8LbxQ8c/ZmZw6a9KXH+9DuUiBKTD5jRYyAi7eG7//klC8gBv
-   zGdmWPUtJujIjwKJlUtP9b7CM0CNyvqaCcBj4P6f0CQPLJsslKIVnH5aY
-   46PhoypySiXidUJK4OoTm+MdRUh1B7cZRTPGblaQd4WOjnC6EkSlWb3Eq
-   g==;
-X-CSE-ConnectionGUID: HQK2ShDcT6KAZjI/VftKDw==
-X-CSE-MsgGUID: 2cJZwSRTSxe8Ck9vCWVCIw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="59332550"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="59332550"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 04:53:33 -0700
-X-CSE-ConnectionGUID: Y6Wip6tRQCuEQ4xOWumbTQ==
-X-CSE-MsgGUID: qeovHKWERhu8FikUC689lA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="135898619"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 07 May 2025 04:53:28 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCdL4-0007ij-1R;
-	Wed, 07 May 2025 11:53:26 +0000
-Date: Wed, 7 May 2025 19:52:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Ajit Pandey <quic_ajipan@quicinc.com>,
-	Imran Shaik <quic_imrashai@quicinc.com>,
-	Taniya Das <quic_tdas@quicinc.com>,
-	Jagadeesh Kona <quic_jkona@quicinc.com>,
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Subject: Re: [PATCH 2/3] clk: qcom: camcc-sc8180x: Add SC8180X camera clock
- controller driver
-Message-ID: <202505071921.BoUs47vy-lkp@intel.com>
-References: <20250422-sc8180x-camcc-support-v1-2-691614d13f06@quicinc.com>
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="NCo5Qiel"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1746618826; x=1778154826;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:mime-version:
+   content-transfer-encoding;
+  bh=9H6IB1t05Wk4CPRCOrMkbFz+/zLlqKfD3q7NfPAHCKA=;
+  b=NCo5QielITX6YnRlIoQEB6PUn5uQF0oTTb/rMJeP4gAIke1pgsHqoOQ4
+   a/dFkGJSFZ9q+rQtLkWv7KPPbOr8OtRu+f+bSQ7XZ+3SKq3KiuN1FcMJT
+   1T4nkHDMeqYHpMhfdjhQXfYIvpBeyZl6WuQn+dXL2IWyg5wL2g74UPPhP
+   2iIva7Q9FXZGNb07vnGOtvY1DjQa8AQyKx4Tfg2ILLZ1LL/BT71LwekX4
+   gbeNR8tbXhUjt+twBbEwyaGlBCvsxfirZO/aofkrvr+9t6KFNrR+0eDcu
+   ZumB698AkGcYb5Ief/GiwvL4rPfXetAzwtVICuSCbU1W1MaDFMzX7nGPb
+   A==;
+X-IronPort-AV: E=Sophos;i="6.15,269,1739836800"; 
+   d="scan'208";a="17398127"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 11:53:39 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [10.0.17.79:35612]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.24.249:2525] with esmtp (Farcaster)
+ id 77eb41e8-f9ab-4c1f-a112-3990db12ac9a; Wed, 7 May 2025 11:53:38 +0000 (UTC)
+X-Farcaster-Flow-ID: 77eb41e8-f9ab-4c1f-a112-3990db12ac9a
+Received: from EX19D008EUC003.ant.amazon.com (10.252.51.205) by
+ EX19MTAEUC001.ant.amazon.com (10.252.51.155) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 7 May 2025 11:53:38 +0000
+Received: from EX19D008EUC001.ant.amazon.com (10.252.51.165) by
+ EX19D008EUC003.ant.amazon.com (10.252.51.205) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 7 May 2025 11:53:38 +0000
+Received: from EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1]) by
+ EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1%3]) with mapi id
+ 15.02.1544.014; Wed, 7 May 2025 11:53:38 +0000
+From: "Heyne, Maximilian" <mheyne@amazon.de>
+To: Jeremy Linton <jeremy.linton@arm.com>
+CC: Sudeep Holla <sudeep.holla@arm.com>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
+	<lenb@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
+Thread-Topic: [PATCH] ACPI/PPTT: fix off-by-one error
+Thread-Index: AQHbv0arMRX/gskFdkix2YX2FUmtIw==
+Date: Wed, 7 May 2025 11:53:38 +0000
+Message-ID: <20250507-argue-rant-9f48ba38@mheyne-amazon>
+References: <20250506-draco-taped-15f475cd@mheyne-amazon>
+ <20250506-shapeless-merciful-inchworm-7bfdb4@sudeepholla>
+ <35895e57-bbe2-4ff9-b1d4-4b70e28ed8a1@arm.com>
+In-Reply-To: <35895e57-bbe2-4ff9-b1d4-4b70e28ed8a1@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2476D48D943DCC429522F5546EF3921F@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422-sc8180x-camcc-support-v1-2-691614d13f06@quicinc.com>
+Content-Transfer-Encoding: quoted-printable
 
-Hi Satya,
+On Tue, May 06, 2025 at 03:11:20PM -0500, Jeremy Linton wrote:
+> Hi,
+> =
 
-kernel test robot noticed the following build warnings:
+> On 5/6/25 8:43 AM, Sudeep Holla wrote:
+> > On Tue, May 06, 2025 at 01:13:02PM +0000, Heyne, Maximilian wrote:
+> > > Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple of
+> > > sizeof() calls") corrects the processer entry size but unmasked a lon=
+ger
+> > > standing bug where the last entry in the structure can get skipped due
+> > > to an off-by-one mistake if the last entry ends exactly at the end of
+> > > the ACPI subtable.
+> > > =
 
-[auto build test WARNING on bc8aa6cdadcc00862f2b5720e5de2e17f696a081]
+> > =
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Satya-Priya-Kakitapalli/dt-bindings-clock-Add-Qualcomm-SC8180X-Camera-clock-controller/20250422-134531
-base:   bc8aa6cdadcc00862f2b5720e5de2e17f696a081
-patch link:    https://lore.kernel.org/r/20250422-sc8180x-camcc-support-v1-2-691614d13f06%40quicinc.com
-patch subject: [PATCH 2/3] clk: qcom: camcc-sc8180x: Add SC8180X camera clock controller driver
-config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20250507/202505071921.BoUs47vy-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071921.BoUs47vy-lkp@intel.com/reproduce)
+> > Unless the firmware has populated an incorrect value for the header len=
+gth, I
+> > don't see how this is possible. The table_end should point to the addre=
+ss
+> > immediately following the last byte of the table. None of the headers a=
+re only
+> > one byte long, so what am I missing that could explain this apparent
+> > off-by-one issue?.
+> =
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505071921.BoUs47vy-lkp@intel.com/
+> More likely its because the sizeof() fix was merged without proper review
+> and is wrong because the type isn't actually known on the object until the
+> header is checked.
 
-All warnings (new ones prefixed by >>):
+I agree that the type might not be known at this point but the condition
 
->> drivers/clk/qcom/camcc-sc8180x.c:403:37: warning: 'cam_cc_parent_data_7' defined but not used [-Wunused-const-variable=]
-     403 | static const struct clk_parent_data cam_cc_parent_data_7[] = {
-         |                                     ^~~~~~~~~~~~~~~~~~~~
->> drivers/clk/qcom/camcc-sc8180x.c:399:32: warning: 'cam_cc_parent_map_7' defined but not used [-Wunused-const-variable=]
-     399 | static const struct parent_map cam_cc_parent_map_7[] = {
-         |                                ^~~~~~~~~~~~~~~~~~~
+  	proc_sz =3D sizeof(struct acpi_pptt_processor);
+	  while((unsigned long)entry + proc_sz <=3D table_end)
+
+would make sure that there could potentially be a node of type
+acpi_pptt_processor because there is at least space for it. If the entry
+can't be of that size because it would go over table_end then it can't
+be an acpi_pptt_processor.
+
+Therefore, I don't think the sizeof() fix is that wrong but we just need
+to adjust the while condition.
+
+Alternatively, we could at least make sure that we can safely access
+(without crossing table_end) the acpi_subtable_header to check the type.
+But the current approach seems cleaner to me.
 
 
-vim +/cam_cc_parent_data_7 +403 drivers/clk/qcom/camcc-sc8180x.c
 
-   398	
- > 399	static const struct parent_map cam_cc_parent_map_7[] = {
-   400		{ P_SLEEP_CLK, 0 },
-   401	};
-   402	
- > 403	static const struct clk_parent_data cam_cc_parent_data_7[] = {
-   404		{ .index = DT_SLEEP_CLK },
-   405	};
-   406	
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
