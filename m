@@ -1,64 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC0F221714;
-	Wed,  7 May 2025 07:57:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24C3221D93;
+	Wed,  7 May 2025 07:57:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746604670; cv=none; b=Wkn/RMbZyRwvY5k1ZwsVTZDzGen349rq3l0++n+rJSxz/tueZ8aeAb0aOlFnVG4m0uSxxeWffbEzLL5TnTUza/pCTB4T6R2yI48bR6dwWJi1fcnGAUPUzc521stGPyzNKlHi23SikMIXWEUDMzTUHx0am2mwDqrPezX8bXIidSo=
+	t=1746604672; cv=none; b=oPbZY+GqL0pdVrB1bGKNbq7hkc5pqfOGOdfln7CHir3LlJooC2H1uaJ9GVurWKmybxYbhtYi9mIAL+XAh02F6fKy9d1JqKZu7VS1+M9h57F/M/Bn4pVeKQPvtgBO0tLGvOT/24TgIqvd82YZQ/aHV/VehLBpwp+Go4qVHZNpvgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746604670; c=relaxed/simple;
-	bh=Edi48S2QW7Bl1AlBnEAmSAX/cjArHfSTkl4yq02K7e0=;
+	s=arc-20240116; t=1746604672; c=relaxed/simple;
+	bh=u+gBveKbvC/z68n5x/exS30N0vPI0QXiowb/QtH/lVk=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=pDS8SbOJTqrPGGqOY/bZ7Rv0Pq4SorIbvRWYl2luZ23eMzgM4vl2dVdzMuCXQO2hg5pgekOmC4iyWU/kIGX9t0qXy0e1wxnRe8BzXorYHtrgSKDEzeDWSqPeB9VGSALHif1foA8GiYNEztrYe+7Qw1vRgyELkF28q+LRsM0jYBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AikqAYTW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rEwL+2LY; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=tMV8/rctBkMZXGb/tmGMPTYAEHUDKdX7CxZUj5BbheAtWpC6iYvvI8793Sv2dgcJKvIEwz0uYKjqzCwbYe5Nwjr6Cav8XXeiKUK8TfhQ+21tEu6jbcqB528vrjuUqyTAhiJcr3R6jW0lzgQtd3NfVECnaBKt21O3k7wOjUsMxnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lprBDmlG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sZapD8RV; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AikqAYTW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rEwL+2LY"
-Date: Wed, 07 May 2025 07:57:46 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lprBDmlG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sZapD8RV"
+Date: Wed, 07 May 2025 07:57:48 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746604666;
+	s=2020; t=1746604669;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QSvjRaQObSyYccysfBqIoddjsNA8E23r2vfDiTYpelM=;
-	b=AikqAYTWyY/iH9/OomCD/5FV5Hb0EkATYxypVv3XTOC2XnMWVLeXcJcFR8xJyR9X1TVzJS
-	d/5Dco7pz+KVtOIE37JXKrJDmLZu/Le1s5HWI23olHM6KfpvsRv5imEnfZ5T+qV12AP1tF
-	3SDjVo1qdE+GL8d6rupNHQAuRSRUvYKcY+WHgkgUbgcXzDeCHLxx0hJy1AHqEQSXvihGVe
-	bkSQFvU25jsGa2qB8O9+bT0V0j830P8MYKx6h0ddWh5wxOvAaOQuLRbQgg1BwQmhAMd7Um
-	11l9hJVvtDNPdeoIqwoV9FCbHj3i0e9Lf9VVoxQKHPTMfZ4VdnZmuUkdGu5vuQ==
+	bh=yCcgAeapgHAV+oqUB8LONYVYhcUa2W8AL6LrLZKayiM=;
+	b=lprBDmlGyKL+hmvJ6RQjLF0f3d0BUH6O+vXJnWcVZDbudS/joUiZZzilkPp6l8bizf2KD+
+	cdWfeDfQ5o8q4w1d7k3r0Wj7EDyi/hV7gLuReRUHGOI5WwGN22cjUjwlf4eh+wEolD0uxz
+	jLW4mo7/y+7DuvYLo3LPnLcuq6/FU5o+6SnJc0l4RxJRbMFpmYbjm2bX5/KRzoU5t5AONR
+	ifF/eSXtqcKr1B8ygpUp6ECjPRiT62DVpcUFw0bvv/W9r2rGI/6UYwJCey8yTo53xaIxFy
+	cnEXo0nnuFB9MdKO9YjAaQz3kTjDkX89DSY6xNiU6IQUPKn+8kppAmMi1OBbXg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746604666;
+	s=2020e; t=1746604669;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QSvjRaQObSyYccysfBqIoddjsNA8E23r2vfDiTYpelM=;
-	b=rEwL+2LYNT0iNU+ryGRb8hZzU4CSAg8HhprGMmOX9+2ByOFX2fWu8SA987pCG2WEJ4j4IN
-	Fv2W0dm/Gsv7IpDg==
+	bh=yCcgAeapgHAV+oqUB8LONYVYhcUa2W8AL6LrLZKayiM=;
+	b=sZapD8RVXZAWF3gNmFem8CEDR4T3L/5mWKo27vIddEjq1k3Ugr8hllW6wawe/a12r8IDAl
+	ewlci+8+UxOPPpDg==
 From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: irq/cleanups] irqdomain: Fix kernel-doc and add it to Documentation
+Subject: [tip: irq/cleanups] Documentation: irq/concepts: Minor improvements
 Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
  Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250319092951.37667-58-jirislaby@kernel.org>
-References: <20250319092951.37667-58-jirislaby@kernel.org>
+In-Reply-To: <20250319092951.37667-55-jirislaby@kernel.org>
+References: <20250319092951.37667-55-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174660466603.406.2754537138927068541.tip-bot2@tip-bot2>
+Message-ID: <174660466838.406.8321244781066755050.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,104 +67,58 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/cleanups branch of tip:
 
-Commit-ID:     6b67de3a2db90987b5d0845b9c6a3ed7eb94dcf4
-Gitweb:        https://git.kernel.org/tip/6b67de3a2db90987b5d0845b9c6a3ed7eb94dcf4
+Commit-ID:     457a114de9a95948e2cc6ddecc4a73392a82aa4e
+Gitweb:        https://git.kernel.org/tip/457a114de9a95948e2cc6ddecc4a73392a82aa4e
 Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Wed, 19 Mar 2025 10:29:50 +01:00
+AuthorDate:    Wed, 19 Mar 2025 10:29:47 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 07 May 2025 09:53:25 +02:00
 
-irqdomain: Fix kernel-doc and add it to Documentation
+Documentation: irq/concepts: Minor improvements
 
-irqdomain.c's kernel-doc exists, but is not plugged into Documentation/
-yet.
+Just note in the docs:
 
-Before plugging it in, fix it first: irq_domain_get_irq_data() and
-irq_domain_set_info() were documented twice. Identically, by both
-definitions for CONFIG_IRQ_DOMAIN_HIERARCHY and !CONFIG_IRQ_DOMAIN_HIERARCHY.
+ 1) A PCI device as an example for shared interrupts
+ 2) A sparse tree can be used for interrupts too
+ 3) i8259s which have 8 pins
 
-Therefore, switch the second kernel-doc into an ordinary comment -- change
-"/**" to simple "/*". This avoids sphinx's: WARNING: Duplicate C
-declaration
-
-Next, in commit b7b377332b96 ("irqdomain: Fix the kernel-doc and plug it
-into Documentation"), irqdomain.h's (header) kernel-doc was added into
-core-api/genericirq.rst. But given the amount of irqdomain functions and
-structures, move all these to core-api/irq/irq-domain.rst now.
-
-Finally, add these newly fixed irqdomain.c's (source) docs there as
-well.
+[ tglx: Fix up subject prefix ]
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250319092951.37667-58-jirislaby@kernel.org
+Link: https://lore.kernel.org/all/20250319092951.37667-55-jirislaby@kernel.org
 
 ---
- Documentation/core-api/genericirq.rst     |  2 --
- Documentation/core-api/irq/irq-domain.rst | 20 ++++++++++++++++++++
- kernel/irq/irqdomain.c                    |  4 ++--
- 3 files changed, 22 insertions(+), 4 deletions(-)
+ Documentation/core-api/irq/concepts.rst | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/core-api/genericirq.rst b/Documentation/core-api/genericirq.rst
-index 25f94df..582bde9 100644
---- a/Documentation/core-api/genericirq.rst
-+++ b/Documentation/core-api/genericirq.rst
-@@ -410,8 +410,6 @@ which are used in the generic IRQ layer.
- .. kernel-doc:: include/linux/interrupt.h
-    :internal:
+diff --git a/Documentation/core-api/irq/concepts.rst b/Documentation/core-api/irq/concepts.rst
+index f166006..7c4564f 100644
+--- a/Documentation/core-api/irq/concepts.rst
++++ b/Documentation/core-api/irq/concepts.rst
+@@ -4,18 +4,20 @@ What is an IRQ?
  
--.. kernel-doc:: include/linux/irqdomain.h
--
- Public Functions Provided
- =========================
+ An IRQ is an interrupt request from a device. Currently, they can come
+ in over a pin, or over a packet. Several devices may be connected to
+-the same pin thus sharing an IRQ.
++the same pin thus sharing an IRQ. Such as on legacy PCI bus: All devices
++typically share 4 lanes/pins. Note that each device can request an
++interrupt on each of the lanes.
  
-diff --git a/Documentation/core-api/irq/irq-domain.rst b/Documentation/core-api/irq/irq-domain.rst
-index 67d45b3..a01c6ea 100644
---- a/Documentation/core-api/irq/irq-domain.rst
-+++ b/Documentation/core-api/irq/irq-domain.rst
-@@ -298,3 +298,23 @@ Debugging
+ An IRQ number is a kernel identifier used to talk about a hardware
+ interrupt source. Typically, this is an index into the global irq_desc
+-array, but except for what linux/interrupt.h implements, the details
+-are architecture specific.
++array or sparse_irqs tree. But except for what linux/interrupt.h
++implements, the details are architecture specific.
  
- Most of the internals of the IRQ subsystem are exposed in debugfs by
- turning CONFIG_GENERIC_IRQ_DEBUGFS on.
-+
-+Structures and Public Functions Provided
-+========================================
-+
-+This chapter contains the autogenerated documentation of the structures
-+and exported kernel API functions which are used for IRQ domains.
-+
-+.. kernel-doc:: include/linux/irqdomain.h
-+
-+.. kernel-doc:: kernel/irq/irqdomain.c
-+   :export:
-+
-+Internal Functions Provided
-+===========================
-+
-+This chapter contains the autogenerated documentation of the internal
-+functions.
-+
-+.. kernel-doc:: kernel/irq/irqdomain.c
-+   :internal:
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 57098c7..c8b6de0 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1996,7 +1996,7 @@ static void irq_domain_check_hierarchy(struct irq_domain *domain)
- 		domain->flags |= IRQ_DOMAIN_FLAG_HIERARCHY;
- }
- #else	/* CONFIG_IRQ_DOMAIN_HIERARCHY */
--/**
-+/*
-  * irq_domain_get_irq_data - Get irq_data associated with @virq and @domain
-  * @domain:	domain to match
-  * @virq:	IRQ number to get irq_data
-@@ -2010,7 +2010,7 @@ struct irq_data *irq_domain_get_irq_data(struct irq_domain *domain,
- }
- EXPORT_SYMBOL_GPL(irq_domain_get_irq_data);
+ An IRQ number is an enumeration of the possible interrupt sources on a
+ machine. Typically, what is enumerated is the number of input pins on
+ all of the interrupt controllers in the system. In the case of ISA,
+-what is enumerated are the 16 input pins on the two i8259 interrupt
+-controllers.
++what is enumerated are the 8 input pins on each of the two i8259
++interrupt controllers.
  
--/**
-+/*
-  * irq_domain_set_info - Set the complete data for a @virq in @domain
-  * @domain:		Interrupt domain to match
-  * @virq:		IRQ number
+ Architectures can assign additional meaning to the IRQ numbers, and
+ are encouraged to in the case where there is any manual configuration
