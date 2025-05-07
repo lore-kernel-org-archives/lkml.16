@@ -1,97 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5505A4B1E50;
-	Wed,  7 May 2025 20:00:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B49B2F43;
+	Wed,  7 May 2025 20:01:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746648022; cv=none; b=FsEScA7caQeR2iaif7R2lI+/4vYotZfss/uMqqgm5R2dtvPqgxkUaDLXw31iZDgk8Knuy2Ihe2ZY2OVopHcLK97vLoYdNeEjBcpGHBGYhG4bPjS8yhSRsAMyjQI3tFXbxWhvB4/yM+nFntelMbYs4WhWq4egmDrAqmJjRxSQ+E8=
+	t=1746648077; cv=none; b=Zk4274K4GXgO11mMBcYiOOXnlEXF6ypBNo4e9MgIpEBadQOfhHtWVsYfRFoyUoaBTwssWfPw1fduW9wb6bQgR3oqL5dOTyktsmqMKDjlc/nyuB/zEdiXf/5xgD2LAywy9VKwqNKvy3ZCL7N3oH6uJaJfEJ7F0uXDqf5PCMkCCR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746648022; c=relaxed/simple;
-	bh=tjav2Lry3CZ3llKxpBjEEIb2DCzNxNqCb8X2oXOpn2k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LaOhJIkEC35Hclk53n1xv2b2Fco0VQEE5rWvSCmGwZhkR6+ELuGYvJNuGEbfokUx8RaTMxsiIL3ASvXIR+CFwSXarvc7sZU6Ni9DMnH06pghfuc1mRXzkUof84Uk0ZFgZiLaPg+0L5BAEuHeQz4xdrDaLDBGTgAT9tNq6ew1Nk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hHTCXVdc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746648077; c=relaxed/simple;
+	bh=DfHI/ZnSSfwOEFBgC0Q2ORu/XpEumIZs17KMnZ4wfYg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W5DMcJmv6sSp1PBnr4aCh83S4mXBFzbUTpPmF7mT2jyGoAX63Ddj+S/L7jtXVaOiKfU0q3QlmuCxKj/FBAMgUtFEuD4ssdgSUe0Crn1FOiEJU++rkHUbrZttBJ6yc+u6bqcg1cknvdphLtnDqX8zRjlz9l0x7WByK1kcF4Ecm4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eMKTO2AG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHTCXVdc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD381C4CEE7;
-	Wed,  7 May 2025 20:00:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eMKTO2AG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAFC8C4CEE2;
+	Wed,  7 May 2025 20:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746648020;
-	bh=tjav2Lry3CZ3llKxpBjEEIb2DCzNxNqCb8X2oXOpn2k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hHTCXVdcs7P4IJcz7KQygsNb2ijbcQWHLoTDMj02pcRaOxUGANPFyw04Fur0Ya+0e
-	 XDjjWvmMQuPQuvqq5l5K3kDucp4F4kMJxVGuxMBFcwchoL6FT3MJ7DXf/s8p3ocA2V
-	 d0zWSCSRRU7XqsIc8dZYtu1Hu8/6M4ZNhF3lX089uSFgYSGH34qNgm9lRl1MkNEqq+
-	 v4xb3MAtbTAfngsrO5RQPPMJEArSkLj+s8yAf3YPYIKiVlrNYqGkLtJl7zSLIIlCfd
-	 a0j0E/Qb39Lpj4weFkrZCnIDvyrLm2Mw2uX86xdUjItUElOfuQkIQcLiBmTftCrVt3
-	 fOCZhIZZFyx3g==
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2c76a1b574cso152870fac.2;
-        Wed, 07 May 2025 13:00:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUlr8IZ5EpbrKt+AEdMLE72g5p0LjquNnRWlKUmylPaKXGu+/EXJDYeWAq3QzHg0lT1XHWzeqYkwgU=@vger.kernel.org, AJvYcCVSe+Nuta9Ox9sQO7NeFJ9pWgztajI3ecuyK85xcD4fdImiLyDRMiKD5erq/+YA7JEpGffjWlyac9Q+zH0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZJbx2TadsN7jHpzaPvtoMj5iJw0bflUIcuciUU6+EtSZSBXsD
-	RWCYlCNIOsdc+WtsgB0Vt/2sdAmO1oNu/ty8SR0FEnsHyKvV0rag4szHzT5sZYvgPAAaRfynS8a
-	40r2z/wkt1Vh0a0MY5yuyFegYShg=
-X-Google-Smtp-Source: AGHT+IG5ntTjTMWQrdtV83l8Iscj3hSN3CVcasJJOW8huMIBAsneuAIyvv53WVJ7ELMSGRGA2f6HHg3dABvNve5Pbxg=
-X-Received: by 2002:a05:6870:47a6:b0:29f:97af:a1a0 with SMTP id
- 586e51a60fabf-2db5c07fc35mr2410065fac.24.1746648020011; Wed, 07 May 2025
- 13:00:20 -0700 (PDT)
+	s=k20201202; t=1746648076;
+	bh=DfHI/ZnSSfwOEFBgC0Q2ORu/XpEumIZs17KMnZ4wfYg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eMKTO2AGZHIyVpqOm/b+ii7bIuDASYiYkxOS307zgNov5/r2xLovO1FEYUaOdEULq
+	 LrfTOaysbGvZDXhslwCRv4KJS/62We3F+1HQezK4Fn3pOjzyXIRyA/sESaJPpQlOiS
+	 b1fXrPFxcohJlDFcbs+3eSMttn4Ed0ZHW/FoS2F/Zh4azbusPeOhoVoG7xkNRHseUI
+	 5CUbKIuZaUBRBCJ+IPYwOr7iupzW0DYHoRjJpaMfbedAA/raMHF67pqrQq7SR2p1DO
+	 huwAUMu8e0784osyr+74CFpFKrk1Y9zQ67+tH/noKnbUiWjj283YsccSSRbhVne5/c
+	 ZcddghvRy5wxg==
+Date: Wed, 7 May 2025 21:01:12 +0100
+From: Simon Horman <horms@kernel.org>
+To: Sagi Maimon <maimon.sagi@gmail.com>
+Cc: jonathan.lemon@gmail.com, vadim.fedorenko@linux.dev,
+	richardcochran@gmail.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v1] ptp: ocp: Limit SMA/signal/freq counts in show/store
+ functions
+Message-ID: <20250507200112.GL3339421@horms.kernel.org>
+References: <20250506080647.116702-1-maimon.sagi@gmail.com>
+ <20250507194630.GJ3339421@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250419025504.9760-1-ricardo.neri-calderon@linux.intel.com>
-In-Reply-To: <20250419025504.9760-1-ricardo.neri-calderon@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 7 May 2025 22:00:08 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jvtYyXoj71WF=0MLHZLt=zfMo5+C1v7xJ6CuCkowxNmg@mail.gmail.com>
-X-Gm-Features: ATxdqUE_l-rxZ7CePiPNQL5CuDpYcHevrgJn0VzeGh0i7eLIf8QPqLTqcloG3PY
-Message-ID: <CAJZ5v0jvtYyXoj71WF=0MLHZLt=zfMo5+C1v7xJ6CuCkowxNmg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] topology/sysfs, cpufreq/intel_pstate: Populate cpu_capacity
-To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	Len Brown <len.brown@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, Ricardo Neri <ricardo.neri@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507194630.GJ3339421@horms.kernel.org>
 
-On Sat, Apr 19, 2025 at 4:49=E2=80=AFAM Ricardo Neri
-<ricardo.neri-calderon@linux.intel.com> wrote:
->
-> Hi,
->
-> Capacity-aware scheduling is now supported on Intel hybrid processors. It
-> makes sense now to populate the interface /sys/devices/system/cpu/cpuN/
-> cpu_capacity. User space entities can use this information to implement
-> policy such as utilization clamps.
->
-> This interface currently lives in arch_topology.c. Rather than implementi=
-ng
-> the interface again for x86, we can move it to a common location in
-> topology.c from which other architectures can also benefit and populate
-> using their own mechanisms.
->
-> I tested this patchset on Intel Alder Lake and DragonBoard 845c. The
-> interfaces are populated correctly.
->
-> I'd appreciate any feedback!
->
-> Thanks and BR,
-> Ricardo
-> Ricardo Neri (2):
->   arch_topology: Relocate cpu_scale to topology.[h|c]
->   cpufreq: intel_pstate: Populate the cpu_capacity sysfs entries
->
->  drivers/base/arch_topology.c   | 52 ----------------------------------
->  drivers/base/topology.c        | 52 ++++++++++++++++++++++++++++++++++
->  drivers/cpufreq/intel_pstate.c |  2 ++
->  include/linux/arch_topology.h  |  8 ------
->  include/linux/topology.h       |  9 ++++++
->  5 files changed, 63 insertions(+), 60 deletions(-)
->
-> --
+On Wed, May 07, 2025 at 08:46:30PM +0100, Simon Horman wrote:
+> On Tue, May 06, 2025 at 11:06:47AM +0300, Sagi Maimon wrote:
+> > The sysfs show/store operations could access uninitialized elements in
+> > the freq_in[], signal_out[], and sma[] arrays, leading to NULL pointer
+> > dereferences. This patch introduces u8 fields (nr_freq_in, nr_signal_out,
+> > nr_sma) to track the actual number of initialized elements, capping the
+> > maximum at 4 for each array. The affected show/store functions are updated to
+> > respect these limits, preventing out-of-bounds access and ensuring safe
+> > array handling.
+> > 
+> > Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+> 
+> Hi Sagi,
+> 
+> With this patch applied GCC 14.2.0 reports:
 
-Both patches applied as 6.16 material, thanks!
+Sorry, I forgot to mention that this is an allmodconfig W=1 build
+on x86_64.
+
+...
