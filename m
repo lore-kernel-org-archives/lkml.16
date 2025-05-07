@@ -1,120 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1080215F49;
-	Wed,  7 May 2025 11:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C44189B8C;
+	Wed,  7 May 2025 11:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746617099; cv=none; b=h+8Ojjd0EYH5X/6LGuxn1FZpA9XbhBHnKO+UOPSvNspdAh+R4uj9rYexY6oKaYfkWKni9IJK97qDKRR7GkMxGUcaZ9BcUDVtXuGoeeziZPJccw/6mk6ihzwFj8DaAk47oqKmnJQMoRLCKcGD72hAX6mS3LM9rw1oDwf/Nh/mHwQ=
+	t=1746617177; cv=none; b=n/2pGZuGWNnpaP5a4FPoqb3lBlz0VogivFOCcTaFjjtUH+QL47I1v4E1EoPQjbBoa0PAqBJNXSSAdZwzKNf5C64qzMlmc7BVi+IEz3HgPM0i/+r3lBb5a/3gm8iwDgB/mUXc3maOcrTglOfzDD59zsVbGCEkdC4FbPA66vR7OFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746617099; c=relaxed/simple;
-	bh=eZJybZdxwASakpoaQMGcFN08228iOOZpqRIN+H3A/QE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BcqJMsh8rMphz0R2IgtLOr22jZzMsv2y534BuEvUVV4kGVS3KbWEoi8yl5d9QrTAMknySK6MawNVfI50C+PlLSQFXyDQaGwKz6IfRQ7y1N5OjCsVnCVXB/OgEr6ZTsdsKGjcwpPFyWysr1DvKlqz+rv9pR6nPfDr+owK/WS8cds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZQcJ+BG6; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746617177; c=relaxed/simple;
+	bh=mQdRu9nt9DF6a/07VoCCoI4ODboFbNw2SfGiz+1z1M4=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=FJKx8JKbvqkDJ3Mt0cO+RaIztTgDFPBC64AM5zPuBHx8X7JzTUUECqEOyPb2/OKNUuibQkK40G5+XCBEi/kKNPeSO5GyoDy34TAl2dOgjYQg8kcF7MuBxybBDOM1eT/by6yVHXrUrkSCrmcd1wjuBIh6+oFNH/eqCFJDAudLNW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NFNyzTwq; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZQcJ+BG6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746617098; x=1778153098;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eZJybZdxwASakpoaQMGcFN08228iOOZpqRIN+H3A/QE=;
-  b=ZQcJ+BG6gdHnxxvaUUtA3Iqq2GJQJ1pbeonlEfUpBljisdTacGZsWdHn
-   l2lV6Vrvpl0iO0JfGpnUajxwKUt46cU7tzLSR8/NJpI3Lebx1pyZnY4dS
-   MHi2uIhLpmV4QMC2Y36ZrL3wRNGW/qZKRkRaSRTM89KIvJ0co6MWn9ESQ
-   PU4ApBgOyCzkloFHxhJqafdLVJV45zQQW3fRfmxzNUVtTtSGuHSZybljP
-   lRclaioyyH/C0UUJ9oXRq+rhMZ1Lotw5ksSOzgd5geOZ21iS3T0AnZHYK
-   M99oZPUVQtWt02wZwnt0/Mu7OXqvuqdxl2fiw2OcmE0uqXkthyGykaqYd
-   Q==;
-X-CSE-ConnectionGUID: gUeCMxigTkCp6Sx1X2ajCg==
-X-CSE-MsgGUID: w4SjrgqyS/qoXznf97VjbA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="48241812"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="48241812"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 04:24:57 -0700
-X-CSE-ConnectionGUID: pqp/Io6KTYeFgb6dTJ5ubw==
-X-CSE-MsgGUID: QXROB2ZTRBKievyOhHhh1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="166861156"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 07 May 2025 04:24:54 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCctP-0007fZ-0v;
-	Wed, 07 May 2025 11:24:51 +0000
-Date: Wed, 7 May 2025 19:24:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mao Jinlong <quic_jinlmao@quicinc.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/5] coresight: Add remote etm support
-Message-ID: <202505071921.rDzEb2CH-lkp@intel.com>
-References: <20250424115854.2328190-5-quic_jinlmao@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFNyzTwq"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736c3e7b390so7570516b3a.2;
+        Wed, 07 May 2025 04:26:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746617175; x=1747221975; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kU4IPVDob4K1HuHAYIVlP4inH/rvK2N+HDjkyfBY+Uo=;
+        b=NFNyzTwq9f3JeoE4oMD9n0A3KoUWY+rwFTQZrOo3GB6aweaXVFkz91nMMosftg+2Up
+         sL/lpqygGo4O919xs1O9/zGFvaq3s3EEDpLMOe9lFB9bXrbMe1S4hYHUMIlICkbjCP54
+         y/YCKBhA/42f07sOFRFMInaDnt6Ow3hoRjfUDR3XEKtWK5FlFvcbM6eXixkuJ7YxRHmk
+         +J9jM3ivJSRjhESKiapTbdsnrLwVg2NL0TyGeSnoRsWMNiFrkOduw+V/teKyxCXBC1BE
+         7t0RKP9Ddu2CWxdtxHRBK0l+7X4Ma82rQLC/v02VIQQJ+l7W70HFj9WkzobdUbvOrWoP
+         0/tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746617175; x=1747221975;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kU4IPVDob4K1HuHAYIVlP4inH/rvK2N+HDjkyfBY+Uo=;
+        b=NJ1gPknBAfBqKc7yxYBUz8aPk0d+uP1OO9SeCrk5JOfwbJumSgtATVi5h2NjCVrISO
+         Uo0DVeYQza0v4z2vYpblOnYf+0pMsuZ7+yV3nqn9h1rB7StoiIvuWe3ZqabaAZ6omcbw
+         2MYMKEaEbE8TnmOgPcCVC0hVxBQWxO2f+yVLEhnX+xHcsXSIfcnl9/f7bOhGQdUn91rF
+         j7NIwg5PlrKo0FhX0koYuMYiwveVcKDC1ZEK4NfIbpQgOblbwi+QCsPwgyc4dMT3zw3T
+         +Y9PF4VvKYyafYQ/2pJbiQcOQX2oa4GZXyAU2loXmrXQiJUm74e6akocWzpFwAfHuU8g
+         DmwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1o2wJFM9pxZAlRaNCwz17nlT9IdkVO4vsTRJMNLpbSWTReEVVCTLxRixOmy2XpUhbecLKw8A3//3Aae0=@vger.kernel.org, AJvYcCVyLAoStbUAriN5rpQJ/xGyVnJ1A8Wq+ivRDeJD+AQOUlDKC6FiwAR+wqlOhloxWCPev8DS@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuSxwnYUCHheTv0ro4fUu+3s8TKGRkmojaT5WTMMpg2SCPzBRh
+	HX5MpTWA9vInRmVUfeNMiSZ814tF8OkVAn+o2YCLUJ8JEsIlBIMfraQFJE2pzwQ=
+X-Gm-Gg: ASbGnctOn3Lsgwo5KkncOjg8weGl9SKUreR13fi5Qboafwc67fyFrcGZwqvF0MPJfQg
+	J1m1JxdvRclJux3qs80UxYr6nz34GKpQ5nBF9tvk7DYn7FthFI/ZIyt8mpi8pdDtJipCsdzGZ16
+	0eADv7k6Tf6K9FcqEuTt+TaSz/UZlkbT1qqGOpF0vNdNhtsedxAqTKCo/wkgTJyM3JsU9+WtpAB
+	Drfe/AagacDBV0GnZdwjbXZIDYCyRz/O79LRFtGB7mmt+caQWbwzkaw0ytAKbeeJnO6S4BEHDM/
+	2KqU5FFaTKvWb7yFaHS3XfZwybtRYr7yIut7cE8r85eUNDG3N3gZz815defkyqkcaXMR2PbmsQ=
+	=
+X-Google-Smtp-Source: AGHT+IFCD49DiyJAUum+f5nQXJ25qce++pssO6RelGMftkAZs1bU3McbEpddihqy9/89a8+pRYs+Zw==
+X-Received: by 2002:a05:6a21:6d84:b0:1fb:e271:82e2 with SMTP id adf61e73a8af0-2148b9227bemr4334687637.11.1746617174929;
+        Wed, 07 May 2025 04:26:14 -0700 (PDT)
+Received: from MSCND1355B05.fareast.nevint.com ([117.128.58.94])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-740590610desm11184898b3a.146.2025.05.07.04.26.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 04:26:14 -0700 (PDT)
+From: Zqiang <qiang.zhang1211@gmail.com>
+To: paulmck@kernel.org,
+	frederic@kernel.org,
+	neeraj.upadhyay@kernel.org,
+	joel@joelfernandes.org,
+	urezki@gmail.com,
+	boqun.feng@gmail.com
+Cc: qiang.zhang1211@gmail.com,
+	rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] rcutorture: Fix rcutorture_one_extend_check() splat in RT kernels
+Date: Wed,  7 May 2025 19:26:03 +0800
+Message-Id: <20250507112605.20910-1-qiang.zhang1211@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424115854.2328190-5-quic_jinlmao@quicinc.com>
 
-Hi Mao,
+For built with CONFIG_PREEMPT_RT=y kernels, running rcutorture
+tests resulted in the following splat:
 
-kernel test robot noticed the following build errors:
+[   68.797425] rcutorture_one_extend_check during change: Current 0x1  To add 0x1  To remove 0x0  preempt_count() 0x0
+[   68.797533] WARNING: CPU: 2 PID: 512 at kernel/rcu/rcutorture.c:1993 rcutorture_one_extend_check+0x419/0x560 [rcutorture]
+[   68.797601] Call Trace:
+[   68.797602]  <TASK>
+[   68.797619]  ? lockdep_softirqs_off+0xa5/0x160
+[   68.797631]  rcutorture_one_extend+0x18e/0xcc0 [rcutorture 2466dbd2ff34dbaa36049cb323a80c3306ac997c]
+[   68.797646]  ? local_clock+0x19/0x40
+[   68.797659]  rcu_torture_one_read+0xf0/0x280 [rcutorture 2466dbd2ff34dbaa36049cb323a80c3306ac997c]
+[   68.797678]  ? __pfx_rcu_torture_one_read+0x10/0x10 [rcutorture 2466dbd2ff34dbaa36049cb323a80c3306ac997c]
+[   68.797804]  ? __pfx_rcu_torture_timer+0x10/0x10 [rcutorture 2466dbd2ff34dbaa36049cb323a80c3306ac997c]
+[   68.797815] rcu-torture: rcu_torture_reader task started
+[   68.797824] rcu-torture: Creating rcu_torture_reader task
+[   68.797824]  rcu_torture_reader+0x238/0x580 [rcutorture 2466dbd2ff34dbaa36049cb323a80c3306ac997c]
+[   68.797836]  ? kvm_sched_clock_read+0x15/0x30
 
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master v6.15-rc5]
-[cannot apply to next-20250507]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Disable BH does not change the SOFTIRQ corresponding bits in
+preempt_count() for RT kernels, this commit therefore use
+softirq_count() to check the if BH is disabled.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mao-Jinlong/dt-bindings-arm-Add-CoreSight-QMI-component-description/20250424-200202
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20250424115854.2328190-5-quic_jinlmao%40quicinc.com
-patch subject: [PATCH v5 4/5] coresight: Add remote etm support
-config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20250507/202505071921.rDzEb2CH-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071921.rDzEb2CH-lkp@intel.com/reproduce)
+Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
+---
+ kernel/rcu/rcutorture.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505071921.rDzEb2CH-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/hwtracing/coresight/coresight-remote-etm.c:161:27: error: initialization of 'int (*)(struct coresight_device *, struct perf_event *, enum cs_mode,  struct coresight_path *)' from incompatible pointer type 'int (*)(struct coresight_device *, struct perf_event *, enum cs_mode,  struct coresight_trace_id_map *)' [-Wincompatible-pointer-types]
-     161 |         .enable         = remote_etm_enable,
-         |                           ^~~~~~~~~~~~~~~~~
-   drivers/hwtracing/coresight/coresight-remote-etm.c:161:27: note: (near initialization for 'remote_etm_source_ops.enable')
-
-
-vim +161 drivers/hwtracing/coresight/coresight-remote-etm.c
-
-   159	
-   160	static const struct coresight_ops_source remote_etm_source_ops = {
- > 161		.enable		= remote_etm_enable,
-   162		.disable	= remote_etm_disable,
-   163	};
-   164	
-
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 373c65a6e103..ef439569f979 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -471,7 +471,7 @@ rcu_read_delay(struct torture_random_state *rrsp, struct rt_read_seg *rtrsp)
+ 	    !(torture_random(rrsp) % (nrealreaders * 2000 * longdelay_ms))) {
+ 		started = cur_ops->get_gp_seq();
+ 		ts = rcu_trace_clock_local();
+-		if (preempt_count() & (SOFTIRQ_MASK | HARDIRQ_MASK))
++		if ((preempt_count() & HARDIRQ_MASK) || softirq_count())
+ 			longdelay_ms = 5; /* Avoid triggering BH limits. */
+ 		mdelay(longdelay_ms);
+ 		rtrsp->rt_delay_ms = longdelay_ms;
+@@ -1990,7 +1990,7 @@ static void rcutorture_one_extend_check(char *s, int curstate, int new, int old,
+ 		return;
+ 
+ 	WARN_ONCE((curstate & (RCUTORTURE_RDR_BH | RCUTORTURE_RDR_RBH)) &&
+-		  !(preempt_count() & SOFTIRQ_MASK), ROEC_ARGS);
++		  !softirq_count(), ROEC_ARGS);
+ 	WARN_ONCE((curstate & (RCUTORTURE_RDR_PREEMPT | RCUTORTURE_RDR_SCHED)) &&
+ 		  !(preempt_count() & PREEMPT_MASK), ROEC_ARGS);
+ 	WARN_ONCE(cur_ops->readlock_nesting &&
+@@ -2004,7 +2004,7 @@ static void rcutorture_one_extend_check(char *s, int curstate, int new, int old,
+ 
+ 	WARN_ONCE(cur_ops->extendables &&
+ 		  !(curstate & (RCUTORTURE_RDR_BH | RCUTORTURE_RDR_RBH)) &&
+-		  (preempt_count() & SOFTIRQ_MASK), ROEC_ARGS);
++		  softirq_count(), ROEC_ARGS);
+ 
+ 	/*
+ 	 * non-preemptible RCU in a preemptible kernel uses preempt_disable()
+@@ -2025,6 +2025,9 @@ static void rcutorture_one_extend_check(char *s, int curstate, int new, int old,
+ 	if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
+ 		mask |= RCUTORTURE_RDR_PREEMPT | RCUTORTURE_RDR_SCHED;
+ 
++	if (IS_ENABLED(CONFIG_PREEMPT_RT) && softirq_count())
++		mask |= RCUTORTURE_RDR_BH | RCUTORTURE_RDR_RBH;
++
+ 	WARN_ONCE(cur_ops->readlock_nesting && !(curstate & mask) &&
+ 		  cur_ops->readlock_nesting() > 0, ROEC_ARGS);
+ }
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.17.1
+
