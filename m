@@ -1,99 +1,124 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565572309B2
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:07:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E141148832;
+	Wed,  7 May 2025 09:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746608832; cv=none; b=S1V/evTuvDSkrnqOCK1nlJwyntEadI6wBKyuhCc1mJYjvHPCn67BFjLhTbPsFG1tbrVcUDMjNu8uytelwu8A3jDrHJF3b27iRoQJWGjNLyLfgxWyzcK7d3Kec4E5BNKsS+77NU8ltMi/KEzOSqoQcDy6ElsrMyqRizwpOe9ht8A=
+	t=1746608842; cv=none; b=T+ES+BX3G7FRRUPb+XQ1rOvWSvFHegkgzCAmbpwKE62J0+sKlSvFVJHs+3w0AwVHKcLoqv3pMeGKfcxdLJ1m0zpr2GZWRPFeA6pwYD55DZJ7qOp82Y7qLfpr4/EPBpso8ncwZeuYyqKAHZFoRJSgZlsj+Mhz08RJXa5NVBkUTg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746608832; c=relaxed/simple;
-	bh=hZC5f+b9USatNoguTDEhrP+OZA4hqYVfUftEwfqtpBM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QoktVUEerkC3SI/g7kpsNqlcvEd218zTQs6pu/DF3+gAPUnLABHUVaIFxqiMFepPhNdXqGaWET3s9EJSLKRK2btdTvBdWNpKQ9Irhh2Xap7Tj02rydEGrLyWogwgHFjkks9eC6RYKeUk1asTjzfRPZUxgjrvhc0n3qfhpv1IS8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com; spf=pass smtp.mailfrom=isovalent.com; dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b=XySpEsOl; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isovalent.com
+	s=arc-20240116; t=1746608842; c=relaxed/simple;
+	bh=/2JGXCg2iXnM4IwdNWOVz0dAcm8hk2gvn5PV0dLs/zE=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=P2jnkV8AxqogQgFOSALk8/WaAUVJVzgmT/5WZ2aIGYgFHQmxpGnveZG5EyWm1n6g4/2kus0b8Go9E6ddk0Q523Z2Fkyjgn+9ilBPYYK50cHf0RMqcS5OkC6GxdEXhY3hGA3qQoy9Se+mEuFK+NZFJ/v81YGMgpKaFCXJ/BZ7iDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=27qnk8Bl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BER8zzrd; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b="XySpEsOl"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a0ac853894so1410304f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 02:07:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent.com; s=google; t=1746608828; x=1747213628; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HzWczKOtRNdv6oYCcCWTL1fK96+7hkuKcZ+yQdI7Ga8=;
-        b=XySpEsOlzlx9BD3K2I9sACRU4+r0ads2Re2zrMJ7l6xo3twTSfpUI+XMqOAro488Sp
-         HJyIveFJ5K/xgN2mWon3CGl2I4Q8f4AUE1QM03KjTqtnubf2CKFhen3Hw79q84Mq2uBD
-         8L2CHY9NC/0+O24r0S9Mdz7RvY1PVXkRO5JIm+E50bPNkJgyw7C6gBt5HYUEy7yA0p3s
-         q+vmBnKqYAqhe5RLLJTjjQPEK+QhL9IYE/2LI+WyJFQsRbcZmopd0Pqj0QqzxZI0iy6H
-         wmOeddQlzxyEvInfUdTvZGUJoEBJtszTvfhhnKlgCR5qzAjcGfYmrqZSSUzqUdHEgMmU
-         N6xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746608828; x=1747213628;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HzWczKOtRNdv6oYCcCWTL1fK96+7hkuKcZ+yQdI7Ga8=;
-        b=LSyIFg8DXATxnYfcxVhHwUUEgsMD+4b+8HE2bNR1fGIag8LyJ1HOFvDj1EiCYyxzx+
-         9DNAYO6gzPYIa3CRVGvrypdI+j0BqsebWzdzJC3jEo6kUSM07KMBylGmeDSbZa8ZdDgz
-         LScVvXaToOfGv2Q8XmKs2UlepIKIHN7FHEoGTDBtEVgfJe+spYjvJXpQsbO1rxrMM7eh
-         4CdilYA8Za4G37gjFncuMstFumXkGjNCUW1l/pRuPZ4fZFE6I0KpKseL7KteCPly1dNh
-         lP3KbwSoK/VXd0tquilju07ELKctDjCxjT6X9bZlVZDFj0r/yHiKxWgI4X6VQzM/mQj6
-         0tOA==
-X-Forwarded-Encrypted: i=1; AJvYcCX088qFCMixPoWrmaaPpzRDHD72BzEmgHOIaZa+pR2EBSGIIls9SyT/UyqEHwrS8Cz+ewiv93YWVWpT32g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw25K+tF2GDS4sP2uPGNVrGD0PlHxLCNrIcFh+ktaWt8tAeqyDL
-	FPGy3UcON+l4fJr7N7qDGb28/hsS2L7qe+0Gip+tV/j2qmiDEvGdyAbkQR/terTfAx+CnBm+Vwd
-	tbwzf8foihPKLehsIyZsAERlzJ2ujFi6F2luo9Q==
-X-Gm-Gg: ASbGnct3HjL/+m/iBJ3N3W3+MZzruACVV42iRJQ1DFvyEg51DGZHxvThQiTVCqdHCtD
-	hf5G9wH8vaSji8T+vksx4Yw5b4kcM0PGNtrW8TTLYxc6HAiNlTgS7Do8/EGIPnunDDiW1ybBN70
-	itoh1nKtN5uavS7C7+qaFxa7oSHntjC7nK92WBhv7ufRpW4g==
-X-Google-Smtp-Source: AGHT+IHjbkLnacbos9jg8MSNrNqfZgtfYSx+9ggUbfHgSlwtKGIOIJuAXx/CFfKUFlefpe1UhB48Y5x5Uo8a3HvYMaw=
-X-Received: by 2002:a05:6000:2210:b0:3a0:830a:3d63 with SMTP id
- ffacd0b85a97d-3a0b4997fc5mr1984898f8f.9.1746608828586; Wed, 07 May 2025
- 02:07:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="27qnk8Bl";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BER8zzrd"
+Date: Wed, 07 May 2025 09:07:18 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746608839;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tancZG+ppQnGwiLpkvbOVs0/l7HyydebuKkEu8nPHac=;
+	b=27qnk8BlHtlwLzTYUDC9ftQh8eh8ulTgr3WBWNzGcEwVsKtbK3AFm08g2CG3Yn2xcGsFdo
+	EYrRpkUm+xm4tyb1fVl/szidqRuC3gUaL+YQt4ZYhG1OcDvfZTDgLGaggLpLqx3CdYCmbX
+	nXGWXlzryk5RUjiKpP2oDd46HCdL2sLMgJWOmtn0oxJ3SSCkCvdD5KVMkdaE6/YNN24SUb
+	ds4jKdoebw23q+aZb3cHFoGA9x0vPzDxDQWIhr6epE5YCfTd7NN1Dooo0ue7+5UXBevIvo
+	IyqDzgQr3Tex32KYsEdBZZ1cr8J6lmp+QjUsP5NBm+SB19u207YG6UahzfzR+g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746608839;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tancZG+ppQnGwiLpkvbOVs0/l7HyydebuKkEu8nPHac=;
+	b=BER8zzrdmlcartqzdkd987UyZMcSkcyisAN6Q+dM0I50NY9Uzc6ylf5xOd0Cv+kiyF2Ww5
+	HLp2pcMHBCK6rZDQ==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] genirq: Remove irq_[get|put]_desc*()
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20250429065422.729586582@linutronix.de>
+References: <20250429065422.729586582@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505-vmlinux-mmap-v3-0-5d53afa060e8@isovalent.com>
- <20250505-vmlinux-mmap-v3-1-5d53afa060e8@isovalent.com> <CAEf4BzbsLJgbnuLj6sYFgH7sUZPfn3SqRf_5edTSGuo2oYXN4A@mail.gmail.com>
-In-Reply-To: <CAEf4BzbsLJgbnuLj6sYFgH7sUZPfn3SqRf_5edTSGuo2oYXN4A@mail.gmail.com>
-From: Lorenz Bauer <lmb@isovalent.com>
-Date: Wed, 7 May 2025 10:06:57 +0100
-X-Gm-Features: ATxdqUF-AtJKaQ86AR2mJxx8_Qq77605VMH3v3VHVteQJKjxM9Yh70Gg0ik9GJQ
-Message-ID: <CAN+4W8j-s3YSj-Ct7pNiXkhVnsVkv_bWx22WCnkGYf3mjRf_Fw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 1/3] btf: allow mmap of vmlinux btf
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174660883834.406.9096907142350031159.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 6, 2025 at 10:39=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> > +       if (vma->vm_pgoff)
-> > +               return -EINVAL;
->
-> any particular reason to not allow vm_pgoff?
+The following commit has been merged into the irq/core branch of tip:
 
-Doesn't seem particularly useful because the header is at offset 0,
-and I don't trust myself to get the overflow checks done right.
+Commit-ID:     104361217c2a2ab7d6a9de756952814af0a8a5ad
+Gitweb:        https://git.kernel.org/tip/104361217c2a2ab7d6a9de756952814af0a8a5ad
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Tue, 29 Apr 2025 08:55:54 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 07 May 2025 09:08:17 +02:00
 
-> it's certainly subjective, but I find this error handling with !err in
-> for loop condition hard to follow. What's wrong with arguably more
-> straightforward (and as you can see I'm not a big fan of mutated addr
-> but calculated vma->vm_start + i * PAGE_SIZE: pick one style one
-> follow it for both entities?):
+genirq: Remove irq_[get|put]_desc*()
 
-Yeah that's nicer, I was just going off of what Alexei proposed.
+All users are converted to the guards. Remove the helpers.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lore.kernel.org/all/20250429065422.729586582@linutronix.de
+
+
+---
+ kernel/irq/internals.h | 24 ------------------------
+ 1 file changed, 24 deletions(-)
+
+diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+index 44d3a67..bd2db6e 100644
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -191,30 +191,6 @@ static inline class_irqdesc_lock_t class_irqdesc_lock_constructor(unsigned int i
+ 
+ #define scoped_irqdesc		((struct irq_desc *)(__guard_ptr(irqdesc_lock)(&scope)))
+ 
+-static inline struct irq_desc *
+-irq_get_desc_buslock(unsigned int irq, unsigned long *flags, unsigned int check)
+-{
+-	return __irq_get_desc_lock(irq, flags, true, check);
+-}
+-
+-static inline void
+-irq_put_desc_busunlock(struct irq_desc *desc, unsigned long flags)
+-{
+-	__irq_put_desc_unlock(desc, flags, true);
+-}
+-
+-static inline struct irq_desc *
+-irq_get_desc_lock(unsigned int irq, unsigned long *flags, unsigned int check)
+-{
+-	return __irq_get_desc_lock(irq, flags, false, check);
+-}
+-
+-static inline void
+-irq_put_desc_unlock(struct irq_desc *desc, unsigned long flags)
+-{
+-	__irq_put_desc_unlock(desc, flags, false);
+-}
+-
+ #define __irqd_to_state(d) ACCESS_PRIVATE((d)->common, state_use_accessors)
+ 
+ static inline unsigned int irqd_get(struct irq_data *d)
