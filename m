@@ -1,73 +1,69 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867DB189B8C
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1080215F49;
+	Wed,  7 May 2025 11:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746617098; cv=none; b=CDBqGGKRzFnbafgqDAyTemVqX9Fa1PSF/1PgQH+edOwPSsoQQwuihIbAP3hh7AgL9nrUU0rREfIRJJx0/obsWey0Q1ZVX6En409rpiQiEMGtF3jBQC87njM/LrL7+R8FCuZRxN0Gu2sWBGq2Cgsm7MxmAkXruJZZ8KMEGzFH3q0=
+	t=1746617099; cv=none; b=h+8Ojjd0EYH5X/6LGuxn1FZpA9XbhBHnKO+UOPSvNspdAh+R4uj9rYexY6oKaYfkWKni9IJK97qDKRR7GkMxGUcaZ9BcUDVtXuGoeeziZPJccw/6mk6ihzwFj8DaAk47oqKmnJQMoRLCKcGD72hAX6mS3LM9rw1oDwf/Nh/mHwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746617098; c=relaxed/simple;
-	bh=oar+Bhsai/tc/GaUVtDvAbqWQLjDSDc4YeBGhvA8YjQ=;
+	s=arc-20240116; t=1746617099; c=relaxed/simple;
+	bh=eZJybZdxwASakpoaQMGcFN08228iOOZpqRIN+H3A/QE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gQzCiKEpuTYKjCJnbTir5A/R4s4kKzPhEgg0gt2BCYP2v+nvDk8E2VGkBIWV0F2KDQN471kE0wICJp00wOwqh9iwQmMN8qr+qKd53wpTaTVAOq/R5cIqWTZkJ9FRIshRaXP/Zb7K85F3GToeirt7cHG7sYiU+RB6vIgUbQmWQ3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rhLvF6oD; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=BcqJMsh8rMphz0R2IgtLOr22jZzMsv2y534BuEvUVV4kGVS3KbWEoi8yl5d9QrTAMknySK6MawNVfI50C+PlLSQFXyDQaGwKz6IfRQ7y1N5OjCsVnCVXB/OgEr6ZTsdsKGjcwpPFyWysr1DvKlqz+rv9pR6nPfDr+owK/WS8cds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZQcJ+BG6; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rhLvF6oD"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so58163285e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 04:24:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746617095; x=1747221895; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ar3opOrcf8YKrqt/F9Ouy5r6VUjzl1KJIEQkTj2liqA=;
-        b=rhLvF6oDbqh0gYyjfbr/FV7NIIuiMv0lFE5VhyX/PCrKfwZJlSj08vrUE7JpssNcZv
-         8qqH/qGL9TIlehgEuhARgoFaoPJsByblwSfQASph3rRzXlLaK0Ho2GD4OCrDre34ZISJ
-         qX++foIMZRbw885wauNzCRSwL6wgGV3KOvXyFX/IUk1t8RJZl0JyzqU35+LVqKaWDE/S
-         FkcdzKRXb+zBhUOoPSBIFPyA+5/XjYc0uzaV6fDhGb+EEoBHp6uM9Qv9w0TttBVmAQqb
-         2+R2F3bn2hChnyV8GMnQ7jNNhX4uI+o2EFx/yeT5/6p28abmVx14faH14snyZ5TGl4Kh
-         oVOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746617095; x=1747221895;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ar3opOrcf8YKrqt/F9Ouy5r6VUjzl1KJIEQkTj2liqA=;
-        b=RuIKs/553981sOmwr8NUq09Dr+qyaKN1cV4V5ufSwnMmQuo5wg7t7dWar4NbWR0+AJ
-         /WYgPKjkinh9DlGtmJ/tr/8n/WAtY2X6hzkS/dr0ZM31v4eCs69s2/iuj1kmOYxnHnsX
-         JpqZUVDiGNy/T8JEoiVvQiUtwIjf8Sq+rR3IILh7WbrcZbyojkhcGEUVzRmPZdwlsfX7
-         +eOB7HqsISt3Yj0wsL0JaZjgPVuEa7Tf7XlI62VDZBF4ruk/3C4rrY0GlbTl/D9MguNn
-         25pSnnYeX0gNXxVmhAmDGtSaA8bsXNexN3/IsucVRJOpL+/OaHPbFVERBdy0wzW5wpN0
-         +jCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVkd4aDdQzQran82W3+H/EzCBXi/bV8soSTTkaubUtZheFwSIaGWHeiWLM0kkqBZGUzq9XeYECLltjh5Y8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYdX720SEMtzpQM1RYWhLFAxELWlB7UNMV8SPGI0bObATGmcMW
-	uuYN8Vn0NTbhW/2/FaXTpmFvUOsKsMblzI/ri4yvjjbQh3aab6ofnL2Ov+Kzdq0=
-X-Gm-Gg: ASbGnctixZr77wnVh7BMCMBBJGGj8DI3b/RRB6MkKiZDwS1Tvoi7Z/SQMamVdU73wIk
-	BA5XHSYAyVS9vvTnb2pYkuYJoPcKmsI2I8GLwvmvFgDoktLorzcBnukOqCutbuiOGXAQWon2YZS
-	4AfzievsjFgJ6ZQyrUvVzexsOCeZ8JvWfMRh0YoQl+NCCjwbj8ygqCcn7gkQV0Vh6hEtAmyAOLS
-	XblbESsaL0Hn+DqwPrLqy1N+ho70CygvJimziXpt4zNFkngiXGQR50k2T89kc8acrS4wA6kfHpt
-	pkUgImlwz2U/xMRY/FOIJHy9eNSDaKnxEzTVA5RIF4eFeA==
-X-Google-Smtp-Source: AGHT+IHyJ94/xudBhc2hVks1GmnieE9BCHBaAQyYklBR/tJ0BTUQtnhG2e9qWqy0ux6mdoFrnCGZhQ==
-X-Received: by 2002:a05:600c:46c8:b0:43c:fcbc:968c with SMTP id 5b1f17b1804b1-441d44bd46fmr26000975e9.7.1746617094808;
-        Wed, 07 May 2025 04:24:54 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441d4346542sm29214775e9.11.2025.05.07.04.24.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 04:24:54 -0700 (PDT)
-Date: Wed, 7 May 2025 14:24:43 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Rujra Bhatt <braker.noob.kernel@gmail.com>
-Cc: dpenkler@gmail.com, gregkh@linuxfoundation.org,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 RESEND] staging : gpib : agilent_82350b :
- agilent_82350b.c re-checked the sizeof structure, also checkpatch.pl has
- shown wrong error, hence now applied the right option and commited the
- changes, this will be PATCH V2. earlier have applied void pointer only so it
- will take only 8 bytes, and not the whole structure size.
-Message-ID: <aBtC-78bNYtlNHPe@stanley.mountain>
-References: <aBs5MeEdCCwiGE0B@brak3rDesk>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZQcJ+BG6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746617098; x=1778153098;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eZJybZdxwASakpoaQMGcFN08228iOOZpqRIN+H3A/QE=;
+  b=ZQcJ+BG6gdHnxxvaUUtA3Iqq2GJQJ1pbeonlEfUpBljisdTacGZsWdHn
+   l2lV6Vrvpl0iO0JfGpnUajxwKUt46cU7tzLSR8/NJpI3Lebx1pyZnY4dS
+   MHi2uIhLpmV4QMC2Y36ZrL3wRNGW/qZKRkRaSRTM89KIvJ0co6MWn9ESQ
+   PU4ApBgOyCzkloFHxhJqafdLVJV45zQQW3fRfmxzNUVtTtSGuHSZybljP
+   lRclaioyyH/C0UUJ9oXRq+rhMZ1Lotw5ksSOzgd5geOZ21iS3T0AnZHYK
+   M99oZPUVQtWt02wZwnt0/Mu7OXqvuqdxl2fiw2OcmE0uqXkthyGykaqYd
+   Q==;
+X-CSE-ConnectionGUID: gUeCMxigTkCp6Sx1X2ajCg==
+X-CSE-MsgGUID: w4SjrgqyS/qoXznf97VjbA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="48241812"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="48241812"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 04:24:57 -0700
+X-CSE-ConnectionGUID: pqp/Io6KTYeFgb6dTJ5ubw==
+X-CSE-MsgGUID: QXROB2ZTRBKievyOhHhh1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="166861156"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 07 May 2025 04:24:54 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCctP-0007fZ-0v;
+	Wed, 07 May 2025 11:24:51 +0000
+Date: Wed, 7 May 2025 19:24:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mao Jinlong <quic_jinlmao@quicinc.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 4/5] coresight: Add remote etm support
+Message-ID: <202505071921.rDzEb2CH-lkp@intel.com>
+References: <20250424115854.2328190-5-quic_jinlmao@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,12 +72,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBs5MeEdCCwiGE0B@brak3rDesk>
+In-Reply-To: <20250424115854.2328190-5-quic_jinlmao@quicinc.com>
 
-I think you sent an incorrect patch earlier and you're trying to revert
-that patch now?  We never applied the patch so there is no need.
+Hi Mao,
 
-regards,
-dan carpenter
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on robh/for-next]
+[also build test ERROR on linus/master v6.15-rc5]
+[cannot apply to next-20250507]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Mao-Jinlong/dt-bindings-arm-Add-CoreSight-QMI-component-description/20250424-200202
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20250424115854.2328190-5-quic_jinlmao%40quicinc.com
+patch subject: [PATCH v5 4/5] coresight: Add remote etm support
+config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20250507/202505071921.rDzEb2CH-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071921.rDzEb2CH-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505071921.rDzEb2CH-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/hwtracing/coresight/coresight-remote-etm.c:161:27: error: initialization of 'int (*)(struct coresight_device *, struct perf_event *, enum cs_mode,  struct coresight_path *)' from incompatible pointer type 'int (*)(struct coresight_device *, struct perf_event *, enum cs_mode,  struct coresight_trace_id_map *)' [-Wincompatible-pointer-types]
+     161 |         .enable         = remote_etm_enable,
+         |                           ^~~~~~~~~~~~~~~~~
+   drivers/hwtracing/coresight/coresight-remote-etm.c:161:27: note: (near initialization for 'remote_etm_source_ops.enable')
 
 
+vim +161 drivers/hwtracing/coresight/coresight-remote-etm.c
+
+   159	
+   160	static const struct coresight_ops_source remote_etm_source_ops = {
+ > 161		.enable		= remote_etm_enable,
+   162		.disable	= remote_etm_disable,
+   163	};
+   164	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
