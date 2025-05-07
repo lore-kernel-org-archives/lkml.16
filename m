@@ -1,92 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFD6156237
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:35:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281811CB31D;
+	Wed,  7 May 2025 16:35:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746635704; cv=none; b=CVvly3ZBxSqODO6s1eNqTcEWf3l13pdZXwpUPMHoYQ6J/I9vpwTzYl/zjCu/601a+F6H+QZdpy+JQMnUCsCUInGv9yF8o7bLPEycz0AUhBrGSSm1HzsZdlqDBQJP1DvikSxUzMOCYgYIdo3o46QfbthLAYyiGwB8xMai9PoqCkQ=
+	t=1746635754; cv=none; b=BbsKsh+9yD0qYjCXFnfej6wHeJ1Spxd1Ct2m2HSnkmKr3XD/Ngyoy+99OCMbw6j8xvubWae751nXzx51R4klcruZn4MXsQHvUBaVq8QJRfLjCW/xANyhuHpFRDOG045qaaj8L92+khZo1jDocgSkUnxIe7xzHgAOc/hZig0ioFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746635704; c=relaxed/simple;
-	bh=kad3jINNZ0osjkDMFkqfo9JLDhhK/YCCvNjLOOfIsUs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MlSUZPopnvZvSbrwgSIdGxE4bJiNunZidv01SBH0puLqP4ksRwXPCANczikNKyBQNwucN77eWvPMI2FYxtKs17rlvqyjgh1/60KYpGUC5ziV0DvLS4HKYAtgHt7VN380RBpwUGqOqJVcfWkoU0Hxemyp2CahY3jZZvBjbvUDw3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sZSeTLFk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746635754; c=relaxed/simple;
+	bh=sblmv0utzdv+8ThOgBE6raOXo50apK1luciquPL4aqc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j0rnbFJxtT63xeuOrRJ1thm3u/J0LOfbR5qWoq8WXONQi4FtdJA11RFOFkOqbUnKKXO2hsrbILdZck8wkfpKDUSGGKxvObOOxasbdInWJmv/2yZSnCacnkigwsgu2edKW7+z/JxdQd8Q/LrMy4lxOLdeByXQd88wc9PHlgLeDcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JrQsKPXF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sZSeTLFk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F0A6C4CEE2;
-	Wed,  7 May 2025 16:35:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JrQsKPXF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00791C4CEE2;
+	Wed,  7 May 2025 16:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746635703;
-	bh=kad3jINNZ0osjkDMFkqfo9JLDhhK/YCCvNjLOOfIsUs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sZSeTLFkyGwKwCd31moc58PtGiSuEiUcNGorc82opu4eu3COTP8vQABhNlA4R/pJT
-	 y/KMTBi1PEF6ZscUlrdZlgNj7fLyPFVKoYBGkSRpbv5zIQrkABLBQw8mbSHuhS3ZdW
-	 /CFHIOzCRFm5wjpaRr4LO+uqFdZaUczUuqthQbe1ofBTJxfda8HM/h6q+qrUbFOfn1
-	 LmJZ/VnbjckNhBp0t1ys37LdxRJn2XJ0TfOsSZSzQuKCaBe6PRv9OsTuM8zJDjr69a
-	 AgTHnr8Lnyrp4wckZaMCWAtBGfiKERiMp9KiDOuiprmn3I/WsiKU5O4PMJFTSQI6hW
-	 nLWq8x7OFKFRw==
-Date: Wed, 7 May 2025 06:35:02 -1000
-From: Tejun Heo <tj@kernel.org>
-To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH sched_ext/for-6.15-fixes] sched_ext:
- bpf_iter_scx_dsq_new() should always initialize iterator
-Message-ID: <aBuLtjMM9LHLkreU@slm.duckdns.org>
-References: <aBkt_4tEZATxf6-Q@slm.duckdns.org>
+	s=k20201202; t=1746635753;
+	bh=sblmv0utzdv+8ThOgBE6raOXo50apK1luciquPL4aqc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JrQsKPXFa+whGnrNIZLEKq/rKZXjjPjlLx7TUV83ByJeL7QTml4aWFoBaeWajyUhP
+	 U6fvWU4nm8QorQF6M/vWAyOG8Fc9RPEZbBJAbKIsJ7rZL9Kfzoe/l/r0+VUpHaWYsr
+	 Q28bBNvl0KEVqfhJTmOtLWBT3kygJSfNvla5kUTxKUNBn7CnkxcDijwPCix1upydi9
+	 jdP/TIDc+Nxf1REe6i6aW2gDpZLsJcMQ1fIMdUGo2S0nJRqV2wezHKTXyF0Ba/ysSr
+	 2pzJaGQOZgIkvSFGZF54e8SZHEXBqKRyIzx1knBfyqAn0BkqoTsugZ2wUorPPSYXKb
+	 BHOqor6JzyZRA==
+Message-ID: <c8ad3f65-f70e-4c6e-9231-0ae709e87bfe@kernel.org>
+Date: Wed, 7 May 2025 18:35:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBkt_4tEZATxf6-Q@slm.duckdns.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3] xdp: Add helpers for head length, headroom,
+ and metadata length
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Stanislav Fomichev <stfomichev@gmail.com>, Jon Kohler <jon@nutanix.com>
+Cc: Jason Wang <jasowang@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>, Simon Horman <horms@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ Jacob Keller <jacob.e.keller@intel.com>
+References: <20250506125242.2685182-1-jon@nutanix.com>
+ <aBpKLNPct95KdADM@mini-arch>
+ <681b603ac8473_1e4406294a6@willemb.c.googlers.com.notmuch>
+Content-Language: en-US
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <681b603ac8473_1e4406294a6@willemb.c.googlers.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Applied to sched_ext/for-6.15-fixes with a small update to commit message as
-suggested by Andrea.
 
------- 8< ------
-From 428dc9fc0873989d73918d4a9cc22745b7bbc799 Mon Sep 17 00:00:00 2001
-From: Tejun Heo <tj@kernel.org>
-Date: Mon, 5 May 2025 11:30:39 -1000
-Subject: [PATCH] sched_ext: bpf_iter_scx_dsq_new() should always initialize
- iterator
 
-BPF programs may call next() and destroy() on BPF iterators even after new()
-returns an error value (e.g. bpf_for_each() macro ignores error returns from
-new()). bpf_iter_scx_dsq_new() could leave the iterator in an uninitialized
-state after an error return causing bpf_iter_scx_dsq_next() to dereference
-garbage data. Make bpf_iter_scx_dsq_new() always clear $kit->dsq so that
-next() and destroy() become noops.
+On 07/05/2025 15.29, Willem de Bruijn wrote:
+> Stanislav Fomichev wrote:
+>> On 05/06, Jon Kohler wrote:
+>>> Introduce new XDP helpers:
+>>> - xdp_headlen: Similar to skb_headlen
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: 650ba21b131e ("sched_ext: Implement DSQ iterator")
-Cc: stable@vger.kernel.org # v6.12+
-Acked-by: Andrea Righi <arighi@nvidia.com>
----
- kernel/sched/ext.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+I really dislike xdp_headlen().  This "headlen" originates from an SKB
+implementation detail, that I don't think we should carry over into XDP
+land.
+We need to come up with something that isn't easily mis-read as the 
+header-length.
 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 4e37b40ce280..f5133249fd4d 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -6827,6 +6827,12 @@ __bpf_kfunc int bpf_iter_scx_dsq_new(struct bpf_iter_scx_dsq *it, u64 dsq_id,
- 	BUILD_BUG_ON(__alignof__(struct bpf_iter_scx_dsq_kern) !=
- 		     __alignof__(struct bpf_iter_scx_dsq));
- 
-+	/*
-+	 * next() and destroy() will be called regardless of the return value.
-+	 * Always clear $kit->dsq.
-+	 */
-+	kit->dsq = NULL;
-+
- 	if (flags & ~__SCX_DSQ_ITER_USER_FLAGS)
- 		return -EINVAL;
- 
--- 
-2.49.0
+>>> - xdp_headroom: Similar to skb_headroom
+>>> - xdp_metadata_len: Similar to skb_metadata_len
+>>>
 
+I like naming of these.
+
+>>> Integrate these helpers into tap, tun, and XDP implementation to start.
+>>>
+>>> No functional changes introduced.
+>>>
+>>> Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+>>> Signed-off-by: Jon Kohler <jon@nutanix.com>
+>>> ---
+>>> v2->v3: Integrate feedback from Stanislav
+>>> https://patchwork.kernel.org/project/netdevbpf/patch/20250430201120.1794658-1-jon@nutanix.com/
+>>
+>> Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+> 
+> Reviewed-by: Willem de Bruijn <willemb@google.com>
+> 
+
+Nacked-by: Jesper Dangaard Brouer <hawk@kernel.org>
+
+pw: cr
