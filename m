@@ -1,461 +1,501 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8E582367D7
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 07:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4015E2356C1;
+	Wed,  7 May 2025 07:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746604705; cv=none; b=iy+5DmmjpOSEOLBtaqchVf9VYvkL+E0gm95FLwW8+77d3KNH0PaS9DsFhTzUOnBBMGg3ULconW728iYTfp/ZtOMub7J3r/rNL3d++fYndJqv07SjRL12QSRU9ITc+YcnUrXwJOY8jZOioAfi0IFdKmLTgpgO3zHfyvj/3DIVBPU=
+	t=1746604704; cv=none; b=A1DRjXAmhLIBzsiIdQG1+BcTR8IRrcwZBVmhfNJixIeLKP+Up/7zSLSGqkRXRBw00V8hBSUr7MdOiBNE9L52R1Kk7IFLlC4LfmXtJJ+JGdCopxgffZeEnwuHYLqZjXgoS0gfB4HMhcQCthJXVDJwQLpwtTg4LixUZTVIC3Wp2RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746604705; c=relaxed/simple;
-	bh=91armhAdh+9Vycdb6nirwIJTPM/mSe2/nPKM6rMESwo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S23oJH+2rHxWT0znG4IdM31Qs/oXysGNC4bWOrqlc2YpH2G4DGuZbmoIIXIo8ljTarSVec9IFhF9JfjpRn+OakJw9ABb1LBDUVaR+GFQVvgb3GCXfE0a6lypeQhJI4PKbXOf5V4PaQVYwj68ShZVzfhTt3nk5If1x/+G4K5HS6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5820339;
-	Wed,  7 May 2025 00:58:09 -0700 (PDT)
-Received: from [10.1.26.133] (unknown [10.1.26.133])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D09733F5A1;
-	Wed,  7 May 2025 00:58:17 -0700 (PDT)
-Message-ID: <239d4e93-7ab6-4fc9-b907-7ca9d71f81fd@arm.com>
-Date: Wed, 7 May 2025 08:58:15 +0100
+	s=arc-20240116; t=1746604704; c=relaxed/simple;
+	bh=PknRbyojs7hOI37VrV2Jsm7i0qAFElDnyoKMXqvlKo8=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=kzyBcbg7EZC+EdrXvvehcQqzAkqjp0t9rFIhr/Wltry7lds2b9q0Y06iijkuMFwB+5081KDaXuJGhKf/NgkR7NtHvw9qm/azwlrpVvDXQe324BgFyocoJrLrlWh+agZuSYDft5in9ojJ5MT5CCuMek2RvfSWEJMCIy/qkZRxCNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CcKotJ7j; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+bpkQwEE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CcKotJ7j";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+bpkQwEE"
+Date: Wed, 07 May 2025 07:58:17 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746604698;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C7xsekxMbQSOoV4Rlt3yvTtDbiPyJ94t6q1ri0ZUbqE=;
+	b=CcKotJ7jhbFV6VwG7irRvmj4rsgZO4WITuK4cAWGEl6YM0pZydwwvCeVOMSN/06DYTIGBx
+	DnojYknfAX3yK54fAwpNTllGJesQoITbPbioL7+IwTDjB/TPOtj8GttYE9dX56xCe0F0J7
+	apECZYfQKHMi/vZuFnI29KOdHATE27W0lU6JrJ13Lw5lMGzthagetvWcJC+ogz+JjiZHBC
+	Du76St0lWPtFoMzi6Q26d/DjaWRqRS1U4SaB5ycP888IMN5wEHag4P1qtQrBtwI7Jtf3FH
+	41LVxWpCi9cQLOa4LQezxJUlvlvDW11Hu2CBuen1wPDTcCroQATdvFf9qWlkYw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746604698;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C7xsekxMbQSOoV4Rlt3yvTtDbiPyJ94t6q1ri0ZUbqE=;
+	b=+bpkQwEENEpV40oEyTDi8uMFIEUx9ZTTgKMlwpQgbQNTjk3kXgxVxFYIc0REpWjek9UsFD
+	9KtTr0WE1Kq/gGAQ==
+From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/cleanups] irqchip: Switch to of_fwnode_handle()
+Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Antonio Borneo <antonio.borneo@foss.st.com>,
+ Herve Codina <herve.codina@bootlin.com>, Anup Patel <anup@brainfault.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250319092951.37667-7-jirislaby@kernel.org>
+References: <20250319092951.37667-7-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v3 PATCH 0/6] arm64: support FEAT_BBM level 2 and large block
- mapping when rodata=full
-Content-Language: en-GB
-To: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org,
- catalin.marinas@arm.com, Miko.Lenczewski@arm.com,
- scott@os.amperecomputing.com, cl@gentwo.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Dev Jain <dev.jain@arm.com>
-References: <20250304222018.615808-1-yang@os.amperecomputing.com>
- <3750d3f8-17c6-4bb8-8107-215d442e4ec3@os.amperecomputing.com>
- <2fb974bb-1470-4a5f-90d5-97456140c98f@arm.com>
- <22b53cff-00db-48f1-b1e8-b11a54ebb147@os.amperecomputing.com>
- <4794885d-2e17-4bd8-bdf3-8ac37047e8ee@os.amperecomputing.com>
- <5c6d9706-7684-4288-b630-c60b3766b13f@arm.com>
- <4d02978c-03c0-48fe-84eb-0f3fa0c54fea@os.amperecomputing.com>
- <912c3126-8ba7-4c3a-b168-438f92e89217@arm.com>
- <2ab5f65c-b9dc-471c-9b61-70d765af285e@os.amperecomputing.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <2ab5f65c-b9dc-471c-9b61-70d765af285e@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <174660469795.406.2028917153126899382.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On 05/05/2025 22:39, Yang Shi wrote:
-> 
-> 
-> On 5/2/25 4:51 AM, Ryan Roberts wrote:
->> On 14/04/2025 22:24, Yang Shi wrote:
->>>
->>> On 4/14/25 6:03 AM, Ryan Roberts wrote:
->>>> On 10/04/2025 23:00, Yang Shi wrote:
->>>>> Hi Ryan,
->>>>>
->>>>> I know you may have a lot of things to follow up after LSF/MM. Just gently
->>>>> ping,
->>>>> hopefully we can resume the review soon.
->>>> Hi, I'm out on holiday at the moment, returning on the 22nd April. But I'm very
->>>> keen to move this series forward so will come back to you next week. (although
->>>> TBH, I thought I was waiting for you to respond to me... :-| )
->>>>
->>>> FWIW, having thought about it a bit more, I think some of the suggestions I
->>>> previously made may not have been quite right, but I'll elaborate next week.
->>>> I'm
->>>> keen to build a pgtable splitting primitive here that we can reuse with vmalloc
->>>> as well to enable huge mappings by default with vmalloc too.
->>> Sounds good. I think the patches can support splitting vmalloc page table too.
->>> Anyway we can discuss more after you are back. Enjoy your holiday.
->> Hi Yang,
->>
->> Sorry I've taken so long to get back to you. Here's what I'm currently thinking:
->> I'd eventually like to get to the point where the linear map and most vmalloc
->> memory is mapped using the largest possible mapping granularity (i.e. block
->> mappings at PUD/PMD, and contiguous mappings at PMD/PTE level).
->>
->> vmalloc has history with trying to do huge mappings by default; it ended up
->> having to be turned into an opt-in feature (instead of the original opt-out
->> approach) because there were problems with some parts of the kernel expecting
->> page mappings. I think we might be able to overcome those issues on arm64 with
->> BBML2.
->>
->> arm64 can already support vmalloc PUD and PMD block mappings, and I have a
->> series (that should make v6.16) that enables contiguous PTE mappings in vmalloc
->> too. But these are currently limited to when VM_ALLOW_HUGE is specified. To be
->> able to use that by default, we need to be able to change permissions on
->> sub-regions of an allocation, which is where BBML2 and your series come in.
->> (there may be other things we need to solve as well; TBD).
->>
->> I think the key thing we need is a function that can take a page-aligned kernel
->> VA, will walk to the leaf entry for that VA and if the VA is in the middle of
->> the leaf entry, it will split it so that the VA is now on a boundary. This will
->> work for PUD/PMD block entries and contiguous-PMD/contiguous-PTE entries. The
->> function can assume BBML2 is present. And it will return 0 on success, -EINVAL
->> if the VA is not mapped or -ENOMEM if it couldn't allocate a pgtable to perform
->> the split.
-> 
-> OK, the v3 patches already handled page table allocation failure with returning
-> -ENOMEM and BUG_ON if it is not mapped because kernel assumes linear mapping
-> should be always present. It is easy to return -EINVAL instead of BUG_ON.
-> However I'm wondering what usecases you are thinking about? Splitting vmalloc
-> area may run into unmapped VA?
+The following commit has been merged into the irq/cleanups branch of tip:
 
-I don't think BUG_ON is the right behaviour; crashing the kernel should be
-discouraged. I think even for vmalloc under correct conditions we shouldn't see
-any unmapped VA. But vmalloc does handle it gracefully today; see (e.g.)
-vunmap_pmd_range() which skips the pmd if its none.
+Commit-ID:     1e5b6bfd7f5790952798781dfabc968e9d8116fb
+Gitweb:        https://git.kernel.org/tip/1e5b6bfd7f5790952798781dfabc968e9d8116fb
+Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
+AuthorDate:    Wed, 19 Mar 2025 10:28:59 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 07 May 2025 09:53:21 +02:00
 
-> 
->>
->> Then we can use that primitive on the start and end address of any range for
->> which we need exact mapping boundaries (e.g. when changing permissions on part
->> of linear map or vmalloc allocation, when freeing part of a vmalloc allocation,
->> etc). This way we only split enough to ensure the boundaries are precise, and
->> keep larger mappings inside the range.
-> 
-> Yeah, makes sense to me.
-> 
->>
->> Next we need to reimplement __change_memory_common() to not use
->> apply_to_page_range(), because that assumes page mappings only. Dev Jain has
->> been working on a series that converts this to use walk_page_range_novma() so
->> that we can change permissions on the block/contig entries too. That's not
->> posted publicly yet, but it's not huge so I'll ask if he is comfortable with
->> posting an RFC early next week.
-> 
-> OK, so the new __change_memory_common() will change the permission of page
-> table, right? 
+irqchip: Switch to of_fwnode_handle()
 
-It will change permissions of all the leaf entries in the range of VAs it is
-passed. Currently it assumes that all the leaf entries are PTEs. But we will
-generalize to support all the other types of leaf entries too.,
+of_node_to_fwnode() is irqdomain's reimplementation of the "officially"
+defined of_fwnode_handle(). The former is in the process of being
+removed, so use the latter instead.
 
-> If I remember correctly, you suggested change permissions in
-> __create_pgd_mapping_locked() for v3. So I can disregard it?
+[ tglx: Fix up subject prefix ]
 
-Yes I did. I think this made sense (in my head at least) because in the context
-of the linear map, all the PFNs are contiguous so it kind-of makes sense to
-reuse that infrastructure. But it doesn't generalize to vmalloc because vmalloc
-PFNs are not contiguous. So for that reason, I think it's preferable to have an
-independent capability.
+Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Antonio Borneo <antonio.borneo@foss.st.com>
+Reviewed-by: Herve Codina <herve.codina@bootlin.com>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Acked-by: Herve Codina <herve.codina@bootlin.com> # irq-lan966x-oic
+Link: https://lore.kernel.org/all/20250319092951.37667-7-jirislaby@kernel.org
 
-> 
-> The current code assumes the address range passed in by change_memory_common()
-> is *NOT* physically contiguous so __change_memory_common() handles page table
-> permission on page basis. I'm supposed Dev's patches will handle this then my
-> patch can safely assume the linear mapping address range for splitting is
-> physically contiguous too otherwise I can't keep large mappings inside the
-> range. Splitting vmalloc area doesn't need to worry about this.
+---
+ drivers/irqchip/irq-alpine-msi.c            | 2 +-
+ drivers/irqchip/irq-apple-aic.c             | 4 ++--
+ drivers/irqchip/irq-armada-370-xp.c         | 4 ++--
+ drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c | 2 +-
+ drivers/irqchip/irq-gic-v3.c                | 4 ++--
+ drivers/irqchip/irq-ixp4xx.c                | 2 +-
+ drivers/irqchip/irq-lan966x-oic.c           | 2 +-
+ drivers/irqchip/irq-loongarch-cpu.c         | 2 +-
+ drivers/irqchip/irq-loongson-eiointc.c      | 2 +-
+ drivers/irqchip/irq-loongson-htvec.c        | 2 +-
+ drivers/irqchip/irq-loongson-liointc.c      | 2 +-
+ drivers/irqchip/irq-loongson-pch-msi.c      | 2 +-
+ drivers/irqchip/irq-loongson-pch-pic.c      | 2 +-
+ drivers/irqchip/irq-ls-scfg-msi.c           | 2 +-
+ drivers/irqchip/irq-meson-gpio.c            | 2 +-
+ drivers/irqchip/irq-mvebu-gicp.c            | 2 +-
+ drivers/irqchip/irq-mvebu-odmi.c            | 2 +-
+ drivers/irqchip/irq-mvebu-sei.c             | 6 +++---
+ drivers/irqchip/irq-qcom-mpm.c              | 2 +-
+ drivers/irqchip/irq-riscv-intc.c            | 2 +-
+ drivers/irqchip/irq-sni-exiu.c              | 2 +-
+ drivers/irqchip/irq-stm32mp-exti.c          | 2 +-
+ drivers/irqchip/irq-ti-sci-inta.c           | 4 ++--
+ drivers/irqchip/irq-ti-sci-intr.c           | 2 +-
+ drivers/irqchip/irq-uniphier-aidet.c        | 2 +-
+ 25 files changed, 31 insertions(+), 31 deletions(-)
 
-I'm not sure I fully understand the point you're making here...
-
-Dev's series aims to use walk_page_range_novma() similar to riscv's
-implementation so that it can walk a VA range and update the permissions on each
-leaf entry it visits, regadless of which level the leaf entry is at. This
-doesn't make any assumption of the physical contiguity of neighbouring leaf
-entries in the page table.
-
-So if we are changing permissions on the linear map, we have a range of VAs to
-walk and convert all the leaf entries, regardless of their size. The same goes
-for vmalloc... But for vmalloc, we will also want to change the underlying
-permissions in the linear map, so we will have to figure out the contiguous
-pieces of the linear map and call __change_memory_common() for each; there is
-definitely some detail to work out there!
-
-> 
->>
->> You'll still need to repaint the whole linear map with page mappings for the
->> case !BBML2 case, but I'm hoping __create_pgd_mapping_locked() (potentially with
->> minor modifications?) can do that repainting on the live mappings; similar to
->> how you are doing it in v3.
-> 
-> Yes, when repainting I need to split the page table all the way down to PTE
-> level. A simple flag should be good enough to tell __create_pgd_mapping_locked()
-> do the right thing off the top of my head.
-
-Perhaps it may be sufficient to reuse the NO_BLOCK_MAPPINGS and NO_CONT_MAPPINGS
-flags? For example, if you are find a leaf mapping and NO_BLOCK_MAPPINGS is set,
-then you need to split it?
-
-> 
->>
->> Miko's BBML2 series should hopefully get imminently queued for v6.16.
-> 
-> Great! Anyway my series is based on his advertising BBML2 patch.
-> 
->>
->> So in summary, what I'm asking for your large block mapping the linear map
->> series is:
->>    - Paint linear map using blocks/contig if boot CPU supports BBML2
->>    - Repaint linear map using page mappings if secondary CPUs don't support BBML2
-> 
-> OK, I just need to add some simple tweak to split down to PTE level to v3.
-> 
->>    - Integrate Dev's __change_memory_common() series
-> 
-> OK, I think I have to do my patches on top of it. Because Dev's patch need
-> guarantee the linear mapping address range is physically contiguous.
-> 
->>    - Create primitive to ensure mapping entry boundary at a given page-aligned VA
->>    - Use primitive when changing permissions on linear map region
-> 
-> Sure.
-> 
->>
->> This will be mergable on its own, but will also provide a great starting base
->> for adding huge-vmalloc-by-default.
->>
->> What do you think?
-> 
-> Definitely makes sense to me.
-> 
-> If I remember correctly, we still have some unsolved comments/questions for v3
-> in my replies on March 17, particularly:
-> https://lore.kernel.org/linux-arm-kernel/2b715836-b566-4a9e-
-> b344-9401fa4c0feb@os.amperecomputing.com/
-
-Ahh sorry about that. I'll take a look now...
-
-Thanks,
-Ryan
-
-> 
-> Thanks,
-> Yang
-> 
->>
->> Thanks,
->> Ryan
->>
->>
->>> Thanks,
->>> Yang
->>>
->>>> Thanks,
->>>> Ryan
->>>>
->>>>> Thanks,
->>>>> Yang
->>>>>
->>>>>
->>>>> On 3/13/25 10:40 AM, Yang Shi wrote:
->>>>>> On 3/13/25 10:36 AM, Ryan Roberts wrote:
->>>>>>> On 13/03/2025 17:28, Yang Shi wrote:
->>>>>>>> Hi Ryan,
->>>>>>>>
->>>>>>>> I saw Miko posted a new spin of his patches. There are some slight changes
->>>>>>>> that
->>>>>>>> have impact to my patches (basically check the new boot parameter). Do you
->>>>>>>> prefer I rebase my patches on top of his new spin right now then restart
->>>>>>>> review
->>>>>>>> from the new spin or review the current patches then solve the new review
->>>>>>>> comments and rebase to Miko's new spin together?
->>>>>>> Hi Yang,
->>>>>>>
->>>>>>> Sorry I haven't got to reviewing this version yet, it's in my queue!
->>>>>>>
->>>>>>> I'm happy to review against v3 as it is. I'm familiar with Miko's series
->>>>>>> and am
->>>>>>> not too bothered about the integration with that; I think it's pretty
->>>>>>> straight
->>>>>>> forward. I'm more interested in how you are handling the splitting, which I
->>>>>>> think is the bulk of the effort.
->>>>>> Yeah, sure, thank you.
->>>>>>
->>>>>>> I'm hoping to get to this next week before heading out to LSF/MM the
->>>>>>> following
->>>>>>> week (might I see you there?)
->>>>>> Unfortunately I can't make it this year. Have a fun!
->>>>>>
->>>>>> Thanks,
->>>>>> Yang
->>>>>>
->>>>>>> Thanks,
->>>>>>> Ryan
->>>>>>>
->>>>>>>
->>>>>>>> Thanks,
->>>>>>>> Yang
->>>>>>>>
->>>>>>>>
->>>>>>>> On 3/4/25 2:19 PM, Yang Shi wrote:
->>>>>>>>> Changelog
->>>>>>>>> =========
->>>>>>>>> v3:
->>>>>>>>>       * Rebased to v6.14-rc4.
->>>>>>>>>       * Based on Miko's BBML2 cpufeature patch (https://lore.kernel.org/
->>>>>>>>> linux-
->>>>>>>>> arm-kernel/20250228182403.6269-3-miko.lenczewski@arm.com/).
->>>>>>>>>         Also included in this series in order to have the complete
->>>>>>>>> patchset.
->>>>>>>>>       * Enhanced __create_pgd_mapping() to handle split as well per Ryan.
->>>>>>>>>       * Supported CONT mappings per Ryan.
->>>>>>>>>       * Supported asymmetric system by splitting kernel linear mapping if
->>>>>>>>> such
->>>>>>>>>         system is detected per Ryan. I don't have such system to test,
->>>>>>>>> so the
->>>>>>>>>         testing is done by hacking kernel to call linear mapping
->>>>>>>>> repainting
->>>>>>>>>         unconditionally. The linear mapping doesn't have any block and
->>>>>>>>> cont
->>>>>>>>>         mappings after booting.
->>>>>>>>>
->>>>>>>>> RFC v2:
->>>>>>>>>       * Used allowlist to advertise BBM lv2 on the CPUs which can
->>>>>>>>> handle TLB
->>>>>>>>>         conflict gracefully per Will Deacon
->>>>>>>>>       * Rebased onto v6.13-rc5
->>>>>>>>>       * https://lore.kernel.org/linux-arm-kernel/20250103011822.1257189-1-
->>>>>>>>> yang@os.amperecomputing.com/
->>>>>>>>>
->>>>>>>>> RFC v1: https://lore.kernel.org/lkml/20241118181711.962576-1-
->>>>>>>>> yang@os.amperecomputing.com/
->>>>>>>>>
->>>>>>>>> Description
->>>>>>>>> ===========
->>>>>>>>> When rodata=full kernel linear mapping is mapped by PTE due to arm's
->>>>>>>>> break-before-make rule.
->>>>>>>>>
->>>>>>>>> A number of performance issues arise when the kernel linear map is using
->>>>>>>>> PTE entries due to arm's break-before-make rule:
->>>>>>>>>       - performance degradation
->>>>>>>>>       - more TLB pressure
->>>>>>>>>       - memory waste for kernel page table
->>>>>>>>>
->>>>>>>>> These issues can be avoided by specifying rodata=on the kernel command
->>>>>>>>> line but this disables the alias checks on page table permissions and
->>>>>>>>> therefore compromises security somewhat.
->>>>>>>>>
->>>>>>>>> With FEAT_BBM level 2 support it is no longer necessary to invalidate the
->>>>>>>>> page table entry when changing page sizes.  This allows the kernel to
->>>>>>>>> split large mappings after boot is complete.
->>>>>>>>>
->>>>>>>>> This patch adds support for splitting large mappings when FEAT_BBM level 2
->>>>>>>>> is available and rodata=full is used. This functionality will be used
->>>>>>>>> when modifying page permissions for individual page frames.
->>>>>>>>>
->>>>>>>>> Without FEAT_BBM level 2 we will keep the kernel linear map using PTEs
->>>>>>>>> only.
->>>>>>>>>
->>>>>>>>> If the system is asymmetric, the kernel linear mapping may be repainted
->>>>>>>>> once
->>>>>>>>> the BBML2 capability is finalized on all CPUs.  See patch #6 for more
->>>>>>>>> details.
->>>>>>>>>
->>>>>>>>> We saw significant performance increases in some benchmarks with
->>>>>>>>> rodata=full without compromising the security features of the kernel.
->>>>>>>>>
->>>>>>>>> Testing
->>>>>>>>> =======
->>>>>>>>> The test was done on AmpereOne machine (192 cores, 1P) with 256GB
->>>>>>>>> memory and
->>>>>>>>> 4K page size + 48 bit VA.
->>>>>>>>>
->>>>>>>>> Function test (4K/16K/64K page size)
->>>>>>>>>       - Kernel boot.  Kernel needs change kernel linear mapping
->>>>>>>>> permission at
->>>>>>>>>         boot stage, if the patch didn't work, kernel typically didn't
->>>>>>>>> boot.
->>>>>>>>>       - Module stress from stress-ng. Kernel module load change permission
->>>>>>>>> for
->>>>>>>>>         linear mapping.
->>>>>>>>>       - A test kernel module which allocates 80% of total memory via
->>>>>>>>> vmalloc(),
->>>>>>>>>         then change the vmalloc area permission to RO, this also change
->>>>>>>>> linear
->>>>>>>>>         mapping permission to RO, then change it back before vfree(). Then
->>>>>>>>> launch
->>>>>>>>>         a VM which consumes almost all physical memory.
->>>>>>>>>       - VM with the patchset applied in guest kernel too.
->>>>>>>>>       - Kernel build in VM with guest kernel which has this series
->>>>>>>>> applied.
->>>>>>>>>       - rodata=on. Make sure other rodata mode is not broken.
->>>>>>>>>       - Boot on the machine which doesn't support BBML2.
->>>>>>>>>
->>>>>>>>> Performance
->>>>>>>>> ===========
->>>>>>>>> Memory consumption
->>>>>>>>> Before:
->>>>>>>>> MemTotal:       258988984 kB
->>>>>>>>> MemFree:        254821700 kB
->>>>>>>>>
->>>>>>>>> After:
->>>>>>>>> MemTotal:       259505132 kB
->>>>>>>>> MemFree:        255410264 kB
->>>>>>>>>
->>>>>>>>> Around 500MB more memory are free to use.  The larger the machine, the
->>>>>>>>> more memory saved.
->>>>>>>>>
->>>>>>>>> Performance benchmarking
->>>>>>>>> * Memcached
->>>>>>>>> We saw performance degradation when running Memcached benchmark with
->>>>>>>>> rodata=full vs rodata=on.  Our profiling pointed to kernel TLB pressure.
->>>>>>>>> With this patchset we saw ops/sec is increased by around 3.5%, P99
->>>>>>>>> latency is reduced by around 9.6%.
->>>>>>>>> The gain mainly came from reduced kernel TLB misses.  The kernel TLB
->>>>>>>>> MPKI is reduced by 28.5%.
->>>>>>>>>
->>>>>>>>> The benchmark data is now on par with rodata=on too.
->>>>>>>>>
->>>>>>>>> * Disk encryption (dm-crypt) benchmark
->>>>>>>>> Ran fio benchmark with the below command on a 128G ramdisk (ext4) with
->>>>>>>>> disk
->>>>>>>>> encryption (by dm-crypt).
->>>>>>>>> fio --directory=/data --random_generator=lfsr --norandommap --
->>>>>>>>> randrepeat 1 \
->>>>>>>>>         --status-interval=999 --rw=write --bs=4k --loops=1 --
->>>>>>>>> ioengine=sync \
->>>>>>>>>         --iodepth=1 --numjobs=1 --fsync_on_close=1 --group_reporting --
->>>>>>>>> thread \
->>>>>>>>>         --name=iops-test-job --eta-newline=1 --size 100G
->>>>>>>>>
->>>>>>>>> The IOPS is increased by 90% - 150% (the variance is high, but the worst
->>>>>>>>> number of good case is around 90% more than the best number of bad case).
->>>>>>>>> The bandwidth is increased and the avg clat is reduced proportionally.
->>>>>>>>>
->>>>>>>>> * Sequential file read
->>>>>>>>> Read 100G file sequentially on XFS (xfs_io read with page cache
->>>>>>>>> populated).
->>>>>>>>> The bandwidth is increased by 150%.
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> Mikołaj Lenczewski (1):
->>>>>>>>>           arm64: Add BBM Level 2 cpu feature
->>>>>>>>>
->>>>>>>>> Yang Shi (5):
->>>>>>>>>           arm64: cpufeature: add AmpereOne to BBML2 allow list
->>>>>>>>>           arm64: mm: make __create_pgd_mapping() and helpers non-void
->>>>>>>>>           arm64: mm: support large block mapping when rodata=full
->>>>>>>>>           arm64: mm: support split CONT mappings
->>>>>>>>>           arm64: mm: split linear mapping if BBML2 is not supported on
->>>>>>>>> secondary
->>>>>>>>> CPUs
->>>>>>>>>
->>>>>>>>>      arch/arm64/Kconfig                  |  11 +++++
->>>>>>>>>      arch/arm64/include/asm/cpucaps.h    |   2 +
->>>>>>>>>      arch/arm64/include/asm/cpufeature.h |  15 ++++++
->>>>>>>>>      arch/arm64/include/asm/mmu.h        |   4 ++
->>>>>>>>>      arch/arm64/include/asm/pgtable.h    |  12 ++++-
->>>>>>>>>      arch/arm64/kernel/cpufeature.c      |  95 ++++++++++++++++++++++++
->>>>>>>>> ++++++
->>>>>>>>> +++++++
->>>>>>>>>      arch/arm64/mm/mmu.c                 | 397 ++++++++++++++++++++++++
->>>>>>>>> ++++++
->>>>>>>>> ++++
->>>>>>>>> +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->>>>>>>>> +++++
->>>>>>>>> ++++++++++++++++++++++-------------------
->>>>>>>>>      arch/arm64/mm/pageattr.c            |  37 ++++++++++++---
->>>>>>>>>      arch/arm64/tools/cpucaps            |   1 +
->>>>>>>>>      9 files changed, 518 insertions(+), 56 deletions(-)
->>>>>>>>>
->>>>>>>>>
-> 
-
+diff --git a/drivers/irqchip/irq-alpine-msi.c b/drivers/irqchip/irq-alpine-msi.c
+index a1430ab..0207d35 100644
+--- a/drivers/irqchip/irq-alpine-msi.c
++++ b/drivers/irqchip/irq-alpine-msi.c
+@@ -213,7 +213,7 @@ static int alpine_msix_init_domains(struct alpine_msix_data *priv,
+ 		return -ENOMEM;
+ 	}
+ 
+-	msi_domain = pci_msi_create_irq_domain(of_node_to_fwnode(node),
++	msi_domain = pci_msi_create_irq_domain(of_fwnode_handle(node),
+ 					       &alpine_msix_domain_info,
+ 					       middle_domain);
+ 	if (!msi_domain) {
+diff --git a/drivers/irqchip/irq-apple-aic.c b/drivers/irqchip/irq-apple-aic.c
+index 974dc08..032d66d 100644
+--- a/drivers/irqchip/irq-apple-aic.c
++++ b/drivers/irqchip/irq-apple-aic.c
+@@ -1014,7 +1014,7 @@ static int __init aic_of_ic_init(struct device_node *node, struct device_node *p
+ 
+ 	irqc->info.die_stride = off - start_off;
+ 
+-	irqc->hw_domain = irq_domain_create_tree(of_node_to_fwnode(node),
++	irqc->hw_domain = irq_domain_create_tree(of_fwnode_handle(node),
+ 						 &aic_irq_domain_ops, irqc);
+ 	if (WARN_ON(!irqc->hw_domain))
+ 		goto err_unmap;
+@@ -1067,7 +1067,7 @@ static int __init aic_of_ic_init(struct device_node *node, struct device_node *p
+ 
+ 	if (is_kernel_in_hyp_mode()) {
+ 		struct irq_fwspec mi = {
+-			.fwnode		= of_node_to_fwnode(node),
++			.fwnode		= of_fwnode_handle(node),
+ 			.param_count	= 3,
+ 			.param		= {
+ 				[0]	= AIC_FIQ, /* This is a lie */
+diff --git a/drivers/irqchip/irq-armada-370-xp.c b/drivers/irqchip/irq-armada-370-xp.c
+index 2aa6a51..de98d16 100644
+--- a/drivers/irqchip/irq-armada-370-xp.c
++++ b/drivers/irqchip/irq-armada-370-xp.c
+@@ -353,7 +353,7 @@ static int __init mpic_msi_init(struct mpic *mpic, struct device_node *node,
+ 	if (!mpic->msi_inner_domain)
+ 		return -ENOMEM;
+ 
+-	mpic->msi_domain = pci_msi_create_irq_domain(of_node_to_fwnode(node), &mpic_msi_domain_info,
++	mpic->msi_domain = pci_msi_create_irq_domain(of_fwnode_handle(node), &mpic_msi_domain_info,
+ 						     mpic->msi_inner_domain);
+ 	if (!mpic->msi_domain) {
+ 		irq_domain_remove(mpic->msi_inner_domain);
+@@ -492,7 +492,7 @@ static int __init mpic_ipi_init(struct mpic *mpic, struct device_node *node)
+ {
+ 	int base_ipi;
+ 
+-	mpic->ipi_domain = irq_domain_create_linear(of_node_to_fwnode(node), IPI_DOORBELL_NR,
++	mpic->ipi_domain = irq_domain_create_linear(of_fwnode_handle(node), IPI_DOORBELL_NR,
+ 						    &mpic_ipi_domain_ops, mpic);
+ 	if (WARN_ON(!mpic->ipi_domain))
+ 		return -ENOMEM;
+diff --git a/drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c b/drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
+index 8e87fc3..11549d8 100644
+--- a/drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
++++ b/drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
+@@ -152,7 +152,7 @@ static void __init its_fsl_mc_of_msi_init(void)
+ 		if (!of_property_read_bool(np, "msi-controller"))
+ 			continue;
+ 
+-		its_fsl_mc_msi_init_one(of_node_to_fwnode(np),
++		its_fsl_mc_msi_init_one(of_fwnode_handle(np),
+ 					np->full_name);
+ 	}
+ }
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index 270d7a4..efc791c 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -1826,7 +1826,7 @@ static int partition_domain_translate(struct irq_domain *d,
+ 
+ 	ppi_idx = __gic_get_ppi_index(ppi_intid);
+ 	ret = partition_translate_id(gic_data.ppi_descs[ppi_idx],
+-				     of_node_to_fwnode(np));
++				     of_fwnode_handle(np));
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -2192,7 +2192,7 @@ static void __init gic_populate_ppi_partitions(struct device_node *gic_node)
+ 
+ 		part = &parts[part_idx];
+ 
+-		part->partition_id = of_node_to_fwnode(child_part);
++		part->partition_id = of_fwnode_handle(child_part);
+ 
+ 		pr_info("GIC: PPI partition %pOFn[%d] { ",
+ 			child_part, part_idx);
+diff --git a/drivers/irqchip/irq-ixp4xx.c b/drivers/irqchip/irq-ixp4xx.c
+index f23b02f..a9a5a52 100644
+--- a/drivers/irqchip/irq-ixp4xx.c
++++ b/drivers/irqchip/irq-ixp4xx.c
+@@ -261,7 +261,7 @@ static int __init ixp4xx_of_init_irq(struct device_node *np,
+ 		pr_crit("IXP4XX: could not ioremap interrupt controller\n");
+ 		return -ENODEV;
+ 	}
+-	fwnode = of_node_to_fwnode(np);
++	fwnode = of_fwnode_handle(np);
+ 
+ 	/* These chip variants have 64 interrupts */
+ 	is_356 = of_device_is_compatible(np, "intel,ixp43x-interrupt") ||
+diff --git a/drivers/irqchip/irq-lan966x-oic.c b/drivers/irqchip/irq-lan966x-oic.c
+index 41ac880..9445c3a 100644
+--- a/drivers/irqchip/irq-lan966x-oic.c
++++ b/drivers/irqchip/irq-lan966x-oic.c
+@@ -224,7 +224,7 @@ static int lan966x_oic_probe(struct platform_device *pdev)
+ 		.exit		= lan966x_oic_chip_exit,
+ 	};
+ 	struct irq_domain_info d_info = {
+-		.fwnode		= of_node_to_fwnode(pdev->dev.of_node),
++		.fwnode		= of_fwnode_handle(pdev->dev.of_node),
+ 		.domain_flags	= IRQ_DOMAIN_FLAG_DESTROY_GC,
+ 		.size		= LAN966X_OIC_NR_IRQ,
+ 		.hwirq_max	= LAN966X_OIC_NR_IRQ,
+diff --git a/drivers/irqchip/irq-loongarch-cpu.c b/drivers/irqchip/irq-loongarch-cpu.c
+index e62dab4..950bc08 100644
+--- a/drivers/irqchip/irq-loongarch-cpu.c
++++ b/drivers/irqchip/irq-loongarch-cpu.c
+@@ -100,7 +100,7 @@ static const struct irq_domain_ops loongarch_cpu_intc_irq_domain_ops = {
+ static int __init cpuintc_of_init(struct device_node *of_node,
+ 				struct device_node *parent)
+ {
+-	cpuintc_handle = of_node_to_fwnode(of_node);
++	cpuintc_handle = of_fwnode_handle(of_node);
+ 
+ 	irq_domain = irq_domain_create_linear(cpuintc_handle, EXCCODE_INT_NUM,
+ 				&loongarch_cpu_intc_irq_domain_ops, NULL);
+diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+index bb79e19..b2860eb 100644
+--- a/drivers/irqchip/irq-loongson-eiointc.c
++++ b/drivers/irqchip/irq-loongson-eiointc.c
+@@ -554,7 +554,7 @@ static int __init eiointc_of_init(struct device_node *of_node,
+ 		priv->vec_count = VEC_COUNT;
+ 
+ 	priv->node = 0;
+-	priv->domain_handle = of_node_to_fwnode(of_node);
++	priv->domain_handle = of_fwnode_handle(of_node);
+ 
+ 	ret = eiointc_init(priv, parent_irq, 0);
+ 	if (ret < 0)
+diff --git a/drivers/irqchip/irq-loongson-htvec.c b/drivers/irqchip/irq-loongson-htvec.c
+index 5da02c7..d8558eb 100644
+--- a/drivers/irqchip/irq-loongson-htvec.c
++++ b/drivers/irqchip/irq-loongson-htvec.c
+@@ -248,7 +248,7 @@ static int htvec_of_init(struct device_node *node,
+ 	}
+ 
+ 	err = htvec_init(res.start, resource_size(&res),
+-			num_parents, parent_irq, of_node_to_fwnode(node));
++			num_parents, parent_irq, of_fwnode_handle(node));
+ 	if (err < 0)
+ 		return err;
+ 
+diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
+index 2b1bd4a..95cade5 100644
+--- a/drivers/irqchip/irq-loongson-liointc.c
++++ b/drivers/irqchip/irq-loongson-liointc.c
+@@ -363,7 +363,7 @@ static int __init liointc_of_init(struct device_node *node,
+ 	}
+ 
+ 	err = liointc_init(res.start, resource_size(&res),
+-			revision, of_node_to_fwnode(node), node);
++			revision, of_fwnode_handle(node), node);
+ 	if (err < 0)
+ 		return err;
+ 
+diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loongson-pch-msi.c
+index 9c62108..c07876a 100644
+--- a/drivers/irqchip/irq-loongson-pch-msi.c
++++ b/drivers/irqchip/irq-loongson-pch-msi.c
+@@ -243,7 +243,7 @@ static int pch_msi_of_init(struct device_node *node, struct device_node *parent)
+ 		return -EINVAL;
+ 	}
+ 
+-	err = pch_msi_init(res.start, irq_base, irq_count, parent_domain, of_node_to_fwnode(node));
++	err = pch_msi_init(res.start, irq_base, irq_count, parent_domain, of_fwnode_handle(node));
+ 	if (err < 0)
+ 		return err;
+ 
+diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
+index 69efda3..62e6bf3 100644
+--- a/drivers/irqchip/irq-loongson-pch-pic.c
++++ b/drivers/irqchip/irq-loongson-pch-pic.c
+@@ -392,7 +392,7 @@ static int pch_pic_of_init(struct device_node *node,
+ 	}
+ 
+ 	err = pch_pic_init(res.start, resource_size(&res), vec_base,
+-				parent_domain, of_node_to_fwnode(node), 0);
++				parent_domain, of_fwnode_handle(node), 0);
+ 	if (err < 0)
+ 		return err;
+ 
+diff --git a/drivers/irqchip/irq-ls-scfg-msi.c b/drivers/irqchip/irq-ls-scfg-msi.c
+index 3cb8079..cbe11a8 100644
+--- a/drivers/irqchip/irq-ls-scfg-msi.c
++++ b/drivers/irqchip/irq-ls-scfg-msi.c
+@@ -225,7 +225,7 @@ static int ls_scfg_msi_domains_init(struct ls_scfg_msi *msi_data)
+ 	}
+ 
+ 	msi_data->msi_domain = pci_msi_create_irq_domain(
+-				of_node_to_fwnode(msi_data->pdev->dev.of_node),
++				of_fwnode_handle(msi_data->pdev->dev.of_node),
+ 				&ls_scfg_msi_domain_info,
+ 				msi_data->parent);
+ 	if (!msi_data->msi_domain) {
+diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
+index 0a25536..7d17762 100644
+--- a/drivers/irqchip/irq-meson-gpio.c
++++ b/drivers/irqchip/irq-meson-gpio.c
+@@ -607,7 +607,7 @@ static int meson_gpio_irq_of_init(struct device_node *node, struct device_node *
+ 
+ 	domain = irq_domain_create_hierarchy(parent_domain, 0,
+ 					     ctl->params->nr_hwirq,
+-					     of_node_to_fwnode(node),
++					     of_fwnode_handle(node),
+ 					     &meson_gpio_irq_domain_ops,
+ 					     ctl);
+ 	if (!domain) {
+diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu-gicp.c
+index d67f93f..521cc26 100644
+--- a/drivers/irqchip/irq-mvebu-gicp.c
++++ b/drivers/irqchip/irq-mvebu-gicp.c
+@@ -232,7 +232,7 @@ static int mvebu_gicp_probe(struct platform_device *pdev)
+ 
+ 	inner_domain = irq_domain_create_hierarchy(parent_domain, 0,
+ 						   gicp->spi_cnt,
+-						   of_node_to_fwnode(node),
++						   of_fwnode_handle(node),
+ 						   &gicp_domain_ops, gicp);
+ 	if (!inner_domain)
+ 		return -ENOMEM;
+diff --git a/drivers/irqchip/irq-mvebu-odmi.c b/drivers/irqchip/irq-mvebu-odmi.c
+index 28f7e81..c1fcd45 100644
+--- a/drivers/irqchip/irq-mvebu-odmi.c
++++ b/drivers/irqchip/irq-mvebu-odmi.c
+@@ -207,7 +207,7 @@ static int __init mvebu_odmi_init(struct device_node *node,
+ 
+ 	inner_domain = irq_domain_create_hierarchy(parent_domain, 0,
+ 						   odmis_count * NODMIS_PER_FRAME,
+-						   of_node_to_fwnode(node),
++						   of_fwnode_handle(node),
+ 						   &odmi_domain_ops, NULL);
+ 	if (!inner_domain) {
+ 		ret = -ENOMEM;
+diff --git a/drivers/irqchip/irq-mvebu-sei.c b/drivers/irqchip/irq-mvebu-sei.c
+index ebd4a90..5030fce 100644
+--- a/drivers/irqchip/irq-mvebu-sei.c
++++ b/drivers/irqchip/irq-mvebu-sei.c
+@@ -402,7 +402,7 @@ static int mvebu_sei_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Create the root SEI domain */
+-	sei->sei_domain = irq_domain_create_linear(of_node_to_fwnode(node),
++	sei->sei_domain = irq_domain_create_linear(of_fwnode_handle(node),
+ 						   (sei->caps->ap_range.size +
+ 						    sei->caps->cp_range.size),
+ 						   &mvebu_sei_domain_ops,
+@@ -418,7 +418,7 @@ static int mvebu_sei_probe(struct platform_device *pdev)
+ 	/* Create the 'wired' domain */
+ 	sei->ap_domain = irq_domain_create_hierarchy(sei->sei_domain, 0,
+ 						     sei->caps->ap_range.size,
+-						     of_node_to_fwnode(node),
++						     of_fwnode_handle(node),
+ 						     &mvebu_sei_ap_domain_ops,
+ 						     sei);
+ 	if (!sei->ap_domain) {
+@@ -432,7 +432,7 @@ static int mvebu_sei_probe(struct platform_device *pdev)
+ 	/* Create the 'MSI' domain */
+ 	sei->cp_domain = irq_domain_create_hierarchy(sei->sei_domain, 0,
+ 						     sei->caps->cp_range.size,
+-						     of_node_to_fwnode(node),
++						     of_fwnode_handle(node),
+ 						     &mvebu_sei_cp_domain_ops,
+ 						     sei);
+ 	if (!sei->cp_domain) {
+diff --git a/drivers/irqchip/irq-qcom-mpm.c b/drivers/irqchip/irq-qcom-mpm.c
+index 7942d8e..00c770e 100644
+--- a/drivers/irqchip/irq-qcom-mpm.c
++++ b/drivers/irqchip/irq-qcom-mpm.c
+@@ -447,7 +447,7 @@ static int qcom_mpm_init(struct device_node *np, struct device_node *parent)
+ 
+ 	priv->domain = irq_domain_create_hierarchy(parent_domain,
+ 				IRQ_DOMAIN_FLAG_QCOM_MPM_WAKEUP, pin_cnt,
+-				of_node_to_fwnode(np), &qcom_mpm_ops, priv);
++				of_fwnode_handle(np), &qcom_mpm_ops, priv);
+ 	if (!priv->domain) {
+ 		dev_err(dev, "failed to create MPM domain\n");
+ 		ret = -ENOMEM;
+diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
+index f653c13..e580588 100644
+--- a/drivers/irqchip/irq-riscv-intc.c
++++ b/drivers/irqchip/irq-riscv-intc.c
+@@ -242,7 +242,7 @@ static int __init riscv_intc_init(struct device_node *node,
+ 		chip = &andes_intc_chip;
+ 	}
+ 
+-	return riscv_intc_init_common(of_node_to_fwnode(node), chip);
++	return riscv_intc_init_common(of_fwnode_handle(node), chip);
+ }
+ 
+ IRQCHIP_DECLARE(riscv, "riscv,cpu-intc", riscv_intc_init);
+diff --git a/drivers/irqchip/irq-sni-exiu.c b/drivers/irqchip/irq-sni-exiu.c
+index c7db617..7d10bf6 100644
+--- a/drivers/irqchip/irq-sni-exiu.c
++++ b/drivers/irqchip/irq-sni-exiu.c
+@@ -249,7 +249,7 @@ static int __init exiu_dt_init(struct device_node *node,
+ 		return -ENXIO;
+ 	}
+ 
+-	data = exiu_init(of_node_to_fwnode(node), &res);
++	data = exiu_init(of_fwnode_handle(node), &res);
+ 	if (IS_ERR(data))
+ 		return PTR_ERR(data);
+ 
+diff --git a/drivers/irqchip/irq-stm32mp-exti.c b/drivers/irqchip/irq-stm32mp-exti.c
+index cb83d6c..649b84f 100644
+--- a/drivers/irqchip/irq-stm32mp-exti.c
++++ b/drivers/irqchip/irq-stm32mp-exti.c
+@@ -531,7 +531,7 @@ static int stm32mp_exti_domain_alloc(struct irq_domain *dm,
+ 		if (ret)
+ 			return ret;
+ 		/* we only support one parent, so far */
+-		if (of_node_to_fwnode(out_irq.np) != dm->parent->fwnode)
++		if (of_fwnode_handle(out_irq.np) != dm->parent->fwnode)
+ 			return -EINVAL;
+ 
+ 		of_phandle_args_to_fwspec(out_irq.np, out_irq.args,
+diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
+index a887efb..38dfc1f 100644
+--- a/drivers/irqchip/irq-ti-sci-inta.c
++++ b/drivers/irqchip/irq-ti-sci-inta.c
+@@ -233,7 +233,7 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
+ 	INIT_LIST_HEAD(&vint_desc->list);
+ 
+ 	parent_node = of_irq_find_parent(dev_of_node(&inta->pdev->dev));
+-	parent_fwspec.fwnode = of_node_to_fwnode(parent_node);
++	parent_fwspec.fwnode = of_fwnode_handle(parent_node);
+ 
+ 	if (of_device_is_compatible(parent_node, "arm,gic-v3")) {
+ 		/* Parent is GIC */
+@@ -709,7 +709,7 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
+-	msi_domain = ti_sci_inta_msi_create_irq_domain(of_node_to_fwnode(node),
++	msi_domain = ti_sci_inta_msi_create_irq_domain(of_fwnode_handle(node),
+ 						&ti_sci_inta_msi_domain_info,
+ 						domain);
+ 	if (!msi_domain) {
+diff --git a/drivers/irqchip/irq-ti-sci-intr.c b/drivers/irqchip/irq-ti-sci-intr.c
+index b49a731..686a8f6 100644
+--- a/drivers/irqchip/irq-ti-sci-intr.c
++++ b/drivers/irqchip/irq-ti-sci-intr.c
+@@ -149,7 +149,7 @@ static int ti_sci_intr_alloc_parent_irq(struct irq_domain *domain,
+ 		goto err_irqs;
+ 
+ 	parent_node = of_irq_find_parent(dev_of_node(intr->dev));
+-	fwspec.fwnode = of_node_to_fwnode(parent_node);
++	fwspec.fwnode = of_fwnode_handle(parent_node);
+ 
+ 	if (of_device_is_compatible(parent_node, "arm,gic-v3")) {
+ 		/* Parent is GIC */
+diff --git a/drivers/irqchip/irq-uniphier-aidet.c b/drivers/irqchip/irq-uniphier-aidet.c
+index 601f934..6005c2d 100644
+--- a/drivers/irqchip/irq-uniphier-aidet.c
++++ b/drivers/irqchip/irq-uniphier-aidet.c
+@@ -188,7 +188,7 @@ static int uniphier_aidet_probe(struct platform_device *pdev)
+ 	priv->domain = irq_domain_create_hierarchy(
+ 					parent_domain, 0,
+ 					UNIPHIER_AIDET_NR_IRQS,
+-					of_node_to_fwnode(dev->of_node),
++					of_fwnode_handle(dev->of_node),
+ 					&uniphier_aidet_domain_ops, priv);
+ 	if (!priv->domain)
+ 		return -ENOMEM;
