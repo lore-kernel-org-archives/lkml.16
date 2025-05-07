@@ -1,320 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EADC4B1E6E;
-	Wed,  7 May 2025 11:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D6A23315C
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746616987; cv=none; b=TAQdjekj//7Exw5uD9s9vqqhbCV6Kb3rdHNTKXNObnUitgradapR402AZoMAAXl5SyWYQgwypslLRoHuGIlnFXxaaCQQF39Z0LX5GqrWymDSOY84w1WkpNFOhl7TbVD7S3KQeZZWAlqLHbqkQJC9/erZRnI8YHnFi44QavA/9f4=
+	t=1746616994; cv=none; b=o8BJBDxfMpDTUUV+UvY+XANKoynMBDLSL9qugzlAI7m0yrw6g9dua/qTQZv4omWuRq1hUjSkZKc1Y/GloPmQPzM/KCtXwd5Rjd+VHyTFl1CHmxU7rTJhcM7hvMwfUv/y9hJxis49lQOQZ7SjVi7gFC1l243oQMeXofuIpBJO/Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746616987; c=relaxed/simple;
-	bh=A74vXDFWSWnKhjsMSQhZJL5xQ7wU7bDlQLBPPoCJGno=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=QVR98VCn7kRocZp+q13ejUFPmiVhAYQ9Ydw86SdsMggLLJW4CNKSv/dyu9FgduGca3YFh2llJRJMQIczAtt9iRKzv8Kbm/h2A6RIjOm4NtDw4eQlz7fRwEeqqjHdoiIybS79JXl9UQXOhY6G1le80VUE1Hd8WVmIPrQgzljo7VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYHE91EX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746616994; c=relaxed/simple;
+	bh=0YN7Qt+8hBYIMYQkj/bbF+8pso2oPM0KoT57Hc+rRzk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X+waumBoeqggDkw4e2SFx9NzapJzs9IvJ6uCtUMma90LliMVdlTyPDt52mQTIIeoN8nXsxpoXSQ8V3u1n+vd6vp20f3u9/zX8goMhGy8UHnD3Z41snw716jgGqbNGEBoT2lV8O0Vd0s4tzSu74w7xhaAb7qrV5D44xZ3x4Q5Tvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=mybp3sV6; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYHE91EX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC435C4CEE7;
-	Wed,  7 May 2025 11:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746616986;
-	bh=A74vXDFWSWnKhjsMSQhZJL5xQ7wU7bDlQLBPPoCJGno=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=JYHE91EXAOzRikVYhL2Zf9hdJmFEnwwUxR6cvcWYsNW3ziZePNwI38/95H3VZrYgX
-	 BqbaUxfpJc6vvNjunDXMF4BHQGaOcHEHoEY1RPHEiMaTJLSLmCKfokdmikKcyBerhp
-	 OgiOQ+N++wi2VMbYk6cJeeQvnC3MVY8r2awo6kTvYqyRWDwTn7EqcDFVxyM7Qi5OFR
-	 oLJ9a4QSQhMVDWELGiCF4PTn3Z1NEyXEk3cctsceIkeDKfIVv3jB8seJjLjxah201n
-	 Et1XJsAZA43H9jqsBILdSLmarAFNQCNW8IhMj7PZzbbk0m5JoByN5Wn2ZMS4QgQufB
-	 unJEy7JSvAQWw==
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="mybp3sV6"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e78e53cc349so395964276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 04:23:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1746616991; x=1747221791; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BrlKQngaih/GyBdcD0JlQz7H1v2pzxnPiDTUdfvP4es=;
+        b=mybp3sV6AGCN4BO5zB4gqBXdriJSZwq2KPTT4t1sB9sklCUTuGVZYldgh+kx2rTcYl
+         08zoX1KX5bW/qeDqD3fWSMSMXo4VlXlMhymWUyLWNFF8tCcJ9MwiIf6pd3ap/S6r3Nu9
+         RzS8HsHMmQnznzifQ9Xod4Tg9HuGeLEpdGivLJGk57LRpNV9iC5mLEcxG7pAPa+suJbC
+         T6cSiSrhsoJc5PE3rnq90R9/ZGyxB6HaWA3PXa6Eo/1GZF9j3rh4hvU28iuzY4C1kcGD
+         7gLVavPFZSwcGv6S+ra6DL0VAx1EzyrVgn/O3thmrlGtratkZnpVruJA6TM0WBaWCBIz
+         uxXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746616991; x=1747221791;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BrlKQngaih/GyBdcD0JlQz7H1v2pzxnPiDTUdfvP4es=;
+        b=d/S/CzgBJVG1/BeZzV5QmS7jUpT3+45j8iZlUxI7yGnriFcpLMt5YIAuuWvIiQCcKY
+         iUuq8svrAHOliMXD5dFSGknjoy4EK7V5gkqLpz5bicrq/IEK8PRmTHqRSi37LKXFVNSk
+         0cl4d2su5/6DHyQyUaJTtR7Pj8HWTlNHxxOQjSSQcFgs/ipKJ/Ioy0EuOxZXYG9Xj0gf
+         d+ffTSKTPk2lI6CuCt1cSdkBnblDXi9V9ZVlAPq6MW3y40Yq5/X70nLXxkKtKftOvyFh
+         xXRYC+3HHSt+DAu1rDN/3NFc5cY6oua+vaonVF/DYH0M4zj1qPiBSEfPU52V8AT3d88C
+         tpqw==
+X-Forwarded-Encrypted: i=1; AJvYcCWMOajhi2vjn5F6TbCDpoEp72JMAUBBh5+JeqU2iUegeIgENrrrO10UTbFkZ++G5HnWQ5UCYd7YRSXIL/Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAXaJUd7ebpk8jAXuQMp0OJVf2NJHOM7FqdwmcOu3CoJ77VPqA
+	cJh52gPgV1nonyzDBrG4fKJKhFo8fFT60QjGAH95oz8tarmnkh+Zugmo7fpaCpZbl6tsRfjbVIw
+	co0xirYVaJPuUFYppz2UjVlHVXquzl+y+U5NjUg==
+X-Gm-Gg: ASbGnctg/2PSXZTrpZnvryQhBuv/SPrYfeT9D0ourNcKKB+hjXMGCpnkoG3bdvKfS+F
+	rTrlkj0Gp9yUAD8Ybr0jY5VKMdR/6my60ho/ma6Dt93PIsagKiwc1+PQ8nkI2cvswmzQatCbHdt
+	BvAwdnjwZtef7KSAweb7VbsII26F7NK6HSHJugCl4mJEUdX4QXnF61
+X-Google-Smtp-Source: AGHT+IFxdYKCzY2TKwPokyurfueqmOKja0Rc4hCwr5SUWy06EioalRQvocuOR1AAy0bCdqDcNh77dszj2t/Oy74t3i4=
+X-Received: by 2002:a05:6902:18cd:b0:e74:e02:626a with SMTP id
+ 3f1490d57ef6-e7880fc6382mr3556036276.19.1746616991034; Wed, 07 May 2025
+ 04:23:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 07 May 2025 13:22:59 +0200
-Message-Id: <D9PW1NI2S6FV.8LA53J87VCML@kernel.org>
-Cc: "Trevor Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye"
- <ark.email@gmail.com>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>, "Petr
- Pavlu" <petr.pavlu@suse.com>, "Sami Tolvanen" <samitolvanen@google.com>,
- "Daniel Gomez" <da.gomez@samsung.com>, "Simona Vetter"
- <simona.vetter@ffwll.ch>, "Greg KH" <gregkh@linuxfoundation.org>, "Fiona
- Behrens" <me@kloenk.dev>, "Daniel Almeida" <daniel.almeida@collabora.com>,
- <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v12 2/3] rust: add parameter support to the `module!`
- macro
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Alice Ryhl" <aliceryhl@google.com>, "Masahiro
- Yamada" <masahiroy@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>,
- "Luis Chamberlain" <mcgrof@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>, "Nicolas Schier" <nicolas.schier@linux.dev>
-X-Mailer: aerc 0.20.1
-References: <20250506-module-params-v3-v12-0-c04d80c8a2b1@kernel.org>
- <20250506-module-params-v3-v12-2-c04d80c8a2b1@kernel.org>
-In-Reply-To: <20250506-module-params-v3-v12-2-c04d80c8a2b1@kernel.org>
+MIME-Version: 1.0
+References: <20250309084814.3114794-1-demonsingur@gmail.com>
+ <20250309084814.3114794-13-demonsingur@gmail.com> <b214bf8d-33d0-4da8-bf16-cc62bd1fbd55@videtronic.com>
+In-Reply-To: <b214bf8d-33d0-4da8-bf16-cc62bd1fbd55@videtronic.com>
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date: Wed, 7 May 2025 12:22:50 +0100
+X-Gm-Features: ATxdqUG3nHKGjKOQoFEY4aL1pXCEA2rU5jPHWszWU5gDb-fbZzf1eN3M8MI_ltM
+Message-ID: <CAPY8ntCtycm+fha9yuJyr2_9obq8cq6xjYJT7acnFPgh_sCi8Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 12/16] media: i2c: add Maxim GMSL2/3 serializer and
+ deserializer drivers
+To: Jakub Kostiw <jakub.kostiw@videtronic.com>
+Cc: Cosmin Tanislav <demonsingur@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Cosmin Tanislav <cosmin.tanislav@analog.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
+	Julien Massot <julien.massot@collabora.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Bjorn Andersson <quic_bjorande@quicinc.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Taniya Das <quic_tdas@quicinc.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	=?UTF-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4gUHJhZG8=?= <nfraprado@collabora.com>, 
+	Eric Biggers <ebiggers@google.com>, Javier Carrasco <javier.carrasco@wolfvision.net>, 
+	Ross Burton <ross.burton@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Zhi Mao <zhi.mao@mediatek.com>, 
+	Kieran Bingham <kieran.bingham@ideasonboard.com>, Dongcheng Yan <dongcheng.yan@intel.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Benjamin Mugnier <benjamin.mugnier@foss.st.com>, Tommaso Merciai <tomm.merciai@gmail.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Ihor Matushchak <ihor.matushchak@foobox.net>, 
+	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>, linux-media@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev, 
+	linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue May 6, 2025 at 3:02 PM CEST, Andreas Hindborg wrote:
-> Add support for module parameters to the `module!` macro. Implement read
-> only support for integer types without `sysfs` support.
+Hi Jakub and Cosmin
+
+On Tue, 6 May 2025 at 19:34, Jakub Kostiw <jakub.kostiw@videtronic.com> wrote:
 >
-> Acked-by: Petr Pavlu <petr.pavlu@suse.com> # from modules perspective
-> Tested-by: Daniel Gomez <da.gomez@samsung.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
-> ---
->  rust/kernel/lib.rs           |   1 +
->  rust/kernel/module_param.rs  | 204 +++++++++++++++++++++++++++++++++++++=
-++++++
->  rust/macros/helpers.rs       |  25 ++++++
->  rust/macros/lib.rs           |  31 +++++++
->  rust/macros/module.rs        | 195 ++++++++++++++++++++++++++++++++++++-=
-----
->  samples/rust/rust_minimal.rs |  10 +++
+> Hi Cosmin
+>
+> Awesome work. The initiative to establish a common framework for GMSL
+> devices is a great idea.
+>
+> I believe that we have found few bugs:
+>
+> > +#define MAX9296A_BACKTOP22(x)                        (0x31d * (x) * 0x3)
+>
+> The first multiplication is wrong and should be replaced with addition:
+>
+> +#define MAX9296A_BACKTOP22(x)                  (0x31d + (x) * 0x3)
+>
+> The same goes for MAX96724 equivalent macro:
+>
+> > +#define MAX96724_BACKTOP22(x)                        (0x415 * (x) * 0x3)
+>
+> In MAX96714 driver there is an issue with setting up lane-polarities.
+>
+> > +static const struct max9296a_chip_info max96714_info = {
+> > +     .max_register = 0x5011,
+> > +     .set_pipe_stream_id = max96714_set_pipe_stream_id,
+> > +     .set_pipe_enable = max96714_set_pipe_enable,
+> > +     .set_pipe_tunnel_enable = max96714_set_pipe_tunnel_enable,
+> > +     .phys_configs = {
+> > +             .num_configs = ARRAY_SIZE(max96714_phys_configs),
+> > +             .configs = max96714_phys_configs,
+> > +     },
+> > +     .polarity_on_physical_lanes = true,
+> > +     .supports_phy_log = true,
+> > +     .adjust_rlms = true,
+> > +     .num_pipes = 1,
+> > +     .pipe_hw_ids = { 1 },
+> > +     .num_phys = 1,
+> > +     .phy_hw_ids = { 1 },
+> > +     .num_links = 1,
+> > +};
+>
+> In order to make thing work we had to set
+>
+> > +     .polarity_on_physical_lanes = true,
+>
+> To false. So this field is either improperly set for MAX96714, or handling of this case is wrong:
+>
+> > +             if (priv->info->polarity_on_physical_lanes)
+> > +                     map = phy->mipi.data_lanes[i];
+> > +             else
+> > +                     map = i;
+>
+> Upon mentioned changes we have successfully tested two GMSL2
+> combinations on Raspberry 5 platform:
+>
+> 1. MAX96724 + MAX96717 (only 2 MIPI-CSI2 lanes with single camera due to
+> hardware limitations)
+>
+> 2. MAX96714 + MAX96717
 
-I know this is already the 12th version, but I think this patch should
-be split into the module_param module introduction, proc-macro
-modifications and the sample changes.
+Feel free to shout if you want help on the Pi side.
 
-[...]
+Pi5 should be able to extract multiple virtual channels to support
+several sensors simultaneously (up to 4 VC/DT combinations). It does
+need a rework so the CFE runs from memory rather than being fed data
+directly from the CSI-2 receiver, but I believe that is pencilled in
+as future work with libcamera already.
 
-> +/// Set the module parameter from a string.
-> +///
-> +/// Used to set the parameter value at kernel initialization, when loadi=
-ng
-> +/// the module or when set through `sysfs`.
-> +///
-> +/// See `struct kernel_param_ops.set`.
-> +///
-> +/// # Safety
-> +///
-> +/// - If `val` is non-null then it must point to a valid null-terminated=
- string.
-> +///   The `arg` field of `param` must be an instance of `T`.
+Unless things have regressed, libcamera should report all connected
+sensors to SerDes setups, and set up Media Controller appropriately to
+use them one at a time. I know I've had that working with simple CSI-2
+multiplexers and thought I'd had it working with TI FPD-Link III
+SerDes (Arducam's IMX219 V3Link kit, modded to remove their MCU). I
+don't have any GMSL hardware to test with.
 
-This sentence is conveying the same (or at least similar) requirement as
-the bullet point below.
+We're also fairly open to merging drivers and overlays for 3rd party
+hardware into the downstream Pi kernel. If they've been reviewed and
+merged upstream then that is the ideal, but if you're prepared to
+support them, then it saves the user the headache of having to build
+out-of-tree modules.
 
-> +/// - `param.arg` must be a pointer to valid `*mut T` as set up by the
-> +///   [`module!`] macro.
-> +///
-> +/// # Invariants
-> +///
-> +/// Currently, we only support read-only parameters that are not readabl=
-e
-> +/// from `sysfs`. Thus, this function is only called at kernel
-> +/// initialization time, or at module load time, and we have exclusive
-> +/// access to the parameter for the duration of the function.
-
-Why is this an Invariants section?
-
-> +///
-> +/// [`module!`]: macros::module
-> +unsafe extern "C" fn set_param<T>(
-> +    val: *const kernel::ffi::c_char,
-> +    param: *const crate::bindings::kernel_param,
-> +) -> core::ffi::c_int
-> +where
-> +    T: ModuleParam,
-> +{
-> +    // NOTE: If we start supporting arguments without values, val _is_ a=
-llowed
-> +    // to be null here.
-> +    if val.is_null() {
-> +        // TODO: Use pr_warn_once available.
-> +        crate::pr_warn!("Null pointer passed to `module_param::set_param=
-`");
-> +        return EINVAL.to_errno();
-> +    }
-> +
-> +    // SAFETY: By function safety requirement, val is non-null and
-> +    // null-terminated. By C API contract, `val` is live and valid for r=
-eads
-> +    // for the duration of this function.
-
-We shouldn't mention "C API contract" here and move the liveness
-requirement to the safety requirements of the function. Or change the
-safety requirements for this function to only be called from some
-specific C API.=20
-
-> +    let arg =3D unsafe { CStr::from_char_ptr(val) };
-> +
-> +    crate::error::from_result(|| {
-> +        let new_value =3D T::try_from_param_arg(arg)?;
-> +
-> +        // SAFETY: `param` is guaranteed to be valid by C API contract
-> +        // and `arg` is guaranteed to point to an instance of `T`.
-
-Ditto.
-
-> +        let old_value =3D unsafe { (*param).__bindgen_anon_1.arg as *mut=
- T };
-> +
-> +        // SAFETY: `old_value` is valid for writes, as we have exclusive
-> +        // access. `old_value` is pointing to an initialized static, and
-> +        // so it is properly initialized.
-
-Why do we have exclusive access? Should be in the safety requirements.
-
-> +        unsafe { *old_value =3D new_value };
-> +        Ok(0)
-> +    })
-> +}
-
-[...]
-
-> +#[doc(hidden)]
-> +#[macro_export]
-> +/// Generate a static [`kernel_param_ops`](srctree/include/linux/modulep=
-aram.h) struct.
-> +///
-> +/// # Examples
-> +///
-> +/// ```ignore
-> +/// make_param_ops!(
-> +///     /// Documentation for new param ops.
-> +///     PARAM_OPS_MYTYPE, // Name for the static.
-> +///     MyType // A type which implements [`ModuleParam`].
-> +/// );
-> +/// ```
-> +macro_rules! make_param_ops {
-> +    ($ops:ident, $ty:ty) =3D> {
-> +        ///
-
-Spurious newline?
-
-> +        /// Static [`kernel_param_ops`](srctree/include/linux/modulepara=
-m.h)
-> +        /// struct generated by `make_param_ops`
-
-Is it useful for this fact to be in the docs? I'd remove it.
-
-> +        #[doc =3D concat!("for [`", stringify!($ty), "`].")]
-> +        pub static $ops: $crate::bindings::kernel_param_ops =3D $crate::=
-bindings::kernel_param_ops {
-> +            flags: 0,
-> +            set: Some(set_param::<$ty>),
-> +            get: None,
-> +            free: None,
-> +        };
-> +    };
-> +}
-> +
-> +make_param_ops!(PARAM_OPS_I8, i8);
-> +make_param_ops!(PARAM_OPS_U8, u8);
-> +make_param_ops!(PARAM_OPS_I16, i16);
-> +make_param_ops!(PARAM_OPS_U16, u16);
-> +make_param_ops!(PARAM_OPS_I32, i32);
-> +make_param_ops!(PARAM_OPS_U32, u32);
-> +make_param_ops!(PARAM_OPS_I64, i64);
-> +make_param_ops!(PARAM_OPS_U64, u64);
-> +make_param_ops!(PARAM_OPS_ISIZE, isize);
-> +make_param_ops!(PARAM_OPS_USIZE, usize);
-> diff --git a/rust/macros/helpers.rs b/rust/macros/helpers.rs
-> index a3ee27e29a6f..16d300ad3d3b 100644
-> --- a/rust/macros/helpers.rs
-> +++ b/rust/macros/helpers.rs
-> @@ -10,6 +10,17 @@ pub(crate) fn try_ident(it: &mut token_stream::IntoIte=
-r) -> Option<String> {
->      }
->  }
-> =20
-> +pub(crate) fn try_sign(it: &mut token_stream::IntoIter) -> Option<char> =
-{
-> +    let peek =3D it.clone().next();
-> +    match peek {
-> +        Some(TokenTree::Punct(punct)) if punct.as_char() =3D=3D '-' =3D>=
- {
-
-Should we also allow a leading `+`?
-
-> +            let _ =3D it.next();
-> +            Some(punct.as_char())
-> +        }
-> +        _ =3D> None,
-> +    }
-> +}
-> +
->  pub(crate) fn try_literal(it: &mut token_stream::IntoIter) -> Option<Str=
-ing> {
->      if let Some(TokenTree::Literal(literal)) =3D it.next() {
->          Some(literal.to_string())
-> @@ -86,3 +97,17 @@ pub(crate) fn function_name(input: TokenStream) -> Opt=
-ion<Ident> {
->      }
->      None
->  }
-> +
-> +/// Parse a token stream of the form `expected_name: "value",` and retur=
-n the
-> +/// string in the position of "value".
-> +///
-> +/// # Panics
-> +///
-> +/// - On parse error.
-> +pub(crate) fn expect_string_field(it: &mut token_stream::IntoIter, expec=
-ted_name: &str) -> String {
-> +    assert_eq!(expect_ident(it), expected_name);
-> +    assert_eq!(expect_punct(it), ':');
-> +    let string =3D expect_string(it);
-> +    assert_eq!(expect_punct(it), ',');
-
-This won't allow omitting the trailing comma.
-
-> +    string
-> +}
-
-[...]
-
-> @@ -186,33 +336,35 @@ pub(crate) fn module(ts: TokenStream) -> TokenStrea=
-m {
->      let info =3D ModuleInfo::parse(&mut it);
-> =20
->      let mut modinfo =3D ModInfoBuilder::new(info.name.as_ref());
-> -    if let Some(author) =3D info.author {
-> -        modinfo.emit("author", &author);
-> +    if let Some(author) =3D &info.author {
-> +        modinfo.emit("author", author);
->      }
-> -    if let Some(authors) =3D info.authors {
-> +    if let Some(authors) =3D &info.authors {
->          for author in authors {
-> -            modinfo.emit("author", &author);
-> +            modinfo.emit("author", author);
->          }
->      }
-> -    if let Some(description) =3D info.description {
-> -        modinfo.emit("description", &description);
-> +    if let Some(description) =3D &info.description {
-> +        modinfo.emit("description", description);
->      }
->      modinfo.emit("license", &info.license);
-> -    if let Some(aliases) =3D info.alias {
-> +    if let Some(aliases) =3D &info.alias {
->          for alias in aliases {
-> -            modinfo.emit("alias", &alias);
-> +            modinfo.emit("alias", alias);
->          }
->      }
-> -    if let Some(firmware) =3D info.firmware {
-> +    if let Some(firmware) =3D &info.firmware {
->          for fw in firmware {
-> -            modinfo.emit("firmware", &fw);
-> +            modinfo.emit("firmware", fw);
-
-I don't like that you have to change all of these. Can't you just take a
-`&[Parameter]` argument in `emit_params` instead of the whole
-`ModuleInfo` struct?
-
----
-Cheers,
-Benno
-
->          }
->      }
+Cheers
+  Dave
