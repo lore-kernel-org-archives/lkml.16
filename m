@@ -1,237 +1,198 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A9B2063D2;
-	Wed,  7 May 2025 06:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D0B211491;
+	Wed,  7 May 2025 06:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746601060; cv=none; b=tVE/0s+g8YlVZ8uSnZTmn2C7kUMoA71nxlJCOb5IR3OC8Q6jzrbAMVwyIH74nkoKDMgz2wZxRrxxSG10WszLkKQoIu57zl6bqAb8HnGOkU9nw0h18hWVyhaykJWMIDc3FitVvUuAiZebxXJit542GT4gVYXdOF+uLSSk+0LrpxA=
+	t=1746601129; cv=none; b=QS7SHt1gn+AlpfdWDQK3wWHAkBRAjAKULO9ZDpwLNWswP4ZhxBfTrWWuq76yuCtXwCOIBqv3YUOosQeUOq7R9aR9AbIlgA18YwgCEN8pAVlzTis/pgWO8aMgtshC5fiLmB9i7N+Iks5WR7JG1l+t3MF0sHGCB11wZ5jmeuqTUM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746601060; c=relaxed/simple;
-	bh=uPboJtORJLTXZAEefZEjcc4REguT1i3TGxVcx273sNk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HFX6G4aHua9lAMqc5fEV8OMMF5ez+gK9tc/yYwQod3bD/Nqz9zKsz47b9m0PkiB4DVpr8fDi4bwDW+/FQONgfHiyIoBgjimbSkR39xO3fUTqV+86t0L4meaGipatyC603FqO33f9LcsjmqbHfaJd5hHbUik0r1NDfjZU+t4CiFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zr5rA2Iv; arc=none smtp.client-ip=209.85.218.54
+	s=arc-20240116; t=1746601129; c=relaxed/simple;
+	bh=8ur7PF+h+OoYNnx+CEH0MbXd0jVGhfPuCWw2eRDq/R0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=J1FA/0PHwr54y2Lf6mmU2cvNF2pnbGPhVK6KfQk6CTeffSJLVgM1LkhQGMGAtNPzeAOhX3NL4ZFDMciJLC7NQf6hXp2CJt73ufvzQIDeI7z9c0Kha2n2+0qAAhZ6o4NHTkNB8qGK/DCMQEXs/Im8fFXZopi2OK+MAnE6K32ZRZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gCLiDimw; arc=none smtp.client-ip=209.85.215.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zr5rA2Iv"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac34257295dso369932066b.2;
-        Tue, 06 May 2025 23:57:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCLiDimw"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af908bb32fdso555649a12.1;
+        Tue, 06 May 2025 23:58:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746601057; x=1747205857; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xamK371qeDgglo6MoBubskEqTznJCUNhPzrK1iwUBn0=;
-        b=Zr5rA2Ivf9FCL0p4CPXLlIxuji+1IbOhUapMKbmTwR7/ruU8j/elJBuZ1jtKwcqWUm
-         Kmwvmw7McjBv+vMOFOkZVIahk6ss1UbpjMauTk2VU/DPz267KXWQDfekPQ11mf13aorC
-         iyi2vkIF/K1Hnkgq6McLXYk4tLQiH6EGZVmom8HT9RID9D0xWfD8WaVvB+sY3vH60lws
-         j0Uu4XSMQ9mfgo3ZrIqzX1RQtIt6EEOgjZSZRs6Z49+a1w51VcFoe85Vju4cvny7CZDf
-         MD0i7gN3smevHU32V/SCDLCuDtgW9SJAAuG54RADSCVm24ZSWC/K5SLk7eMsbKIluYvc
-         N5Tg==
+        d=gmail.com; s=20230601; t=1746601126; x=1747205926; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2VFeUtVSK+P31BKn8p8TOmZdmNczMOu9CNSWqC4iQ/A=;
+        b=gCLiDimwbaKGv/8hjYalQbtHl8LAwQKEzHJY4HZtb0vtyNxho7UWgXc9k7Dmmmw7TJ
+         Tsb4qundUkOnj2Wb0y2HzALzgqPA8e2irdHbGR7KBvcFJ2xBw00VyV+KoNr9VLzMf0FW
+         +Ovq5+4NkssXLat7DUH/rXqQXH//0aRfVuqKdp4QMsojwNnzgIuvse5U1fed1d7ns7c5
+         Ezw9G0tH4DQjRrdKTM2mrPH/M20lURyePyzXQZwPc05u8kjg+nuoMGAFrB5ug1jo9UII
+         uDYRTkttVeRqbM2FvLtYbHNmudecFD3BLjK28DBkOe6wMNblrbCI29SynU5YmC1OWx6f
+         6uzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746601057; x=1747205857;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1746601126; x=1747205926;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xamK371qeDgglo6MoBubskEqTznJCUNhPzrK1iwUBn0=;
-        b=rceJOGxRB/sHlN/hkIJZXfA/Jor2jZx7NVi0/+LYYYOV1nlJDsZSL8eYcrNKL/RgFt
-         65qI27ZMpC3P4k09QGDO6He0GOf5R6q1+V6me1Qt3eeWAIXUxpxSoTFNa6yVQHhHcCpm
-         9dyO+XrOtHCAUobQa3GCs8aZzbd/ktj7MzSMp4D4zrHCt/yWLOf3sbjI3DAGL5cSugfQ
-         mZ9I9sm7g044kBC1MaLBoXRIWfG3ekmE9xiR0Wub8s1ylrUkGXXkwtjEGvquI1RVDa1t
-         fHztNa1Y6z/BQsfKzUul/trBmpiI6Bs+N2atRaADxEzDJ5qrfB7W8GtkwmagtOydFX0u
-         PO6g==
-X-Forwarded-Encrypted: i=1; AJvYcCWMLvGCc/zysTt8YYNV/CXwpfIzQgmbw26gvLJ3uWb9NTTxmZ8Vf7hq4Z2tUV8qK8PZOD3wm3Yh4BQH@vger.kernel.org, AJvYcCWoBB/v0ntFlxUE++qXa9iHsqUXoq1TD0gy6tWmbqr+QT/XUs2BdlKDutx6/KWzR9fPjuHGLDhkT1H7wAcN@vger.kernel.org, AJvYcCXZc2q817oq79epNQFy4svBxgeSATL2uumqK3Sgth06SNqpp4KNhKTLC49uygrFjRLqi28HmYK2jaBb4wi6kGGZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwECC71ZhKFbU+7CX6Mo089Skrag//KuyVZ3+5kWPbyq8Gvb1NK
-	oTPClJu3y4yIIfwqCtAlBzVhEDd7gtF+9Ht8d+GpF+7esCnIChs+c32MHOM8gvc2wT33oq/Y5/e
-	L80e+/Yig4Bbgx7qB/JKtltIdp2w=
-X-Gm-Gg: ASbGnctXl9Y5EMHor5zxo+r0ZlPvMIXze6qS8wMBltyJKYM0roV62jcu0+kv/gjxzPg
-	jkyES8NzEmkfrEizKcMujSa84wRA9eaIb0fCtKlzDrbULnCvhit8Vcvgb5t6MS2jF56r/GQ/P2C
-	7GpQn179OTzA0NlJhEIWTIsA==
-X-Google-Smtp-Source: AGHT+IGI77F5aV03xw4q/HDB6CAuRWeWQEFqnds/n2CENsez5LXuhQv2OMhweTULBgv7huoEcYH14MKgqYabvNZ5Nug=
-X-Received: by 2002:a17:907:3d94:b0:ace:68a5:ec50 with SMTP id
- a640c23a62f3a-ad1e8cd6aaamr232314366b.45.1746601057038; Tue, 06 May 2025
- 23:57:37 -0700 (PDT)
+        bh=2VFeUtVSK+P31BKn8p8TOmZdmNczMOu9CNSWqC4iQ/A=;
+        b=nP80atnBkw8haOflkCYfOI12R22OJxpNbk2lsRa84ZRtQAR3VBVnmR3TCkG4XV+a4L
+         YivR4TBOUY15a3JvgtaqDMa2rnIWpWBcKbKBexcZ212FAmLDRy27NiWVFWVkY6vuF4mV
+         ivNkhQX9uybjOHgQuYX946Dzg+DmYrldkPXoZBB5gHKpdfwN0v4ivkRzXcHh6VGl7avM
+         5Wz8BApGU7o0hdsQUd+s90GSk1FWubhoi5rxB4OZ2Im9P/Y3NDUOiUt26uPA/hbVa46C
+         uLDVZDwiWpgnR1s9IBc4SoEG2JWkJ+Kn/SKHcGZ9YqsraeQsbGojI2PRVFBOZr0jEcXp
+         QJaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXNzm4iENZeGruEwYxi7gETqbc6C7RI+o8oPTZ0RMJ2IRLC5mk++/RoaG1SRNEJC0XY0NvO/JPxAT5P@vger.kernel.org, AJvYcCXXrHnut3nGzT/htlYkaqLR9wQXgheBXrvhaFDcuRCKrLtWPAokMZGVIXe8HWT3al7hS2guNlw3XHAeQhDf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1eCH2hec5OFFSifcU4YfLHXGOOEHkR0wFokJBs19auSGq7VZk
+	0L0BiGCDwlnm0Xn4SLqBP0VwkaOKsiWiZ5J24OnR7YUHN4QGW4CUXkxMaF2uY3A+0A==
+X-Gm-Gg: ASbGncudI08Hc1ntRcHDwh4DpuIl2r8dRV26cuFaTAMGyHlH0hCZk3RhrqGAHWQ2S3Q
+	j70ywvQfc37sw5Vro8/GBnsIzgdNcvQG+HuhRSsD3xbqDB3hJcTkwIDt3enSjMP3RCX+Rv7nJzB
+	s3vbNKMcMLk88aLB3pYZQGwpS8zcgn2iCCj5P/sHphV9rxecq1LfbhwzrkuN8E23cTrCCsEhcJc
+	w5hHx9jXyGPHAkfbSGr+EvTpSfSX8DDNVwyIxP3qevojVpbiCDT1+PNweuPIZcTYou7g72/XVz4
+	P5xINMxCwhwNWwvEVJ1hG3zmYy8vXW1nJa2MN5A4Cjpe7mOrjsZB
+X-Google-Smtp-Source: AGHT+IFWFsMpADeikjRihtABsrJqSE4NbJAS2GkCODo9n7rqiq9wTg7u55ZgGsyb7HunzWU8SJznsg==
+X-Received: by 2002:a17:90b:1d8a:b0:2fa:3b6b:3370 with SMTP id 98e67ed59e1d1-30aa8829e61mr3655144a91.16.1746601126272;
+        Tue, 06 May 2025 23:58:46 -0700 (PDT)
+Received: from NB-GIGA003.letovo.school ([5.194.95.139])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30aae525db4sm1315529a91.22.2025.05.06.23.58.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 23:58:45 -0700 (PDT)
+From: Alexey Charkov <alchark@gmail.com>
+Date: Wed, 07 May 2025 10:58:30 +0400
+Subject: [PATCH v2 1/4] dt-bindings: timer: via,vt8500-timer: Convert to
+ YAML
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-12-3906529757d2@bootlin.com>
-In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-12-3906529757d2@bootlin.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 7 May 2025 09:57:00 +0300
-X-Gm-Features: ATxdqUEyr2DC5DFowZNdUkHLnOYf7BYsyZqXfrppxWGAEJovaoI5Q4o1n5r63Dk
-Message-ID: <CAHp75VfFnd616FiG8XP_oW4MeMBrqj_nmi0xCOGUj-LG1ru-qw@mail.gmail.com>
-Subject: Re: [PATCH v5 12/12] pinctrl: Add pin controller driver for AAEON UP boards
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250507-vt8500-timer-updates-v2-1-65e5d1b0855e@gmail.com>
+References: <20250507-vt8500-timer-updates-v2-0-65e5d1b0855e@gmail.com>
+In-Reply-To: <20250507-vt8500-timer-updates-v2-0-65e5d1b0855e@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Alexey Charkov <alchark@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746601114; l=3856;
+ i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
+ bh=8ur7PF+h+OoYNnx+CEH0MbXd0jVGhfPuCWw2eRDq/R0=;
+ b=lhE5lWPmUzXCbmWvbeOwQgJMVk1YQ1w5MFmgMOhRfho594LWwPSCvWhcrNB/QZCJF9Me0JwNa
+ o7U4TEIhxNqBkkKvgiCqek98wq8QKMYQ0bgDGp4TiocThkarTIKEs7D
+X-Developer-Key: i=alchark@gmail.com; a=ed25519;
+ pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-On Tue, May 6, 2025 at 6:21=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
->
-> This enables the pin control support of the onboard FPGA on AAEON UP
-> boards.
->
-> This FPGA acts as a level shifter between the Intel SoC pins and the pin
-> header, and also as a mux or switch.
->
-> +---------+          +--------------+             +---+
->           |          |              |             |   |
->           | PWM0     |       \      |             | H |
->           |----------|------  \-----|-------------| E |
->           | I2C0_SDA |              |             | A |
-> Intel SoC |----------|------\       |             | D |
->           | GPIO0    |       \------|-------------| E |
->           |----------|------        |             | R |
->           |          |     FPGA     |             |   |
-> ----------+          +--------------+             +---+
->
-> For most of the pins, the FPGA opens/closes a switch to enable/disable
-> the access to the SoC pin from a pin header.
-> Each switch, has a direction flag that is set depending the status of the
-> SoC pin.
->
-> For some other pins, the FPGA acts as a mux, and routes one pin (or the
-> other one) to the header.
->
-> The driver also provides a GPIO chip. It requests SoC pins in GPIO mode,
-> and drives them in tandem with FPGA pins (switch/mux direction).
->
-> This commit adds support only for UP Squared board.
+Rewrite the textual description for the VIA/WonderMedia timer
+as YAML schema.
 
-...
+The IP can generate up to four interrupts from four respective match
+registers, so reflect that in the schema.
 
-> +#define UPBOARD_UP_PIN_MUX(bit, data)                          \
-> +       {                                                       \
-> +               .number =3D UPBOARD_UP_BIT_##bit,                 \
-> +               .name =3D "PINMUX_"#bit,                          \
-> +               .drv_data =3D (void *)(data),                     \
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Alexey Charkov <alchark@gmail.com>
+---
+ .../devicetree/bindings/timer/via,vt8500-timer.txt | 15 -------
+ .../bindings/timer/via,vt8500-timer.yaml           | 51 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 3 files changed, 52 insertions(+), 15 deletions(-)
 
-Wondering why we need to cast here and there if currently we all use
-constant driver data. Perhaps enable const for now and if we ever need
-that to be modified by the consumer we add that.
+diff --git a/Documentation/devicetree/bindings/timer/via,vt8500-timer.txt b/Documentation/devicetree/bindings/timer/via,vt8500-timer.txt
+deleted file mode 100644
+index 901c73f0d8ef05fb54d517b807d04f80eef2e736..0000000000000000000000000000000000000000
+--- a/Documentation/devicetree/bindings/timer/via,vt8500-timer.txt
++++ /dev/null
+@@ -1,15 +0,0 @@
+-VIA/Wondermedia VT8500 Timer
+------------------------------------------------------
+-
+-Required properties:
+-- compatible : "via,vt8500-timer"
+-- reg : Should contain 1 register ranges(address and length)
+-- interrupts : interrupt for the timer
+-
+-Example:
+-
+-	timer@d8130100 {
+-		compatible = "via,vt8500-timer";
+-		reg = <0xd8130100 0x28>;
+-		interrupts = <36>;
+-	};
+diff --git a/Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml b/Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..e748149948f3140d4a158f800b91e70bf9c4f042
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/via,vt8500-timer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: VIA/Wondermedia VT8500 Timer
++
++description:
++  This is the timer block that is a standalone part of the system power
++  management controller on VIA/WonderMedia SoCs (VIA VT8500 and alike).
++  The hardware has a single 32-bit counter running at 3 MHz and four match
++  registers, each of which is associated with a dedicated match interrupt,
++  and the first of which can also serve as the system watchdog (if the
++  watchdog function is enabled, it will reset the system upon match instead
++  of triggering its respective interrupt)
++
++maintainers:
++  - Alexey Charkov <alchark@gmail.com>
++
++properties:
++  compatible:
++    const: via,vt8500-timer
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    items:
++      - description: Channel 0 match. Note that if the watchdog function
++          is enabled, this interrupt will not fire and the system will
++          reboot instead once the counter reaches match register 0 value
++      - description: Channel 1 match
++      - description: Channel 2 match
++      - description: Channel 3 match
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    timer@d8130100 {
++        compatible = "via,vt8500-timer";
++        reg = <0xd8130100 0x28>;
++        interrupts = <36>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 16037aaa770fc35efb45fc26555afaa5102e2640..5c38a60eb3bddc47106509d6cc6450ae93e50191 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3467,6 +3467,7 @@ F:	Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml
+ F:	Documentation/devicetree/bindings/i2c/i2c-wmt.txt
+ F:	Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc.yaml
+ F:	Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
++F:	Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml
+ F:	arch/arm/boot/dts/vt8500/
+ F:	arch/arm/mach-vt8500/
+ F:	drivers/clocksource/timer-vt8500.c
 
-> +       }
-> +
-> +#define UPBOARD_UP_PIN_FUNC(id, data)                          \
-> +       {                                                       \
-> +               .number =3D UPBOARD_UP_BIT_##id,                  \
-> +               .name =3D #id,                                    \
-> +               .drv_data =3D (void *)(data),                     \
+-- 
+2.49.0
 
-Ditto.
-
-> +       }
-
-...
-
-> +static int upboard_pinctrl_register_groups(struct upboard_pinctrl *pctrl=
-)
-> +{
-> +       const struct upboard_pingroup *groups =3D pctrl->pctrl_data->grou=
-ps;
-> +       size_t ngroups =3D pctrl->pctrl_data->ngroups;
-> +       unsigned int i;
-> +       int ret;
-> +
-> +       for (i =3D 0; i < ngroups; i++) {
-> +               ret =3D pinctrl_generic_add_group(pctrl->pctldev, groups[=
-i].grp.name,
-> +                                               groups[i].grp.pins, group=
-s[i].grp.npins, pctrl);
-
-> +               if (ret < 0)
-
-Why ' < 0' ?
-
-> +                       return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int upboard_pinctrl_register_functions(struct upboard_pinctrl *pc=
-trl)
-> +{
-> +       const struct pinfunction *funcs =3D pctrl->pctrl_data->funcs;
-> +       size_t nfuncs =3D pctrl->pctrl_data->nfuncs;
-> +       unsigned int i;
-> +       int ret;
-> +
-> +       for (i =3D 0; i < nfuncs ; i++) {
-> +               ret =3D pinmux_generic_add_function(pctrl->pctldev, funcs=
-[i].name,
-> +                                                 funcs[i].groups, funcs[=
-i].ngroups, NULL);
-> +               if (ret < 0)
-
-Ditto.
-
-> +                       return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-
-...
-
-> +       board_id =3D (enum upboard_board_id)(unsigned long)dmi_id->driver=
-_data;
-> +
-
-Unneeded blank line.
-
-> +       switch (board_id) {
-> +       case UPBOARD_APL01:
-> +               pctrl->maps =3D upboard_pinctrl_mapping_apl01;
-> +               pctrl->nmaps =3D ARRAY_SIZE(upboard_pinctrl_mapping_apl01=
-);
-> +               break;
-> +       default:
-> +               return dev_err_probe(dev, -ENODEV, "Unsupported board\n")=
-;
-> +       }
-
-And actually we can get rid of that train of castings by switching to
-use the info type of the structure
-
-(namings are just constructed without checking for the better or
-existing ones, choose another if you think they fit)
-
-struct upboard_pinctrl_map {
-  ... *maps;
-  ... nmaps;
-};
-
-static const struct upboard_pinctrl_map apl01 =3D {
-  ...
-};
-
-...dmi... =3D {
-  ...
-  .data =3D (void *)&apl01,
-  ...
-};
-
-board_map =3D (const ...) dmi_id->driver_data;
-
-...
-
-But since DMI will require castings, it's up to you as I don't like
-the idea of having that driver data not to be const in the first
-place.
-
---=20
-With Best Regards,
-Andy Shevchenko
