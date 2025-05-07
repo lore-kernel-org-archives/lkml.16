@@ -1,204 +1,155 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD38728B50B
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 18:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91CD28937E;
+	Wed,  7 May 2025 18:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746641631; cv=none; b=q2DPokSvx03/QkutUYkvdNfk/HDA7n28KZGtu0xYPpm+gcrqXMjfMg0JJrUVufr9rVICAi3tDd+vzHzsXddIIfPYuYLncQ++4EJ0c7+ogWtvgarK3l8ouNmM9Eu1jthVoTizVGkchAf/8wmdQfWRyORqPK47iL0dx696w13HeDI=
+	t=1746641779; cv=none; b=JTXv10zWUqCut3uhGZxhvgFTqlOBTeqhh8dLDyG6j0AGKA/gCuWyO843BKO3IGoH1k9TyZeIzKb7pBAAaU/FsqrA5gEx3bzTBXP3yr3vJwmT4nt2IPRK59GvEdbG7r95A9rq2tkVrB1IagfXhUmAo4PYpcchK68emFhfmm024T4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746641631; c=relaxed/simple;
-	bh=3VvSBSZHAcqGL90WW9CUZLTPJaD3rXPiR7KPvcxHITI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=rxW+D6GTAF+c18JANUb7xafSTyP+2tdTpm+q6Zz7o1ov/pR7hJm6XE4XsmLqRYwS/n750pY1xVgw/BC0A9PeaoT59V0LfeMZTfRiKUokK0O5bbV12mm8eYBi2MDxzUULjahRsF/2hvaRZHpYA0l3iX5ucpUgs1wA1Yvgte6k7m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lAZrRe9e; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com
+	s=arc-20240116; t=1746641779; c=relaxed/simple;
+	bh=6rPKdmTAkNXJoVHpXuZmVez15fxfVheZEKRm8PRLszw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Pz23SZq4UcDLQhPkRMyrhSl7Ykyjq8b1DsI/jpql+pzzzPvGi5+Wt9gfRvZ8vPq3FkywR4hKAwnRP+b5RSWa++DQEDgTy0P74t2oXrko8CadJL/oBpwiXHhSPVRLaLrExtlvNAENvyfLn2xlsUM1N9b1AODU8TODMg/apDzQZK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VAzZdzFh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lAZrRe9e"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff58318acaso282655a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 11:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746641629; x=1747246429; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ab0z/F9w7QZP+evG5akeK0TKh6nX5z62iRNswb/WdEg=;
-        b=lAZrRe9eDHagQ0vkCDItayi1y0CTf9yWVzkE/OFhyc3welcyXXe/bsqDe331Wd1x1x
-         3KLRzt0VOSf6580G+17DQInUgVZQ6MjycCLVm9L70UNCVJxSoZ2bk2ylk1g8bg/9XzM+
-         Tx0aFDNC9X65z0GUpMvkruF9T4ul+wi0NvLG/XAWJgRVlbTLFXdHu5529CeuLEuKTkyT
-         jYjEYKOkigvu548qNe9y3UHXJAM84kmxgDXGie9tFYCY/M0o7PIVXS4h/KGhYC5e/vK6
-         nPpVdf/ZVSL4+hjm4RUtrwXTZQqVg9Gs+7dDybi2nUcSIqAfZgjV45IqrUZlV6fSG5oC
-         haVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746641629; x=1747246429;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ab0z/F9w7QZP+evG5akeK0TKh6nX5z62iRNswb/WdEg=;
-        b=Cou9K2+Xm/wZjZFRT04pxMvZBX8usqR6CfNxNbF5zpN05KiU0tbDTDF2caGz/U5bua
-         mZLE1X4wK24cibEtYNmj1L3IpHmPaDrDs/dtfZ6z26Q3qsPwWVzPWk3xlhSq+KQUUQLy
-         jU5bgQrNbC6tVXlxuSGZlflu8Unpze040keswnUSZ76vZLJ7jeQLrx9Q0rUYjqfuvjnA
-         19HN7QhYm/EqIraBU0PASLxLEstO82cMkdzvINxp1zk9b/TLJ2bRRuQzdKQETJqzLS9y
-         UoW9bFd6Lv3JulEMLB6daN4Huc9IBpyW9xWdkQLwJYFiu/iXP8nO/ZX2CTHXNbCDBwgq
-         ez7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVWYjz8tlbyfsr43LDh/h5ayb+kcBpatJpdcMyWqKMMOQSx/sj8QcTBa7w0EJsgQRKJNNOmbg6FruTVkUs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxTQ/aUZ8Os1RXYcz4SeqQjEzlAnTjJ9E/swk822YiJo2gYyOz
-	5bTmWUKD+Fxxxcwk7e6oTWo3537wm2rDe/eHvfxOrUvz4Wz4Nep7esmyqwpv7hc1iC7otVArdpi
-	j
-X-Google-Smtp-Source: AGHT+IGpLtQq0H5iCUdoOPsdCAt5VRS4YQpvIHWiOc6SQmamTL+NGw8aOW9RqwiZ2NDkrnrpMD7IjSLJbok=
-X-Received: from pjbpv17.prod.google.com ([2002:a17:90b:3c91:b0:301:2679:9aa])
- (user=yabinc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:e7c8:b0:2f4:432d:250d
- with SMTP id 98e67ed59e1d1-30b3a6715b7mr207404a91.21.1746641629056; Wed, 07
- May 2025 11:13:49 -0700 (PDT)
-Date: Wed,  7 May 2025 11:13:46 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VAzZdzFh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45EB2C4CEEE;
+	Wed,  7 May 2025 18:16:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746641778;
+	bh=6rPKdmTAkNXJoVHpXuZmVez15fxfVheZEKRm8PRLszw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VAzZdzFhyHK4hcYMx6h4ckMTSI+LlhSKdAtwFvjz9tbhT0nBTr5KJFgWlhi2wtZW/
+	 ZzGxndt5dvrv00FL5R15AI1le3EUu9V88krt5z14PpQMWgd+L30/QUDzBqofcmrIgl
+	 yxpJqJbdVkT2LinqfQHV62UV6AQafZKnP3k3QlBcIjQGFePWBeJekzdtgna8DoiOQ/
+	 +Nh47SJz4O6J/weH9MlaBma8jtuS5N4n+8CtMkcM9sBYa5GwiBdMIZVmE4P9hSAzZY
+	 TaSOCwfdoTaWqWcAkblT7sxQ9LCysQFg11kYlLPMizueE96aREtxnfaLBY1vYuxwI8
+	 UZYfJy+RQWs6A==
+From: Kees Cook <kees@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <kees@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Hou Wenlong <houwenlong.hwl@antgroup.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	kasan-dev@googlegroups.com,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH 2/8] init.h: Disable sanitizer coverage for __init and __head
+Date: Wed,  7 May 2025 11:16:08 -0700
+Message-Id: <20250507181615.1947159-2-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250507180852.work.231-kees@kernel.org>
+References: <20250507180852.work.231-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <20250507181346.1892103-1-yabinc@google.com>
-Subject: [PATCH v4] perf: Allocate non-contiguous AUX pages by default
-From: Yabin Cui <yabinc@google.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	James Clark <james.clark@linaro.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Yabin Cui <yabinc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2847; i=kees@kernel.org; h=from:subject; bh=6rPKdmTAkNXJoVHpXuZmVez15fxfVheZEKRm8PRLszw=; b=owGbwMvMwCVmps19z/KJym7G02pJDBnSi7MPFhcujE1p83GNUj2Vetl/6Q7ju5xS7tumPJN5t DQ2USaro5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCKXJBgZ/igUKc35wvT3UdQu sR4u1YLZi59d21ljXfz+Qtf5bvnJmowMzbyyqauq9ef6NGj9Et9r9GSFGxfTTW/fIBMRRfdvObL 8AA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-perf always allocates contiguous AUX pages based on aux_watermark.
-However, this contiguous allocation doesn't benefit all PMUs. For
-instance, ARM SPE and TRBE operate with virtual pages, and Coresight
-ETR allocates a separate buffer. For these PMUs, allocating contiguous
-AUX pages unnecessarily exacerbates memory fragmentation. This
-fragmentation can prevent their use on long-running devices.
+While __noinstr already contained __no_sanitize_coverage, it needs to
+be added to __init and __head section markings to support the Clang
+implementation of CONFIG_STACKLEAK. This is to make sure the stack depth
+tracking callback is not executed in unsupported contexts.
 
-This patch modifies the perf driver to be memory-friendly by default,
-by allocating non-contiguous AUX pages. For PMUs requiring contiguous
-pages (Intel BTS and some Intel PT), the existing
-PERF_PMU_CAP_AUX_NO_SG capability can be used. For PMUs that don't
-require but can benefit from contiguous pages (some Intel PT), a new
-capability, PERF_PMU_CAP_AUX_PREFER_LARGE, is added to maintain their
-existing behavior.
+The other sanitizer coverage options (trace-pc and trace-cmp) aren't
+needed in __head nor __init either ("We are interested in code coverage
+as a function of a syscall inputs"[1]), so this appears safe to disable
+for them as well.
 
-Signed-off-by: Yabin Cui <yabinc@google.com>
+Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/kcov.c?h=v6.14#n179 [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Changes since v3:
-Add comments and a local variable to explain max_order value
-changes in rb_alloc_aux().
+Cc: Marco Elver <elver@google.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: <x86@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Hou Wenlong <houwenlong.hwl@antgroup.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: <kasan-dev@googlegroups.com>
+---
+ arch/x86/include/asm/init.h | 2 +-
+ include/linux/init.h        | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-Changes since v2:
-Let NO_SG imply PREFER_LARGE. So PMUs don't need to set both flags.
-Then the only place needing PREFER_LARGE is intel/pt.c.
-
-Changes since v1:
-In v1, default is preferring contiguous pages, and add a flag to
-allocate non-contiguous pages. In v2, default is allocating
-non-contiguous pages, and add a flag to prefer contiguous pages.
-
-v1 patchset:
-perf,coresight: Reduce fragmentation with non-contiguous AUX pages for
-cs_etm
-
- arch/x86/events/intel/pt.c  |  2 ++
- include/linux/perf_event.h  |  1 +
- kernel/events/ring_buffer.c | 33 ++++++++++++++++++++++++---------
- 3 files changed, 27 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index fa37565f6418..25ead919fc48 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -1863,6 +1863,8 @@ static __init int pt_init(void)
+diff --git a/arch/x86/include/asm/init.h b/arch/x86/include/asm/init.h
+index 8b1b1abcef15..6bfdaeddbae8 100644
+--- a/arch/x86/include/asm/init.h
++++ b/arch/x86/include/asm/init.h
+@@ -5,7 +5,7 @@
+ #if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION < 170000
+ #define __head	__section(".head.text") __no_sanitize_undefined __no_stack_protector
+ #else
+-#define __head	__section(".head.text") __no_sanitize_undefined
++#define __head	__section(".head.text") __no_sanitize_undefined __no_sanitize_coverage
+ #endif
  
- 	if (!intel_pt_validate_hw_cap(PT_CAP_topa_multiple_entries))
- 		pt_pmu.pmu.capabilities = PERF_PMU_CAP_AUX_NO_SG;
-+	else
-+		pt_pmu.pmu.capabilities = PERF_PMU_CAP_AUX_PREFER_LARGE;
+ struct x86_mapping_info {
+diff --git a/include/linux/init.h b/include/linux/init.h
+index ee1309473bc6..c65a050d52a7 100644
+--- a/include/linux/init.h
++++ b/include/linux/init.h
+@@ -49,7 +49,9 @@
  
- 	pt_pmu.pmu.capabilities		|= PERF_PMU_CAP_EXCLUSIVE |
- 					   PERF_PMU_CAP_ITRACE |
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 0069ba6866a4..56d77348c511 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -301,6 +301,7 @@ struct perf_event_pmu_context;
- #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
- #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
- #define PERF_PMU_CAP_AUX_PAUSE			0x0200
-+#define PERF_PMU_CAP_AUX_PREFER_LARGE		0x0400
- 
- /**
-  * pmu::scope
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 5130b119d0ae..69c90ea1b79a 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -679,7 +679,19 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
- {
- 	bool overwrite = !(flags & RING_BUFFER_WRITABLE);
- 	int node = (event->cpu == -1) ? -1 : cpu_to_node(event->cpu);
--	int ret = -ENOMEM, max_order;
-+	/*
-+	 * True if the PMU needs a contiguous AUX buffer (CAP_AUX_NO_SG) or
-+	 * prefers large contiguous pages (CAP_AUX_PREFER_LARGE).
-+	 */
-+	bool use_contiguous_pages = event->pmu->capabilities & (
-+		PERF_PMU_CAP_AUX_NO_SG | PERF_PMU_CAP_AUX_PREFER_LARGE);
-+	/*
-+	 * Initialize max_order to 0 for page allocation. This allocates single
-+	 * pages to minimize memory fragmentation. This is overriden if
-+	 * use_contiguous_pages is true.
-+	 */
-+	int max_order = 0;
-+	int ret = -ENOMEM;
- 
- 	if (!has_aux(event))
- 		return -EOPNOTSUPP;
-@@ -689,8 +701,8 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
- 
- 	if (!overwrite) {
- 		/*
--		 * Watermark defaults to half the buffer, and so does the
--		 * max_order, to aid PMU drivers in double buffering.
-+		 * Watermark defaults to half the buffer, to aid PMU drivers
-+		 * in double buffering.
- 		 */
- 		if (!watermark)
- 			watermark = min_t(unsigned long,
-@@ -698,16 +710,19 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
- 					  (unsigned long)nr_pages << (PAGE_SHIFT - 1));
- 
- 		/*
--		 * Use aux_watermark as the basis for chunking to
--		 * help PMU drivers honor the watermark.
-+		 * If using contiguous pages, use aux_watermark as the basis
-+		 * for chunking to help PMU drivers honor the watermark.
- 		 */
--		max_order = get_order(watermark);
-+		if (use_contiguous_pages)
-+			max_order = get_order(watermark);
- 	} else {
- 		/*
--		 * We need to start with the max_order that fits in nr_pages,
--		 * not the other way around, hence ilog2() and not get_order.
-+		 * If using contiguous pages, we need to start with the
-+		 * max_order that fits in nr_pages, not the other way around,
-+		 * hence ilog2() and not get_order.
- 		 */
--		max_order = ilog2(nr_pages);
-+		if (use_contiguous_pages)
-+			max_order = ilog2(nr_pages);
- 		watermark = 0;
- 	}
- 
+ /* These are for everybody (although not all archs will actually
+    discard it in modules) */
+-#define __init		__section(".init.text") __cold  __latent_entropy __noinitretpoline
++#define __init		__section(".init.text") __cold __latent_entropy	\
++						__noinitretpoline	\
++						__no_sanitize_coverage
+ #define __initdata	__section(".init.data")
+ #define __initconst	__section(".init.rodata")
+ #define __exitdata	__section(".exit.data")
 -- 
-2.49.0.1045.g170613ef41-goog
+2.34.1
 
