@@ -1,132 +1,127 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED781F4629;
-	Wed,  7 May 2025 05:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D03831C84BF
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 05:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746597493; cv=none; b=jc1anOIIi055mu0GKTywCf1MOYfA6lWAXh09uBqf4G5FVvjXy72jhdlJnt41mziM9bpbnD0zDJ98/h5t5qr8IrtwISi59GX+8tdenNmSAiZlO4Nr6w2aWiyYmknOYepdQVk1rOYgXalmRM2NUyPJAA9s1T5VVlrUdWv/RxIywaY=
+	t=1746597585; cv=none; b=BjOcE3BtxAp27yCnp7cHl+3f7mNtDKpgrATU9Y6m33itb7BG4UqZTzJAhBqFlO56CbSagOEXa6Y2r88LSOlcO2sUaIl5dli/ZzreWyi20P9ZdqvzCxuE4iZ4oALfQciiJuHNKz6fhoqQt0GsWS6+xDoQ2PCpOWn/4KZwHkV9v2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746597493; c=relaxed/simple;
-	bh=noM0OddCe3nMPsrUfDxNQxDN+cqV178/y6VH8nlyRw8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rzhHzt0kVP1uahI9zVtABokHYIM4myGwYcShuxbmpDlrKb6MUHCIHz+MIV1OkpDBe/yf1MHaZx5+oVkZ+NWB4zJd5PTxbo0yjjVwlziDN2TwE70KRmF8JNmmaPsL775wwdjWPYZKUPFiSb35c29ejpkq3f/JhQZ/z+ITX2W2Zqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Alf+rWYA; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Alf+rWYA"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c54b651310so1013433185a.0;
-        Tue, 06 May 2025 22:58:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746597490; x=1747202290; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=62xNdgK3PUfEz8Xz7n17PoKO70VX0ZqDvch6tNNuGFk=;
-        b=Alf+rWYA8F0MIy7/vQOt5N4UMZXvHS2PNOScTJ0aRyIpM2MqUNaxMlZ+q91jzwSi/L
-         0VmIs8L+2JTnL3k5gQaDZZBszqSX098BDOwzqMqr/NBcCHgoF5xsa75NwM0RhT9v63A9
-         oO9cvR5p/8Fm18y0IR4ViYbhLHRuvXTrD7LAW/mM03eizFwc7Ca5k3unYWexwpwn9k4D
-         3wKA/29a/qCqgEf1D/u0IN+ThtmAeyrX8UVDD4BJzRHum9sg7Ld2s2uAH2sLrzLyGMqv
-         SWNIW0rdXkvOLGmEoW5lqRrRBQ1lT646Goo9rfZahNPN/H4APhjlW3oKJEdQnqH4IhIJ
-         WH5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746597490; x=1747202290;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=62xNdgK3PUfEz8Xz7n17PoKO70VX0ZqDvch6tNNuGFk=;
-        b=QlktX2beIGjAwZJf+pydUuN3lJNh74v44ET0Z9K2rT3teyxVUwshGIyqxRVtXf9TZK
-         prcErEr46FCh84JzgHgYCZd1hc6WNu6EnZKkf0rdRQPji7GYXjVgIzICK5mlZl0omYCD
-         T9MlbmpWnHrhpMFT3attywEZJWgr0m3i+MHbsfUIz70ol/C3dNiI2VyWXngTbtftxqaP
-         6IA9mUAsPkehhP/Y4d+9uP/ncEtNZbTzoffnkEKmkCZiV5R4as7ndn1NimI1wy5Gvgkm
-         +5Dsc5qPtT0g848QaDhD4bdNcvlNU407PEn28tBjZwr6+8iGG6EIrcrWUHvLgKxIT0IQ
-         +KUg==
-X-Forwarded-Encrypted: i=1; AJvYcCXsvgW3g/Y+NzufTt+pnOck8SBB2bMf47NmvIQ1MD7v6e7eR/dntGAE4yJFsSGrooLoRNjXn9ZxuX3J1n6v@vger.kernel.org, AJvYcCXzLqB0pZqh6RlO1VLOSw1EvQbv2GIJH/nkVH2MRLv7U0SpoJCx3QNH9sUxd1imB/JZVINuVXdQab0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJ1JHpuOuwHh+TRxK2JrGJn91F4rEpBCG6R5aYYdik/KF6pmfo
-	9oDHxdYrz0FfuAgPv2vVStDCVwVStDdjJfOK5ufWQfxiKjfbvI5OpJykzaucXR4=
-X-Gm-Gg: ASbGncsa+VuEwZa1Om+GbuiCtOmCl7NOu6wdjduv3zXhaZJICaUFJz7ng4nDIddH7iC
-	QYkKztOcW842MuMccuXIQ/pcpzmdDwDX4PC2h2SRal0B01/KCD662MRkROSnYwXEH2uc3D1bcjb
-	U1JmBBDJoHvZfUI0kpXW7CnyGRMVRmaXEHKkD1ZKYrlNFd4cAZbupK9Wg/RQsKmBrwHzqe1Rkd0
-	ym1vXnxmMHB8YqKFTsrL3MHNn72ShjSrSL9Id0aLXuLmBexPG/HkWEYyNTVXioMZyjM2g67nLa0
-	/bnNd2dXNn+xFFbQKDBhSffeNBD6cLy5r7FYbKuRV6/D7tadtAoJwyVmQMEJPg==
-X-Google-Smtp-Source: AGHT+IE+Zs0zPxJ7NZCpPs3fbxcykASWphbwWyDcObU10VQPB9Wk3EyEc/S3iCZ3HP+raP3xoSY8qw==
-X-Received: by 2002:a05:622a:1356:b0:48c:4c6c:bd8d with SMTP id d75a77b69052e-49225560462mr30989061cf.2.1746597479722;
-        Tue, 06 May 2025 22:57:59 -0700 (PDT)
-Received: from c65201v1.fyre.ibm.com ([129.41.87.7])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49223457b48sm9365871cf.68.2025.05.06.22.57.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 22:57:58 -0700 (PDT)
-From: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-To: jikos@kernel.org,
-	bentiss@kernel.org,
-	jic23@kernel.org,
-	srinivas.pandruvada@linux.intel.com,
-	dlechner@baylibre.com
-Cc: linux-input@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-Subject: [PATCH v2] HID: sensor-hub: Fix typo and improve documentation
-Date: Tue,  6 May 2025 22:57:45 -0700
-Message-ID: <20250507055745.4069933-1-chelsyratnawat2001@gmail.com>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1746597585; c=relaxed/simple;
+	bh=6Kn8YsyQvfoTP4YCbsIyH75roaDzrVHBXDJb4ih2S+A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fdTvgQpunHBijuvfWV76NIqS/Qtszj5rXKaV7dLOCnPWwX2pJcGEYmPsj+HmABzve8AqUxrapNM1Yf4f1oQNsf0Ec1Y4WfsPbgK+yjKEqvD1xR9SQQJM0BP5Zb7SOhbTQZ4wtGWVkDWDfbo8/dJiiGIpBiKzGtgBvtir6VdwIhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E7D32F;
+	Tue,  6 May 2025 22:59:33 -0700 (PDT)
+Received: from [192.168.0.12] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F6C93F5A1;
+	Tue,  6 May 2025 22:59:38 -0700 (PDT)
+Message-ID: <5db14757-fd7b-441e-99b3-786f11df372b@arm.com>
+Date: Wed, 7 May 2025 11:29:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/9] coresight: Disable programming clock properly
+To: Leo Yan <leo.yan@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20250423151726.372561-1-leo.yan@arm.com>
+ <20250423151726.372561-5-leo.yan@arm.com>
+ <f56a73a4-ae63-4a46-a493-322c4806b3a2@arm.com>
+ <20250506095428.GB177796@e132581.arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250506095428.GB177796@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Includes the following corrections -
- - Changed Measurment -> Measurement
- - Changed clode -> close
- - Gyro -> gyro
 
-Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
----
-Changes in v2 -
- - Changed  X-AXIS -> X-axis
 
- include/linux/hid-sensor-hub.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+On 5/6/25 15:24, Leo Yan wrote:
+> On Fri, May 02, 2025 at 11:40:31AM +0530, Anshuman Khandual wrote:
+>> Even though this might seem to be being bike shedding, the subject
+>> line above could be re-organized something like the following for
+>> better clarity.
+>>
+>>  coresight: Properly/Appropriately disable programming clocks
+> 
+> Sure.  I will change the subject to this.
+> 
+> [...]
+> 
+>>> @@ -725,8 +723,6 @@ static void debug_platform_remove(struct platform_device *pdev)
+>>>  
+>>>  	__debug_remove(&pdev->dev);
+>>>  	pm_runtime_disable(&pdev->dev);
+>>> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
+>>> -		clk_put(drvdata->pclk);
+>>>  }
+>> Should not these IS_ERR_OR_NULL() here be changed to IS_ERR() ?
+> 
+> For the case above, after changed to devm_clk_get_enabled() for the
+> enabling programming clocks, we don't need any special handling and
+> leave the clock disabling and releasing to the device model layer.
 
-diff --git a/include/linux/hid-sensor-hub.h b/include/linux/hid-sensor-hub.h
-index 0f9f7df865db..e71056553108 100644
---- a/include/linux/hid-sensor-hub.h
-+++ b/include/linux/hid-sensor-hub.h
-@@ -17,7 +17,7 @@
-  * @attrib_id:		Attribute id for this attribute.
-  * @report_id:		Report id in which this information resides.
-  * @index:		Field index in the report.
-- * @units:		Measurment unit for this attribute.
-+ * @units:		Measurement unit for this attribute.
-  * @unit_expo:		Exponent used in the data.
-  * @size:		Size in bytes for data size.
-  * @logical_minimum:	Logical minimum value for this attribute.
-@@ -39,8 +39,8 @@ struct hid_sensor_hub_attribute_info {
-  * struct sensor_hub_pending - Synchronous read pending information
-  * @status:		Pending status true/false.
-  * @ready:		Completion synchronization data.
-- * @usage_id:		Usage id for physical device, E.g. Gyro usage id.
-- * @attr_usage_id:	Usage Id of a field, E.g. X-AXIS for a gyro.
-+ * @usage_id:		Usage id for physical device, e.g. gyro usage id.
-+ * @attr_usage_id:	Usage Id of a field, e.g. X-axis for a gyro.
-  * @raw_size:		Response size for a read request.
-  * @raw_data:		Place holder for received response.
-  */
-@@ -104,10 +104,10 @@ struct hid_sensor_hub_callbacks {
- int sensor_hub_device_open(struct hid_sensor_hub_device *hsdev);
- 
- /**
--* sensor_hub_device_clode() - Close hub device
-+* sensor_hub_device_close() - Close hub device
- * @hsdev:	Hub device instance.
- *
--* Used to clode hid device for sensor hub.
-+* Used to close hid device for sensor hub.
- */
- void sensor_hub_device_close(struct hid_sensor_hub_device *hsdev);
- 
--- 
-2.43.5
+So it can be left unchanged for now and cleaned up later ?
 
+> 
+>> Because now there could not be a NULL return value.
+>>
+>> drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev)
+>>
+>> #ifdef CONFIG_PM
+>> static int debug_runtime_suspend(struct device *dev)
+>> {
+>>         struct debug_drvdata *drvdata = dev_get_drvdata(dev);
+>>
+>>         if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+>>                 clk_disable_unprepare(drvdata->pclk);
+>>         return 0;
+>> }
+>>
+>> static int debug_runtime_resume(struct device *dev)
+>> {
+>>         struct debug_drvdata *drvdata = dev_get_drvdata(dev);
+>>
+>>         if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+>>                 clk_prepare_enable(drvdata->pclk);
+>>         return 0;
+>> }
+>> #endif
+> 
+>> There might more instances like these as well.
+>> 	
+>> git grep IS_ERR_OR_NULL drivers/hwtracing/coresight/ | grep "drvdata->pclk"
+>> drivers/hwtracing/coresight/coresight-cpu-debug.c:      if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+>> drivers/hwtracing/coresight/coresight-cpu-debug.c:      if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+>> drivers/hwtracing/coresight/coresight-funnel.c: if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+>> drivers/hwtracing/coresight/coresight-funnel.c: if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+>> drivers/hwtracing/coresight/coresight-replicator.c:     if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+>> drivers/hwtracing/coresight/coresight-replicator.c:     if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+>> drivers/hwtracing/coresight/coresight-stm.c:    if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+>> drivers/hwtracing/coresight/coresight-stm.c:    if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+>> drivers/hwtracing/coresight/coresight-tpiu.c:   if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+>> drivers/hwtracing/coresight/coresight-tpiu.c:   if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+> 
+> I would like the current patch to focus on the issue of disabling /
+> releasing the programming clocks.
+> 
+> Though the IS_ERR_OR_NULL() check is redundant, it does not cause
+> issue or regression.  The refactoring is left in patch 09 for removing
+> IS_ERR_OR_NULL() checks.
+> 
+> Does this make sense?
+
+Yes, it does now.
