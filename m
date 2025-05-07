@@ -1,127 +1,205 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE6C281369
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BE672836A2
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746623921; cv=none; b=V+GQ+eByrA8inIueO48aQnQBTYTVngwXT0/wuYr2wiAlLyfoRrZN6XI6pXnYs20zgz063Jx/jAr1XYbFoPnmM69pFvMdYqc6v2SjKGpIEONvGEDXeFaROsSctKQTKGjZb0xI6DfEKRPa84QVXC2l6SsqcJ+Loi9XFl8ehjDTqms=
+	t=1746623928; cv=none; b=kFvW+c5ypUJTEl+k4aBdRZNtOwzn9zrsf5Q6+cjK/p2iDL6C8PFoxp9pnjdDmp6mkZKMbiIeLeRLq6f9orA6TSwL/bxAUu/lpjrFr5jSoB6s3AEIsD4q/5Q3ICW9zuhAjXcC1f0a3VVM50q0Eg2BjVoi1awCi5rO3fZB9snGxJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746623921; c=relaxed/simple;
-	bh=vANADi+020FCH5I2njw3FMWd3fKb5Ttxnfby5ZW9V8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BVR0CJMfeN/7tU/GYkuaagi1U5ha163hPx6UysdbNVoFA+ckB3MoKFH+UXuFbVwwjEl0cZKUlG6bXa/cVJExbUnU/8kFWKfpEHJh4nLfEOkMIf9uquDgH5Lvb/Ed25UD1oJwzOUcLfYio6y/R+GjNwlcMDQCxJGgDgLmTzQw1bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sOQUj9rH; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sOQUj9rH"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso66656755e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:18:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746623918; x=1747228718; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mMwJyAtJK/aLIyT6CLn61d8dMsByyOcrMzhv12s06BY=;
-        b=sOQUj9rH/JgpwIXZKDU0vxXibY7ngcB5Zhta1Ld9Tw0B+eqV//1Tfnvu1x229JHoyd
-         C1FCWmHeVXCv1W4HuqLOUbbI6UeHytrLg8zOd6GYrckEooLWXGPHG8pDCqn9Hfvz9CXz
-         um+kfAPh7+R+ve7rLwQlpaUInSmHus7lOeE2GONq/k+45lrjIcmGdsUoU6mY3HZeQIpz
-         58J9aIpYZVs7sdLhnwIxCEoKXQukEsn5/U2ZE/ERjC2K5z3F5HXOuWjL5SW4fhYuLQwz
-         0qdyaQfhWPwe0wqOAuumot/HrDgedba6t5rd3+AeMW0eh9uLFqEPaTkuTavgfXDBcP4X
-         t8Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746623918; x=1747228718;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mMwJyAtJK/aLIyT6CLn61d8dMsByyOcrMzhv12s06BY=;
-        b=IE29yqC69gSymHMKfxVTTklW71VMikdlK5gDNKtOZiAt0uHJW4dz8ZkUcFqU+o9EYq
-         e8mbN3ywSAPJ8XNH+OAzoRqBNdZPtoAxS+s28zU5h05XFiRfmJR9gxvslujjLNJlqQTO
-         VdoeoVxIIMw1GH+EmbP1u5RCXwFsTY64P7pZ6BfHOgpx6R/BjjEJRItwATUlg6ogUiPq
-         GjcWJy7vciOotsujGksfrmtL+lavbTVRP6+qO79Q9g9Xj1wy4XUDz/1UxBAVX661J7AB
-         m3AEnvUKlODmFzb/7hcSKQFOn7gk60odUChoG8LmyS5LFrn5NshHN9vDX3rbWNXYQzEu
-         MSSA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6ZKgVY6OpAdhz0ELm6XKdoNFpJrkN/FH2aG7/gNwT8BiXk3s/Jbc1pM9DZA297KnGdAbBczUYNE1cuUg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGVWTQrGAgm1gt/w/0cVN4yhfW0o6tmZXMmIBAbBBtaiw40Alk
-	W5z5bXyFi08YxnXPAd8Z5rf5p/QS0mQnBFKz6G2rAe8H7qda3HVtBKoIgQlflG4=
-X-Gm-Gg: ASbGncuo9kOliM6Tf/SW+E1X4HuI4A9KsAk/Rd79+1Bal2NKdAON1+7aTi8DZTOIeTu
-	QdsDCayOdlcUrai/BtHwMdOVqYJv6o1TO2CEKZ3QvJnXy6AGToAbGKStNVF6coWglpFIHHleNWV
-	cAusxg59XibFe76UeG1uPQDaoSMS5xr6shbqgnwkIFcHYtNaaGlaf3oh8Mbp6hQ9nQd7VilHCdc
-	eyvlJBaZ6rF6SvQX5fKOWmc9QTS2AXqW4SdYSZ2AHDCoUDSsFYUiPRFeHa9e+kiH0sZDG2/9bUs
-	FeXE6hGt7t5os7/z5j0AmL06LsUV820PDxq4FdXFoiCRvA==
-X-Google-Smtp-Source: AGHT+IH3Qorr4/m1vHEg7Ot9UQ5uCqOCNeK+Gmt1pu97YiZ6JvL10Fw4EinSPUDzBFREtrSqd0/vwg==
-X-Received: by 2002:a05:600c:6085:b0:439:643a:c8d5 with SMTP id 5b1f17b1804b1-441d448ca1bmr37445495e9.0.1746623918101;
-        Wed, 07 May 2025 06:18:38 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442cd380ca4sm629535e9.36.2025.05.07.06.18.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 06:18:37 -0700 (PDT)
-Date: Wed, 7 May 2025 16:18:34 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: Mike Tipton <quic_mdtipton@quicinc.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@oss.nxp.com>,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v3] cpufreq: scmi: Skip SCMI devices that aren't used by
- the CPUs
-Message-ID: <aBtdqvyT4Ded8Lht@stanley.mountain>
-References: <20250428144728.871404-1-quic_mdtipton@quicinc.com>
- <aBtLMYqcnwacGJuy@pluto>
+	s=arc-20240116; t=1746623928; c=relaxed/simple;
+	bh=Aqxfb0D1OaZTFVrIlyE4sDxOdOo3XhRb8mptgkA+QUc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nKyPh3LJLcXJylfX4oq1yQihFf/Xo7e+xjh4a3uvFFnv5o0sMWMVXYYzN1J74FmH5h34M6cYqI3wVEBykZChd95tUoO+4KOuVMN8T7JeQYJnS/RSUSB2oBuFbbBva6Srne6ftvkjsg31Ceam4al+uA2UXyzAVvTx1YjnNNPRfoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0C0516F2;
+	Wed,  7 May 2025 06:18:35 -0700 (PDT)
+Received: from [10.57.20.214] (unknown [10.57.20.214])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8190B3F58B;
+	Wed,  7 May 2025 06:18:43 -0700 (PDT)
+Message-ID: <1cfa00a3-75ac-4fc9-bcda-d2dab688bc87@arm.com>
+Date: Wed, 7 May 2025 14:18:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBtLMYqcnwacGJuy@pluto>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] drm/panfrost: Add driver IOCTL for setting BO labels
+To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
+ linux-kernel@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org,
+ Boris Brezillon <boris.brezillon@collabora.com>, kernel@collabora.com,
+ Rob Herring <robh@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+References: <20250424022138.709303-1-adrian.larumbe@collabora.com>
+ <20250424022138.709303-3-adrian.larumbe@collabora.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250424022138.709303-3-adrian.larumbe@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 07, 2025 at 12:59:45PM +0100, Cristian Marussi wrote:
-> > +static bool scmi_dev_used_by_cpus(struct device *scmi_dev)
-> > +{
-> > +	struct device_node *scmi_np = dev_of_node(scmi_dev);
-> > +	struct device_node *np;
-> > +	struct device *cpu_dev;
-> > +	int cpu, idx;
-> > +
-> > +	if (!scmi_np)
-> > +		return false;
-> > +
-> > +	for_each_possible_cpu(cpu) {
-> > +		cpu_dev = get_cpu_device(cpu);
-> > +		if (!cpu_dev)
-> > +			continue;
-> > +
-> > +		np = dev_of_node(cpu_dev);
-> > +
-> > +		if (of_parse_phandle(np, "clocks", 0) == scmi_np)
+On 24/04/2025 03:21, Adrián Larumbe wrote:
+> Allow UM to label a BO for which it possesses a DRM handle.
 > 
-> Shouldn't this, on Success, be released by an of_node_put() (or, BETTER,
-> by some OF-related cleanup.h magic...)
-> 
+> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
 
-The cleanup.h magic is __free(of_node_put) but dev_of_node() doesn't
-take a reference so I don't think it's required.
+Minor comments below, but otherwise:
 
-regards,
-dan carpenter
+Reviewed-by: Steven Price <steven.price@arm.com>
 
-> > +			return true;
-> > +
-> > +		idx = of_property_match_string(np, "power-domain-names", "perf");
-> > +
-> > +		if (of_parse_phandle(np, "power-domains", idx) == scmi_np)
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_drv.c | 44 ++++++++++++++++++++++++-
+>  drivers/gpu/drm/panfrost/panfrost_gem.h |  2 ++
+>  include/uapi/drm/panfrost_drm.h         | 20 +++++++++++
+>  3 files changed, 65 insertions(+), 1 deletion(-)
 > 
-> Same.
-> 
-> > +			return true;
-> > +	}
-> > +
-> > +	return false;
-> > +}
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
+> index b87f83e94eda..b0ab76d67e96 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
+> @@ -495,6 +495,46 @@ static int panfrost_ioctl_madvise(struct drm_device *dev, void *data,
+>  	return ret;
+>  }
+>  
+> +static int panfrost_ioctl_set_label_bo(struct drm_device *ddev, void *data,
+> +				       struct drm_file *file)
+> +{
+> +	struct drm_panfrost_set_label_bo *args = data;
+> +	struct drm_gem_object *obj;
+> +	const char *label = NULL;
+> +	int ret = 0;
+> +
+> +	if (args->pad)
+> +		return -EINVAL;
+> +
+> +	obj = drm_gem_object_lookup(file, args->handle);
+> +	if (!obj)
+> +		return -ENOENT;
+> +
+> +	if (args->label) {
+> +		label = strndup_user((const char __user *)(uintptr_t)args->label,
+
+Use u64_to_user_ptr()
+
+> +				     PANFROST_BO_LABEL_MAXLEN);
+> +		if (IS_ERR(label)) {
+> +			ret = PTR_ERR(label);
+> +			if (ret == -EINVAL)
+> +				ret = -E2BIG;
+> +			goto err_put_obj;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * We treat passing a label of length 0 and passing a NULL label
+> +	 * differently, because even though they might seem conceptually
+> +	 * similar, future uses of the BO label might expect a different
+> +	 * behaviour in each case.
+> +	 */
+> +	panfrost_gem_set_label(obj, label);
+> +
+> +err_put_obj:
+> +	drm_gem_object_put(obj);
+> +
+> +	return ret;
+> +}
+> +
+>  int panfrost_unstable_ioctl_check(void)
+>  {
+>  	if (!unstable_ioctls)
+> @@ -561,6 +601,7 @@ static const struct drm_ioctl_desc panfrost_drm_driver_ioctls[] = {
+>  	PANFROST_IOCTL(PERFCNT_ENABLE,	perfcnt_enable,	DRM_RENDER_ALLOW),
+>  	PANFROST_IOCTL(PERFCNT_DUMP,	perfcnt_dump,	DRM_RENDER_ALLOW),
+>  	PANFROST_IOCTL(MADVISE,		madvise,	DRM_RENDER_ALLOW),
+> +	PANFROST_IOCTL(SET_LABEL_BO,	set_label_bo,	DRM_RENDER_ALLOW),
+>  };
+>  
+>  static void panfrost_gpu_show_fdinfo(struct panfrost_device *pfdev,
+> @@ -625,6 +666,7 @@ static const struct file_operations panfrost_drm_driver_fops = {
+>   * - 1.2 - adds AFBC_FEATURES query
+>   * - 1.3 - adds JD_REQ_CYCLE_COUNT job requirement for SUBMIT
+>   *       - adds SYSTEM_TIMESTAMP and SYSTEM_TIMESTAMP_FREQUENCY queries
+> + * - 1.4 - adds SET_LABEL_BO
+>   */
+>  static const struct drm_driver panfrost_drm_driver = {
+>  	.driver_features	= DRIVER_RENDER | DRIVER_GEM | DRIVER_SYNCOBJ,
+> @@ -637,7 +679,7 @@ static const struct drm_driver panfrost_drm_driver = {
+>  	.name			= "panfrost",
+>  	.desc			= "panfrost DRM",
+>  	.major			= 1,
+> -	.minor			= 3,
+> +	.minor			= 4,
+>  
+>  	.gem_create_object	= panfrost_gem_create_object,
+>  	.gem_prime_import_sg_table = panfrost_gem_prime_import_sg_table,
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.h b/drivers/gpu/drm/panfrost/panfrost_gem.h
+> index c0be2934f229..842e025b9bdc 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_gem.h
+> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.h
+> @@ -9,6 +9,8 @@
+>  
+>  struct panfrost_mmu;
+>  
+> +#define PANFROST_BO_LABEL_MAXLEN	4096
+> +
+>  struct panfrost_gem_object {
+>  	struct drm_gem_shmem_object base;
+>  	struct sg_table *sgts;
+> diff --git a/include/uapi/drm/panfrost_drm.h b/include/uapi/drm/panfrost_drm.h
+> index 568724be6628..b0445c5e514d 100644
+> --- a/include/uapi/drm/panfrost_drm.h
+> +++ b/include/uapi/drm/panfrost_drm.h
+> @@ -21,6 +21,7 @@ extern "C" {
+>  #define DRM_PANFROST_PERFCNT_ENABLE		0x06
+>  #define DRM_PANFROST_PERFCNT_DUMP		0x07
+>  #define DRM_PANFROST_MADVISE			0x08
+> +#define DRM_PANFROST_SET_LABEL_BO		0x09
+>  
+>  #define DRM_IOCTL_PANFROST_SUBMIT		DRM_IOW(DRM_COMMAND_BASE + DRM_PANFROST_SUBMIT, struct drm_panfrost_submit)
+>  #define DRM_IOCTL_PANFROST_WAIT_BO		DRM_IOW(DRM_COMMAND_BASE + DRM_PANFROST_WAIT_BO, struct drm_panfrost_wait_bo)
+> @@ -29,6 +30,7 @@ extern "C" {
+>  #define DRM_IOCTL_PANFROST_GET_PARAM		DRM_IOWR(DRM_COMMAND_BASE + DRM_PANFROST_GET_PARAM, struct drm_panfrost_get_param)
+>  #define DRM_IOCTL_PANFROST_GET_BO_OFFSET	DRM_IOWR(DRM_COMMAND_BASE + DRM_PANFROST_GET_BO_OFFSET, struct drm_panfrost_get_bo_offset)
+>  #define DRM_IOCTL_PANFROST_MADVISE		DRM_IOWR(DRM_COMMAND_BASE + DRM_PANFROST_MADVISE, struct drm_panfrost_madvise)
+> +#define DRM_IOCTL_PANFROST_SET_LABEL_BO		DRM_IOWR(DRM_COMMAND_BASE + DRM_PANFROST_SET_LABEL_BO, struct drm_panfrost_set_label_bo)
+>  
+>  /*
+>   * Unstable ioctl(s): only exposed when the unsafe unstable_ioctls module
+> @@ -227,6 +229,24 @@ struct drm_panfrost_madvise {
+>  	__u32 retained;       /* out, whether backing store still exists */
+>  };
+>  
+> +/**
+> + * struct drm_panfrost_set_label_bo - ioctl argument for labelling Panfrost BOs.
+> + */
+> +struct drm_panfrost_set_label_bo {
+> +	/** @handle: Handle of the buffer object to label. */
+> +	__u32 handle;
+> +
+> +	/**  @pad: MBZ. */
+> +	__u32 pad;
+> +
+> +	/**
+> +	 * @label: User pointer to a NUL-terminated string
+> +	 *
+> +	 * Length cannot be greater than 4096
+
+NULL is permitted and means clear the label.
+
+Thanks,
+Steve
+
+> +	 */
+> +	__u64 label;
+> +};
+> +
+>  /* Definitions for coredump decoding in user space */
+>  #define PANFROSTDUMP_MAJOR 1
+>  #define PANFROSTDUMP_MINOR 0
 
