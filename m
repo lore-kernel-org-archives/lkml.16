@@ -1,109 +1,65 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828C217332C;
-	Wed,  7 May 2025 22:03:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAB11DD877
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 22:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746655387; cv=none; b=Uy8CKkFOhr3zWgRgyTkmGm4tXcWc26CmF9vyTVhP+bP59uuMTZPzqLmP3nnCOwvhVhv1cmc4LZh4asRpFtaC46dKWKJ2Vp9rNZiWFwGLygKYYi1I92yiSTo/aEfsfDfJ7vmvoYyxa+eEdtSuDya869UV21RDH2i9OZd32WwtZ4c=
+	t=1746655494; cv=none; b=dWJ7Xape7zhyrYdAGar5mWs7Zfs4QOTILai6rQWbQXVeDDeAZlIIfTcKUUl9uNG8wEjuRXgEHBMlRXudmAiyoOTgy2YnpDEBHEfc7pTs/UHuRu+pR1+/k3tUnx8X4zm7S01P1hDrOipZrd1L6XUOUMaw0a0bmkMWUcLLVI04b5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746655387; c=relaxed/simple;
-	bh=0/lAnaPadbVA17wcpVmOQmvsd5rhkl4QrREFr0OLj3g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IfkkZwrxzRbKn35XB8OhiQJEFtUKwpgskkjfZgRNFeFoARnPrvoLZbllRlGV9hL/KJzvHa0KKLcORB+nb4Y6j0RzleEvhxD9jWSAo/YZc0IvWbFx7DgpwUIMV9zBuIAtWFXjBZIHp5qbemWbAl0JsSxyUserrOgbG13+ArR2Tak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BqGHAhyE; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BqGHAhyE"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736c1cf75e4so360120b3a.2;
-        Wed, 07 May 2025 15:03:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746655386; x=1747260186; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XLCuwj4JR7PS32nXitq3gDnSRdVNzf3jHcA5VT1cdtE=;
-        b=BqGHAhyE9dpa7Ew3SacJJk9dRz3Cfa0O9XzPeBjbAn8rhfjXV5N7DY9qCJ3+43/pdM
-         Rardlo2IXF7xZAVcwrRWSXcZN8TflK0doPfQAcg7XOyU8d8m+TIfMeYS2xX4DX8G0078
-         wxBeKDRinchr859lvrP6MM1k7lSlgp5IFLsifHydstqfVVJKe1PocAcjMe8pWynjpndN
-         jMntnbWt4IptvCXawalAh1Yp7DsWjIMni+b53ndNTfRNciqB6WLlXkLVjSb08A5E2Buw
-         poksjVXdBxtmVzULq4wBdw0Sh4FyDpbiMVGCsF0sWyKeaFRnpvDrhzeA/JBB/Nryt3dd
-         DPIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746655386; x=1747260186;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XLCuwj4JR7PS32nXitq3gDnSRdVNzf3jHcA5VT1cdtE=;
-        b=r0cqTpNiBBlAn9cxJa7yXL75Wzv2JRYD66k3vRGQyJ1ENkIVLiZjbZQwOTwBXOo82P
-         51ub8tfHanAXld5r+XDnY+LhnsHALCocPzA3820jlohK0/HgPx70HlkV7qBK8husNEeL
-         kv8pZv9XXOgC/RSMQsy2Cf1NDIebKnltguybVlvK/8d0TstuH6kvs5nl3WM2bMZihnl7
-         OgZuLME8+2hid1NubAWaQHj4A8ZkSrgnVU0QsoVQJ4eYGewiJdbgvYHD6B+drTC11ysO
-         uLFZAzKGYCCmyE1T+w5CS/vmvUJqavDsmiDzGOSBZzbk5p3/8drywjhTLIpRRddJ5iRP
-         Uexw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUlfasbGeXerD3YYqfocDTrSUehd7dPeCyx84nbWKluxUnYUWD8dCsPVTuRERSq36GIzaeBjOx0td7/rDN@vger.kernel.org, AJvYcCWsJvhxeyCSPL+JvC3Q3Fm8bgJ1jM6YNKMoBZyBIDxWXsOJWJ0A15gp7D5Y7mUYdzW3quJrLHkKucI8xw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXuvMQDu3Fe1nHZvC52fDFj+Ztxf6P14pJtPNgpJBsqsXgWr6B
-	3sSkP98f+FnmZTuAjZ5rdKoA4xTqkABwsYHY9yEXZ+iVX/xQk6fi
-X-Gm-Gg: ASbGncvCTTt4IQJcyjVGodsNl7OaTYXL86bS1NvGtdTA5DcorU2ktcXcKfh5vsptbxq
-	AosiBCq++8USFOdKNWJeydYkJ+HjAdlKZlfRfMjqP+WB5CPSIJcdnwHV/U5O3HxKrZy1QhIHk6f
-	EptF5U3RbP2NMLS5h1rrXGFIUqfhkyJd3GfoXNX+qMVcJohDht/5jycn6AqXMKgoEPnq1yShUtM
-	mTIxu+NOnFRvsHf7BFjG0KO7pgQrVGxsfX5jntc9FKBXt+ftGfEqsXWULESHR/6gUqBWsRxKBX/
-	7I77l/z2mGzjREtrsSl2CLIGOVE7qPlmI3zVHML+
-X-Google-Smtp-Source: AGHT+IHtyH9/nYOAy4Nkprd/zD4X9rHxodVpUS/HoDe6dKNNgP51Gz4FqZMQjz/badMFfSIEAH09tQ==
-X-Received: by 2002:a05:6a21:108c:b0:1f5:8cdb:2777 with SMTP id adf61e73a8af0-2159af284e6mr1292053637.3.1746655385543;
-        Wed, 07 May 2025 15:03:05 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:fe5b:f2b0:d1f:f5ac])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74059020dd4sm11857522b3a.117.2025.05.07.15.03.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 15:03:05 -0700 (PDT)
-Date: Wed, 7 May 2025 15:03:02 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: Mark Brown <broonie@kernel.org>, 
-	Manuel Fombuena <fombuena@outlook.com>, Carlos Song <carlos.song@nxp.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Clark Wang <xiaoning.wang@nxp.com>, 
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, Takashi Iwai <tiwai@suse.de>, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Xuntao Chi <chotaotao1qaz2wsx@gmail.com>, 
-	Matthias Eilert <kernel.hias@eilert.tech>, Markus Rathgeb <maggu2810@gmail.com>
-Subject: Re: [PATCH 0/4] Input: synaptics - enable InterTouch for new devices
-Message-ID: <7rxfnqq6qrqi6fzct7d7a3okmfixohpnsdveg2mxf2u3ahjh4i@5k3fq2pabk6m>
-References: <PN3PR01MB95975989E919EDEA7717BF89B888A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+	s=arc-20240116; t=1746655494; c=relaxed/simple;
+	bh=9nNef3XERP856vyAgJ5hUWqmqVl1tSG9gYUQaJ2yHWQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k85Lk6AtDOb8YLl0PImSy5nMbyFWjlSf1aWhYup7nWH/sghSDMzUbRqnawBA32OA/EY+x/kE43IvQy/eo6lbt4sjxapkaaODwnl7OPotvbIGXgvxOeh5erCcwzI6EPfQyGWZniocQcCPkJYVlMrWhbJF9yK+gqvlqBWF9rncZk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 547M4na7045537;
+	Thu, 8 May 2025 07:04:49 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 547M4nL6045534
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Thu, 8 May 2025 07:04:49 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <470689f0-223e-4d26-a919-8d48f383883b@I-love.SAKURA.ne.jp>
+Date: Thu, 8 May 2025 07:04:46 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PN3PR01MB95975989E919EDEA7717BF89B888A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] Wire up the lsm_manage_policy syscall
+To: =?UTF-8?Q?Maxime_B=C3=A9lair?= <maxime.belair@canonical.com>,
+        Song Liu <song@kernel.org>
+Cc: linux-security-module@vger.kernel.org, john.johansen@canonical.com,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        mic@digikod.net, kees@kernel.org, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com, takedakn@nttdata.co.jp,
+        linux-api@vger.kernel.org, apparmor@lists.ubuntu.com,
+        linux-kernel@vger.kernel.org
+References: <20250506143254.718647-1-maxime.belair@canonical.com>
+ <20250506143254.718647-2-maxime.belair@canonical.com>
+ <CAPhsuW4qY9B3KdhqrUOZoNBWQmO_RDwbH46my314WxrFwxbwkQ@mail.gmail.com>
+ <aa3c41f9-6b25-4871-a4be-e08430e59730@canonical.com>
+Content-Language: en-US
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <aa3c41f9-6b25-4871-a4be-e08430e59730@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Anti-Virus-Server: fsav202.rs.sakura.ne.jp
+X-Virus-Status: clean
 
-On Wed, May 07, 2025 at 02:05:14PM +0000, Aditya Garg wrote:
-> Hi all
-> 
-> The linux input mainling list seems to have receivied reports of requiring
-> psmouse.synaptics_intertouch=1 for some devices. This patch series adds support
-> for InterTouch on the following devices by adding them to the list of
-> SMBus-enabled variants:
-> 1. TOS01f6 (Dynabook Portege X30L-G)
-> 2. SYN1221 (TUXEDO InfinityBook Pro 14 v5)
-> 3. DLL060d (Dell Precision M3800)
-> 4. TOS0213 (Dynabook Portege X30-D)
-> 
-> Aditya Garg (3):
->   Input: synaptics - enable InterTouch for TOS01f6
->   Input: synaptics - enable InterTouch for SYN1221
->   Input: synaptics - enable InterTouch for DLL060d
-> 
-> Manuel Fombuena (1):
->   Input: synaptics - enable InterTouch for TOS0213
-> 
->  drivers/input/mouse/synaptics.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> -- 
+On 2025/05/08 0:37, Maxime Bélair wrote:
+> Again, each module decides which operations to expose through this syscall. In many cases
+> the operation will still require CAP_SYS_ADMIN or a similar capability, so environments
+> that choose this interface remain secure while gaining its advantages.
 
-Applied the lot, thank you.
+If the interpretation of "flags" argument varies across LSMs, it sounds like ioctl()'s
+"cmd" argument. Also, there is prctl() which can already carry string-ish parameters
+without involving open(). Why can't we use prctl() instead of lsm_manage_policy() ?
 
--- 
-Dmitry
