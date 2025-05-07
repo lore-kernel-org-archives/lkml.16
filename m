@@ -1,263 +1,226 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB48288C03;
-	Wed,  7 May 2025 13:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EEB288C03
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746623233; cv=none; b=j3okzgxwiflZuDVdBgJK7juqWq6+Zef7WPSBjw+Dpx3AddmsPSdfxXJqJ3CuSN2DRUfM8SLo0+S9OGAWlh9J30FlWsVGWUGZoOzrrBhN2vhpMYfqjsr2o/N+aLYP9ar/EOH5Zmas67cXXSDm1xt5n0tcHfTHSjerleoIawai+es=
+	t=1746623242; cv=none; b=QhJ+MR85sqdNk4cCLRG/IeYASvuX8mVfBWCyDpHe8ritygFLAA2d8ZxMV5gVwJHaj2OcrBu/fAEHrZ2JAJK45+TH4mqaLbq+KOrc1agJCXXm/Bx0iSMIz/DniJpHDfojyZ6JPUVn7AGmByah+OHgl2giYMlyfFrUntzSzWLhcWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746623233; c=relaxed/simple;
-	bh=okYdOkUfuYxZjDxBTddV/Z8yQpoJhL8u5feYj7TGts0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QyXjT44J98brIS8RstuTusbqdf0COTe4KORYjqWVVNMLplAGsj28Zt3Aox0czSzRJlOea8VaaCgWovTvo546Xp3Mqj/AzNMPmB/UrPrt9dW2jQvnjZY3SqsqN8dS00huEUNttzXVOpGhQkqRHj5JzY/staSMlz8ylc6TdRxONDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HnHg3+DG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746623242; c=relaxed/simple;
+	bh=paer5lB4pbDJC6mb4bIKdj4LiWzpncmdf0XRltX399I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=skGUDuh3lKjpfFHt0pJ9Z/XDjaazIO9QX5l9tY/iN/L1O180uO5220htbYRoKmkXYysFOar37HDok6Cs6CdRPaP30uPpby+N/rpg53btfk6mKVCVpJD/yO46Qdoqn126eGtfmUyMiXl+u44Ccz00yorGYD4WEdNzHa4TuNFDTKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fB+6PnIV; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HnHg3+DG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA731C4CEEE;
-	Wed,  7 May 2025 13:07:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746623232;
-	bh=okYdOkUfuYxZjDxBTddV/Z8yQpoJhL8u5feYj7TGts0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=HnHg3+DGLlrxKZ9mSjuCGsnGd5Y+1rwaDvjYe1G+LvQsO4UYdJfmEaNt6OBhBeC5C
-	 gU6/75IcmlFeKf8HD7/uy8O8bDHpTcSqKPTBj1GAdyeDAC2mrTR+na1/2iHzyz+EEA
-	 yqpXV3B7pP97SInR4tjfp2S/3SUMLDTorpNkvWbnocgZIIUZSpyAKXtc37XLr3b3C5
-	 IYlFz8GuoImULqAhku6T0I885x1XuqPlexM7vVNfHrGolh9lb/TLoe5R9ogQ8xYIFH
-	 F93ILorXRmDaA65Ix5gFK1gKWY+zagWJoOGpHqdmxqbOiIF8d0AdlextZ2XXHB8jVZ
-	 +0rz6RscGYZ3Q==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 07 May 2025 09:06:35 -0400
-Subject: [PATCH v8 10/10] ref_tracker: eliminate the ref_tracker_dir name
- field
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fB+6PnIV"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30828fc17adso6744068a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:07:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746623240; x=1747228040; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SSLsX18w2X47vP3BkxY+cojPWShAtErFKfhrlUXjpUU=;
+        b=fB+6PnIVVElbG91ZDB1GOXfgp3Zjsi/1Z4gnXPeAdDoC9qrmZppx+kHoP98MMYKCLq
+         HdvNKXdNOcRH6eDD8zJ58QNEcKlenRpZ6eqOXrDuda8TYqOUdt8LKRiLdhOE8E74GZe5
+         9SXCej0hGhqjeeUYEXO7vuiZtP8i3a6c1XoBbWkvkMO+3WwZ7c2G1bht5AFlc5M1ZvOz
+         OSmhNnKA7dmU6JjYeAofMNQFkxQ/2Ywwb/dUkEAZevzSWWjmYpB+TuOZfBT3dPseWvLA
+         M7F3IPB2ubUDLZXjx3q67xq40pgyVlSsqcoszGqHA1M3sTT8EbYv/l9CwkkUYXVtKbgf
+         fzkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746623240; x=1747228040;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SSLsX18w2X47vP3BkxY+cojPWShAtErFKfhrlUXjpUU=;
+        b=VIBbRu9iBk02RJoVyISo6ebH7DHtlXi69kRkF3b92BN86/K6UJU+hJcomnngShjPaE
+         bd8fbXX9VMNfegLU8gdfAwS4ZkVVL+kZizTb/n0y6BOC/ScQLsUGxzXcPRsYjZaECdxZ
+         G9CfTn781JKPZmQHs1kI7JXsQfVQ91Fw2pXMBKirc0n8n7h6qGHDZLegzWQo6ocJZe7V
+         OIl5RoRWCuIVHCXhEbrzKQ0+P1RrywQpQZcVuvv+QRQr0/bXsE036rbl1FGL6LLyfLqq
+         ecPZS02YfdW5rrOZccxH5xIXFTMKO6i82LLPIyM/Oy+2lmXonKa6HGrdZI7IYk+m7QxO
+         01pA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyv+PBAQ8uj39QrnuzL0QaWhpUirZ/OUndfMcI8EpVkT7/2OeTLDf5r00JRue9lkvK4aV4pTS3JUGxvCU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9T0dyfcV+8zf/7hR2KbtEAZEIQab0T59o9qN/MNMSm+2Detvy
+	x1s1aRZVjhdPpbtV83/VyZBbJU+buD4P2/nTT8SnH5GpbailxOneTT+591kLQrJ84ytHKUtjpZq
+	4FBxobpk48ltmnOEqiWPMthR/bMs=
+X-Gm-Gg: ASbGncsbgF8lMr5ECfvqIfGfIcydyG4Yr5gbsR2xCPeiT62leAcgc/GdN3f70QqPZSv
+	gqlR7W1JDmGjv3zRcTzTnivcSdPFKNwh3ogxX8GIx5NKKr9JMkR4EANEfm1eSOID9Jax9BgWvG4
+	zEsJw9UYBThEVQU6TTU5Lk473j
+X-Google-Smtp-Source: AGHT+IHZU8VPs0UlD0F1OfxdDObBgX0RVrk248qkdHxD24y1phTRkZMWmECCDzeRnuCoPuYKEPCoEz4CHFQ450/qcKU=
+X-Received: by 2002:a17:90a:d2c8:b0:2ff:7031:e380 with SMTP id
+ 98e67ed59e1d1-30aac19b58fmr5771948a91.10.1746623239537; Wed, 07 May 2025
+ 06:07:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250507-reftrack-dbgfs-v8-10-607717d3bb98@kernel.org>
-References: <20250507-reftrack-dbgfs-v8-0-607717d3bb98@kernel.org>
-In-Reply-To: <20250507-reftrack-dbgfs-v8-0-607717d3bb98@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Jani Nikula <jani.nikula@linux.intel.com>, 
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
- Rodrigo Vivi <rodrigo.vivi@intel.com>, 
- Tvrtko Ursulin <tursulin@ursulin.net>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, 
- Nathan Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7622; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=okYdOkUfuYxZjDxBTddV/Z8yQpoJhL8u5feYj7TGts0=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoG1rqU5ozLBZRcDd03PFM46qf2B9VyS2sK1Zk5
- rBzl+kH1TqJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaBta6gAKCRAADmhBGVaC
- FViCEADDWuqtGBgeCFg273dBepRhG7snk2v/1x6vSEBcVK6AIrLQvGy88yjzw+df03FW5WRqSFM
- x9xamRt2FAQRgGPeoKnx+XUwbuiIoqFypI5iGeB3Ef2m6iwZr6+d0YLv3MENbiVCbEK8iaaYlnm
- gGDi4Aam/VDumyaT3IPiBs3iDJftSCzzmnE4MiVDEn/XvJYeMe0dTbCQIcCriOsFquWFxZOoBvL
- LStIwQ9sPBM8ZNM/Opi0MXveQh6pNoPFQdXVFFUyAGGFe6wuM5+Gx2FdCP1RB1QMnU/oy5o/wSA
- yreRShQQNZBLK6wGInfjoN/YEallMpkr3dsFHBrO/MQQhlfyn+uLly6SpDInZsFqIeZHKhJILZu
- UkJ+TWhxCnvXdycngwoJiQh1CQKsHVcvvNAAJYYC4QvnQodmEftfYhjSI/KgzBVZuPNcQCKVRfS
- oAXU6KRCfyEBcdAt1eP4BljWnI/0Ejz98LMyoogC/FBq3gMJ1pHcHzEMvZ6zZkbTts/Hwca66sM
- 2ZBdPRdCDByazoquHrnTnZOzGBslsw6yVJifkV0KwzT/jZ9+qQ75F00Dko3QoOLgNwJtaKs7j7o
- 7Gv0OIgBcAeW1Nuasth3UROqjqifZLnq72MAW/1dMqsm7W+02D19gWtKFCz+y9u4no46Uvi+rT1
- jbSq1GdWS7tRR0A==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+References: <20250506082520.84153-1-aha310510@gmail.com> <aBn4uqA7hnLBH2kL@pc636>
+In-Reply-To: <aBn4uqA7hnLBH2kL@pc636>
+From: Jeongjun Park <aha310510@gmail.com>
+Date: Wed, 7 May 2025 22:07:08 +0900
+X-Gm-Features: ATxdqUEjuEtyhw43XJqZk91crVOvGCzd78Ivgf5Vy1ExAzawMOZpQI7L5pXs9xM
+Message-ID: <CAO9qdTEXEZsA7rE8xJz6NLHTtCk0x4vWxCAd5_eXmPobbxEiNA@mail.gmail.com>
+Subject: Re: [PATCH v2] mm/vmalloc: fix data race in show_numa_info()
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: akpm@linux-foundation.org, edumazet@google.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Now that we have dentries and the ability to create meaningful symlinks
-to them, don't keep a name string in each tracker. Switch the output
-format to print "class@address", and drop the name field.
+Uladzislau Rezki <urezki@gmail.com> wrote:
+>
+> On Tue, May 06, 2025 at 05:25:19PM +0900, Jeongjun Park wrote:
+> > The following data-race was found in show_numa_info():
+> >
+> > ==================================================================
+> > BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
+> >
+> > read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
+> >  show_numa_info mm/vmalloc.c:4936 [inline]
+> >  vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
+> >  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+> >  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+> >  new_sync_read fs/read_write.c:489 [inline]
+> >  vfs_read+0x5b4/0x740 fs/read_write.c:570
+> >  ksys_read+0xbe/0x190 fs/read_write.c:713
+> >  __do_sys_read fs/read_write.c:722 [inline]
+> >  __se_sys_read fs/read_write.c:720 [inline]
+> >  __x64_sys_read+0x41/0x50 fs/read_write.c:720
+> >  x64_sys_call+0x1729/0x1fd0 arch/x86/include/generated/asm/syscalls_64.h:1
+> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >  do_syscall_64+0xa6/0x1b0 arch/x86/entry/syscall_64.c:94
+> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> >
+> > write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
+> >  show_numa_info mm/vmalloc.c:4934 [inline]
+> >  vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
+> >  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+> >  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+> >  new_sync_read fs/read_write.c:489 [inline]
+> >  vfs_read+0x5b4/0x740 fs/read_write.c:570
+> >  ksys_read+0xbe/0x190 fs/read_write.c:713
+> >  __do_sys_read fs/read_write.c:722 [inline]
+> >  __se_sys_read fs/read_write.c:720 [inline]
+> >  __x64_sys_read+0x41/0x50 fs/read_write.c:720
+> >  x64_sys_call+0x1729/0x1fd0 arch/x86/include/generated/asm/syscalls_64.h:1
+> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >  do_syscall_64+0xa6/0x1b0 arch/x86/entry/syscall_64.c:94
+> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> >
+> > value changed: 0x0000008f -> 0x00000000
+> > ==================================================================
+> >
+> > According to this report, there is a read/write data-race because m->private
+> > is accessible to multiple CPUs. To fix this, instead of allocating the heap
+> > in proc_vmalloc_init() and passing the heap address to m->private,
+> > show_numa_info() should allocate the heap.
+> >
+> > One thing to note is that show_numa_info() is called in a critical section
+> > of a spinlock, so it must be allocated on the heap with GFP_ATOMIC flag.
+> >
+> > Fixes: a47a126ad5ea ("vmallocinfo: add NUMA information")
+> > Suggested-by: Eric Dumazet <edumazet@google.com>
+> > Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+> > ---
+> > v2: Refactoring some functions and fix patch as per Eric Dumazet suggestion
+> > - Link to v1: https://lore.kernel.org/all/20250505171948.24410-1-aha310510@gmail.com/
+> > ---
+> >  mm/vmalloc.c | 50 +++++++++++++++++++++++++-------------------------
+> >  1 file changed, 25 insertions(+), 25 deletions(-)
+> >
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index 3ed720a787ec..a5e795346141 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -4914,28 +4914,32 @@ bool vmalloc_dump_obj(void *object)
+> >  #endif
+> >
+> >  #ifdef CONFIG_PROC_FS
+> > +
+> > +/*
+> > + * Print number of pages allocated on each memory node.
+> > + *
+> > + * This function can only be called if CONFIG_NUMA is enabled
+> > + * and VM_UNINITIALIZED bit in v->flags is disabled.
+> > + */
+> >  static void show_numa_info(struct seq_file *m, struct vm_struct *v)
+> >  {
+> > -     if (IS_ENABLED(CONFIG_NUMA)) {
+> > -             unsigned int nr, *counters = m->private;
+> > -             unsigned int step = 1U << vm_area_page_order(v);
+> > +     unsigned int nr, *counters;
+> > +     unsigned int step = 1U << vm_area_page_order(v);
+> >
+> > -             if (!counters)
+> > -                     return;
+> > +     counters = kcalloc(nr_node_ids, sizeof(unsigned int), GFP_ATOMIC);
+> > +     if (!counters)
+> > +             return;
+> >
+> > -             if (v->flags & VM_UNINITIALIZED)
+> > -                     return;
+> > -             /* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
+> > -             smp_rmb();
+> > +     /* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
+> > +     smp_rmb();
+> >
+> > -             memset(counters, 0, nr_node_ids * sizeof(unsigned int));
+> > +     for (nr = 0; nr < v->nr_pages; nr += step)
+> > +             counters[page_to_nid(v->pages[nr])] += step;
+> > +     for_each_node_state(nr, N_HIGH_MEMORY)
+> > +             if (counters[nr])
+> > +                     seq_printf(m, " N%u=%u", nr, counters[nr]);
+> >
+> > -             for (nr = 0; nr < v->nr_pages; nr += step)
+> > -                     counters[page_to_nid(v->pages[nr])] += step;
+> > -             for_each_node_state(nr, N_HIGH_MEMORY)
+> > -                     if (counters[nr])
+> > -                             seq_printf(m, " N%u=%u", nr, counters[nr]);
+> > -     }
+> > +     kfree(counters);
+> >  }
+> >
+> >  static void show_purge_info(struct seq_file *m)
+> > @@ -5013,7 +5017,10 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+> >                       if (is_vmalloc_addr(v->pages))
+> >                               seq_puts(m, " vpages");
+> >
+> > -                     show_numa_info(m, v);
+> > +                     if (!(v->flags & VM_UNINITIALIZED) &&
+> >
+> I think it makes sense to move the VM_UNINITIALIZED check before:
+>
+> <snip>
+>                         v = va->vm;
+>
+>                         seq_printf(m, "0x%pK-0x%pK %7ld",
+>                                 v->addr, v->addr + v->size, v->size);
+> <snip>
+>
+> because it can be still un-initialized, thus flags like "nr_pages", etc
+> will not be valid.
+>
+> Any thoughts? It has nothing to do with a patch, because it fixes other
+> race issue and what i propose might well be a separate patch if we agree.
+>
+> Thanks!
+>
+> --
+> Uladzislau Rezki
 
-Also, add a kerneldoc header for ref_tracker_dir_init().
+That's absolutely correct. If the VM_UNINITIALIZED bit is enabled, it
+means there are uninitialized member variables, so printing the vm_struct
+information is not very appropriate.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- drivers/gpu/drm/display/drm_dp_tunnel.c |  2 +-
- drivers/gpu/drm/i915/intel_runtime_pm.c |  2 +-
- drivers/gpu/drm/i915/intel_wakeref.c    |  2 +-
- include/linux/ref_tracker.h             | 20 ++++++++++++++------
- lib/ref_tracker.c                       |  6 +++---
- lib/test_ref_tracker.c                  |  2 +-
- net/core/dev.c                          |  2 +-
- net/core/net_namespace.c                |  4 ++--
- 8 files changed, 24 insertions(+), 16 deletions(-)
+I think it would be better to add the VM_UNINITIALIZED bit check code
+right after `v = va->vm;`.
 
-diff --git a/drivers/gpu/drm/display/drm_dp_tunnel.c b/drivers/gpu/drm/display/drm_dp_tunnel.c
-index f2a8ef6abf34d89a642d7c7708c41e5b1dc9dece..f8d1f9c60e86c5a7b1866e1c9f6425e99d4ca9c6 100644
---- a/drivers/gpu/drm/display/drm_dp_tunnel.c
-+++ b/drivers/gpu/drm/display/drm_dp_tunnel.c
-@@ -1920,7 +1920,7 @@ drm_dp_tunnel_mgr_create(struct drm_device *dev, int max_group_count)
- 	}
- 
- #ifdef CONFIG_DRM_DISPLAY_DP_TUNNEL_STATE_DEBUG
--	ref_tracker_dir_init(&mgr->ref_tracker, 16, "drm_dptun", "dptun");
-+	ref_tracker_dir_init(&mgr->ref_tracker, 16, "drm_dptun");
- #endif
- 
- 	for (i = 0; i < max_group_count; i++) {
-diff --git a/drivers/gpu/drm/i915/intel_runtime_pm.c b/drivers/gpu/drm/i915/intel_runtime_pm.c
-index 94315e952ead9be276298fb2a0200d102005a0c1..d560f94af7a86f1fc139204a4e901eaea22c6ef1 100644
---- a/drivers/gpu/drm/i915/intel_runtime_pm.c
-+++ b/drivers/gpu/drm/i915/intel_runtime_pm.c
-@@ -60,7 +60,7 @@ static struct drm_i915_private *rpm_to_i915(struct intel_runtime_pm *rpm)
- static void init_intel_runtime_pm_wakeref(struct intel_runtime_pm *rpm)
- {
- 	ref_tracker_dir_init(&rpm->debug, INTEL_REFTRACK_DEAD_COUNT,
--			     "intel_runtime_pm", dev_name(rpm->kdev));
-+			     "intel_runtime_pm");
- 	ref_tracker_dir_symlink(&rpm->debug, "intel_runtime_pm-%s", dev_name(rpm->kdev));
- }
- 
-diff --git a/drivers/gpu/drm/i915/intel_wakeref.c b/drivers/gpu/drm/i915/intel_wakeref.c
-index 2e0498b3fa7947f994de1339d4d2bed93de1a795..bbd5171ce0a22435e540f10821f2a0dad59c1d2f 100644
---- a/drivers/gpu/drm/i915/intel_wakeref.c
-+++ b/drivers/gpu/drm/i915/intel_wakeref.c
-@@ -114,7 +114,7 @@ void __intel_wakeref_init(struct intel_wakeref *wf,
- 			 "wakeref.work", &key->work, 0);
- 
- #if IS_ENABLED(CONFIG_DRM_I915_DEBUG_WAKEREF)
--	ref_tracker_dir_init(&wf->debug, INTEL_REFTRACK_DEAD_COUNT, "intel_wakeref", name);
-+	ref_tracker_dir_init(&wf->debug, INTEL_REFTRACK_DEAD_COUNT, "intel_wakeref");
- 	ref_tracker_dir_symlink(&wf->debug, "intel_wakeref-%s", name);
- #endif
- }
-diff --git a/include/linux/ref_tracker.h b/include/linux/ref_tracker.h
-index ddc5a7b2bd84692bbc1e1ae67674ec2c6857e1ec..cb61ddd3f770a118f3da5d22f98ea2a67a43c6b2 100644
---- a/include/linux/ref_tracker.h
-+++ b/include/linux/ref_tracker.h
-@@ -24,7 +24,6 @@ struct ref_tracker_dir {
- 	struct dentry		*dentry;
- 	struct dentry		*symlink;
- #endif
--	char			name[32];
- #endif
- };
- 
-@@ -48,10 +47,21 @@ void ref_tracker_dir_symlink(struct ref_tracker_dir *dir, const char *fmt, ...)
- 
- #endif /* CONFIG_DEBUG_FS */
- 
-+/**
-+ * ref_tracker_dir_init - initialize a ref_tracker dir
-+ * @dir: ref_tracker_dir to be initialized
-+ * @quarantime_count: max number of entries to be tracked
-+ * @class: pointer to static string that describes object type
-+ *
-+ * Initialize a ref_tracker_dir. If debugfs is configured, then a file
-+ * will also be created for it under the top-level ref_tracker debugfs
-+ * directory.
-+ *
-+ * Note that @class must point to a static string.
-+ */
- static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
- 					unsigned int quarantine_count,
--					const char *class,
--					const char *name)
-+					const char *class)
- {
- 	INIT_LIST_HEAD(&dir->list);
- 	INIT_LIST_HEAD(&dir->quarantine);
-@@ -65,7 +75,6 @@ static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
- 	dir->dentry = NULL;
- 	dir->symlink = NULL;
- #endif
--	strscpy(dir->name, name, sizeof(dir->name));
- 	ref_tracker_dir_debugfs(dir);
- 	stack_depot_init();
- }
-@@ -90,8 +99,7 @@ int ref_tracker_free(struct ref_tracker_dir *dir,
- 
- static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
- 					unsigned int quarantine_count,
--					const char *class,
--					const char *name)
-+					const char *class)
- {
- }
- 
-diff --git a/lib/ref_tracker.c b/lib/ref_tracker.c
-index 5e84e5fd78e147a036d4adb511e657da07866a55..5fb384dd919e1f1ad632eaf595b954118bcfddab 100644
---- a/lib/ref_tracker.c
-+++ b/lib/ref_tracker.c
-@@ -123,7 +123,7 @@ __ref_tracker_dir_pr_ostream(struct ref_tracker_dir *dir,
- 	stats = ref_tracker_get_stats(dir, display_limit);
- 	if (IS_ERR(stats)) {
- 		pr_ostream(s, "%s%s@%p: couldn't get stats, error %pe\n",
--			   s->prefix, dir->name, dir, stats);
-+			   s->prefix, dir->class, dir, stats);
- 		return;
- 	}
- 
-@@ -134,14 +134,14 @@ __ref_tracker_dir_pr_ostream(struct ref_tracker_dir *dir,
- 		if (sbuf && !stack_depot_snprint(stack, sbuf, STACK_BUF_SIZE, 4))
- 			sbuf[0] = 0;
- 		pr_ostream(s, "%s%s@%p has %d/%d users at\n%s\n", s->prefix,
--			   dir->name, dir, stats->stacks[i].count,
-+			   dir->class, dir, stats->stacks[i].count,
- 			   stats->total, sbuf);
- 		skipped -= stats->stacks[i].count;
- 	}
- 
- 	if (skipped)
- 		pr_ostream(s, "%s%s@%p skipped reports about %d/%d users.\n",
--			   s->prefix, dir->name, dir, skipped, stats->total);
-+			   s->prefix, dir->class, dir, skipped, stats->total);
- 
- 	kfree(sbuf);
- 
-diff --git a/lib/test_ref_tracker.c b/lib/test_ref_tracker.c
-index d263502a4c1db248f64a66a468e96c8e4cffab25..b983ceb12afcb84ad60360a1e6fec0072e78ef79 100644
---- a/lib/test_ref_tracker.c
-+++ b/lib/test_ref_tracker.c
-@@ -64,7 +64,7 @@ static int __init test_ref_tracker_init(void)
- {
- 	int i;
- 
--	ref_tracker_dir_init(&ref_dir, 100, "selftest", "selftest");
-+	ref_tracker_dir_init(&ref_dir, 100, "selftest");
- 
- 	timer_setup(&test_ref_tracker_timer, test_ref_tracker_timer_func, 0);
- 	mod_timer(&test_ref_tracker_timer, jiffies + 1);
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 380d07bec15a1f62ed27c31a6e211e74f3a5561d..00776cba0276554066c94a6fc86f5ed4df430cfa 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -11620,7 +11620,7 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
- 
- 	dev->priv_len = sizeof_priv;
- 
--	ref_tracker_dir_init(&dev->refcnt_tracker, 128, "netdev", name);
-+	ref_tracker_dir_init(&dev->refcnt_tracker, 128, "netdev");
- #ifdef CONFIG_PCPU_DEV_REFCNT
- 	dev->pcpu_refcnt = alloc_percpu(int);
- 	if (!dev->pcpu_refcnt)
-diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-index 1c5e0289f0f0b37c61852d95d4e11a8c12a868f3..5b06a0bf88e62c19f6f610eca3a4c4750ff4a2ea 100644
---- a/net/core/net_namespace.c
-+++ b/net/core/net_namespace.c
-@@ -324,8 +324,8 @@ static __net_init void preinit_net(struct net *net, struct user_namespace *user_
- {
- 	refcount_set(&net->passive, 1);
- 	refcount_set(&net->ns.count, 1);
--	ref_tracker_dir_init(&net->refcnt_tracker, 128, "net_refcnt", "net_refcnt");
--	ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net_notrefcnt", "net_notrefcnt");
-+	ref_tracker_dir_init(&net->refcnt_tracker, 128, "net_refcnt");
-+	ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net_notrefcnt");
- 
- 	get_random_bytes(&net->hash_mix, sizeof(u32));
- 	net->dev_base_seq = 1;
+This change isn't that complicated, so I'll add it to the v3 patch and
+send it.
 
--- 
-2.49.0
+Regards,
 
+Jeongjun Park
