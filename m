@@ -1,298 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE4C2101B7;
-	Wed,  7 May 2025 06:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5DF212FB8;
+	Wed,  7 May 2025 06:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746599540; cv=none; b=rtXwNf1c8DbU7Q8KYmSFf2iWGs73EkW50ltHs0+LCO8uXN/nVr7GUIrilqKqFZc+ugwVjQTdirf8h3nHbU666RjNgMPMdi7hzNNGZ+f7EU9qyP11rfIv9RIFI5mJk65GJMZ6UOhh66DQTkI6mbvP4pQknVYM1mpHZzEwdeI9rww=
+	t=1746599542; cv=none; b=RR2pIe1MEwZ745zEKuzBYO58iJzwMcoAu6NPzvRKxjmQqFH1OstflM1FvGsMDu5XWDhkaUJgtgtum30dbx52f2kuvT/HLk0N/IbQSGfqDKG4MNLWQs8XsfIhb+jiAWqkQZEicBZ15kE0oRPudV673NOS+FhBk59eyP8iEtzC5rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746599540; c=relaxed/simple;
-	bh=9mH49n6y8hGryj6ZWG7X7oVmRZ0eXICKJkB/ldTi3G0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MyNrfUBMdiOU5Av+QeRJ2FnPuVGlLo88w4ONoLY4rmoDXCA8tPxXiKoafU5a30/EU4cByDxMy+Am01XIMnB+G7rWL+eZHCZ3116j8JS4CfKqsYucRoBc7vxq+TNPzXJ3CsN7r9Pq5mt+X5kaMhzkC65sP2sNsxCZgpXcw1A+gUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f/xrHCBP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746599542; c=relaxed/simple;
+	bh=gVnr8TnU5oBPUOllfUkHDqgYRsX0nAzlPey3pz8QsSw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=QasUDT1vK8VkqEtMU40dhGQjAn0Z975l/mi9stsuSFZ8lIN10JEAZN4PKWURWYjk0O9Rz3v/crq1LyIJ3A+OSfM9P+YSvZveAqQK80/7jMMGJLwPQhLUyu4ZA/TgON81FITBNMSoaZekOKm+PGbtec5O3hRoSuR9nRck/Njl9ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CTDPSW8X; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f/xrHCBP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D205C4CEEF;
-	Wed,  7 May 2025 06:32:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746599538;
-	bh=9mH49n6y8hGryj6ZWG7X7oVmRZ0eXICKJkB/ldTi3G0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f/xrHCBPur0fjnZWkvrRoTU2aNXfJQeiNFv+bPfMUnpM6v0Ygo8uGQqRakz51gtZ8
-	 MKU7VFkJB8YrxP5o7I5AZo022xbWXDb7+WsGqo6nRpZz9/ZE451OEtYnynOcvMtYTm
-	 v8nGgVpcDQ1XQSB+KRpbZbnoY7RGduP4O90IDBQzmFCRQJDMp3ssRqZET0wZeQHutI
-	 2E5Mt8l5EXVeSFr00ktxkHtmn9siOBC2VFeb8yGkjieaVGP3b2677Rb+YcXk6hdAXN
-	 Pjmcd/xiORD4LkWlaRmp/2J9Jkk1Q36mH6tr/3FLXeMz5yvT8qo1WlqskGc7HV8FTq
-	 CTeu8jwBOKx1Q==
-Date: Wed, 7 May 2025 06:32:17 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: bp@alien8.de, dave.hansen@linux.intel.com, decui@microsoft.com,
-	haiyangz@microsoft.com, hpa@zytor.com, kys@microsoft.com,
-	mikelley@microsoft.com, mingo@redhat.com, tglx@linutronix.de,
-	tiala@microsoft.com, wei.liu@kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	x86@kernel.org, apais@microsoft.com, benhill@microsoft.com,
-	bperkins@microsoft.com, sunilmut@microsoft.com
-Subject: Re: [PATCH hyperv-next v4] x86/hyperv: Fix CPU number and VP index
- confusion in hv_snp_boot_ap()
-Message-ID: <aBr-cScjbkhyoBFA@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250506174249.11496-1-romank@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CTDPSW8X"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22423adf751so73716855ad.2;
+        Tue, 06 May 2025 23:32:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746599540; x=1747204340; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8YWstoYnxasTg7tshxJbl1B8GWpQGF7X65mCdPOf1/0=;
+        b=CTDPSW8XZD6Be5HIisLjLIaoiMkLL+tFC3VX20M9GpI3SJ4sTDsfGG2F+2eJe39jil
+         Kuwqv0YbbIX9xMcjzuDPCybuWdNbY5+k1qwGFFOm7cFb3xJsRjj7m5VbcpVUCeRhJYW1
+         nR4EE6cFHwTD9L0HhPoOQ3ULbBZ13deEr9y7fpevOJNXziUMZiy/qa3OvSYifuYCA6u9
+         2m1W0FTUUIjP2YtJa1Xy1pBADwLZDRvIE7fyYozCSYGH8b85oKm43TDr4J1oqI9ZGZni
+         lX10LqHrdjov8II0//0Ln0pRfqtvrn85aaxbhx5+0Q+agImUNIoSEVqCQLcNi9dOC86C
+         2CbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746599540; x=1747204340;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8YWstoYnxasTg7tshxJbl1B8GWpQGF7X65mCdPOf1/0=;
+        b=Xmra7d4lMoScKSu3/rFpLaw2V8YkaKCR3RCRmc3wOSZxd3IH50ky7oQKiHR6nmRCN5
+         /7DD8e/QphKK0855yemNE1CPVhqwLZc2AsUFXML0kFIA1pTWBOHy7frfFRtTyiH7W9Gm
+         HEerklEXhvTyvrvJjTHXEBH0UIbWjI41x0VtR3ZKcqyxiqCzLGW2t1RUTTcChbhUZko3
+         g9/q51pkIkuue1GQb+QmUHGBpaHud7vZKUsRHOM+Aq7lIw5KCqSDvjQxStrh7o5AAJrj
+         Y4CNvIRrgLBYkC/xIQMt4c97dAMrLT9kS//REQOhgldJCbm7yhdBqpIGTxEJtUne+QcU
+         l9wg==
+X-Forwarded-Encrypted: i=1; AJvYcCUiuDM1SaLiHzsuRUTTW5kBZHt6dCLnXSbRvyIXc9OBwXevHs0Jm5nYfX5x/gyE250cyguEI9UpeNGq@vger.kernel.org, AJvYcCUrYaSoFQYvt8i0VoY4+edgAqILpV+Nt+nWm/c93jOU5CBhJOpvdpOntte1phCQtJYmqK7o829LllG8nQ==@vger.kernel.org, AJvYcCXjlFAiQtHOXG7Q+ZZXRWfUvdXBey8oRcYbP+pCDz6CIUPPHcsIdDeYEtKnYonXOOf+xtEl8qiyLrPqJKo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypSrY+x+D4XmHzF2Yrmf3KI3d0NIfbbyWmHej44rPgAdaDvB4t
+	SahReigSv940o/+rBTHzfWM2R8CbJZwqD/4ODbGFph4dg+sOKem1
+X-Gm-Gg: ASbGncv20WHx/MywniplRnNDO4HdNVIvyQk53hXCRgRtALFba9xHjdImKQev6nvTGuD
+	/0m/utw2DD4/upia7NDJnGT0pK07TRTCmp0serW+aaO1Hn2ghhs76ac0wswN7lxcD6cLgPlVgLI
+	YAzF/O3fEdSlfmYhJzM06FH/FUl4GufS8u64ouXB2Dis66hWCnaBKLIR3TUjkjZad6mviRjhhtH
+	Sv9E/re79+cfQCUHiUgIqBPc3GyMa6jpqB75DsSR8wtsAqSOfioJHxNSQ3eqLokbyAg/LnKVChg
+	PtJ5IeRNtWGlt9hNGV4XBKCI92O5L42oJuvRrQACIUt0NKgEPhM=
+X-Google-Smtp-Source: AGHT+IGJ/qWe5PPqzuHBICQzeHVIVKp5crJzNNKXqyBfyk7uaOLcOkz/tYZnutpwUCMI1zF55cUgKQ==
+X-Received: by 2002:a17:902:e844:b0:22c:3609:97ed with SMTP id d9443c01a7336-22e5ec9e997mr25272325ad.30.1746599540530;
+        Tue, 06 May 2025 23:32:20 -0700 (PDT)
+Received: from Black-Pearl. ([122.162.204.119])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-22e15229384sm85805295ad.206.2025.05.06.23.32.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 23:32:20 -0700 (PDT)
+From: Charan Pedumuru <charan.pedumuru@gmail.com>
+Date: Wed, 07 May 2025 06:29:36 +0000
+Subject: [PATCH 2/2] dt-binding: mmc: microchip,sdhci-pic32: convert text
+ based binding to json schema
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506174249.11496-1-romank@linux.microsoft.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250507-mchp-sdhci-v1-2-ed29de05295a@gmail.com>
+References: <20250507-mchp-sdhci-v1-0-ed29de05295a@gmail.com>
+In-Reply-To: <20250507-mchp-sdhci-v1-0-ed29de05295a@gmail.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Ulf Hansson <ulf.hansson@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-mips@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
+ Charan Pedumuru <charan.pedumuru@gmail.com>
+X-Mailer: b4 0.14.2
 
-On Tue, May 06, 2025 at 10:42:49AM -0700, Roman Kisel wrote:
-> To start an application processor in SNP-isolated guest, a hypercall
-> is used that takes a virtual processor index. The hv_snp_boot_ap()
-> function uses that START_VP hypercall but passes the CPU number to it
-> instead of the VP index.
-> 
-> As those two aren't generally interchangeable, that may lead to hung
-> APs if the VP index and the APIC ID don't match up.
-> 
-> Use the APIC ID to the VP index conversion to provide the correct
-> input to the hypercall.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 44676bb9d566 ("x86/hyperv: Add smp support for SEV-SNP guest")
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-> ---
-> When merging this change to other trees
-> 2d2d4d8bb00 ("arch/x86: Provide the CPU number in the wakeup AP callback")
-> is needed.
+Update text binding to YAML.
+Changes during conversion:
+Add appropriate include statements for interrupts and clock-names
+to resolve errors identified by `dt_binding_check` and `dtbs_check`.
 
-This is dropped from the tree because it breaks builds.
+Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
+---
+ .../bindings/mmc/microchip,sdhci-pic32.txt         | 29 ----------
+ .../bindings/mmc/microchip,sdhci-pic32.yaml        | 66 ++++++++++++++++++++++
+ 2 files changed, 66 insertions(+), 29 deletions(-)
 
-Since this needs to be backported, it makes more sense to apply this
-patch first before the other one (assuming that one doesn't need to be
-backported).
+diff --git a/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt b/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
+deleted file mode 100644
+index f064528effed31f30d1d1c6e0b49c02e215d99af..0000000000000000000000000000000000000000
+--- a/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-* Microchip PIC32 SDHCI Controller
+-
+-This file documents differences between the core properties in mmc.txt
+-and the properties used by the sdhci-pic32 driver.
+-
+-Required properties:
+-- compatible: Should be "microchip,pic32mzda-sdhci"
+-- interrupts: Should contain interrupt
+-- clock-names: Should be "base_clk", "sys_clk".
+-               See: Documentation/devicetree/bindings/resource-names.txt
+-- clocks: Phandle to the clock.
+-          See: Documentation/devicetree/bindings/clock/clock-bindings.txt
+-- pinctrl-names: A pinctrl state names "default" must be defined.
+-- pinctrl-0: Phandle referencing pin configuration of the SDHCI controller.
+-             See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+-
+-Example:
+-
+-	sdhci@1f8ec000 {
+-		compatible = "microchip,pic32mzda-sdhci";
+-		reg = <0x1f8ec000 0x100>;
+-		interrupts = <191 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&rootclk REF4CLK>, <&rootclk PB5CLK>;
+-		clock-names = "base_clk", "sys_clk";
+-		bus-width = <4>;
+-		cap-sd-highspeed;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_sdhc1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.yaml b/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..ca0ca7df9ee991d8402bc4c62b1235ef5db2e85f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.yaml
+@@ -0,0 +1,66 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mmc/microchip,sdhci-pic32.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip PIC32 SDHI Controller
++
++description:
++  The Microchip PIC32 family of microcontrollers (MCUs) includes models with
++  Secure Digital Host Controller Interface (SDHCI) controllers, allowing them
++  to interface with Secure Digital (SD) cards. This interface is used for reading,
++  writing, and managing data on SD cards, enabling storage and data transfer
++  capabilities in embedded systems.
++
++allOf:
++  - $ref: mmc-controller.yaml
++
++maintainers:
++  - Ulf Hansson <ulf.hansson@linaro.org>
++
++properties:
++  compatible:
++    const: microchip,pic32mzda-sdhci
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: base_clk
++      - const: sys_clk
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - pinctrl-names
++  - pinctrl-0
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/clock/microchip,pic32-clock.h>
++    mmc@1f8ec000 {
++        compatible = "microchip,pic32mzda-sdhci";
++        reg = <0x1f8ec000 0x100>;
++        interrupts = <191 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&rootclk REF4CLK>, <&rootclk PB5CLK>;
++        clock-names = "base_clk", "sys_clk";
++        bus-width = <4>;
++        cap-sd-highspeed;
++        pinctrl-names = "default";
++        pinctrl-0 = <&pinctrl_sdhc1>;
++    };
++...
 
-Thanks,
-Wei.
+-- 
+2.43.0
 
-> 
-> [V4]
->     - Rebased on the latest hyperv-next branch, and updated the
->       title and the commit message as some changes were superceeded
->       by 2d2d4d8bb00 ("arch/x86: Provide the CPU number in the wakeup AP callback").
->     ** Thank you, Wei! **
-> 
-> [V3]
->     https://lore.kernel.org/linux-hyperv/20250428182705.132755-1-romank@linux.microsoft.com/
->     - Removed the misleading comment about the APIC ID and VP indices.
->     - Removed the not sufficiently founded if statement that was added
->       to the previous version of the patch to avoid the O(n) time complexity.
->       I'll follow up with a separate patch to address that as that pattern
->        has crept into other places in the code in the AP wakeup path.
->       Fixed the logging message to use the "VP index" terminology
->       consistently.
->     ** Thank you, Michael! **
-> 
-> [V2]
->     https://lore.kernel.org/linux-hyperv/20250425213512.1837061-1-romank@linux.microsoft.com/
->     - Fixed the terminology in the patch and other code to use
->       the term "VP index" consistently
->     ** Thank you, Michael! **
-> 
->     - Missed not enabling the SNP-SEV options in the local testing,
->       and sent a patch that breaks the build.
->     ** Thank you, Saurabh! **
-> 
->     - Added comments and getting the Linux kernel CPU number from
->       the available data.
-> 
-> [V1]
->     https://lore.kernel.org/linux-hyperv/20250424215746.467281-1-romank@linux.microsoft.com/
-> ---
->  arch/x86/hyperv/hv_init.c       | 33 +++++++++++++++++++++++++
->  arch/x86/hyperv/hv_vtl.c        | 44 +++++----------------------------
->  arch/x86/hyperv/ivm.c           |  8 +++++-
->  arch/x86/include/asm/mshyperv.h |  2 ++
->  include/hyperv/hvgdk_mini.h     |  2 +-
->  5 files changed, 49 insertions(+), 40 deletions(-)
-> 
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index 3b569291dfed..9a8fc144e195 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -672,3 +672,36 @@ bool hv_is_hyperv_initialized(void)
->  	return hypercall_msr.enable;
->  }
->  EXPORT_SYMBOL_GPL(hv_is_hyperv_initialized);
-> +
-> +int hv_apicid_to_vp_index(u32 apic_id)
-> +{
-> +	u64 control;
-> +	u64 status;
-> +	unsigned long irq_flags;
-> +	struct hv_get_vp_from_apic_id_in *input;
-> +	u32 *output, ret;
-> +
-> +	local_irq_save(irq_flags);
-> +
-> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> +	memset(input, 0, sizeof(*input));
-> +	input->partition_id = HV_PARTITION_ID_SELF;
-> +	input->apic_ids[0] = apic_id;
-> +
-> +	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
-> +
-> +	control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_INDEX_FROM_APIC_ID;
-> +	status = hv_do_hypercall(control, input, output);
-> +	ret = output[0];
-> +
-> +	local_irq_restore(irq_flags);
-> +
-> +	if (!hv_result_success(status)) {
-> +		pr_err("failed to get vp index from apic id %d, status %#llx\n",
-> +		       apic_id, status);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(hv_apicid_to_vp_index);
-> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> index cc8c6817f704..3d149a2ca4c8 100644
-> --- a/arch/x86/hyperv/hv_vtl.c
-> +++ b/arch/x86/hyperv/hv_vtl.c
-> @@ -211,55 +211,23 @@ static int hv_vtl_bringup_vcpu(u32 target_vp_index, int cpu, u64 eip_ignored)
->  	return ret;
->  }
->  
-> -static int hv_vtl_apicid_to_vp_id(u32 apic_id)
-> -{
-> -	u64 control;
-> -	u64 status;
-> -	unsigned long irq_flags;
-> -	struct hv_get_vp_from_apic_id_in *input;
-> -	u32 *output, ret;
-> -
-> -	local_irq_save(irq_flags);
-> -
-> -	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> -	memset(input, 0, sizeof(*input));
-> -	input->partition_id = HV_PARTITION_ID_SELF;
-> -	input->apic_ids[0] = apic_id;
-> -
-> -	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
-> -
-> -	control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_ID_FROM_APIC_ID;
-> -	status = hv_do_hypercall(control, input, output);
-> -	ret = output[0];
-> -
-> -	local_irq_restore(irq_flags);
-> -
-> -	if (!hv_result_success(status)) {
-> -		pr_err("failed to get vp id from apic id %d, status %#llx\n",
-> -		       apic_id, status);
-> -		return -EINVAL;
-> -	}
-> -
-> -	return ret;
-> -}
-> -
->  static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip, unsigned int cpu)
->  {
-> -	int vp_id;
-> +	int vp_index;
->  
->  	pr_debug("Bringing up CPU with APIC ID %d in VTL2...\n", apicid);
-> -	vp_id = hv_vtl_apicid_to_vp_id(apicid);
-> +	vp_index = hv_apicid_to_vp_index(apicid);
->  
-> -	if (vp_id < 0) {
-> +	if (vp_index < 0) {
->  		pr_err("Couldn't find CPU with APIC ID %d\n", apicid);
->  		return -EINVAL;
->  	}
-> -	if (vp_id > ms_hyperv.max_vp_index) {
-> -		pr_err("Invalid CPU id %d for APIC ID %d\n", vp_id, apicid);
-> +	if (vp_index > ms_hyperv.max_vp_index) {
-> +		pr_err("Invalid CPU id %d for APIC ID %d\n", vp_index, apicid);
->  		return -EINVAL;
->  	}
->  
-> -	return hv_vtl_bringup_vcpu(vp_id, cpu, start_eip);
-> +	return hv_vtl_bringup_vcpu(vp_index, cpu, start_eip);
->  }
->  
->  int __init hv_vtl_early_init(void)
-> diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-> index 30aa76974a3a..71918817129e 100644
-> --- a/arch/x86/hyperv/ivm.c
-> +++ b/arch/x86/hyperv/ivm.c
-> @@ -297,10 +297,16 @@ int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip, unsigned int cpu)
->  	u64 ret, retry = 5;
->  	struct hv_enable_vp_vtl *start_vp_input;
->  	unsigned long flags;
-> +	int vp_index;
->  
->  	if (!vmsa)
->  		return -ENOMEM;
->  
-> +	/* Find the Hyper-V VP index which might be not the same as APIC ID */
-> +	vp_index = hv_apicid_to_vp_index(apic_id);
-> +	if (vp_index < 0 || vp_index > ms_hyperv.max_vp_index)
-> +		return -EINVAL;
-> +
->  	native_store_gdt(&gdtr);
->  
->  	vmsa->gdtr.base = gdtr.address;
-> @@ -348,7 +354,7 @@ int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip, unsigned int cpu)
->  	start_vp_input = (struct hv_enable_vp_vtl *)ap_start_input_arg;
->  	memset(start_vp_input, 0, sizeof(*start_vp_input));
->  	start_vp_input->partition_id = -1;
-> -	start_vp_input->vp_index = cpu;
-> +	start_vp_input->vp_index = vp_index;
->  	start_vp_input->target_vtl.target_vtl = ms_hyperv.vtl;
->  	*(u64 *)&start_vp_input->vp_context = __pa(vmsa) | 1;
->  
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index 3bfc066aeccc..5ec92e3e2e37 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -307,6 +307,7 @@ static __always_inline u64 hv_raw_get_msr(unsigned int reg)
->  {
->  	return __rdmsr(reg);
->  }
-> +int hv_apicid_to_vp_index(u32 apic_id);
->  
->  #else /* CONFIG_HYPERV */
->  static inline void hyperv_init(void) {}
-> @@ -328,6 +329,7 @@ static inline void hv_set_msr(unsigned int reg, u64 value) { }
->  static inline u64 hv_get_msr(unsigned int reg) { return 0; }
->  static inline void hv_set_non_nested_msr(unsigned int reg, u64 value) { }
->  static inline u64 hv_get_non_nested_msr(unsigned int reg) { return 0; }
-> +static inline int hv_apicid_to_vp_index(u32 apic_id) { return -EINVAL; }
->  #endif /* CONFIG_HYPERV */
->  
->  
-> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
-> index cf0923dc727d..2d431b53f587 100644
-> --- a/include/hyperv/hvgdk_mini.h
-> +++ b/include/hyperv/hvgdk_mini.h
-> @@ -475,7 +475,7 @@ union hv_vp_assist_msr_contents {	 /* HV_REGISTER_VP_ASSIST_PAGE */
->  #define HVCALL_CREATE_PORT				0x0095
->  #define HVCALL_CONNECT_PORT				0x0096
->  #define HVCALL_START_VP					0x0099
-> -#define HVCALL_GET_VP_ID_FROM_APIC_ID			0x009a
-> +#define HVCALL_GET_VP_INDEX_FROM_APIC_ID			0x009a
->  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE	0x00af
->  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST	0x00b0
->  #define HVCALL_SIGNAL_EVENT_DIRECT			0x00c0
-> 
-> base-commit: 1b019573c9662c17a33419367a217abe1f5e8060
-> -- 
-> 2.43.0
-> 
