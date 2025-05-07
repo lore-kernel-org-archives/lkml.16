@@ -1,136 +1,90 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B381A841B;
-	Wed,  7 May 2025 06:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8041D432D;
+	Wed,  7 May 2025 06:26:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746599144; cv=none; b=FQgtkUfz8NLDdM9NgDhiJsR9q/jsObScD4RTZuPK7BM6bplPT+XK1oso7k19899HEoJZR5M7uoPKRTGIhkGOLN6xbfb2zAusGEgzwfrmzYcFauw1PhbqnD11UI6evUV79lsoLbpSs4ucs490ptVQa6TX1NFrpwte9yxCwtVUpmQ=
+	t=1746599195; cv=none; b=HLoaW1qt2rq+Zn/zCrYp2ffDf3FvOjbRj4Egdjr+KLF40Nkgid0NuAc7FN5oRLPTwsSSkvDGTCPiPhEuIoperlc76sIvtqEw00S9XKziTSQB8MwdEifrPzV5vXL2F9nHrr1lBp9RzKjj+XdTQoNgGKJUQEs2r6U+R2fgfexb3B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746599144; c=relaxed/simple;
-	bh=kvwKtS+G6N6Uy2Tm3WYCdbWmcbnzZRJ/lMKMFb8zWso=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NJly1E1fTGCNJgXR1tfjzLzh5yNwXtefMzeaYbOjz80FtCd18Zf3xDsfAvIsHntitlL6p7m1mOt3KGiwkjFHRx1g0+kJ4v8bbNi2m+lGCmW7oyPF8jw/OWv2sHql9V3hyua2xgH/wpQOPm4mSvU+Oz2gjKETEn+9iqPjW14u7wA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dSax7/gr; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1746599195; c=relaxed/simple;
+	bh=GaA/zJXRvdyzWhvBvSQORxWGe7IYP25MXqgGd/qtJd4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UrGhourTA9XAT1G2BXb4T8cPB0bRM7to0h2ihajN/mqJHWya8vDC1WJZ+/8lQ9wYcYyafO9tZE4r6RzuM5I4qg26EC5XaD9uZR+wZGPMPgEL7NTBFx7Sgl0o0SsQjpTTUKSU6rxmr0B8ufFDFoCoegqwpkggI4nNPjS2OeLNo/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dICMRTfx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dSax7/gr"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 546J06iH011055;
-	Wed, 7 May 2025 06:25:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=1H2SKd
-	w/CJ1oFZysP7AbA7rtWkaow9Z02aBk9jm2tJY=; b=dSax7/grc7WqB/w/bpL/qP
-	srxnysIRxGGAAXDI6H07wewjbDmW9dQAKxo3hIx0sAJuRV4Y3UnGCqJTo0TGTh+E
-	CSEx4GKSUi74QnnzVHwsttQdyRdXhKiL8GPcX/daPcm1e6gYwCycshMQGispPPPo
-	Cuou3Vg4l+Ua0iF6+JtMrw1ue5LgVKtNzLH80ZHBo09C3DONozFyXjRJfWxxp0qw
-	WFFAIhDbdC9B38s7KpNzdI9Se8DzWOJZVYBtM5pu6AyAERGdgfNKz2IB+6n/VwcM
-	qqusOBll8cO+kIt09bxOjxi8Xwf7a0F9ilw9zWT5w4orqwJl1ZSsTzX2R/7xlUPw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46fgvsmunb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 06:25:28 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5476M1Rq015839;
-	Wed, 7 May 2025 06:25:27 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46fgvsmun8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 06:25:27 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5475xk1u014583;
-	Wed, 7 May 2025 06:25:27 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46dypkq40a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 06:25:27 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5476PPXP40436050
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 7 May 2025 06:25:25 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 69C4420082;
-	Wed,  7 May 2025 06:04:01 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 011B520081;
-	Wed,  7 May 2025 06:04:01 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.63.197.14])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  7 May 2025 06:04:00 +0000 (GMT)
-Received: from jarvis.ozlabs.ibm.com (haven.au.ibm.com [9.63.198.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 37A13600BB;
-	Wed,  7 May 2025 16:03:57 +1000 (AEST)
-Message-ID: <f950789abaad0e854c4e60c7316b675c712c386f.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/3] powerpc/pseries: Correct secvar format
- representation for static key management
-From: Andrew Donnellan <ajd@linux.ibm.com>
-To: Nayna Jain <nayna@linux.ibm.com>, Srish Srinivasan
- <ssrish@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, naveen@kernel.org, zohar@linux.ibm.com,
-        linux-kernel@vger.kernel.org
-Date: Wed, 07 May 2025 16:03:57 +1000
-In-Reply-To: <3fe59767-954b-4c2c-a602-9801f1c1080a@linux.ibm.com>
-References: <20250430090350.30023-1-ssrish@linux.ibm.com>
-	 <20250430090350.30023-2-ssrish@linux.ibm.com>
-	 <87e1185273ce21e5fd69ff071a1be986c2a0301a.camel@linux.ibm.com>
-	 <3fe59767-954b-4c2c-a602-9801f1c1080a@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dICMRTfx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FA21C4CEEF;
+	Wed,  7 May 2025 06:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746599193;
+	bh=GaA/zJXRvdyzWhvBvSQORxWGe7IYP25MXqgGd/qtJd4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dICMRTfxofPY2kTbGCvmkRmicrGpiedx3MsMAhN5m8kr4HSy13nbYE/SPIJYr71/E
+	 N33TTNdB6ASTnsleY7JRYZ3nRLIk6Zs1bvJubEr8/UbG2IfPTqW4sSCS7tBIEJgwLf
+	 nqfCxcZwSkOgO9s4y/KKGBimU0MYh1h2vctEMjOSJjH32wrATWZgIvjnP1VFpoiD/+
+	 NzrSAk3uPD0oP0/i3bnAokgZFjaOSrZrKnBFKtbt8vkB5FbrLxJ17iYCEmiBEPDoeY
+	 EYgpBv7ohLEsMbiLKP5GMYj1SCE0TvCyTSpHBirSCJ/8Hn13lFs4n6fgmBVgPCulqE
+	 RUWoCKnTMjQhQ==
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-40337dd3847so3646217b6e.0;
+        Tue, 06 May 2025 23:26:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUL0HaWWyyQvZ9T6aO92PeQBF6EnSAD1v7Lbv/pRnYC+BYcOCNSw+PbUQydIo3+EjxSjM+okWETUgeo8ODV@vger.kernel.org, AJvYcCVm8YyqquM2BK6EBADs3J/FOL5L79NWE1hnkTSUYfkqYxljcQ3PJo4ynW23ssk2Ofb97hg7FCxmQK8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrnN3aGpEE4gYP1dK273lEl4ookg1qfednbWGtxRgVv+qjduzr
+	Np6hUomd3bHi3Otu1IttX7PWHVIW6htiVlutjF2qcEiCmGxsMPlD5u7lZNiSMaEN4UOwDt3uegj
+	PLtpVYSFuFgAkKt+lD95Vjw4GK/k=
+X-Google-Smtp-Source: AGHT+IE6OoQBQFNIo2RMuI36yMDwzxZHGLigZ5rk40AM8etZx9c58IROyGc/jRXUBwa/wPABVFxm/WCKiib7VV1jN8w=
+X-Received: by 2002:a05:6214:529b:b0:6e8:9e8f:cfb with SMTP id
+ 6a1803df08f44-6f542a5f62dmr30383316d6.24.1746599182795; Tue, 06 May 2025
+ 23:26:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=CLAqXQrD c=1 sm=1 tr=0 ts=681afcd8 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=VI1NQ0rgZN61wkHHH4kA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: QD1K8PZ3uYzMJ7kPAvcb9JP4VkJn7oLp
-X-Proofpoint-ORIG-GUID: rztLrWR4sWMaBLVOXO8rmeAHuH-8u504
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA1NSBTYWx0ZWRfX4xfKB8NZ6lMj ZtfYnsUNf0YlOGsCxzKwCSwj0/7ZlN3V0rIXgktRbJk96/zqTwFBQ7qJYF8HaIgiF/JLG/ZXHLP fwfAFfN8Egegx3Azq06LVxs0lFt5rN7e20WRWDH2PJ3ZltAxbeAfNv2yKK1Djc7/QOjuHCBDB+B
- 5kjED0cI8vLL0DVSGP5e0sePnn0Zn4n8YUhQCUGXYqBadtJUHz05ns+OmaSiTCqwQ03cWzz3mbc ZSoHS2RpPBuOSbR0JXN5VxkSA0GXQMDRy3/p40WWRIyvVAp3fa6p/Thlb5JJUm6JYhz/shzMNMK CWAxRkmqguwkzSHnyNA11yoiZ5Opo5bHsCKgKXHCxg87TcMZPlcFirIXEg+1Ty4YPN7di82VJqJ
- DuXhzSc/Oz4AuIOl9chIMEvHa+o4omFhDcj61hplespwcl4lrvYa9iPXXvMWDUUCs9zOhGDl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_02,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- phishscore=0 malwarescore=0 bulkscore=0 priorityscore=1501 suspectscore=0
- mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=678 clxscore=1015
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505070055
+References: <20250506143254.718647-1-maxime.belair@canonical.com> <20250506143254.718647-2-maxime.belair@canonical.com>
+In-Reply-To: <20250506143254.718647-2-maxime.belair@canonical.com>
+From: Song Liu <song@kernel.org>
+Date: Tue, 6 May 2025 23:26:11 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4qY9B3KdhqrUOZoNBWQmO_RDwbH46my314WxrFwxbwkQ@mail.gmail.com>
+X-Gm-Features: ATxdqUEG2jVvCzrgMgUy-LTFDpzXf-8Zg-TeGO0jYs2AI_kPt5jR1N9qESQfZXI
+Message-ID: <CAPhsuW4qY9B3KdhqrUOZoNBWQmO_RDwbH46my314WxrFwxbwkQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] Wire up the lsm_manage_policy syscall
+To: =?UTF-8?Q?Maxime_B=C3=A9lair?= <maxime.belair@canonical.com>
+Cc: linux-security-module@vger.kernel.org, john.johansen@canonical.com, 
+	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, mic@digikod.net, 
+	kees@kernel.org, stephen.smalley.work@gmail.com, casey@schaufler-ca.com, 
+	takedakn@nttdata.co.jp, penguin-kernel@i-love.sakura.ne.jp, 
+	linux-api@vger.kernel.org, apparmor@lists.ubuntu.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2025-05-06 at 15:27 -0400, Nayna Jain wrote:
->=20
-> > It might be better to use something like "ibm,plpks-sb-static" in
-> > place
-> > of "ibm,plpks-sb-v0" to make it instantly clear that static mode
-> > doesn't use the same version numbering scheme as dynamic mode.
->=20
-> Yes, "ibm,plpks-sb-static" is more clear compared to "ibm,plpks-sb-
-> v0".=C2=A0=20
-> However, I am not sure why "static mode doesn't use the same version=20
-> numbering scheme as dynamic mode". Infact, as per my understanding,=C2=A0
-> it=20
-> is part of same versioning system. "0 represent static, 1 represent=20
-> dynamic and anything beyond 1 would mean dynamic with additional
-> features".
->=20
-> Also, wouldn't having "ibm,pkpks-sb-static" and then "ibm,pkpk-sb-v1"
-> for dynamic would be bit confusing? I mean being static is clear, but
-> what they relate v1 to? Or did you mean to have "ibm,plpks-sb-static"
-> and "ibm,plpks-sb-dynamic"=C2=A0 for the two modes?
->=20
+On Tue, May 6, 2025 at 7:40=E2=80=AFAM Maxime B=C3=A9lair
+<maxime.belair@canonical.com> wrote:
+>
+> Add support for the new lsm_manage_policy syscall, providing a unified
+> API for loading and modifying LSM policies without requiring the LSM=E2=
+=80=99s
+> pseudo-filesystem.
+>
+> Benefits:
+>   - Works even if the LSM pseudo-filesystem isn=E2=80=99t mounted or avai=
+lable
+>     (e.g. in containers)
+>   - Offers a logical and unified interface rather than multiple
+>     heterogeneous pseudo-filesystems.
 
-I don't feel strongly about this, as long as it's well documented.
+These two do not feel like real benefits:
+- Not working in containers is often not an issue, but a feature.
+- One syscall cannot fit all use cases well...
 
---=20
-Andrew Donnellan    OzLabs, ADL Canberra
-ajd@linux.ibm.com   IBM Australia Limited
+>   - Avoids overhead of other kernel interfaces for better efficiency
+
+.. and it is is probably less efficient, because everything need to
+fit in the same API.
+
+Overall, this set doesn't feel like a good change to me.
+
+Thanks,
+Song
