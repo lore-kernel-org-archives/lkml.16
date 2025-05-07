@@ -1,125 +1,87 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E32828CF44;
-	Wed,  7 May 2025 17:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CBAA1C84AA;
+	Wed,  7 May 2025 17:36:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746639361; cv=none; b=MDvz5Vh38k2+UmUuIC390GjNr8bAFaxYvje4rYCvqfrjbvg/FC+mTg+aUDA4QnXD836Xz8e4TSKnDz0R1iTgtpuL4RfGekR6x6X7GHoDHMzzREecRlOMk+QH7NXxEsMEkusmCksOAvCr9GBW2zUKzjfzIzFA+kgXYRcLmaedSEk=
+	t=1746639417; cv=none; b=t0S0dYXut9YhQIfOzBcoFPtelYOUW1XiMSH9dJH7YkOdLOvJ+R8n6gb64aTlELtO+VGz0bOBOUS0WbHlkjmmG56W7TIw12Ga3KqizMBf1QvSCvwsvO/H2vYCGngLOm3nCoZYYgfZMZVi7CIbP26JOQ7x/HOJscAYlxyTVSgPJSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746639361; c=relaxed/simple;
-	bh=c2ITjaoi4y/32y406ufleR0jKcFxlSQQI9/5RMCUp54=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ILzIgeCm3l8VpYSj+cJI/DuqwE9EfSAXpPxsvQviMzkYVE14LdiUOzUm/ZNcTiigre4L7s3fOA22s/VDWk97V9SYE1ME6AV+Y7tMuVUT6Zx1vmB6btFZ+7/llAOg17ZFg5tS/x92aesBNJBmKOtvw6LhGXrmNTk473X8enxj78k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mGyn7Gyg; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746639417; c=relaxed/simple;
+	bh=cZgHgbEMslEH7d4qnp23P8CWCIcdt5/T8snXdHQXoIY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XFcFyI67v/2baMh6+UbNa1kUMB5ETskJyUr65POruMmD0sWJaLibSmpEENzCMQt33FkLx50RvhhDiYwC8cOK465zIkmU08rHKpmoIpSIDdnIq0779VEhf1q5230O5AqQ1YdgMVIn43qUt2mmE/MdVrwgd8ldDmqRl8eeCyEiip0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i5gBcLx/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGyn7Gyg"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so105958f8f.0;
-        Wed, 07 May 2025 10:35:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746639357; x=1747244157; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=B8fzoKFRxHrnQE/JG/vAropqBJ0/DVLBuAo0naIFD4s=;
-        b=mGyn7GygYqCWS3SCxcSLDfdeZDpOSL3lDx8qJqQ1bmgRCilKahTG8IAJw7VS32KCAR
-         8o88BF4tEBBgA3hMfUSNhUMG50gqifi+y2qwGspRZ+gc+UX9EVw4CdZURCfMIWdfEIlf
-         GpL+/PDnnq3NCaNwdJh92nPbwEDi9hE++IrOrRxk9TwjFrfIK7HYcyigQdjNJoHbNPSJ
-         2ZLKXtOnl6AfWQygriA/WktqowAlfgW14BaS8rbbSgW9FE64l9SZnbXcifPqqYmnbrhr
-         POfSghHNUs6GCbvwc4keUZwBW1VLRrRn+MyvxKUxO+C9R66437K1Yn3KXLjvtcJtW5E6
-         Kasw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746639357; x=1747244157;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B8fzoKFRxHrnQE/JG/vAropqBJ0/DVLBuAo0naIFD4s=;
-        b=fu75qra58uDDH5llVJ/EJ/rNK7x+QmOw6HosMdrit0drnyBZz7Pe9sc8kI6hB6oh3u
-         KOOTO9RN33BphFVv1XvwVcsqLVA1uhb3HU7PpeA2Niffdr8CzPzEDW+r5cVBG1J6b/Nz
-         cawOG8Q5DVCQc9ScSyqnDxy2vkkp89e0p3wuK9dUrhhhkRmYb+P8uA7YlwI6FG+fTZNl
-         pCU0dCcGiC8LrH9TG+2h+cMqAElXofXEpFgatdT3hlHIpjgsZ7TmVB8rYeM2hSJq3+Nm
-         LotnFdw1y/8OvaqEwHdRBTxac1OXSUqTDMiQduydvIGMjl8Luu4wGcMMqjGBBbgMI56J
-         pPag==
-X-Forwarded-Encrypted: i=1; AJvYcCUyoNwgCYLFYMO6jSMDNPR2ZH+T67sJqYH65ANDx83yaBkeW0zi8ydmuwBZ9vSHr/ijUzz84QXgplIu65zo@vger.kernel.org, AJvYcCX6YG5N/RcLLskirkNVRdE5RuRC/UXoBfLah2FxCM3N1s0P9hssnliNhzKr9jCsjincME70gj+U/IL0@vger.kernel.org, AJvYcCXbiLEtkSOUh0BiZrdp/HTlIhI45KTOoe+k1U44El7zOq4A23lg/eJlmEkexb7HJI5SvJcgi+UWG4b8y3QnZkO8wOc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLaqSR3UfVW27I619/BBh7UHravBTGLvu5xkiuVAbx9qoYy+M2
-	62//7fQ6TlGXdaYVe5/KJCoPknlwSLtPhwaFIZW1qD8IcmnBTKak
-X-Gm-Gg: ASbGncsg1cGyBldAs/0OnvjnHpLNaoPHrfFkqNf31fBMq/OVtcDUhwNjAclTuyC2XY9
-	5IT8C0V1QrEM4hMChA/LAv7WEEtBYrXSIq98AN3+qgnqh2daOAUB6I7lFh+CTn4s5O5OZ6jpi4X
-	eSod2/sNaLvPBuQmeCzXdC5DF3ji/CRrIPBqjY8FteBqtBxikEnUjW7qn4Y+b89qkRY9zgJE/vq
-	vgw6g8y+UUgcrZUvdFkGq3VJPk30RFldDqkOQr3lhsfHOeiA9CzR6cXHBnxTSElo2J2Hp/mV78t
-	evChs/oafQY2z7llV1x/JqgtqEX+dcz4059uEqzaURJpdLUTaJ9qsIM7VoqokRNeozK54XaPzA=
-	=
-X-Google-Smtp-Source: AGHT+IHJVgnGCHmje37RoGJbHVlOZy0cJJZ5JHLe9pV9lbIp7XqZR/JsVQTP913wHvAw6Cy3+JwSPQ==
-X-Received: by 2002:a5d:64ac:0:b0:3a0:ad15:440f with SMTP id ffacd0b85a97d-3a0b4a03705mr3258354f8f.8.1746639357307;
-        Wed, 07 May 2025 10:35:57 -0700 (PDT)
-Received: from iku.example.org ([2a06:5906:61b:2d00:2b0e:e807:48d:720a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0b7e44397sm1140401f8f.49.2025.05.07.10.35.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 10:35:56 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: netdev@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH net-next] dt-bindings: net: renesas-gbeth: Add support for RZ/V2N (R9A09G056) SoC
-Date: Wed,  7 May 2025 18:35:50 +0100
-Message-ID: <20250507173551.100280-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i5gBcLx/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 724C9C4CEE9;
+	Wed,  7 May 2025 17:36:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746639416;
+	bh=cZgHgbEMslEH7d4qnp23P8CWCIcdt5/T8snXdHQXoIY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i5gBcLx/+W4OrIiWZ5mEORzBu+/MwAyuxa6sW1iOveMt1AbVE409oWBLaBe9YFT6L
+	 +BJmwOuTwy475nvJMOzU2yOj5Hq6UBEFzSeoP4Ug7AdjqzknAB3YSydz9nlR0xUtIh
+	 tPRgayVVB3L/rPkmPej9ZFQRBKHkVp5kyl+FkbcbfKPQcLB21rcVDj4HYs9SaegsFW
+	 Dm86+RQGjxIklt//kN0qITbrcCli74syRXK80c2pQIC5N5+n9RMI7EFYas36hWE+ML
+	 /XjfNG6TPa23jkpJ8JdWBhEFvqAeb3kffuOw//VVv2rwAtdnAITjB/KmfaO5SiBT7k
+	 ctJ0PuZ6PUrnw==
+Date: Wed, 7 May 2025 07:36:55 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Xi Wang <xii@google.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>, linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	David Rientjes <rientjes@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Chen Yu <yu.c.chen@intel.com>, Kees Cook <kees@kernel.org>,
+	Yu-Chun Lin <eleanor15x@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	jiangshanlai@gmail.com
+Subject: Re: [RFC/PATCH] sched: Support moving kthreads into cpuset cgroups
+Message-ID: <aBuaN-xtOMs17ers@slm.duckdns.org>
+References: <20250506183533.1917459-1-xii@google.com>
+ <aBqmmtST-_9oM9rF@slm.duckdns.org>
+ <CAOBoifh4BY1f4B3EfDvqWCxNSV8zwmJPNoR3bLOA7YO11uGBCQ@mail.gmail.com>
+ <aBtp98E9q37FLeMv@localhost.localdomain>
+ <CAOBoifgp=oEC9SSgFC+4_fYgDgSH_Z_TMgwhOxxaNZmyD-ijig@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOBoifgp=oEC9SSgFC+4_fYgDgSH_Z_TMgwhOxxaNZmyD-ijig@mail.gmail.com>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hello,
 
-Document support for the GBETH IP found on the Renesas RZ/V2N (R9A09G056)
-SoC. The GBETH controller on the RZ/V2N SoC is functionally identical to
-the one found on the RZ/V2H(P) (R9A09G057) SoC, so `renesas,rzv2h-gbeth`
-will be used as a fallback compatible.
+On Wed, May 07, 2025 at 10:23:24AM -0700, Xi Wang wrote:
+> Overall I think your arguments depend on kernel and application threads are
+> significantly different for cpu affinity management, but there isn't enough
+> evidence for it. If cpuset is a bad idea for kernel threads it's probably not
+> a good idea for user threads either. Maybe we should just remove cpuset from
+> kernel and let applications threads go with boot time global variables and
+> set their own cpu affinities.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- .../devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml        | 2 ++
- 1 file changed, 2 insertions(+)
+I can't tell whether you're making a good faith argument. Even if you are,
+you're making one bold claim without much substance and then jumping to the
+other extreme based on that. This isn't a productive way to discuss these
+things.
 
-diff --git a/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml b/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
-index 02a6793c26f5..c498a9999289 100644
---- a/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
-+++ b/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
-@@ -14,6 +14,7 @@ select:
-     compatible:
-       contains:
-         enum:
-+          - renesas,r9a09g056-gbeth
-           - renesas,r9a09g057-gbeth
-           - renesas,rzv2h-gbeth
-   required:
-@@ -23,6 +24,7 @@ properties:
-   compatible:
-     items:
-       - enum:
-+          - renesas,r9a09g056-gbeth # RZ/V2N
-           - renesas,r9a09g057-gbeth # RZ/V2H(P)
-       - const: renesas,rzv2h-gbeth
-       - const: snps,dwmac-5.20
+Thanks.
+
 -- 
-2.49.0
-
+tejun
