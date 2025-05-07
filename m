@@ -1,145 +1,113 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6806072628;
-	Wed,  7 May 2025 11:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92231F5834;
+	Wed,  7 May 2025 11:12:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746616334; cv=none; b=RO0q0OAZhRPhyHm4DEG2htvrLrQmYlFsgQBZBRkcBqDY1kPMZwh+TfmS6mKMCkZZreGK0D8EtxMwOE73GWs0n0txR7PeYOFVNLEJl0UdI9m7p9ijhIsG8hLmkwYjZshS4uoxufLJQmV9vX+UTOrEiD3jdWl5SYskPMQ+U8aYbiI=
+	t=1746616375; cv=none; b=Ew/r4X1dy3nLF6DYHS/0AgGMbOv77uk2ILGNNWa+ozLizzv0S6mHegd3zHJwNESrfp5XhOZ1qQlMoBOw3Z6cr2DCk9ykm+zpZNqsoqV+dHq+SANuqSSHP+qjdqx8TW36Q0j/WTncVHR0eYvpJLLhQUDAT0Z28WndhmYHkBXJiMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746616334; c=relaxed/simple;
-	bh=AWug2EJD8Zb0BHxi2TAv1N/jAtrFEH1V7Ij6zoalq0I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=u7wQ12Uc8kazdLb6jWfFNsuIjmGQZW3wiYcT5RA+LYz76gqbW/pavtmsvwWnzQcpCVOoBfU4gBZndGmT45CpUQpyuntgcu/vM13vyOZ6i0fxCD6NHY8QSQ56rd4XIrMqVzMzb3yvBHgx9+omIZwu59syzvfncmWCP2liuBHtd9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mh78cifO; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746616375; c=relaxed/simple;
+	bh=i8Nmf/M83ngPceislApsO+P6BTyU/rioXKpD6P/mSKU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=UD+wRLWdP2kCGzM/LtY52E3YYU0vEQGw4A7Opx+tT/RMl4hPkt+rNsdYZzeQTZTiUj48vbFK3dD0bfcSIznG/HjmZnNKvOhnZDm301aAlOhd5Wgnp8xPRnJ/U99f6FS+q9Y9RcLEmzsSC00nwPbValol7ywoXR/jul5Q8ype0ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Io4axBlX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mh78cifO"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af6a315b491so6097377a12.1;
-        Wed, 07 May 2025 04:12:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746616332; x=1747221132; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CsBfD4Pb9OMNX/WaFeLXYdbl+5f37DSDVYvpAffwCyU=;
-        b=mh78cifOutAHTfVnDmaOhEUuZTaKAMQnFWgX4mn8RzTc09wU0/+gh5HkfUQbc6Zyqr
-         TBEL9faImAP1gfHXuNoKi2mYD0oQDnUqflcHJU8PsnmkrxCnqG/koMeuHCXyFs0BRsG+
-         7PDgzqDmUPCX+E8H+SR1U6hkVusPgygpmI4WJZntydT9y1h7nhBu+KVboSdL7lFe7AEK
-         OAQdk7WVzz5aYUO9CHWQPJdy/sKQiPq0RUq9YlW9ekewwQBe2hSlRP6FFypIXwO4DFhT
-         Z6N5/6OqZ2OcS+u0aEuZWwaOmkddXKZ6UHLmvrO0U/5Jt2TZE9CFcCV3PxBzQW59kID6
-         Nefg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746616332; x=1747221132;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CsBfD4Pb9OMNX/WaFeLXYdbl+5f37DSDVYvpAffwCyU=;
-        b=Vf1jjc+kjz3imly/MKvrAYt3sJZ25vjcYbj3JaewKaf0wbOAie0cyLB25MZLW/1KLc
-         +MxEU0d0+IZ34T9dVQ+FarmHCntfZzTFx7gkKkGuyz9PWNr29rrTS20tKfVtjatZc/AB
-         b6DSTU3ZWvWlDnjvnJO6OOVl+byJAFlyhPQLU6ZIFIPLVmUza/+rkIgOZp1PIvH6GzH/
-         kgjToAz74E2VAMH7jAf28wTnvdkSrnZJ7Hi4eRUmPHgWRNhkXtU+qpTStsSzXA9hShv/
-         +0dluhAZgsFcVl1DF48V0V+4fkE4dsgF0APObc9pHEr82+pCesn9lp2J5eVxk5lOXr1i
-         nVaA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFFv/z/uuh+RPaysG0dMf03wNvil2q8nWnODWkQdCtgJO11c0FLnqX4N0Ik7DDvFBt9YyB+4oKWM1mPSY=@vger.kernel.org, AJvYcCWBtPWiFBdMZXTnTj2SaC2ChdfuWqsJ9+qj770ODva99wPh+aOyrGIFp0seUMEjgUmIQOYVVlNHW67jw8DDwI/wa1smeLMl@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtCDyE0tI44+oxpE6t5Y5DArkb/jHzRdfMws8tAKgw/q0PbWes
-	dpAEYdzOAt4AMOtwkFEtJ/s55xamsh2Fjmto1bU9EgRLzFEcGx15
-X-Gm-Gg: ASbGncupaWKuMQy/uEYAglPwx0Cyf4MTQkJzk8gNb4a0vIqXakUnZJrE50lv/4X+vI3
-	nN6VZBYh/d673m52KVJSwQPCud8GbmARXUXlTDhmra3zWXp5e/GdN2VATkWM7Km2n8MlYu5e9KE
-	EdY8exuGMfUAUYtaDLQuAvdguMmDmcZ7lRP5sXrbg8JqPZQr660I+LsjHR0BGAQjMIm7maT6KQm
-	4v6XJ5EtZwH+kb4ILJqMSXHZQucWn128W73/U9gjTPMYMZ3Qo5r4HX/etUooz4jabFbEsxrFL+6
-	dcMLE2Q6W56xjFWq3ii+oy3tlh/C6HN68anRFwQhh+Nw19Q1l1HhtH5EmWoEPbfzpYHSKw3FNae
-	bpoRZnUzghGnXDw==
-X-Google-Smtp-Source: AGHT+IG/CCghFGRg+QmTrGaDvtys9QtKLenO0TPTE91OHTJx6hqL4uN/Huw3HaDc+dTeyr0qlGbDFw==
-X-Received: by 2002:a17:902:f381:b0:22e:663f:c4b with SMTP id d9443c01a7336-22e663f0fcamr17324135ad.26.1746616332484;
-        Wed, 07 May 2025 04:12:12 -0700 (PDT)
-Received: from localhost.localdomain ([14.22.11.163])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e6612e8e1sm11326985ad.132.2025.05.07.04.12.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 04:12:11 -0700 (PDT)
-From: alexjlzheng@gmail.com
-X-Google-Original-From: alexjlzheng@tencent.com
-To: paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com
-Cc: greg@kroah.com,
-	chrisw@osdl.org,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jinliang Zheng <alexjlzheng@tencent.com>
-Subject: [PATCH v2] securityfs: fix missing of d_delete() in securityfs_remove()
-Date: Wed,  7 May 2025 19:12:04 +0800
-Message-Id: <20250507111204.2585739-1-alexjlzheng@tencent.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Io4axBlX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89EB7C4CEE7;
+	Wed,  7 May 2025 11:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746616375;
+	bh=i8Nmf/M83ngPceislApsO+P6BTyU/rioXKpD6P/mSKU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Io4axBlXnAqiwN50vnbJxawwhAUR2HJTYEh2QC80zGTlMkecKmvP+aeN0z702Eaga
+	 zABZn+8VwK4uiI8pNOmzokFSPS4JI90Q85J8UUeCk52Dshyy31eGxcY2I/QTktk84/
+	 /8KY4lvdvLCn4viw3qtJiSVhAVAyS5LsNKpyV4v+5IqJl0833a37No06FBB4VYPqWh
+	 xRh/HB+0kGKkbBLcIa6XBRsipvWVKuDHS/kx8m8UGtB/d8t2puZ1hmw5lJGkx9A3vl
+	 uu3JrxZVGWdMsstJhxsYfJGPQpN9TDJSI35S0JhVc547QdZR3G9kpIjxwYOnPe8FOj
+	 kr5nC6EnLwP7w==
+From: Mark Brown <broonie@kernel.org>
+To: David Rhodes <david.rhodes@cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Charles Keepax <ckeepax@opensource.cirrus.com>, 
+ "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Peng Fan <peng.fan@nxp.com>
+In-Reply-To: <20250428-csl42x-v2-0-e8056313968f@nxp.com>
+References: <20250428-csl42x-v2-0-e8056313968f@nxp.com>
+Subject: Re: [PATCH v2 0/9] ASoC: codec: cs42l[56,73,52]: Convert to GPIO
+ descriptors
+Message-Id: <174661637241.4174662.1114099505492854363.b4-ty@kernel.org>
+Date: Wed, 07 May 2025 20:12:52 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-From: Jinliang Zheng <alexjlzheng@tencent.com>
+On Mon, 28 Apr 2025 10:09:01 +0800, Peng Fan (OSS) wrote:
+> This patchset is separate from [1], and not merging changes in one
+> patch. So separate changes into three patches for each chip.
+> - sort headers
+> - Drop legacy platform support
+> - Convert to GPIO descriptors
+> 
+> of_gpio.h is deprecated, update the driver to use GPIO descriptors.
+>  - Use devm_gpiod_get_optional to get GPIO descriptor with default
+>    polarity GPIOD_OUT_LOW, set consumer name.
+>  - Use gpiod_set_value_cansleep to configure output value.
+> 
+> [...]
 
-Consider the following module code (just an example to make it easier to
-illustrate the problem, in fact the LSM module will not be dynamically
-unloaded):
+Applied to
 
-  static struct dentry *dentry;
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-  static int __init securityfs_test_init(void)
-  {
-          dentry = securityfs_create_dir("standon", NULL);
-          return PTR_ERR(dentry);
-  }
+Thanks!
 
-  static void __exit securityfs_test_exit(void)
-  {
-          securityfs_remove(dentry);
-  }
+[1/9] ASoC: codec: cs42l56: Sort headers alphabetically
+      commit: 4060ebdd5063eed98a8f81f78f1e67ffc4ff0942
+[2/9] ASoC: codec: cs42l56: Drop cs42l56.h
+      commit: 86f6e4791c40c33891299d95c055e5d06d396284
+[3/9] ASoC: codec: cs42l56: Convert to GPIO descriptors
+      commit: 0bb92e4736a9dd43e3215b378db5ac63075a3cc1
+[4/9] ASoC: codec: cs42l73: Sort headers alphabetically
+      commit: f3e7298848f0e6c09e4da5fd80bca7cd0c58ccc1
+[5/9] ASoC: codec: cs42l73: Drop cs42l73.h
+      commit: 43ef0dccbc2528924c4b03a902fa39502faabb16
+[6/9] ASoC: codec: cs42l73: Convert to GPIO descriptors
+      commit: b6118100382c9e4c8ca623b3a8e8bf1a09c42aa5
+[7/9] ASoC: codec: cs42l52: Sort headers alphabetically
+      commit: 2d703321b856acdb6589d74906e19aa5cb328d4e
+[8/9] ASoC: codec: cs42l52: Drop cs42l52.h
+      commit: 772c036befb875c904731fb309fb9d2e065ba3f8
+[9/9] ASoC: codec: cs42l52: Convert to GPIO descriptors
+      commit: 5bf5bdfd007e07f2ec5b3e07aa02616f4eebef67
 
-  module_init(securityfs_test_init);
-  module_exit(securityfs_test_exit);
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-and then:
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-  insmod /path/to/thismodule
-  cd /sys/kernel/security/standon     <- we hold 'standon'
-  rmmod thismodule                    <- 'standon' don't go away
-  insmod /path/to/thismodule          <- Failed: File exists!
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Although the LSM module will not be dynamically added or deleted after
-the kernel is started, it may dynamically add or delete pseudo files
-for status export or function configuration in userspace according to
-different status, which we are not prohibited from doing so.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-In addition, securityfs_recursive_remove() avoids this problem by calling
-__d_drop() directly. As a non-recursive version, it is somewhat strange
-that securityfs_remove() does not clean up the deleted dentry.
-
-Fix this by adding d_delete() in securityfs_remove().
-
-Fixes: b67dbf9d4c198 ("[PATCH] add securityfs for all LSMs to use")
-Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
----
-changelog:
-v2: Modify the commit message to make it clearer
-v1: https://lore.kernel.org/all/20250426150931.2840-1-alexjlzheng@tencent.com/
----
- security/inode.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/security/inode.c b/security/inode.c
-index da3ab44c8e57..d99baf26350a 100644
---- a/security/inode.c
-+++ b/security/inode.c
-@@ -306,6 +306,7 @@ void securityfs_remove(struct dentry *dentry)
- 			simple_rmdir(dir, dentry);
- 		else
- 			simple_unlink(dir, dentry);
-+		d_delete(dentry);
- 		dput(dentry);
- 	}
- 	inode_unlock(dir);
--- 
-2.49.0
+Thanks,
+Mark
 
