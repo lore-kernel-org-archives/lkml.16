@@ -1,106 +1,89 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22C839ACC;
-	Wed,  7 May 2025 14:56:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B205289E0B;
+	Wed,  7 May 2025 14:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746629807; cv=none; b=bBtEl+uDcJkpV3lX34gE5dbY3+rzz8AiuDZjhOTyfxTsek1hxkG8qVmGvM12VbfXodJDpaJVt8Kkwcq8CfiZ73jIfq3Er9Mdf/PoE3DgQJGnV053XADI7xubvRFZ64uZM1QVxVtiW/BkLzo3G3wo7PtkX01nXyZUrIxU2Ep6Qng=
+	t=1746629831; cv=none; b=WihJ4yKxkJmyfIyr/qXFsON2l9P0rqO6hw2DkiAgkPMEZ28jZDMNWNxGno5TdhHmiStDtPBGVmn5t657+MbWK4TLNmYL4ygGl7h36/z9qECfrbn1UQHtVtdqobOBVSCBmRqry30EegRHBddNubUcSDZAFg9ZTg8ZSxM6shoeHGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746629807; c=relaxed/simple;
-	bh=WV4wvP8JsNZ0F1PfFxjv62Ig25+RnsR6VnAycPTqcGM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=imEXiD8y18++MsCH8H1biyP/n5i5RLLM5XDzbD1Rk8AaW5BSpitSGg4n/uzvC7O+K919YinU+gzHqkgZhUB2yHpRS+eQpbck393peHDh0M8kv2VUWSkWR2q+lwEr/juhywUUD5MYB7XSiD5AHLPN7elJeH7vQvMc20OWbxKkNVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DW2le85c; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746629831; c=relaxed/simple;
+	bh=dDqtRZg26E4Et3Yjy8rypNhjSO073NNczyslrDzYN2k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fAPXw/TZ5oDclMi6xN5JtT6DCEOAfBO4PvTD2SzyTechAfdh1Vz6BHK8Fs6iHJQSnJmEZgduZZNli2sXd6XF14P83nY6k6XB36It4K30iB6dt3X7qc1MOzOXCJQdNpLt/AC4iYVeRlgo9cY6gR5N4awpOFxFwcQfUNKfBvGdFzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c3w6h9UC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uhSJSd9k; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DW2le85c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=tNmFFnlLRbbea3bahp28nTfyzV1Xhe+xKP45jX8AMAY=;
-	b=DW2le85cvHbAy9SNvaybMrSBPDunRSVb5CcYqqAywCjz8Z/8jafn3bTFOlIyEi
-	BM2AtqF7+Ib74XnedGReayUxz/MTVTfZwXHuLvT4FlMeyDnn0O0MFoN+zFNl12Ec
-	ieqn4hQYr23XcKusyjn0FzupqJ0MeMXNLtPVhmVVv99rg=
-Received: from [192.168.71.93] (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wAXG1lgdBtou6IsFA--.12424S2;
-	Wed, 07 May 2025 22:55:29 +0800 (CST)
-Message-ID: <2ae86e9f-2a91-476a-b017-e0e20489d8da@163.com>
-Date: Wed, 7 May 2025 22:55:28 +0800
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c3w6h9UC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uhSJSd9k"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746629828;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xmIM9bL+9pYqApP4iiFLa2aJhHWBMRN4cnMPPzQ7Uuo=;
+	b=c3w6h9UCZfwIuuS3NCJZL6VICMiK/xZO9n6BXRGzZTeB8JGqEKsYIIJQEd+sCKVnjzB0mx
+	Ut1PYkFchzhx9Hx8bDfwGnfRQrKm+oWIvMKhDIg9J0GkO5XbC06KybHbF9EmCRGmjm69D0
+	7dHULGK9bVsIrb1YwTPdTvaS0TGFHrIA+q/v7BLB6QENoRF/k52oMT9bGEDnYQWKxBLOZD
+	UEMESZJFZ8aEPFPnqnAx1yzpx7hQHLpEMgQDuxfabwD0Z6qYGzguk9UKrbJpvkVZWi+QjD
+	j5dWMGyUKfbo8NntAtEVhu8ZsfSDLGC+j/sgbi/V55iFV01xcbV+yyqxYkUOaA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746629828;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xmIM9bL+9pYqApP4iiFLa2aJhHWBMRN4cnMPPzQ7Uuo=;
+	b=uhSJSd9k2sw9XI3tMkhm2D2DL5P+4G6hR5bf0vhvXUMS5HskOI3vlbVGHn1v576LCoIznP
+	Fn6GgNvNKNPOdoAQ==
+To: Marc Zyngier <maz@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Bischoff
+ <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>, "Liam R.
+ Howlett" <Liam.Howlett@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Slaby <jirislaby@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 20/25] irqchip/gic-v5: Add GICv5 PPI support
+In-Reply-To: <867c2sh6jx.wl-maz@kernel.org>
+References: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
+ <20250506-gicv5-host-v3-20-6edd5a92fd09@kernel.org> <87zffpn5rk.ffs@tglx>
+ <86a57ohjey.wl-maz@kernel.org> <87ecx0mt9p.ffs@tglx>
+ <867c2sh6jx.wl-maz@kernel.org>
+Date: Wed, 07 May 2025 16:57:07 +0200
+Message-ID: <874ixwmpto.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] PCI: Configure root port MPS during host probing
-To: Niklas Cassel <cassel@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- heiko@sntech.de, manivannan.sadhasivam@linaro.org, yue.wang@amlogic.com,
- pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org,
- jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
- martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org
-References: <20250506173439.292460-1-18255117159@163.com>
- <20250506173439.292460-2-18255117159@163.com> <aBsN2_YG0RsH4RPA@ryzen>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <aBsN2_YG0RsH4RPA@ryzen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wAXG1lgdBtou6IsFA--.12424S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7XFy3Xr1UJw1DJrWfAFyDGFg_yoWDuFcEv3
-	4Y9r47C3y8Xr90kw43ArZ8JrZxGanxZ3yjg348XrZay3s3Ar48A3s7K3WktF4Uu3WFvr17
-	Cw1UZF1xA39xujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU1eT5PUUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxBGo2gbb-2P7AAAss
+Content-Type: text/plain
 
+On Wed, May 07 2025 at 14:52, Marc Zyngier wrote:
+> On Wed, 07 May 2025 14:42:42 +0100,
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+>> 
+>> On Wed, May 07 2025 at 10:14, Marc Zyngier wrote:
+>> > On Tue, 06 May 2025 16:00:31 +0100,
+>> > Thomas Gleixner <tglx@linutronix.de> wrote:
+>> >> 
+>> >> How does this test distinguish between LEVEL_LOW and LEVEL_HIGH? It only
+>> >> tests for level, no? So the test is interesting at best ...
+>> >
+>> > There is no distinction between HIGH and LOW, RISING and FALLING, in
+>> > any revision of the GIC architecture.
+>> 
+>> Then pretending that there is a set_type() functionality is pretty daft
+>
+> You still need to distinguish between level and edge when this is
+> programmable (which is the case for a subset of the PPIs).
 
+Fair enough, but can we please add a comment to this function which
+explains this oddity.
 
-On 2025/5/7 15:38, Niklas Cassel wrote:
-> On Wed, May 07, 2025 at 01:34:37AM +0800, Hans Zhang wrote:
-> 
-> (snip)
-> 
->>   static void pci_configure_mps(struct pci_dev *dev)
->>   {
->>   	struct pci_dev *bridge = pci_upstream_bridge(dev);
->> @@ -2178,6 +2209,10 @@ static void pci_configure_mps(struct pci_dev *dev)
->>   		return;
->>   	}
-> 
-> We should probably add a comment explaining why we are doing this here.
-> 
-> Perhaps something like:
-> 
-> /*
->   * Unless MPS strategy is PCIE_BUS_TUNE_OFF (don't touch MPS at all),
->   * start off by setting root ports' MPS to MPSS. Depending on the MPS
->   * strategy, and the MPSS of the devices below the root port, the MPS
->   * of the root port might get overriden later.
->   */
-> 
-> 
+Thanks,
 
-Dear Niklas,
-
-Thank you very much for your reply and suggestions.
-It will be added in the next version.
-
-Best regards,
-Hans
-
->> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
->> +	    pcie_bus_config != PCIE_BUS_TUNE_OFF)
->> +		pcie_write_mps(dev, 128 << dev->pcie_mpss);
->> +
->>   	if (!bridge || !pci_is_pcie(bridge))
->>   		return;
->>   
-> 
-> 
-> Kind regards,
-> Niklas
-
+        tglx
