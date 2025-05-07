@@ -1,140 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B3728B4E2;
-	Wed,  7 May 2025 15:42:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01EA28BA91;
+	Wed,  7 May 2025 15:42:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746632544; cv=none; b=bYDGwhLkl/LPJ42edBT4lpb4RrrlxLzf0/IwmZ+HJ/aJo9VEXdArSkTcvzDVGpRVrQGtITjlEoynVJSfENVuTdOm/G+09bEc46owEsRbXj0L/lKNuuKfT7bv0VlhbqhZzVEFfkG6sXO+Sm0EOLfRIZfp7jQub3r0ZbJyyfy8hgo=
+	t=1746632548; cv=none; b=SEeLe7HKa48Ua6oOpI3gpG8/RePwJh8e/sgHmbttgWS7dFM4lPjBAUdQm5Dyabi2YYIVqh5xQRa/ugFF6ZufwwFtKQj/FAY8pmjzBjurRv9FYfwiplBDAiM6cXhcgSpLnOi5CG8Ulh0G+fBMOarjP0rILW9eWDn37QLH+NYbCdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746632544; c=relaxed/simple;
-	bh=X6a4mVmc9Gg+626jkP+iQ/neOLmh8i1nYRqm1zgMs0I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZF5Gn7qHDBK7brLV+FGM/iUxDIuS2ivd8pC/1MYeAI8TEdpQL67rcOjQ6JpkGsYfBUXjyRus8tx0MrJulC5SzsLdOwmEHWIAo8AJd4aNM+o3mfCAshmj1I3jKbZJXlZ93p30JIjbJz6lgXu/iDXHybARrbCwLtb0GYLG6kRkJmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RbYyiEs7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746632548; c=relaxed/simple;
+	bh=UCG9uUCi1T07aauhMZzXc1mEyWGFALTK5OrhIqBgmqY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rL6cMf783/Txpzh/v5NDzOhtjrvR/5CQrA/SmqEQuyXW29EnTSQYs4l02UazMyu29u30N+XDGNDUy6I1inrWIAln0OyF90SZ5qWUyn833GX1YETw3f5wEoLzZXWDF8y4Kv7EE/ZU5x4FJ3I5Ru4V6eKyFLAXbiB3y9quBxjPfww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=noyMKEK1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RbYyiEs7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C510C4CEE9;
-	Wed,  7 May 2025 15:42:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="noyMKEK1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E1EFC4CEEB;
+	Wed,  7 May 2025 15:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746632544;
-	bh=X6a4mVmc9Gg+626jkP+iQ/neOLmh8i1nYRqm1zgMs0I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RbYyiEs7wpnnw8imM6jb3u7SFlt3Hqn5B0wGfNcOEWLQnobDGeH8bQBUkTqXHu93l
-	 AObLrQsBXwxcdg5/QsC8PWLbYslJENDskuMWVnZQAGaSNJpJBp7iSUACe70E08JCiC
-	 kRSUmMhHeLS91T7IPrFEjbnChP+hNcblovKjh06VwoizzOxDCJzj0iqhxqovg5aRe+
-	 ipT51pZVW9zcC3KReij0nOPiUd4JJYuQu3tj+lNxeZpjZvDd5KlaQs4D8W/q/e0LhD
-	 KFt33SqPxIQ9Dx9+Na0rOPfv3nk7NS10V1kVfpMnvu5kbwrq7gdcFHImvOAzn3ha14
-	 RW89QAqBGgOGw==
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2da3b3bb560so32216fac.3;
-        Wed, 07 May 2025 08:42:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVQg/JpnEJPymoV0DDbcrFTdF0hT7OnYILpNMDt0rAZzgSzwnawev/Cp8/7EzcCHH7q53oon5b5jlx2@vger.kernel.org, AJvYcCVfB2Q5KoBVo/C68O4nNRkc1jFGo6iSY8SKo+LH0YHbD4ohWIW5ZDyAhKTl84qCUeGTo7CkH/E4@vger.kernel.org, AJvYcCVyg+QR2VFNDgAcm5nsxRZKXlGWcX3D9kI387YjenUGdJfzyqEDhLY6Z3YoHe657bsLfBWYcVIosx04Hsvc@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzv+0jYsv46X6J5ViQQ9M+zFSB9Obb20DFbmsor4PnLHMsiq1Lp
-	Sv2qHZQwUmZstoiYmhH97ncq8fs4NsXg2W0jly9KOGFGUXgYCohMzSr6xMSA2Zcu/O6LN0GRNYo
-	50Q5wXBhP4ZwV1ZaA7KlIdmmbrLk=
-X-Google-Smtp-Source: AGHT+IF9g0bYO+YbMTdPoNSKVhb7oxdZ2SOFycPAHV8kmay8GgVyfTxxkuMDCK4QI6tlWeIbB4BlcK0/VaSa95NIsNo=
-X-Received: by 2002:a05:6870:6109:b0:2c1:461f:309a with SMTP id
- 586e51a60fabf-2db5bda3d4amr2310275fac.8.1746632543645; Wed, 07 May 2025
- 08:42:23 -0700 (PDT)
+	s=k20201202; t=1746632547;
+	bh=UCG9uUCi1T07aauhMZzXc1mEyWGFALTK5OrhIqBgmqY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=noyMKEK1FiH0vcsaVV6EVq7wZP01ngc3mnlvfZeKNNJzRYQiPexxYyQq7bv73W5q8
+	 rxYjuR0+FozHa/P/g+Nwwep4Xa1MYYsTmJwdLeJThbtG7KJX1NEqXPARJIHm1OIOBn
+	 jeac1QTqKgXeDfic/FPm8DBQOJZUIZKhTBCg5jzYldS+Rnqpp9fNhFbH3Lh8N+de2m
+	 0jEmeaqYPbw7vR43LycegMaYj61OykRzMxlJFYtp/omKnTpZ1ZbksbNnpa70L7yaFt
+	 6TaSghb7AGLrawMqosvsAbeaDEdycCfa1BFp3y737AcpWKsAepPIB/2xT3TjO+2FFO
+	 2Cu1bad8uJlFw==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Marc Kleine-Budde <mkl@pengutronix.de>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	linux-can@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: can: microchip,mcp2510: Fix $id path
+Date: Wed,  7 May 2025 10:42:00 -0500
+Message-ID: <20250507154201.1589542-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-draco-taped-15f475cd@mheyne-amazon> <214c2a2d-e0ea-4ec6-9925-05e39319e813@arm.com>
-In-Reply-To: <214c2a2d-e0ea-4ec6-9925-05e39319e813@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 7 May 2025 17:42:12 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jvWXDQQ++4wmWJ+i=jds+MZ68bRB9+26WM4tAPHFxALw@mail.gmail.com>
-X-Gm-Features: ATxdqUFhaifr6kFHTAZ2IQkc_RdcvjRSQqknxvPrr1gBeUalvCjgLodiDGXZ-24
-Message-ID: <CAJZ5v0jvWXDQQ++4wmWJ+i=jds+MZ68bRB9+26WM4tAPHFxALw@mail.gmail.com>
-Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
-To: Jeremy Linton <jeremy.linton@arm.com>
-Cc: "Heyne, Maximilian" <mheyne@amazon.de>, "stable@vger.kernel.org" <stable@vger.kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 7, 2025 at 5:25=E2=80=AFPM Jeremy Linton <jeremy.linton@arm.com=
-> wrote:
->
-> Hi,
->
-> On 5/6/25 8:13 AM, Heyne, Maximilian wrote:
-> > Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple of
-> > sizeof() calls") corrects the processer entry size but unmasked a longe=
-r
-> > standing bug where the last entry in the structure can get skipped due
-> > to an off-by-one mistake if the last entry ends exactly at the end of
-> > the ACPI subtable.
-> >
-> > The error manifests for instance on EC2 Graviton Metal instances with
-> >
-> >    ACPI PPTT: PPTT table found, but unable to locate core 63 (63)
-> >    [...]
-> >    ACPI: SPE must be homogeneous
-> >
-> > Fixes: 2bd00bcd73e5 ("ACPI/PPTT: Add Processor Properties Topology Tabl=
-e parsing")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
-> > ---
-> >   drivers/acpi/pptt.c | 4 ++--
-> >   1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
-> > index f73ce6e13065d..4364da90902e5 100644
-> > --- a/drivers/acpi/pptt.c
-> > +++ b/drivers/acpi/pptt.c
-> > @@ -231,7 +231,7 @@ static int acpi_pptt_leaf_node(struct acpi_table_he=
-ader *table_hdr,
-> >                            sizeof(struct acpi_table_pptt));
-> >       proc_sz =3D sizeof(struct acpi_pptt_processor);
->
-> This isn't really right, it should be struct acpi_subtable_header, then
-> once the header is safe, pull the length from it.
->
-> But then, really if we are trying to fix the original bug that the table
-> could be shorter than the data in it suggests, the struct
-> acpi_pptt_processor length plus its resources needs to be checked once
-> the subtype is known to be a processor node.
->
-> Otherwise the original sizeof * change isn't really fixing anything.
+The "$id" value must match the relative path under bindings/ and is
+missing the "net" sub-directory.
 
-Sorry, what sense did it make to do
+Fixes: 09328600c2f9 ("dt-bindings: can: convert microchip,mcp251x.txt to yaml")
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ .../devicetree/bindings/net/can/microchip,mcp2510.yaml          | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-proc_sz =3D sizeof(struct acpi_pptt_processor *);
+diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp2510.yaml b/Documentation/devicetree/bindings/net/can/microchip,mcp2510.yaml
+index e0ec53bc10c6..1525a50ded47 100644
+--- a/Documentation/devicetree/bindings/net/can/microchip,mcp2510.yaml
++++ b/Documentation/devicetree/bindings/net/can/microchip,mcp2510.yaml
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+ %YAML 1.2
+ ---
+-$id: http://devicetree.org/schemas/can/microchip,mcp2510.yaml#
++$id: http://devicetree.org/schemas/net/can/microchip,mcp2510.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+ title: Microchip MCP251X stand-alone CAN controller
+-- 
+2.47.2
 
-here?  As much as proc_sz =3D 0 I suppose?
-
-> >
-> > -     while ((unsigned long)entry + proc_sz < table_end) {
-> > +     while ((unsigned long)entry + proc_sz <=3D table_end) {
-> >               cpu_node =3D (struct acpi_pptt_processor *)entry;
-> >               if (entry->type =3D=3D ACPI_PPTT_TYPE_PROCESSOR &&
-
-And this checks if the current entry is a CPU one and goes to the next
-one otherwise, so it clearly looks for a CPU entry.
-
-So the size check is logically correct now: It checks if there's
-enough space in the table to hold a CPU entry that's being looked for.
-The only problem with it is the assumption that the size of a CPU
-entry must be greater than sizeof(struct acpi_pptt_processor).
-
-Previously, it didn't make sense at all.
-
-> >                   cpu_node->parent =3D=3D node_entry)
-> > @@ -273,7 +273,7 @@ static struct acpi_pptt_processor *acpi_find_proces=
-sor_node(struct acpi_table_he
-> >       proc_sz =3D sizeof(struct acpi_pptt_processor);
-> >
-> >       /* find the processor structure associated with this cpuid */
-> > -     while ((unsigned long)entry + proc_sz < table_end) {
-> > +     while ((unsigned long)entry + proc_sz <=3D table_end) {
-> >               cpu_node =3D (struct acpi_pptt_processor *)entry;
-> >
-> >               if (entry->length =3D=3D 0) {
