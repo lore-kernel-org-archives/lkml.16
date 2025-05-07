@@ -1,117 +1,209 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9778F4B1E74;
-	Wed,  7 May 2025 00:01:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9896F41C64
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 00:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746576103; cv=none; b=OkShyc/XT48LFHnk+Uju4+ysxTc/pBE+CuEs7FXGVG3yQudVbv9JEGHHrESh2eMwda58ETrVd7vYgH/6v8E9CFKtuhP2SLFmqXEmoyuIZ7co6Evh21HDE4xnUwrjbWdFaBTzwwbFHz6pk5vQBEwGZO5lFtyFdfAAGje4f9PvPB8=
+	t=1746576113; cv=none; b=emYRMZrslCD7SgLb+FDA+GgyRP2iNRPPkjIP7PeK/nkOgRsOxzxwmLIjYmdutqSJpuU7P+aDHwzZYD7/nQpM4SRd6NBWysok2WyjLjc2vwNsD5Kt6MBy58ufh/p2XidGOuXShWltpTaxn+ZHxtraLOKvPaDALIAxWKLxdwSQg9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746576103; c=relaxed/simple;
-	bh=gWqh/3eR0Rjlj8qYWl6zZx1DublCF+mdPydqJDW86MM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uXBTXwjRILUCH9Dbws7DDbtpEa92ewcj8q2eJfp3R48LUyUKqKqlnnHo/Qiv2iEM7KIFcev3A0Qp9rZMz2defPvGfwip4KhCpuhYvUEKfrQ5p0lmmsnfFYcVahCB6DuauEYPOdgAxwl/yDd3QMShQDryrz9yuIyLG9D7n5CDewM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EN0MLvNn; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746576113; c=relaxed/simple;
+	bh=2GS2rxg7Aq7eNJotH2VhJb5wVzNB5eoTc/aK15VSyIc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=KTLmYDuUho1XUkHMoU+My6Pg3mJ0ppOeyCoq01P835VQMFM0pRzilEO5Okibl21Yj18HiSVtjoprqEXHnO8V6xhs1UIO2uv7fPj3cPGsfy792aXgRiSebvbgLhtzfUjCaHc+qcGNH0xMjkgFhtu1L3G3MMYFp59B3HOF2iN9360=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mJF8ibvB; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EN0MLvNn"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4769bbc21b0so77249991cf.2;
-        Tue, 06 May 2025 17:01:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mJF8ibvB"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ab5d34fdbso7158a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 17:01:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746576100; x=1747180900; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=50DIT5+hNwT/Ht34c4tLDN9hBXSig91HYoFKkiJZ53o=;
-        b=EN0MLvNnup7FRYRTAjE7BUPqIALfe2g0zCeofX+GdjgHzSQqKvtKlATEDQrYWmst2n
-         SL/UV//n9k8SvDr6CijdSnWsoheMbkI5uMKMiMNCZFVIE7JPu7rhwa1QQuRgzmGIsGbL
-         wvsD27gIwNWUcB7k+RSwXQ2Ya2iCE+1LQAFu6EvSQbDdVtkOEyfAHZnMb+QxHBiFKC6a
-         VUIglTiukZPjKltfhb3b6WNIXI1CL6e+efOlhB4piOZSWMX34+ZZF601fd/zIZRIBhVN
-         By3HhoKINRNDyrjXmIOyi1lnZIbDQHnvuEhkUuB3JDWOH8FeJ6wXLFoLmJ3XsXwxn3g6
-         ofFg==
+        d=google.com; s=20230601; t=1746576111; x=1747180911; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IkMMN7aoLjrVziOe6MXRXG9fOk8E9BWhlOpYp2kNdvc=;
+        b=mJF8ibvBVnc3nl49scdlGP1lqTmVRErLzdMAEgyB95el4PF27F6LKyagsI1tXK6Jxo
+         +/3YSE6A9a1lkkP86ahPcbcHnqItje9hPrFkCfsRkYOyb1L504vBcOvrlspCn0xYv7J5
+         iP00n/C96Wd9zWlc6xU9vVDgQhYcNBLbVIu0Cam/JnHU6ybvkqdHXQKhrdu3mKi5bMr1
+         EhWSCIyih7QP65UdTAESguSl7cr02mM9Z7J177dythska+OSM1BOnpK9pTXupuylgaIP
+         OqaKNZf1s3TSUdCqux5EOGxNCJ+9kIC2STws2136vdm7Ck3c7/ny6XZ1pEy8OLkl+pn+
+         bMoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746576100; x=1747180900;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=50DIT5+hNwT/Ht34c4tLDN9hBXSig91HYoFKkiJZ53o=;
-        b=qgoFT4R0/gbAqVgIBbk1HfLcWabOMTIob3cibZQrTMqDTYXx7/BdP7QJpll5owfSdi
-         TeE8tO3fzNWTsmJ6Zvcb98YgsUqNUqHnUhgJIjG5r3/c0pQrNsDiPKVgGk/VigoSMCzH
-         MOxkYiHmxDQg1vAhIgSoov87FPDKJTfxA0PRRQOuqQMpm2cpQZchXaffSxp0T3xXVLm9
-         Foi3OJOdvCUV9JIueOEuAWaMqdTJ/+BEOM8USZsXwRrt0PzeAAIIx9Nywj6Fpy5JwBpE
-         XC35DXr1m0zgrgq3QGidX7qZpf1qPV9G9bH+3SDXfh3MfBi+Nxfal9OUaKpGoe/pw7WV
-         OeAA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1A5hqgRKUs0a1oImKJQyESWu4LQstRsJ1Z3dfutu8BbNovaUJcJFdPtvCeJIDYdHDt3aslEDI8NxRBTvo@vger.kernel.org, AJvYcCWN8APO8GOfnj5LykHbtye0xQQa80NH8wOOc4+fjyjJwHl80P9HuO1WsB5wXm6fZBbWSS2nWgZf@vger.kernel.org, AJvYcCX4pkOmM1keyA9tcWzXbxQtxYOP6CDu37lVbqSFOc3fhyopkdg9VS+mvqFytGi44k0V3SLRkSltIG6K@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJrVnOYorb0ssNYcL1ER7l0jkVz78WpOJVU8Hf+mvjtngi6xE4
-	4ERmCx0vOumejtOwX1eC/6tYbP/7WfYSTf6ktgQqg/OQ194g+Phc
-X-Gm-Gg: ASbGncuC7fPnyFkiB/9wI3Q0Z3X1nDgQC6SFyt+ml06s1y/vnXtqPmFZNV/hpY4/KRJ
-	iDAgdOHzJo79fVsTkp9q8rCjNrtYjkBOCN1MiRIj/0ajdbCvelgzYUfpUYYiTews6FDFGF3+vP1
-	dfZIeKOkpAqdNs6lK17Kqvz88SIpqhvRLnpWMV3w9nAr4Q3634j+u2qmfOSBzOcsa3DZAu0loUD
-	sm7C4D+l9AvaujogU3af+lHlwmJg3kR5JDgiHia+gN9c4aW/6Uko7wD/jptUJ0tOwSV60+IiWlE
-	7bAMxEx4865y1Tsg
-X-Google-Smtp-Source: AGHT+IF5dVIBqWmzWpTLbIydXWtnN76qIrVDzEiJt6opxAhjmE5bMg0jxsUxOxC5DB8owt6CtfkUJg==
-X-Received: by 2002:ac8:5889:0:b0:477:1edc:2367 with SMTP id d75a77b69052e-4922795df0fmr21138941cf.37.1746576100154;
-        Tue, 06 May 2025 17:01:40 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-49221843474sm4647191cf.48.2025.05.06.17.01.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 17:01:39 -0700 (PDT)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Nikita Shubin <nikita.shubin@maquefel.me>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	sophgo@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: (subset) [PATCH v5 0/5] clk: sophgo: add SG2044 clock controller support
-Date: Wed,  7 May 2025 08:01:11 +0800
-Message-ID: <174657601728.224270.14258815179551738984.b4-ty@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250418020325.421257-1-inochiama@gmail.com>
-References: <20250418020325.421257-1-inochiama@gmail.com>
+        d=1e100.net; s=20230601; t=1746576111; x=1747180911;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IkMMN7aoLjrVziOe6MXRXG9fOk8E9BWhlOpYp2kNdvc=;
+        b=pk2JfZgTe182l4GkF17l1ty7MBUkDRRIAA02BL3+OxHByvunHHTPUGqZhg5DfvaizW
+         YKAbIZXeM+r/qAeKQTo+enp4VIQzQqJXtN0OpqpRLHgCWaimtk2nifW8AVBQFV13SZVd
+         +MDnVdOQN+bZWEbh4IfWdPPpWRFzzHtHoeXxMeM4R6pZr5XTShqDE9vBgGk3gltBAhAZ
+         NipugsesJAysnC/r+0WT5avPBi5ABti3w3iLneMW3aBgqRo5Xcy43Z1V77h77T10UFaH
+         6nHWt0iktxgUTcvcUnPMwCwY1Y0sx8BbTLVe8xaqQvEsUhDHyIK4IS44b7b/oTfwWjmI
+         kt4w==
+X-Forwarded-Encrypted: i=1; AJvYcCV1dKMmWT8aQ+RP/2nBt1CVejJ4mACJYcob7QTw3MFahE1ji58PWpKA7aSrDswPslabYk9bjEf5/w821F8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1pk8KKb6UbpRhYPf8Rq93R6muNTGekBfJN9oiIGPAGao7oXS7
+	0mgm8W/azmt7EqzwHgWqHG48ktHqtv02Kj2RXQUWQwyUegpXSvFVaAGYjyPVo/Mz/Ca2aXXY6IW
+	8bQ==
+X-Google-Smtp-Source: AGHT+IG6EiJshM8I+/QNoyITpB25GV3XJSeVoH1WhXumO4+pfjjtK3RlA2H+mctfIUZWla7V1VRApNhLAsY=
+X-Received: from pjbsi7.prod.google.com ([2002:a17:90b:5287:b0:2fb:fa85:1678])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:38c6:b0:2ff:5a9d:937f
+ with SMTP id 98e67ed59e1d1-30aac21f2f2mr2069431a91.24.1746576110794; Tue, 06
+ May 2025 17:01:50 -0700 (PDT)
+Date: Tue, 6 May 2025 17:01:49 -0700
+In-Reply-To: <20250109204929.1106563-2-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250109204929.1106563-1-jthoughton@google.com> <20250109204929.1106563-2-jthoughton@google.com>
+Message-ID: <aBqi7fDtnvxzxV1V@google.com>
+Subject: Re: [PATCH v2 01/13] KVM: Add KVM_MEM_USERFAULT memslot flag and bitmap
+From: Sean Christopherson <seanjc@google.com>
+To: James Houghton <jthoughton@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Yan Zhao <yan.y.zhao@intel.com>, 
+	Nikita Kalyazin <kalyazin@amazon.com>, Anish Moorthy <amoorthy@google.com>, 
+	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>, 
+	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, 18 Apr 2025 10:03:19 +0800, Inochi Amaoto wrote:
-> The clock controller of SG2044 provides multiple clocks for various
-> IPs on the SoC, including PLL, mux, div and gates. As the PLL and
-> div have obvious changed and do not fit the framework of SG2042,
-> a new implement is provided to handle these.
+On Thu, Jan 09, 2025, James Houghton wrote:
+> Use one of the 14 reserved u64s in struct kvm_userspace_memory_region2
+> for the user to provide `userfault_bitmap`.
 > 
-> Changed from v4:
-> 1. patch 1,3: Applied Krzysztof's tag.
-> 2. patch 1: fix header path in description.
-> 3. patch 4: drop duplicated module alias.
-> 4. patch 5: make sg2044_clk_desc_data const.
+> The memslot flag indicates if KVM should be reading from the
+> `userfault_bitmap` field from the memslot. The user is permitted to
+> provide a bogus pointer. If the pointer cannot be read from, we will
+> return -EFAULT (with no other information) back to the user.
+
+For the uAPI+infrastructure changelog, please elaborate on the design goals and
+choices.  The "what" is pretty obvious from the patch; describe why this is being
+added.
+
+> Signed-off-by: James Houghton <jthoughton@google.com>
+> ---
+>  include/linux/kvm_host.h | 14 ++++++++++++++
+>  include/uapi/linux/kvm.h |  4 +++-
+>  virt/kvm/Kconfig         |  3 +++
+>  virt/kvm/kvm_main.c      | 35 +++++++++++++++++++++++++++++++++++
+>  4 files changed, 55 insertions(+), 1 deletion(-)
 > 
-> [...]
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 401439bb21e3..f7a3dfd5e224 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -590,6 +590,7 @@ struct kvm_memory_slot {
+>  	unsigned long *dirty_bitmap;
+>  	struct kvm_arch_memory_slot arch;
+>  	unsigned long userspace_addr;
+> +	unsigned long __user *userfault_bitmap;
+>  	u32 flags;
+>  	short id;
+>  	u16 as_id;
+> @@ -724,6 +725,11 @@ static inline bool kvm_arch_has_readonly_mem(struct kvm *kvm)
+>  }
+>  #endif
+>  
+> +static inline bool kvm_has_userfault(struct kvm *kvm)
+> +{
+> +	return IS_ENABLED(CONFIG_HAVE_KVM_USERFAULT);
+> +}
 
-Applied to sophgo-clk-for-6.16-rc1, thanks!
+Eh, don't think we need this wrapper.  Just check the CONFIG_xxx manually in the
+one or two places where code isn't guarded by an #ifdef.
 
-[5/5] clk: sophgo: Add clock controller support for SG2044 SoC
-      https://github.com/sophgo/linux/commit/41b08610dd262dc4a5e1eff993b2d21eab8b8ba3
+>  struct kvm_memslots {
+>  	u64 generation;
+>  	atomic_long_t last_used_slot;
+> @@ -2553,4 +2559,12 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
+>  				    struct kvm_pre_fault_memory *range);
+>  #endif
+>  
+> +int kvm_gfn_userfault(struct kvm *kvm, struct kvm_memory_slot *memslot,
+> +		      gfn_t gfn);
+> +
+> +static inline bool kvm_memslot_userfault(struct kvm_memory_slot *memslot)
 
-Thanks,
-Inochi
+I strongly prefer kvm_is_userfault_memslot().  KVM's weird kvm_memslot_<flag>()
+nomenclature comes from ancient code, i.e. isn't something I would follow.
 
+> +{
+> +	return memslot->flags & KVM_MEM_USERFAULT;
+
+I think it's worth checking for a non-NULL memslot, even if all current callers
+pre-check for a slot.
+
+> @@ -2042,6 +2051,9 @@ int __kvm_set_memory_region(struct kvm *kvm,
+>  		if (r)
+>  			goto out;
+>  	}
+> +	if (mem->flags & KVM_MEM_USERFAULT)
+> +		new->userfault_bitmap =
+> +		  (unsigned long __user *)(unsigned long)mem->userfault_bitmap;
+
+	if (mem->flags & KVM_MEM_USERFAULT)
+		new->userfault_bitmap = u64_to_user_ptr(mem->userfault_bitmap);
+
+>  	r = kvm_set_memslot(kvm, old, new, change);
+>  	if (r)
+> @@ -6426,3 +6438,26 @@ void kvm_exit(void)
+>  	kvm_irqfd_exit();
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_exit);
+> +
+> +int kvm_gfn_userfault(struct kvm *kvm, struct kvm_memory_slot *memslot,
+> +		       gfn_t gfn)
+
+I think this series is the perfect opportunity (read: victim) to introduce a
+common "struct kvm_page_fault".  With a common structure to provide the gfn, slot,
+write, exec, and is_private fields, this helper can handle the checks and the call
+to kvm_prepare_memory_fault_exit().
+
+And with that in place, I would vote to name this something like kvm_do_userfault(),
+return a boolean, and let the caller return -EFAULT.
+
+For making "struct kvm_page_fault" common, one thought would be to have arch code
+define the entire struct, and simply assert on the few fields that common KVM needs
+being defined by arch code.  And wrap all references in CONFIG_KVM_GENERIC_PAGE_FAULT.
+
+I don't expect there will be a huge number of fields that common KVM needs, i.e. I
+don't think the maintenance burden of punting to arch code will be high.  And letting
+arch code own the entire struct means we don't need to have e.g. fault->arch.present
+vs. fault->write in KVM x86, which to me is a big net negative for readability.
+
+I'll respond to the cover letter with an attachment of seven patches to sketch out
+the idea.
+
+> +{
+> +	unsigned long bitmap_chunk = 0;
+> +	off_t offset;
+> +
+> +	if (!kvm_memslot_userfault(memslot))
+> +		return 0;
+> +
+> +	if (WARN_ON_ONCE(!memslot->userfault_bitmap))
+> +		return 0;
+
+'0' is technically a valid userspace address.  I'd just drop this.  If we have a
+KVM bug that results in failure to generate usefaults, we'll notice quite quickly.
+
+> +
+> +	offset = gfn - memslot->base_gfn;
+> +
+> +	if (copy_from_user(&bitmap_chunk,
+> +			   memslot->userfault_bitmap + offset / BITS_PER_LONG,
+> +			   sizeof(bitmap_chunk)))
+
+Since the address is checked during memslot creation, I'm pretty sure this can
+use __get_user().  At the very least, it should be get_user().
+
+> +		return -EFAULT;
+> +
+> +	/* Set in the bitmap means that the gfn is userfault */
+> +	return !!(bitmap_chunk & (1ul << (offset % BITS_PER_LONG)));
+
+test_bit()?
