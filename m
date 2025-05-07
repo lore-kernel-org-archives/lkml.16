@@ -1,61 +1,59 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8285F21019E;
-	Wed,  7 May 2025 06:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D87413AA3E;
+	Wed,  7 May 2025 06:37:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746599739; cv=none; b=IlyBbO9cj89PXHREcnWnycgU0eONewdev6fqz81Z800RY+r6/as9njbIATQp8VWjorqAYp966umBl6kS7kSSH5x6ZokXmi8NkgWT7YFu1qIOur9AEgNiokKeH9Okt/SMhxYgsXJN1iEQSPqEeoo/G2P8D6vRlqZfDIBglTROBUE=
+	t=1746599870; cv=none; b=dj81rUdR6Bgjny0/g/NTXwV26taPnXgjt6Ka14DDVZixm9luCYYkPwY/6YVnbVmRI+kDoP4SW74Ii20gNpNdyaSv4fXcpI6VPk/N/N6uYGuH/60K/fWZQuffNSBwgspF5LfQatS/veT09+/HUbEZS2r/xOWi/uiZNFMn7niPlyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746599739; c=relaxed/simple;
-	bh=EunsBZu+dPFyFx+so1aikErZNXrHK15H5QeG0WGOHis=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=A9w8eLx3Jvg+eSOrlak9UgZGf3KxWKen/zNDBb8sfe56ug3OHikmK2fm0ZMsDJ1OgZYA6SMq5zLTNMsKIOEhujVbOeLiEA6iNGFXBMHDIt+6hLkZPkclfrqJOcI8CidA7MhQHu4VskYmsyFLCJzRNZs1vE5dLET6wqEsPLLI9V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 77aa34ac2b0d11f0b29709d653e92f7d-20250507
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:01f278ff-13a4-4f34-8fda-6627e63156e8,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6493067,CLOUDID:957d935d78f12afb161e3c7259de899b,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
-	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
-	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 77aa34ac2b0d11f0b29709d653e92f7d-20250507
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 507086601; Wed, 07 May 2025 14:35:29 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id C72F0E006100;
-	Wed,  7 May 2025 14:35:28 +0800 (CST)
-X-ns-mid: postfix-681AFF30-651625104
-Received: from localhost.localdomain (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 3AE54E0080FF;
-	Wed,  7 May 2025 14:35:25 +0800 (CST)
-From: Zihuan Zhang <zhangzihuan@kylinos.cn>
-To: corbet@lwn.net,
-	rafael@kernel.org,
-	len.brown@intel.com,
-	pavel@kernel.org,
-	akpm@linux-foundation.org,
-	paulmck@kernel.org,
-	rostedt@goodmis.org,
-	thuth@redhat.com,
-	bp@alien8.de,
-	ardb@kernel.org,
-	gregkh@linuxfoundation.org
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Zihuan Zhang <zhangzihuan@kylinos.cn>
-Subject: [PATCH v3] PM / sleep: add configurable delay for pm_test
-Date: Wed,  7 May 2025 14:35:20 +0800
-Message-Id: <20250507063520.419635-1-zhangzihuan@kylinos.cn>
+	s=arc-20240116; t=1746599870; c=relaxed/simple;
+	bh=iAJ7LV3fUkX+l59adPf/ghUY2G26V+OK5mBCqKZooqU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Lgwo4bwzEBWi5ZF9/VKxuhOst79t7prpnvZFvXem1wnx0f7NsX+mZsHERCxQP3tCU8IyoSxmjqETuqUeOVdHsuyS2sQKvkpuSiu+S7mSrjWHgpTSY/Rr/TsFAJhqRcDH5iuQkZtJUf4idNOiUPVYyB3mhQrCi37tm3/81xipv98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=je1iH+Ar; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="je1iH+Ar"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471Gm5R020191;
+	Wed, 7 May 2025 06:37:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=8s6zgpzMhqDnLBMGCbmZv3
+	IRmVux3wLiekXXgV1bFKM=; b=je1iH+ArY6sJiJgcb9Hn93xIzNjmCxhYDjYm7b
+	bp47KNd5uttodcddrcci9c4Nxi4w/yaszfg9zhvjbYE4p/ORPDiLCkMh2Qn/EUfi
+	4uyjT5zBparnaUF+2E4LV3H9Q3Nft/r3BFRyeEB5a7U1s3sVAR/l86V3/Yomvu5f
+	kPBjCh3y+QyQFFKgX/+CEZKHKKwI8kksn+s58XlWykIpKnCsIUTQTB1tbu5mj2qk
+	wetY31IGVnQS6anrc8vpPFtXDsp5jdxJv27q2fA6LKMtts7u0HCMYoflbt8KL2fs
+	w/rT7y7U56K1qTKH04sPDLzd1STK+6bxy2p7WwpceUT7alJA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46d9epa5ja-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 06:37:29 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5476bSAa005099
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 7 May 2025 06:37:28 GMT
+Received: from hu-jinlmao-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 6 May 2025 23:37:28 -0700
+From: Mao Jinlong <quic_jinlmao@quicinc.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>,
+        "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>,
+        Yabin Cui <yabinc@google.com>
+CC: Mao Jinlong <quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>,
+        Yuanfang Zhang <quic_yuanfang@quicinc.com>
+Subject: [PATCH v2] coresight: tmc: fix failure to disable/enable ETF after reading
+Date: Tue, 6 May 2025 23:37:16 -0700
+Message-ID: <20250507063716.1945213-1-quic_jinlmao@quicinc.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -63,76 +61,72 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=EOUG00ZC c=1 sm=1 tr=0 ts=681affa9 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=3H110R4YSZwA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=oqbhczGDPXGwOEN-XdEA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: X2iSuHKEDtop_EhCju52Q-1Khqya7BNA
+X-Proofpoint-GUID: X2iSuHKEDtop_EhCju52Q-1Khqya7BNA
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA1OSBTYWx0ZWRfXx7qWBQxuYO3X
+ 4Xk8E+kEoQRdDwHTFaD8sW+rI9XZUiAgCM+EfdSds/02GBuW1guREOeGIxNnBb+a8ZGODFV+qJX
+ OG5f2gk57djmSSXlhD6LkKgXh31qP05uce952dZbH8VhDq2XxBNA6s9wBEwH9ZgqVEf1ycmhLvC
+ ir46h1hR0NEo/Rf7yZ22u6svvRZm0fNk9YpbvQ530kE4nJuoWPNsKjzMu3lnVZKCZDPVctmj6WB
+ ivYFuoXQYBLtXHWQWMT8w6+TGf/w/+evV8mmHh/MYEbb1vuCJmjeNW2pxORaYkkdsZFgnb760qI
+ I7x7+rmNYchWTvdRz48OoCFyhGS9BaZTVA75rOYAPLKIkxYtrXvE927lyydauwlK3FhuTb7D9uu
+ MluBh/bVDr9puB31jPoWakrODdEuMSHIc4W4cPsxBpY8HWOkHzx5+c7EVbJS+7TgZV6WLByp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_02,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 clxscore=1011 impostorscore=0 spamscore=0 lowpriorityscore=0
+ bulkscore=0 phishscore=0 suspectscore=0 mlxlogscore=534 mlxscore=0
+ priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505070059
 
-This patch turns this 5 second delay into a configurable module
-parameter, so users can determine how long to wait in this
-pseudo-hibernate state before resuming the system.
+ETF may fail to re-enable after reading, and driver->reading will
+not be set to false, this will cause failure to enable/disable to ETF.
+This change set driver->reading to false even if re-enabling fail.
 
-The configurable delay parameter has been added to suspend and
-synchronized to hibernation.
-
-Example (wait 30 seconds);
-
-  # echo 30 > /sys/module/hibernate/parameters/pm_test_delay
-  # echo core > /sys/power/pm_test
-
-Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
+Fixes: 669c4614236a ("coresight: tmc: Don't enable TMC when it's not ready.")
+Co-developed-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
 ---
-v3:
- - Fix the location of the hibernate.pm_test_delay parameter in
-   kernel-parameters.txt.
- - Update =E2=80=98[hibernate]=E2=80=99 to =E2=80=98[HIBERNATION]=E2=80=99
-v2:
- - Fix typos.
----
- Documentation/admin-guide/kernel-parameters.txt | 7 +++++++
- kernel/power/hibernate.c                        | 9 +++++++--
- 2 files changed, 14 insertions(+), 2 deletions(-)
+ drivers/hwtracing/coresight/coresight-tmc-etf.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
-ion/admin-guide/kernel-parameters.txt
-index d9fd26b95b34..a110cbb37f20 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1828,6 +1828,13 @@
- 				lz4: Select LZ4 compression algorithm to
- 				compress/decompress hibernation image.
-=20
-+	hibernate.pm_test_delay=3D
-+			[HIBERNATION]
-+			Sets the number of seconds to remain in a hibernation test
-+			mode before resuming the system (see
-+			/sys/power/pm_test). Only available when CONFIG_PM_DEBUG
-+			is set. Default value is 5.
-+
- 	highmem=3Dnn[KMG]	[KNL,BOOT,EARLY] forces the highmem zone to have an e=
-xact
- 			size of <nn>. This works even on boxes that have no
- 			highmem otherwise. This also works to reduce highmem
-diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index 23c0f4e6cb2f..485133af884d 100644
---- a/kernel/power/hibernate.c
-+++ b/kernel/power/hibernate.c
-@@ -133,10 +133,15 @@ bool system_entering_hibernation(void)
- EXPORT_SYMBOL(system_entering_hibernation);
-=20
- #ifdef CONFIG_PM_DEBUG
-+static unsigned int pm_test_delay =3D 5;
-+module_param(pm_test_delay, uint, 0644);
-+MODULE_PARM_DESC(pm_test_delay,
-+		 "Number of seconds to wait before resuming from hibernation test");
- static void hibernation_debug_sleep(void)
- {
--	pr_info("debug: Waiting for 5 seconds.\n");
--	mdelay(5000);
-+	pr_info("hibernation debug: Waiting for %d second(s).\n",
-+		pm_test_delay);
-+	mdelay(pm_test_delay * 1000);
- }
-=20
- static int hibernation_test(int level)
---=20
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index d858740001c2..c9e2d95ae295 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -747,7 +747,6 @@ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata)
+ 	char *buf = NULL;
+ 	enum tmc_mode mode;
+ 	unsigned long flags;
+-	int rc = 0;
+ 
+ 	/* config types are set a boot time and never change */
+ 	if (WARN_ON_ONCE(drvdata->config_type != TMC_CONFIG_TYPE_ETB &&
+@@ -773,11 +772,7 @@ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata)
+ 		 * can't be NULL.
+ 		 */
+ 		memset(drvdata->buf, 0, drvdata->size);
+-		rc = __tmc_etb_enable_hw(drvdata);
+-		if (rc) {
+-			raw_spin_unlock_irqrestore(&drvdata->spinlock, flags);
+-			return rc;
+-		}
++		__tmc_etb_enable_hw(drvdata);
+ 	} else {
+ 		/*
+ 		 * The ETB/ETF is not tracing and the buffer was just read.
+-- 
 2.25.1
 
