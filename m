@@ -1,88 +1,71 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFC61DDC1E;
-	Wed,  7 May 2025 05:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CEC1CCB4B;
+	Wed,  7 May 2025 05:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746594440; cv=none; b=fWkMg7IUUPSeLlfsSpxk3ckP6z2HIlFkQRrh/m4x6mYsrRIpLMREJPUyGCeNHldLmmNNhr36oFkfia8zp4Cz2y2e/SaKlDZ3syNT7ye88CQi0lJ9u5QZfb2hQl6plJ2+07gEEk2GM51DQ/KzyfObqs1FkrSIQUwIVTveM85HSlI=
+	t=1746594546; cv=none; b=TUauqlu0PXWLhLIst5ktusQ+xozd5qZyWniwap1wXOhoFWbIeRtPuhTq2nTmENISF95dW6IaMfl/v7gpTAs3me53lo+bnQEowl9+YSW8IpRAIE8Cd5GkBVVW++ge27PFOrLYEEMbTLywQA1ud90igucCJ/O7aYRBdEUGQwdWTtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746594440; c=relaxed/simple;
-	bh=sZ/ABV6gSSW+142kA65SyRZuaPtGximO6kt3dOzDW64=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=r1nOlIGP9DnO5/L/GAvYt2/4xnzJ6kZbSFuOKuhECwSv06BGR+NDda1EmTNIMuGpNdYC4CjLtSnRzD5znhSUDhpI8+otp9+P5/uZ5VCF8Y9pd5zmx1H7puW3mw5s2DcgYPlYqmPDrXR6gbTFq6UtgmMeKZ90ezp2iCtluzeYcj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Gy3v3vkj; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746594546; c=relaxed/simple;
+	bh=TalQ9fNo/fQ1mqCr92hlP2SsV2ldrs0zdknJaR4RNWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EjoM8JAguMIiGgaZjknumH2WzNk8ZxSC9boMuHUUHNnO0KrYJ9QBts4No4rPGRU9CCiLtbz2AQhEGxRuAE42E/vAzFRCj6nlcpRoE5tiUTM/Hw6a5313no0cPD1ZFcj2RrSqNg6GFbmAjLRQowXbnIhv8sgsWdXrJWbSNboXB6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jr9Zc5KY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Gy3v3vkj"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 547576SC1275461
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 7 May 2025 00:07:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746594426;
-	bh=e1gzbKQ5W8TsSlAR2NJvnPpyJD/XJunargVbzrDXq+I=;
-	h=From:To:CC:Subject:Date;
-	b=Gy3v3vkj65LSNGtV+UzbDlwPTsPRHhXQwAaNzjOUxF8oMLMLYxWb3aXZOxY9xXAOJ
-	 FuZAIksmEo4/11+a18Wgghwy1KjLcz0ivnndvY+lvBhsBc75ZwMpnzkUvhCWfdoIeO
-	 qz/jxZU7DGAVYAzL1KmLlj1fK8NjTylF2MlbBz/U=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 547576D6023522
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 7 May 2025 00:07:06 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 7
- May 2025 00:07:06 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 7 May 2025 00:07:06 -0500
-Received: from prasanth-server.dhcp.ti.com (prasanth-server.dhcp.ti.com [172.24.227.142])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 547572KY114274;
-	Wed, 7 May 2025 00:07:03 -0500
-From: Prasanth Babu Mantena <p-mantena@ti.com>
-To: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <nm@ti.com>, <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <u-kumar1@ti.com>
-Subject: [PATCH v2] arm64: dts: ti: k3-j721e-common-proc-board: Enable OSPI1 on J721E
-Date: Wed, 7 May 2025 10:37:01 +0530
-Message-ID: <20250507050701.3007209-1-p-mantena@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jr9Zc5KY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5196CC4CEE7;
+	Wed,  7 May 2025 05:09:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746594545;
+	bh=TalQ9fNo/fQ1mqCr92hlP2SsV2ldrs0zdknJaR4RNWg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jr9Zc5KYxpfcMufoPI3V7XOQRc1ocj+dmaEiDqVZra+axaK0NwtB3Zty9LIRJArwU
+	 j11rij1/5p63xwZpsWOa69pdBz0EVSQwkVL08f3l8GMjkW74cqMwQjzkMjfuClWGe3
+	 TgTDfzXt5I07h4y6P4E42Xf4ClP5xybfyWo5IU16BrMP18oFP+pKBViGCWbVy78t8+
+	 W4cIzwqBmOQ+OvScIXY6shDOwTBmPvYk/Fe2Nvv+BT80eFpc7EjRYPRpG/CIeZSPqI
+	 EMjvqlVxnzAIL6DXh9OQ+S11XgNf0oGVzswlM7pzTUBOEPJ6QVNZnYduKIBkIgSVXJ
+	 nAC39XwgTwgbg==
+Date: Wed, 7 May 2025 07:09:03 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, dmitry.baryshkov@linaro.org, 
+	neil.armstrong@linaro.org, abel.vesa@linaro.org, manivannan.sadhasivam@linaro.org, 
+	lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, andersson@kernel.org, 
+	konradybcio@kernel.org, linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+	quic_qianyu@quicinc.com, quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v5 1/6] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
+ Update pcie phy bindings for sa8775p
+Message-ID: <20250507-obedient-copperhead-from-arcadia-4b052e@kuoka>
+References: <20250507031019.4080541-1-quic_ziyuzhan@quicinc.com>
+ <20250507031019.4080541-2-quic_ziyuzhan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250507031019.4080541-2-quic_ziyuzhan@quicinc.com>
 
-J721E SoM has MT25QU512AB Serial NOR flash connected to
-OSPI1 controller. Enable ospi1 node in device tree.
+On Wed, May 07, 2025 at 11:10:14AM GMT, Ziyue Zhang wrote:
+> qcs8300 pcie1 phy use the same clocks as sa8775p, in the review comments
+> of qcs8300 patches, gcc aux clock should be removed and replace it with
+> phy_aux clock.So move "qcom,sa8775p-qmp-gen4x4-pcie-phy" compatible from
+> 7 clocks' list to 6 clocks' list to solve the dtb check error.
+> 
+> qcs8300 pcie phy only use 6 clocks, so move qcs8300 gen4x2 pcie phy
+> compatible from 7 clocks' list to 6 clocks' list.
 
-Fixes: cb27354b38f3b ("arm64: dts: ti: k3-j721e: Add DT nodes for few peripherials")
-Signed-off-by: Prasanth Babu Mantena <p-mantena@ti.com>
----
-Test log : https://gist.github.com/PrasanthBabuMantena/9dda540dce88282117de7e0e945e24ca
- arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts | 1 +
- 1 file changed, 1 insertion(+)
+I don't understand any of this. You just submitted the bindings not so
+far ago. Does this mean they were never tested?
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-index e3d0ef6913b2..45311438315f 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-@@ -573,6 +573,7 @@ &usb1 {
- &ospi1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mcu_fss0_ospi1_pins_default>;
-+	status = "okay";
- 
- 	flash@0 {
- 		compatible = "jedec,spi-nor";
--- 
-2.34.1
+What does it mean that gcc aux clock should be removed in the review
+comments?
+
+Best regards,
+Krzysztof
 
