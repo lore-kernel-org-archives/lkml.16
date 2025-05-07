@@ -1,140 +1,116 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE7A286D7A;
-	Wed,  7 May 2025 13:15:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746623720; cv=pass; b=Ps0XcNMXLOrofDypGzguFv5TSWE3m/nLNIRpyHt8EeC2gw/ULo21i7qidQBeA5H9UbSH3BEaTOE0I3JpZ1vREoUogdkG3PndJSK/Zuy+CvKk7o6kfdCZlQ01zck/LQS57TlmrfLF488R8jvuDyUUKiO2jBkCLNydKyTbCgkqKL0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746623720; c=relaxed/simple;
-	bh=2yOg3Bb/rac0XgXN9hTPToGcLyfnbfMaRV2hE+l7Eg8=;
-	h=MIME-Version:From:To:In-Reply-To:Cc:Subject:Message-ID:Date:
-	 Content-Type; b=noDxaNEIxm9hpf/vsKVekA7geao0mJDJa9tXUj2oht5Qxv3v/hIdUIeZayx8nnpQ5Gb4Li+hQ9dZWzTHZtBUN81ppQP9CTzaAgN6+ik+7HjyXSDkyzshzP3G/suIV5w5q02KkBR273UD7gcpaq1onBzmJMx/7TrvsoinRouRvos=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech; spf=pass smtp.mailfrom=pigmoral.tech; dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b=HUYLgu2n; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pigmoral.tech
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A0120C00D;
+	Wed,  7 May 2025 13:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746623887; cv=none; b=cOWBAAzpsPV7jRrot/3lONajqz8w1r06mBthd8FBaizfZgqRk+aT7vNNdjg+fYyUBvCFWMmFXpwVtRo4jLIuqbiBvo1NMalOh942eYekDRNdT/b+lmYos63Knw1gHs73h4mju09btMJGY3KHJYS+vlSaF1BoC/i8ovaaVRD/8XU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746623887; c=relaxed/simple;
+	bh=/4l54gB51JEiLKfzvbIFcqCBo1N+fvqPwDNQAGVYOdg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d9CunA+P9Bq5xKG6zRrPG8jK5ggLHA2q0AnhNlW8r2s4XE/0RwR5qh7TofWlxX+RTqcns0AnhF1OJ05f+Cxs9GDWhSDUsMFcsMExmhHkEmZvs6GQV/jBb2YYFQDzGjXvov/RaSxKTKomeKMsfaCa/JNhE/dg/vxxizOj5WACRr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I6TMtmkJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b="HUYLgu2n"
-ARC-Seal: i=1; a=rsa-sha256; t=1746623684; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=eDcPnx8EZoR6mILNb1tC9QJ2hoMrWLxxe6xqeD5gDldVIaSd5yha8mjGIS6OpzWm+uQOrDic4bA8+9+3OiETC12L5zJqUxEVBdGn29v/Le16i+Cqs1r0OJDkSLQGN96Qx8WLmRSGm6hVrKJc6Z6fOuiFMG0x8VQHieTu68DKmAI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746623684; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ZsmKLqMYFF5FclFI2zl2gM9NnSF+GvqV6ouEAfjIasM=; 
-	b=iZ39D3xX3qtNwIulRL+AXulntpwWckebQj6nyzJ9/p61cdTJzvc0dPnR5qVaEAR9Ao2z/n11WrVXFTiKb1qp37N1i0ybVTU8jb24Uuglx0N4qS3o7L0lD+1dNtrYTDtVsCnbeUOrE3yq5vuVJqNp8byFI8QnewwHDUkzkGQsaJo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=pigmoral.tech;
-	spf=pass  smtp.mailfrom=junhui.liu@pigmoral.tech;
-	dmarc=pass header.from=<junhui.liu@pigmoral.tech>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746623684;
-	s=zmail; d=pigmoral.tech; i=junhui.liu@pigmoral.tech;
-	h=MIME-Version:From:From:To:To:In-Reply-To:Cc:Cc:Subject:Subject:Message-ID:Date:Date:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=ZsmKLqMYFF5FclFI2zl2gM9NnSF+GvqV6ouEAfjIasM=;
-	b=HUYLgu2nlDBywApn/QVH6qKLLqV/PsDfMGc0ZbZByNa026ebRL8Q1Rcb6u8sgcaX
-	hQQvKZ1+cRh3O5d+5CosaREm+17xzQhycT+XLT8zSaRlDEKkHiQdAJJLOq+qQOb2b9N
-	eNR4nbf8FU9ACw0jDJhWNx8kvJXkQDIihmERn0QQ=
-Received: by mx.zohomail.com with SMTPS id 1746623681228340.1573753215861;
-	Wed, 7 May 2025 06:14:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I6TMtmkJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A91A9C4CEF0;
+	Wed,  7 May 2025 13:18:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746623886;
+	bh=/4l54gB51JEiLKfzvbIFcqCBo1N+fvqPwDNQAGVYOdg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=I6TMtmkJ9wONHD2Ptd5Lq1z0HFKIn+wm3W5+OhhKao+mTow1VHAKAe99bVuhBg40P
+	 d9cEg3XWUxrzS8msuGZO/ILnlRm4vycdlNQSuNlBzRMKXtC2SurQODlSEZNKUI8f1a
+	 DPfvxcJ3v/1veZYEFgxSELMS2UNNvQz9bunNqpAy3Ge/gx2LrkrqapPb1mOJbEJ/OW
+	 bIPL4JR1JNog7t4jlbjtBNWyO2VjEaeCpb+qZjJrvad9b7n+FmWgXotnqKqJ7l5vfP
+	 xxETuj5muBcSV5jTGv1vBhP5g/9QkRrVD/K3fhlikwQCHPpz5FaMx1PVZ9Aapp+ya/
+	 rdR3sgNsfxd8g==
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2d522f699bcso3341113fac.2;
+        Wed, 07 May 2025 06:18:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWF1InDHZd6Py+n8aCJ6VSA/Tqi5RI/7sJDDzTWGTGCqiqe6ANKISOtIetqDYp/qdqqVYUAbjRb392e@vger.kernel.org, AJvYcCXWNyUibxBjgTyE2eQ05IhfyIcPKz02jZPQRBBmmxnUjMcHilF+wId0VGQKcG3ywe4cvJYEFrGw1lwcoY4h@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3O+bew86MoAub2V6T1co2P5D7qOai2aay23zJGYtoatAZVNR8
+	I3WoKIz94v8TucfdXeZZV9LR6YEwj3WeS1NLU6Jk5rQ5rsVBjH2E+BYmLDZYTa3GJh567+2q6dm
+	Mvs0mOa43P++Ztbp7iWFn5guoHYI=
+X-Google-Smtp-Source: AGHT+IGPxxvCaybWIAoO2Nga9MEP69VTlaFKPWEWg85ZVQgC8uwxe7rwkJLQ8fk0/O4Gc2ddjZITaMLhIJ6aGrZKMyE=
+X-Received: by 2002:a05:6871:2b19:b0:2d4:ea06:b11 with SMTP id
+ 586e51a60fabf-2db5bd765abmr1754110fac.7.1746623885951; Wed, 07 May 2025
+ 06:18:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Junhui Liu" <junhui.liu@pigmoral.tech>
-To: "Inochi Amaoto" <inochiama@gmail.com>, 
-	"Conor Dooley" <conor@kernel.org>
-In-Reply-To: <myug24f2rnscxracipkv2ghsjlv32qcyui6u4ckpwtaij6bw3x@yesvbm6vh5ls>
-Cc: "Jassi Brar" <jassisinghbrar@gmail.com>, 
-	"Rob Herring" <robh@kernel.org>, 
-	"Krzysztof Kozlowski" <krzk+dt@kernel.org>, 
-	"Conor Dooley" <conor+dt@kernel.org>, 
-	"Chen Wang" <unicorn_wang@outlook.com>, 
-	"Yuntao Dai" <d1581209858@live.com>, 
-	"Paul Walmsley" <paul.walmsley@sifive.com>, 
-	"Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, 
-	"Alexandre Ghiti" <alex@ghiti.fr>, <linux-kernel@vger.kernel.org>, 
-	<devicetree@vger.kernel.org>, <sophgo@lists.linux.dev>, 
-	<linux-riscv@lists.infradead.org>, "Junhui Liu" <junhui.liu@pigmoral.tech>
-Subject: Re: [PATCH v3 2/3] riscv: dts: add mailbox for Sophgo CV18XX series
-	 SoC
-Message-ID: <183d40fa26bbd878.d80bda6c3142fde6.abe31e31d76ed1ce@Jude-Air.local>
-Date: Wed, 7 May 2025 13:14:33 +0000
-Content-Type: text/plain; charset="utf-8"
+References: <20250505173819.419271-1-tony.luck@intel.com>
+In-Reply-To: <20250505173819.419271-1-tony.luck@intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 7 May 2025 15:17:54 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0j5RsZ-QcX1HsVifxKuKXxqF50nrqSf38i=qyBZQSM2fQ@mail.gmail.com>
+X-Gm-Features: ATxdqUH0Kcfwa4e0V3gYVu1BrqxvO8sWNsBYoTMaJIfVI97f5zHx1NUUoeMLKA4
+Message-ID: <CAJZ5v0j5RsZ-QcX1HsVifxKuKXxqF50nrqSf38i=qyBZQSM2fQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/3] Add interfaces for ACPI MRRM table
+To: Tony Luck <tony.luck@intel.com>
+Cc: rafael@kernel.org, lenb@kernel.org, 
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
 
-Hi Inochi,
+On Mon, May 5, 2025 at 7:38=E2=80=AFPM Tony Luck <tony.luck@intel.com> wrot=
+e:
+>
+> This series based on:
+>         https://web.git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-=
+pm.git/log/?h=3Dtesting
+>
+> Memory used to be homogeneous. Then NUMA came along. Later different
+> types of memory (persistent memory, on-package high bandwidth memory,
+> CXL attached memory).
+>
+> Each type of memory has its own performance characteristics, and users
+> will need to monitor and control access by type.
+>
+> The MRRM solution is to tag physical address ranges with "region IDs"
+> so that platform firmware[1] can indicate the type of memory for each
+> range (with separate tags available for local vs. remote access to
+> each range). Note that these ranges can include addresses reserved
+> for future hotplugged memory.
+>
+> The region IDs will be used to provide separate event counts for each
+> region for "perf" and for the "resctrl" file system to monitor and
+> control memory bandwidth in each region.
+>
+> Users will need to know the address range(s) that are part of each
+> region. This patch series adds
+>         /sys/firmware/acpi/memory_ranges/rangeX
+> directories to provide user space accessible enumeration.
+>
+> -Tony
+>
+> [1] MRRM definition allow for future expansion for the OS to assign
+> these region IDs.
+>
+> Changes since version 4 here:
+> https://lore.kernel.org/all/20250429202412.380637-1-tony.luck@intel.com/
+>
+> *) Dropped patch 1. ACPICA changes have been merged into the linux-pm
+>    tree.
+> *) Removed spurious blank file from mrrm_init() (Thanks, Fenghua).
+>
+> Tony Luck (3):
+>   ACPI/MRRM: Minimal parse of ACPI MRRM table
+>   ACPI/MRRM: Add /sys files to describe memory ranges
+>   ACPI: Add documentation for exposing MRRM data
+>
+>  include/linux/acpi.h                          |   9 +
+>  drivers/acpi/acpi_mrrm.c                      | 182 ++++++++++++++++++
+>  Documentation/ABI/testing/sysfs-firmware-acpi |  21 ++
+>  arch/x86/Kconfig                              |   1 +
+>  drivers/acpi/Kconfig                          |   3 +
+>  drivers/acpi/Makefile                         |   1 +
+>  6 files changed, 217 insertions(+)
+>  create mode 100644 drivers/acpi/acpi_mrrm.c
+>
 
-On 07/05/2025 20:12, Inochi Amaoto wrote:
-> On Tue, Apr 29, 2025 at 02:44:10AM +0000, Junhui Liu wrote:
->> Hi Conor,
->> Thanks for you review.
->>=20
->> The previous email accidentally lost some Cc lists :(, I'm sorry to
->> harass you.
->>=20
->> On 28/04/2025 17:55, Conor Dooley wrote:
->> > On Mon, Apr 28, 2025 at 08:39:45PM +0800, Junhui Liu wrote:
->> >> From: Yuntao Dai <d1581209858@live.com>
->> >>=20
->> >> Add mailbox node for Sophgo CV18XX series SoC.
->> >>=20
->> >> Signed-off-by: Yuntao Dai <d1581209858@live.com>
->> >> Signed-off-by: Junhui Liu <junhui.liu@pigmoral.tech>
->> >> ---
->> >>  arch/riscv/boot/dts/sophgo/cv18xx.dtsi | 7 +++++++
->> >>  1 file changed, 7 insertions(+)
->> >>=20
->> >> diff --git a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi b/arch/riscv/boot/=
-dts/sophgo/cv18xx.dtsi
->> >> index c18822ec849f353bc296965d2d600a3df314cff6..f7277288f03c024039054b=
-dc4176fc95c2c8be52 100644
->> >> --- a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
->> >> +++ b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
->> >> @@ -55,6 +55,13 @@ soc {
->> >>  		dma-noncoherent;
->> >>  		ranges;
->> >> =20
->> >> +		mailbox: mailbox@1900000 {
->> >> +			compatible =3D "sophgo,cv1800b-mailbox";
->> >> +			reg =3D <0x01900000 0x1000>;
->> >> +			interrupts =3D <101 IRQ_TYPE_LEVEL_HIGH>;
->> >> +			#mbox-cells =3D <2>;
->> >> +		};
->> >=20
->> > No user added here, is there another series in the works that adds a
->> > user of the mailbox?
->> >=20
->>=20
->> There isn't an actual user node in this specific patch. I used a
->> `mailbox-test` node to verify the functionality in this patch series.
->>=20
->=20
-> I am happy to see the way you test it. Can you add it to the cover?
-
-Sure, I will post the testing process to the cover letter in the next
-version.
-
->=20
->> The intended user for this mailbox is the `remoteproc` node. I plan to
->> submit the `remoteproc` driver patches once the corresponding reset
->> driver [1] is ready and merged.
->>=20
->> link: https://lore.kernel.org/linux-riscv/20250209122936.2338821-1-inochi=
-ama@gmail.com/ [1]
->>=20
->=20
-> I will submit a version for this in the next rc1. I think you can submit
-> you remoteproc patch in RFC to get it reviewed.
-
-ok, thanks.
-
->=20
-> Regards,
-> Inochi
-
---=20
-Best regards,
-Junhui Liu
+All patches applied as 6.16 material, thanks!
