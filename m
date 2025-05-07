@@ -1,80 +1,72 @@
-Received: from mail.mleia.com (mleia.com [178.79.152.223])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671BF2116E7;
-	Wed,  7 May 2025 06:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB76A211704;
+	Wed,  7 May 2025 06:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746600723; cv=none; b=dBKlg7Bshi2Zy8Nsv4gvtoxcTK2oqOc+hpRfEXMTcf+1kjvL8hGHagjSNQRzOWFgUeuIg8NiVnXrrPf4UH1GXZo4DQIeVURfOHhmg3CfpepWtN98YJFgzv/Aujo9eOWG416dE3tZTq8Vqdp52aK6lVMpa2MfcKn+eUc0Rste/c8=
+	t=1746600724; cv=none; b=bR/CVlNfV0UHqHW8CFi0eOVYJCTrG4zSt+ivXTJ0ACB5WI1FcbbxtF6sIn/pavNR/RhkrqArhZhY3M+KFJEamSp33QLr85mO3luSY3Tc/+oT4Z68Xgfjb46K9oKMRq5bYTV1smtcRCqyztyZgM7YLVf51tA/vH6p0leTu+GIvds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746600723; c=relaxed/simple;
-	bh=7HbNIzMEBH3G1bZP2toTzbtQQnF+CEXpP6d9nsdQ/bY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FCn/BPjrem8Cp7HAJ2UsnvaU4e6DAlu+Nb+8f4kylbP8CkZT9WfAUZHPNfunTdMNjuskdfIk6xTZTEztE7DloEoNNUvLEqEsK/IIRyDu2hCX/BNWAE/QeQeZ1pAsymZIXDAZro0oqqTRqBPT4MF8YvXrUrvm9uHu4Dqi6PcSfsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=TSDu3/e9; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=TSDu3/e9; arc=none smtp.client-ip=178.79.152.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
+	s=arc-20240116; t=1746600724; c=relaxed/simple;
+	bh=sAy+y3AZkIMDT5b/NnZgOmqXq0/LlciPRfUcFCB13O4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=QzdchmwZH8vi6fAi7Zu8SZl4GvTb78silV46aGyolD0giXzvEWe97lN84NlHShXrX7ZrqG9QLhGXklKs9jGP1PjTVboKVrzD4FesHglpQHDlKg96YC59QGozAWrsJP2Agi7hAmgTe1fqq54vGs0yEoXXuGHEVnXy5ZvNZH+EPfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=ebueA8Uy; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="TSDu3/e9";
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="TSDu3/e9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1746600331; bh=7HbNIzMEBH3G1bZP2toTzbtQQnF+CEXpP6d9nsdQ/bY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TSDu3/e9wC/7vkGemThhcyDL1eyfJswqiF+QvbHgBBl5FWJdrT3q+vqpcVyLE53ZI
-	 PP6DCQL3tLLlz4Ygb5IXgCe4AvGmt1NsYzFrOl6Tt2gyiBwrk6ZPBds7qSL620m86B
-	 LQmiNSbBi7qQ8xhaiTy0oMF8qyeRiCEl+hQdebrQUoD2Ye+IcH0fMiyo1q0yuSoVfN
-	 cXPi2iOGg4TDbFl+bdURsC9F1hSyiiFkXY42/53VIX6aQJThmsPwaLmc2kVWx35tV/
-	 2IvU8xF3JWvhpMH/OscJWcOdTRs0hPvhelVz+9TEwOpJ+jjwd0reaU258Gd3mvp/zK
-	 PSTtEEgGHVzeA==
-Received: from mail.mleia.com (localhost [127.0.0.1])
-	by mail.mleia.com (Postfix) with ESMTP id 2C8DA3B7F0F;
-	Wed,  7 May 2025 06:45:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1746600331; bh=7HbNIzMEBH3G1bZP2toTzbtQQnF+CEXpP6d9nsdQ/bY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TSDu3/e9wC/7vkGemThhcyDL1eyfJswqiF+QvbHgBBl5FWJdrT3q+vqpcVyLE53ZI
-	 PP6DCQL3tLLlz4Ygb5IXgCe4AvGmt1NsYzFrOl6Tt2gyiBwrk6ZPBds7qSL620m86B
-	 LQmiNSbBi7qQ8xhaiTy0oMF8qyeRiCEl+hQdebrQUoD2Ye+IcH0fMiyo1q0yuSoVfN
-	 cXPi2iOGg4TDbFl+bdURsC9F1hSyiiFkXY42/53VIX6aQJThmsPwaLmc2kVWx35tV/
-	 2IvU8xF3JWvhpMH/OscJWcOdTRs0hPvhelVz+9TEwOpJ+jjwd0reaU258Gd3mvp/zK
-	 PSTtEEgGHVzeA==
-Message-ID: <fd2eaad2-2c9a-4277-b705-cac5258d6409@mleia.com>
-Date: Wed, 7 May 2025 09:45:28 +0300
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="ebueA8Uy"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 88CFF41086
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1746600721; bh=Hosa0bzBf8nm3VLP5rpRIktgvVcUf1ib4g98bjlDpJU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=ebueA8UyRiOTwAsisqFDLcOvUHpVBWL1CWp5eJlUGnLFcwIIgzFW3FrdbIq8bZ9UV
+	 VZ6MgN5s4iFMKjs5Z70f+IAbOHIv3c8+MzaBuPeSO06EDu6APmTT/IzQE7UdIKz7Ee
+	 luNYtTusagvnUwlHLgIul0wutObxOTmFCRjHn9s37bE4q9IMtKAKS0Z32HuUvTFYPO
+	 Do/9crejd8s6q0A0Vqh/5kv8VV368vIqCX6MPqx35+8yEf3THvJ1bqTrK80u6jP6tj
+	 ZKjoUg/9IcNaSqYZsYYWjmTkXwV3fH/EJCz3t4NCBp8jMh0FmGz0HsB01a/K9P9Xx1
+	 kjNPuxQ46kojQ==
+Received: from localhost (mdns.lwn.net [45.79.72.68])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 88CFF41086;
+	Wed,  7 May 2025 06:52:00 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton
+ <akpm@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: duplicate patch in the jc_docs tree
+In-Reply-To: <20250507111956.69847ed6@canb.auug.org.au>
+References: <20250507111956.69847ed6@canb.auug.org.au>
+Date: Wed, 07 May 2025 00:51:56 -0600
+Message-ID: <87bjs4vroz.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: serial: Convert nxp,lpc3220-hsuart to DT
- schema
-Content-Language: ru-RU
-To: "Rob Herring (Arm)" <robh@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250506220048.2546915-1-robh@kernel.org>
-From: Vladimir Zapolskiy <vz@mleia.com>
-In-Reply-To: <20250506220048.2546915-1-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20250507_064531_201306_81B92975 
-X-CRM114-Status: UNSURE (   4.52  )
-X-CRM114-Notice: Please train this message. 
+Content-Type: text/plain
 
-On 5/7/25 01:00, Rob Herring (Arm) wrote:
-> Convert the NXP LPC3220 HS UART binding to DT schema. It is a
-> straight-forward conversion.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+Stephen Rothwell <sfr@canb.auug.org.au> writes:
 
-Acked-by: Vladimir Zapolskiy <vz@mleia.com>
+> Hi all,
+>
+> The following commit is also in the mm-unstable tree as a different commit
+> (but the same patch):
+>
+>   98d2ea56614b ("docs/mm/damon/design: Fix spelling mistake")
+>
+> This is commit
+>
+>   7368fcda3f61 ("docs/mm/damon/design: fix spelling mistake")
+>
+> in the mm-unstable tree.
 
---
-Best wishes,
-Vladimir
+Yup, I'll soon drop mine.
+
+Thanks,
+
+jon
