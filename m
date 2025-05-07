@@ -1,94 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A6C155CBD;
-	Wed,  7 May 2025 15:18:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B5718EB0;
+	Wed,  7 May 2025 15:20:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746631117; cv=none; b=VROW0D7/DrHs/OTEdbbbjEI9niHkUm0tKZrKDJ2jWZaexbuBp3kS/1CwRwg3DuDRAHlRAp6M8VfJlb+whB+D+BovOexYIJEE/7tLEsEhPMDl9ldxCBo57ULhL9JM1RaWkc3Ssnr3wX7szTKVG7R9Q2FaJ0oUkktnOVtL1/JPzwg=
+	t=1746631257; cv=none; b=nRSrAUU2jwNzmCAcpMRRbjE+LbrkSpRzQw9ZROb3QS/bWxueWY/lJD51/i6S0law5Y62+PtJC8+q2Bmx1nI7ckm4uqbgyxBk52Rglrd+y3yfgFBWVa/CrxOXCfaOTl79hvmcEz4pYf8XDYaQN2i/TRbjO67DEvybR+MRGCOG/1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746631117; c=relaxed/simple;
-	bh=XKcJueuFpqD8GYZ9LLQB/CLJN3H6ACFCEdW05J9NxMk=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=cNtwxgoHS9yY83mQ+M1by7FQ+MWC+SUcdZ7ka+POs2LQLCJoW4ubyC9ZxzFdAoybZtR8bRfGojCD+QjCQpsaWHnUF3ldTN+IsQKHleAaFpTEnMqjBctcB1hJeInPZKE1IhKwBE7Oy0BL8cpd4v6kZXJr2LPxu9JeaJVLebCaHmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UBrwAS5s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746631257; c=relaxed/simple;
+	bh=DMuRy3vH/9HB8MP/eHAh3lYTSsXJDYIcI3IY1DjMl9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FLSgOflBKUjI0rPo2ZBuB+OE0knfD8CbS7Cuo8NWQfKnP1vMZ6AHhCRmsTagNEdWW7dt00LfyL3bfo1Yfgu7qcU6jJO40lW4aDU+2V9cgBpaDMMAIZamK5cO/2F1SSLB01bWnlomYCftBNlhpQpo9FQleEsM59lxP860eIMEFWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XtWCiZBB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UBrwAS5s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A5D9C4CEE2;
-	Wed,  7 May 2025 15:18:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XtWCiZBB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B24D4C4CEE2;
+	Wed,  7 May 2025 15:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746631116;
-	bh=XKcJueuFpqD8GYZ9LLQB/CLJN3H6ACFCEdW05J9NxMk=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=UBrwAS5sHH3KMHQGQFmz/tQNAcTWVQ6gycxf8zZXfonRFcf2/Bk7DS+my1SrkvYGg
-	 81+mByHAKymqFZEPZlLnRZ8c7hKDGXQJM16qj4R2Z7735wcdtZieALcUEf2osn4NeB
-	 Ik+taf0+vjFJmNZeHSp/ZpvND6xGyDqiPwpDwEc/B9VKG1soj1pg46ucLH8BmM4gW/
-	 vBMlh17LZsZQYtufBAngX3C1JMB8kXT1IBOwfo9Wtx7nuR13vL/JOrOtkCdsb/o2X6
-	 F6CdUVVxpg0+q66JUiN/6WHSxcbBvKgpHRDhYYYKDfLc6lNEYYvmfOnJmOPCF/M9Ow
-	 X0jkC9rB5pY/Q==
-Date: Wed, 07 May 2025 10:18:34 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1746631256;
+	bh=DMuRy3vH/9HB8MP/eHAh3lYTSsXJDYIcI3IY1DjMl9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XtWCiZBBDcigCs9rAvAR90ZGDu/yeCGV3FKIg+lWgQE5tggI55fQ1EThnEsOeZK6q
+	 DMgxmlLMOatvtvVSXCn/BryaK7YoFbb2M/POZrcgkS6EZYv7YUBvmZil/SK50Hh4lr
+	 5WjXKMjsXaXd4xa42SXkRvSxdbQSR/XvJWhUymwiON2nv7AERNtl3vpyW0LoQK7YAy
+	 cxJpPfw1+r6CRqcco+5MVQkED2iX9uAWZ9Qy4qG4xvssMDOKQ/FfnL7O6xphMDJEUB
+	 irILuNpPN/+Wv1FrkUGgMyxd+d/QABeUU6LhMKNH4yRpDpoYG7R4C5hZcdsme1/nqV
+	 Qyvq/zT/vj8NA==
+Date: Wed, 7 May 2025 18:20:47 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com,
+	rafael@kernel.org, lenb@kernel.org, akpm@linux-foundation.org,
+	alison.schofield@intel.com, rrichter@amd.com, bfaccini@nvidia.com,
+	haibo1.xu@intel.com, david@redhat.com, chenhuacai@kernel.org,
+	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	chenbaozi@phytium.com.cn, loongarch@lists.linux.dev
+Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
+Message-ID: <aBt6T2hbiFBeFofE@kernel.org>
+References: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- Lars-Peter Clausen <lars@metafoo.de>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
- linux-kernel@vger.kernel.org, 
- Mikael Gonella-Bolduc <m.gonella.bolduc@gmail.com>
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-In-Reply-To: <20250507135147.1328639-1-dario.binacchi@amarulasolutions.com>
-References: <20250507135147.1328639-1-dario.binacchi@amarulasolutions.com>
-Message-Id: <174663111457.1398857.14653136407863606416.robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: iio: light: apds9160: add missing type
- definition
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
 
+On Tue, May 06, 2025 at 02:22:45PM +0800, Yuquan Wang wrote:
+> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
+> with the expectation that numa_cleanup_meminfo moves them to
+> numa_reserved_meminfo. There is no need for that indirection when it is
+> known in advance that these unpopulated ranges are meant for
+> numa_reserved_meminfo in support of future hotplug / CXL provisioning.
+> 
+> Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
+> ranges directly.
+> 
+> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
 
-On Wed, 07 May 2025 15:51:38 +0200, Dario Binacchi wrote:
-> Fix the following warning:
-> 
->  Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml: ps-cancellation-current-picoamp: missing type definition
-> 
-> raised by command:
-> 
->  make dt_binding_check  DT_SCHEMA_FILES=fsl.yaml
-> 
-> Fixes: be464661e7532 ("dt-bindings: iio: light: Add APDS9160 binding")
-> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+
 > ---
 > 
->  Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> Changes in v2 (Thanks to Dan & Alison):
+> - Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
+> - Add comments to describe the usage of numa_add_reserved_memblk()
+> - Updating the commit message to clarify the purpose of the patch
+> 
+> By the way, "LoongArch: Introduce the numa_memblks conversion" is in linux-next.
+> 
+>  drivers/acpi/numa/srat.c     |  2 +-
+>  include/linux/numa_memblks.h |  1 +
+>  mm/numa_memblks.c            | 22 ++++++++++++++++++++++
+>  3 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index 0a725e46d017..751774f0b4e5 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -453,7 +453,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (numa_add_memblk(node, start, end) < 0) {
+> +	if (numa_add_reserved_memblk(node, start, end) < 0) {
+>  		/* CXL driver must handle the NUMA_NO_NODE case */
+>  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
+>  			node, start, end);
+> diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
+> index dd85613cdd86..991076cba7c5 100644
+> --- a/include/linux/numa_memblks.h
+> +++ b/include/linux/numa_memblks.h
+> @@ -22,6 +22,7 @@ struct numa_meminfo {
+>  };
+>  
+>  int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
+>  void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
+>  
+>  int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
+> diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
+> index ff4054f4334d..541a99c4071a 100644
+> --- a/mm/numa_memblks.c
+> +++ b/mm/numa_memblks.c
+> @@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+>  	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
+>  }
+>  
+> +/**
+> + * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
+> + * @nid: NUMA node ID of the new memblk
+> + * @start: Start address of the new memblk
+> + * @end: End address of the new memblk
+> + *
+> + * Add a new memblk to the numa_reserved_meminfo.
+> + *
+> + * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
+> + * against memblock_type information and moves any that intersect reserved
+> + * ranges to numa_reserved_meminfo. However, when that information is known
+> + * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
+> + * to numa_reserved_meminfo directly.
+> + *
+> + * RETURNS:
+> + * 0 on success, -errno on failure.
+> + */
+> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
+> +{
+> +	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
+> +}
+> +
+>  /**
+>   * numa_cleanup_meminfo - Cleanup a numa_meminfo
+>   * @mi: numa_meminfo to clean up
+> -- 
+> 2.34.1
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/light/brcm,apds9160.example.dtb: light-sensor@53 (brcm,apds9160): ps-cancellation-current-picoamp: 62400 is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/property-units.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250507135147.1328639-1-dario.binacchi@amarulasolutions.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+-- 
+Sincerely yours,
+Mike.
