@@ -1,84 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5670B19047F;
-	Wed,  7 May 2025 16:05:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BBF28B7DC;
+	Wed,  7 May 2025 16:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.129.21.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746633913; cv=none; b=EAEn9f8ugePKrvtEc3hhrgAD+MkwYtUzgu9MtgGb/L0ldSO7isWVLyywMXisbG0coom2SO+0i5LbAEwrPE0VcpF7exIrdBapqZOFbxrQniNguWGy9l917Gogmw4Gn+Z4rtC0Q1wcRaidv8W4QAP7rIVUKjmtH5j8BQJNswHR/eY=
+	t=1746633959; cv=none; b=gibI/RiQdCr2ND5FU4g+0KjUXLwEUyWE3gbBF+XjhWHLmIhdASEGTMvtxqbwylZVP6ousdmgDsNTXJazIhl7NWR3Z3vJXT8dztqg1oWwVuM+y2IKGCy/PQ3KllJwjbigwwtCnS1yV2ohAf0sjRMMMjL99eBnhn+AHioBKpAdB+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746633913; c=relaxed/simple;
-	bh=5Lc+6qjcgo99zASOnfht6H5SgJYNqToDMZJHW4RhmJE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n+n2KGNZp19I8SDUVjVwVkSss6bPz1wbR0rKCEGhm2lL/Koa+6oEiuiZ9WX1LYI4HPhIeZwHedAealXoT59A7SePY51MoW/i20dM8nMsKmC8VXD7ZbvXjbxI7xqKhWPHKdLADV+yKBboejssB4G/NezWOTy2JVkEzLGVifu4Kjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: vBKlma7fQViCIMmXsyvtVg==
-X-CSE-MsgGUID: B/rcTjnFSGq3iMmr9Mzllg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48519805"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="48519805"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 09:05:06 -0700
-X-CSE-ConnectionGUID: Tswh+QfXRImyo3mn+KMR4A==
-X-CSE-MsgGUID: 62GTDZbuQ7GD7CowmxTU4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="136518068"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 09:05:05 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1uChGY-00000003mCo-0nvn;
-	Wed, 07 May 2025 19:05:02 +0300
-Date: Wed, 7 May 2025 19:05:01 +0300
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Ariel Simulevski <ariel@simulevski.at>
-Cc: Guido Trentalancia <guido2022@trentalancia.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: tigerlake: Document supported platforms in
- Kconfig help
-Message-ID: <aBuErZKeelnCaWbw@smile.fi.intel.com>
-References: <CAMz-Jg-Vz9npxtVqjPXnK_WSDm2zc9_MBsQKTJKVghaSU7fyxg@mail.gmail.com>
+	s=arc-20240116; t=1746633959; c=relaxed/simple;
+	bh=x0GhAdTrsUjoll9UJ2scIqlF4JD4LTwaMQXDabkmEbY=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=PNduHskfypZeaPn/V1oMrmOfEN1MEAn1xhMUhTxwFqjCs+8j5vZNyrqC3ktqxg1ePYTsUWLJOE73zuzV9QDC/BfzykSZ5e4Ko53RC3sFzufsgbeV65f6zLlB3MqxrvqF5bPRaDqPos2WE4IE4zDCBBb4WMxFV6YyTB/5ZqCLHj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr; spf=pass smtp.mailfrom=3xo.fr; dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b=aADmR4cE; arc=none smtp.client-ip=212.129.21.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b="aADmR4cE"
+Received: from localhost (mail.3xo.fr [212.129.21.66])
+	by mail.3xo.fr (Postfix) with ESMTP id 97959CB;
+	Wed,  7 May 2025 17:59:01 +0200 (CEST)
+X-Virus-Scanned: Debian amavis at nxo2.3xo.fr
+Received: from mail.3xo.fr ([212.129.21.66])
+ by localhost (mail.3xo.fr [212.129.21.66]) (amavis, port 10024) with ESMTP
+ id s-y2X6RhqgSo; Wed,  7 May 2025 17:58:59 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.3xo.fr 0A4A08D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xo.fr; s=3xo;
+	t=1746633539; bh=z9CikFXAeKFWOimfQF9yvtUss98FljLb1RvOvIhBgOU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aADmR4cEDRykDletGNFs1jjnJfrJw+6GnyYprK83CZrRd3tyEy6ub0QVpmzlbeazj
+	 psoK4uZwGo8lE4eCpyFy/sZzTGN+nqdCvbzMi75ZUqlOvTf4pBaSMDrWN4NHYbjKm7
+	 bDptnwVG7o9vy6zED37DnAlYY6ZHaF/WnwuvHkNIY2K3D/YXWknc0fgwlHDZkyBevA
+	 YIiT1HMgOfDgIBn+r6hwNmQKcENMYMqfLC0KaK/eeMUW4APFAGaH0E+WiMg5BaW5GF
+	 O4GOukJMPKZQVl0NsKxysVgRQGaoanjfVpx8FBoaw1l9RLMUk+rB9RDnMoKxykF+PW
+	 Usb6564G5QQWw==
+Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by mail.3xo.fr (Postfix) with ESMTPSA id 0A4A08D;
+	Wed,  7 May 2025 17:58:59 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMz-Jg-Vz9npxtVqjPXnK_WSDm2zc9_MBsQKTJKVghaSU7fyxg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Date: Wed, 07 May 2025 17:58:58 +0200
+From: Nicolas Baranger <nicolas.baranger@3xo.fr>
+To: Paulo Alcantara <pc@manguebit.com>
+Cc: Christoph Hellwig <hch@infradead.org>, hch@lst.de, David Howells
+ <dhowells@redhat.com>, netfs@lists.linux.dev, linux-cifs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Steve French
+ <smfrench@gmail.com>, Jeff Layton <jlayton@kernel.org>, Christian Brauner
+ <brauner@kernel.org>
+Subject: Re: [netfs/cifs - Linux 6.14] loop on file cat + file copy when files
+ are on CIFS share
+In-Reply-To: <df978e3da9bec1a5e040448f6341b646@manguebit.com>
+References: <10bec2430ed4df68bde10ed95295d093@3xo.fr>
+ <35940e6c0ed86fd94468e175061faeac@3xo.fr> <Z-Z95ePf3KQZ2MnB@infradead.org>
+ <48685a06c2608b182df3b7a767520c1d@3xo.fr>
+ <F89FD4A3-FE54-4DB2-BA08-3BCC8843C60E@manguebit.com>
+ <5087f9cb3dc1487423de34725352f57c@3xo.fr>
+ <f12973bcf533a40ca7d7ed78846a0a10@manguebit.com>
+ <e63e7c7ec32e3014eb758fd6f8679f93@3xo.fr>
+ <53697288e2891aea51061c54a2e42595@manguebit.com>
+ <bb5f1ed84df1686aebdba5d60ab0e162@3xo.fr>
+ <af401afc7e32d9c0eeb6b36da70d2488@3xo.fr>
+ <a25811b8d4f245173f672bdfa8f81506@3xo.fr>
+ <e0b7f4902af6c758b5cdb7c2b7892b43@manguebit.com>
+ <df978e3da9bec1a5e040448f6341b646@manguebit.com>
+Message-ID: <4367e54becaf348ac6c18e0b298dcd7e@3xo.fr>
+X-Sender: nicolas.baranger@3xo.fr
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 05, 2025 at 08:07:23PM +0200, Ariel Simulevski wrote:
-> Hi Andy,
+Hi Paulo
+
+I'm testing this branch and going back with results
+
+Thanks again !
+Nicolas
+
+Le 2025-05-07 00:53, Paulo Alcantara a écrit :
+
+> Hi Nicolas,
 > 
-> Thanks for the feedback.
+> Could you try my cifs.dio branch [1] which contains the following fixes
 > 
-> Just to confirm: for the Kconfig help text, would you prefer keeping
-> it strictly to a plain list of supported platforms (e.g. "Supported
-> platforms: Tiger Lake, Alder Lake-N, Alder Lake-S") with no additional
-> explanation or context?
-
-Yes.
-
-> And only PINCTRL_TIGERLAKE because I think
-> that the note on PINCTRL_ALDERLAKE is actually quite helpful.
-
-That note, about particular touchpad or touchscreen is confusing as
-it is small part of the users that be hinted by it. The rest won't
-understand why it is there. The driver runs on tons of different
-platforms and configurations, so such a niche notices are not
-applicable here.
-
-> I want to make sure the v2 follows your expectations exactly.
-
-Sure.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> afea8b581c75 ("netfs: Fix wait/wake to be consistent about the 
+> waitqueue used")
+> ae9f3deaa17a ("netfs: Fix the request's work item to not require a 
+> ref")
+> b2a47dc3ead6 ("netfs: Fix setting of transferred bytes with short DIO 
+> reads")
+> c59f7c9661b9 ("smb: client: ensure aligned IO sizes")
+> 
+> Let me know if you find any issues with it.  Thanks.
+> 
+> [1] https://git.manguebit.com/linux.git
