@@ -1,99 +1,75 @@
-Received: from h8.fbrelay.privateemail.com (h8.fbrelay.privateemail.com [162.0.218.231])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3741B1DED52
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.0.218.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC651F1905
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746609327; cv=none; b=elwkQ6+DT+RApmuZ77l5IZzPCJKsX9qIi5CnFzEFcvbOMa9xyuUh/lIV+5Bnw+O068MkZHhcP1TpY2gHg8BZlOF8/S/jeh8zpMQgfgzOh8fVKgw0LligG5NKkHaxlieMPPkdghzLZCpZnfagMs4AnrD5RvfJ28ZXaJEHNIKzvCc=
+	t=1746609333; cv=none; b=EB5woJG2nEtdSwCFVw6yZd/vtGXF/sjCUgQmlTh2v8PkmnJvz4uMY8MKvhconWcrgx/Eq1o8TOkBIxNZZT1vm1LhDFoOQuTTxi0RKZBIS3OJVQ8sgbwSwTbt9se/hNt3AN+QQvv816kdf+WtYZ8GFRHbkA1G+IoxxbLR5mPvJaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746609327; c=relaxed/simple;
-	bh=egT0yKlCDwoRHqLe+MRwanT0SawFfp6yH1Bs4mtm8UE=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=jhdXNDvD61ZhoMRpnRnoxZ7aJWf23O7BrFlm0E7knUVDtXPgnB3uA7zYqxDmDYC60m/1sLi1fI0o4FzAwaBue11foSsFbNb+tQT1CiIqY0BADrH/IxKERgD1JSzXFTA96VmSNHUlxtGNMujtq4bIlaPvMqjGS45Q9BesnMjBcKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kenogo.org; spf=pass smtp.mailfrom=kenogo.org; dkim=pass (2048-bit key) header.d=kenogo.org header.i=@kenogo.org header.b=biZnOZNI; arc=none smtp.client-ip=162.0.218.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kenogo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kenogo.org
+	s=arc-20240116; t=1746609333; c=relaxed/simple;
+	bh=G2/2XpBOhsww7ORMVPPsSJT8mP0ZzF2Yf1LmkHm/5Bc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kon5HalMGO6AS26X1z1fWUpsLViSpW1hKCkoHQQQfdzgCTSqkssiqT/6S18lrI3u2tYlCyLh6UDEneGR26Kf/vGz/dBLoMzdwIN6mvURyooy05bAYJ26e/o47nU+JmD4JvclWQsCVeJq3AMtiajvTKtFCAHz1ZsTh1JPJOMSV+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y+zvK4NN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zl+p1P4U; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kenogo.org header.i=@kenogo.org header.b="biZnOZNI"
-Received: from MTA-08-4.privateemail.com (mta-08.privateemail.com [198.54.118.215])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by h7.fbrelay.privateemail.com (Postfix) with ESMTPSA id 4ZsqNp613zz2xFV
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 05:15:22 -0400 (EDT)
-Received: from mta-08.privateemail.com (localhost [127.0.0.1])
-	by mta-08.privateemail.com (Postfix) with ESMTP id 4ZsqNf65Dwz3hhVf
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 05:15:14 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=kenogo.org; s=default;
-	t=1746609314; bh=egT0yKlCDwoRHqLe+MRwanT0SawFfp6yH1Bs4mtm8UE=;
-	h=Date:To:From:Subject:From;
-	b=biZnOZNIx4HeYWxnfWP5ZlETzlGzf0Qj6yKKxbspsW0WCW6c8anQsDF6iG4QfsjmZ
-	 PpQnJ3xv2d8xp0d10nZdqaG9TnD8ow0kSFecKHbPS2uPJxGuDAQewSft+XLV7y6C+X
-	 n2ZNf0RxdOk8FfhkYAkGZjA3k1IbbSi5vKkdIKLqpB1UaqeAhWQeUd0f5T2fUcN2Iv
-	 +wGNnSyDKQGrV4vnOdRPgdogprgJmvf7vv3F7JabyTz1XrvOgHKkSSRqc3mccaeqZB
-	 wus3hqN5OQvu0Ga+oIMO422mdayHpeddLW3PDQSscJLKWd9K8ysgrCNL5i0hb8pBTQ
-	 +ElspbD+MvFCg==
-Received: from [100.115.92.203] (nat-141-76-8-190.dip.tu-dresden.de [141.76.8.190])
-	by mta-08.privateemail.com (Postfix) with ESMTPA
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 05:15:14 -0400 (EDT)
-Message-ID: <fed2cedc-0458-4dfe-9e14-6d64be618165@kenogo.org>
-Date: Wed, 7 May 2025 11:15:12 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y+zvK4NN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zl+p1P4U"
+Date: Wed, 7 May 2025 11:15:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746609330;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JimTckZl2BytKdqLsH9N1Q1dX2kn4sCMUIjmguZkJvY=;
+	b=Y+zvK4NNmknV76UVFiqZN3mPtZo3aWbNlmdQZFwycoDt7M7xnub04pVGttX1VZ7YUd4M3Q
+	4hrKyWPZ3Bl8XBEjHq5fWQMV1Eg47TSoq1EnC8nKV/W/EfVGntP6hqh6xPSNVBlvGmfRHF
+	l5RFpwNl9VvyDIxcOsQs7zB38FQoahRYO5uzK+aFW3EfRS92nnjyWr45FtXVzhN3o5S2/C
+	F1BXcAwt98UeVBxSNVANpnlksw6ZrgVbl41mXV3wNsNWHn2hy3dbeRuXUWHVmC+uU15Dip
+	TSVuI7r4dGWYSK21j9bb8o4admMQwj9YIRyvD7JZQXXg7PqDbiQarNL/y3V+bA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746609330;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JimTckZl2BytKdqLsH9N1Q1dX2kn4sCMUIjmguZkJvY=;
+	b=zl+p1P4UFM8IXQIqgb6kwcNnZJ908mbDXslHmV+fZ692VHLSMlEi+Ve+TPW866fkm+7A56
+	TaPf6niGtCv1zvDQ==
+From: "Ahmed S. Darwish" <darwi@linutronix.de>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
+	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 17/26] x86/cpuid: Remove direct CPUID(0x2) query API
+Message-ID: <aBsksJx4URuKYGXQ@lx-t490>
+References: <20250506050437.10264-1-darwi@linutronix.de>
+ <20250506050437.10264-18-darwi@linutronix.de>
+ <aBnPVj9NZlROyA0W@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: linux-kernel@vger.kernel.org
-From: Keno Goertz <contact@kenogo.org>
-Subject: ntp: Adjustment of time_maxerror with 500ppm instead of 15ppm
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBnPVj9NZlROyA0W@gmail.com>
 
-Hello,
+On Tue, 06 May 2025, Ingo Molnar wrote:
+>
+> There's one mention of this API orphaned in the
+> for_each_leaf_0x2_entry() comment section:
+>
+>   arch/x86/include/asm/cpuid/leaf_0x2_api.h: *    for_each_scanned_leaf_0x2_entry(regs, ptr, entry) {
+>
 
-I've been looking into the kernel's NTP code and found what I understand 
-to be a deviation from NTP as standardized by RFC 5905.  The 
-documentation of this part of the kernel is pretty sparse, so there may 
-be some motivation behind this that I don't know of.  Perhaps someone 
-with more knowledge can explain this.
+Nice catch; will fix.
 
-The doc string of `struct ntp_data` states that `time_maxerror` holds 
-the "NTP sync distance (NTP dispersion + delay / 2)".
-
-ntpd indeed sets this value to what RFC 5905 calls the "root 
-synchronization distance" LAMBDA.
-
-In RFC 5905, this LAMBDA increases over time because the root dispersion 
-increases at a rate of PHI, which is set to 15ppm.  Running
-
-$ ntpq -c "rv 0 rootdisp"
-
-a couple of times confirms that the root dispersion reported by ntpd 
-increases with this rate.  Consequently, so does the root 
-synchronization distance LAMBDA.
-
-However, the function `ntp.c:second_overflow()` instead increases the 
-value of `time_maxerror` with the rate MAXFREQ, which is set to 500ppm.
-
-This leads to standard library functions like ntp_gettime() reporting 
-much bigger values of `maxerror` than ntpd is working with.  This can be 
-confirmed by running
-
-$ adjtimex -p
-
-a couple of times.
-
-MAXFREQ *can* be found in the reference implementation of RFC 5905 and 
-is also set to 500ppm there, but it is used in a different context: 
-MAXFREQ is an upper bound for the local clock's frequency offset, while 
-PHI is an upper bound for the frequency drift of a clock synchronized 
-with NTP.
-
-At least this is my understanding.  Can someone explain this?
-
-Best regards
-Keno
+Thanks,
+Ahmed
