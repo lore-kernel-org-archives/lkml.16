@@ -1,105 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2D828B7CD;
-	Wed,  7 May 2025 19:50:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B246C1DD877;
+	Wed,  7 May 2025 19:52:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746647451; cv=none; b=gD2wdcUO2Ju7bghOnAquFuWhpQ5SPBTc+S9gNNT8nZ7MMBgj1QBVfdHi6nlIdqT3LnADMaNhjN4YDI+T1YZi+LhPCTm2FqSiYw94Q1EnakqzDd9mi+kJwP7dAaOdj4O3JWyEXJHaNQWPtMim7wRUrrGPV5o4DJN5GZ5b8NHeqeg=
+	t=1746647564; cv=none; b=PatxLJR44zLx+PUcL/TkAwwLVsi6CIZsennLYR+u9LmZL8K3SwcsVzzqCa8k7ObKMBAGpCLExn/4TVgXdYEMsq2iruv2LzBRq+ciJf4cUo9OSfNTX7vFCfF/o/WQAMgQiYqnwUKhxD40HQcuJW5HOfj+4f4J3JBgEwd4iwGXhhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746647451; c=relaxed/simple;
-	bh=3K/lkvfFCs/82QJBISbca7YT7L6y0PkB4hRjS4NLTPI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D8NuvKJORrd5F/gwRlP2u43M3lSPms6O7bpiFT24/IImvd+5icDIkFTqGzrvqFh5qnA9y5e6AA1rcvqbY0yGMRCWrb+WkBEIdN1NEW6s/bak4bFE+WVkm7wWWPLYl/iyeRxAcOVTCmZJYRk15fGX2esGTh1j25VV44fmYKwGv5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJPP6b6J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746647564; c=relaxed/simple;
+	bh=IP1sexJ5AqEl1JL/vrHOkdQGcrLkSGT1/bXaGfYanxs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nuSHMkUTp6SON3Ky/elsyf/h7Y7XAI98YxlzX1FyUNbIg2AtDtY4LxsBLaWgLgPjID/znWYobki3nUTeICJZnxF41qMSBrMfudrmTiZbq4lfFix8Q7M9zuvkZEE/rZzQHWNyp4aoADkxKti3iLXCRPa4Ps2rJ6G3txH5Sx5sYSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nbsekDng; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJPP6b6J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 971BBC4CEE2;
-	Wed,  7 May 2025 19:50:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nbsekDng"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F20C0C4CEEB;
+	Wed,  7 May 2025 19:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746647450;
-	bh=3K/lkvfFCs/82QJBISbca7YT7L6y0PkB4hRjS4NLTPI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZJPP6b6JhvABdbIrF7lmXfQt6Tu3HuuqG9VFadfM25ZFeJ6NDzqcRd2p9FUpXPUb9
-	 7GRSVsG1qmDbuARLCppknxhRlqXccrhQ56Wx1h1DJvlUM5HqX+WEzAax2SrBpv5GpN
-	 YpCJEqrjlER1QWjNpm+o7pgtg8uFOFCTMbIznLITd112w5ANrF0o79VxW3Jx0WbYJl
-	 h9qY3JvfwUvCF9OnBk6WfabJ7uW/9/hY3silNDszSP0NBnzfds4ShjltISileRlCcQ
-	 BNJAV6RsEKICoX2UABWmze2KA3wVHC/jEEIMc0n1Q5JD0vCOBQVupSnVYr3vU1N4iw
-	 lEERR8qoRN9Pg==
-Date: Wed, 7 May 2025 20:50:40 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jonathan Santos <jonath4nns@gmail.com>
-Cc: 20250505163919.6d805db2@jic23-huawei, Jonathan Santos
- <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, andy@kernel.org, nuno.sa@analog.com,
- Michael.Hennerich@analog.com, marcelo.schmitt@analog.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
- linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
- broonie@kernel.org, dlechner@baylibre.com
-Subject: Re: [PATCH v6 02/11] dt-bindings: iio: adc: ad7768-1: add
- trigger-sources property
-Message-ID: <20250507205040.3a1eec14@jic23-huawei>
-In-Reply-To: <aBpgFQ+/KBXdvyWx@JSANTO12-L01.ad.analog.com>
-References: <cover.1745605382.git.Jonathan.Santos@analog.com>
-	<128de2793d6d5424ad152c394faf1d51f0d56e0b.1745605382.git.Jonathan.Santos@analog.com>
-	<20250505163919.6d805db2@jic23-huawei>
-	<aBpgFQ+/KBXdvyWx@JSANTO12-L01.ad.analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1746647564;
+	bh=IP1sexJ5AqEl1JL/vrHOkdQGcrLkSGT1/bXaGfYanxs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nbsekDngZRKrUVqYx7v1yG/5qImmvHmnFeURvi1FkbK9TDIStReWx0m0HfLJWwIe/
+	 tsWcui3FxqwnL+bdPJ8znI57YVJOLEwSG0ILdzdO780+QZVg1E8CIXc6Tw5Ndow9tg
+	 cFuIyMFOD57kBCnFOmHT7XOaf80fCtY9jIx727zsRZlBU4v4HTB/3NHV3PNSOxAe5t
+	 aK2YMB1lh3duaavoCgEmastZgtW3eoINTHr5CTKcA7smb2HWjn2vnQNDLCVg9u16To
+	 nmeb3bmMljh076MQ0mJL94VT6oHb/893s18B9p+tVqk9Ouvpp9QoBYzDnitkVUCSlP
+	 JRNgVJlVdip/g==
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2d4f8c42f49so800912fac.1;
+        Wed, 07 May 2025 12:52:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV8s6vn0rDfen7Mw/XtpKXLTo4Siy7O4XIi9LZJfFEUlZAJvgJCQO1k7/u/p30plmsjNeOV2AjjDQs=@vger.kernel.org, AJvYcCXZ3gxT2PxjIHwA3AGBrZVRv2yWU6actbRO1mN2KArzYlXj0ex8qtrCEgtuksThqQmRzclluBCS9OQrTmM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyU+jZIvWzHtAPHfsa21OGyx1twt+fmNg4UglUpiaXIxWR93rqT
+	eWyS1Wuauuwb2ZbLe/Sntlwjs2oAUthbuygt1hrb894+FjJh+yMg7ooaDgVlBQzaYD0gKKZP8wO
+	OqUm60Jcpju0QXIV91bwA22ayngM=
+X-Google-Smtp-Source: AGHT+IHAYFUsgf5CY68kR+wueNn0ih5PFLRIbTC32kvnqqwU1UTFoomTK2fnfGTP/3v2ZFw4jvaqe8FMVK4n6M0D1JY=
+X-Received: by 2002:a05:6871:a694:b0:2d5:307f:cc5f with SMTP id
+ 586e51a60fabf-2db808814ecmr532228fac.12.1746647563187; Wed, 07 May 2025
+ 12:52:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250429000110.236243-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20250429000110.236243-1-srinivas.pandruvada@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 7 May 2025 21:52:32 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ia28dh6xjkef3ADkz6SN6VMp8Lj4Z=Bq665p7xoi_82w@mail.gmail.com>
+X-Gm-Features: ATxdqUHpvcMsLo4GDdvPV8Jl8BoqXdx4_PsNfLSva9LUe0tC-bcCgJYhMZsjXbQ
+Message-ID: <CAJZ5v0ia28dh6xjkef3ADkz6SN6VMp8Lj4Z=Bq665p7xoi_82w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Platform Temperature Control interface
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: rui.zhang@intel.com, daniel.lezcano@linaro.org, rafael@kernel.org, 
+	lukasz.luba@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 6 May 2025 16:16:37 -0300
-Jonathan Santos <jonath4nns@gmail.com> wrote:
+On Tue, Apr 29, 2025 at 2:01=E2=80=AFAM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> Platform Temperature Control is a dynamic control loop implemented in
+> hardware to manage the skin or any board temperature of a device. The
+> reported skin or board temperature is controlled by comparing to a
+> configured target temperature and adjusting the SoC (System on Chip)
+> performance accordingly.
+>
+> This series supports optional controls from the user space.
+>
+> v2:
+> Change sysfs folder name and other cleanups
+>
+> Srinivas Pandruvada (3):
+>   thermal: intel: int340x: Add platform temperature control interface
+>   thermal: intel: int340x: Enable platform temperature control
+>   thermal: int340x: processor_thermal: Platform temperature control
+>     documentation
+>
+>  .../driver-api/thermal/intel_dptf.rst         |  21 ++
+>  .../thermal/intel/int340x_thermal/Makefile    |   1 +
+>  .../platform_temperature_control.c            | 243 ++++++++++++++++++
+>  .../processor_thermal_device.c                |  15 +-
+>  .../processor_thermal_device.h                |   3 +
+>  .../processor_thermal_device_pci.c            |   5 +-
+>  6 files changed, 285 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/thermal/intel/int340x_thermal/platform_temper=
+ature_control.c
+>
+> --
 
-> On 05/05, Jonathan Cameron wrote:
-> > On Sun, 27 Apr 2025 21:12:16 -0300
-> > Jonathan Santos <Jonathan.Santos@analog.com> wrote:
-> >   
-> ...
-> > >  required:
-> > >    - compatible
-> > >    - reg
-> > > @@ -65,7 +95,6 @@ required:
-> > >    - vref-supply
-> > >    - spi-cpol
-> > >    - spi-cpha
-> > > -  - adi,sync-in-gpios  
-> > 
-> > Maybe worth requiring oneOf adi,sync-in-gpios or trigger-sources? 
-> >   
-> 
-> We cannot do that because we defined that self triggering is enabled
-> when trigger-sources is omitted (is this case adi,sync-in-gpios is not
-> present as well).
-Ah. Fair enough.  More complex but we can constrain to never having
-both adi,sync-in-gpios and trigger-sources at the same time.
-
-> 
-> > >  
-> > >  patternProperties:
-> > >    "^channel@([0-9]|1[0-5])$":
-> > > diff --git a/include/dt-bindings/iio/adc/adi,ad7768-1.h b/include/dt-bindings/iio/adc/adi,ad7768-1.h
-> > > new file mode 100644
-> > > index 000000000000..34d92856a50b
-> > > --- /dev/null
-> > > +++ b/include/dt-bindings/iio/adc/adi,ad7768-1.h
-> > > @@ -0,0 +1,10 @@
-> > > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-> > > +
-> > > +#ifndef _DT_BINDINGS_ADI_AD7768_1_H
-> > > +#define _DT_BINDINGS_ADI_AD7768_1_H
-> > > +
-> > > +#define AD7768_TRIGGER_SOURCE_SYNC_OUT  0
-> > > +#define AD7768_TRIGGER_SOURCE_GPIO3     1
-> > > +#define AD7768_TRIGGER_SOURCE_DRDY      2
-> > > +
-> > > +#endif /* _DT_BINDINGS_ADI_AD7768_1_H */  
-> >   
-
+All three patches applied as 6.16 material, thanks!
