@@ -1,66 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B1C1EE7BE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801271E7C34;
 	Wed,  7 May 2025 05:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746596692; cv=none; b=O9djkFBl+NFfWFWaYzKaoVUdphgeCOSc9pj7Fun81y9YtubfB8v8rYVr0r6XJR4ZK3mYxd412btdcHTD3qhxiKyI2Mck8nt/w7LrdLQa5b4TXrDwCBAVcLSQMHzljg2/LXAPLnaEgYVYVYdUdMOb8WBC1UCcX1Uy7PXbRZvk4OY=
+	t=1746596692; cv=none; b=iCftFI3+hdb+ZWKw2fR4ALxoMACw6AT8wIrG7j68YDzolxSvGgGAMccvoy258E1nWgrWifpBO49UWABXFIBrLKc/WJfArSlOGHlmj4UN8FOaGfS7BY6Nb2cMsfM6BCIJceMKAug1Hb/7FFxC9PnNuSYW+MsMFs/NjpY33r2mICo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746596692; c=relaxed/simple;
-	bh=JQX+pNi+rd47yrsUf9LzXxL1bR3OCMpgA5gg847AdJU=;
+	bh=dET57/3w7AB13kQwYH18hcOd/6ONv+xqKFslnB4Aw1E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UhEZpFpH/ZjWSPZPUdAJ2vMqSK/Ri4ONBplvnuVbTdq8Xmo5Aw3zezylvPcbXZ682/H7a1JnnQkZWFJPYDOlemYuwAnYx8PfbNkpdgQhViqdctKF+FhHMooOLmnOUbGFiw10cZio9+rlEJPKk7/rMgstVpUf2DmyAOKXUAYT+ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MK6IJYal; arc=none smtp.client-ip=192.198.163.17
+	 Content-Type:Content-Disposition:In-Reply-To; b=gdfMC87jIEbXjLAGTAvPBExX07WDbUvt1SyHmBrVyjK0++2MRkcuv/tEHlXn2g/zHvU+hH/WU+NyFmDxqf5LE2knKXtZa/fWLkfSHspPbxV+B53yqkt0HahbRZsc7pafdSLldyDg9aJGV1orDnmqI77n1Sdleyo5mmKd0K6jtsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AMCrJBwn; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MK6IJYal"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AMCrJBwn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746596690; x=1778132690;
+  t=1746596689; x=1778132689;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=JQX+pNi+rd47yrsUf9LzXxL1bR3OCMpgA5gg847AdJU=;
-  b=MK6IJYalkhLgDuZa2sGeIx0Rd0kXh4XubKcOw6OfbaIIGm9abJZWIACe
-   /KUBBoy1ZhEv2iF8/VRW7cFI/Ub+3jegyiEElIOpn/sd0dIEyzrYfrKgM
-   niZw9zLzD0/eA/72NxZMhEVBbwWRU7oVQOgakK4vSc8poFSJhcRVuDNkF
-   YJFBjxHg7RB90b6d1st2vBArnbD8rnwfs4XXi3pqWzynWAbi3dDE4vRHA
-   uRb0Yz7wuPTT8I/L/GJYYxcglpOB1y6XSM6pHgaSHEBpEpODPMgNU4Cdj
-   qer9K+eUvOWEaqyWyt6AWE/zsrjQUPDBnqeO4bsTG4i1efefgMwdrodNK
-   A==;
-X-CSE-ConnectionGUID: GzO16g5DTF6yO5ZFZ+iT7g==
-X-CSE-MsgGUID: 2GN5LkD1RPuSFNQQ1vYnaQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="48202530"
+  bh=dET57/3w7AB13kQwYH18hcOd/6ONv+xqKFslnB4Aw1E=;
+  b=AMCrJBwnMSAEhfknUhieo041xJqbDWHJhQlCWGK4dfu3cj8rBvYtDqmH
+   yWtBXGhxcczZZSF8koCvFnT7O66lntACHcj8MMWi1ZwL5vU0WWKSxYMmV
+   sbdh4dptULT1BsG0I13ifQY0XKMidfMogpjZgP/1t65CNYjt4QBnLWBDU
+   qQk4XZJd0b3FFsm77kuM+fIC3JMOX/eDTG7CW5mhJD24zV5jn7rat6iHu
+   1vVVsGX39iXXwBmShAdf3kYiIrO3J+MoffNW7sS3gEUfwN0ugaSBC91oo
+   BmzkcebN2bmbmIzKvGLvI1xvQQ59ILwaG3TbJTOhpXo0G0+k81AaQY4JM
+   w==;
+X-CSE-ConnectionGUID: CdNASeqrTZaH2BfvljYAdg==
+X-CSE-MsgGUID: vyxluEeTS7ChrUJ3Tdtb6A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="35932877"
 X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="48202530"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 22:44:49 -0700
-X-CSE-ConnectionGUID: h2ssVtyISB66sQtFkP2/BA==
-X-CSE-MsgGUID: 1ljMQRoCQ7G7X1gly5+u1Q==
+   d="scan'208";a="35932877"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 22:44:49 -0700
+X-CSE-ConnectionGUID: c4D2Ws4lRaymkTlaqFHm/g==
+X-CSE-MsgGUID: ocnwfwJRR2WLdCgnFPKUdg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="135844091"
+   d="scan'208";a="140959206"
 Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 06 May 2025 22:44:45 -0700
+  by orviesa005.jf.intel.com with ESMTP; 06 May 2025 22:44:46 -0700
 Received: from kbuild by 1992f890471c with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uCXaF-00076C-1W;
+	id 1uCXaF-000769-1E;
 	Wed, 07 May 2025 05:44:43 +0000
-Date: Wed, 7 May 2025 13:44:35 +0800
+Date: Wed, 7 May 2025 13:44:34 +0800
 From: kernel test robot <lkp@intel.com>
-To: Ashish Kalra <Ashish.Kalra@amd.com>, seanjc@google.com,
-	pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	herbert@gondor.apana.org.au
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, x86@kernel.org,
-	john.allen@amd.com, davem@davemloft.net, thomas.lendacky@amd.com,
-	michael.roth@amd.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] crypto: ccp: Add support to enable
- CipherTextHiding on SNP_INIT_EX
-Message-ID: <202505071309.cJl7zfy2-lkp@intel.com>
-References: <94ffa7595fca67cfdcd2352354791bdb6ac00499.1745279916.git.ashish.kalra@amd.com>
+To: Dan Williams <dan.j.williams@intel.com>, dave.hansen@linux.intel.com
+Cc: oe-kbuild-all@lists.linux.dev, x86@kernel.org,
+	Kees Cook <kees@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Naveen N Rao <naveen@kernel.org>,
+	Vishal Annapurve <vannapurve@google.com>,
+	Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev
+Subject: Re: [PATCH v3 2/2] x86/devmem: Drop /dev/mem access for confidential
+ guests
+Message-ID: <202505071309.Aa4vRJxa-lkp@intel.com>
+References: <174491712829.1395340.5054725417641299524.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,45 +69,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <94ffa7595fca67cfdcd2352354791bdb6ac00499.1745279916.git.ashish.kalra@amd.com>
+In-Reply-To: <174491712829.1395340.5054725417641299524.stgit@dwillia2-xfh.jf.intel.com>
 
-Hi Ashish,
+Hi Dan,
 
 kernel test robot noticed the following build errors:
 
-[auto build test ERROR on next-20250417]
-[cannot apply to herbert-cryptodev-2.6/master herbert-crypto-2.6/master kvm/queue kvm/next linus/master kvm/linux-next v6.15-rc3 v6.15-rc2 v6.15-rc1 v6.15-rc5]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+[auto build test ERROR on 0af2f6be1b4281385b618cb86ad946eded089ac8]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ashish-Kalra/crypto-ccp-New-bit-field-definitions-for-SNP_PLATFORM_STATUS-command/20250422-082725
-base:   next-20250417
-patch link:    https://lore.kernel.org/r/94ffa7595fca67cfdcd2352354791bdb6ac00499.1745279916.git.ashish.kalra%40amd.com
-patch subject: [PATCH v3 3/4] crypto: ccp: Add support to enable CipherTextHiding on SNP_INIT_EX
-config: i386-buildonly-randconfig-002-20250422 (https://download.01.org/0day-ci/archive/20250507/202505071309.cJl7zfy2-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071309.cJl7zfy2-lkp@intel.com/reproduce)
+url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Williams/x86-devmem-Remove-duplicate-range_is_allowed-definition/20250419-080713
+base:   0af2f6be1b4281385b618cb86ad946eded089ac8
+patch link:    https://lore.kernel.org/r/174491712829.1395340.5054725417641299524.stgit%40dwillia2-xfh.jf.intel.com
+patch subject: [PATCH v3 2/2] x86/devmem: Drop /dev/mem access for confidential guests
+config: openrisc-randconfig-r073-20250428 (https://download.01.org/0day-ci/archive/20250507/202505071309.Aa4vRJxa-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071309.Aa4vRJxa-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505071309.cJl7zfy2-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505071309.Aa4vRJxa-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   In file included from arch/x86/kvm/svm/svm.c:24:
->> include/linux/psp-sev.h:1035:74: error: use of undeclared identifier 'FALSE'
-    1035 | static inline bool is_sev_snp_ciphertext_hiding_supported(void) { return FALSE; }
-         |                                                                          ^
-   1 error generated.
+   drivers/char/mem.c: In function 'open_port':
+>> drivers/char/mem.c:604:6: error: implicit declaration of function 'cc_platform_has' [-Werror=implicit-function-declaration]
+     604 |      cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+         |      ^~~~~~~~~~~~~~~
+>> drivers/char/mem.c:604:22: error: 'CC_ATTR_GUEST_MEM_ENCRYPT' undeclared (first use in this function)
+     604 |      cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+         |                      ^~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/char/mem.c:604:22: note: each undeclared identifier is reported only once for each function it appears in
+   cc1: some warnings being treated as errors
 
 
-vim +/FALSE +1035 include/linux/psp-sev.h
+vim +/cc_platform_has +604 drivers/char/mem.c
 
-  1034	
-> 1035	static inline bool is_sev_snp_ciphertext_hiding_supported(void) { return FALSE; }
-  1036	
+   586	
+   587	static int open_port(struct inode *inode, struct file *filp)
+   588	{
+   589		int rc;
+   590	
+   591		if (!capable(CAP_SYS_RAWIO))
+   592			return -EPERM;
+   593	
+   594		rc = security_locked_down(LOCKDOWN_DEV_MEM);
+   595		if (rc)
+   596			return rc;
+   597	
+   598		/*
+   599		 * Enforce encrypted mapping consistency and avoid unaccepted
+   600		 * memory conflicts, "lockdown" /dev/mem for confidential
+   601		 * guests.
+   602		 */
+   603		if (IS_ENABLED(CONFIG_STRICT_DEVMEM) &&
+ > 604		    cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+   605			return -EPERM;
+   606	
+   607		if (iminor(inode) != DEVMEM_MINOR)
+   608			return 0;
+   609	
+   610		/*
+   611		 * Use a unified address space to have a single point to manage
+   612		 * revocations when drivers want to take over a /dev/mem mapped
+   613		 * range.
+   614		 */
+   615		filp->f_mapping = iomem_get_mapping();
+   616	
+   617		return 0;
+   618	}
+   619	
 
 -- 
 0-DAY CI Kernel Test Service
