@@ -1,65 +1,293 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033FC223702;
-	Wed,  7 May 2025 07:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA9A225A4F;
+	Wed,  7 May 2025 07:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746604679; cv=none; b=dpVqZVl5nR2eJT2jZy5i2w78umRmXDs57PpuV0ckhWLp6megdBMayjuzA/2M2+lDkhM8h6RybylgebSdH3XFTFFexLMiP1ZTAp41yAtKdLcCm+JJ7V0kSMckHKZsPx/t5UQT4X5FEXHVJSCDllZZfjfuCYZ1FiIe2G+o/QbaaRA=
+	t=1746604681; cv=none; b=JAFhT4puEQVJGgf7BjLCefUs6selj9flHNGSX0zT3YS4NZ8gzAdrFlmbt+uJlhr7WMV/+D1o1nl8YbTlXsvL3xwCkDffdZi4NHB67pDKj7NXH2kUOauPh/4/cfehWoJ3CAoqnpstUikhZLvXewVTmvbsjlHFjy852Oj3PYZxEyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746604679; c=relaxed/simple;
-	bh=Zh1Ax+79urOihrTf+frzyudruYuijX+G+RsUCOtrxR4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vF6beFHSyFCU27FQHaGYnAe46H3oJ2DDoIyeklJ4VQvCK23eFBXeH67ssZPmMgsrVgX4Oq0rQbQdaT1vng181hS1lrVnkX00DoIXQwpTEbbTtNSxC0cWfIoxIvDOoFRTmdw2Z4Ck6XKFlNDYbTSHa9XsOjuDGpU3FJ5TKdlAt5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=bp9/PJqD; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1746604681; c=relaxed/simple;
+	bh=LiF8c33hpSYIAEkHGeaPAZrDKpeEzMDvAT2ajpsuSxc=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=G3ond7yfwZA2GiYFJy4Gaa6q3s2Sd3MZVYJu/b5Rqor1LwwLwyoA3/PphIbccliioA9iMjU8zg1N7W7Izn/eB1pHvzrImUnw1aL7xm3qrZn9fMj1RIZTuBAABvJcACTc85S4OWy7C2+/tyQUriK9hDWgiIAjQd5/+6gKWb9YBxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BOJukuqx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5DDrLS1t; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="bp9/PJqD"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 31F241F949;
-	Wed,  7 May 2025 09:57:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1746604666;
-	bh=Zh1Ax+79urOihrTf+frzyudruYuijX+G+RsUCOtrxR4=; h=From:To:Subject;
-	b=bp9/PJqDfYkHIwO7r+oExaz/LOmHOCYbtrw7u8McQMGBwBEBzefL8rw1+uhHO9H8V
-	 KsxoETq9zRTZIj7jKRr6hFzVI/sXYCGlb7k10JDhkdpcH2ncI31Xu6xqs9NecIamkb
-	 5/cPThsxaK3iMWAstY52ZvvSy1waW4gewOfNaXVPYS2cesx7sMNyrtcDMBy/PX8hnc
-	 ML6uBtSPxKAgQJWtSZiOZN1p0yFQVhUj1zHkhtaOjCqqkx+ESG56c24rrQ9F8SbtNK
-	 b1hc0Gy/NpD2LD1ZjPOUpB/0ttCXco4YCsYsdqLqhgeXj1URNRA5ssUCSUsXTaK8EF
-	 uTo1SBb6IAxjg==
-Date: Wed, 7 May 2025 09:57:34 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Daniel Schultz <d.schultz@phytec.de>
-Cc: nm@ti.com, vigneshr@ti.com, kristo@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, robertcnelson@gmail.com,
-	francesco.dolcini@toradex.com, upstream@lists.phytec.de,
-	w.egorov@phytec.de
-Subject: Re: [PATCH 2/4] arm64: dts: ti: k3-am625-*: Specify Temperature Grade
-Message-ID: <20250507075734.GA10198@francesco-nb>
-References: <20250507050847.912756-1-d.schultz@phytec.de>
- <20250507050847.912756-2-d.schultz@phytec.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BOJukuqx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5DDrLS1t"
+Date: Wed, 07 May 2025 07:57:56 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746604677;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GBMMQbT2ajvf+rvDIb3foBqvPN9ijqERZQ9pMk+9png=;
+	b=BOJukuqxhRT8mwuUrUWerA7EIZ9DzUFVywmQ+z6jZaBZTuu7lRJx7CpMfsr0Q6SHVcSusV
+	1NP2gYm1ys0XlMu6HQ4SQoqwfBa6NtDOft/KSAi2XuDBBXFmrHfr/f2b1DuERixfNOBdZk
+	BkbEWsvrmweMxnhhikZJHMnIgR03pGRy5Yam0Hmgw7H74kLpRivAHem8oJK9oWtzLrdB/h
+	cAWQJEIe3ECvC0/13IrT3zBErXAWrgFZCWBZ1qW9x7UiIHb9aUclQlf+QHZ8sCjo/CEsK2
+	kJthmSG+5fCtvzgUwhRiuJT74954cR13qBdOiS0dACTW3mBraoQ0PLrlH974qQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746604677;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GBMMQbT2ajvf+rvDIb3foBqvPN9ijqERZQ9pMk+9png=;
+	b=5DDrLS1tbdwiJ0DrU7lZeTqZ9tEAG7GEonVdfc+1zuhaAQv0hmFZTFJrJsMOG713X1tEth
+	SOFkz17dZy1rdLCg==
+From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/cleanups] powerpc: Switch to irq_find_mapping()
+Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250319092951.37667-42-jirislaby@kernel.org>
+References: <20250319092951.37667-42-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507050847.912756-2-d.schultz@phytec.de>
+Message-ID: <174660467643.406.3878316136992998883.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 06, 2025 at 10:08:45PM -0700, Daniel Schultz wrote:
-> Specify the temperature grade in the base device tree to ensure
-> correct trip points are applied for each board.
+The following commit has been merged into the irq/cleanups branch of tip:
 
-At least for Verdin this is not correct.
+Commit-ID:     a57a38ebcd93045a664c295b51bd5d1e655ecacc
+Gitweb:        https://git.kernel.org/tip/a57a38ebcd93045a664c295b51bd5d1e655ecacc
+Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
+AuthorDate:    Wed, 19 Mar 2025 10:29:34 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 07 May 2025 09:53:24 +02:00
 
-Verdin AM62 is available in different variants, the correct
-thermal thresholds should be set in firmware/bootloader, see for example
-in u-boot, arch/arm/mach-k3/am62x/am625_fdt.c
+powerpc: Switch to irq_find_mapping()
 
-Francesco
+irq_linear_revmap() is deprecated, so remove all its uses and supersede
+them by an identical call to irq_find_mapping().
 
+[ tglx: Fix up subject prefix ]
+
+Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Christophe Leroy <christophe.leroy@csgroup.eu> # for 8xx
+Link: https://lore.kernel.org/all/20250319092951.37667-42-jirislaby@kernel.org
+
+---
+ arch/powerpc/platforms/44x/uic.c                 | 2 +-
+ arch/powerpc/platforms/52xx/mpc52xx_gpt.c        | 2 +-
+ arch/powerpc/platforms/52xx/mpc52xx_pic.c        | 2 +-
+ arch/powerpc/platforms/85xx/socrates_fpga_pic.c  | 2 +-
+ arch/powerpc/platforms/8xx/cpm1-ic.c             | 2 +-
+ arch/powerpc/platforms/8xx/pic.c                 | 2 +-
+ arch/powerpc/platforms/embedded6xx/flipper-pic.c | 2 +-
+ arch/powerpc/platforms/embedded6xx/hlwd-pic.c    | 2 +-
+ arch/powerpc/platforms/powermac/pic.c            | 2 +-
+ arch/powerpc/sysdev/cpm2_pic.c                   | 2 +-
+ arch/powerpc/sysdev/ehv_pic.c                    | 2 +-
+ arch/powerpc/sysdev/ge/ge_pic.c                  | 2 +-
+ arch/powerpc/sysdev/ipic.c                       | 2 +-
+ arch/powerpc/sysdev/mpic.c                       | 4 ++--
+ 14 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/arch/powerpc/platforms/44x/uic.c b/arch/powerpc/platforms/44x/uic.c
+index 481ec25..85daf84 100644
+--- a/arch/powerpc/platforms/44x/uic.c
++++ b/arch/powerpc/platforms/44x/uic.c
+@@ -328,5 +328,5 @@ unsigned int uic_get_irq(void)
+ 	msr = mfdcr(primary_uic->dcrbase + UIC_MSR);
+ 	src = 32 - ffs(msr);
+ 
+-	return irq_linear_revmap(primary_uic->irqhost, src);
++	return irq_find_mapping(primary_uic->irqhost, src);
+ }
+diff --git a/arch/powerpc/platforms/52xx/mpc52xx_gpt.c b/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
+index f042b21..3dbe5a5 100644
+--- a/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
++++ b/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
+@@ -369,7 +369,7 @@ struct mpc52xx_gpt_priv *mpc52xx_gpt_from_irq(int irq)
+ 	mutex_lock(&mpc52xx_gpt_list_mutex);
+ 	list_for_each(pos, &mpc52xx_gpt_list) {
+ 		gpt = container_of(pos, struct mpc52xx_gpt_priv, list);
+-		if (gpt->irqhost && irq == irq_linear_revmap(gpt->irqhost, 0)) {
++		if (gpt->irqhost && irq == irq_find_mapping(gpt->irqhost, 0)) {
+ 			mutex_unlock(&mpc52xx_gpt_list_mutex);
+ 			return gpt;
+ 		}
+diff --git a/arch/powerpc/platforms/52xx/mpc52xx_pic.c b/arch/powerpc/platforms/52xx/mpc52xx_pic.c
+index 7ec56d3..eb6a4e7 100644
+--- a/arch/powerpc/platforms/52xx/mpc52xx_pic.c
++++ b/arch/powerpc/platforms/52xx/mpc52xx_pic.c
+@@ -515,5 +515,5 @@ unsigned int mpc52xx_get_irq(void)
+ 		return 0;
+ 	}
+ 
+-	return irq_linear_revmap(mpc52xx_irqhost, irq);
++	return irq_find_mapping(mpc52xx_irqhost, irq);
+ }
+diff --git a/arch/powerpc/platforms/85xx/socrates_fpga_pic.c b/arch/powerpc/platforms/85xx/socrates_fpga_pic.c
+index b4f6360..4b69fb3 100644
+--- a/arch/powerpc/platforms/85xx/socrates_fpga_pic.c
++++ b/arch/powerpc/platforms/85xx/socrates_fpga_pic.c
+@@ -83,7 +83,7 @@ static inline unsigned int socrates_fpga_pic_get_irq(unsigned int irq)
+ 		if (cause >> (i + 16))
+ 			break;
+ 	}
+-	return irq_linear_revmap(socrates_fpga_pic_irq_host,
++	return irq_find_mapping(socrates_fpga_pic_irq_host,
+ 			(irq_hw_number_t)i);
+ }
+ 
+diff --git a/arch/powerpc/platforms/8xx/cpm1-ic.c b/arch/powerpc/platforms/8xx/cpm1-ic.c
+index 1549f6c..a49d4a9 100644
+--- a/arch/powerpc/platforms/8xx/cpm1-ic.c
++++ b/arch/powerpc/platforms/8xx/cpm1-ic.c
+@@ -59,7 +59,7 @@ static int cpm_get_irq(struct irq_desc *desc)
+ 	cpm_vec = in_be16(&data->reg->cpic_civr);
+ 	cpm_vec >>= 11;
+ 
+-	return irq_linear_revmap(data->host, cpm_vec);
++	return irq_find_mapping(data->host, cpm_vec);
+ }
+ 
+ static void cpm_cascade(struct irq_desc *desc)
+diff --git a/arch/powerpc/platforms/8xx/pic.c b/arch/powerpc/platforms/8xx/pic.c
+index 7639f28..933d6ab 100644
+--- a/arch/powerpc/platforms/8xx/pic.c
++++ b/arch/powerpc/platforms/8xx/pic.c
+@@ -80,7 +80,7 @@ unsigned int mpc8xx_get_irq(void)
+ 	if (irq == PIC_VEC_SPURRIOUS)
+ 		return 0;
+ 
+-        return irq_linear_revmap(mpc8xx_pic_host, irq);
++        return irq_find_mapping(mpc8xx_pic_host, irq);
+ 
+ }
+ 
+diff --git a/arch/powerpc/platforms/embedded6xx/flipper-pic.c b/arch/powerpc/platforms/embedded6xx/flipper-pic.c
+index a41649b..91a8f0a 100644
+--- a/arch/powerpc/platforms/embedded6xx/flipper-pic.c
++++ b/arch/powerpc/platforms/embedded6xx/flipper-pic.c
+@@ -173,7 +173,7 @@ unsigned int flipper_pic_get_irq(void)
+ 		return 0;	/* no more IRQs pending */
+ 
+ 	irq = __ffs(irq_status);
+-	return irq_linear_revmap(flipper_irq_host, irq);
++	return irq_find_mapping(flipper_irq_host, irq);
+ }
+ 
+ /*
+diff --git a/arch/powerpc/platforms/embedded6xx/hlwd-pic.c b/arch/powerpc/platforms/embedded6xx/hlwd-pic.c
+index 9abb3da..b57e87b 100644
+--- a/arch/powerpc/platforms/embedded6xx/hlwd-pic.c
++++ b/arch/powerpc/platforms/embedded6xx/hlwd-pic.c
+@@ -190,7 +190,7 @@ static struct irq_domain *__init hlwd_pic_init(struct device_node *np)
+ unsigned int hlwd_pic_get_irq(void)
+ {
+ 	unsigned int hwirq = __hlwd_pic_get_irq(hlwd_irq_host);
+-	return hwirq ? irq_linear_revmap(hlwd_irq_host, hwirq) : 0;
++	return hwirq ? irq_find_mapping(hlwd_irq_host, hwirq) : 0;
+ }
+ 
+ /*
+diff --git a/arch/powerpc/platforms/powermac/pic.c b/arch/powerpc/platforms/powermac/pic.c
+index 2eddc8b..c37783a 100644
+--- a/arch/powerpc/platforms/powermac/pic.c
++++ b/arch/powerpc/platforms/powermac/pic.c
+@@ -250,7 +250,7 @@ static unsigned int pmac_pic_get_irq(void)
+ 	raw_spin_unlock_irqrestore(&pmac_pic_lock, flags);
+ 	if (unlikely(irq < 0))
+ 		return 0;
+-	return irq_linear_revmap(pmac_pic_host, irq);
++	return irq_find_mapping(pmac_pic_host, irq);
+ }
+ 
+ static int pmac_pic_host_match(struct irq_domain *h, struct device_node *node,
+diff --git a/arch/powerpc/sysdev/cpm2_pic.c b/arch/powerpc/sysdev/cpm2_pic.c
+index c63d72f..4a59ed1 100644
+--- a/arch/powerpc/sysdev/cpm2_pic.c
++++ b/arch/powerpc/sysdev/cpm2_pic.c
+@@ -207,7 +207,7 @@ unsigned int cpm2_get_irq(void)
+ 
+ 	if (irq == 0)
+ 		return(-1);
+-	return irq_linear_revmap(cpm2_pic_host, irq);
++	return irq_find_mapping(cpm2_pic_host, irq);
+ }
+ 
+ static int cpm2_pic_host_map(struct irq_domain *h, unsigned int virq,
+diff --git a/arch/powerpc/sysdev/ehv_pic.c b/arch/powerpc/sysdev/ehv_pic.c
+index 4ee8d36..b6f9774 100644
+--- a/arch/powerpc/sysdev/ehv_pic.c
++++ b/arch/powerpc/sysdev/ehv_pic.c
+@@ -175,7 +175,7 @@ unsigned int ehv_pic_get_irq(void)
+ 	 * this will also setup revmap[] in the slow path for the first
+ 	 * time, next calls will always use fast path by indexing revmap
+ 	 */
+-	return irq_linear_revmap(global_ehv_pic->irqhost, irq);
++	return irq_find_mapping(global_ehv_pic->irqhost, irq);
+ }
+ 
+ static int ehv_pic_host_match(struct irq_domain *h, struct device_node *node,
+diff --git a/arch/powerpc/sysdev/ge/ge_pic.c b/arch/powerpc/sysdev/ge/ge_pic.c
+index 5b1f8dc..0bc3f0b 100644
+--- a/arch/powerpc/sysdev/ge/ge_pic.c
++++ b/arch/powerpc/sysdev/ge/ge_pic.c
+@@ -245,7 +245,7 @@ unsigned int gef_pic_get_irq(void)
+ 			if (active & (0x1 << hwirq))
+ 				break;
+ 		}
+-		virq = irq_linear_revmap(gef_pic_irq_host,
++		virq = irq_find_mapping(gef_pic_irq_host,
+ 			(irq_hw_number_t)hwirq);
+ 	}
+ 
+diff --git a/arch/powerpc/sysdev/ipic.c b/arch/powerpc/sysdev/ipic.c
+index f7b415e..70be210 100644
+--- a/arch/powerpc/sysdev/ipic.c
++++ b/arch/powerpc/sysdev/ipic.c
+@@ -801,7 +801,7 @@ unsigned int ipic_get_irq(void)
+ 	if (irq == 0)    /* 0 --> no irq is pending */
+ 		return 0;
+ 
+-	return irq_linear_revmap(primary_ipic->irqhost, irq);
++	return irq_find_mapping(primary_ipic->irqhost, irq);
+ }
+ 
+ #ifdef CONFIG_SUSPEND
+diff --git a/arch/powerpc/sysdev/mpic.c b/arch/powerpc/sysdev/mpic.c
+index 3de0901..787a88e 100644
+--- a/arch/powerpc/sysdev/mpic.c
++++ b/arch/powerpc/sysdev/mpic.c
+@@ -1785,7 +1785,7 @@ static unsigned int _mpic_get_one_irq(struct mpic *mpic, int reg)
+ 		return 0;
+ 	}
+ 
+-	return irq_linear_revmap(mpic->irqhost, src);
++	return irq_find_mapping(mpic->irqhost, src);
+ }
+ 
+ unsigned int mpic_get_one_irq(struct mpic *mpic)
+@@ -1823,7 +1823,7 @@ unsigned int mpic_get_coreint_irq(void)
+ 		return 0;
+ 	}
+ 
+-	return irq_linear_revmap(mpic->irqhost, src);
++	return irq_find_mapping(mpic->irqhost, src);
+ #else
+ 	return 0;
+ #endif
