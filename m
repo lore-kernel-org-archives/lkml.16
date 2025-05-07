@@ -1,272 +1,172 @@
-Received: from e240-7.smtp-out.eu-north-1.amazonses.com (e240-7.smtp-out.eu-north-1.amazonses.com [23.251.240.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2441FBCAD
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 22:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB1B2046B3;
+	Wed,  7 May 2025 22:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746658262; cv=none; b=XfzRlqQhmaFW18Q5qyGosM2pNidVRVi2tpBRduZCKCNxgXr7zi1QClYdSJZATb5sQM/kXmpxAXPsWVQOdpJ5YUOrZcxJ5Tdnx6QYKCX5ugFh5pZDBxWJ8D5+8FZ+Y58+PjFU3pH9JVvDT4g/CSdY/5h8BlmwthOB24eB+caG45E=
+	t=1746658272; cv=none; b=ury1PYuB9A1R6XBBKMctyZyp4NQ6Idnifji0s8byssD00khVDCLHHUU8NUmKbW4Ti8snVn5k0fdoLnIZU81Vre8FmrB+seeNV1cuKAGV6HeSmWaaKX7mcs6NKh+9A73PCe6lz1sckem0nSXM3HuhQ/3r+J2ShxqSV+Sz6RNvUpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746658262; c=relaxed/simple;
-	bh=u/VxZyRVwVVWCb17n9SiizIdCucyimsALLFuxK9V/v8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=buVSUGc8c+H4PYtaK80tlC1Uv66ePVNgXr6ckJ5NK22EmiKv1px3GMLQh+8aAtFsfsBHZ3ydi6W8GIqBBDK2S27lL0/i6DctqogDZ/qspnMtP/ZNlpif9j9oNBRt/XMOuQMKb8DyJwVNPdXvF7Dl2q+tEFJ+f4wW4HCVZlWIaPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=K+bBaPyZ; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=bIVgQ3cK; arc=none smtp.client-ip=23.251.240.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
+	s=arc-20240116; t=1746658272; c=relaxed/simple;
+	bh=E9+eGHJrbeS9i2f/rzKsy3HqYqEgW0ZpMWLReHSEssM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u+6TZv07bf6NVLq2S8Zov8rHR5lwQwagNmCsL/+MoLNFEK5s7NOXAV1LTkU11mYDviw0eItjUIIW5RCwZGec92HlYmno004lVwCQHDv/4tuMj0V4JK0Cwa6OgYs56S2jMvJrf/wAuXoQSxSME7PlcVX5n62quwrW4UmJe/grImI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YhVu/JAR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="K+bBaPyZ";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="bIVgQ3cK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1746658258;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=u/VxZyRVwVVWCb17n9SiizIdCucyimsALLFuxK9V/v8=;
-	b=K+bBaPyZg6DkQkS6VKv4UlwAm/TB1GGBa4YpQ7Vm3DtiVjqq1DAgOtAl+Fd5Eqo+
-	FHG9eXD+88pBogtJKZb0vh00ZPEiEt24Tk8ta6FMUT3P0UJFcSPXJgUfa4PZYq4uKYO
-	ZD60NjAEtkx6fRHw20jHJFr9BFUK745/fhPa/Oa4tLv3z/0BAeBjkDjWVjacr1X9KE2
-	oB6frY233r0orLXNYPI2gkXxqbXGoi1feX21Q9GzzGWUPwnU96uCn9dOyR+9h+n9sbz
-	lVQ6ZMLe6DDP3PvxMMCl4eM1JiwRNTK3kLhdVm/B2Va896kRimL/4O4wGDPpHLyDBg7
-	wGUd7Wqa6g==
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1746658258;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-	bh=u/VxZyRVwVVWCb17n9SiizIdCucyimsALLFuxK9V/v8=;
-	b=bIVgQ3cKnA7if2SzZwxvlcxdpKX2PmP86s1saCzFwdYVAkffeCO5bq9rFLu/dU+I
-	ukGs5xXIdFNVA4LJ2ZNiQw5mnAaUjxlCaCgOOQ+3YbykDMxh0WuKodngVWByeVs4ut2
-	2jxKiFwZ0c7GrH99VgOCy4UfNTXULfT/VJ8byrqU=
-X-Forwarded-Encrypted: i=1; AJvYcCVFFhqMjmvv4Jo9PWF8dbRDmE7oB4fT+g1iRP0Tm5DHi2bww7lOX9Rxgv+nFihjZg5+4bCUTzO8xYIiiSw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRZtZTCrbiPKN152CL1meM5eTK366Nqdh1dZGddVG+ehaHVQ5n
-	xzO667F+q+IGr3nF+LuyODTWWOcBjGKA7jXOQaeUg4WPyqPI24ro1FSaCumuE4b+eHRLdGZL4uC
-	+K7TjtnjVjV6bACMmkMROx550cWo=
-X-Google-Smtp-Source: AGHT+IGYe4C//wRw1MydI9tDxP1BkXsgbQVwhKzvXB8b4Q2Wx/Ai6WIh6rV6vC7JP/xcoguyIqDCpOzYJKldHFl35+w=
-X-Received: by 2002:a17:90a:da87:b0:2fe:b907:3b05 with SMTP id
- 98e67ed59e1d1-30aac29bf2bmr7379060a91.29.1746658255869; Wed, 07 May 2025
- 15:50:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YhVu/JAR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 523C8C4CEE2;
+	Wed,  7 May 2025 22:51:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746658271;
+	bh=E9+eGHJrbeS9i2f/rzKsy3HqYqEgW0ZpMWLReHSEssM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=YhVu/JARipX+n+imQm/DwgdiRF9OrLw8xZSMF+SoP8751mZO6/oKhl1ladE4sVZCf
+	 HpThYUAOmu3iRP4JTlA+KmFOe3FEs0fSbSWAGUbf6USriLi5iMoRS1zuw1dls5g/1q
+	 ervkaCbeJs0jTmsjg4EXHES3r9DJIYfeJFor0BfzRJ43iH/6nrkgS5uHuuB4C4XcsT
+	 ehwpVxWm49eqwSk/XxtJInB7SRF3jpv7LX8QoXmLvNGBjUs104G23M+6pjdi0o0EWF
+	 bCAp3lzpFaHK4q95XyhEudRBiw6YDnHzeLzueC2ZAIcEShTVcoyxfK97/7nqhDkmrw
+	 yif6jJHkFSlsw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id E9FEDCE0D1D; Wed,  7 May 2025 15:51:10 -0700 (PDT)
+Date: Wed, 7 May 2025 15:51:10 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-rt-users@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	Mike Galbraith <efault@gmx.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Peter Collingbourne <pcc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Thiago Jung Bauermann <thiago.bauermann@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	Kristina Martsenko <kristina.martsenko@arm.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Petr Tesarik <ptesarik@suse.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Juri Lelli <juri.lelli@redhat.com>, Phil Auld <pauld@redhat.com>
+Subject: Re: [PATCH 1/1] arm64: enable PREEMPT_LAZY
+Message-ID: <b67d07d2-21d6-45ab-b069-c71b90f8bcba@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250305104925.189198-1-vschneid@redhat.com>
+ <20250305104925.189198-2-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507142552.9446-1-aha310510@gmail.com>
-In-Reply-To: <20250507142552.9446-1-aha310510@gmail.com>
-From: Ozgur Kara <ozgur@goosey.org>
-Date: Wed, 7 May 2025 22:50:58 +0000
-X-Gmail-Original-Message-ID: <CADvZ6EqLDcQ9Ag3JD5_VdJOc9WnvP7Sek9gP7sDw9xanieJGcw@mail.gmail.com>
-X-Gm-Features: ATxdqUHzT-vjZuEaAAjESbWCVqFEXkWEYdlqR6AAnE_BlEpPNCKX6_n7HsKgm4M
-Message-ID: <01100196acf1ed92-b7371c69-31bd-42d4-b691-55216da8cc93-000000@eu-north-1.amazonses.com>
-Subject: Re: [PATCH v3] mm/vmalloc: fix data race in show_numa_info()
-To: Jeongjun Park <aha310510@gmail.com>
-Cc: akpm@linux-foundation.org, urezki@gmail.com, edumazet@google.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
-X-SES-Outgoing: 2025.05.07-23.251.240.7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305104925.189198-2-vschneid@redhat.com>
 
-Jeongjun Park <aha310510@gmail.com>, 7 May 2025 =C3=87ar, 17:32 tarihinde =
-=C5=9Funu yazd=C4=B1:
->
-> The following data-race was found in show_numa_info():
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
->
-> read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
->  show_numa_info mm/vmalloc.c:4936 [inline]
->  vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
->  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
->  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
->  new_sync_read fs/read_write.c:489 [inline]
->  vfs_read+0x5b4/0x740 fs/read_write.c:570
->  ksys_read+0xbe/0x190 fs/read_write.c:713
->  __do_sys_read fs/read_write.c:722 [inline]
->  __se_sys_read fs/read_write.c:720 [inline]
->  __x64_sys_read+0x41/0x50 fs/read_write.c:720
->  x64_sys_call+0x1729/0x1fd0 arch/x86/include/generated/asm/syscalls_64.h:=
-1
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xa6/0x1b0 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
->  show_numa_info mm/vmalloc.c:4934 [inline]
->  vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
->  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
->  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
->  new_sync_read fs/read_write.c:489 [inline]
->  vfs_read+0x5b4/0x740 fs/read_write.c:570
->  ksys_read+0xbe/0x190 fs/read_write.c:713
->  __do_sys_read fs/read_write.c:722 [inline]
->  __se_sys_read fs/read_write.c:720 [inline]
->  __x64_sys_read+0x41/0x50 fs/read_write.c:720
->  x64_sys_call+0x1729/0x1fd0 arch/x86/include/generated/asm/syscalls_64.h:=
-1
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xa6/0x1b0 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> value changed: 0x0000008f -> 0x00000000
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> According to this report, there is a read/write data-race because m->priv=
-ate
-> is accessible to multiple CPUs. To fix this, instead of allocating the he=
-ap
-> in proc_vmalloc_init() and passing the heap address to m->private,
-> show_numa_info() should allocate the heap.
->
-> One thing to note is that show_numa_info() is called in a critical sectio=
-n
-> of a spinlock, so it must be allocated on the heap with GFP_ATOMIC flag.
->
-> Fixes: a47a126ad5ea ("vmallocinfo: add NUMA information")
-> Suggested-by: Eric Dumazet <edumazet@google.com>
-> Suggested-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+On Wed, Mar 05, 2025 at 11:49:25AM +0100, Valentin Schneider wrote:
+> From: Mark Rutland <mark.rutland@arm.com>
+> 
+> For an architecture to enable CONFIG_ARCH_HAS_RESCHED_LAZY, two things are
+> required:
+> 1) Adding a TIF_NEED_RESCHED_LAZY flag definition
+> 2) Checking for TIF_NEED_RESCHED_LAZY in the appropriate locations
+> 
+> 2) is handled in a generic manner by CONFIG_GENERIC_ENTRY, which isn't
+> (yet) implemented for arm64. However, outside of core scheduler code,
+> TIF_NEED_RESCHED_LAZY only needs to be checked on a kernel exit, meaning:
+> o return/entry to userspace.
+> o return/entry to guest.
+> 
+> The return/entry to a guest is all handled by xfer_to_guest_mode_handle_work()
+> which already does the right thing, so it can be left as-is.
+> 
+> arm64 doesn't use common entry's exit_to_user_mode_prepare(), so update its
+> return to user path to check for TIF_NEED_RESCHED_LAZY and call into
+> schedule() accordingly.
+> 
+> Link: https://lore.kernel.org/linux-rt-users/20241216190451.1c61977c@mordecai.tesarici.cz/
+> Link: https://lore.kernel.org/all/xhsmh4j0fl0p3.mognet@vschneid-thinkpadt14sgen2i.remote.csb/
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> [testdrive, _TIF_WORK_MASK fixlet and changelog.]
+> Signed-off-by: Mike Galbraith <efault@gmx.de>
+> [Another round of testing; changelog faff]
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+
+Nice!  This gets rid of the .config complaints that you otherwise get
+when running the rcutorture TREE07 scenario on arm64:
+
+Tested-by: Paul E. McKenney <paulmck@kernel.org>
+
 > ---
-> v3: Following Uladzislau Rezki's suggestion, we check v->flags beforehand
->         to avoid printing uninitialized members of vm_struct.
-> - Link to v2: https://lore.kernel.org/all/20250506082520.84153-1-aha31051=
-0@gmail.com/
-> v2: Refactoring some functions and fix patch as per Eric Dumazet suggesti=
-on
-> - Link to v1: https://lore.kernel.org/all/20250505171948.24410-1-aha31051=
-0@gmail.com/
-> ---
->  mm/vmalloc.c | 51 ++++++++++++++++++++++++++-------------------------
->  1 file changed, 26 insertions(+), 25 deletions(-)
->
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 3ed720a787ec..9139025e20e5 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -4914,28 +4914,32 @@ bool vmalloc_dump_obj(void *object)
->  #endif
->
->  #ifdef CONFIG_PROC_FS
-> +
-> +/*
-> + * Print number of pages allocated on each memory node.
-> + *
-> + * This function can only be called if CONFIG_NUMA is enabled
-> + * and VM_UNINITIALIZED bit in v->flags is disabled.
-> + */
->  static void show_numa_info(struct seq_file *m, struct vm_struct *v)
->  {
-> -       if (IS_ENABLED(CONFIG_NUMA)) {
-> -               unsigned int nr, *counters =3D m->private;
-> -               unsigned int step =3D 1U << vm_area_page_order(v);
-> +       unsigned int nr, *counters;
-> +       unsigned int step =3D 1U << vm_area_page_order(v);
->
-> -               if (!counters)
-> -                       return;
-> +       counters =3D kcalloc(nr_node_ids, sizeof(unsigned int), GFP_ATOMI=
-C);
-> +       if (!counters)
-> +               return;
->
-> -               if (v->flags & VM_UNINITIALIZED)
-
-Hello,
-
-although skipping memory blocks with VM_UNINITIALIZED flag seems like
-a good idea maybe it might be a good idea to check correctness of
-memory areas.
-
-if (v && (v->flags & VM_UNINITIALIZED)) {
-    continue;
-}
-
-> -                       return;
-> -               /* Pair with smp_wmb() in clear_vm_uninitialized_flag() *=
-/
-> -               smp_rmb();
-> +       /* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
-> +       smp_rmb();
->
-> -               memset(counters, 0, nr_node_ids * sizeof(unsigned int));
-> +       for (nr =3D 0; nr < v->nr_pages; nr +=3D step)
-> +               counters[page_to_nid(v->pages[nr])] +=3D step;
-> +       for_each_node_state(nr, N_HIGH_MEMORY)
-> +               if (counters[nr])
-> +                       seq_printf(m, " N%u=3D%u", nr, counters[nr]);
->
-> -               for (nr =3D 0; nr < v->nr_pages; nr +=3D step)
-> -                       counters[page_to_nid(v->pages[nr])] +=3D step;
-> -               for_each_node_state(nr, N_HIGH_MEMORY)
-> -                       if (counters[nr])
-> -                               seq_printf(m, " N%u=3D%u", nr, counters[n=
-r]);
-> -       }
-> +       kfree(counters);
->  }
->
->  static void show_purge_info(struct seq_file *m)
-> @@ -4979,6 +4983,8 @@ static int vmalloc_info_show(struct seq_file *m, vo=
-id *p)
->                         }
->
->                         v =3D va->vm;
-> +                       if (v->flags & VM_UNINITIALIZED)
-> +                               continue;
->
->                         seq_printf(m, "0x%pK-0x%pK %7ld",
->                                 v->addr, v->addr + v->size, v->size);
-> @@ -5013,7 +5019,9 @@ static int vmalloc_info_show(struct seq_file *m, vo=
-id *p)
->                         if (is_vmalloc_addr(v->pages))
->                                 seq_puts(m, " vpages");
->
-> -                       show_numa_info(m, v);
-> +                       if (IS_ENABLED(CONFIG_NUMA))
-> +                               show_numa_info(m, v);
-> +
->                         seq_putc(m, '\n');
->                 }
->                 spin_unlock(&vn->busy.lock);
-> @@ -5028,14 +5036,7 @@ static int vmalloc_info_show(struct seq_file *m, v=
-oid *p)
->
->  static int __init proc_vmalloc_init(void)
->  {
-> -       void *priv_data =3D NULL;
-> -
-> -       if (IS_ENABLED(CONFIG_NUMA))
-> -               priv_data =3D kmalloc(nr_node_ids * sizeof(unsigned int),=
- GFP_KERNEL);
-> -
-> -       proc_create_single_data("vmallocinfo",
-> -               0400, NULL, vmalloc_info_show, priv_data);
-> -
-> +       proc_create_single("vmallocinfo", 0400, NULL, vmalloc_info_show);
-
-proc_create_single function clean but it no longer receives data like
-priv_data right? so if priv_data is needed again code will not work.
-if use priv_data becomes necessary, a suitable memory allocation and
-release mechanism should be added for this.
-otherwise a memory leak could occur and perhaps the use of kfree
-instead of kmalloc could also be added.
-
-proc_create_single_data("vmallocinfo", 0400, NULL, vmalloc_info_show,
-priv_data);
-
-// use kfree and free priv_data
-kfree(priv_data);
-
-Regards
-
-Ozgur
-
->         return 0;
->  }
->  module_init(proc_vmalloc_init);
-> --
->
->
->
+>  arch/arm64/Kconfig                   |  1 +
+>  arch/arm64/include/asm/thread_info.h | 16 +++++++++-------
+>  arch/arm64/kernel/entry-common.c     |  2 +-
+>  3 files changed, 11 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index fcdd0ed3eca89..7789d7fb6f191 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -41,6 +41,7 @@ config ARM64
+>  	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+>  	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+>  	select ARCH_HAS_NONLEAF_PMD_YOUNG if ARM64_HAFT
+> +	select ARCH_HAS_PREEMPT_LAZY
+>  	select ARCH_HAS_PTE_DEVMAP
+>  	select ARCH_HAS_PTE_SPECIAL
+>  	select ARCH_HAS_HW_PTE_YOUNG
+> diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
+> index 1114c1c3300a1..4443ef2789758 100644
+> --- a/arch/arm64/include/asm/thread_info.h
+> +++ b/arch/arm64/include/asm/thread_info.h
+> @@ -59,11 +59,12 @@ void arch_setup_new_exec(void);
+>  
+>  #define TIF_SIGPENDING		0	/* signal pending */
+>  #define TIF_NEED_RESCHED	1	/* rescheduling necessary */
+> -#define TIF_NOTIFY_RESUME	2	/* callback before returning to user */
+> -#define TIF_FOREIGN_FPSTATE	3	/* CPU's FP state is not current's */
+> -#define TIF_UPROBE		4	/* uprobe breakpoint or singlestep */
+> -#define TIF_MTE_ASYNC_FAULT	5	/* MTE Asynchronous Tag Check Fault */
+> -#define TIF_NOTIFY_SIGNAL	6	/* signal notifications exist */
+> +#define TIF_NEED_RESCHED_LAZY	2	/* Lazy rescheduling needed */
+> +#define TIF_NOTIFY_RESUME	3	/* callback before returning to user */
+> +#define TIF_FOREIGN_FPSTATE	4	/* CPU's FP state is not current's */
+> +#define TIF_UPROBE		5	/* uprobe breakpoint or singlestep */
+> +#define TIF_MTE_ASYNC_FAULT	6	/* MTE Asynchronous Tag Check Fault */
+> +#define TIF_NOTIFY_SIGNAL	7	/* signal notifications exist */
+>  #define TIF_SYSCALL_TRACE	8	/* syscall trace active */
+>  #define TIF_SYSCALL_AUDIT	9	/* syscall auditing */
+>  #define TIF_SYSCALL_TRACEPOINT	10	/* syscall tracepoint for ftrace */
+> @@ -85,6 +86,7 @@ void arch_setup_new_exec(void);
+>  
+>  #define _TIF_SIGPENDING		(1 << TIF_SIGPENDING)
+>  #define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
+> +#define _TIF_NEED_RESCHED_LAZY	(1 << TIF_NEED_RESCHED_LAZY)
+>  #define _TIF_NOTIFY_RESUME	(1 << TIF_NOTIFY_RESUME)
+>  #define _TIF_FOREIGN_FPSTATE	(1 << TIF_FOREIGN_FPSTATE)
+>  #define _TIF_SYSCALL_TRACE	(1 << TIF_SYSCALL_TRACE)
+> @@ -100,10 +102,10 @@ void arch_setup_new_exec(void);
+>  #define _TIF_NOTIFY_SIGNAL	(1 << TIF_NOTIFY_SIGNAL)
+>  #define _TIF_TSC_SIGSEGV	(1 << TIF_TSC_SIGSEGV)
+>  
+> -#define _TIF_WORK_MASK		(_TIF_NEED_RESCHED | _TIF_SIGPENDING | \
+> +#define _TIF_WORK_MASK		(_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY | \
+>  				 _TIF_NOTIFY_RESUME | _TIF_FOREIGN_FPSTATE | \
+>  				 _TIF_UPROBE | _TIF_MTE_ASYNC_FAULT | \
+> -				 _TIF_NOTIFY_SIGNAL)
+> +				 _TIF_NOTIFY_SIGNAL | _TIF_SIGPENDING)
+>  
+>  #define _TIF_SYSCALL_WORK	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | \
+>  				 _TIF_SYSCALL_TRACEPOINT | _TIF_SECCOMP | \
+> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
+> index b260ddc4d3e9a..7993fab0cab4c 100644
+> --- a/arch/arm64/kernel/entry-common.c
+> +++ b/arch/arm64/kernel/entry-common.c
+> @@ -132,7 +132,7 @@ static void do_notify_resume(struct pt_regs *regs, unsigned long thread_flags)
+>  	do {
+>  		local_irq_enable();
+>  
+> -		if (thread_flags & _TIF_NEED_RESCHED)
+> +		if (thread_flags & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY))
+>  			schedule();
+>  
+>  		if (thread_flags & _TIF_UPROBE)
