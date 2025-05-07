@@ -1,32 +1,33 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3EA7289361;
-	Wed,  7 May 2025 17:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6191F7586;
+	Wed,  7 May 2025 17:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746637649; cv=none; b=P6xgpl1VUFR6f8TFBERSDAM909OW+s8LHCqTFtFl3N83VQCaBfzDTjT0IjbB5OizANBwJQ9Y/4T3MQLdO6U9y5KrIyIq1qmNiMYBoftFqFVf33MI6pZY46o/EGoJkyHzX07by11X4dAvGzEsXdMloUZYv4u2XrmPveeFKRFl0Sg=
+	t=1746637725; cv=none; b=o2IatKiqF17fagbc5oAB8LOaa7/yw1tUY6/5IWcIRF/G96ihUVqOcRmrXLU+F4rsMTgCYKl+jTQSElxmsVaujEp83G8/KV/MVSI5S6IEdhV20kY07GVMWD4KGQZQdCUbY8YIgnAhm895J0DEd83DTQeda6fEsOaoxkohUvz8qsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746637649; c=relaxed/simple;
-	bh=ZAeBIInxRDk0JjceYJ5nfLOCipMU/kiZnDbJqxCcXA4=;
+	s=arc-20240116; t=1746637725; c=relaxed/simple;
+	bh=Jq9bflgMyv//ExGbdW2q5bnL262ltP3uzPizW6R3qgQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tk8XwpUGxCCvL9NOKCD0tenKW+TO1IDZ+/QJlIdiPX2/r03o/VeLWdskgQH7alJ90/WzyyIvifrMH0qgCfF4IlDai7bEBmV408O/4iU6LP2BPJFZvT5CHCV3+YeeKEUJmkmyDe51lbbmL7HFl07V5fiRk+GFdUHFnPyo8uQirks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=r+9GXfG8; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	 In-Reply-To:Content-Type; b=GfYZqvCGPBr5Tjr1O4Y51SNnOWeuskm5e2+4osLms+ubxKVZZKrpsvC5FHfEnWboPy9GsIlA0GbQb6cCvPuG7q/sW4t2wvoj1RrDoFs0qU3NiFlFvgIopEGLju03eN++/9wmYiOIlAkHuSF3rifT9Kde7dByRf/ul4xJX+z2QdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e7Qu/EDJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="r+9GXfG8"
-Received: from [10.137.184.60] (unknown [131.107.1.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id F18A121199CC;
-	Wed,  7 May 2025 10:07:26 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F18A121199CC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746637647;
-	bh=dJhcMfKRu4+UGyqD7ovmVZwM69P8Veulgfr2jLnleuo=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e7Qu/EDJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D120C4CEE2;
+	Wed,  7 May 2025 17:08:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746637724;
+	bh=Jq9bflgMyv//ExGbdW2q5bnL262ltP3uzPizW6R3qgQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=r+9GXfG8FhrdPPXfg1bReS5N0GwmGU0A9GInvcMi9GqLfOrTkQGkLZdutP/pe3JOb
-	 HwKEGOcUureqf8NLxyWuQ/CcWQSzkzr6jYzkYn/gLFXYG8MJOxKNVVSFcCZa3T29Up
-	 mdxh06iUb33SYSzx+WgNPaNFGCi34dm7fSL74lnw=
-Message-ID: <3b0c3732-ccf6-4133-b55c-4177532ebecb@linux.microsoft.com>
-Date: Wed, 7 May 2025 10:07:27 -0700
+	b=e7Qu/EDJig6b64oE/qqwoKYK9fSwUPPOSXLMM56GRafS+LNckWgaWgkQbvfMyNmXH
+	 VrJGB002uH44KNM4HIKdInCOpxtAdwtQIKV666ZD+fF3Y04tT1DjZrW1qJY8WcIKwE
+	 UX9D0Yr8aWD9VxZfS/v7j562BLp2c1ga71QoXBg9mtO0BcsWOeqJ+aBYojpNELyQ3u
+	 D8hclkjDfymw3CSRW65O1lsBDxxTdNomGizR3NaKVtd4WwCb23fdUoWU9BGHVLtR3d
+	 eCuahVLurdKoKssDrvzWZmnhnaeWTrMx3uB9C7m5uPeHSkx4iFO8X25S/GUkHuGo3/
+	 HPZQOxm3Lug2A==
+Message-ID: <062e886f-7c83-4d46-97f1-ebbce3ca8212@kernel.org>
+Date: Wed, 7 May 2025 19:08:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,58 +35,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v3] arch/x86: Provide the CPU number in the
- wakeup AP callback
-To: Wei Liu <wei.liu@kernel.org>
-Cc: ardb@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
- decui@microsoft.com, dimitri.sivanich@hpe.com, haiyangz@microsoft.com,
- hpa@zytor.com, imran.f.khan@oracle.com, jacob.jun.pan@linux.intel.com,
- jgross@suse.com, justin.ernst@hpe.com, kprateek.nayak@amd.com,
- kyle.meyer@hpe.com, kys@microsoft.com, lenb@kernel.org, mingo@redhat.com,
- nikunj@amd.com, papaluri@amd.com, perry.yuan@amd.com, peterz@infradead.org,
- rafael@kernel.org, russ.anderson@hpe.com, steve.wahl@hpe.com,
- tglx@linutronix.de, thomas.lendacky@amd.com, tim.c.chen@linux.intel.com,
- tony.luck@intel.com, xin@zytor.com, yuehaibing@huawei.com,
- linux-acpi@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
- benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com
-References: <20250430204720.108962-1-romank@linux.microsoft.com>
- <aBl62kTEAnR790KF@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
- <aBr8cNXD630JbIxP@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+Subject: Re: [PATCH net-next v3] xdp: Add helpers for head length, headroom,
+ and metadata length
+To: Zvi Effron <zeffron@riotgames.com>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Stanislav Fomichev <stfomichev@gmail.com>, Jon Kohler <jon@nutanix.com>,
+ Jason Wang <jasowang@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>, Simon Horman <horms@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ Jacob Keller <jacob.e.keller@intel.com>
+References: <20250506125242.2685182-1-jon@nutanix.com>
+ <aBpKLNPct95KdADM@mini-arch>
+ <681b603ac8473_1e4406294a6@willemb.c.googlers.com.notmuch>
+ <c8ad3f65-f70e-4c6e-9231-0ae709e87bfe@kernel.org>
+ <CAC1LvL3nE14cbQx7Me6oWS88EdpGP4Gx2A0Um4g-Vuxk4m_7Rw@mail.gmail.com>
 Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <aBr8cNXD630JbIxP@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <CAC1LvL3nE14cbQx7Me6oWS88EdpGP4Gx2A0Um4g-Vuxk4m_7Rw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 5/6/2025 11:23 PM, Wei Liu wrote:
-> On Tue, May 06, 2025 at 02:58:34AM +0000, Wei Liu wrote:
->> On Wed, Apr 30, 2025 at 01:47:20PM -0700, Roman Kisel wrote:
->>> When starting APs, confidential guests and paravisor guests
->>> need to know the CPU number, and the pattern of using the linear
->>> search has emerged in several places. With N processors that leads
->>> to the O(N^2) time complexity.
->>>
->>> Provide the CPU number in the AP wake up callback so that one can
->>> get the CPU number in constant time.
->>>
->>> Suggested-by: Michael Kelley <mhklinux@outlook.com>
->>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
->>> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+On 07/05/2025 19.02, Zvi Effron wrote:
+> On Wed, May 7, 2025 at 9:37 AM Jesper Dangaard Brouer <hawk@kernel.org> wrote:
 >>
->> Queued to hyperv-next. Thanks.
+>>
+>>
+>> On 07/05/2025 15.29, Willem de Bruijn wrote:
+>>> Stanislav Fomichev wrote:
+>>>> On 05/06, Jon Kohler wrote:
+>>>>> Introduce new XDP helpers:
+>>>>> - xdp_headlen: Similar to skb_headlen
+>>
+>> I really dislike xdp_headlen(). This "headlen" originates from an SKB
+>> implementation detail, that I don't think we should carry over into XDP
+>> land.
+>> We need to come up with something that isn't easily mis-read as the
+>> header-length.
 > 
-> This patch broke linux-next. I have dropped it. Please change
-> numachip_wakeup_secondary.
+> ... snip ...
 > 
+>>>> + * xdp_headlen - Calculate the length of the data in an XDP buffer
+> 
+> How about xdp_datalen()?
 
-Thanks for your help! Working on that.
+Yes, I like xdp_datalen() :-)
+--Jesper
 
-> Wei.
-
--- 
-Thank you,
-Roman
-
+> On Wed, May 7, 2025 at 9:37 AM Jesper Dangaard Brouer <hawk@kernel.org> wrote:
+>>
+>>
+>>
+>> On 07/05/2025 15.29, Willem de Bruijn wrote:
+>>> Stanislav Fomichev wrote:
+>>>> On 05/06, Jon Kohler wrote:
+>>>>> Introduce new XDP helpers:
+>>>>> - xdp_headlen: Similar to skb_headlen
+>>
+>> I really dislike xdp_headlen().  This "headlen" originates from an SKB
+>> implementation detail, that I don't think we should carry over into XDP
+>> land.
+>> We need to come up with something that isn't easily mis-read as the
+>> header-length.
+>>
+>>>>> - xdp_headroom: Similar to skb_headroom
+>>>>> - xdp_metadata_len: Similar to skb_metadata_len
+>>>>>
+>>
+>> I like naming of these.
+>>
+>>>>> Integrate these helpers into tap, tun, and XDP implementation to start.
+>>>>>
+>>>>> No functional changes introduced.
+>>>>>
+>>>>> Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+>>>>> Signed-off-by: Jon Kohler <jon@nutanix.com>
+>>>>> ---
+>>>>> v2->v3: Integrate feedback from Stanislav
+>>>>> https://patchwork.kernel.org/project/netdevbpf/patch/20250430201120.1794658-1-jon@nutanix.com/
+>>>>
+>>>> Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+>>>
+>>> Reviewed-by: Willem de Bruijn <willemb@google.com>
+>>>
+>>
+>> Nacked-by: Jesper Dangaard Brouer <hawk@kernel.org>
+>>
+>> pw: cr
+>>
