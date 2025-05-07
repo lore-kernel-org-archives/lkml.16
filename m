@@ -1,115 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C185F186E2E;
-	Wed,  7 May 2025 15:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3290289E21
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746630176; cv=none; b=hDj2AqwRhNlv6D3eBCp/NmxThWN4GK1L3hFB+gSTOw3IvxqWy85HJRQfIUkC1ncsyZ5B23jCmjZJXEKoLEEpXk/n9Xrx+lML67D611mmV6UcjfCMresgS79omm1HT/hVFAZcNZAOysr+8L/hZYVxEUjVLaAqdIBY4RozpcjdYYI=
+	t=1746630183; cv=none; b=Rc0mTCKf2C3VamQHeq7KhpQzTNWnOWuuFHjS4w/yPjyABeqNic/9enUo4jMryqDgUrwJrZ4RrqSEsdBinDsPjNClbxMqT9vUEzJOiPUoT2tjwL3fNCNjINI/x6tPplkqyWmg3grcRaW11cbGQJ9c0q7LkfCuIg2pXXOVCWNLKIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746630176; c=relaxed/simple;
-	bh=vtUHYngmcvy8/hID4LtvlRBZCfZROB/R+TjQOTME2Bg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vkg3oZlzc1nezsRxZTGcClrBE9qPCB+zFe3mELv1G0dMfbFV1sZO55ekzRCa/If34VtYuj2Omu8S9Fr+q4QdQky4uUOYdyWWPuaTh4GxnuO26Onzs5K1IVC1h5poo3A8RTvvINlK/e3SulWpBdl309ee50zyanlr2+0/lh1MiV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pt0ektGr; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746630183; c=relaxed/simple;
+	bh=Z331Xz6BypkZeG6da25QTFR9t+2pjjlYXN249He1Vbo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ofgVmgoHrLXxEHOARt3iBnDVphHLt8RDHzkd7HTqc0J7I6E/XDM+OPSwGKxQItHnoWOTwTBSPoOn5YCl+nJ1TiyaaUlJ/ghTLK02Hji+ptIGcfRMTUE3q3fo3oByOQYuwPrpm3eweWA/V51UGbPFYJPDOLZG1orNqQU7SfWezi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GKTIv+3n; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pt0ektGr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746630176; x=1778166176;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vtUHYngmcvy8/hID4LtvlRBZCfZROB/R+TjQOTME2Bg=;
-  b=Pt0ektGrfPj6ZfwLbEZkwSR/s3GRM+E05yt7VclqGI18VRg6tsvzO8c7
-   DdbazJHoeY1zLPqpHNlsJT3ate2YSd5/HHODVk5L003Wa6oJk0Ue+wWob
-   b5iSfhc/Lmlmuve3LTUcmKghoup+V0Cy+iVfUz/b4MpsqdmJih60TSLCF
-   3dzHwWtS5ewueyu49T/yvW6/OveOCpB42Ig4oJnnD6AnQrHy+KsaXLd7o
-   0N3AbXBMbf8CG/T7K6EkqtqyTS6TXg8JO2QFVenrZ+dZV3TQ7dMRl/bbR
-   kul+zrpeqU+xr57MEeYxB3h32EgTnf+dujhUztCqpds8zBvkGU6V42se/
-   A==;
-X-CSE-ConnectionGUID: zqveaGftRW+KRVdI0y87Ow==
-X-CSE-MsgGUID: xTD69FyQSu6g7chF6SkdnQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52020383"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="52020383"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 08:02:54 -0700
-X-CSE-ConnectionGUID: lRvf7inWQZi1tpGGkpwiJA==
-X-CSE-MsgGUID: n7eeEJ6hSiWvPOaKwLixag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="166908528"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 08:02:45 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uCgID-00000003lNr-0NGr;
-	Wed, 07 May 2025 18:02:41 +0300
-Date: Wed, 7 May 2025 18:02:40 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 06/26] driver core: fw_devlink: Introduce
- fw_devlink_set_device()
-Message-ID: <aBt2EHYf6j6Ulthb@smile.fi.intel.com>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
- <20250507071315.394857-7-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GKTIv+3n"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-549963b5551so8039664e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 08:03:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746630180; x=1747234980; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cPQPH+/Eb6uvELz1Axgon35b6gEdtxND/4Qsd9Mokjg=;
+        b=GKTIv+3nfkxThykY9Nz8Hz1TvumbgT/HLNsboBHozdQ+PdtouovN5k+WI1GzjcPQ22
+         +kTDEoC2v+P7PF1DenKZDgFErohSM94Xf2JU/rBp0vmFycCek0GRYCv/uBvgRsaHHSSD
+         wpc+4XGajejdKf/ZcAGgfi0q3cePhgOZy0CUFeGdhbpgTlFmRIugQD5iAEmox6mtdEFr
+         0AUMRe2gsuNhLQTJen5n3vRr6d9wOqUdYIxUvSnb31QLs0ohNLfBTc29iJhZMAvI8JvM
+         jVUmra00ZDDxMid+o4bSCOSLSpz0uFB8HirW8kD1O7BS2DNbx4XC08n8R4npNK+9OPLE
+         xj7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746630180; x=1747234980;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cPQPH+/Eb6uvELz1Axgon35b6gEdtxND/4Qsd9Mokjg=;
+        b=dqDjhGcdaGsGr7waWLKGa04ojBZ1cEfYZx52T1GRLOOXEzuHVofQ3wR0gPAWvxYvCT
+         mpjUh1NaOLMSs4nq8d/p+nay/KQrsVE644sdY6UpZvnDOrJj0qNik35+Z0ScNRqSt1OB
+         X2TXbkzysXbM8JD5whqIN69opgy8T3lPPVoOtfNWP55XHJNYES4s7yClZMopXMMEVxB1
+         mombU0WFo1S9gC29VDE4tK3rP6Dx2wCXhM7g23ZL6fHxYRzP6XNUKCYGDUqhCCSohv0M
+         D+xNWrNyipukiM4xENzmc5hY8HX+SgKKln0b00CdV12usFW7s3vjV9aR+agTIwEPyD/V
+         nObQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdz2As/p30JpJCt4bKtMVbuSmSXQB8XXECX4zb1i6lsiuyasHz1EEQQmr3QJqxLlOkB5dQR/7xY57GBCI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPvGJaGfiIEL0LmgqGvGQp11BZH8GOIY3zW3bWRN+orJViO8Tb
+	I4TBcLlfpXCsFWkJDu7BgTbxps1F7CBlI4vjH/DRsVEO9YBI45M5
+X-Gm-Gg: ASbGnctjmniAMGo1nBlN3dHYCtLaAWxiPHyzZmXjtZPB0XCEAX9T6kbavvdClHU0MuI
+	WyykF4QVPRKHyUSP/V6jt6Okgr0InO6+E+zZ+C4CfKs0LIa3R9h8NRLZ8to94JAiuN2Lmv0Yt3W
+	M04/G0IzpLn+sD/ge74H9nFiW0TbuZuQ7Evhq6uyFCC65O61oAWBjUoCdJVpXeJEufWfspJJlyX
+	ZsvDDBsWLTZNbAgi4rRV7iUUu7DZK5AikrYhpEP8IY11Xhg5fdlQIAWjgkQMJsGXTght83joN6s
+	8TfIkRrFuG135rhh8pcFbdR2pIvd0uGZSEmk
+X-Google-Smtp-Source: AGHT+IHxBAef2IhqabpPHC/e/d7qXkNOZ7Q9azXSNuOOEutHsNe+TFsgoAl4GJBc7u1VHUQMCZ3stg==
+X-Received: by 2002:a05:6512:398a:b0:54e:86f3:5e5d with SMTP id 2adb3069b0e04-54fb92936bcmr1402997e87.7.1746630179627;
+        Wed, 07 May 2025 08:02:59 -0700 (PDT)
+Received: from pc638.lan ([2001:9b1:d5a0:a500:2d8:61ff:fec9:d743])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94c8c9csm2350928e87.92.2025.05.07.08.02.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 08:02:58 -0700 (PDT)
+From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	David Hildenbrand <david@redhat.com>,
+	Baoquan He <bhe@redhat.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: [PATCH] MAINTAINERS: Add myself as vmalloc co-maintainer
+Date: Wed,  7 May 2025 17:02:57 +0200
+Message-Id: <20250507150257.61485-1-urezki@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507071315.394857-7-herve.codina@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 07, 2025 at 09:12:48AM +0200, Herve Codina wrote:
-> Setting fwnode->dev is specific to fw_devlink.
-> 
-> In order to avoid having a direct 'fwnode->dev = dev;' in several
-> place in the kernel, introduce fw_devlink_set_device() helper to perform
-> this operation.
+I have been working on the vmalloc code for several years,
+contributing to improvements and fixes. Add myself as
+co-maintainer ("M") alongside Andrew Morton.
 
-Makes sense, can you also mark that field as __private? So sparse can catch
-the abusers up.
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b2c3be5f61314..0aa8db9d0fb52 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -25983,7 +25983,7 @@ F:	tools/testing/vsock/
+ 
+ VMALLOC
+ M:	Andrew Morton <akpm@linux-foundation.org>
+-R:	Uladzislau Rezki <urezki@gmail.com>
++M:	Uladzislau Rezki <urezki@gmail.com>
+ L:	linux-mm@kvack.org
+ S:	Maintained
+ W:	http://www.linux-mm.org
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.5
 
