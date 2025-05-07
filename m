@@ -1,138 +1,147 @@
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE231B422A;
-	Wed,  7 May 2025 17:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F340428C005;
+	Wed,  7 May 2025 17:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746637851; cv=none; b=Ov5BSS0IxUoHhhWCGVt293LaAAwp6pb/4wTPhb/UjEemmfeKWXJknEXvCGve9awtB1xKRcNxYvYsb4T4YJQxGZqMXFpsNDS8Z3njCmKpZJTneb6CSmAbDfM2xawqtpXonG6zHLDcWxSAG60urjxvCCuHEMxCIdJA+Cek5yfZe10=
+	t=1746637882; cv=none; b=as2kvohVP7lJwSzNfGOvdpK/N8hGQQad1C/qKDr0tfCE67eMr1uA0WlmEjIbAOFJrqoUkttlR4R93UnpJtGd4Kb3qlTsI+xSt6/PYV3Hz5P4a3WcGhQ8ZQ8LmJKn8zBZ0pvWc5e2RjJd1S0oyfNdrMs8bV70cMA/W/VWs85gNYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746637851; c=relaxed/simple;
-	bh=GdybVPW58nHttNnn67p5Dw8Vt/zoJoYf8sjIoyBMutE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PaVvhf/LBkN+b7BGBR/b28rccIllrGBt/b0rkNWrYDFvoP1TLGCUVFStOevlLQHf7lVTtj39CM468GF+jhECyHo7nP8/E5hyoybGLLG5jNbXIkfJerrDqmReKLex63ynOfnP9wI8wiYhyCZ06tURalO/QxqxUItrHVm0f3NQBPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4ce8aa3113aso31468137.3;
-        Wed, 07 May 2025 10:10:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746637847; x=1747242647;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g6BzKJWX3OTXa7VM0gHk5m0nv8wWWmh2GA+fJcCItkM=;
-        b=Mrcn6vA7QHhZ1m00+f37LZ4g+nk/EcIwnNC34gVDu/6g5p3yw7JV1TuQ8ZlRxzMDm4
-         oV7S+KMu2jdpoV6ea6tgVO5jYyUz5Pke73j699URuwxi2KH0pt61YvYw2czsf/b01g6L
-         6RYrExXYQ1hxZGKn5RwEOMoIG0cYuZuBI2jw95yn3FtNAr63YtJUdJIXv1r4kvxBgULX
-         goUcx7p2m5pFEWck/Iojzkom8icZSB92TIOsio7hSrhhLxVwzYuSuq+CXvz+MwyaHgp2
-         2eQniciwzyr1HDPUNtVtc6iGXZKV8eqiGSCAvdPA9N8+n6SS8nmKLr8EleDuVKH8RBZF
-         VpSw==
-X-Forwarded-Encrypted: i=1; AJvYcCV25Cd+iRKkzuE2upLHEXo5HL52KhRJhur6HWyvG5c9UeP0MaoP9a4BBngT09CzdBy4IlUc6jy778eg@vger.kernel.org, AJvYcCVVZrvS17K0eeBgy9zmsn0g5AFkiP2ft5se8Dm/O7+Mhnb5hxYIoyRobuc6Ai4423NcVZBTQS46jukTFb6w/J7CUvc=@vger.kernel.org, AJvYcCWkIoBA2MG3aIz0LJtHNXKsV08IhdJruff+kJ6eqEAo3E0Fs1wjCXYK7m8Pp4nsKNRS+LshyUWLNS86@vger.kernel.org, AJvYcCWwf1lnLmZWNf76gqulWQrVjTlwMjl737JfSq5t8Pmg1tqi3RNz82dcUAJ12uvhe/SVjKcLOZEQS8uqsoqB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzq+BbeYny+SJRCGH6sbGrWAFYRUF6pE+oEuwBZdgO8Vsv56PSc
-	/PB1T76lr7sSEYRtueGVUrsnX8+8ubSuiz6/OFwajUR5h/TnNqjHF2agzARY
-X-Gm-Gg: ASbGnctWzTeGOtBvL1C7qGtyCfyuyB+4aYQIp7n0dVfoWwYk44FBKyTjqsOExGLCLoY
-	Asn4yqcu+KuLF9sz15IvQKIYjSGbYFW1qGNgKUHzZHiWFPvA1sfvDo9Giw1o0PtwzVystDxD1DP
-	X6qKmDzXT2hj/yW+dVpJrYADTUeW/Iq+3oHXd+vwXwyFEjWOs3o/MJBO8Fxsx7KWGMgyg+Lk2Z0
-	TOdXKrbd+NpKggMMTdrLB6M9kuMTsUL/wsHVgEybC6BM1KFO+hSGPK12TcQh20UPPdyCRrOTpKV
-	t1QB5yEZOnRqm/3aeGkATxLJTituwXrhJ2vD4bAoQ5B1UQMZuPMb60RphkD4SyWTDjGcISnMzmk
-	swWU=
-X-Google-Smtp-Source: AGHT+IF4XQnFDpryUyUxKHSd8nFgnv74mJpWqBi5fNrfYem1Mn2hoXW0oYA40WC9rrT53ivpNfOgIQ==
-X-Received: by 2002:a05:6102:5f02:b0:4da:d874:d30d with SMTP id ada2fe7eead31-4ddad09406amr249937137.17.1746637847397;
-        Wed, 07 May 2025 10:10:47 -0700 (PDT)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8780af50ec4sm2230162241.0.2025.05.07.10.10.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 10:10:47 -0700 (PDT)
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-879e8e2237dso51441241.0;
-        Wed, 07 May 2025 10:10:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUJLkjrJFclZZmVj+xT6qtig0DlK0v9BAUlyEpzgSXKf6v6kajsVSlLOgGUFQEZLx74bhuWj7GwxT56@vger.kernel.org, AJvYcCV5c+OZFiTJ6hdhOz7Tx7Kid+QLjboQKiD/S/Q1DDzzro177gtGKGYHjBFMGgsmc2wEw5vS/D4aYh0ElAYg@vger.kernel.org, AJvYcCXJT16mpwsbtd3Bci8QnKniXTH3zuxTKrFoHGdq3D7Jjl2clwV8qnramJz4ormhSm+q+iVI6F/Nf5FT@vger.kernel.org, AJvYcCXme2XPZFngeCgItDVVq4PgBxOUjQmUpJbXGeqxf/ZeZ1HqVsI4MLY9ScP5OgxECIFVBd28qqLq1MG3/Cgad6pWslA=@vger.kernel.org
-X-Received: by 2002:a67:e704:0:b0:4c1:9526:a636 with SMTP id
- ada2fe7eead31-4ddacfcbee5mr428862137.15.1746637847030; Wed, 07 May 2025
- 10:10:47 -0700 (PDT)
+	s=arc-20240116; t=1746637882; c=relaxed/simple;
+	bh=PtOzak8p1izoQ8d/3FjSq3y4ospvl2h2KBvgXERvZGQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=rxFEiTLQTDuioj8s3jwMW3lJo736OLrsT8wNDDvbii0RQvh0z2hKce/H0TQ0gizLx33qo1HzaT92gdkWgRpSz4dwejtGgvaBEHwKW6NN2k60tlhxYjYsEMgp97Dc8J1x5tesJrfo2GQkgYWtaq5ERRGk28OS2KRiHRYqOL4tKw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=TD8MeoFX; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pV1thzWp; arc=none smtp.client-ip=202.12.124.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="TD8MeoFX";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pV1thzWp"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 8BF492540051;
+	Wed,  7 May 2025 13:11:16 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Wed, 07 May 2025 13:11:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1746637876;
+	 x=1746724276; bh=CxmqSZ1AK7yBB5MUSaTIQdTYBYRu6YuDz5DPNt9zgX8=; b=
+	TD8MeoFXIn00Al80JI5XHSktYNRxRkcus3vLgbmGgVz/giA9jWsvGiRPlTSCF62R
+	SPRPCKSZRQlHnqrghPxoXESn/AHD/YE1gUnSm0TPa+hl9YnQr9TMlpylF5vWEZX8
+	70qpjziLPxUlyAzY1B5J7wvSqNRwFbYdweccbt3XJn+9+k1P+lobGddJVYmLa1vz
+	f5DTv6Fg1fntIA9WvjDC6PUZD+CEpnca1iqH/BUoUWhv8QSbtrEzzplIbgRl0+SY
+	ii7Q3/z5vPrWEJoBXeHPzdAg3A11bUV1Zd2RoBpsZy1b204Vy6Xc3zb1FDbPjTpH
+	96TCuaqbNvBJSrppI+aHZA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746637876; x=
+	1746724276; bh=CxmqSZ1AK7yBB5MUSaTIQdTYBYRu6YuDz5DPNt9zgX8=; b=p
+	V1thzWp7eesDXNbedrvkD1iAzNrHo/OXQuyk/CTNDbUB+BHkdY3atJMJwoSezu02
+	O4pnKco6LMh9FNLV7pk18A4UOAnpAY1mtF3VnIlrqJo5RH6Xgj+sgXxcxvkCQVHI
+	byWwyEArtM+8aRcyavpO8F1LmkYQ3yZqRXURUYvTkEP9MnQkNqaOmCnsd2ZNi0sk
+	9m4Gylxw3oUWGoxvaLnzD/NTje+gr23mwgyYsu1vOmrV134NBWjavDveRBY2WMtT
+	4BMGlou69/KJYdDRuWwrCwjc33W2rSSdXsZgxviuKgGy388ml3+dNHxlMjirIsJ0
+	DfR+Nmbaemm9s+ZVK6slg==
+X-ME-Sender: <xms:M5QbaPsMwqf-pS3_653FHCGaoz9P_YagO9WpOIr_TpM7OBMshiq_TQ>
+    <xme:M5QbaAclo64on0zQsOgWsim3nNFSsWsbwLz5rO_ZRdznEhjkpTdGFzmYF4OGFS7o5
+    jMDYxSHyYiXwfBdq00>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejgedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertder
+    tdejnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhepkedvuefhiedtueeijeevtdeiieejfeelveff
+    feelkeeiteejffdvkefgteeuhffgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
+    rghrnhgusgdruggvpdhnsggprhgtphhtthhopedugedpmhhouggvpehsmhhtphhouhhtpd
+    hrtghpthhtoheprghmvghrghhnrghtsegsrgihlhhisghrvgdrtghomhdprhgtphhtthho
+    pegrnhhgvghlohhgihhorggttghhihhnohdruggvlhhrvghgnhhosegtohhllhgrsghorh
+    grrdgtohhmpdhrtghpthhtohepnhhfrhgrphhrrgguohestgholhhlrggsohhrrgdrtgho
+    mhdprhgtphhtthhopehlghhirhgufihoohgusehgmhgrihhlrdgtohhmpdhrtghpthhtoh
+    epmhgrthhthhhirghsrdgsghhgsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghrnhgu
+    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhn
+    fhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhmvgguihgrthgvkheslh
+    hishhtshdrihhnfhhrrgguvggrugdrohhrgh
+X-ME-Proxy: <xmx:M5QbaCxmjxrDE9yrJxbt3PHNCP8k3VIrNux4v48ofmIojq2f1xZpTA>
+    <xmx:M5QbaON0TcKXLcysSxt8BPSKohLTEKYCDL-UG7QhOOUFuV0kJJ8CPQ>
+    <xmx:M5QbaP96hilH0TkMGS83WQ_pdM_Cx1a2PteS4DivZVflYIq3ug8fdQ>
+    <xmx:M5QbaOUUvoZp3p8jSEdBS3unBjEDzBoQ7uGr-oRHGh87eakDVvUgaQ>
+    <xmx:NJQbaLcnpQ6jhKJ4Hm6Hmzq6JnU4oeNA91IBLkIWJGTncBLWZdNMWR6l>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id F40F51C20067; Wed,  7 May 2025 13:11:14 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410140628.4124896-1-claudiu.beznea.uj@bp.renesas.com> <20250410140628.4124896-5-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20250410140628.4124896-5-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 7 May 2025 19:10:34 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVpy=89g0=-U4E4Kg=M_gS96RP26xDj_mUp=Lb1sjOHMg@mail.gmail.com>
-X-Gm-Features: ATxdqUESjN3wxYT2D9YZnj32scz4-tPbBJdl0WBAykKaKzN-N28EwVRRrUAF1yI
-Message-ID: <CAMuHMdVpy=89g0=-U4E4Kg=M_gS96RP26xDj_mUp=Lb1sjOHMg@mail.gmail.com>
-Subject: Re: [PATCH 4/7] clk: renesas: r9a08g045: Drop power domain instantiation
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+X-ThreadId: T2abdfe4f2fd01522
+Date: Wed, 07 May 2025 19:10:54 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>,
+ "Arnd Bergmann" <arnd@kernel.org>
+Cc: "Mark Brown" <broonie@kernel.org>, "Liam Girdwood" <lgirdwood@gmail.com>,
+ "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
+ "Matthias Brugger" <matthias.bgg@gmail.com>,
+ "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
+ "Alexandre Mergnat" <amergnat@baylibre.com>,
+ "Zoran Zhan" <zoran.zhan@mediatek.com>, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+Message-Id: <86a3a0ab-be37-4b4d-a5a5-32d09c1a75ce@app.fastmail.com>
+In-Reply-To: <d9642581-3fed-47d8-9661-4335ec1e9c27@notapiano>
+References: <20250505052106.1811802-1-arnd@kernel.org>
+ <d9642581-3fed-47d8-9661-4335ec1e9c27@notapiano>
+Subject: Re: [PATCH] ASoC: mediatek: mt8188-mt6359: select CONFIG_SND_SOC_MT6359_ACCDET
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Claudiu,
-
-On Thu, 10 Apr 2025 at 16:06, Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Wed, May 7, 2025, at 18:41, N=C3=ADcolas F. R. A. Prado wrote:
+> On Mon, May 05, 2025 at 07:20:52AM +0200, Arnd Bergmann wrote:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>=20
+>> The driver support was added without selecting the codec, which leads=
+ to
+>> a link failure:
+>>=20
+>> aarch64-linux-ld: sound/soc/mediatek/mt8188/mt8188-mt6359.o: in funct=
+ion `mt8188_mt6359_init':
+>> mt8188-mt6359.c:(.text+0x19f0): undefined reference to `mt6359_accdet=
+_enable_jack_detect'
 >
-> Since the configuration order between the individual MSTOP and CLKON bits
-> cannot be preserved with the power domain abstraction, drop the power
-> domain instantiations.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> Hm, I cannot seem to reproduce this. I just tried to build on today's =
+next with
+> CONFIG_SND_SOC_MT6359_ACCDET disabled and have tried
+> CONFIG_SND_SOC_MT8188_MT6359 both =3Dm and =3Dy, but in both cases it =
+compiles fine.
 
-Thanks for your patch!
+The config that failed for me had CONFIG_SND_SOC_MT6359_ACCDET.
 
-> --- a/drivers/clk/renesas/r9a08g045-cpg.c
-> +++ b/drivers/clk/renesas/r9a08g045-cpg.c
-> @@ -192,59 +192,105 @@ static const struct cpg_core_clk r9a08g045_core_clks[] __initconst = {
->  };
->
->  static const struct rzg2l_mod_clk r9a08g045_mod_clks[] = {
+> I wonder if somehow your tree was missing "ASoC: mediatek: mt6359: Add=
+ stub for
+> mt6359_accdet_enable_jack_detect" [1]
 
-> +       DEF_MOD("dmac_aclk",            R9A08G045_DMAC_ACLK, R9A08G045_CLK_P3, 0x52c, 0,
-> +                                       MSTOP(BUS_REG1, BIT(2))),
-> +       DEF_MOD("dmac_pclk",            R9A08G045_DMAC_PCLK, CLK_P3_DIV2, 0x52c, 1,
-> +                                       MSTOP(BUS_REG1, BIT(3))),
+> https://lore.kernel.org/all/20250306-mt8188-accdet-v3-3-7828e835ff4b@c=
+ollabora.com/
 
-The documentation is not very clear about the mapping to the 4 MSTOP
-bits related to DMA. Can you enlighten me?
+I had not seen that patch, but with that applied, my patch needs to
+be revised as well. If the idea is that CONFIG_SND_SOC_MT8188_MT6359
+can work correctly without CONFIG_SND_SOC_MT6359_ACCDET, it should be
 
-> @@ -294,78 +340,6 @@ static const unsigned int r9a08g045_crit_mod_clks[] __initconst = {
->         MOD_CLK_BASE + R9A08G045_VBAT_BCLK,
->  };
->
-> -static const struct rzg2l_cpg_pm_domain_init_data r9a08g045_pm_domains[] = {
-> -       /* Keep always-on domain on the first position for proper domains registration. */
-> -       DEF_PD("always-on",     R9A08G045_PD_ALWAYS_ON,
-> -                               DEF_REG_CONF(0, 0),
-> -                               GENPD_FLAG_ALWAYS_ON | GENPD_FLAG_IRQ_SAFE),
-> -       DEF_PD("gic",           R9A08G045_PD_GIC,
-> -                               DEF_REG_CONF(CPG_BUS_ACPU_MSTOP, BIT(3)),
-> -                               GENPD_FLAG_ALWAYS_ON),
-> -       DEF_PD("ia55",          R9A08G045_PD_IA55,
-> -                               DEF_REG_CONF(CPG_BUS_PERI_CPU_MSTOP, BIT(13)),
-> -                               GENPD_FLAG_ALWAYS_ON),
-> -       DEF_PD("dmac",          R9A08G045_PD_DMAC,
-> -                               DEF_REG_CONF(CPG_BUS_REG1_MSTOP, GENMASK(3, 0)),
-> -                               GENPD_FLAG_ALWAYS_ON),
+      depends on SND_SOC_MT6359_ACCDET || !SND_SOC_MT6359_ACCDET
 
-[...]
+in order to force SND_SOC_MT8188_MT6359=3Dm if the ACCDET portion
+is in a loadable module.
 
-> -       DEF_PD("rtc",           R9A08G045_PD_RTC,
-> -                               DEF_REG_CONF(CPG_BUS_MCPU3_MSTOP, BIT(7)), 0),
+If SND_SOC_MT8188_MT6359 requires SND_SOC_MT6359_ACCDET to work
+correctly, then my original patch is still needed and yours
+should be reverted.
 
-These MSTOP bits are no longer controlled. Is that intentional?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+     Arnd
