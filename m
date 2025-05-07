@@ -1,194 +1,106 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2049.outbound.protection.outlook.com [40.107.93.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D185728DF1B;
-	Wed,  7 May 2025 18:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746642525; cv=fail; b=hg10sAYo5xa8+5g7H4ExZkSmnkiLgZ3MO+a56053/JOV4c78HM1KWUjyaCXGrAhu0W7XtCsdOD/OIyu7/d7D+raOYDpOKPDuua+QE6GPCXAfrx3/79d8cFpgetjF1w41lNBxUm36u7Q7Q5dFOlh6S2TaKiUrI9FEDfOBIScE44o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746642525; c=relaxed/simple;
-	bh=GrYKKKi7sXldNz6XT99oBEVQNiPHaIuFqByLDt1c9a4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=E4ZEBdzJd+Zcf4MwfpCu7sgjKVAdLn8CORFshhCoAu/dtLx2uu4NTIedmd0PbFVQn3KsELmaHljt0qVJ5XhCt8BOL8IV9yqs9xjc7E357PXwK86mXjYEWYW58DjmMDljhR1MFefpwBZkI4ShPwwb4QdqWhexZDMdnINHSbTkXEI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BpK94+vx; arc=fail smtp.client-ip=40.107.93.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA5E153BD9
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 18:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746642576; cv=none; b=HlC6zT2Qd0zzZxTK6R1NNj4onwBqN6uIYo+GTVFcVs5qyq+v36DHb/669f7otxcr8eVzV2ibmT75dM6sevBiRg15SZxoVnCHxWQuvBqE8wnB/aN5t91wlg9PFLTzidaozB5r9UbSGZ4JZyQ/Td6E2PXbPGBISs6zJ8z9GoLEyuA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746642576; c=relaxed/simple;
+	bh=slydqQQYSrYdyznpu6ZdFVyoYlYPGOAm6+qhysaDu0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pZl4sXfF76HmMqXlFv51QjhI4C8YTMuX5oOsBuxriYFKvnB/aEXkivqQExmyWWtFuLK/8Q/7imcK3q2SSw2BK0SF9LNI610j8HREqjbM/h78doBahHEUKOGtERyTcetGeK7LMsCFr0Pk/hUFUgLNUFQQnYiUi0XCdJWGh4SKWMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=B9cGLONt; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BpK94+vx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=soUiFUSWv+F1oYxXwNjhIRTwH08B4cc4zRi5qNoiiOAjYQpJZK3aoGVtG6Jpc2miRrUc007iuhc71B7fhz8CW4E+GWE+f6dQPMdX6LOPF+em+gLaeAd4SmwXydjzsvDzGuGK+LlFzlUbnrIKL2yPF1B6S8OLmV3jwoZPrN8chPO4dPqjM96rAtb+8eQV6WRmJdPKzWtCGIjBiLGZoYQwhXFLyggoc7SynCrpFCD6RbtYcIsnpmBB5GyVegtXVKjWLsOGwRsjPRiro6rYHxIc08IZtYyUPpIvkD4QkDZ6H0ZJ5d3K3EV79CQEH+7qcIZyrSnxJnddO3GB9K5907rP6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GrYKKKi7sXldNz6XT99oBEVQNiPHaIuFqByLDt1c9a4=;
- b=o5XFuc5USem33kziT/OQdvtq4xoB1BhY6bZN2gY+blz9yA0OMaBVRMXBY7VAk7oFiQ+SnrRnIINLLbVyP+a/QGlcIEllI2mMTdiTpbGJP8CVgB/H7qxhXWjXSJXZtnyY/DGVR9nKVyJR/BUS6iK7Kx2Db5qT8Uk/QGsTyBf7GM1Ay8nFtZROvG2VSEmUm7H4d3HusOgK/22YC04Q+El/E+mDSU9u/ZWFuMYZYDisrg1f3ORf7TsqYhnTVgRASZ02NX6ZRbK7aLx0JyitBjaYxzRSmM5T6rzxlEQRqDVX9GPE0xl7FdFwumHt75uuFbs9bNWUV4cy+N+TYd3YokfNqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GrYKKKi7sXldNz6XT99oBEVQNiPHaIuFqByLDt1c9a4=;
- b=BpK94+vxbbxYqII+bm+H6jCdZXZayR8lgeqoKSShLFRHhTYNGViVXzjDWfIYs5CwiN9bfYiVvISOeiyHhSLCAMXCTfbtbNptsioyeO+nQUmJyjb14Dq3y7cqvRNqRuewQVm0CKXunWeDoSf6p7cKHORvuMDK7FAKNfgM2agsMKs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- CY5PR12MB6106.namprd12.prod.outlook.com (2603:10b6:930:29::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.26; Wed, 7 May 2025 18:28:37 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8699.019; Wed, 7 May 2025
- 18:28:36 +0000
-Message-ID: <003143c8-6dd2-4484-a641-7418f686c388@amd.com>
-Date: Wed, 7 May 2025 13:28:32 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 00/16] Enable CXL PCIe port protocol error handling and
- logging
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
- jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
- ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
- rrichter@amd.com, nathan.fontenot@amd.com,
- Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
- ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
-References: <20250327014717.2988633-1-terry.bowman@amd.com>
- <aBqV9UCF6dQFtcyP@gourry-fedora-PF4VCD3F>
-Content-Language: en-US
-From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <aBqV9UCF6dQFtcyP@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0230.namprd04.prod.outlook.com
- (2603:10b6:806:127::25) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="B9cGLONt"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e8fb83e137so2534756d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 11:29:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rowland.harvard.edu; s=google; t=1746642574; x=1747247374; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2eLxeAZWz5DWy39hfAWzq0GbOK4A+xTpArBWabUxQtg=;
+        b=B9cGLONtY0F3Uetu+wAPAQwYWdyyQomAhJd08opNbRHoinygF+QXQJS+Wxus13rgGG
+         Zv6iT6cmh/R1RKEMsY9XBhQqu52Va4IG0LyyrDoeYk69kvMLm+TuI8JV3ujfUIg0oEai
+         QdnSryLcNuFwQyyeRLnliCxXEDbAfp2tgtB5pgoJ54QBTdwYL4Tta/wZcWXosoZnDaKo
+         nC1ZNnTkYPfynB1s0vtBIP0PKJFi+IoYBtvL8KJVI40QdbH7cmTZ6A9JBEVi/Ry5wXPe
+         Rgxlr5ETc9lCeqMUoHrpHszO35t7U9cJvV0KGwD6cBSt1kmXpWRXRmWuVK0AR/VU9DmJ
+         /1EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746642574; x=1747247374;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2eLxeAZWz5DWy39hfAWzq0GbOK4A+xTpArBWabUxQtg=;
+        b=qhI3Ep6jJMwP4AACxxcqXnfMh2KbOm4nd0/TuQh48yjVxfDllMDY1A2i+gHiy3H/OC
+         HH26P25AZB+xejbO31hrWf077NM0+KMjRHcGx40HRr2YZ+xU4+Jw+RQMzcSH3NpBT+h6
+         Z0ImQDEkrb67z2c8BHeNqAQgqJmdfeOKF6MPB4CPWlxtqcMKSPQzi9hkmgIH2cI/Rgse
+         QwAVpUalbdkaXFfN7I5nSK2/xYvLu9Zqz3YyOjNhY5bp3J8NrKJuCaljG/TUUpvMGG1J
+         05L8TEEUT1u45jIb/1Nt8cPIw/8E8gQmC7vfhfWJXuDzPuvWdR16lrLINdTEjMrAcxPO
+         n/eA==
+X-Forwarded-Encrypted: i=1; AJvYcCUB38Lw3iwKAMMQN6590XCwQeu9iSWkKV2WhLygGMb562ygMe3L0PdVVlp69VHCjAURyHx3cr53kaAV7S4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiDuQVCMwqhzBASZW7/OBnNePD5uF26fB9npD+9UCXuU6Zsx/T
+	9sMH1bqWa+mIsBQ75QT/Tc6RHMZN8bt4EW5nXEFayJwUpOjHAkvzfH2nl18Qbw==
+X-Gm-Gg: ASbGnctOhxnIHSI5GXgR4E/Vx61d6PKoPoe+lTHorRMqA7LnLjKf4Uz9dbRxO8iSS8q
+	XIgYNHyjAAa/9OBly4O+4dOiBoXgHiSoyvIPKdYnp0k9B4q+eRF9AsmocsbsK6vVSu1krCHoGHz
+	J0jXXneoNJ2i/9xGuJdoLfWJMHwDO9neNcfcVnTt9F1ZwRlSbXvcSmpKeGl8LDTphdrsF6mxqug
+	HxDnCEMuM26hb35rdjPS1T71Qtp0m2QJY75sQJ52gc6TlgLryH0EkrrYR6h4Bbu4Gdi5HIqyW41
+	BIuIJeMWTvMysE1fgYCrSV0gQX0MXaWgz2eIRnDtQZ9lRbBJoj2CqOy1HtmzNgX0iyuyLrCotd0
+	V6URi4MMOiah0Ypkit08iALqrsk7Mew82tQ==
+X-Google-Smtp-Source: AGHT+IGQv5tQ5SQMRSX/sa6n2hgD/zAItfZYRP+U1sy0D5EJbaPN9BTFNJhkO7Ja8MeJLyw/QLJenw==
+X-Received: by 2002:ad4:5aa2:0:b0:6f5:107c:7db2 with SMTP id 6a1803df08f44-6f5429b1457mr58288666d6.9.1746642574245;
+        Wed, 07 May 2025 11:29:34 -0700 (PDT)
+Received: from rowland.harvard.edu (nat-65-112-8-52.harvard-secure.wrls.harvard.edu. [65.112.8.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f542623ef8sm17522416d6.19.2025.05.07.11.29.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 11:29:33 -0700 (PDT)
+Date: Wed, 7 May 2025 14:29:31 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Jake Rice <jake@jakerice.dev>
+Cc: linux-usb@vger.kernel.org, gregkh@linuxfoundation.org,
+	usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] usb: storage: Add blockbuffer ptr to info struct of
+ sddr09 driver
+Message-ID: <c71aa977-d58d-4eee-9ab9-e9fbdca121bf@rowland.harvard.edu>
+References: <20250506191531.3326-1-jake@jakerice.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|CY5PR12MB6106:EE_
-X-MS-Office365-Filtering-Correlation-Id: 759821dc-c870-4c76-ab8f-08dd8d94fb34
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|7416014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c1A0c2FFcnJVMi9tYjdVNVNSMDNpQWpuMklEU1ZwcEZBMEVnVFVid1hyYlFK?=
- =?utf-8?B?bEJYWnBJN0VUMWg3L01TT3lMSnJaTjNVWjhxWk9RTkk5ZFphd1VQNFpqWTJt?=
- =?utf-8?B?ZUVCbkJwZFppUWQvVnZkSGJYT3cyWHBEUzJHbTVKNVlNYXVVTFcvQkJONTZK?=
- =?utf-8?B?RTRqWDZnV2RWR3Q3OVpMNUZZaU1HL0Y1UkdPNnFQaVVVL1FXYTlVWVlSV20w?=
- =?utf-8?B?L01OcW0vU2llK0hycEl3NVZUUlJpa0RHTTlFc1dNQ1FSL2FRczhPVEdXb0tp?=
- =?utf-8?B?TStxRmZQWTlYNEZDcjYrRlFOUnNEZXdQWWtRYjhsY0FoZm5wM3BJVmhpRjR1?=
- =?utf-8?B?UUR4UFBsTTRQZ1paQTNtY3NtZUtaUlBMak9WSVFVejROZ0xpMnByMXBCcTF2?=
- =?utf-8?B?OXY0M0txYzdHc2srb3dXekJjejRYZjdqb3Q5TWtSM2Z5RnBHRnRlSy90N200?=
- =?utf-8?B?bU1IaWg2L21rSGRiaG51SkhpTSs2eEp4aVc3OFNnR0ZwWmZsSWtuVXdac3h0?=
- =?utf-8?B?Q3cyOUhSOEYzV09HVHFDdlpvK3lTRnEwbVlpcHVORVNxYzJYYVlVZHJsNkxU?=
- =?utf-8?B?bVVoOXVNbnpnUU41OFIvblJVdDNQWG1YaHdGazdFZUtDQkdUSC9zUmZrdzRn?=
- =?utf-8?B?QXJOaFkvTitSR2Z1SkoyQVN2QmxwbUVkM0RWV1FxMUR3ODgyTlgrWWhJWmNK?=
- =?utf-8?B?citINkJpSnczTHowaG81RUdHa0pCVHFoM3RUQ0kzdGVnT3NBc1hjK2pPMFZs?=
- =?utf-8?B?WEdveGhTajVkYnc3UHRNKzNPK3N4UjZFRTFLMTlJZzlqSmljVjZPS3QwOHRU?=
- =?utf-8?B?dzZaY2k3YXRjRzN4azNzQ1h2TXdHZkthSFFzdE1OKytJWmNFUkFjeG9TaXVh?=
- =?utf-8?B?QjVDTk96T0JoeXIveS9McEJueW5Ua3h4b0dZaFpqamNuTzR3T0Q1WG5kWUtV?=
- =?utf-8?B?STdoei8wdDV1K2RPdWNBaWtDZ0hIMVUxcWE4eTVGR053cWVIQnBDeTNqK09a?=
- =?utf-8?B?VHBQc01IdFpZamFha3ZCaCtnVzRubkFLZnIvM255ajFtY2oxSnNlN2N3SVB5?=
- =?utf-8?B?WmQrRVVJUnNmNGVmTVZZLzBZV0NvNFl5RksyVmhsTnVoeTJkejBuMDdWMGhD?=
- =?utf-8?B?MGIrT3NXK0ovb3AzUUtGeFV0WlJwMUpZM3NNREFoMEs4Mm9LOXRyQkt4U212?=
- =?utf-8?B?b2lBck5OMVdNZGYyRllqcmE2cDFGVXlxSUd6eVJLMnhZR0lyTmFncElLUFZa?=
- =?utf-8?B?YnM4Uzg1andSMUdlN0wzNGtrblZVVE5WZzNhd2JtU09qVEFHRUIrSlhmZlRj?=
- =?utf-8?B?YndkRXZIaGU2MldjYm9SWlk0OGdVc0pZNDRWRUxwamdiYkJZWHdSKytJR21s?=
- =?utf-8?B?d1VZeHptVnBrU0xrVGt3RWdWbC9kdEo1dnZSZ1k1UklHZy9ZVjI5cDFiTExE?=
- =?utf-8?B?M0VJK29TcElsbTFhdCtWQTZuRktheFo5QWN1K3hVVnRQMithbHlkdWhQS2Fx?=
- =?utf-8?B?bVpERmNDTlZnZjZ4WEVzUWR0TnFwZGpiMjJkOVhJQUpqYkJ4czc3QVVmc3d1?=
- =?utf-8?B?WDFCY1I5V0xyYXl4SmxIenBGQm1XeEVFMC9mcVhGWVJ1YzZxYUhiS1FSMDhU?=
- =?utf-8?B?QU16akFjSzNlRlhRSEdkM2RJRUFhc1RUcUdDYkRSWmFPKzk0OTd3ZWFFSGFQ?=
- =?utf-8?B?T2tmNjUraEFweCtrQ3JkTWhyTnZZZWFZcXpDWS81enNlWS9OaGsrMFZmRXVz?=
- =?utf-8?B?bEFWYncwbWZ0TTFLZzR2QnRtV2ZTUDlNbEpkUHl2NWphVmhQZ054bXZINWdL?=
- =?utf-8?B?RFZyVG9CQnpXODFNTzV0QnI2MFcrUm5PeXhzU3FuRHZpYkFjK3RZMEF1Z3FB?=
- =?utf-8?B?MFhxdCtrRmpVZFRoRmdWbk9tUjdvNFJrdEJwUHMvSUE4UjZGUmtBUVkvWFIv?=
- =?utf-8?Q?gwnkAft6Bmo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YXIwRnFEQzl6a3drblpmTjVwSU5wb1RkNWZyMWM5NHd6ZGxkUUFCQTBQeUpZ?=
- =?utf-8?B?ZlJpbUt6YXdiWXpmUDVKUG01SktzVThYTzJQV1NuYlFnWGRzNnR5eGxrYUhz?=
- =?utf-8?B?azRqdkdWQUxyU3lFZGJGblN1UkpZK0dFQVIyY042ZWhGdXVubDJ4dVZvait6?=
- =?utf-8?B?akorRzRuT2gxYk16S2doTDhuTnJyUE5YdDVQUlUwV1JicjY1czZOUkVMdm9l?=
- =?utf-8?B?OFhqL0Q5bzFsNFZPM3BEVlA3NlRNazFldFloYkVsVU5ZSk1HS3cvd0IwOXd3?=
- =?utf-8?B?U1pPNG0ycjZqVHBIUEFsQnBhZmdBRzhzWnNYWXowbWcvV2crMEdVNkIrSUtG?=
- =?utf-8?B?djYxRkxmL2paY2wwNTlHSE1HYzVEMTB2WitvZXhSYm5SRzlscDlYQkVaS094?=
- =?utf-8?B?cGlRYkZyNlg0U25CMnBHUzBOUE1ZT2JVSDM3TUJTV0hhNHpLeWlLcDd2Z2xL?=
- =?utf-8?B?YVRsVTVYek9TTXlqQkw5SG1rUHdNVHVyYmFsV1k1cFBaTUhuSFh3VWRTUjRE?=
- =?utf-8?B?YTBER1dNelppb2NyN2xHTENxQVdYVVk4bC8vRWhVTEJIdXpIMHE1VVZlVVVi?=
- =?utf-8?B?VnRxRGxsZHBzcnBKWjJYa2hzT3JkRG01VWVzdGFmREErdXNwd0lkWlpiZHJZ?=
- =?utf-8?B?ckQ2eS81QStpWmhqVE54WC9zWXhmOHpCQ2ZHc1doWlpwRzFrN1ErcEl3OUhk?=
- =?utf-8?B?RGo0eGxxbUxlOHJwZCtOZHJWNTNpdTh1cU54QWZDZXhldWYyS0x0WFJHcUR3?=
- =?utf-8?B?TlY1blRmUlVDTXdod3JHU210Z0ZzSncrQ2FJdjR1bHdqSXJDdTVoWDhSVS9R?=
- =?utf-8?B?WVV6ckRyZkNlYVExRzI1dHdmT05rblozdGtsc09ycm5YWFJQU0ZBNURmVldo?=
- =?utf-8?B?SUdwQWRyL3lsaDdrUFFJNjBabWRRTHlUcFhCZGVMYkR1TkxrV21vNGEyRFBN?=
- =?utf-8?B?RENJQUlGL2tRWGZWY1RyVmFSbDFwYi8wZnBLMk1ERGh2anNLeVNGTFFHVDdm?=
- =?utf-8?B?eGFzcTg0dnpMajBpNlJNaWM5SFBMUWJtRXIzN0ZBNmhyVWoyakloUTh1Q25F?=
- =?utf-8?B?aHhsWjJESTVZL0dBa1VOTDBXYVlDbmQzd2UyczFocy9JV2ozNU1vK1R0ckFL?=
- =?utf-8?B?ZnU2MUFNYkc4WTBqTG9ISU4zaUNPcnlIUHZGVXhaUDhvZVhaSWJxRVBna1RJ?=
- =?utf-8?B?ZTdhV1cyb1hLTEFrTlRrVGZueDlRenRVU0cwMXllcHFKaGp3NDMybnl3QSs3?=
- =?utf-8?B?eFJITThSVkJ1d3VVUGpodTVLeVJrVFk0NEc1NGlRZ1o0NUM5V28rZkFQN1pS?=
- =?utf-8?B?V1NyTEhrSUtmV3dDallpMW5TRElFbmFRUHByV3hIdDBwNGNxZUdxMnhqbVl1?=
- =?utf-8?B?U21OQmxnQWQ4U1YzT2dRb0FWWlRBSndsSGpzSUhYTEh0WWhzaU5jOUNCcFRV?=
- =?utf-8?B?QU5aanhjZGZXYnB2QTR5YkowRCtKaWUwK29HUGxuU080TyttcTQ4U0ZmRDkr?=
- =?utf-8?B?RXpDNFk5TjVJMnpLRHpSa3dqK2NUS0hOWmhqdlgxK2x5N01QdTJXVE1kQjRV?=
- =?utf-8?B?NXA4b29nQWhQdXdwd1FvN2hrZ1RkUkJlKzd2eDlINU1zNythai9keHpCTTRu?=
- =?utf-8?B?YWxPNVl4R2dFeWZMSHJPdEhPNUdLSnhabkF6TTZDMU5sUmh2TjFYN0tVRGFR?=
- =?utf-8?B?L3JQK2lHMkwxTThObXJNMHVsN2hOeW9XSjM4MzhueGpIR2NsRk9TQThnNGgv?=
- =?utf-8?B?RkFEb1UzUDVjTTdyb1BiQ3NFMEJIRmI3QUY1Q3JwcVZCM3ROSGt5RDRZMUdP?=
- =?utf-8?B?Ny91c1p0aUROTEVyeW0ydXhzSkRzbnJaQko1WHJjbkxtVHhmUTBlVmVrSWxh?=
- =?utf-8?B?MzJwRHVVbU83R3JTTWY5LzMwZml5ZmxGTjJrTmNuNktPSWNaUFEwZHZBU1ly?=
- =?utf-8?B?cDYwOHhTVCtSdWFFNU03dEtGUzlGMnJBSmx3SDFBbDNZQzBxaHRzTHhIckpF?=
- =?utf-8?B?V2g2dStXeHhYNStldlhUWDRLZTJSL0VhcnJkK1hWYVBYTjBZOWVSVGI1ZWhm?=
- =?utf-8?B?UlZ1NjI3N0g1VDBEc2ZNZUFWVnhzMnFZQ0kwTzhKUzA3dWEwNEFmaW1FVWc1?=
- =?utf-8?Q?/VfNeveQ4MXRSJy8E0kRIXAKb?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 759821dc-c870-4c76-ab8f-08dd8d94fb34
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 18:28:36.7821
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O6eYrPQbjtP8296TSJgjAT6VN06sZDKe5qvXdPXqZlf+sLbHIK5cBZmhKykNg0ps9zjUor/AZyDzi2RlBfphlg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6106
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506191531.3326-1-jake@jakerice.dev>
 
+On Tue, May 06, 2025 at 03:15:31PM -0400, Jake Rice wrote:
+> Hi all,
+> 
+> This patch updates the sddr09 driver to allocate a reusable block
+> buffer. Unfortunately, I don't have access to the SDDR-00 hardware
+> (which I know is pretty ancient), so I'm requesting testing from anyone who does. 
+> Please let me now if the patch causes any issues or improves performance.
+> 
+> Best,
+> Jake
+> 
+> ---
+> Currently, upon every write the block buffer is allocated and freed which is
+> computationally expensive. With this implementation, a buffer pointer
+> is added as a member to the info struct and allocated when the card
+> information is read. The buffer is freed during desconstruction if
+> necessary.
 
+This isn't a high-priority sort of thing.  SDDR-09 is indeed very old 
+and likely quite slow (by comparison with current hardware); the time 
+required for the memory allocations and deallocations probably doesn't 
+have much effect on the overall I/O rate.
 
-On 5/6/2025 6:06 PM, Gregory Price wrote:
-> On Wed, Mar 26, 2025 at 08:47:01PM -0500, Terry Bowman wrote:
->> This patchset updates CXL Protocol Error handling for CXL Ports and CXL
->> Endpoints (EP). The reach of this patchset grew from CXL Ports to include
->> EPs as well because updating the handling for all devices is preferable
->> over supporting multiple handling paths.
->>
->> This patchset is a continuation of v7 and can be found here:
->> https://lore.kernel.org/linux-cxl/20250211192444.2292833-1-terry.bowman@amd.com/
->>
-> I've been testing this for stability on a fair number of boxes for some
-> time - backported to v6.13. Haven't seen any major issues related to
-> this set in that time. Outside my normal wheelhouse, but for the sake
-> of runtime stability:
->
-> Tested-by: Gregory Price <gourry@gourry.net>
->
-> Trying to get more explicit testing feedback from RAS folks.
->
-> (note: there appears to be some conflicting changes in v6.15-rc4+ that
-> a bit outside my current timeline to forward port and test.)
->
-> ~Gregory
-Thanks Greg.
+Still, I guess it doesn't hurt to do this.  However, I don't have time 
+to review the patch properly right now, and I don't have the hardware to 
+test it with.
 
--Terry
+Alan Stern
