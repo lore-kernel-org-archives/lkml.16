@@ -1,57 +1,73 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A282B2D7
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:35:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6678E21CC48;
+	Wed,  7 May 2025 13:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746624958; cv=none; b=Z02SJQ7SM7wiKL1bky8GZIzFP9Tnjb3u+KeXxddv/UzYrEoTuljz4B//2tpxnJyi4+rsy/Vbku8GZPlofss7/s2+G9d1+UiEERzgPPiU9yV9n8fibak+oYfT7aCpFlFeUtXh0O27a9zUR6z1BDumzC2q1AaqSwzPJlqnbBfh2WA=
+	t=1746625134; cv=none; b=eLewTMKIf9SvLcxfZF2xLjilvviOmUsQTRuv/UOt+NSi7Q9Hy2VO3KF+q8x86gLkRLCjwga6Fv3y+1Ud10UCwzjYz+zJme55grrRRDEx4Fr3fB3hHOvM5sDfWZ+fpVbmfStPeO8VM5FAlm9xrm23aIkYJ/XckjQIj1+80OYUd08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746624958; c=relaxed/simple;
-	bh=5Jciuq5twNayGvhNEegwlXnF765QTUXXRKMPnMk6YaY=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=J8Y62Nm9XG63xi0bPr9ttH6OpvcSlLl5aIt0ZsELCylAbiGd0zHaVy5PgcGED4KZ93JH8yr0uQSBXAh+JhmwcCNf/ItYFE1EVTi4NjTAOKjRBa3eftYCSYo/bvXY9IpnUeVju20Un3dsRVgaUIRj4l2Mz9i2r7OTMLshFvz/2wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=XNdvC1Ez; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1746625134; c=relaxed/simple;
+	bh=LfNP7WJnwi+phkB8AdTkI2n6mePHkoApep398h3RGrQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DU745Qr8wDB+dA0VCrFVnttOFqleOctSskhloh6RECsCAn4eY4RFjscVntXgt+l8Hm+P39YtL1GmEz2/nlr67v9AxKLLJsmuBhTH3QuYgBHrw/YFy/e5QCpWwXMtvgK/lG+4s7toTIi9lV6ngRhIbfQqQ+f9VrUIg3v0EwUfels=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XsQwQ9oM; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="XNdvC1Ez"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1746624948; bh=SeYSq3VFv0lFDJsZXUY05jjblB4Kn0Y5fV5O3f9HOrs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=XNdvC1Ez7deZNd/hGcvIf/eQdmjRo5VdRiXw47oqjl6lP+tuDTJKYUkqLiMYowVBb
-	 3BuPpIitSolOUqyP6XXpScjubfZc9OM3equH/ve52+7kkU58ujQ5y5BzTPGqf0oD6A
-	 nhpwWV3ANJm+FYJ3UWPpui6CClLYUcUfJKrR7Nlk=
-Received: from pek-lxu-l1.wrs.com ([114.244.56.254])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id 5D31746A; Wed, 07 May 2025 21:23:19 +0800
-X-QQ-mid: xmsmtpt1746624199tq0noae7k
-Message-ID: <tencent_E9E91EEE86CD84787A6EF82C196CD494640A@qq.com>
-X-QQ-XMAILINFO: Nq7sfrZZD4Jf4JH/oozqZPk/ShJJ65KfG+IE1RA9VTrQ1BD08ZOLNCC92ZNeuV
-	 RuxWl+D/Xcq2xycEJTgl2guzfv8suPaYUVA4Hly0sid8vbYtSMZyAc/ECZMtEyQ9AO+70G2zNJ8J
-	 HVuoWF6urDLBOXTfqBdWmqKsJ+j/liNZA0QibypDYE5q/IvOlH2CrQ9ju9CyR4xs1wHaCXQMdztj
-	 tVkStSG8V6tRgwPGwPM6NZLU+azmYqz+F+mMH/o/sOUIpJ3Cimdq20U7l3suChG/NcJYI7z7CLiL
-	 52qP2jtr7CywHoeLkJpUEj5EklkLUEdEoL70+7lF4NkLPmzHwq48vU0G5apQvbgXczcY0AHDqNG9
-	 ZkBD2HLa2dRwfQIl31CpmXMUi09Gel1515EEYswpQAjEGYdBw9V0NcOFLJ1MlYRtrUXNk17Hg22i
-	 Ol36EAWOoPRYvzVBJTzDAktFIImZEOm+8cRO8ugKdDXwlZYEv84xu1vHa2DHzDWmyhV3k/Glug+6
-	 rUEHGLxTbtkvDWQ4BgSbI3tb5bVAbSVwwGrn9NuQBGs6Vx5hkP60fKVn3uBdCBhgWutL7eBVsO2U
-	 uTwdxzZ8OmVf7Uka+vaPQXO6v6xVONyW9Wrv9o6WlrEIx0qD0MNOe41TTSxOzSXQRnz0JyGPOF6P
-	 C9nTpGq1XRyqjm5PofGaRa1AWNqOSTn296/iJmEgNu2cc4Efrc4XQ7iR/eFeHf/oSIskhOFPD/m1
-	 X/yo5RQhbPgotuRmwVl6oNjYSwDI3h+YmrFBLkD6NIko3yLjxhK7st72zDzrl4YOd4iSZDYWmG7D
-	 BOpxGXtcImGJSDgSm2t7WK63axKgJ8p+mgubPKTgEs0OaD1Y6kgkinToue+v4PCvQKrm3fUFyRhV
-	 7rQm95eMpep4Y9fE43qzmuLS1MCFRWsfeOywp61Y3hIWKf6wGN9kygLEyEi7WVqSvxro1sZH4Z90
-	 AN+e+psn4=
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_request_ibss_scan
-Date: Wed,  7 May 2025 21:23:19 +0800
-X-OQ-MSGID: <20250507132318.3346552-2-eadavis@qq.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XsQwQ9oM"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54e816aeca6so9076908e87.2;
+        Wed, 07 May 2025 06:38:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746625130; x=1747229930; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OD/yxQNBXIGY/VHqYV6OisAoQh685n5/Owltr5spKgw=;
+        b=XsQwQ9oMyu+dE6S3eYEMOiWaUH7Of106bt6dI00jGSbemygX5DcHozSA93/l1qiz15
+         swFTF9NfL57wjux45f5Ba3a7FsmlBQjeIUe10wxQGW0pyFZn9vYO/y5xNkBIG5k6TUft
+         Lq8wbgqKlkjfyp05Fz8bMG2RJWUIRpq3J0/4t4JWCMppXJK8KEqydM3HViL8HhH7KowC
+         t7ETv+g975cWD30CiZGRCHFj6Wn8qIwYADt6h+tXVFnl4k1SBT7XTLwJQVEEvmlORPRW
+         9repqNVNTbXulVF8BLPZxHqLw/Gy59HZZI9oY3B9ANlSmQ1Ib0ljagcNX6krsRu+SdT2
+         LStQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746625130; x=1747229930;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OD/yxQNBXIGY/VHqYV6OisAoQh685n5/Owltr5spKgw=;
+        b=TX7dtKHMzJY4uiCkdwXT8GOywQ7/vyg97vKZH0c+4Ol/33Q8gZQZFyRvTEqHBgHvLu
+         TbFAymV2fHTYgg6LNsuj1LKPFecZiZIzzSe8ZlWzP+5Z8IuXRH758CxSW2o4SdmkF7mo
+         jozCaOS9ee/40TBCU50SQlq5z6Da+/LPNUJrQwEQRHWhzwPWBkN9pUqGOJxMwWEru3+t
+         NgC8nA9qDHQwg8li9t1b3uFUbPbBgvNeJVfSSFjOE/zz0xf+MscC6u6Rq1kgTPSx8rlp
+         qzPtyg8Rt+u0KXy5jeX/N1v6Z5Le4dv9bNszTfsbuWf6TgzgIjkxwBUydnf/kSZNtqSu
+         i4Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCWC+w4Aoyh+UjJHUSQp4uc5uZ4M32xbNssnEWKgrGEkwGShkaIGjHLFTIECE9QG9xDKwbBSOzO0OL3aWkk=@vger.kernel.org, AJvYcCWJF9gpYQLPxQ1su5J5qcU+RWuYOxEVXXeM1ccLdFIvVy4D6DInehVSh6+Cpa1JwrARL0FVffY9+7rcEErbVOB+rxOs@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfWlyKWIvVxGybKf2oYfOd782Hu29lOgP8Jay3IBDdE4F5NCWb
+	E0aS0fhjKPMn+kjH+DIEbanfa2bo50pA7rRIYa8gN7VEm8BIwnqJ
+X-Gm-Gg: ASbGncvQYBc1LCElSNInd0kX5sJSNfBswX9B3qhr+Is9tRZFEOWKW40vEYm62xd4iPD
+	P0pHCYUPP5nlxkBgKZe+zWD+LYTBENh1Ocv4fP7H5jyab6o0SYNXeqkxDkzKuZ0mC1bXz08ciHw
+	O38eOqFruOYxxh5M26osfq0a5DCvUwlI8VTC5cFxT1xiZllY8ouRbgRS2asV2NHmLQGYjETZavT
+	e6LEMzVnkCZcBrP3IH91HhZa3GkVUg8eEfA0vY7SrJ8G68EXxssAtP0q9cJXA3PDBCT6ramwQMH
+	KndlDr/d/7t1xtWjxyHzzYQyFHet2xi74rHHBsI=
+X-Google-Smtp-Source: AGHT+IE7OuUNY21KuuPCZDuP+BcZV7oI8FYP8VyCZ4PN2pl4RI2QdeBd+BN8VNJT1RoUI1Io7w0QGw==
+X-Received: by 2002:ac2:5693:0:b0:54a:cc07:4091 with SMTP id 2adb3069b0e04-54fb928f00emr1141623e87.2.1746625130185;
+        Wed, 07 May 2025 06:38:50 -0700 (PDT)
+Received: from fedora.. ([37.131.106.85])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94bf0cesm2348836e87.57.2025.05.07.06.38.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 06:38:49 -0700 (PDT)
+From: Devaansh Kumar <devaanshk840@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: Devaansh Kumar <devaanshk840@gmail.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [RESEND PATCH v5] tracing: Replace deprecated strncpy() with strscpy() for stack_trace_filter_buf
+Date: Wed,  7 May 2025 19:08:36 +0530
+Message-ID: <20250507133837.19640-1-devaanshk840@gmail.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <680fd171.050a0220.2b69d1.045e.GAE@google.com>
-References: <680fd171.050a0220.2b69d1.045e.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,30 +76,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-#syz test
+strncpy() is deprecated for NUL-terminated destination buffers and must
+be replaced by strscpy().
 
-diff --git a/net/mac80211/scan.c b/net/mac80211/scan.c
-index cb7079071885..88ee1ce44e8e 100644
---- a/net/mac80211/scan.c
-+++ b/net/mac80211/scan.c
-@@ -369,6 +369,9 @@ static bool ieee80211_prep_hw_scan(struct ieee80211_sub_if_data *sdata)
- 		return false;
+See issue: https://github.com/KSPP/linux/issues/90
+
+Signed-off-by: Devaansh Kumar <devaanshk840@gmail.com>
+---
+
+Changes since v4:
+- Removed unnecessary sizeof(stack_trace_filter_buf) in strscpy
+
+Changes since v3:
+- Refactored code to compare length with str_has_prefix in a single line
+
+Changes since v2;
+- Removed unnecessary string.h header file inclusion
+
+Changes since v1:
+- Moved from memcpy() to strscpy()
+
+
+ kernel/trace/trace_stack.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+index 14c6f272c4d8..4c349db381cb 100644
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -542,7 +542,7 @@ static __init int enable_stacktrace(char *str)
+ 	int len;
  
- 	if (ieee80211_hw_check(&local->hw, SINGLE_SCAN_ON_ALL_BANDS)) {
-+		if (WARN_ON_ONCE(req->n_channels == 0))
-+			return -EINVAL;
-+
- 		local->hw_scan_req->req.n_channels = req->n_channels;
+ 	if ((len = str_has_prefix(str, "_filter=")))
+-		strncpy(stack_trace_filter_buf, str + len, COMMAND_LINE_SIZE);
++		strscpy(stack_trace_filter_buf, str + len);
  
- 		for (i = 0; i < req->n_channels; i++) {
-@@ -760,6 +763,9 @@ static int __ieee80211_start_scan(struct ieee80211_sub_if_data *sdata,
- 		/* None of the channels are actually set
- 		 * up but let UBSAN know the boundaries.
- 		 */
-+		if (WARN_ON_ONCE(req->n_channels == 0))
-+			return -EINVAL;
-+
- 		local->hw_scan_req->req.n_channels = req->n_channels;
- 
- 		ies = (u8 *)local->hw_scan_req +
+ 	stack_tracer_enabled = 1;
+ 	return 1;
+-- 
+2.49.0
 
