@@ -1,158 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F9E215197;
-	Wed,  7 May 2025 16:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16AA19047F
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746634372; cv=none; b=TwdTe6YzX4L+IW0vLQqUPkjd4IH3964bRMxKqQOdRB7vyCIFi3vZg3aU0GQxQy/RzFhkGEqOpLr2D79+AGKcvQolo3BR2mOTFo3fs9AUOn0NFi+PSuFokF9CJtNTri2/wbqEwCDh+d5EQMl/HIB1oBeTuUwqX3i9FV4akpJHXnA=
+	t=1746634423; cv=none; b=Z5nC1xi6KPOcGt0hYGIjm9/lwZTmZnBEvjLBaYLg7fn6t8fO+0YFkGPfu6G0xoarly22HZj3BAwMhCIcJrRXk/2m6uhMR3lhhKa2zJtyRojDX9809MUkG54/sLkFpv8nRJEJHkCNMobwjY3Uj21TTvtJFO6d1Yv77OTTiBfmMys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746634372; c=relaxed/simple;
-	bh=NgV9gb3MNcWqBiGv30nVf8yM/e0HQuZamzPRZKopGGI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pqlcRTCbZdZJWo7xReDSpnIxsCmJwEUGn4lJjepBW33bcWw+j8UQgV+l8tdTr+gE5WNnrMqneshSbjstIfiCnpdUTGfL5MEF5w6Z6M9r6c8wmP6YszP8Y8dPeY80jA7CDtbSPuDN2ji02U8TJSh9OSOR4GRkznv5JTcRyKhSCGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lOmvey8V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746634423; c=relaxed/simple;
+	bh=2ilPNKF6f/rDkMNB2UoP20P3lHsdIGcLFDsA/AUjOXo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Xe8X9QoGP63eTunKTaQgDBIS4Y4EviCslUKc2/DBMtv3IOZrIvRj7zRMkQrk7mSIp1Yc8AqlCHQt3raqlJs/iec9TZRAbo/9sUkhjY3sZYlouv7cMRA1R3k7XPlQu7EOGMYVSJgLviHaF0zPlmDTd7I8cCvAE3tzKk8wKeyMWig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U/7vidYv; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lOmvey8V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C214BC4CEE9;
-	Wed,  7 May 2025 16:12:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746634371;
-	bh=NgV9gb3MNcWqBiGv30nVf8yM/e0HQuZamzPRZKopGGI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lOmvey8VjmjQoujhNZkrb14agia0kvhIP9ruSrUvMM5ASWt/Zn8KlrQAwtOqHjeal
-	 quV7IRSqlaV9dyn+bCcDYjbGxE9yscC2A/PlQC0QiwEuEHF2rX1h2v6PTw4chrjhfq
-	 fECSiGDc7hmDbjrrCfsnaps0CtXVxViZKKQs6BsyD8+pMRcAZ1oKA89QHWw2QK/PVq
-	 tIe/H1YnEcVAtuIksL9m8xYvXzTN/IqGKbkK9sDXt9eDgu7370Z0DPpKoVUVcRVHoi
-	 4/S6fXP5P2PkDBYehvT8qsSwLERwBYybVcl1sFWd7mG6D3BuwEYA9WPPYjZsTigxTP
-	 HOU0Vl5JDpf+A==
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-601a8b6c133so608898eaf.1;
-        Wed, 07 May 2025 09:12:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVTgU2Y1iahtQF7JkvNVNBYBKhBX6kLYKZ5/YaRIuDyJPHodLUod1QXo2K00gRH/IF1HogkJ8FNjrN2@vger.kernel.org, AJvYcCVVQMSWlUJz01Jc7GjYjtx1MwntFp4Tx39iTADb5+R+H1Vx3lhVEqUc6+P2boM8fY7NrEm32weHmt2c8uJx@vger.kernel.org, AJvYcCVxtJOdoYYVUEtuAyeugql8NGGa/6ZVo95Pt3cUJej5w7FcJzV8N6Jyi++oT6Zm5341Zi/Szj14@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLg2+cLXbjsOBkF6Qkgp2JIEbhd7P0dXr30gOGM8xnyErIJmjk
-	fMHaMIcrJR3b5BUNrN5QbJnM0fyr6D4jFZU6OZs1XrAJV6KRP8sxPNQsm/0cdjNzXAVEmv15yun
-	kPDJl/s8ykPaHD+NLoO4C847s2SU=
-X-Google-Smtp-Source: AGHT+IFm2G7vMhkwbbCVl7L4A5NTpNVPjzGsw1lgYvvaLpUxiMXb372fR+bbyzJEB78MqSgLhSYc5SbazdWLqRY5pyY=
-X-Received: by 2002:a4a:d18e:0:b0:604:ac85:abe2 with SMTP id
- 006d021491bc7-6083346b675mr58870eaf.3.1746634371080; Wed, 07 May 2025
- 09:12:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U/7vidYv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746634420;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3/Vr0zVbcT7BzCMh97BIa3Lqx/NCn2qxIyCi3f2m9aU=;
+	b=U/7vidYvr45BYKmB+aof69FWYQVjYJm9eun0b9D23pPriKRNzslM1wmHLKQhgKQ/GbOvGe
+	Nx94t9eTCO78Vc0SQy06BkTRRDo7YtlMHIxbIkvk8WTVN0KJfJaSCaJ0xiIzETrUPS5aTF
+	R+ZOi6dz91BVpunTFmss0TCJMHcgRMw=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-190-SXPiZFViOwKTJHjCPGb2vw-1; Wed,
+ 07 May 2025 12:13:36 -0400
+X-MC-Unique: SXPiZFViOwKTJHjCPGb2vw-1
+X-Mimecast-MFC-AGG-ID: SXPiZFViOwKTJHjCPGb2vw_1746634414
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BE1B5195608B;
+	Wed,  7 May 2025 16:13:33 +0000 (UTC)
+Received: from [10.44.33.91] (unknown [10.44.33.91])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B246A30001A1;
+	Wed,  7 May 2025 16:13:12 +0000 (UTC)
+Message-ID: <2c41caf5-0579-42d8-8f7e-4a9b1a0baa48@redhat.com>
+Date: Wed, 7 May 2025 18:13:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-draco-taped-15f475cd@mheyne-amazon> <214c2a2d-e0ea-4ec6-9925-05e39319e813@arm.com>
- <CAJZ5v0jvWXDQQ++4wmWJ+i=jds+MZ68bRB9+26WM4tAPHFxALw@mail.gmail.com> <1911d3b6-f328-40a6-aa03-cde3d79554de@arm.com>
-In-Reply-To: <1911d3b6-f328-40a6-aa03-cde3d79554de@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 7 May 2025 18:12:40 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0ii9HLfqfgcp=1qRRX6M1yThf7ZPNkSLVc5GGFhv=N-Lg@mail.gmail.com>
-X-Gm-Features: ATxdqUFz_G-xumrMaH9DthfVtj9CaPWWuEm7JWekOadO-oye5lvECoLE0lOwrj0
-Message-ID: <CAJZ5v0ii9HLfqfgcp=1qRRX6M1yThf7ZPNkSLVc5GGFhv=N-Lg@mail.gmail.com>
-Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
-To: Jeremy Linton <jeremy.linton@arm.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Heyne, Maximilian" <mheyne@amazon.de>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, Len Brown <lenb@kernel.org>, 
-	Sudeep Holla <sudeep.holla@arm.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v8 0/8] Add Microchip ZL3073x support (part 1)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Lee Jones <lee@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20250507152504.85341-1-ivecera@redhat.com>
+Content-Language: en-US
+In-Reply-To: <20250507152504.85341-1-ivecera@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Wed, May 7, 2025 at 5:51=E2=80=AFPM Jeremy Linton <jeremy.linton@arm.com=
-> wrote:
->
-> On 5/7/25 10:42 AM, Rafael J. Wysocki wrote:
-> > On Wed, May 7, 2025 at 5:25=E2=80=AFPM Jeremy Linton <jeremy.linton@arm=
-.com> wrote:
-> >>
-> >> Hi,
-> >>
-> >> On 5/6/25 8:13 AM, Heyne, Maximilian wrote:
-> >>> Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple of
-> >>> sizeof() calls") corrects the processer entry size but unmasked a lon=
-ger
-> >>> standing bug where the last entry in the structure can get skipped du=
-e
-> >>> to an off-by-one mistake if the last entry ends exactly at the end of
-> >>> the ACPI subtable.
-> >>>
-> >>> The error manifests for instance on EC2 Graviton Metal instances with
-> >>>
-> >>>     ACPI PPTT: PPTT table found, but unable to locate core 63 (63)
-> >>>     [...]
-> >>>     ACPI: SPE must be homogeneous
-> >>>
-> >>> Fixes: 2bd00bcd73e5 ("ACPI/PPTT: Add Processor Properties Topology Ta=
-ble parsing")
-> >>> Cc: stable@vger.kernel.org
-> >>> Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
-> >>> ---
-> >>>    drivers/acpi/pptt.c | 4 ++--
-> >>>    1 file changed, 2 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
-> >>> index f73ce6e13065d..4364da90902e5 100644
-> >>> --- a/drivers/acpi/pptt.c
-> >>> +++ b/drivers/acpi/pptt.c
-> >>> @@ -231,7 +231,7 @@ static int acpi_pptt_leaf_node(struct acpi_table_=
-header *table_hdr,
-> >>>                             sizeof(struct acpi_table_pptt));
-> >>>        proc_sz =3D sizeof(struct acpi_pptt_processor);
-> >>
-> >> This isn't really right, it should be struct acpi_subtable_header, the=
-n
-> >> once the header is safe, pull the length from it.
-> >>
-> >> But then, really if we are trying to fix the original bug that the tab=
-le
-> >> could be shorter than the data in it suggests, the struct
-> >> acpi_pptt_processor length plus its resources needs to be checked once
-> >> the subtype is known to be a processor node.
-> >>
-> >> Otherwise the original sizeof * change isn't really fixing anything.
-> >
-> > Sorry, what sense did it make to do
-> >
-> > proc_sz =3D sizeof(struct acpi_pptt_processor *);
-> >
-> > here?  As much as proc_sz =3D 0 I suppose?
->
-> No, I agree, I think the original checks were simplified along the way
-> to that. It wasn't 'right' either.
->
-> The problem is that there are three subtypes of which processor is only
-> one, and that struct acpi_pptt_processor doesn't necessarily reflect the
-> actual size of the processor structure in the table because it has
-> optional private resources tagged onto the end.
+On 07. 05. 25 5:24 odp., Ivan Vecera wrote:
+> Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
+> provides DPLL and PTP functionality. This series bring first part
+> that adds the common MFD driver that provides an access to the bus
+> that can be either I2C or SPI.
+> 
+> The next part of the series is bringing the DPLL driver that will
+> covers DPLL functionality. Another series will bring PTP driver and
+> flashing capability via devlink in the MFD driver will follow soon.
+> 
+> Testing was done by myself and by Prathosh Satish on Microchip EDS2
+> development board with ZL30732 DPLL chip connected over I2C bus.
+> 
+> Patch breakdown
+> ===============
+> Patch 1 - Common DT schema for DPLL device and pin
+> Patch 2 - DT bindings for microchip,zl3073* devices
+> Patch 3 - Basic support for I2C, SPI and regmap configuration
+> Patch 4 - Devlink device registration and info
+> Patch 5 - Helpers for reading and writing register mailboxes
+> Patch 6 - Fetch invariant register values used by DPLL/PTP sub-drivers
+> Patch 7 - Clock ID generation for DPLL driver
+> Patch 8 - Register/create DPLL device cells
+> 
+> ---
+> v7->v8:
+> * replaced zl3073x_pdata array ZL3073X_PDATA macro in patch 8
+> v6->v7:
+> * pass channel number using platform data instead of mfd_cell->id
+> v5->v6:
+> * fixed devlink info firmware version to be running instead of fixed
+> * added documentation for devlink info versions
+> v4->v5:
+> * fixed DT patches description
+> * dropped mailbox API
+> * added type-safe register access functions
+> * added an ability to protect multi-op accesses
+> v3->v4:
+> * fixed shortcomings in DT patches
+> * completely reworked register access
+> * removed a need to manage locking during mailbox accesses by callers
+> * regcache switched to maple
+> * dev_err_probe() in probe path
+> * static mfd cells during sub-devices registration
+> v1->v3:
+> * dropped macros for generating register access functions
+> * register access functions are provided in <linux/mfd/zl3073x_regs.h>
+> * fixed DT descriptions and compatible wildcard usage
+> * reworked regmap locking
+>    - regmap uses implicit locking
+>    - mailbox registers are additionally protected by extra mutex
+> * fixed regmap virtual address range
+> * added regmap rbtree cache (only for page selector now)
+> * dropped patches for exporting strnchrnul and for supporting mfg file
+>    this will be maybe added later
+> 
+> Ivan Vecera (8):
+>    dt-bindings: dpll: Add DPLL device and pin
+>    dt-bindings: dpll: Add support for Microchip Azurite chip family
+>    mfd: Add Microchip ZL3073x support
+>    mfd: zl3073x: Add support for devlink device info
+>    mfd: zl3073x: Protect operations requiring multiple register accesses
+>    mfd: zl3073x: Fetch invariants during probe
+>    mfd: zl3073x: Add clock_id field
+>    mfd: zl3073x: Register DPLL sub-device during init
+> 
+>   .../devicetree/bindings/dpll/dpll-device.yaml |  76 ++
+>   .../devicetree/bindings/dpll/dpll-pin.yaml    |  45 +
+>   .../bindings/dpll/microchip,zl30731.yaml      | 115 +++
+>   Documentation/networking/devlink/index.rst    |   1 +
+>   Documentation/networking/devlink/zl3073x.rst  |  37 +
+>   MAINTAINERS                                   |  11 +
+>   drivers/mfd/Kconfig                           |  32 +
+>   drivers/mfd/Makefile                          |   5 +
+>   drivers/mfd/zl3073x-core.c                    | 872 ++++++++++++++++++
+>   drivers/mfd/zl3073x-i2c.c                     |  68 ++
+>   drivers/mfd/zl3073x-regs.h                    |  54 ++
+>   drivers/mfd/zl3073x-spi.c                     |  68 ++
+>   drivers/mfd/zl3073x.h                         |  31 +
+>   include/linux/mfd/zl3073x-regs.h              |  88 ++
+>   include/linux/mfd/zl3073x.h                   | 202 ++++
+>   15 files changed, 1705 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
+>   create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+>   create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+>   create mode 100644 Documentation/networking/devlink/zl3073x.rst
+>   create mode 100644 drivers/mfd/zl3073x-core.c
+>   create mode 100644 drivers/mfd/zl3073x-i2c.c
+>   create mode 100644 drivers/mfd/zl3073x-regs.h
+>   create mode 100644 drivers/mfd/zl3073x-spi.c
+>   create mode 100644 drivers/mfd/zl3073x.h
+>   create mode 100644 include/linux/mfd/zl3073x-regs.h
+>   create mode 100644 include/linux/mfd/zl3073x.h
 
-Right.
+I apologize for this quick update not respecting the 24 hour grace
+period, I was not aware of such rule and otherwise I would not have been
+able to send the v8 before Monday.
 
-> So if the bug being fixed is that the length check is validating that
-> the table length is less than the data in the table, that's still a
-> problem because its only validating the processor node without resources.
+Ivan
 
-Admittedly, it is not my code, but I understand this check as a
-termination condition for the loop: If there's not enough space in the
-table to hold a thing that I'm looking for, I may as well bail out.
-
-> AKA the return is still potentially returning a pointer to a structure
-> which may not be entirely contained in the table.
-
-Right, but this check should be made anyway before comparing
-cpu_node->parent to node_entry, when it is known to be a CPU entry
-because otherwise why bother.
-
-Roughly something like this:
-
-proc_sz =3D sizeof(struct acpi_pptt_processor);
-
-while ((unsigned long)entry + entry->length <=3D table_end) {
-        if (entry->type =3D=3D ACPI_PPTT_TYPE_PROCESSOR &&
-            entry->length >=3D proc_sz &&
-            cpu_node->parent =3D=3D node_entry)
-                return 0;
-...
-}
