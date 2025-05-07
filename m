@@ -1,130 +1,320 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3041120CCED;
-	Wed,  7 May 2025 11:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EADC4B1E6E;
+	Wed,  7 May 2025 11:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746616934; cv=none; b=eQuzosE1kYszZHY26HlaTn0GBusAlvX1USr5Wigt0OJVc387rvbH7z+I/2w/yZfkVrgNX4oRKTYDraKjUrbl5FXIqceO7yNW2T+bk0RvYqZ25i1XVwR2/HDvdbD95OgzT8aahkb6BGkupNTYfYp100fB9SaSsKFC6LzxPAhxzCk=
+	t=1746616987; cv=none; b=TAQdjekj//7Exw5uD9s9vqqhbCV6Kb3rdHNTKXNObnUitgradapR402AZoMAAXl5SyWYQgwypslLRoHuGIlnFXxaaCQQF39Z0LX5GqrWymDSOY84w1WkpNFOhl7TbVD7S3KQeZZWAlqLHbqkQJC9/erZRnI8YHnFi44QavA/9f4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746616934; c=relaxed/simple;
-	bh=keSFJ17byZIacrkA9Q+V/bwj92nFNZoHf+fY/qM0Me0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YMQmt56Gm7vT9W0R/oVAOgcHOwbTRXID2W6LNyG0jGjykrAFIFB9MNuWqhG9m7PnttlCo0qSOglXeZgqEQLixDIj7ntDnIQy7SWz/CgXNPqUmAMG8CE46EX0PXB7Y+WxM2XuF42lwq0u3t0L8da6/nbpfjhuTCpLsSZXAwbypGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k7lU0qj1; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746616987; c=relaxed/simple;
+	bh=A74vXDFWSWnKhjsMSQhZJL5xQ7wU7bDlQLBPPoCJGno=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=QVR98VCn7kRocZp+q13ejUFPmiVhAYQ9Ydw86SdsMggLLJW4CNKSv/dyu9FgduGca3YFh2llJRJMQIczAtt9iRKzv8Kbm/h2A6RIjOm4NtDw4eQlz7fRwEeqqjHdoiIybS79JXl9UQXOhY6G1le80VUE1Hd8WVmIPrQgzljo7VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYHE91EX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k7lU0qj1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746616933; x=1778152933;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=keSFJ17byZIacrkA9Q+V/bwj92nFNZoHf+fY/qM0Me0=;
-  b=k7lU0qj1/I3oO66APas+JruigaBfXaP5LVobdSZZtamaVKXmupfTCydy
-   uOni5hshBq1jUl3ns4keypNrDNbTeVgU7K/OMfRPk6NAxqy+0/Xjn6Xht
-   LV3QF8OJ0Of6fkvq2rezfHWKAPyHPDiEd/of/uyARxfI/8ySYR5Jr1wo1
-   A+vTPF1zem6rfE5Mirz94Qmy/OCLahuafqUF2UXAantSEpncSpyxb0MT5
-   Arad9QDo7w/3s95+eEQJ/Xp3BWchZRd6MP/L5ir0b7FN+Z/QZJDF+yB5f
-   E14FE/dHGy1ereMPZHo5SKjR6XakmWpC8qs8lw0lHqcrJSZie/SqtU3DU
-   A==;
-X-CSE-ConnectionGUID: YluFXpkeQaqp/1aiWmMK3Q==
-X-CSE-MsgGUID: uR24XAleQvWsIy7A1njhNg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="52155806"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="52155806"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 04:22:11 -0700
-X-CSE-ConnectionGUID: jFtpUtg3R3G77mWFegnbEA==
-X-CSE-MsgGUID: tJLTWUbyT1SwHxuf0Oe82Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="166974025"
-Received: from chenyu-dev.sh.intel.com ([10.239.62.107])
-  by fmviesa001.fm.intel.com with ESMTP; 07 May 2025 04:22:06 -0700
-From: Chen Yu <yu.c.chen@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: mkoutny@suse.com,
-	Ingo Molnar <mingo@redhat.com>,
-	Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mel Gorman <mgorman@suse.de>,
-	Michal Hocko <mhocko@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	"Chen, Tim C" <tim.c.chen@intel.com>,
-	Aubrey Li <aubrey.li@intel.com>,
-	Libo Chen <libo.chen@oracle.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
-	Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-	"Jain, Ayush" <ayushjai@amd.com>,
-	cgroups@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Chen Yu <yu.chen.surf@foxmail.com>,
-	Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH v4 0/2] sched/numa: add statistics of numa balance task migration
-Date: Wed,  7 May 2025 19:14:53 +0800
-Message-Id: <cover.1746611892.git.yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYHE91EX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC435C4CEE7;
+	Wed,  7 May 2025 11:23:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746616986;
+	bh=A74vXDFWSWnKhjsMSQhZJL5xQ7wU7bDlQLBPPoCJGno=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=JYHE91EXAOzRikVYhL2Zf9hdJmFEnwwUxR6cvcWYsNW3ziZePNwI38/95H3VZrYgX
+	 BqbaUxfpJc6vvNjunDXMF4BHQGaOcHEHoEY1RPHEiMaTJLSLmCKfokdmikKcyBerhp
+	 OgiOQ+N++wi2VMbYk6cJeeQvnC3MVY8r2awo6kTvYqyRWDwTn7EqcDFVxyM7Qi5OFR
+	 oLJ9a4QSQhMVDWELGiCF4PTn3Z1NEyXEk3cctsceIkeDKfIVv3jB8seJjLjxah201n
+	 Et1XJsAZA43H9jqsBILdSLmarAFNQCNW8IhMj7PZzbbk0m5JoByN5Wn2ZMS4QgQufB
+	 unJEy7JSvAQWw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 07 May 2025 13:22:59 +0200
+Message-Id: <D9PW1NI2S6FV.8LA53J87VCML@kernel.org>
+Cc: "Trevor Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye"
+ <ark.email@gmail.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>, "Petr
+ Pavlu" <petr.pavlu@suse.com>, "Sami Tolvanen" <samitolvanen@google.com>,
+ "Daniel Gomez" <da.gomez@samsung.com>, "Simona Vetter"
+ <simona.vetter@ffwll.ch>, "Greg KH" <gregkh@linuxfoundation.org>, "Fiona
+ Behrens" <me@kloenk.dev>, "Daniel Almeida" <daniel.almeida@collabora.com>,
+ <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v12 2/3] rust: add parameter support to the `module!`
+ macro
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Alice Ryhl" <aliceryhl@google.com>, "Masahiro
+ Yamada" <masahiroy@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>,
+ "Luis Chamberlain" <mcgrof@kernel.org>, "Danilo Krummrich"
+ <dakr@kernel.org>, "Nicolas Schier" <nicolas.schier@linux.dev>
+X-Mailer: aerc 0.20.1
+References: <20250506-module-params-v3-v12-0-c04d80c8a2b1@kernel.org>
+ <20250506-module-params-v3-v12-2-c04d80c8a2b1@kernel.org>
+In-Reply-To: <20250506-module-params-v3-v12-2-c04d80c8a2b1@kernel.org>
 
-Introducing the task migration and swap statistics in the following places:
-/sys/fs/cgroup/{GROUP}/memory.stat
-/proc/{PID}/sched
-/proc/vmstat
+On Tue May 6, 2025 at 3:02 PM CEST, Andreas Hindborg wrote:
+> Add support for module parameters to the `module!` macro. Implement read
+> only support for integer types without `sysfs` support.
+>
+> Acked-by: Petr Pavlu <petr.pavlu@suse.com> # from modules perspective
+> Tested-by: Daniel Gomez <da.gomez@samsung.com>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+> ---
+>  rust/kernel/lib.rs           |   1 +
+>  rust/kernel/module_param.rs  | 204 +++++++++++++++++++++++++++++++++++++=
+++++++
+>  rust/macros/helpers.rs       |  25 ++++++
+>  rust/macros/lib.rs           |  31 +++++++
+>  rust/macros/module.rs        | 195 ++++++++++++++++++++++++++++++++++++-=
+----
+>  samples/rust/rust_minimal.rs |  10 +++
 
-These statistics facilitate a rapid evaluation of the performance and resource
-utilization of the target workload.
+I know this is already the 12th version, but I think this patch should
+be split into the module_param module introduction, proc-macro
+modifications and the sample changes.
 
-Patch 1 is a fix from Libo to avoid task swapping for kernel threads,
-because Numa balance only cares about the user pages via VMA.
+[...]
 
-Patch 2 is the major change to expose the statistics of task migration and
-swapping in corresponding files.
+> +/// Set the module parameter from a string.
+> +///
+> +/// Used to set the parameter value at kernel initialization, when loadi=
+ng
+> +/// the module or when set through `sysfs`.
+> +///
+> +/// See `struct kernel_param_ops.set`.
+> +///
+> +/// # Safety
+> +///
+> +/// - If `val` is non-null then it must point to a valid null-terminated=
+ string.
+> +///   The `arg` field of `param` must be an instance of `T`.
 
-The reason to fold patch 1 and patch 2 into 1 patch set is that patch 1 is
-necessary for patch 2 to avoid accessing a NULL mm_struct from a kernel
-thread, which causes NULL pointer exception.
+This sentence is conveying the same (or at least similar) requirement as
+the bullet point below.
 
-The Tested-by and Acked-by tags are preserved, because these tags are provided
-in version 1 which has the p->mm check.
+> +/// - `param.arg` must be a pointer to valid `*mut T` as set up by the
+> +///   [`module!`] macro.
+> +///
+> +/// # Invariants
+> +///
+> +/// Currently, we only support read-only parameters that are not readabl=
+e
+> +/// from `sysfs`. Thus, this function is only called at kernel
+> +/// initialization time, or at module load time, and we have exclusive
+> +/// access to the parameter for the duration of the function.
 
-Previous version:
-v3:
-https://lore.kernel.org/lkml/20250430103623.3349842-1-yu.c.chen@intel.com/
-v2:
-https://lore.kernel.org/lkml/20250408101444.192519-1-yu.c.chen@intel.com/
-v1:
-https://lore.kernel.org/lkml/20250402010611.3204674-1-yu.c.chen@intel.com/
+Why is this an Invariants section?
 
-Chen Yu (1):
-  sched/numa: add statistics of numa balance task migration
+> +///
+> +/// [`module!`]: macros::module
+> +unsafe extern "C" fn set_param<T>(
+> +    val: *const kernel::ffi::c_char,
+> +    param: *const crate::bindings::kernel_param,
+> +) -> core::ffi::c_int
+> +where
+> +    T: ModuleParam,
+> +{
+> +    // NOTE: If we start supporting arguments without values, val _is_ a=
+llowed
+> +    // to be null here.
+> +    if val.is_null() {
+> +        // TODO: Use pr_warn_once available.
+> +        crate::pr_warn!("Null pointer passed to `module_param::set_param=
+`");
+> +        return EINVAL.to_errno();
+> +    }
+> +
+> +    // SAFETY: By function safety requirement, val is non-null and
+> +    // null-terminated. By C API contract, `val` is live and valid for r=
+eads
+> +    // for the duration of this function.
 
-Libo Chen (1):
-  sched/numa: fix task swap by skipping kernel threads
+We shouldn't mention "C API contract" here and move the liveness
+requirement to the safety requirements of the function. Or change the
+safety requirements for this function to only be called from some
+specific C API.=20
 
- Documentation/admin-guide/cgroup-v2.rst | 6 ++++++
- include/linux/sched.h                   | 4 ++++
- include/linux/vm_event_item.h           | 2 ++
- kernel/sched/core.c                     | 9 +++++++--
- kernel/sched/debug.c                    | 4 ++++
- kernel/sched/fair.c                     | 3 ++-
- mm/memcontrol.c                         | 2 ++
- mm/vmstat.c                             | 2 ++
- 8 files changed, 29 insertions(+), 3 deletions(-)
+> +    let arg =3D unsafe { CStr::from_char_ptr(val) };
+> +
+> +    crate::error::from_result(|| {
+> +        let new_value =3D T::try_from_param_arg(arg)?;
+> +
+> +        // SAFETY: `param` is guaranteed to be valid by C API contract
+> +        // and `arg` is guaranteed to point to an instance of `T`.
 
--- 
-2.25.1
+Ditto.
 
+> +        let old_value =3D unsafe { (*param).__bindgen_anon_1.arg as *mut=
+ T };
+> +
+> +        // SAFETY: `old_value` is valid for writes, as we have exclusive
+> +        // access. `old_value` is pointing to an initialized static, and
+> +        // so it is properly initialized.
+
+Why do we have exclusive access? Should be in the safety requirements.
+
+> +        unsafe { *old_value =3D new_value };
+> +        Ok(0)
+> +    })
+> +}
+
+[...]
+
+> +#[doc(hidden)]
+> +#[macro_export]
+> +/// Generate a static [`kernel_param_ops`](srctree/include/linux/modulep=
+aram.h) struct.
+> +///
+> +/// # Examples
+> +///
+> +/// ```ignore
+> +/// make_param_ops!(
+> +///     /// Documentation for new param ops.
+> +///     PARAM_OPS_MYTYPE, // Name for the static.
+> +///     MyType // A type which implements [`ModuleParam`].
+> +/// );
+> +/// ```
+> +macro_rules! make_param_ops {
+> +    ($ops:ident, $ty:ty) =3D> {
+> +        ///
+
+Spurious newline?
+
+> +        /// Static [`kernel_param_ops`](srctree/include/linux/modulepara=
+m.h)
+> +        /// struct generated by `make_param_ops`
+
+Is it useful for this fact to be in the docs? I'd remove it.
+
+> +        #[doc =3D concat!("for [`", stringify!($ty), "`].")]
+> +        pub static $ops: $crate::bindings::kernel_param_ops =3D $crate::=
+bindings::kernel_param_ops {
+> +            flags: 0,
+> +            set: Some(set_param::<$ty>),
+> +            get: None,
+> +            free: None,
+> +        };
+> +    };
+> +}
+> +
+> +make_param_ops!(PARAM_OPS_I8, i8);
+> +make_param_ops!(PARAM_OPS_U8, u8);
+> +make_param_ops!(PARAM_OPS_I16, i16);
+> +make_param_ops!(PARAM_OPS_U16, u16);
+> +make_param_ops!(PARAM_OPS_I32, i32);
+> +make_param_ops!(PARAM_OPS_U32, u32);
+> +make_param_ops!(PARAM_OPS_I64, i64);
+> +make_param_ops!(PARAM_OPS_U64, u64);
+> +make_param_ops!(PARAM_OPS_ISIZE, isize);
+> +make_param_ops!(PARAM_OPS_USIZE, usize);
+> diff --git a/rust/macros/helpers.rs b/rust/macros/helpers.rs
+> index a3ee27e29a6f..16d300ad3d3b 100644
+> --- a/rust/macros/helpers.rs
+> +++ b/rust/macros/helpers.rs
+> @@ -10,6 +10,17 @@ pub(crate) fn try_ident(it: &mut token_stream::IntoIte=
+r) -> Option<String> {
+>      }
+>  }
+> =20
+> +pub(crate) fn try_sign(it: &mut token_stream::IntoIter) -> Option<char> =
+{
+> +    let peek =3D it.clone().next();
+> +    match peek {
+> +        Some(TokenTree::Punct(punct)) if punct.as_char() =3D=3D '-' =3D>=
+ {
+
+Should we also allow a leading `+`?
+
+> +            let _ =3D it.next();
+> +            Some(punct.as_char())
+> +        }
+> +        _ =3D> None,
+> +    }
+> +}
+> +
+>  pub(crate) fn try_literal(it: &mut token_stream::IntoIter) -> Option<Str=
+ing> {
+>      if let Some(TokenTree::Literal(literal)) =3D it.next() {
+>          Some(literal.to_string())
+> @@ -86,3 +97,17 @@ pub(crate) fn function_name(input: TokenStream) -> Opt=
+ion<Ident> {
+>      }
+>      None
+>  }
+> +
+> +/// Parse a token stream of the form `expected_name: "value",` and retur=
+n the
+> +/// string in the position of "value".
+> +///
+> +/// # Panics
+> +///
+> +/// - On parse error.
+> +pub(crate) fn expect_string_field(it: &mut token_stream::IntoIter, expec=
+ted_name: &str) -> String {
+> +    assert_eq!(expect_ident(it), expected_name);
+> +    assert_eq!(expect_punct(it), ':');
+> +    let string =3D expect_string(it);
+> +    assert_eq!(expect_punct(it), ',');
+
+This won't allow omitting the trailing comma.
+
+> +    string
+> +}
+
+[...]
+
+> @@ -186,33 +336,35 @@ pub(crate) fn module(ts: TokenStream) -> TokenStrea=
+m {
+>      let info =3D ModuleInfo::parse(&mut it);
+> =20
+>      let mut modinfo =3D ModInfoBuilder::new(info.name.as_ref());
+> -    if let Some(author) =3D info.author {
+> -        modinfo.emit("author", &author);
+> +    if let Some(author) =3D &info.author {
+> +        modinfo.emit("author", author);
+>      }
+> -    if let Some(authors) =3D info.authors {
+> +    if let Some(authors) =3D &info.authors {
+>          for author in authors {
+> -            modinfo.emit("author", &author);
+> +            modinfo.emit("author", author);
+>          }
+>      }
+> -    if let Some(description) =3D info.description {
+> -        modinfo.emit("description", &description);
+> +    if let Some(description) =3D &info.description {
+> +        modinfo.emit("description", description);
+>      }
+>      modinfo.emit("license", &info.license);
+> -    if let Some(aliases) =3D info.alias {
+> +    if let Some(aliases) =3D &info.alias {
+>          for alias in aliases {
+> -            modinfo.emit("alias", &alias);
+> +            modinfo.emit("alias", alias);
+>          }
+>      }
+> -    if let Some(firmware) =3D info.firmware {
+> +    if let Some(firmware) =3D &info.firmware {
+>          for fw in firmware {
+> -            modinfo.emit("firmware", &fw);
+> +            modinfo.emit("firmware", fw);
+
+I don't like that you have to change all of these. Can't you just take a
+`&[Parameter]` argument in `emit_params` instead of the whole
+`ModuleInfo` struct?
+
+---
+Cheers,
+Benno
+
+>          }
+>      }
