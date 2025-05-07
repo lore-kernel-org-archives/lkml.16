@@ -1,199 +1,98 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523E41FF603
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 06:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608B014884C;
+	Wed,  7 May 2025 06:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746598822; cv=none; b=OnUL9iBafi/lNeTlLqnXgfoS6up9qz/OoXoeMld1f1eczVPYHiVRVNDvOAIj5WxzX/MItEw+YvPeOHIERCZ36yQ3FvnHztdVIqBTebbqWjhV5aKnf/Iyckx4C7GPruoxKjxqOIBfJEdevG/5ksmUJEAeruqrQwGjo0vIFh8bmH8=
+	t=1746598867; cv=none; b=SBl8JNQp5WiNPUOpgxMhA+mc8O8CNoflGx8Fk3bTAYiQm42lIGF9VpWTU4d7SxAnDaBc7t8HwEMKRJrNvavNrFyz1gdqsRRMnrdsN3MVCwuBmLa7iWM8EEuzPN1pvXml3pO09aAz/oh3v8eZDffMUxso/dEZWMJRfnQZC2jN8oY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746598822; c=relaxed/simple;
-	bh=oVzO12ncyGqg+ZQk7J5TfT09sDCOkhTgdT/AEkH0y2w=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hizsjzvUOask76L9UzomWIAPV8/tX8S82x02iqbFglw29yAbu8UnbdA6vM6DoE+OnKtFWZXDM+QDVpWpm7v6CcBJ7T1NzTdVA3xnaRNqVaG3cF3NBYfkX+NsblnjrQVe/qMshRwrB8HgVXcjXxCYPRq2QDdJZEu8t/kjj2XicuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D3IVb3xl; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1746598867; c=relaxed/simple;
+	bh=0D+Tdo2OwXLWYP3IRAD3ktKnQD9CgJbw3LACcvS8npc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hkYNFFm7BzuNXWPNSPZVbA6IJ5dTVQBIGftETpTwGq/z+bFIow8hRlMtA/MMRURX32LDdIUy1L4uVfId4sx95QxuV+t0levXgZ26ygtCGy8mVToVv7MnxvvK6QT8qZFkYnpuoQd1IRqmvhdvqJWhhJ8w0bwHD6ZbDq5S/UjY7C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SpVGih2l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D3IVb3xl"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43ceb011ea5so36230095e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 23:20:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746598815; x=1747203615; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ls5MgKciqm6FU9ZD38WWbxuKWTlwn7qiovMV9GCozTM=;
-        b=D3IVb3xlGpLqTVvxJbm65CES4pvmk+Rhw3PW1vsM1r2KWM70vyQi3RVGZ3GpYQ9NCu
-         KZQ5HIpZmzb+oKWmUI9WirFVd8Xclo0ICBLtdGVlo7kK7uHZQKzZnHMOV2QieIZpaI6r
-         EYaeFzk1EseGrbCpU27uuaBpUDOS7+yeyBdRFGp0vIKn/dwa6jKOuE6lQS/h7alXbiOh
-         rZTqBpPpUe/9I9l0NTZc6pRy4rs9Jw3//ds5+RFHBi/CqlJy3tLTj69+plAazaQ6I0cG
-         QBmHh1qWfZeeLMheYG3ZFsR4tMx3qoTBd8qpRSlsfk7BDf+GbrblbqFssBnAqcjqbBX9
-         F1HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746598815; x=1747203615;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ls5MgKciqm6FU9ZD38WWbxuKWTlwn7qiovMV9GCozTM=;
-        b=QO7KbDg47CQioTRcQJk+1iwtEgrrsWujwkiQsyJMFJww6xkNu4mXabAPh1gmdznQVv
-         bMEOwP5fxpfLcqniBg2ysQePkKGGcFmOPCivi5iNjcfglo8givnxinPi3x0lQU7usmgk
-         Mf/xla3NxwnoyfbDzHsRRSMZ+grX0FkPIzgUvC2STZvOEP9l0qveyUIRSX0JEIwRtwf+
-         7wiEK3WidA+jiD2BFfgoXOvTv1pXPp1GsIO4kTsahKO7v2JBMj/c/ehCrKGQraR0JMHD
-         FLrexgc8oEU5l+1i70OfZbJPRdKlUgiktNn2uxcZAmMvn7QQXEvOOiQyXnwNJM5WIRIC
-         CUJA==
-X-Forwarded-Encrypted: i=1; AJvYcCWB3y5Zdvt3T/ShpjplXKNXQ+dz7dadREDjK3J4xhuWqb5fcb331QLV3zWgrydCzZKnxHkAdVkgtp07kGQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys/oJOchUYZcjppZrfrYvCdZWtiUJdAkNhUZ3wjNEJuBcmTLtt
-	BjWF5+H8I+ewLoVMKjhdOdeOq9cyv62Pqjs4ZnSRXE60cwQBw6uWq/2YWNQgtd1pxAgLFwM99sn
-	uFdjJNiIR2jAlGA==
-X-Google-Smtp-Source: AGHT+IFchIQSs6/uaxnQNTXkJre3kxCjqjKEbsAqhsRKcdwlycwmgb49bF0r1rNpdSe8w8oMvecRmqhQu70oY8g=
-X-Received: from wmbei16.prod.google.com ([2002:a05:600c:3f10:b0:440:59df:376a])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:8283:b0:43d:fa5d:9315 with SMTP id 5b1f17b1804b1-441d44e5195mr10736555e9.33.1746598815766;
- Tue, 06 May 2025 23:20:15 -0700 (PDT)
-Date: Wed, 7 May 2025 06:20:13 +0000
-In-Reply-To: <87ecx2q93v.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SpVGih2l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 797E8C4CEE7;
+	Wed,  7 May 2025 06:21:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746598866;
+	bh=0D+Tdo2OwXLWYP3IRAD3ktKnQD9CgJbw3LACcvS8npc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SpVGih2lGPKKqhgBoViAsh2MGm7pU9k3tmPDJlX/6Zfzf66RSKHMbHaiJe/bL44uz
+	 EYoUXPly3E0nL3bTAHLX0d1NXdwc6yzRLvahyep+8TL/eC3AIgsrFM3w6fnyiT7rGr
+	 4zJ/wt5iSTtpNttYF7i4ChBzUbAtjMCIdcyR+smEWqiL6gDfEEjFKFYGKNM6gVlB69
+	 MPsP1XTGCz1pznQMDhcgkqJ75xZHF8SRfwGP0poz0l9eahN80KPlmdz0Qs2/Z0nhST
+	 QomTVvLuAJCCVbZ0CYvZjFTh6sRvPGrpU/pVQjKbc0XRZxuWWloB9JwTzrQNwom4Zy
+	 q1MifAIZxihog==
+Date: Wed, 7 May 2025 15:21:04 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	Sander Vanheule <sander@svanheule.net>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] regmap: remove MDIO support
+Message-ID: <aBr70GkoQEpe0sOt@finisterre.sirena.org.uk>
+References: <c5452c26-f947-4b0c-928d-13ba8d133a43@gmail.com>
+ <aBquZCvu4v1yoVWD@finisterre.sirena.org.uk>
+ <59109ac3-808d-4d65-baf6-40199124db3b@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me> <20250502-unique-ref-v10-1-25de64c0307f@pm.me>
- <ZQ8N85Nd1qwR7qgLQKvl4cyYaCeQPD_ugOpVmYypwTmeLoV6acIhB2WLf3eBT-VUjm6jWF2qQzp2tU0kCqq39A==@protonmail.internalid>
- <aBSsrLGSJgLGTViT@google.com> <87ecx2q93v.fsf@kernel.org>
-Message-ID: <aBr7nbI2AScXSjTg@google.com>
-Subject: Re: [PATCH v10 1/5] rust: types: Add Ownable/Owned types
-From: Alice Ryhl <aliceryhl@google.com>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Oliver Mangold <oliver.mangold@pm.me>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="JU5l45uWXeqTMhD2"
+Content-Disposition: inline
+In-Reply-To: <59109ac3-808d-4d65-baf6-40199124db3b@gmail.com>
+X-Cookie: Well begun is half done.
 
-On Tue, May 06, 2025 at 01:20:04PM +0200, Andreas Hindborg wrote:
-> "Alice Ryhl" <aliceryhl@google.com> writes:
-> 
-> > On Fri, May 02, 2025 at 09:02:29AM +0000, Oliver Mangold wrote:
-> >> From: Asahi Lina <lina@asahilina.net>
-> >>
-> >> By analogy to AlwaysRefCounted and ARef, an Ownable type is a (typically
-> >> C FFI) type that *may* be owned by Rust, but need not be. Unlike
-> >> AlwaysRefCounted, this mechanism expects the reference to be unique
-> >> within Rust, and does not allow cloning.
-> >>
-> >> Conceptually, this is similar to a KBox<T>, except that it delegates
-> >> resource management to the T instead of using a generic allocator.
-> >>
-> >> Link: https://lore.kernel.org/all/20250202-rust-page-v1-1-e3170d7fe55e@asahilina.net/
-> >> Signed-off-by: Asahi Lina <lina@asahilina.net>
-> >> [ om:
-> >>   - split code into separate file and `pub use` it from types.rs
-> >>   - make from_raw() and into_raw() public
-> >>   - fixes to documentation
-> >> ]
-> >> Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
-> >> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-> >> ---
-> >>  rust/kernel/types.rs         |   3 ++
-> >>  rust/kernel/types/ownable.rs | 117 +++++++++++++++++++++++++++++++++++++++++++
-> >>  2 files changed, 120 insertions(+)
-> >>
-> >> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> >> index 9d0471afc9648f2973235488b441eb109069adb1..5d8a99dcba4bf733107635bf3f0c15840ec33e4c 100644
-> >> --- a/rust/kernel/types.rs
-> >> +++ b/rust/kernel/types.rs
-> >> @@ -11,6 +11,9 @@
-> >>  };
-> >>  use pin_init::{PinInit, Zeroable};
-> >>
-> >> +pub mod ownable;
-> >> +pub use ownable::{Ownable, OwnableMut, Owned};
-> >> +
-> >>  /// Used to transfer ownership to and from foreign (non-Rust) languages.
-> >>  ///
-> >>  /// Ownership is transferred from Rust to a foreign language by calling [`Self::into_foreign`] and
-> >> diff --git a/rust/kernel/types/ownable.rs b/rust/kernel/types/ownable.rs
-> >> new file mode 100644
-> >> index 0000000000000000000000000000000000000000..52e7a69019f1e2bbbe3cf715651b67a5a5c7c13d
-> >> --- /dev/null
-> >> +++ b/rust/kernel/types/ownable.rs
-> >> @@ -0,0 +1,117 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +
-> >> +//! Owned reference types.
-> >> +
-> >> +use core::{
-> >> +    marker::PhantomData,
-> >> +    mem::ManuallyDrop,
-> >> +    ops::{Deref, DerefMut},
-> >> +    ptr::NonNull,
-> >> +};
-> >> +
-> >> +/// Types that may be owned by Rust code or borrowed, but have a lifetime managed by C code.
-> >> +///
-> >> +/// It allows such types to define their own custom destructor function to be called when
-> >> +/// a Rust-owned reference is dropped.
-> >> +///
-> >> +/// This is usually implemented by wrappers to existing structures on the C side of the code.
-> >> +///
-> >> +/// # Safety
-> >> +///
-> >> +/// Implementers must ensure that:
-> >> +/// - Any objects owned by Rust as [`Owned<T>`] stay alive while that owned reference exists (i.e.
-> >> +///   until the [`release()`](Ownable::release) trait method is called).
-> >> +/// - That the C code follows the usual mutable reference requirements. That is, the kernel will
-> >> +///   never mutate the [`Ownable`] (excluding internal mutability that follows the usual rules)
-> >> +///   while Rust owns it.
-> >
-> > This seems too strong? Or does the exception mean to say that this does
-> > not apply to anything containing `Opaque`? By far most structs using
-> > this will use Opaque, so maybe directly mention Opaque instead?
-> 
-> `Opaque` is covered by "(excluding internal mutability that follows the usual rules)".
 
-I guess. But I think it would still be good to rephrase to mention
-Opaque for ease of understanding.
+--JU5l45uWXeqTMhD2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > That C code follows the usual aliasing rules. That is, unless the value
-> > is wrapped in `Opaque` (or `UnsafeCell`), then the value must not be
-> > modified in any way while Rust owns it, unless that modification happens
-> > inside a `&mut T` method on the value.
-> >
-> >> +pub unsafe trait Ownable {
-> >> +    /// Releases the object (frees it or returns it to foreign ownership).
-> >> +    ///
-> >> +    /// # Safety
-> >> +    ///
-> >> +    /// Callers must ensure that the object is no longer referenced after this call.
-> >> +    unsafe fn release(this: NonNull<Self>);
-> >> +}
-> >> +
-> >> +/// A subtrait of Ownable that asserts that an [`Owned<T>`] or `&mut Owned<T>` Rust reference
-> >> +/// may be dereferenced into a `&mut T`.
-> >> +///
-> >> +/// # Safety
-> >> +///
-> >> +/// Implementers must ensure that access to a `&mut T` is safe, implying that it is okay to call
-> >> +/// [`core::mem::swap`] on the `Ownable`. This excludes pinned types (meaning: most kernel types).
-> >> +pub unsafe trait OwnableMut: Ownable {}
-> >> +
-> >> +/// An owned reference to an ownable kernel object.
-> >> +///
-> >> +/// The object is automatically freed or released when an instance of [`Owned`] is
-> >> +/// dropped.
-> >> +///
-> >> +/// # Invariants
-> >> +///
-> >> +/// The pointer stored in `ptr` is valid for the lifetime of the [`Owned`] instance.
-> >
-> > This should probably talk about ownership.
-> 
-> How about
-> 
->   The pointee of `ptr` can be considered owned by the [`Owned`] instance.
+On Wed, May 07, 2025 at 08:09:27AM +0200, Heiner Kallweit wrote:
+> On 07.05.2025 02:50, Mark Brown wrote:
+> > On Tue, May 06, 2025 at 10:06:00PM +0200, Heiner Kallweit wrote:
 
-Sure.
+> >> MDIO regmap support was added with 1f89d2fe1607 as only patch from a
+> >> series. The rest of the series wasn't applied. Therefore MDIO regmap
+> >> has never had a user.
 
-Alice
+> > Is it causing trouble, or is this just a cleanup?
+
+> It's merely a cleanup. The only thing that otherwise would need
+
+If it's not getting in the way I'd rather leave it there in case someone
+wants it, that way I don't need to get CCed into some other series
+again.
+
+> improvement is that REGMAP_MDIO selects MDIO_BUS w/o considering
+> the dependency of MDIO_BUS on MDIO_DEVICE. REGMAP_MDIO should
+> depend on MDIO_BUS.
+
+Well, REGMAP_MDIO should be selected itself so none of these selects or
+dependencies would do anything anyway.
+
+--JU5l45uWXeqTMhD2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmga+80ACgkQJNaLcl1U
+h9DZSwf/UacNqpLSOgvwOYhS5g6GaTnVoP8wSBCvKXgvmQX1BH+dyvEQa35e6Ltb
+Pcl99zYDXZxthp4kPME4CGB/QOK2aJS5TptkJLf8XdKWJ7GUdyNMq7000w7A9kSI
+yJQ4LDODNx6WTRtCjQr6mIj0xD3IysQ05KgZo1i0v61S9+HT9lE6wbWlEK5xmjMs
+HeZP5Adqw2DMxQ3LxrscJE04p3B3ym8oQdErEjuZTWKyi8Xm9S94J3vO1q+sK/cK
+4jmC8BLbWSijMXHsXCPwOnwHIBMIgxrekLERsP7vIme2c+H7M13YMdTttFaR3qlU
+WB/6CgjDm/z1KIPkNPG4NFoiG8/gXA==
+=stj/
+-----END PGP SIGNATURE-----
+
+--JU5l45uWXeqTMhD2--
