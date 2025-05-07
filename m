@@ -1,317 +1,164 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D563289E18;
-	Wed,  7 May 2025 14:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA7C28136B
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 14:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746628560; cv=none; b=ZUutLrJ2EeXEhO47IK8ajqEpk+Ao17/EO5EtupwePIdkDS+dBdRD6iH9ykJrChRL26KQO9+tRPB9juFIJeLduDgYlvZ7RAZopgOZHXjcJ/JNLXcYQ+C3e3WOsWs4P1ELmpzcd1SFu0lbLheQePpIHFXeRlN9pTMtF9r3MDzFWkg=
+	t=1746628594; cv=none; b=ZKtnI0VmwCWv2SzZIbh6KpSKRZ5GewKgi308YUusrZwmoo0VC6PgfGMn/PXL3LsYlHCG3EKkM94IfdRdJxaDN8OZotFxqtJby3vUCRLNGUCT9UP6VNsJKoam/oATxgthiafjDQcOcSNmvwl0bLeUgfkKg3dt50ECGpuhDpn+vlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746628560; c=relaxed/simple;
-	bh=2eMJh4QUmGLX4BNr0GiVvQHlmWhDqnp+WxQq1hpa6Ws=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dxZpsJEmYadWM5nNH/3vidhIuWOqhAz565XjQa6vd+VxeLO4C0SQBOa+V8QdrgS1wzb5W2IwQmCQXgwQA0qd4UEAyeHE5Qh+rIXWs5JEXgbXtEwoJgCtFrKvpPtLqJFKqMJzjCZSbzkNqFsjyVhzbfDfF8S1J6yDafaXzJKZ49c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F11F743A1E;
-	Wed,  7 May 2025 14:35:47 +0000 (UTC)
-Message-ID: <dd877b46-5327-4f9e-91d0-30a9e863a9cb@ghiti.fr>
-Date: Wed, 7 May 2025 16:35:47 +0200
+	s=arc-20240116; t=1746628594; c=relaxed/simple;
+	bh=fVlSFbG3u628EYseVWSf4N6fNlIkvPxjlWaKQ+obPNo=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=ctY/zezNTm6PpOgdFiwj+JNGRom0Qkeyl3hcHkmHwOXUw4BGCzlMrpPO+byMghXThEbpEEYUkJLDB4A+bH8ToX3vqDpVDgVKTqYCMeDSzsm/QuJ4J5CFMbF0LI0AXPjBeKWMYiWBVP/WaLN3SHo6/JnsrwX0bSaBJBuOFKQTRnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=GGpJfSiD; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="GGpJfSiD"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a0b0d8090dso176081f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 07:36:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1746628591; x=1747233391; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:from:to:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ziqHwwsRYBlnOytFFSvfeo7+WCPTNxHeZbIxMBlJdhs=;
+        b=GGpJfSiDkF+av8Huk4dE9niZ99bCkYcYkCWrZbetJrdHyzZxjyLSN4DT6E1eJrTjAr
+         EYvegDuqJtBtE/L2W+JIfJkA9r3eZPAi9OE4GsB0LdiUJapHnYU0drsD6Fh+/GwXrwJ6
+         D+ZaDKxlf9vhbJApMTqwGQ7PeiUEtsBGaPd6DdHB0j8Z5HWPRqbYSQcJN1j2YV3yi/5l
+         IXaIlKuL2qAas8IkLSfCuW0cHIH9KCIkD4AR90f0pA8O6p9rjIb9EoNjNVDsA5crd+54
+         xgn7M30UZd0wsyQmLIKpb/Tm1VeLA20t0J8KyKrEBst1YeK86p7g4D80bTCn/eOltZkn
+         ILEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746628591; x=1747233391;
+        h=in-reply-to:references:subject:from:to:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ziqHwwsRYBlnOytFFSvfeo7+WCPTNxHeZbIxMBlJdhs=;
+        b=cHhHuSJLIHS/gGfHlCpWTD4Ig4ao8iIRkgGeU3W3EJpMZx0teoY7tVHVzS0cShB30B
+         /XfcrCnmbZ1Z4ytVX1QcButmq/A3Qlxmly8lD+MR45OZyd6BdsEGf96KMPiBAf19oGJl
+         JvJB1WS3RFsbxhWJWhzVoxaxFiyV8UVx81Y2PsWoq1yic0zZNp30mYTLiHeNdA6+BDvT
+         LKhyM3ImGzgcGrexiNcm8ojflIjMInz0tMYN3SIJ5UWZ8QJ9GAZ1+p8DRKSVKVyDIrsY
+         NqySysGFBqjAxFfcabZ4z6q4fDYemYM9XFKHSlEganAvvgmFkkFo19+aqPUkw7aPIK4E
+         96Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCUbrUUhw/xhbU6u93hSLm854SDapGwD15iKhYXz3xiYO7xmvONeGHFitfjfUi5QR++V+DU6wODgIunvPMU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzvom6mMcSKtg1//tK08LzElIJy7bYjcOZdj5V7sSAlqRERhfEg
+	jDWlMQgEKR8VpMkYjyX3Gf/HdNZyrJV/rY9pNLTiNcJQE5DKphbxGekUzUwqTLU=
+X-Gm-Gg: ASbGnctCjIxS2Gy/P/hocXgEq90ARfUya+QNR1Pt9lZsn6E70tRvnl2tPH3jnnJBSL1
+	98wdTNrlty44oM7j8ct4vTR18BxWbG16z48UQRR43VUYU9HGLmWQ3JXLytOlDtijSbx3ixQkdfU
+	PPpolcVvjP9KWjGED6Aokyz9xOkdn+VaMMkHgIRpQV4qlSGvYu98d5zvc62UyMgpgY7nhyDmR8p
+	v9IvVW/U4pvRuK2ZaxLicbT0ftjhJksPAMNgCsB0IplCrAkMJBPQZsMulaaYkStzkeOBTbNntKU
+	yvfKLmspmEbRZRJtyUH8KxgmJoKDOHxLgTGBWhv4msDKvAeR
+X-Google-Smtp-Source: AGHT+IEajZZzNeyoeib2XsmQjInc2KEWeUmYjGy4p5Qc/30lHXvX26EPvLDj1a/b0VLqz2Zq6F2iCA==
+X-Received: by 2002:a5d:64e2:0:b0:3a0:7e53:b52d with SMTP id ffacd0b85a97d-3a0b4a69bdamr1109869f8f.15.1746628590982;
+        Wed, 07 May 2025 07:36:30 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:f39f:9517:bfc5:cd5e])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b0efbfsm17536249f8f.69.2025.05.07.07.36.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 07:36:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 05/12] riscv: ftrace: prepare ftrace for atomic code
- patching
-Content-Language: en-US
-To: Andy Chiu <andybnac@gmail.com>
-Cc: linux-riscv@lists.infradead.org, alexghiti@rivosinc.com,
- palmer@dabbelt.com, Andy Chiu <andy.chiu@sifive.com>,
- =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Mark Rutland <mark.rutland@arm.com>, puranjay12@gmail.com,
- paul.walmsley@sifive.com, greentime.hu@sifive.com, nick.hu@sifive.com,
- nylon.chen@sifive.com, eric.lin@sifive.com, vicent.chen@sifive.com,
- zong.li@sifive.com, yongxuan.wang@sifive.com, samuel.holland@sifive.com,
- olivia.chu@sifive.com, c2232430@gmail.com
-References: <20250407180838.42877-1-andybnac@gmail.com>
- <20250407180838.42877-5-andybnac@gmail.com>
- <aea9f0cd-087a-43f2-8631-a6926ff9ced3@ghiti.fr>
- <735ba24d-e1f9-4d56-934b-18d0d2b91428@ghiti.fr>
- <CAFTtA3NqC+r9HBS2cJvwzZMyTECJe3VbWrsZgWo6e-LTgpPOaA@mail.gmail.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <CAFTtA3NqC+r9HBS2cJvwzZMyTECJe3VbWrsZgWo6e-LTgpPOaA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejudduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedtgeeuhffhveeujeetveevieekleekvdffudefleevgefgieekkefggefhtddtveenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeekjeelfhemrgehrgdtmedurggrgeemrggsvdegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeekjeelfhemrgehrgdtmedurggrgeemrggsvdegpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeekjeelfhemrgehrgdtmedurggrgeemrggsvdegngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedvuddprhgtphhtthhopegrnhguhigsnhgrtgesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheprghlvgigghhhihhtihesrhhiv
- hhoshhinhgtrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghnugihrdgthhhiuhesshhifhhivhgvrdgtohhmpdhrtghpthhtohepsghjohhrnhesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqthhrrggtvgdqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: alex@ghiti.fr
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 07 May 2025 16:36:30 +0200
+Message-Id: <D9Q05T702L8Y.3UTLG7VXIFXOK@ventanamicro.com>
+Cc: <kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>,
+ <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+To: "Atish Patra" <atish.patra@linux.dev>, "Anup Patel"
+ <anup@brainfault.org>, "Atish Patra" <atishp@atishpatra.org>, "Paul
+ Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
+ <palmer@dabbelt.com>, "Alexandre Ghiti" <alex@ghiti.fr>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+Subject: Re: [PATCH 0/5] Enable hstateen bits lazily for the KVM RISC-V
+ Guests
+References: <20250505-kvm_lazy_enable_stateen-v1-0-3bfc4008373c@rivosinc.com> <D9OYWFEXSA55.OUUXFPIGGBZV@ventanamicro.com> <bc0f1273-d596-47dd-bcc6-be9894157828@linux.dev>
+In-Reply-To: <bc0f1273-d596-47dd-bcc6-be9894157828@linux.dev>
 
-Hi Andy,
-
-On 07/05/2025 16:18, Andy Chiu wrote:
-> On Mon, May 5, 2025 at 10:06 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
->> On 23/04/2025 10:22, Alexandre Ghiti wrote:
->>> Hi Andy,
+2025-05-06T11:24:41-07:00, Atish Patra <atish.patra@linux.dev>:
+> On 5/6/25 2:24 AM, Radim Kr=C4=8Dm=C3=A1=C5=99 wrote:
+>> 2025-05-05T14:39:25-07:00, Atish Patra <atishp@rivosinc.com>:
+>>> This series adds support for enabling hstateen bits lazily at runtime
+>>> instead of statically at bootime. The boot time enabling happens for
+>>> all the guests if the required extensions are present in the host and/o=
+r
+>>> guest. That may not be necessary if the guest never exercise that
+>>> feature. We can enable the hstateen bits that controls the access lazil=
+y
+>>> upon first access. This providers KVM more granular control of which
+>>> feature is enabled in the guest at runtime.
 >>>
->>> On 07/04/2025 20:08, Andy Chiu wrote:
->>>> From: Andy Chiu <andy.chiu@sifive.com>
->>>>
->>>> We use an AUIPC+JALR pair to jump into a ftrace trampoline. Since
->>>> instruction fetch can break down to 4 byte at a time, it is impossible
->>>> to update two instructions without a race. In order to mitigate it, we
->>>> initialize the patchable entry to AUIPC + NOP4. Then, the run-time code
->>>> patching can change NOP4 to JALR to eable/disable ftrcae from a
->>>> function. This limits the reach of each ftrace entry to +-2KB displacing
->>>> from ftrace_caller.
->>>>
->>>> Starting from the trampoline, we add a level of indirection for it to
->>>> reach ftrace caller target. Now, it loads the target address from a
->>>> memory location, then perform the jump. This enable the kernel to update
->>>> the target atomically.
->>>>
->>>> The new don't-stop-the-world text patching on change only one RISC-V
->>>> instruction:
->>>>
->>>>     |  -8: &ftrace_ops of the associated tracer function.
->>>>     | <ftrace enable>:
->>>>     |   0: auipc  t0, hi(ftrace_caller)
->>>>     |   4: jalr   t0, lo(ftrace_caller)
->>>>     |
->>>>     |  -8: &ftrace_nop_ops
->>>>     | <ftrace disable>:
->>>>     |   0: auipc  t0, hi(ftrace_caller)
->>>>     |   4: nop
->>>>
->>>> This means that f+0x0 is fixed, and should not be claimed by ftrace,
->>>> e.g. kprobe should be able to put a probe in f+0x0. Thus, we adjust the
->>>> offset and MCOUNT_INSN_SIZE accordingly.
->>>>
->>>> Co-developed-by: Björn Töpel <bjorn@rivosinc.com>
->>>> Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
->>>> Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
->>>> ---
->>>> Changelog v4:
->>>>    - Include Björn's fix for kprobe
->>>>    - Refactor code for better reading (Robbin, Björn)
->>>>    - Remove make_call_ra and friedns (Björn)
->>>>    - Update comments to match reality (Björn)
->>>>    - Drop code defined by !WITH_ARG
->>>>    - Add a synchronization point when updating ftrace_call_dest (Björn)
->>>> ---
->>>>    arch/riscv/include/asm/ftrace.h |  49 ++++++------
->>>>    arch/riscv/kernel/ftrace.c      | 130 ++++++++++++++++----------------
->>>>    arch/riscv/kernel/mcount-dyn.S  |   9 +--
->>>>    3 files changed, 92 insertions(+), 96 deletions(-)
->>>>
->>>> diff --git a/arch/riscv/include/asm/ftrace.h
->>>> b/arch/riscv/include/asm/ftrace.h
->>>> index d8b2138bd9c6..6a5c0a7fb826 100644
->>>> --- a/arch/riscv/include/asm/ftrace.h
->>>> +++ b/arch/riscv/include/asm/ftrace.h
->>>> @@ -20,10 +20,9 @@ extern void *return_address(unsigned int level);
->>>>    #define ftrace_return_address(n) return_address(n)
->>>>      void _mcount(void);
->>>> -static inline unsigned long ftrace_call_adjust(unsigned long addr)
->>>> -{
->>>> -    return addr;
->>>> -}
->>>> +unsigned long ftrace_call_adjust(unsigned long addr);
->>>> +unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip);
->>>> +#define ftrace_get_symaddr(fentry_ip)
->>>> arch_ftrace_get_symaddr(fentry_ip)
->>>>      /*
->>>>     * Let's do like x86/arm64 and ignore the compat syscalls.
->>>> @@ -57,12 +56,21 @@ struct dyn_arch_ftrace {
->>>>     * 2) jalr: setting low-12 offset to ra, jump to ra, and set ra to
->>>>     *          return address (original pc + 4)
->>>>     *
->>>> + * The first 2 instructions for each tracable function is compiled
->>>> to 2 nop
->>>> + * instructions. Then, the kernel initializes the first instruction
->>>> to auipc at
->>>> + * boot time (<ftrace disable>). The second instruction is patched
->>>> to jalr to
->>>> + * start the trace.
->>>> + *
->>>> + *<Image>:
->>>> + * 0: nop
->>>> + * 4: nop
->>>> + *
->>>>     *<ftrace enable>:
->>>> - * 0: auipc  t0/ra, 0x?
->>>> - * 4: jalr   t0/ra, ?(t0/ra)
->>>> + * 0: auipc  t0, 0x?
->>>> + * 4: jalr   t0, ?(t0)
->>>>     *
->>>>     *<ftrace disable>:
->>>> - * 0: nop
->>>> + * 0: auipc  t0, 0x?
->>>>     * 4: nop
->>>>     *
->>>>     * Dynamic ftrace generates probes to call sites, so we must deal with
->>>> @@ -75,10 +83,9 @@ struct dyn_arch_ftrace {
->>>>    #define AUIPC_OFFSET_MASK    (0xfffff000)
->>>>    #define AUIPC_PAD        (0x00001000)
->>>>    #define JALR_SHIFT        20
->>>> -#define JALR_RA            (0x000080e7)
->>>> -#define AUIPC_RA        (0x00000097)
->>>>    #define JALR_T0            (0x000282e7)
->>>>    #define AUIPC_T0        (0x00000297)
->>>> +#define JALR_RANGE        (JALR_SIGN_MASK - 1)
->>>>      #define to_jalr_t0(offset)                        \
->>>>        (((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_T0)
->>>> @@ -96,26 +103,14 @@ do {                                    \
->>>>        call[1] = to_jalr_t0(offset);                    \
->>>>    } while (0)
->>>>    -#define to_jalr_ra(offset)                        \
->>>> -    (((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_RA)
->>>> -
->>>> -#define to_auipc_ra(offset)                        \
->>>> -    ((offset & JALR_SIGN_MASK) ?                    \
->>>> -    (((offset & AUIPC_OFFSET_MASK) + AUIPC_PAD) | AUIPC_RA) :    \
->>>> -    ((offset & AUIPC_OFFSET_MASK) | AUIPC_RA))
->>>> -
->>>> -#define make_call_ra(caller, callee, call)                \
->>>> -do {                                    \
->>>> -    unsigned int offset =                        \
->>>> -        (unsigned long) (callee) - (unsigned long) (caller); \
->>>> -    call[0] = to_auipc_ra(offset);                    \
->>>> -    call[1] = to_jalr_ra(offset);                    \
->>>> -} while (0)
->>>> -
->>>>    /*
->>>> - * Let auipc+jalr be the basic *mcount unit*, so we make it 8 bytes
->>>> here.
->>>> + * Only the jalr insn in the auipc+jalr is patched, so we make it 4
->>>> + * bytes here.
->>>>     */
->>>> -#define MCOUNT_INSN_SIZE 8
->>>> +#define MCOUNT_INSN_SIZE    4
->>>> +#define MCOUNT_AUIPC_SIZE    4
->>>> +#define MCOUNT_JALR_SIZE    4
->>>> +#define MCOUNT_NOP4_SIZE    4
->>>>      #ifndef __ASSEMBLY__
->>>>    struct dyn_ftrace;
->>>> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
->>>> index 1fd10555c580..cf78eef073a0 100644
->>>> --- a/arch/riscv/kernel/ftrace.c
->>>> +++ b/arch/riscv/kernel/ftrace.c
->>>> @@ -8,10 +8,21 @@
->>>>    #include <linux/ftrace.h>
->>>>    #include <linux/uaccess.h>
->>>>    #include <linux/memory.h>
->>>> +#include <linux/irqflags.h>
->>>>    #include <linux/stop_machine.h>
->>>>    #include <asm/cacheflush.h>
->>>>    #include <asm/text-patching.h>
->>>>    +unsigned long ftrace_call_adjust(unsigned long addr)
->>>> +{
->>>> +    return addr + MCOUNT_AUIPC_SIZE;
->>>> +}
->>>> +
->>>> +unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
->>>> +{
->>>> +    return fentry_ip - MCOUNT_AUIPC_SIZE;
->>>> +}
->>>> +
+>>> Currently, the following hstateen bits are supported to control the acc=
+ess
+>>> from VS mode.
 >>>
->>> Those functions cause the following errors when building with
->>> !CONFIG_DYNAMIC_FTRACE, but I'm not sure how to fix this:
+>>> 1. BIT(58): IMSIC     : STOPEI and IMSIC guest interrupt file
+>>> 2. BIT(59): AIA       : SIPH/SIEH/STOPI
+>>> 3. BIT(60): AIA_ISEL  : Indirect csr access via siselect/sireg
+>>> 4. BIT(62): HSENVCFG  : SENVCFG access
+>>> 5. BIT(63): SSTATEEN0 : SSTATEEN0 access
 >>>
->>> ../arch/riscv/kernel/ftrace.c: In function 'ftrace_call_adjust':
->>> ../arch/riscv/kernel/ftrace.c:19:35: error: 'MCOUNT_AUIPC_SIZE'
->>> undeclared (first use in this function)
->>>     19 |                 return addr + 8 + MCOUNT_AUIPC_SIZE;
->>>        |                                   ^~~~~~~~~~~~~~~~~
->>> ../arch/riscv/kernel/ftrace.c:19:35: note: each undeclared identifier
->>> is reported only once for each function it appears in
->>>    CC      fs/9p/vfs_dir.o
->>> ../arch/riscv/kernel/ftrace.c: In function 'arch_ftrace_get_symaddr':
->>> ../arch/riscv/kernel/ftrace.c:26:28: error: 'MCOUNT_AUIPC_SIZE'
->>> undeclared (first use in this function)
->>>     26 |         return fentry_ip - MCOUNT_AUIPC_SIZE;
->>>        |                            ^~~~~~~~~~~~~~~~~
->>>    CC      drivers/pci/pcie/pme.o
->>> ../arch/riscv/kernel/ftrace.c: In function 'ftrace_call_adjust':
->>> ../arch/riscv/kernel/ftrace.c:22:1: error: control reaches end of
->>> non-void function [-Werror=return-type]
->>>     22 | }
->>>        | ^
->>> ../arch/riscv/kernel/ftrace.c: In function 'arch_ftrace_get_symaddr':
->>> ../arch/riscv/kernel/ftrace.c:27:1: error: control reaches end of
->>> non-void function [-Werror=return-type]
->>>     27 | }
->>>        | ^
->>> cc1: some warnings being treated as errors
->>> make[5]: *** [../scripts/Makefile.build:203:
->>> arch/riscv/kernel/ftrace.o] Error 1
->>>
->> So I fixed those errors with the following, let me know if that's not
->> correct:
->>
->> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
->> index d65f06bfb4573..4c6c24380cfd9 100644
->> --- a/arch/riscv/kernel/ftrace.c
->> +++ b/arch/riscv/kernel/ftrace.c
->> @@ -13,6 +13,7 @@
->>    #include <asm/cacheflush.h>
->>    #include <asm/text-patching.h>
->>
->> +#ifdef CONFIG_DYNAMIC_FTRACE
->>    unsigned long ftrace_call_adjust(unsigned long addr)
->>    {
->>           if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
->> @@ -26,7 +27,6 @@ unsigned long arch_ftrace_get_symaddr(unsigned long
->> fentry_ip)
->>           return fentry_ip - MCOUNT_AUIPC_SIZE;
->>    }
->>
->> -#ifdef CONFIG_DYNAMIC_FTRACE
->>    void arch_ftrace_update_code(int command)
->>    {
->>           mutex_lock(&text_mutex);
->> @@ -191,7 +191,12 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
->>           return 0;
->>    }
->>
->> -#endif
->> +#else /* CONFIG_DYNAMIC_FTRACE */
->> +unsigned long ftrace_call_adjust(unsigned long addr)
->> +{
->> +       return addr;
->> +}
->> +#endif /* CONFIG_DYNAMIC_FTRACE */
->>
->>    #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
->>    int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
->>
-> Hi Alex,
+>>> KVM already support trap/enabling of BIT(58) and BIT(60) in order
+>>> to support sw version of the guest interrupt file.
+>> I don't think KVM toggles the hstateen bits at runtime, because that
+>> would mean there is a bug even in current KVM.
 >
-> Yes, this is valid, thanks for noticing and fixing the error. I would
-> personally prefer leaving the #else /* CONFIG_DYNAMIC_FTRACE */ part
-> in ftrace.h, but it can also come later as a refactor. Or, I can
-> respin the series, with fixes on this and the previous patch, along
-> with some typos and variable declarations that Robin mentioned.
-
-
-If you can respin a new patchset soon, that's nice, in the meantime I 
-keep this version + my fixes (without Robbin remarks though) in my 
-for-next branch as we definitely want this in 6.16 :)
-
-So it's up to you!
-
-Thanks,
-
-Alex
-
-
+> This was a typo. I meant to say trap/emulate BIT(58) and BIT(60).
+> This patch series is trying to enable the toggling of the hstateen bits=
+=20
+> upon first access.
 >
-> Thanks,
-> Andy
+> Sorry for the confusion.
+
+No worries, it's my fault for misreading.
+I got confused, because the code looked like generic lazy enablement,
+while it's really only for the upper 32 bits and this series is not lazy
+toggling any VS-mode visible bits.
+
+>>>                                                     This series extends
+>>> those to enable to correpsonding hstateen bits in PATCH1. The remaining
+>>> patches adds lazy enabling support of the other bits.
+>> The ISA has a peculiar design for hstateen/sstateen interaction:
+>>
+>>    For every bit in an hstateen CSR that is zero (whether read-only zero
+>>    or set to zero), the same bit appears as read-only zero in sstateen
+>>    when accessed in VS-mode.
+>
+> Correct.
+>
+>> This means we must clear bit 63 in hstateen and trap on sstateen
+>> accesses if any of the sstateen bits are not supposed to be read-only 0
+>> to the guest while the hypervisor wants to have them as 0.
+>
+> Currently, there are two bits in sstateen. FCSR and ZVT which are not=20
+> used anywhere in opensbi/Linux/KVM stack.
+
+True, I guess we can just make sure the current code can't by mistake
+lazily enable any of the bottom 32 hstateen bits and handle the case
+properly later.
+
+> In case, we need to enable one of the bits in the future, does hypevisor=
+=20
+> need to trap every sstateen access ?
+
+We need to trap sstateen accesses if the guest is supposed to be able to
+control a bit in sstateen, but the hypervisor wants to lazily enable
+that feature and sets 0 in hstateen until the first trap.
+
+If hstateen is 1 for all features that the guest could control through
+sstateen, we can and should just set the SE bit (63) to 1 as well.
+
+> As per my understanding, it should be handled in the hardware and any=20
+> write access to to those bits should be masked
+> with hstateen bit value so that it matches. That's what we do in Qemu as=
+=20
+> well.
+
+Right, hardware will do the job most of the time.  It's really only for
+the lazy masking, beause if we don't trap the stateen accesses, they
+would differ from what the guest should see.
