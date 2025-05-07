@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A513209;
-	Wed,  7 May 2025 06:05:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F83D182D2;
+	Wed,  7 May 2025 06:06:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746597939; cv=none; b=pC8hmZo1kE22gs9lcDn8dHxSthmKYPNTczEHAakJVtU7JsjZx20oPdU1KOJd4uAa3y2/tjOwaoKlNtmd9KgYZMGXNuF3W8LX41S7Y5qO7ep+AN1buzxROazPDnmWCmBoGFgyXU6mEqP2vtTIizrgtDmQSymAICMBX7IMxArNOOI=
+	t=1746598005; cv=none; b=W3HXrIGIyn9PdEaxrjAOHkmTB4QTyCOARAhUgAWGXgZ1PVE+tjCKeGO8hl7RTqt7KK8m1b7BvBYwNWdAT0S2jg/2OBTiJVXrIo/yDUpGhEJwQVzC7GpuIzV0UwCpE3j0KC00W4U0b4gCcJnj0KZu82mBlI0sjL5Ux5QcyDL+H8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746597939; c=relaxed/simple;
-	bh=MxaitG3CeVKWMYfeMyrLf5dhe0p3NY2WKRP6bXurY4A=;
+	s=arc-20240116; t=1746598005; c=relaxed/simple;
+	bh=sl0h3K31emDHUrMxHF3Oe1q8RNKJCOPAyZs8N/5wF8w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J/Cjk0PkbzCpFolxhI+/ucO1Tnz6uuo8t88jUjJCuaTqYNysfYc3x1cGWaFWnX4yS6srNK2pvaujPYBXlIRUP9aGxt/PXwZDqau8Y1wfc3vUfawqRXRI/xl13Wu8azj6lQWYO75PlNcIyoufd9f5gV8KndvmuXCmahqWsbWdDxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xydg6riZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=oMfUN31DSedVbOZVafde2IadNVVEhtGU3iPUjyz6Ev2ijR0O6jXky7qmSIi4yWvgsGe7h01ihw1JpA9HSRuw6ahGg4OTielKCldjVKuzYoAbs4qmCFoFaNp2vjDx/Yb00rDURRLjeAKBoJLi0jny6G7d79SAGGxyJVvi98y4iso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bOlxPNU6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xydg6riZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 927D5C4CEE7;
-	Wed,  7 May 2025 06:05:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bOlxPNU6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33DC8C4CEEF;
+	Wed,  7 May 2025 06:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746597938;
-	bh=MxaitG3CeVKWMYfeMyrLf5dhe0p3NY2WKRP6bXurY4A=;
+	s=k20201202; t=1746598004;
+	bh=sl0h3K31emDHUrMxHF3Oe1q8RNKJCOPAyZs8N/5wF8w=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Xydg6riZZiopOfjrEFs9cFM5vjxkDdxaMx26gHeyNlsv+htBqzNyK7TVu8UV47g/W
-	 FyiB8SBP7pt7G4J8OkZgHtZmi96TDgsuoZAouple+rlD9GrEqkguTWHMr2DbhbSxX4
-	 9gAxC2ZFcu4W783A17jlYjR/ObGNRnbN0QZ0S1BN3qRHsZa3YxFFBTiOwHlYxoGPyr
-	 t41ThI81r1N88XNZ6lUB1DJp6DQxNkv6LxFKj77YtSa7H8gWLPG+ANoy04+v4wukif
-	 C1jtgshJvfUr5cTyxig5zIyf/uRaD40LVREPv1kz+Wm8qi+E6BnD7uZuOXzSnAcPlv
-	 DzZXeYATjqonA==
-Message-ID: <d51b4422-0c46-4b03-840b-302603b3136f@kernel.org>
-Date: Wed, 7 May 2025 08:05:35 +0200
+	b=bOlxPNU6SyploBkpfUPdZO9JRAZL6bnFIvO4SfYNu8CkHetu8NsWxKwLKc9gIs+xi
+	 GIPjxN/zKhMhdpw8iV5TXdDVc7cmYQuPmsscNwLFoJlxKDCRPTnXpFiMixpYAXkROO
+	 Ddk3I4UhNu/jRWeqWa2tHEAJFD8AFWVPw9eIKxyybetXr8xrn529fPtMlUZKRrYWH8
+	 Xc+ipHmWLGlHtEEq3C9VFr1JQzQDewJEai9BJli+25AFBQmVKAZUd28D4tRpA2oNhZ
+	 7wOrQCJ+SvwC+AnRTurDi0F72iph3GQ24VjJ5vwRG4+3fTHRovXCRf9WvRTPAHRqAW
+	 rcz8YvWf4N2Rw==
+Message-ID: <3539bd21-7a31-4e02-828a-e03c226f0f90@kernel.org>
+Date: Wed, 7 May 2025 08:06:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,12 +35,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] tty: serial: 8250_omap: fix tx with dma
-To: Mans Rullgard <mans@mansr.com>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, linux-omap@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250506150748.3162-1-mans@mansr.com>
+Subject: Re: linux-next: manual merge of the tip tree with the net-next tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: Mengyuan Lou <mengyuanlou@net-swift.com>,
+ Networking <netdev@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250507124900.4dad50d4@canb.auug.org.au>
 Content-Language: en-US
 From: Jiri Slaby <jirislaby@kernel.org>
 Autocrypt: addr=jirislaby@kernel.org; keydata=
@@ -85,94 +90,32 @@ Autocrypt: addr=jirislaby@kernel.org; keydata=
  f/bIWIr0cqQmqQ33FgRhrG1+Xml6UXyJ2jExmlO8JljuOGeXYh6ZkIEyzqzffzBLXZCujlYQ
  DFXpyMNVJ2ZwPmX2mWEoYuaBU0JN7wM+/zWgOf2zRwhEuD3A2cO2PxoiIfyUEfB9SSmffaK/
  S4xXoB6wvGENZ85Hg37C7WDNdaAt6Xh2uQIly5grkgvWppkNy4ZHxE+jeNsU7tg=
-In-Reply-To: <20250506150748.3162-1-mans@mansr.com>
+In-Reply-To: <20250507124900.4dad50d4@canb.auug.org.au>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 06. 05. 25, 17:07, Mans Rullgard wrote:
-> Commit 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
-> introduced an error in the TX DMA handling for 8250_omap.
+On 07. 05. 25, 4:49, Stephen Rothwell wrote:
+> Hi all,
 > 
-> When the OMAP_DMA_TX_KICK flag is set, one byte is pulled from the
-> kfifo and emitted directly in order to start the DMA.  This is done
-> without updating DMA tx_size which leads to uart_xmit_advance() called
-> in the DMA complete callback advancing the kfifo by one too much.
+> Today's linux-next merge of the tip tree got a conflict in:
 > 
-> In practice, transmitting N bytes has been seen to result in the last
-> N-1 bytes being sent repeatedly.
+>    drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
 > 
-> This change fixes the problem by moving all of the dma setup after
-> the OMAP_DMA_TX_KICK handling and using kfifo_len() instead of the
-> dma size for the 4-byte cutoff check. This slightly changes the
-> behaviour at buffer wraparound, but it still transmits the correct
-> bytes somehow. At the point kfifo_dma_out_prepare_mapped is called,
-> at least one byte is guaranteed to be in the fifo, so checking the
-> return value is not necessary.
+> between commit:
 > 
-> Fixes: 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Mans Rullgard <mans@mansr.com>
-> ---
-> v2: split patch in two
-> ---
->   drivers/tty/serial/8250/8250_omap.c | 24 +++++++++---------------
->   1 file changed, 9 insertions(+), 15 deletions(-)
+>    a9843689e2de ("net: txgbe: add sriov function support")
 > 
-> diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-> index f1aee915bc02..180466e09605 100644
-> --- a/drivers/tty/serial/8250/8250_omap.c
-> +++ b/drivers/tty/serial/8250/8250_omap.c
-> @@ -1173,16 +1173,6 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
->   		return 0;
->   	}
->   
-> -	sg_init_table(&sg, 1);
-> -	ret = kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1,
-> -					   UART_XMIT_SIZE, dma->tx_addr);
-> -	if (ret != 1) {
-> -		serial8250_clear_THRI(p);
-> -		return 0;
-> -	}
-> -
-> -	dma->tx_size = sg_dma_len(&sg);
-> -
->   	if (priv->habit & OMAP_DMA_TX_KICK) {
->   		unsigned char c;
->   		u8 tx_lvl;
-...
-> @@ -1216,11 +1206,12 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
->   			goto err;
->   		}
->   		skip_byte = c;
-> -		/* now we need to recompute due to kfifo_get */
-> -		kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1,
-> -				UART_XMIT_SIZE, dma->tx_addr);
->   	}
->   
-> +	sg_init_table(&sg, 1);
-> +	kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1,
-> +				     UART_XMIT_SIZE, dma->tx_addr);
+> from the net-next tree and commit:
+> 
+>    567b0a520912 ("net: Switch to irq_domain_create_*()")
+> 
+> from the tip tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned,
 
-This can fail (note the first call to this was checked). The latter 
-(deliberately) not.
+LGTM, thanks.
 
-> +
->   	desc = dmaengine_prep_slave_sg(dma->txchan, &sg, 1, DMA_MEM_TO_DEV,
->   			DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
->   	if (!desc) {
-...
-> @@ -1248,8 +1240,10 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
->   err:
->   	dma->tx_err = 1;
->   out_skip:
-> -	if (skip_byte >= 0)
-> +	if (skip_byte >= 0) {
->   		serial_out(p, UART_TX, skip_byte);
-> +		p->port.icount.tx++;
-
-This is still unrelated.
-
-thanks,
 -- 
 js
 suse labs
