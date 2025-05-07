@@ -1,286 +1,76 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BC720FAB4
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 23:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C6B20FAB4;
+	Wed,  7 May 2025 23:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746659018; cv=none; b=dVgJhW357vkYs0St4N4kiy2/OgOU2Ncp5EzZAxKS5BhG7RE2PhQlUe1WWB7KAzKSnLIXw31XpL/g/RnoHhMjoMG3GO/QbSMbaPX0DMGbfvmTP+JHDL6Mv/kLOb4hvcFqtRWRybaxLZpRPttem2GxwilLMre6/aym5WHDAFuMQs4=
+	t=1746659119; cv=none; b=pDUMw23a5ShU74iY2Zk7puMU3OFF8jnpmyHNEcsBiJgZ3qWkXoBF/4j4+F7wUnlNw9djOcwXkYKjtEcLgeDRCM6Nt9xycMPd13tCN21S4c3WTyl0+nMonnejjOH7PDKxMHwqDnhjj1U3Ga3FuPajXjunIt9ttBjzgR0AoM/CXDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746659018; c=relaxed/simple;
-	bh=2XmKf4r7PMI/+F7HCnW1whR1EZIc9+PIVrLSuf10zLg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XJXOCDlrfFYxmlKcDpm3/J0pSomHdcKLacxypkUC7xVo6m+o74E4MxXCojuOz9qXHitEu1z5tvduCddE4e9MJLfBYvE8etahSdNpFA2rzgqyZi3P3uihfYMsXg3eNDzd2hv6ye/p8gpYMM9tXS/62K2NpHWsfUXWooSfOGl5wa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RL4q8DCU; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746659119; c=relaxed/simple;
+	bh=Xzh3R1+5X8CSogqLzjGWaEBZSNYD4mdIa2j8iDwWstI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bjzgxokLtmtJKEZtQ6+YLNiOD6PDvWpjpV/ZOciYLTjhcEaJlf5udZJ3m5Qkf7lHqWdKoZ1rBVsDYnYypZ5v+ywlz2HManPkhhMV1nZkSK+aY4YYGnabYjJ7/2MBxwUzx2/TMTe+y37YEJkGNGdE4KCt+mp25oQEtklMAM6SF4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=ZRuiNtY3; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RL4q8DCU"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-306b51e30ffso356328a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 16:03:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746659016; x=1747263816; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Qq49Dart3v0WlvGRUo03jrUoC30OnK8nNG5A8WXCnUA=;
-        b=RL4q8DCU2mrJB6GqiSrdmEZevzvoOlIcvzfk5BLQQi6eQyvZKYyUw4CIN/rb4UxGLK
-         JK156ocbFzwGywLoaKvqzcXMyjydcuwNLbrjHB/lRbVsUKl4xQBw6hxicsRgPBZLKbrH
-         lUyoi/Zh+OEsaneK0qiCTv0tP8nZ0kKajbUC7fuVL8vnf3TIf8t2MwrIat+sS5L0B7Yw
-         KlHCPGxD/L+dfBqfBAVGEt4FphreATdtgFhbZQCH8he/rs0mvnhaAJFAorZllMrpU35f
-         qRh0gD4Rbr62VlCKQe6UeqKf0A2/afxZkghCJ9w+EHDwdAET4Gl0xs4keN2dUTjdh1kG
-         m6EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746659016; x=1747263816;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Qq49Dart3v0WlvGRUo03jrUoC30OnK8nNG5A8WXCnUA=;
-        b=vSBriuRkcYmvtXQSHVAKE02gO7yAXdEMvbAipmjJ681i2DuSJheexgmbd/5XvnM2Xe
-         RWvqiIKkVhMnhnJKGJoUtL0vPSxPQ/outjl2YlYz/JJGmZoqbvCR/AFHViXsv0wozyaO
-         Twc9sVbQ8wNZbzQodBcsdb5WE0/AsVQ3dRIOQJF5FFmPleIMjjKnM9VxfHjQBDZCTGtb
-         7gJqotokx3obhLsFj5BUejceiD2xrt+Taq/fmdVwJ3Ywq3MCZRbf4WEX+2bCi6Wcsgco
-         ah2BCiSr6+ILxueNh16DBhlc1bT25Jx4FcWCMNySFFr3CSjwUpJ1D2v5srT4/Y4mbXGK
-         CzcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEsUhcjDT1biDFdUoQMnz7fezGN6qPyk1KPuLWdyJhWGxhRIjrRYWpqbwTHy5eEfIG5sO8RNkyOru/wz4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFNKYj/2mT3b2TQfdEuBkfoGc+pGYCO2pwWGooOhUQs0aIwOOs
-	Vtc0yHJeTaNjOG0teFBsqMMbQe5ydUgsFbyCQQjziahZCkezc12Gt8i54M325Sy4DReUibv6xAJ
-	cjQ==
-X-Google-Smtp-Source: AGHT+IGf7GrnMA0ECrA5Cc+xFBVRuZ0noNkL8FCy7GwGt33Tt3DR9TcVbBH2Tlv+OXVWcHLSD3Da30W7ftU=
-X-Received: from pjbst8.prod.google.com ([2002:a17:90b:1fc8:b0:2fc:13d6:b4cb])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:38c5:b0:2fe:80cb:ac05
- with SMTP id 98e67ed59e1d1-30b32a5612emr1426077a91.9.1746659016471; Wed, 07
- May 2025 16:03:36 -0700 (PDT)
-Date: Wed, 7 May 2025 16:03:34 -0700
-In-Reply-To: <71af8435d2085b3f969cb3e73cff5bfacd243819.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="ZRuiNtY3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=3YtOVnz8Naz9BdSMdKJ1oOLMQLBL9SbNPPPSsGJDfGQ=; b=ZRuiNtY38leGiFCxb+2bGaD9wy
+	u2hZC4kjeZL82YBFruMDCqe8356myD9s1RQUGDWvSIiMfGZAbrePyoWJaO9CC9mnaPcyRktm/BeAZ
+	gPr9rrQ9ZAGx4YOiT2CLSVw4z1QgDQJ5WiTbE5tMTzC3KXv6uLEPGtFf+jKFGWO98JbfIZK20FQK/
+	E/5uBw9jrGhdfkqpmdgJHYMGZFIeVqyJgX+JcVjknJjD3MnjT4fNb9oajdmjoy7iQqyl/nAPngIE7
+	39C9gyYbm5d4qo0TEdSYVjw42RhBMvMm0oTG+mT7K+IcatEpMCBkt5OjE5I3yLG2yExhmXLmCDpxd
+	qEb2u8yQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uCnpA-000000028bk-039z;
+	Wed, 07 May 2025 23:05:12 +0000
+Date: Thu, 8 May 2025 00:05:11 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Stephen Brennan <stephen.s.brennan@oracle.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Mateusz Guzik <mjguzik@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-debuggers@vger.kernel.org,
+	Sentaro Onizuka <sentaro@amazon.com>
+Subject: Re: [PATCH] fs: convert mount flags to enum
+Message-ID: <20250507230511.GA2023217@ZenIV>
+References: <20250507223402.2795029-1-stephen.s.brennan@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250416002546.3300893-1-mlevitsk@redhat.com> <20250416002546.3300893-4-mlevitsk@redhat.com>
- <aAgpD_5BI6ZcCN29@google.com> <2b1ec570a37992cdfa2edad325e53e0592d696c8.camel@redhat.com>
- <71af8435d2085b3f969cb3e73cff5bfacd243819.camel@redhat.com>
-Message-ID: <aBvmxjxUrXEBa3sc@google.com>
-Subject: Re: [PATCH 3/3] x86: KVM: VMX: preserve host's DEBUGCTLMSR_FREEZE_IN_SMM
- while in the guest mode
-From: Sean Christopherson <seanjc@google.com>
-To: mlevitsk@redhat.com
-Cc: kvm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507223402.2795029-1-stephen.s.brennan@oracle.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Thu, May 01, 2025, mlevitsk@redhat.com wrote:
-> On Thu, 2025-05-01 at 16:41 -0400, mlevitsk@redhat.com wrote:
-> > On Tue, 2025-04-22 at 16:41 -0700, Sean Christopherson wrote:
-> > > On Tue, Apr 15, 2025, Maxim Levitsky wrote:
-> > > > Pass through the host's DEBUGCTL.DEBUGCTLMSR_FREEZE_IN_SMM to the g=
-uest
-> > > > GUEST_IA32_DEBUGCTL without the guest seeing this value.
-> > > >=20
-> > > > Note that in the future we might allow the guest to set this bit as=
- well,
-> > > > when we implement PMU freezing on VM own, virtual SMM entry.
-> > > >=20
-> > > > Since the value of the host DEBUGCTL can in theory change between V=
-M runs,
-> > > > check if has changed, and if yes, then reload the GUEST_IA32_DEBUGC=
-TL with
-> > > > the new value of the host portion of it (currently only the
-> > > > DEBUGCTLMSR_FREEZE_IN_SMM bit)
-> > >=20
-> > > No, it can't.=C2=A0 DEBUGCTLMSR_FREEZE_IN_SMM can be toggled via IPI =
-callback, but
-> > > IRQs are disabled for the entirety of the inner run loop.=C2=A0 And i=
-f I'm somehow
-> > > wrong, this change movement absolutely belongs in a separate patch.
->=20
->=20
-> Hi,
->=20
-> You are right here - reading MSR_IA32_DEBUGCTLMSR in the inner loop is a
-> performance regression.
->=20
-> Any ideas on how to solve this then? Since currently its the common code =
-that
-> reads the current value of the MSR_IA32_DEBUGCTLMSR and it doesn't leave =
-any
-> indication about if it changed I can do either
->=20
-> 1. store old value as well, something like 'vcpu->arch.host_debugctl_old'=
- Ugly IMHO.
->=20
-> 2. add DEBUG_CTL to the set of the 'dirty' registers, e.g add new bit for=
- kvm_register_mark_dirty
-> It looks a bit overkill to me
->=20
-> 3. Add new x86 callback for something like .sync_debugctl(). I vote for t=
-his option.
->=20
-> What do you think/prefer?
+On Wed, May 07, 2025 at 03:34:01PM -0700, Stephen Brennan wrote:
+> In prior kernel versions (5.8-6.8), commit 9f6c61f96f2d9 ("proc/mounts:
+> add cursor") introduced MNT_CURSOR, a flag used by readers from
+> /proc/mounts to keep their place while reading the file. Later, commit
+> 2eea9ce4310d8 ("mounts: keep list of mounts in an rbtree") removed this
+> flag and its value has since been repurposed.
+> 
+> For debuggers iterating over the list of mounts, cursors should be
+> skipped as they are irrelevant. Detecting whether an element is a cursor
+> can be difficult. Since the MNT_CURSOR flag is a preprocessor constant,
+> it's not present in debuginfo, and since its value is repurposed, we
+> cannot hard-code it. For this specific issue, cursors are possible to
+> detect in other ways, but ideally, we would be able to read the mount
+> flag definitions out of the debuginfo. For that reason, convert the
+> mount flags to an enum.
 
-I was going to say #3 as well, but I think I have a better idea.
+Just a warning - there's a bunch of pending changes in that area,
+so debuggers are going to be in trouble anyway.
 
-DR6 has a similar problem; the guest's value needs to be loaded into hardwa=
-re,
-but only somewhat rarely, and more importantly, never on a fastpath reentry=
-.
+Folks, VFS data structures do *NOT* come with any stability warranties.
+Especially if the object in question is not even defined in include/*/*...
 
-Forced immediate exits also have a similar need: some control logic in comm=
-on x86
-needs instruct kvm_x86_ops.vcpu_run() to do something.
-
-Unless I've misread the DEBUGCTLMSR situation, in all cases, common x86 onl=
-y needs
-to a single flag to tell vendor code to do something.  The payload for that=
- action
-is already available.
-
-So rather than add a bunch of kvm_x86_ops hooks that are only called immedi=
-ately
-before kvm_x86_ops.vcpu_run(), expand @req_immediate_exit into a bitmap of =
-flags
-to communicate what works needs to be done, without having to resort to a f=
-ield
-in kvm_vcpu_arch that isn't actually persistent.
-
-The attached patches are relatively lightly tested, but the DR6 tests from =
-the
-recent bug[*] pass, so hopefully they're correct?
-
-The downside with this approach is that it would be difficult to backport t=
-o LTS
-kernels, but given how long this has been a problem, I'm not super concerne=
-d about
-optimizing for backports.
-
-If they look ok, feel free to include them in the next version.  Or I can p=
-ost
-them separately if you want.
-
-> > > > +		__vmx_set_guest_debugctl(vcpu, vmx->msr_ia32_debugctl);
-> > >=20
-> > > I would rather have a helper that explicitly writes the VMCS field, n=
-ot one that
-> > > sets the guest value *and* writes the VMCS field.
-> >=20
-> > >=20
-> > > The usage in init_vmcs() doesn't need to write vmx->msr_ia32_debugctl=
- because the
-> > > vCPU is zero allocated, and this usage doesn't change vmx->msr_ia32_d=
-ebugctl.
-> > > So the only path that actually needs to modify vmx->msr_ia32_debugctl=
- is
-> > > vmx_set_guest_debugctl().
-> >=20
-> > But what about nested entry? nested entry pretty much sets the MSR to a
-> > value given by the guest.
-> >=20
-> > Also technically the intel_pmu_legacy_freezing_lbrs_on_pmi also changes=
- the
-> > guest value by emulating what the real hardware does.
-
-Drat, sorry, my feedback was way too terse.  What I was trying to say is th=
-at if
-we cache the guest's msr_ia32_debugctl, then I would rather have this:
-
---
-static void vmx_guest_debugctl_write(struct kvm_vcpu *vcpu)
-{
-	u64 val =3D vmx->msr_ia32_debugctl |
-		  vcpu->arch.host_debugctl & DEBUGCTLMSR_FREEZE_IN_SMM);
-
-	vmcs_write64(GUEST_IA32_DEBUGCTL, val);
-}
-
-int vmx_set_debugctl(struct kvm_vcpu *vcpu, u64 data, bool host_initiated)
-{
-	u64 invalid =3D data & ~vmx_get_supported_debugctl(vcpu, host_initiated);
-
-	if (invalid & (DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR)) {
-		kvm_pr_unimpl_wrmsr(vcpu, MSR_IA32_DEBUGCTLMSR, data);
-		data &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
-		invalid &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
-	}
-
-	if (invalid)
-		return 1;
-
-	if (is_guest_mode(vcpu) && (get_vmcs12(vcpu)->vm_exit_controls &
-					VM_EXIT_SAVE_DEBUG_CONTROLS))
-		get_vmcs12(vcpu)->guest_ia32_debugctl =3D data;
-
-	if (intel_pmu_lbr_is_enabled(vcpu) && !to_vmx(vcpu)->lbr_desc.event &&
-	    (data & DEBUGCTLMSR_LBR))
-		intel_pmu_create_guest_lbr_event(vcpu);
-
-	vmx->msr_ia32_debugctl =3D data;
-	vmx_guest_debugctl_write(vcpu);
-	return 0;
-}
---
-
-So that the path that refreshes vmcs.GUEST_IA32_DEBUGCTL on VM-Entry doesn'=
-t have
-to feed in vmx->msr_ia32_debugctl, because the only value that is ever writ=
-ten to
-hardware is vmx->msr_ia32_debugctl.
-
-However, I'm not entirely convinced that we need to cache the guest value,
-because toggling DEBUGCTLMSR_FREEZE_IN_SMM should be extremely rare.  So so=
-mething
-like this?
-
---
-static void vmx_guest_debugctl_write(struct kvm_vcpu *vcpu, u64 val)
-{
-	val |=3D vcpu->arch.host_debugctl & DEBUGCTLMSR_FREEZE_IN_SMM);
-
-	vmcs_write64(GUEST_IA32_DEBUGCTL, val);
-}
-
-int vmx_set_debugctl(struct kvm_vcpu *vcpu, u64 data, bool host_initiated)
-{
-	u64 invalid =3D data & ~vmx_get_supported_debugctl(vcpu, host_initiated);
-
-	if (invalid & (DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR)) {
-		kvm_pr_unimpl_wrmsr(vcpu, MSR_IA32_DEBUGCTLMSR, data);
-		data &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
-		invalid &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
-	}
-
-	if (invalid)
-		return 1;
-
-	if (is_guest_mode(vcpu) && (get_vmcs12(vcpu)->vm_exit_controls &
-					VM_EXIT_SAVE_DEBUG_CONTROLS))
-		get_vmcs12(vcpu)->guest_ia32_debugctl =3D data;
-
-	if (intel_pmu_lbr_is_enabled(vcpu) && !to_vmx(vcpu)->lbr_desc.event &&
-	    (data & DEBUGCTLMSR_LBR))
-		intel_pmu_create_guest_lbr_event(vcpu);
-
-	vmx_guest_debugctl_write(vcpu, data);
-	return 0;
-}
---
-
-And then when DEBUGCTLMSR_FREEZE_IN_SMM changes:
-
-	if (<is DEBUGCTLMSR_FREEZE_IN_SMM toggled>)
-		vmx_guest_debugctl_write(vmcs_read64(GUEST_IA32_DEBUGCTL) &
-					 ~DEBUGCTLMSR_FREEZE_IN_SMM);
-
-And the LBR crud doesn't need to call into the "full" vmx_set_debugctl() (o=
-r we
-don't even need that helper?).
-
-Side topic, we really should be able to drop @host_initiated, because KVM's=
- ABI
-is effectively that CPUID must be set before MSRs, i.e. allowing the host t=
-o stuff
-unsupported bits isn't necessary.  But that's a future problem.
+_Anything_ that tries to play with these objects must be version-dependent
+and be ready to be broken by changes in underlying code at zero notice.
