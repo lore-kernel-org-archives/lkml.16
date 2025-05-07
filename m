@@ -1,48 +1,25 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396F32AE84;
-	Wed,  7 May 2025 04:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A119542AA3
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 04:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746591120; cv=none; b=UjeOeQ5LM9oP4vy1qomeXD9D/SgzCF/uTnpyRiqbMF1fNMpyzzbV46dc+jIhAie3qazffldo1FtIg6ijXNGQNqz77mB7bBwLcc/qk1GN9WDf58edux6t06LTwZETw4Q/ZMo+CaJzkvaCZAIqBR1D+97zACvPTeFxtYpBhe1ysNM=
+	t=1746591443; cv=none; b=L8vwgPTJB8DPjKa//0TIou8BoV1EVHhBp3nJs4e7VqNkoQ13ro3fV5QfBjwx9wbRnwLTzsftxXai4YKakGD8Rcn3bavso6n9o+gzB7CVdOCZYXLWpSDxX5hdyOmRKtAmlpWow6QXP7gdaOdoWBu5j7/MQ6Nd1KM55zChtt4uOM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746591120; c=relaxed/simple;
-	bh=t6o/Kr1oTxulD7Lw+8iLnHW/czcDclgYwK3GLTNakZA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lFv8FlMz5FYO+P0x9a7D/Ibj4NPRLrDIfkut+lXh3mA61Tihkwd9qCe7kOBbgYKWDd9JVCqMscp/nt6bxHCHOPpLExuOeTNUFTba5JJ59fH3cpB+hW+RpXGILc7/SaYvJK1GR91i9i0aACAMeYgj637iGS9DO2qi8aTML2VoX94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cBVxwihD; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cBVxwihD"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471H7bB028394;
-	Wed, 7 May 2025 04:11:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	t6o/Kr1oTxulD7Lw+8iLnHW/czcDclgYwK3GLTNakZA=; b=cBVxwihDnqJIkHLu
-	T3A1wvmCSdfl6D9sw1BrgvNZXY0acu54LyW2fArYSA/tuHiwHFUmXeifl7Fwb0Bl
-	d1/1j534ppezQ+yFt4OH7R0ILG64Pt7ZZWJK0PZw2Ubw1N4ihPN63xIU/3Hl45N9
-	6Nx0he+24LdQVgfc81U8hXUH+RusLeHRb1WC6ESAG/fdTlSrDLwJbT2deSGCMHJd
-	2hC2tj0UiXF99OFbBiIl1Y7qYVpt+XvV0rmCL0Bcojwhx/+F3tMdWSIy32zurHL9
-	oceu79hHLJsZSCZM1fkosTH2WWcFTMxSB8Jzs/Ljfzyjtmc4ITYpQIqYnJd/iuwR
-	iKoPIw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46fguujh5g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 04:11:55 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5474Bsa2004120
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 7 May 2025 04:11:54 GMT
-Received: from [10.218.23.250] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 6 May 2025
- 21:11:49 -0700
-Message-ID: <d41d1c72-6f43-497a-8021-8a9af59f5877@quicinc.com>
-Date: Wed, 7 May 2025 09:41:45 +0530
+	s=arc-20240116; t=1746591443; c=relaxed/simple;
+	bh=mBOUIX3npKUWoyFIC+dxW15Egv6+lPmsSnbkonkZouc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q/9mg5pldQbjZlzo2yqu2DRsoo4HllNdOWBgiijVHF4ZKRj17YR+O8DMoeKkp7LPO0tTeaF6Zp77cSCFcueGeLoLXZeuB6qNQ1lcNbNlGGyUHyuA/8/i/j8McqmRUFN4DQUgR5cfiMDh8x+fCjgg0ALcYtNyY+E8YEJaz8qkKow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 906CD2F;
+	Tue,  6 May 2025 21:17:04 -0700 (PDT)
+Received: from [192.168.0.12] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8501A3F5A1;
+	Tue,  6 May 2025 21:17:12 -0700 (PDT)
+Message-ID: <d08adb1c-6db5-45d1-9eb7-dce19bc7158e@arm.com>
+Date: Wed, 7 May 2025 09:47:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,91 +27,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] dt-bindings: clock: qcom: Add missing bindings on
- gcc-sc8180x
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Krzysztof Kozlowski
-	<krzk@kernel.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Ajit Pandey
-	<quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        "Taniya
- Das" <quic_tdas@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20250430-sc8180x-camcc-support-v2-0-6bbb514f467c@quicinc.com>
- <20250430-sc8180x-camcc-support-v2-1-6bbb514f467c@quicinc.com>
- <20250502-singing-hypersonic-snail-bef73a@kuoka>
- <cbca1b2f-0608-4bd3-b1fb-7f338d347b5e@quicinc.com>
- <35662ebc-d975-4891-8cbb-1ba3c324f504@kernel.org>
- <1cd1d97f-a6f1-43e6-8451-b9433db93c16@oss.qualcomm.com>
+Subject: Re: [PATCH] arm64/debug: Drop redundant DBG_MDSCR_* macros
+To: Ada Couprie Diaz <ada.coupriediaz@arm.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250417105253.3188976-1-anshuman.khandual@arm.com>
+ <0be8e3be-a029-4eea-a79c-310b8e0a05c3@arm.com>
 Content-Language: en-US
-From: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-In-Reply-To: <1cd1d97f-a6f1-43e6-8451-b9433db93c16@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=UJPdHDfy c=1 sm=1 tr=0 ts=681add8b cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
- a=Vq3j57szJu-oTNTe2DwA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: 7O9dthSOPnR6rI1R0WwGrHRCYyxAu8xO
-X-Proofpoint-GUID: 7O9dthSOPnR6rI1R0WwGrHRCYyxAu8xO
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDAzNiBTYWx0ZWRfX7H1Spp35sAko
- yief7MwyDhF4DhdIFxmRpHmWl/iiSYAJawNbZRIaRFTNerwVwE6leEzx+9L40KrotaFqsXfyhF+
- zM2fbmfulDnh9CDATZVhkN+81mBX0W3x+t7J3tRj6KBVUwUXoF7TC3JzwIjEk8BoWXzM+Votw4P
- eyD1ZxA20K6S9/ywF8Yr/Q0izVjMgVPUgprjYT8eRpkjCvc2pq/TpEJ0MZhcw/8D9oH6ZclLxQa
- U8ybUJbki3RZ6V8faQWPNaZK1VfoPdf+DD/tC4q9YMqI6IuiGtXtCRFX4ut8Pm+zt50JLhkt74I
- xlJujRi+NAC9QC7ydARLY4/s9wUP7ZrNp5AkOiRYwsKOe1huQdlgi0JOUwh6GdSkPAYH0698CGx
- MgN5OxExTaMzHTGnz+NZYygIbfldCVuHRqEl5W7iNqoqdiAjwTJQn+LlGpFqSFxkNtVjfOxT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_01,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 adultscore=0 clxscore=1015 phishscore=0 spamscore=0
- impostorscore=0 mlxlogscore=754 mlxscore=0 lowpriorityscore=0 bulkscore=0
- malwarescore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505070036
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <0be8e3be-a029-4eea-a79c-310b8e0a05c3@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 5/6/25 18:40, Ada Couprie Diaz wrote:
+> Hi Anshuman,
+> 
+> On 17/04/2025 11:52, Anshuman Khandual wrote:
+>> MDSCR_EL1 has already been defined in tools sysreg format and hence can be
+>> used in all debug monitor related call paths. Subsequently all DBG_MDSCR_*
+>> macros become redundant and hence can be dropped off completely. While here
+>> convert all variables handling MDSCR_EL1 register as u64 which reflects its
+>> true width as well.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+> 
+> I think the changes make sense, even more so given that `kvm/debug.c` already uses the sysreg format definition for MDSCR_EL1.
 
-On 5/5/2025 6:52 PM, Konrad Dybcio wrote:
-> On 5/5/25 11:46 AM, Krzysztof Kozlowski wrote:
->> On 05/05/2025 11:43, Satya Priya Kakitapalli wrote:
->>> On 5/2/2025 12:15 PM, Krzysztof Kozlowski wrote:
->>>> On Wed, Apr 30, 2025 at 04:08:55PM GMT, Satya Priya Kakitapalli wrote:
->>>>> Add all the missing clock bindings for gcc-sc8180x.
->>>>>
->>>>> Fixes: 0fadcdfdcf57 ("dt-bindings: clock: Add SC8180x GCC binding")
->>>>> Cc: stable@vger.kernel.org
->>>> What sort of bug is being fixed here? This needs to be clearly expressed
->>>> in commit msg - bug or observable issue.
->>>
->>> The multi-media AHB clocks are needed to create HW dependency in the
->>> multimedia CC dt blocks and avoid any issues. They were not defined in
->>> the initial bindings.
->>>
->>> Sure, I'll add the details in the commit text.
->> I don't understand what is the bug here. You just described missing feature.
-> i.e. this patch is fine, but the fixes tag doesn't apply, as it doesn't
-> really fix anything on its own
+> 
+> It looks good to me, but I think there is a missing conversion to 64 bits below.
+> Would it make sense to convert the two instances of MDSCR_EL1 used in `tools/testing/selftests/kvm/arm64/debug-exceptions.c`, in `enable_monitor_debug_exceptions()` and `install_ss()` , to 64 bits as well ? (They don't rely on `DBG_MDSCR_*`, the test defines its own macros)
 
+Sure, will do the necessary changes.
 
-Okay, I'll drop the fixes tag.
+> 
+>> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
+>> index b260ddc4d3e9..6dbfc1008007 100644
+>> --- a/arch/arm64/kernel/entry-common.c
+>> +++ b/arch/arm64/kernel/entry-common.c
+>> @@ -354,7 +354,7 @@ static void cortex_a76_erratum_1463225_svc_handler(void)
+>>         __this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 1);
+>>       reg = read_sysreg(mdscr_el1);
+>> -    val = reg | DBG_MDSCR_SS | DBG_MDSCR_KDE;
+>> +    val = reg | MDSCR_EL1_SS | MDSCR_EL1_KDE;
+>>       write_sysreg(val, mdscr_el1);
+>>       asm volatile("msr daifclr, #8");
+>>       isb();
+> 
+> Given the change of width to 64 bits elsewhere, shouldn't we change val and reg to u64 here as well ?
 
+Sure, will fold this in as well.
+> 
+> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
+> index 73cf6a5f41d8..d61a5ddf53d6 100644
+> --- a/arch/arm64/kernel/entry-common.c
+> +++ b/arch/arm64/kernel/entry-common.c
+> @@ -344,7 +344,7 @@ static DEFINE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
+>  
+>  static void cortex_a76_erratum_1463225_svc_handler(void)
+>  {
+> -    u32 reg, val;
+> +    u64 reg, val;
+>  
+>      if (!unlikely(test_thread_flag(TIF_SINGLESTEP)))
+>          return;
 
-> Konrad
+Thanks for your review.
