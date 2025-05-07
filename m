@@ -1,95 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6311DED5F;
-	Wed,  7 May 2025 05:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BB3A1DED7C
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 05:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746594719; cv=none; b=UmA4z+u5e+dWBSs+NriQEW+K6bMIbRY9XOB0b3f5Jv2pwVMX5svUfTcAnxAuPKleCOLFMlgRW8Q6uELrQBzwTAzqESSo8ZiemWsoj87tyZpgkfdLrhsqjNBJPIzBnHM/Boz1Q035WVUBeymy7E4/Vilap/pw1xpYA5+CY12k50o=
+	t=1746594744; cv=none; b=c7frYDJfpa8N/0thbrjO3AV16TxVTQbD60PLDWechC8zXBPCCctaz2PZYeoxbXx7l1rN2sQ/kumUpQyJ4GdLXZRqd2Sm8UXBBl+ZYWM9kbZiS2LuWiqBAQHULqGJ5o2jZ58padidyi8BymKUHtgrzDJyCNK9Mmkh/IAtEwfs1wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746594719; c=relaxed/simple;
-	bh=y46Bo0fq6ATx2ZWFjSMtCL1bTyU6UOGHBJIa/IU+dcw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=k80vodRld+HFycVOAKuSLB6QxVo3OG1+Oe+uL9YMHNLzT5qG5DFulgGJCArPBqrZ2p2pr024UPkFnGJVKwVOG7lrIdRnmbtSBCYFiH8lPgxGT6Vl9Yvp+5/JcOibW5wDuIztiMUMqipy/nSbVXBnGvLESLODsjn/kEAliWOR7ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FhdBIQxe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FhdBIQxe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C19D1C4CEE9;
-	Wed,  7 May 2025 05:11:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746594719;
-	bh=y46Bo0fq6ATx2ZWFjSMtCL1bTyU6UOGHBJIa/IU+dcw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=FhdBIQxe2yJ13wbwHq8QLKv67Lz2kqORJMPgRHRwl6Lm9AUg+PK0cYHP9IIeDzDfH
-	 j6Zl9bHFdzxepXb7ZRnxAVJc2EuF9BtWIZ5/uAOFXRWtD9rQylZxDkM5aCzvUUWyz2
-	 wXx77UDCMPtU2JTzlDC/sPpQMegvuIlerXYIJq+pTTRFj+VtbhvLo2grUr4egFywta
-	 cqnhb3J6oRSqYghOXsqHzHXAyQtOkPeSWr0Ckfn8T1Qucl1tFueYsd3WZJLPDegjD6
-	 8wUy2gpE0yEuRtC1AzafOCVRVAmFcMz4BIlh8zOBQNO1e6Pd21YE4FpAV8rQsYNFee
-	 riySWWjX85Bwg==
-From: Mark Brown <broonie@kernel.org>
-To: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-Cc: alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz, 
- tiwai@suse.com, yung-chuan.liao@linux.intel.com, 
- ranjani.sridharan@linux.intel.com, pierre-louis.bossart@linux.dev, 
- Basavaraj.Hiregoudar@amd.com, Sunil-kumar.Dommati@amd.com, 
- venkataprasad.potturu@amd.com, Mario.Limonciello@amd.com, 
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org
-In-Reply-To: <20250506120823.3621604-1-Vijendar.Mukunda@amd.com>
-References: <20250506120823.3621604-1-Vijendar.Mukunda@amd.com>
-Subject: Re: [PATCH 1/3] ASoC: amd: amd_sdw: Fix unlikely uninitialized
- variable use in create_sdw_dailinks()
-Message-Id: <174659471540.4169088.2896331168566981958.b4-ty@kernel.org>
-Date: Wed, 07 May 2025 14:11:55 +0900
+	s=arc-20240116; t=1746594744; c=relaxed/simple;
+	bh=q5IU/nsPp9Xi9gKNHPIZzkjsy7rPZ35R3Awm/h0lvL0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qABVHf848HRdfhJCAlpQvP2cj12hQ0lTkan5e/08H1JpRnpKEcj7rkudf1O1fycsS04jimU+oYmNBAm+qgO09+LVmykqfg577USNkjm3+Fmf27BcBoSDDX91sbi+QI7AOmlh35eM5qZx9XTwSrJuK7H0zlIPoXhma4298RsZu7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43BB02F;
+	Tue,  6 May 2025 22:12:10 -0700 (PDT)
+Received: from [10.162.43.22] (K4MQJ0H1H2.blr.arm.com [10.162.43.22])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F06333F673;
+	Tue,  6 May 2025 22:12:16 -0700 (PDT)
+Message-ID: <17289428-894a-4397-9d61-c8500d032b28@arm.com>
+Date: Wed, 7 May 2025 10:42:14 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mm: mincore: use folio_pte_batch() to batch process
+ large folios
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: willy@infradead.org, david@redhat.com, 21cnbao@gmail.com,
+ ryan.roberts@arm.com, ziy@nvidia.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1742960003.git.baolin.wang@linux.alibaba.com>
+ <7ad05bc9299de5d954fb21a2da57f46dd6ec59d0.1742960003.git.baolin.wang@linux.alibaba.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <7ad05bc9299de5d954fb21a2da57f46dd6ec59d0.1742960003.git.baolin.wang@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
 
-On Tue, 06 May 2025 17:37:22 +0530, Vijendar Mukunda wrote:
-> Initialize current_be_id to 0 in AMD legacy stack(NO DSP enabled) SoundWire
-> generic machine driver code to handle the unlikely case when there are no
-> devices connected to a DAI.
+
+
+On 26/03/25 9:08 am, Baolin Wang wrote:
+> When I tested the mincore() syscall, I observed that it takes longer with
+> 64K mTHP enabled on my Arm64 server. The reason is the mincore_pte_range()
+> still checks each PTE individually, even when the PTEs are contiguous,
+> which is not efficient.
 > 
-> In this case create_sdw_dailink() would return without touching the passed
-> pointer to current_be_id.
+> Thus we can use folio_pte_batch() to get the batch number of the present
+> contiguous PTEs, which can improve the performance. I tested the mincore()
+> syscall with 1G anonymous memory populated with 64K mTHP, and observed an
+> obvious performance improvement:
 > 
-> [...]
+> w/o patch		w/ patch		changes
+> 6022us			1115us			+81%
+> 
+> Moreover, I also tested mincore() with disabling mTHP/THP, and did not
+> see any obvious regression.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> ---
+>   mm/mincore.c | 27 ++++++++++++++++++++++-----
+>   1 file changed, 22 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/mincore.c b/mm/mincore.c
+> index 832f29f46767..88be180b5550 100644
+> --- a/mm/mincore.c
+> +++ b/mm/mincore.c
+> @@ -21,6 +21,7 @@
+>   
+>   #include <linux/uaccess.h>
+>   #include "swap.h"
+> +#include "internal.h"
+>   
+>   static int mincore_hugetlb(pte_t *pte, unsigned long hmask, unsigned long addr,
+>   			unsigned long end, struct mm_walk *walk)
+> @@ -105,6 +106,7 @@ static int mincore_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>   	pte_t *ptep;
+>   	unsigned char *vec = walk->private;
+>   	int nr = (end - addr) >> PAGE_SHIFT;
+> +	int step, i;
+>   
+>   	ptl = pmd_trans_huge_lock(pmd, vma);
+>   	if (ptl) {
+> @@ -118,16 +120,31 @@ static int mincore_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>   		walk->action = ACTION_AGAIN;
+>   		return 0;
+>   	}
+> -	for (; addr != end; ptep++, addr += PAGE_SIZE) {
+> +	for (; addr != end; ptep += step, addr += step * PAGE_SIZE) {
+>   		pte_t pte = ptep_get(ptep);
+>   
+> +		step = 1;
+>   		/* We need to do cache lookup too for pte markers */
+>   		if (pte_none_mostly(pte))
+>   			__mincore_unmapped_range(addr, addr + PAGE_SIZE,
+>   						 vma, vec);
+> -		else if (pte_present(pte))
+> -			*vec = 1;
+> -		else { /* pte is a swap entry */
+> +		else if (pte_present(pte)) {
+> +			if (pte_batch_hint(ptep, pte) > 1) {
+> +				struct folio *folio = vm_normal_folio(vma, addr, pte);
+> +
+> +				if (folio && folio_test_large(folio)) {
+> +					const fpb_t fpb_flags = FPB_IGNORE_DIRTY |
+> +								FPB_IGNORE_SOFT_DIRTY;
+> +					int max_nr = (end - addr) / PAGE_SIZE;
+> +
+> +					step = folio_pte_batch(folio, addr, ptep, pte,
+> +							max_nr, fpb_flags, NULL, NULL, NULL);
+> +				}
+> +			}
 
-Applied to
+Can we go ahead with this along with [1], that will help us generalize 
+for all arches.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+[1] https://lore.kernel.org/all/20250506050056.59250-3-dev.jain@arm.com/
+(Please replace PAGE_SIZE with 1)
 
-Thanks!
-
-[1/3] ASoC: amd: amd_sdw: Fix unlikely uninitialized variable use in create_sdw_dailinks()
-      commit: 4d87ae7508cb7ff58fd0bcecc6e9491f42f987f8
-[2/3] ASoC: amd: sof_amd_sdw: Fix unlikely uninitialized variable use in create_sdw_dailinks()
-      commit: 6b83ba4bc3ecb915476d688c9f00f3be57b49a0c
-[3/3] ASoC: amd: sof_amd_sdw: add logic to get cpu_pin_id for ACP7.0/ACP7.1 platforms
-      commit: ad6d689e776478113aeef7bfb0e4222b1ff2a986
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+> +
+> +			for (i = 0; i < step; i++)
+> +				vec[i] = 1;
+> +		} else { /* pte is a swap entry */
+>   			swp_entry_t entry = pte_to_swp_entry(pte);
+>   
+>   			if (non_swap_entry(entry)) {
+> @@ -146,7 +163,7 @@ static int mincore_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>   #endif
+>   			}
+>   		}
+> -		vec++;
+> +		vec += step;
+>   	}
+>   	pte_unmap_unlock(ptep - 1, ptl);
+>   out:
 
