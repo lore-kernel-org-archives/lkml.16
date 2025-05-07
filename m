@@ -1,142 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF003149C64;
-	Wed,  7 May 2025 08:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2A07263A
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746608296; cv=none; b=pT2w/vociIqmW6mec/bmRdemDn+iGi+brOBXXmZNEZ2ZfJFDJOeTCnWSHOV13mP8ynoPVJvjY6OVwAo/0D2Offh7g+64TpGYQDXlk7GrfzjeycKOblSjurZV5rRxRYYpEgX0FlU0XZ6oEh0/zGo9i4p6d1KBW3jid+ue84qBjxI=
+	t=1746608484; cv=none; b=m+1HmRDV2h7v1gDgj1dI/PQ1XKmXlWfyfxYHjNteplpB4OlES8LsSiImfYXymM+1WaMs/I0jEXas+INxz55L8ImPu72oZ4jnvfK3k96zPSqiJeRVdhJLiGj7/C0DpI0M5pj27/RpXyc3yjTvPddfGLCvSXbPYcIra6Il02OykEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746608296; c=relaxed/simple;
-	bh=lpLYWTvwCD9ibFjrHBDefiW1/xmwvteVjOwcFqoHT9Y=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=sTQeQyMixfuP+TBiTW7U3tOcvNs8KgOY05ZzjrjCP9488j9jJTnRlP3EoJDWU13bfcJ0hD2wVJxs2VIziY7WgecZvGFeq4nztojW0YquKPNmttATs6I7Z/sRvydikEICRCcR8pN9r6kpO7Tww4XsEW4K3pgPKOGB1te4WbOpjzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SMrtRN7W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746608484; c=relaxed/simple;
+	bh=92zK43JKrNURrOQyhvSQDoyLlgYqzYkxOJINs9dvBrE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IPKNe/fnA0f2e/QhHPKa4/06GQuAqSsGH9kFez+rFB6BKC97TJQ7Rf8ft2HBCyRijqZ3swGV3m39YMeu45itFHZPwd4wPq5lUE/TznbDlwkJvzHvUUeDc0xpD4tml6IOps5RMDWfLG1VcQsXKCgW0PlBTp7xWeODnot92/aUDuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iWsf0f4Q; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SMrtRN7W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B329C4CEE7;
-	Wed,  7 May 2025 08:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746608295;
-	bh=lpLYWTvwCD9ibFjrHBDefiW1/xmwvteVjOwcFqoHT9Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SMrtRN7WHuITA7k8CqvBVY1rQVRkZt4CichuUXA6AxxTIKXgtbscdi+UPROmuiwhd
-	 XKxaDqNH/46G52FnAwCofXYsBmZG8TWeB1IJ+fzJ2icLDvWNYz1EMBOVZQRuDVp+Xm
-	 wKsCWrCUvSltGBH2sSBp3ZbPuuH6TOoQFHNk341KUdquOffXKIzeVGUivQOhaoiEC/
-	 lCauskOTTVozvLQ6dVsjylDOLEhPIbEVoa54To55oaPkC0ZsVE3StaAzB453ir1Wdo
-	 +fyLWJ9xx0dFETF6XrrzJNmXu9j5tIVYbO3BqGbmF1+QfsRVuwZzK5sYONvBZs9rcY
-	 W/l12eN5WjHag==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iWsf0f4Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746608482; x=1778144482;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=92zK43JKrNURrOQyhvSQDoyLlgYqzYkxOJINs9dvBrE=;
+  b=iWsf0f4Qt+OJCmAq5Lh8SiUg60wWIgXPekW3xKq8DX9eURStzqovC40V
+   eVvWc/Uuyh6kNIJbSSr75yCFc5bLup1FKYcN2skFKszt6LyZREWacMl9m
+   9FL6SZtuR4EyLvqFCuDy+28uTLLW7wM/Ryy5m01dbQjYHsmNkF/Fso7C2
+   HMP6+PL5V5IJ57NCLF671YkwbcJaJ18TYISd+zCa72vOuNbeAii9/ghSS
+   Ts0IZRG2j+jI3xm3w2rXTXmh9BqWpjSym3U/hAKYxnc7O+DfCGTD2vnHP
+   Qo0LFWlK4hjMIZJ3cCKADNHlOEdlelhGTCSWC3VdtmvfuHKAn0c2fyhdy
+   A==;
+X-CSE-ConnectionGUID: 1vmZ1YGvRmK52EQCdZ/34w==
+X-CSE-MsgGUID: eW56YEIVRRygsfc534TVxw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="73716009"
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="73716009"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 02:01:22 -0700
+X-CSE-ConnectionGUID: 8WQe1olIQBWUw6YcxHy67A==
+X-CSE-MsgGUID: e8OWlXHRT1qne2vq3HgY7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="135797169"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 07 May 2025 02:01:21 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCaeT-0007SG-1i;
+	Wed, 07 May 2025 09:01:17 +0000
+Date: Wed, 7 May 2025 17:01:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Max Kellermann <max.kellermann@ionos.com>, dhowells@redhat.com,
+	netfs@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Max Kellermann <max.kellermann@ionos.com>
+Subject: Re: [PATCH 1/4] fs/netfs: convert `netfs_io_request.error` to a
+ `short
+Message-ID: <202505071602.yJrZsTiu-lkp@intel.com>
+References: <20250428154859.3228933-1-max.kellermann@ionos.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 07 May 2025 10:58:08 +0200
-Message-Id: <D9PSYQMCW74W.39JB3NDCWB2H3@kernel.org>
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Alice Ryhl" <aliceryhl@google.com>, "Masahiro
- Yamada" <masahiroy@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>,
- "Luis Chamberlain" <mcgrof@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>, "Nicolas Schier" <nicolas.schier@linux.dev>
-Cc: "Trevor Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye"
- <ark.email@gmail.com>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>, "Petr
- Pavlu" <petr.pavlu@suse.com>, "Sami Tolvanen" <samitolvanen@google.com>,
- "Daniel Gomez" <da.gomez@samsung.com>, "Simona Vetter"
- <simona.vetter@ffwll.ch>, "Greg KH" <gregkh@linuxfoundation.org>, "Fiona
- Behrens" <me@kloenk.dev>, "Daniel Almeida" <daniel.almeida@collabora.com>,
- <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v12 1/3] rust: str: add radix prefixed integer parsing
- functions
-X-Mailer: aerc 0.20.1
-References: <20250506-module-params-v3-v12-0-c04d80c8a2b1@kernel.org>
- <20250506-module-params-v3-v12-1-c04d80c8a2b1@kernel.org>
-In-Reply-To: <20250506-module-params-v3-v12-1-c04d80c8a2b1@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428154859.3228933-1-max.kellermann@ionos.com>
 
-On Tue May 6, 2025 at 3:02 PM CEST, Andreas Hindborg wrote:
-> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-> index 878111cb77bc..174e70397305 100644
-> --- a/rust/kernel/str.rs
-> +++ b/rust/kernel/str.rs
-> @@ -573,7 +573,6 @@ macro_rules! c_str {
->  }
-> =20
->  #[cfg(test)]
-> -#[expect(clippy::items_after_test_module)]
->  mod tests {
->      use super::*;
-> =20
-> @@ -946,3 +945,174 @@ fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::R=
-esult {
->  macro_rules! fmt {
->      ($($f:tt)*) =3D> ( core::format_args!($($f)*) )
->  }
-> +
-> +/// Integer parsing functions for parsing signed and unsigned integers
-> +/// potentially prefixed with `0x`, `0o`, or `0b`.
-> +pub mod parse_int {
+Hi Max,
 
-Why not make this its own file? It's 172 lines long already.
+kernel test robot noticed the following build errors:
 
-> +    pub trait ParseInt: private::FromStrRadix + TryFrom<u64> {
-> +        /// Parse a string according to the description in [`Self`].
-> +        fn from_str(src: &BStr) -> Result<Self> {
-> +            match src.deref() {
-> +                [b'-', rest @ ..] =3D> {
-> +                    let (radix, digits) =3D strip_radix(rest.as_ref());
-> +                    // 2's complement values range from -2^(b-1) to 2^(b=
--1)-1.
-> +                    // So if we want to parse negative numbers as positi=
-ve and
-> +                    // later multiply by -1, we have to parse into a lar=
-ger
-> +                    // integer. We choose `u64` as sufficiently large.
-> +                    //
-> +                    // NOTE: 128 bit integers are not available on all
-> +                    // platforms, hence the choice of 64 bits.
-> +                    let val =3D u64::from_str_radix(
-> +                        core::str::from_utf8(digits).map_err(|_| EINVAL)=
-?,
-> +                        radix,
-> +                    )
-> +                    .map_err(|_| EINVAL)?;
-> +
-> +                    if val > Self::abs_min() {
-> +                        return Err(EINVAL);
-> +                    }
-> +
-> +                    if val =3D=3D Self::abs_min() {
-> +                        return Ok(Self::MIN);
-> +                    }
-> +
-> +                    // SAFETY: We checked that `val` will fit in `Self` =
-above.
-> +                    let val: Self =3D unsafe { val.try_into().unwrap_unc=
-hecked() };
-> +
-> +                    Ok(val.complement())
+[auto build test ERROR on brauner-vfs/vfs.all]
+[also build test ERROR on linus/master v6.15-rc5 next-20250506]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-You're allowing to parse `u32` with a leading `-`? I'd expect an error
-in that case. Maybe `complement` should be named `negate` and return a
-`Result`?
+url:    https://github.com/intel-lab-lkp/linux/commits/Max-Kellermann/fs-netfs-reorderd-struct-fields-to-eliminate-holes/20250428-235058
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
+patch link:    https://lore.kernel.org/r/20250428154859.3228933-1-max.kellermann%40ionos.com
+patch subject: [PATCH 1/4] fs/netfs: convert `netfs_io_request.error` to a `short
+config: sparc-randconfig-002-20250503 (https://download.01.org/0day-ci/archive/20250507/202505071602.yJrZsTiu-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071602.yJrZsTiu-lkp@intel.com/reproduce)
 
----
-Cheers,
-Benno
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505071602.yJrZsTiu-lkp@intel.com/
 
-> +                }
-> +                _ =3D> {
-> +                    let (radix, digits) =3D strip_radix(src);
-> +                    Self::from_str_radix(digits, radix).map_err(|_| EINV=
-AL)
-> +                }
-> +            }
-> +        }
-> +    }
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+>> ERROR: modpost: "__cmpxchg_called_with_bad_pointer" [fs/netfs/netfs.ko] undefined!
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
