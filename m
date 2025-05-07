@@ -1,83 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405672135C9;
-	Wed,  7 May 2025 15:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C441118EB0;
+	Wed,  7 May 2025 15:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746631312; cv=none; b=NCpKhGBoC4xLZbcfiiFPdb2fDO0Ov/H62XCrtqNYuJma1KglQGiDWhU7YC8Zb7WH2N/6dRTegT7vJgRG4XpQYI7pERN5eQpZyfkrLs/HDsK2y45QtMOAfFqbxYHP7IKITSe7wznHNPq4W0I5ao614FAL0fR4eKoEoy2azejwfqE=
+	t=1746631358; cv=none; b=VPiZqeaOZJR6Gbu3p1aW1OB/mYs7ZKYufZgzmI/cc1y0j/wc+bM+62D9hDj8BsMnVKbJDgqeaoTOqKEBSQ3Ovz+ejljy66vfGwEhv6wyrTNcjp9INUrPeNcjytOSVJkSWeY83HwzFoiIdOsMa1SlSeF/1BfXZy7UnUDyISmZE78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746631312; c=relaxed/simple;
-	bh=+Pl1wgxLDGfI331J470iytuKu5DjqgecfozUU3odKcU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZNH547oF9eIjWwNA2/VgMAUK0tbnmGgf5cCGUDMl8CqqJmZwQctPDUjS0FuA2gyqm9TrY60elRsoGC9j75fs7JYYm9C+xtNH75gy8FJ/CV5krIVcXV0YYk2hxn+oE6TD58yNs7+MEqfL/QCFaHC6qeFOVe70aDcWQVlMTtNOEhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jzuj0wmz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746631358; c=relaxed/simple;
+	bh=G6GIobQZjGbAv136r9m+tdpjpUDEpPUBOIo+rwGG/qE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BfdULuT2ElLYtGRv9poViQWfMfQo5E/08+0Zo0aO9i9A2iDSloJiM6Th2AOi0WdBPkUZ/wn/Z2cSWQW8hlp3xuYgqJKMQ+u34PU7xaEV+Oj6CaGBZfQPpqTyjTD6DklR3xCE0Ed54U10R5kvCe1VxveJwwvm61xoq8Zxm6lZcFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J7uU6SRX; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jzuj0wmz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07578C4AF0D;
-	Wed,  7 May 2025 15:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746631311;
-	bh=+Pl1wgxLDGfI331J470iytuKu5DjqgecfozUU3odKcU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jzuj0wmzcA99+V/TrfvfgKAhHT8WTkJj6fPsC2ZXFpyAyZmjb/KtCfHa7xCh0fe+h
-	 SzVSO83oLHaJrdQOtVl3g5Tbo3Dq+rHCzZetZLsp/ew6LfqhgVpvN/QwE1n+s2wMc+
-	 AXCBa8DjRfRF5U+GB7JygCElsE0RH2FplypRvVNt5c7ixsHhJH8PQi/YT5ArJH8LOj
-	 M7OizJ4M4TJ7sXHo6hhGALe7rw6fSoGH94UzlqtAyVJitbrXrU7i+N5igXDywOmaJ4
-	 Vl/pA4n4BnNpFIVFGSXn5XgHFyMifq1smbpdx1edsLxTRuOBhsGUd+hV65rz+0BV9n
-	 TmI5yMtxM+mjw==
-Date: Wed, 7 May 2025 18:21:42 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yuquan Wang <wangyuquan1236@phytium.com.cn>,
-	Jonathan.Cameron@huawei.com, dan.j.williams@intel.com,
-	rafael@kernel.org, lenb@kernel.org, alison.schofield@intel.com,
-	rrichter@amd.com, bfaccini@nvidia.com, haibo1.xu@intel.com,
-	david@redhat.com, chenhuacai@kernel.org, linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, chenbaozi@phytium.com.cn,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
-Message-ID: <aBt6hihp4m3fbd02@kernel.org>
-References: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
- <20250506185544.474d025e43ebadadaedb982a@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7uU6SRX"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5fbe7a65609so2196524a12.0;
+        Wed, 07 May 2025 08:22:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746631355; x=1747236155; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QLt5UoHo/uyFct2KVPgAYy9QmHAyTkt3+bUdcit5PVs=;
+        b=J7uU6SRXzQE6EccKmf+j9MC5sVrPjP/hHsf/+5oUdQMT2wUU+UQNETSuasmGSBfliJ
+         cBTitvTwzNzrT2+iQPC1SnlZV5QySgocAodPI6/zApjgXWkk2L2iKFHGJKORj8YzETrS
+         C7u9JXnUfqYCRSHCld63rwpfV2bI8eXaEkPFbt73xm/7a94HyUo513a3yRn2hVj8U8cm
+         cJH4z0WkjuFjUToZGzOYXHyrsfkZfJ4uoDXTFT3xZGsjEuEmDr82uUhJyrBRZvOvXNas
+         YRZyrZCL5cXfiAI76Fz40SCEIwhPMX/URTy6m50iNS9+vapAqZYn0fkvQVe+fQk5aU6T
+         0JqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746631355; x=1747236155;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QLt5UoHo/uyFct2KVPgAYy9QmHAyTkt3+bUdcit5PVs=;
+        b=mTSt8fDbvGD5ui+4Gts8PeifmPNGQ72+GYkI+aVJxMHuKU2gwC/Mh0krQyWBHg2afN
+         fWHTgravKDAkP81VUTU3Kh6SiGyBcafQW6I7ekdk4BZaTW98dDbfDkiOF69DdLtFBrFa
+         SbLBpjHEokpaXavDHM/rbX0ak4E1N2IniI2SMTdMJpDOxaqG3wfPDg4JvdwTfISSEqGd
+         go5HKMAekyZVTH0OSXwQSz9PPnnAvghFLzl8cimCgWcOcJ4GVCWwlReb7mt3PtMNDU+x
+         H9+EyR4HGixPmw/N0uApenTe27sVYLkvtdmOwnJMtSHcYahlqSRpdTAYMCIcClSyqqqR
+         MrNA==
+X-Forwarded-Encrypted: i=1; AJvYcCUH0fRzwwKuUgmm3SSxyWa2SGAwtRUWS9JHwZDVX66fn2msknHi/yFjM6HMn0cwPsjczbFd0I6GVDeBJ7a23i17@vger.kernel.org, AJvYcCVk9Yko2L8Xa73xHa+y2Wd+GktuJeq/HiACPBsI3vLo8HEx/YTS9Zzk8Xeyd8IQ9n3whRxeN8OCDAbje6yZ@vger.kernel.org, AJvYcCW9TA6WQWdBHBUa91OHE4d1evuzaq5vdwYNGPdlKSs2CEYcuZ/AvAV8+SGlGYIP70AZvQ3FmNw1h1xk@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBCbTCt9I+LJKm+VLWO2hngHvac/tEw61Q9IFgjB71VEvPpVc+
+	4adzpY4d8Y24ZpdGb/xaFoSd+7Ih8cAOQkDOHcAdsrz3cUDMSI+s2JprQ2CgQnQHmnK1VLEdFhA
+	yN4pq7wcZ66dAYKQqA6F9NOyZVEc=
+X-Gm-Gg: ASbGncshpWr9BKs9Zum60GEc+sfcC4RJzKvUltFMO2oj/opeL7BQJiZe8AR6+AyAa6B
+	9Lc1AqmHNEhOycEIABQLYwclpb46P9JTbeVo6XFYnMZhH9iU3hNBelvlosbZ/zO87v/3CVYm48e
+	1iY0oxFN/DWwUggDTmhc0MtdgG
+X-Google-Smtp-Source: AGHT+IENrHBhDJ6QmCIALW/trOZbo+S+uz/FTJiKIkupIyaB84PssD8rkhzD5vVURdYtZ1ValTicpx4mnni9dTZkiMw=
+X-Received: by 2002:a17:907:7f1f:b0:acb:88ac:e30f with SMTP id
+ a640c23a62f3a-ad1e8bd008dmr427685966b.20.1746631354904; Wed, 07 May 2025
+ 08:22:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506185544.474d025e43ebadadaedb982a@linux-foundation.org>
+References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
+ <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
+ <CAHp75VdRp7RG-YCAL2Jx4uXsT2RVQNeu-MxPB5pWRq8TqtsSXw@mail.gmail.com> <cb98bec7-748c-4e00-aa9f-b5075bebb5b2@bootlin.com>
+In-Reply-To: <cb98bec7-748c-4e00-aa9f-b5075bebb5b2@bootlin.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 7 May 2025 18:21:58 +0300
+X-Gm-Features: ATxdqUGUzY3A4zHzeU_ubjrnOY2zfB9ZK-KToR7BIUdNK8ReLiEBIkmZ9i8rOpA
+Message-ID: <CAHp75Ve_oM6NyvLGsBK4CddEEv=cafw_VfONKwEBX2CBdNxJmA@mail.gmail.com>
+Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
+ forwarder library
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06, 2025 at 06:55:44PM -0700, Andrew Morton wrote:
-> On Tue,  6 May 2025 14:22:45 +0800 Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
-> 
-> > acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
-> > with the expectation that numa_cleanup_meminfo moves them to
-> > numa_reserved_meminfo. There is no need for that indirection when it is
-> > known in advance that these unpopulated ranges are meant for
-> > numa_reserved_meminfo in support of future hotplug / CXL provisioning.
-> > 
-> > Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
-> > ranges directly.
-> > 
-> > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-> > ---
-> > 
-> > Changes in v2 (Thanks to Dan & Alison):
-> > - Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
-> > - Add comments to describe the usage of numa_add_reserved_memblk()
-> > - Updating the commit message to clarify the purpose of the patch
-> > 
-> > By the way, "LoongArch: Introduce the numa_memblks conversion" is in linux-next.
-> 
-> So is this patch dependent upon "LoongArch: Introduce the numa_memblks
-> conversion"?
+On Wed, May 7, 2025 at 5:53=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
+> On 5/7/25 08:29, Andy Shevchenko wrote:
+> >> +/**
+> >> + * gpio_fwd_gpio_add - Add a GPIO in the forwarder
+> >
+> > forwarder
+>
+> Sorry I do not see the typo :)
 
-Yes, the previous version of this patch failed to build on loongarch.
+Your original piece of the code. Please look better.
 
--- 
-Sincerely yours,
-Mike.
+-static int gpiochip_fwd_gpio_add(struct gpiochip_fwd *fwd,
+-                                struct gpio_desc *desc,
+-                                unsigned int offset)
++/**
++ * gpio_fwd_gpio_add - Add a GPIO in the forwader
+
+
+> >> + * @fwd: GPIO forwarder
+> >> + * @desc: GPIO decriptor to register
+> >
+> > descriptor
+
+Ditto.
+
+> >> + * @offset: offset for the GPIO in the forwarder
+> >> + *
+> >> + * Returns: 0 on success, or negative errno on failure.
+> >> + */
+> >
+> > Please, spellcheck all of the comments.
+>
+> Ditto
+
+See above and spell check. Thank you.
+
+...
+
+> > + struct gpio_chip;
+>
+> And also struct gpio_desc;
+
+Yes. :-)
+
+--=20
+With Best Regards,
+Andy Shevchenko
