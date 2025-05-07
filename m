@@ -1,272 +1,114 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEFDC2144DB;
-	Wed,  7 May 2025 10:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2339A214238
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 10:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746613580; cv=none; b=b/ZUN+CwRaSMJ9pXKFL61lfCHUGRJ4GKEalBFbTGEOjylu61lZwtgLjNFtvtd7MSkENE6Lh6EEEXajp7YL/haRT4aih6UFL6EAyiobBlxQpULi8JO8zPcPGIECGK3XOerC48RhnrhelvE39PLua1q2YXnU9B68d2i/Sxw1drJQs=
+	t=1746613595; cv=none; b=NLnHKyq9QJuCrYgDIXHaReeZG746uzdBIQuMMI/O50tkgiilchjRdmu7JWC3zC/p+ccIK5HAelogiPQIs/8ghrVzRrYV/m3FObc07e5Z7j0cFtqVoDKuCc+pUevybqRkRUl/Fr8vhprGGYlSHLcQVrMzsY/I35h2ihHJ9cuAxnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746613580; c=relaxed/simple;
-	bh=mfreBlO200NzQDhkioSmgolD47bqC9Zpog3kqWOeMNk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=blLgvp8JJ2IQ9S8owgRh/mNcrE+sdN1iZMAh3z+metk66H8IzbMOeHnfWiHx9m5FHplp1lcUMLFYCyrvsCuZpj/So0jI33lPGlfHEkzkBrbhloig9fAl5xEt/MHAlHMQHefHjHIi6lm8E5nb7zf/U8h6aN0cbeQnhHTzUa4bRtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10F7F339;
-	Wed,  7 May 2025 03:26:08 -0700 (PDT)
-Received: from [10.1.30.69] (unknown [10.1.30.69])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 265153F5A1;
-	Wed,  7 May 2025 03:26:15 -0700 (PDT)
-Message-ID: <82c0ee14-65fb-4f34-892a-a3820d8d0f97@arm.com>
-Date: Wed, 7 May 2025 11:26:14 +0100
+	s=arc-20240116; t=1746613595; c=relaxed/simple;
+	bh=VMDAaRv49Pn2CU3Twm7LhYZwvYteakniDBT4Tl3skVQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HP+Vt0WfC+eK9nAgA87FS0rhFSq/+gQvRqFuvEgO5oMreELlQG21j0vhG1fMDBi4Pznu5pS/gTM6/TkeH8YdnFwMJE8OjdDqh0k280LB7xFBc7ArTA0YRoGQvSLf0gbY9G/iJLZObXDPyPRsywbPCune08rUWFfsf60Sh2U/2ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YdILnvp+; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YdILnvp+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746613594; x=1778149594;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VMDAaRv49Pn2CU3Twm7LhYZwvYteakniDBT4Tl3skVQ=;
+  b=YdILnvp+kF5VbH6hegLgKcXt5DEV0yOGISDT9uXrm2/f0X6bBYDoLYsq
+   iXzq/O4xha88gsEh+iGqhqBFHQO8l2AdgIOcJFSxcVz1EgP+TE94y60fV
+   x+vhOqpzO+I2HWK/j6w35J7Ep0oU12QMR/3mEy5mo2mq6wq3hBkjZTzO9
+   Rl3J9rSaFr6Z4MmvLpTaYR6uWxcOj76OLg40Z/Ny2tUGyUozn3w56sm+b
+   5dJ/PYYHR3RJ/4TKocnUPg6ZSuzz2cXHzVb7qo6hJlkXz2pqU44dIf+bg
+   fo1bllyQQ/asTJR6+wryw/cNf0kxruw/irEgmoyaXVSntvo8dNpeJuYGk
+   A==;
+X-CSE-ConnectionGUID: lrAuN0JYSIKLmvyPbzfo9g==
+X-CSE-MsgGUID: 0EHxAMq5SpCk7Qipxn5lQQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="48484156"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="48484156"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 03:26:16 -0700
+X-CSE-ConnectionGUID: /VK66a+1TXKIlUWEgTMI3w==
+X-CSE-MsgGUID: JaCHj4UKRg6O+yu8ewa7WA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="135819761"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 07 May 2025 03:26:13 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCbyc-0007av-1f;
+	Wed, 07 May 2025 10:26:10 +0000
+Date: Wed, 7 May 2025 18:25:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Dhaval Giani (AMD)" <dhaval@gianis.ca>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Dhaval Giani <dhaval.giani@amd.com>,
+	Gautham Shenoy <gautham.shenoy@amd.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	"Dhaval Giani (AMD)" <dhaval@gianis.ca>
+Subject: Re: [PATCH 2/3] sched/fair: Add a test to test that a task selected
+ to run has positive lag
+Message-ID: <202505071826.dQRr4AyC-lkp@intel.com>
+References: <20250422-b4-eevdf-tests-v1-post-v1-2-35d158254c72@gianis.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 16/43] arm64: RME: Handle realm enter/exit
-Content-Language: en-GB
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
- <aneesh.kumar@kernel.org>
-References: <20250416134208.383984-1-steven.price@arm.com>
- <20250416134208.383984-17-steven.price@arm.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20250416134208.383984-17-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422-b4-eevdf-tests-v1-post-v1-2-35d158254c72@gianis.ca>
 
-On 16/04/2025 14:41, Steven Price wrote:
-> Entering a realm is done using a SMC call to the RMM. On exit the
-> exit-codes need to be handled slightly differently to the normal KVM
-> path so define our own functions for realm enter/exit and hook them
-> in if the guest is a realm guest.
-> 
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
-> Changes since v7:
->   * A return of 0 from kvm_handle_sys_reg() doesn't mean the register has
->     been read (although that can never happen in the current code). Tidy
->     up the condition to handle any future refactoring.
-> Changes since v6:
->   * Use vcpu_err() rather than pr_err/kvm_err when there is an associated
->     vcpu to the error.
->   * Return -EFAULT for KVM_EXIT_MEMORY_FAULT as per the documentation for
->     this exit type.
->   * Split code handling a RIPAS change triggered by the guest to the
->     following patch.
-> Changes since v5:
->   * For a RIPAS_CHANGE request from the guest perform the actual RIPAS
->     change on next entry rather than immediately on the exit. This allows
->     the VMM to 'reject' a RIPAS change by refusing to continue
->     scheduling.
-> Changes since v4:
->   * Rename handle_rme_exit() to handle_rec_exit()
->   * Move the loop to copy registers into the REC enter structure from the
->     to rec_exit_handlers callbacks to kvm_rec_enter(). This fixes a bug
->     where the handler exits to user space and user space wants to modify
->     the GPRS.
->   * Some code rearrangement in rec_exit_ripas_change().
-> Changes since v2:
->   * realm_set_ipa_state() now provides an output parameter for the
->     top_iap that was changed. Use this to signal the VMM with the correct
->     range that has been transitioned.
->   * Adapt to previous patch changes.
-> ---
->   arch/arm64/include/asm/kvm_rme.h |   3 +
->   arch/arm64/kvm/Makefile          |   2 +-
->   arch/arm64/kvm/arm.c             |  19 +++-
->   arch/arm64/kvm/rme-exit.c        | 170 +++++++++++++++++++++++++++++++
->   arch/arm64/kvm/rme.c             |  19 ++++
->   5 files changed, 207 insertions(+), 6 deletions(-)
->   create mode 100644 arch/arm64/kvm/rme-exit.c
-> 
-> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
-> index b916db8565a2..d86051ef0c5c 100644
-> --- a/arch/arm64/include/asm/kvm_rme.h
-> +++ b/arch/arm64/include/asm/kvm_rme.h
-> @@ -101,6 +101,9 @@ void kvm_realm_destroy_rtts(struct kvm *kvm, u32 ia_bits);
->   int kvm_create_rec(struct kvm_vcpu *vcpu);
->   void kvm_destroy_rec(struct kvm_vcpu *vcpu);
->   
-> +int kvm_rec_enter(struct kvm_vcpu *vcpu);
-> +int handle_rec_exit(struct kvm_vcpu *vcpu, int rec_run_status);
-> +
->   void kvm_realm_unmap_range(struct kvm *kvm,
->   			   unsigned long ipa,
->   			   unsigned long size,
-> diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
-> index 2ebc66812d49..c4b10012faa3 100644
-> --- a/arch/arm64/kvm/Makefile
-> +++ b/arch/arm64/kvm/Makefile
-> @@ -24,7 +24,7 @@ kvm-y += arm.o mmu.o mmio.o psci.o hypercalls.o pvtime.o \
->   	 vgic/vgic-mmio.o vgic/vgic-mmio-v2.o \
->   	 vgic/vgic-mmio-v3.o vgic/vgic-kvm-device.o \
->   	 vgic/vgic-its.o vgic/vgic-debug.o vgic/vgic-v3-nested.o \
-> -	 rme.o
-> +	 rme.o rme-exit.o
->   
->   kvm-$(CONFIG_HW_PERF_EVENTS)  += pmu-emul.o pmu.o
->   kvm-$(CONFIG_ARM64_PTR_AUTH)  += pauth.o
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index 7c0bb1b05f4c..cf707130ef66 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -1263,7 +1263,10 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->   		trace_kvm_entry(*vcpu_pc(vcpu));
->   		guest_timing_enter_irqoff();
->   
-> -		ret = kvm_arm_vcpu_enter_exit(vcpu);
-> +		if (vcpu_is_rec(vcpu))
-> +			ret = kvm_rec_enter(vcpu);
-> +		else
-> +			ret = kvm_arm_vcpu_enter_exit(vcpu);
->   
->   		vcpu->mode = OUTSIDE_GUEST_MODE;
->   		vcpu->stat.exits++;
-> @@ -1319,10 +1322,13 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->   
->   		local_irq_enable();
->   
-> -		trace_kvm_exit(ret, kvm_vcpu_trap_get_class(vcpu), *vcpu_pc(vcpu));
-> -
->   		/* Exit types that need handling before we can be preempted */
-> -		handle_exit_early(vcpu, ret);
-> +		if (!vcpu_is_rec(vcpu)) {
-> +			trace_kvm_exit(ret, kvm_vcpu_trap_get_class(vcpu),
-> +				       *vcpu_pc(vcpu));
-> +
-> +			handle_exit_early(vcpu, ret);
-> +		}
+Hi Dhaval,
 
-minor nit: Looks like we loose the kvm_exit trace. Could we add
-something in handle_rec_exit ?
->   
->   		preempt_enable();
->   
-> @@ -1345,7 +1351,10 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->   			ret = ARM_EXCEPTION_IL;
->   		}
->   
-> -		ret = handle_exit(vcpu, ret);
-> +		if (vcpu_is_rec(vcpu))
-> +			ret = handle_rec_exit(vcpu, ret);
-> +		else
-> +			ret = handle_exit(vcpu, ret);
->   	}
->   
->   	/* Tell userspace about in-kernel device output levels */
-> diff --git a/arch/arm64/kvm/rme-exit.c b/arch/arm64/kvm/rme-exit.c
-> new file mode 100644
-> index 000000000000..a1adf5610455
-> --- /dev/null
-> +++ b/arch/arm64/kvm/rme-exit.c
-> @@ -0,0 +1,170 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2023 ARM Ltd.
-> + */
-> +
-> +#include <linux/kvm_host.h>
-> +#include <kvm/arm_hypercalls.h>
-> +#include <kvm/arm_psci.h>
-> +
-> +#include <asm/rmi_smc.h>
-> +#include <asm/kvm_emulate.h>
-> +#include <asm/kvm_rme.h>
-> +#include <asm/kvm_mmu.h>
-> +
-> +typedef int (*exit_handler_fn)(struct kvm_vcpu *vcpu);
-> +
-> +static int rec_exit_reason_notimpl(struct kvm_vcpu *vcpu)
-> +{
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +
-> +	vcpu_err(vcpu, "Unhandled exit reason from realm (ESR: %#llx)\n",
-> +		 rec->run->exit.esr);
-> +	return -ENXIO;
-> +}
-> +
-> +static int rec_exit_sync_dabt(struct kvm_vcpu *vcpu)
-> +{
-> +	return kvm_handle_guest_abort(vcpu);
-> +}
-> +
-> +static int rec_exit_sync_iabt(struct kvm_vcpu *vcpu)
-> +{
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +
-> +	vcpu_err(vcpu, "Unhandled instruction abort (ESR: %#llx).\n",
-> +		 rec->run->exit.esr);
-> +	return -ENXIO;
-> +}
-> +
-> +static int rec_exit_sys_reg(struct kvm_vcpu *vcpu)
-> +{
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +	unsigned long esr = kvm_vcpu_get_esr(vcpu);
-> +	int rt = kvm_vcpu_sys_get_rt(vcpu);
-> +	bool is_write = !(esr & 1);
-> +	int ret;
-> +
-> +	if (is_write)
-> +		vcpu_set_reg(vcpu, rt, rec->run->exit.gprs[0]);
-> +
-> +	ret = kvm_handle_sys_reg(vcpu);
-> +	if (ret > 0 && !is_write)
-> +		rec->run->enter.gprs[0] = vcpu_get_reg(vcpu, rt);
-> +
-> +	return ret;
-> +}
-> +
-> +static exit_handler_fn rec_exit_handlers[] = {
-> +	[0 ... ESR_ELx_EC_MAX]	= rec_exit_reason_notimpl,
-> +	[ESR_ELx_EC_SYS64]	= rec_exit_sys_reg,
-> +	[ESR_ELx_EC_DABT_LOW]	= rec_exit_sync_dabt,
-> +	[ESR_ELx_EC_IABT_LOW]	= rec_exit_sync_iabt
-> +};
-> +
-> +static int rec_exit_psci(struct kvm_vcpu *vcpu)
-> +{
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +	int i;
-> +
-> +	for (i = 0; i < REC_RUN_GPRS; i++)
-> +		vcpu_set_reg(vcpu, i, rec->run->exit.gprs[i]);
-> +
-> +	return kvm_smccc_call_handler(vcpu);
-> +}
-> +
-> +static int rec_exit_ripas_change(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm *kvm = vcpu->kvm;
-> +	struct realm *realm = &kvm->arch.realm;
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +	unsigned long base = rec->run->exit.ripas_base;
-> +	unsigned long top = rec->run->exit.ripas_top;
-> +	unsigned long ripas = rec->run->exit.ripas_value;
-> +
-> +	if (!kvm_realm_is_private_address(realm, base) ||
-> +	    !kvm_realm_is_private_address(realm, top - 1)) {
-> +		vcpu_err(vcpu, "Invalid RIPAS_CHANGE for %#lx - %#lx, ripas: %#lx\n",
-> +			 base, top, ripas);
+kernel test robot noticed the following build warnings:
 
-Do we need to set the RMI_REJECT for run->enter.flags 
-REC_ENTER_FLAG_RIPAS_RESPONSE ?
+[auto build test WARNING on c70fc32f44431bb30f9025ce753ba8be25acbba3]
 
-Rest looks fine to me.
+url:    https://github.com/intel-lab-lkp/linux/commits/Dhaval-Giani-AMD/sched-fair-Introduce-a-new-debugfs-directory-for-EEVDF-tests/20250423-082221
+base:   c70fc32f44431bb30f9025ce753ba8be25acbba3
+patch link:    https://lore.kernel.org/r/20250422-b4-eevdf-tests-v1-post-v1-2-35d158254c72%40gianis.ca
+patch subject: [PATCH 2/3] sched/fair: Add a test to test that a task selected to run has positive lag
+config: mips-randconfig-r121-20250426 (https://download.01.org/0day-ci/archive/20250507/202505071826.dQRr4AyC-lkp@intel.com/config)
+compiler: mips-linux-gcc (GCC) 10.5.0
+reproduce: (https://download.01.org/0day-ci/archive/20250507/202505071826.dQRr4AyC-lkp@intel.com/reproduce)
 
-Suzuki
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505071826.dQRr4AyC-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> kernel/sched/eevdf-tests.c:24:6: sparse: sparse: symbol 'eevdf_positive_lag_test' was not declared. Should it be static?
+>> kernel/sched/eevdf-tests.c:25:4: sparse: sparse: symbol 'eevdf_positive_lag_count' was not declared. Should it be static?
+
+vim +/eevdf_positive_lag_test +24 kernel/sched/eevdf-tests.c
+
+    20	
+    21	/*
+    22	 * Test parameters
+    23	 */
+  > 24	bool eevdf_positive_lag_test;
+  > 25	u8 eevdf_positive_lag_count = 10;
+    26	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
