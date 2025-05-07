@@ -1,221 +1,176 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E93223CB
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 07:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CEFE213E9E;
+	Wed,  7 May 2025 07:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746601535; cv=none; b=ox6YRA8JWKpJPLCmkdCf/zCWN5L35rcWpJi4AdIvlKlEGVA2eB7AcbXLnEz2aLrzpjplnfu6+p+qrXiuxaxnZ9y/PdITgM7DoWK6t9zZpSzzqKJgCesHPodGQKjWrPvYV4HACCTX7CY/c0fYD/XwHS5mfvvEXaCZ68wnTrwWGU0=
+	t=1746601550; cv=none; b=l+dORrH+56fRdjWc/9rn6JhUo/4wi6ONTPe9uDk61XfimZK6DJt7Shfke24nl7MllN3rhgpOcxI0mGZZ58YlVLcLrdrRj3pfEy8OP2YIfT+lxFzDte1AlhsuvL3p2a/RzGCO2hNmRwVwusjXxfcShvsRZcN/SDuSuaTUzD2Bfx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746601535; c=relaxed/simple;
-	bh=8sMgZtsBofGRCONLWZxr2nzcXo6BzCtS54/Y9ejsotw=;
+	s=arc-20240116; t=1746601550; c=relaxed/simple;
+	bh=DG0KPZ4QdR9bks8772omkMX/R6zKp+X/sa+BK0sQ9WY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kANC3R+mUTmEVdQ9Wyi6GTbTBJLHO/cBx+n/S1SmOhG1kFpcUFnZMNFT2irFuEW2dSuSTQoX+JTsPqLWqZPbxc+2G0/eqtuxHNmHbVNwGEt8zG4AU03UTGGqWc32umADjrkn6JxPyUGMEXNHApIBFH3eLJIjAkUn4ubOWptEdu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Sfvm9Ag1; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=V6FynvDn7qXTQpxgqjNCYfIPgu8lsDNHTVODih4fEplpFoDRZS78wfHB+lZWPpnA1wcdB/Pqcngg6DhLWO7UmS/wgbn1CpyyFaPCfm8mMPVVUhUxfvoDG6rl+Qa9mIBgnzdQ5rZ8OgC0ziQe9xSq5q6q8HINt3xhEtf3G+2cPPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MzDpBCyU; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Sfvm9Ag1"
-Date: Wed, 7 May 2025 07:05:24 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746601529;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pwXGCKLUvkR+CK7jeYzmYMDP45CQNCvobFgoMRwBGTY=;
-	b=Sfvm9Ag1gvu4eaQispHxszQc1k0aFmgSsKhOuzGRj4+ojyC8VWG78k3LY/Fim5JlSJweSn
-	E0zJ4c86cf4FbTOOlxt1Z4RY2pm2cmrihgPCIgNs+g9rLaPdAXTr8r1kC7qVD9p3OpswBG
-	ch8BiT6SGDRiTUFbgtUIdYNPXsju/jk=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michael Larabel <Michael@michaellarabel.com>,
-	Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2] KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1
- VM count transitions
-Message-ID: <aBsGNPvG75KspVmp@google.com>
-References: <20250505180300.973137-1-seanjc@google.com>
- <aBnbBL8Db0rHXxFX@google.com>
- <aBoZpr2HNPysavjd@google.com>
- <aBoc0MhlvO4hR03u@google.com>
- <aBoxcOPWRWyFIgVE@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MzDpBCyU"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-225477548e1so68873765ad.0;
+        Wed, 07 May 2025 00:05:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746601548; x=1747206348; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Z8MJm7QOEEE4G0g7EZK8uH2bldZDsOGk1jOk5w4WeA=;
+        b=MzDpBCyUhvpY9WNz4ahi2wkPWW7JH2t8juKK8QDxWyJIo8aJnadiWJIa6+lXuq4Lck
+         /jP+bZROgTnc3gYsg0xpSmCGVSm69cJlHM8CAv23aUeA0Dn2VkrVsSvsMRPfSpHFyjBe
+         97sPIFFKNQUXcV3b4/Xjn+Dtnmky+z8F2bECbymTCWjIXsmJN7KYIDKIjsBRaNa1xMvN
+         Ry2rWVDiLLfaSnC8JzMrrTGEwh2z7s6+uA3GX4mlDbWgUOr/6aYbl418fFu617wGStPR
+         xS2ZDTcBFZU++InjP3G6Oef7av/cyWP8f2gPzCcH9299jxKOzm/l1okxI1/JIM9qQ9dQ
+         LqRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746601548; x=1747206348;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0Z8MJm7QOEEE4G0g7EZK8uH2bldZDsOGk1jOk5w4WeA=;
+        b=a4rKuWGq0IDUlc5EACvpSIhcUZaESvRRWAYR0TDez5hrBHBLWvolRWrv+8n+NqENed
+         J0/aY1SfBuwQWf0XZCNjyRBdBOzAk9dSHyptOO8swv7GSWCnoG+xK19Jrmv2G+N0LmBg
+         GQ4n/B0SEltkTBF/COqkvXfooOM3xeyAhlLRvIa5LHttt27wcM4cOl0tiHzFoVMukK0c
+         q30pi0Va2uUahzSfgcfTCI0bG8PCntoGJVe7sqbA5/Vq9UjX5MJhuo5Dp/rLCcCRDNU8
+         /svAvX2LFho6fdYgoGKQMJiD8lX+8prWX5jkWw1vxt5KV3CAHJ2stFAL0TugVUAREEme
+         htzw==
+X-Forwarded-Encrypted: i=1; AJvYcCUu9cv4CKsbPhAXDANJ27lUbzvvjRGrQkfV0vdQz2u5IbVTsqY0gvcsMt/OjpN2jLT0wR83+4XApDY=@vger.kernel.org, AJvYcCV7CueFxTzLt/9/5WCH7KYDepNT+4YBum62D728B/HWJczAL/WQ0K7UYRJbKkcrlKcBwv+eZFgc67hviu7Hzw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywy0Wk08G8f2IyBs3p+dg+C4feZIOuexEAonA3lVc07y90QmpJD
+	tG0zGhBwwkT9RSpDOxDDoJoTGkqaACEGTGq+YsEoV4EXFPDdrWpw
+X-Gm-Gg: ASbGncu953MbxhvyJBpnIov+kRIKYEm9FMGD9ZDP5G2Qdn+gegZKnLV1r/cidzd6dSa
+	DNgnzyNEXFPKHM7e3MW3pR7i67DWIVvxnsjlMQ7SiQgWVZYMYAE5A/0w/MgfDfgDZk+IXSH4GVr
+	0TqLWugev134diTfLuS82Hg+Zdh6wo/+MBd3kmoS2ia05tkWFzLWTCvkK9bx9NTX57XRhnUKnx9
+	FIa7fz2LrDEJcNWMsWY9tktB6P/P+NmBMqgO17hL19mjwJKY4t6SEgMhevZhJHt+3WEDe1tUmzx
+	IJK3HAiBbl9aRmxpybW6UpYXVJVAamZ1JznltazcuOWbWdSRPvk=
+X-Google-Smtp-Source: AGHT+IG45EJPY9aLpaA4mWOBTXCnsVZU256/yGDIhUKOOVmavzVmB5PbQY4tSVJ5Ujy2FzrTLZ1Vbw==
+X-Received: by 2002:a17:902:e742:b0:220:cb1a:da5 with SMTP id d9443c01a7336-22e5ece1dd3mr39581575ad.40.1746601547581;
+        Wed, 07 May 2025 00:05:47 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e630dfb61sm7384855ad.143.2025.05.07.00.05.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 00:05:46 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 64E67423E4D9; Wed, 07 May 2025 14:05:44 +0700 (WIB)
+Date: Wed, 7 May 2025 14:05:44 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: chenlinxuan@uniontech.com, Miklos Szeredi <miklos@szeredi.hu>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-doc@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+	Bernd Schubert <bernd.schubert@fastmail.fm>
+Subject: Re: [PATCH 2/2] docs: filesystems: add fuse-passthrough.rst
+Message-ID: <aBsGSOtlJyARt5tR@archie.me>
+References: <20250507-fuse-passthrough-doc-v1-0-cc06af79c722@uniontech.com>
+ <20250507-fuse-passthrough-doc-v1-2-cc06af79c722@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1he+shXJXTIyn9jI"
 Content-Disposition: inline
-In-Reply-To: <aBoxcOPWRWyFIgVE@google.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250507-fuse-passthrough-doc-v1-2-cc06af79c722@uniontech.com>
 
-On Tue, May 06, 2025 at 08:57:36AM -0700, Sean Christopherson wrote:
-> On Tue, May 06, 2025, Yosry Ahmed wrote:
-> > On Tue, May 06, 2025 at 07:16:06AM -0700, Sean Christopherson wrote:
-> > > On Tue, May 06, 2025, Yosry Ahmed wrote:
-> > > > On Mon, May 05, 2025 at 11:03:00AM -0700, Sean Christopherson wrote:
-> > > > > +static void svm_srso_vm_destroy(void)
-> > > > > +{
-> > > > > +	if (!cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
-> > > > > +		return;
-> > > > > +
-> > > > > +	if (atomic_dec_return(&srso_nr_vms))
-> > > > > +		return;
-> > > > > +
-> > > > > +	guard(spinlock)(&srso_lock);
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * Verify a new VM didn't come along, acquire the lock, and increment
-> > > > > +	 * the count before this task acquired the lock.
-> > > > > +	 */
-> > > > > +	if (atomic_read(&srso_nr_vms))
-> > > > > +		return;
-> > > > > +
-> > > > > +	on_each_cpu(svm_srso_clear_bp_spec_reduce, NULL, 1);
-> > > > 
-> > > > Just a passing-by comment. I get worried about sending IPIs while
-> > > > holding a spinlock because if someone ever tries to hold that spinlock
-> > > > with IRQs disabled, it may cause a deadlock.
-> > > > 
-> > > > This is not the case for this lock, but it's not obvious (at least to
-> > > > me) that holding it in a different code path that doesn't send IPIs with
-> > > > IRQs disabled could cause a problem.
-> > > > 
-> > > > You could add a comment, convert it to a mutex to make this scenario
-> > > > impossible,
-> > > 
-> > > Using a mutex doesn't make deadlock impossible, it's still perfectly legal to
-> > > disable IRQs while holding a mutex.
-> > 
-> > Right, but it's illegal to hold a mutex while disabling IRQs.
-> 
-> Nit on the wording: it's illegal to take a mutex while IRQs are disabled.  Disabling
-> IRQs while already holding a mutex is fine.
 
-Yes :)
+--1he+shXJXTIyn9jI
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> And it's also illegal to take a spinlock while IRQs are disabled, becauase spinlocks
-> become sleepable mutexes with PREEMPT_RT=y.  While PREEMPT_RT=y isn't super common,
-> people do run KVM with PREEMPT_RT=y, and I'm guessing bots/CI would trip any such
-> violation quite quickly.
+On Wed, May 07, 2025 at 01:16:42PM +0800, Chen Linxuan via B4 Relay wrote:
+> ---
+>  Documentation/filesystems/fuse-passthrough.rst | 139 +++++++++++++++++++=
+++++++
 
-But I think spin_lock_irq() and friends aren't a violation with
-PREEMPT_RT=y, so these wouldn't trip bots/CI AFAICT.
+Add the docs to Documentation/filesystems/index.rst toctree.
 
-> 
-> E.g. with IRQs disabled around the guard(spinlock)(&srso_lock):
-> 
->  BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
->  in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 2799, name: qemu
->  preempt_count: 0, expected: 0
->  RCU nest depth: 0, expected: 0
->  1 lock held by qemu/2799:
->   #0: ffffffff8263f898 (srso_lock){....}-{3:3}, at: svm_vm_destroy+0x47/0xa0
->  irq event stamp: 9090
->  hardirqs last  enabled at (9089): [<ffffffff81414087>] vprintk_store+0x467/0x4d0
->  hardirqs last disabled at (9090): [<ffffffff812fd1ce>] svm_vm_destroy+0x5e/0xa0
->  softirqs last  enabled at (0): [<ffffffff8137585c>] copy_process+0xa1c/0x29f0
->  softirqs last disabled at (0): [<0000000000000000>] 0x0
->  Call Trace:
->   <TASK>
->   dump_stack_lvl+0x57/0x80
->   __might_resched.cold+0xcc/0xde
->   rt_spin_lock+0x5b/0x170
->   svm_vm_destroy+0x47/0xa0
->   kvm_destroy_vm+0x180/0x310
->   kvm_vm_release+0x1d/0x30
->   __fput+0x10d/0x2f0
->   task_work_run+0x58/0x90
->   do_exit+0x325/0xa80
->   do_group_exit+0x32/0xa0
->   get_signal+0xb5b/0xbb0
->   arch_do_signal_or_restart+0x29/0x230
->   syscall_exit_to_user_mode+0xea/0x180
->   do_syscall_64+0x7a/0x220
->   entry_SYSCALL_64_after_hwframe+0x76/0x7e
->  RIP: 0033:0x7fb50ae7fc4e
->   </TASK>
-> 
-> > In this case, if the other CPU is already holding the lock then there's no
-> > risk of deadlock, right?
-> 
-> Not on srso_lock, but there's still deadlock potential on the locks used to protect
-> the call_function_data structure.
-> 
-> > > Similarly, I don't want to add a comment, because there is absolutely nothing
-> > > special/unique about this situation/lock.  E.g. KVM has tens of calls to
-> > > smp_call_function_many_cond() while holding a spinlock equivalent, in the form
-> > > of kvm_make_all_cpus_request() while holding mmu_lock.
-> > 
-> > Agreed that it's not a unique situation at all. Ideally we'd have some
-> > debugging (lockdep?) magic that identifies that an IPI is being sent
-> > while a lock is held, and that this specific lock is never spinned on
-> > with IRQs disabled.
-> 
-> Sleepable spinlocks aside, the lockdep_assert_irqs_enabled() in
-> smp_call_function_many_cond() already provides sufficient of coverage for that
-> case.  And if code is using some other form of IPI communication *and* taking raw
-> spinlocks, then I think it goes without saying that developers would need to be
-> very, very careful.
+> +FUSE (Filesystem in Userspace) passthrough is a feature designed to impr=
+ove the
+> +performance of FUSE filesystems for I/O operations. Typically, FUSE oper=
+ations
+> +involve communication between the kernel and a userspace FUSE daemon, wh=
+ich can
+> +introduce overhead. Passthrough allows certain operations on a FUSE file=
+ to
+"incur overhead."
+> +bypass the userspace daemon and be executed directly by the kernel on an
+> +underlying "backing file".
+> +
+> +This is achieved by the FUSE daemon registering a file descriptor (point=
+ing to
+> +the backing file on a lower filesystem) with the FUSE kernel module. The=
+ kernel
+> +then receives an identifier (`backing_id`) for this registered backing f=
+ile.
+                               (``backing_id``)
+> +When a FUSE file is subsequently opened, the FUSE daemon can, in its res=
+ponse to
+> +the ``OPEN`` request, include this ``backing_id`` and set the
+> +``FOPEN_PASSTHROUGH`` flag. This establishes a direct link for specific
+> +operations.
 
-I think we are not talking about the same thing, or I am
-misunderstanding you. The lockdep_assert_irqs_enabled() assertion in
-smp_call_function_many_cond() does not protect against this case AFAICT.
+> <snipped>...
 
-Basically imagine that a new code path is added that does:
+> +The ``CAP_SYS_ADMIN`` requirement acts as a safeguard against these issu=
+es,
+> +restricting this powerful capability to trusted processes. As noted in t=
+he
+> +kernel code (``fs/fuse/passthrough.c`` in ``fuse_backing_open()``):
 
-	spin_lock_irq(&srso_lock);
-	/* Some trivial logic, no IPI sending */
-	spin_unlock_irq(&srso_lock);
+I don't see any comments in fuse_backing_open() besides TODO. Perhaps the
+sentence can be removed?
 
-I believe spin_lock_irq() will disable IRQs (at least on some setups)
-then spin on the lock.
+> +
+> +Discussions suggest that exposing information about these backing files,=
+ perhaps
+> +through a dedicated interface under ``/sys/fs/fuse/connections/``, could=
+ be a
+> +step towards relaxing this capability. This would be analogous to how
+> +``io_uring`` exposes its "fixed files", which are also visible via ``fdi=
+nfo``
+> +and accounted under the registering user's ``RLIMIT_NOFILE``.
 
-Now imagine svm_srso_vm_destroy() is already holding the lock and sends
-the IPI from CPU 1, while CPU 2 is executing the above code with IRQs
-already disabled and spinning on the lock.
+Where are pointers (links) to discussions? These can be added to the docs.
 
-This is the deadlock scenario I am talking about. The lockdep assertion
-in smp_call_function_many_cond() doesn't help because IRQs are enabled
-on CPU 1, the problem is that they are disabled on CPU 2.
+> +As a general principle for new kernel features that allow userspace to i=
+nstruct
+> +the kernel to perform direct operations on its behalf based on user-prov=
+ided
+> +file descriptors, starting with a higher privilege requirement (like
+> +``CAP_SYS_ADMIN``) is a conservative and common security practice. This =
+allows
+> +the feature to be used and tested while further security implications are
+> +evaluated and addressed. As Amir Goldstein mentioned in one of the discu=
+ssions,
+> +there was "no proof that this is the only potential security risk" when =
+the
+> +initial privilege checks were put in place.
 
-Lockdep can detect this by keeping track of the fact that some code
-paths acquire the lock with IRQs off while some code paths acquire the
-lock and send IPIs, I think.
+Discussion links please.
 
-> 
-> > > smp_call_function_many_cond() already asserts that IRQs are disabled, so I have
-> > > zero concerns about this flow breaking in the future.
-> > 
-> > That doesn't really help tho, the problem is if another CPU spins on the
-> > lock with IRQs disabled, regardless of whether or not it. Basically if
-> > CPU 1 acquires the lock and sends an IPI while CPU 2 disables IRQs and
-> > spins on the lock.
-> 
-> Given that svm_srso_vm_destroy() is guaranteed to call on_each_cpu() with the
-> lock held at some point, I'm completely comfortable relying on its lockdep
-> assertion.
-> 
-> > > > or dismiss my comment as being too paranoid/ridiculous :)
-> > > 
-> > > I wouldn't say your thought process is too paranoid; when writing the code, I had
-> > > to pause and think to remember whether or not using on_each_cpu() while holding a
-> > > spinlock is allowed.  But I do think the conclusion is wrong :-)
-> > 
-> > That's fair. I think protection against this should be done more generically
-> > as I mentioned earlier, but it felt like it would be easy-ish to side-step it
-> > in this case.
-> 
-> Eh, modifying this code in such a way that it could deadlock without lockdep
-> noticing would likely send up a comincal number of red flags during code review.
+Thanks.
 
-It just takes another code path using spin_lock_irq() or friends to
-deadlock AFAICT.
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Anyway, this has side tracked and I am probably taking more of your time
-that I originally wanted, I was just making an observation more-or-less
-:)
+--1he+shXJXTIyn9jI
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaBsGQwAKCRD2uYlJVVFO
+o14vAP9z6UbpIgMGBxsVnCjCqJvWjc98hEDIRQG9rl7EV5CnnAEA3sV2azSp6PUf
+0mI5fO9wM0NlYTuu2g8dLC+yD99NEgc=
+=nNoh
+-----END PGP SIGNATURE-----
+
+--1he+shXJXTIyn9jI--
