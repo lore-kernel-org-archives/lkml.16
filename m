@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED25F231A2D;
-	Wed,  7 May 2025 07:58:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CE0233D88;
+	Wed,  7 May 2025 07:58:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746604696; cv=none; b=msU8mWhiNRidBU5ZfbTne2B6Y3rKexpKW3LljZNpZMu2xkRrcDDs+snrmPCyvBU+6USCX4UlGy7MPeUwsEDzvnQfKy7EdUU+gq9v2ftEZOn2n2EF77sc1J+hRNvgaa2oGaub5kMdVKKiLFOPlrHi7sMJUY4FWJWE5c6ruRByono=
+	t=1746604698; cv=none; b=MklAYmhmpoWlbxVUyRyJgn0zQiM+xb4H60sivrOlIFUge/0BFxSHLFweMXxoPtPFr86T5Eey85PL1DHJoFTNkR1Lppc14Lp5xYYOX+80GDAmxhl/leOgfTD96a5l8wJo0tSdNItfZEpnWGX6rrJrdjB9ZyN4wMf+UbRoEt1Nnxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746604696; c=relaxed/simple;
-	bh=DYPLgLjIIRYmBKvsJ0icTRohsxETmf/cdYbQnf2bfl4=;
+	s=arc-20240116; t=1746604698; c=relaxed/simple;
+	bh=+9En8sGZLFpIwdbGVW3unaML1KDsyf708O2Jm1/L+oc=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=KFmEp4aIvxzsbLRF2s/4FFChpC1+xuCjx1FuvIN0vEHDMbqagCRkrdwV4OMHDuHpxhjyQeL+QI6clda8bzEY/N7ybSZPSWxyeOorzS3ywQK/zlsOK9Oz7CUELtV5EO15b3ywQjljaU5DHPrI9+bqKthAfpb5W8+k0bKxozZbV1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QnIfmAdv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UAF795q8; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=RJkQ17NTLS0KfaZ8cnseBIyULOlM6P9L9VZ6PxoU6BlMxD1j9odO0u8rD72d09cmr4F2sPgQiGHWftM9AN+Jp54Hg4Ne/9ANv5vhsEgyN/yaL4NRpfEvlAY3rUyrYqj+Vq23cfi27w73JRmQHy1T0ultjgRxJFLIRwETq4ch3Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OygTbYWB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cgXo8+DO; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QnIfmAdv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UAF795q8"
-Date: Wed, 07 May 2025 07:58:11 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OygTbYWB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cgXo8+DO"
+Date: Wed, 07 May 2025 07:58:13 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746604692;
+	s=2020; t=1746604694;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aR49F/D75jeeLMZ8xXPBMGI0JliLcyOcVeXtF8M6xYU=;
-	b=QnIfmAdvxQjyPn8aywDm1h76ZpvLGtsASxDukXW8JvDYQS791tVWfosgMLpJkeIXTmsu2E
-	yCgJVVOVf8eOVcm3zv1hRYCobUzLeeWFKa8CwBUr8nJE2927sx/TxfOP6CpT0tOiydeLa4
-	YVwD4/nh+WrT2kZvnfPriZNLLXA8yBonyXsPzrf0uTKuOrZEUCYL9qXxKwDZTPU1SlWYNw
-	LMUuZYtTsbxwK4RF5+8UWJ2iRcBJQ/7SCD5dUK9FXC5zunW3N5jL4paD8Wt6oYNsx5ZnSs
-	PZnbN6WgV4y4dAAeFegVsBiB3DcdY5ZZvIyMtmDJTklwC5xwK0YFhqEtMFSDpA==
+	bh=5j9uqjHih0ScVJc/1uYv7gSvx61yyyD5YI+oshp/JZk=;
+	b=OygTbYWBODh03ZwG1HUtvug2menIbOaLgCvflUl5ybVHpRZkwR2y+Jqd5NP0cngM0Ga4fy
+	Khiiqt1xgZGdRHDQ0KWmxDviV1qy0AHf8KLUdE5HPpC2f/3TYOEdKUNQ04HnrBBKL8KQ+j
+	1p/m+eHZGq6WbKxoiOdqU4fA3PZ56mPvQQWk54iHMpTHbsgq9T8rLIX+Sq4ZwuwKJJl5sU
+	Gq+Z8Mgx235Fb7nVGhabQY8nsQzE94iOnoGrzKX3R8EwmrqME88W4zz7YaJHwiCy5kFrN+
+	qg2o1BSL76ULsy6ECFpyeLPfrZA8rNeyw1gHXdhNDVfzrNHjcMryfAcYN9jZwA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746604692;
+	s=2020e; t=1746604694;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aR49F/D75jeeLMZ8xXPBMGI0JliLcyOcVeXtF8M6xYU=;
-	b=UAF795q8U1NPHHDU1oshVH92gZVVitHamhZZhf4HPjA5sl0UGNbNsx/I3nI52ln5nt4Ko+
-	f9SmZnbE4DC81sDQ==
+	bh=5j9uqjHih0ScVJc/1uYv7gSvx61yyyD5YI+oshp/JZk=;
+	b=cgXo8+DOrblXLg2/u9C8vL94CxXHgKVYEzoR115cRR47dX5gmJ7w5h0kynNuOnn9Xw5nVK
+	rAavzw/IKo2xWpCg==
 From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/cleanups] gpio: Switch to irq_domain_create_*()
+Subject: [tip: irq/cleanups] ARM: Switch to irq_domain_create_*()
 Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
  Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250319092951.37667-18-jirislaby@kernel.org>
-References: <20250319092951.37667-18-jirislaby@kernel.org>
+In-Reply-To: <20250319092951.37667-15-jirislaby@kernel.org>
+References: <20250319092951.37667-15-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174660469154.406.151900842282637832.tip-bot2@tip-bot2>
+Message-ID: <174660469358.406.2335165421414855959.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,14 +67,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/cleanups branch of tip:
 
-Commit-ID:     02226c57602d9a0d0ea37c4c58a6d5975e525961
-Gitweb:        https://git.kernel.org/tip/02226c57602d9a0d0ea37c4c58a6d5975e525961
+Commit-ID:     e848923ad13b238990a7b253d28934db3d6f1ab0
+Gitweb:        https://git.kernel.org/tip/e848923ad13b238990a7b253d28934db3d6f1ab0
 Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Wed, 19 Mar 2025 10:29:10 +01:00
+AuthorDate:    Wed, 19 Mar 2025 10:29:07 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 07 May 2025 09:53:22 +02:00
 
-gpio: Switch to irq_domain_create_*()
+ARM: Switch to irq_domain_create_*()
 
 irq_domain_add_*() interfaces are going away as being obsolete now.
 Switch to the preferred irq_domain_create_*() ones. Those differ in the
@@ -91,249 +91,165 @@ case basis (by people who can actually test with the HW).
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250319092951.37667-18-jirislaby@kernel.org
+Link: https://lore.kernel.org/all/20250319092951.37667-15-jirislaby@kernel.org
 
 ---
- drivers/gpio/gpio-brcmstb.c   | 2 +-
- drivers/gpio/gpio-davinci.c   | 5 ++---
- drivers/gpio/gpio-em.c        | 5 +++--
- drivers/gpio/gpio-grgpio.c    | 2 +-
- drivers/gpio/gpio-lpc18xx.c   | 8 +++-----
- drivers/gpio/gpio-mvebu.c     | 2 +-
- drivers/gpio/gpio-mxc.c       | 2 +-
- drivers/gpio/gpio-mxs.c       | 4 ++--
- drivers/gpio/gpio-pxa.c       | 6 +++---
- drivers/gpio/gpio-rockchip.c  | 2 +-
- drivers/gpio/gpio-sa1100.c    | 2 +-
- drivers/gpio/gpio-sodaville.c | 2 +-
- drivers/gpio/gpio-tb10x.c     | 2 +-
- drivers/gpio/gpio-twl4030.c   | 5 ++---
- include/linux/gpio/driver.h   | 5 +++--
- 15 files changed, 26 insertions(+), 28 deletions(-)
+ arch/arm/common/sa1111.c             |  6 +++---
+ arch/arm/mach-exynos/suspend.c       |  5 ++---
+ arch/arm/mach-imx/avic.c             |  4 ++--
+ arch/arm/mach-imx/gpc.c              |  5 ++---
+ arch/arm/mach-imx/tzic.c             |  4 ++--
+ arch/arm/mach-omap1/irq.c            |  3 +--
+ arch/arm/mach-omap2/omap-wakeupgen.c |  5 ++---
+ arch/arm/mach-pxa/irq.c              |  5 ++---
+ arch/arm/plat-orion/gpio.c           | 12 ++++++------
+ 9 files changed, 22 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
-index ca34729..e7671bc 100644
---- a/drivers/gpio/gpio-brcmstb.c
-+++ b/drivers/gpio/gpio-brcmstb.c
-@@ -437,7 +437,7 @@ static int brcmstb_gpio_irq_setup(struct platform_device *pdev,
- 	int err;
+diff --git a/arch/arm/common/sa1111.c b/arch/arm/common/sa1111.c
+index 9846f30..02eda44 100644
+--- a/arch/arm/common/sa1111.c
++++ b/arch/arm/common/sa1111.c
+@@ -416,9 +416,9 @@ static int sa1111_setup_irq(struct sa1111 *sachip, unsigned irq_base)
+ 	writel_relaxed(~0, irqbase + SA1111_INTSTATCLR0);
+ 	writel_relaxed(~0, irqbase + SA1111_INTSTATCLR1);
  
- 	priv->irq_domain =
--		irq_domain_add_linear(np, priv->num_gpios,
-+		irq_domain_create_linear(of_fwnode_handle(np), priv->num_gpios,
- 				      &brcmstb_gpio_irq_domain_ops,
- 				      priv);
- 	if (!priv->irq_domain) {
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index 63fc788..3c3b3ed 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -479,9 +479,8 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- 			return irq;
- 		}
- 
--		irq_domain = irq_domain_add_legacy(dev->of_node, ngpio, irq, 0,
--							&davinci_gpio_irq_ops,
--							chips);
-+		irq_domain = irq_domain_create_legacy(of_fwnode_handle(dev->of_node), ngpio, irq, 0,
-+						      &davinci_gpio_irq_ops, chips);
- 		if (!irq_domain) {
- 			dev_err(dev, "Couldn't register an IRQ domain\n");
- 			return -ENODEV;
-diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
-index 6c862c5..8d86f20 100644
---- a/drivers/gpio/gpio-em.c
-+++ b/drivers/gpio/gpio-em.c
-@@ -323,8 +323,9 @@ static int em_gio_probe(struct platform_device *pdev)
- 	irq_chip->irq_release_resources = em_gio_irq_relres;
- 	irq_chip->flags	= IRQCHIP_SKIP_SET_WAKE | IRQCHIP_MASK_ON_SUSPEND;
- 
--	p->irq_domain = irq_domain_add_simple(dev->of_node, ngpios, 0,
--					      &em_gio_irq_domain_ops, p);
-+	p->irq_domain = irq_domain_create_simple(of_fwnode_handle(dev->of_node),
-+						 ngpios, 0,
-+						 &em_gio_irq_domain_ops, p);
- 	if (!p->irq_domain) {
- 		dev_err(dev, "cannot initialize irq domain\n");
- 		return -ENXIO;
-diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
-index 30a0522..641df8f 100644
---- a/drivers/gpio/gpio-grgpio.c
-+++ b/drivers/gpio/gpio-grgpio.c
-@@ -397,7 +397,7 @@ static int grgpio_probe(struct platform_device *ofdev)
- 			return -EINVAL;
- 		}
- 
--		priv->domain = irq_domain_add_linear(np, gc->ngpio,
-+		priv->domain = irq_domain_create_linear(of_fwnode_handle(np), gc->ngpio,
- 						     &grgpio_irq_domain_ops,
- 						     priv);
- 		if (!priv->domain) {
-diff --git a/drivers/gpio/gpio-lpc18xx.c b/drivers/gpio/gpio-lpc18xx.c
-index 2cf9fb4..ae6182c 100644
---- a/drivers/gpio/gpio-lpc18xx.c
-+++ b/drivers/gpio/gpio-lpc18xx.c
-@@ -240,11 +240,9 @@ static int lpc18xx_gpio_pin_ic_probe(struct lpc18xx_gpio_chip *gc)
- 
- 	raw_spin_lock_init(&ic->lock);
- 
--	ic->domain = irq_domain_add_hierarchy(parent_domain, 0,
--					      NR_LPC18XX_GPIO_PIN_IC_IRQS,
--					      dev->of_node,
--					      &lpc18xx_gpio_pin_ic_domain_ops,
--					      ic);
-+	ic->domain = irq_domain_create_hierarchy(parent_domain, 0, NR_LPC18XX_GPIO_PIN_IC_IRQS,
-+						 of_fwnode_handle(dev->of_node),
-+						 &lpc18xx_gpio_pin_ic_domain_ops, ic);
- 	if (!ic->domain) {
- 		pr_err("unable to add irq domain\n");
- 		ret = -ENODEV;
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index 3604abc..4055596 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -1242,7 +1242,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
- 		return 0;
- 
- 	mvchip->domain =
--	    irq_domain_add_linear(np, ngpios, &irq_generic_chip_ops, NULL);
-+	    irq_domain_create_linear(of_fwnode_handle(np), ngpios, &irq_generic_chip_ops, NULL);
- 	if (!mvchip->domain) {
- 		dev_err(&pdev->dev, "couldn't allocate irq domain %s (DT).\n",
- 			mvchip->chip.label);
-diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 619b6fb..74bc8f0 100644
---- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -502,7 +502,7 @@ static int mxc_gpio_probe(struct platform_device *pdev)
- 		goto out_bgio;
- 	}
- 
--	port->domain = irq_domain_add_legacy(np, 32, irq_base, 0,
-+	port->domain = irq_domain_create_legacy(of_fwnode_handle(np), 32, irq_base, 0,
- 					     &irq_domain_simple_ops, NULL);
- 	if (!port->domain) {
- 		err = -ENODEV;
-diff --git a/drivers/gpio/gpio-mxs.c b/drivers/gpio/gpio-mxs.c
-index 024ad07..b418fbc 100644
---- a/drivers/gpio/gpio-mxs.c
-+++ b/drivers/gpio/gpio-mxs.c
-@@ -303,8 +303,8 @@ static int mxs_gpio_probe(struct platform_device *pdev)
- 		goto out_iounmap;
- 	}
- 
--	port->domain = irq_domain_add_legacy(np, 32, irq_base, 0,
--					     &irq_domain_simple_ops, NULL);
-+	port->domain = irq_domain_create_legacy(of_fwnode_handle(np), 32, irq_base, 0,
-+						&irq_domain_simple_ops, NULL);
- 	if (!port->domain) {
- 		err = -ENODEV;
- 		goto out_iounmap;
-diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
-index 91cea97..c3dfaed 100644
---- a/drivers/gpio/gpio-pxa.c
-+++ b/drivers/gpio/gpio-pxa.c
-@@ -636,9 +636,9 @@ static int pxa_gpio_probe(struct platform_device *pdev)
- 	if (!pxa_last_gpio)
- 		return -EINVAL;
- 
--	pchip->irqdomain = irq_domain_add_legacy(pdev->dev.of_node,
--						 pxa_last_gpio + 1, irq_base,
--						 0, &pxa_irq_domain_ops, pchip);
-+	pchip->irqdomain = irq_domain_create_legacy(of_fwnode_handle(pdev->dev.of_node),
-+						    pxa_last_gpio + 1, irq_base, 0,
-+						    &pxa_irq_domain_ops, pchip);
- 	if (!pchip->irqdomain)
+-	sachip->irqdomain = irq_domain_add_linear(NULL, SA1111_IRQ_NR,
+-						  &sa1111_irqdomain_ops,
+-						  sachip);
++	sachip->irqdomain = irq_domain_create_linear(NULL, SA1111_IRQ_NR,
++						     &sa1111_irqdomain_ops,
++						     sachip);
+ 	if (!sachip->irqdomain) {
+ 		irq_free_descs(sachip->irq_base, SA1111_IRQ_NR);
  		return -ENOMEM;
- 
-diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-index 01a3b3d..c63352f 100644
---- a/drivers/gpio/gpio-rockchip.c
-+++ b/drivers/gpio/gpio-rockchip.c
-@@ -521,7 +521,7 @@ static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
- 	struct irq_chip_generic *gc;
- 	int ret;
- 
--	bank->domain = irq_domain_add_linear(bank->of_node, 32,
-+	bank->domain = irq_domain_create_linear(of_fwnode_handle(bank->of_node), 32,
- 					&irq_generic_chip_ops, NULL);
- 	if (!bank->domain) {
- 		dev_warn(bank->dev, "could not init irq domain for bank %s\n",
-diff --git a/drivers/gpio/gpio-sa1100.c b/drivers/gpio/gpio-sa1100.c
-index 242dad7..3f3ee36 100644
---- a/drivers/gpio/gpio-sa1100.c
-+++ b/drivers/gpio/gpio-sa1100.c
-@@ -319,7 +319,7 @@ void __init sa1100_init_gpio(void)
- 
- 	gpiochip_add_data(&sa1100_gpio_chip.chip, NULL);
- 
--	sa1100_gpio_irqdomain = irq_domain_add_simple(NULL,
-+	sa1100_gpio_irqdomain = irq_domain_create_simple(NULL,
- 			28, IRQ_GPIO0,
- 			&sa1100_gpio_irqdomain_ops, sgc);
- 
-diff --git a/drivers/gpio/gpio-sodaville.c b/drivers/gpio/gpio-sodaville.c
-index c2a2c76..6a3c4c6 100644
---- a/drivers/gpio/gpio-sodaville.c
-+++ b/drivers/gpio/gpio-sodaville.c
-@@ -169,7 +169,7 @@ static int sdv_register_irqsupport(struct sdv_gpio_chip_data *sd,
- 			IRQ_GC_INIT_MASK_CACHE, IRQ_NOREQUEST,
- 			IRQ_LEVEL | IRQ_NOPROBE);
- 
--	sd->id = irq_domain_add_legacy(pdev->dev.of_node, SDV_NUM_PUB_GPIOS,
-+	sd->id = irq_domain_create_legacy(of_fwnode_handle(pdev->dev.of_node), SDV_NUM_PUB_GPIOS,
- 				sd->irq_base, 0, &irq_domain_sdv_ops, sd);
- 	if (!sd->id)
- 		return -ENODEV;
-diff --git a/drivers/gpio/gpio-tb10x.c b/drivers/gpio/gpio-tb10x.c
-index b6335cd..8cf676f 100644
---- a/drivers/gpio/gpio-tb10x.c
-+++ b/drivers/gpio/gpio-tb10x.c
-@@ -183,7 +183,7 @@ static int tb10x_gpio_probe(struct platform_device *pdev)
- 		if (ret != 0)
- 			return ret;
- 
--		tb10x_gpio->domain = irq_domain_add_linear(np,
-+		tb10x_gpio->domain = irq_domain_create_linear(of_fwnode_handle(np),
- 						tb10x_gpio->gc.ngpio,
- 						&irq_generic_chip_ops, NULL);
- 		if (!tb10x_gpio->domain) {
-diff --git a/drivers/gpio/gpio-twl4030.c b/drivers/gpio/gpio-twl4030.c
-index bcd6922..0d17985 100644
---- a/drivers/gpio/gpio-twl4030.c
-+++ b/drivers/gpio/gpio-twl4030.c
-@@ -502,7 +502,6 @@ static void gpio_twl4030_power_off_action(void *data)
- static int gpio_twl4030_probe(struct platform_device *pdev)
- {
- 	struct twl4030_gpio_platform_data *pdata;
--	struct device_node *node = pdev->dev.of_node;
- 	struct gpio_twl4030_priv *priv;
- 	int ret, irq_base;
- 
-@@ -524,8 +523,8 @@ static int gpio_twl4030_probe(struct platform_device *pdev)
- 		return irq_base;
+diff --git a/arch/arm/mach-exynos/suspend.c b/arch/arm/mach-exynos/suspend.c
+index cac4e82..150a1e5 100644
+--- a/arch/arm/mach-exynos/suspend.c
++++ b/arch/arm/mach-exynos/suspend.c
+@@ -209,9 +209,8 @@ static int __init exynos_pmu_irq_init(struct device_node *node,
+ 		return -ENOMEM;
  	}
  
--	irq_domain_add_legacy(node, TWL4030_GPIO_MAX, irq_base, 0,
--			      &irq_domain_simple_ops, NULL);
-+	irq_domain_create_legacy(of_fwnode_handle(pdev->dev.of_node), TWL4030_GPIO_MAX, irq_base, 0,
-+				 &irq_domain_simple_ops, NULL);
+-	domain = irq_domain_add_hierarchy(parent_domain, 0, 0,
+-					  node, &exynos_pmu_domain_ops,
+-					  NULL);
++	domain = irq_domain_create_hierarchy(parent_domain, 0, 0, of_fwnode_handle(node),
++					     &exynos_pmu_domain_ops, NULL);
+ 	if (!domain) {
+ 		iounmap(pmu_base_addr);
+ 		pmu_base_addr = NULL;
+diff --git a/arch/arm/mach-imx/avic.c b/arch/arm/mach-imx/avic.c
+index cf6546d..3067c06 100644
+--- a/arch/arm/mach-imx/avic.c
++++ b/arch/arm/mach-imx/avic.c
+@@ -201,8 +201,8 @@ static void __init mxc_init_irq(void __iomem *irqbase)
+ 	WARN_ON(irq_base < 0);
  
- 	ret = twl4030_sih_setup(&pdev->dev, TWL4030_MODULE_GPIO, irq_base);
- 	if (ret < 0)
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 4c0294a..b532330 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -287,8 +287,9 @@ struct gpio_irq_chip {
- 	/**
- 	 * @first:
- 	 *
--	 * Required for static IRQ allocation. If set, irq_domain_add_simple()
--	 * will allocate and map all IRQs during initialization.
-+	 * Required for static IRQ allocation. If set,
-+	 * irq_domain_create_simple() will allocate and map all IRQs
-+	 * during initialization.
- 	 */
- 	unsigned int first;
+ 	np = of_find_compatible_node(NULL, NULL, "fsl,avic");
+-	domain = irq_domain_add_legacy(np, AVIC_NUM_IRQS, irq_base, 0,
+-				       &irq_domain_simple_ops, NULL);
++	domain = irq_domain_create_legacy(of_fwnode_handle(np), AVIC_NUM_IRQS, irq_base, 0,
++					  &irq_domain_simple_ops, NULL);
+ 	WARN_ON(!domain);
  
+ 	for (i = 0; i < AVIC_NUM_IRQS / 32; i++, irq_base += 32)
+diff --git a/arch/arm/mach-imx/gpc.c b/arch/arm/mach-imx/gpc.c
+index 5909088..2e63356 100644
+--- a/arch/arm/mach-imx/gpc.c
++++ b/arch/arm/mach-imx/gpc.c
+@@ -245,9 +245,8 @@ static int __init imx_gpc_init(struct device_node *node,
+ 	if (WARN_ON(!gpc_base))
+ 	        return -ENOMEM;
+ 
+-	domain = irq_domain_add_hierarchy(parent_domain, 0, GPC_MAX_IRQS,
+-					  node, &imx_gpc_domain_ops,
+-					  NULL);
++	domain = irq_domain_create_hierarchy(parent_domain, 0, GPC_MAX_IRQS, of_fwnode_handle(node),
++					     &imx_gpc_domain_ops, NULL);
+ 	if (!domain) {
+ 		iounmap(gpc_base);
+ 		return -ENOMEM;
+diff --git a/arch/arm/mach-imx/tzic.c b/arch/arm/mach-imx/tzic.c
+index 8b3d98d..50a5668 100644
+--- a/arch/arm/mach-imx/tzic.c
++++ b/arch/arm/mach-imx/tzic.c
+@@ -175,8 +175,8 @@ static int __init tzic_init_dt(struct device_node *np, struct device_node *p)
+ 	irq_base = irq_alloc_descs(-1, 0, TZIC_NUM_IRQS, numa_node_id());
+ 	WARN_ON(irq_base < 0);
+ 
+-	domain = irq_domain_add_legacy(np, TZIC_NUM_IRQS, irq_base, 0,
+-				       &irq_domain_simple_ops, NULL);
++	domain = irq_domain_create_legacy(of_fwnode_handle(np), TZIC_NUM_IRQS, irq_base, 0,
++					  &irq_domain_simple_ops, NULL);
+ 	WARN_ON(!domain);
+ 
+ 	for (i = 0; i < 4; i++, irq_base += 32)
+diff --git a/arch/arm/mach-omap1/irq.c b/arch/arm/mach-omap1/irq.c
+index 9b587ec..bb1bc06 100644
+--- a/arch/arm/mach-omap1/irq.c
++++ b/arch/arm/mach-omap1/irq.c
+@@ -220,8 +220,7 @@ void __init omap1_init_irq(void)
+ 	omap_l2_irq = irq_base;
+ 	omap_l2_irq -= NR_IRQS_LEGACY;
+ 
+-	domain = irq_domain_add_legacy(NULL, nr_irqs, irq_base, 0,
+-				       &irq_domain_simple_ops, NULL);
++	domain = irq_domain_create_legacy(NULL, nr_irqs, irq_base, 0, &irq_domain_simple_ops, NULL);
+ 
+ 	pr_info("Total of %lu interrupts in %i interrupt banks\n",
+ 		nr_irqs, irq_bank_count);
+diff --git a/arch/arm/mach-omap2/omap-wakeupgen.c b/arch/arm/mach-omap2/omap-wakeupgen.c
+index 6f0d612..a66b1dc 100644
+--- a/arch/arm/mach-omap2/omap-wakeupgen.c
++++ b/arch/arm/mach-omap2/omap-wakeupgen.c
+@@ -585,9 +585,8 @@ static int __init wakeupgen_init(struct device_node *node,
+ 		wakeupgen_ops = &am43xx_wakeupgen_ops;
+ 	}
+ 
+-	domain = irq_domain_add_hierarchy(parent_domain, 0, max_irqs,
+-					  node, &wakeupgen_domain_ops,
+-					  NULL);
++	domain = irq_domain_create_hierarchy(parent_domain, 0, max_irqs, of_fwnode_handle(node),
++					     &wakeupgen_domain_ops, NULL);
+ 	if (!domain) {
+ 		iounmap(wakeupgen_base);
+ 		return -ENOMEM;
+diff --git a/arch/arm/mach-pxa/irq.c b/arch/arm/mach-pxa/irq.c
+index d9cadd9..5bfce8a 100644
+--- a/arch/arm/mach-pxa/irq.c
++++ b/arch/arm/mach-pxa/irq.c
+@@ -147,9 +147,8 @@ pxa_init_irq_common(struct device_node *node, int irq_nr,
+ 	int n;
+ 
+ 	pxa_internal_irq_nr = irq_nr;
+-	pxa_irq_domain = irq_domain_add_legacy(node, irq_nr,
+-					       PXA_IRQ(0), 0,
+-					       &pxa_irq_ops, NULL);
++	pxa_irq_domain = irq_domain_create_legacy(of_fwnode_handle(node), irq_nr, PXA_IRQ(0), 0,
++						  &pxa_irq_ops, NULL);
+ 	if (!pxa_irq_domain)
+ 		panic("Unable to add PXA IRQ domain\n");
+ 	irq_set_default_domain(pxa_irq_domain);
+diff --git a/arch/arm/plat-orion/gpio.c b/arch/arm/plat-orion/gpio.c
+index 595e9cb..a15f474 100644
+--- a/arch/arm/plat-orion/gpio.c
++++ b/arch/arm/plat-orion/gpio.c
+@@ -602,12 +602,12 @@ void __init orion_gpio_init(int gpio_base, int ngpio,
+ 			       IRQ_NOREQUEST, IRQ_LEVEL | IRQ_NOPROBE);
+ 
+ 	/* Setup irq domain on top of the generic chip. */
+-	ochip->domain = irq_domain_add_legacy(NULL,
+-					      ochip->chip.ngpio,
+-					      ochip->secondary_irq_base,
+-					      ochip->secondary_irq_base,
+-					      &irq_domain_simple_ops,
+-					      ochip);
++	ochip->domain = irq_domain_create_legacy(NULL,
++						 ochip->chip.ngpio,
++						 ochip->secondary_irq_base,
++						 ochip->secondary_irq_base,
++						 &irq_domain_simple_ops,
++						 ochip);
+ 	if (!ochip->domain)
+ 		panic("%s: couldn't allocate irq domain (DT).\n",
+ 		      ochip->chip.label);
