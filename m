@@ -1,144 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B5718EB0;
-	Wed,  7 May 2025 15:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC74D2144CD;
+	Wed,  7 May 2025 15:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746631257; cv=none; b=nRSrAUU2jwNzmCAcpMRRbjE+LbrkSpRzQw9ZROb3QS/bWxueWY/lJD51/i6S0law5Y62+PtJC8+q2Bmx1nI7ckm4uqbgyxBk52Rglrd+y3yfgFBWVa/CrxOXCfaOTl79hvmcEz4pYf8XDYaQN2i/TRbjO67DEvybR+MRGCOG/1s=
+	t=1746631287; cv=none; b=e0K6i3YI5yS+CDaeXuZgdOr6qMafXVa/+23NBnhViCX6Qs1rPawfMc7dD/H5NIJSDwuQyG0OVGtm3TvfBCQDsXPMOdOtdoQ7KU6fE3Re7OAx73mMHUhOiceA5BXX8aENgBKP6BppZZSaHKc8dT3XzyJsSbq9xvJ0PnWavszkYgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746631257; c=relaxed/simple;
-	bh=DMuRy3vH/9HB8MP/eHAh3lYTSsXJDYIcI3IY1DjMl9w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FLSgOflBKUjI0rPo2ZBuB+OE0knfD8CbS7Cuo8NWQfKnP1vMZ6AHhCRmsTagNEdWW7dt00LfyL3bfo1Yfgu7qcU6jJO40lW4aDU+2V9cgBpaDMMAIZamK5cO/2F1SSLB01bWnlomYCftBNlhpQpo9FQleEsM59lxP860eIMEFWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XtWCiZBB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746631287; c=relaxed/simple;
+	bh=Rp2RWQ2SmfrP/wcKdEEy5VWXzW6C7wbaPad+wRFEvEc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ePzaBfMnXuFjXYGWqYbpPEFJYfhHbnNON0F4KFdxtKZ/tlj0Qs806v770gTyLhXcW8g7c5DwBf3exzzeMOZX7pPrWViSUQKytnPeje7+upX1hAQqOeUei5KroBssq9leuMtbMGp/VGCPBtFeuyH5dOG2P8aHI6W67spOTS1Pj68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S03gyzyH; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XtWCiZBB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B24D4C4CEE2;
-	Wed,  7 May 2025 15:20:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746631256;
-	bh=DMuRy3vH/9HB8MP/eHAh3lYTSsXJDYIcI3IY1DjMl9w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XtWCiZBBDcigCs9rAvAR90ZGDu/yeCGV3FKIg+lWgQE5tggI55fQ1EThnEsOeZK6q
-	 DMgxmlLMOatvtvVSXCn/BryaK7YoFbb2M/POZrcgkS6EZYv7YUBvmZil/SK50Hh4lr
-	 5WjXKMjsXaXd4xa42SXkRvSxdbQSR/XvJWhUymwiON2nv7AERNtl3vpyW0LoQK7YAy
-	 cxJpPfw1+r6CRqcco+5MVQkED2iX9uAWZ9Qy4qG4xvssMDOKQ/FfnL7O6xphMDJEUB
-	 irILuNpPN/+Wv1FrkUGgMyxd+d/QABeUU6LhMKNH4yRpDpoYG7R4C5hZcdsme1/nqV
-	 Qyvq/zT/vj8NA==
-Date: Wed, 7 May 2025 18:20:47 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com,
-	rafael@kernel.org, lenb@kernel.org, akpm@linux-foundation.org,
-	alison.schofield@intel.com, rrichter@amd.com, bfaccini@nvidia.com,
-	haibo1.xu@intel.com, david@redhat.com, chenhuacai@kernel.org,
-	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	chenbaozi@phytium.com.cn, loongarch@lists.linux.dev
-Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
-Message-ID: <aBt6T2hbiFBeFofE@kernel.org>
-References: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S03gyzyH"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22423adf751so80062275ad.2;
+        Wed, 07 May 2025 08:21:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746631285; x=1747236085; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FHYXpGSD8xf0POifLdqzvkcg78XfISduLF2AQceCFVg=;
+        b=S03gyzyHAop54EyMzDzN/4TznHBg6eXllPGcydI2FEHRIu8/UIrAAj1CyaeIwRnhZr
+         4JXE8PKQD6hNlmYBNppGb/qefv7KNuR4VCDx64y5Aef5XXqr1Ev39diFUX/m/Slrlo9L
+         iumhfTni1ckZeJfoxqs4s0OT5lFLTkq4iM0WvtZNGcP5HZk95QrdFYlXtYrz3SCyJzU6
+         eItJHXfGpiJ+LqwIZmU/SAbarDgok28jcafN8Sh5aTi6LInVm19nJNrd+yKijzeGK4zn
+         XU7jAjaUCgJWOJifr1hCmaAxGUcksBUdV26OzpUSj3UqQo9yL6vIxVj4gOfqUXtpHlSR
+         02SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746631285; x=1747236085;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FHYXpGSD8xf0POifLdqzvkcg78XfISduLF2AQceCFVg=;
+        b=eMusnHs6NpcQYmzn9xwaBRJmRvjtGfYNDBCitK19pI8jgBU3TlySajDHeWU9ARO1vH
+         wjWI5rOVVA6P0wnovHwNYrmLh4IjMOyo5+8d6MadmJPcXUWHFMSF5viK7s6cKL/kdSAN
+         rsYHKG6X7iyr0OCarmYWzvSC5mvQQ1JHxzvw5AH69aRQtlQnUGacDsWVQ6jPSWq7fi5Q
+         p+G+kuYiI4lraFALsHhbCU6idRIuXg9UFUOBaEIZRKRG9JBuRhyhxsDSudwUsT23Gb0u
+         OUVqj4DPB8i1Zc36D39clY5WG95K72iDexCI52vnbdjGYSj0l6OGwEmWXHwo9jxNXdSR
+         ztPw==
+X-Forwarded-Encrypted: i=1; AJvYcCW0kAWsLGFFiBQ8mxPgXiom4TiUf1hBaGCJx0oMaapatHzy8xEubswOM0gEeV9IrHaIOy0AJvjww9e7REE=@vger.kernel.org, AJvYcCWxCi01+2Ty6TgjbCGZe4VIyPMLMIbRpueRumP4/lQBrlrsXBIoef75Zjp4EY5v6r8XJzThke9M@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxd7g6SDcnmixPsKyC++U7ysITcMQsvss8rrpYGdHKPhkW1/jF1
+	fmeMur1hTzpftro7fjf9xFCY61EVkWGhMUwITVU6/ziAra4n+fHD
+X-Gm-Gg: ASbGncsOWtezl7+IXr+LGX1z5db/OQDzf4b6AHIaIBGkMdE8n73e85cwIYFbtKExXqo
+	tkuTiFFgkeYV/h2QvHzNvys3uSyRnIGeYR0tQAAQYdtVVF7Zqt44QbN/sQR/vD3CBbUE8iZFCrL
+	lmvwdvqCu0RHIa+0cZ/suD2sF+xVOtW+tE5KxKdqUga+sSb006Lu3KyZf8qP2+74wQC9WjSFPpM
+	Ne2bdj8oOR6OeLjI5mfiRD7vygqUfyr5OQCObMG9JSY7ZsmOntVZ9VLohxFQK3MouuE7u8+OaY/
+	AGm0t8n0zw5dczZXv75CPvPyu72D/s6lIUxy/Y2ZnoANFP2eO7DDzw==
+X-Google-Smtp-Source: AGHT+IHFUiFNkkCbXkCtoDYGospKz+U/fHm+dGtocIkZN5tVhCqe60E9zpNrlEWkcod4loYukr8TJQ==
+X-Received: by 2002:a17:903:198d:b0:224:24d3:60f4 with SMTP id d9443c01a7336-22e5ea792a6mr49831435ad.15.1746631284997;
+        Wed, 07 May 2025 08:21:24 -0700 (PDT)
+Received: from localhost.localdomain ([49.37.223.8])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-22e15228f62sm94771405ad.168.2025.05.07.08.21.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 08:21:24 -0700 (PDT)
+From: Abdun Nihaal <abdun.nihaal@gmail.com>
+To: shshaikh@marvell.com
+Cc: Abdun Nihaal <abdun.nihaal@gmail.com>,
+	manishc@marvell.com,
+	GR-Linux-NIC-Dev@marvell.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	rajesh.borundia@qlogic.com,
+	sucheta.chakraborty@qlogic.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net] qlcnic: fix memory leak in qlcnic_sriov_channel_cfg_cmd()
+Date: Wed,  7 May 2025 20:51:00 +0530
+Message-ID: <20250507152102.53783-1-abdun.nihaal@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 06, 2025 at 02:22:45PM +0800, Yuquan Wang wrote:
-> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
-> with the expectation that numa_cleanup_meminfo moves them to
-> numa_reserved_meminfo. There is no need for that indirection when it is
-> known in advance that these unpopulated ranges are meant for
-> numa_reserved_meminfo in support of future hotplug / CXL provisioning.
-> 
-> Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
-> ranges directly.
-> 
-> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+In one of the error paths in qlcnic_sriov_channel_cfg_cmd(), the memory
+allocated in qlcnic_sriov_alloc_bc_mbx_args() for mailbox arguments is
+not freed. Fix that by jumping to the error path that frees them, by
+calling qlcnic_free_mbx_args().
 
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Fixes: f197a7aa6288 ("qlcnic: VF-PF communication channel implementation")
+Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
+---
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-> ---
-> 
-> Changes in v2 (Thanks to Dan & Alison):
-> - Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
-> - Add comments to describe the usage of numa_add_reserved_memblk()
-> - Updating the commit message to clarify the purpose of the patch
-> 
-> By the way, "LoongArch: Introduce the numa_memblks conversion" is in linux-next.
-> 
->  drivers/acpi/numa/srat.c     |  2 +-
->  include/linux/numa_memblks.h |  1 +
->  mm/numa_memblks.c            | 22 ++++++++++++++++++++++
->  3 files changed, 24 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> index 0a725e46d017..751774f0b4e5 100644
-> --- a/drivers/acpi/numa/srat.c
-> +++ b/drivers/acpi/numa/srat.c
-> @@ -453,7 +453,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  		return -EINVAL;
->  	}
->  
-> -	if (numa_add_memblk(node, start, end) < 0) {
-> +	if (numa_add_reserved_memblk(node, start, end) < 0) {
->  		/* CXL driver must handle the NUMA_NO_NODE case */
->  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
->  			node, start, end);
-> diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
-> index dd85613cdd86..991076cba7c5 100644
-> --- a/include/linux/numa_memblks.h
-> +++ b/include/linux/numa_memblks.h
-> @@ -22,6 +22,7 @@ struct numa_meminfo {
->  };
->  
->  int __init numa_add_memblk(int nodeid, u64 start, u64 end);
-> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
->  void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
->  
->  int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
-> diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
-> index ff4054f4334d..541a99c4071a 100644
-> --- a/mm/numa_memblks.c
-> +++ b/mm/numa_memblks.c
-> @@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
->  	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
->  }
->  
-> +/**
-> + * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
-> + * @nid: NUMA node ID of the new memblk
-> + * @start: Start address of the new memblk
-> + * @end: End address of the new memblk
-> + *
-> + * Add a new memblk to the numa_reserved_meminfo.
-> + *
-> + * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
-> + * against memblock_type information and moves any that intersect reserved
-> + * ranges to numa_reserved_meminfo. However, when that information is known
-> + * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
-> + * to numa_reserved_meminfo directly.
-> + *
-> + * RETURNS:
-> + * 0 on success, -errno on failure.
-> + */
-> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
-> +{
-> +	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
-> +}
-> +
->  /**
->   * numa_cleanup_meminfo - Cleanup a numa_meminfo
->   * @mi: numa_meminfo to clean up
-> -- 
-> 2.34.1
-> 
-
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c
+index 28d24d59efb8..d57b976b9040 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c
+@@ -1484,8 +1484,11 @@ static int qlcnic_sriov_channel_cfg_cmd(struct qlcnic_adapter *adapter, u8 cmd_o
+ 	}
+ 
+ 	cmd_op = (cmd.rsp.arg[0] & 0xff);
+-	if (cmd.rsp.arg[0] >> 25 == 2)
+-		return 2;
++	if (cmd.rsp.arg[0] >> 25 == 2) {
++		ret = 2;
++		goto out;
++	}
++
+ 	if (cmd_op == QLCNIC_BC_CMD_CHANNEL_INIT)
+ 		set_bit(QLC_BC_VF_STATE, &vf->state);
+ 	else
 -- 
-Sincerely yours,
-Mike.
+2.47.2
+
