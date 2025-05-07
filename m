@@ -1,31 +1,25 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BE21C6FF5
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 10:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C439E4414;
+	Wed,  7 May 2025 10:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746614435; cv=none; b=t5wACzNPreGPhFZLTkMOkoJ89ejQg48k0BXfbsYkQNxagt7LwjHPbJghRWwGmmokFgPgSxhcHPCQntEISMCE3Ahctc4OJ05l0UPfauHY3+RdHrELTpoqdgLB+R0pl+i2MRQaimy3osthpEl2WDrxBHon0kJ+8Rt1mlkEjKqhOio=
+	t=1746614555; cv=none; b=HviLTxEAm7o3XDV1Ad2uhqWT5+VAZhgt2wCBKTClAs/qf53Dv1pzdxPu2rsZW7/xqklNxRhKnFqG3eor8Nrxt30SAvzU1StLQmx+wvsFG/Or6/aOO7xK0joyZ592td7ZWRKq56YuWqUNlnuPbOaf0PxHAOcuKMzdkGyS6lpMwqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746614435; c=relaxed/simple;
-	bh=6/fyKXdJ4DvdgGCJD0Nlf2ars3Nx3AG135w4Nl37rk0=;
+	s=arc-20240116; t=1746614555; c=relaxed/simple;
+	bh=K7FRUYsKa68Pm5CEDV96iYy58lhLu7ZJV05L7Jo9o1c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MELebdxK3uuA7/ID/jMVN+En78saaqY5i5sXB7njOr6exoO/bWUxQKYYig4vZFzEnsyyIhv4bBIBN4dTdEnhunTu9L1wHtSZ9zHPOUwQIVKKL86ZdDvdc7nawCugwC0iQ3NIrOPagR7f5uxFXrrV8tlICb6zzdJmVYtuVHZv/oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 547AePvw062699;
-	Wed, 7 May 2025 19:40:25 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 547AeOBM062693
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Wed, 7 May 2025 19:40:24 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <9c68743f-5efa-4a77-a29b-d3e8f2b2a462@I-love.SAKURA.ne.jp>
-Date: Wed, 7 May 2025 19:40:21 +0900
+	 In-Reply-To:Content-Type; b=r5ebBKuPkFwMIUw4F0KjQe6vmTgqI71eTegaJ/DXcHMB1TuBrN3vCrbGS2wzvCS3I+Y5dM3SzZ3BMXTJRHMXTKO7VfKsntqREs0l+7cK2dnslMqT45XgLs6mB0vRRIqPgbsYSP9TsuuMRCItJvqzDU0OVq0GxE4aOOBdSolAl4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0016B339;
+	Wed,  7 May 2025 03:42:22 -0700 (PDT)
+Received: from [10.1.30.69] (unknown [10.1.30.69])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 04BF93F5A1;
+	Wed,  7 May 2025 03:42:29 -0700 (PDT)
+Message-ID: <54a21b12-2b17-4e0a-9cbf-f68406fb003a@arm.com>
+Date: Wed, 7 May 2025 11:42:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,46 +27,187 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] lsm: introduce security_lsm_manage_policy hook
-To: =?UTF-8?Q?Maxime_B=C3=A9lair?= <maxime.belair@canonical.com>,
-        linux-security-module@vger.kernel.org
-Cc: john.johansen@canonical.com, paul@paul-moore.com, jmorris@namei.org,
-        serge@hallyn.com, mic@digikod.net, kees@kernel.org,
-        stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
-        takedakn@nttdata.co.jp, linux-api@vger.kernel.org,
-        apparmor@lists.ubuntu.com, linux-kernel@vger.kernel.org
-References: <20250506143254.718647-1-maxime.belair@canonical.com>
- <20250506143254.718647-3-maxime.belair@canonical.com>
-Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <20250506143254.718647-3-maxime.belair@canonical.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Anti-Virus-Server: fsav301.rs.sakura.ne.jp
-X-Virus-Status: clean
+Subject: Re: [PATCH v8 17/43] arm64: RME: Handle RMI_EXIT_RIPAS_CHANGE
+Content-Language: en-GB
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
+ Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
+ <aneesh.kumar@kernel.org>
+References: <20250416134208.383984-1-steven.price@arm.com>
+ <20250416134208.383984-18-steven.price@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250416134208.383984-18-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 2025/05/06 23:32, Maxime Bélair wrote:
-> diff --git a/security/lsm_syscalls.c b/security/lsm_syscalls.c
-> index dcaad8818679..b39e6635a7d5 100644
-> --- a/security/lsm_syscalls.c
-> +++ b/security/lsm_syscalls.c
-> @@ -122,5 +122,10 @@ SYSCALL_DEFINE3(lsm_list_modules, u64 __user *, ids, u32 __user *, size,
->  SYSCALL_DEFINE5(lsm_manage_policy, u32, lsm_id, u32, op, void __user *, buf, u32
->  		__user *, size, u32, flags)
->  {
-> -	return 0;
-> +	size_t usize;
+On 16/04/2025 14:41, Steven Price wrote:
+> The guest can request that a region of it's protected address space is
+> switched between RIPAS_RAM and RIPAS_EMPTY (and back) using
+> RSI_IPA_STATE_SET. This causes a guest exit with the
+> RMI_EXIT_RIPAS_CHANGE code. We treat this as a request to convert a
+> protected region to unprotected (or back), exiting to the VMM to make
+> the necessary changes to the guest_memfd and memslot mappings. On the
+> next entry the RIPAS changes are committed by making RMI_RTT_SET_RIPAS
+> calls.
+> 
+> The VMM may wish to reject the RIPAS change requested by the guest. For
+> now it can only do with by no longer scheduling the VCPU as we don't
+> currently have a usecase for returning that rejection to the guest, but
+> by postponing the RMI_RTT_SET_RIPAS changes to entry we leave the door
+> open for adding a new ioctl in the future for this purpose.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+> Changes since v7:
+>   * Rework the loop in realm_set_ipa_state() to make it clear when the
+>     'next' output value of rmi_rtt_set_ripas() is used.
+> New patch for v7: The code was previously split awkwardly between two
+> other patches.
+> ---
+>   arch/arm64/kvm/rme.c | 88 ++++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 88 insertions(+)
+> 
+> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+> index bee9dfe12e03..fe0d5b8703d2 100644
+> --- a/arch/arm64/kvm/rme.c
+> +++ b/arch/arm64/kvm/rme.c
+> @@ -624,6 +624,65 @@ void kvm_realm_unmap_range(struct kvm *kvm, unsigned long start,
+>   		realm_unmap_private_range(kvm, start, end);
+>   }
+>   
+> +static int realm_set_ipa_state(struct kvm_vcpu *vcpu,
+> +			       unsigned long start,
+> +			       unsigned long end,
+> +			       unsigned long ripas,
+> +			       unsigned long *top_ipa)
+> +{
+> +	struct kvm *kvm = vcpu->kvm;
+> +	struct realm *realm = &kvm->arch.realm;
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +	phys_addr_t rd_phys = virt_to_phys(realm->rd);
+> +	phys_addr_t rec_phys = virt_to_phys(rec->rec_page);
+> +	struct kvm_mmu_memory_cache *memcache = &vcpu->arch.mmu_page_cache;
+> +	unsigned long ipa = start;
+> +	int ret = 0;
 > +
-> +	if (get_user(usize, size))
-> +		return -EFAULT;
+> +	while (ipa < end) {
+> +		unsigned long next;
 > +
-> +	return security_lsm_manage_policy(lsm_id, op, buf, usize, flags);
->  }
+> +		ret = rmi_rtt_set_ripas(rd_phys, rec_phys, ipa, end, &next);
+> +
+> +		if (RMI_RETURN_STATUS(ret) == RMI_SUCCESS) {
+> +			ipa = next;
+> +		} else if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
+> +			int walk_level = RMI_RETURN_INDEX(ret);
+> +			int level = find_map_level(realm, ipa, end);
+> +
+> +			/*
+> +			 * If the RMM walk ended early then more tables are
+> +			 * needed to reach the required depth to set the RIPAS.
+> +			 */
+> +			if (walk_level < level) {
+> +				ret = realm_create_rtt_levels(realm, ipa,
+> +							      walk_level,
+> +							      level,
+> +							      memcache);
+> +				/* Retry with RTTs created */
 
-syzbot will report user-controlled unbounded huge size memory allocation attempt. ;-)
+minor nit: Do we need to add a comment here, saying, we stop processing
+the request if we run out of RTT pages in this go and Realm could retry
+it.
 
-This interface might be fine for AppArmor, but TOMOYO won't use this interface because
-TOMOYO's policy is line-oriented ASCII text data where the destination is switched via
-pseudo‑filesystem's filename; use of filename helps restricting which type of policy
-can be manipulated by which process.
+> +				if (!ret)
+> +					continue;
+> +			} else {
+> +				ret = -EINVAL;
+> +			}
+> +
+> +			break;
+> +		} else {
+> +			WARN(1, "Unexpected error in %s: %#x\n", __func__,
+> +			     ret);
+> +			ret = -ENXIO;
+> +			break;
+> +		}
+
+minor nit: Following from Gavin's comment on another patch, could
+switch() make the above code more readable and remove the continue; ?
+
+		switch (RMI_RETURN_STATUS(ret)) {
+		case RMI_SUCCESS:
+			ipa = next;
+			break;
+		case RMI_ERROR_RTT: {
+
+		
+		}
+			break;
+		default:
+			WARN(..);
+			ret = -ENXIO;
+			goto out;
+		}
+
+I am fine either way.
+
+> +	}
+> +
+
+out:
+
+> +	*top_ipa = ipa;
+> +
+> +	if (ripas == RMI_EMPTY && ipa != start)
+> +		realm_unmap_private_range(kvm, start, ipa);
+> +
+> +	return ret;
+> +}
+> +
+>   static int realm_init_ipa_state(struct realm *realm,
+>   				unsigned long ipa,
+>   				unsigned long end)
+> @@ -863,6 +922,32 @@ void kvm_destroy_realm(struct kvm *kvm)
+>   	kvm_free_stage2_pgd(&kvm->arch.mmu);
+>   }
+>   
+> +static void kvm_complete_ripas_change(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm *kvm = vcpu->kvm;
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +	unsigned long base = rec->run->exit.ripas_base;
+> +	unsigned long top = rec->run->exit.ripas_top;
+> +	unsigned long ripas = rec->run->exit.ripas_value;
+> +	unsigned long top_ipa;
+> +	int ret;
+> +
+> +	do {
+> +		kvm_mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache,
+> +					   kvm_mmu_cache_min_pages(vcpu->arch.hw_mmu));
+> +		write_lock(&kvm->mmu_lock);
+> +		ret = realm_set_ipa_state(vcpu, base, top, ripas, &top_ipa);
+> +		write_unlock(&kvm->mmu_lock);
+> +
+> +		if (WARN_RATELIMIT(ret && ret != -ENOMEM,
+> +				   "Unable to satisfy RIPAS_CHANGE for %#lx - %#lx, ripas: %#lx\n",
+> +				   base, top, ripas))
+> +			break;
+> +
+> +		base = top_ipa;
+> +	} while (top_ipa < top);
+> +}
+> +
+
+Rest looks good to me.
+
+Suzuki
+
 
