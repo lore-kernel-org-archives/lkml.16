@@ -1,135 +1,116 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F7120469E;
-	Wed,  7 May 2025 20:56:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6ACF17E4;
+	Wed,  7 May 2025 20:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746651382; cv=none; b=j/aFe/RI71vYPCmU+PtcxY9oPNbdOeIbMlpA5uy/XUKLqgUwoiCBPFZ7++G7qplr06sU/rK2Go9s8qf/TgjD+fg9wPTeN6gkwLy3farBboiz/euEYvwoYTsM/eF2wdHWyfujbQGMSDaAFCDfapRFO8T9UEdDHs0iRCueQrIBX0U=
+	t=1746651506; cv=none; b=WkZsZts+T4sY5vVLBJvOOuxXvePIb4YDtOFCsddgo0yWnBtD0aB3lOWxmwTN9IdpGjF/GRS1MtlM/FRPIZEyN05XMxl1H2HJaaKDYYlylUMoZfVG7GHkEVQBP1QetLRmPuXKgl47hKmnQbRrUn8Fz8kPbDn2M/Cvuk/nCUgQxAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746651382; c=relaxed/simple;
-	bh=aATQNiNXp+XTR8me3RrN1Ea00RjeRKkln7z1qZu1NSg=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=cgubEOpSQQICXJ7b25RaokdRvpdVLsDWyUqV56lS/hTiZGl78dJ5q+mnto5NVlQsA5/6ukdyNJj0M+ImLGHqtoabH8IFaXjpSFyaTAcLJzrIS13LqAullCEsEGjyyKXqbRznidc9Y+1gV53F45Kh0wdX9AddH3ApkfTnVlt9odw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bX4BaSXd; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746651506; c=relaxed/simple;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nCr2ZqociS0tTx3tPkuukNhl8cnnf/fN2bv6RRWEZ0sdl8hhuZesHsaKusCz4LH10ztvehwNIFUC9O4ytXNMGya31klQjdMPr/B8Pj4GbD+0530QoRC73gN/f5wXE5E1fDo3TmVvRiiN74XycLntksetfHZmtpkPIBeUF/y+bX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=WuuGgEbx; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bX4BaSXd"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c55500cf80so27863885a.1;
-        Wed, 07 May 2025 13:56:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746651380; x=1747256180; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X056WfmD4BdpGkuIiY+waO1LrO03BTEViDGdRU+E8S0=;
-        b=bX4BaSXdHZ7QENSrMjHR209TsgAWQ1t+yfB4ttJ10xs+aFQ/za7aWFgbVnvN2CdBqM
-         ACdmoKfS/VxHW8UIYmLg8YzNNPNx6O6CoErUobN4vE8MyZuk5LIlVErqKaqf3oB3gTUj
-         SMfNbg4c6TGn5MDcTg8SaWz+s9REfT3n7q0GEK9sRNv1ISZUUYyYElSAzvHv55NDuCof
-         3xt+B0X61/sGHMxYNFdSpCY3/TtMjYDKpvpO8VUwHJ9721mkbn+YCcc2dQvM6p8lxQTw
-         TVjgFdOOa/s7RNaocLqbLeJhbmjfcWaUEm5BYoA01MwUJxE5hIr3xmUAsqQ7fw66v7Fr
-         VK+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746651380; x=1747256180;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=X056WfmD4BdpGkuIiY+waO1LrO03BTEViDGdRU+E8S0=;
-        b=XggsaOr/cF+Qy4L01itWT2aR/6xGsQsp6rqecKe7a691eIPLAV7o/oy8e+xNefXyYy
-         vu71+Vkv7DM3uLm+mt+Y1IOMtLjcZ8QTUOy3QijHxWbXjDwZvXkZwaFq7fTygPGNysBZ
-         aT9ncmHmN6vcZo5qJvriIm/TxcAdy+urB7QiosEGE+Pq5fljPqwDgkagMQ80uCjiIGty
-         nwP8uFiCDO3HGKHuWKBQ+wEgpBOWdP7U68XMMVPkCPsWQG6vyas31S8bEg8zlxVpNYwA
-         tLAjvAX3m/LC/MzQew3ypPrfk/BNyRQYELrSqslYDKTAsX4J+0oWV3U65d7xyclpfQBI
-         mPHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKzwXBndBhvBr4lAp3lBNhO7XWmgyeTZU2oYUToosrI96BVERo250w0T13N3cgw7Lr2H+0zwKG1dbf7fV9@vger.kernel.org, AJvYcCUanFGB66ZcJpecoDcA6x27nhLf9JnLMi0n2ki9WnHIDpQ46zEYPlCpppLEFl+iblSE4j0=@vger.kernel.org, AJvYcCWz0fjEI9PY3BJkROzxJnsu9zZ/pO3ViZl0b06+l7b5w9p/vHTxtXinSI8Qhf8EkYLnQS4HTF7b@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/rBoiUiUE0NVXBXYMCNtCsmszTg5u24nCeMGJxhsAx4dAnw2P
-	YwlaNjSF6mXaBfrbavQZi39eJWgOWoYSYS5MNTqMjCOpvSVb97FO
-X-Gm-Gg: ASbGnctRWCS2swkBi0EICoIKtwudMcgFypEBqKluwJ+KPSP5YRbVWajt6wkRNu613n/
-	wXYTMPtqVV95cLPC7rpOG1j03iSEwlJZas3vnP8/Ccli2GQrdHavhsShhNGyAmihKNJ65T/znL6
-	KicMNJmVJJlpaoskQuXgHvhPutG7YAY9WBemk5Dz7yUfkwvQJTPKUqqEbXdzQrDTaymXG439z/E
-	X9d44ENs6WdmZsk1djAOd90FvPBa8VBkPh9JH7OeBv2bb3an9FvoF4CqLZqSuLI21dD0Y0gjZ2T
-	r2BSQSvk7Y8MMeHHiId5ywgJ9zTS9yOkIvtvEjZIsrUF+Fht9RFk21EEqkYUSAi7qfTv1rREJ8P
-	7TujirbdSGF6QuxlOpPKT
-X-Google-Smtp-Source: AGHT+IHwxXf2rsnqLoEUxHHKlGLyfl0YEL3qVNBGGTiecI/ahMWqeskO86K7jYc2HpgCv53H3FU24Q==
-X-Received: by 2002:a05:620a:2a0f:b0:7cc:aedc:d0c1 with SMTP id af79cd13be357-7ccf9ddadcbmr126421785a.5.1746651380176;
-        Wed, 07 May 2025 13:56:20 -0700 (PDT)
-Received: from localhost (141.139.145.34.bc.googleusercontent.com. [34.145.139.141])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7caf75b8736sm211224885a.81.2025.05.07.13.56.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 13:56:19 -0700 (PDT)
-Date: Wed, 07 May 2025 16:56:19 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Jon Kohler <jon@nutanix.com>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Jason Wang <jasowang@redhat.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- Jesper Dangaard Brouer <hawk@kernel.org>, 
- John Fastabend <john.fastabend@gmail.com>, 
- netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org
-Cc: Jon Kohler <jon@nutanix.com>
-Message-ID: <681bc8f326126_20e9e6294b1@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20250507161912.3271227-1-jon@nutanix.com>
-References: <20250507161912.3271227-1-jon@nutanix.com>
-Subject: Re: [PATCH net-next] tun: use xdp_get_frame_len()
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="WuuGgEbx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1746651496; x=1747256296; i=rwarsow@gmx.de;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=WuuGgEbxK6eW47+i4u9bdSVdWyPdfMmMgY900vSNdsu/LeG/qJH2/85qP/MiC2v2
+	 KlE6EaxjYMF0huVxFgieAjk7mdgSlR5Uvh9YuIdbs893FjCi+W5ZcmdRUYQr9M8T3
+	 OseLgonYwEdwTIZZAtFT7x/byrzCJGuPYzswXXhXrDtcqfxLaD+1ar4cUeLVnvkwy
+	 vFq04TPxfhOOSWboYtsujX+bMweooZcZ7Dl7DHyButCKwJVhoGlSnSSCK7LV+8keT
+	 SFnNzRg1U2UV77LRgnzEppTRheBjNV/+FgpTHBkDkwlDzMTTcOOrcQj9J07ty2C+Y
+	 Tzmm8dSJQNDG5jb0OQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.200.20] ([46.142.34.53]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MYvY2-1uYkfY0bWS-00VQGH; Wed, 07
+ May 2025 22:58:16 +0200
+Message-ID: <b1f3a530-e409-44a6-afcd-94810bffc347@gmx.de>
+Date: Wed, 7 May 2025 22:58:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.14 000/183] 6.14.6-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250507183824.682671926@linuxfoundation.org>
+From: Ronald Warsow <rwarsow@gmx.de>
+Content-Language: de-DE, en-US
+In-Reply-To: <20250507183824.682671926@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:1C2B/l1POeCqXlGcOcZ6PspWZE1x5i37JhwY4B6QEOMA0Msd1ru
+ seVOLvWt/dZA3rYPcc56MAVhQ+9R/epVwwMua8gRDvodSzt815QUS60cJ/A7XiXxIPR5vJ7
+ 2zvOnOYsXTuqHagyp1YI5ZQU66LQeEm2JU89/snhieEbu9b/Oka0OhXg82DldxbcCk/G8kK
+ 6Qt1bc5QBo0CQSQkIWb7w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:cBXX96OWt3I=;WIbHqEggykxn1cSdRIPHCVv6k7c
+ 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
 
-Jon Kohler wrote:
-> Use xdp_get_frame_len helper to ensure xdp frame size is calculated
-> correctly in both single buffer and multi buffer configurations.
+Hi Greg
 
-Not necessarily opposed, but multi buffer is not actually possible
-in this code path, right?
+no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
-tun_put_user_xdp only copies xdp_frame->data, for one.
+Thanks
 
-Else this would also be fix, not net-next material.
-> 
-> Signed-off-by: Jon Kohler <jon@nutanix.com>
-> ---
->  drivers/net/tun.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-> index 7babd1e9a378..1c879467e696 100644
-> --- a/drivers/net/tun.c
-> +++ b/drivers/net/tun.c
-> @@ -1993,7 +1993,7 @@ static ssize_t tun_put_user_xdp(struct tun_struct *tun,
->  				struct iov_iter *iter)
->  {
->  	int vnet_hdr_sz = 0;
-> -	size_t size = xdp_frame->len;
-> +	size_t size = xdp_get_frame_len(xdp_frame);
->  	ssize_t ret;
->  
->  	if (tun->flags & IFF_VNET_HDR) {
-> @@ -2579,7 +2579,7 @@ static int tun_ptr_peek_len(void *ptr)
->  		if (tun_is_xdp_frame(ptr)) {
->  			struct xdp_frame *xdpf = tun_ptr_to_xdp(ptr);
->  
-> -			return xdpf->len;
-> +			return xdp_get_frame_len(xdpf);
->  		}
->  		return __skb_array_len_with_tag(ptr);
->  	} else {
-> -- 
-> 2.43.0
-> 
-
-
+Tested-by: Ronald Warsow <rwarsow@gmx.de>
