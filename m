@@ -1,141 +1,122 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C66D11C54A2
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 05:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5F91DF756;
+	Wed,  7 May 2025 05:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746597116; cv=none; b=sKbogRdAi1+DH61hupa7DUR5L4bxDjpKiQOTv+kWfqzQQ5Bm2MGbDg025f2H9004Yx2LOOtuLDY4FgU4hZO9bhGg++GAz0BHSCYznwRrBSmvbAPgfDhorkf4QRlFa6TIjh8Fzqb13MT8l+dOqJGlky4paUDcCFCxYmy82JVG2C0=
+	t=1746597138; cv=none; b=ul6nZygDG3HZT1Jd3LK/q0o2lmX2AmSLk8wal7xH11Lgq3snQdpg2Q7xBfKU1cFmsPoHpjPi6F3ia0RGwjKkroHxG0VHJDIRJvnRK/0FlOwr2sA+W3jJ9oWTWBWkyHO5NUr/miuw4ypxD694WvyAaleTgQdqjIzKiz8Y3404Pl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746597116; c=relaxed/simple;
-	bh=nSOv5rQ5SxT1Vqqk9mSgLjHBzWa93SRsnwYLo5JvTNE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qZawY/ww4oJ5YQWwtKu5VZOxGj5TMmHidN27hQwLCAuuN2zpHb6qQHaWdjnczZL8x4kPJrGIDBpSzOoiIjOTsClNxj7DhI6IyS78TLgdSzstxV4T6CXamqGi7D23YWT5wDlWSzc8IUlt2p6+tW50+yqD0MrCbddA2ysD+py8Trg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C5C92F;
-	Tue,  6 May 2025 22:51:42 -0700 (PDT)
-Received: from [192.168.0.12] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 910583F5A1;
-	Tue,  6 May 2025 22:51:48 -0700 (PDT)
-Message-ID: <b93cb084-de85-47ff-856d-c18556ec00fa@arm.com>
-Date: Wed, 7 May 2025 11:21:45 +0530
+	s=arc-20240116; t=1746597138; c=relaxed/simple;
+	bh=YRR7ppD//cez0xtxj2iwS8SZwAI28Pj9uGenogTa3es=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gMAwdYavfh+ZYuHNB+3cGzjMMJ8iKUKGxPR8NkkcnQCHfLekwwltPF/uv0auiDWY9/Ziapivoy/U3ylIM1Uch1CU5uxRi4+F53rpCWyX4u5vUobfpDf4EqVZ10Y7zcS/LrxrBjRiBrXjSCVuMIgIxelGsiE8ucgXKLekCUzBQc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I/1qNw6O; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/1qNw6O"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2241053582dso101335735ad.1;
+        Tue, 06 May 2025 22:52:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746597136; x=1747201936; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=smhU12W8dRI9QGxOei4hf/4siEfSpDXyjFzqR1L2Huc=;
+        b=I/1qNw6OiZGN1GTGNBHw69dhll/KdjqyHIk6y5FQnIWRh4DR3tZpzqE1iqqz6CrN2R
+         WaYBmzN4p3E37uhPHl9nz+DVgEVInKokGcrknEuPzvMLiOBfNTvpHKvsFWKVHnbkEplp
+         wCXnjSCsjb85ZL6XsShh5cWXj9yWGx0jG503akg0OC7Gx67R3rzlVIpmXhHiJH828pNp
+         GmS2OTZkhuJ3LoFH0nEfgdGQo2JfRP+iLHFnryWKkmEHO5vGGQ/v4MwNC9EoAjPQ6dNA
+         bKTRek+hAkg7CJMjF/uM1Be7A+zVqp6ym+XjH9Uv37PFFop791HNeOqMgXvOJB3KJYIh
+         u6VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746597136; x=1747201936;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=smhU12W8dRI9QGxOei4hf/4siEfSpDXyjFzqR1L2Huc=;
+        b=MTfbBzxK/3HMtR69+1R+4Kbgnl8Xznsnz9pAMHuXU7kOlp6xqs+kab7VJ5uDViyii3
+         rAIm7dkeGAxcVLVxQBNcBIHVgRAHdHzPF4w+cz78sRRxSvVI6WVVHXnqZ0Ea2LKLCad1
+         2iW1HykiuRK+70gjEha6m1Mklr9M3AJT0RTZyIczoJj/zmx0hNVtkGjW27Vq1YmeYgKp
+         nLwvlRUYIvKanfcRBsDCEv8mXB7dPAgPmkoKN5G7va4U10IWyHZPWdlSlBT0i+ZCtxH5
+         Go79WL/hNQ3YckdXpuiZlUgs5bB4LfVrqHbQ+f8cXU9jyH/xa4tvsW0HvHN4OkXJi8Kt
+         lD5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWDeXq65Y6+ioeMzPG78JcXsA/++OuGYK50XsJpjNzqEBM3YUZn9JsgMo2Lgrws70oxo2gVSWW51TQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh+nX4AgAl9XJYRP4gzjKD5OthqBZNOFzUC/8v2+KvLb0z2OmN
+	HuoWsdokCTupsf/32DrxJ/kryTXmcfLlXNMUUpfHfYStKLdQ75WM
+X-Gm-Gg: ASbGncvXdaQacxKqBlHrpWCq/dXcy8CgJdlE6TG4PFo97i2j9LMPnDc9sDlJN8gndYo
+	METnJnHgukdKfIE9jfqeiJ9kA/tfeJxPgG8jOVtrB5PqCfxPq0VB7xpEuVrvdeHQUaZOHCK4Ax2
+	SiFfSbYEa6DjkY1NbOKr3yB4PlysQeoS9qgH7Mhn7hrRObZUQ8k/uwa24qera6xXI4/CdHr9Yjj
+	Zf/opNeoCY5NDoo4whOAlvhq8+RUJxlMqBKat8yQV2eSTIZdsUQ2Dq0vlqbqLLhftI/n+l5rwzs
+	2Cb5cnRX7txt2lI1/YhezXGm7wXcsQdYCvafn2uU
+X-Google-Smtp-Source: AGHT+IG4eMjifuvSw//N7jcuB1Hkt+eZM8ysGT50OX9zUojTJYnEzLHT3LvwRU4CU2r/W3gkrA7n3g==
+X-Received: by 2002:a17:902:e784:b0:224:283f:a9ef with SMTP id d9443c01a7336-22e5ea70835mr25879645ad.6.1746597135665;
+        Tue, 06 May 2025 22:52:15 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e150eb007sm85307785ad.25.2025.05.06.22.52.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 22:52:15 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 23766423E4D9; Wed, 07 May 2025 12:52:13 +0700 (WIB)
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Frederic Barrat <fbarrat@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Andrew Donnellan <ajd@linux.ibm.com>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Eric Biggers <ebiggers@google.com>,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jan Kara <jack@suse.cz>,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH] Documentation: ioctl-number: Update table intro
+Date: Wed,  7 May 2025 12:51:46 +0700
+Message-ID: <20250507055145.23345-2-bagasdotme@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/9] coresight: Consolidate clock enabling
-To: Leo Yan <leo.yan@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com
-References: <20250423151726.372561-1-leo.yan@arm.com>
- <20250423151726.372561-8-leo.yan@arm.com>
- <08690315-ce0e-4b2e-b85e-d8b9a82f4b11@arm.com>
- <20250506105352.GE177796@e132581.arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250506105352.GE177796@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1641; i=bagasdotme@gmail.com; h=from:subject; bh=YRR7ppD//cez0xtxj2iwS8SZwAI28Pj9uGenogTa3es=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDBlSXyJud70S/rTOKDy+eqbyxWO1Mp/6ZA8vvqNTelWVZ dZCkW96HaUsDGJcDLJiiiyTEvmaTu8yErnQvtYRZg4rE8gQBi5OAZjIv6mMDGsfJr8+Lxe2TWem zgNPO6Wvx3jzbqsaev+b0LflqEJpzWWGvwKnnhgJqX/Mm75ywd71W/sX6BnynztjLGVXX5jV8Un uDgMA
+X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
+Content-Transfer-Encoding: 8bit
 
+Introduction paragraph to the ioctl numbers table states that only
+ioctls in ancient Linux kernel version (v2.6.31) for x86 arch are
+listed. This is inaccurate as the table also lists ioctls from non-x86
+archs and the kernel is continously developed (currently in v6.x).
 
+Update the paragraph accordingly.
 
-On 5/6/25 16:23, Leo Yan wrote:
-> On Mon, May 05, 2025 at 12:58:06PM +0530, Anshuman Khandual wrote:
-> 
-> [...]
-> 
->>> --- a/drivers/hwtracing/coresight/coresight-core.c
->>> +++ b/drivers/hwtracing/coresight/coresight-core.c
->>> @@ -1645,6 +1645,51 @@ int coresight_etm_get_trace_id(struct coresight_device *csdev, enum cs_mode mode
->>>  }
->>>  EXPORT_SYMBOL_GPL(coresight_etm_get_trace_id);
->>>  
->>> +/*
->>> + * Attempt to find and enable programming clock (pclk) and trace clock (atclk)
->>> + * for the given device.
->>> + *
->>> + * The AMBA bus driver will cover the pclk, to avoid duplicate operations,
->>> + * skip to get and enable the pclk for an AMBA device.
->>> + *
->>> + * atclk is an optional clock, it will be only enabled when it is existed.
->>> + * Otherwise, a NULL pointer will be returned to caller.
->>> + *
->>> + * Returns: '0' on Success; Error code otherwise.
->>> + */
->>> +int coresight_get_enable_clocks(struct device *dev, struct clk **pclk,
->>> +				struct clk **atclk)
->>
->> These arguments probably could be arranged better as pclk and atclk are
->> always contained inside 'xxx_drvdata' structure, which could be derived
->> from the 'dev' structure itself, if [dev|platform]_set_drvdata() always
->> ensured to be called earlier.
-> 
-> Seems to me, the conclusion "pclk and atclk ... could be derived from
-> the 'dev' structure itself" is not true.
-> 
-> The reason is the coresight_get_enable_clocks() function is located in
-> the CoreSight core layer, it has no knowledge for driver data
-> definitions (see etmv4_drvdata, funnel_drvdata, etc).  as a result, it
-> cannot directly access the fields "drvdata->pclk" and "drvdata->atclk".
+Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+---
+ Documentation/userspace-api/ioctl/ioctl-number.rst | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-That's correct because all device's drvdata structure definitions are
-local to their drivers and not really available in the core coresight
-layer. Trying to make them available might create more code churn and
-also break the abstraction.
+diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+index 83e5d2abdad694..51269ff250882f 100644
+--- a/Documentation/userspace-api/ioctl/ioctl-number.rst
++++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+@@ -62,9 +62,8 @@ Following this convention is good because:
+ (5) When following the convention, the driver code can use generic
+     code to copy the parameters between user and kernel space.
+ 
+-This table lists ioctls visible from user land for Linux/x86.  It contains
+-most drivers up to 2.6.31, but I know I am missing some.  There has been
+-no attempt to list non-X86 architectures or ioctls from drivers/staging/.
++This table lists ioctls visible from userland for Linux version 6.x+,
++excluding ones from drivers/staging/.
+ 
+ ====  =====  ======================================================= ================================================================
+ Code  Seq#    Include File                                           Comments
 
-I guess then a struct device and two clock double pointers are needed
-for these optional clocks to be assigned and enabled as proposed here.
+base-commit: b91a0cbb6f27ee499e376091e8c8c0ddfd69103c
+-- 
+An old man doll... just what I always wanted! - Clara
 
-> 
->> Currently there are only two instances where a NULL is being passed to
->> indicate that 'atclk' clock is not to be probed or enabled. Could not
->> individual clock requirements be passed in a flag argument instead ?
->>
->> #define CORESIGHT_ENABLE_PCLK	0x1
->> #define CORESIGHT_ENABLE_ATCLK	0x2
->>
->> coresight_get_enable_clocks(struct device *dev, unsigned long flags)
->>
->> - atclk/pclk derived from drdvata which in turn from dev
->> - flags can be checked for pclk/atclk requirements
->>
->> Even better - as atlck is the only optional clock here, it could just
->> have a boolean flag argument to indicate for atclk clock.
->>
->>> +{
->>> +	WARN_ON(!pclk);
->>> +
->>> +	if (!dev_is_amba(dev)) {
->>> +		/*
->>> +		 * "apb_pclk" is the default clock name for an Arm Primecell
->>> +		 * peripheral, while "apb" is used only by the CTCU driver.
->>> +		 *
->>> +		 * For easier maintenance, CoreSight drivers should use
->>> +		 * "apb_pclk" as the programming clock name.
->>> +		 */
->>> +		*pclk = devm_clk_get_enabled(dev, "apb_pclk");
->>> +		if (IS_ERR(*pclk))
->>> +			*pclk = devm_clk_get_enabled(dev, "apb");
->>> +		if (IS_ERR(*pclk))
->>> +			return PTR_ERR(*pclk);
->>> +	} else {
->>> +		/* Don't enable pclk for an AMBA device */
->>> +		*pclk = NULL;
->>> +	}
->>
->> Might be better to invert this conditional check as if (dev_is_amba(dev))
->> for better readability.
-> 
-> Will refine code for this.
-
-Sure
