@@ -1,165 +1,146 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A8928C2A2
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 17:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D0828C020
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 17:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746637316; cv=none; b=fQb9Gieb2BcvD3MVPA7n3eoj23naWwxoHu+KJZmz3yQS/n1eA0XOuhEqsKuzBtBAiaYJWEcGNPrOg42tw2izJBouVb7bDMu5LGWbIdgUVv9jDncR7s2KZoSQzmN5uvi7ZaOTMRHO+9hfVy6Z1stCgjOU33ClYCpjC4SwftrsyQo=
+	t=1746637336; cv=none; b=V4jeONLbW4QtXFGXmH7QgAkIRdr27+ABRKNN2nJFftQZbuHt84gbrWEtbIZzZD3E81EV16rlVnJHnscnsI+diRelwrfhAU/5JJsCR1BKe2DzR3KHHoPesy+iRmKmDCTIbVCIedUcrPXeVaTUn1N8O4pr+GUM0q4WBEFgsHsDIvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746637316; c=relaxed/simple;
-	bh=VRzZAEAI6kBQhdsGc32Wu7dxtOabpXZl0Q/8VndG94M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fnb+YNyOjbfR354AUZ0KhW7ydk89QsOV89adEckji0bnd2GhwI6l7grU3G0mhJtZyKolBzlh7f3wStHLWKeqxmH6Lp3f2zpz3Uebr3/z8+URWFvyv+qPPlKmR+qFOVhbAy4jwexoRYDe9oZYsCFK8nSUvZ7mqfReTktLHWmPKN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=eSa4KocY; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1746637336; c=relaxed/simple;
+	bh=OcE+GoKOw7LhrCuLbrKh/LcbzJpz8rlGel67AsCJzTI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rxMfnL2JyJgmkRoW9Wxfj7HmFvw5q0AtfrINmWqjApxO2Yjb54nnARAMB8BqZ+Us/HSD75XXxadKgFa9+y1bAgKfBJX3n4ncvztU8Za5QSuJu9UFxGGOc0uAvZ+eXjWSq5ESANdMDfN1MDhNPo1H3jQOlfisWKrNo4Xpf45teU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riotgames.com; spf=pass smtp.mailfrom=riotgames.com; dkim=pass (1024-bit key) header.d=riotgames.com header.i=@riotgames.com header.b=IwX7XXVm; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riotgames.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riotgames.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="eSa4KocY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=ZfQuhl755N9ABQ2hDF6Pyo8eByft1E9/Y4DOUPbzRLQ=; b=eSa4KocYubTuaFmW
-	8kSpMbvTFNWz4wNi0bdHijDlUzF//40z7iUECqZje6Uljrtm1u8a9qEcmYkmZbwlTJ4u/2Lb0MHQh
-	z5ol+oJhQ/NGAs0jmmDaZT2nzDU4r2ofhqpIfAsYq8zC2mkuKimlnHlHoJHqvlWGnqBJX7rC+SBla
-	ouvE6JR8aX/6AhDhCZbVcMCaHwjznMi2FbQSs24OsC8/tjYT5FkoxrYB9RVvluAxMOo6eX9BJKAek
-	8XDxAWJuCkbvvBOnxM3td20vSoEJuybvsYTOldeMtROwT4p8uMUpmtN2ofDlGx70EEtM085QHSQML
-	P/DegdxvJ6cdvaJdQg==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1uCi9U-002EIU-0L;
-	Wed, 07 May 2025 17:01:48 +0000
-From: linux@treblig.org
-To: alexander.deucher@amd.com,
-	kenneth.feng@amd.com,
-	christian.koenig@amd.com
-Cc: airlied@gmail.com,
-	simona@ffwll.ch,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH 3/3] drm/amd/pm: Remove remainder of mode2_reset_is_support
-Date: Wed,  7 May 2025 18:01:45 +0100
-Message-ID: <20250507170145.102508-4-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250507170145.102508-1-linux@treblig.org>
-References: <20250507170145.102508-1-linux@treblig.org>
+	dkim=pass (1024-bit key) header.d=riotgames.com header.i=@riotgames.com header.b="IwX7XXVm"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30aa79ee726so171640a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 10:02:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riotgames.com; s=riotgames; t=1746637332; x=1747242132; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=evCH9GiqYG33lbncK47MNfRK8jVnMEAaPU/9KW+jEKQ=;
+        b=IwX7XXVmfZBHK1jv7uFvyWJPfH2Ob6HJJku8lJw8iIdD0Qy/IFOPLz8eL3mT2meOAe
+         C7kXnRyzAekCUrv1sRAizd2SI6LAG2UFeqg8uPtb/Nn3qBvhNAu0Xz+h0sCFkB996HLf
+         t3d0Oy4qyjyx4s0QJjog0S3kCwcuhp7Hbzsl0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746637332; x=1747242132;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=evCH9GiqYG33lbncK47MNfRK8jVnMEAaPU/9KW+jEKQ=;
+        b=loBEKd2KVsFKKR2wP0gyg9Kby+k/Ptr9xVkT38AkODHJOmFu/lNNA5xCAB+x8S0R6x
+         vPLrej1I7elZHJiZ24T0+MRwcP4ENRe+rj4KoKba90/cshIhKV3r8M3mTDYFJ8XiT8ap
+         m9EOWg6h+aP7ki9kAAA05Fce2jhhqUutaHxLEBFa1t8G7TTYOdpEh7/AQtQEff9RwOrC
+         trfuHUc6NvH7oDwQtEKKBipsbf5VpSmbMHFoFJNtjLf4aBYAEEfGbmnHUwztrha5L0fk
+         7hxXZ6EmM3HAu03L6Eiy4ttL7QrjXTSxkuVe2ocEMHvxxrDydrZZs+KIXJOnCC1Hu6yf
+         cLzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUMII+CKr+jhvRcp2At6zNvWvtv3g9MiB9YKuw9rozPRPjTZwu7WrPBBDf2GangBqSmHX4YDsWqnZpd5Ls=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSuYaN/TeDEC5s8rlmY/olJ/A8U7Njr8a/x4ckDJPlBDy2nWTx
+	4Sla+rbnX35JJj/leziugUBDTFF1nUCBZeCsO/cZDyANPZ0y5SzXHH3fFvs20+crrnJIySznVMn
+	aca0KmjGbD1L1Rn7ZPkSHIGa84foRzgdXDHB1zA==
+X-Gm-Gg: ASbGncsWTUpAjKVjbrczw2jnT36Vurg3G3tmGEpz1aPsr90JRwRWtrDO71Nx70+GtEF
+	Mex5I9kOgAsc4szxOAwz7TBPU4q5hH3OaHzitmjf9ehouHbc/JyTw3ubvjIZvOOGDY0y+p3oCjm
+	gi189r7GViwKmhXEB5AWS8gQ==
+X-Google-Smtp-Source: AGHT+IGFj5vERsIsOzMMzWHx4KyiQNS3ACFY3x+qC86Qtz4zl4CEaYY14fFJaSflTT3GMneoxBCaK3B2zsphjb3Nipk=
+X-Received: by 2002:a17:90b:4f46:b0:30a:9025:84d1 with SMTP id
+ 98e67ed59e1d1-30aac191600mr6879065a91.16.1746637332399; Wed, 07 May 2025
+ 10:02:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250506125242.2685182-1-jon@nutanix.com> <aBpKLNPct95KdADM@mini-arch>
+ <681b603ac8473_1e4406294a6@willemb.c.googlers.com.notmuch> <c8ad3f65-f70e-4c6e-9231-0ae709e87bfe@kernel.org>
+In-Reply-To: <c8ad3f65-f70e-4c6e-9231-0ae709e87bfe@kernel.org>
+From: Zvi Effron <zeffron@riotgames.com>
+Date: Wed, 7 May 2025 10:02:00 -0700
+X-Gm-Features: ATxdqUHeYs9_StQV2Ta3ALi0amyLtmj3B1nixRHGF-7WCF8a8jaznKs7hOx7vKA
+Message-ID: <CAC1LvL3nE14cbQx7Me6oWS88EdpGP4Gx2A0Um4g-Vuxk4m_7Rw@mail.gmail.com>
+Subject: Re: [PATCH net-next v3] xdp: Add helpers for head length, headroom,
+ and metadata length
+To: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+	Stanislav Fomichev <stfomichev@gmail.com>, Jon Kohler <jon@nutanix.com>, Jason Wang <jasowang@redhat.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	Jacob Keller <jacob.e.keller@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Wed, May 7, 2025 at 9:37=E2=80=AFAM Jesper Dangaard Brouer <hawk@kernel.=
+org> wrote:
+>
+>
+>
+> On 07/05/2025 15.29, Willem de Bruijn wrote:
+> > Stanislav Fomichev wrote:
+> >> On 05/06, Jon Kohler wrote:
+> >>> Introduce new XDP helpers:
+> >>> - xdp_headlen: Similar to skb_headlen
+>
+> I really dislike xdp_headlen(). This "headlen" originates from an SKB
+> implementation detail, that I don't think we should carry over into XDP
+> land.
+> We need to come up with something that isn't easily mis-read as the
+> header-length.
 
-The previous patch removed smu_mode2_reset_is_support()
-which was the only function to call through the mode2_reset_is_support()
-method pointer.
+... snip ...
 
-Remove the remaining functions that were assigned to it
-and the pointer itself.
+>>> + * xdp_headlen - Calculate the length of the data in an XDP buffer
 
-See discussion at:
-https://lore.kernel.org/all/DM4PR12MB5165D85BD85BC8FC8BF7A3B48E88A@DM4PR12MB5165.namprd12.prod.outlook.com/
+How about xdp_datalen()?
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- drivers/gpu/drm/amd/pm/swsmu/inc/amdgpu_smu.h           | 4 ----
- drivers/gpu/drm/amd/pm/swsmu/smu11/sienna_cichlid_ppt.c | 6 ------
- drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c      | 6 ------
- drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_6_ppt.c    | 6 ------
- 4 files changed, 22 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/pm/swsmu/inc/amdgpu_smu.h b/drivers/gpu/drm/amd/pm/swsmu/inc/amdgpu_smu.h
-index a5ba37f57650..eb0a97dde71c 100644
---- a/drivers/gpu/drm/amd/pm/swsmu/inc/amdgpu_smu.h
-+++ b/drivers/gpu/drm/amd/pm/swsmu/inc/amdgpu_smu.h
-@@ -1229,10 +1229,6 @@ struct pptable_funcs {
- 	 * @mode1_reset_is_support: Check if GPU supports mode1 reset.
- 	 */
- 	bool (*mode1_reset_is_support)(struct smu_context *smu);
--	/**
--	 * @mode2_reset_is_support: Check if GPU supports mode2 reset.
--	 */
--	bool (*mode2_reset_is_support)(struct smu_context *smu);
- 
- 	/**
- 	 * @mode1_reset: Perform mode1 reset.
-diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu11/sienna_cichlid_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu11/sienna_cichlid_ppt.c
-index 19a25fdc2f5b..115e3fa456bc 100644
---- a/drivers/gpu/drm/amd/pm/swsmu/smu11/sienna_cichlid_ppt.c
-+++ b/drivers/gpu/drm/amd/pm/swsmu/smu11/sienna_cichlid_ppt.c
-@@ -3089,11 +3089,6 @@ static int sienna_cichlid_stb_get_data_direct(struct smu_context *smu,
- 	return 0;
- }
- 
--static bool sienna_cichlid_is_mode2_reset_supported(struct smu_context *smu)
--{
--	return true;
--}
--
- static int sienna_cichlid_mode2_reset(struct smu_context *smu)
- {
- 	int ret = 0, index;
-@@ -3229,7 +3224,6 @@ static const struct pptable_funcs sienna_cichlid_ppt_funcs = {
- 	.get_default_config_table_settings = sienna_cichlid_get_default_config_table_settings,
- 	.set_config_table = sienna_cichlid_set_config_table,
- 	.get_unique_id = sienna_cichlid_get_unique_id,
--	.mode2_reset_is_support = sienna_cichlid_is_mode2_reset_supported,
- 	.mode2_reset = sienna_cichlid_mode2_reset,
- };
- 
-diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c
-index 83163d7c7f00..38fbe0ddc4e6 100644
---- a/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c
-+++ b/drivers/gpu/drm/amd/pm/swsmu/smu13/aldebaran_ppt.c
-@@ -1976,11 +1976,6 @@ static bool aldebaran_is_mode1_reset_supported(struct smu_context *smu)
- 	return true;
- }
- 
--static bool aldebaran_is_mode2_reset_supported(struct smu_context *smu)
--{
--	return true;
--}
--
- static int aldebaran_set_mp1_state(struct smu_context *smu,
- 				   enum pp_mp1_state mp1_state)
- {
-@@ -2086,7 +2081,6 @@ static const struct pptable_funcs aldebaran_ppt_funcs = {
- 	.set_pp_feature_mask = smu_cmn_set_pp_feature_mask,
- 	.get_gpu_metrics = aldebaran_get_gpu_metrics,
- 	.mode1_reset_is_support = aldebaran_is_mode1_reset_supported,
--	.mode2_reset_is_support = aldebaran_is_mode2_reset_supported,
- 	.smu_handle_passthrough_sbr = aldebaran_smu_handle_passthrough_sbr,
- 	.mode1_reset = aldebaran_mode1_reset,
- 	.set_mp1_state = aldebaran_set_mp1_state,
-diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_6_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_6_ppt.c
-index c478b3be37af..c529859c83ab 100644
---- a/drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_6_ppt.c
-+++ b/drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_6_ppt.c
-@@ -2849,11 +2849,6 @@ static bool smu_v13_0_6_is_mode1_reset_supported(struct smu_context *smu)
- 	return true;
- }
- 
--static bool smu_v13_0_6_is_mode2_reset_supported(struct smu_context *smu)
--{
--	return true;
--}
--
- static int smu_v13_0_6_smu_send_hbm_bad_page_num(struct smu_context *smu,
- 						 uint32_t size)
- {
-@@ -3586,7 +3581,6 @@ static const struct pptable_funcs smu_v13_0_6_ppt_funcs = {
- 	.get_pm_metrics = smu_v13_0_6_get_pm_metrics,
- 	.get_thermal_temperature_range = smu_v13_0_6_get_thermal_temperature_range,
- 	.mode1_reset_is_support = smu_v13_0_6_is_mode1_reset_supported,
--	.mode2_reset_is_support = smu_v13_0_6_is_mode2_reset_supported,
- 	.mode1_reset = smu_v13_0_6_mode1_reset,
- 	.mode2_reset = smu_v13_0_6_mode2_reset,
- 	.wait_for_event = smu_v13_0_wait_for_event,
--- 
-2.49.0
-
+On Wed, May 7, 2025 at 9:37=E2=80=AFAM Jesper Dangaard Brouer <hawk@kernel.=
+org> wrote:
+>
+>
+>
+> On 07/05/2025 15.29, Willem de Bruijn wrote:
+> > Stanislav Fomichev wrote:
+> >> On 05/06, Jon Kohler wrote:
+> >>> Introduce new XDP helpers:
+> >>> - xdp_headlen: Similar to skb_headlen
+>
+> I really dislike xdp_headlen().  This "headlen" originates from an SKB
+> implementation detail, that I don't think we should carry over into XDP
+> land.
+> We need to come up with something that isn't easily mis-read as the
+> header-length.
+>
+> >>> - xdp_headroom: Similar to skb_headroom
+> >>> - xdp_metadata_len: Similar to skb_metadata_len
+> >>>
+>
+> I like naming of these.
+>
+> >>> Integrate these helpers into tap, tun, and XDP implementation to star=
+t.
+> >>>
+> >>> No functional changes introduced.
+> >>>
+> >>> Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+> >>> Signed-off-by: Jon Kohler <jon@nutanix.com>
+> >>> ---
+> >>> v2->v3: Integrate feedback from Stanislav
+> >>> https://patchwork.kernel.org/project/netdevbpf/patch/20250430201120.1=
+794658-1-jon@nutanix.com/
+> >>
+> >> Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+> >
+> > Reviewed-by: Willem de Bruijn <willemb@google.com>
+> >
+>
+> Nacked-by: Jesper Dangaard Brouer <hawk@kernel.org>
+>
+> pw: cr
+>
