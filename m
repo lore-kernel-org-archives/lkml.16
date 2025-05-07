@@ -1,140 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7331F28E59F;
-	Wed,  7 May 2025 19:58:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5505A4B1E50;
+	Wed,  7 May 2025 20:00:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746647886; cv=none; b=nN+kHgzcTIUGD31syg/PyJbEZi68A8lBORHF3h8n6uRVuoDyYq0OVNzi1lYdiFG1KEMXfpY4PK99NI5KstSY3HVdz4GhyxR7u6HGHXcD39Z/54STqYdPtHqXgI0As8k5hn94uK3+BrggAuVIv0XRAXKt2QyeUCrJhTsE+HxztZY=
+	t=1746648022; cv=none; b=FsEScA7caQeR2iaif7R2lI+/4vYotZfss/uMqqgm5R2dtvPqgxkUaDLXw31iZDgk8Knuy2Ihe2ZY2OVopHcLK97vLoYdNeEjBcpGHBGYhG4bPjS8yhSRsAMyjQI3tFXbxWhvB4/yM+nFntelMbYs4WhWq4egmDrAqmJjRxSQ+E8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746647886; c=relaxed/simple;
-	bh=Sl/O9tbxuYSTHBAOLUnGaBf3c6bYP4TWR8+4mnFAWSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XJIH0jp4mL/UK1kBjVFwFNInwf7ADaL+U5rYCx+b505NyMHSnF8tAJn42XZMGDwLt7uJZ3PakN0yYRhsXN8+ZqossoqsN7ftLlR0grV9NhI/UPkfJWwVHdtDxx9Y89ilzZZF9PVn/KSJUGjzRUtjI44CHHsVFhY1E0vCValXwr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=akq5jul8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746648022; c=relaxed/simple;
+	bh=tjav2Lry3CZ3llKxpBjEEIb2DCzNxNqCb8X2oXOpn2k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LaOhJIkEC35Hclk53n1xv2b2Fco0VQEE5rWvSCmGwZhkR6+ELuGYvJNuGEbfokUx8RaTMxsiIL3ASvXIR+CFwSXarvc7sZU6Ni9DMnH06pghfuc1mRXzkUof84Uk0ZFgZiLaPg+0L5BAEuHeQz4xdrDaLDBGTgAT9tNq6ew1Nk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hHTCXVdc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="akq5jul8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8976EC4CEE2;
-	Wed,  7 May 2025 19:58:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHTCXVdc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD381C4CEE7;
+	Wed,  7 May 2025 20:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746647886;
-	bh=Sl/O9tbxuYSTHBAOLUnGaBf3c6bYP4TWR8+4mnFAWSI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=akq5jul8DPExk0S2renmYeNJpQyVm5B/wv2Ynutsl7z/8Ku0paDjnKFTlbTaHpeGi
-	 wkz8IkmjfIIu8IiIPF4LYX1Hxm/1ZZu9W7FG1tnvsFRot3FO+LO7H2g0BHyNaeBaZR
-	 ur/sBektWqBlouwGHLK8cEO6Ev+WskM9hlGNWmDJtJU5zLUb5eJ0eJEECpUiXyO/6G
-	 u4RFRyNzOTQY/TTnoKIhUyqR6M1da/c15+uKdrEuFv+sJDxPcpTEZTPKEBdOhYkAt7
-	 AWpRI8ibpVgs6ASXmhKG6G/Ur/2rPJ/i3Urmuarao0WUhRqD4OLS2Ug4ra/9SkG+Ts
-	 PuTenpfOX0CFQ==
-Date: Wed, 7 May 2025 20:57:55 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Esteban Blanc <eblanc@baylibre.com>,
- Andy Shevchenko <andy@kernel.org>, Oleksij Rempel
- <o.rempel@pengutronix.de>, kernel@pengutronix.de, Song Qiang
- <songqiang1304521@gmail.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/14] iio: remove bits_per_word = 8 assignments
-Message-ID: <20250507205755.69428eb5@jic23-huawei>
-In-Reply-To: <4678d4f0c5634f8709f84745054ae16484617b8d.camel@gmail.com>
-References: <20250505-iio-remove-bits_per_word-8-v1-0-341f85fcfe11@baylibre.com>
-	<4678d4f0c5634f8709f84745054ae16484617b8d.camel@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1746648020;
+	bh=tjav2Lry3CZ3llKxpBjEEIb2DCzNxNqCb8X2oXOpn2k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=hHTCXVdcs7P4IJcz7KQygsNb2ijbcQWHLoTDMj02pcRaOxUGANPFyw04Fur0Ya+0e
+	 XDjjWvmMQuPQuvqq5l5K3kDucp4F4kMJxVGuxMBFcwchoL6FT3MJ7DXf/s8p3ocA2V
+	 d0zWSCSRRU7XqsIc8dZYtu1Hu8/6M4ZNhF3lX089uSFgYSGH34qNgm9lRl1MkNEqq+
+	 v4xb3MAtbTAfngsrO5RQPPMJEArSkLj+s8yAf3YPYIKiVlrNYqGkLtJl7zSLIIlCfd
+	 a0j0E/Qb39Lpj4weFkrZCnIDvyrLm2Mw2uX86xdUjItUElOfuQkIQcLiBmTftCrVt3
+	 fOCZhIZZFyx3g==
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2c76a1b574cso152870fac.2;
+        Wed, 07 May 2025 13:00:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUlr8IZ5EpbrKt+AEdMLE72g5p0LjquNnRWlKUmylPaKXGu+/EXJDYeWAq3QzHg0lT1XHWzeqYkwgU=@vger.kernel.org, AJvYcCVSe+Nuta9Ox9sQO7NeFJ9pWgztajI3ecuyK85xcD4fdImiLyDRMiKD5erq/+YA7JEpGffjWlyac9Q+zH0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZJbx2TadsN7jHpzaPvtoMj5iJw0bflUIcuciUU6+EtSZSBXsD
+	RWCYlCNIOsdc+WtsgB0Vt/2sdAmO1oNu/ty8SR0FEnsHyKvV0rag4szHzT5sZYvgPAAaRfynS8a
+	40r2z/wkt1Vh0a0MY5yuyFegYShg=
+X-Google-Smtp-Source: AGHT+IG5ntTjTMWQrdtV83l8Iscj3hSN3CVcasJJOW8huMIBAsneuAIyvv53WVJ7ELMSGRGA2f6HHg3dABvNve5Pbxg=
+X-Received: by 2002:a05:6870:47a6:b0:29f:97af:a1a0 with SMTP id
+ 586e51a60fabf-2db5c07fc35mr2410065fac.24.1746648020011; Wed, 07 May 2025
+ 13:00:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250419025504.9760-1-ricardo.neri-calderon@linux.intel.com>
+In-Reply-To: <20250419025504.9760-1-ricardo.neri-calderon@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 7 May 2025 22:00:08 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jvtYyXoj71WF=0MLHZLt=zfMo5+C1v7xJ6CuCkowxNmg@mail.gmail.com>
+X-Gm-Features: ATxdqUE_l-rxZ7CePiPNQL5CuDpYcHevrgJn0VzeGh0i7eLIf8QPqLTqcloG3PY
+Message-ID: <CAJZ5v0jvtYyXoj71WF=0MLHZLt=zfMo5+C1v7xJ6CuCkowxNmg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] topology/sysfs, cpufreq/intel_pstate: Populate cpu_capacity
+To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Len Brown <len.brown@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Ricardo Neri <ricardo.neri@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 07 May 2025 07:28:12 +0100
-Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
+On Sat, Apr 19, 2025 at 4:49=E2=80=AFAM Ricardo Neri
+<ricardo.neri-calderon@linux.intel.com> wrote:
+>
+> Hi,
+>
+> Capacity-aware scheduling is now supported on Intel hybrid processors. It
+> makes sense now to populate the interface /sys/devices/system/cpu/cpuN/
+> cpu_capacity. User space entities can use this information to implement
+> policy such as utilization clamps.
+>
+> This interface currently lives in arch_topology.c. Rather than implementi=
+ng
+> the interface again for x86, we can move it to a common location in
+> topology.c from which other architectures can also benefit and populate
+> using their own mechanisms.
+>
+> I tested this patchset on Intel Alder Lake and DragonBoard 845c. The
+> interfaces are populated correctly.
+>
+> I'd appreciate any feedback!
+>
+> Thanks and BR,
+> Ricardo
+> Ricardo Neri (2):
+>   arch_topology: Relocate cpu_scale to topology.[h|c]
+>   cpufreq: intel_pstate: Populate the cpu_capacity sysfs entries
+>
+>  drivers/base/arch_topology.c   | 52 ----------------------------------
+>  drivers/base/topology.c        | 52 ++++++++++++++++++++++++++++++++++
+>  drivers/cpufreq/intel_pstate.c |  2 ++
+>  include/linux/arch_topology.h  |  8 ------
+>  include/linux/topology.h       |  9 ++++++
+>  5 files changed, 63 insertions(+), 60 deletions(-)
+>
+> --
 
-> On Mon, 2025-05-05 at 14:20 -0500, David Lechner wrote:
-> > While grepping the IIO subsystem for drivers that set bits_per_word to
-> > unusual values to check for potential bugs, I found it to be a bit of a
-> > nuisance that 2/3s of the matches were setting it to the default value
-> > of 8. So here is a series removing the unnecessary assignments.
-> >=20
-> > --- =20
->=20
-> LGTM,
->=20
-> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-Applied.  Still time to comment if we missed anything though as for
-now just pushed out for 0-day to poke at.
-
-Thanks,
-
-Jonathan
-
->=20
-> > David Lechner (14):
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad4030: remove bits_per_word =
-=3D 8
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ti-tsc2046: remove bits_per_wo=
-rd =3D 8
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: chemical: bme680_spi: remove bits_p=
-er_word =3D 8
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: dac: ad5761: remove bits_per_word =
-=3D 8
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: dac: ad5766: remove bits_per_word =
-=3D 8
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: dac: ad5791: remove bits_per_word =
-=3D 8
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: dac: ltc2688: remove bits_per_word =
-=3D 8
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: gyro: adxrs450: remove bits_per_wor=
-d =3D 8
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: imu: adis: remove bits_per_word =3D=
- 8
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: magnetometer: hmc5843_spi: remove b=
-its_per_word =3D 8
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: magnetometer: rm3100-spi: remove bi=
-ts_per_word =3D 8
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: pressure: bmp280-spi: remove bits_p=
-er_word =3D 8
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: pressure: ms5611_spi: remove bits_p=
-er_word =3D 8
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: pressure: zpa2326_spi: remove bits_=
-per_word =3D 8
-> >=20
-> > =C2=A0drivers/iio/adc/ad4030.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 4 ----
-> > =C2=A0drivers/iio/adc/ti-tsc2046.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | 1 -
-> > =C2=A0drivers/iio/chemical/bme680_spi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
- 8 --------
-> > =C2=A0drivers/iio/dac/ad5761.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 --
-> > =C2=A0drivers/iio/dac/ad5766.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 --
-> > =C2=A0drivers/iio/dac/ad5791.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 --
-> > =C2=A0drivers/iio/dac/ltc2688.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 --
-> > =C2=A0drivers/iio/gyro/adxrs450.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 5 -----
-> > =C2=A0drivers/iio/imu/adis.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 9 ---------
-> > =C2=A0drivers/iio/imu/adis_buffer.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 | 3 ---
-> > =C2=A0drivers/iio/magnetometer/hmc5843_spi.c | 1 -
-> > =C2=A0drivers/iio/magnetometer/rm3100-spi.c=C2=A0 | 1 -
-> > =C2=A0drivers/iio/pressure/bmp280-spi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
- 8 --------
-> > =C2=A0drivers/iio/pressure/ms5611_spi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
- 1 -
-> > =C2=A0drivers/iio/pressure/zpa2326_spi.c=C2=A0=C2=A0=C2=A0=C2=A0 | 1 -
-> > =C2=A015 files changed, 50 deletions(-)
-> > ---
-> > base-commit: 7e9a82ab5b861d3c33c99a22c1245a5b262ee502
-> > change-id: 20250505-iio-remove-bits_per_word-8-db80654b1c17
-> >=20
-> > Best regards, =20
->=20
-
+Both patches applied as 6.16 material, thanks!
