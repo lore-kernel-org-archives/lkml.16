@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D408286431
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:19:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AB672882AF
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:19:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746724788; cv=none; b=puxoEFRlMrDOSL7lh38Vo93dHwPe7DmppmnCELl7rNKBu3c97r9DqB/QXraZXJzWtiuly+0O6QPKyUEIc7tIE2m+94KK3emIhgf1xM8bpVPu6sSEWbDDMSpHNWX0yKnjXh0SVwX1GSKlOMubz8vEsHtbjEPXJr5rethsYeXhvxg=
+	t=1746724792; cv=none; b=YOHxP65wzh3yqWQAcm85w1Lqw7rEp1SxfxUAjU5rthOayfCI4yR6eIbk0d7IoC87KL1NTaYguhIR9FmYzEffjzbeDi4hXK6mSQ0iFBjU+hBKv13i2Wxkc+n2mk4KXsnWTX979WzubSkQknbxJPP3fO+6G2CoKW8dhAbaNZxD+U8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746724788; c=relaxed/simple;
-	bh=xBb3GdoZmQes6mjJNED4nvYESfZo0jkbHcN5LWGbEZ4=;
+	s=arc-20240116; t=1746724792; c=relaxed/simple;
+	bh=wM93TKavCy8WnEb1Cs3W1D0G4nMV8eSj3VBX4Z2D+d4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JAr3wP01wb97IXmoVcsG3fVgjwTIXTi5kN5N7Ldp2pnsGC7dcxNUDwl4RHo37tit24WoU6Z1PXRCFcSQfPW6diVP2092E5ikJAeuer6dsS6JMZKEi/d+6UWrJz1D8NA25MKcrByXhow3PdmqD/kR5G7yBfQScEr9I+Ed1AbbpDE=
+	 MIME-Version; b=FwesxpmU3bST/aK7x96SE0Grbian+0ks6wie/7E6+1GAwO36T7z859Ko81v+kVFvrz/XNUgSwJsnZz97yKYbEZrfYgV0OhPLcJMJ63N4ul9AT8l//MRRdDLbLTnjtZOcbtUa8JcH7vLyaE4KG9DaKRePQu1P2vDaGKngl/4WCMA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F1C32403;
-	Thu,  8 May 2025 10:19:35 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22AD62437;
+	Thu,  8 May 2025 10:19:39 -0700 (PDT)
 Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 809743F58B;
-	Thu,  8 May 2025 10:19:42 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 289053F58B;
+	Thu,  8 May 2025 10:19:46 -0700 (PDT)
 From: James Morse <james.morse@arm.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -46,11 +46,12 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
 	Koba Ko <kobak@nvidia.com>,
 	Shanker Donthineni <sdonthineni@nvidia.com>,
 	fenghuay@nvidia.com,
+	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
 	Babu Moger <babu.moger@amd.com>,
-	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Subject: [PATCH v10 07/30] x86/resctrl: Check all domains are offline in resctrl_exit()
-Date: Thu,  8 May 2025 17:18:35 +0000
-Message-Id: <20250508171858.9197-8-james.morse@arm.com>
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v10 08/30] x86/resctrl: resctrl_exit() teardown resctrl but leave the mount point
+Date: Thu,  8 May 2025 17:18:36 +0000
+Message-Id: <20250508171858.9197-9-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20250508171858.9197-1-james.morse@arm.com>
 References: <20250508171858.9197-1-james.morse@arm.com>
@@ -62,69 +63,158 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-resctrl_exit() removes things like the resctrl mount point directory
-and unregisters the filesystem prior to freeing data structures that
-were allocated during resctrl_init().
+resctrl_exit() was intended for use when the 'resctrl' module was unloaded.
+resctrl can't be built as a module, and the kernfs helpers are not exported
+so this is unlikely to change. MPAM has an error interrupt which indicates
+the MPAM driver has gone haywire. Should this occur tasks could run with
+the wrong control values, leading to bad performance for important tasks.
+In this scenario the MPAM driver will reset the hardware, but it needs
+a way to tell resctrl that no further configuration should be attempted.
 
-This assumes that there are no online domains when resctrl_exit() is
-called. If any domain were online, the limbo or overflow handler could
-be scheduled to run.
+In particular, moving tasks between control or monitor groups does not
+interact with the architecture code, so there is no opportunity for the
+arch code to indicate that the hardware is no-longer functioning.
 
-Add a check for any online control or monitor domains, and document that
-the architecture code is required to offline all monitor and control
-domains before calling resctrl_exit().
+Using resctrl_exit() for this leaves the system in a funny state as
+resctrl is still mounted, but cannot be un-mounted because the sysfs
+directory that is typically used has been removed. Dave Martin suggests
+this may cause systemd trouble in the future as not all filesystems
+can be unmounted.
 
-Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
+Add calls to remove all the files and directories in resctrl, and
+remove the sysfs_remove_mount_point() call that leaves the system
+in a funny state. When triggered, this causes all the resctrl files
+to disappear. resctrl can be unmounted, but not mounted again.
+
 Signed-off-by: James Morse <james.morse@arm.com>
-Tested-by: Babu Moger <babu.moger@amd.com>
+Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
 Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Tested-by: Peter Newman <peternewman@google.com>
+Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
+Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
+Tested-by: Babu Moger <babu.moger@amd.com>
+Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
 Changes since v9:
- * Clarified commit message.
+ * Removed 'this function' from a comment, added the missing word 'errno'.
 
 Changes since v8:
- * This patch is new.
+ * Call resctrl_fs_teardown() under cpuhp lock, for good measure.
+ * Set debugfs_resctrl to NULL to be robust against a second call.
+ * Added more documentation commentary.
+ * Moved some words around to change the tone.
+
+Changes since v7:
+ * Moved kernfs cleanup functions to resctrl_fs_teardown(), and call this
+   from rescrl_exit().
+ * Added description of MPAM resetting the hardware to the commit message.
+
+Changes since v6:
+ * Added kdoc and comment to resctrl_exit().
+
+Changes since v5:
+ * Serialise rdtgroup_destroy_root() against umount().
+ * Check rdtgroup_default.kn to protect against duplicate calls.
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 48 +++++++++++++++++++++-----
+ 1 file changed, 40 insertions(+), 8 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 88197afbbb8a..f617ac97758b 100644
+index f617ac97758b..699d0cde12c4 100644
 --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -4420,8 +4420,32 @@ int __init resctrl_init(void)
- 	return ret;
+@@ -3078,6 +3078,22 @@ static void rmdir_all_sub(void)
+ 	kernfs_remove(kn_mondata);
  }
  
-+static bool __exit resctrl_online_domains_exist(void)
++static void resctrl_fs_teardown(void)
 +{
-+	struct rdt_resource *r;
++	lockdep_assert_held(&rdtgroup_mutex);
 +
-+	for_each_rdt_resource(r) {
-+		if (!list_empty(&r->ctrl_domains) || !list_empty(&r->mon_domains))
-+			return true;
-+	}
++	/* Cleared by rdtgroup_destroy_root() */
++	if (!rdtgroup_default.kn)
++		return;
 +
-+	return false;
++	rmdir_all_sub();
++	rdt_pseudo_lock_release();
++	rdtgroup_default.mode = RDT_MODE_SHAREABLE;
++	closid_exit();
++	schemata_list_destroy();
++	rdtgroup_destroy_root();
 +}
 +
-+/*
-+ * resctrl_exit() - Remove the resctrl filesystem and free resources.
+ static void rdt_kill_sb(struct super_block *sb)
+ {
+ 	struct rdt_resource *r;
+@@ -3091,12 +3107,7 @@ static void rdt_kill_sb(struct super_block *sb)
+ 	for_each_alloc_capable_rdt_resource(r)
+ 		resctrl_arch_reset_all_ctrls(r);
+ 
+-	rmdir_all_sub();
+-	rdt_pseudo_lock_release();
+-	rdtgroup_default.mode = RDT_MODE_SHAREABLE;
+-	closid_exit();
+-	schemata_list_destroy();
+-	rdtgroup_destroy_root();
++	resctrl_fs_teardown();
+ 	if (resctrl_arch_alloc_capable())
+ 		resctrl_arch_disable_alloc();
+ 	if (resctrl_arch_mon_capable())
+@@ -4127,6 +4138,8 @@ static int rdtgroup_setup_root(struct rdt_fs_context *ctx)
+ 
+ static void rdtgroup_destroy_root(void)
+ {
++	lockdep_assert_held(&rdtgroup_mutex);
++
+ 	kernfs_destroy_root(rdt_root);
+ 	rdtgroup_default.kn = NULL;
+ }
+@@ -4432,23 +4445,42 @@ static bool __exit resctrl_online_domains_exist(void)
+ 	return false;
+ }
+ 
+-/*
++/**
+  * resctrl_exit() - Remove the resctrl filesystem and free resources.
+  *
++ * Called by the architecture code in response to a fatal error.
++ * Removes resctrl files and structures from kernfs to prevent further
++ * configuration.
 + *
-+ * When called by the architecture code, all CPUs and resctrl domains must be
-+ * offline. This ensures the limbo and overflow handlers are not scheduled to
-+ * run, meaning the data structures they access can be freed by
-+ * resctrl_mon_resource_exit().
-+ */
+  * When called by the architecture code, all CPUs and resctrl domains must be
+  * offline. This ensures the limbo and overflow handlers are not scheduled to
+  * run, meaning the data structures they access can be freed by
+  * resctrl_mon_resource_exit().
++ *
++ * After resctrl_exit() returns, the architecture code should return an
++ * error from all resctrl_arch_ functions that can do this.
++ * resctrl_arch_get_resource() must continue to return struct rdt_resources
++ * with the correct rid field to ensure the filesystem can be unmounted.
+  */
  void __exit resctrl_exit(void)
  {
-+	cpus_read_lock();
-+	WARN_ON_ONCE(resctrl_online_domains_exist());
-+	cpus_read_unlock();
+ 	cpus_read_lock();
+ 	WARN_ON_ONCE(resctrl_online_domains_exist());
 +
++	mutex_lock(&rdtgroup_mutex);
++	resctrl_fs_teardown();
++	mutex_unlock(&rdtgroup_mutex);
++
+ 	cpus_read_unlock();
+ 
  	debugfs_remove_recursive(debugfs_resctrl);
++	debugfs_resctrl = NULL;
  	unregister_filesystem(&rdt_fs_type);
- 	sysfs_remove_mount_point(fs_kobj, "resctrl");
+-	sysfs_remove_mount_point(fs_kobj, "resctrl");
++
++	/*
++	 * Do not remove the sysfs mount point added by resctrl_init() so that
++	 * it can be used to umount resctrl.
++	 */
+ 
+ 	resctrl_mon_resource_exit();
+ }
 -- 
 2.39.5
 
