@@ -1,48 +1,64 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E5815B0EF;
-	Thu,  8 May 2025 21:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8966915A848;
+	Thu,  8 May 2025 21:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746739852; cv=none; b=QbV1xVc6J8TbbJP26p5UMTQg79IvfiZXUBAFBnEFrSKZdyVmMIX6+q/QzWnbqxs8wTkZlklDAkDFJNUA+mLhWX/BdklSypR0Bli892Q0op5rQXRMQs3Eu+vLs+tZfEPZrhol8OL7YcaKjMD8B8FuWgAVek+2plKVbGZqyXRUmcc=
+	t=1746739861; cv=none; b=iGc9he20/5RJK7Eejhs7VmdhGfOoOb9QdTShgmuGDKRFeGKtQAUsYmXVPgRdd6z0YYJev8TSP5ty0/O6BXVwrKO6Xm/3yp11hmNq7o39XdZo9+J3hcmIV93d2Rd1NJTHGV2N7G9ttph7T+VZBFRh63SugflP1cWn6O7TZq/1+2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746739852; c=relaxed/simple;
-	bh=RUKIICug20cm8XME6wtY4AykbgHsCJfzI3ZGDosJ3Z0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ktmKl95lHgzpekGQTVORyeHgbF7Kj9eUJfsYYY0LWq4IqrUwQyjRftl301egnuo96g5wUBFjU/N1snjurMnEj32mKen8Jt3LN5zo7QqRcjZ+B0ifyqcUE0kG41lM7bB9nTaVpUDSSU65k/DoLS4mHoKWPl+PVJoFaS5w22IbjmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ad+p4Q0V; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746739861; c=relaxed/simple;
+	bh=JTHLtY0ld8a6BH5xxbR1r5sxYQvJPYy22w1ADwLVN04=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dXZeLkwbCxv71zNVKAnUtp7sbbnvCYNbioteUX0e2ehQkGSOPNPVOGWidYjGesd/z1rLC00l5Iy4dMA9axD0Cyn26ggL0C7kSYRQUTJfvCLqonV61B/oq3eJFPqgUkPmB5vX/JGImOdDiOFEj3Wwr1U+j3he/NtQ+BMgW3QpvGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gEIlSdoq; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ad+p4Q0V"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548DGABX016832;
-	Thu, 8 May 2025 21:30:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	RD4CF6NmUfveOeZbPzTR3fagQtEkyvh8kENIJEz0KbY=; b=ad+p4Q0VaSypXeAo
-	CZSHXuraAid0E5jzCqjsvciDVqyTLRMBZ8wbEghiMYLIPH3TEHuB1b6GyFd1aWNN
-	FxUyrj//uhBNRu5DZ6TCo5r14geeOQTNLFa8PyPfWZdXUVf0cWwjRx50Ys5XmEV1
-	XEb/LwaIwdzCZDk4Eo+ba8JY4mHw240VOurDjS37aObLXu222T3jSwB8h4cePzjN
-	CVPfLZNQj1TE1wZ6pqUgb/4XiToc5BOvJogxiAoNgyZvux0PjvD+DNC4P3ff64uP
-	2L48cO+EIwYozirp8JiByKN5bvEO2StasrEHopai7Zg+vJIzAvQY1v9OoT816hwe
-	GKhaKA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp8tkx4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 21:30:36 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 548LUZWN001649
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 8 May 2025 21:30:35 GMT
-Received: from [10.71.109.79] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
- 14:30:35 -0700
-Message-ID: <7ec6f0d8-971d-4607-82ad-9489ce2d352e@quicinc.com>
-Date: Thu, 8 May 2025 14:30:34 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gEIlSdoq"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-acec5b99052so252016466b.1;
+        Thu, 08 May 2025 14:30:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746739858; x=1747344658; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Bsh/GPZb/TiZg30RyOqrw2DkOqfcNkWV+XjxsFUC3/A=;
+        b=gEIlSdoqha38XQqFzSkTf/9LDDYWOGAaZCrMJoSTv6tsDJo2C2eEHHrAh35DAQoW44
+         PGokWCt6ZLl3EsTTt4ZibcHluDK/AaphAHITDdNjeJ1zwjjfplsq38fApwWq87UzSoel
+         uRvl0hTlRMCGlO+mXr1y/Buwcw8qNjXuj6eR96IaBJRTErBf2KpwjWHZuVSPIPezoWdO
+         d5TnUgwBxnrCHqQStz78N2KUIMyvyYWn9JOHXDAblckh6+hXOCcGkwFT4hTVp6yC1jDO
+         1G8ohJUnyUklY3+buKNgj0csc5ouSb1uZJjsyB3oXQMxHa9WzDGPK/TDb3wL2niRa00H
+         tijQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746739858; x=1747344658;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bsh/GPZb/TiZg30RyOqrw2DkOqfcNkWV+XjxsFUC3/A=;
+        b=sLDPQzb4dqml1llHoYfW0rWY/6NbPwZYGZc6tLxJiBQw8s3cq3qPnMeLZCitzZ+3YE
+         P9WF4QPhN9HJ331JqO7Je0dsHP7x5b5PDEjf0g8SlZS4mPNStAVDW2OhaAWll0aj4Tjk
+         E+GILBtJatpD0FQ6V6YdxmGvPitl6p75FRx0RM6YVxZRfUQn28U8OBtqM2VMKEuGbk/3
+         Sj6ZGHnptFB37oeDHhuUiiNpASHdt/Wc4MvMIx/cwIVdtoGjupR07GtnJGKKGjdAegJE
+         ujvBRxMgFTRC9VLpYWVRqkND3TScUkjzDTJtLe6Tr/ihpIYn4hBqSWeRQJ65GDYxlw78
+         13/A==
+X-Forwarded-Encrypted: i=1; AJvYcCX7B7rEr1/bKN0D7l3qTdeOTnHtFx9j2ASjq1AKVf13vN0FSTKE/C9wn+FJONgIBX9alyUzJy6Gw3Lxlg==@vger.kernel.org, AJvYcCXZcBucIkEqMcwPCHVNGHcMzwwBC6s8IxpwBCFOg2KsZIIYf6Qny2cp109jBNHy1rRCJ2Bmn1XkTZQGPiw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVTMshFH8rk9tZFVFMcIS89VMcYwAg0cb1j+5AoHVckbH2XbbW
+	M6L/JFNopDqsCZ2XLztqqrnwIFCWMr/NKwA5UnuBpDsJs6O+OD6+
+X-Gm-Gg: ASbGncsPfyelbirD0cEBuh9lyDNAPEv+yGRZPXKORYQ+EMAbBbS6lmW7DXW61lzFfwk
+	wdRYYNI9VHdCCidAeGwnnFQY8NVqMuCxqlLxK3O+gnebLYLLc0jWYfx+GMRADcbYX8sWTyU7cjr
+	tPEmjyFgogGRketoWF5r0U8RhrxWXkaOMTDJ4lc0vSOA/G45Q/CJmIrlKmKVabUp3xwWjR/VTWw
+	5UA1/Gjg8vBqWfEp5gFXOgb1Nobr1O1wwK7Z1oazRhYCbEAIA9acYxBgNg8KVq2I4uip89bt+Sb
+	rfu8lkEMZn7Xw61I4MPgI84cChnwZs2VIe+1JGrxCw+dFz2mqUluUqoq0Kd3
+X-Google-Smtp-Source: AGHT+IHQvMuJCDoH7Bs9mWvrUVeR5FXNog6hLVAgx/pJfBFrMIGxgzNimQ4Xt+0VHn69QHSLo+ILeQ==
+X-Received: by 2002:a17:906:f58a:b0:ad1:fd0f:a0b5 with SMTP id a640c23a62f3a-ad219101a0cmr99666666b.30.1746739857311;
+        Thu, 08 May 2025 14:30:57 -0700 (PDT)
+Received: from [172.27.55.78] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2192cf5casm46220266b.2.2025.05.08.14.30.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 14:30:56 -0700 (PDT)
+Message-ID: <39c21e55-4aeb-4935-ab8a-759d97662ec3@gmail.com>
+Date: Fri, 9 May 2025 00:30:54 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,266 +66,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 14/14] drm/msm/dpu: Enable quad-pipe for DSC and
- dual-DSI case
-To: Jun Nie <jun.nie@linaro.org>, Rob Clark <robdclark@gmail.com>,
-        "Abhinav
- Kumar" <quic_abhinavk@quicinc.com>,
-        Sean Paul <sean@poorly.run>,
-        "Marijn
- Suijten" <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Dmitry Baryshkov <lumag@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20250506-quad-pipe-upstream-v9-0-f7b273a8cc80@linaro.org>
- <20250506-quad-pipe-upstream-v9-14-f7b273a8cc80@linaro.org>
+Subject: Re: [PATCH net-next] net/mlx5: support software TX timestamp
+To: Stanislav Fomichev <stfomichev@gmail.com>,
+ Jason Xing <kerneljasonxing@gmail.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, saeedm@nvidia.com, tariqt@nvidia.com,
+ andrew+netdev@lunn.ch, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, leon@kernel.org,
+ Carolina Jubran <cjubran@nvidia.com>
+References: <20250506215508.3611977-1-stfomichev@gmail.com>
+ <1a1ab6eb-9bfc-4298-ba1e-a6f4229ce091@gmail.com>
+ <CAL+tcoDu0NdZQ+QmqL9mF8VNj+4cPLgmy1maAucAc7JkKOjm6A@mail.gmail.com>
+ <aBzaK8I0hA31ba_4@mini-arch>
 Content-Language: en-US
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <20250506-quad-pipe-upstream-v9-14-f7b273a8cc80@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Nfpx24jjqpgAizwo5PpdImZJ9z9dKxLv
-X-Proofpoint-ORIG-GUID: Nfpx24jjqpgAizwo5PpdImZJ9z9dKxLv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE5NCBTYWx0ZWRfX8jk7SQXcntR6
- +rtFl+rIM/ATMww4jSszY3EEdlQQDXrIE8MkTOknX2JYzn5zdxlFINRG3SoaIP+lZ0RVfbMLdw3
- ofORujZPNaUI+EdiwIa7Au9s4I6KKJm5F3OFz5nTiiENMT79DzNIA0dwU7tnJArlu2B2bjgBPRZ
- J/3bvgGnkTla7d8lOWUul3/TvG1zAJyHwNjVDObf/BOZCswvDknIWk9i+SPoQOkJeYZitFdzpt5
- Gd5H1HAeeRelK9r5ckSbanH1Ud1JMA9ZDDNRYWgxFzg2RK0/5g5fsk/fB/wqy1l2EicB9AWngZk
- HoqsFnVGi0+hsEevoTfDcOJYxMiH2bEQpqx9+HFtlrxOPth8ceT5o/SsR2Tv+vJ2YeqDA8wcMyH
- qWEhn0mE0wHEHEUFnagF4+Z2RTRKV6kSSEGlX/brT0kbkn6NN/kcaXFiFwMaaxPdiNo5z/JP
-X-Authority-Analysis: v=2.4 cv=e/4GSbp/ c=1 sm=1 tr=0 ts=681d227c cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8
- a=COk6AnOGAAAA:8 a=L95mz036j096roKjO1sA:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_06,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0 clxscore=1015
- mlxlogscore=999 spamscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0
- mlxscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505080194
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <aBzaK8I0hA31ba_4@mini-arch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-On 5/6/2025 8:47 AM, Jun Nie wrote:
-> To support high-resolution cases that exceed the width limitation of
-> a pair of SSPPs, or scenarios that surpass the maximum MDP clock rate,
-> additional pipes are necessary to enable parallel data processing
-> within the SSPP width constraints and MDP clock rate.
+On 08/05/2025 19:22, Stanislav Fomichev wrote:
+> On 05/08, Jason Xing wrote:
+>> Hi Tariq,
+>>
+>> On Thu, May 8, 2025 at 2:30 PM Tariq Toukan <ttoukan.linux@gmail.com> wrote:
+>>>
+>>>
+>>>
+>>> On 07/05/2025 0:55, Stanislav Fomichev wrote:
+>>>> Having a software timestamp (along with existing hardware one) is
+>>>> useful to trace how the packets flow through the stack.
+>>>> mlx5e_tx_skb_update_hwts_flags is called from tx paths
+>>>> to setup HW timestamp; extend it to add software one as well.
+>>>>
+>>>> Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+>>>> ---
+>>>>    drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 1 +
+>>>>    drivers/net/ethernet/mellanox/mlx5/core/en_tx.c      | 1 +
+>>>>    2 files changed, 2 insertions(+)
+>>>>
+>>>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+>>>> index fdf9e9bb99ac..e399d7a3d6cb 100644
+>>>> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+>>>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+>>>> @@ -1689,6 +1689,7 @@ int mlx5e_ethtool_get_ts_info(struct mlx5e_priv *priv,
+>>>>                return 0;
+>>>>
+>>>>        info->so_timestamping = SOF_TIMESTAMPING_TX_HARDWARE |
+>>>> +                             SOF_TIMESTAMPING_TX_SOFTWARE |
+>>>>                                SOF_TIMESTAMPING_RX_HARDWARE |
+>>>>                                SOF_TIMESTAMPING_RAW_HARDWARE;
+>>>>
+>>>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+>>>> index 4fd853d19e31..f6dd26ad29e5 100644
+>>>> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+>>>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+>>>> @@ -341,6 +341,7 @@ static void mlx5e_tx_skb_update_hwts_flags(struct sk_buff *skb)
+>>>>    {
+>>>>        if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP))
+>>>>                skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
+>>>> +     skb_tx_timestamp(skb);
+>>>
+>>> Doesn't this interfere with skb_tstamp_tx call in the completion flow
+>>> (mlx5e_consume_skb)?
+>>
+>> skb_tstamp_tx() only takes care of hardware timestamp in this case.
+>>
+>>>
+>>> What happens if both flags (SKBTX_SW_TSTAMP / SKBTX_HW_TSTAMP) are set
+>>> Is it possible?
+>>
+>> If only these two are set, only hardware timestamp will be passed to
+>> the userspace because of the SOF_TIMESTAMPING_OPT_TX_SWHW limit in
+>> __skb_tstamp_tx().
+>>
+>> If users expect to see both timestamps, then
+>> SOF_TIMESTAMPING_OPT_TX_SWHW has to be set.
 > 
-> Request 4 mixers and 4 DSCs for high-resolution cases where both DSC
-> and dual interfaces are enabled. More use cases can be incorporated
-> later if quad-pipe capabilities are required.
-> 
-> Signed-off-by: Jun Nie <jun.nie@linaro.org>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Right, skb_tx_timestamp does nothing and bails out if it detects
+> SKBTX_IN_PROGRESS. And skb_tstamp_tx in mlx5e_consume_skb handles
+> only (and will trigger only for) HW tstamp case.
 
-Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
-
-> ---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c         | 27 +++++++++++++++++------
->   drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h         |  6 ++---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c      | 28 ++++++++----------------
->   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h |  2 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h   |  2 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h      |  2 +-
->   6 files changed, 35 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> index a56d68de219910a827830293e8ff24f4cdee74e4..f22ca13b35e778fed3e6e02c581ef689a5544cfb 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> @@ -200,7 +200,7 @@ static int dpu_crtc_get_lm_crc(struct drm_crtc *crtc,
->   		struct dpu_crtc_state *crtc_state)
->   {
->   	struct dpu_crtc_mixer *m;
-> -	u32 crcs[CRTC_DUAL_MIXERS];
-> +	u32 crcs[CRTC_QUAD_MIXERS];
->   
->   	int rc = 0;
->   	int i;
-> @@ -1296,6 +1296,7 @@ static struct msm_display_topology dpu_crtc_get_topology(
->   	struct drm_display_mode *mode = &crtc_state->adjusted_mode;
->   	struct msm_display_topology topology = {0};
->   	struct drm_encoder *drm_enc;
-> +	u32 num_rt_intf;
->   
->   	drm_for_each_encoder_mask(drm_enc, crtc->dev, crtc_state->encoder_mask)
->   		dpu_encoder_update_topology(drm_enc, &topology, crtc_state->state,
-> @@ -1309,11 +1310,14 @@ static struct msm_display_topology dpu_crtc_get_topology(
->   	 * Dual display
->   	 * 2 LM, 2 INTF ( Split display using 2 interfaces)
->   	 *
-> +	 * If DSC is enabled, try to use 4:4:2 topology if there is enough
-> +	 * resource. Otherwise, use 2:2:2 topology.
-> +	 *
->   	 * Single display
->   	 * 1 LM, 1 INTF
->   	 * 2 LM, 1 INTF (stream merge to support high resolution interfaces)
->   	 *
-> -	 * If DSC is enabled, use 2 LMs for 2:2:1 topology
-> +	 * If DSC is enabled, use 2:2:1 topology
->   	 *
->   	 * Add dspps to the reservation requirements if ctm is requested
->   	 *
-> @@ -1325,14 +1329,23 @@ static struct msm_display_topology dpu_crtc_get_topology(
->   	 * (mode->hdisplay > MAX_HDISPLAY_SPLIT) check.
->   	 */
->   
-> -	if (topology.num_intf == 2 && !topology.cwb_enabled)
-> -		topology.num_lm = 2;
-> -	else if (topology.num_dsc == 2)
-> +	num_rt_intf = topology.num_intf;
-> +	if (topology.cwb_enabled)
-> +		num_rt_intf--;
-> +
-> +	if (topology.num_dsc) {
-> +		if (dpu_kms->catalog->dsc_count >= num_rt_intf * 2)
-> +			topology.num_dsc = num_rt_intf * 2;
-> +		else
-> +			topology.num_dsc = num_rt_intf;
-> +		topology.num_lm = topology.num_dsc;
-> +	} else if (num_rt_intf == 2) {
->   		topology.num_lm = 2;
-> -	else if (dpu_kms->catalog->caps->has_3d_merge)
-> +	} else if (dpu_kms->catalog->caps->has_3d_merge) {
->   		topology.num_lm = (mode->hdisplay > MAX_HDISPLAY_SPLIT) ? 2 : 1;
-> -	else
-> +	} else {
->   		topology.num_lm = 1;
-> +	}
->   
->   	if (crtc_state->ctm)
->   		topology.num_dspp = topology.num_lm;
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-> index 6eaba5696e8e6bd1246a9895c4c8714ca6589b10..455073c7025b0bcb970d8817f197d9bcacc6dca5 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-> @@ -210,7 +210,7 @@ struct dpu_crtc_state {
->   
->   	bool bw_control;
->   	bool bw_split_vote;
-> -	struct drm_rect lm_bounds[CRTC_DUAL_MIXERS];
-> +	struct drm_rect lm_bounds[CRTC_QUAD_MIXERS];
->   
->   	uint64_t input_fence_timeout_ns;
->   
-> @@ -218,10 +218,10 @@ struct dpu_crtc_state {
->   
->   	/* HW Resources reserved for the crtc */
->   	u32 num_mixers;
-> -	struct dpu_crtc_mixer mixers[CRTC_DUAL_MIXERS];
-> +	struct dpu_crtc_mixer mixers[CRTC_QUAD_MIXERS];
->   
->   	u32 num_ctls;
-> -	struct dpu_hw_ctl *hw_ctls[CRTC_DUAL_MIXERS];
-> +	struct dpu_hw_ctl *hw_ctls[CRTC_QUAD_MIXERS];
->   
->   	enum dpu_crtc_crc_source crc_source;
->   	int crc_frame_skip_count;
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> index a125a477404fdafee6495f6d3778160f14a01a96..bbb0873a891879722f2b02767fc48b7406de70f8 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> @@ -55,7 +55,7 @@
->   #define MAX_PHYS_ENCODERS_PER_VIRTUAL \
->   	(MAX_H_TILES_PER_DISPLAY * NUM_PHYS_ENCODER_TYPES)
->   
-> -#define MAX_CHANNELS_PER_ENC 2
-> +#define MAX_CHANNELS_PER_ENC 4
->   #define MAX_CWB_PER_ENC 2
->   
->   #define IDLE_SHORT_TIMEOUT	1
-> @@ -675,22 +675,12 @@ void dpu_encoder_update_topology(struct drm_encoder *drm_enc,
->   
->   	dsc = dpu_encoder_get_dsc_config(drm_enc);
->   
-> -	/* We only support 2 DSC mode (with 2 LM and 1 INTF) */
-> -	if (dsc) {
-> -		/*
-> -		 * Use 2 DSC encoders, 2 layer mixers and 1 or 2 interfaces
-> -		 * when Display Stream Compression (DSC) is enabled,
-> -		 * and when enough DSC blocks are available.
-> -		 * This is power-optimal and can drive up to (including) 4k
-> -		 * screens.
-> -		 */
-> -		WARN(topology->num_intf > 2,
-> -		     "DSC topology cannot support more than 2 interfaces\n");
-> -		if (topology->num_intf >= 2 || dpu_kms->catalog->dsc_count >= 2)
-> -			topology->num_dsc = 2;
-> -		else
-> -			topology->num_dsc = 1;
-> -	}
-> +	/*
-> +	 * Set DSC number as 1 to mark the enabled status, will be adjusted
-> +	 * in dpu_crtc_get_topology()
-> +	 */
-> +	if (dsc)
-> +		topology->num_dsc = 1;
->   
->   	connector = drm_atomic_get_new_connector_for_encoder(state, drm_enc);
->   	if (!connector)
-> @@ -2176,8 +2166,8 @@ static void dpu_encoder_helper_reset_mixers(struct dpu_encoder_phys *phys_enc)
->   	struct dpu_hw_mixer_cfg mixer;
->   	int i, num_lm;
->   	struct dpu_global_state *global_state;
-> -	struct dpu_hw_blk *hw_lm[2];
-> -	struct dpu_hw_mixer *hw_mixer[2];
-> +	struct dpu_hw_blk *hw_lm[MAX_CHANNELS_PER_ENC];
-> +	struct dpu_hw_mixer *hw_mixer[MAX_CHANNELS_PER_ENC];
->   	struct dpu_hw_ctl *ctl = phys_enc->hw_ctl;
->   
->   	memset(&mixer, 0, sizeof(mixer));
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-> index 61b22d9494546885db609efa156222792af73d2a..09395d7910ac87c035b65cf476350bf6c9619612 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-> @@ -302,7 +302,7 @@ static inline enum dpu_3d_blend_mode dpu_encoder_helper_get_3d_blend_mode(
->   
->   	/* Use merge_3d unless DSC MERGE topology is used */
->   	if (phys_enc->split_role == ENC_ROLE_SOLO &&
-> -	    dpu_cstate->num_mixers == CRTC_DUAL_MIXERS &&
-> +	    (dpu_cstate->num_mixers != 1) &&
->   	    !dpu_encoder_use_dsc_merge(phys_enc->parent))
->   		return BLEND_3D_H_ROW_INT;
->   
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> index 4cea19e1a20380c56ae014f2d33a6884a72e0ca0..77a7a5375d545483edb316e8428df12212191362 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> @@ -24,7 +24,7 @@
->   #define DPU_MAX_IMG_WIDTH 0x3fff
->   #define DPU_MAX_IMG_HEIGHT 0x3fff
->   
-> -#define CRTC_DUAL_MIXERS	2
-> +#define CRTC_QUAD_MIXERS	4
->   
->   #define MAX_XIN_COUNT 16
->   
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-> index 7c74221380b2c05225c9f82ed6d33765042aec78..94f117e36af83602e5254ebcf5f28de36fd79886 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-> @@ -34,7 +34,7 @@
->   #define DPU_MAX_PLANES			4
->   #endif
->   
-> -#define STAGES_PER_PLANE		1
-> +#define STAGES_PER_PLANE		2
->   #define PIPES_PER_STAGE			2
->   #define PIPES_PER_PLANE			(PIPES_PER_STAGE * STAGES_PER_PLANE)
->   #ifndef DPU_MAX_DE_CURVES
-> 
-
+I see.
+Patch LGTM, except for the function name nit, pointed out in an earlier 
+comment.
+We could remove the "hw" from function name mlx5e_tx_skb_update_hwts_flags.
