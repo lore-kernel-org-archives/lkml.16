@@ -1,62 +1,75 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9821F27A441;
-	Thu,  8 May 2025 18:37:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5748286D70;
+	Thu,  8 May 2025 18:37:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746729455; cv=none; b=OOZuJFc4LT0C43GTRFrIOMMdC73z1MgKPN6oRDf6vKzzVFip1Te/sAAy1JtmY0VzrXYqFAXiLGU5B1n1HEsi/u0efKVjTdWNiAeN+kHyIbqdw2gnJRqkSXHVMH525KD6KKX7NlaamA/PFLz/YSizjmQedpF9MzqWdrlt8dKkUvY=
+	t=1746729457; cv=none; b=i4diHn7LrbWI/Z/YlFkvg7DLTE0cudrvwqfH+aAwLKCRsyV3x4MkbuRXeLMFsH1xK5CPJjbIJstciOvS3+T9VktD3SfkdX8BacJ9izjxsr2ChlV302twivWnB3Ii9vpQljfjW07/6jtBAJYQaBv4++BNOuAa05f2xjD138/XFiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746729455; c=relaxed/simple;
-	bh=GSuc35WTKIW6mLi3m17zcCwP27KFa6TYCm4bbpgZpPI=;
+	s=arc-20240116; t=1746729457; c=relaxed/simple;
+	bh=LVtUUN2MrfsyK80smjhH6AaJQhd0Umzk+ryvBq/tDD0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HSr7+4p4K7bHkzLJ3xTS0W4xchTSSypxEecVq9cEiQo3BtfhHLRcLtaF4ZUf8cQ+AzO6aPGYuYjKeubucGmzGeECHIKvAERFiFAmejwU3KRgwQGRpMEIUl1zfvYF1VZ5SHeBby8nay+jStn7WHh3JLB/Aui4lv3DQPYtKRijPEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FHyOnToX; arc=none smtp.client-ip=198.175.65.10
+	 Content-Type:Content-Disposition:In-Reply-To; b=EshW895YmGkkiSWYj07fcF1tjFycAGmaB8XOhGbBJL7cC0gHdi+QvMnOtEQ/DwKrVa/6TpNss2Mhm1Z4891BayOZD7aYPyF5d/5LSPLmX/cCrTAouivupIyINYL71MmMwgYgksAdpm6VFhCPiwiWqfL9fLMYqMBizezk2ecCmDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IXmT0d0P; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FHyOnToX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IXmT0d0P"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746729454; x=1778265454;
+  t=1746729456; x=1778265456;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=GSuc35WTKIW6mLi3m17zcCwP27KFa6TYCm4bbpgZpPI=;
-  b=FHyOnToXU4NyehrCDyaYVcXTtZC7XIPlxQdj7LnLTYRTcu6beCvgqXfK
-   WPmHUeNDpPtOEbJ3FR4gESXSj2xmtSxRZ53pAArSS70dCmK1rTrIhHf8k
-   eitLWY7xIwRsKE7mhu+ZCN2kk8LlqS1Yu+6rYX701uqFEHSw8iO7SpQT3
-   65cil8iN7bN/Ok0aaO2MAKjXj4oz0lCRc6lmDqfFvqvtytHzJ6MqIXpb+
-   7zDI8/7SL5F/4yDrupX5pzeXoCqlGVAopNffMCw8RFh12u9FnnwUU1XYb
-   vLmEmKRrYil+Vv5TnfGSUcO6SOv6T8DuUkR8Dc6ZIHJDEf5HoetqGX9kw
-   A==;
-X-CSE-ConnectionGUID: mp8ZOAivSY69I5YbTpB3UA==
-X-CSE-MsgGUID: dadwvnCHTRaz7cz6ol6Ahg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="65949370"
+  bh=LVtUUN2MrfsyK80smjhH6AaJQhd0Umzk+ryvBq/tDD0=;
+  b=IXmT0d0P9fCKY2BXh3/KgC9I6hBAB+XKPac/Klpq08xyPgWxPokjN/Pl
+   2rDdlhwPOUgECqXBsVqS+7T2zuBJld6e78KIGeKVEsLTyTxqHobudHjzr
+   8mHOt27TZJ5ug5dzkuRrzgJFhtz45dLyhvT4WyE4EmEhqzhqtM/KgNykz
+   iWcQ2dWdQlfHQrTr2WqAI4T5lA4gx3+lrrrQN7/z7EkQtBUwcir2wuelq
+   K4ktqu3nT6hQyNqTFakgL7s6uHCbo/isuhZjgOLAWUXvsmKquAtGw5Rbl
+   GtkZJX2nt/A+77wn8NVXUwGTxm+rkk20jvjFg3oj5/Ktg33FwoK/T1T+B
+   g==;
+X-CSE-ConnectionGUID: vYPHGsWyS6G4X/qdwOOGrw==
+X-CSE-MsgGUID: b+XNGQQ0T+KWzapp2ljwiw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="65949376"
 X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="65949370"
+   d="scan'208";a="65949376"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:37:33 -0700
-X-CSE-ConnectionGUID: uv4Y3IJBTPC4FtOKn6Staw==
-X-CSE-MsgGUID: cKEZ55OTQeumHfm/UdTNBw==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:37:36 -0700
+X-CSE-ConnectionGUID: z4vP90/9SX26Xj5i1zn72w==
+X-CSE-MsgGUID: JwEnOJrdQlmA6ZPuj15nnA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="159678630"
+   d="scan'208";a="159678634"
 Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
   by fmviesa002.fm.intel.com with ESMTP; 08 May 2025 11:37:31 -0700
 Received: from kbuild by 1992f890471c with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uD67d-000BGV-13;
+	id 1uD67d-000BGX-17;
 	Thu, 08 May 2025 18:37:29 +0000
-Date: Fri, 9 May 2025 02:37:03 +0800
+Date: Fri, 9 May 2025 02:37:04 +0800
 From: kernel test robot <lkp@intel.com>
-To: Dawei Li <dawei.li@linux.dev>, andersson@kernel.org,
-	mathieu.poirier@linaro.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dawei.li@linux.dev,
-	set_pte_at@outlook.com
-Subject: Re: [PATCH 2/3] rpmsg: char: Implement eptdev based on anon inode
-Message-ID: <202505090243.edAOs4uG-lkp@intel.com>
-References: <20250507141712.4276-3-dawei.li@linux.dev>
+To: Vitor Soares <ivitro@gmail.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: oe-kbuild-all@lists.linux.dev, Vitor Soares <vitor.soares@toradex.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Aradhya Bhatia <aradhya.bhatia@linux.dev>,
+	Jayesh Choudhary <j-choudhary@ti.com>, ivitro@gmail.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] drm/bridge: cdns-dsi: Replace deprecated
+ UNIVERSAL_DEV_PM_OPS()
+Message-ID: <202505090233.0YCNNAzE-lkp@intel.com>
+References: <20250507161800.527464-1-ivitro@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,45 +78,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250507141712.4276-3-dawei.li@linux.dev>
+In-Reply-To: <20250507161800.527464-1-ivitro@gmail.com>
 
-Hi Dawei,
+Hi Vitor,
 
-kernel test robot noticed the following build errors:
+kernel test robot noticed the following build warnings:
 
-[auto build test ERROR on 92a09c47464d040866cf2b4cd052bc60555185fb]
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.15-rc5 next-20250508]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Dawei-Li/rpmsg-char-Reuse-eptdev-logic-for-anon-device/20250507-223209
-base:   92a09c47464d040866cf2b4cd052bc60555185fb
-patch link:    https://lore.kernel.org/r/20250507141712.4276-3-dawei.li%40linux.dev
-patch subject: [PATCH 2/3] rpmsg: char: Implement eptdev based on anon inode
-config: x86_64-randconfig-r052-20250508 (https://download.01.org/0day-ci/archive/20250509/202505090243.edAOs4uG-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505090243.edAOs4uG-lkp@intel.com/reproduce)
+url:    https://github.com/intel-lab-lkp/linux/commits/Vitor-Soares/drm-bridge-cdns-dsi-Replace-deprecated-UNIVERSAL_DEV_PM_OPS/20250508-001902
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250507161800.527464-1-ivitro%40gmail.com
+patch subject: [PATCH v2] drm/bridge: cdns-dsi: Replace deprecated UNIVERSAL_DEV_PM_OPS()
+config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20250509/202505090233.0YCNNAzE-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505090233.0YCNNAzE-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505090243.edAOs4uG-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505090233.0YCNNAzE-lkp@intel.com/
 
-All errors (new ones prefixed by >>):
+All warnings (new ones prefixed by >>):
 
-   In file included from drivers/rpmsg/rpmsg_ctrl.c:28:
->> drivers/rpmsg/rpmsg_char.h:54:1: error: expected identifier or '('
-      54 | {
-         | ^
-   1 error generated.
+>> drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c:1148:12: warning: 'cdns_dsi_suspend' defined but not used [-Wunused-function]
+    1148 | static int cdns_dsi_suspend(struct device *dev)
+         |            ^~~~~~~~~~~~~~~~
+>> drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c:1137:12: warning: 'cdns_dsi_resume' defined but not used [-Wunused-function]
+    1137 | static int cdns_dsi_resume(struct device *dev)
+         |            ^~~~~~~~~~~~~~~
 
 
-vim +54 drivers/rpmsg/rpmsg_char.h
+vim +/cdns_dsi_suspend +1148 drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
 
-    51	
-    52	static inline int rpmsg_eptdev_create(struct rpmsg_device *rpdev, struct device *parent,
-    53					      struct rpmsg_channel_info chinfo, int *pfd);
-  > 54	{
-    55		return -ENXIO;
-    56	}
-    57	
+  1136	
+> 1137	static int cdns_dsi_resume(struct device *dev)
+  1138	{
+  1139		struct cdns_dsi *dsi = dev_get_drvdata(dev);
+  1140	
+  1141		reset_control_deassert(dsi->dsi_p_rst);
+  1142		clk_prepare_enable(dsi->dsi_p_clk);
+  1143		clk_prepare_enable(dsi->dsi_sys_clk);
+  1144	
+  1145		return 0;
+  1146	}
+  1147	
+> 1148	static int cdns_dsi_suspend(struct device *dev)
+  1149	{
+  1150		struct cdns_dsi *dsi = dev_get_drvdata(dev);
+  1151	
+  1152		clk_disable_unprepare(dsi->dsi_sys_clk);
+  1153		clk_disable_unprepare(dsi->dsi_p_clk);
+  1154		reset_control_assert(dsi->dsi_p_rst);
+  1155		dsi->link_initialized = false;
+  1156		return 0;
+  1157	}
+  1158	
 
 -- 
 0-DAY CI Kernel Test Service
