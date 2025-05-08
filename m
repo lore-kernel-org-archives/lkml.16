@@ -1,106 +1,83 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C021957FC
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 11:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5211917F4;
+	Thu,  8 May 2025 11:36:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746704114; cv=none; b=e986erjJu9UDsuNcQ0PcbsA+nEYBc4Z/gldfFqPcYBHmjVkETWuGYTWCFTs8KxVoOPoK7vjYzXvPtZXgaLlFJOjwsJmBAPtzlDjS9NBz5swYyzeE1PjRc8y4wh0ynRuJPmMqO6VflkpfgCc3Su/dlivci36ZJ081xEaIsHOF8jk=
+	t=1746704179; cv=none; b=AiYS1Lvbk735zno4oBuerg2ggkBUQmi2+RS713zOzrThqR+9MhM253om6GyAqesgF08vZmcM3BGVf0C2DhETlqTWfI8XPH7JQFdalmLDA1u4btzBjY5hcz7h2Lu0xUzQzwHgajaUaJo2jqapXDclxGe71OtC3LU7uYc3xDpT/BQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746704114; c=relaxed/simple;
-	bh=bvVyv6xMDGMJyUYc55F9Ofhjgol/RDYaGz3yYp9ZNsY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tG5nTnxV9ni6XO487cKv0/acidY3NFskkujz9tu2c8VAvsOd5VN1w2EA66YviV8/ljVCWb0vAEeljCz4gh8OaDd0FV62wPdE1U4Y4NjlNCSZShiFtEW20dBeGcP0oaa+wb7xD5FCdIpU1zq6iRZ+rWG/JGKaLCBuKj4R8LIOuqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cErWP2Vc; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746704179; c=relaxed/simple;
+	bh=BU8NQeplfoLhhubiqXdhGOT23Wqj5sJj4znksBSAoxE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=DfOp/XCN1HQRpx0qfQffDEdCx7XF9dlMzWOC7F0oaEtAks9L7WKfvH0TIk6murY0eiAyGmNZ5gQHHNWuZz0jw7EpFPsfo2JntMlJhxRceowGOqet8tnUbXTHa5ZCT3DmHE9ForyPaFkpfo17nJbpYQCWYJkubyVUr3MQDkBkUxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=JMo5OmnF; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cErWP2Vc"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-708a853c362so7885347b3.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 04:35:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746704111; x=1747308911; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+cFDupK6Xf2E6C4tAlReAOJJ7NUs3xHRwtk+nXwvxV4=;
-        b=cErWP2Vc/udCDZVBdVmIOClhqgVwY5EE0StXi91/R55KoNHE9Ne4hqyo1PrCO3+2CF
-         9XnzoeQKlP6Dc4Bf/SGBhLoRAd2wBK7ctdqxu8li70ktwE5BzlEalTqC75Xo7DKShKHv
-         myd3fBwnxA1VvoFVylqPXZeSrQLX2MGY/OoIcRSvzTUE6xgc+jQr/CwtIrBISKWmsX9p
-         B7pFG+mfmwCGCBs9UgDTkJb4kCV6NzR6Cy+ugQ+YdWQYXOzlsLLRMOI78nP1bRhIPtRX
-         cxqlye0x0MYW7VGWdEz4/2WLYGJDs4/BUEtv4DgWLh7+sgCPLCNvZofzJgzdnZr6jMtN
-         y1Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746704111; x=1747308911;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+cFDupK6Xf2E6C4tAlReAOJJ7NUs3xHRwtk+nXwvxV4=;
-        b=Zb3sTX2WmPfpIgj+733/rl4YUHwoROaTijzT7b26gDWYpKDl0sxwcdLPdLh2ZiacWO
-         nolPKetO1/e3FRWC8t7RsMlgD0HYbVA0X5gN8Chm/yXA0vh34uhUGYZ4bkZBuzbSUNfE
-         EhRkyHFvmTIfyh8Xr41NFSCYxRM2eTYoqyXcQsGldJjyvgRaLSzso3AaruX6DH4BAl6P
-         HFwYYbrJCtXeaTWojNPQ2Rd1R9QqZ5RGMEU1nI3z/uFo72DSMF3vRD6otP/IKNfFEnf2
-         kUt177Y+3aCYgu3IgCHv1iQQpgWBAn3IkFlCkWmOmVAwShwHknJ5UcjdUb8rua/fNLkl
-         zVCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvSDqSrnxw5tsCt9dXlsD1LJepXGaRsR++bxbMcgbnaiZayAv/XoLfkuEUTLJxrGxx7KkGTymKtL+fHnM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxrPtY+ZWkoCB9kBPDGoGlgXeATg9MUilBBhBWsE/o/84mfG3E
-	l1G3FZD+/aPhIERYHoHoB0XrVaEg9bef6TGwYThv6lA5dqO29CxN/+zjQQlY24IJU0WYCwfktBi
-	Rj2yXxQ6/U4YPHZmPAEueN7a3piQYtNxOEMKtCQ==
-X-Gm-Gg: ASbGncvnW2TJCjFzQew20XMYK/ncmL1Npnktklc0WcV29G4wpo10i6609wSWHHhZi1q
-	JQtljkfAa4zFTfobDOuAoGqEKCDsmtvWV1YP8NkQgp9HvnMi3MH8b3vxDWeU4IrfvKSgEW1GwQe
-	BAvk7XdonkHfO6rhGbZCMVGiw=
-X-Google-Smtp-Source: AGHT+IHN2lUuKUTarkdcjyDqAknRCn/fWmfDn/tSy5fWl2NXM12u16FDC4NBp9NnMQQejpVFcCMkShO7wmk1XhnlUdU=
-X-Received: by 2002:a05:690c:3581:b0:6f9:48c6:6a17 with SMTP id
- 00721157ae682-70a1db14904mr97981527b3.26.1746704111629; Thu, 08 May 2025
- 04:35:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="JMo5OmnF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=C7cZX+eXm/vbJId8kTehe4+vFu6+Xjt+OeRYHMWNqmA=; b=JMo5OmnFRL3WZHIa
+	gxoigHirafSLWNb0Y2m/qGorjVcMUVl5+s3BtTEuSN2/iGPsnALVK86HT4Wa5yVsVi62V+LjTCp45
+	gYDua7TyOPdSPc2ZvmHnlL9Z2kihLfC075UuGUMKB54Qcf47BOMrXIKkx7W29Q4MMNedMNNiv1pkx
+	RMW6eL4sZxRLEmeTa2NVPiIHdQDKW+vFeG70zeSl6Tcos04JLqItFCLTBuPP+AgiaG4qYXNxUmH10
+	7M8g2kjRfc//7uxl3sLeVdIwUcfD1fWpaJGzM4QzVJajGaAdtMq/2fns68tLOzfhqJLkwkgJJKAfI
+	E6ltcAdqVr6mWIIGfw==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1uCzXo-002Mu8-2h;
+	Thu, 08 May 2025 11:36:04 +0000
+Date: Thu, 8 May 2025 11:36:04 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: perex@perex.cz, tiwai@suse.com, krzysztof.h1@wp.pl
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: question on sound/isa/msnd/msnd_midi.c
+Message-ID: <aByXJKi2j7B4b0bH@gallifrey>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aBxPQ8AI8N5v-7rL@stanley.mountain> <CAPDyKFoZiEAn8yT8a9VZqayR1=HPnMn+a51O3zUAUR3L6RXH=Q@mail.gmail.com>
- <aByIzTj2t1I9Wrzw@stanley.mountain>
-In-Reply-To: <aByIzTj2t1I9Wrzw@stanley.mountain>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 8 May 2025 13:34:35 +0200
-X-Gm-Features: ATxdqUGOeXxjQLDl7WQSeWq8Dw_7uuE6KmRvz_BasEIpW18BLduzRZu0OBCb7go
-Message-ID: <CAPDyKFpiqrZwebmo+n9mO6Fce3ZYWhVLzcDu37SfphdvpQxSiA@mail.gmail.com>
-Subject: Re: [PATCH] pmdomain: core: Fix error checking in genpd_dev_pm_attach_by_id()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Niklas Cassel <niklas.cassel@linaro.org>, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
+X-Uptime: 11:27:35 up 10 days, 19:41,  1 user,  load average: 0.07, 0.04, 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On Thu, 8 May 2025 at 12:34, Dan Carpenter <dan.carpenter@linaro.org> wrote:
->
-> On Thu, May 08, 2025 at 12:14:41PM +0200, Ulf Hansson wrote:
-> > On Thu, 8 May 2025 at 08:29, Dan Carpenter <dan.carpenter@linaro.org> wrote:
-> > >
-> > > The error checking for of_count_phandle_with_args() does not handle
-> > > negative error codes correctly.  The problem is that "index" is a u32 so
-> > > in the condition "if (index >= num_domains)" negative error codes stored
-> > > in "num_domains" are type promoted to very high positive values and
-> > > "index" is always going to be valid.
-> > >
-> > > Test for negative error codes first and then test if "index" is valid.
-> > >
-> > > Fixes: 3ccf3f0cd197 ("PM / Domains: Enable genpd_dev_pm_attach_by_id|name() for single PM domain")
-> > > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> >
-> > Thanks for the fix! It looks correct to me!
-> >
-> > What puzzles me though, if this is a real problem I am sure we would
-> > have been receiving bug reports, don't you think?
-> >
->
-> I think it would only cause an issue for invalid devicetrees?  So it's
-> probably not an issue people often see in real life.
+Hi,
+   I noticed that nothing calls snd_msndmidi_new in
+sound/isa/msnd/msnd_midi.c and was about to delete it, but I'm not
+too sure - I think it's actually a bug where it should be called.
 
-Yes, you are probably right.
+  This code was added in 2009 by
+commit f6c638350275 ("ALSA: Turtle Beach Multisound Classic/Pinnacle driver")
+(Pretty new for an ISA card!)
 
-Anyway, I have applied this for fixes and added a stable tag.
+Looking at msnd_midi.c the only function in there that anything
+calls is snd_msndmidi_input_read() called by msnd_pinnacle.c but that
+is guarded by a check:
 
-Thanks!
-Uffe
+  146    if (chip->msndmidi_mpu)
+  147          snd_msndmidi_input_read(chip->msndmidi_mpu);   
+
+but I don't think anything sets that msndmidi_mpu, since the only
+thing that could is snd_msndmidi_new() which isn't called.
+
+I see that the original poster didn't test the external midi:
+   https://mailman.alsa-project.org/hyperkitty/list/alsa-devel@alsa-project.org/message/CWPYLPLJQEK64UU3YFCAMVXGDY42QKF2/
+so I guess this has always been missing.
+
+I don't have the hardware to test.
+
+Thoughts?
+
+Dave
+
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
