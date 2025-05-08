@@ -1,124 +1,132 @@
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EB7220F23
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 21:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1AA15B0EF;
+	Thu,  8 May 2025 21:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746740185; cv=none; b=HBkn5EPznjhulSgitIXNaXv6xSZTcV/MwsynrtiyIPT8qj/CfjS4k6pjkxdaXudgkfRloqLLGitFd6d3aOK0fKeG/AxjipPRbLIZxAuAB5AWSi+ALpJEdZDMeMI9rtj23XVlFW6K4s6mdemLpTVjcgLaVjGqF8JMHhudaeXrw/Q=
+	t=1746740404; cv=none; b=OZ53MIc4z8o5EuUBYEupupg4J2ygALyrDJiXV+vzlpCFGb5JF4qhJaVKinAtvV3XUku62diahqjLS7ik3qX4p20PEmq2dnCg0E5RqFECXdBwuL28vOEGbHNp5RGlNe4TzmLSXUyPKE5u/ecNx58QGqS8fow3xXwibCsLJexO65E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746740185; c=relaxed/simple;
-	bh=26zDKqAMHLoU5RTA1Sv8YHd3YspOEzIEa2pXaGqWlKY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WT1uAQSkE1VjHM1xkqNTJzMMrotN126nW3uIWYhX8iF39ndLI55z4KoWXQzIb814UXkxFEojS3AouTEP7Al6KzSlgIJmUSMTJ5fmGfpOk1K5tilkWs0iBBmkjh21bud4EIpALQriH4hcf7fF85vBCjgS14v8yg813NiEk6Del6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PE0ee5S6; arc=none smtp.client-ip=209.85.217.46
+	s=arc-20240116; t=1746740404; c=relaxed/simple;
+	bh=6yVxsi2E85S+R5lW4kL/CgTk3eP3swRhsuthT/n+Ti4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WTQ5CHex+IxmzSfFmqiJt0/2EaburXfTvuLwjWW8wT2Z/7iUoIRSGEr9EI3yc7Z8d4oWmov4PIUDHxd6Qd+SmGDlcZH8bF+IKXq0KyHburJHneFNLpNRppmthMi2MpHgomPIEEtl+FZ2bnt2S6OVP/PgndX2T+FLE3CbNPVtprE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KYAVXbAL; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PE0ee5S6"
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4c4e1f16833so448561137.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 14:36:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KYAVXbAL"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a1f8c85562so28543f8f.1;
+        Thu, 08 May 2025 14:40:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746740182; x=1747344982; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1746740401; x=1747345201; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=26zDKqAMHLoU5RTA1Sv8YHd3YspOEzIEa2pXaGqWlKY=;
-        b=PE0ee5S6OjqGakIJ9izusF7KW/+J3CpVauAQsq4cer4IpdyI4YPafRdybk2qiah09h
-         kbhm7ZtrmHpOscJKvMWyrV+kDtkNJOWiAYja4b80/mHndQ2bduKUUHM+Usw4xf7TrB6L
-         8SaTYcpad8pVvHkiAcmu+3ngSEAgnxq2Pb54g0LSom9RvDYzGB3omUU0c2yyoJrn1AjC
-         1dYqjqrDzkXBkLtricbksJrsV8Uvkwb6b013o1ulGNZ044kzyjwDhtXIIvV7e6V5EFUS
-         PgDSugKX2a0QGx53YbD0n8Qj9l3KSLm6Yqeiyt4BGLGKRIYvGfnAIctymtorCPo4PRUK
-         CWZA==
+        bh=b6iKxLNv8V7pETLeJH3poz4r78D0xk17zrhZAC6yXQY=;
+        b=KYAVXbALEKE3csg7MWk1wJYJ+GvVT5lYKYFC7UpPY+nAnef7TiEbHlWO3Qs5PzZQWR
+         HFQbtEFqKxXgHA82vWX89f4kn6U+NTgRtXX8Ivz/PBmGeMHSecF80w70Z+CcNqHaDVxF
+         z44a4uYNWGbzvZ8bx8MjgmoYsWYLIJUw0n8G24E5tSBV5Sj3ky8jaanZzUnBe0zOa8/I
+         iwFC58as3KV0rKBc0HbBuapuMOzncgNh90K4VR1sLuaFFmynQyg4KhPr5my7+i70zeq+
+         yMJJlXb/H9mBMu7LbDE84FI59Z9CUOB5THSHRY6p3fg5LWJvvOakWAZ5Jm9J8yF+mJf3
+         SjYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746740182; x=1747344982;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1746740401; x=1747345201;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=26zDKqAMHLoU5RTA1Sv8YHd3YspOEzIEa2pXaGqWlKY=;
-        b=V3fT2+VdBFudHrSmD9OGbu5VyhnhdOGrwwO74iAgZz9oICSN6GOvF8tsScTtfA8yJu
-         dLLTONhVvPWJY05h0Jvqplajkwrv615iGhIj7tA0pHshyjw61yAtY8q2wbDsANPFmUCG
-         UOA2Hn3FrmznfzBon/2pOpGNaSCf/RxgmGTQYNbAKMpBu4yG/1LiwqUIsgmzJByNxqQI
-         KxGjV7+t/qh6bioBWlMx1F4kuZQRC992FCwNt9up8hdOMlUPL3Dcy6JtvyiezotsYk+I
-         gnYYMQ7q3xircIy70Mb4IfBp4NB4rxUjmqfKatvCoVjtBVBxDW5G4oSFE0zWXMmGC2l6
-         K/Xg==
-X-Forwarded-Encrypted: i=1; AJvYcCWVqquvMnfWhK+o0mhrC3OPm+YFP9AYzd9yfAU4pkb6N85W7Y1VB4AdLwZ/A6LAr/n8ZJLjv6po6RMtubQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFJ+9dgmy9URgJoPn9SgN0dF/3UB8xaMOpbYwQveRm0eKnpcYt
-	1+tIDG9EzmIB0bDKlEHslF5TNgCyNFoOhZOyqMzLXQZLrLSAzMpPxrJMBJrek1D2M+THDCFIRul
-	V5b6ayXKMvCKWz1/0J7MVjxdEdUc=
-X-Gm-Gg: ASbGncs3pKLRzzhlWO3onGWOZTric9TqZ9L/d+m08d3OkuISWfXkOEk3iRBpPcEJwWs
-	nxEqP6e78KG4KHBvH/M8AB7y7BoL95SnvoNImgsuaDpjQqu7y6vkAopu6riizD7fRJamSZS1FyW
-	6M2PdTr/TZfLxmkFaWpAfxtg==
-X-Google-Smtp-Source: AGHT+IEy7LHeE27vl9WIdNN8TAFalU6lGLqSRL81CvZXvba5jmHKr8MbVut43YTi0kfBOO5ncTZ9H7TM8nIp4vtA4KY=
-X-Received: by 2002:a05:6102:4a8c:b0:4db:154f:aa02 with SMTP id
- ada2fe7eead31-4deed30ce38mr1415177137.1.1746740182375; Thu, 08 May 2025
- 14:36:22 -0700 (PDT)
+        bh=b6iKxLNv8V7pETLeJH3poz4r78D0xk17zrhZAC6yXQY=;
+        b=KCVc/lVz5frLy7U1cmuaubJft3YY0eCYgPzkoJpruUJtoTT5ppK2FITH6UOI0AhVM7
+         +C6BQNClVtphcykFgIB4Fw1F8s7uWgahnaOL5rfXZTTSm04OAXpo1IvGob/6h2JkSpnC
+         PlwTXNtYNbLeEnbSZ2VFaNG91DgH2HlBbZTPHteG0dQPkBhbIJ+5r5Id7sOiyxTsfDQu
+         Ge46RHn2+oKdrZ+zTZaAaHvHYNQwUbFkp4UhnzY20mHG5GMhjqq4QuWecRig4RDett4y
+         9PDtgj+orKQizPT1XFAUqE/U+cQ2LiuSzNsZMnuXGEOskCYBXdguzg8M+8w/VielR7ld
+         NS1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW/eF2u5j/7dIPE+cs2PnkepkTUrVl5k8vhxEej3LLm5y7YEHqTpQS3IUVQX3rMR349tOk9mDRr/wvGxSjG@vger.kernel.org, AJvYcCXnHZRv2eWjnzO8SuDlNTtNXY3O5jtLtq/pdGy982E3ZU/m7lK9J9dMs06ITIag4re5S/yt4/kmKc8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKS3KV+9ffKWScMRixeY80VRJKyf5bdFhLMOeifQSm3YpJSWfl
+	yVYloH3Per7E3UrsO6KbeyLgNf9587yqtcDY11DKvlMdCOWnEY6+
+X-Gm-Gg: ASbGncsJTEW9wIY6EvrzLLkjPZBdTOQp5W8PfJBlZX5AGr5lDOyhiq0+O4JJd2o+Uba
+	SyVfOfNrpv3YqJWvAunHh6DrJVXmQ67gyGrBM3WH4nYcaoNFCesBZUr8LkWJhZvWYDZBQUjZkgG
+	wmbLGE8HbeOgXUK3WB9TMKpxwy5Z4H4nXdWdvb7EbCenUyR31y+mRflE0dDNP2UJO+hHA+nH7Zu
+	J9AfQh0VeXjkAg7eAiiEHa5SF6qt6OldYL9rNRqJms2HS9CpIjv8mnVkq3VUj7vw4suJf0NnqPP
+	QgchCEhdsxQw03Q4wftOJQe6UFGAI/JiUHt9ggOCzU5yEno6m86hCClpcF5CpTSLBmw5w5d/L3n
+	TcMz3wfwSNyFoZA==
+X-Google-Smtp-Source: AGHT+IE0WPQ/O8hzBzdH+71zuXvnfTcTp1gVeC9FNstp3An7yRQmTACh7fhbKRYnp0MWiYuGxTvlCg==
+X-Received: by 2002:a05:6000:4304:b0:3a0:b294:ccf2 with SMTP id ffacd0b85a97d-3a1f649cc02mr938659f8f.52.1746740401013;
+        Thu, 08 May 2025 14:40:01 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2a12sm1101305f8f.44.2025.05.08.14.40.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 14:40:00 -0700 (PDT)
+Date: Thu, 8 May 2025 22:39:59 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Eugen
+ Hristev <eugen.hristev@linaro.org>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 1/7] iio: make IIO_DMA_MINALIGN minimum of 8 bytes
+Message-ID: <20250508223959.70e909d2@pumpkin>
+In-Reply-To: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-1-814b72b1cae3@baylibre.com>
+References: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-0-814b72b1cae3@baylibre.com>
+	<20250505-iio-introduce-iio_declare_buffer_with_ts-v5-1-814b72b1cae3@baylibre.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508090735.39756-1-21cnbao@gmail.com> <aBzMf6H9Lad6CaFQ@x1.local>
- <CA+EESO7J189B=rrM93NLo_22XirEkp16ttd+Ys2ShqNxKvZcbA@mail.gmail.com>
-In-Reply-To: <CA+EESO7J189B=rrM93NLo_22XirEkp16ttd+Ys2ShqNxKvZcbA@mail.gmail.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 9 May 2025 09:36:11 +1200
-X-Gm-Features: AX0GCFs7i0Fgmspd5yZQhwdm-Rw-CeN8l-Y8J88CN_rblOo8bSiZ0fXu9LaRc5k
-Message-ID: <CAGsJ_4y=9_NYkQDPVp5dcsr70EE=fBOmwpoRM623uwB-+7Q1Ug@mail.gmail.com>
-Subject: Re: [PATCH RFC] mm: userfaultfd: correct dirty flags set for both
- present and swap pte
-To: Lokesh Gidra <lokeshgidra@google.com>
-Cc: Peter Xu <peterx@redhat.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
-	David Hildenbrand <david@redhat.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Kalesh Singh <kaleshsingh@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 9, 2025 at 3:27=E2=80=AFAM Lokesh Gidra <lokeshgidra@google.com=
-> wrote:
->
-> Thanks Barry for fixing this.
->
-> On Thu, May 8, 2025 at 8:24=E2=80=AFAM Peter Xu <peterx@redhat.com> wrote=
-:
-> >
-> > On Thu, May 08, 2025 at 09:07:35PM +1200, Barry Song wrote:
-> > > From: Barry Song <v-songbaohua@oppo.com>
-> > >
-> > > As David pointed out, what truly matters for mremap and userfaultfd
-> > > move operations is the soft dirty bit. The current comment and
-> > > implementation=E2=80=94which always sets the dirty bit for present PT=
-Es
-> > > and fails to set the soft dirty bit for swap PTEs=E2=80=94are incorre=
-ct.
->
-> Can you please briefly describe the consequences of not setting the
-> soft-dirty bit? I'm wondering if it needs to be backported as a fix?
+On Mon, 05 May 2025 11:31:42 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-As I understand it, this could break features like Checkpoint-Restore
-in Userspace (CRIU), which relies on tracking memory changes to create
-incremental dumps. While Android may not currently have a real-world
-use case for this, it would still be beneficial to backport the fix in
-a general way.
+> Add a condition to ensure that IIO_DMA_MINALIGN is at least 8 bytes.
+> On some 32-bit architectures, IIO_DMA_MINALIGN is 4. In many cases,
+> drivers are using this alignment for buffers that include a 64-bit
+> timestamp that is used with iio_push_to_buffers_with_ts(), which expects
+> the timestamp to be aligned to 8 bytes. To handle this, we can just make
+> IIO_DMA_MINALIGN at least 8 bytes.
+> 
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+>  include/linux/iio/iio.h | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> index 638cf2420fbd85cf2924d09d061df601d1d4bb2a..7e1e3739328d103262071bd34ba5f6631163c122 100644
+> --- a/include/linux/iio/iio.h
+> +++ b/include/linux/iio/iio.h
+> @@ -775,8 +775,18 @@ static inline void *iio_device_get_drvdata(const struct iio_dev *indio_dev)
+>   * to in turn include IIO_DMA_MINALIGN'd elements such as buffers which
+>   * must not share  cachelines with the rest of the structure, thus making
+>   * them safe for use with non-coherent DMA.
+> + *
+> + * A number of drivers also use this on buffers that include a 64-bit timestamp
+> + * that is used with iio_push_to_buffer_with_ts(). Therefore, in the case where
+> + * DMA alignment is not sufficient for proper timestamp alignment, we align to
+> + * 8 bytes instead.
+>   */
+> +#if ARCH_DMA_MINALIGN < sizeof(s64)
+> +#define IIO_DMA_MINALIGN sizeof(s64)
+> +#else
+>  #define IIO_DMA_MINALIGN ARCH_DMA_MINALIGN
+> +#endif
 
->
-> > > This patch updates the behavior to correctly set the soft dirty bit
-> > > for both present and swap PTEs in accordance with mremap.
-> > >
-> > > Reported-by: David Hildenbrand <david@redhat.com>
-> > > Closes: https://lore.kernel.org/linux-mm/02f14ee1-923f-47e3-a994-4950=
-afb9afcc@redhat.com/
-> > > Cc: Peter Xu <peterx@redhat.com>
-> > > Cc: Suren Baghdasaryan <surenb@google.com>
-> > > Cc: Lokesh Gidra <lokeshgidra@google.com>
-> > > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> >
-> > Acked-by: Peter Xu <peterx@redhat.com>
-> >
-> > --
-> > Peter Xu
+Did you actually test this?
+You can't use sizeof() in a pre-processor conditional.
 
-Thanks
-Barry
+	David
+
+> +
+>  struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv);
+>  
+>  /* The information at the returned address is guaranteed to be cacheline aligned */
+> 
+
