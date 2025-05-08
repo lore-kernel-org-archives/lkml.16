@@ -1,186 +1,319 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D353266F10
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A269253953
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746713427; cv=none; b=mrb+By4CskMuHq4imfeje7o1Yl9pHfjsqecxH3oNqFP07Nhho+nI6by0BjsRb7jPJn77rUrThzu6js/cQmMENO8B1+XWDqB23XhVT5Nx2W2LLQ6WOdqcuhD0AXytL3prVW3A8l8MDYzIZLbrFABXs23FmNRZCJPV6T8R4BujwnU=
+	t=1746713434; cv=none; b=RyoKkkSVV007OG0M6Bq3bVmmdn6ngN+bOzzHlPYtCXzJAY96SxpryQLJC5xlffkvpl9jNXNZ04Zas23Anl3NqHacMJ+eaMFkPBDa9xrjAJqjhv3GvNeOQIakBEgRB8nC95k7UL1iSW+gxMnFGIU8Z63BZQCf73ilPOVwDE/9+mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746713427; c=relaxed/simple;
-	bh=RaCWxBRdYBPrhmSkEzciipjWTledXPE2JsIOwJIPUVc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rRy/MvWRD3ajGu53sCWUaD87mRXc2Y3n08y34i/kb2e6Tu2CWGyBuXFrujKR3m0ulCapzshj9fEWISgZ8i2CK1zfkTAd2p6oetJ0x+MISyV7RYCrtZDZEqJEXIl7Y9k3u43HX0t7AqfnJxgae3+VfyeMFL/w2Q/M1kC9RoPN13k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QDI6i43V; arc=none smtp.client-ip=209.85.216.74
+	s=arc-20240116; t=1746713434; c=relaxed/simple;
+	bh=zwqe8n1F1m1w1e7lXM4Lu8Y4bcVnFfSGuEScYAE6pe0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XxZ0QVJ0GxGwMVKODER/gMrEu8XXzKIXDTfEivKwRNOe18GO94LO1mhILvp09o54Onf0XFIaMcVjTEgdv8LM3yqu39yTMTgJstnXqMcs43lmhd9ZfiibSe4vrAy1oPnJc/wpMivoCufWWuoBdE8riFcJU1wqeXv6/e9GjCScKV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J2jKosAs; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QDI6i43V"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30a3c3014fcso892630a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 07:10:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J2jKosAs"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22e39fbad5fso163835ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 07:10:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746713425; x=1747318225; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=4KGvQ+Q6heMHcK36CVSIx+UJlHy7CJTk2MzDhPy5Mfw=;
-        b=QDI6i43Vy/TKdQgzyIHXEngulWNLc8swjDSmohQmH4KiDjobOStg4pwWY8qHJ1I7eK
-         zylfHqArpSfkdSuspiPCpNU71V3KoCdlH2pshWoyS8ekNOw4Z5BMzQcEs1IfWwkLiHRg
-         QbwRm3MOFIbYdgvIVV9H0IYV+SqUOxYhULgjwqOrU8ohWiFYPciihKjthNkjD4rzAWiq
-         3HDouEl3zLvm42eYixTWR+HXdx78zxDhnbj8LA/UlWfJvbOK/vfwihKaRV9m+Ggavcqr
-         S1M0dAcP1Zi5m64LNAfocQIbYND4Jo9qL/MHB59uT1+p2hP2cjdaA3RN+LoHzu0Po+2d
-         pg9Q==
+        d=google.com; s=20230601; t=1746713432; x=1747318232; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zwqe8n1F1m1w1e7lXM4Lu8Y4bcVnFfSGuEScYAE6pe0=;
+        b=J2jKosAsGylhFy1fJa1yfe2WXE/vVJk4glvsm4PA6099MlVSD6TSxj9xtPOp7kf3F4
+         z8QjTRFCOlC0OGn09Mwu50kr8xygcS42rsXzNWx69LIOxZx6eAC6D/CRCm9Q33ryv+YG
+         RQWAPuJMqv4yUBt+bVKiqdMkY3/UBW4ziMD2GZYf+c4DxnjjxHCP7WmTWNzLuVgPF8u7
+         GLoMUgTLI+b2kEDHk0pHDwbUS/jl4Mzz2z1az8GKZQyWaIUjBpF59gYQeVWWWoDFFfBX
+         dPkQwXg6W2ahb/85IeUaYPrlPhtE3Q+TgJnANjE3TTUhZfgBeR6UoVW+CANxS9FRtYnW
+         2QuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746713425; x=1747318225;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4KGvQ+Q6heMHcK36CVSIx+UJlHy7CJTk2MzDhPy5Mfw=;
-        b=A8OKmnQY4gnRLhwP9Fy/h7oBRAsZddNhpI6QXaM+DWkL3jVe65gY9RVlLQYvJIiLrq
-         5xbyUi3K5kNzfRd3aueIucDsqMUfUQWa1hlhtI5W4VW4eZ2UKLYPgFo+HujbvO35aA6S
-         z8HlGOdvTRvDyePMTTZlqbJuCcxNCSgdDyf7nFwO/MhgUt+/pju5mSVVXAwLsrAUcT3r
-         SYUYVt+4R/mAkEWVW+1jEvUaISEfR8k+7r306paeBFW+24+mZLGmMqFlnhlseXbzFGHL
-         H7Cl+jZmraynCJbxKxSzMSrK5QsdRFLsIowI/7SM62exVTTzjuuc479sOjjXnGqW1D6N
-         OhPw==
-X-Forwarded-Encrypted: i=1; AJvYcCXpMoCcLAjcNoIwRWO68z68BT7jDT0MmD/gWIjEqNETU09LRYC/lXPJYdwcMWH7ko/J+WU/m43YWs1WMzg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzl9qwVvrLWCT8JmzqWeUiW/TM4La3nejyHy9TR0+txKvFs241/
-	+LlsUhC8OnpeQIELpRi30U4hc/sT+ERBh5JyxiPuBzsW+zxBW8ubaRNGmI2a8JJ1tIuwgtz+qks
-	xkQ==
-X-Google-Smtp-Source: AGHT+IEtWJ3nmgNRQEmk4BVb5RHnwtUoCyvuNs/Epm6J06x22EncYKPdDDsnMCNUw8J0F0H1iuL5jdh5x00=
-X-Received: from pjuu13.prod.google.com ([2002:a17:90b:586d:b0:2fa:1481:81f5])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3d86:b0:2f7:4cce:ae37
- with SMTP id 98e67ed59e1d1-30aac1b3f9emr12785433a91.18.1746713424759; Thu, 08
- May 2025 07:10:24 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu,  8 May 2025 07:10:12 -0700
-In-Reply-To: <20250508141012.1411952-1-seanjc@google.com>
+        d=1e100.net; s=20230601; t=1746713432; x=1747318232;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zwqe8n1F1m1w1e7lXM4Lu8Y4bcVnFfSGuEScYAE6pe0=;
+        b=pA+yAkAgmGMVT5IlewOTYfDTAhsG9mxkkOycxe9jzFzjQnxxHIPkX+ckiXFmcaSq1+
+         2PNiTDMPaOJJFu7r59MNmqjFg81nA2JPtNaRbxK9SBymo/X4MWhWSKBQToVEKc1gZHgV
+         n5F/P4BM3IZM2BTHE8Q7gllwhMPMt5AC3fihPfV8JEM4o/97t850FGNZTbaL+A41ZeoT
+         EWjimwzjcXBlPUqa6UspKLCqfX4GaTtjPiAMlUsnshT7VKeJK89PLWlbosjtpCslLc6S
+         sl5groucyGLEt/2RoA//9psxZbalBpn4ech4LKXKjVVnhRDIr9NOlzkwSC0cG3r68X2t
+         DB5g==
+X-Forwarded-Encrypted: i=1; AJvYcCVbTqO/gIZiNvSyDZ7PkhoijbeBajCwTTRi+UITbvjgzb1ZgR/3fEG423kWkLGXbc4x+ORAF0fEbBD6WSk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIJzLfjFZo+ej7ss8f4vpCSD+6/GtobWklOtZs2xXRKjx7vRyH
+	oEe9HQzt2s0JN/kOkvADDEcqff8uB9bHQDxy9M0TRk7T/BsbG9ysGB8PmkC4t49n6EHMlCH4BZf
+	Obg7l+Cx3IjBOJUwnb3AYdwcFQIhNv+cg7sIC
+X-Gm-Gg: ASbGnctXY72nnTr+7b7JnCw0Jfn5+dYqJYg+eYrwQSHaS9c+7zAQk2uVdU6fIgQ9XBs
+	e4VSz9BJGnUFaTbhQrjw6WXduknn/DcjtbBcRS8Kwg5wOxlVDuRHby6WF0TJEg0p0dp7L7ZNPVP
+	t3p+7oNHAejRd0/1efPEBgwEq623ziIwtssCq8R6dutyNK0Fbd2QMgAE0=
+X-Google-Smtp-Source: AGHT+IEh70aQvHm9Ez/T9w1QV1ErfeXE9sNdnw97zi2XUcYXtZAvT4iDdbVPsSThyuivxkSP48fe/UejuBy8PvCtObs=
+X-Received: by 2002:a17:902:da89:b0:22e:570f:e25 with SMTP id
+ d9443c01a7336-22fa148efdemr2541355ad.13.1746713431263; Thu, 08 May 2025
+ 07:10:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250508141012.1411952-1-seanjc@google.com>
-X-Mailer: git-send-email 2.49.0.1015.ga840276032-goog
-Message-ID: <20250508141012.1411952-6-seanjc@google.com>
-Subject: [PATCH v2 5/5] KVM: Use mask of harvested dirty ring entries to
- coalesce dirty ring resets
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Xu <peterx@redhat.com>, Yan Zhao <yan.y.zhao@intel.com>, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Sean Christopherson <seanjc@google.com>
+MIME-Version: 1.0
+References: <20250424030603.329-1-yan.y.zhao@intel.com> <CAGtprH9_McMDepbuvWMLRvHooPdtE4RHog=Dgr_zFXT5s49nXA@mail.gmail.com>
+ <aBAiCBmON0g0Qro1@yzhao56-desk.sh.intel.com> <CAGtprH_ggm8N-R9QbV1f8mo8-cQkqyEta3W=h2jry-NRD7_6OA@mail.gmail.com>
+ <aBldhnTK93+eKcMq@yzhao56-desk.sh.intel.com> <CAGtprH9wi6zHJ5JeuAnjZThMAzxxibJGo=XN1G1Nx8txZRg8_w@mail.gmail.com>
+ <aBmmirBzOZfmMOJj@yzhao56-desk.sh.intel.com> <CAGtprH9fDMiuk3JGSS12M-wFoqRj+sjdtEHJFS_5QfKX7aGkRQ@mail.gmail.com>
+ <aBsNsZsWuVl4uo0j@yzhao56-desk.sh.intel.com> <CAGtprH-+Bo4hFxL+THiMgF5V4imdVVb0OmRhx2Uc0eom9=3JPA@mail.gmail.com>
+ <aBwJHE/zRDvV41fH@yzhao56-desk.sh.intel.com>
+In-Reply-To: <aBwJHE/zRDvV41fH@yzhao56-desk.sh.intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Thu, 8 May 2025 07:10:19 -0700
+X-Gm-Features: ATxdqUH_uhJzbyz3ZRGmoCFDO9CDFYwrMETTJ4mFPOzp9Sq23c_bSAtNZ34Y5z8
+Message-ID: <CAGtprH9hwj7BvSm4DgRkHmdPnmi-1-FMH5Z7xK1VBh=s4W8VYA@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, x86@kernel.org, rick.p.edgecombe@intel.com, 
+	dave.hansen@intel.com, kirill.shutemov@intel.com, tabba@google.com, 
+	ackerleytng@google.com, quic_eberman@quicinc.com, michael.roth@amd.com, 
+	david@redhat.com, vbabka@suse.cz, jroedel@suse.de, thomas.lendacky@amd.com, 
+	pgonda@google.com, zhiquan1.li@intel.com, fan.du@intel.com, 
+	jun.miao@intel.com, ira.weiny@intel.com, isaku.yamahata@intel.com, 
+	xiaoyao.li@intel.com, binbin.wu@linux.intel.com, chao.p.peng@intel.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use "mask" instead of a dedicated boolean to track whether or not there
-is at least one to-be-reset entry for the current slot+offset.  In the
-body of the loop, mask is zero only on the first iteration, i.e. !mask is
-equivalent to first_round.
+On Wed, May 7, 2025 at 6:32=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com> wrot=
+e:
+>
+> On Wed, May 07, 2025 at 07:56:08AM -0700, Vishal Annapurve wrote:
+> > On Wed, May 7, 2025 at 12:39=E2=80=AFAM Yan Zhao <yan.y.zhao@intel.com>=
+ wrote:
+> > >
+> > > On Tue, May 06, 2025 at 06:18:55AM -0700, Vishal Annapurve wrote:
+> > > > On Mon, May 5, 2025 at 11:07=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.=
+com> wrote:
+> > > > >
+> > > > > On Mon, May 05, 2025 at 10:08:24PM -0700, Vishal Annapurve wrote:
+> > > > > > On Mon, May 5, 2025 at 5:56=E2=80=AFPM Yan Zhao <yan.y.zhao@int=
+el.com> wrote:
+> > > > > > >
+> > > > > > > Sorry for the late reply, I was on leave last week.
+> > > > > > >
+> > > > > > > On Tue, Apr 29, 2025 at 06:46:59AM -0700, Vishal Annapurve wr=
+ote:
+> > > > > > > > On Mon, Apr 28, 2025 at 5:52=E2=80=AFPM Yan Zhao <yan.y.zha=
+o@intel.com> wrote:
+> > > > > > > > > So, we plan to remove folio_ref_add()/folio_put_refs() in=
+ future, only invoking
+> > > > > > > > > folio_ref_add() in the event of a removal failure.
+> > > > > > > >
+> > > > > > > > In my opinion, the above scheme can be deployed with this s=
+eries
+> > > > > > > > itself. guest_memfd will not take away memory from TDX VMs =
+without an
+> > > > > > > I initially intended to add a separate patch at the end of th=
+is series to
+> > > > > > > implement invoking folio_ref_add() only upon a removal failur=
+e. However, I
+> > > > > > > decided against it since it's not a must before guest_memfd s=
+upports in-place
+> > > > > > > conversion.
+> > > > > > >
+> > > > > > > We can include it in the next version If you think it's bette=
+r.
+> > > > > >
+> > > > > > Ackerley is planning to send out a series for 1G Hugetlb suppor=
+t with
+> > > > > > guest memfd soon, hopefully this week. Plus I don't see any rea=
+son to
+> > > > > > hold extra refcounts in TDX stack so it would be good to clean =
+up this
+> > > > > > logic.
+> > > > > >
+> > > > > > >
+> > > > > > > > invalidation. folio_ref_add() will not work for memory not =
+backed by
+> > > > > > > > page structs, but that problem can be solved in future poss=
+ibly by
+> > > > > > > With current TDX code, all memory must be backed by a page st=
+ruct.
+> > > > > > > Both tdh_mem_page_add() and tdh_mem_page_aug() require a "str=
+uct page *" rather
+> > > > > > > than a pfn.
+> > > > > > >
+> > > > > > > > notifying guest_memfd of certain ranges being in use even a=
+fter
+> > > > > > > > invalidation completes.
+> > > > > > > A curious question:
+> > > > > > > To support memory not backed by page structs in future, is th=
+ere any counterpart
+> > > > > > > to the page struct to hold ref count and map count?
+> > > > > > >
+> > > > > >
+> > > > > > I imagine the needed support will match similar semantics as VM=
+_PFNMAP
+> > > > > > [1] memory. No need to maintain refcounts/map counts for such p=
+hysical
+> > > > > > memory ranges as all users will be notified when mappings are
+> > > > > > changed/removed.
+> > > > > So, it's possible to map such memory in both shared and private E=
+PT
+> > > > > simultaneously?
+> > > >
+> > > > No, guest_memfd will still ensure that userspace can only fault in
+> > > > shared memory regions in order to support CoCo VM usecases.
+> > > Before guest_memfd converts a PFN from shared to private, how does it=
+ ensure
+> > > there are no shared mappings? e.g., in [1], it uses the folio referen=
+ce count
+> > > to ensure that.
+> > >
+> > > Or do you believe that by eliminating the struct page, there would be=
+ no
+> > > GUP, thereby ensuring no shared mappings by requiring all mappers to =
+unmap in
+> > > response to a guest_memfd invalidation notification?
+> >
+> > Yes.
+> >
+> > >
+> > > As in Documentation/core-api/pin_user_pages.rst, long-term pinning us=
+ers have
+> > > no need to register mmu notifier. So why users like VFIO must registe=
+r
+> > > guest_memfd invalidation notification?
+> >
+> > VM_PFNMAP'd memory can't be long term pinned, so users of such memory
+> > ranges will have to adopt mechanisms to get notified. I think it would
+> Hmm, in current VFIO, it does not register any notifier for VM_PFNMAP'd m=
+emory.
 
-Opportunstically combine the adjacent "if (mask)" statements into a single
-if-statement.
+I don't completely understand how VM_PFNMAP'd memory is used today for
+VFIO. Maybe only MMIO regions are backed by pfnmap today and the story
+for normal memory backed by pfnmap is yet to materialize.
 
-No function change intended.
+>
+> > be easy to pursue new users of guest_memfd to follow this scheme.
+> > Irrespective of whether VM_PFNMAP'd support lands, guest_memfd
+> > hugepage support already needs the stance of: "Guest memfd owns all
+> > long-term refcounts on private memory" as discussed at LPC [1].
+> >
+> > [1] https://lpc.events/event/18/contributions/1764/attachments/1409/318=
+2/LPC%202024_%201G%20page%20support%20for%20guest_memfd.pdf
+> > (slide 12)
+> >
+> > >
+> > > Besides, how would guest_memfd handle potential unmap failures? e.g. =
+what
+> > > happens to prevent converting a private PFN to shared if there are er=
+rors when
+> > > TDX unmaps a private PFN or if a device refuses to stop DMAing to a P=
+FN.
+> >
+> > Users will have to signal such failures via the invalidation callback
+> > results or other appropriate mechanisms. guest_memfd can relay the
+> > failures up the call chain to the userspace.
+> AFAIK, operations that perform actual unmapping do not allow failure, e.g=
+.
+> kvm_mmu_unmap_gfn_range(), iopt_area_unfill_domains(),
+> vfio_iommu_unmap_unpin_all(), vfio_iommu_unmap_unpin_reaccount().
 
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Yan Zhao <yan.y.zhao@intel.com>
-Cc: Maxim Levitsky <mlevitsk@redhat.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- virt/kvm/dirty_ring.c | 60 +++++++++++++++++++++----------------------
- 1 file changed, 29 insertions(+), 31 deletions(-)
+Very likely because these operations simply don't fail.
 
-diff --git a/virt/kvm/dirty_ring.c b/virt/kvm/dirty_ring.c
-index a3434be8f00d..934828d729e5 100644
---- a/virt/kvm/dirty_ring.c
-+++ b/virt/kvm/dirty_ring.c
-@@ -121,7 +121,6 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
- 	u64 cur_offset, next_offset;
- 	unsigned long mask = 0;
- 	struct kvm_dirty_gfn *entry;
--	bool first_round = true;
- 
- 	while (likely((*nr_entries_reset) < INT_MAX)) {
- 		if (signal_pending(current))
-@@ -141,42 +140,42 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
- 		ring->reset_index++;
- 		(*nr_entries_reset)++;
- 
--		/*
--		 * While the size of each ring is fixed, it's possible for the
--		 * ring to be constantly re-dirtied/harvested while the reset
--		 * is in-progress (the hard limit exists only to guard against
--		 * wrapping the count into negative space).
--		 */
--		if (!first_round)
-+		if (mask) {
-+			/*
-+			 * While the size of each ring is fixed, it's possible
-+			 * for the ring to be constantly re-dirtied/harvested
-+			 * while the reset is in-progress (the hard limit exists
-+			 * only to guard against the count becoming negative).
-+			 */
- 			cond_resched();
- 
--		/*
--		 * Try to coalesce the reset operations when the guest is
--		 * scanning pages in the same slot.
--		 */
--		if (!first_round && next_slot == cur_slot) {
--			s64 delta = next_offset - cur_offset;
-+			/*
-+			 * Try to coalesce the reset operations when the guest
-+			 * is scanning pages in the same slot.
-+			 */
-+			if (next_slot == cur_slot) {
-+				s64 delta = next_offset - cur_offset;
- 
--			if (delta >= 0 && delta < BITS_PER_LONG) {
--				mask |= 1ull << delta;
--				continue;
--			}
-+				if (delta >= 0 && delta < BITS_PER_LONG) {
-+					mask |= 1ull << delta;
-+					continue;
-+				}
- 
--			/* Backwards visit, careful about overflows!  */
--			if (delta > -BITS_PER_LONG && delta < 0 &&
--			    (mask << -delta >> -delta) == mask) {
--				cur_offset = next_offset;
--				mask = (mask << -delta) | 1;
--				continue;
-+				/* Backwards visit, careful about overflows! */
-+				if (delta > -BITS_PER_LONG && delta < 0 &&
-+				(mask << -delta >> -delta) == mask) {
-+					cur_offset = next_offset;
-+					mask = (mask << -delta) | 1;
-+					continue;
-+				}
- 			}
--		}
- 
--		/*
--		 * Reset the slot for all the harvested entries that have been
--		 * gathered, but not yet fully processed.
--		 */
--		if (mask)
-+			/*
-+			 * Reset the slot for all the harvested entries that
-+			 * have been gathered, but not yet fully processed.
-+			 */
- 			kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
-+		}
- 
- 		/*
- 		 * The current slot was reset or this is the first harvested
-@@ -185,7 +184,6 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
- 		cur_slot = next_slot;
- 		cur_offset = next_offset;
- 		mask = 1;
--		first_round = false;
- 	}
- 
- 	/*
--- 
-2.49.0.1015.ga840276032-goog
+>
+> That's why we rely on increasing folio ref count to reflect failure, whic=
+h are
+> due to unexpected SEAMCALL errors.
 
+TDX stack is adding a scenario where invalidation can fail, a cleaner
+solution would be to propagate the result as an invalidation failure.
+Another option is to notify guest_memfd out of band to convey the
+ranges that failed invalidation.
+
+With in-place conversion supported, even if the refcount is raised for
+such pages, they can still get used by the host if the guest_memfd is
+unaware that the invalidation failed.
+
+>
+> > > Currently, guest_memfd can rely on page ref count to avoid re-assigni=
+ng a PFN
+> > > that fails to be unmapped.
+> > >
+> > >
+> > > [1] https://lore.kernel.org/all/20250328153133.3504118-5-tabba@google=
+.com/
+> > >
+> > >
+> > > > >
+> > > > >
+> > > > > > Any guest_memfd range updates will result in invalidations/upda=
+tes of
+> > > > > > userspace, guest, IOMMU or any other page tables referring to
+> > > > > > guest_memfd backed pfns. This story will become clearer once th=
+e
+> > > > > > support for PFN range allocator for backing guest_memfd starts =
+getting
+> > > > > > discussed.
+> > > > > Ok. It is indeed unclear right now to support such kind of memory=
+.
+> > > > >
+> > > > > Up to now, we don't anticipate TDX will allow any mapping of VM_P=
+FNMAP memory
+> > > > > into private EPT until TDX connect.
+> > > >
+> > > > There is a plan to use VM_PFNMAP memory for all of guest_memfd
+> > > > shared/private ranges orthogonal to TDX connect usecase. With TDX
+> > > > connect/Sev TIO, major difference would be that guest_memfd private
+> > > > ranges will be mapped into IOMMU page tables.
+> > > >
+> > > > Irrespective of whether/when VM_PFNMAP memory support lands, there
+> > > > have been discussions on not using page structs for private memory
+> > > > ranges altogether [1] even with hugetlb allocator, which will simpl=
+ify
+> > > > seamless merge/split story for private hugepages to support memory
+> > > > conversion. So I think the general direction we should head towards=
+ is
+> > > > not relying on refcounts for guest_memfd private ranges and/or page
+> > > > structs altogether.
+> > > It's fine to use PFN, but I wonder if there're counterparts of struct=
+ page to
+> > > keep all necessary info.
+> > >
+> >
+> > Story will become clearer once VM_PFNMAP'd memory support starts
+> > getting discussed. In case of guest_memfd, there is flexibility to
+> > store metadata for physical ranges within guest_memfd just like
+> > shareability tracking.
+> Ok.
+>
+> > >
+> > > > I think the series [2] to work better with PFNMAP'd physical memory=
+ in
+> > > > KVM is in the very right direction of not assuming page struct back=
+ed
+> > > > memory ranges for guest_memfd as well.
+> > > Note: Currently, VM_PFNMAP is usually used together with flag VM_IO. =
+in KVM
+> > > hva_to_pfn_remapped() only applies to "vma->vm_flags & (VM_IO | VM_PF=
+NMAP)".
+> > >
+> > >
+> > > > [1] https://lore.kernel.org/all/CAGtprH8akKUF=3D8+RkX_QMjp35C0bU1zx=
+Gi4v1Zm5AWCw=3D8V8AQ@mail.gmail.com/
+> > > > [2] https://lore.kernel.org/linux-arm-kernel/20241010182427.1434605=
+-1-seanjc@google.com/
+> > > >
+> > > > > And even in that scenario, the memory is only for private MMIO, s=
+o the backend
+> > > > > driver is VFIO pci driver rather than guest_memfd.
+> > > >
+> > > > Not necessary. As I mentioned above guest_memfd ranges will be back=
+ed
+> > > > by VM_PFNMAP memory.
+> > > >
+> > > > >
+> > > > >
+> > > > > > [1] https://elixir.bootlin.com/linux/v6.14.5/source/mm/memory.c=
+#L6543
+> >
