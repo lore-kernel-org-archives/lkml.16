@@ -1,55 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081CF1BEF7D;
-	Thu,  8 May 2025 09:45:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FFC1C5D59;
+	Thu,  8 May 2025 09:45:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746697519; cv=none; b=T0SVftNwQ9YYWPSLK3mYwJIGW18JHRnNlYNdNfD2dQL5OJ2/0tt+XO4oFT++hX2UO3YQwhQpW7CtmQkGA0dCddrPEaEwnkDgDiBrIGTht3hZPBWavYcFK94AbMnvFqBwqVFWYVhrS1Mu5Hj2ovlDPnC0AG3hEnD6zB/DXJIBbi4=
+	t=1746697524; cv=none; b=MNgwRLPfb52iuNe5g0Bi+u/Ynmo2nPt31fgdfWONcajUfU64gZtsz19MgXM4EtiCJGiSyA2TTRUJALM7qVXjaw1+8twXx2JmVfJ/qbCe3wsTyQn4sWqqWMKuOkmL0EqhySh8LUtCWVxC3cTj2y7uF0+j+BhZkJP0zYSSd9UD1Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746697519; c=relaxed/simple;
-	bh=Cc1Skj2gto0ryJBoXR8ewyIYTGM/x6xJbXVwlCnskmU=;
+	s=arc-20240116; t=1746697524; c=relaxed/simple;
+	bh=OtBbZ26g2rNajWYoUamkRdqVOEmpJet2AEq0+kChBc8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dpx2k1juhOsk2c/vZXOhqF7Ac53l9cyE1ajfOx3jYGGbG2xFlZVdqFw6D29cuqJAPfXho3bFTiNq4tbsaZUteBI351Jjr7vNYpcJRY4jMzwzuxPtQC7cs3Sdj/czhQEH/Cz3afeGO9RH5MT+KZ7z1XAKczMfA/jyxiR5SdHXxrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LSX8cTI8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qBwE3z36APR4rXZb6TEQxLehthn/bwDJqH5y8CqXI7TWQcbimN8Y9dmti22y19YSQHhPB4EStlUb8X8447p1qP3wOnBrwyoABvJef79e/ehoE5d4cRtOIc8XVofoL35qzRMmqFMqtS5HFYgRrZ0mJN+k6pSp9LF0UABSk/AADfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tJQEk/r2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LSX8cTI8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0453C4CEE7;
-	Thu,  8 May 2025 09:45:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746697518;
-	bh=Cc1Skj2gto0ryJBoXR8ewyIYTGM/x6xJbXVwlCnskmU=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tJQEk/r2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C889C4CEE7;
+	Thu,  8 May 2025 09:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746697524;
+	bh=OtBbZ26g2rNajWYoUamkRdqVOEmpJet2AEq0+kChBc8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LSX8cTI8/vBABDZQ+rSYj4l9l4Wc8jSRifZt9YcFuePwFbmbajYbhXgA4oE3NGKhe
-	 uWi/ifztGcQTxDHqk0qc/NJsZXS2VYyMEf+uX3YwRJmSGjP6UEMti1pKk1FYVMQ6Xs
-	 bWeL65kOJcfpxSz0R7fnOhA8bOwr5aWMT6D99QL4RlAkW1QQKu0fx/LegWUsgHtdNL
-	 wgVYKKA3ziMeBm+wuNGFc14nlVJuKlEojt89fj9iJDt/tiVzNy5hnNYBNmWTDs5Zsg
-	 zai35rtmGOx0mZBACU/TO/IBhN3qMMUYSK1A7mchf7A0YsKb/juvK7s0/6cB6UmpmH
-	 rAjeMbbwH0+JQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uCxoa-000000000zp-0t46;
-	Thu, 08 May 2025 11:45:16 +0200
-Date: Thu, 8 May 2025 11:45:16 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Qiang Yu <quic_qianyu@quicinc.com>
-Cc: Wenbin Yao <quic_wenbyao@quicinc.com>, catalin.marinas@arm.com,
-	will@kernel.org, linux-arm-kernel@lists.infradead.org,
-	andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, vkoul@kernel.org, kishon@kernel.org,
-	sfr@canb.auug.org.au, linux-phy@lists.infradead.org,
-	krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
-	quic_mrana@quicinc.com, quic_cang@quicinc.com,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Abel Vesa <abel.vesa@linaro.org>
-Subject: Re: [PATCH v3 5/5] phy: qcom: qmp-pcie: add x1e80100 qref supplies
-Message-ID: <aBx9LB_qQIvA0bj8@hovoldconsulting.com>
-References: <20250508081514.3227956-1-quic_wenbyao@quicinc.com>
- <20250508081514.3227956-6-quic_wenbyao@quicinc.com>
- <aBxpMuFGKgWrw1TV@hovoldconsulting.com>
- <5fd4abe7-3621-4119-9482-de823b247b0d@quicinc.com>
+	b=tJQEk/r2+qd0PdPKQ3L7T31utZMvtPV0w2RPG/VBxzF2FhnFa39jhG6Vh5SRNZwVE
+	 yUs4DtMpuvIt7xX8AXE1KCeYg6o2+dqgbkXyldfJgzWlxcEj55aSH1NdcQcV/ECZqb
+	 baYJ+YjMQTbS9rHwe3yV6pQ4vjh9J87g2/GWYwsg=
+Date: Thu, 8 May 2025 11:45:20 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Zongmin Zhou <min_halo@163.com>
+Cc: rafael@kernel.org, dakr@kernel.org, markgross@kernel.org, arnd@arndb.de,
+	eric.piel@tremplin-utc.net, valentina.manea.m@gmail.com,
+	shuah@kernel.org, i@zenithal.me, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Zongmin Zhou <zhouzongmin@kylinos.cn>
+Subject: Re: [PATCH 1/2] driver core:add device's platform_data set for faux
+ device
+Message-ID: <2025050854-breeching-had-c9b3@gregkh>
+References: <cover.1746662386.git.zhouzongmin@kylinos.cn>
+ <b03b374bc3adad275893e2ad60d4bf5a0ad358e3.1746662386.git.zhouzongmin@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,56 +43,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5fd4abe7-3621-4119-9482-de823b247b0d@quicinc.com>
+In-Reply-To: <b03b374bc3adad275893e2ad60d4bf5a0ad358e3.1746662386.git.zhouzongmin@kylinos.cn>
 
-On Thu, May 08, 2025 at 04:50:30PM +0800, Qiang Yu wrote:
+On Thu, May 08, 2025 at 05:11:47PM +0800, Zongmin Zhou wrote:
+> From: Zongmin Zhou <zhouzongmin@kylinos.cn>
 > 
-> On 5/8/2025 4:20 PM, Johan Hovold wrote:
-> > On Thu, May 08, 2025 at 04:15:14PM +0800, Wenbin Yao wrote:
-> >> From: Qiang Yu <quic_qianyu@quicinc.com>
-> >>
-> >> All PCIe PHYs on the X1E80100 SOC require the vdda-qref, which feeds QREF
-> >> clocks provided by the TCSR device.
-> > This still looks wrong and you never replied to why these supplies
-> > shouldn't be handled by the tcsr clock driver that supplies these
-> > clocks:
-> >
-> > 	https://lore.kernel.org/lkml/aBHUmXx6N72_sCH9@hovoldconsulting.com/
+> Most drivers based on platform bus may have specific data
+> for the device.And will get this specific data to use
+> after device added.
+> So keep the setting for device's platform_data is necessary
+> for converting platform device to faux device.
 
-> Sorry, I thought Konrad had convinced you.
+I do not understand, why not just use the platform_data field directly
+in the faux device structure?  Why change all callers to now have to
+keep track of an additional pointer in these create functions?  That
+just adds complexity for everyone when almost no one will need it.
 
-IIRC, he just said you guys were told to add the QREF supply to the PHY.
-That's not an argument.
+thanks,
 
-> If the TCSR driver manages these supplies, would it be possible for tscr
-> driver to recognize when it needs to turn vdda-qref on or off for a
-> specific PCIe port?
-
-Sure, just add a lookup table to the driver and enable the required
-supplies when a ref clock is enabled.
-
-As I mentioned in the other thread, the T14s has the following QREF
-supplies:
-
-	
-	VDD_A_QREFS_1P2_A
-	VDD_A_QREFS_1P2_B
-
-	VDD_A_QREFS_0P875_A
-	VDD_A_QREFS_0P875_B
-	VDD_A_QREFS_0P875_0
-	VDD_A_QREFS_0P875_2
-	VDD_A_QREFS_0P875_3
-
-and it's not clear how these maps to the various consumer ref clocks,
-including the PCIe ones:
-
-	#define TCSR_PCIE_2L_4_CLKREF_EN
-	#define TCSR_PCIE_2L_5_CLKREF_EN
-	#define TCSR_PCIE_8L_CLKREF_EN
-	#define TCSR_PCIE_4L_CLKREF_EN
-
-That mapping can be done by the TCSR clock driver (which would also take
-care of the 1.2 V supplies).
-
-Johan
+greg k-h
