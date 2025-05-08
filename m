@@ -1,111 +1,94 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B48E26D4EE
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D08526D4EE;
+	Thu,  8 May 2025 15:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746717204; cv=none; b=S3h611UFN3yvwj9D/WCPpU0K9h/tz51VM431ZSeRsmfHY0vHE4NM79jCSdTZmefXma7C+jSbN6p1uCVbE0qIMIJvBFchTFM0VWYCqEdN1HedYrGA5Hm/ktU3u2NjO8wVG0+j2wPui3/uVTsBYwxSo4DR5JIELqFJcKTVI+ADTwI=
+	t=1746717248; cv=none; b=trsc8khbqxDtuCJJPUbVAXtTOxL2hOpQSrDY/4qjM7Fu8bMwQ0cUAHY6kUGaC70Q7OQaEzFdtUS6JvsfYdarmgmJ0PpdgcfBu6pCYXCf1F5QuJDeYlIMmou3KPhcOhQ+6KV2eLPP2MSbwo0aS94AcJYTlOW27fkgaS/9TD4CSco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746717204; c=relaxed/simple;
-	bh=er9JruBJ1ROI98KBkKzyBvjmSvmVDo6LqUcMUzcey54=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SZavK86SIORZH47n/nP+dI9RUvwvxXUtsfC4Iw55sBviSyG8rIG6WPi3qE2HL3+47UF0XQTqPfbgjrlFM8GV6RNLsvKfLKMr4HlzLIy3U+5etQDU2xm+s4Tg4DxSIcVN/XcGeSN3A4FGVvjsLTewGKMwodY/UwR4zt/R57gc4Zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Bjxh68Z8; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746717248; c=relaxed/simple;
+	bh=yormhUEt8XHC3PTbUAynHNQJAL9v5mh6z/cnwi7mQzw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NPzUoJy36ug9sm/HIzAw2s1KRbovs56/y1tRgwAkWx5uFK/hKGuBQanxf/qCGR1+DKw4BNXCsv8FGYPBh5hqjUHb+H3kGM1pD+HL92v6e1NffYvvQxdY9baJuJnx5T9cY6T+xelMyK17QUEUqHqZxdWxl9o/oACL9RyhYmZYL/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gk1M7IYK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bjxh68Z8"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-441c0d8eb3bso554835e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 08:13:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746717200; x=1747322000; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pN3djr/Ox6iIz+2iFp54kpKXmeWRt4ynHX38XP+wEPE=;
-        b=Bjxh68Z8DmWvTMwtMfbaE4hVNiZGAvUR3uCZghFI9uarO2lLxLqkPafhkStoa1NCze
-         CRWZeGle9kY9IiQ4dRrb/aehtzifsPWMdm7EPB6Hb6i7yRPGI0oaqqkqRheq9O4bFEHc
-         0It3Ohi1KoA8M7pnjTJhyc6HB99P25pQeuaUrniuqAlyHR70xsJeB02BOfUuBuDR48wH
-         3SWgNMxZ0GLkipTBNIDk9tG+lartAbOh4kX8V94Piu90hHW4DBpXgJ9kWNdnhM2iX9L6
-         xBL+lkLvQjqIikRpkdCb9zmAAPkx/+8qkPk0OsVgMZkmc3kVzjummaCufjF4v+BzcDkQ
-         7t7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746717200; x=1747322000;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pN3djr/Ox6iIz+2iFp54kpKXmeWRt4ynHX38XP+wEPE=;
-        b=F5tJecw63fB18oxzfqy1FApVLpVGhr4tqPJO3s2BJW1Ho+rwspkwCOb585gFnP/75Q
-         4Pzs2mAYhosBWLyU6f7e9ONoeYOO1gisCJ6wg+N6uInPXZUgi0+qzzHpAMAoK20CBSuw
-         cgwGkgwqqOA1W+RKkI6txHX1+Vkbs0QgKkfKDVUO2fkyZaGQTF/vwyWn8iqSUN4P4Dz5
-         X8cyd0S4bzV+Q8yurnkNGEYuFCN1hY+VZNGKxHVOzXhgCC86M3uESDB+2bkkgDqDwub9
-         9NICKWtst8QS2K12v8QjMLRPhE+R/TMd8+4p1qrQojPmULlx7SsfBq6N7J2XsVgxBa/S
-         ig3g==
-X-Forwarded-Encrypted: i=1; AJvYcCVh7PdeQPG1M9p3dnvfjNc0079grwZxEmBDcW2ayCLyLO1Ore6v4W9JkUkHOnPM2wv48/WAdkNKxAdqLTk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMjtJRD3T9Zqj7yFOrdEgHNdszB2xnNPAC8B3KYTfLp51sX2oR
-	4XG4q08qQ7BjWis9ZUcbgxoEz6H0EKkbXA77tS5s9Ne1NQrixcMZKpWv6nFFj0hItubIxDjupPV
-	B
-X-Gm-Gg: ASbGncvZzdPcE5dWJ3wH5Jq99qUJmK1EHbFCudIVobidlu3iMgUoNSvjlRDBxzE+bZW
-	98bImsqw7YxzfSx0HvyH3gRfstUbPeI631om5B//TM2gX093K9qwwRs8WsAY3g6bZIww0mGuvJm
-	VcWi0SxsTSwD0shTtYOP4OgWHNgkBjdNj562K+wwo7sh6Iy/JCm2vGBh/AwWRH4xMRASowwfEBS
-	SNjpXU6OqQseLaULG8H4LDTNiUP6eRkCKND2a+ymv1KMATb87hryvEnxzkCIRZqT0DZt9rSX69W
-	sIy291aEvvO4f3uLYmKJAvjS3IBFRPIBpTnYyZrTb8vNz/5Vdw==
-X-Google-Smtp-Source: AGHT+IErviNxwSHugUP393ShTXvK7BVPilsbdU79yB5PzcgGeL2DYiovzo/BF006+TE5n8rgNyPDcg==
-X-Received: by 2002:a05:600c:1c8c:b0:43d:fa5e:50e6 with SMTP id 5b1f17b1804b1-441d44ed5afmr22861605e9.9.1746717200589;
-        Thu, 08 May 2025 08:13:20 -0700 (PDT)
-Received: from kuoka.. ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c5c5sm224684f8f.96.2025.05.08.08.13.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 08:13:20 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Mircea Caprioru <mircea.caprioru@analog.com>,
-	Peter Rosin <peda@axentia.se>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v2] mux: adgs1408: fix Wvoid-pointer-to-enum-cast warning
-Date: Thu,  8 May 2025 17:13:17 +0200
-Message-ID: <174671716287.210402.13952248395866315913.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250501181819.164207-2-krzysztof.kozlowski@linaro.org>
-References: <20250501181819.164207-2-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gk1M7IYK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 951F7C4CEE7;
+	Thu,  8 May 2025 15:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746717247;
+	bh=yormhUEt8XHC3PTbUAynHNQJAL9v5mh6z/cnwi7mQzw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=gk1M7IYKExGjljdTpf1IfU5ou08bIjcdhIiSuSenW0kyxV2GExk7zCpzcFkUxNb0p
+	 KXEEVwNdsaPukq/3O0umdNvXm5oxqmsLPMc8r3l7gC1JpNqi554/Z4hx3vxAMxJclV
+	 +5Pp50KoPyPfgv17a2+Cl+75XGzCvajXBZVAaT1WYUG8BMIyl8cIfdZjE36dqQPT7T
+	 s0R0XKsDqFUXMEVnGFksZaxpVpItRsErtGP3v84yXDsL9JOiTjPlvJkgw4CiWCuFOc
+	 z0tLw2RoxVLCkp6hLHS8l/9oIAkDtpfn7tAJsmxW7A+B7VyHTq9Re5ATdBtjHTU3La
+	 LCHMt5et1bI6w==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 38DC2CE076F; Thu,  8 May 2025 08:14:07 -0700 (PDT)
+Date: Thu, 8 May 2025 08:14:07 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: ilpo.jarvinen@linux.intel.com, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, kernel-team@meta.com,
+	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
+Subject: Re: [PATCH] PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
+Message-ID: <606a5ead-1fcf-43a4-94d3-5d8c1e70dd92@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <3840f086-91cf-4fec-8004-b272a21d86cf@paulmck-laptop>
+ <20250508190845.4cae8b62@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=613; i=krzysztof.kozlowski@linaro.org;
- h=from:subject:message-id; bh=MFK7NgR6Otww9YF3htt49ijPK122UNFCKRwH9r78zG0=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoHMoMGjI3HHuD7R72fnl2vWtIT7CgiSNgnZ2dn
- 5GHAqp0NyCJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBzKDAAKCRDBN2bmhouD
- 1/fZD/9s637We+pp6QFCgEj9ISIZERl+RgwhtJjFmYZ+k/TmCj+nothOoPBX3APPiEGbgpINRq1
- c3uQGct6eFZSRXKrEOVQ1RNyfda+hrJrDnJOzVOPKuozcrxEmfCFqvYgOpTcL4lmlQ7FCHXrBm7
- +DBzVax6pXxdUFZVKFoh//cf1bLuR2OxaNMiiacOtlXlJFFwVKwd2slLx8nJlF2hu4PbqSY2Fuo
- EFcwaLv4IafchbvBIILDzy62rS4/Zd27ax0e1VJFQZ9bezCTnxcyeTdqDF+zwL7xD2rfCWdURvY
- 8ytEEXGT36Yyi5EOPM5/MXrMiba6cLlL2UYVqz1JfS6Qs0g1V+Zsp7QvHzM1HfsChcNNdUdBwKD
- 2/pi0rKY/R1v46ZkyfL021uouK+3Lka2RMNBeW6C73rBHN9cRwlI+1giZY8hIfiMhKGETznUzt7
- MQYLfbi3whZbve5H0vymkeUIK4XtMGTwe6BAL+V73aqIS/J8Wi5crsKw4m/bAOYM/jQd4yOu6cA
- 8qG3rQWrJATTrhI3xW1pFTsNw02QZBWBF9tvkIshdUFKSmMNLiB1tuH1ncyk0rr2T/lCr5D/xVc
- Z6Rh7oGPKRTBSNnEhrd1zLdkM8Otpk2lyzU5AvZ8SH6MVcV/TD26mGg3isOtJ9TNKa/jnqDYPS8 i848Up2DeRHJc7g==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250508190845.4cae8b62@canb.auug.org.au>
 
-
-On Thu, 01 May 2025 20:18:20 +0200, Krzysztof Kozlowski wrote:
-> 'chip_id' is an enum, thus cast of pointer on 64-bit compile test with
-> W=1 causes:
+On Thu, May 08, 2025 at 07:08:45PM +1000, Stephen Rothwell wrote:
+> Hi Paul,
 > 
->   adgs1408.c:63:12: error: cast to smaller integer type 'enum adgs1408_chip_id' from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
+> On Wed, 7 May 2025 15:04:57 -0700 "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> >
+> > PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
+> > 
+> > Builds with CONFIG_PREEMPT_RT=y get the following build error:
+> > 
+> > drivers/pci/pcie/bwctrl.c:56:22: error: ‘pcie_bwctrl_lbms_rwsem’ defined but not used [-Werror=unused-variable]
+> > 
+> > Therefore, remove this unused variable.  Perhaps this should be folded
+> > into the commit shown below.
+> > 
+> > Fixes: 0238f352a63a ("PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_SEEN flag")
+> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: <linux-pci@vger.kernel.org>
+> > 
+> > diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+> > index fdafa20e4587d..841ab8725aff7 100644
+> > --- a/drivers/pci/pcie/bwctrl.c
+> > +++ b/drivers/pci/pcie/bwctrl.c
+> > @@ -53,7 +53,6 @@ struct pcie_bwctrl_data {
+> >   * (using just one rwsem triggers "possible recursive locking detected"
+> >   * warning).
+> >   */
+> > -static DECLARE_RWSEM(pcie_bwctrl_lbms_rwsem);
+> >  static DECLARE_RWSEM(pcie_bwctrl_setspeed_rwsem);
+> >  
+> >  static bool pcie_valid_speed(enum pci_bus_speed speed)
 > 
-> 
+> I added that to linux-next today and will remove it when it is no
+> longer needed.
 
-v1 of this was waiting on the lists for some time, so I grabbed this v2 as well.
+Thank you, Stephen!
 
-[1/1] mux: adgs1408: fix Wvoid-pointer-to-enum-cast warning
-      https://git.kernel.org/krzk/linux/c/9761037d28327e0d4ee9586a8210ef6462c2c757
+Ilpo, I look forward to seeing this patch replaced by your improved
+version with better comments.
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+							Thanx, Paul
