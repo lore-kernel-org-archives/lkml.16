@@ -1,515 +1,272 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2049.outbound.protection.outlook.com [40.107.104.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962A1272E7D
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746714904; cv=none; b=Wan+vnrQHHXjwXnsgzKEh3PEFLXm6ELDGUc1/eLWJv5RgfkGnv6d4kTI/Vsd/Svzp+RnTWT4OoCp/rThlo5wYsApAPqDZ1rWQCNWFzDejLiOWACbNsJuzGgPTyte13bPzvg6MuXOo90/tBpQ461IN2dsTrqPJCGLQJa21CnT4nk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746714904; c=relaxed/simple;
-	bh=EDDVKelXJBqp6lbt4Dny38T0MBAdPUKWIgXoG6um3Jg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MuFAjDEGywDl5sxMf/zGu9fCfkenm3J/Z5YYs0+9KvGsSrBOt//AC4MrZ+eyVQr7F1A7roFxbF/ACy0MZ1qNv/k/klgBz/OIOzNi2qjZEM0o1uWPpsxKWdkO4X4uDbCASTjacW9pfbNFvDuDyJjkECpYRRnCV5rS+yLBmYgoahc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z65sLXnD; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D638E2749F7;
+	Thu,  8 May 2025 14:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746715033; cv=fail; b=jZF5Vp2/LZGbVP0JPw3O+gg4v+Nz308xqLt17yJf7L4UXiGgQmN5fOZZIvPa4Mz07XExMpWqCGG0UgS9jjYQ0nbt0I94rCBJ/JSOjdXMxPKJiOCM641f9cYgq0PIEcIxXFwE0Af3a5zktmkKQ+a1R879UZE35IowtABpQzts/pA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746715033; c=relaxed/simple;
+	bh=KP9iAc+qO3fu3zAe+/Z+7fMWbH9bvb5iQMcDYr3Lqus=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=mXs1Auozcg81TsqBH84IczebcjoaQmNy5ft9a+ykxv8EnnGu9ywaEtx7y+N0GPxa93vldWVbS5JfrBL1vTXPONLVvEOhi6p465pRREVHDz2+pIGaOHknGxHKxpW4SneXHWtx8VDXwefJr/NcnlnC34B+ZLU+Wc3j77vP4wQhlSo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=CYI2xnAv; arc=fail smtp.client-ip=40.107.104.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z65sLXnD"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39d73b97500so61960f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 07:35:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746714900; x=1747319700; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tbCbkXsD7YNzb32rDK+QilQgXnhU1hEkB5ht6gWz7/s=;
-        b=Z65sLXnDGYQw96cp7Rc9AvtYBnXmdNCs6E0jfLEPb3b8Lsm1h5/Hl9CIApk+nMI2t9
-         PcfAJCTkyXxV4HX+wOB/Es5VMacfzERTAUIx6bfnHfIyiIABUR9QtfsXV2VBnAzJrSJ6
-         AbNh4fdYq3aWNWNMScJR1p6/mQRUCvmny0lky0fB1ZaG8/VdHNIxZPmAqE8Ptx/sot8+
-         hlGLoGagcF7eIE+Jd8JxK5hWFwhwiG+ScG8lnSA9wgjNXZHHAeipNacoyIW+e0LUibmE
-         iqL0Q+vafDRdB7bBNpQ4D+Mmjm+8KxCJ8+QiNGbaOR8dHkcc533rgWQmTUJsignKA3Hl
-         kaTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746714900; x=1747319700;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tbCbkXsD7YNzb32rDK+QilQgXnhU1hEkB5ht6gWz7/s=;
-        b=EHJqPg4I9MFhQlYUL3ks4yuKGynBhGP7jxy3VeJVh12Ib9YeM6bynZfgQE7raLvnQs
-         MCnA//fbrn82loRwP2qD5pW4+Teela79ki+WpxrrX8IQTZY2Qs2fqyL5gMBwdnFLdZRD
-         MG6bOOSF64fg6TIrhxfHQgZzMS4uwtpYJebTuttYeItldJ1WO6h9Xbh3MwuEdFW5B06n
-         rEhgdkFXNaZB+MNmPwqSUA+a5zRSKszywcLC3oJCSb2o6+PW12TrExCdNJA0DKJgmu6x
-         /wwZ9PJ20b4VJU15cHBvhefbYUK+4wVNbpYueVYm0F8haK3Z3j/pNs982irtYUpZaWW5
-         Q2TQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXAH8xLFx9yBo2SS54wWetegU7dy0OS2Jmf7RVIeR1Ku4LSUZ1zI1yj952m7nMkj9lZXXNLjWjes85LyZw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf6TwBdsDOv4xPk7jyVOyv6THyrt6PnF6XPqgPZtN2ErhE7i5S
-	eKnHLp8365tPKxeljIS4w6yFGt/zfdIn+r6oxEnE/A/0pDu7fuTGpsYuHYSfsUo=
-X-Gm-Gg: ASbGncsGzE4YawRFhh0/WG7Apby+nKGqEFIEnLv9CTtQay7yUfoCCAKB/5+8XK7ozI8
-	dP4pBhPY5J3+0YyX/4f5dtqwGCI65hVpxTVWWGiMsvsxL/MWbq2SZycMNPo/sKfRKB28/6bHoHr
-	LOjJUQR0MwU7Gn+4ohQ2xuPhPs0FZNeQaaVffAgQnQaQZpYf2FJT9rQFvvbYUeVu2lgjAqfXxTB
-	D34U2/Oo7an59RPQhU8AJwzWw0io0e3F77jy+t+6oDFsubl2EqYRdZFMFEBqlYx9jg1eWp2saQh
-	xs/9kWSrYlDmEE6X+9UkDNbDBtRt2UZZTXW4uR4q1yfh9QVr5u+cmNsWhCylxOwAQKbJ5A==
-X-Google-Smtp-Source: AGHT+IHKRFzeVuZR32ohV+1cEUWHG3h4+XKyCO0FbtcmqDReT7lEHTU+FqvRRyJN5aC5lQ1kGCe+VQ==
-X-Received: by 2002:a05:6000:4212:b0:3a0:ba77:fde with SMTP id ffacd0b85a97d-3a1f5c6102bmr40669f8f.8.1746714899898;
-        Thu, 08 May 2025 07:34:59 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ec98dsm149861f8f.25.2025.05.08.07.34.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 07:34:59 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Thu, 08 May 2025 16:34:48 +0200
-Subject: [PATCH v2 2/2] drm/panel: Add Novatek NT37801 panel driver
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="CYI2xnAv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EjwYdURBwe/pdSbdR17xgawBFGiJ+NG3FAL12Iy4rCWqHgnu9Z8vOA2I7Ei9lczvmOx1BRe/cLt/RuGrsr12FPd9sp598QLkCZUvapw9oO4DdP2tDqOcOGKL+9VSEg1cOTzJHICXm+oocfNqSwJohVI+PKJzTf643nEGjYH0ONgDW7p6y183jngYz1OkmTKBqxNxtZmUW89/x4EIs+cg1dduIN9X6RNSv11B7hAPUIi8soDJIKYawPDgNto+42e7p3Mu0UhSIKtf/9ASt9YWvsG58w/Uxv1Ns2hYCv7BK3zy2kT58YsXKrlkQCv1VtCMQTJ37f5UtYBXGpsBAKNCQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kYC69QtZI/90QMt6FygTxGft63slwqVIVU8yjTnCpFw=;
+ b=oOxiII2Q8LoQ4AooHfm4t5c/maVuBJxSVoDMdwgQoEwKGIAvEZvv31nqSQs0iO/OM1kcuD3PYliLWNpm0dj2aHiTPzOPNicMqHJ6oku4JQoBwG6x/5utBZDSWws2z4yGqmCEWZpNX4chkFo7sWsnq1MNckiWB4assr9N2MwjVP0PabMz4Vd9KC5I9BxxVhUkOZ6+W2/XzGFI8SMQKhoZoB5sFn0drkN2flVxLeH8ZTO9gavPUTsSkT2TiUG8Ysejokq6Qr2pOGEU4O8LAYQ+esophBVHE85SO/ykPgNxGuS1f1ECihOBuxIh7DEplEubQ8h1eSKuLEQrWvhOBgdZHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kYC69QtZI/90QMt6FygTxGft63slwqVIVU8yjTnCpFw=;
+ b=CYI2xnAvtWT/0PxuRVpuwLKJvioh4CNyzMEbb5skAAtlNhcEizjQYLbkoVekSwFGBhvADXeIGTPz4VkG0iQvS53Pp1l/j2R9nJQAMkwJoI8aPXzooWnh/hd+6RAycNGseKb5fVvbcqsXNEvR/R5nGBUVTtz4xDZdF0zXa7n2lr+0tuUVa8hrxtamP9lrZ94hLVnvgPmQvodEECoTy4Ol/CSh0AiO3M2SohBD/wbUD62GkeT0O6o4c5xr8q7fSShRyPFhJEgEe/VKMWel70zlWjnDQT9hnl6N3t13bg7xukXiJik/tSVSNSH1c5vKfp6qH2ThdMl1YpGRh60jAy1YhA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
+ by PAXPR04MB9280.eurprd04.prod.outlook.com (2603:10a6:102:2b6::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Thu, 8 May
+ 2025 14:37:08 +0000
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2%4]) with mapi id 15.20.8722.020; Thu, 8 May 2025
+ 14:37:07 +0000
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: netdev@vger.kernel.org
+Cc: =?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: gianfar: convert to ndo_hwtstamp_get() and ndo_hwtstamp_set()
+Date: Thu,  8 May 2025 17:36:59 +0300
+Message-ID: <20250508143659.1944220-1-vladimir.oltean@nxp.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BE1P281CA0494.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:7e::13) To AM8PR04MB7779.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24b::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250508-sm8750-display-panel-v2-2-3ca072e3d1fa@linaro.org>
-References: <20250508-sm8750-display-panel-v2-0-3ca072e3d1fa@linaro.org>
-In-Reply-To: <20250508-sm8750-display-panel-v2-0-3ca072e3d1fa@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=14098;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=EDDVKelXJBqp6lbt4Dny38T0MBAdPUKWIgXoG6um3Jg=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoHMEOaQax2tc9V06Qn0ALv5UI0R2sdk3hVM6uy
- 8zWLddWmKOJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBzBDgAKCRDBN2bmhouD
- 1+gsD/91FwHiQj3YlbHTV30mpZf7SdbmW2ARWNJipSl+Aopd5YI3ELKwvNyaVVjFzxSUs7Omgfr
- 0boohrnkkjLW2LKD0lXKFmneQC31EGWBOD2SOjMLh3owgsdEYonRHZigJVHbXF/DIVee4ugH5in
- JnOV86ce8R7k/HhGUIcHqIvYqgcrcJ/MiQWJkyVly+3R+ANoAhL2MyKdiql7AGaB0rx5igBDwmq
- /AwRElTLKj4sIS1arpxae7LbWmZSjrCWSvvVkNF9DVgRIoW/13hSOdBfJl2yajnjO8WGUacPyrL
- N+xzj6RDVlHtIAqHdDhQIR4hhg+UqmwAdjCfam/SQ+Xd5sTGGeFkyuKsM7ZWg20qKnN5qjgT4uP
- lAej/MUpTwiteVq1kFme5DqapC9ZyMjwwivXLFG4hjco7yINR3zhfiedOceRYzSRcg1s0hdMcw4
- INakuZGeEr8zQw9+l8RXZgXB+DMhzGom0RhZ2oEPwRNG0Cw7N5qStI6mBleyG2SNTARK+Dv/uw4
- ueUJcOGNfVmy3m1j8lpBR/aodQZdbopKfGLZAG37+oRlXRmIMnnJTQ/vaYrzmrs7sEk6EHeS/eb
- xQPwmgV0ym6slVgpP3mpfge27V++d7nC/vKA4oRxkVxYTvoF3B9Rh46T3Yo7lsaOmRXCeKxK4BH
- WQrDgFHlylsjYqw==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|PAXPR04MB9280:EE_
+X-MS-Office365-Filtering-Correlation-Id: 81519229-6e6d-45e5-4c21-08dd8e3dcf2d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|52116014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?8IBg9oN27ZPS1qKfdy8L44k0rymxkPI6Tnw4d0cbi9lUJNdLgZwYnYm1tRi4?=
+ =?us-ascii?Q?IdNEWOOxNpckvsKx2c4sJ3tzgjGy0TqMHrJKYnTBVQGgChWUoevZvsBsKUq4?=
+ =?us-ascii?Q?qSjaiyeNQjL8zQc3RmSIO9NhfnfY8Jarzny/hUTzJx8jN8o4PG4/ejhHZNXX?=
+ =?us-ascii?Q?fSOFZcF5po8jUvKed9pcKxcstW78eXhhrcgvT8ayVsKpRA2SvdjethmEKKkF?=
+ =?us-ascii?Q?6JKzL7vkC67tfDFnoECD4A7S5pDLZkDpVGc+4upIsqQQX9OKhsIu/BPhrwIH?=
+ =?us-ascii?Q?q3mJB8AxDVMgUYVGBUaKhgLJqS6pYrZBHd9OiBhHJ7AirFqC52m3mMPe+VsK?=
+ =?us-ascii?Q?HMW4JpBSVejVicZYlKHaElkvLBFYqCF5aoOGxluIrpjXVaTPizdf1Us8O731?=
+ =?us-ascii?Q?ZsUb119b/wV4UWm1YfCBF1JGr6u3IF0E1i0EysExfWq2aX0gTNCrJvYaYgJ3?=
+ =?us-ascii?Q?Ybr/wJerp44YcYnGgGX0mRxP+zu0rWg3YY/WP1bwNfgUmUPz4n0CnE6/HHEG?=
+ =?us-ascii?Q?T22qDz331hmWJ/qK7zQQb9F7bCXpZ5xKlzhUm8G7SjTRozk4MsF6DYPypb2A?=
+ =?us-ascii?Q?LtaB0hTyAfBwoqVGfq0pkMV4s4yGtabPwHFTNNgdZQaiYZtBiBSOxLWER3eU?=
+ =?us-ascii?Q?y+hX9gZe46xZ2YNFF3ZwN/leIZvgSvypfjvxAfJZeQfbAylXyFolntl7rwrB?=
+ =?us-ascii?Q?xYQdQxLGZRJaQV43UnT+BHsd9ga3xoXn97k7MJXLUlY0fN2YMOKZB4Ky2BW0?=
+ =?us-ascii?Q?7fonYDT1F2z1rP4WyRFoFbSNkkzV4wrb+JuJrpULAfBG5EL4T4fgl0srQI3L?=
+ =?us-ascii?Q?pGhHwxSVDWGuS4IWjb5bkbAUfqKf6FQ4ZFPo0B5+BHJ42ErvrXg9ryjKBgy3?=
+ =?us-ascii?Q?cKfEIq5hWks1wO+2BbHjrtu1G6CPEeQtEnC2fOhaQJz34UV31C5scyNdUiIT?=
+ =?us-ascii?Q?/Pt8B1Mi5pZDZPIC5T69e3KZ0bdKE4uAGTDvx63szE119b+lFkX0yrhNCOZ0?=
+ =?us-ascii?Q?9s2p9+ufGWFibo8CjdHb/eifyggJzR2Q2QX46/4p3xP16X5b184A+2xNHmDo?=
+ =?us-ascii?Q?wFQ6yead1WbJir5PE1V35V64hYl/JNf7+H+In8JwXu85LLpp34JdEmp3FYjg?=
+ =?us-ascii?Q?9zIIu5YncwqvZemjcrlPAN/ow2475rFD7wYc25XnVnwz310OT9zajifJpZDf?=
+ =?us-ascii?Q?7FrZB4nycpcl4J+wr7YpUn0GynloPWh9cHh7N4zgiMh//eILSpMBl/CH/p+e?=
+ =?us-ascii?Q?ADbH3XLMCp8Dl1p5B8sEHpgrKxoPZTvcQT+tD3+h58UVOo/By24IE5jYyDSh?=
+ =?us-ascii?Q?wjU9ok2aQA7QMByAl71gc9h024zFcnOH+lCJAnfchHVtdCLWNWUETRP9AxN7?=
+ =?us-ascii?Q?Lr1c+wJQuYKjjBVihhL3ZAk4XvGYwXIdK3bLZTyjJmYs9EksCB+Sv4sEUYIW?=
+ =?us-ascii?Q?EdusQO9FdxAhYbT6IGCQ5294yfeOqTAMWxu8TA8/fvxs4lH8FWX30A=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?CX+GUdczj/1f0NiBkVzJQd+xF/7OcI/EOuxKu0+XFaS9QNUS+QZKrADoIEJW?=
+ =?us-ascii?Q?yHvTc6KiW7/vMsbojLhAtiHoxCsFiuOFfEBYtqOLRKRk22LayIMOMK9qwtCi?=
+ =?us-ascii?Q?TcHUlFSged2ooNh77peSddV2nKZDJ2sHJO8hCwRbBDbL4nmiU8qGwNenrMuN?=
+ =?us-ascii?Q?4kJuaPZzTMGdNisXSdEU5N57/jKvCpUF/ko9o+DyIOBhHL0WO9lkdoigmBc4?=
+ =?us-ascii?Q?lYQLr79RiBde/5kTYuKNJ6CMiK4W6YoJBrP6GKsJCwA4YzNAGk6+IUygrEIH?=
+ =?us-ascii?Q?h8XzUG/j4mryFNonM9TPfa80ZAJjAtQnowqBSeEw4j+wNyl+dgqXHS2fbrjf?=
+ =?us-ascii?Q?8AFqhrgmcX/D4czViq+pi/NW+xgWTRYcePvktNgPW1og9MmRJcpSrXjg2BVF?=
+ =?us-ascii?Q?kZ5Vq9wMI1wRx/aRsHnnocDmwxXPmjseCoLHARiE90kgoBG2KL0Ep1ubNLKL?=
+ =?us-ascii?Q?1FrPPsdkKmvzCzKL7zve2m97QIZXMAzvI9skPCOT1xtynb2mg+xZbUCpHYYM?=
+ =?us-ascii?Q?qVpDIljxQDrBCOmJWX5GZAdzJ8An6iAPzDGWsgkpPxtBH+6mWBWA+Ehy7nfn?=
+ =?us-ascii?Q?LPF/BZ7djocLaRT7SYBjWiudK7/vo/zduAAbLrwHHXvUBBU9pF30j9AZHGgu?=
+ =?us-ascii?Q?o9iMuAlXhSNp/IFIHV4UXKpHNYo2qiwKykB98xNbbZuCNYvXkDTGYu7PPMei?=
+ =?us-ascii?Q?5acSQ4wyrA3MTvCskcumgqGpXMfajvhJ7M/5MEvvJc4febOZzroG6TqrK+pL?=
+ =?us-ascii?Q?PPygMJ8lY2/pqCtVQ0SYmAAjqoOtaQnG4QINXmNJFWLqy7jQcvdetwOMm3lc?=
+ =?us-ascii?Q?0rDx6S2upzZbfi2JV6FwBQv27FcRjDsL4Vbc/h3/RAL4Nb62nPlnxN1T/F5B?=
+ =?us-ascii?Q?tvQGqH3uSqhYMZBcr3v5ezWygXQOH6v7ORe7MGMzkgs8C/OOiH5Z0lWG9DiF?=
+ =?us-ascii?Q?FZ6TwxF+ySRhYn0RPl232GQIZMvxDaO77dRB7fCsT3fQ9g3RfhdlkhPcicwB?=
+ =?us-ascii?Q?r+ei2wNht6XBBNP1mxl887bhxaHWyJ+eCtf5vVisOGmbKKye+cuA7wfrQ5U2?=
+ =?us-ascii?Q?R+9Ir8eKs7nMyp5n/GBRgsrs5renjdsbT1H3aLBiOceB1TIn/QI1A4aOojqx?=
+ =?us-ascii?Q?fwZ9ocOI7Nulct113qUa14VSyAzYLSm9sDsLQDAFeMhZHJDGkSjcg7iVVira?=
+ =?us-ascii?Q?5Do6O5JvJgbR9np2lSsOctg6TJMoUYYnj7mHZkX/VXolrC3yARvyY/wjnnJj?=
+ =?us-ascii?Q?UQmHH0qhD0d2bfgKvbgqeBLArXIu/4SoIcuC5PnhN5s+l6WLGPG5g3WjKuhH?=
+ =?us-ascii?Q?Lz9tq53doWMfcDT2XU7VhaQvAvWT9d0pBgFAOZsENeJMVOIr66hunrsBQ0Zo?=
+ =?us-ascii?Q?y7AtVRDrjgUF2Xr+gv38G7TgOngk2lYosjKN1oL03H++tknnjFM6zzLRp0Ej?=
+ =?us-ascii?Q?HO/5AJ3YszTWxavas09ztXNbE+AyD1CLhQ3WD4iygp2KhybGi4B84UCJ9skP?=
+ =?us-ascii?Q?ftbL8BOpAYvqsxMocmHF2L/y0uL02sZilEAm2Y9UktS+LGoCgw4KvaeTxSq7?=
+ =?us-ascii?Q?HQf3FXxG4/CJS4lDlOo+YbB6b+PJTrqxDTihIctWXbzl9HA+S1nc+CbSpSkV?=
+ =?us-ascii?Q?BA=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 81519229-6e6d-45e5-4c21-08dd8e3dcf2d
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 14:37:07.8877
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MdDi5+BTpSlwTMG3/veaKu1uwxC0YTDgysqkj/0vg2088OFVVpHf+Ru15lRjGSgpiOm+UszbFI69hbZgDxcLyw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9280
 
-Add driver for the Novatek NT37801 or NT37810 AMOLED DSI 1440x3200
-panel in CMD mode, used on Qualcomm MTP8750 board (SM8750).
+New timestamping API was introduced in commit 66f7223039c0 ("net: add
+NDOs for configuring hardware timestamping") from kernel v6.6. It is
+time to convert the gianfar driver to the new API, so that the
+ndo_eth_ioctl() path can be removed completely.
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Don't propagate the unnecessary "config.flags = 0;" assignment to
+gfar_hwtstamp_get(), because dev_get_hwtstamp() provides a zero
+initialized struct kernel_hwtstamp_config.
+
+After removing timestamping logic from gfar_ioctl(), the rest is
+equivalent to phy_do_ioctl_running(), so provide that directly as our
+ndo_eth_ioctl() implementation.
+
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com> # LS1021A
 ---
- MAINTAINERS                                   |   6 +
- drivers/gpu/drm/panel/Kconfig                 |  10 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- drivers/gpu/drm/panel/panel-novatek-nt37801.c | 340 ++++++++++++++++++++++++++
- 4 files changed, 357 insertions(+)
+ drivers/net/ethernet/freescale/gianfar.c | 53 +++++++-----------------
+ 1 file changed, 16 insertions(+), 37 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b2c3be5f6131432647dd01f22bbf4bf1c8bde9e6..78cdd5f81c322c230a82c8a877b2338d932478cb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7595,6 +7595,12 @@ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
- F:	Documentation/devicetree/bindings/display/panel/novatek,nt36672a.yaml
- F:	drivers/gpu/drm/panel/panel-novatek-nt36672a.c
+diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
+index deb35b38c976..bcbcad613512 100644
+--- a/drivers/net/ethernet/freescale/gianfar.c
++++ b/drivers/net/ethernet/freescale/gianfar.c
+@@ -2061,15 +2061,13 @@ static void gfar_timeout(struct net_device *dev, unsigned int txqueue)
+ 	schedule_work(&priv->reset_task);
+ }
  
-+DRM DRIVER FOR NOVATEK NT37801 PANELS
-+M:	Krzysztof Kozlowski <krzk@kernel.org>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/display/panel/novatek,nt37801.yaml
-+F:	drivers/gpu/drm/panel/panel-novatek-nt37801.c
-+
- DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS
- M:	Lyude Paul <lyude@redhat.com>
- M:	Danilo Krummrich <dakr@kernel.org>
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index 7e9c60a626fbbabb954ed2a7e3d1ef5eee0679d6..c7b688995c8d31b7445aa79dcc310742e4e724d8 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -508,6 +508,16 @@ config DRM_PANEL_NOVATEK_NT36672E
- 	  LCD panel module. The panel has a resolution of 1080x2408 and uses 24 bit
- 	  RGB per pixel.
+-static int gfar_hwtstamp_set(struct net_device *netdev, struct ifreq *ifr)
++static int gfar_hwtstamp_set(struct net_device *netdev,
++			     struct kernel_hwtstamp_config *config,
++			     struct netlink_ext_ack *extack)
+ {
+-	struct hwtstamp_config config;
+ 	struct gfar_private *priv = netdev_priv(netdev);
  
-+config DRM_PANEL_NOVATEK_NT37801
-+	tristate "Novatek NT37801/NT37810 AMOLED DSI panel"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y here if you want to enable support for Novatek NT37801 (or
-+	  NT37810) AMOLED DSI Video Mode LCD panel module with 1440x3200
-+	  resolution.
-+
- config DRM_PANEL_NOVATEK_NT39016
- 	tristate "Novatek NT39016 RGB/SPI panel"
- 	depends on OF && SPI
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index 883974f0cba128e28f23e31512f8d30d59913b0e..2dcc224cba63e9cf59410fd974e5f068bb9e26b3 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -50,6 +50,7 @@ obj-$(CONFIG_DRM_PANEL_NOVATEK_NT35950) += panel-novatek-nt35950.o
- obj-$(CONFIG_DRM_PANEL_NOVATEK_NT36523) += panel-novatek-nt36523.o
- obj-$(CONFIG_DRM_PANEL_NOVATEK_NT36672A) += panel-novatek-nt36672a.o
- obj-$(CONFIG_DRM_PANEL_NOVATEK_NT36672E) += panel-novatek-nt36672e.o
-+obj-$(CONFIG_DRM_PANEL_NOVATEK_NT37801) += panel-novatek-nt37801.o
- obj-$(CONFIG_DRM_PANEL_NOVATEK_NT39016) += panel-novatek-nt39016.o
- obj-$(CONFIG_DRM_PANEL_MANTIX_MLAF057WE51) += panel-mantix-mlaf057we51.o
- obj-$(CONFIG_DRM_PANEL_OLIMEX_LCD_OLINUXINO) += panel-olimex-lcd-olinuxino.o
-diff --git a/drivers/gpu/drm/panel/panel-novatek-nt37801.c b/drivers/gpu/drm/panel/panel-novatek-nt37801.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..84d367eab058bdddf5a40feb6a75f29ec62dd9f2
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-novatek-nt37801.c
-@@ -0,0 +1,340 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+// Copyright (c) 2024 Linaro Limited
-+
-+#include <linux/backlight.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+
-+#include <drm/display/drm_dsc.h>
-+#include <drm/display/drm_dsc_helper.h>
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_modes.h>
-+#include <drm/drm_panel.h>
-+#include <drm/drm_probe_helper.h>
-+
-+#include <video/mipi_display.h>
-+
-+struct novatek_nt37801 {
-+	struct drm_panel panel;
-+	struct mipi_dsi_device *dsi;
-+	struct drm_dsc_config dsc;
-+	struct gpio_desc *reset_gpio;
-+	struct regulator_bulk_data *supplies;
-+};
-+
-+static const struct regulator_bulk_data novatek_nt37801_supplies[] = {
-+	{ .supply = "vddio" },
-+	{ .supply = "vci" },
-+	{ .supply = "vdd" },
-+};
-+
-+static inline struct novatek_nt37801 *to_novatek_nt37801(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct novatek_nt37801, panel);
-+}
-+
-+static void novatek_nt37801_reset(struct novatek_nt37801 *ctx)
-+{
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+	usleep_range(10000, 21000);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	usleep_range(10000, 21000);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+	usleep_range(10000, 21000);
-+}
-+
-+#define NT37801_DCS_SWITCH_PAGE			0xf0
-+
-+#define novatek_nt37801_switch_page(dsi_ctx, page) \
-+	mipi_dsi_dcs_write_seq_multi((dsi_ctx), NT37801_DCS_SWITCH_PAGE, \
-+				     0x55, 0xaa, 0x52, 0x08, (page))
-+
-+static int novatek_nt37801_on(struct novatek_nt37801 *ctx)
-+{
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	novatek_nt37801_switch_page(&dsi_ctx, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6f, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc5, 0x0b, 0x0b, 0x0b);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xff, 0xaa, 0x55, 0xa5, 0x80);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6f, 0x02);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf5, 0x10);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6f, 0x1b);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf4, 0x55);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6f, 0x18);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf8, 0x19);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6f, 0x0f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfc, 0x00);
-+	mipi_dsi_dcs_set_column_address_multi(&dsi_ctx, 0x0000, 0x059f);
-+	mipi_dsi_dcs_set_page_address_multi(&dsi_ctx, 0x0000, 0x0c7f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x90, 0x03, 0x03);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x91,
-+				     0x89, 0x28, 0x00, 0x28, 0xc2, 0x00, 0x02,
-+				     0x68, 0x04, 0x6c, 0x00, 0x0a, 0x02, 0x77,
-+				     0x01, 0xe9, 0x10, 0xf0);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xff, 0xaa, 0x55, 0xa5, 0x81);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6f, 0x23);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xfb,
-+				     0x00, 0x01, 0x00, 0x11, 0x33, 0x33, 0x33,
-+				     0x55, 0x57, 0xd0, 0x00, 0x00, 0x44, 0x56,
-+				     0x77, 0x78, 0x9a, 0xbc, 0xdd, 0xf0);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6f, 0x06);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf3, 0xdc);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_SET_GAMMA_CURVE, 0x00);
-+	mipi_dsi_dcs_set_tear_on_multi(&dsi_ctx, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x3b, 0x00, 0x18, 0x00, 0x10);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_WRITE_CONTROL_DISPLAY,
-+				     0x20);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x51,
-+				     0x07, 0xff, 0x07, 0xff, 0x0f, 0xff);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5a, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5f, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x9c, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_WRITE_MEMORY_START);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x2f, 0x00);
-+
-+	novatek_nt37801_switch_page(&dsi_ctx, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb2, 0x55, 0x01, 0xff, 0x03);
-+	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 120);
-+	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 20);
-+
-+	return dsi_ctx.accum_err;
-+}
-+
-+static int novatek_nt37801_off(struct novatek_nt37801 *ctx)
-+{
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 20);
-+
-+	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 120);
-+
-+	return dsi_ctx.accum_err;
-+}
-+
-+static int novatek_nt37801_prepare(struct drm_panel *panel)
-+{
-+	struct novatek_nt37801 *ctx = to_novatek_nt37801(panel);
-+	struct device *dev = &ctx->dsi->dev;
-+	struct drm_dsc_picture_parameter_set pps;
-+	int ret;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(novatek_nt37801_supplies),
-+				    ctx->supplies);
-+	if (ret < 0)
-+		return ret;
-+
-+	novatek_nt37801_reset(ctx);
-+
-+	ret = novatek_nt37801_on(ctx);
-+	if (ret < 0)
-+		goto err;
-+
-+	drm_dsc_pps_payload_pack(&pps, &ctx->dsc);
-+
-+	ret = mipi_dsi_picture_parameter_set(ctx->dsi, &pps);
-+	if (ret < 0) {
-+		dev_err(panel->dev, "failed to transmit PPS: %d\n", ret);
-+		goto err;
-+	}
-+
-+	ret = mipi_dsi_compression_mode(ctx->dsi, true);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to enable compression mode: %d\n", ret);
-+		goto err;
-+	}
-+
-+	msleep(28);
-+
+-	if (copy_from_user(&config, ifr->ifr_data, sizeof(config)))
+-		return -EFAULT;
+-
+-	switch (config.tx_type) {
++	switch (config->tx_type) {
+ 	case HWTSTAMP_TX_OFF:
+ 		priv->hwts_tx_en = 0;
+ 		break;
+@@ -2082,7 +2080,7 @@ static int gfar_hwtstamp_set(struct net_device *netdev, struct ifreq *ifr)
+ 		return -ERANGE;
+ 	}
+ 
+-	switch (config.rx_filter) {
++	switch (config->rx_filter) {
+ 	case HWTSTAMP_FILTER_NONE:
+ 		if (priv->hwts_rx_en) {
+ 			priv->hwts_rx_en = 0;
+@@ -2096,44 +2094,23 @@ static int gfar_hwtstamp_set(struct net_device *netdev, struct ifreq *ifr)
+ 			priv->hwts_rx_en = 1;
+ 			reset_gfar(netdev);
+ 		}
+-		config.rx_filter = HWTSTAMP_FILTER_ALL;
++		config->rx_filter = HWTSTAMP_FILTER_ALL;
+ 		break;
+ 	}
+ 
+-	return copy_to_user(ifr->ifr_data, &config, sizeof(config)) ?
+-		-EFAULT : 0;
 +	return 0;
-+
-+err:
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	regulator_bulk_disable(ARRAY_SIZE(novatek_nt37801_supplies),
-+			       ctx->supplies);
-+
-+	return ret;
-+}
-+
-+static int novatek_nt37801_unprepare(struct drm_panel *panel)
-+{
-+	struct novatek_nt37801 *ctx = to_novatek_nt37801(panel);
-+	struct device *dev = &ctx->dsi->dev;
-+	int ret;
-+
-+	ret = novatek_nt37801_off(ctx);
-+	if (ret < 0)
-+		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
-+
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+
-+	regulator_bulk_disable(ARRAY_SIZE(novatek_nt37801_supplies),
-+			       ctx->supplies);
-+
+ }
+ 
+-static int gfar_hwtstamp_get(struct net_device *netdev, struct ifreq *ifr)
++static int gfar_hwtstamp_get(struct net_device *netdev,
++			     struct kernel_hwtstamp_config *config)
+ {
+-	struct hwtstamp_config config;
+ 	struct gfar_private *priv = netdev_priv(netdev);
+ 
+-	config.flags = 0;
+-	config.tx_type = priv->hwts_tx_en ? HWTSTAMP_TX_ON : HWTSTAMP_TX_OFF;
+-	config.rx_filter = (priv->hwts_rx_en ?
+-			    HWTSTAMP_FILTER_ALL : HWTSTAMP_FILTER_NONE);
+-
+-	return copy_to_user(ifr->ifr_data, &config, sizeof(config)) ?
+-		-EFAULT : 0;
+-}
+-
+-static int gfar_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
+-{
+-	struct phy_device *phydev = dev->phydev;
++	config->tx_type = priv->hwts_tx_en ? HWTSTAMP_TX_ON : HWTSTAMP_TX_OFF;
++	config->rx_filter = priv->hwts_rx_en ? HWTSTAMP_FILTER_ALL :
++			    HWTSTAMP_FILTER_NONE;
+ 
+-	if (!netif_running(dev))
+-		return -EINVAL;
+-
+-	if (cmd == SIOCSHWTSTAMP)
+-		return gfar_hwtstamp_set(dev, rq);
+-	if (cmd == SIOCGHWTSTAMP)
+-		return gfar_hwtstamp_get(dev, rq);
+-
+-	if (!phydev)
+-		return -ENODEV;
+-
+-	return phy_mii_ioctl(phydev, rq, cmd);
 +	return 0;
-+}
-+
-+static const struct drm_display_mode novatek_nt37801_mode = {
-+	.clock = (1440 + 20 + 4 + 20) * (3200 + 20 + 2 + 18) * 120 / 1000,
-+	.hdisplay = 1440,
-+	.hsync_start = 1440 + 20,
-+	.hsync_end = 1440 + 20 + 4,
-+	.htotal = 1440 + 20 + 4 + 20,
-+	.vdisplay = 3200,
-+	.vsync_start = 3200 + 20,
-+	.vsync_end = 3200 + 20 + 2,
-+	.vtotal = 3200 + 20 + 2 + 18,
-+	.type = DRM_MODE_TYPE_DRIVER,
-+};
-+
-+static int novatek_nt37801_get_modes(struct drm_panel *panel,
-+				     struct drm_connector *connector)
-+{
-+	return drm_connector_helper_get_modes_fixed(connector,
-+						    &novatek_nt37801_mode);
-+}
-+
-+static const struct drm_panel_funcs novatek_nt37801_panel_funcs = {
-+	.prepare = novatek_nt37801_prepare,
-+	.unprepare = novatek_nt37801_unprepare,
-+	.get_modes = novatek_nt37801_get_modes,
-+};
-+
-+static int novatek_nt37801_bl_update_status(struct backlight_device *bl)
-+{
-+	struct mipi_dsi_device *dsi = bl_get_data(bl);
-+	u16 brightness = backlight_get_brightness(bl);
-+	int ret;
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_set_display_brightness_large(dsi, brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	return 0;
-+}
-+
-+static const struct backlight_ops novatek_nt37801_bl_ops = {
-+	.update_status = novatek_nt37801_bl_update_status,
-+};
-+
-+static struct backlight_device *
-+novatek_nt37801_create_backlight(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	const struct backlight_properties props = {
-+		.type = BACKLIGHT_RAW,
-+		.brightness = 4095,
-+		.max_brightness = 4095,
-+	};
-+
-+	return devm_backlight_device_register(dev, dev_name(dev), dev, dsi,
-+					      &novatek_nt37801_bl_ops, &props);
-+}
-+
-+static int novatek_nt37801_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	struct novatek_nt37801 *ctx;
-+	int ret;
-+
-+	ctx = devm_drm_panel_alloc(dev, struct novatek_nt37801, panel,
-+				   &novatek_nt37801_panel_funcs,
-+				   DRM_MODE_CONNECTOR_DSI);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ret = devm_regulator_bulk_get_const(dev,
-+					    ARRAY_SIZE(novatek_nt37801_supplies),
-+					    novatek_nt37801_supplies,
-+					    &ctx->supplies);
-+	if (ret < 0)
-+		return ret;
-+
-+	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(ctx->reset_gpio))
-+		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio),
-+				     "Failed to get reset-gpios\n");
-+
-+	ctx->dsi = dsi;
-+	mipi_dsi_set_drvdata(dsi, ctx);
-+
-+	dsi->lanes = 4;
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->mode_flags = MIPI_DSI_MODE_NO_EOT_PACKET | MIPI_DSI_CLOCK_NON_CONTINUOUS;
-+
-+	ctx->panel.prepare_prev_first = true;
-+	ctx->panel.backlight = novatek_nt37801_create_backlight(dsi);
-+	if (IS_ERR(ctx->panel.backlight))
-+		return dev_err_probe(dev, PTR_ERR(ctx->panel.backlight),
-+				     "Failed to create backlight\n");
-+
-+	drm_panel_add(&ctx->panel);
-+
-+	/* This panel only supports DSC; unconditionally enable it */
-+	dsi->dsc = &ctx->dsc;
-+	ctx->dsc.dsc_version_major = 1;
-+	ctx->dsc.dsc_version_minor = 1;
-+	ctx->dsc.slice_height = 40;
-+	ctx->dsc.slice_width = 720;
-+	ctx->dsc.slice_count = 1440 / ctx->dsc.slice_width;
-+	ctx->dsc.bits_per_component = 8;
-+	ctx->dsc.bits_per_pixel = 8 << 4; /* 4 fractional bits */
-+	ctx->dsc.block_pred_enable = true;
-+
-+	ret = mipi_dsi_attach(dsi);
-+	if (ret < 0) {
-+		drm_panel_remove(&ctx->panel);
-+		return dev_err_probe(dev, ret, "Failed to attach to DSI host\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static void novatek_nt37801_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct novatek_nt37801 *ctx = mipi_dsi_get_drvdata(dsi);
-+	int ret;
-+
-+	ret = mipi_dsi_detach(dsi);
-+	if (ret < 0)
-+		dev_err(&dsi->dev, "Failed to detach from DSI host: %d\n", ret);
-+
-+	drm_panel_remove(&ctx->panel);
-+}
-+
-+static const struct of_device_id novatek_nt37801_of_match[] = {
-+	{ .compatible = "novatek,nt37801" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, novatek_nt37801_of_match);
-+
-+static struct mipi_dsi_driver novatek_nt37801_driver = {
-+	.probe = novatek_nt37801_probe,
-+	.remove = novatek_nt37801_remove,
-+	.driver = {
-+		.name = "panel-novatek-nt37801",
-+		.of_match_table = novatek_nt37801_of_match,
-+	},
-+};
-+module_mipi_dsi_driver(novatek_nt37801_driver);
-+
-+MODULE_AUTHOR("Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>");
-+MODULE_DESCRIPTION("Panel driver for the Novatek NT37801/NT37810 AMOLED DSI panel");
-+MODULE_LICENSE("GPL");
-
+ }
+ 
+ /* Interrupt Handler for Transmit complete */
+@@ -3174,7 +3151,7 @@ static const struct net_device_ops gfar_netdev_ops = {
+ 	.ndo_set_features = gfar_set_features,
+ 	.ndo_set_rx_mode = gfar_set_multi,
+ 	.ndo_tx_timeout = gfar_timeout,
+-	.ndo_eth_ioctl = gfar_ioctl,
++	.ndo_eth_ioctl = phy_do_ioctl_running,
+ 	.ndo_get_stats64 = gfar_get_stats64,
+ 	.ndo_change_carrier = fixed_phy_change_carrier,
+ 	.ndo_set_mac_address = gfar_set_mac_addr,
+@@ -3182,6 +3159,8 @@ static const struct net_device_ops gfar_netdev_ops = {
+ #ifdef CONFIG_NET_POLL_CONTROLLER
+ 	.ndo_poll_controller = gfar_netpoll,
+ #endif
++	.ndo_hwtstamp_get = gfar_hwtstamp_get,
++	.ndo_hwtstamp_set = gfar_hwtstamp_set,
+ };
+ 
+ /* Set up the ethernet device structure, private data,
 -- 
-2.45.2
+2.43.0
 
