@@ -1,182 +1,244 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2060.outbound.protection.outlook.com [40.107.220.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD26B172BD5
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 22:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746745071; cv=none; b=a7okgDGfbmiGxM1jA0X0GAigusLVZUp4PGEAARQRVTl+ewxvxsXoJzDeVh7QYYK4Lus9OB5+XU2nlsMekTIw9lgtNuQFsFeEokLPWEORzwMRYxNiIbaXqfdF4JLmv4tGpBljF8SZ0r7RAhOOYQRFfNvIP43Ap0pQQxubLitkJ/U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746745071; c=relaxed/simple;
-	bh=B2SbnoaVXsgvl3TP0ClbBFtCJLQ4Op6iWjB4E3/WFYY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HxJYoa37qOs/5DZKYa6j+tr+a8IiKBvg/e8hSNoA11xBhec/C7OHGZCRJBwt/Iq40Q8ks0gE+auePfg8XTAJHxFn6iqFIlng8UDyjxzzRgV77x4vwDaOapdu3QvhxCLs4riKBuGlOb+8NaCZx+6Baj3JvU5ls7w5Ye+qZ3eiL/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hoEElJK4; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEDF215772;
+	Thu,  8 May 2025 23:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746745235; cv=fail; b=foyjT5kmkU32+Pa09EeugE24mnc1KHcgoyVtp+GEKDbgM3fQw9hifmLr6amVmSOu99roVvjeGVHnkB8aA291t8e42PEqIlPR5b71In57Lj3637JEfohKfQhUjNzrA8vrnDKAxDVXM6C05XSeTK6TH79Bxb2yMFeSUWtP8pb3AFo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746745235; c=relaxed/simple;
+	bh=sGDk2A7cIZGjsfZBZGH6HEVDkwhMakeJhqkOlvjI5Rw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Khffb0wEmgjr/hYwjE3rM7NXgOpdU+lpGrzAu6FvdzDi1FzKeiX73r0488WmJdoiqHhmHeP/IKolL7S6cttnn0KaOUekn5pW9iKal/X5pbquIk4VjgZkDZlZnYZ5Fj/YZEovl1O2lqIiRUYew2JD16IVHypXnpgAMjyzBj8204Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pzSiBcAL; arc=fail smtp.client-ip=40.107.220.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hoEElJK4"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548DKc1G016419
-	for <linux-kernel@vger.kernel.org>; Thu, 8 May 2025 22:57:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Cg/tISJIMaT0Gm0WnDpcV1xCOuL4/CvFo6caXG5lllY=; b=hoEElJK4411CYouu
-	nmvVX5tBkg1ik//LkkXsWpVxWVi7bZ2h8hLTX6Ak15I+iMfdng2MPI7hbrTKihIM
-	omtWC8PNaGF+EyBcwlEOy+hvj+UQwZr5f+AnQcyivP77m4BpqcjlLDQ0H0cULzrC
-	308WxUxpI0cIKJgOJKVHHrpkCwos0J9KvHsnbccm+7i+iccOGV6+bCB/B+ckp6Hp
-	tSGCrp6HuxZP0fDIUZsi63wASoKilR7Sxk7H/6X7K0ZxFpqJfQoq/4EeZEGK08CA
-	ZaaHjkraZcjwvPxFNbiHy/ZFLS+1NINScjNg3Sjzrjd+FjSoMuQMeSGIKF/OXDR8
-	5be5Vw==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp8trnh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 22:57:48 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f5466289bdso2159556d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 15:57:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746745068; x=1747349868;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cg/tISJIMaT0Gm0WnDpcV1xCOuL4/CvFo6caXG5lllY=;
-        b=DeVruCG5rmjHCV3aie2njCr3JyE81QMQ2aS5ZABlu3OKk4KmJ4Mf8S/Cadz3ENcFYk
-         Gi6tgKVgLQgnf8tcX/9Pj6JOrBuZBkbEK7CYvgym2QIdBpNdaL6Bb7MvbETpTsWOG0zT
-         5/Ni9KcWRESUtjfBQaqi3Vo5iEbHcYimJAOwdlh3RCPyxUGfqz77HC2GNC9MvieTQNX6
-         /SnOd2JkEuSNO/ML9L6VgMLcOz4fln0LxXaDMielHtliTYHkaU7KZuhEOmzCPluR4kSl
-         y1/QW1mKiV81vkYsVU3MoFJukuHd6AmuXo6jNJV8wesh/SC4ZdRvKMo0FA1jQtyhqhI3
-         5YTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVgh7WA8rDvXuAeAgxDS+0+hN4NDCEBokrum9vyz6U8T5dpsbLDXUr0NBts4VU5LxQV2zwPXqOCwhZXVh8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzZ268RgpFuak1xIf9RD/cGi8HAE/f5RsVZap+ipy0JP3sDeH1
-	v1no60CbIlU0IkE5SvUowRYwSNHKZhrUuRJmfoE9XO/it0sJuAcurj2VKLjROz0U37T1ljiw48v
-	R7yrQO6ifsc9t9z8OxV5cPOFQQ+d7S7zpoOUhke4RMN1MJvJpgRz6KIcYJVRVssQ=
-X-Gm-Gg: ASbGncvao4TrHW+jdXCKJggMyiNkPnLwZIp4X7AAXFh9xF2EV2LbEcUldqCzC/G9Rbq
-	v9uourqaRDMPy7wfp6YFO6OcJBpTk7W6WaT/z1d5ez32YV2ozrSfWHQ/4MQTtAdyP9FvS15mGhJ
-	7gvV6EN3cIp8foJ3plrf2DZrmQ4hbF46gdOusJgOm/saQhGKwqO4uo+mblHhgKpszDVmOG4ar07
-	folXOwxybI74NB3txTQXcgvg5jOpvcEM6SeR3CYF9jbRqzZ8VOl5towW8iSF3RK7WZnk79Hfw9Y
-	M74ZxBZ82e4qCoYMPFa3TrkbQiSio4QQz5vPeCRGs31mtDa9H8aKtggImfXg+QGdeS8=
-X-Received: by 2002:a05:620a:2452:b0:7c5:9ab7:3012 with SMTP id af79cd13be357-7cd0114145fmr84450885a.11.1746745067685;
-        Thu, 08 May 2025 15:57:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH2s+oB6HkxxT4d0lM7bmLSmPrIM683EN2m3B/pSVjMRkJKV/JUPOChZeDLpjtb0iG/hd4+vQ==
-X-Received: by 2002:a05:620a:2452:b0:7c5:9ab7:3012 with SMTP id af79cd13be357-7cd0114145fmr84449185a.11.1746745067288;
-        Thu, 08 May 2025 15:57:47 -0700 (PDT)
-Received: from [192.168.65.105] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad219746072sm52582966b.112.2025.05.08.15.57.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 15:57:46 -0700 (PDT)
-Message-ID: <3c0fea8d-0715-40e6-bed9-e0961bf034e0@oss.qualcomm.com>
-Date: Fri, 9 May 2025 00:57:44 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pzSiBcAL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MYhxLVlRyh8tQmFbNwYqvdWBE365ZTFtY1Mpa5pIgxhMHqCNFkR2Uhi6GtnQfxCO/c4iVZomOkW3pubb0dRrs7ONqlrSSlcDRQW2s7IVvqO6xTznr9QQBXvWoBSIiHtYjakITg0xnfxdtoDC0bRo6qF6LvKKX9md42tcaoXuYj+ucQaMESvGEADWq60HrmVKa2vLo8c8vAQYpGOpnCt+mUToYrVmk5cweofpapI7L7aprQvzf83a/7pl7cQj70DaJ2fes0WtB4J/TuwZeAnUjPQ5vCnYHtahTSB8kM89K8lAgFCweMnD2ShM7TG3o4n/5DKGz9W0SHwFdJZoXhCKjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=p/4uJ//RXeI1VXlj3vH2+hyRvmshYiHldX+gnmaEkWI=;
+ b=y/QSYatitWxXlxr5oML1nhFSYLLS/lTL1D9sPhlIT9oo7dFs7zAVRTrLBk357kZex5sicECDn318q8E8BV7KN+HG2ZVNOkYEhMMRglkL4R6tfMWTikvb14UYo268CmO0A2iwPkbQ/2xPP0ijjbjbQdHXmYqjKlNGJ0W6CNdcixefWJwPo8ADZ3TmtrP+RivIglof7avfYiiWsssZAL6zv3jQG+GfY3Y+UsSs4oMJMgxULtFI3xdzGOJM8thckoQB8uaNZ7yXpn6ju5/uqB8bYn9e1TQuJsRvw7YXeVW7wiS9npmh5vdHs/1WGz3eQTAh1hZTthjpB79wdLyj5LTgzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p/4uJ//RXeI1VXlj3vH2+hyRvmshYiHldX+gnmaEkWI=;
+ b=pzSiBcALQnoq4+Xv2yDafibwqWctXvHy9bfeiQTD9s08sEqOozp/qRfo6sRU9k+c7RsSuCzeDU2lUbSZcMkve3UFEoo3VWtjr8fbZII2339TLmBB35FRc8CIkwgbL9Zbx1sGK/CmExid2CsatKqHt9jUUsrSNVTYb/PtlOarhPY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6440.namprd12.prod.outlook.com (2603:10b6:8:c8::18) by
+ DM6PR12MB4330.namprd12.prod.outlook.com (2603:10b6:5:21d::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.21; Thu, 8 May 2025 23:00:27 +0000
+Received: from DS0PR12MB6440.namprd12.prod.outlook.com
+ ([fe80::6576:7d84:1c66:1620]) by DS0PR12MB6440.namprd12.prod.outlook.com
+ ([fe80::6576:7d84:1c66:1620%5]) with mapi id 15.20.8678.028; Thu, 8 May 2025
+ 23:00:26 +0000
+Message-ID: <07898a21-2e8f-4413-90a1-076460cd55b8@amd.com>
+Date: Thu, 8 May 2025 19:00:24 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12] platform/x86: Add AMD ISP platform config for OV05C10
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Ilya K <me@0upti.me>, Pratap Nirujogi <pratap.nirujogi@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>, W_Armin@gmx.de,
+ mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, benjamin.chan@amd.com, bin.du@amd.com,
+ gjorgji.rosikopulos@amd.com, king.li@amd.com, dantony@amd.com
+References: <20250505171302.4177445-1-pratap.nirujogi@amd.com>
+ <9061d5a7-c1f6-47ad-b60a-226e48021d62@0upti.me>
+ <21c9d764-4945-4837-93dc-ab58f22f8668@linux.intel.com>
+ <019c9a4d-f8e5-4345-95df-255a04e5c34e@amd.com>
+ <c98e9dd5-69e1-0a20-dcc7-f9f7fa40762a@linux.intel.com>
+Content-Language: en-GB
+From: "Nirujogi, Pratap" <pnirujog@amd.com>
+In-Reply-To: <c98e9dd5-69e1-0a20-dcc7-f9f7fa40762a@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: YQBPR0101CA0311.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:6c::14) To DS0PR12MB6440.namprd12.prod.outlook.com
+ (2603:10b6:8:c8::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: sm8750: Add adsp fastrpc support
-To: Alexey Klimov <alexey.klimov@linaro.org>, andersson@kernel.org,
-        konradybcio@kernel.org, linux-arm-msm@vger.kernel.org
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        srini@kernel.org, quic_ekangupt@quicinc.com,
-        krzysztof.kozlowski@linaro.org
-References: <20250502011539.739937-1-alexey.klimov@linaro.org>
- <10f69da3-6f94-4249-a8f3-459dc48fa5e1@oss.qualcomm.com>
- <D9R4NCKH46WP.14C8F7W4M58ZQ@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <D9R4NCKH46WP.14C8F7W4M58ZQ@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: rJqSaeQafhEYDTFst298rImuBKu40ydN
-X-Proofpoint-ORIG-GUID: rJqSaeQafhEYDTFst298rImuBKu40ydN
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDIwOSBTYWx0ZWRfX6EWLnl15wSxO
- 8dUKtJSqTQvN7Z/6TcWzH8ylKSzfFsTQRvKXa5sD/96dITGBr4JbDMQMfmsX6oB2UYLvDFNAQ8E
- cNz/DCw4XwIdvHO3toLWsqSGvirh+A4UW2bE0MJzOR3MAVQQDRZr2wxjqxGxus2fl2beRtM55Lc
- fd7+jP2VumUSmyMt8iqx44tbdOrg94cwZIegTm+YojaNLoFnXB5NueGXhghGh3e54hQ4S3/UAAL
- J1feNoO/yoKW17LnmMJKAzeGA4YEKzxrls4gi7ZsN2DNF0dxHq21zoXJ/3i6i5P386SiUnVwxjx
- L5govZoVx2saRSZc2FIv47nFWuNmSZyDc5wB8J+0u0iZtXyww0jr68MP/NISeNUME77nvwMnGq4
- jExuQ4bsi34TaawqLiYeqJuVhu6ytx0SQIsyhbiJe2jOMuaI21+a4I3iWzSyXUc/g8XD3bcI
-X-Authority-Analysis: v=2.4 cv=e/4GSbp/ c=1 sm=1 tr=0 ts=681d36ec cx=c_pps
- a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=VwQbUJbxAAAA:8
- a=KKAkSRfTAAAA:8 a=zwkf0SmHCyEPBq45FFAA:9 a=QEXdDO2ut3YA:10
- a=iYH6xdkBrDN1Jqds4HTS:22 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_07,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0 clxscore=1015
- mlxlogscore=981 spamscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0
- mlxscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505080209
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6440:EE_|DM6PR12MB4330:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9860ee63-df2d-4778-626d-08dd8e841f1f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZG4yU2VWR0hEMUJnejFZa1FmVytFMU1hNUtBUjNzajU1aHp3WmowbGk2VHZK?=
+ =?utf-8?B?SUFnamtpTGloR2ErTnhicXRTTHJUMVpEb1ZKNDFTMEFCNE9VQXdtNDFJdnVM?=
+ =?utf-8?B?bzQzcm5WZXR6NFJUQ3dGRTkvMm9xenF0amFZRkpCWG9pK3hRekFWZ2VuaHNt?=
+ =?utf-8?B?U3ZyK2YvOGtlZkovM2ZxR3RKU3hRTzdxOXVNQTQ2OEVzY1JGeVlBZFBURlZD?=
+ =?utf-8?B?UEt5V3NLekg4VjFMOVB1aStzY1hTSk9PcXVuNkpYak53YndiT05YQTBCdmtQ?=
+ =?utf-8?B?NzloczQ4NDlNK21jOWRDUko5Uld4eXN2cVI3SGEvd0tIRWVVejBDWnFkckZW?=
+ =?utf-8?B?OUxmNjEyNEc5R1Z6a3R0SktvcTFOMzZvQU9qUjJBd3ZjL1FnVzB0Nkh0TTNH?=
+ =?utf-8?B?K0xPQjlkMkYwZmFCQjB3Ty91MThTUk5XbUZtV2FLWjVnV25KUUlFWXhoblpR?=
+ =?utf-8?B?eDBtWENyTVZCOEpvR1l2VjlCOXhKQW44MzZWVGxKRTZFVkFCNS9rMUdNUWJZ?=
+ =?utf-8?B?Q3ZxZ0tqQlFtNWl1NmsyMFV5QmFhMVFLdlRlQzBzcDBiOWF5MEExRUZ0Yzhw?=
+ =?utf-8?B?L3B4M0R2K1IrR29ndVZncGRZM1FvaFlIbVVhUFBPU0ZOeFl5NDd4TkRIamhp?=
+ =?utf-8?B?NE1zVlViSm5KTm92WGFRbFRqQ3pvQVhvWDBXSDRkLzNjN0o5M010Z1NLR0lm?=
+ =?utf-8?B?RHQ5Q3c5SFVEeTl3SUxzMXg2MjhmVnJjN01tcTlaMmNtZytpb2kxSFBsdVlw?=
+ =?utf-8?B?V0FCZGlqTURQQ1M0SGZtamJldkJkMzdBZVJYbGV0MmR5MmRza21qdnhXUHVH?=
+ =?utf-8?B?ZFZtUUhURnZ6QVh4aFlSVWZldXpjTFRTbFZ2UExXbW00TG9TWExGVWtTMUtR?=
+ =?utf-8?B?U1BpajZyWUZxNmhxVStxVkVLY1BGMk5rUGFkT3BYekVadTdMOWczU1JoenNs?=
+ =?utf-8?B?SU15azdQd2JvcEVjYmRGMlFkK3J3Qi9ReFZGVjVYNGIvS3BxOENFMDZIUzhn?=
+ =?utf-8?B?bTYzVXh4QW5aTEhrZzhPSktoTWN3d3IrMFFnckYwTWVFYjJncVdiWjlmYnhj?=
+ =?utf-8?B?R1Y1eUwvOGRMSkdFblRuSm9nQmNCQStvNmt5c0Q5cWpiYW5Ba3M4Zm9NdUQ4?=
+ =?utf-8?B?N0orTVlZaXRnVTRQMUoyRW1Bb1h6ZWhhU0kwcGsvakNJUUVCZzE0UHJYNzFC?=
+ =?utf-8?B?TEhTbkYrNGVXTEhoTXNOZ2Q4clRYUlZFTXlYSmpGeW5TcWxLbHA5Q0x3VVVS?=
+ =?utf-8?B?MkZkdENIaGMzQ0l1SFBiSmhpcTA4bE1yTmxIVkg3RjYybWZCTWZSTk45dW9K?=
+ =?utf-8?B?NTR2MUtJOXFJeHhCa3EycFlTMkc4dzhaOGtaazlWQzRzY0I5ME5zaVA0T0pl?=
+ =?utf-8?B?NnV2UWJaZjBSb0dPdXY0SmU3a1RydXROalMxMmFSa1RyYkloQm1PS0FWSlpD?=
+ =?utf-8?B?UmVja3ZPVitFeFhmbXhFNWdhbDRTNkxEOVB1SnFlSmpyQmpBVUZxMXdzRVJJ?=
+ =?utf-8?B?M0d0ZGZuWGxZMGFkNllxWkVuZUErM0RiaTE1YmZqTXFOcnJSSit1TGlFU2JO?=
+ =?utf-8?B?MUlrNTdnQ0JRd0RHMG1xcS9PbnRlUjJVNEd6NzhzREdHLzRQSzdDbmdaMjFM?=
+ =?utf-8?B?OHduYk40dWs4eXhnbncvSC85cUVQdjF2VU9UbXpMMlpDV29LRGNDdGJYM281?=
+ =?utf-8?B?cTQ1a21wcE03UlN6WldvdUJqWGswaGVRbll1TDA5ZFIyVEk5dm9zUkdPQ2Zi?=
+ =?utf-8?B?Z3VQbTdadnZQdEQzK1NYM2NhOGV2bFFTZUxRYytvMnRDK3U3NFI5cHgyeXd4?=
+ =?utf-8?B?K08yOWZoczVHM0tRbW5HTGRFVHlTc3U2NzNjU2oxTUtvTUtwQ3FvSlk1OVRT?=
+ =?utf-8?B?Q1NCdVBhaFJiZnpheGF5RnJaYzVIaE14RmY5UFdzd0hQN2lBOUJMQkRMdlJk?=
+ =?utf-8?Q?RjNQuvi0U8U=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6440.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SmthWGJaWTRZVFZmWW5PWEs3QThnaEFnL05hVGoyU1lRdm93L0p5U3JTQXAr?=
+ =?utf-8?B?aWx6N2JrWlpQRkFGa2wwQk0rc1d1Z1Y4WlIxV3NXbHp5TDdYZUwzblNEa0sy?=
+ =?utf-8?B?ekFFVGZmVzRsQ3JwajM1eUxrZStqNWErdHRxcFlnTFVvRFFRTFBKMTdNMnR6?=
+ =?utf-8?B?TStaWFR5dUJ2MW01eTB5VzNUUGZWN1RwNmkyVFVJT0g0anM1UG1SdDBmZDFj?=
+ =?utf-8?B?eXdJRkoyN2xsK3BsRVdqV0pPblBTYTNtemkxdXRZUnpjS2d4MWNRUWoyV1ZU?=
+ =?utf-8?B?Tnc1UkNuMldTemdaUGEyektiYzNJMTNaUDh6aHlKYjFpaVJzWW56Yk4xbW5B?=
+ =?utf-8?B?eUYwVEZjWkZBOGx4L241UUs4eTZPY1JoSWVVOC9GQ0pmTjFvNmF1UjZsNGdT?=
+ =?utf-8?B?eis4bXdWemJxTzhWUlVJbnNQY25pbi9nQk9oOFBkUmlNbmQ1bDEzelVmam96?=
+ =?utf-8?B?N2REWE5WSmNwUFphdmYzb3pIVFBUeGFldlJXK3JCSjNQanR4by9OLy8wN1dz?=
+ =?utf-8?B?aDIwS253aExJNk5JMTNwRUpzQ2dkdDZDVWV4cHY0MmhwQlZBZ0RBTFNmWnlG?=
+ =?utf-8?B?c2VMeThaOVdIYm9OVWlyZ1Uvem1PdXR0cEcxZHI4ZDB1dEdvc0FOVndZVjAx?=
+ =?utf-8?B?TnJkaE9FZGlKT1dFWGRRTFFSTnpCSG5RQVBBLzkzYWZ6a09aLzE2NkthV3c2?=
+ =?utf-8?B?cFhJWVEwU0duUktNRnkvRlZpQjVPNndKZ2NxNHZ3ejRYMmNONVdxeTVTQjZU?=
+ =?utf-8?B?U0Y3T3ZQSDVKMVRNNThmVllDWTRzWmxERmpqT2lGUi9PWVp4MkUzM1ZvTkwv?=
+ =?utf-8?B?L1c0ZFJrK0U3UHdtZVhhQlNYMlh0a0JyTlJNTnByZXd2RjJ6MnFxQUZXeTdz?=
+ =?utf-8?B?M0kybk9kbG1Oa2gwNEtHanpYZWZHOWVWS3NVckwvaTdkZGtKVmhRSXlvWUF5?=
+ =?utf-8?B?cG41blBFRnZFTVlJN0JMUmtoOCtkSXYzTXBmaWFpYS9qc1R2dDJLYVVKN2NT?=
+ =?utf-8?B?SkU4SnRDbVJaOWdmQ21ld0FNaSs5RFpEMXZMa1NRMFQyMXJ2c1dpU1pkQmFn?=
+ =?utf-8?B?cWQ3YWYzQTZVNExGaHBZWGpFRjg0b2Y2TndkcU8xakFjR2t5UGtiMXMySUlJ?=
+ =?utf-8?B?TVE4TXpWQlVKR1k2dk1jY0pvU09TZWVINnhXZ0lkbzhWSzFERCtxOExtRXZj?=
+ =?utf-8?B?cU56c2pXR1Z5ZGh5TC9aRWQvL1lSQUtzZ1hrelZlRjVHWVFOQXFpbUUyQ1J5?=
+ =?utf-8?B?cVJ4Zm1YZFBvNW9oY0tjdDlpTTZrd3BnUk5iYW1nSzJlQ3kxWHBKTEtaVDJp?=
+ =?utf-8?B?RG9ZVk1EbjQzWVdDUzNuVXMwQTZJUHppdVhYWUlWNHlMTm5RWXV5K1ZrMGJs?=
+ =?utf-8?B?dWxNa3hzSEpkOVpOMGwzOEZSYlYyQ0t6WUh0dWtGR1N6Tis1ZXhzcFBTTVAx?=
+ =?utf-8?B?UW9nRjAvU2pSek1tMG9BQlhUS0Y0R2NtNTYxSy9vZnNoLy9SZ2dpTnU2ZW4z?=
+ =?utf-8?B?RjVVMHJWcHpWVjB1R3F1bUcxdWxhTkhxZmNRVDFrSW1tc014a1ZrVXdkNTRq?=
+ =?utf-8?B?QWpES0I5UkwvTGtJWVM0WTZNZmZ1RmdadkpsUjhNM3lXUFpqdXlYMUs2cEJw?=
+ =?utf-8?B?a0FTM3ZJTDFKSTZkenlYdmd6clpNbUo1OUdyZnQwSDRvOXhySmJZUElHWXd1?=
+ =?utf-8?B?bmRtaFREZGc0K0MwS2NyWCtTUWh0ejcrbmIxdk5PY01uU3dLRExUQS9TMWhv?=
+ =?utf-8?B?MVJUSU5vMjErTGV6MXZIQmU5ejBncjBvRVlRNk8wNmVYWXd0VWFnUEJsbXkx?=
+ =?utf-8?B?WCszWE9pb1NtTjRKdVZzeDJjRXpNWklNcWthanFaYS9EOVl5a09MaUwvZDlm?=
+ =?utf-8?B?YkRET0JzZ1YxWjZGUDlYR1p0Y0NsVVdjQTZNdXBua0oxaXkwS0ZaekNIbGVJ?=
+ =?utf-8?B?akJqUjlKTENSZlZjNlJiZlRKS210QU9NZ3ZlMU03MzFlMmlCc1VLRy9lNVdF?=
+ =?utf-8?B?OFFGYXdRbEE2b2lyemJ3N2lPa2xINzh0SVZIeTExalBYUTUyZS9VQ2ZuRDUx?=
+ =?utf-8?B?VmUrWEFuSnR0T2RKOHFkNWZ0RmxsV0dBUWx2QzhQdDBNRFFqLzJKLzNiNDkv?=
+ =?utf-8?Q?Xn/y/CHImeoiSVTyRgCx67cpB?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9860ee63-df2d-4778-626d-08dd8e841f1f
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6440.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 23:00:26.7482
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rGZfyvImH1DHKmTnGQr2NAC2gTgEN1UkYYF1OKICm71pVh/9/0WjIhIXlhZrOPIZWvGLWoPgieZedGgbTkesAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4330
 
-On 5/9/25 12:20 AM, Alexey Klimov wrote:
-> On Fri May 2, 2025 at 10:38 AM BST, Konrad Dybcio wrote:
->> On 5/2/25 3:15 AM, Alexey Klimov wrote:
->>> While at this, also add required memory region for fastrpc.
->>>
->>> Tested on sm8750-mtp device with adsprpdcd.
->>>
->>> Cc: Ekansh Gupta <quic_ekangupt@quicinc.com>
->>> Cc: Srinivas Kandagatla <srini@kernel.org>
->>> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
->>> ---
->>>  arch/arm64/boot/dts/qcom/sm8750.dtsi | 70 ++++++++++++++++++++++++++++
->>>  1 file changed, 70 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
->>> index 149d2ed17641..48ee66125a89 100644
->>> --- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
->>> @@ -7,6 +7,7 @@
->>>  #include <dt-bindings/clock/qcom,sm8750-gcc.h>
->>>  #include <dt-bindings/clock/qcom,sm8750-tcsr.h>
->>>  #include <dt-bindings/dma/qcom-gpi.h>
->>> +#include <dt-bindings/firmware/qcom,scm.h>
->>>  #include <dt-bindings/interconnect/qcom,icc.h>
->>>  #include <dt-bindings/interconnect/qcom,sm8750-rpmh.h>
->>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->>> @@ -523,6 +524,14 @@ llcc_lpi_mem: llcc-lpi@ff800000 {
->>>  			reg = <0x0 0xff800000 0x0 0x800000>;
->>>  			no-map;
->>>  		};
->>> +
->>> +		adsp_rpc_remote_heap_mem: adsp-rpc-remote-heap {
->>> +			compatible = "shared-dma-pool";
->>> +			alloc-ranges = <0x0 0x00000000 0x0 0xffffffff>;
->>> +			alignment = <0x0 0x400000>;
->>> +			size = <0x0 0xc00000>;
->>> +			reusable;
->>> +		};
->>>  	};
->>>  
->>>  	smp2p-adsp {
->>> @@ -2237,6 +2246,67 @@ q6prmcc: clock-controller {
->>>  						};
->>>  					};
->>>  				};
->>> +
->>> +				fastrpc {
->>> +					compatible = "qcom,fastrpc";
->>> +					qcom,glink-channels = "fastrpcglink-apps-dsp";
->>> +					label = "adsp";
->>> +					memory-region = <&adsp_rpc_remote_heap_mem>;
->>
->> IIUC the driver only considers this on the sensor DSP
+Hi Ilpo,
+
+On 5/8/2025 4:52 AM, Ilpo Järvinen wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
 > 
-> Memory region is required for audio protection domain + adsprpdcd as far as I know.
+> 
+> On Wed, 7 May 2025, Nirujogi, Pratap wrote:
+>> On 5/6/2025 8:53 AM, Ilpo Järvinen wrote:
+>>> Caution: This message originated from an External Source. Use proper caution
+>>> when opening attachments, clicking links, or responding.
+>>>
+>>>
+>>> On Tue, 6 May 2025, Ilya K wrote:
+>>>
+>>>>> +#define AMDISP_OV05C10_I2C_ADDR            0x10
+>>>>> +#define AMDISP_OV05C10_PLAT_NAME   "amdisp_ov05c10_platform"
+>>>>> +#define AMDISP_OV05C10_HID         "OMNI5C10"
+>>>>> +#define AMDISP_OV05C10_REMOTE_EP_NAME      "ov05c10_isp_4_1_1"
+>>>>> +#define AMD_ISP_PLAT_DRV_NAME              "amd-isp4"
+>>>>
+>>>> Hey folks, I know v12 might be a bit too late for this one, but I've got
+>>>> another device here (Asus GZ302EA tablet) with a very similar camera
+>>>> setup, but a different sensor (OV13B10), and it looks like this driver
+>>>> just assumes a certain hardcoded configuration... I wonder if it makes
+>>>> sense to reorganize the code so that more sensor configurations can be
+>>>> added without making a separate module? I'd be happy to help with
+>>>> refactoring/testing/etc, if people are interested.
+>>>
+>>> v12 is not too late, and besides, v9..v12 has happened within 5 days
+>>> which is rather short time (hint to the submitter that there's no need
+>>> to burn patch series version numbers at that speed :-)).
+>>>
+>>> I'll give folks some time to sort this out if you need to add e.g., some
+>>> driver_data instead.
+>>>
+>>> --
+>>>    i.
+>>>
+>> Hi Ilya, Ilpo,
+>>
+>> I agree with the suggestion, but how about taking-up the refactoring part in a
+>> separate patch. Yes this patch focussed on supporting OV05C10 and even the
+>> code review proceeded with this understanding. Refactoring now for generic
+>> support would require changes that would undo some of the recent review
+>> feedback (especially related to global variables usage). Please let us know
+>> what do you think.
+> 
+> Hi,
+> 
+> If you refer to comments given to v7 that resulted in removal of swnodes
+> field from struct amdisp_platform (and some other fields along with it), I
+> don't think the comment was given to mean that you could not have
+> platform info structure (const struct amdisp_platform_info that never was
+> been there) but that it should be separate struct from the runtime one
+> (struct amdisp_platform). The runtime struct can have a pointer to the
+> info struct if it's content is needed after probe.
+> 
+> When the platform info struct exists, pointer to it can be put into
+> driver_data in amdisp_sensor_ids. I don't expect you to necessarily add
+> the other sensor there but I'd like to see this adapted such that it can
+> be relatively easily added which likely requires having that separate
+> struct for platform info.
+> 
+> So in a sense, it undoes some of the changes done after v7 but looking
+> into history of this patch, it looks the post v7 patches went slightly
+> into wrong direction which makes adding next device harder than it needs
+> to be (I'm sorry I didn't realize this sooner). TBH, I don't think adding
+> the info struct is that much extra effort for you given what you had in
+> v7, the info just needs another struct separate from struct
+> amdisp_platform but the ingrediments kind of where there already.
+> 
+Thanks for clarifying and providing direction. I agree adding the new 
+amdisp_platform_info structure should be straightforward. I will 
+implement the changes and submit the new patch v13.
 
-next-20250508
+Thanks,
+Pratap
 
-rmem_node = of_parse_phandle(rdev->of_node, "memory-region", 0);
-if (domain_id == SDSP_DOMAIN_ID && rmem_node) {
-	// ...
-}
+> --
+>   i.
 
-maybe some driver changes are still pending?
-
-Konrad
