@@ -1,108 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB274B1E6F
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 01:37:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82E34B1E6F;
+	Thu,  8 May 2025 01:40:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746668225; cv=none; b=K75fwxPcHU5AZG2+nxIgo2qkzRKlFgOx/LtZj86l/rMqTXPbWRiyrcdEf6oysIkhjvah6Zx7j5yMmN/93lSCLnCa+Q01NhzCWvAvL+Dc1QEQ3pQuDQ7LEdguYpw7sAzwv51Ti6jI7cfDH0kPh7ylvltcReh2hUMirVjHjFcuijc=
+	t=1746668408; cv=none; b=Wmg+cmM+2JY6/yspEvU3WL3Sv7dfPEi1pYhF4wogyrD/u/wLht5nbVjvXFTP5hOXMLMvtzMiVE0eJ8KwPUddP3gplMHgaJZUeveGX9vh19dluLm7EcPDZnkIWcd3urX2JNj5be29cSsnnsiTvauLVQBEQc/g73RMkzALjhXWClk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746668225; c=relaxed/simple;
-	bh=pRYTX2VLsUqyiCzLvT/3wIsdfY9m1XZvdCfmiQ9A7oc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=LJ0S7hx4jryddCR1oc7nzjyeRO6uojRWYdc3baTBapOuH8/ud1EiHVXpCCPB2rrddq2aLXHzKazHenSIcPwgDFOzMfcuQA3eMweJyVnNFwK0mOUulFIu2t+IZ6RopysbUGsB1l1m+bxixIaG/JZP2Hh6K+YEY8PKEVunutTuTLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dnycdlAc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746668408; c=relaxed/simple;
+	bh=SYSL3CqLFqQ5L+DAxnRJM/O+kSR8EiapwRLyicH6VJI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=VY6kktHnqrJ61WE/vD/XEMkXRrnmwH9F6vlADUJwNHBNIXnNXcTzvixg2pT2h7psQ/6VYu0CeeQcfi9Y8zEwuY4aR6cKAIgli5FenmVv42ssIk8kXCyFygZO+eXd0eqVzHPexvqB7IPXe0bGyCelRaICzsANwyWtBagoQgVZGHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZBTeVlVG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dnycdlAc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 776B6C4CEE2;
-	Thu,  8 May 2025 01:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1746668225;
-	bh=pRYTX2VLsUqyiCzLvT/3wIsdfY9m1XZvdCfmiQ9A7oc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dnycdlAcQBEsRwACIHbVv+OpVbHm9G/xV/5/2F/Mc0n9IBSODnj0B4rG+NP+wp5TT
-	 DlAPZzhuYe4sK5vDAY3opv0Ad5ebj/E/Od/2+4xOMXQMx825p1qIxbOuzZs9ElVsrX
-	 998bwUASzpodCI6zLanlhPUcjHnFaOPerALKFgME=
-Date: Wed, 7 May 2025 18:37:03 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Dev Jain <dev.jain@arm.com>
-Cc: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
- ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
- maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
- anshuman.khandual@arm.com, willy@infradead.org, ioworker0@gmail.com,
- yang@os.amperecomputing.com, baolin.wang@linux.alibaba.com, ziy@nvidia.com,
- hughd@google.com
-Subject: Re: [PATCH v2 2/2] mm: Optimize mremap() by PTE batching
-Message-Id: <20250507183703.43d7b53d5e2e263566cfe80a@linux-foundation.org>
-In-Reply-To: <20250507060256.78278-3-dev.jain@arm.com>
-References: <20250507060256.78278-1-dev.jain@arm.com>
-	<20250507060256.78278-3-dev.jain@arm.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZBTeVlVG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC805C4CEE2;
+	Thu,  8 May 2025 01:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746668407;
+	bh=SYSL3CqLFqQ5L+DAxnRJM/O+kSR8EiapwRLyicH6VJI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=ZBTeVlVGdT9P1cL+mzAyNaKZAC5hHkaW0XkUsRMAZepSRIgKzAUIV/+sRpcmqfgfQ
+	 kjbwLy8dDg7AunLxf2e19es2T/cZkmdMIbphdCiBjPYO4qZ5eJbT55dapzwyZ5tjs8
+	 sQM7JWW4TDCvDN4BDJ4IKbVSGX5spb/U146lzc7yAk+nj7/L0VpnvCTXt/NiDXwCoo
+	 JsPIIJB++5W2+mtgfzwc7k9QAJ/aYvnLX1jr1HnPj73ZOlN+qoLXjMgdAuQHUG8xyh
+	 4juP/fa0VRfhc+akGXr5V2A4pviXNj7GRkPVRjsTD2zp9ZK46/Um7jcRXno65eoXGa
+	 hrKldZYlQ0Nfg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADCD9380AA70;
+	Thu,  8 May 2025 01:40:47 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2 0/3] Bug fixes from XDP patch series
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174666844624.2418694.14482147133138763410.git-patchwork-notify@kernel.org>
+Date: Thu, 08 May 2025 01:40:46 +0000
+References: <20250506110546.4065715-1-m-malladi@ti.com>
+In-Reply-To: <20250506110546.4065715-1-m-malladi@ti.com>
+To: Meghana Malladi <m-malladi@ti.com>
+Cc: namcao@linutronix.de, horms@kernel.org, john.fastabend@gmail.com,
+ hawk@kernel.org, daniel@iogearbox.net, ast@kernel.org, pabeni@redhat.com,
+ kuba@kernel.org, edumazet@google.com, davem@davemloft.net,
+ andrew+netdev@lunn.ch, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srk@ti.com,
+ vigneshr@ti.com, rogerq@kernel.org, danishanwar@ti.com
 
-On Wed,  7 May 2025 11:32:56 +0530 Dev Jain <dev.jain@arm.com> wrote:
+Hello:
 
-> To use PTE batching, we want to determine whether the folio mapped by
-> the PTE is large, thus requiring the use of vm_normal_folio(). We want
-> to avoid the cost of vm_normal_folio() if the code path doesn't already
-> require the folio. For arm64, pte_batch_hint() does the job. To generalize
-> this hint, add a helper which will determine whether two consecutive PTEs
-> point to consecutive PFNs, in which case there is a high probability that
-> the underlying folio is large.
-> Next, use folio_pte_batch() to optimize move_ptes(). On arm64, if the ptes
-> are painted with the contig bit, then ptep_get() will iterate through all 16
-> entries to collect a/d bits. Hence this optimization will result in a 16x
-> reduction in the number of ptep_get() calls. Next, ptep_get_and_clear()
-> will eventually call contpte_try_unfold() on every contig block, thus
-> flushing the TLB for the complete large folio range. Instead, use
-> get_and_clear_full_ptes() so as to elide TLBIs on each contig block, and only
-> do them on the starting and ending contig block.
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Tue, 6 May 2025 16:35:43 +0530 you wrote:
+> This patch series fixes the bugs introduced while adding
+> xdp support in the icssg driver, and were reproduced while
+> running xdp-trafficgen to generate xdp traffic on icssg interfaces.
 > 
-> ...
->
-> --- a/include/linux/pgtable.h
-> +++ b/include/linux/pgtable.h
-> @@ -369,6 +369,35 @@ static inline pgd_t pgdp_get(pgd_t *pgdp)
->  }
->  #endif
->  
-> +/**
-> + * maybe_contiguous_pte_pfns - Hint whether the page mapped by the pte belongs
-> + * to a large folio.
-> + * @ptep: Pointer to the page table entry.
-> + * @pte: The page table entry.
-> + *
-> + * This helper is invoked when the caller wants to batch over a set of ptes
-> + * mapping a large folio, but the concerned code path does not already have
-> + * the folio. We want to avoid the cost of vm_normal_folio() only to find that
-> + * the underlying folio was small; i.e keep the small folio case as fast as
-> + * possible.
-> + *
-> + * The caller must ensure that ptep + 1 exists.
-> + */
+> v1: https://lore.kernel.org/all/20250428120459.244525-1-m-malladi@ti.com/
+> 
+> Meghana Malladi (3):
+>   net: ti: icssg-prueth: Set XDP feature flags for ndev
+>   net: ti: icssg-prueth: Fix kernel panic during concurrent Tx queue
+>     access
+>   net: ti: icssg-prueth: Report BQL before sending XDP packets
+> 
+> [...]
 
-Gee, that isn't the prettiest interface we've ever invented.
+Here is the summary with links:
+  - [net,v2,1/3] net: ti: icssg-prueth: Set XDP feature flags for ndev
+    https://git.kernel.org/netdev/net/c/e5641daa0ea1
+  - [net,v2,2/3] net: ti: icssg-prueth: Fix kernel panic during concurrent Tx queue access
+    https://git.kernel.org/netdev/net/c/8b3fae3e2376
+  - [net,v2,3/3] net: ti: icssg-prueth: Report BQL before sending XDP packets
+    https://git.kernel.org/netdev/net/c/1884fc85ae6e
 
-Is there any prospect that this function will get another caller?  If
-not then it's probably better to just open-code all this in the caller
-and fill it up with comments.
-
-
-Anyway, review of this series is scanty.  I'd normally enter
-wait-and-see mode, but this:
-
-> the average execution time reduces from 1.9 to
-> 1.2 seconds, giving a 37% performance optimization, on Apple M3 (arm64).
-
-prompts me into push-it-along mode.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
