@@ -1,68 +1,122 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from e240-12.smtp-out.eu-north-1.amazonses.com (e240-12.smtp-out.eu-north-1.amazonses.com [23.251.240.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DF0216E05
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5202F1C6FE2;
+	Thu,  8 May 2025 09:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746696008; cv=none; b=t7x5LvG2fid3J6BhIfog09KVIztqz9VddJ7Cp6KbM9kKKpZ9QxWXqwHNz28tYA+CzXsODrxuVaWn/6TUiC0/OhmXHdeUnFIcWxrRuda4/n2KC77HVpzCosW5FGL2fJ8hwSVLoV/r8zwbYnp4I6VUhmaoIQxUEgZMgBPfwoG25hY=
+	t=1746696030; cv=none; b=uBEhYGdiitxT9MfPCBPM9bXEAg3S4Kw6WlVq7fTt6j9/E3VWG8dyoXWutidxfULiPQ0ERx05aNWzU1I4ZaiIS6wUZuAcKxigmTiPE3Ot5L0rg2XtOkpnNw3EyELwv1BSsnjgAM3kr5uLqKDrbtnTiK7RaiO8RbavqYQq3TbMDCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746696008; c=relaxed/simple;
-	bh=hnINcULJKHYJ9cO06p8JPKpFweoVVjduW6YYgmpYZaU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jK+0AJXr1wc2uSe1ppkSV8efjFO1cGm8NOrABcYM7GAfCsZXJW9v0z0BSwGNYQYNZATREpLPbh2uxC4ZaUdo+sPfdIK8li3mAeOqYs8u4x9YGBwlhOFQBYKP00CZ3J7sp1Co2Zy2zsgDtTuvwoiGjHWeKnDIS0zuXzczKRylp04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uCxQ4-0003WE-Tb; Thu, 08 May 2025 11:19:56 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uCxQ3-001hZx-2i;
-	Thu, 08 May 2025 11:19:55 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uCxQ3-00049l-2O;
-	Thu, 08 May 2025 11:19:55 +0200
-Message-ID: <5a72aff989d9e3e00fdae7a66c39e746db2bf501.camel@pengutronix.de>
-Subject: Re: [PATCH v3 2/2] reset: canaan: add reset driver for Kendryte K230
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Junhui Liu <junhui.liu@pigmoral.tech>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski
-	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Date: Thu, 08 May 2025 11:19:55 +0200
-In-Reply-To: <20250507-k230-reset-v3-2-c85240782ea5@pigmoral.tech>
-References: <20250507-k230-reset-v3-0-c85240782ea5@pigmoral.tech>
-	 <20250507-k230-reset-v3-2-c85240782ea5@pigmoral.tech>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1746696030; c=relaxed/simple;
+	bh=SThKzxl+IKKJS2MawyJClzR5TBlOJAXMzYLYLwwryOM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sYFxGkY1sl7wgy5G8Ee/9TJCETVtGLwKDDX+dlhBQo+Nz3cJehfD6UdnhVir5BwgB/Z4uL/rPqNee83j5dzC7G4GYUjuccY69Zf8XzEpXdGl0IgwExLEjdK24InZdY9VgLdtmcnMSzahquFIDAofrXwMzhy0ydM8O3LfudmyvRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=ohHovBwo; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=4szNP/mH; arc=none smtp.client-ip=23.251.240.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="ohHovBwo";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="4szNP/mH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1746696026;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=SThKzxl+IKKJS2MawyJClzR5TBlOJAXMzYLYLwwryOM=;
+	b=ohHovBwodYpLzMrPo6dlgcqa7Sf6o/dFUSZfXUmYEx21lpmpOHDK916u888/NXRI
+	zgXzeAgxSxk8SOGOxPypfRBIUAJQPDeGNQReHR8sBq2rphQf/Rma5GMfSs+1CsptGbz
+	Qx9JC7IoZPL7peuUP46tke3VsivdKnZccqiY2KBObt24EC+RoCPt4yKAsfkqlyw+U/Y
+	PsVu+0kqAamEXFie+YQsuH6n9le3SjEEOG8QZ35YC4JFeUhh9sO6fpGG/dhPdF9C/c/
+	xjE/lvhwZqsKkLjoMjKmflp3QV9SGd1iyZ71NGrnSyEux5r98TsOIvj5Byf5UZheHNn
+	ZFmaVXdgzA==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1746696026;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+	bh=SThKzxl+IKKJS2MawyJClzR5TBlOJAXMzYLYLwwryOM=;
+	b=4szNP/mHSyCDuOGu6MMpxT3hgyrs637Y1eMdvbFNza5kONaCwgLHg7mkHCWZtlwi
+	Izdmoqr8DFZXURKR52m0lASJ90efgCTB+x+KKMnBGTBlfRB9eVyjhhKGrQ5zlgi3IeZ
+	ENUExutAbQc83incJRBcP2u98yzwICvtare5QEfQ=
+X-Forwarded-Encrypted: i=1; AJvYcCXa23GnQfbay0NnKk1DOForEJxFaTwxyaBhGN6DU3MywqbUvsCDhzNq8ZCyb6Egr1vn2TFKWdZCQix7og==@vger.kernel.org, AJvYcCXqPem+Xoup8XuP92dPR3AEt5l7TXHkqeLKrD5IaIbtzKtPgmByD/KvQHHz7mKQzTLZogsm5BIxWkhgwDs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFtz1nGZ0v3HEP2IyM9+RU0xjj3seYZE9F0EHK7r5J3TmdcxUJ
+	OE/ADCPD/Y+y+LgAbWD1xgiBoge8A4wqIZowU3XkiiB8yG4/z87JPW4bI/BK/6ULxExl7/fHcVF
+	b4KL3Tu3Dvyi2DLkYh7KWuZwJXc0=
+X-Google-Smtp-Source: AGHT+IGg9LyZYIzsQsK3d3j3V6agE9ZkxUiLACBsACC2B+VivMDPu9lP1Jlg+5678N6r0kn0EiaNpiUfueu/tCTBkTI=
+X-Received: by 2002:a17:90b:4a82:b0:2fe:8282:cb9d with SMTP id
+ 98e67ed59e1d1-30b3a6d339dmr3557791a91.28.1746696023768; Thu, 08 May 2025
+ 02:20:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20250508182504.418552ef@canb.auug.org.au>
+In-Reply-To: <20250508182504.418552ef@canb.auug.org.au>
+From: Ozgur Kara <ozgur@goosey.org>
+Date: Thu, 8 May 2025 09:20:26 +0000
+X-Gmail-Original-Message-ID: <CADvZ6ErzVX1gx4LXAXUB4wSEa8Q21O++P3iVsgGvwqEy9tTq8Q@mail.gmail.com>
+X-Gm-Features: ATxdqUFYgNZFJ0pwCmRMUypGqdD-0JsBXjdCOuTMaq0A18WlxVUD3HGLwe_fv3A
+Message-ID: <01100196af32388a-d226b95d-f866-4863-ae9a-698aef7cedc6-000000@eu-north-1.amazonses.com>
+Subject: Re: linux-next: build failure after merge all the trees
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Jonathan Corbet <corbet@lwn.net>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
+X-SES-Outgoing: 2025.05.08-23.251.240.12
 
-On Mi, 2025-05-07 at 21:25 +0800, Junhui Liu wrote:
-> Add support for the resets on Canaan Kendryte K230 SoC. The driver
-> support CPU0, CPU1, L2 cache flush, hardware auto clear and software
-> clear resets.
->=20
-> Signed-off-by: Junhui Liu <junhui.liu@pigmoral.tech>
+Stephen Rothwell <sfr@canb.auug.org.au>, 8 May 2025 Per, 11:26
+tarihinde =C5=9Funu yazd=C4=B1:
+>
+> Hi all,
+>
+> In my after merge build tests, today's linux-next build (htmldocs)
+> failed like this:
+>
+> make[1]: Entering directory '/home/sfr/next/htmldocs'
+>   PARSE   include/uapi/linux/dvb/ca.h
+>   PARSE   include/uapi/linux/dvb/dmx.h
+>   PARSE   include/uapi/linux/dvb/frontend.h
+>   PARSE   include/uapi/linux/dvb/net.h
+>   PARSE   include/uapi/linux/videodev2.h
+>   PARSE   include/uapi/linux/media.h
+>   PARSE   include/uapi/linux/cec.h
+>   PARSE   include/uapi/linux/lirc.h
+> Using alabaster theme
+> Using Python kernel-doc
+> /home/sfr/next/next/Documentation/virt/kvm/x86/intel-tdx.rst:255: WARNING=
+: Footnote [1] is not referenced. [ref.footnote]
+>
+> Sphinx error:
+> Sphinx is unable to load the master document (/home/sfr/next/next/Documen=
+tation/index.rst). The master document must be within the source directory =
+or a subdirectory of it.
+> make[3]: *** [/home/sfr/next/next/Documentation/Makefile:123: htmldocs] E=
+rror 2
+> make[2]: *** [/home/sfr/next/next/Makefile:1804: htmldocs] Error 2
+> make[1]: *** [/home/sfr/next/next/Makefile:248: __sub-make] Error 2
+> make[1]: Leaving directory '/home/sfr/next/htmldocs'
+> make: *** [Makefile:248: __sub-make] Error 2
+>
+> I have no idea what caued this :-(
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Hello,
 
-regards
-Philipp
+Did you run this command before you got this error?
+
+$ make htmldocs
+
+but the error shows itself because index.rst is not in need requested
+directory, please run:
+
+$ git restore Documentation/index.rst
+
+Can this solve it?
+Regards,
+
+Ozgur
+
+>
+> --
+> Cheers,
+> Stephen Rothwell
