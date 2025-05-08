@@ -1,53 +1,53 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA3A221D85;
-	Thu,  8 May 2025 08:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76D221D596;
+	Thu,  8 May 2025 08:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746692156; cv=none; b=E4VUw6YxcN4Gi0YQ4jzakW2ixUWHxcBqC2xDtIvqhcj72868/JaNcuW9MquECFDCdfNeHrSnkOQtKvBI9gjfnQM1lonb5ZySdBipXN5GLP6O/NTjRdzU/4eojB59kQS8gzYXbjSlH/VQgthvzN8xZONuh8sB94GIk8Z+gAWU908=
+	t=1746692217; cv=none; b=raYJQHKcrr3PVsyTMbARAh26Cpx6bBOCCQ2G0G+JPHLEtAwfkal/Bm2wrm45x4fhk+kF3iwteyiTgf1HazOtzOIlBJI2/P5jf90teHV9z9DofUgqW3frs7/pWvP5AA2vG7sDe9r5lR7byGWU9tFGBr4CmHwJpzjke8W7XNfVoFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746692156; c=relaxed/simple;
-	bh=JmA7pvrEgYrs1PcjyGWOcGGiRiGcNAA8tjFKPgJx2Tw=;
+	s=arc-20240116; t=1746692217; c=relaxed/simple;
+	bh=9IRZhpn9aPjXbC+3ZI72ksVpGu5ZPK1knhrphqAIKgw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=epEQwsa70AsaIslES0NqLg4y9NPskSMKb+KdE0JliDqZ1U0I3kwlrfvUMjSh566P7JA1/Do5hzNnIYKTGn/I9Ujiv0fwPYStu/5yJLe5donJxpjG+cVFVF+p5g4c6yJL3/5fnk/SYk1v+ZE5j2UjnVQB3sSwb8fL5QvNy+nrqgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TOx+ZG0D; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version; b=YkVBcvNHNHxvsFwnJGjTKBOujxvHJ5ZVJZqeJPl1Qfpsv7Ti09Posx+93UP3LOHCOVPkevymjECuV+71Iz5a9EvGqQeoz/gd4VNNg/TlAGT7jTz5fsmrHnqekkcFti7yvz/MAvvblAK4kh7rqicG+2XINn3JV9vE6mP8wvxvjPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZQowrLWV; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TOx+ZG0D"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5484WPMl014263;
-	Thu, 8 May 2025 08:15:40 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZQowrLWV"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5484XOfl002229;
+	Thu, 8 May 2025 08:15:43 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=6I5NKwnudXs
-	ObxUBmaCCU9StOtiNnwgkCDL8qEnAgzY=; b=TOx+ZG0Dh3Ig+fCoxuwaXtwt1Ic
-	u4IVPcb0q6STBFYyhb1vLqStwZDjoyPP+WF3xV0ae7I5/eWLXxEyuF7BkfVQR2D3
-	lOsUGgGoZnIDjYfuKNrs1due5s225o3x+rbsGTbUB/493/n4X9y5mURhlX2K/DWA
-	yUDtTpBI7o/xVkXBPRU8zVHhpv7dR1ujopXREAzxlPTZz9XjcWNG1ofFMdZojU4o
-	bNZTDebuPzhj/kQGDDkkbcD0Jrkkq6lMS2s+mkdcHdyVhXAVK4kvMyocRsEI7x0t
-	jWGZC9YCqvylJH6ka3PFPvB5mTaRZGbKiYe7D4vBePmv2fhhqMyN9mProSg==
-Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp4ghnx-1
+	:mime-version:references:subject:to; s=qcppdkim1; bh=0qC38Lo3Cws
+	8W1OAXc6S0yEDsU5CcGbyXnjIINnlII0=; b=ZQowrLWV+rvaVUwm9PaaYCovhhH
+	LWboFZI5Zi9Ek1YzPKIsXoTRBYYWCz759TIPaAwAorFK8ACvsS5BAq5Bp4lZFV61
+	yAUHc4aM+CsHKCz9j0OjYk4iEhR4Oc+CiwyjfEK20/tuqtC84yKLuEZqapJNFlfk
+	HqTmYXnERj8uo1pbCabjQpMve4x/Ms8EYhyeS4crBAc543S0ZLnH2tE3PBB7/7Zk
+	LD/IJUa7BwJqNbUpnct/HS5xmuH2JqQwdgu1WqeiK/XpJT1B3BUvTrNybZeHSERn
+	HNfH3/czmHOpbR+HcEy0IrdKUshC0kLZN+zVN/Rj/df+/HvCITwu1A5w37w==
+Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnpfgh0y-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 08:15:39 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5488FbZE006412;
-	Thu, 8 May 2025 08:15:37 GMT
+	Thu, 08 May 2025 08:15:43 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5488Felj015326;
+	Thu, 8 May 2025 08:15:40 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 46dc7mf854-1
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 46dc7mq5g5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 08:15:37 +0000
-Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5488Fabu006398;
-	Thu, 8 May 2025 08:15:36 GMT
+	Thu, 08 May 2025 08:15:40 +0000
+Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5488FYdg015232;
+	Thu, 8 May 2025 08:15:40 GMT
 Received: from cbsp-sh-gv.ap.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 5488FasM006396
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 5488FeR9015306
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 08:15:36 +0000
+	Thu, 08 May 2025 08:15:40 +0000
 Received: by cbsp-sh-gv.ap.qualcomm.com (Postfix, from userid 4635958)
-	id 6622C40D09; Thu,  8 May 2025 16:15:34 +0800 (CST)
+	id 568F240CFD; Thu,  8 May 2025 16:15:39 +0800 (CST)
 From: Wenbin Yao <quic_wenbyao@quicinc.com>
 To: catalin.marinas@arm.com, will@kernel.org,
         linux-arm-kernel@lists.infradead.org, andersson@kernel.org,
@@ -58,11 +58,11 @@ To: catalin.marinas@arm.com, will@kernel.org,
         linux-phy@lists.infradead.org
 Cc: krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
         quic_mrana@quicinc.com, quic_cang@quicinc.com, quic_qianyu@quicinc.com,
-        quic_wenbyao@quicinc.com,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: [PATCH v3 3/5] arm64: dts: qcom: x1e80100-qcp: enable pcie3 x8 slot for X1E80100-QCP
-Date: Thu,  8 May 2025 16:15:12 +0800
-Message-Id: <20250508081514.3227956-4-quic_wenbyao@quicinc.com>
+        quic_wenbyao@quicinc.com, Johan Hovold <johan+linaro@kernel.org>,
+        Abel Vesa <abel.vesa@linaro.org>
+Subject: [PATCH v3 5/5] phy: qcom: qmp-pcie: add x1e80100 qref supplies
+Date: Thu,  8 May 2025 16:15:14 +0800
+Message-Id: <20250508081514.3227956-6-quic_wenbyao@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250508081514.3227956-1-quic_wenbyao@quicinc.com>
 References: <20250508081514.3227956-1-quic_wenbyao@quicinc.com>
@@ -77,185 +77,119 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: N_9C08JeuGa1MEvu6N2nBB-ACA3IuWHg
-X-Authority-Analysis: v=2.4 cv=E5XNpbdl c=1 sm=1 tr=0 ts=681c682b cx=c_pps
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA3MiBTYWx0ZWRfX8Gt7V3Ewdg1u
+ gjs7bgcDRKs1e805Lo1grnuUnyKh+7r5Z8uBWukbn2inB9npIpiPwE1mC8YRcotGUSyIt5RPT9L
+ C8RHVexQn5PF4B91M6TlFdQDJzkOc9B+gRtUoaUeBnSovw2dchy/HvoKCc2KZUnb0BCQn7m7E5r
+ mte99CYLSiLAWjgQwkDuIobL4SJsI+h9jtmn9FLVJPVwTcQgNBua5exCaryZCANXVrdQey1gcGM
+ X6CszKI22c25JcVytM97cjG4CKV8zGCpFiA/T2KwA6VBD2ODI6/4cjNIX8EMQQbE2NcjKf7mBZG
+ YMUNte2kWaxQwJI+x/qQF+/1EEi4PT2KsN9OQ5L9ks6nP3ZGYVbJH/ZN9hCvMGnt+6r80jRcDP+
+ t0gw5cx7I5JDZbJSgfaFWoJSSWzbgjnTAq9lLOAWRqft+wpfwjTlbx/acaUtYctImGwzSUm0
+X-Proofpoint-GUID: mFh4YkiYOyOUUFmZkBKTAPY-kXeLMAoa
+X-Proofpoint-ORIG-GUID: mFh4YkiYOyOUUFmZkBKTAPY-kXeLMAoa
+X-Authority-Analysis: v=2.4 cv=J5Kq7BnS c=1 sm=1 tr=0 ts=681c682f cx=c_pps
  a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=uqfcqhS-80NqSzA78J4A:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA3MiBTYWx0ZWRfXxuG5Og18+1RK
- bytTJHGcI/d/qt0IflvEg8+p2kej5t1x8kOXQr/i+qhgM++A3IaBXxBphFDZ1EzuWEORfhtVy3k
- MY3dwmIB1SPAHEMwX3QkUSU8n9NNqNkRxkbGYVoGBx39uXB5t1efA4xPHk4zfVXYlDrmWjMbKlP
- uDtXygBRcbHYhEkGyLt71ZGwx0re+m2j8kGuB1+yy6Rtujz73Sv87dGXy/EfWFH3MK4rvsYOaJA
- ln69qliaVB/98IAjKyk8Seacst7o6Ep8TgGM77ojezf9LefELqQiQArSR/z8MbHycFvQOs35DBV
- t6s7QpLO9BCvONe3jFGSUD/8f4QfhTgeISlDv0ADateRDAkqyOYex5wkLkG7FrgVoj4XAK/uVPI
- L7PtTyhoFy/1azRV+Ho6WISANLU3S3+nb43ng5ZUay3q4KoQd4XqRI2Z/fN3rB0eqSkv1hAX
-X-Proofpoint-ORIG-GUID: N_9C08JeuGa1MEvu6N2nBB-ACA3IuWHg
+ a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8
+ a=ZID-MTkIcqpTFlPhiEUA:9 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-08_02,2025-05-07_02,2025-02-21_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 suspectscore=0 adultscore=0 mlxscore=0 malwarescore=0
- bulkscore=0 phishscore=0 spamscore=0 priorityscore=1501 mlxlogscore=900
- lowpriorityscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505080072
+ adultscore=0 phishscore=0 malwarescore=0 impostorscore=0 spamscore=0
+ clxscore=1011 mlxlogscore=999 mlxscore=0 suspectscore=0 lowpriorityscore=0
+ bulkscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505080072
 
 From: Qiang Yu <quic_qianyu@quicinc.com>
 
-Add perst, wake and clkreq sideband signals and required regulators in
-PCIe3 controller and PHY device tree node. Describe the voltage rails of
-the x8 PCI slots for PCIe3 port.
+All PCIe PHYs on the X1E80100 SOC require the vdda-qref, which feeds QREF
+clocks provided by the TCSR device.
 
+Hence, restore the vdda-qref request for the 6th PCIe instance by reverting
+commit 031b46b4729b ("phy: qcom: qmp-pcie: drop bogus x1e80100 qref
+supplies"). For the 4th PCIe instance (Gen3 x2), add a new driver data
+entry, namely x1e80100_qmp_gen3x2_pciephy_cfg, which is a copy of
+sm8550_qmp_gen3x2_pciephy_cfg but uses sm8550_qmp_phy_vreg_l instead.
+
+Fixes: 031b46b4729b ("phy: qcom: qmp-pcie: drop bogus x1e80100 qref supplies")
+Fixes: 606060ce8fd0 ("phy: qcom-qmp-pcie: Add support for X1E80100 g3x2 and g4x2 PCIE")
+Cc: Johan Hovold <johan+linaro@kernel.org>
+Cc: Abel Vesa <abel.vesa@linaro.org>
 Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
 Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 ---
- arch/arm64/boot/dts/qcom/x1e80100-qcp.dts | 118 ++++++++++++++++++++++
- 1 file changed, 118 insertions(+)
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 37 ++++++++++++++++++++----
+ 1 file changed, 32 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-index 470c4f826..ec2479f8f 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-@@ -318,6 +318,48 @@ vreg_wcn_3p3: regulator-wcn-3p3 {
- 		regulator-boot-on;
- 	};
- 
-+	vreg_pcie_12v: regulator-pcie-12v {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "VREG_PCIE_12V";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+
-+		gpio = <&pm8550ve_8_gpios 8 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+
-+		pinctrl-0 = <&pcie_x8_12v>;
-+		pinctrl-names = "default";
-+	};
-+
-+	vreg_pcie_3v3_aux: regulator-pcie-3v3-aux {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "VREG_PCIE_3P3_AUX";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpio = <&pmc8380_3_gpios 8 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+
-+		pinctrl-0 = <&pm_sde7_aux_3p3_en>;
-+		pinctrl-names = "default";
-+	};
-+
-+	vreg_pcie_3v3: regulator-pcie-3v3 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "VREG_PCIE_3P3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpio = <&pmc8380_3_gpios 6 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+
-+		pinctrl-0 = <&pm_sde7_main_3p3_en>;
-+		pinctrl-names = "default";
-+};
-+
- 	usb-1-ss0-sbu-mux {
- 		compatible = "onnn,fsusb42", "gpio-sbu-mux";
- 
-@@ -909,6 +951,59 @@ &mdss_dp3_phy {
- 	status = "okay";
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+index ab90aafb3..c3c725744 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+@@ -4142,6 +4142,33 @@ static const struct qmp_phy_cfg sa8775p_qmp_gen4x4_pciephy_cfg = {
+ 	.phy_status		= PHYSTATUS_4_20,
  };
  
-+&pm8550ve_8_gpios {
-+	pcie_x8_12v: pcie-12v-default-state {
-+		pins = "gpio8";
-+		function = "normal";
-+		output-enable;
-+		output-high;
-+		bias-pull-down;
-+		power-source = <0>;
-+	};
++static const struct qmp_phy_cfg x1e80100_qmp_gen3x2_pciephy_cfg = {
++	.lanes = 2,
++
++	.offsets		= &qmp_pcie_offsets_v5,
++
++	.tbls = {
++		.serdes		= sm8550_qmp_gen3x2_pcie_serdes_tbl,
++		.serdes_num	= ARRAY_SIZE(sm8550_qmp_gen3x2_pcie_serdes_tbl),
++		.tx		= sm8550_qmp_gen3x2_pcie_tx_tbl,
++		.tx_num		= ARRAY_SIZE(sm8550_qmp_gen3x2_pcie_tx_tbl),
++		.rx		= sm8550_qmp_gen3x2_pcie_rx_tbl,
++		.rx_num		= ARRAY_SIZE(sm8550_qmp_gen3x2_pcie_rx_tbl),
++		.pcs		= sm8550_qmp_gen3x2_pcie_pcs_tbl,
++		.pcs_num	= ARRAY_SIZE(sm8550_qmp_gen3x2_pcie_pcs_tbl),
++		.pcs_misc	= sm8550_qmp_gen3x2_pcie_pcs_misc_tbl,
++		.pcs_misc_num	= ARRAY_SIZE(sm8550_qmp_gen3x2_pcie_pcs_misc_tbl),
++	},
++	.reset_list		= sdm845_pciephy_reset_l,
++	.num_resets		= ARRAY_SIZE(sdm845_pciephy_reset_l),
++	.vreg_list		= sm8550_qmp_phy_vreg_l,
++	.num_vregs		= ARRAY_SIZE(sm8550_qmp_phy_vreg_l),
++	.regs			= pciephy_v5_regs_layout,
++
++	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
++	.phy_status		= PHYSTATUS,
 +};
 +
-+&pmc8380_3_gpios {
-+	pm_sde7_aux_3p3_en: pcie-aux-3p3-default-state {
-+		pins = "gpio8";
-+		function = "normal";
-+		output-enable;
-+		output-high;
-+		bias-pull-down;
-+		power-source = <0>;
-+	};
-+
-+	pm_sde7_main_3p3_en: pcie-main-3p3-default-state {
-+		pins = "gpio6";
-+		function = "normal";
-+		output-enable;
-+		output-high;
-+		bias-pull-down;
-+		power-source = <0>;
-+	};
-+};
-+
-+&pcie3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie3_default>;
-+	perst-gpios = <&tlmm 143 GPIO_ACTIVE_LOW>;
-+	wake-gpios = <&tlmm 145 GPIO_ACTIVE_LOW>;
-+
-+	status = "okay";
-+};
-+
-+&pcie3_phy {
-+	vdda-phy-supply = <&vreg_l3c_0p8>;
-+	vdda-pll-supply = <&vreg_l3e_1p2>;
-+
-+	status = "okay";
-+};
-+
-+&pcie3port {
-+	vpcie12v-supply = <&vreg_pcie_12v>;
-+	vpcie3v3-supply = <&vreg_pcie_3v3>;
-+	vpcie3v3aux-supply = <&vreg_pcie_3v3_aux>;
-+};
-+
- &pcie4 {
- 	perst-gpios = <&tlmm 146 GPIO_ACTIVE_LOW>;
- 	wake-gpios = <&tlmm 148 GPIO_ACTIVE_LOW>;
-@@ -1120,6 +1215,29 @@ nvme_reg_en: nvme-reg-en-state {
- 		bias-disable;
- 	};
+ static const struct qmp_phy_cfg x1e80100_qmp_gen4x2_pciephy_cfg = {
+ 	.lanes = 2,
  
-+	pcie3_default: pcie3-default-state {
-+		clkreq-n-pins {
-+			pins = "gpio144";
-+			function = "pcie3_clk";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+
-+		perst-n-pins {
-+			pins = "gpio143";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+
-+		wake-n-pins {
-+			pins = "gpio145";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+	};
-+
- 	pcie4_default: pcie4-default-state {
- 		clkreq-n-pins {
- 			pins = "gpio147";
+@@ -4164,8 +4191,8 @@ static const struct qmp_phy_cfg x1e80100_qmp_gen4x2_pciephy_cfg = {
+ 
+ 	.reset_list		= sdm845_pciephy_reset_l,
+ 	.num_resets		= ARRAY_SIZE(sdm845_pciephy_reset_l),
+-	.vreg_list		= qmp_phy_vreg_l,
+-	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
++	.vreg_list		= sm8550_qmp_phy_vreg_l,
++	.num_vregs		= ARRAY_SIZE(sm8550_qmp_phy_vreg_l),
+ 	.regs			= pciephy_v6_regs_layout,
+ 
+ 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+@@ -4197,8 +4224,8 @@ static const struct qmp_phy_cfg x1e80100_qmp_gen4x4_pciephy_cfg = {
+ 
+ 	.reset_list		= sdm845_pciephy_reset_l,
+ 	.num_resets		= ARRAY_SIZE(sdm845_pciephy_reset_l),
+-	.vreg_list		= qmp_phy_vreg_l,
+-	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
++	.vreg_list		= sm8550_qmp_phy_vreg_l,
++	.num_vregs		= ARRAY_SIZE(sm8550_qmp_phy_vreg_l),
+ 	.regs			= pciephy_v6_regs_layout,
+ 
+ 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+@@ -5094,7 +5121,7 @@ static const struct of_device_id qmp_pcie_of_match_table[] = {
+ 		.data = &sm8650_qmp_gen4x2_pciephy_cfg,
+ 	}, {
+ 		.compatible = "qcom,x1e80100-qmp-gen3x2-pcie-phy",
+-		.data = &sm8550_qmp_gen3x2_pciephy_cfg,
++		.data = &x1e80100_qmp_gen3x2_pciephy_cfg,
+ 	}, {
+ 		.compatible = "qcom,x1e80100-qmp-gen4x2-pcie-phy",
+ 		.data = &x1e80100_qmp_gen4x2_pciephy_cfg,
 -- 
 2.34.1
 
