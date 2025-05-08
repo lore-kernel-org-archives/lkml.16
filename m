@@ -1,212 +1,185 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD6A8472;
-	Thu,  8 May 2025 05:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9DA2144B7;
+	Thu,  8 May 2025 05:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746682697; cv=none; b=Bb8wKCk0J3rd4S4Kxuz88c5iJUJAnQ+wZMxE+TbbozKNmTwlWjlqDIwW8eDG/Zq06XX3Nt/SOmY2d/xpnR24xcFGEl20fcsfJbg1aPG78Dj9kv2lPFgRLleNWOCoe822WDwPwzepQUNmKCKISPeulys/3eKY05aaV8EEOcsotZ4=
+	t=1746682736; cv=none; b=lBsB1V+FMd0pqscp/y7CCbweYJrkyLEliyoWvRYsbNM3CYgSoJ/MBiCdwB9enp7cWtpTOfWoV7qrXnW5PD1NxemB1ynEi9dBFvsV41hG69TTFvFfF+a1lz754hREayo7VEl4qBCUdsqyrDKI0rd4hMcT/qNeGJHCifBSQ2MnQO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746682697; c=relaxed/simple;
-	bh=mRAZn2LeXfdoC6viEiqXpxy2KTuT+st3ZqgpMzkgSWg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NEUfZoCkaxWilOAA3vJDg7prm/tfIc/uAgE/U0eQWYo7DhnHg2MB3a4L7TdkhVtcoolyMGw4TY3qkvZ+aQooTLnZs7oKKcDslj8IbeZl3EgJsJP3Z+SLsX/LCIsbyaY1jf+Fa6Kdwq4YsYG4qOPKrDl9/R03F2o067gCLuqE43w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HCxL/0xl; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746682736; c=relaxed/simple;
+	bh=dDCrl7bkwo/0S+4APKJnm3R6af9SQELqg9M5HZnlgFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nUZ6++/Azuf1LfbidN9cvszLJiFGmpSyN+Bo9Bqgq5GG8yww3caNA6BP5z1PklUgN42+s9JdUSj0X0LoGbpXM7FWXMLDu3GJAn4BVniPU1TfWHGEBfUEALEiEySJauvHRpDqq0kgiVs8Nx2e7yTAMFSoPWxEfZ2L79Q04TT7G98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=bnXy1y85; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=1ZCSTR2U; arc=none smtp.client-ip=155.254.16.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HCxL/0xl"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5484XWu2010664;
-	Thu, 8 May 2025 05:38:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0RsbbGYFvDIiMTNSkXUgQ8AuJQFETNnj8+Tfr9bN4Qw=; b=HCxL/0xlTmJOOhOG
-	KQ5CHWWlWfdAU7oSPZjwNVvyJtkjATQBHnYfKSuusTgd8z6zuXv0xZLrAB2L1t+E
-	sG/thAcrK5Vvf9TGfu/iKq1puvPFBY7PBfH84vBxq/sjh0PzcNONQXyJLc52QbTm
-	5h3iVXCpU1lT8UkS6LHH0rL2x13DSp4QBVzzhlOjleblzVbKWYufSLQMh5wn0ay/
-	YjW1Ukf3E+dqAsvNPB/xwHDvC0iDd261lFmqaCkNUj7w/MDQTJ85AXl0LvjUwOP9
-	go4BeuumhOPWLYuhMKonGanKEtLN+jzA7gFEVi0Dm/aELcf2+/LOYEC/HKdS6H+j
-	3vo7Vg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnpmg484-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 05:38:04 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5485c3UX009865
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 8 May 2025 05:38:03 GMT
-Received: from [10.239.133.114] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 7 May 2025
- 22:38:00 -0700
-Message-ID: <f9713d5e-68a8-497e-8a1a-9398ad1246cb@quicinc.com>
-Date: Thu, 8 May 2025 13:37:57 +0800
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="bnXy1y85";
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="1ZCSTR2U"
+Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
+	by bayard.4d2.org (Postfix) with ESMTP id 96FA612FB444;
+	Wed, 07 May 2025 22:38:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
+	t=1746682733; bh=dDCrl7bkwo/0S+4APKJnm3R6af9SQELqg9M5HZnlgFc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bnXy1y85/b2c9u9GelQ+EWxYmOcP25x/X4mu7n3Hk7WxQvGvHJTEKvMRInDeQGJON
+	 CJydroNKSYlW2P7BMVwe/YZsoPToMgaBv1AZQhOe4MJ9rZ2T3YKi3APDRyiStx2jB6
+	 8mblpqic/vFCLea7qgCZ8lrUA7iDUqsTZ3cBen8ckgA57SMXpbI2OjUfl/qJA1rV/1
+	 Whhf+bHiDao2TW1lh+UJ1ngRYdzfYU9Kp0krWuZA+EOAQhA/IOY6RoqBvAPWCMiBD+
+	 A76ndalXqqA/XDH1iao5VF9INz7gn2GDNBBKwSpa1zMapbYS1LlHzKoS4ex+QC1Vpi
+	 j0pMZEGkzPzeQ==
+X-Virus-Scanned: amavisd-new at 4d2.org
+Received: from bayard.4d2.org ([127.0.0.1])
+ by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id oLEJHnSxcwgL; Wed,  7 May 2025 22:38:19 -0700 (PDT)
+Received: from ketchup (unknown [183.217.82.204])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: heylenay@4d2.org)
+	by bayard.4d2.org (Postfix) with ESMTPSA id 7773212FB404;
+	Wed, 07 May 2025 22:38:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
+	t=1746682699; bh=dDCrl7bkwo/0S+4APKJnm3R6af9SQELqg9M5HZnlgFc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=1ZCSTR2UamB34rz6a0We4Hxm+i7shGD78C0zzsPrCYtO4ElKKXZ5B1r9CyF1Bnwvw
+	 3xhCO7GIr8ibHgQMnZKZJwMbIijgOg3JD/gtXWviUPE+cCwYtaKhJcIX8DVs90Z3Av
+	 it6iWm2SnKOY3j1fjQ3XUtkJLCPMaKxt6g93++gr1gJa5FqEe761gCbSIYgkX78atw
+	 j87r5jc5yIgagwzEmUGRnlzgZY1Vq4E1ENA5TUDStsGuFSrXbCCj70r+5sh8NAS6Si
+	 yPuNjkXVh5c7CWQmp0ZAygwvP6ei3Cq2evvtm3qUv7szHCke/dFSTDew6PEkysSGcS
+	 q1J5WYq0dbQpA==
+Date: Thu, 8 May 2025 05:38:11 +0000
+From: Haylen Chu <heylenay@4d2.org>
+To: Alex Elder <elder@riscstar.com>, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+	p.zabel@pengutronix.de, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	dlan@gentoo.org
+Cc: inochiama@outlook.com, guodong@riscstar.com, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org, spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 4/6] reset: spacemit: add support for SpacemiT CCU
+ resets
+Message-ID: <aBxDQ1_2xJjGlwNf@ketchup>
+References: <20250506210638.2800228-1-elder@riscstar.com>
+ <20250506210638.2800228-5-elder@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] coresight: add coresight Trace Network On Chip
- driver
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>
-CC: <kernel@oss.qualcomm.com>, <linux-arm-msm@vger.kernel.org>,
-        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250411-trace-noc-v3-0-1f19ddf7699b@quicinc.com>
- <20250411-trace-noc-v3-2-1f19ddf7699b@quicinc.com>
- <23d02991-3bc6-41e2-bb8b-a38786071c43@arm.com>
- <257fb0a5-7bf7-4a04-9f8d-d8759351584c@quicinc.com>
- <9b75b9d1-a9ed-46c9-9dba-8e3eb261dcc0@arm.com>
- <4a6a8bad-e5d9-4613-a839-5a21491ef7c4@quicinc.com>
- <069e920c-7023-4a6d-b1c6-dc87ac9d2360@arm.com>
- <f4db016a-0c57-4213-8eca-75a090d7aabb@arm.com>
-Content-Language: en-US
-From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-In-Reply-To: <f4db016a-0c57-4213-8eca-75a090d7aabb@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=TpjmhCXh c=1 sm=1 tr=0 ts=681c433c cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=hBx-iGXkYGsp8hSzPlMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: CdtAznACIRqolIUGZt35ka06zW2wO9aN
-X-Proofpoint-GUID: CdtAznACIRqolIUGZt35ka06zW2wO9aN
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA0NiBTYWx0ZWRfX0DCTYt+Qzelh
- A80/lR57KgHYUiFT3DC85WMwJ5B5Zh2T+vQ1ijbXubaI/SVTVNWuEKuvZ+pu+4k35ZReiXWrnM+
- fBHD1dL4Z/fj4oIPwY11h+HIXFRruu10PobT+cNaRk06fYhsQH7dsZua46n0S4FagDn4uPSst+t
- PKN0nc+dE4fTSkQB3ryn9M2EBA3Uxc7NnYz3dCRPn7TUq9LR6DvTmGPxtssweyvPvKtHuH+OIvu
- r7sqelFsuYBBzlDNRuIQ2dDqE2tKG9UWutlYABt72rmXhLq+/NbJvKK7f9mc5P7uQiU9F/fxKVX
- 87H709ufzvO5ML/+A+dq8tBrbS9jNWB10iiP/U6zT/y2AjnbAbDjxNmKEnhCW1jBtqDfOxROUxH
- CUvOBlvZdXywRj7m5V152ixfuPxzdibK1NtZsiHnNKuJlCTn3wuWVNJF2QiJfEYrFpNX67HZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_01,2025-05-07_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 suspectscore=0
- clxscore=1011 adultscore=0 malwarescore=0 mlxlogscore=999 spamscore=0
- impostorscore=0 mlxscore=0 phishscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505080046
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506210638.2800228-5-elder@riscstar.com>
 
-
-
-On 5/7/2025 7:59 PM, Suzuki K Poulose wrote:
-> On 07/05/2025 09:52, Suzuki K Poulose wrote:
->> On 07/05/2025 05:26, Yuanfang Zhang wrote:
->>>
->>>
->>> On 5/6/2025 7:20 PM, Suzuki K Poulose wrote:
->>>> On 14/04/2025 10:16, Yuanfang Zhang wrote:
->>>>>
->>>>>
->>>>> On 4/11/2025 5:59 PM, Suzuki K Poulose wrote:
->>>>>> On 11/04/2025 09:57, Yuanfang Zhang wrote:
->>>>>>> Add a driver to support Coresight device Trace Network On Chip (TNOC),
->>>>>>> which is an integration hierarchy integrating functionalities of TPDA
->>>>>>> and funnels. It aggregates the trace and transports to coresight trace
->>>>>>> bus.
->>>>>>>
->>>>>>> Compared to current configuration, it has the following advantages:
->>>>>>> 1. Reduce wires between subsystems.
->>>>>>> 2. Continue cleaning the infrastructure.
->>>>>>> 3. Reduce Data overhead by transporting raw data from source to target.
->>>>>>>
->>>>>>>      +------------------------+                +-------------------------+
->>>>>>>      | Video Subsystem        |                |Video Subsystem          |
->>>>>>>      |       +-------------+  |                |       +------------+    |
->>>>>>>      |       | Video TPDM  |  |                |       | Video TPDM |    |
->>>>>>>      |       +-------------+  |                |       +------------+    |
->>>>>>>      |            |           |                |              |           |
->>>>>>>      |            v           |                |              v          |
->>>>>>>      |   +---------------+    |                |        +-----------+    |
->>>>>>>      |   | Video funnel  |    |                |        |Video TNOC |    |
->>>>>>>      |   +---------------+    |                |        +-----------+    |
->>>>>>>      +------------|-----------+                +------------|------------+
->>>>>>>                   |                                         |
->>>>>>>                   v-----+                                   |
->>>>>>> +--------------------|---------+                         |
->>>>>>> |  Multimedia        v         |                         |
->>>>>>> |  Subsystem   +--------+      |                         |
->>>>>>> |              |  TPDA  |      |                         v
->>>>>>> |              +----|---+      |              +---------------------+
->>>>>>> |                   |          |              |    Aggregator TNOC  |
->>>>>>> |                   |          |              +----------|----------+
->>>>>>> |                   +--        |                         |
->>>>>>> |                     |        |                         |
->>>>>>> |                     |        |                         |
->>>>>>> |              +------v-----+  |                         |
->>>>>>> |              |  Funnel    |  |                         |
->>>>>>> |              +------------+  |                         |
->>>>>>> +----------------|-------------+                         |
->>>>>>>                     |                                       |
->>>>>>>                     v                                       v
->>>>>>>          +--------------------+                    +------------------+
->>>>>>>          |   Coresight Sink   |                    |  Coresight Sink  |
->>>>>>>          +--------------------+                    +------------------+
->>>>>>
->>>>>> If each NOC has TraceID, how do you reliably decode the trace ?
->>>>>> Is there a single NOC/TPDA in the path from Source to sink ?
->>>>>
->>>>> Not each TNOC has TraceID, there is only one TNOC has TraceID for one path
->>>>> from Source to sink. In the example, only the aggregator TNOC has traceID.
->>>>> Decode trace relying on TraceID + Inport number.
->>>>> It can has mutiple TNOC/TPDA in one path.
->>>>
->>>> So do we only describe the TNOCs that need traceId in the DT ? (e.g., Aggregator TNOC above ?) How about Video TNOC ? Don't we allocate a
->>>> trace id for it by default, when it is described ?
->>>>
->>>> Suzuki
->>>>
->>> yes, now only describe the TNOCs which need traceID, Video TNOC is another type, it is interconnect TNOC which collects trace from subsystems
->>> and transfers Aggr TNOC, it doesn't have ATID. Its driver is different from this patch, I want to describe it when upstream its driver.
+On Tue, May 06, 2025 at 04:06:35PM -0500, Alex Elder wrote:
+> Implement reset support for SpacemiT CCUs.  The code is structured to
+> handle SpacemiT resets generically, while defining the set of specific
+> reset controllers and their resets in an SoC-specific source file.  A
+> SpacemiT reset controller device is an auxiliary device associated with
+> a clock controller (CCU).
 > 
-> So, if both are TNOC and there different types of them, how do you plan
-> to identify, which is what ?
+> This initial patch defines the reset controllers for the MPMU, APBC, and
+> MPMU CCUs, which already defined clock controllers.
 > 
-I will describe interconnect TNOC as a platform device because it doesn't have PID register.
-It will have a compatible "qcom,coresight-interconnect-tnoc".
- 
-> And we also have a dt-bindings which simply says "coresight-tnoc". Isn't too generic if it is meant to be "aggregator" ?
-> 
-aggregator TNOC is generic TNOC, the dt-bindings is for this generic TNOC. interconnect TNOC is special TNOC, There will be a separate dt-bindings to describe it.
-> Suzuki
-> 
-> 
-> 
->>
->> Thanks! Please could you make sure to describe all of this when sending
->> out a patch in the cover letter ?
->>
-sure, will update the cover letter.
->> Cheers
->> Suzuki
->>
->>
->>>
->>> Yuanfang
->>>
->>>
->>>
->>>
->>>
->>>
->>
+> Signed-off-by: Alex Elder <elder@riscstar.com>
+> ---
+>  drivers/reset/Kconfig           |   1 +
+>  drivers/reset/Makefile          |   1 +
+>  drivers/reset/spacemit/Kconfig  |  12 +++
+>  drivers/reset/spacemit/Makefile |   7 ++
+>  drivers/reset/spacemit/core.c   |  61 +++++++++++
+>  drivers/reset/spacemit/core.h   |  39 +++++++
+>  drivers/reset/spacemit/k1.c     | 177 ++++++++++++++++++++++++++++++++
+>  7 files changed, 298 insertions(+)
+>  create mode 100644 drivers/reset/spacemit/Kconfig
+>  create mode 100644 drivers/reset/spacemit/Makefile
+>  create mode 100644 drivers/reset/spacemit/core.c
+>  create mode 100644 drivers/reset/spacemit/core.h
+>  create mode 100644 drivers/reset/spacemit/k1.c
 > 
 
+...
+
+> diff --git a/drivers/reset/spacemit/Kconfig b/drivers/reset/spacemit/Kconfig
+> new file mode 100644
+> index 0000000000000..4ff3487a99eff
+> --- /dev/null
+> +++ b/drivers/reset/spacemit/Kconfig
+> @@ -0,0 +1,12 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +
+> +config RESET_SPACEMIT
+> +	bool
+> +
+> +config RESET_SPACEMIT_K1
+> +	tristate "SpacemiT K1 reset driver"
+> +	depends on ARCH_SPACEMIT || COMPILE_TEST
+> +	select RESET_SPACEMIT
+> +	default ARCH_SPACEMIT
+> +	help
+> +	  This enables the reset controller driver for the SpacemiT K1 SoC.
+
+With auxiliary bus introduced, Kconfig entries for both the reset and
+clock should select AUXILIARY_BUS, or building defconfig will fail with
+undefined references,
+
+        riscv64-unknown-linux-musl-ld: drivers/clk/spacemit/ccu-k1.o: in function `k1_ccu_probe':
+        ccu-k1.c:(.text+0x19c): undefined reference to `auxiliary_device_init'
+        riscv64-unknown-linux-musl-ld: ccu-k1.c:(.text+0x226): undefined reference to `__auxiliary_device_add'
+        riscv64-unknown-linux-musl-ld: drivers/reset/spacemit/k1.o: in function `spacemit_k1_reset_driver_init':
+        k1.c:(.init.text+0x1a): undefined reference to `__auxiliary_driver_register'
+        riscv64-unknown-linux-musl-ld: drivers/reset/spacemit/k1.o: in function `spacemit_k1_reset_driver_exit':
+        k1.c:(.exit.text+0x10): undefined reference to `auxiliary_driver_unregister'
+
+> diff --git a/drivers/reset/spacemit/Makefile b/drivers/reset/spacemit/Makefile
+> new file mode 100644
+> index 0000000000000..3a064e9d5d6b4
+> --- /dev/null
+> +++ b/drivers/reset/spacemit/Makefile
+> @@ -0,0 +1,7 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +obj-$(CONFIG_RESET_SPACEMIT)			+= reset_spacemit.o
+
+As RESET_SPACEMIT is defined as bool, the reset driver will never be
+compiled as a module... so either the RESET_SPACEMIT_K1 should be
+limited to bool as well or you could take an approach similar to the
+clock driver.
+
+> +reset_spacemit-y				:= core.o
+> +
+> +reset_spacemit-$(CONFIG_RESET_SPACEMIT_K1)	+= k1.o
+
+...
+
+> new file mode 100644
+> index 0000000000000..19a34f151b214
+> --- /dev/null
+> +++ b/drivers/reset/spacemit/k1.c
+
+...
+
+> +MODULE_DEVICE_TABLE(auxiliary, spacemit_k1_reset_ids);
+> +
+> +#undef K1_AUX_DEV_ID
+> +
+> +static struct auxiliary_driver spacemit_k1_reset_driver = {
+> +	.probe          = spacemit_k1_reset_probe,
+> +	.id_table       = spacemit_k1_reset_ids,
+> +};
+> +module_auxiliary_driver(spacemit_k1_reset_driver);
+> -- 
+> 2.45.2
+
+If you're willing to make the reset driver buildable as a module, please
+add MODULE_{LICENSE,DESCRIPTION} statements and possibly also
+MODULE_AUTHOR(), or modpost will complain,
+
+	ERROR: modpost: missing MODULE_LICENSE() in drivers/reset/spacemit/reset_spacemit.o
+	WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/reset/spacemit/reset_spacemit.o
+
+Best regards,
+Haylen Chu
