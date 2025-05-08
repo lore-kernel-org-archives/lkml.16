@@ -1,78 +1,92 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184EF13635C;
-	Thu,  8 May 2025 11:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CC213635C;
+	Thu,  8 May 2025 11:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746702634; cv=none; b=RTyCmcS325Wk1ivr51KtwFMfjM+UhSl1pavV4DuEykuy4rk3scS7ru5Cbfha33CGvL5CsPajO9Z9xII04DDpqzZxi4ptpvuDH18l19qVzd2ZdQHr2P84jIZWjBWWIvqSKVP0CHxvfRZMO07JlMs4riBo/uIIGnv/U9r80a3zgS8=
+	t=1746702675; cv=none; b=jszkezSLdXDJubK6PEbzrcIVgBq1relRnHVU/ORQtiqbKV++1ZoLTqDCvEhQwQdE4maIZ+rhTwd2jRfjKpN7jXT3969tmMEQ55STYkVvgq9wkwM7v0MYlKmBqKLPu0VWcsjrlPYpkuWYNZZ+ZHfIn3RsJxP6+Xn7xUXfTQa7MfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746702634; c=relaxed/simple;
-	bh=apzDazRApc8L184ZCd+kMTXpfPKpEbT8IDs20ODUeAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oExGPL5LWeauyIfBsf78UygxzRH7u3/fRsGYjzELSZpN+pWMNe/VlzxyQB9TVbD75pV49rWsE/RN0v5OovyJ4usF8EX5Uh/fWbMqC66T9xYaqrAWofsFMvxJQyhoJn9rpXvsFXu0tKPWJIyOF9Id5ZGBozxVV3wXaliCmId+TXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=rT3KkXL6; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1746702675; c=relaxed/simple;
+	bh=PocAb1ppw+OcP7W7z0BpynnnsbupAp/hFOdPCA203F0=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=nd0Vv+fFT5MvTpj9wl/X+4+3LpElk8q2DnVcmHjRPyHxk6GreD3rTx7ZzmMT4XsFdANUOO+z9HvPcpVCJnvdyN/Ks7WFLoQvqjsi6gJcmz+Jc6j4IWLyhx1unAWa/uGm4q74f7VvKQp1/meE1WS23oCXXXWeQq7Seh0w049y67k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vtiw1Fe3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="rT3KkXL6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=B5PgKdWYwmTvZP+vXKi5TVXR3KLYo3HXJNEjM9zMT6I=; b=rT3KkXL6muj9CdLOMCIyrNzOT6
-	jKoUS74jTWHoQgNJc+SMJonOWlJVMqsc/EvfGpq9AWm6vQr94Fepi1OmZKhzLPQrSJ/4gQVgNh2K+
-	AiVnLg2MhmYGdIRfqZAkM5ZiRlnlCQu2AzUitWC3PUyNFcM3mTkzUr6160ikecihS4e2xReGF4KXw
-	FpqOyhfKfzJ6EPJDVZleATz9A3zfGtfy5MJhMEOmEwW5sxHjFdUTfktxKMVv1wznKiOqVMUEMBQWp
-	BY+wnYEV18ZH/9RJU28Mq+Te49bK206jU3itLYxq8l+flsExZ1dQVQKgV/TjvPDilkrns3I6Y4vlm
-	IZDOdgHA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uCz8z-004ZRI-2M;
-	Thu, 08 May 2025 19:10:26 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 08 May 2025 19:10:25 +0800
-Date: Thu, 8 May 2025 19:10:25 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] crypto: powerpc/poly1305 - Add missing poly1305_emit_arch
-Message-ID: <aByRIfXmkvZ4ZfCs@gondor.apana.org.au>
-References: <cover.1745815528.git.herbert@gondor.apana.org.au>
- <915c874caf5451d560bf26ff59f58177aa8b7c17.1745815528.git.herbert@gondor.apana.org.au>
- <242ebbf1-4ef0-41c3-83cb-a055c262ba4a@leemhuis.info>
- <aBtF2jVZQwxGiHVk@gondor.apana.org.au>
- <37cf099e-d5c2-40d8-bc31-77e1f9623b1c@linux.ibm.com>
- <aBx6DwsjDJmdHphy@gondor.apana.org.au>
- <7b491c56-0f2d-4805-a763-0a46233b8640@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vtiw1Fe3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A4F6C4CEE7;
+	Thu,  8 May 2025 11:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746702674;
+	bh=PocAb1ppw+OcP7W7z0BpynnnsbupAp/hFOdPCA203F0=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Vtiw1Fe393DXA/Qmf8g6GOtvL8Wd/KgC0TL/xj52C0LGKFcmFIp6SmEPN5XwsbbQp
+	 PdPSNEdpy79QCoEU62qiyOp57rQbiEj4MUd93a8tI8UYyOgnEOfuTOXp9o3dSFD4e5
+	 aLUmlWHwSJnQ9PrSOY63CGNshy9t3zLR+UIKcDWOAXwjKr/BU2YXAZcQgTrc9hEzhx
+	 RGVf+1VZt6y3rGWe8v7pidNAy/VcCm6jNgddtdnMGlWW49GpEWEc81USID6WWPixej
+	 f3n/1VMGb8YQOQ5FIYzuuUg455DC4vsRUqpF4MLmZaDKAkhzR9I3Z2quxVuavXNae1
+	 uV8MlAxhPuhsA==
+Date: Thu, 08 May 2025 06:11:12 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7b491c56-0f2d-4805-a763-0a46233b8640@linux.ibm.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Andy Shevchenko <andy@kernel.org>, 
+ David Lechner <dlechner@baylibre.com>, 
+ Michael Hennerich <michael.hennerich@analog.com>, 
+ Conor Dooley <conor.dooley@microchip.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-iio@vger.kernel.org, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
+ Jonathan Cameron <jic23@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, linux-kernel@vger.kernel.org
+To: Angelo Dureghello <adureghello@baylibre.com>
+In-Reply-To: <20250508-wip-bl-ad7606-calibration-v4-4-91a3f2837e6b@baylibre.com>
+References: <20250508-wip-bl-ad7606-calibration-v4-0-91a3f2837e6b@baylibre.com>
+ <20250508-wip-bl-ad7606-calibration-v4-4-91a3f2837e6b@baylibre.com>
+Message-Id: <174670267187.3889412.7858960687511929039.robh@kernel.org>
+Subject: Re: [PATCH v4 4/5] dt-bindings: iio: adc: adi,ad7606: add gain
+ calibration support
 
-On Thu, May 08, 2025 at 03:31:25PM +0530, Venkat Rao Bagalkote wrote:
->
-> Attached is the complete boot up logs.
 
-Thanks.  Can you please try the Crypto API chacha20poly1305 and
-see what happens there? If you have it built as a module you can
-load it with
+On Thu, 08 May 2025 12:06:08 +0200, Angelo Dureghello wrote:
+> From: Angelo Dureghello <adureghello@baylibre.com>
+> 
+> Add gain calibration support by a per-channel resistor value.
+> 
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> ---
+>  .../devicetree/bindings/iio/adc/adi,ad7606.yaml    | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
 
-	modprobe chacha20poly1305
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250508-wip-bl-ad7606-calibration-v4-4-91a3f2837e6b@baylibre.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
