@@ -1,186 +1,108 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1B94B1E7D;
-	Thu,  8 May 2025 18:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E7F4B1E7D;
+	Thu,  8 May 2025 18:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746729202; cv=none; b=W94+jBIU4BThsKWq0ZBgCLkHnoZ0vZuh3KABBcMXD9wGlCaHILeh4/WShP9xWc38hcIpUdCRyKJT6l84/2puBJ8YwALKoQSeP5sXlbT+vqSIqimcV8pnfthCeEqBSqZUB9HoANjL1F1vHPuZK493sJ4CNDgyfVdRtZDyFQxRFKA=
+	t=1746729325; cv=none; b=MQB7AUD9LTHl0ixcYs/YGVyDfdG3T2IOWR0yuZS3o11nMmBY8CrKZOlvqVj1k5+rfWkO1rppSaEqN0EizUzyN+jt1ejLHg1u1Oy7pE0S8EV9P8rOtc8YNxSM+NWvAYf6ruVEwgQ5/VsCvI1NyzrCQMcbCwlAui9OzYlhNcsMkks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746729202; c=relaxed/simple;
-	bh=JOcc+M9rOvZ1c35pE9SCvCiacPbTkjMI6AluzJW0xeA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CASH50w7AjBxlLRAPYRUr9o1gO75ZxbhupMKRPO3jUsRuhVZKKacP9icyUCH524cRV3lPDWdRodji7uvXjZ+P8SE/WELZa4hB1+3MsjyTypXSEGq87OQzkIUia9ZeqsjLfkQSHEGYaea8P23E32TPeB+59PjGn0SLpVWyhLMnJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mlsycKxc; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlsycKxc"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-30a892f8124so157983a91.3;
-        Thu, 08 May 2025 11:33:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746729199; x=1747333999; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8FQJhUt0Xs5KmiFJABZgU0fKzpM3sDlbu/it07qeVBQ=;
-        b=mlsycKxcF8Pg2BcgDOnKZQqQaS/u6EZP+9530Gx9qvWlO1TFL63NAOtOxTELlRw07B
-         BoCT3kRNSgn1QmuaUyCNDhBu8mo5tVGvZqldxeFnbpSR98hR2IG6bIQEXyYg77XkbxVu
-         1m3urNIMCkyJS72fD1YFw3UAp8IA9GSItQ9D/WBnUWNLSf5N4pGxVNUDXYaAo8GZg/1E
-         cNv8Ym5Rm2bmt4LVA16ZhKX5bDHDWiUf/EhK4ah7Gqz9vQ3jbisESk0hjpMuoYXWYOfG
-         FKVLc6rYgkNjIUiszH2JvDymvfY9HZeS2fiBwRIUCnWATX4ORTq1p8R3hdWwBwKfkjE2
-         Huow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746729199; x=1747333999;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8FQJhUt0Xs5KmiFJABZgU0fKzpM3sDlbu/it07qeVBQ=;
-        b=Wt9wSfPcApjmC2YL9w/UKRu2TAISd+uQqOu3yCUROXgi4zTu+tTF6gKvWRpTMCoUxv
-         b+4eyQvCvxqYSOW3QC40rQSZetiGWJjU9C6X6D2vO75FkVhWPIaNo8nDMQTZyiFMeIG6
-         RDPgN9SjbAdIF38ccgnZTTn2SlC6jK6Np+FDTi7Nb3LwOzI4gjNv9ri41KFWPXBiKh1H
-         wINysYc2JgUy+EwtRTFRokH1m/VulDYlN3N556+NMjyR8yp7KA4MUcx814LayfyL9zM3
-         BNeOxKpaUtc6rLL41J7zxOykDO1PVVN0nnQBxecC/Uk9C0j1tsNVoITGdVb0Njel2xz6
-         ORUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXqiDv1KfEmXZqs1yQiMpYai2QXK2RpOO6XOWb4hdkPiCn4s0HJXm1p1bAnv4bDDnC2qK4yFVkUkjZNACW@vger.kernel.org, AJvYcCXBSyy7K0DNtYQ9MKCggg+5YgZ0Q8yzbBSAVrqfiekpTRghS4HKJqmOCdMAosn5Oda49yMnQwJqAydZpinY@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEjfInwtwQz3XR7EXugmqlKWQk4vJj7rdRjBkSrLayFovrYbIY
-	lgkkvILQ6/qfXElVQJT2EkqMT3luutW1qYwb1qh66AqhEze9jXXxU1mkV6hgP6OcXu19CcjSGbr
-	dZXlblhD/giBcQ6iFrFlNr3bLKPs=
-X-Gm-Gg: ASbGncvyQn/LlN2nat4x81cM0g0Iw6asdMIefLB+uWD5MoUH5WYsZw4GBGYLp74K+2c
-	YnHPuy4zqBNsR8zq7Wu7kxGUBPeYc0K7igRS5Gd83XrA1RHWRpsTjunQbe26gfr66oYpwabtVI3
-	2kw8XuxX3uAE5jBRrNSvUjtg==
-X-Google-Smtp-Source: AGHT+IHpUe5YqkWw0UFJtqeULReAr+4JR57SpZTyi/DJlRlRiBws1wPRXwVJgzIDpy8odTqgv5arRpEHmEIb9VOXibA=
-X-Received: by 2002:a17:90a:e7d2:b0:2fe:b972:a2c3 with SMTP id
- 98e67ed59e1d1-30c3b909b29mr304390a91.0.1746729199120; Thu, 08 May 2025
- 11:33:19 -0700 (PDT)
+	s=arc-20240116; t=1746729325; c=relaxed/simple;
+	bh=pQVCCI8EqkRoXe6jlfp88q7Ckl5MiVkBR4sc8JWAFWs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bg/cb2qt2pf97qADAoSg269ND+GTgZMNfuYMNhD2GrGHe5jxHsKgWG6lUtCpIDo6LdHypRt6rLq+uvoPlV/D1iQqy4EGiHPc1ThVsd+M9/sEd+KR/Z3wLTj3BYemMieAubPJ8OO8YjQr15zy9phP1yGgGs1FMX6t6ktzdq2LOKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: 1VGZZ0+HTdSsOqSy8EL+SA==
+X-CSE-MsgGUID: mIW0WpyQQBOVUBKta4jmGA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="52344853"
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="52344853"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:35:17 -0700
+X-CSE-ConnectionGUID: bvrRQzUPTXqm6DaZU2h9sg==
+X-CSE-MsgGUID: ut+I5uXbQZmzVtZD2uR6PA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="136090820"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:35:13 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uD65P-00000004CCz-1H8r;
+	Thu, 08 May 2025 21:35:11 +0300
+Date: Thu, 8 May 2025 21:35:11 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Angelo Dureghello <adureghello@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] Documentation: ABI: IIO: add calibconv_delay
+ documentation
+Message-ID: <aBz5X3AQRi1ONsly@smile.fi.intel.com>
+References: <20250508-wip-bl-ad7606-calibration-v4-0-91a3f2837e6b@baylibre.com>
+ <20250508-wip-bl-ad7606-calibration-v4-1-91a3f2837e6b@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com> <20250508-topic-ubwc_central-v1-10-035c4c5cbe50@oss.qualcomm.com>
-In-Reply-To: <20250508-topic-ubwc_central-v1-10-035c4c5cbe50@oss.qualcomm.com>
-From: Connor Abbott <cwabbott0@gmail.com>
-Date: Thu, 8 May 2025 14:33:08 -0400
-X-Gm-Features: ATxdqUE2vLeH_1fBevqnXZeORD_v0wWgDms-Rnd2Lz_3k2tRIEmXBn1VABvu08w
-Message-ID: <CACu1E7EFK7dzR=hm-J58jz77pMxn2SoJVrfQvV0RHiESi1mkzA@mail.gmail.com>
-Subject: Re: [PATCH RFT 10/14] drm/msm/a6xx: Stop tracking macrotile_mode (again)
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508-wip-bl-ad7606-calibration-v4-1-91a3f2837e6b@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, May 8, 2025 at 2:14=E2=80=AFPM Konrad Dybcio <konradybcio@kernel.or=
-g> wrote:
->
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->
-> SC8180X (A680) and SA8775P (A663) require a write to that register,
-> while other SKUs are fine with the default value. Don't overwrite it
-> needlessly, requiring the developer to read the value back from
-> hardware just to put it in the driver again, introducing much more room
-> for error.
+On Thu, May 08, 2025 at 12:06:05PM +0200, Angelo Dureghello wrote:
+> From: Angelo Dureghello <adureghello@baylibre.com>
+> 
+> Add new IIO calibconv_delay documentation.
+> 
+> The ad7606 implements a phase calibation feature, in nanoseconds.
+> Being this a time delay, using the conv_delay suffix.
 
-I'm not sure I understand that last sentence. The original reason I
-always wrote it was that for host image copy we need to know the value
-of macrotile_mode, so again the value exposed to userspace must match
-what's set in the HW. We can't read the value from the HW and send it
-to userspace, because userspace queries this when creating the
-physical device during device enumeration and we really don't want to
-spuriously turn on the device then. That means the safest thing is to
-always program it, guaranteeing that it always matches. Otherwise we
-just have to hope that the default value matches what we expect it to
-be.
+...
 
-I know you're copying this from kgsl, but kgsl doesn't expose the
-macrotile_mode to userspace. I expect that HIC was added afterwards
-and only works via hacks there (if it's even supported at all on the
-relevant SoCs).
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_convdelay
+> +KernelVersion:  6.16
 
-Connor
+Here is the space being used...
 
->
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 19 +++++--------------
->  1 file changed, 5 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/=
-adreno/a6xx_gpu.c
-> index 60f89a2d851a5c383fc14cce4c483f630132a9a6..bee7e9685aa3ea282fb20ef47=
-9e4d243d28418f7 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -594,7 +594,6 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *g=
-pu)
->
->         gpu->ubwc_config.min_acc_len =3D 0;
->         gpu->ubwc_config.ubwc_swizzle =3D 0x6;
-> -       gpu->ubwc_config.macrotile_mode =3D 0;
->         gpu->ubwc_config.highest_bank_bit =3D 2;
->
->         if (adreno_is_a610(gpu)) {
-> @@ -616,13 +615,8 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *=
-gpu)
->         if (adreno_is_a621(gpu))
->                 gpu->ubwc_config.highest_bank_bit =3D 0;
->
-> -       if (adreno_is_a623(gpu)) {
-> +       if (adreno_is_a623(gpu))
->                 gpu->ubwc_config.highest_bank_bit =3D 3;
-> -               gpu->ubwc_config.macrotile_mode =3D 1;
-> -       }
-> -
-> -       if (adreno_is_a680(gpu))
-> -               gpu->ubwc_config.macrotile_mode =3D 1;
->
->         if (adreno_is_a650(gpu) ||
->             adreno_is_a660(gpu) ||
-> @@ -631,19 +625,15 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu =
-*gpu)
->             adreno_is_a740_family(gpu)) {
->                 /* TODO: get ddr type from bootloader and use 2 for LPDDR=
-4 */
->                 gpu->ubwc_config.highest_bank_bit =3D 3;
-> -               gpu->ubwc_config.macrotile_mode =3D 1;
->         }
->
->         if (adreno_is_a663(gpu)) {
->                 gpu->ubwc_config.highest_bank_bit =3D 0;
-> -               gpu->ubwc_config.macrotile_mode =3D 1;
->                 gpu->ubwc_config.ubwc_swizzle =3D 0x4;
->         }
->
-> -       if (adreno_is_7c3(gpu)) {
-> +       if (adreno_is_7c3(gpu))
->                 gpu->ubwc_config.highest_bank_bit =3D 1;
-> -               gpu->ubwc_config.macrotile_mode =3D 1;
-> -       }
->
->         if (adreno_is_a702(gpu)) {
->                 gpu->ubwc_config.highest_bank_bit =3D 1;
-> @@ -691,8 +681,9 @@ static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
->         gpu_write(gpu, REG_A6XX_UCHE_MODE_CNTL,
->                   adreno_gpu->ubwc_config.min_acc_len << 23 | hbb_lo << 2=
-1);
->
-> -       gpu_write(gpu, REG_A6XX_RBBM_NC_MODE_CNTL,
-> -                 adreno_gpu->ubwc_config.macrotile_mode);
-> +       /* The reset value only needs altering in some cases */
-> +       if (adreno_is_a680(adreno_gpu) || adreno_is_a663(adreno_gpu))
-> +               gpu_write(gpu, REG_A6XX_RBBM_NC_MODE_CNTL, BIT(0));
->  }
->
->  static void a7xx_patch_pwrup_reglist(struct msm_gpu *gpu)
->
-> --
-> 2.49.0
->
+> +Contact:        linux-iio@vger.kernel.org
+> +Description:
+> +		Delay of start of conversion in seconds from common reference
+> +		point shared by all channels. Can be writable when used to
+> +		compensate for delay variation introduced by external filters
+> +		feeding a simultaneous sampling ADC.
+> +
+> +		I.e., for the ad7606 ADC series, this value is intended as a
+> +		configurable time delay in seconds, to correct delay introduced
+> +		by an optional external filtering circuit.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_convdelay_available
+> +KernelVersion:	6.16
+
+...and here is TAB. Please, make the text consistent. If the original one is
+inconsistent, fix it first.
+
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Available values of convdelay. Maybe expressed as:
+> +
+> +		- a range specified as "[min step max]"
+> +
+> +		If shared across all channels, <type>_calibconv_delay_available
+> +		is used.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
