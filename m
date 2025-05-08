@@ -1,132 +1,63 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1AA15B0EF;
-	Thu,  8 May 2025 21:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60FC622331E;
+	Thu,  8 May 2025 21:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746740404; cv=none; b=OZ53MIc4z8o5EuUBYEupupg4J2ygALyrDJiXV+vzlpCFGb5JF4qhJaVKinAtvV3XUku62diahqjLS7ik3qX4p20PEmq2dnCg0E5RqFECXdBwuL28vOEGbHNp5RGlNe4TzmLSXUyPKE5u/ecNx58QGqS8fow3xXwibCsLJexO65E=
+	t=1746740465; cv=none; b=KOCItBetW1eGB48lC5fXlA1mxDRARkutD8zqWy47ch9eEDpRDfTMSscPKS3ZBxxmf61EeZY4lKaGZr57Xg3Puag58uvqpPD/BinKRNf+kQu5Re9gxpcwTHf9Cd4aH/O/uueluUeho4CysWMSQdQrGIUoS+RY8HWRFIeIZbWYfsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746740404; c=relaxed/simple;
-	bh=6yVxsi2E85S+R5lW4kL/CgTk3eP3swRhsuthT/n+Ti4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WTQ5CHex+IxmzSfFmqiJt0/2EaburXfTvuLwjWW8wT2Z/7iUoIRSGEr9EI3yc7Z8d4oWmov4PIUDHxd6Qd+SmGDlcZH8bF+IKXq0KyHburJHneFNLpNRppmthMi2MpHgomPIEEtl+FZ2bnt2S6OVP/PgndX2T+FLE3CbNPVtprE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KYAVXbAL; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746740465; c=relaxed/simple;
+	bh=eWLDivHb/Zs+9pB7oUXg8LbBxLoPvxtOqcSg0bj0akQ=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=LDVKZcNHv1F5OemIIwJ7/z6geZCFoalx2czGMmVaPnjSW/2XSzukoEgIzME8rWu7Cu5cnnqN94qY5SSXK970Vo/Uk0wKTRKLEj//Oa06xEyjGbqU/3gPO2fIKwMyxE5sE95QKWy1zajmUV+RAxMEvqEr6QnCU3hgJP8crSfnq/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Amp97yM9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KYAVXbAL"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a1f8c85562so28543f8f.1;
-        Thu, 08 May 2025 14:40:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746740401; x=1747345201; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b6iKxLNv8V7pETLeJH3poz4r78D0xk17zrhZAC6yXQY=;
-        b=KYAVXbALEKE3csg7MWk1wJYJ+GvVT5lYKYFC7UpPY+nAnef7TiEbHlWO3Qs5PzZQWR
-         HFQbtEFqKxXgHA82vWX89f4kn6U+NTgRtXX8Ivz/PBmGeMHSecF80w70Z+CcNqHaDVxF
-         z44a4uYNWGbzvZ8bx8MjgmoYsWYLIJUw0n8G24E5tSBV5Sj3ky8jaanZzUnBe0zOa8/I
-         iwFC58as3KV0rKBc0HbBuapuMOzncgNh90K4VR1sLuaFFmynQyg4KhPr5my7+i70zeq+
-         yMJJlXb/H9mBMu7LbDE84FI59Z9CUOB5THSHRY6p3fg5LWJvvOakWAZ5Jm9J8yF+mJf3
-         SjYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746740401; x=1747345201;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b6iKxLNv8V7pETLeJH3poz4r78D0xk17zrhZAC6yXQY=;
-        b=KCVc/lVz5frLy7U1cmuaubJft3YY0eCYgPzkoJpruUJtoTT5ppK2FITH6UOI0AhVM7
-         +C6BQNClVtphcykFgIB4Fw1F8s7uWgahnaOL5rfXZTTSm04OAXpo1IvGob/6h2JkSpnC
-         PlwTXNtYNbLeEnbSZ2VFaNG91DgH2HlBbZTPHteG0dQPkBhbIJ+5r5Id7sOiyxTsfDQu
-         Ge46RHn2+oKdrZ+zTZaAaHvHYNQwUbFkp4UhnzY20mHG5GMhjqq4QuWecRig4RDett4y
-         9PDtgj+orKQizPT1XFAUqE/U+cQ2LiuSzNsZMnuXGEOskCYBXdguzg8M+8w/VielR7ld
-         NS1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW/eF2u5j/7dIPE+cs2PnkepkTUrVl5k8vhxEej3LLm5y7YEHqTpQS3IUVQX3rMR349tOk9mDRr/wvGxSjG@vger.kernel.org, AJvYcCXnHZRv2eWjnzO8SuDlNTtNXY3O5jtLtq/pdGy982E3ZU/m7lK9J9dMs06ITIag4re5S/yt4/kmKc8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKS3KV+9ffKWScMRixeY80VRJKyf5bdFhLMOeifQSm3YpJSWfl
-	yVYloH3Per7E3UrsO6KbeyLgNf9587yqtcDY11DKvlMdCOWnEY6+
-X-Gm-Gg: ASbGncsJTEW9wIY6EvrzLLkjPZBdTOQp5W8PfJBlZX5AGr5lDOyhiq0+O4JJd2o+Uba
-	SyVfOfNrpv3YqJWvAunHh6DrJVXmQ67gyGrBM3WH4nYcaoNFCesBZUr8LkWJhZvWYDZBQUjZkgG
-	wmbLGE8HbeOgXUK3WB9TMKpxwy5Z4H4nXdWdvb7EbCenUyR31y+mRflE0dDNP2UJO+hHA+nH7Zu
-	J9AfQh0VeXjkAg7eAiiEHa5SF6qt6OldYL9rNRqJms2HS9CpIjv8mnVkq3VUj7vw4suJf0NnqPP
-	QgchCEhdsxQw03Q4wftOJQe6UFGAI/JiUHt9ggOCzU5yEno6m86hCClpcF5CpTSLBmw5w5d/L3n
-	TcMz3wfwSNyFoZA==
-X-Google-Smtp-Source: AGHT+IE0WPQ/O8hzBzdH+71zuXvnfTcTp1gVeC9FNstp3An7yRQmTACh7fhbKRYnp0MWiYuGxTvlCg==
-X-Received: by 2002:a05:6000:4304:b0:3a0:b294:ccf2 with SMTP id ffacd0b85a97d-3a1f649cc02mr938659f8f.52.1746740401013;
-        Thu, 08 May 2025 14:40:01 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2a12sm1101305f8f.44.2025.05.08.14.40.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 14:40:00 -0700 (PDT)
-Date: Thu, 8 May 2025 22:39:59 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Eugen
- Hristev <eugen.hristev@linaro.org>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 1/7] iio: make IIO_DMA_MINALIGN minimum of 8 bytes
-Message-ID: <20250508223959.70e909d2@pumpkin>
-In-Reply-To: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-1-814b72b1cae3@baylibre.com>
-References: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-0-814b72b1cae3@baylibre.com>
-	<20250505-iio-introduce-iio_declare_buffer_with_ts-v5-1-814b72b1cae3@baylibre.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Amp97yM9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC3C2C4CEE7;
+	Thu,  8 May 2025 21:41:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746740464;
+	bh=eWLDivHb/Zs+9pB7oUXg8LbBxLoPvxtOqcSg0bj0akQ=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=Amp97yM98EcKIJtug5LfW9weVRAZBgbS7ff8v6KVUVAypNuQhxEWbbz9spIGM24iI
+	 4WKpcR02nsis0Ls2i3ZUN7JnHEqJoKuXyAlgL2TuG/dCuOrCQLOcMOZ9mTccShU9nA
+	 iirYXv9JKPy+SmXlhXK9wEPVgWHdBlYgX30nBREwTyso5dCdcIPkL/oA7jGcGF27zY
+	 KCbEVTulxKkHsYWlCgFsImUJUTfNGHSgWQeBveSUH4PifUs0MSkYFXkgg9mnDvPVqO
+	 g/zws+2MR8jXhmdOi8httkWFgF9gHMQFRj62JoSi1Ibaf13PK3/HhHODcAROlWbNC6
+	 3aLG4ApShPOeQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE95380AA70;
+	Thu,  8 May 2025 21:41:44 +0000 (UTC)
+Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc6
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <pdixxswan4bhmajjvnczxa2nxh5tm52itlttopnuk3w6lzv3ms@inq7k7aws2rg>
+References: <pdixxswan4bhmajjvnczxa2nxh5tm52itlttopnuk3w6lzv3ms@inq7k7aws2rg>
+X-PR-Tracked-List-Id: <linux-bcachefs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <pdixxswan4bhmajjvnczxa2nxh5tm52itlttopnuk3w6lzv3ms@inq7k7aws2rg>
+X-PR-Tracked-Remote: git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-05-08
+X-PR-Tracked-Commit-Id: 8e4d28036c293241b312b1fceafb32b994f80fcc
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9c69f88849045499e8ad114e5e13dbb3c85f4443
+Message-Id: <174674050327.3050618.15775685558013664884.pr-tracker-bot@kernel.org>
+Date: Thu, 08 May 2025 21:41:43 +0000
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Mon, 05 May 2025 11:31:42 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+The pull request you sent on Thu, 8 May 2025 15:58:00 -0400:
 
-> Add a condition to ensure that IIO_DMA_MINALIGN is at least 8 bytes.
-> On some 32-bit architectures, IIO_DMA_MINALIGN is 4. In many cases,
-> drivers are using this alignment for buffers that include a 64-bit
-> timestamp that is used with iio_push_to_buffers_with_ts(), which expects
-> the timestamp to be aligned to 8 bytes. To handle this, we can just make
-> IIO_DMA_MINALIGN at least 8 bytes.
-> 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
->  include/linux/iio/iio.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> index 638cf2420fbd85cf2924d09d061df601d1d4bb2a..7e1e3739328d103262071bd34ba5f6631163c122 100644
-> --- a/include/linux/iio/iio.h
-> +++ b/include/linux/iio/iio.h
-> @@ -775,8 +775,18 @@ static inline void *iio_device_get_drvdata(const struct iio_dev *indio_dev)
->   * to in turn include IIO_DMA_MINALIGN'd elements such as buffers which
->   * must not share  cachelines with the rest of the structure, thus making
->   * them safe for use with non-coherent DMA.
-> + *
-> + * A number of drivers also use this on buffers that include a 64-bit timestamp
-> + * that is used with iio_push_to_buffer_with_ts(). Therefore, in the case where
-> + * DMA alignment is not sufficient for proper timestamp alignment, we align to
-> + * 8 bytes instead.
->   */
-> +#if ARCH_DMA_MINALIGN < sizeof(s64)
-> +#define IIO_DMA_MINALIGN sizeof(s64)
-> +#else
->  #define IIO_DMA_MINALIGN ARCH_DMA_MINALIGN
-> +#endif
+> git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-05-08
 
-Did you actually test this?
-You can't use sizeof() in a pre-processor conditional.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9c69f88849045499e8ad114e5e13dbb3c85f4443
 
-	David
+Thank you!
 
-> +
->  struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv);
->  
->  /* The information at the returned address is guaranteed to be cacheline aligned */
-> 
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
