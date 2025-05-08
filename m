@@ -1,124 +1,137 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D0E220686;
-	Thu,  8 May 2025 07:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D81621A44B
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 07:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746689924; cv=none; b=HlnVmQKqvfPN8LavayrEWjThF982OHWT2/IspLGvpqLv1tR//BUzJB925Vqc+uVq6iG1DeQ2cckUCVP8LXeRVxKf9AhbgxdnCEfnhg/mrL050bk0hZ+aluoEL0Bm3lX/8AW3+HAkAd9n9k9HAj5hIwrb5v0z8Syr6voNctOagUY=
+	t=1746689932; cv=none; b=HxJmhSkcuTw0wEUC726KBgEzi0sIZ7HJC+1WRvq51RWha4aGr7Ae6OrFUbNpJSNgyNQZc5txcWXLyedaQp0WeDdHeye4b8hdyTwtsssAzvHf4NYt2Nfg495b6BV9JTQmczKSILs5Cr6H1up05LRIgEImZqt0YJRK6c7juhk+0Pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746689924; c=relaxed/simple;
-	bh=00t+73t/o1ImybTkegnyFnImjLxdJcovYH6HVmTUJwA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=THtN2GGWFa8WhOb7Cb6/omQzWI6DdhAPyW7va93LoRhIF3ufPSZhQ31pGrr6RYzwpWPKwOQwITmiRVoJ2xy2YmNwLHhUFWjG4MBnr7GFrZqWx6f2AeJnYvlO9W0lKEobT8X81QwB/FZjv5QL1sjcojhyfP1Bl053OmdDxsGpp14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-879467794efso380411241.3;
-        Thu, 08 May 2025 00:38:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746689920; x=1747294720;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8TdWX9BvnLKIzglHQcO1riqJBcVy449ZX9JhxrNyGJc=;
-        b=D1FI50+9blvocnAK2fXKTfdRuhR470mWgSnxJnb2D53398BH3nGSR5WBWE7QTY5jOd
-         LIeTtns52+TgLALTqIYHllQuakmTr80Rr6B+FTejrlchipa+sropDsMHOuZrYQghilRk
-         je4ugAZj0Pux46uv5RzzBMYzVf4+WQbUtrbxLrrvzLb1HodBycxVgex8FqOCfoEYsHLD
-         ic6owFsuPZBiZsWqXs+4lc0jJ2LeN24YUe+kqzxuEGnmRopHhzVbNobAh4kkA/lCD7uG
-         tKCIWVeNWmnyN0dz7as+zgvK8urskIcLqNsCxh9Q15Jqtju2bligOPZHEPfbcwuQcx1A
-         +7Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDAEjDJjb6k4zvN6QOubo8mbeBkzoSHD/STeOyPoBXhBKOjl1j3q4zSiaSM2C72ma7N/KhGq8PfuFEVz8=@vger.kernel.org, AJvYcCWacI4B6pOcJTsHTsLjd4pidEubUREe16O/mLq6tGHOEiP8ozWhYqHpYiBrb0oLAyxsEmjSdvCi1VpeBcEE@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtoXUsdr4TTR3DVomBppoXvT9QFiXXa2ciq5JkJmXmHdNgsa+V
-	u+L1GpB/zi1lNYdVk32hxdM0SOYQSNfkAGXyXYsY05jdVnJ+JAcNolosxaDD
-X-Gm-Gg: ASbGncvo0MKtf9ihvUCtCuDE9XlSORGssoL8hp1kIW/rKIfuaZJS0Qk7VCcxshZx0Co
-	+GkjWa1oQ9yGxFdgdGdnS06JJYKmcvk6vOCsgKAPOHxLHZ+W+WX91jgKimY+WYVb7sxjg4yxOJP
-	a0nMlaXWgXMJQDYPeZQZZ17VIPiaIcPGTVPpSEpDCFPw3AIaedu1qG/EOqGAyictZ6dWj3SkbxJ
-	Vl0AH+L1f9olXT/VGvBGtKgDSdaruzSy/CSEojezbMgIAIx9pOzqJ2a+3gR2wlV3YrP0zD2KmFC
-	Hjo0evB2UNY0DaPVfUOylUA/Kf/22+xrScvFcsPdvfHSlOlVD561hRi9cxJoxTI9OVGYlc343Ll
-	BgWj96JNdQDhbsQ==
-X-Google-Smtp-Source: AGHT+IEAYmuT9bt/EZYRX3xPr3Qjq/pFg7Y7gAsPnhq0IbyR7wEkcv0zepyahlrIQJ18LqWdDX2eBw==
-X-Received: by 2002:a05:6102:3e87:b0:4da:e6e1:c343 with SMTP id ada2fe7eead31-4dc738d46b9mr5292810137.23.1746689920050;
-        Thu, 08 May 2025 00:38:40 -0700 (PDT)
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ddba67c5a9sm17124137.30.2025.05.08.00.38.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 00:38:39 -0700 (PDT)
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4c6cf5e4cd5so602007137.2;
-        Thu, 08 May 2025 00:38:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUEUIlfsFtBbATlaW1ZNegBCzRTYZB6UJpjdTCDH6dLDjISr6jVcZd6iGHAwFmqOEcL3cOIbaWnXrZ70s/p@vger.kernel.org, AJvYcCWwQd5ZK7+edg53Y8Sp6j9befMaBaYGtWLgOlJP10oP1jyEi8AvNH+PxaDPRFAyUc8f1JTU3I/zPx2u99g=@vger.kernel.org
-X-Received: by 2002:a05:6102:15a4:b0:4dd:b86a:dac1 with SMTP id
- ada2fe7eead31-4ddb86adb37mr323439137.3.1746689918794; Thu, 08 May 2025
- 00:38:38 -0700 (PDT)
+	s=arc-20240116; t=1746689932; c=relaxed/simple;
+	bh=k+C8E7fjxwPOS+3bQbBZwOzttwQoEn9g/Fznc0zc04s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QcImeM5uY3ClsHkTzVePxMc8aLIzz8/euujuaHXUZywdY30AfBbKcIN4UVwaEgt5xxIHdxSkYrec0PfkF151gx6Nq/1+TN9P82a2DdbFY4u6uG+qXAga7vGbYFd5ONziPaOp0+2+UXunqi/NZ0TupEhIkSazTf7ZdvK8hDUI8nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KrL3BBrq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KrL3BBrq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746689929;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NNm/GVsc/U/JM9udHFGbUagWNhhVtJjmOoQfrIgRWUM=;
+	b=KrL3BBrqXuRt5/H6gx4XljHC1avwG/fPr6DyEqUq+qr84JcM/fEJS4vRiYTgcnk/IWh6kn
+	XrlZlBD7qFwiDKTnWORmq9M00BK7jnhExKDN/DgIEnvijfoyW8VDr+Lbgrr9LKpCBRNg1m
+	m3n/mg711tFK7Yo7FRBQTISiJS+egxo=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-10-6Xf9rjE3MSqDfkMdgcAf0Q-1; Thu,
+ 08 May 2025 03:38:45 -0400
+X-MC-Unique: 6Xf9rjE3MSqDfkMdgcAf0Q-1
+X-Mimecast-MFC-AGG-ID: 6Xf9rjE3MSqDfkMdgcAf0Q_1746689925
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C88D6195608A;
+	Thu,  8 May 2025 07:38:44 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.8])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6FDC21955F24;
+	Thu,  8 May 2025 07:38:43 +0000 (UTC)
+Date: Thu, 8 May 2025 15:38:38 +0800
+From: Baoquan He <bhe@redhat.com>
+To: fuqiang wang <fuqiang.wang@easystack.cn>
+Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5] x86/kexec: fix potential cmem->ranges out of bounds
+Message-ID: <aBxfflkkQXTetmbq@MiWiFi-R3L-srv>
+References: <20240108130720.228478-1-fuqiang.wang@easystack.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507074936.486648-1-masahiroy@kernel.org> <9ec50ce0-f60b-4d87-bc44-adaf2a1a97a1@linuxfoundation.org>
- <b1e4e83c0965e10f2fe59826d19eaf131ec7aef9.camel@sipsolutions.net>
-In-Reply-To: <b1e4e83c0965e10f2fe59826d19eaf131ec7aef9.camel@sipsolutions.net>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 8 May 2025 09:38:26 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUwE7btR+ebG8-gvPb8GPnxUGPWw3yKR4qM4Uc_mYcHhg@mail.gmail.com>
-X-Gm-Features: ATxdqUHSUZJrVPRt7puYinzwH0Sbp9Bizhx3T3hxY8yiAcyEWRrVX-9gdHKQkgI
-Message-ID: <CAMuHMdUwE7btR+ebG8-gvPb8GPnxUGPWw3yKR4qM4Uc_mYcHhg@mail.gmail.com>
-Subject: Re: [PATCH] um: let 'make clean' properly clean underlying SUBARCH as well
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Shuah Khan <skhan@linuxfoundation.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Richard Weinberger <richard@nod.at>, 
-	linux-um@lists.infradead.org, David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240108130720.228478-1-fuqiang.wang@easystack.cn>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Hi Johannes,
+In memmap_exclude_ranges(), elfheader will be excluded from crashk_res.
+In the current x86 architecture code, the elfheader is always allocated
+at crashk_res.start. It seems that there won't be a new split range.
+But it depends on the allocation position of elfheader in crashk_res. To
+avoid potential out of bounds in future, add a extra slot. And using
+random kexec_buf for passing dm crypt keys may cause a range split too,
+add another extra slot here.
 
-On Thu, 8 May 2025 at 07:29, Johannes Berg <johannes@sipsolutions.net> wrote:
-> On Wed, 2025-05-07 at 15:38 -0600, Shuah Khan wrote:
-> > My workflow:
-> >
-> > - Build kernel on x86_64 with CONFIG_AMD_MEM_ENCRYPT enabled
-> >
-> > - Check for arch/x86/realmode/rm/pasyms.h
-> >    ls arch/x86/realmode/rm/pasyms.h
-> >       arch/x86/realmode/rm/pasyms.h
-> >
-> > - make ARCH=um O=/linux/build
-> >
-> >    This patch cleans the source tree, but doesn't remove
-> >    arch/x86/realmode/rm/pasyms.h
-> >
-> > - ls arch/x86/realmode/rm/pasyms.h
-> >       arch/x86/realmode/rm/pasyms.h
->
-> Is that even _expected_ to work? If you have x86 built first, I'd almost
-> expect you to have to do "make ARCH=x86 mrproper" before building
-> another ARCH. I don't see how ARCH=um would know how to do a full clean
-> up of ARCH=x86, unless this is somehow arch-independent?
->
-> Or maybe that's not an issue with other architectures because UML is
-> special in that it uses parts of x86?
+The similar issue also exists in fill_up_crash_elf_data(). The range to
+be excluded is [0, 1M], start (0) is special and will not appear in the
+middle of existing cmem->ranges[]. But in cast the low 1M could be
+changed in the future, add a extra slot too.
 
-Probably.
-I only use my linux-next source tree for fixing reported build issues on
-various architectures, and I never use make clean/mrproper.  Works fine.
+Previously discussed link:
+[1] https://lore.kernel.org/kexec/ZXk2oBf%2FT1Ul6o0c@MiWiFi-R3L-srv/
+[2] https://lore.kernel.org/kexec/273284e8-7680-4f5f-8065-c5d780987e59@easystack.cn/
+[3] https://lore.kernel.org/kexec/ZYQ6O%2F57sHAPxTHm@MiWiFi-R3L-srv/
 
-> Though I guess the patch here should make it do that, more or less, but
-> it can't, likely because you're also switching from in-tree build to O=
-> build?
+Signed-off-by: fuqiang wang <fuqiang.wang@easystack.cn>
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+v4->v5:
+- This is on top of Coiby's LUKS patchset in branch mm-nonmm-unstable of
+  akpm/mm.git. I did some adaption based on Coiby's patches.
+- [PATCH v9 0/8] Support kdump with LUKS encryption by reusing LUKS volume keys
 
-Yeah, mixing in-tree and out-of-tree builds causes issues.
-Never build in-tree in a source tree you use with O= (except for
-e.g. "make tags").
+ arch/x86/kernel/crash.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index bcb534688dfe..749a60ce8b7f 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -165,8 +165,18 @@ static struct crash_mem *fill_up_crash_elf_data(void)
+ 	/*
+ 	 * Exclusion of crash region and/or crashk_low_res may cause
+ 	 * another range split. So add extra two slots here.
++	 *
++	 * Exclusion of low 1M may not cause another range split, because the
++	 * range of exclude is [0, 1M] and the condition for splitting a new
++	 * region is that the start, end parameters are both in a certain
++	 * existing region in cmem and cannot be equal to existing region's
++	 * start or end. Obviously, the start of [0, 1M] cannot meet this
++	 * condition.
++	 *
++	 * But in order to lest the low 1M could be changed in the future,
++	 * (e.g. [stare, 1M]), add a extra slot.
+ 	 */
+-	nr_ranges += 2;
++	nr_ranges += 3;
+ 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+ 	if (!cmem)
+ 		return NULL;
+@@ -313,10 +323,15 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+ 	struct crash_mem *cmem;
+ 
+ 	/*
+-	 * Using random kexec_buf for passing dm crypt keys may cause a range
+-	 * split. So use two slots here.
++	 * In the current x86 architecture code, the elfheader is always
++	 * allocated at crashk_res.start. But it depends on the allocation
++	 * position of elfheader in crashk_res. To avoid potential out of
++	 * bounds in future, add an extra slot.
++	 *
++	 * And using random kexec_buf for passing dm crypt keys may cause a
++	 * range split too, add another extra slot here.
+ 	 */
+-	nr_ranges = 2;
++	nr_ranges = 3;
+ 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+ 	if (!cmem)
+ 		return -ENOMEM;
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.41.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
