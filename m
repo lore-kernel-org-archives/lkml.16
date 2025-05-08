@@ -1,53 +1,53 @@
 Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9784D2236E4
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 11:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA80A223DE8
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 11:43:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746704625; cv=none; b=eWyBTXRsPiKtqM3mRFH0etvV15R1r3tnq0yIh9tiPLyHtJA16NI5FZmmKbSRa/4vK+5bIoofd4YPi/vz8em8slEAOxxV9yCWzUv4TAj5QvlXhgtVLS+6dWOVEMKV70uzquHpxhELLgpv8Pljh3V9Nzj4EBo5/9RSNNTkQH5s9jY=
+	t=1746704626; cv=none; b=mr511cWI5UceGbjJryhoA3eZJZi/IS67SY/4UqchLnuG9w4+K23Bl54XVZ+Jw7HPXdd18ZDdeHTNPppyZdCYovW2BXystNRlysUCuPDh5umMeGWs6fkiTamU8Qx4sRCr8XYC/nv5JyvI5EJgOAZlhbk+Axj8cmPvLCjC6E3yaDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746704625; c=relaxed/simple;
-	bh=mVxjU99n31HrBlGza8EtQuypLaCGN7Humj2ntyYV4Uc=;
+	s=arc-20240116; t=1746704626; c=relaxed/simple;
+	bh=SNkN+aUxCD4khnvAOEVbcOq4dfyvknF/k2ubANz9rSs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tlAecCMEn0nmUUZpzzaEJcSS/LPz77g9ULXlWlSlHzRpTbc5hGEncvMGS3tsTzoatMDqzNlIiO/Z4InRxgbQfqZsqqNO5nLPRbkOvvJy81rSmTwracJU+6CXxcdOnW+MAgW+AyT/B6eAPKE+y6jy62zX//CosyW007XoMm/kJVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EsKgS2Ou; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=nrAh88sdCOBmWDh89/gz1vnDQ/BpY/T9fPQ346YQwPOE/2nP4bIyG66k1SEUlL3MwNjlbM+PJlmSVOdUpomwvbkVkCAZh0yWlFbnwdRb4qzZhD6GOSKLYmttCMpGYf8hfBwR9jPTjMCHRsMeJZmr02hc6bmvnWA3v1FW0ODVApo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CNxOF+cA; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EsKgS2Ou"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d4d15058dso6064165e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 04:43:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CNxOF+cA"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-442cdf07ad9so3801825e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 04:43:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746704621; x=1747309421; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746704623; x=1747309423; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bpwm6pDMroooW2YqC/KslLIOgf8WNN2/GA1ulGmQzEk=;
-        b=EsKgS2OuoGn5Jg8jtUHkUc0xdXZvUzjetUDbp3HROK3ixRrOptloytZjI1s8/8R6co
-         Pfe+E258fO4S2Sgeg8zFcZzE8FE92vPADFjhgevAK6dzivKQuIJq0ypOjiS7WTtdqZ0x
-         fu14mKdUgtCu5EMaht47mix3taC1gl0m6sGSCpg9OB2ho4osJjyfgx8SN9aRq0oykW8M
-         G/7SUHDgBI/MRVi/Z/leVedBoQUywjw+VRlArcSIrbeHymP47Y5L3zfF5Kw0RGHRqtrg
-         fdmfabgf/JiiCFiBBpfCyCR/fw6lGzXDriz1yCZwlZPvwOfg76MEvKIDZmiiL8p6b6T7
-         aDgQ==
+        bh=OFL6LCOiCuB4AhqO2WO2qSyMds3tZvVGSAG8TlD6fm8=;
+        b=CNxOF+cAogGpctO7kcy9I3N0R+jWF6U8jYDByBmz1gkJpVONf/DWaiZ1WK0wBMOmzx
+         G8/vZeIQPx7FNuj65Wrmr4/8gNyQ5kt33+fLjtOTvCS8GoSKJbrcMBQe77CmthBt8ajS
+         IEXpK5IaqFN8dtgmKszkDrW9S7mPXorwlpEWsGO0Nn4U89d3iitgojSeq09Rga+MYqzV
+         GRcuEtY8a+4JZg9NNYfhm3ktXUiHzV4Ll6gOmR50Zl53+7IDaz7Bh1yVZQ2q0ktc/tYP
+         t1dDdxeWyQ4q9NRed08kqGMs8erR7TQSGWXDRumgJvts4h31SOHGR14sIJpq3vt3vS+O
+         v+Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746704621; x=1747309421;
+        d=1e100.net; s=20230601; t=1746704623; x=1747309423;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bpwm6pDMroooW2YqC/KslLIOgf8WNN2/GA1ulGmQzEk=;
-        b=rGbQ10JEFheTpu22IUPyLC6KYGsIa03LhgXjgYnsOowIOl5IBwZUju6ogQDBfIDqHW
-         wccLHzjt4/iLejWnpuAFQxsRiOV34bxukDA2vI8LGFwCXahIhHTdbg73VPfxF4JOXF/R
-         49/8OaeiJrhk7xQOyZ6JRMd/oUGxJHd+6oXiBrPs3ljIk/NNU4aa1++dZT7jF6b8QSUk
-         e6+cZtPzzRJWPsAPKk7r8LaC85FrqLhuYjMiToHaBH8SH0zyXFnUcCfTvXCcHpOFqScx
-         jJZi5LkdU7qCiw+2eF5tUepMeGEyHnjzTnsQbjTSMNb9Pm8HSTkj3MuENejRsjNwi1z+
-         yYHQ==
-X-Gm-Message-State: AOJu0YznsYb5JBeKhbvtt+bRsHLBKa0r2nRz4R9ibSH4KCgcWTFY+l+A
-	gzgUNFNI8THmHDUqfMfkHJ4+AWo7mAxuHyZGTf6O3Nq7bbgD+VtXMQ1EyE70zgbdqYcn7g==
-X-Google-Smtp-Source: AGHT+IFG/ZuCQ/+26pPq9ukelXiqSOvAL5bCK15tfzAkfYjQ6XoSb9As+yOPtVe7L+pFX8orsfcASQ1E
-X-Received: from wmbdo21.prod.google.com ([2002:a05:600c:6815:b0:43c:f6b3:fa10])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:8714:b0:43d:1b95:6d0e
- with SMTP id 5b1f17b1804b1-442d033a3d9mr26273835e9.23.1746704621043; Thu, 08
- May 2025 04:43:41 -0700 (PDT)
-Date: Thu,  8 May 2025 13:43:31 +0200
+        bh=OFL6LCOiCuB4AhqO2WO2qSyMds3tZvVGSAG8TlD6fm8=;
+        b=jlOOgbIlfwWlmmfDzhrshcvUyLAlwqT2rRWigzJhrikZOBtbCMXXIZ1IupRxwkUUNg
+         vspDPlXipvJeYHduWWg33kgPDkMnv3c9EPLrbZ3A47oBlG5ua4QZtkJ+Jr2euCD60+WU
+         ya9vVX9pTub/8GAeClFSSycGZPIZZhStqNBirRLtuClM/1o6N3iLqm2Wuo1brXSuZaNA
+         ih9a7cfqrxjEzg4zbqJ4fn7zlZHgo2smc3IX98MoxALn8NV9pPYea2Q4i8BtyxOGGxXv
+         2wx6OZTx/iZtEq910sUlHsk8TPOc9SdTq8fW24HdkPLv3LFLLmzgoP7NXSZvKiKBVfsL
+         JDOg==
+X-Gm-Message-State: AOJu0YxOWitr0HsrJ48vlyM+ICvmq+iQLSRCiS83gUqsHz/zDkY440nk
+	7wBlvuZxwR31WwlZ6JnluS7/LgDVUCkzjipsDpNwV3Dni3iMgdsVKUVkX1K+nULm+Ifryg==
+X-Google-Smtp-Source: AGHT+IHhgjjPcSzSlIvKKbGxCHF4/xh5ayQlKt49bS4/7hxPqwU88888d3Bex6M06x7UUFIZSSVblKdy
+X-Received: from wmbem23.prod.google.com ([2002:a05:600c:8217:b0:441:b661:2d94])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:3d13:b0:43c:f3e4:d6f6
+ with SMTP id 5b1f17b1804b1-441d44e3660mr72820155e9.31.1746704623167; Thu, 08
+ May 2025 04:43:43 -0700 (PDT)
+Date: Thu,  8 May 2025 13:43:32 +0200
 In-Reply-To: <20250508114328.2460610-5-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -57,14 +57,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250508114328.2460610-5-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2150; i=ardb@kernel.org;
- h=from:subject; bh=CKHvAG0z7Zm+FmDzWOKAeYGz1T+VYqK4Y0hoS74iP5w=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUNmxpNSuUXf5nPfSf8WKnSK9eTdh2w755dfWXug0Wfut
- IMfw1eGdZSyMIhxMMiKKbIIzP77bufpiVK1zrNkYeawMoEMYeDiFICJBDcx/JVdc6HXd8cCV0GR
- ophczU0npNZFH95/kp9/0vn9gRyOu6wY/im8lZhWNCfu+uVpgi81Zrc0r/x+YdYh8VuWEtJ7Ln6 W3sUGAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4218; i=ardb@kernel.org;
+ h=from:subject; bh=j8k/j5lLwOtOO5g2RunsS1a0UPrHZPgoaoPHRVCj0HU=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUNmxtNDLXyH4vbP5Hn2N3xteLLlH9mFD+alrm7kKly3W
+ eLd4e+rO0pZGMQ4GGTFFFkEZv99t/P0RKla51myMHNYmUCGMHBxCsBEbi9lZGh+6vuo8tplgY66
+ 2R3/RSr/Fy7eV5byx/cO7yFOxgb98iWMDHdPm57KuGFZE86venruP3lRDoPFOk/SGjfantBpO/x /FxcA
 X-Mailer: git-send-email 2.49.0.987.g0cc8ee98dc-goog
-Message-ID: <20250508114328.2460610-7-ardb+git@google.com>
-Subject: [PATCH v2 2/3] arm64/boot: Move global CPU override variables out of BSS
+Message-ID: <20250508114328.2460610-8-ardb+git@google.com>
+Subject: [PATCH v2 3/3] arm64/boot: Disallow BSS exports to startup code
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, 
@@ -73,52 +73,118 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Accessing BSS will no longer be permitted from the startup code in
-arch/arm64/kernel/pi, as some of it executes before BSS is cleared.
-Clearing BSS earlier would involve managing cache coherency explicitly
-in software, which is a hassle we prefer to avoid.
-
-So move some variables that are assigned by the startup code out of BSS
-and into .data.
+BSS might be uninitialized when entering the startup code, so forbid the
+use by the startup code of any variables that live after __bss_start in
+the linker map.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/arm64/kernel/cpufeature.c | 22 ++++++++++----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ arch/arm64/kernel/image-vars.h  | 62 +++++++++++---------
+ arch/arm64/kernel/vmlinux.lds.S |  2 +
+ 2 files changed, 35 insertions(+), 29 deletions(-)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 4c46d80aa64b..2cac5e5ca94d 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -765,17 +765,17 @@ static const struct arm64_ftr_bits ftr_raz[] = {
- #define ARM64_FTR_REG(id, table)		\
- 	__ARM64_FTR_REG_OVERRIDE(#id, id, table, &no_override)
+diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
+index c3b4c0479d5c..a928e0c0b45a 100644
+--- a/arch/arm64/kernel/image-vars.h
++++ b/arch/arm64/kernel/image-vars.h
+@@ -10,6 +10,12 @@
+ #error This file should only be included in vmlinux.lds.S
+ #endif
  
--struct arm64_ftr_override id_aa64mmfr0_override;
--struct arm64_ftr_override id_aa64mmfr1_override;
--struct arm64_ftr_override id_aa64mmfr2_override;
--struct arm64_ftr_override id_aa64pfr0_override;
--struct arm64_ftr_override id_aa64pfr1_override;
--struct arm64_ftr_override id_aa64zfr0_override;
--struct arm64_ftr_override id_aa64smfr0_override;
--struct arm64_ftr_override id_aa64isar1_override;
--struct arm64_ftr_override id_aa64isar2_override;
--
--struct arm64_ftr_override arm64_sw_feature_override;
-+struct arm64_ftr_override __read_mostly id_aa64mmfr0_override;
-+struct arm64_ftr_override __read_mostly id_aa64mmfr1_override;
-+struct arm64_ftr_override __read_mostly id_aa64mmfr2_override;
-+struct arm64_ftr_override __read_mostly id_aa64pfr0_override;
-+struct arm64_ftr_override __read_mostly id_aa64pfr1_override;
-+struct arm64_ftr_override __read_mostly id_aa64zfr0_override;
-+struct arm64_ftr_override __read_mostly id_aa64smfr0_override;
-+struct arm64_ftr_override __read_mostly id_aa64isar1_override;
-+struct arm64_ftr_override __read_mostly id_aa64isar2_override;
++#define PI_EXPORT_SYM(sym)		\
++	__PI_EXPORT_SYM(sym, __pi_ ## sym, Cannot export BSS symbol sym to startup code)
++#define __PI_EXPORT_SYM(sym, pisym, msg)\
++	PROVIDE(pisym = sym);		\
++	ASSERT((sym - KIMAGE_VADDR) < (__bss_start - KIMAGE_VADDR), #msg)
 +
-+struct arm64_ftr_override __read_mostly arm64_sw_feature_override;
+ PROVIDE(__efistub_primary_entry		= primary_entry);
  
- static const struct __ftr_reg_entry {
- 	u32			sys_id;
+ /*
+@@ -36,37 +42,35 @@ PROVIDE(__pi___memcpy			= __pi_memcpy);
+ PROVIDE(__pi___memmove			= __pi_memmove);
+ PROVIDE(__pi___memset			= __pi_memset);
+ 
+-PROVIDE(__pi_id_aa64isar1_override	= id_aa64isar1_override);
+-PROVIDE(__pi_id_aa64isar2_override	= id_aa64isar2_override);
+-PROVIDE(__pi_id_aa64mmfr0_override	= id_aa64mmfr0_override);
+-PROVIDE(__pi_id_aa64mmfr1_override	= id_aa64mmfr1_override);
+-PROVIDE(__pi_id_aa64mmfr2_override	= id_aa64mmfr2_override);
+-PROVIDE(__pi_id_aa64pfr0_override	= id_aa64pfr0_override);
+-PROVIDE(__pi_id_aa64pfr1_override	= id_aa64pfr1_override);
+-PROVIDE(__pi_id_aa64smfr0_override	= id_aa64smfr0_override);
+-PROVIDE(__pi_id_aa64zfr0_override	= id_aa64zfr0_override);
+-PROVIDE(__pi_arm64_sw_feature_override	= arm64_sw_feature_override);
+-PROVIDE(__pi_arm64_use_ng_mappings	= arm64_use_ng_mappings);
++PI_EXPORT_SYM(id_aa64isar1_override);
++PI_EXPORT_SYM(id_aa64isar2_override);
++PI_EXPORT_SYM(id_aa64mmfr0_override);
++PI_EXPORT_SYM(id_aa64mmfr1_override);
++PI_EXPORT_SYM(id_aa64mmfr2_override);
++PI_EXPORT_SYM(id_aa64pfr0_override);
++PI_EXPORT_SYM(id_aa64pfr1_override);
++PI_EXPORT_SYM(id_aa64smfr0_override);
++PI_EXPORT_SYM(id_aa64zfr0_override);
++PI_EXPORT_SYM(arm64_sw_feature_override);
++PI_EXPORT_SYM(arm64_use_ng_mappings);
+ #ifdef CONFIG_CAVIUM_ERRATUM_27456
+-PROVIDE(__pi_cavium_erratum_27456_cpus	= cavium_erratum_27456_cpus);
+-PROVIDE(__pi_is_midr_in_range_list	= is_midr_in_range_list);
++PI_EXPORT_SYM(cavium_erratum_27456_cpus);
++PI_EXPORT_SYM(is_midr_in_range_list);
+ #endif
+-PROVIDE(__pi__ctype			= _ctype);
+-PROVIDE(__pi_memstart_offset_seed	= memstart_offset_seed);
+-
+-PROVIDE(__pi_swapper_pg_dir		= swapper_pg_dir);
+-
+-PROVIDE(__pi__text			= _text);
+-PROVIDE(__pi__stext               	= _stext);
+-PROVIDE(__pi__etext               	= _etext);
+-PROVIDE(__pi___start_rodata       	= __start_rodata);
+-PROVIDE(__pi___inittext_begin     	= __inittext_begin);
+-PROVIDE(__pi___inittext_end       	= __inittext_end);
+-PROVIDE(__pi___initdata_begin     	= __initdata_begin);
+-PROVIDE(__pi___initdata_end       	= __initdata_end);
+-PROVIDE(__pi__data                	= _data);
+-PROVIDE(__pi___bss_start		= __bss_start);
+-PROVIDE(__pi__end			= _end);
++PI_EXPORT_SYM(_ctype);
++PI_EXPORT_SYM(memstart_offset_seed);
++
++PI_EXPORT_SYM(swapper_pg_dir);
++
++PI_EXPORT_SYM(_text);
++PI_EXPORT_SYM(_stext);
++PI_EXPORT_SYM(_etext);
++PI_EXPORT_SYM(__start_rodata);
++PI_EXPORT_SYM(__inittext_begin);
++PI_EXPORT_SYM(__inittext_end);
++PI_EXPORT_SYM(__initdata_begin);
++PI_EXPORT_SYM(__initdata_end);
++PI_EXPORT_SYM(_data);
+ 
+ #ifdef CONFIG_KVM
+ 
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+index 466544c47dca..e4a525a865c1 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -319,6 +319,7 @@ SECTIONS
+ 
+ 	/* start of zero-init region */
+ 	BSS_SECTION(SBSS_ALIGN, 0, 0)
++	__pi___bss_start = __bss_start;
+ 
+ 	. = ALIGN(PAGE_SIZE);
+ 	__pi_init_pg_dir = .;
+@@ -332,6 +333,7 @@ SECTIONS
+ 	. = ALIGN(SEGMENT_ALIGN);
+ 	__pecoff_data_size = ABSOLUTE(. - __initdata_begin);
+ 	_end = .;
++	__pi__end = .;
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
 -- 
 2.49.0.987.g0cc8ee98dc-goog
 
