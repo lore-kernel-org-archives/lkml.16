@@ -1,101 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DC02874E0;
-	Thu,  8 May 2025 18:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861CD27875C
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 18:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746730110; cv=none; b=GFRHweLBoGy+KVDNIJq8NOCkW2SNoNpW8+gZSnyOZ2NL+MkNmw9PAa3oet1CL+L0VHpudylF2zkMXuCorhyFIxefs5oSTHln1xTFH0BsKN4zHaEm3EJUJt/7Ndiia7JZ5Y/AyfdDwxd30X71Id3WEl/iiPDTkZo3ioOJEb16Gqk=
+	t=1746730152; cv=none; b=MidzrPlq0oTqEbHjkdwgfLCwxBK80j87TJYil8cvYoSwWOSrDhkp9VDP5daYghdXoJMlkEtzezQSqTeMruAZuu6uIjckESQsj90P0DRDmLVZXro8Po0ICzFs+mtczhiLiY2/AqkOWHcXyGqIthJJJddnDFPsMHjlZAFNVl7wvA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746730110; c=relaxed/simple;
-	bh=oRr/DvmE+Rdgz4q1zFdC2iw7yUAYJM6s4Xt8+UL+g84=;
+	s=arc-20240116; t=1746730152; c=relaxed/simple;
+	bh=wK6rXqJv6Q9HETINckal3+AxEXHzzBeOeWS295xZTwk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VaBaQ/XUi1TC9RG+Xm/Z/iydnhO0BfXpijgvIW5NJ6c9ZZtC68VDDHucBSYdaszvqi0J4dlBqqlCAATLa+XaQCnCXlze3xfK8T9Kvmdjge9v12Nn2bHovR4f9RO4P/RWYeEWj6z4Qbe+C5qIj3yVvZ7t7B96vBdrnhg9uqrFIHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u3AVRFZ0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jr21uSBp7wAfkIWaO2tHOFicxzJmQXx7kp63FRFwAIbLS3MtEhJIn3fHqjQutNYB7vdeU18xJts319bDL9sFlTHOBHdOmZ6NUbfrWXHUAr8okXxCawrmBHJW7nBpfq70vb7PFECMFAZ2JScp6YO4a/5tqRgvicZzk0aQfl3V5kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HFWJqwaQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8w6gKwf6; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u3AVRFZ0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A23FCC4CEE7;
-	Thu,  8 May 2025 18:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746730109;
-	bh=oRr/DvmE+Rdgz4q1zFdC2iw7yUAYJM6s4Xt8+UL+g84=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u3AVRFZ0iZjowz2/QXYof4vLEyATCxasXlkJJfOXeEKyTFWH39QuvNd2LMn2mp1U1
-	 8RH7FE6WN4zytgMlhvBvW2ztjcwTs/YAHB5t1WlT2IhlHljyJu2p8OoFGruq+oj09D
-	 M86JnW696RJLKwmaKP2YpZeRcbzlNvnKrP7yJcPqkcfDfpGaj9ohCxZjQoqv6pTYdo
-	 F3amegnif54ahkDCg25+4ic0B8jbco3FV8PhAIGeXpC46WrMVuUVsrDr3huYIq3L/X
-	 BA50sopi2aFq26RhPpbpSEd6y+5i4aerQr9CVTDzs/nGSkkrkMbjlM0qucigjBATqs
-	 sgWpC93F1uAvw==
-Date: Thu, 8 May 2025 18:48:28 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: longli@linuxonhyperv.com
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Long Li <longli@microsoft.com>
-Subject: Re: [Patch v3 0/5] Fix uio_hv_generic on systems with >4k page sizes
-Message-ID: <aBz8fBWQKfH04g2u@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <1746492997-4599-1-git-send-email-longli@linuxonhyperv.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HFWJqwaQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8w6gKwf6"
+Date: Thu, 8 May 2025 20:49:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746730149;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zgieM7TFBIUGIGLPFDm65OyHb8JUxeHxxWcl08nZ49E=;
+	b=HFWJqwaQ5ezyVwg/hm9exwbzdchg7qF7YRg02Jg4A6Eu6lxsaZiIVgGt5z10N2ulo6upfj
+	quv2GnAIxOorTbzMq+RNdCv4g2rI7yV9cFAtwQbOb/zxmwdK+oPwGseKdCBOEUElotSvKS
+	ckRlZkG4V6Fl/rU1v6KilP5dxmDFU4GFJnZiGBX7QQeXVdMS12A6wA0Q8XBvz0mIpFSG8J
+	d1sZdsreydHuo+giO2sQIyhvTd63o/SzLlpooBFlIotWZJPjGJnjVNtsYWTvWz6ot1jIet
+	zQCeBOHo8rhwqsFeoa7xgDJnqTV/iROK6Mbz1eAiwwLf0zmpwq0o3SbpXNPhJQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746730149;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zgieM7TFBIUGIGLPFDm65OyHb8JUxeHxxWcl08nZ49E=;
+	b=8w6gKwf6CQhGNkG/oTsQWa54y6twhI0eUpzRpc6fOklc+fbkawR0v/F97ufGfl7QMahzuo
+	Qo6XA7TAUNoivKAg==
+From: "Ahmed S. Darwish" <darwi@linutronix.de>
+To: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
+	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 0/9] x86/cpuid: Headers cleanup
+Message-ID: <aBz8o-Ikwvr9Y1PF@lx-t490>
+References: <20250508150240.172915-1-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1746492997-4599-1-git-send-email-longli@linuxonhyperv.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250508150240.172915-1-darwi@linutronix.de>
 
-On Mon, May 05, 2025 at 05:56:32PM -0700, longli@linuxonhyperv.com wrote:
-> From: Long Li <longli@microsoft.com>
-> 
-> UIO framework requires the device memory aligned to page boundary.
-> Hyper-V may allocate some memory that is Hyper-V page aligned (4k)
-> but not system page aligned.
-> 
-> Fix this by having Hyper-V always allocate those pages on system page
-> boundary and expose them to user-mode.
-> 
-> Change in v2:
-> Added two more patches to the series:
-> "uio_hv_generic: Adjust ring size according to system page alignment"
-> "Drivers: hv: Remove hv_free/alloc_* helpers"
-> 
-> Added more details in the commit message of
-> "uio_hv_generic: Use correct size for interrupt and monitor pages"
-> 
-> Change in v3:
-> Rearranged the patch on removing hv_alloc/free* helpers
-> Added "Drivers: hv: Use kzalloc for panic page allocation"
-> Fixed typos.
-> 
-> Long Li (5):
->   Drivers: hv: Allocate interrupt and monitor pages aligned to system
->     page boundary
->   uio_hv_generic: Use correct size for interrupt and monitor pages
->   uio_hv_generic: Align ring size to system page
+On Thu, 08 May, Ahmed S. Darwish wrote:
+>
+> Simplify it into:
+>
+>     include/asm/
+>     ├── api.h
+>     └── types.h
+>
 
-These patches to UIO look like small bug fixes to me.
+Typo:
 
-Greg, let me know if you care enough to review them.
-
-Given the patches surround these bug fixes, I propose to let me take
-them via the Hyper-V tree.
+      include/asm/cpuid/
+      ├── api.h
+      └── types.h
 
 Thanks,
-Wei.
-
->   Drivers: hv: Use kzalloc for panic page allocation
->   Drivers: hv: Remove hv_alloc/free_* helpers
-> 
->  drivers/hv/connection.c        | 23 ++++++++++++-----
->  drivers/hv/hv_common.c         | 45 +++-------------------------------
->  drivers/uio/uio_hv_generic.c   |  7 ++++--
->  include/asm-generic/mshyperv.h |  4 ---
->  4 files changed, 25 insertions(+), 54 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
+Ahmed
