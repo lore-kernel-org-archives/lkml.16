@@ -1,162 +1,122 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from out203-205-221-221.mail.qq.com (out203-205-221-221.mail.qq.com [203.205.221.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18DA8F77;
-	Fri,  9 May 2025 02:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E718F77
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 02:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746756661; cv=none; b=S1b1n/ZOZORPogXtIPSFPBheWu9UDdxtKC1u6niOZqC1LzLl21j+9Gyg//CTPqDFssHXDwTYpFVHmQrlu5D4N9OPg0ikUZHr+/r8KhVY3H2lxZN57Mvcmy47+w4pLfzwg/HzCeqdMBP98t4Z3dmCwmtBKpk8FUvKfzWMogngPq4=
+	t=1746756893; cv=none; b=qqQd/sEh6w80pebcQeO66ZIs8FOYbtWLRBm+BR0QYRK50mJbwnmGMr0k7xa5MA7Oe4eTIodeixWLNruia0qzgavl7fDKZ16AV4erizP/T3WffwHmy2pOBq0HHysm36ayP/NTkvMFWWQxsS6j1kaXR8eOHN8iC0VEHAhfKWo4n0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746756661; c=relaxed/simple;
-	bh=eouLDxNWFtWINNeneQevRkOh1Ike8Q0fYwwO6srNaVc=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=nm17EKxeRqKlswvacxvZutHb/kl1FKwenxAWzvATPEkM9qPff7iVW6NqvPHyZsPZ3vX1nH+oYk0t9VSTF3+/3eU+PB5j2IIv293Ir9CTLTjh7tC7TnHYPOJyw/txmDZOgHWQCVFjgFNM/IyngDUQKnc9ThuhTpl4/SqFDYs4wb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZtsQr68Dbz1Z1Yl;
-	Fri,  9 May 2025 09:50:44 +0800 (CST)
-Received: from kwepemk200017.china.huawei.com (unknown [7.202.194.83])
-	by mail.maildlp.com (Postfix) with ESMTPS id 745B0180B52;
-	Fri,  9 May 2025 09:54:21 +0800 (CST)
-Received: from [10.174.178.219] (10.174.178.219) by
- kwepemk200017.china.huawei.com (7.202.194.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 9 May 2025 09:54:19 +0800
-Subject: Re: [PATCH] perf kvm: Fix arm64 VM-EXIT event detection
-To: Haixin Yu <yuhaixin.yhx@linux.alibaba.com>
-CC: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, James
- Clark <james.clark@arm.com>, Mike Leach <mike.leach@linaro.org>, Leo Yan
-	<leo.yan@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
-	<mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Shannon Zhao
-	<shannon.zhao@linux.alibaba.com>, Sergey Senozhatsky
-	<sergey.senozhatsky@gmail.com>
-References: <ZNG9PNB-fEBNyK9E@B-Q60VQ05P-2326.local>
-From: Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <33dd0a17-cf35-4b6b-9ee5-9983669cc98b@huawei.com>
-Date: Fri, 9 May 2025 09:54:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+	s=arc-20240116; t=1746756893; c=relaxed/simple;
+	bh=OiURoFFs9rTnjIw5kVIYCMyHlhDEDRxk1RK+YtbaD6A=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=Tt0oqaeqO45EBY2vsfd6mBzs1nM76qInBPkQE46Gvg7UfMcuoEn8W9TqLp5aJKnCgPCCb/xA/8LoAAppwm4uLnhQQT054DlApiFZPtBQoTtWkdEVIXtbhLbYBMhuRjdPzw/zHe1/wwG/dHChZiLs59FjlGlQZtiJSZFSu50O73U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=uipV/5X4; arc=none smtp.client-ip=203.205.221.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="uipV/5X4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1746756881; bh=50EMK0zUDIARn/oLsuMIxQe8WwQiSOJm3GVLZmYJKOE=;
+	h=From:To:Cc:Subject:Date;
+	b=uipV/5X4bPPcYcd5uKhb5dW71Dua44aIu6mzCY4khntPq7EWu48sS3TqkUbpgt0sA
+	 mhsjcnEsiHYSDEt1P4Gj71UHgmrltjf8YSFdUpkBnNwOCEAhGTF3bXFfCpNFJNwK5K
+	 W92TQPgJA19evf3KH1A1FMprOf5v+HvYrhJUVwwk=
+Received: from localhost.localdomain ([36.111.64.84])
+	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
+	id D7528072; Fri, 09 May 2025 09:53:53 +0800
+X-QQ-mid: xmsmtpt1746755633tdwraare5
+Message-ID: <tencent_0B227ECF6D12D91A3070FE8D41568AD10206@qq.com>
+X-QQ-XMAILINFO: Mi+38GKm5OhV9t8a0/uAavUtGEFxnOCpFpjWvoQBodd8QTqNiNcLLecILIzfeJ
+	 fL/YK7/m5IJc9LajBltU7nJBtO+FSt+rU6Ob4dYsJ4QedqPVkvCc0V5voAGaQb6XpuvqkABt6P1i
+	 lveBujYXJlDUoMehTLg62+b5NScTxRnPxTwQZkZNxtcVduK4y+D0Tu4F/5j9pheONmVp0XAwbXYK
+	 gthCgo1JgsD9FtzOwKpGR2znh04ZLJRG+PQj4PPNZrhmjX2MfkDXnxN2dGGeHfzm7ceUA6yee2WI
+	 qeboUzwSvFWWiGzRthsbHjPsmj0G4JKlQ/6RuaJdAOSwkMvofuQrGJPIgaiPJ5fF90F577E5jfkQ
+	 7WtzWpi1+gRL0Oh0af9skDolvjTA4XPJjL1rNupIiK2rroTnyLNNAnhMk4Bf9UdQyPTeVfa+Tucl
+	 Pa56oTt2kzTEMVwgEdwqYvl9C6t0OntACZ254gWQt4xONa0Aj/DjEiegv8w6N2cDmJd+tSPKwrBk
+	 zOBg617RjaTuC6Ik8Oa7Up2WHBgECrmrfjKpklHXs1v6s66OK2DS4AjylZVTjDSFVNf0ZpHYb0F7
+	 YjxgIzwE67tGraOa5sxc1Rl8HWpBGxhDRi3AuXTHz6i4E+Lg5w3ZtaL52O++kGF6pW8YdONBheub
+	 1LhAcmPDqkTw5XJqf2g0HeyKb3Urs0NpuGJDpZr/Ybkdqu0agnqG8M6ZWhOuHeW/SkGfLdFnCTIy
+	 kqf2hGIUIOEAj6aEaK2VKwXxbI/M1exZV85A/MtKoEeMUejzSk7loc7w5B2thjxc5n7sTZwTFcbB
+	 Lh6xdSyMpVc9QxJFJonbYHFpBeX+3nOzYjXiSD4PZpSUcXpdA3PTKB5EHRvepao5UakNHPdvUk8A
+	 /8Oi0D0sCNcoaADQNZI0CJO21qH3kdMz3ek8EUx8de14RaUjEaIFjrZQhxZGl/FryWugbehmKj4p
+	 xQO/b9UbaX+8mpb9hvbEv4Rzu+NPOFdvNJujbMmD4=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Feng Lee <379943137@qq.com>
+To: david@redhat.com,
+	baohua@kernel.org,
+	21cnbao@gmail.com,
+	akpm@linux-foundation.org,
+	mingo@kernel.org,
+	jgg@ziepe.ca,
+	jhubbard@nvidia.com,
+	peterx@redhat.com
+Cc: maobibo@loongson.cn,
+	trivial@kernel.org,
+	linux-kernel@vger.kernel.org,
+	lance.yang@linux.dev,
+	anshuman.khandual@arm.com,
+	Feng Lee <379943137@qq.com>
+Subject: [PATCH v2] mm: clean up redundant code
+Date: Thu,  8 May 2025 22:01:15 +0800
+X-OQ-MSGID: <20250508140115.2669-1-379943137@qq.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ZNG9PNB-fEBNyK9E@B-Q60VQ05P-2326.local>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemk200017.china.huawei.com (7.202.194.83)
+Content-Transfer-Encoding: 8bit
 
-[ +Cc the original author of perf kvm stat ]
+Remove pgd_offset_gate() completely and simply make the single
+caller use pgd_offset()
 
-On 2023/8/8 11:57, Haixin Yu wrote:
-> A VM-EXIT event shall start at kvm:kvm_exit, and end with the next
-> kvm:kvm_entry. But it's reversed on arm64, which means the time running
-> guest code in fact.
+It appears that the gate area resides in the kernel-mapped segment
+exclusively on IA64. Therefore, removing pgd_offset_k is safe since
+IA64 is now obsolete.
 
-Good catch! It'd be great if Sergey could take a look.
+Signed-off-by: Feng Lee <379943137@qq.com>
 
-> 
-> Example:
-> 
->  # perf kvm stat record -p 2772 -- sleep 1
-> 
-> Before this change:
-> 
->  # perf kvm stat report
-> 
-> Analyze events for all VMs, all VCPUs:
-> 
->     VM-EXIT Samples Samples%   Time%   Min Time   Max Time    Avg time
-> 
->     IRQ      756     100.00%  100.00%   2.28us    3674.38us   1375.66us ( +-   4.34% )
-> 
-> Total Samples:756, Total events handled time:1039996.94us.
-> 
-> After:
-> 
->  # perf kvm stat report
-> 
-> Analyze events for all VMs, all VCPUs:
-> 
->     VM-EXIT Samples Samples%   Time%   Min Time   Max Time    Avg time
-> 
->     IRQ     772      100.00%  100.00%   0.24us     62.86us    6.34us ( +-   3.55% )
-> 
-> Total Samples:772, Total events handled time:4890.80us.
-> 
-> IRQ average handled time decreases to 6us, which is a more rational result
-> as KVM handles IRQ by returning to guest directly.
-> 
-> Signed-off-by: Haixin Yu <yuhaixin.yhx@linux.alibaba.com>
-> ---
->  tools/perf/arch/arm64/util/kvm-stat.c | 24 +++---------------------
->  tools/perf/builtin-kvm.c              |  2 +-
->  2 files changed, 4 insertions(+), 22 deletions(-)
-> 
-> diff --git a/tools/perf/arch/arm64/util/kvm-stat.c b/tools/perf/arch/arm64/util/kvm-stat.c
-> index 6611aa21cba9..eeb659ceedc2 100644
-> --- a/tools/perf/arch/arm64/util/kvm-stat.c
-> +++ b/tools/perf/arch/arm64/util/kvm-stat.c
-> @@ -21,7 +21,7 @@ const char *kvm_events_tp[] = {
->  	NULL,
->  };
->  
-> -static void event_get_key(struct evsel *evsel,
-> +void exit_event_get_key(struct evsel *evsel,
->  			  struct perf_sample *sample,
->  			  struct event_key *key)
->  {
-> @@ -40,27 +40,9 @@ static void event_get_key(struct evsel *evsel,
->  	}
->  }
->  
-> -static bool event_begin(struct evsel *evsel,
-> -			struct perf_sample *sample __maybe_unused,
-> -			struct event_key *key __maybe_unused)
-> -{
-> -	return evsel__name_is(evsel, kvm_entry_trace);
-> -}
-> -
-> -static bool event_end(struct evsel *evsel,
-> -		      struct perf_sample *sample,
-> -		      struct event_key *key)
-> -{
-> -	if (evsel__name_is(evsel, kvm_exit_trace)) {
-> -		event_get_key(evsel, sample, key);
-> -		return true;
-> -	}
-> -	return false;
-> -}
-> -
->  static struct kvm_events_ops exit_events = {
-> -	.is_begin_event = event_begin,
-> -	.is_end_event	= event_end,
-> +	.is_begin_event = exit_event_begin,
-> +	.is_end_event	= exit_event_end,
->  	.decode_key	= exit_event_decode_key,
->  	.name		= "VM-EXIT"
->  };
-> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index 71165036e4ca..498cd8e21134 100644
-> --- a/tools/perf/builtin-kvm.c
-> +++ b/tools/perf/builtin-kvm.c
-> @@ -615,7 +615,7 @@ static const char *get_filename_for_perf_kvm(void)
->  
->  #if defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->  
-> -void exit_event_get_key(struct evsel *evsel,
-> +void __weak exit_event_get_key(struct evsel *evsel,
->  			struct perf_sample *sample,
->  			struct event_key *key)
->  {
+---
+Changes in v2:
+  - remove pgd_offset_gate completely
+  - remove pgd_offset_k from the get_gate_page function completely
+---
+ include/linux/pgtable.h | 4 ----
+ mm/gup.c                | 5 +----
+ 2 files changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+index b50447ef1c92..f1e890b60460 100644
+--- a/include/linux/pgtable.h
++++ b/include/linux/pgtable.h
+@@ -1164,10 +1164,6 @@ static inline void arch_swap_restore(swp_entry_t entry, struct folio *folio)
+ }
+ #endif
+ 
+-#ifndef __HAVE_ARCH_PGD_OFFSET_GATE
+-#define pgd_offset_gate(mm, addr)	pgd_offset(mm, addr)
+-#endif
+-
+ #ifndef __HAVE_ARCH_MOVE_PTE
+ #define move_pte(pte, old_addr, new_addr)	(pte)
+ #endif
+diff --git a/mm/gup.c b/mm/gup.c
+index f32168339390..0685403fe510 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1101,10 +1101,7 @@ static int get_gate_page(struct mm_struct *mm, unsigned long address,
+ 	/* user gate pages are read-only */
+ 	if (gup_flags & FOLL_WRITE)
+ 		return -EFAULT;
+-	if (address > TASK_SIZE)
+-		pgd = pgd_offset_k(address);
+-	else
+-		pgd = pgd_offset_gate(mm, address);
++	pgd = pgd_offset(mm, address);
+ 	if (pgd_none(*pgd))
+ 		return -EFAULT;
+ 	p4d = p4d_offset(pgd, address);
+-- 
+2.49.0
+
