@@ -1,108 +1,149 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m32102.qiye.163.com (mail-m32102.qiye.163.com [220.197.32.102])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655D922579B;
-	Thu,  8 May 2025 12:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB5D2253B2;
+	Thu,  8 May 2025 12:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746708958; cv=none; b=PoQM7Z6UljZiu7DconZGla7fFHfX1QR+lu+58EmZ9vPSrwWiSr7a+xkAHTtSF06ePoJj9taQLd3StKrUmp9Cg44YRPfzaYIyiPiOCOFdfXo4sEns69uXKxLwYVvC2siFVUK7MbawmMmJXfd7+oAJ5s43hidxbK/NE8QzuC1D3eA=
+	t=1746708968; cv=none; b=MY0/zzSbSpgBcNwL9eFgeMw7jZlF2GuGPBZfANsc1dXeibleuhdT4EqzrV6OQ+mrlIO9hcRAhSG0A9S8XqlG0kKmMhceThmMrX9N3wo/vOBiwqOA52Gagl5xyjHQDQMI1e/SMTbm1ivGXUA79Ep3vE/A4LOoathqwTs+RsEFwEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746708958; c=relaxed/simple;
-	bh=P2hkK24gIBpekWVgzbZvUT9UAOj3974Lm4QOgZm4MU4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F9+fXCi42XBTkWYor+Tx1hGkZ3P98pAH+Rc8AHPDflIrT8YJdxXiIr6dCgy2PFTWUTvgdA5MIwBR0C8YA7BSBaxn1KONijQuewdiwODVDK04KVD0Vt3c+b/eVYHqkMnny9YrVquobVCwPMAjpHdXQZ1ZT37J/3vb/MuZWBtARO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=XPlPcIC0; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="XPlPcIC0"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39ee5ac4321so1215691f8f.1;
-        Thu, 08 May 2025 05:55:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1746708954; x=1747313754; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=p6AYNVAEWLWzZVYwdSbhFHON7qW08tK4r17ya22Q5uQ=;
-        b=XPlPcIC0Ng4UNTZiY1dUVjhVyMtIGmrfmrHqhcUfj/0CgSyWKAPhXUfICIFnLRCOCX
-         LBRsZ9AJ+z+SrJtuWv5+JB7Oq2dyB7s2VixxOwpf01bU9tMBNiJCRm9bZgVYDuOVCgGp
-         0DO4GiIZSK/mwtmK0YocxNijvsapPK7gvwAkPPZmetrHhvy7Cj1gBxLgb3Vxx62JbWY1
-         0nCzimV8vGy9RHgWlCR72yBXWnyOrIz1URka7aGgECf8pYek/m3AZguAuF0mWSqVG19A
-         m1I5XPpZVSU7uVmxvlebuQmppL9iPCr/3g+y34T3w20r6TebcSpDGyPFkSy035CSR6Tg
-         WpQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746708955; x=1747313755;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p6AYNVAEWLWzZVYwdSbhFHON7qW08tK4r17ya22Q5uQ=;
-        b=QAG39Mzoy+Nifa8y0wJlv3Sol2PlWpSuSq4Fb82MoRW/YNXOYlQXBVHqoRQ8q8Su9i
-         zSYEoqI4YO2uDGFMW5tMqWKzQocBK3FSxwCvd8g2H0SSJdoyWqW4sCnbdxKK3Htp3qh2
-         B0rBhV0jfYbB3Hepo9yU067K2z0sfE7g7YlapCLNBXFFZPLsTfL4ha1ZPg4YpYdGwDPj
-         iAdnxMVz5c7Ad39W/P+qvm4YtP25oHFq94yTLRTS0AFsqXmPJE5SJZBBGL/fx76Yazy9
-         m1wBub1VsA6jnYlN3Vm1wMLwA5axg2d01uLSeuHf4qF2uhTcH8tadplGaT93dehh8tMv
-         NWoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWtw+KqCDUtJ7Rctd6bzmZKWImPwHbgYTOnUcjZtRm5Z+Fj74VVDUJS7FlOvFjeHEaQNn5a9+RDaK4v40o=@vger.kernel.org, AJvYcCXxZxXaXUSsrE6qBuSUmTu8prpjQ/iobTdgzF/+4cD1xF1b/QKToyhRTmTyLlZl8GkLjOb8c+74@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzt8rKET4gviuYWO0vtjEHYYhk1pD3pwjyfog3lOWzPAjGYgUkz
-	qN7fXzuIH1rja8oLeEfOo9VSQSUKFEvGCRE/N6l4OTbYBIbMoNqhFE7z
-X-Gm-Gg: ASbGncsR8MyNHUc1DHQBF/yv4IlM7jo2lrlDas450zCDTs42Z4Jfkkqglq3JGElo0L4
-	btDckmWdaEXYM5vczRLZL8jF0e1occ032wefQJgBElJkXwWY+vwR9ZQg77+vXzgBG0gGbpqwt1i
-	cHNRj4dyJ1l7uU/mulcQbxxRJLMdhbxBx6kaWE0fYGoPFqUSQ5aG4rs8/RHcWi6rdKyqQX6L+oP
-	n92UMDz6geSxxAO7T+SAxNZIXLRSg9M30aV+EmghPce209Kqx6E1iTJTNCH/Csinyxo5LDXwwv1
-	ZivlyN6B9nnH343fDj+ZfOhbKamLganspQVtymmoL7BGAOIM1TsgquG4gWaa6CtnrQhvGhVXmt5
-	8T86YTgcrMDeNq1MIhg==
-X-Google-Smtp-Source: AGHT+IGTa2WWD3VgWj+uKDTBuDUhX771kiVc7NX3oQrzYhOmASsrPcy1MfhL6cDIuvZ78Xz9Lvk9Tg==
-X-Received: by 2002:a05:6000:184d:b0:39c:30d9:3b5c with SMTP id ffacd0b85a97d-3a0ba0efbf9mr2488623f8f.39.1746708954465;
-        Thu, 08 May 2025 05:55:54 -0700 (PDT)
-Received: from [192.168.1.3] (p5b05727d.dip0.t-ipconnect.de. [91.5.114.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0b9af4ba1sm2897233f8f.59.2025.05.08.05.55.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 05:55:53 -0700 (PDT)
-Message-ID: <384739cf-4b2b-4c4c-81e6-19d4547dd395@googlemail.com>
-Date: Thu, 8 May 2025 14:55:52 +0200
+	s=arc-20240116; t=1746708968; c=relaxed/simple;
+	bh=5PDCbIC95j/ITD40mDOy1iMbEairxNDKkHP6w2tyA+E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GOEM1tttbxur2oBjLoz2UPa+rETu7ZXTDo2qr6QTE28NTJPAEZ32iticuz3hdgA0XoG1YYXx+DfYH1cBLbSv6rujbApJ15GpPrUPjmJbue9QLj1lbnr+POiH72fTqUERUPjGpKSK76Dr4zLaifotM7heHI0dXB+q8bzEQwY+MYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sangfor.com.cn; spf=pass smtp.mailfrom=sangfor.com.cn; arc=none smtp.client-ip=220.197.32.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sangfor.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sangfor.com.cn
+Received: from ubuntu.. (unknown [121.32.254.147])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1464cfa34;
+	Thu, 8 May 2025 20:50:46 +0800 (GMT+08:00)
+From: Zhu Wei <zhuwei@sangfor.com.cn>
+To: don.brace@microchip.com,
+	kevin.barnett@microchip.com
+Cc: dinghui@sangfor.com.cn,
+	zengzhicong@sangfor.com.cn,
+	James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com,
+	storagedev@microchip.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Zhu Wei <zhuwei@sangfor.com.cn>
+Subject: [PATCH] scsi: smartpqi: Fix the race condition between pqi_tmf_worker and pqi_sdev_destroy
+Date: Thu,  8 May 2025 20:50:11 +0800
+Message-ID: <20250508125011.3455696-1-zhuwei@sangfor.com.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.1 00/97] 6.1.138-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250508112609.711621924@linuxfoundation.org>
-Content-Language: de-DE
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250508112609.711621924@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZSx9KVhlNSh5KTE1NTUxMSFYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKSUpVSElVSU5PVUpPTFlXWRYaDxIVHRRZQVlPS0hVSktJT09PSFVKS0
+	tVSkJLS1kG
+X-HM-Tid: 0a96aff2c9a309cekunm1464cfa34
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NRg6Tgw5LjIMTg0qAU4oSgsj
+	GA5PCzVVSlVKTE9NTEtDTU9MT0JMVTMWGhIXVQETDgweEjsIGhUcHRQJVRgUFlUYFUVZV1kSC1lB
+	WUpJSlVISVVJTk9VSk9MWVdZCAFZQU5PSE03Bg++
 
-Am 08.05.2025 um 13:30 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.1.138 release.
-> There are 97 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+There is a race condition between pqi_sdev_destroy and pqi_tmf_worker.
+After pqi_free_device is released, pqi_tmf_worker will still use device.
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+kasan report:
+[ 1933.765810] ==================================================================
+[ 1933.771862] scsi 15:0:20:0: Direct-Access     ATA      WDC  WUH722222AL WTS2 PQ: 0 ANSI: 6
+[ 1933.779190] BUG: KASAN: use-after-free in pqi_device_wait_for_pending_io+0x9e/0x600 [smartpqi]
+[ 1933.779194] Read of size 4 at addr ffff88954c490480 by task kworker/2:2/518186
+[ 1933.779201] CPU: 2 PID: 518186 Comm: kworker/2:2 Kdump: loaded Tainted: G     U     OE
+			4.19.90-89.16.v2401.osc.sfc.6.11.1.0108.ky10.x86_64+debug #1
+[ 1933.779203] Source Version: v6.11.1.0108+0~65323201.20250328
+[ 1933.779205] Hardware name: SANGFOR S2122-S12L/ASERVER-P-2000, BIOS TYR.2.00.0100 05/18/2019
+[ 1933.779213] Workqueue: events pqi_tmf_worker [smartpqi]
+[ 1933.779216] Call Trace:
+[ 1933.779225]  dump_stack+0x8b/0xb9
+[ 1933.779239]  print_address_description+0x65/0x2b0
+[ 1933.779249]  kasan_report+0x14b/0x290
+[ 1933.779255]  pqi_device_wait_for_pending_io+0x9e/0x600 [smartpqi]
+[ 1933.779264]  pqi_device_reset_handler+0x174f/0x1f30 [smartpqi]
+[ 1933.779284]  process_one_work+0x65f/0x12d0
+[ 1933.806306]  worker_thread+0x87/0xb50
+[ 1933.806315]  kthread+0x2e9/0x3a0
+[ 1933.806323]  ret_from_fork+0x1f/0x40
+[ 1933.843994] Allocated by task 579094:
+[ 1933.875361]  save_stack+0x19/0x80
+[ 1933.892366]  kasan_kmalloc+0xa0/0xd0
+[ 1933.892373]  kmem_cache_alloc+0xbb/0x1c0
+[ 1933.892378]  getname_flags+0xba/0x500
+[ 1933.892384]  user_path_at_empty+0x1d/0x40
+[ 1933.892389]  vfs_statx+0xb9/0x140
+[ 1933.892397]  __do_sys_newstat+0x77/0xd0
+[ 1933.913179]  do_syscall_64+0xa4/0x430
+[ 1933.913187]  entry_SYSCALL_64_after_hwframe+0x5c/0xc1
+[ 1933.933381] Freed by task 579094:
+[ 1933.933389]  save_stack+0x19/0x80
+[ 1933.933392]  __kasan_slab_free+0x130/0x180
+[ 1933.933396]  kmem_cache_free+0x78/0x1e0
+[ 1933.933401]  filename_lookup+0x216/0x400
+[ 1933.933405]  vfs_statx+0xb9/0x140
+[ 1933.933407]  __do_sys_newstat+0x77/0xd0
+[ 1933.933417]  do_syscall_64+0xa4/0x430
+[ 1933.933432]  entry_SYSCALL_64_after_hwframe+0x5c/0xc1
+[ 1933.956837]
+[ 1933.956842] The buggy address belongs to the object at ffff88954c490000
+                which belongs to the cache names_cache of size 4096
+[ 1933.956845] The buggy address is located 1152 bytes inside of
+                4096-byte region [ffff88954c490000, ffff88954c491000)
+[ 1933.956851] The buggy address belongs to the page:
+[ 1934.297352] page:ffffea0055312400 count:1 mapcount:0 mapping:ffff888100580f00
+		index:0x0 compound_mapcount: 0
+[ 1934.309566] flags: 0x57ffffc0008100(slab|head)
+[ 1934.316370] raw: 0057ffffc0008100 0000000000000000 dead000000000200 ffff888100580f00
+[ 1934.326518] raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
+[ 1934.338191] page dumped because: kasan: bad access detected
+[ 1934.346177]
+[ 1934.350031] Memory state around the buggy address:
+[ 1934.357220]  ffff88954c490380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[ 1934.366854]  ffff88954c490400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[ 1934.376474] >ffff88954c490480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[ 1934.386094]                    ^
+[ 1934.391684]  ffff88954c490500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[ 1934.402601]  ffff88954c490580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[ 1934.412228] ==================================================================
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+Before pqi_sdev_destroy executes pqi_free_device, cancel the pqi_tmf_worker
+of the corresponding device.
 
+Fixes: 2d80f4054f7f ("scsi: smartpqi: Update deleting a LUN via sysfs")
+Signed-off-by: Zhu Wei <zhuwei@sangfor.com.cn>
+---
+ drivers/scsi/smartpqi/smartpqi_init.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Beste Grüße,
-Peter Schneider
-
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+index 8a26eca4fdc9..102ed7501f08 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -6581,6 +6581,8 @@ static void pqi_sdev_destroy(struct scsi_device *sdev)
+ 	struct pqi_scsi_dev *device;
+ 	int mutex_acquired;
+ 	unsigned long flags;
++	unsigned int lun;
++	struct pqi_tmf_work *tmf_work;
+ 
+ 	ctrl_info = shost_to_hba(sdev->host);
+ 
+@@ -6607,6 +6609,8 @@ static void pqi_sdev_destroy(struct scsi_device *sdev)
+ 	mutex_unlock(&ctrl_info->scan_mutex);
+ 
+ 	pqi_dev_info(ctrl_info, "removed", device);
++	for (lun = 0, tmf_work = device->tmf_work; lun < PQI_MAX_LUNS_PER_DEVICE; lun++, tmf_work++)
++		cancel_work_sync(&tmf_work->work_struct);
+ 	pqi_free_device(device);
+ }
+ 
 -- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+2.43.0
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
