@@ -1,185 +1,174 @@
-Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9DA2144B7;
-	Thu,  8 May 2025 05:38:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74E68472
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 05:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746682736; cv=none; b=lBsB1V+FMd0pqscp/y7CCbweYJrkyLEliyoWvRYsbNM3CYgSoJ/MBiCdwB9enp7cWtpTOfWoV7qrXnW5PD1NxemB1ynEi9dBFvsV41hG69TTFvFfF+a1lz754hREayo7VEl4qBCUdsqyrDKI0rd4hMcT/qNeGJHCifBSQ2MnQO0=
+	t=1746682933; cv=none; b=Rh1xZYgsaTq5C3NroubMVHvR4y7KxxEsN9qVjEeanmqGxFDa7aYUXFrjl1+Ax+KhuUxSJz+sP7zX27RyokBB4JJHpRXoG9xmH3JcMqwxD7eHUxn7cknnAjkojbuedzYoP96MHXNmdcgCgzTUsi4sPukIZMNQGXUoxaeAfgdWELk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746682736; c=relaxed/simple;
-	bh=dDCrl7bkwo/0S+4APKJnm3R6af9SQELqg9M5HZnlgFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nUZ6++/Azuf1LfbidN9cvszLJiFGmpSyN+Bo9Bqgq5GG8yww3caNA6BP5z1PklUgN42+s9JdUSj0X0LoGbpXM7FWXMLDu3GJAn4BVniPU1TfWHGEBfUEALEiEySJauvHRpDqq0kgiVs8Nx2e7yTAMFSoPWxEfZ2L79Q04TT7G98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=bnXy1y85; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=1ZCSTR2U; arc=none smtp.client-ip=155.254.16.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
+	s=arc-20240116; t=1746682933; c=relaxed/simple;
+	bh=TM/MufJVEDLNCEGKM1aXEkuuApBQkMfumkSR0YPR0qo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fCUwrHY/SkRB036u8vAArwrtNu7wmjpgT0Ootde63PJDKh8527k1B/9ml9V5R7rpcLLM7FTKCXQqUvWiH+ZNLJHc6qYU6/ajjwjK+i8Eikdz/Bv4X1hzeHryiYEJ98Lm5XQCaAiF7vw93nFhPghMA5bmnxOCWNVo3kXlHgZa3kA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LMWhrzeQ; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="bnXy1y85";
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="1ZCSTR2U"
-Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
-	by bayard.4d2.org (Postfix) with ESMTP id 96FA612FB444;
-	Wed, 07 May 2025 22:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1746682733; bh=dDCrl7bkwo/0S+4APKJnm3R6af9SQELqg9M5HZnlgFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bnXy1y85/b2c9u9GelQ+EWxYmOcP25x/X4mu7n3Hk7WxQvGvHJTEKvMRInDeQGJON
-	 CJydroNKSYlW2P7BMVwe/YZsoPToMgaBv1AZQhOe4MJ9rZ2T3YKi3APDRyiStx2jB6
-	 8mblpqic/vFCLea7qgCZ8lrUA7iDUqsTZ3cBen8ckgA57SMXpbI2OjUfl/qJA1rV/1
-	 Whhf+bHiDao2TW1lh+UJ1ngRYdzfYU9Kp0krWuZA+EOAQhA/IOY6RoqBvAPWCMiBD+
-	 A76ndalXqqA/XDH1iao5VF9INz7gn2GDNBBKwSpa1zMapbYS1LlHzKoS4ex+QC1Vpi
-	 j0pMZEGkzPzeQ==
-X-Virus-Scanned: amavisd-new at 4d2.org
-Received: from bayard.4d2.org ([127.0.0.1])
- by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id oLEJHnSxcwgL; Wed,  7 May 2025 22:38:19 -0700 (PDT)
-Received: from ketchup (unknown [183.217.82.204])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: heylenay@4d2.org)
-	by bayard.4d2.org (Postfix) with ESMTPSA id 7773212FB404;
-	Wed, 07 May 2025 22:38:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1746682699; bh=dDCrl7bkwo/0S+4APKJnm3R6af9SQELqg9M5HZnlgFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=1ZCSTR2UamB34rz6a0We4Hxm+i7shGD78C0zzsPrCYtO4ElKKXZ5B1r9CyF1Bnwvw
-	 3xhCO7GIr8ibHgQMnZKZJwMbIijgOg3JD/gtXWviUPE+cCwYtaKhJcIX8DVs90Z3Av
-	 it6iWm2SnKOY3j1fjQ3XUtkJLCPMaKxt6g93++gr1gJa5FqEe761gCbSIYgkX78atw
-	 j87r5jc5yIgagwzEmUGRnlzgZY1Vq4E1ENA5TUDStsGuFSrXbCCj70r+5sh8NAS6Si
-	 yPuNjkXVh5c7CWQmp0ZAygwvP6ei3Cq2evvtm3qUv7szHCke/dFSTDew6PEkysSGcS
-	 q1J5WYq0dbQpA==
-Date: Thu, 8 May 2025 05:38:11 +0000
-From: Haylen Chu <heylenay@4d2.org>
-To: Alex Elder <elder@riscstar.com>, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-	p.zabel@pengutronix.de, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
-	dlan@gentoo.org
-Cc: inochiama@outlook.com, guodong@riscstar.com, devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org, spacemit@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/6] reset: spacemit: add support for SpacemiT CCU
- resets
-Message-ID: <aBxDQ1_2xJjGlwNf@ketchup>
-References: <20250506210638.2800228-1-elder@riscstar.com>
- <20250506210638.2800228-5-elder@riscstar.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMWhrzeQ"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6ecf0e07947so7036746d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 22:42:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746682930; x=1747287730; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TM/MufJVEDLNCEGKM1aXEkuuApBQkMfumkSR0YPR0qo=;
+        b=LMWhrzeQI65Pp0dChU2KMZQUXnLk+JP5bAclbUBFE6mPlKDkPTKMbIshoRFDj9rNw6
+         81xnWSx6DG3nPutbg6iARM8Dd7fLHxuOqboSh8qC0iyvckG3obBbsRwxZwdflO4btDBj
+         2DAY3zynD6UhFMarcwdMTLmuhBmeY1wOzwhZVDPssIIhI6MMWuIj/I1H8fiD3Sb1aOR3
+         QQCIg/QLVhdAQmPuTzdkG2LgU+e/obBWmZjwIRlnXjq+i+muSwlQNWCD9fvp7GT66K9l
+         i1lEQ/uEkutVaXEbiKb+C/WIhZMGZvKlBE+5C8PkCFAnSfqHssaK0eTxgqDFFNNOKmuT
+         VG5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746682930; x=1747287730;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TM/MufJVEDLNCEGKM1aXEkuuApBQkMfumkSR0YPR0qo=;
+        b=ZANJMzNam4IJRex9jw/yS1JkZEp0lheD08xqFpviQLDHaF47X+ZLmlDLjbyhLircog
+         Td+Rg7+atvVSBDVjJ6RitjcCrfANlYTRWdvQQUlVc5LgD2ak8p/b5G0HpcOs3v59pe7E
+         YUoYGm1zfY2YpLCvKu9/cDG/fUWEBDsO9Sqxd3eIpvzg/4m8I3L+lNRZ2EyGhABpZuCK
+         K7I0+LTlbvtoBZ+KIF2WSMcDy+bQDu/Zo6DDKO8JN0TTnVbt6QA7lCyE9NVS8ivgx/+9
+         sIrEAVlBMBbizqSAxDScaZ1oUFtbfpFH5GSf3aUyMHmhOm391DaDdck7pS+5SNCLBMti
+         cfkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUM3JxAagviow3akOO/z68/T8BMIvuc0ZdnpkWpirM/kcw01M1Wxlq81Spea78J42q5cie4OUHw1CxJLz0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrCwszzbK1JvW3ViPCEbtpnU6fy/G5Ptbv+92k1QN37lA3XnXY
+	wY/zu1xGLQZQXwFaTqsavP2X9oPZpjpBLKOtOOrqBp3u86uKUWV9obLOD6Ssg9RU2+lzCVLXlDN
+	yOQvZ1QXEWr2FVP3+uZhqCXiMhQJGRPHFN/Y=
+X-Gm-Gg: ASbGncsQ/cL7WkR1vKdr2ih6nWH7YGCWWqfty5NYFhlyBklYpeqrdf9hdvmfxwG91hV
+	ttJ9zfKhkuWuNV8Uwxg8iiGaghLFckqTfofgrSFDfew/q0yUdLxyUgf1MSNoGvunudbTiYMNE5d
+	wEPe9V4jgK2G1cFo4CheDUGxg=
+X-Google-Smtp-Source: AGHT+IH+efhkGKF4AOL+BWpKPJLYuo9dGR16L2HYtzc3mMEwDIKEp9KRP7Kb8YXX6rNvlhFJq3a+0HkejR16Q/nU5as=
+X-Received: by 2002:a05:6214:acf:b0:6e2:3761:71b0 with SMTP id
+ 6a1803df08f44-6f54badec91mr37830986d6.5.1746682930599; Wed, 07 May 2025
+ 22:42:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506210638.2800228-5-elder@riscstar.com>
+References: <20250507141132.2773275-1-usamaarif642@gmail.com>
+ <293530AA-1AB7-4FA0-AF40-3A8464DC0198@nvidia.com> <96eccc48-b632-40b7-9797-1b0780ea59cd@gmail.com>
+ <8E3EC5A4-4387-4839-926F-3655188C20F4@nvidia.com> <279d29ad-cbd6-4a0e-b904-0a19326334d1@gmail.com>
+In-Reply-To: <279d29ad-cbd6-4a0e-b904-0a19326334d1@gmail.com>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Thu, 8 May 2025 13:41:34 +0800
+X-Gm-Features: ATxdqUHQQfnKfoBp5RkCnMABraZFQ6P20s3QRkwHLezvrdNG_i4a26Ar-vd6Kqs
+Message-ID: <CALOAHbCxhL=VM=E5UzNvQYZsrF4zdcQ1-49iEJ1UYvLsurtxCw@mail.gmail.com>
+Subject: Re: [PATCH 0/1] prctl: allow overriding system THP policy to always
+To: Usama Arif <usamaarif642@gmail.com>
+Cc: Zi Yan <ziy@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, david@redhat.com, 
+	linux-mm@kvack.org, hannes@cmpxchg.org, shakeel.butt@linux.dev, 
+	riel@surriel.com, baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com, 
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06, 2025 at 04:06:35PM -0500, Alex Elder wrote:
-> Implement reset support for SpacemiT CCUs.  The code is structured to
-> handle SpacemiT resets generically, while defining the set of specific
-> reset controllers and their resets in an SoC-specific source file.  A
-> SpacemiT reset controller device is an auxiliary device associated with
-> a clock controller (CCU).
-> 
-> This initial patch defines the reset controllers for the MPMU, APBC, and
-> MPMU CCUs, which already defined clock controllers.
-> 
-> Signed-off-by: Alex Elder <elder@riscstar.com>
-> ---
->  drivers/reset/Kconfig           |   1 +
->  drivers/reset/Makefile          |   1 +
->  drivers/reset/spacemit/Kconfig  |  12 +++
->  drivers/reset/spacemit/Makefile |   7 ++
->  drivers/reset/spacemit/core.c   |  61 +++++++++++
->  drivers/reset/spacemit/core.h   |  39 +++++++
->  drivers/reset/spacemit/k1.c     | 177 ++++++++++++++++++++++++++++++++
->  7 files changed, 298 insertions(+)
->  create mode 100644 drivers/reset/spacemit/Kconfig
->  create mode 100644 drivers/reset/spacemit/Makefile
->  create mode 100644 drivers/reset/spacemit/core.c
->  create mode 100644 drivers/reset/spacemit/core.h
->  create mode 100644 drivers/reset/spacemit/k1.c
-> 
+On Thu, May 8, 2025 at 12:09=E2=80=AFAM Usama Arif <usamaarif642@gmail.com>=
+ wrote:
+>
+>
+>
+> On 07/05/2025 16:57, Zi Yan wrote:
+> > On 7 May 2025, at 11:12, Usama Arif wrote:
+> >
+> >> On 07/05/2025 15:57, Zi Yan wrote:
+> >>> +Yafang, who is also looking at changing THP config at cgroup/contain=
+er level.
 
-...
+Thanks
 
-> diff --git a/drivers/reset/spacemit/Kconfig b/drivers/reset/spacemit/Kconfig
-> new file mode 100644
-> index 0000000000000..4ff3487a99eff
-> --- /dev/null
-> +++ b/drivers/reset/spacemit/Kconfig
-> @@ -0,0 +1,12 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +
-> +config RESET_SPACEMIT
-> +	bool
-> +
-> +config RESET_SPACEMIT_K1
-> +	tristate "SpacemiT K1 reset driver"
-> +	depends on ARCH_SPACEMIT || COMPILE_TEST
-> +	select RESET_SPACEMIT
-> +	default ARCH_SPACEMIT
-> +	help
-> +	  This enables the reset controller driver for the SpacemiT K1 SoC.
+> >>>
+> >>> On 7 May 2025, at 10:00, Usama Arif wrote:
+> >>>
+> >>>> Allowing override of global THP policy per process allows workloads
+> >>>> that have shown to benefit from hugepages to do so, without regressi=
+ng
+> >>>> workloads that wouldn't benefit. This will allow such types of
+> >>>> workloads to be run/stacked on the same machine.
+> >>>>
+> >>>> It also helps in rolling out hugepages in hyperscaler configurations
+> >>>> for workloads that benefit from them, where a single THP policy is
+> >>>> likely to be used across the entire fleet, and prctl will help overr=
+ide it.
+> >>>>
+> >>>> An advantage of doing it via prctl vs creating a cgroup specific
+> >>>> option (like /sys/fs/cgroup/test/memory.transparent_hugepage.enabled=
+) is
+> >>>> that this will work even when there are no cgroups present, and my
+> >>>> understanding is there is a strong preference of cgroups controls be=
+ing
+> >>>> hierarchical which usually means them having a numerical value.
+> >>>
+> >>> Hi Usama,
+> >>>
+> >>> Do you mind giving an example on how to change THP policy for a set o=
+f
+> >>> processes running in a container (under a cgroup)?
+> >>
+> >> Hi Zi,
+> >>
+> >> In our case, we create the processes in the cgroup via systemd. The wa=
+y we will enable THP=3Dalways
+> >> for processes in a cgroup is in the same way we enable KSM for the cgr=
+oup.
+> >> The change in systemd would be very similar to the line in [1], where =
+we would set prctl PR_SET_THP_ALWAYS
+> >> in exec-invoke.
+> >> This is at the start of the process, but you would already know at the=
+ start of the process
+> >> whether you want THP=3Dalways for it or not.
+> >>
+> >> [1] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b28dd4=
+ade7c6ab7be29a/src/core/exec-invoke.c#L5045
+> >
+> > You also need to add a new systemd.directives, e.g., MemoryTHP, to
+> > pass the THP enablement or disablement info from a systemd config file.
+> > And if you find those processes do not benefit from using THPs,
+> > you can just change the new "MemoryTHP" config and restart the processe=
+s.
+> >
+> > Am I getting it? Thanks.
+> >
+>
+> Yes, thats right. They would exactly the same as what we (Meta) do
+> for KSM. So have MemoryTHP similar to MemroryKSM [1] and if MemoryTHP is =
+set,
+> the ExecContext->memory_thp would be set similar to memory_ksm [2], and w=
+hen
+> that is set, the prctl will be called at exec_invoke of the process [3].
+>
+> The systemd changes should be quite simple to do.
+>
+> [1] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b28dd4ade=
+7c6ab7be29a/man/systemd.exec.xml#L1978
+> [2] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b28dd4ade=
+7c6ab7be29a/src/core/dbus-execute.c#L2151
+> [3] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b28dd4ade=
+7c6ab7be29a/src/core/exec-invoke.c#L5045
 
-With auxiliary bus introduced, Kconfig entries for both the reset and
-clock should select AUXILIARY_BUS, or building defconfig will fail with
-undefined references,
+This solution carries a risk: since prctl() does not require any
+capabilities, the task itself could call it and override your memory
+policy. While we could enforce CAP_SYS_RESOURCE to restrict this, that
+capability is typically enabled by default in containers, leaving them
+still vulnerable.
 
-        riscv64-unknown-linux-musl-ld: drivers/clk/spacemit/ccu-k1.o: in function `k1_ccu_probe':
-        ccu-k1.c:(.text+0x19c): undefined reference to `auxiliary_device_init'
-        riscv64-unknown-linux-musl-ld: ccu-k1.c:(.text+0x226): undefined reference to `__auxiliary_device_add'
-        riscv64-unknown-linux-musl-ld: drivers/reset/spacemit/k1.o: in function `spacemit_k1_reset_driver_init':
-        k1.c:(.init.text+0x1a): undefined reference to `__auxiliary_driver_register'
-        riscv64-unknown-linux-musl-ld: drivers/reset/spacemit/k1.o: in function `spacemit_k1_reset_driver_exit':
-        k1.c:(.exit.text+0x10): undefined reference to `auxiliary_driver_unregister'
+This approach might work for Kubernetes/container environments, but it
+would require substantial code changes to implement securely.
 
-> diff --git a/drivers/reset/spacemit/Makefile b/drivers/reset/spacemit/Makefile
-> new file mode 100644
-> index 0000000000000..3a064e9d5d6b4
-> --- /dev/null
-> +++ b/drivers/reset/spacemit/Makefile
-> @@ -0,0 +1,7 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +obj-$(CONFIG_RESET_SPACEMIT)			+= reset_spacemit.o
-
-As RESET_SPACEMIT is defined as bool, the reset driver will never be
-compiled as a module... so either the RESET_SPACEMIT_K1 should be
-limited to bool as well or you could take an approach similar to the
-clock driver.
-
-> +reset_spacemit-y				:= core.o
-> +
-> +reset_spacemit-$(CONFIG_RESET_SPACEMIT_K1)	+= k1.o
-
-...
-
-> new file mode 100644
-> index 0000000000000..19a34f151b214
-> --- /dev/null
-> +++ b/drivers/reset/spacemit/k1.c
-
-...
-
-> +MODULE_DEVICE_TABLE(auxiliary, spacemit_k1_reset_ids);
-> +
-> +#undef K1_AUX_DEV_ID
-> +
-> +static struct auxiliary_driver spacemit_k1_reset_driver = {
-> +	.probe          = spacemit_k1_reset_probe,
-> +	.id_table       = spacemit_k1_reset_ids,
-> +};
-> +module_auxiliary_driver(spacemit_k1_reset_driver);
-> -- 
-> 2.45.2
-
-If you're willing to make the reset driver buildable as a module, please
-add MODULE_{LICENSE,DESCRIPTION} statements and possibly also
-MODULE_AUTHOR(), or modpost will complain,
-
-	ERROR: modpost: missing MODULE_LICENSE() in drivers/reset/spacemit/reset_spacemit.o
-	WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/reset/spacemit/reset_spacemit.o
-
-Best regards,
-Haylen Chu
+--=20
+Regards
+Yafang
