@@ -1,931 +1,269 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359BC1F8750;
-	Thu,  8 May 2025 10:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4CF17A310
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746699642; cv=none; b=PodZA57nFMK3cZMdhTrceiOFIfEWZI0yogxSA6EREntFqR83L+svblQwil5P+CPQfqp3RXbGWypxhPOTOIJBh4xCJkJCemJ3EKnKtnCBX0qjekOiSMe2h2qGYddpdy2gzArAv+BPIQMXyDAzkqYaL8bATZeP8ktmFOFJwgM+5Xg=
+	t=1746699683; cv=none; b=qAOCJmUwLp+fFToTZQSqk3JfENLb2VrxLsuLuwnUQvroyeDYDv6wHa8V0nvTs6kBfCoVjfzTOcWIuQUbBgK0Rnu8l4u5Nphbn/jWYNwf0L1DdyYXHH9uq8azt+r4dURECD5JvxsUr0/Es3W45PiC7KiFozC/rJVW6rLYxVN5/dA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746699642; c=relaxed/simple;
-	bh=APQ+WRfL6l/3pR5YhUJGYoOkicB6SpOvufylOsno4fo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tsJ2/cBf0k5ofvMA0rquK0sEBUc7bLCa/mJ1lZ6PXssZDa994Jvm3gAguM6Q3THseYEFtM3kna364SvadEPgGWT3QSoWYhf4BVmpr7IijtNNoYxYS0X/tNBljZZ7ChpbCBtRutddZImNxt0bIj8NuSLu/a4vEp+DI4VozkN2Gls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tYgA97t3; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746699683; c=relaxed/simple;
+	bh=o5l1PFmthbNbe7ZWUMOjOhMCKHuHeZIvd0T4wfUqVI4=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=JzwPNaT5IAZz4M8730HIzB1es6XktrIz3dwdidYAZDIkh8atd2lKCZAhekcpg5nfMze6db7hXDnMTXW+v/eSfxRaXK7o1XpbF/897FhEXa60il5JNsioR42y6Axd2FMbycAPoamAek0v9s6y+LP2hO8xQS4NHd7h76LDLsQgcR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UdkjO881; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tYgA97t3"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 548AKaSI1642674
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 8 May 2025 05:20:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746699636;
-	bh=e0qqMALltGNCNg4KQUlGZge+aAV5ELAWTocAHroXT8I=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=tYgA97t3ItNZta55lZmdSffcRtE2UuIU5PbOV8bvjYQL2lo6VlR5DP3IpzVQK0I4U
-	 gOAaQ8Zbs0VQlKMc7qXdvWCPuI/WdgZiMOZ9oKqhv5UWTt0IEFCpbFuypBpCtztD2N
-	 u1CPXTX2Xte0qNOKxd1Qm5r6Xxyw+EGsshx1GHpY=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 548AKaVQ089553
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 8 May 2025 05:20:36 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
- May 2025 05:20:35 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 8 May 2025 05:20:35 -0500
-Received: from pratham-Workstation-PC (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 548AKYi6054832;
-	Thu, 8 May 2025 05:20:35 -0500
-From: T Pratham <t-pratham@ti.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller"
-	<davem@davemloft.net>, T Pratham <t-pratham@ti.com>
-CC: Kamlesh Gurudasani <kamlesh@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        Manorit Chawdhry
-	<m-chawdhry@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>
-Subject: [PATCH v4 2/2] crypto: ti: Add driver for DTHE V2 AES Engine (ECB, CBC)
-Date: Thu, 8 May 2025 15:37:41 +0530
-Message-ID: <20250508101723.846210-4-t-pratham@ti.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250508101723.846210-2-t-pratham@ti.com>
-References: <20250508101723.846210-2-t-pratham@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UdkjO881"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad1d1f57a01so148868466b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 03:21:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746699679; x=1747304479; darn=vger.kernel.org;
+        h=autocrypt:subject:from:cc:to:content-language:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o5l1PFmthbNbe7ZWUMOjOhMCKHuHeZIvd0T4wfUqVI4=;
+        b=UdkjO881IoAUWNX6G4NLPoupIWlDU4uC+yaV5WS8yzl/qfOrR0YJ3ZB6lIlM3LMPMt
+         C1bfFXLcRxoY8scmDwy4PlX2agR7Vz2bxg84Q1S8xadyqBxMqJgq8d9TIcfKEOYKaO6j
+         tkyxcSgAzklD8JZJaISIFKni3cCZDmPJsVRKKNM1mMmDRqZu1E4lm2AJB+s5lUOOWqGm
+         muwALnsuGQxKxb0tXlUYGFlcOlDu8A/VKM1z37Umoksp0Ekn2RuxnVyQROyEfRq5ynZ8
+         IZvT5A0deev4x2nWwlvBhiMf7bsMrOyOKrRjjfTZ7j/Bpi4G81BSdx3HPOY7Z/YGyu3m
+         KcxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746699679; x=1747304479;
+        h=autocrypt:subject:from:cc:to:content-language:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=o5l1PFmthbNbe7ZWUMOjOhMCKHuHeZIvd0T4wfUqVI4=;
+        b=VvBpfsswx4Nlg1/M6kwRb0KYm1GXJmZWN/6j7tuUIdCRpnR0xMcUqd236jlJMuRX0k
+         77cKADAIZ4wdEdEeLqIn2gjTa1IbqHXzhHKyAZ24ywFWNu1opaC+fv2/d2sYOBWp4kmP
+         cmyUfAd6dV3ejv01RWmBdMlyxwbgwsvRmbgdvpIteE9/3asBpb1X6ZEait4x3Mpmh4V0
+         vgYswRZXd6oir+tKtxUyH4P7zaAdMgBuIlIuhSd46VJgoztfPr4q+zvwTjhZiFt7A4vw
+         BX5sHplX9wwpYElBnSGyzxYOyBjKhWF5S6lkz+bgeUGBzS36pjkau1z3Z/0MihVxSW5z
+         3evA==
+X-Forwarded-Encrypted: i=1; AJvYcCUO8UEg5i9HToVj+JNMXXshLdkkWpPWxOwtoDdz/+cvuVFRYAbco7qua8dzO5JS+ORc3R+H4+p+mJVrz6k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbfxiJe0y/oCQYKnP6mDxd2mDyCK//Ig0KLe1doJbe5SYJtk3u
+	uhvuBzkkvKufk2yszFIcjETyT4xRMKg+eBztDA+w2gLEAbB0w0Sj
+X-Gm-Gg: ASbGncu2ndvRGCHcZtOsecHZWH+Zv39F7PxjJrzCfvKiX06LeDFx9Sk9iEkOMT+iF0Q
+	RL8HRO5zkXiPzSoCXeTK+FWprBCFGGl8pg+I5rkGV2MEn3o1IGoBnr3187DILqK3uZ+pq6Z69Ha
+	Y+2GWJQHyubqyZmtfEuJGENZQNdMPptxRjv2QvdpmGV1ZR6EBOKta9NRR4ifCrICiotM+/GAl4H
+	/X0ID0Uvou19QgmwqvdIeNXoJTypVfp9iKwVf1Fm6fKIESofFGAwX+xgsCM/eztPBnY6Ms6FNGg
+	bg+P95ViQ1n3AzJIY7Y8pMspE6H8mpT9K8IcEFTZfhCiZZ0=
+X-Google-Smtp-Source: AGHT+IHowQdgmKg5BVqd1jR94LIfmtRukxpooLfKmF/IjM3hBRDabrJZEVa32k3Zn9wTSkCHBfk/eA==
+X-Received: by 2002:a17:907:97cd:b0:acb:4f4a:cbd0 with SMTP id a640c23a62f3a-ad1e8bc3caemr534554666b.14.1746699679145;
+        Thu, 08 May 2025 03:21:19 -0700 (PDT)
+Received: from [192.168.1.248] ([87.254.1.131])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ad1894c02b8sm1050644966b.118.2025.05.08.03.21.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 03:21:18 -0700 (PDT)
+Message-ID: <60721f5a-15d2-46a1-aa0c-d6d599244cb2@gmail.com>
+Date: Thu, 8 May 2025 11:21:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Michael Tretter <m.tretter@pengutronix.de>,
+ "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Michal Simek <michal.simek@amd.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: "Colin King (gmail)" <colin.i.king@gmail.com>
+Subject: soc: xilinx: vcu: issue with 2nd null check on pointer divider
+Autocrypt: addr=colin.i.king@gmail.com; keydata=
+ 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
+ FVPMkxl2UyaayDvhrO9kNXvl1SKCpdzCMQ==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------ZNVH1caHyGO08rC00OCZtKKe"
 
-Add support for ECB and CBC modes in the AES Engine of the DTHE V2
-hardware crypto accelerator.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------ZNVH1caHyGO08rC00OCZtKKe
+Content-Type: multipart/mixed; boundary="------------X8WDFiRZL0EOQHDx40xHNMB8";
+ protected-headers="v1"
+From: "Colin King (gmail)" <colin.i.king@gmail.com>
+To: Michael Tretter <m.tretter@pengutronix.de>,
+ "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Michal Simek <michal.simek@amd.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Message-ID: <60721f5a-15d2-46a1-aa0c-d6d599244cb2@gmail.com>
+Subject: soc: xilinx: vcu: issue with 2nd null check on pointer divider
 
-Signed-off-by: T Pratham <t-pratham@ti.com>
----
- MAINTAINERS                       |   1 +
- drivers/crypto/Kconfig            |   1 +
- drivers/crypto/Makefile           |   1 +
- drivers/crypto/ti/Kconfig         |  13 +
- drivers/crypto/ti/Makefile        |   3 +
- drivers/crypto/ti/dthev2-aes.c    | 428 ++++++++++++++++++++++++++++++
- drivers/crypto/ti/dthev2-common.c | 220 +++++++++++++++
- drivers/crypto/ti/dthev2-common.h | 111 ++++++++
- 8 files changed, 778 insertions(+)
- create mode 100644 drivers/crypto/ti/Kconfig
- create mode 100644 drivers/crypto/ti/Makefile
- create mode 100644 drivers/crypto/ti/dthev2-aes.c
- create mode 100644 drivers/crypto/ti/dthev2-common.c
- create mode 100644 drivers/crypto/ti/dthev2-common.h
+--------------X8WDFiRZL0EOQHDx40xHNMB8
+Content-Type: multipart/mixed; boundary="------------fXtuJGquhu316bEYyR8RZbAh"
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b990850b4994..25a42e0b19e4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -24557,6 +24557,7 @@ M:	T Pratham <t-pratham@ti.com>
- L:	linux-crypto@vger.kernel.org
- S:	Supported
- F:	Documentation/devicetree/bindings/crypto/ti,am62l-dthev2.yaml
-+F:	drivers/crypto/ti/
- 
- TI DAVINCI MACHINE SUPPORT
- M:	Bartosz Golaszewski <brgl@bgdev.pl>
-diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
-index 5686369779be..c1407236f137 100644
---- a/drivers/crypto/Kconfig
-+++ b/drivers/crypto/Kconfig
-@@ -849,5 +849,6 @@ config CRYPTO_DEV_SA2UL
- source "drivers/crypto/aspeed/Kconfig"
- source "drivers/crypto/starfive/Kconfig"
- source "drivers/crypto/inside-secure/eip93/Kconfig"
-+source "drivers/crypto/ti/Kconfig"
- 
- endif # CRYPTO_HW
-diff --git a/drivers/crypto/Makefile b/drivers/crypto/Makefile
-index 22eadcc8f4a2..c0e8d4acc37c 100644
---- a/drivers/crypto/Makefile
-+++ b/drivers/crypto/Makefile
-@@ -48,3 +48,4 @@ obj-$(CONFIG_CRYPTO_DEV_AMLOGIC_GXL) += amlogic/
- obj-y += intel/
- obj-y += starfive/
- obj-y += cavium/
-+obj-$(CONFIG_ARCH_K3) += ti/
-diff --git a/drivers/crypto/ti/Kconfig b/drivers/crypto/ti/Kconfig
-new file mode 100644
-index 000000000000..575e09fa7d96
---- /dev/null
-+++ b/drivers/crypto/ti/Kconfig
-@@ -0,0 +1,13 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+config CRYPTO_DEV_TI_DTHEV2
-+	tristate "Support for TI DTHE V2 crypto accelerators"
-+	depends on CRYPTO && CRYPTO_HW && ARCH_K3
-+	select CRYPTO_ENGINE
-+	select CRYPTO_SKCIPHER
-+	select CRYPTO_ECB
-+	select CRYPTO_CBC
-+	help
-+	  This enables support for the TI DTHE V2 hw crypto accelerator
-+	  which can be found on TI K3 SOCs. Selecting this enables use
-+	  of hardware acceleration for cryptographic algorithms on
-+	  these devices.
-diff --git a/drivers/crypto/ti/Makefile b/drivers/crypto/ti/Makefile
-new file mode 100644
-index 000000000000..b883078f203d
---- /dev/null
-+++ b/drivers/crypto/ti/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+obj-$(CONFIG_CRYPTO_DEV_TI_DTHEV2) += dthev2.o
-+dthev2-objs := dthev2-common.o dthev2-aes.o
-diff --git a/drivers/crypto/ti/dthev2-aes.c b/drivers/crypto/ti/dthev2-aes.c
-new file mode 100644
-index 000000000000..f0c8e7d4a23a
---- /dev/null
-+++ b/drivers/crypto/ti/dthev2-aes.c
-@@ -0,0 +1,428 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * K3 DTHE V2 crypto accelerator driver
-+ *
-+ * Copyright (C) Texas Instruments 2025 - https://www.ti.com
-+ * Author: T Pratham <t-pratham@ti.com>
-+ */
-+
-+#include <crypto/aead.h>
-+#include <crypto/aes.h>
-+#include <crypto/algapi.h>
-+#include <crypto/engine.h>
-+#include <crypto/internal/aead.h>
-+#include <crypto/internal/skcipher.h>
-+
-+#include "dthev2-common.h"
-+
-+#include <linux/delay.h>
-+#include <linux/dmaengine.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/io.h>
-+#include <linux/scatterlist.h>
-+
-+/* Registers */
-+
-+// AES Engine
-+#define DTHE_P_AES_BASE		0x7000
-+#define DTHE_P_AES_KEY1_0	0x0038
-+#define DTHE_P_AES_KEY1_1	0x003C
-+#define DTHE_P_AES_KEY1_2	0x0030
-+#define DTHE_P_AES_KEY1_3	0x0034
-+#define DTHE_P_AES_KEY1_4	0x0028
-+#define DTHE_P_AES_KEY1_5	0x002C
-+#define DTHE_P_AES_KEY1_6	0x0020
-+#define DTHE_P_AES_KEY1_7	0x0024
-+#define DTHE_P_AES_IV_IN_0	0x0040
-+#define DTHE_P_AES_IV_IN_1	0x0044
-+#define DTHE_P_AES_IV_IN_2	0x0048
-+#define DTHE_P_AES_IV_IN_3	0x004C
-+#define DTHE_P_AES_CTRL		0x0050
-+#define DTHE_P_AES_C_LENGTH_0	0x0054
-+#define DTHE_P_AES_C_LENGTH_1	0x0058
-+#define DTHE_P_AES_AUTH_LENGTH	0x005C
-+#define DTHE_P_AES_DATA_IN_OUT	0x0060
-+
-+#define DTHE_P_AES_SYSCONFIG	0x0084
-+#define DTHE_P_AES_IRQSTATUS	0x008C
-+#define DTHE_P_AES_IRQENABLE	0x0090
-+
-+/* Register write values and macros */
-+
-+enum aes_ctrl_mode_masks {
-+	AES_CTRL_ECB_MASK = 0x00,
-+	AES_CTRL_CBC_MASK = BIT(5),
-+};
-+
-+#define DTHE_AES_CTRL_MODE_CLEAR_MASK		~GENMASK(28, 5)
-+
-+#define DTHE_AES_CTRL_DIR_ENC			BIT(2)
-+
-+#define DTHE_AES_CTRL_KEYSIZE_16B		BIT(3)
-+#define DTHE_AES_CTRL_KEYSIZE_24B		BIT(4)
-+#define DTHE_AES_CTRL_KEYSIZE_32B		(BIT(3) | BIT(4))
-+
-+#define DTHE_AES_CTRL_SAVE_CTX_SET		BIT(29)
-+
-+#define DTHE_AES_CTRL_OUTPUT_READY		BIT_MASK(0)
-+#define DTHE_AES_CTRL_INPUT_READY		BIT_MASK(1)
-+#define DTHE_AES_CTRL_SAVED_CTX_READY		BIT_MASK(30)
-+#define DTHE_AES_CTRL_CTX_READY			BIT_MASK(31)
-+
-+#define DTHE_AES_SYSCONFIG_DMA_DATA_IN_OUT_EN	GENMASK(6, 5)
-+#define DTHE_AES_IRQENABLE_EN_ALL		GENMASK(3, 0)
-+
-+/* Misc */
-+#define AES_IV_SIZE				AES_BLOCK_SIZE
-+#define AES_BLOCK_WORDS				(AES_BLOCK_SIZE / sizeof(u32))
-+#define AES_IV_WORDS				AES_BLOCK_WORDS
-+
-+static int dthe_cipher_init_tfm(struct crypto_skcipher *tfm)
-+{
-+	struct dthe_tfm_ctx *ctx = crypto_skcipher_ctx(tfm);
-+	struct dthe_data *dev_data = dthe_get_dev(ctx);
-+
-+	void __iomem *aes_base_reg = dev_data->regs + DTHE_P_AES_BASE;
-+	u32 aes_irqenable_val = readl_relaxed(aes_base_reg + DTHE_P_AES_IRQENABLE);
-+	u32 aes_sysconfig_val = readl_relaxed(aes_base_reg + DTHE_P_AES_SYSCONFIG);
-+
-+	memzero_explicit(ctx, sizeof(*ctx));
-+	ctx->dev_data = dev_data;
-+	ctx->ctx_info.aes_ctx = kzalloc(sizeof(*ctx->ctx_info.aes_ctx), GFP_KERNEL);
-+	if (!ctx->ctx_info.aes_ctx)
-+		return -ENOMEM;
-+
-+	crypto_skcipher_set_reqsize(tfm, sizeof(struct dthe_aes_req_ctx));
-+
-+	aes_sysconfig_val |= DTHE_AES_SYSCONFIG_DMA_DATA_IN_OUT_EN;
-+	writel_relaxed(aes_sysconfig_val, aes_base_reg + DTHE_P_AES_SYSCONFIG);
-+
-+	aes_irqenable_val |= DTHE_AES_IRQENABLE_EN_ALL;
-+	writel_relaxed(aes_irqenable_val, aes_base_reg + DTHE_P_AES_IRQENABLE);
-+
-+	return 0;
-+}
-+
-+static void dthe_cipher_exit_tfm(struct crypto_skcipher *tfm)
-+{
-+	struct dthe_tfm_ctx *ctx = crypto_skcipher_ctx(tfm);
-+	struct dthe_data *dev_data = dthe_get_dev(ctx);
-+
-+	void __iomem *aes_base_reg = dev_data->regs + DTHE_P_AES_BASE;
-+
-+	kfree(ctx->ctx_info.aes_ctx);
-+	writel_relaxed(0, aes_base_reg + DTHE_P_AES_IRQENABLE);
-+}
-+
-+static int dthe_aes_setkey(struct crypto_skcipher *tfm, const u8 *key, unsigned int keylen)
-+{
-+	struct dthe_tfm_ctx *ctx = crypto_skcipher_ctx(tfm);
-+
-+	if (keylen != AES_KEYSIZE_128 && keylen != AES_KEYSIZE_192 && keylen != AES_KEYSIZE_256)
-+		return -EINVAL;
-+
-+	ctx->ctx_info.aes_ctx->keylen = keylen;
-+	memcpy(ctx->ctx_info.aes_ctx->key, key, keylen);
-+
-+	return 0;
-+}
-+
-+static void dthe_aes_set_ctrl_key(struct dthe_tfm_ctx *ctx,
-+				  struct dthe_aes_req_ctx *rctx,
-+				  u32 *iv_in)
-+{
-+	struct dthe_data *dev_data = dthe_get_dev(ctx);
-+	struct dthe_aes_ctx *actx = ctx->ctx_info.aes_ctx;
-+	void __iomem *aes_base_reg = dev_data->regs + DTHE_P_AES_BASE;
-+	u32 ctrl_val = 0;
-+
-+	writel_relaxed(actx->key[0], aes_base_reg + DTHE_P_AES_KEY1_0);
-+	writel_relaxed(actx->key[1], aes_base_reg + DTHE_P_AES_KEY1_1);
-+	writel_relaxed(actx->key[2], aes_base_reg + DTHE_P_AES_KEY1_2);
-+	writel_relaxed(actx->key[3], aes_base_reg + DTHE_P_AES_KEY1_3);
-+
-+	if (actx->keylen > AES_KEYSIZE_128) {
-+		writel_relaxed(actx->key[4], aes_base_reg + DTHE_P_AES_KEY1_4);
-+		writel_relaxed(actx->key[5], aes_base_reg + DTHE_P_AES_KEY1_5);
-+	}
-+	if (actx->keylen == AES_KEYSIZE_256) {
-+		writel_relaxed(actx->key[6], aes_base_reg + DTHE_P_AES_KEY1_6);
-+		writel_relaxed(actx->key[7], aes_base_reg + DTHE_P_AES_KEY1_7);
-+	}
-+
-+	if (rctx->enc)
-+		ctrl_val |= DTHE_AES_CTRL_DIR_ENC;
-+
-+	if (actx->keylen == AES_KEYSIZE_128)
-+		ctrl_val |= DTHE_AES_CTRL_KEYSIZE_16B;
-+	else if (actx->keylen == AES_KEYSIZE_192)
-+		ctrl_val |= DTHE_AES_CTRL_KEYSIZE_24B;
-+	else
-+		ctrl_val |= DTHE_AES_CTRL_KEYSIZE_32B;
-+
-+	// Write AES mode
-+	ctrl_val &= DTHE_AES_CTRL_MODE_CLEAR_MASK;
-+	switch (rctx->mode) {
-+	case DTHE_AES_ECB:
-+		ctrl_val |= AES_CTRL_ECB_MASK;
-+		break;
-+	case DTHE_AES_CBC:
-+		ctrl_val |= AES_CTRL_CBC_MASK;
-+		break;
-+	}
-+
-+	if (iv_in) {
-+		ctrl_val |= DTHE_AES_CTRL_SAVE_CTX_SET;
-+		for (int i = 0; i < AES_IV_WORDS; ++i)
-+			writel_relaxed(iv_in[i],
-+				       aes_base_reg + DTHE_P_AES_IV_IN_0 + (DTHE_REG_SIZE * i));
-+	}
-+
-+	writel_relaxed(ctrl_val, aes_base_reg + DTHE_P_AES_CTRL);
-+}
-+
-+static void dthe_aes_dma_in_callback(void *data)
-+{
-+	struct skcipher_request *req = (struct skcipher_request *)data;
-+	struct dthe_aes_req_ctx *rctx = skcipher_request_ctx(req);
-+
-+	complete(&rctx->aes_compl);
-+}
-+
-+static int dthe_aes_run(struct crypto_engine *engine, void *areq)
-+{
-+	struct skcipher_request *req = container_of(areq, struct skcipher_request, base);
-+	struct dthe_tfm_ctx *ctx = crypto_skcipher_ctx(crypto_skcipher_reqtfm(req));
-+	struct dthe_data *dev_data = dthe_get_dev(ctx);
-+	struct dthe_aes_req_ctx *rctx = skcipher_request_ctx(req);
-+
-+	unsigned int len = req->cryptlen;
-+	struct scatterlist *src = req->src;
-+	struct scatterlist *dst = req->dst;
-+
-+	int src_nents = sg_nents_for_len(src, len);
-+	int dst_nents;
-+
-+	int src_mapped_nents;
-+	int dst_mapped_nents;
-+
-+	bool diff_dst;
-+	enum dma_data_direction src_dir, dst_dir;
-+
-+	struct device *tx_dev, *rx_dev;
-+	struct dma_async_tx_descriptor *desc_in, *desc_out;
-+
-+	int ret;
-+
-+	void __iomem *aes_base_reg = dev_data->regs + DTHE_P_AES_BASE;
-+
-+	if (src == dst) {
-+		diff_dst = false;
-+		src_dir = DMA_BIDIRECTIONAL;
-+		dst_dir = DMA_BIDIRECTIONAL;
-+	} else {
-+		diff_dst = true;
-+		src_dir = DMA_TO_DEVICE;
-+		dst_dir  = DMA_FROM_DEVICE;
-+	}
-+
-+	tx_dev = dmaengine_get_dma_device(dev_data->dma_aes_tx);
-+	rx_dev = dmaengine_get_dma_device(dev_data->dma_aes_rx);
-+
-+	src_mapped_nents = dma_map_sg(tx_dev, src, src_nents, src_dir);
-+	if (src_mapped_nents == 0) {
-+		ret = -EINVAL;
-+		goto aes_err;
-+	}
-+
-+	if (!diff_dst) {
-+		dst_nents = src_nents;
-+		dst_mapped_nents = src_mapped_nents;
-+	} else {
-+		dst_nents = sg_nents_for_len(dst, len);
-+		dst_mapped_nents = dma_map_sg(rx_dev, dst, dst_nents, dst_dir);
-+		if (dst_mapped_nents == 0) {
-+			dma_unmap_sg(tx_dev, src, src_nents, src_dir);
-+			ret = -EINVAL;
-+			goto aes_err;
-+		}
-+	}
-+
-+	desc_in = dmaengine_prep_slave_sg(dev_data->dma_aes_rx, dst, dst_mapped_nents,
-+					  DMA_DEV_TO_MEM, DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+	if (!desc_in) {
-+		dev_err(dev_data->dev, "IN prep_slave_sg() failed\n");
-+		ret = -EINVAL;
-+		goto aes_prep_err;
-+	}
-+
-+	desc_out = dmaengine_prep_slave_sg(dev_data->dma_aes_tx, src, src_mapped_nents,
-+					   DMA_MEM_TO_DEV, DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+	if (!desc_out) {
-+		dev_err(dev_data->dev, "OUT prep_slave_sg() failed\n");
-+		ret = -EINVAL;
-+		goto aes_prep_err;
-+	}
-+
-+	desc_in->callback = dthe_aes_dma_in_callback;
-+	desc_in->callback_param = req;
-+
-+	init_completion(&rctx->aes_compl);
-+
-+	if (rctx->mode == DTHE_AES_ECB)
-+		dthe_aes_set_ctrl_key(ctx, rctx, NULL);
-+	else
-+		dthe_aes_set_ctrl_key(ctx, rctx, (u32 *)req->iv);
-+
-+	writel_relaxed(req->cryptlen, aes_base_reg + DTHE_P_AES_C_LENGTH_0);
-+
-+	dmaengine_submit(desc_in);
-+	dmaengine_submit(desc_out);
-+
-+	dma_async_issue_pending(dev_data->dma_aes_rx);
-+	dma_async_issue_pending(dev_data->dma_aes_tx);
-+
-+	// Need to do a timeout to ensure finalise gets called if DMA callback fails for any reason
-+	ret = wait_for_completion_timeout(&rctx->aes_compl, msecs_to_jiffies(DTHE_DMA_TIMEOUT_MS));
-+	if (!ret) {
-+		ret = -ETIMEDOUT;
-+
-+		for (int i = 0; i < AES_BLOCK_WORDS; ++i)
-+			readl_relaxed(aes_base_reg + DTHE_P_AES_DATA_IN_OUT + (DTHE_REG_SIZE * i));
-+	} else {
-+		ret = 0;
-+	}
-+
-+	// For modes other than ECB, read IV_OUT
-+	if (rctx->mode != DTHE_AES_ECB) {
-+		u32 *iv_out = (u32 *)req->iv;
-+
-+		for (int i = 0; i < AES_IV_WORDS; ++i)
-+			iv_out[i] = readl_relaxed(aes_base_reg +
-+						  DTHE_P_AES_IV_IN_0 +
-+						  (DTHE_REG_SIZE * i));
-+	}
-+
-+aes_prep_err:
-+	dma_unmap_sg(tx_dev, src, src_nents, src_dir);
-+	if (dst_dir != DMA_BIDIRECTIONAL)
-+		dma_unmap_sg(rx_dev, dst, dst_nents, dst_dir);
-+
-+aes_err:
-+	local_bh_disable();
-+	crypto_finalize_skcipher_request(dev_data->engine, req, ret);
-+	local_bh_enable();
-+	return 0;
-+}
-+
-+static int dthe_aes_crypt(struct skcipher_request *req)
-+{
-+	struct dthe_tfm_ctx *ctx = crypto_skcipher_ctx(crypto_skcipher_reqtfm(req));
-+	struct dthe_data *dev_data = dthe_get_dev(ctx);
-+	struct crypto_engine *engine;
-+
-+	/*
-+	 * If data is not a multiple of AES_BLOCK_SIZE, need to return -EINVAL
-+	 * If data length input is zero, no need to do any operation.
-+	 */
-+	if (req->cryptlen % AES_BLOCK_SIZE)
-+		return -EINVAL;
-+
-+	if (req->cryptlen == 0)
-+		return 0;
-+
-+	engine = dev_data->engine;
-+	return crypto_transfer_skcipher_request_to_engine(engine, req);
-+}
-+
-+static int dthe_aes_ecb_encrypt(struct skcipher_request *req)
-+{
-+	struct dthe_aes_req_ctx *rctx = skcipher_request_ctx(req);
-+
-+	rctx->enc = 1;
-+	rctx->mode = DTHE_AES_ECB;
-+	return dthe_aes_crypt(req);
-+}
-+
-+static int dthe_aes_ecb_decrypt(struct skcipher_request *req)
-+{
-+	struct dthe_aes_req_ctx *rctx = skcipher_request_ctx(req);
-+
-+	rctx->enc = 0;
-+	rctx->mode = DTHE_AES_ECB;
-+	return dthe_aes_crypt(req);
-+}
-+
-+static int dthe_aes_cbc_encrypt(struct skcipher_request *req)
-+{
-+	struct dthe_aes_req_ctx *rctx = skcipher_request_ctx(req);
-+
-+	rctx->enc = 1;
-+	rctx->mode = DTHE_AES_CBC;
-+	return dthe_aes_crypt(req);
-+}
-+
-+static int dthe_aes_cbc_decrypt(struct skcipher_request *req)
-+{
-+	struct dthe_aes_req_ctx *rctx = skcipher_request_ctx(req);
-+
-+	rctx->enc = 0;
-+	rctx->mode = DTHE_AES_CBC;
-+	return dthe_aes_crypt(req);
-+}
-+
-+static struct skcipher_engine_alg cipher_algs[] = {
-+	{
-+		.base.init			= dthe_cipher_init_tfm,
-+		.base.exit			= dthe_cipher_exit_tfm,
-+		.base.setkey			= dthe_aes_setkey,
-+		.base.encrypt			= dthe_aes_ecb_encrypt,
-+		.base.decrypt			= dthe_aes_ecb_decrypt,
-+		.base.min_keysize		= AES_MIN_KEY_SIZE,
-+		.base.max_keysize		= AES_MAX_KEY_SIZE,
-+		.base.base = {
-+			.cra_name		= "ecb(aes)",
-+			.cra_driver_name	= "ecb-aes-dthev2",
-+			.cra_priority		= 30000,
-+			.cra_flags		= CRYPTO_ALG_TYPE_SKCIPHER |
-+						  CRYPTO_ALG_KERN_DRIVER_ONLY,
-+			.cra_alignmask		= AES_BLOCK_SIZE - 1,
-+			.cra_blocksize		= AES_BLOCK_SIZE,
-+			.cra_ctxsize		= sizeof(struct dthe_tfm_ctx),
-+			.cra_module		= THIS_MODULE,
-+		},
-+		.op.do_one_request = dthe_aes_run,
-+	}, /* ECB AES */
-+	{
-+		.base.init			= dthe_cipher_init_tfm,
-+		.base.exit			= dthe_cipher_exit_tfm,
-+		.base.setkey			= dthe_aes_setkey,
-+		.base.encrypt			= dthe_aes_cbc_encrypt,
-+		.base.decrypt			= dthe_aes_cbc_decrypt,
-+		.base.min_keysize		= AES_MIN_KEY_SIZE,
-+		.base.max_keysize		= AES_MAX_KEY_SIZE,
-+		.base.ivsize			= AES_IV_SIZE,
-+		.base.base = {
-+			.cra_name		= "cbc(aes)",
-+			.cra_driver_name	= "cbc-aes-dthev2",
-+			.cra_priority		= 30000,
-+			.cra_flags		= CRYPTO_ALG_TYPE_SKCIPHER |
-+						  CRYPTO_ALG_KERN_DRIVER_ONLY,
-+			.cra_alignmask		= AES_BLOCK_SIZE - 1,
-+			.cra_blocksize		= AES_BLOCK_SIZE,
-+			.cra_ctxsize		= sizeof(struct dthe_tfm_ctx),
-+			.cra_module		= THIS_MODULE,
-+		},
-+		.op.do_one_request = dthe_aes_run,
-+	} /* CBC AES */
-+};
-+
-+int dthe_register_aes_algs(void)
-+{
-+	return crypto_engine_register_skciphers(cipher_algs, ARRAY_SIZE(cipher_algs));
-+}
-+
-+void dthe_unregister_aes_algs(void)
-+{
-+	crypto_engine_unregister_skciphers(cipher_algs, ARRAY_SIZE(cipher_algs));
-+}
-diff --git a/drivers/crypto/ti/dthev2-common.c b/drivers/crypto/ti/dthev2-common.c
-new file mode 100644
-index 000000000000..4d5b59d3ef1f
---- /dev/null
-+++ b/drivers/crypto/ti/dthev2-common.c
-@@ -0,0 +1,220 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * K3 DTHE V2 crypto accelerator driver
-+ *
-+ * Copyright (C) Texas Instruments 2025 - https://www.ti.com
-+ * Author: T Pratham <t-pratham@ti.com>
-+ */
-+
-+#include <crypto/aes.h>
-+#include <crypto/algapi.h>
-+#include <crypto/engine.h>
-+#include <crypto/internal/aead.h>
-+#include <crypto/internal/skcipher.h>
-+
-+#include "dthev2-common.h"
-+
-+#include <linux/delay.h>
-+#include <linux/dmaengine.h>
-+#include <linux/dmapool.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/scatterlist.h>
-+
-+#define DRIVER_NAME	"dthev2"
-+
-+static struct dthe_list dthe_dev_list = {
-+	.dev_list = LIST_HEAD_INIT(dthe_dev_list.dev_list),
-+	.lock = __SPIN_LOCK_UNLOCKED(dthe_dev_list.lock),
-+};
-+
-+struct dthe_data *dthe_get_dev(struct dthe_tfm_ctx *ctx)
-+{
-+	struct dthe_data *dev_data;
-+
-+	if (ctx->dev_data)
-+		return ctx->dev_data;
-+
-+	spin_lock_bh(&dthe_dev_list.lock);
-+	dev_data = list_first_entry(&dthe_dev_list.dev_list, struct dthe_data, list);
-+	if (dev_data)
-+		list_move_tail(&dev_data->list, &dthe_dev_list.dev_list);
-+	spin_unlock_bh(&dthe_dev_list.lock);
-+
-+	return dev_data;
-+}
-+
-+static int dthe_dma_init(struct dthe_data *dev_data)
-+{
-+	int ret;
-+	struct dma_slave_config cfg;
-+
-+	dev_data->dma_aes_rx = NULL;
-+	dev_data->dma_aes_tx = NULL;
-+	dev_data->dma_sha_tx = NULL;
-+
-+	dev_data->dma_aes_rx = dma_request_chan(dev_data->dev, "rx");
-+	if (IS_ERR(dev_data->dma_aes_rx)) {
-+		return dev_err_probe(dev_data->dev, PTR_ERR(dev_data->dma_aes_rx),
-+				     "Unable to request rx DMA channel\n");
-+	}
-+
-+	dev_data->dma_aes_tx = dma_request_chan(dev_data->dev, "tx1");
-+	if (IS_ERR(dev_data->dma_aes_tx)) {
-+		ret = dev_err_probe(dev_data->dev, PTR_ERR(dev_data->dma_aes_tx),
-+				    "Unable to request tx1 DMA channel\n");
-+		goto err_dma_aes_tx;
-+	}
-+
-+	dev_data->dma_sha_tx = dma_request_chan(dev_data->dev, "tx2");
-+	if (IS_ERR(dev_data->dma_sha_tx)) {
-+		ret = dev_err_probe(dev_data->dev, PTR_ERR(dev_data->dma_sha_tx),
-+				    "Unable to request tx2 DMA channel\n");
-+		goto err_dma_sha_tx;
-+	}
-+
-+	memzero_explicit(&cfg, sizeof(cfg));
-+
-+	cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+	cfg.src_maxburst = 4;
-+
-+	ret = dmaengine_slave_config(dev_data->dma_aes_rx, &cfg);
-+	if (ret) {
-+		dev_err(dev_data->dev, "Can't configure IN dmaengine slave: %d\n", ret);
-+		goto err_dma_config;
-+	}
-+
-+	cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+	cfg.dst_maxburst = 4;
-+
-+	ret = dmaengine_slave_config(dev_data->dma_aes_tx, &cfg);
-+	if (ret) {
-+		dev_err(dev_data->dev, "Can't configure OUT dmaengine slave: %d\n", ret);
-+		goto err_dma_config;
-+	}
-+
-+	return 0;
-+
-+err_dma_config:
-+	dma_release_channel(dev_data->dma_sha_tx);
-+err_dma_sha_tx:
-+	dma_release_channel(dev_data->dma_aes_tx);
-+err_dma_aes_tx:
-+	dma_release_channel(dev_data->dma_aes_rx);
-+
-+	return ret;
-+}
-+
-+static int dthe_register_algs(void)
-+{
-+	return dthe_register_aes_algs();
-+}
-+
-+static void dthe_unregister_algs(void)
-+{
-+	dthe_unregister_aes_algs();
-+}
-+
-+static int dthe_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct dthe_data *dev_data;
-+	int ret;
-+
-+	dev_data = devm_kzalloc(dev, sizeof(*dev_data), GFP_KERNEL);
-+	if (!dev_data)
-+		return -ENOMEM;
-+
-+	dev_data->dev = dev;
-+	dev_data->regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(dev_data->regs))
-+		return PTR_ERR(dev_data->regs);
-+
-+	platform_set_drvdata(pdev, dev_data);
-+
-+	spin_lock(&dthe_dev_list.lock);
-+	list_add(&dev_data->list, &dthe_dev_list.dev_list);
-+	spin_unlock(&dthe_dev_list.lock);
-+
-+	ret = dthe_dma_init(dev_data);
-+	if (ret)
-+		goto probe_dma_err;
-+
-+	dev_data->engine = crypto_engine_alloc_init(dev, 1);
-+	if (!dev_data->engine) {
-+		ret = -ENOMEM;
-+		goto probe_engine_err;
-+	}
-+
-+	ret = crypto_engine_start(dev_data->engine);
-+	if (ret) {
-+		dev_err(dev, "Failed to start crypto engine\n");
-+		goto probe_engine_start_err;
-+	}
-+
-+	ret = dthe_register_algs();
-+	if (ret) {
-+		dev_err(dev, "Failed to register algs\n");
-+		goto probe_reg_err;
-+	}
-+
-+	return 0;
-+
-+probe_reg_err:
-+	crypto_engine_stop(dev_data->engine);
-+probe_engine_start_err:
-+	crypto_engine_exit(dev_data->engine);
-+probe_engine_err:
-+	dma_release_channel(dev_data->dma_aes_rx);
-+	dma_release_channel(dev_data->dma_aes_tx);
-+	dma_release_channel(dev_data->dma_sha_tx);
-+probe_dma_err:
-+	spin_lock(&dthe_dev_list.lock);
-+	list_del(&dev_data->list);
-+	spin_unlock(&dthe_dev_list.lock);
-+
-+	return ret;
-+}
-+
-+static void dthe_remove(struct platform_device *pdev)
-+{
-+	struct dthe_data *dev_data = platform_get_drvdata(pdev);
-+
-+	spin_lock(&dthe_dev_list.lock);
-+	list_del(&dev_data->list);
-+	spin_unlock(&dthe_dev_list.lock);
-+
-+	dthe_unregister_algs();
-+
-+	crypto_engine_stop(dev_data->engine);
-+	crypto_engine_exit(dev_data->engine);
-+
-+	dma_release_channel(dev_data->dma_aes_rx);
-+	dma_release_channel(dev_data->dma_aes_tx);
-+	dma_release_channel(dev_data->dma_sha_tx);
-+}
-+
-+static const struct of_device_id dthe_of_match[] = {
-+	{ .compatible = "ti,am62l-dthev2", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, dthe_of_match);
-+
-+static struct platform_driver dthe_driver = {
-+	.probe	= dthe_probe,
-+	.remove	= dthe_remove,
-+	.driver = {
-+		.name		= DRIVER_NAME,
-+		.of_match_table	= dthe_of_match,
-+	},
-+};
-+
-+module_platform_driver(dthe_driver);
-+
-+MODULE_AUTHOR("T Pratham <t-pratham@ti.com>");
-+MODULE_DESCRIPTION("Texas Instruments DTHE V2 driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/crypto/ti/dthev2-common.h b/drivers/crypto/ti/dthev2-common.h
-new file mode 100644
-index 000000000000..c6212d8be10e
---- /dev/null
-+++ b/drivers/crypto/ti/dthev2-common.h
-@@ -0,0 +1,111 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * K3 DTHE V2 crypto accelerator driver
-+ *
-+ * Copyright (C) Texas Instruments 2025 - https://www.ti.com
-+ * Author: T Pratham <t-pratham@ti.com>
-+ */
-+
-+#ifndef __TI_DTHEV2_H__
-+#define __TI_DTHEV2_H__
-+
-+#include <crypto/aead.h>
-+#include <crypto/aes.h>
-+#include <crypto/algapi.h>
-+#include <crypto/engine.h>
-+#include <crypto/hash.h>
-+#include <crypto/internal/aead.h>
-+#include <crypto/internal/hash.h>
-+#include <crypto/internal/skcipher.h>
-+
-+#include <linux/delay.h>
-+#include <linux/dmaengine.h>
-+#include <linux/dmapool.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/io.h>
-+#include <linux/scatterlist.h>
-+
-+#define DTHE_REG_SIZE		4
-+#define DTHE_DMA_TIMEOUT_MS	2000
-+
-+enum dthe_aes_mode {
-+	DTHE_AES_ECB = 0,
-+	DTHE_AES_CBC,
-+};
-+
-+/* Driver specific struct definitions */
-+
-+/**
-+ * struct dthe_data - DTHE_V2 driver instance data
-+ * @dev: Device pointer
-+ * @regs: Base address of the register space
-+ * @list: list node for dev
-+ * @engine: Crypto engine instance
-+ * @dma_aes_rx: AES Rx DMA Channel
-+ * @dma_aes_tx: AES Tx DMA Channel
-+ * @dma_sha_tx: SHA Tx DMA Channel
-+ */
-+struct dthe_data {
-+	struct device *dev;
-+	void __iomem *regs;
-+	struct list_head list;
-+	struct crypto_engine *engine;
-+
-+	struct dma_chan *dma_aes_rx;
-+	struct dma_chan *dma_aes_tx;
-+
-+	struct dma_chan *dma_sha_tx;
-+};
-+
-+/**
-+ * struct dthe_list - device data list head
-+ * @dev_list: linked list head
-+ * @lock: Spinlock protecting accesses to the list
-+ */
-+struct dthe_list {
-+	struct list_head dev_list;
-+	spinlock_t lock;
-+};
-+
-+/**
-+ * struct dthe_aes_ctx - AES engine tfm ctx struct
-+ * @keylen: AES key length
-+ * @key: AES key
-+ */
-+struct dthe_aes_ctx {
-+	unsigned int keylen;
-+	u32 key[AES_KEYSIZE_256 / sizeof(u32)];
-+};
-+
-+/**
-+ * struct dthe_tfm_ctx - Transform ctx struct containing ctx for all sub-components of DTHE V2
-+ * @dev_data: Device data struct pointer
-+ * @ctx_info: Union of ctx structs of various sub-components of DTHE_V2
-+ */
-+struct dthe_tfm_ctx {
-+	struct dthe_data *dev_data;
-+	union {
-+		struct dthe_aes_ctx *aes_ctx;
-+	} ctx_info;
-+};
-+
-+/**
-+ * struct dthe_aes_req_ctx - AES engine req ctx struct
-+ * @mode: AES mode
-+ * @enc: flag indicating encryption or decryption operation
-+ * @aes_compl: Completion variable for use in manual completion in case of DMA callback failure
-+ */
-+struct dthe_aes_req_ctx {
-+	enum dthe_aes_mode mode;
-+	int enc;
-+	struct completion aes_compl;
-+};
-+
-+/* Struct definitions end */
-+
-+struct dthe_data *dthe_get_dev(struct dthe_tfm_ctx *ctx);
-+
-+int dthe_register_aes_algs(void);
-+void dthe_unregister_aes_algs(void);
-+
-+#endif
--- 
-2.43.0
+--------------fXtuJGquhu316bEYyR8RZbAh
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
+SGksDQoNClRoZXJlIHNlZW1zIHRvIGJlIGFuIGlzc3VlIHdpdGggdGhlIGZvbGxvd2luZyBm
+dW5jdGlvbiB3aXRoIHRoZSBzZWNvbmQgDQpjaGVjayBvbiBpZiAoIWRpdmlkZXIpLiBGaXJz
+dGx5IHRoaXMgaXMgcmVkdW5kYW50IGNvZGUgc2luY2UgZGl2aWRlciBoYXMNCmFscmVhZHkg
+YmVlbiBudWxsIGNoZWNrZWQsIHNvIEkgc3VzcGVjdCBpdCBzaG91bGQgYmUgaW5zdGVhZCBp
+ZiAoIW11eCkgDQpidXQgSSdtIHVuc3VyZSBpZiB0aGlzIGlzIGNvcnJlY3Qgc2luY2UgdGhl
+IGNhbGwgdG8gDQpjbGtfaHdfdW5yZWdpc3Rlcl9kaXZpZGVyIGlzIG5vdCBtYWRlLiAgQWxz
+byBpZiBtdXggaXMgbnVsbCwgaXNuJ3QgdGhlIA0KY2FsbCB0byBjbGtfaHdfdW5yZWdpc3Rl
+cl9tdXgoKSBwcm9ibGVtYXRpYyBhcyBhIG51bGwgcG9pbnRlciBpcyBiZWluZyANCnBhc3Nl
+ZCB0byBpdC4NCg0Kc3RhdGljIHZvaWQgeHZjdV9jbGtfaHdfdW5yZWdpc3Rlcl9sZWFmKHN0
+cnVjdCBjbGtfaHcgKmh3KQ0Kew0KICAgICAgICAgc3RydWN0IGNsa19odyAqZ2F0ZSA9IGh3
+Ow0KICAgICAgICAgc3RydWN0IGNsa19odyAqZGl2aWRlcjsNCiAgICAgICAgIHN0cnVjdCBj
+bGtfaHcgKm11eDsNCg0KICAgICAgICAgaWYgKCFnYXRlKQ0KICAgICAgICAgICAgICAgICBy
+ZXR1cm47DQoNCiAgICAgICAgIGRpdmlkZXIgPSBjbGtfaHdfZ2V0X3BhcmVudChnYXRlKTsN
+CiAgICAgICAgIGNsa19od191bnJlZ2lzdGVyX2dhdGUoZ2F0ZSk7DQogICAgICAgICBpZiAo
+IWRpdmlkZXIpDQogICAgICAgICAgICAgICAgIHJldHVybjsNCg0KICAgICAgICAgbXV4ID0g
+Y2xrX2h3X2dldF9wYXJlbnQoZGl2aWRlcik7DQogICAgICAgICBjbGtfaHdfdW5yZWdpc3Rl
+cl9tdXgobXV4KTsNCiAgICAgICAgIGlmICghZGl2aWRlcikNCiAgICAgICAgICAgICAgICAg
+cmV0dXJuOw0KDQogICAgICAgICBjbGtfaHdfdW5yZWdpc3Rlcl9kaXZpZGVyKGRpdmlkZXIp
+Ow0KfQ0KDQpDb2xpbg0K
+--------------fXtuJGquhu316bEYyR8RZbAh
+Content-Type: application/pgp-keys; name="OpenPGP_0x68C287DFC6A80226.asc"
+Content-Disposition: attachment; filename="OpenPGP_0x68C287DFC6A80226.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xsFNBE6TJCgBEACo6nMNvy06zNKj5tiwDsXXS+LhT+LwtEsy9EnraKYXAf2xwazc
+ICSjX06efanlyhB0figzQO0n/tP7BcfMVNG7n1+DC71mSyRK1ZERcG1523ajvdZO
+xbBCTvTitYOy3bjs+LXKqeVMhK3mRvdTjjmVpWnWqJ1LL+Hn12ysDVVfkbtuIm2N
+oaSEC8Ae8LSSyCMecd22d9PnLR4UeFgrWEkQsqROq6ZDJT9pBLGe1ZS0pVGhkRyB
+P9GP65oPev39SmfAx9R92SYJygCy0pPvBMWKvEZS/7bpetPNx6l2xu9UvwoeEbpz
+UvH26PHO3DDAv0ynJugPCoxlGPVf3zcfGQxy3otydNTWkP6Wh3Q85m+AlifgKZud
+jZLrO6c+fAw/jFu1UMjNuyhgShtFU7NvEzL3RqzFf9O1qM2muj83IeFQ1FZ65QAi
+CdTa3npz1vHc7N4uEQBUxyXgXfCI+A5yDnjHwzU0Y3RYS52TA3nfa08yLGPLTf5w
+yAREkFYou20vh5vRvPASoXx6auVf1MuxokDShVhxLpryBnlKCobs4voxN54BUO7m
+zuERXN8kadsxGFzItAyfKYzEiJrpUB1yhm78AecDyiPlMjl99xXk0zs9lcKriaBy
+VUv/NsyJFQj/kmdxox3XHi9K29kopFszm1tFiDwCFr/xumbZcMY17Yi2bQARAQAB
+zSdDb2xpbiBJYW4gS2luZyA8Y29saW4uaS5raW5nQGdtYWlsLmNvbT7CwZEEEwEI
+ADsCGwMFCwkIBwMFFQoJCAsFFgIDAQACHgECF4AWIQRwYtqk8AG5xmFnAM9owoff
+xqgCJgUCY8GcawIZAQAKCRBowoffxqgCJtd/EACIWcaxfVt/MH4qqo5ELsjCFPVp
++RhVpQDWy8v9Np2YbTcZ4AY2Zj4Pq/HrZ3F/Bh02v85C6mNv8BDTKev6Qcq3BYw0
+iqw6/xLNvRcSFHM81mQI9xtnAWIWfI9k5hpX19QooPIIP3GOMdMc1uRUGTxTgTFA
+AsAswRY3kMzo6k7arQnUs9zbiZ9SmS43qWOIxzGnvneekHHDAcomc/oho7kgj6rK
+p/f9qRrhForkgVQwdj6iBlW934yRXzeFVF3wr7Lk5GQNIEkJiNQPZs54ojBS/Kx6
+3UTLT1HgOp6UY9RPEi9wubmUR+J6YjLRZMr5PCcA86EYmRoysnnJ8Q/SlBVD8npp
+GVEcuvrbH3MBfhmwOPDc3RyLkEtKfSTB92k1hsmRkx9zkyuUzhcSnqQnpWGJD+xt
+KHvcHRT7Uxaa+SDwUDM36BjkyVcZQy8c+Is2jA55uwNgPpiA7n82pTeT+FRGd+7i
+CLQHaryu6FO6DNDv09RbPBjIiC/q814aeKJaSILP1ld9/PEBrLPdm+6lG6OKOt9D
+DV6jPmfR96FydjxcmI1cgZVgPomSxv2JB1erOggB8rmX4hhWYsVQl1AXZs3LdEpJ
+6clmCPspn/ufZxHslgR9/WR1EvPMQc8XtssF55p8ehRIcVSXDRcMFr3ZuqMTXcL6
+8YbDmv5OGS95O1Gs4c0iQ29saW4gS2luZyA8Y29saW4ua2luZ0B1YnVudHUuY29t
+PsLBdwQTAQgAIQUCTwq47wIbAwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgAAKCRBo
+woffxqgCJo1bD/4gPIQ0Muy5TGHqTQ/bSiQ9oWjS5rAQvsrsVwcm2Ka7Uo8LzG8e
+grZrYieJxn3Qc22b98TiT6/5+sMa3XxhxBZ9FvALve175NPOz+2pQsAV88tR5NWk
+5YSzhrpzi7+klkWEVAB71hKFZcT0qNlDSeg9NXfbXOyCVNPDJQJfrtOPEuutuRuU
+hrXziaRchqmlhmszKZGHWybmPWnDQEAJdRs2Twwsi68WgScqapqd1vq2+5vWqzUT
+JcoHrxVOnlBq0e0IlbrpkxnmxhfQ+tx/Sw9BP9RITgOEFh6tf7uwly6/aqNWMgFL
+WACArNMMkWyOsFj8ouSMjk4lglT96ksVeCUfKqvCYRhMMUuXxAe+q/lxsXC+6qok
+Jlcd25I5U+hZ52pz3A+0bDDgIDXKXn7VbKooJxTwN1x2g3nsOLffXn/sCsIoslO4
+6nbr0rfGpi1YqeXcTdU2Cqlj2riBy9xNgCiCrqrGfX7VCdzVwpQHyNxBzzGG6JOm
+9OJ2UlpgbbSh6/GJFReW+I62mzC5VaAoPgxmH38g0mA8MvRT7yVpLep331F3Inmq
+4nkpRxLd39dgj6ejjkfMhWVpSEmCnQ/Tw81z/ZCWExFp6+3Q933hGSvifTecKQlO
+x736wORwjjCYH/A3H7HK4/R9kKfL2xKzD+42ejmGqQjleTGUulue8JRtpM1AQ29s
+aW4gSWFuIEtpbmcgKEludGVsIENvbGluIElhbiBLaW5nIGtleSkgPGNvbGluLmtp
+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
+=3DQKm6
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------fXtuJGquhu316bEYyR8RZbAh--
+
+--------------X8WDFiRZL0EOQHDx40xHNMB8--
+
+--------------ZNVH1caHyGO08rC00OCZtKKe
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEEcGLapPABucZhZwDPaMKH38aoAiYFAmgchZIFAwAAAAAACgkQaMKH38aoAiap
+Ng//ZRVvnhAxOJ6JQWn9xKl7K071YHGFnMiBoH8/cJmQzN099CBmnYEJosTrAJKEZ6j1Mracvfxv
+mHzzEkwU9GQ1qyUDXip750YUmD+7ZfzgBvIcV0ppixWbxxuUxv9So1PWTYIfe/ha8aVE3sQqRlyZ
+EACCjeQWqDFR3qGGYPHt5VvlahDxxPxILBgaECYATo/LxNHw5Dkg+1xs/Y2qsouz/mORGDczeU9r
+tZOoe6iQKhQWx7XQV7kSeE3OyhyzyX7CpgL8DJ8gHjkhZZ4/LjbYaUuj1/eh8cK09DHXcbEPl9zT
+y2Rj5BtjrEVfWfC3oTlTCX0r1JYSli6ptTfxOALWAoQToiqqd+7Qj2Tdue+dMe5Yk2EIIYBfYGzS
+uJwD+9J0S93LW/TDt9nbI5fTurA4B2LKzLcYIpJ3S2IZurgrwAcesi9aZ9VhQ1ftIhyp/BDwvK31
+2a0/KqsxzvXzdhz8EtzGmOfA/ahPO72911Y+Ods0iDzYooVDUwzpkmT5metR/BTq6zYRXKQS4Gts
+Ve7KtJiLityT/wWJFyxPQ2OGMIKRz1CtLf+kWlQKVZk7cGdZa8RhwSwaspuyyYwlk8S0i8fAavH8
+Ual5xLV+yY6tbA/PtJ3gn9l4eAOjNiFcLbaJdu/+PNe7Bz0IkH3OWYc4BQiuv5IPe+ZcGw2oSm4E
+2vQ=
+=EV0w
+-----END PGP SIGNATURE-----
+
+--------------ZNVH1caHyGO08rC00OCZtKKe--
