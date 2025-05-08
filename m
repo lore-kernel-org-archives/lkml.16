@@ -1,137 +1,412 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C1722256E;
-	Thu,  8 May 2025 19:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC733289823;
+	Thu,  8 May 2025 19:41:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746733182; cv=none; b=T1HLW4sKgOJJYNPy0BRSvZwoYDnpprEKgIYW5sVOkpi8dlJ0Mq6FBH9DXvlF+dJ0o4KhEIdWKJbTthPnMVDw7UqHIZgmtnRKBdD4jYg3poOGMGP8IQfqKoG7dyKQ3I/F/O2Ory7cYFP5ov1xzGiwOHIfkGdEWyI/QIdouo2AnpA=
+	t=1746733300; cv=none; b=QjfK1KIWoUDlndLbxsUm310OPk4sewLLs/m4M/tCM0bQ/E72cxSsxTGfj4i8MebdQ454IXBlyRJ+Ua2Sphb4PGgpvFCtgHiriZ8HiMscLy34nIO6UHQueX1ZCjeiunbv2LR1mJ8oeAMSW5AaNd/R8smv2uATp3zYScuPhkWMXj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746733182; c=relaxed/simple;
-	bh=hAilNBFFJjfHY8ctZm9ZWAdpUqW4veJAA4tcgJfcKv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X4f/QOvWbMXEseimM+coCZNwMmWRVxAHLEsx0d2mi1fL56BLYnprT9IZSir9AClkrTQmjRDSo5x7oBkCNN/vVBiADKxp8dBmhmaKwoCnJ7jkNlyJoEwlaoEBKM1vfOmNVK2RtvNf4n2dox8UDeTjymlOKRIo4s4nFmYJ3rPyGq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: j6okXO7BRz+Cfm7u87GUiA==
-X-CSE-MsgGUID: XpOIHBKOSQuSNC1DV0v1sg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="52346031"
+	s=arc-20240116; t=1746733300; c=relaxed/simple;
+	bh=xDsbv3ls5X3YM0JiXefAsh4WsqCsb4fO+p9sSZmG6EM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=dJI1+rAau/uBKbC1sFMu7rFI8hCFv1JbVw7rlEWCFK0cLUFRxD2erV1M1RnmwRGieRNv2zTBgdeUCcGSYijejcrSu0eK9L3UCqlbJHrtsq4o9UmvWZqbLWZ3Ai4eIi7NVMzcM0BuvFPgVkO5cUSOKhScr7bAhHn/lud8qNZcAKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gQ2Gnb1h; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gQ2Gnb1h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746733298; x=1778269298;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=xDsbv3ls5X3YM0JiXefAsh4WsqCsb4fO+p9sSZmG6EM=;
+  b=gQ2Gnb1hUL3npkzn74R+QiZi8Ww/1GTFKMEBR/qB08KZfK199tMMgp5E
+   GIjPr4HogXBG2wv4CL2Hmc7zuLJ1FBxL7PE4ierOhJu4os7WhvbMld/CC
+   YyI4vBw2egTqwWxm3rw3RWMGNH3qTTRUjtx0+dcwIG86GJrY6o2fU2aQE
+   vQCYu8SXllqxK6GRT+ZWfkGHlsk/LA+OVOHTvZIZepIHLKDQsJu4rOX7r
+   iXkFhCShwjAEw+ndoRsSk84HSfjoKr1Wo3VwCV9C2j359NS9Wj3Pa+8LX
+   pge6+eVFgW0xY+YaItRdHky7kqJVjMkMNAm/Ysi8ynK0ZTrkdMcQtlTDz
+   g==;
+X-CSE-ConnectionGUID: LTG/vPOEQG+sVbPjsO0D2g==
+X-CSE-MsgGUID: bBY8jFyZQXOAmY+cEU2Ckw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48454556"
 X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
-   d="scan'208";a="52346031"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 12:39:39 -0700
-X-CSE-ConnectionGUID: KWulWhzJQRmiBZud12T51w==
-X-CSE-MsgGUID: vbSx4htURVmghGEyUAS0wg==
+   d="scan'208";a="48454556"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 12:41:36 -0700
+X-CSE-ConnectionGUID: 2muSIeo1Rn2aIK2qd/9l4w==
+X-CSE-MsgGUID: cBScj3p6ToCtMmPHlUaIeA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
-   d="scan'208";a="167470398"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 12:39:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uD75g-00000004DLl-1R5F;
-	Thu, 08 May 2025 22:39:32 +0300
-Date: Thu, 8 May 2025 22:39:32 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	nuno.sa@analog.com, Michael.Hennerich@analog.com,
-	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com,
-	Pop Paul <paul.pop@analog.com>
-Subject: Re: [PATCH v7 11/12] iio: adc: ad7768-1: add filter type and
- oversampling ratio attributes
-Message-ID: <aB0IdPcjtcGFp6o-@smile.fi.intel.com>
-References: <cover.1746662899.git.Jonathan.Santos@analog.com>
- <2180d8774a2fdef3900f86fbc8f25886503df479.1746662899.git.Jonathan.Santos@analog.com>
+   d="scan'208";a="136880804"
+Received: from jf5300-b11a338t.jf.intel.com ([10.242.51.115])
+  by fmviesa010.fm.intel.com with ESMTP; 08 May 2025 12:41:35 -0700
+From: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	hannes@cmpxchg.org,
+	yosry.ahmed@linux.dev,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev,
+	usamaarif642@gmail.com,
+	ryan.roberts@arm.com,
+	21cnbao@gmail.com,
+	ying.huang@linux.alibaba.com,
+	akpm@linux-foundation.org,
+	senozhatsky@chromium.org,
+	linux-crypto@vger.kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	clabbe@baylibre.com,
+	ardb@kernel.org,
+	ebiggers@google.com,
+	surenb@google.com,
+	kristen.c.accardi@intel.com,
+	vinicius.gomes@intel.com
+Cc: wajdi.k.feghali@intel.com,
+	vinodh.gopal@intel.com,
+	kanchana.p.sridhar@intel.com
+Subject: [PATCH v9 01/19] crypto: acomp - Remove request chaining
+Date: Thu,  8 May 2025 12:41:16 -0700
+Message-Id: <20250508194134.28392-2-kanchana.p.sridhar@intel.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20250508194134.28392-1-kanchana.p.sridhar@intel.com>
+References: <20250508194134.28392-1-kanchana.p.sridhar@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2180d8774a2fdef3900f86fbc8f25886503df479.1746662899.git.Jonathan.Santos@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 08, 2025 at 02:05:26PM -0300, Jonathan Santos wrote:
-> Separate filter type and decimation rate from the sampling frequency
-> attribute. The new filter type attribute enables sinc3, sinc3+rej60
-> and wideband filters, which were previously unavailable.
-> 
-> Previously, combining decimation and MCLK divider in the sampling
-> frequency obscured performance trade-offs. Lower MCLK divider
-> settings increase power usage, while lower decimation rates reduce
-> precision by decreasing averaging. By creating an oversampling
-> attribute, which controls the decimation, users gain finer control
-> over performance.
-> 
-> The addition of those attributes allows a wider range of sampling
-> frequencies and more access to the device features. Sampling frequency
-> table is updated after every digital filter parameter change.
-> 
-> Changes in the sampling frequency are not allowed anymore while in
-> buffered mode.
+Request chaining requires the user to do too much book keeping.
+Remove it from acomp.
 
-...
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+---
+ crypto/acompress.c                  | 117 ++++++++--------------------
+ crypto/scompress.c                  |  18 +----
+ include/crypto/acompress.h          |  14 ----
+ include/crypto/internal/acompress.h |   5 --
+ 4 files changed, 35 insertions(+), 119 deletions(-)
 
->  static void ad7768_fill_samp_freq_tbl(struct ad7768_state *st)
->  {
-> -	unsigned int i;
-> +	unsigned int i, freq_filtered, len = 0;
-> +
-> +	freq_filtered = DIV_ROUND_CLOSEST(st->mclk_freq, st->oversampling_ratio);
-> +	for (i = 0; i < ARRAY_SIZE(ad7768_mclk_div_rates); i++) {
-
-> +		st->samp_freq_avail[len] = DIV_ROUND_CLOSEST(freq_filtered,
-> +							     ad7768_mclk_div_rates[i]);
-
-Same comment as per previous patch.
-
-> +		/* Sampling frequency cannot be lower than the minimum of 50 SPS */
-> +		if (st->samp_freq_avail[len] >= 50)
-> +			len++;
-
-Actually I would rather see the assignment once.
-
-	... samp_freq_avail;
-
-	for (i = 0; i < ARRAY_SIZE(ad7768_mclk_div_rates); i++) {
-		/* Sampling frequency cannot be lower than the minimum of 50 SPS */
-		samp_freq_avail = DIV_ROUND_CLOSEST(freq_filtered, ad7768_mclk_div_rates[i]);
-		if (samp_freq_avail < 50)
-			continue;
-
-		st->samp_freq_avail[len++] = samp_freq_avail;
-	}
-
-> +	}
-> +
-> +	st->samp_freq_avail_len = len;
-> +}
-
-...
-
-> +	res = DIV_ROUND_CLOSEST(st->mclk_freq, freq * st->oversampling_ratio);
->  
->  	/* Find the closest match for the desired sampling frequency */
-> +	for (i = 0; i < ARRAY_SIZE(ad7768_mclk_div_rates); i++) {
-> +		diff_new = abs(res - ad7768_mclk_div_rates[i]);
->  		if (diff_new < diff_old) {
->  			diff_old = diff_new;
->  			idx = i;
->  		}
->  	}
-
-Hmm... Wasn't the point to include util_macros.h to replace the above?
-
+diff --git a/crypto/acompress.c b/crypto/acompress.c
+index f7a3fbe5447e..82fb3c04e68f 100644
+--- a/crypto/acompress.c
++++ b/crypto/acompress.c
+@@ -161,7 +161,6 @@ static void acomp_save_req(struct acomp_req *req, crypto_completion_t cplt)
+ 	state->data = req->base.data;
+ 	req->base.complete = cplt;
+ 	req->base.data = state;
+-	state->req0 = req;
+ }
+ 
+ static void acomp_restore_req(struct acomp_req *req)
+@@ -172,23 +171,20 @@ static void acomp_restore_req(struct acomp_req *req)
+ 	req->base.data = state->data;
+ }
+ 
+-static void acomp_reqchain_virt(struct acomp_req_chain *state, int err)
++static void acomp_reqchain_virt(struct acomp_req *req)
+ {
+-	struct acomp_req *req = state->cur;
++	struct acomp_req_chain *state = &req->chain;
+ 	unsigned int slen = req->slen;
+ 	unsigned int dlen = req->dlen;
+ 
+-	req->base.err = err;
+-	state = &req->chain;
+-
+ 	if (state->flags & CRYPTO_ACOMP_REQ_SRC_VIRT)
+ 		acomp_request_set_src_dma(req, state->src, slen);
+ 	else if (state->flags & CRYPTO_ACOMP_REQ_SRC_FOLIO)
+-		acomp_request_set_src_folio(req, state->sfolio, state->soff, slen);
++		acomp_request_set_src_folio(req, state->sfolio, req->soff, slen);
+ 	if (state->flags & CRYPTO_ACOMP_REQ_DST_VIRT)
+ 		acomp_request_set_dst_dma(req, state->dst, dlen);
+ 	else if (state->flags & CRYPTO_ACOMP_REQ_DST_FOLIO)
+-		acomp_request_set_dst_folio(req, state->dfolio, state->doff, dlen);
++		acomp_request_set_dst_folio(req, state->dfolio, req->doff, dlen);
+ }
+ 
+ static void acomp_virt_to_sg(struct acomp_req *req)
+@@ -213,7 +209,6 @@ static void acomp_virt_to_sg(struct acomp_req *req)
+ 		size_t off = req->soff;
+ 
+ 		state->sfolio = folio;
+-		state->soff = off;
+ 		sg_init_table(&state->ssg, 1);
+ 		sg_set_page(&state->ssg, folio_page(folio, off / PAGE_SIZE),
+ 			    slen, off % PAGE_SIZE);
+@@ -233,7 +228,6 @@ static void acomp_virt_to_sg(struct acomp_req *req)
+ 		size_t off = req->doff;
+ 
+ 		state->dfolio = folio;
+-		state->doff = off;
+ 		sg_init_table(&state->dsg, 1);
+ 		sg_set_page(&state->dsg, folio_page(folio, off / PAGE_SIZE),
+ 			    dlen, off % PAGE_SIZE);
+@@ -241,8 +235,7 @@ static void acomp_virt_to_sg(struct acomp_req *req)
+ 	}
+ }
+ 
+-static int acomp_do_nondma(struct acomp_req_chain *state,
+-			   struct acomp_req *req)
++static int acomp_do_nondma(struct acomp_req *req, bool comp)
+ {
+ 	u32 keep = CRYPTO_ACOMP_REQ_SRC_VIRT |
+ 		   CRYPTO_ACOMP_REQ_SRC_NONDMA |
+@@ -259,7 +252,7 @@ static int acomp_do_nondma(struct acomp_req_chain *state,
+ 	fbreq->slen = req->slen;
+ 	fbreq->dlen = req->dlen;
+ 
+-	if (state->op == crypto_acomp_reqtfm(req)->compress)
++	if (comp)
+ 		err = crypto_acomp_compress(fbreq);
+ 	else
+ 		err = crypto_acomp_decompress(fbreq);
+@@ -268,114 +261,70 @@ static int acomp_do_nondma(struct acomp_req_chain *state,
+ 	return err;
+ }
+ 
+-static int acomp_do_one_req(struct acomp_req_chain *state,
+-			    struct acomp_req *req)
++static int acomp_do_one_req(struct acomp_req *req, bool comp)
+ {
+-	state->cur = req;
+-
+ 	if (acomp_request_isnondma(req))
+-		return acomp_do_nondma(state, req);
++		return acomp_do_nondma(req, comp);
+ 
+ 	acomp_virt_to_sg(req);
+-	return state->op(req);
++	return comp ? crypto_acomp_reqtfm(req)->compress(req) :
++		      crypto_acomp_reqtfm(req)->decompress(req);
+ }
+ 
+-static int acomp_reqchain_finish(struct acomp_req *req0, int err, u32 mask)
++static int acomp_reqchain_finish(struct acomp_req *req, int err)
+ {
+-	struct acomp_req_chain *state = req0->base.data;
+-	struct acomp_req *req = state->cur;
+-	struct acomp_req *n;
+-
+-	acomp_reqchain_virt(state, err);
+-
+-	if (req != req0)
+-		list_add_tail(&req->base.list, &req0->base.list);
+-
+-	list_for_each_entry_safe(req, n, &state->head, base.list) {
+-		list_del_init(&req->base.list);
+-
+-		req->base.flags &= mask;
+-		req->base.complete = acomp_reqchain_done;
+-		req->base.data = state;
+-
+-		err = acomp_do_one_req(state, req);
+-
+-		if (err == -EINPROGRESS) {
+-			if (!list_empty(&state->head))
+-				err = -EBUSY;
+-			goto out;
+-		}
+-
+-		if (err == -EBUSY)
+-			goto out;
+-
+-		acomp_reqchain_virt(state, err);
+-		list_add_tail(&req->base.list, &req0->base.list);
+-	}
+-
+-	acomp_restore_req(req0);
+-
+-out:
++	acomp_reqchain_virt(req);
++	acomp_restore_req(req);
+ 	return err;
+ }
+ 
+ static void acomp_reqchain_done(void *data, int err)
+ {
+-	struct acomp_req_chain *state = data;
+-	crypto_completion_t compl = state->compl;
++	struct acomp_req *req = data;
++	crypto_completion_t compl;
+ 
+-	data = state->data;
++	compl = req->chain.compl;
++	data = req->chain.data;
+ 
+-	if (err == -EINPROGRESS) {
+-		if (!list_empty(&state->head))
+-			return;
++	if (err == -EINPROGRESS)
+ 		goto notify;
+-	}
+ 
+-	err = acomp_reqchain_finish(state->req0, err,
+-				    CRYPTO_TFM_REQ_MAY_BACKLOG);
+-	if (err == -EBUSY)
+-		return;
++	err = acomp_reqchain_finish(req, err);
+ 
+ notify:
+ 	compl(data, err);
+ }
+ 
+-static int acomp_do_req_chain(struct acomp_req *req,
+-			      int (*op)(struct acomp_req *req))
++static int acomp_do_req_chain(struct acomp_req *req, bool comp)
+ {
+-	struct crypto_acomp *tfm = crypto_acomp_reqtfm(req);
+-	struct acomp_req_chain *state;
+ 	int err;
+ 
+-	if (crypto_acomp_req_chain(tfm) ||
+-	    (!acomp_request_chained(req) && acomp_request_issg(req)))
+-		return op(req);
+-
+ 	acomp_save_req(req, acomp_reqchain_done);
+-	state = req->base.data;
+ 
+-	state->op = op;
+-	state->src = NULL;
+-	INIT_LIST_HEAD(&state->head);
+-	list_splice_init(&req->base.list, &state->head);
+-
+-	err = acomp_do_one_req(state, req);
++	err = acomp_do_one_req(req, comp);
+ 	if (err == -EBUSY || err == -EINPROGRESS)
+-		return -EBUSY;
++		return err;
+ 
+-	return acomp_reqchain_finish(req, err, ~0);
++	return acomp_reqchain_finish(req, err);
+ }
+ 
+ int crypto_acomp_compress(struct acomp_req *req)
+ {
+-	return acomp_do_req_chain(req, crypto_acomp_reqtfm(req)->compress);
++	struct crypto_acomp *tfm = crypto_acomp_reqtfm(req);
++
++	if (crypto_acomp_req_chain(tfm) || acomp_request_issg(req))
++		crypto_acomp_reqtfm(req)->compress(req);
++	return acomp_do_req_chain(req, true);
+ }
+ EXPORT_SYMBOL_GPL(crypto_acomp_compress);
+ 
+ int crypto_acomp_decompress(struct acomp_req *req)
+ {
+-	return acomp_do_req_chain(req, crypto_acomp_reqtfm(req)->decompress);
++	struct crypto_acomp *tfm = crypto_acomp_reqtfm(req);
++
++	if (crypto_acomp_req_chain(tfm) || acomp_request_issg(req))
++		crypto_acomp_reqtfm(req)->decompress(req);
++	return acomp_do_req_chain(req, false);
+ }
+ EXPORT_SYMBOL_GPL(crypto_acomp_decompress);
+ 
+diff --git a/crypto/scompress.c b/crypto/scompress.c
+index 5762fcc63b51..c1ce12564299 100644
+--- a/crypto/scompress.c
++++ b/crypto/scompress.c
+@@ -293,28 +293,14 @@ static int scomp_acomp_comp_decomp(struct acomp_req *req, int dir)
+ 	return ret;
+ }
+ 
+-static int scomp_acomp_chain(struct acomp_req *req, int dir)
+-{
+-	struct acomp_req *r2;
+-	int err;
+-
+-	err = scomp_acomp_comp_decomp(req, dir);
+-	req->base.err = err;
+-
+-	list_for_each_entry(r2, &req->base.list, base.list)
+-		r2->base.err = scomp_acomp_comp_decomp(r2, dir);
+-
+-	return err;
+-}
+-
+ static int scomp_acomp_compress(struct acomp_req *req)
+ {
+-	return scomp_acomp_chain(req, 1);
++	return scomp_acomp_comp_decomp(req, 1);
+ }
+ 
+ static int scomp_acomp_decompress(struct acomp_req *req)
+ {
+-	return scomp_acomp_chain(req, 0);
++	return scomp_acomp_comp_decomp(req, 0);
+ }
+ 
+ static void crypto_exit_scomp_ops_async(struct crypto_tfm *tfm)
+diff --git a/include/crypto/acompress.h b/include/crypto/acompress.h
+index c497c73baf13..267d557daeb1 100644
+--- a/include/crypto/acompress.h
++++ b/include/crypto/acompress.h
+@@ -52,10 +52,6 @@ struct acomp_req;
+ struct folio;
+ 
+ struct acomp_req_chain {
+-	struct list_head head;
+-	struct acomp_req *req0;
+-	struct acomp_req *cur;
+-	int (*op)(struct acomp_req *req);
+ 	crypto_completion_t compl;
+ 	void *data;
+ 	struct scatterlist ssg;
+@@ -68,8 +64,6 @@ struct acomp_req_chain {
+ 		u8 *dst;
+ 		struct folio *dfolio;
+ 	};
+-	size_t soff;
+-	size_t doff;
+ 	u32 flags;
+ };
+ 
+@@ -349,8 +343,6 @@ static inline void acomp_request_set_callback(struct acomp_req *req,
+ 	req->base.data = data;
+ 	req->base.flags &= keep;
+ 	req->base.flags |= flgs & ~keep;
+-
+-	crypto_reqchain_init(&req->base);
+ }
+ 
+ /**
+@@ -558,12 +550,6 @@ static inline void acomp_request_set_dst_folio(struct acomp_req *req,
+ 	req->base.flags |= CRYPTO_ACOMP_REQ_DST_FOLIO;
+ }
+ 
+-static inline void acomp_request_chain(struct acomp_req *req,
+-				       struct acomp_req *head)
+-{
+-	crypto_request_chain(&req->base, &head->base);
+-}
+-
+ /**
+  * crypto_acomp_compress() -- Invoke asynchronous compress operation
+  *
+diff --git a/include/crypto/internal/acompress.h b/include/crypto/internal/acompress.h
+index aaf59f3236fa..b69d818d7e68 100644
+--- a/include/crypto/internal/acompress.h
++++ b/include/crypto/internal/acompress.h
+@@ -98,11 +98,6 @@ void crypto_unregister_acomp(struct acomp_alg *alg);
+ int crypto_register_acomps(struct acomp_alg *algs, int count);
+ void crypto_unregister_acomps(struct acomp_alg *algs, int count);
+ 
+-static inline bool acomp_request_chained(struct acomp_req *req)
+-{
+-	return crypto_request_chained(&req->base);
+-}
+-
+ static inline bool acomp_request_issg(struct acomp_req *req)
+ {
+ 	return !(req->base.flags & (CRYPTO_ACOMP_REQ_SRC_VIRT |
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.27.0
 
