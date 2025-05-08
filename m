@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DFB27B516
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:03:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7AB27C856
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:03:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716586; cv=none; b=cKNZzlxX54pbuFts5Y/8WIA3J+Iw40u2jsIQjbrDyh/5NA4w8n5P3foU5MhS53ZoPxkzoXmifQAK86GSH+xp5GN61XQIyNfa6XJQAThhygAGwvsQ0+KEW8R+xPOQNFPXgoHiLKSOwa9bIMTXvDa2O33O/usrYzFeAa8U3i+89FI=
+	t=1746716589; cv=none; b=XUg3ihIXc5lmaWkXD4RQykJCEsLN8K8Dw6zsjhyikEtzY0sro9FLnlPFXQ6Dcnx7EXD21j1tuL3jlaxEHiUZt3VqBBlz1fhrG72ixH2IaicPPZD/PlCdQPdLmyK6U3gzQeMdcTwfYaibmK3isLnJuZlyFBllAHpy0fL3WRkjXlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716586; c=relaxed/simple;
-	bh=GVTfeGKHrkRu8eLI3uK43e70/CgAu2MN5heww0lN6nk=;
+	s=arc-20240116; t=1746716589; c=relaxed/simple;
+	bh=XJMUrvzkl7T7SJvE5TMLA06hwaBkEJ6l2urEVurF6Jw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ksSjnMOjWiQub/9eZEXM37B9QPFbdOOyUVumUghAyrGI2JAsdUWOS5xIEczbEAwLbxYvRS+njWZvh63jECSeGPUxhA7WfR0SiIWbPrOoCmddApUmpC3bVzLPPTj/OjVIsdnD60Zy1L9R7vRiYQoYZkbU/O8czv3FLmLIqnIFjSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y+T3sffs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w4/IGnJi; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=idf6TI54rHqMdZ/YGuBjOiz/3mJ+t97Sez2G7i5fC3p/uAYdqwyHnOABmPm4uhZOSwhyBGlRe5jMjcpJFKQsLgLrm4qQxp69A1RG2RY8omxZb96pK0TL8bUy2t30L4+cA4mMhJ/Gutp6k56EShu15he5QzS9/cWnxzlrrSU00Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=b8U6WSTj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6vVvM+7l; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y+T3sffs";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w4/IGnJi"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b8U6WSTj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6vVvM+7l"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746716583;
+	s=2020; t=1746716586;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WMuqN7CQJKVFh5Qod0h7zRKR2zJsoYZx0+h+Dl9/l9Y=;
-	b=Y+T3sffsK6pGcrECFfFJ5hOYO0HzYneMkDtsq6QfpFSTwmWVnc1ADqmwHhKzd8FBHY0jRi
-	05DA5YsawAH86prndhESAuTYUZ3WLvY18nODU8fPFaXSfMpqmEDbSEF034M7TK6Uomz9XT
-	I6y7vVPs2acVzyoOfNvD9Vd+xp/H0j7whFQdaA24jK3X5ISRA6iXkvg1amzwsJjQimtRrj
-	km/Y4bLVLTcXHbbYCz61CSze6ANeVKBTFjxGXYnmBqAccZWjnpSydcGr3Bq+UX2LLs3GwA
-	ye28GDB9sDtvMJBSRRTDX7h0TjdkTxEk1blAgtFwWvP53ywfSIr7+PgMWKQvbQ==
+	bh=Ry0BzcU6tq9UEbAb2PtgSqgInssbUst9H7FdYRIUqdQ=;
+	b=b8U6WSTjtJR6HLCAzAaNsKVYkSGWxdTNQSVtTchyRPgdFBkfP8U1U7NBJWiOV47iowFqx8
+	KlnZip5GP4Ch6y5q/PqcVW8G/FHzgJ2RZ3q5L5pWEDgHuQGKPeB2m5CkttCUHQobQJf6Ta
+	ZlS+PF6uEgapGZfb7joO6dcKjs2H/hh4TOxK+GQ87IxZ51XQauTanN7HDh3nqKeLNiCQcz
+	8kFj+Q8H+uhbd23hmTpwFY+SYmY+O/Ug7jnZ7pqyrSVnCBTClCQXpgCN+Fop5y1FoG8uCe
+	EgNSjaulmZqdO4C1iDl6cVnr/NyzR1BAvJJYXiikPqglkCWsZBFBVYBwgTq2jA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746716583;
+	s=2020e; t=1746716586;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WMuqN7CQJKVFh5Qod0h7zRKR2zJsoYZx0+h+Dl9/l9Y=;
-	b=w4/IGnJi+IT1L44wocBxfE6OCnwR1/1pMeNMwwRRfAc5pz84hhpcRD7GrlrkHGISlPIl8h
-	KQmzLzkp4WEhfNBw==
+	bh=Ry0BzcU6tq9UEbAb2PtgSqgInssbUst9H7FdYRIUqdQ=;
+	b=6vVvM+7l+ofqV15G9B9fse4ureL8h6d6WpI51HI0CRpY9YTxF+0Orp4KFgum5Y2l4O+jNN
+	weE0qP4EU4GTnLCg==
 To: Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -50,9 +50,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v1 8/9] x86/cpuid: Rename native_cpuid() to cpuid_native()
-Date: Thu,  8 May 2025 17:02:37 +0200
-Message-ID: <20250508150240.172915-9-darwi@linutronix.de>
+Subject: [PATCH v1 9/9] x86/cpuid: Rename native_cpuid_REG() to cpuid_native_REG()
+Date: Thu,  8 May 2025 17:02:38 +0200
+Message-ID: <20250508150240.172915-10-darwi@linutronix.de>
 In-Reply-To: <20250508150240.172915-1-darwi@linutronix.de>
 References: <20250508150240.172915-1-darwi@linutronix.de>
 Precedence: bulk
@@ -64,185 +64,155 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 In order to let all the APIs under <cpuid/api.h> have a shared "cpuid_"
-namespace, rename native_cpuid() to cpuid_native().
+namespace, rename native_cpuid_REG() to cpuid_native_REG().
+
+To beetter align with the new namespace, also rename the internal
+NATIVE_CPUID_REG() macro to __CPUID_NATIVE_REG().
 
 Adjust all call-sites accordingly.
 
 Suggested-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 ---
- arch/x86/boot/compressed/sev.c           | 6 +++---
- arch/x86/include/asm/cpuid/api.h         | 6 +++---
- arch/x86/kernel/cpu/microcode/intel.c    | 2 +-
- arch/x86/kernel/cpu/microcode/internal.h | 4 ++--
- arch/x86/kernel/paravirt.c               | 2 +-
- arch/x86/mm/mem_encrypt_identity.c       | 6 +++---
- arch/x86/xen/enlighten_pv.c              | 4 ++--
- 7 files changed, 15 insertions(+), 15 deletions(-)
+ arch/x86/boot/compressed/pgtable_64.c   |  4 ++--
+ arch/x86/include/asm/cpuid/api.h        | 12 ++++++------
+ arch/x86/include/asm/microcode.h        |  2 +-
+ arch/x86/kernel/cpu/microcode/amd.c     |  2 +-
+ arch/x86/kernel/cpu/microcode/core.c    |  6 +++---
+ arch/x86/kernel/head32.c                |  2 +-
+ drivers/firmware/efi/libstub/x86-5lvl.c |  4 ++--
+ 7 files changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index f054bf52c10a..4b617f8f9b7f 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -494,7 +494,7 @@ static int sev_check_cpu_support(void)
- 	/* Check for the SME/SEV support leaf */
- 	eax = 0x80000000;
- 	ecx = 0;
--	native_cpuid(&eax, &ebx, &ecx, &edx);
-+	cpuid_native(&eax, &ebx, &ecx, &edx);
- 	if (eax < 0x8000001f)
- 		return -ENODEV;
- 
-@@ -508,7 +508,7 @@ static int sev_check_cpu_support(void)
+diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
+index d8c5de40669d..8cfe50988aa2 100644
+--- a/arch/x86/boot/compressed/pgtable_64.c
++++ b/arch/x86/boot/compressed/pgtable_64.c
+@@ -125,8 +125,8 @@ asmlinkage void configure_5level_paging(struct boot_params *bp, void *pgtable)
  	 */
- 	eax = 0x8000001f;
- 	ecx = 0;
--	native_cpuid(&eax, &ebx, &ecx, &edx);
-+	cpuid_native(&eax, &ebx, &ecx, &edx);
- 	/* Check whether SEV is supported */
- 	if (!(eax & BIT(1)))
- 		return -ENODEV;
-@@ -666,7 +666,7 @@ bool early_is_sevsnp_guest(void)
- 		 */
- 		eax = 0x8000001f;
- 		ecx = 0;
--		native_cpuid(&eax, &ebx, &ecx, &edx);
-+		cpuid_native(&eax, &ebx, &ecx, &edx);
- 		if (eax & BIT(28)) {
- 			struct msr m;
+ 	if (IS_ENABLED(CONFIG_X86_5LEVEL) &&
+ 			!cmdline_find_option_bool("no5lvl") &&
+-			native_cpuid_eax(0) >= 7 &&
+-			(native_cpuid_ecx(7) & (1 << (X86_FEATURE_LA57 & 31)))) {
++			cpuid_native_eax(0) >= 7 &&
++			(cpuid_native_ecx(7) & (1 << (X86_FEATURE_LA57 & 31)))) {
+ 		l5_required = true;
  
+ 		/* Initialize variables for 5-level paging */
 diff --git a/arch/x86/include/asm/cpuid/api.h b/arch/x86/include/asm/cpuid/api.h
-index e957f09d8a8f..7f4644747649 100644
+index 7f4644747649..9f8a1176ad86 100644
 --- a/arch/x86/include/asm/cpuid/api.h
 +++ b/arch/x86/include/asm/cpuid/api.h
-@@ -22,7 +22,7 @@ static inline bool cpuid_feature(void)
+@@ -35,8 +35,8 @@ static inline void cpuid_native(u32 *eax, u32 *ebx,
+ 	    : "memory");
  }
- #endif
  
--static inline void native_cpuid(u32 *eax, u32 *ebx,
-+static inline void cpuid_native(u32 *eax, u32 *ebx,
- 				u32 *ecx, u32 *edx)
- {
- 	/* ecx is often an input as well as an output. */
-@@ -40,7 +40,7 @@ static inline u32 native_cpuid_##reg(u32 op)			\
+-#define NATIVE_CPUID_REG(reg)					\
+-static inline u32 native_cpuid_##reg(u32 op)			\
++#define __CPUID_NATIVE_REG(reg)					\
++static inline u32 cpuid_native_##reg(u32 op)			\
  {								\
  	u32 eax = op, ebx, ecx = 0, edx;			\
  								\
--	native_cpuid(&eax, &ebx, &ecx, &edx);			\
-+	cpuid_native(&eax, &ebx, &ecx, &edx);			\
- 								\
- 	return reg;						\
- }
-@@ -56,7 +56,7 @@ NATIVE_CPUID_REG(edx)
+@@ -48,10 +48,10 @@ static inline u32 native_cpuid_##reg(u32 op)			\
+ /*
+  * Native CPUID functions returning a single datum:
+  */
+-NATIVE_CPUID_REG(eax)
+-NATIVE_CPUID_REG(ebx)
+-NATIVE_CPUID_REG(ecx)
+-NATIVE_CPUID_REG(edx)
++__CPUID_NATIVE_REG(eax)
++__CPUID_NATIVE_REG(ebx)
++__CPUID_NATIVE_REG(ecx)
++__CPUID_NATIVE_REG(edx)
+ 
  #ifdef CONFIG_PARAVIRT_XXL
  # include <asm/paravirt.h>
- #else
--# define __cpuid native_cpuid
-+# define __cpuid	cpuid_native
- #endif
+diff --git a/arch/x86/include/asm/microcode.h b/arch/x86/include/asm/microcode.h
+index 695e569159c1..755c9f693118 100644
+--- a/arch/x86/include/asm/microcode.h
++++ b/arch/x86/include/asm/microcode.h
+@@ -64,7 +64,7 @@ static inline u32 intel_get_microcode_revision(void)
+ 	native_wrmsrl(MSR_IA32_UCODE_REV, 0);
  
- /*
-diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/microcode/intel.c
-index 819199bc0119..66693831f665 100644
---- a/arch/x86/kernel/cpu/microcode/intel.c
-+++ b/arch/x86/kernel/cpu/microcode/intel.c
-@@ -347,7 +347,7 @@ static __init bool load_builtin_intel_microcode(struct cpio_data *cp)
- 	if (IS_ENABLED(CONFIG_X86_32))
- 		return false;
+ 	/* As documented in the SDM: Do a CPUID 1 here */
+-	native_cpuid_eax(1);
++	cpuid_native_eax(1);
  
--	native_cpuid(&eax, &ebx, &ecx, &edx);
-+	cpuid_native(&eax, &ebx, &ecx, &edx);
+ 	/* get the current revision from MSR 0x8B */
+ 	native_rdmsr(MSR_IA32_UCODE_REV, dummy, rev);
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index 4a10d35e70aa..d757383b653c 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -1098,7 +1098,7 @@ static enum ucode_state load_microcode_amd(u8 family, const u8 *data, size_t siz
  
- 	sprintf(name, "intel-ucode/%02x-%02x-%02x",
- 		x86_family(eax), x86_model(eax), x86_stepping(eax));
-diff --git a/arch/x86/kernel/cpu/microcode/internal.h b/arch/x86/kernel/cpu/microcode/internal.h
-index 5df621752fef..6049fd7ac16a 100644
---- a/arch/x86/kernel/cpu/microcode/internal.h
-+++ b/arch/x86/kernel/cpu/microcode/internal.h
-@@ -73,7 +73,7 @@ static inline int x86_cpuid_vendor(void)
- 	u32 eax = 0x00000000;
- 	u32 ebx, ecx = 0, edx;
- 
--	native_cpuid(&eax, &ebx, &ecx, &edx);
-+	cpuid_native(&eax, &ebx, &ecx, &edx);
- 
- 	if (CPUID_IS(CPUID_INTEL1, CPUID_INTEL2, CPUID_INTEL3, ebx, ecx, edx))
- 		return X86_VENDOR_INTEL;
-@@ -89,7 +89,7 @@ static inline unsigned int x86_cpuid_family(void)
- 	u32 eax = 0x00000001;
- 	u32 ebx, ecx = 0, edx;
- 
--	native_cpuid(&eax, &ebx, &ecx, &edx);
-+	cpuid_native(&eax, &ebx, &ecx, &edx);
- 
- 	return x86_family(eax);
- }
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 1ccd05d8999f..e2c812beb06c 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -122,7 +122,7 @@ struct paravirt_patch_template pv_ops = {
- 	.cpu.io_delay		= native_io_delay,
- 
- #ifdef CONFIG_PARAVIRT_XXL
--	.cpu.cpuid		= native_cpuid,
-+	.cpu.cpuid		= cpuid_native,
- 	.cpu.get_debugreg	= pv_native_get_debugreg,
- 	.cpu.set_debugreg	= pv_native_set_debugreg,
- 	.cpu.read_cr0		= native_read_cr0,
-diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
-index 5eecdd92da10..6bad28dd8b07 100644
---- a/arch/x86/mm/mem_encrypt_identity.c
-+++ b/arch/x86/mm/mem_encrypt_identity.c
-@@ -501,7 +501,7 @@ void __head sme_enable(struct boot_params *bp)
- 	/* Check for the SME/SEV support leaf */
- 	eax = 0x80000000;
- 	ecx = 0;
--	native_cpuid(&eax, &ebx, &ecx, &edx);
-+	cpuid_native(&eax, &ebx, &ecx, &edx);
- 	if (eax < 0x8000001f)
- 		return;
- 
-@@ -518,7 +518,7 @@ void __head sme_enable(struct boot_params *bp)
+ static int __init save_microcode_in_initrd(void)
+ {
+-	unsigned int cpuid_1_eax = native_cpuid_eax(1);
++	unsigned int cpuid_1_eax = cpuid_native_eax(1);
+ 	struct cpuinfo_x86 *c = &boot_cpu_data;
+ 	struct cont_desc desc = { 0 };
+ 	enum ucode_state ret;
+diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
+index 1395fa72960f..9924b8238492 100644
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -106,7 +106,7 @@ static bool __init check_loader_disabled_bsp(void)
+ 	 * completely accurate as xen pv guests don't see that CPUID bit set but
+ 	 * that's good enough as they don't land on the BSP path anyway.
  	 */
- 	eax = 0x8000001f;
- 	ecx = 0;
--	native_cpuid(&eax, &ebx, &ecx, &edx);
-+	cpuid_native(&eax, &ebx, &ecx, &edx);
- 	/* Check whether SEV or SME is supported */
- 	if (!(eax & (AMD_SEV_BIT | AMD_SME_BIT)))
+-	if (native_cpuid_ecx(1) & BIT(31))
++	if (cpuid_native_ecx(1) & BIT(31))
+ 		return true;
+ 
+ 	if (x86_cpuid_vendor() == X86_VENDOR_AMD) {
+@@ -128,7 +128,7 @@ void __init load_ucode_bsp(void)
+ 	if (!cpuid_feature())
  		return;
-@@ -552,7 +552,7 @@ void __head sme_enable(struct boot_params *bp)
- 		 */
- 		eax = 1;
- 		ecx = 0;
--		native_cpuid(&eax, &ebx, &ecx, &edx);
-+		cpuid_native(&eax, &ebx, &ecx, &edx);
- 		if (ecx & BIT(31))
- 			return;
  
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 21c7f524766e..d1a1a3546bd5 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -327,7 +327,7 @@ static bool __init xen_check_mwait(void)
- 	ax = 1;
- 	cx = 0;
+-	cpuid_1_eax = native_cpuid_eax(1);
++	cpuid_1_eax = cpuid_native_eax(1);
  
--	native_cpuid(&ax, &bx, &cx, &dx);
-+	cpuid_native(&ax, &bx, &cx, &dx);
+ 	switch (x86_cpuid_vendor()) {
+ 	case X86_VENDOR_INTEL:
+@@ -162,7 +162,7 @@ void load_ucode_ap(void)
+ 	if (dis_ucode_ldr)
+ 		return;
  
- 	mwait_mask = (1 << (X86_FEATURE_EST % 32)) |
- 		     (1 << (X86_FEATURE_MWAIT % 32));
-@@ -344,7 +344,7 @@ static bool __init xen_check_mwait(void)
- 	cx = 0;
- 	dx = 0;
+-	cpuid_1_eax = native_cpuid_eax(1);
++	cpuid_1_eax = cpuid_native_eax(1);
  
--	native_cpuid(&ax, &bx, &cx, &dx);
-+	cpuid_native(&ax, &bx, &cx, &dx);
+ 	switch (x86_cpuid_vendor()) {
+ 	case X86_VENDOR_INTEL:
+diff --git a/arch/x86/kernel/head32.c b/arch/x86/kernel/head32.c
+index de001b2146ab..43aa1cfc1b65 100644
+--- a/arch/x86/kernel/head32.c
++++ b/arch/x86/kernel/head32.c
+@@ -146,7 +146,7 @@ void __init __no_stack_protector mk_early_pgtbl_32(void)
  
- 	/* Ask the Hypervisor whether to clear ACPI_PROC_CAP_C_C2C3_FFH. If so,
- 	 * don't expose MWAIT_LEAF and let ACPI pick the IOPORT version of C3.
+ #ifdef CONFIG_MICROCODE_INITRD32
+ 	/* Running on a hypervisor? */
+-	if (native_cpuid_ecx(1) & BIT(31))
++	if (cpuid_native_ecx(1) & BIT(31))
+ 		return;
+ 
+ 	params = (struct boot_params *)__pa_nodebug(&boot_params);
+diff --git a/drivers/firmware/efi/libstub/x86-5lvl.c b/drivers/firmware/efi/libstub/x86-5lvl.c
+index 77359e802181..db347c91edb3 100644
+--- a/drivers/firmware/efi/libstub/x86-5lvl.c
++++ b/drivers/firmware/efi/libstub/x86-5lvl.c
+@@ -34,8 +34,8 @@ efi_status_t efi_setup_5level_paging(void)
+ 		return EFI_SUCCESS;
+ 
+ 	/* check for 5 level paging support */
+-	if (native_cpuid_eax(0) < 7 ||
+-	    !(native_cpuid_ecx(7) & (1 << (X86_FEATURE_LA57 & 31))))
++	if (cpuid_native_eax(0) < 7 ||
++	    !(cpuid_native_ecx(7) & (1 << (X86_FEATURE_LA57 & 31))))
+ 		return EFI_SUCCESS;
+ 
+ 	/* allocate some 32-bit addressable memory for code and a page table */
 -- 
 2.49.0
 
