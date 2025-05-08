@@ -1,88 +1,91 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96ACE221D94
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 23:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F41D22F75E
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 23:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746745470; cv=none; b=IyBhhD7EZcH1h3kKzxixlyXGFITQDuA5y9OoV4/TN5CUfDVP0qPysReI7/772izwU+dmekRmxwoOGoe8BERvB4RkEWNQFCQYlumRdv+hci2UblOV38+YBWkxaF+91c7fcUZ2gjWEEZ7mwAREVFR91WlqhKLwZtmw8DUUBr7p9hc=
+	t=1746745477; cv=none; b=VdHlosImTIISshI1Zszte4VG6Ly/MasURYPRUWH6qc3WzZ9AoKqelmYVBdGz0hZ0LRXPZGyXGd8U8nW46sN1BzzuoY2Zfv6Y493wjhSZa2u+v7/bUxQgj++97zUN9hvPlasg/iyye3aCfxt9YrPpd26NgdsGA+avpulu+z61VNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746745470; c=relaxed/simple;
-	bh=JzRxuCHHEoe0xm2svplJV/PWpn9/fOwK048vkaL1MgA=;
+	s=arc-20240116; t=1746745477; c=relaxed/simple;
+	bh=o9MeEdic2aw5fuiXgCnE5gY7Rjy86uabdHeLWt3OWtg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UXiRa4Bu6B4n6AIpeX6+AJODK0orzsu4BLzHba/CKOk2e4qSvYOCSG6P15F2OCIDfeS6Iktnb+YDgtmd02y4UFU3n4t0wplOsPsp9kbN9gKNMahmghnvNzFHNYNX/NI7nq477uoJ60yelTTRCMaYPsOyl7I6rooaDCsN+tiE5RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=smqmNsFy; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=MRqVeFd3lxokQYTmKknOKOA5WuzTwVJsPX5Qedp36KGZoDrTKkbdcb5BPN2fgE7L5frXyS0fthninO3EGomnajeqNAw6b2/dcCEPRhTqJQtcios1waPp6rB3siXYV4e9u0FA8y3rSPUYBIb2CbcEtknP9DsMZw1fdRH8O2y6e9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2oJsu3Lx; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="smqmNsFy"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30ad109bc89so1739820a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 16:04:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2oJsu3Lx"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-740b646ff9eso816570b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 16:04:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746745468; x=1747350268; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746745475; x=1747350275; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2TEJVC9pdMWAaVUNB7HuRZMfxNu+J4vzTlXLSvKGeMY=;
-        b=smqmNsFyVcu04Iij/mGffHqHmixk/4X0jJ90rJtbku8MZ2c/yo6KhXfpkC8drKhdcj
-         ZXJdlyWSSxKLpUAfwhP2P/LDJRIrQYlXZYKMUfVBHgZZdUDSAoGIxFlhiw93qbi3NdvQ
-         1F4tZQXVGjk7nBS+RDpsgskXLoMrkKQFrlW16YZBRp5RHjiMFN/oVL5XEvtvYZIqyO3A
-         mHJjpVPqU4AQ1t5S07LApWAGOC6jp3KiaB6go05yPQz80+wUNUQsji27aB90ICWkBuIO
-         3vqaY0c8IjoYWayyV6hnuPQt3gW7trOW/GidDoi2UGZ3wrvC0zVz8LP8lqWIhbrNMErA
-         p4gw==
+        bh=UFnJZ/RAlcNSP8DZMSaNIf40AZH7y1/ctvuFTqQKpZw=;
+        b=2oJsu3Lx5JPxYgcQU4M51wvLCGjfw5SXjg9UWs2cTdZ4Qk8YYLR5D8b4asIdfza+bV
+         Qbh6Dx87grn7oTV7bvdf5WZ6iz6o5DX5ztUg2exo0S6mudlrVheyI5u/au4uV6MJKJcJ
+         6LGAdRbURQ4bPIMlaJF09hWeREIDBzN7UGg5CxSFtFux4FXXvlpDrePrkpRZpevLtnn1
+         wOne0WFc5+YBXCXdAKdtd69Mna3qivHltJc2uBPc8rYQiKrawklJJ3nsvIb3PppoN/s6
+         XMF9wIBiFKf7oNQaXu0nQjAMZoYDttzbPRCNaqgksIGfzGIzvbEuC8UbLBcCKmzbaMe7
+         TPfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746745468; x=1747350268;
+        d=1e100.net; s=20230601; t=1746745475; x=1747350275;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2TEJVC9pdMWAaVUNB7HuRZMfxNu+J4vzTlXLSvKGeMY=;
-        b=Y/Io3uPNnJ34M8p6hs9aNq9/qQi1eY8AEIYMAm5ez7ydGQGSNVMO74l/TRbXnUZ0p0
-         Fq/c+RJQvxMcCKfkAnTgb+qqXpqULfx0uglu2IRuy6gXlw5TJoFwRZfNoda3LAVygWAj
-         ez8wQkoGhfX6v+Xz8GSiCYFGPjyLklZORz2UOLBUXoqILmhm1teodQt0WIO3Zv8RPe9H
-         s80VvrnkQnUe8ebqbBrWjE3YjfuFlbBm7rFMeiMBNyWOaSBy8KWcs9b9JQElFq8MR4z6
-         q6XYmLMFbcA8ao9IsNWvXJ46hTqK53g+hV4HGoyqqXAKwggduACwmGc8DVZTZYCpEmmD
-         uqog==
-X-Forwarded-Encrypted: i=1; AJvYcCVoxiGpwbxO1+pu36hYyznyvU0q+EEN2dzUjlBV34jhWhO0mAOx7LvaonLvYmi556BrMJs/bch7gI6VMwU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzz2xux1gExVh3hxWzYcIBUg8NmLdUl6XlyfU36X22CvZmXoizV
-	bSvrV7PfR2+gHZNc0oSXtmTIkNkDk4m1Ph3V9nN3kXlM17rW0L8mCT7+jvpJU6PGBVDOyLcp1bZ
-	JKg==
-X-Google-Smtp-Source: AGHT+IH6CyLxRoG5aV2vlGLPfd+CFf1M+609PaVUlqb+8J1uGMaanS7q1+sS7ACFHR15KEXEFz+dfgO4qO0=
-X-Received: from pjp12.prod.google.com ([2002:a17:90b:55cc:b0:301:2a0f:b03d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:52cf:b0:30a:4700:ca91
- with SMTP id 98e67ed59e1d1-30c3cb174bbmr1795676a91.1.1746745467893; Thu, 08
- May 2025 16:04:27 -0700 (PDT)
-Date: Thu,  8 May 2025 16:04:11 -0700
-In-Reply-To: <20250506011250.1089254-1-seanjc@google.com>
+        bh=UFnJZ/RAlcNSP8DZMSaNIf40AZH7y1/ctvuFTqQKpZw=;
+        b=sqf2ucGxwnvShPcY//3lrbnTEvNHI5sVenNwsjPhKK8tX0FyDCCr2V2NylwuKjPwjo
+         GMJ3ae2BuEdOpXTNOWLjlHKJhaFKh44nQhckv6C+K9CXtFA99CeQn0bbxLfgzkVIzNLP
+         hcv4WK0H7kiFTxwAJXKr6YUITTI5guez/f5aFWp2CaebqY40KlwyLa+UVnUyVKedlwWe
+         z/8UL2vSfcsLCpRnRmsdljerICq8NTZkYqiWY+b+hHZlAxhKB7PmEDnh79q5NWyXRsAH
+         SZqq4FEUwm0wtEhcMHpOTsRXEAprZ3+3WFKlsNw8xOo/N6w5e0vFID9In7OFPmaTpxGL
+         isvA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1vU485rmoulc9dD6+HTKi+Ti/fxw6qtABncvPR5DnByVJfxC3Diz0yp/+niSRSc2f3BgOkVAvGvZyWl4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPaWFhKUPMuSDURf40urL3reZFWHbPbhrab/OWEhh6olBIqO1/
+	4ZXUtmtDEYqpny6ZMC6WEBlxwfKafGKnTBzoBNoVtLHY1xjRguehlMDQcke2IvMOJ17EBA3rATY
+	piQ==
+X-Google-Smtp-Source: AGHT+IG4NdTzrTcn/tJ+C+qU+BUxLlmZ3u4ruAx10ti1k6L8LxPT6OHgmEaQdgvRL/L6EYHOM/vcI+YYgpw=
+X-Received: from pgax25.prod.google.com ([2002:a05:6a02:2e59:b0:b22:c4d:2874])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:72a4:b0:1f5:8da5:ffe9
+ with SMTP id adf61e73a8af0-215abb03afcmr1445565637.12.1746745475574; Thu, 08
+ May 2025 16:04:35 -0700 (PDT)
+Date: Thu,  8 May 2025 16:04:13 -0700
+In-Reply-To: <20250505180300.973137-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250506011250.1089254-1-seanjc@google.com>
+References: <20250505180300.973137-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.1015.ga840276032-goog
-Message-ID: <174674524889.1512631.9502586158459413855.b4-ty@google.com>
-Subject: Re: [PATCH] KVM: selftests: Add a test for x86's fastops emulation
+Message-ID: <174674531183.1512799.1644836485465401885.b4-ty@google.com>
+Subject: Re: [PATCH v2] KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1
+ VM count transitions
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Michael Larabel <Michael@michaellarabel.com>, Borislav Petkov <bp@alien8.de>
 Content-Type: text/plain; charset="utf-8"
 
-On Mon, 05 May 2025 18:12:50 -0700, Sean Christopherson wrote:
-> Add a test to verify KVM's fastops emulation via forced emulation.  KVM's
-> so called "fastop" infrastructure executes the to-be-emulated instruction
-> directly on hardware instead of manually emulating the instruction in
-> software, using various shenanigans to glue together the emulator context
-> and CPU state, e.g. to get RFLAGS fed into the instruction and back out
-> for the emulator.
+On Mon, 05 May 2025 11:03:00 -0700, Sean Christopherson wrote:
+> Set the magic BP_SPEC_REDUCE bit to mitigate SRSO when running VMs if and
+> only if KVM has at least one active VM.  Leaving the bit set at all times
+> unfortunately degrades performance by a wee bit more than expected.
+> 
+> Use a dedicated spinlock and counter instead of hooking virtualization
+> enablement, as changing the behavior of kvm.enable_virt_at_load based on
+> SRSO_BP_SPEC_REDUCE is painful, and has its own drawbacks, e.g. could
+> result in performance issues for flows that are sensitive to VM creation
+> latency.
 > 
 > [...]
 
-Applied quickly to kvm-x86 selftests to make it easier to test's PeterZ's
-fastops changes, and to get early test coverage on more hardware (in case
-my assertion that undefined arithmetic flags are deterministic proves to
-be wrong).
+Applied to kvm-x86 fixes.  Assuming -next doesn't explode overnight, I'll get
+a pull request sent to Paolo tomorrow.
 
-[1/1] KVM: selftests: Add a test for x86's fastops emulation
-      https://github.com/kvm-x86/linux/commit/5e9ac644c40f
+[1/1] KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1 VM count transitions
+      https://github.com/kvm-x86/linux/commit/e3417ab75ab2
 
 --
 https://github.com/kvm-x86/linux/tree/next
