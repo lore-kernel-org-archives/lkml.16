@@ -1,255 +1,137 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF5B21D5B6;
-	Thu,  8 May 2025 20:42:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51A8288C96;
+	Thu,  8 May 2025 20:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746736980; cv=none; b=rS5kwck5/1/PsZYI3yNpqjDc45FJwzK81tc8BljTJBkGe2sbJ0I7oUOP5n+strPWAhu2LlDU2aq07FRyaBRQ78ac/KYAb0ao7W5h5zwHEL+iTo8Qv8kJcXFnJp49mHHThpuHxvl79dmP8U2iA3ERp8WWKGzizfjjDh7ntbe3q68=
+	t=1746737102; cv=none; b=uGlclUW6K3qfiaw7MYcmlizdFz6A2bVzql8R3ZMHPx8PzTXtw3sqQi918hyF5ETCJUFlw1frYJsm/BCFFwVj0RpqG9hR0JzY1ruJrIBRccW20XkyGYuaBHXPKwj8O2DWtT9rZGJzg1j/ocxlFompm2AvwBA6PZc0hEtILfzBZF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746736980; c=relaxed/simple;
-	bh=VBfbOT5DLr+c5/KA0te9LEdnTO8YPjykp2me/1rQCB0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=c0biKuYe7naL7iTX9LZU1bm7XgMi32QqLoZ3CBc5wtNtoAncua2IBUiGAx4Pl3q3QVVekVOuBy+/yf4dalZbOIEHw+vyDRac+GmSkHP+USOuhvJi1Buf2UjtZYL8PnATQAodIe6oDmOaeMTtVvBtgBPA1Y8gu2U5rY9eiMWMKec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FYqdMSKS; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746737102; c=relaxed/simple;
+	bh=DouCk8thK2P5zZ4AS87//vIXlGPgjxAOc78HwKw9Jdo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BcE900b1pQ0e/FHYQvcFl0NeFrbq+IV9Pf3wnaDhSETG/6emuZw1R5OXNkxNA6HOUWa+FQdNsDXyPMYYX75t/k/pKLXGtOpJpSl71VlIAhPlLpzsjDvzBdTFLuQHWXzszD3/TSxFodqX29Z/g+Ylo/iig9ZhRNh+vCJftFkQdqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IVi23faX; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FYqdMSKS"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548D4vEg002336;
-	Thu, 8 May 2025 20:42:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6XH1kUFCdQFPpnMvt+cv4nkpDWV0J/KTTGqM0CbPTwQ=; b=FYqdMSKSBIA/Aegm
-	p/6ugsnc7pL1aF+8BfkRcVQSLO5+nKMdWeye8ZBhGv9dXOlTys5mJcX6SzvMbpTS
-	g7Ioq+xrqj+HtNj3eZOiaee1Hmj1HCiZlWoVvmHYm9kG3nopfTDHIH4cebAHmmtP
-	OqTZ+KdAOkOdpnA1aV7L8dYL8FNsJYnnuPsojaSTmlo9PY0ng+868wwAgIxTLhiE
-	LfuSJowLGqiRvR251afU70+OMdDntMrtJBYo/SesDHKe1pcmtrqheRXFEgQKBNm8
-	ilXmaz+0PfxIKybUNBPUvmBV/RRin0QBU937lyh6kuv0tJn/WGAx2mZaVBZARn9k
-	sNdAZg==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp5agcj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 20:42:41 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 548Kge02007408
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 8 May 2025 20:42:40 GMT
-Received: from [10.134.71.99] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
- 13:42:40 -0700
-Message-ID: <0dace5ee-8c81-4181-ae0d-7f317b7f5ac9@quicinc.com>
-Date: Thu, 8 May 2025 13:42:39 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IVi23faX"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf848528aso11415005e9.2;
+        Thu, 08 May 2025 13:45:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746737099; x=1747341899; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=socg9X9NWsH5gVrrZlrt7sf1Or5cD/+VF6198Lz9YVE=;
+        b=IVi23faXFbOVGNQOAyUnoLGS159czd2MSwTjGPXJPCqppwzzN0oBPRWln+yvhrGjTt
+         UfO6J00x4EDia2zv27SXz+Q5IuS/MRbeuZFOJyxWKIdbf0vVkG+FXVndtfd4WUYIEFHh
+         zbqQvV9AQ82iqvKdb5dWFhDgsIqWYl2jiCuIyyS0JwQhQVeVQMog2yeraek8QUHwJsb9
+         Z6UeKpFsX+R+eHUY+iyAv/aAjga2kYiph9NXbt0itvjhG2e+WTaKd9od9fgQ397woHfQ
+         KRkk8l+J31CAkyaFbqEfTC3Ew634xd19k11fdI3dsane8719YfC0rvyLOXaAF7px0N1t
+         6/xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746737099; x=1747341899;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=socg9X9NWsH5gVrrZlrt7sf1Or5cD/+VF6198Lz9YVE=;
+        b=URWseFBMcO3p4sqeGoD002q+eLsxOIDm28KJBwmYwUVwD6CPKB/7/Z9przSKZ5EJHl
+         Z99N0YdkwsdeZ3U7h87RTackveTvbyPxxbinChBXjP7d5peUt9qPKWsO+4ddkeDFv6VP
+         eEYGENmf82sYb5nVgTPd3PMv52kkSq7oxVjyXmcvVPJ6B7u2cVwnqCb7nbU4akDk2WlD
+         YUO8EC26xQbcqNvFuu+gAQgB1/3JNRlYUu9ISgj6cvuUoxvCLXpcaO/KDgO00X4CNun9
+         0R69xEZNfDyIqgq84rFcLDbU+qfaz9gnJpmsyVezVy7yCVdGHmAu+8X/uZrCKpWyWPab
+         dJlw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9WpX/VG8fQ2Aek60i6VSoE79/eXjF21S4c78f8hfOoQap3vDdHmRZczLmOgHYcoiRUn3VWhDRf7JdD5s=@vger.kernel.org, AJvYcCWMiDFoQrTX4OUR8G2QrKH6bx78ACSHrX7P1h+7w9HnyA0Ldpkf8rEZzLXyu7poD7Cqz96qTHd5xhq1SgAh@vger.kernel.org, AJvYcCXqM+BCzZFx9YL+nxFPAigAcdXliCZ/rgqzDTQst96lILvjJ1GbTaItBD3i4tcP0us19X4u6f+IBGyc@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVFv+QKo0vmZXHnrc9PF0swDpixA/bHMDBg5VqJD93AKP1y6gC
+	12XTeZCYh9zmA7vGCEtNymgF5TeZSeMnAUxiI698sU4nS+Nor2k9
+X-Gm-Gg: ASbGncvvZRmfacGRKgj7h8mWmxqdKOnSn/RmKaN9nbURx8St6xW9KwAEfQHVYSEety+
+	MNThIGQtd65bBWlEoOPi4RRNZMMVFQ4on3vJaCUqFsH3fos+dDk9jelf7PzXTZcXRrNEhxN0pf5
+	10+UPanM46gX7p3cvbLo7V1VeLx38qnS06+mFidV/eeuNKVsximEH89rconDjm3qIiL2VES+mPL
+	gX3hE/vp7uVYEWd1jazsN0Vt8uH7xWaRAkeJao7OZntKeZbg7YcswvcVljw8WurJ8kBF547jpsf
+	Tfks4Uu1JwqHDhdTBkrQ4JfKzGJZYi6CfnW8WHuVNhi/G18YsPST9dw+1Md3LWSmFiy4Qy9LXQ4
+	Z1ZEiyCIvRB8x9ovec+GjQjrgngE=
+X-Google-Smtp-Source: AGHT+IESDRX2lvASSErkuZb1xuJH8GXgYTQGA4pljvU+gcfPosWeExLiSPBN5Fmc7jrrId7UTlwePw==
+X-Received: by 2002:a05:600c:8708:b0:441:a715:664a with SMTP id 5b1f17b1804b1-442d6dd9d8cmr5184285e9.20.1746737098584;
+        Thu, 08 May 2025 13:44:58 -0700 (PDT)
+Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd3b7b83sm47260905e9.33.2025.05.08.13.44.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 13:44:57 -0700 (PDT)
+Date: Thu, 8 May 2025 22:44:54 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Thierry Reding <treding@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Maxim Schwalm <maxim.schwalm@gmail.com>, Brad Griffis <bgriffis@nvidia.com>, 
+	David Heidelberg <david@ixit.cz>, Ion Agorria <ion@agorria.com>, devicetree@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] ARM: tegra: Add device-tree for ASUS Transformer
+ Pad LTE TF300TL
+Message-ID: <rtb2j3ch2sbxdcyenhjz5auqbs6lcjadstbpnhtd7m66q7ewl6@q7injesdjpnm>
+References: <20250503102950.32744-1-clamor95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 09/14] drm/msm/dpu: split PIPES_PER_STAGE definition
- per plane and mixer
-To: Jun Nie <jun.nie@linaro.org>, Rob Clark <robdclark@gmail.com>,
-        "Abhinav
- Kumar" <quic_abhinavk@quicinc.com>,
-        Sean Paul <sean@poorly.run>,
-        "Marijn
- Suijten" <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Dmitry Baryshkov <lumag@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20250506-quad-pipe-upstream-v9-0-f7b273a8cc80@linaro.org>
- <20250506-quad-pipe-upstream-v9-9-f7b273a8cc80@linaro.org>
-Content-Language: en-US
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <20250506-quad-pipe-upstream-v9-9-f7b273a8cc80@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=XL0wSRhE c=1 sm=1 tr=0 ts=681d1741 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=e5mUnYsNAAAA:8
- a=KKAkSRfTAAAA:8 a=0uiON693c8ldkTsWMEsA:9 a=QEXdDO2ut3YA:10
- a=Vxmtnl_E_bksehYqCbjh:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: gfZKLkJVt65LZDovBHCZSh7YwLTgzYTI
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE4NiBTYWx0ZWRfXw1At4TWHfvvr
- /SH8ZehCvWzg96+l4NGiM8OBTs5Sl2B9NFpYz090QRh136QXwUovQ+o7+LmTbDZU0yBdmRlvour
- VUpHiFUjIUlPggDzAm3jglhvG3Q/tPskdc6jhvH+nYKw8hAigJvUVTr1ioM4dqK/b1Tqzq/zfR4
- Gvd7b3dzfDby4vHHFqFQEulaN04zI4dQ6xFQLOfSyIR5d/af7ttkrU0diPGbkuQl1giWYuP/3UQ
- GxbWwRhdQppbVhW9Xa0dNuyvw68t/KQfxi2vtcvZlaM+TCxIhItcAQ2sjZ9fdUeSxTXRRRbIWCN
- Wnz9a6NHPu2PwBjtdCA7MfHZtPB3dTcQlA7DPnnuO5cLnFveRABGZ1MZ/5RLiIyDs0XYDdgNeNN
- Ao/AHUzTPbNBpnkTe65TGgs+Bf2LKgeRL+V9PC3w9BkYGtFfVmbQknH84ylRx0IRipxAf3sg
-X-Proofpoint-ORIG-GUID: gfZKLkJVt65LZDovBHCZSh7YwLTgzYTI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_06,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 adultscore=0 priorityscore=1501 bulkscore=0
- spamscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505080186
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rz77sh7gaqyro4cb"
+Content-Disposition: inline
+In-Reply-To: <20250503102950.32744-1-clamor95@gmail.com>
 
 
+--rz77sh7gaqyro4cb
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 0/3] ARM: tegra: Add device-tree for ASUS Transformer
+ Pad LTE TF300TL
+MIME-Version: 1.0
 
-On 5/6/2025 8:47 AM, Jun Nie wrote:
-> The stage contains configuration for a mixer pair. Currently the plane
-> supports just one stage and 2 pipes. Quad-pipe support will require
-> handling 2 stages and 4 pipes at the same time. In preparation for that
-> add a separate define, PIPES_PER_PLANE, to denote number of pipes that
-> can be used by the plane.
-> 
-> Signed-off-by: Jun Nie <jun.nie@linaro.org>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
-Hi Jun,
-
-I think the comment from v7 about propogating the PIPES_PER_PLANE change 
-to _dpu_plane_color_fill() got dropped in this version [1].
-
-Also, any reason PIPES_PER_STAGE was kept for 
-dpu_plane_danger_signal_ctrl()?
-
-Thanks,
-
-Jessica Zhang
-
-[1] 
-https://patchwork.freedesktop.org/patch/640534/?series=139762&rev=6#comment_1171802
-
+On Sat, May 03, 2025 at 01:29:47PM +0300, Svyatoslav Ryhel wrote:
+> Add device-tree for ASUS Transformer Pad LTE TF300TL, which is NVIDIA
+> Tegra30-based tablet device.
+>=20
 > ---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c    |  4 ++--
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h |  1 +
->   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c   | 14 +++++++-------
->   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h   |  4 ++--
->   4 files changed, 12 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> index 6338603bf8be9fcc4324b098d5d69d20235cdbae..d710b4eec7ad946a4cf74d6ac5f4db90e8dcf1fd 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> @@ -463,7 +463,7 @@ static void _dpu_crtc_blend_setup_mixer(struct drm_crtc *crtc,
->   		if (pstate->stage == DPU_STAGE_BASE && format->alpha_enable)
->   			bg_alpha_enable = true;
->   
-> -		for (i = 0; i < PIPES_PER_STAGE; i++) {
-> +		for (i = 0; i < PIPES_PER_PLANE; i++) {
->   			if (!pstate->pipe[i].sspp)
->   				continue;
->   			set_bit(pstate->pipe[i].sspp->idx, fetch_active);
-> @@ -1272,7 +1272,7 @@ static int dpu_crtc_reassign_planes(struct drm_crtc *crtc, struct drm_crtc_state
->   	return ret;
->   }
->   
-> -#define MAX_CHANNELS_PER_CRTC 2
-> +#define MAX_CHANNELS_PER_CRTC PIPES_PER_PLANE
->   #define MAX_HDISPLAY_SPLIT 1080
->   
->   static struct msm_display_topology dpu_crtc_get_topology(
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-> index 8d820cd1b5545d247515763039b341184e814e32..b0ed41108a32158c0bc3be2e25fc229b218fd6c5 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-> @@ -34,6 +34,7 @@
->   #define DPU_MAX_PLANES			4
->   #endif
->   
-> +#define PIPES_PER_PLANE			2
->   #define PIPES_PER_STAGE			2
->   #ifndef DPU_MAX_DE_CURVES
->   #define DPU_MAX_DE_CURVES		3
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> index 4cb81a6a692be51d342d9a6f322b632e5fd07b2c..ea7e3fdf52f726737941ad33218a843dca17280b 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> @@ -1078,7 +1078,7 @@ static int dpu_plane_virtual_atomic_check(struct drm_plane *plane,
->   		 * resources are freed by dpu_crtc_assign_plane_resources(),
->   		 * but clean them here.
->   		 */
-> -		for (i = 0; i < PIPES_PER_STAGE; i++)
-> +		for (i = 0; i < PIPES_PER_PLANE; i++)
->   			pstate->pipe[i].sspp = NULL;
->   
->   		return 0;
-> @@ -1129,7 +1129,7 @@ static int dpu_plane_virtual_assign_resources(struct drm_crtc *crtc,
->   	pipe_cfg = &pstate->pipe_cfg[0];
->   	r_pipe_cfg = &pstate->pipe_cfg[1];
->   
-> -	for (i = 0; i < PIPES_PER_STAGE; i++)
-> +	for (i = 0; i < PIPES_PER_PLANE; i++)
->   		pstate->pipe[i].sspp = NULL;
->   
->   	if (!plane_state->fb)
-> @@ -1240,7 +1240,7 @@ void dpu_plane_flush(struct drm_plane *plane)
->   		/* force 100% alpha */
->   		_dpu_plane_color_fill(pdpu, pdpu->color_fill, 0xFF);
->   	else {
-> -		for (i = 0; i < PIPES_PER_STAGE; i++)
-> +		for (i = 0; i < PIPES_PER_PLANE; i++)
->   			dpu_plane_flush_csc(pdpu, &pstate->pipe[i]);
->   	}
->   
-> @@ -1363,7 +1363,7 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane,
->   			&fmt->pixel_format, MSM_FORMAT_IS_UBWC(fmt));
->   
->   	/* move the assignment here, to ease handling to another pairs later */
-> -	for (i = 0; i < PIPES_PER_STAGE; i++) {
-> +	for (i = 0; i < PIPES_PER_PLANE; i++) {
->   		if (!pstate->pipe[i].sspp)
->   			continue;
->   		dpu_plane_sspp_update_pipe(plane, &pstate->pipe[i],
-> @@ -1377,7 +1377,7 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane,
->   
->   	pstate->plane_fetch_bw = 0;
->   	pstate->plane_clk = 0;
-> -	for (i = 0; i < PIPES_PER_STAGE; i++) {
-> +	for (i = 0; i < PIPES_PER_PLANE; i++) {
->   		if (!pstate->pipe[i].sspp)
->   			continue;
->   		pstate->plane_fetch_bw += _dpu_plane_calc_bw(pdpu->catalog, fmt,
-> @@ -1396,7 +1396,7 @@ static void _dpu_plane_atomic_disable(struct drm_plane *plane)
->   	struct dpu_sw_pipe *pipe;
->   	int i;
->   
-> -	for (i = 0; i < PIPES_PER_STAGE; i += 1) {
-> +	for (i = 0; i < PIPES_PER_PLANE; i += 1) {
->   		pipe = &pstate->pipe[i];
->   		if (!pipe->sspp)
->   			continue;
-> @@ -1518,7 +1518,7 @@ static void dpu_plane_atomic_print_state(struct drm_printer *p,
->   
->   	drm_printf(p, "\tstage=%d\n", pstate->stage);
->   
-> -	for (i = 0; i < PIPES_PER_STAGE; i++) {
-> +	for (i = 0; i < PIPES_PER_PLANE; i++) {
->   		pipe = &pstate->pipe[i];
->   		if (!pipe->sspp)
->   			continue;
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
-> index 052fd046e8463855b16b30389c2efc67c0c15281..18ff5ec2603ed63ce45f530ced3407d3b70c737b 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
-> @@ -33,8 +33,8 @@
->   struct dpu_plane_state {
->   	struct drm_plane_state base;
->   	struct msm_gem_address_space *aspace;
-> -	struct dpu_sw_pipe pipe[PIPES_PER_STAGE];
-> -	struct dpu_sw_pipe_cfg pipe_cfg[PIPES_PER_STAGE];
-> +	struct dpu_sw_pipe pipe[PIPES_PER_PLANE];
-> +	struct dpu_sw_pipe_cfg pipe_cfg[PIPES_PER_PLANE];
->   	enum dpu_stage stage;
->   	bool needs_qos_remap;
->   	bool pending;
-> 
+> Changes from v2:
+> - optimized the schema for Transformers
+> ---
+>=20
+> Svyatoslav Ryhel (3):
+>   dt-bindings: arm: tegra: group Tegra30 based ASUS Transformers
+>   dt-bindings: arm: tegra: Add Asus Transformer Pad TF300TL
+>   ARM: tegra: Add device-tree for ASUS Transformer Pad LTE TF300TL
 
+I've applied all of these. There's a checkpatch warning on patch 3/3
+because it doesn't seem to understand the pattern compatible defined
+in the audio card bindings.
+
+As for the warning that Rob's bot pointed out, those are present for
+all Tegra30 boards and there are patches in the works to fix all of
+these, I just need to find the time to get them merged.
+
+Thierry
+
+--rz77sh7gaqyro4cb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmgdF8YACgkQ3SOs138+
+s6HIAg/8Cb/Cd9nfoTiJMaYigAi1lwexoOzOB5ndbUzHxQyHapn3eUkOcKa72Xqd
+Vok7+pCBIqG31ShlwjpVQtausHs9N3kMbY/LEM/wpiwc7FHbnkXl/nu7yVCXKot4
+lG8WK7SXNNXgfQcJNHdLiGzDRcx/6e5Oto2C0JC4zE8CTKJJdRkMRr6dMSitJJ4e
+v8lrXv/7VvMn2k+e/1193kyIXGsJ/3xv4NjeD7+wQDUmsi9d1Ld2lNROAMxt+o5u
+iqeqKEIVr89snyGKnxnrtrzn6bdWZcC5Ib+sKHu4AH8qz5GwOXjp2IXSUFsjAcCi
+hSrsx//ht9oIRWNVDyjtxnCIVSSCeKS/d4Y39kZPbVRQsnK0h6/u7+B8wVa6CQ6u
+qGnHTyHHPH4AlOfcZ9m/7K9yxoG37lXdcPxfi784ZvOwbW/uicpOVGwGYsgb5DBC
+FY53l3Gs/yhI+IXN2l3oCRx7+74sk6lXVktyHsbI//Bl+FB/6S4lKqAFOhm+hoM2
+l3j2G5JRk9s8kRzaQbfJgsPd5est84Pnb43bnR/kg4MDKC7n/YowXLI1m9ao4quO
+E/Hhegnn9QxzIWVq5y/cPy4k5hiwXZ9t195tEN3gCOyGuoFJKRiA84T/T95Ka/td
+k8Qk7uPFlCb1no5ZRu1Lpccr8AY26jRXHaxELUNqAppiUKZFJlg=
+=VRUZ
+-----END PGP SIGNATURE-----
+
+--rz77sh7gaqyro4cb--
