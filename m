@@ -1,135 +1,194 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03B94B1E78
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9304C2153CE;
+	Thu,  8 May 2025 10:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746701094; cv=none; b=KRo3jopPrs0MsQGjhqQPSLIys4afqoeaO7tkiNtrI1Q+Ov2lbGwIpV3Sl7StLOX8tpMuGrw3W084pLLS9YzQf4rADkbT6mcJb0j86ZdshaLIy8LqS+AjyCUSL3fBCluIsmnRAkv9Qkz9QcvtsavqixtklWBw0iKTP6jpHyDPi/s=
+	t=1746701094; cv=none; b=PKRwE/ZOftllo9G92YO5ftdU9O/jzKg3k79dEx+Dl4f4XTO5zeLue+cqkWF+31fIthSKdIgi2pG7v8YR6L165JbgRF0qlUst70rBZa0vdSTJvkvlRg6sa+0t+FXpbSL9gMzbqUKRfOpyMvcbMXPu2HWaOIO8lfAWHxuDgH8LXIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746701094; c=relaxed/simple;
-	bh=Fn/Bg797RXtejcknSS+9IWDalUH7spovGht6Hnt9Dzc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iqvvbyr5TPTGv8DXMD6AC+gvpP6HhUZcMIbobcgvtqLcnPrC2w0F/E6itCDysZ/VK45JFgOT3BqDWDMIj46x10sjzj5Y6T46pZUzEc9jv355HeqLbPrBOSbEQsWzHCbxuJ+qy4otrbOys+Bb9rTEH+heqLeJESk6Q73RoKVUd8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=czI43x1K; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=xqnW9kopq8l64iCs7XUKDphBW5xsrquQhMRe7SGLz5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fE/0ePiS5/BHorft23gIQZ54iELlSaxiDg1J4ewe0TXbMIiOj8Q0iX+3obyq64rIvrFA9X8zb86Ecu4usMQCC8lrQ2Y14TEjPQNipvqZ644vjq1n3FehkH8ljUdzntWjIh58Uy4oRjz2p20ODf7pi/tCj/p2mLEpRoUXpSy4BiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lWJmVqVj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="czI43x1K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746701091;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kg0VQN380cNy38+THmalJtzeh1gOYnZWm93pCjMLjOk=;
-	b=czI43x1KLzE1GTC6pGdE1IS6CahfZGETeALu1S+fndNyyplNe+SQNSInZgYiMnwXvzn+F0
-	1V7r/rn0XAJ8N+0HNpFU5RwrVJX+9YRWgmw5rcJPl3khzdG8PshZytfLebh0VcUAe8PBHo
-	RqruxctLPAE3YNBuc0ut/Mnr69fr4k0=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-397-mw9JlpWgPPOke-ngKQT7xw-1; Thu, 08 May 2025 06:44:50 -0400
-X-MC-Unique: mw9JlpWgPPOke-ngKQT7xw-1
-X-Mimecast-MFC-AGG-ID: mw9JlpWgPPOke-ngKQT7xw_1746701089
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-442cd12d151so5026055e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 03:44:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746701089; x=1747305889;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kg0VQN380cNy38+THmalJtzeh1gOYnZWm93pCjMLjOk=;
-        b=esXS0JMuKYD6V24KjL/Tx3nSYIKFmqtnb0kIr/XXzPDEyXMY3RLS4b/OiZyIL9XXYs
-         vartBmqa8YK6TM7NNarhugZFDHPmJYUmNOFE/2V0EPfP6qiRJp5TEUHSuwOOYB4EUDsb
-         aFTOwRuzEI4+2mSkWRhXLtoKMaTd6inTrHo68qBkQ/zJLwLk+PPsflRIQjjycGecfW09
-         NbNE8VuJPI2xJubwtsX65YxuDTkp0emiB5mLxqiFx9eE3SUgDC4UQg9kJ1kkHeVpAE9/
-         8J4bBB4x47qGLZ4FTwxfgkuoUiMEFM7+FnjHVphxxD24YSs8E81eIl1oE3avB5GWAm1K
-         lE1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUsTcrPp3fL2qIzCgYVaRZBY+XhUOI3QrlTATZALGl0M789NBjMyvRwKFcZLlTwc3nZ7QkY2MtV+cubUhU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCHODzAyWqr9k5P+eyuupdlvKMYVpuxGIJMGud5NmE6X9lWEgS
-	xgvl0/x9A+TC93zO7uFVQtYWWnZHi5SGcJpaUq6Q+yrzYLlKL/ybIaz9JYTUN21wAED8jCB4V6x
-	MUjUwjaUKW+MPnyKDeFalaHlg2GTJYveKqYZYgv3Y5AJ9Xmxqcbq/jdCtMtFA6w==
-X-Gm-Gg: ASbGncvcDEkhkMac7B8/vtF/6l8lXQko6SkYcSlssXs34q+f+vbgy4vI2SBVVUPIQoW
-	g2TMuqRpdMGM6LWvLH1bEFztCb9sMRU9QvGdIx6ycGKUN5zns5EsbwMQpzXvMA0yYMtQvPKan6I
-	SNsJG8JU0AXGzlRWDoCqM/fZICQE0PG+O2/7mBQjgxu8BxS/z8kgALqOMrvr+MpwMFKCl0ds2Mz
-	i6nFyZsFA1B2N0/jP75cG6fI+OeV5jfEaC7rC8nJnpqMISxV8ULfeDrzqyHNdEMd5zppBHJzyYc
-	jmyIT3Ans9EpZpb6j6XOs7S/neCyarwT+gIgRHXeOpvof/OHmWPd576l0Rp3mlMQwLwvIg==
-X-Received: by 2002:a05:600c:5027:b0:43c:f64c:44a4 with SMTP id 5b1f17b1804b1-441d44c41a5mr60707235e9.8.1746701089368;
-        Thu, 08 May 2025 03:44:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFKWHQImK0mQVYX3JJhEVaBoNakORu3NGB6ausgRqlBfk0NSvqhDkPdCLTMr4AX1Nn44y4TLQ==
-X-Received: by 2002:a05:600c:5027:b0:43c:f64c:44a4 with SMTP id 5b1f17b1804b1-441d44c41a5mr60706975e9.8.1746701089048;
-        Thu, 08 May 2025 03:44:49 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d14e6d74sm23818755e9.21.2025.05.08.03.44.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 03:44:48 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Philipp Stanner <phasta@mailbox.org>, Philipp Stanner
- <phasta@kernel.org>, Dave Airlie <airlied@redhat.com>, Gerd Hoffmann
- <kraxel@redhat.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Alex Deucher <alexander.deucher@amd.com>,
- Arnd Bergmann <arnd@kernel.org>, Jani Nikula <jani.nikula@intel.com>,
- Niklas Schnelle <schnelle@linux.ibm.com>, Jeff Johnson
- <jeff.johnson@oss.qualcomm.com>
-Cc: virtualization@lists.linux.dev, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/cirrus: Use non-hybrid PCI devres API
-In-Reply-To: <6d46103afab9fc8e843e5681226f7db34a4ca57d.camel@mailbox.org>
-References: <20250417094009.29297-2-phasta@kernel.org>
- <87frhzc1a9.fsf@minerva.mail-host-address-is-not-set>
- <6d46103afab9fc8e843e5681226f7db34a4ca57d.camel@mailbox.org>
-Date: Thu, 08 May 2025 12:44:46 +0200
-Message-ID: <87a57ns7oh.fsf@minerva.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lWJmVqVj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3043C4CEE7;
+	Thu,  8 May 2025 10:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746701094;
+	bh=xqnW9kopq8l64iCs7XUKDphBW5xsrquQhMRe7SGLz5E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lWJmVqVjUrPhFLOrmOrc8VrQDhLMQb1iYqhL9i4oEafgAhAvl/TqYIXHy3Ufs9UBJ
+	 xeiq9bCza5XLv4OV8VeSS5XZT84c7tpc8G6sjbaA/vipFOsT7FmLU4aoP2wdBbQXpC
+	 yt4XbnmbN0lIavQMNQQUKrLQE/Hyh3SxrRShDR0uWIMcXh3wdiKMC38xIgtYG3qpmu
+	 lcWWbhY2GdZuGSkXJ6E80ecvj+sD/Bqu1OZGdzIp/6n5Y3mQnbxo/7W3Dc/1dDzdTt
+	 2JXOUM3wqyOVSyrZP2pVpD3hZjyvD97cIYXiu6E/i8imGyuSvvt3JCj6aZJYsQnrsG
+	 XByNzTryEvqMw==
+Date: Thu, 8 May 2025 12:44:45 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 20/25] irqchip/gic-v5: Add GICv5 PPI support
+Message-ID: <aByLHdktOLUk8HCN@lpieralisi>
+References: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
+ <20250506-gicv5-host-v3-20-6edd5a92fd09@kernel.org>
+ <87zffpn5rk.ffs@tglx>
+ <86a57ohjey.wl-maz@kernel.org>
+ <87ecx0mt9p.ffs@tglx>
+ <867c2sh6jx.wl-maz@kernel.org>
+ <874ixwmpto.ffs@tglx>
+ <aBxgceQBRA6vBK7o@lpieralisi>
+ <864ixvh4ss.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <864ixvh4ss.wl-maz@kernel.org>
 
-Philipp Stanner <phasta@mailbox.org> writes:
+On Thu, May 08, 2025 at 09:42:27AM +0100, Marc Zyngier wrote:
+> On Thu, 08 May 2025 08:42:41 +0100,
+> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> > 
+> > On Wed, May 07, 2025 at 04:57:07PM +0200, Thomas Gleixner wrote:
+> > > On Wed, May 07 2025 at 14:52, Marc Zyngier wrote:
+> > > > On Wed, 07 May 2025 14:42:42 +0100,
+> > > > Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > >> 
+> > > >> On Wed, May 07 2025 at 10:14, Marc Zyngier wrote:
+> > > >> > On Tue, 06 May 2025 16:00:31 +0100,
+> > > >> > Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > >> >> 
+> > > >> >> How does this test distinguish between LEVEL_LOW and LEVEL_HIGH? It only
+> > > >> >> tests for level, no? So the test is interesting at best ...
+> > > >> >
+> > > >> > There is no distinction between HIGH and LOW, RISING and FALLING, in
+> > > >> > any revision of the GIC architecture.
+> > > >> 
+> > > >> Then pretending that there is a set_type() functionality is pretty daft
+> > > >
+> > > > You still need to distinguish between level and edge when this is
+> > > > programmable (which is the case for a subset of the PPIs).
+> > > 
+> > > Fair enough, but can we please add a comment to this function which
+> > > explains this oddity.
+> > 
+> > Getting back to this, I would need your/Marc's input on this.
+> > 
+> > I think it is fair to remove the irq_set_type() irqchip callback for
+> > GICv5 PPIs because there is nothing to set, as I said handling mode
+> > for these IRQs is fixed. I don't think this can cause any trouble
+> > (IIUC a value within the IRQF_TRIGGER_MASK should be set on requesting
+> > an IRQ to "force" the trigger to be programmed and even then core code
+> > would not fail if the irq_set_type() irqchip callback is not
+> > implemented).
+> > 
+> > I am thinking about *existing* drivers that request GICv3 PPIs with
+> > values in IRQF_TRIGGER_MASK set (are there any ? Don't think so but you
+> > know better than I do), when we switch over to GICv5 we would have no
+> > irq_set_type() callback for PPIs but I think we are still fine, not
+> > implementing irqchip.irq_set_type() is correct IMO.
+> 
+> Nobody seems to use a hardcoded trigger (well, there is one exception,
+> but that's to paper over a firmware bug).
 
-Hello Philipp,
+That's what I get if I remove the PPI irq_set_type() callback (just one
+timer, removed others because they add nothing) and enable debug for
+kernel/irq/manage.c (+additional printout):
 
-> On Tue, 2025-04-22 at 23:51 +0200, Javier Martinez Canillas wrote:
->> Philipp Stanner <phasta@kernel.org> writes:
->> 
->> Hello Philipp,
->> 
->> > cirrus enables its PCI device with pcim_enable_device(). This,
->> > implicitly, switches the function pci_request_regions() into
->> > managed
->> > mode, where it becomes a devres function.
->> > 
->> > The PCI subsystem wants to remove this hybrid nature from its
->> > interfaces. To do so, users of the aforementioned combination of
->> > functions must be ported to non-hybrid functions.
->> > 
->> > Replace the call to sometimes-managed pci_request_regions() with
->> > one to
->> > the always-managed pcim_request_all_regions().
->> > 
->> > Signed-off-by: Philipp Stanner <phasta@kernel.org>
->> > ---
->> 
->> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
->> 
->
-> Who's in charge of applying this? Any objections with me just putting
-> it into drm-misc-next?
->
+ genirq: No set_type function for IRQ 70 (GICv5-PPI)
+  __irq_set_trigger+0x13c/0x180
+  __setup_irq+0x3d8/0x7c0
+  __request_percpu_irq+0xbc/0x114
+  arch_timer_register+0x84/0x140
+  arch_timer_of_init+0x180/0x1d0
+  timer_probe+0x74/0x124
+  time_init+0x18/0x58
+  start_kernel+0x198/0x384
+  __primary_switched+0x88/0x90
 
-Sure, go ahead.
+ arch_timer: check_ppi_trigger irq 70 flags 8
+ genirq: enable_percpu_irq irq 70 type 8
+ genirq: No set_type function for IRQ 70 (GICv5-PPI)
+  __irq_set_trigger+0x13c/0x180
+  enable_percpu_irq+0x100/0x140
+  arch_timer_starting_cpu+0x54/0xb8
+  cpuhp_issue_call+0x254/0x3a8
+  __cpuhp_setup_state_cpuslocked+0x208/0x2c8
+  __cpuhp_setup_state+0x50/0x74
+  arch_timer_register+0xc4/0x140
+  arch_timer_of_init+0x180/0x1d0
+  timer_probe+0x74/0x124
+  time_init+0x18/0x58
+  start_kernel+0x198/0x384
+  __primary_switched+0x88/0x90
 
-> P.
->
+I noticed that, if the irq_set_type() function is not implemented,
+we don't execute (in __irq_set_trigger()):
 
--- 
-Best regards,
+irq_settings_set_level(desc);
+irqd_set(&desc->irq_data, IRQD_LEVEL);
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+which in turn means that irqd_is_level_type(&desc->irq_data) is false
+for PPIs (ie arch timers, despite being level interrupts).
 
+An immediate side effect is that they show as edge in:
+
+/proc/interrupts
+
+but that's just what I could notice.
+
+Should I set them myself in PPI translate/alloc functions ?
+
+Removing the irq_set_type() for PPIs does not seem so innocuous, it is a
+bit complex to check all ramifications, please let me know if you spot
+something I have missed.
+
+> > On the other hand, given that on GICv5 PPI handling mode is fixed,
+> > do you think that in the ppi_irq_domain_ops.translate() callback,
+> > I should check the type the firmware provided and fail the translation
+> > if it does not match the HW hardcoded value ?
+> 
+> Why? The fact that the firmware is wrong doesn't change the hardware
+> integration. It just indicates that whoever wrote the firmware didn't
+> read the documentation.
+> 
+> Even more, I wonder what the benefit of having that information in the
+> firmware tables if the only thing that matters in the immutable HW
+> view. Yes, having it in the DT/ACPI simplifies the job of the kernel
+> (only one format to parse). But it is overall useless information.
+
+Yes, that I agree but it would force firmware bindings to special case
+PPIs to remove the type (#interrupt-cells and co.).
+
+From what I read I understand I must ignore the PPI type provided by
+firmware.
+
+> > Obviously if firmware exposes the wrong type that's a firmware bug
+> > but I was wondering whether it is better to fail the firmware-to-Linux
+> > IRQ translation if the firmware provided type is wrong rather than carry
+> > on pretending that the type is correct (I was abusing the irq_set_type()
+> > callback to do just that - namely, check that the type provided by
+> > firmware matches HW but I think that's the wrong place to put it).
+> 
+> I don't think there is anything to do. Worse case, you spit a
+> pr_warn_once() and carry on.
+
+Thanks,
+Lorenzo
