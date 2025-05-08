@@ -1,83 +1,124 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F8596F073;
-	Thu,  8 May 2025 08:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5B26F073;
+	Thu,  8 May 2025 08:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746692090; cv=none; b=fWtv/mWP1AmO1VOby5DBkuUL7CJtItFqFcFFd9NxvB1AWiVuRoaZUPXq/7UB/0xO9rJ3NM5L3EOIvzZHsdaZtlkt2u7Ky3X1VB+hJu1uZTBdmQsp/ZW6u8nbeSpcHEtlp4g9dpOdhanrQU7C9Gu/XjEknufSiRCabxPKhXqQLQk=
+	t=1746692093; cv=none; b=OwJ58Ru+hXZEAH7JO7k0Udc7Q1e47h/qb4Lq4VVSH8hpslBSfq43ssIaeQ4kGiSMkMFU/jXO36ajO1/QRVT2dwsvQu264QoCFtZvHCKWol/aUo3F06ZMPOLl2rUIT3mlkWM/RjtREhh6wHpyIdBgz7dSrThzCWqjtRT54jXHygY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746692090; c=relaxed/simple;
-	bh=74xPf07Id1YjwyWpiTLsgusd9YeNBekMVBvnho/qu28=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UBu0uMHjQAqUEQmhksLBZyLXaGYpfnStga2H0UmbsunoKuvrRYOZAxPn0Okqj3PKjYkp+2jqeDUga7TxGFInGgAM7M9uZ1nJ5Nc7nPt5Q9OXvhBGlLVS3efgEKBy893tLXXVMUP5iwI2IZr5ahM2POI76zdEP8I96P9KR6YxtSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ltzca0ey; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746692093; c=relaxed/simple;
+	bh=a90R/RVtpbilNz7s62Jg8u91/OCcf1dJCeMzvHKzX2o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r8cucbhY2pj246KOILhTuE+Al1zbXmxYlbdncwSxRdwOhG3zkGfoHmakb2GAHD743jAsp0yFZGDP+lsFpeT+NT4qYqW2Pv74S8LJlf11hiEbxITDNWbjNgncse4uJFWn2mFs1dGIt/5MVcsX7nBz0zVdI7GduXl8/nraT53EJHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A52oFjrq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ltzca0ey"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=9u
-	i4tQhpd/K6rp/B6uUyA+cBe3CYrRp23mZq06w97t4=; b=ltzca0eytM1zjYG1Jy
-	T+gihYRZ+MS9YhUgPLCUOCz5/f65rEba2pav49UWM6nmpqGzH71fCgM1y7qj8LOv
-	KQtxFjLVFRlJip9oBCoGPwg9FaXt4QgW2mTlCHhYUsVnVW+QZ7twc+mkiEu/ZDDw
-	K7hch19A/HxmfDLDATJ7tOAAM=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgC3xJPHZxxosVC1BQ--.11373S4;
-	Thu, 08 May 2025 16:14:00 +0800 (CST)
-From: lvxiafei <xiafei_xupt@163.com>
-To: Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Cc: lvxiafei <lvxiafei@sensetime.com>,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] netfilter: nf_conntrack: table full detailed log
-Date: Thu,  8 May 2025 16:13:12 +0800
-Message-Id: <20250508081313.57914-1-xiafei_xupt@163.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A52oFjrq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 486EBC4AF09;
+	Thu,  8 May 2025 08:14:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746692093;
+	bh=a90R/RVtpbilNz7s62Jg8u91/OCcf1dJCeMzvHKzX2o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=A52oFjrqemalMSdOL5Jmf+c40wj1sXuWYLl3QItkyf8Aqq/xG84ltalPNi2KEG/fq
+	 ABli4aqrCKNLjztj/+3aUSi9l+2nt/WM6JzKW4nKCDdxi3YEPTXXrxPhPHVBjH68Ql
+	 Ri2XOSRQxtmhtCmCLya0Hp11BXH8gJ/hZHf3u8a96PiTaJSp4JwsxXIZQkErTJ2E0g
+	 Xy4LgLvC4i/ZOKRMlEdcvIRN5jBO/kNIaNBZ6DOcXfFkf7IOuSYm/K6GeoT/a8BO7T
+	 aEG/E4OMKhoe3/ngc8pHwi5btrsjtQjEqJ8mkiuyn4PouIID1ct9uWjprupBP2SyG5
+	 YvHfgMoFzbtNQ==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-326bb1d3e34so4023311fa.3;
+        Thu, 08 May 2025 01:14:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUjLDvCYRQE+ee7mamAmV8GSDBpIRZwyKM69oD/iQj5tO4y9MHz05Ibf7i5FkdosKDB1lJfirJM6Y51qhoT@vger.kernel.org, AJvYcCVAYWfcvPhe+NoSfGkFXwjQvM5vAuPw8ujRRQuJqlwE0k+c0Tf10KklSN0aIHpwx/zci8pgYerKxU0EiEU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2o1kmrFzeLycqe0GYInCO5UiY14gSeV0QHsUVWLwie45VC9aH
+	9laEd46kAZpezP9dX9iHLeOyid8kx0UKmWqLt2+8LewufDZunG5dRbgXqsu2yrfkYQc+keOJqao
+	F0k4xvlNdNiaZovxGvJzNvdcS1LM=
+X-Google-Smtp-Source: AGHT+IG5/r3K74rrgmP4jjN2TrL5tduvKzUd/NyUq1PVkJzbIiLe5Exi6qlai9lYrJkj3vGsc13NepVCII6zThmGhHQ=
+X-Received: by 2002:a2e:a9ab:0:b0:31b:4770:4957 with SMTP id
+ 38308e7fff4ca-326ad15e61amr23735871fa.3.1746692091963; Thu, 08 May 2025
+ 01:14:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgC3xJPHZxxosVC1BQ--.11373S4
-X-Coremail-Antispam: 1Uf129KBjvdXoWruF4kCF4UWry8XrW8JF1xGrg_yoWfKFXEk3
-	92qFyjqF1Fvr9Fkr48XwsrWF9Fga4fAFZ3ZryUZrZF9a4DtryDKFWkZF4Yv34UGr4qyF9r
-	Cr93XF1a9w47GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8l38UUUUUU==
-X-CM-SenderInfo: x0ldwvplb031rw6rljoofrz/1tbiKBlGU2gbtOMAywACsJ
+References: <20250507074936.486648-1-masahiroy@kernel.org> <9ec50ce0-f60b-4d87-bc44-adaf2a1a97a1@linuxfoundation.org>
+ <b1e4e83c0965e10f2fe59826d19eaf131ec7aef9.camel@sipsolutions.net> <CAMuHMdUwE7btR+ebG8-gvPb8GPnxUGPWw3yKR4qM4Uc_mYcHhg@mail.gmail.com>
+In-Reply-To: <CAMuHMdUwE7btR+ebG8-gvPb8GPnxUGPWw3yKR4qM4Uc_mYcHhg@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 8 May 2025 17:14:15 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT_m+R3Keyys2NpmQWRmZzHNv9FM_ALv=vn_WMzTSWhyw@mail.gmail.com>
+X-Gm-Features: ATxdqUFvuCFG5NyS8UC8wsCetGd3jkgaQucz2-cP5mFw3Psg07oK3WaW20XowMg
+Message-ID: <CAK7LNAT_m+R3Keyys2NpmQWRmZzHNv9FM_ALv=vn_WMzTSWhyw@mail.gmail.com>
+Subject: Re: [PATCH] um: let 'make clean' properly clean underlying SUBARCH as well
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Richard Weinberger <richard@nod.at>, 
+	linux-um@lists.infradead.org, David Gow <davidgow@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: lvxiafei <lvxiafei@sensetime.com>
+On Thu, May 8, 2025 at 4:38=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
+.org> wrote:
+>
+> Hi Johannes,
+>
+> On Thu, 8 May 2025 at 07:29, Johannes Berg <johannes@sipsolutions.net> wr=
+ote:
+> > On Wed, 2025-05-07 at 15:38 -0600, Shuah Khan wrote:
+> > > My workflow:
+> > >
+> > > - Build kernel on x86_64 with CONFIG_AMD_MEM_ENCRYPT enabled
+> > >
+> > > - Check for arch/x86/realmode/rm/pasyms.h
+> > >    ls arch/x86/realmode/rm/pasyms.h
+> > >       arch/x86/realmode/rm/pasyms.h
+> > >
+> > > - make ARCH=3Dum O=3D/linux/build
+> > >
+> > >    This patch cleans the source tree, but doesn't remove
+> > >    arch/x86/realmode/rm/pasyms.h
+> > >
+> > > - ls arch/x86/realmode/rm/pasyms.h
+> > >       arch/x86/realmode/rm/pasyms.h
+> >
+> > Is that even _expected_ to work? If you have x86 built first, I'd almos=
+t
+> > expect you to have to do "make ARCH=3Dx86 mrproper" before building
+> > another ARCH. I don't see how ARCH=3Dum would know how to do a full cle=
+an
+> > up of ARCH=3Dx86, unless this is somehow arch-independent?
+> >
+> > Or maybe that's not an issue with other architectures because UML is
+> > special in that it uses parts of x86?
+>
+> Probably.
+> I only use my linux-next source tree for fixing reported build issues on
+> various architectures, and I never use make clean/mrproper.  Works fine.
+>
+> > Though I guess the patch here should make it do that, more or less, but
+> > it can't, likely because you're also switching from in-tree build to O=
+=3D
+> > build?
+>
+> Yeah, mixing in-tree and out-of-tree builds causes issues.
+> Never build in-tree in a source tree you use with O=3D (except for
+> e.g. "make tags").
+>
 
-Add the netns field in the "nf_conntrack: table full,
-dropping packet" log to help locate the specific netns
-when the table is full.
+I argue this.
 
-Signed-off-by: lvxiafei <lvxiafei@sensetime.com>
----
- net/netfilter/nf_conntrack_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+You can start out-of-tree builds after running 'make mrproper'
+for the architecture you want to build the kernel for.
 
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index 7f8b245e287a..71849960cf0c 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -1659,7 +1659,8 @@ __nf_conntrack_alloc(struct net *net,
- 			if (!conntrack_gc_work.early_drop)
- 				conntrack_gc_work.early_drop = true;
- 			atomic_dec(&cnet->count);
--			net_warn_ratelimited("nf_conntrack: table full, dropping packet\n");
-+			net_warn_ratelimited("nf_conntrack: table full in netns %u, dropping packet\n",
-+					     net->ns.inum);
- 			return ERR_PTR(-ENOMEM);
- 		}
- 	}
--- 
-2.40.1
+Hence, Kbuild suggests to do so when it determines
+the source tree is not clean enough.
 
+Unfortunately, "make mrproper ARCH=3Dum" did not clean the tree
+deeply enough.   Hence, this patch.
+
+
+--=20
+Best Regards
+Masahiro Yamada
