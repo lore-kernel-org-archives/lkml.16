@@ -1,72 +1,113 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762B01FC8
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 06:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D482C1D63F2;
+	Thu,  8 May 2025 06:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746684062; cv=none; b=GudQULFiLewuU6P4aGbk7FfMLUl4OTaWH9GJ1+oB8x5duqtRKCpkbUbJLh/SxFl+oFSqgBzP+xJ7u5fT46SEx48JZN8/8IGqCMImO/vqqAysFoYJx58zI3YLYWLcae+UGmNOMM4jY503H9k25QRQTdHOTXkXdtEMJdL9xU9k2I4=
+	t=1746684084; cv=none; b=Urx6R1JKhLLqKnl+pUSOwPgTypl11bCLue1zO9u/rYFZbsnAfRyaOcU/Ae59jOLOeMR79U+rZjZkfDRDuY64/YZ6G/7crpPdnmF5fT1RxYHScpQ/FbT9/yoDALwsEPRPFp2GD187Ag3bHRIuxKnUEb8gUTRis7ODJfPHuumodIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746684062; c=relaxed/simple;
-	bh=F2fxwJ/tLGSJU1oVvK9x5TYZPPvQXrubBX+kuc6q548=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M06M+T2bo7Jti9GIDg6uFpTRUXkxohx20rYp6pyHFHIXuhLdq971U3XEmfcpuyb4Gz13drsNKK470Y3ujIM3Md3KzXHT7BkG8e8IoZxhv25O3kaXaP20KPWSVGeiPZHQ0crL02y2sE0quzKetu1grJxFLOXutOo8ebE1gxcYJWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ie2IgIec; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1746684084; c=relaxed/simple;
+	bh=yp2VPPqQVYukwAWYetB7YiabOpfn/VGHrneqXAdRHN4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AeY6O5Qf3RWH9cqK0jXZqYvEY22yCUz81z55voHLyOV5idk+jdaZjxsww0M3l0CJQe/aeSEWCWdHy5PQjkNO2x32v5EIoHBjI5nNwJM/Oe6kPJbLjzHVzvHINyTTO91g98K4YzS+NJ4Gev+vpWlIe8zQU97ebA/EDDavKaPxWyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tIu4DJEw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ie2IgIec"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xP0KRNJzx8RIi5c4Icq/a4y8dcse2YorRXigC3K0lXg=; b=ie2IgIec/ZYa01/g+Sw24Q4MSY
-	SpRG0f2HZvWX6kvpAzqdgrIQA4eNtEwiTOBo4SOrRn8Tb6QK4YCaJ4pXGfCh4hGCgJEOSKqi+2iPW
-	FIROq5//PLuWKnXXb2l9w6yj4NhVpmjCnKWHqBS0ltDqtJv+f6A2VI9Gb757Cglz7nxErak/LJklp
-	9yGgimiGSHDi1zaFkhlSuabCJwZAkZnR+bZhAYqq0b81Uu6VhLaHhXUtPrh+ochrr47Dt9KAL09Gg
-	WcPuUvlaCztFqJKhf4iFwnm4ypR7FVzOVcvXagKYyTeJoyIAdM6V4BtK9zAzXq9GrVvlwifC21Enu
-	sH+iPBqg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCuJR-0000000HQ39-3pJb;
-	Thu, 08 May 2025 06:00:53 +0000
-Date: Wed, 7 May 2025 23:00:53 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Vitaly Wool <vitaly.wool@konsulko.se>, linux-mm@kvack.org,
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	Nhat Pham <nphamcs@gmail.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Minchan Kim <minchan@kernel.org>, Igor Belousov <igor.b@beldev.am>,
-	Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
-Message-ID: <aBxIlUYEPojTopek@infradead.org>
-References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
- <aBoK7f7rtfbPFGap@google.com>
- <m2dmxnhtvxano6lye7lr3saiobn4ygpln55xntlstfo4zwws5g@qpq7aagx3xwq>
- <b42gpp5qsa4j22ai2v4rwwkjhvfbcbf3lcnjoccz7xeidae5c7@ot2ocric3qzs>
- <aBsDj0IGQBJC_JMj@infradead.org>
- <unyov4aypoaotj56m5scgd4qtjfn2mceb4zdmtaek42dfqaq3t@lrrqwojlmudp>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tIu4DJEw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E42E0C4CEEB;
+	Thu,  8 May 2025 06:01:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746684083;
+	bh=yp2VPPqQVYukwAWYetB7YiabOpfn/VGHrneqXAdRHN4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tIu4DJEw/UkLqGIVrC75kaJFTLViAvSzFiesuQsPHNnThP5bWO1OngxGen1svIsCw
+	 PbgPtFNRaoKpv7zS1ENqvqoR+2/XQ4DaJ/GYklbmSw2BmNNRhlP6IJn4ZmhFC03qK0
+	 JeeBV4WNmN6XD4cV5+dm5p9wUzMFONTsTgx4PZ91cERrirxTfl8oDjH0okTiF1XAkS
+	 sX23epz4d67WciZpW6KCC3EtE4ByfEd5vDp9KwDHQo8WuDuQbh8Uy1voTOnWQUuWu/
+	 /aP/HnOBU8yxLU7vC/HFWzmoZe4fFapbL9d83UEnovEsjhFGY+OyAn+x2JhAecOZfC
+	 TdAuvWNiLsPAw==
+Message-ID: <79148223-d87f-486e-9d51-979f9188a837@kernel.org>
+Date: Thu, 8 May 2025 08:01:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <unyov4aypoaotj56m5scgd4qtjfn2mceb4zdmtaek42dfqaq3t@lrrqwojlmudp>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] dt-bindings: mfd: mediatek: mt6397: Add
+ #sound-dai-cells property
+To: Julien Massot <julien.massot@collabora.com>, kernel@collabora.com,
+ Sen Chu <sen.chu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
+ Macpaul Lin <macpaul.lin@mediatek.com>, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Hui Liu <hui.liu@mediatek.com>, Yong Wu <yong.wu@mediatek.com>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Tinghan Shen <tinghan.shen@mediatek.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, iommu@lists.linux.dev
+References: <20250505-mt8395-dtb-errors-v1-0-9c4714dcdcdb@collabora.com>
+ <20250505-mt8395-dtb-errors-v1-1-9c4714dcdcdb@collabora.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250505-mt8395-dtb-errors-v1-1-9c4714dcdcdb@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 08, 2025 at 02:58:14PM +0900, Sergey Senozhatsky wrote:
-> Oh, I didn't realize that zram was the only swap_slot_free_notify
-> user.  zram already handles REQ_OP_DISCARD/REQ_OP_WRITE_ZEROES so
-> I guess only swap-cluster needs some work.  Are there any
-> blockers/complications on the swap-cluster side?
+On 05/05/2025 15:23, Julien Massot wrote:
+> The 'mt6359.dtsi' file already uses the '#sound-dai-cells' property.
+> Add the corresponding property to the binding to fix the following
+> dtb-check error:
+If this is a DAI, then you miss dai-common reference. If not, you need
+to explain it in commit msg.
 
-I think the reason it was added it was so that the discard can be
-done non-blocking with a spinlock held.  Which seems a bit sketch
-when calling into a driver anyway..
-
+Best regards,
+Krzysztof
