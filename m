@@ -1,93 +1,131 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A05224B26
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 20:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3B524B26
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 20:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746735381; cv=none; b=TdIdDGuHM0qUyY/FI0Fbko9EDrIIq5xINxJjV29y9gx5vwbahywEwzmMzmUzg8swqDQXN0OoCLpGnHDZUQRI5+bkSEypaarxpUAfvZLMQdStmNROH0C5K/3j142y7TGKBf3/g/gBOP+g3bPY88Jfpa5GHmvrQCglJks/T4k7Rp0=
+	t=1746735451; cv=none; b=QQOjG8pBR56ZKyaGmp6Vz8z5NwxWkdXYZXzJDJ7TMTZsLjujd63yXtOFR4rh3mKrlreYMgikVKJmoKMKCtRi5dVmtHY1T9xaLIyma/hjHm5+YQrH1VkbBJ0+P8zLCr8d7Nk6mqXmES1eiZ8SehFBr+YkIFM1bB15V7Vh3UbphSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746735381; c=relaxed/simple;
-	bh=p8Zcxo4J4pFBBrvBfeq2+pMemDmGv98U3CWVoFFZLvg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qx8NAixeWogS3f2I2grTmIoyhSmxee2iIKuxpPHzS6MvimVcNwVFT1LLv02YcdVe1ZEv81gsaUFlHaA0c4w6mgF6CaLQXSxCJvRiH+S+jNV+EM9fLkraAT43xy3byLnXhIkHSnHAFZOeboYxMgFgjeW7Vzl02pqz1oF0Dv5EqbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=iGPsW/gP; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1746735451; c=relaxed/simple;
+	bh=vQw7+x3sCXM1CFdwcjqiaFcmIlu+p5tMyKAhdv0KA9o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ce7qx4/unC+YvBXgkXtpW9k7JavaW3OD0dBv+C5ndy3i86aKOEdVx21h8k6punQ26QrXRLw5rGjG4EbNIhWML6FrnBZGfP2da2TngaY0g4HMy8zweSv9zA7KuEszxXUmXjUl1LcdTvHI64/pB1ibNGJmAM2g4WyhAAOkpVRTHdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=L0zvo6Ua; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="iGPsW/gP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=C8UHkk2am11YMFz//N35jiF4QHsdGKv/t5svYIOY4L0=; b=iGPsW/gP5qFCnQFlt3LW9WuoQK
-	kRnjrBA9clzkoUsUqWXb13Au06Cz8YsRUfAUIVlRANJfYEscjSqDRxzXoY/GERvPQM/fkjgyZe1z3
-	DDBc9FCbYx4p5F4jMnRa0zCAMk+sjrJ4yoj0Lu10Uxr+204lEg5hLU6PsP8r/9W2TsuHUfyy8ErIF
-	qrq4lsJ8AYwWtawI6XRHY6B6DueF/KdXBHOhXeH9Sd/1YCwCICyl5cCU3Yfj7Ydu2HQz+tT75Lmg4
-	CJ2r7PoXnJr6mB0L6mk5xvtRUF9fcOrf509hc8WrMScznI/WwDkwkvAXmFfMYsh0874SfGT2f8jrK
-	6E6EdXlQ==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <carnil@debian.org>)
-	id 1uD7ek-006l47-Q2; Thu, 08 May 2025 20:15:47 +0000
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id A6B1DBE2DE0; Thu, 08 May 2025 22:15:45 +0200 (CEST)
-Date: Thu, 8 May 2025 22:15:45 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Larry Wei <larryw3i@yeah.net>, 1103397@bugs.debian.org
-Cc: Ben Hutchings <ben@decadent.org.uk>, TonyWWang-oc@zhaoxin.com,
-	"Chang S. Bae" <chang.seok.bae@intel.com>,
-	Lyle Li <LyleLi@zhaoxin.com>, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, aruna.ramakrishna@oracle.com, pbonzini@redhat.com,
-	levymitchell0@gmail.com, attofari@amazon.de,
-	linux-kernel@vger.kernel.org, CobeChen@zhaoxin.com,
-	TimGuo@zhaoxin.com, LeoLiu-oc@zhaoxin.com
-Subject: Re: Bug#1103397: linux-image-amd64: Kernel Panic:
-  copy_fpstate_to_sigframe crashes.
-Message-ID: <aB0Q8S47iNeD1GOM@eldamar.lan>
-References: <4ac9f677-699e-4ef1-b160-9f1c6fe8e820@yeah.net>
- <c566339b-d8d3-4f74-a3b8-8f373fbe3f47@yeah.net>
- <174486226753.86424.3234605951040281675.reportbug@zx2>
- <8bcebb19-17f6-47e6-976a-0c9560795cd7@yeah.net>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="L0zvo6Ua"
+Message-ID: <adbf1bdb-b4a6-4004-91a2-8ae1a7c6485d@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746735446;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xW1lyde1rFoYHMdSte95ffiRHM0n9sNPG5Z2FF4OZhU=;
+	b=L0zvo6Uag5ujjLttWPBQRpOjKck0A5r5ywbrj41FXX+z3dHgUk0x2eXomtoQssNCK+iBy3
+	RirtEwpbTb/ma2HieBXVtB24FXb/KN4AxY/YiVsFaIiSWU3PNo5aPXAAelxFmCtu6o0DwU
+	gh9pwRbnSKEBkg162bdGTfqujxdAOt8=
+Date: Thu, 8 May 2025 13:17:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8bcebb19-17f6-47e6-976a-0c9560795cd7@yeah.net>
-X-Debian-User: carnil
+Subject: Re: [PATCH v6 01/14] riscv: sbi: add Firmware Feature (FWFT) SBI
+ extensions definitions
+To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>,
+ Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-kselftest@vger.kernel.org
+Cc: Samuel Holland <samuel.holland@sifive.com>,
+ Andrew Jones <ajones@ventanamicro.com>, Deepak Gupta <debug@rivosinc.com>
+References: <20250424173204.1948385-1-cleger@rivosinc.com>
+ <20250424173204.1948385-2-cleger@rivosinc.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <20250424173204.1948385-2-cleger@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Larry Wei, hi Ben,
-
-For context this is about https://bugs.debian.org/1103397, and which
-Ben did forward in
-https://lore.kernel.org/regressions/dddb6b8d56e3f28b914e1e243f948457d53149ce.camel@decadent.org.uk/T/
-
-On Thu, May 08, 2025 at 03:12:31AM +0800, Larry Wei wrote:
-> Thank you all,
+On 4/24/25 10:31 AM, ClÃ©ment LÃ©ger wrote:
+> The Firmware Features extension (FWFT) was added as part of the SBI 3.0
+> specification. Add SBI definitions to use this extension.
 > 
-> I have pulled the newest `linux-next` changes and compiled it, my laptop
-> boots well now! https://linux-hardware.org/?probe=271fabb7a4 , but it still
-> prints some `WARNING` information at startup:
-> https://linux-hardware.org/?probe=271fabb7a4&log=dmesg . May this output is
-> useful for you maintainers.
+> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+> Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+> Tested-by: Samuel Holland <samuel.holland@sifive.com>
+> Reviewed-by: Deepak Gupta <debug@rivosinc.com>
+> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> ---
+>   arch/riscv/include/asm/sbi.h | 33 +++++++++++++++++++++++++++++++++
+>   1 file changed, 33 insertions(+)
 > 
-> And, thank you all again.
+> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+> index 3d250824178b..bb077d0c912f 100644
+> --- a/arch/riscv/include/asm/sbi.h
+> +++ b/arch/riscv/include/asm/sbi.h
+> @@ -35,6 +35,7 @@ enum sbi_ext_id {
+>   	SBI_EXT_DBCN = 0x4442434E,
+>   	SBI_EXT_STA = 0x535441,
+>   	SBI_EXT_NACL = 0x4E41434C,
+> +	SBI_EXT_FWFT = 0x46574654,
+>   
+>   	/* Experimentals extensions must lie within this range */
+>   	SBI_EXT_EXPERIMENTAL_START = 0x08000000,
+> @@ -402,6 +403,33 @@ enum sbi_ext_nacl_feature {
+>   #define SBI_NACL_SHMEM_SRET_X(__i)		((__riscv_xlen / 8) * (__i))
+>   #define SBI_NACL_SHMEM_SRET_X_LAST		31
+>   
+> +/* SBI function IDs for FW feature extension */
+> +#define SBI_EXT_FWFT_SET		0x0
+> +#define SBI_EXT_FWFT_GET		0x1
+> +
+> +enum sbi_fwft_feature_t {
+> +	SBI_FWFT_MISALIGNED_EXC_DELEG		= 0x0,
+> +	SBI_FWFT_LANDING_PAD			= 0x1,
+> +	SBI_FWFT_SHADOW_STACK			= 0x2,
+> +	SBI_FWFT_DOUBLE_TRAP			= 0x3,
+> +	SBI_FWFT_PTE_AD_HW_UPDATING		= 0x4,
+> +	SBI_FWFT_POINTER_MASKING_PMLEN		= 0x5,
+> +	SBI_FWFT_LOCAL_RESERVED_START		= 0x6,
+> +	SBI_FWFT_LOCAL_RESERVED_END		= 0x3fffffff,
+> +	SBI_FWFT_LOCAL_PLATFORM_START		= 0x40000000,
+> +	SBI_FWFT_LOCAL_PLATFORM_END		= 0x7fffffff,
+> +
+> +	SBI_FWFT_GLOBAL_RESERVED_START		= 0x80000000,
+> +	SBI_FWFT_GLOBAL_RESERVED_END		= 0xbfffffff,
+> +	SBI_FWFT_GLOBAL_PLATFORM_START		= 0xc0000000,
+> +	SBI_FWFT_GLOBAL_PLATFORM_END		= 0xffffffff,
+> +};
+> +
+> +#define SBI_FWFT_PLATFORM_FEATURE_BIT		BIT(30)
+> +#define SBI_FWFT_GLOBAL_FEATURE_BIT		BIT(31)
+> +
+> +#define SBI_FWFT_SET_FLAG_LOCK			BIT(0)
+> +
+>   /* SBI spec version fields */
+>   #define SBI_SPEC_VERSION_DEFAULT	0x1
+>   #define SBI_SPEC_VERSION_MAJOR_SHIFT	24
+> @@ -419,6 +447,11 @@ enum sbi_ext_nacl_feature {
+>   #define SBI_ERR_ALREADY_STARTED -7
+>   #define SBI_ERR_ALREADY_STOPPED -8
+>   #define SBI_ERR_NO_SHMEM	-9
+> +#define SBI_ERR_INVALID_STATE	-10
+> +#define SBI_ERR_BAD_RANGE	-11
+> +#define SBI_ERR_TIMEOUT		-12
+> +#define SBI_ERR_IO		-13
+> +#define SBI_ERR_DENIED_LOCKED	-14
+>   
+>   extern unsigned long sbi_spec_version;
+>   struct sbiret {
 
-Going thorough the bugs I notice there was a related upstream
-discussion/patch relating to ae6012d72fa6 ("x86/pkeys: Ensure updated
-PKRU value is XRSTOR'd")  in the following:
-
-https://lore.kernel.org/all/20250102075419.2559-1-TonyWWang-oc@zhaoxin.com/
-
-There were some followups, but discussion ended on 18.01.2025.
-
-Did this felt through the cracks?
-
-Regards,
-Salvatore
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
