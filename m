@@ -1,253 +1,121 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3E442A83
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B087D26E16A
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746714662; cv=none; b=PDXrbljVpIIBkOAGnvFEQESCboU5F2HtC6c0dZTJh8n0HuDAnc9XpzewHcMV/kwDm7gW5aF/0RHUnvM87uiyVKdbRzFx5vcZ5Nwk3z3Hi9o8Fv67V3hKzIp3PWNy4hhrUvw1R1TTQYkcU5EfmiwAa4Lv1oCeQ6BbHdrCxBPchc0=
+	t=1746714712; cv=none; b=pPo7ayJkAkA+PLryRtbcm5XKXNIQczaSLb8MEvoV6V7yeoDxjU0VQwv709mn9LUyi+ke6pZvTpDc/mcwgE1GzHvB/frB89jctIEGpXcgZcBQfMNCOt64TWyLc0dPVA4TEy4CUeXjxrw6wJIMgVJPkdROGHF84wMnaCB6uKu4GNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746714662; c=relaxed/simple;
-	bh=LLPv4mgSjIMxvNQIS9GtSCYxXegxbxnYOkExtmGrzxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SgtIg7mZsTpH+ZBe8ilBKq1XcqVchRCzo2EZ+bShbkBKkGtC1od1QAtUd8ooQp7YndnI4vPtDUaJ+7qrgpLmhC+FY+X8bTOP1B2dBqW3/s/1hsY0ZHSt8T6cvjPf+9RM/h6k1DLNOyVT+5COi7QWuebiLgq3WtAdVRiLPN+LmOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=NkvirwbK; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1746714712; c=relaxed/simple;
+	bh=vvs7XvP+K3DBZ3mhg7d2yMjiTj87uIFFO65p7EPD0XI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cWuBE3Bbb+bG568TIaetVo4L5yi8Hr0JKuCO/7OoqWCz0c9wh9sSmiHw7PyyJrO1E5AO8JaAe+oFRF3q+3cHk5yo8ntytxDSSxbkxHcmYdM/L8zZt8KPZkU+566jncmD1WJ5avWT8Rbq8J2Nt5Nf/4USGNems7wiSTVLEIXk9bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=OBUU/7uL; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="NkvirwbK"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad1a87d93f7so202390366b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 07:31:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="OBUU/7uL"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a0b4c828c1so136371f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 07:31:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1746714659; x=1747319459; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=po7XCNAM5aoU4SCt2utVP9VuGZuTXpzkGFcrpMe0GG8=;
-        b=NkvirwbKqbb4Zrw7dvLhi9/HbYxBksTv8/aWMyTxxEbzwRVVy86UwyeUWnstbXxzX8
-         fnc8tONGp1zNnnLTUejmcVaec3ZrdB+lYpirKjIDWwbvDjY56HlcH5DRvTlrRb1F2M4x
-         CdA0aw/gUZy2rsX6CPVap+amD1dJ5wNEjlLwTq5mQD8FyxMdyDAKeNRRdrJKZeRsxAjb
-         qht8VnavBqGGDTRQrYJHoF+oe3IvGKF7eL31pcnzqb234Z+2sTHieB010IEYd7a9cXvC
-         aEWhSfoMjCEiDpkLc/MWAQnc59Em3FUkogUc2fWDOXK+QpwhpIQCFvBzlqXJ39SbkM8c
-         mdLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746714659; x=1747319459;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=ventanamicro.com; s=google; t=1746714709; x=1747319509; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=po7XCNAM5aoU4SCt2utVP9VuGZuTXpzkGFcrpMe0GG8=;
-        b=fpSZ+A97unSZ4yZi4d0HyqepAXQOYuaIIudrcL/rnTUZAhYCEcirenCx4aWzNuhF/y
-         CMetzHfig5szrRomfZ77OGLYl3/6jPj7kFoH4FDoBXyvXvTNe91n7FOZCksdgx/BtliC
-         1HGyE+q4px7auIwLKBUTY+82VtJ577sTApxmLHDsqkf4mQlRCHSAVRym4SBC08lI7U78
-         8eaNHJOgc044N4Vs2DvhtsS2up/rvG1LDwxE0DFAS8I2D/a6OB3HV2/zlxQU249JFjhW
-         DjvxxAO8/j6W5WgscldXFrG2B/2cdI8go7P3jQm3f6K4mi08wEzJuqLEfOXZtZv1aKKm
-         alVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQtIanoYftHq9B8lMz8Lndtqp+8u7GYghi9J9HeQiRHyc1SDL1jIpydL39CsgtGLkVFgYWuoW9qupVtVo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx36lP/FaLuW4zi19lo9WAaJIrBGTOuLkwz+qnoOkc20LENhw0f
-	ySAHljd8HpO0/Sp0+AI6W9y59R//9OYkc0gpJBbEQ5sf1IueL8nljpBOfV2dh4w=
-X-Gm-Gg: ASbGnctZ/Xwmfo6Xi9C8Lsku1bLnnn5w7jP3h5BbQYnrZVjn5x/n18QdYelUNkS/K9H
-	+mtbfjw4f+TXWuaSJ54l++dy2819xKbuOfpgIO6BdYX2LQH5YxenoaiC6C61ucUjBLbazLKWXQd
-	loCFv4zRogGQ4daS50F9YGnroKKajkDNrfI1QsnxT655l0FWeD148lsbudjFkz21bZiwZg8hYG7
-	Ek2x/h2yg54htgpPjYTnKQiwJKpvF/4cd9nS6h/uyZB2N3X3X+/9vmEm4LGysAC4Ex7NV87ZgZE
-	7PdOAFFOzFcR6c9uTPW8anvnm/xhp/I2NLH40Mp6ZocQjHi6ps/Fjbd9SQN/n8xeFiBjikh/MBv
-	RXoXjoPw=
-X-Google-Smtp-Source: AGHT+IGIWEndgQkKTbjUKnyDkK0FcwKyffVWOR8u0As5y5IiwHlT/APkVxi1Y3XycuR8HVQF48M1qw==
-X-Received: by 2002:a17:907:948c:b0:ad2:1371:6fde with SMTP id a640c23a62f3a-ad213717202mr54406166b.44.1746714659038;
-        Thu, 08 May 2025 07:30:59 -0700 (PDT)
-Received: from jiri-mlt.client.nvidia.com ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891ee1f2sm1085548466b.75.2025.05.08.07.30.52
+        bh=Npf5Cp02vjjlOhdcHZRyKHohJloygz1xYGChAUxnU34=;
+        b=OBUU/7uLuwf/9srYtwK3JO+6m0fi30krBiAVBgJlvR0kFa8B1L4Tw4JKLyOD74yQ+N
+         RtgPPSE3RHaljlk54t8hGGQxt8jqZd8QZZucJNvugqhvxa3XhEb87b9/4onMNSS2f9hV
+         iLkJjUSZZPAr21YKC+/AeHLY/Xh0KZ3aF7AVxYnLo4gAyRBz3MXZFSrK63CH7F5fpGCM
+         VhuX0NHH86bualYUDwfKKSlpjoKHUwrHXdVOkxVi7LoJkD7+m0CJn8vKQEGpcIgKlZr3
+         LWL3pZm4YA3lfhmuqhpH1uBZ7bVZn2c4Qf6f2s3ev4/ifSc+KT3Et5DcpfUspycWmq1r
+         l+Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746714709; x=1747319509;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Npf5Cp02vjjlOhdcHZRyKHohJloygz1xYGChAUxnU34=;
+        b=lq3JT/7na2faX5Zn+4EtF/Ss0zmeq/MtoBwVe1ZPk9DDgQMldd8g0BU8h4XjEYe9tu
+         arly71kV3CIX2HuYGhEVpfqL8WiaT5El2uKeJURA5cKMyoohR9zlYGRlmsQSpu2jAPI6
+         DOVxFZ6zlqkZicCtvyn9ySleSHoiwuXW6Szk6t5v8XGrO/FdzaVMYIO9V885vCSSa5Zb
+         Ul5fMSk+kvyXRQD7AtdXAIVynfbRibJI8UBW7IrLbO7OVbXjJB4oIobScDa2FOybyvlJ
+         +VO+Z7sYmVuE83FuPtdWHJO8yk+nWFxYRT1QU4p4ljpaisKRqQcua8kzCE6y2gVU6aa5
+         ULsA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxf2mvPC3eVt+2+LM01iwysWdY5h/c7UmWPV4anWl99d999SPOy3utmCwujbTdetfsrYe7ozML0FXzJjI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFV9eqjHoAaOEy/1sKfDehIwuFfm0iYeX1Zo+xaIDlULCULPgg
+	j6Ll/FTHIMw5aT7VfV5YoaoGeMlRgV+hBN0EFhTW1D+1w0tdeGq4eIkk6JsLrXrt2Ah4EJWyqRz
+	g
+X-Gm-Gg: ASbGncutoqDzJ0UxSYB9EBNXMLK1L6ejdiATz19izpEC3QGNlJ5HJkQsBjVCASoDES/
+	FDPeUI00F7SY/tEyOuzhGZg6hPnYh9guEg4imL/hH1vUJjwsTUXYI8E31PeZIB8ylIn0x0dD/lP
+	6XyHet3MbCY1ppngC14FkhtUSVxLOgJEXxHihuU00mG/GdllUbOqGHBZbueeUHerNOGLSakOX+w
+	WE7tlh4D8Pj4rJnHWEYhz07R52+horMpwwGMpLhSVxnbpz8bdxSlvD3yLIT4oQulWP278wqPTsh
+	+IzDCTdxieJLK1bSSMbmkcXD/FMMtT/sJpK1/XuzbuvEbdY0
+X-Google-Smtp-Source: AGHT+IFDKtOArIEDhyzzyyo9ibITZPppPGTsVRUFviwEpobpTYwXsYjaHuTW7dWWMam5suhtm71qqw==
+X-Received: by 2002:a05:6000:2dc6:b0:3a0:b3ad:6636 with SMTP id ffacd0b85a97d-3a0b4a0356fmr2554909f8f.4.1746714708992;
+        Thu, 08 May 2025 07:31:48 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:a451:a252:64ea:9a0e])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ecccbsm147512f8f.32.2025.05.08.07.31.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 07:30:58 -0700 (PDT)
-Date: Thu, 8 May 2025 16:30:49 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
-Cc: donald.hunter@gmail.com, kuba@kernel.org, davem@davemloft.net, 
-	edumazet@google.com, pabeni@redhat.com, horms@kernel.org, vadim.fedorenko@linux.dev, 
-	anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com, andrew+netdev@lunn.ch, 
-	saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com, jonathan.lemon@gmail.com, 
-	richardcochran@gmail.com, aleksandr.loktionov@intel.com, milena.olech@intel.com, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org, 
-	linux-rdma@vger.kernel.org
-Subject: Re: [PATCH net-next v3 2/3] dpll: add phase_offset_monitor_get/set
- callback ops
-Message-ID: <rwterkiyhdjcedboj773zc5s3d6purz6yaccfowco7m5zd7q3c@or4r33ay2dxh>
-References: <20250508122128.1216231-1-arkadiusz.kubalewski@intel.com>
- <20250508122128.1216231-3-arkadiusz.kubalewski@intel.com>
+        Thu, 08 May 2025 07:31:48 -0700 (PDT)
+From: =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+To: kvm-riscv@lists.infradead.org
+Cc: kvm@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Andrew Jones <ajones@ventanamicro.com>
+Subject: [PATCH v2 1/2] KVM: RISC-V: reset smstateen in a better place
+Date: Thu,  8 May 2025 16:28:42 +0200
+Message-ID: <20250508142842.1496099-3-rkrcmar@ventanamicro.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250508142842.1496099-2-rkrcmar@ventanamicro.com>
+References: <20250508142842.1496099-2-rkrcmar@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250508122128.1216231-3-arkadiusz.kubalewski@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thu, May 08, 2025 at 02:21:27PM +0200, arkadiusz.kubalewski@intel.com wrote:
->Add new callback operations for a dpll device:
->- phase_offset_monitor_get(..) - to obtain current state of phase offset
->  monitor feature from dpll device,
->- phase_offset_monitor_set(..) - to allow feature configuration.
->
->Obtain the feature state value using the get callback and provide it to
->the user if the device driver implements callbacks.
->
->Execute the set callback upon user requests.
->
->Reviewed-by: Milena Olech <milena.olech@intel.com>
->Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
->---
->v3:
->- remove feature flags and capabilities,
->- add separated (per feature) callback ops,
->- use callback ops to determine feature availability.
->---
-> drivers/dpll/dpll_netlink.c | 76 ++++++++++++++++++++++++++++++++++++-
-> include/linux/dpll.h        |  8 ++++
-> 2 files changed, 82 insertions(+), 2 deletions(-)
->
->diff --git a/drivers/dpll/dpll_netlink.c b/drivers/dpll/dpll_netlink.c
->index c130f87147fa..6d2980455a46 100644
->--- a/drivers/dpll/dpll_netlink.c
->+++ b/drivers/dpll/dpll_netlink.c
->@@ -126,6 +126,26 @@ dpll_msg_add_mode_supported(struct sk_buff *msg, struct dpll_device *dpll,
-> 	return 0;
-> }
-> 
->+static int
->+dpll_msg_add_phase_offset_monitor(struct sk_buff *msg, struct dpll_device *dpll,
->+				  struct netlink_ext_ack *extack)
->+{
->+	const struct dpll_device_ops *ops = dpll_device_ops(dpll);
->+	enum dpll_feature_state state;
->+	int ret;
->+
->+	if (ops->phase_offset_monitor_set && ops->phase_offset_monitor_get) {
->+		ret = ops->phase_offset_monitor_get(dpll, dpll_priv(dpll),
->+						    &state, extack);
->+		if (ret)
->+			return -EINVAL;
+This got missed when the series was applied out of order.
 
-Why you don't propagate "ret"?
+Signed-off-by: Radim Krčmář <rkrcmar@ventanamicro.com>
+---
+Feel free to squash this patch with 376e3c0f8aa5 ("KVM: RISC-V: remove
+unnecessary SBI reset state").
+---
+ arch/riscv/kvm/vcpu.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+index 7cc0796999eb..a78f9ec2fa0e 100644
+--- a/arch/riscv/kvm/vcpu.c
++++ b/arch/riscv/kvm/vcpu.c
+@@ -60,6 +60,7 @@ static void kvm_riscv_vcpu_context_reset(struct kvm_vcpu *vcpu)
+ 
+ 	memset(cntx, 0, sizeof(*cntx));
+ 	memset(csr, 0, sizeof(*csr));
++	memset(&vcpu->arch.smstateen_csr, 0, sizeof(vcpu->arch.smstateen_csr));
+ 
+ 	/* Restore datap as it's not a part of the guest context. */
+ 	cntx->vector.datap = vector_datap;
+@@ -101,8 +102,6 @@ static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
+ 
+ 	kvm_riscv_vcpu_context_reset(vcpu);
+ 
+-	memset(&vcpu->arch.smstateen_csr, 0, sizeof(vcpu->arch.smstateen_csr));
+-
+ 	kvm_riscv_vcpu_fp_reset(vcpu);
+ 
+ 	kvm_riscv_vcpu_vector_reset(vcpu);
+-- 
+2.49.0
 
->+		if (nla_put_u32(msg, DPLL_A_PHASE_OFFSET_MONITOR, state))
->+			return -EMSGSIZE;
->+	}
->+
->+	return 0;
->+}
->+
-> static int
-> dpll_msg_add_lock_status(struct sk_buff *msg, struct dpll_device *dpll,
-> 			 struct netlink_ext_ack *extack)
->@@ -591,6 +611,9 @@ dpll_device_get_one(struct dpll_device *dpll, struct sk_buff *msg,
-> 		return ret;
-> 	if (nla_put_u32(msg, DPLL_A_TYPE, dpll->type))
-> 		return -EMSGSIZE;
->+	ret = dpll_msg_add_phase_offset_monitor(msg, dpll, extack);
->+	if (ret)
->+		return ret;
-> 
-> 	return 0;
-> }
->@@ -746,6 +769,31 @@ int dpll_pin_change_ntf(struct dpll_pin *pin)
-> }
-> EXPORT_SYMBOL_GPL(dpll_pin_change_ntf);
-> 
->+static int
->+dpll_phase_offset_monitor_set(struct dpll_device *dpll, struct nlattr *a,
->+			      struct netlink_ext_ack *extack)
->+{
->+	const struct dpll_device_ops *ops = dpll_device_ops(dpll);
->+	enum dpll_feature_state state = nla_get_u32(a), old_state;
->+	int ret;
->+
->+	if (!(ops->phase_offset_monitor_set && ops->phase_offset_monitor_get)) {
->+		NL_SET_ERR_MSG_ATTR(extack, a, "dpll device not capable of phase offset monitor");
->+		return -EOPNOTSUPP;
->+	}
->+	ret = ops->phase_offset_monitor_get(dpll, dpll_priv(dpll), &old_state,
->+					    extack);
->+	if (ret) {
->+		NL_SET_ERR_MSG(extack, "unable to get current state of phase offset monitor");
->+		return -EINVAL;
->+	}
->+	if (state == old_state)
->+		return 0;
->+
->+	return ops->phase_offset_monitor_set(dpll, dpll_priv(dpll), state,
->+					     extack);
-
-Why you need to do this get/set dance? I mean, just call the driver
-set() op and let it do what is needed there, no?
-
-
->+}
->+
-> static int
-> dpll_pin_freq_set(struct dpll_pin *pin, struct nlattr *a,
-> 		  struct netlink_ext_ack *extack)
->@@ -1533,10 +1581,34 @@ int dpll_nl_device_get_doit(struct sk_buff *skb, struct genl_info *info)
-> 	return genlmsg_reply(msg, info);
-> }
-> 
->+static int
->+dpll_set_from_nlattr(struct dpll_device *dpll, struct genl_info *info)
->+{
->+	struct nlattr *a;
->+	int rem, ret;
->+
->+	nla_for_each_attr(a, genlmsg_data(info->genlhdr),
->+			  genlmsg_len(info->genlhdr), rem) {
-
-Hmm, why you iterate? Why you just don't parse to attr array, as it is
-usually done?
-
-
->+		switch (nla_type(a)) {
->+		case DPLL_A_PHASE_OFFSET_MONITOR:
->+			ret = dpll_phase_offset_monitor_set(dpll, a,
->+							    info->extack);
->+			if (ret)
->+				return ret;
->+			break;
->+		default:
->+			break;
->+		}
->+	}
->+
->+	return 0;
->+}
->+
-> int dpll_nl_device_set_doit(struct sk_buff *skb, struct genl_info *info)
-> {
->-	/* placeholder for set command */
->-	return 0;
->+	struct dpll_device *dpll = info->user_ptr[0];
->+
->+	return dpll_set_from_nlattr(dpll, info);
-> }
-> 
-> int dpll_nl_device_get_dumpit(struct sk_buff *skb, struct netlink_callback *cb)
->diff --git a/include/linux/dpll.h b/include/linux/dpll.h
->index 5e4f9ab1cf75..6ad6c2968a28 100644
->--- a/include/linux/dpll.h
->+++ b/include/linux/dpll.h
->@@ -30,6 +30,14 @@ struct dpll_device_ops {
-> 				       void *dpll_priv,
-> 				       unsigned long *qls,
-> 				       struct netlink_ext_ack *extack);
->+	int (*phase_offset_monitor_set)(const struct dpll_device *dpll,
->+					void *dpll_priv,
->+					enum dpll_feature_state state,
->+					struct netlink_ext_ack *extack);
->+	int (*phase_offset_monitor_get)(const struct dpll_device *dpll,
->+					void *dpll_priv,
->+					enum dpll_feature_state *state,
->+					struct netlink_ext_ack *extack);
-> };
-> 
-> struct dpll_pin_ops {
->-- 
->2.38.1
->
