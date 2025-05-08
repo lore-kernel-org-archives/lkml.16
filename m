@@ -1,108 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E7F4B1E7D;
-	Thu,  8 May 2025 18:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D532147F6;
+	Thu,  8 May 2025 18:36:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746729325; cv=none; b=MQB7AUD9LTHl0ixcYs/YGVyDfdG3T2IOWR0yuZS3o11nMmBY8CrKZOlvqVj1k5+rfWkO1rppSaEqN0EizUzyN+jt1ejLHg1u1Oy7pE0S8EV9P8rOtc8YNxSM+NWvAYf6ruVEwgQ5/VsCvI1NyzrCQMcbCwlAui9OzYlhNcsMkks=
+	t=1746729379; cv=none; b=BSNf96XCdhrkWc6KLEm4Z4t2p2/N8GPGXgwBbeCEQTY7ms5e3f4NonK+Ce+rt/PYxjF15x/QlZm8uG1ZVxzy0RR+3iuSzhGYLXq88YAtNItG7oNgECGI/LJO97JirkqXsZgD9RFsa4L2itd5rUZjbRCJR2Z45SqErDNL5pFMpr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746729325; c=relaxed/simple;
-	bh=pQVCCI8EqkRoXe6jlfp88q7Ckl5MiVkBR4sc8JWAFWs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bg/cb2qt2pf97qADAoSg269ND+GTgZMNfuYMNhD2GrGHe5jxHsKgWG6lUtCpIDo6LdHypRt6rLq+uvoPlV/D1iQqy4EGiHPc1ThVsd+M9/sEd+KR/Z3wLTj3BYemMieAubPJ8OO8YjQr15zy9phP1yGgGs1FMX6t6ktzdq2LOKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: 1VGZZ0+HTdSsOqSy8EL+SA==
-X-CSE-MsgGUID: mIW0WpyQQBOVUBKta4jmGA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="52344853"
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="52344853"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:35:17 -0700
-X-CSE-ConnectionGUID: bvrRQzUPTXqm6DaZU2h9sg==
-X-CSE-MsgGUID: ut+I5uXbQZmzVtZD2uR6PA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="136090820"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:35:13 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uD65P-00000004CCz-1H8r;
-	Thu, 08 May 2025 21:35:11 +0300
-Date: Thu, 8 May 2025 21:35:11 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] Documentation: ABI: IIO: add calibconv_delay
- documentation
-Message-ID: <aBz5X3AQRi1ONsly@smile.fi.intel.com>
-References: <20250508-wip-bl-ad7606-calibration-v4-0-91a3f2837e6b@baylibre.com>
- <20250508-wip-bl-ad7606-calibration-v4-1-91a3f2837e6b@baylibre.com>
+	s=arc-20240116; t=1746729379; c=relaxed/simple;
+	bh=8qRcaObsbkV3dzahO6i44klrpzR4rTo+K2qGz94TNdc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E1u72GvS9FqRptZoKishEwzcKcekS/xZ92DboaPjjFAycqeyqwStIkatUrKcytlogp+2oHOGBRnkZtpEV403sQ4siogH9h3M9B9oVWpCeojXMbSdP3bNuACYEaLt6cGW9D00tOJagErTfv/O2EtU/rKOuLGOuiDKIkY3sNocvG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-51eb1a714bfso927178e0c.3;
+        Thu, 08 May 2025 11:36:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746729374; x=1747334174;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rYgnp2PSg9KL11tldQ485cPxrLluqoPttc4PhTteUa8=;
+        b=EqhULSwtmOi6cmc6eJEuRD2wT4jS5gLsS1cAuCoxWNmPJOBSpZylt3zF/cjB/bKXzX
+         GVShia+9u/YVQx+0wI1LIDl+9Q8wFqDTzJ9knyCXW8NfKTMwtAaypJo6gxwe+O+DRbGn
+         rs7O+cIIA75eZjuw8cH4FC/dwe1+5UCF9WQ3RGKjKQc4B4ETbi8y4c4RVgB2uZK8tnIy
+         pK1MJzxOhjm0istfv25Qt7ay0hyjdyFczuMaSjNQf6LMprZbxTMEZLMuOws2/hkK4tEk
+         bDHw/CFneUZ//jVAeCc6oSegl8tDyuOF1w42XX0xIR9SvGeN/CMguJU4IpZf9pR9Limf
+         Tibw==
+X-Forwarded-Encrypted: i=1; AJvYcCUc7KWKmbUyMasqCjC/3Um1Eqtb9/wjWadBnkDmtEKJKGV4NI/eRt3urSFmg1VB9/H3o0s+h1g26NIr@vger.kernel.org, AJvYcCV0WzF+i265RUUa/SLqvulImYUfQMFwLwf1m3oTISi0YltqlftxW5XLKEgt/V3QJpnKdGyephn0Zjxl@vger.kernel.org, AJvYcCVBloFIEWg0VwWBtIgLblndzyRnNQC1MO7ckJlCvU3tluUItBQExpoPIm8cqn4XHQoPK/Pj5lhxDoor@vger.kernel.org, AJvYcCVl2gNq3jgFeyYe53ZjU/T34hhcKve6nKltKyuxk9MYedBoKi5IYPsBaLpDoy3UPLrYVt2dakHTIS1/iNDx@vger.kernel.org, AJvYcCVrvqxh+3v61QD10PcG67ERKfi3dMiVh1Jime2CekZa3ZDk3K5VknQJlGSIdSoBujQdWNoR0/DfzYsl@vger.kernel.org, AJvYcCVw4SWOBXFsdjAVjAhv7+JiybMDGliIiaWV+2OM0bwnAG8tYs/4+Mm0hqwJ+AKSVPcN+WtB2ae50PyQ@vger.kernel.org, AJvYcCX8mVYJeUtvs/AsSFYe6x/MQwkZ8P/9g0L4nkYzCvVgxGKCNCh1wM3kKOohH5HjUQbjGeaZRUQRKJsSpg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6RThLFPgjHH79alBAZzswAhX5RKxudQwnM/XSUUkTqHSOUYSR
+	FP56XSX3FYBYpiPgjmlKPcORFaTOUzKOTPSu7M/sj4SvYX0m4Us4nQYkh/GQ
+X-Gm-Gg: ASbGncvlxqmy8l1s8zxVlsAY2rFJg6pP4v0WYUm+8I7/+XRCusSuoc+XHzx7p+8zaeQ
+	CVcamU7KimTCzvNlgTUhU1p7P11p135rQxKiAJQyyiPlnoCVfP6ETeGQ2AxhUuXEmK+FaRWOACC
+	njQyKiIlHlE36V4IM1cTkosI+lFM8yS587WgTwlT6YIrJt5cUxtxqrPK6oGwBpkZxmKXNEseRvv
+	pd9W346A6i5wZeF0nO3PNK6gSuGAVKs6ieRVoe4gjuSpZ3xH7VqOvyjYB12XTOWWuiWg2r/Ws1J
+	NzdCisqa6I2w4HBbz9HDLvmPpLo2MlfagpKz5a31fOeGXkcErHDdTZeZIEPv8gKs4lLccn/c/9z
+	uKllc0sg=
+X-Google-Smtp-Source: AGHT+IEwjchnCI5bdbWFc8ap/iPnG+SrSIGfn53ZONiLXepF5XDNn+n3PxnLIEI+tAyD7o392jTrZw==
+X-Received: by 2002:a05:6102:15a0:b0:4c3:2803:61c1 with SMTP id ada2fe7eead31-4deed3d38damr497871137.18.1746729374058;
+        Thu, 08 May 2025 11:36:14 -0700 (PDT)
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com. [209.85.221.182])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dea857f6a0sm189390137.5.2025.05.08.11.36.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 11:36:12 -0700 (PDT)
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-52934f4fb23so880416e0c.1;
+        Thu, 08 May 2025 11:36:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU73vWYG3iqWtTi3oK3FnK6kufkREXCN8vYx52UJeoQwCGxlMNNyATPaMwJU59EPnOR6Owv7OOtin5y@vger.kernel.org, AJvYcCUm3em46o+5cTi0BvSEts9tRy5s3rmENp9dezBVQhwYj6zK0BOGniYLz8H2PTYRJux1xhbIoGBpAzqP@vger.kernel.org, AJvYcCV1tCRAo2F+oIkoHfopg7D6MG0nkdd4A44oqJzZtViEkosSbjA1EjsAE274jeU11BWGGdD7oWsc8URNl431@vger.kernel.org, AJvYcCVm6pG16bEejVZYgVJx98y76O782G/yN4vj1lk2bLpsnncP4GKQ0NKLhxz/Qos1RLTRMoFIf/dv0sSR@vger.kernel.org, AJvYcCWqrLmrbyjENk7xZsMmaf32usvMMgbsxPcZxinT4k45gixQoj9W715jvvkVa7p39cNmbaEEFAcKe0p1Ew==@vger.kernel.org, AJvYcCXBPKC2blKFQK2E+Kh33IjAw6ogEMzhXXDpJF8Wz1uUxwdXyVV8YmXUo7aT08albsDZyKjQIYtBfnoK@vger.kernel.org, AJvYcCXIbNn+1HARPp+U7gLgrSdyAh1N2UNQ7wNwexOUj84erM8ZBTk7Cf7smr1abidjiqOlFjVHkYb/Rvvx@vger.kernel.org
+X-Received: by 2002:a67:e7cc:0:b0:4dd:b037:d23d with SMTP id
+ ada2fe7eead31-4deed36f9ddmr542907137.12.1746729371961; Thu, 08 May 2025
+ 11:36:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250508-wip-bl-ad7606-calibration-v4-1-91a3f2837e6b@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250507071315.394857-1-herve.codina@bootlin.com>
+ <20250507071315.394857-13-herve.codina@bootlin.com> <aBz4gxUlnSgEtHn8@smile.fi.intel.com>
+In-Reply-To: <aBz4gxUlnSgEtHn8@smile.fi.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 8 May 2025 20:35:57 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWe9XKDvszbkz9jx=qcyLufFMnoG3BcTpbyay6cQZAJ0A@mail.gmail.com>
+X-Gm-Features: AX0GCFvrzDOY8sW8kwNxuZ1_3pAgsil5zL802IfBcD5409O6It8refjLWt5eRkA
+Message-ID: <CAMuHMdWe9XKDvszbkz9jx=qcyLufFMnoG3BcTpbyay6cQZAJ0A@mail.gmail.com>
+Subject: Re: [PATCH v2 12/26] PCI: of: Set fwnode device of newly created PCI
+ device nodes
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 08, 2025 at 12:06:05PM +0200, Angelo Dureghello wrote:
-> From: Angelo Dureghello <adureghello@baylibre.com>
-> 
-> Add new IIO calibconv_delay documentation.
-> 
-> The ad7606 implements a phase calibation feature, in nanoseconds.
-> Being this a time delay, using the conv_delay suffix.
+On Thu, 8 May 2025 at 20:32, Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Wed, May 07, 2025 at 09:12:54AM +0200, Herve Codina wrote:
+> > Device-tree node can be created when CONFIG_PCI_DYNAMIC_OF_NODES. Those
+> > node are created and filled based on PCI core information but the
+> > fwnode device field is not set.
+> >
+> > When later an overlay is applied, this consuses fw_devlink. Indeed,
+>
+> consuses?
 
-...
+confuses
 
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_convdelay
-> +KernelVersion:  6.16
+Gr{oetje,eeting}s,
 
-Here is the space being used...
-
-> +Contact:        linux-iio@vger.kernel.org
-> +Description:
-> +		Delay of start of conversion in seconds from common reference
-> +		point shared by all channels. Can be writable when used to
-> +		compensate for delay variation introduced by external filters
-> +		feeding a simultaneous sampling ADC.
-> +
-> +		I.e., for the ad7606 ADC series, this value is intended as a
-> +		configurable time delay in seconds, to correct delay introduced
-> +		by an optional external filtering circuit.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_convdelay_available
-> +KernelVersion:	6.16
-
-...and here is TAB. Please, make the text consistent. If the original one is
-inconsistent, fix it first.
-
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Available values of convdelay. Maybe expressed as:
-> +
-> +		- a range specified as "[min step max]"
-> +
-> +		If shared across all channels, <type>_calibconv_delay_available
-> +		is used.
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
