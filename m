@@ -1,183 +1,156 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36388212B3A;
-	Thu,  8 May 2025 09:29:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F7726561E;
+	Thu,  8 May 2025 09:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746696566; cv=none; b=WfQN4OblPTp9KJ/UGmvt13KNBpGCcZDOokxvOROEXXHBDJ0XNpYoM7A13uVDUFsUBIPxOFGm9yggcAcZuF9dxWgiNoC3KBnSvtmJrVOGldPbjUMspUMHxJ+sPIkiUsFvaSBPaZ9jm7y4U8UxnL3+vygTgYHqHxcjM49g5wzRDJI=
+	t=1746696570; cv=none; b=sqZdUKsE/WnfB5n+ACdTouWryr630i5WBoV2qyLCJF0+cZW8Ct8f1lelgK1h+x+2au3+4L16SRmzVupKXn9D466DhWJufS6DyFgCzMigfixC74TzghzQuGZ1HoI8KKXtAmfMO4qTOe/aCudVPYy4RuFDQYqrqmyDXkvyjJgEiQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746696566; c=relaxed/simple;
-	bh=sngpcCVtwhKVcH/6x4CjcHof55f+rqXMxRQja6DBVg8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lc4wcSbAZsK/wUMeusVsz839rwN8FeWf2Lh6Fcyl06dGLmLwB2Gq4/fveEtAwgf6iHFfdyCSqVbmsU4aKsrgKBz3sv3rF5/qyViz48Rx7VL6oeWT2Evi4xlZIWsaqtUrnoPp365eyJv3evSpqkBn1KCRI5QL0VdJI2L9MnJmX1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=aJMWhhW3; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1746696570; c=relaxed/simple;
+	bh=b+QRVuuaQDDP/B17F6zk5qSO093mgI3JlezK9WH6yIM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=sdKH1ekR/C3uQmSkE34PgBnAOyHRwjmRS6prf0PF0lLkdDN1Esv8FauBBdj1sAd7ha21IIfcayJpG70ByLfxNzkUL5JR7eRmpM0F2+cEsRM8a9zuoTmBGqND1cy4H/lPi2md4zKrg0NctLOTxDI36NqozqBQX+Mv4vyANTV+ro4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R7Q3FYCM; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aJMWhhW3"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 7CE162115DCD; Thu,  8 May 2025 02:29:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7CE162115DCD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746696564;
-	bh=k10D7q/lt/KA5HXrM1tVZYWcIvRW+BWcwZ+HO7w2oy4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aJMWhhW3RGlwa6IAL36Xcwx0fuoweyGLgDQkjVwBDSJDLj6WJzxfYOrPSysf9Fx73
-	 VofAcu12/1GnG0N3rfckSR3fQhZKF2W3/b6qHhMNnXR/5th2UKwM9eDzKjiYmAEuqc
-	 98DiRy4tM/3gVAz/2aFczVNOptnQaPkv0DRbM1Lw=
-Date: Thu, 8 May 2025 02:29:24 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	decui@microsoft.com, stephen@networkplumber.org, kys@microsoft.com,
-	paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
-	davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
-	longli@microsoft.com, ssengar@linux.microsoft.com,
-	linux-rdma@vger.kernel.org, daniel@iogearbox.net,
-	john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
-	hawk@kernel.org, tglx@linutronix.de, andrew+netdev@lunn.ch,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: mana: Add handler for hardware servicing
- events
-Message-ID: <20250508092924.GA2081@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1746633519-17549-1-git-send-email-haiyangz@microsoft.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R7Q3FYCM"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5484WJa4025435;
+	Thu, 8 May 2025 09:29:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	wSttNrKjfcsS5u/VzVpuNaX2/1qwPC4wcthYtaGK+To=; b=R7Q3FYCMVC53djtC
+	AvEoDQpzmdiXTwCdr69KL9TqyQMN23GTdejLop3XfSJfwD4ZAxzE64pPdGNubITu
+	MjEig6yXi+kLQ4JJtfmIxnD0Dn6sCM29Bqh6spZvQvjI5ijiAeVSOS5EcyuyFkJs
+	sEyb7J/pS6qS8+CEGm7WUE7K47XH+pdW2DgI9WE+d/Qe4TFx2VhE25s3nBDvfOP9
+	ps0UVilP4uM9fZk3grIatS2gziAarFs4k17y9kt7kRUrbE6dIsV0VX2Twx6ZZqI3
+	feuR9uZaxEtp1ecb8/52f1anoQv9ioBJ89Jkj3VrvbXxkJ+qXBAkVylU5djebeLb
+	XImBuA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp10t1m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 09:29:25 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5489TOQS031672
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 8 May 2025 09:29:24 GMT
+Received: from [10.253.32.147] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
+ 02:29:21 -0700
+Message-ID: <d388b471-482b-48ba-a504-694529535362@quicinc.com>
+Date: Thu, 8 May 2025 17:29:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1746633519-17549-1-git-send-email-haiyangz@microsoft.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] tty: serdev: serdev-ttyport: Fix use-after-free in
+ ttyport_close() due to uninitialized serport->tty
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Rob Herring <robh@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
+        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <liulzhao@qti.qualcomm.com>, <quic_chejiang@quicinc.com>,
+        <zaiyongc@qti.qualcomm.com>, <quic_zijuhu@quicinc.com>,
+        <quic_mohamull@quicinc.com>,
+        Panicker Harish <quic_pharish@quicinc.com>
+References: <20250430111617.1151390-1-quic_cxin@quicinc.com>
+ <2025043022-rumbling-guy-26fb@gregkh>
+Content-Language: en-US
+From: Xin Chen <quic_cxin@quicinc.com>
+In-Reply-To: <2025043022-rumbling-guy-26fb@gregkh>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA4NCBTYWx0ZWRfX15gbxE1eM+co
+ qJi3W0iCnxKutbiR1v9FNL3F0ARGpN1D6XhAshQJcOfLIRs0coLexxwXPMC22XBxbQuc0pHGAor
+ gxM8tKBGvk0DeURoF7otQaOJwQmCEvhw3ewrV8L7qH3iYDHreO/hVXSVfxprUWnnXLlmvTVl+vx
+ mnbXdrGNyykzti2GdZsFWaC7k6bv1Wc7g2be061R0kCVYIhUIA2/GxgjDuCE3R1SUZZSInPLPwB
+ knf/DMwY83ZvdjOSCjg8Ve6uvw69wRs5ktsg0+WVg9scsaINFhjiZ6017fJpCsKkrH6jNhJC3XT
+ MADM/liSiWwgvkr4RoDhfxu6fHNPt3xcnAOkXiGPsBUkiXIVpEXDjZlc+H7lyfJuM+hmQDqTehb
+ 26/TeJ2ZVNpUk4a0lncmVyH5bbc5hGrghagoeRM63f133dhUze6ek/SdhONkc+OZ32CyUghb
+X-Proofpoint-GUID: EBVNWcEGwpa6T7g7W1fmMuJ-oqytpGNP
+X-Proofpoint-ORIG-GUID: EBVNWcEGwpa6T7g7W1fmMuJ-oqytpGNP
+X-Authority-Analysis: v=2.4 cv=W4o4VQWk c=1 sm=1 tr=0 ts=681c7975 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=EIDKYfb7kX6--GltqKcA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_03,2025-05-07_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=410 suspectscore=0 lowpriorityscore=0 phishscore=0
+ priorityscore=1501 bulkscore=0 spamscore=0 mlxscore=0 adultscore=0
+ clxscore=1015 malwarescore=0 impostorscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505080084
 
-On Wed, May 07, 2025 at 08:58:39AM -0700, Haiyang Zhang wrote:
-> To collaborate with hardware servicing events, upon receiving the special
-> EQE notification from the HW channel, remove the devices on this bus.
-> Then, after a waiting period based on the device specs, rescan the parent
-> bus to recover the devices.
+
+On 4/30/2025 7:40 PM, Greg Kroah-Hartman wrote:
+> On Wed, Apr 30, 2025 at 07:16:17PM +0800, Xin Chen wrote:
+>> When ttyport_open() fails to initialize a tty device, serport->tty is not
+>> --- a/drivers/tty/serdev/serdev-ttyport.c
+>> +++ b/drivers/tty/serdev/serdev-ttyport.c
+>> @@ -88,6 +88,10 @@ static void ttyport_write_flush(struct serdev_controller *ctrl)
+>>  {
+>>  	struct serport *serport = serdev_controller_get_drvdata(ctrl);
+>>  	struct tty_struct *tty = serport->tty;
+>> +	if (!tty) {
+>> +		dev_err(&ctrl->dev, "tty is null\n");
+>> +		return;
+>> +	}
 > 
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->  .../net/ethernet/microsoft/mana/gdma_main.c   | 61 +++++++++++++++++++
->  include/net/mana/gdma.h                       |  5 +-
->  2 files changed, 65 insertions(+), 1 deletion(-)
+> What prevents tty from going NULL right after you just checked this?
+
+First sorry for reply so late for I have a long statutory holidays.
+Maybe I don't get your point. From my side, there is nothing to prevent it.
+Check here is to avoid code go on if tty is NULL.
 > 
-> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> index 4ffaf7588885..aa2ccf4d0ec6 100644
-> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> @@ -352,11 +352,52 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8 arm_bit)
->  }
->  EXPORT_SYMBOL_NS(mana_gd_ring_cq, "NET_MANA");
->  
-> +#define MANA_SERVICE_PERIOD 10
-> +
-> +struct mana_serv_work {
-> +	struct work_struct serv_work;
-> +	struct pci_dev *pdev;
-> +};
-> +
-> +static void mana_serv_func(struct work_struct *w)
-> +{
-> +	struct mana_serv_work *mns_wk = container_of(w, struct mana_serv_work, serv_work);
-> +	struct pci_dev *pdev = mns_wk->pdev;
-> +	struct pci_bus *bus, *parent;
-> +
-> +	if (!pdev)
-> +		goto out;
-> +
-> +	bus = pdev->bus;
-> +	if (!bus) {
-> +		dev_err(&pdev->dev, "MANA service: no bus\n");
-> +		goto out;
-> +	}
-> +
-> +	parent = bus->parent;
-> +	if (!parent) {
-> +		dev_err(&pdev->dev, "MANA service: no parent bus\n");
-> +		goto out;
-> +	}
-> +
-> +	pci_stop_and_remove_bus_device_locked(bus->self);
-> +
-> +	msleep(MANA_SERVICE_PERIOD * 1000);
-> +
-> +	pci_lock_rescan_remove();
-> +	pci_rescan_bus(parent);
-> +	pci_unlock_rescan_remove();
-> +
-> +out:
-> +	kfree(mns_wk);
+> And why print out that message, what can userspace do with it?
+> 
 
-Shouldn't gc->in_service be set to false again?
+I add the print just ref to code in other place. This can't be used by
+userspace, but it can be used in DMesg log when system crashes.
+>>
+>>  	tty_driver_flush_buffer(tty);
+>>  }
+>> @@ -108,8 +112,10 @@ static int ttyport_open(struct serdev_controller *ctrl)
+>>  	int ret;
+>>
+>>  	tty = tty_init_dev(serport->tty_drv, serport->tty_idx);
+>> -	if (IS_ERR(tty))
+>> +	if (IS_ERR(tty)) {
+>> +		serport->tty = NULL;
+>>  		return PTR_ERR(tty);
+>> +	}
+>>  	serport->tty = tty;
+>>
+>>  	if (!tty->ops->open || !tty->ops->close) {
+>> @@ -156,6 +162,11 @@ static void ttyport_close(struct serdev_controller *ctrl)
+>>
+>>  	clear_bit(SERPORT_ACTIVE, &serport->flags);
+>>
+>> +	if (!tty) {
+>> +		dev_err(&ctrl->dev, "tty is null\n");
+>> +		return;
+>> +	}
+> 
+> Again, what prevents it from changing right after you just checked it?
 
-> +}
-> +
->  static void mana_gd_process_eqe(struct gdma_queue *eq)
->  {
->  	u32 head = eq->head % (eq->queue_size / GDMA_EQE_SIZE);
->  	struct gdma_context *gc = eq->gdma_dev->gdma_context;
->  	struct gdma_eqe *eq_eqe_ptr = eq->queue_mem_ptr;
-> +	struct mana_serv_work *mns_wk;
->  	union gdma_eqe_info eqe_info;
->  	enum gdma_eqe_type type;
->  	struct gdma_event event;
-> @@ -400,6 +441,26 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
->  		eq->eq.callback(eq->eq.context, eq, &event);
->  		break;
->  
-> +	case GDMA_EQE_HWC_FPGA_RECONFIG:
-> +	case GDMA_EQE_HWC_SOCMANA_CRASH:
+Same with above, there is nothing prevent it. Check here is to avoid code go on
+if tty is NULL.
+The check is for changes in ttyport_open(). In my project, it's possible that
+ttyport_close() and ttyport_write_flush() get called after ttyport_open()
+failed, at which time tty is invalid.
 
-may be we also add a log(dev_dbg) to indicate if the servicing is for
-FPGA reconfig or socmana crash.
+thanks,
+Xin
 
-> +		if (gc->in_service) {
-> +			dev_info(gc->dev, "Already in service\n");
-> +			break;
-> +		}
-> +
-> +		mns_wk = kzalloc(sizeof(*mns_wk), GFP_ATOMIC);
-> +		if (!mns_wk) {
-> +			dev_err(gc->dev, "Fail to alloc mana_serv_work\n");
-> +			break;
-> +		}
-> +
-> +		dev_info(gc->dev, "Start MANA service\n");
-> +		gc->in_service = true;
-> +		mns_wk->pdev = to_pci_dev(gc->dev);
-> +		INIT_WORK(&mns_wk->serv_work, mana_serv_func);
-> +		schedule_work(&mns_wk->serv_work);
-> +		break;
-> +
->  	default:
->  		break;
->  	}
-> diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-> index 228603bf03f2..13cfbcf67815 100644
-> --- a/include/net/mana/gdma.h
-> +++ b/include/net/mana/gdma.h
-> @@ -58,8 +58,9 @@ enum gdma_eqe_type {
->  	GDMA_EQE_HWC_INIT_EQ_ID_DB	= 129,
->  	GDMA_EQE_HWC_INIT_DATA		= 130,
->  	GDMA_EQE_HWC_INIT_DONE		= 131,
-> -	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
-> +	GDMA_EQE_HWC_FPGA_RECONFIG	= 132,
->  	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
-> +	GDMA_EQE_HWC_SOCMANA_CRASH	= 135,
->  	GDMA_EQE_RNIC_QP_FATAL		= 176,
->  };
->  
-> @@ -388,6 +389,8 @@ struct gdma_context {
->  	u32			test_event_eq_id;
->  
->  	bool			is_pf;
-> +	bool			in_service;
-> +
->  	phys_addr_t		bar0_pa;
->  	void __iomem		*bar0_va;
->  	void __iomem		*shm_base;
-> -- 
-> 2.34.1
