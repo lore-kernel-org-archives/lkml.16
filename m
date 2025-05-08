@@ -1,75 +1,54 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5748286D70;
-	Thu,  8 May 2025 18:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C214C286D68;
+	Thu,  8 May 2025 18:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746729457; cv=none; b=i4diHn7LrbWI/Z/YlFkvg7DLTE0cudrvwqfH+aAwLKCRsyV3x4MkbuRXeLMFsH1xK5CPJjbIJstciOvS3+T9VktD3SfkdX8BacJ9izjxsr2ChlV302twivWnB3Ii9vpQljfjW07/6jtBAJYQaBv4++BNOuAa05f2xjD138/XFiI=
+	t=1746729561; cv=none; b=QeaU8O96S/1ynALkxZarBjAqI+kJ3aDzZG7G2HVQk15fPi/FN60AbJMP0gMSp4Kpu9/hu9V4uahoqfasC0Io72A4YgWSwniUG5tpaoUdih7CLAl0lVr94n60yYPTRqewTS6SWOodHKAJZRxJceV66XH1TQklThGD5qV6NCl4RGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746729457; c=relaxed/simple;
-	bh=LVtUUN2MrfsyK80smjhH6AaJQhd0Umzk+ryvBq/tDD0=;
+	s=arc-20240116; t=1746729561; c=relaxed/simple;
+	bh=aSLCvMPJiFtdHctPooEDdmXbWiWznln96hcDJ8bZEhQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EshW895YmGkkiSWYj07fcF1tjFycAGmaB8XOhGbBJL7cC0gHdi+QvMnOtEQ/DwKrVa/6TpNss2Mhm1Z4891BayOZD7aYPyF5d/5LSPLmX/cCrTAouivupIyINYL71MmMwgYgksAdpm6VFhCPiwiWqfL9fLMYqMBizezk2ecCmDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IXmT0d0P; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=c2vhewlj0Wef16GPulNYXqRotoNhN2cGIlBdSyPeSpHedzQxi3CEXt8efK5XcbhNEyhoLP+WwHJZgGD3RNVsOQ2Y1mz/6zAZAQDOJD6RHSqUL8BmPHI2pqb7YfOvWFbsV4PpJYYvXjzKZNfGeXdFWl6Xos90DrOrfafGwHURDcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QDAbB5eE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IXmT0d0P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746729456; x=1778265456;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LVtUUN2MrfsyK80smjhH6AaJQhd0Umzk+ryvBq/tDD0=;
-  b=IXmT0d0P9fCKY2BXh3/KgC9I6hBAB+XKPac/Klpq08xyPgWxPokjN/Pl
-   2rDdlhwPOUgECqXBsVqS+7T2zuBJld6e78KIGeKVEsLTyTxqHobudHjzr
-   8mHOt27TZJ5ug5dzkuRrzgJFhtz45dLyhvT4WyE4EmEhqzhqtM/KgNykz
-   iWcQ2dWdQlfHQrTr2WqAI4T5lA4gx3+lrrrQN7/z7EkQtBUwcir2wuelq
-   K4ktqu3nT6hQyNqTFakgL7s6uHCbo/isuhZjgOLAWUXvsmKquAtGw5Rbl
-   GtkZJX2nt/A+77wn8NVXUwGTxm+rkk20jvjFg3oj5/Ktg33FwoK/T1T+B
-   g==;
-X-CSE-ConnectionGUID: vYPHGsWyS6G4X/qdwOOGrw==
-X-CSE-MsgGUID: b+XNGQQ0T+KWzapp2ljwiw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="65949376"
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="65949376"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:37:36 -0700
-X-CSE-ConnectionGUID: z4vP90/9SX26Xj5i1zn72w==
-X-CSE-MsgGUID: JwEnOJrdQlmA6ZPuj15nnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="159678634"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 08 May 2025 11:37:31 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uD67d-000BGX-17;
-	Thu, 08 May 2025 18:37:29 +0000
-Date: Fri, 9 May 2025 02:37:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vitor Soares <ivitro@gmail.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: oe-kbuild-all@lists.linux.dev, Vitor Soares <vitor.soares@toradex.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Aradhya Bhatia <aradhya.bhatia@linux.dev>,
-	Jayesh Choudhary <j-choudhary@ti.com>, ivitro@gmail.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] drm/bridge: cdns-dsi: Replace deprecated
- UNIVERSAL_DEV_PM_OPS()
-Message-ID: <202505090233.0YCNNAzE-lkp@intel.com>
-References: <20250507161800.527464-1-ivitro@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QDAbB5eE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A3E0C4CEE7;
+	Thu,  8 May 2025 18:39:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746729560;
+	bh=aSLCvMPJiFtdHctPooEDdmXbWiWznln96hcDJ8bZEhQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QDAbB5eEujHm6EsEQZ9Z2k6629vZYnNcpL9OF3ut5SmCuCYYISa3Y5t+XSFz29nCN
+	 kvIWRQin3ExBhrCgC9dsYnwFTRdaNIWUJIeWEaxhhxq8Mk6h1gxKCnaAsG2bbkU/qD
+	 HOtK2L3xeCDILApkH+n0wO3TRIUDct4pcW4ZeTCpS8BEYnNEGwPf31obEANEhf1JiQ
+	 YYMezgKwpRMzKMbv4uCEhukggb58k/Zkf6mqHMT4iq0qo0F+g8brAZC3Dlt4MDpBqD
+	 KhEu9C4/CzFYc/NiMKXTAYpUW8VHA51KkvKDl1WOkaG5qH5rO2maQVoYwptapRwDn2
+	 V6KBCR1Y5vI7w==
+Date: Thu, 8 May 2025 18:39:18 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: ardb@kernel.org, bp@alien8.de, brgerst@gmail.com,
+	dave.hansen@linux.intel.com, decui@microsoft.com,
+	dimitri.sivanich@hpe.com, gautham.shenoy@amd.com,
+	haiyangz@microsoft.com, hpa@zytor.com, imran.f.khan@oracle.com,
+	jacob.jun.pan@linux.intel.com, jpoimboe@kernel.org,
+	justin.ernst@hpe.com, kprateek.nayak@amd.com, kyle.meyer@hpe.com,
+	kys@microsoft.com, lenb@kernel.org, mhklinux@outlook.com,
+	mingo@redhat.com, nikunj@amd.com, papaluri@amd.com,
+	patryk.wlazlyn@linux.intel.com, peterz@infradead.org,
+	rafael@kernel.org, russ.anderson@hpe.com, sohil.mehta@intel.com,
+	steve.wahl@hpe.com, tglx@linutronix.de, thomas.lendacky@amd.com,
+	tiala@microsoft.com, wei.liu@kernel.org, yuehaibing@huawei.com,
+	linux-acpi@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
+	benhill@microsoft.com, bperkins@microsoft.com,
+	sunilmut@microsoft.com
+Subject: Re: [PATCH hyperv-next 0/2] arch/x86, x86/hyperv: Few fixes for the
+ AP startup
+Message-ID: <aBz6Vuv9w4uRjaG_@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <20250507182227.7421-1-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,67 +57,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250507161800.527464-1-ivitro@gmail.com>
+In-Reply-To: <20250507182227.7421-1-romank@linux.microsoft.com>
 
-Hi Vitor,
+On Wed, May 07, 2025 at 11:22:24AM -0700, Roman Kisel wrote:
+> This patchset combines two patches that depend on each other and were not applying
+> cleanly:
+>   1. Fix APIC ID and VP index confusion in hv_snp_boot_ap():
+>     https://lore.kernel.org/linux-hyperv/20250430204720.108962-1-romank@linux.microsoft.com/
+>   2. Provide the CPU number in the wakeup AP callback:
+>     https://lore.kernel.org/linux-hyperv/20250430204720.108962-1-romank@linux.microsoft.com/
+> 
+> I rebased the patches on top of the latest hyperv-next tree and updated the second patch
+> that broke the linux-next build. That fix that, I made one non-functional change:
+> updated the signature of numachip_wakeup_secondary() to match the parameter list of
+> wakeup_secondary_cpu().
+> 
+> Roman Kisel (2):
+>   x86/hyperv: Fix APIC ID and VP index confusion in hv_snp_boot_ap()
+>   arch/x86: Provide the CPU number in the wakeup AP callback
 
-kernel test robot noticed the following build warnings:
+I queue these up.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.15-rc5 next-20250508]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Just so you know I'm experimenting a new setup. These have been applied
+to hyperv-next-staging. It will take some time for them to propagate to
+hyperv-next.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Vitor-Soares/drm-bridge-cdns-dsi-Replace-deprecated-UNIVERSAL_DEV_PM_OPS/20250508-001902
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250507161800.527464-1-ivitro%40gmail.com
-patch subject: [PATCH v2] drm/bridge: cdns-dsi: Replace deprecated UNIVERSAL_DEV_PM_OPS()
-config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20250509/202505090233.0YCNNAzE-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505090233.0YCNNAzE-lkp@intel.com/reproduce)
+Thanks,
+Wei.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505090233.0YCNNAzE-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c:1148:12: warning: 'cdns_dsi_suspend' defined but not used [-Wunused-function]
-    1148 | static int cdns_dsi_suspend(struct device *dev)
-         |            ^~~~~~~~~~~~~~~~
->> drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c:1137:12: warning: 'cdns_dsi_resume' defined but not used [-Wunused-function]
-    1137 | static int cdns_dsi_resume(struct device *dev)
-         |            ^~~~~~~~~~~~~~~
-
-
-vim +/cdns_dsi_suspend +1148 drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-
-  1136	
-> 1137	static int cdns_dsi_resume(struct device *dev)
-  1138	{
-  1139		struct cdns_dsi *dsi = dev_get_drvdata(dev);
-  1140	
-  1141		reset_control_deassert(dsi->dsi_p_rst);
-  1142		clk_prepare_enable(dsi->dsi_p_clk);
-  1143		clk_prepare_enable(dsi->dsi_sys_clk);
-  1144	
-  1145		return 0;
-  1146	}
-  1147	
-> 1148	static int cdns_dsi_suspend(struct device *dev)
-  1149	{
-  1150		struct cdns_dsi *dsi = dev_get_drvdata(dev);
-  1151	
-  1152		clk_disable_unprepare(dsi->dsi_sys_clk);
-  1153		clk_disable_unprepare(dsi->dsi_p_clk);
-  1154		reset_control_assert(dsi->dsi_p_rst);
-  1155		dsi->link_initialized = false;
-  1156		return 0;
-  1157	}
-  1158	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+>  arch/x86/coco/sev/core.c             | 13 ++-----
+>  arch/x86/hyperv/hv_init.c            | 33 +++++++++++++++++
+>  arch/x86/hyperv/hv_vtl.c             | 54 ++++------------------------
+>  arch/x86/hyperv/ivm.c                | 11 ++++--
+>  arch/x86/include/asm/apic.h          |  8 ++---
+>  arch/x86/include/asm/mshyperv.h      |  7 ++--
+>  arch/x86/kernel/acpi/madt_wakeup.c   |  2 +-
+>  arch/x86/kernel/apic/apic_noop.c     |  8 ++++-
+>  arch/x86/kernel/apic/apic_numachip.c |  2 +-
+>  arch/x86/kernel/apic/x2apic_uv_x.c   |  2 +-
+>  arch/x86/kernel/smpboot.c            | 10 +++---
+>  include/hyperv/hvgdk_mini.h          |  2 +-
+>  12 files changed, 76 insertions(+), 76 deletions(-)
+> 
+> 
+> base-commit: 9b0844d87b1407681b78130429f798beb366f43f
+> -- 
+> 2.43.0
+> 
