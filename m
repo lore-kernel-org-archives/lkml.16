@@ -1,401 +1,270 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4446020D50B
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1520E20D4E2
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746726343; cv=none; b=dwmuXLcQCP7rKBT8FEnuzNzqrZcAMbuSep//uzJqcZGIvdpiv4YIH7dxmWiZ+6VnNsnPf1Oq06boOCW4uZanE2wCBY/N1OkTkjnE14DkjVmxitXS51mXtzBxsctoEpwtoqrcMT/SZ3hS53RRDdlD5ytDtWZDCsZymYwIhFrn54A=
+	t=1746726372; cv=none; b=Z3PHDfvOulv0bliwLbCuyyHIJNiRhNFaDqHBTS0qXZdPigxOh9OC0FVxImkKAVvCGu2aagYw/+fGmgoSBywX6WQIpIn4T1cfYRjUMBqg9iEAVzfChBXMINvH3b+voTGMWZh12eSbXkMRJHBuI3haXeDQTLs2L/jC3qr8Qljh+6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746726343; c=relaxed/simple;
-	bh=0uONWRNF15Jv8uIv0B45XQKpseOb6seBoGqZpXZcw1s=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID; b=E8paYyYo3+meAULQOgv7RyLl6CgdiplwFG86aLHXuCJrdj3TXUsGi1GQGs4xvIPeq9EmOslm3KuC0EVYo9DO6W90wFbicNKCAhz3WejUpsLCOvYOvjXHvYyXM5TNkIu31bfPiuXvNbO4ulri8GtrlwkOe5ZFQJMVB5QRthf5ZQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=IZZE0R//; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1746726372; c=relaxed/simple;
+	bh=WUG0vjVJ+PuA3Dpi/S2TZp4qS7pyXcTRvNgGqu0hrpw=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vGSRVt070mCqHOY8zt0o/WXgDIBz5wnXIlJ7DZsVZuJD5Y6kAoGhr8UGfgg5oTbhjN0Rk8zar2lGAb4DVrybH6esycEQKcbHoPQPd2EDqZ5352zM1Ts1N+ptAVQ87oC4gwU0b1pW/71sAwJOrCIyhJ/5FEE4hftilCSC/vZUNNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wm81w/Ap; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="IZZE0R//"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-30a99e2bdd4so1211691a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 10:45:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wm81w/Ap"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5499d2134e8so1656082e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 10:46:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1746726340; x=1747331140; darn=vger.kernel.org;
-        h=message-id:to:from:cc:in-reply-to:subject:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=dEAIpsuCysn8s52UezknC02k+EhomijIPzdPSULwJfQ=;
-        b=IZZE0R//+7aiPGIhTrnZj55Zbew9EGCK+JHrwLw0KAa41v3/s6Z9jfamK0WzqYJPCv
-         hkBDSA4PSLhdP8O3HMMVsdxqvEaBi0ba6H1VJxQL/gRno0Vqs97M39ffN0gBRWzLBoD6
-         ANRjU5EnJLWzUPJTlKAHiHYdjLnve2Zqsq1z9xTq9wjbovVm+YWMyZ3h82cNP6UHUK45
-         e8IdrbxxoBo4Hiexx3/eIMv9RymfeiR6PbPYAHb4CQhHmwvthoJewJg4dFkXOGxwGlZe
-         mf43vhNp7OYZsXIIpV1IyjeRslZg9EnKguG1QYR96v7ETpGjPss0OaBIwdocX1FARb/0
-         fq6w==
+        d=gmail.com; s=20230601; t=1746726368; x=1747331168; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fqmk4M3DrF29I/qbtB8U0fpJdgAdiiMTLbwwOsWf1q8=;
+        b=Wm81w/Apj8tyWoRWnL5vJPKcwcx7tnfq8Pi1rnkD132rvvGy8UUHbW0eaXApZkfqan
+         FC/UsMka9u6phZMQsWUi+HjXSJrhhzl7V27lZx1gkRw0HJreh6GNcMil6sWdoAjlQuJm
+         VGDG2xIVbKOaJFO5/5YiSBBcyU9NhX0IqeIK8TBjtRZFKQV1QVHyY6uP6ao7ddBgxRkr
+         pBpjCkdbGTml5f4v9Vd6lkPonW741KuYRZP10BFA6un1gVOlPnHELT0J99tDv8mvwp9c
+         VetHIzBx5QmRd/Gd1jPSV8TVfWmah2ZEbYP9MYPPOAUvV7jeiub1n7PY25Jx/LJ248Pb
+         EoSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746726340; x=1747331140;
-        h=message-id:to:from:cc:in-reply-to:subject:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dEAIpsuCysn8s52UezknC02k+EhomijIPzdPSULwJfQ=;
-        b=lY9B1V1mDE9vL7IrTOBrs/KHuc9N+kUl1WlmYaIiGI7lpiz4rqg1nAFagZBeCQ5QbH
-         aOFMe3fQwm+WiYesltBcRBrzWE9P/Jyk/Ss7YG2nm8Lp2iRtsHIXr+vZ5NXxK1lfZ7l8
-         1+IAaDTR1/1AHMoY79in0bDJ2eVKa3LpAM3Q+3izuPmuMNanUdUXOUsiktUnP5oZfnUp
-         LlJ4JImMa4RonZXBqQF3EgkwggdZeud1WRwf/qFqIoEtME5E97uBT+AX6jiC9uYgFAOq
-         BtUzCI4f5m2+UKxrsDo0OC5LlD9R5mq8zUyc7g0NJBWsavRlUIsRgQl8JUn50zCuYqdC
-         6vPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUN2Nze644/iqaHpURLq5n3JpLT2LQuUjlHAGMzulridpcxaAhVEt9gvlEMCJDq8eYmeZBWw4T+AGbCQsQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDINQjv0nLnHk5WLrFYZxra1ciwDuAAgRtw+TKon0kBhEc9vhG
-	WzRN8IrZnxzGw1AiaN4WgJ4JcRf4lpyWE+U2Kgo82IWz9Kms3SqDTHj8KoSZBN8=
-X-Gm-Gg: ASbGncsWYL96N/SqwVNCm8CJ7uS0grELd2QmZIPrqcuqwIfRcOb2yOqiMLjIRD2MxTn
-	6VoEefNJsREbtqb65KR6EFhdapX1xyAHoST+GqUDBMIa28spwXYwvvzkHBmav+eJyFNu0pYxluB
-	WL2pleGcN0NYs/Tbd43Rd6t9AMYTGQyspf0y1RCMLl/sQKW4naIVTORaUdjugOrIWpfnOQWs4/K
-	ywDznTreKEit9KDgy/eHL+dSdAtaqG04KkFgwv4LGAObRdwghddsHsj9iQ4mLpuAwgHfmnbDoa/
-	egsv9Jz/65d/CrB6rLflAtR8uKMbUqjRJw==
-X-Google-Smtp-Source: AGHT+IHeD97pMTFuyKCP/YT5KvCO+fk1gqZ4VsKAgAj3Z3vrsQq843QhamFknnUEu4uFYy+vJhv0hg==
-X-Received: by 2002:a17:90b:3f04:b0:308:539d:7577 with SMTP id 98e67ed59e1d1-30c3b915960mr891237a91.0.1746726340334;
-        Thu, 08 May 2025 10:45:40 -0700 (PDT)
-Received: from localhost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30c39e6101dsm259626a91.36.2025.05.08.10.45.39
+        d=1e100.net; s=20230601; t=1746726368; x=1747331168;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fqmk4M3DrF29I/qbtB8U0fpJdgAdiiMTLbwwOsWf1q8=;
+        b=usOVVPm4C6JQsoYyfasJxhfRMzUB4nOzIh9WNBt9aPqCKagp08DDh01nbNGqXHzyxu
+         U/6cG38o/x5vqn/rYyFqL5aUy6dMZ4zwJPrCswdhLV+TsUc3+tQmF8XnytrrbRVe89bI
+         58plSdaEJhKqRB1F9aRq0GIr/aSsbvlJ0DNfKlldcEU4OdBAh2d1TldVnOX02eJzHaei
+         2Jb/WnuJJkFmCKAlSQSHY2nSFL3McX8eQGeDL+2v60D7nBo0Lijj7lml2CyGMEFb/g7I
+         L54uWoIxXNNYd6BUOZKBQHaoRIrjI9dh9ZPVJPZGyeuRHK3VtsjGOGRgBlFBbwJ+K6Nd
+         dzWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWfdMY0jhp3i8peZSdGQs8Do/oNcvUsveuClC6FvZ5FdKSESiWMZvaC+N8Ya9d3i3y5fxdgmpgwcdpV8u4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXuG9AG0VFK8naGRaTgWqjn9ul6VYBgM+AHob43sZkHdABCf3D
+	UctSbmnnL+xrGgkbxyE3BnyGJ8kN1mY9O0TvjaW1zSd2DzifHon+72I7wQ==
+X-Gm-Gg: ASbGnct3PpACrKL8tfFtinRu9qGxPrpBbWG+UBZ1jKSlCi3cHIWIiaKf5YYfGweF/89
+	vpXzvqTPnCOGaFBZtKEdy2y5FVKLbPw4rxctTSwbplzen2PCcXnyDFVU3b7MhhARPlQKI4IJHnI
+	q/Ivbvyu5wGdhe6hd5HRUnHx/guEYzrv71NnrzIThk1E2DSHldVena9KRn7kpTRs3mlC+yv/tYQ
+	BPGLZU10QGsfMikvZ/LAepcckkZLpTm59R+dkZihaLyqRUxwPh+rKYu+39aaKxcTyKBnWgSBgIB
+	1xwK40l7P8hfieMx2emfhGjCVKGqYuxHArMKhmds7DUZmOYFSTV7MTEEI7AMJruBWAB9
+X-Google-Smtp-Source: AGHT+IEetBMwa2XQqElClYSAZkQrSQPEeaYWrS2+mPR7Nmlj2u5AbpPdRYI1FaaPTaalk7//cfpSMQ==
+X-Received: by 2002:a05:6512:6401:b0:54a:c4af:18 with SMTP id 2adb3069b0e04-54fc67c5defmr30643e87.22.1746726367583;
+        Thu, 08 May 2025 10:46:07 -0700 (PDT)
+Received: from pc636 (host-95-203-26-194.mobileonline.telia.com. [95.203.26.194])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64c6dfasm30043e87.210.2025.05.08.10.46.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 10:45:39 -0700 (PDT)
-Date: Thu, 08 May 2025 10:45:39 -0700 (PDT)
-X-Google-Original-Date: Thu, 08 May 2025 10:45:38 PDT (-0700)
-Subject:     Re: [PATCH v4 07/13] crypto: riscv/sha256 - implement library instead of shash
-In-Reply-To: <20250428170040.423825-8-ebiggers@kernel.org>
-CC: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-  linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-  linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, sparclinux@vger.kernel.org,
-  linux-s390@vger.kernel.org, x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Jason@zx2c4.com,
-  Linus Torvalds <torvalds@linux-foundation.org>
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: ebiggers@kernel.org
-Message-ID: <mhng-0b1a0c43-eff8-4ea0-9aaa-46727504555c@palmer-ri-x1c9a>
+        Thu, 08 May 2025 10:46:07 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Thu, 8 May 2025 19:46:04 +0200
+To: Jeongjun Park <aha310510@gmail.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>, akpm@linux-foundation.org,
+	edumazet@google.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] mm/vmalloc: fix data race in show_numa_info()
+Message-ID: <aBzt3HIU3l0sp81_@pc636>
+References: <20250508160800.12540-1-aha310510@gmail.com>
+ <aBzYNsvccLZVxcV5@pc636>
+ <CAO9qdTEZGPRB1XJ0U9fNVmG54sohC5hiP4u=9WdOPeO6htfFrQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAO9qdTEZGPRB1XJ0U9fNVmG54sohC5hiP4u=9WdOPeO6htfFrQ@mail.gmail.com>
 
-On Mon, 28 Apr 2025 10:00:32 PDT (-0700), ebiggers@kernel.org wrote:
-> From: Eric Biggers <ebiggers@google.com>
->
-> Instead of providing crypto_shash algorithms for the arch-optimized
-> SHA-256 code, instead implement the SHA-256 library.  This is much
-> simpler, it makes the SHA-256 library functions be arch-optimized, and
-> it fixes the longstanding issue where the arch-optimized SHA-256 was
-> disabled by default.  SHA-256 still remains available through
-> crypto_shash, but individual architectures no longer need to handle it.
->
-> To match sha256_blocks_arch(), change the type of the nblocks parameter
-> of the assembly function from int to size_t.  The assembly function
-> actually already treated it as size_t.
->
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->  arch/riscv/crypto/Kconfig                     |  11 --
->  arch/riscv/crypto/Makefile                    |   3 -
->  arch/riscv/crypto/sha256-riscv64-glue.c       | 125 ------------------
->  arch/riscv/lib/crypto/Kconfig                 |   7 +
->  arch/riscv/lib/crypto/Makefile                |   3 +
->  .../sha256-riscv64-zvknha_or_zvknhb-zvkb.S    |   4 +-
->  arch/riscv/lib/crypto/sha256.c                |  62 +++++++++
->  7 files changed, 74 insertions(+), 141 deletions(-)
->  delete mode 100644 arch/riscv/crypto/sha256-riscv64-glue.c
->  rename arch/riscv/{ => lib}/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S (98%)
->  create mode 100644 arch/riscv/lib/crypto/sha256.c
->
-> diff --git a/arch/riscv/crypto/Kconfig b/arch/riscv/crypto/Kconfig
-> index 4863be2a4ec2f..cd9b776602f89 100644
-> --- a/arch/riscv/crypto/Kconfig
-> +++ b/arch/riscv/crypto/Kconfig
-> @@ -26,21 +26,10 @@ config CRYPTO_GHASH_RISCV64
->  	  GCM GHASH function (NIST SP 800-38D)
->
->  	  Architecture: riscv64 using:
->  	  - Zvkg vector crypto extension
->
-> -config CRYPTO_SHA256_RISCV64
-> -	tristate "Hash functions: SHA-224 and SHA-256"
-> -	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
-> -	select CRYPTO_SHA256
-> -	help
-> -	  SHA-224 and SHA-256 secure hash algorithm (FIPS 180)
-> -
-> -	  Architecture: riscv64 using:
-> -	  - Zvknha or Zvknhb vector crypto extensions
-> -	  - Zvkb vector crypto extension
-> -
->  config CRYPTO_SHA512_RISCV64
->  	tristate "Hash functions: SHA-384 and SHA-512"
->  	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
->  	select CRYPTO_SHA512
->  	help
-> diff --git a/arch/riscv/crypto/Makefile b/arch/riscv/crypto/Makefile
-> index 4ae9bf762e907..e10e8257734e3 100644
-> --- a/arch/riscv/crypto/Makefile
-> +++ b/arch/riscv/crypto/Makefile
-> @@ -5,13 +5,10 @@ aes-riscv64-y := aes-riscv64-glue.o aes-riscv64-zvkned.o \
->  		 aes-riscv64-zvkned-zvbb-zvkg.o aes-riscv64-zvkned-zvkb.o
->
->  obj-$(CONFIG_CRYPTO_GHASH_RISCV64) += ghash-riscv64.o
->  ghash-riscv64-y := ghash-riscv64-glue.o ghash-riscv64-zvkg.o
->
-> -obj-$(CONFIG_CRYPTO_SHA256_RISCV64) += sha256-riscv64.o
-> -sha256-riscv64-y := sha256-riscv64-glue.o sha256-riscv64-zvknha_or_zvknhb-zvkb.o
-> -
->  obj-$(CONFIG_CRYPTO_SHA512_RISCV64) += sha512-riscv64.o
->  sha512-riscv64-y := sha512-riscv64-glue.o sha512-riscv64-zvknhb-zvkb.o
->
->  obj-$(CONFIG_CRYPTO_SM3_RISCV64) += sm3-riscv64.o
->  sm3-riscv64-y := sm3-riscv64-glue.o sm3-riscv64-zvksh-zvkb.o
-> diff --git a/arch/riscv/crypto/sha256-riscv64-glue.c b/arch/riscv/crypto/sha256-riscv64-glue.c
-> deleted file mode 100644
-> index c998300ab8435..0000000000000
-> --- a/arch/riscv/crypto/sha256-riscv64-glue.c
-> +++ /dev/null
-> @@ -1,125 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0-or-later
-> -/*
-> - * SHA-256 and SHA-224 using the RISC-V vector crypto extensions
-> - *
-> - * Copyright (C) 2022 VRULL GmbH
-> - * Author: Heiko Stuebner <heiko.stuebner@vrull.eu>
-> - *
-> - * Copyright (C) 2023 SiFive, Inc.
-> - * Author: Jerry Shih <jerry.shih@sifive.com>
-> - */
-> -
-> -#include <asm/simd.h>
-> -#include <asm/vector.h>
-> -#include <crypto/internal/hash.h>
-> -#include <crypto/internal/simd.h>
-> -#include <crypto/sha256_base.h>
-> -#include <linux/kernel.h>
-> -#include <linux/module.h>
-> -
-> -/*
-> - * Note: the asm function only uses the 'state' field of struct sha256_state.
-> - * It is assumed to be the first field.
-> - */
-> -asmlinkage void sha256_transform_zvknha_or_zvknhb_zvkb(
-> -	struct crypto_sha256_state *state, const u8 *data, int num_blocks);
-> -
-> -static void sha256_block(struct crypto_sha256_state *state, const u8 *data,
-> -			 int num_blocks)
-> -{
-> -	/*
-> -	 * Ensure struct crypto_sha256_state begins directly with the SHA-256
-> -	 * 256-bit internal state, as this is what the asm function expects.
-> -	 */
-> -	BUILD_BUG_ON(offsetof(struct crypto_sha256_state, state) != 0);
-> -
-> -	if (crypto_simd_usable()) {
-> -		kernel_vector_begin();
-> -		sha256_transform_zvknha_or_zvknhb_zvkb(state, data, num_blocks);
-> -		kernel_vector_end();
-> -	} else
-> -		sha256_transform_blocks(state, data, num_blocks);
-> -}
-> -
-> -static int riscv64_sha256_update(struct shash_desc *desc, const u8 *data,
-> -				 unsigned int len)
-> -{
-> -	return sha256_base_do_update_blocks(desc, data, len, sha256_block);
-> -}
-> -
-> -static int riscv64_sha256_finup(struct shash_desc *desc, const u8 *data,
-> -				unsigned int len, u8 *out)
-> -{
-> -	sha256_base_do_finup(desc, data, len, sha256_block);
-> -	return sha256_base_finish(desc, out);
-> -}
-> -
-> -static int riscv64_sha256_digest(struct shash_desc *desc, const u8 *data,
-> -				 unsigned int len, u8 *out)
-> -{
-> -	return sha256_base_init(desc) ?:
-> -	       riscv64_sha256_finup(desc, data, len, out);
-> -}
-> -
-> -static struct shash_alg riscv64_sha256_algs[] = {
-> -	{
-> -		.init = sha256_base_init,
-> -		.update = riscv64_sha256_update,
-> -		.finup = riscv64_sha256_finup,
-> -		.digest = riscv64_sha256_digest,
-> -		.descsize = sizeof(struct crypto_sha256_state),
-> -		.digestsize = SHA256_DIGEST_SIZE,
-> -		.base = {
-> -			.cra_blocksize = SHA256_BLOCK_SIZE,
-> -			.cra_flags = CRYPTO_AHASH_ALG_BLOCK_ONLY |
-> -				     CRYPTO_AHASH_ALG_FINUP_MAX,
-> -			.cra_priority = 300,
-> -			.cra_name = "sha256",
-> -			.cra_driver_name = "sha256-riscv64-zvknha_or_zvknhb-zvkb",
-> -			.cra_module = THIS_MODULE,
-> -		},
-> -	}, {
-> -		.init = sha224_base_init,
-> -		.update = riscv64_sha256_update,
-> -		.finup = riscv64_sha256_finup,
-> -		.descsize = sizeof(struct crypto_sha256_state),
-> -		.digestsize = SHA224_DIGEST_SIZE,
-> -		.base = {
-> -			.cra_blocksize = SHA224_BLOCK_SIZE,
-> -			.cra_flags = CRYPTO_AHASH_ALG_BLOCK_ONLY |
-> -				     CRYPTO_AHASH_ALG_FINUP_MAX,
-> -			.cra_priority = 300,
-> -			.cra_name = "sha224",
-> -			.cra_driver_name = "sha224-riscv64-zvknha_or_zvknhb-zvkb",
-> -			.cra_module = THIS_MODULE,
-> -		},
-> -	},
-> -};
-> -
-> -static int __init riscv64_sha256_mod_init(void)
-> -{
-> -	/* Both zvknha and zvknhb provide the SHA-256 instructions. */
-> -	if ((riscv_isa_extension_available(NULL, ZVKNHA) ||
-> -	     riscv_isa_extension_available(NULL, ZVKNHB)) &&
-> -	    riscv_isa_extension_available(NULL, ZVKB) &&
-> -	    riscv_vector_vlen() >= 128)
-> -		return crypto_register_shashes(riscv64_sha256_algs,
-> -					       ARRAY_SIZE(riscv64_sha256_algs));
-> -
-> -	return -ENODEV;
-> -}
-> -
-> -static void __exit riscv64_sha256_mod_exit(void)
-> -{
-> -	crypto_unregister_shashes(riscv64_sha256_algs,
-> -				  ARRAY_SIZE(riscv64_sha256_algs));
-> -}
-> -
-> -module_init(riscv64_sha256_mod_init);
-> -module_exit(riscv64_sha256_mod_exit);
-> -
-> -MODULE_DESCRIPTION("SHA-256 (RISC-V accelerated)");
-> -MODULE_AUTHOR("Heiko Stuebner <heiko.stuebner@vrull.eu>");
-> -MODULE_LICENSE("GPL");
-> -MODULE_ALIAS_CRYPTO("sha256");
-> -MODULE_ALIAS_CRYPTO("sha224");
-> diff --git a/arch/riscv/lib/crypto/Kconfig b/arch/riscv/lib/crypto/Kconfig
-> index bc7a43f33eb3a..c100571feb7e8 100644
-> --- a/arch/riscv/lib/crypto/Kconfig
-> +++ b/arch/riscv/lib/crypto/Kconfig
-> @@ -4,5 +4,12 @@ config CRYPTO_CHACHA_RISCV64
->  	tristate
->  	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
->  	default CRYPTO_LIB_CHACHA
->  	select CRYPTO_ARCH_HAVE_LIB_CHACHA
->  	select CRYPTO_LIB_CHACHA_GENERIC
-> +
-> +config CRYPTO_SHA256_RISCV64
-> +	tristate
-> +	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
-> +	default CRYPTO_LIB_SHA256
-> +	select CRYPTO_ARCH_HAVE_LIB_SHA256
-> +	select CRYPTO_LIB_SHA256_GENERIC
-> diff --git a/arch/riscv/lib/crypto/Makefile b/arch/riscv/lib/crypto/Makefile
-> index e27b78f317fc8..b7cb877a2c07e 100644
-> --- a/arch/riscv/lib/crypto/Makefile
-> +++ b/arch/riscv/lib/crypto/Makefile
-> @@ -1,4 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->
->  obj-$(CONFIG_CRYPTO_CHACHA_RISCV64) += chacha-riscv64.o
->  chacha-riscv64-y := chacha-riscv64-glue.o chacha-riscv64-zvkb.o
-> +
-> +obj-$(CONFIG_CRYPTO_SHA256_RISCV64) += sha256-riscv64.o
-> +sha256-riscv64-y := sha256.o sha256-riscv64-zvknha_or_zvknhb-zvkb.o
-> diff --git a/arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S b/arch/riscv/lib/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
-> similarity index 98%
-> rename from arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
-> rename to arch/riscv/lib/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
-> index f1f5779e47323..fad501ad06171 100644
-> --- a/arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
-> +++ b/arch/riscv/lib/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
-> @@ -104,12 +104,12 @@
->  	sha256_4rounds	\last, \k1, W1, W2, W3, W0
->  	sha256_4rounds	\last, \k2, W2, W3, W0, W1
->  	sha256_4rounds	\last, \k3, W3, W0, W1, W2
->  .endm
->
-> -// void sha256_transform_zvknha_or_zvknhb_zvkb(u32 state[8], const u8 *data,
-> -//					       int num_blocks);
-> +// void sha256_transform_zvknha_or_zvknhb_zvkb(u32 state[SHA256_STATE_WORDS],
-> +//					       const u8 *data, size_t nblocks);
->  SYM_FUNC_START(sha256_transform_zvknha_or_zvknhb_zvkb)
->
->  	// Load the round constants into K0-K15.
->  	vsetivli	zero, 4, e32, m1, ta, ma
->  	la		t0, K256
-> diff --git a/arch/riscv/lib/crypto/sha256.c b/arch/riscv/lib/crypto/sha256.c
-> new file mode 100644
-> index 0000000000000..18b84030f0b39
-> --- /dev/null
-> +++ b/arch/riscv/lib/crypto/sha256.c
-> @@ -0,0 +1,62 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * SHA-256 (RISC-V accelerated)
-> + *
-> + * Copyright (C) 2022 VRULL GmbH
-> + * Author: Heiko Stuebner <heiko.stuebner@vrull.eu>
-> + *
-> + * Copyright (C) 2023 SiFive, Inc.
-> + * Author: Jerry Shih <jerry.shih@sifive.com>
-> + */
-> +
-> +#include <asm/simd.h>
-> +#include <asm/vector.h>
-> +#include <crypto/internal/sha2.h>
-> +#include <crypto/internal/simd.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +
-> +asmlinkage void sha256_transform_zvknha_or_zvknhb_zvkb(
-> +	u32 state[SHA256_STATE_WORDS], const u8 *data, size_t nblocks);
-> +
-> +static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_extensions);
-> +
-> +void sha256_blocks_arch(u32 state[SHA256_STATE_WORDS],
-> +			const u8 *data, size_t nblocks)
-> +{
-> +	if (static_branch_likely(&have_extensions) && crypto_simd_usable()) {
-> +		kernel_vector_begin();
-> +		sha256_transform_zvknha_or_zvknhb_zvkb(state, data, nblocks);
-> +		kernel_vector_end();
-> +	} else {
-> +		sha256_blocks_generic(state, data, nblocks);
-> +	}
-> +}
-> +EXPORT_SYMBOL(sha256_blocks_arch);
-> +
-> +bool sha256_is_arch_optimized(void)
-> +{
-> +	return static_key_enabled(&have_extensions);
-> +}
-> +EXPORT_SYMBOL(sha256_is_arch_optimized);
-> +
-> +static int __init riscv64_sha256_mod_init(void)
-> +{
-> +	/* Both zvknha and zvknhb provide the SHA-256 instructions. */
-> +	if ((riscv_isa_extension_available(NULL, ZVKNHA) ||
-> +	     riscv_isa_extension_available(NULL, ZVKNHB)) &&
-> +	    riscv_isa_extension_available(NULL, ZVKB) &&
-> +	    riscv_vector_vlen() >= 128)
-> +		static_branch_enable(&have_extensions);
-> +	return 0;
-> +}
-> +arch_initcall(riscv64_sha256_mod_init);
-> +
-> +static void __exit riscv64_sha256_mod_exit(void)
-> +{
-> +}
-> +module_exit(riscv64_sha256_mod_exit);
-> +
-> +MODULE_DESCRIPTION("SHA-256 (RISC-V accelerated)");
-> +MODULE_AUTHOR("Heiko Stuebner <heiko.stuebner@vrull.eu>");
-> +MODULE_LICENSE("GPL");
+On Fri, May 09, 2025 at 01:26:14AM +0900, Jeongjun Park wrote:
+> Uladzislau Rezki <urezki@gmail.com> wrote:
+> >
+> > On Fri, May 09, 2025 at 01:07:59AM +0900, Jeongjun Park wrote:
+> > > The following data-race was found in show_numa_info():
+> > >
+> > > ==================================================================
+> > > BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
+> > >
+> > > read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
+> > >  show_numa_info mm/vmalloc.c:4936 [inline]
+> > >  vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
+> > >  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+> > >  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+> > > ....
+> > >
+> > > write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
+> > >  show_numa_info mm/vmalloc.c:4934 [inline]
+> > >  vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
+> > >  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+> > >  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+> > > ....
+> > >
+> > > value changed: 0x0000008f -> 0x00000000
+> > > ==================================================================
+> > >
+> > > According to this report,there is a read/write data-race because m->private
+> > > is accessible to multiple CPUs. To fix this, instead of allocating the heap
+> > > in proc_vmalloc_init() and passing the heap address to m->private,
+> > > vmalloc_info_show() should allocate the heap.
+> > >
+> > > Fixes: a47a126ad5ea ("vmallocinfo: add NUMA information")
+> > > Suggested-by: Eric Dumazet <edumazet@google.com>
+> > > Suggested-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> > > Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+> > > ---
+> > > v5: Change heap to be allocated only when CONFIG_NUMA is enabled
+> > > - Link to v4: https://lore.kernel.org/all/20250508065558.149091-1-aha310510@gmail.com/
+> > > v4: Change the way counters array heap is allocated, per Andrew Morton's suggestion.
+> > >     And fix it to call smp_rmb() in the correct location.
+> > > - Link to v3: https://lore.kernel.org/all/20250507142552.9446-1-aha310510@gmail.com/
+> > > v3: Following Uladzislau Rezki's suggestion, we check v->flags beforehand
+> > >     to avoid printing uninitialized members of vm_struct.
+> > > - Link to v2: https://lore.kernel.org/all/20250506082520.84153-1-aha310510@gmail.com/
+> > > v2: Refactoring some functions and fix patch as per Eric Dumazet suggestion
+> > > - Link to v1: https://lore.kernel.org/all/20250505171948.24410-1-aha310510@gmail.com/
+> > > ---
+> > >  mm/vmalloc.c | 62 ++++++++++++++++++++++++++++------------------------
+> > >  1 file changed, 34 insertions(+), 28 deletions(-)
+> > >
+> > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > index 3ed720a787ec..866f18766dfc 100644
+> > > --- a/mm/vmalloc.c
+> > > +++ b/mm/vmalloc.c
+> > > @@ -3100,7 +3100,7 @@ static void clear_vm_uninitialized_flag(struct vm_struct *vm)
+> > >       /*
+> > >        * Before removing VM_UNINITIALIZED,
+> > >        * we should make sure that vm has proper values.
+> > > -      * Pair with smp_rmb() in show_numa_info().
+> > > +      * Pair with smp_rmb() in vread_iter() and vmalloc_info_show().
+> > >        */
+> > >       smp_wmb();
+> > >       vm->flags &= ~VM_UNINITIALIZED;
+> > > @@ -4914,28 +4914,29 @@ bool vmalloc_dump_obj(void *object)
+> > >  #endif
+> > >
+> > >  #ifdef CONFIG_PROC_FS
+> > > -static void show_numa_info(struct seq_file *m, struct vm_struct *v)
+> > > -{
+> > > -     if (IS_ENABLED(CONFIG_NUMA)) {
+> > > -             unsigned int nr, *counters = m->private;
+> > > -             unsigned int step = 1U << vm_area_page_order(v);
+> > >
+> > > -             if (!counters)
+> > > -                     return;
+> > > +/*
+> > > + * Print number of pages allocated on each memory node.
+> > > + *
+> > > + * This function can only be called if CONFIG_NUMA is enabled
+> > > + * and VM_UNINITIALIZED bit in v->flags is disabled.
+> > > + */
+> > > +static void show_numa_info(struct seq_file *m, struct vm_struct *v,
+> > > +                              unsigned int *counters)
+> > > +{
+> > > +     unsigned int nr;
+> > > +     unsigned int step = 1U << vm_area_page_order(v);
+> > >
+> > > -             if (v->flags & VM_UNINITIALIZED)
+> > > -                     return;
+> > > -             /* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
+> > > -             smp_rmb();
+> > > +     if (!counters)
+> > > +             return;
+> > >
+> > > -             memset(counters, 0, nr_node_ids * sizeof(unsigned int));
+> > > +     memset(counters, 0, nr_node_ids * sizeof(unsigned int));
+> > >
+> > > -             for (nr = 0; nr < v->nr_pages; nr += step)
+> > > -                     counters[page_to_nid(v->pages[nr])] += step;
+> > > -             for_each_node_state(nr, N_HIGH_MEMORY)
+> > > -                     if (counters[nr])
+> > > -                             seq_printf(m, " N%u=%u", nr, counters[nr]);
+> > > -     }
+> > > +     for (nr = 0; nr < v->nr_pages; nr += step)
+> > > +             counters[page_to_nid(v->pages[nr])] += step;
+> > > +     for_each_node_state(nr, N_HIGH_MEMORY)
+> > > +             if (counters[nr])
+> > > +                     seq_printf(m, " N%u=%u", nr, counters[nr]);
+> > >  }
+> > >
+> > >  static void show_purge_info(struct seq_file *m)
+> > > @@ -4962,8 +4963,12 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+> > >       struct vmap_node *vn;
+> > >       struct vmap_area *va;
+> > >       struct vm_struct *v;
+> > > +     unsigned int *counters = NULL;
+> > >       int i;
+> > >
+> > > +     if (IS_ENABLED(CONFIG_NUMA))
+> > > +             counters = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
+> > > +
+> > >       for (i = 0; i < nr_vmap_nodes; i++) {
+> > >               vn = &vmap_nodes[i];
+> > >
+> > > @@ -4979,6 +4984,11 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+> > >                       }
+> > >
+> > >                       v = va->vm;
+> > > +                     if (v->flags & VM_UNINITIALIZED)
+> > > +                             continue;
+> > > +
+> > > +                     /* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
+> > > +                     smp_rmb();
+> > >
+> > >                       seq_printf(m, "0x%pK-0x%pK %7ld",
+> > >                               v->addr, v->addr + v->size, v->size);
+> > > @@ -5013,7 +5023,9 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+> > >                       if (is_vmalloc_addr(v->pages))
+> > >                               seq_puts(m, " vpages");
+> > >
+> > > -                     show_numa_info(m, v);
+> > > +                     if (counters)
+> > > +                             show_numa_info(m, v, counters);
+> > > +
+> > Let's execute it for NUMA only.
+> >
+> > >                       seq_putc(m, '\n');
+> > >               }
+> > >               spin_unlock(&vn->busy.lock);
+> > > @@ -5023,19 +5035,13 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+> > >        * As a final step, dump "unpurged" areas.
+> > >        */
+> > >       show_purge_info(m);
+> > > +     kfree(counters);
+> > Let's execute it for NUMA only.
+> >
+> > >       return 0;
+> > >  }
+> > >
+> > >  static int __init proc_vmalloc_init(void)
+> > >  {
+> > > -     void *priv_data = NULL;
+> > > -
+> > > -     if (IS_ENABLED(CONFIG_NUMA))
+> > > -             priv_data = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
+> > > -
+> > > -     proc_create_single_data("vmallocinfo",
+> > > -             0400, NULL, vmalloc_info_show, priv_data);
+> > > -
+> > > +     proc_create_single("vmallocinfo", 0400, NULL, vmalloc_info_show);
+> > >       return 0;
+> > >  }
+> > >  module_init(proc_vmalloc_init);
+> > > --
+> >
+> > You are so fast :)
+> >
+> 
+> oops sorry.
+> 
+> I'm not sure why you'd want to avoid initializing "counters pointer" to
+> NULL, but it's a simple change so I'll write a patch for it right away
+> and send it out as a v6 patch.
+> 
+Because i would like to avoid of having such rule if someone decides to
+drop your initialization later of after a code refactoring. This is a reason.
 
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
-
-I assume you want to keep these all together somewhere, so I'm going to 
-drop it from the RISC-V patchwork.
+--
+Uladzislau Rezki
