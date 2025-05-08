@@ -1,185 +1,156 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974361D63F5
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 22:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927C42040A8;
+	Thu,  8 May 2025 22:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746743065; cv=none; b=Wazqjz0EJtHw2HX4VHzMTwFIkeTcX8O22U+eVXs1YGGBipsxNweidGBXk5bhFkaXIB2mHpKfskwyGxAuSKiwMtadHQo5M81yFRNUWC7kru4bRqWSkUwINacT0dCFl0w5fHNTjCN3VkI5VP82PiPDDcYyayqMBEX9Ep6XkmcVL5U=
+	t=1746743395; cv=none; b=sK4xud0La8MBLg+wwleYya1Ms2SY2W1uEQrMcn0NXfl0uVfCM5M2Bpf/PtLndIXujXJI0vGMlZI5rOKNOiu6KVMzNSzGGxJxRtMFzXII/5q30vPYow9tIhYu/t+b1jp/18IWLazbtZzckPOeXFIEfRdoh/ccRW+jcK7wM3BZACc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746743065; c=relaxed/simple;
-	bh=EASvvr6zy4sNrYkdGbffGMgWuXnT6GZQq0R8l7eXBJ0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=cbV8y9zhMnm3hXAJj+i+HuWXPLZ0lk9Q9/fsV4wQiAxjYEnT0aIzjtnF/KPcQS6NW+o+mLnugb97N0hwLALhgD/dt1wGml2QbtOcZKmTUu6EuSHvTsgUT/j6HDCQDbi5GjgDc+SE22w5N7ZDETaPu63HeF4BN2KUQhRcDDc8XAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d9099f9056so26756195ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 15:24:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746743062; x=1747347862;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HqYpOk+kp9o/oe58c6ux0E83wKBz30NTkNCZ9/EBWws=;
-        b=Cs59YHKErZep+SyqdPOUY64DW2QaKH1DqX4IxUG+WinKDuJy9Zq5cVpufm7zp5w9C1
-         OJEVTEnLeVsGrul7QdtSWSjzx+ENJTbPqc6SZHPnGQdsC8c+5NrRpnINOkoBdWKn3GyS
-         6mY0h5ZA/LYLTyYYnm1i3RojMJ5kxwGWal6pcw4wjFPbw+zus4S5uUjyRQ10U73KcuDv
-         Sm5LKRM67AMuDyadlvWgO37yLKIRur+1s6P37Avkh6Odh530g+HAjSzM8VDxFKNI0LYJ
-         10or0aQFgvz+JwfW+9cvkgbhbkWZ78tfsQnr9R7E9tMr3Hygf+Gs4XUytuj9AWFM4Ufh
-         f8Ew==
-X-Gm-Message-State: AOJu0YzGoLdh+i0GD7H7Mas3HQOZwFI5+xkAJ/B79FHveaKEMwOn9wVN
-	ezkRyIxmFFj3lCHh5HwzIEyByeCatPjBUBrS/N9YRrs854qIgSiP503hoHE+eG3c31TlIhOeBBh
-	jd3o1mmkCRCdNkR3Ke5C2XFOpnAlPft3kpHr2Jj/fpXCozKofD192W7yiDg==
-X-Google-Smtp-Source: AGHT+IF8ouceDSj9KHS0v+Fp89FRYOMjYaJkw8MiHUUN0lYGNxLLlVy8apBQZeB+JkrzoaHpIqCEH9fDvs+rFQjMnKBhzugHQNfu
+	s=arc-20240116; t=1746743395; c=relaxed/simple;
+	bh=WW95/e28q1Oyg9LbCL7e4cJIeVH8K2yt8VFB8rXoxrM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=j9GQ2bKEBx51Npt9aULLo8xZmkXrA63kXctprOfVgzh7osrg1f5hbYJZNkbDraz+EREY42/KxU2sbgd+oIdkjspGAXVwJh3ZiXsHPpepQX0Ab9jYyOmBFU1ERHW044wt9JGbsqwwgiUqBY8ATrEtnSvKp1pCYpYVbd/zODVDkR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fwghq97I; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fwghq97I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EA16C4CEE7;
+	Thu,  8 May 2025 22:29:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746743395;
+	bh=WW95/e28q1Oyg9LbCL7e4cJIeVH8K2yt8VFB8rXoxrM=;
+	h=Date:From:To:Cc:Subject:Reply-To:From;
+	b=fwghq97IVhyDz4qFny0JCHDrM5heiUjRCQFKoR28ka5Fostb5Spip90d2gb3jEH1P
+	 d2ZKe5N1jZpFSU/wsPTsPCDpSU9O73bBSllA1hF5ln4SIHg5Tp65uJLnLRVuzmDJEN
+	 J1Z+fpZ7ZaZnkLBNrj5VljPYYkAuipOkM4dVidLlO3k2q5ymW9WW2SZctDt2CfwGgg
+	 i/nQnvnwZMiH3lrv/emGBMBSvS8Tbegsl4Jc0tDdLl2okZSQOxLPlgMYAf0YWoLfAd
+	 R/yDxAEEQDqzHlaiDucc4VHLfrFLsqVT8+yNIRtK+m5jjV6U9ykWR+5X+kNU78iEX7
+	 hM+ByPG61fWsA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id A64E7CE11A4; Thu,  8 May 2025 15:29:54 -0700 (PDT)
+Date: Thu, 8 May 2025 15:29:54 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org,
+	kernel-team@meta.com
+Subject: [BUG] Lockdep warning from "genirq/cpuhotplug: Convert to lock
+ guards"
+Message-ID: <a6f59b64-1604-4186-8a75-8ad776974a65@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3e90:b0:3d9:2fbe:2bb1 with SMTP id
- e9e14a558f8ab-3da7e1f1d23mr18457395ab.12.1746743062736; Thu, 08 May 2025
- 15:24:22 -0700 (PDT)
-Date: Thu, 08 May 2025 15:24:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681d2f16.050a0220.a19a9.011f.GAE@google.com>
-Subject: [syzbot] [kernel?] BUG: unable to handle kernel NULL pointer
- dereference in module_kobj_release
-From: syzbot <syzbot+3ea73421f5aa3f339e9e@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hello,
+Hello, Thomas,
 
-syzbot found the following issue on:
+Testing next-20250508 with lockdep enabled got a splat that is shown in
+all its glory below.  Reverting this commit makes the problem go away:
 
-HEAD commit:    d76bb1ebb558 Merge tag 'erofs-for-6.15-rc6-fixes' of git:/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=155c58f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=224acb8d2ffe8753
-dashboard link: https://syzkaller.appspot.com/bug?extid=3ea73421f5aa3f339e9e
-compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
+88a4df117ad6 ("genirq/cpuhotplug: Convert to lock guards")
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Alternatively, changing that commit's final "scoped_guard(raw_spinlock"
+to "scoped_guard(raw_spinlock_irq" also fixes things, as shown in the
+incremental patch at the very end of this email.  If this is a proper fix,
+please feel free to fold it into your original.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/fa3fbcfdac58/non_bootable_disk-d76bb1eb.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/cf604d463f46/vmlinux-d76bb1eb.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/01922f2b5b5e/Image-d76bb1eb.gz.xz
+							Thanx, Paul
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3ea73421f5aa3f339e9e@syzkaller.appspotmail.com
+------------------------------------------------------------------------
 
- el0t_64_sync_handler+0x10c/0x138 arch/arm64/kernel/entry-common.c:762
- el0t_64_sync+0x1a4/0x1a8 arch/arm64/kernel/entry.S:600
-kobject: kobject_add_internal failed for raw_gadget with -EEXIST, don't try to register things with the same name in the same directory.
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
-Mem abort info:
-  ESR = 0x0000000096000046
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x06: level 2 translation fault
-Data abort info:
-  ISV = 0, ISS = 0x00000046, ISS2 = 0x00000000
-  CM = 0, WnR = 1, TnD = 0, TagAccess = 0
-  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-user pgtable: 4k pages, 52-bit VAs, pgdp=00000000440f6980
-[0000000000000008] pgd=0800000044a74403, p4d=080000004487c403, pud=0800000044880403, pmd=0000000000000000
-Internal error: Oops: 0000000096000046 [#1]  SMP
-Modules linked in:
-CPU: 0 UID: 0 PID: 3469 Comm: syz.0.4 Not tainted 6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT 
-Hardware name: linux,dummy-virt (DT)
-pstate: 614020c9 (nZCv daIF +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-pc : __lse__cmpxchg_case_acq_32 arch/arm64/include/asm/atomic_lse.h:271 [inline]
-pc : __cmpxchg_case_acq_32 arch/arm64/include/asm/cmpxchg.h:120 [inline]
-pc : __cmpxchg_acq arch/arm64/include/asm/cmpxchg.h:169 [inline]
-pc : raw_atomic_cmpxchg_acquire include/linux/atomic/atomic-arch-fallback.h:2055 [inline]
-pc : raw_atomic_try_cmpxchg_acquire include/linux/atomic/atomic-arch-fallback.h:2173 [inline]
-pc : atomic_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:1302 [inline]
-pc : queued_spin_lock include/asm-generic/qspinlock.h:111 [inline]
-pc : do_raw_spin_lock include/linux/spinlock.h:187 [inline]
-pc : __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:111 [inline]
-pc : _raw_spin_lock_irqsave+0x34/0x8c kernel/locking/spinlock.c:162
-lr : complete_with_flags kernel/sched/completion.c:20 [inline]
-lr : complete+0x24/0xa4 kernel/sched/completion.c:47
-sp : ffff80008948bba0
-x29: ffff80008948bba0 x28: fdf00000098d0000 x27: 0000000000000000
-x26: 0000000000000000 x25: 0000000000000000 x24: f6f000000485c968
-x23: ffff800081d77478 x22: 0000000000000000 x21: ffff80008256d388
-x20: 0000000000000008 x19: 0000000000000000 x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000 x15: ffff800081b610e0
-x14: 0000000000000164 x13: ffff8000828d1130 x12: 0000000000000001
-x11: 000000ece58db54c x10: 7fd9d1af9fae5191 x9 : 6105f830acda155c
-x8 : fdf00000098d11e8 x7 : fff000007f8d4b00 x6 : fff07ffffd022000
-x5 : fff000007f8ca588 x4 : 0000000000000000 x3 : 0000000000000000
-x2 : 0000000000000001 x1 : 0000000000000000 x0 : 0000000000000008
-Call trace:
- __lse__cmpxchg_case_acq_32 arch/arm64/include/asm/atomic_lse.h:271 [inline] (P)
- __cmpxchg_case_acq_32 arch/arm64/include/asm/cmpxchg.h:120 [inline] (P)
- __cmpxchg_acq arch/arm64/include/asm/cmpxchg.h:169 [inline] (P)
- raw_atomic_cmpxchg_acquire include/linux/atomic/atomic-arch-fallback.h:2055 [inline] (P)
- raw_atomic_try_cmpxchg_acquire include/linux/atomic/atomic-arch-fallback.h:2173 [inline] (P)
- atomic_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:1302 [inline] (P)
- queued_spin_lock include/asm-generic/qspinlock.h:111 [inline] (P)
- do_raw_spin_lock include/linux/spinlock.h:187 [inline] (P)
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:111 [inline] (P)
- _raw_spin_lock_irqsave+0x34/0x8c kernel/locking/spinlock.c:162 (P)
- complete_with_flags kernel/sched/completion.c:20 [inline]
- complete+0x24/0xa4 kernel/sched/completion.c:47
- module_kobj_release+0x14/0x20 kernel/params.c:946
- kobject_cleanup lib/kobject.c:689 [inline]
- kobject_release lib/kobject.c:720 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0xa4/0x114 lib/kobject.c:737
- lookup_or_create_module_kobject.part.0+0xac/0xdc kernel/params.c:783
- lookup_or_create_module_kobject+0x40/0x50 kernel/params.c:793
- module_add_driver+0xf0/0x16c drivers/base/module.c:46
- bus_add_driver+0xf8/0x208 drivers/base/bus.c:682
- driver_register+0x60/0x128 drivers/base/driver.c:249
- usb_gadget_register_driver_owner+0x54/0x13c drivers/usb/gadget/udc/core.c:1700
- raw_ioctl_run drivers/usb/gadget/legacy/raw_gadget.c:595 [inline]
- raw_ioctl+0x74c/0xd2c drivers/usb/gadget/legacy/raw_gadget.c:1306
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __arm64_sys_ioctl+0xb4/0xe8 fs/ioctl.c:892
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x48/0x110 arch/arm64/kernel/syscall.c:49
- el0_svc_common.constprop.0+0x40/0xe0 arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x1c/0x28 arch/arm64/kernel/syscall.c:151
- el0_svc+0xa0/0xe0 arch/arm64/kernel/entry-common.c:744
- el0t_64_sync_handler+0x10c/0x138 arch/arm64/kernel/entry-common.c:762
- el0t_64_sync+0x1a4/0x1a8 arch/arm64/kernel/entry.S:600
-Code: b9000841 d503201f 52800001 52800022 (88e17c02) 
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	b9000841 	str	w1, [x2, #8]
-   4:	d503201f 	nop
-   8:	52800001 	mov	w1, #0x0                   	// #0
-   c:	52800022 	mov	w2, #0x1                   	// #1
-* 10:	88e17c02 	casa	w1, w2, [x0] <-- trapping instruction
+[    0.608026] ================================
+[    0.608026] WARNING: inconsistent lock state
+[    0.608026] 6.15.0-rc5-next-20250508 #4883 Not tainted
+[    0.608026] --------------------------------
+[    0.608026] inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
+[    0.608026] cpuhp/1/21 [HC0[0]:SC0[0]:HE1:SE1] takes:
+[    0.608026] ffff91f0010650c0 (&irq_desc_lock_class){?...}-{2:2}, at: irq_affinity_online_cpu+0x51/0x120
+[    0.608026] {IN-HARDIRQ-W} state was registered at:
+[    0.608026]   lock_acquire+0xbd/0x2d0
+[    0.608026]   _raw_spin_lock+0x2b/0x40
+[    0.608026]   handle_level_irq+0x18/0x160
+[    0.608026]   __common_interrupt+0x4a/0xf0
+[    0.608026]   common_interrupt+0x78/0x90
+[    0.608026]   asm_common_interrupt+0x26/0x40
+[    0.608026]   _raw_spin_unlock_irqrestore+0x34/0x50
+[    0.608026]   __setup_irq+0x460/0x730
+[    0.608026]   request_threaded_irq+0x10b/0x180
+[    0.608026]   hpet_time_init+0x35/0x50
+[    0.608026]   x86_late_time_init+0x16/0x40
+[    0.608026]   start_kernel+0x6b6/0x810
+[    0.608026]   x86_64_start_reservations+0x18/0x30
+[    0.608026]   x86_64_start_kernel+0xc6/0xe0
+[    0.608026]   common_startup_64+0x13e/0x148
+[    0.608026] irq event stamp: 35
+[    0.608026] hardirqs last  enabled at (35): [<ffffffffb8ede1fb>] finish_task_switch.isra.0+0xeb/0x300
+[    0.608026] hardirqs last disabled at (34): [<ffffffffb9f01c69>] __schedule+0x909/0xfa0
+[    0.608026] softirqs last  enabled at (0): [<ffffffffb8e9061b>] copy_process+0x98b/0x2070
+[    0.608026] softirqs last disabled at (0): [<0000000000000000>] 0x0
+[    0.608026]
+[    0.608026] other info that might help us debug this:
+[    0.608026]  Possible unsafe locking scenario:
+[    0.608026]
+[    0.608026]        CPU0
+[    0.608026]        ----
+[    0.608026]   lock(&irq_desc_lock_class);
+[    0.608026]   <Interrupt>
+[    0.608026]     lock(&irq_desc_lock_class);
+[    0.608026]
+[    0.608026]  *** DEADLOCK ***
+[    0.608026]
+[    0.608026] 3 locks held by cpuhp/1/21:
+[    0.608026]  #0: ffffffffba86d630 (cpu_hotplug_lock){++++}-{0:0}, at: cpuhp_thread_fun+0x4d/0x200
+[    0.608026]  #1: ffffffffba86fd40 (cpuhp_state-up){+.+.}-{0:0}, at: cpuhp_thread_fun+0x4d/0x200
+[    0.608026]  #2: ffffffffba95d6c8 (sparse_irq_lock){+.+.}-{4:4}, at: irq_affinity_online_cpu+0x16/0x120
+[    0.608026]
+[    0.608026] stack backtrace:
+[    0.608026] CPU: 1 UID: 0 PID: 21 Comm: cpuhp/1 Not tainted 6.15.0-rc5-next-20250508 #4883 PREEMPT(full)
+[    0.608026] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+[    0.608026] Call Trace:
+[    0.608026]  <TASK>
+[    0.608026]  dump_stack_lvl+0x68/0xa0
+[    0.608026]  print_usage_bug.part.0+0x22d/0x2d0
+[    0.608026]  mark_lock+0x594/0x630
+[    0.608026]  ? __lock_acquire+0x64d/0x18d0
+[    0.608026]  __lock_acquire+0x408/0x18d0
+[    0.608026]  ? mtree_load+0x81/0x5a0
+[    0.608026]  ? find_held_lock+0x2b/0x80
+[    0.608026]  lock_acquire+0xbd/0x2d0
+[    0.608026]  ? irq_affinity_online_cpu+0x51/0x120
+[    0.608026]  _raw_spin_lock+0x2b/0x40
+[    0.608026]  ? irq_affinity_online_cpu+0x51/0x120
+[    0.608026]  irq_affinity_online_cpu+0x51/0x120
+[    0.608026]  ? __pfx_irq_affinity_online_cpu+0x10/0x10
+[    0.608026]  cpuhp_invoke_callback+0x2e8/0x440
+[    0.608026]  ? lock_release+0xc6/0x290
+[    0.608026]  ? cpuhp_thread_fun+0x4d/0x200
+[    0.608026]  cpuhp_thread_fun+0x181/0x200
+[    0.608026]  ? __pfx_smpboot_thread_fn+0x10/0x10
+[    0.608026]  smpboot_thread_fn+0xee/0x220
+[    0.608026]  kthread+0x102/0x200
+[    0.608026]  ? __pfx_kthread+0x10/0x10
+[    0.608026]  ret_from_fork+0x165/0x1b0
+[    0.608026]  ? __pfx_kthread+0x10/0x10
+[    0.608026]  ret_from_fork_asm+0x1a/0x30
+[    0.608026]  </TASK>
 
+------------------------------------------------------------------------
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
+index 7bd4c2a5cef4b..e77ca6db5e11e 100644
+--- a/kernel/irq/cpuhotplug.c
++++ b/kernel/irq/cpuhotplug.c
+@@ -243,7 +243,7 @@ int irq_affinity_online_cpu(unsigned int cpu)
+ 	irq_lock_sparse();
+ 	for_each_active_irq(irq) {
+ 		desc = irq_to_desc(irq);
+-		scoped_guard(raw_spinlock, &desc->lock)
++		scoped_guard(raw_spinlock_irq, &desc->lock)
+ 			irq_restore_affinity_of_irq(desc, cpu);
+ 	}
+ 	irq_unlock_sparse();
