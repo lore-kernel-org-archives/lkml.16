@@ -1,197 +1,128 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2042.outbound.protection.outlook.com [40.107.95.42])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD6E2417EE;
-	Thu,  8 May 2025 14:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746713889; cv=fail; b=ELAcrxhq3P6NBCKMs+MULf44qRj8J+FND2/3dF6xuauzbKLMhuUrasVGIgrRq8IDe1LCDsBB6Vd0kMB2RsDZVTgu17X8/cVIBi/ujF13LOioH3rZGWej44R8StR7OKU+CPDncg1RB3JUCoNHa4UxZTQIo+Y1aX5eGC0WjOm/JCg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746713889; c=relaxed/simple;
-	bh=SlmP45iNi/q+E31oUtVNbpjA5tjTBeAEQe41WtXGH3E=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=JDgqFpvculAVhExvvQVb9GtdP/uWXFFxuDQCuCCoEYlH8BcasYZCNlJPdtQ5Q6UrvFEZ7dBtY76vqPT6V25+itWkqh8qf135wSFv+Ki1Ct/2Csf6QienR8niv3DehWyTy5kc/HDgxg1UkzDCf19jJmmyNQVfhOlmF/0Q26J4rNg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OW6VGqs3; arc=fail smtp.client-ip=40.107.95.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFA3252917;
+	Thu,  8 May 2025 14:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746714006; cv=none; b=UUMS0SHD7SzCZn5drsRkzz2rYBkL3rjctKBZGsOsPZBxq3uaqw3syvHvUtbrmmms1xLcYmTFGwlFSzDQ7xgoOHi7qzM8bBHGEzOaqlcr9c1fgAu7MIX7jdPLxRqvqCdaE6Ft+Lg5rIA6iTcdQ4bf7/6/wUnEhnCKKvH7776GALs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746714006; c=relaxed/simple;
+	bh=XrV4JuEsI8Hr/6XfZfbjC6QvYK6N6o9BjhUVHbxlRY4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oD6PsIfa4v9IzKaxtm6pSr2qZz9diaPyCFCqCcIH3tlAiECzOEHKWJ9ZEbZVC6T9j5NyJJbSMn2W8WRFd4VjN1dc/hTBNrYIuB/NOWvyIYJjEwtEsdALey7FLOkq0GOiX4FaxMKK0xPS/Zr7Uy4K65/31g/JZ+0QORu9reUjbKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gON0YwD8; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OW6VGqs3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Y/x7Xdb3U1CF55j+pQDspQXLf9NQTWKYEjwtBwEjObDKImfKQCcQf6gGNTSqt2/p3CTIj15R+e4D1KgjkcVnc2DGgcQYL0gZOTE1M+vYFecEbbyDhvROfvrZoIc+KZVRZeXrEHc3FO4mphRUBirjT7Yoz8g/swXf2RCa5Ty48la3b7tARRZFvsU6l5wr2y/WGWO5tiuiKyYp55pikHP3pmMEgZNJZewNu29pL9R7xz09G3MAV/79THkEqrIb5shLYrJ2PJ0f1cZTDQCFkUrxU37Yk1b18IDXL5UnCeWwTKjbnF07WuXo8yd2amqkaGyoxg7u4v7d0eMVUBtFJspLQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NtwSV9bZOYSomxQ+B0lunFiMYZ3ZuHQobKIHW9AYRgY=;
- b=yBANXhiCa/L0K6bcK9YRqWxsSnuDYia2CkhKrko1y+G9qAULWgak8NpKWuHsl/g85gomrAdw8u/SI17PGpUDZ8nmZ1LIRCNJ6/2Mj31bnautb/W7R85pMjVqz26NvYrbHwfqXruk5CuKqR7okL4oWqD56Qse7SMV4fKI8zreQD2kOu/Ig6L0s/Uz+IXrWV6PQyNV7bIrwkq5rgiHSOz1n2FjD+1FDtD8oYvBIN6fmLF6MLfRdoe32mONBANE3gXMOY6aUcpGEK3WY5Ep1Ex7cT0P09qIvb8RYSXOK+3vanukeLLYFaLzF8DxhkmI0Dx7gqt3hBZsyU85qCxqBmI+Bg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NtwSV9bZOYSomxQ+B0lunFiMYZ3ZuHQobKIHW9AYRgY=;
- b=OW6VGqs3ohWsWwxkJyo+aMDSyUb+X/pzvMhSvYlnExpmYeZhf9XpEWDx1l4APMX0MsBy4fIobLLA6myOrHK/I4+zb9NR6LCrcH0SUF/rCjH8r8RkXL81T5F0Fn3joDGiCy/RbG3uHkNwdXvKFbn2LZtdVUdiKXVn0tb886boqJygaSy2h5lcnLnfFXINjc+a/0HDaKMG7LypzAGR3dYQlB7DI0LV8osRSRijEcGbSnhdgtQSTDwWDinGJmpVEijiP3djHEvdUPmLTsxAek9J7qOUFttkntBjlyO0HXaEznlZHsrFhoYoIs/Lo8u46ZXd67rbKKi7sE0hVz7JWn4+mw==
-Received: from CH3PR12MB7738.namprd12.prod.outlook.com (2603:10b6:610:14e::9)
- by SN7PR12MB7251.namprd12.prod.outlook.com (2603:10b6:806:2ab::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Thu, 8 May
- 2025 14:18:00 +0000
-Received: from CH3PR12MB7738.namprd12.prod.outlook.com
- ([fe80::fad1:1acb:f5eb:98ee]) by CH3PR12MB7738.namprd12.prod.outlook.com
- ([fe80::fad1:1acb:f5eb:98ee%3]) with mapi id 15.20.8699.034; Thu, 8 May 2025
- 14:18:00 +0000
-From: Asmaa Mnebhi <asmaa@nvidia.com>
-To: Andrew Lunn <andrew@lunn.ch>
-CC: "davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
-	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, David Thompson <davthompson@nvidia.com>
-Subject: RE: [PATCH net v1] mlxbf-gige: Support workaround for MDIO GPIO
- degradation bug
-Thread-Topic: [PATCH net v1] mlxbf-gige: Support workaround for MDIO GPIO
- degradation bug
-Thread-Index: AQHbPTCwkw/5mDAiDkuucKlF479Xq7LJ1/+AgP/0uKA=
-Date: Thu, 8 May 2025 14:18:00 +0000
-Message-ID:
- <CH3PR12MB7738C758D2A87A9263414AFBD78BA@CH3PR12MB7738.namprd12.prod.outlook.com>
-References: <20241122224829.457786-1-asmaa@nvidia.com>
- <7c7e94dc-a87f-425b-b833-32e618497cf8@lunn.ch>
-In-Reply-To: <7c7e94dc-a87f-425b-b833-32e618497cf8@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH3PR12MB7738:EE_|SN7PR12MB7251:EE_
-x-ms-office365-filtering-correlation-id: 0f687ae8-bf33-4a33-9806-08dd8e3b2341
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?yv9zoa2UzJPSWNIdW7JYzRiv/dudo9Z5JWecep7nuv9CLLjBFcjTaWG9WVM2?=
- =?us-ascii?Q?mKp1jeWXbpc/1mB4URJEdNmgqH45x80C2UH354qMIeqi/fHvKzIq41lPqa6T?=
- =?us-ascii?Q?GVdsQs7qiybzZXpB6PG3j56T3yU9v4eGKGYfgOl4SwHLrWIQZyi5h54LeyUv?=
- =?us-ascii?Q?LLi727LN2moI/uUdLPjYiY/ESGQTEzDFnkMMqs02HPLdxMmfehp2WMymtD3/?=
- =?us-ascii?Q?bY60vxsoTui+ewtMP7kM9m3jg5YLXnVCkhT1C62Q0YhQlyjuRlfDKunGqAkP?=
- =?us-ascii?Q?r1mNmkort4g31F+CY7BK1b0ZEVRRYW4aGo9FmMQvcUTQypNUOBFZs6x4NlDL?=
- =?us-ascii?Q?OwijZrQv2L5n1SFueeMDlx9lOv0fBO0C8iXI/qmhO9a6vjijeMMMYPK9GbdC?=
- =?us-ascii?Q?urI18kD1RTese9EUwDVoNZ7ICORMcqSrzfasIUQX8VuBMxvdcc2bWYYAvqQD?=
- =?us-ascii?Q?ZVPr3Y2ROtUbQu1mgH/thbfGjDIOPZ7rVSXHew4du0RqKdkk9Z9DHY42EWhM?=
- =?us-ascii?Q?GfMxRRai8JjjtB9QGEGrrb9hQhN1v7uGxo+E29gOSsp2bEXICLdSL/vWh7n5?=
- =?us-ascii?Q?BH+iPd+BV7sHm5+Uvs2YwmNYWy8zoXPXzoXOR1y8uzbMUKmcv9dvQTXXsJ9J?=
- =?us-ascii?Q?79UKJ49Dx1W38jE01+JLYEo6LB99+JJaCZE71NECeaBD8rc+rKOYluz7qeVI?=
- =?us-ascii?Q?hE3oCc8moT4BlMTXq89M1XpgvRM5g1Y3xNldsW8zjmq+AXAc53ImzRFLWwlI?=
- =?us-ascii?Q?Zq1d7mr/v3HOY0OBwCyuqhaICiDbxQXw9CSSuVoI2LWJGexF/04p2hvYLri2?=
- =?us-ascii?Q?zefZlFjB0fLiEfRmLd8K8P4Dahsb6kp5QlTLVvDLEvVL11bwtSA7gR+2jlMF?=
- =?us-ascii?Q?z9O/aGbO+K5Zj6czvinPJZ9/9y1NW4UO6GAhTg+wVv//xhE/45JFWvxyaRRX?=
- =?us-ascii?Q?yP5Sn95TiTyKFqpW7m5h8r5VaGgzwR0CjHecCngVDnAC9wEjIWnBZA6qR9cC?=
- =?us-ascii?Q?2pdzI0ZFjmDFV6vev36qW5mrnODSgADqf1ibaPxnCVusyC1ejtzxCW4ZvOOs?=
- =?us-ascii?Q?i4m9LgrJbqwxT1Owt14avCKNnPK26V1ceD6kiq6+cGVh9cLII2l8V9O1H5DO?=
- =?us-ascii?Q?uHqteUynkuxCGBAzoBQXzTlCg8sVlrdNTdZTv7PDSVss9JAFJwK6R2Q92Tmm?=
- =?us-ascii?Q?/872yjxrP9f9D/OwddMuxLM0oInUNoiRyJevk9L6AcKt7XivkBBsvHwGXLnn?=
- =?us-ascii?Q?IRgqDZ/uNJjNRCWZEQu7PP5NCDSZiAbO/kSTGehQpT35ezVqViFFkUVtr3Bm?=
- =?us-ascii?Q?dL0S26ufzNiRdiYa1Hax0L6ciUMtcr28c09CPKkwUHo2KCSBtsOh0dM1/2Kn?=
- =?us-ascii?Q?CeH2Ej/HRzzVHl8fpoTOB/gpxcimNe71Wo60zwLriDM/QSZ6hk+Whgm48T7S?=
- =?us-ascii?Q?c0LvT9eKumD/lg6h2DlYclq0S60anc2+h4ypz2ahxOuxUWOomLX8YRPr8KWg?=
- =?us-ascii?Q?/V/cr3B4DBq15lM=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB7738.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?YetEC3QJE9BgnM9o6+aGSoX6dV5RrogCg8eakoTeVjcO8fn55sWsaeQfNv+l?=
- =?us-ascii?Q?gE6hg4DkrOS7cYkWzgjcZLMATnt8K3E7YXB7ShQe4/K9Dq0ovH8MdNaLWanh?=
- =?us-ascii?Q?WdeWtTVFRyuy8ijlqZs4wlfHjvfIWmi9dXqR4ACRxdoLWUDK9s/aWdOH7oGw?=
- =?us-ascii?Q?Six4rqfPmEUVM11A7ejA7zfLW/wLRSJDviQr3hNKALXyQK4qBbutuf5xoN8E?=
- =?us-ascii?Q?c0Hy16aHdezVHnPpzrYK+SAGoNm04k4zDjRtA6KzWbhrqemRBX+Tnu+OS2Bo?=
- =?us-ascii?Q?BhgqCSlCl7fnXDxg1tm6ECFiSRhBoRXldv17vOyB6NsHh9EZTz+uF8yLbkFB?=
- =?us-ascii?Q?8a25LXZkKiYq3SDjGAn/FTGcEWVBIcl6iDkTjEGLKQs0DLZ+60k8BsvbXjGK?=
- =?us-ascii?Q?DJrEEf5UL/op1tXC7LTGOLawbwUJPAeA6feYNp2o4kFOLmc2uzA/1rD0Lg35?=
- =?us-ascii?Q?EcgcimWPbnbe/1fkHQix8i+/XC1lSpsdq6YyEsJodBZ6BzTuH6hAfXBIccu5?=
- =?us-ascii?Q?gsFBDKoKNR6y/7AsdOgUoFg1dmfAYVjAF27cFmXgZ6296ZcBOPFvZO6cmYjo?=
- =?us-ascii?Q?qE2I4yRQDIWGie20ODFmWuxAUEQIOnNrFkd+XC8Lj8U/OEOkjDHGQXEPsZB2?=
- =?us-ascii?Q?wAWJxFCOqjrJoT3jmUkbQhUqkrIPL68SKG4omxLFmPwa73YpUTnfmCFWGloT?=
- =?us-ascii?Q?YYxfgfHTxweE7H7Pa+e3OxrGi4P5bpvZ0jtBZdL6r33NbCqeq8bb9YfDMO+7?=
- =?us-ascii?Q?rWPlSwgWarxJEdf0l8hvLo3zN5y/MjZQezPl3ZBw3Ubr+5pD/msYbRbFS6sa?=
- =?us-ascii?Q?qPxy8E/hIxlO3uJBHBQp+aSUI67w6ag+NWzuq+4Cc12yccXrq/m2Bc7tFvAm?=
- =?us-ascii?Q?1chEk7/mEmtK05WAM9I6QoM+SfN8WMLhNVmNYtGnCzwXO9MIF/QfALPXfZ20?=
- =?us-ascii?Q?+gEp3hSGoGMPGztRdnkFfIMEgsek0nPld7qw72xdQRrWFN/yMlD1zFGz5kUR?=
- =?us-ascii?Q?vVdFiO3U/6wb8tj+KEquXodnCQdIgZUzxzjXuu7IhYevlR1cvGlBG5zdxGwC?=
- =?us-ascii?Q?dGPJBQ+e/jTCMvL30HPSvayGKgxnUk46wQ1sYQ4/jzrMEbHlmDhdjeI24SQv?=
- =?us-ascii?Q?aDG9Z716BxAN2ZqfpQAst1uluD8dHo/Cabyz29Jb2KC6ZfqwH7ARHAv56FFM?=
- =?us-ascii?Q?40QmrC9rQRDDY3F2kKVgNEbyuSFVNWyXd2kozyqtXLwhbtSpMPm62cYA/+Rw?=
- =?us-ascii?Q?RKHD92mU1x5OFdCmxJ9tje1jNY5gFjaJvFmXipwkzwWe9siDjNp3TpbOOoW7?=
- =?us-ascii?Q?Q+bKYAHBypqWBkWSkWVFy9sJb7EiKbJXjCh5K2tu8OmKDIc43wPaJTkgBpUQ?=
- =?us-ascii?Q?XP+Sq31f2s5A0bfqI0pb0mAOGsTIDTIY1b6LFOkqGp2btaowlE7G+Yxa1kjl?=
- =?us-ascii?Q?yrtBIvp4FGm1ozacec2YydAW51goD8Wh1rOvsWhzetodJCiefiVf3ko4YjLr?=
- =?us-ascii?Q?Dt1iIDTji4F5WB/fz06sWVOqiyLq7HNB6n/LYRObxinfNI9k0+iFrqxqW2yc?=
- =?us-ascii?Q?6ykf9MQJLkjwzLGmYWI=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gON0YwD8"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548AE8af023344;
+	Thu, 8 May 2025 14:20:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=BbdA6G
+	SNDQ9l9N6NDx+sJ5cwcfZ6sHdcZUGqGuEPWxw=; b=gON0YwD8l1vsFPIPrbIThu
+	w7JsCJNwG49wctABvueEcyp3Z9SeRM9nH9YU/O7oHIJOdT9bNYV5BrYn51KHTa01
+	PQaCvi8RlShcWa5fyPMYMyaUCsN5YJU6J256Z2TA0wokV6G8aGzOthVfaJqrZbY7
+	Wbx4n1m18xEbtOU3cL/GZR4raEOerLQUQZNbVHbcCBJOwBzWlBGclDbchjApa8v/
+	Gc2z/gYXY4xwBh7v2876drPXs8CXSKB+LIunXMpqr8AFf7Ol2eL009RuseWcMS2a
+	CX5xJFZnFs5nXzDb5YRoIigk/OiIkKrD6/FXVnjASXGOfo1AT8SPuPXKZ3/wia4A
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46gfm9c0ft-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 14:20:01 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 548Bj8HG013861;
+	Thu, 8 May 2025 14:20:00 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46e062nstr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 14:20:00 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 548EJxkF6947410
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 8 May 2025 14:19:59 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6C1385805B;
+	Thu,  8 May 2025 14:19:59 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1809158059;
+	Thu,  8 May 2025 14:19:58 +0000 (GMT)
+Received: from [9.111.68.72] (unknown [9.111.68.72])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu,  8 May 2025 14:19:57 +0000 (GMT)
+Message-ID: <6046d139-2a46-4824-bdfc-687750c1ee5b@linux.ibm.com>
+Date: Thu, 8 May 2025 16:19:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB7738.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f687ae8-bf33-4a33-9806-08dd8e3b2341
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2025 14:18:00.1695
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8yeZXGMHTRuDZsGuJEeikUVJa2EJEZ4L9bxg+WyT2NOoVovyDGJxBpZpKmtEg67vU0nS25FE3zlkubMQlmNANg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7251
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv7 10/24] zram: add zlib compression backend support
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org
+References: <20240902105656.1383858-1-senozhatsky@chromium.org>
+ <20240902105656.1383858-11-senozhatsky@chromium.org>
+Content-Language: en-US
+From: Zaslonko Mikhail <zaslonko@linux.ibm.com>
+In-Reply-To: <20240902105656.1383858-11-senozhatsky@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDEyMCBTYWx0ZWRfX7qBZo6asl6pf nasu5CtQ/I3nGuBpw4+0+8DD0dv/O5TGlM5VdB/a5UGJB2+BtwjLOvmKXhNePYIYjegfWujqUbs 2BBaUPKt4gy1UCT3NRY2JsBI6pycxIjna3jOM5pbSw3FPxFE3/pdTvL45XF9S4t6k3QaIojFX3W
+ vqaKyfbihntn1JlfAwN4MggBKIlkX4SxvayT5UwMA1i8YeLmS5zQXqX5SrRRXZ+1MMfuV9UomSK Fl7z8Gy2/6z7RBM1GOn/cqlNQOCLkNYTi8wN6AxIDmKOtbOB4xwrRrJG6dx91rMCmAC/oe94ejX 2umkYoOdhs6uynkqqN3hLJ3SfYdxUIEEfXIr+sn6lvFyFhWFhazzkXiLnWR2c7bUolE1ktIU/aW
+ sKj7VLVszDdQ12c+RMUlT9FPFOqx3d3jCO7zhb8Amd4f+LyOkh5k2XSpR4exTEx32IIQonYF
+X-Authority-Analysis: v=2.4 cv=RIGzH5i+ c=1 sm=1 tr=0 ts=681cbd91 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=cm27Pg_UAAAA:8 a=EwjiY0pQsr8U1XeyRU0A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: 8dzpQ9hiECxgtoxRz0_p9h_in7PeFIRc
+X-Proofpoint-ORIG-GUID: 8dzpQ9hiECxgtoxRz0_p9h_in7PeFIRc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_05,2025-05-07_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 clxscore=1011 bulkscore=0 mlxscore=0 phishscore=0
+ mlxlogscore=999 malwarescore=0 impostorscore=0 spamscore=0
+ lowpriorityscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505080120
 
-> > Once the BlueField-3 MDIO clock is enabled by software, it is expected
-> > and intended for it to keep toggling. BlueField-3 has a hardware GPIO
-> > bug where constant toggling at "high frequencies" will lead to GPIO
-> > degradation.
-> >
-> > The workaround suggested by the hardware team is to lower down the
-> > clock frequency. That will increase the "life expectation" of the GPIO.
-> > The lowest possible frequency we can achieve is 1.09Mhz by setting
-> > mdio_period =3D 0xFF.
->=20
-> 802.3 says:
->=20
->   22.2.2.13 MDC (management data clock)
->=20
->   MDC is sourced by the station management entity to the PHY as the
->   timing reference for transfer of information on the MDIO signal. MDC
->   is an aperiodic signal that has no maximum high or low times. The
->   minimum high and low times for MDC shall be 160 ns each, and the
->   minimum period for MDC shall be 400 ns, regardless of the nominal
->   period of TX_CLK and RX_CLK.
->=20
-> My reading of this is that you can stop the clock when it is not needed. =
-Maybe
-> tie into the Linux runtime power management framework. It can keep track =
-of
-> how long a device has been idle, and if a timer is exceeded, make a callb=
-ack to
-> power it down.
->=20
-> If you have an MDIO bus with one PHY on it, the access pattern is likely =
-to be a
-> small bunch of reads followed by about one second of idle time. I would o=
-f
-> thought that stopping the clock increases the life expectancy of you hard=
-ware
-> more than just slowing it down.
+Hello Sergey,
 
-Hi Andrew,=20
+On 02.09.2024 12:55, Sergey Senozhatsky wrote:
+> Add s/w zlib (inflate/deflate) compression.
+> 
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> ---
 
-Thank you for your answer and apologies for the very late response. My conc=
-ern with completely stopping the clock is the case we are using the PHY pol=
-ling mode for the link status? We would need MDIO to always be operational =
-for polling to work, wouldn't we?
+> diff --git a/drivers/block/zram/backend_deflate.c b/drivers/block/zram/backend_deflate.c
+> new file mode 100644
+> index 000000000000..acefb86701b9
+> --- /dev/null
+> +++ b/drivers/block/zram/backend_deflate.c
+> @@ -0,0 +1,132 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/slab.h>
+> +#include <linux/vmalloc.h>
+> +#include <linux/zlib.h>
+> +
+> +#include "backend_deflate.h"
+> +
+> +/* Use the same value as crypto API */
+> +#define DEFLATE_DEF_WINBITS		11
+> +#define DEFLATE_DEF_MEMLEVEL		MAX_MEM_LEVEL
+> +
 
-Thanks.
-Asmaa
+I was trying to use a zram device with a deflate compression algorithm tuned for s390 hardware acceleration. While I was able to set the compression level via algorithm_params sysfs attribute, I figured out that the window size used by zram zlib compression is limited to 4K since windowBits parameter is hardcoded to DEFLATE_DEF_WINBITS. In order to utilize s390 hardware deflate acceleration, the maximum window size is needed (windowBits of 15), which is also a zlib default. Thus, I'm wondering why windowBits value of 11 was picked for zram zlib compression backend support. The comment line says 'Use the same value as crypto API'... could you please clarify here? Are there some memory constraints?
 
+I tried to build the kernel with DEFLATE_DEF_WINBITS set to 15 and verified that s390 hardware deflate acceleration works for zram devices with a deflate compression.
+
+Thanks,
+Mikhail
