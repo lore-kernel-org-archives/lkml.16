@@ -1,145 +1,95 @@
-Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB12279337;
-	Thu,  8 May 2025 14:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29509278150;
+	Thu,  8 May 2025 14:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746715821; cv=none; b=eJlUK2X+41ZBV9iWTuSWxpuCwUOVLoqIW2qEcOsKUGxCGp0fCIhqAskWyhqxATqAejUzxDlhtUnuMEz2HjDJMDpFEWhCjZzz29GShLxAJQG1qQ1H8XynT3+gsJ+9Fi642JS+a4+7kM6VizR27scUGjC166YQsThCILFoXru3jBk=
+	t=1746715850; cv=none; b=h1ZrNfgj+vOdFmf64ADpO+OReZ7ltN+tU4CWsAegSXU5SaBOF/k56X4n07bpx/9NDHbN0by9UNEeHyr5qw4kQNxcb0jtB8nCfDJjF8aLH/efb+jYU4IsfjLxZ2LeAjh0xoBk8Qdiy/b/ETU0p9tZxup18IxDQ2nkXLpFSwVC53k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746715821; c=relaxed/simple;
-	bh=kSyOd/YqwB4I7SCdXQSrZ2DZeX6cJamcOQno4YyOQA0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=K4zFU3WkZfm9r7VmRPcdhC1xjE7t+PU59hsu4DJWAVb05x9OQYmP9CljHAmdwu0O8DE8/x5Y7Xxp7DuucKTMQr4IJ/Ptp5rLTC/rKavamnVKC2LK/aYE13FxtC0Qu2hQvFvBokXQAjO+1U0oil99WHlq9x0TDBPuO9zYx1q2SlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=jzZKrupp; arc=none smtp.client-ip=207.171.188.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1746715850; c=relaxed/simple;
+	bh=jH5SGcX3ZdcFxEoulSCBV2Phdw9LLtV84mxbdRu7o88=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=n6Cw3slLF1NG0TQvx/QZvO5GOP+xh7IZX/A2LLhNrnhgTbrkihZ8P5g59jdAUSyiH7t+M9Q27sxa6apLb9m6YKXSvncBxiq3PHllX6GI6W0OdsmTohV/xwVysuTgx0B0a0vxCXSyYBtpCLNMDZe9U15njVAkTekZN1YXiMx1HpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FtBK+lkM; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="jzZKrupp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1746715817; x=1778251817;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:mime-version:
-   content-transfer-encoding;
-  bh=BHpCAxEHtnyUYUm3CkHmDoIQw35lsCllGPJ1yOn0X/M=;
-  b=jzZKruppJ9XiyNyM96RJUYQFfvubslfmg+agRJsgcLNXMKxkK/zosHov
-   n6Snk9KmcFARQ2exLyMne70+TpgsZO2Ob167yLUVO+ukCB48fCuDaFNSR
-   oSMT91gh4OJO9HtvjJrJK/bif7jz5Hai25M6W1KUdZvD/cgKSF1FQxFjv
-   y3SfkM8AKcu+RpM4eihDPh/9ZRbo050sUqBGiFzrDl7tdm4IVgyPNwps8
-   E/e77Hi+qgL/QAjyT4ARkttDzaBOOIWV+66ZGjFhP7cS7uJCP89AoILqV
-   jUs7SZT1s0bOd812QhmNg87t8X9whKd+Le7svKDuImOE+uGmG8hTWJpeu
-   w==;
-X-IronPort-AV: E=Sophos;i="6.15,272,1739836800"; 
-   d="scan'208";a="17815690"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 14:50:09 +0000
-Received: from EX19MTAEUB001.ant.amazon.com [10.0.17.79:2671]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.32.128:2525] with esmtp (Farcaster)
- id 44994329-5418-4e57-adac-c37e048f9fa5; Thu, 8 May 2025 14:50:06 +0000 (UTC)
-X-Farcaster-Flow-ID: 44994329-5418-4e57-adac-c37e048f9fa5
-Received: from EX19D008EUC002.ant.amazon.com (10.252.51.146) by
- EX19MTAEUB001.ant.amazon.com (10.252.51.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 8 May 2025 14:50:06 +0000
-Received: from EX19D008EUC001.ant.amazon.com (10.252.51.165) by
- EX19D008EUC002.ant.amazon.com (10.252.51.146) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 8 May 2025 14:50:06 +0000
-Received: from EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1]) by
- EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1%3]) with mapi id
- 15.02.1544.014; Thu, 8 May 2025 14:50:06 +0000
-From: "Heyne, Maximilian" <mheyne@amazon.de>
-To: Jeremy Linton <jeremy.linton@arm.com>
-CC: "rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org"
-	<lenb@kernel.org>, "jmeurin@google.com" <jmeurin@google.com>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"sudeep.holla@arm.com" <sudeep.holla@arm.com>, Yicong Yang
-	<yangyicong@hisilicon.com>, "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] ACPI: PPTT: Fix processor subtable walk
-Thread-Topic: [PATCH] ACPI: PPTT: Fix processor subtable walk
-Thread-Index: AQHbwCh8rUbZYEeM7U2CpGyi5RqI0g==
-Date: Thu, 8 May 2025 14:50:06 +0000
-Message-ID: <20250508-laugh-stud-e5037c82@mheyne-amazon>
-References: <20250508023025.1301030-1-jeremy.linton@arm.com>
-In-Reply-To: <20250508023025.1301030-1-jeremy.linton@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2D3D35BEE9554B4D99A6B058091F6CEE@amazon.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FtBK+lkM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746715849; x=1778251849;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=jH5SGcX3ZdcFxEoulSCBV2Phdw9LLtV84mxbdRu7o88=;
+  b=FtBK+lkMplz6Ioy4bKWL1I2nFofraf4HJ655+YOqyxe02auO9yliD/OX
+   exJo2WeLkTMjHOxA8OGn6HiffTXvTRSo6Ne8Dni/HaoKjvP71zf5Kg0jn
+   MSqecy3SnZAgfe/6ZFjqNTF5t5rYvolzD2BlSjQNnw0iRhSBvi0Sflnem
+   wW3+PXQsBffez0v72+RriaifS+U+SdvaIOU3PijxjsuR26f0lJGWXVO2z
+   Xhbm2iquE9pMhee1kS+5l5/FkMe2zJ/dAP6r1HFXrhllANAwWR1K+E4wX
+   Pc69N8JB1golCYTzz+NkMb2G/tGcW/ihDjWepUPn2tsQBewZA7/jYAwJe
+   Q==;
+X-CSE-ConnectionGUID: wSrA1B0hTBaRONDTTdTUiQ==
+X-CSE-MsgGUID: 31rN+qmoQbakQJuCz2B3fQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48372324"
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="48372324"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:50:47 -0700
+X-CSE-ConnectionGUID: axgp00/iTnewpBziKXtiTg==
+X-CSE-MsgGUID: pZ4zCB+EQimd1ypaXJ/xog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="167265552"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.196])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:50:43 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: hdegoede@redhat.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
+ wim@linux-watchdog.org, linux@roeck-us.net, 
+ Yen-Chi Huang <jesse.huang@portwell.com.tw>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+ jay.chen@canonical.com
+In-Reply-To: <a04be962-b207-4085-af5b-523f59bffcbc@portwell.com.tw>
+References: <a04be962-b207-4085-af5b-523f59bffcbc@portwell.com.tw>
+Subject: Re: [PATCH v6] platform/x86: portwell-ec: Add GPIO and WDT driver
+ for Portwell EC
+Message-Id: <174671583458.18151.3490608010947983443.b4-ty@linux.intel.com>
+Date: Thu, 08 May 2025 17:50:34 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Wed, May 07, 2025 at 09:30:25PM -0500, Jeremy Linton wrote:
-> The original PPTT code had a bug where the processor subtable length
-> was not correctly validated when encountering a truncated
-> acpi_pptt_processor node.
-> =
+On Tue, 06 May 2025 18:23:14 +0800, Yen-Chi Huang wrote:
 
-> Commit 7ab4f0e37a0f4 ("ACPI PPTT: Fix coding mistakes in a couple of
-> sizeof() calls") attempted to fix this by validating the size is as
-> large as the acpi_pptt_processor node structure. This introduced a
-> regression where the last processor node in the PPTT table is ignored
-> if it doesn't contain any private resources. That results errors like:
-> =
-
->   ACPI PPTT: PPTT table found, but unable to locate core XX (XX)
->   ACPI: SPE must be homogeneous
-> =
-
-> Furthermore, it fail in a common case where the node length isn't
-> equal to the acpi_pptt_processor structure size, leaving the original
-> bug in a modified form.
-> =
-
-> Correct the regression by adjusting the loop termination conditions as
-> suggested by the bug reporters. An additional check performed after
-> the subtable node type is detected, validates the acpi_pptt_processor
-> node is fully contained in the PPTT table. Repeating the check in
-> acpi_pptt_leaf_node() is largely redundant as the node is already
-> known to be fully contained in the table.
-> =
-
-> The case where a final truncated node's parent property is accepted,
-> but the node itself is rejected should not be considered a bug.
-> =
-
-> Fixes: 7ab4f0e37a0f4 ("ACPI PPTT: Fix coding mistakes in a couple of size=
-of() calls")
-> Reported-by: Maximilian Heyne <mheyne@amazon.de>
-> Closes: https://lore.kernel.org/linux-acpi/20250506-draco-taped-15f475cd@=
-mheyne-amazon/
-> Reported-by: Yicong Yang <yangyicong@hisilicon.com>
-> Closes: https://lore.kernel.org/linux-acpi/20250507035124.28071-1-yangyic=
-ong@huawei.com/
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> Cc: Jean-Marc Eurin <jmeurin@google.com>
-> Cc: <stable@vger.kernel.org>
-
-Thank you so much for providing this proper fix and also thanks for the
-great discussions. This allowed my to learn new things. Much
-appreciated.
-
-I confirm the fix works for me. Therefore,
-
-Tested-by: Maximilian Heyne <mheyne@amazon.de>
+> Adds a driver for the ITE Embedded Controller (EC) on Portwell boards.
+> It integrates with the Linux GPIO and watchdog subsystems to provide:
+> 
+> - Control/monitoring of up to 8 EC GPIO pins.
+> - Hardware watchdog timer with 1-255 second timeouts.
+> 
+> The driver communicates with the EC via I/O port 0xe300 and identifies
+> the hardware by the "PWG" firmware signature. This enables enhanced
+> system management for Portwell embedded/industrial platforms.
+> 
+> [...]
 
 
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
+The list of commits applied:
+[1/1] platform/x86: portwell-ec: Add GPIO and WDT driver for Portwell EC
+      commit: 83579675331059689e2869bf752ca9e17fadbd82
 
-Amazon Web Services Development Center Germany GmbH
-Tamara-Danz-Str. 13
-10243 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-Sitz: Berlin
-Ust-ID: DE 365 538 597
+--
+ i.
 
