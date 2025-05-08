@@ -1,126 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD742797A0;
-	Thu,  8 May 2025 14:57:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714201581E0;
+	Thu,  8 May 2025 14:58:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716253; cv=none; b=Shu9n/gIj4PtMtEq0iAXYjmwcVIBqM7hXePLIV10YfH0P01MxLtbTw0wAclyjtNz75f1fR+nYpFxwr2VdTtFyfQP0DW93C4jTatGfcX5ql4Ft60lC1X+VdUC46skoGTLGKcGr/ZiXvf97vN6GUlEPKjEqZuZfk5r7MkAor1zNkQ=
+	t=1746716290; cv=none; b=ZRpikn7eWbmOzdVHr2x3F3S9EsgyQQwfail8rvBJRz99VcZRFeXg4WqfI4ZaViy9XofVcxB+rQqF6BJFBRt3MlsfJr8AKZWwY2sQYwZtWYNNKKi5vqysKZ4xVUD1+4Au9BpS2fvqbSpXW0k/EF8sXpUJ44b3oevWbNfkkazTisc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716253; c=relaxed/simple;
-	bh=6iHhw5qFT/tUA3m1akQE4BAydwJFznjhgGJU3QAL6ww=;
+	s=arc-20240116; t=1746716290; c=relaxed/simple;
+	bh=2gQcav+TDe4DHa8UjsaDcHXzpSYYdWIU9InpqKfC1+I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WaPeSzQCyyc2zf3luulOJeyOu6odehNpzi2ncP/HmKAc1s6lPoqiUWmjp2ZANIe504gqPWqHBWBZzTnYXFaWqvBNyO5Au7rm/LEq1CgE1xLoKM/rIwZAKvhTPcTFxdma7dYlDPC65Mj1fAKp8HqIB4gxUvBH9HiWOME84b8BMao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SlHhKS0w; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XyMz+tVhoeV2N6bjufrWIlhUqUsOe2mnqBR0+pwta1WbgKXoVPoMwNyCDbrcouSFEaN9/87RfM9PfUqutKwUPZKcCSu2O7dKyXOeGS1QJRvBuL2nFka6d5/jy3m4MGvPwFjQxIzJyfsUxFJ7FPzC0YqhJ/C94W+l2rMsukg5ESA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=owIkK/QB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SlHhKS0w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA32DC4CEEF;
-	Thu,  8 May 2025 14:57:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="owIkK/QB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F1D4C4CEE7;
+	Thu,  8 May 2025 14:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746716253;
-	bh=6iHhw5qFT/tUA3m1akQE4BAydwJFznjhgGJU3QAL6ww=;
+	s=k20201202; t=1746716289;
+	bh=2gQcav+TDe4DHa8UjsaDcHXzpSYYdWIU9InpqKfC1+I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SlHhKS0wdh1rO5+aBOBNJAGvvHuvASSuFyJJAvEKq59Yo90yNzSmciNTXSZbcoopU
-	 rwYGoMjQnrQaAYrMJY6u57Z2qMuTbPK9+HZPX613hqQRlmRqhNw6G1zx+SFY09mmwW
-	 ErXC9bcqRol73azhn9rAZfgR9GG3yJFVy5qETy0gg1CvC24c0uxVeApjewy44KIW9s
-	 YIWhTm0lBFa/hKv0now+gl8E8l4qritWLbfF/HIpdCGgYsxGal11FNjFql3kRE7rps
-	 aiPqc27ke+Fqj27wDeYjgRMvYLTCpZ6egAuBtsp/9/zRKyzI5vximbyrqnmmxjNm8H
-	 2tlewhWR4zmig==
-Date: Thu, 8 May 2025 15:57:29 +0100
-From: Lee Jones <lee@kernel.org>
-To: Johan Adolfsson <johan.adolfsson@axis.com>
-Cc: Pavel Machek <pavel@kernel.org>, linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel@axis.com
-Subject: Re: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct
- multi_index
-Message-ID: <20250508145729.GR3865826@google.com>
-References: <20250506-led-fix-v1-1-56a39b55a7fc@axis.com>
+	b=owIkK/QBGYZgWx9bh+VKbw5vWsNUHRjIrO8u3i35g7gmYmXF1D8j/DBulSUnoI3tc
+	 4i4hiUJY18XmcFnMjkF8yyxKrdZPyWOpn3IstzqFvzRGdIRAglwyFlds82Z1jE6jzG
+	 MsAd96NjpBf8CcPnnYHxDDwXE5ykqVVx3qY4fB2J3VEuZpS5npaT2xrBewN1rgaI1L
+	 27e1M8Lu4MlpOpPt13emMBSMlY00rKs5fQdgaDGjUBzl2ipkfR88vKa/jD0NSqDTSs
+	 zyKkU7TyNG+yWg1JlgzVtMLTB6OopjffTk1XYV3CEqUA3KoJj0qqG9W+210G4Qsf83
+	 q33I/jLA21V7Q==
+Date: Thu, 8 May 2025 15:58:06 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: linux-usb@vger.kernel.org,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: usb: ti,usb8041: Add binding for TI
+ USB8044 hub controller
+Message-ID: <20250508-prewashed-jawline-37f53c0f9429@spud>
+References: <20250507131143.2243079-1-mike.looijmans@topic.nl>
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.3e03400f-766d-4690-8f43-cbea2cac93d8@emailsignatures365.codetwo.com>
+ <20250507131143.2243079-2-mike.looijmans@topic.nl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="3CJWpGckFSe2JlaA"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250506-led-fix-v1-1-56a39b55a7fc@axis.com>
+In-Reply-To: <20250507131143.2243079-2-mike.looijmans@topic.nl>
 
-On Tue, 06 May 2025, Johan Adolfsson wrote:
 
-> mc_subled used for multi_index needs well defined array indexes,
-> to guarantee the desired result, optionally use reg for that.
-> 
-> If devicetree child nodes is processed in random or reverse order
-> you may end up with multi_index "blue green red" instead of the expected
-> "red green blue".
-> If user space apps uses multi_index to deduce how to control the leds
-> they would most likely be broken without this patch if devicetree
-> processing is reversed (which it appears to be).
-> 
-> arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts has reg set
-> but I don't see how it can have worked without this change.
-> 
-> If reg is not set, the previous behavior is kept, index will be in
-> the order nodes are processed.
-> 
-> Signed-off-by: Johan Adolfsson <johan.adolfsson@axis.com>
+--3CJWpGckFSe2JlaA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, May 07, 2025 at 03:11:43PM +0200, Mike Looijmans wrote:
+> The TI USB8044 is similar to the USB8041.
+
+Similar how? Why's a fallback not suitable?
+
+>=20
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
 > ---
-> Since devicetree nodes are (sometimes?) processed in reverse order,
-> support reg as the actual multi_index index so yo get well defined
-> color order presented in the multi_index file.
-> Not sure if reusing reg for this is the correct way or if another
-> property such as "multi_index" or similar should be used instead.
-> Looks like reg is used for similar things at least.
-> Or should the whole "reverse the devicetree" problem be fixed instead?
-> ---
->  drivers/leds/leds-lp50xx.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/leds/leds-lp50xx.c b/drivers/leds/leds-lp50xx.c
-> index 02cb1565a9fb..48db024081f5 100644
-> --- a/drivers/leds/leds-lp50xx.c
-> +++ b/drivers/leds/leds-lp50xx.c
-> @@ -476,6 +476,7 @@ static int lp50xx_probe_dt(struct lp50xx *priv)
->  			return -ENOMEM;
->  
->  		fwnode_for_each_child_node(child, led_node) {
-> +			int multi_index = num_colors;
->  			ret = fwnode_property_read_u32(led_node, "color",
->  						       &color_id);
->  			if (ret) {
-> @@ -483,8 +484,15 @@ static int lp50xx_probe_dt(struct lp50xx *priv)
->  				dev_err(priv->dev, "Cannot read color\n");
->  				return ret;
->  			}
-> +			ret = fwnode_property_read_u32(led_node, "reg", &multi_index);
-> +			if (ret) {
-> +				multi_index = num_colors;
+>=20
+>  Documentation/devicetree/bindings/usb/ti,usb8041.yaml | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/usb/ti,usb8041.yaml b/Docu=
+mentation/devicetree/bindings/usb/ti,usb8041.yaml
+> index c2e29bd61e11..fd6b35a40a5b 100644
+> --- a/Documentation/devicetree/bindings/usb/ti,usb8041.yaml
+> +++ b/Documentation/devicetree/bindings/usb/ti,usb8041.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/usb/ti,usb8041.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+> =20
+> -title: TI USB8041 USB 3.0 hub controller
+> +title: TI USB8041 and USB8044 USB 3.0 hub controllers
+> =20
+>  maintainers:
+>    - Alexander Stein <alexander.stein@ew.tq-group.com>
+> @@ -17,6 +17,8 @@ properties:
+>      enum:
+>        - usb451,8140
+>        - usb451,8142
+> +      - usb451,8440
+> +      - usb451,8442
+> =20
+>    reg: true
+> =20
+> --=20
+> 2.34.1
+>=20
+>=20
+> Met vriendelijke groet / kind regards,
+>=20
+> Mike Looijmans
+> System Expert
+>=20
+>=20
+> TOPIC Embedded Products B.V.
+> Materiaalweg 4, 5681 RJ Best
+> The Netherlands
+>=20
+> T: +31 (0) 499 33 69 69
+> E: mike.looijmans@topic.nl
+> W: www.topic.nl
+>=20
+> Please consider the environment before printing this e-mail
 
-Didn't we already initialise this?
+--3CJWpGckFSe2JlaA
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +			} else if (multi_index >= LP50XX_LEDS_PER_MODULE) {
-> +				dev_warn(priv->dev, "reg %i out of range\n", multi_index);
+-----BEGIN PGP SIGNATURE-----
 
-This should probably fail outright.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBzGfQAKCRB4tDGHoIJi
+0ma7AQCYXSv4S/1olF9XH6ulUTdmcc5JJK/AU8jFkpD5MnJERgD9Ep63wcJybfZW
+LOsqIAeJ2CY5b8szOkBSmSwHapFXdAw=
+=qHIW
+-----END PGP SIGNATURE-----
 
-> +				multi_index = num_colors;
-> +			}
->  
-> -			mc_led_info[num_colors].color_index = color_id;
-> +			mc_led_info[multi_index].color_index = color_id;
->  			num_colors++;
->  		}
->  
-> 
-> ---
-> base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
-> change-id: 20250225-led-fix-444fb544584a
-> 
-> Best regards,
-> -- 
-> Johan Adolfsson <johan.adolfsson@axis.com>
-> 
-
--- 
-Lee Jones [李琼斯]
+--3CJWpGckFSe2JlaA--
