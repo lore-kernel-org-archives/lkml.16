@@ -1,249 +1,387 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013027.outbound.protection.outlook.com [40.93.201.27])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304382163BD;
-	Thu,  8 May 2025 22:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.27
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746742264; cv=fail; b=m6IIBf+9kDNs1DahLMdW67bBV9Mbdn/I3Rp5hlfG/tISBE6lo/waN97UVX1xUtqvVWsNF99H49vUW1a8hc9tkusecx5oRBTOPqEpaof5ncThRTztKRR+zEUEnUJcF73aIBlHIvR35Wq8ImLIx/pHVL5mu9VhhwPPEAZJYKrWeeA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746742264; c=relaxed/simple;
-	bh=i987bSL9pFZ9BUWIZGwgN5GHmV/N8AFDp4+vTQMj6Y0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=JvfqwJi/y6fPqo0SCO3su6DcAmIwUkjFu1AVMiol5/4GPrRagdx3k+EINh5DOPlnQI3pTZV4oW+7aKaMSfEW9xyPjuyk72LnEsyZNrbDHZu/gWu1/KQ+WulLLIiZ4HO95bCLIUbgkxBDz0PMXK44wjT+JCO2yjlvNqZGUzHmPuU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=kV9Dz2Z4; arc=fail smtp.client-ip=40.93.201.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3962191F77;
+	Thu,  8 May 2025 22:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746742305; cv=none; b=NeIv5ns1aiaJfntNTDm+RoMif/KBQ1yyGHPyGAtcwS0mUlKu69EEYZ80LvwrGrgwr+389M3oOqUCCUpKFcAC2Q9U5TeUlB/IzT9pKB58vsR4waKVUn8PDxjdeXnfA3cTk8xWhdrspr9OK1nV4Gfq9rYSAoytIG+LvAkfIoxDgNc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746742305; c=relaxed/simple;
+	bh=ePeGaPvgcXfJJ9oGhpeBkvCqSt8QxbQwgbm/1K4GkJ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=HByE7Mtp18P2vbeS3VAE6KfnRbUzZoEhnv1ag6aTzHsM5xyXe5zpzkpjnXVO+1A1Dp1nphHPNcnxVtRyF9LoPKEp//XUp3J0Dpab1cqt/qUL34yRuorfxCbqF/4wZs6PUza+8jhqFPXJuobZhjITYU0NM4R9qqi5tUK5tPWGrEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vi1zhNLi; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="kV9Dz2Z4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=afPdyniD9BF9QgqaNny5+W1kb3zEDPt8FsiY8YfSEnosWD50Md/8WLDZvf3UoQdv5X6V+Krc40T4epjTOX/1gY24aK0pcJiAUPoQ9vXMOLDHOoqcIKPDTl3b4cY2ppGTzDKdhu9fcwBtSvJJYCir9yCKtRz1eqVsPa+0dcQVE7YEf8FCzbkNe3fbkqL9APTLaXiG9jYAzl+oKAGuxS9984Lp6u8m4wxoryk7Jdarj3EJoNeC5yEdcA5XY8qduGZMdwv8WF2XYmIUKE9XI6MkGlxq4q9vk8a4i0yGrLy0S9ZZB45UZBeLw1ctg5BvGBkLKFBskEQ7zq0jZ3+f7qC9MA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wQMj9vmbRoV4IgOY9Afc9mLfkeAbHyR6RybWYxyTZPc=;
- b=uayZPiJYUO7BysLTKDViZ6DpN5CSQnc2xC71u5NOwGoooPdEFiOa+glSg1f7IRI0QrGuAf25XLT9xh9zRRd2d4Txv7ml2tw/YHjcmGLdV5rmTSUHTyolSaoHfVIy0cnfgC/BVuGWVDDKgMqcrbdxVWfwl7Y0TljEb9V7kvnSJIbQPM6YfBuu1SjIAYx+Aw8ZrXQgVFU24XtMGDDMEHBRjsmk6AkQoDtsSSCfbAdVs0GCB6PkY34o8qKyjEIngh4TPHVwiAwIBpjBzoSDS11eP5Mqq9s8kSAgWpYJLGjbxLcpqfGBDSalJ5kdQTo9WXxYrrbOSSBK0BjhTAf8A7kKWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
- dkim=pass header.d=altera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wQMj9vmbRoV4IgOY9Afc9mLfkeAbHyR6RybWYxyTZPc=;
- b=kV9Dz2Z4Scoy0LMx6u7WHX70xd5t46Drz5jgGkjFXCJ3awgN6CARcqy75f7ZwttHMZR1Cs4vC+Q0fxI7C0qxqWp68r9crDyTnlj3qIugxq6mpG+vk72up8++yE42Ed5tz3Br+zlXtSx77j7Qs0BfOm3Y+hI4aXRixRyB1fJOetGzQLmWmAS4hANCGklLjnp32DhWTupG7SRBFkMsrB/GdULQU8FvWSRvLC9i49m2XQ6hXTISlJCTnQhbDAP8YifcrttPzuophmFc0dj1E6KafktBkfX1sLpjcPRyG1LNj+lGo4aer4zflmQEe/FIK99RJ1eSGoVPwS4otmN8p7FN+g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=altera.com;
-Received: from BYAPR03MB3461.namprd03.prod.outlook.com (2603:10b6:a02:b4::23)
- by DM6PR03MB5052.namprd03.prod.outlook.com (2603:10b6:5:1f2::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Thu, 8 May
- 2025 22:10:56 +0000
-Received: from BYAPR03MB3461.namprd03.prod.outlook.com
- ([fe80::706b:dd15:bc81:313c]) by BYAPR03MB3461.namprd03.prod.outlook.com
- ([fe80::706b:dd15:bc81:313c%4]) with mapi id 15.20.8699.026; Thu, 8 May 2025
- 22:10:55 +0000
-Message-ID: <efad3ebf-919f-4bc8-8e78-9ebb33efb305@altera.com>
-Date: Thu, 8 May 2025 15:10:54 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 RESEND] clk: socfpga: agilex: add support for the Intel
- Agilex5
-To: Stephen Boyd <sboyd@kernel.org>, dinguyen@kernel.org,
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
- mturquette@baylibre.com, netdev@vger.kernel.org, richardcochran@gmail.com
-Cc: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>,
- Teh Wen Ping <wen.ping.teh@intel.com>
-References: <20250417145238.31657-1-matthew.gerlach@altera.com>
- <1f9856930efce8b52f3abbc17fb4d3ca@kernel.org>
-Content-Language: en-US
-From: Matthew Gerlach <matthew.gerlach@altera.com>
-In-Reply-To: <1f9856930efce8b52f3abbc17fb4d3ca@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BYAPR02CA0063.namprd02.prod.outlook.com
- (2603:10b6:a03:54::40) To BYAPR03MB3461.namprd03.prod.outlook.com
- (2603:10b6:a02:b4::23)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vi1zhNLi"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 548MBZO81196080
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 8 May 2025 17:11:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746742296;
+	bh=bU/HMyfK0n695cUcLFRk3ZwvH1zz2GS2yR3SddqHlE0=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=vi1zhNLiZfZaP/x6XBGoeYyFggu0jGAXL1siY9u4VXBEYrZ3k3UzXiHg2gDWwuAwe
+	 kXoUGNnHeEC5L1e9owyaoJsbEAB8fpJIFi3I8wokXIf4Mpf4xJRX3MQGYOe+1vBq2Z
+	 uuPgUjMhy8NsUYP5JlCkjFWE4PXIWrm2uYWNh71w=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 548MBZV6086785
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 8 May 2025 17:11:35 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
+ May 2025 17:11:35 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 8 May 2025 17:11:35 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 548MBZPW085164;
+	Thu, 8 May 2025 17:11:35 -0500
+Message-ID: <feb8b86c-7785-468e-9c8c-3fd345f504b4@ti.com>
+Date: Thu, 8 May 2025 17:11:35 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR03MB3461:EE_|DM6PR03MB5052:EE_
-X-MS-Office365-Filtering-Correlation-Id: 48319d7c-8295-4629-8501-08dd8e7d3462
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QmxoUm91NFV2VGs1ajBKcDBrdG5UOWpQYjFnQy82TlNXUmxkR3NZWi9NVDRy?=
- =?utf-8?B?eWxJSGIwS2RzdGlEeWY4MmI1cFg3c0p2bW1CcXVkSDB2ZmxVWnZPb3NXTEV0?=
- =?utf-8?B?ZHFHaEdOcXk0ZUh6QnNVUDRFVmUxQU1pdy9CNi9Zdm5qYWNtb0lNQ2U1UGUr?=
- =?utf-8?B?OEp0bWE4MkY1b1Y2dlAxTm10RXJoZXMwUnpzZHJScThGNWFuUDZ4a1VkNlNY?=
- =?utf-8?B?VnFXR2cySkVsVWZxUzR1UVZqS1JGOEp0Q0pTZkpveXg3bTI0NG1xdU91STNN?=
- =?utf-8?B?U0hib0VnaU0rN2RnenNKL3V1WDRhN0JXZWVJb3BRZ3FudnlMMHlJNEllWmFG?=
- =?utf-8?B?RUVZTE90MU9DSG5UUVRBKzRxeUNFZUtCcEd4dVllbFE1dDNKbHNtUDdNYllM?=
- =?utf-8?B?MVFmcmpxRzdYN1lwNHRiSEwvYytrK250blZvTEVvdVhvUmo5VlZhUTFSdFpk?=
- =?utf-8?B?UFV1YXMzb1RQSmU3S2x5cWZxdlNZaUtkNUt5RTRQV2EzZS9RQmN2cWg5bkhL?=
- =?utf-8?B?emxIcnN5c1hhRXpRelVCbk5jam5DWEpGc2RGVVNWaTB5TFFrQVhyekdWdDhJ?=
- =?utf-8?B?SjU5dmdGV3lMYmhXa3dzVWlhSDNYM0NGNllsY09nNU13N1NnbjZXSTBqb3hK?=
- =?utf-8?B?QkUzRlJTRnMxVFdKcFlsYXd5K1FuRENlY3hZbUdWRkwrc0RUMlg2Zjd4bmpl?=
- =?utf-8?B?V2t1NlNFc25vQjFsM2ZZdEJaTFJNY2JQTGNlQlk3elhwU0E3RzNCd3NCYW1Z?=
- =?utf-8?B?bWhqNmVFRi9JZXFLVVYwak5oNExxWnZRVFJxS0RLNWlsOFlqYitVMDBNeGlu?=
- =?utf-8?B?MDZmSTA5ODRMcmVKVEdjUmFqL1hxUm9FeXhJT29BRHRkbXpYWFV4bVZwZ1pv?=
- =?utf-8?B?eW54cy8wME9UZ0dGd0h6eHprZmFackhpWHEreGZBRGh5R0RHWkM3R0t4SU9B?=
- =?utf-8?B?V3VxcDhJbVBES2tJdjhSSVdFOHVYZnJROUV2WllwTDJIdmxTdTJ2ajV1SU9O?=
- =?utf-8?B?STZWQnh5SmRMUVVmazZjZ0NScGxOdU54UDArRTk1VUtLSldoVWtRUWdYeFJN?=
- =?utf-8?B?T2JrQUZkVnFWZ3JucGFUSTJZcFh3dFZscldNZW5mVk1zVHFsME1qNGF2Rmoy?=
- =?utf-8?B?WnEyQjh2WUJvZlBWbW9Ha2dpMHNvZktiZXJENGpoT1d3TDNBTzZYZUxkekth?=
- =?utf-8?B?c2pjWU90VUVKTUtyOUtjeCsrNTkzV2NWa2xMamJEMnBOWEZmNitkVUlSR2ZE?=
- =?utf-8?B?MTBMSEhSY3JCVXJWQ29EMHBTUkZ0TnZLMVVtVG9MSXVxblMrcndLaUNGUGFn?=
- =?utf-8?B?Nzg0RUJJY0tuVVRRQXN5RUo2S2wwVzR5bmw1Qk5SS1NUanJCazNDR2VqcmVR?=
- =?utf-8?B?S0lseDhvVXNiTnNDR3hsRTdCTDc3ZERzUTJpSkExWFgyWHc5Yk5aK1BvZGdX?=
- =?utf-8?B?L082NHVxajBhd2FDLzI1SnNnbkFTWjh1NjV6MDQyMVRaalMxckVzeE0xeUds?=
- =?utf-8?B?TEFOQVg4elh1bnRFKzZxcXl5VFRUWmlBSHp4T2hDb0ZzYVBGU2M1a1B2NHRl?=
- =?utf-8?B?b3FuS2NEeUlLbnp4K3RyQkZabEw1ampPSmpNT0hOTVZybW1BQkN6NHF6WkNz?=
- =?utf-8?B?OU91U096cmJmV0t2M1BWMVJiRWpzYmsvNHhWQW15dVZTQ2V6UEhUbkRnTmFq?=
- =?utf-8?B?aXdZYTI0eWIvbDlYZlRyNFUyciswLzdKMkFCT0xtazFkZE45dVVGeEdTL1VI?=
- =?utf-8?B?VklzdWlsRzFlamVpZmN5a3pHeTRsTUJGc1l4L0pUMXR0V1hrK09NaWNNc2VW?=
- =?utf-8?B?L0x0bUdoTFB3bTRrbFNFbHltU2VRWDBHeDRjV0xLcWNZeWFRV0Npb0hWVmZj?=
- =?utf-8?B?bkt0R0wzNnlGMDVhK3praTROZ1p1aHpQeGRET3hQcnpoT2tuSzdNNG5jT3Rq?=
- =?utf-8?Q?29VQfo8Nij0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3461.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZG0rR01lakMwd0E3bU5WYlNmZm1DaS9TNWtjeUhJOXdwaEl3SGEvNzhiNjB6?=
- =?utf-8?B?VHloZHdEOTZoRWExMDlUUUVzSjN0WUpqYkRvdlVxVHNWUjR4ay85UTZVUURh?=
- =?utf-8?B?cFdUazQ5ejZvQmIxNU9aS0F3Wk0zd2VabmtsM21NQ0kzMzBzc0xXM1h1L1Nn?=
- =?utf-8?B?UjkyTzNBUjFubUdSNXVQQTZsZUVWcitLQU8ybzVUamFDOGhhcWtLb0J0cDJG?=
- =?utf-8?B?dTJWT2NGR3FqekpUTVZlTXRqbldyNkxIdC80QXhrc2dvaWpyNndJdElmcnds?=
- =?utf-8?B?R0U0WEFPdFR1ODhDcVVzbWxwWm1VRU5sM2p2T2RqZVFzYm1yTEw4MVBneFc3?=
- =?utf-8?B?alhFaGkyM1BvM2I4UGlYcnY1dzRTZC9XMSs4YVVUcysraFBjSjJyc216NlpR?=
- =?utf-8?B?TWgwalI4UFB1Uy9McDhlVnc4Vll6NVVENlJRcm51RkdWY2JQdzhoUzVBRXNp?=
- =?utf-8?B?THRjZVRWR256UXpwK2pZU3Q0NkdDV3hNVHY2VGlBWUgzb1duaGpxQk02MjlK?=
- =?utf-8?B?VFBlU1lpNXdiWWw2U1h4RmZka3JjZDBsc1lVanI0NHU3WjlHdTRmcjlEcERl?=
- =?utf-8?B?LzQvcG5rSk1BSGRTZjdwYzRqN3RsQjg3RkZKbC84RjRRejBPK3NxMndVbStj?=
- =?utf-8?B?MVEvWHBmSFc3d3A2QnNiRWs3Yk96OE9oNFFkS2Q4aXZjZytGT29vdGdQSnlU?=
- =?utf-8?B?R29qYmRTRnZtNCtLYlplMm9TOVdESlV1UW55UjJnc3F3b1hnSHpXbkErcjcv?=
- =?utf-8?B?ZmM3dkFRYUJ0NUpmZkVKd2I1TkJkdXJnbEdtZ2piWXJYcjFwVXRlT2x4M2x5?=
- =?utf-8?B?dWJrQlZLeEtkSjdJYnhqNHR3a282QjNseHh0ejVEdjhDeUxoVGpnbG1lekgr?=
- =?utf-8?B?cGwvWVVIcVk5SG5yKzBHRjBBaDhaRHg1aEVRYTQ0ZHJlUlBJNnNNWEhXd2Ns?=
- =?utf-8?B?bUhkdXNvVkZyVGxLdFM5dldydDR1a2lOWjJMeEhOVm8yNHJ0Nkd6MUxuMVZ3?=
- =?utf-8?B?OXg1b3Ryd25nMnJOcUR0d21lZURHdEcwTjNmZzhDQzIxcE9zZDFBZVErWllN?=
- =?utf-8?B?MDl4c0VBck1jbnhNMERGVUJrZzFWSXVHb0VCNU1mcVFxYnRkOWRnUUMxMXdt?=
- =?utf-8?B?ZlpNV2pHOXJPTFZrM1RQRnlUTHdxK1hTTVQyR2lOMXIvaXo1dHNEQjhBZkpC?=
- =?utf-8?B?UFp1ckxNdTY0bUxISUhxUmdaVkJMQXlJOFJHZVpmNCs5UUIraVZJYUdMNThT?=
- =?utf-8?B?NHJ0RXk5Tm5kZDFxWXBFVjUyc1FiQkdGRUlaampRQTlxTnlWUzUvazRtQXVo?=
- =?utf-8?B?UERXa2h4MGVRNEFCRnRnK3h6cFNPcnJ5L2JKZS9YS1EzSkkrREM1UjdFTFpx?=
- =?utf-8?B?elNZcWcyc1FqNmJKbXQxMUh3WXc4Nk8xUXljV2JzT0VLTFFXb2ZoVWZBVzZz?=
- =?utf-8?B?dGNrOUhJNVVLREhDRkp3MFgva2w4Y01LaE43ZllvNWFrQ1hzNm44VGVPN1lS?=
- =?utf-8?B?UnNUa3hNV2E3ZzI1Y1RDcWxxMmluZ0J5RHVsQ1VjMU0yRVgvZDArTm1nZk55?=
- =?utf-8?B?WkNqRWlyQ0tRaWlzdXBaS1FKakgzbUpxWkFWVEpXRERYbFpoS1oraGlqVXJQ?=
- =?utf-8?B?akJNNmxsYVc2SXNyTlEwdHIybm5NTE1QM0s2cjRUNkRqb1d3aG96R1A5R1ZI?=
- =?utf-8?B?bEhHUFZrMFlmZCtpMlI4TEZZWEJXY2g1c1JqOXJKdW9tbzltK2VYQnV2Qkdv?=
- =?utf-8?B?NkNnZGVHcmVva1RNR2prRFk1L2I2M1o2K3FVR2dxOVJ2RXArckxSMWNwK1N0?=
- =?utf-8?B?NWxQTG9vNk5jNFFBUE5Yb2owbUROZCtqQVBqK0V0UWt5RUd6VThtdkVVWngx?=
- =?utf-8?B?UG1teEJ5b25ETklwY1NYb0IzdjZNN0NINy9XaHJRNVBpc1luTUQ2cnFMdmxY?=
- =?utf-8?B?M2FjUmJZekJuVk4rUFhYQlRNcDA4cXEwdkh4aGdua1RsMDFIMU85RGJUOG80?=
- =?utf-8?B?NHlPM1NXM0xZVEpuWnZyc0tuVjlqbXg2ZGdEMm9SMzRTVjAxUkVaSEJIZEs3?=
- =?utf-8?B?ekhnUTVlS3dRd29sVmg1VWJBOGd0YmRDRXJYOHV0Y00vN0VWWmVrS3BzQ0xt?=
- =?utf-8?B?TkQ1Ym54UVFCTk8xenRXV0tWU3hvN2FhUi9OT3RKRHpLQmY3NzZwcUN0MEdE?=
- =?utf-8?B?Tmc9PQ==?=
-X-OriginatorOrg: altera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48319d7c-8295-4629-8501-08dd8e7d3462
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3461.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 22:10:55.9386
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NJY2HKnajbk8a6IaRJst1XBBZzxdSjzeaZID40aEwDtEmAeqHT6+52rx4VHf7wgTINWHYqRtD3RARQnJj/2PX8NK7Ks4vi9hFhny7DPNfBQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5052
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 2/2] serial: 8250: Add PRUSS UART driver
+To: Andrew Davis <afd@ti.com>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>
+CC: Jiri Slaby <jirislaby@kernel.org>,
+        Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+        Hari Nagalla <hnagalla@ti.com>
+References: <20250501003113.1609342-1-jm@ti.com>
+ <20250501003113.1609342-3-jm@ti.com>
+ <052c2566-d42c-4256-890d-b1cdbc964857@ti.com>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <052c2566-d42c-4256-890d-b1cdbc964857@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+
+Hi Andrew,
+
+On 5/1/25 11:28 AM, Andrew Davis wrote:
+> On 4/30/25 7:31 PM, Judith Mendez wrote:
+>> From: Bin Liu <b-liu@ti.com>
+>>
+>> This adds a new serial 8250 driver that supports the UART in PRUSS
+>> module.
+>>
+>> The PRUSS has a UART sub-module which is based on the industry standard
+>> TL16C550 UART controller, which has 16-bytes FIFO and supports 16x and
+>> 13x over samplings.
+>>
+>> Signed-off-by: Bin Liu <b-liu@ti.com>
+>> Signed-off-by: Judith Mendez <jm@ti.com>
+>> ---
+>>   drivers/tty/serial/8250/8250_pruss.c | 213 +++++++++++++++++++++++++++
+>>   drivers/tty/serial/8250/Kconfig      |  10 ++
+>>   drivers/tty/serial/8250/Makefile     |   1 +
+>>   3 files changed, 224 insertions(+)
+>>   create mode 100644 drivers/tty/serial/8250/8250_pruss.c
+>>
+>> diff --git a/drivers/tty/serial/8250/8250_pruss.c 
+>> b/drivers/tty/serial/8250/8250_pruss.c
+>> new file mode 100644
+>> index 000000000000..2943bf7d6645
+>> --- /dev/null
+>> +++ b/drivers/tty/serial/8250/8250_pruss.c
+>> @@ -0,0 +1,213 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + *  Serial Port driver for PRUSS UART on TI platforms
+>> + *
+>> + *  Copyright (C) 2020-2021 by Texas Instruments Incorporated - 
+>> http://www.ti.com/
+>> + *  Author: Bin Liu <b-liu@ti.com>
+>> + */
+>> +#include <linux/clk.h>
+>> +#include <linux/module.h>
+>> +#include <linux/serial_reg.h>
+>> +#include <linux/serial_core.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/remoteproc.h>
+>> +#include "8250.h"
+>> +
+>> +#define DEFAULT_CLK_SPEED    192000000
+>> +
+>> +/* extra registers */
+>> +#define PRUSS_UART_PEREMU_MGMT    12
+>> +#define PRUSS_UART_TX_EN    BIT(14)
+>> +#define PRUSS_UART_RX_EN    BIT(13)
+>> +#define PRUSS_UART_FREE_RUN    BIT(0)
+>> +
+>> +#define PRUSS_UART_MDR            13
+>> +#define PRUSS_UART_MDR_OSM_SEL_MASK    BIT(0)
+>> +#define PRUSS_UART_MDR_16X_MODE        0
+>> +#define PRUSS_UART_MDR_13X_MODE        1
+>> +
+>> +struct pruss8250_info {
+>> +    int type;
+> 
+> You never use type, why store it here?
+
+removed
+
+> 
+>> +    int line;
+>> +};
+>> +
+>> +static inline void uart_writel(struct uart_port *p, u32 offset, int 
+>> value)
+>> +{
+>> +    writel(value, p->membase + (offset << p->regshift));
+>> +}
+>> +
+>> +static int pruss8250_startup(struct uart_port *port)
+>> +{
+>> +    int ret;
+>> +
+>> +    uart_writel(port, PRUSS_UART_PEREMU_MGMT, 0);
+>> +
+>> +    ret = serial8250_do_startup(port);
+>> +    if (!ret)
+>> +        uart_writel(port, PRUSS_UART_PEREMU_MGMT, PRUSS_UART_TX_EN |
+>> +                              PRUSS_UART_RX_EN |
+>> +                              PRUSS_UART_FREE_RUN);
+>> +    return ret;
+>> +}
+>> +
+>> +static unsigned int pruss8250_get_divisor(struct uart_port *port,
+>> +                      unsigned int baud,
+>> +                      unsigned int *frac)
+>> +{
+>> +    unsigned int uartclk = port->uartclk;
+>> +    unsigned int div_13, div_16;
+>> +    unsigned int abs_d13, abs_d16;
+>> +    u16 quot;
+>> +
+>> +    /* Old custom speed handling */
+>> +    if (baud == 38400 && (port->flags & UPF_SPD_MASK) == UPF_SPD_CUST) {
+>> +        quot = port->custom_divisor & UART_DIV_MAX;
+>> +        if (port->custom_divisor & (1 << 16))
+>> +            *frac = PRUSS_UART_MDR_13X_MODE;
+>> +        else
+>> +            *frac = PRUSS_UART_MDR_16X_MODE;
+>> +
+>> +        return quot;
+>> +    }
+>> +
+>> +    div_13 = DIV_ROUND_CLOSEST(uartclk, 13 * baud);
+>> +    div_16 = DIV_ROUND_CLOSEST(uartclk, 16 * baud);
+>> +    div_13 = div_13 ? : 1;
+>> +    div_16 = div_16 ? : 1;
+>> +
+>> +    abs_d13 = abs(baud - uartclk / 13 / div_13);
+>> +    abs_d16 = abs(baud - uartclk / 16 / div_16);
+>> +
+>> +    if (abs_d13 >= abs_d16) {
+>> +        *frac = PRUSS_UART_MDR_16X_MODE;
+>> +        quot = div_16;
+>> +    } else {
+>> +        *frac = PRUSS_UART_MDR_13X_MODE;
+>> +        quot = div_13;
+>> +    }
+>> +
+>> +    return quot;
+>> +}
+>> +
+>> +static void pruss8250_set_divisor(struct uart_port *port, unsigned 
+>> int baud,
+>> +                  unsigned int quot, unsigned int quot_frac)
+>> +{
+>> +    serial8250_do_set_divisor(port, baud, quot);
+>> +    /*
+>> +     * quot_frac holds the MDR over-sampling mode
+>> +     * which is set in pruss8250_get_divisor()
+>> +     */
+>> +    quot_frac &= PRUSS_UART_MDR_OSM_SEL_MASK;
+>> +    serial_port_out(port, PRUSS_UART_MDR, quot_frac);
+>> +}
+>> +
+>> +static int pruss8250_probe(struct platform_device *pdev)
+>> +{
+>> +    struct device_node *np = pdev->dev.of_node;
+>> +    struct uart_8250_port port8250;
+>> +    struct uart_port *up = &port8250.port;
+>> +    struct pruss8250_info *info;
+>> +    struct resource resource;
+>> +    unsigned int port_type;
+>> +    struct clk *clk;
+>> +    int ret;
+>> +
+>> +    port_type = (unsigned long)of_device_get_match_data(&pdev->dev);
+> 
+> Will the port type ever not be PORT_16550A?
+
+So far each UART module is has been the same, I think it might be safe
+to hardcode:
+
+port->type = PORT_16550A;
 
 
-On 5/6/25 1:52 PM, Stephen Boyd wrote:
-> Quoting Matthew Gerlach (2025-04-17 07:52:38)
-> > From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
-> >
-> > Add support for Intel's SoCFPGA Agilex5 platform. The clock manager
-> > driver for the Agilex5 is very similar to the Agilex platform, so
-> > it is reusing most of the Agilex clock driver code.
-> >
-> > Signed-off-by: Teh Wen Ping <wen.ping.teh@intel.com>
-> > Reviewed-by: Dinh Nguyen <dinguyen@kernel.org>
-> > Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
-> > Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
-> > ---
-> > Changes in v4:
-> > - Add .index to clk_parent_data.
->
-> It's useful to link to the previous round with lore links. Please do it
-> next time.
+> 
+>> +    if (port_type == PORT_UNKNOWN)
+>> +        return -EINVAL;
+>> +
+>> +    info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
+>> +    if (!info)
+>> +        return -ENOMEM;
+>> +
+>> +    memset(&port8250, 0, sizeof(port8250));
+>> +
+>> +    ret = of_address_to_resource(np, 0, &resource);
+> 
+> platform_get_resource()
 
-Thanks for the useful recommendation. I will be sure to add such links.
+Will add
 
-So I should have added something like the following:
+> 
+>> +    if (ret) {
+>> +        dev_err(&pdev->dev, "invalid address\n");
+>> +        return ret;
+>> +    }
+>> +
+>> +    ret = of_alias_get_id(np, "serial");
+> 
+> Can you make use of the uart_read_port_properties() helper here?
 
-      - Link to v3: 
-https://lore.kernel.org/linux-clk/20231003120402.4186270-1-niravkumar.l.rabara@intel.com/
+yes we can,
+thanks for reviewing.
 
->
-> >
-> > Changes in v3:
-> > - Used different name for stratix10_clock_data pointer.
-> > - Used a single function call, devm_platform_ioremap_resource().
-> > - Used only .name in clk_parent_data.
-> >
-> > Stephen suggested to use .fw_name or .index, But since the changes are on top
-> > of existing driver and current driver code is not using clk_hw and removing
-> > .name and using .fw_name and/or .index resulting in parent clock_rate &
-> > recalc_rate to 0.
-> >
-> > diff --git a/drivers/clk/socfpga/clk-agilex.c b/drivers/clk/socfpga/clk-agilex.c
-> > index 8dd94f64756b..a5ed2a22426e 100644
-> > --- a/drivers/clk/socfpga/clk-agilex.c
-> > +++ b/drivers/clk/socfpga/clk-agilex.c
-> > @@ -334,6 +336,375 @@ static const struct stratix10_gate_clock agilex_gate_clks[] = {
-> >           10, 0, 0, 0, 0, 0, 4},
-> >  };
-> >
-> > +static const struct clk_parent_data agilex5_pll_mux[] = {
-> > +       { .name = "osc1", .index = AGILEX5_OSC1, },
-> > +       { .name = "cb-intosc-hs-div2-clk", .index = AGILEX5_CB_INTOSC_HS_DIV2_CLK, },
-> > +       { .name = "f2s-free-clk", .index = AGILEX5_F2S_FREE_CLK, },
-> > +};
-> > +
-> > +static const struct clk_parent_data agilex5_boot_mux[] = {
-> > +       { .name = "osc1", .index = AGILEX5_OSC1, },
-> > +       { .name = "cb-intosc-hs-div2-clk", .index = AGILEX5_CB_INTOSC_HS_DIV2_CLK, },
-> > +};
-> > +
-> > +static const struct clk_parent_data agilex5_core0_free_mux[] = {
-> > +       { .name = "main_pll_c1", .index = AGILEX5_MAIN_PLL_C1_CLK, },
-> > +       { .name = "peri_pll_c0", .index = AGILEX5_MAIN_PLL_C0_CLK, },
->
-> The index doesn't work this way. The number indicates which index in the
-> DT node's 'clocks' property to use as the parent. It doesn't indicate
-> which index in this clk provider to use. I don't see any 'clocks'
-> property in the binding for this compatible "intel,agilex5-clkmgr", so
-> this doesn't make any sense either.
-Thanks for the explanation. I misunderstood how .index works.
->
-> If you can't use clk_hw pointers then just stick to the old way of doing
-> it with string names and no struct clk_parent_data usage.
+~ Judith
 
-Continuing to do the old way with string names does maximizes code 
-reuse. I will remove the .index in v5.
 
-Thanks for the review,
+> 
+> Andrew
+> 
+>> +    if (ret > 0)
+>> +        up->line = ret;
+>> +
+>> +    clk = devm_clk_get(&pdev->dev, NULL);
+>> +    if (IS_ERR(clk)) {
+>> +        if (PTR_ERR(clk) == -EPROBE_DEFER)
+>> +            return -EPROBE_DEFER;
+>> +        up->uartclk = DEFAULT_CLK_SPEED;
+>> +    } else {
+>> +        up->uartclk = clk_get_rate(clk);
+>> +        devm_clk_put(&pdev->dev, clk);
+>> +    }
+>> +
+>> +    up->dev = &pdev->dev;
+>> +    up->mapbase = resource.start;
+>> +    up->mapsize = resource_size(&resource);
+>> +    up->type = port_type;
+>> +    up->iotype = UPIO_MEM;
+>> +    up->regshift = 2;
+>> +    up->flags = UPF_SHARE_IRQ | UPF_BOOT_AUTOCONF | UPF_FIXED_PORT |
+>> +            UPF_FIXED_TYPE | UPF_IOREMAP;
+>> +    up->irqflags |= IRQF_SHARED;
+>> +    up->startup = pruss8250_startup;
+>> +    up->rs485_config = serial8250_em485_config;
+>> +    up->get_divisor = pruss8250_get_divisor;
+>> +    up->set_divisor = pruss8250_set_divisor;
+>> +
+>> +    ret = of_irq_get(np, 0);
+>> +    if (ret < 0) {
+>> +        if (ret != -EPROBE_DEFER)
+>> +            dev_err(&pdev->dev, "missing irq\n");
+>> +        return ret;
+>> +    }
+>> +
+>> +    up->irq = ret;
+>> +    spin_lock_init(&port8250.port.lock);
+>> +    port8250.capabilities = UART_CAP_FIFO | UART_CAP_AFE;
+>> +
+>> +    ret = serial8250_register_8250_port(&port8250);
+>> +    if (ret < 0)
+>> +        goto err_dispose;
+>> +
+>> +    info->type = port_type;
+>> +    info->line = ret;
+>> +    platform_set_drvdata(pdev, info);
+>> +
+>> +    return 0;
+>> +
+>> +err_dispose:
+>> +    irq_dispose_mapping(port8250.port.irq);
+>> +    return ret;
+>> +}
+>> +
+>> +static void pruss8250_remove(struct platform_device *pdev)
+>> +{
+>> +    struct pruss8250_info *info = platform_get_drvdata(pdev);
+>> +
+>> +    serial8250_unregister_port(info->line);
+>> +}
+>> +
+>> +static const struct of_device_id pruss8250_table[] = {
+>> +    { .compatible = "ti,pruss-uart", .data = (void *)PORT_16550A, },
+>> +    { /* end of list */ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, pruss8250_table);
+>> +
+>> +static struct platform_driver pruss8250_driver = {
+>> +    .driver = {
+>> +        .name = "pruss8250",
+>> +        .of_match_table = pruss8250_table,
+>> +    },
+>> +    .probe = pruss8250_probe,
+>> +    .remove = pruss8250_remove,
+>> +};
+>> +
+>> +module_platform_driver(pruss8250_driver);
+>> +
+>> +MODULE_AUTHOR("Bin Liu <b-liu@ti.com");
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_DESCRIPTION("Serial Port driver for PRUSS UART on TI platforms");
+>> diff --git a/drivers/tty/serial/8250/Kconfig 
+>> b/drivers/tty/serial/8250/Kconfig
+>> index f64ef0819cd4..cd4346609c55 100644
+>> --- a/drivers/tty/serial/8250/Kconfig
+>> +++ b/drivers/tty/serial/8250/Kconfig
+>> @@ -582,6 +582,16 @@ config SERIAL_8250_NI
+>>         To compile this driver as a module, choose M here: the module
+>>         will be called 8250_ni.
+>> +config SERIAL_8250_PRUSS
+>> +    tristate "TI PRU-ICSS UART support"
+>> +    depends on SERIAL_8250
+>> +    depends on PRU_REMOTEPROC && TI_PRUSS_INTC
+>> +    help
+>> +      This driver is to support the UART module in PRU-ICSS which is
+>> +      available in some TI platforms.
+>> +      Say 'Y' here if you wish to use PRU-ICSS UART.
+>> +      Otherwise, say 'N'.
+>> +
+>>   config SERIAL_OF_PLATFORM
+>>       tristate "Devicetree based probing for 8250 ports"
+>>       depends on SERIAL_8250 && OF
+>> diff --git a/drivers/tty/serial/8250/Makefile 
+>> b/drivers/tty/serial/8250/Makefile
+>> index b04eeda03b23..3132b4f40a34 100644
+>> --- a/drivers/tty/serial/8250/Makefile
+>> +++ b/drivers/tty/serial/8250/Makefile
+>> @@ -47,6 +47,7 @@ obj-$(CONFIG_SERIAL_8250_PARISC)    += 8250_parisc.o
+>>   obj-$(CONFIG_SERIAL_8250_PCI)        += 8250_pci.o
+>>   obj-$(CONFIG_SERIAL_8250_PCI1XXXX)    += 8250_pci1xxxx.o
+>>   obj-$(CONFIG_SERIAL_8250_PERICOM)    += 8250_pericom.o
+>> +obj-$(CONFIG_SERIAL_8250_PRUSS)        += 8250_pruss.o
+>>   obj-$(CONFIG_SERIAL_8250_PXA)        += 8250_pxa.o
+>>   obj-$(CONFIG_SERIAL_8250_RT288X)    += 8250_rt288x.o
+>>   obj-$(CONFIG_SERIAL_8250_CS)        += serial_cs.o
 
-Matthew Gerlach
-
->
-> > +       { .name = "osc1", .index = AGILEX5_OSC1, },
-> > +       { .name = "cb-intosc-hs-div2-clk", .index = AGILEX5_CB_INTOSC_HS_DIV2_CLK, },
-> > +       { .name = "f2s-free-clk", .index = AGILEX5_F2S_FREE_CLK, },
-> > +};
-> > +
