@@ -1,288 +1,184 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C239423E35F;
-	Thu,  8 May 2025 08:54:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785CF239E95;
+	Thu,  8 May 2025 08:55:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746694454; cv=none; b=jL4SQ2alMdYbzfJtxpVXJ4Eva89LqvNFOj2AarKPJ0xIDKxkz+XLIpvrsKqwd0K3zQyRd1X6djeNaY8FDmum5mTVCB1zJN4v+E6IlattfmmybcgAcZWsQ/GKkz3oqmOoi2jAZWrDEkpwBJCUOHqp//Yrc8C4vK8W/jXjtK3Jhj0=
+	t=1746694508; cv=none; b=nXCePiQRr+P7b/+lnW6B3IXzfx5zixrRfmwhLnjH3xXIoppLHWWk1bDhpuuL60ABhqOABi0pWqIY5PK5pt+FHDuJ+cwBwUmyj3Bk0wMpRkm49tyty9CnicTHAq8Qk+TQPS9tagrBSfroF3vEM2uc7RNcXuxm/1dFTGEdhfTYvjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746694454; c=relaxed/simple;
-	bh=aeZPyyvtHWmKYFfyG8fSOBi9lfDKNm0mWBz3v98X+YA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nMmSGuKhfxjIVg6CryYPgrj/GVxALNtG8/ErF9ZEjWUMy+PWv/Xb9c4iUbAaEZYrfUB9gmdG+R0iSrfowSk+SnTvq/rqxHGbNXhtDck15wL2uwhpRRlyvjKY+0rbsmh/t0WjMHFMDInKofC+Poc1E9BROQQB+cAZHxIsRg0qx5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exnMG6s6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746694508; c=relaxed/simple;
+	bh=UFEexb2wQ4VfbaBPjbBUtzh7EapVioSw3lWphbIeH08=;
+	h=From:Date:Message-ID:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lsbKC3eKAUM64sXgnnMPpAWvf/LM7sChQDPFt9RHDY8LLAqf6XFmi17xj3jlOlbv2+zZBBoOVrMv8Nh15iqzriLxXYCu5gNc+ynRTlPXqnihrEH+/64URYF+scsDQu1rXx8ziMLTVoK9aVauh4dtyRT6tyGNzyQSCYX8rW8wafk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n6R8bauI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exnMG6s6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5EB9CC4CEEB;
-	Thu,  8 May 2025 08:54:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n6R8bauI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D6ADC4CEE7;
+	Thu,  8 May 2025 08:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746694454;
-	bh=aeZPyyvtHWmKYFfyG8fSOBi9lfDKNm0mWBz3v98X+YA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=exnMG6s67MADw4z/6O6OIxZLxHzLJd3GTY0zO/Rv8FghMA5cBj6pjXmPk2NochDLh
-	 gSFPQN6a8J02CsTvjn8Wgmqd0n5D+bzbvjMgAxYykPxG5NGw7BIG2IrrHAYQSXh0Cg
-	 7MUEooF+sEYTaItGd/30uqweDc+FwYPgOuTUU9G//kgFigrYPG2GqMpYImBe6PVJDK
-	 sLCHrtFHJ28JLVqtFGyBriHtWgMZuv02bIh1fbQdvxIZY8wpb8svVqKBWyxSZzPTUq
-	 uEP5tEIo2tXRxvG/nZFxN5bXCmErsBuGwcH1f4scK21M4ZeGsYhKcZP2VD0zFe1BIY
-	 w3UALKydszhRw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 510CFC3ABC9;
-	Thu,  8 May 2025 08:54:14 +0000 (UTC)
-From: Chen Linxuan via B4 Relay <devnull+chenlinxuan.uniontech.com@kernel.org>
-Date: Thu, 08 May 2025 16:53:45 +0800
-Subject: [PATCH v2 2/3] fs: fuse: add backing_files control file
+	s=k20201202; t=1746694508;
+	bh=UFEexb2wQ4VfbaBPjbBUtzh7EapVioSw3lWphbIeH08=;
+	h=From:Date:To:Cc:Subject:In-Reply-To:References:From;
+	b=n6R8bauIp46ZLLCPVuJlQfBGsEY5sBWEdFp8l3zG4jt0xPxD7q7pPOFvzRGvDXrZs
+	 seVOiPtrklHsvTgKnlyBs1Bk/ZQJQoVa+1FS6huyxtjVTIaq3sJ0828NRyOhpHRtok
+	 4pTGj10m2fbJrYwoQw0xnMQyLIIaqeCtII8dvsqctOZtAg5BXWFkmj/hRyoosnGRKI
+	 ANDs8fsOUMhQbO2yC7fp49EkKJFn2uiEhJS1NTuqxewrwRv2qKNO+oA6jcr2Zc1ezn
+	 E2N8II9Tgi+ZPyndvtLFUnqzRX37K4cW8gDR3HdggM+jatxaDQ40iJzerTSs5xINgp
+	 GytsSqOJeRTeg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uCx21-00CwQo-UV;
+	Thu, 08 May 2025 09:55:06 +0100
+From: Marc Zyngier <maz@kernel.org>
+Date: Thu, 08 May 2025 09:55:05 +0100
+Message-ID: <8634dfh47q.wl-maz@kernel.org>
+>From: Marc Zyngier <maz@kernel.org>
+To: Per Larsen <perl@immunant.com>
+Cc: armellel@google.com,
+	arve@android.com,
+	catalin.marinas@arm.com,
+	kernel-team@android.com,
+	kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	qperret@google.com,
+	sebastianene@google.com,
+	sudeep.holla@arm.com,
+	will@kernel.org,
+	yuzenghui@huawei.com,
+	Per Larsen <perlarsen@google.com>
+Subject: Re: [PATCH 1/3] KVM: arm64: Restrict FF-A host version renegotiation
+In-Reply-To: <aBnNXyJn818ZEKOS@google.com>
+References: <CA+AY4XcaJa1_U3qXQUBj4wZJYc9hKmRX8FTNeDvV2auEnC_WrA@mail.gmail.com>
+	<86r017h00e.wl-maz@kernel.org>
+	<aBnNXyJn818ZEKOS@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250508-fusectl-backing-files-v2-2-62f564e76984@uniontech.com>
-References: <20250508-fusectl-backing-files-v2-0-62f564e76984@uniontech.com>
-In-Reply-To: <20250508-fusectl-backing-files-v2-0-62f564e76984@uniontech.com>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Chen Linxuan <chenlinxuan@uniontech.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6076;
- i=chenlinxuan@uniontech.com; h=from:subject:message-id;
- bh=id6oT8a7yC3qd46gYMaegcNojko0bpH3Ayxh7JPrSGg=;
- b=owEBbQKS/ZANAwAKAXYe5hQ5ma6LAcsmYgBoHHEt1CnQi/e7pwJqkt2cfNBt81LpsAuTZBz42
- AhCXSVLg96JAjMEAAEKAB0WIQTO1VElAk6xdvy0ZVp2HuYUOZmuiwUCaBxxLQAKCRB2HuYUOZmu
- izp6D/oDY1tR3wOwTQg7lSqwVEOAwbsXdkPYA0b4xhU+k4ApVRChlwM/Ud1SnNgsxRGpI6sFu1w
- abACmc9gNArdAEt/1AcEEhWKdRMLQ2xS06V+++3vr8OSXzuUtLt0eCju5KxpfiEla56OmFVwuhq
- 1zKGzUxtpjvO31e2iLxG3zoyEyZKvBj4Od9sYP3gC+tgTTyCeeWJlvDn7SqnWnReL4SzT2m5txC
- VF07yYeefeb+ScTnMUrjSCFxyZYcxQJ+CIqRHGlZWizksDJFw6YxSKloXSYZfXkMJyKfGu7S6OL
- OyR8U9aUjtzme1RpkHd/q/Jnxyrkbdfpl5qhiX8J6uL7GXbu5oenkJ1yqIW/QePWz8Lt4CUvsc2
- DSQEmjdLt9xSArjux2LMmCGCFXbhxPETDU7ivsTbPQ+NVwQbAB1X/RLmiS1WAfiZGjSt/wc1NG4
- axFuGMpM0rwFtlYNgKu0WsJiOqexwwLZ1+zsM/MhxygLA1w78oH9GnXVtp13LSPxZ6YUZAFfrEy
- MapRw9SX6OmS+m3tJsdM8FM5RAK0IiiMdKtYDJefeEfr2EzFYgSAASiqd7g8FKR/LZ9Mfo4qldT
- ZqBVMH1E+9U2Jt3SaWD5tnlOZWVtno5Rl5vXAbMxM5wgRUjOVlnM7sufVI94ChQ6msnE/iD5LAq
- UaVvZNNEFOb8hIA==
-X-Developer-Key: i=chenlinxuan@uniontech.com; a=openpgp;
- fpr=D818ACDD385CAE92D4BAC01A6269794D24791D21
-X-Endpoint-Received: by B4 Relay for chenlinxuan@uniontech.com/default with
- auth_id=380
-X-Original-From: Chen Linxuan <chenlinxuan@uniontech.com>
-Reply-To: chenlinxuan@uniontech.com
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: perl@immunant.com, armellel@google.com, arve@android.com, catalin.marinas@arm.com, kernel-team@android.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, qperret@google.com, sebastianene@google.com, sudeep.holla@arm.com, will@kernel.org, yuzenghui@huawei.com, perlarsen@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-From: Chen Linxuan <chenlinxuan@uniontech.com>
+On Tue, 06 May 2025 10:29:41 +0100,
+Per Larsen <perl@immunant.com> wrote:
+> 
+> From: Per Larsen <perlarsen@google.com>
+> 
+> On Fri, May 02, 2025 at 09:47:45AM +0100, Marc Zyngier wrote:
+> > On Fri, 02 May 2025 04:52:39 +0100,
+> > Per Larsen <perl@immunant.com> wrote:
+> > > 
+> > > FF-A implementations with the same major version must interoperate with
+> > > earlier minor versions per DEN0077A 1.2 REL0 13.2.1 but FF-A version 1.1
+> > > broke the ABI on several structures and 1.2 relies on SMCCC 1.2 is not
+> > > backwards compatible with SMCCC 1.2 (see DEN0028 1.6 G BET0 Appendix F).
+> > > 
+> > > If we return the negotiated hypervisor version when the host requests a
+> > > lesser minor version, the host will rely on the FF-A interoperability
+> > > rules. Since the hypervisor does not currently have the necessary
+> > > compatibility paths (e.g. to handle breaking changes to the SMC calling
+> > > convention), return NOT_SUPPORTED.
+> > > 
+> > > Signed-off-by: Per Larsen <perlarsen@google.com>
+> > > Signed-off-by: Per Larsen <perl@immunant.com>
+> > > ---
+> > >  arch/arm64/kvm/hyp/nvhe/ffa.c | 19 ++++++++++++++++++-
+> > >  1 file changed, 18 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> > > index 3369dd0c4009..10e88207b78e 100644
+> > > --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
+> > > +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> > > @@ -712,7 +712,24 @@ static void do_ffa_version(struct arm_smccc_res *res,
+> > > 
+> > >   hyp_spin_lock(&version_lock);
+> > >   if (has_version_negotiated) {
+> > > - res->a0 = hyp_ffa_version;
+> > > + /*
+> > > + * FF-A implementations with the same major version must
+> > > + * interoperate with earlier minor versions per DEN0077A 1.2
+> > > + * REL0 13.2.1 but FF-A version 1.1 broke the ABI on several
+> > > + * structures and 1.2 relies on SMCCC 1.2 is not backwards
+> > > + * compatible with SMCCC 1.2 (see DEN0028 1.6 G BET0 Appendix F).
+> > 
+> > I can't parse this sentence. Missing words?
+> > 
+> 
+> Yes, I will fix this in v2.
+> 
+> > > + *
+> > > + * If we return the negotiated hypervisor version when the host
+> > > + * requests a lesser minor version, the host will rely on the
+> > > + * aforementioned FF-A interoperability rules. Since the
+> > > + * hypervisor does not currently have the necessary compatibility
+> > > + * paths (e.g. to paper over the above-mentioned calling
+> > > + * convention changes), return NOT_SUPPORTED.
+> > > + */
+> > > + if (FFA_MINOR_VERSION(ffa_req_version) < FFA_MINOR_VERSION(hyp_ffa_version))
+> > > + res->a0 = FFA_RET_NOT_SUPPORTED;
+> > > + else
+> > > + res->a0 = hyp_ffa_version;
+> > >   goto unlock;
+> > >   }
+> > > 
+> > 
+> > Something has gone seriously wrong with your email, and the patches
+> > are badly mangled and unusable. They are also sent as individual
+> > patches and not as a thread, which is a sign that you didn't send them
+> > using git. Please fix this for your next posting.
+> > 
+> 
+> Yes, my apologies. I will use git send-email to post v2.
+> 
+> > More to the meat of the patches: why should the hypervisor paper over
+> > anything if the spec is broken? Why can't the host just as well decide
+> > for itself what to do?
+> > 
+> 
+> Asssuming we drop this patch from the series and apply the rest, the
+> hypervisor and host can negotiate FF-A 1.2. If the host then calls
+> FFA_VERSION a second time to request FF-A 1.1, the hypervisor would
+> return version 1.2 (without this patch).
 
-Add a new FUSE control file "/sys/fs/fuse/connections/*/backing_files"
-that exposes the paths of all backing files currently being used in
-FUSE mount points. This is particularly valuable for tracking and
-debugging files used in FUSE passthrough mode.
+Why would it do that? Once a particular version has been negotiated, I
+expect to be immutable.
 
-This approach is similar to how fixed files in io_uring expose their
-status through fdinfo, providing administrators with visibility into
-backing file usage. By making backing files visible through the FUSE
-control filesystem, administrators can monitor which files are being
-used for passthrough operations and can force-close them if needed by
-aborting the connection.
+> Per the spec, that means the
+> host is can use the compatibility rules (DEN0077A Sec 13.2.1) to go
+> ahead and use FF-A 1.1 (every function in 1.A must work in a compatible
+> way in 1.B if B>A).
 
-This exposure of backing files information is an important step towards
-potentially relaxing CAP_SYS_ADMIN requirements for certain passthrough
-operations in the future, allowing for better security analysis of
-passthrough usage patterns.
+I don't interpret this as "you can switch between versions" after the
+initial negotiation.
 
-The control file is implemented using the seq_file interface for
-efficient handling of potentially large numbers of backing files.
-Access permissions are set to read-only (0400) as this is an
-informational interface.
+> However, the hypervisor negotiated version stays at 1.2 so it will use
+> SMCCC 1.2 for 64-bit interfaces. The host has no way of knowing this and
+> might as well assume that the hypervisor was implemented to fall back to
+> SMCCC 1.1 in this particular case. 
+> 
+> I don't even know that the host will ever try to renegotiate as it is
+> explicitly not allowed by the FF-A spec. There is no way for the
+> hypervisor to say, "stay at the negotiated version" so we must return
+> NOT_SUPPORTED. 
 
-FUSE_CTL_NUM_DENTRIES has been increased from 5 to 6 to accommodate the
-additional control file.
+If it is not allowed, why should we do *anything*? And if the host is
+broken, let's fix the host rather than adding pointless validation
+code to EL2.
 
-Some related discussions can be found at links below.
+Thanks,
 
-Link: https://lore.kernel.org/all/4b64a41c-6167-4c02-8bae-3021270ca519@fastmail.fm/T/#mc73e04df56b8830b1d7b06b5d9f22e594fba423e
-Link: https://lore.kernel.org/linux-fsdevel/CAOQ4uxhAY1m7ubJ3p-A3rSufw_53WuDRMT1Zqe_OC0bP_Fb3Zw@mail.gmail.com/
-Cc: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
----
- fs/fuse/control.c | 136 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
- fs/fuse/fuse_i.h  |   2 +-
- 2 files changed, 136 insertions(+), 2 deletions(-)
-
-diff --git a/fs/fuse/control.c b/fs/fuse/control.c
-index f0874403b1f7c91571f38e4ae9f8cebe259f7dd1..d1ac934d7b8949577545ffd20535c68a9c4ef90f 100644
---- a/fs/fuse/control.c
-+++ b/fs/fuse/control.c
-@@ -11,6 +11,7 @@
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/fs_context.h>
-+#include <linux/seq_file.h>
- 
- #define FUSE_CTL_SUPER_MAGIC 0x65735543
- 
-@@ -180,6 +181,136 @@ static ssize_t fuse_conn_congestion_threshold_write(struct file *file,
- 	return ret;
- }
- 
-+struct fuse_backing_files_seq_state {
-+	struct fuse_conn *fc;
-+	int backing_id;
-+};
-+
-+static void *fuse_backing_files_seq_start(struct seq_file *seq, loff_t *pos)
-+{
-+	struct fuse_backing *fb;
-+	struct fuse_backing_files_seq_state *state;
-+	struct fuse_conn *fc;
-+	int backing_id;
-+	void *ret;
-+
-+	if (*pos + 1 > INT_MAX)
-+		return ERR_PTR(-EINVAL);
-+
-+	backing_id = *pos + 1;
-+
-+	fc = fuse_ctl_file_conn_get(seq->file);
-+	if (!fc)
-+		return ERR_PTR(-ENOTCONN);
-+
-+	rcu_read_lock();
-+
-+	fb = idr_get_next(&fc->backing_files_map, &backing_id);
-+
-+	rcu_read_unlock();
-+
-+	if (!fb) {
-+		ret = NULL;
-+		goto err;
-+	}
-+
-+	state = kmalloc(sizeof(*state), GFP_KERNEL);
-+	if (!state) {
-+		ret = ERR_PTR(-ENOMEM);
-+		goto err;
-+	}
-+
-+	state->fc = fc;
-+	state->backing_id = backing_id;
-+
-+	ret = state;
-+	return ret;
-+
-+err:
-+	fuse_conn_put(fc);
-+	return ret;
-+}
-+
-+static void *fuse_backing_files_seq_next(struct seq_file *seq, void *v,
-+					 loff_t *pos)
-+{
-+	struct fuse_backing_files_seq_state *state = v;
-+	struct fuse_backing *fb;
-+
-+	(*pos)++;
-+	state->backing_id++;
-+
-+	rcu_read_lock();
-+
-+	fb = idr_get_next(&state->fc->backing_files_map, &state->backing_id);
-+
-+	rcu_read_unlock();
-+
-+	if (!fb)
-+		return NULL;
-+
-+
-+	return state;
-+}
-+
-+static int fuse_backing_files_seq_show(struct seq_file *seq, void *v)
-+{
-+	struct fuse_backing_files_seq_state *state = v;
-+	struct fuse_conn *fc = state->fc;
-+	struct fuse_backing *fb;
-+
-+	rcu_read_lock();
-+
-+	fb = idr_find(&fc->backing_files_map, state->backing_id);
-+	fb = fuse_backing_get(fb);
-+	if (!fb)
-+		goto out;
-+
-+	if (!fb->file)
-+		goto out_put_fb;
-+
-+	seq_printf(seq, "%5u: ", state->backing_id);
-+	seq_file_path(seq, fb->file, " \t\n\\");
-+	seq_puts(seq, "\n");
-+
-+out_put_fb:
-+	fuse_backing_put(fb);
-+out:
-+	rcu_read_unlock();
-+	return 0;
-+}
-+
-+static void fuse_backing_files_seq_stop(struct seq_file *seq, void *v)
-+{
-+	struct fuse_backing_files_seq_state *state;
-+
-+	if (!v)
-+		return;
-+
-+	state = v;
-+	fuse_conn_put(state->fc);
-+	kvfree(state);
-+}
-+
-+static const struct seq_operations fuse_backing_files_seq_ops = {
-+	.start = fuse_backing_files_seq_start,
-+	.next = fuse_backing_files_seq_next,
-+	.stop = fuse_backing_files_seq_stop,
-+	.show = fuse_backing_files_seq_show,
-+};
-+
-+static int fuse_backing_files_seq_open(struct inode *inode, struct file *file)
-+{
-+	return seq_open(file, &fuse_backing_files_seq_ops);
-+}
-+
-+static const struct file_operations fuse_conn_backing_files_ops = {
-+	.open = fuse_backing_files_seq_open,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = seq_release,
-+};
-+
- static const struct file_operations fuse_ctl_abort_ops = {
- 	.open = nonseekable_open,
- 	.write = fuse_conn_abort_write,
-@@ -270,7 +401,10 @@ int fuse_ctl_add_conn(struct fuse_conn *fc)
- 				 1, NULL, &fuse_conn_max_background_ops) ||
- 	    !fuse_ctl_add_dentry(parent, fc, "congestion_threshold",
- 				 S_IFREG | 0600, 1, NULL,
--				 &fuse_conn_congestion_threshold_ops))
-+				 &fuse_conn_congestion_threshold_ops) ||
-+	    !fuse_ctl_add_dentry(parent, fc, "backing_files", S_IFREG | 0400, 1,
-+				 NULL,
-+				 &fuse_conn_backing_files_ops))
- 		goto err;
- 
- 	return 0;
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index d56d4fd956db99ecd93052a9655428664882cb72..2830b05bb0928e9b30f9905d70fc3ec1ef11c2a5 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -46,7 +46,7 @@
- #define FUSE_NAME_MAX (PATH_MAX - 1)
- 
- /** Number of dentries for each connection in the control filesystem */
--#define FUSE_CTL_NUM_DENTRIES 5
-+#define FUSE_CTL_NUM_DENTRIES 6
- 
- /* Frequency (in seconds) of request timeout checks, if opted into */
- #define FUSE_TIMEOUT_TIMER_FREQ 15
+	M.
 
 -- 
-2.43.0
-
-
+Without deviation from the norm, progress is not possible.
