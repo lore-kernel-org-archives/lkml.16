@@ -1,230 +1,211 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E6D17A2E2;
-	Thu,  8 May 2025 17:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0897221294;
+	Thu,  8 May 2025 17:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746723681; cv=none; b=mY7LCqpPfZN+85Q8H4oI4RFh5FVvRbIEXaLyIn4OIFpp6aFBSVzq3z8wJqBm16vADj1eKH/sHBwJGC15HdDIA/DxKvy/Tgi6SiL9tMom3yJ45NuyQh61OVNBbNNQzak3J39YxVoxT5rs0O8sq5mSa0cUG75j1FFgcYjQzbDr5Zk=
+	t=1746723805; cv=none; b=NSC4GcKmdcxUr7QonWq9Ge6BQbm/w6tkh7fLwkultZEmE5piNaGXhDqqMdEd9wkQe+j2FeBo40bN9N0UwsGfMiNCx27suwOzqAPYTW9RWPMXAxtTwkNVTenXcNb2fok/KskdsDCoIe8dhtHlDkoB/+kGLWLJP8sFU7Eydqe6BOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746723681; c=relaxed/simple;
-	bh=5g5sNjmEbICuTiKl8J/PU1T+NoezNWvdYbd2+Uq4lsE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FznavX5VdAw4peDeC8XhhrtoE9NLzE3Fm+EAWA6KmaQM7LwtCZvdWR178LN/kjYs6u5P+3IvcOKeuIPC0KNN2/pggrAk8Kl+9Pe8sirllUSNEzwGZfk+ixJqoM5mlDoPrrpBpxZJFluVDV14a7nM6E6GFEPD0XL8A9CVw/uvCfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=k6v9v6wV; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746723805; c=relaxed/simple;
+	bh=gZCDkiJ4Rg95tBrcRO8NL7Eap/QE9Mn0zTYRwRZ5lAc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=USiXZRHykBMIVfayg9eA7IEIIfbNe4s4XEeak9CFu6g/uu5wLTcoZjVrfO0R8r0W4tfPY6VR3OOQv7752YUaxTqQi2R5JAhEo4J8cyo/CgrofjWLoHBcvtFGhEjjGJPI/8NHIWbqCr01j5Pshm3UqcgfKASZzSjfSB6tkQeO7m0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=EbNx2WUd; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="k6v9v6wV"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548DAEmR002489;
-	Thu, 8 May 2025 17:01:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	MX55mfn5ivAMl1yMEqz1iGMbuw3wI94Ny0zOyMZOhIo=; b=k6v9v6wV4odXR9WN
-	mPDlasT2QSG50I2NRlN4yEV4XJCReOqMf33mzRZQLmCkpzmtpU9gP2q3Sf8TBAU6
-	mIPmKZtWmguJaftk3hGyBgsJ/slNm92lL2gS+2e5fLIn+VuIzWia6uo9rqlU4/TR
-	0Fj6XnDpe/UKro/wUbbSAHZqx9yTfRoq25kfqf7cc2ctj8+9dvIIzYh/mCdWZfCi
-	e8jnOOudIOax0pFnnOs5htlboneKi0vKJn02KOcVlm1QzEzKPloWlDr5ebOmaAeR
-	1jUCEtimLjXXENciLyhIGXLNIiWRfanQeZ9iwZEEGtEG/ylVxIGElmYRHCoqJf9J
-	bAv8Jg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp5a0rw-1
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="EbNx2WUd"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548FSX9V000696;
+	Thu, 8 May 2025 13:03:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=YeJkxcgCvWKrgpLFRX7pF+F2eqK
+	1Bsb7YEXmv/cAX0E=; b=EbNx2WUdleF+aoqLuR2i3YtjceMs/4q7k7O09PHRUfn
+	hJ8+6wdYhsykYKeHT+NEAPgQWEkFFarPx2cX2CCxZsPF16jsvOkOhg3RhQsB0vYb
+	845L/557vc7eQKIJTibeZSn2QRKutzZF4EBhoWJgeWp4TON9Aa1RyOP6EE5YMJNk
+	ixjZgZiHB1kUKucTA6opBfH4J7pQsI5dC2O93x3SLZ1Xf/GOzZS4vo5oMipkuPAm
+	17EiWc1WX2qfxQVZYRBrZQpX0N9aj673O57Vo1utljJYyv9EDf1Zvo9q7incd2oc
+	8PFfYKOCSR3p045YxyHRX02KK67uQ0m5TyURj0gRjfA==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 46gy9q8cye-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 17:01:11 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 548H1BxE013320
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 8 May 2025 17:01:11 GMT
-Received: from [10.216.33.253] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
- 10:01:06 -0700
-Message-ID: <c8097899-42f6-4fa6-bee1-6af9208283d7@quicinc.com>
-Date: Thu, 8 May 2025 22:31:02 +0530
+	Thu, 08 May 2025 13:03:10 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 548H39t9052577
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 8 May 2025 13:03:09 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 8 May 2025 13:03:09 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 8 May 2025 13:03:09 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Thu, 8 May 2025 13:03:09 -0400
+Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 548H2qSF015857;
+	Thu, 8 May 2025 13:02:55 -0400
+From: Jonathan Santos <Jonathan.Santos@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+CC: Jonathan Santos <Jonathan.Santos@analog.com>, <andy@kernel.org>,
+        <nuno.sa@analog.com>, <Michael.Hennerich@analog.com>,
+        <marcelo.schmitt@analog.com>, <jic23@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <marcelo.schmitt1@gmail.com>, <linus.walleij@linaro.org>,
+        <brgl@bgdev.pl>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <jonath4nns@gmail.com>, <dlechner@baylibre.com>
+Subject: [PATCH v7 00/12] iio: adc: ad7768-1: Add features, improvements, and fixes
+Date: Thu, 8 May 2025 14:02:50 -0300
+Message-ID: <cover.1746662899.git.Jonathan.Santos@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/7] arm64: dts: qcom: qcm6490-idp: Add WSA8830
- speakers and WCD9370 headset codec
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@oss.qualcomm.com>, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-References: <20250429092430.21477-1-quic_pkumpatl@quicinc.com>
- <20250429092430.21477-7-quic_pkumpatl@quicinc.com>
- <7322bb2c-5778-48cd-8661-91308ea8cfc8@oss.qualcomm.com>
-Content-Language: en-US
-From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-In-Reply-To: <7322bb2c-5778-48cd-8661-91308ea8cfc8@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=XL0wSRhE c=1 sm=1 tr=0 ts=681ce358 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=P-IC7800AAAA:8
- a=COk6AnOGAAAA:8 a=iqUyA3GN4URQhEV_7bsA:9 a=QEXdDO2ut3YA:10
- a=d3PnA9EDa4IxuAV0gXij:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: kzJXbIsxnCYeLcGUX3cKM0n_Nn9pnWBq
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE0OSBTYWx0ZWRfX7JIL0ILTdcQj
- h7g9qDCI7+amV/C0RC/3iB8ywINwZGH9uc/QUpnKme/Cfq+aHzoqCauqaEFA+cz9Q2kLezRgra1
- 2mwAvYG6xN3EWelwj+qyjXYTHk1BzA5e/k4OWMWOBu7HqOV1OxslKq/Hc5+1p9PAU/nchoKJucm
- A3+QSh6ZNYZUqtxPkmHYBC09DLWgyVxSw2L0KEYSTHwZBznAq42WbGk2lrDgU73BcWm9wV6Vdy3
- aVX5y3XOZg2aveqZ/lXPx1BX41jXFcks7Wc+WxrLC66OEYLzxD1BlIb2UxiGhD43MtKVBotoYzo
- t7eSKyGcwmfQSbHKb5z9LBnvVmjZyWxwTrZLfk7A/nvaKX8o540SuNl7dpC76aGm6Awe9ot9iyp
- W+Sr+4kSEDpyHC6ouvH8GAMIUM26q1Clr94auvXhNsrTHYg7oBw74mt5fQzR8fCaMjjKe5rY
-X-Proofpoint-ORIG-GUID: kzJXbIsxnCYeLcGUX3cKM0n_Nn9pnWBq
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: ulU4eOWoH9C5wOf0IJWx49L8JfibmLvd
+X-Authority-Analysis: v=2.4 cv=f/ZIBPyM c=1 sm=1 tr=0 ts=681ce3ce cx=c_pps
+ a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
+ a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=wUxFP8jSl_fENa0tmKEA:9
+X-Proofpoint-ORIG-GUID: ulU4eOWoH9C5wOf0IJWx49L8JfibmLvd
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE0OSBTYWx0ZWRfXyag8l0tyIo+p
+ yEOjBkQII7fqsZC0FcPMDqd7qUZjYSfDpiMDXvqYe5TWTM7eiVlfEaFLmBRuBtPLWvw4yVi/zkr
+ QIAfWMZXUD2D3RZxkoKmDnUx1+wxfgi+MlJ1dtuHJGD1hyuCh1YmSLI4KqvgsAT5mJuG4Yk8+V7
+ okeVZofxSdBo4Kk6X7SDS44Hmpo62mDmmitq4WYPdkeAAbTFmcNMcjUcT93al2DGypBmJP2Qeg1
+ 8bOlwrQjwxOOZ+ufWjV0M1RxIcd3ouRUCTmed0rvfjX+RzdOMwi3O9Cxg4MRKT2N81UzgnFSowx
+ u+jp4dkqfsNY4dkKpzp69uk59Ko0/1GByQgTM8XJ/WzGUd8m0/pEWv63KY+z4avdwi96rlKbkKu
+ B0JIEQamovwEXCEwbcBue4De/MKl1/+uvmWKjktExy/m1zfjqCjXGnux/b1it2O+Z2xLBuz5
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-08_05,2025-05-08_02,2025-02-21_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 adultscore=0 priorityscore=1501 bulkscore=0
- spamscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ clxscore=1015 malwarescore=0 adultscore=0 mlxscore=0 impostorscore=0
+ suspectscore=0 priorityscore=1501 phishscore=0 bulkscore=0 lowpriorityscore=0
+ spamscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2505080149
 
+This patch series introduces some new features, improvements,
+and fixes for the AD7768-1 ADC driver. 
+
+The goal is to support all key functionalities listed in the device
+datasheet, including filter mode selection, common mode voltage output
+configuration and GPIO support. Additionally, this includes fixes 
+for SPI communication and for IIO interface, and also code improvements
+to enhance maintainability and readability.
+
+---
+Changes in v7:
+* Added a new patch to reorganize driver headers.
+* Added the new files to MAINTAINERS.
+* Added dependencies to constrain the use of trigger-sources and
+  adi,sync-in-gpios properties at the same time.
+* Self triggering is enabled only when the trigger-sources property is
+  not defined. Added TODO to support other trigger sources when the subsystem
+  is available.
+* Refactor code to avoid forward declarations.
+* Mentioned that sampling frequency changes is not allowed in
+  buffered mode.
+* Addressed review comments, see individual pacthes.
+* Link to v6: https://lore.kernel.org/linux-iio/cover.1745605382.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v6:
+* Changed description and addressed other nits in the gpio-trigger patch.
+* Rewrote the #trigger-sources-cells description and removed mentions 
+  to offload engine.
+* Added adi,ad7768-1.h header with macros for the trigger source cells.
+* removed of_match_ptr() from regulator_desc.
+* Replaced deprecated .set callback with .set_rv in the gpio controller
+  patch.
+* Use `trigger-sources` as an alternative to `adi,sync-in-gpios`
+  (now optional), instead of replacing it.
+* Check trigger source by the compatible string (and the dev node for the
+  self triggering).
+* Addressed review comments, see individual pacthes.
+* Link to v5: https://lore.kernel.org/linux-iio/cover.1744325346.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v5:
+* Added gpio-trigger binding patch.
+* Include START pin and DRDY in the trigger-sources description.
+* increased trigger-source-cells to 1: this cell will define the trigger
+  source type.
+* Fixed the holes in the regmap ranges.
+* replace old iio_device_claim_direct_mode() for the new 
+  iio_device_claim/release_direct() functions.
+* Changed some commit messages.
+* Link to v4: https://lore.kernel.org/linux-iio/cover.1741268122.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v4:
+* Added missing `select REGMAP_SPI` and `select REGULATOR` to the device's Kconfig.
+* VCM output regulator property renamed.
+* Added direct mode conditional locks to regulator controller callbacks.
+* Renamed regulator controller.
+* Created helper function to precalculate the sampling frequency table and avoid
+  race conditions.
+* Link to v3: https://lore.kernel.org/linux-iio/cover.1739368121.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v3:
+* Fixed irregular or missing SoBs.
+* Moved MOSI idle state patch to the start of the patch, as the other fix.
+* fixed dt-binding errors.
+* Trigger-sources is handled in a different way, as an alternative to sync-in-gpio.
+  (this way we avoid breaking old applications).
+* VCM output is controlled by the regulator framework.
+* Added a second regmap for 24-bit register values.
+* Add new preparatory patch replacing the manual attribute declarations for
+  the read_avail from struct iio_info.
+* included sinc3+rej60 filter type.
+* Addressed review comments, see individual pacthes.
+* Link to v2: https://lore.kernel.org/linux-iio/cover.1737985435.git.Jonathan.Santos@analog.com/T/#u
+
+Changes in v2:
+* Removed synchronization over SPI property and replaced it for trigger-sources.
+* Added GPIO controller documentation.
+* VCM output control changed from an IIO attribute to a devicetree property (static value).
+* Converted driver to use regmap and dropped spi_read_reg and spi_write_reg pacthes.
+* replaced decimation_rate attribute for oversampling_ratio and dropped device specific documentation patch.
+* Added low pass -3dB cutoff attribute.
+* Addressed review comments, see individual pacthes.
+* Link to v1: https://lore.kernel.org/linux-iio/cover.1736201898.git.Jonathan.Santos@analog.com/T/#t
+
+Jonathan Santos (11):
+  iio: adc: ad7768-1: reorganize driver headers
+  dt-bindings: trigger-source: add generic GPIO trigger source
+  dt-bindings: iio: adc: ad7768-1: add trigger-sources property
+  dt-bindings: iio: adc: ad7768-1: Document GPIO controller
+  dt-bindings: iio: adc: ad7768-1: document regulator provider property
+  iio: adc: ad7768-1: add regulator to control VCM output
+  iio: adc: ad7768-1: add multiple scan types to support 16-bits mode
+  iio: adc: ad7768-1: add support for Synchronization over SPI
+  iio: adc: ad7768-1: replace manual attribute declaration
+  iio: adc: ad7768-1: add filter type and oversampling ratio attributes
+  iio: adc: ad7768-1: add low pass -3dB cutoff attribute
+
+Sergiu Cuciurean (1):
+  iio: adc: ad7768-1: Add GPIO controller support
+
+ .../bindings/iio/adc/adi,ad7768-1.yaml        |  68 +-
+ .../bindings/trigger-source/gpio-trigger.yaml |  40 +
+ MAINTAINERS                                   |   4 +-
+ drivers/iio/adc/Kconfig                       |   1 +
+ drivers/iio/adc/ad7768-1.c                    | 905 +++++++++++++++---
+ include/dt-bindings/iio/adc/adi,ad7768-1.h    |  10 +
+ 6 files changed, 918 insertions(+), 110 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
+ create mode 100644 include/dt-bindings/iio/adc/adi,ad7768-1.h
 
 
-On 4/29/2025 4:31 PM, Konrad Dybcio wrote:
-> On 4/29/25 11:24 AM, Prasad Kumpatla wrote:
->> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
->>
->> Add nodes for WSA8830 speakers and WCD9370 headset codec
->> on qcm6490-idp board.
->>
->> Enable lpass macros along with audio support pin controls.
->>
->> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
->> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 162 +++++++++++++++++++++++
->>   1 file changed, 162 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
->> index 7a155ef6492e..1a59080cbfaf 100644
->> --- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
->> +++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
->> @@ -18,6 +18,7 @@
->>   #include "pm7325.dtsi"
->>   #include "pm8350c.dtsi"
->>   #include "pmk8350.dtsi"
->> +#include "qcs6490-audioreach.dtsi"
->>   
->>   /delete-node/ &ipa_fw_mem;
->>   /delete-node/ &rmtfs_mem;
->> @@ -169,6 +170,30 @@
->>   		regulator-min-microvolt = <3700000>;
->>   		regulator-max-microvolt = <3700000>;
->>   	};
->> +
->> +	wcd9370: audio-codec-0 {
->> +		compatible = "qcom,wcd9370-codec";
->> +
->> +		pinctrl-0 = <&wcd_reset_n>;
->> +		pinctrl-1 = <&wcd_reset_n_sleep>;
->> +		pinctrl-names = "default", "sleep";
-> 
-> Does audio work for you? For inexplicable reasons, it didn't for me
-> on rb2 when the sleep state was defined
-> 
-For Qcm6490-IDP board Audio is working fine, Not sure about rb2, Could 
-you please provide more details about rb2 ?>> +
->> +		reset-gpios = <&tlmm 83 GPIO_ACTIVE_HIGH>;
->> +
->> +		vdd-buck-supply = <&vreg_l17b_1p7>;
->> +		vdd-rxtx-supply = <&vreg_l18b_1p8>;
->> +		vdd-px-supply = <&vreg_l18b_1p8>;
->> +		vdd-mic-bias-supply = <&vreg_bob_3p296>;
->> +
->> +		qcom,micbias1-microvolt = <1800000>;
->> +		qcom,micbias2-microvolt = <1800000>;
->> +		qcom,micbias3-microvolt = <1800000>;
->> +
->> +		qcom,rx-device = <&wcd937x_rx>;
->> +		qcom,tx-device = <&wcd937x_tx>;
->> +
->> +		#sound-dai-cells = <1>;
->> +	};
->>   };
->>   
->>   &apps_rsc {
->> @@ -536,6 +561,76 @@
->>   	firmware-name = "qcom/qcm6490/a660_zap.mbn";
->>   };
->>   
->> +&lpass_dmic01_clk {
->> +	drive-strength = <8>;
->> +	bias-disable;
->> +};
->> +
->> +&lpass_dmic01_data {
->> +	bias-pull-down;
-> 
-> As a testament to these definitions belonging in the soc dtsi, you
-> added them in the file you included already.
-> 
-> [...]
-Ack, Will move to soc dtsi file.>
->>   &tlmm {
->>   	gpio-reserved-ranges = <32 2>, /* ADSP */
->>   			       <48 4>; /* NFC */
->> @@ -725,6 +868,25 @@
->>   		function = "gpio";
->>   		bias-pull-up;
->>   	};
->> +
->> +	sw_ctrl: sw-ctrl-state {
->> +		pins = "gpio86";
->> +		function = "gpio";
->> +		bias-pull-down;
->> +	};
-> 
-> Again, unused
-Ack>
->> +
->> +	wcd_reset_n: wcd-reset-n-state {
->> +		pins = "gpio83";
->> +		function = "gpio";
->> +		drive-strength = <8>;
-> 
-> Since the definition is otherwise identical to the sleep state,
-> you should define the (other) bias type that should be set when
-> active.
-> 
-Taken the reference from sc7280, which is working fine.
-Link for reference : 
-https://elixir.bootlin.com/linux/v6.15-rc5/source/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi#L841
-
-Will cross check and modify if required.
-
-Thanks,
-Prasad> Konrad
->   > +	};
->> +
->> +	wcd_reset_n_sleep: wcd-reset-n-sleep-state {
->> +		pins = "gpio83";
->> +		function = "gpio";
->> +		drive-strength = <8>;
->> +		bias-disable;
->> +	};
->>   };
->>   
->>   &uart5 {
+base-commit: 9415c8b5b9b7ba927d98f80022a2890e8639e9e4
+prerequisite-patch-id: fbb33747cd0293bacd5b6d801d6cfc087449a28e
+-- 
+2.34.1
 
