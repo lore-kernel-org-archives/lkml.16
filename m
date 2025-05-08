@@ -1,33 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C971DE3C0;
-	Thu,  8 May 2025 06:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19DF4AEE0;
+	Thu,  8 May 2025 06:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746685621; cv=none; b=IAoRr4x3a5B0nWIqMySfoTGVb2kh5NKeezTx+NKIdaR7HvTYe7kZRb56VSlAodYviocWzo9ipSd35NuwJLQJV7KLYF9Xf0KimcRZ4nidGq3AginUGcPT1mMWfbKOR9Iv2s24z1eyrgFP0MT68W3iL3ZNhj2zaH/gqaOsJexWnaw=
+	t=1746685767; cv=none; b=jVSAeN3/grsJTkUVjaLNAYXQSD22Ia94IS3EyWOOM7P+/Wr+QgH8Jr2Yft3e+I5ilNNJmk0h0FQRQ/JQpS2BDG4B46SpsxqKhDBSct4WfoY4ZzCxZZ50Sq6Xy42Nimq343BN8g+LegT6ZGYRqrB87a+jkGL6N1eqqCqwxfLOk7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746685621; c=relaxed/simple;
-	bh=9j6WtAQ6uxKBDo5BIDuWyFtPZ0W6bM3nXpFKnwGq2uA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PaYEsprnsUskyt3pqkUVZWbJ+JM3hwSsI1+QfC5fnWeqJgyMNwkGBvvi2i6mwJx3FmQrJ4/HHq0TI5aHxHByb+BwI1QhCa0IFD4ZXTU2kYPkZ1T747n7yTL1Qis3QcB5KK4hQuSfGHIKrRB+mDUSrkHLXGABeOooP7kptkEh0nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2N6cyUB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746685767; c=relaxed/simple;
+	bh=EG1jmU9WpDgOgZB7WH7UYDAnD7QTZXwsYx2m8qU4xP8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dIk8MsilwIOPSqDh+Y6wntttKqJEATpoloGnTViv81Ul+QYicd05Jzb2A/cJpXc4PMQFSGWzbfywV/7n82Oab9x2CXhCsxBMpHZ1qESsmGEOsnwBuinNB77rQ5hDLRR6B5RoUsMHBV9DYSQqlgvb73+alUzjYeTCxeubV8+9mXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bnu5crRx; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2N6cyUB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 721D7C4CEEB;
-	Thu,  8 May 2025 06:26:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746685620;
-	bh=9j6WtAQ6uxKBDo5BIDuWyFtPZ0W6bM3nXpFKnwGq2uA=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=N2N6cyUB3A6IkBJQplK8Yy7FLMIeqtCTEZbyapl7uw2mztA9Qa8i0/JmFg/n31/Yx
-	 SsPZX5c4Aw9h6gQaCJCPF0w9JypeD28R21/R3yiBOgELgXw6K4vEKDADeEEHzcYNUD
-	 PwrETqzbwOTsJx/u6ThoLOhLrNlQ2HEF6huY8f06OEjbFjt0jn0M3DQXgS8T6BiAR6
-	 vPTAAtk8kEryQ6IntMaIhzDiAduMEyAQnBwA0Jb491sCSexD1llIEr/HnU3AIyxapN
-	 Rh0qNPvKAJOk0zYTmzHiY1LYp1OtX6OniFn2QELNtNn92l6xXsiL50uRhUH07eI3SR
-	 gEq6TFQSUfqDg==
-Message-ID: <97cfb30a-daa5-44de-ab29-f20b35d49d72@kernel.org>
-Date: Thu, 8 May 2025 08:26:54 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnu5crRx"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-441ab63a415so6180055e9.3;
+        Wed, 07 May 2025 23:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746685764; x=1747290564; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yjC1nSPgNwPzXESamIJNGNNa5tx1nPWCngnFXt5aqfQ=;
+        b=bnu5crRxoUC2d3lzYx60DC29ZsXYQxzjqxHlQpOxpyI4E1Lml5W/7UIb/T7ubu2r+q
+         cP8al7VSos9vdP7xA92SK5mqjdg10FOOwcNUwXhasT1cwTootStZ/e5q+78Z3CGRg5mv
+         iRm54W8PueDOhgTBfzBKPwZ8maR4YOJguYI2o0qWrNo6lLVhoemwiU9O7fPd/PtsmrKO
+         xXhFhtofuuFYCANCX5e3TGd0rTcY1p54GdeNdjpUq1a+hcZhcTvYnW8UQJmsyr1AuG+9
+         c0oRzsNg/jW+a1fc1n16YJny8ZWgmCuZwXGxHicnlX1JpUkWHKRaaGrFpIzkMVctW/xM
+         M5hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746685764; x=1747290564;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yjC1nSPgNwPzXESamIJNGNNa5tx1nPWCngnFXt5aqfQ=;
+        b=ty36lOosvFThfzr6yJ0fXIe7ip9WJzik1E5odzH679ygZKf/hu7Ryl8k8VANbp2lfW
+         8+xRJEVEEdk8lYd3Mz/IQLkCzI3gfSadWn5lvptGsbQ80JhY0SE1UpnnLURjEF3tgWEz
+         7qRXGs4UNC7ERkTegUQvxF7jK0wMKlkNdEI5tgiOTUP7WrJuZQfo1vSMDk8spFFSCaja
+         2YZ0G6o0EPQyx7Thz+JwMmafx6ANFt7GrVjVUjRxsAU9KVMW2dsxZCG8LkdP8HtgYtZh
+         e6c1QC3Wj1OD8O4FP53KknJouSqy8kMM0m0Sw82XO0wP67SQOJUF7kMzSH0W1RgW/TF2
+         bvWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0o+Kz3GSOBeliV1mIYOn+BPTM8ChxapR5Wo9ByDndnMWB2B2MlpA8Un06kuOkf3sP18v7OVKm@vger.kernel.org, AJvYcCWVucKbL9Ie3+a6pCaUbY1OyATodrQXAESBeyY1zd6q4NCCcBMYlJBeGnqELpu4lBdshe+2MwExZqRoFIo=@vger.kernel.org, AJvYcCWYqptQIZUSE3F0Xpn5Kzcb+8H26Uwfsl8QxKSIXRs9pdV7iyv1LChDjmi/VwvpoRQZFelIqe6Xf+AGbw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/UsDhgMY+9iCTGewjBPSqx+Fba0oy7CWjMHtGm2C+ED1GwsmL
+	MiWRaEOhdckVPJsORlkNGdxdZn6zuU8xOEkj5zM4fFCuQ1dKsy1U
+X-Gm-Gg: ASbGncvidEUCnueRXLjc6U8vQlBP+8rQsqVPOQmgVk1DEUtAA2nauilCOTd9WHcu1o9
+	wtVpl79q2TDQ9Matb0kHAPP+r2zGSv0VUNi1s8FcxMCct0K9grD8Udg/hsoavW34/rCgt2eLHb3
+	SEZLLY06uJqI52uhzz7WkjRCW7RQGjocEYYDDgeCfF1k5PXOT6SrsjWXi/SguliVnQpZuh53i2G
+	nr9tEcMGVailCULSy8fDSYpsgvxkWvWIFtTobzYZaPh2fB5lAIoc514uwd5ZUjnWn0DRvQcalxj
+	QRBVfkcwD3sf17vtjQsmX3o3M6a8vATXbdMlPJoi1igQBsQWWRGK3Qzzd7qAB3Ic/RWMYdg=
+X-Google-Smtp-Source: AGHT+IFuTIQEyN6bZu1AGnLlMV4J2XuIAoxQT1Adad+31AHeFae30vNbC29NW1CfTdQuluEI8mNT2A==
+X-Received: by 2002:a05:600c:5129:b0:43c:e7a7:aea0 with SMTP id 5b1f17b1804b1-441d44dd0demr36073105e9.26.1746685763545;
+        Wed, 07 May 2025 23:29:23 -0700 (PDT)
+Received: from [172.27.55.78] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441d15dd9c6sm55426115e9.1.2025.05.07.23.29.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 May 2025 23:29:23 -0700 (PDT)
+Message-ID: <1a1ab6eb-9bfc-4298-ba1e-a6f4229ce091@gmail.com>
+Date: Thu, 8 May 2025 09:29:20 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,107 +66,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/4] Exynos Thermal code improvement
-To: Anand Moon <linux.amoon@gmail.com>,
- Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Alim Akhtar <alim.akhtar@samsung.com>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- "open list:SAMSUNG THERMAL DRIVER" <linux-pm@vger.kernel.org>,
- "open list:SAMSUNG THERMAL DRIVER" <linux-samsung-soc@vger.kernel.org>,
- "moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:CLANG/LLVM BUILD SUPPORT:Keyword:b(?i:clang|llvm)b"
- <llvm@lists.linux.dev>
-References: <20250430123306.15072-1-linux.amoon@gmail.com>
- <CANAwSgSXNuNFQ6RiqiLEBY3eCmxz2hQYfWTFij=Vi8S7rS-_TA@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH net-next] net/mlx5: support software TX timestamp
+To: Stanislav Fomichev <stfomichev@gmail.com>, netdev@vger.kernel.org
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, saeedm@nvidia.com, tariqt@nvidia.com,
+ andrew+netdev@lunn.ch, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, leon@kernel.org,
+ Carolina Jubran <cjubran@nvidia.com>
+References: <20250506215508.3611977-1-stfomichev@gmail.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CANAwSgSXNuNFQ6RiqiLEBY3eCmxz2hQYfWTFij=Vi8S7rS-_TA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <20250506215508.3611977-1-stfomichev@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 08/05/2025 08:14, Anand Moon wrote:
-> Hi All,
+
+
+On 07/05/2025 0:55, Stanislav Fomichev wrote:
+> Having a software timestamp (along with existing hardware one) is
+> useful to trace how the packets flow through the stack.
+> mlx5e_tx_skb_update_hwts_flags is called from tx paths
+> to setup HW timestamp; extend it to add software one as well.
 > 
-> On Wed, 30 Apr 2025 at 18:03, Anand Moon <linux.amoon@gmail.com> wrote:
->>
->> Hi All,
->>
->> This patch series is a rework of my previous patch series [1],
->> where the code changes were not adequately justified.
->>
->> In this new series, I have improved the commit subject
->> and commit message to better explain the changes.
->>
->> v6: Add new patch to use devm_clk_get_enabled
->>     and Fix few typo in subject as suggested by Daniel.
->> v5: Drop the guard mutex patch
->> v4: Tried to address Lukasz review comments.
->>
->> Tested on Odroid U3 amd XU4 SoC boards.
->> Build with clang with W=1 enable.
->>
+> Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+> ---
+>   drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 1 +
+>   drivers/net/ethernet/mellanox/mlx5/core/en_tx.c      | 1 +
+>   2 files changed, 2 insertions(+)
 > 
-> Genital Ping!!!
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+> index fdf9e9bb99ac..e399d7a3d6cb 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+> @@ -1689,6 +1689,7 @@ int mlx5e_ethtool_get_ts_info(struct mlx5e_priv *priv,
+>   		return 0;
+>   
+>   	info->so_timestamping = SOF_TIMESTAMPING_TX_HARDWARE |
+> +				SOF_TIMESTAMPING_TX_SOFTWARE |
+>   				SOF_TIMESTAMPING_RX_HARDWARE |
+>   				SOF_TIMESTAMPING_RAW_HARDWARE;
+>   
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+> index 4fd853d19e31..f6dd26ad29e5 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+> @@ -341,6 +341,7 @@ static void mlx5e_tx_skb_update_hwts_flags(struct sk_buff *skb)
+>   {
+>   	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP))
+>   		skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
+> +	skb_tx_timestamp(skb);
 
+Doesn't this interfere with skb_tstamp_tx call in the completion flow 
+(mlx5e_consume_skb)?
 
-Huhu, nice. :)
-I make typos as well, but some typos are better to avoid. :)
+What happens if both flags (SKBTX_SW_TSTAMP / SKBTX_HW_TSTAMP) are set 
+Is it possible?
 
-Anyway, !!! are exclamation marks and I think it is very difficult to
-scream at someone gently. I think this is contradictory to itself, so it
-does not feel gently at all.
+>   }
+>   
+>   static void mlx5e_tx_check_stop(struct mlx5e_txqsq *sq)
 
-Plus you sent it 7 days ago and you are known to send poor quality,
-untested code, so just relax and wait.
-
-Best regards,
-Krzysztof
