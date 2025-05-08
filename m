@@ -1,169 +1,337 @@
 Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E603621A44B;
-	Thu,  8 May 2025 06:43:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6035F17A2F0;
+	Thu,  8 May 2025 06:44:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746686626; cv=none; b=XD5w5iB3mmSPGv9DwSFXayrdFMTgmzG84TDH+7FvCPgRS7u0XUS5Du8I8A/QXLGoI0J3duAO068WPRIDFbHjf6DtCovE5gRCAV7y01q/p4KHeup7slVpMfFxFinWbB0e9WuzIaNiQJbmQTdhzMOYtOb/EYbE6ZsVkxh1SC6jMxY=
+	t=1746686661; cv=none; b=HkfFPmIB/YjdgewrtqIKLCDkfK1GHank/+Vz3kK0MRebPv29ssZ1yDJcyMTk823IVVplUIGWJKD9LINYiduhmm3XCjt8NdBKcGFdHWcw34LXV5mDru5M2Kp20Q+FnuTOqFhLgkCuU36s30ZH9IkgH+CcLEpBtD3efTjajwltLls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746686626; c=relaxed/simple;
-	bh=ALXW81uUrisfgcjtb0ouK01mwUo3Mqd/ZMmNS0XeX2U=;
-	h=Date:From:To:Cc:Subject:References:Mime-Version:Message-ID:
-	 Content-Type; b=gZobe1A5PhVNPheCtWBuUSkurStd2+MUvqqDHNTXn9mdA62q+uEpIV3EopTsazPaw+1jMm6xtqPLkMq4ar14OATDQng9WcjXxTUZ66VAQ13eLNbB4EbNWKn0WtkMzWn6pwglk0p3+dHo4CKsH6rOVkCAJyYQQsf8Z5BAWwU0Vcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.com.cn; spf=pass smtp.mailfrom=kylinos.com.cn; arc=none smtp.client-ip=18.194.254.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.com.cn
-X-QQ-mid: esmtpsz18t1746686588t2685c14f
-X-QQ-Originating-IP: QnHYIOYg0Zm3iyQW04mhygOyD/ALwlNoRQFHJOpkG2g=
-Received: from DESKTOP-SUAVFFI ( [118.249.225.48])
+	s=arc-20240116; t=1746686661; c=relaxed/simple;
+	bh=iJW6WOHNtWwu4D33uyz/a7pPIbuQhMzzj5nZUW+PiE8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=GxKrscB1CONmjkFgeTwtphFqVe0K7bmoIL6KB1uk50GE3jvST0wiz9DZvkCa2Lb0LqtBXzBNW8C4KwNN60n/PDRj6vy047V5pYuQ/bHesdzjd1f4zj6gAxBsMJPesi4YcUpWT5VW1b901DPlARsF7YHeMueHzkpogj187nJve7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com; spf=pass smtp.mailfrom=airkyi.com; dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b=C19ZUcTz; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=airkyi.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b="C19ZUcTz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=airkyi.com;
+	s=altu2504; t=1746686616;
+	bh=S38gIegyImzSiPrPTJZbZJbHNkJdghgnHdGNsjdUcdY=;
+	h=From:To:Subject:Date:Message-Id;
+	b=C19ZUcTzKIfhaexVnl4JUB9Ja60eg5kPNE9KoaBFDReYt+lhTBMwaPxiR0pJs2GqO
+	 pNqh49+OuHbSWe9o0O8Lr+bxOsHjQYdBDVfUJ96U4CQXLn8uIJrsDnO1gw3JPaOHlw
+	 Q8y/bG5S2SSMCyjxE8pGAv9ORo3wQNpOmKm7cNfU=
+X-QQ-mid: esmtpsz18t1746686615t934238f6
+X-QQ-Originating-IP: 6QePaabhGr3rW48lbWk1i7+S8T1BOSY7MRS+ZtJxtzw=
+Received: from DESKTOP-8BT1A2O.localdomain ( [58.22.7.114])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 08 May 2025 14:43:05 +0800 (CST)
+	id ; Thu, 08 May 2025 14:43:33 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 7358442712510008102
-EX-QQ-RecipientCnt: 13
-Date: Thu, 8 May 2025 14:43:37 +0800
-From: "liudalin@kylinos.com.cn" <liudalin@kylinos.com.cn>
-To: zhoubinbin <zhoubinbin@loongson.cn>, 
-	=?UTF-8?B?5YiY6L6+5p6X?= <liudalin@kylinsec.com.cn>, 
-	alexandre.belloni <alexandre.belloni@bootlin.com>, 
-	wangming01 <wangming01@loongson.cn>
-Cc: chenhuacai <chenhuacai@kernel.org>, 
-	gaojuxin <gaojuxin@loongson.cn>, 
-	git <git@xen0n.name>, 
-	jiaxun.yang <jiaxun.yang@flygoat.com>, 
-	keguang.zhang <keguang.zhang@gmail.com>, 
-	lixuefeng <lixuefeng@loongson.cn>, 
-	linux-rtc <linux-rtc@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	zhoubb.aaron <zhoubb.aaron@gmail.com>
-Subject: Re: Re: [PATCH] rtc: loongson: Add missing alarm notifications for ACPI RTC events
-References: <20250429062736.982039-1-liudalin@kylinsec.com.cn>, 
-	<2fa3740a-9181-40bf-9b1a-eeb6ffc6f23f@loongson.cn>
-X-Priority: 3
-X-GUID: D242E433-C5E1-45A1-886C-7C52DDA20DA9
-X-Has-Attach: no
-X-Mailer: Foxmail 7.2.21.453[cn]
+X-BIZMAIL-ID: 16256494491489308250
+From: Chaoyi Chen <kernel@airkyi.com>
+To: Sandy Huang <hjc@rock-chips.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Chaoyi Chen <chaoyi.chen@rock-chips.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] dt-bindings: display: rockchip: Convert cdn-dp-rockchip.txt to yaml
+Date: Thu,  8 May 2025 14:43:04 +0800
+Message-Id: <20250508064304.670-3-kernel@airkyi.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250508064304.670-1-kernel@airkyi.com>
+References: <20250508064304.670-1-kernel@airkyi.com>
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:airkyi.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: MN7J+qOXnZ1LC2rHDFipWslgoSnqa12WgIq5OFE7T5CnvQygjVvLtPOz
+	34z4g/G9c6Bz2zSN9IWW2dtlILMVqZUuVpfFpRnYER0GVTZluIS8NoJgI4+I7x3O8ACv17D
+	ygDmpUbZ1K4KHwBwGmbVlEIaCw+TwGpVv/18qZ1aIvSh23CNPOc9361Cmwm4OAj2NFNCKTw
+	u28d7uoc4XpcUVtEGg/Y10Htm4i5vF+zLYaYxkw1T/HAPF3FPG+ddADvdn8AI5hQfBAJ1yR
+	rDBHnTKXH0+OMpgNrwgEk+jcIMfXgcvJz2xci4ITCYxeC4bVDGzGcl7axDygcYcWcnjHuS7
+	eS1FHY/JKF3JRPLDjfcBta73qlJOX2T3cvK6RPDM1dyl9oHN14xmK7wSJDdA2BDPXpW/sNm
+	wuAuswVyBAPPyp3cxZmYrU+WEWQEeeQnhgmiq5Hqu5IyO5wAWTjtOHzmLZf7t4AHUCmMoQ2
+	gqUs3Ys6A84V2NHL6PqI9RrBB9e03ZA800pFwB57vDBhr8ALcoC+km9Y2Nh6SqHlvjymonv
+	fMRCSTidxAZnOadpLIWOyKHsKN0GZVllC1/niUn6yxMv6s8I7z29sM+fk+FjJA4oJSPitga
+	ykBWlz2Jlybhk5R9kdXPd5pRggBDU66vTenAwHryRhknLZhRg5RBZZsGysESH4f75t8xW1A
+	Q4CpwR3Ox3WD53hK4LOyqI3nuozPLk7FEKjipwSeunDL8Q2cEPpq2HMJ9BN+vvGYMswNeHz
+	1pxQqpNMFXrbZXZ/Fsorf6xuN8puXtFvDPMNoyJfOoqOuT4mbXrOGfqyM4jaYu/GDMkwcmX
+	uB+bKMQjk66GROAx55iDXNYpD1IqTTnYWyQmHmZ4DqSuefX6b5Y4Q633iYG3xAzyofOyD9I
+	Lg0pApPOnai0jkvm0ERghjvIP52JT98z31ddueWW2o08u4UGzm+alYO6dZwOWB2+v/v9T1p
+	t9cRaRB+mRBCG92dz7sXNhGoh/BJB+uWO6BTeoru44MlNynosFzXdn9AV
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <2F2C4ADAA7F0A3F4+2025050814433635296030@kylinos.com.cn>
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:kylinos.com.cn:qybglogicsvrgz:qybglogicsvrgz8a-0
-X-QQ-XMAILINFO: OR0QjYVUcDVNvOOaCbe6Nak+QFq9iNmlRzYuRMRStNVlOmN04L7SscBy
-	1IyUFLjX42PSAs7BCYmM6baXJac27KYSeEnui/TDP50Ob4QUQGrhXqoCT/dw2BOr1K7LaeG
-	3N6oDK2XmNn4TMV1CWTK07vCHO5lvaEHmOvQXixfeS6WFnGvp1ahPGnJLowr+ym7FGoJUsY
-	4m2T8d+9Rw0JFgqBXaiWR3et5WXwPkOijhrd89hYXwnMfYaONE44nMcVXVU7K7WPuuQzyEr
-	lBQZVEgAlqqacCscek3fqe1VOvlEXy8VJGaAjfgbTOLiZF/5Cyrpp8H2e/n4LpnkN771sXp
-	koZB6n0eYt81FWETU+fJSOHFmOv6Qhxj1CtqI2ICLKW9plmR9t62qq0ijSpeY9O1EdBJPvg
-	TcJvVdxwKwzwc3U9DZ8CK2ftOrv0z9Bif7nUcwuiUCLOlpG7bA0q+IW+fOaPiWwDyGNWh0G
-	6B5do/Zn3aFS7HkYEv9x/uPxaKRGk55XoByZZ+KPFqq1385bz2ogQ9aiy1+UVY5XNNpX6ZP
-	gPcxDA+gcPHFWfUn3RvrN+RQc627+eVbDj4B0feXrqe6tJrqdINT+U8OYP/2fWOfRVDS4Z6
-	OiUjzd9yCerSTyKhCkpGWrRaiq2z/2Xaag4lHIF7LX9WmqUq9Q+MFFDsUyaG9al6L2reg5g
-	UJntnNVtYERXSXSFviHlSCuBH3yBkR7cV9VJeXphtvAq2fqK6JkqBiyRXXd4AYGtXVY3ao0
-	+eBivdhChTN/PhWI0CVOnpTXDfDgcDGs1aic89j3nZ8FgmkQxkKPYPsENovPonEWXC51Ec2
-	R4hv/CWSKaEKXDeyvjAv4wjSYzEnETd0BDiqal+e5fAFykwLnwyCoEIiQwsrncsdpeXLfw3
-	7FW2tcAN3pfOeoyw5vBrTYCQAhydbGwc7w7qJgleqxkT/JfNrNIbxeJmTMX2LRPh0zKVurP
-	1hUjFxsdv5rCvEp42OH3hg6wIQEoH3kxFCAyL8U99uLILXrs6Y+nkERMOBablPlqzAEDUvy
-	grBfxlIwdYixKiomaUQbpKwiVCvm6ppAu+dlt7SyidfQuMfNtP+QjziOrQp/0=
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
 
-SGkgQmluYmluOgogICBUaGUgZGVzY3JpYmVkIGlzc3VlIGRvZXMgbm90IGhhcHBlbmVkICB3aXRo
-IG9yIHdpdGhvdXQgdGhlIHBhdGNoIGJ5IHRlc3QsIGFzIHRoZSBpbnRlcnJ1cHQgaXMgbWFuYWdl
-ZCBieSBhY3BpLiAKCiAgIFRoZSBkZXZpY2UgaW5mbyBhbmQgdGVzdCByZXN1bHQgYXJlIGFzIGZv
-bGxvd3MuCgoxLiBEZXZpY2UgaW5mbwpb57O757uf5pyq5r+A5rS7XVtyb290QG1haWwgdGVzdF0j
-IGRtaWRlY29kZSAtcQpCSU9TIEluZm9ybWF0aW9uCiAgICAgICAgVmVuZG9yOiBaRC1URUNICiAg
-ICAgICAgVmVyc2lvbjogVjA5CiAgICAgICAgUmVsZWFzZSBEYXRlOiAwNi8xNS8yMDIyCiAgICAg
-ICAgUk9NIFNpemU6IDggTUIKICAgICAgICBDaGFyYWN0ZXJpc3RpY3M6CiAgICAgICAgICAgICAg
-ICBQQ0kgaXMgc3VwcG9ydGVkCiAgICAgICAgICAgICAgICBCSU9TIGlzIHVwZ3JhZGVhYmxlCiAg
-ICAgICAgICAgICAgICBCSU9TIHNoYWRvd2luZyBpcyBhbGxvd2VkCiAgICAgICAgICAgICAgICBC
-b290IGZyb20gQ0QgaXMgc3VwcG9ydGVkCiAgICAgICAgICAgICAgICBTZWxlY3RhYmxlIGJvb3Qg
-aXMgc3VwcG9ydGVkCiAgICAgICAgICAgICAgICBCSU9TIFJPTSBpcyBzb2NrZXRlZAogICAgICAg
-ICAgICAgICAgU2VyaWFsIHNlcnZpY2VzIGFyZSBzdXBwb3J0ZWQgKGludCAxNGgpCiAgICAgICAg
-ICAgICAgICBVU0IgbGVnYWN5IGlzIHN1cHBvcnRlZAogICAgICAgICAgICAgICAgRnVuY3Rpb24g
-a2V5LWluaXRpYXRlZCBuZXR3b3JrIGJvb3QgaXMgc3VwcG9ydGVkCiAgICAgICAgICAgICAgICBV
-RUZJIGlzIHN1cHBvcnRlZAogICAgICAgIEJJT1MgUmV2aXNpb246IDQuMAogICAgICAgIEZpcm13
-YXJlIFJldmlzaW9uOiAwLjQKClN5c3RlbSBJbmZvcm1hdGlvbgogICAgICAgIE1hbnVmYWN0dXJl
-cjogR0VJVAogICAgICAgIFByb2R1Y3QgTmFtZTogVVQ2MDAwLUxCNQogICAgICAgIFZlcnNpb246
-IDEuMAogICAgICAgIFNlcmlhbCBOdW1iZXI6IFRCRCBieSBPRU0KICAgICAgICBVVUlEOiAwMDEx
-MjIzMy00NDU1LTY2NzctODg5OS1hYWJiY2NkZGVlZmYKICAgICAgICBXYWtlLXVwIFR5cGU6IFBv
-d2VyIFN3aXRjaAogICAgICAgIFNLVSBOdW1iZXI6IExvb25nc29uX1NLVQogICAgICAgIEZhbWls
-eTogVHlwZTFGYW1pbHkKCkJhc2UgQm9hcmQgSW5mb3JtYXRpb24KICAgICAgICBNYW51ZmFjdHVy
-ZXI6IEdFSVQKICAgICAgICBQcm9kdWN0IE5hbWU6IEdHLTNBNTAwMC0wMgogICAgICAgIFZlcnNp
-b246IDEuMAogICAgICAgIFNlcmlhbCBOdW1iZXI6IENoYXNzaXMgQm9hcmQgU2VyaWFsI1RvIEJl
-IEZpbGxlZCBCeSBPLkUuTQogICAgICAgIEFzc2V0IFRhZzogVHlwZTIgLSBCb2FyZCBBc3NldCBU
-YWcKICAgICAgICBGZWF0dXJlczoKICAgICAgICAgICAgICAgIEJvYXJkIGlzIGEgaG9zdGluZyBi
-b2FyZAogICAgICAgICAgICAgICAgQm9hcmQgaXMgcmVwbGFjZWFibGUKICAgICAgICBMb2NhdGlv
-biBJbiBDaGFzc2lzOiBUeXBlMiAtIEJvYXJkIENoYXNzaXMgTG9jYXRpb24KICAgICAgICBUeXBl
-OiBNb3RoZXJib2FyZAouLi4KCjIuIFRoZSBzeXN0ZW0gZXhoaWJpdHMgYSB0aW1lb3V0IGVycm9y
-IHdoZW4gd2FpdGluZyBmb3IgYWxhcm0gc2lnbmFsIHJlc3BvbnNlIHdpdGhvdXQgdGhlIHBhdGNo
-Lgpb57O757uf5pyq5r+A5rS7XVtyb290QG1haWwgdGVzdF0jIGNhdCAvcHJvYy9pbnRlcnJ1cHRz
-IHxncmVwIGFjcGkKMjE6ICAgICAgICAgIDMgICAgICAgICAgMCAgICAgICAgICAwICAgICAgICAg
-IDAgICBQQ0ggUElDICAgMSAgYWNwaQpb57O757uf5pyq5r+A5rS7XVtyb290QG1haWwgdGVzdF0j
-Clvns7vnu5/mnKrmv4DmtLtdW3Jvb3RAbWFpbCB0ZXN0XSMgLi9ydGMwMQpSVEMgUkVBRCBURVNU
-OgpSVEMgUkVBRCBURVNUIFBhc3NlZApDdXJyZW50IFJUQyBkYXRlL3RpbWUgaXMgOC01LTIwMjUs
-IDA1OjUwOjA1LgpSVEMgQUxBUk0gVEVTVCA6QWxhcm0gdGltZSBzZXQgdG8gMDU6NTA6MTAuCldh
-aXRpbmcgNSBzZWNvbmRzIGZvciB0aGUgYWxhcm0uLi4KVGltZWQgb3V0IHdhaXRpbmcgZm9yIHRo
-ZSBhbGFybQpSVEMgVVBEQVRFIElOVEVSUlVQVFMgVEVTVCA6ClJUQ19VSUVfT04gbm90IHN1cHBv
-cnRlZApSVEMgVGVzdHMgRG9uZSEKW+ezu+e7n+acqua/gOa0u11bcm9vdEBtYWlsIHRlc3RdIwpb
-57O757uf5pyq5r+A5rS7XVtyb290QG1haWwgdGVzdF0jIGNhdCAvcHJvYy9pbnRlcnJ1cHRzIHxn
-cmVwIGFjcGkKMjE6ICAgICAgICAgIDQgICAgICAgICAgMCAgICAgICAgICAwICAgICAgICAgIDAg
-ICBQQ0ggUElDICAgMSAgYWNwaQpb57O757uf5pyq5r+A5rS7XVtyb290QG1haWwgdGVzdF0jCgoz
-LiBUaGVyZSBpcyBubyBlcnJvciB3aXRoIHRoZSBwYXRjaCBhcHBsaWVkIGFuZCB0aGUgaW50ZXJy
-dXB0cyBhcmUgdHJpZ2dlcmVkIG9rClvns7vnu5/mnKrmv4DmtLtdW3Jvb3RAbWFpbCB0ZXN0XSMg
-Y2F0IC9wcm9jL2ludGVycnVwdHMgfGdyZXAgYWNwaQoyMTogICAgICAgICAgMCAgICAgICAgICAw
-ICAgICAgICAgIDAgICAgICAgICAgMCAgIFBDSCBQSUMgICAxICBhY3BpClvns7vnu5/mnKrmv4Dm
-tLtdW3Jvb3RAbWFpbCB0ZXN0XSMKW+ezu+e7n+acqua/gOa0u11bcm9vdEBtYWlsIHRlc3RdIyAu
-L3J0YzAxClJUQyBSRUFEIFRFU1Q6ClJUQyBSRUFEIFRFU1QgUGFzc2VkCkN1cnJlbnQgUlRDIGRh
-dGUvdGltZSBpcyA4LTUtMjAyNSwgMDY6MDk6MDMuClJUQyBBTEFSTSBURVNUIDpBbGFybSB0aW1l
-IHNldCB0byAwNjowOTowOC4KV2FpdGluZyA1IHNlY29uZHMgZm9yIHRoZSBhbGFybS4uLgpBbGFy
-bSByYW5nLgpSVEMgQUxBUk0gVEVTVCBQYXNzZWQKUlRDIFVQREFURSBJTlRFUlJVUFRTIFRFU1Qg
-OgpSVENfVUlFX09OIG5vdCBzdXBwb3J0ZWQKUlRDIFRlc3RzIERvbmUhClvns7vnu5/mnKrmv4Dm
-tLtdW3Jvb3RAbWFpbCB0ZXN0XSMKW+ezu+e7n+acqua/gOa0u11bcm9vdEBtYWlsIHRlc3RdIyBj
-YXQgL3Byb2MvaW50ZXJydXB0cyB8Z3JlcCBhY3BpCjIxOiAgICAgICAgICAxICAgICAgICAgIDAg
-ICAgICAgICAgMCAgICAgICAgICAwICAgUENIIFBJQyAgIDEgIGFjcGkKW+ezu+e7n+acqua/gOa0
-u11bcm9vdEBtYWlsIHRlc3RdIwoKCgoKCkZyb206wqBCaW5iaW4gWmhvdQoKCgpEYXRlOsKgMjAy
-NS0wNS0wOMKgMTE6MTIKCgoKVG86wqBMaXUgRGFsaW47IGFsZXhhbmRyZS5iZWxsb25pOyB3YW5n
-bWluZzAxCgoKCkNDOsKgY2hlbmh1YWNhaTsgZ2FvanV4aW47IGdpdDsgamlheHVuLnlhbmc7IGtl
-Z3Vhbmcuemhhbmc7IGxpeHVlZmVuZzsgbGludXgtcnRjOyBsaW51eC1rZXJuZWw7IHpob3ViYi5h
-YXJvbgoKCgpTdWJqZWN0OsKgUmU6IFtQQVRDSF0gcnRjOiBsb29uZ3NvbjogQWRkIG1pc3Npbmcg
-YWxhcm0gbm90aWZpY2F0aW9ucyBmb3IgQUNQSSBSVEMgZXZlbnRzCgoKCkhpIERhbGluOgoKCgrC
-oAoKCgpUaGFua3MgZm9yIHlvdXIgcGF0Y2guCgoKCsKgCgoKCk9uIDIwMjUvNC8yOSAxNDoyNywg
-TGl1IERhbGluIHdyb3RlOgoKCgo+IFdoZW4gYW4gYXBwbGljYXRpb24gc2V0cyBhbmQgZW5hYmxl
-cyBhbiBhbGFybSBvbiBMb29uZ3NvbiBSVEMgZGV2aWNlcywKCgoKPiB0aGUgYWxhcm0gbm90aWZp
-Y2F0aW9uIGZhaWxzIHRvIHByb3BhZ2F0ZSB0byB1c2Vyc3BhY2UgYmVjYXVzZSB0aGUKCgoKPiBB
-Q1BJIGV2ZW50IGhhbmRsZXIgb21pdHMgY2FsbGluZyBydGNfdXBkYXRlX2lycSgpLgoKCgo+CgoK
-Cj4gQXMgYSByZXN1bHQsIHByb2Nlc3NlcyB3YWl0aW5nIHZpYSBzZWxlY3QoKSBvciBwb2xsKCkg
-b24gUlRDIGRldmljZQoKCgo+IGZpbGVzIGZhaWwgdG8gcmVjZWl2ZSBhbGFybSBub3RpZmljYXRp
-b25zLgoKCgo+CgoKCj4gRml4ZXM6IDFiNzMzYTllYmMzZCAoInJ0YzogQWRkIHJ0YyBkcml2ZXIg
-Zm9yIHRoZSBMb29uZ3NvbiBmYW1pbHkgY2hpcHMiKQoKCgo+IFNpZ25lZC1vZmYtYnk6IExpdSBE
-YWxpbiA8bGl1ZGFsaW5Aa3lsaW5zZWMuY29tLmNuPgoKCgo+IC0tLQoKCgo+wqDCoCBkcml2ZXJz
-L3J0Yy9ydGMtbG9vbmdzb24uYyB8IDIgKysKCgoKPsKgwqAgMSBmaWxlIGNoYW5nZWQsIDIgaW5z
-ZXJ0aW9ucygrKQoKCgo+CgoKCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcnRjL3J0Yy1sb29uZ3Nv
-bi5jIGIvZHJpdmVycy9ydGMvcnRjLWxvb25nc29uLmMKCgoKPiBpbmRleCA5N2U1NjI1YzA2NGMu
-LjBjNTczZjE5OGY2MyAxMDA2NDQKCgoKPiAtLS0gYS9kcml2ZXJzL3J0Yy9ydGMtbG9vbmdzb24u
-YwoKCgo+ICsrKyBiL2RyaXZlcnMvcnRjL3J0Yy1sb29uZ3Nvbi5jCgoKCj4gQEAgLTEyOSw2ICsx
-MjksOCBAQCBzdGF0aWMgdTMyIGxvb25nc29uX3J0Y19oYW5kbGVyKHZvaWQgKmlkKQoKCgo+wqDC
-oCB7CgoKCj7CoMKgIHN0cnVjdCBsb29uZ3Nvbl9ydGNfcHJpdiAqcHJpdiA9IChzdHJ1Y3QgbG9v
-bmdzb25fcnRjX3ByaXYgKilpZDsKCgoKPsKgwqAKCgoKPiArIHJ0Y191cGRhdGVfaXJxKHByaXYt
-PnJ0Y2RldiwgMSwgUlRDX0FGIHwgUlRDX0lSUUYpOwoKCgo+ICsKCgoKV2hpbGUgdGVzdGluZyB0
-aGUgcGF0Y2gsIEkgbm90aWNlZCB0aGF0IGludGVycnVwdHMgYXJlIHRyaWdnZXJlZAoKCgptdWx0
-aXBsZSB0aW1lcyAoL3Byb2MvaW50ZXJydXB0KSwgbm90IHN1cmUgaWYgeW91IGhhdmUgdGhlIHNh
-bWUgaXNzdWUuCgoKCsKgCgoKCkkgdGhpbmsgd2UgbmVlZCBhIHNpbWlsYXIgb3BlcmF0aW9uIHRv
-IGxvb25nc29uX3J0Y19pc3IoKSB0byBjbGVhciB0aGUKCgoKaW50ZXJydXB0OgoKCgpyZWdtYXBf
-d3JpdGUocHJpdi0+cmVnbWFwLCBUT1lfTUFUQ0gwX1JFRywgMCk7CgoKCj7CoMKgIHNwaW5fbG9j
-aygmcHJpdi0+bG9jayk7CgoKCj7CoMKgIC8qIERpc2FibGUgUlRDIGFsYXJtIHdha2V1cCBhbmQg
-aW50ZXJydXB0ICovCgoKCj7CoMKgIHdyaXRlbChyZWFkbChwcml2LT5wbV9iYXNlICsgUE0xX0VO
-X1JFRykgJiB+UlRDX0VOLAoKCgpUaGFua3MuCgoKCkJpbmJpbgoKCgrCoAoKCgrCoAoKCgrCoAoK
-Cg==
+From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 
+Convert cdn-dp-rockchip.txt to yaml.
 
+Tested with:
+
+1. make ARCH=arm64 dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip,cdn-dp.yaml
+
+2. make ARCH=arm64 dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip,cdn-dp.yaml
+
+Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+---
+ .../display/rockchip/cdn-dp-rockchip.txt      |  74 ---------
+ .../display/rockchip/rockchip,cdn-dp.yaml     | 148 ++++++++++++++++++
+ 2 files changed, 148 insertions(+), 74 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,cdn-dp.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
+deleted file mode 100644
+index 8df7d2e393d6..000000000000
+--- a/Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
++++ /dev/null
+@@ -1,74 +0,0 @@
+-Rockchip RK3399 specific extensions to the cdn Display Port
+-================================
+-
+-Required properties:
+-- compatible: must be "rockchip,rk3399-cdn-dp"
+-
+-- reg: physical base address of the controller and length
+-
+-- clocks: from common clock binding: handle to dp clock.
+-
+-- clock-names: from common clock binding:
+-	       Required elements: "core-clk" "pclk" "spdif" "grf"
+-
+-- resets : a list of phandle + reset specifier pairs
+-- reset-names : string of reset names
+-		Required elements: "apb", "core", "dptx", "spdif"
+-- power-domains : power-domain property defined with a phandle
+-		  to respective power domain.
+-- assigned-clocks: main clock, should be <&cru SCLK_DP_CORE>
+-- assigned-clock-rates : the DP core clk frequency, shall be: 100000000
+-
+-- rockchip,grf: this soc should set GRF regs, so need get grf here.
+-
+-- ports: contain a port nodes with endpoint definitions as defined in
+-	 Documentation/devicetree/bindings/media/video-interfaces.txt.
+-	 contained 2 endpoints, connecting to the output of vop.
+-
+-- phys: from general PHY binding: the phandle for the PHY device.
+-
+-- extcon: extcon specifier for the Power Delivery
+-
+-- #sound-dai-cells = it must be 1 if your system is using 2 DAIs: I2S, SPDIF
+-
+--------------------------------------------------------------------------------
+-
+-Example:
+-	cdn_dp: dp@fec00000 {
+-		compatible = "rockchip,rk3399-cdn-dp";
+-		reg = <0x0 0xfec00000 0x0 0x100000>;
+-		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cru SCLK_DP_CORE>, <&cru PCLK_DP_CTRL>,
+-			 <&cru SCLK_SPDIF_REC_DPTX>, <&cru PCLK_VIO_GRF>;
+-		clock-names = "core-clk", "pclk", "spdif", "grf";
+-		assigned-clocks = <&cru SCLK_DP_CORE>;
+-		assigned-clock-rates = <100000000>;
+-		power-domains = <&power RK3399_PD_HDCP>;
+-		phys = <&tcphy0_dp>, <&tcphy1_dp>;
+-		resets = <&cru SRST_DPTX_SPDIF_REC>;
+-		reset-names = "spdif";
+-		extcon = <&fusb0>, <&fusb1>;
+-		rockchip,grf = <&grf>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		#sound-dai-cells = <1>;
+-
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			dp_in: port {
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				dp_in_vopb: endpoint@0 {
+-					reg = <0>;
+-					remote-endpoint = <&vopb_out_dp>;
+-				};
+-
+-				dp_in_vopl: endpoint@1 {
+-					reg = <1>;
+-					remote-endpoint = <&vopl_out_dp>;
+-				};
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,cdn-dp.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,cdn-dp.yaml
+new file mode 100644
+index 000000000000..ed68b48a6743
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,cdn-dp.yaml
+@@ -0,0 +1,148 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/rockchip/rockchip,cdn-dp.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip RK3399 specific extensions to the CDN Display Port
++
++maintainers:
++  - Andy Yan <andy.yan@rock-chip.com>
++  - Heiko Stuebner <heiko@sntech.de>
++  - Sandy Huang <hjc@rock-chips.com>
++
++properties:
++  compatible:
++    items:
++      - const: rockchip,rk3399-cdn-dp
++
++  reg:
++    description:
++      CDN DP core register
++
++  assigned-clock-rates: true
++  assigned-clocks: true
++
++  clocks:
++    minItems: 4
++
++  clock-names:
++    items:
++      - const: core-clk
++      - const: pclk
++      - const: spdif
++      - const: grf
++
++  extcon:
++    description:
++      Phandle to the extcon device providing the cable state for the DP phy.
++
++  interrupts:
++    maxItems: 1
++
++  phys:
++    minItems: 1
++    maxItems: 2
++
++  ports:
++    $ref: /schemas/graph.yaml#/properties/ports
++
++    properties:
++      port@0:
++        $ref: /schemas/graph.yaml#/properties/port
++        description: Input of the CDN DP
++        properties:
++          endpoint@0:
++            description: Connection to the VOPB
++          endpoint@1:
++            description: Connection to the VOPL
++      port@1:
++        $ref: /schemas/graph.yaml#/properties/port
++        description: Output of the CDN DP
++
++    required:
++      - port@0
++      - port@1
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    minItems: 4
++
++  reset-names:
++    items:
++      - const: spdif
++      - const: dptx
++      - const: apb
++      - const: core
++
++  rockchip,grf:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      This SoC makes use of GRF regs.
++
++  "#sound-dai-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++  - phys
++  - ports
++  - resets
++  - reset-names
++  - rockchip,grf
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/rk3399-cru.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/rk3399-power.h>
++    cdn_dp: dp@fec00000 {
++        compatible = "rockchip,rk3399-cdn-dp";
++        reg = <0x0 0xfec00000 0x0 0x100000>;
++        assigned-clocks = <&cru SCLK_DP_CORE>;
++        assigned-clock-rates = <100000000>;
++        interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&cru SCLK_DP_CORE>, <&cru PCLK_DP_CTRL>, <&cru SCLK_SPDIF_REC_DPTX>,
++                <&cru PCLK_VIO_GRF>;
++        clock-names = "core-clk", "pclk", "spdif", "grf";
++        power-domains = <&power RK3399_PD_HDCP>;
++        phys = <&tcphy0_dp>, <&tcphy1_dp>;
++        resets = <&cru SRST_DPTX_SPDIF_REC>, <&cru SRST_P_UPHY0_DPTX>,
++                <&cru SRST_P_UPHY0_APB>, <&cru SRST_DP_CORE>;
++        reset-names = "spdif", "dptx", "apb", "core";
++        rockchip,grf = <&grf>;
++        #sound-dai-cells = <1>;
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            dp_in: port@0 {
++                reg = <0>;
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                dp_in_vopb: endpoint@0 {
++                    reg = <0>;
++                    remote-endpoint = <&vopb_out_dp>;
++                };
++
++                dp_in_vopl: endpoint@1 {
++                    reg = <1>;
++                    remote-endpoint = <&vopl_out_dp>;
++                };
++            };
++
++            dp_out: port@1 {
++                reg = <1>;
++            };
++        };
++    };
+--
+2.49.0
 
