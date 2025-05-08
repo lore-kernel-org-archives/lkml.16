@@ -1,76 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C444B1E7D;
-	Thu,  8 May 2025 18:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1B94B1E7D;
+	Thu,  8 May 2025 18:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746729173; cv=none; b=dPtKKKlVCEZ5G7Bljp8cc/DLuQb8HuZzrrg+NnaHtSMMYVTCyLYO3mh1rrs/9aMulfnfYJN15a3/cf0tkSP3CisOVkCBQl4RmjSF0ACAo2PReX1PT9Bc/izDvyxQYgsQluM5Ze0ZINfJtNN5F4Wf0skx8HBR46WgbCagBBXgCG0=
+	t=1746729202; cv=none; b=W94+jBIU4BThsKWq0ZBgCLkHnoZ0vZuh3KABBcMXD9wGlCaHILeh4/WShP9xWc38hcIpUdCRyKJT6l84/2puBJ8YwALKoQSeP5sXlbT+vqSIqimcV8pnfthCeEqBSqZUB9HoANjL1F1vHPuZK493sJ4CNDgyfVdRtZDyFQxRFKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746729173; c=relaxed/simple;
-	bh=dI9PYz2NiVcz9XB8oLCo4yQGCH+anaoEe3DTOVFETh0=;
+	s=arc-20240116; t=1746729202; c=relaxed/simple;
+	bh=JOcc+M9rOvZ1c35pE9SCvCiacPbTkjMI6AluzJW0xeA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kVWW7aPabsTxzFyncLe9i/L2bkfr+3lehARSt9Xrau7GuEuHV2sE0xLMXBQvnes5k0xn85p4H9J4ZZSLd0EYxeoZ5D/zxOf6ZfLqG/pIyawdfwxVLHJMdVnqaUAmWdj+YaYsCMBOd+i6hbwsQ+3hvF1A7oWGaS+BvLxeVww9eIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t7NB/AL1; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=CASH50w7AjBxlLRAPYRUr9o1gO75ZxbhupMKRPO3jUsRuhVZKKacP9icyUCH524cRV3lPDWdRodji7uvXjZ+P8SE/WELZa4hB1+3MsjyTypXSEGq87OQzkIUia9ZeqsjLfkQSHEGYaea8P23E32TPeB+59PjGn0SLpVWyhLMnJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mlsycKxc; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t7NB/AL1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87FDCC4CEF3;
-	Thu,  8 May 2025 18:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746729172;
-	bh=dI9PYz2NiVcz9XB8oLCo4yQGCH+anaoEe3DTOVFETh0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=t7NB/AL1fy/mTrbiHY/MCL2wqDOxfSJ5ZaouwvyNeFyhSvHVzRHcapexCm80sRaiE
-	 qN8bkVF2Wluimr+pQyWA3JqyyvItf+KYo1kdpcVw11nq4aeYiZGjmha/CJDJ0naK8u
-	 qmlmHGbqa0T9ikWCJPAgCzIFrmOQdtmnrWa3Hjamo4RXGxrVg/M/eAX9oYz56/jHbY
-	 2d8t+yRuqWPz7TCMvBmBxtT9aPzZJDKSyXA4wZ8jOQI4s9WpNHjRSgSFnBIiqd2UYW
-	 dr19azTjkz5GVGlRbnHMQCe83yZZvPQdTTFfqyQEUdrs8nAh70VlkbcrLUe+4vyu1X
-	 c8Sjjw9ybXmXA==
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6f54e27405dso5370416d6.3;
-        Thu, 08 May 2025 11:32:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUGNqfMlaRrMH3FQEuGYLmw3vmWAtcLVaAOfA6gcVVB/rbaP0550H0zf1htprU98eA0R1nUB+t6fb/XVqAJ@vger.kernel.org, AJvYcCUsfKjJDuRHikpRYAdu3GVEVZJbzLnm8ybzhUG04CNHua+d6H1k67rCoXbup0PhxI8nk3/emgGObs6YezM=@vger.kernel.org, AJvYcCW2+Zc0ZUXa+bM49P/kzOiObjXEdWVlwo409Fi+B7QLfosvHRYT0BCST98Q3SWdesFxXnglE9mORhbF/KtWvWw/@vger.kernel.org, AJvYcCWxfzdKaxXu0YtUqSQnulunKUobDikQCHsQeIwb4gvGD4cN8rFAAS6l8ZPWgR85asD4DM4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyE+AL0OGnubg5PdDcIup/MSqziaDy3AVhucjJFmLArhjKSwT/y
-	TgrOxxXaDdIl1cPUYhjKtMaGQDxq/SFBrTBT8qAnQ58a8T59O7PUWaGtJFvskgrp6lFDA6RrqTq
-	w8DZfpM9W3fRmy84T0xXnqNXCDas=
-X-Google-Smtp-Source: AGHT+IFGy1cRgySSEQi/MG5bIU6lid7JLUbcXDq643AD1ZUr6eRMCZ7Yix8NvK6uHTAvzj7j2m5rR44CYrq6wg9RldQ=
-X-Received: by 2002:ad4:5dcf:0:b0:6f5:46b0:7d11 with SMTP id
- 6a1803df08f44-6f6e48100a9mr5001936d6.36.1746729171544; Thu, 08 May 2025
- 11:32:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlsycKxc"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-30a892f8124so157983a91.3;
+        Thu, 08 May 2025 11:33:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746729199; x=1747333999; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8FQJhUt0Xs5KmiFJABZgU0fKzpM3sDlbu/it07qeVBQ=;
+        b=mlsycKxcF8Pg2BcgDOnKZQqQaS/u6EZP+9530Gx9qvWlO1TFL63NAOtOxTELlRw07B
+         BoCT3kRNSgn1QmuaUyCNDhBu8mo5tVGvZqldxeFnbpSR98hR2IG6bIQEXyYg77XkbxVu
+         1m3urNIMCkyJS72fD1YFw3UAp8IA9GSItQ9D/WBnUWNLSf5N4pGxVNUDXYaAo8GZg/1E
+         cNv8Ym5Rm2bmt4LVA16ZhKX5bDHDWiUf/EhK4ah7Gqz9vQ3jbisESk0hjpMuoYXWYOfG
+         FKVLc6rYgkNjIUiszH2JvDymvfY9HZeS2fiBwRIUCnWATX4ORTq1p8R3hdWwBwKfkjE2
+         Huow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746729199; x=1747333999;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8FQJhUt0Xs5KmiFJABZgU0fKzpM3sDlbu/it07qeVBQ=;
+        b=Wt9wSfPcApjmC2YL9w/UKRu2TAISd+uQqOu3yCUROXgi4zTu+tTF6gKvWRpTMCoUxv
+         b+4eyQvCvxqYSOW3QC40rQSZetiGWJjU9C6X6D2vO75FkVhWPIaNo8nDMQTZyiFMeIG6
+         RDPgN9SjbAdIF38ccgnZTTn2SlC6jK6Np+FDTi7Nb3LwOzI4gjNv9ri41KFWPXBiKh1H
+         wINysYc2JgUy+EwtRTFRokH1m/VulDYlN3N556+NMjyR8yp7KA4MUcx814LayfyL9zM3
+         BNeOxKpaUtc6rLL41J7zxOykDO1PVVN0nnQBxecC/Uk9C0j1tsNVoITGdVb0Njel2xz6
+         ORUA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXqiDv1KfEmXZqs1yQiMpYai2QXK2RpOO6XOWb4hdkPiCn4s0HJXm1p1bAnv4bDDnC2qK4yFVkUkjZNACW@vger.kernel.org, AJvYcCXBSyy7K0DNtYQ9MKCggg+5YgZ0Q8yzbBSAVrqfiekpTRghS4HKJqmOCdMAosn5Oda49yMnQwJqAydZpinY@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEjfInwtwQz3XR7EXugmqlKWQk4vJj7rdRjBkSrLayFovrYbIY
+	lgkkvILQ6/qfXElVQJT2EkqMT3luutW1qYwb1qh66AqhEze9jXXxU1mkV6hgP6OcXu19CcjSGbr
+	dZXlblhD/giBcQ6iFrFlNr3bLKPs=
+X-Gm-Gg: ASbGncvyQn/LlN2nat4x81cM0g0Iw6asdMIefLB+uWD5MoUH5WYsZw4GBGYLp74K+2c
+	YnHPuy4zqBNsR8zq7Wu7kxGUBPeYc0K7igRS5Gd83XrA1RHWRpsTjunQbe26gfr66oYpwabtVI3
+	2kw8XuxX3uAE5jBRrNSvUjtg==
+X-Google-Smtp-Source: AGHT+IHpUe5YqkWw0UFJtqeULReAr+4JR57SpZTyi/DJlRlRiBws1wPRXwVJgzIDpy8odTqgv5arRpEHmEIb9VOXibA=
+X-Received: by 2002:a17:90a:e7d2:b0:2fe:b972:a2c3 with SMTP id
+ 98e67ed59e1d1-30c3b909b29mr304390a91.0.1746729199120; Thu, 08 May 2025
+ 11:33:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508182025.2961555-1-tjmercier@google.com> <20250508182025.2961555-2-tjmercier@google.com>
-In-Reply-To: <20250508182025.2961555-2-tjmercier@google.com>
-From: Song Liu <song@kernel.org>
-Date: Thu, 8 May 2025 11:32:39 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7aGCof7=4kcPC0qFr9R1CD-L8aXFV6viBBK43UJZB1KQ@mail.gmail.com>
-X-Gm-Features: ATxdqUF9-QhsdlBFsjsiwpLDumtKQSWnSrDHS1EoJZlTkU8ysEENxH7Dxn847kM
-Message-ID: <CAPhsuW7aGCof7=4kcPC0qFr9R1CD-L8aXFV6viBBK43UJZB1KQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 1/5] dma-buf: Rename debugfs symbols
-To: "T.J. Mercier" <tjmercier@google.com>
-Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	skhan@linuxfoundation.org, alexei.starovoitov@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
-	simona@ffwll.ch, eddyz87@gmail.com, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	jolsa@kernel.org, mykolal@fb.com, shuah@kernel.org
+References: <20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com> <20250508-topic-ubwc_central-v1-10-035c4c5cbe50@oss.qualcomm.com>
+In-Reply-To: <20250508-topic-ubwc_central-v1-10-035c4c5cbe50@oss.qualcomm.com>
+From: Connor Abbott <cwabbott0@gmail.com>
+Date: Thu, 8 May 2025 14:33:08 -0400
+X-Gm-Features: ATxdqUE2vLeH_1fBevqnXZeORD_v0wWgDms-Rnd2Lz_3k2tRIEmXBn1VABvu08w
+Message-ID: <CACu1E7EFK7dzR=hm-J58jz77pMxn2SoJVrfQvV0RHiESi1mkzA@mail.gmail.com>
+Subject: Re: [PATCH RFT 10/14] drm/msm/a6xx: Stop tracking macrotile_mode (again)
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 8, 2025 at 11:20=E2=80=AFAM T.J. Mercier <tjmercier@google.com>=
- wrote:
+On Thu, May 8, 2025 at 2:14=E2=80=AFPM Konrad Dybcio <konradybcio@kernel.or=
+g> wrote:
 >
-> Rename the debugfs list and mutex so it's clear they are now usable
-> without the need for CONFIG_DEBUG_FS. The list will always be populated
-> to support the creation of a BPF iterator for dmabufs.
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 >
-> Signed-off-by: T.J. Mercier <tjmercier@google.com>
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+> SC8180X (A680) and SA8775P (A663) require a write to that register,
+> while other SKUs are fine with the default value. Don't overwrite it
+> needlessly, requiring the developer to read the value back from
+> hardware just to put it in the driver again, introducing much more room
+> for error.
 
-Acked-by: Song Liu <song@kernel.org>
+I'm not sure I understand that last sentence. The original reason I
+always wrote it was that for host image copy we need to know the value
+of macrotile_mode, so again the value exposed to userspace must match
+what's set in the HW. We can't read the value from the HW and send it
+to userspace, because userspace queries this when creating the
+physical device during device enumeration and we really don't want to
+spuriously turn on the device then. That means the safest thing is to
+always program it, guaranteeing that it always matches. Otherwise we
+just have to hope that the default value matches what we expect it to
+be.
+
+I know you're copying this from kgsl, but kgsl doesn't expose the
+macrotile_mode to userspace. I expect that HIC was added afterwards
+and only works via hacks there (if it's even supported at all on the
+relevant SoCs).
+
+Connor
+
+>
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 19 +++++--------------
+>  1 file changed, 5 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/=
+adreno/a6xx_gpu.c
+> index 60f89a2d851a5c383fc14cce4c483f630132a9a6..bee7e9685aa3ea282fb20ef47=
+9e4d243d28418f7 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -594,7 +594,6 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *g=
+pu)
+>
+>         gpu->ubwc_config.min_acc_len =3D 0;
+>         gpu->ubwc_config.ubwc_swizzle =3D 0x6;
+> -       gpu->ubwc_config.macrotile_mode =3D 0;
+>         gpu->ubwc_config.highest_bank_bit =3D 2;
+>
+>         if (adreno_is_a610(gpu)) {
+> @@ -616,13 +615,8 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *=
+gpu)
+>         if (adreno_is_a621(gpu))
+>                 gpu->ubwc_config.highest_bank_bit =3D 0;
+>
+> -       if (adreno_is_a623(gpu)) {
+> +       if (adreno_is_a623(gpu))
+>                 gpu->ubwc_config.highest_bank_bit =3D 3;
+> -               gpu->ubwc_config.macrotile_mode =3D 1;
+> -       }
+> -
+> -       if (adreno_is_a680(gpu))
+> -               gpu->ubwc_config.macrotile_mode =3D 1;
+>
+>         if (adreno_is_a650(gpu) ||
+>             adreno_is_a660(gpu) ||
+> @@ -631,19 +625,15 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu =
+*gpu)
+>             adreno_is_a740_family(gpu)) {
+>                 /* TODO: get ddr type from bootloader and use 2 for LPDDR=
+4 */
+>                 gpu->ubwc_config.highest_bank_bit =3D 3;
+> -               gpu->ubwc_config.macrotile_mode =3D 1;
+>         }
+>
+>         if (adreno_is_a663(gpu)) {
+>                 gpu->ubwc_config.highest_bank_bit =3D 0;
+> -               gpu->ubwc_config.macrotile_mode =3D 1;
+>                 gpu->ubwc_config.ubwc_swizzle =3D 0x4;
+>         }
+>
+> -       if (adreno_is_7c3(gpu)) {
+> +       if (adreno_is_7c3(gpu))
+>                 gpu->ubwc_config.highest_bank_bit =3D 1;
+> -               gpu->ubwc_config.macrotile_mode =3D 1;
+> -       }
+>
+>         if (adreno_is_a702(gpu)) {
+>                 gpu->ubwc_config.highest_bank_bit =3D 1;
+> @@ -691,8 +681,9 @@ static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+>         gpu_write(gpu, REG_A6XX_UCHE_MODE_CNTL,
+>                   adreno_gpu->ubwc_config.min_acc_len << 23 | hbb_lo << 2=
+1);
+>
+> -       gpu_write(gpu, REG_A6XX_RBBM_NC_MODE_CNTL,
+> -                 adreno_gpu->ubwc_config.macrotile_mode);
+> +       /* The reset value only needs altering in some cases */
+> +       if (adreno_is_a680(adreno_gpu) || adreno_is_a663(adreno_gpu))
+> +               gpu_write(gpu, REG_A6XX_RBBM_NC_MODE_CNTL, BIT(0));
+>  }
+>
+>  static void a7xx_patch_pwrup_reglist(struct msm_gpu *gpu)
+>
+> --
+> 2.49.0
+>
