@@ -1,186 +1,93 @@
-Received: from e240-10.smtp-out.eu-north-1.amazonses.com (e240-10.smtp-out.eu-north-1.amazonses.com [23.251.240.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2049E22332B;
-	Thu,  8 May 2025 12:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640EE28682
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746707866; cv=none; b=ULKBkWPCh3hoxhPKZXHysR8/Ryz1fJHcZWqKNh5/MhvlwzqQjkmT3jLmJ/SZjIB7OXuEed3goiKe7kQRatnXbHFJ5ConKCW19qGnIV4L5wmKenvzEFXwtaO5xyP2pe3kyCfyz3NOcPCf/Tc3P8/zrdm33ycrUOxzR8yRxyq/QWU=
+	t=1746707934; cv=none; b=spfjVRWOrnJVTtYAT9VrEoFyjw5yleppG72D84ebx4ar/8Xx9L+e0xN/dVs1mDtELtioSeopc7N1YaEYFPoJSLyxsqSFael6tdor8nSyJwCMvxylY4p1G1TG+vcDUjACHfFTGRKvwdfdMDzSwqYJWJqPF6eCVkpRV7+iIasvAv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746707866; c=relaxed/simple;
-	bh=sw/IM+DGe4wS2k7u4UL/F1KA0r8brXhwGqqYxpwVJ5o=;
+	s=arc-20240116; t=1746707934; c=relaxed/simple;
+	bh=ym/GGePTtcR6pPbHuXLLIC6Kw58vqtqImYgRJwNLr5w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aDxN1o4A76gwbRclwULxL60xs0Gx7zR9wByQVaqDFGQl55WLHKfxwfc4Yba+GgFOTbzPO0sy1cZdK79EsdPjfgN0+4Yn/I2E4tT4hYxqePw4IK2Ee4ilOqzNqBhDFPWmVsqoIHC56Uj8h0y2scVe+CDXIDY96/43Twwmn43BMOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=Gfb7W9lW; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=s2IVMrVJ; arc=none smtp.client-ip=23.251.240.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
+	 To:Cc:Content-Type; b=aeOJiNkfs1KrKelPyJUn5tedEueLjDa7iSCFDOAB+pOWQQD9djTgMMf2vXLLy9B3wnYB0WrT9I/M7Hl/kO+DljghPyh0UVWFPrZ/hdQh/89whxSKeP39HUBkzNOz5a2n6s3SIYp6a8sKfvaEE+NipEiBUpEqkyGN+9F/RCVf9CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wDMkLU/i; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="Gfb7W9lW";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="s2IVMrVJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1746707861;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=sw/IM+DGe4wS2k7u4UL/F1KA0r8brXhwGqqYxpwVJ5o=;
-	b=Gfb7W9lWycYD9ahW1NZqzss4q9HkV3ARG1v2s1jerynNtocVWMlVu5pXlPDOtaO7
-	k0iLGwnxupTdzJMnmjPJfnj22ZwVW0xvGc1pmtLbjBFApMrXcYWcJMjQn4j877HXBPz
-	Iqqb4Y9gilbKQchkpiFmIC4Vx1YykDiZh781KevLuDCcYCWeKuyfw2sH4SnUI14cxZA
-	NskrnYoCBfIQ2X88xrtg+uhQ4u8u5yWIItVlon3tW7J0NLBNsKcZeanBoT66Lul3+3k
-	h8/ZCWKZEqMbSng4JNLnbgOtgpIdXk1ktlBXHt+ToSRwlHHF5Wopr01U5l5uSBXSPfD
-	2de2cYFETA==
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1746707861;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-	bh=sw/IM+DGe4wS2k7u4UL/F1KA0r8brXhwGqqYxpwVJ5o=;
-	b=s2IVMrVJ/FLG1HVUsltaUZpCjQUrT16qkAIwcCBMLW+62J+TcqwguXWpm/elFLPX
-	4Ya94y0BJ9xboLxg7z5156iWHsFAx9OjJzlfwhQ6Xo6jx7bk++Ve+Xw2SpqrQ3bp/Rc
-	CefJvo4jj1mhUZLs093hOaDzuQimaNF1gbA+V94A=
-X-Forwarded-Encrypted: i=1; AJvYcCUZYJXSFGpLA+CiaJrk6+j0tMvOQVZ4xZN2RGFn2Vo9yZ2IEGMsH7RlBnpupii7MdsHF60kEY+u@vger.kernel.org, AJvYcCXVJ0Zql1DsI4NiSYZn6JSBnONmg6SfPLOzOKiuYdLVd0+xI5xh7peY0eswHgb3BbLD4hwwk6CrA2Nv9oo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBHhdBcq1Y2E+6ZzxtwiDtiHEePUmBe6JG2E4VJXomFK58CINT
-	bR8iReHwlOF/eW6LTfoh219pT59GJm7zvSvGp+kl6T4lVwCJqfXNCq9BpJm2ZEzGfrni1H9rrA3
-	owglYxQY5ZAxeXNNCFAm5f2DYtgo=
-X-Google-Smtp-Source: AGHT+IEua/nzvKFxLTo3aDzBURtaPlFt14umDlK/H+ypZTn/XRl9nhpJdxj7vVFrUZ4RezVUwAcez7c3GDbxZ8CrKS0=
-X-Received: by 2002:a17:90b:1e08:b0:305:5f25:fd30 with SMTP id
- 98e67ed59e1d1-30aac184aaamr10925497a91.4.1746707858598; Thu, 08 May 2025
- 05:37:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wDMkLU/i"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30bef9b04adso8250671fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:38:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746707930; x=1747312730; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ym/GGePTtcR6pPbHuXLLIC6Kw58vqtqImYgRJwNLr5w=;
+        b=wDMkLU/iBTSt7ygMLhPJEzEH/GXw1jl/+0nNoklo5RhDLdpBZSGSCrr8ZMFgklmJa+
+         JhY67Wnia9PDKosZAf5iu4OQMMOhdW4SjOwZuwI2EDpogZEMCHQBtqkPl4oWenmw/yhW
+         Dwmt7Iw13Bz8HzRgb/SbHG+mnrNxDDX5z6Nq0O3v6maemtAnnG2hCgsdWn1JKAWmVed8
+         KeQ4/thfr0PFE7SFP+ovnUN8TsWWyOYHHWaUiq4uzICkRHwephI/hwOK9yoJB2/epGyt
+         8DJmSZZ3r1WuGwhmBMqWVp+cplxie10DV1UbR0GohfmIy+jjFZ8toG/h3enhAvP5eqBg
+         EU4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746707930; x=1747312730;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ym/GGePTtcR6pPbHuXLLIC6Kw58vqtqImYgRJwNLr5w=;
+        b=IKa/X5ezQ6923xOwJtIuYczfBTIAewL6pDkxh0bjogQ+7p/xslkDjh9jVevFgM3mJO
+         duJRT27hmeSn0a+0yd7O4hkFTtdY5zqae0oxYcXVFJvFyJU2G62oOQiJY18ZMhJ1B49+
+         m7APpTAEJRuiUptSXz/M1FQpgVOurdZvcul+e1E8dSqWwpDc/leUr1YL5BI1nGFxGPqa
+         8axY6lfec/E4eesfiwZsrMOOSuwT7xL7XEZbE7vfbOWVRO4N+HCn/M6h3IRGLtJbP/jW
+         V/hWfHMMGuD1mnOdADEo68JYjwU/YGcrP04gLxlifQiyel9gOxX4d4G/UKkxsNjxMIvQ
+         5GtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVB1u3f6D26xAc9E8cUkAMkyb3cs4tUpkgm90iP+bGEb4zRkX/d7P7NvIQ8tBn4TC4P6SiiHzMQey1j5Bc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjgPVDRtfaLMG9sKqGkjx/1LQ5oJNc4/FpwlUkOfAA7IiBG9hU
+	09jL8pa373TQm0hInlPTSxEyGTSChi9LzVPlVheq+FbSYvt6r3SNDhTG7ELGXrU2bJbBCeYQqc7
+	UCxnXQylvbyMl/rpsTB728NhKG4pb/EJk5scFTQ==
+X-Gm-Gg: ASbGncunRewAADwpOaycaR4PZlpgeh6YdMrzHVZO24fg6ASu+G4Ju2bv0x2nNaHyjJ6
+	L36ofY9/BE3WZgJqGWM+0PSqZrjW+TIzRG0H7W4A0+dhrlPa0PGFYi4m5KeiRLDiewN75Fz4Mfw
+	8dYWtcIFDgaaXj13CNOLTSYA==
+X-Google-Smtp-Source: AGHT+IGJqMyrmkCUIQDg8PE9y89S4un8Sptn+ne9CkBnqLfvsuKGyDCGNoAKWRWwcnckQHjTgl6OjpG8jsiCqQsITZg=
+X-Received: by 2002:a2e:b893:0:b0:30b:d543:5a71 with SMTP id
+ 38308e7fff4ca-326ad17460dmr28868011fa.1.1746707930459; Thu, 08 May 2025
+ 05:38:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <01100196adabd0d2-24bf9783-b3d5-4566-9f98-9eda0c1f4833-000000@eu-north-1.amazonses.com>
- <c18ef0d0-d716-4d04-9a01-59defc8bb56e@lunn.ch>
-In-Reply-To: <c18ef0d0-d716-4d04-9a01-59defc8bb56e@lunn.ch>
-From: Ozgur Kara <ozgur@goosey.org>
-Date: Thu, 8 May 2025 12:37:41 +0000
-X-Gmail-Original-Message-ID: <CADvZ6EpS4n7W8z9X43J2ahVRzFrXg-MADUhGNRFbm4m6y-9jSw@mail.gmail.com>
-X-Gm-Features: ATxdqUHniDJws00seF4GXFi7TIt1gTXUH4LZCyQmQFYjO7dTCsjdtOxRIUcmU6I
-Message-ID: <01100196afe6ce73-82eaa239-15a5-48d0-bca7-f5870ec0569e-000000@eu-north-1.amazonses.com>
-Subject: Re: [PATCH] net: ethernet: Fixe issue in nvmem_get_mac_address()
- where invalid mac addresses
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Ozgur Kara <ozgur@goosey.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, 
-	Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250506092718.106088-1-clamor95@gmail.com> <20250506092718.106088-2-clamor95@gmail.com>
+In-Reply-To: <20250506092718.106088-2-clamor95@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 8 May 2025 14:38:39 +0200
+X-Gm-Features: ATxdqUHd6nS8kMJuc0f8MXMDIRZHhCR46AYmqFnKzqCQqTYWz7YZni31Y68Ocio
+Message-ID: <CACRpkdZCv2RV1ioXsuJnLHsiErbrfv5jjzvPWMire94+OznY2g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: display: panel: Document Renesas
+ R61307 based DSI panel
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
-X-SES-Outgoing: 2025.05.08-23.251.240.10
 
-Andrew Lunn <andrew@lunn.ch>, 8 May 2025 Per, 15:01 tarihinde =C5=9Funu yaz=
-d=C4=B1:
->
-> On Thu, May 08, 2025 at 02:14:00AM +0000, Ozgur Kara wrote:
-> > From: Ozgur Karatas <ozgur@goosey.org>
-> >
-> > it's necessary to log error returned from
-> > fwnode_property_read_u8_array because there is no detailed information
-> > when addr returns an invalid mac address.
-> >
-> > kfree(mac) should actually be marked as kfree((void *)mac) because mac
-> > pointer is of type const void * and type conversion is required so
-> > data returned from nvmem_cell_read() is of same type.
->
-> What warning do you see from the compiler?
+On Tue, May 6, 2025 at 11:27=E2=80=AFAM Svyatoslav Ryhel <clamor95@gmail.co=
+m> wrote:
 
-Hello Andrew,
+> R61307 is liquid crystal driver for high-definition amorphous silicon
+> (a-Si) panels and is ideal for tablets and smartphones.
+>
+> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
 
-My compiler didnt give an error to this but we had to declare that
-pointer would be used as a memory block not data and i added (void *)
-because i was hoping that mac variable would use it to safely remove
-const so expect a parameter of type void * avoid possible compiler
-incompatibilities.
-I guess, however if mac is a pointer of a different type (i guess)  we
-use kfree(mac) without converting it to (void *) type compiler may
-give an error.
+I see you have gone the extra mile and deduced the underlying
+display controller, excellent work.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-For example will give error:
-
-int mac =3D 10;
-kfree(mac);
-
-because pointer was of a type incompatible with const void * and i
-think its not a compiler error, in this case it could be an error at
-runtime bug and type of error could turn into a memory leak.
-for example use clang i guess give error warning passing argument 1 of
-kfree qualifier from pointer target type.
-
-am i thinking wrong?
-
-> > @@ -565,11 +565,16 @@ static int fwnode_get_mac_addr(struct
-> > fwnode_handle *fwnode,
-> >         int ret;
-> >
-> >         ret =3D fwnode_property_read_u8_array(fwnode, name, addr, ETH_A=
-LEN);
-> > -       if (ret)
-> > +       if (ret) {
-> > +               pr_err("Failed to read MAC address property %s\n", name=
-);
-> >                 return ret;
-> > +        }
-> >
-> > -       if (!is_valid_ether_addr(addr))
-> > +       if (!is_valid_ether_addr(addr)) {
-> > +               pr_err("Invalid MAC address read for %s\n", name);
-> >                 return -EINVAL;
-> > +        }
-> > +
-> >         return 0;
-> >  }
->
-> Look at how it is used:
->
-> int of_get_mac_address(struct device_node *np, u8 *addr)
-> {
->         int ret;
->
->         if (!np)
->                 return -ENODEV;
->
->         ret =3D of_get_mac_addr(np, "mac-address", addr);
->         if (!ret)
->                 return 0;
->
->         ret =3D of_get_mac_addr(np, "local-mac-address", addr);
->         if (!ret)
->                 return 0;
->
->         ret =3D of_get_mac_addr(np, "address", addr);
->         if (!ret)
->                 return 0;
->
->         return of_get_mac_address_nvmem(np, addr);
-> }
->
-> We keep trying until we find a MAC address. It is not an error if a
-> source does not have a MAC address, we just keep going and try the
-> next.
->
-> So you should not print an message if the property does not
-> exist. Other errors, EIO, EINVAL, etc, are O.K. to print a warning.
->
-
-ah, i understand that its already checked continuously via a loop so
-it would be unnecessary if i printed an error message for
-of_get_mac_addr.
-hm this is an expected situation and device are just moving on to the
-next property I understand thank you.
-I will look at code again and understand it better.
-
-Thanks for help,
-Regards
-
-Ozgur
-
->     Andrew
->
-> ---
-> pw-bot: cr
->
->
+Yours,
+Linus Walleij
