@@ -1,168 +1,155 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80B322D4FD
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF5C1E4BE;
+	Thu,  8 May 2025 13:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746712477; cv=none; b=EdIppf8jDOxZxkqu6d3EgHUGMuvQSdeejEpo9yTJptq+/LjU6wGaL353naAOtJXXAZVXddIG/Klr4jH+BBPUeAvo+4nIMps3hVh9OPpQKa8WRxjK5gLY7PFzJfulq9OM3ClEQyzxeIXHhOQ9ttCd3YYN9UC3xH48aPdPNwMuYl4=
+	t=1746712549; cv=none; b=jpCSYMkjXMCm8sCKuUuHW2X+DWvvLGW8E0flBVsPr23DC7GMpgBpB9xa5tUhc9gkn2FclE9qBW7jyU7xblRf7cPDmVLucUjJAfyqfRTPKZH0Z3fI2OoCVlCwd29L8r3j35JDQWW5zRbsT8yeBJP06pTEzjydve5COjQGr+pk8ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746712477; c=relaxed/simple;
-	bh=qRzs9PVcepQsfzI+91MDulpnTFZB7bYA8DD+AYQJXBg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sM59w3teY3uIjb2avQ3f3CE2FwfwDqa5qGl0UzUNQ91caefpw9ocQEA1KzBPvKwM7ng/8gTd/Pxtm5cT5CN9L8xHKQViWMtSLZKhK72bKiJ3lkIDyn0fF8IFhol0sjta3OV1k89GU4GlWM9Yc1f8bOiJZHfHSFOE7lrtCQmTvNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H0yIog/H; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H0yIog/H"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a0b3f62d1aso132988f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 06:54:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746712474; x=1747317274; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=OE2XfGjW9rbiEGA9DoJIt4ipIusyoB7R0P16CBqgBPM=;
-        b=H0yIog/HB6bZgr3/fYdOYKGCseCGqZSoA0NQyJ4AUqPHOJWtMoGBTJ4DN6DS/3W7iP
-         HJbaU8X3q5KIPBDVgKP+ElwgtYSqSvJa8qK2YdqtntZ9P52+63rO8ugQKoVM/ndc8pOj
-         Og6qHPCTPZBm8rTZV1HuBAI4gQbetbhUGvq9vTd0qLuG3rqLC4qmnWfyjBrMjLKtqLxl
-         8T3iS92pnMt9n1Z4Sm29bpBWzgIcOd5Cq4mgp4kZjCh3yssq8RclaYbNuPry5PpxSMwN
-         OSBCIhh0WnrFDPE7nP0m5CjQJExjwFE6mkZsmoD+tUpzgo+j8TDPXI130q1UGPHnB8tw
-         YC8Q==
+	s=arc-20240116; t=1746712549; c=relaxed/simple;
+	bh=9yPNPSc0LUCMXjjbU4c3craIMFzHhiWcrmCoxP6V+F0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uPvAF4FhlLYfLL5Kyz+Gvqpowk2qBpJZAo0764zl6cGL4AEiKDmYn/HZzL2wPz3vPxtJqT7j3KjuxB20CPuW5v0FPy9nZmU8RdQpkJPQQ/YDLHx3a6oWfF0CJwpyGvYeAsWz0kz0lg1JH0zb2ZvRNT/j+IZPGiwqUgyjdyniiO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-877c48657f9so340548241.1;
+        Thu, 08 May 2025 06:55:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746712474; x=1747317274;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1746712543; x=1747317343;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=OE2XfGjW9rbiEGA9DoJIt4ipIusyoB7R0P16CBqgBPM=;
-        b=MFpJAJCbcrDDGO2RoLdNn/MNEaWee5SGy1VbmDuUl7zxW2QjVTta+e1lqye0lvy1t9
-         N2Bh8A3+zr0LjcC5CAXrQ+tjIHefl96kcBFZ/S8zXIe05JkhqQOjaKSdc9rKL3/7BeRo
-         tEtUrqBBzMjNkBoL9+sGeAu3lW7hFf5kATdMkcYdaCRUlQZUZnWYpfQtejaA6npLwv5u
-         PxST/n/RjRSE/HVL60XehFEAT5cjhhuPU0Pm3EFqWD91QtPtkYlG5S7KhlrpO3iUNDum
-         Xf90jhFNWHyK0cZrrFdm105qAng779/CutQDUJHh1IDJwjOab+hpu4hFc89zGyqvCxmt
-         ry5g==
-X-Forwarded-Encrypted: i=1; AJvYcCVnHnMCG+oHghRGx7/GkKzGAmBFxTQpB+tJWscYzXZVVlb+nVuqv5s5G+mdLuSCsUKsBAIl0wZMTqKFGBk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXKZJb4cyFIyrGlRRF+sBtNZP84+vdZBGhMxbaOSgopnk4d7sq
-	wMffneQvsOD3m13yRfpM4nTwRwISTAqBNTpwL9idB/ezW92ZCLSwXCXVL8l8vio=
-X-Gm-Gg: ASbGncvflLBj6nZ2S/Zn6UmdePxdBLzzzQRPsSQyr9f7Be8ndkNn3orsD87N/wM5cb7
-	soGA85PiGl6F6+v3EJefu64Jj6FT0Gb/mBmZSiQj0UDQ1oOSfht30EXOcbz0oA3ZlMJI2BiGLYR
-	6MDg/uD4Ey5mU9XBZG6pVsFg/86e1nf9XEkfpoji41JEi74f72UIVfcXQ3ok+B5RfaUCjPAqo2k
-	CEd10gCUNyr318gcti15R89+X8SuhhNRYMbMh9Hh3wdx7f+jaiT9OBBM5MQ3oln/dWI7xbabf89
-	IKSgZ5XRrSAFBDXx2e3/yIkAw6CRl4o4mNSkn4xNhCYwdKKG6jatistO6eXpuiKaIS+sgg==
-X-Google-Smtp-Source: AGHT+IGFsswoZdi7bBzt6mldCknC7FapGsMM1Gttk1zZwwuSCaJhWziPOOq27/+/xll1dWJ7kbC78Q==
-X-Received: by 2002:a05:6000:2703:b0:3a0:bd7a:7bab with SMTP id ffacd0b85a97d-3a0bd7a7d1fmr539248f8f.12.1746712473884;
-        Thu, 08 May 2025 06:54:33 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32b0a9sm38507795e9.2.2025.05.08.06.54.32
+        bh=TG53lCY9swcVAuETWptBrWnI+kXcrj2DMV+TDx845sE=;
+        b=SWhySSNh+NfkhkJM53EEutcnzhVUBnvjhTQ+4u7UHt7HWS9cL7fO9E4Wrjxz2QbuXD
+         w19vkIiPUTh+LYnt0VFGCIOidxmkoqpxI0Ey7J7nvGFYVgzkxEU3UVzOLxnVF+HKfPRc
+         vQisCERwtt6Aen+UpTrsWBIS0qh41qC2Br6JOe5wwH297ohkGK++bOGbBldIunNXKo+f
+         ymx1ZarkdpluD5xeytn6jSoSOqeUcTU2XelubJ3PqbFmUdgWuQ4e+TQ/SVePdE52tVkf
+         +Wd9TDHm1n7QWBpKIgJb7rBXJFjFYQXV/B7G0oZgbAwYjPSX9vEUWz0ll6aqqQGItKi7
+         QQsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9fsdiVJ8MjzN4Mv5tdyWI/cA1hnevZEW3OkZrwC8p4KteigwHyNzAjK66YNjhHrUUV/+Ws/B3YK4WOGZx@vger.kernel.org, AJvYcCVRvdmLcvlPIUjkfN3/YHWKC1Asv3kHOgYERU2p67OU8biqFsHVNCpPp1Rnzd8lYv4bM5jWA6ziZ5m3NWOE7cHSzlg=@vger.kernel.org, AJvYcCWHzSHp6D+0a/uRbvkOaPk614jLm0rG/AV6UCeA3wl+uqJ90ZYssekMdKwQDog+I6gV0j2yBWPKNnnu@vger.kernel.org, AJvYcCWJZOJLxeKQzc+TyLO64ZifRI5b9c0CdfPtozBGJkWzck9rvdaSV9rhjiSbxnD+xtNWSmXs2tVWqy+y@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0D7m50Vl4TKOJCz3fnKeIhDcuOSvJMRssz3+96vmwLGXiPLMB
+	XMgo6bV3yzllzrCaWP2+XtFcVROlZB0UfMdqU9zXgPuVuDi8LVTl/e0fjJFw
+X-Gm-Gg: ASbGncs5lnHkNL3zwyNG3sUPlMeuFrbrK8pOJBLq9VZV98ZE1FLQGPVAE/QsI0KYJzC
+	jpnOw5bTyWBEteHdZt8T+Rh/uSQgJH+4hl/7/nrHNfnsPJxyMGBHanu2xR6XQ/BKTyWXoIORyw1
+	r+v6BhoODdZD+MgPhCkZKxIFMHP6TqIC0jr1e4KRn/0WB6oGdqWVIgOr4bw0C30qKYTfazqNkK2
+	SlXm9HaO6dkMiCBTHGNNzm71JA8act2zVuUF2oW4/rHbM9x54WNd8M4qKzzxmjYyHg7nY4JhXLP
+	nkvYjSOWBL1IRR0qQvKFIII1IXGc4+6XZ37Las+MMZXv1/+DkO6Q+y3DKUfWqgpMwi+OqsTh4Yu
+	rxyA=
+X-Google-Smtp-Source: AGHT+IGHGVHlk0vPBsU/x6OzgEC77+U/haMrfV4lYHLuXTqNDEa0zw2GO5SddMzzg2RMkE3Y9cJmMw==
+X-Received: by 2002:a05:6102:3309:b0:4d7:9072:1873 with SMTP id ada2fe7eead31-4dc738e63afmr6195059137.24.1746712543238;
+        Thu, 08 May 2025 06:55:43 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dea85b24e3sm12237137.9.2025.05.08.06.55.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 06:54:33 -0700 (PDT)
-Message-ID: <809ff3f7-612f-4e0b-8f81-59290d4bd0aa@linaro.org>
-Date: Thu, 8 May 2025 15:54:31 +0200
+        Thu, 08 May 2025 06:55:42 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-877c48657f9so340538241.1;
+        Thu, 08 May 2025 06:55:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUPmzHpkV7H97l1bzgh+/3KZOGMUuFwcgus8PWfyhCEN5AADk8l6tGyNxG1gt9TvmLKTo+8ySxneyts@vger.kernel.org, AJvYcCVqSsxf0hX+zDMIu0MrV2vrShlsQa6F6UpLoVJYXw690dANCizgiCJbzVjmUYCbyvQmWnK6vI0w9mTk@vger.kernel.org, AJvYcCWAUL9JpyjJbq8mKdADD4FkgnuEVdBYox/FhrgURN278qyO6JLoNZsrLLZNR+TP0pW5dek+Ibg7MUI7XPrQX5rc3FM=@vger.kernel.org, AJvYcCWEKwWpft9ExK1fLeTjHXUGNFJT2v45zWHgh85W2XIWA15FPlqwMlSZrlknyZycB1xK8bg3Ac3LTPRZglMf@vger.kernel.org
+X-Received: by 2002:a05:6102:3309:b0:4d7:9072:1873 with SMTP id
+ ada2fe7eead31-4dc738e63afmr6195041137.24.1746712542587; Thu, 08 May 2025
+ 06:55:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] drm/panel: Add Novatek NT37801 panel driver
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250505-sm8750-display-panel-v1-0-e5b5398482cc@linaro.org>
- <20250505-sm8750-display-panel-v1-2-e5b5398482cc@linaro.org>
- <CACRpkdZi3ryJ_D6NYaLS1Cmevp-Pmbdq6zTL5+a=cmXNq42N5g@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- 2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <CACRpkdZi3ryJ_D6NYaLS1Cmevp-Pmbdq6zTL5+a=cmXNq42N5g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250410140628.4124896-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250410140628.4124896-2-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdWx9Xk5QksoGFvCyo2HLXZ_+WRBCe3bDrZx=bfPoXHJgg@mail.gmail.com> <df05d999-8eba-4fbd-93f6-7919f73da11a@tuxon.dev>
+In-Reply-To: <df05d999-8eba-4fbd-93f6-7919f73da11a@tuxon.dev>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 8 May 2025 15:55:30 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXQMtTuvi+VzEN-OkGNneoxngrcyxffG80gk73GMN8Fpg@mail.gmail.com>
+X-Gm-Features: AX0GCFtHcX-rwmtxLJu-ieDhfsL3iAqABkUt_x6vV19TS74XV00cFj1CzKSYXKw
+Message-ID: <CAMuHMdXQMtTuvi+VzEN-OkGNneoxngrcyxffG80gk73GMN8Fpg@mail.gmail.com>
+Subject: Re: [PATCH 1/7] clk: renesas: rzg2l-cpg: Skip lookup of clock when
+ searching for a sibling
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 08/05/2025 14:54, Linus Walleij wrote:
-> (...)
->> +static int novatek_nt37801_on(struct novatek_nt37801 *ctx)
->> +{
->> +       struct mipi_dsi_device *dsi = ctx->dsi;
->> +       struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
->> +
->> +       dsi->mode_flags |= MIPI_DSI_MODE_LPM;
->> +
->> +       mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf0,
->> +                                    0x55, 0xaa, 0x52, 0x08, 0x01);
-> 
-> The above is obviously some kind of unlocking
-> sequence to open page 1 of some vendor registers.
-> 
-> We know this because the exact same sequence appear in
-> panel-innolux-p079zca.c  and panel-sony-tulip-truly-nt35521.c
-> and the last argument is the page, so there we added
-> a switch page macro making it clear what is going on.
-> Could you do the same here?
+Hi Claudiu,
 
-I don't have docs and this is auto-generated panel driver based on
-downstream DTS, but sure, I can prepare something similar based on above
-assumption.
+On Wed, 7 May 2025 at 14:12, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+> On 05.05.2025 18:52, Geert Uytterhoeven wrote:
+> > On Thu, 10 Apr 2025 at 16:06, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >>
+> >> Since the sibling data is filled after the priv->clks[] array entry is
+> >> populated, the first clock that is probed and has a sibling will
+> >> temporarily behave as its own sibling until its actual sibling is
+> >> populated. To avoid any issues, skip this clock when searching for a
+> >> sibling.
+> >>
+> >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >
+> > Thanks for your patch!
+> >
+> >> --- a/drivers/clk/renesas/rzg2l-cpg.c
+> >> +++ b/drivers/clk/renesas/rzg2l-cpg.c
+> >> @@ -1324,6 +1324,9 @@ static struct mstp_clock
+> >>
+> >>                 hw = __clk_get_hw(priv->clks[priv->num_core_clks + i]);
+> >>                 clk = to_mod_clock(hw);
+> >> +               if (clk == clock)
+> >> +                       continue;
+> >> +
+> >>                 if (clock->off == clk->off && clock->bit == clk->bit)
+> >>                         return clk;
+> >>         }
+> >
+> > Why not move the whole block around the call to
+> > rzg2l_mod_clock_get_sibling() up instead?
+> >
+> >             ret = devm_clk_hw_register(dev, &clock->hw);
+> >             if (ret) {
+> >                     clk = ERR_PTR(ret);
+> >                     goto fail;
+> >             }
+> >
+> >     -       clk = clock->hw.clk;
+> >     -       dev_dbg(dev, "Module clock %pC at %lu Hz\n", clk,
+> > clk_get_rate(clk));
+> >     -       priv->clks[id] = clk;
+> >     -
+> >             if (mod->is_coupled) {
+> >                     struct mstp_clock *sibling;
+> >
+> >                     clock->enabled = rzg2l_mod_clock_is_enabled(&clock->hw);
+> >                     sibling = rzg2l_mod_clock_get_sibling(clock, priv);
+> >                     if (sibling) {
+> >                             clock->sibling = sibling;
+> >                             sibling->sibling = clock;
+> >                     }
+> >             }
+> >
+> >     +       clk = clock->hw.clk;
+> >     +       dev_dbg(dev, "Module clock %pC at %lu Hz\n", clk,
+> > clk_get_rate(clk));
+> >     +       priv->clks[id] = clk;
+> >     +
+> >             return;
+>
+> This should work as well. I considered the proposed patch generates less
+> diff. Please let me know if you prefer it addressed as you proposed.
 
-> 
-> With this addressed:
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> Yours,
-> Linus Walleij
+Given you have a later patch that contains a similar check, postponing
+setting priv->clks[id] looks like the better solution to me.
 
+Gr{oetje,eeting}s,
 
-Best regards,
-Krzysztof
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
