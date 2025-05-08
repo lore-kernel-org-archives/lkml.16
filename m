@@ -1,151 +1,212 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1333428E17
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 06:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05674747F
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 06:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746685345; cv=none; b=Baa73zEyToCDNi8y8jCN9hAQohnWmEmpkh2GsUakIIQQMKWBimGoy/2THzHgWYIrwIZyslS+MSrLFO0Qdvi2+W8bE9eWZ+I+oVq05x8/tB+vH2g6Sc24jqAxq68ENrLuE/mO37n4BKS6bsRKYap/7GMt4vGCkP7CKQ1/aU7Soq8=
+	t=1746685493; cv=none; b=WjpcmYSHlHA93nGpnHOMMA1sz4ZpdfciqYolcecN/T4dAsKU+RBgbjdJDqd6pyL9g7Ko+sPRst2VjGwbt72p7a4ZrqvwVtGx7WoQdbirAEAGVoejRF8vdIN1tB6P6Cp0ajPyI4r9a7vyRiNVk450kzXl2FW+YaC0mDd5CfKB3UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746685345; c=relaxed/simple;
-	bh=FRGadOKXD/0qhxB+ApG2aEjr9bZ6ix+2m19qPwL9EIA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=b7imgu/b1OmbV0EsBrW5o5QXz3krFdTVcJjhq1HQ9uP1WXDpU8OPehOnI1iJNKw5V4+gV1nK57QMN3bJX66KOEaaZ1KNyvd6aDsnWwhJx4JK1FTr7j1RpG4D1AkKHgtBeP/DqvQqCyES0zgj1aB0N7jdurfS4Qngrl0UP7VhAe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D0BE4BAS; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746685493; c=relaxed/simple;
+	bh=p/VdULAVeF4K2Q+upl4+rwoadWVrqvXYpynC63s0o6E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P+hsa+k5dRRMnb3arvrNo8g8g+Blr6okfDek9Sig2lYAB0sAVX+JfN7dMRhU8LOVTLooV2AlxPseEyOFF8mSK7OSzRM2Xu2SnUGs0j6nQkWHa6b3wPEBA8C7F9+zxq+JhOO3yqAqawtL5xm7cjuJ5Vx5JYpCrzhhqOLD9V+REgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=j6vSFg8z; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D0BE4BAS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746685344; x=1778221344;
-  h=date:from:to:cc:subject:message-id;
-  bh=FRGadOKXD/0qhxB+ApG2aEjr9bZ6ix+2m19qPwL9EIA=;
-  b=D0BE4BASpvam3gTKjDnbwsvhI0yvjvm6dtyp9OMGdrVWWITqD+AiIQIi
-   CbE6BvCFORKqd4cEkGlKX2yukH6y5+VM9/cV6W7ElE8KVjcATJ2tNXJhE
-   Vnj1Ge8vbfcGHprEtoo6DAAcgG9Bhv9HSv3xzeeQ0ecWAQZB5J0N90MMr
-   rV6I5AcyHobqUPpz9G3sqntG7hm86tQYLdqJCb66Eq0Opu48MmEZ0Ks2Q
-   26B7F7aKTtSWajZyuhLxCqw0YZ08sxDM3iIYljCwxdK4z4+5sCOGOZIWl
-   UUDT3aFScunxgCNyQB52PzO6NdqJlH/qR+tqDbMVivQSnz43wNZKpOf0o
-   w==;
-X-CSE-ConnectionGUID: g40lgGCQRaq9605bDLv+CA==
-X-CSE-MsgGUID: YGNKoyMwQZCIH8SMsqnNGw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48561297"
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="48561297"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 23:22:23 -0700
-X-CSE-ConnectionGUID: CizIWZ/FRh6KcUZEazO46g==
-X-CSE-MsgGUID: IVo4L0wKSSCjMrW/mNQ2rg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="135893802"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 07 May 2025 23:22:23 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCueC-000Adp-06;
-	Thu, 08 May 2025 06:22:20 +0000
-Date: Thu, 08 May 2025 14:21:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/alternatives] BUILD SUCCESS
- 7f9958230d8a79d474829bee25ec9426397335ce
-Message-ID: <202505081422.DFJHuBHF-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="j6vSFg8z"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746685478;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Ei4PX0Vl85kv5sOEPUuFgHeGfJKMG2wW4+tzyXrfHA4=;
+	b=j6vSFg8zlUnRI+4FgIxe8tjodDfHTAMbx/eAL+u4pKT4ndQ5QNRHZ94lMh/TRF/Cqqbi+W
+	/bsYj5tiGWCmhD49SeWQOoH0x0IJc1GfOXvOr4eXAYeVCXciB4L2f90Ckd3Z5BRBfjQHtT
+	Cq3VhrozBKPGFLEp7qGa3tzyOtsrzRI=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: bpf@vger.kernel.org
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Cong Wang <cong.wang@bytedance.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v1] bpf, sockmap: Fix concurrency issues between memory charge and uncharge
+Date: Thu,  8 May 2025 14:24:22 +0800
+Message-ID: <20250508062423.51978-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/alternatives
-branch HEAD: 7f9958230d8a79d474829bee25ec9426397335ce  x86/mm: Fix false positive warning in switch_mm_irqs_off()
+Triggering WARN_ON_ONCE(sk->sk_forward_alloc) by running the following
+command, followed by pressing Ctrl-C after 2 seconds:
+./bench sockmap -c 2 -p 1 -a --rx-verdict-ingress
+'''
+------------[ cut here ]------------
+WARNING: CPU: 2 PID: 40 at net/ipv4/af_inet.c inet_sock_destruct
 
-elapsed time: 2672m
+Call Trace:
+<TASK>
+__sk_destruct+0x46/0x222
+sk_psock_destroy+0x22f/0x242
+process_one_work+0x504/0x8a8
+? process_one_work+0x39d/0x8a8
+? __pfx_process_one_work+0x10/0x10
+? worker_thread+0x44/0x2ae
+? __list_add_valid_or_report+0x83/0xea
+? srso_return_thunk+0x5/0x5f
+? __list_add+0x45/0x52
+process_scheduled_works+0x73/0x82
+worker_thread+0x1ce/0x2ae
+'''
 
-configs tested: 74
-configs skipped: 133
+Reason:
+When we are in the backlog process, we allocate sk_msg and then perform
+the charge process. Meanwhile, in the user process context, the recvmsg()
+operation performs the uncharge process, leading to concurrency issues
+between them.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The charge process (2 functions):
+1. sk_rmem_schedule(size) -> sk_forward_alloc increases by PAGE_SIZE
+                             multiples
+2. sk_mem_charge(size)    -> sk_forward_alloc -= size
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    clang-19
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    clang-19
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    clang-19
-arc                                 defconfig    gcc-14.2.0
-arm                              allmodconfig    clang-19
-arm                               allnoconfig    gcc-14.2.0
-arm                              allyesconfig    clang-19
-arm                                 defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    gcc-14.2.0
-hexagon                          allyesconfig    clang-19
-hexagon                             defconfig    gcc-14.2.0
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    clang-20
-i386                             allyesconfig    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-openrisc                          allnoconfig    clang-21
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    clang-21
-parisc                           allyesconfig    gcc-14.2.0
-parisc64                            defconfig    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    clang-21
-powerpc                          allyesconfig    gcc-14.2.0
-riscv                            allmodconfig    gcc-14.2.0
-riscv                             allnoconfig    clang-21
-riscv                            allyesconfig    gcc-14.2.0
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    clang-19
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250506    clang-20
-x86_64      buildonly-randconfig-002-20250506    gcc-12
-x86_64      buildonly-randconfig-003-20250506    gcc-12
-x86_64                              defconfig    clang-20
-x86_64                                  kexec    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    clang-18
-x86_64                         rhel-9.4-kunit    clang-18
-x86_64                           rhel-9.4-ltp    clang-18
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-14.2.0
+The uncharge process (sk_mem_uncharge()):
+3. sk_forward_alloc += size
+4. check if sk_forward_alloc > PAGE_SIZE
+5. reclaim    -> sk_forward_alloc decreases, possibly becoming 0
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Because the sk performing charge and uncharge is not locked
+(mainly because the backlog process does not lock the socket), therefore,
+steps 1 to 5 will execute concurrently as follows:
+
+cpu0                                cpu1
+1
+                                    3
+                                    4   --> sk_forward_alloc >= PAGE_SIZE
+                                    5   --> reclaim sk_forward_alloc
+2 --> sk_forward_alloc may
+      become negative
+
+Solution:
+1. Add locking to the kfree_sk_msg() process, which is only called in the
+   user process context.
+2. Integrate the charge process into sk_psock_create_ingress_msg() in the
+   backlog process and add locking.
+3. Reuse the existing psock->ingress_lock.
+
+Fixes: 799aa7f98d53 ("skmsg: Avoid lock_sock() in sk_psock_backlog()")
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+---
+ include/linux/skmsg.h |  7 +++++--
+ net/core/skmsg.c      | 37 +++++++++++++++++++++++++------------
+ 2 files changed, 30 insertions(+), 14 deletions(-)
+
+diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
+index 0b9095a281b8..3967b85ce1c0 100644
+--- a/include/linux/skmsg.h
++++ b/include/linux/skmsg.h
+@@ -378,10 +378,13 @@ static inline bool sk_psock_queue_empty(const struct sk_psock *psock)
+ 	return psock ? list_empty(&psock->ingress_msg) : true;
+ }
+ 
+-static inline void kfree_sk_msg(struct sk_msg *msg)
++static inline void kfree_sk_msg(struct sk_psock *psock, struct sk_msg *msg)
+ {
+-	if (msg->skb)
++	if (msg->skb) {
++		spin_lock_bh(&psock->ingress_lock);
+ 		consume_skb(msg->skb);
++		spin_unlock_bh(&psock->ingress_lock);
++	}
+ 	kfree(msg);
+ }
+ 
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index 276934673066..77c698627b16 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -480,7 +480,7 @@ int sk_msg_recvmsg(struct sock *sk, struct sk_psock *psock, struct msghdr *msg,
+ 		msg_rx->sg.start = i;
+ 		if (!sge->length && (i == msg_rx->sg.end || sg_is_last(sge))) {
+ 			msg_rx = sk_psock_dequeue_msg(psock);
+-			kfree_sk_msg(msg_rx);
++			kfree_sk_msg(psock, msg_rx);
+ 		}
+ 		msg_rx = sk_psock_peek_msg(psock);
+ 	}
+@@ -514,16 +514,36 @@ static struct sk_msg *alloc_sk_msg(gfp_t gfp)
+ 	return msg;
+ }
+ 
+-static struct sk_msg *sk_psock_create_ingress_msg(struct sock *sk,
++static struct sk_msg *sk_psock_create_ingress_msg(struct sk_psock *psock,
++						  struct sock *sk,
+ 						  struct sk_buff *skb)
+ {
++	spin_lock_bh(&psock->ingress_lock);
+ 	if (atomic_read(&sk->sk_rmem_alloc) > sk->sk_rcvbuf)
+-		return NULL;
++		goto unlock_err;
+ 
+ 	if (!sk_rmem_schedule(sk, skb, skb->truesize))
+-		return NULL;
++		goto unlock_err;
++
++	/* This will transition ownership of the data from the socket where
++	 * the BPF program was run initiating the redirect to the socket
++	 * we will eventually receive this data on. The data will be released
++	 * from consume_skb whether in sk_msg_recvmsg() after its been copied
++	 * into user buffers or in other skb release processes.
++	 */
++	skb_set_owner_r(skb, sk);
++	spin_unlock_bh(&psock->ingress_lock);
+ 
++	/* sk_msg itself is not under sk memory limitations and we only concern
++	 * sk_msg->skb, hence no lock protection is needed here. Furthermore,
++	 * adding a ingress_lock would trigger a warning from lockdep about
++	 * 'softirq-safe to softirq-unsafe'.
++	 */
+ 	return alloc_sk_msg(GFP_KERNEL);
++
++unlock_err:
++	spin_unlock_bh(&psock->ingress_lock);
++	return NULL;
+ }
+ 
+ static int sk_psock_skb_ingress_enqueue(struct sk_buff *skb,
+@@ -585,17 +605,10 @@ static int sk_psock_skb_ingress(struct sk_psock *psock, struct sk_buff *skb,
+ 	 */
+ 	if (unlikely(skb->sk == sk))
+ 		return sk_psock_skb_ingress_self(psock, skb, off, len, true);
+-	msg = sk_psock_create_ingress_msg(sk, skb);
++	msg = sk_psock_create_ingress_msg(psock, sk, skb);
+ 	if (!msg)
+ 		return -EAGAIN;
+ 
+-	/* This will transition ownership of the data from the socket where
+-	 * the BPF program was run initiating the redirect to the socket
+-	 * we will eventually receive this data on. The data will be released
+-	 * from skb_consume found in __tcp_bpf_recvmsg() after its been copied
+-	 * into user buffers.
+-	 */
+-	skb_set_owner_r(skb, sk);
+ 	err = sk_psock_skb_ingress_enqueue(skb, off, len, psock, sk, msg, true);
+ 	if (err < 0)
+ 		kfree(msg);
+-- 
+2.47.1
+
