@@ -1,105 +1,128 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CC91C5D59;
-	Thu,  8 May 2025 10:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DF842065;
+	Thu,  8 May 2025 10:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746698930; cv=none; b=CFZY9zCiYH0bZPiX49Wli+LtpnE5tG0kZ3sgL36VeRacF1uEQb0GuC8SXhzspS4l3/BAwOrNqi0CIC2ws13HWpK/r8DZRx2ogfSYBwfoLxN0pz0akFbNQ9mNFu7o2ZcDFIivjTryoTsfT5TyEZfdTenIEuHs5J8PYw+lTCebceE=
+	t=1746699053; cv=none; b=GboERZ5JcVv5KBLiaQQxd6CWi43pum50pTouI147QQ4YGFhHDi+eBavJigz+lGsCNpqTVlZ582vCurbkJl3wHNrBBscnFSjyediEDWADM5rEetwg8K8FDBgxXV1nlecBu1bJNrd/6wR+aQPeOmBPDwXWjd2iWsPhMnJ6r2oqk74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746698930; c=relaxed/simple;
-	bh=jE981OKiDJArMCxAhfbnrFBr0Jncd4SYmMkp9KmBFbM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ilyDa1O9HOL4rAHSmLbDxqokhwUqg4EyAq9WfxQPCFt3iPxLokki4SJon3XeUMu3ht95goKAS8h4dNV6Ela9dAaGYXcM2h0rDeNo5g8mmE8i4yUN+p1GBSeYlLitIDaJdI4nzCKb1ywGIvfTW5fhn/1yPBwbBO7YJODtpCXUI6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=etw+YE2v; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746699053; c=relaxed/simple;
+	bh=al1FqgCmXx5VBt+1ZySNsT8ko0r+Xa1DTRkUn0hBPyk=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=B6BgOrxrXM7TE6t4Px4USi/t/EGbRPIGYNeXbRs/dRyE/3L3FoIo0F0ofQjAXSMUmXbfjgVTkcWDsblO2QxSarJSvNeYgoa5UoZKVWak+OOh+btQnwsgbljeg2rfjZI60GD2fS18aDBi3MfKQruV37nwEeW05f2tsxEjzO8AUwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q1JOiXu1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="etw+YE2v"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac2ab99e16eso165124366b.0;
-        Thu, 08 May 2025 03:08:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746698926; x=1747303726; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/yggcqTk0XsV8ZLZmi4xW1R5HqwyeXBRnVnXXBXzi44=;
-        b=etw+YE2vBje2Lylq0+flHZi/g9Fjg4V+7oFuJT9Hcbz2drH0w7DMp5JR6ZbqEyM442
-         9+6dF0s+3h4IVJ4p13unbm8aXdrT6s4l3Rijt6K3BqZSICMdSakw3wUy0Lva0c4ecMHC
-         5PfhFThKxzvb5UgNL3+VmjpJ4538LxBVTcFy71tjPsYTCX+115wiwzGSStY+afBrTQmX
-         f6ELSIwN4VX8t34Q/QBcsMpDd8e6vMnKSzDN1vPcPLMoFkdgcuuUJtLr9Js0igL9ryfS
-         Rz+SvPYeoIOuSjsgPaX2Rizg06T7raFQILznlknjaS0wIYCRAxUQ5k9XRt6XfUz8xpaS
-         CZVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746698926; x=1747303726;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/yggcqTk0XsV8ZLZmi4xW1R5HqwyeXBRnVnXXBXzi44=;
-        b=cQhYNFQcUZCb6KETnDbZi8jsNiFtG1WJ32c5vUIF5sVJG/iWrqRURACazFQ+Ddagfs
-         4qW3GI5Ddp1Y1HN477/h9el5VAkDKRANBBxnk5FqeGo7E9NzCX6e3F96MSWBIKYfO3Xa
-         +SC63Zwq0aY120L+1eoXDyRitzUaLSWmkVemPXu/yauJ2cLuC8jCX8a5cu8NGljp3w6e
-         fVjVAbHycLpjktfp9UBiZf+VTnwrL4Nx60jLIKw+wpr3BbHatYNY8SKeubas4HAB58Ik
-         JKtTSwaBvz1TyOGvmYfuNmVcntUzbyELYUsRuL1mCls2JKXiZix9kvkaM7ha7uPlHW1D
-         L3KA==
-X-Forwarded-Encrypted: i=1; AJvYcCUxEAFFBc4FP1Rf15zCCHY+8xMyL4j23BRDA4JNSzD8iGf8gBZHC8V4ygCKsvSgLGiGLKnf4BxvpuDOH2loTzg9UsQ=@vger.kernel.org, AJvYcCWR5l/1K8E2yZXn7eHVXTFVT9zBVnmnBUzJOQ2N9CUW4D1NWbQe3exL2t6Rl3aY89k79u8IEfmWppCx+qg=@vger.kernel.org, AJvYcCXSoQExMa+wZk1BKObVlz31rskT5wjUixYCfnC/tGCXuIkZgLlll/fOeDjQyCHmTkwcM1hPH5hmbL43LEU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIXkJYg8Rc/spb63KJidY92KOsn9bGQftuiNye1BbAAngDChb3
-	1WDbMw8QxKDLfTuXfjLigmlb0o9lM92zDptIybaK98S0kfE64091LJycM69dQvTOiQ==
-X-Gm-Gg: ASbGncv77bEbJNiSInpRn73zaiBsIAcKHFfMUgzJK+9wP99nD9rDrW4hkPb6JyNXaXn
-	ogXDnlrcXINk/396dLpkpv6bbU6HhiNK17NO6+gL86AnXzVXdA2P/tzp8ygauR04DLS1st+hMBY
-	KQvbN0/7LnFwmT7GOhdffeF6sGYBVdX19tZzxLbpDff0KZiwLDdPQB6Phkn8B3aMwbL1E6E5fXD
-	jnt9Lf2ZwZEE3SzmHxKbk5dbfbbnHsd7jD4GQpMqXwVPuiFig+cJC/BRVqkIBVq99cFhS3zboHj
-	N0iNVLSMWME1gRnNizTMq4gHRJZeFYjFPoZcmNc=
-X-Google-Smtp-Source: AGHT+IFLWNwEqwwL7ySlndzs3w8P+oDxqOxKWrfiQG9aG8cFcpataBaGlfldTtB7XJlIcIUGavdlKg==
-X-Received: by 2002:a17:907:a4ca:b0:acf:8758:50f5 with SMTP id a640c23a62f3a-ad1fe674462mr270453466b.5.1746698926348;
-        Thu, 08 May 2025 03:08:46 -0700 (PDT)
-Received: from localhost ([87.254.1.131])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ad1894c0202sm1059131366b.93.2025.05.08.03.08.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 03:08:46 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-media@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] media: rcar_jpu: remove redundant case statement when c is zero
-Date: Thu,  8 May 2025 11:08:35 +0100
-Message-ID: <20250508100835.336240-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q1JOiXu1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20669C4CEE7;
+	Thu,  8 May 2025 10:10:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746699053;
+	bh=al1FqgCmXx5VBt+1ZySNsT8ko0r+Xa1DTRkUn0hBPyk=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=q1JOiXu16Id6bmC4kxGhe9ggBpPRqbPahqHkUlMfgo0p8an0i/GHnXDs4t2wiQP8b
+	 0b0uD/z8QvtzY2RjZo6GJqmq98+WEaZuBUYWq0v5FgGBHQt9B5Zg04m2qVBFZBJDOY
+	 kq4nKxezAKb4Gc7xDn9lId3CSsQ+wetxWoty2nQ3WZ0b2UU3vaEVf1ZyX1g2GhYCfa
+	 HVWLvqkvxh9XGx6VIIhmVB4fB9PN2AkxJ9Bke2iY/HeK07QmyLGYnORxiMbHIRQYgD
+	 ULAOYek3vcRgGQTU8RqQFjMvSSz4l0rotmoOUcOSaLfOXAxlvzFosiYSljeWDVQUDe
+	 U7lQekgo0HFWw==
+Date: Thu, 08 May 2025 05:10:51 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: krzk+dt@kernel.org, afd@ti.com, devicetree@vger.kernel.org, 
+ vigneshr@ti.com, v-singh1@ti.com, kristo@kernel.org, 
+ linux-arm-kernel@lists.infradead.org, khasim@ti.com, nm@ti.com, 
+ conor+dt@kernel.org, praneeth@ti.com, linux-kernel@vger.kernel.org
+To: Paresh Bhagat <p-bhagat@ti.com>
+In-Reply-To: <20250508091422.288876-2-p-bhagat@ti.com>
+References: <20250508091422.288876-1-p-bhagat@ti.com>
+ <20250508091422.288876-2-p-bhagat@ti.com>
+Message-Id: <174669905140.3798918.8007695230469922299.robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: arm: ti: Add bindings for AM62D2
+ SoC
 
-The case statement where c is zero is redundant because the previous
-while loop will only exit if c is non-zero or non-0xff, so c can
-never be zero by the time the switch statement is reaced. Clean up
-the code by removing it.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/media/platform/renesas/rcar_jpu.c | 2 --
- 1 file changed, 2 deletions(-)
+On Thu, 08 May 2025 14:44:20 +0530, Paresh Bhagat wrote:
+> The AM62D2 SoC belongs to the K3 Multicore SoC architecture with DSP core
+> targeted for applications needing high-performance Digital Signal
+> Processing. It is used in applications like automotive audio systems,
+> professional sound equipment, radar and radio for aerospace, sonar in
+> marine devices, and ultrasound in medical imaging. It also supports
+> precise signal analysis in test and measurement tools.
+> 
+> Some highlights of AM62D2 SoC are:
+> 
+> * Quad-Cortex-A53s (running up to 1.4GHz) in a single cluster. Dual/Single
+>   core variants are provided in the same package to allow HW compatible
+>   designs.
+> * One Device manager Cortex-R5F for system power and resource management,
+>   and one Cortex-R5F for Functional Safety or general-purpose usage.
+> * DSP with Matrix Multiplication Accelerator(MMA) (up to 2 TOPS) based on
+>   single core C7x.
+> * 3x Multichannel Audio Serial Ports (McASP) Up to 4/6/16 Serial Data Pins
+>   which can Transmit and Receive Clocks up to 50MHz, with multi-channel I2S
+>   and TDM Audio inputs and outputs.
+> * Integrated Giga-bit Ethernet switch supporting up to a total of two
+>   external ports with TSN capable to enable audio networking features such
+>   as, Ethernet Audio Video Bridging (eAVB) and Dante.
+> * 9xUARTs, 5xSPI, 6xI2C, 2xUSB2, 3xCAN-FD, 3x eMMC and SD, OSPI memory
+>   controller, 1x CSI-RX-4L for Camera, eCAP/eQEP, ePWM, among other
+>   peripherals.
+> * Dedicated Centralized Hardware Security Module with support for secure
+>   boot, debug security and crypto acceleration and trusted execution
+>   environment.
+> * One 32 bit DDR Subsystem that supports LPDDR4, DDR4 memory types.
+> * Low power mode support: Partial IO support for CAN/GPIO/UART wakeup.
+> 
+> This SoC is part K3 AM62x family, which includes the AM62A and AM62P
+> variants. While the AM62A and AM62D are largely similar, the AM62D is
+> specifically targeted for general-purpose DSP applications, whereas the
+> AM62A focuses on edge AI workloads. A key distinction is that the AM62D
+> does not include multimedia components such as the video encoder/decoder,
+> MJPEG encoder, Vision Processing Accelerator (VPAC) for image signal
+> processing, or the display subsystem. Additionally, the AM62D has a
+> different pin configuration compared to the AM62A, which impacts embedded
+> software development.
+> 
+> This adds dt bindings for TI's AM62D2 family of devices.
+> 
+> More details about the SoCs can be found in the Technical Reference Manual:
+> https://www.ti.com/lit/pdf/sprujd4
+> 
+> Signed-off-by: Paresh Bhagat <p-bhagat@ti.com>
+> ---
+>  Documentation/devicetree/bindings/arm/ti/k3.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
 
-diff --git a/drivers/media/platform/renesas/rcar_jpu.c b/drivers/media/platform/renesas/rcar_jpu.c
-index 81038df71bb5..6af154b41eb4 100644
---- a/drivers/media/platform/renesas/rcar_jpu.c
-+++ b/drivers/media/platform/renesas/rcar_jpu.c
-@@ -643,8 +643,6 @@ static u8 jpu_parse_hdr(void *buffer, unsigned long size, unsigned int *width,
- 				return 0;
- 			skip(&jpeg_buffer, (long)word - 2);
- 			break;
--		case 0:
--			break;
- 		default:
- 			return 0;
- 		}
--- 
-2.49.0
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250508091422.288876-2-p-bhagat@ti.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
