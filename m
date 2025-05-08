@@ -1,256 +1,206 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011012.outbound.protection.outlook.com [52.101.70.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE3F1F5F6;
-	Thu,  8 May 2025 13:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746709432; cv=none; b=Wo7VK7XV+Vlc6H0qrCd/h3hCugbZSNFmcsTwgG9xOidEXcyimwg+qBmxWKh86knuMXB9unlbEGj0HTilE5dDPDJRjV49VaFOgFrWb0TFRzWfFpR6+89ohMw3yjqZacDGevf9f6V5lgv9uyhu/VDU5m3FNIuhSfeFGgss6jInsiw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746709432; c=relaxed/simple;
-	bh=mNlDzPJ3yL3xQYv9gZ1G3DIrhkhtYmeejPE9W1ui4hc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JrUICTSSpHh/JMNJC29xE5QFx41MBPzz1si6dwIpCMMH1JfTAtEbFgGvaPxmXVUco4PZHUU1rYfpQXHIo6E+AyYa0ny0ORAPPJ6vui5OoCrAtZSW7Eu0BZDudG+1X4FNjhyuhqqlgysww4p8HC1MCKsEoSu6lw3AlgjOuFGaJa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IYuR7DDx; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB7684A35;
+	Thu,  8 May 2025 13:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746709598; cv=fail; b=ByV4wTuBiiAF/WGUOemexmM4ePDFGjmkpdJkljvQobh9p/QgSACXDXna6Rdcw0+oGKr7ZR7WW+dd4XFP7ThvdsEj2klVUb1Oxi4C8FI9csfPeF/g6nK8SK1Qlq7CFFA9J4fe0x/HIDUsYTsoLZKxwxVa0BiUaTJpKKJcC9nqvoo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746709598; c=relaxed/simple;
+	bh=iEPkSJyL6+BpXatFtQo6G0vbGl6tp1ULx8Wbb3YQM1U=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=lPmJKvAJTJsLrXFalqsB+pstRA264fS+fYXlbWrOqtthsjxJ+aHGUYaPRSkRvPM5Yx4YLodDMh16nAhaHhiOxXply70KX/YTWn45Qz1qxEbeizA3O+x6CjiWlCKuXfDHsLi20WzOL5ci1t+0oMMVkWaIvz43cXB6aHgSSSJ2k/U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=fail smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=oecok5gB; arc=fail smtp.client-ip=52.101.70.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=mt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IYuR7DDx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746709431; x=1778245431;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mNlDzPJ3yL3xQYv9gZ1G3DIrhkhtYmeejPE9W1ui4hc=;
-  b=IYuR7DDxsD22oiWjNuJEWeSqXXCWBBPY73m3VTe9umODHrJGZdAJ1ATw
-   0mfU+rZKJMhuoe6Ng7iQi77D+OMbgMA3YeX2UBrJ2/gCXg3kr0OYVIaIO
-   3AyQcKruI2WvsxXFib1AB5aVS2ZIRRK9wA0lbHAKeHgWYt2yExI7jGACl
-   NuoIPpXC0cuc2l5zKaGTlCI9lzbDfI2+7RH6q4eUFuJVIoq4LMNxLgCdo
-   Dhea8Ka4jJIJdlq3rkYl4jwZM5P3MnIXhUicpB9WL8zMFDBYfC49FfjLA
-   D7og7Zbj2YisDJ6G5wSOYQ+dneA8ro842nD2YCuBjt6FUxhavHf6IASdW
-   g==;
-X-CSE-ConnectionGUID: CyF3W5qjTYyRSwdprUTU9A==
-X-CSE-MsgGUID: 5dxt7QvoSh6oTFhZ2bmBpw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48197148"
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="48197148"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 06:03:50 -0700
-X-CSE-ConnectionGUID: fsaLDxAhS3mkpT7mHdbtNA==
-X-CSE-MsgGUID: 7CTJNPGYRb6FVp6zoPECwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="136685601"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP; 08 May 2025 06:03:47 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id D8D3719D; Thu, 08 May 2025 16:03:45 +0300 (EEST)
-Date: Thu, 8 May 2025 16:03:45 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"seanjc@google.com" <seanjc@google.com>, "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
-	"bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
-	"x86@kernel.org" <x86@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
-	"Zhao, Yan Y" <yan.y.zhao@intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, 
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC, PATCH 02/12] x86/virt/tdx: Allocate reference counters for
- PAMT memory
-Message-ID: <zyqk4zyxpcde7sjzu5xgo7yyntk3w6opoqdspvff4tyud4p6qn@wcnzwwq7d3b6>
-References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
- <20250502130828.4071412-3-kirill.shutemov@linux.intel.com>
- <1e939e994d4f1f36d0a15a18dd66c5fe9864f2e2.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="oecok5gB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ffCo3YAdAM5hCzW+0pYqx03XK0Ae28jUQAYVvYd0zC4wMIdd8XXrFkx2kj1ghHfn/sDJCAZrIBcUrzzJLt7EVydvj6jsLw8ROa9RTjF/LNh6PFY43HwebFHNwH936kGQFKv4VgKpc0BGsk7NKIHuEKnYf9DPlti0FobVflBK4OHI07mbs8q8SsxI7nUL2uth+NM/7cEnJWdKfTQUAP6IJQe7kTC7ixEQnJ7K0fKFta+VC3o+t3qerbHLQnYxAUHlu7PRvqzEFzAW2BKXkCuCgEcyoSh7/vBGxoYssSUDewwWPjdh0A+J7eJJ7Db6PACKlgHYojrZOoGampOmALrFPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=D6hEccL6HiR7eyGIqBcyl2E98fOhlcxvHaAuAy2FE4o=;
+ b=VdzXat2tx0YJv7irjN5KnjBxoD/Iv187Uu8fLj18S6nhWBlnxq1T/og9VhrYPhqhKlPu8dR0JwNIeKwU8mY7WLyzKWi/8jYyT31IHa9gV9ji1i/lMN1tfNSQudMslBvkWgNIPAlfVmG41u8YV3661EXyT5tYxa9487aNaAfPptsLgaJH7Dik30p4L5ALnVf6OA1x+TblIOTX3UJcfAqmLKyNj0vSu/x7Mj4dNNGKqO5tgqGr/ANOf814Thk8F7n2i4mHSPZMo2I6wSkEualLKEyAybyMmdGSANW3yRzUHkv5pQM6W7yf2Tvi5jDikyyHh4+DhKSK+7It3cPQZ4llkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
+ header.d=mt.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D6hEccL6HiR7eyGIqBcyl2E98fOhlcxvHaAuAy2FE4o=;
+ b=oecok5gBWy8H+urELq8Sfe0lP6JizyQCQa8aKCZ/lDwzWUCWk7XRAupT2OJnyBmr6Zy+JKhsAIfycqqQzAquBmavwyNRyoWPNb+o3zTiWbrm2uV4MECjJiVo+PmYVkYwvFG0ZxiptKa5DS9v4H6C1cq8njMQxAdZoAXHMy27cV6RXjl7y8BMy1MIFAi++dhW9G9Mh+pcyXK1J1ZJMg0feasMqYwzRDHXGSmYnD+xlSsuSj4DS0/JfpRNdPiAXjgFNwJ/vaKtUzE8K2VRx3+DymyAxopxB8hnzO/NO8A9CxXGwVazwjjro619Fv3TxHmTcKjMhDcl/aNnsg6xLETPyw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mt.com;
+Received: from DB6PR03MB3062.eurprd03.prod.outlook.com (2603:10a6:6:36::19) by
+ DBAPR03MB6439.eurprd03.prod.outlook.com (2603:10a6:10:199::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8699.21; Thu, 8 May 2025 13:06:32 +0000
+Received: from DB6PR03MB3062.eurprd03.prod.outlook.com
+ ([fe80::b201:e423:f29:53b]) by DB6PR03MB3062.eurprd03.prod.outlook.com
+ ([fe80::b201:e423:f29:53b%4]) with mapi id 15.20.8678.033; Thu, 8 May 2025
+ 13:06:32 +0000
+From: Markus Burri <markus.burri@mt.com>
+To: linux-kernel@vger.kernel.org
+Cc: Markus Burri <markus.burri@mt.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	"Oliver O'Halloran" <oohall@gmail.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
+	Maciej Falkowski <maciej.falkowski@linux.intel.com>,
+	Oded Gabbay <ogabbay@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Nuno Sa <nuno.sa@analog.com>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	linuxppc-dev@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org,
+	linux-gpio@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	Markus Burri <markus.burri@bbv.ch>
+Subject: [PATCH v4 0/6] Fix potential out-of-bounds error in some drivers
+Date: Thu,  8 May 2025 15:06:06 +0200
+Message-Id: <20250508130612.82270-1-markus.burri@mt.com>
+X-Mailer: git-send-email 2.39.5
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MI1P293CA0020.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:3::18) To DB6PR03MB3062.eurprd03.prod.outlook.com
+ (2603:10a6:6:36::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1e939e994d4f1f36d0a15a18dd66c5fe9864f2e2.camel@intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB6PR03MB3062:EE_|DBAPR03MB6439:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3467c20e-bc98-47c1-7f94-08dd8e31272d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|52116014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?r1nQFFE4MGlxjrpUOEUIk9D58BhMaVfcP7iZwYKP2xxfrqnYNBmWeYvIIZ1u?=
+ =?us-ascii?Q?PO6045/2Rimboh2q8fBNLJHTEwGQrzIQmSytq6ugSBhr0uW2fV88itVr9Nit?=
+ =?us-ascii?Q?CvbsvUxWWE8/MF5I0zhldJrM9LzLEE50/cPdPsjWNbw+pLY6wKyJksjhRx09?=
+ =?us-ascii?Q?r3PLA6Kr02FsWOKqaUJOGQkjzDLP/+8E75P4zGA4cd49hpMw7r9wKSOnbV46?=
+ =?us-ascii?Q?gyEHHd17hWXV3q0Y2y1lYrbXWv9LrtsVYXn7JeJYolsqXpKOZLZ8PdOywgb1?=
+ =?us-ascii?Q?kw/OUXwWAFIetWWFWOLOJflTUH02Gf4/zz47+ChSAIjuwxByIyeq6kywscsX?=
+ =?us-ascii?Q?/1BaP13TXRjoH+N9tnmRINIxoHKHCg38LdLwywu7aJ8qjVTjaOsYXS8p1NOp?=
+ =?us-ascii?Q?GIAijrBg+2VZvvHCrf1qRvFAVbwa6be+Czu1734mopqKH+XImDok4P/Hf9qb?=
+ =?us-ascii?Q?AvTyYntkXYzpoPvSmr21NhW3II5JfOr2NHSe41ts1x0B8GYcdkemq6CTgxy+?=
+ =?us-ascii?Q?MFrV4uvlvnh8Ka0AAZYbRoQnyDj5ZblB0rkqTP4SdXyE3C3tL6M+rViWZJyc?=
+ =?us-ascii?Q?fdgMpzzdkPqSaXPk4U6Y/dLjCxITglw38lvP1zKBhGWbIht4+lAusKcsT1y7?=
+ =?us-ascii?Q?1qS927BR5J8KDvUuJy/yrEkAsaPmelJLN92Y/iZlaX/mjK6ilxXjZq6figSY?=
+ =?us-ascii?Q?GnOLmVP4uoDFuevuIeQ3AcikFIc+0cuZ6UCyIcfEYkmIupkm01tl4OhIJfHP?=
+ =?us-ascii?Q?28fLjjXjxfEhty7lcpoYDoS+fytrwLQAa/wPnFwArp79zuxUkxtUEBTGAHwO?=
+ =?us-ascii?Q?Fnfa7QBLAgv6z7iheFwTGtk+1TOCp44rzoX+c3v+dgQqER28TRk7axfka4pS?=
+ =?us-ascii?Q?heF7ZtF60n0HzurkLeOuB9JS2+1Oti8hp6TonrKqYFX602eqGg3t8vMO5d9i?=
+ =?us-ascii?Q?aNejh5SLOXkLIqLXXt/EebUcn93qAPzJgBh359sLcoCDeEg2G5EUqbnPuIPW?=
+ =?us-ascii?Q?v6i/5z91iVjOGLbxwA9fJThaXl+NiXIaLPN47NUpe/HURA48IP4VblUidJEH?=
+ =?us-ascii?Q?o9Bys8w87hVAC5FGqeb1MdBbyqGGkKjT/v1yY16Uiq5C39c6q4XsVBjy/oCb?=
+ =?us-ascii?Q?rHB3bHeql7T/zCEgPZsCK4IVKxE8sTll+Ajop1Jq5yeF8Cyg9AKePssuda0J?=
+ =?us-ascii?Q?kQ8T0PI5bcL3nwDKjKhRXkh5p4xvCU1n3sMqCrUlSD0nEsigKT7/LuqWwKF4?=
+ =?us-ascii?Q?mb1TCvTafu1CRaM97YV2OjH7bRRvKfYWV1MMxLD2eiIBfQ59OWDCDyVujr8j?=
+ =?us-ascii?Q?8QHD1Of9QSJBoj3HuezI73Q/rsUbqI+en0/wcu2K0DItdIA2DMLKhZwSrlGI?=
+ =?us-ascii?Q?AuxgaUbWBMqQMBU7xq8eD8GQ4zEb8X8TNrJEKywEvJnN3k117Vv5EnT5Ixwc?=
+ =?us-ascii?Q?ok0guqH0Kkl1cwlhb733dcm++MFQgWHD15QSJttOY1fDgnL+jxQaLg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR03MB3062.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?j7eTDj7baio8H7fE3UviJotx3bFAFgoQvCJy+eqq6Jb4PiLG2XHjPwqc217a?=
+ =?us-ascii?Q?A3YhbdWRpY5EpA0UnDFrE56fMLG4rlYp5eL/eNvjft2camzhAKJFYxrNZj1J?=
+ =?us-ascii?Q?wE9FT1k5sMyYscUJ7GFZgJkDgPaCEMTmr2eIss6qwJf9TBtvxQyFJx5ks+hc?=
+ =?us-ascii?Q?J95ZsZmK1aq5fAvk2ivke4MDFgzE0EN3tqkpcOLhNz2SmT5ToG8cKq/nTxvz?=
+ =?us-ascii?Q?igaB8yaheUt0cNcYjb72bekVUtt6NLFXTqzQIDV4gZgL0UEDPsMlLu960XGo?=
+ =?us-ascii?Q?XvVNfjZ+trOd/D0CbYC96KI/DR5q0jRlJ+DlgYrCtueSNYgGNtaqe6AC9O73?=
+ =?us-ascii?Q?bolCtAe8f6han+Nl0bhj0Iq5Pb0YLLOWIsv2lKAe/rpfmgPs0HS3xdYfdBTd?=
+ =?us-ascii?Q?1/jgtpSDpQItyoruAkX0aOk/BMIa+IwHVSDRx7mZ9ESw4HDP5P2tyG0iBZu6?=
+ =?us-ascii?Q?RO+2MzmAjMycFZY9Q1upbXKtjlbkslKk8KeqkiHgz5UMDDqk+6dhhWmbL5jv?=
+ =?us-ascii?Q?DpDuUuhq+buR6Wvohex0xaj14bcgS5JmPqbdtgEXsoDzZAXnE9Imt70Op94J?=
+ =?us-ascii?Q?yVrzNQQdsCiDn5Ir9ZzisJ2/MK8MwIwOgovKPCl7/+2vBIUhvjN/rjwkJRgk?=
+ =?us-ascii?Q?KjZ/fbsm+vfoW9fp9WT94U/RCzJwR83/TVRy51ea/QFj7oTygKvWQ2Jt8vNa?=
+ =?us-ascii?Q?Su9yq8jUbQ9liAT5lOQB5kO+/IDmW+o2RZpGZw/x7mfU4PsWK3bjQTJD3uY7?=
+ =?us-ascii?Q?TbTrDl/2qsI8XoB9Dc5xQCX+l2FTjWG4ynkVZ7CKlfM2pIFpdcWfoxgKKhW/?=
+ =?us-ascii?Q?lVWCC0FmNzx17NvNdMk/IebLZiKPrqjY5plaEFAIjyQrPMI/jYXziIN5Nxro?=
+ =?us-ascii?Q?wtzIG/ohfy4H+X9pdsO2LycL/xeW8Yg0+aPnx1LY+NiG7RV84vPZpxND8KnH?=
+ =?us-ascii?Q?rR8HQlNFMmRo09iO/2TolU+we8aLogqE5xrNZqxZ+KW0MBuiKDxZy+tonatM?=
+ =?us-ascii?Q?Rba9zqR3vnjx1N0gMDOXAzf/8FBTAKdOHaz1Ofr8O0+6szPpFGnjwvK2OWQu?=
+ =?us-ascii?Q?MeaizXWykRLYvuaNrIEdVEE4Sjtjdqx+ZkQhnztZ/mn5A95FN+XE7+rX9hlz?=
+ =?us-ascii?Q?hW6S+kUCawz4blLjwu7ZjEzA8nNMnBB7nJQdjKQtPTGOyb58MKKljD7Zo7bf?=
+ =?us-ascii?Q?zVLF1vhWzvTXhHXsUFi9FbmbbbV4lqZwxO+6N8HXZUNwfLq5KjP9IFQSlwrI?=
+ =?us-ascii?Q?2sP9SJ1CCwcZshblZyPoL/rTiYLDti+zsYCOSvzIfyhdhgBfk4fQhvLxiPBz?=
+ =?us-ascii?Q?IMdfsRfL7IKJipKx3Qvkd+9k8DsjNTlrKV9L50Am5zpgvERO+A+X86vyZSbC?=
+ =?us-ascii?Q?EBDQKScA7fd8aERD/FT1FWacbPJjLdmHFsfZ+WfuKJm6h4+q2QX3j1eB9nzC?=
+ =?us-ascii?Q?Mvuv7JIi4lZY+rbVZzp7Rv6ItFmFEAv8viCFVdEDvpGSw3x3PH5CmJpgqQlv?=
+ =?us-ascii?Q?eXQC49EWHQqE3DRZdeOcu9Irm5aeMWj39O5q8wzSVcyzpAq2VD8a2uVI2hLu?=
+ =?us-ascii?Q?JTHIAM0FBAReljxiyHnpkIxWaSmEHv3ElD01pgu6?=
+X-OriginatorOrg: mt.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3467c20e-bc98-47c1-7f94-08dd8e31272d
+X-MS-Exchange-CrossTenant-AuthSource: DB6PR03MB3062.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 13:06:32.0742
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zbyPbVaA+1pN2BWb2HGQnGUFF1At4GBFzn6ms7m9v7OUfBoHtNcPbhdsDva7scS1F6pmDkB7qfKPdmVt6KrUEA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR03MB6439
 
-On Mon, May 05, 2025 at 11:05:12AM +0000, Huang, Kai wrote:
-> 
-> > +static atomic_t *pamt_refcounts;
-> > +
-> >  static enum tdx_module_status_t tdx_module_status;
-> >  static DEFINE_MUTEX(tdx_module_lock);
-> >  
-> > @@ -1035,9 +1038,108 @@ static int config_global_keyid(void)
-> >  	return ret;
-> >  }
-> >  
-> > +atomic_t *tdx_get_pamt_refcount(unsigned long hpa)
-> > +{
-> > +	return &pamt_refcounts[hpa / PMD_SIZE];
-> > +}
-> > +EXPORT_SYMBOL_GPL(tdx_get_pamt_refcount);
-> 
-> It's not quite clear why this function needs to be exported in this patch.  IMO
-> it's better to move the export to the patch which actually needs it.
-> 
-> Looking at patch 5, tdx_pamt_get()/put() use it, and they are in KVM code.  But
-> I think we should just put them here in this file.  tdx_alloc_page() and
-> tdx_free_page() should be in this file too.
-> 
-> And instead of exporting tdx_get_pamt_refcount(), the TDX core code here can
-> export tdx_alloc_page() and tdx_free_page(), providing two high level helpers to
-> allow the TDX users (e.g., KVM) to allocate/free TDX private pages.  How PAMT
-> pages are allocated is then hidden in the core TDX code.
+Several drivers are using debugfs and follow the same pattern.
 
-We would still need tdx_get_pamt_refcount() to handle case when we need to
-bump refcount for page allocated elsewhere.
+A buffer is created on the stack with a limited size to copy the given data
+from user space. The copy is performed using simple_write_to_buffer.
+This function limits the input according to the specified buffer size, but
+it does not write a string terminator if the buffer is truncated.
+Therefore, the driver adds this zero terminator afterward.
+Unfortunately, the original buffer size is used as an index, which can lead
+to an out-of-bounds error.
 
-> > +
-> > +static int pamt_refcount_populate(pte_t *pte, unsigned long addr, void *data)
-> > +{
-> > +	unsigned long vaddr;
-> > +	pte_t entry;
-> > +
-> > +	if (!pte_none(ptep_get(pte)))
-> > +		return 0;
-> > +
-> > +	vaddr = __get_free_page(GFP_KERNEL | __GFP_ZERO);
-> > +	if (!vaddr)
-> > +		return -ENOMEM;
-> > +
-> > +	entry = pfn_pte(PFN_DOWN(__pa(vaddr)), PAGE_KERNEL);
-> > +
-> > +	spin_lock(&init_mm.page_table_lock);
-> > +	if (pte_none(ptep_get(pte)))
-> > +		set_pte_at(&init_mm, addr, pte, entry);
-> > +	else
-> > +		free_page(vaddr);
-> > +	spin_unlock(&init_mm.page_table_lock);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int pamt_refcount_depopulate(pte_t *pte, unsigned long addr,
-> > +				    void *data)
-> > +{
-> > +	unsigned long vaddr;
-> > +
-> > +	vaddr = (unsigned long)__va(PFN_PHYS(pte_pfn(ptep_get(pte))));
-> > +
-> > +	spin_lock(&init_mm.page_table_lock);
-> > +	if (!pte_none(ptep_get(pte))) {
-> > +		pte_clear(&init_mm, addr, pte);
-> > +		free_page(vaddr);
-> > +	}
-> > +	spin_unlock(&init_mm.page_table_lock);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int alloc_tdmr_pamt_refcount(struct tdmr_info *tdmr)
-> > +{
-> > +	unsigned long start, end;
-> > +
-> > +	start = (unsigned long)tdx_get_pamt_refcount(tdmr->base);
-> > +	end = (unsigned long)tdx_get_pamt_refcount(tdmr->base + tdmr->size);
-> > +	start = round_down(start, PAGE_SIZE);
-> > +	end = round_up(end, PAGE_SIZE);
-> > +
-> > +	return apply_to_page_range(&init_mm, start, end - start,
-> > +				   pamt_refcount_populate, NULL);
-> > +}
-> 
-> IIUC, populating refcount based on TDMR will slightly waste memory.  The reason
-> is IIUC we don't need to populate the refcount for a 2M range if the range is
-> completely marked as reserved in TDMR, because it's not possible for the kernel
-> to use such range for TDX.
-> 
-> Populating based on the list of TDX memory blocks should be better.  In
-> practice, the difference should be unnoticeable, but conceptually, using TDX
-> memory blocks is better.
+This patch set fixes this issue in all the drivers I have detected so far.
+The fix is to return an error in case of an unexpectedly long buffer being
+received and to use the effective written size for the zero terminator for 
+consistency.
 
-Okay, I will look into this after dealing with huge pages.
+Changes in V4:
+* Revert the decrement of accepted size by one character
+* Added patches for drivers with the same pattern
 
-> > +
-> > +static int init_pamt_metadata(void)
-> > +{
-> > +	size_t size = max_pfn / PTRS_PER_PTE * sizeof(*pamt_refcounts);
-> > +	struct vm_struct *area;
-> > +
-> > +	if (!tdx_supports_dynamic_pamt(&tdx_sysinfo))
-> > +		return 0;
-> > +
-> > +	/*
-> > +	 * Reserve vmalloc range for PAMT reference counters. It covers all
-> > +	 * physical address space up to max_pfn. It is going to be populated
-> > +	 * from init_tdmr() only for present memory that available for TDX use.
-> > +	 */
-> > +	area = get_vm_area(size, VM_IOREMAP);
-> > +	if (!area)
-> > +		return -ENOMEM;
-> > +
-> > +	pamt_refcounts = area->addr;
-> > +	return 0;
-> > +}
-> > +
-> > +static void free_pamt_metadata(void)
-> > +{
-> > +	size_t size = max_pfn / PTRS_PER_PTE * sizeof(*pamt_refcounts);
-> > +
-> > +	size = round_up(size, PAGE_SIZE);
-> > +	apply_to_existing_page_range(&init_mm,
-> > +				     (unsigned long)pamt_refcounts,
-> > +				     size, pamt_refcount_depopulate,
-> > +				     NULL);
-> > +	vfree(pamt_refcounts);
-> > +	pamt_refcounts = NULL;
-> > +}
-> > +
-> >  static int init_tdmr(struct tdmr_info *tdmr)
-> >  {
-> >  	u64 next;
-> > +	int ret;
-> > +
-> > +	ret = alloc_tdmr_pamt_refcount(tdmr);
-> > +	if (ret)
-> > +		return ret;
-> >  
-> >  	/*
-> >  	 * Initializing a TDMR can be time consuming.  To avoid long
-> > @@ -1048,7 +1150,6 @@ static int init_tdmr(struct tdmr_info *tdmr)
-> >  		struct tdx_module_args args = {
-> >  			.rcx = tdmr->base,
-> >  		};
-> > -		int ret;
-> >  
-> >  		ret = seamcall_prerr_ret(TDH_SYS_TDMR_INIT, &args);
-> >  		if (ret)
-> > @@ -1134,10 +1235,15 @@ static int init_tdx_module(void)
-> >  	if (ret)
-> >  		goto err_reset_pamts;
-> >  
-> > +	/* Reserve vmalloc range for PAMT reference counters */
-> > +	ret = init_pamt_metadata();
-> > +	if (ret)
-> > +		goto err_reset_pamts;
-> > +
-> >  	/* Initialize TDMRs to complete the TDX module initialization */
-> >  	ret = init_tdmrs(&tdx_tdmr_list);
-> >  	if (ret)
-> > -		goto err_reset_pamts;
-> > +		goto err_free_pamt_metadata;
-> >  
-> >  	pr_info("%lu KB allocated for PAMT\n", tdmrs_count_pamt_kb(&tdx_tdmr_list));
-> >  
-> > @@ -1149,6 +1255,9 @@ static int init_tdx_module(void)
-> >  	put_online_mems();
-> >  	return ret;
-> >  
-> > +err_free_pamt_metadata:
-> > +	free_pamt_metadata();
-> > +
-> >  err_reset_pamts:
-> >  	/*
-> >  	 * Part of PAMTs may already have been initialized by the
-> 
+Changes in V3:
+* Decrement accepted size by one character according to feedback
 
+Changes in V2:
+* Use effective written size as index instead of original size
+
+---
+[V3] https://lore.kernel.org/lkml/20250505203830.5117-1-markus.burri@mt.com/
+[V2] https://lore.kernel.org/lkml/20250505045346.29647-1-markus.burri@mt.com/
+[V1] https://lore.kernel.org/lkml/20250501063240.25295-1-markus.burri@mt.com/
+
+Markus Burri (6):
+  iio: backend: fix out-of-bound write
+  accel/ivpu: Use effective buffer size for zero terminator
+  iio: fix potential out-of-bound write
+  gpio: fix potential out-of-bound write
+  powerpc/eeh: fix potential OoB
+  powerpc/eeh-powernv: fix potential OoB
+
+ arch/powerpc/kernel/eeh.c                    |  7 ++++++-
+ arch/powerpc/platforms/powernv/eeh-powernv.c |  7 ++++++-
+ drivers/accel/ivpu/ivpu_debugfs.c            |  2 +-
+ drivers/gpio/gpio-virtuser.c                 | 12 ++++++++++--
+ drivers/iio/industrialio-backend.c           |  5 ++++-
+ drivers/iio/industrialio-core.c              |  5 ++++-
+ 6 files changed, 31 insertions(+), 7 deletions(-)
+
+
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.39.5
