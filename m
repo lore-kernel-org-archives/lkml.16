@@ -1,136 +1,100 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C3F4B1E5E
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 03:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E319D4B1E5E;
+	Thu,  8 May 2025 03:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746673652; cv=none; b=KVAGSiSuno/AOWy0BMLxp1qeqyL5EWNxfQ6UySqfa9Siypk2jd1uvs2XZKI3nYdcX8LEoVFVypASBuUsif0ixbxUO6lDQPtFRKW3R4qWb3WFm5KAfQ/7FePhdAOpC1fE/KWwVKBHRyr46lwXHRXiw3QtweTMD0UOpK6SGKYzGC4=
+	t=1746673771; cv=none; b=K6FyWZaX7Z+RJqpnr1+ldGaYiOdEyb6t/S8hIGP6C6izYUQQYFd6hRVFJuBW8NFl1zv/XTKMfMEz4R4rXbx6u9jpMArwKorTcVgGm0OoIA3VnfppuiAdHmdZOoPIxeP7eHzAs71xDrXimw6Ldp8dV5ruImVy+j8CwxT6m1SiIQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746673652; c=relaxed/simple;
-	bh=crbFYD5yoswrWzX4vK/KAloTcJOKL9njY3taECgb4yA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=qoXJb/SDDdkMCHPFDfo2KjL54fSpud8448HDq6gT1NHPNEHtZm/zrei9MN6nPHHXYcFgVkkNHno5JIOj74xtUaiE6QwmtK3fmYW4sjvs2UMM0ugDPNiOXYSBI7oOcNb7Ser/LkNvhLGEgyuRxRfLxYxjvf7+VWrkNgrNnogq58Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=PH10iqJp reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746673771; c=relaxed/simple;
+	bh=9VPUkAAqKJdFWpDRqamHtFrmx85GBqkgnKOSnrDI9vA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=oObtfgSJHmAly0o7V/znJpR/e1oZAiykL53sgTFg3cnw9s+sk9JRBdWGIhKUDoYCrVa8WhUy1S1sSQ/OQ1uEvvCqn2R6qL1uM5ialUK3zPIQK+WEZzmwzXg/jJojTB/XA3llAZTu4CfsMgCGEdbaIzw99+/gGsg3u5TVEqdy84M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=EFd6c7Kw; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="PH10iqJp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=JpIpfDqIlkCXCbp+675CiztuDwA2Gv6116ByKXvgmG4=; b=P
-	H10iqJpTII+BlOuA+owhfcQcVRHLpoTm0B6tJHCnzqu7MjWcc6TeNsGUK87IWl4W
-	5KeRvSkNiNr3iks+qUm9BtedBy2IsH1rw1nM9zzrRPUca2oEYxqDO+VCOvy6ZV0M
-	iGz8Z1/2H8kX7aU1RtOt670ufg3Vm3E1LpSiG0KxuA=
-Received: from 00107082$163.com ( [111.35.191.17] ) by
- ajax-webmail-wmsvr-40-127 (Coremail) ; Thu, 8 May 2025 11:06:35 +0800 (CST)
-Date: Thu, 8 May 2025 11:06:35 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Kent Overstreet" <kent.overstreet@linux.dev>
-Cc: "Suren Baghdasaryan" <surenb@google.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] alloc_tag: avoid mem alloc and iter reset when reading
- allocinfo
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <nubqzts4e6n3a5e7xljdsql7mxgzkobo7besgkfvnhn4thhxk3@reob3iac3psp>
-References: <20250507175500.204569-1-00107082@163.com>
- <a0ebf2e.b422.196abf97373.Coremail.00107082@163.com>
- <CAJuCfpFAUdqqvFPfe_OLR76c0bX_ngwG=JKC42pVB+WAeX4w0w@mail.gmail.com>
- <nubqzts4e6n3a5e7xljdsql7mxgzkobo7besgkfvnhn4thhxk3@reob3iac3psp>
-X-NTES-SC: AL_Qu2fBPqcvE0i4yGeZOkZnEYQheY4XMKyuPkg1YJXOp80lyTS1i8PZ25IJ2Ls0fmBKwSmoQmJUCZj9eRhRIVjWqimtUXWlablo9BhYroM8fqx
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EFd6c7Kw"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54839KTa982443
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 7 May 2025 22:09:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746673760;
+	bh=i8RU0fbhH6U3yXyRxm0j+S6qxPOhhNP5iZUZq5SHWkU=;
+	h=From:Date:Subject:References:In-Reply-To:To:CC;
+	b=EFd6c7Kw8CRgFAsa70xcFmpdhdP7ddY9ZNBmSSVTKdb/U395KNpqvgG+QUY3aCYd+
+	 EMKgzYazfEv4Zq/u6a8jR5fc0qBLN2MkXFCGVgD1nicNv9dJwsPi2kBUABF07Qb9/q
+	 ms1xj4hwzWEV9JODyrYinI0pnRogL3TxYd1e/ivg=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54839K8I008939
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 7 May 2025 22:09:20 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 7
+ May 2025 22:09:19 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 7 May 2025 22:09:19 -0500
+Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54839JRi020147;
+	Wed, 7 May 2025 22:09:19 -0500
+From: Bryan Brattlof <bb@ti.com>
+Date: Wed, 7 May 2025 22:09:19 -0500
+Subject: [PATCH v5 1/3] dt-bindings: arm: ti: Add binding for AM62L SoCs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <289b58f1.352d.196addbf31d.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:fygvCgD3P6u8Hxxo25CmAA--.58020W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqAZGqmgb7oIe+QALsx
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250507-am62lx-v5-1-4b57ea878e62@ti.com>
+References: <20250507-am62lx-v5-0-4b57ea878e62@ti.com>
+In-Reply-To: <20250507-am62lx-v5-0-4b57ea878e62@ti.com>
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero
+ Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Bryan Brattlof <bb@ti.com>
+X-Mailer: b4 0.13.0
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-CkF0IDIwMjUtMDUtMDggMDg6MDE6NTUsICJLZW50IE92ZXJzdHJlZXQiIDxrZW50Lm92ZXJzdHJl
-ZXRAbGludXguZGV2PiB3cm90ZToKPk9uIFdlZCwgTWF5IDA3LCAyMDI1IGF0IDExOjQyOjU2UE0g
-KzAwMDAsIFN1cmVuIEJhZ2hkYXNhcnlhbiB3cm90ZToKPj4gT24gV2VkLCBNYXkgNywgMjAyNSBh
-dCA2OjE54oCvUE0gRGF2aWQgV2FuZyA8MDAxMDcwODJAMTYzLmNvbT4gd3JvdGU6Cj4+ID4KPj4g
-PiBIaSwKPj4gPiBKdXN0IHdhbnQgdG8gc2hhcmUgaG93IEkgbm90aWNlIHRob3NlIG1lbW9yeSBh
-bGxvY2F0aW9uIGJlaGFpdm9yczogdGhlIGN1bXVsYXRpdmUgY291bnRlcnN+IQo+PiA+Cj4+ID4g
-V2l0aCBjdW11bGF0aXZlIGNvdW50ZXJzLCBJIGNhbiBpZGVudGlmeSB3aGljaCBtb2R1bGUga2Vl
-cHMgYWxsb2MvZnJlZSBtZW1vcnksIGJ5IHRoZSByYXRpbyBiZXR3ZWVuCj4+ID4gIGN1bXVsYXRp
-dmUgY2FsbHMgYW5kIHJlbWFpbmluZyBjYWxscywgYW5kIG1heWJlIGFuIG9wdGltaXphdGlvbiBj
-b3VsZCBiZSBhcHBsaWVkLgo+PiA+IEZvbGxvd2luZyBpcyB0b3AxNiBJIGdvdCBvbiBteSBzeXN0
-ZW06Cj4+ID4KPj4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0r
-LS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0rCj4+ID4gfCAg
-ICAgICAgICAgICAgICAgIGFsbG9jICAgICAgICAgICAgICAgICAgfCBjYWxscyB8IGN1bXVsYXRp
-dmUgY2FsbHMgfCAgICAgICByYXRpbyAgICAgICAgfAo+PiA+ICstLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0t
-LS0tLS0tLS0tLS0tLSsKPj4gPiB8ICAgICAgICAgICAgZnMvc2VxX2ZpbGUuYzo1ODQgICAgICAg
-ICAgICB8ICAgMiAgIHwgICAgIDE4MDY0ODI1ICAgICB8ICAgICA5MDMyNDEyLjUgICAgICB8Cj4+
-ID4gfCAgICAgICAgICAgICBmcy9zZXFfZmlsZS5jOjM4ICAgICAgICAgICAgfCAgIDUgICB8ICAg
-ICAxODE0ODI4OCAgICAgfCAgICAgMzYyOTY1Ny42ICAgICAgfAo+PiA+IHwgICAgICAgICAgICAg
-ZnMvc2VxX2ZpbGUuYzo2MyAgICAgICAgICAgIHwgICAxNSAgfCAgICAgMTgxNTMyNzEgICAgIHwg
-MTIxMDIxOC4wNjY2NjY2NjY3IHwKPj4gPiB8ICAgICAgICAgIG5ldC9jb3JlL3NrYnVmZi5jOjU3
-NyAgICAgICAgICB8ICAgOSAgIHwgICAgIDEwNjc5OTc1ICAgICB8IDExODY2NjMuODg4ODg4ODg5
-ICB8Cj4+ID4gfCAgICAgICAgICBuZXQvY29yZS9za2J1ZmYuYzo2NTggICAgICAgICAgfCAgIDIx
-ICB8ICAgICAxMTAxMzQzNyAgICAgfCAgNTI0NDQ5LjM4MDk1MjM4MSAgfAo+PiA+IHwgICAgICAg
-ICAgICAgZnMvc2VsZWN0LmM6MTY4ICAgICAgICAgICAgIHwgICA3ICAgfCAgICAgMjgzMTIyNiAg
-ICAgIHwgNDA0NDYwLjg1NzE0Mjg1NzE2IHwKPj4gPiB8ICAgICAgICAgICAgbGliL2FsbG9jX3Rh
-Zy5jOjUxICAgICAgICAgICB8ICAgMSAgIHwgICAgICAzNDA2NDkgICAgICB8ICAgICAgMzQwNjQ5
-LjAgICAgICB8ICA8LS0tIEhlcmUgSSBzdGFydGVkCj4+ID4gfCAgICAgICAgICAga2VybmVsL3Np
-Z25hbC5jOjQ1NSAgICAgICAgICAgfCAgIDEgICB8ICAgICAgMzAwNzMwICAgICAgfCAgICAgIDMw
-MDczMC4wICAgICAgfAo+PiA+IHwgZnMvbm90aWZ5L2lub3RpZnkvaW5vdGlmeV9mc25vdGlmeS5j
-Ojk2IHwgICAxICAgfCAgICAgIDI0OTgzMSAgICAgIHwgICAgICAyNDk4MzEuMCAgICAgIHwKPj4g
-PiB8ICAgICAgICAgICAgZnMvZXh0NC9kaXIuYzo2NzUgICAgICAgICAgICB8ICAgMyAgIHwgICAg
-ICA1MTk3MzQgICAgICB8IDE3MzI0NC42NjY2NjY2NjY2NiB8Cj4+ID4gfCAgICAgICBkcml2ZXJz
-L3VzYi9ob3N0L3hoY2kuYzoxNTU1ICAgICAgfCAgIDQgICB8ICAgICAgMTI2NDAyICAgICAgfCAg
-ICAgIDMxNjAwLjUgICAgICAgfAo+PiA+IHwgICAgICAgICAgICAgIGZzL2xvY2tzLmM6Mjc1ICAg
-ICAgICAgICAgIHwgICAzNiAgfCAgICAgIDk4Njk1NyAgICAgIHwgMjc0MTUuNDcyMjIyMjIyMjIz
-IHwKPj4gPiB8ICAgICAgICAgICBmcy9wcm9jL2lub2RlLmM6NTAyICAgICAgICAgICB8ICAgMyAg
-IHwgICAgICA2Mzc1MyAgICAgICB8ICAgICAgMjEyNTEuMCAgICAgICB8Cj4+ID4gfCAgICAgICAg
-ICAgICAgZnMvcGlwZS5jOjEyNSAgICAgICAgICAgICAgfCAgMTIzICB8ICAgICAyMTQzMzc4ICAg
-ICAgfCAxNzQyNS44MzczOTgzNzM5ODQgfAo+PiA+IHwgICAgICAgICAgICBuZXQvY29yZS9zY20u
-Yzo4NCAgICAgICAgICAgIHwgICAzICAgfCAgICAgIDQzMjY3ICAgICAgIHwgMTQ0MjIuMzMzMzMz
-MzMzMzM0IHwKPj4gPiB8ICAgICAgICAgZnMva2VybmVsX3JlYWRfZmlsZS5jOjgwICAgICAgICB8
-ICAgMiAgIHwgICAgICAyNjkxMCAgICAgICB8ICAgICAgMTM0NTUuMCAgICAgICB8Cj4+ID4gKy0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0rLS0tLS0tLS0t
-LS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0tLS0tKwo+PiA+Cj4+ID4gSSB0aGluayB0aGlzIGlz
-IGFub3RoZXIgImdvb2QiIHVzYWdlIGZvciBjdW11bGF0aXZlIGNvdW50ZXJzOiBpZiBhIG1vZHVs
-ZSBqdXN0IGtlZXBzIGFsbG9jL2ZyZWUgbWVtb3J5LAo+PiA+IG1heWJlIGl0IGlzIGdvb2QgdG8g
-bW92ZSB0aGUgbWVtb3J5IGFsbG9jL2ZyZWUgdG8gc29tZXdoZXJlIGxlc3MgZnJlcXVlbnQuCj4+
-ID4KPj4gPiBJbiB0aGUgY2FzZSBvZiB0aGlzIHBhdGNoLCBhIG1lbW9yeSBhbGxvY2F0aW9uIGZv
-ciBlYWNoIHJlYWQtY2FsbHMsIGNhbiBiZSBtb3ZlZCB0byBvcGFuLWNhbGxzLgo+PiA+Cj4+ID4g
-SWYgaW50ZXJlc3RlZCwgSSBjYW4gcmUtc2VuZCB0aGUgcGF0Y2ggZm9yIGN1bXVsYXRpdmUgY291
-bnRlcnMgZm9yIGZ1cnRoZXIgZGlzY3Vzc2lvbnMuCj4+IAo+PiBZZWFoLCBteSBpc3N1ZSB3aXRo
-IGN1bXVsYXRpdmUgY291bnRlcnMgaXMgdGhhdCB3aGlsZSB0aGV5IG1pZ2h0IGJlCj4+IHVzZWZ1
-bCBmb3Igc29tZSBhbmFseXNlcywgbW9zdCB1c2VjYXNlcyB3b3VsZCBwcm9iYWJseSBub3QgYmVu
-ZWZpdAo+PiBmcm9tIHRoZW0gd2hpbGUgc2hhcmluZyB0aGUgcGVyZm9ybWFuY2Ugb3ZlcmhlYWQu
-IE9UT0ggbWFraW5nIGl0Cj4+IG9wdGlvbmFsIHdpdGggYSBzZXBhcmF0ZSBDT05GSUcgdGhhdCBh
-ZmZlY3RzIHRoZSBjb250ZW50IG9mIHRoZQo+PiAvcHJvYy9hbGxvY2luZm8gc2VlbXMgbGlrZSBh
-IGJhZCBpZGVhIHRvIG1lLiBVc2Vyc3BhY2UgcGFyc2VycyBub3cKPj4gd291bGQgaGF2ZSB0byBj
-aGVjayBub3Qgb25seSB0aGUgZmlsZSB2ZXJzaW9uIGJ1dCBhbHNvIHdoZXRoZXIgdGhpcwo+PiBr
-ZXJuZWwgY29uZmlnIGlzIGVuYWJsZWQsIG9yIGhhbmRsZSBhIHBvc3NpYmlsaXR5IG9mIGFuIGFk
-ZGl0aW9uYWwKPj4gY29sdW1uIGluIHRoZSBvdXRwdXQuIERvZXMgbm90IHNlZW0gbGlrZSBhIGdv
-b2Qgc29sdXRpb24gdG8gbWUuCj4KPlllYWgsIEkgZG9uJ3Qgc2VlIG11Y2ggYmVuZWZpdCBmb3Ig
-Y3VtdWxhdGl2ZSBjb3VudGVycyBvdmVyIGp1c3QgcnVubmluZwo+YSBwcm9maWxlci4KPgo+UnVu
-bmluZyBhIHByb2ZpbGVyIGlzIGFsd2F5cyB0aGUgZmlyc3QgdGhpbmcgeW91IHNob3VsZCBkbyB3
-aGVuIHlvdSBjYXJlCj5hYm91dCBDUFUgdXNhZ2UsIHRoYXQncyBhbHdheXMgdGhlIHRoaW5nIHRo
-YXQgd2lsbCBnaXZlIHlvdSB0aGUgYmVzdAo+b3ZlcmFsbCBwaWN0dXJlLiBJZiBtZW1vcnkgYWxs
-b2NhdGlvbnMgYXJlIGFuIGlzc3VlLCB0aGV5J2xsIHNob3cgdXAKPnRoZXJlLgo+Cj5CdXQgZ2Vu
-ZXJhbGx5IHRoZXkncmUgbm90LCBiZWNhdXNlIHNsdWIgaXMgX3JlYWxseSBkYW1uIGZhc3RfLiBQ
-ZW9wbGUKPmdlbmVyYWxseSB3b3JyeSBhYm91dCBtZW1vcnkgYWxsb2NhdGlvbiBvdmVyaGVhZCBh
-IGJpdCB0b28gbXVjaC4KPgo+KE1lbW9yeSBfbGF5b3V0Xywgb3RvaCwgYXZvaWQgcG9pbnRlciBj
-aGFzaW5nIC0gdGhhdCdzIGFsd2F5cyB3b3J0aAo+d29ycnlpbmcgYWJvdXQsIGJ1dCBjdW11bGF0
-aXZlIGNvdW50ZXJzIHdvbid0IHNob3cgeW91IHRoYXQpLgoKVGhhbmtzIGZvciB0aGUgZmVlZGJh
-Y2t+CkkgYWdyZWUgdGhhdCBtZW1vcnkgYWxsb2NhdGlvbiBub3JtYWxseSBkb3NlIG5vdCB0YWtl
-IG1ham9yIHBhcnQgb2YgYSBwcm9maWxpbmcgcmVwb3J0LApldmVuIHByb2ZpbGluZyBhIGZpbyB0
-ZXN0LCBrbWVtX2NhY2hlX2FsbG9jIG9ubHkgdGFrZXMgfjElIHBlcmYgc2FtcGxlcy4KCkkgZG9u
-J3Qga25vdyB3aHkgSSBoYXZlIHRoaXMgInRoZSBsZXNzIG1lbW9yeSBhbGxvY2F0aW9uLCB0aGUg
-YmV0dGVyJyBtaW5kc2V0LCAgbWF5YmUKSSB3YXMgd29ycnlpbmcgYWJvdXQgbWVtb3J5IGZyYWdt
-ZW50YXRpb24sIG9yIHNvbWV0aGluZyBlbHNlIEkgIGxlYXJuZWQgb24gc29tZSAidGV4dGJvb2si
-LApUbyBiZSBob25lc3QsIEkgIGhhdmUgbmV2ZXIgaGFkIHJlYWwgZXhwZXJpZW5jZSB3aXRoIHRo
-b3NlIHdvcnJpZXMuLi4uCgoKRGF2aWQK
+Add the binding for TI's AM62L family of devices.
+
+Signed-off-by: Bryan Brattlof <bb@ti.com>
+---
+Changes in v1:
+ - separated out devicetree bindings
+---
+ Documentation/devicetree/bindings/arm/ti/k3.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+index bf6003d8fb764..6f448433d3b2e 100644
+--- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
++++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+@@ -31,6 +31,12 @@ properties:
+           - const: phytec,am62a-phycore-som
+           - const: ti,am62a7
+ 
++      - description: K3 AM62L3 SoC and Boards
++        items:
++          - enum:
++              - ti,am62l3-evm
++          - const: ti,am62l3
++
+       - description: K3 AM62P5 SoC and Boards
+         items:
+           - enum:
+
+-- 
+2.49.0
+
