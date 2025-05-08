@@ -1,187 +1,112 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A900A19D891
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D468221540;
+	Thu,  8 May 2025 12:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746708801; cv=none; b=D4vWKbNi77Wf2AmF8dpqqNkeIb5S4DoadSqMJ590t+qjqedCO3DbdTr04TO9azi/7JSu8VH9bpjhQ2RxDqm/m5CUnyo1J7vF9jOD4kAG0WXE0m4Khv/tcHWPcu4qbQ2T9u3ESXJ+CTSkhfdvUUtALKzHeVD9Nnn7rMp6dIrP1RE=
+	t=1746708829; cv=none; b=NIV+r7ZPp0OOZRDBLF2ucSQPPD622RdWbdcalaDiKdtm/rdVwn3LZ4LsfTjj0fmLIM0XphZNdvqgTLiuIqxmf7EBpB2r0J3r4kpAVJkWa4kN71Q/cT/YQ5/Gbc9CdCk0bzs+oM38QCVga9AGmtmBl3DufTb38WmYxabkXMNj0Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746708801; c=relaxed/simple;
-	bh=MO7AvdqOlFy/SOhn30F4wpqxq56DaDUKnlWbBDMHtuo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IuzRhv7k/jZLGbDXdDR8fZ0NaTI4NZbUXuDh7nFuC2sS4ct/aDzCPJtcSfxTuJsCc2L28H2mHbco7h5OR6zzjZPZiDtpCX29kI4/cQqhX2ZZTflaUY9dRe+hMFC6aoOeP76V9I/E53LvPQCzDzHLlji4buw6ae47RhA+bebYj3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ecq2CBxc; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1746708829; c=relaxed/simple;
+	bh=rKvDdcEyFMuVbDxsaVe56Ux5vURLprceReNvMRSRIM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dfvNVVNH3lMknlwHFDOyYYhGlVhMOT1Km/RO2GncuVrMKs5ziXKNoJ8PJnGhRm7J8DSaVk0ulD5b4vrXi3E3RJ2bvR+0Akkde78OxRxpW9JnesMj9Qf5pjRkQ/VeLF8KNeKVjTrVcewOsPhnyad+DAQ7jSZ+9Jddmo1AfHOBEsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G//ayWXC; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ecq2CBxc"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22e16234307so10721895ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:53:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G//ayWXC"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so9090475e9.2;
+        Thu, 08 May 2025 05:53:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746708799; x=1747313599; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=A2jdQICSbrWpPSzC616u74O39zxpPw10REWcsnl5lv4=;
-        b=Ecq2CBxcMuhgWZ3a5ItJYGzaRSMA5csSIHAfCBzM/Ca+ES/YLA+xlDQJz3kf5XKmSd
-         mTaeJkDSgCoCSxqKg/KA1sDJ0KmrKSxwDli6dgwgerHhuPY0Vz5V6Vy2PzOOAyptYyV8
-         eCurUqRiTpMx9KI7VfMv2FSvADZWo7Sa65TGHgH3RVWc1wO4fue02P2eu+LCq1pqnHLk
-         aqhy/BU8C2OSZrUIbljjW/G6m4JEJQMctdXaLBfsy5iDEiKasQWLT57GDrz0bdbyQTaE
-         DaFsCLAXN/w2r7zovWTFIzNHQzhIGTXnQQvWGnyvybav8zspzh05DO2coMURNYMJs58C
-         jvEw==
+        d=gmail.com; s=20230601; t=1746708826; x=1747313626; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1l3iS/TKmQrqa4v6zV9bm1xcGBuMMVrt22SRtsapFPU=;
+        b=G//ayWXCcTyO1cxNMJVGnQ2Z9DrYOUbuyYdOIz9IYrBKVJEW3uJ+b8z2jXgjFczSdI
+         9o7UIqa2VNHDZ5x6hqCAZlou9lVB4lFoY6B9f9r+lllL3gNQG8Tt/ZtCE8pI3bLy+n6T
+         LmMO/gvUUYvWj4/8vwCNd9naGq1TQlcG3z/iQbBLke4vMM2HKRc9bDXkqCO0l3Xbtl7n
+         kEfNqxBHngJ8aRu7yAjD7WhVDgBQSZdUPhvBxm1x5OdBSiME9Im3kMydRpfV8AwLr873
+         3hjmL5YxY62M4ZF5qa+jyq5vJTXDIQ96CnZHpOlRVf6YapnZ3izTbNT8YDilLwazVJMh
+         1JtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746708799; x=1747313599;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1746708826; x=1747313626;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A2jdQICSbrWpPSzC616u74O39zxpPw10REWcsnl5lv4=;
-        b=av6KyZYKc1pa2d3cPFvBPxyG8GVBZbVT33FeR/2zHfeBhpWGzHPUGKHXJhIR5BIPX5
-         0g+PiesP5ZKNWkh1gtjT/TmDxdsWyeg0HRlkeSsOkd7DbpSKdTZndt9Io+AVhsc1u/OW
-         SupZHQSOP9L3nHxdly47qfgpVN1arFyWEoAbWAOUiKn99LxpqyXEGf0LPMWPg/4jw68B
-         HqGUNoBD8oCYkDGstYjqQ/oWTM2SlU3k8vB41u3uBjgtWk7ISc/Qn21MY5SBs2xrDOqT
-         BUf9npmb7VoX5Emi2djDs2+wIvjKgOmhrVn3xHYFM6NDNHL7xVGwXy4GIXHDQzulOLla
-         gCVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUS/INMx2VgcMscxz2Qu5xIlkEczlWNML2ROWA/RuEqhhexUO68uxajJJHlRZg9/ARqeuTV6QlstNndssc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeP9tjsxkpvL+nh6rsIuGF2GUqnKMRb7sCVyOpjRVEdcvx5EQB
-	M9RMRuBrLNraN3GVni5zsbWUOkR7jc3M3owRByTj7v8bKCkpKBt0
-X-Gm-Gg: ASbGncvMYmIaCJfYA/KGwtMRGVuu//fbQQf1lPVo+i5z37LoLxDHbkVjUvZauay1wHA
-	/v2cfBTw/uFea/GUYGJM45QyzgIrDVwrzKodUgIJFuod90/lvMw7o+FwHY/v+7Gv2nSqpBP5Bbb
-	eGeQpCNavs07uMgzdzhxUsfUbJ8MUGLkO1svceL7a/nSjqN0vH3jOH95QnFnfMFnfVBrfGW9FFQ
-	Vxx4ODMhldP6ocprZUB0upKbO1xf+Frd1lfdDqpRwvSuDE5cJTOQJZcSyR/tXzTKGuYMckVSNKX
-	LKyE3cQx8eDLvOjglKOnb69VLhHz9GMk4HjngGM+YKXqh5Cnvcfa
-X-Google-Smtp-Source: AGHT+IFwxfSao0kgRqnrILMlXsP5Q8tpHiPhGviH4oQ88rh5sv1UYwb+YKX9PMzCmcphLtnW6R4sAA==
-X-Received: by 2002:a17:903:2307:b0:22d:e57a:27b0 with SMTP id d9443c01a7336-22e846e080dmr46241045ad.2.1746708798807;
-        Thu, 08 May 2025 05:53:18 -0700 (PDT)
-Received: from [10.189.144.225] ([43.224.245.227])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1521fca5sm111609795ad.136.2025.05.08.05.53.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 05:53:18 -0700 (PDT)
-Message-ID: <93df9b24-3a37-48ff-aa21-5f27a76ecf90@gmail.com>
-Date: Thu, 8 May 2025 20:53:14 +0800
+        bh=1l3iS/TKmQrqa4v6zV9bm1xcGBuMMVrt22SRtsapFPU=;
+        b=TqRPrnSnCYzMdkbYwBdbTuApCrf8stHMR5Rww0M20txQP3yEqBhTYOn9UgDyucGVER
+         2v6jNcwR1sWGK0/VfjHnhMcSSWRsSVic38CL8x9g3iOJ84QzZKRVfGIuXM7ECWdcN1MC
+         amEvdEXMYti8MeRp0TfzHPP8yq0tIe8LRyOYmdC/peRqh6qxyjR70rtIgCOwiYTAQusw
+         wE724pAKK2IVudJc7EZ2doY0KfvK1sg95lXr3foxUNwJFmyRyapAv6KlpMXA+DgfLYay
+         8CanX6+4O3HBWLA4o+fJwjwRnW0WULE2pEBJZ1vnyjHMZVQvQp74nmP53yHt4u70OvO5
+         z62g==
+X-Forwarded-Encrypted: i=1; AJvYcCU8iXatKXnGaOJfTGbNMkKEd7g2TZhA8HxnqCwx+ZLhOPTfLozueQIOA0cOJjwd/4u+oT2eUPO0xwM1DT8U@vger.kernel.org, AJvYcCWKWNH+ltqwZoEfjMd+txg6lRQgR3DzKa3Ev1xlLSeWLOLjLxaGUf53qZR8zAuLh/xZ5qhEreBBP6d0vqE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyXPcxnWaMLPhkQHL7B2pSS6GPFT4Jp7oEHov/l7/c4FOEhVO4
+	fhuI68WqGjlqgUnBB1kbx0irowWG1Ly55Xf5XOzX6f8sNF5m0piQL+GiSg==
+X-Gm-Gg: ASbGnctPRMRTizeoclNqD7+1k6Hxi4X1JfK91bU+w527qNrdxd5oW8ly4rkkpKLNQ0U
+	qT37n6ftZjLP6YgjjEOMfRgta+bsue9W7VypFgW26nTbi5i0GtUh5xxU2N02g1hMNbGA3SgWO39
+	+TK+E5c36mv60v5gb/ktNTgnx8JbatfkENw/Jp+rHTMV/zB0kxWlHdsHrqNU88IJmUYyOg+0UC3
+	u0yvRx0KrXxZEI8qTjsgbhrZjezTS0kvIj4hPq3tHy+Yp8PzfTM9kNhXkUHItgO8JkxNYl7U0ie
+	sBTf+NHx2jVmIF+A6vo2eMOB3LQTbnBOOxXvWJvfm3sRUHLR5xnM
+X-Google-Smtp-Source: AGHT+IG5cba62jUROOvRO+O5AK/nVNwnJkll+1lZntviPX9TwJtwpBBNe1ExNq1zIB+0bFYPdgQflA==
+X-Received: by 2002:a05:600c:1394:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-442d034bcffmr37384505e9.30.1746708826061;
+        Thu, 08 May 2025 05:53:46 -0700 (PDT)
+Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a099b0ffb1sm20154250f8f.73.2025.05.08.05.53.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 05:53:45 -0700 (PDT)
+Date: Thu, 8 May 2025 14:53:43 +0200
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
+	Romain Perier <romain.perier@gmail.com>
+Subject: Re: [v3 PATCH] crypto: marvell/cesa - Do not chain submitted requests
+Message-ID: <aBypVwhHHzmqqN5K@Red>
+References: <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
+ <15fadc356b73a1e8e24183f284b5c0a44a53e679.camel@gmail.com>
+ <Zw31JIEyh28vK9q7@gondor.apana.org.au>
+ <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
+ <Zw9AsgqKHJfySScx@gondor.apana.org.au>
+ <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
+ <aBsdTJUAcQgW4ink@gondor.apana.org.au>
+ <aBt5Mxq1MeefwXGJ@Red>
+ <aBw-C_krkNsIoPlT@gondor.apana.org.au>
+ <aBw_iC_4okpiKglQ@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] erofs: add 'fsoffset' mount option for file-backed
- & bdev-based mounts
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, xiang@kernel.org,
- chao@kernel.org, zbestahu@gmail.com, jefflexu@linux.alibaba.com,
- dhavale@google.com, kzak@redhat.com
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- wangshuai12@xiaomi.com, Sheng Yong <shengyong1@xiaomi.com>
-References: <20250408122351.2104507-1-shengyong1@xiaomi.com>
- <20250408122351.2104507-2-shengyong1@xiaomi.com>
- <6389156c-c6df-4e02-ab46-3aaf6230ef76@linux.alibaba.com>
-Content-Language: en-US
-From: Sheng Yong <shengyong2021@gmail.com>
-In-Reply-To: <6389156c-c6df-4e02-ab46-3aaf6230ef76@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aBw_iC_4okpiKglQ@gondor.apana.org.au>
 
-On 5/8/25 12:09, Gao Xiang wrote:
-> Hi Yong,
+Le Thu, May 08, 2025 at 01:22:16PM +0800, Herbert Xu a �crit :
+> v3 simplifies it a little bit:
+>  
+> ---8<---
+> This driver tries to chain requests together before submitting them
+> to hardware in order to reduce completion interrupts.
 > 
-[...]
->> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
->> index 4ac188d5d894..10656bd986bd 100644
->> --- a/fs/erofs/internal.h
->> +++ b/fs/erofs/internal.h
->> @@ -43,6 +43,7 @@ struct erofs_device_info {
->>       char *path;
->>       struct erofs_fscache *fscache;
->>       struct file *file;
->> +    loff_t off;
->>       struct dax_device *dax_dev;
->>       u64 dax_part_off;
+> However, it even extends chains that have already been submitted
+> to hardware.  This is dangerous because there is no way of knowing
+> whether the hardware has already read the DMA memory in question
+> or not.
 > 
-> I wonder if it's possible to combine off as dax_part_off since
-> they are the same functionality...
+> Fix this by splitting the chain list into two.  One for submitted
+> requests and one for requests that have not yet been submitted.
+> Only extend the latter.
+> 
 
-Hi, Xiang,
+The board do not panic anymore, but have still selftest errors:
+See the full boot log at kernel.montjoie.ovh/477935.log
 
-Thanks for the review. Yes, they almost have the same functionality.
-Will combine them.
-> 
->> @@ -199,6 +200,7 @@ enum {
->>   struct erofs_buf {
->>       struct address_space *mapping;
->>       struct file *file;
->> +    loff_t off;
-> 
-> I wonder if there is some other way to check
-> if it's a metabuf, so that we could just use sbi->dif0.off..
-> 
-> But not sure.
-
-It seems no specific fields could tell directly whether a buf is a
-metabuf. But I'll have a try.
-> 
->>       struct page *page;
->>       void *base;
->>   };
-> 
-> ..
-> 
->> +        if (sb->s_bdev)
->> +            devsz = bdev_nr_bytes(sb->s_bdev);
->> +        else if (erofs_is_fileio_mode(sbi))
->> +            devsz = i_size_read(file_inode(sbi->dif0.file));
->> +        else
->> +            return invalfc(fc, "fsoffset only supports file or bdev 
->> backing");
->> +        if (sbi->dif0.off + (1 << sbi->blkszbits) > devsz)
->> +            return invalfc(fc, "fsoffset exceeds device size");
-> 
-> I wonder if those checks are really necessary? even it exceeds
-> the device size, it won't find the valid on-disk superblock then.
-
-Will remove this check.
-> 
->> +    }
->> +
-[...]
->> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
->> index 0671184d9cf1..671527b63c6d 100644
->> --- a/fs/erofs/zdata.c
->> +++ b/fs/erofs/zdata.c
->> @@ -1624,7 +1624,8 @@ static void z_erofs_submit_queue(struct 
->> z_erofs_frontend *f,
->>                    bool *force_fg, bool readahead)
->>   {
->>       struct super_block *sb = f->inode->i_sb;
->> -    struct address_space *mc = MNGD_MAPPING(EROFS_SB(sb));
->> +    struct erofs_sb_info *sbi = EROFS_SB(sb);
->> +    struct address_space *mc = MNGD_MAPPING(sbi);
->>       struct z_erofs_pcluster **qtail[NR_JOBQUEUES];
->>       struct z_erofs_decompressqueue *q[NR_JOBQUEUES];
->>       struct z_erofs_pcluster *pcl, *next;
->> @@ -1673,12 +1674,15 @@ static void z_erofs_submit_queue(struct 
->> z_erofs_frontend *f,
->>               if (bio && (cur != last_pa ||
->>                       bio->bi_bdev != mdev.m_bdev)) {
->>   drain_io:
->> -                if (erofs_is_fileio_mode(EROFS_SB(sb)))
->> +                if (erofs_is_fileio_mode(sbi)) {
->>                       erofs_fileio_submit_bio(bio);
->> -                else if (erofs_is_fscache_mode(sb))
->> +                } else if (erofs_is_fscache_mode(sb)) {
->>                       erofs_fscache_submit_bio(bio);
->> -                else
->> +                } else {
->> +                    bio->bi_iter.bi_sector +=
->> +                        sbi->dif0.off >> SECTOR_SHIFT;
-> 
-> How about multi-device? I guess we should modify
-> erofs_map_dev() directly rather than callers.
-Will fix fsoffset on multi device in the next version.
-
-thanks,
-shengyong
-> 
-> Thanks,
-> Gao Xiang
-
+Regards
