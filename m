@@ -1,136 +1,83 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5F11D63F5;
-	Thu,  8 May 2025 08:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F8596F073;
+	Thu,  8 May 2025 08:14:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746691841; cv=none; b=hsqHRTLvDpH7o2n+AUK8A3NQ51I+XoIn99/XAKjOGbABHDPiUzXkfq2iGZshYA0V+BZ80j1HwuXbyhrF+drqTEiraAU6oJZ4Q9NnBe+u8QRCA/9EiDs+WqIxIQQ4Lqr7lmiNoyTynbwxG7vxHBUPGQHuSukcKhUFGLprT7kzCYw=
+	t=1746692090; cv=none; b=fWtv/mWP1AmO1VOby5DBkuUL7CJtItFqFcFFd9NxvB1AWiVuRoaZUPXq/7UB/0xO9rJ3NM5L3EOIvzZHsdaZtlkt2u7Ky3X1VB+hJu1uZTBdmQsp/ZW6u8nbeSpcHEtlp4g9dpOdhanrQU7C9Gu/XjEknufSiRCabxPKhXqQLQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746691841; c=relaxed/simple;
-	bh=pf6dnDwC/vYnqt4q43GT1y8TcDWhxMTgUC3m4m/Bm9M=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=cxvmnna+/7cdEm4Ric+KrTd8ISyHT3S4u77r25DtxncDzU/qNWFvlQBT1tk5ui9MM4If48/U0rGT+KQReLrYHxX9k0kCmxfC5z9uGX/WmUOiWa1ZaAWfOe0+QD+FzkaOZ7/VtUOB59SoYI5j6pq6jkO7QjMu9i0dhXo9AkTF+4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=I4R3H9vY; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746692090; c=relaxed/simple;
+	bh=74xPf07Id1YjwyWpiTLsgusd9YeNBekMVBvnho/qu28=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UBu0uMHjQAqUEQmhksLBZyLXaGYpfnStga2H0UmbsunoKuvrRYOZAxPn0Okqj3PKjYkp+2jqeDUga7TxGFInGgAM7M9uZ1nJ5Nc7nPt5Q9OXvhBGlLVS3efgEKBy893tLXXVMUP5iwI2IZr5ahM2POI76zdEP8I96P9KR6YxtSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ltzca0ey; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="I4R3H9vY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746691835;
-	bh=er9c4fZfkzYsG61VxLMQA8EJmZcd8pATLwgOEU0jdvg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=I4R3H9vYlzbBvE0CoWtq0EsnXmUB1xRgJZx/szJtR5ZgF1HtxqMpqrFUExg6M0yIm
-	 Pi4fMqDzCFqSEerZ/kTW3xcO+90PKanYgN71z02N/JHow6Yrcvs8rIee6j4JAcA5kA
-	 XqbwNn8WRuR3ldGxocru5pNQpGkbfilNjcfI+us+1aqLxjUQiUrCmgc10nhHHmAtf7
-	 O6ZaltkGYxniGltJrYyK03WS0KORSqlKG7YesYvFRI47KHdVdSEfRttztTTjApARe4
-	 P5zC+NWNQmyYzpRDajZqs0qO/vy2LloqyjL0EJNCAgAEfL5yhcC9Qfd0LtZ+qn/WJB
-	 D0ZhPzADiIw3w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZtPvY35DRz4x3d;
-	Thu,  8 May 2025 18:10:33 +1000 (AEST)
-Date: Thu, 8 May 2025 18:10:32 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Dan Williams <dan.j.williams@intel.com>,
- <sathyanarayanan.kuppuswamy@linux.intel.com>, <yilun.xu@intel.com>,
- <sameo@rivosinc.com>, <aik@amd.com>, <suzuki.poulose@arm.com>,
- <steven.price@arm.com>, <lukas@wunner.de>, Greg KH <greg@kroah.com>
-Cc: Cedric Xing <cedric.xing@intel.com>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
- <linux@weissschuh.net>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the devsec-tsm tree
-Message-ID: <20250508181032.58fc7e5b@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ltzca0ey"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=9u
+	i4tQhpd/K6rp/B6uUyA+cBe3CYrRp23mZq06w97t4=; b=ltzca0eytM1zjYG1Jy
+	T+gihYRZ+MS9YhUgPLCUOCz5/f65rEba2pav49UWM6nmpqGzH71fCgM1y7qj8LOv
+	KQtxFjLVFRlJip9oBCoGPwg9FaXt4QgW2mTlCHhYUsVnVW+QZ7twc+mkiEu/ZDDw
+	K7hch19A/HxmfDLDATJ7tOAAM=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgC3xJPHZxxosVC1BQ--.11373S4;
+	Thu, 08 May 2025 16:14:00 +0800 (CST)
+From: lvxiafei <xiafei_xupt@163.com>
+To: Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Cc: lvxiafei <lvxiafei@sensetime.com>,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] netfilter: nf_conntrack: table full detailed log
+Date: Thu,  8 May 2025 16:13:12 +0800
+Message-Id: <20250508081313.57914-1-xiafei_xupt@163.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/zTIk7l+XGAEGT6YFw3lx9MX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PygvCgC3xJPHZxxosVC1BQ--.11373S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWruF4kCF4UWry8XrW8JF1xGrg_yoWfKFXEk3
+	92qFyjqF1Fvr9Fkr48XwsrWF9Fga4fAFZ3ZryUZrZF9a4DtryDKFWkZF4Yv34UGr4qyF9r
+	Cr93XF1a9w47GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8l38UUUUUU==
+X-CM-SenderInfo: x0ldwvplb031rw6rljoofrz/1tbiKBlGU2gbtOMAywACsJ
 
---Sig_/zTIk7l+XGAEGT6YFw3lx9MX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: lvxiafei <lvxiafei@sensetime.com>
 
-Hi all,
+Add the netns field in the "nf_conntrack: table full,
+dropping packet" log to help locate the specific netns
+when the table is full.
 
-After merging the devsec-tsm tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
-
-drivers/virt/coco/guest/tsm-mr.c: In function 'tsm_mr_create_attribute_grou=
-p':
-drivers/virt/coco/guest/tsm-mr.c:228:29: error: assignment to 'const struct=
- bin_attribute * const*' from incompatible pointer type 'struct bin_attribu=
-te **' [-Wincompatible-pointer-types]
-  228 |         ctx->agrp.bin_attrs =3D no_free_ptr(bas);
-      |                             ^
-
-Caused by commit
-
-  29b07a7b8f41 ("tsm-mr: Add TVM Measurement Register support")
-
-interacting with commit
-
-  9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
-
-from the driver-core tree.
-
-I have applied the following merge resolution for today (there must be
-a better solution).
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 8 May 2025 17:52:55 +1000
-Subject: [PATCH] fix up for "tsm-mr: Add TVM Measurement Register support"
-
-interacting with "sysfs: constify attribute_group::bin_attrs" from the
-driver-core tree.
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: lvxiafei <lvxiafei@sensetime.com>
 ---
- drivers/virt/coco/guest/tsm-mr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nf_conntrack_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/virt/coco/guest/tsm-mr.c b/drivers/virt/coco/guest/tsm=
--mr.c
-index d75b08548292..37e6650bfb6c 100644
---- a/drivers/virt/coco/guest/tsm-mr.c
-+++ b/drivers/virt/coco/guest/tsm-mr.c
-@@ -225,7 +225,7 @@ tsm_mr_create_attribute_group(const struct tsm_measurem=
-ents *tm)
-=20
- 	init_rwsem(&ctx->rwsem);
- 	ctx->agrp.name =3D "measurements";
--	ctx->agrp.bin_attrs =3D no_free_ptr(bas);
-+	ctx->agrp.bin_attrs =3D (const struct bin_attribute *const *)no_free_ptr(=
-bas);
- 	ctx->tm =3D tm;
- 	return &no_free_ptr(ctx)->agrp;
- }
---=20
-2.47.2
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index 7f8b245e287a..71849960cf0c 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -1659,7 +1659,8 @@ __nf_conntrack_alloc(struct net *net,
+ 			if (!conntrack_gc_work.early_drop)
+ 				conntrack_gc_work.early_drop = true;
+ 			atomic_dec(&cnet->count);
+-			net_warn_ratelimited("nf_conntrack: table full, dropping packet\n");
++			net_warn_ratelimited("nf_conntrack: table full in netns %u, dropping packet\n",
++					     net->ns.inum);
+ 			return ERR_PTR(-ENOMEM);
+ 		}
+ 	}
+-- 
+2.40.1
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/zTIk7l+XGAEGT6YFw3lx9MX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgcZvgACgkQAVBC80lX
-0GxDlAf/RIbLsajek1ZCokfXd1fbbnt3m3pu9T+yXaJ8O7KocTwSKYOiivUsEY0C
-2EUcr7p6X+yx6iY+xy6soCtxWl8d2K++iqO1/OC+xLTY0yFv41GSjWWdFvdOsJrs
-Qy/RnLBAWPFyEyw5Fh5y6DLXFw6sp91UcEajMQTFFib2qvPa5Fjw37KHmtH83psQ
-kZQz8WTWsz+PsZRul0EyHU2ivyuYYXFWKgz2LA0u3/Yfou6qD4o5Z4+uaHNi0KxV
-G0a1JeqbOsC8/wwAYv+rG2CINEoL+CZJUspmc1fHenVG+SIhMyedOAfJWvVOx6FP
-xo6k3tEvyR20SkdR9EUA1wF8uxkeaw==
-=j1Dr
------END PGP SIGNATURE-----
-
---Sig_/zTIk7l+XGAEGT6YFw3lx9MX--
