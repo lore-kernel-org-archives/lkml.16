@@ -1,373 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1820F1E4BE;
-	Thu,  8 May 2025 13:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3AB11E502;
+	Thu,  8 May 2025 13:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746712588; cv=none; b=fEgaF0RW2Xbu0Bd4rBXMdnJs5qIx+HW4DelmK+hIbAeHey8trlZ7XpWc4t6bbQFbAFbng9KCivK6NnE7xWB30S0dj7UTd5i0AZ3SVr/dfqXohQ3lZEdYhAFibxqEexalaHYdMOVJvq2vdT4+mImTXA2oJefm58OKFQ7yQHgb3xM=
+	t=1746712680; cv=none; b=ejNkhQyQ+KdcIPL4VpmfLHg4w8E8DT0jiT8ZvseJF3wN+ufG2nkZSm8F3VL1jBDuK3aalm0h6pBxQAO2kojkhehMWh1to6bJLqp5ZTI0zLbycL0zjYAehBMhfpg/gDcGzIAsV0VbC7RUDMNmyRHtuBIPVZYpXh16jdPFhU2Wxjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746712588; c=relaxed/simple;
-	bh=AkBLQz0zLwR/Qn07/LnCgI6CJcH4FvXomdXMeEBf1YA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=MUDm0I+mbtxUTFq0VJB+QHWD96lOOO/pnjOALrG1sAQjiUWw/nJcMtzDEazeC51ONQTzIlJTKSW/uF9CJhNivQIPUtyeNa9+PgIxsiuHEfXennAJwUt3l5QieZvrm87Uj2rWB3i91p/Yq8cuTY3VyE2nSKnLj8Yy3Aky9SIV8/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08B8AC4CEE7;
-	Thu,  8 May 2025 13:56:26 +0000 (UTC)
-Date: Thu, 8 May 2025 09:56:39 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v2] tracing: Allow the top level trace_marker to write into
- another instances
-Message-ID: <20250508095639.39f84eda@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746712680; c=relaxed/simple;
+	bh=pnK7j3iLlDUxLcmldCg7AjEszg5umwAWmK3mTEYqYbM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m61s9bin4BXtaEUMwnDb0Ln7aq70nOtC/HpT/kyDW4T61dFEqiuo3BzJ8xbHBJL1wfUfD5aGveq0h7VE7SDQe8QjMJQR5oN4n7pM/O9yHPPSVJjpNxCt6sAmk/Ls1ZHyEGjQTrhNlj+tq+Tw82eIgbbJEoEa08v1K0AbxHByXp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=YUpcFd9h; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="YUpcFd9h"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso4758675e9.3;
+        Thu, 08 May 2025 06:57:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1746712676; x=1747317476; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bc/Hb+NUmb+r3dEJSpV1YEeQoXiOiyGyh7KJhLgdWwA=;
+        b=YUpcFd9h0pIhXl0d4YdqVoDECO42hKZKi0LFveA+FqhpNRdka5ud7vKkvdHotvJ4iG
+         hIrhiMZbjIm+/dAyKjl7eMbiwy/esMRVd9zemk2ClAu1zqfcRFYzIvaFaWY7bh+XTaIi
+         mYdrh82frT9SHaPVUNu0Z1+A/XIeYTV1zL28yGpXEXr7V0cSDCb/bzuMb4nSbMqPJhVN
+         rdfFRjxDG1iAoCZY96wglFPA6C6+mMu1PKPo4qkkNGrO3dWcMDgWtj8dOk4TpjRhoSYV
+         Dli/8+DbLsU3XRuPhiSymAHJr6ZTqTw1BsyZal17ULhad4Iq4e0fLIs5j0SA6V8K8yzi
+         AUpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746712676; x=1747317476;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bc/Hb+NUmb+r3dEJSpV1YEeQoXiOiyGyh7KJhLgdWwA=;
+        b=WMl0DctHYbUOJzJ6G/1liGXavUtzlqcJO8v3CnBJGUJP7Koi5UNQ9ga1tCj9VxsYuL
+         71+2kRS9+BZuKjAqgtN13nFfLTp45vYM+OHsQO34CbML20CtFb/xy314Dn2r+bpbAorw
+         AJ6AtlMNmLB92EVrAHq/qPWNJacvsQsH2F6dwu5RAo5OCPXAXIQdRjDKBwjs8dWLGJO3
+         XbSj6tkDF781eriGMBTCcoq3oDd1B52smA9mRhdZ/3nngt/AAqyfu/tgpc78JbQWzONW
+         AS98ZRJ3bODxfJRmfaWXXYBA1SE4PkwpzAr70dyC5ZIDiBM003PbSYlQkyD2YD7EweNq
+         PRnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUD/z4Dpz5lTgYpmsHGBZbScJicPTjBM+xHpH1WrnQVbWigwBt3gUNMvarURE19BztOAPp00bjo@vger.kernel.org, AJvYcCV+foeNrWytjXtC3vG5z8e2VEsO1fPfdOTeXMb2qkANOExb0Aa7QtPAjKFbldYXtu5shXHv2GM38yYRbSw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBUtEbAw+2ojbAyo7HR3eIdzN97iqawEET3AXC4Ik0l9zA23GK
+	Yb09keLYpp9Xsk5NBc2aOtQaBwgI0jxW9rLYk2W+ZCHkVO57vFg=
+X-Gm-Gg: ASbGnctVss35LbRRgQyjMMHt5Y+khYH7L/yGyVUykR9rSwRkbh/tVJoIozuFCxLe+ta
+	S1uVmLvB5lMwOK6tUrmKKUp2XT9VVP/UBorJo+KAZWiCkaDwMfZWCCeRkIEIr7cYKlakpalylqb
+	0cuU7czsYmJ7M0UyJWZKlrLkjbmAs/rbOGWXvzSofRZ27W5GwRdCJLwMYs0P8V09qLrHKPXyACR
+	6r38VvKjXd1aQqE6mWaOGbrWZd8vmkEPZ9L9TNqnSSshkZdCrsn8qWaQxZeZrCUjLcFjzfAdHLF
+	VC6+slqIRmcPuXWWRyo7lwFROAoYoPfblE4YCTnEZq44WQkUTIOa7oD1fi8hwC2TbZXC2GlUL0J
+	zipEZy7rJH9oKtPjgVQ==
+X-Google-Smtp-Source: AGHT+IFFwJcze1T7lgw6hr8b0Ua/t9GIVv5voSi0/3NVOHk7byZ6lTzScE2jwlR1wJYTPP5qB2k0sA==
+X-Received: by 2002:a5d:5f96:0:b0:3a0:b565:f1ea with SMTP id ffacd0b85a97d-3a0ba0991a3mr2435294f8f.5.1746712676210;
+        Thu, 08 May 2025 06:57:56 -0700 (PDT)
+Received: from [192.168.1.3] (p5b05727d.dip0.t-ipconnect.de. [91.5.114.125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ecccbsm59313f8f.32.2025.05.08.06.57.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 06:57:55 -0700 (PDT)
+Message-ID: <afebad90-097a-4728-ac16-5081225f8cc7@googlemail.com>
+Date: Thu, 8 May 2025 15:57:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.6 000/129] 6.6.90-rc2 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250508112618.875786933@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250508112618.875786933@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Am 08.05.2025 um 13:30 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.6.90 release.
+> There are 129 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-There are applications that have it hard coded to write into the top level
-trace_marker instance (/sys/kernel/tracing/trace_marker). This can be
-annoying if a profiler is using that instance for other work, or if it
-needs all writes to go into a new instance.
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-A new option is created called "copy_trace_marker". By default, the top
-level has this set, as that is the default buffer that writing into the
-top level trace_marker file will go to. But now if an instance is created
-and sets this option, all writes into the top level trace_marker will also
-be written into that instance buffer just as if an application were to
-write into the instance's trace_marker file.
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-If the top level instance disables this option, then writes to its own
-trace_marker and trace_marker_raw files will not go into its buffer.
 
-If no instance has this option set, then the write will return an error
-and errno will contain ENODEV.
+Beste Grüße,
+Peter Schneider
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/20250409145515.1cf1835e@gandalf.local.home
-
-- Save _THIS_IP_ from tracing_mark_write() and record that as the entry->ip
-  as that is what is shown in the trace output and the selftests look for
-  that function.
-
- Documentation/trace/ftrace.rst |  13 +++
- kernel/trace/trace.c           | 144 ++++++++++++++++++++++++++-------
- kernel/trace/trace.h           |   2 +
- 3 files changed, 128 insertions(+), 31 deletions(-)
-
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index c9e88bf65709..af66a05e18cc 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -1205,6 +1205,19 @@ Here are the available options:
- 	default instance. The only way the top level instance has this flag
- 	cleared, is by it being set in another instance.
- 
-+  copy_trace_marker
-+	If there are applications that hard code writing into the top level
-+	trace_marker file (/sys/kernel/tracing/trace_marker or trace_marker_raw),
-+	and the tooling would like it to go into an instance, this option can
-+	be used. Create an instance and set this option, and then all writes
-+	into the top level trace_marker file will also be redirected into this
-+	instance.
-+
-+	Note, by default this option is set for the top level instance. If it
-+	is disabled, then writes to the trace_marker or trace_marker_raw files
-+	will not be written into the top level file. If no instance has this
-+	option set, then a write will error with the errno of ENODEV.
-+
-   annotate
- 	It is sometimes confusing when the CPU buffers are full
- 	and one CPU buffer had a lot of events recently, thus
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 0cd681516438..cf51c30b137f 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -493,7 +493,8 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
- 	 TRACE_ITER_ANNOTATE | TRACE_ITER_CONTEXT_INFO |		\
- 	 TRACE_ITER_RECORD_CMD | TRACE_ITER_OVERWRITE |			\
- 	 TRACE_ITER_IRQ_INFO | TRACE_ITER_MARKERS |			\
--	 TRACE_ITER_HASH_PTR | TRACE_ITER_TRACE_PRINTK)
-+	 TRACE_ITER_HASH_PTR | TRACE_ITER_TRACE_PRINTK |		\
-+	 TRACE_ITER_COPY_MARKER)
- 
- /* trace_options that are only supported by global_trace */
- #define TOP_LEVEL_TRACE_FLAGS (TRACE_ITER_PRINTK |			\
-@@ -501,7 +502,8 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
- 
- /* trace_flags that are default zero for instances */
- #define ZEROED_TRACE_FLAGS \
--	(TRACE_ITER_EVENT_FORK | TRACE_ITER_FUNC_FORK | TRACE_ITER_TRACE_PRINTK)
-+	(TRACE_ITER_EVENT_FORK | TRACE_ITER_FUNC_FORK | TRACE_ITER_TRACE_PRINTK | \
-+	 TRACE_ITER_COPY_MARKER)
- 
- /*
-  * The global_trace is the descriptor that holds the top-level tracing
-@@ -513,6 +515,9 @@ static struct trace_array global_trace = {
- 
- static struct trace_array *printk_trace = &global_trace;
- 
-+/* List of trace_arrays interested in the top level trace_marker */
-+static LIST_HEAD(marker_copies);
-+
- static __always_inline bool printk_binsafe(struct trace_array *tr)
- {
- 	/*
-@@ -534,6 +539,28 @@ static void update_printk_trace(struct trace_array *tr)
- 	tr->trace_flags |= TRACE_ITER_TRACE_PRINTK;
- }
- 
-+/* Returns true if the status of tr changed */
-+static bool update_marker_trace(struct trace_array *tr, int enabled)
-+{
-+	lockdep_assert_held(&event_mutex);
-+
-+	if (enabled) {
-+		if (!list_empty(&tr->marker_list))
-+			return false;
-+
-+		list_add_rcu(&tr->marker_list, &marker_copies);
-+		tr->trace_flags |= TRACE_ITER_COPY_MARKER;
-+		return true;
-+	}
-+
-+	if (list_empty(&tr->marker_list))
-+		return false;
-+
-+	list_del_init(&tr->marker_list);
-+	tr->trace_flags &= ~TRACE_ITER_COPY_MARKER;
-+	return true;
-+}
-+
- void trace_set_ring_buffer_expanded(struct trace_array *tr)
- {
- 	if (!tr)
-@@ -5220,7 +5247,8 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
- {
- 	if ((mask == TRACE_ITER_RECORD_TGID) ||
- 	    (mask == TRACE_ITER_RECORD_CMD) ||
--	    (mask == TRACE_ITER_TRACE_PRINTK))
-+	    (mask == TRACE_ITER_TRACE_PRINTK) ||
-+	    (mask == TRACE_ITER_COPY_MARKER))
- 		lockdep_assert_held(&event_mutex);
- 
- 	/* do nothing if flag is already set */
-@@ -5251,6 +5279,9 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
- 		}
- 	}
- 
-+	if (mask == TRACE_ITER_COPY_MARKER)
-+		update_marker_trace(tr, enabled);
-+
- 	if (enabled)
- 		tr->trace_flags |= mask;
- 	else
-@@ -7134,11 +7165,9 @@ tracing_free_buffer_release(struct inode *inode, struct file *filp)
- 
- #define TRACE_MARKER_MAX_SIZE		4096
- 
--static ssize_t
--tracing_mark_write(struct file *filp, const char __user *ubuf,
--					size_t cnt, loff_t *fpos)
-+static ssize_t write_marker_to_buffer(struct trace_array *tr, const char __user *ubuf,
-+				      size_t cnt, unsigned long ip)
- {
--	struct trace_array *tr = filp->private_data;
- 	struct ring_buffer_event *event;
- 	enum event_trigger_type tt = ETT_NONE;
- 	struct trace_buffer *buffer;
-@@ -7152,18 +7181,6 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
- #define FAULTED_STR "<faulted>"
- #define FAULTED_SIZE (sizeof(FAULTED_STR) - 1) /* '\0' is already accounted for */
- 
--	if (tracing_disabled)
--		return -EINVAL;
--
--	if (!(tr->trace_flags & TRACE_ITER_MARKERS))
--		return -EINVAL;
--
--	if ((ssize_t)cnt < 0)
--		return -EINVAL;
--
--	if (cnt > TRACE_MARKER_MAX_SIZE)
--		cnt = TRACE_MARKER_MAX_SIZE;
--
- 	meta_size = sizeof(*entry) + 2;  /* add '\0' and possible '\n' */
-  again:
- 	size = cnt + meta_size;
-@@ -7196,7 +7213,7 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
- 	}
- 
- 	entry = ring_buffer_event_data(event);
--	entry->ip = _THIS_IP_;
-+	entry->ip = ip;
- 
- 	len = __copy_from_user_inatomic(&entry->buf, ubuf, cnt);
- 	if (len) {
-@@ -7229,18 +7246,12 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
- }
- 
- static ssize_t
--tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
-+tracing_mark_write(struct file *filp, const char __user *ubuf,
- 					size_t cnt, loff_t *fpos)
- {
- 	struct trace_array *tr = filp->private_data;
--	struct ring_buffer_event *event;
--	struct trace_buffer *buffer;
--	struct raw_data_entry *entry;
--	ssize_t written;
--	int size;
--	int len;
--
--#define FAULT_SIZE_ID (FAULTED_SIZE + sizeof(int))
-+	ssize_t written = -ENODEV;
-+	unsigned long ip;
- 
- 	if (tracing_disabled)
- 		return -EINVAL;
-@@ -7248,10 +7259,42 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
- 	if (!(tr->trace_flags & TRACE_ITER_MARKERS))
- 		return -EINVAL;
- 
--	/* The marker must at least have a tag id */
--	if (cnt < sizeof(unsigned int))
-+	if ((ssize_t)cnt < 0)
- 		return -EINVAL;
- 
-+	if (cnt > TRACE_MARKER_MAX_SIZE)
-+		cnt = TRACE_MARKER_MAX_SIZE;
-+
-+	/* The selftests expect this function to be the IP address */
-+	ip = _THIS_IP_;
-+
-+	/* The global trace_marker can go to multiple instances */
-+	if (tr == &global_trace) {
-+		guard(rcu)();
-+		list_for_each_entry_rcu(tr, &marker_copies, marker_list) {
-+			written = write_marker_to_buffer(tr, ubuf, cnt, ip);
-+			if (written < 0)
-+				break;
-+		}
-+	} else {
-+		written = write_marker_to_buffer(tr, ubuf, cnt, ip);
-+	}
-+
-+	return written;
-+}
-+
-+static ssize_t write_raw_marker_to_buffer(struct trace_array *tr,
-+					  const char __user *ubuf, size_t cnt)
-+{
-+	struct ring_buffer_event *event;
-+	struct trace_buffer *buffer;
-+	struct raw_data_entry *entry;
-+	ssize_t written;
-+	int size;
-+	int len;
-+
-+#define FAULT_SIZE_ID (FAULTED_SIZE + sizeof(int))
-+
- 	size = sizeof(*entry) + cnt;
- 	if (cnt < FAULT_SIZE_ID)
- 		size += FAULT_SIZE_ID - cnt;
-@@ -7282,6 +7325,40 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
- 	return written;
- }
- 
-+static ssize_t
-+tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
-+					size_t cnt, loff_t *fpos)
-+{
-+	struct trace_array *tr = filp->private_data;
-+	ssize_t written = -ENODEV;
-+
-+#define FAULT_SIZE_ID (FAULTED_SIZE + sizeof(int))
-+
-+	if (tracing_disabled)
-+		return -EINVAL;
-+
-+	if (!(tr->trace_flags & TRACE_ITER_MARKERS))
-+		return -EINVAL;
-+
-+	/* The marker must at least have a tag id */
-+	if (cnt < sizeof(unsigned int))
-+		return -EINVAL;
-+
-+	/* The global trace_marker_raw can go to multiple instances */
-+	if (tr == &global_trace) {
-+		guard(rcu)();
-+		list_for_each_entry_rcu(tr, &marker_copies, marker_list) {
-+			written = write_raw_marker_to_buffer(tr, ubuf, cnt);
-+			if (written < 0)
-+				break;
-+		}
-+	} else {
-+		written = write_raw_marker_to_buffer(tr, ubuf, cnt);
-+	}
-+
-+	return written;
-+}
-+
- static int tracing_clock_show(struct seq_file *m, void *v)
- {
- 	struct trace_array *tr = m->private;
-@@ -9775,6 +9852,7 @@ trace_array_create_systems(const char *name, const char *systems,
- 	INIT_LIST_HEAD(&tr->events);
- 	INIT_LIST_HEAD(&tr->hist_vars);
- 	INIT_LIST_HEAD(&tr->err_log);
-+	INIT_LIST_HEAD(&tr->marker_list);
- 
- #ifdef CONFIG_MODULES
- 	INIT_LIST_HEAD(&tr->mod_events);
-@@ -9934,6 +10012,9 @@ static int __remove_instance(struct trace_array *tr)
- 	if (printk_trace == tr)
- 		update_printk_trace(&global_trace);
- 
-+	if (update_marker_trace(tr, 0))
-+		synchronize_rcu();
-+
- 	tracing_set_nop(tr);
- 	clear_ftrace_function_probes(tr);
- 	event_trace_del_tracer(tr);
-@@ -10999,6 +11080,7 @@ __init static int tracer_alloc_buffers(void)
- 	INIT_LIST_HEAD(&global_trace.events);
- 	INIT_LIST_HEAD(&global_trace.hist_vars);
- 	INIT_LIST_HEAD(&global_trace.err_log);
-+	list_add(&global_trace.marker_list, &marker_copies);
- 	list_add(&global_trace.list, &ftrace_trace_arrays);
- 
- 	apply_trace_boot_options();
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 86e9d7dcddba..bd084953a98b 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -403,6 +403,7 @@ struct trace_array {
- 	struct trace_options	*topts;
- 	struct list_head	systems;
- 	struct list_head	events;
-+	struct list_head	marker_list;
- 	struct trace_event_file *trace_marker_file;
- 	cpumask_var_t		tracing_cpumask; /* only trace on set CPUs */
- 	/* one per_cpu trace_pipe can be opened by only one user */
-@@ -1384,6 +1385,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 		C(MARKERS,		"markers"),		\
- 		C(EVENT_FORK,		"event-fork"),		\
- 		C(TRACE_PRINTK,		"trace_printk_dest"),	\
-+		C(COPY_MARKER,		"copy_trace_marker"),\
- 		C(PAUSE_ON_TRACE,	"pause-on-trace"),	\
- 		C(HASH_PTR,		"hash-ptr"),	/* Print hashed pointer */ \
- 		FUNCTION_FLAGS					\
 -- 
-2.47.2
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
