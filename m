@@ -1,183 +1,194 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2055.outbound.protection.outlook.com [40.107.243.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545E91C3306;
-	Thu,  8 May 2025 19:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746731791; cv=none; b=iNwUth01OsUjr0Av5wzuA31o/T9F7qMg3EHdZqgLII9P3KzSEOLf5LPldFGumzFfMBTwKxRhYxgI7BUr7AfEgc5bBLkz3nDCe4oxc0xrP2+TFiiXg0Srlyae/fRRBl6kpaUxfpBA95c1KoRV5LpeTvcOrxkf5kZWu3XPpTLkeuk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746731791; c=relaxed/simple;
-	bh=rfmXXBVoNqTex65022lN4GHlfQgjwGemw6URhPvtZ6k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sMlhm70pAUrrsTGNCUYsb9S5Yl2yXDUzUuRCPmA37B+42E9jA4NAy5UBPYVVVs/gi28t2EKafJ6anGgucBtaCFoNqmkb9fdnG7/ZRk8MqiUOoXIGK6WoZcmlyLMwAySKQ4CZb8NBjS+ZJw/C6mIaJSsVmdzK3IisbIT6m5liI9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VZP5A4Gc; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752C61DF24F
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 19:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746731841; cv=fail; b=t1aRSSGxpivJj48Q+6nuCL2Y/zWP9xa9HL/cbTfoYs6edsYvBmV5yzk8g71NNtBnGvVpxgVMHwJVaSzIVs9FbOyo/p80TIGKrP2RbEYgLm+FvDGEBUzDcmM5ZpPjjmFmZe1Ar4pMIs70/vcD+TaHJVmhvGNeZholiCYIkdWiCF0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746731841; c=relaxed/simple;
+	bh=20KpIxeHcQrUs8z92Y/gEUqnrn/VPCkqBIEh55xZx3U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hmp6qmQUHtR6CtkJvtpD/sQ8EsfE0dIPlx8aU6qTbAdalvdPXwcY4SLC8O4RE/YY0MAlb+zi50SifdPCy+Fv/pAq7Qnt38XGz+omT/3tV8ogefa6OEb+/riYI4B8TiQRW0ReYXTGtOrIOWD10cxxjKjX6RL6iByiwNgK75kH2SA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=er9oft4D; arc=fail smtp.client-ip=40.107.243.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZP5A4Gc"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-309f26c68b8so211594a91.2;
-        Thu, 08 May 2025 12:16:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746731789; x=1747336589; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=84mPmcLjjmYTudDd8CpbhvwzXUd0/qgapgzE5Qn/8Po=;
-        b=VZP5A4GcyAB/Q4yfJRpL+4jSbh7fOlSs6vgophGBQVhIAv1SakLI9J5EISuJIKgon1
-         qPNA1J4nOPsirNK2HChUZhx9UKq0CjAj1+IY+te9FsweAimWsjj78mUCUn4TnRSMGGMe
-         12CBITEEW2xBNfweveJ1kxvD7Zd/aeS+CCLTULequMERRHdDnfKROOsOOLgxfLPFgjTk
-         scPpuRKzMAmmes2q7RBJ+FRSrD27RWg5+jMtrPivAJFFcirj/aWsntgZWXojGrI7FjCE
-         1wi7TIK6/2jQj6xYcByRNFWA9qBg3dUreXWHItKqhEbR0IqH9LmuqTqAnhaMwADKunZE
-         RFxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746731789; x=1747336589;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=84mPmcLjjmYTudDd8CpbhvwzXUd0/qgapgzE5Qn/8Po=;
-        b=Q/v1b/TppHCF4Q2Es55IZ5ZTrn0yuxJJXoClXJwHDWFSUQte/zRxm7jnF0cmuYEdn3
-         iAZNzh/0h6glNw8QKcPamuIwKDeKiKKnKnZL+DF2QIy8GxaOqoZpt85ggRgR5cYOyNs+
-         G/g/ugZPQbyMhJAYOW3amipHitUIts8hxerGxa4hh/TNvS8U27ZawcCDsvWTuhKHYDi8
-         X01iqciqRa3P/3RqU1WEEdIzs09q0RxC3RUeQeUa1wxdkgZr0C0q5Nv8TUAXWAQVixIZ
-         JGGpyiJjKh1itiDRCXQE4FpTa2265tvzKMtRQqvoaNrd29yWTQch9hpeH8q63c7ipu3Y
-         64Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCUq6jND66i3p9alq9yKcCHUrc/gnx+l/pAo/cCAjpYTRGo5q2eSC4IsOATFVoR4NCSZY47V2LkZf4rEX2v5@vger.kernel.org, AJvYcCVX8ogzeBjBIDxO6qOq/JeCukVroev3VKW9WCH7rkiMjdbMAQv8F8wdS2mh9bThoZfqa1Pm8WT9i3YTWGZp@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjDLlpKpFUBywSyXBm2FGpkqRM595aZgoQAgZ0hRusH32bbf3U
-	Hpqgte0388iDXWdn6x+x328NwasUs0VlJk+JPL2ehUyfbM4vUQ5QeFm4wmtNp1XwAyFvXnbntLH
-	IUvv9+0Y8m2tlIGwAju05+sFQ/04=
-X-Gm-Gg: ASbGncsdgkCZiuxhZjkZZEr6wQxF4RdQ/mHyEqMthBuxOKmJZkChPWeKVvSjwtV1Qpn
-	15U/sjRHy0BvkDvavpPOXAYBirH1YPLsS/OPK1Pq5O6My9ySlD1AyNB3mJxmpmto1B9Soyt++CD
-	fCcws6LQHZDDBRoGb9m3NuQQ==
-X-Google-Smtp-Source: AGHT+IFnJI/dGTw42zeAnFybyVqbxMj3ucJwVN3oeKoPAG/l010GL4Y+78qpZJpzYGlUpVf8RbqJGDcVWc6cKAm0TLY=
-X-Received: by 2002:a17:90b:1b4a:b0:305:5f31:6c63 with SMTP id
- 98e67ed59e1d1-30c3d65e755mr383705a91.6.1746731789590; Thu, 08 May 2025
- 12:16:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="er9oft4D"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SpTsRjWPaerAZAzxnP/UffJ4VchyEkoZCgqMgli+nI4mFzIU3LtIDbxfblc5zwLTRHwkKthN6C0ZQSByyLuJwacR8Hx95V3fK7nIKRJR4NVcte5p/O0F4i/F5yNLlVcO6/V3/Y+8myFNVp//jvVUOB1e/7YlIz/yTpmR4YpqcPSnweOZG9/bnHuQ+qvYr8B+krBmZ8a3hMyzuCaPRIT5NG8D86wd+RRh/RMyI+omI60BOfS6G9ued6dZS+XV9PCoighQbQBcFTIb7BJ5Be76Lnh/UYLUBzKr/+T6ICZbWva9Y0W8SGOetJcN34vt7pZy2MmMCo0pDxSCbNlY5qm8Yg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ug4Vhbyd20u+Wm8LaeCnTY809MgpGFFinMyATCaIZ4g=;
+ b=lbtncTr4UCGO8OwLI4+kL7BeXwamsAnpNx4gQKRYmTjFOSHICdq7bhaF2bee2JegwphbfTXW0+O2+xLd05xoTrADSmNxrdUTBp9e6gCafgsHDYN0TWBCFeb3R7NyiCfxxVtOPq+4U8jIxV17/triVHZrXoNmsuEd1dIz5V06kRuiFmJKW5/XEOPLZWP/tl4w2TfXesyqO6QX/WhM3VMD+uhde43LxvFrkC00Z6D9/+FHo75JkH8vB5npDyCbaToJ8BclYpgDea52KCjqasElaZbLAiF5Le3iuzPii+MJ7rEmAaa35EyjU4pSfFz+qS7LVo0wEl+9L5Kz3ViiVHgZfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ug4Vhbyd20u+Wm8LaeCnTY809MgpGFFinMyATCaIZ4g=;
+ b=er9oft4DW4vwDm3IncNMbyoZDo0TKcdFOgzE+YjlbDARTlcomDWnYfY51Jtf3loy9MbZrI7KQ9hUklVQoZAsGtd9ARN7xZUMtPqtPwFYXqGzpvdvpbbfnIz7/u/TbisS3PtG1uNHpWkX6eChPToEvgGypeT2BsanW/LYPLhtueD2FgITB346zz1vINqN+RyyG+ZK+zhOrKIo6Ow47tNiBD1td7HsEBTRCCIqtLa6PjU6MnPSNAwy+Iw9sxzEY4waTOjHawNiZgJYMhBjrneBv9LTVbE8xUXP6hbbl7FbHDTiBoIMWlj/OLlwAxMSLFmU3v6lGnvwhBofTKRmBcJkRw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ PH7PR12MB6491.namprd12.prod.outlook.com (2603:10b6:510:1f4::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.22; Thu, 8 May
+ 2025 19:17:08 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8722.020; Thu, 8 May 2025
+ 19:17:08 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: David Hildenbrand <david@redhat.com>, <linux-mm@kvack.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Oscar Salvador <osalvador@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Mel Gorman <mgorman@techsingularity.net>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Brendan Jackman <jackmanb@google.com>, Richard Chang <richardycc@google.com>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/4] mm/page_isolation: make page isolation a
+ standalone bit.
+Date: Thu, 08 May 2025 15:17:05 -0400
+X-Mailer: MailMate (2.0r6255)
+Message-ID: <D24FC56F-CED6-40DB-8216-6B705473106C@nvidia.com>
+In-Reply-To: <13898284-B62B-412D-A592-856406F7D7C0@nvidia.com>
+References: <20250507211059.2211628-1-ziy@nvidia.com>
+ <20250507211059.2211628-2-ziy@nvidia.com>
+ <20250508052409.GB320498@cmpxchg.org>
+ <13898284-B62B-412D-A592-856406F7D7C0@nvidia.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: MN0P220CA0004.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:208:52e::15) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com> <20250508-topic-ubwc_central-v1-5-035c4c5cbe50@oss.qualcomm.com>
-In-Reply-To: <20250508-topic-ubwc_central-v1-5-035c4c5cbe50@oss.qualcomm.com>
-From: Connor Abbott <cwabbott0@gmail.com>
-Date: Thu, 8 May 2025 15:16:18 -0400
-X-Gm-Features: ATxdqUGiqWT_DWApTY9ymoO6UH-6KDlDJuxswDFXWcGSKrN_vB9pf1QCaLL_Oto
-Message-ID: <CACu1E7GrdS3m0fLcnOW+v-nkzRveXrzVw9PzSb01duYx1aifSQ@mail.gmail.com>
-Subject: Re: [PATCH RFT 05/14] drm/msm/a6xx: Resolve the meaning of AMSBC
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|PH7PR12MB6491:EE_
+X-MS-Office365-Filtering-Correlation-Id: e8b93b00-30c1-439c-cd05-08dd8e64ece9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?3s52FteKvBhhhqN4994/9ifuKLSb5DolshwSJyXsDmwYztbpEfcnayLzUtcv?=
+ =?us-ascii?Q?GsZznkB5SRtzs8ObHEvsThWfRfAX2qC6g4ZD9eixkQwRrXUW1R20gEfIQLLr?=
+ =?us-ascii?Q?00OADr3f/aGY1k/HrcpzxqSJfn9JsOc5Ylg80ivVT75gmbDZ+rv05uk1ZVad?=
+ =?us-ascii?Q?fyaJd1oRzguacLqj/45JkjCFhaJ04pxqS2p34d06Rv62pNUdbgcOinmGk+tH?=
+ =?us-ascii?Q?JAMaIm/AKxLSJh9fiZm6/qcwoB92nrM43fXMr+JeTuOwW6EaJqMOP4N9UNAg?=
+ =?us-ascii?Q?rhTMG+ztvJVf1IBhwMES3iIlnERi4dF5cotHgkAO7hnRnEgBf5ilU045vYW0?=
+ =?us-ascii?Q?2zboWMcsUuw8X73zNDEIUEpPPbjXPbW+SMfhB3B9EVTes3LFkT3h9uFoCacx?=
+ =?us-ascii?Q?nInfkFwDgHheZ/UI3Rgc34PDqCATIOJ7IthaUL63qkH66ROHjLvFrj0/joEH?=
+ =?us-ascii?Q?RpesRRhu4/8R+hwHYZjQqP/7910b/teHEI+yekKrBFjRUryuNbwJIn8FgNdS?=
+ =?us-ascii?Q?Sm6KGd0gYi0n1KZs2u62MQlX8cS1UkwGnGPF6nkLEVIlxmestzdj5A7cwiEv?=
+ =?us-ascii?Q?85YV6hkwuuapKmcVJIFOnEER9BgqV62pR9jviqhFA+FlVVzXTicTaFlZjHvg?=
+ =?us-ascii?Q?aTyo2Wab6Y9QT6sveM9o0Gg9yfRoCNBviIOeYPCZlRYYR5O8p11w1TroLXZ2?=
+ =?us-ascii?Q?YHzuRwuLNZmTbtYymtw+ooELROZodoXpNomhCGf6TPKYgKdwKwxuoptbIteR?=
+ =?us-ascii?Q?yh3Ff17mU/53ifBXwQvlwxPZLO2ARpuwFgjOAD7zypcoYr+EYBHjPL+RleMa?=
+ =?us-ascii?Q?3GqkLJKwWw56c+O1rWQS5rrO4clQ51qeODO5kYKCt6yLRB2l9wGyCXO9XL2n?=
+ =?us-ascii?Q?rT6T6UHunfC4E7pWRil1hLc3GwiRRZWq4W1EZiQLICF1qC+EKTc7fu34H7+a?=
+ =?us-ascii?Q?anFXA6VumvnIvjTi/Hojsv3pQ9C98SDkCyVsqFGXhWOOmpMjKSabRjLgbX+g?=
+ =?us-ascii?Q?1HDjGWQ9hVxGuAAVMMOcohMh/Gn8p6vN8kW3GqiRerIhsFVARAwSz2SiEfke?=
+ =?us-ascii?Q?oYi5OA8ULxNLF9L56a739gTogk5y+W8OIwBNWWajMvDzfPIj3RNDkDEPTpax?=
+ =?us-ascii?Q?qkKiP96+9qhP5yfPIGPCvWfS7oQfKaxEBghl41W9Y/td4rFpS1jtCEn9tTzr?=
+ =?us-ascii?Q?OLZJH6716XlIA6tmqZqFNvmdAZwkBjbkUf+hMtduVU0IrEfIsk0fUUp36Rsj?=
+ =?us-ascii?Q?YhPENCiHvLjDlxTAt+AzD8ftre0qLd3q6UqD/YfGdi4IN1oe6GwsiCuJMxpV?=
+ =?us-ascii?Q?4EZSqX3AytSHHK7lpPum384vMBYdHjU3iAM9MruYjLj42DuEhVesyNlV7wnP?=
+ =?us-ascii?Q?qRZTQuJrHXsIwmvgdOExeb0t+Jds6gp7cG9YLCNWWLPk9SVaI9GgwOIBBVUg?=
+ =?us-ascii?Q?5FDjKGcHqho=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?EDLVVNgE/EJ4AGfMnNuK3ZX51d9y1dEWLW2HHLWTZHxgjW4zub9R6jOhmpI7?=
+ =?us-ascii?Q?M+06TjFTfOMSNmBrOofD5ji+zuEn0yqKsVJeNMm1TE8OcJyDH/rVHHRpb/2L?=
+ =?us-ascii?Q?80KaJgBkNbAdUTTUm9EJpsB6QNkUjJ6C0NmNgHuDC4TBTglp2OARd9UdfICI?=
+ =?us-ascii?Q?sY9pVAvGpbL//RD65qvBHEc/UWdYrGj27iQ/DXhqF3CvFawog/O5CVenq/Pv?=
+ =?us-ascii?Q?R6N1B08dZQqv+/+imggoLmeYaZMR2Vq3urHa+NtPulKXHoI6z+iQlF2C+hTY?=
+ =?us-ascii?Q?cpL+YpXzQK01YiBLR7gnBfcfkGWcvhqYbzjgCvJ8C3AxTdjb2yQ5fzPQrKsz?=
+ =?us-ascii?Q?mU2J5DwQYHQ6pYkYvTWRmoI6ldFqrXQlFF4OPTyheFXEN09iO8OoORXtfw0d?=
+ =?us-ascii?Q?su9FpP4JEhEiXoeeMyleCtNN+O0gkmZT4wlMoOL/Aph0XleeI3XMTaA/Vztz?=
+ =?us-ascii?Q?YVYdSfBEf5GkwpZ3Uu3tEeXGyc/y/H1Q+6AoxPefSis2iHQe/rphnu297Hdc?=
+ =?us-ascii?Q?gRpht4+804gC3GcDWdojrSW3UhdLpCCX1X4rG8fJ+94M7ekb/N0L9zevRNcB?=
+ =?us-ascii?Q?Wak6Z4Soxl+gE6BAsiZFWM1Jl8Alt57KR4JN/CeBpBjWiP5hkoJPa6LGole4?=
+ =?us-ascii?Q?dFKxxlOZAcDFKvHKMtJLj7f0g05f1I1UsCXd70Tbo/ZMM/PlW3s4ILM0cMoE?=
+ =?us-ascii?Q?vcCGbYROpq/IeVpKX3NIadqWMs1FIgRj3tP615iVO56ELxoZ7E68m2Ef+WH8?=
+ =?us-ascii?Q?DWFAEsNFFQiihhnhxHKfdXkSpRPy8VRCSbI/umPUzjsd6ekGCBeddv7GJx9c?=
+ =?us-ascii?Q?A2waAH1PBbMxNZGBxH4L4X5aSOmZZfzHJzi9DTcUX1Xp8QeZRDNdkH5Jno0e?=
+ =?us-ascii?Q?186HksD4c9oSaxUFYvjkN5JlYgnvXXRSU0fK1eUDiIrjt19ghOugTc5yUjND?=
+ =?us-ascii?Q?VjDNQsaIbjhUjTm80EzAwF5G+MTPRXqv3znJjey1Ep0CHkzNfwZR8DmgckIn?=
+ =?us-ascii?Q?6ugmaO0Ppsgg79QzasxrR8HZmYKaLurQFkOt42arr2V8kWwJqS0s4L5bTph/?=
+ =?us-ascii?Q?Pw8jR2egC5TNOTLJrBlkKcTnWSyeBxTuQkSxfDQ+JMFLSIl7zhYtQvjL6ep6?=
+ =?us-ascii?Q?7o0dm60JnwUISaDupTH1DoLACjcKc/rBy9edS1JWyKxg4LWMMOxHZO3vxOzM?=
+ =?us-ascii?Q?MIE/ZBTiEhRKvILgknxwT+5hzTuhRq4xtK3oqDVgc/JSCzUwuI+IlHc+k8kE?=
+ =?us-ascii?Q?brdW5aWXWeTqeENzJzybuSj49OQDq5GOwj8MlNH2iL0FTV3KWfLC1m6plpea?=
+ =?us-ascii?Q?l4pPahbWoCRkJKpDEBTMAI9k6vum2RYAmJ30O9jdZrBpO7RF1IuJP+rR1y1v?=
+ =?us-ascii?Q?MfeACMGIbdYQqsj4p9n8mP+iuickTh2ENzMF79eHPqtxwEVp/ETw++DKNjEt?=
+ =?us-ascii?Q?7XJgGNHJsOmOSf67c5vepziG3X+Qi7pDY8E1QVa40LndmTTAADqtUC7/QRk2?=
+ =?us-ascii?Q?tLsKM/8HTtQhnCZhlB2WkMvkogz/wXWwvaGYItRnodPnNqyiwbyJHZI7/9PR?=
+ =?us-ascii?Q?mkccGHdHIpyV6wRtjKJO1GC3d5J3imuhGjTo/Slc?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8b93b00-30c1-439c-cd05-08dd8e64ece9
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 19:17:08.0221
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C96RLISypDVBMnos4ugRq/fTEMGkALkkZ4JTjvXgVU7ljFHxCBOhEMEpao9up8Pw
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6491
 
-On Thu, May 8, 2025 at 2:13=E2=80=AFPM Konrad Dybcio <konradybcio@kernel.or=
-g> wrote:
->
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->
-> The bit must be set to 1 if the UBWC encoder version is >=3D 3.0, drop it
-> as a separate field.
 
-For these sorts of things, it's probably best to add a helper to the
-common ubwc config header. Other blocks also have bits for enabling
-AMSBC and similar things that also need to be set based on the UBWC
-version.
+>>> @@ -426,7 +460,12 @@ void set_pageblock_migratetype(struct page *page=
+, int migratetype)
+>>>  		     migratetype < MIGRATE_PCPTYPES))
+>>>  		migratetype =3D MIGRATE_UNMOVABLE;
+>>>
+>>> -	set_pfnblock_flags_mask(page, (unsigned long)migratetype,
+>>> +#ifdef CONFIG_MEMORY_ISOLATION
+>>> +	if (migratetype =3D=3D MIGRATE_ISOLATE)
+>>> +		set_pageblock_isolate(page);
+>>
+>> Are there paths actually doing this after the second patch?
+>>
+>> There are many instances that want to *read* the migratetype or
+>> MIGRATE_ISOLATE, but only isolation code should be manipulating that
+>> bit through the dedicated set/toggle_pageblock_isolate API.
+>>
+>> If there isn't one, it might be good to enforce this with a VM_WARN
+>> instead.
+>
+> I checked all set_pageblock_migratetype() callers and do not see
+> one using it for pageblock isolation. Let me replace the code
+> with a VM_WARN and add a comment to tell users to use dedicated
+> pageblock isolation APIs.
+>
 
-Connor
+Actually, move_freepages_block_isolate() calls __move_freepages_block()
+to move free pages to MIGRATE_ISOLATE pageblock and
+set_pageblock_migratetype() is used inside __move_freepages_block().
+So the branch has to stay. Will use the suggestion below.
 
->
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/=
-adreno/a6xx_gpu.c
-> index 89eb725f0950f3679d6214366cfbd22d5bcf4bc7..5fe0e8e72930320282a856e1f=
-f77994865360854 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -617,21 +617,16 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu =
-*gpu)
->
->         if (adreno_is_a621(gpu)) {
->                 gpu->ubwc_config.highest_bank_bit =3D 0;
-> -               gpu->ubwc_config.amsbc =3D 1;
->                 gpu->ubwc_config.uavflagprd_inv =3D 2;
->         }
->
->         if (adreno_is_a623(gpu)) {
->                 gpu->ubwc_config.highest_bank_bit =3D 3;
-> -               gpu->ubwc_config.amsbc =3D 1;
->                 gpu->ubwc_config.rgb565_predicator =3D 1;
->                 gpu->ubwc_config.uavflagprd_inv =3D 2;
->                 gpu->ubwc_config.macrotile_mode =3D 1;
->         }
->
-> -       if (adreno_is_a640_family(gpu))
-> -               gpu->ubwc_config.amsbc =3D 1;
-> -
->         if (adreno_is_a680(gpu))
->                 gpu->ubwc_config.macrotile_mode =3D 1;
->
-> @@ -642,7 +637,6 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *g=
-pu)
->             adreno_is_a740_family(gpu)) {
->                 /* TODO: get ddr type from bootloader and use 2 for LPDDR=
-4 */
->                 gpu->ubwc_config.highest_bank_bit =3D 3;
-> -               gpu->ubwc_config.amsbc =3D 1;
->                 gpu->ubwc_config.rgb565_predicator =3D 1;
->                 gpu->ubwc_config.uavflagprd_inv =3D 2;
->                 gpu->ubwc_config.macrotile_mode =3D 1;
-> @@ -650,7 +644,6 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *g=
-pu)
->
->         if (adreno_is_a663(gpu)) {
->                 gpu->ubwc_config.highest_bank_bit =3D 0;
-> -               gpu->ubwc_config.amsbc =3D 1;
->                 gpu->ubwc_config.rgb565_predicator =3D 1;
->                 gpu->ubwc_config.uavflagprd_inv =3D 2;
->                 gpu->ubwc_config.macrotile_mode =3D 1;
-> @@ -659,7 +652,6 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *g=
-pu)
->
->         if (adreno_is_7c3(gpu)) {
->                 gpu->ubwc_config.highest_bank_bit =3D 1;
-> -               gpu->ubwc_config.amsbc =3D 1;
->                 gpu->ubwc_config.uavflagprd_inv =3D 2;
->                 gpu->ubwc_config.macrotile_mode =3D 1;
->         }
-> @@ -675,7 +667,9 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *g=
-pu)
->  static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
->  {
->         struct adreno_gpu *adreno_gpu =3D to_adreno_gpu(gpu);
-> +       const struct qcom_ubwc_cfg_data *cfg =3D adreno_gpu->common_ubwc_=
-cfg;
->         u32 hbb =3D adreno_gpu->ubwc_config.highest_bank_bit;
-> +       bool amsbc =3D cfg->ubwc_enc_version >=3D UBWC_3_0;
->         u32 hbb_hi =3D hbb >> 2;
->         u32 hbb_lo =3D hbb & 3;
->         u32 ubwc_mode =3D adreno_gpu->ubwc_config.ubwc_swizzle & 1;
-> @@ -684,7 +678,7 @@ static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
->         gpu_write(gpu, REG_A6XX_RB_NC_MODE_CNTL,
->                   level2_swizzling_dis << 12 |
->                   adreno_gpu->ubwc_config.rgb565_predicator << 11 |
-> -                 hbb_hi << 10 | adreno_gpu->ubwc_config.amsbc << 4 |
-> +                 hbb_hi << 10 | amsbc << 4 |
->                   adreno_gpu->ubwc_config.min_acc_len << 3 |
->                   hbb_lo << 1 | ubwc_mode);
->
->
-> --
-> 2.49.0
->
+>>
+>>> +	else
+>>> +#endif
+>>> +		set_pfnblock_flags_mask(page, (unsigned long)migratetype,
+>>>  				page_to_pfn(page), MIGRATETYPE_MASK);
+>>
+>> If the branch stays, you could add a `return' to the MIGRATE_ISOLATE
+>> leg, drop the else and indent this line normally.
+
+
+Best Regards,
+Yan, Zi
