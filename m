@@ -1,108 +1,109 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83254B1E78
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314E21CAA6C
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746698474; cv=none; b=d+Hn0/9NiosHCW1r7aWFXR1GgGpKfRlD18NM5+3K3OzBO+XjhW2muNubbPxG5zbiLfh0mJs9RpB0Z90Qz0Y/2+5otz1JMjHNhdCrrxh7kWSaEtkicfwJFlHQCtUjthNNbJe1VB6guGg6wq3nIwtYe8bYPTxgtAlUA+BwIHh6Ov8=
+	t=1746698531; cv=none; b=Ia87J7u8XemP2As/yPsPb7rQYwZma+hPWhwyQkd21ZYwR0/1FnWg9csp9gRs+8U/+2woSEXoq/78vPOQRlw/d3dYvnmNQyQ/1fJZFuu7yHhRtzIXuR/DuRC4FtPEBOAGggiGLEp4QnF33uLvnFe8QB+h7r/w4bDVFPjGQARr0LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746698474; c=relaxed/simple;
-	bh=yCmPbavZasXyZK2LzAOfmhkicxEWdieO3xsj3pII0v8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SXNCZq04mSvmn18CXYXHRsrB2mB5EP4BZV47xphn0ClBT3wsjrULEamI3a48j+2SD9Xo3l+lETbRpq1G14yxRu4kNCjEV4I25MGgM0xLdZDU+HmbhiuMJR25sk/YWnruijmns7pMDtu9QwJ1DeD7OLEjlZ/wI5qKkaIrAU86xkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tH7SxnWE; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746698531; c=relaxed/simple;
+	bh=dD3XhLv3aLEgd9xznXybGYKnL30+PEHqHxV9/ZWuREQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=Gjg776GxZVfl5pw8vRPlQVit7h9QiaaFUWc5USWw3wmbCkd0b2Ng/2ENn5lnDoGtMjNiv7VQXy8CfyyH3iDVzdtOrV1AnQuN9K9Qs/4ZfFsMxebkZtQ+uMI4EirdS46EJWbWdyiPxTxxgg1E9rtC0BOWfaTiUfwx5pMiwRllPAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=OGKZ9AvX; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tH7SxnWE"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-3104ddb8051so7951541fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 03:01:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="OGKZ9AvX"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a0b1808864so37838f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 03:02:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746698471; x=1747303271; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UKuIs4bD7hmTmBBuWS0gS4IWCByDc925DpPRPOTwVhk=;
-        b=tH7SxnWEsKdFK19bIvq/rjG38oXvNuzxNwTsFAK7G1nCCoLp8SZgqLUIr1KM4U9WSj
-         Wh/vxAPbfAw5in9PVHx5KFZgacVwKyFTlOR/vPHrVXSqKx7e/pSWmLd555vxTHMBps/N
-         IcAzZlFc1geRLCi82WACPXiW+awlqpJIIxZrpsNtQvTRp5kx5SDz3VCF5yzL7qWMzr40
-         tJvevSnTlz6f3ebmCE8HUbP9Rv/LTFKExdoSAPHRSCb8pMdGBmUhbhdY0RvEdUHxebh6
-         NyHmEg6Bt24tzv4u3PGps25sc7rjig+6SXD/DZouK7qPXIXnmNhWBJWhAo7YjSthWw2D
-         62LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746698471; x=1747303271;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=ventanamicro.com; s=google; t=1746698528; x=1747303328; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UKuIs4bD7hmTmBBuWS0gS4IWCByDc925DpPRPOTwVhk=;
-        b=ZAXT3Ia67lcJ0xdE9GxpHru1UunIgu2OONgTpHX9xKL2H9RkAyWDR6TNnN/JRUHcyi
-         053fIqWbQaFEXvX0H67CD+TwnJG5rPCceNVNHNWvC8aY1av2zA+1udtFkrjaZ1lXYfPV
-         IKk3ouL7n7UoymNKr4kL+9qafGxZfDrYS7SyLCJ+zX7HyqEIX9siln6sneJ3eWehbCXb
-         2Ns1OSya5TZI7Iijoh0qRSBt8zVATNOz8dEhU1E54e7YxfhnVWO2hjHrfqwE7XQbJx+e
-         ejloGbFP+FV/OFqM9OqTWQvqLaKWCRY2jr5Thi6EQ8UJmk2iWXByC5bgmLx1zaefpfGX
-         UnaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX5Sy6V96Kd98k30yFkXKMtvhDlLbgM1qqf4D7HTKlxgtzuabkSqTr92J7X/6MkS0nrPfLcxcjHAKOGY6w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnLG+LVqCAJmIWFLxWrIXrYKj4b42wHZavHpxiJh4qhymn77Pm
-	o5EmQvnpvuGT8kkQ8vWqw5yLfAzkaI1bus06mxZiQOXvz0eyH6t3m1IeggkC2AP+icBiIq8g9ux
-	+q5DZ
-X-Gm-Gg: ASbGncsPsdKGfraYMrFe6bRfwg6j3Bm3Mgmj+9HL0dFENhkHV7b4x2rKDIfOfD0WB1v
-	bKaeW7pfuO3RlhPU16bkSLNzqG1I1O5gs11gB9WHuCyw977ts+1bM83FdrOgW2I7nRCOXkxOMw4
-	1o/+xVC8jolWcSuTEh/dcNCoiSuSa8q4iNbeVl0TmqLW7h0XrXKKr2zPcX2x7zx/L6i5zZgDEPN
-	BXw913wg1GDz/l0j19X2aCtUIG0eHi6FDFB3e6kEA31BhJ6kZXR7Zh+XgU2emMiuC226kaHhQ4w
-	rp2c/Cq9TXV+9dQ6d5aRFrjFKYqnJ54S9E3izp9fNdMXqC11FNmABJ03/pXbpijaF8lbi6IuHnQ
-	xIx72NkczqrLxdEev8A==
-X-Google-Smtp-Source: AGHT+IE/s7lPN5vUCzksRaYR2B7bj4kJTFfHdhYwtVVBT+3QBxGeiK2BZt3LablW7b/dF67NnuKtHg==
-X-Received: by 2002:a17:907:7249:b0:ad1:fd0f:a0b5 with SMTP id a640c23a62f3a-ad1fe6fd715mr244883266b.30.1746698459943;
-        Thu, 08 May 2025 03:00:59 -0700 (PDT)
-Received: from google.com (201.31.90.34.bc.googleusercontent.com. [34.90.31.201])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1895095d7sm1054555166b.151.2025.05.08.03.00.59
+        bh=WBoYS0wz++EQw8/z3GxgW1EZr6KbY89jyHXnVjV8trs=;
+        b=OGKZ9AvXSCzPjBXsG0vy+i7kKicv94Ap26LZwjqrfS3n66x76yARcfYEIxpaY3l7Ux
+         jdDfhhluyw9f21EijLdI7mM/tGAbyIHL/g/kFmKGtl7U1tkt9r6xaEL+QKSPp4EuRCU0
+         ILWH+EwwH72PCEWam5B8nl9cUZ8j42vSuoxjjlzQa71eluP0BNecal7Cqnnqpml7GKfq
+         srckRmiZuEiAciHAUWnBQ+B+eV3CsKt9Aenj+Jo8K8eWVpMLToIW87SclAlb20ggM3EY
+         wCYSny06qk41PQnpKx3vxicu9v1b1GEHeWmBGXTO5NwxCkMVM+6SiJoGgENKEXPI9VrB
+         TH6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746698528; x=1747303328;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WBoYS0wz++EQw8/z3GxgW1EZr6KbY89jyHXnVjV8trs=;
+        b=OWE7Rc3Fh5OE5iyqsx+bw22Fkk0tLjhL9+0qRUo6cnTJo7bPRMosAIZw5Uuh3BraT+
+         GqIwgjHQ/QTT8O9RnKpmCxZbB9vDTdxxWXJNsTSPloLV6F/Wk9TgfkeZDDT6ausHFe1e
+         zH/iYiwFvfIGPYApPdsJBqRDl0YtjgAECv4gqzVnE2vemrs3BTYmgSX/NQ8b7+p5o2Ds
+         LTtPAK4ik2xQ4RTTMPWPiJ+yOGOar1Ln3TRYeDHqX4QaBbFXvlwE4wtxc/efnapbaGx2
+         5mKYCVuUe36FG/3TIut0LlajYvW1IJRTIn4gegNKE7WrVBSLQxx4STKbi97y+niJFRdu
+         K9zA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSWNFSXJXbg7sAbr3nyYpIfIfjZ+2qIVkocodXhqJ+7XCvYkfs+VaKV1rvmprTrOZHbm3F65f3AQcElUM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFnL3806MPVP8rURczybULPEkasy43Lo4uTzDpx+82NPpDq3R6
+	WZiZLK6FoYkuciCUH+TVygol7r38s6O2K4GMQnzJ/8nBkLo64aojAunhTNAB9NM=
+X-Gm-Gg: ASbGncuZfntugqgYiycbyOk1I0x2acJOGIbzrJcBdKJtp9cbmXgmJqB1qG0H8HLXlpG
+	XPVwOvWwRVibxwNRwgoOxf4TvsdsWmdgmK67YnU9AANKC7ajopNFA56xarRu4GTb/jW1G7lkjB9
+	ndTEUhXxNr+v5L1t8RTdwMo7o0RuMZ281AudM/06RKXoti+JSQFpthUEmHm4FUcpf0TDv9Ja9oD
+	0nxoAQpBMmI+o5HemdcbdQClBmTQUQPnFFsTU4bRFM5+j6KjBhXBG60WkKAj5iKAaHgZJCfSwEz
+	aNSJ58IlG9tMiL5iE5z/5jYWtvlWtbZNA5cleH8s3isA2dLoEOnFg2KqROA=
+X-Google-Smtp-Source: AGHT+IHUaQx/Mee6s3Ke3xU/t61RV8r367qD/26lQfVX2YZuAy0gm6pedVbgXrEeJfa8XZl3movr0A==
+X-Received: by 2002:a05:600c:1c97:b0:43d:301b:5508 with SMTP id 5b1f17b1804b1-441d44bc487mr21958065e9.2.1746698528415;
+        Thu, 08 May 2025 03:02:08 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:a451:a252:64ea:9a0e])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae7caasm20004897f8f.54.2025.05.08.03.02.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 03:00:59 -0700 (PDT)
-Date: Thu, 8 May 2025 10:00:55 +0000
-From: Matt Bobrowski <mattbobrowski@google.com>
-To: Viktor Malik <vmalik@redhat.com>
-Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v4 2/4] uaccess: Define pagefault lock guard
-Message-ID: <aByA1wael6H4tMo8@google.com>
-References: <cover.1746598898.git.vmalik@redhat.com>
- <39416cac1d011661601caffc6ac38195c82ede86.1746598898.git.vmalik@redhat.com>
+        Thu, 08 May 2025 03:02:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <39416cac1d011661601caffc6ac38195c82ede86.1746598898.git.vmalik@redhat.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 08 May 2025 12:02:07 +0200
+Message-Id: <D9QOY9TMQXSX.2VOEKVRCXKOO1@ventanamicro.com>
+Subject: Re: [PATCH 3/5] KVM: RISC-V: remove unnecessary SBI reset state
+Cc: <kvm-riscv@lists.infradead.org>, <kvm@vger.kernel.org>,
+ <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Atish
+ Patra" <atishp@atishpatra.org>, "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
+ "Alexandre Ghiti" <alex@ghiti.fr>, "Andrew Jones"
+ <ajones@ventanamicro.com>, "Mayuresh Chitale" <mchitale@ventanamicro.com>
+To: "Anup Patel" <anup@brainfault.org>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
+ <20250403112522.1566629-6-rkrcmar@ventanamicro.com>
+ <CAAhSdy3y0-hz59Nrqvvhp=+cWJe1s50K7EpuZmKBqfy-XQFd1Q@mail.gmail.com>
+In-Reply-To: <CAAhSdy3y0-hz59Nrqvvhp=+cWJe1s50K7EpuZmKBqfy-XQFd1Q@mail.gmail.com>
 
-On Wed, May 07, 2025 at 08:40:37AM +0200, Viktor Malik wrote:
-> Define a pagefault lock guard which allows to simplify functions that
-> need to disable page faults.
-> 
-> Signed-off-by: Viktor Malik <vmalik@redhat.com>
-> ---
->  include/linux/uaccess.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-> index 7c06f4795670..1beb5b395d81 100644
-> --- a/include/linux/uaccess.h
-> +++ b/include/linux/uaccess.h
-> @@ -296,6 +296,8 @@ static inline bool pagefault_disabled(void)
->   */
->  #define faulthandler_disabled() (pagefault_disabled() || in_atomic())
->  
-> +DEFINE_LOCK_GUARD_0(pagefault, pagefault_disable(), pagefault_enable())
+2025-05-08T11:48:00+05:30, Anup Patel <anup@brainfault.org>:
+> On Thu, Apr 3, 2025 at 5:02=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcm=
+ar@ventanamicro.com> wrote:
+>>
+>> The SBI reset state has only two variables -- pc and a1.
+>> The rest is known, so keep only the necessary information.
+>>
+>> The reset structures make sense if we want userspace to control the
+>> reset state (which we do), but I'd still remove them now and reintroduce
+>> with the userspace interface later -- we could probably have just a
+>> single reset state per VM, instead of a reset state for each VCPU.
+>>
+>> Signed-off-by: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.com>
+>
+> Queued this patch for Linux-6.16
 
-I can't help but mention that naming this scope-based cleanup helper
-`pagefault` just seems overly ambiguous. That's just me though...
+[5/5] was already applied, which means that [3/5] would be nicer with
+
+  memset(&vcpu->arch.smstateen_csr, 0, sizeof(vcpu->arch.smstateen_csr));
+
+in the new function (kvm_riscv_vcpu_context_reset) where we memset(0)
+the other csr context.
+
+Should I add a patch to do that in v2?
+
+Thanks.
