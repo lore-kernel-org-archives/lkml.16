@@ -1,230 +1,263 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F571A42C4;
-	Thu,  8 May 2025 09:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784B6198845
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746695795; cv=none; b=HUMtn/HhJdpnfekIhvwDVk5NFECwDlqoxtR019tszWMghBsPdGXEBufw66cD3yg22YgT0YRz41+OWCGzDPpDqeimq8YKX8vFZBJ3Q/mvZ6fG8EM9GaKDMm9I4XgUnqei19OrawVVscegOWR9xyzyvuKh8tP6LHMGl2+E4JMllFo=
+	t=1746695857; cv=none; b=QijE8V9A5a4zvT2P5Hwt+z0/JPK5G8zEyoPEaW1vSaxXJ4366LEL6tFy5SWRjls/4U+e60Ex/A5S2eaewifYZLTIeXSmAvf9qxwuatP5OU7Hs05PMu2OUHrzse1jzptZLMQwJZp7xTIyG3EUYeQiLJsMAqXWT5RBL5uSZM0aBJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746695795; c=relaxed/simple;
-	bh=IHBVqgqSDmB+55+UqaXdIH1khHeHtFN9JCHjpuEBUOU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qWKYYWxdDB2OIdFSXynsvRmOzqxmvAGMnhMb8MfrUlOeL3+lk2OrrlCW5odeAmKrhrtvirp44ha0qhuKM/AwuDULTvPPaKweN3DKSkTNgkAsfuQtJWJwrPWw1y0/LRsBIYNt32eWDJZjl4KjcIb2BsyIt9NU/vpwf9qR6Pp+AOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GKMx+nxs; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1746695857; c=relaxed/simple;
+	bh=hASGQaxXpiY5FHVtp3EgMQ6Y/NJAsNGG/hzPVZj9HMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JM0SR9J/LW/ycYpBntdNx/LNb1a7Eu+f5VubEVYFzDIN7SAZkCSiC5rvB7+5EXC0SuJSNFI3Y4w1MkSd5wRJ+a+pMEo63ApuxnpcXFTBSKJinv1eZFHL9Jpj9J3AgFN90zBiBJEx3POL/DiA+G8S0pBrThiQIovjFNLZ57CT2ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ROgpOU2S; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GKMx+nxs"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5487nvWM012196;
-	Thu, 8 May 2025 09:16:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=OUQs9u
-	FbnBcoWm8xxAZWEmoDdHesKZKr25oTwpFqAMw=; b=GKMx+nxszPGU29lsko7dYD
-	hhGySEDlZp3nYfp+yU70Kowj8Ox37IqaBqNB/FjKiOsHXMGH7eVGvj0FbF5tALID
-	rNNs4sGJZWsAUkSpycyr4oi5DaPcgm9tGd0FG4YRE294FSKB7CO8QtQtcUhuGwGy
-	ko2lcq38EiJ9LkIyFJAEoFLPFQ+N2+vHehwQrQu+VFZduXAPbTFCF7j4kHIPdLEy
-	yzw0Mv+j1jA2AMHWh6+GoO/kxoJzVJDUT/De99GElTk5AsYMfZfVIRigTgNgrYAM
-	4tXeG1G1m/ZKeBBJfEtFLYtuMv14uBL0/k1sjUj8u6IiHCmiVtDOL9FksB+kQfeA
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46g5ejww6r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 09:16:11 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5488bjSj001313;
-	Thu, 8 May 2025 09:16:10 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46dwftn8pe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 09:16:10 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5489GAvD21496340
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 8 May 2025 09:16:10 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2B0E558055;
-	Thu,  8 May 2025 09:16:10 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E0D0858059;
-	Thu,  8 May 2025 09:16:07 +0000 (GMT)
-Received: from [9.61.251.83] (unknown [9.61.251.83])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  8 May 2025 09:16:07 +0000 (GMT)
-Message-ID: <37cf099e-d5c2-40d8-bc31-77e1f9623b1c@linux.ibm.com>
-Date: Thu, 8 May 2025 14:46:06 +0530
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ROgpOU2S"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso600117f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 02:17:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746695854; x=1747300654; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BF1WFSYzy6unIRUXzEpd/eRhMY+e6oBnTujYR6+ffP4=;
+        b=ROgpOU2Sz+LbA9BpU+SgekuRNd/eYVVJwu5n/efwodhpbp1GFyYe+nP+OAxA5rnLdJ
+         iQ2TN9Yu5bHelFqd0PWtv3KRU3Cy0HaqPWtL+hTk1DVEr3zF5mVBJKzy1l6nz7yY7/VQ
+         82LUpCI617nOLl/ER1K/LdZBEdJ8o2e/Y28zUttWahi5hkAXG0nndlFEZgMQRm4EXjvy
+         E68U4rQgvwwSSWmfoXE7RaYvojmKPmkIqI0Knnpbf9XMohoOQJhJzfw8Ki4cm3ApAw00
+         qfKdVEIpJLN4RI9k38/xYeZ1hVMR58q9yZbeaHgsKU1gZFh5IqOiKl7P+e+LutXhDxpJ
+         j54Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746695854; x=1747300654;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BF1WFSYzy6unIRUXzEpd/eRhMY+e6oBnTujYR6+ffP4=;
+        b=HUjUMQS6/xHVtmgIEpQUKnG0ljsX3J4JnLEtEa0uqxRCLO0G9B2ca0TFRaIgAeTDQ5
+         w1BkT0FynD+NvOX/XMW9NxnAoDnhxqb3IAfhKWzt+iVqIRpwK6FJVXFHcyvzZEolpgV6
+         192TvhBySQyZMROhCCVJ47jo2ORhzWkBY9g+tMK+nuEUvvyu5soF8/9Unpn/tdjPOF7l
+         iu8vyrPbbpkhNsiRjfS1isAWTse0WbGypSghE/8FIXekihXazJeeb3ZYcWpqeO1z1O1B
+         9pVO//K012UuICmtVw6j9KmMUZSNE+rFIXjYF6pUiGEOWnhU21akSK55SpiZ/nXkpuG5
+         PVwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8dM20DGcxujznOVNL+T6qRatueCIpKl57j/Q8SJGGh9C3cdVXq0dXrfMoAwJRa5QPZL2lpvYLghJsYPY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxv47fB1TrcO7bv+deGWzy/CSTasUG5LXNvLtvPHLXUmiB3bIcS
+	ORaRA1suZBpdkji3Ee6AUbMKTdGrU9imtOUmDRC+dRv4LkpERsVJGvszc63pofQ=
+X-Gm-Gg: ASbGncuu4ljL44j8fRubSFwo43FKg/yJYdgMegcWlt631R0R1O0t5p88cESHGOT+iQc
+	aJ14SOUUNwjNbulISvL+S1xy0Ec/UJz6vp7tUUrpct6r6ODYWN0/NCPDPtKiLT6mQROfnwkbqGb
+	kuKtyBjoqFu69bij4Sidvb+ZXflSkHoyQ2Do0buqWinQ1ovw8biKSu2HQDMNgs3frkbUSNsh49A
+	ANFlyezqILAZnt8mtdbuqUFEfz/SYLJ5+2l+l0w1A/uEAXLvVvYzVpAt9uBqyOIquAZWzVTqAdu
+	aVgX2NpYLEcnnPkOH4g6e++LZ4ehMzwusbUghTpIIzYZtrkTCmiIbvh9+eARHEg9pc0tM/01bIO
+	LwySev4hz0rble3kDUQ==
+X-Google-Smtp-Source: AGHT+IHmUlWs7sWnu8sNqCM7w1Ovbo7chcDANaOLySE8KJF9TX6KqKSbMi5HVBx/UBaB7+ICOj4c0Q==
+X-Received: by 2002:a05:6000:178c:b0:39e:cbc7:ad38 with SMTP id ffacd0b85a97d-3a0b49bc923mr5220023f8f.32.1746695853692;
+        Thu, 08 May 2025 02:17:33 -0700 (PDT)
+Received: from archlinux (host-87-8-31-78.retail.telecomitalia.it. [87.8.31.78])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0ebf11bffsm495167f8f.20.2025.05.08.02.17.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 02:17:33 -0700 (PDT)
+Date: Thu, 8 May 2025 11:16:19 +0200
+From: Angelo Dureghello <adureghello@baylibre.com>
+To: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 5/5] iio: adc: ad7606: add gain calibration support
+Message-ID: <qaiqdak4pieewavl2ff4mpr2ywhw2bvnoob55buiinkisacar5@q6jhlb5klcf6>
+References: <20250506-wip-bl-ad7606-calibration-v3-0-6eb7b6e72307@baylibre.com>
+ <20250506-wip-bl-ad7606-calibration-v3-5-6eb7b6e72307@baylibre.com>
+ <c999800bb5f6c1f2687ff9b257079dcf719dd084.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] crypto: powerpc/poly1305 - Add missing poly1305_emit_arch
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-        Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-References: <cover.1745815528.git.herbert@gondor.apana.org.au>
- <915c874caf5451d560bf26ff59f58177aa8b7c17.1745815528.git.herbert@gondor.apana.org.au>
- <242ebbf1-4ef0-41c3-83cb-a055c262ba4a@leemhuis.info>
- <aBtF2jVZQwxGiHVk@gondor.apana.org.au>
-Content-Language: en-GB
-From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-In-Reply-To: <aBtF2jVZQwxGiHVk@gondor.apana.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=SvuQ6OO0 c=1 sm=1 tr=0 ts=681c765b cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=lAgNKBcoAAAA:8 a=FNyBlpCuAAAA:8 a=VnNF1IyMAAAA:8 a=r7MKod_UI1lkIC2NXqAA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=drE6d5tx1tjNRBs8zHOc:22 a=RlW-AWeGUCXs_Nkyno-6:22
-X-Proofpoint-GUID: kJWh61mFWr0ADYxJozMTIY58WU1C0PNQ
-X-Proofpoint-ORIG-GUID: kJWh61mFWr0ADYxJozMTIY58WU1C0PNQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA4MiBTYWx0ZWRfX7iNdu0IiaF8d /UU6eo0IvCyMh3JVkhslGEfjp8MJkn7C97xr1wm6t0Ysf8PiVM06HR3BsPxuWoXELTDA+rdxoVc wlAjgOi5FixmlRA2JbhajKmxuJXxy9e2ompZJjacb33d/BY6E/BvazU38cUTTg92sgTaVtoe6HP
- pHdufPXhjLwgNxOgAOm00+lCZJmXnT4JBGlOpWVMfd9J11aXW+dUx/doHRatfv458vsh3VNUBWv OopPPEGKxhZCkxPsQJWkPVxEex7n7SFU2TObpljPicaBCFYFx5vHjYYDiGKwn029Hzh3mWYd7E5 257WUxkS95zd0QWlrDkldU9/DHxO4tl67YtY+PtWN9s9WzzVa53fCXuzZsHBJdgR6A5M6EzJQlm
- WxDBhhNLwr7r+l81KicPCD3K+4tFenV5cSSDVQQIHjKpMCr/0tCEnbcjjM//eHMZoNphOeb1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_03,2025-05-07_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999 phishscore=0
- adultscore=0 priorityscore=1501 spamscore=0 mlxscore=0 suspectscore=0
- clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505080082
+In-Reply-To: <c999800bb5f6c1f2687ff9b257079dcf719dd084.camel@gmail.com>
 
-Hello Herbert,
+Hi all,
+On 07.05.2025 07:14, Nuno Sá wrote:
+> On Tue, 2025-05-06 at 23:03 +0200, Angelo Dureghello wrote:
+> > From: Angelo Dureghello <adureghello@baylibre.com>
+> > 
+> > Add gain calibration support, using resistor values set on devicetree,
+> > values to be set accordingly with ADC external RFilter, as explained in
+> > the ad7606c-16 datasheet, rev0, page 37.
+> > 
+> > Usage example in the fdt yaml documentation.
+> > 
+> > Tested-by: David Lechner <dlechner@baylibre.com>
+> > Reviewed-by: Nuno Sá <nuno.sa@analog.com>
+> > Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> > ---
+> >  drivers/iio/adc/ad7606.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/iio/adc/ad7606.h |  4 ++++
+> >  2 files changed, 60 insertions(+)
+> > 
+> > diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+> > index
+> > a986eb1284106da4980ac36cb0b5990e4e3bd948..049fd8616769d32778aa238b348b2fb82fa83745
+> > 100644
+> > --- a/drivers/iio/adc/ad7606.c
+> > +++ b/drivers/iio/adc/ad7606.c
+> > @@ -33,6 +33,10 @@
+> >  
+> >  #include "ad7606.h"
+> >  
+> > +#define AD7606_CALIB_GAIN_MIN	0
+> > +#define AD7606_CALIB_GAIN_STEP	1024
+> > +#define AD7606_CALIB_GAIN_MAX	(63 * AD7606_CALIB_GAIN_STEP)
+> > +
+> >  /*
+> >   * Scales are computed as 5000/32768 and 10000/32768 respectively,
+> >   * so that when applied to the raw values they provide mV values.
+> > @@ -125,6 +129,8 @@ static int ad7609_chan_scale_setup(struct iio_dev *indio_dev,
+> >  				   struct iio_chan_spec *chan);
+> >  static int ad7616_sw_mode_setup(struct iio_dev *indio_dev);
+> >  static int ad7606b_sw_mode_setup(struct iio_dev *indio_dev);
+> > +static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev,
+> > +					struct iio_chan_spec *chan);
+> >  
+> >  const struct ad7606_chip_info ad7605_4_info = {
+> >  	.max_samplerate = 300 * KILO,
+> > @@ -180,6 +186,7 @@ const struct ad7606_chip_info ad7606b_info = {
+> >  	.scale_setup_cb = ad7606_16bit_chan_scale_setup,
+> >  	.sw_setup_cb = ad7606b_sw_mode_setup,
+> >  	.offload_storagebits = 32,
+> > +	.calib_gain_setup_cb = ad7606_chan_calib_gain_setup,
+> >  	.calib_offset_avail = ad7606_calib_offset_avail,
+> >  	.calib_phase_avail = ad7606b_calib_phase_avail,
+> >  };
+> > @@ -195,6 +202,7 @@ const struct ad7606_chip_info ad7606c_16_info = {
+> >  	.scale_setup_cb = ad7606c_16bit_chan_scale_setup,
+> >  	.sw_setup_cb = ad7606b_sw_mode_setup,
+> >  	.offload_storagebits = 32,
+> > +	.calib_gain_setup_cb = ad7606_chan_calib_gain_setup,
+> >  	.calib_offset_avail = ad7606_calib_offset_avail,
+> >  	.calib_phase_avail = ad7606c_calib_phase_avail,
+> >  };
+> > @@ -246,6 +254,7 @@ const struct ad7606_chip_info ad7606c_18_info = {
+> >  	.scale_setup_cb = ad7606c_18bit_chan_scale_setup,
+> >  	.sw_setup_cb = ad7606b_sw_mode_setup,
+> >  	.offload_storagebits = 32,
+> > +	.calib_gain_setup_cb = ad7606_chan_calib_gain_setup,
+> >  	.calib_offset_avail = ad7606c_18bit_calib_offset_avail,
+> >  	.calib_phase_avail = ad7606c_calib_phase_avail,
+> >  };
+> > @@ -357,6 +366,49 @@ static int ad7606_get_chan_config(struct iio_dev *indio_dev,
+> > int ch,
+> >  	return 0;
+> >  }
+> >  
+> > +static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev,
+> > +					struct iio_chan_spec *chan)
+> > +{
+> > +	struct ad7606_state *st = iio_priv(indio_dev);
+> > +	unsigned int num_channels = st->chip_info->num_adc_channels;
+> > +	struct device *dev = st->dev;
+> > +	int ret;
+> > +
+> > +	device_for_each_child_node_scoped(dev, child) {
+> > +		u32 reg, r_gain;
+> > +
 
-On 07/05/25 5:06 pm, Herbert Xu wrote:
-> On Wed, May 07, 2025 at 01:03:06PM +0200, Thorsten Leemhuis wrote:
->> """
->> ld: warning: discarding dynamic section .glink
->> ld: warning: discarding dynamic section .plt
->> ld: linkage table error against `poly1305_emit_arch'
->> ld: stubs don't match calculated size
->> ld: can not build stubs: bad value
->> ld: lib/crypto/poly1305.o: in function `poly1305_final':
->> /builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250507/linux-6.15.0-0.0.next.20250507.443.vanilla.fc43.ppc64le/lib/crypto/poly1305.c:65:(.text+0x2dc): undefined reference to `poly1305_emit_arch'
->> ld: /builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250507/linux-6.15.0-0.0.next.20250507.443.vanilla.fc43.ppc64le/lib/crypto/poly1305.c:65:(.text+0x378): undefined reference to `poly1305_emit_arch'
->> make[2]: *** [scripts/Makefile.vmlinux:91: vmlinux] Error 1
->> make[1]: *** [/builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250507/linux-6.15.0-0.0.next.20250507.443.vanilla.fc43.ppc64le/Makefile:1250: vmlinux] Error 2
->> """
-> Oops, the powerpc patch was missing the assembly part:
->
-> ---8<---
-> Rename poly1305_emit_64 to poly1305_emit_arch to conform with
-> the expectation of the poly1305 library.
->
-> Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
-> Fixes: 14d31979145d ("crypto: powerpc/poly1305 - Add block-only interface")
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
->
-> diff --git a/arch/powerpc/lib/crypto/poly1305-p10-glue.c b/arch/powerpc/lib/crypto/poly1305-p10-glue.c
-> index 16c2a8316696..7cea0ebcc6bc 100644
-> --- a/arch/powerpc/lib/crypto/poly1305-p10-glue.c
-> +++ b/arch/powerpc/lib/crypto/poly1305-p10-glue.c
-> @@ -17,6 +17,7 @@ asmlinkage void poly1305_64s(struct poly1305_block_state *state, const u8 *m, u3
->   asmlinkage void poly1305_emit_arch(const struct poly1305_state *state,
->   				   u8 digest[POLY1305_DIGEST_SIZE],
->   				   const u32 nonce[4]);
-> +EXPORT_SYMBOL_GPL(poly1305_emit_arch);
->   
->   static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_p10);
->   
-> diff --git a/arch/powerpc/lib/crypto/poly1305-p10le_64.S b/arch/powerpc/lib/crypto/poly1305-p10le_64.S
-> index a3c1987f1ecd..2ba2911b8038 100644
-> --- a/arch/powerpc/lib/crypto/poly1305-p10le_64.S
-> +++ b/arch/powerpc/lib/crypto/poly1305-p10le_64.S
-> @@ -1030,7 +1030,7 @@ SYM_FUNC_END(poly1305_64s)
->   # Input: r3 = h, r4 = s, r5 = mac
->   # mac = h + s
->   #
-> -SYM_FUNC_START(poly1305_emit_64)
-> +SYM_FUNC_START(poly1305_emit_arch)
->   	ld	10, 0(3)
->   	ld	11, 8(3)
->   	ld	12, 16(3)
-> @@ -1060,7 +1060,7 @@ Skip_h64:
->   	std	10, 0(5)
->   	std	11, 8(5)
->   	blr
-> -SYM_FUNC_END(poly1305_emit_64)
-> +SYM_FUNC_END(poly1305_emit_arch)
->   
->   SYM_DATA_START_LOCAL(RMASK)
->   .align 5
-
-
-I tested this patch by applying on next-20250507, though it fixes the 
-build issue, it has introduced a boot warning.
-
-
-Warning:
-
-
-[Â Â Â  1.644487] ------------[ cut here ]------------
-[Â Â Â  1.644490] WARNING: CPU: 3 PID: 1 at 
-lib/crypto/chacha20poly1305.c:359 chacha20poly1305_init+0x28/0x50
-[Â Â Â  1.644501] Modules linked in:
-[Â Â Â  1.644507] CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Not tainted 
-6.15.0-rc5-next-20250507-00002-g8be5012869c6-dirty #1 VOLUNTARY
-[Â Â Â  1.644515] Hardware name: IBM,8375-42A POWER9 (architected) 0x4e0202 
-0xf000005 of:IBM,FW950.80 (VL950_131) hv:phyp pSeries
-[Â Â Â  1.644520] NIP:Â  c0000000020646c0 LR: c0000000020646b4 CTR: 
-00000000007088ec
-[Â Â Â  1.644525] REGS: c000000a03757960 TRAP: 0700Â Â  Not tainted 
-(6.15.0-rc5-next-20250507-00002-g8be5012869c6-dirty)
-[Â Â Â  1.644530] MSR:Â  8000000002029033 <SF,VEC,EE,ME,IR,DR,RI,LE>Â  CR: 
-28000282Â  XER: 0000000f
-[Â Â Â  1.644544] CFAR: c000000002064ec8 IRQMASK: 0
-[Â Â Â  1.644544] GPR00: c0000000020646b4 c000000a03757c00 c000000001dc8100 
-0000000000000001
-[Â Â Â  1.644544] GPR04: 0000000000000961 c0000009e94dd5c0 c000000a0d348000 
-0000000000000960
-[Â Â Â  1.644544] GPR08: 00000009e7270000 0000000000000000 0000000000000000 
-c0000013fb400000
-[Â Â Â  1.644544] GPR12: c0000013fc9fffa8 c000000017ffcb00 c0000000000113d8 
-0000000000000000
-[Â Â Â  1.644544] GPR16: 0000000000000000 0000000000000000 0000000000000000 
-0000000000000000
-[Â Â Â  1.644544] GPR20: 0000000000000000 0000000000000000 0000000000000000 
-0000000000000000
-[Â Â Â  1.644544] GPR24: 0000000000000000 0000000000000000 c0000000020b19a8 
-0000000000000006
-[Â Â Â  1.644544] GPR28: 0000000000000000 c0000000020b1960 c000000a05490a00 
-c000000002064698
-[Â Â Â  1.644600] NIP [c0000000020646c0] chacha20poly1305_init+0x28/0x50
-[Â Â Â  1.644607] LR [c0000000020646b4] chacha20poly1305_init+0x1c/0x50
-[Â Â Â  1.644612] Call Trace:
-[Â Â Â  1.644615] [c000000a03757c00] [c0000000020646b4] 
-chacha20poly1305_init+0x1c/0x50 (unreliable)
-[Â Â Â  1.644624] [c000000a03757c20] [c000000000010d1c] 
-do_one_initcall+0x5c/0x37c
-[Â Â Â  1.644631] [c000000a03757d00] [c000000002005394] 
-do_initcalls+0x144/0x18c
-[Â Â Â  1.644638] [c000000a03757d90] [c000000002005688] 
-kernel_init_freeable+0x214/0x288
-[Â Â Â  1.644645] [c000000a03757df0] [c0000000000113fc] kernel_init+0x2c/0x1b0
-[Â Â Â  1.644651] [c000000a03757e50] [c00000000000df5c] 
-ret_from_kernel_user_thread+0x14/0x1c
-[Â Â Â  1.644657] ---- interrupt: 0 at 0x0
-[Â Â Â  1.644661] Code: 7c0803a6 4e800020 3c4cffd6 38423a68 60000000 
-7c0802a6 f8010010 f821ffe1 4800028d 60000000 68630001 5463063e 
-<0b030000> 2c030000 4082000c 38600000
-[Â Â Â  1.644681] ---[ end trace 0000000000000000 ]---
-
-
-If you are planning to fix this in seperate patch, please add below tag.
-
-
-Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-
+working on further features, i noticed this function is called
+for each channel, that is not correct, so need to fix this,
+will send a v4.
 
 Regards,
+angelo
 
-Venkat.
-
+> > +		ret = fwnode_property_read_u32(child, "reg", &reg);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		/* channel number (here) is from 1 to num_channels */
+> > +		if (reg < 1 || reg > num_channels) {
+> > +			dev_warn(dev, "wrong ch number (ignoring): %d\n", reg);
+> > +			continue;
+> > +		}
+> > +
+> 
+> Sorry Angelo, just realized this now. Any reason for not treating the above as a real
+> invalid argument? It's minor and not a big deal but odd enough...
+> 
+> - Nuno Sá
+> 
+> > +		ret = fwnode_property_read_u32(child, "adi,rfilter-ohms",
+> > +					       &r_gain);
+> > +		if (ret == -EINVAL)
+> > +			/* Keep the default register value. */
+> > +			continue;
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		if (r_gain > AD7606_CALIB_GAIN_MAX)
+> > +			return dev_err_probe(st->dev, -EINVAL,
+> > +					     "wrong gain calibration value.");
+> > +
+> > +		/* Chan reg is 1-based index. */
+> > +		ret = st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
+> > +			DIV_ROUND_CLOSEST(r_gain, AD7606_CALIB_GAIN_STEP));
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int ad7606c_18bit_chan_scale_setup(struct iio_dev *indio_dev,
+> >  					  struct iio_chan_spec *chan)
+> >  {
+> > @@ -1410,6 +1462,10 @@ static int ad7606_probe_channels(struct iio_dev *indio_dev)
+> >  				chan->info_mask_separate_available |=
+> >  					BIT(IIO_CHAN_INFO_CALIBBIAS) |
+> >  					BIT(IIO_CHAN_INFO_CONVDELAY);
+> > +				ret = st->chip_info->calib_gain_setup_cb(
+> > +					indio_dev, chan);
+> > +				if (ret)
+> > +					return ret;
+> >  			}
+> >  
+> >  			/*
+> > diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+> > index
+> > f613583a7fa4095115b0b28e3f8e51cd32b93524..94165d217b69d54cbce9109b8c0f9dc0237cf304
+> > 100644
+> > --- a/drivers/iio/adc/ad7606.h
+> > +++ b/drivers/iio/adc/ad7606.h
+> > @@ -50,6 +50,8 @@ struct ad7606_state;
+> >  typedef int (*ad7606_scale_setup_cb_t)(struct iio_dev *indio_dev,
+> >  				       struct iio_chan_spec *chan);
+> >  typedef int (*ad7606_sw_setup_cb_t)(struct iio_dev *indio_dev);
+> > +typedef int (*ad7606_calib_gain_setup_cb_t)(struct iio_dev *indio_dev,
+> > +					    struct iio_chan_spec *chan);
+> >  
+> >  /**
+> >   * struct ad7606_chip_info - chip specific information
+> > @@ -66,6 +68,7 @@ typedef int (*ad7606_sw_setup_cb_t)(struct iio_dev *indio_dev);
+> >   * @init_delay_ms:	required delay in milliseconds for initialization
+> >   *			after a restart
+> >   * @offload_storagebits: storage bits used by the offload hw implementation
+> > + * @calib_gain_setup_cb: callback to setup of gain calibration for each channel
+> >   * @calib_offset_avail: pointer to offset calibration range/limits array
+> >   * @calib_phase_avail:  pointer to phase calibration range/limits array
+> >   */
+> > @@ -81,6 +84,7 @@ struct ad7606_chip_info {
+> >  	bool				os_req_reset;
+> >  	unsigned long			init_delay_ms;
+> >  	u8				offload_storagebits;
+> > +	ad7606_calib_gain_setup_cb_t	calib_gain_setup_cb;
+> >  	const int			*calib_offset_avail;
+> >  	const int			(*calib_phase_avail)[2];
+> >  };
+> > 
+> 
