@@ -1,144 +1,170 @@
-Received: from mail66.out.titan.email (mail66.out.titan.email [3.216.99.48])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639641DB958
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 03:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.216.99.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50894B1E5E
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 03:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746673319; cv=none; b=oIMaGUOenmmTMw4hkxp3Dt1mcAU/5Yma+5HVaLxYT0LHFErOk7aQCsipo1TPKsbpE6ebb2yV3kTHtg/NPijBnW/tsj7BdfV4Db/6fwKHSlb2cLdpH5dnYLM1lFL+r7NtOuWeaJlkz4BHk6+lT3QUlwxWX7oltwySeksjSx+FGJY=
+	t=1746673352; cv=none; b=DgX/cEOoSJKrDAt8uoeL3DtsqSMSiZ+0IzeZSfl9ONvOmTGNb03GA/KF4E3N8+gdvVADvvzDhUHG50MqMgfwOhG2PT3XrUpqWiRpuCDbhKkAibXxj5mFU0CyHYEGPYoyF8BwvP2NpWS9HbKZYl4nV+37arN9ytOzrfuv3xTyxy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746673319; c=relaxed/simple;
-	bh=7Tf1EqFD545JHpAWZXvSjHa28oRZjVWMUVk79TF5iA8=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=PDRcCdw1OakS9PNcvOUEMx/UiuDbp8JrDKnIpTAt0uuoR9U/OOsIagAN2+7OWzTrD29BW2eZ+DKxgowvrARxpaJf/pmnzKMhF15X7KqmZKKRloL07FVsi3iaYQoaObNUn2KXfVaFzGMhiAYZLrpo00Rm3nPQkS7EoRHIhoF84cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=cBzuG33s; arc=none smtp.client-ip=3.216.99.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
+	s=arc-20240116; t=1746673352; c=relaxed/simple;
+	bh=w5BERNMTmQmbkO7p5AxG7tR5aNdQ2mlSCWPFGr8DzZg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=LOZTmwobiZPmRRoHH/i8iYbpFjRO1Xtgzmj2sQqi+a0nbfX/PsHZOUeKpVW7tFE5jr1ppIe2+vck/1TK/0fQcVKhRlJ+w0O0dUQZSHsC6gV8rNA7/NsSMnNnCqUVm2VWBKHtkPcfWBqcj9eSsujlCSb39qo73y/kvcqTBHg4Fxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IcRbCCw2; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="cBzuG33s"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp-out.flockmail.com (Postfix) with ESMTP id 2A42E60360;
-	Thu,  8 May 2025 03:01:50 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=RCzvqplp+4SerGTRkXu4/iLMKYFITxB7gCQ/kktCJrU=;
-	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=cc:from:references:to:mime-version:in-reply-to:date:subject:message-id:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1746673310; v=1;
-	b=cBzuG33sSgGRIR9ebvPLQtox5qhT95Arw3IlLbP4nMW+4EdBFxOjc2NDYRwEz6hzb6JMTjFu
-	Of1gRa4Qu8Vy+3pFXkGX/ItJWp19nRzdxSap3pwl2L4Mml1kuZ6xiFwBGukL08ph3nUqlvqQnDZ
-	0Qfi+ucJ+FxSoRHS18NuInfc=
-Received: from smtpclient.apple (unknown [141.11.218.23])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id 1E03E60363;
-	Thu,  8 May 2025 03:01:46 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IcRbCCw2"
+Message-ID: <6eb27fe4-9dad-4ea5-afd0-a5d1e3f60acb@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746673347;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SnwtDdbXkv7ywwoyp6XSXq29PJSBA4fmJE0lToHIVjU=;
+	b=IcRbCCw2S6npM2W3zEPzX+wAETzE4GxNoUKPuytg15Y2aopKHZA87Fp3Myy1VSJeQk37a+
+	/2fZjSVnPPhNpONCJURZrO5eawlvmB1S9WBbjx+aRlIKR6FxF/UR7yAblZhBD6ZozGXW3l
+	gIffslgcXe+IuO0TBxUO7QhxaYPZkdE=
+Date: Thu, 8 May 2025 11:02:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH v2] md/bcache: Mark __nonstring look-up table
-Feedback-ID: :i@coly.li:coly.li:flockmailId
-From: Coly Li <i@coly.li>
-In-Reply-To: <389A9925-0990-422C-A1B3-0195FAA73288@coly.li>
-Date: Thu, 8 May 2025 11:01:34 +0800
-Cc: Coly Li <colyli@kernel.org>,
- Kent Overstreet <kent.overstreet@linux.dev>,
- Ard Biesheuvel <ardb@kernel.org>,
- linux-bcache@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <851B250D-A22C-4B47-BBAC-55284B5B5790@coly.li>
-References: <20250418202130.it.887-kees@kernel.org>
- <389A9925-0990-422C-A1B3-0195FAA73288@coly.li>
-To: Kees Cook <kees@kernel.org>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1746673310016857733.5242.3433233303003199658@prod-use1-smtp-out1001.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=fZxXy1QF c=1 sm=1 tr=0 ts=681c1e9e
-	a=USBFZE4A2Ag4MGBBroF6Xg==:117 a=USBFZE4A2Ag4MGBBroF6Xg==:17
-	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=VwQbUJbxAAAA:8
-	a=41P4AONiiAATRugwBd4A:9 a=QEXdDO2ut3YA:10 a=ZImdrWQ-kMQFOr_krkRP:22
+MIME-Version: 1.0
+Subject: Re: [PATCH RFC 2/3] kernel/hung_task: add option to dump system info
+ when hung task detected
+Content-Language: en-US
+To: Feng Tang <feng.tang@linux.alibaba.com>
+References: <20250507104322.30700-1-feng.tang@linux.alibaba.com>
+ <20250507104322.30700-3-feng.tang@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Petr Mladek
+ <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+ linux-kernel@vger.kernel.org
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <20250507104322.30700-3-feng.tang@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
+Hi Feng,
 
+Thanks for the patch series!
 
-> 2025=E5=B9=B44=E6=9C=8819=E6=97=A5 11:55=EF=BC=8CColy Li <i@coly.li> =
-=E5=86=99=E9=81=93=EF=BC=9A
->=20
->=20
->=20
->> 2025=E5=B9=B44=E6=9C=8819=E6=97=A5 04:21=EF=BC=8CKees Cook =
-<kees@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
->>=20
->> GCC 15's new -Wunterminated-string-initialization notices that the 16
->> character lookup table "zero_uuid" (which is not used as a C-String)
->> needs to be marked as "nonstring":
->>=20
->> drivers/md/bcache/super.c: In function 'uuid_find_empty':
->> drivers/md/bcache/super.c:549:43: warning: initializer-string for =
-array of 'char' truncates NUL terminator but destination lacks =
-'nonstring' attribute (17 chars into 16 available) =
-[-Wunterminated-string-initialization]
->> 549 |         static const char zero_uuid[16] =3D =
-"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
->>     |                                           =
-^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>=20
->> Add the annotation (since it is not used as a C-String), and switch =
-the
->> initializer to an array of bytes.
->>=20
->> Signed-off-by: Kees Cook <kees@kernel.org>
->> ---
->> v2: use byte array initializer (colyli)
->> v1: =
-https://lore.kernel.org/all/20250416220135.work.394-kees@kernel.org/
->> Cc: Coly Li <colyli@kernel.org>
->> Cc: Kent Overstreet <kent.overstreet@linux.dev>
->> Cc: Ard Biesheuvel <ardb@kernel.org>
->> Cc: linux-bcache@vger.kernel.org
->> ---
->> drivers/md/bcache/super.c | 3 ++-
->> 1 file changed, 2 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
->> index e42f1400cea9..a76ce92502ed 100644
->> --- a/drivers/md/bcache/super.c
->> +++ b/drivers/md/bcache/super.c
->> @@ -546,7 +546,8 @@ static struct uuid_entry *uuid_find(struct =
-cache_set *c, const char *uuid)
->>=20
->> static struct uuid_entry *uuid_find_empty(struct cache_set *c)
->> {
->> - static const char zero_uuid[16] =3D =
-"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
->> + static const char zero_uuid[] __nonstring =3D
->=20
+On 2025/5/7 18:43, Feng Tang wrote:
+> Kernel panic code utilizes sys_show_info() to dump needed system
+> information to help debugging. Similarly, add this debug option for
+> task hung case, and 'hungtask_print' is the knob to control what
+> information should be printed out.
+> 
+> Also clean up the code about dumping locks and triggering backtrace
+> for all CPUs. One todo may be to merge this 'hungtask_print' with
+> some sysctl knobs in hung_task.c.
+> 
+> Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+> ---
+>   kernel/hung_task.c | 29 ++++++++++++++++-------------
+>   1 file changed, 16 insertions(+), 13 deletions(-)
+> 
+> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+> index dc898ec93463..8229637be2c7 100644
+> --- a/kernel/hung_task.c
+> +++ b/kernel/hung_task.c
+> @@ -58,12 +58,20 @@ static unsigned long __read_mostly sysctl_hung_task_check_interval_secs;
+>   static int __read_mostly sysctl_hung_task_warnings = 10;
+>   
+>   static int __read_mostly did_panic;
+> -static bool hung_task_show_lock;
+>   static bool hung_task_call_panic;
+> -static bool hung_task_show_all_bt;
+>   
+>   static struct task_struct *watchdog_task;
+>   
+> +/*
+> + * A bitmask to control what kinds of system info to be printed when a
+> + * hung task is detected, it could be task, memory, lock etc. Refer panic.h
+> + * for details of bit definition.
+> + */
+> +unsigned long hungtask_print;
+> +core_param(hungtask_print, hungtask_print, ulong, 0644);
 
-Hi Kees,
+how about lockup_debug_print_mask?
 
-> I notice zero_uuid[16] changes to zero_uuid[], then the element number =
-information is removed.
->=20
-> Is it OK for GCC 15 to only add __nonstring and keep zero_uuid[16]?
+It could be useful for debugging, but there are a few concerns:
 
-Ping ?
+1) SYS_PRINT_* vs. hung_task_* priority conflict
+- If SYS_PRINT_ALL_CPU_BT is set on the command line but
+hung_task_all_cpu_backtrace is disabled, which one wins?
+- Or should SYS_PRINT_ALL_CPU_BT force-enable hung_task_all_cpu_backtrace?
 
-You are expert here, I need your opinion.
+2) Duplicate prints
+With SYS_PRINT_BLOCKED_TASKS enabled, processes in D state will be printed
+twice, right?
 
-Thanks.
+Also, we really should document how those command-line parameters work ;)
 
-Coly Li
+Thansk,
+Lance
 
-
-
->> + { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
->>=20
->> return uuid_find(c, zero_uuid);
->> }
->> --=20
->> 2.34.1
-
+> +
+> +static unsigned long cur_hungtask_print;
+> +
+>   #ifdef CONFIG_SMP
+>   /*
+>    * Should we dump all CPUs backtraces in a hung task event?
+> @@ -163,11 +171,12 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+>   	 */
+>   	sysctl_hung_task_detect_count++;
+>   
+> +	cur_hungtask_print = hungtask_print;
+>   	trace_sched_process_hang(t);
+>   
+>   	if (sysctl_hung_task_panic) {
+>   		console_verbose();
+> -		hung_task_show_lock = true;
+> +		cur_hungtask_print |= SYS_PRINT_LOCK_INFO;
+>   		hung_task_call_panic = true;
+>   	}
+>   
+> @@ -190,10 +199,10 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+>   			" disables this message.\n");
+>   		sched_show_task(t);
+>   		debug_show_blocker(t);
+> -		hung_task_show_lock = true;
+> +		cur_hungtask_print |= SYS_PRINT_LOCK_INFO;
+>   
+>   		if (sysctl_hung_task_all_cpu_backtrace)
+> -			hung_task_show_all_bt = true;
+> +			cur_hungtask_print |= SYS_PRINT_ALL_CPU_BT;
+>   		if (!sysctl_hung_task_warnings)
+>   			pr_info("Future hung task reports are suppressed, see sysctl kernel.hung_task_warnings\n");
+>   	}
+> @@ -242,7 +251,7 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+>   	if (test_taint(TAINT_DIE) || did_panic)
+>   		return;
+>   
+> -	hung_task_show_lock = false;
+> +	cur_hungtask_print = 0;
+>   	rcu_read_lock();
+>   	for_each_process_thread(g, t) {
+>   		unsigned int state;
+> @@ -266,14 +275,8 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+>   	}
+>    unlock:
+>   	rcu_read_unlock();
+> -	if (hung_task_show_lock)
+> -		debug_show_all_locks();
+> -
+> -	if (hung_task_show_all_bt) {
+> -		hung_task_show_all_bt = false;
+> -		trigger_all_cpu_backtrace();
+> -	}
+>   
+> +	sys_show_info(cur_hungtask_print);
+>   	if (hung_task_call_panic)
+>   		panic("hung_task: blocked tasks");
+>   }
 
