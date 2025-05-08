@@ -1,99 +1,104 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0D92627F5
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 08:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8124B21D011;
+	Thu,  8 May 2025 08:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746693145; cv=none; b=Go7YbtjbDgHf/mUbiq8aW1wfy7nEFMgN6WmcoKUd19EeqkpppXLWZlNQab8JMwEi1I85RYDwaytprK7lIP5muXOI5t4hG//BGCqRh81dRqyvSCqQn5Tzu+9u6a2rqCmLrthAT4URq9mS4CCsxeboSqiUynWWxD8EEePpQH1Vk70=
+	t=1746693292; cv=none; b=aWjN+SMyXZNRiLO1MApFm8dexQ/0+TaxJ2TWkLfZZOhboslJNe9c69E5sVAhb4yWGUW9nK5IGBZtzVeyBu3LNA6+mtuAHKCZfS+vk4CsjihkdorMhagCwDOidNKzhKInnoPtED++3iyDYHuNcncYy7i+As35c6mqz9blo5/Cv7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746693145; c=relaxed/simple;
-	bh=N8mZbwrs/5/HrYcaufL1Ugn9aNRzeB+rYc/9Jk/Dr3s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nfjlswkwlY5BmwTd7RnfqbIZoBYRsvLpZZ0rCpnmtr99J/GZwbaYPD+MmrRgF61nhRD2qOSS6zhJtNmskpCOPqoclWqGj3Vj51nbc9wS6tptRCR6IfxetvXdvOWbKP9H8Dv+Fnb1bvUfmQ7BPH4lLP5L2A/pMpXJjgn9t06emoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uF8w/arX; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746693292; c=relaxed/simple;
+	bh=/yn0vOBSqs1gT1qgFskCzgf8UxOw44a5QvWI6DwYPmM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XqWjmCZcuSebtqHMqKckFs06lt6i6PKcKSxl3wPCqr6zMjCCc9VQQVrIxkkqlmmQ3tmBViN7W3xVL9AFmc369pFVotNstvU2wWUcRqGJL2YNgN1XqmtajIIVCsFwr5+HqZNq2zJd5XA3Px8KO5EiCNtThPoQdxXsbpCV64LzQEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lvHX6Jfr; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uF8w/arX"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6f0ad74483fso8563256d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 01:32:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746693143; x=1747297943; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N8mZbwrs/5/HrYcaufL1Ugn9aNRzeB+rYc/9Jk/Dr3s=;
-        b=uF8w/arXTrCXchwAXa2DikpL0JU18fH6YoZRKCb6GIOXrvuGZD0WnpITWSlRP/4QBh
-         l2hdV18bpSSq7k6O5GqL/lH5AjtBtAizMyE+gAgvCnMNoF+QOrX6VGLxP8EbP0ag0per
-         wYsM/Zq8eWYhSIHNRaPGazwSgHh5Ufu2P8ohYnopqy68pvbNhUHj1+dxucN+a+8VqSPY
-         Y7DRA0zXFBEklAHvHPpnIcw5qm/6tgJXyYT+ArKuxCkI2cQIKqGhOYnflH2xj2t7efKW
-         8xwFNg024OCwrncmslOdHPSPzJa0KOZbdoUJ2qJMrBU5z9XtMzVsvxQWjGtoXnSKC/iW
-         lqqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746693143; x=1747297943;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N8mZbwrs/5/HrYcaufL1Ugn9aNRzeB+rYc/9Jk/Dr3s=;
-        b=knR2sZ1zA8MquadRCbjsno9CptLBirmeXbuA/ZBSOTB0isTFZHIcguZiSN9tYqDqhX
-         KfSoz938vNtU2W8aYFIasbsapHPlQIIbHOkFpO65aOKX1Mgvqzzh+H7i5urYInitF5pI
-         hY/G0r/C5vwHhO2sZ/oNc50shfuHszlTLDDkF2DbRhy9xwFcfYzLsimfc+L9V6ZGvQsr
-         L/OxYZWU1aBjz8fcpzrQZEZiyuv4Q7ZcMKxNfLUaTH2mIJ/RLSru0AeF3hT0nHMYeiEd
-         o20VkETO9Sf9zrYGe35PHIdMv0oduEuD7HfqqVoTWyOTaiiPNopjVIMqwDxUz0eBnQC/
-         0yxw==
-X-Forwarded-Encrypted: i=1; AJvYcCXolTCEJ4qctyZo7hYXlY3PQk5f6jzJVkFfLWYpDD4uTTZKSilTruPzh8S+Ho+AGRVSFloysCXR9DvZtLo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9siV0g6s7aHTVhSSxMPtRvtN5+d+c1nzpP9s1v9tqmjX3m7xs
-	M/lPZ9yQxNjfvf4lHNCj0Vb0zOswYj0Ibh6695RaMMuhwZw8rdM+9HBgCtOGBxjMmGvscEWtnwx
-	t5B0bxX4SjbpSSH3Fub2j+pyBtdGl7OxrHloY
-X-Gm-Gg: ASbGncscDnTAVDePLwPlAYDSYG0pxmvF9sIl6lT1bHSveXq80SJGIJcAAuKNmj0BqmY
-	glCM1zZpSUhmoUBCtulfP/N70DP+WBsO4DT+tEyrq3lJp9Z8JTgYMuzW4lbhUF123l/MBdPkalW
-	56djfgEt87QJL9r5ggMSKSLWpJ4xOh/drmCt3c1O5M/E2Zip3LqtK8JvqoFMMZqM4=
-X-Google-Smtp-Source: AGHT+IGCI9yCKt7dsF9BpZWhipvTKbTZ/CQVkEZcrPI1qI82H4Af2aJ5Eo5kObAwhe6gD1UjC6ZozUgCVkdmxL4SrRM=
-X-Received: by 2002:a05:6214:5086:b0:6d8:a8e1:b57b with SMTP id
- 6a1803df08f44-6f542aad8c4mr120881656d6.36.1746693142679; Thu, 08 May 2025
- 01:32:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lvHX6Jfr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746693287;
+	bh=/yn0vOBSqs1gT1qgFskCzgf8UxOw44a5QvWI6DwYPmM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lvHX6Jfr7OJ3b9RU2pr9vKKmVzcczO72O3biC5VnlBbkLBYBi4j80YJi2EahlHN1c
+	 6I9FwWK2rI9vTlfgY0vX59fGYaiqUGpGcxReA8po/KwPkXIJBEPYgbVoK27U8P4nkQ
+	 X4QD/QaGCH6DAVicsxmX8fpMRCdFt6D/fag3nmUd43PN/6uB7xi1I6h2Cgt/WTqLpq
+	 SZEaWRHihGqfwPDfI/lIhJzyu9FoTR2A8LrpgfmZCRkdBpb7sSHMCQ9F4OpeDxNYKz
+	 VId7swgQvxQGPbEbgdeQEvtYfy088uRJpCZWNsQMmZX2KRcEXgt4abxmz6xz2/sV+O
+	 wA2RMcDIF2HaA==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 62D3417E02BE;
+	Thu,  8 May 2025 10:34:46 +0200 (CEST)
+Message-ID: <ff8da58b-9e87-46d9-b4d2-4059ef05780d@collabora.com>
+Date: Thu, 8 May 2025 10:34:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507160012.3311104-1-glider@google.com> <20250507160012.3311104-2-glider@google.com>
- <CANpmjNMUFmnVweY5zCkkszD39bhT3+eKk1-Qqc0LZTUdPN0x=Q@mail.gmail.com> <CAG_fn=VuaiTB11bJraxQjoVxp=0ML7Zoth1CYjczgUof3Rhqmw@mail.gmail.com>
-In-Reply-To: <CAG_fn=VuaiTB11bJraxQjoVxp=0ML7Zoth1CYjczgUof3Rhqmw@mail.gmail.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Thu, 8 May 2025 10:31:45 +0200
-X-Gm-Features: ATxdqUE7xSG_AG0WDgqD8g8zoZ_7fGDEsRbmK90FzbLlILhlobzg4Gki4bJ9d3g
-Message-ID: <CAG_fn=VYg3sveZ8ofNJsx6-rS6p2PDNGWAKj18LpYRu02hV6-A@mail.gmail.com>
-Subject: Re: [PATCH 2/5] kmsan: fix usage of kmsan_enter_runtime() in kmsan_vmap_pages_range_noflush()
-To: Marco Elver <elver@google.com>
-Cc: dvyukov@google.com, bvanassche@acm.org, kent.overstreet@linux.dev, 
-	iii@linux.ibm.com, akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] dt-bindings: iommu: mediatek: mt8195 Accept up to 5
+ interrupts
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Julien Massot <julien.massot@collabora.com>, kernel@collabora.com,
+ Sen Chu <sen.chu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
+ Macpaul Lin <macpaul.lin@mediatek.com>, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?=
+ <nfraprado@collabora.com>, Hui Liu <hui.liu@mediatek.com>,
+ Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Tinghan Shen <tinghan.shen@mediatek.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, iommu@lists.linux.dev
+References: <20250505-mt8395-dtb-errors-v1-0-9c4714dcdcdb@collabora.com>
+ <20250505-mt8395-dtb-errors-v1-2-9c4714dcdcdb@collabora.com>
+ <baeae909-4d12-4cbd-a063-7ad165304b96@kernel.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <baeae909-4d12-4cbd-a063-7ad165304b96@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 8, 2025 at 10:19=E2=80=AFAM Alexander Potapenko <glider@google.=
-com> wrote:
->
-> On Wed, May 7, 2025 at 6:09=E2=80=AFPM Marco Elver <elver@google.com> wro=
-te:
-> >
-> > On Wed, 7 May 2025 at 18:00, Alexander Potapenko <glider@google.com> wr=
-ote:
-> > >
-> > > Only enter the runtime to call __vmap_pages_range_noflush(), so that =
-error
-> > > handling does not skip kmsan_leave_runtime().
-> > >
-> > > This bug was spotted by CONFIG_WARN_CAPABILITY_ANALYSIS=3Dy
-> >
-> > Might be worth pointing out this is not yet upstream:
-> > https://lore.kernel.org/all/20250304092417.2873893-1-elver@google.com/
->
-> Thanks! I'll update the description (here and in the other patch) and
-> post v2 later today.
+Il 08/05/25 08:03, Krzysztof Kozlowski ha scritto:
+> On 05/05/2025 15:23, Julien Massot wrote:
+>>
+>> Fixes: 3b5838d1d82e3 ("arm64: dts: mt8195: Add iommu and smi nodes")
+>> Signed-off-by: Julien Massot <julien.massot@collabora.com>
+>> ---
+>>   Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml b/Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml
+>> index 75750c64157c868725c087500ac81be4e282c829..035941c2db32170e9a69a5363d8c05ef767bb251 100644
+>> --- a/Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml
+>> +++ b/Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml
+>> @@ -97,7 +97,8 @@ properties:
+>>       maxItems: 1
+>>   
+>>     interrupts:
+>> -    maxItems: 1
+>> +    minItems: 1
+>> +    maxItems: 5
+>>   
+> Every iommu or just some (as described in commit msg) can have 5
+> interrupts? Looks you miss here proper constraints per variant.
+> 
+Technically, all of the IOMMUs can have more than one interrupt - but it's not
+clear which one and why, as documentation is lacking.
 
-Since Andrew picked the changes up already, we've decided there's no
-need for a respin :)
+Let's restrict this discussion to MT8195 anyway, as it's the only one declaring
+those 5 interrupts...
+...all of the IOMMUs declare just one, and mediatek,mt8195-iommu-infra declares 5.
+
+P.S.: Nice catch!
+
+Cheers,
+Angelo
