@@ -1,301 +1,179 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F9B2144CF;
-	Thu,  8 May 2025 10:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE35821D3E2
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746701100; cv=none; b=RyaqbS4HRJPJclzEJ0Os1J41q2NWucMwAUx/cvkHlC/AUOrpBRANP3y5qHDcqdocyLq/+0WF8S1xhe/Q7cKfQpekjKlLX7X7nE1foUNjsAxylhLHcEzHR0wCJ8SKXIuM/TFW9Qfjc29G9pMclVobK9Cz0m66XGGLZy4Ud5GPqCw=
+	t=1746701110; cv=none; b=sAVWa24TXxRk9PL/B2/U7xgGrbeyQwmIMhYP2rUsm/DV3gttrnnJStHXaNEccrdTo/0HyUvqpZjmDs8uhieeHjoH4sIdNhkXnzh+POTLaE1XvJXSfQLpUND3aUS4tI2aaCbBZnAv8Rvn9T4B8/LU+Cq2TJONZl3DolrDDjjN0hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746701100; c=relaxed/simple;
-	bh=3O4f7o+cdwSh7GkfSkWFzT4gqArOsohg7ON5dIaRPrk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YjbveU9ZlQwoDUmafTSh67RLh6mrhI4rvTorCZm4utMAPdoubiPw3PO04AEevV46C0OTMoKKY5QwQlTE6ExVxnreRRsjOabxNkpH0B+wxm6c7OancTJcob1taaqq9N/E/eQoUzMQRUKLGCDJVvIgzYe37trW0twRQj7oCsqnKso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZJfRJiTw; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746701110; c=relaxed/simple;
+	bh=FY5aqFfKL11NuTG7B4uPZeY355YRDdgJOPBn8ClLl+w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kHxMEKcR6iwCXkWiiI0hit2pHASzwPAlODYTZknMHIMX6cp4DIZJeKeL6m7GLBqavgdqgDlbn+7wKg93IoJXSpjfrsJxObP/nkZUAa3nZgPXFU+1YGmwU93LOJN8WUd4NqcPPxVZ4Zd1C8qqYi8AZ6IMx9YE3drgez9CeC+14b4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ie4OlSMy; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZJfRJiTw"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso145070466b.0;
-        Thu, 08 May 2025 03:44:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746701097; x=1747305897; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WtJCJ1H+oBO5+I1jatloihWgA0mc4DVX8o/Pn2JcwS0=;
-        b=ZJfRJiTwT0sGE3Ev//Gz31WIaoucE2RLgd9GLzOgiSnI7gbqpbOC32dUF6sb8epu2c
-         BvF2Kds7U9MYO4WbtW29oGDh5AM8c8eyPQITc2q52/FffoR/86sYCKcu/vp2zlKLZLB0
-         /2LuoRoP9PCn8fwovKZESF+mYdvHT1qwAJezC04UrCql4ksy8DZvXu+LtCmbpIypbTVp
-         c8E9bcyWvuLJN0LamNp8YMY5/KLVWIKz9fG84QeZSKyAwvtyvm09/lfGme3iZPPFuQQc
-         Pij2r3SoWL/Wf0NbXPZyhT5DGN7TNBD9eGu2DljtolQIG/xfyEO7+BlnUmsk77QSZUiG
-         fyzw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ie4OlSMy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746701107;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=144CCdZ3QqhhoE6LNmKSPB/eWeg7K2Itr6u/8FJkLpE=;
+	b=ie4OlSMyXkSdFQwX1A96F/1K0D3n/ifTXqfMLqpgGGVbN6hch5Qe1euIacfsa7flmIcy5D
+	BY4vPQhnvCVdMFwy55NHUQZ2a7hQeJE717nPYu7wr6mOXo5YakPsaBduK5IBi1ajwy8egW
+	5CieiGf47DcCCUXxdsgXSwLdkNC5t5o=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-633-0js9ndmFNbqVZO2HS5cvBA-1; Thu, 08 May 2025 06:45:04 -0400
+X-MC-Unique: 0js9ndmFNbqVZO2HS5cvBA-1
+X-Mimecast-MFC-AGG-ID: 0js9ndmFNbqVZO2HS5cvBA_1746701103
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43ea256f039so6549265e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 03:45:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746701097; x=1747305897;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WtJCJ1H+oBO5+I1jatloihWgA0mc4DVX8o/Pn2JcwS0=;
-        b=JGt70vMn1GWM4Mp5xYE23OxVPh9avkDwgCQhqSTuI0DMrdRG235COdKh493Ocueabw
-         oH2UIeTB31qSudINJqAWj9LFmOhyf07Y77Z1FtBJ2r1fQRkuVq6Dgd3l/XXthYOk/eFu
-         tLRrLoqwlSs6whMbAiZEURtoRf/F2jIBOXpv7n7rKRLxDxkZDUUYazjabnXIPuLq3oQ5
-         1qZAv20XQygynqpSoD7Wo2J4Mgw8fkaS47BeJEntCBgA4NwwYhWI7e0hzlBFBR26aHIW
-         fIF9SGFbH6x7Rcjp/7lRMi72qwRo9KsurnjG5QHzq/IKjN7t0rtW9yQ5QSMuOusuody0
-         VTrw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8Nld9PlOqc1Vq8+XUp72HoOclR+Lsmm1aNmYyFn8xQ+xkHhOJ78anVX9x3resor8SCbg6FcsTTDIqM19A@vger.kernel.org, AJvYcCXoccRxARO45bJ1aMQuuUd3IDEMLWpZQCTvnwmPzYT7L8/QvxytJzIssYAZ/7C3OjiygOTEtr3NA62qHEiz@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUJgsQGqjmbH4abZOOeU/cmdSTr2USr1yu2Rq2cSgl7nnpkXr/
-	sVxP1jn+hHYmXs4Gk45RHJb+sBWMQCXsS4rL/09ctfI86isIOaKRMhmV6OfeSrxJbnZ7swLy1wq
-	g9q22dAzRh+YkIK9wRgF8gKYbS+/vZ8rLJheLxg==
-X-Gm-Gg: ASbGncsXAt2I/BMQIeAUmF0bROIMO7Lkc6oOlF1WH+45v+mw9XyGzOiYG9G1jzs2+AE
-	eLiOFXP3AsO/6Bppxs/sHESsAse/sRs9k+bjwcdCR6Q+F93osjfmmOLBomP/Gm3aCvWgJj453Lj
-	veGIgwZpdz6aTgIqsfAkwOQw==
-X-Google-Smtp-Source: AGHT+IFeNjt+C+vzqzbxWit/mPEbNH5SMZ1tw08O7SI176FbLYKl1AD1zs1+FtbZWG/2rUAttNLNmfn2VoW8qT6KQNg=
-X-Received: by 2002:a17:907:d2a:b0:ace:cbe0:2d67 with SMTP id
- a640c23a62f3a-ad1e8d0d4dfmr716108366b.55.1746701096129; Thu, 08 May 2025
- 03:44:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746701103; x=1747305903;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=144CCdZ3QqhhoE6LNmKSPB/eWeg7K2Itr6u/8FJkLpE=;
+        b=Z75FgPycUXqZTQEOyUvL3PyCu4cdq98Ve2p34fG7GI80+2wpB4/i7qnJNcPWteS4Ag
+         wkTmS3HfiRTBB07y/6BUOhz1MvbLwsqlExIRO59gl3IL9a4iezka7LCO4gTC9gknmX9t
+         J16yrMa13JOAW8aToAOp+g+xoHuTjmwKqc40/bhbeLVI7NY4zb16iu59wEi8Tpw9/XpJ
+         2tMaRC8aGGLEX3U6G+svY+qNG3IpVdZSNpmq0NdU0/04rQOkk65JzGND36Kr4q3DTv9d
+         d+tfYTXgRcmTCO7lcvEe6D+mWSWk0uTP1WHZ+ey+5Z+twoWemYRMVC+oB3C5CoDgtEFQ
+         pxlg==
+X-Forwarded-Encrypted: i=1; AJvYcCXzS8k235bphJaEMaDYDtWXlyp7qF33zY5/ABvMA8MAyaA3NMZC214sC5ZLrMejuYGwRDYqF4Q0w7LEL3U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtOx/jdESQuF4zVzUptCc5ZD9IKZaarjpad0FZtBkxexPnj4vC
+	lZgK0BZgfwN42SkoQcxoFxZ+yBRKPgzsfAR+sFBTBcVUFQ0rBTMkHWbAvf4ESJio9YnhcQ6UF56
+	SRkwIPJixWz+MstaB9MLGi0ksd+jNhTxNGmo0/vglgK5eYWBnAVJnIr4tDFi+mg==
+X-Gm-Gg: ASbGnct0UAJw1vzVfzej1Rb2DI5DTHwsgvd+CCUqpvDbmFnnaAOpMur2CYlZ3NePO7k
+	ofI4KYP7U56A/fLoNnm2gNC8IsLTth0LdN1kzlgoUWq9u0XnavGmY0sGOn3ebXjbFLJJq2BpWhj
+	RaDEvxKgxxWEx7MkU2zcktwMMBoNu2yEIvY2eH1i29ADI6q7YbOTgEd/mdaqyaemNdzo6ZInhF3
+	Uy4Dn7O57EZFVm0KQgj7pS4UccGVm9ezaK9bACYg6bvl7K82enBjFZ9e358zpg45uBxmqdqYB55
+	W9L2McXaW4TBaD4gup7AN2dOtcsvtvtTo4Ii0i3RAlFFAVluF2dwoOSbssBet7ZFO/nFIAzg+2a
+	XyBII5IucxPphr0AF0cYh6jT7ShOzj7ugvFIy4/E=
+X-Received: by 2002:a05:600c:6099:b0:441:d2d8:bd8b with SMTP id 5b1f17b1804b1-442d02eb737mr25234875e9.8.1746701103460;
+        Thu, 08 May 2025 03:45:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFJipFDeuAP66y53PUXj/YtGNe0kDSmVFggpMyReSgfoxt7A5u5wr1a0OocAi2q7Qu34MSpWg==
+X-Received: by 2002:a05:600c:6099:b0:441:d2d8:bd8b with SMTP id 5b1f17b1804b1-442d02eb737mr25234635e9.8.1746701103059;
+        Thu, 08 May 2025 03:45:03 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f3e:5900:27aa:5f4a:b65c:3d3c? (p200300d82f3e590027aa5f4ab65c3d3c.dip0.t-ipconnect.de. [2003:d8:2f3e:5900:27aa:5f4a:b65c:3d3c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d14e6d74sm23825945e9.21.2025.05.08.03.45.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 03:45:02 -0700 (PDT)
+Message-ID: <a5cde237-0dcf-4e85-b763-7a38e9f9c563@redhat.com>
+Date: Thu, 8 May 2025 12:45:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508-fusectl-backing-files-v2-0-62f564e76984@uniontech.com> <20250508-fusectl-backing-files-v2-2-62f564e76984@uniontech.com>
-In-Reply-To: <20250508-fusectl-backing-files-v2-2-62f564e76984@uniontech.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 8 May 2025 12:44:43 +0200
-X-Gm-Features: ATxdqUFKt8_DRAgB1MJq2rrA-z669438lMdCHIvzykfiV2rftctx4Yvyisi2_v8
-Message-ID: <CAOQ4uxjLkpUz2BPwVUtk6zHQtYmVww9qkUtGi5YA=Y-9XeiU9w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] fs: fuse: add backing_files control file
-To: chenlinxuan@uniontech.com
-Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Memory hotplug locking issue: Useless (?) zone span seqlock
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@suse.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Pavel Tatashin
+ <pasha.tatashin@soleen.com>, Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>
+References: <b3acfb1e-2d7a-42ef-9705-bf0b20a0d152@efficios.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <b3acfb1e-2d7a-42ef-9705-bf0b20a0d152@efficios.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 8, 2025 at 10:54=E2=80=AFAM Chen Linxuan via B4 Relay
-<devnull+chenlinxuan.uniontech.com@kernel.org> wrote:
->
-> From: Chen Linxuan <chenlinxuan@uniontech.com>
->
-> Add a new FUSE control file "/sys/fs/fuse/connections/*/backing_files"
-> that exposes the paths of all backing files currently being used in
-> FUSE mount points. This is particularly valuable for tracking and
-> debugging files used in FUSE passthrough mode.
->
-> This approach is similar to how fixed files in io_uring expose their
-> status through fdinfo, providing administrators with visibility into
-> backing file usage. By making backing files visible through the FUSE
-> control filesystem, administrators can monitor which files are being
-> used for passthrough operations and can force-close them if needed by
-> aborting the connection.
->
-> This exposure of backing files information is an important step towards
-> potentially relaxing CAP_SYS_ADMIN requirements for certain passthrough
-> operations in the future, allowing for better security analysis of
-> passthrough usage patterns.
->
-> The control file is implemented using the seq_file interface for
-> efficient handling of potentially large numbers of backing files.
-> Access permissions are set to read-only (0400) as this is an
-> informational interface.
->
-> FUSE_CTL_NUM_DENTRIES has been increased from 5 to 6 to accommodate the
-> additional control file.
->
-> Some related discussions can be found at links below.
->
-> Link: https://lore.kernel.org/all/4b64a41c-6167-4c02-8bae-3021270ca519@fa=
-stmail.fm/T/#mc73e04df56b8830b1d7b06b5d9f22e594fba423e
-> Link: https://lore.kernel.org/linux-fsdevel/CAOQ4uxhAY1m7ubJ3p-A3rSufw_53=
-WuDRMT1Zqe_OC0bP_Fb3Zw@mail.gmail.com/
-> Cc: Amir Goldstein <amir73il@gmail.com>
-> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
-> ---
->  fs/fuse/control.c | 136 ++++++++++++++++++++++++++++++++++++++++++++++++=
-+++++-
->  fs/fuse/fuse_i.h  |   2 +-
->  2 files changed, 136 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/fuse/control.c b/fs/fuse/control.c
-> index f0874403b1f7c91571f38e4ae9f8cebe259f7dd1..d1ac934d7b8949577545ffd20=
-535c68a9c4ef90f 100644
-> --- a/fs/fuse/control.c
-> +++ b/fs/fuse/control.c
-> @@ -11,6 +11,7 @@
->  #include <linux/init.h>
->  #include <linux/module.h>
->  #include <linux/fs_context.h>
-> +#include <linux/seq_file.h>
->
->  #define FUSE_CTL_SUPER_MAGIC 0x65735543
->
-> @@ -180,6 +181,136 @@ static ssize_t fuse_conn_congestion_threshold_write=
-(struct file *file,
->         return ret;
->  }
->
-> +struct fuse_backing_files_seq_state {
-> +       struct fuse_conn *fc;
-> +       int backing_id;
-> +};
-> +
-> +static void *fuse_backing_files_seq_start(struct seq_file *seq, loff_t *=
-pos)
-> +{
-> +       struct fuse_backing *fb;
-> +       struct fuse_backing_files_seq_state *state;
-> +       struct fuse_conn *fc;
-> +       int backing_id;
-> +       void *ret;
-> +
-> +       if (*pos + 1 > INT_MAX)
-> +               return ERR_PTR(-EINVAL);
-> +
-> +       backing_id =3D *pos + 1;
+On 07.03.25 21:22, Mathieu Desnoyers wrote:
+> I'm currently perfecting my understanding of the mm code and reviewing
+> pieces of it as I go, and stumbled on this:
+> 
+> commit 27cacaad16c5 ("mm,memory_hotplug: drop unneeded locking")
+> 
+> This commit removes all users of zone_span_writelock(), thus making
+> the inline useless, but leaves the now useless
+> zone_span_seqbegin()/zone_span_seqretry() in place within
+> page_outside_zone_boundaries().
+> 
+> So I'm confused. What's going on ?
+> 
+> And if this commit got things very wrong when removing the
+> seqlock, I wonder if there are cases where its partial
+> pgdat_resize_lock() removal can be an issue as well.
 
-I am not sure if this +1 is correct.
-Please make sure that you test reading in several chunks
-not only from pos 0 to make sure this is right.
-Assuming that is how the code gets to call start() with non zero pos?
+I stumbled over that myself recently as well. I think I mentioned in the 
+past that we should just store
 
-I think that backing_id should always be in sync with *pos for that to
-work correctly.
-"The next() function should set ``*pos`` to a value that start() can use
-to find the new location in the sequence."
+start_pfn + end_pfn
 
-That means that we do not really need the backing_id in the state.
-We can just have a local backing_id var that reads from *pos and
-*pos is set to it at the end of start/next.
+instead of
 
-> +
-> +       fc =3D fuse_ctl_file_conn_get(seq->file);
-> +       if (!fc)
-> +               return ERR_PTR(-ENOTCONN);
-> +
-> +       rcu_read_lock();
-> +
-> +       fb =3D idr_get_next(&fc->backing_files_map, &backing_id);
-> +
-> +       rcu_read_unlock();
-> +
-> +       if (!fb) {
-> +               ret =3D NULL;
-> +               goto err;
-> +       }
-> +
-> +       state =3D kmalloc(sizeof(*state), GFP_KERNEL);
-> +       if (!state) {
-> +               ret =3D ERR_PTR(-ENOMEM);
-> +               goto err;
-> +       }
-> +
-> +       state->fc =3D fc;
-> +       state->backing_id =3D backing_id;
-> +
-> +       ret =3D state;
-> +       return ret;
-> +
-> +err:
-> +       fuse_conn_put(fc);
-> +       return ret;
-> +}
-> +
-> +static void *fuse_backing_files_seq_next(struct seq_file *seq, void *v,
-> +                                        loff_t *pos)
-> +{
-> +       struct fuse_backing_files_seq_state *state =3D v;
-> +       struct fuse_backing *fb;
-> +
-> +       (*pos)++;
-> +       state->backing_id++;
-
-Need to check for INT_MAX overflow?
-
-> +
-> +       rcu_read_lock();
-> +
-> +       fb =3D idr_get_next(&state->fc->backing_files_map, &state->backin=
-g_id);
-> +
-> +       rcu_read_unlock();
-> +
-> +       if (!fb)
-> +               return NULL;
-
-I think that I gave you the wrong advice on v1 review.
-IIUC, if you return NULL from next(), stop() will get a NULL v arg,
-so I think you need to put fc and free state here as well.
-Please verify that.
-
-Perhaps a small helper fuse_backing_files_seq_state_free()
-can help the code look cleaner, because you may also need it
-in the int overflow case above?
-
-> +
-> +
-> +       return state;
-> +}
-> +
-> +static int fuse_backing_files_seq_show(struct seq_file *seq, void *v)
-> +{
-> +       struct fuse_backing_files_seq_state *state =3D v;
-> +       struct fuse_conn *fc =3D state->fc;
-> +       struct fuse_backing *fb;
-> +
-> +       rcu_read_lock();
-> +
-> +       fb =3D idr_find(&fc->backing_files_map, state->backing_id);
-> +       fb =3D fuse_backing_get(fb);
-
-rcu_read_unlock();
-
-should be here.
-After you get a ref on fb, it is safe to deref fb without RCU
-so no need for the goto cleanup labels.
-
-> +       if (!fb)
-> +               goto out;
-> +
-> +       if (!fb->file)
-> +               goto out_put_fb;
-> +
-
-This would be nicer as
-      if (!fb->file) {
-
-to avoid the goto.
-
-> +       seq_printf(seq, "%5u: ", state->backing_id);
-> +       seq_file_path(seq, fb->file, " \t\n\\");
-> +       seq_puts(seq, "\n");
-> +
-> +out_put_fb:
-> +       fuse_backing_put(fb);
-> +out:
-> +       rcu_read_unlock();
-> +       return 0;
-> +}
-> +
-> +static void fuse_backing_files_seq_stop(struct seq_file *seq, void *v)
-> +{
-> +       struct fuse_backing_files_seq_state *state;
-> +
-> +       if (!v)
-> +               return;
-> +
-> +       state =3D v;
-> +       fuse_conn_put(state->fc);
-> +       kvfree(state);
-
-That could become a helper
-static void fuse_backing_files_seq_state_free(struct
-fuse_backing_files_seq_state *state)
-
-and seq_stop() could become:
-
-if (v)
-       fuse_backing_files_seq_state_free(v);
+start_pfn + nr_pages
 
 
-Thanks,
-Amir.
+Then, concurrent resizing could happen (and we could atomically read 
+start_pfn / end_pfn).
+
+Right now, when adjusting start_pfn, we always also have to adjust 
+nr_pages. A concurrent reader calculating end_pfn manually could see 
+some crappy result.
+
+Having that said, I am not aware of issues in that area, but it all 
+looks like only a partial cleanup to me.
+
+-- 
+Cheers,
+
+David / dhildenb
+
