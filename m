@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8860D202C5C;
-	Thu,  8 May 2025 06:09:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE608216399;
+	Thu,  8 May 2025 06:09:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746684564; cv=none; b=qeDTaDW3b/tImhEKDDJmhuSCd/Mo+O+XIo0TFS3rtKB0Cmg8V+eBU46qroHPRsPcVwof1DJ/QGztKrT2NlgQSVbAuCgXxv6JrUhTPqWxsoU05vMcV10VV0W317WjPmIHRDuP6li2hnvC1yepmOD56JMvDgcEUZir2rfDPpbRq4g=
+	t=1746684566; cv=none; b=rj/XI0kwPeLQCdtAAx9iCF5PjuccRMS5H3dpSJ42FM3hwsvpyhRmlS78SPXbcGWSc9XeRpt7uIoZGWq91cMAzSlaIZ5U5f1ZaHShyjz9IddFSctEbO/QURpnNjJ+Lg6ancnQ9EWedlMs0E31hzAdIHX5NW3ChomuS+6ke4naBfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746684564; c=relaxed/simple;
-	bh=vdzcGzInBDOdEhA5i4T5CvvF61LwUqRe54QNxKAiupk=;
+	s=arc-20240116; t=1746684566; c=relaxed/simple;
+	bh=aNzIdCINKAyp+r1r0nEkypLqIzGYNhghY5XaHOpNRBo=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=sngMh8z1nuYH4liAd0Q1qJabhFoE2jEkm7GmiCCRD0d5ED27IsAkUpJ2boYX6NBMjB1RYoXh9czOaOYnYl/m3nwnfcS6UG5mq4y56JQmcISp/n7r0TvmSI2RwlRSNVwS2nzkkH2GRt2SvTHbQU3s/FqjxiAiiHvZysViMlSYDHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ClkpjYlH; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=qtMTe96s1MRjuwK+ND8d6fUuYrAWn/iMHwlSFenZQ9enx2Rrue3gSuC38W2P9ndHx4IbLnBs0qNN7O9/ZVCQ2Uc08ZSnG8yqqB8BrXmdX12+jJKq5bz5tj0Tcbz6a4Ulb+dqRKagIvRGHpo7pV3oJYfeorK0v+ZV0kNNPibTwHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GhF+i6qW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ClkpjYlH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD110C4CEEE;
-	Thu,  8 May 2025 06:09:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GhF+i6qW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8671DC4CEEB;
+	Thu,  8 May 2025 06:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746684564;
-	bh=vdzcGzInBDOdEhA5i4T5CvvF61LwUqRe54QNxKAiupk=;
+	s=k20201202; t=1746684565;
+	bh=aNzIdCINKAyp+r1r0nEkypLqIzGYNhghY5XaHOpNRBo=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=ClkpjYlHj7FHHOznnrYJskuMCST6rbF/Mkh+sz+Uvgf9Y+9loiz8tIAIk5WeO5p0e
-	 cLpuqEv7JThCGIroNadUvgMGs2MA8uu9YuH1XYB2qmoAu3UuqmxB/h+EDXLXZFuXhJ
-	 f+YeJ/eijymplOtximmC72sHlYn1B+c20KeTSDd41MNeZkkjg5yi5+JSPrU4rxdFsA
-	 Rdvknzsq4j8ef2HTQ2EDvbMjEwlmiKIlu54O/+p6OX/f2BVchIIHiWR9lO34PqV1eG
-	 rkhUHL2s7aftRa6lgFElmGHZHseZWB7O0B9i1U9EQqlMYVUQAUMBcf+A6PwRKLc5n2
-	 Qz68QUm3zCeSg==
-Date: Thu, 08 May 2025 01:09:21 -0500
+	b=GhF+i6qW8ZUnWN8dJpgO8wPFp4CzysEiMLcaKsUSTc4bXQ3fIW/f8W7Flv7mUM5s8
+	 Eq2NF19N2dGwdcnpr5ZqX4pe4buqsAH/KiRMQ9IjiXb3tMnT+LIx68xfQG5pIQXOh9
+	 S4onWkn0Da13dfjAIbj77/bx6KxZAfNJBGBpisqRZz65B0GAKEsb5XVkTiuMu4rU98
+	 SeZfCogDffRDlR08ZRAfQukpxQkqqscM25t3h25xczyYpUZf2iVzAeoegEz6B+uw9K
+	 HSD/xPvjUvijtVuy7vtOVQEorb66kiGAoraC0nXdQNt9RSPSC9RYdqaT52wQkAXfkH
+	 PMmpPvhSmTkJw==
+Date: Thu, 08 May 2025 01:09:24 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,33 +36,29 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
- conor+dt@kernel.org, vikash.bansal@nxp.com, shashank.rebbapragada@nxp.com, 
- krzk+dt@kernel.org, Frank.Li@nxp.com, linux-i3c@lists.infradead.org, 
- devicetree@vger.kernel.org, priyanka.jain@nxp.com
-To: Aman Kumar Pandey <aman.kumarpandey@nxp.com>
-In-Reply-To: <20250508045711.2810207-1-aman.kumarpandey@nxp.com>
-References: <20250508045711.2810207-1-aman.kumarpandey@nxp.com>
-Message-Id: <174668456098.3462718.13659996753700192660.robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: i3c: Add NXP P3H2x4x i3c-hub
- support
+Cc: andre.draszik@linaro.org, tudor.ambarus@linaro.org, krzk+dt@kernel.org, 
+ sre@kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, dima.fedrau@gmail.com, 
+ alim.akhtar@samsung.com, conor+dt@kernel.org, badhri@google.com, 
+ linux-kernel@vger.kernel.org, peter.griffin@linaro.org, 
+ linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org
+To: Amit Sunil Dhamne <amitsd@google.com>
+In-Reply-To: <20250508050856.674782-2-amitsd@google.com>
+References: <20250508050856.674782-1-amitsd@google.com>
+ <20250508050856.674782-2-amitsd@google.com>
+Message-Id: <174668456195.3462769.556560233730725103.robh@kernel.org>
+Subject: Re: [PATCH v1 1/2] dt-bindings: power: supply: max17201: add port
+ property
 
 
-On Thu, 08 May 2025 07:57:10 +0300, Aman Kumar Pandey wrote:
-> Add bindings for the NXP P3H2x4x (P3H2440/P3H2441/P3H2840/P3H2841)
-> multiport I3C hub family. These devices connect to a host via
-> I3C/I2C/SMBus and allow communication with multiple downstream
-> peripherals.
+On Wed, 07 May 2025 22:08:51 -0700, Amit Sunil Dhamne wrote:
+> Add port binding to represent an endpoint that connects the power line
+> from the battery to the Type-C port connector
 > 
-> Signed-off-by: Aman Kumar Pandey <aman.kumarpandey@nxp.com>
-> Signed-off-by: Vikash Bansal <vikash.bansal@nxp.com>
+> Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
 > ---
-> V1 -> V2: Cleaned up coding style and addressed review comments
-> ---
->  .../bindings/i3c/p3h2840-i3c-hub.yaml         | 332 ++++++++++++++++++
->  MAINTAINERS                                   |   8 +
->  2 files changed, 340 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i3c/p3h2840-i3c-hub.yaml
+>  .../devicetree/bindings/power/supply/maxim,max17201.yaml     | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
@@ -73,10 +69,8 @@ dtschema/dtc warnings/errors:
 
 
 doc reference errors (make refcheckdocs):
-Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/i3c/p3h2x4x_i3c_hub.yaml
-MAINTAINERS: Documentation/devicetree/bindings/i3c/p3h2x4x_i3c_hub.yaml
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250508045711.2810207-1-aman.kumarpandey@nxp.com
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250508050856.674782-2-amitsd@google.com
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.
