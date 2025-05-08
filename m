@@ -1,134 +1,125 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B401078F
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E914D86353
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746711153; cv=none; b=W0jU68C5tVzQrdWl0SIjKEtSZX40e2nX7lV2+f5OsUQWeyCzGUtQqUFC8avNatwAWsNHBgIYe7C2ersEJaSc8xFDYWv3tzPoJqhv700S7agYAYmipAgrKcyLjr4rL3PdIEP3+3nz32vuWw4hXMobt3m7JYOWQ+sermn6/PG8eEQ=
+	t=1746711210; cv=none; b=Lq1BhwjsZRY2nuMAbdfbf8f3BT8MReeCklzrXgeGgPSaAUDZMdfPKFsx/1RGEIZc+Y4FK0JGaOf/6QU2sF47BkOduNTS912pwqxoHddUIgsNcy+jhvicRwB5egjRYr5ydERPBAS2EBmrXZP8J+d8LpT5JXMYuw+aCOcCEqMxcaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746711153; c=relaxed/simple;
-	bh=UaX7lHk6APGzrlNbZtyPi82/m8GJkmtjAztxLDCFxtM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=Vddx9BCFmLvSxF6u4CBDfg13edtWeuInRgDfW0T7SyR/uIz0mjLynrc/08fhlrDNU/4mmFJHwNQEa1Or4UQ230N8HdxI7qDLUr80OEzk1TcrZttw0C2pb52MyS2ZAqbnSOR+thPFcDyPugrd4ubXkusGw3dFjW5zdn2HBdIezks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=KLrTbFlp; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1746711210; c=relaxed/simple;
+	bh=kHY2L9AAUzXeokRXvu9nu/P9V3hBGYDfgVExgxaVQq0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jUsJq6Ll+0E9EoRpYRbdJ/Xw+VsK93QgJwdFqcf2j05oNnENJxRhWxTDHRxpF9rXLMclpmSrFoQKVkBO3Q0qe0ba++4ASJ40Osh82BaVnMDF2IpVeusP5X/ZvVNaa2MH+UDfxplqgzD/dG3D9e4nL20voqKjn/KpsE8VIgiD0AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CfECkK+B; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="KLrTbFlp"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cee550af2so422795e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 06:32:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1746711149; x=1747315949; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ctop9M+S6pXp/ivb7RmdzyIsAM5dZO8eB9pvvIkCEbM=;
-        b=KLrTbFlpR9vF/XiDJfMDK1ST0j/y9ahE3N6zOECj38aO3xGC8SSqB6BwFdrYf/2AjR
-         Vk04OC7b0mTe1GYE8d+FEk0wXgArLp0AnZxLZcFsx0851Qz8qV8vdystFMGzGZbyU4RS
-         X2rD5ZI6SweGZU+IGB9i6mUQ1UnQdpzKMG/cHqX7ncCQxgiMSqdTxhRxAj4W7Cb4DLvO
-         JO7byWMbBm5+oFH1jeVkq0bMFq0Sh+4s0RnpRgqjUu5F+TE8tUVClYvtccDM5NtzLgQv
-         dMbBHVPJ6hCPa0Q/6cIYBAHM0ANjIni0B4L3oR8aijJAuiISpIZWshRfgi3OtE5v/2XL
-         hzyA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CfECkK+B"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548Ckwj9010134
+	for <linux-kernel@vger.kernel.org>; Thu, 8 May 2025 13:33:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	lMYfNUnuS89Wpo1r8C5mbTS3ohz5/xv+vUvBIEOJELk=; b=CfECkK+BZyHZQ8Ad
+	DVbqKsJ7rmilEVrJucabreteJTYoeIW1wtLY6UaXsZdQLIaOYBd2dNQ/3pdvNZQV
+	IASApCjasMyqnSp4rCU9aHAnmE3O0+AJTfjl9OsAd5Gj4xEDaFEkPkqWxR3ySHZa
+	qN31EoxlRtkt+HhfOszKb/KXyrhxEuDKcvMOpjQrOta9GSoygZzbq+K+2+21M70J
+	K1B6ICTJpS6X8XRQ6NTrSQJ4Iyg4ZP3jAlBmLX/9LcSDAP69+JGJjJUpQNe2EWkI
+	YituhxSnk/+iE38BImbdrWKMSFd2qD9Xad8BJgbEp07AoZkVZCXzmSIRiLGeiLI/
+	Fj4WWA==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp79fgh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 13:33:28 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5af539464so24309085a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 06:33:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746711149; x=1747315949;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Ctop9M+S6pXp/ivb7RmdzyIsAM5dZO8eB9pvvIkCEbM=;
-        b=ksyg/czgqoZBCOqEVTMz8lDmILbiTBemvT3VG6X/uhVw/niTyubThTDtLON/33oMAU
-         Oowpzs9xPrktEVEhktuVEeFnVxXMnTN3TLfJyv7AAYQNbKi8qlnrnBpU2Bd54qAHOjeU
-         mMavsh5f39CPgtHRxX40V6rVEp4FCbVP0eC7oRYLUpOx4LUy2CXXukB+q/udafhvKTxr
-         C14tKa1/i/3WjcvogQOs4CZ8mzLwZR17i/Im/1jabO4KOBHiqG7O2mYSAjeZaEmEHanm
-         h8rwhwJeruMt6b7VVxlnDSvQS6C1971pl8hKVy/6/YZsDrH2UT6aK33IakLqQX/xSQb9
-         lyTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXzHtRuQaVIvaHPy5rzzIEIN5Ehz+plg5eYBZI1rutVizT85wgmUlBGDp1whzTgOKXjQ70M/yrzoBJJlLA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTSuWanrysbGsA8laxWbMgXc/tbpyGVw+6jnsghShE2ybJlS2t
-	YE4HEDCGIe4t7t4GFyqjMp9TpOi7tw7ejV64Q6HNzsEa6cv3CJzkzAOfuiUyLoo=
-X-Gm-Gg: ASbGnctkpB50DHXPMfg9KxgMuIc5wLrwSsWJHVzvegsBsWL5vs/IJhKhVS/N80oAKGr
-	85te1ODAhWIVhqqwBx1Xxlao/Sn6Xr4IBCIx810xcWveTAV/EIPvyM7bUH3B++zkruhHOKisty5
-	J82mtNjzXgmpRa/QVAasR0UTCYgRhZVPM+EdwxPoFZ2XwwGj6h9ebc7SH1+kZKCWlNdK9XJ0gQo
-	q6fVoG0yGBuXf02WlH6D3ihmYXpz8jjgaZMKQVwa2rqnGJ+HO1pUZluYUZMEP8GTxk0oiDHBkN8
-	fbB2jDRTWrmfXs/C4qf8eCNUetXssBE03VrELxN6NysyEC5J
-X-Google-Smtp-Source: AGHT+IFV8Gdwh/t9ZunwZV8yC9Gjd4YDqTg8K4dFRuyEe/kGcOgQumaKBu9osZaWckRfANKTr0Qn6g==
-X-Received: by 2002:a05:600c:cca:b0:439:a3df:66f3 with SMTP id 5b1f17b1804b1-441d44e57d6mr24537645e9.6.1746711149535;
-        Thu, 08 May 2025 06:32:29 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:a451:a252:64ea:9a0e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32b0c8sm37984755e9.3.2025.05.08.06.32.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 06:32:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746711207; x=1747316007;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lMYfNUnuS89Wpo1r8C5mbTS3ohz5/xv+vUvBIEOJELk=;
+        b=qVxd6wKFHb+YPzc06W3+9jZtrUEJP4Ungdyl/0lpDdZRQCuiqToIJ8zJiSt5DkIEoa
+         ieX11XjDm3rBcqBkkB+ga6p4CHHXqAvZ5+ChFTEFNIqnLGAvgdJiShpGIDMYBsbWYRbn
+         N1l9NG6X+FkfUEUHUBTH9XtAqiADFbU9nCW+pFSevCVBVS2IyR5wQsxIo6Zt4Jnft/w4
+         DPNDxufQUM7luMqY7EZ+2BLruu1ckXJepdv5WL4O3+DPCEdzQ3MRK91zI7OlkgOZK9fH
+         znh5Ufd0ynRPwb5Zy6d/F6MdIuJprN6FHswLquUHt6pHNdvZjGYFu+f6FEs0rSmBsFpT
+         98UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW2vwhT/GOeabd59/mYRCb+pa8RSlHrRgQB7C+wykNOL8aShMI57FaVQrp8KKdJCbYl+kLq0cpYjQ50rz0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHlKPRu+WtB8rlDM5nOQ37qRm8w15IanBKuRSCQ1yD2Bfd7s9B
+	7Nv7XJEeoiQff4hdksHi6+8FWKSK8Fv9xMOoNhtUQ1SCP6fzna0NildPuz3z7PiyLOOX8BIHpff
+	Qnv/ipVT1KQxUH11vS1Fy8fJO49feaw3J+X1tDCvmdJa7PsGwuFcZ9sL12ldSLiCDxn4S2Wc=
+X-Gm-Gg: ASbGnct3SK0VU9vrxYghQOVSOGgj1XCp7jrdk5rn452K+cfLpsGDwvvd+qgaVfa+DlC
+	xy/kAOU9IRSiwoiGdrrML2onM27reHLtqYr8gxXQ6C18mmLoghKcZnkkJYV92u50fILNWaWkwLP
+	LcLgYTfpXY3apakk5Z3Y4cEJLQhp5/d98AyudVW68G12A4lD9Fop0JVzXMdz/DGPXBcAd3SFesF
+	nFiJZYS7A4XdR2LOqeMEFZRNZ5bhknU7nRFRRmfkgyqlDJwNx4Rh4UfUWwgYdgHoD5kChSa9Irv
+	nptWfzZmoxlhxnVxAjA3kmqUtwv/q+sEb59DSQl1hwGQmqKqkPF/ef2Jh2MbefRj11Y=
+X-Received: by 2002:a05:620a:2a14:b0:7c3:bcb2:f450 with SMTP id af79cd13be357-7caf74220dbmr329259585a.15.1746711206756;
+        Thu, 08 May 2025 06:33:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF6s2Ys7CGrDpjUFZ6mMJVSeDH0rUEreHUG859D2NeWarnKpmclxkN93uV3z/V0eMXoKSJDtg==
+X-Received: by 2002:a05:620a:2a14:b0:7c3:bcb2:f450 with SMTP id af79cd13be357-7caf74220dbmr329258085a.15.1746711206337;
+        Thu, 08 May 2025 06:33:26 -0700 (PDT)
+Received: from [192.168.65.105] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad18950857fsm1081323966b.125.2025.05.08.06.33.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 06:33:24 -0700 (PDT)
+Message-ID: <370da6b0-f6ac-4a9c-ac9f-f1adc890fc68@oss.qualcomm.com>
+Date: Thu, 8 May 2025 15:33:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] arm64: dts: qcom: qcs8300: add the pcie smmu node
+To: Pratyush Brahma <quic_pbrahma@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dmitry Baryshkov <lumag@kernel.org>
+References: <20250508-qcs8300-pcie-smmu-v3-1-c6b4453b0b22@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250508-qcs8300-pcie-smmu-v3-1-c6b4453b0b22@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 08 May 2025 15:32:25 +0200
-Message-Id: <D9QTFAE7R84D.2V08QTHORJTAH@ventanamicro.com>
-Subject: Re: [PATCH 4/5] RISC-V: KVM: Enable envcfg and sstateen bits lazily
-Cc: <kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>,
- <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-To: "Atish Patra" <atishp@rivosinc.com>, "Anup Patel" <anup@brainfault.org>,
- "Atish Patra" <atishp@atishpatra.org>, "Paul Walmsley"
- <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Alexandre Ghiti" <alex@ghiti.fr>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250505-kvm_lazy_enable_stateen-v1-0-3bfc4008373c@rivosinc.com> <20250505-kvm_lazy_enable_stateen-v1-4-3bfc4008373c@rivosinc.com>
-In-Reply-To: <20250505-kvm_lazy_enable_stateen-v1-4-3bfc4008373c@rivosinc.com>
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDExNCBTYWx0ZWRfXw31fqQWwPwW1
+ XI/lZydNar/PhGhoMiNUtBXAsYfXd6F6hMPg5ijZjZI66SPvReJTH7F4FLzmSpeI0AODZrtTXr4
+ 7c/1a7tEZra3s5kj4/74DnUUcNjOzAPz8FBx1aVW5Y7aTYoGrg6YF/DyM6OTgAHL2i1J3j4429h
+ TnZVIw7g8rnFCf9vyQXa70na5VDK2h7BYc2oPELFuqxXOn5nkdxyxZ7OpGdzeqrKRs1OR6E5K2h
+ l2LN4R7xBEi6ta3+YsBTcoTscFiAZVPyks6hHSX+AdFtgaLY+ryB+NEygaBqTuiRBOUmXxbM2gQ
+ mU7sM9OOFmrwyZIflCvfK/HqSB/Lfc8F8W+FDUhqvAWnt3CIIAzS15JMGGnBM4RorssCDF89bk2
+ 5PqKwnrdGpiiAu+me0/ZUGd4ynAKJGgOg5X6zMoA0y1C6yUOyAOO35eAjbfZJncG9otA3jjp
+X-Proofpoint-GUID: MmlbikU-ZmVlLtLLoJklprUbaECedMCh
+X-Authority-Analysis: v=2.4 cv=B/G50PtM c=1 sm=1 tr=0 ts=681cb2a8 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
+ a=EUspDBNiAAAA:8 a=kZKVpPXic2WTofaLpVUA:9 a=QEXdDO2ut3YA:10 a=IkyAniIzxkYA:10
+ a=IoWCM6iH3mJn3m4BftBB:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: MmlbikU-ZmVlLtLLoJklprUbaECedMCh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_04,2025-05-07_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 spamscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 adultscore=0
+ mlxlogscore=767 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505080114
 
-2025-05-05T14:39:29-07:00, Atish Patra <atishp@rivosinc.com>:
-> SENVCFG and SSTATEEN CSRs are controlled by HSENVCFG(62) and
-> SSTATEEN0(63) bits in hstateen. Enable them lazily at runtime
-> instead of bootime.
->
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+On 5/8/25 8:21 AM, Pratyush Brahma wrote:
+> Add the PCIe SMMU node to enable address translations
+> for pcie.
+> 
+> Reviewed-by: Dmitry Baryshkov <lumag@kernel.org>
+> Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
 > ---
-> diff --git a/arch/riscv/kvm/vcpu_insn.c b/arch/riscv/kvm/vcpu_insn.c
-> @@ -256,9 +256,37 @@ int kvm_riscv_vcpu_hstateen_lazy_enable(struct kvm_v=
-cpu *vcpu, unsigned int csr_
->  	return KVM_INSN_CONTINUE_SAME_SEPC;
->  }
-> =20
-> +static int kvm_riscv_vcpu_hstateen_enable_senvcfg(struct kvm_vcpu *vcpu,
-> +						  unsigned int csr_num,
-> +						  unsigned long *val,
-> +						  unsigned long new_val,
-> +						  unsigned long wr_mask)
-> +{
-> +	return kvm_riscv_vcpu_hstateen_lazy_enable(vcpu, csr_num, SMSTATEEN0_HS=
-ENVCFG);
-> +}
 
-Basically the same comments as for [1/5]:
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Why don't we want to set the ENVCFG bit (62) unconditionally?
-
-It would save us the trap on first access.  We don't get anything from
-the trap, so it looks like a net negative to me.
-
-> +
-> +static int kvm_riscv_vcpu_hstateen_enable_stateen(struct kvm_vcpu *vcpu,
-> +						  unsigned int csr_num,
-> +						  unsigned long *val,
-> +						  unsigned long new_val,
-> +						  unsigned long wr_mask)
-> +{
-> +	const unsigned long *isa =3D vcpu->arch.isa;
-> +
-> +	if (riscv_isa_extension_available(isa, SMSTATEEN))
-> +		return kvm_riscv_vcpu_hstateen_lazy_enable(vcpu, csr_num, SMSTATEEN0_S=
-STATEEN0);
-> +	else
-> +		return KVM_INSN_EXIT_TO_USER_SPACE;
-> +}
-
-The same argument applies to the SE0 bit (63) when the guest has the
-sstateen extension.
-
-KVM doesn't want to do anything other than stop trapping and reenter, so
-it seems to me we could just not trap in the first place.
-
-Thanks.
+Konrad
