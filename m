@@ -1,180 +1,126 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308511C1ADB
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4864918DB14
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746712069; cv=none; b=uepT7lb2VA7zgEa22AeyfdG+/ZgCdQc96Hgl8ZToGQGt+K0uks2H/0oJbMmzqwIH9sKWLzNZBn6aecfalwNkruc49fdC5MZqBg4ZY7vS43jalwoThRLxAzfI4Q2uwjX4SjZHfBTV+mDyqu3UQxykNmfg+jRO/vNAlPP0LUsaC48=
+	t=1746712177; cv=none; b=lOk/uoVD+2+PwbAO+xET+52l7JUmdBaePhb6wqG7kEow3uw7fLwTxAEPRcYTM9uetXqmJXwAR/+z/rLDupGEHOgG8sLIiNPfTXoIL7qwyoxV3JQ5qVZqxVkiGiluXs6QdeIifxCVrnI1JVxdeU1Dd2eqNCzXJ36mKoGjdc7ikzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746712069; c=relaxed/simple;
-	bh=rzsPdT++zOraCmcSidgiXEPUZobjQZKmnP6vWb74DBY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iSHayApEDucze+Ju3C7+VYNCalPmVDq7dx5xi1gwxRl/WVgOwm4Ha6drouu0cnxceYKZh+0zVhlEHKHyH3lD8ozMYsH2fcm/FwX3XvqjqZ85l3IggLERI6gcO0SVWpbOFFn/JUJUKsbtO5xYLVBmaNTOVQJVWmCKAPLYE2/GVXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gi4/rBQt; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746712177; c=relaxed/simple;
+	bh=OD8GxFlJxZjRjI0IBByxRgE9JRBwwfxhYepxx0fCF40=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SyX4PuOveAPbxghIEprKOy69A3xZOlTkSqU/1KdsKxauldTpMeNew+egxSYmyvImPxTe51+CP44d3H4gEfm/anp6ELhBSsahNJXpIZRqJSdg8i5fmOMyw4Fzdg4osUeztGU044NKORHuE0rkxWCUvm383tidEO4R2Jjn+NIIhYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eUrhAVc5; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gi4/rBQt"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-742360cec7eso98245b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 06:47:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746712067; x=1747316867; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/qVc6/TX2bExqc/mP07lavjif1Fs21N6CV6T1fKAfzw=;
-        b=gi4/rBQtzICwT8bVleNVvfvV3bhuVOAKG1hc0fgCn8Lmi8g9esBHWnpBGMCXDCMXOm
-         h9FID+jGQx4zVu0nvGgSY3D2B/lN2wRN6+Gf508l3ZJZyO0qaCD3aQdvjpo9D55Urv0q
-         Ljv1HwNg2hPsXVMYJEhWsCpvKI6Fie6aB3sFs9MR0Hheih/yTfJAlLKJkyINEYiFncGR
-         0NIvoVNFV5dJYskUAoH8AUs1tdv4rXxK6vrnUHRudIu70pGd+vgxTZHJJVRLvreRrp+W
-         2y3SYwWWL5cOUBwJYYen6VzgOIFg5sPoZ456PKz2oZPi+i71MTbHqt1AduNK1Xz3ZgAD
-         Nw3w==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eUrhAVc5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746712173;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CywF47gXjpgY/l1leg6XrAUlD5bu0hAVfhP0zMhN6lE=;
+	b=eUrhAVc5e9IHiT1mMYkaXvP4qGgPKsMj/TncqMuMbuwoBnFUihvpst+6d4L5XHB623qWov
+	ViWem5elQGqYAKdNAOg0UrdDGbtNFS5iUMVF79iNZtdUg1TVn/+A+IMMKAutyFfPv/NrWs
+	FiHwuCeT1vQils7tW8m/MsLrkW2qn4w=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-156-zNn4hbmhMZqE_10C4g6JXQ-1; Thu, 08 May 2025 09:49:31 -0400
+X-MC-Unique: zNn4hbmhMZqE_10C4g6JXQ-1
+X-Mimecast-MFC-AGG-ID: zNn4hbmhMZqE_10C4g6JXQ_1746712170
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39d917b1455so370024f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 06:49:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746712067; x=1747316867;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/qVc6/TX2bExqc/mP07lavjif1Fs21N6CV6T1fKAfzw=;
-        b=YTYaMBj1W7z0/Cry8E3ejOMFZJ6q7m1M1yjubxtcwsISq4XLRoFbxqEfaCJB4lOyhf
-         ffe25J5+F1RewTaUvqKkZGJ1FsMtAxAj4dI1O2ln0OOBE7Xhro7SQGZEIHJm2H0npKYk
-         NNMyJmwXhpEdnuymiznFYLRBPszOtL1wJre1Su+NT6cYrM6BNRJlG5W3bUtZscXId9tg
-         AlLolFS66aPqbhQuO2qvhL1rSUuZTcU1TDY0Vh8d/Wu+1eUjhzKc3NZuKcZGep1aIMwj
-         VoZ1ya/88jDl7Lzdqkko9QXbm3ILUcGPPHFixtT124ZYuM9OKM87fzBa/I6D2wk2ivj2
-         Vmxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsNcbRy8DJb/ZOWoPaQtEZ4ofad7kObIJougEZ/GMOTx6HE1Z3JRSSdncMMcoInJHHKm8RjO+DD4kssIU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgMCFjMhoRE/yqq6DSepWTjmK5fIEZWrbFq45bkQ5kijBWYqWI
-	LtNNnYS2yub4Ksm1VAjs/a84q7jP0zNF2Yt9TTiH3reXGq+Jv/aAYoqe90nwIyRAa314ifqERQC
-	45Q==
-X-Google-Smtp-Source: AGHT+IHEFGM+mr5sAwMAAOVCtuuSqYx117lvI3PWz4iuDvjUST6lb99Vkq928HvLliTrrTGNh8DqA5LPHP8=
-X-Received: from pfbct10.prod.google.com ([2002:a05:6a00:f8a:b0:742:22b3:d8b6])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3394:b0:73d:ff02:8d83
- with SMTP id d2e1a72fcca58-7409ced9480mr12781153b3a.3.1746712067294; Thu, 08
- May 2025 06:47:47 -0700 (PDT)
-Date: Thu, 8 May 2025 06:47:44 -0700
-In-Reply-To: <d78cd913-69eb-415f-ac30-1677642a5f1a@linux.intel.com>
+        d=1e100.net; s=20230601; t=1746712170; x=1747316970;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CywF47gXjpgY/l1leg6XrAUlD5bu0hAVfhP0zMhN6lE=;
+        b=M8KGTDxWkn0lo+HadfOr36qzexzeGK2SNdbOx2GTh8KSm+Gy8UbnECuuoATv8C3x8x
+         7F3sxXBqTVq4XdMdj5+ago42qA4lSlBMU3Vf52TZ6HWnnyWPtimdyJnSovubJbfM/o/G
+         3bBJVDhUsjGk8TlZr2DL7GeLbE+t0U7OCa87e5hqAbR94UlFi1T/6vNiYOCnhnKvj/ki
+         S6NGJpEquCC29JnuB3TOROfQP0dKW03fnl95Lb2VyV1ZIEO4fWXuDVNzmuuXL9PN/hS7
+         oTQjIsswz9mglbToyYm9HsWzmdUV3S06oxXzie3DdUUuQbeih4HRIZmX+2EHv3KLytpv
+         qw8A==
+X-Forwarded-Encrypted: i=1; AJvYcCWaz9bSZCROFIH5vJxGIsvnr5mPlCn0CzQhGcOTQWkxJSSlnYAgNAGDmTYpw9ocp7HOG8uGLp+g2elOUkg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGUqU8A3jt7QQV8ah9klRodSwNbrn9YBMxN3PAFGR7cl0r7qo5
+	UcleGHGmTZ8Y3qsxSVKJzpxAuoFdToOy4YHi3lVHODbhX3UYHEfhaw7NtTG1ITllFrr93/kuCSI
+	E7ySR6ULy91HKK08gVoxRKYbDPyRA1Ovz1BpqJWolxDgMEvPC0ZjyOpJ0mXFJug==
+X-Gm-Gg: ASbGncsET0t7Qy05Udm8Cr3YfXTYAtNvmA4aE9rPpcgBUL4no+7GATc55GEdKw5oaAR
+	26idCZrzOq71WvdswFl+384KsNUWPt8IunYgmR1xJ8Q7i48sTZqh2OlqJA+PdkwqTqiBMCneRos
+	jZ2FiBJoEvYz75cZcNq4MKNsunGQ4t39tkqh7DufqT2RHv7pD6IVJsVNfZpgWlHTZ05vD5pEzy7
+	obiXw/cO50AiyABr7zzqrnCc/L9yiI+0QykXhuP0TQWwuW2CNc/sHASJJoHM33IaXxfUHuXBCm2
+	qgn4r1xXE2w9nW51
+X-Received: by 2002:a05:6000:290c:b0:391:43cb:43fa with SMTP id ffacd0b85a97d-3a0b4a68652mr6692126f8f.51.1746712170401;
+        Thu, 08 May 2025 06:49:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IECjAERYWa6S2sVnLY/p8FyXyHfUJVuA1XUuJN5svWBMIQPW9IiG9y/gkXhSokA6jatooc4QA==
+X-Received: by 2002:a05:6000:290c:b0:391:43cb:43fa with SMTP id ffacd0b85a97d-3a0b4a68652mr6692103f8f.51.1746712170075;
+        Thu, 08 May 2025 06:49:30 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:244b:910::f39? ([2a0d:3344:244b:910::f39])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57de0b2sm42895f8f.19.2025.05.08.06.49.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 06:49:29 -0700 (PDT)
+Message-ID: <23278f6d-f111-46f7-a844-2cd7fbf8b623@redhat.com>
+Date: Thu, 8 May 2025 15:49:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250426001355.1026530-1-seanjc@google.com> <701a94eb-feac-4578-850c-5b1f015877af@linux.intel.com>
- <aBTe6dpaQs6bmFwh@google.com> <d78cd913-69eb-415f-ac30-1677642a5f1a@linux.intel.com>
-Message-ID: <aBy2AGIFi34q031x@google.com>
-Subject: Re: [PATCH] perf/x86/intel: KVM: Mask PEBS_ENABLE loaded for guest
- with vCPU's value.
-From: Sean Christopherson <seanjc@google.com>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Seth Forshee <sforshee@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2 7/9] net: ethernet: ti: cpsw_ale: add policer
+ save restore for PM sleep
+To: Roger Quadros <rogerq@kernel.org>,
+ Siddharth Vadapalli <s-vadapalli@ti.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Russell King <linux@armlinux.org.uk>, danishanwar@ti.com
+Cc: srk@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250505-am65-cpsw-rx-class-v2-0-5359ea025144@kernel.org>
+ <20250505-am65-cpsw-rx-class-v2-7-5359ea025144@kernel.org>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250505-am65-cpsw-rx-class-v2-7-5359ea025144@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 06, 2025, Dapeng Mi wrote:
->=20
-> On 5/2/2025 11:04 PM, Sean Christopherson wrote:
-> > On Sun, Apr 27, 2025, Dapeng Mi wrote:
-> >> On 4/26/2025 8:13 AM, Sean Christopherson wrote:
-> >> Currently we have this Sean's fix, only the guest PEBS event bits of
-> >> IA32_PEBS_ENABLE MSR are enabled in non-root mode, suppose we can simp=
-ly
-> >> change global_ctrl guest value calculation to this.
-> >>
-> >> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core=
-.c
-> >> index 09d2d66c9f21..5bc56bb616ec 100644
-> >> --- a/arch/x86/events/intel/core.c
-> >> +++ b/arch/x86/events/intel/core.c
-> >> @@ -4342,9 +4342,12 @@ static struct perf_guest_switch_msr
-> >> *intel_guest_get_msrs(int *nr, void *data)
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 arr[global_ctrl] =3D (struc=
-t perf_guest_switch_msr){
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .msr =3D MSR_CORE_PERF_GLOBAL_CTRL,
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .host =3D intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
-> >> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 .guest =3D intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs=
-_mask,
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 .guest =3D intel_ctrl & ~cpuc->intel_ctrl_host_mask,
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
-> > Hmm, that's not as clear cut.  PEBS needs to be disabled because leavin=
-g it enabled
-> > will crash the guest.  For the counter itself, unless leaving it enable=
-d breaks
-> > perf and/or degrades the sampling, I don't think there's an obvious rig=
-ht/wrong
-> > approach.
-> >
-> > E.g. if the host wants to profile host and guest, then keeping the coun=
-t running
-> > while the guest is active might be a good thing.  It's still far, far f=
-rom
-> > perfect, as a counter that overflows when the guest is active won't gen=
-erate a
-> > PEBS record, but without digging further, it's not obvious that even th=
-at flaw
-> > is overall worse than always disabling the counter.
->=20
-> Hmm, if the host PEBS event only samples host side, whether the HW counte=
-r
-> or the PEBS engine would be disabled once VM enters non-root mode, the KV=
-M
-> PEBS implementation is correct. But for the host PEBS events which sampli=
-ng
-> both host and guest, the implementation seems incorrect.
+On 5/5/25 6:26 PM, Roger Quadros wrote:
+> diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
+> index ce216606d915..4e29702b86ea 100644
+> --- a/drivers/net/ethernet/ti/cpsw_ale.c
+> +++ b/drivers/net/ethernet/ti/cpsw_ale.c
+> @@ -1823,3 +1823,45 @@ int cpsw_ale_policer_set_entry(struct cpsw_ale *ale, u32 policer_idx,
+>  
+>  	return 0;
+>  }
+> +
+> +void cpsw_ale_policer_save(struct cpsw_ale *ale, u32 *data)
+> +{
+> +	int i, idx;
+> +
+> +	for (idx = 0; idx < ale->params.num_policers; idx++) {
+> +		cpsw_ale_policer_read_idx(ale, idx);
+> +
+> +		for (i = 0; i < CPSW_ALE_POLICER_ENTRY_WORDS; i++)
+> +			data[i] = readl_relaxed(ale->params.ale_regs +
+> +						ALE_POLICER_PORT_OUI + 4 * i);
+> +
+> +		regmap_field_write(ale->fields[ALE_THREAD_CLASS_INDEX], idx);
+> +		data[i++] = readl_relaxed(ale->params.ale_regs +
+> +					ALE_THREAD_VAL);
+> +		data += i * 4;
 
-Well, yeah, because there is no correct implementation.
+I'm confused by the '* 4' part. I think that you just need:
+		data += i
 
-> As the below code shows, as long as there are host PEBS events regardless
-> of the host PEBS events only sample guest or both host and guest, the hos=
-t
-> PEBS events would be disabled on both HW counters and PEBS engine once VM
-> enters non-root mode.
->=20
-> =C2=A0=C2=A0=C2=A0 arr[global_ctrl] =3D (struct perf_guest_switch_msr){
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .msr =3D MSR_CORE_PERF_GLOBAL_=
-CTRL,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .host =3D intel_ctrl & ~cpuc->=
-intel_ctrl_guest_mask,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .guest =3D intel_ctrl & ~cpuc-=
->intel_ctrl_host_mask & ~pebs_mask,
-> =C2=A0=C2=A0=C2=A0 };
->=20
-> =C2=A0=C2=A0=C2=A0 if (arr[pebs_enable].host) {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Disable guest PEBS if host =
-PEBS is enabled. */
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 arr[pebs_enable].guest =3D 0;
->=20
-> =C2=A0=C2=A0=C2=A0 }
->=20
-> So the host PEBS events which hopes to sample both host and guest only
-> samples host side in fact. This is unexpected.
+to move to the next policer context. I *think* the current code causes
+OoB?!?
 
-It's only unexpected in the sense that it's probably not well documented.  =
-Because
-the DS buffer is virtually address, there simply isn't a sane way to enable=
- PEBS
-(or any feature that utizies the DS buffer) while running a KVM guest that =
-isn't
-enlightened to explicitly allow profiling via host PEBS (and AFAIK, no such=
- guest
-exists).
+/P
 
-Even when KVM is using shadowing paging, i.e. fully controls the page table=
-s used
-while the guest is running, enabling PEBS isn't feasible as KVM has no way =
-to
-prevent the guest from using the virtual address.  E.g. KVM could shove in =
-mappings
-for the DS buffer, but that DoS the guest if the guest wants to use the sam=
-e
-virtual address range for its own purposes, and would be a massive data lea=
-k to
-the guest since the guest could read host data from the buffer.
