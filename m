@@ -1,147 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A49279791;
-	Thu,  8 May 2025 15:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 865C321ADA3;
+	Thu,  8 May 2025 15:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746719036; cv=none; b=s4HbGnZmnvRZYY948JKMuyLKzsCRDEOLBYJtuguderdZWOW/OhrDfEPe4Eqrc7y2dNBUbsJTs7V6vC5qrBNpM5q8aRHygI29QKAqyAMK5ZfkAW8VMq+vH9N5aA0FzpVXn4PN9DnF6L88UKlNryEjNP6w81rqZyHXXNhtybWEEQo=
+	t=1746719058; cv=none; b=MC1XV9OhvEzEO2j202lCNveGKLid0ApaPdtvIax79rz02iT36QG7VIDAUTMXZ4IxUViHNP9LQl+z9QD4kQ9JLsDmpZPm0vBAssDFc4Yd5wKdCM6ZvRSKY3QoMO94Q4GrGV1XBclo27fX/SL/Jf3SN6g6YIAN8xbw7izBJImdzDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746719036; c=relaxed/simple;
-	bh=T6p70PtHkjOvSfKheTE9RIe/1B7E/b+kxUGvqGGghc4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=izxSEIEgehbUkZu1tJNKWh++aITU2t7W3f++a/vOZY4/5OLEaQvFXQN5PpkZmhNoIo9I33K1uyCuXWoBZI2metdXvqqHI5yvXKBfMpBQeLTwcWxPgQsgzhPZRndF0SHHnjYpjdR0RU5YPME1HxLUpjrDEOsHmRkCox07KTSP+h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ebQTAwBC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746719058; c=relaxed/simple;
+	bh=KB1/oizvpQsTeqTJKHIr+4TjWtU21XbIcDWxYq/GjaI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bk8arP74ajjI5pkWnk3nYC36OL67eqV38wsZ+P0gvNtt/t4r8ShnEQSxUHqjS6rmBEZf4zRsvsX3lsWmc5Fo/rgH+Wl5gyBioZ1/H/+lMGqUyDzsvOvGdS/sPNZMVYJ7pzku5tgkVesuVKVij4UFmuOXDT/59rrYeApwX91niV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kk2qc85P; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ebQTAwBC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B382C4CEE7;
-	Thu,  8 May 2025 15:43:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746719035;
-	bh=T6p70PtHkjOvSfKheTE9RIe/1B7E/b+kxUGvqGGghc4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ebQTAwBCFZt7fGX2PkSuWO3qgF32hEtffzoI4TppSq3DEI8Minyy7ijI/389xE1E3
-	 95j8+WBZ6awF0Md43Vfk/2gNY7LG/uCiueeLWmv5CC0jJDnM/NgHGSfz31D/W18UCq
-	 pnwHxx29Gppo/eEutif8PGanh7fmJteJFplJd8tAKshf/L6pWK5SlV++TMdIAC1SXe
-	 /YLakK8aREkwqjzmzAK2ACSB61xID0PTyFXBBw4C1K8jFeBqNm/WJTzHkcOYWrwbtA
-	 oROnW51xBB/gKvv1GtqwhMSEZ4jYyeiqxR8bRsJvJJOhOgB8d0tNU+vyeKTem60MVs
-	 0dsXxwOXAl1TQ==
-Date: Thu, 8 May 2025 17:43:53 +0200
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] net: airoha: Use dev_err_probe()
-Message-ID: <aBzROQyQ_5oHmYr3@lore-desk>
-References: <5c94b9b3850f7f29ed653e2205325620df28c3ff.1746715755.git.christophe.jaillet@wanadoo.fr>
- <1b67aa9ea0245325c3779d32dde46cdf5c232db9.1746715755.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kk2qc85P"
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D9B7D2115DCD;
+	Thu,  8 May 2025 08:44:14 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D9B7D2115DCD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746719055;
+	bh=YjfYKDh2NdzjhE/wrp8l29NjvPHl77ttab2YnyaGfew=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kk2qc85P0SF4cDpyPqzBQ/kgxMQ6DpNMSZuA3RgSErU+p7sF9EJrzHpFZp0V4KZnM
+	 G4rjdVBkhQ8o/0YuaXCp0t6enF/kc2xRZIyIePwosb22yHs4uSlIKlqXaKFIo2qN5U
+	 3fbVIigBjLMPdcQRHbRtxnOT0CnFiJ9Edy7MvSM4=
+Message-ID: <1edea7f4-5ad2-4103-8eb5-9d5d9f0c7b0d@linux.microsoft.com>
+Date: Thu, 8 May 2025 08:44:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cyhlDYaZG9bgrtv1"
-Content-Disposition: inline
-In-Reply-To: <1b67aa9ea0245325c3779d32dde46cdf5c232db9.1746715755.git.christophe.jaillet@wanadoo.fr>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Drivers: hv: Introduce mshv_vtl driver
+To: Saurabh Singh Sengar <ssengar@microsoft.com>,
+ Naman Jain <namjain@linux.microsoft.com>, KY Srinivasan <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>
+Cc: Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <20250506084937.624680-1-namjain@linux.microsoft.com>
+ <KUZP153MB1444BE7FD66EA9CA9B4B9A97BE88A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <be04a26f-866d-43e6-9a0b-15b91405503e@linux.microsoft.com>
+ <29edc00e-9797-4f4a-83b3-0b4158c94a16@linux.microsoft.com>
+ <KUZP153MB14448028621F8148D5129D9FBE8BA@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <KUZP153MB14448028621F8148D5129D9FBE8BA@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
---cyhlDYaZG9bgrtv1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On May 08, Christophe JAILLET wrote:
-> Use dev_err_probe() to slightly simplify the code.
-> It is less verbose, more informational and makes error logging more
-> consistent in the probe.
->=20
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> Changes in v2:
->   - New patch
->=20
-> Compile tested only.
-> ---
->  drivers/net/ethernet/airoha/airoha_eth.c | 21 +++++++++------------
->  1 file changed, 9 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/ether=
-net/airoha/airoha_eth.c
-> index 2335aa59b06f..7404ee894467 100644
-> --- a/drivers/net/ethernet/airoha/airoha_eth.c
-> +++ b/drivers/net/ethernet/airoha/airoha_eth.c
-> @@ -2896,10 +2896,9 @@ static int airoha_probe(struct platform_device *pd=
-ev)
->  	eth->dev =3D &pdev->dev;
-> =20
->  	err =3D dma_set_mask_and_coherent(eth->dev, DMA_BIT_MASK(32));
-> -	if (err) {
-> -		dev_err(eth->dev, "failed configuring DMA mask\n");
-> -		return err;
-> -	}
-> +	if (err)
-> +		return dev_err_probe(eth->dev, err,
-> +				     "failed configuring DMA mask\n");
+On 5/7/2025 8:00 PM, Saurabh Singh Sengar wrote:
+>>
+>> On 5/7/2025 4:21 AM, Naman Jain wrote:
+>>>
+>>>
+>>
+>> [...]
+>>
+>>> <snip>
+>>>
+>>>>> +        return -EINVAL;
+>>>>> +    if (copy_from_user(payload, (void __user *)message.payload_ptr,
+>>>>> +               message.payload_size))
+>>>>> +        return -EFAULT;
+>>>>> +
+>>>>> +    return hv_post_message((union
+>>>>
+>>>> This function definition is in separate file which can be build as
+>>>> independent module, this will cause problem while linking . Try
+>>>> building with CONFIG_HYPERV=m and check.
+>>>>
+>>>> - Saurabh
+>>>
+>>> Thanks for reviewing Saurabh. As CONFIG_HYPERV can be set to 'm'
+>>> and CONFIG_MSHV_VTL depends on it, changing CONFIG_MSHV_VTL to
+>>> tristate and a few tweaks in Makefile will fix this issue. This will
+>>> ensure that mshv_vtl is also built as a module when hyperv is built as a
+>> module.
+>>>
+>>> I'll take care of this in next version.
+>>
+>> Let me ask for a clarification. How would the system boot if CONFIG_HYPERV
+>> is set to m? The arch parts are going to be still compiled-in, correct?
+>> Otherwise I don't see how that would initialize.
+>>
+>> I am thinking who would load Hyper-V modules on the system that requires
+>> Hyper-V here. It is understandable that distro's build Hyper-V as a module.
+>> That way, they don't have to load anything when there is no Hyper-V. Here, it
+>> is Hyper-V in and out, what do we need to fix?
+> 
+> We need to fix compilation - for everyone.
 
-Can dma_set_mask_and_coherent() return -EPROBE_DEFER? The other parts are f=
-ine.
+You seem to know for whom it is broken, would be great to share this
+knowledge. When CONFIG_MSHV_VTL is set to "m", OpenHCL will break down
+without additional work. So why do we need to be able to build that
+as a module, to let someone build the firmware that doesn't work?
 
-Regards,
-Lorenzo
+So far the request comes off as absurd to me.
 
-> =20
->  	eth->fe_regs =3D devm_platform_ioremap_resource_byname(pdev, "fe");
->  	if (IS_ERR(eth->fe_regs))
-> @@ -2912,10 +2911,9 @@ static int airoha_probe(struct platform_device *pd=
-ev)
->  	err =3D devm_reset_control_bulk_get_exclusive(eth->dev,
->  						    ARRAY_SIZE(eth->rsts),
->  						    eth->rsts);
-> -	if (err) {
-> -		dev_err(eth->dev, "failed to get bulk reset lines\n");
-> -		return err;
-> -	}
-> +	if (err)
-> +		return dev_err_probe(eth->dev, err,
-> +				     "failed to get bulk reset lines\n");
-> =20
->  	eth->xsi_rsts[0].id =3D "xsi-mac";
->  	eth->xsi_rsts[1].id =3D "hsi0-mac";
-> @@ -2925,10 +2923,9 @@ static int airoha_probe(struct platform_device *pd=
-ev)
->  	err =3D devm_reset_control_bulk_get_exclusive(eth->dev,
->  						    ARRAY_SIZE(eth->xsi_rsts),
->  						    eth->xsi_rsts);
-> -	if (err) {
-> -		dev_err(eth->dev, "failed to get bulk xsi reset lines\n");
-> -		return err;
-> -	}
-> +	if (err)
-> +		return dev_err_probe(eth->dev, err,
-> +				     "failed to get bulk xsi reset lines\n");
-> =20
->  	eth->napi_dev =3D alloc_netdev_dummy(0);
->  	if (!eth->napi_dev)
-> --=20
-> 2.49.0
->=20
+> 
+> - Saurabh
+> 
+>>
+>>>
+>>> here is the diff for reference:
+>>> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig index
+>>> 57dcfcb69b88..c7f21b483377 100644
+>>> --- a/drivers/hv/Kconfig
+>>> +++ b/drivers/hv/Kconfig
+>>> @@ -73,7 +73,7 @@ config MSHV_ROOT
+>>>             If unsure, say N.
+>>>
+>>>    config MSHV_VTL
+>>> -       bool "Microsoft Hyper-V VTL driver"
+>>> +       tristate "Microsoft Hyper-V VTL driver"
+>>>           depends on HYPERV && X86_64
+>>>           depends on TRANSPARENT_HUGEPAGE
+>>>           depends on OF
+>>> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile index
+>>> 5e785dae08cc..c53a0df746b7 100644
+>>> --- a/drivers/hv/Makefile
+>>> +++ b/drivers/hv/Makefile
+>>> @@ -15,9 +15,11 @@ hv_vmbus-$(CONFIG_HYPERV_TESTING)    +=
+>>> hv_debugfs.o
+>>>    hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_utils_transport.o
+>>>    mshv_root-y := mshv_root_main.o mshv_synic.o mshv_eventfd.o
+>>> mshv_irq.o \
+>>>                  mshv_root_hv_call.o mshv_portid_table.o
+>>> +mshv_vtl-y := mshv_vtl_main.o
+>>>
+>>>    # Code that must be built-in
+>>>    obj-$(subst m,y,$(CONFIG_HYPERV)) += hv_common.o -obj-$(subst
+>>> m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o mshv_common.o
+>>> -
+>>> -mshv_vtl-y := mshv_vtl_main.o mshv_common.o
+>>> +obj-$(subst m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o ifneq
+>>> +($(CONFIG_MSHV_ROOT) $(CONFIG_MSHV_VTL),)
+>>> +    obj-y += mshv_common.o
+>>> +endif
+>>>
+>>> Regards,
+>>> Naman
+>>
+>> --
+>> Thank you,
+>> Roman
+> 
 
---cyhlDYaZG9bgrtv1
-Content-Type: application/pgp-signature; name=signature.asc
+-- 
+Thank you,
+Roman
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaBzROAAKCRA6cBh0uS2t
-rFUMAQDpd0Xn+koxS18cJkCYXHZdZTj2Iyhx4nRlRK9NFE7f9QD/W6UmXacIPR+Y
-bxz9OGSYFknzz3Tw588fLCsHr2Ur7QU=
-=7evt
------END PGP SIGNATURE-----
-
---cyhlDYaZG9bgrtv1--
