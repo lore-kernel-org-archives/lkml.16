@@ -1,141 +1,80 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC0E22A4E3
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C2C22A4E3;
+	Thu,  8 May 2025 13:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746710051; cv=none; b=avhE24wsUMX7Fv7/vwE/WC/11pYFcvZsp6k0GWTeTv3GmE9j3ZRa2tCAyfI7XCOtXmseMlb+JbfGJ52khek/LkwaA0ztsvjR4jwiVb7SUHTC/FtlzRqW0kv0mzt4uPXf5u8d2wJsIk5u4v/x8T9bV44oRHl5FV8MjjudAgI7+6I=
+	t=1746710058; cv=none; b=iATio/0PUb57mXGKXr0nReWRxVmQ4STxQn1ktTe0lNM24wdg1nG0/VHUPmd2mPsiFWOTOlcF7z1naJS6RJMiQVXb46Z5eHrCwjct4EgzAebI3R/Y/liSVU6G9et4ZYgOSsNahRqO/iQLL6aQMzzeHo/MZCAdXsI42x37Zv7FiTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746710051; c=relaxed/simple;
-	bh=9mXvjbwW8ofidBphHEKQjhYR9ffb1wijcx8qRAM1zG0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=f+LKjXP3XUDKjrAwfy7z7DvDke7SrF/3VP3THRQFwDAkHejQwP8/ab2Ao6DlJ2exs+f9I+ghMa3y4W4lC40yiR5zjYoOkJe9fb40qvA8id4bqD5SwrOMpbfp4NvXAE7HMAQo6WYkRHgdw98EVbVkm59VMyZgJbXLQiHZxJoW/YQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ULhribNO; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746710058; c=relaxed/simple;
+	bh=C50vYTMMMLJegSnhiKqc3VZzFMbE07J+cq/qRHMRREs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=o2aPf62mvoupDMcTli+lKCiz1jzUmbxndyH3d3rLSe02ZWL7MnfMcPk+nW1OXQe020As8PTWAY7v9zjO04qg2qzM7IY2bEWuwnHPoSnMQsG9QPraYQ1NkDo9qBbYDD71yXjTj92/izxyhK1vITt9Auqp2TFGOWXS7JCJoQe7xSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dwji80nG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ULhribNO"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-73c17c770a7so1142023b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 06:14:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746710049; x=1747314849; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=W0ynFZEEXAjIagoyl65aQJ9Sy+zKGYCNgLUwmb5k0MA=;
-        b=ULhribNOHgS+4z/WEc7xhhmKIDRR6VIBr1EEOjDNxPbEkAeMWSEp9M+NnfUays2k/+
-         POuE4Py6xtJPh2MeEVaIzgqCgUL3+ZQv23FFZrG+7XvPPQ36jG7+9JheUTrL3kvqXzTm
-         rTGIv+JVBPIxmBmey0cpOnKPL3H7y+Q/Owz9H4w4rbt8JmSgpcMiyw6zXt8JCGWRDmSz
-         AQ7Jed6CBHSaFiTTsgajOo/wPxOUlc8u6FBCYXqg36dkKpQfS+V8A4MOcK7PDo8qil0P
-         Qm5Ut2UXoJ0FNYxjsU3zmnAVwouDDG6fUP4fws/zvnWLax1JDoSnYavqSdryaaeBFSSw
-         2uWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746710049; x=1747314849;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W0ynFZEEXAjIagoyl65aQJ9Sy+zKGYCNgLUwmb5k0MA=;
-        b=rjZJuMXXaTVGT0H0A9C5ORutur3tP1B8arI+z9ch8KkKyAgSYmEwAd7918/2JYQ6uZ
-         sBLWdZNG+WJ4t4q7OGsElO1YVll65sqFIod56BW0WFqMX2bg+Qw2LahSCHDnJKyIzUa3
-         brcTRd8Ivr0UhSLmQVvovgcgFt6MrKFsgwQ3+/tMlj8nOQtEUfGPHOPlBH5TyZfh8Fwh
-         9udKubPP960JrTemInzAX16McTHKLyZQe9y2AR9e/QOgqFw9UpgejpL7DRF5LggLkx/l
-         KOcVLpM3h/A7Sc1eRBvhQ3LxxlkOy4wSAfYIeycKGU7zV9Ibqq/o4s92kJr+rvIrvzTL
-         gCsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVXly/Wjtjin6YZqAVRGXyx7l4J1iRbAVRgQWT4FvobN1pcRDC/gm+R3Dmv88kTvQAPw4Ro2B5Z0G1pIws=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5M7CQVVBRVefWZSXr4hJEmwYeqvbZvYHQnHQgCFZrnJQTKRs4
-	pHdBFw9Y/FCjE+zta4MQzMPijtIFWnAiZiKM4v9pqeltceukR0StyK0g3/TC2xQ=
-X-Gm-Gg: ASbGncuF+nxaErC2kFmY3jNLQ4guaxzyryNxLdJskyhSVPIvVa8nGysas4h39YiIMgR
-	ouWOPTd9HWikeuRjWi6Km/OGjYdp8yahA9KF6qvUv39o2WLyBcp5Jh3Z1Pd30PS4yxKpQXT2UU3
-	VTP4R77S/c8joPShtX09Y0Q7Z3fqxZpRLQ+pMLnF9cSh/bPwUo3tVUwIUdoqUXt5kq4WfbNoSm2
-	DObt5/rgt15SZWFdc+jUaxAWOtz+8Jkwccjq2kFgtYbYf9sMTFcaDQvlbjp9tyxcMUr8/OuZCcB
-	felxwmYNSixoIFGfXtoPvKh/Luzuk6KXpIfXHJM=
-X-Google-Smtp-Source: AGHT+IFA5bdAR+g+8jas/pp/moZKFd/5kEN1qQAf++05eckooX+tTxGDVWyNcpdJrbek7kiTWc5H5g==
-X-Received: by 2002:a05:6a00:2887:b0:736:73ad:365b with SMTP id d2e1a72fcca58-740a99b3b98mr5056194b3a.14.1746710048945;
-        Thu, 08 May 2025 06:14:08 -0700 (PDT)
-Received: from localhost ([97.126.182.119])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7405905d067sm13158112b3a.126.2025.05.08.06.14.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 06:14:08 -0700 (PDT)
-From: Kevin Hilman <khilman@baylibre.com>
-To: Sukrut Bellary <sbellary@baylibre.com>, Russell King
- <linux@armlinux.org.uk>, Rob Herring <robh@kernel.org>, Tony Lindgren
- <tony@atomide.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Nishanth
- Menon <nm@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Sukrut Bellary <sbellary@baylibre.com>, Aaro Koskinen
- <aaro.koskinen@iki.fi>, Andreas Kemnade <andreas@kemnade.info>, Roger
- Quadros <rogerq@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Santosh
- Shilimkar <ssantosh@kernel.org>, Bajjuri Praneeth <praneeth@ti.com>,
- Raghavendra Vignesh <vigneshr@ti.com>, Bin Liu <b-liu@ti.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pm@vger.kernel.org
-Subject: Re: [PATCH 2/4] pmdomain: ti: Fix STANDBY handling of PER power domain
-In-Reply-To: <20250318230042.3138542-3-sbellary@baylibre.com>
-References: <20250318230042.3138542-1-sbellary@baylibre.com>
- <20250318230042.3138542-3-sbellary@baylibre.com>
-Date: Thu, 08 May 2025 06:14:07 -0700
-Message-ID: <7hjz6rtfc0.fsf@baylibre.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dwji80nG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AD8CC4CEED;
+	Thu,  8 May 2025 13:14:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746710058;
+	bh=C50vYTMMMLJegSnhiKqc3VZzFMbE07J+cq/qRHMRREs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=dwji80nGV9fIyRuxKaYf+HghXFXqx1+2kVS8apGQ/dOFuqoYL1sQZL/SOpn7wVeud
+	 PyORB8EDEusdC1FTd3M9s6Sy1GEcTgfff09JLyLEYYusqDREgxQ4rz4CdiTSLbm1g/
+	 iM1oObH3HydpD/iPKdPZtFAaMT/HHHhIj08ISV1MGKPayMMP93xolbOoVs/8y5NH8Y
+	 z+lYv+ZfCJHvmD1V2veU/99k5Hk2qp5g8TPZnEHr8UgOjxf1xPLFBlR0ZCXTq/jH0l
+	 BzXSg2p7pUyL0sPfG9+wDWUBow1Oc47lWXKFsGRwI5TbhFyZxSfkOFub8Lth1sycon
+	 Itj1nJDZuQKEQ==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@denx.de,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	srw@sladewatkins.net,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org,
+	Miguel Ojeda <ojeda@kernel.org>
+Subject: Re: [PATCH 6.6 000/129] 6.6.90-rc1 review
+Date: Thu,  8 May 2025 15:14:08 +0200
+Message-ID: <20250508131408.623011-1-ojeda@kernel.org>
+In-Reply-To: <20250507183813.500572371@linuxfoundation.org>
+References: <20250507183813.500572371@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Sukrut Bellary <sbellary@baylibre.com> writes:
-
-> Per AM335x TRM[1](section 8.1.4.3 Power mode), in case of STANDBY,
-> PER domain should be ON. So, fix the PER power domain handling on standby.
+On Wed, 07 May 2025 20:38:56 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 >
-> [1] https://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
+> This is the start of the stable review cycle for the 6.6.90 release.
+> There are 129 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
+> Responses should be made by Fri, 09 May 2025 18:37:41 +0000.
+> Anything received after that time might be too late.
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Boot-tested under QEMU for Rust x86_64:
 
-Ulf, this series has been tested now.  Go ahead and take this patch.
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
 
-Thanks,
+Thanks!
 
-Kevin
-
-
-> ---
->  drivers/pmdomain/ti/omap_prm.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pmdomain/ti/omap_prm.c b/drivers/pmdomain/ti/omap_prm.c
-> index b8ceb3c2b81c..7e36e675a8c6 100644
-> --- a/drivers/pmdomain/ti/omap_prm.c
-> +++ b/drivers/pmdomain/ti/omap_prm.c
-> @@ -18,7 +18,9 @@
->  #include <linux/pm_domain.h>
->  #include <linux/reset-controller.h>
->  #include <linux/delay.h>
-> -
-> +#if IS_ENABLED(CONFIG_SUSPEND)
-> +#include <linux/suspend.h>
-> +#endif
->  #include <linux/platform_data/ti-prm.h>
->  
->  enum omap_prm_domain_mode {
-> @@ -88,6 +90,7 @@ struct omap_reset_data {
->  #define OMAP_PRM_HAS_RSTST	BIT(1)
->  #define OMAP_PRM_HAS_NO_CLKDM	BIT(2)
->  #define OMAP_PRM_RET_WHEN_IDLE	BIT(3)
-> +#define OMAP_PRM_ON_WHEN_STANDBY	BIT(4)
->  
->  #define OMAP_PRM_HAS_RESETS	(OMAP_PRM_HAS_RSTCTRL | OMAP_PRM_HAS_RSTST)
->  
-> @@ -404,7 +407,8 @@ static const struct omap_prm_data am3_prm_data[] = {
->  		.name = "per", .base = 0x44e00c00,
->  		.pwrstctrl = 0xc, .pwrstst = 0x8, .dmap = &omap_prm_noinact,
->  		.rstctrl = 0x0, .rstmap = am3_per_rst_map,
-> -		.flags = OMAP_PRM_HAS_RSTCTRL, .clkdm_name = "pruss_ocp"
-> +		.flags = OMAP_PRM_HAS_RSTCTRL | OMAP_PRM_ON_WHEN_STANDBY,
-> +		.clkdm_name = "pruss_ocp",
->  	},
->  	{
->  		.name = "wkup", .base = 0x44e00d00,
-> -- 
-> 2.34.1
+Cheers,
+Miguel
