@@ -1,587 +1,208 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C96195FE8
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 07:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A44220F4F
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 07:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746689823; cv=none; b=IcKbEPxEc647yJF0hSVxkK3wi+EI5ZMtQJhaMQiEkFhu0okMxuNJsgfQkdgm+k9mzbaRatGKU1sPiM/7IdMTPjC8L6JujOg4+U1VOc4iveTgJrgVFb9Z5msUeWGlBd0jAlVIpzYnWaOD+Mf6HUYMC8YW+GjQlW/WFWgZOCT2tIM=
+	t=1746689835; cv=none; b=YebCPEBcq6b7BQ0qiCQP+0cZeI58eTjJM06G+2Rhnr+UrDRHGHpXv34awGacV97LKEsZwcbDlixh1JOEdXWXLNGd9zQ3kZRmYJmc9UKam21d5YgitCEe/HbtPGPUjBGqWfyVipMqD+P7yLoFCEugnWZUF53bF/h4KM7G+t1Y4tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746689823; c=relaxed/simple;
-	bh=GSCB/+JYZBPPpZiX1f3WS5bBGvWo2ZfMzvEaH7RtyE4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qETtBXbWqUNSTLaUSBfkwq8SSnmwjbHCaONc/tY57z7ms77a1a+kUySaCIGFXz+JPjLx+tKDeeC3Bc8cZLf94iA3YoFU/VI0EtUs83ORxtBx0vcbCMdTVmqCPaqrSDM8soSM+jdUHloDhAR5tAJgJl251/DonElhEffq/BSN+m8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=HpLBcwAr; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1746689835; c=relaxed/simple;
+	bh=4Jaa4N0WTUpYbd8+QpfWfHEYKBJOovkD+RP+EaFRBhw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EKJRX9TK8cDPo+dzDeUndr7q2x6K53VlPOSshq5LPwTeYNX6ruYCyG+3NQE28OlvjfsCx2J5iBnFDzD/xkNrS1rt/jEQhJvdSo33eKqE6cvMDSQwYStnhkS3xuW9vC2dqZhf0G68qKCg/pMOKlAqkVone8ONFQ26z3cLTnxW4pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cVK01zAJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HpLBcwAr"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7410c18bb00so111645b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 00:37:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1746689819; x=1747294619; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wk4dCc2q9E8YzNIUIgghlTWJtgsuOL0UvwmTTfcvNg8=;
-        b=HpLBcwArtPpn3zvgU+NlZx3/K1bXEzQLPDT5ie/bdkvxpOmkItLhstNtGgE+jUFqsY
-         Sh9os3cHauXSBPlxw458D2AT5HoeBSf5wZFufBEPlNens16lDdFmCbfeUP3aWkFdHslV
-         stysYwyqz6Ko+3dvam6pwN5jU33h7mYCQfvJI=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cVK01zAJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746689833;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=GezCcPBScg5KPaNeawmNmkgQU7p8LvvEy7wz0/a17Ms=;
+	b=cVK01zAJfjLdYRf1/is1gxU9soOm/Atexv82p75hofihcr/Fk6pcC1glH52o566Q3PtqKN
+	+8enKMGlY5zLTqUFj4/odqH7nwINV27uHD9L0HUgo7A7m7zm4fB/3RyFquafH2dA7CdGA/
+	Kz0ClooDNSuPwAGc/c8+VtqIzag+JMg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-374-BhNx_AZbML-55hTSGwiY8w-1; Thu, 08 May 2025 03:37:12 -0400
+X-MC-Unique: BhNx_AZbML-55hTSGwiY8w-1
+X-Mimecast-MFC-AGG-ID: BhNx_AZbML-55hTSGwiY8w_1746689831
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39d9243b1c2so246123f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 00:37:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746689819; x=1747294619;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wk4dCc2q9E8YzNIUIgghlTWJtgsuOL0UvwmTTfcvNg8=;
-        b=ALhs/t5pulngCzCsZDeraT6tghD341RptrFs/TKHX+0VJSMwaqnyz9oh0lyNGXXZlF
-         ylPDeCUP7lGOzxqUNZBNhJOurliiiWAGdN1qToooUgGtwI76xkNwluOr/vnzaygZ9Xmp
-         lXhsobF8tD32j7VzgjXEZ52H2gMe4PQPrwSWfYi6GbSFiFgvoZKpn34KDNpbzOkLyJzV
-         Cu8nkfAlPbKx7akC6gG7h+eimJueQJ6r6oXZ8IsWlPu/WWdfln9HC57uFv/yDr4/GcoJ
-         suog7i0IjoSzcrscr5Xr+WAVr04c+gK747D8xVbVjf3IKNQ4E3UcBnF0Y43LYkY03gKd
-         /iLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUP3Hif9uKbmse5TSlPDg7EKZ9Md+giP2o80M2r+vJZeWPYPEl9X9OBZrMVAGLpqEyfnYMOGVb79rM0MYM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5VfzyiV+W/48cZZUsqQk+2AD1V4kBbBHkQZ+pdyo3HyMpxLUc
-	Pm1GjN6yvyOHkGED+AZp4OkL637k88UWPzpvTfexvIvs+obtvl/1hRZFNz8iKqaIgKpuK8Nw2UF
-	Wa8bg2ur86bdhlFWh01diLbKiXtLTV2eJzOAX
-X-Gm-Gg: ASbGncuhp9eGfzxzgI2ZEoZYK0/kBt4rtJh1CIXVxeNl+2moag7HabsdWOK1EwDmKXG
-	G40ZkaHKFKml8t8tKK9v9i52l85Kqe6P0R1E68G+KMlxGfUz2ngnyvJEJYrkU3Tt4e/HqiwTGzT
-	rOfuuMb56Z/7uu526AkaLk
-X-Google-Smtp-Source: AGHT+IFB8JkFGRlbnlOVYykX7v/f06YcLbeGlLW2aAxnTBsvwBu08mIWRTh3ZelYym01WYd+YNsc/0ZnZEOLCsunXrY=
-X-Received: by 2002:aa7:9316:0:b0:736:2a73:6756 with SMTP id
- d2e1a72fcca58-7409cfef303mr9062460b3a.21.1746689819508; Thu, 08 May 2025
- 00:36:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746689831; x=1747294631;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GezCcPBScg5KPaNeawmNmkgQU7p8LvvEy7wz0/a17Ms=;
+        b=TuEId0/pakyBTcjs/4U44rfwIl3SCvtfUiV0vuXZoj8BT/lMHJ26+tN9fVXKRuoxA3
+         gZ+WDxlNm5nNU84wBqIgaPopWi34PxkwOGD1SdAxYL9wVqUv9fpWN9pdo8g8sNh/ZmVM
+         ybYkgyKUZnExOUffbJndolaSNAbIikEumsSUj+gxVg35rv18xbaIt639ltm8WCarniLc
+         tjqEOj4Cz79tXwjcSU9wqaj2+q8KTCCZheUHNN969xg6G/RX3yC3UbyGWH5m4NrluO98
+         cQwaS9WSj6t5vx+K6LoAA/wdeboHeG7nxGZ7y875bkoowstS73+qmcwKZDOCd5A2u96a
+         54Fg==
+X-Forwarded-Encrypted: i=1; AJvYcCXqEBR4g2Tnq7Mwr2kPp3DH5jyMJx2U1ksCDHI5MxLbFPJlqKh5aCfKHVJDo3f9DPuzTsBxJsbehWxwvfs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSdz3VWsxnmyDzLI7TiPnm7YJCdACdlB47tWHIJLcLipHSUmOj
+	PPIMEPXZtAjVx5ljTfoytoyJTv/o8kP4XS+8O99aaHgmTTHjjufwyDMpcwCZlqXzQuTI/IpOMWb
+	DTiWfVgmoZ7Z5xxsGupuKTuhwzzS11gtI3eaeBfWhe0hdO4h52f/PAjEZNkZM1A==
+X-Gm-Gg: ASbGncsEndluwF6XMdx0OGt2u4nmFb+juGU3K+85iKEkH/FhRqar1LVOfHP1tsMgmzz
+	uANI4/JNdEuCpV5X+HPWxJsvvYyyPkdVB2ZBW4HpcL7FV5d5xT9nI1GfYzCFVysQ6jvE46nv3xP
+	5QYmvpydZEK/0cAAxczv2r0DCJ7VlGfJozBK/Pb4BSVLRgIsasXoip0ugaq+MriU88jiu9iAgj+
+	sQJv2f8pK0cS2oTKIfI+WMUEAGGHwHzs37KvmfEnwT1zR7LaSOMSI7dq0qlOEeRdFkURcEqIARK
+	vdGmHKpBOUUh5y/mhbAefak3/OkuyW8Zd//bv6L1Qsx2rVRiSq9vxeXuWWvpFHuyhgKTi5rUdQ6
+	fpbx/4WRkMolLwGrOB5088dDnifZRxlGo5bIVwio=
+X-Received: by 2002:a5d:64e8:0:b0:3a0:809f:1c95 with SMTP id ffacd0b85a97d-3a0b4a6868bmr5069696f8f.53.1746689830666;
+        Thu, 08 May 2025 00:37:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFfpkNjKotxnV6NRi8jDftDtvx5wtIETdy3ab7NqN203hY3QPoExdZ1fDzVF1kh2LAVn+THHA==
+X-Received: by 2002:a5d:64e8:0:b0:3a0:809f:1c95 with SMTP id ffacd0b85a97d-3a0b4a6868bmr5069666f8f.53.1746689830299;
+        Thu, 08 May 2025 00:37:10 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f3e:5900:27aa:5f4a:b65c:3d3c? (p200300d82f3e590027aa5f4ab65c3d3c.dip0.t-ipconnect.de. [2003:d8:2f3e:5900:27aa:5f4a:b65c:3d3c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae3ccdsm19537950f8f.38.2025.05.08.00.37.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 00:37:09 -0700 (PDT)
+Message-ID: <0fd1bf14-a664-49c0-a239-fdc45b8e3a39@redhat.com>
+Date: Thu, 8 May 2025 09:37:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508045957.2823318-1-abhijit.gangurde@amd.com> <20250508045957.2823318-9-abhijit.gangurde@amd.com>
-In-Reply-To: <20250508045957.2823318-9-abhijit.gangurde@amd.com>
-From: Kalesh Anakkur Purayil <kalesh-anakkur.purayil@broadcom.com>
-Date: Thu, 8 May 2025 13:06:47 +0530
-X-Gm-Features: ATxdqUGhazH4PlIoFulZVFyin8xyWDgso205DYpeeWHlQh8sghrJfFsB8Owk4B0
-Message-ID: <CAH-L+nM86KduwFfEUDdGOSx865Dq=YHaVfUZU8GRqb2C3tq7dQ@mail.gmail.com>
-Subject: Re: [PATCH v2 08/14] RDMA/ionic: Register auxiliary module for ionic
- ethernet adapter
-To: Abhijit Gangurde <abhijit.gangurde@amd.com>
-Cc: shannon.nelson@amd.com, brett.creeley@amd.com, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net, 
-	jgg@ziepe.ca, leon@kernel.org, andrew+netdev@lunn.ch, allen.hubbe@amd.com, 
-	nikhil.agarwal@amd.com, linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andrew Boyer <andrew.boyer@amd.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000003f22f006349aea7a"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mm: convert do_set_pmd() to take a folio
+To: Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Matthew Wilcox <willy@infradead.org>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, dev.jain@arm.com, ziy@nvidia.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <8e33c8a65b46170dfd8ba6715d2115856a55b8f6.1746609191.git.baolin.wang@linux.alibaba.com>
+ <a2faee74256c22cff2238487a86b154d5520c334.1746609191.git.baolin.wang@linux.alibaba.com>
+ <aBtNrQNlL7hjLrTZ@casper.infradead.org>
+ <88060373-d0b8-404a-b53b-9b5a54f5ba6f@linux.alibaba.com>
+ <aBuOjrH1UpyTf8I9@casper.infradead.org>
+ <569e592c-1c30-4c03-bcee-c1670ac4e159@linux.alibaba.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <569e592c-1c30-4c03-bcee-c1670ac4e159@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---0000000000003f22f006349aea7a
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 08.05.25 04:23, Baolin Wang wrote:
+> 
+> 
+> On 2025/5/8 00:47, Matthew Wilcox wrote:
+>> On Wed, May 07, 2025 at 08:36:54PM +0800, Baolin Wang wrote:
+>>> On 2025/5/7 20:10, Matthew Wilcox wrote:
+>>>> Because I see nowhere in this patch that you initialise 'page'.
+>>>
+>>> Please look at the following code in do_set_pmd(), and the 'page' will be
+>>> initialized before using.
+>>>
+>>>           if (thp_disabled_by_hw() || vma_thp_disabled(vma, vma->vm_flags))
+>>>                   return ret;
+>>>
+>>>           if (!thp_vma_suitable_order(vma, haddr, PMD_ORDER))
+>>>                   return ret;
+>>>
+>>>           if (folio_order(folio) != HPAGE_PMD_ORDER)
+>>>                   return ret;
+>>>           page = &folio->page;
+>>
+>> Ah, fair, I missed that.
+>>
+>>>> And that's really the important part.  You seem to be assuming that a
+>>>> folio will never be larger than PMD size, and I'm not comfortable with
+>>>
+>>> No, I have no this assumption. But do_set_pmd() is used to establish PMD
+>>> mappings for the PMD-sized folios, and we already have PMD-sized checks to
+>>> validate the folio size:
+>>>
+>>>           if (!thp_vma_suitable_order(vma, haddr, PMD_ORDER))
+>>>                   return ret;
+>>>
+>>>           if (folio_order(folio) != HPAGE_PMD_ORDER)
+>>>                   return ret;
+>>>
+>>>> that assumption.  It's a limitation I put in place a few years ago so we
+>>>> didn't have to find and fix all those assumptions immediately, but I
+>>>> imagine that some day we'll want to have larger folios.
+>>>>
+>>>> So unless you can derive _which_ page in the folio we want to map from
+>>>
+>>> IMO, for PMD mapping of a PMD-sized folio, we do not need to know _which_
+>>> page in the folio we want to map, because we'll always map the entire
+>>> PMD-sized folio.
+>>
+>> There's a difference between "Assert that the folio is PMD sized" inside
+>> the function because we know there are still problems, and "Change the
+>> interface so we can't specify which page inside the folio is the one
+>> we're actually interested in".
+> 
+> Fair enough. So how about adding a new 'folio' parameter to
+> do_set_pmd(), similar to the set_pte_range() function prototype?
+> 
+> vm_fault_t do_set_pmd(struct vm_fault *vmf, struct folio *folio, struct
+> page *page)
 
-On Thu, May 8, 2025 at 10:33=E2=80=AFAM Abhijit Gangurde
-<abhijit.gangurde@amd.com> wrote:
->
-> Register auxiliary module to create ibdevice for ionic
-> ethernet adapter.
->
-> Co-developed-by: Andrew Boyer <andrew.boyer@amd.com>
-> Signed-off-by: Andrew Boyer <andrew.boyer@amd.com>
-> Co-developed-by: Allen Hubbe <allen.hubbe@amd.com>
-> Signed-off-by: Allen Hubbe <allen.hubbe@amd.com>
-> Signed-off-by: Abhijit Gangurde <abhijit.gangurde@amd.com>
-> ---
-> v1->v2
->   - Removed netdev references from ionic RDMA driver
->   - Moved to ionic_lif* instead of void* to convey information between
->     aux devices and drivers.
->
->  drivers/infiniband/hw/ionic/ionic_ibdev.c   | 135 ++++++++++++++++++++
->  drivers/infiniband/hw/ionic/ionic_ibdev.h   |  21 +++
->  drivers/infiniband/hw/ionic/ionic_lif_cfg.c | 121 ++++++++++++++++++
->  drivers/infiniband/hw/ionic/ionic_lif_cfg.h |  65 ++++++++++
->  4 files changed, 342 insertions(+)
->  create mode 100644 drivers/infiniband/hw/ionic/ionic_ibdev.c
->  create mode 100644 drivers/infiniband/hw/ionic/ionic_ibdev.h
->  create mode 100644 drivers/infiniband/hw/ionic/ionic_lif_cfg.c
->  create mode 100644 drivers/infiniband/hw/ionic/ionic_lif_cfg.h
->
-> diff --git a/drivers/infiniband/hw/ionic/ionic_ibdev.c b/drivers/infiniba=
-nd/hw/ionic/ionic_ibdev.c
-> new file mode 100644
-> index 000000000000..ca047a789378
-> --- /dev/null
-> +++ b/drivers/infiniband/hw/ionic/ionic_ibdev.c
-> @@ -0,0 +1,135 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (C) 2018-2025, Advanced Micro Devices, Inc. */
-> +
-> +#include <linux/module.h>
-> +#include <linux/printk.h>
-> +#include <net/addrconf.h>
-> +
-> +#include "ionic_ibdev.h"
-> +
-> +#define DRIVER_DESCRIPTION "AMD Pensando RoCE HCA driver"
-> +#define DEVICE_DESCRIPTION "AMD Pensando RoCE HCA"
-> +
-> +MODULE_AUTHOR("Allen Hubbe <allen.hubbe@amd.com>");
-> +MODULE_DESCRIPTION(DRIVER_DESCRIPTION);
-> +MODULE_LICENSE("GPL");
-> +MODULE_IMPORT_NS("NET_IONIC");
-> +
-> +static const struct auxiliary_device_id ionic_aux_id_table[] =3D {
-> +       { .name =3D "ionic.rdma", },
-> +       {},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(auxiliary, ionic_aux_id_table);
-> +
-> +static void ionic_destroy_ibdev(struct ionic_ibdev *dev)
-> +{
-> +       ib_unregister_device(&dev->ibdev);
-> +       ib_dealloc_device(&dev->ibdev);
-> +}
-> +
-> +static struct ionic_ibdev *ionic_create_ibdev(struct ionic_aux_dev *ioni=
-c_adev)
-> +{
-> +       struct ib_device *ibdev;
-> +       struct ionic_ibdev *dev;
-> +       int rc;
-> +
-> +       rc =3D ionic_version_check(&ionic_adev->adev.dev, ionic_adev->lif=
-);
-> +       if (rc)
-> +               goto err_dev;
-You can return directly from here
-> +
-> +       dev =3D ib_alloc_device(ionic_ibdev, ibdev);
-> +       if (!dev) {
-> +               rc =3D -ENOMEM;
-> +               goto err_dev;
-You can return directly from here
-> +       }
-> +
-> +       ionic_fill_lif_cfg(ionic_adev->lif, &dev->lif_cfg);
-> +
-> +       ibdev =3D &dev->ibdev;
-> +       ibdev->dev.parent =3D dev->lif_cfg.hwdev;
-> +
-> +       strscpy(ibdev->name, "ionic_%d", IB_DEVICE_NAME_MAX);
-> +       strscpy(ibdev->node_desc, DEVICE_DESCRIPTION, IB_DEVICE_NODE_DESC=
-_MAX);
-> +
-> +       ibdev->node_type =3D RDMA_NODE_IB_CA;
-> +       ibdev->phys_port_cnt =3D 1;
-> +
-> +       /* the first two eq are reserved for async events */
-> +       ibdev->num_comp_vectors =3D dev->lif_cfg.eq_count - 2;
-> +
-> +       addrconf_ifid_eui48((u8 *)&ibdev->node_guid,
-> +                           ionic_lif_netdev(ionic_adev->lif));
-> +
-> +       rc =3D ib_device_set_netdev(ibdev, ionic_lif_netdev(ionic_adev->l=
-if), 1);
-> +       if (rc)
-> +               goto err_admin;
-> +
-> +       rc =3D ib_register_device(ibdev, "ionic_%d", ibdev->dev.parent);
-> +       if (rc)
-> +               goto err_register;
-> +
-> +       return dev;
-> +
-> +err_register:
-Unnecessary label
-> +err_admin:
-> +       ib_dealloc_device(&dev->ibdev);
-> +err_dev:
-> +       return ERR_PTR(rc);
-> +}
-> +
-> +static int ionic_aux_probe(struct auxiliary_device *adev,
-> +                          const struct auxiliary_device_id *id)
-> +{
-> +       struct ionic_aux_dev *ionic_adev;
-> +       struct ionic_ibdev *dev;
-> +
-> +       ionic_adev =3D container_of(adev, struct ionic_aux_dev, adev);
-> +       dev =3D ionic_create_ibdev(ionic_adev);
-> +       if (IS_ERR(dev))
-> +               return dev_err_probe(&adev->dev, PTR_ERR(dev),
-> +                                    "Failed to register ibdev\n");
-> +
-> +       auxiliary_set_drvdata(adev, dev);
-> +       ibdev_dbg(&dev->ibdev, "registered\n");
-> +
-> +       return 0;
-> +}
-> +
-> +static void ionic_aux_remove(struct auxiliary_device *adev)
-> +{
-> +       struct ionic_ibdev *dev =3D auxiliary_get_drvdata(adev);
-> +
-> +       dev_dbg(&adev->dev, "unregister ibdev\n");
-> +       ionic_destroy_ibdev(dev);
-> +       dev_dbg(&adev->dev, "unregistered\n");
-> +}
-> +
-> +static struct auxiliary_driver ionic_aux_r_driver =3D {
-> +       .name =3D "rdma",
-> +       .probe =3D ionic_aux_probe,
-> +       .remove =3D ionic_aux_remove,
-> +       .id_table =3D ionic_aux_id_table,
-> +};
-> +
-> +static int __init ionic_mod_init(void)
-> +{
-> +       int rc;
-> +
-> +       rc =3D auxiliary_driver_register(&ionic_aux_r_driver);
-> +       if (rc)
-> +               goto err_aux;
-> +
-> +       return 0;
-> +
-> +err_aux:
-> +       return rc;
-You can simplify this function as "return
-auxiliary_driver_register(&ionic_aux_r_driver);"
-> +}
-> +
-> +static void __exit ionic_mod_exit(void)
-> +{
-> +       auxiliary_driver_unregister(&ionic_aux_r_driver);
-> +}
-> +
-> +module_init(ionic_mod_init);
-> +module_exit(ionic_mod_exit);
-> diff --git a/drivers/infiniband/hw/ionic/ionic_ibdev.h b/drivers/infiniba=
-nd/hw/ionic/ionic_ibdev.h
-> new file mode 100644
-> index 000000000000..e13adff390d7
-> --- /dev/null
-> +++ b/drivers/infiniband/hw/ionic/ionic_ibdev.h
-> @@ -0,0 +1,21 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Copyright (C) 2018-2025, Advanced Micro Devices, Inc. */
-> +
-> +#ifndef _IONIC_IBDEV_H_
-> +#define _IONIC_IBDEV_H_
-> +
-> +#include <rdma/ib_verbs.h>
-> +#include <ionic_api.h>
-> +
-> +#include "ionic_lif_cfg.h"
-> +
-> +#define IONIC_MIN_RDMA_VERSION 0
-> +#define IONIC_MAX_RDMA_VERSION 2
-> +
-> +struct ionic_ibdev {
-> +       struct ib_device        ibdev;
-> +
-> +       struct ionic_lif_cfg    lif_cfg;
-> +};
-> +
-> +#endif /* _IONIC_IBDEV_H_ */
-> diff --git a/drivers/infiniband/hw/ionic/ionic_lif_cfg.c b/drivers/infini=
-band/hw/ionic/ionic_lif_cfg.c
-> new file mode 100644
-> index 000000000000..a02eb2f5bd45
-> --- /dev/null
-> +++ b/drivers/infiniband/hw/ionic/ionic_lif_cfg.c
-> @@ -0,0 +1,121 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (C) 2018-2025, Advanced Micro Devices, Inc. */
-> +
-> +#include <linux/kernel.h>
-> +
-> +#include <ionic.h>
-> +#include <ionic_lif.h>
-> +
-> +#include "ionic_lif_cfg.h"
-> +
-> +#define IONIC_MIN_RDMA_VERSION 0
-> +#define IONIC_MAX_RDMA_VERSION 2
-> +
-> +static u8 ionic_get_expdb(struct ionic_lif *lif)
-> +{
-> +       u8 expdb_support =3D 0;
-> +
-> +       if (lif->ionic->idev.phy_cmb_expdb64_pages)
-> +               expdb_support |=3D IONIC_EXPDB_64B_WQE;
-> +       if (lif->ionic->idev.phy_cmb_expdb128_pages)
-> +               expdb_support |=3D IONIC_EXPDB_128B_WQE;
-> +       if (lif->ionic->idev.phy_cmb_expdb256_pages)
-> +               expdb_support |=3D IONIC_EXPDB_256B_WQE;
-> +       if (lif->ionic->idev.phy_cmb_expdb512_pages)
-> +               expdb_support |=3D IONIC_EXPDB_512B_WQE;
-> +
-> +       return expdb_support;
-> +}
-> +
-> +void ionic_fill_lif_cfg(struct ionic_lif *lif, struct ionic_lif_cfg *cfg=
-)
-> +{
-> +       union ionic_lif_identity *ident =3D &lif->ionic->ident.lif;
-> +
-> +       cfg->lif =3D lif;
-> +       cfg->hwdev =3D &lif->ionic->pdev->dev;
-> +       cfg->lif_index =3D lif->index;
-> +       cfg->lif_hw_index =3D lif->hw_index;
-> +
-> +       cfg->dbid =3D lif->kern_pid;
-> +       cfg->dbid_count =3D le32_to_cpu(lif->ionic->ident.dev.ndbpgs_per_=
-lif);
-> +       cfg->dbpage =3D lif->kern_dbpage;
-> +       cfg->intr_ctrl =3D lif->ionic->idev.intr_ctrl;
-> +
-> +       cfg->db_phys =3D lif->ionic->bars[IONIC_PCI_BAR_DBELL].bus_addr;
-> +
-> +       if (IONIC_VERSION(ident->rdma.version, ident->rdma.minor_version)=
- >=3D
-> +           IONIC_VERSION(2, 1))
-> +               cfg->page_size_supported =3D
-> +                   cpu_to_le64(ident->rdma.page_size_cap);
-> +       else
-> +               cfg->page_size_supported =3D IONIC_PAGE_SIZE_SUPPORTED;
-> +
-> +       cfg->rdma_version =3D ident->rdma.version;
-> +       cfg->qp_opcodes =3D ident->rdma.qp_opcodes;
-> +       cfg->admin_opcodes =3D ident->rdma.admin_opcodes;
-> +
-> +       cfg->stats_type =3D cpu_to_le16(ident->rdma.stats_type);
-> +       cfg->npts_per_lif =3D le32_to_cpu(ident->rdma.npts_per_lif);
-> +       cfg->nmrs_per_lif =3D le32_to_cpu(ident->rdma.nmrs_per_lif);
-> +       cfg->nahs_per_lif =3D le32_to_cpu(ident->rdma.nahs_per_lif);
-> +
-> +       cfg->aq_base =3D le32_to_cpu(ident->rdma.aq_qtype.qid_base);
-> +       cfg->cq_base =3D le32_to_cpu(ident->rdma.cq_qtype.qid_base);
-> +       cfg->eq_base =3D le32_to_cpu(ident->rdma.eq_qtype.qid_base);
-> +
-> +       /*
-> +        * ionic_create_rdma_admin() may reduce aq_count or eq_count if
-> +        * it is unable to allocate all that were requested.
-> +        * aq_count is tunable; see ionic_aq_count
-> +        * eq_count is tunable; see ionic_eq_count
-> +        */
-> +       cfg->aq_count =3D le32_to_cpu(ident->rdma.aq_qtype.qid_count);
-> +       cfg->eq_count =3D le32_to_cpu(ident->rdma.eq_qtype.qid_count);
-> +       cfg->cq_count =3D le32_to_cpu(ident->rdma.cq_qtype.qid_count);
-> +       cfg->qp_count =3D le32_to_cpu(ident->rdma.sq_qtype.qid_count);
-> +       cfg->dbid_count =3D le32_to_cpu(lif->ionic->ident.dev.ndbpgs_per_=
-lif);
-> +
-> +       cfg->aq_qtype =3D ident->rdma.aq_qtype.qtype;
-> +       cfg->sq_qtype =3D ident->rdma.sq_qtype.qtype;
-> +       cfg->rq_qtype =3D ident->rdma.rq_qtype.qtype;
-> +       cfg->cq_qtype =3D ident->rdma.cq_qtype.qtype;
-> +       cfg->eq_qtype =3D ident->rdma.eq_qtype.qtype;
-> +       cfg->udma_qgrp_shift =3D ident->rdma.udma_shift;
-> +       cfg->udma_count =3D 2;
-> +
-> +       cfg->max_stride =3D ident->rdma.max_stride;
-> +       cfg->expdb_mask =3D ionic_get_expdb(lif);
-> +
-> +       cfg->sq_expdb =3D
-> +           !!(lif->qtype_info[IONIC_QTYPE_TXQ].features & IONIC_QIDENT_F=
-_EXPDB);
-> +       cfg->rq_expdb =3D
-> +           !!(lif->qtype_info[IONIC_QTYPE_RXQ].features & IONIC_QIDENT_F=
-_EXPDB);
-> +}
-> +
-> +struct net_device *ionic_lif_netdev(struct ionic_lif *lif)
-> +{
-> +       return lif->netdev;
-> +}
-> +
-> +int ionic_version_check(const struct device *dev, struct ionic_lif *lif)
-> +{
-> +       union ionic_lif_identity *ident =3D &lif->ionic->ident.lif;
-> +       int rc;
-local variable "rc" is not needed here, you can return directly.
-> +
-> +       if (ident->rdma.version < IONIC_MIN_RDMA_VERSION ||
-> +           ident->rdma.version > IONIC_MAX_RDMA_VERSION) {
-> +               rc =3D -EINVAL;
-> +               dev_err_probe(dev, rc,
-> +                             "ionic_rdma: incompatible version, fw ver %=
-u\n",
-> +                             ident->rdma.version);
-> +               dev_err_probe(dev, rc,
-> +                             "ionic_rdma: Driver Min Version %u\n",
-> +                             IONIC_MIN_RDMA_VERSION);
-> +               dev_err_probe(dev, rc,
-> +                             "ionic_rdma: Driver Max Version %u\n",
-> +                             IONIC_MAX_RDMA_VERSION);
-> +               return rc;
-> +       }
-> +
-> +       return 0;
-> +}
-> diff --git a/drivers/infiniband/hw/ionic/ionic_lif_cfg.h b/drivers/infini=
-band/hw/ionic/ionic_lif_cfg.h
-> new file mode 100644
-> index 000000000000..b095637c54cf
-> --- /dev/null
-> +++ b/drivers/infiniband/hw/ionic/ionic_lif_cfg.h
-> @@ -0,0 +1,65 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Copyright (C) 2018-2025, Advanced Micro Devices, Inc. */
-> +
-> +#ifndef _IONIC_LIF_CFG_H_
-> +
-> +#define IONIC_VERSION(a, b) (((a) << 16) + ((b) << 8))
-> +#define IONIC_PAGE_SIZE_SUPPORTED      0x40201000 /* 4kb, 2Mb, 1Gb */
-> +
-> +#define IONIC_EXPDB_64B_WQE    BIT(0)
-> +#define IONIC_EXPDB_128B_WQE   BIT(1)
-> +#define IONIC_EXPDB_256B_WQE   BIT(2)
-> +#define IONIC_EXPDB_512B_WQE   BIT(3)
-> +
-> +struct ionic_lif_cfg {
-> +       struct device *hwdev;
-> +       struct ionic_lif *lif;
-> +
-> +       int lif_index;
-> +       int lif_hw_index;
-> +
-> +       u32 dbid;
-> +       int dbid_count;
-> +       u64 __iomem *dbpage;
-> +       struct ionic_intr __iomem *intr_ctrl;
-> +       phys_addr_t db_phys;
-> +
-> +       u64 page_size_supported;
-> +       u32 npts_per_lif;
-> +       u32 nmrs_per_lif;
-> +       u32 nahs_per_lif;
-> +
-> +       u32 aq_base;
-> +       u32 cq_base;
-> +       u32 eq_base;
-> +
-> +       int aq_count;
-> +       int eq_count;
-> +       int cq_count;
-> +       int qp_count;
-> +
-> +       u16 stats_type;
-> +       u8 aq_qtype;
-> +       u8 sq_qtype;
-> +       u8 rq_qtype;
-> +       u8 cq_qtype;
-> +       u8 eq_qtype;
-> +
-> +       u8 udma_count;
-> +       u8 udma_qgrp_shift;
-> +
-> +       u8 rdma_version;
-> +       u8 qp_opcodes;
-> +       u8 admin_opcodes;
-> +
-> +       u8 max_stride;
-> +       bool sq_expdb;
-> +       bool rq_expdb;
-> +       u8 expdb_mask;
-> +};
-> +
-> +int ionic_version_check(const struct device *dev, struct ionic_lif *lif)=
-;
-> +void ionic_fill_lif_cfg(struct ionic_lif *lif, struct ionic_lif_cfg *cfg=
-);
-> +struct net_device *ionic_lif_netdev(struct ionic_lif *lif);
-> +
-> +#endif /* _IONIC_LIF_CFG_H_ */
-> --
-> 2.34.1
->
->
+That's what I used for rmap functions. *Maybe* folio+idx is better: 
+might avoid having to lookup the page in some cases (probably in the 
+future).
 
+-- 
+Cheers,
 
---=20
-Regards,
-Kalesh AP
+David / dhildenb
 
---0000000000003f22f006349aea7a
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBWowggRSoAMCAQICDDfBRQmwNSI92mit0zANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAwODI5NTZaFw0yNTA5MTAwODI5NTZaMIGi
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xHzAdBgNVBAMTFkthbGVzaCBBbmFra3VyIFB1cmF5aWwxMjAw
-BgkqhkiG9w0BCQEWI2thbGVzaC1hbmFra3VyLnB1cmF5aWxAYnJvYWRjb20uY29tMIIBIjANBgkq
-hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnv1Reaeezfr6NEmg3xZlh4cz9m7QCN13+j4z1scrX+b
-JfnV8xITT5yvwdQv3R3p7nzD/t29lTRWK3wjodUd2nImo6vBaH3JbDwleIjIWhDXLNZ4u7WIXYwx
-aQ8lYCdKXRsHXgGPY0+zSx9ddpqHZJlHwcvas3oKnQN9WgzZtsM7A8SJefWkNvkcOtef6bL8Ew+3
-FBfXmtsPL9I2vita8gkYzunj9Nu2IM+MnsP7V/+Coy/yZDtFJHp30hDnYGzuOhJchDF9/eASvE8T
-T1xqJODKM9xn5xXB1qezadfdgUs8k8QAYyP/oVBafF9uqDudL6otcBnziyDBQdFCuAQN7wIDAQAB
-o4IB5DCCAeAwDgYDVR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZC
-aHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJj
-YTIwMjAuY3J0MEEGCCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3Iz
-cGVyc29uYWxzaWduMmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcC
-ARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNV
-HR8EQjBAMD6gPKA6hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNp
-Z24yY2EyMDIwLmNybDAuBgNVHREEJzAlgSNrYWxlc2gtYW5ha2t1ci5wdXJheWlsQGJyb2FkY29t
-LmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGP
-zzAdBgNVHQ4EFgQUI3+tdStI+ABRGSqksMsiCmO9uDAwDQYJKoZIhvcNAQELBQADggEBAGfe1o9b
-4wUud0FMjb/FNdc433meL15npjdYWUeioHdlCGB5UvEaMGu71QysfoDOfUNeyO9YKp0h0fm7clvo
-cBqeWe4CPv9TQbmLEtXKdEpj5kFZBGmav69mGTlu1A9KDQW3y0CDzCPG2Fdm4s73PnkwvemRk9E2
-u9/kcZ8KWVeS+xq+XZ78kGTKQ6Wii3dMK/EHQhnDfidadoN/n+x2ySC8yyDNvy81BocnblQzvbuB
-a30CvRuhokNO6Jzh7ZFtjKVMzYas3oo6HXgA+slRszMu4pc+fRPO41FHjeDM76e6P5OnthhnD+NY
-x6xokUN65DN1bn2MkeNs0nQpizDqd0QxggJgMIICXAIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYD
-VQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25h
-bFNpZ24gMiBDQSAyMDIwAgw3wUUJsDUiPdpordMwDQYJYIZIAWUDBAIBBQCggccwLwYJKoZIhvcN
-AQkEMSIEIDgR1CvKUA/YJ9TaZgbXzZS0o/ciG1B2oj/8Su/KrNyBMBgGCSqGSIb3DQEJAzELBgkq
-hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDUwODA3MzY1OVowXAYJKoZIhvcNAQkPMU8wTTAL
-BglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG
-9w0BAQcwCwYJYIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIBABk5PFg28mfGH4Yogmgxa1whmS1z
-GsieMJFtSKO3NPCYcTEfRrh/HvoXgxW+7cNtNO0fp3+MZe4Y8SSGeDza7VnvZyMQEQvKdue7pEw/
-PDFELuNUiqPDAQh/3n/R6kpTDECPQ2MV5IM7hRUgibfMQCyKBnCPrD9Ixdsto8Q3YX0k+JMDR1aN
-+Bm3G1dEI8P4/WgwpebdbuYRVTZNAjlWtfg+j8W32NnuFUXKBG9p7cP6qBreGkgGJjirV3d5Hieh
-IvkWILfMh2KymQelQB9abh2bVVWAbmkt+yG49Wx3CqXVeOll4KbLYip1reFPIBQAebv7YoZvfKcR
-DJAeDEy0hKo=
---0000000000003f22f006349aea7a--
