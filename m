@@ -1,465 +1,288 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629A7215F46
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1236F227B95
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746711328; cv=none; b=GuZfq6i3mljeU9tAbuHgxr7RRUX4lSC5oSB9z0OCAuVeULbUnTzBoZZEPaw56N3MMJ4S36XZhtFjQMiHFyRu/OR/6/W4+asYxdCRRCoxo92wA9OQVohy2eFnrmnKP5oPvCswt3UOCWW297PNKRzc6ho4NSZ0ybhAcRK0WxFHFVs=
+	t=1746711348; cv=none; b=RKLR6xHFdX2n7kXuM9GurM4FaSFEakI5GHKuHeGtCv67zhIYCtqbKRx6y7uyVSXSAVZpTwtdN6SKc68LTP9Zs36ExzhSd9ss4IMH4jl1UMvQTvfVG3X+ZwN6RK9YTb7iwEezl+wInRJXPR7bQqB7NS+Z0FdsFQydeeCwhIReaqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746711328; c=relaxed/simple;
-	bh=So4f+jJaLPqD+D7bvApVfhV4eSpPtqn3tyyYtKpK7mc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CB/B2bKqL+uCvtUMDVIDn17jSqvCuxNhrjpuSz/A3Cryc62Mjg5BMr2hgXcYRqAIPrKK6umGNoNj9uOPSh4mNhXOzW8ppVqTIlFmPV6mI8645aLAAu4/z1A41Q8lCWMFsXhTQwJCdgHIcMtpk+pZBxnZ+PyLkPjwi52pkzIgAhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WEVtiQVx; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746711348; c=relaxed/simple;
+	bh=oCPXCYBLis5NqUUv9gRdM5qCAERiXaTaexkD+erWwhw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Pu7NOnN/Cwlitu2idlIbenGntpLCJ636Gka5wzFKoIqlLeCff9b5/8672ryQiSIWNUw2VJ3FmXgzrzFpPC+sRao4VWwuXlDXmZ6PjmOGyLPOQoVG/bmVNd18SZL7BDpFXscD+pSgVEfzfDYd0A05GExX8+0JbMZyr1FZooorDPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UbIWQJE8; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WEVtiQVx"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22e033b0f1aso10718085ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 06:35:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UbIWQJE8"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-741b3e37a1eso274094b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 06:35:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746711325; x=1747316125; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=umXRL51odZ+U28adyG5IqbnLQh785NI+zLPkHmpwwsU=;
-        b=WEVtiQVx5EGc2ArbBqlRweIG7s6180by/wZtX6eQz2K4kLwqCxUGQnghG3l+eitmdn
-         yTJ4onq7O2aH3mtMKJsGgXPO7xuy/nONg8IiYgoxsSeBJMz9vqcLyx8zru4lucChgYAv
-         TrGcJSA/PuaH4hAV1hp8m9un/50SD30TM8z1XRMhO2lO/JnoWHRuUMjkHqDrDrIwb6L1
-         1wK3VOpqMz5/aeFIISAR3jb5utDaZ0JRL5L6T5w/OAvwauMO6s0Hajzc/RAQMLawnrdQ
-         axovyqMRTNSnFUz5kApbko+nm2jLwm53IlyXrgS19yDcA/WPpG++ryf4Ca1xvZnac20j
-         0q0Q==
+        d=gmail.com; s=20230601; t=1746711346; x=1747316146; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=s5cd1JuMxkuWCim9GZfUS6E7KDoCCe0+9iFH893TFEo=;
+        b=UbIWQJE8lam4gdMRhIxsr0b0g8hNcEyXK1QHvO/OOIFRz+OAU4OYvk/pPAHaawN05N
+         YBTviuRHOYxj60QVWdeiUbOy5e1p2TG9jdhbSm97HgvZNxQFu5qOm1CNa35FcPHDdYSF
+         j/hDykmYJ8+7G/tU580EYhKLN5z8aslZy+Wemyfc6nS1gxx4CgObLfTAhGIIy9Y3vy3u
+         kqHSDf21lLHCx40XrahLUIbwz1npp45wp8pzE3IiQdsdtJf+DN1H4ttp6+rySCkK2CBG
+         3hipXsUcKcgh+qmMrazM1M7Hz9cL4Jg4j+4h1Gsa012+9WYFnfiJvS2I7STitSBu4l1f
+         zvWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746711325; x=1747316125;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=umXRL51odZ+U28adyG5IqbnLQh785NI+zLPkHmpwwsU=;
-        b=tvM2dfjRB0QVGbbjidHttWfVQjk8ZuSMZKqYrL/86CNwWiRjF64k+JGAV9XFz6ttve
-         cLtlc+rFJBdMSSzQYwOc/OKhi4Hft3lhHSJ5U+s4OW/yVgbKW6vPTwurIMHzg45rRzma
-         B6GxrRutmn63JkR+zwtlMk6163dOWANLNT1CT1p17qaZ3poJm3JB5DZyma5vtBLw/0sh
-         AzcvZfZmnwugjpwVs/I6OgRInz/dNs2grFd+kSFweVv96wFn3IQVOdHSKF5QUPDAgfiP
-         zzdf9jgfkQHNIc7wdU+B5kk9w8jhlFjzRk1nRmOqGEWnz/HuNJHpTG7l22umB9b+3zEF
-         sb9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUUxhQJ+tLZJNZsXpF0ly3TqAnRTqaOP883LuXGxuG0/D3t0TDRixMkGNLemkUhUOQ6reR4D6atKGyC2aA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtbuVUSfVj8AWMr1dmGmuG9CI8HGqMBVNoCz3BvhzO20IXJSpT
-	8ZavIcCaARY3zm1GHIwbBW27C0Fc5Ht52k2cizWwkArxPTSzjhL3crTB/kMAgPh2PFW6gjOkLvq
-	DNA==
-X-Google-Smtp-Source: AGHT+IGujTTizBC2NO5GtsoKrNA2DFFypxeWr+gCQllfmd13bBZQH9bmWcxSzOrS7mlhLhKrB6brjIgvzMA=
-X-Received: from plrr12.prod.google.com ([2002:a17:902:c60c:b0:223:225b:3d83])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:fa7:b0:220:d257:cdbd
- with SMTP id d9443c01a7336-22e8a7fe95cmr50782475ad.48.1746711325460; Thu, 08
- May 2025 06:35:25 -0700 (PDT)
-Date: Thu, 8 May 2025 06:35:22 -0700
-In-Reply-To: <aBvmxjxUrXEBa3sc@google.com>
+        d=1e100.net; s=20230601; t=1746711346; x=1747316146;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s5cd1JuMxkuWCim9GZfUS6E7KDoCCe0+9iFH893TFEo=;
+        b=GsbyGVTNOlaUIt/ZmIWi0iPxRSXqCpouQCjdMOtcF0UY/eTx+g1mSXirjQL4XYpDKR
+         f4idjEeRxgNtCxRfbO7pMMxWZQZqB0uTXZbsEjhvd3SucH9+cxXBTTnjAowQEvgocwMg
+         j/8yYFo0eEXbTKt6Mk4YCRlUk8Ifn2gtRFAXMbB9dmpvrUcFIlRnuLcEc5u8Ev9ZwgBQ
+         I6bNVwhl4Oya+QcCDMQEtLE9fwt0qlOvY0jdtdo8XHslsTKOzgLADVwAaOOBLjqMPwLb
+         v539p5UkFzQM1OqwyeQ4plxn2/N/UDkg+upxQAl+dd6YTOj19xQa8bEpiF9J/3JLh0z1
+         cqrg==
+X-Forwarded-Encrypted: i=1; AJvYcCWzdHryKeZ5kGAb8JXA5sGIDtkNJcV0HkA3hRvWpiMlMvioUIbU3II0T3TUWCkY3IKX5GXlCpLbH8HDEJY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfIIhn5KyRdz5O293f8DaV+LOkGw5uim/Za3Z891nM9KcsiSB+
+	a0Dq4RNLPkdUNKkQnC0eFaVFJuSNgUnclcqWKjAV6Ax0WJbddQevrgVNAFa9XcqEkvFiPddbg8S
+	jf72C8wZGHUno9qiUhf+a5KQJ8kJfTKT0l6M=
+X-Gm-Gg: ASbGncuLT7OQeLhlC3/OLdXyCBLhaYJR+PgcmkJk4SvZcI4A+Bv94JqewLy9dICaabb
+	XW5qRzlvBVYga8zEhryP7Nl95u1gYonNFNdCUSj1WWihQv/XJ4DxkVHSZS/AB+xz4hp/8J9iAKc
+	VPM3lKRydTes7EOgtU/qUNgrgV
+X-Google-Smtp-Source: AGHT+IE56KfqX3gxisy1zZ+EZNu7DWCHUYLZbZ7arwvjCNqBZsK/byADttzPPnDqlOOI/RQ2bPzL6mIsBpNRCSIRZIU=
+X-Received: by 2002:a05:6a20:394d:b0:1f5:709d:e0cc with SMTP id
+ adf61e73a8af0-2148d63dcb9mr12759568637.40.1746711346123; Thu, 08 May 2025
+ 06:35:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250416002546.3300893-1-mlevitsk@redhat.com> <20250416002546.3300893-4-mlevitsk@redhat.com>
- <aAgpD_5BI6ZcCN29@google.com> <2b1ec570a37992cdfa2edad325e53e0592d696c8.camel@redhat.com>
- <71af8435d2085b3f969cb3e73cff5bfacd243819.camel@redhat.com> <aBvmxjxUrXEBa3sc@google.com>
-Message-ID: <aByzGilzBiTa-43C@google.com>
-Subject: Re: [PATCH 3/3] x86: KVM: VMX: preserve host's DEBUGCTLMSR_FREEZE_IN_SMM
- while in the guest mode
-From: Sean Christopherson <seanjc@google.com>
-To: mlevitsk@redhat.com
-Cc: kvm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: multipart/mixed; charset="UTF-8"; boundary="MlINIt/uc2Bhy9cL"
+MIME-Version: 1.0
+References: <20250508065558.149091-1-aha310510@gmail.com> <aByo6wgsvkxTg1fI@pc636>
+In-Reply-To: <aByo6wgsvkxTg1fI@pc636>
+From: Jeongjun Park <aha310510@gmail.com>
+Date: Thu, 8 May 2025 22:35:37 +0900
+X-Gm-Features: ATxdqUGmB4SFgx7KWzfPXB2ytFLx8C_yqKkywCIeBIwxDqEjIseu0ZDsugTUaOI
+Message-ID: <CAO9qdTHWvTafDrdkyXh1k7ix0=3_HnVYuAzOhg3x-iP8dv0NmA@mail.gmail.com>
+Subject: Re: [PATCH v4] mm/vmalloc: fix data race in show_numa_info()
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: akpm@linux-foundation.org, edumazet@google.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Uladzislau Rezki <urezki@gmail.com> wrote:
+>
+> On Thu, May 08, 2025 at 03:55:58PM +0900, Jeongjun Park wrote:
+> > The following data-race was found in show_numa_info():
+> >
+> > ==================================================================
+> > BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
+> >
+> > read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
+> >  show_numa_info mm/vmalloc.c:4936 [inline]
+> >  vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
+> >  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+> >  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+> > ....
+> >
+> > write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
+> >  show_numa_info mm/vmalloc.c:4934 [inline]
+> >  vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
+> >  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+> >  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+> > ....
+> >
+> > value changed: 0x0000008f -> 0x00000000
+> > ==================================================================
+> >
+> > According to this report,there is a read/write data-race because m->private
+> > is accessible to multiple CPUs. To fix this, instead of allocating the heap
+> > in proc_vmalloc_init() and passing the heap address to m->private,
+> > vmalloc_info_show() should allocate the heap.
+> >
+> > Fixes: a47a126ad5ea ("vmallocinfo: add NUMA information")
+> > Suggested-by: Eric Dumazet <edumazet@google.com>
+> > Suggested-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> > Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+> > ---
+> > v4: Change the way counters array heap is allocated, per Andrew Morton's suggestion.
+> >     And fix it to call smp_rmb() in the correct location.
+> > - Link to v3: https://lore.kernel.org/all/20250507142552.9446-1-aha310510@gmail.com/
+> > v3: Following Uladzislau Rezki's suggestion, we check v->flags beforehand
+> >     to avoid printing uninitialized members of vm_struct.
+> > - Link to v2: https://lore.kernel.org/all/20250506082520.84153-1-aha310510@gmail.com/
+> > v2: Refactoring some functions and fix patch as per Eric Dumazet suggestion
+> > - Link to v1: https://lore.kernel.org/all/20250505171948.24410-1-aha310510@gmail.com/
+> > ---
+> >  mm/vmalloc.c | 61 ++++++++++++++++++++++++++++------------------------
+> >  1 file changed, 33 insertions(+), 28 deletions(-)
+> >
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index 3ed720a787ec..112df5a86106 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -3100,7 +3100,7 @@ static void clear_vm_uninitialized_flag(struct vm_struct *vm)
+> >       /*
+> >        * Before removing VM_UNINITIALIZED,
+> >        * we should make sure that vm has proper values.
+> > -      * Pair with smp_rmb() in show_numa_info().
+> > +      * Pair with smp_rmb() in vread_iter() and vmalloc_info_show().
+> >        */
+> >       smp_wmb();
+> >       vm->flags &= ~VM_UNINITIALIZED;
+> > @@ -4914,28 +4914,29 @@ bool vmalloc_dump_obj(void *object)
+> >  #endif
+> >
+> >  #ifdef CONFIG_PROC_FS
+> > -static void show_numa_info(struct seq_file *m, struct vm_struct *v)
+> > -{
+> > -     if (IS_ENABLED(CONFIG_NUMA)) {
+> > -             unsigned int nr, *counters = m->private;
+> > -             unsigned int step = 1U << vm_area_page_order(v);
+> >
+> > -             if (!counters)
+> > -                     return;
+> > +/*
+> > + * Print number of pages allocated on each memory node.
+> > + *
+> > + * This function can only be called if CONFIG_NUMA is enabled
+> > + * and VM_UNINITIALIZED bit in v->flags is disabled.
+> > + */
+> > +static void show_numa_info(struct seq_file *m, struct vm_struct *v,
+> > +                              unsigned int *counters)
+> > +{
+> > +     unsigned int nr;
+> > +     unsigned int step = 1U << vm_area_page_order(v);
+> >
+> > -             if (v->flags & VM_UNINITIALIZED)
+> > -                     return;
+> > -             /* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
+> > -             smp_rmb();
+> > +     if (!counters)
+> > +             return;
+> >
+> > -             memset(counters, 0, nr_node_ids * sizeof(unsigned int));
+> > +     memset(counters, 0, nr_node_ids * sizeof(unsigned int));
+> >
+> > -             for (nr = 0; nr < v->nr_pages; nr += step)
+> > -                     counters[page_to_nid(v->pages[nr])] += step;
+> > -             for_each_node_state(nr, N_HIGH_MEMORY)
+> > -                     if (counters[nr])
+> > -                             seq_printf(m, " N%u=%u", nr, counters[nr]);
+> > -     }
+> > +     for (nr = 0; nr < v->nr_pages; nr += step)
+> > +             counters[page_to_nid(v->pages[nr])] += step;
+> > +     for_each_node_state(nr, N_HIGH_MEMORY)
+> > +             if (counters[nr])
+> > +                     seq_printf(m, " N%u=%u", nr, counters[nr]);
+> >  }
+> >
+> >  static void show_purge_info(struct seq_file *m)
+> > @@ -4962,8 +4963,11 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+> >       struct vmap_node *vn;
+> >       struct vmap_area *va;
+> >       struct vm_struct *v;
+> > +     unsigned int *counters = NULL;
+> >
+> Setting NULL can be dropped.
+>
+> >       int i;
+> >
+> > +     counters = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
+> "if (IS_ENABLED(CONFIG_NUMA))"? If no NUMA, allocating and freeing sounds
+> like without any reason.
+>
+> > +
+> >       for (i = 0; i < nr_vmap_nodes; i++) {
+> >               vn = &vmap_nodes[i];
+> >
+> > @@ -4979,6 +4983,11 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+> >                       }
+> >
+> >                       v = va->vm;
+> > +                     if (v->flags & VM_UNINITIALIZED)
+> > +                             continue;
+> > +
+> > +                     /* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
+> > +                     smp_rmb();
+> >
+> >                       seq_printf(m, "0x%pK-0x%pK %7ld",
+> >                               v->addr, v->addr + v->size, v->size);
+> > @@ -5013,7 +5022,9 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+> >                       if (is_vmalloc_addr(v->pages))
+> >                               seq_puts(m, " vpages");
+> >
+> > -                     show_numa_info(m, v);
+> > +                     if (IS_ENABLED(CONFIG_NUMA))
+> > +                             show_numa_info(m, v, counters);
+> > +
+> >                       seq_putc(m, '\n');
+> >               }
+> >               spin_unlock(&vn->busy.lock);
+> > @@ -5023,19 +5034,13 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+> >        * As a final step, dump "unpurged" areas.
+> >        */
+> >       show_purge_info(m);
+> > +     kfree(counters);
+> >
+> Maybe check for NULL before and IS_ENABLED(CONFIG_NUMA)?
+>
+> --
+> Uladzislau Rezki
 
---MlINIt/uc2Bhy9cL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hmm....then I think patching vmalloc_info_show() like this should
+work.
 
-On Wed, May 07, 2025, Sean Christopherson wrote:
-> On Thu, May 01, 2025, mlevitsk@redhat.com wrote:
-> > Any ideas on how to solve this then? Since currently its the common code that
-> > reads the current value of the MSR_IA32_DEBUGCTLMSR and it doesn't leave any
-> > indication about if it changed I can do either
-> > 
-> > 1. store old value as well, something like 'vcpu->arch.host_debugctl_old' Ugly IMHO.
-> > 
-> > 2. add DEBUG_CTL to the set of the 'dirty' registers, e.g add new bit for kvm_register_mark_dirty
-> > It looks a bit overkill to me
-> > 
-> > 3. Add new x86 callback for something like .sync_debugctl(). I vote for this option.
-> > 
-> > What do you think/prefer?
-> 
-> I was going to say #3 as well, but I think I have a better idea.
-> 
-> DR6 has a similar problem; the guest's value needs to be loaded into hardware,
-> but only somewhat rarely, and more importantly, never on a fastpath reentry.
-> 
-> Forced immediate exits also have a similar need: some control logic in common x86
-> needs instruct kvm_x86_ops.vcpu_run() to do something.
-> 
-> Unless I've misread the DEBUGCTLMSR situation, in all cases, common x86 only needs
-> to a single flag to tell vendor code to do something.  The payload for that action
-> is already available.
-> 
-> So rather than add a bunch of kvm_x86_ops hooks that are only called immediately
-> before kvm_x86_ops.vcpu_run(), expand @req_immediate_exit into a bitmap of flags
-> to communicate what works needs to be done, without having to resort to a field
-> in kvm_vcpu_arch that isn't actually persistent.
-> 
-> The attached patches are relatively lightly tested, but the DR6 tests from the
-> recent bug[*] pass, so hopefully they're correct?
-> 
-> The downside with this approach is that it would be difficult to backport to LTS
-> kernels, but given how long this has been a problem, I'm not super concerned about
-> optimizing for backports.
-> 
-> If they look ok, feel free to include them in the next version.  Or I can post
-> them separately if you want.
-
-And of course I forgot to attach the patches...
-
---MlINIt/uc2Bhy9cL
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0001-KVM-x86-Convert-vcpu_run-s-immediate-exit-param-into.patch"
-
-From edaa5525a228bc8711c4cefca391b436e6b18803 Mon Sep 17 00:00:00 2001
-From: Sean Christopherson <seanjc@google.com>
-Date: Wed, 7 May 2025 13:46:03 -0700
-Subject: [PATCH 1/2] KVM: x86: Convert vcpu_run()'s immediate exit param into
- a generic bitmap
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/include/asm/kvm_host.h |  6 +++++-
- arch/x86/kvm/svm/svm.c          |  4 ++--
- arch/x86/kvm/vmx/main.c         |  6 +++---
- arch/x86/kvm/vmx/tdx.c          |  3 ++-
- arch/x86/kvm/vmx/vmx.c          |  3 ++-
- arch/x86/kvm/vmx/x86_ops.h      |  4 ++--
- arch/x86/kvm/x86.c              | 11 ++++++++---
- 7 files changed, 24 insertions(+), 13 deletions(-)
+ mm/vmalloc.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 4c27f213ea55..62137a777f33 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1673,6 +1673,10 @@ static inline u16 kvm_lapic_irq_dest_mode(bool dest_mode_logical)
- 	return dest_mode_logical ? APIC_DEST_LOGICAL : APIC_DEST_PHYSICAL;
- }
- 
-+enum kvm_x86_run_flags {
-+	KVM_RUN_FORCE_IMMEDIATE_EXIT	= BIT(0),
-+};
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 3ed720a787ec..b60355256211 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -4962,8 +4962,12 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+    struct vmap_node *vn;
+    struct vmap_area *va;
+    struct vm_struct *v;
++   unsigned int *counters = NULL;
+    int i;
+
++   if (IS_ENABLED(CONFIG_NUMA))
++       counters = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
 +
- struct kvm_x86_ops {
- 	const char *name;
- 
-@@ -1754,7 +1758,7 @@ struct kvm_x86_ops {
- 
- 	int (*vcpu_pre_run)(struct kvm_vcpu *vcpu);
- 	enum exit_fastpath_completion (*vcpu_run)(struct kvm_vcpu *vcpu,
--						  bool force_immediate_exit);
-+						  u64 run_flags);
- 	int (*handle_exit)(struct kvm_vcpu *vcpu,
- 		enum exit_fastpath_completion exit_fastpath);
- 	int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 5f8c571cbe7c..79b14fe4e3d8 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -4311,9 +4311,9 @@ static noinstr void svm_vcpu_enter_exit(struct kvm_vcpu *vcpu, bool spec_ctrl_in
- 	guest_state_exit_irqoff();
- }
- 
--static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu,
--					  bool force_immediate_exit)
-+static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
- {
-+	bool force_immediate_exit = run_flags & KVM_RUN_FORCE_IMMEDIATE_EXIT;
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 	bool spec_ctrl_intercepted = msr_write_intercepted(vcpu, MSR_IA32_SPEC_CTRL);
- 
-diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index d1e02e567b57..fef3e3803707 100644
---- a/arch/x86/kvm/vmx/main.c
-+++ b/arch/x86/kvm/vmx/main.c
-@@ -175,12 +175,12 @@ static int vt_vcpu_pre_run(struct kvm_vcpu *vcpu)
- 	return vmx_vcpu_pre_run(vcpu);
- }
- 
--static fastpath_t vt_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
-+static fastpath_t vt_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
- {
- 	if (is_td_vcpu(vcpu))
--		return tdx_vcpu_run(vcpu, force_immediate_exit);
-+		return tdx_vcpu_run(vcpu, run_flags);
- 
--	return vmx_vcpu_run(vcpu, force_immediate_exit);
-+	return vmx_vcpu_run(vcpu, run_flags);
- }
- 
- static int vt_handle_exit(struct kvm_vcpu *vcpu,
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index b952bc673271..7dbfad28debc 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1020,8 +1020,9 @@ static void tdx_load_host_xsave_state(struct kvm_vcpu *vcpu)
- 				DEBUGCTLMSR_FREEZE_PERFMON_ON_PMI | \
- 				DEBUGCTLMSR_FREEZE_IN_SMM)
- 
--fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
-+fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
- {
-+	bool force_immediate_exit = run_flags & KVM_RUN_FORCE_IMMEDIATE_EXIT;
- 	struct vcpu_tdx *tdx = to_tdx(vcpu);
- 	struct vcpu_vt *vt = to_vt(vcpu);
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 9ff00ae9f05a..e66f5ffa8716 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7317,8 +7317,9 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
- 	guest_state_exit_irqoff();
- }
- 
--fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
-+fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
- {
-+	bool force_immediate_exit = run_flags & KVM_RUN_FORCE_IMMEDIATE_EXIT;
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	unsigned long cr3, cr4;
- 
-diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
-index b4596f651232..0b4f5c5558d0 100644
---- a/arch/x86/kvm/vmx/x86_ops.h
-+++ b/arch/x86/kvm/vmx/x86_ops.h
-@@ -21,7 +21,7 @@ void vmx_vm_destroy(struct kvm *kvm);
- int vmx_vcpu_precreate(struct kvm *kvm);
- int vmx_vcpu_create(struct kvm_vcpu *vcpu);
- int vmx_vcpu_pre_run(struct kvm_vcpu *vcpu);
--fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit);
-+fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags);
- void vmx_vcpu_free(struct kvm_vcpu *vcpu);
- void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event);
- void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
-@@ -133,7 +133,7 @@ void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event);
- void tdx_vcpu_free(struct kvm_vcpu *vcpu);
- void tdx_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
- int tdx_vcpu_pre_run(struct kvm_vcpu *vcpu);
--fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit);
-+fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags);
- void tdx_prepare_switch_to_guest(struct kvm_vcpu *vcpu);
- void tdx_vcpu_put(struct kvm_vcpu *vcpu);
- bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 75c0a934556d..d2ad83621595 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -10777,6 +10777,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		dm_request_for_irq_injection(vcpu) &&
- 		kvm_cpu_accept_dm_intr(vcpu);
- 	fastpath_t exit_fastpath;
-+	u64 run_flags;
- 
- 	bool req_immediate_exit = false;
- 
-@@ -11021,8 +11022,11 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		goto cancel_injection;
- 	}
- 
--	if (req_immediate_exit)
-+	run_flags = 0;
-+	if (req_immediate_exit) {
-+		run_flags |= KVM_RUN_FORCE_IMMEDIATE_EXIT;
- 		kvm_make_request(KVM_REQ_EVENT, vcpu);
-+	}
- 
- 	fpregs_assert_state_consistent();
- 	if (test_thread_flag(TIF_NEED_FPU_LOAD))
-@@ -11059,8 +11063,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		WARN_ON_ONCE((kvm_vcpu_apicv_activated(vcpu) != kvm_vcpu_apicv_active(vcpu)) &&
- 			     (kvm_get_apic_mode(vcpu) != LAPIC_MODE_DISABLED));
- 
--		exit_fastpath = kvm_x86_call(vcpu_run)(vcpu,
--						       req_immediate_exit);
-+		exit_fastpath = kvm_x86_call(vcpu_run)(vcpu, run_flags);
- 		if (likely(exit_fastpath != EXIT_FASTPATH_REENTER_GUEST))
- 			break;
- 
-@@ -11072,6 +11075,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 			break;
- 		}
- 
-+		run_flags = 0;
+    for (i = 0; i < nr_vmap_nodes; i++) {
+        vn = &vmap_nodes[i];
+
+@@ -5013,7 +5017,9 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+            if (is_vmalloc_addr(v->pages))
+                seq_puts(m, " vpages");
+
+-           show_numa_info(m, v);
++           if (counters)
++               show_numa_info(m, v, counters);
 +
- 		/* Note, VM-Exits that go down the "slow" path are accounted below. */
- 		++vcpu->stat.exits;
- 	}
-
-base-commit: 94da2b969670d100730b5537f20523e49e989920
--- 
-2.49.0.1015.ga840276032-goog
-
-
---MlINIt/uc2Bhy9cL
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0002-KVM-x86-Drop-kvm_x86_ops.set_dr6-in-favor-of-a-new-K.patch"
-
-From fdb106317c1a743f79014157c13728ea021ad0b1 Mon Sep 17 00:00:00 2001
-From: Sean Christopherson <seanjc@google.com>
-Date: Wed, 7 May 2025 14:00:39 -0700
-Subject: [PATCH 2/2] KVM: x86: Drop kvm_x86_ops.set_dr6() in favor of a new
- KVM_RUN flag
-
-Instruct vendor code to load the guest's DR6 into hardware via a new
-KVM_RUN flag, and remove kvm_x86_ops.set_dr6(), whose sole purpose was to
-load vcpu->arch.dr6 into hardware when DR6 can be read/written directly
-by the guest.
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/include/asm/kvm-x86-ops.h |  1 -
- arch/x86/include/asm/kvm_host.h    |  2 +-
- arch/x86/kvm/svm/svm.c             | 10 ++++++----
- arch/x86/kvm/vmx/main.c            |  9 ---------
- arch/x86/kvm/vmx/vmx.c             |  9 +++------
- arch/x86/kvm/x86.c                 |  2 +-
- 6 files changed, 11 insertions(+), 22 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
-index 8d50e3e0a19b..9e0c37ea267e 100644
---- a/arch/x86/include/asm/kvm-x86-ops.h
-+++ b/arch/x86/include/asm/kvm-x86-ops.h
-@@ -49,7 +49,6 @@ KVM_X86_OP(set_idt)
- KVM_X86_OP(get_gdt)
- KVM_X86_OP(set_gdt)
- KVM_X86_OP(sync_dirty_debug_regs)
--KVM_X86_OP(set_dr6)
- KVM_X86_OP(set_dr7)
- KVM_X86_OP(cache_reg)
- KVM_X86_OP(get_rflags)
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 62137a777f33..18be7835fb73 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1675,6 +1675,7 @@ static inline u16 kvm_lapic_irq_dest_mode(bool dest_mode_logical)
- 
- enum kvm_x86_run_flags {
- 	KVM_RUN_FORCE_IMMEDIATE_EXIT	= BIT(0),
-+	KVM_RUN_LOAD_GUEST_DR6		= BIT(1),
- };
- 
- struct kvm_x86_ops {
-@@ -1727,7 +1728,6 @@ struct kvm_x86_ops {
- 	void (*get_gdt)(struct kvm_vcpu *vcpu, struct desc_ptr *dt);
- 	void (*set_gdt)(struct kvm_vcpu *vcpu, struct desc_ptr *dt);
- 	void (*sync_dirty_debug_regs)(struct kvm_vcpu *vcpu);
--	void (*set_dr6)(struct kvm_vcpu *vcpu, unsigned long value);
- 	void (*set_dr7)(struct kvm_vcpu *vcpu, unsigned long value);
- 	void (*cache_reg)(struct kvm_vcpu *vcpu, enum kvm_reg reg);
- 	unsigned long (*get_rflags)(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 79b14fe4e3d8..ffa10c448efa 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -4360,10 +4360,13 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
- 	svm_hv_update_vp_id(svm->vmcb, vcpu);
- 
- 	/*
--	 * Run with all-zero DR6 unless needed, so that we can get the exact cause
--	 * of a #DB.
-+	 * Run with all-zero DR6 unless the guest can write DR6 freely, so that
-+	 * KVM can get the exact cause of a #DB.  Note, loading guest DR6 from
-+	 * KVM's snapshot is only necessary when DR accesses won't exit.
- 	 */
--	if (likely(!(vcpu->arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT)))
-+	if (unlikely(run_flags & KVM_RUN_LOAD_GUEST_DR6))
-+		svm_set_dr6(vcpu, vcpu->arch.dr6);
-+	else if (likely(!(vcpu->arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT)))
- 		svm_set_dr6(vcpu, DR6_ACTIVE_LOW);
- 
- 	clgi();
-@@ -5171,7 +5174,6 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
- 	.set_idt = svm_set_idt,
- 	.get_gdt = svm_get_gdt,
- 	.set_gdt = svm_set_gdt,
--	.set_dr6 = svm_set_dr6,
- 	.set_dr7 = svm_set_dr7,
- 	.sync_dirty_debug_regs = svm_sync_dirty_debug_regs,
- 	.cache_reg = svm_cache_reg,
-diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index fef3e3803707..c85cbce6d2f6 100644
---- a/arch/x86/kvm/vmx/main.c
-+++ b/arch/x86/kvm/vmx/main.c
-@@ -489,14 +489,6 @@ static void vt_set_gdt(struct kvm_vcpu *vcpu, struct desc_ptr *dt)
- 	vmx_set_gdt(vcpu, dt);
+            seq_putc(m, '\n');
+        }
+        spin_unlock(&vn->busy.lock);
+@@ -5023,6 +5029,7 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+     * As a final step, dump "unpurged" areas.
+     */
+    show_purge_info(m);
++   kfree(counters);
+    return 0;
  }
- 
--static void vt_set_dr6(struct kvm_vcpu *vcpu, unsigned long val)
--{
--	if (is_td_vcpu(vcpu))
--		return;
--
--	vmx_set_dr6(vcpu, val);
--}
--
- static void vt_set_dr7(struct kvm_vcpu *vcpu, unsigned long val)
- {
- 	if (is_td_vcpu(vcpu))
-@@ -943,7 +935,6 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- 	.set_idt = vt_op(set_idt),
- 	.get_gdt = vt_op(get_gdt),
- 	.set_gdt = vt_op(set_gdt),
--	.set_dr6 = vt_op(set_dr6),
- 	.set_dr7 = vt_op(set_dr7),
- 	.sync_dirty_debug_regs = vt_op(sync_dirty_debug_regs),
- 	.cache_reg = vt_op(cache_reg),
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index e66f5ffa8716..49bf58ca9ffd 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5604,12 +5604,6 @@ void vmx_sync_dirty_debug_regs(struct kvm_vcpu *vcpu)
- 	set_debugreg(DR6_RESERVED, 6);
- }
- 
--void vmx_set_dr6(struct kvm_vcpu *vcpu, unsigned long val)
--{
--	lockdep_assert_irqs_disabled();
--	set_debugreg(vcpu->arch.dr6, 6);
--}
--
- void vmx_set_dr7(struct kvm_vcpu *vcpu, unsigned long val)
- {
- 	vmcs_writel(GUEST_DR7, val);
-@@ -7364,6 +7358,9 @@ fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
- 		vmcs_writel(GUEST_RIP, vcpu->arch.regs[VCPU_REGS_RIP]);
- 	vcpu->arch.regs_dirty = 0;
- 
-+	if (run_flags & KVM_RUN_LOAD_GUEST_DR6)
-+		set_debugreg(vcpu->arch.dr6, 6);
-+
- 	/*
- 	 * Refresh vmcs.HOST_CR3 if necessary.  This must be done immediately
- 	 * prior to VM-Enter, as the kernel may load a new ASID (PCID) any time
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index d2ad83621595..d8ae62f49bd7 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -11044,7 +11044,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		set_debugreg(vcpu->arch.eff_db[3], 3);
- 		/* When KVM_DEBUGREG_WONT_EXIT, dr6 is accessible in guest. */
- 		if (unlikely(vcpu->arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT))
--			kvm_x86_call(set_dr6)(vcpu, vcpu->arch.dr6);
-+			run_flags |= KVM_RUN_LOAD_GUEST_DR6;
- 	} else if (unlikely(hw_breakpoint_active())) {
- 		set_debugreg(0, 7);
- 	}
--- 
-2.49.0.1015.ga840276032-goog
 
+--
 
---MlINIt/uc2Bhy9cL--
+This way, we won't allocate heap unnecessarily when
+CONFIG_NUMA is disabled, and we only need to check if
+counters are NULL or not before calling show_numa_info().
+
+However, if you change it like this, counters must always be
+initialized to NULL.
+
+Regards,
+
+Jeongjun Park
