@@ -1,421 +1,165 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA1924B28;
-	Thu,  8 May 2025 21:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301CC202C5C;
+	Thu,  8 May 2025 22:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746741485; cv=none; b=azNTR3y46iFvoCUVJtsnaEe7ZUSGdVPZCzbqaVgW3/GdxTavywCZ6Jpks4kI0hBtXmYVviLJFSw+ru8pagJLX4citk8Eme6vGfbxB9xchZcUHQEA2dga4Xi3WJe8HSG2RISeQaZwVuNHyrbG/XmyKfAwpUOkC4SuGlsu2MJlNNw=
+	t=1746741621; cv=none; b=ShnZlMtJb908ZF5fSxSZF55q3dNwH6OmKVtbpl1Esgr4zxNiplPT1N+CvqkC/1m8UXWapr3TRmetQi6ITArJl62VfmAsx0JOa5a9r2RgisK9zrdhscqkfOODRWgF/K5Cv/UAeEPhLq6fPsxy8z2eHcNiJzDaGnBubWbV5LJfFxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746741485; c=relaxed/simple;
-	bh=4ozDT+SIIppBBtE/cACq0eOwl/6yqGdREzqAhx3tdJ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GYa81mvTPfgPZvH7/U9S+W6Z69lhx5jrq0DFDmY4qISIrSQYeiQyzMXNYZhVCYcyFvDJbuKFVuIIeYLJzCkJdIxznUPkwmv+JVpVSMB5jwj1yiFl7andbrxSHVofzBAqtUzzJY4vkTG9rhJyZu8zzrEaUSE1XSmlVRz0yP8Va5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gHJsfWaz; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746741621; c=relaxed/simple;
+	bh=KVvgX9Sz//6c92uZjhQoPSnIEHvJqDAnUBmUV/6XQAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o7536Uy7yeJvEGvLOs5xRFBqWHGNHS36AuJqDndbfK6ZBDi1+QlkDSV91ydTQmEULO/9jInoKu9r9Uj4Qw/NQOJEitstv3BqnoBaA9lrM32xyOuzoGfJ7fq53acCXrcELrMRZBqdpgOjo0wPJPDSsp3lCzhfFRNWmdRxrNoUZ2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gutgaRnf; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gHJsfWaz"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548DANSQ009407;
-	Thu, 8 May 2025 21:57:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	H/c5wCC4PrD7yepboyL8e/nVX96kBpmeUZLIKejenvw=; b=gHJsfWazSTBVC9So
-	XXTN/CX9hKe3AJTFywel/GQf2r/nnmGoNTfOb1zDmvUzO4VmaLA38qUJOYhXEtrf
-	xeTaIRzToWkDVwsteOKH51vnUpokd6J1CwWu7UrU7HWvYOxptr7SUpPJ2qAmwyNu
-	uZidNX/DVdQdD8Z4uqOZW6FVTgGsK+XBIYFJ74L9P6XrD+eIglll0ZCXs0JyGavP
-	zIHsK+uYHnl5QSVusCeeRf/nRjMMjnobK4En4dHskJKFAxbdSnM2HdMn7/50NzCp
-	TO9liEJw71aXfn2zvphZIZFpXcuXTj5ev2oM+ivOP1rw4k0PyNuGUjee6S3362Nz
-	q+8dHA==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnpetkm4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 21:57:43 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 548LvgYE018928
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 8 May 2025 21:57:42 GMT
-Received: from [10.71.109.79] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
- 14:57:41 -0700
-Message-ID: <0e87c261-08f9-4a4a-9916-0487a6dbc737@quicinc.com>
-Date: Thu, 8 May 2025 14:57:41 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gutgaRnf"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-440685d6afcso16129675e9.0;
+        Thu, 08 May 2025 15:00:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746741618; x=1747346418; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jFPptVlWELbngFMrThLLYDU5tK5YqcQQHLUB6h2bqos=;
+        b=gutgaRnf5Qc+LAZCULIrIpdVDJH2TEmuP3+Gh7Z+2XopBIhU8pmxY64u2zJduP9+wH
+         Y6HL4RnI5Y5qq1KZ/43jJZPFbE8DmFJX2JsuFGBJEJEVoWQLl5k7snTI5PmjVg/ruA2r
+         oZdAniWueKygKm35f/JjwcAYfo4fjY7vjXqM3XzKjE1bvVXMZGyS3evNADZGbmRQzXg2
+         o8OrRz8toe889rojHunhUDvJmed7YyKs9I47ZCiJncYhWdYUo58mwjRxyfoeKCZA1E2g
+         pHxInrWoa2DYxJ7RN8CUSKCBifqtqtkDvNp8MfXxMfy77r+/89BxBuLaeOUQVQnfNXsz
+         3zEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746741618; x=1747346418;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jFPptVlWELbngFMrThLLYDU5tK5YqcQQHLUB6h2bqos=;
+        b=YsxYANGbj71b6G9iASuugV0TvXy4TC5uZa7ZJcTd+WpJVX8Jz7sbmSoAyguHhOvtQj
+         wxHpragEPc7FNubH3TvdVd9MbyOCBEtvNNm9GXzwT/eggqyAMjIwu+QvzZnn18A7C5pL
+         xgHOTQn1gMl2uoHbcrGlnlxHdzgUOBdAVvCtehwQ+s6dVz85nrDKWfh7rEXrALMZGvZa
+         j+9T1Nc/qNweSZIN0J2K4J9BOYjeAWaHobQofD4MdavJMHxSTDVKfwws2xiwMymZ8Eht
+         4xP39vZnURfcsb5YFuqeojLzxRZAk4aPU7Giikl1wUJ/n4vHbHmEVjl0N65BsQH4S6bH
+         ghgw==
+X-Forwarded-Encrypted: i=1; AJvYcCVEyo8w/JMhJGyX/iCZ3bfNRfiktDgeHZPbNbyDfTXvtLy7ROr3QfXFSAH38bCXn426lK9FOp2U4PfZ@vger.kernel.org, AJvYcCWY6WkPH/kiENfHDBX6J22fSTy18Qef39YpxCgeJjR3HTwnIds7RDl7MTExVczpMAZjtR7BRz6n9VT/MMw=@vger.kernel.org, AJvYcCWnUmnAW3IyEug36AroYKoLQmh9LnGTr9O5T6lc/nt5XC4zzvW4fMpjxd83dmT7yjO9iq51cXcXKNVXPiI=@vger.kernel.org, AJvYcCXPMUhWHNL2VzyLB/V5NmodmJ6l8DeVDYpwgwmqAExRny6FPPa5txPq5MhMolxlzNVVRx5jvm6FXiSJs39N@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIY4GNJ7HfdnW9qjve3gMozpSFhrdM1bh73SgHMhNJUMm7JDQm
+	29pG5WVdSpxidQc6iSUfUy1wt2kaoJVcEjqvrFDoswve8TZDhjx8kaD48A==
+X-Gm-Gg: ASbGncvSgZfviQMu2XV8FVb+lFXwR+EzCCG7sR2grlvj8mxDfwdHiv9y2H88EB/iU31
+	6b3oKQu2xO6QdSgOMxwBY4ZdWeCNBJiwLnNFggW5TO9dZJx7LdJQJFtXdsKxHj8QxGxsE15giAQ
+	Y7nRuNi5k9woYC106SrTddRdM3ikdS9vbzBUBoFLTdk1MkKHoeGm3EtSGs88v9vxsUfzlj1kbBJ
+	jCJk8QOlVEEM6Bwwhn1TyqmKaDAxcLmknRvi6rX/z5OcMlzbZSm6Tk9Z/zaQntogDZ7NYEK+u9R
+	VwGoyNVG9lQbDKUmlltXp7NCrOgMAzTeg43iCLA7qDAMBHkySFGgs/4UuZZukG7BT05IsgkVnX8
+	GtVqrn73pvaAhE+RcEsvghCER5POfq/99N3Ofcg==
+X-Google-Smtp-Source: AGHT+IG3AYYCZjpiyNF33eGBd2NOxkGCG27jymfzWyrn6MCB6Fm4BvoruhYdcOJFuQliiCx3Ju+NDA==
+X-Received: by 2002:a05:600c:5027:b0:440:8fcd:cf16 with SMTP id 5b1f17b1804b1-442d6d6b6f7mr7776095e9.19.1746741618205;
+        Thu, 08 May 2025 15:00:18 -0700 (PDT)
+Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d14e6d74sm41174815e9.21.2025.05.08.15.00.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 15:00:17 -0700 (PDT)
+Date: Fri, 9 May 2025 00:00:15 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: webgeek1234@gmail.com
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, linux-media@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v4 0/4] Tegra CEC Updates
+Message-ID: <almxxsmr2ppjisqyzufqkbkekx3pab6cdtnlbdf4epe77eidvs@s4qv7s5udnhq>
+References: <20250413-tegra-cec-v4-0-b6337b66ccad@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] drm/panel: visionox-rm69299: support the variant
- found in the SHIFT6mq
-To: <neil.armstrong@linaro.org>, David Airlie <airlied@gmail.com>,
-        "Simona
- Vetter" <simona@ffwll.ch>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>
-CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Casey Connolly <casey.connolly@linaro.org>,
-        Caleb Connolly <caleb@connolly.tech>
-References: <20250507-topic-misc-shift6-panel-v1-0-64e8e98ff285@linaro.org>
- <20250507-topic-misc-shift6-panel-v1-2-64e8e98ff285@linaro.org>
-Content-Language: en-US
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <20250507-topic-misc-shift6-panel-v1-2-64e8e98ff285@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE5OSBTYWx0ZWRfX1qo6NbDvhgTe
- plEFjl75U5frDWFk6ByLNwBExKfM2WpsSRdjnBQQAHxDfYDk5prvrL3LPyRxmUcKkIYn9o4eJyz
- XL4Umd3GxU+0cZA/6PCi3oRMi8Nc0O4HEN7ygINM/8h9CetH7XIede+ttUPM5gBwJoJJvJhngnE
- 7uJpdGW/5qr+dmTevotfiFMzWTmEfs35aLO7RNswBS6ocMHk1LWfJuA3k8XU/EymDYuGgULJsgn
- eZJVmHlXXbOf4RmXEQuCH13MsD2Hj0RJ2qluVJSzbbp6j+wwvVFv2DegDWngKAxUvsQuHCP19yj
- nQTM6sGCG+R89UTntYAgoqunzWPHnyIfOd1eCG0Xc3Ay5mxIdZOYTGqqgFhMiJyer6MngAUZHRQ
- QZOIX7Rag1c/91U83U+cQWhpaWQkL10kZkDtLtBKnszAz+sGbenCAgwTGe/BIAPuamYOhu+L
-X-Proofpoint-ORIG-GUID: MJI1OBZinirfW_UzLPA5iWJ6iG03nh2Z
-X-Proofpoint-GUID: MJI1OBZinirfW_UzLPA5iWJ6iG03nh2Z
-X-Authority-Analysis: v=2.4 cv=Yt4PR5YX c=1 sm=1 tr=0 ts=681d28d7 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=kuvCIlgCnUscDMFZ:21 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=KKAkSRfTAAAA:8 a=NsWeV797_Utf8EiLlUcA:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_07,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 mlxscore=0 adultscore=0 spamscore=0 impostorscore=0
- phishscore=0 lowpriorityscore=0 mlxlogscore=999 suspectscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505080199
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="3epgod7wk6jifceo"
+Content-Disposition: inline
+In-Reply-To: <20250413-tegra-cec-v4-0-b6337b66ccad@gmail.com>
 
 
+--3epgod7wk6jifceo
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 0/4] Tegra CEC Updates
+MIME-Version: 1.0
 
-On 5/7/2025 2:43 AM, neil.armstrong@linaro.org wrote:
-> From: Caleb Connolly <caleb@connolly.tech>
-> 
-> Add support for another variant of the rm69299 panel. This panel is
-> 1080x2160 and is found in the shift-axolotl (SHIFT6mq).
-> 
-> Signed-off-by: Caleb Connolly <caleb@connolly.tech>
-> [narmstrong: removed cosmetic changes, fixed to apply, use enums to select mode]
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+On Sun, Apr 13, 2025 at 02:35:31PM -0500, Aaron Kling via B4 Relay wrote:
+> This series updates Tegra hdmi cec support to be usable out of the box
+> on Tegra210 through Tegra194.
+>=20
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 > ---
->   drivers/gpu/drm/panel/panel-visionox-rm69299.c | 221 ++++++++++++++++++++++---
->   1 file changed, 195 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-visionox-rm69299.c b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-> index be3a9797fbced5222b313cf83f8078b919e2c219..26a79ab517723f23b7dc333235b81de264b5f30a 100644
-> --- a/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-> +++ b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-> @@ -5,6 +5,7 @@
->   
->   #include <linux/delay.h>
->   #include <linux/module.h>
-> +#include <linux/property.h>
->   #include <linux/mod_devicetable.h>
->   #include <linux/gpio/consumer.h>
->   #include <linux/regulator/consumer.h>
-> @@ -15,11 +16,17 @@
->   #include <drm/drm_modes.h>
->   #include <drm/drm_panel.h>
->   
-> +enum visionox_rm69299_modes {
-> +	VISIONOX_RM69299_MODE_1080X2248_60HZ = 0,
-> +	VISIONOX_RM69299_MODE_1080X2160_60HZ
-> +};
-> +
->   struct visionox_rm69299 {
->   	struct drm_panel panel;
->   	struct regulator_bulk_data supplies[2];
->   	struct gpio_desc *reset_gpio;
->   	struct mipi_dsi_device *dsi;
-> +	enum visionox_rm69299_modes mode;
->   };
->   
->   static inline struct visionox_rm69299 *panel_to_ctx(struct drm_panel *panel)
-> @@ -81,10 +88,123 @@ static int visionox_rm69299_unprepare(struct drm_panel *panel)
->   	return ret;
->   }
->   
-> +#define VISIONOX_RM69299_SHIFT_INIT_SEQ_LEN 432
-> +
-> +static const u8 visionox_rm69299_1080x2248_60hz_init_seq[VISIONOX_RM69299_SHIFT_INIT_SEQ_LEN][2] = {
+> Changes in v4:
+> - Fix review comment on patch 1
+> - Link to v3: https://lore.kernel.org/r/20250409-tegra-cec-v3-0-91640131d=
+fa2@gmail.com
+>=20
+> Changes in v3:
+> - Update patch 1 to fix lint warnings
+> - Link to v2: https://lore.kernel.org/r/20250408-tegra-cec-v2-0-2f004fdf8=
+4e8@gmail.com
+>=20
+> Changes in v2:
+> - Dropped patch 2, per request
+> - Added change to declare fallback compatibles instead, as per request
+> - Update patch 1 to allow fallback compatibles
+> - Link to v1: https://lore.kernel.org/r/20250407-tegra-cec-v1-0-e25dd9577=
+b5f@gmail.com
+>=20
+> ---
+> Aaron Kling (4):
+>       media: dt-bindings: Document Tegra186 and Tegra194 cec
+>       arm64: tegra: Add fallback cec compatibles
+>       arm64: tegra: Add CEC controller on Tegra210
+>       arm64: tegra: Wire up cec to devkits
+>=20
+>  .../devicetree/bindings/media/cec/nvidia,tegra114-cec.yaml | 14 ++++++++=
+++----
+>  arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts         |  6 ++++++
+>  .../boot/dts/nvidia/tegra186-p3509-0000+p3636-0001.dts     |  6 ++++++
+>  arch/arm64/boot/dts/nvidia/tegra186.dtsi                   |  2 +-
+>  arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts         |  6 ++++++
+>  arch/arm64/boot/dts/nvidia/tegra194-p3509-0000.dtsi        |  6 ++++++
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi                   |  2 +-
+>  arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts         |  6 ++++++
+>  arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts         |  6 ++++++
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi                   |  9 +++++++++
+>  10 files changed, 57 insertions(+), 6 deletions(-)
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250407-tegra-cec-7e3a7bef456f
+>=20
+> Best regards,
+> --=20
+> Aaron Kling <webgeek1234@gmail.com>
 
-Hi Neil,
+Applied, thanks.
 
-I see this being used for the 1080x2160 mode, but the name here seems to 
-imply that this is the init sequence for 1080x2248. Was that intended?
+Thierry
 
-> +	{ 0xFE, 0x40 }, { 0x05, 0x04 }, { 0x06, 0x08 }, { 0x08, 0x04 },
-> +	{ 0x09, 0x08 }, { 0x0A, 0x07 }, { 0x0B, 0xCC }, { 0x0C, 0x07 },
-> +	{ 0x0D, 0x90 }, { 0x0F, 0x87 }, { 0x20, 0x8D }, { 0x21, 0x8D },
-> +	{ 0x24, 0x05 }, { 0x26, 0x05 }, { 0x28, 0x05 }, { 0x2A, 0x05 },
-> +	{ 0x2D, 0x28 }, { 0x2F, 0x28 }, { 0x30, 0x32 }, { 0x31, 0x32 },
-> +	{ 0x37, 0x80 }, { 0x38, 0x30 }, { 0x39, 0xA8 }, { 0x46, 0x48 },
-> +	{ 0x47, 0x48 }, { 0x6B, 0x10 }, { 0x6F, 0x02 }, { 0x74, 0x2B },
-> +	{ 0x80, 0x1A }, { 0xFE, 0x40 }, { 0x93, 0x10 }, { 0x16, 0x00 },
-> +	{ 0x85, 0x07 }, { 0x84, 0x01 }, { 0x86, 0x0F }, { 0x87, 0x05 },
-> +	{ 0x8C, 0x00 }, { 0x88, 0x2E }, { 0x89, 0x2E }, { 0x8B, 0x09 },
-> +	{ 0x95, 0x00 }, { 0x91, 0x00 }, { 0x90, 0x00 }, { 0x8D, 0xD0 },
-> +	{ 0x8A, 0x03 }, { 0xFE, 0xA0 }, { 0x13, 0x00 }, { 0x33, 0x00 },
-> +	{ 0x0B, 0x33 }, { 0x36, 0x1E }, { 0x31, 0x88 }, { 0x32, 0x88 },
-> +	{ 0x37, 0xF1 }, { 0xFE, 0x50 }, { 0x00, 0x00 }, { 0x01, 0x00 },
-> +	{ 0x02, 0x00 }, { 0x03, 0xE9 }, { 0x04, 0x00 }, { 0x05, 0xF6 },
-> +	{ 0x06, 0x01 }, { 0x07, 0x2C }, { 0x08, 0x01 }, { 0x09, 0x62 },
-> +	{ 0x0A, 0x01 }, { 0x0B, 0x98 }, { 0x0C, 0x01 }, { 0x0D, 0xBF },
-> +	{ 0x0E, 0x01 }, { 0x0F, 0xF6 }, { 0x10, 0x02 }, { 0x11, 0x24 },
-> +	{ 0x12, 0x02 }, { 0x13, 0x4E }, { 0x14, 0x02 }, { 0x15, 0x70 },
-> +	{ 0x16, 0x02 }, { 0x17, 0xAF }, { 0x18, 0x02 }, { 0x19, 0xE2 },
-> +	{ 0x1A, 0x03 }, { 0x1B, 0x1F }, { 0x1C, 0x03 }, { 0x1D, 0x52 },
-> +	{ 0x1E, 0x03 }, { 0x1F, 0x82 }, { 0x20, 0x03 }, { 0x21, 0xB6 },
-> +	{ 0x22, 0x03 }, { 0x23, 0xF0 }, { 0x24, 0x04 }, { 0x25, 0x1F },
-> +	{ 0x26, 0x04 }, { 0x27, 0x37 }, { 0x28, 0x04 }, { 0x29, 0x59 },
-> +	{ 0x2A, 0x04 }, { 0x2B, 0x68 }, { 0x30, 0x04 }, { 0x31, 0x85 },
-> +	{ 0x32, 0x04 }, { 0x33, 0xA2 }, { 0x34, 0x04 }, { 0x35, 0xBC },
-> +	{ 0x36, 0x04 }, { 0x37, 0xD8 }, { 0x38, 0x04 }, { 0x39, 0xF4 },
-> +	{ 0x3A, 0x05 }, { 0x3B, 0x0E }, { 0x40, 0x05 }, { 0x41, 0x13 },
-> +	{ 0x42, 0x05 }, { 0x43, 0x1F }, { 0x44, 0x05 }, { 0x45, 0x1F },
-> +	{ 0x46, 0x00 }, { 0x47, 0x00 }, { 0x48, 0x01 }, { 0x49, 0x43 },
-> +	{ 0x4A, 0x01 }, { 0x4B, 0x4C }, { 0x4C, 0x01 }, { 0x4D, 0x6F },
-> +	{ 0x4E, 0x01 }, { 0x4F, 0x92 }, { 0x50, 0x01 }, { 0x51, 0xB5 },
-> +	{ 0x52, 0x01 }, { 0x53, 0xD4 }, { 0x58, 0x02 }, { 0x59, 0x06 },
-> +	{ 0x5A, 0x02 }, { 0x5B, 0x33 }, { 0x5C, 0x02 }, { 0x5D, 0x59 },
-> +	{ 0x5E, 0x02 }, { 0x5F, 0x7D }, { 0x60, 0x02 }, { 0x61, 0xBD },
-> +	{ 0x62, 0x02 }, { 0x63, 0xF7 }, { 0x64, 0x03 }, { 0x65, 0x31 },
-> +	{ 0x66, 0x03 }, { 0x67, 0x63 }, { 0x68, 0x03 }, { 0x69, 0x9D },
-> +	{ 0x6A, 0x03 }, { 0x6B, 0xD2 }, { 0x6C, 0x04 }, { 0x6D, 0x05 },
-> +	{ 0x6E, 0x04 }, { 0x6F, 0x38 }, { 0x70, 0x04 }, { 0x71, 0x51 },
-> +	{ 0x72, 0x04 }, { 0x73, 0x70 }, { 0x74, 0x04 }, { 0x75, 0x85 },
-> +	{ 0x76, 0x04 }, { 0x77, 0xA1 }, { 0x78, 0x04 }, { 0x79, 0xC0 },
-> +	{ 0x7A, 0x04 }, { 0x7B, 0xD8 }, { 0x7C, 0x04 }, { 0x7D, 0xF2 },
-> +	{ 0x7E, 0x05 }, { 0x7F, 0x10 }, { 0x80, 0x05 }, { 0x81, 0x21 },
-> +	{ 0x82, 0x05 }, { 0x83, 0x2E }, { 0x84, 0x05 }, { 0x85, 0x3A },
-> +	{ 0x86, 0x05 }, { 0x87, 0x3E }, { 0x88, 0x00 }, { 0x89, 0x00 },
-> +	{ 0x8A, 0x01 }, { 0x8B, 0x86 }, { 0x8C, 0x01 }, { 0x8D, 0x8F },
-> +	{ 0x8E, 0x01 }, { 0x8F, 0xB3 }, { 0x90, 0x01 }, { 0x91, 0xD7 },
-> +	{ 0x92, 0x01 }, { 0x93, 0xFB }, { 0x94, 0x02 }, { 0x95, 0x18 },
-> +	{ 0x96, 0x02 }, { 0x97, 0x4F }, { 0x98, 0x02 }, { 0x99, 0x7E },
-> +	{ 0x9A, 0x02 }, { 0x9B, 0xA6 }, { 0x9C, 0x02 }, { 0x9D, 0xCF },
-> +	{ 0x9E, 0x03 }, { 0x9F, 0x14 }, { 0xA4, 0x03 }, { 0xA5, 0x52 },
-> +	{ 0xA6, 0x03 }, { 0xA7, 0x93 }, { 0xAC, 0x03 }, { 0xAD, 0xCF },
-> +	{ 0xAE, 0x04 }, { 0xAF, 0x08 }, { 0xB0, 0x04 }, { 0xB1, 0x42 },
-> +	{ 0xB2, 0x04 }, { 0xB3, 0x7F }, { 0xB4, 0x04 }, { 0xB5, 0xB4 },
-> +	{ 0xB6, 0x04 }, { 0xB7, 0xCC }, { 0xB8, 0x04 }, { 0xB9, 0xF2 },
-> +	{ 0xBA, 0x05 }, { 0xBB, 0x0C }, { 0xBC, 0x05 }, { 0xBD, 0x26 },
-> +	{ 0xBE, 0x05 }, { 0xBF, 0x4B }, { 0xC0, 0x05 }, { 0xC1, 0x64 },
-> +	{ 0xC2, 0x05 }, { 0xC3, 0x83 }, { 0xC4, 0x05 }, { 0xC5, 0xA1 },
-> +	{ 0xC6, 0x05 }, { 0xC7, 0xBA }, { 0xC8, 0x05 }, { 0xC9, 0xC4 },
-> +	{ 0xCA, 0x05 }, { 0xCB, 0xD5 }, { 0xCC, 0x05 }, { 0xCD, 0xD5 },
-> +	{ 0xCE, 0x00 }, { 0xCF, 0xCE }, { 0xD0, 0x00 }, { 0xD1, 0xDB },
-> +	{ 0xD2, 0x01 }, { 0xD3, 0x32 }, { 0xD4, 0x01 }, { 0xD5, 0x3B },
-> +	{ 0xD6, 0x01 }, { 0xD7, 0x74 }, { 0xD8, 0x01 }, { 0xD9, 0x7D },
-> +	{ 0xFE, 0x60 }, { 0x00, 0xCC }, { 0x01, 0x0F }, { 0x02, 0xFF },
-> +	{ 0x03, 0x01 }, { 0x04, 0x00 }, { 0x05, 0x02 }, { 0x06, 0x00 },
-> +	{ 0x07, 0x00 }, { 0x09, 0xC4 }, { 0x0A, 0x00 }, { 0x0B, 0x04 },
-> +	{ 0x0C, 0x01 }, { 0x0D, 0x00 }, { 0x0E, 0x04 }, { 0x0F, 0x00 },
-> +	{ 0x10, 0x71 }, { 0x12, 0xC4 }, { 0x13, 0x00 }, { 0x14, 0x04 },
-> +	{ 0x15, 0x01 }, { 0x16, 0x00 }, { 0x17, 0x06 }, { 0x18, 0x00 },
-> +	{ 0x19, 0x71 }, { 0x1B, 0xC4 }, { 0x1C, 0x00 }, { 0x1D, 0x02 },
-> +	{ 0x1E, 0x00 }, { 0x1F, 0x00 }, { 0x20, 0x08 }, { 0x21, 0x66 },
-> +	{ 0x22, 0xB4 }, { 0x24, 0xC4 }, { 0x25, 0x00 }, { 0x26, 0x02 },
-> +	{ 0x27, 0x00 }, { 0x28, 0x00 }, { 0x29, 0x07 }, { 0x2A, 0x66 },
-> +	{ 0x2B, 0xB4 }, { 0x2F, 0xC4 }, { 0x30, 0x00 }, { 0x31, 0x04 },
-> +	{ 0x32, 0x01 }, { 0x33, 0x00 }, { 0x34, 0x03 }, { 0x35, 0x00 },
-> +	{ 0x36, 0x71 }, { 0x38, 0xC4 }, { 0x39, 0x00 }, { 0x3A, 0x04 },
-> +	{ 0x3B, 0x01 }, { 0x3D, 0x00 }, { 0x3F, 0x05 }, { 0x40, 0x00 },
-> +	{ 0x41, 0x71 }, { 0x83, 0xCE }, { 0x84, 0x02 }, { 0x85, 0x20 },
-> +	{ 0x86, 0xDC }, { 0x87, 0x00 }, { 0x88, 0x04 }, { 0x89, 0x00 },
-> +	{ 0x8A, 0xBB }, { 0x8B, 0x80 }, { 0xC7, 0x0E }, { 0xC8, 0x05 },
-> +	{ 0xC9, 0x1F }, { 0xCA, 0x06 }, { 0xCB, 0x00 }, { 0xCC, 0x03 },
-> +	{ 0xCD, 0x04 }, { 0xCE, 0x1F }, { 0xCF, 0x1F }, { 0xD0, 0x1F },
-> +	{ 0xD1, 0x1F }, { 0xD2, 0x1F }, { 0xD3, 0x1F }, { 0xD4, 0x1F },
-> +	{ 0xD5, 0x1F }, { 0xD6, 0x1F }, { 0xD7, 0x17 }, { 0xD8, 0x1F },
-> +	{ 0xD9, 0x16 }, { 0xDA, 0x1F }, { 0xDB, 0x0E }, { 0xDC, 0x01 },
-> +	{ 0xDD, 0x1F }, { 0xDE, 0x02 }, { 0xDF, 0x00 }, { 0xE0, 0x03 },
-> +	{ 0xE1, 0x04 }, { 0xE2, 0x1F }, { 0xE3, 0x1F }, { 0xE4, 0x1F },
-> +	{ 0xE5, 0x1F }, { 0xE6, 0x1F }, { 0xE7, 0x1F }, { 0xE8, 0x1F },
-> +	{ 0xE9, 0x1F }, { 0xEA, 0x1F }, { 0xEB, 0x17 }, { 0xEC, 0x1F },
-> +	{ 0xED, 0x16 }, { 0xEE, 0x1F }, { 0xEF, 0x03 }, { 0xFE, 0x70 },
-> +	{ 0x5A, 0x0B }, { 0x5B, 0x0B }, { 0x5C, 0x55 }, { 0x5D, 0x24 },
-> +	{ 0xFE, 0x90 }, { 0x12, 0x24 }, { 0x13, 0x49 }, { 0x14, 0x92 },
-> +	{ 0x15, 0x86 }, { 0x16, 0x61 }, { 0x17, 0x18 }, { 0x18, 0x24 },
-> +	{ 0x19, 0x49 }, { 0x1A, 0x92 }, { 0x1B, 0x86 }, { 0x1C, 0x61 },
-> +	{ 0x1D, 0x18 }, { 0x1E, 0x24 }, { 0x1F, 0x49 }, { 0x20, 0x92 },
-> +	{ 0x21, 0x86 }, { 0x22, 0x61 }, { 0x23, 0x18 }, { 0xFE, 0x40 },
-> +	{ 0x0E, 0x10 }, { 0xFE, 0xA0 }, { 0x04, 0x80 }, { 0x16, 0x00 },
-> +	{ 0x26, 0x10 }, { 0x2F, 0x37 }, { 0xFE, 0xD0 }, { 0x06, 0x0F },
-> +	{ 0x4B, 0x00 }, { 0x56, 0x4A }, { 0xFE, 0x00 }, { 0xC2, 0x09 },
-> +	{ 0x35, 0x00 }, { 0xFE, 0x70 }, { 0x7D, 0x61 }, { 0x7F, 0x00 },
-> +	{ 0x7E, 0x4E }, { 0x52, 0x2C }, { 0x49, 0x00 }, { 0x4A, 0x00 },
-> +	{ 0x4B, 0x00 }, { 0x4C, 0x00 }, { 0x4D, 0xE8 }, { 0x4E, 0x25 },
-> +	{ 0x4F, 0x6E }, { 0x50, 0xAE }, { 0x51, 0x2F }, { 0xAD, 0xF4 },
-> +	{ 0xAE, 0x8F }, { 0xAF, 0x00 }, { 0xB0, 0x54 }, { 0xB1, 0x3A },
-> +	{ 0xB2, 0x00 }, { 0xB3, 0x00 }, { 0xB4, 0x00 }, { 0xB5, 0x00 },
-> +	{ 0xB6, 0x18 }, { 0xB7, 0x30 }, { 0xB8, 0x4A }, { 0xB9, 0x98 },
-> +	{ 0xBA, 0x30 }, { 0xBB, 0x60 }, { 0xBC, 0x50 }, { 0xBD, 0x00 },
-> +	{ 0xBE, 0x00 }, { 0xBF, 0x39 }, { 0xFE, 0x00 }, { 0x51, 0x66 },
-> +};
-> +
->   static int visionox_rm69299_prepare(struct drm_panel *panel)
->   {
->   	struct visionox_rm69299 *ctx = panel_to_ctx(panel);
-> -	int ret;
-> +	int ret, i;
->   
->   	ret = visionox_rm69299_power_on(ctx);
->   	if (ret < 0)
-> @@ -92,28 +212,48 @@ static int visionox_rm69299_prepare(struct drm_panel *panel)
->   
->   	ctx->dsi->mode_flags |= MIPI_DSI_MODE_LPM;
->   
-> -	ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]) { 0xfe, 0x00 }, 2);
-> -	if (ret < 0) {
-> -		dev_err(ctx->panel.dev, "cmd set tx 0 failed, ret = %d\n", ret);
-> -		goto power_off;
-> -	}
-> -
-> -	ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]) { 0xc2, 0x08 }, 2);
-> -	if (ret < 0) {
-> -		dev_err(ctx->panel.dev, "cmd set tx 1 failed, ret = %d\n", ret);
-> -		goto power_off;
-> -	}
-> -
-> -	ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]) { 0x35, 0x00 }, 2);
-> -	if (ret < 0) {
-> -		dev_err(ctx->panel.dev, "cmd set tx 2 failed, ret = %d\n", ret);
-> -		goto power_off;
-> -	}
-> -
-> -	ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]) { 0x51, 0xff }, 2);
-> -	if (ret < 0) {
-> -		dev_err(ctx->panel.dev, "cmd set tx 3 failed, ret = %d\n", ret);
-> -		goto power_off;
-> +	if (ctx->mode == VISIONOX_RM69299_MODE_1080X2160_60HZ) {
-> +		for (i = 0; i < VISIONOX_RM69299_SHIFT_INIT_SEQ_LEN; i++) {
-> +			ret = mipi_dsi_dcs_write_buffer(ctx->dsi,
+--3epgod7wk6jifceo
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Any reason for not using mipi_dsi_dcs_write_buffer_multi() here?
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmgdKW8ACgkQ3SOs138+
+s6GYeA//XE2vyZqqYpifD0khPD5xG3gxB1YfHHKl0Y7ZSyvHLFJizd+hzzjUH9N/
+5vnczfETsqCuDvNZVlHJpjgCuM8ClyWY672WjZepl9doioFOp+tVi4PwknqLnHCy
+YYgyU6JK315UK7ktYxhWe6oInbFtZSUXRW/a1j3HJRAmpiNp2OToNcMFWFTDNuvn
+g2fxSEgTDfVEFpMhMVGc2iaCClGw7py7xk0mTaHo++FY8/kSH1GVybcwHDmFNHGk
+Z/0oOnZ2L7Lxjn+9QV8eWTZpIOYLN6Y+YlmFvaP+XfMSMw/MiaUWxhbSP1E8QAI6
+ANPd1/avzIcIqpbRqsBoB3AZxP67kWTjM9cMBMo5lADGmKGXdEONVkleT6VJ9XPs
+kC6pPuicSTCpon6HyGDyQ4CL/P78aMD+sDc1nYMtX1Qjo7zEzr/vPZ+WY2FLUMR7
+o2WLBdcp/bGVntyOqFU4C8JuXANU51W89nUHIdcUd4R00E7bzO9PYdE3xvXdr7GN
+3EeR3VbzKve8IqJs7hQL6VWBh9EwS1vPei/bg/Ma0MFk2U6Cut8DF3emqdDYh1em
+0X89IwEJCivye8EITGngb9k+uSqoVCQkOTnILgw0uzchzU8frEEe1YLQfoeGCYcY
+hAtxWHR9pHV/t4L6L+oabd1lEkZWzVezDMWw7lSNnZhtnEFeVM0=
+=1WMA
+-----END PGP SIGNATURE-----
 
-Jessica Zhang
-
-> +				visionox_rm69299_1080x2248_60hz_init_seq[i], 2);
-> +			if (ret < 0) {
-> +				dev_err(ctx->panel.dev,
-> +					"cmd set tx 0 failed, ret = %d\n", ret);
-> +				return ret;
-> +			}
-> +		}
-> +	} else {
-> +		ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]){ 0xfe, 0x00 },
-> +						2);
-> +		if (ret < 0) {
-> +			dev_err(ctx->panel.dev,
-> +				"cmd set tx 0 failed, ret = %d\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]){ 0xc2, 0x08 },
-> +						2);
-> +		if (ret < 0) {
-> +			dev_err(ctx->panel.dev,
-> +				"cmd set tx 1 failed, ret = %d\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]){ 0x35, 0x00 },
-> +						2);
-> +		if (ret < 0) {
-> +			dev_err(ctx->panel.dev,
-> +				"cmd set tx 2 failed, ret = %d\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]){ 0x51, 0xff },
-> +						2);
-> +		if (ret < 0) {
-> +			dev_err(ctx->panel.dev,
-> +				"cmd set tx 3 failed, ret = %d\n", ret);
-> +			return ret;
-> +		}
->   	}
->   
->   	ret = mipi_dsi_dcs_write(ctx->dsi, MIPI_DCS_EXIT_SLEEP_MODE, NULL, 0);
-> @@ -154,14 +294,38 @@ static const struct drm_display_mode visionox_rm69299_1080x2248_60hz = {
->   	.flags = 0,
->   };
->   
-> +static const struct drm_display_mode visionox_rm69299_1080x2160_60hz = {
-> +	.clock = 158695,
-> +	.hdisplay = 1080,
-> +	.hsync_start = 1080 + 26,
-> +	.hsync_end = 1080 + 26 + 2,
-> +	.htotal = 1080 + 26 + 2 + 36,
-> +	.vdisplay = 2160,
-> +	.vsync_start = 2160 + 8,
-> +	.vsync_end = 2160 + 8 + 4,
-> +	.vtotal = 2160 + 8 + 4 + 4,
-> +	.flags = 0,
-> +};
-> +
->   static int visionox_rm69299_get_modes(struct drm_panel *panel,
->   				      struct drm_connector *connector)
->   {
->   	struct visionox_rm69299 *ctx = panel_to_ctx(panel);
-> +	const struct drm_display_mode *panel_mode;
->   	struct drm_display_mode *mode;
->   
-> -	mode = drm_mode_duplicate(connector->dev,
-> -				  &visionox_rm69299_1080x2248_60hz);
-> +	switch (ctx->mode) {
-> +	case VISIONOX_RM69299_MODE_1080X2248_60HZ:
-> +		panel_mode = &visionox_rm69299_1080x2248_60hz;
-> +		break;
-> +	case VISIONOX_RM69299_MODE_1080X2160_60HZ:
-> +		panel_mode = &visionox_rm69299_1080x2160_60hz;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	mode = drm_mode_duplicate(connector->dev, panel_mode);
->   	if (!mode) {
->   		dev_err(ctx->panel.dev, "failed to create a new display mode\n");
->   		return 0;
-> @@ -191,6 +355,8 @@ static int visionox_rm69299_probe(struct mipi_dsi_device *dsi)
->   	if (!ctx)
->   		return -ENOMEM;
->   
-> +	ctx->mode = (enum visionox_rm69299_modes)device_get_match_data(dev);
-> +
->   	mipi_dsi_set_drvdata(dsi, ctx);
->   
->   	ctx->dsi = dsi;
-> @@ -240,7 +406,10 @@ static void visionox_rm69299_remove(struct mipi_dsi_device *dsi)
->   }
->   
->   static const struct of_device_id visionox_rm69299_of_match[] = {
-> -	{ .compatible = "visionox,rm69299-1080p-display", },
-> +	{ .compatible = "visionox,rm69299-1080p-display",
-> +	  .data = (void *)VISIONOX_RM69299_MODE_1080X2248_60HZ },
-> +	{ .compatible = "visionox,rm69299-shift",
-> +	  .data = (void *)VISIONOX_RM69299_MODE_1080X2160_60HZ },
->   	{ /* sentinel */ }
->   };
->   MODULE_DEVICE_TABLE(of, visionox_rm69299_of_match);
-> 
-
+--3epgod7wk6jifceo--
