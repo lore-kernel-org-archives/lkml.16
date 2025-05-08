@@ -1,300 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1391953A1
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109CA5A79B;
+	Thu,  8 May 2025 09:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746697132; cv=none; b=UQ3lVrPuTgD8SwrSZCUOvGukQVQ/cSCUjzvASCCpDijjiRUIflAGznRCoq4uwj/SV4+4qko1FfRUDgfrGFE/KTAdNFVU+MP00OBwdo6tRpiyp8EWcDUcp94yw7zUkv0qwcUVdjqwTf7tVi+Ix4Wrjgk7eeUGsU4n0uiqB5iHADY=
+	t=1746697168; cv=none; b=uo+ycJRqxO+KDGeU+wsDSgIOTR/z2+ug4dcttSXymBPoDhMHtRtTSxfK9DUzR+jpMEDR/pWAjh4k20eE/89rhdg6C1u+3YAzG/nC3qdholtk7OLIZ/ashFWZTtpdTjC5UDkNGj7mBuN2SPkS4lyFvJsdobV+Ubw3tbk2GZiyQs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746697132; c=relaxed/simple;
-	bh=CMtqZ6TweDxC1ofKfV/gsvJjiOj2ZQ7+zmKfVa08o8A=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=EDJqW5FVRexvHefLOEMDv1eGCpHdSTTI+3tPuwuAoPZhyEiXO+OJMnKb33Uf7aGecpPnz6CCvpAuHlfA2U5TtCY2hAmHG6c9tB0UeA8HvtjaoxwybkKJYE1NW+rXYIn6a75K7xr7Kml9IARy8n71XGcwQ7tHlxad7K+eTJigT2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dj3uPPSj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746697168; c=relaxed/simple;
+	bh=yHL36ocCfxeq/utyccr6VCpsFhL9r1LtxPcHbVSIKWY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WrG00GCRsiz9NqnDJcrN6lDEzZk7D+4N8P4wY+F/sRMcgzkte9UgEsm3SPWwgyvU5+e87W6vdP2oI+FB49MJIuGkKgnLBVHsoBzzO1oUMpGFL9XdPtWmA3Dp8NHLHtmk+VEK0B+1Quu3QQA6e0+XI/8rp4NhXCmRcUV8mm0LBig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DUdoslVC; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dj3uPPSj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41157C4CEE7;
-	Thu,  8 May 2025 09:38:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746697131;
-	bh=CMtqZ6TweDxC1ofKfV/gsvJjiOj2ZQ7+zmKfVa08o8A=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=dj3uPPSjuycussZoOtT39zkxoek6dah6ne/0VZDQ/4Ey+CXdJuryxiRFda6aiylEb
-	 vZ/mHBFubHNSqRwAk0GQPuoyBBee7ImPal6g5xL+DZGfgSFsfHQE+5UCpyLqZc1mz7
-	 +aoKrMR6teJrb1u1IDjQZWGat/wCtnqBcLHd6waHUXKn+Y6DUcBEZU84LXGidWBZ92
-	 J7IUvZGH8EyKYO3kE//RnN5h+nMI4RiE00rdWL6g+3LB6yTcaWAQpj1rg9F292MAwx
-	 maWfFr/nCa+1EjDWX8VnqZ8diYOhZXR9JSkiOOSiBTtaU0ue5j/8GwO2MofBwCzA7u
-	 E10qUv+nuQMSA==
-Message-ID: <81348540-e3aa-4907-94cd-df0c408e66e0@kernel.org>
-Date: Thu, 8 May 2025 17:38:48 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DUdoslVC"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5484WThH014355;
+	Thu, 8 May 2025 09:39:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=qG/FDR4jIPDN3P1J0ZljbXUNk7DPM+48V6U
+	+OK74WNc=; b=DUdoslVCDrMcoumeK6AALRF8fajFV0dk0MJZ2+sBHHwmEMCBU2+
+	zAcZ9tqvyJW3bQUUqQS6v6GUKu1MxkqU8pAiQyxLc5yrurLNEHHPmDIsUHlrScWi
+	t+1JxlHVN9pzpZ6ebd05aE5tkrgDV+mNLe/TFloacKgNOCcucXvKEgQD1aaM4oz9
+	gEhVtPFhbd0OIQ9fkJuxmNd9KPAUuAHcR2oFFsgvw2FxnxbMf6Tng9HDcZiWJvth
+	zgHkINWbLoPfuQZIDunJwIPwSFK5yCfZDSnvwkC6iEtVIYsFIOESN/dNmutcqZKk
+	bfAPxTJ9NkSoRht3Qf3VDQrpThIBccf4UBg==
+Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp4gt5m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 09:39:01 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5489cwRr025863;
+	Thu, 8 May 2025 09:38:58 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 46dc7mfnxk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 09:38:58 +0000
+Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5489cwjg025855;
+	Thu, 8 May 2025 09:38:58 GMT
+Received: from cbsp-sh-gv.ap.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 5489cvnQ025854
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 09:38:58 +0000
+Received: by cbsp-sh-gv.ap.qualcomm.com (Postfix, from userid 393357)
+	id B981E40D11; Thu,  8 May 2025 17:38:56 +0800 (CST)
+From: Ziqi Chen <quic_ziqichen@quicinc.com>
+To: quic_cang@quicinc.com, bvanassche@acm.org, mani@kernel.org,
+        beanhuo@micron.com, avri.altman@wdc.com, junwoo80.lee@samsung.com,
+        martin.petersen@oracle.com, quic_ziqichen@quicinc.com,
+        quic_nguyenb@quicinc.com, quic_nitirawa@quicinc.com,
+        quic_rampraka@quicinc.com, neil.armstrong@linaro.org,
+        luca.weiss@fairphone.com, konrad.dybcio@oss.qualcomm.com,
+        peter.wang@mediatek.com
+Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3] scsi: ufs: core: skip UFS clkscale if host asynchronous scan in progress
+Date: Thu,  8 May 2025 17:38:51 +0800
+Message-Id: <20250508093854.3281475-1-quic_ziqichen@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, pilhyun.kim@sk.com
-Subject: Re: [PATCH v4 2/2] f2fs: add ckpt_valid_blocks to the section entry
-To: "yohan.joung" <yohan.joung@sk.com>, jaegeuk@kernel.org,
- daehojeong@google.com
-References: <20250508074756.693-1-yohan.joung@sk.com>
- <20250508074756.693-2-yohan.joung@sk.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250508074756.693-2-yohan.joung@sk.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: IMxl1a_7qZbu-8wh2KhYRZw49trfoYzV
+X-Authority-Analysis: v=2.4 cv=E5XNpbdl c=1 sm=1 tr=0 ts=681c7bb6 cx=c_pps
+ a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=avOu-EqILVl7MynqQNIA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA4NyBTYWx0ZWRfX1SG9hUeTQrVp
+ QG2JxkGU5o0WdIz9c1qxFwGQjsFtXWpF15L6mnBqdmEARXDeAB0R6sjGpEhpwHPWgM9mH0jQD5H
+ hHkASo7AP66iraOg+naV20aY1ZMdRpxuHY/M/zi+HD8mYEpMnjt3xRwFdPTt4ChH1HGSqoaiwKo
+ +OUSX/DsyM8YfPPfPBPxz9SP+SIN9VLk5tjGzGVqGmc1jREJVmT+Y1rxx/vrm/+O+5xdHAyrNIh
+ QfHQ3fgUEjntW+J4sqIIa/qsGZbIitOF191LcPWaQahX3d5vXV2ZH3Tv4DAjm4UE2i5WAGbQrM3
+ Vg1zyciYNi1WD3a1ZKIy6/S2G546gEFx/6k291a1oJV3MZl+FLa8W4PgB6nlMwxsQcgpBahVkst
+ WYDgF8qU0VXjwiz/xEUQYWiFOK7PgcjCwD8bC1p/yAhrYT8hEBJ8m1JydFmiNVFkHOEhWOCH
+X-Proofpoint-ORIG-GUID: IMxl1a_7qZbu-8wh2KhYRZw49trfoYzV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_03,2025-05-07_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 suspectscore=0 adultscore=0 mlxscore=0 malwarescore=0
+ bulkscore=0 phishscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
+ lowpriorityscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505080087
 
-On 5/8/25 15:47, yohan.joung wrote:
-> when performing buffered writes in a large section,
-> overhead is incurred due to the iteration through
-> ckpt_valid_blocks within the section.
-> when SEGS_PER_SEC is 128, this overhead accounts for 20% within
-> the f2fs_write_single_data_page routine.
-> as the size of the section increases, the overhead also grows.
-> to handle this problem ckpt_valid_blocks is
-> added within the section entries.
-> 
-> Test
-> insmod null_blk.ko nr_devices=1 completion_nsec=1  submit_queues=8
-> hw_queue_depth=64 max_sectors=512 bs=4096 memory_backed=1
-> make_f2fs /dev/block/nullb0
-> make_f2fs -s 128 /dev/block/nullb0
-> fio --bs=512k --size=1536M --rw=write --name=1
-> --filename=/mnt/test_dir/seq_write
-> --ioengine=io_uring --iodepth=64 --end_fsync=1
-> 
-> before
-> SEGS_PER_SEC 1
-> 2556MiB/s
-> SEGS_PER_SEC 128
-> 2145MiB/s
-> 
-> after
-> SEGS_PER_SEC 1
-> 2556MiB/s
-> SEGS_PER_SEC 128
-> 2556MiB/s
-> 
-> Signed-off-by: yohan.joung <yohan.joung@sk.com>
-> ---
->  fs/f2fs/segment.c | 41 +++++++++++++++++++++++++++++-------
->  fs/f2fs/segment.h | 53 +++++++++++++++++++++++++++++++++++++----------
->  2 files changed, 76 insertions(+), 18 deletions(-)
-> 
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index 671bc5a8fd4a..7a53f2d8a474 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -2447,7 +2447,7 @@ static void update_segment_mtime(struct f2fs_sb_info *sbi, block_t blkaddr,
->   * that the consecutive input blocks belong to the same segment.
->   */
->  static int update_sit_entry_for_release(struct f2fs_sb_info *sbi, struct seg_entry *se,
-> -				block_t blkaddr, unsigned int offset, int del)
-> +				unsigned int segno, block_t blkaddr, unsigned int offset, int del)
->  {
->  	bool exist;
->  #ifdef CONFIG_F2FS_CHECK_FS
-> @@ -2492,15 +2492,22 @@ static int update_sit_entry_for_release(struct f2fs_sb_info *sbi, struct seg_ent
->  				f2fs_test_and_clear_bit(offset + i, se->discard_map))
->  			sbi->discard_blks++;
->  
-> -		if (!f2fs_test_bit(offset + i, se->ckpt_valid_map))
-> +#ifdef CONFIG_F2FS_CHECK_FS
-> +		if (__is_large_section(sbi))
-> +			sanity_check_valid_blocks(sbi, segno);
-> +#endif
-> +		if (!f2fs_test_bit(offset + i, se->ckpt_valid_map)) {
->  			se->ckpt_valid_blocks -= 1;
-> +			if (__is_large_section(sbi))
-> +				get_sec_entry(sbi, segno)->ckpt_valid_blocks -= 1;
-> +		}
->  	}
->  
->  	return del;
->  }
->  
->  static int update_sit_entry_for_alloc(struct f2fs_sb_info *sbi, struct seg_entry *se,
-> -				block_t blkaddr, unsigned int offset, int del)
-> +				unsigned int segno, block_t blkaddr, unsigned int offset, int del)
->  {
->  	bool exist;
->  #ifdef CONFIG_F2FS_CHECK_FS
-> @@ -2532,13 +2539,23 @@ static int update_sit_entry_for_alloc(struct f2fs_sb_info *sbi, struct seg_entry
->  	 * SSR should never reuse block which is checkpointed
->  	 * or newly invalidated.
->  	 */
-> +#ifdef CONFIG_F2FS_CHECK_FS
-> +	if (__is_large_section(sbi))
-> +		sanity_check_valid_blocks(sbi, segno);
-> +#endif
+When preparing for UFS clock scaling, the UFS driver will quiesce all sdevs
+queues on the UFS SCSI host tagset list and then unquiesce them when UFS
+clock scaling unpreparing. If the UFS SCSI host async scan is in progress
+at this time, some LUs may be added to the tagset list between UFS clkscale
+prepare and unprepare. This can cause two issues:
 
-How about doing sanity check after ckpt_valid_blocks update?
+1. During clock scaling, there may be IO requests issued through new added
+queues that have not been quiesced, leading to task abort issue.
 
->  	if (!is_sbi_flag_set(sbi, SBI_CP_DISABLED)) {
-> -		if (!f2fs_test_and_set_bit(offset, se->ckpt_valid_map))
-> +		if (!f2fs_test_and_set_bit(offset, se->ckpt_valid_map)) {
->  			se->ckpt_valid_blocks++;
-> +			if (__is_large_section(sbi))
-> +				get_sec_entry(sbi, segno)->ckpt_valid_blocks++;
-> +		}
->  	}
->  
-> -	if (!f2fs_test_bit(offset, se->ckpt_valid_map))
-> +	if (!f2fs_test_bit(offset, se->ckpt_valid_map)) {
->  		se->ckpt_valid_blocks += del;
-> +		if (__is_large_section(sbi))
-> +			get_sec_entry(sbi, segno)->ckpt_valid_blocks += del;
-> +	}
->  
->  	return del;
->  }
-> @@ -2569,9 +2586,9 @@ static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
->  
->  	/* Update valid block bitmap */
->  	if (del > 0) {
-> -		del = update_sit_entry_for_alloc(sbi, se, blkaddr, offset, del);
-> +		del = update_sit_entry_for_alloc(sbi, se, segno, blkaddr, offset, del);
->  	} else {
-> -		del = update_sit_entry_for_release(sbi, se, blkaddr, offset, del);
-> +		del = update_sit_entry_for_release(sbi, se, segno, blkaddr, offset, del);
->  	}
->  
->  	__mark_sit_entry_dirty(sbi, segno);
-> @@ -4700,12 +4717,16 @@ void f2fs_flush_sit_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  					&sit_in_journal(journal, offset));
->  				check_block_count(sbi, segno,
->  					&sit_in_journal(journal, offset));
-> +				if (__is_large_section(sbi))
-> +					set_ckpt_valid_blocks(sbi, segno);
->  			} else {
->  				sit_offset = SIT_ENTRY_OFFSET(sit_i, segno);
->  				seg_info_to_raw_sit(se,
->  						&raw_sit->entries[sit_offset]);
->  				check_block_count(sbi, segno,
->  						&raw_sit->entries[sit_offset]);
-> +				if (__is_large_section(sbi))
-> +					set_ckpt_valid_blocks(sbi, segno);
->  			}
+2. These new added queues that have not been quiesced will be unquiesced as
+well when UFS clkscale is unprepared, resulting in warning prints.
 
-Move here for cleanup?
+Therefore, use the flag host->async_scan to check whether the host async
+scan is in progress or not. Additionally, move ufshcd_devfreq_init() to
+after ufshcd_add_lus() to ensure this flag already be set before starting
+devfreq monitor.
 
-if (__is_large_section(sbi))
-	set_ckpt_valid_blocks(sbi, segno);
+Co-developed-by: Can Guo <quic_cang@quicinc.com>
+Signed-off-by: Can Guo <quic_cang@quicinc.com>
+Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+---
 
-How about adding sanity check here as well?
+v1 -> v2:
+Move whole clkscale Initialize process out of ufshcd_add_lus().
 
->  
->  			__clear_bit(segno, bitmap);
-> @@ -5029,6 +5050,12 @@ static int build_sit_entries(struct f2fs_sb_info *sbi)
->  	}
->  	up_read(&curseg->journal_rwsem);
->  
-> +	/* update ckpt_ckpt_valid_block */
-> +	if (__is_large_section(sbi)) {
-> +		for (unsigned int segno = 0; segno < MAIN_SEGS(sbi); segno += SEGS_PER_SEC(sbi))
+v2 -> v3:
+Add check for the return value of ufshcd_add_lus().
+---
+ drivers/ufs/core/ufshcd.c | 35 ++++++++++++++++++++---------------
+ 1 file changed, 20 insertions(+), 15 deletions(-)
 
-Let's keep the style of defining variable outside of 'for' statement.
-
-> +			set_ckpt_valid_blocks(sbi, segno);
-> +	}
-
-do sanity check here?
-
-> +
->  	if (err)
->  		return err;
->  
-> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-> index 5777b385e7d2..ebc90d3cb57c 100644
-> --- a/fs/f2fs/segment.h
-> +++ b/fs/f2fs/segment.h
-> @@ -211,6 +211,7 @@ struct seg_entry {
->  
->  struct sec_entry {
->  	unsigned int valid_blocks;	/* # of valid blocks in a section */
-> +	unsigned int ckpt_valid_blocks; /* # of valid blocks last cp in a section */
->  };
->  
->  #define MAX_SKIP_GC_COUNT			16
-> @@ -347,22 +348,52 @@ static inline unsigned int get_valid_blocks(struct f2fs_sb_info *sbi,
->  static inline unsigned int get_ckpt_valid_blocks(struct f2fs_sb_info *sbi,
->  				unsigned int segno, bool use_section)
->  {
-> -	if (use_section && __is_large_section(sbi)) {
-> -		unsigned int secno = GET_SEC_FROM_SEG(sbi, segno);
-> -		unsigned int start_segno = GET_SEG_FROM_SEC(sbi, secno);
-> -		unsigned int blocks = 0;
-> -		int i;
-> +	if (use_section && __is_large_section(sbi))
-> +		return get_sec_entry(sbi, segno)->ckpt_valid_blocks;
-> +	else
-> +		return get_seg_entry(sbi, segno)->ckpt_valid_blocks;
-> +}
-> +
-> +static inline void set_ckpt_valid_blocks(struct f2fs_sb_info *sbi,
-> +		unsigned int segno)
-> +{
-> +	unsigned int secno = GET_SEC_FROM_SEG(sbi, segno);
-> +	unsigned int start_segno = GET_SEG_FROM_SEC(sbi, secno);
-> +	unsigned int blocks = 0;
-> +	int i;
->  
-> -		for (i = 0; i < SEGS_PER_SEC(sbi); i++, start_segno++) {
-> -			struct seg_entry *se = get_seg_entry(sbi, start_segno);
-> +	for (i = 0; i < SEGS_PER_SEC(sbi); i++, start_segno++) {
-> +		struct seg_entry *se = get_seg_entry(sbi, start_segno);
->  
-> -			blocks += se->ckpt_valid_blocks;
-> -		}
-> -		return blocks;
-> +		blocks += se->ckpt_valid_blocks;
->  	}
-> -	return get_seg_entry(sbi, segno)->ckpt_valid_blocks;
-> +	get_sec_entry(sbi, segno)->ckpt_valid_blocks = blocks;
->  }
->  
-> +#ifdef CONFIG_F2FS_CHECK_FS
-> +static inline void sanity_check_valid_blocks(struct f2fs_sb_info *sbi,
-> +		unsigned int segno)
-> +{
-> +	unsigned int secno = GET_SEC_FROM_SEG(sbi, segno);
-> +	unsigned int start_segno = GET_SEG_FROM_SEC(sbi, secno);
-> +	unsigned int blocks = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < SEGS_PER_SEC(sbi); i++, start_segno++) {
-> +		struct seg_entry *se = get_seg_entry(sbi, start_segno);
-> +
-> +		blocks += se->ckpt_valid_blocks;
-> +	}
-> +
-> +	if (blocks != get_sec_entry(sbi, segno)->ckpt_valid_blocks) {
-> +		f2fs_err(sbi,
-> +			"Inconsistent ckpt valid blocks: "
-> +			"seg entry(%d) vs sec entry(%d) at secno %d",
-> +			blocks, get_sec_entry(sbi, segno)->ckpt_valid_blocks, secno);
-> +		f2fs_bug_on(sbi, 1);
-> +	}
-> +}
-> +#endif
-
-#else
-static inline void sanity_check_valid_blocks(struct f2fs_sb_info *sbi,
-			unsigned int segno)
-{
-}
-#endif
-
-Then we don't need to cover sanity_check_valid_blocks() invoking w/
-CONFIG_F2FS_CHECK_FS.
-
-Thanks,
-
->  static inline void seg_info_from_raw_sit(struct seg_entry *se,
->  					struct f2fs_sit_entry *rs)
->  {
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 1c53ccf5a616..04f40677e76a 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -1207,6 +1207,9 @@ static bool ufshcd_is_devfreq_scaling_required(struct ufs_hba *hba,
+ 	if (list_empty(head))
+ 		return false;
+ 
++	if (hba->host->async_scan)
++		return false;
++
+ 	if (hba->use_pm_opp)
+ 		return freq != hba->clk_scaling.target_freq;
+ 
+@@ -8740,21 +8743,6 @@ static int ufshcd_add_lus(struct ufs_hba *hba)
+ 	if (ret)
+ 		goto out;
+ 
+-	/* Initialize devfreq after UFS device is detected */
+-	if (ufshcd_is_clkscaling_supported(hba)) {
+-		memcpy(&hba->clk_scaling.saved_pwr_info,
+-			&hba->pwr_info,
+-			sizeof(struct ufs_pa_layer_attr));
+-		hba->clk_scaling.is_allowed = true;
+-
+-		ret = ufshcd_devfreq_init(hba);
+-		if (ret)
+-			goto out;
+-
+-		hba->clk_scaling.is_enabled = true;
+-		ufshcd_init_clk_scaling_sysfs(hba);
+-	}
+-
+ 	/*
+ 	 * The RTC update code accesses the hba->ufs_device_wlun->sdev_gendev
+ 	 * pointer and hence must only be started after the WLUN pointer has
+@@ -9009,6 +8997,23 @@ static void ufshcd_async_scan(void *data, async_cookie_t cookie)
+ 
+ 	/* Probe and add UFS logical units  */
+ 	ret = ufshcd_add_lus(hba);
++	if (ret)
++		goto out;
++
++	/* Initialize devfreq and start devfreq monitor */
++	if (ufshcd_is_clkscaling_supported(hba)) {
++		memcpy(&hba->clk_scaling.saved_pwr_info,
++			&hba->pwr_info,
++			sizeof(struct ufs_pa_layer_attr));
++		hba->clk_scaling.is_allowed = true;
++
++		ret = ufshcd_devfreq_init(hba);
++		if (ret)
++			goto out;
++
++		hba->clk_scaling.is_enabled = true;
++		ufshcd_init_clk_scaling_sysfs(hba);
++	}
+ 
+ out:
+ 	pm_runtime_put_sync(hba->dev);
+-- 
+2.34.1
 
