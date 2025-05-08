@@ -1,72 +1,65 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE579285409
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5B91FCFDB
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:45:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746722713; cv=none; b=hdXtLGVl4++bjP7YWn1iTAXKeUk8mu/dkpI/10ibaROnsJ3D0PelNhT/JT68vswBrzpxcZkCMIcHlzvR64MjM3IQxJ/F67hXuN0X48rgD+gq/lobCZz3SDUrkTr19oTclCvz/QFGBIMHgFd1zJ2elj05aR6jWckkVL9NbswHZuw=
+	t=1746722755; cv=none; b=rV0XGODRm6L+4K75YHwWFmU+F9tnuPIg6DG3mBWDur3Vi5aB62caR0kMBxhGqMw4rCedOckWQqV0cEXk8RmiUUqbbHcioZackLVoNMIOu6UgBC+QDREBjo35C7f1bMNK2BdEEV/czQojnvDbHTlC69SZs0q7IPs4OaEg7hp4WH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746722713; c=relaxed/simple;
-	bh=kwiaz6X37w2p+rGl0TL9E9E/OK/1JhUxEEvizn3ahAs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ouPU/LQ77HC2iXiIa2mpfyRLHt+YzdTc5KA4HBp7D3PcBeFGW15LRtJKANTCj32shhgJ/kXsgLrVOj84bYrKzyYToyO+v0gsrqoe7RLiBaIMRVFicp1HGSjgj6iKvk5gw+BjrneHbcOuC+rjnC/88u3ASgm0L4n/preWnJ0YCQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gx1VbU0K; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746722755; c=relaxed/simple;
+	bh=sYeZLtpHPeuyHV/41fg3SXOFV2Tg9CfQcSP+Mkt6FAw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=sKUlxh8PWkbddg5jHTjDlEHcmhaJdNKaWIYWydH40/5UdYlLNAYGlu3Z7P1mzVydUBOsw5Ib70w+yR4m5xJoSiG4LagaDSKUOP/UvpLy6uf0BsJMg4avTk5xEjgrhDgWGvB+Q1r3EYMZZVpPpsKh/IA/fi0rjrPflbs2D/YLrnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mICO/toI; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gx1VbU0K"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548DHFSa008635
-	for <linux-kernel@vger.kernel.org>; Thu, 8 May 2025 16:45:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	JSgwUqkSfEKmNonIWMkEu2HDYErCYBP3rkqztUMDifA=; b=gx1VbU0KJBasGDR9
-	9olNE3xQg9wIMhXlglOw419otAS8RjI9tm29pMl9cuOGntVpwelD3Hnod88u/nTa
-	6rKuCG5ENY+tx3Ta8FQbqfEDXCjNAJLeLwLE2DCvDPQYTvEdO8co67Xl4Xe0a6AJ
-	TEA4LQclneCObVzAH1hLWrDxB+LBYHOXUUpYbSxdGUVvMIJGnhuXSWXHKJgHx7Cb
-	E7kx0rPC576uavyDgHm3/KWSeegXuj0sb62z+36kFF26TsRlYYUS8qTPNi8TD0Ot
-	Vx9HDrUWEiDoVO3c2p/ElBGGDQ1CB3eva2yhiPuDTKfSkoT3NlMPLBLbdK5AFfte
-	QEaZNA==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp5a0h1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 16:45:10 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c54be4b03aso24448585a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 09:45:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mICO/toI"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-72b0626c785so1049270a34.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 09:45:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746722752; x=1747327552; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ZS1DAu/OGipdaeYyDVfVQy+AhcyRGZVYwm5fK44jnLQ=;
+        b=mICO/toIb/HlwX+vg9U5ispi7FBErVNzk5S+GKrVfiMt8Y2sUWYVUeEWT5Wi8nCr6v
+         02++H8yzwEV94bOjpiHlmNrmIkO6VgiFtwGM41DxDhAI5RvKBGFjuMAaYm9v8XJNE9J4
+         Cy8eM65qmTdTqF3zci1lPbGYttDTMqQ1LnAnWTD124bQc5HqUbtuHfgffbi136fLyfa8
+         /O6TdBwVDV83oL5z3ml/Z4RYP8CbJ6CBSv0ybsnE5WvfAy/uSZiRKYvBhb6WzDEAFT1+
+         F+UMXMva8AbhPui8DGHBcDu3M3kMIEc9NB2MlYOXan5WQUjOCf5bSnQSCJo/QJwkuEIs
+         NcVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746722709; x=1747327509;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1746722752; x=1747327552;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JSgwUqkSfEKmNonIWMkEu2HDYErCYBP3rkqztUMDifA=;
-        b=F8VuqFruAxl8nO3a7SnHkcrVM/PBvnrgcdIFK6uzULAUAx9vwWDK0ZiEL5wovT4xQJ
-         Fzlx0YbuTYh3AHNn2FiCnWd6nFoJs2jNaw0jJ53nQOJqdxjVvLEa26AuVvrn0IYD3paB
-         8WCpuFP8xK/mN0bmoYyOzq6QsCr/eIj+YwLwC4iqFSupDoB4cB7/0r6jND6FtgCETG/x
-         sx9QKuigj5XYNvERgtI4Ccd1Io89GNNZd8BwZHAdjHqW5RgZSNdsdMLe/OxdDa9fk9ik
-         xPJyUXem0e2fIzJNOxJIrNFP2jYD/WiO9yR0tcmkIdNFVY6r8rP51J+/OA0Z0eUHEi5A
-         +Yqw==
-X-Forwarded-Encrypted: i=1; AJvYcCXFTx9KdeniJpbWNCQEr8+fqCZmwN5CtSbwwXT2Cq4AWfE8AZiRSU//+K592IglpzHERlCJfsbI1t4rpbo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqJZKPOZnD18cov99t/aGOFFs2375ShWkSCxnFUs2DDB7MpV/0
-	+By8aTVmMp1Iz0L2/Anx3AE0fkZW7Fs5wlaUl3wRdF19MJ5P6aX6xjCD4JpbVmbbQolJ4urOOPv
-	rLYzGGnqYaNNYAxRzIqH6ESJKIXbAHGHUJHBJ02KJi1QA59h0KQ7+efGQtGly2XU=
-X-Gm-Gg: ASbGnctPcz787pVHuDZMMdrJFKGk3VTdhXM5OV1dRwCp32qgHroqRSFoy1+PtJqaRVG
-	w1Zoutqs7PFekbizBESns/lrlZvdY1JrabEnggrzM/+fIm271HGKvbMCU8lqNX3Gi7svd5Lb7Qg
-	sAd6Q+natw3Ycr2Ae7ckCI5/7izb6cq3roExgKA+Q0/Lea5qW/RD0VZmUPkBikaKMdKs9SyfXn1
-	3baxekPIe0xxVme5uXiSLLRZNQHRqV/LCemGBzJaMBxtMh96j1nvrBWmWn+675safUBNA9tCmCk
-	gpxhvUrVtLpYFYCEiRgJ4AiMR8IE/Vlh4cCFRkIE03vgxp4ZnGgH+YWuwU5LcFkDWBw=
-X-Received: by 2002:a05:622a:44:b0:474:f601:c21e with SMTP id d75a77b69052e-4945272e639mr384681cf.5.1746722709666;
-        Thu, 08 May 2025 09:45:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGjCAPrSx/92bGi1x7He7ajN3/L+4Y9gypA2HsWqw0iZxERYDr2h8wCQykaB1fY5i9aXZ5LlA==
-X-Received: by 2002:a05:622a:44:b0:474:f601:c21e with SMTP id d75a77b69052e-4945272e639mr384241cf.5.1746722709030;
-        Thu, 08 May 2025 09:45:09 -0700 (PDT)
-Received: from [192.168.65.105] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197bdddcsm10190466b.140.2025.05.08.09.45.06
+        bh=ZS1DAu/OGipdaeYyDVfVQy+AhcyRGZVYwm5fK44jnLQ=;
+        b=TfnC/d6TaC+tXmlzZKkFYGBrpqj4x4HbRih48XZ8Jwe4VMIS+HBbr5tJfHbT6BNA1s
+         Kqv8eEXQ09ZpJQB1jm8jzE5GpxoJC6Ivj7Vk+NpvroJdbot5MYiJU7qB6uNHa/l7Q00Y
+         pCmXeOv5bpTfCFa5XjwffUd4hFaTy2mhxQg9qkY5qr7GXZz2VzgHITU/owon/oTeThEb
+         d6vYpZdyEjTcS9wQDxeT1P3yUtmpQWuPXjE/ifLBJmX2rQQ32M57DOhF3pI6yFa22ePq
+         BRqciHbDf464OEquE4J9yFzfiZhnd8oVHHO1SVAaR81z/tK5On4xyP/New97PGbmdsV0
+         iF5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVauvER3Mh+GSlrZFg9hRLKsyLVMo6WaesOqIVa3BgOlbbsQ+H2su4BPIOpfYT0qwkJDwJAPX3o9XorV/Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycbhbZCGzCHRZr2iv2f7LRPEUakjM2RmTrQ+G0VrhN7yxLxiBx
+	k/cwqzrUcmgRjv+Wj3cUpsgTbPSbnmqZvWNwJJ21WutaL3aCzvgSZVTXK8XwH/g=
+X-Gm-Gg: ASbGncuG4WDFBvPaPIykNZztNJoReDJwqyh6fPvII+TK4L/KD5zDv/ix5R/8e4BdfTB
+	4XXZe46q1+l5aKYdGyH+IGidkmBdOLqMMGxLAkUrgn1pZZZ5qXL4ADre6Iupl9N54jfZMvZjG6S
+	QYNbNsIL6Capmr6RZAchWGfsNVlCn9/fRTRDspfc/DIxgBF7dp6d6O2lL4GgrLR8kdYYvdop1pG
+	YCoiWsT+/qO7awqUHI1BUXIG9uoYWtC/ZFTKDrnZpTpnFYMTVyaJblGBugR7IwbhOjZOEDb/nm+
+	JEbV1p35PlFc491DkqrejXK0etL6B57oGF91e0NdN5eUX5HBYAHfHyPpw6BgFaRMZK4tfTXk9Wc
+	vsu3/c6wDpk0ZWq5ELw==
+X-Google-Smtp-Source: AGHT+IEZDZLOMxJDt8kLUDFqLwM51K2NVQLT54ITBkIlx9L3ppO4Dyj06GSMVCaofCpDgYIIbqiFjw==
+X-Received: by 2002:a05:6830:3788:b0:72c:10db:f210 with SMTP id 46e09a7af769-732269faf05mr352368a34.13.1746722752395;
+        Thu, 08 May 2025 09:45:52 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e? ([2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-732264d59e1sm102555a34.34.2025.05.08.09.45.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 09:45:08 -0700 (PDT)
-Message-ID: <b488ac7b-46dd-44e1-a132-c92daf95b421@oss.qualcomm.com>
-Date: Thu, 8 May 2025 18:45:06 +0200
+        Thu, 08 May 2025 09:45:51 -0700 (PDT)
+Message-ID: <37ae4941-da7e-4298-8269-b5faf29fffdd@baylibre.com>
+Date: Thu, 8 May 2025 11:45:50 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,95 +67,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/7] arm64: dts: qcom: qcs6490-audioreach: Modify LPASS
- macros clock settings for audioreach
-To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-References: <20250429092430.21477-1-quic_pkumpatl@quicinc.com>
- <20250429092430.21477-4-quic_pkumpatl@quicinc.com>
- <12ccf19f-10f9-42a7-b61d-fd54d5922bf7@oss.qualcomm.com>
- <82e6c229-8852-4ae9-add0-5fdc0a15f7c5@quicinc.com>
+Subject: Re: [PATCH v2 2/4] iio: adc: adi-axi-adc: add set decimation rate
+To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+ Dragos Bogdan <dragos.bogdan@analog.com>,
+ Antoniu Miclaus <antoniu.miclaus@analog.com>,
+ Olivier Moysan <olivier.moysan@foss.st.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Matti Vaittinen <mazziesaccount@gmail.com>,
+ Tobias Sperling <tobias.sperling@softing.com>,
+ Marcelo Schmitt <marcelo.schmitt@analog.com>,
+ Alisa-Dariana Roman <alisadariana@gmail.com>,
+ Esteban Blanc <eblanc@baylibre.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250508123107.3797042-1-pop.ioan-daniel@analog.com>
+ <20250508123107.3797042-3-pop.ioan-daniel@analog.com>
+From: David Lechner <dlechner@baylibre.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <82e6c229-8852-4ae9-add0-5fdc0a15f7c5@quicinc.com>
+In-Reply-To: <20250508123107.3797042-3-pop.ioan-daniel@analog.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=Lu2Symdc c=1 sm=1 tr=0 ts=681cdf96 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=FNMLLXcm4HOaPzSYPkwA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: I08rPWYKt4WdJngON8gNVF4fkPDTs0zz
-X-Proofpoint-ORIG-GUID: I08rPWYKt4WdJngON8gNVF4fkPDTs0zz
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE0NiBTYWx0ZWRfXwUi6JmDMs8Q/
- /5dkeDbNBL0I/ZQY0FVHIKfHceSUOcWd5ef6C0FMtku2T8wJdtthGP+Yd2mMvf7dn9i62D6nbJs
- vDhN5EUARQ8jw7SoOSJzAciTQgRClN96UHLFioEhY5xn5NwQlzVPHS7zIs4Uwc+32+ZplQ8xPc/
- kn+YfnH5vThgI5p4+/OMjxDdTI0AO6pZ7POxdb+By3/WRMUTyUfHhR3BSxrO8osTf2YTLhEuv3k
- xiCxJ6PUo549Zel7G52YBVlYPPG3gLxYDqzYc8truVIPGVEU1hMnkhjhcn3R6Fq46xmk6XDNar+
- cGHE2wqRu5rrhW2MubMypVpZ04m9pWIG7T3O2XQMzXZM+tqVtJ/+t3WfwAtWOpiFnagvylcQkqI
- N3H7YEKGJqepRSaBlJk23BgbBNxJFB63cXRsD/6bROVQlDZfNhm7MITvj7fcViAD1xH4g54Y
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_05,2025-05-08_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
- priorityscore=1501 suspectscore=0 clxscore=1015 adultscore=0 malwarescore=0
- spamscore=0 impostorscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505080146
+Content-Transfer-Encoding: 7bit
 
-On 5/8/25 6:38 PM, Prasad Kumpatla wrote:
+On 5/8/25 7:30 AM, Pop Ioan Daniel wrote:
+> Add support for setting decimation rate.
 > 
+> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+> ---
+> changes in v2:
+>  - update ADI_AXI_ADC_REG_CHAN_USR_CTRL_2 register in a per-channel register
+>  - rename ADI_AXI_ADC_DEC_RATE_MASK in
+>    ADI_AXI_ADC_CHAN_USR_CTRL_2_DEC_RATE_N_MASK
+>  - add channel index parameter to keep axi_adc_set_dec_rate generic
+>  - remove ad7405 chip-specific struct
+>  drivers/iio/adc/adi-axi-adc.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
-> On 4/29/2025 4:24 PM, Konrad Dybcio wrote:
->> On 4/29/25 11:24 AM, Prasad Kumpatla wrote:
->>> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
->>>
->>> Modify and enable WSA, VA, RX and TX lpass macros and lpass_tlmm clock
->>> settings. For audioreach solution mclk, npl and fsgen clocks are enabled
->>> through the q6prm clock driver.
->>>
->>> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
->>> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->>> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->>> ---
->>>   .../boot/dts/qcom/qcs6490-audioreach.dtsi     | 48 +++++++++++++++++++
->>>   1 file changed, 48 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
->>> index b11b9eea64c1..f3859d805ea7 100644
->>> --- a/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
->>> @@ -11,6 +11,54 @@
->>>   #include <dt-bindings/sound/qcom,q6afe.h>
->>>   #include <dt-bindings/sound/qcom,q6dsp-lpass-ports.h>
->>>   +&lpass_rx_macro {
->>> +    /delete-property/ power-domains;
->>> +    /delete-property/ power-domain-names;
->>> +    clocks = <&q6prmcc LPASS_CLK_ID_TX_CORE_MCLK LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
->>> +         <&q6prmcc LPASS_CLK_ID_TX_CORE_NPL_MCLK  LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
->>
->> TX -> RX?
->>
->> [...]
->>
->>> +&lpass_wsa_macro {
->>> +    /delete-property/ power-domains;
->>> +    /delete-property/ power-domain-names;
->>> +    clocks = <&q6prmcc LPASS_CLK_ID_TX_CORE_MCLK LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
->>> +         <&q6prmcc LPASS_CLK_ID_TX_CORE_NPL_MCLK LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
->>
->> TX -> WSA?
-> 
-> For qcs6490 RX drives clk from TX CORE which is mandated from DSP side, Unlike sm8450 dedicated core clocks. Core TX clk is used for both RX and WSA as per DSP recommendations.
+> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
+> index 9e8c30230791..33eb8f337e0b 100644
+> --- a/drivers/iio/adc/adi-axi-adc.c
+> +++ b/drivers/iio/adc/adi-axi-adc.c
+> @@ -80,6 +80,9 @@
+>  #define ADI_AXI_ADC_REG_CHAN_CTRL_3(c)		(0x0418 + (c) * 0x40)
+>  #define   ADI_AXI_ADC_CHAN_PN_SEL_MASK		GENMASK(19, 16)
+>  
+> +#define ADI_AXI_ADC_REG_CHAN_USR_CTRL_2(c)	(0x0424 + (c) * 0x40)
+> +#define   ADI_AXI_ADC_CHAN_USR_CTRL_2_DEC_RATE_N_MASK		GENMASK(15, 0)
+> +
+>  /* IO Delays */
+>  #define ADI_AXI_ADC_REG_DELAY(l)		(0x0800 + (l) * 0x4)
+>  #define   AXI_ADC_DELAY_CTRL_MASK		GENMASK(4, 0)
+> @@ -242,6 +245,17 @@ static int axi_adc_test_pattern_set(struct iio_backend *back,
+>  	}
+>  }
+>  
+> +static int axi_adc_set_dec_rate(struct iio_backend *back, unsigned int chan,
+> +				unsigned int rate)
+> +{
+> +	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
+> +
+> +	return regmap_update_bits(st->regmap,
+> +				  ADI_AXI_ADC_REG_CHAN_USR_CTRL_2(chan),
+> +				  ADI_AXI_ADC_CHAN_USR_CTRL_2_DEC_RATE_N_MASK,
+> +				  FIELD_PREP(ADI_AXI_ADC_CHAN_USR_CTRL_2_DEC_RATE_N_MASK, rate));
 
-Please leave a comment as it's not obvious
+Rate is getting a bit far past 80 chars, so would be nice to wrap that line.
 
-Konrad
+> +}
+> +
+>  static int axi_adc_read_chan_status(struct adi_axi_adc_state *st, unsigned int chan,
+>  				    unsigned int *status)
+>  {
+> @@ -550,6 +564,7 @@ static const struct iio_backend_ops adi_axi_adc_ops = {
+>  	.test_pattern_set = axi_adc_test_pattern_set,
+>  	.chan_status = axi_adc_chan_status,
+>  	.interface_type_get = axi_adc_interface_type_get,
+> +	.oversampling_ratio_set = axi_adc_set_dec_rate,
+
+Would make more sense if function was named axi_adc_oversampling_ratio_set.
+(Making the names match exactly (with namespace prefix added) make less info
+you have to hold in your head when reading the driver.)
+
+>  	.debugfs_reg_access = iio_backend_debugfs_ptr(axi_adc_reg_access),
+>  	.debugfs_print_chan_status = iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
+>  };
+
