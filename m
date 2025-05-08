@@ -1,107 +1,134 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE5F2750F2
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E621DC988;
+	Thu,  8 May 2025 14:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746715679; cv=none; b=S+Lmg3pboSlBpvB+HWn6W44enRCbULeECJHUbMa5RAPNozBNMZc0IVvGexFk+p1wPHTHdu9lR0MSVI/PQP3NMNKKUOZw2WjvPXI6wV4/xRLU0l77Cdfg6JEU6DAX4IJuWsdpOMnT8uYFXPSMcVSCaHJpKiDxE1Ftvn2JAW9ACf8=
+	t=1746715686; cv=none; b=eLfhxHleL3Rp+53D/ZdbPaUF7eVkhh56IVccb7vYE1zV8yZky/HgZg3kwaDvruHN8ukDTZiEx3Q72EMrd4CoX5cPtKUlRzlv0MMVVLIh9J2S5bI3jzF+rgzeJh87o/yQJI4WdCCNeRbYI1xrjZPAWYbJH0gYUEqbB6ncZ7jhZZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746715679; c=relaxed/simple;
-	bh=OP0WRNpQ3AhTCII2JqnV9mcyFJ8DbeYGPnHp7gBLYfo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Db25L151KQwTGnlR9dSib1T1nIq0jxG9Vx+/bGElNtEgDFuJx4rT8cBzqnDsLqlORYGcLtZgE9fHeuccFhKCUxmf9LAIVXrFD7X4KTWEuDCV5+l1vPOHcopzAgdC+U62O/ZorBJOEsSTCVy+voljzJN7sRSEdNm51krpAGF3nuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QkzQtZO8; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1746715686; c=relaxed/simple;
+	bh=FMMo1NiH6RdH+2yuH9IfA46b5LATQ4bbazGrNJmBDSc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DaD+aM4J9GnrtkI1SoGar2+mgZ6Q9KH+iilCeDARg6yoSx1j7vLQevaAFh7SNGaj8TqyAwGZ5spXWpIZOj2ZBJv2Jz3dMJ1MiWbcQzD8TSvm4ltdtXdlZ7arj1mRShkyzLqb0N27VCV4bfOuN5npU5gM2t++NDkDotvauZMdZjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egxYxSVm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QkzQtZO8"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2db9e29d3bcso82357fac.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 07:47:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1746715676; x=1747320476; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZbKXS17FLCeINM3f26BpfyHxYt8ulznWKq5GCJKKZ7s=;
-        b=QkzQtZO8aY6n3+WjKEIL7hwWinNpcpRYlo4iqe/lflSF9tRKi/cvmluvESHQi1feNi
-         9iRHotQSUD4gIyl32OQV9tzXIvCaVzNzZmnN1dKRkJixlXjtQi+feAlCtfmMQ/ctMN6h
-         ZoEIMxcI60owOdTWdo3u5OqfdKfEppQnGcx0s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746715676; x=1747320476;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZbKXS17FLCeINM3f26BpfyHxYt8ulznWKq5GCJKKZ7s=;
-        b=RSOmktbasfvjkh0tJyLe7QPO7hTuxVE0VHyEr9lHhFjTchzf4BIBoXWhgg/8E5YXKm
-         CzeuEI+jV8/6htTE0PldHjJ2LQ9HqMxrjTz/NjovBVE1qFNER4Z0quZyHcZRAb0nMz4y
-         PqklXecZNQdx8XamF2L/NBbCS5W3KTzAtpIU/ca+csIz10GgCEfYIBl5dPZUm6l7tsUp
-         jt9RO9wF27xSVuZVxFPYWiFNXUvspH+fnDkMSHSqq49SVw/jRP7IFvoSivha2tN0YLOZ
-         yEs8gjhV+22NASIsMXViiJU0iBTj20bedU0R3VwfFTama0nzkxC6OtVXbp0mR6YJJT3p
-         bdhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXglT8tsBKCkfvZwPMzzWUcxKcW1O2KlrOWy0PV6dMeB4Ui/RGxSYRJ4/JsCGaPs+bXI5FJrIZaD1BtAHw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKkld1ifTZVIvtsycvXdd5A1vylIahhocxUXRfpPHP4ZGDB6hI
-	bqYgtmGO3CVgw3u9Hby+QHHU4a7eiOgGmD+R+RQ8tUhDSNoKaTZKr2t/81BgEz0=
-X-Gm-Gg: ASbGncsdkdOICVwNNU4Vf7D2KM+vR8UeK2I0aJVbS0hndiOgp7AB99O9/hynfdnciBC
-	nDRWULeXk7VW7euttUhy8s6RsLRgAP3/G1e4LRac1kwdeUNR3VqhuPMV2hJEiEW5Csi1tJ0Dg37
-	R5u9ftEErXMbVaXBBMxlM7dEYmJgFc53h3RijgMZVAxSQAE/qqeR2JdHAcorp5ZHRdXWnufwWIb
-	7h+d1XdGR/cGphRLFjEfIx0sArRQFd1ecK1xJQvQAeFnuX/iTVd5x8m8DhV9P5DomFiPqIsAchb
-	Kus/aNumRf6qQvia1h+x7wZfgnss8h1qNS7zEhi/Ffrefj6h7FE=
-X-Google-Smtp-Source: AGHT+IGEA5a4mOTrYmH7D6XLU6ZecdwkH7ReVPSCIEcHWSuV4+go/qkk5dvHLhAUPmYAL8ZzKUhwxw==
-X-Received: by 2002:a05:6871:20d:b0:2d4:d393:8e47 with SMTP id 586e51a60fabf-2db5bd5c4d3mr4693133fac.4.1746715676231;
-        Thu, 08 May 2025 07:47:56 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f88a91977bsm3220210173.54.2025.05.08.07.47.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 07:47:55 -0700 (PDT)
-Message-ID: <e6503d21-6e95-44d4-bf84-9412d61d7605@linuxfoundation.org>
-Date: Thu, 8 May 2025 08:47:55 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egxYxSVm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01F7DC4CEE7;
+	Thu,  8 May 2025 14:48:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746715686;
+	bh=FMMo1NiH6RdH+2yuH9IfA46b5LATQ4bbazGrNJmBDSc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=egxYxSVms4ygR1CTUZWw7Vs835GYMgta3+GdB3YM281qfW3LLrSDdQ83RD4jSrHfC
+	 luLg84ovwNTl6CLIiMMD+AMgqFX+ytvymVfA+4L8GCw/Ef6vkajGECJ7IiODC3ph7j
+	 ou+K7TPtig4arEMS2FdSZLageLoZBXKGYAbmhUl27ACtkGGVXFi7+JaU5NkjGJvl+d
+	 /Lu7A0MBauiTuHXSws5kO9k3UoaKx3bEPSN96ic+ud/WG9IPB88cXMs2jw2r4Oz9fb
+	 uaR5n6N/jgPUu1T1s2UDeTzxrHYZQDiZcylBpV/2SZX4lbLgRSxLbKT9j1nSRsGACD
+	 CrARvwpDvQhxw==
+Date: Thu, 8 May 2025 15:48:01 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Angelo Dureghello <adureghello@baylibre.com>
+Cc: "Rob Herring (Arm)" <robh@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/5] dt-bindings: iio: adc: adi,ad7606: add gain
+ calibration support
+Message-ID: <20250508-everybody-tissue-b7bfb726ae99@spud>
+References: <20250508-wip-bl-ad7606-calibration-v4-0-91a3f2837e6b@baylibre.com>
+ <20250508-wip-bl-ad7606-calibration-v4-4-91a3f2837e6b@baylibre.com>
+ <174670267187.3889412.7858960687511929039.robh@kernel.org>
+ <bttbhfjxwtfc4rxqde5rc6s6gqpgutsya4s2mezjl5t37yuuoh@lgayj2yp2mva>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/164] 6.12.28-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250507183820.781599563@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250507183820.781599563@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="0GRueCO7wZXO4BSF"
+Content-Disposition: inline
+In-Reply-To: <bttbhfjxwtfc4rxqde5rc6s6gqpgutsya4s2mezjl5t37yuuoh@lgayj2yp2mva>
 
-On 5/7/25 12:38, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.28 release.
-> There are 164 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 09 May 2025 18:37:41 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.28-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
 
-Compiled and booted on my test system. No dmesg regressions.
+--0GRueCO7wZXO4BSF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+On Thu, May 08, 2025 at 02:09:12PM +0200, Angelo Dureghello wrote:
+> Hi Rob,
+>=20
+> On 08.05.2025 06:11, Rob Herring (Arm) wrote:
+> >=20
+> > On Thu, 08 May 2025 12:06:08 +0200, Angelo Dureghello wrote:
+> > > From: Angelo Dureghello <adureghello@baylibre.com>
+> > >=20
+> > > Add gain calibration support by a per-channel resistor value.
+> > >=20
+> > > Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> > > Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> > > ---
+> > >  .../devicetree/bindings/iio/adc/adi,ad7606.yaml    | 29 ++++++++++++=
+++++++++++
+> > >  1 file changed, 29 insertions(+)
+> > >=20
+> >=20
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >=20
+> > yamllint warnings/errors:
+> >=20
+> > dtschema/dtc warnings/errors:
+> >=20
+> >=20
+> > doc reference errors (make refcheckdocs):
+> >=20
+> > See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/2025=
+0508-wip-bl-ad7606-calibration-v4-4-91a3f2837e6b@baylibre.com
+> >=20
+> > The base for the series is generally the latest rc1. A different depend=
+ency
+> > should be noted in *this* patch.
+> >=20
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> > date:
+> >=20
+> > pip3 install dtschema --upgrade
+> >=20
+> > Please check and re-submit after running the above command yourself. No=
+te
+> > that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> > your schema. However, it must be unset to test all examples with your s=
+chema.
+> >=20
+>=20
+> I am getting no errors at all by:
+>=20
+> make dt_binding_check DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings=
+/iio/adc
+> make dt_binding_check DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings=
+/iio/adc/adi,ad7606.yaml
 
-thanks,
--- Shuah
+I think the bot do be wildin'
+
+--0GRueCO7wZXO4BSF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBzEIQAKCRB4tDGHoIJi
+0jncAP9zBkLBBhL3hxzr33U8uvRkUaMRmvcdksf89pNUNEjlKQD/X1d9vV8GohTT
+i2nIb12grgxv2NSgsE6Z2ibdBEorEQY=
+=q2tQ
+-----END PGP SIGNATURE-----
+
+--0GRueCO7wZXO4BSF--
