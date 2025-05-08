@@ -1,279 +1,104 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF10289823;
-	Thu,  8 May 2025 19:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D7F28B3FF;
+	Thu,  8 May 2025 19:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746734123; cv=none; b=NAcyq+NYAdf7YsryHybci9e5UV1+BEWAO9t5wchOs0OC+vkZDHnI3D8ktB1aP6ly0Y/XPGxmM9b6+9Yad/RcTFR4J6grf0gZi7i33vUcnPw/IfNMTf4fii2pObeO4DPiQuUk1ob6Pl5hO8XP8vSFIY8A7NYby67GWjE5aQexNS4=
+	t=1746734163; cv=none; b=WppB3PgsVp1TuQInRS4NdUZhW0cTPmEvmNQPFHVOxgXwIEL85XaEcB6iqVNvYoUTNfmZimW5XVUgD1LF2jq85C0mgemNcwXyk/4kYpRUxPLMpMYbLyJGQtJQDYlN7Uzt6bK9W/g/SMyfWLRkiQ70BWf7A2fkfqz1TqQROEhP0xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746734123; c=relaxed/simple;
-	bh=NIlaEZOjjYw503zEtkLA060WDKdU2sfcKok31HZb7fg=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=Od4k/v2aApp/uC9umqvWHIhoNJdbBhcQB9ZlaN8hIZIJNwWOx0jDY3sFKa9MDLUakca6PhMjt1Uajb2sY/jVTqlwn++5R/7Vlq9lAFNx93CYNhMOVx66yMg9UA3IGdXHVdzmFjgohoyndUCILt/Ae5bsCBEw+cg9ZJpDpiTJ2gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nbaOy8UH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HfFbZTSn; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746734163; c=relaxed/simple;
+	bh=i55yyCYs9Dt3rXnaFOCk8AYoNdtlA/BZ9TyZhfIZYD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lTuWztp2hLryUh3f4oOd0LjbRlb3QCmH4qOzySi7heqsIPsg0RgBCEaXool5f6hwin7vQ1PBzEwsuI2UZRwgn9ND4dYaZAnCTpaqOMFqz/yrKcAxMcjppFrKWjtqBNJjghB9VZPdm6wmK1itXMA6Nk2RY4M+ruSD/bJP8vzVD6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hvs5N6ry; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nbaOy8UH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HfFbZTSn"
-Date: Thu, 08 May 2025 19:55:17 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746734118;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=fYb4XdAPx1UxLmvwWYSBvDn1belJ2jh1iwn3z+SvTko=;
-	b=nbaOy8UHqLNLikwLu+aLYsIBitV8QxPW78Cwp6/7Ick7hP/31dIWVFmtCUIMrZK2mr3XQl
-	Yh9UQmoRWKxM1yv2FN1PzXdXl6oWJiNYQJ504H4gHNr0UFpSLz23iDJO1zskSD/OydjtF8
-	h9CLdwz9Rx/6PxLKMJ8kca6RaLxcIfPGth7I2tvClzDI55bR2A8DRCFokDhWkK6X+psa5P
-	xXh3+KaCVyTGrr6wzMdNfyRa88DjRNTO0VUwhHPoSVdWbLeqDed7VgT1Z+L2yxSkgb9bUM
-	z4wC+Kufy/KDNwk2Y4jFNf9yIA9I8z9LE3vcNuafLZfQ13/TLo1qZiXpoiVS1A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746734118;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=fYb4XdAPx1UxLmvwWYSBvDn1belJ2jh1iwn3z+SvTko=;
-	b=HfFbZTSn5Mz5NIxJm0YIuacSc9BJ+Arh0Rm0VTrZ/sPW7Js6likpylxIpLsssDM/mJN/PN
-	LiJiMyE2dr5gj0Dg==
-From: "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf: Fix irq work dereferencing garbage
-Cc: Frederic Weisbecker <frederic@kernel.org>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hvs5N6ry"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AD9AC4CEE7;
+	Thu,  8 May 2025 19:55:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746734162;
+	bh=i55yyCYs9Dt3rXnaFOCk8AYoNdtlA/BZ9TyZhfIZYD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hvs5N6ryFk59z6pPXVxhcYl2MryOdOtS5sYfit97fKLoaEYK8e9HM//Afqzthne4x
+	 yigk2HE3LKMqIjok5etCP8+6I2eXaoMSu0d3Ouh+2CGDLwUnvGt+Obq3KhPXpYf9Ez
+	 mThrt+/MZl2qozdwK3uYcgkikoFczV6SOFyq8WkkWYpPQ7GCC9/4eWGEkrvOnbjEEl
+	 l3vTRYZHUdEQ/Ncc7/oY9MvNzRfjwzdeGlKnLgUmEjgz22oi0fi+kiNlDRDjTKddFr
+	 jHo+Ju3uD6TlQIJZFdYvOFtMsCwPm2qCoJxDybbDTJZavJKMoIvSEpSy6UpWd2CJnH
+	 AiqbZRj0ybM2Q==
+Date: Thu, 8 May 2025 16:55:54 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [RFC/PATCH] perf lock contention: Add -J/--inject-delay option
+Message-ID: <aB0MSvrGA5fgH5Hj@x1>
+References: <20250225075929.900995-1-namhyung@kernel.org>
+ <aBzDpi25-LBgAjEj@x1>
+ <aBzqGn0Ktbl38sOF@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174673411735.406.16084411654137347057.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aBzqGn0Ktbl38sOF@google.com>
 
-The following commit has been merged into the perf/core branch of tip:
+On Thu, May 08, 2025 at 10:30:02AM -0700, Namhyung Kim wrote:
+> On Thu, May 08, 2025 at 11:45:58AM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Mon, Feb 24, 2025 at 11:59:29PM -0800, Namhyung Kim wrote:
+> > > This is to slow down lock acquistion (on contention locks) deliberately.
+> > > A possible use case is to estimate impact on application performance by
+> > > optimization of kernel locking behavior.  By delaying the lock it can
+> > > simulate the worse condition as a control group, and then compare with
+> > > the current behavior as a optimized condition.
 
-Commit-ID:     d20eb2d5fe8f8818abcfdadf5ac5109938f1318e
-Gitweb:        https://git.kernel.org/tip/d20eb2d5fe8f8818abcfdadf5ac5109938f1318e
-Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Mon, 28 Apr 2025 13:11:47 +02:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 08 May 2025 21:50:19 +02:00
+> > So this looks useful, I guess we can proceed and merge it?
 
-perf: Fix irq work dereferencing garbage
+> That'd be great. :)
 
-The following commit:
+Can you please refresh it?
 
-	da916e96e2de ("perf: Make perf_pmu_unregister() useable")
-
-has introduced two significant event's parent lifecycle changes:
-
-1) An event that has exited now has EVENT_TOMBSTONE as a parent.
-   This can result in a situation where the delayed wakeup irq_work can
-   accidentally dereference EVENT_TOMBSTONE on:
-
-CPU 0                                          CPU 1
------                                          -----
-
-__schedule()
-    local_irq_disable()
-    rq_lock()
-    <NMI>
-    perf_event_overflow()
-        irq_work_queue(&child->pending_irq)
-    </NMI>
-    perf_event_task_sched_out()
-        raw_spin_lock(&ctx->lock)
-        ctx_sched_out()
-        ctx->is_active = 0
-        event_sched_out(child)
-        raw_spin_unlock(&ctx->lock)
-                                              perf_event_release_kernel(parent)
-                                                  perf_remove_from_context(child)
-                                                  raw_spin_lock_irq(&ctx->lock)
-                                                  // Sees !ctx->is_active
-                                                  // Removes from context inline
-                                                  __perf_remove_from_context(child)
-                                                      perf_child_detach(child)
-                                                          event->parent = EVENT_TOMBSTONE
-    raw_spin_rq_unlock_irq(rq);
-    <IRQ>
-    perf_pending_irq()
-        perf_event_wakeup(child)
-            ring_buffer_wakeup(child)
-                rcu_dereference(child->parent->rb) <--- CRASH
-
-This also concerns the call to kill_fasync() on parent->fasync.
-
-2) The final parent reference count decrement can now happen before the
-   the final child reference count decrement. ie: the parent can now
-   be freed before its child. On PREEMPT_RT, this can result in a
-   situation where the delayed wakeup irq_work can accidentally
-   dereference a freed parent:
-
-CPU 0                                          CPU 1                              CPU 2
------                                          -----                              ------
-
-perf_pmu_unregister()
-    pmu_detach_events()
-       pmu_get_event()
-           atomic_long_inc_not_zero(&child->refcount)
-
-                                               <NMI>
-                                               perf_event_overflow()
-                                                   irq_work_queue(&child->pending_irq);
-                                               </NMI>
-                                               <IRQ>
-                                               irq_work_run()
-                                                   wake_irq_workd()
-                                               </IRQ>
-                                               preempt_schedule_irq()
-                                               =========> SWITCH to workd
-                                               irq_work_run_list()
-                                                   perf_pending_irq()
-                                                       perf_event_wakeup(child)
-                                                           ring_buffer_wakeup(child)
-                                                               event = child->parent
-
-                                                                                  perf_event_release_kernel(parent)
-                                                                                      // Not last ref, PMU holds it
-                                                                                      put_event(child)
-                                                                                      // Last ref
-                                                                                      put_event(parent)
-                                                                                          free_event()
-                                                                                              call_rcu(...)
-                                                                                  rcu_core()
-                                                                                      free_event_rcu()
-
-                                                               rcu_dereference(event->rb) <--- CRASH
-
-This also concerns the call to kill_fasync() on parent->fasync.
-
-The "easy" solution to 1) is to check that event->parent is not
-EVENT_TOMBSTONE on perf_event_wakeup() (including both ring buffer
-and fasync uses).
-
-The "easy" solution to 2) is to turn perf_event_wakeup() to wholefully
-run under rcu_read_lock().
-
-However because of 2), sanity would prescribe to make event::parent
-an __rcu pointer and annotate each and every users to prove they are
-reliable.
-
-Propose an alternate solution and restore the stable pointer to the
-parent until all its children have called _free_event() themselves to
-avoid any further accident. Also revert the EVENT_TOMBSTONE design
-that is mostly here to determine which caller of perf_event_exit_event()
-must perform the refcount decrement on a child event matching the
-increment in inherit_event().
-
-Arrange instead for checking the attach state of an event prior to its
-removal and decrement the refcount of the child accordingly.
-
-Fixes: da916e96e2de ("perf: Make perf_pmu_unregister() useable")
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/events/core.c | 31 +++++++++++++++----------------
- 1 file changed, 15 insertions(+), 16 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 882db7b..e0ca4a8 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -208,7 +208,6 @@ static void perf_ctx_unlock(struct perf_cpu_context *cpuctx,
- }
- 
- #define TASK_TOMBSTONE ((void *)-1L)
--#define EVENT_TOMBSTONE ((void *)-1L)
- 
- static bool is_kernel_event(struct perf_event *event)
- {
-@@ -2338,12 +2337,6 @@ static void perf_child_detach(struct perf_event *event)
- 
- 	sync_child_event(event);
- 	list_del_init(&event->child_list);
--	/*
--	 * Cannot set to NULL, as that would confuse the situation vs
--	 * not being a child event. See for example unaccount_event().
--	 */
--	event->parent = EVENT_TOMBSTONE;
--	put_event(parent_event);
- }
- 
- static bool is_orphaned_event(struct perf_event *event)
-@@ -5705,7 +5698,7 @@ static void put_event(struct perf_event *event)
- 	_free_event(event);
- 
- 	/* Matches the refcount bump in inherit_event() */
--	if (parent && parent != EVENT_TOMBSTONE)
-+	if (parent)
- 		put_event(parent);
- }
- 
-@@ -9998,7 +9991,7 @@ void perf_event_text_poke(const void *addr, const void *old_bytes,
- 
- void perf_event_itrace_started(struct perf_event *event)
- {
--	event->attach_state |= PERF_ATTACH_ITRACE;
-+	WRITE_ONCE(event->attach_state, event->attach_state | PERF_ATTACH_ITRACE);
- }
- 
- static void perf_log_itrace_start(struct perf_event *event)
-@@ -13922,10 +13915,7 @@ perf_event_exit_event(struct perf_event *event,
- {
- 	struct perf_event *parent_event = event->parent;
- 	unsigned long detach_flags = DETACH_EXIT;
--	bool is_child = !!parent_event;
--
--	if (parent_event == EVENT_TOMBSTONE)
--		parent_event = NULL;
-+	unsigned int attach_state;
- 
- 	if (parent_event) {
- 		/*
-@@ -13942,6 +13932,8 @@ perf_event_exit_event(struct perf_event *event,
- 		 */
- 		detach_flags |= DETACH_GROUP | DETACH_CHILD;
- 		mutex_lock(&parent_event->child_mutex);
-+		/* PERF_ATTACH_ITRACE might be set concurrently */
-+		attach_state = READ_ONCE(event->attach_state);
- 	}
- 
- 	if (revoke)
-@@ -13951,18 +13943,25 @@ perf_event_exit_event(struct perf_event *event,
- 	/*
- 	 * Child events can be freed.
- 	 */
--	if (is_child) {
--		if (parent_event) {
--			mutex_unlock(&parent_event->child_mutex);
-+	if (parent_event) {
-+		mutex_unlock(&parent_event->child_mutex);
-+
-+		/*
-+		 * Match the refcount initialization. Make sure it doesn't happen
-+		 * twice if pmu_detach_event() calls it on an already exited task.
-+		 */
-+		if (attach_state & PERF_ATTACH_CHILD) {
- 			/*
- 			 * Kick perf_poll() for is_event_hup();
- 			 */
- 			perf_event_wakeup(parent_event);
- 			/*
- 			 * pmu_detach_event() will have an extra refcount.
-+			 * perf_pending_task() might have one too.
- 			 */
- 			put_event(event);
- 		}
-+
- 		return;
- 	}
- 
+⬢ [acme@toolbox perf-tools-next]$        git am ./20250224_namhyung_perf_lock_contention_add_j_inject_delay_option.mbx
+Applying: perf lock contention: Add -J/--inject-delay option
+error: patch failed: tools/perf/util/bpf_skel/lock_contention.bpf.c:11
+error: tools/perf/util/bpf_skel/lock_contention.bpf.c: patch does not apply
+error: patch failed: tools/perf/util/lock-contention.h:140
+error: tools/perf/util/lock-contention.h: patch does not apply
+Patch failed at 0001 perf lock contention: Add -J/--inject-delay option
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
+⬢ [acme@toolbox perf-tools-next]$ git am --abort
+⬢ [acme@toolbox perf-tools-next]$ 
+⬢ [acme@toolbox perf-tools-next]$ patch -p1 < ./20250224_namhyung_perf_lock_contention_add_j_inject_delay_option.mbx
+patching file tools/perf/Documentation/perf-lock.txt
+Hunk #1 succeeded at 216 (offset 1 line).
+patching file tools/perf/builtin-lock.c
+Hunk #2 succeeded at 2003 (offset 30 lines).
+Hunk #3 succeeded at 2508 (offset 30 lines).
+Hunk #4 succeeded at 2652 (offset 30 lines).
+patching file tools/perf/util/bpf_lock_contention.c
+Hunk #1 succeeded at 261 (offset 78 lines).
+Hunk #2 succeeded at 373 (offset 80 lines).
+patching file tools/perf/util/bpf_skel/lock_contention.bpf.c
+Hunk #1 succeeded at 14 with fuzz 2 (offset 3 lines).
+Hunk #2 succeeded at 152 (offset 35 lines).
+Hunk #3 FAILED at 153.
+Hunk #4 succeeded at 397 (offset 39 lines).
+Hunk #5 succeeded at 835 with fuzz 1 (offset 230 lines).
+1 out of 5 hunks FAILED -- saving rejects to file tools/perf/util/bpf_skel/lock_contention.bpf.c.rej
+patching file tools/perf/util/lock-contention.h
+Hunk #2 succeeded at 146 with fuzz 1.
+Hunk #3 succeeded at 156 (offset 1 line).
+⬢ [acme@toolbox perf-tools-next]$
