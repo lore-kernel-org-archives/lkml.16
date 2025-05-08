@@ -1,110 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267E638384;
-	Thu,  8 May 2025 18:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A0D229B16;
+	Thu,  8 May 2025 18:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746727865; cv=none; b=fJgSu4lPvacCQ3fojbDrWCFRMIKARL3y3cAFsRzF9f/nD15YYkZwUBOkNwDaWnYnlzsfOB4VtSKlNb5fJSfrjgHS3FCmPekDKgFELtxei0/u5vTElD4ozoUIvusZ0RK8KSqElcXWhGnMaPnfuPLeVHisUOWdBQ+GTP2STJ7T8oo=
+	t=1746728006; cv=none; b=uMRBeIGveCcMXbFzjsGTFat0/8SaYh25hy12raGZXcNdLxFveswteoqrRdVroMo1dAzpWQuFlIgNaY9L86//qb6m/NVe8IL22aeBSX0p6U7DsGgO45P5DEIo+r+RSsgnHNowmct7ZnD0oLVMeUb5PmSBoatu6uiw5YJFKbNc5OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746727865; c=relaxed/simple;
-	bh=h2z7asBiLWhRr6KyfeycB+CvmHgHDalytvMwoHOAQOE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rauOhTeglgnN2QUe/ObShldJEK/1uCVNdjxhW+kEgF7/k3H22AEWzfWT4B9UcEU/Wf1DhkD4DJFve83IdbxVrI8z6y284nd4qwa1x3DNMWMdAx4YqfmM1Q86OFQolNO49jkK1oYpER594zOFKk95x9TZ9DlmWkPhxv8ODsfrQJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RWd9QRAr; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746728006; c=relaxed/simple;
+	bh=tMAy5xVCwWpgxNJfNaRnAAeKwSI9QYqDnzAylqCtjYc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nVsR7LRwFYRV8RgYaogr7ywNtU3+V1lSrn0tU0OiGgVGgAZyzYoHZ4fY6MDW55xz9emA/EBzL+2V9SQik1Wi+XSGi1gwp4HHN3Hj0JgBaANh9U+MEuDQbh3Q6keIafclGKK5u2LUpaVvEjkBRzg7ley7pji4eWSFCfBuzJ+t3Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mWunfEki; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RWd9QRAr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746727861; x=1778263861;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=h2z7asBiLWhRr6KyfeycB+CvmHgHDalytvMwoHOAQOE=;
-  b=RWd9QRAr+ZCP+ZbckSTFLJmZauvT3tkIQ6aOosb9YPcirj5Rvuthx0Xz
-   SPit5JPV/9bXxfbyYAX9K9AeY1V3URTNoNzneRu/64R0USomFOc2gN3K9
-   rWdlcfPEEO2yDFaiaXNLjztnZLUU4Tl/qJUW08JONBO1OlAGaZktJte01
-   Aq1jOUFa4CrqOojir8IwTRP4JqN3F3Grr3NrT5CZ2fqBVg07ds20SADpq
-   zOzw4GyK1nKM2ptc/KDqyXt5JzF8ITqAUZ21qkB3gZAHZ0riJtK/jVnDG
-   oAhn8pUJkSD/lx7h5B93qQ18E6QYaymfO2d3KNTninERgqir8Cf5l1GLb
-   A==;
-X-CSE-ConnectionGUID: dcHN0FiZSa+kq/cIwrs59A==
-X-CSE-MsgGUID: nvdHN7sRQUSY/DghPvvxAQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="71044164"
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="71044164"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:11:00 -0700
-X-CSE-ConnectionGUID: 7+RJvBV3R36MDgF8vvbepw==
-X-CSE-MsgGUID: B3uGSd1+T42KCZNkdTl6wQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="137372177"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO pujfalus-desk.intel.com) ([10.245.246.123])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:10:57 -0700
-From: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
-To: vkoul@kernel.org,
-	yung-chuan.liao@linux.intel.com,
-	perex@perex.cz,
-	tiwai@suse.com
-Cc: pierre-louis.bossart@linux.dev,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	broonie@kernel.org,
-	liam.r.girdwood@intel.com,
-	ranjani.sridharan@linux.intel.com
-Subject: [PATCH] ALSA/hda: intel-sdw-acpi: Correct sdw_intel_acpi_scan() function parameter
-Date: Thu,  8 May 2025 21:12:07 +0300
-Message-ID: <20250508181207.22113-1-peter.ujfalusi@linux.intel.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mWunfEki"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2A26C4CEE7;
+	Thu,  8 May 2025 18:13:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746728006;
+	bh=tMAy5xVCwWpgxNJfNaRnAAeKwSI9QYqDnzAylqCtjYc=;
+	h=From:Subject:Date:To:Cc:From;
+	b=mWunfEkiaoTV8QCc52y61TtGeejMs4U1+AhKERoIPr0LyzDpbvji+lITrAeLm6/QY
+	 m43XRJLKliEPWcj/rNWNX0UAYGdkaTQ+5c3praGKnHIKlDF0s87GUXFzNX382Ibmva
+	 LNZ3dJfPSBssNWXmiH68iYiVsEeWM94Jrn5V42/VWMRoTayEDRYCTVHYLJLxdn2JZL
+	 bs/juXDgZ/WglgQS3O2khXdPjA4xp6bP/OLarYNgdIiU2Nwhi3uD9dRNJDvJuBNXkG
+	 SfFMaaVrV7wmAUzN2YgguyDj46nORqbQpl/0ACLEL+bOJAob4Q6UNOci5+cYSOFrc6
+	 euwMzG7grCPTw==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Subject: [RFT PATCH 00/14] Add a single source of truth for UBWC
+ configuration data
+Date: Thu, 08 May 2025 20:12:32 +0200
+Message-Id: <20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABD0HGgC/y3NYQrCMAwF4KuU/DbSbla3IeI9REZb4yxsnTadC
+ uLdrVMCgfcgX17AFD0xNOIFke6e/RhyUAsB7mJCR+hPOUMhCy1XpcQ0Xr3DyT5c6yikaHrUpdM
+ reZaqJg358Brp7J8zejj+cqTblO30K2EgZjPbjdjOdJ4/vXFlGzur1zrfndos4V2hQqsMWapqa
+ Svaj8zL22R6Nw7DMq/d9681TPhtfGpEoGfCP13B8f3+AAEWw2frAAAA
+X-Change-ID: 20250430-topic-ubwc_central-53c540f019e5
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <lumag@kernel.org>, 
+ Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746728002; l=3014;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=tMAy5xVCwWpgxNJfNaRnAAeKwSI9QYqDnzAylqCtjYc=;
+ b=qwT6r0o9a6b07+HS3tbDhJgdoh+nVD6SD7bdCNpoJHF0AEPe24I3pCZEYQTv+ZfFHYOPPx7FF
+ uBJsq7l9E0cBBzlIOcrQxVkfBKbPmxO3hqK2AvOLaqjBggV/g275URH
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-The acpi_handle should be just a handle and not a pointer in
-sdw_intel_acpi_scan() parameter list.
-It is called with 'acpi_handle handle' as parameter and it is passing it to
-acpi_walk_namespace, which also expects acpi_handle and not  acpi_handle*
+As discussed a lot in the past, the UBWC config must be coherent across
+a number of IP blocks (currently display and GPU, but it also may/will
+concern camera/video as the drivers evolve).
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Reviewed-by: Liam Girdwood <liam.r.girdwood@intel.com>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+So far, we've been trying to keep the values reasonable in each of the
+two drivers separately, but it really make sense to do so, especially
+given certain fields (see [1]) may need to be gathered dynamically.
+
+This series introduces a Single Source of Truth (SSOT) database to be
+consumed by multimedia drivers as needed.
+
+[1] https://lore.kernel.org/linux-arm-msm/20250410-topic-smem_dramc-v2-0-dead15264714@oss.qualcomm.com/
+
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 ---
- include/linux/soundwire/sdw_intel.h | 2 +-
- sound/hda/intel-sdw-acpi.c          | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Konrad Dybcio (14):
+      soc: qcom: Add UBWC config provider
+      drm/msm: Use the central UBWC config database
+      drm/msm/adreno: Offset the HBB value by 13
+      drm/msm/a6xx: Get a handle to the common UBWC config
+      drm/msm/a6xx: Resolve the meaning of AMSBC
+      drm/msm/a6xx: Simplify uavflagprd_inv detection
+      drm/msm/a6xx: Resolve the meaning of UBWC_MODE
+      drm/msm/a6xx: Replace '2' with BIT(1) in level2_swizzling_dis calc
+      drm/msm/a6xx: Resolve the meaning of rgb565_predicator
+      drm/msm/a6xx: Stop tracking macrotile_mode (again)
+      drm/msm/a6xx: Simplify min_acc_len calculation
+      drm/msm/adreno: Switch to the common UBWC config struct
+      drm/msm/a6xx: Drop cfg->ubwc_swizzle override
+      drm/msm/a5xx: Use UBWC data from the common UBWC config struct
 
-diff --git a/include/linux/soundwire/sdw_intel.h b/include/linux/soundwire/sdw_intel.h
-index 493d9de4e472..dc6ebaee3d18 100644
---- a/include/linux/soundwire/sdw_intel.h
-+++ b/include/linux/soundwire/sdw_intel.h
-@@ -365,7 +365,7 @@ struct sdw_intel_res {
-  * on e.g. which machine driver to select (I2S mode, HDaudio or
-  * SoundWire).
-  */
--int sdw_intel_acpi_scan(acpi_handle *parent_handle,
-+int sdw_intel_acpi_scan(acpi_handle parent_handle,
- 			struct sdw_intel_acpi_info *info);
- 
- void sdw_intel_process_wakeen_event(struct sdw_intel_ctx *ctx);
-diff --git a/sound/hda/intel-sdw-acpi.c b/sound/hda/intel-sdw-acpi.c
-index 8686adaf4531..d3511135f7d3 100644
---- a/sound/hda/intel-sdw-acpi.c
-+++ b/sound/hda/intel-sdw-acpi.c
-@@ -177,7 +177,7 @@ static acpi_status sdw_intel_acpi_cb(acpi_handle handle, u32 level,
-  * sdw_intel_startup() is required for creation of devices and bus
-  * startup
-  */
--int sdw_intel_acpi_scan(acpi_handle *parent_handle,
-+int sdw_intel_acpi_scan(acpi_handle parent_handle,
- 			struct sdw_intel_acpi_info *info)
- {
- 	acpi_status status;
+ drivers/gpu/drm/msm/Kconfig                        |   1 +
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.c              |  17 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c              | 129 ++++-----
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c            |  10 +-
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h            |  41 +--
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c        |   6 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h        |   4 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |   7 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h            |   2 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c          |   3 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c             |   2 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h             |   2 +-
+ drivers/gpu/drm/msm/msm_mdss.c                     | 302 +++------------------
+ drivers/soc/qcom/Kconfig                           |   8 +
+ drivers/soc/qcom/Makefile                          |   1 +
+ drivers/soc/qcom/ubwc_config.c                     | 255 +++++++++++++++++
+ .../msm_mdss.h => include/linux/soc/qcom/ubwc.h    |  19 +-
+ 17 files changed, 395 insertions(+), 414 deletions(-)
+---
+base-commit: 19c541fe872387798a25df947f56a26212aa9a97
+change-id: 20250430-topic-ubwc_central-53c540f019e5
+prerequisite-message-id: <20250505-topic-7c3_rgb565pred_fix-v1-1-b1aebe890b8e@oss.qualcomm.com>
+prerequisite-patch-id: b1d26d75633cacbde82a456bff06d27de2792733
+
+Best regards,
 -- 
-2.49.0
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
