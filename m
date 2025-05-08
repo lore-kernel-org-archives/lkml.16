@@ -1,83 +1,150 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A852A2236EB;
-	Thu,  8 May 2025 21:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F425CB8;
+	Thu,  8 May 2025 21:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746740669; cv=none; b=EQB1oQ3Ayqrri+A5V5jG0fARwxOZOk8oc9jg//WIdAFiTDkucniLLaZWYjrKt6s14D88iJ0DdD+L4QfocUQuz0HphPacEZRCqfqfSyifPcfMIgpiM31jVz+7cL/eXRfiewWwbugMPuq1fZGAjSMnJA5US5mmLdSxtnOL0KAsC+U=
+	t=1746740951; cv=none; b=PS3SFVqFA9tz58PfQFgSD4E6qfi64quEwwmBI9xdMWzBXWa8KLWBHnRNfs512kQ4mStrTDTaHQAU4FXFLO6DZFhY6XVXiFOarGXzF7aUZb47Y/WYlxI27CiGdgxA4+pCv9a6KDwDgl/z1SA/mM5CwpE4N5RnSzTVNArdGKVmrSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746740669; c=relaxed/simple;
-	bh=r60Q6oOHc13fi6kMuHzPHXQmB8KxMckKssS5xTywd4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=B6JBiCDW07dKnYArc3t5l1zpMfzHnolRl3ktNrVt7izaaW7nDrdtLrAFKWbEGDr+wpSfusoTl+YEtZfGu97lmtYrBh9CMkOQneqv3H2ks6yQLohcLX8g191vlX0Q1/zAJ4+XgmawwTFyKgqw42ABpuF5QASe2i7exAYIdr7U4ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=GHYtCMHH; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746740951; c=relaxed/simple;
+	bh=H0urki9LI3KNRa5Q+wG6DOyvCUCtfMf7YdnpvEjI7T0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FBJzI2LgtFhSgqZft0kXJpjA1FsBT7yzecnL5sCbF9CziQQoaP+GWgfo43PWCb24f8p+/rH40hq1iz0AgvtKq9pofPDrpduHf7t5KOR4ex2twZd5lwz+cGvIWQV4OYuWORMIk31dgl4dyelfeMWxSg0iyD42asTVPHDBGnQ9KFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=IC0yX2kZ; arc=none smtp.client-ip=52.119.213.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GHYtCMHH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746740660;
-	bh=b30cAf0HlKZ41HJeMtOxc9R39dOx2HMgbAgXvchRW18=;
-	h=Date:From:To:Cc:Subject:From;
-	b=GHYtCMHHdhaAl3PnGJL0FL4GJihWxFkOD2BAmc2EeIY7skbYPDoAquzhwWwPk6NWi
-	 RM5F2PMDHp5ZQq8G4BJYa1FjsM8hDyeWXnaXbtEricn7ATrLN/wKk/ZWnF1kxujdm9
-	 AQRrA4TIkj0gP2lKF1j4RgxVspkg5DFa8JMcAPYtoohdFJSwQfoo6UrOLuGeQqcR2S
-	 uQw4IbG3Wti6uUCrGqBIXR4jnuTUDNJ6XVzUQFFUYceGh/euhoHXGK0XAdpETL2GRY
-	 jE7CFqI0J34nBXINWMA4cK4A3cyRsx+/+VfkqcquuRRnM46voJ9tdZ/3EketjwSOPT
-	 imd2nx8P3lC6w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZtlyX0mbmz4wcr;
-	Fri,  9 May 2025 07:44:19 +1000 (AEST)
-Date: Fri, 9 May 2025 07:44:17 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: gldrk <me@rarity.fan>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the pm tree
-Message-ID: <20250509074417.1accacbd@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="IC0yX2kZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1746740950; x=1778276950;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=XMr3FDaYMjbSHc+Mc/4xTQjKYDslKxhh7yEkIw02wOc=;
+  b=IC0yX2kZV4gdyzBgWqgvI3hRxa1hF0/wwVgz2f20jrl5YLIzMcBpyJBZ
+   j57NLL6K+ytVlBQeB6IwOJNl1wLkM6V4PfxFcPG17MGA7YNLMc+1Obu/P
+   rqgNKug2dnxRMarx/w322VM5R9MBjI5PjwvsqLydXD6v2swx9FR/cpvEf
+   pkpKJ45V8/2ImRpjWpGy8kanjL3Pe7JmkaYNVPFAk6rIdw8hBdsr/sUm+
+   GfRmX5iaXvykO6amPbKZDCByk6ZLHDX3I1xeMSQaWvVzlj8y89uomqjdS
+   K+BoVcvKvXIvayaZbGESWpCG0Osh5gInieRVqGXdoF2NP/q/NhyrpYZIl
+   A==;
+X-IronPort-AV: E=Sophos;i="6.15,273,1739836800"; 
+   d="scan'208";a="91374175"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 21:49:05 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.21.151:8301]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.10.32:2525] with esmtp (Farcaster)
+ id 8e2af0a3-db14-4683-9fa1-2122160a051f; Thu, 8 May 2025 21:49:04 +0000 (UTC)
+X-Farcaster-Flow-ID: 8e2af0a3-db14-4683-9fa1-2122160a051f
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 8 May 2025 21:49:03 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.106.100.30) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 8 May 2025 21:48:59 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <brauner@kernel.org>
+CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <daan.j.demeyer@gmail.com>,
+	<davem@davemloft.net>, <david@readahead.eu>, <edumazet@google.com>,
+	<horms@kernel.org>, <jack@suse.cz>, <jannh@google.com>, <kuba@kernel.org>,
+	<kuniyu@amazon.com>, <lennart@poettering.net>,
+	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
+	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
+Subject: Re: [PATCH v4 04/11] net: reserve prefix
+Date: Thu, 8 May 2025 14:47:45 -0700
+Message-ID: <20250508214850.62973-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250508-vorboten-herein-4ee71336e6f7@brauner>
+References: <20250508-vorboten-herein-4ee71336e6f7@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/HFzHmAC6eUSk6fyc_U+gicg";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D035UWB001.ant.amazon.com (10.13.138.33) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
---Sig_/HFzHmAC6eUSk6fyc_U+gicg
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Christian Brauner <brauner@kernel.org>
+Date: Thu, 8 May 2025 08:16:29 +0200
+> On Wed, May 07, 2025 at 03:45:52PM -0700, Kuniyuki Iwashima wrote:
+> > From: Christian Brauner <brauner@kernel.org>
+> > Date: Wed, 07 May 2025 18:13:37 +0200
+> > > Add the reserved "linuxafsk/" prefix for AF_UNIX sockets and require
+> > > CAP_NET_ADMIN in the owning user namespace of the network namespace to
+> > > bind it. This will be used in next patches to support the coredump
+> > > socket but is a generally useful concept.
+> > 
+> > I really think we shouldn't reserve address and it should be
+> > configurable by users via core_pattern as with the other
+> > coredump types.
+> > 
+> > AF_UNIX doesn't support SO_REUSEPORT, so once the socket is
+> > dying, user can't start the new coredump listener until it's
+> > fully cleaned up, which adds unnecessary drawback.
+> 
+> This really doesn't matter.
+> 
+> > The semantic should be same with other types, and the todo
+> > for the coredump service is prepare file (file, process, socket)
+> > that can receive data and set its name to core_pattern.
+> 
+> We need to perform a capability check during bind() for the host's
+> coredump socket. Otherwise if the coredump server crashes an
+> unprivileged attacker can simply bind the address and receive all
+> coredumps from suid binaries.
 
-Hi all,
+As I mentioned in the previous thread, this can be better
+handled by BPF LSM with more fine-grained rule.
 
-Commit
+1. register a socket with its name to BPF map
+2. check if the destination socket is registered at connect
 
-  8979b0e76718 ("ACPICA: utilities: Fix overflow check in vsnprintf()")
+Even when LSM is not availalbe, the cgroup BPF prog can make
+connect() fail if the destination name is not registered
+in the map.
 
-is missing a Signed-off-by from its author.
+> 
+> This is also a problem for legitimate coredump server updates. To change
+> the coredump address the coredump server must first setup a new socket
+> and then update core_pattern and then shutdown the old coredump socket.
 
---=20
-Cheers,
-Stephen Rothwell
+So, for completeness, the server should set up a cgroup BPF
+prog to route the request for the old name to the new one.
 
---Sig_/HFzHmAC6eUSk6fyc_U+gicg
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Here, the bpf map above can be reused to check if the socket
+name is registered in the map or route to another socket in
+the map.
 
------BEGIN PGP SIGNATURE-----
+Then, the unprivileged issue below and the non-dumpable issue
+mentioned in the cover letter can also be resolved.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgdJbIACgkQAVBC80lX
-0GxAxwgAmNzdKj/fZeujhsoM9tKrWkuNKMQwFTjQVWEbuO4tI1AS2Z//fCzKR6PB
-O+yPGKoJpCRUHFf9opmdB+bkSznNxYka8D60pCvVQQZ5r5AW+MAL4GXJvOqjWe/p
-D1cB5JL9co03NCIXPf8dXTbWZhcP+0GoAwEMRZQH8Nq+0przq+vACYSYXnNLCmF3
-B4ES+TjcrzIsykAjez3Mi+UL9uA7UD3Gu+7q4T9sCtjxGwgDUCI9AkRM7fNPPFXs
-Kj/4KPdoM2igD0pugQT3DTwOFe5YEerQaEFfu7YmmzpGj7jMxvUG91MCjKdzrRcH
-oxpllwQGLOuKzl72txjUX3zARCTm3g==
-=s3U2
------END PGP SIGNATURE-----
+The server is expected to have CAP_SYS_ADMIN, so BPF should
+play a role.
 
---Sig_/HFzHmAC6eUSk6fyc_U+gicg--
+
+> 
+> Now an unprivileged attacker can rebind the old coredump socket address
+> but there's still a crashing task that got scheduled out after it copied
+> the old coredump server address but before it connected to the coredump
+> server. The new server is now up and the old server's address has been
+> reused by the attacker. Now the crashing task gets scheduled back in and
+> connects to the unprivileged attacker and forwards its suid dump to the
+> attacker.
+> 
+> The name of the socket needs to be protected. This can be done by prefix
+> but the simplest way is what I did in my earlier version and to just use
+> a well-known name. The name really doesn't matter and all it adds is
+> potential for subtle bugs. I want the coredump code I have to maintain
+> to have as little moving parts as possible.
+> 
+> I'm happy to drop the patch to reserve the prefix as that seems to
+> bother you. But the coredump socket name won't be configurable. It'd be
+> good if we could just compromise here. Without the capability check on
+> bind we can just throw this all out as that's never going to be safe.
