@@ -1,112 +1,102 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3244B1E78;
-	Thu,  8 May 2025 10:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F8B72632;
+	Thu,  8 May 2025 10:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746701655; cv=none; b=H8MOC7q1NLhWqCBTgzrPMDwAiUlGd9w+oZBiWf0Fw4NinY9gLDkRX4xT0/9ilM69J2S6wd1FDJFed4rep3Zy85ZxgpbnSKUQz1ugSOeENPcrbuVC5lIPpQX1+Z6pV20+Y/HNrP4vIUwsHHiQWQEGEKGYgUJGla8OdQTWKUuZTpU=
+	t=1746701735; cv=none; b=rDzSfgGOKo8e+tYSvRFNQs8x1hyDJkt72HxVfuDkmlnQP7n+NmaH8OjxN0gMJZhf6moF9sjHju8lhpcdUjAk6n/HHajsLcWZZ5XXxAv1P1G05sSxeEeJG+/nUE7wVSL4xTbNssNQFxZx3raXfU3+WJ+RZfGrzSa1VHRqRVlp37o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746701655; c=relaxed/simple;
-	bh=X3UksTYOVHm8B+ZOXaMzzqudmeL3PAsZDR+aV6A8GH4=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=kWJ1AJI5aIoA8xOzDjVqqPuV+9NukfuPyv8cQ6z/Yk1o4licRMWa2eVz3gr8OO1Wy7/9k3gu8i4EEUbsrNnPHbTzfBAb2UzQJZdcw/Gr63lbTprrxrLXMSPhYBD/qXDJo8W+GxxLr6B3E9l2XG3PXxiPrmcKu/l2Ev0pxn6ux5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kiTnPny/; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746701735; c=relaxed/simple;
+	bh=j863nxwGzYzfIuGSW/w/08VR6akS2bkUtpHDZUuUAjg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g00VV950OFo4+KhRUqe/Zz+t4OZo4Xw/Wb1ly29B4S3x/xtkAcF71MUo7GHilryOTvbo9PUEfVGCdGlgZp7jFBVW5cIcXvOgiSQI5QCnLb5WSCIY5bdj7tXhMluri2NwCzeGfG9MX9G4fQaPryFeB6C6VkdWQZsLTNybc/+Kr2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=LUMkxV7y; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kiTnPny/"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22fa28c761dso4149255ad.2;
-        Thu, 08 May 2025 03:54:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746701653; x=1747306453; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CEusxefEvuohqfQtlfsyFtEEHjXPJ9IrggtjDDOP+0M=;
-        b=kiTnPny/gh39ZmTScxhREw0QC/74IhJPKMtuOWrc1K7GR7zbxhTxcTuDLDre11p/q5
-         nRI+TAv3cWSi3c5btoVBitYqpTN21K/8NWnEWJNyeYS9WSDwzZ/1chtJdNgrjEruwiZq
-         DbPKaIoRGAyevEQh5Byz37QcwmkoKVRPf4jXC/W7AUiWxIGavTI89DCzcHxnLe3gAo/x
-         3pjtBFPHjQ3rmNeRfa8xDHexfGOmDqSpbkIjWMGGGEMrJCEs0ivf6cTrs2CWabsomfyo
-         rHdEfO9AdAlto3NWygPqakTaYBfUZ55qLrwL8DS7GWG7bAksukGm4vBKYIQgTurlI3Ee
-         sEpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746701653; x=1747306453;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CEusxefEvuohqfQtlfsyFtEEHjXPJ9IrggtjDDOP+0M=;
-        b=e3EKaiP2ENbGvfa0YJ8jRsDpdIXNrfhkPvt5BfMgZJgARjSk/0BvCvGYFwJMwn85dK
-         DzZKORpYW4aZbDg5qN0rzjR9mbxHp/RUhOn310LHO8YohFStRj8A9+4Xb1x31nqQZ7qy
-         nTScfm++cuHuF5BcjgdxpbWAEVuN3oPMFEJFRf76nBkMKBQZFz8Nck7DsaJ5ZbJL+eRb
-         A2RzcwK615NeKUG9VQpVDahKlEEPXbhsvMsf8oYE6vpgKY0tLhrk3SDGRdrYLHFXUXzq
-         4E2mOnjjyw0fmHu0ZCCAqRwZ5RGeYON9Zwal92+0VVc+7MKQGmFNNQLo3V8BFv4hg3Nj
-         g77Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVY/abkREyMLYcErR1RBxu+Qc85QuWYAfD2I5eYseruKO4TBCswovfeatq2HHSHpfMAzip6ZcP4UnjJMiI=@vger.kernel.org, AJvYcCWTzKCZpMhywcThdl58tUzEufrHue1GEjGogF4/k6YdcaDOWBPrj6wcaIJeYon3k7R4PQgH88+wy5TgvQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+hngPJ+NoUX54O9vZ5bJNgJXVxW6ET++ugvjyDZ1MIObMVi4s
-	uoc5VlZi0Z7EYwMeKhqNmvJ15G2tXfLmsir9igerzHu2w4pDCUFz/4k9N38n
-X-Gm-Gg: ASbGncs/VnP73nKPt3+97K6k5UnfkXVDPfDgQLP3wY7FFT/sGYI8EWnq5KGjaB0jlSb
-	Zkj+QPdfhqUiKw1vPF81a4/1wrJlwIRtDZeIEGjX8SsVn7VkBxgGTFUsmsYDPmh0bbkk/uhWkOs
-	/v/G1QJO0x7y8jU7ignn6oHGnLo3Fc4nl0EKpMRtz0OLbFeu0fgzUVPY3Ok1PjCCr3tqsy7TXiV
-	9FTbqvYGJoEhaoLPpc3FvtIi+mC4zxBJ6Q0OsX0OZCG4Ggmnp/AlSS7zlbRrar+i0h6eDO5x/NF
-	M4Ec2C1Ck5INQs9mqjTs3m6eayES/YBTK3yaLG/UvuojreZjir2Hohh4Po8DisKc8AQwbp3fXwM
-	/l06iL+yPRVE=
-X-Google-Smtp-Source: AGHT+IHka/4iLzM65cY0fw7qKKRLRgrJDhrMgH4b2rg9j9EtsdgIUjZ704FigjYt/W1FnIFNmK5ECw==
-X-Received: by 2002:a17:902:e849:b0:22c:33b2:e40e with SMTP id d9443c01a7336-22e5ea1d4d6mr100254235ad.2.1746701652965;
-        Thu, 08 May 2025 03:54:12 -0700 (PDT)
-Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e151e95dbsm109376325ad.64.2025.05.08.03.54.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 03:54:12 -0700 (PDT)
-Message-ID: <3b35840a-7b87-44fc-8580-219ac78ad112@gmail.com>
-Date: Thu, 8 May 2025 19:54:08 +0900
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="LUMkxV7y"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9A0EB40E015E;
+	Thu,  8 May 2025 10:55:22 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id ksLRDIInAJOo; Thu,  8 May 2025 10:55:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746701718; bh=OF37/t9aaM7xkpNHEWQXA51YMPAw2sptXORu5APDjMM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LUMkxV7yLLWUcAxszCVe+XKGaAx6cg6CEdG0+NbXsi+hk3ZUuhFNGWsvxS+GYvm5z
+	 VKp7UKcOBqFPuygOrjztVnDhrJEncu9sb4lbFk7cqfsZvS38NI1Qp7Tu+kqWUYSO0h
+	 nh1/cKgXJFdZzulbIBqfW6BdsTwvzmhiYbEcIB3mB4c5BWH9cnUrm6qJmWVcYdipW3
+	 VeAgLGEAKcP3EZPnMSRILE2Acwq2GCTHONMBJxkXOhCTM9nO1YfjPtZH+0e4MM24ni
+	 xpJPjqF+9KJbhiojXqw5VeyGfERBEIicPGJcic9koIFZl9myJACryISGsYS+MYY6/n
+	 wVXMmkPPY7IFsycSAKenQ5obVN9TXHWk9ajm7DFA6PkzKA14vQqerV0p8hPwt4HHtx
+	 bqvdzzTC8jznF0WnircrjJwkY4xO1pBJLJx9RdleE6RuBWEPMizrDJwtha2B1mjirK
+	 7dTuqAoZl2LBX/U2NoJLmoWGLBn1+sPNGeuZWWP+HDcNFnw6CH3A4bDX7xAJA38eaM
+	 GPPMVS+RIHRPt0r5kio1nDQ+SS5vHEJ3SaNZNaW3hrOcU91cQsexCvi7SHcXKgVrBn
+	 lzezb/w92quuTnMyz+WafqQ4EIQXd/NSEhRLAuiynt2DtUSAnAY1ALUxB5vnY7A4Ci
+	 /yd5ngcN/FVpt0gTWvn9u5ZQ=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C65CE40E01FA;
+	Thu,  8 May 2025 10:55:08 +0000 (UTC)
+Date: Thu, 8 May 2025 12:55:02 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org, x86@kernel.org,
+	Ingo Molnar <mingo@kernel.org>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [RFT PATCH v2 00/23] x86: strict separation of startup code
+Message-ID: <20250508105502.GAaByNhlpwwdK6_ZyL@fat_crate.local>
+References: <20250504095230.2932860-25-ardb+git@google.com>
+ <20250507095255.GMaBstd1-nsMixe3Kn@fat_crate.local>
+ <CAMj1kXGJk1JsehK3jtbR7yOKFV4UvySYbq10x8td1gM9ryHeBw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: sfr@canb.auug.org.au
-Cc: corbet@lwn.net, linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- Dan Williams <dan.j.williams@intel.com>
-References: <20250508184839.656af8f6@canb.auug.org.au>
-Subject: Re: linux-next: build failure after merge all the trees
-Content-Language: en-US
-From: Akira Yokosawa <akiyks@gmail.com>
-In-Reply-To: <20250508184839.656af8f6@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGJk1JsehK3jtbR7yOKFV4UvySYbq10x8td1gM9ryHeBw@mail.gmail.com>
 
-[+CC: Mauro & Dan]
+On Wed, May 07, 2025 at 02:05:37PM +0200, Ard Biesheuvel wrote:
+> So I'd actually argue for splitting this up even more rather than
+> bundling it all together,
 
-Hi,
+Splitting it into logically separated bits? Yes. Just because: no.
 
-Stephen Rothwell wrote:
-> The commands I use are:
+The SEV stuff is still largely in motion so once it starts settling down,
+splitting it would be the first thing that irks me and I'll go do it.
+
+> although the sev vs sev-internal distinction is a bit dubious - it would be
+> better to split this across functional lines.
 > 
-> cd $HOME/next/next
-> make O="$HOME/next/htmldocs" htmldocs
+> I added sev-internal.h so that that single mother-of-all-source-files
+> could be hacked up without exposing implementation details to external
+> users that were hidden before. I.e., the high-level APIs that other
+> callers need to use should be in sev.h, and the implementation of that
+> API should be carved up meaningfully. For example, perhaps the #VC
+> handling stuff (which now lives in a separate source file) could be
+> exposed via sev-vc.h, and only included in places where that
+> particular functionality is being used.
 
-Please try:
+Right, please put those considerations in the commit messages - it helps a lot
+with the review.
 
-  make O="$HOME/next/htmldocs" KERNELDOC=scripts/kernel-doc.pl htmldocs
+Thx.
 
-, assuming your $HOME/next/next is the top of kernel source.
+-- 
+Regards/Gruss,
+    Boris.
 
-I'm suspecting that the conflict resolution done in
-c84724f2137f ("Merge branch 'for-6.16/tsm-mr' into tsm-next")
-ended up in mismatching path names given to "kernel-doc::" somewhere.
-
-Looks like recent conversion of the kernel-doc script into python
-has changed the behavior in such error conditions.
-With the perl version, you'll see a couple of:
-
-    Error: Cannot open file <...>/linux/drivers/virt/coco/tsm-mr.c
-
-, but the doc build should complete.
-
-HTH,
-Akira
-
+https://people.kernel.org/tglx/notes-about-netiquette
