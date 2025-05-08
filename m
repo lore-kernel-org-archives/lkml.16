@@ -1,138 +1,130 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 084108C1E
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 05:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0A586323
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 05:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746683534; cv=none; b=P54Sx9/Eor1Rj5hOi1gVHcG+XfqDPB7sn4FxaPGLV73lC4scxWNUxTgjkEhYv99aTFzA+ctrfGaRcenVp8zJZv6N6KWCyVw13f5HiK8q5R64syeV22KezMbn9eveHjKNx+8WjG3uWhrwuNXm9vSRfFCy/azXIiKl4zeDxoK67Co=
+	t=1746683596; cv=none; b=DybLJiKxjOZVkFvPgJ9End22IKIeWjnpXbpqjHPPCZ5yEOZY19cfI9kSMsXZ8etT1ffTGnW7Xe0mSOXpFFCBhEsNpnKOcfj4adYehgnae6HvcvjrumcvExdczZiZruUfKUs/wdSVzqB1X7nm085q5JCMltoqzEs0wSPjRdrMSkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746683534; c=relaxed/simple;
-	bh=Bz3RK3w8Iqotrfm+jiRfcCmjyO9GogSAsriwYpQb9gs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=R+EoSxXn6rBjZWwljcrL0exVid4zaH/f5YXLVg1HjJxQFJ8WhuD2w65yzT6bVQHhMr3TbuNNOwRmtjynluTIDe1/XkkAVEAlN1vOhDXQARmVZHemCogCm3ruVmleGx8rcfar709D2U8QAqI4hknNpuwZPLnAbh4evchVoYZD3LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=lFB3y/9s reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746683596; c=relaxed/simple;
+	bh=ub2iVlb4SHKAW5jPjSlFRvkrNnm7zCxFEv3lOgzebyE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sZgqCaj6HQnacsyJgpJhOGVarMr1wvTLkpNAZcE0CWKIwz7YKiDk3Qs/eJMdOtprkU1Xhmvl7CD3pTXLPIAv1juPVVV8CRYjaEyrO71iMvkbPy6WlKSMKFMG0eKcthFppYG2pn1qh0FZiRz1YJkdd8O/gSpR7F+WiLJzXKx/fC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=qRyc2OxS; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Sd5BdEik reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="lFB3y/9s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=n0B34arbIHUnRtwFWU1yjtd7WuKCdlVvJWIjrc5VsAM=; b=l
-	FB3y/9sBMvCyHlIM7cHnOiOa23KzIAlU8Ui0PJGmwsRl53M77VyPOoUSEQggtVLw
-	cz8Q08M4j3vcaPdw9uMCnH6wxs8IG04khk8pYsNMXkJQbaGddR0rJ+773Gf5oCK7
-	XNHTwA9S/h/RFj5zjSgs9sPEzxmN2gjKauI1ZcF034=
-Received: from 00107082$163.com ( [111.35.191.17] ) by
- ajax-webmail-wmsvr-40-130 (Coremail) ; Thu, 8 May 2025 13:51:48 +0800 (CST)
-Date: Thu, 8 May 2025 13:51:48 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Kent Overstreet" <kent.overstreet@linux.dev>
-Cc: "Suren Baghdasaryan" <surenb@google.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] alloc_tag: avoid mem alloc and iter reset when reading
- allocinfo
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <52tsrapmkfywv4kkdpravtfmxkhxchyua4wttpugihld4iws3r@atfgtbd5wwhx>
-References: <20250507175500.204569-1-00107082@163.com>
- <a0ebf2e.b422.196abf97373.Coremail.00107082@163.com>
- <CAJuCfpFAUdqqvFPfe_OLR76c0bX_ngwG=JKC42pVB+WAeX4w0w@mail.gmail.com>
- <nubqzts4e6n3a5e7xljdsql7mxgzkobo7besgkfvnhn4thhxk3@reob3iac3psp>
- <289b58f1.352d.196addbf31d.Coremail.00107082@163.com>
- <y6egptcxlbzgboykjorh3syxwy4wu37eolmjtwuwu36gtbfhgf@o3o34qii4gmq>
- <1ed4c8f7.3e12.196adf621a2.Coremail.00107082@163.com>
- <52tsrapmkfywv4kkdpravtfmxkhxchyua4wttpugihld4iws3r@atfgtbd5wwhx>
-X-NTES-SC: AL_Qu2fBPqTvE0r7iGZZekZnEYQheY4XMKyuPkg1YJXOp80mCXtyiAPZ25CNnXs0fmtIgemoQmaTyB17uBjdqV9RrrWGvturAP36k/33cU5ijBT
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="qRyc2OxS";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Sd5BdEik"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1746683593; x=1778219593;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=+EhF6K8iP9mfpQBTanjU88sfd+KY8wpvCiD31HubBpA=;
+  b=qRyc2OxSLZi+LouVn9qT4rguAi5L9LYDXwTRc9dSGR4niih8l9H50+pC
+   /X6Vq2BMbH2s1ncfFeVeA7+Sb9AecTEkJyqqsDs6ARxmPtkQR4bunPqSx
+   ry68C759f461ad0ZJOdvBtFrrEpetRTfVjAB4+zkmaeyBtQSMc3+9mjU5
+   jRiOzvk0OwtwiwvukuGIlmvVes8Gq+eJ4zx33ZdO0RN/bViT/QVYM4c7i
+   HysacnbBPGBS7yNqvDy2jJCVR7HR8sp5+NtkBLun1FwDmjhRuTq6cnViw
+   J/kUlIM2NtuEE5pqFrsw+dViwZQIqG8hp1WJlKUVJbji9LtiYFCFKnmvu
+   A==;
+X-CSE-ConnectionGUID: xbpkzIP9R/qC6etNh8IRJA==
+X-CSE-MsgGUID: xnb0ZSFgTwGbn6c0RXGptw==
+X-IronPort-AV: E=Sophos;i="6.15,271,1739833200"; 
+   d="scan'208";a="43949933"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 08 May 2025 07:53:04 +0200
+X-CheckPoint: {681C46BF-47-C7E25413-F4312D34}
+X-MAIL-CPID: 66C688438851F16310F03349BE687D8C_4
+X-Control-Analysis: str=0001.0A006376.681C46D2.0053,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D59C3160024;
+	Thu,  8 May 2025 07:52:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1746683579;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+EhF6K8iP9mfpQBTanjU88sfd+KY8wpvCiD31HubBpA=;
+	b=Sd5BdEikxwjpfFOj5IDvtC61NMJMYM5wDSpY2TWONg2qb7ny0tda0jQ0U/BEhlxRGGE+7P
+	XW/dv833vlG0UHzsmvAcUnjVXkRfzUhoVaEkfVn/k1K4pxnYrajjYvE4BfbLXIolmes41a
+	EaK2z8Y2c+lh0Xce+PTj7Uv/U3zROYrdbqviMh+I5QvCkaK0W+6HunIBhdj7N9l/pPNHOm
+	EKQ5Vd8mojrABJIElm/eMihNfWj+gWIJzSrXIISS0qU7vUA2NN2sYjhW/dlStAPG+190dY
+	s9XMiITFk/nPaD9XI097goS2FMZ0E+i2eYFn+yHMmdeWVWqO9QTObi+GbsIpxA==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Stefan Wahren <wahrenst@gmx.net>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Shawn Guo <shawnguo@kernel.org>, Esben Haabendal <esben@geanix.com>
+Subject: Re: [PATCH 1/1] arm64: Kconfig: Enable PINCTRL on i.MX platforms
+Date: Thu, 08 May 2025 07:52:58 +0200
+Message-ID: <8259306.DvuYhMxLoT@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <5af33290-e7d8-437c-a22f-5b873596d67a@gmx.net>
+References:
+ <20250507124414.3088510-1-alexander.stein@ew.tq-group.com>
+ <5af33290-e7d8-437c-a22f-5b873596d67a@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <e1cc19.5287.196ae733594.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:gigvCgCXX0p1RhxoYkupAA--.15361W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0gNHqmgcKSWmQwALsq
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-CkF0IDIwMjUtMDUtMDggMTI6MDc6NDAsICJLZW50IE92ZXJzdHJlZXQiIDxrZW50Lm92ZXJzdHJl
-ZXRAbGludXguZGV2PiB3cm90ZToKPk9uIFRodSwgTWF5IDA4LCAyMDI1IGF0IDExOjM1OjExQU0g
-KzA4MDAsIERhdmlkIFdhbmcgd3JvdGU6Cj4+IAo+PiAKPj4gQXQgMjAyNS0wNS0wOCAxMTozMTox
-MiwgIktlbnQgT3ZlcnN0cmVldCIgPGtlbnQub3ZlcnN0cmVldEBsaW51eC5kZXY+IHdyb3RlOgo+
-PiA+T24gVGh1LCBNYXkgMDgsIDIwMjUgYXQgMTE6MDY6MzVBTSArMDgwMCwgRGF2aWQgV2FuZyB3
-cm90ZToKPj4gPj4gVGhhbmtzIGZvciB0aGUgZmVlZGJhY2t+Cj4+ID4+IEkgYWdyZWUgdGhhdCBt
-ZW1vcnkgYWxsb2NhdGlvbiBub3JtYWxseSBkb3NlIG5vdCB0YWtlIG1ham9yIHBhcnQgb2YgYSBw
-cm9maWxpbmcgcmVwb3J0LAo+PiA+PiBldmVuIHByb2ZpbGluZyBhIGZpbyB0ZXN0LCBrbWVtX2Nh
-Y2hlX2FsbG9jIG9ubHkgdGFrZXMgfjElIHBlcmYgc2FtcGxlcy4KPj4gPj4gCj4+ID4+IEkgZG9u
-J3Qga25vdyB3aHkgSSBoYXZlIHRoaXMgInRoZSBsZXNzIG1lbW9yeSBhbGxvY2F0aW9uLCB0aGUg
-YmV0dGVyJyBtaW5kc2V0LCAgbWF5YmUKPj4gPj4gSSB3YXMgd29ycnlpbmcgYWJvdXQgbWVtb3J5
-IGZyYWdtZW50YXRpb24sIG9yIHNvbWV0aGluZyBlbHNlIEkgIGxlYXJuZWQgb24gc29tZSAidGV4
-dGJvb2siLAo+PiA+PiBUbyBiZSBob25lc3QsIEkgIGhhdmUgbmV2ZXIgaGFkIHJlYWwgZXhwZXJp
-ZW5jZSB3aXRoIHRob3NlIHdvcnJpZXMuLi4uCj4+ID4KPj4gPkl0J3MgYSBjb21tb24gYmlhcy4g
-Ik1lbW9yeSBhbGxvY2F0aW9ucyIgdGFrZSB1cCBhIGxvdCBvZiBjb25jZXB0dWFsCj4+ID5zcGFj
-ZSBpbiBvdXIgaGVhZHMsIGFuZCBnZW5lcmFsbHkgZm9yIGdvb2QgcmVhc29uIC0gaS5lLiBoYW5k
-bGluZyBtZW1vcnkKPj4gPmFsbG9jYXRpb24gZXJyb3JzIGlzIG9mdGVuIGEgbWFqb3IgY29uY2Vy
-biwgYW5kIHlvdSBkbyBhbHdheXMgd2FudCB0byBiZQo+PiA+YXdhcmUgb2YgbWVtb3J5IGxheW91
-dC4KPj4gPgo+PiA+QnV0IHRoaXMgY2FuIHR1cm4gaW50byBhbiBhdmVyc2lvbiB0aGF0J3MgZW50
-aXJlbHkgZGlzcHJvcG9ydGlvbmF0ZSAtCj4+ID5lLmcuIHVzaW5nIGxpbmtlZCBsaW5rZWQgbGlz
-dHMgYW5kIGZpeGVkIHNpemUgYXJyYXlzIGluIHdheXMgdGhhdCBhcmUKPj4gPmVudGlyZWx5IGlu
-YXBwcm9wcmlhdGUsIGluc3RlYWQgb2YgdmVjdG9ycyBhbmQgb3RoZXIgYmV0dGVyIGRhdGEKPj4g
-PnN0cnVjdHVyZXM7IGdvb2QgZGF0YSBzdHJ1Y3R1cmVzIGFsd2F5cyByZXF1aXJlIGFsbG9jYXRp
-b25zLgo+PiA+Cj4+ID5Qcm9maWxlLCBwcm9maWxlLCBwcm9maWxlLCBhbmQgcmVtZW1iZXIgeW91
-ciBiYXNpYyBDUyAoYmlnIE8gbm90YXRpb24pIC0KPj4gPjkwJSBvZiB0aGUgdGltZSwgc2ltcGxl
-IGNvZGUgd2l0aCBnb29kIGJpZyBPIHJ1bm5pbmcgdGltZSBpcyBhbGwgeW91Cj4+ID5uZWVkLgo+
-PiAKPj4gY29weSB0aGF0fiEKPgo+QW5vdGhlciB0aGluZyB0byBub3RlIGlzIHRoYXQgbWVtb3J5
-IGxheW91dCAtIGF2b2lkaW5nIHBvaW50ZXIgY2hhc2luZyAtCj5pcyBodWdlbHkgaW1wb3J0YW50
-LCBidXQgaXQnbGwgYWxtb3N0IG5ldmVyIHNob3cgdXAgYXMgYWxsb2NhdG9yIGNhbGxzLgo+Cj5U
-byBnaXZlIHlvdSBzb21lIGV4YW1wbGVzLCBtZW1wb29scyBhbmQgYmlvc2V0cyB1c2VkIHRvIGJl
-IHNlcGFyYXRlbHkKPmFsbG9jYXRlZC4gVGhpcyB3YXMgbWFpbmx5IHRvIG1ha2UgZXJyb3IgcGF0
-aHMgaW4gb3V0ZXIgb2JqZWN0Cj5jb25zdHJ1Y3RvcnMvZGVzdHJ1Y3RvcnMgZWFzaWVyIGFuZCBz
-YWZlcjogaW5zdGVhZCBvZiBrZWVwaW5nIHRyYWNrIG9mCj53aGF0J3MgaW5pdGlhbGl6ZWQgYW5k
-IHdoYXQncyBub3QsIGlmIHlvdSd2ZSBnb3QgYSBwb2ludGVyIHRvIGEKPm1lbXBvb2wvYmlvc2V0
-IHlvdSBjYWxsICpfZnJlZSgpIG9uIGl0Lgo+Cj4oUGVvcGxlIGhhZG4ndCB5ZXQgY2x1ZWQgdGhh
-dCB5b3UgY2FuIGp1c3Qga3phbGxvYygpIHRoZSBlbnRpcmUgb3V0ZXIKPm9iamVjdCwgYW5kIHRo
-ZW4gaWYgdGhlIGlubmVyIG9iamVjdCBpcyB6ZXJvZWQgaXQgd2Fzbid0IGluaXRpYWxpemVkKS4K
-Pgo+QnV0IHRoYXQgbWVhbnMgeW91J3JlIGFkZGluZyBhIHBvaW50ZXIgY2hhc2UgdG8gZXZlcnkg
-bWVtcG9vbF9hbGxvYygpCj5jYWxsLCBhbmQgc2luY2UgYmlvc2V0IGl0c2VsZiBoYXMgbWVtcG9v
-bHMgYWxsb2NhdGluZyBiaW9zIGhhZCBfdHdvXwo+dW5uZWNlc3NhcnkgcG9pbnRlciBkZXJlZnMu
-IFRoYXQncyBkZWF0aCBmb3IgcGVyZm9ybWFuY2Ugd2hlbiB5b3UncmUKPnJ1bm5pbmcgY2FjaGUg
-Y29sZCwgYnV0IHNpbmNlIGV2ZXJ5b25lIGJlbmNobWFya3MgY2FjaGUtaG90Li4uCj4KPihJIHdh
-cyB0aGUgb25lIHdobyBmaXhlZCB0aGF0KS4KPgo+QW5vdGhlciBiaWcgb25lIHdhcyBnZW5lcmlj
-X2ZpbGVfYnVmZmVyZWRfcmVhZCgpLiBNYWluIGJ1ZmZlcmVkIHJlYWQKPnBhdGgsIGV2ZXJ5b25l
-IHdhbnRzIGl0IHRvIGJlIGFzIGZhc3QgYXMgcG9zc2libGUuCj4KPkJ1dCB0aGUgY29yZSBpcyAo
-d2FzKSBhIGxvb3AgdGhhdCB3YWxrcyB0aGUgcGFnZWNhY2hlIHJhZGl4IHRyZWUgdG8gZ2V0Cj50
-aGUgcGFnZSwgdGhlbiBjb3BpZXMgNGsgb2YgZGF0YSBvdXQgdG8gdXNlcnNwYWNlICh0aGVyZSBn
-b2VzIGwxKSwgdGhlbgo+cmVwZWF0cyBhbGwgdGhhdCBwb2ludGVyIGNoYXNpbmcgZm9yIHRoZSBu
-ZXh0IDRrLiBQcmUgbGFyZ2UgZm9saW9zLCBpdAo+d2FzIGhvcnJpZmljLgo+Cj5Tb2x1dGlvbiAt
-IHZlY3Rvcml6ZSBpdC4gTG9vayB1cCBhbGwgdGhlIHBhZ2VzIHdlJ3JlIGNvcHlpbmcgZnJvbSBh
-bGwgYXQKPm9uY2UsIHN0dWZmIHRoZW0gaW4gYSAoZHluYW1pY2FsbHkgYWxsb2NhdGVkISBmb3Ig
-ZWFjaCByZWFkISkgdmVjdG9yLAo+YW5kIHRoZW4gZG8gdGhlIGNvcHlpbmcgb3V0IHRvIHVzZXJz
-cGFjZSBhbGwgYXQgb25jZS4gTWFzc2l2ZQo+cGVyZm9ybWFuY2UgZ2Fpbi4KPgo+T2YgY291cnNl
-LCB0byBkbyB0aGF0IEkgZmlyc3QgaGFkIHRvIGNsZWFuIHVwIGEgdGFuZ2xlZCAyNTArIGxpbmUK
-Pm1vbnN0cm9zaXR5IG9mIGhhbGYgYmFrZWQsIHBvb3JseSB0aG91Z2h0IG91dCAib3B0aW1pemF0
-aW9ucyIgKHRoZSB3b3JzdAo+c3BhZ2hldHRpIG9mIGdvdG9zIHlvdSdkIGV2ZXIgc2VlbikgYW5k
-IHR1cm4gaXQgaW50byBzb21ldGhpbmcKPm1hbmFnZWFibGUuLi4KPgo+U28gLSBrZWVwIHRoaW5n
-cyBzaW1wbGUsIGRvbid0IG92ZXJ0aGluayB0aGUgbGl0dGxlIHN0dWZmLCBzbyB5b3UgY2FuCj5z
-cG90IGFuZCB0YWNrbGUgdGhlIGJpZyBhbGdvcml0aG1pYyB3aW5zIDopCkkgd2lsbCBrZWVwIHRo
-aXMgaW4gbWluZH4hIDopCgpBbmQgdGhhbmtzIGZvciB0aGUgZW5saWdodGVuaW5nIG5vdGVzfiEh
-IAoKVGhvdWdoIEkgY291bGQgbm90IHF1aXRlIGNhdGNoIHVwIHdpdGggdGhlIGZpcnN0IG9uZSwg
-IEkgdGhpbmsgSSBnb3QgdGhlIHBvaW50Ogphdm9pZCB1bm5lY2Vzc2FyeSBwb2ludGVyIGNoYXNp
-bmcgYW5kICBrZWVwIHRoZSBwb2ludGVyIGNoYXNpbmcgYXMgc2hvcnQoYmFsYW5jZWQpIGFzIHBv
-c3NpYmxlfiAKClRoZSBzZWNvbmQgb25lLCBhYm91dCBjb3B5IDRrIGJ5IDRrLCBzZWVtcyAgcXVp
-dGUgc2ltaWxhciB0byBzZXFfZmlsZSwgYXQgbGVhc3QgdGhlICI0ayIgcGFydCwgbGl0ZXJhbGx5
-LgpzZXFfZmlsZSByZWFkKCkgIGRlZmF1bHRzIHRvIGFsbG9jIDRrIGJ1ZmZlciwgYW5kIHJlYWQg
-ZGF0YSB1bnRpbCBFT0Ygb3IgdGhlIDRrIGJ1ZmZlciBpcyBmdWxsLCAgIGFuZCBzdGFydCBvdmVy
-CmFnYWluIGZvciB0aGUgbmV4dCByZWFkKCkuICAgCk9uZSBzb2x1dGlvbiBjb3VsZCBiZSBtYWtl
-IGNoYW5nZXMgdG8gc2VxX2ZpbGUsIGRvIG5vdCBzdG9wIHVudGlsIHVzZXIgYnVmZmVyIGlzIGZ1
-bGwgZm9yIGVhY2ggcmVhZC4Ka2luZCBvZiBzaW1pbGFyIHRvIHlvdXIgc2Vjb25kIG5vdGUsIGlu
-IGEgc2VxdWVudGlhbCBzdHlsZSwgIEkgdGhpbmsuCklmICB1c2VyIHJlYWQgd2l0aCAxMjhLIGJ1
-ZmZlciwgIGFuZCBzZXFfZmlsZSBmaWxsIHRoZSBidWZmZXIgNGsgYnkgNGssIGl0IHdvdWxkIG9u
-bHkgbmVlZCB+MyByZWFkIGNhbGxzIGZvciBhbGxvY2luZm8uCihJIGRpZCBwb3N0IGEgcGF0Y2gg
-Zm9yIHNlcV9maWxlIHRvIGZpbGwgdXNlciBidWZmZXIsIGJ1dCBzdGFydC9zdG9wIHN0aWxsIGhh
-cHBlbnMgYXQgIDRrIGJvdW5kYXJ5ICwgc28gbm8gaGVscCBmb3IgCnRoZSBpdGVyYXRvciByZXdp
-bmRpbmcgd2hlbiByZWFkIC9wcm9jL2FsbG9jaW5mbyB5ZXQuCmh0dHBzOi8vbG9yZS5rZXJuZWwu
-b3JnL2xrbWwvMjAyNDEyMjAxNDA4MTkuOTg4Ny0xLTAwMTA3MDgyQDE2My5jb20vICkKVGhlIHNv
-bHV0aW9uIGluIHRoaXMgcGF0Y2ggaXMga2VlcGluZyB0aGUgaXRlcmF0b3IgYWxpdmUgYW5kIHZh
-bGlkIGNyb3NzIHJlYWQgYm91bmRhcnksIHRoaXMgY2FuICBhbHNvIGF2b2lkIHRoZSBjb3N0IGZv
-ciAKZWFjaCBzdGFydCBvdmVyLgoKCgpEYXZpZAoK
+Hi Stefan,
+
+Am Mittwoch, 7. Mai 2025, 16:30:33 CEST schrieb Stefan Wahren:
+> Hi Alexander,
+>=20
+> [add Shawn and Esben]
+>=20
+> Am 07.05.25 um 14:44 schrieb Alexander Stein:
+> > Select PINCTRL for NXP i.MX SoCs.
+> could you please explain the motivation behind your change?
+>=20
+> Is it related to this commit 17d21001891402 ("ARM: imx: Allow user to=20
+> disable pinctrl")?
+
+Ah, thanks for the pointer. It might be the case. I noticed that, when
+using arch/arm64/defconfig and disabling all platforms despite ARCH_MXC
+before running make olddefconfig, CONFIG_PINCTRL gets disabled as well.
+No platform is enabling it. I noticed this when building in yocto and
+non-IMX platforms are disabled for build time reasons.
+
+Best regards,
+Alexader
+
+> >
+> > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> > ---
+> >   arch/arm64/Kconfig.platforms | 1 +
+> >   1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> > index a541bb029aa4e..49c3bc25e5f68 100644
+> > --- a/arch/arm64/Kconfig.platforms
+> > +++ b/arch/arm64/Kconfig.platforms
+> > @@ -219,6 +219,7 @@ config ARCH_MXC
+> >   	select ARM64_ERRATUM_845719 if COMPAT
+> >   	select IMX_GPCV2
+> >   	select IMX_GPCV2_PM_DOMAINS
+> > +	select PINCTRL
+> >   	select PM
+> >   	select PM_GENERIC_DOMAINS
+> >   	select SOC_BUS
+>=20
+>=20
+
+
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
+
+
