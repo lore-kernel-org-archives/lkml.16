@@ -1,134 +1,129 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2F66F073
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 08:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610D16F073;
+	Thu,  8 May 2025 08:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746691664; cv=none; b=QELdeSFCIxxXp3mUSuy98Ijg5TWxB04ZR6YN13OqUMlViYzZT7Nfr7ad1Dz9oLAjsacJr+6n6KJLyDI+SZRn4fLGqD8hh49oKYHx91MLELBG94f1sERB6O4+Yog52E6HkY6Xnx8uXtn1/+iaFbl4OmM2AkOkZou7urQ7p035e9E=
+	t=1746691703; cv=none; b=oBRr/wOckIxAmQnFJUNDPkAxAFzFQlY/RW27spu+UgErI5CVE36cGazCbnRvJLQsbYgOPixl3MEtpp2HoqIbnfCXK2yOfAw0phmjir71n6l1LybjNyAalkdD6GWDOXdXdBjHUHdN8QSGCOQcBsGfBnmwnoyy+fzhIUOUl7Zl/m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746691664; c=relaxed/simple;
-	bh=VvJyVgfwE/tf2nM/arkeHG8DCYPZCnFmpe2XLdCrC7A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Npruzs9gcOgEj8haOcdAhXqrUsSTSSG+DdKbQMQEO7HAM1raTzr7c0fTY8Z7U6Ovofw0Ci4UFJQAFhIBYtqQV3E0u8hTwJZ+mDGKRil5ojlpgiVdfzFlzPkgFLbiG4xxpmGJnmL6vtKZ/MZUhiW1pqZyklXRVHDdjcIeYfcnDK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=MXoXnw+s; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=YIElGG9t reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="MXoXnw+s";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="YIElGG9t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1746691661; x=1778227661;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=VvJyVgfwE/tf2nM/arkeHG8DCYPZCnFmpe2XLdCrC7A=;
-  b=MXoXnw+sMy4gwRu6TFIrKRkvGuSO+suqFHfTEVTOwM/U1d+SjL2K53M3
-   NvI7qdeDtjoljzHwKTZO/bkQrlU27/AoNM0u2yclACDNouNIv2z6bDw8u
-   myREWJrzKNkYev4R+YRvqwWLaI4PUp6dKZi2HeQuTAQFAlcJ98nDQGrsF
-   W+Gnh6ILJxR3b+N/5YcjKpby3o6Z0v5GHz5QWqIo+98W7nJ6eIQO8TNRx
-   A4/9RmUUnx3n7FsT9qwPNOvG9FWld+bHKCFZJusFqSHjV+J2nz6+zAtB8
-   YSW0b87Gih4eJOqC5FuWHlPS5ALProVLuSrsVVOPfU19f18Rah47PVNBB
-   A==;
-X-CSE-ConnectionGUID: /Ws5gQ/3TvilkfRlpMhvfg==
-X-CSE-MsgGUID: wmq3LZIoTQyzYU0idt8Iag==
-X-IronPort-AV: E=Sophos;i="6.15,271,1739833200"; 
-   d="scan'208";a="43954413"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 08 May 2025 10:07:37 +0200
-X-CheckPoint: {681C6649-29-45F3AE15-E90F7DFA}
-X-MAIL-CPID: D73B9C706E3199116FADD3609FEEBAFF_5
-X-Control-Analysis: str=0001.0A006397.681C664B.007D,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 57469163F01;
-	Thu,  8 May 2025 10:07:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1746691653;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VvJyVgfwE/tf2nM/arkeHG8DCYPZCnFmpe2XLdCrC7A=;
-	b=YIElGG9tOSf2sQm9x2MY4rRj808ZLuGpYNcjuuWV87kPfDdkUN9n+YPiQMilp5DVMngDeT
-	Im7/Xkc2J0QUZ4Y7+st8iGeyNLN0AOwblOxZ1nyXuN8ZYYsQvTUJp0vKEIolnkyr5aPlsS
-	7mcBiNut12c8Uus8N7ZctNdlPb3p3pSlL5kgzBS/DMpAPwWD/++KIPduBhongFKEO1m767
-	KVIo0UJP/uSMICrpV5PYxosl5Lc5+vMnC1iwYnVjZeHGpECzEtXSHOB8hesipWinbPa2/L
-	IrSgMeKDRhfvkZ+RTszSxJKJKZwolwH7dH9mEWOyti0m3hAGIk62gp8PJnvpvA==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Esben Haabendal <esben@geanix.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Stefan Wahren <wahrenst@gmx.net>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/1] arm64: Kconfig: Enable PINCTRL on i.MX platforms
-Date: Thu, 08 May 2025 10:07:27 +0200
-Message-ID: <7023673.LvFx2qVVIh@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <87ikmby52x.fsf@geanix.com>
-References:
- <20250507124414.3088510-1-alexander.stein@ew.tq-group.com>
- <8259306.DvuYhMxLoT@steina-w> <87ikmby52x.fsf@geanix.com>
+	s=arc-20240116; t=1746691703; c=relaxed/simple;
+	bh=+sJ+nOd93uoWClQE2mhYQO1xYIQfotIWKMU2W7nPB2o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pwpvs1MkmZZO/eH6Kq5IbB73V9tRCViOswDdAFyb+wxoYtaP2GmGITf9c3ZnMdiEq1PmzSo+fgMcgwTPt9qqH0r/FzE3zvh2TIInocGtBS3l4vhZrOnpTXcSn5juMwU0BBI2NW0yBU4Hmx1cFrOvb1mv29xbH57j4Kcfjgb9DVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-5241abb9761so238255e0c.1;
+        Thu, 08 May 2025 01:08:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746691697; x=1747296497;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5pyh88RLi7QBn3vHcG2jBCwxHsg3m1PlM26ESBfjfQk=;
+        b=JdVUV14WGk68/k1HNNJGKorvTY7Q8kr0nz2kJuiUsEQOn70dC6/VuX/LS0IuBcV3OV
+         /v5sgnoLF7ggsPuZEenIWHr1XT1KzVWNE/PMvtKbvNZtel0tcHCqNh2JhTg4bQEFThqx
+         QSvAVz8KeK6KbHiinIXfOFDiLA5SM5qqjLoeutHb2IyoRAKixPYKT7TsgiFOSzKlEBRy
+         XXOmGPeqPeUehJKh/gyag4Pn7HUuJc8EwecAA7QzvpPgkhjhRIMdPlj2MFzoUgozGUeO
+         OZMAkxwPBbWX2ydgmnpjvZprveH/RJkmoxCNkRqf1o/wzPz4JOMssRchcboys89crIjB
+         PtdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9w1Jt9qaJgT/KogH8Sehsd8x74zE5gcGXD8gM8y0B4sgPYREpIUahvrn2BB1o3boSloTaQ0vPX1J2EpW1C7CFmvw=@vger.kernel.org, AJvYcCWmA69ukN0pd6k5LJOhKObgTMu/q6J6qr/j4LbVMc8tmJOGkoX9RtbCOA3ujQzBIkiBXmjNEqQVtwE=@vger.kernel.org, AJvYcCWnKkIO9botPEul9Adv7i+FXZyXxeL6K5z+wLxI9l5ZJ1d5kYj55rFn1psMm9q8YzDpE7lPpCVPFkBkD2nk@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRY/iSfJPFp3RdnMMXzU6xUnU80r6RpfxiHjZFDiQiankdG/ow
+	c51kzh2g1DdAsM2Wh3YOvDuixpSe/HPC7GYLzo9adtj9q1C/TNnLgyGPbbVR
+X-Gm-Gg: ASbGncsu4NRZ5Wlt741EbzMxhLBkQrnYaR7ciMvtQax7QZmiNO/wbW2sdAHz6m6uqdS
+	rDR7DO4eYy/4+9ViBRB1Z1hFf9RMoimHGP2CL0HmijA4m4A54Im+QhCMVaY4XXYmZt72BV+3k9p
+	AqeTYS4Ebz+9bI9KgmxCay85kXrkKwg+gb7FdyQvgjAjb+a/7OE9YGEgm1PCY8086s5WoinJkFx
+	Fwm/0VGxJxS8WzhYQJUPCx8WwXRXu7hAuIvsmeTnMv+/G6V7uvxX1WPKij/zokEhBWg6S/aO7N2
+	+UOGe5C70a1Qc6jbhaPFqRWD1T10jnItf43LZ89Oa2howKbTEQyWw1f4Xmf3ustiU9SWGQBYVYu
+	de7H3Sbo=
+X-Google-Smtp-Source: AGHT+IFaWIGOmB8cTBxOE+dYT4jEmG0XdjfXBvG0xeDCxKUTjA0Z0v02NnZ2wm1eKbLYbdO4+GchmA==
+X-Received: by 2002:a05:6122:7d0:b0:529:d14:67b6 with SMTP id 71dfb90a1353d-52c441af38fmr1708144e0c.7.1746691697402;
+        Thu, 08 May 2025 01:08:17 -0700 (PDT)
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52ae419c85csm2888631e0c.33.2025.05.08.01.08.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 01:08:17 -0700 (PDT)
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-5262475372eso197650e0c.2;
+        Thu, 08 May 2025 01:08:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWERG2zKGAiRQQbsYKzmFdvBqDBG3fMORz0BTLJezVvidt2qZuvm2KyBxeg20ibfYakqXIqPFvSvEg=@vger.kernel.org, AJvYcCXP7qTdcNYgGPIqAm8VRHqVlVK/mkm5ETkeP5G+mKfEYMmUzzKbztJyW7Q6bmaQwYCMFrepPKxTaOTyR5Zv7TIPaUM=@vger.kernel.org, AJvYcCXjRkBa3ovT+r4jzo9wMSLt4kSxUcX90GCgg5bTvI9E/h8U4uz4MLZg9Aa9+UXw3fwdBzeHOr3bbKhaLOaf@vger.kernel.org
+X-Received: by 2002:a05:6122:3295:b0:529:2644:5eec with SMTP id
+ 71dfb90a1353d-52c441e2252mr1551202e0c.8.1746691696707; Thu, 08 May 2025
+ 01:08:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20250327151109.9648-1-tsogomonian@astralinux.ru>
+In-Reply-To: <20250327151109.9648-1-tsogomonian@astralinux.ru>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 8 May 2025 10:08:05 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUoZSXQwu6gZgbzUcFgjQh=ng7UZAGC5ke4GVB-zqqhqQ@mail.gmail.com>
+X-Gm-Features: ATxdqUHjjZXKNDvAcDrDPJ9dSfaDFZqswvwv39QmwuKKp-97On7DFcun-1asJ9A
+Message-ID: <CAMuHMdUoZSXQwu6gZgbzUcFgjQh=ng7UZAGC5ke4GVB-zqqhqQ@mail.gmail.com>
+Subject: Re: [PATCH RFC] renesas: add zero check for prate variable
+To: Tigran Sogomonian <tsogomonian@astralinux.ru>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Esben,
+Hi Tigran,
 
-Am Donnerstag, 8. Mai 2025, 08:44:22 CEST schrieb Esben Haabendal:
-> "Alexander Stein" <alexander.stein@ew.tq-group.com> writes:
->=20
-> > Hi Stefan,
-> >
-> > Am Mittwoch, 7. Mai 2025, 16:30:33 CEST schrieb Stefan Wahren:
-> >> Hi Alexander,
-> >>
-> >> [add Shawn and Esben]
-> >>
-> >> Am 07.05.25 um 14:44 schrieb Alexander Stein:
-> >> > Select PINCTRL for NXP i.MX SoCs.
-> >> could you please explain the motivation behind your change?
-> >>
-> >> Is it related to this commit 17d21001891402 ("ARM: imx: Allow user to
-> >> disable pinctrl")?
-> >
-> > Ah, thanks for the pointer. It might be the case.
->=20
-> The goal of the patch mentioned above was to be able to build a kernel
-> for LS1021A without pinctrl framework enabled, as LS1021A does not have
-> a pinctrl driver.
->=20
-> With your patch, that would not be possible anymore.
+On Thu, 27 Mar 2025 at 16:13, Tigran Sogomonian
+<tsogomonian@astralinux.ru> wrote:
+> To avoid division by zero, a check was added to the prate
+> variable, since no guarantees were found that it could not
+> be equal to zero.
+>
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>
+> Signed-off-by: Tigran Sogomonian <tsogomonian@astralinux.ru>
 
-Why? LS1021A is arm, not arm64 which this patch is touching only.
+Thanks for your patch!
 
-BTW: Commit b77bd3ba762f3 ("ARM: imx: Re-introduce the PINCTRL selection")
-is actually doing the same for arm as there is some fallout from
-17d21001891402.
+> --- a/drivers/clk/renesas/rcar-gen3-cpg.c
+> +++ b/drivers/clk/renesas/rcar-gen3-cpg.c
+> @@ -205,6 +205,8 @@ static int cpg_z_clk_determine_rate(struct clk_hw *hw,
+>                                                   prate * zclk->fixed_div);
+>
+>         prate = req->best_parent_rate / zclk->fixed_div;
+> +       if (prate == 0)
+> +               return -EINVAL;
 
-> > I noticed that, when using arch/arm64/defconfig and disabling all
-> > platforms despite ARCH_MXC before running make olddefconfig,
-> > CONFIG_PINCTRL gets disabled as well. No platform is enabling it. I
-> > noticed this when building in yocto and non-IMX platforms are disabled
-> > for build time reasons.
->=20
-> But is that something that needs to be fixed?
->=20
-> It sounds like quite a special use-case, and why not simply enable
-> CONFIG_PINCTRL in that case then?
+prate can never be zero, as req->best_parent_rate is always larger or
+equal than zclk->max_rate, and zclk->fixed_div is a very small number
+(2 or 4).
 
-PINCTRL is crucial for any SoC to even boot, so this is an option which has
-to be set if that platform is enabled.
+>         min_mult = max(div64_ul(req->min_rate * 32ULL, prate), 1ULL);
+>         max_mult = min(div64_ul(req->max_rate * 32ULL, prate), 32ULL);
+>         if (max_mult < min_mult)
+> diff --git a/drivers/clk/renesas/rcar-gen4-cpg.c b/drivers/clk/renesas/rcar-gen4-cpg.c
+> index 31aa790fd003..4c9a7d699290 100644
+> --- a/drivers/clk/renesas/rcar-gen4-cpg.c
+> +++ b/drivers/clk/renesas/rcar-gen4-cpg.c
+> @@ -308,6 +308,8 @@ static int cpg_z_clk_determine_rate(struct clk_hw *hw,
+>                                                   prate * zclk->fixed_div);
+>
+>         prate = req->best_parent_rate / zclk->fixed_div;
+> +       if (prate == 0)
+> +               return -EINVAL;
 
-Best regards
-Alexander
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+Likewise.
 
+>         min_mult = max(div64_ul(req->min_rate * 32ULL, prate), 1ULL);
+>         max_mult = min(div64_ul(req->max_rate * 32ULL, prate), 32ULL);
+>         if (max_mult < min_mult)
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
