@@ -1,173 +1,116 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE082874E5
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 18:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063CB286D61;
+	Thu,  8 May 2025 18:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746729566; cv=none; b=o04DzJCJqChfnd6+alWJRAK9m67M0X2tjTYw3EzmvPh9CTK5IATg+ylioXLrVEd5m1KZVfTFhEQxDV7fSiJbKEHFTyjKNtMkNR3d3coFENWiQcS3fnozEeURCBrJggQQpqRXDlPFA55oow43RHsANO3qljE5/QWdZLy2yVOrrH4=
+	t=1746729587; cv=none; b=UPEQl7bfOUv2cYUPyR/wgD1ZR0Ap3rB7BtsjX54VKweaThxfHqSlU56dFH1M3cHp8c/YnzYkpsIsTk8LaPxOg5ApE8vFQVTWKcsndTKcLoizHb/mVD+t9qaxl3Hz0AOq70rwPVsVuIU3J1VfOttCBrrihw72i1+b8GV0JFxwSfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746729566; c=relaxed/simple;
-	bh=Np+KzvnxNMm8BOqHv7WffUtm+ne1DIjG/00wHz+OJ0A=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fYGWa7JWI4NwrmKtyswE3grsTn5YmGJ6jfyEhSjq3ZngnhKyNGw6LYPLylkSlPEQr/hKFzVA+f1WC9Kz0yS3KHWpw23ln72z5XAW/fyGnzc+HeAurv8tYRD7t8BaRKGkavF0oO+PLHHQNrGZ96ih0+ncGFKixkrdgXW4Rcnhv94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=qSdAdYpD; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="qSdAdYpD"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 3659FA0780;
-	Thu,  8 May 2025 20:39:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=6nb2cCPK5LUfQe9tE52LNNxXl3+TZ5aWJppwBidSKUA=; b=
-	qSdAdYpDUUJNE/vqy7gs09hYUg+hlZLscu8jMLH6KwUNPl8489698KT8re2qw0fU
-	PUYCSdbLf1oOPuYT3Sfnnw8TUrkymiPVgejF0lyLesiop5hN0yXyaNczzmBdxhLz
-	DwpLsSmdEPIi/wnALPMQHJ+3sWpTQxbj/4afJvt6UMpWpR88+T72t/Qj/0feuuox
-	GyiL3mBnguzFcn4yBHlVYN0VhE0JWo0aBtvHICfg9jk9BUrh3drYOaN0L+qc5+kB
-	JsRSlF8APf3nAsdn6NVpIqghzRnGopKqGWN+3WUAeIi+QXZouAhbQx9l8nTBEis8
-	0xsRlRYc6F8041gj6HDwEWZLPrvlxplUs/zPbum5J9Uug4Yl64gCUcE/WqkTEIOu
-	CI2682NuBrzxBM6GYoGdblDOgB9O+f6UKDvavw2m3zf2hCwtVhhkmR0OYSH453oe
-	8i2sEKZym2SobQEzFW9tdl2fEkQNigR5DklJkStMKlK5xKTefIDO6NI/Gm5j3oro
-	7pBMB/ETbNu6ygRPSmRbKNIfOMkLdgovgzSa/iPvDXCAQnNX7HqLntZauxNPuxJB
-	uV0a6RgEhJ3mPxa75Ck1MEqWkDEqAZPr3ZwgREOTXeXRUS8FQmsTjFj780YRPv6B
-	1RQiQBOwlk+KhQOClGo+K74mczSnVGh5AWUpkX76MEc=
-From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>, "Michael
- Walle" <mwalle@kernel.org>, Richard Weinberger <richard@nod.at>, Miquel
- Raynal <miquel.raynal@bootlin.com>, Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH v2] mtd: Verify written data in paranoid mode
-Date: Thu, 8 May 2025 20:37:34 +0200
-Message-ID: <20250508183733.514124-3-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1746729587; c=relaxed/simple;
+	bh=XijhJI+zS6x49k5yeDbJQm7J5mBLadnfpbOoE7T0cAc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L9rHOEsgP+yRb5wKsULjCSIp9qMPq7uRWUKQIxNNcv4p4VS0KNnGZfvaNeXgWeNk9RBycpX6GpRdmDRlaLwtREE8G8CGCATHt/JIpNwRo296/6m63/FDgsogvYh1FvtOmvBEoiDl4yV11E9Ro1ioKBibQj1jAqJJ0C+b2KdnAus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: vJRmdyLwS1qP5DKFV9naaA==
+X-CSE-MsgGUID: PUd5gPIuQQ2R3697Jx6qVA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="58748091"
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="58748091"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:39:45 -0700
+X-CSE-ConnectionGUID: FXSPScreQhqUZAukaZ7+HQ==
+X-CSE-MsgGUID: JAmpC+y1QTqKYbV4vkHXXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="167321959"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:39:41 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uD69i-00000004CG8-44NK;
+	Thu, 08 May 2025 21:39:38 +0300
+Date: Thu, 8 May 2025 21:39:38 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Angelo Dureghello <adureghello@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 3/5] iio: adc: ad7606: add offset and phase
+ calibration support
+Message-ID: <aBz6am83scKywvkn@smile.fi.intel.com>
+References: <20250508-wip-bl-ad7606-calibration-v4-0-91a3f2837e6b@baylibre.com>
+ <20250508-wip-bl-ad7606-calibration-v4-3-91a3f2837e6b@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1746729557;VERSION=7990;MC=2616487500;ID=244882;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94853667D62
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508-wip-bl-ad7606-calibration-v4-3-91a3f2837e6b@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Csókás, Bence <csokas.bence@prolan.hu>
+On Thu, May 08, 2025 at 12:06:07PM +0200, Angelo Dureghello wrote:
+> From: Angelo Dureghello <adureghello@baylibre.com>
+> 
+> Add support for offset and phase calibration, only for
+> devices that support software mode, that are:
+> 
+> ad7606b
+> ad7606c-16
+> ad7606c-18
 
-Add MTD_PARANOID config option for verifying all written data to prevent
-silent bit errors being undetected, at the cost of some bandwidth overhead.
+...
 
-Signed-off-by: Csókás, Bence <csokas.bence@prolan.hu>
----
+> +static int ad7606_get_calib_offset(struct ad7606_state *st, int ch, int *val)
+> +{
+> +	int ret;
+> +
+> +	ret = st->bops->reg_read(st, AD7606_CALIB_OFFSET(ch));
+> +	if (ret < 0)
+> +		return ret;
 
-Notes:
-    Changes in v2:
-    * refactor to be in mtdcore instead of spi-nor core
+> +	*val = st->chip_info->calib_offset_avail[0] + ret *
+> +		st->chip_info->calib_offset_avail[1];
 
- drivers/mtd/Kconfig   | 14 ++++++++++++
- drivers/mtd/mtdcore.c | 51 +++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 63 insertions(+), 2 deletions(-)
+You are too fast with new versions... As I pointed out, this is not a logical
+split. My only concern was the column, i.e. to be as
 
-diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
-index 796a2eccbef0..e75f4a57df6a 100644
---- a/drivers/mtd/Kconfig
-+++ b/drivers/mtd/Kconfig
-@@ -206,6 +206,20 @@ config MTD_PARTITIONED_MASTER
- 	  the parent of the partition device be the master device, rather than
- 	  what lies behind the master.
- 
-+config MTD_PARANOID
-+	bool "Read back written data (paranoid mode)"
-+	help
-+	  This option makes the MTD core read back all data on a write and
-+	  report an error if it doesn't match the written data. This can
-+	  safeguard against silent bit errors resulting from a faulty Flash,
-+	  controller oddities, bus noise etc.
-+
-+	  It is up to the layer above MTD (e.g. the filesystem) to handle
-+	  this condition, for example by going read-only to prevent further
-+	  data corruption, or to mark a certain region of Flash as bad.
-+
-+	  If you are unsure, select 'n'.
-+
- source "drivers/mtd/chips/Kconfig"
- 
- source "drivers/mtd/maps/Kconfig"
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index 5ba9a741f5ac..139cbac51132 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -1745,8 +1745,8 @@ int mtd_read_oob(struct mtd_info *mtd, loff_t from, struct mtd_oob_ops *ops)
- }
- EXPORT_SYMBOL_GPL(mtd_read_oob);
- 
--int mtd_write_oob(struct mtd_info *mtd, loff_t to,
--				struct mtd_oob_ops *ops)
-+static int _mtd_write_oob(struct mtd_info *mtd, loff_t to,
-+			  struct mtd_oob_ops *ops)
- {
- 	struct mtd_info *master = mtd_get_master(mtd);
- 	int ret;
-@@ -1771,6 +1771,53 @@ int mtd_write_oob(struct mtd_info *mtd, loff_t to,
- 
- 	return mtd_write_oob_std(mtd, to, ops);
- }
-+
-+static int _mtd_verify(struct mtd_info *mtd, loff_t to, size_t len, const u8 *buf)
-+{
-+	struct device *dev = &mtd->dev;
-+	u_char *verify_buf;
-+	size_t r_retlen;
-+	int ret;
-+
-+	verify_buf = devm_kmalloc(dev, len, GFP_KERNEL);
-+	if (!verify_buf)
-+		return -ENOMEM;
-+
-+	ret = mtd_read(mtd, to, len, &r_retlen, verify_buf);
-+	if (ret < 0)
-+		goto err;
-+
-+	if (len != r_retlen) {
-+		/* We shouldn't see short reads */
-+		dev_err(dev, "Verify failed, written %zd but only read %zd",
-+			len, r_retlen);
-+		ret = -EIO;
-+		goto err;
-+	}
-+
-+	if (memcmp(verify_buf, buf, len)) {
-+		dev_err(dev, "Verify failed, compare mismatch!");
-+		ret = -EIO;
-+	}
-+
-+err:
-+	devm_kfree(dev, verify_buf);
-+	return ret;
-+}
-+
-+int mtd_write_oob(struct mtd_info *mtd, loff_t to,
-+		  struct mtd_oob_ops *ops)
-+{
-+	int ret = _mtd_write_oob(mtd, to, ops);
-+
-+#if IS_ENABLED(CONFIG_MTD_PARANOID)
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = _mtd_verify(mtd, to, ops->retlen, ops->datbuf);
-+#endif // CONFIG_MTD_PARANOID
-+	return ret;
-+}
- EXPORT_SYMBOL_GPL(mtd_write_oob);
- 
- /**
+	*val = st->chip_info->calib_offset_avail[0] +
+	       ret * st->chip_info->calib_offset_avail[1];
 
-base-commit: d76bb1ebb5587f66b0f8b8099bfbb44722bc08b3
+> +	return 0;
+> +}
+
+...
+
+> +	val -= start_val;
+> +	val /= step_val;
+
+Hmm...
+
+To me the
+
+	val = (val - start_val) / step_val;
+
+looks better as it immediately gives an idea of the initial content of the val.
+Ideally I would even add a new temporary variable for this, so the operand and
+the assignee won't be the same variable.
+
+> +	return st->bops->reg_write(st, AD7606_CALIB_OFFSET(ch), val);
+
 -- 
-2.49.0
+With Best Regards,
+Andy Shevchenko
 
 
