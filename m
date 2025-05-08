@@ -1,80 +1,85 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861CD27875C
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 18:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE7727875C
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 18:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746730152; cv=none; b=MidzrPlq0oTqEbHjkdwgfLCwxBK80j87TJYil8cvYoSwWOSrDhkp9VDP5daYghdXoJMlkEtzezQSqTeMruAZuu6uIjckESQsj90P0DRDmLVZXro8Po0ICzFs+mtczhiLiY2/AqkOWHcXyGqIthJJJddnDFPsMHjlZAFNVl7wvA4=
+	t=1746730180; cv=none; b=caFnppGxsNsA5DZKsdTLW2AOzN2avEy1w4KgiL287qkV3XTM5m1sLXqMXpbl1FFjcVfSj1DiXmB8DxmGu7yx+9yrrDT35Q5NzSx4XvLPh2NE0jtyMusJlvGezpgdCAkubQhgXvZaxoGCWw0c+W3AYlXYT/A3gPY3fBWRGTq8e7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746730152; c=relaxed/simple;
-	bh=wK6rXqJv6Q9HETINckal3+AxEXHzzBeOeWS295xZTwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jr21uSBp7wAfkIWaO2tHOFicxzJmQXx7kp63FRFwAIbLS3MtEhJIn3fHqjQutNYB7vdeU18xJts319bDL9sFlTHOBHdOmZ6NUbfrWXHUAr8okXxCawrmBHJW7nBpfq70vb7PFECMFAZ2JScp6YO4a/5tqRgvicZzk0aQfl3V5kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HFWJqwaQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8w6gKwf6; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746730180; c=relaxed/simple;
+	bh=jK92st7X0klV03+jG2bTxf99xWy4odtdMf2NoHOPdXs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ogxnf7pi/LI+7BTpMd6+PSWE37kuNLXeJ1VCu1QJA7+gjZdRdcqV54bTI93ITrYr3hzJP/+qgtcLXMY/zGcZiQZ2gCiTAkr0MW57b0rScdqqzT5pUBMKKM6B8PnhSUOv6nwtLPYojntxO7D9gMCodZcOKl1Oe/ydpgvQtHTc0Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ptjbcfql; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HFWJqwaQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8w6gKwf6"
-Date: Thu, 8 May 2025 20:49:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746730149;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ptjbcfql"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746730177;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zgieM7TFBIUGIGLPFDm65OyHb8JUxeHxxWcl08nZ49E=;
-	b=HFWJqwaQ5ezyVwg/hm9exwbzdchg7qF7YRg02Jg4A6Eu6lxsaZiIVgGt5z10N2ulo6upfj
-	quv2GnAIxOorTbzMq+RNdCv4g2rI7yV9cFAtwQbOb/zxmwdK+oPwGseKdCBOEUElotSvKS
-	ckRlZkG4V6Fl/rU1v6KilP5dxmDFU4GFJnZiGBX7QQeXVdMS12A6wA0Q8XBvz0mIpFSG8J
-	d1sZdsreydHuo+giO2sQIyhvTd63o/SzLlpooBFlIotWZJPjGJnjVNtsYWTvWz6ot1jIet
-	zQCeBOHo8rhwqsFeoa7xgDJnqTV/iROK6Mbz1eAiwwLf0zmpwq0o3SbpXNPhJQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746730149;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zgieM7TFBIUGIGLPFDm65OyHb8JUxeHxxWcl08nZ49E=;
-	b=8w6gKwf6CQhGNkG/oTsQWa54y6twhI0eUpzRpc6fOklc+fbkawR0v/F97ufGfl7QMahzuo
-	Qo6XA7TAUNoivKAg==
-From: "Ahmed S. Darwish" <darwi@linutronix.de>
-To: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
-	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 0/9] x86/cpuid: Headers cleanup
-Message-ID: <aBz8o-Ikwvr9Y1PF@lx-t490>
-References: <20250508150240.172915-1-darwi@linutronix.de>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=IW0+4MWM9x9LMl+OAQiFn/VAiGTBHRX4k1GUGskDHkE=;
+	b=PtjbcfqluCyCpG2s6p9oXtMp5zTv9wjla3J+EelppwhkpwGP6l1ii7RKx7LSLD5pLis9aT
+	ELz25Nrrkz0BuJb03SswaJ2NsVCcDc/Yco88i5cjhnF9W0mLtYUhsulNkvu5NUqV/nI1Lq
+	Pvx3j7tQHOooEAhyczrGPegRMPpyV7A=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-528-1IEsC-AOM4yIUb1O4Y_kdg-1; Thu,
+ 08 May 2025 14:49:36 -0400
+X-MC-Unique: 1IEsC-AOM4yIUb1O4Y_kdg-1
+X-Mimecast-MFC-AGG-ID: 1IEsC-AOM4yIUb1O4Y_kdg_1746730174
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 74F191955DE8;
+	Thu,  8 May 2025 18:49:34 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.22.80.242])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7458618004A7;
+	Thu,  8 May 2025 18:49:32 +0000 (UTC)
+From: Joel Savitz <jsavitz@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Joel Savitz <jsavitz@redhat.com>,
+	Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	cgroups@vger.kernel.org
+Subject: [PATCH v2 0/2] Minor namespace code simplication
+Date: Thu,  8 May 2025 14:49:28 -0400
+Message-ID: <20250508184930.183040-1-jsavitz@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250508150240.172915-1-darwi@linutronix.de>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Thu, 08 May, Ahmed S. Darwish wrote:
->
-> Simplify it into:
->
->     include/asm/
->     ├── api.h
->     └── types.h
->
+The two patches are independent of each other. The first patch removes
+unnecssary NULL guards from free_nsproxy() and create_new_namespaces()
+in line with other usage of the put_*_ns() call sites. The second patch
+slightly reduces the size of the kernel when CONFIG_CGROUPS is not
+selected.
 
-Typo:
+Joel Savitz (2):
+  kernel/nsproxy: remove unnecessary guards
+  include/cgroup: separate {get,put}_cgroup_ns no-op case
 
-      include/asm/cpuid/
-      ├── api.h
-      └── types.h
+Changes from v1:
+- now removing the guards instead of adding them where missing since
+  checking that all calls in the NULL case were already no-ops
+- added second patch
 
-Thanks,
-Ahmed
+ include/linux/cgroup.h | 26 ++++++++++++++------------
+ kernel/nsproxy.c       | 30 ++++++++++--------------------
+ 2 files changed, 24 insertions(+), 32 deletions(-)
+
+-- 
+2.45.2
+
