@@ -1,156 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFC12397A4
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B504C23C517;
+	Thu,  8 May 2025 09:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746694803; cv=none; b=q8qDUzsW62Vf2R5CNAhiMUFs6TfKeWEfTZqerHhBrsg2+0DonrTlQ4OJ7NtFByTYfgxMrSmoIzcDz9LnyRomY8MJtw+carpdeQaNw3ACL6La3fggXZ8Hz6ozoZXELQ4QnVdfJuqIC48YU2yqIuwTdHzr6KNEojuLccGq9XNCNU4=
+	t=1746694804; cv=none; b=DuavvVBCGxToZd32MvF32Vxadrf5aIfctkmMBpO9poWkdUlhqMKmB0Mq4/D3cenExLwpdjRaF5mNhFjpQChBFCGoOD5KiTHD7a7ApA+dA+hqCRrkMsU8ysfOrm4WVBUHLK0u6hjTeV/SyTE55+H3hsquX04DSZ/L5MmxfF/r27Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746694803; c=relaxed/simple;
-	bh=ndQF1JUtQPfbpS9NlJ5rMEcSRWoZDITUT4WBSrSdAsA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=osaVleRkj7kduRRy0bJCjE1mkXA20gcb5iup89YBbYjqMENIbHdBUj/jDwQa+mr0MqmhER1ikf+uN5ZlPZlI0wOPby0QiV+xCNq7W8mP8GBfjZiF22XWWk9u0IrPq60DhDGIcGvurB7c6oXCqbJk7rGptRTy5uFVpDa4Y68RLRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EzWm8jbo; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746694804; c=relaxed/simple;
+	bh=AaeWpi+yydjjAMPRH8AVWiTo86051eamAp/lfybEBio=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=QFPgJ0saWSHFGCUMQIbZFqXt5C9kvz5pfwjocNx5/ZTTz/NoJdqOvYxL+1jxce7WyWna23NEjZwSMRiLRi/p0AemOnIsX3Fy6kNGgE9Op8wl7nmRNBnMTkebpTCrWOIJYxL8gbyrddApkhgB4BKkRLGXZeWVE3YAYijySkJhg7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JeSX2aYI; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EzWm8jbo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746694800;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qOQcTqANU1leNfWALhEgYRCRqcO0Qjjft1AKNAg4mjA=;
-	b=EzWm8jboQKZQDT7mmVEnXsbRfW7FVq8eEOuRHQ9pQiJTGgJai9FehzUcj1KhbyNpsCwtIT
-	fuAeTwlkvHgUBmjaKMzYB6O4i8h+An0xUqF4l+TRDRWcBvgYO/vWfxExpNmb4X/IxVdPRH
-	8FUMy06RZmLOLBqK/5JEFLemzTaicZo=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-127-Owr-70HUMBykHm_1GiUlPQ-1; Thu, 08 May 2025 04:59:59 -0400
-X-MC-Unique: Owr-70HUMBykHm_1GiUlPQ-1
-X-Mimecast-MFC-AGG-ID: Owr-70HUMBykHm_1GiUlPQ_1746694798
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b20027d9ac0so156332a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 01:59:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746694798; x=1747299598;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qOQcTqANU1leNfWALhEgYRCRqcO0Qjjft1AKNAg4mjA=;
-        b=CALITGqy2OJowIfdRCiR36MH6V58TLifuGZDM4eAWQUV3xoVv0ldUGxiZpEzVQp22V
-         OJQUBPFdj4QiWYAQRZ6O+HqNrEZsdQ5qhRTjfxf1lThxVSAe9dsHpiFlAuu/f/ZCyNz5
-         E5HH6lRZYU2M8iO6Mr6Fqn+qawr/qO8LqpYiW9SsRPHjX/SrzEDObJnuk+rHNawAUaRv
-         g9FxOQ6QkErcDWDi7YiZkT9gLa7uOTYuUra0rc5wBssus5Skk0VySn13ABqIknfNmOL8
-         vYX42sgIp/5iCAzpF1IgqW9r5SbMU5QXXOAzgGi+EtQS3QseVEPUYINCGEi3KcImjvKK
-         51aA==
-X-Forwarded-Encrypted: i=1; AJvYcCWfdVByvofWdu51GxYL1AjY5sOM/l2OggDjHyWO9OuOQiL8Lj8VQ+g2Crctg2/R52dGGNpyCf78AkhcfsI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGB4zQsRbkRb43IpG6Lf+2uo7kbe5Dc0GXCNcDzHd1T/EZpbZK
-	rcLI3B8nppnctbP8Bo6QW6MQue6V+9P38eX7gz+0flp4NKRofCg+d8JRvTXT3BQT0srhqJQlvDV
-	kM/+7cuTp7szC53D/dYnB2V3uSiCzY1/8wrgITbsiWiX3WOf0uD/m5TaIXSRuhA==
-X-Gm-Gg: ASbGnctfcZfnFvh92zMMW51BzCUgpN4z3ewiTr+5zKb5pV/jVxbETcyG3VGsqJxUyxb
-	2Aea6qz2LbKniusAvdZV28h/z5iBvM3R9reHUfG3fGHpKADFG1q5ytvYvsFZhZZgjK38/Yokmef
-	l6zi96mGsSuoX3ypUGDlwuIZy9dOmBjAjVf1lZRVJXN51/sCIICQb18WFK/6qoMC+UlarRPX6jB
-	NtMp9kBvcnF8ahSL3f6QWsc61sn5n5/k+jm5mbafM2soq1guo/2a6KdlnyR3+eKaQMfrnZDmROb
-	PDMfOJaPPWlP
-X-Received: by 2002:a05:6a21:3a83:b0:1f5:8d3b:e294 with SMTP id adf61e73a8af0-2148b526dd7mr10023543637.16.1746694798028;
-        Thu, 08 May 2025 01:59:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF1EwAUJsR9DPVq6ks/wjHy3vUPtJEluOMLF3EubNvy3Xr+lYJJSx5JADt/lM5REM16u/RwNw==
-X-Received: by 2002:a05:6a21:3a83:b0:1f5:8d3b:e294 with SMTP id adf61e73a8af0-2148b526dd7mr10023516637.16.1746694797754;
-        Thu, 08 May 2025 01:59:57 -0700 (PDT)
-Received: from [192.168.68.51] ([180.233.125.65])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7405906372fsm13173105b3a.148.2025.05.08.01.59.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 01:59:57 -0700 (PDT)
-Message-ID: <8a05e7da-3640-4e79-b215-c705b879472f@redhat.com>
-Date: Thu, 8 May 2025 18:59:50 +1000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JeSX2aYI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746694803; x=1778230803;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=AaeWpi+yydjjAMPRH8AVWiTo86051eamAp/lfybEBio=;
+  b=JeSX2aYIaIA6yeLgSW9I4eYeLhCWqdCiDGo7gnnNA2ZfeoT9v7q2JokU
+   Qg/YzBqFAy8QEAA5bQtQgEhk/7RY1gvBlersXM8X3hBJZaiDosnkcq+EX
+   p0JKIUpT2IUG89oCZ+7znKBU7uiSwEmUZ5AK5kbdR+xKbeLSRoDJw0zdh
+   O1i11Y5B2RxT7JzbSZLQ6wHrc5vqaEkpzJBc4RblTQVxNp3ZBG4+1/Ivj
+   UfHMSlHHmfwDwklFHT6W4R8GTAm0kJgAGegoYleIpi+ZPLU0DuQiPFCVp
+   JTchMNYPGqRpT1wZYbiHugT2HO+Nc+fjgdPQkSLI1Il0hdDE3nyn7dt8A
+   w==;
+X-CSE-ConnectionGUID: 5QZ+qf1IRUqDXWQxPVUP0Q==
+X-CSE-MsgGUID: Dg6LD25/T6qds32myNC7kg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48628718"
+X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
+   d="scan'208";a="48628718"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 02:00:02 -0700
+X-CSE-ConnectionGUID: YbfE/K9wQw+aMceyhwuuug==
+X-CSE-MsgGUID: IrS8fQ0mRyOfaUDqt1MDWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
+   d="scan'208";a="167164017"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.196])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 01:59:59 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 8 May 2025 11:59:56 +0300 (EEST)
+To: "Paul E. McKenney" <paulmck@kernel.org>
+cc: bhelgaas@google.com, linux-pci@vger.kernel.org, kernel-team@meta.com, 
+    LKML <linux-kernel@vger.kernel.org>, sfr@canb.auug.org.au, 
+    linux-next@vger.kernel.org
+Subject: Re: [PATCH] PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
+In-Reply-To: <3840f086-91cf-4fec-8004-b272a21d86cf@paulmck-laptop>
+Message-ID: <099859f7-6a27-ca1a-7e22-4facafc4b6c4@linux.intel.com>
+References: <3840f086-91cf-4fec-8004-b272a21d86cf@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] KVM: arm64: Drop sort_memblock_regions()
-From: Gavin Shan <gshan@redhat.com>
-To: kvmarm@lists.linux.dev
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- qperret@google.com, maz@kernel.org, oliver.upton@linux.dev,
- joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
- catalin.marinas@arm.com, will@kernel.org, shan.gavin@gmail.com
-References: <20250311043718.91004-1-gshan@redhat.com>
-Content-Language: en-US
-In-Reply-To: <20250311043718.91004-1-gshan@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-1810519414-1746694529=:922"
+Content-ID: <178ae2f6-e5bf-ff7d-18f7-e740c101bee3@linux.intel.com>
 
-Hi Marc/Oliver,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 3/11/25 2:37 PM, Gavin Shan wrote:
-> Drop sort_memblock_regions() and avoid sorting the copied memory
-> regions to be ascending order on their base addresses, because the
-> source memory regions should have been sorted correctly when they
-> are added by memblock_add() or its variants.
-> 
-> This is generally reverting commit a14307f5310c ("KVM: arm64: Sort
-> the hypervisor memblocks"). No functional changes intended.
-> 
-> Signed-off-by: Gavin Shan <gshan@redhat.com>
-> ---
->   arch/arm64/kvm/pkvm.c | 19 -------------------
->   1 file changed, 19 deletions(-)
-> 
+--8323328-1810519414-1746694529=:922
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <516b9215-2156-176f-cd2c-bed75f2e5277@linux.intel.com>
 
-Please let me know if I need to resend after a rebase, or anything I need to
-do so that it can be merged? :-)
+On Wed, 7 May 2025, Paul E. McKenney wrote:
 
-Thanks,
-Gavin
+> PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
+>=20
+> Builds with CONFIG_PREEMPT_RT=3Dy get the following build error:
+>=20
+> drivers/pci/pcie/bwctrl.c:56:22: error: =E2=80=98pcie_bwctrl_lbms_rwsem=
+=E2=80=99 defined but not used [-Werror=3Dunused-variable]
+>=20
+> Therefore, remove this unused variable.  Perhaps this should be folded
+> into the commit shown below.
+>=20
+> Fixes: 0238f352a63a ("PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_S=
+EEN flag")
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> Cc: "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux.intel.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: <linux-pci@vger.kernel.org>
+>=20
+> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+> index fdafa20e4587d..841ab8725aff7 100644
+> --- a/drivers/pci/pcie/bwctrl.c
+> +++ b/drivers/pci/pcie/bwctrl.c
+> @@ -53,7 +53,6 @@ struct pcie_bwctrl_data {
+>   * (using just one rwsem triggers "possible recursive locking detected"
+>   * warning).
+>   */
+> -static DECLARE_RWSEM(pcie_bwctrl_lbms_rwsem);
+>  static DECLARE_RWSEM(pcie_bwctrl_setspeed_rwsem);
+> =20
+>  static bool pcie_valid_speed(enum pci_bus_speed speed)
+>=20
 
-> diff --git a/arch/arm64/kvm/pkvm.c b/arch/arm64/kvm/pkvm.c
-> index 930b677eb9b0..d9c9174f89a1 100644
-> --- a/arch/arm64/kvm/pkvm.c
-> +++ b/arch/arm64/kvm/pkvm.c
-> @@ -10,7 +10,6 @@
->   #include <asm/kvm_mmu.h>
->   #include <linux/memblock.h>
->   #include <linux/mutex.h>
-> -#include <linux/sort.h>
->   
->   #include <asm/kvm_pkvm.h>
->   
-> @@ -24,23 +23,6 @@ static unsigned int *hyp_memblock_nr_ptr = &kvm_nvhe_sym(hyp_memblock_nr);
->   phys_addr_t hyp_mem_base;
->   phys_addr_t hyp_mem_size;
->   
-> -static int cmp_hyp_memblock(const void *p1, const void *p2)
-> -{
-> -	const struct memblock_region *r1 = p1;
-> -	const struct memblock_region *r2 = p2;
-> -
-> -	return r1->base < r2->base ? -1 : (r1->base > r2->base);
-> -}
-> -
-> -static void __init sort_memblock_regions(void)
-> -{
-> -	sort(hyp_memory,
-> -	     *hyp_memblock_nr_ptr,
-> -	     sizeof(struct memblock_region),
-> -	     cmp_hyp_memblock,
-> -	     NULL);
-> -}
-> -
->   static int __init register_memblock_regions(void)
->   {
->   	struct memblock_region *reg;
-> @@ -52,7 +34,6 @@ static int __init register_memblock_regions(void)
->   		hyp_memory[*hyp_memblock_nr_ptr] = *reg;
->   		(*hyp_memblock_nr_ptr)++;
->   	}
-> -	sort_memblock_regions();
->   
->   	return 0;
->   }
+I've a patch which removes not only the rwsem but also the comment details=
+=20
+related to it. I've just not sent it yet because lkp has been very cranky=
+=20
+recently to build test things in a reasonable time.
 
+--=20
+ i.
+--8323328-1810519414-1746694529=:922--
