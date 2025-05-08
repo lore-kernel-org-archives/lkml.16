@@ -1,131 +1,170 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C0427470;
-	Thu,  8 May 2025 17:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8A627470
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746726490; cv=none; b=TTyQIPQRbBCFziTUBH0l7+/aYXuCa7jkJBeSFoEGgWhIxUy7NvJ9Bm88P0M25SqZCqCmT1Af7cIjxRkJI86n+LwMUhMqLRNVt/8nrd4YivYARZS4ldmBVCR0UxbkaCEF3gtBJ42Dk8kAJqkBY6tZ/IAmhu4d4QiZAemaGozBeQg=
+	t=1746726530; cv=none; b=knnujjfnWdKE1ViHxS/Xl16r6o8I4dkSz43IndyWVokEZC4KBhSn2N5YgeG7az6nWYH7WFVwo65G671LPQca8QbL2+D2mXpVN2rfYY/p355cLYv/kGuVzEmtTzHkamv/tgKZhx3lvwzqRw2dCJM7NnuyvkHONGAt8EuFp+B/6yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746726490; c=relaxed/simple;
-	bh=jd8KDAA5nklc+QafKfTYSqBKgvLQkQvUCe++LG8aEvQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i6BtFt2hYL7XRMiBoeQw9Vh1ZYDrVhTnV2UHh00JfqBidfVb3+AbQbamafRkok2Y+9uC7XQKc7bCZTjU739L+7m2QOIT7unFqZE8b2gppHNV5DoSA9/SdOkxd/eh8JMFtN7ATrcsw1fKTWi+wzBa6+v4CfLanfYdyLACstv5c08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J+7vBBox; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746726530; c=relaxed/simple;
+	bh=Mn0ibbYww6nu7ChoXnb/V8up93JjOP9PQag24UPnr/s=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=LfLL5lv2jkLR0n2bO4XNHA2rprAkOdQe7ZTtGrMtwm+zn8jei8UoX0JI39haRMiHxZKdcqh49AstPQV6dMjkAAzgabD1YA93DbYbPJ5oplfT38zltoW9uAmodUNONb5uSLEiEC5cplhTvg/jYUw1QXK1EsbSh1LiSkgrpAEosxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=NQZjXSyd; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+7vBBox"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22e70a9c6bdso21948185ad.3;
-        Thu, 08 May 2025 10:48:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="NQZjXSyd"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22e6a088e16so10377095ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 10:48:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746726488; x=1747331288; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LyB1B4pYcWiPvT1oUA/MLKveWlBjaDgJpcmCpY+cTqY=;
-        b=J+7vBBoxfUGfFqp4pvOCwaWdDVTUmL+MWTLycAYCOuBgOMEX3c0xH8I1TZQwpfznzt
-         AAKk3kmZ6DyvduWFrZw1pwLNdu4KjIVkXwkE3ttGcnlbFtunGkOvggbZ0Rskff+ggKwn
-         YqY1Hq/4l/EC+ZFul0bf9c1A4M1DqSJE1VkvOA2GVz9ZjRR23c9MSpTHvmvOOTcP8QNM
-         DDErKgGhgql1DYL/qLcTBO9XWxqbHhi9Ac4jsFCF/d2GgoBlaAHvC3/+Kx6OVYg4ZYdP
-         8YXZ1c/ICa6taLlpZca3/lXJcLaudNjINLExykx1qcg8PyaGt4AnxofnuMnz+gBleq/F
-         4shQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746726488; x=1747331288;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1746726527; x=1747331327; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LyB1B4pYcWiPvT1oUA/MLKveWlBjaDgJpcmCpY+cTqY=;
-        b=ncv19tcQZe9RIPFGrr7ZPS548EsLIH/yQrcbMlHNVkFT2OMZKTogdwqjsvkTTyr9uS
-         1k09sSrtp7qe2TJ1ZJnSSRXhUCu3KwmoV6L8sRkrIdp045msWOE3uadqcLsNT18gtAfb
-         TIJC4v1BsVSyJeUKS9/XR16hX2UriYXccwKIRrObKPUyEOd/MlZZYyXkVTJuUJZb+ICs
-         Umx2znNUVvA7t90Yp6ghdAsLA2H3op5AkP1KVn4bPoUiIll7f69i2cHEfhhWdWKoZnlD
-         zIp2GMrerj4w7UuxiBOL7WmwnzTzd/pf4aFuJ23RjUbCGngkPN6PvR92b/zgZZjxlbJT
-         Pmpw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJ5E9oyX0tJOrQbUzOSsQWVvq/gc4saDb7//zfVHWi5xmGLqgp/SuVRCWf8kKEUGRSLESfla2/P/IcwN8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtvN9EEwJpXaJVSLPfT1FT18uuDdbFc/DCJy75GTVyOt02Aonn
-	szqvlFA240bypcQ2GpDsTme9GNcdtYO2hCSTkA3CvEIZ5nNCgqsw
-X-Gm-Gg: ASbGnctUIR4o9YkobVlE1dbiVrnRr7aTRJrHbmKNG/hJUl0Cjr0l785U6yVeGOg3+zE
-	892OUuyC+4Epc/XUkPSVV9cW1lfrBlBM43QQBqMYdJZ0tcJ/0GZGMHVNDzZw2RZlhCrYOOl65aH
-	73UiX++Qu/WT8N4JcDHy0Ke1M7fUG+eLchbFSrNpoV+o6fQD8UYRzrVrlB7f/usk++ydHY6NR6l
-	pXFO3ly9hxDiprxuHkoV0fWpecwfe9csZF85uzb/z4AFvz+SE2DuxIhPGFStUMO/CaYqZJHj0eL
-	8pPys32yVDqhwulwfLBi+sKJrwWSJlVU1krRS8vOoTi7qRIHAi0huLcj+2ZVWTGzUgEZQQR8JE3
-	JJWtbz8lHOvYEbTCZSDH2910jtCziyG/h+WtLih4Iiw==
-X-Google-Smtp-Source: AGHT+IFF8ECxX861npZizaTDpVgNfnpXLpSwnneNwDnEuZFmAQyOqLGa230XZ7ytSJuLE9MO8Y86Og==
-X-Received: by 2002:a17:902:f682:b0:224:a79:5fe9 with SMTP id d9443c01a7336-22fc8b59bd0mr3479565ad.30.1746726487888;
-        Thu, 08 May 2025 10:48:07 -0700 (PDT)
-Received: from cosmo-ubuntu-2404.dhcpserver.bu9bmc.local (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc828a3a5sm2023315ad.161.2025.05.08.10.48.06
+        bh=DYqLmfWWYnfjqyKiU4qtxry5bO8L2HemS6Lj3IB5Ozo=;
+        b=NQZjXSydwdMJMfOkGNMzs6nMKqE18ZiUXo6xOMyEoXLYC1G6ieZHRLWqRgVq/HyJRo
+         D4Tfikc2mryfpwlO1y3vb+M213/yWQe6626KwUxtinGVSWFtJfToTuchQpqnqYMM5yRL
+         WKRVx4N+M3soPOyOlvBVd9Ph3ovLHqbCQVrSP92UbN0yyrvmWjz3PcukGArHY90iCYD3
+         mZGIcDTCboyOJ/bzWUE+fX6a54/c1gurwUc5rvw/RzytMYLgazV1+FX2hBa+kBiqii+3
+         dL8UgfiWg7IbyAKRX/ANTBY6OKafsCLyCoa91ceZxMgqHKv3jcXM7D716X1bwkRfQ6Rz
+         bB0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746726527; x=1747331327;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DYqLmfWWYnfjqyKiU4qtxry5bO8L2HemS6Lj3IB5Ozo=;
+        b=HqArnp+EDaVzqai3mKusOUgssEZNCquAkyqIdXIFd8ENWgwAZssxBb4yOcq5aX39oT
+         cT0bwGOfRnrW9lojTv/26GB3EzE/D6RJMCLd+fs+Z4L70/ek2fOk3Tct8lEv8uzngnGZ
+         bDE3NYCAdHZ2qabR70w1FOZFmwoNoXXJb+2tVx8SH/s1wpMrF9v6zqzOd3GcsEcigd7O
+         q6zuaLrqKtE70YuNgUGpGhTC4H8wp5d+HmwXJk157qTeXC0LrRF2VWgi6ldR6FfrfVgU
+         /BssYC73sJixLOIxDx1Zw3Kvk4ailTihvCAayfYAfYnfRYwLY8wFVb0cjgNw96ASe4HD
+         ZzzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVAQZqY0fAPoZlnfo2fC2OjFgxGzG4MhANC3HvBf51syRyNWOMDXW11nkjnnXP88sI+QCe07BPVuYgwRTo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNtKlnx9skbXvxz5J7S6mAYZpnvYQl5pJGc6hObffcSY0VOb++
+	BjOyuAykmJhl8mo0yuL1Ci2bBPIaV91//EHSBnnnel/jCIrG3OAY3W73NiBJj3I=
+X-Gm-Gg: ASbGncvuNVW+zUlcQACmcmBY1mJgAXSr1VptJY8LfZcAQVw168hA8KQDmUxcfb7gJuZ
+	4uEovUUbDpyKc3DmBtamS/7TppRK3nA3D/JvXZxuvijOfsQwpU8CsY7qV5qxxCsfWqvEl0lHKz6
+	sC1JghKmi8uZQENRviJ8KWQkAqu0QvCJEqp5eCUGoQSoVfNJhWMbDEnuk3u0PORQQAcafe7CuKa
+	d0+BnmMBGQ+wGz5TtDr9+YsyFuBJTScmjn4RlNO2+xttd+nsbOis50Xxedy+U41xVE6EpvGFEUj
+	n2luV0mPQRLm6qg2EWMqLVTk/N4DVNk5AmyjoYKCg8eC
+X-Google-Smtp-Source: AGHT+IH82nPRzsrk8rYddBvn02C0V4vxqNATQ/FAfbV0gyTYbn992YmIneFZFLQQNKd12/Qa8kEAyA==
+X-Received: by 2002:a17:903:8cc:b0:223:517a:d4ed with SMTP id d9443c01a7336-22fc938ca63mr1882425ad.15.1746726527509;
+        Thu, 08 May 2025 10:48:47 -0700 (PDT)
+Received: from localhost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc7547838sm2322225ad.18.2025.05.08.10.48.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 10:48:07 -0700 (PDT)
-From: Cosmo Chou <chou.cosmo@gmail.com>
-To: badhri@google.com,
-	heikki.krogerus@linux.intel.com,
-	gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chou.cosmo@gmail.com,
-	cosmo.chou@quantatw.com
-Subject: [PATCH] usb: typec: tcpm: Use configured PD revision for negotiation
-Date: Fri,  9 May 2025 01:47:56 +0800
-Message-ID: <20250508174756.1300942-1-chou.cosmo@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Thu, 08 May 2025 10:48:46 -0700 (PDT)
+Date: Thu, 08 May 2025 10:48:46 -0700 (PDT)
+X-Google-Original-Date: Thu, 08 May 2025 10:48:45 PDT (-0700)
+Subject:     Re: [PATCH] riscv: add Andes SoC family Kconfig support
+In-Reply-To: <Z8rMKZoDYmpNosSj@atctrx.andestech.com>
+CC: Conor Dooley <conor@kernel.org>, linux-riscv@lists.infradead.org,
+  linux-kernel@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, alex@ghiti.fr,
+  tim609@andestech.com
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: ben717@andestech.com
+Message-ID: <mhng-d0a8012c-c5c9-4309-ac08-bcb1dab85b26@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Initialize negotiated_rev and negotiated_rev_prime based on the port's
-configured PD revision (rev_major) rather than always defaulting to
-PD_MAX_REV. This ensures ports start PD communication using their
-appropriate revision level.
+On Fri, 07 Mar 2025 02:36:25 PST (-0800), ben717@andestech.com wrote:
+> On Thu, Mar 06, 2025 at 04:40:49PM +0000, Conor Dooley wrote:
+>> [EXTERNAL MAIL]
+>
+>> Date: Thu, 6 Mar 2025 16:40:49 +0000
+>> From: Conor Dooley <conor@kernel.org>
+>> To: Ben Zong-You Xie <ben717@andestech.com>
+>> Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+>>  paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+>>  alex@ghiti.fr
+>> Subject: Re: [PATCH] riscv: add Andes SoC family Kconfig support
+>>
+>> On Wed, Mar 05, 2025 at 11:05:26AM +0800, Ben Zong-You Xie wrote:
+>> > The first SoC in the Andes series is QiLai. It includes a high-performance
+>> > quad-core RISC-V AX45MP cluster and one NX27V vector processor.
+>>
+>> I'd expect a config option like this to come with the user, which in
+>> this case is the dts etc for a board using the QiLai SoC or drivers for
+>> the SoC. Without dts or drivers, there's no reason to ever enable this,
+>> so where are those patches?
+>>
+>> Cheers,
+>> Conor.
+>>
+>
+> Hi Conor,
+>
+> We are still preparing those patches for upstream, and we will add them
+> in the next patch series.
 
-This allows proper communication with devices that require specific
-PD revision levels, especially for the hardware designed for PD 1.0
-or 2.0 specifications.
+This is still "Needs Ack" in patchwork, so
 
-Signed-off-by: Cosmo Chou <chou.cosmo@gmail.com>
----
- drivers/usb/typec/tcpm/tcpm.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
 
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index a99db4e025cd..5a58c21c4d14 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -4782,8 +4782,13 @@ static void run_state_machine(struct tcpm_port *port)
- 		typec_set_pwr_opmode(port->typec_port, opmode);
- 		port->pwr_opmode = TYPEC_PWR_MODE_USB;
- 		port->caps_count = 0;
--		port->negotiated_rev = PD_MAX_REV;
--		port->negotiated_rev_prime = PD_MAX_REV;
-+		if (port->pd_rev.rev_major > 0 && port->pd_rev.rev_major <= PD_MAX_REV + 1) {
-+			port->negotiated_rev = port->pd_rev.rev_major - 1;
-+			port->negotiated_rev_prime = port->pd_rev.rev_major - 1;
-+		} else {
-+			port->negotiated_rev = PD_MAX_REV;
-+			port->negotiated_rev_prime = PD_MAX_REV;
-+		}
- 		port->message_id = 0;
- 		port->message_id_prime = 0;
- 		port->rx_msgid = -1;
-@@ -5048,8 +5053,13 @@ static void run_state_machine(struct tcpm_port *port)
- 					      port->cc2 : port->cc1);
- 		typec_set_pwr_opmode(port->typec_port, opmode);
- 		port->pwr_opmode = TYPEC_PWR_MODE_USB;
--		port->negotiated_rev = PD_MAX_REV;
--		port->negotiated_rev_prime = PD_MAX_REV;
-+		if (port->pd_rev.rev_major > 0 && port->pd_rev.rev_major <= PD_MAX_REV + 1) {
-+			port->negotiated_rev = port->pd_rev.rev_major - 1;
-+			port->negotiated_rev_prime = port->pd_rev.rev_major - 1;
-+		} else {
-+			port->negotiated_rev = PD_MAX_REV;
-+			port->negotiated_rev_prime = PD_MAX_REV;
-+		}
- 		port->message_id = 0;
- 		port->message_id_prime = 0;
- 		port->rx_msgid = -1;
--- 
-2.43.0
+Though like Conor says, we need the rest of the code to do anything 
+here, so that's really just a way to get it out of my queue ;)
 
+>
+> Thanks,
+> Ben
+>
+>> >
+>> > For further information, refer to [1].
+>> >
+>> > [1] https://www.andestech.com/en/products-solutions/andeshape-platforms/qilai-chip/
+>> >
+>> > Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
+>> > ---
+>> >  arch/riscv/Kconfig.errata | 2 +-
+>> >  arch/riscv/Kconfig.socs   | 9 +++++++++
+>> >  2 files changed, 10 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/arch/riscv/Kconfig.errata b/arch/riscv/Kconfig.errata
+>> > index e318119d570d..be76883704a6 100644
+>> > --- a/arch/riscv/Kconfig.errata
+>> > +++ b/arch/riscv/Kconfig.errata
+>> > @@ -12,7 +12,7 @@ config ERRATA_ANDES
+>> >
+>> >  config ERRATA_ANDES_CMO
+>> >  	bool "Apply Andes cache management errata"
+>> > -	depends on ERRATA_ANDES && ARCH_R9A07G043
+>> > +	depends on ERRATA_ANDES && (ARCH_R9A07G043 || ARCH_ANDES)
+>> >  	select RISCV_DMA_NONCOHERENT
+>> >  	default y
+>> >  	help
+>> > diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+>> > index 1916cf7ba450..b89b6e0d1bc9 100644
+>> > --- a/arch/riscv/Kconfig.socs
+>> > +++ b/arch/riscv/Kconfig.socs
+>> > @@ -1,5 +1,14 @@
+>> >  menu "SoC selection"
+>> >
+>> > +config ARCH_ANDES
+>> > +	bool "Andes SoCs"
+>> > +	depends on MMU && !XIP_KERNEL
+>> > +	select ERRATA_ANDES
+>> > +	select ERRATA_ANDES_CMO
+>> > +	select AX45MP_L2_CACHE
+>> > +	help
+>> > +	  This enables support for Andes SoC platform hardware.
+>> > +
+>> >  config ARCH_MICROCHIP_POLARFIRE
+>> >  	def_bool ARCH_MICROCHIP
+>> >
+>> > --
+>> > 2.34.1
+>> >
+>> >
+>> > _______________________________________________
+>> > linux-riscv mailing list
+>> > linux-riscv@lists.infradead.org
+>> > http://lists.infradead.org/mailman/listinfo/linux-riscv
