@@ -1,161 +1,151 @@
-Received: from mail-244108.protonmail.ch (mail-244108.protonmail.ch [109.224.244.108])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7999F226170
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85C62153CB;
+	Thu,  8 May 2025 12:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746708209; cv=none; b=gAM/TWfKLST6sGBGCkS61HnrVCRJREVxTWVKh9dvrqx15iAjNWMj6SJu6c9EFuqDRySORckueaxtuXAd18MIzmi3VNpnu06DoOjzHDkh2GWy3ersHL5NxRdYmFC685GnQFCewHYEFDpIbjw5RqdvBHcPqsQeAC6Bf+IH8ZOaY+Q=
+	t=1746708273; cv=none; b=hG5BD7Akbw62aWIDlkkeJHn4FrAKyIZ1/zQiWcGYEtHnO6FiYJK81T7wH6uBE0o+MFEvyW6KWI+IPqrd6ZJK9SF24VdN3GLwaTvwqlexeSu4kPtjiBCM8QQsxoCTkCAmEsNFl1WpBsBlAQ4ovHrHOvAgNkl/5bn0iKYUzyUob+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746708209; c=relaxed/simple;
-	bh=zG7qqson8ltj7u0zdwfOfJteViT6Z7xCoIr6JY2V/08=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YUV7L5gE3LS6dRhYjKSizU4Y2JRVBU2aIjg5VrOjIFZpLtPFDJoFsPGjeNkvLEC6EiZk6pnWSF3/EHdaWmYCfkItksUQjr3tFPNBa8QGko+3r/gXd4wTjHKeqtAjZZiEVF1CkmScutUcrnlK9iCFmki+Z7FQnJpih8Lwti4PxqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=OIkSZspv; arc=none smtp.client-ip=109.224.244.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1746708273; c=relaxed/simple;
+	bh=5+S6WOtSW5+xp4Q4Wv1CMtjgP3qalrD/+Wv37NFOBjo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZpQahfpM1rrxFxIKqP/Os+vhBGU5/9t8bwJKcScX1DqAEZJjTmdnLxjFlXvc5WLM9dFeS6MZCehZBTnY2N6SH7fVg5c9crg6LuP1TuQbj54t6s6THC3GxwdutSo9dsMP+I26rQVjt91+ZJ1Yyg7i7Ye9WfewXsXvuoQtUwhZYaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=cIjO0GS8; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="OIkSZspv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
-	s=protonmail; t=1746708195; x=1746967395;
-	bh=0+XgH0rIRqKV07OTyvhe5YqpcOYz2bBf5mCHrTax72w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:From:To:
-	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=OIkSZspvQ4QqIyHkLoBDX1f0k8Cunqwe+LQyURHMMvZxOEboElm85r6ayAoW35GlN
-	 Z/S1BfBApmOZQvIiuTd1GIczM8VrooixpwCUYIUrKRMsf8kFNGwfR/H7qO0muDfsEP
-	 6kc+cxcFZ91D5BldZqvDZqWHo2Cb3L0xI31exXwPqjmy9kFcMtVgLl2pITatMJq/XR
-	 +2YnTkC038n5zWlehvX3OvTUI0G4yuNkNPwhdx57ZYDbhFdJXYlD3TkQBNDRlJxTl2
-	 q+id2RrZuiE4lR58Rh9pLtTayn/3CTIYodWPlCO127xpaX9+A6DG/O/kb1e0By0xOU
-	 /T6jR/nOdLUIA==
-X-Pm-Submission-Id: 4ZtWy62rNnz454
-From: Esben Haabendal <esben@geanix.com>
-To: "Alexander Stein" <alexander.stein@ew.tq-group.com>
-Cc: "Catalin Marinas" <catalin.marinas@arm.com>,  "Will Deacon"
- <will@kernel.org>,  "Stefan Wahren" <wahrenst@gmx.net>,
-  <linux-arm-kernel@lists.infradead.org>,  <linux-kernel@vger.kernel.org>,
-  "Shawn Guo" <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/1] arm64: Kconfig: Enable PINCTRL on i.MX platforms
-In-Reply-To: <5724399.aeNJFYEL58@steina-w> (Alexander Stein's message of "Thu,
-	08 May 2025 14:25:44 +0200")
-References: <20250507124414.3088510-1-alexander.stein@ew.tq-group.com>
-	<7023673.LvFx2qVVIh@steina-w> <87ecwzy0pw.fsf@geanix.com>
-	<Etws1ew28TLJxt4SyQRijrPqBXWRnMQ518XgfauJ5tEfgI2y1mms25jjdVACQnjc2jZmc-PHiK4BIVQ4M8a09A==@protonmail.internalid>
-	<5724399.aeNJFYEL58@steina-w>
-Date: Thu, 08 May 2025 14:43:09 +0200
-Message-ID: <87a57nxogy.fsf@geanix.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cIjO0GS8"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 548Ci7w31100803
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 8 May 2025 07:44:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746708247;
+	bh=sTJliYfCtt4bgttWS5Hp986Wh6Lp9pytD8qb3eAhJ7U=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=cIjO0GS8qFsJ4lzYHSfhrXw7Xlg90ruLfJUbYB6a3PJYp9YxR4dlX8ZRRtPiVpIZC
+	 Gw9S+f3Z1W6kcV8xz+PXBufLihBYmPDVKiuok3Bm324ZnAn+oOE5hRhmk/ss7WVNeq
+	 91PJNeWirnnb9RrpwEZ1qt0tqb+POjtv98j2+0SI=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 548Ci7i5040304
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 8 May 2025 07:44:07 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
+ May 2025 07:44:06 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 8 May 2025 07:44:06 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 548Ci6lI040835;
+	Thu, 8 May 2025 07:44:06 -0500
+Date: Thu, 8 May 2025 07:44:06 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+CC: "Kumar, Udit" <u-kumar1@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <vaishnav.a@ti.com>, <r-donadkar@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <jai.luthra@linux.dev>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-j722s-evm: Add overlay for TEVI
+ OV5640
+Message-ID: <20250508124406.tb34bqhv66gqcb7j@swizzle>
+References: <20250505115700.500979-1-y-abhilashchandra@ti.com>
+ <20250505115700.500979-3-y-abhilashchandra@ti.com>
+ <a6329e9d-409e-4f62-b26d-c4d0e49d772c@ti.com>
+ <9cb4f94e-00e8-43d5-be7a-85dc1188e856@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9cb4f94e-00e8-43d5-be7a-85dc1188e856@ti.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-"Alexander Stein" <alexander.stein@ew.tq-group.com> writes:
+On 17:46-20250508, Yemike Abhilash Chandra wrote:
+> Hi Udit,
+> Thanks for the review.
+> 
+> On 07/05/25 13:50, Kumar, Udit wrote:
+> > Hello Vaishnav/Abhilash
+> > 
+> > Thanks for patch
+> > 
+> > On 5/5/2025 5:27 PM, Yemike Abhilash Chandra wrote:
+> > > From: Vaishnav Achath <vaishnav.a@ti.com>
+> > > 
+> > > TechNexion TEVI OV5640 camera is a 5MP camera that can be used with
+> > > J722S EVM through the 22-pin CSI-RX connector. Add a reference overlay
+> > > for quad TEVI OV5640 modules on J722S EVM.
+> > > 
+> > > Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+> > > Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+> > > ---
+> > >   arch/arm64/boot/dts/ti/Makefile               |   4 +
+> > >   .../k3-j722s-evm-csi2-quad-tevi-ov5640.dtso   | 358 ++++++++++++++++++
+> > >   2 files changed, 362 insertions(+)
+> > >   create mode 100644
+> > > arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/ti/Makefile
+> > > b/arch/arm64/boot/dts/ti/Makefile
+> > > index 829a3b028466..76b750e4b8a8 100644
+> > > --- a/arch/arm64/boot/dts/ti/Makefile
+> > > +++ b/arch/arm64/boot/dts/ti/Makefile
+> > > @@ -123,6 +123,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-j721s2-evm-pcie1-ep.dtbo
+> > >   dtb-$(CONFIG_ARCH_K3) += k3-am67a-beagley-ai.dtb
+> > >   dtb-$(CONFIG_ARCH_K3) += k3-j722s-evm.dtb
+> > >   dtb-$(CONFIG_ARCH_K3) += k3-j722s-evm-csi2-quad-rpi-cam-imx219.dtbo
+> > > [..]
+> > > diff --git
+> > > a/arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso
+> > > b/arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso
+> > > new file mode 100644
+> > > index 000000000000..537224ea60e3
+> > > --- /dev/null
+> > > +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso
+> > > @@ -0,0 +1,358 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+> > > +/*
+> > > + * 4 x TEVI OV5640 MIPI Camera module on RPI camera connector.
+> > > + *
+> > > + * Copyright (C) 2024 Texas Instruments Incorporated -
+> > > https://www.ti.com/
+> > > + */
+> > > +
+> > > +/dts-v1/;
+> > > +/plugin/;
+> > > +
+> > > +#include <dt-bindings/gpio/gpio.h>
+> > > +#include "k3-pinctrl.h"
+> > > +
+> > > +&{/} {
+> > > +    clk_ov5640_fixed: clock-24000000 {
+> > > +        compatible = "fixed-clock";
+> > > +        #clock-cells = <0>;
+> > > +        clock-frequency = <24000000>;
+> > > +    };
+> > > +
+> > 
+> > Please check once , this is clock is 25M or 24M .
+> > 
+> > As I see CDC6CE025000ADLXT/U28 is marked as 25M OSC
+> > 
+> 
+> This is the crystal clock with in the sensor.
 
-> Hi Esben,
->
-> Am Donnerstag, 8. Mai 2025, 10:18:35 CEST schrieb Esben Haabendal:
->> "Alexander Stein" <alexander.stein@ew.tq-group.com> writes:
->>
->> > Hi Esben,
->> >
->> > Am Donnerstag, 8. Mai 2025, 08:44:22 CEST schrieb Esben Haabendal:
->> >> "Alexander Stein" <alexander.stein@ew.tq-group.com> writes:
->> >>
->> >> > Hi Stefan,
->> >> >
->> >> > Am Mittwoch, 7. Mai 2025, 16:30:33 CEST schrieb Stefan Wahren:
->> >> >> Hi Alexander,
->> >> >>
->> >> >> [add Shawn and Esben]
->> >> >>
->> >> >> Am 07.05.25 um 14:44 schrieb Alexander Stein:
->> >> >> > Select PINCTRL for NXP i.MX SoCs.
->> >> >> could you please explain the motivation behind your change?
->> >> >>
->> >> >> Is it related to this commit 17d21001891402 ("ARM: imx: Allow user to
->> >> >> disable pinctrl")?
->> >> >
->> >> > Ah, thanks for the pointer. It might be the case.
->> >>
->> >> The goal of the patch mentioned above was to be able to build a kernel
->> >> for LS1021A without pinctrl framework enabled, as LS1021A does not have
->> >> a pinctrl driver.
->> >>
->> >> With your patch, that would not be possible anymore.
->> >
->> > Why? LS1021A is arm, not arm64 which this patch is touching only.
->>
->> Good point :)  Sorry about that.
->>
->> > BTW: Commit b77bd3ba762f3 ("ARM: imx: Re-introduce the PINCTRL selection")
->> > is actually doing the same for arm as there is some fallout from
->> > 17d21001891402.
->> >
->> >> > I noticed that, when using arch/arm64/defconfig and disabling all
->> >> > platforms despite ARCH_MXC before running make olddefconfig,
->> >> > CONFIG_PINCTRL gets disabled as well. No platform is enabling it. I
->> >> > noticed this when building in yocto and non-IMX platforms are disabled
->> >> > for build time reasons.
->> >>
->> >> But is that something that needs to be fixed?
->> >>
->> >> It sounds like quite a special use-case, and why not simply enable
->> >> CONFIG_PINCTRL in that case then?
->> >
->> > PINCTRL is crucial for any SoC to even boot, so this is an option which has
->> > to be set if that platform is enabled.
->>
->> Yes, but PINCTRL (framework) does not by itself do anything meaningful.
->> You need the correct pinctrl driver.
->>
->> Making the various SOC's select the corresponding pinctrl drivers makes
->> sense if it is required for booting under all circumstances. And this
->> should then indirectly enable/select PINCTRL and anything else needed
->> for that driver.
->
-> If you prefer I don't mind enabling PINCTRL and the SoC-specific driver
-> (e.g. PINCTRL_IMX8MP) depending on each SoC-support, e.g. SOC_IMX35 or
-> SOC_IMX8M.
+Please cross check this - the camera *module* has a BAW crystal which is the
+source of clock to the sensor.
 
-For SOC_IMX35, it should be selected by default.
 
-    config PINCTRL_IMX35
-            bool "IMX35 pinctrl driver"
-            depends on OF
-            depends on SOC_IMX35 || COMPILE_TEST
-            default SOC_IMX35
-
-For the IMX8M* SoC's, that is not done, as there is only a common
-SOC_IMX8M config entry, which corresponds to multiple pinctrl drivers,
-which we probably don't want to select all of by default.
-
->> Having ARCH_MXC select PINCTRL as such is mostly pointless IMHO.
->> Enabling a driver framework without enabling any drivers for it, when
->> building a kernel where no SOC's requiring any pinctrl drivers is kind
->> of weird. If you want to do that, why not simply enable both ARCH_MXC
->> and PINCTRL in your yocto recipe?
->
-> PINCTRL is currently only enabled because other SoCs happen to enable it,
-> just this feels just plain wrong. If these platforms are disabled or
-> removed for whatever reason, the other platforms should still work.
-
-As it is now, to build for let's say i.MX 8M Plus, you have to enable
-    SOC_IMX8M
-    PINCTRL_IMX8MP
-to get a kernel that is likely to boot.
-
-If you enable
-    SOC_IMX8M
-    PINCTRL
-but not
-    PINCTRL_IMX8MP
-you won't have pinctrl support, and the kernel will probably not work as
-expected.
-
-What am I missing?
-
-/Esben
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
