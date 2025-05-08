@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828C315A86B
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 00:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C211E2834
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 00:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746665320; cv=none; b=pAGpHFZ1OUbTHerJ37b49ZrFsPm3MLEWHfOFhwZwIIOwCuXVVoF+ls2yvV/6HnoP2kLspvA7mzShaBfjm2QpztwnslOK7V2Yozk/K1pf0iFvlFpHKyO1Iut5X2uY0IlJG0eR8FsFpr4Y08syLA6xGbRrJkXDMhd45i90LsZ5AYw=
+	t=1746665325; cv=none; b=pnKC7WT9UD06O+BMVthfMOHltdVXUGJoC6O1Qt99AECLpA8sw/E4xLQhCGBEFNzIg3BC9h13JNynoTo89SVDBCkilP4hT+y5RxNbnXySebK4Vjqi3BDuM/3swOZNURZRy/fnNeAEITk8Ol/c7qCe7p7Fanf3TETHBtR6Es7qlgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746665320; c=relaxed/simple;
-	bh=dyqcNTk9OPsrtIpqTgjziEIAqTB6qpkn/n/NvMbCZEI=;
+	s=arc-20240116; t=1746665325; c=relaxed/simple;
+	bh=3faivae3XYstrRHw5QOydPRDb8eLp/UXyJazTs99n5U=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=N+UDexKAwxihXzyCCSY15JEb4z322f+uj+N+vXzQdJnbvNIXgeaGU6989f70FijkXMDycxfvXDxCqNgrG67hhea5cQInPZUb98iCwLn5qmPuUVTQP41mQxSnhfe58LL8XF9k24NsC3FC+ZfXICyaCstA710xz3iawOIyidkc+W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GhWrb+C8; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=Ik+6BXDlKL5LLPbLHlEyTDa47KfIQorEW9Sk2gO5+xGGbGGUKy2Tby1DS5EJc8kINBxl8JyECVgFCjC/bWNM+/hELzZ+KRhZqLt3n7Bh9QkWBTcTcATHkbfH8vJYce4J4FiOPnamtU+ngTzutyDOdwGXiwmCuPnooMu89RVn/G0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gRmv4xB/; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GhWrb+C8"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22e5a558bfaso8717775ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 17:48:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gRmv4xB/"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30a39fa0765so713332a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 17:48:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746665316; x=1747270116; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746665321; x=1747270121; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kYDyR9CQ41BaDC42YOSlqGxpvCJv7HXaEYFXBgq5RBU=;
-        b=GhWrb+C87m01B8jmhmUiMpBL5ofGhLPaZpZT5FU0q6P2pCTTJdzxPX9hGJZrq9R7Nq
-         FCKopLlT7I2jH2MxdZOLvLL1pVNmsr27Ut9BwlPnMWXWO+Qlh938Nqsf+oL41JXNcuDl
-         0iyawIQ7SksEp3O7yh922KNRHIZQy0Zx6o9tv/cb5gZNGSI/oK2X4vypag7pXaGbbtTL
-         76bxmsSeWCbpRropEXW8GJgYNKXB0eYCYK9tcG9tYrUVeDxQe4HY+hbfynhhSx3nuNu4
-         kmH7s0G+o5iyJEeCAecY/CnVvc0RgEFKwA8UcRuEgaCiluwUncrwDPvT1NVe77QIGDjs
-         iQkA==
+        bh=jdymNESOtoqlSKfOld7O62q+ATDbJOYzEoCPoXvdsNo=;
+        b=gRmv4xB/qXHvXnDcPtV+aPIN7jGW1O2R8vgXKqqALbjJXUR9g5wpokqIU/pIMZcmxm
+         SsUkfldx2nLtkU1HXNPxC0hgJkaZIIkpmqx8nppSWP6AJ9OGVcoqICLl/IVHx+zTs00g
+         2tT8tYb9hUJbjKbXBh1Mg5xrqpHQIhlBF6zC7wX5E435G2QHGF8m0XEt9CtJsvqyFQ2v
+         CIkWSkIs4P6wbyVhrJYUciNgLhYJpcxbAJJUejd9WGs0Y67bxE/XAevU/1U7V+2+i7gT
+         LajCJX3/ZewZNs04IyM0mpE051QBhreGjPc43pFvHI6Csg64gXut93FSsrquuudeZmJQ
+         5FaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746665316; x=1747270116;
+        d=1e100.net; s=20230601; t=1746665321; x=1747270121;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kYDyR9CQ41BaDC42YOSlqGxpvCJv7HXaEYFXBgq5RBU=;
-        b=NX8SMtIjPmKeciLEbdiN2+sDgppixOBv5GXcV/mJpgv7jLoVhHAypffBskzn7U3INA
-         YkEueXNSumn3DQ4HulsTZKPDuZBxSSHXxIH97QS3KiCfabc34aUWbJBm0JE27oAeiBxd
-         dJUzm4Qkoh5s747cYdr+CNP+KMFd/4MfCT6H4cCrphJSL0N3h0SzY/cvIs288rgt358H
-         wZdFIISeqMY+IGJ4tGMZjbWj15qYdLQHduuj8GWc09UbEDWarFglfMrdoiukEqxSnPkT
-         g1/hGBjwI6HorEhYo5stBPT2BNk8GR7Rg1V0fOhb+IOQPxH86Fu38ouRAepY3XwWdwLT
-         AN7g==
-X-Forwarded-Encrypted: i=1; AJvYcCX9H6EHVNLRwhSg5oPDWAwGvLjHLPgVS/q5etKZXbXNEYFRFQ+vMhv0efvFx5gzVZIJ1ImFoAl69kgO/m0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0esrxX7Ot3HkR/39TJhU7KdWt1K/tObWTdsiBKnse0hkiyssU
-	OEDhMAM2G2o3G58TYrL9KX2t2a4f7ioNrXo3t9A+j1iA7E9RH0nxgiQ7rwvJwDcgFhz1I1nv/wQ
-	3zDTEwM1rspChD+MrZxHb0g==
-X-Google-Smtp-Source: AGHT+IFacogxr0ODO6PRxraF8YX4ITl4t0rUQ989b/4Z3MefJOwdb8bNyzEquX5FLpjdtycoEOAfqSD9j7c/SD4+Ug==
-X-Received: from plblg15.prod.google.com ([2002:a17:902:fb8f:b0:22e:4574:b2bc])
+        bh=jdymNESOtoqlSKfOld7O62q+ATDbJOYzEoCPoXvdsNo=;
+        b=YR+mIP+7T9cLmneSscwKv/61QDdkSaVtW0F/X5UH3DwO3/n+7p4LK/w8zLIucc8vK/
+         N/bBYUy8pezXCSAiLnacj7LCn8TZzPFo0xFa9QRSezZ12dIHiPXMnBywt/XGlhKdTy3e
+         JzxdoHC/MLUe31Rp8ezEnImSmifxo5axSQ19gZSX/QxwRuEzSNM3SBIwmUDiffXysMoH
+         p9lvsqwHnF3t9dVpRtRfI6kZeTt/+zmEXdvTo6zF5a3b9MQg2RXvtfj1/F3PpVfBb2VU
+         31wjg5NhsMJWX97UH0hTr/GKtLB6Q9HZb5W9OlfK9b703hFISNS1gyubU5h1A3wPXFcm
+         Bprg==
+X-Forwarded-Encrypted: i=1; AJvYcCVc60qkzXq2IA2b6ZzFib160trzxfb7WK75k6v8sAp+A/3sMdw5azyziy+FwJoCSOBA05795PfuYL0guY8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGheiw2qeSggnxMocxstg/6N0VQIB4hN5MQe/GxqHmr/uS0161
+	dwB8R67Px+N3H9wmjWde7fDp7/S9K/F/nsd/wiaY8/Q1P40YlXUS36qZchmYhTihbRwBGik63Km
+	fo58SZup9klcAjyPa0paUGA==
+X-Google-Smtp-Source: AGHT+IGrRc+EZyVOfKps7I5sxHBKTIU92vkDXCFafwp1D3P2RsQ5r5ep19XSR3PvoNGHNnRfQZQE+Iw3q1aaEIC8hA==
+X-Received: from pjbsp16.prod.google.com ([2002:a17:90b:52d0:b0:2ea:29de:af10])
  (user=almasrymina job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:db0c:b0:22e:5e05:b89d with SMTP id d9443c01a7336-22e5ea7caeamr77706365ad.16.1746665315831;
- Wed, 07 May 2025 17:48:35 -0700 (PDT)
-Date: Thu,  8 May 2025 00:48:22 +0000
+ 2002:a17:90b:38c6:b0:2fe:b174:31fe with SMTP id 98e67ed59e1d1-30aac18622dmr7934268a91.2.1746665321013;
+ Wed, 07 May 2025 17:48:41 -0700 (PDT)
+Date: Thu,  8 May 2025 00:48:25 +0000
 In-Reply-To: <20250508004830.4100853-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250508004830.4100853-1-almasrymina@google.com>
 X-Mailer: git-send-email 2.49.0.987.g0cc8ee98dc-goog
-Message-ID: <20250508004830.4100853-3-almasrymina@google.com>
-Subject: [PATCH net-next v14 2/9] net: add get_netmem/put_netmem support
+Message-ID: <20250508004830.4100853-6-almasrymina@google.com>
+Subject: [PATCH net-next v14 5/9] net: add devmem TCP TX documentation
 From: Mina Almasry <almasrymina@google.com>
 To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-doc@vger.kernel.org, io-uring@vger.kernel.org, 
@@ -81,251 +81,200 @@ Cc: Mina Almasry <almasrymina@google.com>, Donald Hunter <donald.hunter@gmail.co
 	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Currently net_iovs support only pp ref counts, and do not support a
-page ref equivalent.
-
-This is fine for the RX path as net_iovs are used exclusively with the
-pp and only pp refcounting is needed there. The TX path however does not
-use pp ref counts, thus, support for get_page/put_page equivalent is
-needed for netmem.
-
-Support get_netmem/put_netmem. Check the type of the netmem before
-passing it to page or net_iov specific code to obtain a page ref
-equivalent.
-
-For dmabuf net_iovs, we obtain a ref on the underlying binding. This
-ensures the entire binding doesn't disappear until all the net_iovs have
-been put_netmem'ed. We do not need to track the refcount of individual
-dmabuf net_iovs as we don't allocate/free them from a pool similar to
-what the buddy allocator does for pages.
-
-This code is written to be extensible by other net_iov implementers.
-get_netmem/put_netmem will check the type of the netmem and route it to
-the correct helper:
-
-pages -> [get|put]_page()
-dmabuf net_iovs -> net_devmem_[get|put]_net_iov()
-new net_iovs ->	new helpers
+Add documentation outlining the usage and details of the devmem TCP TX
+API.
 
 Signed-off-by: Mina Almasry <almasrymina@google.com>
 Acked-by: Stanislav Fomichev <sdf@fomichev.me>
 
 ---
 
-v5: https://lore.kernel.org/netdev/20250227041209.2031104-2-almasrymina@google.com/
+v5:
+- Address comments from Stan and Bagas
 
-- Updated to check that the net_iov is devmem before calling
-  net_devmem_put_net_iov().
-
-- Jakub requested that callers of __skb_frag_ref()/skb_page_unref be
-  inspected to make sure that they generate / anticipate skbs with the
-  correct pp_recycle and unreadable setting:
-
-skb_page_unref
-==============
-
-- skb_page_unref is unreachable from these callers due to unreadable
-  checks returning early:
-
-gro_pull_from_frag0, skb_copy_ubufs, __pskb_pull_tail
-
--  callers that are reachable for unreadable skbs. These would only see rx
-   unreadable skbs with pp_recycle set before this patchset and would drop
-   a pp ref count. After this patchset they can see tx unreadable skbs
-   with no pp attached and no pp_recycle set, and so now they will drop
-   a net_iov ref via put_netmem:
-
-__pskb_trim, __pskb_trim_head, skb_release_data, skb_shift
-
-__skb_frag_ref
-==============
-
-Before this patchset __skb_frag_ref would not do the right thing if it
-saw any unreadable skbs, either with pp_recycle set or not. Because it
-unconditionally tries to acquire a page ref, but with RX only support I
-can't reproduce calls to __skb_frag_ref even after enabling tc forwarding
-to TX.
-
-After this patchset __skb_frag_ref would obtain a page ref equivalent on
-dmabuf net_iovs, by obtaining a ref on the binding.
-
-Callers that are unreachable for unreadable skbs:
-
-- veth_xdp_get
-
-Callers that are reachable for unreadable skbs, and from code review they
-look specific to the TX path:
-
-- tcp_grow_skb, __skb_zcopy_downgrade_managed, __pskb_copy_fclone,
-  pskb_expand_head, skb_zerocopy, skb_split, pksb_carve_inside_header,
-  pskb_care_inside_nonlinear, tcp_clone_payload, skb_segment.
-
-Callers that are reachable for unreadable skbs, and from code review they
-look reachable in the RX path, although my testing never hit these
-paths. These are concerning. Maybe we should put this patch in net and
-cc stable? However, no drivers currently enable unreadable netmem, so
-fixing this in net-next is fine as well maybe:
-
-- skb_shift, skb_try_coalesce
+v4:
+- Mention SO_BINDTODEVICE is recommended (me/Pavel).
 
 v2:
-- Add comment on top of refcount_t ref explaining the usage in the XT
-  path.
-- Fix missing definition of net_devmem_dmabuf_binding_put in this patch.
+- Update documentation for iov_base is the dmabuf offset (Stan)
 
 ---
- include/linux/skbuff_ref.h |  4 ++--
- include/net/netmem.h       |  3 +++
- net/core/devmem.c          | 10 ++++++++++
- net/core/devmem.h          | 20 ++++++++++++++++++++
- net/core/skbuff.c          | 30 ++++++++++++++++++++++++++++++
- 5 files changed, 65 insertions(+), 2 deletions(-)
+ Documentation/networking/devmem.rst | 150 +++++++++++++++++++++++++++-
+ 1 file changed, 146 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/skbuff_ref.h b/include/linux/skbuff_ref.h
-index 0f3c58007488a..9e49372ef1a05 100644
---- a/include/linux/skbuff_ref.h
-+++ b/include/linux/skbuff_ref.h
-@@ -17,7 +17,7 @@
-  */
- static inline void __skb_frag_ref(skb_frag_t *frag)
- {
--	get_page(skb_frag_page(frag));
-+	get_netmem(skb_frag_netmem(frag));
- }
+diff --git a/Documentation/networking/devmem.rst b/Documentation/networking/devmem.rst
+index eb678ca454968..a6cd7236bfbd2 100644
+--- a/Documentation/networking/devmem.rst
++++ b/Documentation/networking/devmem.rst
+@@ -62,15 +62,15 @@ More Info
+     https://lore.kernel.org/netdev/20240831004313.3713467-1-almasrymina@google.com/
  
- /**
-@@ -40,7 +40,7 @@ static inline void skb_page_unref(netmem_ref netmem, bool recycle)
- 	if (recycle && napi_pp_put_page(netmem))
- 		return;
- #endif
--	put_page(netmem_to_page(netmem));
-+	put_netmem(netmem);
- }
  
- /**
-diff --git a/include/net/netmem.h b/include/net/netmem.h
-index 973fdbcfef38b..ecb6b29c93f61 100644
---- a/include/net/netmem.h
-+++ b/include/net/netmem.h
-@@ -273,4 +273,7 @@ static inline unsigned long netmem_get_dma_addr(netmem_ref netmem)
- 	return __netmem_clear_lsb(netmem)->dma_addr;
- }
+-Interface
+-=========
++RX Interface
++============
  
-+void get_netmem(netmem_ref netmem);
-+void put_netmem(netmem_ref netmem);
-+
- #endif /* _NET_NETMEM_H */
-diff --git a/net/core/devmem.c b/net/core/devmem.c
-index f5c3a7e6dbb7b..dca2ff7cf6923 100644
---- a/net/core/devmem.c
-+++ b/net/core/devmem.c
-@@ -295,6 +295,16 @@ net_devmem_bind_dmabuf(struct net_device *dev, unsigned int dmabuf_fd,
- 	return ERR_PTR(err);
- }
  
-+void net_devmem_get_net_iov(struct net_iov *niov)
-+{
-+	net_devmem_dmabuf_binding_get(net_devmem_iov_binding(niov));
-+}
-+
-+void net_devmem_put_net_iov(struct net_iov *niov)
-+{
-+	net_devmem_dmabuf_binding_put(net_devmem_iov_binding(niov));
-+}
-+
- /*** "Dmabuf devmem memory provider" ***/
+ Example
+ -------
  
- int mp_dmabuf_devmem_init(struct page_pool *pool)
-diff --git a/net/core/devmem.h b/net/core/devmem.h
-index 7fc158d527293..946f2e0157467 100644
---- a/net/core/devmem.h
-+++ b/net/core/devmem.h
-@@ -29,6 +29,10 @@ struct net_devmem_dmabuf_binding {
- 	 * The binding undos itself and unmaps the underlying dmabuf once all
- 	 * those refs are dropped and the binding is no longer desired or in
- 	 * use.
-+	 *
-+	 * net_devmem_get_net_iov() on dmabuf net_iovs will increment this
-+	 * reference, making sure that the binding remains alive until all the
-+	 * net_iovs are no longer used.
- 	 */
- 	refcount_t ref;
+-tools/testing/selftests/net/ncdevmem.c:do_server shows an example of setting up
+-the RX path of this API.
++./tools/testing/selftests/drivers/net/hw/ncdevmem:do_server shows an example of
++setting up the RX path of this API.
  
-@@ -111,6 +115,9 @@ net_devmem_dmabuf_binding_put(struct net_devmem_dmabuf_binding *binding)
- 	__net_devmem_dmabuf_binding_free(binding);
- }
  
-+void net_devmem_get_net_iov(struct net_iov *niov);
-+void net_devmem_put_net_iov(struct net_iov *niov);
-+
- struct net_iov *
- net_devmem_alloc_dmabuf(struct net_devmem_dmabuf_binding *binding);
- void net_devmem_free_dmabuf(struct net_iov *ppiov);
-@@ -120,6 +127,19 @@ bool net_is_devmem_iov(struct net_iov *niov);
- #else
- struct net_devmem_dmabuf_binding;
+ NIC Setup
+@@ -235,6 +235,148 @@ can be less than the tokens provided by the user in case of:
+ (a) an internal kernel leak bug.
+ (b) the user passed more than 1024 frags.
  
-+static inline void
-+net_devmem_dmabuf_binding_put(struct net_devmem_dmabuf_binding *binding)
-+{
-+}
++TX Interface
++============
 +
-+static inline void net_devmem_get_net_iov(struct net_iov *niov)
-+{
-+}
 +
-+static inline void net_devmem_put_net_iov(struct net_iov *niov)
-+{
-+}
++Example
++-------
 +
- static inline void
- __net_devmem_dmabuf_binding_free(struct net_devmem_dmabuf_binding *binding)
- {
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index d73ad79fe739d..00c22bce98e44 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -89,6 +89,7 @@
- #include <linux/textsearch.h>
++./tools/testing/selftests/drivers/net/hw/ncdevmem:do_client shows an example of
++setting up the TX path of this API.
++
++
++NIC Setup
++---------
++
++The user must bind a TX dmabuf to a given NIC using the netlink API::
++
++        struct netdev_bind_tx_req *req = NULL;
++        struct netdev_bind_tx_rsp *rsp = NULL;
++        struct ynl_error yerr;
++
++        *ys = ynl_sock_create(&ynl_netdev_family, &yerr);
++
++        req = netdev_bind_tx_req_alloc();
++        netdev_bind_tx_req_set_ifindex(req, ifindex);
++        netdev_bind_tx_req_set_fd(req, dmabuf_fd);
++
++        rsp = netdev_bind_tx(*ys, req);
++
++        tx_dmabuf_id = rsp->id;
++
++
++The netlink API returns a dmabuf_id: a unique ID that refers to this dmabuf
++that has been bound.
++
++The user can unbind the dmabuf from the netdevice by closing the netlink socket
++that established the binding. We do this so that the binding is automatically
++unbound even if the userspace process crashes.
++
++Note that any reasonably well-behaved dmabuf from any exporter should work with
++devmem TCP, even if the dmabuf is not actually backed by devmem. An example of
++this is udmabuf, which wraps user memory (non-devmem) in a dmabuf.
++
++Socket Setup
++------------
++
++The user application must use MSG_ZEROCOPY flag when sending devmem TCP. Devmem
++cannot be copied by the kernel, so the semantics of the devmem TX are similar
++to the semantics of MSG_ZEROCOPY::
++
++	setsockopt(socket_fd, SOL_SOCKET, SO_ZEROCOPY, &opt, sizeof(opt));
++
++It is also recommended that the user binds the TX socket to the same interface
++the dma-buf has been bound to via SO_BINDTODEVICE::
++
++	setsockopt(socket_fd, SOL_SOCKET, SO_BINDTODEVICE, ifname, strlen(ifname) + 1);
++
++
++Sending data
++------------
++
++Devmem data is sent using the SCM_DEVMEM_DMABUF cmsg.
++
++The user should create a msghdr where,
++
++* iov_base is set to the offset into the dmabuf to start sending from
++* iov_len is set to the number of bytes to be sent from the dmabuf
++
++The user passes the dma-buf id to send from via the dmabuf_tx_cmsg.dmabuf_id.
++
++The example below sends 1024 bytes from offset 100 into the dmabuf, and 2048
++from offset 2000 into the dmabuf. The dmabuf to send from is tx_dmabuf_id::
++
++       char ctrl_data[CMSG_SPACE(sizeof(struct dmabuf_tx_cmsg))];
++       struct dmabuf_tx_cmsg ddmabuf;
++       struct msghdr msg = {};
++       struct cmsghdr *cmsg;
++       struct iovec iov[2];
++
++       iov[0].iov_base = (void*)100;
++       iov[0].iov_len = 1024;
++       iov[1].iov_base = (void*)2000;
++       iov[1].iov_len = 2048;
++
++       msg.msg_iov = iov;
++       msg.msg_iovlen = 2;
++
++       msg.msg_control = ctrl_data;
++       msg.msg_controllen = sizeof(ctrl_data);
++
++       cmsg = CMSG_FIRSTHDR(&msg);
++       cmsg->cmsg_level = SOL_SOCKET;
++       cmsg->cmsg_type = SCM_DEVMEM_DMABUF;
++       cmsg->cmsg_len = CMSG_LEN(sizeof(struct dmabuf_tx_cmsg));
++
++       ddmabuf.dmabuf_id = tx_dmabuf_id;
++
++       *((struct dmabuf_tx_cmsg *)CMSG_DATA(cmsg)) = ddmabuf;
++
++       sendmsg(socket_fd, &msg, MSG_ZEROCOPY);
++
++
++Reusing TX dmabufs
++------------------
++
++Similar to MSG_ZEROCOPY with regular memory, the user should not modify the
++contents of the dma-buf while a send operation is in progress. This is because
++the kernel does not keep a copy of the dmabuf contents. Instead, the kernel
++will pin and send data from the buffer available to the userspace.
++
++Just as in MSG_ZEROCOPY, the kernel notifies the userspace of send completions
++using MSG_ERRQUEUE::
++
++        int64_t tstop = gettimeofday_ms() + waittime_ms;
++        char control[CMSG_SPACE(100)] = {};
++        struct sock_extended_err *serr;
++        struct msghdr msg = {};
++        struct cmsghdr *cm;
++        int retries = 10;
++        __u32 hi, lo;
++
++        msg.msg_control = control;
++        msg.msg_controllen = sizeof(control);
++
++        while (gettimeofday_ms() < tstop) {
++                if (!do_poll(fd)) continue;
++
++                ret = recvmsg(fd, &msg, MSG_ERRQUEUE);
++
++                for (cm = CMSG_FIRSTHDR(&msg); cm; cm = CMSG_NXTHDR(&msg, cm)) {
++                        serr = (void *)CMSG_DATA(cm);
++
++                        hi = serr->ee_data;
++                        lo = serr->ee_info;
++
++                        fprintf(stdout, "tx complete [%d,%d]\n", lo, hi);
++                }
++        }
++
++After the associated sendmsg has been completed, the dmabuf can be reused by
++the userspace.
++
++
+ Implementation & Caveats
+ ========================
  
- #include "dev.h"
-+#include "devmem.h"
- #include "netmem_priv.h"
- #include "sock_destructor.h"
- 
-@@ -7313,3 +7314,32 @@ bool csum_and_copy_from_iter_full(void *addr, size_t bytes,
- 	return false;
- }
- EXPORT_SYMBOL(csum_and_copy_from_iter_full);
-+
-+void get_netmem(netmem_ref netmem)
-+{
-+	struct net_iov *niov;
-+
-+	if (netmem_is_net_iov(netmem)) {
-+		niov = netmem_to_net_iov(netmem);
-+		if (net_is_devmem_iov(niov))
-+			net_devmem_get_net_iov(netmem_to_net_iov(netmem));
-+		return;
-+	}
-+	get_page(netmem_to_page(netmem));
-+}
-+EXPORT_SYMBOL(get_netmem);
-+
-+void put_netmem(netmem_ref netmem)
-+{
-+	struct net_iov *niov;
-+
-+	if (netmem_is_net_iov(netmem)) {
-+		niov = netmem_to_net_iov(netmem);
-+		if (net_is_devmem_iov(niov))
-+			net_devmem_put_net_iov(netmem_to_net_iov(netmem));
-+		return;
-+	}
-+
-+	put_page(netmem_to_page(netmem));
-+}
-+EXPORT_SYMBOL(put_netmem);
 -- 
 2.49.0.987.g0cc8ee98dc-goog
 
