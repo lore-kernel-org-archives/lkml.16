@@ -1,106 +1,188 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1A2222594
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C849B21421C
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746700500; cv=none; b=laFs6J5c1zMpHkYvI6Lcxdz/t0/Qw2+/vA2l+y+HSiQyEXb3ynEWB5lMw7v/42b74++fuaRGTIBnoFdRGnDAfSgyZWDRaetHuPSe7Sg95TUxm7bTDp+q1SUD3034ZW9HN3UVEzkJLgU2GVhZkWKU8VkTrPIm+ohcICRW1CsRIFE=
+	t=1746700639; cv=none; b=qfQgYydhlpA43TuTOCmedvLHmeSBYenNzxmAOCPMwvqwurp1ug0RZAfhqigetTYik7gxOh4hzcfOW7gmp8WD0pkg/1BM2/wAVkjhtjoWRB5sNKqLFNMWVygchmdLZj0qZdWC5yoNLHFnTPlpEbtFPMbdxMHcbkNft6eTia69xzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746700500; c=relaxed/simple;
-	bh=XshUOr28r6ZZkb+yL1lgKFOURqljAiLtgGQWw8Tj5Xk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r5OjFwtRJBXhHS9NDguqReH+GixKinwEDUxkcw0Aha1zf952PkUle5drV9VCyctJPKiNKGYoBJVWn+02AuxXoJEEqEMU4gHHJg5oSPn9TeXN5yQxiInyiOWGI39zep4a/Y8NPkVjD6qZ5/6xW/g6M5j1bwA5Lg7rfjoRktrFDQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rqfpSduV; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1746700639; c=relaxed/simple;
+	bh=k61Wm8fICEDBJQkkSOr2DXiyI/ba/fX2/3gztAkXCZ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZvmUmQaxrNKwRGno9BilFFln+DLlHU/6LzQWTRVkBAyau4IwCtLd9iVnsOTy0LWLvq9UHAPgNCI6BLpTWTMy66LJPNTLuATTJcybdB477ZNn9zQSGof9gjNA0hdLNA9wX1M2rTJC138BBXwiJYAsxIopt4eLWXuhYUFdRWPgbSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HYP3ht8/; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rqfpSduV"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso5555985e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 03:34:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HYP3ht8/"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a0b5b90b7aso113722f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 03:37:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746700497; x=1747305297; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lCD/xrhh7lmsv0m28M2TFBr3CCN+yhJ+7aC75XpUxc0=;
-        b=rqfpSduVzIwxiGLRblAFbGJW7jqAYmbz35uTd2AeMJQZop9AhUKFA6Jqa378MBVG54
-         4oatq5qVgG3iy/VKnzPePzWqXsqp0XipJO4L3LjsDTzVeapyGTTYLSIkNUT/N9zfJ8/U
-         iVl3B5KAfOUeOTRrB0Q7GExtmqAL/Zn1OT1GyCaN29r8T4rG/u1MRXyVWO6kY86NB3yu
-         bkTqycFGaiQSjxLb68scBicX+norFVYZl2K2CK+vqIsvIm+Lkl4rkkXWkhDAZ1ZkmWY1
-         RVp5/i1e2R9ylc8lT7R8MRAhQO78TlI4or0crPQdSRKJillRpwjsupFgIkZyBpBxkH4u
-         PDCw==
+        d=linaro.org; s=google; t=1746700635; x=1747305435; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=EMe64DLuaUvItiJTh5N7eJuZ39Bu2jaMquPSmf78ahY=;
+        b=HYP3ht8/5XDFUonI5yFbyGLd4az+CSueXHhTOF2ydpGOdU2yenbJ9Ln/mA/7Uf3aIn
+         mSWkrBd4L0wVwnxnDBqSezKynTn02u1RIw891dwst6b6UBrzE7vFMKi6k94idnjE3smM
+         gWvAuOLLDlvUqAfNF8FLs6yooTd+VtsIhAItHwVOQ0ffT6oC5QkFGUPcF2EYhnqONq2m
+         7WWyv3GgzxhIdJkHsETccECEwzriX8Dq6JW3rgTGns9lmUiGmf4jxC27m7WiyOLDX8TL
+         c5gjTWfsY3KZcT8YeGCDGIngqJCLJfK4RhjzLBT06YFOn+4/x3Z5Xp7Q/JsroJ0qyky8
+         i1lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746700497; x=1747305297;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lCD/xrhh7lmsv0m28M2TFBr3CCN+yhJ+7aC75XpUxc0=;
-        b=El8LwJJF3QqAZmRIwxrww8X2+u6hUDwyBEL6wbxQ0abfYhKNExj1KbqSNZvKm9RlxC
-         WRnyqgfk00qYuvsc5RqZDcRDHCO68B5Ej5al9xZ8UBQ6DSLGs6fd4pb1u2TMJSxDaB5o
-         8fW/ixL0/RlcaGjQmtsJl6a7TyWU4WiOQJ9oUGnHDs88WegrUWjC+qKiawXOLqKMFPhv
-         9y8H1kke1ACatF5spNSFm/NeR38FUQOFy5fw4Rxj4Q//rbn2ZJxl+ralh+fPRWkDYZI7
-         3wj4cgEiFuMKeFVRkGsAlIaSe0T04Zfm7oCh8RuM3xFVTOs/h4HpmPzrRK42usaKCn59
-         mqKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ40+CmvtCzLTFFrem6xbMhot49E785/olEKvxIogIJ7n60IkzYjG/Ky3Xqv8y9ffDaGhOIKZuSAoiunY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLJNZaRCcLrH45Ha2bsh+87UiR+WHRhxuFF1mtgTeOHF1mNjIL
-	JJ5BAf+/v/0xCLbVVVNeGdxwVeiiq4Y97z6nJYl6ggpKOp13QxPatn1Ze066Jxw=
-X-Gm-Gg: ASbGncthJdXwVHXAyhG/OcJz7lDhu2KXKm/39zQD9r/A1NhdQlBWc8J5QA6swSOJmgG
-	lPLyrEh95qC/R2NXvADZvuDYEMOCDAlR2k9xV5GAm/68fATPlgQnXLH1YdZNQYgS72gaO1iFy7x
-	cHqu6fDter3hwCFOp5J5e/U5iuiozqdzb7TpVeLR4bofiUVs7gcklir1fN//A6FwEUUJbH/74/p
-	9fxEOSlJ10BMGxz1P7rUunFyyPa8Q6y9kgasH1vDtlcvJp3S7GpC52Spf2NTarFgL+1bbwtTC5o
-	uQDElv3YvIaZl+3pbg+LHB9M2o+JgLUapEOEul+vaARlZQ==
-X-Google-Smtp-Source: AGHT+IE2ZwRPPmNDwrBPPnDKpNkj/SmmhYpil9fT1HsszQFc0vAn/mcedhnk142mhnL007orG1uNYg==
-X-Received: by 2002:a05:600c:3483:b0:43c:f81d:34 with SMTP id 5b1f17b1804b1-441d44c4428mr58842365e9.9.1746700497085;
-        Thu, 08 May 2025 03:34:57 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442cd32835dsm32673715e9.6.2025.05.08.03.34.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 03:34:56 -0700 (PDT)
-Date: Thu, 8 May 2025 13:34:53 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Niklas Cassel <niklas.cassel@linaro.org>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] pmdomain: core: Fix error checking in
- genpd_dev_pm_attach_by_id()
-Message-ID: <aByIzTj2t1I9Wrzw@stanley.mountain>
-References: <aBxPQ8AI8N5v-7rL@stanley.mountain>
- <CAPDyKFoZiEAn8yT8a9VZqayR1=HPnMn+a51O3zUAUR3L6RXH=Q@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1746700635; x=1747305435;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EMe64DLuaUvItiJTh5N7eJuZ39Bu2jaMquPSmf78ahY=;
+        b=Ul7HkFtttgquMq8Z4Ndl53bqx+mPtXg5QonT9pNadejtp8sOmXc1QyALLtWpnv7KoS
+         kocycXM8LZBQdmkWpynJ3CjaxCWT8s1IEIsBNPdIqINGbrQwhGZZQ27FEd4/exbX2yLX
+         C9I1jz+Oo+fBISLZZoRgp7UNWrMia1nvBApz+NqpeuVMwZfIVWou1jugb8wker0+a3Hw
+         SAALxFH9jsC/uEYEnfANjmhQW7JMva6cxp9guokiHbogGLvLQSZfLHPYoh1jMt7kz0yG
+         bVZ2kGtPVcw52jXjforvMyk1gYnzxfrEjNprDSi72SrzBCydHZ8suC9BlUUAz7er37CN
+         Bbdw==
+X-Forwarded-Encrypted: i=1; AJvYcCXwwF4l4rrzveapABCgP/uE/sClwTY5Qjs8JJQMQHDozE3IYPY1c5Kisl5NxceW22/NaHPIdUvy2Rboahg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymYK8u91+me8rSVupt9Mkr2GG23Bi18uNdg/UoalxXH8bW85eg
+	JRy3NPiRI117guCdFfGyVq90WfzKoEV3HjVwQWZaQo9I2wSfsEu03M0HzJ7s4yY=
+X-Gm-Gg: ASbGncuPmUFVQES2g0P/PIa4TJ0esXrLj6bFmF7eZLcLmV+6YoEXFKQCBYrdCsiktbt
+	qt5xT1yj6MWK3nDFXsUHgYcw2+37waPPcdBR4sYSmLQw9ds36sa4Yu+tyEmvVJXmXOKswzxzcoh
+	zuu5Sz5hmZzGQWXKsYw+eBq2UGFVmimgwD9DkUIb77v+RmV6J8J6hgQYzLh+hSWl6LAkKLLH6GB
+	GQGO5oApoU1ZEE4KiMG6jSkzeB24g7QjxJeOaJM5DdSH9cUJP78hjPv194lJmeCofPgS9cO5+ZI
+	oJXMhf/oO3FzDZ1ZvFeBqEk0uXTbOOij5V0Z4U/zfXQRLHZ8WA7qRVAHOHI=
+X-Google-Smtp-Source: AGHT+IEmRNQLIu6YqEm6R0RqMgKIlZ6E5GBW/10pHPAdewCUEFyBQMiQkoUKVy6kElqpING9uXiYLw==
+X-Received: by 2002:a5d:588b:0:b0:3a0:782e:9185 with SMTP id ffacd0b85a97d-3a0b49e9e45mr2266519f8f.2.1746700635034;
+        Thu, 08 May 2025 03:37:15 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0b840737bsm3175324f8f.67.2025.05.08.03.37.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 03:37:14 -0700 (PDT)
+Message-ID: <afda790f-0b5e-4569-a92b-904df936df85@linaro.org>
+Date: Thu, 8 May 2025 12:37:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFoZiEAn8yT8a9VZqayR1=HPnMn+a51O3zUAUR3L6RXH=Q@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sm8750: Add Soundwire nodes
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250424-sm8750-audio-part-2-v1-0-50133a0ec35f@linaro.org>
+ <20250424-sm8750-audio-part-2-v1-1-50133a0ec35f@linaro.org>
+ <e83b58ea-0124-4619-82a5-35134dc0a935@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ 2+47PN9NZAOyb771QoVr8A==
+In-Reply-To: <e83b58ea-0124-4619-82a5-35134dc0a935@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 08, 2025 at 12:14:41PM +0200, Ulf Hansson wrote:
-> On Thu, 8 May 2025 at 08:29, Dan Carpenter <dan.carpenter@linaro.org> wrote:
-> >
-> > The error checking for of_count_phandle_with_args() does not handle
-> > negative error codes correctly.  The problem is that "index" is a u32 so
-> > in the condition "if (index >= num_domains)" negative error codes stored
-> > in "num_domains" are type promoted to very high positive values and
-> > "index" is always going to be valid.
-> >
-> > Test for negative error codes first and then test if "index" is valid.
-> >
-> > Fixes: 3ccf3f0cd197 ("PM / Domains: Enable genpd_dev_pm_attach_by_id|name() for single PM domain")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+On 25/04/2025 11:24, Konrad Dybcio wrote:
+> On 4/24/25 11:40 AM, Krzysztof Kozlowski wrote:
+>> Add Soundwire controllers on SM8750, fully compatible with earlier
+>> SM8650 generation.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sm8750.dtsi | 122 +++++++++++++++++++++++++++++++++++
+>>  1 file changed, 122 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>> index 149d2ed17641a085d510f3a8eab5a96304787f0c..1e7aa25c675e76ce6aa571e04d7117b8c2ab25f8 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>> @@ -2257,6 +2257,36 @@ lpass_wsa2macro: codec@6aa0000 {
+>>  			#sound-dai-cells = <1>;
+>>  		};
+>>  
+>> +		swr3: soundwire@6ab0000 {
+>> +			compatible = "qcom,soundwire-v2.0.0";
 > 
-> Thanks for the fix! It looks correct to me!
+> They're v2.1.0, same on 8650, there's a number of new registers
+
+Sorry, but no. This the "generic" compatible and it is correct. Devices
+expose versions, which is perfectly usable, thus changing compatible to
+different one is not useful. We could go with soc specific compatibles
+and new generic one, but what would that solve? This one is generic
+enough - the device is compatible with v2.0.
+
+
 > 
-> What puzzles me though, if this is a real problem I am sure we would
-> have been receiving bug reports, don't you think?
+> [...]
 > 
+> 
+>> +		swr2: soundwire@7630000 {
+>> +			compatible = "qcom,soundwire-v2.0.0";
+>> +			reg = <0 0x07630000 0 0x10000>;
+>> +			interrupts = <GIC_SPI 761 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 785 IRQ_TYPE_LEVEL_HIGH>;
+>> +			interrupt-names = "core", "wakeup";
+>> +			clocks = <&lpass_txmacro>;
+>> +			clock-names = "iface";
+>> +			label = "TX";
+>> +
+>> +			pinctrl-0 = <&tx_swr_active>;
+>> +			pinctrl-names = "default";
+>> +
+>> +			qcom,din-ports = <4>;
+>> +			qcom,dout-ports = <0>;
+> 
+> There's 1 OUT port on this instance
+> 
+> otherwise (modulo the settings I don't have a reference for)
 
-I think it would only cause an issue for invalid devicetrees?  So it's
-probably not an issue people often see in real life.
+Omitted on purpose, no port configuration available.
 
-regards,
-dan carpenter
 
+Best regards,
+Krzysztof
