@@ -1,44 +1,43 @@
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7692139C4;
-	Thu,  8 May 2025 05:15:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A77D21504D
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 05:15:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746681332; cv=none; b=lpxeBIbkr2YRu6JsZhACki68CRV/vAjokj2UY36Jf89qdKA/d5fHJPpXKQNG53WNa/xdmBXz69AKodgaBLUMbmECRXb4I9xEgykylyHNh82hfN1fOCViHAHJ7FtVtJzEI4Xahqke2X3gzel44dVktTjBPkbF9X5rHRSy0OhN6l4=
+	t=1746681335; cv=none; b=Vm+nLKHU4us7cN09tnmqeb/UiCbLOnEP4rIHzWaLRe5ySHKLLt9xp2vxryTLZP2SqomxnQ/vMIgjfS5Q/X0/rTPS8433WuxV4UBY2DvSwlq/ryx7RSoVrUDvDXwU2U2sURBNxK1ywbA2ar2RkjQckNz1GpoSXc0xBtmIKsfsr74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746681332; c=relaxed/simple;
-	bh=ISTACO0x9B1R7EsjFwT3G1ahFXPlmjZx3tK2r/IA7Gw=;
+	s=arc-20240116; t=1746681335; c=relaxed/simple;
+	bh=pA+nMQhKKS2/fEX7uhzqrqS2x+Y5IgMSiFXP1XmeHm4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sw3GORxvDEUI5Dcs+1eUggV9X1hGGL6gnRveIF/QmJWWjn29bCj0cUZ+2JMCX5eIUFB9gKzssNJ6OHhEvOh/7uJS+Xifp/zT+qFd0XG8Ipy9HLZTsFjmTlWRWpnfKr0GATmX4qdtjDrMMBzEMggXWUJyyYrImFRFajR1eR6OuWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tncbnr0Z; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=ry0JObvrGibpASiVD9GFrLDqQYFJthNmVzXIp2DBSK6Biru+Bhyz1pcYHXusFvLyD5nYqvyNv2+J6ocs8OX4I7t0D8Kh7K+YZQalv4XXT1A1mJhUnHMX+WjESonDHFvzjAdSflTNlCeYggyCqqpli780c5HKqqiMcWKUZ//IPac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JBfVrU8u; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tncbnr0Z"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JBfVrU8u"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=hjROd0wIshF4nMKexOdcqPc3YUZQgQDvNXYUo/8KwuY=; b=tncbnr0Z/51DQlCz6NmFJZGyGG
-	aT5jujsnIXf19DNcnuMwusr8F6xwrqODAPPL9iFemFFE57h1vKdZUjODAEz3VbjoxneORcLp3Hcrf
-	hcvGv1PqEWzkPHfSq93lefR+hoh01EzsNvGxsjxP+U9D3RXMVHb/48DhFfyIfmilZQf5Ag7bdXVhp
-	J4iXUvDw0XBvLlGAeuEvMezQ+tsnOh76DlgmzV7DYzIAQU/mRPDr9FEexZIhHb9HyCI3oQiUa1lAE
-	QRBiLXPc7diNb6EwD5Qb+UHE/+k4EJO0xXwLRsmjdnLVvb4RmWnhTYcYXmD6xRMwtLF2t8Vw4jaBl
-	1yt/wrPg==;
+	bh=mJ601YFTsjLc/Bu1ljq7runEahH6x5HE4nmzXPhOC1Q=; b=JBfVrU8uqyrhYLSbVLWM8tvrf+
+	udba6Sw9VJE72XaxBHgNQA9LdhEY8oR45G7PaMlpK0EyGyPOOcKrA1XzEvcaDIOoVGQE6vpoQWNEZ
+	jQYMU9LhF4WjO2PYpKTd3azTw4Vvpfl+w1zOxJIzmqyR1u7bVvykjMgB2YmGUrR8b/a2/QhsmW8/B
+	TzuIpeeCwE6BW+lF+KjBFA9DbNMjOGEgWT+Luf6t5V0PK+XRam4DPvteL5lFEPqiWdvDuKgyTI87Z
+	FzFNJcJ2WhNj2NLBq+u9BUVcN7Sp6KAU/b3ZZgOtdqDrrfwWTeJSMLOrFKt3UqkUmfUPD/s3bxws4
+	Tn3kRrQw==;
 Received: from 2a02-8389-2341-5b80-2368-be33-a304-131f.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:2368:be33:a304:131f] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCtbV-0000000HLfo-2btf;
-	Thu, 08 May 2025 05:15:30 +0000
+	id 1uCtbZ-0000000HLfw-1BuZ;
+	Thu, 08 May 2025 05:15:33 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Jaegeuk Kim <jaegeuk@kernel.org>,
 	Chao Yu <chao@kernel.org>
 Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH 1/6] f2fs: fix to return correct error number in f2fs_sync_node_pages()
-Date: Thu,  8 May 2025 07:14:27 +0200
-Message-ID: <20250508051520.4169795-2-hch@lst.de>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/6] f2fs: return bool from __f2fs_write_meta_folio
+Date: Thu,  8 May 2025 07:14:28 +0200
+Message-ID: <20250508051520.4169795-3-hch@lst.de>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250508051520.4169795-1-hch@lst.de>
 References: <20250508051520.4169795-1-hch@lst.de>
@@ -51,48 +50,89 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Chao Yu <chao@kernel.org>
+__f2fs_write_meta_folio can only return 0 or AOP_WRITEPAGE_ACTIVATE.
+As part of phasing out AOP_WRITEPAGE_ACTIVATE, switch to a bool return
+instead.
 
-If __write_node_folio() failed, it will return AOP_WRITEPAGE_ACTIVATE,
-the incorrect return value may be passed to userspace in below path,
-fix it.
-
-- sync_filesystem
- - sync_fs
-  - f2fs_issue_checkpoint
-   - block_operations
-    - f2fs_sync_node_pages
-     - __write_node_folio
-     : return AOP_WRITEPAGE_ACTIVATE
-
-Cc: stable@vger.kernel.org
-Reported-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Chao Yu <chao@kernel.org>
 ---
- fs/f2fs/node.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/f2fs/checkpoint.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index ec74eb9982a5..69308523c34e 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -2092,10 +2092,14 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index e42ed62fa45c..595d6e87aa2f 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -340,7 +340,7 @@ void f2fs_ra_meta_pages_cond(struct f2fs_sb_info *sbi, pgoff_t index,
+ 		f2fs_ra_meta_pages(sbi, index, ra_blocks, META_POR, true);
+ }
  
- 			ret = __write_node_folio(folio, false, &submitted,
- 						wbc, do_balance, io_type, NULL);
--			if (ret)
-+			if (ret) {
+-static int __f2fs_write_meta_folio(struct folio *folio,
++static bool __f2fs_write_meta_folio(struct folio *folio,
+ 				struct writeback_control *wbc,
+ 				enum iostat_type io_type)
+ {
+@@ -353,7 +353,7 @@ static int __f2fs_write_meta_folio(struct folio *folio,
+ 			folio_clear_uptodate(folio);
+ 			dec_page_count(sbi, F2FS_DIRTY_META);
+ 			folio_unlock(folio);
+-			return 0;
++			return true;
+ 		}
+ 		goto redirty_out;
+ 	}
+@@ -373,11 +373,11 @@ static int __f2fs_write_meta_folio(struct folio *folio,
+ 	if (unlikely(f2fs_cp_error(sbi)))
+ 		f2fs_submit_merged_write(sbi, META);
+ 
+-	return 0;
++	return true;
+ 
+ redirty_out:
+ 	folio_redirty_for_writepage(wbc, folio);
+-	return AOP_WRITEPAGE_ACTIVATE;
++	return false;
+ }
+ 
+ static int f2fs_write_meta_pages(struct address_space *mapping,
+@@ -461,7 +461,7 @@ long f2fs_sync_meta_pages(struct f2fs_sb_info *sbi, enum page_type type,
+ 			if (!folio_clear_dirty_for_io(folio))
+ 				goto continue_unlock;
+ 
+-			if (__f2fs_write_meta_folio(folio, &wbc,
++			if (!__f2fs_write_meta_folio(folio, &wbc,
+ 						io_type)) {
  				folio_unlock(folio);
--			else if (submitted)
-+				folio_batch_release(&fbatch);
-+				ret = -EIO;
-+				goto out;
-+			} else if (submitted) {
- 				nwritten++;
-+			}
- 
- 			if (--wbc->nr_to_write == 0)
  				break;
+@@ -1409,7 +1409,6 @@ static void commit_checkpoint(struct f2fs_sb_info *sbi,
+ 	 * f2fs_sync_meta_pages are combined in this function.
+ 	 */
+ 	struct folio *folio = f2fs_grab_meta_folio(sbi, blk_addr);
+-	int err;
+ 
+ 	memcpy(folio_address(folio), src, PAGE_SIZE);
+ 
+@@ -1418,13 +1417,14 @@ static void commit_checkpoint(struct f2fs_sb_info *sbi,
+ 		f2fs_bug_on(sbi, 1);
+ 
+ 	/* writeout cp pack 2 page */
+-	err = __f2fs_write_meta_folio(folio, &wbc, FS_CP_META_IO);
+-	if (unlikely(err && f2fs_cp_error(sbi))) {
+-		f2fs_folio_put(folio, true);
+-		return;
++	if (unlikely(!__f2fs_write_meta_folio(folio, &wbc, FS_CP_META_IO))) {
++		if (f2fs_cp_error(sbi)) {
++			f2fs_folio_put(folio, true);
++			return;
++		}
++		f2fs_bug_on(sbi, true);
+ 	}
+ 
+-	f2fs_bug_on(sbi, err);
+ 	f2fs_folio_put(folio, false);
+ 
+ 	/* submit checkpoint (with barrier if NOBARRIER is not set) */
 -- 
 2.47.2
 
