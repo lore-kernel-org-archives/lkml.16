@@ -1,104 +1,130 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B224B1E48
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F8919D087
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746697814; cv=none; b=DvxXki5VIGZ1TUMGP12/3TaXtMlQaTVC8m9d0beX42YWbN303O0qRHOGl6E6KYWWWjeZWH9bozmzh0fBULlk6s9pLccbvAVQlStIS1kYArWaNhsia/kn4JroXBmfhTYwD8QljEPALWPQrt+2s4fO81a7mZ1lOe2SaxsgX3hchYg=
+	t=1746697815; cv=none; b=hdZRfoUXyMtM6yFFaMJv9X1xDrWwYY+L4E8m/EHs6+y5ech0zTHkrSc15batSPVZpWmpeoZRM6D+DGruSX7IS/x3oJ5nTBJHAL8YJQjeCfFY5OUD4qD4AWzR2DNcNZC3SAl98t/pbDANDtSiIEH2ex30rYvZkkN/mpO4mgfQ9Y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746697814; c=relaxed/simple;
-	bh=00ywMczicjvLslhDXgo4TMUmGZHD8Tveta18brDBikI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=D/ltU+2My7CmXfAGqElBiwnrOCaaPB3ZuXKx/yhpa20zHXbOxVCo16p5hlg2EYkPUHt1GZlhcS/HLZ2f2aGl6YtJKigg+hmP1I3O8xSvgr0QpjvT3aQFvaRjN4hNa7BNrVEK/lpuXmNOl2gkBKtpqy8HRqcCU9TkV5VX3Es57Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wIIKMFKQ; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1746697815; c=relaxed/simple;
+	bh=UMYTbAfhSz3oYez7MYIou5fHejdjBHCi0/9zaF7aZtc=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RTRrpmEDQm+0rYZbRpIoWX7KmgjVyu5bYq94L1KAeXu9JVed0IUOU7O+jtn356qvsQuxuGGhCJKSF4Fw/YCmd355rlLR5Sj29jy7NcC+FeyXKW2c6W/bsMV9LnAFs3ykkqt2Yu2wywGJbTOBnNChdnJqhbgYbE+MRI74C/aLuy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=L0g9gO3q; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lXbMvYnO; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=L0g9gO3q; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lXbMvYnO; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wIIKMFKQ"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43ceeaf1524so3351895e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 02:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746697811; x=1747302611; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=u/6uHZ3GvAkpHOsls9UjvsdvAaxsnvKcIvywoDvH3W0=;
-        b=wIIKMFKQ+J4W5qMMJATbWRhqKd9DbBOCuFzOGtJZbhoGWG6noDQf/8NOk+J7Lw+VB9
-         xwrKgnwHtzm2hF9XB09yNh77U1+Mk7MCklCDSpGzBu81hgatG57qVLpqQug78//iQkzY
-         U1wxKY+ZGrTupKlWV9b5IpB7UI0FsGQsrbJ4Gtagax2n53K/khp8TT1yxyQGf+evJ5FF
-         8aDpLJrBejqDcxNoApRIE471DryrqTkU9E9EKUgIWtwxVotEUBka2KurJS6b30jLLZcc
-         i6sbEzy3YD9MlsgCxTJ5zsR/pyai1Ll5/V1iS/Nhx4xYXOhihWUkKvirIrvk9dTNhXBg
-         d/2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746697811; x=1747302611;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u/6uHZ3GvAkpHOsls9UjvsdvAaxsnvKcIvywoDvH3W0=;
-        b=qpJA1fSM7zzzEIZFMP/8p53jqO51QfpdYXzWm/oYgPWX4axO0ASI0tiYomBRi6QohT
-         Y7BvVLXfUa2USFdf+2l2jmAFGne1EEJSfDaC8k96HM/7q/ggUK0ykbDikuzev2/9noK5
-         /0uViTM1qOK1O5pIU7z4nc7xpt9lPiGBapayj2NKSWIYBSDT/F9HTHB+yEijQVDma9Dt
-         /aG1I/8Zwawf4b7/HNTIqbUtak5tfsH5HCGl1wNACzOM/fAyBcaCVsXWWJOBtzw+fovw
-         gr1lp75LG7mdOqrzUzZPMZ4DceBBhNras3yRedKI8Z3+aUUZ5SuIEpIVCoMXRGs/3Blf
-         zLSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWKWd6spAO9PM2NjkXJCtmFgagDE6Y05Wpj4gSbxd0s0tOGkn1V8Kmg2aFGdRg/zGqZiTMhl4W1FESLnMo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDARHcIxXpgMV0j7NAefGCCqGIXPGDuCqCckrKzywaDGFwuQXj
-	oNzIYLZrNBMrdiNPhPAk/YYLN/bTgD0mHv53UhavsnhMnQOAbJyyS1xC6Z7gSFdHf3jzklEndeJ
-	rWrySJ4ezBrPoiA==
-X-Google-Smtp-Source: AGHT+IEPrOFfcaia13QLDulHVL4VMLLoqkhxKC0rPGGEnWlVvGIpNhU24GDrXr7kYP/zkfLYYSYSLZVsywKF6Yk=
-X-Received: from wmbep21.prod.google.com ([2002:a05:600c:8415:b0:43d:40ea:764d])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1e02:b0:43d:186d:a4bf with SMTP id 5b1f17b1804b1-442d0208645mr23551155e9.0.1746697811013;
- Thu, 08 May 2025 02:50:11 -0700 (PDT)
-Date: Thu, 8 May 2025 09:50:09 +0000
-In-Reply-To: <D9PWI4JVVMMP.20A1IK9ZVSG3Z@kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="L0g9gO3q";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lXbMvYnO";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="L0g9gO3q";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lXbMvYnO"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 95DAB2117A;
+	Thu,  8 May 2025 09:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746697811; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DVddMs/Um0AZ7UxaV3gqfzUVzmN9lHKdP84ZVyxCRkk=;
+	b=L0g9gO3qFszvNxPdTqiSuYqEglQy+K5Wj21Vbn3+mYMvhrzpJ0PgBETlgG/g/NI72+O/Nf
+	L+MXhbW1mGragnfXSWfoTEk2Mx5xNQhX4fjV8s5LxMj4vSYEdMyPUMPAFCbXEkmFbJ13Ng
+	HFeH5hHkXPTovKesoBVyU6yp87vRwk0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746697811;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DVddMs/Um0AZ7UxaV3gqfzUVzmN9lHKdP84ZVyxCRkk=;
+	b=lXbMvYnOrzlFMTWKrjcmiEOnKiFRuuJtu40tsNzKglwRYurNxZXmwTXvNkvtQua1rm1OCK
+	9xaWBITL5pA8YRCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746697811; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DVddMs/Um0AZ7UxaV3gqfzUVzmN9lHKdP84ZVyxCRkk=;
+	b=L0g9gO3qFszvNxPdTqiSuYqEglQy+K5Wj21Vbn3+mYMvhrzpJ0PgBETlgG/g/NI72+O/Nf
+	L+MXhbW1mGragnfXSWfoTEk2Mx5xNQhX4fjV8s5LxMj4vSYEdMyPUMPAFCbXEkmFbJ13Ng
+	HFeH5hHkXPTovKesoBVyU6yp87vRwk0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746697811;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DVddMs/Um0AZ7UxaV3gqfzUVzmN9lHKdP84ZVyxCRkk=;
+	b=lXbMvYnOrzlFMTWKrjcmiEOnKiFRuuJtu40tsNzKglwRYurNxZXmwTXvNkvtQua1rm1OCK
+	9xaWBITL5pA8YRCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 673AB13712;
+	Thu,  8 May 2025 09:50:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id VbnpF1N+HGjndgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 08 May 2025 09:50:11 +0000
+Date: Thu, 08 May 2025 11:50:11 +0200
+Message-ID: <87frhfv3cc.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: linux@treblig.org
+Cc: perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: hda: Remove unused snd_hda_add_nid
+In-Reply-To: <20250505010922.340534-1-linux@treblig.org>
+References: <20250505010922.340534-1-linux@treblig.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250502-vec-methods-v5-0-06d20ad9366f@google.com>
- <20250502-vec-methods-v5-6-06d20ad9366f@google.com> <D9PWI4JVVMMP.20A1IK9ZVSG3Z@kernel.org>
-Message-ID: <aBx-UTG2ZGErdSHv@google.com>
-Subject: Re: [PATCH v5 6/7] rust: alloc: add Vec::remove
-From: Alice Ryhl <aliceryhl@google.com>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Flag: NO
+X-Spam-Score: -3.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_NONE(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
 
-On Wed, May 07, 2025 at 01:44:30PM +0200, Benno Lossin wrote:
-> On Fri May 2, 2025 at 3:19 PM CEST, Alice Ryhl wrote:
-> > This is needed by Rust Binder in the range allocator, and by upcoming
-> > GPU drivers during firmware initialization.
-> >
-> > Panics in the kernel are best avoided when possible, so an error is
-> > returned if the index is out of bounds. An error type is used rather
-> > than just returning Option<T> to let callers handle errors with ?.
-> >
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+On Mon, 05 May 2025 03:09:22 +0200,
+linux@treblig.org wrote:
 > 
-> One follow-up comment below. With the `# Panics` section removed:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
 > 
-> Reviewed-by: Benno Lossin <lossin@kernel.org>
-
-Thanks!
-
-> > diff --git a/rust/kernel/alloc/kvec/errors.rs b/rust/kernel/alloc/kvec/errors.rs
-> > index 84c96ec5007ddc676283cbce07f4d670c3873c1e..06fe696e8bc6612a5e6aa2f6c28b685033acfa2f 100644
-> > --- a/rust/kernel/alloc/kvec/errors.rs
-> > +++ b/rust/kernel/alloc/kvec/errors.rs
-> > @@ -21,3 +21,18 @@ fn from(_: PushError<T>) -> Error {
-> >          EINVAL
-> >      }
-> >  }
-> > +
-> > +/// Error type for [`Vec::remove`].
-> > +pub struct RemoveError;
+> snd_hda_add_nid() last use was removed in 2014 by
+> commit db8e8a9dc972 ("ALSA: hda - Remove the obsoleted static quirk codes
+> from patch_cmedia.c")
 > 
-> Would it make sense as a follow-up to store the index that was accessed?
+> Remove it.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-Usually I think we would only store the information that the caller
-doesn't already know?
+Thanks, applied now.
 
-Alice
+
+Takashi
