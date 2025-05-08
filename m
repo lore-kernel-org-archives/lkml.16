@@ -1,116 +1,105 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326F31FF1A6
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 21:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD60713D891;
+	Thu,  8 May 2025 21:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746738845; cv=none; b=ZQvlGG7SdtmBfvl+t0pAoqhkLDGnuUYmfCogrjuLGVYbVB5utuR1Ovyki3AF2HEnY0xmUh80/syL8nrZdJLFAJGiAiaYVG/+1XSQMWe1nQONABZB2pwQT2rCs/2Lhh9w8YnGmwK5FtdVAjRUjl2j70izEKW++kVPgbwoWcf6QhI=
+	t=1746738921; cv=none; b=pXrixdbLAHrgXy4Z+xd8+BCL0kBNsfdDxVOWDWy48mqx+5kkBJsygR7rXlwKvOBZnKykrUfIIbz3qTz9q6JtrE3LLnRjvK12vjm0UsXKQTehVwANdnfTfpbk4ZssxN1lEDKejntw6Xqv+Atiz4zcM/kqyIVHkFlKUbdzKG2VIJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746738845; c=relaxed/simple;
-	bh=3cv6ZrlFJ/maRjtjOZVnEex5kiV5Rlf24wXMNXE+IMw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W5c+17p50jrlaQD6TLQUnEEz/dkSf/2jk6Mjl9OYlROaKziU0DloorktTadM0+ZryekdKaqLDFX+QrGZRYgLeo4rtpHQ0MhNBvIw9mVvBQ5ShQ81USuUdxlwGweG7DNK/09wGQLcPv8oVEIl2k2gcjpYsnufzjen9AH9ec1scuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=04mdS6ZQ; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1746738921; c=relaxed/simple;
+	bh=nKXeoryRWZyfozlALz/gMgLZJWpZbJjP9ZhiMeLCAZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tqy3vmF7n6pWq57QzMt6DxSbQmyHHYO2tTwNAKG1NHaLGMTRCpPXnslTuINpWi5iMZioADeLVtzWYdwICYLhePeGQ88cOHE0YtQpG/VKQDZpSasBjAbm4hCfwOJawPN1sf31TyzvMv3jMyt6KAe0npkWOfItWH5GdS9IHUDzezc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h96xfiiI; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="04mdS6ZQ"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-476ae781d21so15469931cf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 14:13:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h96xfiiI"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-441d1ed82dbso12814685e9.0;
+        Thu, 08 May 2025 14:15:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1746738839; x=1747343639; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IbSEs5i9JI6kyVWaKILrcS+cPrKL+TnrdLE+teJclrk=;
-        b=04mdS6ZQxY5ApYhwQhHsUnTcX+ifjCW+5F58QDR4uvhVoZ6OzjBd1yhvf/8vbqqCEp
-         jxkiqU1MK5O+u0iHh6Dk7TTPUandVZVFVGLHtzIIGK7bAKEYozW9QwfvnJR/giNijRJe
-         KC+IBstzmOMDrCL9wPDJqlID+odPQ2sOh2PrzFR+DJZiwcP+g3E0qylPOCOFNx65gobB
-         wv/wCqSpwJdiPlqyKm/sKDUs07igEQwdPNCrD4eIrLbEBkQ6b0TfhqiRJvoUd3PtHgrH
-         8XJcZptHYiKDat0LpPzUNnrjVaxYz7ZS578XTCszHUQRSdC5SZJfUhLAQfUj369eyENb
-         CsAA==
+        d=gmail.com; s=20230601; t=1746738918; x=1747343718; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V+wsUkJO0RztPZsvUmHBVaL2bfuw9bYNlaeajMcqcC8=;
+        b=h96xfiiI2GQt22XbF1YtrWB1gOS1XA1DFyYSynqqV2E2PXeIA/8cAxxyMabN14ZRty
+         liKoK5/7T3UO7AoD/Aj8lCHkbVIJ8FFgbn72KlNdEQFC5PNb7ThFHfvSvbqCGv/bSbxr
+         roW8M3kJHr6H+6nrtogLSdFvG84KoL9JlD9o3PNYLAI4OwxGO1BTBTlFQRerGMBxm96F
+         OPfx7V0DHMQ69nVG7TjWfiWScm8gdgsgMixWuS5Ip+oTsTAF8wpysWAql62im+UyL99t
+         SXj+IJbdEmMuPWpcg6CR/wLi61Jl2tMujhqjaHYTFADuxonuEl7MY2/IBltL6WgMRFkp
+         oxwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746738839; x=1747343639;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IbSEs5i9JI6kyVWaKILrcS+cPrKL+TnrdLE+teJclrk=;
-        b=L9rbu/e0THHmliE4hRMpilj9DTTyTJUB3IaV+GYtAC6F3XjxMHgx0/7HoudDnw2Z4G
-         F4Rv3aUpUxrcCH8N6AKOXtPfXHH83uADAhwAtUIgBg8THtezC6ulbketZT21n7Pm0eqZ
-         hdmGVfm7AU7i2ycZk1+97FOHCBip6JfeBuJo3KnAimhAAadZcUwIioNGc7rWlVa0/rkJ
-         a4D+hJ50NXt0OM3PRS766PXpA1HeljpByfxEOp1gEt/cLBIVWtBAmhBM42e2NEWw5e3K
-         9RnmWsp6LdfGxpWqTL70vWoRXE9YS41RgMmrGYOKdrzBV9laricV1ioRIi3pH7a1gOWE
-         CDfg==
-X-Forwarded-Encrypted: i=1; AJvYcCVDpDqGGveAHxbL7K5H2aHfKWJYdcPOB41Tb4KhkpHfz6ChWuuUs9Lp/+dRA466fCNvEREODrh4EuNRfEA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXKzhRBQfJ/BykaoRwv+Bj7admhJnw/pB5TO7dBQA01CNxJAtf
-	BEwU29mrsNnIDolXGsQx4ojrkAhTQyWUYhcJ1xF6IQrBDjM8oHfHptfItc7+dWE=
-X-Gm-Gg: ASbGncsV78cbMVuA8fW4LG9V7L9WvJFFnXsslouyylqhb0tuqxfCpTRFgUBKhv+YxYP
-	EDSHp5UWWcVAZqurMY3BHzDetowgVt7cqOYsvKAt+uZxKMtBOGSCaB6zsrYtdjkxwJ/ntD4L0YM
-	H4zFit9kuO/eqRl4NlEsozC9DIMl3jkSCFHCTYBMaU5elHMUAwrMSed2LoVTKnnhPVii8T8m/Ss
-	msVP8GaPmE6PKYR58zQJbDjV/tMop+mpNIq2bX0E54ANu8r1j0zHohFc+ETZjWUxG9OAOX+zcYx
-	baUtyna8YNvRRjqZb2YjFG7SMmuh/9D16oM2qnk=
-X-Google-Smtp-Source: AGHT+IFNfVRGOCDTGD5f7kzrdDnm/pknN1mDWYFshHPxof/afMsFf7sZViFjDfUmWlKz4iK4AuBqPg==
-X-Received: by 2002:a05:622a:5518:b0:478:f76c:191d with SMTP id d75a77b69052e-494527f4418mr16695871cf.52.1746738839059;
-        Thu, 08 May 2025 14:13:59 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-494524bbc53sm3172241cf.47.2025.05.08.14.13.58
+        d=1e100.net; s=20230601; t=1746738918; x=1747343718;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V+wsUkJO0RztPZsvUmHBVaL2bfuw9bYNlaeajMcqcC8=;
+        b=XJ7PKPCJ57fAy1vUFAu/TT2K/CMSkjrK9qap5JqSZdCO9knLgfwiTMEsJU2mdlRp4F
+         BcOVuz7j7ivbr/ijJdq3n9EzsqhKUF/mc1P39XVhxIOCajvVl5EQWFoZUpJNzdyzFPXg
+         nqyhMHTyvj3HYmKJQ3ine5WBlVcQCf4/hc/qmTZkUcNjysoDflLS4CzyLnvMnRG7YjgY
+         iLo9aJdXmNUF81ICSPtzdF4s9PpxhgO4byQRlLKegWIHmk59ilriXgo4Wbbg3hCi+ZDT
+         P5IlYfSWaD3wOcugFbGbjbKkz8ef8W/xx0FtW+j20Kh6SOhczUjgRxX393QL+Mt3ablc
+         Md3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVBLk+3kWMvpEMEUGXxmfy19KiWzU0m4FzKlJEtf/hwiPV7cpHwN40IEoCQ7plM1evLWhe/zL7SFCUinHU=@vger.kernel.org, AJvYcCVxGbRH9nFpRm2/mBEIAqTfr+j0S0sq/byZIMJWZCHmz7ZIug2Jy9IIXyUr0fjohOMEc54Ocl61pueysRE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzhn3+u1oYr6nKqXlluQF4q4Xn0U8dShOi3YbYq73eA2bnbEMnl
+	XbsWYr5ObIJlGqJxySNHP/h7DjlZ71Tl9gUP0k0QtQRFkuoaLwtq
+X-Gm-Gg: ASbGnctGaSu8mWXMTjAqwBuJi9VXZKzq1jEpU+cIIfVIFF8CBf776JqSd8mVrLlV/Ze
+	Z/EJG9JuFk/9F5eS41xdQBlffYPB8MnfLZ/qrxcvgY0V4Vr4XvahLVv70X37RSBn2jBeNY8mALY
+	Qx8NeIbraexkHPTN1+zVaCLwkGnQIoGRTm7Vf0CodBjo00wB2kItDyP2NeOR+7U1bzdpFFaaTAF
+	8Z6b92DA+y2wN9zTaE0ZaP6itZ9DZlK4SlqFxoR3f9uqvlmAfo+5MQPXvQn2uImGQOV1JLj+32q
+	l2x4I7mPKhXYPytYSmbYrStTDFb10C85NE+U/MHWZdHxqBlMtj0Klvtc6CxWsMpShCFKUzPw2Zb
+	dqLVQtPCJjciy1RHtDk1KplPX2ZKLZqxj
+X-Google-Smtp-Source: AGHT+IFBBjd15su7QJAfzUcRdW8vPL4Y86zFld115UOnPwje+OXBJGVcsmNAIIOFAqvCs1kpRz3GVQ==
+X-Received: by 2002:a05:6000:144e:b0:3a0:b979:4e7c with SMTP id ffacd0b85a97d-3a1f643a4bbmr796911f8f.3.1746738917948;
+        Thu, 08 May 2025 14:15:17 -0700 (PDT)
+Received: from localhost (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a1f5a4cc2esm1062784f8f.90.2025.05.08.14.15.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 14:13:58 -0700 (PDT)
-Date: Thu, 8 May 2025 17:13:57 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Zi Yan <ziy@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Richard Chang <richardycc@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] mm/page_isolation: make page isolation a
- standalone bit.
-Message-ID: <20250508211357.GE323143@cmpxchg.org>
-References: <20250507211059.2211628-1-ziy@nvidia.com>
- <20250507211059.2211628-2-ziy@nvidia.com>
- <50BB00FF-746E-4623-8F48-F74209EDBD0A@nvidia.com>
+        Thu, 08 May 2025 14:15:16 -0700 (PDT)
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Tomasz Maciej Nowak <tmn505@gmail.com>,
+	Aaron Kling <webgeek1234@gmail.com>
+Cc: devicetree@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: tegra: Add uartd serial alias for Jetson TX1 module
+Date: Thu,  8 May 2025 23:15:13 +0200
+Message-ID: <174673890827.1569748.754360952735325946.b4-ty@nvidia.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250420-tx1-bt-v1-1-153cba105a4e@gmail.com>
+References: <20250420-tx1-bt-v1-1-153cba105a4e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <50BB00FF-746E-4623-8F48-F74209EDBD0A@nvidia.com>
 
-On Thu, May 08, 2025 at 04:22:43PM -0400, Zi Yan wrote:
-> On 7 May 2025, at 17:10, Zi Yan wrote:
+From: Thierry Reding <treding@nvidia.com>
+
+
+On Sun, 20 Apr 2025 09:35:37 -0500, Aaron Kling wrote:
+> If a serial-tegra interface does not have an alias, the driver fails to
+> probe with an error:
+> serial-tegra 70006300.serial: failed to get alias id, errno -19
+> This prevents the bluetooth device from being accessible.
 > 
-> > During page isolation, the original migratetype is overwritten, since
-> > MIGRATE_* are enums and stored in pageblock bitmaps. Change
-> > MIGRATE_ISOLATE to be stored a standalone bit, PB_migrate_isolate, like
-> > PB_migrate_skip, so that migratetype is not lost during pageblock
-> > isolation. pageblock bits needs to be word aligned, so expand
-> > the number of pageblock bits from 4 to 8 and make PB_migrate_isolate bit 7.
-> >
-> > Signed-off-by: Zi Yan <ziy@nvidia.com>
-
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-
-> > ---
-> >  include/linux/mmzone.h          | 17 ++++++++++----
-> >  include/linux/page-isolation.h  |  2 +-
-> >  include/linux/pageblock-flags.h | 33 +++++++++++++++++++++++++-
-> >  mm/page_alloc.c                 | 41 ++++++++++++++++++++++++++++++++-
-> >  4 files changed, 86 insertions(+), 7 deletions(-)
-> >
 > 
-> Here is the fixup 1/3 to address Johannes’ comments.
 
-Thanks!
+Applied, thanks!
 
+[1/1] arm64: tegra: Add uartd serial alias for Jetson TX1 module
+      commit: dfb25484bd73c8590954ead6fd58a1587ba3bbc5
+
+Best regards,
+-- 
+Thierry Reding <treding@nvidia.com>
