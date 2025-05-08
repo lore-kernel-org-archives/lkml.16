@@ -1,64 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D724B1E6F;
-	Thu,  8 May 2025 19:55:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB79328AB07;
+	Thu,  8 May 2025 19:55:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746734120; cv=none; b=AF3K7lmu4rz5M7AAka/GdharfvbZPOkaK6OealeaN9xAruR2eLEFr9BlVAOFa0aiYi4QmLGSBUjPKe9FzWyS6BD9tg3tqn7yDXQCSZcRaxO0uM4IfhuoC7Ny+nfuIz25R/QE91rvLcAVnyeT/zoGLk0VH8wihH0Vegl/BOC/IEA=
+	t=1746734122; cv=none; b=soZ6B6Y98CrjoU5lLJoHaGWuO1bKGClnCOh0v+buqVbN4tR046+kAXPgwQpuRv3WayBUP4cri4AMD7Oq0rTh986bgSmadIFwzCdZ0eRtO5bIV4K3wyE0IEGiKMHF7syEyUBxImpLVeThPHVbAjeqh10dO/BXTYXE5B/2ms9WzmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746734120; c=relaxed/simple;
-	bh=13iEzxWM4z9JT0NJ+Z6kURwn94j/7kg8rJor7rNdHR8=;
+	s=arc-20240116; t=1746734122; c=relaxed/simple;
+	bh=CK0t9cJNPiohA7U6VrTawN2ImWwY9f5GAj6+i9bjzNc=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=lvbx8GbhgoNK8IUXKEXl7oPA9/5XYg95PlwZiJrvEo+Nl6TCxoUDpA6Hm8oWbUEJB13Fn2yTY2lv1a1FeYrUkcDZyo6K6L0QdvG4YedFHIiUXMbxqWsbMErn4i1rzKt9kkneCpyon5sIKKcttN3nUyNVY4h3R/A+pBxN9Q8+Ocg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Mr5JufV5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7vh3FqmX; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=vGTM3OSbFIuGH7+TUtUzkvkflZ5d3N9A45ehEZ1YO/Z4XZ32kCaXYD7ARNhHOtgn3kJMnk0HL30b+Tk80dNNk9NH68ZNIJdcbtcP5/P/0EReY4Fb0ciOdpZljWiYZ51BYZDLm2OuHvZ/R1GDv9bP9gNBju41v8B0qiDCY77Fe8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Nes9HDFV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cNV8yMgH; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Mr5JufV5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7vh3FqmX"
-Date: Thu, 08 May 2025 19:55:16 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Nes9HDFV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cNV8yMgH"
+Date: Thu, 08 May 2025 19:55:18 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746734117;
+	s=2020; t=1746734119;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w5ae7IWeE5KoZBrMZYVK4cxIgEHfYDQES88MaJUUJrg=;
-	b=Mr5JufV5ih1xSCE6FGpEe7lDn5x2Yxm3GfYsFNZKj2k3LT3OLlFoWD98BLhG4Mf487juVJ
-	Z7CD+et06KumiLSZM1L/EDiQ5IA5y9Fqcc6MQEcuibuTQHyfTGAOGVzEkz/J+fsO1y02lu
-	5my7mtMQAAlOr9/4zhGifU34onXs5C8uMuxDnJsvHTC1D5TkTAzbYJtQKTXwo+aIO6mn45
-	Q68Ul37u3r5Dmo5H7vMgRB2riBpBxRRarbeuHiauU2jXSr7SP8t2HaQAgeqgGvGWeJ9WDN
-	BWtj3yqKVn/Ecrsn7o170BbHA8qCrJDz+gSXR82RU1Nd+N/d+uOt8d8M2vXUSQ==
+	bh=siNDSESzLlnGOv9tiEV7pGvjDx2pwY3p8vKTGiSB9tE=;
+	b=Nes9HDFVrkWfnrG1nhCcIb0fsw30xhEVYJFQCkq+a2nishHDQMd8XqbR+tkejAqdweif/P
+	9vXj7Neyzg2J8PIUnn1PCQG+vX0ekNTxFjY3MWqfLJ5nWqMBA04CzoS0PZFCLboeRLYf9h
+	OT4KKC/akOQRLu2rdsB53M+fhSpEQRUx/kZJRgNfGIBGvWU/6XngusJqbUac5A+e4vSF5L
+	re65zSkLdAb/809r0/vK5FnrbFh5sZVDI1M5TFNqWIe2EXBVmEfb+KPK58KJol9UF8wPfM
+	F9OUnicetyZCGjedHblwEXBGeZAVY3wD4VqsjSZFIyenDVjyML7NLvxnU1bNIQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746734117;
+	s=2020e; t=1746734119;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w5ae7IWeE5KoZBrMZYVK4cxIgEHfYDQES88MaJUUJrg=;
-	b=7vh3FqmXVJ+O4Ho+ojJK3iA5IK3zgWnjUHHFVxb8QV+VfwSoHvxy8qjlfh3yELcn0yhqCp
-	dwRHUXEp6VsogrAQ==
+	bh=siNDSESzLlnGOv9tiEV7pGvjDx2pwY3p8vKTGiSB9tE=;
+	b=cNV8yMgHCNQdqPtEGYpZWBRna0RJrPdmYhlzYMpuEkgD/dMC6l8Luc6yEcxIJrWBNvTE56
+	9tAhR9CO+X+zd4Dg==
 From: "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: perf/core] perf: Remove too early and redundant CPU hotplug handling
+Subject: [tip: perf/core] perf: Fix failing inherit_event() doing extra
+ refcount decrement on parent
 Cc: Frederic Weisbecker <frederic@kernel.org>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250424161128.29176-4-frederic@kernel.org>
-References: <20250424161128.29176-4-frederic@kernel.org>
+In-Reply-To: <20250424161128.29176-2-frederic@kernel.org>
+References: <20250424161128.29176-2-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174673411659.406.17891868589817143242.tip-bot2@tip-bot2>
+Message-ID: <174673411813.406.11065501391492821247.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,70 +68,77 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     f400565faa50737ac1d550d2c75128c0dad75765
-Gitweb:        https://git.kernel.org/tip/f400565faa50737ac1d550d2c75128c0dad75765
+Commit-ID:     22d38babb3adcb1227ecfb91d9423008a46548fe
+Gitweb:        https://git.kernel.org/tip/22d38babb3adcb1227ecfb91d9423008a46548fe
 Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Thu, 24 Apr 2025 18:11:27 +02:00
+AuthorDate:    Thu, 24 Apr 2025 18:11:25 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 08 May 2025 21:50:19 +02:00
+CommitterDate: Thu, 08 May 2025 21:50:18 +02:00
 
-perf: Remove too early and redundant CPU hotplug handling
+perf: Fix failing inherit_event() doing extra refcount decrement on parent
 
-The CPU hotplug handlers are called twice: at prepare and online stage.
+When inherit_event() fails after the child allocation but before the
+parent refcount has been incremented, calling put_event() wrongly
+decrements the reference to the parent, risking to free it too early.
 
-Their role is to:
+Also pmu_get_event() can't be holding a reference to the child
+concurrently at this point since it is under pmus_srcu critical section.
 
-1) Enable/disable a CPU context. This is irrelevant and even buggy at
-   the prepare stage because the CPU is still offline. On early
-   secondary CPU up, creating an event attached to that CPU might
-   silently fail because the CPU context is observed as online but the
-   context installation's IPI failure is ignored.
+Fix it with restoring the deleted free_event() function and call it on
+the failing child in order to free it directly under the verified
+assumption that its refcount is only 1. The refcount to the parent is
+then voluntarily omitted.
 
-2) Update the scope cpumasks and re-migrate the events accordingly in
-   the CPU down case. This is irrelevant at the prepare stage.
-
-3) Remove the events attached to the context of the offlining CPU. It
-   even uses an (unnecessary) IPI for it. This is also irrelevant at the
-   prepare stage.
-
-Also none of the *_PREPARE and *_STARTING architecture perf related CPU
-hotplug callbacks rely on CPUHP_PERF_PREPARE.
-
-CPUHP_AP_PERF_ONLINE is enough and the right place to perform the work.
-
+Fixes: da916e96e2de ("perf: Make perf_pmu_unregister() useable")
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20250424161128.29176-4-frederic@kernel.org
+Link: https://lkml.kernel.org/r/20250424161128.29176-2-frederic@kernel.org
 ---
- include/linux/cpuhotplug.h | 1 -
- kernel/cpu.c               | 5 -----
- 2 files changed, 6 deletions(-)
+ kernel/events/core.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 1987400..df366ee 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -60,7 +60,6 @@ enum cpuhp_state {
- 	/* PREPARE section invoked on a control CPU */
- 	CPUHP_OFFLINE = 0,
- 	CPUHP_CREATE_THREADS,
--	CPUHP_PERF_PREPARE,
- 	CPUHP_PERF_X86_PREPARE,
- 	CPUHP_PERF_X86_AMD_UNCORE_PREP,
- 	CPUHP_PERF_POWER,
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index b08bb34..a59e009 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -2069,11 +2069,6 @@ static struct cpuhp_step cpuhp_hp_states[] = {
- 		.teardown.single	= NULL,
- 		.cant_stop		= true,
- 	},
--	[CPUHP_PERF_PREPARE] = {
--		.name			= "perf:prepare",
--		.startup.single		= perf_event_init_cpu,
--		.teardown.single	= perf_event_exit_cpu,
--	},
- 	[CPUHP_RANDOM_PREPARE] = {
- 		.name			= "random:prepare",
- 		.startup.single		= random_prepare_cpu,
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 05136e8..882db7b 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5628,6 +5628,22 @@ static void _free_event(struct perf_event *event)
+ }
+ 
+ /*
++ * Used to free events which have a known refcount of 1, such as in error paths
++ * of inherited events.
++ */
++static void free_event(struct perf_event *event)
++{
++	if (WARN(atomic_long_cmpxchg(&event->refcount, 1, 0) != 1,
++				     "unexpected event refcount: %ld; ptr=%p\n",
++				     atomic_long_read(&event->refcount), event)) {
++		/* leak to avoid use-after-free */
++		return;
++	}
++
++	_free_event(event);
++}
++
++/*
+  * Remove user event from the owner task.
+  */
+ static void perf_remove_from_owner(struct perf_event *event)
+@@ -14184,7 +14200,7 @@ inherit_event(struct perf_event *parent_event,
+ 
+ 	pmu_ctx = find_get_pmu_context(child_event->pmu, child_ctx, child_event);
+ 	if (IS_ERR(pmu_ctx)) {
+-		put_event(child_event);
++		free_event(child_event);
+ 		return ERR_CAST(pmu_ctx);
+ 	}
+ 	child_event->pmu_ctx = pmu_ctx;
+@@ -14199,7 +14215,7 @@ inherit_event(struct perf_event *parent_event,
+ 	if (is_orphaned_event(parent_event) ||
+ 	    !atomic_long_inc_not_zero(&parent_event->refcount)) {
+ 		mutex_unlock(&parent_event->child_mutex);
+-		put_event(child_event);
++		free_event(child_event);
+ 		return NULL;
+ 	}
+ 
