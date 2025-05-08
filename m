@@ -1,121 +1,121 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207DD35979
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 07:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED2FBA38;
+	Thu,  8 May 2025 07:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746688957; cv=none; b=OEvFIxO2XLEGwavrysq1tqcOJ1t6APHl1GnEzvdLZa7rd+QzPOFMKqo8IbDuanowhP4J38vLoAU2LGXmIgCNjEIt1OIHfj8xtE5yeqFcmz5ZQffkQ4wBorg7c2hUv2Qa5JkbQaxNFrTy5OZglMiIkWdXfJEXHxsglsDVLDvSypE=
+	t=1746689029; cv=none; b=b/G655T/Ihh+LD2EcAi2/bEogNS40VSnZc6w+QleiDkSQN5rcUkMu1O2DzIZrPI5dhO9k717Lc/nv6SQeq45aSD76reyIPA1i9bmb3r+FKDiivJtMowCAg6KSjGa1dI7dSgzUuiNznOUFolo+E/UWCWpWgQnsjmWa2NYwNx0owk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746688957; c=relaxed/simple;
-	bh=QGS1M/YT3mDdy/1Xp33jgSPbNLnApMgn9s4eyyzTfes=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dfxQX6gx25wgP2JHZdyaLXCbwsRh9gCGZuh+GLomdBvWWW2vRyp50yMyZXGLCgMx1WY3nEcr4PD1nx+rqDVNcOwC8OuwizHBsFDduKvUv1m54oJJ8V+GL3qgeAGWyxjqZ9YclVZPuL8ylBxqiwmOFePK1y1hpCKR8PnKBKYVCsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <sha@pengutronix.de>)
-	id 1uCvaK-00056O-C2; Thu, 08 May 2025 09:22:24 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <sha@pengutronix.de>)
-	id 1uCvaK-001ghe-00;
-	Thu, 08 May 2025 09:22:24 +0200
-Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <sha@pengutronix.de>)
-	id 1uCvaJ-00ALKC-2r;
-	Thu, 08 May 2025 09:22:23 +0200
-Date: Thu, 8 May 2025 09:22:23 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	kernel@pengutronix.de,
-	Alvin =?iso-8859-15?Q?=A6ipraga?= <alsi@bang-olufsen.dk>
-Subject: Re: [PATCH v4 2/3] dt-bindings: clock: add TI CDCE6214 binding
-Message-ID: <aBxbr8CyKmdZQobS@pengutronix.de>
-References: <20250430-clk-cdce6214-v4-0-9f15e7126ac6@pengutronix.de>
- <20250430-clk-cdce6214-v4-2-9f15e7126ac6@pengutronix.de>
- <3ba53493700561923c4ea9ab53a1a272@kernel.org>
- <aBsUObKHmJkBFN04@pengutronix.de>
- <1f072e2e02bb6a66d10c50177e5c69a6@kernel.org>
+	s=arc-20240116; t=1746689029; c=relaxed/simple;
+	bh=x6UYtviapPHf1R3zc4RWuyiNLIffWNkfuKVrmU838lA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iIDwflQomRX5TOop5sY/jtjnQzwzMzhtrpCouCu8n/Nu+y8eeP9TFyOoTj5A50cmi6sooQLJnpECjIBLo8mMxsQ4yZtXtjIorxrWFuWXcT+z27ZEmjvGRouatc99LSk2sqp+hLh2YAHuODidOpMmnu6Zb8OUsCJOx29K6VUxKW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-524125f6cadso432681e0c.2;
+        Thu, 08 May 2025 00:23:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746689024; x=1747293824;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MC2q4Bvc/SNvLt3WT4WF7kVWRNYt1yaE/Dlb0P0YraY=;
+        b=oMCKLef6x6sP9TxIrpvgMGH1kOFj/9XC6H+DOvO7nITMnr34xuM7VcxBwGl6SCHGhg
+         gysQ+E9I2+bNwqn4jBac/8EnJDktOqDh9oXkwBVdhASOpgffM6JfDTX9ROtTdRUh+6D3
+         Id4hQSHgmVXCw4gRRQ72gHOmqn3LXEVxg6v3SvMR5fFvPvuuILm275M1E8+k/bFW3Hjv
+         lQ0g8HpHPAx+H6Bl+dd9Ukw8rbaxn2g2wvkcJpUQi0OTL8nGdHuOEVZqkVjyRAq1M7XM
+         tOzTc8nu2WeWbEYrrh02gNxuKyrQ5+7OL/cNdXAkr1tGaP5dSVwTlBVOWWMxAurN64i6
+         cWUg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/xmMbjArWFH1dlH+mupouu6T0Azft0ts/THoB6GwDgIqtkPXlEj97nah+Kk6jnFDNOsogNEF9U1Sp@vger.kernel.org, AJvYcCWoTQxOlnL7avznIaAJ3y3wZJJEW/Hb9Sabi0Nx62EpQmYi2anZLd7V5DaJlUmkXJwoUTjRBRQDZJnM1blU9TRn@vger.kernel.org, AJvYcCXYfdE031Mgtsu8L5iUdk7/Q0caQviEweXJkovUI4d2bRjUqKpqWqQtcTAvZJT7Rm+MGEAHIFcxIY3K/cOz@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzHvU4il43soVKbzyENHTAX+NIY5XeRwwls23MXffxoJym6qp9
+	V9tMJzZqyXEnnZyzafk1pP80OVsaB4soDo5BT2+t1Mr/yJ+Rjd+v7jMJWYbn
+X-Gm-Gg: ASbGncvjNJpf6rJvro9HJxuy8dULZ+s6pE6fEN70NeZLPFeH+M9VQ8DfbuYCaBl9DLs
+	MRRQHePXH22nMKdLzej4r4KLbdGiMMhr9AqOjjmnR7kHc83j2ta97MV7VVMcGoqJ//79XN7ZY5J
+	TQmKD/sUsKRofGR4CFXuieXRh2MPxBNhu39dDYOqbPb0MTPChEwB/rDc89XaedZUV4MzHMjpwvi
+	a3Pcx4p9Wn2KOEDKOTdweruPi9RIRnA+k/Ps35uVKn3HNwtKeSYlH/W35PchTMUC6uwiuecw5LW
+	pepcoVn+aMfk9zThBGCvS+FP8aI47uGXpfSLH0AV9wl3UIXADzWjvyVYH9P4kUz0JYWcVsQr0Lf
+	a4zFQVm/f/Oul1XzCJw==
+X-Google-Smtp-Source: AGHT+IHuokG2RC5Fv6TahnJCCJ3Z9qTn5AZBW04hh4g23AvNpmq4xUYyxNAlyhJf8igSO6ewt5sX1Q==
+X-Received: by 2002:a05:6122:2a08:b0:52a:863f:78dd with SMTP id 71dfb90a1353d-52c441a450fmr1774518e0c.6.1746689024601;
+        Thu, 08 May 2025 00:23:44 -0700 (PDT)
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com. [209.85.221.169])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52ae419d6b0sm2863925e0c.38.2025.05.08.00.23.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 00:23:42 -0700 (PDT)
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-524125f6cadso432617e0c.2;
+        Thu, 08 May 2025 00:23:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVOQHqRto+iztrQQOmqFptZ7JT42Q7el8U3luXn0yveMpo12nEAE/7Xz5bMRRr0pHWyJN2AUS6URPDmL7cP@vger.kernel.org, AJvYcCWAWEMGr4KYxu1Qq4vOy3uos1Eca/0TgIc+gFIDfmXaKpcAQNFKyohnGiPF2m8pxmNoIZ4EuD40ZctF@vger.kernel.org, AJvYcCWSQmvVsXSJo7g8bKP/YEd5aIq6oY7Qmfua4bTBALz7fxalM+VJsPF4l/S/2JrvWusw7VIp7S8cPJUeelnMdv9s@vger.kernel.org
+X-Received: by 2002:a05:6102:3348:b0:4c3:6544:c250 with SMTP id
+ ada2fe7eead31-4ddad0cd585mr2181667137.23.1746689021878; Thu, 08 May 2025
+ 00:23:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1f072e2e02bb6a66d10c50177e5c69a6@kernel.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
+ <20250506-aaeon-up-board-pinctrl-support-v5-8-3906529757d2@bootlin.com>
+ <CAHp75VdRp7RG-YCAL2Jx4uXsT2RVQNeu-MxPB5pWRq8TqtsSXw@mail.gmail.com>
+ <cb98bec7-748c-4e00-aa9f-b5075bebb5b2@bootlin.com> <CAHp75Ve_oM6NyvLGsBK4CddEEv=cafw_VfONKwEBX2CBdNxJmA@mail.gmail.com>
+ <CAHp75VeBBG-2OZ6fDDJMdZ=SGZRWyaL71nTXaHx7Pyr1PLME2w@mail.gmail.com>
+In-Reply-To: <CAHp75VeBBG-2OZ6fDDJMdZ=SGZRWyaL71nTXaHx7Pyr1PLME2w@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 8 May 2025 09:23:30 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXJ+XLuVqnTVYX20Zjzt9gzAtE5w7nkZ3agaxjQ_cPwmA@mail.gmail.com>
+X-Gm-Features: ATxdqUG9aTueYzZzMECN6trZGp_ApPNLbA9m42YvM6OF-IADrHcQH0Bzu4semJ0
+Message-ID: <CAMuHMdXJ+XLuVqnTVYX20Zjzt9gzAtE5w7nkZ3agaxjQ_cPwmA@mail.gmail.com>
+Subject: Re: [PATCH v5 08/12] gpio: aggregator: export symbols of the GPIO
+ forwarder library
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Thomas Richard <thomas.richard@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 07, 2025 at 01:11:31PM -0700, Stephen Boyd wrote:
-> Quoting Sascha Hauer (2025-05-07 01:05:13)
-> > On Mon, May 05, 2025 at 10:50:49AM -0700, Stephen Boyd wrote:
-> > > Quoting Sascha Hauer (2025-04-30 02:01:35)
-> > > > diff --git a/Documentation/devicetree/bindings/clock/ti,cdce6214.yaml b/Documentation/devicetree/bindings/clock/ti,cdce6214.yaml
-> > > > new file mode 100644
-> > > > index 0000000000000..d4a3a3df9ceb9
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/clock/ti,cdce6214.yaml
-> > > > @@ -0,0 +1,155 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > +
-> > > > +patternProperties:
-> > > > +  '^clk@[0-1]$':
-> > > > +    type: object
-> > > > +    description:
-> > > > +      optional child node that can be used to specify input pin parameters. The reg
-> > > > +      properties match the CDCE6214_CLK_* defines.
-> > > 
-> > > Presumably the EEPROM is typically used to configure all this stuff? Do
-> > > you actually need to program this from the kernel, or are you
-> > > implementing all this for development purposes?
-> > 
-> > The EEPROM could be used to configure this. I don't know if the final
-> > product will have the EEPROM programmed, but even if it is, should we
-> > make this mandatory?
-> 
-> No I'm not asking about making the property/node required. I'm wondering
-> if you're actually using these bindings. If they're not used then I
-> worry we're putting a bunch of configuration in here that we'll never
-> use.
+Hi Andy,
 
-At the moment we are using the device tree binding. I asked our customer if
-they plan to use it in production as well.
+On Wed, 7 May 2025 at 17:23, Andy Shevchenko <andy.shevchenko@gmail.com> wr=
+ote:
+> On Wed, May 7, 2025 at 6:21=E2=80=AFPM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Wed, May 7, 2025 at 5:53=E2=80=AFPM Thomas Richard
+> > <thomas.richard@bootlin.com> wrote:
+> > > On 5/7/25 08:29, Andy Shevchenko wrote:
+>
+> ...
+>
+> > > >> + * gpio_fwd_gpio_add - Add a GPIO in the forwarder
+> > > >
+> > > > forwarder
+> > >
+> > > Sorry I do not see the typo :)
+> >
+> > Your original piece of the code. Please look better.
+>
+> Ah, it was probably me mistakenly fixing the original text :-) It has
+> a typo there.
 
-> 
-> > 
-> > Speaking of the EEPROM I think we should make sure that the pin
-> > configuration in the device tree is optional so that we do not overwrite
-> > settings from the EEPROM if it contains valid values.
-> 
-> Ok. Aren't the pinctrl settings already optional?
+Gmail suggests correcting typos in your emails while you type them,
+even in quoted parts, and you may have inadvertently accepted the
+suggestion.  I've been bitten by that, too :-(
 
-Yes, they are, but when the pin setup is missing I haven't explicitly taken
-care to not overwrite any settings made by the EEPROM. Likely the driver
-just does it right. Without pin setup the registers are just not
-touched.
+Gr{oetje,eeting}s,
 
-Sascha
+                        Geert
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
