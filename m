@@ -1,110 +1,187 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from e240-7.smtp-out.eu-north-1.amazonses.com (e240-7.smtp-out.eu-north-1.amazonses.com [23.251.240.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CFF22577D
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C984F22B8B0;
+	Thu,  8 May 2025 13:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746710907; cv=none; b=R7qscljo3SKAVi9rgyB1kk7ii1/ojWgAJ0nXIkODM18Hsx27rif0BOjvihpRCTo/PoA08jY7GN9I1DFsaQDS4DWT6njZ5bCkEdESc1uNfB2pdnDbuXL95n7LdfnDF3yBscAuET3NmJKRCZZaAvv++QQRdd9976RNiZwlxk+dLh4=
+	t=1746710926; cv=none; b=HdKTm+2RaF755bltO+9f8Vv2SoXWZZ0BfuHNsd5R5nrJNEcu9P7qgbk/uPc11uriLQwitk1putWgXYC3fa9NoM4qmP02yGHUgL+Q6Ljn27gvIhSWriZmmBbMX6B7mxIsS3TwcAvRBdOtExS788sPwhLMOqra00wWW4jLCPucDcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746710907; c=relaxed/simple;
-	bh=+L4RShj5f5vWujBc4hl7X7bkL3O1PyKno5T0QURiKrc=;
+	s=arc-20240116; t=1746710926; c=relaxed/simple;
+	bh=LQLMHViaAuulEUk9EIvBIfDrzzlTpwuQK+oYnrSNoOI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RTOShaLR//ldTKtKNs3JJwMcngS6jhSxX9N6SmenWM2crhuyyqY+Le6jMLfB1daLnpi6K9S1W0ytHdIuENZvfVxNU1drenjsX9XZuDvccl8rXvgQ/f8hDqDGBJxaEteaBqcln2ARFtKCp0O5M9rIGuwaz9wO/Qsft5jcYiwGU9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com; spf=pass smtp.mailfrom=ciq.com; dkim=pass (2048-bit key) header.d=ciq.com header.i=@ciq.com header.b=pRWh7vZu; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ciq.com
+	 To:Cc:Content-Type; b=nS1sUxwpCu/wJkE0Nf3AIRMconbPdYvD2DAamjQ5bg3Ye8NH19Ror6mZOfyuhHKNCOlO3YvBJSzemLLj5HCEEBErq9q/4i2X6Ha/1QEIqL8bXMdGfVKwbbHX5EzRFDGiDpUrcseqX44/XIbI738GAX1RsM5r6uhav3AF3SooUp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=aPoqFINc; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=tn8u8XxC; arc=none smtp.client-ip=23.251.240.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ciq.com header.i=@ciq.com header.b="pRWh7vZu"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c7913bab2cso103817685a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 06:28:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ciq.com; s=s1; t=1746710904; x=1747315704; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W6+F7sC4lq7A9uwyyHv0JUmrfUrtoSWQI2+38pjZK+0=;
-        b=pRWh7vZuRyAPVq0mf295rzpaLpKDMLH1+ZQ8fyMKVbUA1y2oPiQlBRuob790LXYM2U
-         K1ryBNP9xI8VEKxGUaFYoU90Lqs9meCEEwslxwmmArPCrbwS1ujYEkGqI+hLNrJp8Z6U
-         rbP21HBX3Y7CQnkzvUT8LjU2TwATdTVPJaVS356UeHuBJAnuhy934Jft2JlhCcF04jF1
-         wpusVOMDvk87g9zKMz6LfPqQ/ncuCgXT0et6cVhwsA+JePI/T7oJdcZdwlveMloIyli9
-         IU4zsOJsIMt07875q2xGPyDDZRUcPkaz/exVWfLXKSu752n9GPT5Q1n7VXUVjUJJsyqI
-         zJ9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746710904; x=1747315704;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W6+F7sC4lq7A9uwyyHv0JUmrfUrtoSWQI2+38pjZK+0=;
-        b=tvLqkPji0noKN91zO4OoQXP5Dyyt6PmOxpgMm/O/PlhC7RROEuJFaFEpzP2nHOiWnj
-         +kKBD1ZnmzS/1TZs6GbMBWZuudbYkdWCCOma6ICJHJhrkiHVSAJUaaiiMTKR1N9TjdbJ
-         iGWKGc4+dI9HAWv4fSU+8ZIRpylXyd9vT6pFWfGaVliMEW3Cjn4je1zeZxPnhVPmhp7s
-         4lIpRWyklabPaqUDEa0/cZHIZX4oS4qzcYPTBMwP3i7z/Azq9CM6jQEGzgUNlGj87XpU
-         mTnOxsV1y1aszBJpKubtfE430CJHYcH1gFOmksiSVr5cYX6OIjuksCgiGLIfN6mr1url
-         uH9w==
-X-Forwarded-Encrypted: i=1; AJvYcCULuDY36oe8UySHehgoA7ThFTw0EkaYUHKayXgDkT2TsBJSkUM/9oW1HB7mkO6mb0cLaCVRZSiIOluxXc8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbReGYq/lb8BsVeKSqzf47HE9oXaHqJCfdDxwNhdPZr+Kilbvt
-	smFFDK6nNhp+rKvfu+vumTPe9VtD7yNeqHj6MK/YJo0/7ZSdk4HzQ7Z0MohwMlqBysXZhIiTU5u
-	CuTdpgDy5D4JcLsRZO/0vMfQHTApFUEU8k1ey6g==
-X-Gm-Gg: ASbGncs4OVvps5gVVhR+d19SWdlOevsykfKRoULXvdcVbEuKH5hu8oSgRij9H+rep6N
-	qSiArKdHkup01wsQqRM/17t+/gTWLliK0VALD1aaPi0XdOlQxb9qBVrX+iLsruEOYef+LO5eddR
-	8w1P8ujzRMvnG6Bd1KdOXLcw==
-X-Google-Smtp-Source: AGHT+IFAm5bd005VyseIS1dr9F6a/JBOZzKDKZuZ1gmuo0nUeW1bL4XJmAQifXGpoCCjFyCVBzgF3f33AxU4Tq3X+YE=
-X-Received: by 2002:a05:620a:1985:b0:7c7:a554:e2a5 with SMTP id
- af79cd13be357-7caf7405679mr1060715285a.44.1746710904541; Thu, 08 May 2025
- 06:28:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="aPoqFINc";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="tn8u8XxC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1746710920;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=LQLMHViaAuulEUk9EIvBIfDrzzlTpwuQK+oYnrSNoOI=;
+	b=aPoqFINcP4KrsAYETd+SSurUH9hn/smdiwUZBFG0o3ieGYYi1OrOYIti8+P/a4IO
+	je+bdd5rsWgDWKZJPNcjesc56iLJ8SnOqUckPi/mDpkoUbSK6BWUODibQl6OYK6oIU0
+	nyFwXwx55GOdHu5NjkghuZYUIUUch/ealEQe/+vwyqMnjVzVJ0sa5qa4SIW9NZsWON5
+	jv1GR4eCweMFugetKw9g67jMS0eqBWGZPPR+PUzJTPG+dqfQHgDxA/TiHEVtgsDfwta
+	YslNKWBF6n8l8LrTWSzZZf1G48qK5DlRXUmqOwS1oHqsG58Xgo3g6G+M8DzsjyBrkGX
+	udahFIMUcw==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1746710920;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+	bh=LQLMHViaAuulEUk9EIvBIfDrzzlTpwuQK+oYnrSNoOI=;
+	b=tn8u8XxC+8dRICqcr7UJLSzk1I3ii0sEMIrQf2h+im3m0IKrUwXuPbWQJGlO05P6
+	DHr2p9g1T+uqeKZfmT6q3N0ATgWI5Y+hANf8dWnPBqgIXnG9VcvGxd7wlX81tLRaWMr
+	zllEE6Y6r8ZVVsL3dEajTZ6KlHfBselbMYf6xAsw=
+X-Forwarded-Encrypted: i=1; AJvYcCWLK5+RWEiYjgByhPXHQq2aJx2TEuOsMFwCMr1TsqcOUx0GQOmWsYM8GUDLS7OzaOB5Y3SAal8hIePJI3k=@vger.kernel.org, AJvYcCXz2fKeXTGCJVWBSLFU3w/VCI0HBgWDnyyDCfCxo9C5W6KCJn9O++RpF/u9IFzXRZ9vjXy2kw0R@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxglb2YG3daTo4IQGGUEEjD+VTxd3wIHK3cPkZ8GsEujIKfNTTG
+	ooxKHNzeNoxCSkC98EaKjGk+lTMXO8E47Ef5OgjTig8ipoYeXBrjE/jImeZ0FefWiyXJgqaZkBa
+	ctGOdtHQfV91NHmP4j98akCaaElw=
+X-Google-Smtp-Source: AGHT+IHJ1FIgIVjncNwpLeyC4o6xebiauozP9PnaHoQzAHFcmeeLukcE/U3qANsD4ArPdcs6EXK8pu6ipKVLNMP5tK4=
+X-Received: by 2002:a17:90b:4c08:b0:2ee:dd9b:e402 with SMTP id
+ 98e67ed59e1d1-30b32c3fa6amr5828892a91.12.1746710918354; Thu, 08 May 2025
+ 06:28:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507183820.781599563@linuxfoundation.org>
-In-Reply-To: <20250507183820.781599563@linuxfoundation.org>
-From: Brett Mastbergen <bmastbergen@ciq.com>
-Date: Thu, 8 May 2025 09:28:13 -0400
-X-Gm-Features: ATxdqUGQ979zRBf0y1uOq64HSCY88KmE0OF2th89NGdxTXyo1bgCaZ6VsUDVfCg
-Message-ID: <CAOBMUvigbAGXoCSVqCz0nZ+7Y9ausHqV01uY1Z6W1jgGJkQzzQ@mail.gmail.com>
-Subject: Re: [PATCH 6.12 000/164] 6.12.28-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
+References: <CADvZ6EoGrp9SCvkVKEV0i=NW-7XZmxbmZkmxd8TPFboPTAUF_g@mail.gmail.com>
+ <01100196af6a2181-4f17e5a7-799c-46cd-99f3-9393545834b1-000000@eu-north-1.amazonses.com>
+ <CADVnQykrenhejQCcsNE6JBsk3bE5_rNTeQe3izrZd9qp8zmkYg@mail.gmail.com>
+In-Reply-To: <CADVnQykrenhejQCcsNE6JBsk3bE5_rNTeQe3izrZd9qp8zmkYg@mail.gmail.com>
+From: Ozgur Kara <ozgur@goosey.org>
+Date: Thu, 8 May 2025 13:28:40 +0000
+X-Gmail-Original-Message-ID: <CADvZ6Ep7KeQb1BnBRGmqJ7D191LEDMg6CX2YLyX5QSDOQtDnpA@mail.gmail.com>
+X-Gm-Features: ATxdqUGmTyHUiyIUJ-kcDWXsIyC47YpMBwP19-9DSRD_Q40DUpjEE6LfqojGdLY
+Message-ID: <01100196b0157e76-acca71aa-f8d0-45b0-bb09-de38e1bfa341-000000@eu-north-1.amazonses.com>
+Subject: Re: [PATCH] net: ipv4: Fix destination address determination in flowi4_init_output
+To: Neal Cardwell <ncardwell@google.com>
+Cc: Ozgur Kara <ozgur@goosey.org>, Eric Dumazet <edumazet@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, 
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	netdev@vger.kernel.org, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
+X-SES-Outgoing: 2025.05.08-23.251.240.7
 
-On Wed, May 7, 2025 at 3:00=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Neal Cardwell <ncardwell@google.com>, 8 May 2025 Per, 15:54 tarihinde
+=C5=9Funu yazd=C4=B1:
 >
-> This is the start of the stable review cycle for the 6.12.28 release.
-> There are 164 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> On Thu, May 8, 2025 at 6:21=E2=80=AFAM Ozgur Kara <ozgur@goosey.org> wrot=
+e:
+> >
+> > From: Ozgur Karatas <ozgur@goosey.org>
+> >
+> > flowi4_init_output() function returns an argument and if opt->srr is
+> > true and opt->faddr is assigned to be checked before opt->faddr is
+> > used but if opt->srr seems to be true and opt->faddr is not set
+> > properly yet.
+> >
+> > opt itself will be an incompletely initialized struct and this access
+> > may cause a crash.
+> > * added daddr
+> > * like readability by passing a single daddr argument to
+> > flowi4_init_output() call.
+> >
+> > Signed-off-by: Ozgur Karatas <ozgur@goosey.org>
 >
-> Responses should be made by Fri, 09 May 2025 18:37:41 +0000.
-> Anything received after that time might be too late.
+> For bug fixes, please include a Fixes: footer; there are more details her=
+e:
+>    https://www.kernel.org/doc/html/v6.12/process/submitting-patches.html
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.12.28-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.12.y
-> and the diffstat can be found below.
+
+Hello Neal, I will pay attention to this sorry.
+
+> > ---
+> >  net/ipv4/syncookies.c | 14 +++++++++++++-
+> >  1 file changed, 13 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
+> > index 5459a78b9809..2ff92d512825 100644
+> > --- a/net/ipv4/syncookies.c
+> > +++ b/net/ipv4/syncookies.c
+> > @@ -408,6 +408,7 @@ struct sock *cookie_v4_check(struct sock *sk,
+> > struct sk_buff *skb)
+> >         struct flowi4 fl4;
+> >         struct rtable *rt;
+> >         __u8 rcv_wscale;
+> > +       __be32 daddr;
+> >         int full_space;
+> >         SKB_DR(reason);
+> >
+> > @@ -442,6 +443,17 @@ struct sock *cookie_v4_check(struct sock *sk,
+> > struct sk_buff *skb)
+> >                 goto out_free;
+> >         }
+> >
+> > +        /* Safely determine destination address considered SRR option.
+> > +         * The flowi4 destination address is derived from opt->faddr
+> > if opt->srr is set.
+> > +         * However IP options are not always present in the skb and
+> > accessing opt->faddr
+> > +         * without validating opt->optlen and opt->srr can lead to
+> > undefined behavior.
+> > +         */
+> > +        if (opt && opt->optlen && opt->srr) {
+> > +                daddr =3D opt->faddr;
+> > +        } else {
+> > +                daddr =3D ireq->ir_rmt_addr;
+> > +        }
 >
+> Can you please explain how opt could be NULL, given how it is
+> initialized, like this:
+>         struct ip_options *opt =3D &TCP_SKB_CB(skb)->header.h4.opt;
+> ?
+>
+> And can you please explain how opt->srr could be set if opt->optlen is
+> 0? I'm not seeing how it's possible, given how the
+> __ip_options_compile() code is structured. But perhaps I am missing
+> something.
+>
+
+The issue is more nuanced than opt being only NULL, while opt =3D
+&TCP_SKB_CB(skb)->header.h4.opt gives a valid pointer to a structure
+and the contents of that structure might be uninitialized or invalid
+in certain code paths.
+My patch adds defensive programming by checking three conditions
+before accessing opt->faddr: whether opt itself is valid, opt->optlen
+is non-zero and opt->srr is set.
+This prevents undefined behavior when accessing opt->faddr in cases
+where the structure's fields haven't been properly initialized.
+
+The previous code (opt->srr ? opt->faddr : ireq->ir_rmt_addr) assumed
+opt->srr was always valid, while the new code safely establishes daddr
+=3D ireq->ir_rmt_addr as the default, only using opt->faddr when all
+safety conditions are met.
+ However, the issue lies in the validity of the struct ip_options
+content, particularly opt->srr and opt->faddr. If the
+TCP_SKB_CB(skb)->header.h4.opt structure is uninitialized or reset
+(e.g., via memset or incomplete parsing), fields like opt->optlen and
+opt->srr may contain garbage values, leading to undefined behavior
+when accessed.
+
+A specific example of this vulnerability occurs during early SYN
+transactions, particularly if tcp_v4_cookie_check() is called
+directly. In this scenario, opt->optlen might be zero while other
+fields contain garbage values, which could lead to memory corruption
+or security issues.
+So this patch ensures robustness against invalid options, especially
+in edge cases like malformed SYN packets, with minimal overhead.
+
+am i mistaken? if there is missing information please forward it.
+
+Regards
+
+Ozgur
+
 > thanks,
+> neal
 >
-> greg k-h
 >
-
-Builds successfully.  Boots and works on qemu and Dell XPS 15 9520 w/
-Intel Core i7-12600H
-
-Tested-by: Brett Mastbergen <bmastbergen@ciq.com>
-
-Thanks,
-Brett
