@@ -1,104 +1,87 @@
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CF6A927;
-	Thu,  8 May 2025 12:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2620A17BA5;
+	Thu,  8 May 2025 13:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746709175; cv=none; b=cVT7zWn0vPoELkkEMELXP5NZaHGqrOnSfCpdj6ezJtPr0MVqaJDTyDvkevlDb/cqCR7bDzbzeeRl6xR2E7u5/oNOMsMbxYtVkrtbx6HuFYvGJUMLcnSWMV6BU25bxjYaEGq08tWkv4c3MX9lMNYfTa17Un0T8LP/ERbrJEHZ/YI=
+	t=1746709365; cv=none; b=XnBWVFpnSEt+8Ii5rxriGwNui9CuyLGDIkVLBBQNTfOWbqmhDuIL2bSPaAHdmYAW3LJJFUmLkvgA7j9m5T2CPBATkUOxrWhnfHyIVpEFs+tNUDBGSXGqwJbDz9t+TXev6IkfKp/Vys2Z6x9nHtFdlq1XCrANo6OnP3zfXrTKLoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746709175; c=relaxed/simple;
-	bh=aJSE6ncB4PWgfyV5v7DV6bvwyMhTYTShI15ytKls2K0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jhrSwnACryNbKi/OLLYBDzGszE85fmZm/Wh4wwts/ZvKWCL+F3+3zBD+db4yl7ZvCLft2tIDED7RqTGjRAp3/nb0smrEI5WdHUvCvljX6HCRSxxRh44puUcj5fyby+KZRMXS1vDEUaI9W09MlPaS5/kcyS1QwnkTi6vNleKq+oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-879c44a1dc4so227749241.3;
-        Thu, 08 May 2025 05:59:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746709171; x=1747313971;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=01ZSEgdLjUpD4xto7wBwz7+BoSwten0GUTJr0EeQUdg=;
-        b=VsrWPwqrOQtLSESXiZ9PV/128ao3PGdqYL2qKXrftjJnMU5dgAITeF6hocVa8Fzph/
-         qhipr17QcbdIprkHNDbIsamet7+w3xKn2pQhtWI5d9/l85nakDjktedFnidrKgwexPCJ
-         Abio6P6omh6mlHqOprTzbVFUcVni9Vuc3b4ZEB5Rm+heOnXHaHEO6pdQ7OWRgvov+CxK
-         YfAA86j5rI5IAUwKFhFGGYoIlX51YbuheIsO3jtxRWPZO9glor3FzZR0zonC9ANCMUfD
-         PDyO7/kroVZ9UFIh+LoI8+LU/y+M7QS0gz8AvLiChCjUnZnCmYmd3vO8D7c4N/a3bwQd
-         dfkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYmxul031+Szh8qkBlHEpFxjiABW+WBV/FMOeFiEf9A+D8GhcBvejqHAJmAZPBwQ+RlbxiKrNyPEL6jN4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxtG7SBsT+5mJCkmEnmzth1yoG1R4eR/ybrgAVTZM3UkBNrDM2
-	qXpTXBN3qE1R9dSo4+TgEsjZsk7uH4ZHhZt4/sM5cNatkQPiS0WdqHWd+hR3
-X-Gm-Gg: ASbGncuCKAVB9ubnkFzyFKBH5Yp8vk32kVB87sAu5082ML5FJxv4JRgwA4bJMvEFa3w
-	2FcBVKCqqO66BX4Konl778I+i9YWD7mbzrlLtkxUafiKr0cdMPkgE8WQrLtfZdsUOBr10+bDCh6
-	4qhsIWFNHJ0OchABVpLjf0JCkyL+6VbMSYUE07tMUXRdqKPGmvjHbPdgeKUko0dPalJvqODPa/A
-	Depqxjyx6zltU82JalP/92LR4FYTSWEHkFNSuu7VcZg7HHHnD+JXfU5UUb/CJIG1qLMJCouUXQc
-	VBFD0WiXTR9iyaghJfqg9mU7k0Dvo3MfNEx4l7pQsj221eKJ+Qk8Vj6o1djp7yZM2fhE26I72LK
-	Jtns=
-X-Google-Smtp-Source: AGHT+IEPKv0VOn5vxekpsRMVhuMjevRmsVsb7itTSpASMTikCugYnYCEz4dI9aRKyvYs1VSsaXaOIg==
-X-Received: by 2002:a05:6102:5794:b0:4da:fc9d:f0a with SMTP id ada2fe7eead31-4dc738070afmr5044262137.15.1746709171094;
-        Thu, 08 May 2025 05:59:31 -0700 (PDT)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8780b0216aesm2541923241.20.2025.05.08.05.59.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 05:59:30 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-879edc092e7so142639241.0;
-        Thu, 08 May 2025 05:59:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWM50TVp0QmloO6WEhBqxXUye5FzVyTgGWTUH4YByuI+1TQfXfsXN6ifGFYzd/9ZanTkZ+4v47BYLZUbpg=@vger.kernel.org
-X-Received: by 2002:a05:6102:5794:b0:4da:fc9d:f0a with SMTP id
- ada2fe7eead31-4dc738070afmr5044224137.15.1746709170498; Thu, 08 May 2025
- 05:59:30 -0700 (PDT)
+	s=arc-20240116; t=1746709365; c=relaxed/simple;
+	bh=3jYIMlTRS21sFwI2KZR6aQTeSVvwhaMYQmdsc+lOmvg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BlWt4YHFMVzs0qIDCMLRtlvfRjZ9y8s+tq6bzNpmvpFJ7kZrfzma6r0GbFWcy+5RrYQHokTDl+mvjIwcJCiKHCjR8qs4nbA4OKColadBIQOCX6wseUHOni64SsSCUZHvEe2SBvWameOp5Va9YuL2E7Mm59X4cbZ0H1DlTIU0org=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fM5RJCob; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fM5RJCob"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A62ACC4CEE7;
+	Thu,  8 May 2025 13:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746709363;
+	bh=3jYIMlTRS21sFwI2KZR6aQTeSVvwhaMYQmdsc+lOmvg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fM5RJCob3QZpPVDNWRh3u4IuG2knKHM3A8fO8bPRFDTlh3az/dDQD2aI3vOGaUdia
+	 Ip+iLBgIGRCjelyn8/K26PX0UM3lj/iFzroldvYZZMWion6/MXLbGloz7jHruC55an
+	 sQTU+U370CFcNKlFw9oKn1w8LnjFUcy2ooZdS7ZLz4sBVVwYE0hHswe6GFPc80Ho4m
+	 p5+VxmvnWWkARwOd4HlLNC1Ry9mw/fWtAnzfEblnttFWkrEmTnGeRZaXApCmwVsb39
+	 W9MNxPwNkA0PYdPpeBPMuhuMvrrQaCb27z5KYsqdmMNG0ILcXgr4BX9LxGipv6HzTa
+	 nf+nIlTNomZTg==
+From: Will Deacon <will@kernel.org>
+To: rafael@kernel.org,
+	lenb@kernel.org,
+	james.morse@arm.com,
+	tony.luck@intel.com,
+	bp@alien8.de,
+	Huang Yiwei <quic_hyiwei@quicinc.com>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	xueshuai@linux.alibaba.com,
+	quic_aiquny@quicinc.com,
+	quic_satyap@quicinc.com,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kernel@quicinc.com,
+	kernel@oss.qualcomm.com
+Subject: Re: [PATCH v2] firmware: SDEI: Allow sdei initialization without ACPI_APEI_GHES
+Date: Thu,  8 May 2025 14:02:35 +0100
+Message-Id: <174670772284.646111.7927928404698891686.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250507045757.2658795-1-quic_hyiwei@quicinc.com>
+References: <20250507045757.2658795-1-quic_hyiwei@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505203345.802740-1-ebiggers@kernel.org> <20250505203345.802740-2-ebiggers@kernel.org>
-In-Reply-To: <20250505203345.802740-2-ebiggers@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 8 May 2025 14:59:18 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXhXMxE9yL7BeSgiw5mt5+-kMy3LaJ+QR6buxjWUxPFrQ@mail.gmail.com>
-X-Gm-Features: AX0GCFtEaUD2NCZLiE9qGON2RilPUzfQ6k2Dn9KkdLXJ6kvr02NTCLgMF07u628
-Message-ID: <CAMuHMdXhXMxE9yL7BeSgiw5mt5+-kMy3LaJ+QR6buxjWUxPFrQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/7] crypto: tcrypt - rename CRYPTO_TEST to CRYPTO_BENCHMARK
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 5 May 2025 at 22:37, Eric Biggers <ebiggers@kernel.org> wrote:
-> From: Eric Biggers <ebiggers@google.com>
->
-> tcrypt is actually a benchmarking module and not the actual tests.  This
-> regularly causes confusion.  Update the kconfig option name and help
-> text accordingly.
->
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+On Wed, 07 May 2025 12:57:57 +0800, Huang Yiwei wrote:
+> SDEI usually initialize with the ACPI table, but on platforms where
+> ACPI is not used, the SDEI feature can still be used to handle
+> specific firmware calls or other customized purposes. Therefore, it
+> is not necessary for ARM_SDE_INTERFACE to depend on ACPI_APEI_GHES.
+> 
+> In commit dc4e8c07e9e2 ("ACPI: APEI: explicit init of HEST and GHES
+> in acpi_init()"), to make APEI ready earlier, sdei_init was moved
+> into acpi_ghes_init instead of being a standalone initcall, adding
+> ACPI_APEI_GHES dependency to ARM_SDE_INTERFACE. This restricts the
+> flexibility and usability of SDEI.
+> 
+> [...]
 
->  arch/m68k/configs/amiga_defconfig           |  2 +-
->  arch/m68k/configs/apollo_defconfig          |  2 +-
->  arch/m68k/configs/atari_defconfig           |  2 +-
->  arch/m68k/configs/bvme6000_defconfig        |  2 +-
->  arch/m68k/configs/hp300_defconfig           |  2 +-
->  arch/m68k/configs/mac_defconfig             |  2 +-
->  arch/m68k/configs/multi_defconfig           |  2 +-
->  arch/m68k/configs/mvme147_defconfig         |  2 +-
->  arch/m68k/configs/mvme16x_defconfig         |  2 +-
->  arch/m68k/configs/q40_defconfig             |  2 +-
->  arch/m68k/configs/sun3_defconfig            |  2 +-
->  arch/m68k/configs/sun3x_defconfig           |  2 +-
+Applied to arm64 (for-next/acpi), thanks!
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
+[1/1] firmware: SDEI: Allow sdei initialization without ACPI_APEI_GHES
+      https://git.kernel.org/arm64/c/59529bbe642d
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Cheers,
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Will
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
