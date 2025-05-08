@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899BD78F32;
-	Thu,  8 May 2025 16:51:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D662284667
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:51:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746723088; cv=none; b=dyk1s5KnHd3JQfw3BzvCvYS61kMxqr4b0hZCPJ9BiZuSZuFXUu1Esa+X0eMTbwJAh9daJsfKxKgG68b/NEYKX+FKMr/FXQvBAtdJXiJoedV0jX+bzwo+7nFj3El6a9YRmt+AWHbIEsDD4zKGqGGNviuiuAie6yPLdXM6/ykNINQ=
+	t=1746723090; cv=none; b=bsV0IcsVoFhaNNxEj5H7v5gn78Zl5Du+quwiTro5m737/b80EqFKzx2HW40J5fLMB+64QPpsCaQocpwFIZ53lIvfxy1rhJ1ERbq/bSGPhdfpKzoJyPnVw479wfO36oJytjkFpE3TCgwFGJI23ctIxm2z3225ktGocm6cvs1oW7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746723088; c=relaxed/simple;
-	bh=0k+Wh6+uCGMO9uLN2T6ncyytOn1upByjcEkNa1fx1r4=;
+	s=arc-20240116; t=1746723090; c=relaxed/simple;
+	bh=YiJPxFVH9MriN3MHinddIsL3bUEwnFXdV+9UivOrkRg=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=fx6EYjdXLDLoJ9GyJn2Ncsdu3CkRMzepRlErVY+pTHGr7SRU3pJ+Swu6splZDwQxchVG1j/k3LscO2t16XnFGuRiXwHP2uQupvXQj2SiRkiEE2jFTI6Nlms18aRwI76pLt+HUaBnhEudHNK74atGyfNy2V4boIQB+JC3G3bVXs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ejoa2BEd; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=l6YmXjxlW+1MFs2o57bOfx3JmQfe8kEQNBmSqGCgeh4fq6+FPc6YB0VbhWwU3jLrz5XKE8Sy1VyZ7Jv32oiWGB9WOB8zE+ZLdGqAZVGtKcHAnDsoFTVt9ZadtdPEpw93IlUISw/PaSLiVsDisD86IydObEiNSXC5Gfj7pBB8cds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DLsycetw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ejoa2BEd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56570C4CEE7;
-	Thu,  8 May 2025 16:51:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DLsycetw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6F36C4CEEB;
+	Thu,  8 May 2025 16:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746723088;
-	bh=0k+Wh6+uCGMO9uLN2T6ncyytOn1upByjcEkNa1fx1r4=;
+	s=k20201202; t=1746723089;
+	bh=YiJPxFVH9MriN3MHinddIsL3bUEwnFXdV+9UivOrkRg=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ejoa2BEdUlP1DbdY+j6d/ljdnXRtQ1JbuAIfWusXbXKwEX2fAuyovjXR4W6Ae76iB
-	 K38V/ZVWGLbXs1xCy6gk+awFa54Rf1FxM+pA7SEMwyHQdjtXBLBBIsRZKr310lDAbR
-	 kihI2OY/f3f/wrzvZj0R1ayWyPLh/OnpZT6MIEcooHaLQJaWUQYK2jHBGZSaoEIV7K
-	 B3FHNQPprAa9LUrjKJhEoMbJkMusxLL7mUsQK/cIgq3Pf7lpskw8TxB/nBUsU9oE6Y
-	 FfCfGnvoHs8lEhvhnxA+Nje7AMklgjO2s9qIJzoSlO/Liq3TqHGc8te/hGkPFfXQ0X
-	 adn+WSXQ/Dlgg==
+	b=DLsycetwDmsyPJB4WHamckxwZkopiBLA00sfuxrLv7euXG1RDBDHK1RMKWkaG39FN
+	 jhu0vU6fNkMfd7Gly8UW7gZzR27UMZ4SbqemCsJpxqwcMqZ+pteX5w13TGS6v1AIP4
+	 wgjCOcXropBQMZOcMyPr9LuVBF9kBqle1+KSmrfx0qAROATlKnopIx+BvkAgUeOB5S
+	 2ssea/yyezjU2DLH+RCLa+lyR/QyMC1OYXkFw5FTaOq1wYT4MMFMd6B9Nq4eRccyVf
+	 iUgMIRtrLX4mDHRoa8iLGQ3ucQVlAmw51FU9vIM+OzGl2CSSy3BwYcTjvdob1WYGf5
+	 9KD7Oh9bkhhjA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34016380AA70;
-	Thu,  8 May 2025 16:52:08 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADF08380AA70;
+	Thu,  8 May 2025 16:52:09 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,51 +37,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 0/5] riscv: misaligned: fix interruptible context and add
- tests
+Subject: Re: [PATCH] riscv: Disallow PR_GET_TAGGED_ADDR_CTRL without Supm
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <174672312700.2976395.88758017141795080.git-patchwork-notify@kernel.org>
-Date: Thu, 08 May 2025 16:52:07 +0000
-References: <20250422162324.956065-1-cleger@rivosinc.com>
-In-Reply-To: <20250422162324.956065-1-cleger@rivosinc.com>
-To: =?utf-8?b?Q2zDqW1lbnQgTMOpZ2VyIDxjbGVnZXJAcml2b3NpbmMuY29tPg==?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
-Cc: linux-riscv@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- corbet@lwn.net, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, alex@ghiti.fr, shuah@kernel.org,
- ajones@ventanamicro.com, samuel.holland@sifive.com
+ <174672312824.2976395.79446860575493569.git-patchwork-notify@kernel.org>
+Date: Thu, 08 May 2025 16:52:08 +0000
+References: <20250507145230.2272871-1-samuel.holland@sifive.com>
+In-Reply-To: <20250507145230.2272871-1-samuel.holland@sifive.com>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-riscv@lists.infradead.org, alex@ghiti.fr, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, bodonnel@redhat.com, charlie@rivosinc.com,
+ conor.dooley@microchip.com, joel.granados@kernel.org,
+ paul.walmsley@sifive.com, cuiyunhui@bytedance.com,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
-This series was applied to riscv/linux.git (fixes)
+This patch was applied to riscv/linux.git (fixes)
 by Alexandre Ghiti <alexghiti@rivosinc.com>:
 
-On Tue, 22 Apr 2025 18:23:07 +0200 you wrote:
-> This series fixes misaligned access handling when in non interruptible
-> context by reenabling interrupts when possible. A previous commit
-> changed raw_copy_from_user() with copy_from_user() which enables page
-> faulting and thus can sleep. While correct, a warning is now triggered
-> due to being called in an invalid context (sleeping in
-> non-interruptible). This series fixes that problem by factorizing
-> misaligned load/store entry in a single function than reenables
-> interrupt if the interrupted context had interrupts enabled.
-> In order for misaligned handling problems to be caught sooner, add a
-> kselftest for all the currently supported instructions .
+On Wed,  7 May 2025 07:52:18 -0700 you wrote:
+> When the prctl() interface for pointer masking was added, it did not
+> check that the pointer masking ISA extension was supported, only the
+> individual submodes. Userspace could still attempt to disable pointer
+> masking and query the pointer masking state. commit 81de1afb2dd1
+> ("riscv: Fix kernel crash due to PR_SET_TAGGED_ADDR_CTRL") disallowed
+> the former, as the senvcfg write could crash on older systems.
+> PR_GET_TAGGED_ADDR_CTRL state does not crash, because it reads only
+> kernel-internal state and not senvcfg, but it should still be disallowed
+> for consistency.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v2,1/5] riscv: misaligned: factorize trap handling
-    (no matching commit)
-  - [v2,2/5] riscv: misaligned: enable IRQs while handling misaligned accesses
-    https://git.kernel.org/riscv/c/453805f0a28f
-  - [v2,3/5] riscv: misaligned: use get_user() instead of __get_user()
-    https://git.kernel.org/riscv/c/897e8aece3c8
-  - [v2,4/5] Documentation/sysctl: add riscv to unaligned-trap supported archs
-    (no matching commit)
-  - [v2,5/5] selftests: riscv: add misaligned access testing
-    (no matching commit)
+  - riscv: Disallow PR_GET_TAGGED_ADDR_CTRL without Supm
+    https://git.kernel.org/riscv/c/7f1c3de1370b
 
 You are awesome, thank you!
 -- 
