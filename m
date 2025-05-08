@@ -1,40 +1,48 @@
-Received: from smtp.smtpout.orange.fr (smtp-75.smtpout.orange.fr [80.12.242.75])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89A127AC47;
-	Thu,  8 May 2025 16:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D14227AC47;
+	Thu,  8 May 2025 16:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746720402; cv=none; b=kwODx6550o+AoqadTZycxs9MYexyJ6Ov4BhEbfUmnUmvbEgDOlgVdwffBVbcH6QVXYXwEx9vkQBldcnJ1g7nUsXuWyBtbdji8uXAsxFDHr3h2Eel0u0K5CMhKBxKjed53Uff4S6Ie60Gb3sTghHtqb7k1jg8BnchRSO9G+iLqdM=
+	t=1746720411; cv=none; b=F4jPC5QONamblWAxRYbhgRcmS/6Dz0T1p8EmdQdojRxGOqU9cKYPMicOPqBuAfrGgYuLYeA9m70tOpuzWLaYlGkOgQWK9Ax0Y6Mq0ZlyLdpx8unbTdIkeIQE8ikdLO60tjTQDOVRlJEINh9YHTrzoBdRkcI4Df9+Nl5pDZZjD6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746720402; c=relaxed/simple;
-	bh=ZXF39FFw9bSaoaPc3UbH1V0LnHSE+53rFY6xbOMm1J8=;
+	s=arc-20240116; t=1746720411; c=relaxed/simple;
+	bh=OyskF42LM6Bxn6mh3FqN4hvTQ2IPXptkR5h/ItWp4+s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hnI6xyUSom4D70YzdnXbgVurcvYzVLVDq2ag3xhxIdaoaUXLxmRANi4vJaFMYFlitQdborq2oGFettSJSbD4sEAaj64apsiwjMEsqMvoDBT+lMK23rZ/fdsWCJbEW6SiWuTGqL1VYC1RSkhJMOUas90o6DjKjsKANB4Tm6T7mMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=ATwY6ABM; arc=none smtp.client-ip=80.12.242.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	 In-Reply-To:Content-Type; b=VfPhDw94MC1kZqCS9eXvYDgqS6PbhpuiDAVX9S624xgUgVWqyGRggGMjp2ikgP7yo+dYYIAA0Uu1aCoOPEH7iJ03G7TQOsrGdi0l8evJ0EX2Ev/7y6v97kHrLPRp3owm5XXTFOhpgR9dOy4frAbcdXT1938+Px4UVQJwaJA8G0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=xPehbiMa; arc=none smtp.client-ip=199.89.3.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="ATwY6ABM"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id D3kUuhiTn5oOhD3kUuQpGk; Thu, 08 May 2025 18:05:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1746720329;
-	bh=i3Zcprdv1SvQj0eiycKQXI51YCMEuANQ9KWCXytXxLs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=ATwY6ABMjL9h2bymt7e78pl9aKcyh+EW5/LzWCMpLnKdY3A2MnCK2IfN54Cblz188
-	 frUSBSmFo3Mlo+ZWoWEk6Gk6woIflGmSyUb+BEg9JuLGXjzvWEzbQnuhtX9xd8xDN3
-	 1HcGPT8iZJNsZH964+0wBxoS09nQ7HOhHtgS4XMixHUiF8qDVtN16RE8zjFEUeMmve
-	 l9oD4xuiMRY97u+tI1uWtlIPxAgUeGkX1KFYAfUQmJNZp/7IAeCnt6EPJpwUU34YfO
-	 /xiXGagHB/5+fIGOLgaCdeSONbXd0FhUslqS+faTY2gQ/df8VyzjbAtPlQZ4qoOPXS
-	 1G/utI/oMG2Kg==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Thu, 08 May 2025 18:05:29 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <68149c51-ba75-4f0f-a86a-bd810d47d684@wanadoo.fr>
-Date: Thu, 8 May 2025 18:05:26 +0200
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="xPehbiMa"
+Received: from localhost (localhost [127.0.0.1])
+	by 003.mia.mailroute.net (Postfix) with ESMTP id 4ZtcT46L4Nzlnfx6;
+	Thu,  8 May 2025 16:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1746720405; x=1749312406; bh=CQV5mSzjgEnmWgEB9C9eBlg0
+	5iQfM1JglqUd5jyRaCM=; b=xPehbiMaEnzZjy25zBHGqux/ZU6vkcDWgggsvUH4
+	xzaNbUoLrhQE15jdntRDvLKjB1N+EtLzXi36iP+Hl7I8SxrwvzWaqEIVN7lFwSOJ
+	xBiEI5ypd4XWqllaQr8KAUjONPPKtxBe3HU8OokcRQFP8CUu6te1zdtsYM87nx7Q
+	f1TYgkPa3Cn+b3EHKp+z3iT96+3bqXEmqDGIFRIb2u+MLh+7YgAQNNzfIOoPE9+E
+	ssd/w1m2SCDZCEOipdGMYgFhmThf8Bvj8omZduRGTtCdsGD1cwnONWGpg7jGLEnG
+	HdST4kX/sWLK2NxvXGDHX2fs73YngPt8dE1bjkb2seFqRA==
+X-Virus-Scanned: by MailRoute
+Received: from 003.mia.mailroute.net ([127.0.0.1])
+ by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id 2AIYu1_hzvfV; Thu,  8 May 2025 16:06:45 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4ZtcSj1w5wzlssn9;
+	Thu,  8 May 2025 16:06:28 +0000 (UTC)
+Message-ID: <fd13e179-f2d8-4085-86da-c6b0fce2de5b@acm.org>
+Date: Thu, 8 May 2025 09:06:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,99 +50,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] net: airoha: Fix an error handling path in
- airoha_alloc_gdm_port()
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- netdev@vger.kernel.org
-References: <5c94b9b3850f7f29ed653e2205325620df28c3ff.1746715755.git.christophe.jaillet@wanadoo.fr>
- <aBzOaiU6Ac3ZTU-4@lore-desk>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <aBzOaiU6Ac3ZTU-4@lore-desk>
+Subject: Re: [PATCH v3] scsi: ufs: core: skip UFS clkscale if host
+ asynchronous scan in progress
+To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com,
+ mani@kernel.org, beanhuo@micron.com, avri.altman@wdc.com,
+ junwoo80.lee@samsung.com, martin.petersen@oracle.com,
+ quic_nguyenb@quicinc.com, quic_nitirawa@quicinc.com,
+ quic_rampraka@quicinc.com, neil.armstrong@linaro.org,
+ luca.weiss@fairphone.com, konrad.dybcio@oss.qualcomm.com,
+ peter.wang@mediatek.com
+Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20250508093854.3281475-1-quic_ziqichen@quicinc.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250508093854.3281475-1-quic_ziqichen@quicinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Le 08/05/2025 à 17:31, Lorenzo Bianconi a écrit :
->> If register_netdev() fails, the error handling path of the probe will not
->> free the memory allocated by the previous airoha_metadata_dst_alloc() call
->> because port->dev->reg_state will not be NETREG_REGISTERED.
->>
->> So, an explicit airoha_metadata_dst_free() call is needed in this case to
->> avoid a memory leak.
->>
->> Fixes: af3cf757d5c9 ("net: airoha: Move DSA tag in DMA descriptor")
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
->> Changes in v2:
->>    - New patch
->>
->> Compile tested only.
->> ---
->>   drivers/net/ethernet/airoha/airoha_eth.c | 10 +++++++++-
->>   1 file changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/ethernet/airoha/airoha_eth.c
->> index 16c7896f931f..af8c4015938c 100644
->> --- a/drivers/net/ethernet/airoha/airoha_eth.c
->> +++ b/drivers/net/ethernet/airoha/airoha_eth.c
->> @@ -2873,7 +2873,15 @@ static int airoha_alloc_gdm_port(struct airoha_eth *eth,
->>   	if (err)
->>   		return err;
->>   
->> -	return register_netdev(dev);
->> +	err = register_netdev(dev);
->> +	if (err)
->> +		goto free_metadata_dst;
->> +
->> +	return 0;
->> +
->> +free_metadata_dst:
->> +	airoha_metadata_dst_free(port);
->> +	return err;
->>   }
->>   
->>   static int airoha_probe(struct platform_device *pdev)
->> -- 
->> 2.49.0
->>
-> 
-> I have not tested it but I think the right fix here would be something like:
-> 
-> diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/ethernet/airoha/airoha_eth.c
-> index b1ca8322d4eb..33f8926bba25 100644
-> --- a/drivers/net/ethernet/airoha/airoha_eth.c
-> +++ b/drivers/net/ethernet/airoha/airoha_eth.c
-> @@ -2996,10 +2996,12 @@ static int airoha_probe(struct platform_device *pdev)
->   	for (i = 0; i < ARRAY_SIZE(eth->ports); i++) {
->   		struct airoha_gdm_port *port = eth->ports[i];
+On 5/8/25 2:38 AM, Ziqi Chen wrote:
+> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+> index 1c53ccf5a616..04f40677e76a 100644
+> --- a/drivers/ufs/core/ufshcd.c
+> +++ b/drivers/ufs/core/ufshcd.c
+> @@ -1207,6 +1207,9 @@ static bool ufshcd_is_devfreq_scaling_required(struct ufs_hba *hba,
+>   	if (list_empty(head))
+>   		return false;
 >   
-> -		if (port && port->dev->reg_state == NETREG_REGISTERED) {
-> +		if (!port)
-> +			continue;
+> +	if (hba->host->async_scan)
+> +		return false;
 
-I think it works.
+Testing a boolean is never a proper way to synchronize code sections.
+As an example, the SCSI core could set hba->host->async_scan after this
+check completed and before the code below is executed. I think we need a
+better solution.
 
-We can still have port non NULL and airoha_metadata_dst_alloc() which 
-fails, but airoha_metadata_dst_free() seems to handle it correctly.
-
-CJ
-
-
-> +
-> +		if (port->dev->reg_state == NETREG_REGISTERED)
->   			unregister_netdev(port->dev);
-> -			airoha_metadata_dst_free(port);
-> -		}
-> +		airoha_metadata_dst_free(port);
->   	}
->   	free_netdev(eth->napi_dev);
->   	platform_set_drvdata(pdev, NULL);
-> 
-> Regards,
-> Lorenzo
-
+Bart.
