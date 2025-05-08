@@ -1,113 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F71127A44C;
-	Thu,  8 May 2025 15:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECA327A90E;
+	Thu,  8 May 2025 15:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746717031; cv=none; b=DCygWe6eKAA5jL7JIDg5UXjxmo3dWDVPyUJ7+eCSX09Ce4P7Y9fSvLH1s4RCtl+aC57d8+4TJ8+orGW1Cvx9to5Pi+UZo7+8HO+Xgf1YMa1NkzY94E8n+BiU+A/P1m6V3w3Rur8pDeE8lkUR8hNy1qIXVdeSVgTuZ0HIznak8Wc=
+	t=1746717037; cv=none; b=rxyZL9LOi7Iz394PoM9gQwxQzt9DnN2jEogP1N4HtR1RZGLQsjduiR0qC1yo0zPgM75Sg7PPpwQTlzBJLRQTDWAIid94FSn+IZit+6HVwVK/n8i5xkJIXDFLGhMPZjhaCtqOyK4gftFGtlGT9tGl00xZ9TE7vVLFxA/ee0vQ1Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746717031; c=relaxed/simple;
-	bh=dhECve019k+MAhaJXpnJX0vZpEJhKyOVtBrA+Jc60Gw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KKIKnS4rlhDv1km7tFA0zvNhEVSwvroycXF2naCYt3aSWnbvZ3eREKX5jyUiFXzh2/zuUzVtq9vGZJMawS4UiOOplzHM9iNmlp+dRXoHOTKleZ2n+hkKGqRZpOMqqwqKe6D9tW10ruLNLRtwzWzAGJm68A3S93KDZG7ebSBU/Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jiLzLgnN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746717037; c=relaxed/simple;
+	bh=W/N1Gf+al6pNUQzBJaYk29eGVWTmR5NjBKSkcP7398o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=D/2PmZnl3UvSWlLlrj8xNtR8+W/9ddVQkV7TsHCalQeDihbvAPLXGXuoaeOF/q1lvem8+9fqyZwBxUmGbtfXc1oTVOSrNKRj99W9k/0ZMESHmGNtvIVzDPvfEzhz32yhiLxebamdhF7l80Kp4ofbATUDdN3o9X+4ZjeOWbghpO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=fzw9/zCM; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jiLzLgnN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A144EC4CEE7;
-	Thu,  8 May 2025 15:10:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746717031;
-	bh=dhECve019k+MAhaJXpnJX0vZpEJhKyOVtBrA+Jc60Gw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jiLzLgnNY0s2FTPN5+DxCy5Hc10iLZS6vuh/B+dVKZ6zKd/hSyVEe58/lA0bztS7m
-	 ymneFlZ/yNcmS1JXeh8kTaRgTz5yCcTkIK/jUSo8TmuSSw6fO+vGl2Ws+UplUycPtP
-	 lzWp5XeU8zpMwhowNEHlqbONMLjgB6e1qsLi2t6HE+UyGDvaVJNjNtlXqQcl3tQaj7
-	 +0cLGZF/sUQS2BjI1onrqLymbKDVh94UUXp7Dk6Z0OK4CYFRP0j2z6tEjIqCGsOEjb
-	 MmvOmdQFFn4kKRx6jCrBkW98MGqJmDnaMkgff4kBbIdgUaZBASIEA5NmQMfSdH3zOV
-	 M5I/xYSK1H5Yw==
-Date: Thu, 8 May 2025 17:10:28 +0200
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="fzw9/zCM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=sPGF4iJ89vQnNQWZ/GKp9JU0vVYLz0bowVMRVSbbC0A=; b=fzw9/zCMm7BFFW6M+Rin+6LZcN
+	W9QO9NwoAAuF5xa5SROEeKGf8Kc4Xg88X599tnWsVzmcTqGCXoiwA67DMwjaJDXLlHqpBCVNSuqXQ
+	uSzbQrxCEANmDQKqGAteGkJdV31qENaK6iPLnpOd5TeL9shIdboQ1dU0j2CVgLUBnc/csM2L39dcN
+	7PqqCEvTfyRj54XzohpPJV//aHVnQe+xQbmXh/wDTfhpZuowTE3U7LoYt0pA//LLPk19sGQVv0RxN
+	J2vB0psKHm2pdOgktQFzQbr8O6aesQUCmXRwQpHFA2m4jKhtPtvoqPrfCxtQWGQ5laKIBsxKu71YY
+	v2nhCt+Q==;
+Received: from i53875a1d.versanet.de ([83.135.90.29] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uD2tG-0005fP-0y; Thu, 08 May 2025 17:10:26 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: heiko@sntech.de
+Cc: quentin.schulz@cherry.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] net: airoha: Fix an error handling path in
- airoha_probe()
-Message-ID: <aBzJZCIvE9u_IAM-@lore-desk>
-References: <5c94b9b3850f7f29ed653e2205325620df28c3ff.1746715755.git.christophe.jaillet@wanadoo.fr>
- <3791c95da3fa3c3bd2a942210e821d9301362128.1746715755.git.christophe.jaillet@wanadoo.fr>
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Heiko Stuebner <heiko.stuebner@cherry.de>
+Subject: [PATCH 5/6] dt-bindings: arm: rockchip: add PX30-PP1516 boards from Theobroma Systems
+Date: Thu,  8 May 2025 17:09:54 +0200
+Message-ID: <20250508150955.1897702-6-heiko@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250508150955.1897702-1-heiko@sntech.de>
+References: <20250508150955.1897702-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="V+aLiTt/t6jXV4qn"
-Content-Disposition: inline
-In-Reply-To: <3791c95da3fa3c3bd2a942210e821d9301362128.1746715755.git.christophe.jaillet@wanadoo.fr>
+Content-Transfer-Encoding: 8bit
 
+From: Heiko Stuebner <heiko.stuebner@cherry.de>
 
---V+aLiTt/t6jXV4qn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+PP1516 are Touchscreen devices built around the PX30 SoC and companion
+devices to PX30-Cobra, again with multiple display options.
 
-> If an error occurs after a successful airoha_hw_init() call,
-> airoha_ppe_deinit() needs to be called as already done in the remove
-> function.
->=20
-> Fixes: 00a7678310fe ("net: airoha: Introduce flowtable offload support")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> Changes in v2:
->   - Call airoha_ppe_init() at the right place in the error handling path
->     of the probe   [Lorenzo Bianconi]
->=20
-> Compile tested only.
-> ---
->  drivers/net/ethernet/airoha/airoha_eth.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/ether=
-net/airoha/airoha_eth.c
-> index af8c4015938c..d435179875df 100644
-> --- a/drivers/net/ethernet/airoha/airoha_eth.c
-> +++ b/drivers/net/ethernet/airoha/airoha_eth.c
-> @@ -2967,6 +2967,7 @@ static int airoha_probe(struct platform_device *pde=
-v)
->  error_napi_stop:
->  	for (i =3D 0; i < ARRAY_SIZE(eth->qdma); i++)
->  		airoha_qdma_stop_napi(&eth->qdma[i]);
-> +	airoha_ppe_init(eth);
+The devices feature an EMMC, OTG port and a 720x1280 display with a
+touchscreen and camera
 
-it was actually a typo in my previous email but this should be clearly
-airoha_ppe_deinit().
+Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+---
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Regards,
-Lorenzo
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 6435c724e682..58af37b4d6b8 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -1119,6 +1119,14 @@ properties:
+           - const: tsd,px30-cobra
+           - const: rockchip,px30
+ 
++      - description: Theobroma Systems PX30-PP1516
++        items:
++          - enum:
++              - tsd,px30-pp1516-ltk050h3146w-a2
++              - tsd,px30-pp1516-ltk050h3148w
++          - const: tsd,px30-pp1516
++          - const: rockchip,px30
++
+       - description: Theobroma Systems PX30-uQ7 with Haikou baseboard
+         items:
+           - const: tsd,px30-ringneck-haikou
+-- 
+2.47.2
 
->  error_hw_cleanup:
->  	for (i =3D 0; i < ARRAY_SIZE(eth->qdma); i++)
->  		airoha_hw_cleanup(&eth->qdma[i]);
-> --=20
-> 2.49.0
->=20
-
---V+aLiTt/t6jXV4qn
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaBzJZAAKCRA6cBh0uS2t
-rOayAQCaglkROsypWbnoARe9kkq6RYdKaAl4rjlfjKCEB8HWQQEAgs12WF2PhlvU
-iTcoAkcTJX4fuM85cyB9I8L+eeZi/wg=
-=QUnf
------END PGP SIGNATURE-----
-
---V+aLiTt/t6jXV4qn--
