@@ -1,172 +1,129 @@
-Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269482066CF;
-	Thu,  8 May 2025 12:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDA72066CF;
+	Thu,  8 May 2025 12:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746708486; cv=none; b=rx7Rm3rZBI8CmdLkpBNLCciR/8a/es28md8ZPLdrqU7nNgYUb+tJdKQIflAbneF+ZcySxGEZO30WGKDUfmOXQveSTRGAMljEWtFtqZEZgX3ekjEdZQmBblXp5k4PN9qI3hPn4bN9ygBeor7ZIen6Gv0P5UDji+jmZ4AvEoQjy+E=
+	t=1746708508; cv=none; b=HqM8X2vJeXe29p2+BwdjxZ2WOGS4E0kJGmwJCD+FJUyHr0GlPL45ysqWNGHijgBh626/bZ5Fesc5d5n2Yi4NVR/0Y9HLEEumT5ZQkd+XevUuGWB5oVpERQm01ckN0iAmgVnwlqxfZ8P7xCBjSgKWa4Cp0+4zko0At6bFIN5amns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746708486; c=relaxed/simple;
-	bh=32CtRKmrPA7nB/+f8XmyUNlfkbdkgk0lazsLdNElUp8=;
+	s=arc-20240116; t=1746708508; c=relaxed/simple;
+	bh=K1JcDkyymVY9Ta8SYRATFg4KegkMDnSgEyDqpkv3p00=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cVDT7dakbJ8eOFd8NcNWHv9YPoWqTPc8i+Z5gTgOui8aa0gaBJs0htZToXb6JONCJ1vOqTyQsATwXIU2eWiBIdZ11vQFS+WIknBD3ai5vTCea25gOl83ZXGP2ExXUwvXcn0VONjnc+/pd6/aIp3IP4Cs/u+xb67npaXJwT6f8hY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=0Gy0hFUn; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=j9Rxn0Nn; arc=none smtp.client-ip=155.254.16.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xt2Fg+xNlBBMQwU1kHXylyUTPkDpMSTN8H5M2BBz6OUDB3QOe8/yuep7IgA3W3JJpkozApflXS+HSlKQBRgX1dRQyfTQBLOckyBVbUQKKqE8CQhYsTzt6atjzkiJTZCbITJbsESBoHEogHsRQCDlZ6q4rYMaCtahyyXyak22sFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7CRbjQR; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="0Gy0hFUn";
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="j9Rxn0Nn"
-Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
-	by bayard.4d2.org (Postfix) with ESMTP id 157CF12FB439;
-	Thu, 08 May 2025 05:48:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1746708483; bh=32CtRKmrPA7nB/+f8XmyUNlfkbdkgk0lazsLdNElUp8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=0Gy0hFUnJwW7W4VikxFm8zEYloYZjmlt56duf6SD/a1jKj2920kTub7a76TU4Xtpl
-	 8jtcYMFREVMr/r3tjrwO5V3rc3m2QYKKydHPSauHppvE6+eKuSzUEXNPPw3utZT5Nw
-	 wx1CyQxTbqSwOJoJkCAhzyToVXy2ne2U8NOPAyO9njuJZHrtYJraIxkykswX9g8+KX
-	 kbcfIK1xVTon+U1au/0jl8vOpIN154S4SRdlPYXhg7KkPpIc1IvHa/pDpIBFib3giU
-	 KeXe1eNwcDCEdinqd/+qEaefNGzePho0FGbnAaNtF1DqvmJ1dy8vY8MCFHC1ur1P5j
-	 5mLLm1dCj6LYA==
-X-Virus-Scanned: amavisd-new at 4d2.org
-Received: from bayard.4d2.org ([127.0.0.1])
- by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id Ylu42rJHkAyE; Thu,  8 May 2025 05:47:27 -0700 (PDT)
-Received: from ketchup (unknown [183.217.82.204])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: heylenay@4d2.org)
-	by bayard.4d2.org (Postfix) with ESMTPSA id B177312FB404;
-	Thu, 08 May 2025 05:47:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1746708446; bh=32CtRKmrPA7nB/+f8XmyUNlfkbdkgk0lazsLdNElUp8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j9Rxn0NnDtxFBNTZXaVNbdMlSNpg2FVTn1w7cyn9yZpuTnSC3saa0N6MeOBzX1uGD
-	 M5V5CqijL2FQCjQLOfl4w885XKxkR65CLQenF20WoJB+QFBcRHu0aWeYBqzsjm/MxA
-	 gTsZRNeRlk21Qg9K+213efdRner3P7bzuijDM1Itdjrls9SQlfSAys5wxq8tl+kZ9i
-	 aG4Z+DLuU1KOEiiJPdzokK9bBrA4MNlFji0bmN8K9t82TNBoBjyU49vMoAvn2VjnFR
-	 iE46+EBTQngIMS0MPAy8S4PJNhQs2OKApoHSHHXuEk7KnI8pN8s+rsTqPSVpRpkXvm
-	 0+MTId2zsOavg==
-Date: Thu, 8 May 2025 12:47:19 +0000
-From: Haylen Chu <heylenay@4d2.org>
-To: Alex Elder <elder@riscstar.com>, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-	p.zabel@pengutronix.de, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
-	dlan@gentoo.org
-Cc: inochiama@outlook.com, guodong@riscstar.com, devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org, spacemit@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/6] reset: spacemit: add support for SpacemiT CCU
- resets
-Message-ID: <aByn187aRWyrzzF4@ketchup>
-References: <20250506210638.2800228-1-elder@riscstar.com>
- <20250506210638.2800228-5-elder@riscstar.com>
- <aBxDQ1_2xJjGlwNf@ketchup>
- <d2614363-1dab-4ea3-b79a-5d3c02c4bc17@riscstar.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7CRbjQR"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-440685d6afcso10734195e9.0;
+        Thu, 08 May 2025 05:48:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746708504; x=1747313304; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=K1JcDkyymVY9Ta8SYRATFg4KegkMDnSgEyDqpkv3p00=;
+        b=W7CRbjQRlAfxEHN3J+Lhvatrn8mvYSExWgZ6ymQc4dT3OXXC+8Gf3chPOUbeRtuB4n
+         pjXC+3oHZTgnzQXDAdKO5FwCar2xiHMjXoZ44lw6Hj4h+4JO2MjFXKIJRFwweR+l6PRn
+         DsxhL5gS0tFSdYWi4dTmtJ2kwp4kI6z8RTJHqq+CohllObI88nA7HW6GEwIw6GaMvgF3
+         1HKl9oKNbE0WAeigV7G/Lz0rymX8jnuY7QzSZkPL6rPaKixwHwhAp2IRqU7tbOVmNz04
+         Ff+4FlgbPI/6bCmv8vJNGMpotaW/FqrvOilbpbby+Fx9gLUDV5MFIbejG3Z+kxpci/SV
+         Kr6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746708504; x=1747313304;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K1JcDkyymVY9Ta8SYRATFg4KegkMDnSgEyDqpkv3p00=;
+        b=W1tLAHTsxOzw85OfTr+7y7K7YG9RsMUYnchwuCTHCvZuKYeFIktJDpIx1tGWF3EIBm
+         +svU5GP3SGIfEW2MSBXsY1A41pDhRmwsu5G2TspIYDQ09cMl3KpzaVwffVCgW3PZbxPF
+         mL+vlXb+8jX0Y1RehR62VaB6CsWhmvMWwOPf1N3YYkOJnS/YQiD3ww33HUFmKIvQ+FIt
+         aNo6ulGbYQ09W88GrsR+SmOuc1cB5Q/G+wwDnkhTY63qxAD842t4RgLiEYeWpmjm5xzK
+         8pPuQ49WLAW+g60tq15OWBqoJfTEej8KGAgQ09j5jLExEotK8okwzLTyMz+Dy6vrDmoq
+         S8Dg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+ol6BXYK/J4cPTyBECCx0Emz4igcz0UWxqNyHxEH07aVYw64ZhJVTuabmGsYDFJcTQAh7p/8EboelYxaJ@vger.kernel.org, AJvYcCVwdybWhWaKOEVVikaDAH+o5RPxB/esuCFM12ajl5vCNObqz0ZKBbI3Z8E0KdFUwqlN2OYdlfWHpGkC@vger.kernel.org, AJvYcCWP2FpB2lfYx/Mj555xtenQnuxu9VAFKBtPTZ04cOTaA0kJS5fvUnnku1L5QaojLffLOCb2FBwCq06kPGM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYz8JkP9uGmhrk7yyRVxFbQYXO03MiloxTmV1Mr54cQ9vXO0FP
+	897rt3j5Q+s87UeEx+G3Ihz3hVa1T1Td4ULS9Nts2vgzKrM87ohd
+X-Gm-Gg: ASbGncuZuWTfOUpD4ClTu577E04H7e4KA8QrDkPMtR5/bLsmSRqRc5I8CCPHhw4eZbO
+	agCf/qBU1M5cDsiiCYn8bt40rCKBuvURXu6vkm8CD/2pqjUFYNCBcgPs4UvPYwTjMJGU1N7+J2Y
+	xQZCrIvD+c6SnudkryWZqmX/cX6VPUZo2JZTpXUO1vlmfBbEC/OxITSektgpxbX8p3jisEw7K2T
+	ns+i+OC8lUmFvDH+FBhXuy8PAG2rNoWfdGsf22ggfkT9xY/w8to4S0iAUzFP9Tyavt8NPlmyDX+
+	VFsg2YMD9iGJ0Wywo+exTzMnY5hPjEGz6exOqI+GRxWRMtoLxyd73psfbmCyELwjpq3xX196cOv
+	qHrjK9CSOERQuXe9E/vhQl9hqKUQ=
+X-Google-Smtp-Source: AGHT+IHSVvOwM76//qmn73kAnoUTmj/CnRUBRA7zQwSUPHrkrhEv1jw1uHjVkLixP24yaZc89bJizA==
+X-Received: by 2002:a05:600c:37c6:b0:43d:1b74:e89a with SMTP id 5b1f17b1804b1-441d44c3933mr66198845e9.9.1746708504289;
+        Thu, 08 May 2025 05:48:24 -0700 (PDT)
+Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd328455sm37086045e9.2.2025.05.08.05.48.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 05:48:23 -0700 (PDT)
+Date: Thu, 8 May 2025 14:48:21 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Aaron Kling <webgeek1234@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] memory: tegra210-emc: Support Device Tree EMC
+ Tables
+Message-ID: <ckimvttxjgx44xhfql3nov3qbf35y73nbu3p4m63nqbi22vh37@6p2ji7he5toy>
+References: <20250508-tegra210-emc-dt-v2-0-d33dc20a1123@gmail.com>
+ <qhhv27thjnbz7rtcfja767bpxjvwa6iivc2bphar7t2wobuzb7@aspkmrgp2ihy>
+ <CALHNRZ-q7W9CfeD4ipmwFVqHm7oGfTgJpwNoVhfbSXFPDxF91Q@mail.gmail.com>
+ <eba00bd5-fa1a-4cad-bb41-b395011235e1@kernel.org>
+ <CALHNRZ_WPUM8wKSLcyyZm4jc9onBYiP3oLd=39k4=hoqLzHhrA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7hulawnxj67g4v62"
 Content-Disposition: inline
-In-Reply-To: <d2614363-1dab-4ea3-b79a-5d3c02c4bc17@riscstar.com>
+In-Reply-To: <CALHNRZ_WPUM8wKSLcyyZm4jc9onBYiP3oLd=39k4=hoqLzHhrA@mail.gmail.com>
 
-On Thu, May 08, 2025 at 06:55:17AM -0500, Alex Elder wrote:
-> On 5/8/25 12:38 AM, Haylen Chu wrote:
-> > On Tue, May 06, 2025 at 04:06:35PM -0500, Alex Elder wrote:
-> > > Implement reset support for SpacemiT CCUs.  The code is structured to
-> > > handle SpacemiT resets generically, while defining the set of specific
-> > > reset controllers and their resets in an SoC-specific source file.  A
-> > > SpacemiT reset controller device is an auxiliary device associated with
-> > > a clock controller (CCU).
-> > > 
-> > > This initial patch defines the reset controllers for the MPMU, APBC, and
-> > > MPMU CCUs, which already defined clock controllers.
-> > > 
-> > > Signed-off-by: Alex Elder <elder@riscstar.com>
-> > > ---
-> > >   drivers/reset/Kconfig           |   1 +
-> > >   drivers/reset/Makefile          |   1 +
-> > >   drivers/reset/spacemit/Kconfig  |  12 +++
-> > >   drivers/reset/spacemit/Makefile |   7 ++
-> > >   drivers/reset/spacemit/core.c   |  61 +++++++++++
-> > >   drivers/reset/spacemit/core.h   |  39 +++++++
-> > >   drivers/reset/spacemit/k1.c     | 177 ++++++++++++++++++++++++++++++++
-> > >   7 files changed, 298 insertions(+)
-> > >   create mode 100644 drivers/reset/spacemit/Kconfig
-> > >   create mode 100644 drivers/reset/spacemit/Makefile
-> > >   create mode 100644 drivers/reset/spacemit/core.c
-> > >   create mode 100644 drivers/reset/spacemit/core.h
-> > >   create mode 100644 drivers/reset/spacemit/k1.c
-> > > 
-> > 
-> > ...
-> > 
-> > > diff --git a/drivers/reset/spacemit/Kconfig b/drivers/reset/spacemit/Kconfig
-> > > new file mode 100644
-> > > index 0000000000000..4ff3487a99eff
-> > > --- /dev/null
-> > > +++ b/drivers/reset/spacemit/Kconfig
-> > > @@ -0,0 +1,12 @@
-> > > +# SPDX-License-Identifier: GPL-2.0-only
-> > > +
-> > > +config RESET_SPACEMIT
-> > > +	bool
-> > > +
-> > > +config RESET_SPACEMIT_K1
-> > > +	tristate "SpacemiT K1 reset driver"
-> > > +	depends on ARCH_SPACEMIT || COMPILE_TEST
-> > > +	select RESET_SPACEMIT
-> > > +	default ARCH_SPACEMIT
-> > > +	help
-> > > +	  This enables the reset controller driver for the SpacemiT K1 SoC.
 
-...
+--7hulawnxj67g4v62
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v2 0/4] memory: tegra210-emc: Support Device Tree EMC
+ Tables
+MIME-Version: 1.0
 
-> > > diff --git a/drivers/reset/spacemit/Makefile b/drivers/reset/spacemit/Makefile
-> > > new file mode 100644
-> > > index 0000000000000..3a064e9d5d6b4
-> > > --- /dev/null
-> > > +++ b/drivers/reset/spacemit/Makefile
-> > > @@ -0,0 +1,7 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +
-> > > +obj-$(CONFIG_RESET_SPACEMIT)			+= reset_spacemit.o
-> > 
-> > As RESET_SPACEMIT is defined as bool, the reset driver will never be
-> > compiled as a module... so either the RESET_SPACEMIT_K1 should be
-> > limited to bool as well or you could take an approach similar to the
-> > clock driver.
-> 
-> I'm not sure I understand this statement, at least in this
-> context.  This pattern is used to define a single module
-> "reset_spacemit.o" out of several source files.
+On Thu, May 08, 2025 at 07:27:52AM -0500, Aaron Kling wrote:
+[...]
+> The devices I'm talking about are not yet end of life, so it is
+> physically possible for them to get a bootloader update to conform to
+> the existing mainline model. But I'm just one guy trying to do 3rd
+> party support for these devices, I can't affect what Nvidia does with
+> the signed bootloader on these devices. I'd love to be able to swap
+> out an open source bootloader on these, but the secure boot setup
+> prevents that.
 
-The problem is that RESET_SPACEMIT could only evaluate to N or Y (it's a
-bool entry), thus reset_spacemit.o will always be built into the kernel,
-regardless whether RESET_SPACEMIT_K1 is set to Y or M.
+I've reached out to our Android team internally to see if there's
+anything we can realistically do about this.
 
-In the clock driver, the platform config entry (SPACEMIT_CCU, bool type)
-is used to hide SoC-specific entries instead of being really used in
-Makefile.
+Thierry
 
-> But I think you're saying that RESET_SPACEMIT and
-> RESET_SPACEMIT_K1 should both be bool, or both be
-> tristate.  I will resolve that question before I
-> send the next version.
+--7hulawnxj67g4v62
+Content-Type: application/pgp-signature; name="signature.asc"
 
-This isn't necessary, but making both of them bool will definitely
-simplify your work, although I'd like to see the reset driver able to
-be built as module, just like the clock one :)
+-----BEGIN PGP SIGNATURE-----
 
-> > > +reset_spacemit-y				:= core.o
-> > > +
-> > > +reset_spacemit-$(CONFIG_RESET_SPACEMIT_K1)	+= k1.o
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmgcqBUACgkQ3SOs138+
+s6FseA//dsjUgo5pq8qp+c6KgtZoXZsobQIJS+p23RqDrJ0vTBDlP1gkR03kkOiD
+o3POI2fzjsN2i90Ic+mv/N4R1w7Wwa/zjtdms+xLWNiHu4D/wCkHdiU/X4vd7MWX
+cIMOn1AvXLsXuUbK3KJdp1LVYauqva5psI5JmJBlu/FppBFplY9b9chcgDVf+Foh
+tMab7xWM0XeUHxoJvVCP+YD7XVeuX437wvhzT4pyIXm/Bl+YQhCzUBPiQetKX6Ui
+z0a8hw1v9nMIoz4C0GWmDLNs4pnQ31s8RN+oVQurMZtDBveP4r31QRvZ1DGirOLk
+mQ/iJOpJqHf5kbIEcHvep6BZKH3bEjotjF2N99YX2TYyHOgANUQO5OqD3Fh7ttCJ
+WmmPlVCJsdYtQQMF2kBJiQAcRrv5r0+ZzHmKm7S7vGeFjQiMegLZVPLOm2X+0aUS
+NCMPPiHG7+gKIOHHYsdyVF4z6Qv8ATU7BA+6ggR5UoqRLJ/Pilp3VKLj76nms/TX
+T0GMmJJU5/WAmLBawlWswKuoGIAWrgiYsmwqpt+SMFrgIwwMNV/ToxfbyCu8L64X
+I0IXCV0XDr8gvpitpAwA33GxP8VhFvxqSysvCr9BBgQkDmoITGhVAn4reJfoz6tj
+F8Fizop1NQzBwNFJMAwl8aUfJZoh95P5hC4uPKUS75Xg/zRR0hA=
+=YCXe
+-----END PGP SIGNATURE-----
 
-Regards,
-Haylen Chu
+--7hulawnxj67g4v62--
