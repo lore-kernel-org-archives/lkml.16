@@ -1,48 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3455278169;
-	Thu,  8 May 2025 14:56:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B35C20E6E4;
+	Thu,  8 May 2025 14:56:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716161; cv=none; b=VjP7tY69YhzsYmmgxtxwiHilHRtozXDvuAhBbELSfEYn5zbBCVgUF+dr3qKvAnFmJmYJpNxV9XkAwZKI2Pw+Ur+gWtO57jH89V1kIznNjK449f2mNOOfbZ8h5XfrMLTqKidMJlPR4RVkXMCaIdAbP+AK95TM6LHnnryINbI8W3s=
+	t=1746716191; cv=none; b=rvQSaN6+UeFo9KJufU88Po6XGbBdr9b85PTS3OkvIbKYmVAzjV5O6TancnNbxCcidCwdyMYVsp13kxhA563m61DyqmGNL8jNntOC0Rk1nBfY/D8X639EQ0kRejxnUKxvmckE7zcYd48aLoqJqHTp/apbte8wrV0ep8XC0ue1jis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716161; c=relaxed/simple;
-	bh=3sph70K7tbu8/YzMrRwGcqavagjwvO/xYYwjATmmdXg=;
+	s=arc-20240116; t=1746716191; c=relaxed/simple;
+	bh=Z4dvnwDPKKrOO7FUvW4AKUEsf8IE286Bt0EslCrm8Pg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FIDC8bzhb2e1JbB1YLL96gqGcJPkd+zQZEB332vcYlIWd8rauoSzUXeO0DvWdId67bXxJ6Ld8ftM/Mmywz19orCa1zFRsFYwvM22H+tj7h9vy6a+Y/cCvJwDDcQQPxqIuvj5hgrAcPTh5uDPAueLmcgJ69d7RXZAZxCpVpfOmT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AAbuPQB9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=up0BuxsjIHUQp+iWTSXObJkGwDvz6r5HfNZLwE/BeOX0kLcXYzTEywskcRkwyA9eKo2/xjeudFqyOyKM34cA3n2A9CaIIf56PAe2uWFqzKBndPWh6pYca0UbkCPuBhwANmeq4B9Kbjy3aKxgKaWibdH2MtYTRedXrAGRGJoOqpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gic8elSE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AAbuPQB9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0CC4C4CEED;
-	Thu,  8 May 2025 14:55:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gic8elSE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEBEFC4CEE7;
+	Thu,  8 May 2025 14:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746716160;
-	bh=3sph70K7tbu8/YzMrRwGcqavagjwvO/xYYwjATmmdXg=;
+	s=k20201202; t=1746716190;
+	bh=Z4dvnwDPKKrOO7FUvW4AKUEsf8IE286Bt0EslCrm8Pg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AAbuPQB9LmgaEoA8iWd4ABBrgsumCnyQWKSp8TzmXJGRnx2RcjOcFM9gmT4KP+gZM
-	 7MXlN3jJSTDLQUBXh3Tn8CZSxHHV+nO76VVc6YYayZ8wvcy6xR+cXJIQO91kVpTwo4
-	 66W/qtJD58QJvEmarBqimUgq5t1lMoRSGTTUQn3z+tdFG5boh5hrAaklcN9BSGHfrZ
-	 6o4xanrubBikkDhmoM8UHTqdEVAvzPmXaZm+vcDfJMWZB3UD78tNW7LyRatjm3xJXl
-	 pqIuA6IKZ7XdC9fyql5kjJCsZo+7qgpIqyTy5/FhPhRbDQHlphsNaYS+vlf0sXXP/T
-	 gHLzzKMoXx/Ww==
-Date: Thu, 8 May 2025 15:55:55 +0100
+	b=gic8elSEBoSXWOgzZ/JP3Y447rorLLxgCm4lmsxdhRrsKkwlBp7tpjjfcqO8YJFek
+	 h4ThQQx/NcOh+3o7SgaV6dU1ToBlHqJTZ39Y+1YdAUuOcXMmGNtvTNZOv9UAZLgweP
+	 Yq8yXkIZ2nKa/xRQdYoFnM6UUckLblPNyaKVb6Curng2KCXZlMwkkjUp8MiViUvLYN
+	 qHmhMUJ3FDhV4t27V5wHL9JDYbsS/Y0wbS883m1Fi9KmxGmDc7tTot3VIdn8mPnB26
+	 w18SCe9fzbQERcxIPL/YNjAnc2LFgaTlEYQRXHZloH9CiyAkd3cRl7+Gtsi0V91VMz
+	 1mM5Un13tQWag==
+Date: Thu, 8 May 2025 15:56:26 +0100
 From: Conor Dooley <conor@kernel.org>
 To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Joyce Ooi <joyce.ooi@intel.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Move altr,msi-controller to
- interrupt-controller directory
-Message-ID: <20250508-donut-radiator-66d06a36e8e8@spud>
-References: <20250507154253.1593870-1-robh@kernel.org>
+	Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	linux-can@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: can: microchip,mcp2510: Fix $id path
+Message-ID: <20250508-bankable-ethically-100b553b1819@spud>
+References: <20250507154201.1589542-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,34 +46,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MPh2K4ynGn9ngJl9"
+	protocol="application/pgp-signature"; boundary="ky+DZqPykRgOfhgT"
 Content-Disposition: inline
-In-Reply-To: <20250507154253.1593870-1-robh@kernel.org>
+In-Reply-To: <20250507154201.1589542-1-robh@kernel.org>
 
 
---MPh2K4ynGn9ngJl9
+--ky+DZqPykRgOfhgT
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 07, 2025 at 10:42:53AM -0500, Rob Herring (Arm) wrote:
-> While altr,msi-controller is used with PCI, it is not a PCI host bridge
-> and is just an MSI provider. Move it with other MSI providers in the
-> 'interrupt-controller' directory.
+On Wed, May 07, 2025 at 10:42:00AM -0500, Rob Herring (Arm) wrote:
+> The "$id" value must match the relative path under bindings/ and is
+> missing the "net" sub-directory.
 >=20
+> Fixes: 09328600c2f9 ("dt-bindings: can: convert microchip,mcp251x.txt to =
+yaml")
 > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
 Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
---MPh2K4ynGn9ngJl9
+--ky+DZqPykRgOfhgT
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBzF+wAKCRB4tDGHoIJi
-0hx6AP9MH4cTQdoahYIWy4tKS1Uo3KGmbcyM5IZnCm2u05kBbAD9GLxG0FsIniey
-CsrB+KAm76x/ZHArBtB2OU0tQ6KOWw8=
-=/Kh0
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBzGGgAKCRB4tDGHoIJi
+0qwtAQDAN8XEkM5Y1FfAwRsghKcOYekZNfGUuNuNVO2Hj8FlCgD/fa3Ptxfwk6rZ
+UoCTbjnYF5mM1vJgevrnq3hkiG1BzgA=
+=PUb/
 -----END PGP SIGNATURE-----
 
---MPh2K4ynGn9ngJl9--
+--ky+DZqPykRgOfhgT--
