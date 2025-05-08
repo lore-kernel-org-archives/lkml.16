@@ -1,83 +1,129 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5211917F4;
-	Thu,  8 May 2025 11:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F6D220F26;
+	Thu,  8 May 2025 11:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746704179; cv=none; b=AiYS1Lvbk735zno4oBuerg2ggkBUQmi2+RS713zOzrThqR+9MhM253om6GyAqesgF08vZmcM3BGVf0C2DhETlqTWfI8XPH7JQFdalmLDA1u4btzBjY5hcz7h2Lu0xUzQzwHgajaUaJo2jqapXDclxGe71OtC3LU7uYc3xDpT/BQ=
+	t=1746704202; cv=none; b=eqxxm7aGx7eUMP1ufcn3s/WGTMGSI7l0Eg++TWA1863Lrq+Nzb3jDtNoJ3Lq4Zgd6yFhqGv631B8bfBJxPhThYes0A69CiDZcfyaAkfE+A+WZP/3o+P67EFlhmivU+SPRzVN35ECS+FCoSeCKVW8Hu16+299cVSn5LqRmpKYgZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746704179; c=relaxed/simple;
-	bh=BU8NQeplfoLhhubiqXdhGOT23Wqj5sJj4znksBSAoxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=DfOp/XCN1HQRpx0qfQffDEdCx7XF9dlMzWOC7F0oaEtAks9L7WKfvH0TIk6murY0eiAyGmNZ5gQHHNWuZz0jw7EpFPsfo2JntMlJhxRceowGOqet8tnUbXTHa5ZCT3DmHE9ForyPaFkpfo17nJbpYQCWYJkubyVUr3MQDkBkUxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=JMo5OmnF; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1746704202; c=relaxed/simple;
+	bh=9EPr0UyMdXYUk+UXs4jteZKw6xDp0zVkVXceKKUv1Nw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kmEPZE+UHnd9eyCtm0HWxbuqv2Lj1Khk3Xbg5Z7nJTpLyhiI5W6nPk3PisSrSHdny8XOreO1wOLbyWxqzayNJiyLbnd4NghXse04QeFJlg829xx9uG//2D7+rN72M4Tsp6qjSj3jrwjdPKAb6jtfw1L+5hNtv6q55z7NIXOKBUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aLlOyVqt; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="JMo5OmnF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=C7cZX+eXm/vbJId8kTehe4+vFu6+Xjt+OeRYHMWNqmA=; b=JMo5OmnFRL3WZHIa
-	gxoigHirafSLWNb0Y2m/qGorjVcMUVl5+s3BtTEuSN2/iGPsnALVK86HT4Wa5yVsVi62V+LjTCp45
-	gYDua7TyOPdSPc2ZvmHnlL9Z2kihLfC075UuGUMKB54Qcf47BOMrXIKkx7W29Q4MMNedMNNiv1pkx
-	RMW6eL4sZxRLEmeTa2NVPiIHdQDKW+vFeG70zeSl6Tcos04JLqItFCLTBuPP+AgiaG4qYXNxUmH10
-	7M8g2kjRfc//7uxl3sLeVdIwUcfD1fWpaJGzM4QzVJajGaAdtMq/2fns68tLOzfhqJLkwkgJJKAfI
-	E6ltcAdqVr6mWIIGfw==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1uCzXo-002Mu8-2h;
-	Thu, 08 May 2025 11:36:04 +0000
-Date: Thu, 8 May 2025 11:36:04 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: perex@perex.cz, tiwai@suse.com, krzysztof.h1@wp.pl
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: question on sound/isa/msnd/msnd_midi.c
-Message-ID: <aByXJKi2j7B4b0bH@gallifrey>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aLlOyVqt"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f6fb95f431so3778594a12.0;
+        Thu, 08 May 2025 04:36:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746704199; x=1747308999; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ltr3kPU8Ou7XLMkgW3sKce+SE31ag1MbahmNgvMMJHs=;
+        b=aLlOyVqt0WI2z9ABD2NfxrhAVGtt256C5EEoV4VcQ8h/8bx1yIl27G3yDUXi65XQh5
+         HgUa3OObszUEQfw7OUhoIRgFAPyJlDxA/ouADJCxqI7R4YuRKnHGAgQ4sYv4JRN3Gxx3
+         dqnbvzmYorc7CbW8LJGWFFpkaQBo1OsgJM/ynLnsDb3MXdw5uQAosy+UWd8JMsB2zR33
+         I6K5EeJIII2Mo31lNNe2xiSMK3wy7XciACCljVKevOnTi0i91twRwZ5Cl0ASpZJfxJVY
+         nhyApQQaAhBYeSh7EzKR4hZFPJSJMxdG9AE99asU/NRDEtiQsfnHA+nABBOUJfnoOqgH
+         8lBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746704199; x=1747308999;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ltr3kPU8Ou7XLMkgW3sKce+SE31ag1MbahmNgvMMJHs=;
+        b=vgkFAdREnLLd6xegt3SOuMrp8dVCnq9xONqdccn2woys52oa3FSiN9617YP7Jce/q2
+         Y70VUUYXyYE32Z88meydIiHf+6SKoRvtmjyNVuWGemX//w+23GTjv8nyLoGol65ZjPY9
+         3xQ4WQdvMbehabb6UuTUl/pypkgnyVhtyLPEnoppSOEErtI7cSbz170IC74zHEh75HxA
+         dLx5Le7DQA0DjXu+fpgJfqHVd8IHFwLrxtu7o3hrY7Scrj+Jd0OlinZFVrPBnPnmKpMP
+         0YCx7tGAGMSKGJWScwqfLwH9hlL457tm3xOxzyt/w6VZJ3tHBp72saHToRPsKiR8e4Sq
+         FVSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUT0oGMONCAebTur9ax70lVG94zHuFCkyYdW13wm4o0sBSd3zcpkMMwZtGsukljd8ANcyNqn+iZzLA=@vger.kernel.org, AJvYcCV/3wMyJ1AdeYJFSocy0EOEWmwmXlqaIKTUAklIV5GeHfFHERfpAKYlI7ZmgI9fF6Kvmulh1sLBxpURQCu1+Yh/Xaw=@vger.kernel.org, AJvYcCXdtQkFejSZMxiHtrl/1t49bU70+pbq4sfcrYcNjkY0jrUfgH6eRNokkP5eL0kmbkRx2ERJQ5tMNdCPcNE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yylqm60B+ht7B/Lk9sWA3UlbJsy99k70+tfWTcEciQ6t+KxNf0K
+	kyJB7nhrD3E8CJ2GYAsSwBmXfA+GB3tPk4/Mo/hTjErc8AJZfV5KV6eWH/urAY9fJj/LKld94Ov
+	ojxzUIR/+M1VuZxS+1iXf6wuc338=
+X-Gm-Gg: ASbGncuAR+AbxiSrG4ukuxd5K+NJdM0XPWeP8GNj1bjDpYTI6fPWBmYQlF2t1kxz+0x
+	IjxQSE7uUuQ0QXUETGLxVWWKGNSeZptltBliPfCpz1TEQW7OBIOU+v35/X7qqArteYe3DZ1h30i
+	trq200iC5JYN7CDs+5nt4m
+X-Google-Smtp-Source: AGHT+IFRb+7ScKez83qOuG4N6t6qIMEbVcI1rTEw0gYhc/qxLVO0dIAsrm1I+vwoVva6auYEZdGL5jWG49v19xFXQlM=
+X-Received: by 2002:a17:907:9715:b0:ace:bee8:ae0f with SMTP id
+ a640c23a62f3a-ad1fc8da3efmr281177366b.1.1746704198687; Thu, 08 May 2025
+ 04:36:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
-X-Uptime: 11:27:35 up 10 days, 19:41,  1 user,  load average: 0.07, 0.04, 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+References: <20250430123306.15072-1-linux.amoon@gmail.com> <CANAwSgSXNuNFQ6RiqiLEBY3eCmxz2hQYfWTFij=Vi8S7rS-_TA@mail.gmail.com>
+ <97cfb30a-daa5-44de-ab29-f20b35d49d72@kernel.org>
+In-Reply-To: <97cfb30a-daa5-44de-ab29-f20b35d49d72@kernel.org>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Thu, 8 May 2025 17:06:22 +0530
+X-Gm-Features: ATxdqUE4hoONrfJ6klWGqObf3kEkWmvGg_F19UdLU4-d5Z7kZ2HdPSVuUXBp08c
+Message-ID: <CANAwSgRLAydhpsF4kASBjeSw3QEVcCBGYk_tSgLAGHGSLQJcRQ@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] Exynos Thermal code improvement
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	"open list:SAMSUNG THERMAL DRIVER" <linux-pm@vger.kernel.org>, 
+	"open list:SAMSUNG THERMAL DRIVER" <linux-samsung-soc@vger.kernel.org>, 
+	"moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:CLANG/LLVM BUILD SUPPORT:Keyword:b(?i:clang|llvm)b" <llvm@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
-   I noticed that nothing calls snd_msndmidi_new in
-sound/isa/msnd/msnd_midi.c and was about to delete it, but I'm not
-too sure - I think it's actually a bug where it should be called.
+Hi Krzysztof,
+On Thu, 8 May 2025 at 11:57, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On 08/05/2025 08:14, Anand Moon wrote:
+> > Hi All,
+> >
+> > On Wed, 30 Apr 2025 at 18:03, Anand Moon <linux.amoon@gmail.com> wrote:
+> >>
+> >> Hi All,
+> >>
+> >> This patch series is a rework of my previous patch series [1],
+> >> where the code changes were not adequately justified.
+> >>
+> >> In this new series, I have improved the commit subject
+> >> and commit message to better explain the changes.
+> >>
+> >> v6: Add new patch to use devm_clk_get_enabled
+> >>     and Fix few typo in subject as suggested by Daniel.
+> >> v5: Drop the guard mutex patch
+> >> v4: Tried to address Lukasz review comments.
+> >>
+> >> Tested on Odroid U3 amd XU4 SoC boards.
+> >> Build with clang with W=1 enable.
+> >>
+> >
+> > Genital Ping!!!
+>
+>
+> Huhu, nice. :)
+> I make typos as well, but some typos are better to avoid. :)
+>
+> Anyway, !!! are exclamation marks and I think it is very difficult to
+> scream at someone gently. I think this is contradictory to itself, so it
+> does not feel gently at all.
+>
+I did not mean anything harsh with these !!! marks.
 
-  This code was added in 2009 by
-commit f6c638350275 ("ALSA: Turtle Beach Multisound Classic/Pinnacle driver")
-(Pretty new for an ISA card!)
+> Plus you sent it 7 days ago and you are known to send poor quality,
+> untested code, so just relax and wait.
+>
+NAK - Do not merge these changes. The original code is in better condition,
+and the proposed modifications introduce issues.
 
-Looking at msnd_midi.c the only function in there that anything
-calls is snd_msndmidi_input_read() called by msnd_pinnacle.c but that
-is guarded by a check:
+> Best regards,
+> Krzysztof
 
-  146    if (chip->msndmidi_mpu)
-  147          snd_msndmidi_input_read(chip->msndmidi_mpu);   
-
-but I don't think anything sets that msndmidi_mpu, since the only
-thing that could is snd_msndmidi_new() which isn't called.
-
-I see that the original poster didn't test the external midi:
-   https://mailman.alsa-project.org/hyperkitty/list/alsa-devel@alsa-project.org/message/CWPYLPLJQEK64UU3YFCAMVXGDY42QKF2/
-so I guess this has always been missing.
-
-I don't have the hardware to test.
-
-Thoughts?
-
-Dave
-
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Thanks
+-Anand
