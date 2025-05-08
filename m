@@ -1,35 +1,35 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B5121ADA3;
-	Thu,  8 May 2025 06:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CF721B1A3;
+	Thu,  8 May 2025 06:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746686665; cv=none; b=aZVF4Rbaae4Amf9HMehJQtsPfuYvZGzb/CKFmN9NoGxmzv7sTW6mHNRObZRdAqnBl/UWSsRGXwoJ6Jn2gwUzSVD8/sCiTNm6oXm36VOpW0G7KyPV5kTLtee0dP2ARaJKWbUzaLWVERP2mUsnK/M0eYG9BAQUegUwm6Nw6NvQYYY=
+	t=1746686667; cv=none; b=P+YyId1Dn8e/9Kd0kWfy5+wC82zT/+TOvQwVCGCBYS5ofqrfZ1kGYXltFsuT3B1agq6f7i6Hme0k3SIWoFKGAEKdTJdNnvoAuK8kxoGYb/ySfaqJ8AfYnrCcSSM8YmOXtA2MvRsRRC/M1y3u/uFgn8LuLDmdgDt6CEA+5g6cCyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746686665; c=relaxed/simple;
-	bh=/38mWXskPoVQglLcSXuOweYW8P002AnwffGmfoyHC+I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=ruZax9bdj50oCUrytQN8b2h/m7YXKlpFC9DLzANc3QoHPJy5rt2p+e40ZIZgANDD4gyjs9yzAxSKAd7kxGLHSZjkIygRRP8t75He+7iquTPtDi/YnkETD1gDM3euWPjo5EIliGgFgiNJEUID4DlyQ9XubOA6z5o2vyPL4mVvWtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com; spf=pass smtp.mailfrom=airkyi.com; dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b=EIBFFjXc; arc=none smtp.client-ip=18.169.211.239
+	s=arc-20240116; t=1746686667; c=relaxed/simple;
+	bh=HTkMbecgEA76J/DSUzXaE8ifmkpnDi8Sa23FEF9VYEU=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=HEaPLSEDkcpWhsobBbQcYI2PLW9Bus6secUtSWy8OJN9wgJnhPuVu4ssAR5A1z5UZo4S6qQz4ZipahWxlM8XUioyJ4oNrHIheoajmI00IfRcjUy01BgAuN53ygrlDX/3t8JgMU/wcaDMXK8PG78NmsvQMt8z3sRgA3h5OaQyRqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com; spf=pass smtp.mailfrom=airkyi.com; dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b=WitwGPd4; arc=none smtp.client-ip=54.207.19.206
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=airkyi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b="EIBFFjXc"
+	dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b="WitwGPd4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=airkyi.com;
-	s=altu2504; t=1746686614;
-	bh=QyDFhO8OtjpTCJbTfPuoHwFDRMlY45kLnroWzhMw0+o=;
+	s=altu2504; t=1746686609;
+	bh=0pI2iREWW5cC2LwJLtCoMOYZhwY83h/z7B9+8q2WvaM=;
 	h=From:To:Subject:Date:Message-Id;
-	b=EIBFFjXcS1XhvSE80uXG9ACdOd1Elnc6pazPCFetlfV1srzr2i5Pp2jHvYO85xQ2o
-	 g2+Gn9I25Sv4trSTf4HSVZosb3BAY08/G5CXxC+71niwt3Vm9WS9Z82NMpiIi9GSDM
-	 drJA8tOiWy0FQUUgG2XO3ss7g2Or8RoP3k0XRpck=
-X-QQ-mid: esmtpsz18t1746686612te3481210
-X-QQ-Originating-IP: zbzDiNl3M4Ey2lstqT3s4mpmSf/C2+GYcEOzllnANXk=
+	b=WitwGPd4ELUfHlcBca74VFrCqdUNdz9uI+Rc7hx3jM/z7Dus5aO4zKCd8/MkbMTCT
+	 0RztnDfv3gzZ9TKvLQp2lp2jJ6I9RidPpUTeAGo3Wzs2VQGjBIGmhPiVeG/C7Hm2AE
+	 RiwuS/GN2uPiZqp/pZXJWAlPOh3V9UvkjbY68AIM=
+X-QQ-mid: esmtpsz18t1746686608t123d24cd
+X-QQ-Originating-IP: Lb7KIkQyY8JilwbOns5Cl43BA/5Z8/J56hf/m1H92DY=
 Received: from DESKTOP-8BT1A2O.localdomain ( [58.22.7.114])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 08 May 2025 14:43:29 +0800 (CST)
+	id ; Thu, 08 May 2025 14:43:26 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 997468467344160860
+X-BIZMAIL-ID: 4859509138922957751
 From: Chaoyi Chen <kernel@airkyi.com>
 To: Sandy Huang <hjc@rock-chips.com>,
 	Heiko Stuebner <heiko@sntech.de>,
@@ -49,30 +49,28 @@ Cc: Chaoyi Chen <chaoyi.chen@rock-chips.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] arm64: dts: rockchip: Improve coding style for rk3399 cdn_dp
-Date: Thu,  8 May 2025 14:43:03 +0800
-Message-Id: <20250508064304.670-2-kernel@airkyi.com>
+Subject: [PATCH 0/2] Convert Rockchip CDN DP binding to yaml
+Date: Thu,  8 May 2025 14:43:02 +0800
+Message-Id: <20250508064304.670-1-kernel@airkyi.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250508064304.670-1-kernel@airkyi.com>
-References: <20250508064304.670-1-kernel@airkyi.com>
 X-QQ-SENDSIZE: 520
 Feedback-ID: esmtpsz:airkyi.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: N5B7MX/IRFYgEb1I4KmXo2Ziq6XRf69B3uXk7PnGoPxySQhlZvpv/XYE
-	PtUfBYD1Sw3zPuLf0SqUHBr4OSnXsXjpuJI4nDCKI5KD+ekTPFhEqS8zhROeEgFSIrWHBCn
-	Hv5qHWvicl13+yg4bho6pcYLQDx03ZmfOjJAzm3YplltTo14kPYrulaI/geBgidQCBkS7/R
-	uJ+favHAQ0dkNG2jjlsMBRdsRax9SCRHsl8kamRgWTmqx26CAf/tzcFTUQ/1duJadj8JGM7
-	n86D2A9CHnXOypQociLXJvY1/e9DtWv6Q/1//ipT67YSvs5/vBBVbVZW0zzBQgxnXSOZ6C4
-	Woa06SkHPAWlRn2H4SYkTBNxB/DBXuJJSm13OksKSmfT0ovIKDlHbxtr/5ynL0RjZkEjTyT
-	AyuFhvJYFD2bl+czpCvIg1RyO74YttGxn6UaV6eSG0Neh+ZOmcnFUkdgFD7r59IPPOBfPcO
-	Im/nhqLEdDiOSVFCuN6naJ4i+/Ysar39tKpcJUHM2Cshb5PRPOOWnOxTwxKpZBngcN6GIRY
-	ca/MRXvQiEQsEcRcs2y90fwIuCKxwpcCuFV0Ec+wQaEUzCi0Qn1RhyVFJo0J+/sgsDDUlSx
-	55wFEIZa8lQbZaLlKvprxilt/R54VB+pxe9ai8pyD5pqEM4U7Pez7whjZb21HmkEe2p0TfQ
-	8V/MQ7TrBdjQafWlZ8zhZCVduIv6mevtOJHWFeL4NFNFtUOMGnEPWOnaKtdgIB6LNza+AVo
-	aZeyQfXfSGsfXHbMcnSgaZEFFUvDYMvn/fMJACE14647/dXpPUXcDb7kthc43ScJGN5ZjvX
-	ytxSCGED2dYdPHlyGqsSrMRzFEg4gMB4DPEWfu5iSY8PuBCQ4tZzEh289R1Of1glFgQw833
-	8bAuUfYzoQHpac5deERHHSjr4AoJV7Ufq6f2vkwAL6c0aOXeWSmywztSAWvh0rXhGU3ELxt
-	MVDgLxklZMP/MUwy2i58XlL/4
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-XMAILINFO: N3IC8um5pMyYiUTB++F8KmGWAz7BbvjjiJvjkp/Emlsn4bb47X4/ZJQi
+	3s93gkfxyyqyBFPaHO95ETcR+vn67It2LfIX0jXKOXkXWHipQnUY61PNk7v42XfLt2bUInW
+	b1CJIGt+gHy+SoabkJiwrra6tQkkj42SpsbbS03vIQR40QiBW1GVfYGJAosQekfFzr+CwRg
+	YwMqWTEMVM4z3suCQIV+m4DDk3oSPaviOUbZJ1dFHZFydMyGXoh3+7d5aTHitLvAonE8QgF
+	jeIEGebHMXzzEwvZ2qy3xzcsPYmyCbRBaWUDR/wovsrryAiK1OwxaGgyEjmpSNJL9dxQPQA
+	XIulur70ImXupPMIfD4g/cvF6SxuWkZPkIQkIn9rynumJIkXcJc6mHYGoz/qOuQHDdQ7SbN
+	F+CPCIanHXerXlwJOJhajxzhhBnPhbKASftNDzq9ZD4JfIfYape0q0ezZ8Ar9nrYrucZ/4a
+	3FwGKtAOVO01z2DpkBTgYShC8gJm4yzBkVDzRRnIlqQwpjht0zILw6So2G0RqS8mSz7aYIK
+	0ZXduco+VDbsd63wAHnLfiO659D6971lm00O1i7vpHIvVZ0rFXSEA76N/gJCjGUBk66yU16
+	h0hKvIeFpl7ilnJ24FNO8J7buPsBUNIPooKHKJmAWWLOAxB/iUPGGVcchiLR0YPtt1a2tG6
+	bUMR4pcsQhe+Pw4KCVpde0oz4eccAOhnEQg2MDPF6m4Q7lW0mcXPAJSpr/gfICE0bHHRA7R
+	BnaKLEyJ+IWakDzca2dX0+tz15yetBk95GlTAx58Emd25MrQ9rda/6yHJQrE3wS22Sy6+ZI
+	SRWByavJ1v1Z/xKQNObNDN5Oht3I7KmAwqiz0IhA9mpdPExOZZ4rzZe1BAYvukfHNXUxz7F
+	e2tfrMTeBn6x31JRJjWXREaL5MK6BBQqdCtwtXoCzkeA7QsaqWvgFrbT/Vh4XCcYyRgX8cW
+	VoHl3OzAjNz5v0Q==
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
 X-QQ-RECHKSPAM: 0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -82,42 +80,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 
-Let's make the ports nodes of cdn_dp in the same style as the other
-display interface, and match the style of ports's yaml.
+This series convert cdn-dp-rockchip.txt to yaml.
 
-Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
----
- arch/arm64/boot/dts/rockchip/rk3399-base.dtsi | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+PATCH 1 try to improve coding style on the existing rk3399 cdn-dp
+node.
+PATCH 2 try to convert cdn-dp-rockchip.txt to yaml.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-base.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-base.dtsi
-index 9d5f5b083e3c..e340b6df7445 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-base.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-base.dtsi
-@@ -618,7 +618,11 @@ cdn_dp: dp@fec00000 {
- 		status = "disabled";
- 
- 		ports {
--			dp_in: port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			dp_in: port@0 {
-+				reg = <0>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
-@@ -632,6 +636,10 @@ dp_in_vopl: endpoint@1 {
- 					remote-endpoint = <&vopl_out_dp>;
- 				};
- 			};
-+
-+			dp_out: port@1 {
-+				reg = <1>;
-+			};
- 		};
- 	};
- 
--- 
+Tested with:
+
+1. make ARCH=arm64 dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip,cdn-dp.yaml
+
+2. make ARCH=arm64 dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip,cdn-dp.yaml
+
+
+Chaoyi Chen (2):
+  arm64: dts: rockchip: Improve coding style for rk3399 cdn_dp
+  dt-bindings: display: rockchip: Convert cdn-dp-rockchip.txt to yaml
+
+ .../display/rockchip/cdn-dp-rockchip.txt      |  74 ---------
+ .../display/rockchip/rockchip,cdn-dp.yaml     | 148 ++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3399-base.dtsi |  10 +-
+ 3 files changed, 157 insertions(+), 75 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,cdn-dp.yaml
+
+--
 2.49.0
 
