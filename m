@@ -1,250 +1,131 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFCA6227563
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065A0224AF3;
+	Thu,  8 May 2025 12:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746708850; cv=none; b=Xr+xKPsFKwQeZomAFMegGOyfDo7+AxSic2aMt3N5w9te2C7uXTP6Byz5MPZosWu6UjYsTQjq1gvtUNPwpTahCN6VV/xDvmfymbi7lYwjMQl+c06+9+i6x4av8sKZSThw8jE1JTj62/L0eefwLTf9hBTqukcBgK8Hd0hT4oop1n4=
+	t=1746708883; cv=none; b=hos3iBqzSTwRPJjWp2PsnQXb31i81TMClBkL92M5yuqbMud7ppTXy4m7OdlfEHVN8CXwBxpc1ZHaUmJZE7bhUQflXT46xd6D/Nxm+lvdo7FlbhcSOlqAwdEagkkLAg1N/bkcibONAn1ZYb6pQ9bGrJsF/Hx+vbsosQ0L5NKvvjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746708850; c=relaxed/simple;
-	bh=RMrktqoVM0Tag4wRNHLGzgYhSGANNO7jHpPXy1sj/9w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jsOlIBsLCK6SSEomfGu84nXC3pA2hwDKGEBYEmCh8jpziRfWZTvjHprTRzrT81dklC/uskndOIhNCbVW5OM5NuYoJzvBUnwaA/QHs3eKGv3N3Umz04ls0v9cDPeZq9b/MfjkFvo8ROOz03TcY8hCwCZPGSobLeq7K7JlbNsbd+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=aNEKanIM; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1746708883; c=relaxed/simple;
+	bh=S9eoTW4XJBQw+Xx3Yvv9LwoTc4xtq7hLIPTj83IOlyQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bgP0hBIwrkzKxjnXFuz0UT/RXtPpwoa5bwUBr7ob/w+Mr2gdoE+dCcDrthexx+bELT+UutgaVSgpXANKvmozJfmE9j0D6FgJLWv7TrgY6Ya9H9nwkiif32BhvXrLnnmthPMZzpWMNm3n+w5PZDQHTaV/W1WrykxJCkY0J07ESJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJJVjIY6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="aNEKanIM"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso10481055e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:54:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1746708846; x=1747313646; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jm423Y8G3bZzVpNR0UOH1j8FXfca62QjmxMzBfC7huk=;
-        b=aNEKanIMZX5SjN73Jxwt+UePDYh1pXxzRNEk1yHQIY33M6MaCR9f8g8n9DPovUOY+V
-         WRBV4hnfCulk90kDCEiN1QQ5+qEYLoOt6U5iKqdkKQRy1YA1N1BkLUHAgCY8zLCW8pm8
-         i38myrj3g1h+m6MoDXSsrpOokw+IWWOVgs+pw8sW7GtsFyIudNEiFdS2FNnLmQS1eBV3
-         hGY0I4Pn6trpgxo68m8OqiebnBRpNEMeeKl2EKhqPIFRwikwVY6oKDy1zKOy+hZl/p1b
-         l7u7vjuWwNN3WE44BjaRxNCgQrFU5N/GRpg227vdUbrmwot9Y1My5CYn1CDdWzOq6iOH
-         hgGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746708846; x=1747313646;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jm423Y8G3bZzVpNR0UOH1j8FXfca62QjmxMzBfC7huk=;
-        b=PzeGjVqnGToY63q4zOK8nUEPamWgRuuL81tBZgyq1P8lE7l8HaAcMXP65HIc+XcRwt
-         2tC2Qfu2Dh5aFBOKiFPIqHKelF0yS19dg9ja+N0K0XkkyeakMedXLmAC2BWrVrTHaRI5
-         HJKPkRQIMizBnrrtVo1ln1Y2sf8XU6asm7xym9+bUU4stqItUoH2p+O8G0IQ4xw3ntj2
-         UjU2rHRG8N/pE1HWavEe5K0fjRFy/61lFKi2fNCaVmVbiYQ7cw5QhpDI1fOOA5darOvh
-         R6BL2jv5SdKhwdo9MCM+qEaY8E4E8iPX1e+WotRMPDfcImnCSZ+4Ne0tOV3ZvjWWWDaK
-         Gztw==
-X-Forwarded-Encrypted: i=1; AJvYcCVS4WI/Ke23lVZl6KhupXEZPz5EJrhKSN+jJDvlmskBZ/6CX/k874yNWJTIHYAmfQmlBdo+PsaM1XIqbZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXJhPFqrSMZh6QA+elNgYNamSOywXnOch4x9CXlJRZhJkiZBe+
-	szav5UwiQkIg2GzynltStW9D38JdHHQhk0QamwfVWpH/h0a0y1d4eYYPsdVRpuM=
-X-Gm-Gg: ASbGncvdU57MS3B2ZUe5AEbW5GtJ9JrCYbwnEfi8+UZ3sYLEde958PmfZKcZ9fPZPg9
-	TYx7QOMyyyCADYnbOy7tnWA1iKfBmstoP3Wvysuxh/MW7/34EasfmnOo2K6DmD8OUa6AIt/h2Tn
-	eRuihPtJKJYDcW3wrPCYNkgoRsoMabNCb54kgDd6yutScqaBUiVR/Sw2mOVEGGCOyalpz556BQ3
-	vBiJxGxZyaCXCDu4R6mOEr8PI645b/K5IRupFBplixUkHBvHDVaAeZB77FOdAdwjyiftUGyNRyq
-	yjNweE0ucfBvTumGJPfC7e0n7XY7CbyN24HR+v9UMCCLbqdApqEV781CWzLQcA==
-X-Google-Smtp-Source: AGHT+IG1nnYSwMKUh8NiWx5aATvCUW2fpW8/7C+bUd4+UV4P5eti7YcHhuvCEC7sOjk1ZxZemts2xg==
-X-Received: by 2002:a05:600c:3b29:b0:43d:83a:417d with SMTP id 5b1f17b1804b1-442d02ecb69mr31105475e9.12.1746708846224;
-        Thu, 08 May 2025 05:54:06 -0700 (PDT)
-Received: from alex-rivos.lan ([2001:861:3382:ef90:e3eb:2939:f761:f7f1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd35f40asm35960345e9.27.2025.05.08.05.54.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 05:54:05 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v3 2/3] riscv: Strengthen duplicate and inconsistent definition of RV_X()
-Date: Thu,  8 May 2025 14:52:01 +0200
-Message-Id: <20250508125202.108613-3-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250508125202.108613-1-alexghiti@rivosinc.com>
-References: <20250508125202.108613-1-alexghiti@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJJVjIY6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FB0DC4CEE7;
+	Thu,  8 May 2025 12:54:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746708881;
+	bh=S9eoTW4XJBQw+Xx3Yvv9LwoTc4xtq7hLIPTj83IOlyQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uJJVjIY6HdOdH4RVivepNxYb66cIl89AYcbOO/ZJojD2R1hMpapDcP4BFzfnIMOc9
+	 qgWXoayMi8hkZxiK72zs/RskPLTBuk/Tspk4041PCwOyYbQJ5B8CCqQL34oMiwyMU9
+	 sJYlxiZ7n3sQfQ/VFlGMPLaKCBmSfR46Nak/COVSADhIjpT5qrofclpgic1dx2RbDv
+	 PoAFMck6eoG3NUfHUpxEesuFg1Eu2iXuKr7tVFeH0oUzuiTxHIXaMuDdbDLccXOZuZ
+	 CZNgxqQUtcxKllRiaUc+xzLR0JJjFA6YovdLIwzcRg4SZ/541VcsTmHugwGA4nhHLY
+	 JMacJGFaN0Grg==
+Message-ID: <179d3a2a-a8bf-44be-b601-e9817c203508@kernel.org>
+Date: Thu, 8 May 2025 14:54:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/6] mux: gpio: add optional regulator support
+To: Johan Hovold <johan@kernel.org>, srinivas.kandagatla@linaro.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: peda@axentia.se, broonie@kernel.org, andersson@kernel.org,
+ krzk+dt@kernel.org, ivprusov@salutedevices.com, luca.ceresoli@bootlin.com,
+ zhoubinbin@loongson.cn, paulha@opensource.cirrus.com, lgirdwood@gmail.com,
+ robh@kernel.org, conor+dt@kernel.org, konradybcio@kernel.org,
+ perex@perex.cz, tiwai@suse.com, dmitry.baryshkov@oss.qualcomm.com,
+ linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ johan+linaro@kernel.org, Christopher Obbard <christopher.obbard@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20250327100633.11530-1-srinivas.kandagatla@linaro.org>
+ <20250327100633.11530-3-srinivas.kandagatla@linaro.org>
+ <Z-zvuhz2nkA5j4RZ@hovoldconsulting.com>
+ <aBynhb6voxJvZtB7@hovoldconsulting.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <aBynhb6voxJvZtB7@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-RV_X() macro is defined in two different ways which is error prone.
+On 08/05/2025 14:45, Johan Hovold wrote:
+>> nit: "failed to get/enable mux supply" may be more consistent with the
+>> other (non-capitalised error) messages and avoids repeating "gpio mux"
+>> which will be added by driver core.
+>>
+>>> +
+>>>  	ret = devm_mux_chip_register(dev, mux_chip);
+>>>  	if (ret < 0)
+>>>  		return ret;
+>>
+>> Either way:
+>>
+>> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+>> Tested-by: Johan Hovold <johan+linaro@kernel.org>
+> 
+> Can someone please pick this one and the binding update up for 6.16?
+> 
+> I see you recently volunteered to do so, Krzysztof? [1]
 
-So harmonize its first definition and add another macro RV_X_mask() for
-the second one.
+Sure, thanks for ping. I'll take with your change in err msg.
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/include/asm/insn.h        | 39 ++++++++++++++--------------
- arch/riscv/kernel/elf_kexec.c        |  2 +-
- arch/riscv/kernel/traps_misaligned.c |  2 +-
- arch/riscv/kvm/vcpu_insn.c           |  2 +-
- 4 files changed, 23 insertions(+), 22 deletions(-)
+> 
+> Johan
+> 
+> [1] https://lore.kernel.org/all/20250501175303.144102-2-krzysztof.kozlowski@linaro.org/
 
-diff --git a/arch/riscv/include/asm/insn.h b/arch/riscv/include/asm/insn.h
-index 2a589a58b291..ac3e606feca2 100644
---- a/arch/riscv/include/asm/insn.h
-+++ b/arch/riscv/include/asm/insn.h
-@@ -288,43 +288,44 @@ static __always_inline bool riscv_insn_is_c_jalr(u32 code)
- 
- #define RV_IMM_SIGN(x) (-(((x) >> 31) & 1))
- #define RVC_IMM_SIGN(x) (-(((x) >> 12) & 1))
--#define RV_X(X, s, mask)  (((X) >> (s)) & (mask))
--#define RVC_X(X, s, mask) RV_X(X, s, mask)
-+#define RV_X_mask(X, s, mask)  (((X) >> (s)) & (mask))
-+#define RV_X(X, s, n) RV_X_mask(X, s, ((1 << (n)) - 1))
-+#define RVC_X(X, s, mask) RV_X_mask(X, s, mask)
- 
- #define RV_EXTRACT_RS1_REG(x) \
- 	({typeof(x) x_ = (x); \
--	(RV_X(x_, RVG_RS1_OPOFF, RVG_RS1_MASK)); })
-+	(RV_X_mask(x_, RVG_RS1_OPOFF, RVG_RS1_MASK)); })
- 
- #define RV_EXTRACT_RD_REG(x) \
- 	({typeof(x) x_ = (x); \
--	(RV_X(x_, RVG_RD_OPOFF, RVG_RD_MASK)); })
-+	(RV_X_mask(x_, RVG_RD_OPOFF, RVG_RD_MASK)); })
- 
- #define RV_EXTRACT_UTYPE_IMM(x) \
- 	({typeof(x) x_ = (x); \
--	(RV_X(x_, RV_U_IMM_31_12_OPOFF, RV_U_IMM_31_12_MASK)); })
-+	(RV_X_mask(x_, RV_U_IMM_31_12_OPOFF, RV_U_IMM_31_12_MASK)); })
- 
- #define RV_EXTRACT_JTYPE_IMM(x) \
- 	({typeof(x) x_ = (x); \
--	(RV_X(x_, RV_J_IMM_10_1_OPOFF, RV_J_IMM_10_1_MASK) << RV_J_IMM_10_1_OFF) | \
--	(RV_X(x_, RV_J_IMM_11_OPOFF, RV_J_IMM_11_MASK) << RV_J_IMM_11_OFF) | \
--	(RV_X(x_, RV_J_IMM_19_12_OPOFF, RV_J_IMM_19_12_MASK) << RV_J_IMM_19_12_OFF) | \
-+	(RV_X_mask(x_, RV_J_IMM_10_1_OPOFF, RV_J_IMM_10_1_MASK) << RV_J_IMM_10_1_OFF) | \
-+	(RV_X_mask(x_, RV_J_IMM_11_OPOFF, RV_J_IMM_11_MASK) << RV_J_IMM_11_OFF) | \
-+	(RV_X_mask(x_, RV_J_IMM_19_12_OPOFF, RV_J_IMM_19_12_MASK) << RV_J_IMM_19_12_OFF) | \
- 	(RV_IMM_SIGN(x_) << RV_J_IMM_SIGN_OFF); })
- 
- #define RV_EXTRACT_ITYPE_IMM(x) \
- 	({typeof(x) x_ = (x); \
--	(RV_X(x_, RV_I_IMM_11_0_OPOFF, RV_I_IMM_11_0_MASK)) | \
-+	(RV_X_mask(x_, RV_I_IMM_11_0_OPOFF, RV_I_IMM_11_0_MASK)) | \
- 	(RV_IMM_SIGN(x_) << RV_I_IMM_SIGN_OFF); })
- 
- #define RV_EXTRACT_BTYPE_IMM(x) \
- 	({typeof(x) x_ = (x); \
--	(RV_X(x_, RV_B_IMM_4_1_OPOFF, RV_B_IMM_4_1_MASK) << RV_B_IMM_4_1_OFF) | \
--	(RV_X(x_, RV_B_IMM_10_5_OPOFF, RV_B_IMM_10_5_MASK) << RV_B_IMM_10_5_OFF) | \
--	(RV_X(x_, RV_B_IMM_11_OPOFF, RV_B_IMM_11_MASK) << RV_B_IMM_11_OFF) | \
-+	(RV_X_mask(x_, RV_B_IMM_4_1_OPOFF, RV_B_IMM_4_1_MASK) << RV_B_IMM_4_1_OFF) | \
-+	(RV_X_mask(x_, RV_B_IMM_10_5_OPOFF, RV_B_IMM_10_5_MASK) << RV_B_IMM_10_5_OFF) | \
-+	(RV_X_mask(x_, RV_B_IMM_11_OPOFF, RV_B_IMM_11_MASK) << RV_B_IMM_11_OFF) | \
- 	(RV_IMM_SIGN(x_) << RV_B_IMM_SIGN_OFF); })
- 
- #define RVC_EXTRACT_C2_RS1_REG(x) \
- 	({typeof(x) x_ = (x); \
--	(RV_X(x_, RVC_C2_RS1_OPOFF, RVC_C2_RS1_MASK)); })
-+	(RV_X_mask(x_, RVC_C2_RS1_OPOFF, RVC_C2_RS1_MASK)); })
- 
- #define RVC_EXTRACT_JTYPE_IMM(x) \
- 	({typeof(x) x_ = (x); \
-@@ -346,10 +347,10 @@ static __always_inline bool riscv_insn_is_c_jalr(u32 code)
- 	(RVC_IMM_SIGN(x_) << RVC_B_IMM_SIGN_OFF); })
- 
- #define RVG_EXTRACT_SYSTEM_CSR(x) \
--	({typeof(x) x_ = (x); RV_X(x_, RVG_SYSTEM_CSR_OFF, RVG_SYSTEM_CSR_MASK); })
-+	({typeof(x) x_ = (x); RV_X_mask(x_, RVG_SYSTEM_CSR_OFF, RVG_SYSTEM_CSR_MASK); })
- 
- #define RVFDQ_EXTRACT_FL_FS_WIDTH(x) \
--	({typeof(x) x_ = (x); RV_X(x_, RVFDQ_FL_FS_WIDTH_OFF, \
-+	({typeof(x) x_ = (x); RV_X_mask(x_, RVFDQ_FL_FS_WIDTH_OFF, \
- 				   RVFDQ_FL_FS_WIDTH_MASK); })
- 
- #define RVV_EXTRACT_VL_VS_WIDTH(x) RVFDQ_EXTRACT_FL_FS_WIDTH(x)
-@@ -375,10 +376,10 @@ static inline void riscv_insn_insert_jtype_imm(u32 *insn, s32 imm)
- {
- 	/* drop the old IMMs, all jal IMM bits sit at 31:12 */
- 	*insn &= ~GENMASK(31, 12);
--	*insn |= (RV_X(imm, RV_J_IMM_10_1_OFF, RV_J_IMM_10_1_MASK) << RV_J_IMM_10_1_OPOFF) |
--		 (RV_X(imm, RV_J_IMM_11_OFF, RV_J_IMM_11_MASK) << RV_J_IMM_11_OPOFF) |
--		 (RV_X(imm, RV_J_IMM_19_12_OFF, RV_J_IMM_19_12_MASK) << RV_J_IMM_19_12_OPOFF) |
--		 (RV_X(imm, RV_J_IMM_SIGN_OFF, 1) << RV_J_IMM_SIGN_OPOFF);
-+	*insn |= (RV_X_mask(imm, RV_J_IMM_10_1_OFF, RV_J_IMM_10_1_MASK) << RV_J_IMM_10_1_OPOFF) |
-+		 (RV_X_mask(imm, RV_J_IMM_11_OFF, RV_J_IMM_11_MASK) << RV_J_IMM_11_OPOFF) |
-+		 (RV_X_mask(imm, RV_J_IMM_19_12_OFF, RV_J_IMM_19_12_MASK) << RV_J_IMM_19_12_OPOFF) |
-+		 (RV_X_mask(imm, RV_J_IMM_SIGN_OFF, 1) << RV_J_IMM_SIGN_OPOFF);
- }
- 
- /*
-diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
-index e783a72d051f..1c3b76a67356 100644
---- a/arch/riscv/kernel/elf_kexec.c
-+++ b/arch/riscv/kernel/elf_kexec.c
-@@ -21,6 +21,7 @@
- #include <linux/memblock.h>
- #include <linux/vmalloc.h>
- #include <asm/setup.h>
-+#include <asm/insn.h>
- 
- int arch_kimage_file_post_load_cleanup(struct kimage *image)
- {
-@@ -336,7 +337,6 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
- 	return ret ? ERR_PTR(ret) : NULL;
- }
- 
--#define RV_X(x, s, n)  (((x) >> (s)) & ((1 << (n)) - 1))
- #define RISCV_IMM_BITS 12
- #define RISCV_IMM_REACH (1LL << RISCV_IMM_BITS)
- #define RISCV_CONST_HIGH_PART(x) \
-diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
-index 4354c87c0376..3d0e5eadfac3 100644
---- a/arch/riscv/kernel/traps_misaligned.c
-+++ b/arch/riscv/kernel/traps_misaligned.c
-@@ -17,6 +17,7 @@
- #include <asm/hwprobe.h>
- #include <asm/cpufeature.h>
- #include <asm/vector.h>
-+#include <asm/insn.h>
- 
- #define INSN_MATCH_LB			0x3
- #define INSN_MASK_LB			0x707f
-@@ -105,7 +106,6 @@
- #define SH_RS2				20
- #define SH_RS2C				2
- 
--#define RV_X(x, s, n)			(((x) >> (s)) & ((1 << (n)) - 1))
- #define RVC_LW_IMM(x)			((RV_X(x, 6, 1) << 2) | \
- 					 (RV_X(x, 10, 3) << 3) | \
- 					 (RV_X(x, 5, 1) << 6))
-diff --git a/arch/riscv/kvm/vcpu_insn.c b/arch/riscv/kvm/vcpu_insn.c
-index 97dec18e6989..62cb2ab4b636 100644
---- a/arch/riscv/kvm/vcpu_insn.c
-+++ b/arch/riscv/kvm/vcpu_insn.c
-@@ -8,6 +8,7 @@
- #include <linux/kvm_host.h>
- 
- #include <asm/cpufeature.h>
-+#include <asm/insn.h>
- 
- #define INSN_OPCODE_MASK	0x007c
- #define INSN_OPCODE_SHIFT	2
-@@ -91,7 +92,6 @@
- #define SH_RS2C			2
- #define MASK_RX			0x1f
- 
--#define RV_X(x, s, n)		(((x) >> (s)) & ((1 << (n)) - 1))
- #define RVC_LW_IMM(x)		((RV_X(x, 6, 1) << 2) | \
- 				 (RV_X(x, 10, 3) << 3) | \
- 				 (RV_X(x, 5, 1) << 6))
--- 
-2.39.2
 
+Best regards,
+Krzysztof
