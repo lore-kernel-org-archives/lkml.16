@@ -1,223 +1,228 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C4521422A
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 22:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746744353; cv=fail; b=JT2Fk9LPT3SdeomwOwXcylA2S4y5S00PvkoQoC/oCehQBTkabejbKn2BvUp8zbSrS/OYcIIzWywc76YwZXf14w4IOlhjEgoD/H8KTdIMVPyh//JI7I4roOuia2ponRqSakJBh07fz8AHV0NY14d5sd2HOR7nIwtRYXs+Aw2yFD4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746744353; c=relaxed/simple;
-	bh=1c/GxbGTq6r1foYgWKlgPXjUD9yq4mKpXL+Vo7wULAM=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Ts67RSFP25PV2w9juZlirBOKzjSSHcdsl5fsj9/v6ZolTosTEehDWXxpJnYEzAelf7V2GwNW/k/IkKA5dfBB094mFE8q9WbhMoR8McUCiCUZ8jLz4OmbMx0M01t1f5qz+/e7z+/BLj/I5102iOOcp7RJTewHLGKJrtHnztOpSMI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cNnXVSgH; arc=fail smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AACF218596
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 22:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746744356; cv=none; b=bT+foonBK+SoiBKYIh+iu6eNOHSs8mMvkympeCELE+bcSJ0Sb1wpPrEgjIX22gC723Z3NuWEuyxeEh1YmPoqf4DvUe5wu6VCCS1wo6fwVtwyeINrq+4hputCACb3c4QtFLBNNiQUhAsU/WHu0nEa3A8p0YcUYSQ6YM+9tgL/XpA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746744356; c=relaxed/simple;
+	bh=0A2PyAe0FEWxU24BYezBxE14ElWWg1cQepZASFQ5RhM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n+fD/AMqrCDADQZd/oJSnwsMY45vCBJi9sFpgoNg+9g+TETFaV6qS+fgQQrlsK8jWZVCZa+G1QP81BzEX8noopTDJH85UztmOjj0AXsWAlumCP9s1rLWWYWQfd6t5lrQqvTr3LJxWB40b/LEzUNH0s0SnVXdlndqDhyQBiOXVeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rbui3bY1; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cNnXVSgH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746744352; x=1778280352;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=1c/GxbGTq6r1foYgWKlgPXjUD9yq4mKpXL+Vo7wULAM=;
-  b=cNnXVSgHVeVOe6/y5t2XlK/YUX+2I8HrH6CvnQCVVqXNmkIbGeorUeTg
-   jnj2nQe5GnsmoFxkB2xKGrttoGLyKCoI1Q+vYn7lIXqYDiqDMtXB22JGa
-   FSrqBNdWrYeLFpIiEB9DBYhryuukagKdLEADVGFQYZbIUbbqatQXGYhEF
-   han60XfrJEmLCqis7YStb31raSNV9PH1yngqs+qkSHudshC64a6oppyYD
-   GbMq1EQdqTapVA/esGQ6IerkHMQmutVY/Sg7mE7kBpqIRIagH9KJ7RZrv
-   yPXH4x8/fEWSpDprcco0G7Sic7rfWdppmKEoaYlLAFjdtynmUpP7vAC0P
-   A==;
-X-CSE-ConnectionGUID: ezqBcoaZTnGzQqTzkoh+jw==
-X-CSE-MsgGUID: uGOcJF6qS6Ctk8KbAfPy0Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="66088218"
-X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
-   d="scan'208";a="66088218"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 15:45:42 -0700
-X-CSE-ConnectionGUID: FwD9q+9QSGS042iV1IVwLQ==
-X-CSE-MsgGUID: YTB9pvxFSEycjo/N213mIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
-   d="scan'208";a="167373804"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 15:45:42 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 8 May 2025 15:45:41 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 8 May 2025 15:45:41 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 8 May 2025 15:45:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tR0qD/X1NQ0PS2650s8efgp4vbKtlY94kjpCtMTkEo8RcPrNQjlSIFv4cWjCOdLmh6jvdAOlaeLt4vFMkBoWq/ukEbNI8EBg6TjAgsBYvpCUX3qIRUBWLuE+Tfl28WqVmt+QvESCwNmYI5avH3LcT3UwPoYHid0kHzLt+E2NorRicP0OYt+YtGCQjpXiHCokv5klZp/cqxXASfJPy5yYurKTpqyPbz02UU5iSi6VvsrE/GE95oEiRwezUm16E6BAeU0j7vizNjex3i4Ps2I9QMkcnjsYfnTaEqJHvFIYlRLE7WZ8/Tzsgp1Eo6Zp0/lfCWUkf5ogI+mfvs1uyQzA6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wP1uxzYADQKKAC8L/ua2RvpAG0bwhivhS+0kuRTjmKc=;
- b=Fd7YVgOzpFZ6u78HMovS0NM+ginr5O+cwzjgqfGmH1ut4AR5eoqwqBG1UxriIwUiHlm4VFCZq/h7rMAlpTVKsTR6P5tWmSoTywcXsRiEIlNFJiAD9vOyx353u7iXungNrrNJ883N5dMR7eeNCWtN9SyR1OeeJP/N6QU/nrQPgIBMq3w4KBkwqPNIgML/nmaACgSiwRUTRZEvUOmnP6+5KFr+3myrNe79JBCQKp8I4LxBT4ddNnUBRVvUUSKV0xKQb2fUQ7Z/DS8fra7XcMWKucQUVLZczXARoydCwHz+pu+Kpweuy7cJyewlqUsIkIDDyQD6J2QAlBjvj40ILtMfKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by SJ0PR11MB5007.namprd11.prod.outlook.com (2603:10b6:a03:2d2::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.22; Thu, 8 May
- 2025 22:45:35 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8722.021; Thu, 8 May 2025
- 22:45:35 +0000
-Message-ID: <3e573f62-3204-485a-870f-4cd469390855@intel.com>
-Date: Thu, 8 May 2025 15:45:32 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 29/30] x86,fs/resctrl: Move resctrl.rst to live under
- Documentation/filesystems
-To: James Morse <james.morse@arm.com>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>, Babu Moger
-	<Babu.Moger@amd.com>, <shameerali.kolothum.thodi@huawei.com>, "D Scott
- Phillips OS" <scott@os.amperecomputing.com>, <carl@os.amperecomputing.com>,
-	<lcherian@marvell.com>, <bobo.shaobowang@huawei.com>,
-	<tan.shaopeng@fujitsu.com>, <baolin.wang@linux.alibaba.com>, Jamie Iles
-	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
-	<peternewman@google.com>, <dfustini@baylibre.com>, <amitsinght@marvell.com>,
-	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
-	"Dave Martin" <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>, Shanker
- Donthineni <sdonthineni@nvidia.com>, <fenghuay@nvidia.com>, Shaopeng Tan
-	<tan.shaopeng@jp.fujitsu.com>
-References: <20250508171858.9197-1-james.morse@arm.com>
- <20250508171858.9197-30-james.morse@arm.com>
-Content-Language: en-US
-From: Reinette Chatre <reinette.chatre@intel.com>
-In-Reply-To: <20250508171858.9197-30-james.morse@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR05CA0113.namprd05.prod.outlook.com
- (2603:10b6:a03:334::28) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rbui3bY1"
+Message-ID: <dfb57a6c-8db7-4ab5-9d51-eec40cf8662e@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746744352;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0zLrDmNRPDlp9ApamVxJavibI7Ej0iwc88PKAJoessY=;
+	b=rbui3bY13NbbvkEFY4U4IDhY6PQ4MkQDV8Ny74RuhuERdEElVBZrLnJLZ+eMo3jsHBBsXG
+	+2BtXVvxsRyoQYKz0ygcR7tXSVoxxLSR6nMSqqJiFUyz58n/eMozy1tOufWdNNlWpR/sLz
+	PZs4V8gfxkQ13Ya+4NAyoBwfcs5Co+M=
+Date: Thu, 8 May 2025 23:45:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|SJ0PR11MB5007:EE_
-X-MS-Office365-Filtering-Correlation-Id: ba7c9bd9-4417-4033-a111-08dd8e820b9d
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?dkRkWGoyU0RMVjlJdkpqZUkwYWhzWHNYald5elhDcTlhMEdEUFJBR0dUdTJM?=
- =?utf-8?B?cEwvS0RBNG0vMi9SQ29lRnJrYVJUUGI4RlBtL2E2MUN0NFRGbTl3L1F5Wmky?=
- =?utf-8?B?QnFZaWRtNmN3Y3dlVzFydFp1eEJSTmR2cGhCY3Mvc3BqNGZJVXlBc01YVVc2?=
- =?utf-8?B?NTdiRG1JZDl1ZWxIYS92RW9oU2xrZVdFanJIdjZPd3BQRFFwam9SRmlJZjNE?=
- =?utf-8?B?cjVBRTFhWDdrWDE3VGU1SmRqRVJrLzErU2JjS2MvQnRHYURYR1RSVSttNzdm?=
- =?utf-8?B?WkMxK2pDS2VtTGVKakpHRkJCQjJTZk02OGVOSGFDUmxUcmRTc1dRVmI0M2xF?=
- =?utf-8?B?bWVWVFFUWHVobi9WNm9RNHhmUEQyTWR1T1dQeXFVa1BJdlVwQU4wRy9GSTA2?=
- =?utf-8?B?VlU2Z1pHR25NOS9KQlZNQk9vOXJJN2hwUEpycG9lS2Y1NUxRV2tZY2J4WjFz?=
- =?utf-8?B?eGlsMkRidWVvbSsrZmZwMmtYOUtsa3JIN2g1bXZVVCtGL1puRDM0QkhCQ1JY?=
- =?utf-8?B?UVRDVjJGdlFxaGRtY1ozWGN6Y0ZYbFNRREkvdHgxam1WamtiZEsreTJPcWNK?=
- =?utf-8?B?TUVZcXN1TUk0Q1l2emFySTNvMHdLbFlPbXQxdlhLM2dIWlRlUHBXdWhDS2gv?=
- =?utf-8?B?VitiUXJWY3lUejFnMVZTdmw2THRIaDh0dWVQeFFxTjN1cmJrRXpaTStSZDRW?=
- =?utf-8?B?WE9FVjFhL01IL0xoTmNXYnVUWk1lSDBpYktuNFNmbzdMdytRSURyeDljSmFZ?=
- =?utf-8?B?SC94WlBPbllnWFlpVVZRcDU5WkM4czkrL3ZaRUdBSWphaWViSlNyZHRiRXUy?=
- =?utf-8?B?MWlCNkg4QVhPRkQ0YVJNVy8rbXV3QmtJY2ZYa0tybEEyNFBKZVFPN0xzTDZ4?=
- =?utf-8?B?dlp6N3B0VjY2WkNtdC9xMXFlM1VxN2VQK3FHN0pFdjExN0RPZmpJazZpSWI4?=
- =?utf-8?B?NjFEUjd6bkF3V1FycDQxc2hMYmJOY1ZoWHV6bWduNzJ4MzZLTGp6NFJxUEdn?=
- =?utf-8?B?K2NWemFhRzlFcFdtZldMemFzM091ZnNBOFMzZFBnMTNtb0dKOW1OMmZ5ZGNw?=
- =?utf-8?B?YVFTRHU1azJ0d21BUk0yeXN6ZXhFMGFJMjJjWVlVYTV1ckgxSWtydmxkL0RG?=
- =?utf-8?B?Mm1FR09tVkxFakF3aFp0Y2tJWnhpVmk3bmNaanQ3NU1sWTJ3OThZL3ZEYXBX?=
- =?utf-8?B?bTgzWG94aHBhK3ljMExkNlhremNQNnZkY2ZpMVIrNkNxVEhMWTVCdTJLWmp6?=
- =?utf-8?B?WGFDYktoZ24ra2ZNa0lmcDNFay9yU1FKSDhFTWFnK0w3b05DU2pCMGhxTURO?=
- =?utf-8?B?OTBKLyttRCtkMXNjRjdjQ0xYUlVCRlRLZUFLR21wZmlqa3RSNG5pbXFIQTdC?=
- =?utf-8?B?dThXVE41azZSdU5CdDJENnMxQWlYd2kyVGVYQnhNOXRWUGNXbjdNemUvbW8y?=
- =?utf-8?B?N2tHMmFBVGsrUnVKeXN4VzhIYVBjMnBzRzJnc2M2cm55aGV0bHJsQytEVDEz?=
- =?utf-8?B?bHFPcnNsSmxLL0FCdzJ5ZEdoZEpZbDBvZU1FcHNvSGNHN1JRTmVEaE5IaVNB?=
- =?utf-8?B?M2FEajMxaVFhUE9jWXM3SmpNcUxHcGNoaFpMdXdlMWdMZkxnb2t1UHBWSmta?=
- =?utf-8?B?aC95TllxMFo5clNNYnlCSTVWMTlDZGcyZHNvNytsakFiazl4QWY0b1RSaGlQ?=
- =?utf-8?B?OFNhNmNzRjBrNnJ5TUhjNmFRNko0TWx4aFVRUnJLK3ZZMmxGKytBWkMyNEdv?=
- =?utf-8?B?TWhXWGR6WW9OWEEzcUxQN3dydXQ1WW9MbFRoV2hrdjVLQWY3ZUdIZzNHbFBW?=
- =?utf-8?B?YThpY3BHS0hsaDhVU2tQYm11L2VpY0cvYmROQ0ZEeHNJU0NWbkJnUERWczJn?=
- =?utf-8?B?cFg3djJVb1B4UmtoTGFVZlFXNWtGNkZGbys2Z3dtNjZybDdsbmRBR0p6RU13?=
- =?utf-8?Q?AQQ2eIRD5EU=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VGRYN0ZzdThjak9qNllocUY3am1oaXBtaXhpWk1Zb0FOVFQ5NmV2ZHVyYzhD?=
- =?utf-8?B?ZzZjc2RubTgrdENHb3k3cTNxdFY5aUhFOG1oYWZqTys4VHJseHBEMnM0RTMz?=
- =?utf-8?B?aUY2dG4yU2xkSDRMS0U3YXdxNlpIa2w3M3lHdzZQbnA2dHZpY1VnVUY0ZWVX?=
- =?utf-8?B?dVplbVNSajRJN0FzNEl4MjZrR3pEa1dwZThrSlU2am1wZEhxMmpEYk9wWXYv?=
- =?utf-8?B?TU9oaGVZbVAxdTlDKzI4MlhQMEpBSVAxblhHRnQwajVLR1ZMNkdWS0RpbEQw?=
- =?utf-8?B?R1BGT1MxU01yNUd1ak1wRU0zU3NLQWFmYmVQS09TeXJPNFZ6a1pkQTE0MkhX?=
- =?utf-8?B?L0RaVUpYc050dkUweGxSVXRvTlRYeXdscmNqOTAyb2U4aTBsYkFxSFNrWDEz?=
- =?utf-8?B?K3lSZGgzanRDejQ2WEpKLzhQaWdYTjM5bk4yTG1UN2Y3TmVaV0ViVHRVQ2dL?=
- =?utf-8?B?R2E3ZjUxQ2ZINDRmMFUwNUV2MGZSNy8xN1NWNFJWdHBzb3NPc1UycUpOUTk0?=
- =?utf-8?B?TGxoVDF6aGViZUxUSEl4QVp2cDJWUUJ4T2JGM1RMOW1vVmYvaUxTb2ZJcXhB?=
- =?utf-8?B?b3cxVnRZU3llSEt0YUUxdkR0WEVOalMyTGltd2hXV1B6Qzd1V1dUMUVCR1FJ?=
- =?utf-8?B?anRKTzlwWWJqMHR6T01xVUh3SFdLVklranVpMFNIQkRXV1Q3TVJpanZ0RkZI?=
- =?utf-8?B?S3hueW1BMUlUUC92d2tFblVZTTN6c0c2dzhad2h2M1J1Y1lodk5VYVZ0akUv?=
- =?utf-8?B?blBNRVgwcFp0ZXpsNHdDQ0k3RGd6RUxMaC9PbG8rWGJsajEwemk0RjhSRUU4?=
- =?utf-8?B?UkUwNWMzY0tGOHBrcVc0WjZpVkV2ZWZLRjVScFRSMjJaOU9pYjlYQXl3OW4v?=
- =?utf-8?B?L2N6T1lvcXcrSGRPckttZWtiTis1ajJCZGdjREZuZGdocTB0N3RGd054NlZh?=
- =?utf-8?B?bTRFc1dWeGloVFFMWUloVTI5d2xIaGNZUkl5VGNPMjcxWW8yRW1HNzFBWFQr?=
- =?utf-8?B?UDN0V2NUcU83Wm55eEllNzlpcDhBNXpiY21za3lNd1h1alFrWjlEbDZlZjdX?=
- =?utf-8?B?WitNQWJJazgyZVJqYitxTDJTZlMvMWllTUFGNjdEQUcxYks5TDBoa29mRDR0?=
- =?utf-8?B?MDFTVCt4NnNNVldYWXBIVHpiOVFkQlZaVDFkMXFiaURiUXVHTVJhMm5HbzBu?=
- =?utf-8?B?ZElPYjhUUkxVVyszd05wQ0h5MFBsUDBFSnRHNnZBc0RDU3JLU0NJT3FLa3FM?=
- =?utf-8?B?VlRqTUV4c0d5ejBjUmh3Nngyc3VsWlVITXNJVE5lOXc1L2d5b2E0dXFkMXl1?=
- =?utf-8?B?VWh4YW90T0dMSXNuUjI0VFUvNlZqYXd1UStNWmJLZTg1aXhoSjRURHBNSlNu?=
- =?utf-8?B?UGVnOFlOZ2JpQzNkT1o3OVhaTDdkUThDZmMxWVRkTWoxaW10Yi9VeVVCS0tP?=
- =?utf-8?B?SERFdGhFUHQ1Nm5Kd0hJRGVQeHdWSDVidFl5Wlo0T3lpTFltYzA3TFZueFlz?=
- =?utf-8?B?YXdETDdRWURRYXJnemtqOG1DY1NOTXJXYk90bXdLTmlvaFJJZG1rbHRxelBr?=
- =?utf-8?B?SkJvV2crYWprRFN4S0l3RmsvdVJOdHMvUTVHS1lCb0dVYzY1VkNuMzU0LzVF?=
- =?utf-8?B?ZUV2RmdVRWs1bncvSXUwb09MS3c3eG8wOC84cE1TVm1OUUR2R0xGRVBWb3ZI?=
- =?utf-8?B?Q3BUUmczdkZDVXg5c05EdTJoS1ZTSC83bm9oMUU5YUNWblBWb3NlNDNOYjNT?=
- =?utf-8?B?UnF6Y0ZvaXBNSlFKS014OWluN1JMU1AxTFcvVFFsaFdtV29tK0IrMFovUzJB?=
- =?utf-8?B?RzRpMFBBazhnQnNqazVrbEtTUFhJbW1keHo0c1AxM3ZsemdnYWdjZ1g4Wi9M?=
- =?utf-8?B?Y1Robk1CNTlkZFAvWlJlR3ZvWkh1UzJYVWtrcW9pVVowaGRiWElrNS9MVmlS?=
- =?utf-8?B?UzRLYmlFd0NJRDRpQnVUL3lJSCt6ZS9SVjRlOVRtS254WU1BUFBXZksvR0RZ?=
- =?utf-8?B?andGWnhscnRtb2dxa05HNjZudWZVSTBCVkFuY2FnUE5VaWNTblVTOHhWTzhU?=
- =?utf-8?B?WlpNNTltWVhMbTNQSWYvQWVoRWcvWUxoclhZRjlKMG10Z0V6VGllelRWSFQ3?=
- =?utf-8?B?ZWIyOUtGMXR2bzNRTWlLUFJpcVZjZjJoTUhQZWswcXM5UWp0ZllabmI3c3Mw?=
- =?utf-8?B?bHc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba7c9bd9-4417-4033-a111-08dd8e820b9d
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 22:45:34.9587
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4TKvK2j4KKkNia1RjPOLkPzhcaA1ED7aA8ASnCh47wkXDNXUudK+ZKCtvSnFydEAEOHfF02Pdd7Z+KIhiMmCYaiaFJnd4F7kPcsfqrz5QXo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5007
-X-OriginatorOrg: intel.com
+Subject: Re: [PATCH net-next] net: ixp4xx_eth: convert to ndo_hwtstamp_get()
+ and ndo_hwtstamp_set()
+To: Vladimir Oltean <vladimir.oltean@nxp.com>, netdev@vger.kernel.org
+Cc: =?UTF-8?Q?K=C3=B6ry_Maincent?= <kory.maincent@bootlin.com>,
+ Linus Walleij <linusw@kernel.org>, Imre Kaloz <kaloz@openwrt.org>,
+ linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Richard Cochran <richardcochran@gmail.com>,
+ linux-kernel@vger.kernel.org
+References: <20250508211043.3388702-1-vladimir.oltean@nxp.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250508211043.3388702-1-vladimir.oltean@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi James,
-
-On 5/8/25 10:18 AM, James Morse wrote:
-> The filesystem code has moved from arch/x86 to fs. Move the documentation
-> too.
+On 08/05/2025 22:10, Vladimir Oltean wrote:
+> New timestamping API was introduced in commit 66f7223039c0 ("net: add
+> NDOs for configuring hardware timestamping") from kernel v6.6. It is
+> time to convert the intel ixp4xx ethernet driver to the new API, so that
+> the ndo_eth_ioctl() path can be removed completely.
 > 
-> Signed-off-by: James Morse <james.morse@arm.com>
-> Tested-by: Peter Newman <peternewman@google.com>
-> Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-> Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
-> Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
-> Tested-by: Babu Moger <babu.moger@amd.com>
-> Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
+> hwtstamp_get() and hwtstamp_set() are only called if netif_running()
+> when the code path is engaged through the legacy ioctl. As I don't
+> want to make an unnecessary functional change which I can't test,
+> preserve that restriction when going through the new operations.
+> 
+> When cpu_is_ixp46x() is false, the execution of SIOCGHWTSTAMP and
+> SIOCSHWTSTAMP falls through to phy_mii_ioctl(), which may process it in
+> case of a timestamping PHY, or may return -EOPNOTSUPP. In the new API,
+> the core handles timestamping PHYs directly and does not call the netdev
+> driver, so just return -EOPNOTSUPP directly for equivalent logic.
+> 
+> A gratuitous change I chose to do anyway is prefixing hwtstamp_get() and
+> hwtstamp_set() with the driver name, ipx4xx. This reflects modern coding
+> sensibilities, and we are touching the involved lines anyway.
+> 
+> The remainder of eth_ioctl() is exactly equivalent to
+> phy_do_ioctl_running(), so use that.
+> 
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 > ---
+>   drivers/net/ethernet/xscale/ixp4xx_eth.c | 61 +++++++++++-------------
+>   1 file changed, 29 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/xscale/ixp4xx_eth.c b/drivers/net/ethernet/xscale/ixp4xx_eth.c
+> index a2ab1c150822..e1e7f65553e7 100644
+> --- a/drivers/net/ethernet/xscale/ixp4xx_eth.c
+> +++ b/drivers/net/ethernet/xscale/ixp4xx_eth.c
+> @@ -394,16 +394,20 @@ static void ixp_tx_timestamp(struct port *port, struct sk_buff *skb)
+>   	__raw_writel(TX_SNAPSHOT_LOCKED, &regs->channel[ch].ch_event);
+>   }
+>   
+> -static int hwtstamp_set(struct net_device *netdev, struct ifreq *ifr)
+> +static int ixp4xx_hwtstamp_set(struct net_device *netdev,
+> +			       struct kernel_hwtstamp_config *cfg,
+> +			       struct netlink_ext_ack *extack)
+>   {
+> -	struct hwtstamp_config cfg;
+>   	struct ixp46x_ts_regs *regs;
+>   	struct port *port = netdev_priv(netdev);
+>   	int ret;
+>   	int ch;
+>   
+> -	if (copy_from_user(&cfg, ifr->ifr_data, sizeof(cfg)))
+> -		return -EFAULT;
+> +	if (!cpu_is_ixp46x())
+> +		return -EOPNOTSUPP;
+> +
+> +	if (!netif_running(netdev))
+> +		return -EINVAL;
+>   
+>   	ret = ixp46x_ptp_find(&port->timesync_regs, &port->phc_index);
+>   	if (ret)
+> @@ -412,10 +416,10 @@ static int hwtstamp_set(struct net_device *netdev, struct ifreq *ifr)
+>   	ch = PORT2CHANNEL(port);
+>   	regs = port->timesync_regs;
+>   
+> -	if (cfg.tx_type != HWTSTAMP_TX_OFF && cfg.tx_type != HWTSTAMP_TX_ON)
+> +	if (cfg->tx_type != HWTSTAMP_TX_OFF && cfg->tx_type != HWTSTAMP_TX_ON)
+>   		return -ERANGE;
+>   
+> -	switch (cfg.rx_filter) {
+> +	switch (cfg->rx_filter) {
+>   	case HWTSTAMP_FILTER_NONE:
+>   		port->hwts_rx_en = 0;
+>   		break;
+> @@ -431,39 +435,45 @@ static int hwtstamp_set(struct net_device *netdev, struct ifreq *ifr)
+>   		return -ERANGE;
+>   	}
+>   
+> -	port->hwts_tx_en = cfg.tx_type == HWTSTAMP_TX_ON;
+> +	port->hwts_tx_en = cfg->tx_type == HWTSTAMP_TX_ON;
+>   
+>   	/* Clear out any old time stamps. */
+>   	__raw_writel(TX_SNAPSHOT_LOCKED | RX_SNAPSHOT_LOCKED,
+>   		     &regs->channel[ch].ch_event);
+>   
+> -	return copy_to_user(ifr->ifr_data, &cfg, sizeof(cfg)) ? -EFAULT : 0;
+> +	return 0;
+>   }
+>   
+> -static int hwtstamp_get(struct net_device *netdev, struct ifreq *ifr)
+> +static int ixp4xx_hwtstamp_get(struct net_device *netdev,
+> +			       struct kernel_hwtstamp_config *cfg)
+>   {
+> -	struct hwtstamp_config cfg;
+>   	struct port *port = netdev_priv(netdev);
+>   
+> -	cfg.flags = 0;
+> -	cfg.tx_type = port->hwts_tx_en ? HWTSTAMP_TX_ON : HWTSTAMP_TX_OFF;
+> +	if (!cpu_is_ixp46x())
+> +		return -EOPNOTSUPP;
+> +
+> +	if (!netif_running(netdev))
+> +		return -EINVAL;
 
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+One interesting fact is that phy_do_ioctl_running() will return -ENODEV
+in case of !netif_running(netdev) while previous code would return
+-EINVAL. Probably it's ok, but may be it's better to have consistent
+error path for both options.
 
-Reinette
+Otherwise LGTM,
+Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+
+
+> +
+> +	cfg->flags = 0;
+> +	cfg->tx_type = port->hwts_tx_en ? HWTSTAMP_TX_ON : HWTSTAMP_TX_OFF;
+>   
+>   	switch (port->hwts_rx_en) {
+>   	case 0:
+> -		cfg.rx_filter = HWTSTAMP_FILTER_NONE;
+> +		cfg->rx_filter = HWTSTAMP_FILTER_NONE;
+>   		break;
+>   	case PTP_SLAVE_MODE:
+> -		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V1_L4_SYNC;
+> +		cfg->rx_filter = HWTSTAMP_FILTER_PTP_V1_L4_SYNC;
+>   		break;
+>   	case PTP_MASTER_MODE:
+> -		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V1_L4_DELAY_REQ;
+> +		cfg->rx_filter = HWTSTAMP_FILTER_PTP_V1_L4_DELAY_REQ;
+>   		break;
+>   	default:
+>   		WARN_ON_ONCE(1);
+>   		return -ERANGE;
+>   	}
+>   
+> -	return copy_to_user(ifr->ifr_data, &cfg, sizeof(cfg)) ? -EFAULT : 0;
+> +	return 0;
+>   }
+>   
+>   static int ixp4xx_mdio_cmd(struct mii_bus *bus, int phy_id, int location,
+> @@ -985,21 +995,6 @@ static void eth_set_mcast_list(struct net_device *dev)
+>   }
+>   
+>   
+> -static int eth_ioctl(struct net_device *dev, struct ifreq *req, int cmd)
+> -{
+> -	if (!netif_running(dev))
+> -		return -EINVAL;
+> -
+> -	if (cpu_is_ixp46x()) {
+> -		if (cmd == SIOCSHWTSTAMP)
+> -			return hwtstamp_set(dev, req);
+> -		if (cmd == SIOCGHWTSTAMP)
+> -			return hwtstamp_get(dev, req);
+> -	}
+> -
+> -	return phy_mii_ioctl(dev->phydev, req, cmd);
+> -}
+> -
+>   /* ethtool support */
+>   
+>   static void ixp4xx_get_drvinfo(struct net_device *dev,
+> @@ -1433,9 +1428,11 @@ static const struct net_device_ops ixp4xx_netdev_ops = {
+>   	.ndo_change_mtu = ixp4xx_eth_change_mtu,
+>   	.ndo_start_xmit = eth_xmit,
+>   	.ndo_set_rx_mode = eth_set_mcast_list,
+> -	.ndo_eth_ioctl = eth_ioctl,
+> +	.ndo_eth_ioctl = phy_do_ioctl_running,
+>   	.ndo_set_mac_address = eth_mac_addr,
+>   	.ndo_validate_addr = eth_validate_addr,
+> +	.ndo_hwtstamp_get = ixp4xx_hwtstamp_get,
+> +	.ndo_hwtstamp_set = ixp4xx_hwtstamp_set,
+>   };
+>   
+>   static struct eth_plat_info *ixp4xx_of_get_platdata(struct device *dev)
 
