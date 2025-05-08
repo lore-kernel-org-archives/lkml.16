@@ -1,187 +1,88 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C200284B26;
-	Thu,  8 May 2025 17:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E44617A2E2
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746723974; cv=none; b=jO0G8yboPypzYTRsCzZr4pwU0pJ97OljcR+k1Zc2iOmZjTO8FmMjfumGyHyD9z0f60QgDuBE3jnfhlQlsbdxrYg6XIwnBvBWUn0mOFK55wvUsnFneM7aRe5q4Oi7hdnxrV+FwLRlcCJ7FA/xhZhquPSqIbCxHRUzO3rZjTZ8Ixk=
+	t=1746724092; cv=none; b=SyAKmWpeZBAfZ994pLyNX17yvwa19xE4plCD96WYVSKuaKpW5cVU8rphHyrqJzRjkmMUqS4FFjBmSxAp60p9UBBNRHD1+l9aVrw1p0YeKlHXqsPOdUA7o4/7aopx55jrtxpjoqXuh2J04/uZzd2AwRXiXfd4cAPIVQ3orjjmjzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746723974; c=relaxed/simple;
-	bh=5oB5XuQUAHY+iWIu7xO2YXp0L1tqVZjkQtTZeLmmlko=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SmPIkFLvBQBJVmjtdt2JwtlrQxNCTIoeszWn6rSrp8r2lb4049zRj+4jLEnE1gYPFDHWGqSGI6wnfDSBGfTO3lk1EcjRNrwPKCNAosh6IDrVWzQdN57beK1t3ojQFTjblrDYnCfgqbMs3NUbv4ckQw2kUmvzFfY14PrQpCmcTIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=mHpPycDp; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="mHpPycDp"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548DMfTV013536;
-	Thu, 8 May 2025 13:05:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=Vr42C
-	2tcFtKYH/kR/TkyurniNImfA3S11wrHsfaGJBo=; b=mHpPycDp3WCq0j73JnV5V
-	bDf1ZvaBYfSJDo29Q/EDaB2dx5e9uONiYE7CfnXsMpGHq/KFoLypErBo4lFRd1V0
-	nIHsBTz6RFTbajndr5oUrDzxnObBeBcHLbx6C7TkNFUh6L37QgnZKj135fee1niQ
-	07rIlvA0uEOUYo7f+2PR4loUxHoc+TVjQzkr80iyQS/n3cmr9Vm6YIROS8Kg2W4L
-	7EeMk94sZ6q+dEosC4UzWDFukOm3uLus3wsUbFg5m+qmZIFJDKGKkjR6TCj36xpW
-	jK9aUBGgQFp21vrR8Jc2SrB3Z0ACvh+Ke0rv7YDoo65ysggtewc0oyRCrc11gJ/+
-	w==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 46gpct32qc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 13:05:57 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 548H5ujR052999
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 8 May 2025 13:05:56 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 8 May 2025
- 13:05:55 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Thu, 8 May 2025 13:05:55 -0400
-Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 548H5drA015955;
-	Thu, 8 May 2025 13:05:42 -0400
-From: Jonathan Santos <Jonathan.Santos@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-CC: Jonathan Santos <Jonathan.Santos@analog.com>, <andy@kernel.org>,
-        <nuno.sa@analog.com>, <Michael.Hennerich@analog.com>,
-        <marcelo.schmitt@analog.com>, <jic23@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <marcelo.schmitt1@gmail.com>, <linus.walleij@linaro.org>,
-        <brgl@bgdev.pl>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <jonath4nns@gmail.com>, <dlechner@baylibre.com>
-Subject: [PATCH v7 12/12] iio: adc: ad7768-1: add low pass -3dB cutoff attribute
-Date: Thu, 8 May 2025 14:05:39 -0300
-Message-ID: <4a8b85097213311851a710df7c036c124c7862ed.1746662899.git.Jonathan.Santos@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1746662899.git.Jonathan.Santos@analog.com>
-References: <cover.1746662899.git.Jonathan.Santos@analog.com>
+	s=arc-20240116; t=1746724092; c=relaxed/simple;
+	bh=u4BVgpwlW3L+XA0sSf9CqoTwlFzxeaowJIuq6fa48JM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=fgvsYH4jqyrlnz143YG0Z19Syr1zFLO7Z/sbILYQHP+kZAq/5c8iqPHlxTrD+91WgUunokScMvvo4qLKygLlIGGwgypznd/KCrRMfF61fltFbldApOjhTtuCJmwuN5YgvR80Z85VExLdb5uqvRga6DEMABeiO/8tkGepyQYT0g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPv6:::1])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <l.stach@pengutronix.de>)
+	id 1uD4j8-0004jx-Ex; Thu, 08 May 2025 19:08:06 +0200
+Message-ID: <a18f214ab0487a1c562f9e2f7f66ab1345925177.camel@pengutronix.de>
+Subject: Re: [PATCH v2] drm/etnaviv: Fix flush sequence logic
+From: Lucas Stach <l.stach@pengutronix.de>
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>, linux-kernel@vger.kernel.org
+Cc: Russell King <linux+etnaviv@armlinux.org.uk>, Christian Gmeiner
+ <christian.gmeiner@gmail.com>, David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>, Philipp Zabel <p.zabel@pengutronix.de>, Guido
+ =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+ etnaviv@lists.freedesktop.org,  dri-devel@lists.freedesktop.org
+Date: Thu, 08 May 2025 19:08:04 +0200
+In-Reply-To: <20250508145624.4154317-1-tomeu@tomeuvizoso.net>
+References: <20250507112131.3686966-1-tomeu@tomeuvizoso.net>
+	 <20250508145624.4154317-1-tomeu@tomeuvizoso.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=J/eq7BnS c=1 sm=1 tr=0 ts=681ce475 cx=c_pps
- a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
- a=dt9VzEwgFbYA:10 a=gAnH3GRIAAAA:8 a=IpJZQVW2AAAA:8 a=ZkoTrUv0hqWFqrPu6skA:9
- a=IawgGOuG5U0WyFbmm1f5:22
-X-Proofpoint-GUID: lCYsiY6ywWlXGcoOtBfEO-AjC8Mk7FP8
-X-Proofpoint-ORIG-GUID: lCYsiY6ywWlXGcoOtBfEO-AjC8Mk7FP8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE0OSBTYWx0ZWRfX0QsmtxVLUXOQ
- wV1O9049CiB+oZqL86wZUfnYjSeyHmSKEWsq0cUqtIdX6guPNwKXbRmXDBOPLOelLSrF5wdty0S
- 97wVtvrhC0tU2fmCs+KqY9+67oQTCiLVwP2UdThK8hQ+TWPdaMPtlAiHDSVqOKMh2J87nPNyVtG
- ehbIfFHNRbVBSpGPGKuifaZr1ikV66F+oeXYdDurOROpeERv0qzOH/x2G2GbIHSBIio/C0Q2zWV
- ukWurbS9DL+YKKV9t4gY3NhdCst/NkblMgKhVsoT2b9WsuG7hVntkIodwMfGGerP53n7cPJ96B1
- PI7sN4oBgW+V3M2XD18GtEOaKgI1y1A1p1llDegaKWJ0zLvQNriFrgZFyKryqkuDBHrIJrXqSzy
- pp/iR0FFeXCzYM6mxO0xbVRa82jR4P6Aul4w1g1+xBgLqvGR+sF7BaXbJ0E5MCRDeEiaq9+A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_05,2025-05-08_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 impostorscore=0 adultscore=0 lowpriorityscore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 malwarescore=0
- spamscore=0 mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505080149
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Ad7768-1 has a different -3db frequency multiplier depending on
-the filter type configured. The cutoff frequency also varies according
-to the current ODR.
+Am Donnerstag, dem 08.05.2025 um 16:56 +0200 schrieb Tomeu Vizoso:
+> We should be comparing the last submitted sequence number with that of
+> the address space we may be switching to.
+>=20
+This isn't the relevant change here though: if we switch the address
+space, the comparison is moot, as we do a full flush on AS switch
+anyway. The relevant change is that with the old code we would record
+the flush sequence of the AS we switch away from as the current flush
+sequence, so we might miss a necessary flush on the next submission if
+that one doesn't require a AS switch, but would only flush based on
+sequence mismatch.
 
-Add a readonly low pass -3dB frequency cutoff attribute to clarify to
-the user which bandwidth is being allowed depending on the filter
-configurations.
+Mind if I rewrite the commit message along those lines while applying?
 
-Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-Reviewed-by: David Lechner <dlechner@baylibre.com>
-Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
----
-v7 Changes:
-* None
+Regards,
+Lucas
 
-v6 Changes:
-* None
-
-v5 Changes:
-* None
-
-v4 Changes:
-* None
-
-v3 Changes:
-* None
-
-v2 Changes:
-* New patch in v2.
----
- drivers/iio/adc/ad7768-1.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-index 28998cb02761..335612bce3bd 100644
---- a/drivers/iio/adc/ad7768-1.c
-+++ b/drivers/iio/adc/ad7768-1.c
-@@ -152,6 +152,17 @@ enum ad7768_scan_type {
- 	AD7768_SCAN_TYPE_HIGH_SPEED,
- };
- 
-+/*
-+ * -3dB cutoff frequency multipliers (relative to ODR) for
-+ * each filter type. Values are multiplied by 1000.
-+ */
-+static const int ad7768_filter_3db_odr_multiplier[] = {
-+	[AD7768_FILTER_SINC5] = 204,
-+	[AD7768_FILTER_SINC3] = 262,
-+	[AD7768_FILTER_SINC3_REJ60] = 262,
-+	[AD7768_FILTER_WIDEBAND] = 433,
-+};
-+
- static const int ad7768_mclk_div_rates[] = {
- 	16, 8, 4, 2,
- };
-@@ -757,7 +768,8 @@ static const struct iio_chan_spec ad7768_channels[] = {
- 		.type = IIO_VOLTAGE,
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
- 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |
--					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
-+					    BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
- 		.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
- 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
- 		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),
-@@ -777,7 +789,7 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
- {
- 	struct ad7768_state *st = iio_priv(indio_dev);
- 	const struct iio_scan_type *scan_type;
--	int scale_uv, ret;
-+	int scale_uv, ret, temp;
- 
- 	scan_type = iio_get_current_scan_type(indio_dev, chan);
- 	if (IS_ERR(scan_type))
-@@ -815,6 +827,12 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
- 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
- 		*val = st->oversampling_ratio;
- 
-+		return IIO_VAL_INT;
-+
-+	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-+		temp = st->samp_freq * ad7768_filter_3db_odr_multiplier[st->filter_type];
-+		*val = DIV_ROUND_CLOSEST(temp, 1000);
-+
- 		return IIO_VAL_INT;
- 	}
- 
--- 
-2.34.1
+> Fixes: 27b67278e007 ("drm/etnaviv: rework MMU handling")
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> ---
+>  drivers/gpu/drm/etnaviv/etnaviv_buffer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c b/drivers/gpu/drm/e=
+tnaviv/etnaviv_buffer.c
+> index b13a17276d07..88385dc3b30d 100644
+> --- a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
+> @@ -347,7 +347,7 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, u3=
+2 exec_state,
+>  	u32 link_target, link_dwords;
+>  	bool switch_context =3D gpu->exec_state !=3D exec_state;
+>  	bool switch_mmu_context =3D gpu->mmu_context !=3D mmu_context;
+> -	unsigned int new_flush_seq =3D READ_ONCE(gpu->mmu_context->flush_seq);
+> +	unsigned int new_flush_seq =3D READ_ONCE(mmu_context->flush_seq);
+>  	bool need_flush =3D switch_mmu_context || gpu->flush_seq !=3D new_flush=
+_seq;
+>  	bool has_blt =3D !!(gpu->identity.minor_features5 &
+>  			  chipMinorFeatures5_BLT_ENGINE);
 
