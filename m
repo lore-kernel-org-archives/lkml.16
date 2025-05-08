@@ -1,130 +1,150 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCBCEAF6
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F1723D2AE
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746695266; cv=none; b=C005LT9pt5BksG237sAe+DrOIh3qk6ByHVuI2gofoyDjLZIO8ndSBaG8o2UVRE0oKnnWFg1gBDVRMm/6UhTt6/r+uWMkySb27gTKdPDlQSCRbUdYIE+YBZmFYNZR1NU+1+NBX2oQ0O6/fCtTDQ0byN+TmcSIcjABKyZ1UyFLNJ0=
+	t=1746695278; cv=none; b=VH4NmQwxt4DVzn1Q3KnZOfyWVDKkz8g48ynbmzJvg4YZ+jGy74FHN8X195wt01kqg86n74EO66XsMLIPxkpEqikKCevcOq3itMdWHBem9ycMIXHJ4YfLOqKbG1en8y2+TyRUNvC8Ih+3sw+kS2YDbhr4jJ+Gjh7Ci1Am/CfTfAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746695266; c=relaxed/simple;
-	bh=TKwi/y4TtFwBOzXvq/iVApkONSwqtwirmTxVv59GJ04=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=WFZzkRwEWxA72kZVpbjU6r2QJ+qI4xNMM0O2sataIECp9zm0jeLsFflbl+fwaso/oikjuDOKklODUcgetxNctXPz7p8b49YNWKdOUEjDydoMzk2BOZwcAjBju06L6CzMUPjVLX4K2p3xH+GfivsDW9I5ckO8rp7Tk0YLNR80jH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LmSqX1iY; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746695278; c=relaxed/simple;
+	bh=cFOGWnVtQr0saOTihmVXuGVu+LURGA/kQzStCBpjTyg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cwKOGMc0lOw5DRwvboFKYmX39NC6DJNhfIsqHLq2THOBC691gpxmKbpshA9IJFsaSikapsQdBxgFSZBUcziKOchFJZqzmtVKKFUd8JzkctceowdlHFokb/8PhsQ0fO2/zyIjpZH1MjrWrl6aFyo0RedDrCXK2ooKANDN3cYV3oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dzT8mBkY; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmSqX1iY"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-30a8c9906e5so959622a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 02:07:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dzT8mBkY"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a0b5b90b7aso101410f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 02:07:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746695264; x=1747300064; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1746695275; x=1747300075; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=G59wmYTEp5CZVNWd3zANz7fLvnvyW6wlXmFfNSZ4Nas=;
-        b=LmSqX1iYBJJDHn7JKveZL0YK2MTJUM79oqQJMKVm1UXkdtTC01L+2sGVi6E+LurzW2
-         Gz7uqNxoYxr1XKOc2Tun1ffR2M50xqtSO0AyDtQnWOAuwkWahdPUYkFk7OxBdXKnaIS7
-         vfj6EivzH0L0yul88TBgEF1OBPh/QwvatOUhQ0sxmABMB0URFsEnvGJ3jxWyrp00x47a
-         wDRliYnvbBjeA03mKjwXkGsBedUbtLYLj1EbWeGa3KrAz0EdY7chjVP3hlRYr2lmOhvN
-         b2vgyd6XaU6uCN+vBBaj4dU6m2aVThBd08dy0XO4Z7XD9jgq7vuR7FERu9m+QiXRn/CP
-         ZgvA==
+        bh=lMpv5HRf7q1KKLcNwoafQJQk9nLYrnMRUfqpfBYSi/E=;
+        b=dzT8mBkYxfyp/V1mE2Vyk+GFlD7m3I1V8H/gPguooBC2tv8LGPIH6Z4TbXsbF0fOPn
+         SdEGjiBC80Az5UJ1Uwl8VsYVzsHmr1Pq1MWiDwMsySlAGZjydV1KC2+nJ5t1bxIhmR68
+         4FXveChc0mfOISF8tYy5ybqGN+qb6U0ObuymLU3ZeoSWJrrKrVlOWcXBa26OpvTFUJiV
+         +F/oh2IRBbKqk31gTKpjwmeZVkxiXHwn4McEoSxXOf/Mg5qhkJwMFEh4fZNNP3M01T1N
+         ZOOVTb1Zstcb65pqRCgH9pZj+e0lBnXdUvkx1dA1S/GzjvShnYyXTOordXHgsO89V00K
+         44AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746695264; x=1747300064;
+        d=1e100.net; s=20230601; t=1746695275; x=1747300075;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=G59wmYTEp5CZVNWd3zANz7fLvnvyW6wlXmFfNSZ4Nas=;
-        b=Jt//FyQ5px5huYGwZUM1KPCkw9D69e1to4LdDovsjeisTokH2d1ln5i0WLmz0fxsci
-         zaCeg0BjU7DZBWXKxBiZ5MpN8GKFE2oGXk/UChu3TXJaE/wnk5sf5OaQJ0rJS4+V3DJ2
-         FO5P5p1W8ZRQbk1mK0S2OXOuUxWvOJNq+eMqVbvkUB2BGBOPmUyWiNheuLiqhmB20YKA
-         mIfl+tWcL04xndad7xvb6rHwoTAs0rNwuodpbiyWES+08mjvEo2Dy3DuW8NMiB0XvVh5
-         8+q9CAVafnOvkzU16FHdskmTysHWHOsBNh0m6RYGrBBXJFapXhT58oPyxoSIoOanvOwU
-         gerw==
-X-Gm-Message-State: AOJu0YxWpnLSddApHkv81aCXByxLPJpMGMZmzmtVzSF43fWSG9PmdCH0
-	ca0WZLd06DkVRe624hGmkVyUI18YdBmkTU75dbxhOa34/8z3CEVd
-X-Gm-Gg: ASbGnctVn2wwAulPjc+h2sfiMfrveZViF4zcgjq6SjOTD2FX5KbXHEDK1LRapBQ46JK
-	M7d47GtBeYXbr7lSkIxTzaaDHRxIWZBhgwhAjQPrKSrqK5J8bOBOiT6KU1OeZlR32bq/VrMNjlV
-	gFWn/e2ZET6tVaJIxm9LDpcZzA7tTjYnyScCnB2+cDvMDXSJqJSZMOX8K9eGmIXiQEZEC5pLn7h
-	+CRhbYVc0YisNkflJjMggFqDMk5DpwcwKLcsTdjgSa16sg6mLRB8WY1bspDv2f8xWI28MtXBFYS
-	lMCQtxz6Hi1oC8EYPLQ+Jyv00fOe9bIlc4eSSn6H5/fkMWY8gLfdAw8tHQ==
-X-Google-Smtp-Source: AGHT+IGiE8488YJK1sIW3qbGbcFmbvSB7DRXNdU/o8vJJjPjJcjqo8+MYtY0hX9blpGRgL6LSyZMwQ==
-X-Received: by 2002:a17:90b:38c2:b0:2ff:592d:23bc with SMTP id 98e67ed59e1d1-30b28cdc729mr3619651a91.4.1746695263949;
-        Thu, 08 May 2025 02:07:43 -0700 (PDT)
-Received: from Barrys-MBP.hub ([118.92.10.104])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ad4d54ff6sm1696043a91.25.2025.05.08.02.07.40
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 08 May 2025 02:07:43 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: akpm@linux-foundation.org,
-	linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	Barry Song <v-songbaohua@oppo.com>,
-	David Hildenbrand <david@redhat.com>,
-	Peter Xu <peterx@redhat.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Lokesh Gidra <lokeshgidra@google.com>
-Subject: [PATCH RFC] mm: userfaultfd: correct dirty flags set for both present and swap pte
-Date: Thu,  8 May 2025 21:07:35 +1200
-Message-Id: <20250508090735.39756-1-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+        bh=lMpv5HRf7q1KKLcNwoafQJQk9nLYrnMRUfqpfBYSi/E=;
+        b=hnXOhD+7UjfvbKzt2faw1JxWOlP52yQVMrR+rLt2NJ0E4CL59aradG4MMBpL7esgP+
+         kp+NJL8Fo5X1ZLoDy8FLqKBqOIRQgDJsIOQZtCBj/ep2VZFGfpspEERAoJQNoOWOABix
+         Q5jLMeqh58BRt4xSanT+fphOp2i8lsX/4jGDb5IQvkeW+yMGDyt9DjsnJdyoDr2X54cL
+         VxA2gTAT0NnC7dA1fJWr9WaiSYSg9ImJkO6lQuQ3Cw7Dy7h9Alznl00gsRxmONtUjTP9
+         kXpq8UTkTTG6PBndISD8dZfKH+rjJs3E8wKwfKJy9zEugGtElX3HOfXNzAOlydR2JkQm
+         lrJA==
+X-Forwarded-Encrypted: i=1; AJvYcCWL+S4/7IfGTb77eZoBcTQYM7rZAWfCnp1+CAJfVxdpPLHbY1Amp12HPyHJVETMCg2yaBbM0Rs+XfSgtLQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJo3cRth4ZBVEzu7WSHCKgO8ts6y1K0ztSJ3e22DBtx6kDmSd5
+	si7QTwol7KJfRzoASkqZjOWVtIOlmt8krxMp6pqaAjKjIs1mY+KAXvzf7aSNvqs=
+X-Gm-Gg: ASbGncunAQGcDajVw2rEE2RAr1OAqt1yuwnfeNWea+4eOBOWFMt6VaE/Q7v71ZoXQuI
+	x8Ox6U/nL8wbp9WddxIa36CJcJ+UkhgUNZHlyPlnv2XwIhqS6dD7763pcU7/7cBS/vxm1NwQW5+
+	zEHh2gpOtrbnpUTvcA9Ri4YNm/0wyPS+zuHey1etFgsxszIYBeAOOPBQqJwxHa3VEke+v1xO4yy
+	r1mj2iQ4H/jri9lkVktCABY7A75aJWiMB2jd3zaAHC6U0C33+rTjvHYbZqb1EO6+6yzQuOblJWI
+	kL+tccjU7s24f1qy2M/M4dZcaspcpNr7DnhZz2y6YNRcVn50ng==
+X-Google-Smtp-Source: AGHT+IEPpTmtaFEr5272RyfI2A5wJm126PcKcCmO3UU4wfCfxMuNh81Fph52JbVRVXplQwXettz9FA==
+X-Received: by 2002:a5d:588b:0:b0:3a0:782e:9185 with SMTP id ffacd0b85a97d-3a0b49e9e45mr2153806f8f.2.1746695275227;
+        Thu, 08 May 2025 02:07:55 -0700 (PDT)
+Received: from kuoka.. ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0b5764733sm4867922f8f.22.2025.05.08.02.07.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 02:07:54 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Mark Brown <broonie@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	soc@lists.linux.dev
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [GIT PULL] memory: drivers: renesas for v6.16 (for SPI and arm-soc)
+Date: Thu,  8 May 2025 11:07:48 +0200
+Message-ID: <20250508090749.51379-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2476; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=cFOGWnVtQr0saOTihmVXuGVu+LURGA/kQzStCBpjTyg=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoHHRlWbsbAFQq97t0KAdqrSkwvWfZRQTyzwNrF
+ lAI8TxsExmJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBx0ZQAKCRDBN2bmhouD
+ 179UD/49zZ3UpgAr2vDLFWDBNBHfYlp58/q6tWf1hqTuUKsHwB0kWAprD/ZAXKdf/4M3IlwYI0q
+ pT/ByCDAt9N9kRg8s3cfs3eR0+VjN+HFE21+ml6ss00duM9Ujrmzn/CyiV9zdItjpGURh2R9asK
+ d20mVaMAJ5TsM2iq3Hnmy2jf+O/bEbneaimBc1JFLgdkPXbqflAXUwlChC8iHhHldAJLfugOnW2
+ rFn2dNNobiSigTBAZ6t4BFBl9LOcIhp67BvIDblrw6Bkt9JGgmfL68ctwKbQJ8Li7RgsZDgU8RZ
+ bJUHj+mkRN5Hj/WeuW2FzL3LEGU6dzTT8QMR9OLCq9ocBg0aqlVCJU2BOXh5j+4nzM3QozUUeii
+ RXE2oHJlA3ASHsbmJIGnFLpeXCbhYNo+y+0qMnDf5Kn2WaXgUwvn/q+DRPFrAwgAb+1jf+WYhnE
+ MGimB9e1zYuslH2by/Av8cXinVy5bII5uV/iFKrHy+ze35QD6fY6dumxeR+cGgOR6/4e50VmTTU
+ Oz1BjcGS/6vKbPJc6dWGo5cGIhihf3YL1zJMSeqxvA84bxJqML5UGyC9KX8R6lY+94d2t10Ark9
+ zpwOhTuu4hK4Agmvhb1qsatvDx7hfZKdXvtBo4PLcbrJkRmHhR8h8hkSs3k2nHzhuNlLz0YgCl3 xemMhmYlhcYiRpw==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 Content-Transfer-Encoding: 8bit
 
-From: Barry Song <v-songbaohua@oppo.com>
+Hi Mark,
 
-As David pointed out, what truly matters for mremap and userfaultfd
-move operations is the soft dirty bit. The current comment and
-implementation—which always sets the dirty bit for present PTEs
-and fails to set the soft dirty bit for swap PTEs—are incorrect.
-This patch updates the behavior to correctly set the soft dirty bit
-for both present and swap PTEs in accordance with mremap.
+Feel free to pull stable tag with Renesas PRC IF memory controller driver
+changes exposing interface for the SPI driver:
 
-Reported-by: David Hildenbrand <david@redhat.com>
-Closes: https://lore.kernel.org/linux-mm/02f14ee1-923f-47e3-a994-4950afb9afcc@redhat.com/
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Lokesh Gidra <lokeshgidra@google.com>
-Signed-off-by: Barry Song <v-songbaohua@oppo.com>
----
- mm/userfaultfd.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+https://lore.kernel.org/all/20250424090000.136804-8-biju.das.jz@bp.renesas.com/
 
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index e8ce92dc105f..bc473ad21202 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -1064,8 +1064,13 @@ static int move_present_pte(struct mm_struct *mm,
- 	src_folio->index = linear_page_index(dst_vma, dst_addr);
- 
- 	orig_dst_pte = folio_mk_pte(src_folio, dst_vma->vm_page_prot);
--	/* Follow mremap() behavior and treat the entry dirty after the move */
--	orig_dst_pte = pte_mkwrite(pte_mkdirty(orig_dst_pte), dst_vma);
-+	/* Set soft dirty bit so userspace can notice the pte was moved */
-+#ifdef CONFIG_MEM_SOFT_DIRTY
-+	orig_dst_pte = pte_mksoft_dirty(orig_dst_pte);
-+#endif
-+	if (pte_dirty(orig_src_pte))
-+		orig_dst_pte = pte_mkdirty(orig_dst_pte);
-+	orig_dst_pte = pte_mkwrite(orig_dst_pte, dst_vma);
- 
- 	set_pte_at(mm, dst_addr, dst_pte, orig_dst_pte);
- out:
-@@ -1100,6 +1105,9 @@ static int move_swap_pte(struct mm_struct *mm, struct vm_area_struct *dst_vma,
- 	}
- 
- 	orig_src_pte = ptep_get_and_clear(mm, src_addr, src_pte);
-+#ifdef CONFIG_MEM_SOFT_DIRTY
-+	orig_src_pte = pte_swp_mksoft_dirty(orig_src_pte);
-+#endif
- 	set_pte_at(mm, dst_addr, dst_pte, orig_src_pte);
- 	double_pt_unlock(dst_ptl, src_ptl);
- 
--- 
-2.39.3 (Apple Git-146)
 
+Hi Arnd,
+
+Please pull this into soc/drivers for v6.16.
+
+Best regards,
+Krzysztof
+
+
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-mem-ctrl.git tags/memory-controller-drv-renesas-6.16
+
+for you to fetch changes up to 798dc3f19c9e3855c18c3afb610bc5d27195ef44:
+
+  memory: renesas-rpc-if: Add missing static keyword (2025-05-08 10:59:07 +0200)
+
+----------------------------------------------------------------
+Renesas memory controller drivers for v6.16
+
+Improvements and new device support for the Renesas RPC IF memory
+controller driver:
+1. Minor cleanup and improvements.
+2. Refactor the driver to accommodate for newly added Renesas RZ/G3E support:
+   - Acquire two resets instead of only one,
+   - Add RZ/G3E xSPI support with different register layout and its own,
+     new interface for Renesas SPI.
+
+----------------------------------------------------------------
+Biju Das (9):
+      memory: renesas-rpc-if: Fix RPCIF_DRENR_CDB macro error
+      memory: renesas-rpc-if: Move rpcif_info definitions near to the user
+      dt-bindings: memory: Document RZ/G3E support
+      memory: renesas-rpc-if: Move rpc-if reg definitions
+      memory: renesas-rpc-if: Use devm_reset_control_array_get_exclusive()
+      memory: renesas-rpc-if: Add regmap to struct rpcif_info
+      memory: renesas-rpc-if: Add wrapper functions
+      memory: renesas-rpc-if: Add RZ/G3E xSPI support
+      memory: renesas-rpc-if: Add missing static keyword
+
+ .../memory-controllers/renesas,rzg3e-xspi.yaml     | 135 ++++
+ drivers/memory/renesas-rpc-if-regs.h               | 147 +++++
+ drivers/memory/renesas-rpc-if.c                    | 714 +++++++++++++++------
+ drivers/memory/renesas-xspi-if-regs.h              | 105 +++
+ include/memory/renesas-rpc-if.h                    |   4 +
+ 5 files changed, 914 insertions(+), 191 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/renesas,rzg3e-xspi.yaml
+ create mode 100644 drivers/memory/renesas-rpc-if-regs.h
+ create mode 100644 drivers/memory/renesas-xspi-if-regs.h
