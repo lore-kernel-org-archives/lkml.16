@@ -1,138 +1,139 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4102D21D3D1;
-	Thu,  8 May 2025 08:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442AC21D3D1;
+	Thu,  8 May 2025 08:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746694259; cv=none; b=KLOiYPWvQDdBbiCKp+JXKFYA+pJgGh7okXmTSRnwAdx38kIR06djrennGk7qDqoJA2RQ1mt3jPJtqbQvYV2LsKIEi/fFgRcOyBN16w5yvkEdWCerHJ1WyNubSVPjx//aWcPJphWzkQIWReWbvaoevAzIJ0rAOZVfBvqGFnOlwEY=
+	t=1746694306; cv=none; b=HZdi03Ij+lrc5xRP5ky2hZFnST9k2O7KWqwcvIEDvbzFWI3aPrjC8b0vicoRSVtpYrMyVkzQlVQBBMQRCG60L0RN9C/gqAzUxXCHhpzzgNp2DUtfZEKdjDyu9zn6HXCk5aer+QV/kp+NboRwNZ8OYcxua+545gQGgrIweyG8bsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746694259; c=relaxed/simple;
-	bh=BrbK4f66nQDeHyRVYyxzILu+g+U0/Z110+ceWJXL5EQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WFREZc+bCFcnJ+OzQfhQ8ydfag7kvlgAL1TXH1n+t64pK83pDxNPwOA0x0GCT+X+tK4O13BQPuImv/wwS+1vk6UQVak2BJS7Ft7DFIe6ReFy+D8GFvb9khsB0OlqEKciMC6lSU0vtBG/ZU4Ap3qkBdIqEcsr7rStn+aIJH3cJRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ifruc59p; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746694306; c=relaxed/simple;
+	bh=g4vvz+1sC8PYlJe+IjdoWsQQ0G2aDr2E1sIDxHh/bc8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dQgoCktszqNugkkdUran8XFBNoST2/pa9V7PswyG70aqZN0aAuM7x5YBMrv4fbJ7EfrPI3zgtus1Fu8cfn8sD2kVIlHBochR1oeef/YE9Do6+ezOr+SOMmWvpYLSB57d+BrZVGW1jLw9QKx8g8uF2diajSpk+K3E5Sg2j6NzsTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cw5QhkPx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ifruc59p"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5488lTNL019197;
-	Thu, 8 May 2025 08:50:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FeuXQKJYzXKrQyimVC6enB/MDQqFsM6oNHE6NFSYQag=; b=ifruc59pxaTBrTqs
-	7PorMX71cIKDMN0zY/+25hp7Tqy0hjTAGjvOwFFrxru95VP16WpS4rcAp4A16I6g
-	MIVdu7bl6dqJ08RKDWe4yDV8YeIxsU+MNIAmub828/dfcSuyxa2t4GGxdVXvhVGM
-	y8M2xAJrUQ3FIqldzHrrYkyqpew/iBhcV9WTIJiN9aX/YWR7xrZ60d2RrIsuRgMD
-	JQtN5ElPsojJfJwBCRT6YCZgKaeOtMwtsukSZ50s/ZcPm0lN2SAZe61sb0fTjlQP
-	Y5vrPaeeb35An7M5pRjGqS9iEO5+xLbNQN2uJhpiuc7tovDDzJ3iL3v9kZSlZO7D
-	5DJoLw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gsdj006j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 08:50:39 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5488od4T018031
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 8 May 2025 08:50:39 GMT
-Received: from [10.239.29.178] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
- 01:50:33 -0700
-Message-ID: <5fd4abe7-3621-4119-9482-de823b247b0d@quicinc.com>
-Date: Thu, 8 May 2025 16:50:30 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cw5QhkPx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1D26C4CEE7;
+	Thu,  8 May 2025 08:51:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746694305;
+	bh=g4vvz+1sC8PYlJe+IjdoWsQQ0G2aDr2E1sIDxHh/bc8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Cw5QhkPx446koYPzDN6Fb/2MM1Qu3M9lN4j+KJSVfYC60EkluMmKxqWPeTCq+5oem
+	 y7xOpzvcDTXG7p9HAcA2CWybgegwlIepgEyIH1oNGtyXwZZPMbegtOL+oo+XALsBcW
+	 R0rX0aD4YR+yKKVl4P9onl7k9ZQlQsvDLLe9XTTn1w43ISSbDov7T5j+qRr8bzST/o
+	 TWOfkBLyS4wdVNaTJRXNH1TKRxtZLBEeNDUxPHUGvOdMYDkC/Bbuhh0JdonPIdWxcH
+	 AjQOG0X4WV6ElpBRg3W26X9fyReG9EJWyRurPHyr3/IEGMyg9OzdIxoNleI4JYEAP8
+	 fcnyMHgh6F2Kw==
+From: Philipp Stanner <phasta@kernel.org>
+To: schalla@marvell.com,
+	vattunuru@marvell.com,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Shijith Thotton <sthotton@marvell.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Satha Rao <skoteshwar@marvell.com>,
+	Philipp Stanner <phasta@kernel.org>
+Cc: virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4] vdpa/octeon_ep: Control PCI dev enabling manually
+Date: Thu,  8 May 2025 10:51:35 +0200
+Message-ID: <20250508085134.24084-2-phasta@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/5] phy: qcom: qmp-pcie: add x1e80100 qref supplies
-To: Johan Hovold <johan@kernel.org>, Wenbin Yao <quic_wenbyao@quicinc.com>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <vkoul@kernel.org>, <kishon@kernel.org>, <sfr@canb.auug.org.au>,
-        <linux-phy@lists.infradead.org>, <krishna.chundru@oss.qualcomm.com>,
-        <quic_vbadigan@quicinc.com>, <quic_mrana@quicinc.com>,
-        <quic_cang@quicinc.com>, Johan Hovold <johan+linaro@kernel.org>,
-        Abel Vesa
-	<abel.vesa@linaro.org>
-References: <20250508081514.3227956-1-quic_wenbyao@quicinc.com>
- <20250508081514.3227956-6-quic_wenbyao@quicinc.com>
- <aBxpMuFGKgWrw1TV@hovoldconsulting.com>
-Content-Language: en-US
-From: Qiang Yu <quic_qianyu@quicinc.com>
-In-Reply-To: <aBxpMuFGKgWrw1TV@hovoldconsulting.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=PMAP+eqC c=1 sm=1 tr=0 ts=681c705f cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
- a=zitRP-D0AAAA:8 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=FqpPY7LzFvk08Lq7rO8A:9
- a=QEXdDO2ut3YA:10 a=xwnAI6pc5liRhupp6brZ:22 a=TjNXssC_j7lpFel5tvFf:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA3OCBTYWx0ZWRfX5VIC6QSm1+Yl
- gpHethyLRA9t6AEHjeBfkmh6QyeAucGikMzitV4dr4ywbluCe0pFJLF1lpu83wB4hR9roHXqBND
- b2BY1S0jZVusiIEGAaZ+qdw3My+//W7LF8IHgZ0dZT2XApNbMTwCWuQIhvG03kqxPh3a+Smx7g3
- pkWlb9hYIuOiqsjNPis8A/vP2W2qyOO1ShXfAdbrm4hYqIb8AqXGBhyIlkgR6lxunSocB2/Mrzs
- +8gUQovs+b0IdewuoMpH8Z4trr53+1s8i3sjz2ya/TyAHlU/jr3J9zCL+0ohjN8Aa8lffPl2kOt
- 1aijFRth75CUkneb3laB0hhKHHxhczU7zf9wOc11dft+kuqyz9E3lWn3enwjNKr2fptxOYxYyXt
- oK6pnubqiZThDAGQAmU50qLlVF/WdPibCZjTbBWHp+zMKgeqOfSvFp15LH7nHgrUD5S4cBsO
-X-Proofpoint-GUID: krx3KZtZkv5IdASRwzeLwYfjIsRBR-T3
-X-Proofpoint-ORIG-GUID: krx3KZtZkv5IdASRwzeLwYfjIsRBR-T3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_03,2025-05-07_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 impostorscore=0 mlxscore=0 suspectscore=0 spamscore=0
- bulkscore=0 priorityscore=1501 clxscore=1011 lowpriorityscore=0
- mlxlogscore=999 adultscore=0 malwarescore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505080078
+Content-Transfer-Encoding: 8bit
 
+PCI region request functions such as pci_request_region() currently have
+the problem of becoming sometimes managed functions, if
+pcim_enable_device() instead of pci_enable_device() was called. The PCI
+subsystem wants to remove this deprecated behavior from its interfaces.
 
-On 5/8/2025 4:20 PM, Johan Hovold wrote:
-> On Thu, May 08, 2025 at 04:15:14PM +0800, Wenbin Yao wrote:
->> From: Qiang Yu <quic_qianyu@quicinc.com>
->>
->> All PCIe PHYs on the X1E80100 SOC require the vdda-qref, which feeds QREF
->> clocks provided by the TCSR device.
-> This still looks wrong and you never replied to why these supplies
-> shouldn't be handled by the tcsr clock driver that supplies these
-> clocks:
->
-> 	https://lore.kernel.org/lkml/aBHUmXx6N72_sCH9@hovoldconsulting.com/
-Sorry, I thought Konrad had convinced you.
+octeopn_ep enables its device with pcim_enable_device() (for VF. PF uses
+manual management), but does so only to get automatic disablement. The
+driver wants to manage its PCI resources for VF manually, without devres.
 
-If the TCSR driver manages these supplies, would it be possible for tscr
-driver to recognize when it needs to turn vdda-qref on or off for a
-specific PCIe port?
->
->> Hence, restore the vdda-qref request for the 6th PCIe instance by reverting
->> commit 031b46b4729b ("phy: qcom: qmp-pcie: drop bogus x1e80100 qref
->> supplies"). For the 4th PCIe instance (Gen3 x2), add a new driver data
->> entry, namely x1e80100_qmp_gen3x2_pciephy_cfg, which is a copy of
->> sm8550_qmp_gen3x2_pciephy_cfg but uses sm8550_qmp_phy_vreg_l instead.
->>
->> Fixes: 031b46b4729b ("phy: qcom: qmp-pcie: drop bogus x1e80100 qref supplies")
->> Fixes: 606060ce8fd0 ("phy: qcom-qmp-pcie: Add support for X1E80100 g3x2 and g4x2 PCIE")
->> Cc: Johan Hovold <johan+linaro@kernel.org>
->> Cc: Abel Vesa <abel.vesa@linaro.org>
->> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
->> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
-> Johan
+The easiest way not to use automatic resource management at all is by
+also handling device enable- and disablement manually.
 
+Replace pcim_enable_device() with pci_enable_device(). Add the necessary
+calls to pci_disable_device().
+
+Signed-off-by: Philipp Stanner <phasta@kernel.org>
+Acked-by: Vamsi Attunuru <vattunuru@marvell.com>
+---
+Changes in v4:
+  - s/AF/PF
+  - Add Vamsi's AB
+
+Changes in v3:
+  - Only call pci_disable_device() for the PF version. For AF it would
+    cause a WARN_ON because pcim_enable_device()'s callback will also
+    try to disable.
+---
+ drivers/vdpa/octeon_ep/octep_vdpa_main.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/vdpa/octeon_ep/octep_vdpa_main.c b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+index f3d4dda4e04c..9b49efd24391 100644
+--- a/drivers/vdpa/octeon_ep/octep_vdpa_main.c
++++ b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+@@ -454,6 +454,9 @@ static void octep_vdpa_remove_pf(struct pci_dev *pdev)
+ 		octep_iounmap_region(pdev, octpf->base, OCTEP_HW_MBOX_BAR);
+ 
+ 	octep_vdpa_pf_bar_expand(octpf);
++
++	/* The pf version does not use managed PCI. */
++	pci_disable_device(pdev);
+ }
+ 
+ static void octep_vdpa_vf_bar_shrink(struct pci_dev *pdev)
+@@ -825,7 +828,7 @@ static int octep_vdpa_probe_pf(struct pci_dev *pdev)
+ 	struct octep_pf *octpf;
+ 	int ret;
+ 
+-	ret = pcim_enable_device(pdev);
++	ret = pci_enable_device(pdev);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to enable device\n");
+ 		return ret;
+@@ -834,15 +837,17 @@ static int octep_vdpa_probe_pf(struct pci_dev *pdev)
+ 	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+ 	if (ret) {
+ 		dev_err(dev, "No usable DMA configuration\n");
+-		return ret;
++		goto disable_pci;
+ 	}
+ 	octpf = devm_kzalloc(dev, sizeof(*octpf), GFP_KERNEL);
+-	if (!octpf)
+-		return -ENOMEM;
++	if (!octpf) {
++		ret = -ENOMEM;
++		goto disable_pci;
++	}
+ 
+ 	ret = octep_iomap_region(pdev, octpf->base, OCTEP_HW_MBOX_BAR);
+ 	if (ret)
+-		return ret;
++		goto disable_pci;
+ 
+ 	pci_set_master(pdev);
+ 	pci_set_drvdata(pdev, octpf);
+@@ -856,6 +861,8 @@ static int octep_vdpa_probe_pf(struct pci_dev *pdev)
+ 
+ unmap_region:
+ 	octep_iounmap_region(pdev, octpf->base, OCTEP_HW_MBOX_BAR);
++disable_pci:
++	pci_disable_device(pdev);
+ 	return ret;
+ }
+ 
 -- 
-With best wishes
-Qiang Yu
+2.48.1
 
