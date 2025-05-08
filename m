@@ -1,65 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918D415A858;
-	Thu,  8 May 2025 04:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6AB8C1E;
+	Thu,  8 May 2025 04:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746678647; cv=none; b=G63HwzjClq9o9qz0h/kqpkShtOX067VNakWZvaYgvViPXSH3UFqezjC1fSzCnch1NJfxwifLesO6DCfPwlWdI/ug5BKFuwwrcAkR91zYE+0CEAjOl2GLmY5GP3xzdnkvXysdT3Hg86UCVL7lBYdbjKNZr7STW4aeQQlJOs17lxU=
+	t=1746679059; cv=none; b=h84ofrBzHh8Tgfkpd1L5dP+mj2RLD1EZ4xG8ZqWRJtdO4/kaNYkoXGJwlesa2KbODNoe29T0iPQeLofJxw69d6KS1CptM00/2ct+p1HVPvimZl5cqbXfkjhuV5rDGu0+GdydGOk5C5+PEq+uOPxxmFKf5uf0HY37T52qwp7gfKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746678647; c=relaxed/simple;
-	bh=R3lZPq8jE1TfODDLc9DGRZGgvVALUs6gab1xXc8C0LY=;
+	s=arc-20240116; t=1746679059; c=relaxed/simple;
+	bh=0FChnJQPzz1KtzDEL5Eiax95pO/O1yR1baYM2Fap6x4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=in1SX2Bjc4A2ebTWxkcabb91psevjmmqCiEp8NEiMDj6SNFypmfChH0M25TzQaPxzVb9IyUlBf08X1gyBhFrKKtidtviVXngL9qXlA3+ASXkJFTUsz5zSa5k5fD3OZl1GZnS1I+xYBajkjlQrVTcVS6227aJEfeIJ3YIlEbSmgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Aybba2EK; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mh6PS8Ko7zfnlGqCmvHclVd+rDVSk3vwJbXpeBAeGRq28ODASr9U0og3DMvuv4TcpaFM2psm8FMttrn7grc9tv0wfsOZLhAP1fwiNO3yBt0iA6gDxPeNHcBczU3J8JDfOmMB/a1j+SZpy26LVPYGx1oAVdvYZ9dXLjMr40LaMFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=jt5SNyfo; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=Jjm612SV; arc=none smtp.client-ip=155.254.16.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Aybba2EK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746678646; x=1778214646;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=R3lZPq8jE1TfODDLc9DGRZGgvVALUs6gab1xXc8C0LY=;
-  b=Aybba2EKnty+KLPABO17ThiLSv2/QgJ+gfv7RVWum8GXqDgGM5YOe3yn
-   T2ymu4NA0MIjs+Ru5tnuLDZS4tjlQ9gUPXHcpH2Mx9MLDdUvl1lTBI2mZ
-   96YvEQ+UdAorn6W0OUvwmngzAk5XLupBC4KAPXglbDFnHtpcrYSWYie68
-   i+o4WkkcZNTVAMZufF215lvJzJkT6sLDJ9d//27nxWTIoGplm04BTYaP6
-   ccMfieEkZFD4jbCpaCqbucN2rtJNAR444UCIpKBkE8l4HDQzNjE5xHrXf
-   aiOf9hXafgGYkoW9QS/y5ASdPMfpYEHgN6dMlNnpZbdN0G+WjNPDQaBG/
-   g==;
-X-CSE-ConnectionGUID: FUqSlr9AQJmp4p77LM7VZA==
-X-CSE-MsgGUID: uZaE8ZnHTlaBGsggryripg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48550265"
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="48550265"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 21:30:45 -0700
-X-CSE-ConnectionGUID: Va7iEmHhSoCglHAPudVm/g==
-X-CSE-MsgGUID: Kkd+uZjLRWCCCIPj+DQSDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="136105721"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 07 May 2025 21:30:43 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCsu8-000A3j-1d;
-	Thu, 08 May 2025 04:30:40 +0000
-Date: Thu, 8 May 2025 12:30:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Jan Kara <jack@suse.cz>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Matthew Bobrowski <repnop@google.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] fanotify: Avoid a couple of
- -Wflex-array-member-not-at-end warnings
-Message-ID: <202505081249.CUDWsu7Z-lkp@intel.com>
-References: <aBqdlxlBtb9s7ydc@kspp>
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="jt5SNyfo";
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="Jjm612SV"
+Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
+	by bayard.4d2.org (Postfix) with ESMTP id 2D90112FB439;
+	Wed, 07 May 2025 21:16:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
+	t=1746677811; bh=0FChnJQPzz1KtzDEL5Eiax95pO/O1yR1baYM2Fap6x4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jt5SNyfodEi1ogDoJwe3JVlS0f9ZGc0hP+3ydAncgh4TPciIv+WHzCwS7EA8wgOq2
+	 ExSv5WIqFKleXikDRurQOpnO9sLKKj8Q/CP5fhJNZn5kUh2jDrU5XTu7To6LIhEawe
+	 WFDjblpoeXZwDN+Ldqm/FxOAzlQInbwgIJDAP4esF4uBqYxSCC65cKhPbsMvR0Y0dV
+	 2eWXhRjgfICEPOWW9pW+yT7GhGlS9HPvkT9ilnJPqNAr00waKTa/Xfhhk40aQaIrUy
+	 rKQJM1VJ8PhBwDQOmkR96jpecRuVwXY4mbAnRIUwfTW/8DmRPc+eUC3xhm/I6Vqe+5
+	 a3VwjXheJfa4Q==
+X-Virus-Scanned: amavisd-new at 4d2.org
+Received: from bayard.4d2.org ([127.0.0.1])
+ by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id Fgf2V28gQU5G; Wed,  7 May 2025 21:16:14 -0700 (PDT)
+Received: from ketchup (unknown [183.217.82.204])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: heylenay@4d2.org)
+	by bayard.4d2.org (Postfix) with ESMTPSA id 5306A12FB404;
+	Wed, 07 May 2025 21:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
+	t=1746677774; bh=0FChnJQPzz1KtzDEL5Eiax95pO/O1yR1baYM2Fap6x4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jjm612SVbUIilb0k9QVvl0KVmSkGUikSuYuzbBvuBrSD+fnVAduVWKdebnCtcuPJS
+	 bOgSUhRzYaysNDP8XobasGJEG9gUQOPwQHRiysaB2L4RdM4mCDdLFKkD/DP0n6QBWm
+	 jtdMDoHluKfzN6CUl3jbvGPyi9z7FDSzt2K3FSqrjHf5qlKRqE8MCQrqbekSDULahk
+	 IOgfsFVcmz+2cXs/VEaIwmHDHYBzqylZjIp0rIg0NVDqocTjKGghXWegGWFPjRWR2W
+	 knFk9wGYe8h6H7KIIXOmNWK3T4/acDoX6Sow2npJ5medxWk0Cuv+FcPnY60vHHiJn2
+	 5mfxKRxbEIxGg==
+Date: Thu, 8 May 2025 04:16:05 +0000
+From: Haylen Chu <heylenay@4d2.org>
+To: Alex Elder <elder@riscstar.com>, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+	p.zabel@pengutronix.de, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	dlan@gentoo.org
+Cc: inochiama@outlook.com, guodong@riscstar.com, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org, spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/6] soc: spacemit: create a header for clock/reset
+ registers
+Message-ID: <aBwwBSfnkw6XUOLA@ketchup>
+References: <20250506210638.2800228-1-elder@riscstar.com>
+ <20250506210638.2800228-3-elder@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,59 +72,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBqdlxlBtb9s7ydc@kspp>
+In-Reply-To: <20250506210638.2800228-3-elder@riscstar.com>
 
-Hi Gustavo,
+On Tue, May 06, 2025 at 04:06:33PM -0500, Alex Elder wrote:
+> Move the definitions of register offsets and fields used by the SpacemiT
+> K1 SoC CCUs into a separate header file, so that they can be shared by
+> the reset driver that will be found under drivers/reset.
+> 
+> Signed-off-by: Alex Elder <elder@riscstar.com>
+> ---
+>  drivers/clk/spacemit/ccu-k1.c | 111 +--------------------------------
+>  include/soc/spacemit/ccu_k1.h | 113 ++++++++++++++++++++++++++++++++++
 
-kernel test robot noticed the following build warnings:
+CCU is abbreviated from "clock controller unit" thus the filename seems
+a little strange to me. Will k1-syscon.h be a better name? We could put
+all syscon registers together when introducing the power-domain driver
+later, which could provide an overall view of register layout.
 
-[auto build test WARNING on jack-fs/fsnotify]
-[also build test WARNING on linus/master v6.15-rc5 next-20250507]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>  2 files changed, 114 insertions(+), 110 deletions(-)
+>  create mode 100644 include/soc/spacemit/ccu_k1.h
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Gustavo-A-R-Silva/fanotify-Avoid-a-couple-of-Wflex-array-member-not-at-end-warnings/20250507-074110
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs.git fsnotify
-patch link:    https://lore.kernel.org/r/aBqdlxlBtb9s7ydc%40kspp
-patch subject: [PATCH][next] fanotify: Avoid a couple of -Wflex-array-member-not-at-end warnings
-config: x86_64-defconfig (https://download.01.org/0day-ci/archive/20250508/202505081249.CUDWsu7Z-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250508/202505081249.CUDWsu7Z-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505081249.CUDWsu7Z-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from fs/notify/fdinfo.c:17:
->> fs/notify/fanotify/fanotify.h:280:16: warning: alignment 1 of 'union <anonymous>' is less than 4 [-Wpacked-not-aligned]
-     280 |         struct fanotify_fh name;                                                      \
-         |                ^~~~~~~~~~~
-   fs/notify/fanotify/fanotify.h:287:9: note: in expansion of macro 'FANOTIFY_INLINE_FH'
-     287 |         FANOTIFY_INLINE_FH(object_fh, FANOTIFY_INLINE_FH_LEN);
-         |         ^~~~~~~~~~~~~~~~~~
->> fs/notify/fanotify/fanotify.h:280:16: warning: alignment 1 of 'union <anonymous>' is less than 4 [-Wpacked-not-aligned]
-     280 |         struct fanotify_fh name;                                                      \
-         |                ^~~~~~~~~~~
-   fs/notify/fanotify/fanotify.h:315:9: note: in expansion of macro 'FANOTIFY_INLINE_FH'
-     315 |         FANOTIFY_INLINE_FH(object_fh, MAX_HANDLE_SZ);
-         |         ^~~~~~~~~~~~~~~~~~
-
-
-vim +280 fs/notify/fanotify/fanotify.h
-
-b8a6c3a2f0ae4d Amir Goldstein          2020-07-08  275  
-2c5069433a3adc Gabriel Krisman Bertazi 2021-10-25  276  #define FANOTIFY_INLINE_FH(name, size)						      \
-e3725b8a2ecdf6 Gustavo A. R. Silva     2025-05-06  277  union {										      \
-e3725b8a2ecdf6 Gustavo A. R. Silva     2025-05-06  278  	/* Space for object_fh and object_fh.buf[] - access with fanotify_fh_buf() */ \
-e3725b8a2ecdf6 Gustavo A. R. Silva     2025-05-06  279  	unsigned char _inline_fh_buf[struct_size_t(struct fanotify_fh, buf, size)];   \
-1758cd2e95d31b Alexey Dobriyan         2023-10-10 @280  	struct fanotify_fh name;						      \
-e3725b8a2ecdf6 Gustavo A. R. Silva     2025-05-06  281  } __packed
-2c5069433a3adc Gabriel Krisman Bertazi 2021-10-25  282  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Haylen Chu
