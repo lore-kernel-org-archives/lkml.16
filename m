@@ -1,79 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6141227BA1
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0E4227B95;
+	Thu,  8 May 2025 13:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746711817; cv=none; b=dnWKnR33ZlorLhbTtmZV/n3rC4gaH8BjcDrRM23ULxewBuYV/HziC6ml3XTWwA7lw5WFYBjhgKp9cPKOJCOhLYkrhOXA2A4ywpF3jnS7eA6HGi1Ab757twJlbXRFXpYvD/aBNDoVOpzDfDz60KtP3dZ2/eWjeVp6LbY358rUjF0=
+	t=1746711854; cv=none; b=WeIywdjaQV30w1KuRMgjsJbzET3hAitkMQbaYbwJVp31bzjvVto6lohnI/hjQdbXzcu6Q1dHmmDv1Kba7X/q9OnQsGuOxRU6AJFPC52QGjItgFYVc2ozNPxPO2YyzFH1q6/YcAz2riukPpHrC0OWh+7OafrXoWangFpc0crQw8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746711817; c=relaxed/simple;
-	bh=Y55wLFIvvID7sOrwT7mRN800kTlffZtkYjyvo+A31sc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C5XiYkOgB1yv7rNEOFJm/B7cPK1Wow3SWz1zrAv6r/ZUnyq9Dh4f6Rbm9Z9VhDpIyFWfYHfz30ue7SHMx9KsVeEKakEOiwAq79pZtTG2ItmJ1rJ5TRwkOeY3UFlR5ob4B/wn88DZw69abYyotcfEtG+hM1KN3lYv/8OU1pu+Q8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABFD2C4CEE7;
-	Thu,  8 May 2025 13:43:34 +0000 (UTC)
-Date: Thu, 8 May 2025 09:43:42 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Aaron Lu <ziqianlu@bytedance.com>, Florian Bezdeka
- <florian.bezdeka@siemens.com>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, Ben
- Segall <bsegall@google.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
- Peter Zijlstra <peterz@infradead.org>, Josh Don <joshdon@google.com>, Ingo
- Molnar <mingo@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Xi
- Wang <xii@google.com>, linux-kernel@vger.kernel.org, Juri Lelli
- <juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Mel
- Gorman <mgorman@suse.de>, Chengming Zhou <chengming.zhou@linux.dev>, Chuyi
- Zhou <zhouchuyi@bytedance.com>, Clark Williams <clark.williams@gmail.com>,
- daniel.wagner@suse.com, josephtsalisbury@gmail.com, lgoncalv@redhat.com,
- Tom Zanussi <zanussi@kernel.org>, williams@redhat.com, dwagner@suse.de
-Subject: Re: [RFC PATCH v2 7/7] sched/fair: alternative way of accounting
- throttle time
-Message-ID: <20250508094342.177ddf4d@gandalf.local.home>
-In-Reply-To: <ef402bac-3b41-4322-b5b2-224c874275e3@siemens.com>
-References: <20250409120746.635476-1-ziqianlu@bytedance.com>
-	<20250409120746.635476-8-ziqianlu@bytedance.com>
-	<099db50ce28f8b4bde37b051485de62a8f452cc2.camel@siemens.com>
-	<20250507090923.GA194948@bytedance>
-	<618bc3b199f19be916913301edb5ec832131e842.camel@siemens.com>
-	<20250508024525.GA628019@bytedance>
-	<ef402bac-3b41-4322-b5b2-224c874275e3@siemens.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746711854; c=relaxed/simple;
+	bh=X6Yu3x0xPCSuSq8UL7wpQLlzPGCiDE0xw6l+RcPJyao=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pi9C1dXX/m7x4TAF973egi4MmxXNc5UP82HbQAIBEIbhCyH37w7jaw+GP3D0edYV765lXqpXzlivhsWcNrKMwA9FcZ8dp9J5leJ5J0Rmqk5MDrfDoCOhQOPfok/FoM5f4gT1KePVUxfuGMEWi8omuOABIrj5QwzVXWB+0+3+d18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=C8CudheC; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="C8CudheC"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id B9223261CE;
+	Thu,  8 May 2025 15:44:02 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id k7mFSywzps7E; Thu,  8 May 2025 15:44:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1746711841; bh=X6Yu3x0xPCSuSq8UL7wpQLlzPGCiDE0xw6l+RcPJyao=;
+	h=From:To:Cc:Subject:Date;
+	b=C8CudheCORIWPtDCkwpl2+57gId+4YhGA/oHeKwANNoujv5hw+/3XcHw4jFvZ+pKj
+	 vX59902vb2sYt0vXXLNVACIZ9FH7LniuN4XHBZe8lOnC8YGR12Q2P5MuwOxechzo9A
+	 DRJVdNP9me4tTB4dh5l8aWjxfLqhI2VkDbTHbi7eMNHrLv6vcUvzfAr63UtPL0nTiI
+	 /tbEFH1YOkEjUkM3pkpx7tBfGtBCxkc3/YXeR7BYOG6qlciF5QmYQx3yOz4yxFxIqT
+	 gpYoknBEDsEhy/f3s7XEhbHyH9h3Hvc6ZV1iiFa/H+fFvUhQPT7uYPo5a5bAYFrtr5
+	 qaoU/63J+oUdw==
+From: Yao Zi <ziyao@disroot.org>
+To: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Yao Zi <ziyao@disroot.org>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Shresth Prasad <shresthprasad7@gmail.com>,
+	Chukun Pan <amadeus@jmu.edu.cn>,
+	Jonas Karlman <jonas@kwiboo.se>
+Cc: linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] Support RK3528 variant of Rockchip naneng-combphy
+Date: Thu,  8 May 2025 13:43:28 +0000
+Message-ID: <20250508134332.14668-2-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, 8 May 2025 08:13:39 +0200
-Jan Kiszka <jan.kiszka@siemens.com> wrote:
+Rockchip RK3528 ships a naneng-combphy that operates in either PCIe or
+USB 3.0 mode. It has a similar control logic to previous generations of
+naneng-combphy but an apparently different register layout.
 
-> On 08.05.25 04:45, Aaron Lu wrote:
-> > On Wed, May 07, 2025 at 11:33:42AM +0200, Florian Bezdeka wrote:  
-> >> To sum up: This series fixes (or seems to fix, let's wait for one more
-> >> week to be sure) a critical RT issue. Is there a chance that once we
-> >> made it into mainline that we see (official) backports? 6.12 or 6.1
-> >> would be nice.  
-> > 
-> > I don't think there will be official backports if this series entered
-> > mainline because stable kernels only take fixes while this series changed
-> > throttle behavior dramatically. Of course, this is just my personal
-> > view, and the maintainer will make the final decision.  
-> 
-> With 6.12 carrying RT in-tree and this patches serious fixing a hard
-> lock-up of that configuration, a backport to 6.12-stable would be
-> required IMHO. Backports beyond that should be a topic for the
-> (separate) rt-stable trees.
->
+This series prepares phy-rockchip-naneng-combphy.c for variants with a
+different register layout and add RK3528 support.
 
-Agreed, and I'm adding the stable RT maintainers as well in case this needs
-to go earlier than 6.12.
+Testing is done on both Radxa E20C and Radxa Rock 2A with downstream
+devicetree changes, both USB 3 and PCIe modes are verified with mainline
+driver and achives a reasonable link speed.
 
-Thanks,
+The devicetree change (PATCH 5) depend on v5 of the SD/SDIO series
+("Support SD/SDIO controllers on RK3528")[1] for a clean apply. Thanks
+for your time and review.
 
--- Steve
+[1]: https://lore.kernel.org/all/20250506092206.46143-1-ziyao@disroot.org/
+
+Yao Zi (5):
+  dt-bindings: soc: rockchip: Add RK3528 pipe-phy GRF syscon
+  dt-bindings: phy: rockchip: naneng-combphy: Add RK3528 variant
+  phy: rockchip: naneng-combphy: Add SoC prefix to register definitions
+  phy: rockchip: naneng-combphy: Add RK3528 support
+  arm64: dts: rockchip: Add naneng-combphy for RK3528
+
+ .../phy/phy-rockchip-naneng-combphy.yaml      |   5 +-
+ .../devicetree/bindings/soc/rockchip/grf.yaml |   1 +
+ arch/arm64/boot/dts/rockchip/rk3528.dtsi      |  23 +
+ .../rockchip/phy-rockchip-naneng-combphy.c    | 740 +++++++++++-------
+ 4 files changed, 495 insertions(+), 274 deletions(-)
+
+-- 
+2.49.0
+
