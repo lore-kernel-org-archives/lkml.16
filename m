@@ -1,106 +1,96 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BE4F2144A8
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BE52144A8;
+	Thu,  8 May 2025 09:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746696426; cv=none; b=MJ/JsxmAMLF2g3IVbdF7CXcgnfyJFKvR8Pqzu6PE000V/ANd3m0G13jgJu71D9Y4+4DtHQdNMNXg8Pp8md967iHVc8xCBU74AwqI4WoqaSl+361qyAD+5tgLqJp+aSZMaqf7kYOumUdy0n4GypFNLsZQ9gqpVg298AjZyWKQjJw=
+	t=1746696441; cv=none; b=BR6ZJnBnZBV8GDTRwNl3ILkvBKDcI7xa4JhORJBWzRNfxGn6z6O1TOrzYvGO2d7qqLYbO8I6jLDW+L75LwmNKduAVfxwSx5vYMZ6D1eyLmYtKMl0wodByRulCvw/Wv0Nkpi0NzZPO85FJWAiFXSD9v7jAQn8a7qP5KRaVQVxz6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746696426; c=relaxed/simple;
-	bh=jBTnTuDF1nWzonOW4Z/l4TDLFMG9KRzfXwLS8AsJUWI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nJJLuVFOHrzA3LbpR6Qs7vQ2cz1F3YS96l6GYKbDuxoVX9DJ5VmymAbHAJ6c4GdaN+tsYTiIDYdiTyeAHiioWAdDLph7+FmekQt7a85RAMk/XbiJBWfg6h70oCsNC88pJWBCirk6zD7g6Pw99m3TBPdKk5VKtCSlDOVbW7gko0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 506D2106F;
-	Thu,  8 May 2025 02:26:54 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3BD493F673;
-	Thu,  8 May 2025 02:27:02 -0700 (PDT)
-Date: Thu, 8 May 2025 10:26:59 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Per Larsen <perl@immunant.com>, armellel@google.com, arve@android.com,
-	Sudeep Holla <sudeep.holla@arm.com>, catalin.marinas@arm.com,
-	kernel-team@android.com, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	qperret@google.com, sebastianene@google.com, will@kernel.org,
-	yuzenghui@huawei.com, Per Larsen <perlarsen@google.com>
-Subject: Re: [PATCH 1/3] KVM: arm64: Restrict FF-A host version renegotiation
-Message-ID: <20250508-spectral-sage-whippet-4f7ac2@sudeepholla>
-References: <CA+AY4XcaJa1_U3qXQUBj4wZJYc9hKmRX8FTNeDvV2auEnC_WrA@mail.gmail.com>
- <86r017h00e.wl-maz@kernel.org>
- <aBnNXyJn818ZEKOS@google.com>
- <8634dfh47q.wl-maz@kernel.org>
+	s=arc-20240116; t=1746696441; c=relaxed/simple;
+	bh=0erWkF40pUIGwAGypE58a7+XvzGDRJetEZCo9MO5foM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DCR1u4dib9YfJKo/afSK0H/mXrd6W4qpJjZ7VSVNHwfOj7FgQZfVz3IHsftY8RiKcbe1vVH6RFaWjcf6EcEAjVWkypxxf0I6xAsZ1rbMEVrUo/HzvuqVP91/Ug4H27hEaTCOe7/m9OvOu9jA5oqQWte6J3kTGHGr8iYVynO8sdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=etTWGR0W; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="etTWGR0W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746696435;
+	bh=0erWkF40pUIGwAGypE58a7+XvzGDRJetEZCo9MO5foM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=etTWGR0Wll5fBy9t5srO8h/sXmNhgcI4x8MxXW13utYR+H+IL+a7m0G66tUmeGjmI
+	 MDdp4PD0mYQ7CbsXjJ/4+mUJZbxbNPERBD8hISz8yPRah03psDg76Qv9W6zWhy1DI+
+	 Xpm6uqW6BB2YMai/7X0lkiolwnaS+Z0KiUU5Nh9Br4cq2i19KqVawgtrndLdiDh0rt
+	 sjiGobXikchTjZLnXMC1mp7kZyONAUw2F+KB24u7vpoubkkn/yfPiVI3NMDqg+D9Vh
+	 /JFt2cu0s7fQBaB4NDHGkc+eiMaREp8k3BYJct1TKDEqK0yzUipSqe42hXws8EgT62
+	 9waxKj3MJEY6A==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZtRc25qHhz4x89;
+	Thu,  8 May 2025 19:27:14 +1000 (AEST)
+Date: Thu, 8 May 2025 19:27:13 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Ozgur Kara <ozgur@goosey.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge all the trees
+Message-ID: <20250508192713.4fd440e4@canb.auug.org.au>
+In-Reply-To: <01100196af3237f3-279dac0b-ad07-4f5c-bbd7-0e0f2d14659a-000000@eu-north-1.amazonses.com>
+References: <20250508182504.418552ef@canb.auug.org.au>
+	<01100196af3237f3-279dac0b-ad07-4f5c-bbd7-0e0f2d14659a-000000@eu-north-1.amazonses.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8634dfh47q.wl-maz@kernel.org>
+Content-Type: multipart/signed; boundary="Sig_/VNRsE7+549brboJktW=gpak";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-(just adding some additional info not particularly impacting the $subject
- change implementation)
+--Sig_/VNRsE7+549brboJktW=gpak
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 08, 2025 at 09:55:05AM +0100, Marc Zyngier wrote:
-> On Tue, 06 May 2025 10:29:41 +0100,
-> Per Larsen <perl@immunant.com> wrote:
-> > 
+Hi Ozgur,
 
-[...]
+On Thu, 8 May 2025 09:20:26 +0000 Ozgur Kara <ozgur@goosey.org> wrote:
+>
+> Did you run this command before you got this error?
+>=20
+> $ make htmldocs
+>=20
+> but the error shows itself because index.rst is not in need requested
+> directory, please run:
+>=20
+> $ git restore Documentation/index.rst
+>=20
+> Can this solve it?
 
-> > Asssuming we drop this patch from the series and apply the rest, the
-> > hypervisor and host can negotiate FF-A 1.2. If the host then calls
-> > FFA_VERSION a second time to request FF-A 1.1, the hypervisor would
-> > return version 1.2 (without this patch).
-> 
-> Why would it do that? Once a particular version has been negotiated, I
-> expect to be immutable.
-> 
+Please see my second email.
 
-Not suggesting that we need to support this, but it is technically possible
-today by loading FF-A as a module—first inserting and removing a module with
-v1.2 support, then loading one with v1.1 support. It can ever throw error
-as not supported to keep it simple.
+--=20
+Cheers,
+Stephen Rothwell
 
-> > Per the spec, that means the
-> > host is can use the compatibility rules (DEN0077A Sec 13.2.1) to go
-> > ahead and use FF-A 1.1 (every function in 1.A must work in a compatible
-> > way in 1.B if B>A).
-> 
-> I don't interpret this as "you can switch between versions" after the
-> initial negotiation.
-> 
+--Sig_/VNRsE7+549brboJktW=gpak
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Agreed.
+-----BEGIN PGP SIGNATURE-----
 
-> > However, the hypervisor negotiated version stays at 1.2 so it will use
-> > SMCCC 1.2 for 64-bit interfaces. The host has no way of knowing this and
-> > might as well assume that the hypervisor was implemented to fall back to
-> > SMCCC 1.1 in this particular case. 
-> > 
-> > I don't even know that the host will ever try to renegotiate as it is
-> > explicitly not allowed by the FF-A spec. There is no way for the
-> > hypervisor to say, "stay at the negotiated version" so we must return
-> > NOT_SUPPORTED. 
-> 
-> If it is not allowed, why should we do *anything*? And if the host is
-> broken, let's fix the host rather than adding pointless validation
-> code to EL2.
-> 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgcePEACgkQAVBC80lX
+0GyV2gf9F4QSC5T8YyDkghJMlrjWYKzoKDEaU1zZ/hxM8Q2EKy6w9oZhibUVZLbh
+jJBv1pIwfzdSFXORitr1a3J67oGD8DV9Mo0qhh+sy/4S9RFVm5CxMLj+M5/RKkSt
+rBST6WDc4hv1FPFEN3k+boGYWMy6FzPohB16yziFQj9FylTHTS83hzQYCF3teheT
+6VAkxgy9+jBJ+tlsj2fM6ncA4g4dS6rZh1ofZtuUxY6foAsvN551I5Ww+26jkEVf
+Ee91zfO/nuPoR59KL/CmBQUfAfGOK+ZlRzZkcixxyduRdvoDJhW5qoNwU9DsPwqC
+XtTPtCPtOwt3u5ce+DIHUN35uPohbw==
+=5KsZ
+-----END PGP SIGNATURE-----
 
-Agreed, it is *not yet" allowed. There were some thoughts for a different
-use-case IIUC, need to check the status. IIRC, it was bootloader vs OS
-where bootloader like UEFI might negotiate one version(usually older) and
-then OS comes and request newer version. To support such a setup, we do
-need some additional support in the spec and the current latest v1.2 is not
-sufficient.
-
--- 
-Regards,
-Sudeep
+--Sig_/VNRsE7+549brboJktW=gpak--
