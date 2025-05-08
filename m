@@ -1,132 +1,127 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C807279325
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADFF427934D;
+	Thu,  8 May 2025 15:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716941; cv=none; b=jXmmFMTCF0BTqq0vpbSx3EKJmbyUeawc8hz9K73X1u8ydcN99fF74l6/q7oka6NdqGP8NYXj0NLRSYrHr+xEhocp5Kb/GoWmjuCI5LNFp/qvXsYf62tZ8tnBT7x2CXyxvvsQbWp21PnQsSFT8066D8q5lGeSbVRog85WVln7o58=
+	t=1746716971; cv=none; b=SZ+cdpjyPMqSugSqRSzpTtFO9TacM0jmucjGQlyRLhjuMqNpnTEF84w6MwUmg2UDpwQ0XcNAQ073k6a48lRuIuoG9fMKKx4Uwc6d0cfdWjMZp8f1IMjR9GN3qwuppqCda0QNSWI20lPGHkinxuyXdZgfP+uIJV12pVpzvX3FfXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716941; c=relaxed/simple;
-	bh=EUta3aTRjT21bXtQrcK4rhz7dH2rAHVXhefracRyNDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZaqszQ1ZnYEgZF2ZfaP+OtWe8GcxLqBZX2ELcDryHfNcXubH94IrOzRHpEIRxKhkuBl14cAGiZJWy25Vank+ky3q76MuJCin76eHUttnkbiAAfa0JGB3HsM5NlUsyBIdB+dDhwMxMrVMv3sO76Qzm3SgcWJJPHOawthIhQmeQ8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uD2rJ-0006ko-49; Thu, 08 May 2025 17:08:25 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uD2rG-001kE3-0o;
-	Thu, 08 May 2025 17:08:22 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id CA5A940BC73;
-	Thu, 08 May 2025 15:08:21 +0000 (UTC)
-Date: Thu, 8 May 2025 17:08:15 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-usb@vger.kernel.org, Ming Yu <tmyu0@nuvoton.com>
-Subject: Re: [PATCH v10 4/7] can: Add Nuvoton NCT6694 CANFD support
-Message-ID: <20250508-prudent-festive-puffin-83f666-mkl@pengutronix.de>
-References: <20250423094058.1656204-1-tmyu0@nuvoton.com>
- <20250423094058.1656204-5-tmyu0@nuvoton.com>
- <20250503-fulmar-of-sexy-upgrade-1184a7-mkl@pengutronix.de>
- <CAOoeyxWbr6jfZjPvYFD+vHKMZ9CpM6SLt+2xo-4E-NnhGinfvg@mail.gmail.com>
+	s=arc-20240116; t=1746716971; c=relaxed/simple;
+	bh=dIUxDRQQ9VfT08/FY9cCuIoFDGDlW7Ej4+wOflv8zag=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GrgsOi+S1S7LE24WwoOKdmqNK7yPPnp/QiKenSi/gPFwGnuK2UNvyfOFTOAbzIR/PG1reWLaspZ+vpbaq0fOciQJM+uLjlfS59NnbaP6mKcHtkfg9M03LqlSC4PSw5W6A21fgihA0Nq/SrLwiJZOtA1zQhv+0mw2OLMuEFsQe2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jHYTkIPB; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jHYTkIPB"
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 18C5A21199E9;
+	Thu,  8 May 2025 08:09:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 18C5A21199E9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746716963;
+	bh=HGRfFjvHvYenmbQuhVeAhm/NMBt8Vf8l9aGiCRvcDyk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jHYTkIPBCaYL0LF6HoXl5B1lqwE5C+JvjTrmzsy9SlZ5u2+BCJN27u6IsTD7kSKdk
+	 pzYrv/jq5Wnv5HVfgcRG7tCANUs1mu2IlODINDrllqGz8NLqIUwGiiQwi/ewB9lYjF
+	 hkW/R6irTp43W+4HZPvPGScqt5BqsFHCzUkn/Qew=
+Message-ID: <4273451f-5edb-4d39-86b9-022456bba950@linux.microsoft.com>
+Date: Thu, 8 May 2025 08:09:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fkxqes6nz57lm4hv"
-Content-Disposition: inline
-In-Reply-To: <CAOoeyxWbr6jfZjPvYFD+vHKMZ9CpM6SLt+2xo-4E-NnhGinfvg@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next 0/2] arch/x86, x86/hyperv: Few fixes for the
+ AP startup
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "apais@microsoft.com" <apais@microsoft.com>,
+ "benhill@microsoft.com" <benhill@microsoft.com>,
+ "bperkins@microsoft.com" <bperkins@microsoft.com>,
+ "sunilmut@microsoft.com" <sunilmut@microsoft.com>,
+ "ardb@kernel.org" <ardb@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+ "brgerst@gmail.com" <brgerst@gmail.com>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "dimitri.sivanich@hpe.com" <dimitri.sivanich@hpe.com>,
+ "gautham.shenoy@amd.com" <gautham.shenoy@amd.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "hpa@zytor.com" <hpa@zytor.com>,
+ "imran.f.khan@oracle.com" <imran.f.khan@oracle.com>,
+ "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+ "jpoimboe@kernel.org" <jpoimboe@kernel.org>,
+ "justin.ernst@hpe.com" <justin.ernst@hpe.com>,
+ "kprateek.nayak@amd.com" <kprateek.nayak@amd.com>,
+ "kyle.meyer@hpe.com" <kyle.meyer@hpe.com>,
+ "kys@microsoft.com" <kys@microsoft.com>, "lenb@kernel.org"
+ <lenb@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+ "nikunj@amd.com" <nikunj@amd.com>, "papaluri@amd.com" <papaluri@amd.com>,
+ "patryk.wlazlyn@linux.intel.com" <patryk.wlazlyn@linux.intel.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "rafael@kernel.org" <rafael@kernel.org>,
+ "russ.anderson@hpe.com" <russ.anderson@hpe.com>,
+ "sohil.mehta@intel.com" <sohil.mehta@intel.com>,
+ "steve.wahl@hpe.com" <steve.wahl@hpe.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+ "tiala@microsoft.com" <tiala@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>
+References: <20250507182227.7421-1-romank@linux.microsoft.com>
+ <SN6PR02MB415715B9BE06E5B505F6DBB4D48BA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB415715B9BE06E5B505F6DBB4D48BA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
---fkxqes6nz57lm4hv
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v10 4/7] can: Add Nuvoton NCT6694 CANFD support
-MIME-Version: 1.0
 
-On 08.05.2025 11:26:09, Ming Yu wrote:
-> > > This driver supports Socket CANFD functionality for NCT6694 MFD
-> > > device based on USB interface.
-> > >
-> > > Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
-> >
-> > The destroy functions nct6694_canfd_close() and nct6694_canfd_remove()
-> > are not the exact inverse of their init functions. Se comments inline.
-> >
-> > Please fix and add:
-> >
-> > Reviewed-by: Marc Kleine-Budde <mkl@pengutronix.de>
-> >
-> > Feel free to mainline this patch as part of the series outside of the
-> > linux-can-next tree. Better ask the netdev maintainers for their OK, to=
-o.
-> >
-> > What about transceiver delay compensation for higher CAN-FD bitrates?
-> > How does you device handle these?
-> >
->=20
-> In the CAN CMD0's DBTP field, bit 23 is the TDC flag, I will add
-> support for enabling tdc, and firmware will automatically configure
-> tdco. Do you think this approach is appropriate?
+On 5/7/2025 9:22 PM, Michael Kelley wrote:
+> From: Roman Kisel <romank@linux.microsoft.com> Sent: Wednesday, May 7, 2025 11:22 AM
+[...]>
+> I think this works. It's unfortunate that Patch 1 adds 11 lines of code/comments that
+> Patch 2 then deletes, which seems like undesirable churn. I was expecting adding the
+> "cpu" parameter to come first, which then makes fixing the hv_snp_boot_ap() problem
+> more straightforward. But looking more closely, hv_snp_boot_ap() already has a
+> parameter erroneously named "cpu", so adding the correct "cpu" parameter isn't
+> transparent. Hence the order you've chosen is probably the best resolution for a
+> messy situation. :-)
 
-Can you configure the TDC manually via USB?
+Thanks, Michael :) Looked as a good trade-off, went ahead with it. Will
+be happy to address any concerns of that folks might have!
 
-If the firmware does automatic TDCO configuration, does it take care of
-not enabling TCDO if the Data-BRP is > 2?
+> 
+> Michael
+> 
+>>
+>>   arch/x86/coco/sev/core.c             | 13 ++-----
+>>   arch/x86/hyperv/hv_init.c            | 33 +++++++++++++++++
+>>   arch/x86/hyperv/hv_vtl.c             | 54 ++++------------------------
+>>   arch/x86/hyperv/ivm.c                | 11 ++++--
+>>   arch/x86/include/asm/apic.h          |  8 ++---
+>>   arch/x86/include/asm/mshyperv.h      |  7 ++--
+>>   arch/x86/kernel/acpi/madt_wakeup.c   |  2 +-
+>>   arch/x86/kernel/apic/apic_noop.c     |  8 ++++-
+>>   arch/x86/kernel/apic/apic_numachip.c |  2 +-
+>>   arch/x86/kernel/apic/x2apic_uv_x.c   |  2 +-
+>>   arch/x86/kernel/smpboot.c            | 10 +++---
+>>   include/hyperv/hvgdk_mini.h          |  2 +-
+>>   12 files changed, 76 insertions(+), 76 deletions(-)
+>>
+>>
+>> base-commit: 9b0844d87b1407681b78130429f798beb366f43f
+>> --
+>> 2.43.0
+> 
 
-BTW: What's the CAN clock of the device? I want to add it to the
-can-utils' bitrate calculation tool.
+-- 
+Thank you,
+Roman
 
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---fkxqes6nz57lm4hv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmgcyNwACgkQDHRl3/mQ
-kZzE7Af9FGhvmDVRrnQ/F4bSbWoG2NTq/f6c3fZSGEWA89N5tefMfjZvh7dlyYji
-VaHiukxhQV4tR1h1zXxI/eZ9VQA3NyE5dv4XDcTtPDQILQ03+/sEQOOCSoI8Nb+d
-1WJ6Wvj7apYZa6Qvl+s9K5JVrgaRiQOBFXeKIQYAqTaR0DpQ8nB0gYdClnRowTeB
-gTYVRD/j3fNoE6Cm2DTMs/rzDxp57S/RTZTWuqpbo6i39xQZnv4c6IX6kRHS51Lg
-pQQNi1JctlAO52n2YZnYbBVa3P6XM3f/qLDmL7PYzYFo4v5O19avY0wiuanBk+hK
-wllO7zAOx6+Zxj0ABxJ9edXuP0H61g==
-=EkV4
------END PGP SIGNATURE-----
-
---fkxqes6nz57lm4hv--
