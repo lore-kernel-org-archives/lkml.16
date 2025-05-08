@@ -1,274 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B751028E0F
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 03:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746675147; cv=fail; b=dUrEprp4MstaZsWsFY4JHOyHHeoWUGkNTK0kbcwy/g+gsdHaANDljzZdD2d2elEW4lMWDy2DV+jlWaABsiXOdndtF6W33vI3mAq7GOspuC28LObTAd6vbHhowHFM4e0so7slu3AXnGLVpAJOu9V7qN6oUU8dMdgqCK47fS8fqLQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746675147; c=relaxed/simple;
-	bh=OvOEoNeW30Vlo9AX166+aA7a66xVkvLuITrN0zaj6ks=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=K/2PHN5+U5ca3W+yiVDUJzgSm5Ro9z1bJzQsXctZer8GUFvewBClnBZ06G1X2YxnS9aU70JnF8ERbX7MbWGHvChlFWAzIyaZEx/G5btZwys968VaNxAyNOSNP7DvrekfJXGBCE0E6Erj8h3JMcGUPpMOhk3opKq3yDCAJR0UnXc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CHOUoR0N; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAC41E32BE;
+	Thu,  8 May 2025 03:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746675158; cv=none; b=fSbNxNH5PmJFzYQKz68xH94O6m3yUNL8bXp/4G18tNEL4BzfriFAWUrg4obDFRJJ3WJTyP/oMWdTpFQGhwOemuBQCUrnP/LlRsLaaZHVz82Y5H/mx5ejz/edOAtIM7afNDR6dowOqGKcUAiUh31mokaN8mbNkRNzf4brAWbXCbY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746675158; c=relaxed/simple;
+	bh=4zWakdWzDEr5ut1LZ1rZdc8a0RclyxGBdbydjpd0ke4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tyVTA87//HD44VEL3+Q2KLmf8OxgNE1uokY9+QWCJaknh+MTrD+M/5n5/t19pHWO0XYJ9NK7j1DOCFIX4u9f3XNz/XlJaJjCkNlpxmwkeGX8IKkv/aElVTABuXyp/62Q5RZKxakB2dRG5cRgm49Vth8yIOfqPp1gFeJXXu9+MR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PV6NLVgh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CHOUoR0N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746675146; x=1778211146;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=OvOEoNeW30Vlo9AX166+aA7a66xVkvLuITrN0zaj6ks=;
-  b=CHOUoR0NyBHngT5dFDcIJCIXwKQWRMXdfSQq76KVHCJ5mHOG6FGTTf5a
-   MbDdcMiPS099Gld2kFRs7dDSfkyOgTRCO1n6Cxh8HcW3uQqmKGJv3a3gR
-   5VNYL7F2WMcNiel/CpY6RtxAm/3yEVylrHFeRvQOxgJiUuDnLQEplpE7H
-   pZOxYZSzDcr1v07ejTdfqzBWZqk9bTjxChqKlbqXR1v/HM5VWP+zI3TF4
-   ayi0xYlVOx+/xCPdFFvQrJN3DW0yf8HMra/3eFf9mH1SfM+xVKM9hU+C5
-   +rZU6/Ds2u+AzGmIA6MiSLCZocFNB7oasL9AybIhhBQNPcucIc5ggwGvf
-   w==;
-X-CSE-ConnectionGUID: cJ2o38ETQEC/Qb9oxcEf3g==
-X-CSE-MsgGUID: 6Fo0Rz7rQnKmN82xtPLVcA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48305538"
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="48305538"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 20:32:25 -0700
-X-CSE-ConnectionGUID: VzMeYhqeTlamvVZaog0iYg==
-X-CSE-MsgGUID: 3eXhX/NrTd+23El+qo8yxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="167214884"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 20:32:23 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 7 May 2025 20:32:23 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 7 May 2025 20:32:23 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.171)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 7 May 2025 20:32:22 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Kp9huxd08Ad4nA59D4Ns11o2oYVdUDp43h/xsj/ZUff62HqB+DNA9PVz/ZoPEKvCwWaGoD0QEnCPiiSudPMqGqJUoDzKMgK8lm4he6lvmpvtpYbeY3vGk/GhvgXoKhK7jSA2Ox4NTsC2Og8AuJ0hfJC/eMxwDUkCW5vPMRn0yVuViRELsbd8zIUtP2GlYc0DJRpg+RXA9Ren3tpVxwJyo4V+KQnz2hXYMFf5Yv9BDCNVgMYGk6xt9O7YJCrRZ1CgMX3+JeVizbwYNXldC5xyPSKofMl3bW523Nau8GE6AFO+m5O0Y+r34GwsIz+bUxhmGX4oYTkQgoUbFfmk8+G7Ag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a9AkevmRE/k8U0Z9gYkEWsbFITfVylbUKzA6SKxjfZg=;
- b=C/04kjZrBQ4gF0Pb3zFq9FCRXl23aW6c1hfMnzZq6SNyy+Ss2VWkvZKwx1xmXLHqOkcTRuZNunIn8xZR43azz8dCvXtsUGibWNo3kz4ozZavr9Lla8FkYL/e1/VxOzbkk0kRHiF+gZKbAAW6L9oKqrOWOnCIDl/L01Q4nzLhEhmTAZuOLob4NQKbt1+l1VaLwemaP0lgsb3z3aUuKGk8yf05Wj8LNYIgErcGI+abcQo02/ZkSS8vsd35m/z9HEuViM6Xzj0FjwKnHja1E+JG0yQKUeom5cZGet4pdRCZmvQS4OPzg+d9i3XR2RsPlmF340HGmbQ4zomQfQMSShns9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by SJ2PR11MB8513.namprd11.prod.outlook.com (2603:10b6:a03:56e::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Thu, 8 May
- 2025 03:32:20 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8699.022; Thu, 8 May 2025
- 03:32:20 +0000
-Message-ID: <72330b7a-5159-47ce-81e1-28458e4a5719@intel.com>
-Date: Wed, 7 May 2025 20:32:18 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 05/31] fs/resctrl: Set up Kconfig options for telemetry
- events
-To: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghuay@nvidia.com>, "Maciej
- Wieczor-Retman" <maciej.wieczor-retman@intel.com>, Peter Newman
-	<peternewman@google.com>, James Morse <james.morse@arm.com>, Babu Moger
-	<babu.moger@amd.com>, Drew Fustini <dfustini@baylibre.com>, Dave Martin
-	<Dave.Martin@arm.com>, Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>
-CC: <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<patches@lists.linux.dev>
-References: <20250429003359.375508-1-tony.luck@intel.com>
- <20250429003359.375508-6-tony.luck@intel.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250429003359.375508-6-tony.luck@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR13CA0018.namprd13.prod.outlook.com
- (2603:10b6:a03:180::31) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PV6NLVgh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD4D9C4CEEE;
+	Thu,  8 May 2025 03:32:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746675157;
+	bh=4zWakdWzDEr5ut1LZ1rZdc8a0RclyxGBdbydjpd0ke4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=PV6NLVghdQptO19IARU2+LkB3BbQph/mb/EPBkeZSScL4sTDkXF3MlGOJ6YyBRl64
+	 +E9lYv54vQY/YqIgyRQPwEaClMceXXMTPIazXa4oj59ejgVpYNXS4kbvDJ7CMU0bIA
+	 Ap3r5v4QvB/x1RTKQkrKsCVyQdabo8w09KkIB02X5Fr4M///prEYFVcW/jJDrs9Deg
+	 YXvy7t9zGRbXXp67VwbOplQKSthXOGs4HPi5aaovnHM7hNf8pTCX34bJznvN3W9ofT
+	 CyOsJVWmt1USehYT4uYfw8YIW4e9firDu5OqPNK1Uxv47dXum0o8A0QafSVEpsAQOB
+	 0Wgj34aK2tN8w==
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30a9cd61159so549971a91.1;
+        Wed, 07 May 2025 20:32:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUO3N79dFToRDEfqwVL7y2nan1EAYLbCZpc6YQE6VhfQ7XyM070abZBBcLXNnFyJOBKBwJwYKhQ4LA/eOGvofuhIsDWjM6s@vger.kernel.org, AJvYcCWcG1mMjwM63c1Q50Lb00Me+jLV904UiwhrvRJrD0G4eGYnPHHLTKLkdBIkwhQNR3Y/A0pi3PeYjPI1yHI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywj4p8ojjIbOeAs8Q56qyfjAvpD/ZS1kKivfu5xWV5/NWsDgtkt
+	hXHAY8DfQQtIv6VKyxh56JMDW1A57YGOu2zRJUfaNzZnl8qnUoaaH+6QTeriOsUXaM1cukscaxq
+	1WIQVaIDHoyX61Wgk/P6fEJAFTcw=
+X-Google-Smtp-Source: AGHT+IGSyEdgQCH9NU5LZJXrep04qBZPcZeJ0/77eOImdowWZgCxfZAPvW2zenlA/XI5GZNoiryLKItpB6vYx2RCiHE=
+X-Received: by 2002:a17:90a:c2cc:b0:2fa:3174:e344 with SMTP id
+ 98e67ed59e1d1-30adbf58c30mr3173092a91.14.1746675157331; Wed, 07 May 2025
+ 20:32:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|SJ2PR11MB8513:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6823ae68-ae95-46d3-1a66-08dd8de0f05c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|921020;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?UHh2TkRlM0NWSHljYkpuWlFwdzM2NW5URzEraytGN1I1M1prV3dGUkpmd0xN?=
- =?utf-8?B?anRJT3kzTjlGR1lpWUEwN29kMXF4SVFDZ2RMS3NZNDdVSTBsRVZzVG5BSVBp?=
- =?utf-8?B?V0lGZFFWYitLNlJkSnFHb24xNHE3V3lZRERRYmllR1BSNEppazZqVnhxSE1h?=
- =?utf-8?B?ejlybHpBNlYvL2U0MGhDY0NNTjhmMU84VGNDK0F1dXhDNDNPVU05VFNhZjJX?=
- =?utf-8?B?ZlppT24rYmd6bjhxL2h4S3BrbVg5M3ZKVmxmSXRqeEJvc1dLQTNLK1ZlWHpB?=
- =?utf-8?B?NUpQL2RqbWtHRXUzVjJ1SzZXMjBZYnhDdHNLb2JHRkZZQW4wTm1XSGJQYnA2?=
- =?utf-8?B?L2c1VGxYYVphZkI0d21yUktzbVdPSnM4M2xVVnZVWEJ3MTBKVlhXd2phS2Ex?=
- =?utf-8?B?ZDlzdGNoMFU1S2MzSVhOU0VONHczd1RhbmdmM25Vei9aQTZEUE8vVmU4Z21h?=
- =?utf-8?B?UXk0L252UjNnTkJDWmo1clFveWkwdkhXUTZnS1I1VHh5R2JWeTFVbllrYUY2?=
- =?utf-8?B?VXBmOHBSV0diSHU0RlZyZm83NlgxbzdIblR6OEdNQU5obFdpaFZFZTY3Y2Q5?=
- =?utf-8?B?NGJMd3JTLzl5dDBrTUozb2J3cmRKVFllVUlxc0hnN3pQcGtGV0tTcUdzQVJZ?=
- =?utf-8?B?YzhpMTFzWUlmTUdVS1B4MmdOM3U0OEpQZkNtV3RKL3pDNXdWRHJIZGUzQTls?=
- =?utf-8?B?SmpPb2F4YmlYS1kvaWxMY3BqNWVBSGxGMXRwemtvWEVjWi9mWE1wakJLbEtr?=
- =?utf-8?B?NWlSQkFDSy9yVHBzaVZEendjei9qY2xSeWRGVUJWMHdXVG9YdXZ2MGM3VkZ5?=
- =?utf-8?B?N0orV01sYXY2Q0o5RVhoWFpIUTFncG5PMmRsbmYxWVNKeGhNckJrem1pNzZy?=
- =?utf-8?B?ckNXcnRPNDIrSU9ZeUtyQTd3bHA3NmVPbktkQWhYUS95cmdVTGd1RUlZQjZG?=
- =?utf-8?B?STAxWWQvYVl5VlhnQURNNG1leWJmQmlka3l3bnlLcmxqWlgySUp6VnhMRU43?=
- =?utf-8?B?cGc0K3JqbzZZbXczRmZ0Q2sxak9NTm1XNTBrL0d2OW03OVBjeHltRGRnN1E1?=
- =?utf-8?B?cXMwYVJ6R3RQZVhud2lpZ2tXaDMwV1dqQjNrTHpvaXZPK1UxZ2hnL1RoNUd0?=
- =?utf-8?B?SHY5a2NKUkc1c3hib3dmZ0JsYTJGS0FWZUpxY2p1MEprU1BYRVl3VHBEVFBZ?=
- =?utf-8?B?VkdnQ2RObHhvaktVU1JvQmFYckhSWEMyK29KU3R6ZTVqYlpiL0RYdmx5Q0Ru?=
- =?utf-8?B?bTZuS3BBbE9uYTVOZUlJZGFBSTJxUmpPdkdyMWE5Nlg5bERaQklDN1FQUEoz?=
- =?utf-8?B?d1BZLy9XaHltVUszeDA4WEpvN2g3a0tpazlMK3lnbnpzUlhUL2RRVzhjTnQr?=
- =?utf-8?B?eEhZb2dBd3puVE4zSEo1UEdDbGE3eEVhaWpSRk96STVWeGhXNVhrV0FPeXh1?=
- =?utf-8?B?QjQ0Y2VSTmpkOUs3UFlhWHJIdFlReWUvQWNRTFZ1TUtCK2xOV3RTdlphc3BT?=
- =?utf-8?B?OEJ2RkYvbWdsaXFCWXFRWWIzamlET1hFdkliUXBWSnMzTjBCSUJyWFlsQXBN?=
- =?utf-8?B?SXlkR0pZQjFkRExnbUhkYUdUZkllTGJDNmFKV0xmMFpVVEpneU5YME80dDdI?=
- =?utf-8?B?Vi9VRDRKWHN2UmtTaXlqNG1sRnlVY08zc3ZtbWpiYnVFM1hoaW1PZnoyVFhu?=
- =?utf-8?B?NGthZVhiRHQ3aDRjaGdva016WWp0TmIwalczbWYwQUl1S013NmwzOXlacTVp?=
- =?utf-8?B?VnV3SVJwSVZ6Nm9ESUtqbzJUOUJROHJSU25FTC9yd21DeVY1K3BsbDBXMHl0?=
- =?utf-8?B?M3RpMVpWZzBlYitVWUNwcDVpQ21QNG9QZHo2Ky9JUHNOZmtwamJZekxoTVZX?=
- =?utf-8?B?azlUK2c1REJWU3A5eHRyT0R3aWhCMjdidUh3SEhHOEJhU2lnNkx6QThWb2RO?=
- =?utf-8?B?RkxsaW91Wno0ODFHWG9TdGtjdDVRa0pJWS9Ib0ZPZVdxVFEvRXJWUlkxcit1?=
- =?utf-8?B?M2VLS3lCMWFBPT0=?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eUJkZkVPU0pkeENoSHgzS0VYZFVCVjFZQXhvRWFyVE9FZFJZMXJZOU9yZjdC?=
- =?utf-8?B?Rlhjb25qaUNqTUxFdkcwbkswK3lHKytPU25UQStFM2YyMGQwOElBUmRKK3Bk?=
- =?utf-8?B?MytiUnVlTjFzWWtxVWZBZ2krbE9kTVpsWlUzTDNDMHBmak0rYVMrdjJrT3hm?=
- =?utf-8?B?ajFKMnYxUFhuNXdBRGQwWGJOQkNRMUJpMVpCWkRUMGEyaWQvVlRDR0JYMUE5?=
- =?utf-8?B?K1F2dGY5T3p5K25zaXlUQUx0czI3MEZrWWFmeUFjSEFMVjNBWDVoRzVXZGIr?=
- =?utf-8?B?TS82RXVEZUoyazJBeGV0WFQxdFo4S3pxakRsc1VnQXdVSGhYMnIvUWtCRHZI?=
- =?utf-8?B?a2tsdm1NbVNBcHhXTVgvOXNJKzZ0SHljUVBSMGFEdnd5ZkRaVmk4dk1UY0Rh?=
- =?utf-8?B?dmxZV21aaWlXeEdXeXR2WnoxNzNFRWJJc0h0K2toQzh4dnNDY2JvVHpsZXZ1?=
- =?utf-8?B?bVZyb0tSVnVmTG9vVjhwdHRLT2d0enU1bXA0enZrVXUvNi9CZmxrbXEvZ2lv?=
- =?utf-8?B?RE96L0hoMjJObk9PcEt0TGg3T1B6VnJoTGxOZkUrTzBWcy9ySkd1NVhEazVq?=
- =?utf-8?B?R09ZaW90b1MwWWZGU0ZRR1UyN0tpdm5hUk1iZzJLOFMyeGFOdnhyNGNEZWFs?=
- =?utf-8?B?OEpsUTFYdklXbUFtdmtuaUJkcW1wcDNqb2hpZ2s1SEYyZmZhRHBocGdLNmk5?=
- =?utf-8?B?RVBFYkRieHU3Q284V1RORmJxNTh0WVluUXhHeGJWUGV1OHQ5eTFWcGJOVThr?=
- =?utf-8?B?QTlrbGtTcHdQUXRpeGowVis5WjhVL0FPdjF2aG4rajJQNXFBK0gxOVo2NFQx?=
- =?utf-8?B?NEkvY3g4RnpuclBSdTVud0FteHlVK1BRWGhkRnNLNHNKTU84UUg3K2t6aDJm?=
- =?utf-8?B?eUpINWFKdFY0NGlRUXo0RktKQTZRUEFpYzhDN0xNVGpkSW95d25yYlc0Mzd2?=
- =?utf-8?B?TzlvN3dISFZhV29DQmdWQ3JSMG94TlFXSUJ3amVzclJmMWxqNDhKZk1PY1RO?=
- =?utf-8?B?V21aRGtiU2Z1YUZBNlhwUjhhMXVVaXNYcVRWRnlQMElNN29KMWx3UmdGVVVY?=
- =?utf-8?B?bTRXOGZpS0FKU1hXZjVXTFFkbTJVN2NDRmJCWUw3ejZhWjMvVFJYeUx2emht?=
- =?utf-8?B?RE1FWWRZRmFHQ2E3aGdoUlZuN2owZG9Ddy80UEdkZlVWUnVkTldrL2UwQTlm?=
- =?utf-8?B?cGtDNFBnWkVDNjB3UDRWWHorOGRTaFdKQmZiU2JmRE5VVm5mcXY3dGhhLzVE?=
- =?utf-8?B?UXp4dEh6cnVJTkUxenV2MEt3YlhkQnIyTVQrV214YkZBekxhOXRjdXBvVjRo?=
- =?utf-8?B?djYvOStNbkRqYTRZWmJ1eGhXMGp6SGFLc01KZDQvSEtBVTZzMGV5VjNvbVhu?=
- =?utf-8?B?a25waHFERDVwN052d2lNcG9uRjM1YkhzMTVjalZzWXd4cGl5SUtYM3FvQ1FO?=
- =?utf-8?B?ZTlaRDJwQlZ3OXcxSVJzOE05SUJJallpVHU1YUNMd2M0L1pWYmFaRnU1eUsr?=
- =?utf-8?B?a013aTRVKzlEQ1p0dVVmUnBEdE1mWXBsMzViclVZZHViZjJWODcrSzJ4b1Y3?=
- =?utf-8?B?U0F4OWUrTmtJajlMcCtza2ZGK25DRG9OWHN6K2F5QSszd3JxN04xS2Nmc1E3?=
- =?utf-8?B?OFJHMUIzWFdEOVJLdFdBanpucFVIK0ltb0VKdEdnSUF2MUkxRUFxalJYQjRG?=
- =?utf-8?B?TkRVWUliQ2hHbjdwNnMyRTNmU3ZtT0dmQTRMaXBlR3VWSnp0MklIRmxINmZW?=
- =?utf-8?B?K0ZsdlF6SGc2OGdueG9KcEo4R1VndUN1RUF6ektEdGRwcGRyT25jQVUrWk1Y?=
- =?utf-8?B?cXJlaGhTSUUyM1p2MmhscDQ5MDJTMHJsNWN6eG04ckF3aitQZFdTdEhkQUsy?=
- =?utf-8?B?b3lmMVdrM0dScFZmRnErNGJZb2kwcmhISTU4RExZbDZ4dHBDS3dSZHVUeUQ4?=
- =?utf-8?B?S2djNFlzVnRJL2JJV2NBaDJsSWFYNUp2Q2wxSklibHorZHNINXFDTWdLRHUz?=
- =?utf-8?B?N2ZjVVhXY3hQZlhjK3hHSjd2L2VUK0VsVG5mYXdidStuZ3lrblFTbEZzZVNj?=
- =?utf-8?B?UUU2TlJqN3o4T3k1YmZ0YStBTjBiVXc1UlNON2loVXRTNjdPNEZFQnZEbUtR?=
- =?utf-8?B?UHBUempxSnprWERSYUZjV2dteUFnRnNpSU5FVjRaQlU3bEg3T2ZKbXVjejcz?=
- =?utf-8?B?dEE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6823ae68-ae95-46d3-1a66-08dd8de0f05c
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 03:32:20.2361
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MZno7boZYgk97/py2VLjwDRnC8CGbm9INtV9m1bi2feLHPMVTC0alBo5mi93Ns4ASCVpQzNvsT5r5uzGI2138bafoVLEHbKTcoLBvnPS6GY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8513
-X-OriginatorOrg: intel.com
+References: <20250306082615.174777-1-max.kellermann@ionos.com>
+ <20250309151907.GA178120@mail.hallyn.com> <CAKPOu+_vTuZqsBLfRH+kyphiWAtRfWq=nKAcAYu=Wn2JBAkkYg@mail.gmail.com>
+ <20250506132158.GA682102@mail.hallyn.com> <CAKPOu+9JCLVpJ-g_0WwLm5oy=9sq=c9rmoAJD6kNatpMZbbw9w@mail.gmail.com>
+ <CACmP8U+aLY7wmEqdb=a_tpDCY5LaPGb46DU+jSD3bCXX=JUAuA@mail.gmail.com> <CAKPOu+_=ocLeEqcaSMjb5qqrvi6KAu3GYJa19Fqz_dm3a5F77w@mail.gmail.com>
+In-Reply-To: <CAKPOu+_=ocLeEqcaSMjb5qqrvi6KAu3GYJa19Fqz_dm3a5F77w@mail.gmail.com>
+From: "Andrew G. Morgan" <morgan@kernel.org>
+Date: Wed, 7 May 2025 20:32:25 -0700
+X-Gmail-Original-Message-ID: <CACmP8UJmC22+59RcHu_X3xpdUYP-i93rjdVQvZn6_Haj-F8tPw@mail.gmail.com>
+X-Gm-Features: ATxdqUETDS-_DiXOin6JvJoBx88vidjk3ff1ALn2oCTlkow1yogvF7prMzrsEms
+Message-ID: <CACmP8UJmC22+59RcHu_X3xpdUYP-i93rjdVQvZn6_Haj-F8tPw@mail.gmail.com>
+Subject: Re: [PATCH] security/commoncap: don't assume "setid" if all ids are identical
+To: Max Kellermann <max.kellermann@ionos.com>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>, Andy Lutomirski <luto@kernel.org>, paul@paul-moore.com, 
+	jmorris@namei.org, kees@kernel.org, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Tony,
+I'm looking at this code:
 
-On 4/28/25 5:33 PM, Tony Luck wrote:
-> Intel RMID based telemetry events are counted by each CPU core
-> and then aggregated by one or more per-socket micro controllers.
-> Enumeration support is provided by the Intel PMT subsystem.
-> 
-> N.B. Patches for the Intel PMT system are still in progress.
-> They will define an INTEL_PMT_DISCOVERY Kconfig symbol that
-> will be one of the dependencies. This is commented out for
-> now. Final version will include this dependency.
-> 
-> arch/x86 selects this option based on:
+        /* Check for privilege-elevated exec. */
+        if (is_setid ||
+            (!__is_real(root_uid, new) &&
+             (effective ||
+              __cap_grew(permitted, ambient, new))))
+                bprm->secureexec =3D 1;
 
-Portion of changelog seems to be missing ... what does "this option" refer to?
+If a luser runs a setuid program, then the kernel will set this
+bprm->secureexec bit. Indeed, every time this program re-exec's
+itself, that bit will consistently be set. Today.
 
-> 
-> X86_64: Counter registers are in MMIO space. There is no readq()
-> function on 32-bit. Emulation is possible with readl(), but there
-> are races. Running 32-bit kernels on systems that support this
-> feature seems pointless.
+However, with your change, that behavior will change. The first time
+the program is exec'd by luser this bit will be set. However, it will
+"surprisingly" not occur should the program exec itself again. If you
+are unaware of this bit's purpose there is a nice writeup here:
 
-This seems to be the primary dependency that requires the use of
-a Kconfig symbol.
+https://www.kernel.org/doc/html/v5.1/security/LSM.html
 
-> 
-> CPU_SUP_INTEL: It is an Intel specific feature.
+See the "bprm_set_creds" paragraph. My concern is that there is an
+exploit vector associated with an abuser setting LD_LIBRARY_PATH=3D to
+something nefarious, and then invoking a setuid program that happens
+to re-exec itself for some reason. The first invocation will be as
+before, but when the binary re-exec's itself, I am concerned that this
+could cause the privileged binary to load an exploit.
 
-While this is an Intel specific feature it looks to me as though 
-intel_pmt_get_regions_by_feature() will return -ENODEV if it is not supported.
+This has nothing to do with your interest in NO_NEW_PRIV but more to
+do with the legacy behavior changes like this are exposed to.
 
-I think there is benefit to have this code compiled as much as
-possible. An alternative to this CPU_SUP_INTEL dependency may be to add a
-vendor check in the pre-mount callback to match the other Intel vs AMD,
-but this may not be necessary?
+Cheers
 
+Andrew
 
-> 
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
->  arch/x86/Kconfig                       | 1 +
->  drivers/platform/x86/intel/pmt/Kconfig | 7 +++++++
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 5a09acf41c8e..19107fdb4264 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -508,6 +508,7 @@ config X86_CPU_RESCTRL
->  	bool "x86 CPU resource control support"
->  	depends on X86 && (CPU_SUP_INTEL || CPU_SUP_AMD)
->  	depends on MISC_FILESYSTEMS
-> +	select INTEL_AET_RESCTRL if (X86_64 && CPU_SUP_INTEL)
->  	select ARCH_HAS_CPU_RESCTRL
->  	select RESCTRL_FS
->  	select RESCTRL_FS_PSEUDO_LOCK
-> diff --git a/drivers/platform/x86/intel/pmt/Kconfig b/drivers/platform/x86/intel/pmt/Kconfig
-> index e916fc966221..3a8ce39d1004 100644
-> --- a/drivers/platform/x86/intel/pmt/Kconfig
-> +++ b/drivers/platform/x86/intel/pmt/Kconfig
-> @@ -38,3 +38,10 @@ config INTEL_PMT_CRASHLOG
->  
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called intel_pmt_crashlog.
-> +
-> +config INTEL_AET_RESCTRL
-> +	depends on INTEL_PMT_TELEMETRY # && INTEL_PMT_DISCOVERY
-> +	bool
-> +	help
-> +	  Architecture config should "select" this option to enable
-> +	  support for RMID telemetry events in the resctrl file system.
-
-
-Reinette
-
-
+On Tue, May 6, 2025 at 11:33=E2=80=AFPM Max Kellermann <max.kellermann@iono=
+s.com> wrote:
+>
+> On Wed, May 7, 2025 at 5:16=E2=80=AFAM Andrew G. Morgan <morgan@kernel.or=
+g> wrote:
+> > If a setuid program execs itself, does the presence of this code undo
+> > any protection the kernel afforded it on its first invocation?
+>
+> What protection do you mean, and what behavior do you expect when
+> setid execs itself? I see this affects:
+>
+> 1. reset effective ids to real ids (only affects NO_NEW_PRIVS)
+> 2. new cap_permitted cannot be higher than old cap_permitted
+> 3. clear cap_ambient
+> 4. clear pdeath_signal (in begin_new_exec)
+> 5. reset stack limits (in begin_new_exec)
+>
+> About these (from my very limited knowledge of this part of the kernel):
+>
+> 1. is my primary goal, and really no new privs gained by allowing the
+> process to keep existing ids
+> 2. only ever changes anything if new cap_permitted is higher, but if
+> that's the case, the is_setid check is irrelevant because __cap_gained
+> is true, therefore no change with my patch
+> 3. as I already described, the kernel is wrong (or the documentation
+> is wrong), and my patch adjusts kernel to behave as documented
+> 4. I don't see how this is dangerous for anything regarding re-exec;
+> if pdeath_signal wasn't reset on the first exec, it's safe to keep it
+> after the re-exec, too
+> 5. same as 4, I think
+>
+> Did I miss anything?
+>
+> > FWIW I ran the libcap quicktest.sh script against your change and it
+> > doesn't break any capability thing I test for when making libcap
+> > releases.
+>
+> Thanks for taking the time to run these tests. I'm glad the existing
+> tests didn't find any obvious bugs. If we identify an actual problem
+> with my patch, let's write a new test that fails with my patch!
+>
+> > That being said, in general this whole zoo of *[ug]id values
+> > and their subtle behavior is not casually obvious. I'd recommend using
+> > a userspace workaround for your use case, and not changing the legacy
+> > behavior of the kernel.
+>
+> What userspace workaround would be possible? The only thing that comes
+> to my mind is to apply NO_NEW_PRIVS in the child process after exec -
+> but that's too late, because arbitrary untrusted code has already been
+> executed at this point. This means I lose NO_NEW_PRIVS completely,
+> because the attacker can simply skip the call.
+>
+> Max
