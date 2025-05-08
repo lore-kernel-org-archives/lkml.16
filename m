@@ -1,242 +1,100 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530CE239E95
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 08:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01991239E95;
+	Thu,  8 May 2025 08:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746694362; cv=none; b=mOO9phGh+wlN/UW7c57/57nO2TvUvU3j3K1A7yfm99RUg3QS8B47wSqNyh2L8ymY0lIe+55tM1F2unvCnLbxqHJ0Mkl7RKmK1Vej34rhdf+nUHOUgBXxO+5ozdy3VJtaYSSAJX18TDngH5Vp7pnLq5bovmYEcHJSimj6nxwKB44=
+	t=1746694372; cv=none; b=Q75JjVRER5R/UFOf8TEs0LxnrUulp+rcAlpEJooLXf3zMZfn2pV1Q7K4qFl//DxRbq4dNPz/ilgQh4+oTzGJRerEDiTHRW6LY/VvzmUB4NUa4X/uHBGkCfKKdTIv3uXO/uM0zwoure30bAkN4IHWm7+rXoLnHGzUkFdFyfg6j1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746694362; c=relaxed/simple;
-	bh=Y5OoOFqzBwXhZcTP5+FQKVU18wxPEnZPvWFKQRerFRk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=tHSXCDS4vNQS7+XQWcci5kQKA9xRxW8K8mr8+sBn6257EiHikYp1ipuH75o75UEBuYQrAxYYkHj9mIJel0V+fA6W5IU01vBvU/vWPRFMBEn6angu2d2DmicPiP+IWHeqLsDagGaR3GurXqngkUQkU+AKvppW4OPF7NKk8OhzXfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3da741bcf90so7066635ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 01:52:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746694359; x=1747299159;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nCLNC4atFd3LqE75nIlkkiMnyAwzhYa/SNx//fNd3fc=;
-        b=hoA6TXQcVN1WkE5KyL82cs3moj4xLtduBLm+5IazFWGLAzCusi7dRZrlD9Q0qEZb8+
-         Im+ZYvTuDb4HMe8Ews6vO7SnWZdURyYY0FTkvQXtCTPrxGdM5lqnAMYIvJzJF+CeqX2E
-         kAfsYpuYmuDyqu3nHSjJ8aDEBoJtHf/tGM8v8W05ZZlkjgUddBm5h/9gU1YX2VvQ9ixW
-         UDaTx/CaJHt7isTA4l35I/QhJLcwAIoRZuiPbRifGEdevl2dMHl+u5yJtwpT+oDlPaQd
-         7HUVQiGWmR6Bf4K8jBcv7mE96+Xf+Th4tMl7gFNpbDZ0v8YfE4y8LKosls8SJ9PdOW24
-         /usA==
-X-Forwarded-Encrypted: i=1; AJvYcCXKqM3kBBF0m+f8Unj85aPPWjEsgG34s27a61j0zPdx6ZIceyg/P67uuGT7PkqLyD5lMBY5PJ5HrPuhMJ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUhoucA2d8ahrIDQ5x2hM8u3kQj9NmCqqi7Vo0lZd4Jtf9v8U9
-	tuAH2ukVpmX9zeGX5zNTUW7g1+z7AeSRUoZht0QVGJZH0KXc9L33su+tZ5qpexmDGFYkQQq8W/V
-	973a1KK3FgHbRLlRhiGKdv+mfnuhllz+N+LzuT1OwUywlDTIanhHCnP0=
-X-Google-Smtp-Source: AGHT+IEdBijYqwvtFUTFAnBGsdYw02iX9YG/qYh3jDOPB2xOeZhHpAN5PvNSYzBNSzZEkgUB1MI+pQuCWcPjXgDZowcHeWnpciFZ
+	s=arc-20240116; t=1746694372; c=relaxed/simple;
+	bh=znt+9wtzzRAcAOqqt9JwNgOU5Ajvi3gapCMlcDgxZ1U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=PPUKoe4A2Ewi0gjcgItAKrTuG1pU9VX/HJ/DSKPsuTBlSyV9DM8i1VOSRVKbkQX7nKsEHm8VgrfRTiiJognFIRdTBMBvJcl1KUGqINRhwfQqZbMt4jgOfRWI6QobB1ttHJImd50C56PfXRToKXU5oOY8lT2xEWCDSL1SXfbdS9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IKQSi/RW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IKQSi/RW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6C16C4CEEB;
+	Thu,  8 May 2025 08:52:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746694371;
+	bh=znt+9wtzzRAcAOqqt9JwNgOU5Ajvi3gapCMlcDgxZ1U=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=IKQSi/RWEXCNhb6G1V7+tfTHmK14VNAZP6kpeR82wdGTqn8Zc0VK1BU06s6t8ajUR
+	 boT3hXSu3ZHKqwxy6DoF9Ogno40s5H/d70gHNvFyqVBhl83Bev8ycm20yjmuFtrkVA
+	 ZeMf41S31jJQr1Ne/NnJdCGROsyU/QJol1vqmesoHdy4zikDCkcXHHCqswhJUKq29F
+	 7ZyjyonooSqD2D+F+NYKQ7W0Nd6ldmiVlcSKAoB4I+3CDZlbjRrQ8tyCOdp0YHxbj1
+	 9b/jPzomAbEgH5oIozwALyliGbnFOwBBG/FgF0i6AF0cvdKvzuj6I+JfqsUBztDQw5
+	 2AN1FyWXrSZuw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+Date: Thu, 08 May 2025 10:52:11 +0200
+Subject: [PATCH v8 3/3] MAINTAINERS: add configfs Rust abstractions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c04:b0:3cf:bc71:94f5 with SMTP id
- e9e14a558f8ab-3da785a4da8mr32339985ab.22.1746694359494; Thu, 08 May 2025
- 01:52:39 -0700 (PDT)
-Date: Thu, 08 May 2025 01:52:39 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681c70d7.050a0220.a19a9.00c7.GAE@google.com>
-Subject: [syzbot] [ntfs3?] possible deadlock in ntfs_unlink_inode (2)
-From: syzbot <syzbot+dab475abf94f7513eb9f@syzkaller.appspotmail.com>
-To: almaz.alexandrovich@paragon-software.com, linux-kernel@vger.kernel.org, 
-	ntfs3@lists.linux.dev, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250508-configfs-v8-3-8ebde6180edc@kernel.org>
+References: <20250508-configfs-v8-0-8ebde6180edc@kernel.org>
+In-Reply-To: <20250508-configfs-v8-0-8ebde6180edc@kernel.org>
+To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Joel Becker <jlbec@evilplan.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+ Fiona Behrens <me@kloenk.dev>, 
+ Charalampos Mitrodimas <charmitro@posteo.net>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Breno Leitao <leitao@debian.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=710; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=znt+9wtzzRAcAOqqt9JwNgOU5Ajvi3gapCMlcDgxZ1U=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoHHDLcHwWDmgp1BsPK3/vcBdMMl7ofZKYVNOQg
+ GtiaUzXpbuJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaBxwywAKCRDhuBo+eShj
+ d2VZEAC4BrY+NlOiyYVhM+jOYNC097mS697letHGY2EqWh9lrIwGRwA3CiICUag2ndkYzM1w8Nn
+ ThqTHMnJEvFW3g6Jav7UG7LL3VlGyoOuY6IzE6UgQDQ3kg3mzHHzSJmtK7Xg7gKU6y1ojWayvOY
+ wdYFiuYVBDqOzLZ7/BSo96xmactGjWwauODkZTF6qV0D2hZ0yPscPpJnad/7Ld2+lYAnO8ZquuD
+ Bjj8ZToxV/O65PGazzOr6y3vZ3tLjMJetZWxeBZzU4uhPHoSV4g9ZwG/YNCnWGLY2bzQzJ47cyO
+ IEHy2PSWYwlO0eMO8Qf4MXcYyR3DuibRagdpmQ7MZ1viu/qRqolyq9Xz9bwOUuxVFiducoFuT3s
+ SR3Vj+ApduAp5L9lLxQVHkq7eZxCBf2IyhtbfobWmx2Hy25Ex5gfeTf9OK61d0u3MJOXLHdXYVc
+ OiD42fbu7TcHhHvO281co9BrZKHsO6GuVBQ6cAmKzZ6TzqVL1u2oUy3+d55sKasmGY6h4KIh7NT
+ JtvMsl3MS8Bk1bZqihGQAJKpYHOw8Ywf4NjVuTt3q2qC/Weh29gTvGNFRkSHxjCpR2IbMd23t19
+ pfToa8vniza1oA4U9DH8fsfuxHdhDGpOrnH1cOoBcn39W5FNFVFc4s8zPjEQUWES3tOeN1IppxY
+ rOfQzOb+KxMOO/w==
+X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
+ fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Hello,
+Add rust files to configfs MAINTAINERS entry.
 
-syzbot found the following issue on:
-
-HEAD commit:    2a239ffbebb5 Merge tag 'sound-6.15-rc5' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=157fe0f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a42a9d552788177b
-dashboard link: https://syzkaller.appspot.com/bug?extid=dab475abf94f7513eb9f
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/39057b073d40/disk-2a239ffb.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/c82b778f8922/vmlinux-2a239ffb.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/000bd0cd2b5e/bzImage-2a239ffb.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+dab475abf94f7513eb9f@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-rc4-syzkaller-00291-g2a239ffbebb5 #0 Not tainted
-------------------------------------------------------
-syz-executor/11002 is trying to acquire lock:
-ffff88805a314318 (&ni->ni_lock#3/5){+.+.}-{4:4}, at: ni_lock fs/ntfs3/ntfs_fs.h:1105 [inline]
-ffff88805a314318 (&ni->ni_lock#3/5){+.+.}-{4:4}, at: ntfs_unlink_inode+0x273/0x6a0 fs/ntfs3/inode.c:1728
-
-but task is already holding lock:
-ffff88805a3125b8 (&ni->ni_lock/6){+.+.}-{4:4}, at: ni_lock_dir fs/ntfs3/ntfs_fs.h:1110 [inline]
-ffff88805a3125b8 (&ni->ni_lock/6){+.+.}-{4:4}, at: ntfs_rmdir+0xb6/0xf0 fs/ntfs3/namei.c:222
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #3 (&ni->ni_lock/6){+.+.}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
-       ni_lock_dir fs/ntfs3/ntfs_fs.h:1110 [inline]
-       ntfs_unlink+0xb6/0xf0 fs/ntfs3/namei.c:177
-       vfs_unlink+0x391/0x650 fs/namei.c:4579
-       do_unlinkat+0x350/0x560 fs/namei.c:4643
-       __do_sys_unlinkat fs/namei.c:4684 [inline]
-       __se_sys_unlinkat fs/namei.c:4677 [inline]
-       __x64_sys_unlinkat+0xd3/0xf0 fs/namei.c:4677
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #2 (&sb->s_type->i_mutex_key#26){+.+.}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
-       inode_lock include/linux/fs.h:867 [inline]
-       ntfs_file_mmap+0x525/0x730 fs/ntfs3/file.c:397
-       call_mmap include/linux/fs.h:2243 [inline]
-       mmap_file mm/internal.h:167 [inline]
-       __mmap_new_file_vma mm/vma.c:2353 [inline]
-       __mmap_new_vma mm/vma.c:2417 [inline]
-       __mmap_region mm/vma.c:2519 [inline]
-       mmap_region+0x103b/0x1e50 mm/vma.c:2597
-       do_mmap+0xc68/0x1100 mm/mmap.c:561
-       vm_mmap_pgoff+0x31b/0x4c0 mm/util.c:579
-       ksys_mmap_pgoff+0x51f/0x760 mm/mmap.c:607
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (&mm->mmap_lock){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       __might_fault+0xcc/0x130 mm/memory.c:7151
-       _inline_copy_to_user include/linux/uaccess.h:192 [inline]
-       _copy_to_user+0x2c/0xb0 lib/usercopy.c:26
-       copy_to_user include/linux/uaccess.h:225 [inline]
-       fiemap_fill_next_extent+0x1c0/0x390 fs/ioctl.c:145
-       ni_fiemap+0x89c/0xbf0 fs/ntfs3/frecord.c:2007
-       ntfs_fiemap+0xda/0x130 fs/ntfs3/file.c:1380
-       ioctl_fiemap fs/ioctl.c:220 [inline]
-       do_vfs_ioctl+0x1638/0x1eb0 fs/ioctl.c:840
-       __do_sys_ioctl fs/ioctl.c:904 [inline]
-       __se_sys_ioctl+0x82/0x170 fs/ioctl.c:892
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&ni->ni_lock#3/5){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3909
-       __lock_acquire+0xaac/0xd20 kernel/locking/lockdep.c:5235
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
-       ni_lock fs/ntfs3/ntfs_fs.h:1105 [inline]
-       ntfs_unlink_inode+0x273/0x6a0 fs/ntfs3/inode.c:1728
-       ntfs_rmdir+0xc1/0xf0 fs/ntfs3/namei.c:224
-       vfs_rmdir+0x3b7/0x520 fs/namei.c:4454
-       do_rmdir+0x2ac/0x630 fs/namei.c:4509
-       __do_sys_unlinkat fs/namei.c:4683 [inline]
-       __se_sys_unlinkat fs/namei.c:4677 [inline]
-       __x64_sys_unlinkat+0xc2/0xf0 fs/namei.c:4677
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  &ni->ni_lock#3/5 --> &sb->s_type->i_mutex_key#26 --> &ni->ni_lock/6
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&ni->ni_lock/6);
-                               lock(&sb->s_type->i_mutex_key#26);
-                               lock(&ni->ni_lock/6);
-  lock(&ni->ni_lock#3/5);
-
- *** DEADLOCK ***
-
-4 locks held by syz-executor/11002:
- #0: ffff88803057a420 (sb_writers#18){.+.+}-{0:0}, at: mnt_want_write+0x41/0x90 fs/namespace.c:556
- #1: ffff88805a312850 (&type->i_mutex_dir_key#10/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #1: ffff88805a312850 (&type->i_mutex_dir_key#10/1){+.+.}-{4:4}, at: do_rmdir+0x1b2/0x630 fs/namei.c:4501
- #2: ffff88805a3145b0 (&type->i_mutex_dir_key#10){++++}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #2: ffff88805a3145b0 (&type->i_mutex_dir_key#10){++++}-{4:4}, at: vfs_rmdir+0xf7/0x520 fs/namei.c:4443
- #3: ffff88805a3125b8 (&ni->ni_lock/6){+.+.}-{4:4}, at: ni_lock_dir fs/ntfs3/ntfs_fs.h:1110 [inline]
- #3: ffff88805a3125b8 (&ni->ni_lock/6){+.+.}-{4:4}, at: ntfs_rmdir+0xb6/0xf0 fs/ntfs3/namei.c:222
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 11002 Comm: syz-executor Not tainted 6.15.0-rc4-syzkaller-00291-g2a239ffbebb5 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2079
- check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3909
- __lock_acquire+0xaac/0xd20 kernel/locking/lockdep.c:5235
- lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
- __mutex_lock_common kernel/locking/mutex.c:601 [inline]
- __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
- ni_lock fs/ntfs3/ntfs_fs.h:1105 [inline]
- ntfs_unlink_inode+0x273/0x6a0 fs/ntfs3/inode.c:1728
- ntfs_rmdir+0xc1/0xf0 fs/ntfs3/namei.c:224
- vfs_rmdir+0x3b7/0x520 fs/namei.c:4454
- do_rmdir+0x2ac/0x630 fs/namei.c:4509
- __do_sys_unlinkat fs/namei.c:4683 [inline]
- __se_sys_unlinkat fs/namei.c:4677 [inline]
- __x64_sys_unlinkat+0xc2/0xf0 fs/namei.c:4677
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f21ac98df47
-Code: 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 07 01 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffff76a6458 EFLAGS: 00000207 ORIG_RAX: 0000000000000107
-RAX: ffffffffffffffda RBX: 0000000000000065 RCX: 00007f21ac98df47
-RDX: 0000000000000200 RSI: 00007ffff76a7600 RDI: 00000000ffffff9c
-RBP: 00007f21aca1089d R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000100 R11: 0000000000000207 R12: 00007ffff76a7600
-R13: 00007f21aca1089d R14: 000000000006bff7 R15: 00007ffff76a97c0
- </TASK>
-
-
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3cbf9ac0d83f619ef873833b26a3aa3f29ff4161..5ccf04e1eb1fd02e7906e94cb5b0acd49e334d98 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5982,7 +5982,9 @@ S:	Supported
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/a.hindborg/linux.git configfs-next
+ F:	fs/configfs/
+ F:	include/linux/configfs.h
++F:	rust/kernel/configfs.rs
+ F:	samples/configfs/
++F:	samples/rust/rust_configfs.rs
+ 
+ CONGATEC BOARD CONTROLLER MFD DRIVER
+ M:	Thomas Richard <thomas.richard@bootlin.com>
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+-- 
+2.47.2
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
