@@ -1,102 +1,113 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D664A2D;
-	Thu,  8 May 2025 00:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FDC101C8;
+	Thu,  8 May 2025 01:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746665983; cv=none; b=FQ9r1UdKtBOfF+Yv15YnDGF38CVk90Or7hQxiB1SQZPNUHJb4JbDRxqQV1D6i8eVYE9CIAOhPicnKAY6frtBoqDvBjORXUW9gL/jxpCb0BwKOGN5zJRSBg8kNb7mmYZV/6rKuHD+vkGfyYCZc0ZYop+tTmJY4v6AjJf49DO4YqQ=
+	t=1746666155; cv=none; b=WcgZe4Vak+V8iiO2LjS6SOuyuZErsBdX30IxBrTWpiO5phU+FmBeJ5i0OzcEZ7Uim4KJF8cq+1als+9ZvKt0AmdzagKqxx1oQ6pN/UCiB3OJ1IevH+WE0lVaW4ijEwI4EbnRl0+PnFr6ZWPpUar/R+ODKZsprY71Dsee7N98y7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746665983; c=relaxed/simple;
-	bh=5LGyU5TjYoz8v3b0xHtqy7faVAVLrVNhwrO0JlEFzqg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=AmDHKLWRXCdLbecorUfWoAeAgBb4S84arFAnQrtRF8ElI/maTrmEGzK+BAjvg0xmodYNWV/qEA73gqvtmEwDavKAJzuzNXRA01/lWomFs2/pXY4qLapWL3yTRCPoY1jf9claTc/M0oqLGSZHa09ebkEs7xvOJD7jzOXGd3nwWMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=dco8tV+t; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1746666155; c=relaxed/simple;
+	bh=LRcV+pKioj0dnQiQ87GE22M3+IfV3Fs50YQalR4s3E0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WNXwY7ckSJAWcIuINyZSE2stdnAXpqPGjkElD9Vt1iQr+1Ejf7rXWeFG8EdDzh5WnNJRuDVrzHacc3hF1x/8uBOw0nMykxKS4wyR/+3Y74k1moDVYAT58wLd41wBzDLLzw9Wz3WstqOxCsbcqwdrcHQWk8EXJ/sl32WfPYqhh4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nD24P9E4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="dco8tV+t"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 5480xSyqD1276883, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1746665969; bh=5LGyU5TjYoz8v3b0xHtqy7faVAVLrVNhwrO0JlEFzqg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=dco8tV+tdadb04IchYNT7ZtY+dtd5DOuyS8deL0WqCoV5rfQs+EdQxQysfhu3kxQN
-	 c3SuZveGy8vT1sXeLk3b1nQ/lFrbnxC2Epnbj1mNd3spHlXKCevSXj4bLA7b14a2tO
-	 +Uz4Hr5csbU68crFyUYBVuLF34zX/CRSec+7Gh7bEuBl3JwZpG9kWRfWHDrKIPl88o
-	 LWmaQxMDYTWIpmYMcd+dzUnL4mCwJUmbld0TD+fYQTGojaTJsndqceb/rmKayq/4kc
-	 LZcuQC4DjaVfxuGncW5DT9Gzahx56g5TDs2FklWlgO/yJdn09GTr1sQql5gaBbT3eb
-	 Of7/nsIlzw+9A==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 5480xSyqD1276883
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 8 May 2025 08:59:29 +0800
-Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 8 May 2025 08:59:29 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 8 May 2025 08:59:28 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Thu, 8 May 2025 08:59:28 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Fedor Pchelkin <boddah8794@gmail.com>
-CC: Bernie Huang <phhuang@realtek.com>,
-        "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [Bug report] rtw89: 8852b: IO_PAGE_FAULTs with beacon filter feature enabled
-Thread-Topic: [Bug report] rtw89: 8852b: IO_PAGE_FAULTs with beacon filter
- feature enabled
-Thread-Index: AQHbrfBpW2AH+n1rZEuyFH6rIsW1k7Olc7dQgAAnAYCAAXKcUIAf2VeAgAEkbIA=
-Date: Thu, 8 May 2025 00:59:28 +0000
-Message-ID: <419811cccd774d38b5a9c0bbcdf5dfbe@realtek.com>
-References: <uidltsdsuujrczrtzgerhh5cw2tztxktfen6yvztnc7gttzgvk@jccomj7f4gul>
- <148ed65c53be4ef29246d372dd0fef8e@realtek.com>
- <z54thedngt3wnhr5bfer3yg7id2c4uqgw2jjvyausv6p66ys4k@guqol77fpugz>
- <dcf695a6621f43e38a20eb860194191a@realtek.com>
- <7injzacfmvhrugcovyxkn4elnaxnzg27c26zmcqzrwhottyk7e@ap5ellaozcg4>
-In-Reply-To: <7injzacfmvhrugcovyxkn4elnaxnzg27c26zmcqzrwhottyk7e@ap5ellaozcg4>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nD24P9E4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 113DDC4CEE2;
+	Thu,  8 May 2025 01:02:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746666155;
+	bh=LRcV+pKioj0dnQiQ87GE22M3+IfV3Fs50YQalR4s3E0=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=nD24P9E4YbvjSSPqzb70ZEJaC1oGg1pD+DnierwAI2obq/mDgkBDEKm7er5y4h6Rh
+	 4gufBbGcbU7I9Qt9M+/hJv6m8DaEQIuTQ7X3nN3MjmdWm6jmqeTBd8dNppGcKyMdEl
+	 lCW8Sm461hJFz929LlYSeOBVOki3IkL9b5Z/4pC3vUsgE435MKyYUQ/nAIMAMjEWZF
+	 D5X72saPoOmh+bxqiSAjVGAfGvI/h+zvN7G1dJeQMacVOgefj3IojvXtsV4rcHqxHk
+	 hl70hR5b0+GvI8KOAJXDU3nEDbg4nD18PQUrWESLfAhIh2Jz/VIr2PUJeqEfPyQ+2v
+	 ub5HuKZ4zj/hA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001D4C3ABC0;
+	Thu,  8 May 2025 01:02:34 +0000 (UTC)
+From: Amit Sunil Dhamne via B4 Relay <devnull+amitsd.google.com@kernel.org>
+Subject: [PATCH v2 0/5] Add support for Battery Status & Battery Caps AMS
+ in TCPM
+Date: Wed, 07 May 2025 18:00:21 -0700
+Message-Id: <20250507-batt_ops-v2-0-8d06130bffe6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACUCHGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHQUlJIzE
+ vPSU3UzU4B8JSMDI1MDY0ND3aTEkpL4/IJi3aRUw6QUc8PkRCNTEyWg8oKi1LTMCrBR0bG1tQD
+ o5/1GWgAAAA==
+X-Change-ID: 20250311-batt_ops-be1bd71ca254
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Badhri Jagan Sridharan <badhri@google.com>, 
+ Sebastian Reichel <sre@kernel.org>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>, 
+ Pavel Machek <pavel@kernel.org>
+Cc: Kyle Tso <kyletso@google.com>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+ linux-pm@vger.kernel.org, Amit Sunil Dhamne <amitsd@google.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746666154; l=1861;
+ i=amitsd@google.com; s=20241031; h=from:subject:message-id;
+ bh=LRcV+pKioj0dnQiQ87GE22M3+IfV3Fs50YQalR4s3E0=;
+ b=3Id+Nk6+E6cUAu6NLSo6T6dh5n72Vz78BzucEQ2NbPWm4zzcW9Av99ytXVakATFYyAJxyWdry
+ 7zaAHUj5dYkBMJpnELQcs7AoFNoVeswI2MeGakLMn6l4h9X2ehao/qt
+X-Developer-Key: i=amitsd@google.com; a=ed25519;
+ pk=wD+XZSST4dmnNZf62/lqJpLm7fiyT8iv462zmQ3H6bI=
+X-Endpoint-Received: by B4 Relay for amitsd@google.com/20241031 with
+ auth_id=262
+X-Original-From: Amit Sunil Dhamne <amitsd@google.com>
+Reply-To: amitsd@google.com
 
-RmVkb3IgUGNoZWxraW4gPGJvZGRhaDg3OTRAZ21haWwuY29tPiB3cm90ZToNCj4gT24gVGh1LCAx
-Ny4gQXByIDAxOjA1LCBQaW5nLUtlIFNoaWggd3JvdGU6DQo+ID4gRmVkb3IgUGNoZWxraW4gPGJv
-ZGRhaDg3OTRAZ21haWwuY29tPiB3cm90ZToNCj4gPiA+DQo+ID4gPiBPbiBXZWQsIDE2LiBBcHIg
-MDA6NDksIFBpbmctS2UgU2hpaCB3cm90ZToNCj4gPiA+ID4gQXMgYmlzZWN0aW9uLCBjYW4gSSBz
-dW1tYXJpemUgYXMgYmVsb3cgdGFibGU/DQo+ID4gPiA+DQo+ID4gPiA+ICAgICBkNTZjMjYxZTUy
-ICAgICAgICAgICBmaXJtd2FyZSAgICAgICAgICAgICBJT19QQUdFX0ZBVUxUDQo+ID4gPiA+ICAg
-IChDUU0gc3VwcG9ydCkNCj4gPiA+ID4gICAtLS0tLS0tLS0tLS0tLS0gICAgICAtLS0tLS0tLS0t
-LSAgICAgICAgICAtLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gPiAgICAgICBvICAgICAgICAgICAg
-ICAgICAwLjI5LjI5LjcgICAgICAgICAgICAgICAgICB5ZXMNCj4gPiA+ID4gICAgICAgbyAgICAg
-ICAgICAgICAgICAgMC4yOS4yOS41ICAgICAgICAgICAgICAgICAgbm8NCj4gPiA+ID4gICAgICAg
-eCAgICAgICAgICAgICAgICAgMC4yOS4yOS43ICAgICAgICAgICAgICAgICAgbm8NCj4gPiA+ID4g
-ICAgICAgeCAgICAgICAgICAgICAgICAgMC4yOS4yOS41ICAgICAgICAgICAgICAgICAgbm8NCj4g
-PiA+ID4NCj4gPiA+ID4gSWYgdGhpcyB0YWJsZSBpcyBjb3JyZWN0LCB3ZSB3aWxsIGNoZWNrIHRo
-ZSBiZWFjb24gZmlsdGVyIGZlYXR1cmUgaW4gZmlybXdhcmUuDQo+ID4gPiA+DQo+ID4gPg0KPiA+
-ID4gWWVzLCBpdCBjb3JyZWN0bHkgZGVzY3JpYmVzIHRoZSBzaXR1YXRpb24uIE15IHN1c3BpY2lv
-biBjdXJyZW50bHkgZmFsbHMgb24NCj4gPiA+IHRoZSBiZWFjb24gZmlsdGVyIGZlYXR1cmUgaW4g
-ZmlybXdhcmUsIHRvby4NCj4gPg0KPiA+IENvdWxkIHlvdSBoZWxwIHRvIHRlc3Qgd2hlbiB3ZSBo
-YXZlIHVwZGF0ZWQgZmlybXdhcmU/DQo+ID4NCj4gDQo+IEhpLA0KPiANCj4gV2VyZSB5b3UgYWJs
-ZSB0byByZXByb2R1Y2Ugb3IgdHJhY2sgZG93biB0aGUgcHJvYmxlbT8NCg0KWWVzLCB3ZSBoYXZl
-IHJlcHJvZHVjZWQgdGhpcyBwcm9ibGVtLCBhbmQgd2UgZm91bmQgc2VuZGluZyBmaXJtd2FyZSBj
-b21tYW5kDQpkdXJpbmcgZGVlcCBQUyBtb2RlIHdpbGwgcmFpc2UgSU9fUEFHRV9GQVVMVC4gV2l0
-aCBiZWxvdyBzZXR0aW5nIHRvIGRpc2FibGUNCmRlZXAgUFMgbW9kZSwgdGhlIHN5bXB0b20gY2Fu
-IGRpc2FwcGVhci4NCg0KICAgcnR3ODlfY29yZS5rbyBkaXNhYmxlX3BzX21vZGU9eQ0KDQpOb3cg
-d2UgYXJlIGFycmFuZ2luZyBDQVQtQyBlcXVpcG1lbnQgdG8gY2FwdHVyZSBzaWduYWxzIGluIFBD
-SUUgYnVzIHRvIHNlZQ0Kd2hhdCBoYXBwZW5zIGF0IHRoYXQgbW9tZW50LiANCg0KT25lIHBvc3Np
-YmxlIHNvbHV0aW9uICh3b3JrYXJvdW5kKSBpcyB0byBhdm9pZCBzZW5kaW5nIGZpcm13YXJlIGNv
-bW1hbmRzDQpkdXJpbmcgZGVlcCBQUyBtb2RlLCBiZWZvcmUgd2UgZm91bmQgb3V0IHRoZSByb290
-IGNhdXNlLiANCg0KDQo=
+Support for Battery Status & Battery Caps messages in response to
+Get_Battery_Status & Get_Battery_Cap request is required by USB PD devices
+powered by battery, as per "USB PD R3.1 V1.8 Spec", "6.13 Message
+Applicability" section. This patchset adds support for these AMSes
+to achieve greater compliance with the spec.
+
+Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
+---
+Changes in v2:
+  - Instead of introducing new "fixed-batteries" property to pass
+    reference to FG, use OF graph by extending "ports" property
+    definition. (suggested by Krzysztof).
+  - Demonstration of binding usage in gs101-oriole will be in a
+    different patchset.
+
+---
+Amit Sunil Dhamne (5):
+      dt-bindings: connector: extend ports property to model power connections
+      power: supply: core: add helper to get power supply given a fwnode
+      usb: typec: tcpm: Add support for Battery Status response message
+      power: supply: core: add vendor and product id properties
+      usb: typec: tcpm: Add support for Battery Cap response message
+
+ Documentation/ABI/testing/sysfs-class-power        |  19 +-
+ .../bindings/connector/usb-connector.yaml          |  20 +-
+ .../devicetree/bindings/usb/maxim,max33359.yaml    |  25 +++
+ Documentation/power/power_supply_class.rst         |  11 ++
+ drivers/power/supply/power_supply_core.c           |  30 +++
+ drivers/power/supply/power_supply_sysfs.c          |   2 +
+ drivers/usb/typec/tcpm/tcpm.c                      | 208 ++++++++++++++++++++-
+ include/linux/power_supply.h                       |   5 +
+ include/linux/usb/pd.h                             |  65 +++++++
+ 9 files changed, 371 insertions(+), 14 deletions(-)
+---
+base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
+change-id: 20250311-batt_ops-be1bd71ca254
+
+Best regards,
+-- 
+Amit Sunil Dhamne <amitsd@google.com>
+
+
