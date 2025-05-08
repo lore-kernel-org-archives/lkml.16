@@ -1,146 +1,162 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D612F28A1CF;
-	Thu,  8 May 2025 19:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D2121D3C9;
+	Thu,  8 May 2025 19:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746734372; cv=none; b=PEYNYMU7psenBTUgt0reY9jfB6jLsb0L4XthgwDNmBc4vaoztwARNIuH6I+S3aeRzfbBtdQSc0euDeoDPkSbiLYcx3YBlKUXIGbuLgxbCMpzXxWL5XYXdETJ1BIBmEqMPfZaTRgZIi0ezjDVMLfNGIHQC17O6mVEr6rwRFgZUnc=
+	t=1746734399; cv=none; b=kiGqzU40i36Er8o/J3+QiFOeKOTjulgdJBApcwy1dT+jJjGGyPxGreml5znzPm0z09ZcmHvpN7re5rA0JXrDlaAiSSfeqYI1XVG7mkuWWX3UBDcd65Lg+X5Ft7S8oV1+qXEr9H4SxrSr/4wtPwWCFHjSTbWO8eEHcFFQgANq+c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746734372; c=relaxed/simple;
-	bh=D0eTZcDHThj7wFmuGHzLws3kPES381HlOCH3BoO5xv0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=itNiVnKwapISUp8+GYu7ZCwcPTdp+9oxIwCGbWiC5gxzUlR2wGNBc5BQZ7TiGT7U4y6BkcedXg3VCKlLCME6hjRB+uys1exaQGEJRAGk10ZRoQ9ncq2RAoHejgsZO5RVJP0tPhWwzmOoCheu7kgKqUiHmCKmnsrSDhbi+oFvnBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V3Efg+UQ; arc=none smtp.client-ip=209.85.216.46
+	s=arc-20240116; t=1746734399; c=relaxed/simple;
+	bh=nK/hQkP4ncaVLn+85OwpuQUElYHJ9Kq+z9dMsqR8V/Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YJLoWExmp8vK/JalHsoB5sWS5fZ9eCiH0Zr21hVYiTwoTzXUx/Q/CdRJm3x4zm3WP9HHf8tdQ0hA7Hjrw4hCOIATETLc2mpMDf1coEVnCvKqkjkHOLaSB5V1adDfeYaBzr0jhgXT8PBn0Ynwq0yJhrlUT0uiCYcAUoIgvdp0ZRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kSqQ4IyZ; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3Efg+UQ"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-3081f72c271so1467806a91.0;
-        Thu, 08 May 2025 12:59:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSqQ4IyZ"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso1939308b3a.2;
+        Thu, 08 May 2025 12:59:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746734370; x=1747339170; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=XZ1A/jnQKBKmbW0+4UxhQaDHonKrklw/WpsEqGyizjs=;
-        b=V3Efg+UQbYphzzW43+Izuhfaw9bISJQetzyDGa7/3SI27WGYb1lhJ81ICOm1x1z5WY
-         B1mVUSG320yE6yA9naxFMIG3PXNDgKTVLGhjIgHeeN8GVej0I0K/pzfE29sh6YVGcsqO
-         aX04ImTjGhZuV7Lk42z+abNDpPBObKpEVIi2t7XAoQUw1/ucbet4I/ylZDILxhERihHe
-         JA8XGEfYENgonmms58DC4ZW87P5CXX9Zz2JN8wIpsQTEvqQlkbxqwgi2IjAMtzgzj53e
-         uHjxMOskGIN+JZfHgHeGrCuvq1lonJpWGMA6FRbPHTdwjR0LbYN+KTlOY969vUjFb5n1
-         8TaA==
+        d=gmail.com; s=20230601; t=1746734397; x=1747339197; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sJ95+thIJu2pTdyqF3qLY2WS+CqBDgNhqB1f0/bL+nM=;
+        b=kSqQ4IyZD2WXpmJsN+R0gWB/K11AOsKpffu896MVNQs/SwK0o0HNxXTclfDdRqkheW
+         m5RiidvsjFn/PPLM6HSuVcKsQ2tcxUYDtuxig93LuHTqKKIg+11JqwEaJB/VODLlaud/
+         hbviFi0CMc3TqfBKBIjtA1u4IBun1QYPh9ZV1HuuIrLgOURwyfiQaohr6arr+39A3tKp
+         p/5eub23/JNdp/EKFovGJTQN+rQZG9auTqRDDVPN8KOl6WdKJyE61M0scQ2aROIMd5vU
+         lu5U6FYRkZWe9BrVa4F3zPu1Wrmr7+NKi7TfpRQYez6HcmtadQe0WJEkNnM4XYLttmQx
+         7Veg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746734370; x=1747339170;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XZ1A/jnQKBKmbW0+4UxhQaDHonKrklw/WpsEqGyizjs=;
-        b=j1s9Kp71nJJHeHMKzjvjAhPGUrwBCegRttMrzbLK+iujsOfZhI//WrevBxxqurDcVD
-         k09rGok8WOV+ST0LiJB2oi+owg/l2JfdatHoq2lgHH/XlkhLLgKHdZcn1BZudJfoL0Z1
-         IOhiXlo6pNJNpWNahADjphKV5BnwIOBfKeTZSOi3qhYoDRf+7UO9WTFl7KBeDg//wRXQ
-         AlRf2uUhcm71aao0TJ+V9PbhTO8kgbu5s3HePbiQWcvtiaEVGbDMGyCY2SQowSX9L7cQ
-         Z0+o2IJ7u+Hsbp+SCgL3emUm3lGmUTtg5IOzpSXbNp4Rj2R78Z/CI+LHO1og1S1ehM5K
-         foQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhgS66y79TGCEatyl/Bdb1Ek9i7LwoZE0YcPDMCXZu7VX+/vTpMGZmtKpeXRO/bDIfk0DSl5tx@vger.kernel.org, AJvYcCW2bc198w6JxtfQi8Vl6GRQQcMFS7gLLAjEs/ECumwU9BCqEssmkxZSLgOPquY15XOzzmVnDcXJcuF5RGk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtTdXrlJL2bhrhmc9RO4cjVmb2AXYnl/rOD/rDYsQfFpQ3guU1
-	9Q4OWnGMqj6stmN+auxDXhceLLBNQE7rdGLGkfcdUGZkyNtSSxal
-X-Gm-Gg: ASbGncuvw38EPfVq1rntaOuXGC+TiSuPe1HKw1nkAXMN/JGZKbYmR0LiTOHEmpeF2iU
-	pEhoWBKmk9ndJeBWfOM4ZUCVuvn8GWT2sHC1yd7Hof37WFJXBTfHYFznAIiUCM/yUOTzVN6unzY
-	+pxVOQ2k+H9H/qfVgdlgVYYdqaUKqHzYdvavkEwG4lbCoqVdzfvbi/tZm9zkk6cxlIfXjnSP6FZ
-	NIezEppEn418qZISqmFtJjx+op596gto79KdX/iRpvf47ZgfupeX9H/fBiCC6OVHOhkV5saBbB6
-	Zrh103dt8KrYO0qY3aZYMH7jvNN44NmZJONCEsE04bPsfRDTULj8CE9SNSnStYkZpp4j+yz1CYI
-	ND+vy5Wv8maCvwfQ=
-X-Google-Smtp-Source: AGHT+IFVUh9N3HJOvnWcBK/H0I50OtcuVSPhl3G26tmbv8P7V/BrHlWrxEtmYbS8nKEssB5lL23tpw==
-X-Received: by 2002:a17:90b:1dc1:b0:2fe:9581:fbea with SMTP id 98e67ed59e1d1-30c3d6580famr1139524a91.29.1746734369785;
-        Thu, 08 May 2025 12:59:29 -0700 (PDT)
-Received: from [192.168.1.177] (46.37.67.37.rev.sfr.net. [37.67.37.46])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ad4d2f3f3sm2635327a91.12.2025.05.08.12.59.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 12:59:29 -0700 (PDT)
-Message-ID: <34c70ab9-bbc3-4e1e-8840-8ce8eec1d68a@gmail.com>
-Date: Thu, 8 May 2025 21:59:24 +0200
+        d=1e100.net; s=20230601; t=1746734397; x=1747339197;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sJ95+thIJu2pTdyqF3qLY2WS+CqBDgNhqB1f0/bL+nM=;
+        b=QSueERmx5d8Guqh/ld/2UWINckszSYmXfMl/6AwKKsIAths7dDA8NDnJk6KH/ga52N
+         ngrfITYEpqGCsgTjsKWWpJivbkfP+wui/MQB/zNwVUpLNrgEUckVJGrPMSZBdo9o29pR
+         vweuX7DLcLeJc5V5f85Z7CaIwhTrpUA5vQ8K7XNorJnXj5f8/v8iQJ9Y1qqPFHoY9ydH
+         ENGTpoHNODpyzlp3TexcyeE3Z6s7vnpUcSYkZDeuqRftBbMWATwp9Eh00s3QZWXA2+vp
+         HQ1fhWltiHsbrpAWPw86d5lgk1O0rkaNXJMJwRTIvb0qL2zxMxbbrA5Ck3g4Xtckd22T
+         Q/tw==
+X-Forwarded-Encrypted: i=1; AJvYcCUvG9pt20jh9ek8pKOThXO5Ov2Wb3G51m87XE0pDDjTTANQcepicPIai/E6xxDtRylV33M1TnMBmzOEjz0y@vger.kernel.org, AJvYcCVDbMPYsoe+BXp7PBGEzZALTSRYFpNo2rqbdQFLRr1/GndZn7EIPP62TKPZhvZnqIVXYm5arngX1Oq8xhk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwK7+3QfYoKm0Nt4PtMKeToQkfWMYSpe3TtGwBV3Y2WOCjwdjXv
+	7ZvtrCDoNyGVJEmkmsSH9N9LUo4e98U6CvMluSq1sAXlEPWxRF5xomsSSJ0c
+X-Gm-Gg: ASbGncv3+cT79Ui2cyaSXhlOxllZ/Ku6MIgVowJIy4Hg52W4j9QDYpXM3Z6CSzYuIQs
+	ZdMeHakl7ulbgoSIjkdt+PYrPi8TxPzRoVEDGTEm6JMdmU4sVH+Ix91tISi2p35+PGziwjKc4G0
+	LxBAK1GaFOnR0ZuGoKjuas0re3OdB/aJ8/F8pLh4hulaGYFM/F7EpNgVFXWPn8lBVWjY/Ag1Dm9
+	0dUdqb0uKP7y2TPilPEqEjeGdgiaE+tGojYJaDpy5BiN/hC03M1mWCwoioG7GRDsFqv2/btCHyH
+	Y7ioIJt0W82H1ToagZPc0MNEjfZBiwUn+nCjHpQ3
+X-Google-Smtp-Source: AGHT+IEGgI28/7p85CyStV87N9oWy/yKnk4eLXwQuczXV5gnhxNFc8FeVEafcH9ra1E5FD3WGyASBA==
+X-Received: by 2002:a05:6a21:e86:b0:1f5:7280:1cdb with SMTP id adf61e73a8af0-215abb0b6a7mr606627637.16.1746734397008;
+        Thu, 08 May 2025 12:59:57 -0700 (PDT)
+Received: from localhost ([216.228.127.129])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237704619sm423061b3a.20.2025.05.08.12.59.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 12:59:55 -0700 (PDT)
+From: Yury Norov <yury.norov@gmail.com>
+To: Kristen Accardi <kristen.c.accardi@intel.com>,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Yury Norov <yury.norov@gmail.com>
+Subject: [PATCH] crypto: iaa - Optimize rebalance_wq_table()
+Date: Thu,  8 May 2025 15:59:50 -0400
+Message-ID: <20250508195952.391587-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 00/97] 6.1.138-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250508112609.711621924@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250508112609.711621924@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+The function opencodes for_each_cpu() by using a plain for-loop. The
+loop calls cpumask_weight() inside the conditional section. Because
+cpumask_weight() is O(1), the overall complexity of the function is
+O(node * node_cpus^2). Also, cpumask_nth() internally calls hweight(),
+which, if not hardware accelerated, is slower than cpumask_next() in
+for_each_cpu().
 
+If switched to the dedicated for_each_cpu(), the rebalance_wq_table()
+can drop calling cpumask_weight(), together with some housekeeping code.
+This makes the overall complexity O(node * node_cpus), or simply speaking
+O(nr_cpu_ids).
 
-On 5/8/2025 1:30 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.138 release.
-> There are 97 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 10 May 2025 11:25:44 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.138-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+While there, fix opencoded for_each_possible_cpu() too.
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels build tested on 
-BMIPS_GENERIC:
+Signed-off-by: Yury Norov <yury.norov@gmail.com>
+---
+ drivers/crypto/intel/iaa/iaa_crypto_main.c | 35 +++++++++-------------
+ 1 file changed, 14 insertions(+), 21 deletions(-)
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+index 09d9589f2d68..0c5ff1c6e335 100644
+--- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
++++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+@@ -894,7 +894,7 @@ static int wq_table_add_wqs(int iaa, int cpu)
+ static void rebalance_wq_table(void)
+ {
+ 	const struct cpumask *node_cpus;
+-	int node, cpu, iaa = -1;
++	int node_cpu, node, cpu, iaa = 0;
+ 
+ 	if (nr_iaa == 0)
+ 		return;
+@@ -905,36 +905,29 @@ static void rebalance_wq_table(void)
+ 	clear_wq_table();
+ 
+ 	if (nr_iaa == 1) {
+-		for (cpu = 0; cpu < nr_cpus; cpu++) {
+-			if (WARN_ON(wq_table_add_wqs(0, cpu))) {
+-				pr_debug("could not add any wqs for iaa 0 to cpu %d!\n", cpu);
+-				return;
+-			}
++		for_each_possible_cpu(cpu) {
++			if (WARN_ON(wq_table_add_wqs(0, cpu)))
++				goto err;
+ 		}
+ 
+ 		return;
+ 	}
+ 
+ 	for_each_node_with_cpus(node) {
++		cpu = 0;
+ 		node_cpus = cpumask_of_node(node);
+ 
+-		for (cpu = 0; cpu <  cpumask_weight(node_cpus); cpu++) {
+-			int node_cpu = cpumask_nth(cpu, node_cpus);
+-
+-			if (WARN_ON(node_cpu >= nr_cpu_ids)) {
+-				pr_debug("node_cpu %d doesn't exist!\n", node_cpu);
+-				return;
+-			}
+-
+-			if ((cpu % cpus_per_iaa) == 0)
+-				iaa++;
+-
+-			if (WARN_ON(wq_table_add_wqs(iaa, node_cpu))) {
+-				pr_debug("could not add any wqs for iaa %d to cpu %d!\n", iaa, cpu);
+-				return;
+-			}
++		for_each_cpu(node_cpu, node_cpus) {
++			iaa = cpu / cpus_per_iaa;
++			if (WARN_ON(wq_table_add_wqs(iaa, node_cpu)))
++				goto err;
++			cpu++;
+ 		}
+ 	}
++
++	return;
++err:
++	pr_debug("could not add any wqs for iaa %d to cpu %d!\n", iaa, cpu);
+ }
+ 
+ static inline int check_completion(struct device *dev,
 -- 
-Florian
+2.43.0
 
