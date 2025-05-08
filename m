@@ -1,396 +1,289 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013014.outbound.protection.outlook.com [52.101.72.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DAEA2777F5;
-	Thu,  8 May 2025 14:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746715562; cv=none; b=iGpIKsspEi5Y+0WOideP7xddwH2v8vTe4mZ2QZyr6Zg1x6FnWCUjgJIhuFA2Wf2jYPo+HQ/AeGvmOaPdLaGiVzfyc0Qu5Ht7haJQlO2I1hFYzGzjdE0Utivu78NNycg44URbtXcwby95xXNljWIIKCd6PRL/N0nNnC2meNLVcZk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746715562; c=relaxed/simple;
-	bh=I0FoidB5YlrqQxE4Gxgl146ZkM3RpbKYRomqdP6c5P8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j4q3CrPNw1HhuHNU4FI7uJPGKHR3Cbx7X9/n0fh3xDr5PoJn1P2DC4TTN5k1AmReYYfJWm1Hd+fjovfUpvKZDEKCUk1TvQ17yPq8AUa14y9ThydVRL2ZF2UZylhGNj6Vl1ETQxOnb7J3cNd6QGCja8HbpjIzlh8kGA1S8KT1lng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QNm2sxiP; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BE08460;
+	Thu,  8 May 2025 14:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746715604; cv=fail; b=FUTnAPtCXMghaMts1pkNqJ4vQzTNJaaquxYV4yjsZlw2Rhj3K921J6ODYyDbpYM3OUbBFOMAKotBOQE4xFammmFvnSzE/2J5UVg7oSGGy08dLtId9X447XjdNrRpH93X6DR3Ad+PG7eMsUNWwFk294pASTZo/7y5i8MuiDQQkEU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746715604; c=relaxed/simple;
+	bh=Svmtf9V2uGV7fFtD+tZm2g3K59XHvOePAqqq0Bex2RI=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Z62D/r+2L3cknaN5Cx/6V+phcHSWEfgx2FSYF/6QWpedKYBoOlvsSs8Z9IUzZTlyQQ5S5WjIaHioIjntDt5x0EyzumzEx8ZEpUGApB1g1oeTfmSfThvm8FfcdvQdWAjfMMuQWQPZIFn2ChZYtmNtLWQYAo0bOPETtqbOqIFI21s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=nl5xzstp; arc=fail smtp.client-ip=52.101.72.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QNm2sxiP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E566C4CEE7;
-	Thu,  8 May 2025 14:46:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746715562;
-	bh=I0FoidB5YlrqQxE4Gxgl146ZkM3RpbKYRomqdP6c5P8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QNm2sxiP9Jgt0vIOqpAiv1o4jtus7+Gb+yQkgpwpHlOK3Yt96dt9u04Vh8ccC5UED
-	 qQrrKp1g2Yr084KUQAs2NJ0LmTHb1sOsguE0o9B37OUG5uEUfsaF1qMMstB73LGV/y
-	 Ynk4ZvYQgbMm2HneAwOXH/gGK4klPp4UxphI/NBzHSEq5OssYlmhNvuLUX/hytKzKI
-	 gzyYc1b9RqhjS2OUr5bQxq0q8L66/QvZOeL4QyBNflqzfKLJZtBAV+d6+woSmLqC6v
-	 CjZ9lchwG7kIyt6KFnjA8S6R7FcTqBEVtZRPMZJ+M529ryB3RsWCjnlGe7bYflI3wO
-	 HH9NlxuwH9JwQ==
-Date: Thu, 8 May 2025 11:45:58 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [RFC/PATCH] perf lock contention: Add -J/--inject-delay option
-Message-ID: <aBzDpi25-LBgAjEj@x1>
-References: <20250225075929.900995-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="nl5xzstp"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JrCx7rgtAEX1mf0Ebo2rNS3RPT8p5TXJOiYXqztvUl6/SRdtjnnDOJowmwyMHQu92v2XImBy/IrmevpqMUQqtFx+DZjyizGRkkbWYa+aQi9D+PrRoOv/KwQLZP90MA/PD7EYChn8j7AsHdkj8bwt4TYiz4bhy+6V2bnRkIXlq8CSObBv2IhMYUxZqgwM6/w1WqV+3p1DxJb7ly6I5aT2WdKyNDoWQy0Tso8TqumnXEQDUNTlwmBb/2lUVgC70hTcuZpALkdiqX1NiTRuQdziKRz8UAqa/igz2X/PVJnYjt3YZWRiaQBNc2iCAwpWQg9+B498ibFu62UV/O+FiaUDPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KBLHYCjzGfjC+0Lf6ZwZCcdSeAGv2HDC6sNxjNOSiCw=;
+ b=df0/XKkaUjnnDVc8vja4Z5lk20XcRa0pGXxwc4UYqEhry+4BtJn/AgAOxoYbxh3q2gOMfLAxsI2mx5g9fmJMH5EFCYg/ubRPqd6C6yNPvM4aqwsJ14PmkrxpWhcgQqqGnT1HMYxd+4UPRGnJC/jC0sR/r8RRAYcp+H37XopXiCY8YV3exnxybvboeCGevumioDuwRw+gw9ESPX1tv45MjH0fIN/LCZQr1IH4X5LAZcK64lWixi8AtDxXsv108YG0JttjY8+ltU39vHGXdfezNKSoCAkGCZSkFJiD7ogRjlUCkisgSEDaKOHmS7Ly/qCaGpWzikyPZYB7+If47d0MKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KBLHYCjzGfjC+0Lf6ZwZCcdSeAGv2HDC6sNxjNOSiCw=;
+ b=nl5xzstpCD6jydfAtjfcdcWsSfOzifBbpd0HRmCp/eb4FtpSQYd5LYwe6xgnXeB4FvWfZmjVniTXwrTNlogzgMHXAUHR9rRAsqI26RgAdTffIIooVdOpsntFVsEC/JFHRyHCOM0J7gY+9VQP30YtZm58zxfqFTZF/vX8qC7BUPvDpoZcRXxei2QnpBHb2oJJe5b/gkPRohcuJNNZp3YyVElvB4EGGJu/CNZRMogUCy3OX13CVXURPxii/4SVrsAl6aXYmbz+by+lOdplHenQ0Ys2Fxrhup9+7YIQektcrv5ch/2KJYc7W4CuVxpvUrIeGfMjI5dD6xUh6hx/DYex9w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
+ by DBBPR04MB7819.eurprd04.prod.outlook.com (2603:10a6:10:1e9::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.23; Thu, 8 May
+ 2025 14:46:39 +0000
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2%4]) with mapi id 15.20.8722.020; Thu, 8 May 2025
+ 14:46:39 +0000
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: netdev@vger.kernel.org
+Cc: =?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
+	Marcin Wojtas <marcin.s.wojtas@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: mvpp2: convert to ndo_hwtstamp_get() and ndo_hwtstamp_set()
+Date: Thu,  8 May 2025 17:46:30 +0300
+Message-ID: <20250508144630.1979215-1-vladimir.oltean@nxp.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BE1P281CA0389.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:80::17) To AM8PR04MB7779.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24b::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225075929.900995-1-namhyung@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|DBBPR04MB7819:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8de023f4-9917-4a8c-eb55-08dd8e3f23be
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|52116014|376014|7416014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?odRXvgjwaG7yI7bvmSNQfq0nvet3Uy8DNO7Uq8e5EUb85pNWAheOzs3EW0XQ?=
+ =?us-ascii?Q?0L9vo0B6XwqX7k0P59LAGBFAiLLURtzTxsH8P2RNdsjs1TLRbz74mmJbPoR8?=
+ =?us-ascii?Q?YV4W+ThCyxURFZIpalNMhNfsml/iT8+jDuUCs2zwkhBgqwGrb+jDEivg3PjR?=
+ =?us-ascii?Q?WfR8jMEhL4zHjL6tpO/Ll9e+TikWXuMN13vaZ8Epv6mYDmcR/kdnpJgREoTv?=
+ =?us-ascii?Q?7BbHXcyEYuzz4mW1/JndcmSzYE47HFwwAzekWhdv+uLrhhOLaoNSyxi3quT8?=
+ =?us-ascii?Q?bpKokPnrOC4PFTb3+a4ucoQ7087d/Cnwz5/zOoE9yCimJ8BjhdjQPywbHd0i?=
+ =?us-ascii?Q?PIQ7SFKGrDPBsG0bVQq1n1Yyc6jjM6O7vlzee43Ok8PBf7K3yAp6ABHMJ6ja?=
+ =?us-ascii?Q?Jh/dp/KQvsAlGGB7GI5MM+5U156PBLtxGwYJkR/xFktYXn3mul/R0yNOIDOe?=
+ =?us-ascii?Q?TLiotfp9MkskHXbg7GmEYwaHkh+T0PqOKuqICYIGp6GzAD+/pfHBCOaGhh9B?=
+ =?us-ascii?Q?IreIxIYfhuCVh8mv0wG0UDRvz4rfJfyy8Jw7mkFkRwlmoIVRmfM2MlhXsjJ+?=
+ =?us-ascii?Q?rTXASR7xtpnqkSGqjjfw4mbPdaRIaQqxa7hz8ykJMWmO09oQaPDiH4qLxw8J?=
+ =?us-ascii?Q?oG8LvrOVzG7C7boZWOX3MADpAOJXKpRnQR2HHQ906EZuMd1rb6ADfQIIgiwO?=
+ =?us-ascii?Q?pM/aiVTSj5NBQQYlA4z6RUZ6l66DTCmJhO/CyaO6sl5e6it1/lqA4TGUB2nW?=
+ =?us-ascii?Q?JUv26y/CclDH554uXF5YRax/TBnbnnokszUGWBAiyWmEvOwSN/eGXY+Tt1GF?=
+ =?us-ascii?Q?yCdNXv+XWYJB93FykeDWgRd+F+1jAvJeqW0PX3fXN+7l7rHuCkNrlxJfzBeX?=
+ =?us-ascii?Q?WtWy8aSJiS1woP2sOUbtVvR3jR1mrtrfyuiI44hZ9t/mep7Lskl1MBgos1ck?=
+ =?us-ascii?Q?niJrvcI9OiUJiIOXv7Sy86NeMqkvrRSE54Ho3NrOiADQFpmYSz/nxScP/QyF?=
+ =?us-ascii?Q?0YDolrR4RtnjM7rS4yFPTV1w5K16EhZ5EFYcnaVeiyqYd0R2N+NVWg6gjO3Y?=
+ =?us-ascii?Q?eTzbTbl15AJJrIuV4+rV2PXzpj51oa7Fx1Nl1IVteRRjMiSEP93RsCAOMVKC?=
+ =?us-ascii?Q?bJzZW2FABbimxmZQVoTfmgvPxG2D8nsTAdkxarvsVVcUHQfD1ai6ii9lv5M+?=
+ =?us-ascii?Q?TyfxkWxgxMkHEVwC3QSIJ/EVYdXiEabCp81DDDIuXSi4hMnI8gzUGbM8PpPG?=
+ =?us-ascii?Q?lbmQzo48yT1ruHDnAdv84qEOv6pyMXWJMDAQZubFYLu+B78+8t87kKdS/XKw?=
+ =?us-ascii?Q?vuBVruLnkHpX0NQcMLkJNjDvJPF8mH1qUBidTTFVPwSSAj70zExER0YZ/p+A?=
+ =?us-ascii?Q?U4R4IxpQjqcdeH7eXum4D/lrVfe2UowRl9hi/hAfgu/jKjBPyzCT7NNjTs9D?=
+ =?us-ascii?Q?f5NDt6u0B5cc4zk3w44y6d51Snw3I4ywyxRYtbLKkRLUVOOwnX2xjA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(376014)(7416014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?JHVRVXLcuwrZwAcS3EKFEIgWjeIwOeL16pF0Ho/L9OK1q/Z1QmlvTSx5cFVS?=
+ =?us-ascii?Q?JAbdpOFzPvD5k8eswzQLTgDTGXYiraFV87s4iLhPzgdbinnv/+RoTHhgoqvc?=
+ =?us-ascii?Q?yPqfKfdrrkYfu8kdV53UcyKbtjM2RmjueqdRrn5zdTDHV6nwvJXF94zJZgHE?=
+ =?us-ascii?Q?gTpjXtUHHpLzAflliTn3NzteLauAdbnlFnk1OpUYnjZs8cclASQ8btcf279y?=
+ =?us-ascii?Q?1cMVNjlSn8Sf/8NhBbZsLXqz1aVJKp+Wj8PiRyog6o6Y59ndaauI6KrcqOa8?=
+ =?us-ascii?Q?3fpPeeJsWWnmfHH11Y16IzbYbQlotjcctvfk6nQZZ3+PWovl+Q8zMgEsPN6S?=
+ =?us-ascii?Q?5S6OCssdswXmX7E4VSHWT9GlI8W55TzTbcnYOov4uZ2qeQ/U/HncvH2zB2cw?=
+ =?us-ascii?Q?tuAdd6MPmWS3kbGjc+dzkmZ1QNWVaf05PWGi1TWBlvo2a69Oq5mYI/zp1r1H?=
+ =?us-ascii?Q?DKRG+3CefYOSPcwr1E3WeXCs9gyljVVEZhrbMwzsdvzSCkMLlF8NUlJPflDh?=
+ =?us-ascii?Q?YOZEMN3GUASBkgi5Fkv53Hccxd94ASu01qoX+U5cXf/iqJLqTlIOJPIiD6x6?=
+ =?us-ascii?Q?kWWCuhXF5FyA5e6qoBdEviZEJDYloEMI9XA31Ycmchj6cHpS0qkunHKm2Ioo?=
+ =?us-ascii?Q?NPDwyZM6HfE/TZdiK4w+6EV5fMSfZu+o34ecWwCgSWurz8HxWFNx7U0Q0f1c?=
+ =?us-ascii?Q?GDF9pnSQLQ0wOVhysWrzy2vZUqzo1WRGGgpIOwIVXaR/igwoM8rvRN72rhyT?=
+ =?us-ascii?Q?uZyF1GALPcO1PkC4RTEGHxwuCBijnOz9qCzCLuwrSo3c784LGLcHDcL6c9sX?=
+ =?us-ascii?Q?+IHi/z0MfsPeQH8NcvJnv7J9axam8bXjJH+uChLMtXXJTvuWQKPvVSIJgtny?=
+ =?us-ascii?Q?Ja+tWepaYBTk9TvP1o82DJ0WupiSUtJ4IlDfe2w8elHHJrWPjOgp4EZrSHbV?=
+ =?us-ascii?Q?DAKxbY2KqdahIEL5MDwUoU1cxH9vmHMHwBLMU60yZIvVV1w+AoxcBlIS7Cd6?=
+ =?us-ascii?Q?llpOsvHswgM9eS6dPH3Mui9adjjN9l39DU2m/0LLwZmrloP31E3/s3taVv7p?=
+ =?us-ascii?Q?w8Pa4QKX4LZr7cD4w7EaK6rKaBKq0Y5RZY02UjKMnZSHsLV8F1IOWtK/ziCx?=
+ =?us-ascii?Q?/1lXIZx1EvM81LB0aLOYjGe29J4dDs/bXt+yqITn5AlclnH1ytpRB5bpK6SI?=
+ =?us-ascii?Q?jniezQtFgAnFSveKEN8MaBk57vQz1GNKj6nHEZcJ9TMF7LAgWzzS6t98HpJk?=
+ =?us-ascii?Q?bU3QgGWGbPY6h0xh25/Wjfe6CH0WZsJdJNSZAXEubpplCvRzCMVRuDqxJ8uN?=
+ =?us-ascii?Q?bFvm916m61RK9Xq8w4YqAzva2E3/Vxo1QG3FTvmJ4CqH0JoscjirlkahhAxm?=
+ =?us-ascii?Q?aBezxOCfqSNYGdNyOl8feVrQZuLpMl6HOgLf95QRJkE8yuqM5gYbDlrOYsrk?=
+ =?us-ascii?Q?jzCuPgerIG1Bog6scW/opA4flZPUkaKe+R4WX8vinrrwG5soGO4h3DxS14nH?=
+ =?us-ascii?Q?11bNmWMbYNueNGWdPEUSWjjXFlHv5emxdBVZ/z4CqjcCB5abW7ebGV0dEf/Q?=
+ =?us-ascii?Q?kIcx55CUY6Jqkt1ZjEDjpOCWgmbKe3pdyBGGB4AL/iYntfGSz6b3cX/qj3Yv?=
+ =?us-ascii?Q?Xw=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8de023f4-9917-4a8c-eb55-08dd8e3f23be
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 14:46:39.2704
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZdHGW5AT680aGZ+rH6HmMbgUWiQnLATpt6J7lKJ1w0jO1BpkT3VQmC4vUea6ElstL5KqcHCUIJGpa2TsIHGyHw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7819
 
-On Mon, Feb 24, 2025 at 11:59:29PM -0800, Namhyung Kim wrote:
-> This is to slow down lock acquistion (on contention locks) deliberately.
-> A possible use case is to estimate impact on application performance by
-> optimization of kernel locking behavior.  By delaying the lock it can
-> simulate the worse condition as a control group, and then compare with
-> the current behavior as a optimized condition.
+New timestamping API was introduced in commit 66f7223039c0 ("net: add
+NDOs for configuring hardware timestamping") from kernel v6.6. It is
+time to convert the mvpp2 driver to the new API, so that the
+ndo_eth_ioctl() path can be removed completely.
 
-So this looks useful, I guess we can proceed and merge it?
+Note that on the !port->hwtstamp condition, the old code used to fall
+through in mvpp2_ioctl(), and return either -ENOTSUPP if !port->phylink,
+or -EOPNOTSUPP, in phylink_mii_ioctl(). Keep the test for port->hwtstamp
+in the newly introduced net_device_ops, but consolidate the error code
+to just -EOPNOTSUPP. The other one is documented as NFS-specific, it's
+best to avoid it anyway.
 
-- Arnaldo
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+Only compile-tested.
+
+ .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 58 ++++++++-----------
+ 1 file changed, 23 insertions(+), 35 deletions(-)
+
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 416a926a8281..a7872d14a49d 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -5173,38 +5173,40 @@ mvpp2_get_stats64(struct net_device *dev, struct rtnl_link_stats64 *stats)
+ 	stats->tx_dropped	= dev->stats.tx_dropped;
+ }
  
-> The syntax is 'time@function' and the time can have unit suffix like
-> "us" and "ms".  For example, I ran a simple test like below.
-> 
->   $ sudo perf lock con -abl -L tasklist_lock -- \
->     sh -c 'for i in $(seq 1000); do sleep 1 & done; wait'
->    contended   total wait     max wait     avg wait            address   symbol
-> 
->           92      1.18 ms    199.54 us     12.79 us   ffffffff8a806080   tasklist_lock (rwlock)
-> 
-> The contention count was 92 and the average wait time was around 10 us.
-> But if I add 100 usec of delay to the tasklist_lock,
-> 
->   $ sudo perf lock con -abl -L tasklist_lock -J 100us@tasklist_lock -- \
->     sh -c 'for i in $(seq 1000); do sleep 1 & done; wait'
->    contended   total wait     max wait     avg wait            address   symbol
-> 
->          190     15.67 ms    230.10 us     82.46 us   ffffffff8a806080   tasklist_lock (rwlock)
-> 
-> The contention count increased and the average wait time was up closed
-> to 100 usec.  If I increase the delay even more,
-> 
->   $ sudo perf lock con -abl -L tasklist_lock -J 1ms@tasklist_lock -- \
->     sh -c 'for i in $(seq 1000); do sleep 1 & done; wait'
->    contended   total wait     max wait     avg wait            address   symbol
-> 
->         1002      2.80 s       3.01 ms      2.80 ms   ffffffff8a806080   tasklist_lock (rwlock)
-> 
-> Now every sleep process had contention and the wait time was more than 1
-> msec.  This is on my 4 CPU laptop so I guess one CPU has the lock while
-> other 3 are waiting for it mostly.
-> 
-> For simplicity, it only supports global locks for now.
-> 
-> Suggested-by: Stephane Eranian <eranian@google.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/Documentation/perf-lock.txt        | 11 +++
->  tools/perf/builtin-lock.c                     | 74 +++++++++++++++++++
->  tools/perf/util/bpf_lock_contention.c         | 28 +++++++
->  .../perf/util/bpf_skel/lock_contention.bpf.c  | 43 +++++++++++
->  tools/perf/util/lock-contention.h             |  8 ++
->  5 files changed, 164 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
-> index d3793054f7d35626..151fc837587b216e 100644
-> --- a/tools/perf/Documentation/perf-lock.txt
-> +++ b/tools/perf/Documentation/perf-lock.txt
-> @@ -215,6 +215,17 @@ CONTENTION OPTIONS
->  --cgroup-filter=<value>::
->  	Show lock contention only in the given cgroups (comma separated list).
->  
-> +-J::
-> +--inject-delay=<time@function>::
-> +	Add delays to the given lock.  It's added to the contention-end part so
-> +	that the (new) owner of the lock will be delayed.  But by slowing down
-> +	the owner, the waiters will also be delayed as well.  This is working
-> +	only with -b/--use-bpf.
-> +
-> +	The 'time' is specified in nsec but it can have a unit suffix.  Available
-> +	units are "ms" and "us".  Note that it will busy-wait after it gets the
-> +	lock.  Please use it at your own risk.
-> +
->  
->  SEE ALSO
->  --------
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index 5d405cd8e696d21b..3ef452d5d9f5679d 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -62,6 +62,8 @@ static const char *output_name = NULL;
->  static FILE *lock_output;
->  
->  static struct lock_filter filters;
-> +static struct lock_delay *delays;
-> +static int nr_delays;
->  
->  static enum lock_aggr_mode aggr_mode = LOCK_AGGR_ADDR;
->  
-> @@ -1971,6 +1973,8 @@ static int __cmd_contention(int argc, const char **argv)
->  		.max_stack = max_stack_depth,
->  		.stack_skip = stack_skip,
->  		.filters = &filters,
-> +		.delays = delays,
-> +		.nr_delays = nr_delays,
->  		.save_callstack = needs_callstack(),
->  		.owner = show_lock_owner,
->  		.cgroups = RB_ROOT,
-> @@ -2474,6 +2478,74 @@ static int parse_cgroup_filter(const struct option *opt __maybe_unused, const ch
->  	return ret;
->  }
->  
-> +static bool add_lock_delay(char *spec)
-> +{
-> +	char *at, *pos;
-> +	struct lock_delay *tmp;
-> +	unsigned long duration;
-> +
-> +	at = strchr(spec, '@');
-> +	if (at == NULL) {
-> +		pr_err("lock delay should have '@' sign: %s\n", spec);
-> +		return false;
-> +	}
-> +	if (at == spec) {
-> +		pr_err("lock delay should have time before '@': %s\n", spec);
-> +		return false;
-> +	}
-> +
-> +	*at = '\0';
-> +	duration = strtoul(spec, &pos, 0);
-> +	if (!strcmp(pos, "ns"))
-> +		duration *= 1;
-> +	else if (!strcmp(pos, "us"))
-> +		duration *= 1000;
-> +	else if (!strcmp(pos, "ms"))
-> +		duration *= 1000 * 1000;
-> +	else if (*pos) {
-> +		pr_err("invalid delay time: %s@%s\n", spec, at + 1);
-> +		return false;
-> +	}
-> +
-> +	tmp = realloc(delays, (nr_delays + 1) * sizeof(*delays));
-> +	if (tmp == NULL) {
-> +		pr_err("Memory allocation failure\n");
-> +		return false;
-> +	}
-> +	delays = tmp;
-> +
-> +	delays[nr_delays].sym = strdup(at + 1);
-> +	if (delays[nr_delays].sym == NULL) {
-> +		pr_err("Memory allocation failure\n");
-> +		return false;
-> +	}
-> +	delays[nr_delays].time = duration;
-> +
-> +	nr_delays++;
-> +	return true;
-> +}
-> +
-> +static int parse_lock_delay(const struct option *opt __maybe_unused, const char *str,
-> +			    int unset __maybe_unused)
-> +{
-> +	char *s, *tmp, *tok;
-> +	int ret = 0;
-> +
-> +	s = strdup(str);
-> +	if (s == NULL)
-> +		return -1;
-> +
-> +	for (tok = strtok_r(s, ", ", &tmp); tok; tok = strtok_r(NULL, ", ", &tmp)) {
-> +		if (!add_lock_delay(tok)) {
-> +			ret = -1;
-> +			break;
-> +		}
-> +	}
-> +
-> +	free(s);
-> +	return ret;
-> +}
-> +
->  int cmd_lock(int argc, const char **argv)
->  {
->  	const struct option lock_options[] = {
-> @@ -2550,6 +2622,8 @@ int cmd_lock(int argc, const char **argv)
->  	OPT_BOOLEAN(0, "lock-cgroup", &show_lock_cgroups, "show lock stats by cgroup"),
->  	OPT_CALLBACK('G', "cgroup-filter", NULL, "CGROUPS",
->  		     "Filter specific cgroups", parse_cgroup_filter),
-> +	OPT_CALLBACK('J', "inject-delay", NULL, "TIME@FUNC",
-> +		     "Inject delays to specific locks", parse_lock_delay),
->  	OPT_PARENT(lock_options)
->  	};
->  
-> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-> index fc8666222399c995..99b64f303e761cbc 100644
-> --- a/tools/perf/util/bpf_lock_contention.c
-> +++ b/tools/perf/util/bpf_lock_contention.c
-> @@ -183,6 +183,27 @@ int lock_contention_prepare(struct lock_contention *con)
->  		skel->rodata->has_addr = 1;
->  	}
->  
-> +	/* resolve lock name in delays */
-> +	if (con->nr_delays) {
-> +		struct symbol *sym;
-> +		struct map *kmap;
-> +
-> +		for (i = 0; i < con->nr_delays; i++) {
-> +			sym = machine__find_kernel_symbol_by_name(con->machine,
-> +								  con->delays[i].sym,
-> +								  &kmap);
-> +			if (sym == NULL) {
-> +				pr_warning("ignore unknown symbol: %s\n",
-> +					   con->delays[i].sym);
-> +				continue;
-> +			}
-> +
-> +			con->delays[i].addr = map__unmap_ip(kmap, sym->start);
-> +		}
-> +		skel->rodata->lock_delay = 1;
-> +		bpf_map__set_max_entries(skel->maps.lock_delays, con->nr_delays);
-> +	}
-> +
->  	bpf_map__set_max_entries(skel->maps.cpu_filter, ncpus);
->  	bpf_map__set_max_entries(skel->maps.task_filter, ntasks);
->  	bpf_map__set_max_entries(skel->maps.type_filter, ntypes);
-> @@ -272,6 +293,13 @@ int lock_contention_prepare(struct lock_contention *con)
->  			bpf_map_update_elem(fd, &con->filters->cgrps[i], &val, BPF_ANY);
->  	}
->  
-> +	if (con->nr_delays) {
-> +		fd = bpf_map__fd(skel->maps.lock_delays);
-> +
-> +		for (i = 0; i < con->nr_delays; i++)
-> +			bpf_map_update_elem(fd, &con->delays[i].addr, &con->delays[i].time, BPF_ANY);
-> +	}
-> +
->  	if (con->aggr_mode == LOCK_AGGR_CGROUP)
->  		read_all_cgroups(&con->cgroups);
->  
-> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> index 6533ea9b044c71d1..0ac9ae2f1711a129 100644
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> @@ -11,6 +11,9 @@
->  /* for collect_lock_syms().  4096 was rejected by the verifier */
->  #define MAX_CPUS  1024
->  
-> +/* for do_lock_delay().  Arbitrarily set to 1 million. */
-> +#define MAX_LOOP  (1U << 20)
-> +
->  /* lock contention flags from include/trace/events/lock.h */
->  #define LCB_F_SPIN	(1U << 0)
->  #define LCB_F_READ	(1U << 1)
-> @@ -114,6 +117,13 @@ struct {
->  	__uint(max_entries, 1);
->  } slab_caches SEC(".maps");
->  
-> +struct {
-> +	__uint(type, BPF_MAP_TYPE_HASH);
-> +	__uint(key_size, sizeof(__u64));
-> +	__uint(value_size, sizeof(__u64));
-> +	__uint(max_entries, 1);
-> +} lock_delays SEC(".maps");
-> +
->  struct rw_semaphore___old {
->  	struct task_struct *owner;
->  } __attribute__((preserve_access_index));
-> @@ -143,6 +153,7 @@ const volatile int needs_callstack;
->  const volatile int stack_skip;
->  const volatile int lock_owner;
->  const volatile int use_cgroup_v2;
-> +const volatile int lock_delay;
->  
->  /* determine the key of lock stat */
->  const volatile int aggr_mode;
-> @@ -348,6 +359,35 @@ static inline __u32 check_lock_type(__u64 lock, __u32 flags)
->  	return 0;
->  }
->  
-> +static inline long delay_callback(__u64 idx, void *arg)
-> +{
-> +	__u64 target = *(__u64 *)arg;
-> +
-> +	if (target <= bpf_ktime_get_ns())
-> +		return 1;
-> +
-> +	/* just to kill time */
-> +	(void)bpf_get_prandom_u32();
-> +
-> +	return 0;
-> +}
-> +
-> +static inline void do_lock_delay(__u64 duration)
-> +{
-> +	__u64 target = bpf_ktime_get_ns() + duration;
-> +
-> +	bpf_loop(MAX_LOOP, delay_callback, &target, /*flags=*/0);
-> +}
-> +
-> +static inline void check_lock_delay(__u64 lock)
-> +{
-> +	__u64 *delay;
-> +
-> +	delay = bpf_map_lookup_elem(&lock_delays, &lock);
-> +	if (delay)
-> +		do_lock_delay(*delay);
-> +}
-> +
->  static inline struct tstamp_data *get_tstamp_elem(__u32 flags)
->  {
->  	__u32 pid;
-> @@ -566,6 +606,9 @@ int contention_end(u64 *ctx)
->  		data->min_time = duration;
->  
->  out:
-> +	if (lock_delay)
-> +		check_lock_delay(pelem->lock);
-> +
->  	pelem->lock = 0;
->  	if (need_delete)
->  		bpf_map_delete_elem(&tstamp, &pid);
-> diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-> index a09f7fe877df8184..12f6cb789ada1bc7 100644
-> --- a/tools/perf/util/lock-contention.h
-> +++ b/tools/perf/util/lock-contention.h
-> @@ -18,6 +18,12 @@ struct lock_filter {
->  	char			**slabs;
->  };
->  
-> +struct lock_delay {
-> +	char			*sym;
-> +	unsigned long		addr;
-> +	unsigned long		time;
-> +};
-> +
->  struct lock_stat {
->  	struct hlist_node	hash_entry;
->  	struct rb_node		rb;		/* used for sorting */
-> @@ -140,6 +146,7 @@ struct lock_contention {
->  	struct machine *machine;
->  	struct hlist_head *result;
->  	struct lock_filter *filters;
-> +	struct lock_delay *delays;
->  	struct lock_contention_fails fails;
->  	struct rb_root cgroups;
->  	unsigned long map_nr_entries;
-> @@ -148,6 +155,7 @@ struct lock_contention {
->  	int aggr_mode;
->  	int owner;
->  	int nr_filtered;
-> +	int nr_delays;
->  	bool save_callstack;
->  };
->  
-> -- 
-> 2.48.1.658.g4767266eb4-goog
+-static int mvpp2_set_ts_config(struct mvpp2_port *port, struct ifreq *ifr)
++static int mvpp2_hwtstamp_set(struct net_device *dev,
++			      struct kernel_hwtstamp_config *config,
++			      struct netlink_ext_ack *extack)
+ {
+-	struct hwtstamp_config config;
++	struct mvpp2_port *port = netdev_priv(dev);
+ 	void __iomem *ptp;
+ 	u32 gcr, int_mask;
+ 
+-	if (copy_from_user(&config, ifr->ifr_data, sizeof(config)))
+-		return -EFAULT;
++	if (!port->hwtstamp)
++		return -EOPNOTSUPP;
+ 
+-	if (config.tx_type != HWTSTAMP_TX_OFF &&
+-	    config.tx_type != HWTSTAMP_TX_ON)
++	if (config->tx_type != HWTSTAMP_TX_OFF &&
++	    config->tx_type != HWTSTAMP_TX_ON)
+ 		return -ERANGE;
+ 
+ 	ptp = port->priv->iface_base + MVPP22_PTP_BASE(port->gop_id);
+ 
+ 	int_mask = gcr = 0;
+-	if (config.tx_type != HWTSTAMP_TX_OFF) {
++	if (config->tx_type != HWTSTAMP_TX_OFF) {
+ 		gcr |= MVPP22_PTP_GCR_TSU_ENABLE | MVPP22_PTP_GCR_TX_RESET;
+ 		int_mask |= MVPP22_PTP_INT_MASK_QUEUE1 |
+ 			    MVPP22_PTP_INT_MASK_QUEUE0;
+ 	}
+ 
+ 	/* It seems we must also release the TX reset when enabling the TSU */
+-	if (config.rx_filter != HWTSTAMP_FILTER_NONE)
++	if (config->rx_filter != HWTSTAMP_FILTER_NONE)
+ 		gcr |= MVPP22_PTP_GCR_TSU_ENABLE | MVPP22_PTP_GCR_RX_RESET |
+ 		       MVPP22_PTP_GCR_TX_RESET;
+ 
+ 	if (gcr & MVPP22_PTP_GCR_TSU_ENABLE)
+ 		mvpp22_tai_start(port->priv->tai);
+ 
+-	if (config.rx_filter != HWTSTAMP_FILTER_NONE) {
+-		config.rx_filter = HWTSTAMP_FILTER_ALL;
++	if (config->rx_filter != HWTSTAMP_FILTER_NONE) {
++		config->rx_filter = HWTSTAMP_FILTER_ALL;
+ 		mvpp2_modify(ptp + MVPP22_PTP_GCR,
+ 			     MVPP22_PTP_GCR_RX_RESET |
+ 			     MVPP22_PTP_GCR_TX_RESET |
+@@ -5225,26 +5227,22 @@ static int mvpp2_set_ts_config(struct mvpp2_port *port, struct ifreq *ifr)
+ 	if (!(gcr & MVPP22_PTP_GCR_TSU_ENABLE))
+ 		mvpp22_tai_stop(port->priv->tai);
+ 
+-	port->tx_hwtstamp_type = config.tx_type;
+-
+-	if (copy_to_user(ifr->ifr_data, &config, sizeof(config)))
+-		return -EFAULT;
++	port->tx_hwtstamp_type = config->tx_type;
+ 
+ 	return 0;
+ }
+ 
+-static int mvpp2_get_ts_config(struct mvpp2_port *port, struct ifreq *ifr)
++static int mvpp2_hwtstamp_get(struct net_device *dev,
++			      struct kernel_hwtstamp_config *config)
+ {
+-	struct hwtstamp_config config;
+-
+-	memset(&config, 0, sizeof(config));
++	struct mvpp2_port *port = netdev_priv(dev);
+ 
+-	config.tx_type = port->tx_hwtstamp_type;
+-	config.rx_filter = port->rx_hwtstamp ?
+-		HWTSTAMP_FILTER_ALL : HWTSTAMP_FILTER_NONE;
++	if (!port->hwtstamp)
++		return -EOPNOTSUPP;
+ 
+-	if (copy_to_user(ifr->ifr_data, &config, sizeof(config)))
+-		return -EFAULT;
++	config->tx_type = port->tx_hwtstamp_type;
++	config->rx_filter = port->rx_hwtstamp ? HWTSTAMP_FILTER_ALL :
++			    HWTSTAMP_FILTER_NONE;
+ 
+ 	return 0;
+ }
+@@ -5274,18 +5272,6 @@ static int mvpp2_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
+ {
+ 	struct mvpp2_port *port = netdev_priv(dev);
+ 
+-	switch (cmd) {
+-	case SIOCSHWTSTAMP:
+-		if (port->hwtstamp)
+-			return mvpp2_set_ts_config(port, ifr);
+-		break;
+-
+-	case SIOCGHWTSTAMP:
+-		if (port->hwtstamp)
+-			return mvpp2_get_ts_config(port, ifr);
+-		break;
+-	}
+-
+ 	if (!port->phylink)
+ 		return -ENOTSUPP;
+ 
+@@ -5799,6 +5785,8 @@ static const struct net_device_ops mvpp2_netdev_ops = {
+ 	.ndo_set_features	= mvpp2_set_features,
+ 	.ndo_bpf		= mvpp2_xdp,
+ 	.ndo_xdp_xmit		= mvpp2_xdp_xmit,
++	.ndo_hwtstamp_get	= mvpp2_hwtstamp_get,
++	.ndo_hwtstamp_set	= mvpp2_hwtstamp_set,
+ };
+ 
+ static const struct ethtool_ops mvpp2_eth_tool_ops = {
+-- 
+2.43.0
+
