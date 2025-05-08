@@ -1,69 +1,85 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D0C4B1E7D
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 18:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C16E212B28;
+	Thu,  8 May 2025 18:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746729039; cv=none; b=HISJs+cx6Hx3/VBJ7FgOoRiWs6/hLy8jTh430UciG3hp67MeA98L6kiD+ThrjUIs9GRftdCcpiy2mvReQ4igS4mipsPZxjkOZWi6XxVn09Zg7t0CL19u2H107TyzfVfS2q3G4caHFzMhBjlQfBtJFiv3+TnK5xZyumTzlA/YQ0Y=
+	t=1746729064; cv=none; b=VGz2jmKSKrwBUjnW1vh95/WT5VT/GfaAcwhnN88h1tdmmvEPRniTTpmljnROtCe15xXeAq0upzvk8DBbhAsnINZCSjXH6/Z3LimtJo9ViT5I8MpFdMb9/d7xuMV9l6TnK6MEqmalfDAGPE/539BgA5xaHZkStI0dsf7u3QExLV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746729039; c=relaxed/simple;
-	bh=V17CjNbh5XszcwExhM4NzjUKeGuYpBfGx6I3FYFrMuM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VhxMVO6EOWBEpQVFS0GKfR5FS5vatdIKRknPFwnWrOpo66HjkVSdB5ryl6xOCjzybJF+rEra4ruSC0gGcZjK7cKVabJBBS4ZjRIAEfYAEa6U1LxvsEOK6gcrA3//f4c7926n+qOP/51hDVRXCY2UvgBeN+oTGc6Hqy3ZoS+PfWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wdPTfFww; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746729064; c=relaxed/simple;
+	bh=iqi0t3Ha1t0lG8RPc7T1tta1XB48HjAdibQR2crG0NU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YA7rI3Yn5q2JrgvVHEsX8WHSSrCuwEfqxk/qEhr4MMUZiBsiOhqb87spFpZnvhgNkD/0Gu/X3vF+aft+8ixoh+bqiF2t2TSi6WS0quEe+9DcX+G7xtaEp/m5k+voR35lWHM/g6BBc9mDpej0//StnBjoGPe6ym3SVp5XnUVn1M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=tgYxyzAo; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wdPTfFww"
-Date: Thu, 8 May 2025 11:30:29 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746729034;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/nJPl8Ge2IvLFiCs6/TB1SsXH6mxOfrpnBplVM574lI=;
-	b=wdPTfFww2nBK5xA9DQCStl8WWWi9mvVQIVqDN8OD9zMBpIUDikFVbgnIr5CKWjSptR7J9D
-	SpAp7DqbjbREW2SVL+JaRxTYLk3KxevyU0G8krN8FFoxThuOpyrYrgVsPWOq08bDOns1C7
-	C9LZ/KNlPd+F72/ErChko+lE2G/5cIA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, David Hildenbrand <david@redhat.com>, 
-	Michal Hocko <mhocko@kernel.org>, Yu Zhao <yuzhao@google.com>, 
-	Qi Zheng <zhengqi.arch@bytedance.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] MAINTAINERS: add mm reclaim section
-Message-ID: <mhnz33dwwd3npj2re7dn7invntzk6dk7u75ue2pzg35vdappjd@tgqlccmoydar>
-References: <20250508173735.173502-1-lorenzo.stoakes@oracle.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="tgYxyzAo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=NVNg8W4i0W6hja2INdKL3BkLpr6NjK1WYIGNB9EYZTs=; b=tgYxyzAoFJIkQjDHxpq1IA2mKj
+	QMmT3FjrrCGf1hmiQYDv4/FohIY9hi1jqzXV5qSNWTOMloLUICITIewfEAgiVQFGPVwrWe6N5Bzsy
+	PN4WaQTebkuPHB1NaRWd3pbEvMrr5mR9D4IifUiuF/92htZ7wUI0p8wiEMB5DNHpLxi8g1uX7YCmi
+	OtD3oxAl7zvNfnbGaTq/1NMb6A21ulTlxKGnZPL7NNRitvQ8DT4IOg8AseniXtvRLSm+lIYmEiePP
+	C75ley7LqjytEywyqhlZPZeRbYfXxZAaOE7q/s5c/5xh0w9vR8/GvLyUA2YsLQ8kia/kW7XJT4Hik
+	y46fSMFA==;
+Received: from [61.8.144.177] (helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uD61K-0000vi-Hc; Thu, 08 May 2025 20:30:58 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: mturquette@baylibre.com,
+	sboyd@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 0/3] Correctly implemet the usb480m clock on rk3036
+Date: Thu,  8 May 2025 20:30:45 +0200
+Message-ID: <174672902827.1927548.11178117072822465092.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250503202532.992033-1-heiko@sntech.de>
+References: <20250503202532.992033-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250508173735.173502-1-lorenzo.stoakes@oracle.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 08, 2025 at 06:37:35PM +0100, Lorenzo Stoakes wrote:
-> In furtherance of ongoing efforts to ensure people are aware of who
-> de-facto maintains/has an interest in specific parts of mm, as well trying
-> to avoid get_maintainers.pl listing only Andrew and the mailing list for mm
-> files - establish a reclaim memory management section and add relevant
-> maintainers/reviewers.
-> 
-> This is a key part of memory management so sensibly deserves its own
-> section.
-> 
-> This encompasses both 'classical' reclaim and MGLRU and thus reflects this
-> in the reviewers from both, as well as those who have contributed
-> specifically on the memcg side of things.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Seems fine to me, though I would put Johannes as M (if he is fine with
-it).
+On Sat, 03 May 2025 22:25:28 +0200, Heiko Stuebner wrote:
+> In the original clock driver the usb480m clock was "stubbed" as a fixed
+> factor clock, but instead it actually does have a mux-bit to switch
+> between the 24MHz osciallator and the actual 480MHz clock supplied
+> from the usb-phy.
+> 
+> Both the register layout, as well as the implementation is very similar
+> to the rk3128, which seems to be some sort of cousin to the rk3036.
+> 
+> [...]
 
-Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+Applied, thanks!
+
+[1/3] dt-bindings: clock: rk3036: add SCLK_USB480M clock-id
+      commit: 6e06b641ca96c232e0b13f9b44b118742986bcd5
+[2/3] clk: rockchip: rk3036: fix implementation of usb480m clock mux
+      commit: 897adaf536ab01f130ce0b53a635a592733c0f24
+[3/3] clk: rockchip: rk3036: mark ddrphy as critical
+      commit: 596a977b34a722c00245801a5774aa79cec4e81d
+
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
