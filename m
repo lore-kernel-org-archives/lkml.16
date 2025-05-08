@@ -1,187 +1,225 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABA6F263F4E;
-	Thu,  8 May 2025 09:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746697433; cv=none; b=dNxEqiAT+tMEZbpzl7N4QeqrDUGqGCWeRSeRd2hnfXfaofdTZ8BU4tEkXZfadwQG3k9rfLLguM4mJ6mKFzp3+E+uMQN4ht83D6ELagKsPuttAb5kMpCb99MXvG7cHlxbXkKpvG+vB/FaVwf+/BOglhQxNzG80qAUKzhhrVYbdcw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746697433; c=relaxed/simple;
-	bh=H/WhQNKlzogJE4QdmSUmR0gkiVXIC0GbzPbzBw7pZ5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SG4OsLfotsQplrwGWo2evWiQrAxULMo7X0qGDoTLnuxu1EGCbP+gRE0FfkEeR2875QvsZKSopQIoruMXJ2Ai/twRzLgddxuwvitlUCwtBUR/rQSCxl0wXwljCWRGRZLLDjSXZeZMDcMIc0r2J2hahdirBvjX5JiQqw4/BJvRDl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=J+KqvhBk; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD294B1E6B;
+	Thu,  8 May 2025 09:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746697498; cv=fail; b=ii+R8JOonmszUurmcHzvMVOTZTG9lJbmhietrKLt+dhXYvHDu8a41hHYei2aHdQhCeay4najpiqAIicNkzBXqrXWWzoKVR8KVBuHZTWlvbbj+5QaxX8Rmtpb5tDg4zEtW5XXafeHpRwrIAEns2LQqp08Fexgvk9NwC0OEARnINE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746697498; c=relaxed/simple;
+	bh=ojKw8ld323ymjQhLW595fORXvdBJpf0OEkTfw+sgXso=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=F8iohjtgCWN3jvx7jUnLFcO/G4tYrIZDvlJHzvcps4vEhs0ldi+82DikWJlI/QbAWfxqSyz6o16iyMet8plFCvI9GxUwkaRHeEzlulf2I4IeamJ0K+mIhnQIeo+U+on3glB6GmoKPv6sn58T8tgaqG5o4IyO4qGKI9WsssqzKdA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=AaJnL8Zu; arc=fail smtp.client-ip=40.107.236.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="J+KqvhBk"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 382CD21199E0; Thu,  8 May 2025 02:43:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 382CD21199E0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746697431;
-	bh=T55MVOVWe61rHi3lJfC1UHDy1Z+yOeyzZCnQiMX1Uo4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J+KqvhBkERu+CQQma0RImBsW5LhVreeG9YYNffcEWSycBij+lh93WmlyNcF60pvxY
-	 5jBHglrAgT/MZ2QfE7n74bZ+Il6OEFOcm+jODe3kV8EbPDgU4U1/ggwjXDqA8w2hvf
-	 yulekqL+wc8ni0Xqki+vOAWIXEeX4rD6Ax8zRHSQ=
-Date: Thu, 8 May 2025 02:43:51 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	decui@microsoft.com, stephen@networkplumber.org, kys@microsoft.com,
-	paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
-	davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
-	longli@microsoft.com, ssengar@linux.microsoft.com,
-	linux-rdma@vger.kernel.org, daniel@iogearbox.net,
-	john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
-	hawk@kernel.org, tglx@linutronix.de, andrew+netdev@lunn.ch,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: mana: Add handler for hardware servicing
- events
-Message-ID: <20250508094351.GA8528@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1746633519-17549-1-git-send-email-haiyangz@microsoft.com>
- <20250508092924.GA2081@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="AaJnL8Zu"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OL7RLEzgMaHBrpsSpW43LAkg9KiFWN8P4BnrpoHIHotjcxkItO9VCeZrG4VPm2vBDdMDfCvgK/73PrUvdYbdPAtyKiLabPEho9mMacE9kIpZcvie5UsWCtNTtnL1WoHYWNiItZcKKTTaCCwN4TMc1HJXft5rU7R631FEn7M9sUUQLUK3hc/BhB//+HDJDeBNrNGQ8pw6lueXgCI/JNd0hVfQk7iNUPd8w64ZccIS9iKPGdgWrJTAdtkI7Be0VW4Iz1Mut1TGOgqXb8lN+e/a+uhuF7BLG4Zzi57djeAMxMzyTvvRGNnhRfJfkD0zFdhpArE1rnOp93jWAlYUIELTyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f/3M+bVxtyEFFEOA76tJ8mW2ekgCtE1rZ1lihwJoUgw=;
+ b=rljQxqxIQIazd7lbl+imZx061oqIxRAoxNdlI/1G3Q6Xk8ZymblOt7do9hrKdDPPAzhnoKk1BXmxDuviJYfh4FYdHFsmp+qGCK7dyZ2fUJ9t1EvhEp1Ynezrn74T+ATg6l0j2D3ov8w6xBg58+ivG6SorCmQXfdHaQhFzMxa7jO5mC/hg+uLBMErIRITsIbYWyANq6TuG7lVGcLaWjuFLlEGk6TgOTMLN/O6SJVgPLXUw6pI0yeFXlclWgMrEcsewXLbmZEuN9sz95RuzKFqFiXXJPQTiVPCROtvEcwCuuMO+Ym7Z2wGalxrIzOmrbop1FSUbttveAY4l/G7Woj/1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f/3M+bVxtyEFFEOA76tJ8mW2ekgCtE1rZ1lihwJoUgw=;
+ b=AaJnL8ZukmDrgic0BI+rEt9g18uBjkQR50aQ1B4prnJKZVnJy3VbKpydO7xwbS3NtYhYvOlUZf8EeSUjoIgPpTtLOh7tnchh0LIlKHTAJSt328kmhn2SF3bnvFzbJJQws8msQz1FpAPSFT3u/nsiwoG+qatXvaxZOdPYxUpq4cOy1rkwLoYeRyo7FJgF8aSDTcNtzbmCqE8vZLKM2EvviLj6LaIRthgRJFB99Uk0E+2W3GZ/tYhcU1++VM+wP9gv9ONFsAEpUpgZaa4e5UEGEuKDL67WjbZbWnci1oBBh7hQ9yxaOrmbTR3JjzZwhuurdEVIWHNYDkKT9lG97v7uOg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
+ by CH3PR12MB7667.namprd12.prod.outlook.com (2603:10b6:610:14f::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Thu, 8 May
+ 2025 09:44:51 +0000
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9%3]) with mapi id 15.20.8699.022; Thu, 8 May 2025
+ 09:44:51 +0000
+Message-ID: <843c2ffe-6653-4975-a818-03d4bb9e5be6@nvidia.com>
+Date: Thu, 8 May 2025 10:44:45 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.15 00/55] 5.15.182-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, f.fainelli@gmail.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <20250507183759.048732653@linuxfoundation.org>
+From: Jon Hunter <jonathanh@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <20250507183759.048732653@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO2P265CA0103.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:c::19) To SJ2PR12MB8784.namprd12.prod.outlook.com
+ (2603:10b6:a03:4d0::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250508092924.GA2081@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|CH3PR12MB7667:EE_
+X-MS-Office365-Filtering-Correlation-Id: b9e40c79-8d29-4ac6-a7bb-08dd8e14fa7f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?S0tCVHRzRmdUSnlXM1BLTWk5MG5oTi9MVFZxdnY1MWhTbEZWaW9lb1NPdWpE?=
+ =?utf-8?B?dEszaU1yK1lneGZSQzc1Tzd5VzNCYUxjSW1IdTV3MUpsMUxKMHh5TFR2WHZI?=
+ =?utf-8?B?RDMrbGtESVQxU2N0bkIwZnlyNG5heXVLZHFCSXBER2ltSTlSM2RHbjVaVW12?=
+ =?utf-8?B?a0QzNE1MaUptSE1tTDVwemJyekJkbjlYRFhTV1VBVkZpcUpsN3d6RUtFZVlB?=
+ =?utf-8?B?U0J0eEJVZDRoY0syUGVYNWQ5OFA0ams3OXdjdjcwRG1UdEdTQ3F2enpucUUy?=
+ =?utf-8?B?NXhkTkJmTVJtT25uejdoQWFJRWc5cDlPck5ObjlLdTNYT2Rla25DT2lJVXVE?=
+ =?utf-8?B?NS9sV3g0TUhaSGt6N3M4eWdod0RKcWFPVCtpQ3RjQVRNaHlucnFNQVNPREJk?=
+ =?utf-8?B?MHZUd1VTSFppZDIxQ01aN3lldjBYOUI0cGxJU3lIOWpsWGtPY1NMWmJmRUcx?=
+ =?utf-8?B?Z0pZYXlDNGxCTDBETjRwY0FEYkcxS2lWeFkvVTQ2WXJESkpuTURKWlBqck5V?=
+ =?utf-8?B?VW9qazR2VjJIYXZOcU5kK0sxV1FkTjV5K0pDcVBaV1M4dXcvK1ZUTE45dFgw?=
+ =?utf-8?B?TDZtbE9DcHRHeW1ObnlXeVZ0NDZJeFlFaVVvR0tLekJBbzBHVzFEQjROZVFh?=
+ =?utf-8?B?R0RpL3NaVXNMb250d3dJOXZVSjkzNEZhRkNvUHVhMjVlL0E4eWVOeFhUYlE5?=
+ =?utf-8?B?aEZTUHZVaVZmNmFQQVpHVHd1a2xUWTJkNnR3U2gyd0R0QkUzRUdkZXF1UTd2?=
+ =?utf-8?B?amZyQWpIM0R5cVhvNzF3bmNVMnF3RXFyZmtKQk51bWRrQ01NSks5Wm05Ymw2?=
+ =?utf-8?B?dE1nNlBLODg5cndadHJ3RzdXMVJIak5hTjJrYnpPM0MzdVNZa21tR1JZR1Mv?=
+ =?utf-8?B?dGhmY2MrNTZCaUVMM1diYjBvTnpnNnU4Y2YvR0pRN1hQWi9KdlBubE1UMHdo?=
+ =?utf-8?B?cTNMd0RJY2JKNmZMUE54bUd0ZzNDdXRTVEZwcHJjaHZWZStHVlpjNU41aklm?=
+ =?utf-8?B?N2svMlMya25JblVYYm05U2JKTDJnc0hIaGdKK2NaZmtqMU92TDFKZlk4OWlo?=
+ =?utf-8?B?TVZodWtGMU1xY2cxN3lMTEtQOVNCR21EeFFzTmtjOUNObUJxbWRuUE5YN3l5?=
+ =?utf-8?B?MGhzNXAxTGRqU09JalQ4NkJzQ0dFUDJoOEdHTEE2M1FGc0dWUmFzRnZBWS9o?=
+ =?utf-8?B?OU5LRmF6d1RsQVdCUERCYW9IMDVON2lMY2pPMU5rSUgzL3VvallVZDZHVmVF?=
+ =?utf-8?B?SW1obU0wT3g4aEtBSFMwNGdXTmIyN3RMQXVTNDlmTytsd2RLZTdYTWsvUmY4?=
+ =?utf-8?B?WjFRdE5OY2hickVCZEhLNERWQVF0c0RDMDViaTNHN0JrcmhNdW8vSGprZksx?=
+ =?utf-8?B?YkJBSzV0Y2RVUU5tS1FNRVVFWGJtTUtOTElZMU9yT056ZWFIQ0lmZXNySkFm?=
+ =?utf-8?B?d1ZqS0dldWtJSnV2cWxyUHhhVmc5YmhBM0R5cXJXc21lRk5XQitMcmlaMG9p?=
+ =?utf-8?B?MWxIS1crMStaVk5nc2dmcTRzdTlvTGFqSTJlc2d6MzNEWVIvdm9TTGxiTmlv?=
+ =?utf-8?B?VmVHZ0Q5VllDRlZOVVQ4SVBEMXJXM2VkeWM3MENFeXAxQitNMFBRUTd0di9M?=
+ =?utf-8?B?b3BaZFlYc0xCWkhnRTZNdHcxa29uWXJnek5CT2xNV284Ri9BZjBXVnQ3NmY2?=
+ =?utf-8?B?VTVTU1lvdXFiZUg2YWplcnB3dGhZSFB0cUVuOWRER2tvWEhqZzhTMDY2cXNO?=
+ =?utf-8?B?cVZqOVNnTm56L1JoNmMxRWxNL2dkc0tPZkdmeTVHcDkrc3Y2SU55NHNDSk44?=
+ =?utf-8?B?ZnBkeHNlVUJwMGtTNkRTTGVYakNpcmtqWWYwRlNOMXFrRnRuaWpVY2ovejk0?=
+ =?utf-8?B?ZkRLSWxiQ2Z3eXNKOUR2N2dMWWduS2VGLzhteFAwZU00OGY1TWtCMVlzQWRk?=
+ =?utf-8?Q?dmnWqS/64SY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WndBZmM0a0FwTXgweUFVVVJtYnNpdVVKb2FhRk5CbnEwdnV0SStWbFRCSFZy?=
+ =?utf-8?B?b0lnTDg1d20vUnBPQTJNbnEyNms1bzNrQ29LdGgwNkpJRll6K3J5WEJQbW92?=
+ =?utf-8?B?Y0JNeGR1Q0J4a3lMYVVJaXNOSUV5MzJ2ZGxkZW1CbDNUMm1oK0p4RkZJS1Ex?=
+ =?utf-8?B?UHJrM1dTQzQwZ0pFZmF4N2lQOWZCRnlDcFYwVEtTTi9tazlQYmtneFNOMXJy?=
+ =?utf-8?B?ZHlnbmlrYUo5Uyt5djNGT3BESmlRb1l2NkZFZnJWc0ZoaFNUcDNabW96Tm9l?=
+ =?utf-8?B?eUUyR2M4N01aSVBBeC94M1NMbnpKaDIvZjNPZWI2RVdOeUdVNnNzMnpndFlp?=
+ =?utf-8?B?ZSsxUVFySEZHbkNnc1Nyc0VhWDU1Z2VxY3JHQTlXNHFsSDhIbDBlSHlxcFF3?=
+ =?utf-8?B?Y3Y1UHhXbHZBYzlRWVVaRFNaYlRid0xLN2ZSWTFoM2FFWit1dmtibURpQ0R5?=
+ =?utf-8?B?c0RMMjVEM0lsKytUTFdGdk9GdEUvRFJDaFhoWmFaWGZVNzZtcVBZSys5MFY3?=
+ =?utf-8?B?aVdUeEVvQUNyL01rNkJvOXFwT1JmU1dRaTNCVndBQ3p2WXc0OEh5Z3llb1hl?=
+ =?utf-8?B?MHAya1Y0Y2FTemZBR1d0RWNWWUVaNWxjSWJRK0J2dlhqVFNzT2tNZmFTbndF?=
+ =?utf-8?B?SEV4eWlwcldKQkk3a3lzY3BnTlR4L2RlWkI2NkFVQVRBZ3dSblprcVpkYUht?=
+ =?utf-8?B?TUE0VjFLMjBIaUY2WVgzSkVxeDBNczAvWllCRzFwQzc1QmpTQ2dNOUFwZDA5?=
+ =?utf-8?B?bGRuVjVjVmQ2SGcvRFQ5dFNNdmVYOHhPZTFmT3hVTDk4U0YxY2J3SmRrZkRk?=
+ =?utf-8?B?ZGVBSUxXdGd5YmUvdU5FTDRyOVJReTA0aGthN2JPWGZRRmMxSjd3VGdlQkpC?=
+ =?utf-8?B?QmJYYmpQQXFMZk03N1U5WVRoZWlmcXdVcVhxZS9XWGg0RzNJYkFpVnQraVJJ?=
+ =?utf-8?B?OTNLV3lZR3VQTmpDZ1ljQ2RScmZTeFE4a0xwTndmOXhGdWkzdHl2aEMyRW5S?=
+ =?utf-8?B?WkN5cG4wbHFpZzBNSFV1TWNGT2VPVVREelJxT2ZLR1ZFMFNVYUthZFdPN2Mv?=
+ =?utf-8?B?Q1g1Q1ZaZ3R2MjY4M0N4NlRBME5vSk40em1tc3FlTWdXQ0Nod2cxNEc5UHVX?=
+ =?utf-8?B?NDZaOTcvaHUyNktzZW5mYmo1Wks0RVE2L0RTK096T1JoRXloTnJEN3BqdTE5?=
+ =?utf-8?B?enAwdVFJMTVvdCsyOTZYTzR1bXMzUHZyRGl0cW54cUZqN1FaalF5NTJvRUkr?=
+ =?utf-8?B?Qkt5b2wxcnNCVlk1ZHlWUVd6dExtZ0JLVkFPeno1ZEVET3JMc0dtOWNZb2lv?=
+ =?utf-8?B?NWdNMG1raWJ6dGhia1VhSThFK00yYkwwUjltZDJyOFU2VEVuemFrbUtITlQ5?=
+ =?utf-8?B?aE95MVVWODBMc1NWWEFHaEhpSDczbDZoc2ZGSVh5MGlKRXJ2Nmg2Wm91RFJP?=
+ =?utf-8?B?N3IvODBHRVRjV1pGNmtOenNJK2RBMnA5dDI3K2d5MEFsVVcxRzlFTkI0R05w?=
+ =?utf-8?B?V3lpUmFhbDZONkh1ZVNvOStleGl0OUZuelR2ZWtkVGlKTGljTnVqYlkwRlQw?=
+ =?utf-8?B?Qnh2QWlPL1RuczNMQ3AzZUQ5VTFybzhQeEhEblRXUm9GSW5iUWtKUjVOVWZ6?=
+ =?utf-8?B?aHc0dVhXdTRlbDV0Y2taa0tYaExYL05DVjlMcjZWMlgwN1ZodjJ5ejcvQndh?=
+ =?utf-8?B?RW9ES2o1RzJURGlESm1NQ1RGOHR3c1pxcFpqYnJmd0FLdVNveS9oZjM5TE1T?=
+ =?utf-8?B?KzNuK2lyTmJSOUxFcDJZT0RDbWcrZlBEVjJBc2dSdzQ1Yk9OcSs4c21HdmFC?=
+ =?utf-8?B?RjFwZU84WlFrVk5KOUJha3dibDZRZloxVTNhT25DWmNXS2Fab1NId2NVN3dR?=
+ =?utf-8?B?cExuTWNmVHNkRGpMcVVSTUtySjQ5ZnBVeElYbFBOTkFSRE5HUVNzcmNaQ24r?=
+ =?utf-8?B?WGZqeU9zUU1qRkZVOVNhOVJyS3ZVNXpQeFpDWjdRMzdIR1BYL2w2MTVSRytF?=
+ =?utf-8?B?MUNERVlZQ1NMM3l2Uk9Qc3ZtK2lITjAwclM0Vi82TTNWcUtsOHBiTzBRUDNL?=
+ =?utf-8?B?SUYwOXgrckM4YUFLZ2tKbk8yQzRJc04vTzNoM3ZCYVZ2UWZiYVNRVG1WUy90?=
+ =?utf-8?B?L21vVEkxMDEyTkdqamdkcFg0bCt6THNvZUlwbkxQMWpmalhpWjk2VTNlZ3pB?=
+ =?utf-8?B?eHc9PQ==?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9e40c79-8d29-4ac6-a7bb-08dd8e14fa7f
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 09:44:51.2440
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: R/s+pLP3+S86W2CjQL7J2E5hZz05lvtVDNvh2o7HXYJGOeV3WR8UOnFVcAq6czZvgTJrW4YqB0yeMyDAtr0X5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7667
 
-On Thu, May 08, 2025 at 02:29:24AM -0700, Shradha Gupta wrote:
-> On Wed, May 07, 2025 at 08:58:39AM -0700, Haiyang Zhang wrote:
-> > To collaborate with hardware servicing events, upon receiving the special
-> > EQE notification from the HW channel, remove the devices on this bus.
-> > Then, after a waiting period based on the device specs, rescan the parent
-> > bus to recover the devices.
-> > 
-> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > ---
-> >  .../net/ethernet/microsoft/mana/gdma_main.c   | 61 +++++++++++++++++++
-> >  include/net/mana/gdma.h                       |  5 +-
-> >  2 files changed, 65 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > index 4ffaf7588885..aa2ccf4d0ec6 100644
-> > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > @@ -352,11 +352,52 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8 arm_bit)
-> >  }
-> >  EXPORT_SYMBOL_NS(mana_gd_ring_cq, "NET_MANA");
-> >  
-> > +#define MANA_SERVICE_PERIOD 10
-> > +
-> > +struct mana_serv_work {
-> > +	struct work_struct serv_work;
-> > +	struct pci_dev *pdev;
-> > +};
-> > +
-> > +static void mana_serv_func(struct work_struct *w)
-> > +{
-> > +	struct mana_serv_work *mns_wk = container_of(w, struct mana_serv_work, serv_work);
-> > +	struct pci_dev *pdev = mns_wk->pdev;
-> > +	struct pci_bus *bus, *parent;
-> > +
-> > +	if (!pdev)
-> > +		goto out;
-> > +
-> > +	bus = pdev->bus;
-> > +	if (!bus) {
-> > +		dev_err(&pdev->dev, "MANA service: no bus\n");
-> > +		goto out;
-> > +	}
-> > +
-> > +	parent = bus->parent;
-> > +	if (!parent) {
-> > +		dev_err(&pdev->dev, "MANA service: no parent bus\n");
-> > +		goto out;
-> > +	}
-> > +
-> > +	pci_stop_and_remove_bus_device_locked(bus->self);
-> > +
-> > +	msleep(MANA_SERVICE_PERIOD * 1000);
-> > +
-> > +	pci_lock_rescan_remove();
-> > +	pci_rescan_bus(parent);
-> > +	pci_unlock_rescan_remove();
-> > +
-> > +out:
-> > +	kfree(mns_wk);
-> 
-> Shouldn't gc->in_service be set to false again?
+Hi Greg,
 
-ah, nevermind. That won't be needed. Thanks
+On 07/05/2025 19:39, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.182 release.
+> There are 55 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> > +}
-> > +
-> >  static void mana_gd_process_eqe(struct gdma_queue *eq)
-> >  {
-> >  	u32 head = eq->head % (eq->queue_size / GDMA_EQE_SIZE);
-> >  	struct gdma_context *gc = eq->gdma_dev->gdma_context;
-> >  	struct gdma_eqe *eq_eqe_ptr = eq->queue_mem_ptr;
-> > +	struct mana_serv_work *mns_wk;
-> >  	union gdma_eqe_info eqe_info;
-> >  	enum gdma_eqe_type type;
-> >  	struct gdma_event event;
-> > @@ -400,6 +441,26 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
-> >  		eq->eq.callback(eq->eq.context, eq, &event);
-> >  		break;
-> >  
-> > +	case GDMA_EQE_HWC_FPGA_RECONFIG:
-> > +	case GDMA_EQE_HWC_SOCMANA_CRASH:
+> Responses should be made by Fri, 09 May 2025 18:37:41 +0000.
+> Anything received after that time might be too late.
 > 
-> may be we also add a log(dev_dbg) to indicate if the servicing is for
-> FPGA reconfig or socmana crash.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.182-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
 > 
-> > +		if (gc->in_service) {
-> > +			dev_info(gc->dev, "Already in service\n");
-> > +			break;
-> > +		}
-> > +
-> > +		mns_wk = kzalloc(sizeof(*mns_wk), GFP_ATOMIC);
-> > +		if (!mns_wk) {
-> > +			dev_err(gc->dev, "Fail to alloc mana_serv_work\n");
-> > +			break;
-> > +		}
-> > +
-> > +		dev_info(gc->dev, "Start MANA service\n");
-> > +		gc->in_service = true;
-> > +		mns_wk->pdev = to_pci_dev(gc->dev);
-> > +		INIT_WORK(&mns_wk->serv_work, mana_serv_func);
-> > +		schedule_work(&mns_wk->serv_work);
-> > +		break;
-> > +
-> >  	default:
-> >  		break;
-> >  	}
-> > diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-> > index 228603bf03f2..13cfbcf67815 100644
-> > --- a/include/net/mana/gdma.h
-> > +++ b/include/net/mana/gdma.h
-> > @@ -58,8 +58,9 @@ enum gdma_eqe_type {
-> >  	GDMA_EQE_HWC_INIT_EQ_ID_DB	= 129,
-> >  	GDMA_EQE_HWC_INIT_DATA		= 130,
-> >  	GDMA_EQE_HWC_INIT_DONE		= 131,
-> > -	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
-> > +	GDMA_EQE_HWC_FPGA_RECONFIG	= 132,
-> >  	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
-> > +	GDMA_EQE_HWC_SOCMANA_CRASH	= 135,
-> >  	GDMA_EQE_RNIC_QP_FATAL		= 176,
-> >  };
-> >  
-> > @@ -388,6 +389,8 @@ struct gdma_context {
-> >  	u32			test_event_eq_id;
-> >  
-> >  	bool			is_pf;
-> > +	bool			in_service;
-> > +
-> >  	phys_addr_t		bar0_pa;
-> >  	void __iomem		*bar0_va;
-> >  	void __iomem		*shm_base;
-> > -- 
-> > 2.34.1
+> thanks,
+> 
+> greg k-h
+> 
+> -------------
+> Pseudo-Shortlog of commits:
+
+...
+  
+> Stephan Gerhold <stephan.gerhold@linaro.org>
+>      serial: msm: Configure correct working mode before starting earlycon
+
+The above commit is breaking the build for ARM64 and I am seeing
+the following build error ...
+
+drivers/tty/serial/msm_serial.c: In function ‘msm_serial_early_console_setup_dm’:
+drivers/tty/serial/msm_serial.c:1737:34: error: ‘MSM_UART_CR_CMD_RESET_RX’ undeclared (first use in this function); did you mean ‘UART_CR_CMD_RESET_RX’?
+  1737 |         msm_write(&device->port, MSM_UART_CR_CMD_RESET_RX, MSM_UART_CR);
+       |                                  ^~~~~~~~~~~~~~~~~~~~~~~~
+       |                                  UART_CR_CMD_RESET_RX
+drivers/tty/serial/msm_serial.c:1737:34: note: each undeclared identifier is reported only once for each function it appears in
+drivers/tty/serial/msm_serial.c:1737:60: error: ‘MSM_UART_CR’ undeclared (first use in this function); did you mean ‘UART_CR’?
+  1737 |         msm_write(&device->port, MSM_UART_CR_CMD_RESET_RX, MSM_UART_CR);
+       |                                                            ^~~~~~~~~~~
+       |                                                            UART_CR
+drivers/tty/serial/msm_serial.c:1738:34: error: ‘MSM_UART_CR_CMD_RESET_TX’ undeclared (first use in this function); did you mean ‘UART_CR_CMD_RESET_TX’?
+  1738 |         msm_write(&device->port, MSM_UART_CR_CMD_RESET_TX, MSM_UART_CR);
+       |                                  ^~~~~~~~~~~~~~~~~~~~~~~~
+       |                                  UART_CR_CMD_RESET_TX
+   CC      drivers/ata/libata-transport.o
+drivers/tty/serial/msm_serial.c:1739:34: error: ‘MSM_UART_CR_TX_ENABLE’ undeclared (first use in this function); did you mean ‘UART_CR_TX_ENABLE’?
+  1739 |         msm_write(&device->port, MSM_UART_CR_TX_ENABLE, MSM_UART_CR);
+       |                                  ^~~~~~~~~~~~~~~~~~~~~
+       |                                  UART_CR_TX_ENABLE
+
+
+After reverting this, the build is passing again.
+
+Thanks!
+Jon
+
+-- 
+nvpublic
+
