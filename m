@@ -1,90 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670EC1CAA6E;
-	Thu,  8 May 2025 21:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8327322256E
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 21:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746740640; cv=none; b=h5wEi2Z6QbVWL1XNSdXBO1GWe+enme67MKMDsUcXWK/bG9+Aubu/wLgXb6zlFWkkMsRZsKje3cvfeYfI+J5Tmm39s6yd5GhV/YgjxSKO1OiQh6QkeZXr0CslCHKm5wOZKc9VaBLi91uJVLXX7TdpwWWsh29aGEzhnuuUuJGEEc8=
+	t=1746740663; cv=none; b=mgP+tT++48IQ0pFfto9h85EyutG3pPE8Q2mc+IS2reuc269aCz1Tchqcag9ztEP/1tfbGri4hVmgkXn1slfGZwRsAtB2/leywaxOhVX0inU6dAzvU0ady/P85s1s8iyXPrJGh6WIF6etGJyIvHDg3tGCGlxm5H6gcF/884hq99s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746740640; c=relaxed/simple;
-	bh=2XM0ycqF9U6sa+FgoRGJnyBhv3k0LGN8UkGCg3UhoMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nn1pq8FvM/TVSflWNsVaZXyDeedCLmY8AS3iEL11y5zIQoCP83R3BU4DFdPiL1BEtlT9w5VDpIfLMUwv3y4Mgl2RJwJA5pbhiORzS5bxkk9kAOMEYq7TMIOJ2n5+ZYwK3WKRSevS86LfYkT3h/POawsOsSAbn5WSGQ4upipW1f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aUDJQ7TM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746740663; c=relaxed/simple;
+	bh=aQSC+E0Fahye6dbTTPMAX+cp14yGUn51SmoB/H8LWhA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r+B3GHQFcHtDih7zq685BXzKG2U4LtUa6KqbrHKp8x+yHa+m6k4K6M5u8ms6cyipw2fLKoyYAhUk5lh8WGG50M3YL8zLuzMH4pPSShlG+Po7uL6WNtrOcRXm1qE6fmnu4i7K+mMCDicn+vTdK+E5+gS20wRHyU6TJl2b0lRagP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XY9OZrvV; arc=none smtp.client-ip=209.85.210.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aUDJQ7TM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED364C4CEE7;
-	Thu,  8 May 2025 21:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746740640;
-	bh=2XM0ycqF9U6sa+FgoRGJnyBhv3k0LGN8UkGCg3UhoMk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aUDJQ7TMLaRB9cnLeSgzoWJEtdQBcpXGxXX3iQdgb/fgkky2ebvtCYpZLmdhci48l
-	 TmnoOj3mUAygZZYoVHtWPbVtJwha3ocNCa/+16PP4BWZOZW1jFnjzAOEKwhKUi5L2y
-	 5zWHAGai3TXN2tDplVbRSkVB5waYHoWYunAg1hrBW2YRVARQ0IcwrL/oEiIppnRDXV
-	 0Ukl+4He2OzrLJSIcN6FXMY4Qsf7zMhkPe1AD/fH/BtyfpPebsNz2SleZtTATnaFL+
-	 fxXp1GUBTm/t/5K6/IogD15G9TC1NKOE+7iJWNckXd3MPJc5pXgm41L9zNDVRo1RWm
-	 lGJFmu4+Ycc7Q==
-Date: Thu, 8 May 2025 23:43:57 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [tip: perf/core] perf: Fix irq work dereferencing garbage
-Message-ID: <aB0lnW68rLDtuCkZ@pavilion.home>
-References: <174670046919.406.15885032121099672652.tip-bot2@tip-bot2>
- <aB0B2xaHWkzCjC_s@pavilion.home>
- <20250508194605.GA8552@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XY9OZrvV"
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-72c16e658f4so845522a34.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 14:44:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746740659; x=1747345459; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=r4rrgleRHs8E8J9lRvZx/vc/Mrq/nsr1SKG+kIWRs0Y=;
+        b=XY9OZrvVhJ5RnUKGOAKMhJln9Wf+2Ent5Ugrs6jrd/N/CkyDFqvpWoeKC9p83TcBMs
+         N2PL1eFYDsnoDqX4Lh5nUwQ80+4Fv7MV3nwQ7R0p9tnQ7KYofK34+BpIngEiDp94jvvg
+         s2nMZfrZShOvgPpStWlwZhvRKqYcugmwISPgsR6P2tF5AIo61x18E1G6ccawGGtDkdCf
+         Ngei1DP4P31Lj5nIFolFZKowX/ehWnL8SxqgggV15cS2Qg0udiMf7lRB1QppHADDD05U
+         coMxow0F9jVoB5ZWpXUrA6j3R6Bjz1nKxXF+6J5P2/EOnqYR4pAI1dvYYtXd0Gs3Je4w
+         AYHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746740659; x=1747345459;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=r4rrgleRHs8E8J9lRvZx/vc/Mrq/nsr1SKG+kIWRs0Y=;
+        b=BvGeasfU2CFgBnt90/lQI4Ehe68EXlWn668YHdjYwhqDWNUYlH4Rml0gycad6FYz6J
+         iL4o5h8wHsJz/lfocYOycG3rdTrkUj8gfDyMFDiXPQKseFQGwAHpSHeAJVbA2QbnnJUK
+         wzro+7y6wtyZyhuBqJedwHCSZhODkb2OOHmsbnAJw0AIN6HtyTEW/RajXjhh7kke1wtu
+         38iH4lH6QdKRPlgVatKYzqbKadDyRf3EyNp4AAw3wn9n4ID/Su85bTLffcpHhkflkqoa
+         NDJZO4gYGRBJlm63MbPGzQcpXgktRqtyODm5n6qtiesB0IZNJ1/GsSmsCJW42o58Ynlp
+         Xqzw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXINe0vWz8gCTUvKk3nyn55AiU7QdN97lyynGHAHWXGLifwBFrSiUBUOORag+y5JsI0aoFa0prQ2saPhY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCBS7bJYzjt820zJMdNEZc0x680dCrVrIEkWV3hyNuTkZGd2wJ
+	yc+nuKy70Bqnm/A0s+gcdAQP3yNimypdud8PIwzzbn2cXbJJPirj5agfW4HBbZY=
+X-Gm-Gg: ASbGncu2byM0xAt8JklXwzibmTD0AmXtrA/pbDiYXj12D1E5Sdkx+1GpiPlsmvTExG3
+	Uv3LFClXKC8v9VoGk/9lVdFtHp7j+2jqb13MXB8C95TftrFSUxpDGpmmdhUkZwCBZAMHCbfVagt
+	Xhj0ijoD0OIB8L890aQo0NhVnHzekicf/o9nD5QJSy898c0he4GizZs5vLQym7tMIrtPMqQq9Vl
+	9JW8JZGANwvqng+TSPUqg6YmYYJZfxlqRvlBcTjWBGFpprnn/aPdzDcEHsRfk+jJVJUSTHeh8Mq
+	OVPHFRHK9unvhDgaHf4PXwf2bJcGdXrwYvq0c8Y5oC62yUhM9Ub4c+hPqKume9D0gJs3LsaFUon
+	5ks52GrqoX74/zQ0TiQ==
+X-Google-Smtp-Source: AGHT+IEWxrdM7guJzCtW5zB5Io/5M/nAEqa1rWAlUXg+L9OfIUY/bZAREYTnD85qHAKnzpkD1d9V+g==
+X-Received: by 2002:a05:6830:380c:b0:72a:45bf:18d6 with SMTP id 46e09a7af769-73226ab0459mr938322a34.18.1746740659405;
+        Thu, 08 May 2025 14:44:19 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e? ([2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-732264b479asm273544a34.27.2025.05.08.14.44.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 14:44:19 -0700 (PDT)
+Message-ID: <43fd5216-9577-4773-86c3-e3035f3934b7@baylibre.com>
+Date: Thu, 8 May 2025 16:44:18 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250508194605.GA8552@noisy.programming.kicks-ass.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/7] iio: make IIO_DMA_MINALIGN minimum of 8 bytes
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Eugen Hristev <eugen.hristev@linaro.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-0-814b72b1cae3@baylibre.com>
+ <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-1-814b72b1cae3@baylibre.com>
+ <20250508223959.70e909d2@pumpkin>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250508223959.70e909d2@pumpkin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Le Thu, May 08, 2025 at 09:46:05PM +0200, Peter Zijlstra a écrit :
-> On Thu, May 08, 2025 at 09:11:23PM +0200, Frederic Weisbecker wrote:
-> > Le Thu, May 08, 2025 at 10:34:29AM -0000, tip-bot2 for Frederic Weisbecker a écrit :
-> > > The following commit has been merged into the perf/core branch of tip:
-> > > 
-> > > Commit-ID:     88d51e795539acd08bce028eff3aa78748b847a8
-> > > Gitweb:        https://git.kernel.org/tip/88d51e795539acd08bce028eff3aa78748b847a8
-> > > Author:        Frederic Weisbecker <frederic@kernel.org>
-> > > AuthorDate:    Mon, 28 Apr 2025 13:11:47 +02:00
-> > > Committer:     Peter Zijlstra <peterz@infradead.org>
-> > > CommitterDate: Fri, 02 May 2025 12:40:40 +02:00
-> > > 
-> > > perf: Fix irq work dereferencing garbage
-> > > 
-> > > The following commit:
-> > > 
-> > > 	da916e96e2de ("perf: Make perf_pmu_unregister() useable")
-> > > 
-> > > has introduced two significant event's parent lifecycle changes:
-> > > 
-> > > 1) An event that has exited now has EVENT_TOMBSTONE as a parent.
-> > >    This can result in a situation where the delayed wakeup irq_work can
-> > >    accidentally dereference EVENT_TOMBSTONE on:
-> > > 
-> > > CPU 0                                          CPU 1
-> > 
-> > This is missing the most important (and boring) part of the changelog :-)
-> > 
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > 
-> > And I suspect some automatic check will also yell at some point at missing Sob.
+On 5/8/25 4:39 PM, David Laight wrote:
+> On Mon, 05 May 2025 11:31:42 -0500
+> David Lechner <dlechner@baylibre.com> wrote:
 > 
-> Doh, script fail :/
+>> Add a condition to ensure that IIO_DMA_MINALIGN is at least 8 bytes.
+>> On some 32-bit architectures, IIO_DMA_MINALIGN is 4. In many cases,
+>> drivers are using this alignment for buffers that include a 64-bit
+>> timestamp that is used with iio_push_to_buffers_with_ts(), which expects
+>> the timestamp to be aligned to 8 bytes. To handle this, we can just make
+>> IIO_DMA_MINALIGN at least 8 bytes.
+>>
+>> Signed-off-by: David Lechner <dlechner@baylibre.com>
+>> ---
+>>  include/linux/iio/iio.h | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+>> index 638cf2420fbd85cf2924d09d061df601d1d4bb2a..7e1e3739328d103262071bd34ba5f6631163c122 100644
+>> --- a/include/linux/iio/iio.h
+>> +++ b/include/linux/iio/iio.h
+>> @@ -775,8 +775,18 @@ static inline void *iio_device_get_drvdata(const struct iio_dev *indio_dev)
+>>   * to in turn include IIO_DMA_MINALIGN'd elements such as buffers which
+>>   * must not share  cachelines with the rest of the structure, thus making
+>>   * them safe for use with non-coherent DMA.
+>> + *
+>> + * A number of drivers also use this on buffers that include a 64-bit timestamp
+>> + * that is used with iio_push_to_buffer_with_ts(). Therefore, in the case where
+>> + * DMA alignment is not sufficient for proper timestamp alignment, we align to
+>> + * 8 bytes instead.
+>>   */
+>> +#if ARCH_DMA_MINALIGN < sizeof(s64)
+>> +#define IIO_DMA_MINALIGN sizeof(s64)
+>> +#else
+>>  #define IIO_DMA_MINALIGN ARCH_DMA_MINALIGN
+>> +#endif
 > 
-> Let me go fix.
+> Did you actually test this?
+> You can't use sizeof() in a pre-processor conditional.
 
-Looks good, thanks!
+Pretty sure I did, but maybe I was asleep at the wheel. Anyway, this got caught
+by a build bot and I realized the mistake.
 
--- 
-Frederic Weisbecker
-SUSE Labs
+> 
+> 	David
+> 
+>> +
+>>  struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv);
+>>  
+>>  /* The information at the returned address is guaranteed to be cacheline aligned */
+>>
+> 
+
