@@ -1,84 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB49B2AE90
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 03:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FDE1F4736;
+	Thu,  8 May 2025 03:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746674724; cv=none; b=THfWGTEPx+HaOMiSVkhBFBu7eOi05zQjGHRIOJLkg+PdFVse6YDNyeyBhwhJE3iUorzxLEkUNT3NGyVzBEMG5hoZO/dGrXVOKFhF9IC1r9vFNVUT6+KFQbAL2jgNzdr4LB90ClSnqWvIE3oCoQFF0pLOPTIK7gxvQz9hIatsCGc=
+	t=1746674754; cv=none; b=u1nlTdGyfpeiyoUnIQHoGx83NoQ+J0z9QV9t8FhF98AUs4N9rCx+xWaBZ8tvcdw9cj4xjAscUembUlS2w+KHCARtrIEvUfswpsK8pJbAZ93vXA/btyHeppaDTWHWi6mlxt043RpFFq/cK9RgSACZ/esG2s0/IpmASwVd+r+YF+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746674724; c=relaxed/simple;
-	bh=TPrWKrDR17mZcDUlM4N62FY9WIzSSTh/ZkrzGPsBY4I=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=FRwcYpo0Z4bzGiiPkrzzydMhNoWu2TxNVKkDjeJTuRgoHPVAW/Kt7b4SQkbGWrfCoDLVkbDqlu2xBpTZcQB4HNW0XsrzZH28tSlpwbXsQvBwLsJaRqqYADMKPo8k/c7tBzKJWbBx73ZiemmFXBxA9ksM2+SOLNIgzZ0YxmZn2po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kmIVqWpj; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746674754; c=relaxed/simple;
+	bh=9FN4e+9q1iQnxjAeLllxG2YEgg/RjuG3V6jT5Cc3/I8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=l5UnRVeqibyBPBi2p0omchrZR87swviM9JryoMBK0Cx08f7q8UzThtii8ZXAjZi9v1glODHRWr1BPGdJDFL63gb7yW9rp/XKmMplzd7zIAXYRv9nJHn+hdzHq8ptz1/Gaf3KWFHztnSPYW6GgANM+A0g5V8pMxj54ewNkTsoISg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aqmgEZwf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kmIVqWpj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746674723; x=1778210723;
-  h=date:from:to:cc:subject:message-id;
-  bh=TPrWKrDR17mZcDUlM4N62FY9WIzSSTh/ZkrzGPsBY4I=;
-  b=kmIVqWpj6gPx156eVwHc8Fo7itMKOi/qSQ7u0imhgqE8hGUqwKshxTPw
-   rX6u4fHpnILI/AGjoxIIEaMexlNi95PImpLAjdQqq1GcWxBHEqR+5/b5m
-   FoRygjc/mO/dyi4Qb3g4C9JYDXKs5C5dYyGptGkwYbOIhio09w4ArH9pc
-   OuRjFdrYNskuTHNsaEyFBNLWgWB63BEAdDKtiVNlOMforwFFxQgeoA2rO
-   AxaEQmECNBhaPjfhf5wL8rcopujNvnX4vWKeWunyw6Sf5TSTb5yIlNEVc
-   bydgLHmfq1KWc/SGFLoLP0pN7RX/jIy0ql01EYe2SEPHY+01JAjpDTOFo
-   A==;
-X-CSE-ConnectionGUID: +MDGUWp8Sw6sHvR+69bR8A==
-X-CSE-MsgGUID: FDPdDTwARlmvrWGt3av+Hg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="58637149"
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="58637149"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 20:25:23 -0700
-X-CSE-ConnectionGUID: GMfE0J+MSNihjfAO9X53OQ==
-X-CSE-MsgGUID: pnMUbPAJRreyIV9ojT9R3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="136115452"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 07 May 2025 20:25:21 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCrst-0009i4-1e;
-	Thu, 08 May 2025 03:25:19 +0000
-Date: Thu, 08 May 2025 11:24:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/urgent] BUILD SUCCESS
- 5214a9f6c0f56644acb9d2cbb58facf1856d322b
-Message-ID: <202505081131.jkXnv2gX-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aqmgEZwf"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 151F2C4CEEB;
+	Thu,  8 May 2025 03:25:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746674754;
+	bh=9FN4e+9q1iQnxjAeLllxG2YEgg/RjuG3V6jT5Cc3/I8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=aqmgEZwfQs6C478DF1mfn7fFY7uzh1X5I+N5ei8S1FeI6ytAp6UgJmvTgY94Z7hW2
+	 EFmAfFbfs2wpM2cZa9tmcaJmEWrMeaw7EHHfLK2HNcUd/2Rvc8QcJLlrw9etht/8g0
+	 l4yxARRn74cc3JDTjVMJOV3uxe2niYcsLdEyIX5DUxUugByGme3O+ZMolJFar1xj4t
+	 Rqm6k5not1iCP93XMBpVz4XtbPGS8uhqZCvyo/RkjkxINQ2FJkpbk9jkUekmARU8e2
+	 ZZ1E4Hj+SeiD9g+Yzq7u5X43XFqDb1jFFbiHA/xDRIK3hN844gnyBYq6NkabZEbyUQ
+	 BGyz5ek5T2QbQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0984FC3ABC0;
+	Thu,  8 May 2025 03:25:54 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Date: Wed, 07 May 2025 22:25:52 -0500
+Subject: [PATCH v6 1/3] irqdomain: Export irq_domain_free_irqs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250507-pci-tegra-module-v6-1-5fe363eaa302@gmail.com>
+References: <20250507-pci-tegra-module-v6-0-5fe363eaa302@gmail.com>
+In-Reply-To: <20250507-pci-tegra-module-v6-0-5fe363eaa302@gmail.com>
+To: Thomas Gleixner <tglx@linutronix.de>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, 
+ Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746674753; l=813;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=HMpL5ZC0u0zHUx7X6iaMy1A5L01kC5VZDDTCKB3qS7U=;
+ b=yNLWjKrlPioYJb28O/Qirs4sZiLKKFoYgaQMQj2YGLEysic2Q97uljDn0Hz1TEQFsIXL7JwIi
+ BVmBC/xy6ArANd+VC9d+jaqJ6Md+HkTrVNMWbmepYZqEBxNMvF/mY7X
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
-branch HEAD: 5214a9f6c0f56644acb9d2cbb58facf1856d322b  x86/microcode: Consolidate the loader enablement checking
+From: Aaron Kling <webgeek1234@gmail.com>
 
-elapsed time: 2411m
+Export irq_domain_free_irqs() to allow PCI/MSI drivers like pci-tegra to
+be built as a module.
 
-configs tested: 7
-configs skipped: 167
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+---
+ kernel/irq/irqdomain.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index ec6d8e72d980f604ded2bfa2143420e0e0095920..36cd79a8a2ce960b07b03c40067343ec8f632452 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1890,6 +1890,7 @@ void irq_domain_free_irqs(unsigned int virq, unsigned int nr_irqs)
+ 	irq_domain_free_irq_data(virq, nr_irqs);
+ 	irq_free_descs(virq, nr_irqs);
+ }
++EXPORT_SYMBOL_GPL(irq_domain_free_irqs);
+ 
+ static void irq_domain_free_one_irq(struct irq_domain *domain, unsigned int virq)
+ {
 
-tested configs:
-i386    allmodconfig    gcc-12
-i386     allnoconfig    gcc-12
-i386    allyesconfig    gcc-12
-i386       defconfig    clang-20
-x86_64   allnoconfig    clang-20
-x86_64  allyesconfig    clang-20
-x86_64     defconfig    gcc-11
+-- 
+2.48.1
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
