@@ -1,147 +1,168 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEDAB1F4C9D
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 07:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C616D21B19E
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 07:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746689566; cv=none; b=N0XsooB+6+bZjW5ZFPjtxrdT7CRbyY9xdrDlPKOFR9T8sDTmZ0AVCvRw34WaKwGBXfGDyMp3RwsnaK292BiVNGTXRA1ADpsc9rufNQ1J2wHVfYRcD7IoKeYzIk71y5+yJ4ihsoGRyrx2ny2jb+TK7qFbFnCk3xx5zyWP7k3wJ1I=
+	t=1746689601; cv=none; b=Ejq0i89bVhYXkjRAnDiqDa1VJjnKgmnK66siu9KMEGTlWq2zrBOz8ssEQ3Fj3K3MUBMdc2CIqUFzJQEIPFQKOFXDXZA4LGgd5wDz5/i2mKXcJScMOOSInnDDYTVPkslYRHeT0bWr4P6NbNV8z7BoZ252vRCIrz6ZvnRoQzaz7dU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746689566; c=relaxed/simple;
-	bh=eJRhdf3y9fhrnSs+Zl4amR5N1JU/O4meIvkPsi6N5AI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X4j5hB6Ptio30CdhLvdQZwo9iNrQrHC+VqVB4POHDMqPvMrTQEl/cBTYiv+assw0Yh+yERoQ4SlyPnWW8r9scmySs3igfbw5kKTlsLqPSWFQq9U3E7nfz7WwqLmQ9rJUeTz1YFfliWSB+8DnXrcKC5o0fVrfZVnzpiSfD38es4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Sw6L/ZpE; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746689601; c=relaxed/simple;
+	bh=GsMLpRr+q+sBxV84JZlyy1X+RXziYkEpB2gVrlxczrA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gpkg6xWM9PXJ+Hp5sC2sEHAhSh0/4Z2QjiW9OL67qOxm6Nbnc9hy+t9R6jhC9bZeu9r7UGdX4eGe77tKAfFjIN5eyXRS++oYJMICn9vtHC31TAHD2bkT7uob3L0dC4LHNAspxHJtxlIcL9v0ZQZd6Sa6rlnOYh1FcsTeJuqOC4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HDDAnbrt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sw6L/ZpE"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d4ff56136so1002185e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 00:32:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746689563; x=1747294363; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=HoRg830eZYrOz+RPuJ0T7jN6cyXedEMpV65ao6N00bc=;
-        b=Sw6L/ZpExEGp+BIFtlLmcD5QPT3atIIi+eJ+yKmMHoNsgg2bWoFyguIwZwlxrMCwzr
-         FvsDMrVi5Nj2x9ZTh3zCD7njwyDlBQh/WXaYDR5xeBN97cmWPcljp0/gNIuejZwL2bsH
-         OMOnjOCydyD68fqCJRKj1tN4nlc1EMUilOz8N1RC6ZV5n8jLGABOygXvb7rA5TWeemsW
-         edEnvE/DwIuy0xFK290gTjRaL8qXJbhVSZ4Mawu27OrbeO+SBuBz0yEJCJFbJVTkHSjY
-         Q9q4424Tbckg+kgKRhmGRdJvaLUsSs0+bkFedueGABXdAKxM4Y5v+9bsKGHwEVPBOMUt
-         Vg0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746689563; x=1747294363;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HoRg830eZYrOz+RPuJ0T7jN6cyXedEMpV65ao6N00bc=;
-        b=dHkQa3iEq7w8ViL2ZYUizZ5XpqUUMQRHYncIQCuj2UfYdwY2f+ljnxyReMLaV8DUTt
-         k+qGuTPCYwYXIfxH3KYyk4HRWyOjr6JvX8JuTVzoaVXUfTep6xKrAhvIZucpAolUXgj/
-         y7FKXVe6LC/RYyh9oU6GMb3+xFQphbPcpzyeaIyTKELw3I6b/YRLVt7CMZEQQaD5A3yE
-         XGEPRh4RAe4bD6rEI0TCBBF5SlV+NueItvbiMQcb/l74Kjvut/oxNd7FSFoy5ONU1q35
-         Qj6dCzOo8yzoETsT4VzJIx3CB846tZxQ9ofpmqyoMOUXnudSCYsk9ySyMWxMJ09koPIU
-         P0Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCVtcgE0xefIRWeOctmbOTnllAZJef4ubDV+YcgshekMlhVfW+8FpHXVLTKfwjYTlSnOTLKeA0jA0wMYCM8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNsVZHcKoPH2bBRkgXYadrTCcPl0mvSHJcplrUFUzB87i8rohi
-	B6Pg7iZeGkAmfyKOHRnilosHL57rAOMHDWYqB+iRoxRCUBeEbtn5pkWHPpE695o=
-X-Gm-Gg: ASbGnctEd0xiyVAIm93DIvKJNqUpph5fWaVbOGrnRce8/+S9DZyGi7NRsBZGWznFNlW
-	miumld9PjUNZm6A58jt5BANtgBUYYGvY7jtDdGRrlYZIMLWmoCMJzc5KQFwroSWgF7iH4IS8oLx
-	JDwfwpfWM/MGhqtUBgHmlK3wCSOc8SGucatWT61ZUHEjmx/pMCuULtH9DdWCJhKjFk6EaO7l9OA
-	ExbmC7VzbeisNxhls6JybEvoAiksgeFnK35gqWrgx8rmAiOt4xk76aBCC6qhXimjU1HMQZbMUH+
-	PzKKkqCznuzXahvlJFhFrenl0ffwITaN8XqxZY6fVIow8p9uYMj8j+WQiiw=
-X-Google-Smtp-Source: AGHT+IEJFJSCXhWpEZ7xDqiQXhgOgnFF4xcAVyMI6lSXlVe1K3+fU9nEqIAR0SHlCZb6ZtZUjYNdcQ==
-X-Received: by 2002:a05:600c:1c97:b0:43d:301b:5508 with SMTP id 5b1f17b1804b1-441d44bc487mr20004935e9.2.1746689562952;
-        Thu, 08 May 2025 00:32:42 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32b0d7sm27282745e9.7.2025.05.08.00.32.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 00:32:42 -0700 (PDT)
-Message-ID: <84410317-6f83-46a9-aa5c-a84947b89f00@linaro.org>
-Date: Thu, 8 May 2025 09:32:40 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HDDAnbrt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746689597;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=21q884QM7jphvwOnC1ZSy6BXRi57/hdOD7otR8XXP24=;
+	b=HDDAnbrtT11hNqiCxCNOfysNco+v5cZDaf7WNJ/feMvUfgc1fpYykajjDhst5KOI8ybWgm
+	PE5Vgh1r2O9uMnqCiNY7RWeq9vYFK8oPLbtQYiTvwi0Rk2rjjWGc/nJds50lP93U1iAoFE
+	1r5oF0/WBTC9Jj9szki1rKWmUAn7w18=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-199-lM2PEPpmNw2n3E8l_1MeuA-1; Thu,
+ 08 May 2025 03:33:16 -0400
+X-MC-Unique: lM2PEPpmNw2n3E8l_1MeuA-1
+X-Mimecast-MFC-AGG-ID: lM2PEPpmNw2n3E8l_1MeuA_1746689595
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 15DAB1800360;
+	Thu,  8 May 2025 07:33:15 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.8])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 72EE319560B3;
+	Thu,  8 May 2025 07:33:12 +0000 (UTC)
+Date: Thu, 8 May 2025 15:33:08 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Coiby Xu <coxu@redhat.com>
+Cc: fuqiang wang <fuqiang.wang@easystack.cn>,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH v4] x86/kexec: fix potential cmem->ranges out of bounds
+Message-ID: <aBxeNLVvpnpR5FIa@MiWiFi-R3L-srv>
+References: <20240108130720.228478-1-fuqiang.wang@easystack.cn>
+ <ZZzBhy5bLj0JuZZw@MiWiFi-R3L-srv>
+ <4de3c2onosr7negqnfhekm4cpbklzmsimgdfv33c52dktqpza5@z5pb34ghz4at>
+ <20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v8 1/8] dt-bindings: dpll: Add DPLL device and
- pin
-To: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Lee Jones <lee@kernel.org>, Andy Shevchenko <andy@kernel.org>,
- Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20250507152504.85341-1-ivecera@redhat.com>
- <20250507152504.85341-2-ivecera@redhat.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- 2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <20250507152504.85341-2-ivecera@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On 07/05/2025 17:24, Ivan Vecera wrote:
-> Add a common DT schema for DPLL device and its associated pins.
-> The DPLL (device phase-locked loop) is a device used for precise clock
-> synchronization in networking and telecom hardware.
+On 05/07/25 at 10:59pm, Andrew Morton wrote:
+> On Thu, 8 May 2025 12:25:15 +0800 Coiby Xu <coxu@redhat.com> wrote:
 > 
-> The device includes one or more DPLLs (channels) and one or more
-> physical input/output pins.
+> > >
+> > >Acked-by: Baoquan He <bhe@redhat.com>
+> > 
+> > Hi Andrew,
+> > 
+> > It seems this patch was missed.
 > 
-One patchset per 24h. You already sent it today and immediately send
-next version without giving time for any actual review.
+> January 2024.  Yes, it's fair to assume that it was missed ;)
+> 
+> > Will you pick it up?
+> 
+> Sure.
+> 
+> > Without this patch,
+> > kdump kernel will fail to be loaded by the kexec_file_load,
+> > 
+> >   [  139.736948] UBSAN: array-index-out-of-bounds in arch/x86/kernel/crash.c:350:25
+> >   [  139.742360] index 0 is out of range for type 'range [*]'
+> >   [  139.745695] CPU: 0 UID: 0 PID: 5778 Comm: kexec Not tainted 6.15.0-0.rc3.20250425git02ddfb981de8.32.fc43.x86_64 #1 PREEMPT(lazy) 
+> >   [  139.745698] Hardware name: Amazon EC2 c5.large/, BIOS 1.0 10/16/2017
+> >   [  139.745699] Call Trace:
+> >   [  139.745700]  <TASK>
+> >   [  139.745701]  dump_stack_lvl+0x5d/0x80
+> >   [  139.745706]  ubsan_epilogue+0x5/0x2b
+> >   [  139.745709]  __ubsan_handle_out_of_bounds.cold+0x54/0x59
+> >   [  139.745711]  crash_setup_memmap_entries+0x2d9/0x330
+> >   [  139.745716]  setup_boot_parameters+0xf8/0x6a0
+> >   [  139.745720]  bzImage64_load+0x41b/0x4e0
+> >   [  139.745722]  ? find_next_iomem_res+0x109/0x140
+> >   [  139.745727]  ? locate_mem_hole_callback+0x109/0x170
+> >   [  139.745737]  kimage_file_alloc_init+0x1ef/0x3e0
+> >   [  139.745740]  __do_sys_kexec_file_load+0x180/0x2f0
+> >   [  139.745742]  do_syscall_64+0x7b/0x160
+> >   [  139.745745]  ? do_user_addr_fault+0x21a/0x690
+> >   [  139.745747]  ? exc_page_fault+0x7e/0x1a0
+> >   [  139.745749]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> >   [  139.745751] RIP: 0033:0x7f7712c84e4d
+> > 
+> 
+> Do we know why this has appeared at such a late date?  The reporter
+> must be doing something rare.
+> 
+> Baoquan, please re-review this?
+> 
+> A -stable backport is clearly required.  A Fixes: would be nice, but I
+> assume this goes back a long time so it isn't worth spending a lot of
+> time working out when this was introduced.
+> 
+> The patch needed a bit of work to apply to current code.  I did the
+> below.  It compiles.
 
-Best regards,
-Krzysztof
+The 2nd hunk is not so good, it discard one slot adding. I made a new
+version and will reply to Fuqiang's patch, please help check.
+
+> 
+> --- a/arch/x86/kernel/crash.c~x86-kexec-fix-potential-cmem-ranges-out-of-bounds
+> +++ a/arch/x86/kernel/crash.c
+> @@ -165,8 +165,18 @@ static struct crash_mem *fill_up_crash_e
+>  	/*
+>  	 * Exclusion of crash region and/or crashk_low_res may cause
+>  	 * another range split. So add extra two slots here.
+> +	 *
+> +	 * Exclusion of low 1M may not cause another range split, because the
+> +	 * range of exclude is [0, 1M] and the condition for splitting a new
+> +	 * region is that the start, end parameters are both in a certain
+> +	 * existing region in cmem and cannot be equal to existing region's
+> +	 * start or end. Obviously, the start of [0, 1M] cannot meet this
+> +	 * condition.
+> +	 *
+> +	 * But in order to lest the low 1M could be changed in the future,
+> +	 * (e.g. [stare, 1M]), add a extra slot.
+>  	 */
+> -	nr_ranges += 2;
+> +	nr_ranges += 3;
+>  	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+>  	if (!cmem)
+>  		return NULL;
+> @@ -317,9 +327,16 @@ int crash_setup_memmap_entries(struct ki
+>  	 * split. So use two slots here.
+>  	 */
+>  	nr_ranges = 2;
+> -	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+> +	/*
+> +	 * In the current x86 architecture code, the elfheader is always
+> +	 * allocated at crashk_res.start. But it depends on the allocation
+> +	 * position of elfheader in crashk_res. To avoid potential out of
+> +	 * bounds in future, add a extra slot.
+> +	 */
+> +	cmem = vzalloc(struct_size(cmem, ranges, 2));
+>  	if (!cmem)
+>  		return -ENOMEM;
+> +	cmem->max_nr_ranges = 2;
+>  
+>  	cmem->max_nr_ranges = nr_ranges;
+>  	cmem->nr_ranges = 0;
+> _
+> 
+
