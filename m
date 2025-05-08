@@ -1,77 +1,108 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89748209F45
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F4822C321;
+	Thu,  8 May 2025 15:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746719346; cv=none; b=I4UT4JMBOyRbjQlCbVPVJsCTidySzRbjE5uxT/4ilZqfdwuc00h0PSipRBimR+9sVirvsqjnJZru7qIWfZw2Vw+xfEFRjV03/zM3/oNgyEC4n/RUHNRL51yvpplJCDBkfuuU+WTnaVC6Y3XMLCJn4469Vk2Bdx/e3N2NRMNJylU=
+	t=1746719371; cv=none; b=dRO17otsVGbQiaZv2SYqQzKuuGE3uRwidoeKPv/l2/XVojuZad8drucU3DHBX1N/S3jcQzKnT4AHAd7+Dqw1212xOfyyC4a4BdaTAw4FZQ25uFsQs6Z6r1vil8D7PGNs6C+S2LBoVUAHgEa2YeP+RfQxl0xzOTxT/rtamm3VQx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746719346; c=relaxed/simple;
-	bh=CThFNMFKx4HWp2XE28KqxH2Y1BwNwB82Ka51sKvSg2k=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=mUo64t8J2PNA+r784QP59idRVFdljXaP8GutDq/Qh6I7JIsdK7lfclPopgk+AnfYAb/fnjPS8eImpXTI2fmsERrlr4r5wJzH+lPdQVNkfQ5AI1dvCBzzKDhM3OFf+17CBKMk9pBGxr1cu1yaACmF6tIDCxAqvzWGm/hPZY/zDho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d8eda6c48cso22148895ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 08:49:04 -0700 (PDT)
+	s=arc-20240116; t=1746719371; c=relaxed/simple;
+	bh=Y9vWFCVlw2g4DpNXUL4fhrgJKM0WgJemKT0SgUg2hNs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZsyXZqkZRT5eMrk84iTHqqVK+vsbHHhkomezTGHNaotOyXipWd6CB20PeWKbV50wsmIuX7OABCnGcWWABTch1TJdO2Pl6yWIvVxOjnejAkGgtg8H2dkJefAr6XNINz927EpoXAgYXzmoMYTTfmf7/qVp5xk//O6S357mrggO8uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=SwK7ndla; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="SwK7ndla"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so13018655e9.3;
+        Thu, 08 May 2025 08:49:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1746719368; x=1747324168; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eOY1fBOilgG1yZWy9IkYeCeO3dhjP7Lg4rWy8ix1o0M=;
+        b=SwK7ndla8jspccm0CEEOxAlBp4tkK7crrY7ks6GZ/tTCSpgyRVck6UDrSUcUUDcSkE
+         kNuAZORjgkRK03Bh8QDMwdr3KyGP7c73Xnb8M1o0H2aaVR4WaPqK4AzOi44eayq9PDSQ
+         oBWHGycy9vF1vNxlmBf9n2ABWUIXX4p93g8xgIy8NjbD3nrdVC6dGK7fNWO227UzD+d6
+         w9bUBQmz1j9AFDEpAQp6IBWXb6QF4R8P5sR1l6tvhCcsQBsh0jLcwcUhWLsk2bEKQnET
+         mh0I4Fm12iMjvN+UpfEMS7Fr7A/YUb8SmbG046Ui4kiGpWB4mhVBsmUsMw8BYMLV0Gur
+         h7RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746719343; x=1747324143;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1746719368; x=1747324168;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aD+jxVgbrfQVFDofzdatQtArk4oPWbWikKud7IOptlA=;
-        b=GE5MSN4Ne3MziLT2EZSIS88K5uVkda4m9jvJicQA0W9rjJRXfO6DwYA+JCGavvyomM
-         BxKTgpUt5j1L3rVWwp1YD5YxpLXOBjBXAocWeWGwvmXxzmWxsZqETETD7oepHrSK80Q4
-         SBTAQiHKxVZ67XIsA6dhYxd4cpVES+Mlw7y+rjzgFvlIw0Aati+ZytyMs5DC9lYUzLOt
-         ZzmLHR+C/TJ0PM42TnYMu5W63FUmN/VteiD4nmPIWvrBEd+OXPirX2RzzTTrIMBMLig/
-         gYuPZ/rMJdnNQqWGEwwkmgst3J7cVBv07Cx4B/T73/XgowDMJYXYLUVdePxySIZsvfBy
-         9FZw==
-X-Forwarded-Encrypted: i=1; AJvYcCX20H8PjkOChJ12P50MCT/xQXH06Ecpm+bXkggAFlDSsn831oGNICVNcP8o1RtUGJevTWL9JFF/3/+QFws=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrzaBOzemlWE07Q4jOaDUAHubKq0ZzB+WevcYrXoJOKCkGSxXg
-	ZUwjtf2aDlizUa4bZD49mZAy5hErSbmAiF+couDv/Hpc+s6/DEWSU9YIx8fx4AcdHBznR5KrUC8
-	Ou5yH7543O0MWbrHfUxgdlWd96fryUmBEHnAKNKabJy2nbOQRqwpslh8=
-X-Google-Smtp-Source: AGHT+IFZWx+Z2aq+RnZG+0pCjh3GKc6ah8W6E1+BJ41KJTho9rKRkt85qUUCAas8WRzaxK7EdGyTRM8BLnJDYWP9m2RcKnrwtHLE
+        bh=eOY1fBOilgG1yZWy9IkYeCeO3dhjP7Lg4rWy8ix1o0M=;
+        b=qHktj8IRQ9YqXV/vRTVL10izEykBIaltI3Wl11h631rq0gCcylUGv0l2qGspED6zIf
+         i7FqOdyUzd/mf65o5FdvYDjJ+fNJrTTH4IOaza5VjUZ+Xue2FcYwaJEUR9D2BUmBAPKz
+         Ozxt9nN/HPb/L0X3f/3yeCJPLy//+dhp1mtjZJHxb9ePbaA7TtGU7HcDscnaqb8kl8S/
+         qPB2kCVy/GQKXxGh+Gzy0ZfBUbHvxpHOD1jDz1Vyvq9F5S7k6jW5ngqnJ4sk6pRZSHTW
+         uebP1dOXILtXBArbK4f8qCvnoJhHqx3YAUoOvLgVnhgc2XoZmJEXos/X3aoPlpHRV/Q0
+         u+SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUHUPNO1kK80gYT3Vbls94w1caBfT4djfdPLRvECPZVpZEMOTc4mjuuOkhliZWsZ8YPwSor0H2@vger.kernel.org, AJvYcCVXS+kvhc0+ScEjxXlUxADv8bTY0hcmIGbXyaiYk6Khlk81O4H322TJ8R+HA3oeh8c2CIOZ6rWyceN8wVI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRHZweb3Fzp/2J3JQDuSnP35jbITKMt1OLsvZLjywNU027KdYa
+	bZOgXGpj1fjcc2ed8ujA11N3hLxbOz/+BrxRqOFoHV731ZYMUQg=
+X-Gm-Gg: ASbGnctTng1v631LiK1Sa93rSJaap4+aGla5kD8C08B4zteNgl8N/2ZsaQkG9r+yrXJ
+	E42m7V/kGyJuKRF88OZN3ROqiNxhcJpIk0K9i2vxjtKph9IVuhiG38oD8ilriBLb5tarBKtKmyo
+	nIkzkW+brKuwf9ioT6HnX4Sl95TOkYDh+ssq5dwm5jcpj8s7FjF/FWdK2Iy4J4+M4NfbWeYLP0O
+	yWw3ep8Ong/i0RLa/i91tnqDNQun4bwNTIUhPQc2JWoZ092uaGwzXT9xzK0OcSnJJiTeRJfQXsv
+	FzBPlfK0U0KVa4Hak4WVQ2jArc8R+pQ1drYsK+/d4VJt8434vmJwtyohF9jnyOOYA+sjRbjvAr8
+	BqB+i0KW9b5A2cQjtWw==
+X-Google-Smtp-Source: AGHT+IHO1DhAK3LRIJ8mCQPQrQm2PUR4aTQxh06gBQlCA4oEfIzCTN7RksSJNtOQ/XUQJQDZ1GqkOQ==
+X-Received: by 2002:a05:600c:1d08:b0:43c:fffc:7855 with SMTP id 5b1f17b1804b1-441d44c7d8cmr75789755e9.15.1746719367357;
+        Thu, 08 May 2025 08:49:27 -0700 (PDT)
+Received: from [192.168.1.3] (p5b05727d.dip0.t-ipconnect.de. [91.5.114.125])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd328f0fsm42637535e9.7.2025.05.08.08.49.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 08:49:26 -0700 (PDT)
+Message-ID: <bd2a17cf-a8ff-4e6e-9872-0bd28c2ef507@googlemail.com>
+Date: Thu, 8 May 2025 17:49:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:174c:b0:3d3:fa69:6755 with SMTP id
- e9e14a558f8ab-3da7854f6b3mr43699355ab.5.1746719343684; Thu, 08 May 2025
- 08:49:03 -0700 (PDT)
-Date: Thu, 08 May 2025 08:49:03 -0700
-In-Reply-To: <00000000000054bc390618ccb092@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681cd26f.050a0220.a19a9.0116.GAE@google.com>
-Subject: Re: [syzbot] [wireless?] WARNING in minstrel_ht_update_caps
-From: syzbot <syzbot+d805aca692aded25f888@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, johannes.berg@intel.com, 
-	johannes@sipsolutions.net, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, m.lobanov@rosa.ru, netdev@vger.kernel.org, 
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.14 000/183] 6.14.6-rc1 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250507183824.682671926@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250507183824.682671926@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-syzbot suspects this issue was fixed by commit:
+Am 07.05.2025 um 20:37 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.14.6 release.
+> There are 183 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-commit 16ee3ea8faef8ff042acc15867a6c458c573de61
-Author: Mikhail Lobanov <m.lobanov@rosa.ru>
-Date:   Mon Mar 17 10:31:37 2025 +0000
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-    wifi: mac80211: check basic rates validity in sta_link_apply_parameters
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=101444f4580000
-start commit:   0ec986ed7bab tcp: fix incorrect undo caused by DSACK of TL..
-git tree:       net
-kernel config:  https://syzkaller.appspot.com/x/.config?x=864caee5f78cab51
-dashboard link: https://syzkaller.appspot.com/bug?extid=d805aca692aded25f888
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12fb56e1980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17490685980000
 
-If the result looks correct, please mark the issue as fixed by replying with:
+Beste Grüße,
+Peter Schneider
 
-#syz fix: wifi: mac80211: check basic rates validity in sta_link_apply_parameters
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
