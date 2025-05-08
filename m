@@ -1,46 +1,46 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2061.outbound.protection.outlook.com [40.107.92.61])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2086.outbound.protection.outlook.com [40.107.237.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A43019DF6A;
-	Thu,  8 May 2025 05:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4213D213E7E;
+	Thu,  8 May 2025 05:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.86
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746680464; cv=fail; b=BLdQJj/1zVOhawdX0djVscDC8nRX7/jYkUw5Cz6Xn13a0rlWRyqQhxJBUp1DMwepbnBXCBJEiFiTjmVEgqC0sHQZWHskx+Yk0DBUp3lKBJU+Cpum31Sf4pNIfWQicFffzpRpVdulbeIAZA3JLVi6cAZ6dMJa+ltycgqlBxH+0t8=
+	t=1746680478; cv=fail; b=VWHOxA5JDcyLZRfcoXRT82mj6QogJbAgXPB/ePhBZbItIdCkRcjAYYPvspcsndGOEgc95sM1W6Uy1RdqF2n92p7N7fyoKtf5uABMzqoun0JSY1N5h9rCXMP1K4cK4WDW4PcSZOoVohw9hBwEznGPpMzcvOdLBSZhBUHI0WF6gnU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746680464; c=relaxed/simple;
-	bh=ruFTXOuach/z3DXbblJmujzUdkbNkPBFW+YQDcAEhzM=;
+	s=arc-20240116; t=1746680478; c=relaxed/simple;
+	bh=8+NtQf5lkiRQPrS/xcz6OK0iODeCy7ElP2SsFMr69ak=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q37JtJPL+AYCFbDJU0H1PO1NJcde/5bA8Bx/URZ44pcnouCgcPuHyJdgS3XUoLv+LCyf/XntstsjSv0ImOXXZAMcuuEr9KLDR9T+EsFsfWQwXeElQMSkxii19xHo6X1HBh2dTqsF5vJtZ4SaSazOCoQF9K7vGRb7ZfiWubfe8/Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=X075Xl3c; arc=fail smtp.client-ip=40.107.92.61
+	 MIME-Version:Content-Type; b=RX5D/WmnrpUnPKY/cCC/lQEdb244ndY9fVYOEI30qG42DwJiL2qk9pRFugcN/oZTtnaFz0wrSl0PfihqLYjhP1SXl9qPeuRsvY+qnipAw2A9L26LkwBMtrscjlXPS9We657XVOJiL+HJbnnREtqtNPtLqhQYlKt+Xm6KbCI0qoc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QQbw0Of4; arc=fail smtp.client-ip=40.107.237.86
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="X075Xl3c"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QQbw0Of4"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ua5IrWIzvt3tMvXUcJQ6lMHe1I+v9bEUbeI3rVEgbGIXSIAH8Q56yJNw7gROUzmjP4vSjJxaYYL9pf7hlGK3lKmRM0stBu7t2iI59ieirsXlKLjtwY+8NjjF1xvyKje+RBoGoNHAa3xQ/naEsgJkc99ecSFeCFn3uIN+4y2LPn2G/2d234AFij+iZMekGPn0kLcAht5MMlJAkXFm/Idkn3xwD0fufncF/sl0ITUQ84SKz+l0IsWYIURpe6T7CVc/+4dZs7+AA9YTLLRIZZVFSEApp627OrgvSOI/GFxBhgc8kc8VtuDuiQPfvZcP1aeY390HuAcgoNU5vvHe5JdeyA==
+ b=pdIPDPbELdJylK5NsKJw+KL0Uuxnm4vxK/CEx2EjQRKSMZGn2bqJdtkwf6dJoMWfHk86IUrqmZni6VB5N13xRHPmjEAtBMPjfH9m5TXpO9ADOQj/EffsDMrPOfxEIS6xyvFSTypxh5Ih1bzj6OecXhIcOoDX9cf0bWV0QDjD/KLwMBQGXK/IVWdFsTkIxvCg79OVjAvavR5f3wBmAkE1QuNMs49iyL2lzsIoZCCJZsKGNzPtI9nll4Xsm1JnAWtHhLnfjZg2XiE+9FrFder8Nv8yltbDaJlkw4cgjlxZPPzlKxMRzwv5nQpnKTztwUIgcJtwZhd2PNVrb0EO4uxi7Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bS29eiVl+FmoAoRpYJTh5dBcSrBsIvbzDImtulGCMsI=;
- b=Q17lLrLODJ49A97Lobo1oqFdTa+/6xG2tf/RXVO6elQTv+ji8fFgexTI++szU2Jpx1TBaJjrM99gCkWe7Z9/8vBgZR1bleiKxG5sGTZskgEm8e7nfQPPo87cSg3D8Jtik7VVyTEC1elUQSEdLaLyTJKkO1cV7GSDi5V1QuYb58Qn42Nvc+kcXGkpZR34lzUejaUTlq69uM2313rswHSFBYcNYxQ7c3cT4rAt33iyXrqf5QDWgebjCI/jnevBU6ycMRPt7lfleqsjPV2AdYNJuWIE9q+DwG5Eu4Dqpx3kMUGqfeB/yVdVyjXrKE+jFAF0IDQGYM1rHWQXP+tWhCiUgQ==
+ bh=s70M94ctOYpR99iVT7Q0DBV8zpCout837W9PlFOf4QM=;
+ b=f1FH+CHCuRt51SZIbKP923c51eGnj2m16QIgV63Lqgst3q3UpLMG84wluQucXZ73UCDlYh7mSAidwMG30yxvihgA0dYD1T1BljA8bZH0vXYHJ5pyN/TESzB4VLDKl9D3W0JIbuJ57oZwoVsUZiXeP6L4NjGiwOr2oIYqJDv8khXKlLYfKwRDk4ds5Y0BqvPCspPndRK2D9XPdjZkpbEzlQE1tFc0MS9k8XcNWKc93RjdLZjTt4+PLggqSkTjmtIkiIsejq21XgrwhJJTcGoydDuwym8MS8QxAQCBtIWvUJ1aa6uPzTv+XWaIe+bF+Tn+9RI060mi3PJTRW2YnKLxww==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=davemloft.net smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bS29eiVl+FmoAoRpYJTh5dBcSrBsIvbzDImtulGCMsI=;
- b=X075Xl3cD5OCOxYa+wxOkOko7byOn+6q4KXBAexaHSnCfW1/uez4Tc1cP7wRY+N2novfe25JsAVbWoc6CuRz9gOQVI7RE8wzXtxcpL7fSC5cH8a0JhcATT1CibfhkPGOmRHhPDPU9TXV/6cMq0g+DeV6SUaHBqH8nNwyLxYSEkg=
-Received: from PH7P220CA0158.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:33b::34)
- by DS7PR12MB9551.namprd12.prod.outlook.com (2603:10b6:8:24f::13) with
+ bh=s70M94ctOYpR99iVT7Q0DBV8zpCout837W9PlFOf4QM=;
+ b=QQbw0Of4LbfH3uRulgH/ucRYavDR/oBkkPuB+OZFLt3z4VgAKW9+MY0MrG48dDEskPd4VZJEJr+i4d2eRqpqTigWQWf/h7SYI92jxZSey4vWQHlI/8Ha89ANq3gNucMG/CDyIrKCCN8MC0K98aYUg2Ge5E6tUkNgKt/X5HsyMKI=
+Received: from PH7P220CA0173.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:33b::6)
+ by SJ0PR12MB6966.namprd12.prod.outlook.com (2603:10b6:a03:449::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Thu, 8 May
- 2025 05:00:58 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.25; Thu, 8 May
+ 2025 05:01:10 +0000
 Received: from CY4PEPF0000FCC4.namprd03.prod.outlook.com
- (2603:10b6:510:33b:cafe::35) by PH7P220CA0158.outlook.office365.com
- (2603:10b6:510:33b::34) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:510:33b:cafe::cb) by PH7P220CA0173.outlook.office365.com
+ (2603:10b6:510:33b::6) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.31 via Frontend Transport; Thu,
- 8 May 2025 05:00:58 +0000
+ 8 May 2025 05:01:10 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,14 +50,18 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  CY4PEPF0000FCC4.mail.protection.outlook.com (10.167.242.106) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Thu, 8 May 2025 05:00:58 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ 15.20.8722.18 via Frontend Transport; Thu, 8 May 2025 05:01:10 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 8 May
- 2025 00:00:55 -0500
+ 2025 00:01:05 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 8 May
+ 2025 00:01:05 -0500
 Received: from xhdipdslab61.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Thu, 8 May 2025 00:00:51 -0500
+ Transport; Thu, 8 May 2025 00:01:00 -0500
 From: Abhijit Gangurde <abhijit.gangurde@amd.com>
 To: <shannon.nelson@amd.com>, <brett.creeley@amd.com>, <davem@davemloft.net>,
 	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
@@ -66,9 +70,9 @@ CC: <allen.hubbe@amd.com>, <nikhil.agarwal@amd.com>,
 	<linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
 	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Abhijit Gangurde
 	<abhijit.gangurde@amd.com>
-Subject: [PATCH v2 05/14] net: ionic: Provide interrupt allocation support for the RDMA driver
-Date: Thu, 8 May 2025 10:29:48 +0530
-Message-ID: <20250508045957.2823318-6-abhijit.gangurde@amd.com>
+Subject: [PATCH v2 07/14] RDMA: Add IONIC to rdma_driver_id definition
+Date: Thu, 8 May 2025 10:29:50 +0530
+Message-ID: <20250508045957.2823318-8-abhijit.gangurde@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250508045957.2823318-1-abhijit.gangurde@amd.com>
 References: <20250508045957.2823318-1-abhijit.gangurde@amd.com>
@@ -80,243 +84,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: abhijit.gangurde@amd.com does not
- designate permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC4:EE_|DS7PR12MB9551:EE_
-X-MS-Office365-Filtering-Correlation-Id: 315e61e8-a86e-499b-39f9-08dd8ded5254
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC4:EE_|SJ0PR12MB6966:EE_
+X-MS-Office365-Filtering-Correlation-Id: 48a654a9-20e6-4451-351a-08dd8ded5969
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|376014|1800799024|82310400026|921020;
+	BCL:0;ARA:13230040|36860700013|7416014|1800799024|376014|82310400026|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UY5FIwdtYW9dRuAa68HSlsHxosNpH9R2H7mLSiVRhjwJFf+YJaQ9mN402mLl?=
- =?us-ascii?Q?tx/mq8RJJQcVcpX1PKQBJ6/vQAZ3xPWCgPbOb2aQkvf35li8wBdbMI3/Sp4a?=
- =?us-ascii?Q?7GEmVlNmKbgf+mj1iMb6xZ5XU23em1JBI8J8TGbNFLsR96yw2QVkmknEYEqy?=
- =?us-ascii?Q?wW4xwIlLjPQSf4QmIRYPrZ5gsdRrauI6tkWzemUIUX8QbLNK+9MQEPiRzHfe?=
- =?us-ascii?Q?x2deSqDFQ65V/mC3HxnKLl1ANqk1pOkzUQahBVaLoqtTHGHmKleIeMSOgg8f?=
- =?us-ascii?Q?p7eLF0QmC3l+wO/BSzx/JsbphcX2UHo0HZadk/yT4L8XWQqS2i7vDTg5Tkrp?=
- =?us-ascii?Q?t2L04GcRFo3mHwfwhR9422vzPUgYpfYuauWElK6qZ0DqI1eFObxVJzxrNzOD?=
- =?us-ascii?Q?QfgBP5/eq9KIaSADS8NbVKKljLisFhSau7IsuYfb93RbC1rD/9lvujRAMkdO?=
- =?us-ascii?Q?jPJOSzPcJhWf9dfI8ONe/5rnZiZ8WO15ad5fentraWqw37bJSdGWI/+lWAOa?=
- =?us-ascii?Q?r+i4oZIxio5BJxUqLstF727qcpM5Km7ugZp6fpZzSXkvtTDQq4i5xxJeCOrf?=
- =?us-ascii?Q?bj+EDvmh9fB7J9mOJ8WWkJNdmgdsEqdk393qpUHxyzsH42PtY+3Ct/HatYvp?=
- =?us-ascii?Q?Mq7j0SUnc0CzNGt69OUkrPcyd6LRH/+bg0fUu4N6ELs8o7jYFDCmTotmxW95?=
- =?us-ascii?Q?qgSMukdOLQGVQ6zlOuXSl8IVOgKm9cv4e+QPLbdIpE5FRxChQdni8ZkGFEBm?=
- =?us-ascii?Q?4qxXCjgoTNsnIKJVXQD/blRIUw2Ldx0mOVt4PFKFUgSnwTK0kupYD4pep969?=
- =?us-ascii?Q?Lcg1As9GL5PXOqSw6JrbddF8bpu/fEvuMClxMkadwXoqiUK/JNdEU9pWS9Ob?=
- =?us-ascii?Q?gp/UU4TmnddPg08CcHz9rcEF71rk26ZZqlm+jF0XFMAIqgolOvIOGSFQK1h8?=
- =?us-ascii?Q?SAi1iBn+yhvCAeM2Oku9WiE2pfjWoUGXmUVcvi6OVI+3Wqn4n1htl9CccN+w?=
- =?us-ascii?Q?hlHAUtzPr5zxN6n4hunmDY6Aai0UJ5Dcxpr7l5xqeO5Fqxpzx/WGfrbtuMGm?=
- =?us-ascii?Q?AuHPUIBlk38e9x0rWTDxBzs+RagYzxf0TzgWLG14gb4SEr/NGbMZ8wsJ51iX?=
- =?us-ascii?Q?2nkwVvELSYgpUwTMCr8a5C2gCZVuMrjqyk80UPQZTXAwv6ub1ygQlso8fzfj?=
- =?us-ascii?Q?Op16V6bwcqolgKNz3zwyYiWFQAI2HQnAxOKkMBx2hsv7GsQ6xvLyZGK9GeeA?=
- =?us-ascii?Q?rMqQdLmMlThZsWZG79OuCoCOcZspGn5fCqeUxCwUls52n8GX67SEmb/XBllK?=
- =?us-ascii?Q?J3+nzC95iyu17x5SEcvlfPBy4QpUoL9eVsfu11BR8dvu/HX1V2HI22w9pq0c?=
- =?us-ascii?Q?nru0iB0Z6ygQi3K/zHCoKTwEgefhSFa7/ia/qV9jafurCC/vnwkxUsa7hQ8b?=
- =?us-ascii?Q?Q+wvH5+GgUOZIkZ/GDdTm/OEO+9KFwt3mJGAnf1Yk641YP0jkDGYrwW0QdNc?=
- =?us-ascii?Q?laPZRnlfWwr7+9z7NsEvMjP+YUMe0/JRXS825te2OhtmVEF0gPedxD6fMw?=
+	=?us-ascii?Q?zhbKY/x4aMLF/hk7GNX2Fyh6LYENb94W+2KNMI2WOt/bxws7rt8Wmzk+JxdH?=
+ =?us-ascii?Q?a7G2NOCLPh5Y/UZwTOAz3QTa9Bg6/208748PA8Uvcd59gtQZOKkBoWqwLOUG?=
+ =?us-ascii?Q?TAjvquseZ0sMtFwhYI2XgQHSz6oe6czxRZjzN8WdPB6nJdQcO/SprCz3/HJE?=
+ =?us-ascii?Q?0xRMpd7P6LB2x205B35rELsykiiuJt9rrVLsDq66mwQqA4auBF9TtG77gDc7?=
+ =?us-ascii?Q?9iJ0dUj7Q0q9DuUlRNcCaEgXy8PKOXXWLmD5YbwbYzhMvZJfh6koSwv+yYGa?=
+ =?us-ascii?Q?UXKIMT9rxpzY0ryfdIao0tH/hu/wCAFgre098ZITl58QpQnaqpkmIZXamKYR?=
+ =?us-ascii?Q?vHDFf/LPzarAsf3g8iSXHjV7QR4ph/mQUWWesCQhcvHiO99IQ1OLupqkrrn8?=
+ =?us-ascii?Q?YvH0ekdh//J0LWbxJiTO5d6MrNrjxO4b9+pabte6bixqmLMFxBYlp+fOQqPQ?=
+ =?us-ascii?Q?UWLe/HRZ7HRG6ykb6gbXpi1YcrohEX9bzxNmUO5nj1tVpwfFnwhgXj0kmQNQ?=
+ =?us-ascii?Q?5g3Uw8EHbvoCZsCf7VDMimHC9dQaHK8TFABq4pdwsfS15YUce01VG8p4JK5I?=
+ =?us-ascii?Q?ARePc/OjBSL0sEazc87PeRmnJnn9mRYsHtn3VsfvYx9bb0boB/YcWjelcqJF?=
+ =?us-ascii?Q?YPWFvXW2gi1p6bTanD6MHB9RtVY1P/Xm+N+px/891Ponh5k00HcAthmc3HXq?=
+ =?us-ascii?Q?79p6zBWWeh4HTFNtsIuD60bmboLAMvKgFG1BBfICiGu0rVZNmwwGh0Sfxzal?=
+ =?us-ascii?Q?LMPjrzoJiWEy2l4zF2N3UwQ8ZSzwZAQHCVOpPQQR0NxYecIoK2nCTxB9St9B?=
+ =?us-ascii?Q?OxPoe3qOH/iSzeijqHkL/mIM5NidusSGAMsEBC6+56rwsgp3VnMOSJTIL8dA?=
+ =?us-ascii?Q?SGjJJUNBTuecC8iSPw5ltRk3dxATGt7A15UltbiJRunnyOpba8lNiNeflxJn?=
+ =?us-ascii?Q?BrdoLyl3WBbJehvh5WCxQfAi30oGuHzV8I5QRGvYCshFMrV5yy12FZMPh27l?=
+ =?us-ascii?Q?XBjgEusbtRZsxXUl0D3CQoKZFMBiDpnwgMC7I7mbE6zEMorzZMkoljJ3DaHZ?=
+ =?us-ascii?Q?gmYT1MsqQWfB895hyuMVgIH+jam0VGVwZ3fx5Rjv850dRFylO2H4Txn187o0?=
+ =?us-ascii?Q?/B2xjhYjd7NDHdGHrUW1NjkYj/lvELkbUtGsuTNWZdAbpGTGzCMFXjgGflke?=
+ =?us-ascii?Q?paXDcriFfXpSPtVaob8M6aidQQz5KIrQ6DATezE/5LWX4E5mcW7vSJpFbRGP?=
+ =?us-ascii?Q?/E532BX5915Y0XTTVSVj6Om8Eoe+d2zfUMCb2f89IF/c9Fp6cjdMgwrgitaI?=
+ =?us-ascii?Q?c9CWYEVCzEYY5nxbCgnO1/+cyvE3adTjbP4uFpoppvCr40Atc0whfYbaBODg?=
+ =?us-ascii?Q?buyCUFs46+Ltgi8R8pMdtcH7LF5dkqzexWwDsz6/CmVR8zhtihQAqZMbJNo5?=
+ =?us-ascii?Q?SYsq5qwVuKjSYBiKsBlKjB9NtnJf3j318A80F9Del6ZDXgvO4WGZQhYXIcS0?=
+ =?us-ascii?Q?uK1NDl6oRxaLG8rsbes7pHNp7fh788d4SCKcXz5h5nlTJsnQcT9Ft3jrSA?=
  =?us-ascii?Q?=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(1800799024)(82310400026)(921020);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(1800799024)(376014)(82310400026)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 05:00:58.3039
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 05:01:10.1866
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 315e61e8-a86e-499b-39f9-08dd8ded5254
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48a654a9-20e6-4451-351a-08dd8ded5969
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	CY4PEPF0000FCC4.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9551
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6966
 
-RDMA driver needs an interrupt for an event queue. Export
-function from net driver to allocate an interrupt.
+Define RDMA_DRIVER_IONIC in enum rdma_driver_id.
 
-Reviewed-by: Shannon Nelson <shannon.nelson@amd.com>
 Signed-off-by: Abhijit Gangurde <abhijit.gangurde@amd.com>
 ---
- .../net/ethernet/pensando/ionic/ionic_api.h   | 43 +++++++++++++++++++
- .../net/ethernet/pensando/ionic/ionic_dev.h   | 13 ------
- .../net/ethernet/pensando/ionic/ionic_lif.c   | 38 ++++++++--------
- 3 files changed, 62 insertions(+), 32 deletions(-)
+ include/uapi/rdma/ib_user_ioctl_verbs.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_api.h b/drivers/net/ethernet/pensando/ionic/ionic_api.h
-index e0b766d1769f..5fd23aa8c5a1 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_api.h
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_api.h
-@@ -32,6 +32,29 @@ struct ionic_admin_ctx {
- 	union ionic_adminq_comp comp;
+diff --git a/include/uapi/rdma/ib_user_ioctl_verbs.h b/include/uapi/rdma/ib_user_ioctl_verbs.h
+index fe15bc7e9f70..89e6a3f13191 100644
+--- a/include/uapi/rdma/ib_user_ioctl_verbs.h
++++ b/include/uapi/rdma/ib_user_ioctl_verbs.h
+@@ -255,6 +255,7 @@ enum rdma_driver_id {
+ 	RDMA_DRIVER_SIW,
+ 	RDMA_DRIVER_ERDMA,
+ 	RDMA_DRIVER_MANA,
++	RDMA_DRIVER_IONIC,
  };
  
-+#define IONIC_INTR_INDEX_NOT_ASSIGNED	-1
-+#define IONIC_INTR_NAME_MAX_SZ		32
-+
-+/**
-+ * struct ionic_intr_info - Interrupt information
-+ * @name:          Name identifier
-+ * @rearm_count:   Interrupt rearm count
-+ * @index:         Interrupt index position
-+ * @vector:        Interrupt number
-+ * @dim_coal_hw:   Interrupt coalesce value in hardware units
-+ * @affinity_mask: CPU affinity mask
-+ * @aff_notify:    context for notification of IRQ affinity changes
-+ */
-+struct ionic_intr_info {
-+	char name[IONIC_INTR_NAME_MAX_SZ];
-+	u64 rearm_count;
-+	unsigned int index;
-+	unsigned int vector;
-+	u32 dim_coal_hw;
-+	cpumask_var_t *affinity_mask;
-+	struct irq_affinity_notify aff_notify;
-+};
-+
- /**
-  * ionic_adminq_post_wait - Post an admin command and wait for response
-  * @lif:        Logical interface
-@@ -63,4 +86,24 @@ int ionic_error_to_errno(enum ionic_status_code code);
-  */
- void ionic_request_rdma_reset(struct ionic_lif *lif);
- 
-+/**
-+ * ionic_intr_alloc - Reserve a device interrupt
-+ * @lif:        Logical interface
-+ * @intr:       Reserved ionic interrupt structure
-+ *
-+ * Reserve an interrupt index and get irq number for that index.
-+ *
-+ * Return: zero or negative error status
-+ */
-+int ionic_intr_alloc(struct ionic_lif *lif, struct ionic_intr_info *intr);
-+
-+/**
-+ * ionic_intr_free - Release a device interrupt index
-+ * @lif:        Logical interface
-+ * @intr:       Interrupt index
-+ *
-+ * Mark the interrupt index unused so that it can be reserved again.
-+ */
-+void ionic_intr_free(struct ionic_lif *lif, int intr);
-+
- #endif /* _IONIC_API_H_ */
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_dev.h b/drivers/net/ethernet/pensando/ionic/ionic_dev.h
-index bc26eb8f5779..68cf4da3c6b3 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_dev.h
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_dev.h
-@@ -274,19 +274,6 @@ struct ionic_queue {
- 	char name[IONIC_QUEUE_NAME_MAX_SZ];
- } ____cacheline_aligned_in_smp;
- 
--#define IONIC_INTR_INDEX_NOT_ASSIGNED	-1
--#define IONIC_INTR_NAME_MAX_SZ		32
--
--struct ionic_intr_info {
--	char name[IONIC_INTR_NAME_MAX_SZ];
--	u64 rearm_count;
--	unsigned int index;
--	unsigned int vector;
--	u32 dim_coal_hw;
--	cpumask_var_t *affinity_mask;
--	struct irq_affinity_notify aff_notify;
--};
--
- struct ionic_cq {
- 	struct ionic_lif *lif;
- 	struct ionic_queue *bound_q;
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-index 146659f6862a..f89b458bd20a 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-@@ -244,29 +244,36 @@ static int ionic_request_irq(struct ionic_lif *lif, struct ionic_qcq *qcq)
- 				0, intr->name, &qcq->napi);
- }
- 
--static int ionic_intr_alloc(struct ionic_lif *lif, struct ionic_intr_info *intr)
-+int ionic_intr_alloc(struct ionic_lif *lif, struct ionic_intr_info *intr)
- {
- 	struct ionic *ionic = lif->ionic;
--	int index;
-+	int index, err;
- 
- 	index = find_first_zero_bit(ionic->intrs, ionic->nintrs);
--	if (index == ionic->nintrs) {
--		netdev_warn(lif->netdev, "%s: no intr, index=%d nintrs=%d\n",
--			    __func__, index, ionic->nintrs);
-+	if (index == ionic->nintrs)
- 		return -ENOSPC;
--	}
- 
- 	set_bit(index, ionic->intrs);
- 	ionic_intr_init(&ionic->idev, intr, index);
- 
-+	err = ionic_bus_get_irq(ionic, intr->index);
-+	if (err < 0) {
-+		clear_bit(index, ionic->intrs);
-+		return err;
-+	}
-+
-+	intr->vector = err;
-+
- 	return 0;
- }
-+EXPORT_SYMBOL_NS(ionic_intr_alloc, "NET_IONIC");
- 
--static void ionic_intr_free(struct ionic *ionic, int index)
-+void ionic_intr_free(struct ionic_lif *lif, int index)
- {
--	if (index != IONIC_INTR_INDEX_NOT_ASSIGNED && index < ionic->nintrs)
--		clear_bit(index, ionic->intrs);
-+	if (index != IONIC_INTR_INDEX_NOT_ASSIGNED && index < lif->ionic->nintrs)
-+		clear_bit(index, lif->ionic->intrs);
- }
-+EXPORT_SYMBOL_NS(ionic_intr_free, "NET_IONIC");
- 
- static void ionic_irq_aff_notify(struct irq_affinity_notify *notify,
- 				 const cpumask_t *mask)
-@@ -401,7 +408,7 @@ static void ionic_qcq_intr_free(struct ionic_lif *lif, struct ionic_qcq *qcq)
- 	irq_set_affinity_hint(qcq->intr.vector, NULL);
- 	devm_free_irq(lif->ionic->dev, qcq->intr.vector, &qcq->napi);
- 	qcq->intr.vector = 0;
--	ionic_intr_free(lif->ionic, qcq->intr.index);
-+	ionic_intr_free(lif, qcq->intr.index);
- 	qcq->intr.index = IONIC_INTR_INDEX_NOT_ASSIGNED;
- }
- 
-@@ -511,13 +518,6 @@ static int ionic_alloc_qcq_interrupt(struct ionic_lif *lif, struct ionic_qcq *qc
- 		goto err_out;
- 	}
- 
--	err = ionic_bus_get_irq(lif->ionic, qcq->intr.index);
--	if (err < 0) {
--		netdev_warn(lif->netdev, "no vector for %s: %d\n",
--			    qcq->q.name, err);
--		goto err_out_free_intr;
--	}
--	qcq->intr.vector = err;
- 	ionic_intr_mask_assert(lif->ionic->idev.intr_ctrl, qcq->intr.index,
- 			       IONIC_INTR_MASK_SET);
- 
-@@ -546,7 +546,7 @@ static int ionic_alloc_qcq_interrupt(struct ionic_lif *lif, struct ionic_qcq *qc
- 	return 0;
- 
- err_out_free_intr:
--	ionic_intr_free(lif->ionic, qcq->intr.index);
-+	ionic_intr_free(lif, qcq->intr.index);
- err_out:
- 	return err;
- }
-@@ -741,7 +741,7 @@ static int ionic_qcq_alloc(struct ionic_lif *lif, unsigned int type,
- err_out_free_irq:
- 	if (flags & IONIC_QCQ_F_INTR) {
- 		devm_free_irq(dev, new->intr.vector, &new->napi);
--		ionic_intr_free(lif->ionic, new->intr.index);
-+		ionic_intr_free(lif, new->intr.index);
- 	}
- err_out_free_page_pool:
- 	page_pool_destroy(new->q.page_pool);
+ enum ib_uverbs_gid_type {
 -- 
 2.34.1
 
