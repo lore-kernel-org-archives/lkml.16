@@ -1,47 +1,46 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DDD4B1E6E;
-	Thu,  8 May 2025 15:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B5627A130;
+	Thu,  8 May 2025 15:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746719551; cv=none; b=n/q0bRptBJv0XShMs5foG53FJ6g5abeS1ygIJNg4ArM6p6AqKOM8r8uDZoXsy2pifTT2htAbayciyBd6zMHHs3dxIwKh3ZMiniP1t6bvJlmaeu8nSU58zSI5paUJ2c8jjBfJ76lr/JkNj/I1s+6WZy50QCgM5WbZe6jiBl2ibKA=
+	t=1746719555; cv=none; b=WB1kTkcJaEY4Dgnolh54HnBOZ9nQNDWFbsiz4hZK7hXjqFEMrnDePDE5XZzeQfOJx3kMZskCkJG8hsUz75/gJvaoJ7Jm6bdVZvEPqsYxYn6k9L3lpleX4MVGqLxu294p3QpNAbPQTHlu7UE7ks+xfvkq+MLi8OVszJa21jpEJCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746719551; c=relaxed/simple;
-	bh=MfwWOk6Tx/TEqv605hM8mog1v0i46hFLimGEGpLYuUE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uJrbcWRFI1sums8Aym+kRDsyU22ayn3jNDhKjNtwX+JHYjvosFmW8lU468eS/UwAKY8MZOmB4F7m4KsjvrRwG4Lz2o+CNog4ESAsdgFyEPf71Bwb7RPjQxXT1cSBlVf5zc7Qcf8ZD4UNzJs/zCIOzuho+PT6SBZb9Gbfu0i72cQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YHwFXXnr; arc=none smtp.client-ip=198.47.19.246
+	s=arc-20240116; t=1746719555; c=relaxed/simple;
+	bh=bDljt5x97Esy7k1vLAkAoSydOOIMuNe6hGVYZXtLMto=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Dm6rlOUbo5dJMUo4PcH7HtuEAerJWf54MWAvAUSfDUWAi+Y9gg/BhzKuOxEOJC5awwmFZBnkrXrMv9y/jNZtOlNPeedkMCH4WhZD2E6LlqKgvQ8wQc0KAB9a+WWDBvdKSpduocqaVoUlRYUf9kRKQtl9qRIeycfkNKWeU4eHVIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=LAAclLkR; arc=none smtp.client-ip=198.47.23.234
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YHwFXXnr"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 548FqDse1703887
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LAAclLkR"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 548Fq7V51140288
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 8 May 2025 10:52:13 -0500
+	Thu, 8 May 2025 10:52:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746719533;
-	bh=zkRgnerI36b6HY4HkOyt64j/523Zu+/FuRNnOX/SiVU=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=YHwFXXnr4fOELaKYHk/U08lGuFNTXHVKouN4qlQWfFLD3HTEGnQA+SxmgR4YArG0a
-	 NkgYTuc+qxstuKAAN+Xhu1PCKmvgu9z2Kd8LFwZtrdPlBYa/aQFmGi2RGkt02lqJMG
-	 kInUO9MijHRiyPJq6fnPAZLl6qnGFMei5Zgwa6Jc=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 548FqD6x027835
+	s=ti-com-17Q1; t=1746719528;
+	bh=22LK9KobhX2zXmGcP3CVrZLeL3cLsZDdzOWb2Q5CuXo=;
+	h=From:To:CC:Subject:Date;
+	b=LAAclLkR/xcZlvRvm2IqXjRJSHSs/QxYcoN5QtlU6RmuX5ix3Vn5325b1MtWgR2v8
+	 WWWR4n1Zfd7RU5FtmhUqVnGjnFyTdkVpDPna/Ss8UhdaDw0B63t54SpQIHQCiUPq7i
+	 T96qeBR4ObHAwSIoKCnV1ggDp9lAOeLTWtOIHvPI=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 548Fq74X084866
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 8 May 2025 10:52:13 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 8 May 2025 10:52:07 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
- May 2025 10:52:12 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ May 2025 10:52:06 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 8 May 2025 10:52:12 -0500
+ Frontend Transport; Thu, 8 May 2025 10:52:07 -0500
 Received: from abhilash-HP.dhcp.ti.com (abhilash-hp.dhcp.ti.com [172.24.227.115])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 548Fq2oL050794;
-	Thu, 8 May 2025 10:52:09 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 548Fq2oK050794;
+	Thu, 8 May 2025 10:52:03 -0500
 From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
 To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>
@@ -49,12 +48,10 @@ CC: <vaishnav.a@ti.com>, <u-kumar1@ti.com>, <r-donadkar@ti.com>,
         <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
         <jai.luthra@linux.dev>, <linux-kernel@vger.kernel.org>,
         <y-abhilashchandra@ti.com>
-Subject: [PATCH v2 1/4] arm64: dts: ti: j722s-evm: Add DT nodes for power regulators
-Date: Thu, 8 May 2025 21:21:31 +0530
-Message-ID: <20250508155134.2026300-2-y-abhilashchandra@ti.com>
+Subject: [PATCH v2 0/4] Add overlays for IMX219 and OV5640 on J722S
+Date: Thu, 8 May 2025 21:21:30 +0530
+Message-ID: <20250508155134.2026300-1-y-abhilashchandra@ti.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250508155134.2026300-1-y-abhilashchandra@ti.com>
-References: <20250508155134.2026300-1-y-abhilashchandra@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,57 +62,44 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Add device tree nodes for two regulators on the J722S-EVM. VSYS_3V3 is the
-output of LM5141-Q1, and it serves as an input to TPS22990 which produces
-VSYS_3V3_EXP [1]. VSYS_3V3_EXP serves as vin-supply to CSI RPI Connectors.
+This series adds IMX219 and OV5640 overlays to enable support
+for 4 sensors on J722S. This provides a reference for a user to
+enable a different sensor on any of the ports.
 
-Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+Changelog:
+Changes in v2:
+- J722S EVM has the CSI2RX routed to MIPI CSI connector and to 22-pin RPi
+  camera connector through an analog mux. Initially, the analog mux was modeled
+  in the overlay in v1, But following the convention used on other platforms,
+  the analog mux has been moved to the base device tree. So that an overlay
+  can control the mux state according to connected cameras.
+- Correct the vin-supply for RPI camera connectors. To do the same add missing
+  power regulators in the device tree.
+- Mark GPIO used in the comment
+- Add reset-gpios property for tevi-OV5640 overlay
 
-[1]: https://www.ti.com/lit/zip/sprr495
----
- arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Test logs:
+IMX219: https://gist.github.com/Yemike-Abhilash-Chandra/8417af557ff2b82cf8d72be94d838c85
+OV5640: https://gist.github.com/Yemike-Abhilash-Chandra/ea782b0caa5eb171258dd2244cf9604b
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-index 34b9d190800e..0f18fe710929 100644
---- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-@@ -141,6 +141,17 @@ vsys_5v0: regulator-vsys5v0 {
- 		regulator-boot-on;
- 	};
- 
-+	vsys_3v3: regulator-vsys3v3 {
-+		/* output of LM5141-Q1 */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vsys_3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vmain_pd>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	vdd_mmc1: regulator-mmc1 {
- 		/* TPS22918DBVR */
- 		compatible = "regulator-fixed";
-@@ -153,6 +164,17 @@ vdd_mmc1: regulator-mmc1 {
- 		bootph-all;
- 	};
- 
-+	vcc_3v3_exp: regulator-TPS22990 {
-+		/* output of TPS22990 */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_3v3_exp";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vsys_3v3>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	vdd_sd_dv: regulator-TLV71033 {
- 		compatible = "regulator-gpio";
- 		regulator-name = "tlv71033";
+v1: https://lore.kernel.org/all/20250505115700.500979-1-y-abhilashchandra@ti.com/
+
+Vaishnav Achath (2):
+  arm64: dts: ti: k3-j722s-evm: Add overlay for quad IMX219
+  arm64: dts: ti: k3-j722s-evm: Add overlay for TEVI OV5640
+
+Yemike Abhilash Chandra (2):
+  arm64: dts: ti: j722s-evm: Add DT nodes for power regulators
+  arm64: dts: ti: j722s-evm: Add MUX to control CSI2RX
+
+ arch/arm64/boot/dts/ti/Makefile               |   9 +
+ ...k3-j722s-evm-csi2-quad-rpi-cam-imx219.dtso | 329 ++++++++++++++++++
+ .../k3-j722s-evm-csi2-quad-tevi-ov5640.dtso   | 322 +++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-j722s-evm.dts       |  36 ++
+ 4 files changed, 696 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-rpi-cam-imx219.dtso
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso
+
 -- 
 2.34.1
 
