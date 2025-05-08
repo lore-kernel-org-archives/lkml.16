@@ -1,83 +1,123 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744EE450FE;
-	Thu,  8 May 2025 13:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135F817BA5;
+	Thu,  8 May 2025 13:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746710463; cv=none; b=IaSSZdJRF0USCksErNd8ibJhAeDUtUu8Sv+KDpuRZPIXY069Ze+28iTADgvr1vs5rer9JH6eEiKacrgcd1OqR4so8c7k/XbDqHS19NacTYKQ86vYjjyxvgDT65Z0cItNHoKrjV/v7pffeHOyanJxVDqSVqIfpynvCLH+qzXAJzs=
+	t=1746710515; cv=none; b=PPBMIzTms3TSpI5PO4kLLzVcXMrnoY/oHJxhd378ZWGBp56EJmcEqInBTc1CkAwRFnduUMPW2gWc/BKKFZCumKOljFD0kITzJ5btjmFaI/9P+ovIUWObkSj1sgk6Yrc4O32sIQrB4/STB3y4Wmsa12Wkm2VTnqSoZTxnSAgUFtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746710463; c=relaxed/simple;
-	bh=b5U0jdehZzjyw4oH4Xog0i0xxIDE6KzH2wpCe0BbjOA=;
+	s=arc-20240116; t=1746710515; c=relaxed/simple;
+	bh=cy8Qc4ngMqBHIyfiq9amKDZY+4DjHcjHkgkdKV6rx3k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jS5/KYcWlrzTtJT11fliMKWTDAu9OqNOvVu1rH3riC5516xfdn4VZDm2AhFy1RlcxIAMhRRGxYLG8AZbA8/lWBiuXWS/fGDch89kxWSohkjPmYJdHRjVZq4fMJ5OW1g01CRegrrM9M3oAkQs5dEBRDF/KoIpNpLUrZwBm1bOuug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736c3e7b390so922277b3a.2;
-        Thu, 08 May 2025 06:21:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746710460; x=1747315260;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AHunf5/QTJWew5e3tkDgi4bNl0uijCDmlABB1Q9DUy0=;
-        b=JPGGLua567RA0T4clJ4ZT6KtMaKTwyxv3uHa76xf4dHlY5OGNvVDTjgCpa54AsYnYT
-         R0WtHe84/Fm3mLfS/MUJYw39Rh4o4AbTnYW64U1Ds4GkOt4Xr7bBO1Jk4I7pezeGOQy8
-         KP7WcsJ5QS5go/G/5r5hGFqEk+pbnUMf0Nee6KztzZzIRaLddVbY4DuAv4+T/GnYY2Mo
-         430HFWCcmLsjh62trV4sALNLV3g/nn1p0dYPAfXZiO08dqLVM5BfoSAbV0s4jynLe5O5
-         yaoTmtA/Fw7QL4QxqcOLT1Kzkd0yRwlHuQFk+Q2FF6g4s2a0yhCbQm+x/fB905D36iIy
-         s7Ow==
-X-Forwarded-Encrypted: i=1; AJvYcCW+388DMYyfrKZmj1nC3mTPoPOd9fH6ib4qKjdKGOvVcWRTtoacpenagYOz2v/PD2ycWWWjwKxDOTGM@vger.kernel.org, AJvYcCWNkiWwqmjvUnHROF7quGjEQXnat8MLZRO8d4u78TCVQrBxM5lfZCqOxhytQx37+h3IGCxZuFUeg82KJE8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeV/FmNbaxy2XyMaMjRcoiBzVbmn+E7/01a6wqmNx8GuIvAlfr
-	l79NvicM2J4YEom5IX2J9SkOyHmXup19SgRucbQs0wKk+HCHyKSZ
-X-Gm-Gg: ASbGncvueVns4jUdMl8Ak9y5HSna4mgK46gBRskTLV3SwN4o960t+9jUJB+yYAmChfU
-	FMAPSBdAuEA/UTjmesDPh+DrcV7hbjaQz5VjT6skzfRmVUhuIeGfz4ZlvL2tuOPu/h47lUtn0NB
-	Rji1RG4IBJcK/1m34xFGvixlhj+Bzo80ZuSo7f3Ch+2eH0/sHQ49H5rPmC3TvddorJ3lPe5xk8Q
-	f2SQR4ZTD+RNvUDLXVEAvi1xEb48+4ezEBgv1tMQfRfIxIYew3eW5wYrjR3NdHf/6l7jlqal6/N
-	2+KXNcS/QAsLeBY7qiClfDSpBVmOOoxCV/+n4kL5oaprnQaVwv1z8qDhEVYWpSfQflApQfQhj4U
-	=
-X-Google-Smtp-Source: AGHT+IHA1WtuQA1TLHx4EzuVY0FM9Azk2vtubiVKpuEkCb5BJpliP3/GJfhlO4nOkeFq6hHgVxVrow==
-X-Received: by 2002:a05:6a00:4acb:b0:739:50c0:b3fe with SMTP id d2e1a72fcca58-740a99aa622mr5064364b3a.8.1746710460570;
-        Thu, 08 May 2025 06:21:00 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74058dbbe25sm13685875b3a.59.2025.05.08.06.20.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 06:21:00 -0700 (PDT)
-Date: Thu, 8 May 2025 22:20:58 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, bhelgaas@google.com, cassel@kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	treding@nvidia.com, jonathanh@nvidia.com, kthota@nvidia.com,
-	mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V4] PCI: dwc: tegra194: Broaden architecture dependency
-Message-ID: <20250508132058.GA2764898@rocinante>
-References: <20250417074607.2281010-1-vidyas@nvidia.com>
- <20250508051922.4134041-1-vidyas@nvidia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=A9W/+migEek0PjpuIKgkiZjIEwNe+yn+JWtNr99fC3tFy/rFgzeZrjtSBMJfL4YFB2Mtso3mo4QRiY9np4hZWg4XX5L9i5dXJwmXc2VLg5JXHcvmPmdGocFldqGcV25woUzfPDZYkg9fCSFxvkRA+c0y2hGnH+GsTVMteozHxTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MTHfcspn; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MTHfcspn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746710514; x=1778246514;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cy8Qc4ngMqBHIyfiq9amKDZY+4DjHcjHkgkdKV6rx3k=;
+  b=MTHfcspntNC0d3AJgO286QWJScvPmWly5vUrij2P4dk2Ktzn9BZCN0ek
+   EwAMs+gT0ijIRvGUGL1bDExtXinOL977wHMjRPOBPI98h6rE+posazN/4
+   og9ilFw5yrChK46Q3ekpphdwd/uJDadyu/w03BDzG3r+6nzRL3Lg3msYa
+   SKW1ZsYZwxnhPtSaOQqj8QP00gv6lDuYwWg/OnCT3vMvsHUEJhbZ8VS5n
+   J89cnulb6D/Gi3wjsAVlFZKYPxKXNWW3ZF1G4P90d+3eWGI94kuwgn2yb
+   wzAEiukkIHZTBpA0NIT67VewnzSjMALni1A7yYVPWOq3DWTfwjndUxmSA
+   g==;
+X-CSE-ConnectionGUID: PLdpVGFtRiW4UE8h/u8eVA==
+X-CSE-MsgGUID: ksKO5Y2KQiqmGM89BJaRVQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="73871414"
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="73871414"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 06:21:53 -0700
+X-CSE-ConnectionGUID: LvBCSwrPQnuJxdW3yjK1kQ==
+X-CSE-MsgGUID: n+puAlwHQXaXL5SYu6DMRA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="167375171"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa001.fm.intel.com with ESMTP; 08 May 2025 06:21:50 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 9B3291D7; Thu, 08 May 2025 16:21:48 +0300 (EEST)
+Date: Thu, 8 May 2025 16:21:48 +0300
+From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, 
+	"Huang, Kai" <kai.huang@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"seanjc@google.com" <seanjc@google.com>, "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
+	"bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
+	"x86@kernel.org" <x86@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC, PATCH 05/12] KVM: TDX: Add tdx_pamt_get()/put() helpers
+Message-ID: <u6f6jbgbbz2judwuvwtelxdkhbl2dsqc2fqi2n4uvfwhszan75@2kvbsreeywrb>
+References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
+ <20250502130828.4071412-6-kirill.shutemov@linux.intel.com>
+ <55c1c173bfb13d897eaaabcc04f38d010608a7e3.camel@intel.com>
+ <4bb2119a-ff6d-42b6-acf4-86d87b0e9939@intel.com>
+ <aBwSICZBrgiKX2UF@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250508051922.4134041-1-vidyas@nvidia.com>
+In-Reply-To: <aBwSICZBrgiKX2UF@yzhao56-desk.sh.intel.com>
 
-Hello,
+On Thu, May 08, 2025 at 10:08:32AM +0800, Yan Zhao wrote:
+> On Wed, May 07, 2025 at 09:31:22AM -0700, Dave Hansen wrote:
+> > On 5/5/25 05:44, Huang, Kai wrote:
+> > >> +static int tdx_pamt_add(atomic_t *pamt_refcount, unsigned long hpa,
+> > >> +			struct list_head *pamt_pages)
+> > >> +{
+> > >> +	u64 err;
+> > >> +
+> > >> +	hpa = ALIGN_DOWN(hpa, SZ_2M);
+> > >> +
+> > >> +	spin_lock(&pamt_lock);
+> > > Just curious, Can the lock be per-2M-range?
+> > 
+> > Folks, please keep it simple.
+> > 
+> > If there's lock contention on this, we'll fix the lock contention, or
+> > hash the physical address into a fixed number of locks. But having it be
+> > per-2M-range sounds awful. Then you have to size it, and allocate it and
+> > then resize it if there's ever hotplug, etc...
+> In patch 2, there're per-2M-range pamt_refcounts. Could the per-2M-range
+> lock be implemented in a similar way?
+> 
+> +static atomic_t *pamt_refcounts;
+> +atomic_t *tdx_get_pamt_refcount(unsigned long hpa)
+> +{
+> +       return &pamt_refcounts[hpa / PMD_SIZE];
+> +}
 
-> Replace ARCH_TEGRA_194_SOC dependency with a more generic ARCH_TEGRA
-> check for the Tegra194 PCIe controller, allowing it to be built on
-> Tegra platforms beyond Tegra194. Additionally, ensure compatibility
-> by requiring ARM64 or COMPILE_TEST.
+But why? If no contention, it is just wasteful.
 
-Looks good!  With that,
+> > Kirill, could you put together some kind of torture test for this,
+> > please? I would imagine a workload which is sitting in a loop setting up
+> > and tearing down VMs on a bunch of CPUs would do it.
+> > 
+> > That ^ would be the worst possible case, I think. If you don't see lock
+> > contention there, you'll hopefully never see it on real systems.
+> When one vCPU is trying to install a guest page of HPA A, while another vCPU
+> is trying to install a guest page of HPA B, theoretically they may content the
+> global pamt_lock even if HPA A and B belong to different PAMT 2M blocks.
 
-Acked-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+This contention will be be momentary if ever happen.
 
-Thank you!
+> > I *suspect* that real systems will get bottlenecked somewhere in the
+> > page conversion process rather than on this lock. But it should be a
+> > pretty simple experiment to run.
 
-	Krzysztof
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
