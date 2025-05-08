@@ -1,93 +1,105 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640EE28682
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5094B14A4C7;
+	Thu,  8 May 2025 12:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746707934; cv=none; b=spfjVRWOrnJVTtYAT9VrEoFyjw5yleppG72D84ebx4ar/8Xx9L+e0xN/dVs1mDtELtioSeopc7N1YaEYFPoJSLyxsqSFael6tdor8nSyJwCMvxylY4p1G1TG+vcDUjACHfFTGRKvwdfdMDzSwqYJWJqPF6eCVkpRV7+iIasvAv4=
+	t=1746707957; cv=none; b=QKApn6teBjzSUg/IYPtY0kO4LfYuM2FwSswvtNaJCDT7JoCDlhgKIMlLzXc+r9QhpY9KBDkubNmbUgtxHrFVDNC/6PTlsymcdN+vsFLTjqM84oPl68VN6ZRgGoedh3MNkV1V2uywgsQOM+FJ9kLpztWyunfXIGaQaEWZkwxMYvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746707934; c=relaxed/simple;
-	bh=ym/GGePTtcR6pPbHuXLLIC6Kw58vqtqImYgRJwNLr5w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aeOJiNkfs1KrKelPyJUn5tedEueLjDa7iSCFDOAB+pOWQQD9djTgMMf2vXLLy9B3wnYB0WrT9I/M7Hl/kO+DljghPyh0UVWFPrZ/hdQh/89whxSKeP39HUBkzNOz5a2n6s3SIYp6a8sKfvaEE+NipEiBUpEqkyGN+9F/RCVf9CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wDMkLU/i; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746707957; c=relaxed/simple;
+	bh=yKAu21jnIWb30Zvv6QPim5NX6VPtSD2kMpmuoH171UA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Hb2a2vhi8u2Bi3dASDPHEosTO9VSJVu+zmAQ3M4wEUYDvf7KfF7eQcjrdpQV8JrYJUpsgsD/HpjKx1JRRMCdwNFFCU7k8V07cxe/6H6u+BtMKUW8A7D0qLGIeFf6tbwuce7L2z7XA5O+W4kvzM1IeO6nXyAChuT2szmDcRHGAc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENSPlNFG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wDMkLU/i"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30bef9b04adso8250671fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:38:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746707930; x=1747312730; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ym/GGePTtcR6pPbHuXLLIC6Kw58vqtqImYgRJwNLr5w=;
-        b=wDMkLU/iBTSt7ygMLhPJEzEH/GXw1jl/+0nNoklo5RhDLdpBZSGSCrr8ZMFgklmJa+
-         JhY67Wnia9PDKosZAf5iu4OQMMOhdW4SjOwZuwI2EDpogZEMCHQBtqkPl4oWenmw/yhW
-         Dwmt7Iw13Bz8HzRgb/SbHG+mnrNxDDX5z6Nq0O3v6maemtAnnG2hCgsdWn1JKAWmVed8
-         KeQ4/thfr0PFE7SFP+ovnUN8TsWWyOYHHWaUiq4uzICkRHwephI/hwOK9yoJB2/epGyt
-         8DJmSZZ3r1WuGwhmBMqWVp+cplxie10DV1UbR0GohfmIy+jjFZ8toG/h3enhAvP5eqBg
-         EU4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746707930; x=1747312730;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ym/GGePTtcR6pPbHuXLLIC6Kw58vqtqImYgRJwNLr5w=;
-        b=IKa/X5ezQ6923xOwJtIuYczfBTIAewL6pDkxh0bjogQ+7p/xslkDjh9jVevFgM3mJO
-         duJRT27hmeSn0a+0yd7O4hkFTtdY5zqae0oxYcXVFJvFyJU2G62oOQiJY18ZMhJ1B49+
-         m7APpTAEJRuiUptSXz/M1FQpgVOurdZvcul+e1E8dSqWwpDc/leUr1YL5BI1nGFxGPqa
-         8axY6lfec/E4eesfiwZsrMOOSuwT7xL7XEZbE7vfbOWVRO4N+HCn/M6h3IRGLtJbP/jW
-         V/hWfHMMGuD1mnOdADEo68JYjwU/YGcrP04gLxlifQiyel9gOxX4d4G/UKkxsNjxMIvQ
-         5GtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVB1u3f6D26xAc9E8cUkAMkyb3cs4tUpkgm90iP+bGEb4zRkX/d7P7NvIQ8tBn4TC4P6SiiHzMQey1j5Bc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjgPVDRtfaLMG9sKqGkjx/1LQ5oJNc4/FpwlUkOfAA7IiBG9hU
-	09jL8pa373TQm0hInlPTSxEyGTSChi9LzVPlVheq+FbSYvt6r3SNDhTG7ELGXrU2bJbBCeYQqc7
-	UCxnXQylvbyMl/rpsTB728NhKG4pb/EJk5scFTQ==
-X-Gm-Gg: ASbGncunRewAADwpOaycaR4PZlpgeh6YdMrzHVZO24fg6ASu+G4Ju2bv0x2nNaHyjJ6
-	L36ofY9/BE3WZgJqGWM+0PSqZrjW+TIzRG0H7W4A0+dhrlPa0PGFYi4m5KeiRLDiewN75Fz4Mfw
-	8dYWtcIFDgaaXj13CNOLTSYA==
-X-Google-Smtp-Source: AGHT+IGJqMyrmkCUIQDg8PE9y89S4un8Sptn+ne9CkBnqLfvsuKGyDCGNoAKWRWwcnckQHjTgl6OjpG8jsiCqQsITZg=
-X-Received: by 2002:a2e:b893:0:b0:30b:d543:5a71 with SMTP id
- 38308e7fff4ca-326ad17460dmr28868011fa.1.1746707930459; Thu, 08 May 2025
- 05:38:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENSPlNFG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 494A9C4CEE7;
+	Thu,  8 May 2025 12:39:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746707955;
+	bh=yKAu21jnIWb30Zvv6QPim5NX6VPtSD2kMpmuoH171UA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ENSPlNFGhlLNeYIx/HNHxW/3w6rYH+UglSqxqRYP7Adj/v642XJtz8BVfJpDGugoi
+	 tweWAl30imBO/qIPGCbZFH7wfLptIWNlj5uwMBbOMqScdmsQVxdHhyhnwcxxTBzvGW
+	 tZ4zrYby/5nViOnaruv2s8QAZI8quv8WSDJx1lEdV23k1W3o440wI7bHDZYHU4KN00
+	 JuPNrZPTzgzuRAqcQggi61lcDgH+HSJ07uBnC0c3FdqC5ntPkHsBMCwfYYFqkxQtVt
+	 ocYquFilcdvGvUy5UVcg1PpMSJ9VNVgtoSI66xHJcN3FRQ1IwNqgSI6AAEpYUrHdKd
+	 85fR+UdCwRV3g==
+Date: Thu, 8 May 2025 14:39:11 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Akira Yokosawa <akiyks@gmail.com>, corbet@lwn.net,
+ linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, Dan Williams
+ <dan.j.williams@intel.com>
+Subject: Re: linux-next: build failure after merge all the trees
+Message-ID: <20250508143911.5d7a77d4@foz.lan>
+In-Reply-To: <20250508222531.0e7fab9c@canb.auug.org.au>
+References: <20250508184839.656af8f6@canb.auug.org.au>
+	<3b35840a-7b87-44fc-8580-219ac78ad112@gmail.com>
+	<20250508222531.0e7fab9c@canb.auug.org.au>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506092718.106088-1-clamor95@gmail.com> <20250506092718.106088-2-clamor95@gmail.com>
-In-Reply-To: <20250506092718.106088-2-clamor95@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 8 May 2025 14:38:39 +0200
-X-Gm-Features: ATxdqUHd6nS8kMJuc0f8MXMDIRZHhCR46AYmqFnKzqCQqTYWz7YZni31Y68Ocio
-Message-ID: <CACRpkdZCv2RV1ioXsuJnLHsiErbrfv5jjzvPWMire94+OznY2g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: display: panel: Document Renesas
- R61307 based DSI panel
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 6, 2025 at 11:27=E2=80=AFAM Svyatoslav Ryhel <clamor95@gmail.co=
-m> wrote:
+Em Thu, 8 May 2025 22:25:31 +1000
+Stephen Rothwell <sfr@canb.auug.org.au> escreveu:
 
-> R61307 is liquid crystal driver for high-definition amorphous silicon
-> (a-Si) panels and is ideal for tablets and smartphones.
->
-> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> Hi Akira,
+> 
+> On Thu, 8 May 2025 19:54:08 +0900 Akira Yokosawa <akiyks@gmail.com> wrote:
+> >
+> > Please try:
+> > 
+> >   make O="$HOME/next/htmldocs" KERNELDOC=scripts/kernel-doc.pl htmldocs
+> > 
+> > , assuming your $HOME/next/next is the top of kernel source.
+> > 
+> > I'm suspecting that the conflict resolution done in
+> > c84724f2137f ("Merge branch 'for-6.16/tsm-mr' into tsm-next")
+> > ended up in mismatching path names given to "kernel-doc::" somewhere.
+> > 
+> > Looks like recent conversion of the kernel-doc script into python
+> > has changed the behavior in such error conditions.
+> > With the perl version, you'll see a couple of:
+> > 
+> >     Error: Cannot open file <...>/linux/drivers/virt/coco/tsm-mr.c
+> > 
+> > , but the doc build should complete.  
+> 
+> OK, so, yes, the build completes.  I get the following message
+> (multiple similar ones):
+> 
+> WARNING: kernel-doc 'scripts/kernel-doc.pl -rst -enable-lineno -export -export-file drivers/misc/mei/bus.c drivers/misc/mei/bus.c' processing failed with: [Errno 2] No such file or directory: 'scripts/kernel-doc.pl'
+> 
+> So, I used "KERNELDOC=$(pwd)/scripts/kernel-doc.pl" and tried again.
+> 
+> I got these (new) messages:
+> 
+> Error: Cannot open file drivers/virt/coco/tsm-mr.c
+> Error: Cannot open file drivers/virt/coco/tsm-mr.c
+> WARNING: kernel-doc 'scripts/kernel-doc.pl -rst -enable-lineno -export drivers/virt/coco/tsm-mr.c' failed with return code 2
+> 
+> (and a few other innocuous ones)
+> 
+> So your guess is good.
+> 
+> It would be nice to have the Python kernel-doc fixed as well as the
+> devsec-tsm tree.
 
-I see you have gone the extra mile and deduced the underlying
-display controller, excellent work.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+With regards to kernel-doc, failing to build if a file is missing
+is the right thing to do. As kernel-doc is now fully an Sphinx extension,
+it now signalizes to Sphinx that the build has failed. 
 
-Yours,
-Linus Walleij
+Yet, it should have produced some warnings. Maybe we need to specify a
+different log level with Sphinx to make it happen. I'll double check it
+and send a fix later on to kernel-doc.
+
+Thanks,
+Mauro
