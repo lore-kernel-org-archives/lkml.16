@@ -1,688 +1,369 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78122701CE;
-	Thu,  8 May 2025 14:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D430126F443
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746714711; cv=none; b=pvrTSDRhua7AvyMKjga6vyTITFNw0HtEO7wN97k6mbZULyHcpMSUD1GdpHAlbE0uqsGDwvBIvHZBLMJv5vYRYuQHaf3CUlkNFgj8oxo2sZVCrdctFKb24/NY9Iur60Eq4GgPpX6jinHkS3vAPbN/SWsdWkmVlpce3cSZOcd2HGc=
+	t=1746714714; cv=none; b=l5uaiaK91TZy+UaDhuW/QPtp9t3k8/GjPdEqHTzsUHO0HxQrMm5mooeCWNnu0YUKzM8o1v9ZQ1YGup0PhN59tArjYStIv1zPuk6IWycyLMO0PA7DUrgTo/w/AF6S7bXEGb6hFxo9IG/kytphoCz1uFlC7UY57mzwvwxUY/eKZGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746714711; c=relaxed/simple;
-	bh=Oe86gpXCkM659HJPF3ym2PeQVWqhbi2zHdGKE0cMI/k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D0EtYRaR5sAIyq1/xYtmg7vShJoGtbAKK7Wvk0nokGZqcRSCLQ16SvKkPpcb4QyRqE79iLsbIFu/zLYAeWH1xwMDH65+To23/bnKDpr4mnGIBIpk8wXERZH6u0Q/7dYmFSOu4aVctCCZjvJlJXGCqG6Wxw8/c4H4tatwfHOIVGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t+pLnte1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746714714; c=relaxed/simple;
+	bh=l5Dappur0wGcoRttIXhShtgjIcZxHdOGi/r63rgDfpM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YupPGypaaNoIa1PYtUPu6fnajfJdxa9SFjrRbuj5ouyZDTiy/5lhU+DVqlBICioLbEPZl86b+pN1/uTqErTvpXb/Ee0rFdr1e6cEtlupubJdUYWJ3GAHVoiqJrSY2wjtS0aO6AbNz4dqfaG6aJwHO2aVRL9WSul09YtueEqfAp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=ecd7rJ+p; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t+pLnte1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 345ACC4CEE7;
-	Thu,  8 May 2025 14:31:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746714711;
-	bh=Oe86gpXCkM659HJPF3ym2PeQVWqhbi2zHdGKE0cMI/k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t+pLnte1nyAw3PNq+6RJ+D02lonF8Piqr+F4q/vusqY4TtE05QubIwUpc84cqbwvk
-	 iifHY/XrdhuoyOX2P9OBYQh3vBZaMkgTKZm7gBEW1EzCGHqcPUswsWG9Lc976PIzv+
-	 aZ6GXOZU4sbj6lhDDwVtAE3Gm2EriofKwftzb0U5/Rv2wXysZ16jrFG1unFgeQ5EQI
-	 Tqe5BIo/XrXFxfoYcqEt6caXRts8Z5g1IBkDYV/oJB5QoPElAZaMEpODVj8rGH1/cq
-	 PZThZeCMyatmRZjrpMU99n2hrS4P7jmbg0cqUXit0uLvEFoFdNJWJkXdRsQ3nqDtfo
-	 A0jlmpcYXUkUA==
-Date: Thu, 8 May 2025 15:31:46 +0100
-From: Lee Jones <lee@kernel.org>
-To: Matthias Fend <matthias.fend@emfend.at>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="ecd7rJ+p"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-441c0d42233so509085e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 07:31:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1746714710; x=1747319510; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0Iq0irjOP5JV+UDNdYH88ZnlyC3CUjThrEd11ryaVa8=;
+        b=ecd7rJ+pPTF6nXdM+wK6secuGz8jtIILr+TcMKQ8Ef5IFcFE13TGnu4/yPsBdQ3/SZ
+         JJu/OQxT4C9ZMYrhIsDx7Bt2QlFPcWDq+LG1U2ulwHsLTFNFm6QdCQpRxiSHWg7pCOrB
+         CvBLZl52xVyyMBGoeOwLgDcCCgRxALsg/MoVe4Mbhhys3Sgdv2G8bES5hbOUoBD+b+9u
+         k0ReWvyTIHcu4pxdHJfXVvBKzsxlZySKrP/KQyaWKybNxN0/c1ei8ORXVK5HTkI4SmcY
+         tp1j8RJkziMm3gI3O6hb0KQS0A1ifM2oxvX2b0LI6pCYKuYLmziCagL3Oduh0gNtQlT1
+         6M8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746714710; x=1747319510;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0Iq0irjOP5JV+UDNdYH88ZnlyC3CUjThrEd11ryaVa8=;
+        b=DIxrLWaliV1ACD36JdmG2j2U9no0nPpW+eHllTM+b8UCxRSKykkfzL1g5GCz++8HvI
+         n4+szsIW0+50aCxpYfsWaoLCo6lNmFZVpv4KIEcwIyW8DPiJPybk52tCVnlu9GqGrxB9
+         ZSxEDt2s0yHMhIzfX/BmK5TkoArD0mv/DIk7pzKdvxgXQaTw+fAzzJNyOaHFnCq600PA
+         J49FLQQAPplTTlrowFqCrXhcd2R0OngHB0Rc8jux+RohR+ewf51YZcb3BIc7x6HNXron
+         4ijTh9R2LslAxP+qUEITwaHCAJNBdpfsPs6y4VqSSQHUcgx2FrsCHPj6Cz5PKrV9Q1bv
+         3eOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXTBYHyPfO2z0xoSElmhEFHx7B+mwTzjEi0JkzHVz46K8NWwvmvzLgXAy8vWO3i6bdjHgWHN3Bnbg1s+4o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFDmtDA6h+Y6IPhJ33OQRv6eBtJps8KRTOiKdGwc5fWM6PGYW4
+	N65T+KmsL/g4WLz+FkSsiccl+IW1oc7Ddo5xAqmAI9MQEA1SUEGCuKnWM8alC74=
+X-Gm-Gg: ASbGncuQotyx6a+JevKbqDxPvavdL0bWk2DZfiVuN/LZG4+g6TlqkZdpOYpHWAmJAxD
+	ECFb4z4TzfjKNid+9H6fIsqAbRNd7lue6oU8jw3LtXeir7l4Jrw+fKvH7YXpIxABMBN+URpBJlo
+	A/4hsEHgXRnr7V+lH+Dkn5Iz2gK5U+xCqNOpqEYXzFEuuKD4kfARBZpyM7+DyvYp1trYqu52x9f
+	opLGxGiPaBAOXbjM46/Ynq+ARGq/XhEkYRIjaq7gtBCRjBMkGWODEVLREzJ2elhwTJt3sTN7xTg
+	+nnlMZYBWMAfgibkSKtbqYY/PS8G0DYjFwzmygj9WrU64Us/
+X-Google-Smtp-Source: AGHT+IFrhrrk91EQvVw5UVBWpi0thZj7ZgnrM7NMkHcfPYOymBEctXqZ2MNdkHKrUQIb01SSED3Y4g==
+X-Received: by 2002:a05:600c:1d0d:b0:439:9a5a:d3bb with SMTP id 5b1f17b1804b1-441d44bcab8mr24877085e9.2.1746714710000;
+        Thu, 08 May 2025 07:31:50 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:a451:a252:64ea:9a0e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd380a79sm39022965e9.33.2025.05.08.07.31.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 07:31:49 -0700 (PDT)
+From: =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+To: kvm-riscv@lists.infradead.org
+Cc: kvm@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	bsp-development.geo@leica-geosystems.com
-Subject: Re: [PATCH v3 2/2] leds: tps6131x: add support for Texas Instruments
- TPS6131X flash LED driver
-Message-ID: <20250508143146.GP3865826@google.com>
-References: <20250423-leds-tps6131x-v3-0-ca67d346a4ea@emfend.at>
- <20250423-leds-tps6131x-v3-2-ca67d346a4ea@emfend.at>
- <20250501110306.GF1567507@google.com>
- <74577715-b644-4281-8e9b-b481d2a026f3@emfend.at>
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Andrew Jones <ajones@ventanamicro.com>
+Subject: [PATCH v2 2/2] RISC-V: KVM: add KVM_CAP_RISCV_MP_STATE_RESET
+Date: Thu,  8 May 2025 16:28:43 +0200
+Message-ID: <20250508142842.1496099-4-rkrcmar@ventanamicro.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250508142842.1496099-2-rkrcmar@ventanamicro.com>
+References: <20250508142842.1496099-2-rkrcmar@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <74577715-b644-4281-8e9b-b481d2a026f3@emfend.at>
 
-On Fri, 02 May 2025, Matthias Fend wrote:
+Add a toggleable VM capability to modify several reset related code
+paths.  The goals are to
+ 1) Allow userspace to reset any VCPU.
+ 2) Allow userspace to provide the initial VCPU state.
 
-> Hi Lee,
-> 
-> thank you for taking the time for this review.
-> 
-> Am 01.05.2025 um 13:03 schrieb Lee Jones:
-> > On Wed, 23 Apr 2025, Matthias Fend wrote:
-> > 
-> > > The TPS61310/TPS61311 is a flash LED driver with I2C interface. Its power
-> > > stage is capable of supplying a maximum total current of roughly 1500mA.
-> > > The TPS6131x provides three constant-current sinks, capable of sinking up
-> > > to 2 × 400mA (LED1 and LED3) and 800mA (LED2) in flash mode. In torch mode
-> > > each sink (LED1, LED2, LED3) supports currents up to 175mA.
-> > > 
-> > > Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
-> > > ---
-> > >   MAINTAINERS                        |   7 +
-> > >   drivers/leds/flash/Kconfig         |  11 +
-> > >   drivers/leds/flash/Makefile        |   1 +
-> > >   drivers/leds/flash/leds-tps6131x.c | 798 +++++++++++++++++++++++++++++++++++++
-> > >   4 files changed, 817 insertions(+)
-> > 
-> > Looks pretty good in general.  Just a few nits, really.
-> > 
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index fa1e04e87d1d63c1b01b59744d7ade00fe5a1885..67e7c165efd332dfe3bc5ec64a4cc10845d7bbd6 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -23983,6 +23983,13 @@ F:	Documentation/devicetree/bindings/hwmon/ti,tps23861.yaml
-> > >   F:	Documentation/hwmon/tps23861.rst
-> > >   F:	drivers/hwmon/tps23861.c
-> > > +TEXAS INSTRUMENTS TPS6131X FLASH LED DRIVER
-> > > +M:	Matthias Fend <matthias.fend@emfend.at>
-> > > +L:	linux-leds@vger.kernel.org
-> > > +S:	Maintained
-> > > +F:	Documentation/devicetree/bindings/leds/ti,tps6131x.yaml
-> > > +F:	drivers/leds/flash/leds-tps6131x.c
-> > > +
-> > >   TEXAS INSTRUMENTS' DAC7612 DAC DRIVER
-> > >   M:	Ricardo Ribalda <ribalda@kernel.org>
-> > >   L:	linux-iio@vger.kernel.org
-> > > diff --git a/drivers/leds/flash/Kconfig b/drivers/leds/flash/Kconfig
-> > > index f39f0bfe6eefcd376405d9d35dc36e323a485002..55ca663ca506ad8be627f58f6d6308368ea2b928 100644
-> > > --- a/drivers/leds/flash/Kconfig
-> > > +++ b/drivers/leds/flash/Kconfig
-> > > @@ -132,4 +132,15 @@ config LEDS_SY7802
-> > >   	  This driver can be built as a module, it will be called "leds-sy7802".
-> > > +config LEDS_TPS6131X
-> > > +	tristate "LED support for TI TPS6131x flash LED driver"
-> > > +	depends on I2C && OF
-> > > +	depends on GPIOLIB
-> > > +	select REGMAP_I2C
-> > > +	help
-> > > +	  This option enables support for Texas Instruments TPS61310/TPS61311
-> > > +	  flash LED driver.
-> > > +
-> > > +	  This driver can be built as a module, it will be called "leds-tps6131x".
-> > > +
-> > >   endif # LEDS_CLASS_FLASH
-> > > diff --git a/drivers/leds/flash/Makefile b/drivers/leds/flash/Makefile
-> > > index 48860eeced79513a0ed303e4af3db9bfe9724b7e..712fb737a428e42747e1aa339058dc4306ade9c8 100644
-> > > --- a/drivers/leds/flash/Makefile
-> > > +++ b/drivers/leds/flash/Makefile
-> > > @@ -12,3 +12,4 @@ obj-$(CONFIG_LEDS_RT4505)	+= leds-rt4505.o
-> > >   obj-$(CONFIG_LEDS_RT8515)	+= leds-rt8515.o
-> > >   obj-$(CONFIG_LEDS_SGM3140)	+= leds-sgm3140.o
-> > >   obj-$(CONFIG_LEDS_SY7802)	+= leds-sy7802.o
-> > > +obj-$(CONFIG_LEDS_TPS6131X)	+= leds-tps6131x.o
-> > > diff --git a/drivers/leds/flash/leds-tps6131x.c b/drivers/leds/flash/leds-tps6131x.c
-> > > new file mode 100644
-> > > index 0000000000000000000000000000000000000000..c123fb3f908c865f8a9e60b0339067cdb5a864f6
-> > > --- /dev/null
-> > > +++ b/drivers/leds/flash/leds-tps6131x.c
-> > > @@ -0,0 +1,798 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > +/*
-> > > + * Texas Instruments TPS61310/TPS61311 flash LED driver with I2C interface
-> > > + *
-> > > + * Copyright 2025 Matthias Fend <matthias.fend@emfend.at>
-> > > + */
-> > > +
-> > > +#include <linux/gpio/consumer.h>
-> > > +#include <linux/i2c.h>
-> > > +#include <linux/led-class-flash.h>
-> > > +#include <linux/leds.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/regmap.h>
-> > > +#include <media/v4l2-flash-led-class.h>
-> > > +
-> > > +/* Registers */
-> > 
-> > This little header comments are superfluous IMHO.
-> > 
-> > The nomenclature of the defines is good enough.
-> 
-> Okay, I'll remove them.
-> 
-> > 
-> > > +#define TPS6131X_REG_0				0x00
-> > > +#define TPS6131X_REG_0_RESET			BIT(7)
-> > 
-> > Suggest adding a space or two before the bit defines, like:
-> > 
-> > #define TPS6131X_REG_0                          0x00
-> > #define   TPS6131X_REG_0_RESET                  BIT(7)
-> 
-> I actually like that too, but I couldn't convince clang-format to keep the
-> spaces. The automatic formatting was more valuable to me in the end. If you
-> know how to have both, I'd be very happy :)
+(Right now, the boot VCPU isn't reset by KVM and KVM sets the state for
+ VCPUs brought up by sbi_hart_start while userspace for all others.)
 
-I wouldn't let the tooling push you around.
+The goals are achieved with the following changes:
+ * Reset the VCPU when setting MP_STATE_INIT_RECEIVED through IOCTL.
+ * Preserve the userspace initialized VCPU state on sbi_hart_start.
+ * Return to userspace on sbi_hart_stop.
+ * Don't make VCPU reset request on sbi_system_suspend.
 
-IMHO that's a false positive and should be reported.
+The patch is reusing MP_STATE_INIT_RECEIVED, because we didn't want to
+add a new IOCTL, sorry. :)
 
-> > > +#define TPS6131X_REG_0_DCLC13			GENMASK(5, 3)
-> > > +#define TPS6131X_REG_0_DCLC13_SHIFT		3
-> > > +#define TPS6131X_REG_0_DCLC2			GENMASK(2, 0)
-> > > +#define TPS6131X_REG_0_DCLC2_SHIFT		0
-> > > +
-> > > +#define TPS6131X_REG_1				0x01
-> > > +#define TPS6131X_REG_1_MODE			GENMASK(7, 6)
-> > > +#define TPS6131X_REG_1_MODE_SHIFT		6
-> > > +#define TPS6131X_REG_1_FC2			GENMASK(5, 0)
-> > > +#define TPS6131X_REG_1_FC2_SHIFT		0
-> > > +
-> > > +#define TPS6131X_REG_2				0x02
-> > > +#define TPS6131X_REG_2_MODE			GENMASK(7, 6)
-> > > +#define TPS6131X_REG_2_MODE_SHIFT		6
-> > > +#define TPS6131X_REG_2_ENVM			BIT(5)
-> > > +#define TPS6131X_REG_2_FC13			GENMASK(4, 0)
-> > > +#define TPS6131X_REG_2_FC13_SHIFT		0
-> > > +
-> > > +#define TPS6131X_REG_3				0x03
-> > > +#define TPS6131X_REG_3_STIM			GENMASK(7, 5)
-> > > +#define TPS6131X_REG_3_STIM_SHIFT		5
-> > > +#define TPS6131X_REG_3_HPFL			BIT(4)
-> > > +#define TPS6131X_REG_3_SELSTIM_TO		BIT(3)
-> > > +#define TPS6131X_REG_3_STT			BIT(2)
-> > > +#define TPS6131X_REG_3_SFT			BIT(1)
-> > > +#define TPS6131X_REG_3_TXMASK			BIT(0)
-> > > +
-> > > +#define TPS6131X_REG_4				0x04
-> > > +#define TPS6131X_REG_4_PG			BIT(7)
-> > > +#define TPS6131X_REG_4_HOTDIE_HI		BIT(6)
-> > > +#define TPS6131X_REG_4_HOTDIE_LO		BIT(5)
-> > > +#define TPS6131X_REG_4_ILIM			BIT(4)
-> > > +#define TPS6131X_REG_4_INDC			GENMASK(3, 0)
-> > > +#define TPS6131X_REG_4_INDC_SHIFT		0
-> > > +
-> > > +#define TPS6131X_REG_5				0x05
-> > > +#define TPS6131X_REG_5_SELFCAL			BIT(7)
-> > > +#define TPS6131X_REG_5_ENPSM			BIT(6)
-> > > +#define TPS6131X_REG_5_STSTRB1_DIR		BIT(5)
-> > > +#define TPS6131X_REG_5_GPIO			BIT(4)
-> > > +#define TPS6131X_REG_5_GPIOTYPE			BIT(3)
-> > > +#define TPS6131X_REG_5_ENLED3			BIT(2)
-> > > +#define TPS6131X_REG_5_ENLED2			BIT(1)
-> > > +#define TPS6131X_REG_5_ENLED1			BIT(0)
-> > > +
-> > > +#define TPS6131X_REG_6				0x06
-> > > +#define TPS6131X_REG_6_ENTS			BIT(7)
-> > > +#define TPS6131X_REG_6_LEDHOT			BIT(6)
-> > > +#define TPS6131X_REG_6_LEDWARN			BIT(5)
-> > > +#define TPS6131X_REG_6_LEDHDR			BIT(4)
-> > > +#define TPS6131X_REG_6_OV			GENMASK(3, 0)
-> > > +#define TPS6131X_REG_6_OV_SHIFT			0
-> > > +
-> > > +#define TPS6131X_REG_7				0x07
-> > > +#define TPS6131X_REG_7_ENBATMON			BIT(7)
-> > > +#define TPS6131X_REG_7_BATDROOP			GENMASK(6, 4)
-> > > +#define TPS6131X_REG_7_BATDROOP_SHIFT		4
-> > > +#define TPS6131X_REG_7_REVID			GENMASK(2, 0)
-> > > +#define TPS6131X_REG_7_REVID_SHIFT		0
-> > > +
-> > > +/* Constants */
-> > > +
-> > > +#define TPS6131X_MAX_CHANNELS			3
-> > > +
-> > > +#define TPS6131X_FLASH_MAX_I_CHAN13_MA		400
-> > > +#define TPS6131X_FLASH_MAX_I_CHAN2_MA		800
-> > > +#define TPS6131X_FLASH_STEP_I_MA		25
-> > > +
-> > > +#define TPS6131X_TORCH_MAX_I_CHAN13_MA		175
-> > > +#define TPS6131X_TORCH_MAX_I_CHAN2_MA		175
-> > > +#define TPS6131X_TORCH_STEP_I_MA		25
-> > > +
-> > > +#define TPS6131X_TORCH_REFRESH_INTERVAL_JIFFIES msecs_to_jiffies(10000)
-> > 
-> > Why 10s?
-> 
-> At the point where the timer starts, there's a comment that says the
-> register must be updated within a timeout of 13 seconds.
-> So I thought 10 seconds would be a nice, appropriate interval.
+Signed-off-by: Radim Krčmář <rkrcmar@ventanamicro.com>
+---
+If you search for cap 7.42 in api.rst, you'll see that it has a wrong
+number, which is why we're 7.43, in case someone bothers to fix ARM.
 
-Maybe put this useful info in a small comment.
+I was also strongly considering creating all VCPUs in RUNNABLE state --
+do you know of any similar quirks that aren't important, but could be
+fixed with the new userspace toggle?
+---
+ Documentation/virt/kvm/api.rst        | 15 +++++++++++
+ arch/riscv/include/asm/kvm_host.h     |  3 +++
+ arch/riscv/include/asm/kvm_vcpu_sbi.h |  1 +
+ arch/riscv/kvm/vcpu.c                 | 36 +++++++++++++++++----------
+ arch/riscv/kvm/vcpu_sbi.c             | 17 +++++++++++++
+ arch/riscv/kvm/vcpu_sbi_hsm.c         |  7 +++++-
+ arch/riscv/kvm/vcpu_sbi_system.c      |  3 ++-
+ arch/riscv/kvm/vm.c                   | 13 ++++++++++
+ include/uapi/linux/kvm.h              |  1 +
+ 9 files changed, 81 insertions(+), 15 deletions(-)
 
-> > 
-> > > +#define UA_TO_MA(UA)				((UA) / 1000)
-> > 
-> > I'm surprised a generic macro like this doesn't exist already.
-> > 
-> > > +enum tps6131x_mode {
-> > > +	TPS6131X_MODE_SHUTDOWN = 0x0,
-> > > +	TPS6131X_MODE_TORCH = 0x1,
-> > > +	TPS6131X_MODE_FLASH = 0x2,
-> > 
-> > Are these set in stone or are they arbitrary?
-> 
-> The values ​​are fixed because they are written directly to a register.
-> In V1, I used an enum without values ​​and mapped it to the register value in
-> a function. I was asked to omit this mapping and use the enum directly.
-> 
-> TLDR:
-> [x] stone
-> [ ] arbitrary
-> 
-> > 
-> > > +};
-> > > +
-> > > +struct tps6131x {
-> > > +	struct device *dev;
-> > > +	struct regmap *regmap;
-> > > +	struct gpio_desc *reset_gpio;
-> > > +	/*
-> > > +	 * Registers 0, 1, 2, and 3 control parts of the controller that are not completely
-> > > +	 * independent of each other. Since some operations require the registers to be written in
-> > > +	 * a specific order to avoid unwanted side effects, they are synchronized with a lock.
-> > > +	 */
-> > > +	struct mutex lock; /* Hardware access lock for register 0, 1, 2 and 3 */
-> > > +	struct delayed_work torch_refresh_work;
-> > > +	bool valley_current_limit;
-> > > +	bool chan1_en;
-> > > +	bool chan2_en;
-> > > +	bool chan3_en;
-> > > +	struct fwnode_handle *led_node;
-> > > +	u32 max_flash_current_ma;
-> > > +	u32 step_flash_current_ma;
-> > > +	u32 max_torch_current_ma;
-> > > +	u32 step_torch_current_ma;
-> > > +	u32 max_timeout_us;
-> > > +	struct led_classdev_flash fled_cdev;
-> > > +	struct v4l2_flash *v4l2_flash;
-> > > +};
-> > > +
-> > > +static struct tps6131x *fled_cdev_to_tps6131x(struct led_classdev_flash *fled_cdev)
-> > > +{
-> > > +	return container_of(fled_cdev, struct tps6131x, fled_cdev);
-> > > +}
-> > > +
-> > > +/*
-> > > + * Register contents after a power on/reset. These values cannot be changed.
-> > > + */
-> > > +static const struct reg_default tps6131x_regmap_defaults[] = {
-> > > +	{ TPS6131X_REG_0, (1 << TPS6131X_REG_0_DCLC13_SHIFT) | (2 << TPS6131X_REG_0_DCLC2_SHIFT) },
-> > 
-> > Real values should be defined.  What does 2 even do, etc?
-> 
-> Initially, I only had the bare values ​​here, so that no one would mistakenly
-> think that something could be changed here.
-> This information only contains the information about the reset state of the
-> registers from the datasheet.
-> The contents are only needed for correct cache handling and have no meaning
-> for the driver itself.
-> If I now create a separate 'INITIAL' define for each value, which is only
-> used here, it would probably make it a bit harder to read, wouldn't it? What
-> do you think?
-
-I think that I like magic numbers to be defined. :)
-
-> > > +	{ TPS6131X_REG_1, (0 << TPS6131X_REG_1_MODE_SHIFT) | (16 << TPS6131X_REG_1_FC2_SHIFT) },
-> > 
-> > What's the point in oring 0 values?  Can't you just omit them?
-> 
-> Of course, I could simply omit that. But the point was that I had to
-> describe which fields have which values.
-> If I omitted that, the information would somehow disappear.
-
-It's okay to leave things like this in for documentation purposes,
-however since '0' is not documented with a define, it's effectively
-meaningless.  What is mode 0?  If you define all of these magic numbers,
-you can use the 'documentation' ~excuse~ reason guilt-free. :)
-
-> > > +	{ TPS6131X_REG_2, (0 << TPS6131X_REG_2_MODE_SHIFT) | (8 << TPS6131X_REG_2_FC13_SHIFT) },
-> > > +	{ TPS6131X_REG_3, (6 << TPS6131X_REG_3_STIM_SHIFT) | TPS6131X_REG_3_TXMASK },
-> > > +	{ TPS6131X_REG_4, (0 << TPS6131X_REG_4_INDC_SHIFT) },
-> > > +	{ TPS6131X_REG_5, TPS6131X_REG_5_ENPSM | TPS6131X_REG_5_STSTRB1_DIR |
-> > > +				  TPS6131X_REG_5_GPIOTYPE | TPS6131X_REG_5_ENLED2 },
-> > > +	{ TPS6131X_REG_6, (9 << TPS6131X_REG_6_OV_SHIFT) },
-> > > +	{ TPS6131X_REG_7, (4 << TPS6131X_REG_7_BATDROOP_SHIFT) },
-> > > +};
-> > > +
-> > > +/*
-> > > + * These registers contain flags that are reset when read. Ensure that these registers are not read
-> > > + * outside of a call from the driver.
-> > 
-> > You can simplify to just the first sentence.  The rest is implied.
-> 
-> ACK.
-> 
-> > 
-> > > + */
-> > > +static bool tps6131x_regmap_precious(struct device *dev, unsigned int reg)
-> > > +{
-> > > +	switch (reg) {
-> > > +	case TPS6131X_REG_3:
-> > > +	case TPS6131X_REG_4:
-> > > +	case TPS6131X_REG_6:
-> > > +		return true;
-> > > +	default:
-> > > +		return false;
-> > > +	}
-> > > +}
-> > > +
-> > > +static const struct regmap_config tps6131x_regmap = {
-> > > +	.reg_bits = 8,
-> > > +	.val_bits = 8,
-> > > +	.max_register = TPS6131X_REG_7,
-> > > +	.reg_defaults = tps6131x_regmap_defaults,
-> > > +	.num_reg_defaults = ARRAY_SIZE(tps6131x_regmap_defaults),
-> > > +	.cache_type = REGCACHE_FLAT,
-> > 
-> > This is new to me.  Why was this chosen over the usual REGCACHE_MAPLE?
-> 
-> Since the register space for this chip is very small, simple, compact, and
-> contiguous, I think this is the right cache type for it. Did I miss
-> something here?
-
-No, it's just unusual.  It's probably correct (you decide).
-
-> > > +	.precious_reg = &tps6131x_regmap_precious,
-> > > +};
-> > > +
-> > > +struct tps6131x_timer_config {
-> > > +	u8 val;
-> > > +	u8 range;
-> > > +	u32 time_us;
-> > > +};
-> > > +
-> > > +static const struct tps6131x_timer_config tps6131x_timer_configs[] = {
-> > > +	{ .val = 0, .range = 1, .time_us = 5300 },
-> > > +	{ .val = 1, .range = 1, .time_us = 10700 },
-> > > +	{ .val = 2, .range = 1, .time_us = 16000 },
-> > > +	{ .val = 3, .range = 1, .time_us = 21300 },
-> > > +	{ .val = 4, .range = 1, .time_us = 26600 },
-> > > +	{ .val = 5, .range = 1, .time_us = 32000 },
-> > > +	{ .val = 6, .range = 1, .time_us = 37300 },
-> > > +	{ .val = 0, .range = 0, .time_us = 68200 },
-> > > +	{ .val = 7, .range = 1, .time_us = 71500 },
-> > > +	{ .val = 1, .range = 0, .time_us = 102200 },
-> > > +	{ .val = 2, .range = 0, .time_us = 136300 },
-> > > +	{ .val = 3, .range = 0, .time_us = 170400 },
-> > > +	{ .val = 4, .range = 0, .time_us = 204500 },
-> > > +	{ .val = 5, .range = 0, .time_us = 340800 },
-> > > +	{ .val = 6, .range = 0, .time_us = 579300 },
-> > > +	{ .val = 7, .range = 0, .time_us = 852000 },
-> > > +};
-> > > +
-> > > +static const struct tps6131x_timer_config *tps6131x_find_closest_timer_config(u32 timeout_us)
-> > > +{
-> > > +	const struct tps6131x_timer_config *timer_config = &tps6131x_timer_configs[0];
-> > > +	u32 diff, min_diff = U32_MAX;
-> > > +	int i;
-> > > +
-> > > +	for (i = 0; i < ARRAY_SIZE(tps6131x_timer_configs); i++) {
-> > > +		diff = abs(tps6131x_timer_configs[i].time_us - timeout_us);
-> > > +		if (diff < min_diff) {
-> > > +			timer_config = &tps6131x_timer_configs[i];
-> > > +			min_diff = diff;
-> > > +			if (!min_diff)
-> > > +				break;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	return timer_config;
-> > > +}
-> > > +
-> > > +static int tps6131x_reset_chip(struct tps6131x *tps6131x)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	if (tps6131x->reset_gpio) {
-> > > +		gpiod_set_value_cansleep(tps6131x->reset_gpio, 1);
-> > > +		fsleep(10);
-> > > +		gpiod_set_value_cansleep(tps6131x->reset_gpio, 0);
-> > > +		fsleep(100);
-> > > +	} else {
-> > > +		ret = regmap_update_bits(tps6131x->regmap, TPS6131X_REG_0, TPS6131X_REG_0_RESET,
-> > > +					 TPS6131X_REG_0_RESET);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +
-> > > +		fsleep(100);
-> > > +
-> > > +		ret = regmap_update_bits(tps6131x->regmap, TPS6131X_REG_0, TPS6131X_REG_0_RESET, 0);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int tps6131x_init_chip(struct tps6131x *tps6131x)
-> > > +{
-> > > +	u32 reg4, reg5, reg6;
-> > 
-> > Why cant we just reuse a single variable called 'value'?
-> 
-> This way, it's easy to spot a mistake. Each line can only contain parts that
-> use the same 'reg<x>'.
-> But I can easily change it and use only one variable.
-
-Yes please.  It's common practice.
-
-> > > +	int ret;
-> > > +
-> > > +	reg4 = tps6131x->valley_current_limit ? TPS6131X_REG_4_ILIM : 0;
-> > 
-> > Nicer on the eye if we un-squidge these.
-> > 
-> > No need to group everything like this.
-> 
-> I'm happy to adapt the code here as well, but unfortunately I haven't quite
-> figured out how you'd like it to look. Could you please tell me more
-> specifically what I should change?
-
-Like this:
-
-> > > +	ret = regmap_write(tps6131x->regmap, TPS6131X_REG_4, reg4);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	reg5 = TPS6131X_REG_5_ENPSM | TPS6131X_REG_5_STSTRB1_DIR | TPS6131X_REG_5_GPIOTYPE;
-
-> > > +	if (tps6131x->chan1_en)
-> > > +		reg5 |= TPS6131X_REG_5_ENLED1;
-> > > +
-> > > +	if (tps6131x->chan2_en)
-> > > +		reg5 |= TPS6131X_REG_5_ENLED2;
-> > > +
-> > > +	if (tps6131x->chan3_en)
-> > > +		reg5 |= TPS6131X_REG_5_ENLED3;
-
-> > > +	ret = regmap_write(tps6131x->regmap, TPS6131X_REG_5, reg5);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	reg6 = TPS6131X_REG_6_ENTS;
-
-> > > +	ret = regmap_write(tps6131x->regmap, TPS6131X_REG_6, reg6);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int tps6131x_set_mode(struct tps6131x *tps6131x, enum tps6131x_mode mode, bool force)
-> > > +{
-> > > +	u8 val;
-> > > +
-> > > +	val = mode << TPS6131X_REG_1_MODE_SHIFT;
-> > 
-> > You could do this during assignment.  Or, seeing as there is already a
-> > line break required, in the call itself.
-> 
-> ACK.
-> 
-> > 
-> > > +
-> > > +	return regmap_update_bits_base(tps6131x->regmap, TPS6131X_REG_1, TPS6131X_REG_1_MODE, val,
-> > > +				       NULL, false, force);
-> > > +}
-> > > +
-> > > +static void tps6131x_torch_refresh_handler(struct work_struct *work)
-> > > +{
-> > > +	struct tps6131x *tps6131x = container_of(work, struct tps6131x, torch_refresh_work.work);
-> > > +
-> > > +	guard(mutex)(&tps6131x->lock);
-> > > +
-> > > +	tps6131x_set_mode(tps6131x, TPS6131X_MODE_TORCH, true);
-> > 
-> > This can fail.
-> 
-> That's true. I wasn't sure how to respond to this, other than just keep
-> trying.
-> What do you think about not starting the timer in case of an error and
-> instead outputting a message with dev_err?
-
-Either check the value and/or provide a comment why checking is not required.
-
-> > > +
-> > > +	schedule_delayed_work(&tps6131x->torch_refresh_work,
-> > > +			      TPS6131X_TORCH_REFRESH_INTERVAL_JIFFIES);
-> > > +}
-> > > +
-> > > +static int tps6131x_brightness_set(struct led_classdev *cdev, enum led_brightness brightness)
-> > > +{
-> > > +	struct led_classdev_flash *fled_cdev = lcdev_to_flcdev(cdev);
-> > > +	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
-> > 
-> > > +	u32 num_chans;
-> > > +	u32 steps_chan13, steps_chan2;
-> > > +	u32 steps_remaining;
-> > 
-> > Why not group these?
-> 
-> I will do so.
-> 
-> > 
-> > > +	u8 reg0;
-> > > +	int ret;
-> > > +
-> > > +	cancel_delayed_work_sync(&tps6131x->torch_refresh_work);
-> > > +
-> > > +	/*
-> > > +	 * The brightness parameter uses the number of current steps as the unit (not the current
-> > > +	 * value itself). Since the reported step size can vary depending on the configuration,
-> > > +	 * this value must be converted into actual register steps.
-> > > +	 */
-> > > +	steps_remaining = (brightness * tps6131x->step_torch_current_ma) / TPS6131X_TORCH_STEP_I_MA;
-> > > +
-> > > +	num_chans = tps6131x->chan1_en + tps6131x->chan2_en + tps6131x->chan3_en;
-> > > +
-> > > +	/*
-> > > +	 * The currents are distributed as evenly as possible across the activated channels.
-> > > +	 * Since channels 1 and 3 share the same register setting, they always use the same current
-> > > +	 * value. Channel 2 supports higher currents and thus takes over the remaining additional
-> > > +	 * portion that cannot be covered by the other channels.
-> > > +	 */
-> > > +	steps_chan13 = min_t(u32, steps_remaining / num_chans,
-> > > +			     TPS6131X_TORCH_MAX_I_CHAN13_MA / TPS6131X_TORCH_STEP_I_MA);
-> > > +	if (tps6131x->chan1_en)
-> > > +		steps_remaining -= steps_chan13;
-> > > +	if (tps6131x->chan3_en)
-> > > +		steps_remaining -= steps_chan13;
-> > > +
-> > > +	steps_chan2 = min_t(u32, steps_remaining,
-> > > +			    TPS6131X_TORCH_MAX_I_CHAN2_MA / TPS6131X_TORCH_STEP_I_MA);
-> > > +
-> > > +	guard(mutex)(&tps6131x->lock);
-> > > +
-> > > +	reg0 = (steps_chan13 << TPS6131X_REG_0_DCLC13_SHIFT) |
-> > > +	       (steps_chan2 << TPS6131X_REG_0_DCLC2_SHIFT);
-> > 
-> > Indent.
-> 
-> The indent was intention ;) The operands of arithmetic assignments are at
-> least intentionally and automatically aligned to be on the same column. This
-> is also the case elsewhere in the code.
-> What is the alternative expectation here?
-
-I'd normally expect line feeds to be indented.
-
-This is an odd one because nothing is in front of the open parenthesis.
-
-I'm struggling to find any other examples like it - perhaps it is correct?!
-
-[..]
-
-> > > +static int tps6131x_v4l2_setup(struct tps6131x *tps6131x)
-> > > +{
-> > > +	struct v4l2_flash_config v4l2_cfg = { 0 };
-> > > +	struct led_flash_setting *intensity = &v4l2_cfg.intensity;
-> > > +
-> > > +	intensity->min = tps6131x->step_torch_current_ma;
-> > > +	intensity->max = tps6131x->max_torch_current_ma;
-> > > +	intensity->step = tps6131x->step_torch_current_ma;
-> > > +	intensity->val = intensity->min;
-> > > +
-> > > +	strscpy(v4l2_cfg.dev_name, tps6131x->fled_cdev.led_cdev.dev->kobj.name,
-> > > +		sizeof(v4l2_cfg.dev_name));
-> > > +
-> > > +	v4l2_cfg.has_external_strobe = true;
-> > > +	v4l2_cfg.flash_faults = LED_FAULT_TIMEOUT | LED_FAULT_OVER_TEMPERATURE |
-> > > +				LED_FAULT_SHORT_CIRCUIT | LED_FAULT_UNDER_VOLTAGE |
-> > > +				LED_FAULT_LED_OVER_TEMPERATURE;
-> > > +
-> > > +	tps6131x->v4l2_flash = v4l2_flash_init(tps6131x->dev, tps6131x->led_node,
-> > > +					       &tps6131x->fled_cdev, &tps6131x_v4l2_flash_ops,
-> > > +					       &v4l2_cfg);
-> > > +	if (IS_ERR(tps6131x->v4l2_flash)) {
-> > > +		dev_err(tps6131x->dev, "Failed to initialize v4l2 flash LED\n");
-> > > +		return PTR_ERR(tps6131x->v4l2_flash);
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int tps6131x_probe(struct i2c_client *client)
-> > > +{
-> > > +	struct tps6131x *tps6131x;
-> > > +	int ret;
-> > > +
-> > > +	tps6131x = devm_kzalloc(&client->dev, sizeof(*tps6131x), GFP_KERNEL);
-> > > +	if (!tps6131x)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	tps6131x->dev = &client->dev;
-> > > +	i2c_set_clientdata(client, tps6131x);
-> > 
-> > If you already have client, to fetch this, you'll already have access to dev.
-> 
-> I understand that in principle. However, I'm still not entirely sure what
-> exactly I should change. Could you please provide me with some further
-> guidance?
-
-Yes, don't store 'dev' in 'tps6131x'.
-
-> > > +	mutex_init(&tps6131x->lock);
-> > > +	INIT_DELAYED_WORK(&tps6131x->torch_refresh_work, tps6131x_torch_refresh_handler);
-> > > +
-> > > +	ret = tps6131x_parse_node(tps6131x);
-> > > +	if (ret)
-> > > +		return -ENODEV;
-> > 
-> > Why aren't we propagating the real error?
-> 
-> Good point. I'll change that.
-> 
-> > 
-> > > +	tps6131x->regmap = devm_regmap_init_i2c(client, &tps6131x_regmap);
-> > > +	if (IS_ERR(tps6131x->regmap)) {
-> > > +		ret = PTR_ERR(tps6131x->regmap);
-> > 
-> > Use dev_err_ptr_probe() instead.
-> 
-> Hmm, I don't quite understand that. dev_err_ptr_probe() returns an error
-> pointer instead of an int, right?
-
-Yes, disregard - I had a senior moment!
-
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 47c7c3f92314..63e6d23d34f0 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -8496,6 +8496,21 @@ aforementioned registers before the first KVM_RUN. These registers are VM
+ scoped, meaning that the same set of values are presented on all vCPUs in a
+ given VM.
+ 
++7.43 KVM_CAP_RISCV_MP_STATE_RESET
++---------------------------------
++
++:Architectures: riscv
++:Type: VM
++:Parameters: None
++:Returns: 0 on success, -EINVAL if arg[0] is not zero
++
++When this capability is enabled, KVM:
++* Resets the VCPU when setting MP_STATE_INIT_RECEIVED through IOCTL.
++  The original MP_STATE is preserved.
++* Preserves the userspace initialized VCPU state on sbi_hart_start.
++* Returns to userspace on sbi_hart_stop.
++* Doesn't make VCPU reset request on sbi_system_suspend.
++
+ 8. Other capabilities.
+ ======================
+ 
+diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+index f673ebfdadf3..85cfebc32e4c 100644
+--- a/arch/riscv/include/asm/kvm_host.h
++++ b/arch/riscv/include/asm/kvm_host.h
+@@ -119,6 +119,9 @@ struct kvm_arch {
+ 
+ 	/* AIA Guest/VM context */
+ 	struct kvm_aia aia;
++
++	/* KVM_CAP_RISCV_MP_STATE_RESET */
++	bool mp_state_reset;
+ };
+ 
+ struct kvm_cpu_trap {
+diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/asm/kvm_vcpu_sbi.h
+index da28235939d1..439ab2b3534f 100644
+--- a/arch/riscv/include/asm/kvm_vcpu_sbi.h
++++ b/arch/riscv/include/asm/kvm_vcpu_sbi.h
+@@ -57,6 +57,7 @@ void kvm_riscv_vcpu_sbi_system_reset(struct kvm_vcpu *vcpu,
+ 				     u32 type, u64 flags);
+ void kvm_riscv_vcpu_sbi_request_reset(struct kvm_vcpu *vcpu,
+ 				      unsigned long pc, unsigned long a1);
++void kvm_riscv_vcpu_sbi_load_reset_state(struct kvm_vcpu *vcpu);
+ int kvm_riscv_vcpu_sbi_return(struct kvm_vcpu *vcpu, struct kvm_run *run);
+ int kvm_riscv_vcpu_set_reg_sbi_ext(struct kvm_vcpu *vcpu,
+ 				   const struct kvm_one_reg *reg);
+diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+index a78f9ec2fa0e..961b22c05981 100644
+--- a/arch/riscv/kvm/vcpu.c
++++ b/arch/riscv/kvm/vcpu.c
+@@ -51,11 +51,11 @@ const struct kvm_stats_header kvm_vcpu_stats_header = {
+ 		       sizeof(kvm_vcpu_stats_desc),
+ };
+ 
+-static void kvm_riscv_vcpu_context_reset(struct kvm_vcpu *vcpu)
++static void kvm_riscv_vcpu_context_reset(struct kvm_vcpu *vcpu,
++					 bool kvm_sbi_reset)
+ {
+ 	struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
+ 	struct kvm_cpu_context *cntx = &vcpu->arch.guest_context;
+-	struct kvm_vcpu_reset_state *reset_state = &vcpu->arch.reset_state;
+ 	void *vector_datap = cntx->vector.datap;
+ 
+ 	memset(cntx, 0, sizeof(*cntx));
+@@ -65,13 +65,8 @@ static void kvm_riscv_vcpu_context_reset(struct kvm_vcpu *vcpu)
+ 	/* Restore datap as it's not a part of the guest context. */
+ 	cntx->vector.datap = vector_datap;
+ 
+-	/* Load SBI reset values */
+-	cntx->a0 = vcpu->vcpu_id;
+-
+-	spin_lock(&reset_state->lock);
+-	cntx->sepc = reset_state->pc;
+-	cntx->a1 = reset_state->a1;
+-	spin_unlock(&reset_state->lock);
++	if (kvm_sbi_reset)
++		kvm_riscv_vcpu_sbi_load_reset_state(vcpu);
+ 
+ 	/* Setup reset state of shadow SSTATUS and HSTATUS CSRs */
+ 	cntx->sstatus = SR_SPP | SR_SPIE;
+@@ -84,10 +79,19 @@ static void kvm_riscv_vcpu_context_reset(struct kvm_vcpu *vcpu)
+ 	csr->scounteren = 0x7;
+ }
+ 
+-static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
++static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu, bool kvm_sbi_reset)
+ {
+ 	bool loaded;
+ 
++	/*
++	 * The userspace should have triggered a full reset earlier and could
++	 * have set initial state that needs to be preserved.
++	 */
++	if (kvm_sbi_reset && vcpu->kvm->arch.mp_state_reset) {
++		kvm_riscv_vcpu_sbi_load_reset_state(vcpu);
++		return;
++	}
++
+ 	/**
+ 	 * The preemption should be disabled here because it races with
+ 	 * kvm_sched_out/kvm_sched_in(called from preempt notifiers) which
+@@ -100,7 +104,7 @@ static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
+ 
+ 	vcpu->arch.last_exit_cpu = -1;
+ 
+-	kvm_riscv_vcpu_context_reset(vcpu);
++	kvm_riscv_vcpu_context_reset(vcpu, kvm_sbi_reset);
+ 
+ 	kvm_riscv_vcpu_fp_reset(vcpu);
+ 
+@@ -177,7 +181,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+ 	kvm_riscv_vcpu_sbi_init(vcpu);
+ 
+ 	/* Reset VCPU */
+-	kvm_riscv_reset_vcpu(vcpu);
++	kvm_riscv_reset_vcpu(vcpu, false);
+ 
+ 	return 0;
+ }
+@@ -526,6 +530,12 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
+ 	case KVM_MP_STATE_STOPPED:
+ 		__kvm_riscv_vcpu_power_off(vcpu);
+ 		break;
++	case KVM_MP_STATE_INIT_RECEIVED:
++		if (vcpu->kvm->arch.mp_state_reset)
++			kvm_riscv_reset_vcpu(vcpu, false);
++		else
++			ret = -EINVAL;
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 	}
+@@ -714,7 +724,7 @@ static void kvm_riscv_check_vcpu_requests(struct kvm_vcpu *vcpu)
+ 		}
+ 
+ 		if (kvm_check_request(KVM_REQ_VCPU_RESET, vcpu))
+-			kvm_riscv_reset_vcpu(vcpu);
++			kvm_riscv_reset_vcpu(vcpu, true);
+ 
+ 		if (kvm_check_request(KVM_REQ_UPDATE_HGATP, vcpu))
+ 			kvm_riscv_gstage_update_hgatp(vcpu);
+diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
+index 0afef0bb261d..31fd3cc98d66 100644
+--- a/arch/riscv/kvm/vcpu_sbi.c
++++ b/arch/riscv/kvm/vcpu_sbi.c
+@@ -167,6 +167,23 @@ void kvm_riscv_vcpu_sbi_request_reset(struct kvm_vcpu *vcpu,
+ 	kvm_make_request(KVM_REQ_VCPU_RESET, vcpu);
+ }
+ 
++void kvm_riscv_vcpu_sbi_load_reset_state(struct kvm_vcpu *vcpu)
++{
++	struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
++	struct kvm_cpu_context *cntx = &vcpu->arch.guest_context;
++	struct kvm_vcpu_reset_state *reset_state = &vcpu->arch.reset_state;
++
++	cntx->a0 = vcpu->vcpu_id;
++
++	spin_lock(&vcpu->arch.reset_state.lock);
++	cntx->sepc = reset_state->pc;
++	cntx->a1 = reset_state->a1;
++	spin_unlock(&vcpu->arch.reset_state.lock);
++
++	cntx->sstatus &= ~SR_SIE;
++	csr->vsatp = 0;
++}
++
+ int kvm_riscv_vcpu_sbi_return(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ {
+ 	struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
+diff --git a/arch/riscv/kvm/vcpu_sbi_hsm.c b/arch/riscv/kvm/vcpu_sbi_hsm.c
+index f26207f84bab..d1bf1348eefd 100644
+--- a/arch/riscv/kvm/vcpu_sbi_hsm.c
++++ b/arch/riscv/kvm/vcpu_sbi_hsm.c
+@@ -89,7 +89,12 @@ static int kvm_sbi_ext_hsm_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
+ 		ret = kvm_sbi_hsm_vcpu_start(vcpu);
+ 		break;
+ 	case SBI_EXT_HSM_HART_STOP:
+-		ret = kvm_sbi_hsm_vcpu_stop(vcpu);
++		if (vcpu->kvm->arch.mp_state_reset) {
++			kvm_riscv_vcpu_sbi_forward(vcpu, run);
++			retdata->uexit = true;
++		} else {
++			ret = kvm_sbi_hsm_vcpu_stop(vcpu);
++		}
+ 		break;
+ 	case SBI_EXT_HSM_HART_STATUS:
+ 		ret = kvm_sbi_hsm_vcpu_get_status(vcpu);
+diff --git a/arch/riscv/kvm/vcpu_sbi_system.c b/arch/riscv/kvm/vcpu_sbi_system.c
+index 359be90b0fc5..0482968705f8 100644
+--- a/arch/riscv/kvm/vcpu_sbi_system.c
++++ b/arch/riscv/kvm/vcpu_sbi_system.c
+@@ -44,7 +44,8 @@ static int kvm_sbi_ext_susp_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
+ 			}
+ 		}
+ 
+-		kvm_riscv_vcpu_sbi_request_reset(vcpu, cp->a1, cp->a2);
++		if (!vcpu->kvm->arch.mp_state_reset)
++			kvm_riscv_vcpu_sbi_request_reset(vcpu, cp->a1, cp->a2);
+ 
+ 		/* userspace provides the suspend implementation */
+ 		kvm_riscv_vcpu_sbi_forward(vcpu, run);
+diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
+index 7396b8654f45..b27ec8f96697 100644
+--- a/arch/riscv/kvm/vm.c
++++ b/arch/riscv/kvm/vm.c
+@@ -209,6 +209,19 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	return r;
+ }
+ 
++int kvm_vm_ioctl_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
++{
++	switch (cap->cap) {
++	case KVM_CAP_RISCV_MP_STATE_RESET:
++		if (cap->flags)
++			return -EINVAL;
++		kvm->arch.mp_state_reset = true;
++		return 0;
++	default:
++		return -EINVAL;
++	}
++}
++
+ int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+ {
+ 	return -EINVAL;
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index b6ae8ad8934b..454b7d4a0448 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -930,6 +930,7 @@ struct kvm_enable_cap {
+ #define KVM_CAP_X86_APIC_BUS_CYCLES_NS 237
+ #define KVM_CAP_X86_GUEST_MODE 238
+ #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
++#define KVM_CAP_RISCV_MP_STATE_RESET 240
+ 
+ struct kvm_irq_routing_irqchip {
+ 	__u32 irqchip;
 -- 
-Lee Jones [李琼斯]
+2.49.0
+
