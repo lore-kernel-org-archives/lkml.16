@@ -1,240 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA90215160;
-	Thu,  8 May 2025 23:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72CB15624D;
+	Thu,  8 May 2025 23:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746746119; cv=none; b=bTrKyHotukT1NGvogd19qPQhekYxgORZWqPdHSJbAYeEg8tUQuVctBKru+7whtYfkCVGeuRv1AHoYM2dhNWB5iclTWURqgP2ui0C4pqFc58o+31WY1rJCgfQMUmknt0vvm7N/7slGRT55Pq5QSHY8+F8GASN8pwFg6D8SLwE2l8=
+	t=1746746581; cv=none; b=fRh97fYnfCLSoS30ouMNPmtesXbY5fo56eBq/Pbkp1cXA2pMZProRSpqyA3RQr3/sR2wt2ydlOLtk4PfclKutJSEoH8NwILBLiTmmixg0RqBduA4BF0hEufxdGkgPA9s9riJfXVIp8rTeFoRqsU5Zk4jvxMPh2f8NHetmnqi43w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746746119; c=relaxed/simple;
-	bh=j/J5G2M4Tjpz0KLbEjIWvq8j4Ttv4JwvO/ZUttkD/cM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=FSudbYEZsoIDN3j0ZORUK7rHu/dIsYqMhHOO5r/Fbrf3VZi5sVQnH6Av0AUgShXKB8aYaj6YVGgSy8BRtjjjVzkqw2lH+cbTTfg/54BZ5WHSLVdBRGv4z8y2A8I8zOh+NwVFuzqy/OTOSB7uX/xhIhorKP9ih4F7qysCgXzAabg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5A2yn3u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746746581; c=relaxed/simple;
+	bh=FONvhT1jAfHPxkn8m504XAWgTKv+f5ZT1tzDmrZh2U8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rdcu+089aiadNe1lX5y4UJXSBQvR0NCstv1jloUO56Mj9cJCxTvp6acC0yvoFah/Fp4fDhNl2jlY7MnqWcvgIARZ5rT+kQghQyGOPdcsdeNuaatjqJEOx5oIA4/qTxexRNCkRoEAb2sli+3dhjVUt1EZ6m8Kem3Pxspb4N27Ri0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F5ogwJZa; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5A2yn3u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7B1FC4CEE7;
-	Thu,  8 May 2025 23:15:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746746118;
-	bh=j/J5G2M4Tjpz0KLbEjIWvq8j4Ttv4JwvO/ZUttkD/cM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=C5A2yn3uP2/RSDnGxuvK2149R1tsa9hyTSJqH8t+EEOqDLRWsbk6+MRfgXwr2aFn2
-	 Btcml9N8kOLUCDn41gQcQvzTHgD7yD4XWvW3hZ19N0tSp5c+gB0JcMRuiBZvvlpaaq
-	 1nI5yX+UqJKoPIV3wgP0aCl6yxrsvHrOmNkCKMCj2bUd6DZVMIgLmIQT8HS6savv0G
-	 0BBfhaSGR6zuVZ7jGZviI/jWWXMnqLgCF91/qCJIPVUv0y7cdNiGo4pH816M9b9hNm
-	 ZHAt94Fz5G/ZQSA13WmcfSq6JTo4fYIagNn+kMi1BPsTIAGHcA4d3fJq4JFZ+FTHy9
-	 1YvVCa/y+2JSA==
-Date: Fri, 9 May 2025 01:15:06 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: linux-man@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
-Subject: man-pages-6.14 released
-Message-ID: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F5ogwJZa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746746580; x=1778282580;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FONvhT1jAfHPxkn8m504XAWgTKv+f5ZT1tzDmrZh2U8=;
+  b=F5ogwJZaVnCIrooAJRVQxAJX6Jn+z9uJwYPbGrAS6iotr0tUz3XMtlOu
+   UVzuASYcN0IsnzHa1t4+6b61KYRnp5HqOht8oOGmRP0UtvbDUXGKS+ZWZ
+   +GgAEAZA8yQlVWq/xn7OZyK9RKGBNAEn0X2BnOn5XQR3nRS/6vsZbjvBz
+   aYj5B7KRiqCxicc/fwAuuXoQOJpuwLndi4+7lOodoUjIZyu3bXqePdq9G
+   s72Y8Rln6w7entXMA9RVgdXfP2VyA5oCDJaBi6m4i09T+7yvlABmsTUZ3
+   19am0bnSbcImsmnSY4VwVTWe0c6SlHX1K+7MjfoWujMdQT5+v9obLsz/G
+   Q==;
+X-CSE-ConnectionGUID: m/yYdsspSi+4/rzDr0XguQ==
+X-CSE-MsgGUID: bA/i5H51Q1+5Hvh0D+ON1Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="36184682"
+X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
+   d="scan'208";a="36184682"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 16:22:59 -0700
+X-CSE-ConnectionGUID: CmASKxS3Rz6bGPgRz2dXFQ==
+X-CSE-MsgGUID: +dg5XxO/SNubZMX0JB+v4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
+   d="scan'208";a="136400983"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 08 May 2025 16:22:57 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uDAZr-000BSh-0B;
+	Thu, 08 May 2025 23:22:55 +0000
+Date: Fri, 9 May 2025 07:21:59 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dawei Li <dawei.li@linux.dev>, andersson@kernel.org,
+	mathieu.poirier@linaro.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dawei.li@linux.dev,
+	set_pte_at@outlook.com
+Subject: Re: [PATCH 3/3] rpmsg: ctrl: Introduce RPMSG_CREATE_EPT_FD_IOCTL uAPI
+Message-ID: <202505090716.iB4qQAf2-lkp@intel.com>
+References: <20250507141712.4276-4-dawei.li@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="te6szl43obedd5tr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250507141712.4276-4-dawei.li@linux.dev>
+
+Hi Dawei,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on 92a09c47464d040866cf2b4cd052bc60555185fb]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Dawei-Li/rpmsg-char-Reuse-eptdev-logic-for-anon-device/20250507-223209
+base:   92a09c47464d040866cf2b4cd052bc60555185fb
+patch link:    https://lore.kernel.org/r/20250507141712.4276-4-dawei.li%40linux.dev
+patch subject: [PATCH 3/3] rpmsg: ctrl: Introduce RPMSG_CREATE_EPT_FD_IOCTL uAPI
+config: i386-randconfig-011-20250508 (https://download.01.org/0day-ci/archive/20250509/202505090716.iB4qQAf2-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505090716.iB4qQAf2-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505090716.iB4qQAf2-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/rpmsg/rpmsg_ctrl.c:28:
+   drivers/rpmsg/rpmsg_char.h:54:1: error: expected identifier or '(' before '{' token
+      54 | {
+         | ^
+>> drivers/rpmsg/rpmsg_char.h:52:19: warning: 'rpmsg_eptdev_create' used but never defined
+      52 | static inline int rpmsg_eptdev_create(struct rpmsg_device *rpdev, struct device *parent,
+         |                   ^~~~~~~~~~~~~~~~~~~
 
 
---te6szl43obedd5tr
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: linux-man@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
-Subject: man-pages-6.14 released
-MIME-Version: 1.0
+vim +/rpmsg_eptdev_create +52 drivers/rpmsg/rpmsg_char.h
 
-Gidday!
+69265bc12b6567 Arnaud Pouliquen 2022-01-24  51  
+73c9f094eaac8b Dawei Li         2025-05-07 @52  static inline int rpmsg_eptdev_create(struct rpmsg_device *rpdev, struct device *parent,
+73c9f094eaac8b Dawei Li         2025-05-07  53  				      struct rpmsg_channel_info chinfo, int *pfd);
+73c9f094eaac8b Dawei Li         2025-05-07 @54  {
+73c9f094eaac8b Dawei Li         2025-05-07  55  	return -ENXIO;
+73c9f094eaac8b Dawei Li         2025-05-07  56  }
+73c9f094eaac8b Dawei Li         2025-05-07  57  
 
-I'm proud to announce:
-
-	man-pages-6.14 - manual pages for GNU/Linux
-
-
-Tarball download:
-<https://www.kernel.org/pub/linux/docs/man-pages/>
-Git repository:
-<https://git.kernel.org/cgit/docs/man-pages/man-pages.git/>
-Online PDF book:
-<https://www.kernel.org/pub/linux/docs/man-pages/book/>
-
-Thanks to all the contributors to this release (in BCC)!
-And thanks to our sponsors!
-
-	-  Adfinis		<https://adfinis.com/>
-	-  Google		<https://opensource.google/>
-	-  Hudson River Trading	<https://www.hudsonrivertrading.com/>
-	-  Meta			<https://www.meta.com/>
-	-  Red Hat		<https://www.redhat.com/>
-
-
-Have a lovely night!
-Alex
-
-
-You are receiving this message either because:
-
-        a)  (BCC) You contributed to this release.
-
-        b)  You are subscribed to <linux-man@vger.kernel.org>,
-            <linux-kernel@vger.kernel.org>, or
-            <libc-alpha@sourceware.org>.
-
-        c)  (BCC) I have information (possibly inaccurate) that you are
-            the maintainer of a translation of the manual pages, or are
-            the maintainer of the manual pages set in a particular
-            distribution, or have expressed interest in helping with
-            man-pages maintenance, or have otherwise expressed interest
-            in being notified about man-pages releases.
-            If you don't want to receive such messages from me, or you
-            know of some other translator or maintainer who may want to
-            receive such notifications, send me a message.
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D Changes in man=
--pages-6.14 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-Released: 2025-05-09, Aldaya
-
-
-New and rewritten pages
------------------------
-
-man2const/
-	UFFDIO_MOVE.2const
-
-man7/
-	mctp.7
-
-
-Newly documented interfaces in existing pages
----------------------------------------------
-
-man2/
-	fanotify_init.2
-		FAN_REPORT_FD_ERROR
-		FAN_REPORT_MNT
-	fanotify_mark.2
-		FAN_PRE_ACCESS
-		FAN_MARK_MNTNS
-		FAN_MNT_ATTACH, FAN_MNT_DETACH
-	open_by_handle_at.2
-		AT_HANDLE_CONNECTABLE
-		AT_HANDLE_MNT_ID_UNIQUE
-
-man2const/
-	TIOCLINUX.2const
-		TIOCL_SELCHAR
-		TIOCL_SELWORD
-		TIOCL_SELLINE
-		TIOCL_SELPOINTER
-		TIOCL_SELCLEAR
-		TIOCL_SELMOUSEREPORT
-
-man3/
-	abs.3
-		uabs(3)
-		ulabs(3)
-		ullabs(3)
-		uimaxabs(3)
-
-man7/
-	fanotify.7
-		FAN_DENY_ERRNO()
-		FAN_REPORT_FD_ERROR
-		FAN_PRE_ACCESS
-		FAN_RESPONSE_INFO_AUDIT_RULE
-		FAN_REPORT_MNT
-		FAN_MNT_ATTACH, FAN_MNT_DETACH
-		FAN_EVENT_INFO_TYPE_MNT
-
-
-New and changed links
----------------------
-
-man3/
-	uabs.3					(abs(3))
-	ulabs.3					(abs(3))
-	ullabs.3				(abs(3))
-	uimaxabs.3				(abs(3))
-
-
-Global changes
---------------
-
--  CREDITS, *
-   -  Move in-source contribution records to a new CREDITS file, and
-      update copyright notices to be uniform across the project.
-
--  man/
-   -  Use GNU forward declarations of parameters for sizes of array
-      parameters.
-   -  \fX =3D> \f[X]
-   -  Use 'path' instead of 'pathname' for parameters.
-
--  Release tarball
-   -  The size of the release tarball is around 0.1 MiB smaller, thanks
-      to having moved contribution records to the new CREDITS file, and
-      having simplified (and unified) copyright notices.
-
-
-Changes to individual files
----------------------------
-
-The manual pages and other files in the repository have been improved
-beyond what this changelog covers.  To learn more about changes applied
-to individual pages, or the authors of changes, use git(1).
-
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D Linux Software=
- Map =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-
-Begin4
-Title:          Linux man-pages
-Version:        6.14
-Entered-date:   2025-05-09
-Description:    Manual pages for GNU/Linux.  This package contains
-                manual pages for sections 2, 3, 4, 5, and 7, and
-                subsections of those.  Only a few pages are provided in
-                sections 1, 6, and 8, and none in 9.
-Keywords:       man pages
-Maintained-by:  Alejandro Colomar <alx@kernel.org>
-Primary-site:   http://www.kernel.org/pub/linux/docs/man-pages
-                2.6M  man-pages-6.14.tar.gz
-Copying-policy: several; the pages are all freely distributable as long as
-                nroff source is provided
-End
-
---=20
-<https://www.alejandro-colomar.es/>
-
---te6szl43obedd5tr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgdOvkACgkQ64mZXMKQ
-wqkkxA/+JZrLdSANw8DeuKRS9+CHwslImCVUokCQGmLMqSDNjffhOzThZVewKm7Q
-Ul8SaqO4ZhfzRMMlwz9tjqQRMIZ1DEQOcfBNFM+8wCMBP1VgdTj8dFuVbpqMnwGB
-jQrZF3JMank6DntQ97lXPiBceLFbg+vAdUKCAK9dDcrvQFpjWlXq7cQQiDhvgxhc
-e0lVcZ5boWLP0HNAaiZJjVb/CG92t6mT+ccHlC4NbTzYTAjPnoJcqubmYNB6+RGw
-Sc1uquT14I3qIOLnzMlkMzJI3lGepI6SIjb8cv43nepVYL6Ayo876E1eo9Crsl/f
-fbq66f0mkf2CHfJ2ijOEsAyursvIUQDqDLxutCK0YeCFGCeiLjwJhDnXvStTNcmE
-W9p4CDgKWk7K9vM1MMHJ4ACcfiM468c7GWL6ifo3yvmsbIR+uiDY+/JaKPExNLne
-7bOS9uHBdqjcMWYQUQyc5aSXD1eoPTtqxaJiYBTb97G+NlcF8b93ZOlnV5+Mjth9
-viibLSXLIY4+8qpe4uiXC7mklIeB/WE+gaPxBQu7Z16plAAsTg8CCjZTkiJNEW6I
-YHgE1jwLSSjgDqCg9fBknZTc6NXKr9G1vr5l39xv5JcyCnFLT+t48Li+opJQK0gr
-xe/INyZvty19uMCCwIZOdjnq0mR9uYqkwduPUG7rlv22FaV+Fn8=
-=2u16
------END PGP SIGNATURE-----
-
---te6szl43obedd5tr--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
