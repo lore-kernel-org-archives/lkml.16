@@ -1,124 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5B26F073;
-	Thu,  8 May 2025 08:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6781DDC23;
+	Thu,  8 May 2025 08:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746692093; cv=none; b=OwJ58Ru+hXZEAH7JO7k0Udc7Q1e47h/qb4Lq4VVSH8hpslBSfq43ssIaeQ4kGiSMkMFU/jXO36ajO1/QRVT2dwsvQu264QoCFtZvHCKWol/aUo3F06ZMPOLl2rUIT3mlkWM/RjtREhh6wHpyIdBgz7dSrThzCWqjtRT54jXHygY=
+	t=1746692144; cv=none; b=dMqvflxEeoILLtVGy5oD0bHm2FGMt6M/hBfD0TIHcYwcNQPIQ9PN0z/ZZRRNfO2+GuAMjLhJNNm2HRetFxCYlhkdF9R0T9ZakcV9YJH75HyMKO34vpc3ofsHTBzH8DsLVk+RgshDd5Q/07hOTHKVBnMubVa56tu/sps/8oPai74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746692093; c=relaxed/simple;
-	bh=a90R/RVtpbilNz7s62Jg8u91/OCcf1dJCeMzvHKzX2o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r8cucbhY2pj246KOILhTuE+Al1zbXmxYlbdncwSxRdwOhG3zkGfoHmakb2GAHD743jAsp0yFZGDP+lsFpeT+NT4qYqW2Pv74S8LJlf11hiEbxITDNWbjNgncse4uJFWn2mFs1dGIt/5MVcsX7nBz0zVdI7GduXl8/nraT53EJHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A52oFjrq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746692144; c=relaxed/simple;
+	bh=0J5yyuWYoiqeNSzqTqaD/OXkyRKI3jBk1sYRAPwhWEM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AYfme5MwyuC6EHzLoeRiS5JLZMqijEZTu+q2XjcHipird/NS/oR0BlSWYHxJbe8NBI44IqiaOCyWKdZtb1Uhgrh7JCdYotnzdfUbt1Ws7tPwPiXfdpougK+SI4qGtxDjX7NzMgxXdgbLd8dm4rFvJCuTF7qvovRLaiP9ruLOE4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KYe+QqaY; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A52oFjrq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 486EBC4AF09;
-	Thu,  8 May 2025 08:14:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746692093;
-	bh=a90R/RVtpbilNz7s62Jg8u91/OCcf1dJCeMzvHKzX2o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=A52oFjrqemalMSdOL5Jmf+c40wj1sXuWYLl3QItkyf8Aqq/xG84ltalPNi2KEG/fq
-	 ABli4aqrCKNLjztj/+3aUSi9l+2nt/WM6JzKW4nKCDdxi3YEPTXXrxPhPHVBjH68Ql
-	 Ri2XOSRQxtmhtCmCLya0Hp11BXH8gJ/hZHf3u8a96PiTaJSp4JwsxXIZQkErTJ2E0g
-	 Xy4LgLvC4i/ZOKRMlEdcvIRN5jBO/kNIaNBZ6DOcXfFkf7IOuSYm/K6GeoT/a8BO7T
-	 aEG/E4OMKhoe3/ngc8pHwi5btrsjtQjEqJ8mkiuyn4PouIID1ct9uWjprupBP2SyG5
-	 YvHfgMoFzbtNQ==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-326bb1d3e34so4023311fa.3;
-        Thu, 08 May 2025 01:14:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUjLDvCYRQE+ee7mamAmV8GSDBpIRZwyKM69oD/iQj5tO4y9MHz05Ibf7i5FkdosKDB1lJfirJM6Y51qhoT@vger.kernel.org, AJvYcCVAYWfcvPhe+NoSfGkFXwjQvM5vAuPw8ujRRQuJqlwE0k+c0Tf10KklSN0aIHpwx/zci8pgYerKxU0EiEU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2o1kmrFzeLycqe0GYInCO5UiY14gSeV0QHsUVWLwie45VC9aH
-	9laEd46kAZpezP9dX9iHLeOyid8kx0UKmWqLt2+8LewufDZunG5dRbgXqsu2yrfkYQc+keOJqao
-	F0k4xvlNdNiaZovxGvJzNvdcS1LM=
-X-Google-Smtp-Source: AGHT+IG5/r3K74rrgmP4jjN2TrL5tduvKzUd/NyUq1PVkJzbIiLe5Exi6qlai9lYrJkj3vGsc13NepVCII6zThmGhHQ=
-X-Received: by 2002:a2e:a9ab:0:b0:31b:4770:4957 with SMTP id
- 38308e7fff4ca-326ad15e61amr23735871fa.3.1746692091963; Thu, 08 May 2025
- 01:14:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KYe+QqaY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746692139;
+	bh=0J5yyuWYoiqeNSzqTqaD/OXkyRKI3jBk1sYRAPwhWEM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KYe+QqaYHxtSZYuPW61wnny7iHdzaiyk/VdmR7/oKaJKB7i0uDQet2do1NGazV1YQ
+	 cLxdziCRoag4XEfGt/p292DHgFhZpbja63fY8YbbVWtSNYywQ0VRLPyeRwciMrgAC9
+	 IIjnhxe9ItQ77AQQU26VQmh0q/gsJYM2jAlcJRlEyGupSg8xvxOzJzZrdYTuWn2lwU
+	 yOlU6K/7nR95f/2/x+GHUlFuzAgW8EZBJ6exf09QRilKptvKvbyuTK6pyQ8Ef8pRhk
+	 3aSkAqoxgFmhezGJ8WeTyNHDgoIcak/+cobyN70MRpiq+A55W0IMMBAZoJSyE8cetB
+	 3NFc1svtJ1jHQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8995317E0FBA;
+	Thu,  8 May 2025 10:15:38 +0200 (CEST)
+Message-ID: <fe72f05e-6a79-4240-8cf5-7a20e094aa46@collabora.com>
+Date: Thu, 8 May 2025 10:15:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507074936.486648-1-masahiroy@kernel.org> <9ec50ce0-f60b-4d87-bc44-adaf2a1a97a1@linuxfoundation.org>
- <b1e4e83c0965e10f2fe59826d19eaf131ec7aef9.camel@sipsolutions.net> <CAMuHMdUwE7btR+ebG8-gvPb8GPnxUGPWw3yKR4qM4Uc_mYcHhg@mail.gmail.com>
-In-Reply-To: <CAMuHMdUwE7btR+ebG8-gvPb8GPnxUGPWw3yKR4qM4Uc_mYcHhg@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Thu, 8 May 2025 17:14:15 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT_m+R3Keyys2NpmQWRmZzHNv9FM_ALv=vn_WMzTSWhyw@mail.gmail.com>
-X-Gm-Features: ATxdqUFvuCFG5NyS8UC8wsCetGd3jkgaQucz2-cP5mFw3Psg07oK3WaW20XowMg
-Message-ID: <CAK7LNAT_m+R3Keyys2NpmQWRmZzHNv9FM_ALv=vn_WMzTSWhyw@mail.gmail.com>
-Subject: Re: [PATCH] um: let 'make clean' properly clean underlying SUBARCH as well
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Johannes Berg <johannes@sipsolutions.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Richard Weinberger <richard@nod.at>, 
-	linux-um@lists.infradead.org, David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] dt-bindings: serial: mediatek,uart: Add compatible
+ for MT8189
+To: Sirius Wang <sirius.wang@mediatek.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Sean Wang <sean.wang@mediatek.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, wenst@chromium.org,
+ xavier.chang@mediatek.com
+References: <20250508063546.289115-1-sirius.wang@mediatek.com>
+ <20250508063546.289115-3-sirius.wang@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250508063546.289115-3-sirius.wang@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 8, 2025 at 4:38=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
-.org> wrote:
->
-> Hi Johannes,
->
-> On Thu, 8 May 2025 at 07:29, Johannes Berg <johannes@sipsolutions.net> wr=
-ote:
-> > On Wed, 2025-05-07 at 15:38 -0600, Shuah Khan wrote:
-> > > My workflow:
-> > >
-> > > - Build kernel on x86_64 with CONFIG_AMD_MEM_ENCRYPT enabled
-> > >
-> > > - Check for arch/x86/realmode/rm/pasyms.h
-> > >    ls arch/x86/realmode/rm/pasyms.h
-> > >       arch/x86/realmode/rm/pasyms.h
-> > >
-> > > - make ARCH=3Dum O=3D/linux/build
-> > >
-> > >    This patch cleans the source tree, but doesn't remove
-> > >    arch/x86/realmode/rm/pasyms.h
-> > >
-> > > - ls arch/x86/realmode/rm/pasyms.h
-> > >       arch/x86/realmode/rm/pasyms.h
-> >
-> > Is that even _expected_ to work? If you have x86 built first, I'd almos=
-t
-> > expect you to have to do "make ARCH=3Dx86 mrproper" before building
-> > another ARCH. I don't see how ARCH=3Dum would know how to do a full cle=
-an
-> > up of ARCH=3Dx86, unless this is somehow arch-independent?
-> >
-> > Or maybe that's not an issue with other architectures because UML is
-> > special in that it uses parts of x86?
->
-> Probably.
-> I only use my linux-next source tree for fixing reported build issues on
-> various architectures, and I never use make clean/mrproper.  Works fine.
->
-> > Though I guess the patch here should make it do that, more or less, but
-> > it can't, likely because you're also switching from in-tree build to O=
-=3D
-> > build?
->
-> Yeah, mixing in-tree and out-of-tree builds causes issues.
-> Never build in-tree in a source tree you use with O=3D (except for
-> e.g. "make tags").
->
+Il 08/05/25 08:35, Sirius Wang ha scritto:
+> Add compatible string for serial on MT8189 SoC.
+> 
+> Signed-off-by: Sirius Wang <sirius.wang@mediatek.com>
 
-I argue this.
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-You can start out-of-tree builds after running 'make mrproper'
-for the architecture you want to build the kernel for.
-
-Hence, Kbuild suggests to do so when it determines
-the source tree is not clean enough.
-
-Unfortunately, "make mrproper ARCH=3Dum" did not clean the tree
-deeply enough.   Hence, this patch.
-
-
---=20
-Best Regards
-Masahiro Yamada
