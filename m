@@ -1,291 +1,167 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail60.out.titan.email (mail60.out.titan.email [209.209.25.128])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D89422B8DB
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFC9221263
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.209.25.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746721453; cv=none; b=b4jHwDTTDA9UYArPgvYuJSDNrZB0I2ZEGirebo3kAEpRUe5JsNtHtMkFgwyDguIKKrat3TTaE7mz+XQz6OjDFSa0WS6XxrzZvE4qjMCAlvYmz7ei6V5u/Ya8pbfWAhk9FyoM/LfdUce/1IidlI2srbEkAz9+c21NOh6t5C4fQwg=
+	t=1746721504; cv=none; b=qSfSBEzQ+MD9TMhDl4wo+A0pkjdwl3VSM0vdh/yuvoLhIwCSxjmC9PybfVBUDwOWoZh6LaKI0r5wM+DwrCoha/v975WA+CDF9g5S4mSPAewGNhzz5PdUHGJpL8V78t3t084GenuyhFSo82gLz+MjxFMMO1c9SwpjS5vk+nDCVoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746721453; c=relaxed/simple;
-	bh=t3tn6uKOL50qsUsO1X85bUcdjubnWdIaq7pkM+3x/94=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P+b1Ab6YqfffolEUON3xOyVVXiLQMUhfbn0eK930gjxPojexDBQNRf7uPBlaV8y8s5HJ0lMBBQ5wfLHyNEfAozvg++RTKAql908UojgZB0RQrbGe9JQKFfCaRM9AfMy6cYeUTN4sdM1dhlTOvsa5BrzOUxZlmymEf7v/nx9aT7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=k89WTFs3; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746721504; c=relaxed/simple;
+	bh=T2DTGsDRdArRCaS2FN2J3QoGWbMHNQsTYpTibzEj6bg=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=f8uAxq0FTwEL5vQ18O1MRG5GkjoRwrzlxWj38o1sIzqk3NLEUbac90EaaCZqd1qThICKKyZ9lUC8er/NiVyQ5YO/M3Vp13y/Q1mp5WrHNj9PfU0tIWzbia2/9P+jFD4DCPkuM8L1ME06jRhka/L2y6D07BH+ycYiXm5LjaPQ+38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=TRggdLXE; arc=none smtp.client-ip=209.209.25.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="k89WTFs3"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2c76a1b574cso516438fac.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 09:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746721449; x=1747326249; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=siSVab6apiCbyEuP9nd4RY6Qv93d0GsyI0YfHMYsfRU=;
-        b=k89WTFs3FFEYIe1zmfVRYNS4+Eb4Ch0ACoXN1A3XhmCn0WHOqYl5XWjX//TbJxh53e
-         SEEOEYKtSC64r7sy7f93SjiqvsJHoLriEJhHVXBQU4IVNuoMR5/U3Len7J+04hcvzH+/
-         e+ebEh8p5AkFazPmu7bkRU2WzuzNKua58yRr6zZCCcQ1UY7kotEJ5EBqMVi/8fVoCdZv
-         MyZUIIT/yXNrS9wf6uMgzO/RLiX8QRmh3oBsC16O80NgyoOkFtdEm4q7dXEpsrbfEtwS
-         YRxWCM/VlgaUOKIX5NE8M2MJ9HRzuRHwIvD0WX7fgMmhgI6RWvITIFC8sCX35kLaDo3j
-         T0Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746721449; x=1747326249;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=siSVab6apiCbyEuP9nd4RY6Qv93d0GsyI0YfHMYsfRU=;
-        b=XXSsIKod15/KcF0OPR1X5LzztU3YI0DGUnldbm+Fa5PMu90I7RmBqhEYpw+gtplYGo
-         oXGctLqK31MVJdNWRRg920mBQ+H+e1lMazzkZUvScaSoGmAeRYPV/MURNv+j1Pa2UAb/
-         4GsbYraomxQfEzI2ukwScqUE+b/BYW8NEHh+8VV7nSTDhhngkPGRZnhL6CwjJkNcVNR4
-         Xx8hN7Nn69ELrgofPT53r6ZVGLZgrBmgX/txlDI62Nv4L5Dgo5OoBAl3kGz7MhUX7z+L
-         wXf4duLgz1o2TQnRPleurWjPVwVsBdb5B4LQH2sNHKQv/SCL7EtcOpwqva+NjdT/NFLy
-         H7KA==
-X-Forwarded-Encrypted: i=1; AJvYcCXl1nQXOiBleW+dkOpn38BV5jDIYX4p4E2fUsXB8V/4GXcVzotAc10X33VCpY/MKlsKV61HEsD9BQy/gKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yza2avoda76xc3xeYjc+5z3ht9pcKJtUmLHaotNCYQyr+aThIvM
-	cigaIZpPsd3gj/BntWaz/42GVFdwdnhLa8BqyxdSvjy2/i1MTDWKANhXLz9sd6U=
-X-Gm-Gg: ASbGnctHrazTM87M1LkPlq02cJF+Buk8PldnyTcuWIbSMX96N68R9sIfVMuFgfnT4lC
-	Aq5WY0EObvLCW4F8cp1xBlkQJo7B3r/arroYWAtyWh7pFn/0digFCY9w5FGybdEXI+jyDTkYf0V
-	JYSxUSNj+h11w9CcKqAYqdXiXLCC926Eix7PGuPi/NWivu/nSXO5P0UIoBS9c1Z7/n3wOMt1Jfl
-	jeurP7I69AXj+dc/PUjbw76AKIlgy9ZI9otAyJxBtKpD2iAw57728VZ2oJh4k2RTR7vy0KvgDM7
-	f+r+uQ071YgKrWVtHjXcd8lX0BRpxuW2yt3Pdrodl5Q8DdVdXFsHsLHnfD81AUcJOI6eOZ/VPOe
-	ghmxcjqhstykQ1ojejQ==
-X-Google-Smtp-Source: AGHT+IGLtpO6UhBgIcL3xiXd/cc2aOBHyXvNzemxDzdALjywytk8j9FQbKGayZ/TpFw4miZ9NDoJ+g==
-X-Received: by 2002:a05:6871:780d:b0:2d5:1232:b081 with SMTP id 586e51a60fabf-2dba44dcbfcmr49186fac.29.1746721449161;
-        Thu, 08 May 2025 09:24:09 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e? ([2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2dba06ff158sm122755fac.19.2025.05.08.09.24.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 09:24:08 -0700 (PDT)
-Message-ID: <3fdf8296-8839-4b44-8048-3720b0f45787@baylibre.com>
-Date: Thu, 8 May 2025 11:24:08 -0500
+	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="TRggdLXE"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp-out.flockmail.com (Postfix) with ESMTP id CAE4EE0107;
+	Thu,  8 May 2025 16:00:00 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; bh=u/FvevRsgL+DZjKgVYLFKDjkbcSxXS1/GItuAGT1qp8=;
+	c=relaxed/relaxed; d=t12smtp-sign004.email;
+	h=to:from:message-id:mime-version:in-reply-to:cc:references:subject:date:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
+	q=dns/txt; s=titan1; t=1746720000; v=1;
+	b=TRggdLXEEw7SpF9o7r3kJf1ovOK1sc1y79Qk7u19BT7lneNnSsdiieYhoQ97/5slu6qX1QqK
+	vlaKALallZUUEB7Bk9b1j/y7hzrkfseMleCnghqx07WyIqkJ1FOt35Y+bihMj28C3wTDPkX6R0e
+	m7O0X4FXALP/UhAFXD9Zc7/Q=
+Received: from smtpclient.apple (unknown [141.11.218.23])
+	by smtp-out.flockmail.com (Postfix) with ESMTPA id 2C61FE0314;
+	Thu,  8 May 2025 15:59:56 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] iio: magnetometer: qmc5883l: add mount matrix,
- control features and power management
-To: Brajesh Patil <brajeshpatil11@gmail.com>, jic23@kernel.org,
- lars@metafoo.de
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- marcelo.schmitt1@gmail.com
-References: <20250508120900.114348-1-brajeshpatil11@gmail.com>
- <20250508120900.114348-3-brajeshpatil11@gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250508120900.114348-3-brajeshpatil11@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [PATCH v2] md/bcache: Mark __nonstring look-up table
+Feedback-ID: :i@coly.li:coly.li:flockmailId
+From: Coly Li <i@coly.li>
+In-Reply-To: <202505080844.DD7F50F0A@keescook>
+Date: Thu, 8 May 2025 23:59:43 +0800
+Cc: Coly Li <colyli@kernel.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ Ard Biesheuvel <ardb@kernel.org>,
+ linux-bcache@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <02B98CCF-15A9-46EE-AD00-C5EDCAE774F0@coly.li>
+References: <20250418202130.it.887-kees@kernel.org>
+ <389A9925-0990-422C-A1B3-0195FAA73288@coly.li>
+ <851B250D-A22C-4B47-BBAC-55284B5B5790@coly.li>
+ <202505080844.DD7F50F0A@keescook>
+To: Kees Cook <kees@kernel.org>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
+X-F-Verdict: SPFVALID
+X-Titan-Src-Out: 1746720000629225916.26132.7404258459398680928@prod-use1-smtp-out1004.
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.4 cv=O7TDvA9W c=1 sm=1 tr=0 ts=681cd500
+	a=USBFZE4A2Ag4MGBBroF6Xg==:117 a=USBFZE4A2Ag4MGBBroF6Xg==:17
+	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=VwQbUJbxAAAA:8
+	a=LN1WO8SOcHLxaujQaaAA:9 a=QEXdDO2ut3YA:10 a=K3YW7E1MVtJkPNdb1KoQ:22
 
-On 5/8/25 7:09 AM, Brajesh Patil wrote:
-> Signed-off-by: Brajesh Patil <brajeshpatil11@gmail.com>
-> ---
->  drivers/iio/magnetometer/qmc5883l.c | 89 +++++++++++++++++++++++++++++
->  1 file changed, 89 insertions(+)
-> 
-> diff --git a/drivers/iio/magnetometer/qmc5883l.c b/drivers/iio/magnetometer/qmc5883l.c
-> index 07c65f193def..d26f959ab8c5 100644
-> --- a/drivers/iio/magnetometer/qmc5883l.c
-> +++ b/drivers/iio/magnetometer/qmc5883l.c
-> @@ -7,6 +7,7 @@
->  #include <linux/iio/trigger.h>
->  #include <linux/iio/trigger_consumer.h>
->  #include <linux/iio/triggered_buffer.h>
-> +#include <linux/pm.h>
->  #include <linux/regmap.h>
->  #include <linux/types.h>
-> 
-> @@ -54,6 +55,10 @@
->  #define QMC5883L_OSR_MASK           0xC0
->  #define QMC5883L_OSR_SHIFT          6
-> 
-> +#define QMC5883L_SOFT_RST           0x80
-> +#define QMC5883L_ROL_PNT            0x40
-> +#define QMC5883L_INT_ENB            0x01
-> +
->  static const char *const qmc5883l_modes[] = {
->  	"standby", "continuous"
->  };
-> @@ -80,12 +85,14 @@ static const int qmc5883l_odr_map[] = {
->   * @client: I2C client structure
->   * @lock: mutex to protect register access
->   * @regmap: register map of the device
-> + * @orientation: Sensor mounting orientation matrix
->   * @scan: buffer for triggered data reading
->   */
->  struct qmc5883l_data {
->  	struct i2c_client *client;
->  	struct mutex lock; /* Protects sensor read/write operations */
->  	struct regmap *regmap;
-> +	struct iio_mount_matrix orientation;
-> 
->  	struct {
->  		__le16 chans[3];
-> @@ -102,6 +109,9 @@ static ssize_t qmc5883l_show_scale_avail(struct device *dev,
->  					 struct device_attribute *attr, char *buf);
->  static ssize_t qmc5883l_show_status(struct device *dev,
->  				    struct device_attribute *attr, char *buf);
-> +static ssize_t qmc5883l_store_control(struct device *dev,
-> +				      struct device_attribute *attr,
-> +				      const char *buf, size_t count);
-> 
->  static int qmc5883l_buffer_preenable(struct iio_dev *indio_dev)
->  {
-> @@ -357,6 +367,15 @@ static int qmc5883l_read_measurement(struct qmc5883l_data *data,
->  	return IIO_VAL_INT;
->  }
-> 
-> +static const struct iio_mount_matrix *
-> +qmc5883l_get_mount_matrix(const struct iio_dev *indio_dev,
-> +			  const struct iio_chan_spec *chan)
-> +{
-> +	struct qmc5883l_data *data = iio_priv(indio_dev);
-> +
-> +	return &data->orientation;
-> +}
-> +
->  static const struct iio_enum qmc5883l_mode_enum = {
->  	.items = qmc5883l_modes,
->  	.num_items = ARRAY_SIZE(qmc5883l_modes),
-> @@ -376,6 +395,7 @@ static const struct iio_chan_spec_ext_info qmc5883l_ext_info[] = {
->  	IIO_ENUM_AVAILABLE("mode", IIO_SHARED_BY_TYPE, &qmc5883l_mode_enum),
->  	IIO_ENUM("oversampling_ratio", IIO_SHARED_BY_TYPE, &qmc5883l_osr_enum),
->  	IIO_ENUM_AVAILABLE("oversampling_ratio", IIO_SHARED_BY_TYPE, &qmc5883l_osr_enum),
-> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, qmc5883l_get_mount_matrix),
->  	{ }
->  };
-> 
-> @@ -383,6 +403,8 @@ static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(qmc5883l_show_odr_avail);
->  static IIO_DEVICE_ATTR(scale_available, 0444, qmc5883l_show_scale_avail, NULL, 0);
->  static IIO_DEVICE_ATTR(data_ready, 0444, qmc5883l_show_status, NULL, 0);
->  static IIO_DEVICE_ATTR(overflow, 0444, qmc5883l_show_status, NULL, 0);
-> +static IIO_DEVICE_ATTR(soft_reset, 0200, NULL, qmc5883l_store_control, 0);
-> +static IIO_DEVICE_ATTR(pointer_rollover, 0200, NULL, qmc5883l_store_control, 0);
 
-More custom attribute that probably aren't needed or need some justification.
 
-A reset is usually only done on driver probe. Not sure what pointer rollover is.
-> 
->  static ssize_t qmc5883l_show_odr_avail(struct device *dev,
->  				       struct device_attribute *attr, char *buf)
-> @@ -416,6 +438,44 @@ static ssize_t qmc5883l_show_status(struct device *dev,
->  	return -EINVAL;
->  }
-> 
-> +/* Control attribute writes:
-> + * - soft_reset: performs device reset and re-init
-> + * - pointer_rollover: enables/disables rollover pointer
-> + */
-> +static ssize_t qmc5883l_store_control(struct device *dev, struct device_attribute *attr,
-> +				      const char *buf, size_t count)
-> +{
-> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> +	struct qmc5883l_data *data = iio_priv(indio_dev);
-> +	bool val;
-> +	int ret = 0;
-> +
-> +	ret = kstrtobool(buf, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (attr == &iio_dev_attr_soft_reset.dev_attr && val) {
-> +		mutex_lock(&data->lock);
-> +		ret = regmap_write(data->regmap, QMC5883L_CONTROL_REG_2,
-> +				   QMC5883L_SOFT_RST);
-> +		mutex_unlock(&data->lock);
-> +		msleep(50);
-> +
-> +		ret = qmc5883l_init(data);
-> +		if (ret < 0) {
-> +			dev_err(&data->client->dev, "Sensor Reinitialization Failed\n");
-> +			return ret;
-> +		}
-> +		dev_info(&data->client->dev, "Sensor successfully reinitialized\n");
-> +	} else if (attr == &iio_dev_attr_pointer_rollover.dev_attr) {
-> +		mutex_lock(&data->lock);
-> +		ret = regmap_update_bits(data->regmap, QMC5883L_CONTROL_REG_2,
-> +					 QMC5883L_ROL_PNT, val ? QMC5883L_ROL_PNT : 0);
-> +		mutex_unlock(&data->lock);
-> +	}
-> +	return ret ? ret : count;
-> +}
-> +
->  static int qmc5883l_read_raw(struct iio_dev *indio_dev,
->  			     struct iio_chan_spec const *chan, int *val, int *val2, long mask)
->  {
-> @@ -599,6 +659,8 @@ static struct attribute *qmc5883l_attributes[] = {
->  	&iio_dev_attr_scale_available.dev_attr.attr,
->  	&iio_dev_attr_data_ready.dev_attr.attr,
->  	&iio_dev_attr_overflow.dev_attr.attr,
-> +	&iio_dev_attr_soft_reset.dev_attr.attr,
-> +	&iio_dev_attr_pointer_rollover.dev_attr.attr,
->  	NULL
->  };
-> 
-> @@ -659,6 +721,27 @@ static const struct iio_info qmc5883l_info = {
-> 
->  static const unsigned long qmc5883l_scan_masks[] = {0x7, 0};
-> 
-> +static int qmc5883l_suspend(struct device *dev)
-> +{
-> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
-> +	struct qmc5883l_data *data = iio_priv(indio_dev);
-> +
-> +	return qmc5883l_set_mode(data, QMC5883L_MODE_STANDBY);
-> +}
-> +
-> +static int qmc5883l_resume(struct device *dev)
-> +{
-> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
-> +	struct qmc5883l_data *data = iio_priv(indio_dev);
-> +
-> +	return qmc5883l_set_mode(data, QMC5883L_MODE_CONT);
-> +}
+> 2025=E5=B9=B45=E6=9C=888=E6=97=A5 23:58=EF=BC=8CKees Cook =
+<kees@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> On Thu, May 08, 2025 at 11:01:34AM +0800, Coly Li wrote:
+>>=20
+>>> 2025=E5=B9=B44=E6=9C=8819=E6=97=A5 11:55=EF=BC=8CColy Li <i@coly.li> =
+=E5=86=99=E9=81=93=EF=BC=9A
+>>>=20
+>>>=20
+>>>=20
+>>>> 2025=E5=B9=B44=E6=9C=8819=E6=97=A5 04:21=EF=BC=8CKees Cook =
+<kees@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
+>>>>=20
+>>>> GCC 15's new -Wunterminated-string-initialization notices that the =
+16
+>>>> character lookup table "zero_uuid" (which is not used as a =
+C-String)
+>>>> needs to be marked as "nonstring":
+>>>>=20
+>>>> drivers/md/bcache/super.c: In function 'uuid_find_empty':
+>>>> drivers/md/bcache/super.c:549:43: warning: initializer-string for =
+array of 'char' truncates NUL terminator but destination lacks =
+'nonstring' attribute (17 chars into 16 available) =
+[-Wunterminated-string-initialization]
+>>>> 549 |         static const char zero_uuid[16] =3D =
+"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+>>>>    |                                           =
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>>=20
+>>>> Add the annotation (since it is not used as a C-String), and switch =
+the
+>>>> initializer to an array of bytes.
+>>>>=20
+>>>> Signed-off-by: Kees Cook <kees@kernel.org>
+>>>> ---
+>>>> v2: use byte array initializer (colyli)
+>>>> v1: =
+https://lore.kernel.org/all/20250416220135.work.394-kees@kernel.org/
+>>>> Cc: Coly Li <colyli@kernel.org>
+>>>> Cc: Kent Overstreet <kent.overstreet@linux.dev>
+>>>> Cc: Ard Biesheuvel <ardb@kernel.org>
+>>>> Cc: linux-bcache@vger.kernel.org
+>>>> ---
+>>>> drivers/md/bcache/super.c | 3 ++-
+>>>> 1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>=20
+>>>> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+>>>> index e42f1400cea9..a76ce92502ed 100644
+>>>> --- a/drivers/md/bcache/super.c
+>>>> +++ b/drivers/md/bcache/super.c
+>>>> @@ -546,7 +546,8 @@ static struct uuid_entry *uuid_find(struct =
+cache_set *c, const char *uuid)
+>>>>=20
+>>>> static struct uuid_entry *uuid_find_empty(struct cache_set *c)
+>>>> {
+>>>> - static const char zero_uuid[16] =3D =
+"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+>>>> + static const char zero_uuid[] __nonstring =3D
+>>>=20
+>>=20
+>> Hi Kees,
+>>=20
+>>> I notice zero_uuid[16] changes to zero_uuid[], then the element =
+number information is removed.
+>>>=20
+>>> Is it OK for GCC 15 to only add __nonstring and keep zero_uuid[16]?
+>=20
+> Either way is fine. I can update the patch to use the "[16]" again if
+> you'd like?
+>=20
 
-The driver is currently only seting CONT mode when reading data, so having
-this in the suspend/resume doesn't make sense to me.
+Yes please. Thanks in advance.
 
-> +
-> +static const struct dev_pm_ops qmc5883l_pm_ops = {
-> +	.suspend = qmc5883l_suspend,
-> +	.resume = qmc5883l_resume,
-> +};
-> +
->  static int qmc5883l_probe(struct i2c_client *client)
->  {
->  	struct regmap *regmap;
-> @@ -683,6 +766,10 @@ static int qmc5883l_probe(struct i2c_client *client)
->  	data->regmap = regmap;
->  	mutex_init(&data->lock);
-> 
-> +	ret = iio_read_mount_matrix(&client->dev, &data->orientation);
-> +	if (ret)
-> +		dev_warn(&client->dev, "Failed to read mount matrix: %d\n", ret);
-> +
->  	indio_dev->name = "qmc5883l";
->  	indio_dev->info = &qmc5883l_info;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
-> @@ -693,6 +780,7 @@ static int qmc5883l_probe(struct i2c_client *client)
->  	ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev,
->  					      NULL, &qmc5883l_trigger_handler,
->  					      &qmc5883l_buffer_setup_ops);
-> +
->  	if (ret < 0) {
->  		dev_err(&client->dev, "Failed to setup triggered buffer: %d\n", ret);
->  		return ret;
-> @@ -730,6 +818,7 @@ static struct i2c_driver qmc5883l_driver = {
->  	.driver = {
->  		.name = "qmc5883l",
->  		.of_match_table = qmc5883l_of_match,
-> +		.pm = pm_sleep_ptr(&qmc5883l_pm_ops),
->  	},
->  	.id_table = qmc5883l_id,
->  	.probe = qmc5883l_probe,
-> --
-> 2.39.5
-> 
+Coly Li
+
+
+>=20
+>> Ping ?
+>>=20
+>> You are expert here, I need your opinion.
+>>=20
+>> Thanks.
+>>=20
+>> Coly Li
+>>=20
+>>=20
+>>=20
+>>>> + { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+>>>>=20
+>>>> return uuid_find(c, zero_uuid);
+>>>> }
+>>>> --=20
+>>>> 2.34.1
+>>=20
+>>=20
+>=20
+> --=20
+> Kees Cook
 
