@@ -1,106 +1,101 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD38D1DEFE9
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 06:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DA34B1E45
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 06:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746685879; cv=none; b=ZG1Szxc/TNQqsBV/nnp90+ydV4FlE602cbJMscS5WlefsjwA76llyR5tHdY1/NcRBz2Y1hEtYFXJ5b1Ub8OitXFpjOqesAML4wyKtqM2+9+0D6fDXw2ORe72U8+TDQvsIVF6vEYIgLNzSvbt2EDD7G1tBegwY7Xyghu6aqowZEw=
+	t=1746686006; cv=none; b=HU7JLhJqGa1T+MGH4dvp4L/H6vDTo3mdGsu9Jw/BZxVNJWBO9wonfID6ue8af8DwpJqyyLRJGfbIZJHO0MAVhvptCnmv8hVzhRdqvCUJ1Sjr11/Mb+vNGZLfAAa1AZL+wILDHJFG8wjDR4+R/5szYN4SEmFzjeS9jAgLFp7ycIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746685879; c=relaxed/simple;
-	bh=vZRMPhhpZanflQyXzFgxtopwgfSnWaHd3na1GGwd1Is=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c63PBDX+xZ4cYLylLH8KH5cp0/OR0ai+1NOQ/Eb2/ttmAcbLry0aKvXwwzddtejcg05I32Xf+9mEQn4PzVAUtZNy1bk0c8QsIvHebytOrrMyZQsk4U8wRQ6/zAf4YJNj/NlMeA3tD64yWO831Dg1QEXO1qnLXrjzlQhSBK3GCeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7DE3106F;
-	Wed,  7 May 2025 23:31:06 -0700 (PDT)
-Received: from [10.163.54.182] (unknown [10.163.54.182])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 108883F5A1;
-	Wed,  7 May 2025 23:31:08 -0700 (PDT)
-Message-ID: <9bd98ddc-50fb-42cb-be22-1d08161f4713@arm.com>
-Date: Thu, 8 May 2025 12:01:05 +0530
+	s=arc-20240116; t=1746686006; c=relaxed/simple;
+	bh=v/gZOoYkpcXqBs6iIOIuHeFy9Ne5qxFjnODSuurr3zQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YwTRGeUC9KoGz+bZIoosOKK3a206pmxjSIqtG+ODv9eZK8QuM08yyzqYP4m4Z/j9bPVd6vLSdHAALCPpOh7W8gc/3tkYQ5N76SP7yOyRRK3+1FqQpso1qMLYEr0NLyk5G63zyILUJidAg4fyeGt23rDWJJRbwaaFYBHo/KDb8L0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XDnvnMnB; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XDnvnMnB"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b1fde81de05so350910a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 23:33:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1746686004; x=1747290804; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HlgheUo164rlqXvFGQwU6HpEq4bJ/pYk3yvNMQQtoWM=;
+        b=XDnvnMnBScY2mTm0aoQDPW7WOzY/gqxeRz5rg/Ci3LeWf+OWCz+v6lKCs+Zr5ySq7m
+         RhfmL750lT6c8aFW7Q+AgKwRQNMCRMXay8L8zn8T0pFZJZdv/8dzSzjF8/SkmJXUk+VO
+         VqIC6fV7/baigvrkQJX8L2KBciS1leJX18yXo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746686004; x=1747290804;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HlgheUo164rlqXvFGQwU6HpEq4bJ/pYk3yvNMQQtoWM=;
+        b=aVxId8V1r1EepL409J1ywAXYSyawmYdg9pzV6+j/WS4JfFCwucHFCTg4IOpW5Setu4
+         9yXsvKrLy3gVe3dEYVR47aI72Ay5GK5ylEIlNdRmoAoektbGpFUSPlctoY0X4D+eGwpz
+         L6zw57TVZA/ux8K9LeN/a91biF6e5Sn1jEopJRWu7jL8BbBtD5HgNp3d3kvDLbCnn9z8
+         dovwWAP0yf0q9936PD0wDKytT8rPE+TGVMDU7FZRE/gsgziRjOd+7SoIPWGglx8/Y9MQ
+         ggavmeQi7DViBAdf0EYiN+H4Of24lLNfSiLMu9Lx684VdfohFt/PCNBRUIt+6BpTgTXL
+         ZFHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUs3uJTXEVSEbp9Zsyk14ZJ6h87FzPjQmtmqYXCgfG96oPgPjJqie7aNIY56sYbjCXWO2CC1oC30Lku86A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9XC87jqtM9GAsFISd4I/0CgBKYe+kgsr1NmFYNoAksMv1jKrr
+	f/9BAsgEaOFf7fLpnZevOTkqDedJbMhfLh2iJo6a+Z4H72ozzf9J2kpUxLIw5g==
+X-Gm-Gg: ASbGncvzYx8h3H0ZnOZrHizi5lgoU1AbDvYlS5Ia5jPX/wnGnLW5ZFe13GKiTfTE6nR
+	x0PZaBusqBXD/rroY6Ib37bS9xHUeuFQkw4M7GudmB1yX5ozDsQ3dk+4VyvteiNWekdcqYpWrPj
+	aiwepDpuh+xlFQHt1xxhjQBuSNC0IXHkDVNAQNVmnLtuIV8GNOJ5Y760a22wN/ZD0LaDX2+GzMw
+	eldC7gCsml4+XfNUoyQQHLapnNsTFyfrV7QAngcap+J2Xzr9fthWd41z39JXx7TAMabW+nGi6Vp
+	akqF7HCXEWlv0jn65tu86UO5EMLgQ1VrhdjBvi/cfqqF
+X-Google-Smtp-Source: AGHT+IFTxdpBpcI+dt+ewP/ixBZ5/vcOfiMsuXdPx9TL9kjiJLwdfxwmdioqqOx3ETJijnVQIrm7Kg==
+X-Received: by 2002:a17:903:1b6d:b0:224:255b:c934 with SMTP id d9443c01a7336-22e5ee1e42emr85523305ad.51.1746686004087;
+        Wed, 07 May 2025 23:33:24 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:c794:38be:3be8:4c26])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e815806fdsm11012065ad.17.2025.05.07.23.33.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 23:33:23 -0700 (PDT)
+Date: Thu, 8 May 2025 15:33:17 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Christoph Hellwig <hch@infradead.org>, 
+	Yosry Ahmed <yosry.ahmed@linux.dev>, Vitaly Wool <vitaly.wool@konsulko.se>, linux-mm@kvack.org, 
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Minchan Kim <minchan@kernel.org>, Igor Belousov <igor.b@beldev.am>, 
+	Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
+Message-ID: <fbftgni67wha2c6zdx3w5ccsxwlrr5yog6ifipkr4ft7h3hezo@kwb66muoctdj>
+References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
+ <aBoK7f7rtfbPFGap@google.com>
+ <m2dmxnhtvxano6lye7lr3saiobn4ygpln55xntlstfo4zwws5g@qpq7aagx3xwq>
+ <b42gpp5qsa4j22ai2v4rwwkjhvfbcbf3lcnjoccz7xeidae5c7@ot2ocric3qzs>
+ <aBsDj0IGQBJC_JMj@infradead.org>
+ <unyov4aypoaotj56m5scgd4qtjfn2mceb4zdmtaek42dfqaq3t@lrrqwojlmudp>
+ <aBxIlUYEPojTopek@infradead.org>
+ <at4djawky2n5d2nrxor62osid3mkaid4ttmlmc3xwsju2hstun@bos2kgakshpa>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] mm: Optimize mremap() by PTE batching
-To: Zi Yan <ziy@nvidia.com>, Dev Jain <dev.jain@arm.com>
-Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com,
- lorenzo.stoakes@oracle.com, vbabka@suse.cz, jannh@google.com,
- pfalcato@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- david@redhat.com, peterx@redhat.com, ryan.roberts@arm.com, mingo@kernel.org,
- libang.li@antgroup.com, maobibo@loongson.cn, zhengqi.arch@bytedance.com,
- baohua@kernel.org, willy@infradead.org, ioworker0@gmail.com,
- yang@os.amperecomputing.com, baolin.wang@linux.alibaba.com, hughd@google.com
-References: <20250507060256.78278-1-dev.jain@arm.com>
- <20250507060256.78278-3-dev.jain@arm.com>
- <74FDF9E1-3148-460B-8E3C-5EE156A3FA93@nvidia.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <74FDF9E1-3148-460B-8E3C-5EE156A3FA93@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <at4djawky2n5d2nrxor62osid3mkaid4ttmlmc3xwsju2hstun@bos2kgakshpa>
 
-
-
-On 5/8/25 07:30, Zi Yan wrote:
-> On 7 May 2025, at 2:02, Dev Jain wrote:
+On (25/05/08 15:17), Sergey Senozhatsky wrote:
+> On (25/05/07 23:00), Christoph Hellwig wrote:
+> > On Thu, May 08, 2025 at 02:58:14PM +0900, Sergey Senozhatsky wrote:
+> > > Oh, I didn't realize that zram was the only swap_slot_free_notify
+> > > user.  zram already handles REQ_OP_DISCARD/REQ_OP_WRITE_ZEROES so
+> > > I guess only swap-cluster needs some work.  Are there any
+> > > blockers/complications on the swap-cluster side?
+> > 
+> > I think the reason it was added it was so that the discard can be
+> > done non-blocking with a spinlock held.  Which seems a bit sketch
+> > when calling into a driver anyway..
 > 
->> To use PTE batching, we want to determine whether the folio mapped by
->> the PTE is large, thus requiring the use of vm_normal_folio(). We want
->> to avoid the cost of vm_normal_folio() if the code path doesn't already
->> require the folio. For arm64, pte_batch_hint() does the job. To generalize
->> this hint, add a helper which will determine whether two consecutive PTEs
->> point to consecutive PFNs, in which case there is a high probability that
->> the underlying folio is large.
->> Next, use folio_pte_batch() to optimize move_ptes(). On arm64, if the ptes
->> are painted with the contig bit, then ptep_get() will iterate through all 16
->> entries to collect a/d bits. Hence this optimization will result in a 16x
->> reduction in the number of ptep_get() calls. Next, ptep_get_and_clear()
->> will eventually call contpte_try_unfold() on every contig block, thus
->> flushing the TLB for the complete large folio range. Instead, use
->> get_and_clear_full_ptes() so as to elide TLBIs on each contig block, and only
->> do them on the starting and ending contig block.
->>
->> Signed-off-by: Dev Jain <dev.jain@arm.com>
->> ---
->>  include/linux/pgtable.h | 29 +++++++++++++++++++++++++++++
->>  mm/mremap.c             | 37 ++++++++++++++++++++++++++++++-------
->>  2 files changed, 59 insertions(+), 7 deletions(-)
->>
->> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
->> index b50447ef1c92..38dab1f562ed 100644
->> --- a/include/linux/pgtable.h
->> +++ b/include/linux/pgtable.h
->> @@ -369,6 +369,35 @@ static inline pgd_t pgdp_get(pgd_t *pgdp)
->>  }
->>  #endif
->>
->> +/**
->> + * maybe_contiguous_pte_pfns - Hint whether the page mapped by the pte belongs
->> + * to a large folio.
->> + * @ptep: Pointer to the page table entry.
->> + * @pte: The page table entry.
->> + *
->> + * This helper is invoked when the caller wants to batch over a set of ptes
->> + * mapping a large folio, but the concerned code path does not already have
->> + * the folio. We want to avoid the cost of vm_normal_folio() only to find that
->> + * the underlying folio was small; i.e keep the small folio case as fast as
->> + * possible.
->> + *
->> + * The caller must ensure that ptep + 1 exists.
-> 
-> ptep points to an entry in a PTE page. As long as it is not pointing
-> to the last entry, ptep+1 should always exist. With PTRS_PER_PTE and
-> sizeof(pte_t), you can check ptep address to figure out whether it
-> is the last entry of a PTE page, right? Let me know if I misunderstand
-> anything.
+> swap_slot_free_notify is not guaranteed to free anything on the zram/zsmalloc
+> side. zram attempts to trylock entry
 
-Agreed, this not-the-last-pte-entry test is definitely required here just
-to prevent a potential unmapped access crash. But I do agree with Andrew
-that unless there are callers, this should be contained in the call site
-itself (mm/mremap.c) with a good explanation.
+.. I keep forgetting that slot-free can be called from an IRQ.  That's
+some complication.
