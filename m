@@ -1,92 +1,146 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1493728B7D6
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 20:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7435628C03F;
+	Thu,  8 May 2025 20:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746735922; cv=none; b=sj6csQgtoI/7w/zgHTDzmt+nD/k9C052iUxIIDGx5cdVXLzeb4SyEFN7ie2aK8HlqEwGdOkGTPWGWJmC6amM47BQHcSCIfsMrSvtSBx4I8Guq2VbsYBgAyoRsteMtG4xlSi1PLv0x7PxQq39d7Dd5i50oglvnbPgOri+hHt0uLA=
+	t=1746735924; cv=none; b=kmDefHM2n74RbNI7bGetEArqkg7U3bHo083ECgHwQL6Sj4me6/1+LIdbiywrQYdpVN+/rdYXbDorKLNg9tuYfO96zPlL3e4zU8fzmFYxz9neMURyFe5bCsJgpIYSi0R/lUPQsQTpIfls5RuHwvE7Zj3gD4EeNCniqDlnRLLWX6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746735922; c=relaxed/simple;
-	bh=FMFfjAhupIyMcQiW+d2vGijJ/6Hn/M9gHCJ3BHT3hs4=;
+	s=arc-20240116; t=1746735924; c=relaxed/simple;
+	bh=MsJOMVn1vxQ25UIx25I8nR9qjt4TSlX/PtY0sYN3QZ8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dycfRwqwDNNXSyeE/rU7AP3X2zpFlgcW002WzJKbxggQoXPihrsD+aumQxskI3BJqmDvvxJIn3+gFVBVdSEYdjDqADy1j1xY6kJ6pVXsxE21KgM+rjxBsEV5Dfrzt4UDfCh6EWnS3ejktS35rvNmA9IhknmCDCdmVSqYPI/FaGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DIkQ2pbq; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=EgZQpkmDXbkdZPyUzo/0VFOe4GYZX+HewtVnXsljwK38NiCXrgHwvCpFDHLmsIBSrISAc4n8lWiKHJA6F7nCF/KVusSvMVtmZgPUt6CgdMxuqFTheD7d2epj9ta6VKLyds2oRjOyIW9hF7KSqPvEWOHKzMSqkYnUmc9wkLfpgXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ApeXQDUb; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DIkQ2pbq"
-Message-ID: <21e9e805-1582-4960-8250-61fe47b2d0aa@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746735919;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6hy7ec7lbC/Y0P4+kLPv/gY7QRnVaxVEb18bBEjhf04=;
-	b=DIkQ2pbqSpZYQ8yInqdxezW+G5MCjt4PF0pcVkx8mArv59NsvgIzzMWgwimW9Ez4sq8hl9
-	mGgej8SrRQqmDe+QB5exTXx/7rqPr5wVosl/lhRDJRFmfEmJMcjmbcIFXr7KBDSo9avE3y
-	CPa3jZ+J1R11+VVXvL6vT5uqa+AMxxA=
-Date: Thu, 8 May 2025 21:25:14 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ApeXQDUb"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-74068f95d9fso1491483b3a.0;
+        Thu, 08 May 2025 13:25:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746735923; x=1747340723; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=2KKhlirT+mOzzcqtCv1gw0CpqB8qUWHpAj5Ser8V4Q0=;
+        b=ApeXQDUb0cY0v74ClzTg7uM/RZq7dRVvPSZglA5OAh/xTwtTQIz2+EtM+FaTI0DL86
+         AALfyQAd3HQEluLnD7HE5CbVIHJlzcluHANGO1be0lKA3RnlNlf0TAJ94Rgc+gJjvEXV
+         HIAdFzEAvR1Pnmz3xAvpmhN75GNcxDd1/mtqYPceSz5R0Op3e/f4D+jC/WMFOYqdr4q7
+         oghQwonJCExkDJECwmo8yzw+XeeJiHv+uzQHnmtWCahACefwzSNZ1kFn7AfAyYB3Pmrr
+         jCbMoV75+y1lT6xgIlPQ2npLfk9E+kCf7c8Dwx5jP1Ck7ZC3wqR4c78C9feJ+FxfV80k
+         lr7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746735923; x=1747340723;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2KKhlirT+mOzzcqtCv1gw0CpqB8qUWHpAj5Ser8V4Q0=;
+        b=igO322CpwoRYvpY/4vvx1fsgjkWcw9E/PlqAVxNvlnjrZYpL+Qm3fiTkep2TdgZLwN
+         PuAY0gqw8/wwxXOE+gprwDFkHOaQVxZTedmtYKi+ci30NSeK53We1n3pNXJ6xEGCS9P/
+         ymu/5BbU+LRiryH4fYk2RctDMrrc2+HnT93W4XSQSGPO0SVP1CXVvrqiQ0uLKjUhdS/5
+         wyHRUBkQcVtrO6LqUS/DCqDNUBfG7cuafnlhAjVCxYUUt8/1OQVq5xhDTT21AuSLtbyJ
+         gI9sr2K4oS2KBzkAlegoxWiOIp1EYjWyZdt5tFRkZfnRW7tvE/gfqJ76qhKvWaUoxq51
+         Q7dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkFpBBW40AOOouWoQgGkJ2Odydr0A5Jmn7ky3psUzLuCyw1/5yA17eue7+mCp2mr1X/3RQmis3@vger.kernel.org, AJvYcCVCTsDinUEv+jxLKWzq1Eimt1fRakpkAEaOHUcF/aQvco+nA3xcoz3TNqweqakktbgpy4zcQNlPgnQ/6Gk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYpc7pSXH7uNgX7Osm+umBifLhzyaimUciwp/H6zSXs4sCpJ6J
+	PQh1JerasOMt06qoeTGRLkDHhnzRY+EbAli7hwCh8Pv+JsH94YQD
+X-Gm-Gg: ASbGncss6HsgIjqvf6BH6xxeq+zlAVfqowem5GkrbfwtEk1i7s4E4LHOO7GxlqlgeG9
+	RhtQ76mtP7zyNuhExp+oTeemRrDPU16OcAfvE2VydICHZ34WzPxM/DxmlQcPda/hWtp5fi3OpiI
+	OIUD/KZ+Sjo29juPR/xRoa8hbVTgbVDgTACmTjyqw4MAidVS18ZNniNnblA8jelkIClPa0XpY5Y
+	MRLog0yz6m0k+ngrQRvSsUJl5BHtk/jcmAUmNEcUi5WlyCt8KUMYDyNt8WQ1ju8baDvBo46yQTx
+	dFNr8g+vWu58/AjuSQ2AffAWL4zbBkT3p6j57Jb1kpShPGUNzkqOKF23fFHjo/xJ7JYkHXWx9EM
+	lyg/knaBwFCe3EcM=
+X-Google-Smtp-Source: AGHT+IHkcU1/5M2Y+YPbh19OnZdCSlbYkXuOCfgJLAdBmpfseejR1+XFvAy6P48EsXxIs5IGQKWxbA==
+X-Received: by 2002:a05:6a00:21d0:b0:73e:10ea:1196 with SMTP id d2e1a72fcca58-7423bd6c3a9mr980529b3a.8.1746735922594;
+        Thu, 08 May 2025 13:25:22 -0700 (PDT)
+Received: from [192.168.1.177] (46.37.67.37.rev.sfr.net. [37.67.37.46])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7423770414dsm460950b3a.23.2025.05.08.13.25.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 13:25:22 -0700 (PDT)
+Message-ID: <3eccf673-efe0-4feb-906d-ce860497469a@gmail.com>
+Date: Thu, 8 May 2025 22:25:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next] net: dsa: convert to ndo_hwtstamp_get() and
- ndo_hwtstamp_set()
-To: Vladimir Oltean <vladimir.oltean@nxp.com>, netdev@vger.kernel.org
-Cc: =?UTF-8?Q?K=C3=B6ry_Maincent?= <kory.maincent@bootlin.com>,
- Kurt Kanzenbach <kurt@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Woojung Huh <woojung.huh@microchip.com>, UNGLinuxDriver@microchip.com,
- Claudiu Manoil <claudiu.manoil@nxp.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Simon Horman <horms@kernel.org>, Richard Cochran <richardcochran@gmail.com>,
- Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org
-References: <20250508095236.887789-1-vladimir.oltean@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.12 000/164] 6.12.28-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250507183820.781599563@linuxfoundation.org>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250508095236.887789-1-vladimir.oltean@nxp.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
+ xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
+ X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
+ AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
+ ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
+ SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
+ nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
+ qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz80nRmxvcmlhbiBG
+ YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+wmYEExECACYCGyMGCwkIBwMCBBUCCAME
+ FgIDAQIeAQIXgAUCZ7gLLgUJMbXO7gAKCRBhV5kVtWN2DlsbAJ9zUK0VNvlLPOclJV3YM5HQ
+ LkaemACgkF/tnkq2cL6CVpOk3NexhMLw2xzOw00ESM+4EhAQAL/o09boR9D3Vk1Tt7+gpYr3
+ WQ6hgYVON905q2ndEoA2J0dQxJNRw3snabHDDzQBAcqOvdi7YidfBVdKi0wxHhSuRBfuOppu
+ pdXkb7zxuPQuSveCLqqZWRQ+Cc2QgF7SBqgznbe6Ngout5qXY5Dcagk9LqFNGhJQzUGHAsIs
+ hap1f0B1PoUyUNeEInV98D8Xd/edM3mhO9nRpUXRK9Bvt4iEZUXGuVtZLT52nK6Wv2EZ1TiT
+ OiqZlf1P+vxYLBx9eKmabPdm3yjalhY8yr1S1vL0gSA/C6W1o/TowdieF1rWN/MYHlkpyj9c
+ Rpc281gAO0AP3V1G00YzBEdYyi0gaJbCEQnq8Vz1vDXFxHzyhgGz7umBsVKmYwZgA8DrrB0M
+ oaP35wuGR3RJcaG30AnJpEDkBYHznI2apxdcuTPOHZyEilIRrBGzDwGtAhldzlBoBwE3Z3MY
+ 31TOpACu1ZpNOMysZ6xiE35pWkwc0KYm4hJA5GFfmWSN6DniimW3pmdDIiw4Ifcx8b3mFrRO
+ BbDIW13E51j9RjbO/nAaK9ndZ5LRO1B/8Fwat7bLzmsCiEXOJY7NNpIEpkoNoEUfCcZwmLrU
+ +eOTPzaF6drw6ayewEi5yzPg3TAT6FV3oBsNg3xlwU0gPK3v6gYPX5w9+ovPZ1/qqNfOrbsE
+ FRuiSVsZQ5s3AAMFD/9XjlnnVDh9GX/r/6hjmr4U9tEsM+VQXaVXqZuHKaSmojOLUCP/YVQo
+ 7IiYaNssCS4FCPe4yrL4FJJfJAsbeyDykMN7wAnBcOkbZ9BPJPNCbqU6dowLOiy8AuTYQ48m
+ vIyQ4Ijnb6GTrtxIUDQeOBNuQC/gyyx3nbL/lVlHbxr4tb6YkhkO6shjXhQh7nQb33FjGO4P
+ WU11Nr9i/qoV8QCo12MQEo244RRA6VMud06y/E449rWZFSTwGqb0FS0seTcYNvxt8PB2izX+
+ HZA8SL54j479ubxhfuoTu5nXdtFYFj5Lj5x34LKPx7MpgAmj0H7SDhpFWF2FzcC1bjiW9mjW
+ HaKaX23Awt97AqQZXegbfkJwX2Y53ufq8Np3e1542lh3/mpiGSilCsaTahEGrHK+lIusl6mz
+ Joil+u3k01ofvJMK0ZdzGUZ/aPMZ16LofjFA+MNxWrZFrkYmiGdv+LG45zSlZyIvzSiG2lKy
+ kuVag+IijCIom78P9jRtB1q1Q5lwZp2TLAJlz92DmFwBg1hyFzwDADjZ2nrDxKUiybXIgZp9
+ aU2d++ptEGCVJOfEW4qpWCCLPbOT7XBr+g/4H3qWbs3j/cDDq7LuVYIe+wchy/iXEJaQVeTC
+ y5arMQorqTFWlEOgRA8OP47L9knl9i4xuR0euV6DChDrguup2aJVU8JPBBgRAgAPAhsMBQJn
+ uAtCBQkxtc7uAAoJEGFXmRW1Y3YOJHUAoLuIJDcJtl7ZksBQa+n2T7T5zXoZAJ9EnFa2JZh7
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250507183820.781599563@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 08/05/2025 10:52, Vladimir Oltean wrote:
-> New timestamping API was introduced in commit 66f7223039c0 ("net: add
-> NDOs for configuring hardware timestamping") from kernel v6.6. It is
-> time to convert DSA to the new API, so that the ndo_eth_ioctl() path can
-> be removed completely.
-> 
-> Move the ds->ops->port_hwtstamp_get() and ds->ops->port_hwtstamp_set()
-> calls from dsa_user_ioctl() to dsa_user_hwtstamp_get() and
-> dsa_user_hwtstamp_set().
-> 
-> Due to the fact that the underlying ifreq type changes to
-> kernel_hwtstamp_config, the drivers and the Ocelot switchdev front-end,
-> all hooked up directly or indirectly, must also be converted all at once.
-> 
-> The conversion also updates the comment from dsa_port_supports_hwtstamp(),
-> which is no longer true because kernel_hwtstamp_config is kernel memory
-> and does not need copy_to_user(). I've deliberated whether it is
-> necessary to also update "err != -EOPNOTSUPP" to a more general "!err",
-> but all drivers now either return 0 or -EOPNOTSUPP.
-> 
-> The existing logic from the ocelot_ioctl() function, to avoid
-> configuring timestamping if the PHY supports the operation, is obsoleted
-> by more advanced core logic in dev_set_hwtstamp_phylib().
-> 
-> This is only a partial preparation for proper PHY timestamping support.
-> None of these switch driver currently sets up PTP traps for PHY
-> timestamping, so setting dev->see_all_hwtstamp_requests is not yet
-> necessary and the conversion is relatively trivial.
 
-The new interface also supports providing error explanation via extack,
-it would be great to add some error messages in case when setter fails.
-For example, HIRSCHMANN HellCreek switch doesn't support disabling
-of timestamps, it's not obvious from general -ERANGE error code, but can
-be explained by the text in extack message.
+
+On 5/7/2025 8:38 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.28 release.
+> There are 164 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 09 May 2025 18:37:41 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.28-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels build tested on 
+BMIPS_GENERIC:
+
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
