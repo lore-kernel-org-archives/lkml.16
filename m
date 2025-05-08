@@ -1,153 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3509D21018F;
-	Thu,  8 May 2025 08:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD542153DA;
+	Thu,  8 May 2025 08:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746693750; cv=none; b=JxfaRfW/wCKyxqK3ISu6/CRwmPD18q9wg3yv/8ETZeKpIhvJyVnEbLSuGxtzzdkCbU5N8m1aBhwkaht0UJLDj+KxoaT2nNssVfwimBH/n7720SGxNBdkIV6BSMwWhKv6WepKfKlqYYZOZVNzIwRe7M1MV85+SDp+lFaEX8y14IY=
+	t=1746693942; cv=none; b=UWNqQx3yf5hQKxVDTWmRpQtpx5ISAgFuG6ZnBlBzz+t+xKRdD8X6QcMxwmxlIwr6Kf/Xba1BSOKmUUdPINUAI7ZwCzhGt/LbML1aOO+L+lu+ecQ6ukMUyffGOyTCJo3+mc9/lgUF9jBkQ/JRB4+2wZRwt/ZG32O1SIqAHF/Xd8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746693750; c=relaxed/simple;
-	bh=r4rhd827Fnak6aKEMgLnJgrNTLGWxl8VcUCjQ0+pR6c=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p2Yh8gRcuS+9NvcFhhluP2mDB27BjEmC3/zAJDVQKrRnCxR8ZuS958GbsARmKm8YKTWJPhBdf6pGqVU0dm4sQ2ZJqalUjTUqse2i8lxcx4V6k+LY8ot3DGoj8mk15JgwqvCFbeVILt5RLHfiKdYkFJKIo8GsxQxbQvgwTraGvcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1ExFhJt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746693942; c=relaxed/simple;
+	bh=1bNWQpvAZw2h4146M/a5cSVgUYygfrJDdqUT3sy4QxQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RcfAuCzRbyMpx3em6RskYZw2GAht9Gz5chVia3N9lMZRdaC4VHyr17LBLrDKgGhrUZ4BX7IFooYIlMxDTqU0rHZhKwlST6AWVCgGQdDYUrfaTbgJTQWDcI4HSxgWZr2iwDkcxGOEIXiqqYy40bQlsCoZjMJBS5VnzHcSBg7M2Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B/wKW6Si; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1ExFhJt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D702C4CEE7;
-	Thu,  8 May 2025 08:42:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746693749;
-	bh=r4rhd827Fnak6aKEMgLnJgrNTLGWxl8VcUCjQ0+pR6c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=o1ExFhJtUJGWLWfvwRKP+t5Nhas05Da6Xm1+IvL1UlXP/NqPHx1hDNUGWOZ1cG9Hg
-	 ZvAsxplF2LvV2IIDPZIlv2kmxjTpqKhxrml8Ty3viPQ2sB2MhbKb6EqYp/i4cuqxLE
-	 0yu0HdiirY6VYYLM6kBMxtkSLAhIPr3fjGvnumfN3oLjtSxvIwufoxvsV0MAUz+qtA
-	 Wwqt7FIYgfQWsR8v3ETkEIGYI1UrgEP9fIu2GpCa0Tkv9cpo0pxhXGsW0Uv3RqWgrx
-	 LF3E4chMDfjTE0ojemPPZtvjx/nxsTowQmypdUkTmjmPRUjCfMHIPTH80ixvtWE7/x
-	 xF/R63bxc/bAg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uCwpn-00CwFr-F3;
-	Thu, 08 May 2025 09:42:27 +0100
-Date: Thu, 08 May 2025 09:42:27 +0100
-Message-ID: <864ixvh4ss.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/wKW6Si"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5e8274a74so1063397a12.1;
+        Thu, 08 May 2025 01:45:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746693939; x=1747298739; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WQbbYwiKIeSwnEfdIBvlGucq6uB6GiW1ELyN7NX3z8w=;
+        b=B/wKW6SifoTI4fLZd77qD5UDzHMdJB0BhBOMILCC+Ztx+JfIjz8udWyBUJE8sYkxoF
+         kvEsFePHUafOtVL+Y98DPo2J40+atkvdPhDTLoYilKHrKcG9xtpkZz5GQGmhrvQnZ8Ei
+         AWHGvXqNFmtEJ4yesPuAVDjie08Z04WbcnVOfBXttNyD11nm+A1zxgXBn3LlD3Ko9mZj
+         UETSfFpdMDJBmKk1UE+bGf07ugtR/WCejKk++9ooHj3sbsCfqlBfRawYYf1IXWiPEIfs
+         a1iGr9xhwiqqso1d8dFtxYrFZj+Uq6rnjqrjoASCsYCD8RAJ3d687TNvNQTyr6WNpdno
+         PKhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746693939; x=1747298739;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WQbbYwiKIeSwnEfdIBvlGucq6uB6GiW1ELyN7NX3z8w=;
+        b=bJM4WN4li/Az3IGW0uXfQ3rdIBFguEYvldR315JYwnos2ps9vZbYUgIPHxNApkqKV9
+         gm16f0Go7vHBvO3tNReAKCbTP7Jld71PL9KuHgUicVKgDn0ost+C9UT7lgEK1THt/OJ/
+         JTSuSVUAWFaVZpBNHA4J2cB00/3dfrY11N2xuM9lLVz0ytmmbtPff8bnQAHZs2VXG+WH
+         3UQplTvatWXoxQJPpNOKFOTfAoXrlmJ/tTynwrIrEhiEbqeaA/w3LicBS4P00Gmg2cDD
+         qUeslKi3T2rP1Rp8sfSG7uZjC1Lc+pRKqECMIFrRM0XZ9xY9DmSK50xsxYUmEZZwon43
+         4NQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUdmQE39DxeOlp2eJC9qOgp7XJw3ca6ely5uF7HVAdoxp+pTrix5dPjalKvMap7MC5HpTH3lLsAsBf7ndc=@vger.kernel.org, AJvYcCWGIjsqJHrvTv8cnVgWf3RP0LrcHp14YcPLabLH5FagMytVaoznGfVwYVpfr6MENf23ap5dXoBbWDTfa3M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyz17f9YlqKO5wUlOtCl9QaTyZZ2iiiSIzxHd0I0jkL2MWL/MiI
+	Odu4nXpEWi9JrYNqh7g4vbBe5rIHyO3vOz+STCtJgb1nZxgcfzC0
+X-Gm-Gg: ASbGncvj+MVAeSiDrYmkLJ45gEpaNzxPtni5o4PMH+zk7XkVX65E/bie5NwEW5aX16K
+	s6g4LAC9OxCrOi8T/eo9DIqkQBNooNJpZG43D/nyAFFtefu1LC/tV/FJsiDbK9MCEdghx8Ke2Sd
+	keyaFV+qoI9i8FGANDyMsHFwvKUbFykLRTYpEwoGapJQYOF2oEYKG8Ahf/UwJvZCunHqx7FePth
+	CCmPSXsVcVJ57hrz4ag7qzsexkhDqVuerK3WEyedG3sSIYmMXArrOzV+qoJ2i1N4TlucXqkuNTA
+	Qh5nX/WA0/WkeY8PA/NlYbfVTj9bELwNizsd0Tm0cZlu6T6ZDA==
+X-Google-Smtp-Source: AGHT+IH24p67igfdoula/1tlisDjnAjfpuyudgDk/8KRPxpYnmMhfgAbgVxwh+zLalj7Cvnpz0xCWQ==
+X-Received: by 2002:a17:906:fe02:b0:aca:d5a1:c324 with SMTP id a640c23a62f3a-ad1e89ff513mr696332766b.0.1746693938830;
+        Thu, 08 May 2025 01:45:38 -0700 (PDT)
+Received: from localhost ([87.254.1.131])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ad1eba4af90sm297000766b.112.2025.05.08.01.45.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 01:45:38 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Oder Chiou <oder_chiou@realtek.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 20/25] irqchip/gic-v5: Add GICv5 PPI support
-In-Reply-To: <aBxgceQBRA6vBK7o@lpieralisi>
-References: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
-	<20250506-gicv5-host-v3-20-6edd5a92fd09@kernel.org>
-	<87zffpn5rk.ffs@tglx>
-	<86a57ohjey.wl-maz@kernel.org>
-	<87ecx0mt9p.ffs@tglx>
-	<867c2sh6jx.wl-maz@kernel.org>
-	<874ixwmpto.ffs@tglx>
-	<aBxgceQBRA6vBK7o@lpieralisi>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	christophe.jaillet@wanadoo.fr
+Subject: [PATCH][V2][next] ASoC: rt712-sdca: remove redundant else path of if statement
+Date: Thu,  8 May 2025 09:45:27 +0100
+Message-ID: <20250508084527.316380-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, timothy.hayes@arm.com, Liam.Howlett@oracle.com, mark.rutland@arm.com, jirislaby@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 08 May 2025 08:42:41 +0100,
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> 
-> On Wed, May 07, 2025 at 04:57:07PM +0200, Thomas Gleixner wrote:
-> > On Wed, May 07 2025 at 14:52, Marc Zyngier wrote:
-> > > On Wed, 07 May 2025 14:42:42 +0100,
-> > > Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >> 
-> > >> On Wed, May 07 2025 at 10:14, Marc Zyngier wrote:
-> > >> > On Tue, 06 May 2025 16:00:31 +0100,
-> > >> > Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >> >> 
-> > >> >> How does this test distinguish between LEVEL_LOW and LEVEL_HIGH? It only
-> > >> >> tests for level, no? So the test is interesting at best ...
-> > >> >
-> > >> > There is no distinction between HIGH and LOW, RISING and FALLING, in
-> > >> > any revision of the GIC architecture.
-> > >> 
-> > >> Then pretending that there is a set_type() functionality is pretty daft
-> > >
-> > > You still need to distinguish between level and edge when this is
-> > > programmable (which is the case for a subset of the PPIs).
-> > 
-> > Fair enough, but can we please add a comment to this function which
-> > explains this oddity.
-> 
-> Getting back to this, I would need your/Marc's input on this.
-> 
-> I think it is fair to remove the irq_set_type() irqchip callback for
-> GICv5 PPIs because there is nothing to set, as I said handling mode
-> for these IRQs is fixed. I don't think this can cause any trouble
-> (IIUC a value within the IRQF_TRIGGER_MASK should be set on requesting
-> an IRQ to "force" the trigger to be programmed and even then core code
-> would not fail if the irq_set_type() irqchip callback is not
-> implemented).
-> 
-> I am thinking about *existing* drivers that request GICv3 PPIs with
-> values in IRQF_TRIGGER_MASK set (are there any ? Don't think so but you
-> know better than I do), when we switch over to GICv5 we would have no
-> irq_set_type() callback for PPIs but I think we are still fine, not
-> implementing irqchip.irq_set_type() is correct IMO.
+There is an if/else check where the else part is executed if
+adc_vol_flag is true, this else path checks if adc_vol_flag
+is true (which is a redundant second check) and the if path is
+always taken. Remove the redundant check and remove the else
+path since that can never occur.
 
-Nobody seems to use a hardcoded trigger (well, there is one exception,
-but that's to paper over a firmware bug).
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
 
-> On the other hand, given that on GICv5 PPI handling mode is fixed,
-> do you think that in the ppi_irq_domain_ops.translate() callback,
-> I should check the type the firmware provided and fail the translation
-> if it does not match the HW hardcoded value ?
+V1: Fix just for rt712-sdca.c
+V2: Fix for both rt712-sdca.c and rt712-sdca-dmic.c
 
-Why? The fact that the firmware is wrong doesn't change the hardware
-integration. It just indicates that whoever wrote the firmware didn't
-read the documentation.
+---
+ sound/soc/codecs/rt712-sdca-dmic.c | 8 ++------
+ sound/soc/codecs/rt712-sdca.c      | 8 ++------
+ 2 files changed, 4 insertions(+), 12 deletions(-)
 
-Even more, I wonder what the benefit of having that information in the
-firmware tables if the only thing that matters in the immutable HW
-view. Yes, having it in the DT/ACPI simplifies the job of the kernel
-(only one format to parse). But it is overall useless information.
-
-> Obviously if firmware exposes the wrong type that's a firmware bug
-> but I was wondering whether it is better to fail the firmware-to-Linux
-> IRQ translation if the firmware provided type is wrong rather than carry
-> on pretending that the type is correct (I was abusing the irq_set_type()
-> callback to do just that - namely, check that the type provided by
-> firmware matches HW but I think that's the wrong place to put it).
-
-I don't think there is anything to do. Worse case, you spit a
-pr_warn_once() and carry on.
-
-Thanks,
-
-	M.
-
+diff --git a/sound/soc/codecs/rt712-sdca-dmic.c b/sound/soc/codecs/rt712-sdca-dmic.c
+index db011da63bd9..4d044dfa3136 100644
+--- a/sound/soc/codecs/rt712-sdca-dmic.c
++++ b/sound/soc/codecs/rt712-sdca-dmic.c
+@@ -263,12 +263,8 @@ static int rt712_sdca_dmic_set_gain_get(struct snd_kcontrol *kcontrol,
+ 
+ 		if (!adc_vol_flag) /* boost gain */
+ 			ctl = regvalue / 0x0a00;
+-		else { /* ADC gain */
+-			if (adc_vol_flag)
+-				ctl = p->max - (((0x1e00 - regvalue) & 0xffff) / interval_offset);
+-			else
+-				ctl = p->max - (((0 - regvalue) & 0xffff) / interval_offset);
+-		}
++		else /* ADC gain */
++			ctl = p->max - (((0x1e00 - regvalue) & 0xffff) / interval_offset);
+ 
+ 		ucontrol->value.integer.value[i] = ctl;
+ 	}
+diff --git a/sound/soc/codecs/rt712-sdca.c b/sound/soc/codecs/rt712-sdca.c
+index 19d99b9d4ab2..570c2af1245d 100644
+--- a/sound/soc/codecs/rt712-sdca.c
++++ b/sound/soc/codecs/rt712-sdca.c
+@@ -1065,12 +1065,8 @@ static int rt712_sdca_dmic_set_gain_get(struct snd_kcontrol *kcontrol,
+ 
+ 		if (!adc_vol_flag) /* boost gain */
+ 			ctl = regvalue / 0x0a00;
+-		else { /* ADC gain */
+-			if (adc_vol_flag)
+-				ctl = p->max - (((0x1e00 - regvalue) & 0xffff) / interval_offset);
+-			else
+-				ctl = p->max - (((0 - regvalue) & 0xffff) / interval_offset);
+-		}
++		else /* ADC gain */
++			ctl = p->max - (((0x1e00 - regvalue) & 0xffff) / interval_offset);
+ 
+ 		ucontrol->value.integer.value[i] = ctl;
+ 	}
 -- 
-Without deviation from the norm, progress is not possible.
+2.49.0
+
