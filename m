@@ -1,114 +1,71 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843DC266EF1;
-	Thu,  8 May 2025 14:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023AC26868E;
+	Thu,  8 May 2025 14:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746713500; cv=none; b=S4ore5WAk/5LT6Ty8da8lb6xmK01IaU5GKT3e8DeIFsheBvGaj8YaOHzdPyK1sIJmFFLqz7XIY5I63U05OqB9DohUn5Tn4nk7Ud/XRfojJ/v1R86Gwjl4O/SdoAL9Z7SrBV+dm49V+8fwP8b8iuSh97jSXdkjxYEBT6zaaoSxBA=
+	t=1746713502; cv=none; b=IFEU8DXBxS+LVMEzpaIc1Dg5PYmC+DvbO54UeMGvrvbq2eWEMxEISYS0yRXVy259fTuQP6MX3V6uS4GvwogbJ2aTztoyVP6okEEtO3UzKn6Do9P85V24Sjk58PERpagAcu2vzFsJZdx+7SbVTg5sR0Brt5IflvMwN+ZoJ9R3VFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746713500; c=relaxed/simple;
-	bh=93klCyoTKNhAzWuevlsS+fZXbDukLivz4ITUu4ZYfuo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SWUtw+ZS7024/+mMD/5o22pKKvmGTBUOwlRcTvDYpsyKDoF0xjBMkicHy+0sDKaht/xodVx22gEnr6Kni89cEYgRg0K3fnXqXQUyCp6/XI7mI3IpyqDA5eQX5KJtkqgtFhKbawl2TB7t4KMey0qHwuggo6CQedZavm6utkr/dKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hf9ou+eU; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746713502; c=relaxed/simple;
+	bh=XGz7CN8xky35QV4MItpPqWXXsHZx6uiwV0aRCv3dPCU=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ELXz6wW4j1/CMMLHQO3+DMSKSEAjAcs2W7dFcxM30k7fLFrBF0qJa0eljA8nvqeLkyUiepKHD4bwX6skECTThvitnBCpvHbKgJFXT5MaSvscGkPXxZn6UQHmaWjALHVfcNQ+hvMD0VNM7QysEjRHAKqQqEL8WSNdQn1zWJsnBL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WBk8BTtK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hf9ou+eU"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5fbe7a65609so1773990a12.0;
-        Thu, 08 May 2025 07:11:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746713497; x=1747318297; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TJ5nnUYR5u4H4FMiNdhnizipvd3q4umfiz/JcIFJB84=;
-        b=Hf9ou+eUJsV7plRltauEZFFVFO0c37rh2qex+IZVCVocL3fXvfaBZ1jpt/REfaI7uF
-         ytxuOF75LsVQLOq8h9u4TvSZ3CSZ2oD3XE6PrEBiMywz1KPzGjwtG5NutPZyLejm51VV
-         pU3dvhL+njmfx4H3z1FxVjGa0bKf52bH0WYzD7nkKtKLR9DTLy5n0WDjdKpWv5feZE5k
-         h0vHSlGtDtxnmZ5HrGRcnX91qjZaXbljpXu9qtExM2hF1d07InQq0UrgDxkWcUMYvkUI
-         Crwp5ZJ0ALkuh39OQgz3HfONagWIc0kB5yeLYg33jSxjEdVlKLxyMO1YUIaHEx/GX0Lk
-         3mFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746713497; x=1747318297;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TJ5nnUYR5u4H4FMiNdhnizipvd3q4umfiz/JcIFJB84=;
-        b=eeEl8S4Aom6GWUWyMQ/Ut5HGnA7rd9qNtISU+G7ACfGrduvcszNWH0HcjO1p4uCQMO
-         slxUG3H4yJ/BDSnT8RyDdqkS14GIXemIRBTzixgleMVHrx5HgOAVGTjbO5QXiIrv9TAC
-         is1E93LZZCy7143b4BjiiQHEPnvGkAbu/iQxWEzs9UW/g6LQkREN8qYM+M7eyHsrU5R7
-         YKddKhoBqhWfh6ZvmzeUrToE13O7IggcB243DS5ht/vkU+X1RmqCtU/pIrMAHHemIocq
-         Ftn5bSOs9H2ungMGUwfFL9Nu8Os+4mIV6HdVGYId6EJ2CeVIq8/N3Y4FewUUd7XJiP8G
-         m+VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVrvBmVSmuVOUld33OPbxyfG8PR2LRe42ZBQhsltozfpBoOB/iQnY4zu5WrOnHNHe8XYmf46gJXlqVCYss=@vger.kernel.org, AJvYcCVvfcx66em7Qe7pQe04IFc80Ad+neNqaIgiSoCOlHyxbPuTkWyD+3I6kTnfxWvelE/e+vNmwKxSeY1v@vger.kernel.org, AJvYcCXs4GdIX4Tfsmf6umue2ZKp1OW1vCd/Eql6zZ10OuVC2m1YxBDIe8skexCqjOOcCH2ayYVwBkfdkZqgHbc+@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPQI1nouDQDydzqyervVsUmvM6a0gbLFg2M9OkG1mG+IKad0/i
-	u3IxPfM2gLncxyUY5AnU5IxYKGhDxLi3wTblQWnuUFp/5Tjg9JZe
-X-Gm-Gg: ASbGncs96g4RNgjJcpmH9wdpHRp6x9LwoHXyshK5tHxcpVqKAD1G6m7DeNGJ1sqjB9C
-	S6Ox061IzOAPOJLBU1h8l21JEYkjUUJxCirYtBPv2EbAnybJo7J4u3YusD6ti/OiuciNOX7TZzY
-	OSyq3vjiBvI9DLG9xsswd8aYB5WMuB8e8UMVVkr+SDwcyxkoBM4F3EPX91EQ58mBkwYHc7VWL+j
-	V7B9IL1PfMHlkWaRm43UHRObDrlYTuhW8qHh/LwIIo6PhDKlMuh4RGVWf1DNBGdxRoG9GTDEY9k
-	dC3Ndgnco6hpPGBqWv/bdvb4Kf/4H0fSnKp0MgIyYP6gek1iLJ5K1ENj3JmF80FoxusZlcxarD+
-	HrkNQ
-X-Google-Smtp-Source: AGHT+IHd64zJE+LTw6DAvxkBFNYRvbilzQkeJXaAqFji8eENn7G5grbiEz4USHisRKUg1+1wTJQ+bw==
-X-Received: by 2002:a17:907:cbc3:b0:ad1:91cb:3976 with SMTP id a640c23a62f3a-ad1e8d2ced6mr712315166b.58.1746713496490;
-        Thu, 08 May 2025 07:11:36 -0700 (PDT)
-Received: from standask-GA-A55M-S2HP (lu-nat-113-247.ehs.sk. [188.123.113.247])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa7781bf6asm11338216a12.44.2025.05.08.07.11.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 07:11:36 -0700 (PDT)
-Date: Thu, 8 May 2025 16:11:34 +0200
-From: Stanislav Jakubek <stano.jakubek@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, phone-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] ARM: dts: qcom: msm8226-motorola-falcon: specify
- vddio_disp output voltage
-Message-ID: <6143603464a65aebbed281fe6c6164316dd07269.1746711762.git.stano.jakubek@gmail.com>
-References: <cover.1746711762.git.stano.jakubek@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WBk8BTtK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BBD4C4CEE9;
+	Thu,  8 May 2025 14:11:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746713500;
+	bh=XGz7CN8xky35QV4MItpPqWXXsHZx6uiwV0aRCv3dPCU=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=WBk8BTtKO02TgGWcYPcv1mlySZz9Q5dKoCAuVLl5R+aQh9TN4vOv3n6Ja/vfwVjW+
+	 HiP242sFjU87vRNFVidYM7gOx9oWEPZS963ZsH7Kju7s+TTvdTsJ7o/lZnIdSnxKRy
+	 Bf1OXf6qEkZzrF2eFMlJIv42wOEgcrAHSD0E3QZ5WdbBCumD0JoJcyIgVmPRiKTwnF
+	 mhUv6b0HqbNau8j7i7/K70ak+NQxNS08S544TSROHK9hSYzEUysStWe/lN/qErOIL+
+	 2my3xpgeDr3aYGe0C8htcfSB0SwvkjtWSc/Nln3AyQpyChdREiaJknIOFZR3dRCAB+
+	 19qOcV9wyRlDA==
+From: Lee Jones <lee@kernel.org>
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Colin Foster <colin.foster@in-advantage.com>, 
+ =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+ Marek Vasut <marek.vasut+renesas@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
+ Jeff LaBundy <jeff@labundy.com>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250501145125.59952-3-krzysztof.kozlowski@linaro.org>
+References: <20250501145125.59952-3-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: mfd: Drop unrelated nodes from DTS
+ example
+Message-Id: <174671349784.2457426.16761659932735162963.b4-ty@kernel.org>
+Date: Thu, 08 May 2025 15:11:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1746711762.git.stano.jakubek@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-39345
 
-After some digging in downstream sources, it was found that the vddio_disp
-regulator's output voltage is 1.8V. This is further confirmed by the
-troubleshooting guide. Specify its output voltage as such.
-While at it, add a comment specifying the IC, which according to the
-schematic is the TI TPS22902.
+On Thu, 01 May 2025 16:51:26 +0200, Krzysztof Kozlowski wrote:
+> Binding example should not contain other nodes, e.g. consumers of
+> resource providers, because this is completely redundant and adds
+> unnecessary bloat.
+> 
+> 
 
-Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
----
- arch/arm/boot/dts/qcom/msm8226-motorola-falcon.dts | 3 +++
- 1 file changed, 3 insertions(+)
+Applied, thanks!
 
-diff --git a/arch/arm/boot/dts/qcom/msm8226-motorola-falcon.dts b/arch/arm/boot/dts/qcom/msm8226-motorola-falcon.dts
-index d6d5a86491aac..e6392f7d14c75 100644
---- a/arch/arm/boot/dts/qcom/msm8226-motorola-falcon.dts
-+++ b/arch/arm/boot/dts/qcom/msm8226-motorola-falcon.dts
-@@ -62,9 +62,12 @@ key-volume-up {
- 		};
- 	};
- 
-+	/* TI TPS22902 */
- 	vddio_disp_vreg: regulator-vddio-disp {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vddio_disp";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
- 		gpio = <&tlmm 34 GPIO_ACTIVE_HIGH>;
- 		vin-supply = <&pm8226_l8>;
- 		startup-delay-us = <300>;
--- 
-2.43.0
+[1/2] dt-bindings: mfd: Drop unrelated nodes from DTS example
+      commit: a67c891b8e7da2afedb29ee3da68c52aa5e6902a
+[2/2] dt-bindings: mfd: Correct indentation and style in DTS example
+      commit: c3ddcd91220220c417850ede7303a9f37e222408
+
+--
+Lee Jones [李琼斯]
 
