@@ -1,100 +1,245 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F64D1CB31D
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 06:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EC81D8A0A;
+	Thu,  8 May 2025 06:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746685104; cv=none; b=RZMI/lPR1S5pB9VSY0Z3nlTGaRxaXMSgHkIcxMg7tlDuO31l7FG1UNmPHKg08l+TH3TiktsdZhjLNTAhvglGANlVKgYxGH3xXiBu3h9I+6Mus/kpVayyGvk8oO6MJr1+F9Q1Vk3TAQQ/iOed0Vgk3/rvG79UWaVMKYv46HwZ/D8=
+	t=1746685117; cv=none; b=ZUDc6FPTjz+Wc8R595NSGk/PhHaoV/rKc9L2QDiT6lsJ3rMP9SBrK7AAYDehxCNdvkV0mGlDUZCm3mHjpbPusp69ecZCaFgapk+0fvCw4kTgPCww/BGpSpLHdcBNnClQB9mRLxBDEJZlezFrPc51U7hJWgXPLa+S2SvDi60OTB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746685104; c=relaxed/simple;
-	bh=XqBq4/xGPzOX+eDMZnGd+MB/OvHm44XA4eW9KOQu//4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PRzVCfDQqYYaUcI2iSx8MjeEtHiNOHziRZP5Uo5prVcNZGIZEpjFher6eCMYdyYfswN2hcWq+Pst6BTFlx9HVlpgil/LC+Xfz3GWZPpZQ6M/FE6O1lk2Jqh+lGLK4F3RnNAPBTj7egOgzVH42qBB8//+6RAcGcr7kz3uo3nffls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Iktx37Y4; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1746685117; c=relaxed/simple;
+	bh=4qi/P67+uIyVReLfU5vjCz6ajupbpcjoxwPILqTAti4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IkVQf7upDtMvxQ7lNByWAcs9LZ2TTmOt8lg9DsDjxcOYOO3LLfgoqPry5UzmD7c/u28nnOUfRXszXtW54hPixjHF9e7L7JfYibKNxKNuQuIk45yyq+eWlDBeSp1RsbzeGYMU/9oj1iQ7J1j7EEiso/4ye3s0z1Yy3/GSGsOWpKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UiFEZStG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Iktx37Y4"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736b0c68092so592743b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 23:18:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746685102; x=1747289902; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a5vDJd4sFj9Mbe4a4INcdSXmTrq/OgA3/EgwfJosPAI=;
-        b=Iktx37Y4chA4eOl/1sMGCyuBK7aU1lXoOh9hz6AL7QX0aKqQheyd/qSRu8wjbkCA8C
-         uGmx2cTlrhPNysBpYUzabZ3OJ1GmVxtes3uMgb6AHCSLarGRwVF/yVXXWbWF/Juux8ek
-         Dlyob0JLpbbE/kHqYp4eyd641C5jVcRGOLukY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746685102; x=1747289902;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a5vDJd4sFj9Mbe4a4INcdSXmTrq/OgA3/EgwfJosPAI=;
-        b=VtfznCtkIBmAb528wLqb8+hqer91j4eOJJk7jef8orzhkDhaKv9LNhC6YtGbBQ+Xig
-         cSjXZQcda6T1VukJnBXQzphr/Xz4WsIwVVHUBTx+ROiLiqmYfr+thfSMeZEKip9oGySO
-         2sv5wKIIPS3drSxtf7BcTPifmSQ1Vc0B1Ph7Lw+T9+bJCR6yD6/ApM7T2L23gjjSW9yu
-         XRckqwAYjnowlvhAAKEkzorVv85vmgvNa7Tu6WP+HDucAKj+aCvO015bzTi4PE+poaoq
-         hn2pr14pOn9RRaSRCUU4qG2P14zrGKwqhyoCMuYso7xLMB7K+vYOhoIbdT/puA1z8kUk
-         PK2A==
-X-Forwarded-Encrypted: i=1; AJvYcCU/+Bcv1fLWdWhyjOG2peVpWcm+aaCLJqxh6FK2iUgv5d04GFzTXDIDUf/kjrUXrfBH3QMtrga+Zl77jy4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMMdzmpBTBY8hzz6tmVq447lU9/r470xrrQIl8KOAfzXXiK+G+
-	DMLUB5OmC3l+Yny8bFaxu+ZLlCKMfsskI828OV/Yfct3PUki5A55bl06Lt6xfw==
-X-Gm-Gg: ASbGncttCA8EnVENEKq5FkmawsoYDBkPVyYmBaLH9cDrmjh3q0+f8TRpJht1kq6JXJW
-	jQVvfOlxMJYAnrTFtdaiCaFVwlNjPTVzF1RNBUSfHlnqHAacLo5emV5nADml0oPsOK/Tr5gYsty
-	7/upnyWGS668iKf+xWgmfhr0OuwW8BPZddIiUlUPY4mHdrxcmMeZW+fGlVplrsyc6So9m+7Dp04
-	blDp+aa7E1hrMfkFlUT5rYce6a8dWRRDnphxysfSbdCpFkn0svp3YBqHEtyTuEcpP8EJYWbJIxu
-	BQVqStaiPo5NJteGG/LW4FicnMDs0jlfQ8sI0dncgOQRvIzym7MgRKE=
-X-Google-Smtp-Source: AGHT+IEmjxbI0CoGYM3oDVwMMaIwRnvSdfZ4i+4zpM4DgPGGhHStpLMN0bKNgHpy3FaRRumZ4MX0qw==
-X-Received: by 2002:a17:902:f78d:b0:22e:7f20:52ed with SMTP id d9443c01a7336-22e7f2055admr31670455ad.20.1746685102508;
-        Wed, 07 May 2025 23:18:22 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:c794:38be:3be8:4c26])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3b53a6bsm8935238a12.22.2025.05.07.23.18.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 23:18:22 -0700 (PDT)
-Date: Thu, 8 May 2025 15:17:56 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>, Vitaly Wool <vitaly.wool@konsulko.se>, linux-mm@kvack.org, 
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Minchan Kim <minchan@kernel.org>, Igor Belousov <igor.b@beldev.am>, 
-	Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
-Message-ID: <at4djawky2n5d2nrxor62osid3mkaid4ttmlmc3xwsju2hstun@bos2kgakshpa>
-References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
- <aBoK7f7rtfbPFGap@google.com>
- <m2dmxnhtvxano6lye7lr3saiobn4ygpln55xntlstfo4zwws5g@qpq7aagx3xwq>
- <b42gpp5qsa4j22ai2v4rwwkjhvfbcbf3lcnjoccz7xeidae5c7@ot2ocric3qzs>
- <aBsDj0IGQBJC_JMj@infradead.org>
- <unyov4aypoaotj56m5scgd4qtjfn2mceb4zdmtaek42dfqaq3t@lrrqwojlmudp>
- <aBxIlUYEPojTopek@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UiFEZStG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A936C4CEEE;
+	Thu,  8 May 2025 06:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746685116;
+	bh=4qi/P67+uIyVReLfU5vjCz6ajupbpcjoxwPILqTAti4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UiFEZStGiIcWzwH57Q4Z5xVbDrbOdjIpEJB0bMIQyEOzawyELYmi7tHEErn0dPQv2
+	 dlxony58CRNFXVyO5ZIFM4SQZjbPjynGDXkkbEXNE3XtBUKHuXHWWL/Tt05g480fUf
+	 g5DBy8B89p+nZbYj/mYy5tgePS2f5xhK9mwgrjDwtVu0gZpMNdwJJ5BQKMr4Kn/lyN
+	 JDABKLlcdp/UFIAwuB0oSy988GOu0AH7tc5LKP/kwT8dTHQS2G0lGorZfvAU3Ipg6p
+	 edQZrzz5WVop/J/j+yeQwHU00KKuMpLZO0LktdaEMV+4iZn7uEcA5QId3hxEUmusDM
+	 UyVtnT8ZBmw0A==
+Message-ID: <f7941d74-3856-4bd9-95db-0b7f09eb07fd@kernel.org>
+Date: Thu, 8 May 2025 08:18:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBxIlUYEPojTopek@infradead.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] dt-bindings: display/msm: add stream 1 pixel clock
+ binding
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>, Rob Clark
+ <robdclark@gmail.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kuogee Hsieh <quic_khsieh@quicinc.com>,
+ Mahadevan <quic_mahap@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20241202-dp_mst_bindings-v1-0-9a9a43b0624a@quicinc.com>
+ <20241202-dp_mst_bindings-v1-3-9a9a43b0624a@quicinc.com>
+ <39f8e20a-e8c3-4625-abb1-9f35f416705d@kernel.org>
+ <50820e7b-b302-4f7f-baf9-778f3db6cfff@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <50820e7b-b302-4f7f-baf9-778f3db6cfff@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On (25/05/07 23:00), Christoph Hellwig wrote:
-> On Thu, May 08, 2025 at 02:58:14PM +0900, Sergey Senozhatsky wrote:
-> > Oh, I didn't realize that zram was the only swap_slot_free_notify
-> > user.  zram already handles REQ_OP_DISCARD/REQ_OP_WRITE_ZEROES so
-> > I guess only swap-cluster needs some work.  Are there any
-> > blockers/complications on the swap-cluster side?
+On 23/04/2025 04:46, Abhinav Kumar wrote:
+> Hi Krzysztof
 > 
-> I think the reason it was added it was so that the discard can be
-> done non-blocking with a spinlock held.  Which seems a bit sketch
-> when calling into a driver anyway..
+> On 12/3/2024 12:04 AM, Krzysztof Kozlowski wrote:
+>> On 03/12/2024 04:31, Abhinav Kumar wrote:
+>>> On some chipsets the display port controller can support more
+>>
+>> Which chipsets?
+>>
+> 
+>  From the current list of chipsets which support DP, the following can 
+> support more than one stream.
+> 
+> qcom,sa8775p-dp
+> qcom,sc7280-dp
+> qcom,sc8180x-dp
+> qcom,sc8280xp-dp
+> qcom,sm8350-dp
+> qcom,sm8650-dp
+> qcom,sm8550-dp
+> qcom,sm8450-dp
+> qcom,sm8250-dp
+> qcom,sm8150-dp
+> 
+> So do you also want all of these to be added in the same if block as
+> qcom,sa8775p-dp?
 
-swap_slot_free_notify is not guaranteed to free anything on the zram/zsmalloc
-side. zram attempts to trylock entry and if it fails to acquire the ownership
-swap_slot_free_notify for that entry becomes a .miss_free.  So we just keep
-stale data in zspage (potentially, preventing it from being released if that
-was the last allocated object).  I don't know if .miss_free happens often in
-real life.
+That was talk in 2024. Entire context is gone if you reply after three
+months. I do not have even that emails in my inbox anymore.
+
+Probably I expected commit msg to mention at least some, so everyone
+knows which chipsets are affected here and one can verify the statements
+from commit msg.
+
+> 
+>>> than one pixel stream (multi-stream transport). To support MST
+>>> on such chipsets, add the binding for stream 1 pixel clock for
+>>> display port controller. Since this mode is not supported on all
+>>> chipsets, add exception rules and min/max items to clearly mark
+>>> which chipsets support only SST mode (single stream) and which ones
+>>> support MST.
+>>>
+>>> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>>> ---
+>>>   .../bindings/display/msm/dp-controller.yaml        | 32 ++++++++++++++++++++++
+>>>   .../bindings/display/msm/qcom,sa8775p-mdss.yaml    |  9 ++++--
+>>>   2 files changed, 38 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/display/msm/dp-controller.yaml b/Documentation/devicetree/bindings/display/msm/dp-controller.yaml
+>>> index 9fe2bf0484d8..650d19e58277 100644
+>>> --- a/Documentation/devicetree/bindings/display/msm/dp-controller.yaml
+>>> +++ b/Documentation/devicetree/bindings/display/msm/dp-controller.yaml
+>>> @@ -50,30 +50,38 @@ properties:
+>>>       maxItems: 1
+>>>   
+>>>     clocks:
+>>> +    minItems: 5
+>>>       items:
+>>>         - description: AHB clock to enable register access
+>>>         - description: Display Port AUX clock
+>>>         - description: Display Port Link clock
+>>>         - description: Link interface clock between DP and PHY
+>>>         - description: Display Port stream 0 Pixel clock
+>>> +      - description: Display Port stream 1 Pixel clock
+>>>   
+>>>     clock-names:
+>>> +    minItems: 5
+>>>       items:
+>>>         - const: core_iface
+>>>         - const: core_aux
+>>>         - const: ctrl_link
+>>>         - const: ctrl_link_iface
+>>>         - const: stream_pixel
+>>> +      - const: stream_1_pixel
+>>>   
+>>>     assigned-clocks:
+>>> +    minItems: 2
+>>>       items:
+>>>         - description: link clock source
+>>>         - description: stream 0 pixel clock source
+>>> +      - description: stream 1 pixel clock source
+>>>   
+>>>     assigned-clock-parents:
+>>> +    minItems: 2
+>>>       items:
+>>>         - description: Link clock PLL output provided by PHY block
+>>>         - description: Stream 0 pixel clock PLL output provided by PHY block
+>>> +      - description: Stream 1 pixel clock PLL output provided by PHY block
+>>>   
+>>>     phys:
+>>>       maxItems: 1
+>>> @@ -175,6 +183,30 @@ allOf:
+>>>         required:
+>>>           - "#sound-dai-cells"
+>>>   
+>>
+>> Missing if: narrowing this to 5 items for other devices.
+>>
+> 
+> OR would an else be better?
+
+Usually not, although depends how this binding is written.
+
+
+> 
+> +    else:
+> +      properties:
+> +        clocks:
+> +          maxItems: 5
+> +        clock-names:
+> +          items:
+> +            - const: core_iface
+> +            - const: core_aux
+> +            - const: ctrl_link
+> +            - const: ctrl_link_iface
+> +            - const: stream_pixel
+> 
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            enum:
+>>> +              - qcom,sa8775p-dp
+>>> +
+>>> +    then:
+>>> +      properties:
+>>> +        clocks:
+>>
+>> Missing minItems, otherwise it is pointless.
+>>
+> 
+> I thought that since I have already specified the minItems as 5
+> in the clocks in the section above, I need to specify only the maxItems 
+> here?
+
+No, you need explicit constraints here.
+
+
+
+Best regards,
+Krzysztof
