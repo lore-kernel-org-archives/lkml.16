@@ -1,139 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BC3207DEE;
-	Thu,  8 May 2025 18:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6ED207DEE;
+	Thu,  8 May 2025 18:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746727410; cv=none; b=rE5WIr74PF9VghaYNgukHSGKwu55ilXN4TPkbLgl1xZPB1AeEfpYdxUpNvsQQRqWgk+w+t7D2ah5hd2uTm4RPOIApC3tkSDeCSS52z24jZBarAINCuJtqT5XWu6FSVJO269wPA3BWipDYYsIl0ANsRaSdcvnSAl4ZfXXXKYJM88=
+	t=1746727420; cv=none; b=e+h+sdXliS1GAAXxvioST11xGXTIkdVP75o+TBhMIAN4BIZnJ8HoVvhY6kptYrFRDMxQ4tzomqPxJNctOoHzweJx22QMoa7UPNPFQzS09wujKcuhdpLaHBxeo8wCfwUbBAZjy/GozehF9Lx/ewvjsI6Mp4QLtKO5Tw/I8q+tZFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746727410; c=relaxed/simple;
-	bh=keNapksh6o7sIDke7Z7TY0yJwQBMCFVXVOlG6PCsX8o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lg5S5UHdPNa68V5sjgvUTLSAh79eEV5EuoAOkOJZE2d+BpSAZj9TYGtsLG6hP1psunIqjEGkTqbS7OreXUwfXiVfyWg78SPiilpmCWvuPF4x1l2si7SWN8jZL5jOsXZJJz1p/nr6gQMAk2b8eUyA12eKPhGuEUlqC/HC3CtjnLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TZN6x7GW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746727420; c=relaxed/simple;
+	bh=YSKh2xmljkcGCS54ShufBBMsMQMAxgstMFHOgqfhopo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rnwLHq39+awBHVfG46YPefx2/dnjmmAxs+rSYy7IwYSYypj0gTb+z9UEv/WlBHElFYWF5JLfea+1M4lF5NbUr1LH5CFuEek9sRvvb9ToWjO90KQv39alO84bQHZDiIfTwdGdtgio36Qw89fry9ccfAI0BEkjy0T9hlhdIrc6Sb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kHsHZHjp; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TZN6x7GW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C632C4CEE7;
-	Thu,  8 May 2025 18:03:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746727409;
-	bh=keNapksh6o7sIDke7Z7TY0yJwQBMCFVXVOlG6PCsX8o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TZN6x7GWWTzQbQCFq27jKoBQEr5dYYcaOwLq8Faw33FpF4uA0vwXo/hzu+h9CNfWF
-	 XIGZD3oEPOjE21RmipQuoZ2aCKvwuXyX+SLeVKvBGe4oyVB3m+HtfD9LI2R1VSG9kz
-	 s86ZnChSIdG6c4XMJhjv6phGHTxELsMiWMbNvHO2RZ076ujIvJ5pRX8RZMRCmqa4ZY
-	 8xN+UXImo4E6aQ2dDpLFzyg1n2K6XAWG/1+/YCl8RUaMHuaDy5dyvQFgF50V2fG79Y
-	 SSn1XzwFrBmG05N9KdgDqdMacTINtBnWO1SeUlJU4fuGW3tKxNFswwrWbU5k7D+wTv
-	 IBXKfObQioO9w==
-Date: Thu, 8 May 2025 18:03:28 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: Saurabh Singh Sengar <ssengar@microsoft.com>,
-	Naman Jain <namjain@linux.microsoft.com>,
-	KY Srinivasan <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Re: [PATCH] Drivers: hv: Introduce mshv_vtl driver
-Message-ID: <aBzx8HDwKakGG1tR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250506084937.624680-1-namjain@linux.microsoft.com>
- <KUZP153MB1444858108BDF4B42B81C2A0BE88A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
- <8f83fbdb-0aee-4602-ad8a-58bbd22dbdc9@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kHsHZHjp"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5489bWVr011768;
+	Thu, 8 May 2025 18:03:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1xCSXSoSXfhqtNF9xtoPFolydz5FMlZ2dUX0FvNORuM=; b=kHsHZHjpG6zWBYPj
+	/KgVPSYpmwksE3ihQK+O+cZqdp4XYbD2W+Na0cOqxZ7QJG+tbakPyY9JIKnaDC0Y
+	M0ngqQQvRSs6E+5SL8f5dJteBWzXxlN8G64VORfU6WPvaD5w/jLYeZhRoDeF/E65
+	Rsxttjlb5w5g+5ZtS4V+ifBaUjPDnahyRcYCeTdfqGew9a0h39XauIJlNY8zKQeC
+	ylvAzCS/WFEy0P783GhKhsprxg5QpNzCIpWIKVgZwJdsnnR5Mk20FKCFulJBQ0Nh
+	qbeSHqg7wSCjoiS9FE6RFT0DAkB6Q2SeEmwgRj0FAUh6WzaA+Trvg5i+nJhrqPTh
+	OWRGAQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gt52sbka-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 18:03:19 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 548I3IZG029770
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 8 May 2025 18:03:18 GMT
+Received: from [10.134.71.99] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
+ 11:03:18 -0700
+Message-ID: <fe871e80-3117-42da-b50a-b9adf3cef3c9@quicinc.com>
+Date: Thu, 8 May 2025 11:03:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8f83fbdb-0aee-4602-ad8a-58bbd22dbdc9@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 10/14] drm/msm/dpu: Use dedicated WB number definition
+To: Jun Nie <jun.nie@linaro.org>, Rob Clark <robdclark@gmail.com>,
+        "Abhinav
+ Kumar" <quic_abhinavk@quicinc.com>,
+        Sean Paul <sean@poorly.run>,
+        "Marijn
+ Suijten" <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Dmitry Baryshkov <lumag@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250506-quad-pipe-upstream-v9-0-f7b273a8cc80@linaro.org>
+ <20250506-quad-pipe-upstream-v9-10-f7b273a8cc80@linaro.org>
+Content-Language: en-US
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20250506-quad-pipe-upstream-v9-10-f7b273a8cc80@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE2MCBTYWx0ZWRfX11JsyQvBMy3b
+ aYElRTXzk6tKI8+7RJJ2OfriKbfb2CykhFLBjXux41qAjLkzaSRGxc1xf+6RTQvoTw0I2S5uL/F
+ D7KIO/IBnf67MuwgsNsLgrFgLe1Af9eHfBS1A1L0ymElCjmc+wzMu/2u6hTrPcGekbSmo8MQe+1
+ leNxxwpjsNKRiPUYgbVvW099oX8ezhs5CjDS3N9055fgRIHgPRPWqVeUO5VD/86PBacfdQyog7E
+ STCQ5ChXYx1ja/kaxltxC4S4rK2kZRE5S+Swgcy9XtiGaRV3hw3484lMBk8FWujspII6SaoQkaW
+ 23f2hnnc1dWs49BCQ3GuJnvANxr1GfEx0pFNVlyCK6SeExVZ69xVQPFaD62Z3TQ8ccUBaVv+m5N
+ IswHRaB9QKRbd9RqBeLcsEjMOQ5mtOEf+RZK9ekTlug1HKB7gnJQXmoKN90qiqV/YovPMfVn
+X-Authority-Analysis: v=2.4 cv=LKFmQIW9 c=1 sm=1 tr=0 ts=681cf1e7 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8
+ a=COk6AnOGAAAA:8 a=gTC0tX81JuRyhgdZfrkA:9 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: k-9LSWWYQuSIkfT3fEjifwfU49Q38zA-
+X-Proofpoint-GUID: k-9LSWWYQuSIkfT3fEjifwfU49Q38zA-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_05,2025-05-08_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 clxscore=1015 lowpriorityscore=0 suspectscore=0
+ malwarescore=0 mlxscore=0 bulkscore=0 spamscore=0 phishscore=0 adultscore=0
+ priorityscore=1501 impostorscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505080160
 
-On Wed, May 07, 2025 at 12:20:36PM -0700, Roman Kisel wrote:
-> 
-> 
-> On 5/7/2025 6:02 AM, Saurabh Singh Sengar wrote:
-> > 
-> [..]
-> 
-> > > +	}
-> > > +
-> > > +	local_irq_save(flags);
-> > > +	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> > > +	out = *this_cpu_ptr(hyperv_pcpu_output_arg);
-> > > +
-> > > +	if (copy_from_user(in, (void __user *)hvcall.input_ptr,
-> > > hvcall.input_size)) {
-> > 
-> > Here is an issue related to usage of user copy functions when interrupt are disabled.
-> > It was reported by Michael K here:
-> > https://github.com/microsoft/OHCL-Linux-Kernel/issues/33
-> 
-> From the practical point of view, that memory will be touched by the
-> user mode by virtue of Rust requiring initialization so the a possible
-> page fault would be resolved before the IOCTL. OpenHCL runs without swap
-> so the the memory will not be paged out to require page faults to be
-> brought in back.
-> 
-> I do agree that might be turned into a footgun by the user land if
-> they malloc a page w/o prefaulting (so it's just a VA range, not backed
-> with the physical page), and then send its address straight over here
-> right after w/o writing any data to it. Perhaps likelier with the output
-> data. Anyway, yes, relying on the user land doing sane things isn't
-> the best approach to the kernel programming.
 
-Yep. We don't rely on user land software doing sane things to maintain
-correctness in kernel, so this needs to be fixed.
 
-Thanks,
-Wei.
+On 5/6/2025 8:47 AM, Jun Nie wrote:
+> Currently MAX_CHANNELS_PER_ENC is defined as 2, because 2 channels are
+> supported at most in one encoder. The case of 4 channels per encoder is
+> to be added. To avoid breaking current WB usage case, use dedicated WB
+> definition before 4 WB usage case is supported in future.
+> 
+> Signed-off-by: Jun Nie <jun.nie@linaro.org>
 
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> If we're inclined to fix this, I'd encourage to take an approach that
-> works for the confidential VMs as well so we don't have to fix that
-> again when start upstreaming what we have for SNP and TDX. The
-> allocation *must* be visible to the hypervisor in the confidential
-> scenarios.
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> index 3e4ff345bd6d9c0e2a08274874fac40690409cf0..a125a477404fdafee6495f6d3778160f14a01a96 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> @@ -56,6 +56,7 @@
+>   	(MAX_H_TILES_PER_DISPLAY * NUM_PHYS_ENCODER_TYPES)
+>   
+>   #define MAX_CHANNELS_PER_ENC 2
+> +#define MAX_CWB_PER_ENC 2
+>   
+>   #define IDLE_SHORT_TIMEOUT	1
+>   
+> @@ -182,7 +183,7 @@ struct dpu_encoder_virt {
+>   	struct dpu_encoder_phys *cur_master;
+>   	struct dpu_encoder_phys *cur_slave;
+>   	struct dpu_hw_pingpong *hw_pp[MAX_CHANNELS_PER_ENC];
+> -	struct dpu_hw_cwb *hw_cwb[MAX_CHANNELS_PER_ENC];
+> +	struct dpu_hw_cwb *hw_cwb[MAX_CWB_PER_ENC];
+>   	struct dpu_hw_dsc *hw_dsc[MAX_CHANNELS_PER_ENC];
+>   
+>   	unsigned int dsc_mask;
+> @@ -2372,7 +2373,7 @@ void dpu_encoder_helper_phys_setup_cwb(struct dpu_encoder_phys *phys_enc,
+>   	 */
+>   	cwb_cfg.input = INPUT_MODE_LM_OUT;
+>   
+> -	for (int i = 0; i < MAX_CHANNELS_PER_ENC; i++) {
+> +	for (int i = 0; i < MAX_CWB_PER_ENC; i++) {
+>   		hw_cwb = dpu_enc->hw_cwb[i];
+>   		if (!hw_cwb)
+>   			continue;
 > 
-> Or, maybe we could avoid the allocations by reading the first byte
-> of the user land buffer to "pre-fault" the page outside of the
-> scope that disables interrupts. Why allocate if we can avoid that?
-> Could set up also the SMP remote calls to run this on the desired
-> CPU.
-> 
-> Summarizing for the case you want to change this:
-> 
-> 1. Keep interrupts disabled when reading/writing to/from the Hyper-V
->    driver allocated input and output pages.
-> 2. If you decide to allocate separate pages, make sure they are
->    visible to the hypervisor in the confidential scenarios. I know
->    we're not talking SNP and TDX here just yet but it would be
->    a waste of time imho to build something here and scrape that
->    later. The issues with allocations are:
->        a) If allocating on-demand, we might fail the hypercall
->           because of OOM. That's certainly bad as the whole VM
->           will break down.
->        b) If allocating for the whole lifetime of the VM,
->           let us remember that we avoid using hypercalls
->           due to their runtime cost. We'll be keeping around
->           2 pages per CPU for the few times we need them.
-> 3. Consider reading a byte from the user land buffers to make the page
->    fault happen outside of disabling interrupts. There is no
->    outswap (maybe could have disabling swap in Kconfig) so the page
->    will stay in the memory.
-> 
-> If you're not changing this, feel free to keep my "Reviewed-by".
-> 
-> > 
-> > - Saurabh
-> 
-> -- 
-> Thank you,
-> Roman
-> 
+
