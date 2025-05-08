@@ -1,92 +1,127 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D283286D59;
-	Thu,  8 May 2025 17:26:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFB9284662;
+	Thu,  8 May 2025 17:27:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746725197; cv=none; b=hCCXaN8huHZe7j1jzlexVtMZozqHlzrOGExp5vyvnzqDXZnh6cDhbp1trrDmGZ2Lsu+UrmTMr09gGn97fmrAtDD5RMuMbkqKYDBsK9RODmIQE1MncE689z+iIangmwRlBqJsJYQCtF00aryxYcker/EADfEXCo24cVgg5Sse6WM=
+	t=1746725234; cv=none; b=H28YVmYD9Kt2Ltf/rSqjnlGXnoPHoO05iyQpi6N1b7jiqJT+Qa3Eut9csZWlIZs8TdJ5JSsXPS3Lvt+Wa21ROaMVME57rNCaaJYpAFMa8OPvkn471XmZxngGuXdmvHZp00TF3IyLnVRKVaFd1vNpi99uZpj1IRjDfPK7bBmsuwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746725197; c=relaxed/simple;
-	bh=/lMonJP9624v17JznT8vU6RUH3y++91soly0vGOyNrc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HP0s/MENMN2oM+NOeoPNwwWoCDeEnRLCrX3gNwZeWxvJnaUa8ZUIEmd6BdWHns1o/pEgjWqowrAjt2tbKBs/V4LWvQd4e9igMIHkycj5JNqJ+XZXP9XZ0gNPSJ7NFdw9/cxKeTL7X26HiE0F+hLF1Fj3ESbzuvXVvh8qMugLT0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IsQL30ON; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H9CLw99f; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1746725234; c=relaxed/simple;
+	bh=TMr2EZn3Dy99vtzTWc+amUpVz+O4noXXEnSB5lK7Juw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=ANWjQxI4ceSKxD8WOufA13b6ITz3KFIFR6NJCjyaDfJahSi/5SsaQgO0qEfp7k0vMvMp/CqcZtdvdiHrHvWRhUF+OEF+TKGd0MvV4HcHxhJWWQVRdzgxgsDzo7CkVJhAYPKe8rrJ3UQRYEec+lZ56TkncqJ6maLUgRv1iArAKu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G96+aU6E; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TyrNtoju; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IsQL30ON";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H9CLw99f"
-From: Thomas Gleixner <tglx@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G96+aU6E";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TyrNtoju"
+Date: Thu, 08 May 2025 17:27:09 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746725192;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	s=2020; t=1746725230;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hTbyL4rDqJd0LCAW+KvoiiMK8wPz1NsF8UcJJ8cPhiw=;
-	b=IsQL30ONrI4jH8NVOxem46kLDCMzP/Nm59W11WHMUP8KJlzwrFVIEHrxLI3VEWTLPUeH8Y
-	7XOJpnHiBRo/pb4bhe2U4Mpp+M+mJODfTGP9oz9U0HzUgvvphMZt3MK0I33CvXIDScyri/
-	ElClzkI1fJpAvrE3LiRiB/hmMDZM2pdMTfhEOmcNJRV3MKiEu06cyWI8dUvMiUVdnePZra
-	BRfX9LIVEdizlZoEkFEIb0JIz2bbCy/2UAB1ibYG8keWY3Dp5dIjuVv0w6Jm3T0SF3PJ+M
-	lo/W7BklVcGLQjCFreaswevbzJgusPpmB2aTsBXhKZd2kGQNc9dkLdEiN7/0Nw==
+	bh=YoXTJixuzXYKccg1bIeQrdQ0D8BAKohPClXOIolOMzA=;
+	b=G96+aU6EEbnY5iDY/PqKosmgyD3SoWFO+mJf/nTwt0YiRfdXgYPf8wEpCxcLo+JSw916pV
+	XYUzN1OsPB4CQqLxtHoGroel8CjCi/jRxfXRREBZ8VpaMq9CryL2ENENkeiPn9mcnfdWe4
+	GlMS5HGJBGIlGxuPSFdrwN/PBlUjLif8sAwCvqiZmhRVTsfzcm6+8HX01nOMGLxmEpGJ/D
+	hLfao/BDREfUe8N7SKarQs5tWsgTygp+8L57+W+OuKdgJORxj5R8v/BZ/jIDNpZRsmNd8k
+	aYbQZtvkA+nx0eRG0wBsvIIRa90S1lnyp6ogLtvtgDsomOtTb5x0nDZskELsiA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746725192;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	s=2020e; t=1746725230;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hTbyL4rDqJd0LCAW+KvoiiMK8wPz1NsF8UcJJ8cPhiw=;
-	b=H9CLw99fBJ7LF0HxwGGI1SpmPdzd7KGDyNshq8EBwNjUWLVEH9JYnBjbnl2w0aefJsI9yq
-	Of9gn2t7UEx8NSCA==
-To: Frank Li <Frank.Li@nxp.com>, Kishon Vijay Abraham I <kishon@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Anup Patel
- <apatel@ventanamicro.com>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Shuah Khan
- <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach
- <l.stach@pengutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob
- Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org,
- imx@lists.linux.dev, devicetree@vger.kernel.org, Frank Li
- <Frank.Li@nxp.com>
-Subject: Re: [PATCH v18 00/15] PCI: EP: Add RC-to-EP doorbell with platform
- MSI controller
-In-Reply-To: <20250414-ep-msi-v18-0-f69b49917464@nxp.com>
-References: <20250414-ep-msi-v18-0-f69b49917464@nxp.com>
-Date: Thu, 08 May 2025 19:26:31 +0200
-Message-ID: <87y0v7ko8o.ffs@tglx>
+	bh=YoXTJixuzXYKccg1bIeQrdQ0D8BAKohPClXOIolOMzA=;
+	b=TyrNtojuCfhYNTt9VuJMjbFhkqLSUs/EDJJyP/ZcKeBnWjgDNS4OiVv86jEb6ogbS0WDdY
+	BGxOBJ69ddyVe+CA==
+From: "tip-bot2 for Frank Li" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/msi] irqchip/gic-v3-its: Add support for device tree
+ msi-map and msi-mask
+Cc: Frank Li <Frank.Li@nxp.com>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250414-ep-msi-v18-5-f69b49917464@nxp.com>
+References: <20250414-ep-msi-v18-5-f69b49917464@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <174672522967.406.10710032891656618225.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 14 2025 at 14:30, Frank Li wrote:
-> This patches add new API to pci-epf-core, so any EP driver can use it.
->       platform-msi: Add msi_remove_device_irq_domain() in platform_device_msi_free_irqs_all()
->       irqdomain: Add IRQ_DOMAIN_FLAG_MSI_IMMUTABLE and irq_domain_is_msi_immutable()
->       irqchip/gic-v3-its: Set IRQ_DOMAIN_FLAG_MSI_IMMUTABLE for ITS
->       dt-bindings: PCI: pci-ep: Add support for iommu-map and msi-map
->       irqchip/gic-v3-its: Add support for device tree msi-map and msi-mask
+The following commit has been merged into the irq/msi branch of tip:
 
-I applied the interrupt related changes in the tip tree. They are on a
-seperate rc1 based branch and contain no other changes so that they can
-be pulled into the PCI tree as prerequisite for the actual endpoint
-changes. This can be pulled from the following tag:
+Commit-ID:     f1680d9081e161925c3aca81231ee867c95890b0
+Gitweb:        https://git.kernel.org/tip/f1680d9081e161925c3aca81231ee867c95890b0
+Author:        Frank Li <Frank.Li@nxp.com>
+AuthorDate:    Mon, 14 Apr 2025 14:30:59 -04:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 07 May 2025 17:49:24 +02:00
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-platform-msi-05-08-25
+irqchip/gic-v3-its: Add support for device tree msi-map and msi-mask
 
-Thanks,
+Some platform devices create child devices dynamically and require the
+parent device's msi-map to map device IDs to actual sideband information.
 
-        tglx
+A typical use case is using ITS as a PCIe Endpoint Controller(EPC)'s
+doorbell function, where PCI hosts send TLP memory writes to the EP
+controller. The EP controller converts these writes to AXI transactions
+and appends platform-specific sideband information.
+
+EPC's DTS will provide such information by msi-map and msi-mask. A
+simplified dts as
+
+pcie-ep@10000000 {
+	...
+	msi-map = <0 &its 0xc 8>;
+                          ^^^ 0xc is implement defined sideband information,
+			      which append to AXI write transaction.
+	           ^ 0 is function index.
+
+	msi-mask = <0x7>
+}
+
+Check msi-map if msi-parent missed to keep compatility with existing systems.
+
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250414-ep-msi-v18-5-f69b49917464@nxp.com
+---
+ drivers/irqchip/irq-gic-v3-its-msi-parent.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+index bdb04c8..68f9ba4 100644
+--- a/drivers/irqchip/irq-gic-v3-its-msi-parent.c
++++ b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+@@ -118,6 +118,14 @@ static int of_pmsi_get_dev_id(struct irq_domain *domain, struct device *dev,
+ 		index++;
+ 	} while (!ret);
+ 
++	if (ret) {
++		struct device_node *np = NULL;
++
++		ret = of_map_id(dev->of_node, dev->id, "msi-map", "msi-map-mask", &np, dev_id);
++		if (np)
++			of_node_put(np);
++	}
++
+ 	return ret;
+ }
+ 
