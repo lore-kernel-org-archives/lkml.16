@@ -1,105 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8AF8F6F;
-	Thu,  8 May 2025 22:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F811AB52D;
+	Thu,  8 May 2025 22:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746743548; cv=none; b=qbLwnmqQuZtPm+/OEx2Sl6TU8RHOkanmS+4t7E/srtbH8u+UtcLnmY7ElD3aWaFda8gJSIuEWrU5Hhg5GNY1yC0Wjmsc5ykb8B1XB7Sz7+6rC64XtQSJ5m4qHhPjKEE51gLy/HSSWE6CyndzrKAAdCYN8Q9bhowP+cZXCqTRvw8=
+	t=1746743598; cv=none; b=iUAA9gU2EzJRvMl0+X4P5NqPEwHvGVKT5hbB0FcAg4YxoAdCAQ4UoNotjF6Xa/qaGr90hvxsrXwZppEXZ+vsxFqFZoGtbIgyLR47QuZ9MSo+VTYFjHK3FxeEWH8i+xPDb7k2ug579ADACixEgQAMRmN5/ZhbEGq/cvUbx1gao34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746743548; c=relaxed/simple;
-	bh=LN9H+wRwP3Oc6QAiNWdj+F+8WkxOXU1ZzLvlexhRPLs=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=PhhEVVELbQtGu2pInn+2d2Je37M6o+rtXqMQuRR1j0epZUrmXChqWf4a/lbFAbSQqQsyLQVoUsq9tVWjjFjNkwbggiB0SdiNLgWCxGxf8qJHZSPXHeGqlPPyokE1cd214x8tSrJP2+A0zAX2meivtmRWPIvbGAbpZDmtSKwgNIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NSlFTtM+; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746743598; c=relaxed/simple;
+	bh=Dy9dAmDEtYv1D1W6Os+Dt16ZXrkNQpIpd0MNSk4apV4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O7C1ydvh03rO9+bJBWt8LCW3r/sKn9ii2+ZPGPuUfrsbK3QWbNOe1cbkjVJJtcVhQ0O4Wy4B6OY8dvdm9zX90OgJZqZVs8YFoj/ZvNp5quorfUNTmLprlTz7hipLsjhB64dcoH8xfw8uJQ56iYrvI5xXonxWUyiJKoaUb2FfaIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FSXIVHaI; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NSlFTtM+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746743547; x=1778279547;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=LN9H+wRwP3Oc6QAiNWdj+F+8WkxOXU1ZzLvlexhRPLs=;
-  b=NSlFTtM+pGLrVe3HsTcU+GspL8A6YHiIHlLj/TH6EZEnTo9PoTB8Pe0A
-   O/wD4kgLW5u/8Ij33X6k/clXts9f0ag7ZeWoTvB1DnkMk6p7l9G4F4V7O
-   gncKk11qGD+cSiAkrud789dAgXwmxT/Al/D381p7GhT22zKpr0IbMFZtY
-   EuEl9iiJsz3Jf5L4Nk/DFYvK9IOvPHiH5rm/DKJz7GgNwq5eEUP5stgya
-   NIUbHY4+d0lkGBEWBE8zBiBtGQ9a/06P7Xripvvgh929k0M1rTCAI82Vs
-   3llheYVSgY12pKOlQBuk+gXas3S06QT4hQyfXdE2MUqRawT1ByT6/P3FS
-   A==;
-X-CSE-ConnectionGUID: Hm3cn4ysS5i9pTjQh+Ay9Q==
-X-CSE-MsgGUID: 8COFjpLQS4+gGcWZFgK1qw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59953211"
-X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
-   d="scan'208";a="59953211"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 15:32:26 -0700
-X-CSE-ConnectionGUID: mEEQIAKWSwyhic4DI5aBoQ==
-X-CSE-MsgGUID: M+Se2rK5TliUbPOIBXV3Yw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
-   d="scan'208";a="141539203"
-Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 15:32:26 -0700
-Date: Thu, 8 May 2025 15:32:25 -0700 (PDT)
-From: matthew.gerlach@linux.intel.com
-To: "Rob Herring (Arm)" <robh@kernel.org>
-cc: Thomas Gleixner <tglx@linutronix.de>, 
-    Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-    Conor Dooley <conor+dt@kernel.org>, Joyce Ooi <joyce.ooi@intel.com>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org, 
-    devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
-    matthew.gerlach@altera.com
-Subject: Re: [PATCH] dt-bindings: Move altr,msi-controller to interrupt-controller
- directory
-In-Reply-To: <20250507154253.1593870-1-robh@kernel.org>
-Message-ID: <54171dee-9985-536d-f7a6-b2a4af1ed9bd@linux.intel.com>
-References: <20250507154253.1593870-1-robh@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FSXIVHaI"
+Message-ID: <de814321-7ede-4325-be9e-3dd40be68391@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746743590;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HV1W+KoOI60y8Ce+gIw6Y3x5sJ2+CPiqPPkkq5vBFig=;
+	b=FSXIVHaIvZLd/3dFmQP+DEjKwMczBbR7FVxNA0dt1iehlcJmWJTMeUWU2vV52R7ZjmXSi/
+	iZSiHbUXW/brHwj2ZaScr2boAQLjjy7IVhxH40k/jUPZy6464j5wWBzp43HORJSsyQAH/u
+	DYb9uje6klYkCpm74g+UuEhYvJAzkbI=
+Date: Thu, 8 May 2025 23:33:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Subject: Re: [PATCH net-next 1/3] net: cpsw: return proper RX timestamping
+ filter in cpsw_hwtstamp_get()
+To: Vladimir Oltean <vladimir.oltean@nxp.com>, netdev@vger.kernel.org
+Cc: =?UTF-8?Q?K=C3=B6ry_Maincent?= <kory.maincent@bootlin.com>,
+ Andrew Lunn <andrew@lunn.ch>, Siddharth Vadapalli <s-vadapalli@ti.com>,
+ Roger Quadros <rogerq@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org,
+ linux-omap@vger.kernel.org
+References: <20250508194825.3058929-1-vladimir.oltean@nxp.com>
+ <20250508194825.3058929-2-vladimir.oltean@nxp.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250508194825.3058929-2-vladimir.oltean@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
+
+On 08/05/2025 20:48, Vladimir Oltean wrote:
+> priv->rx_ts_enabled is a boolean variable (0 or 1). Overlapped over enum
+> hwtstamp_rx_filters, it makes cfg.rx_filter take the value of either
+> HWTSTAMP_FILTER_NONE (when 0) or HWTSTAMP_FILTER_ALL (when 1).
+
+Hmm.. I have to disagree here. rx_ts_enabled is int, not bool:
+
+struct cpsw_priv {
+         struct net_device               *ndev;
+         struct device                   *dev;
+         u32                             msg_enable;
+         u8                              mac_addr[ETH_ALEN];
+         bool                            rx_pause;
+         bool                            tx_pause;
+         bool                            mqprio_hw;
+         int                             fifo_bw[CPSW_TC_NUM];
+         int                             shp_cfg_speed;
+         int                             tx_ts_enabled;
+         int                             rx_ts_enabled;
+         struct bpf_prog                 *xdp_prog;
+	....
 
 
+And it's assigned a value of HWTSTAMP_FILTER_PTP_V2_EVENT in
+cpsw_hwtstamp_set(). Not sure this change is actually needed.
 
-On Wed, 7 May 2025, Rob Herring (Arm) wrote:
-
-> While altr,msi-controller is used with PCI, it is not a PCI host bridge
-> and is just an MSI provider. Move it with other MSI providers in the
-> 'interrupt-controller' directory.
->
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-Acked-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> 
+> But this is inconsistent with what is returned in cpsw_hwtstamp_set().
+> There, HWTSTAMP_FILTER_ALL is refused (-ERANGE), and a subset of the RX
+> filters requestable by user space are all replaced with
+> HWTSTAMP_FILTER_PTP_V2_EVENT. So the driver should be reporting this
+> value during SIOCGHWTSTAMP as well.
+> 
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 > ---
-> .../{pci => interrupt-controller}/altr,msi-controller.yaml      | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
-> rename Documentation/devicetree/bindings/{pci => interrupt-controller}/altr,msi-controller.yaml (94%)
->
-> diff --git a/Documentation/devicetree/bindings/pci/altr,msi-controller.yaml b/Documentation/devicetree/bindings/interrupt-controller/altr,msi-controller.yaml
-> similarity index 94%
-> rename from Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
-> rename to Documentation/devicetree/bindings/interrupt-controller/altr,msi-controller.yaml
-> index 98814862d006..d046954b8a27 100644
-> --- a/Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/altr,msi-controller.yaml
-> @@ -2,7 +2,7 @@
-> # Copyright (C) 2015, 2024, Intel Corporation
-> %YAML 1.2
-> ---
-> -$id: http://devicetree.org/schemas/altr,msi-controller.yaml#
-> +$id: http://devicetree.org/schemas/interrupt-controller/altr,msi-controller.yaml#
-> $schema: http://devicetree.org/meta-schemas/core.yaml#
->
-> title: Altera PCIe MSI controller
-> -- 
-> 2.47.2
->
->
+>   drivers/net/ethernet/ti/cpsw_priv.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/ti/cpsw_priv.c b/drivers/net/ethernet/ti/cpsw_priv.c
+> index 6fe4edabba44..68d8f7ea0e44 100644
+> --- a/drivers/net/ethernet/ti/cpsw_priv.c
+> +++ b/drivers/net/ethernet/ti/cpsw_priv.c
+> @@ -687,7 +687,8 @@ static int cpsw_hwtstamp_get(struct net_device *dev, struct ifreq *ifr)
+>   
+>   	cfg.flags = 0;
+>   	cfg.tx_type = priv->tx_ts_enabled ? HWTSTAMP_TX_ON : HWTSTAMP_TX_OFF;
+> -	cfg.rx_filter = priv->rx_ts_enabled;
+> +	cfg.rx_filter = priv->rx_ts_enabled ? HWTSTAMP_FILTER_PTP_V2_EVENT :
+> +			HWTSTAMP_FILTER_NONE;
+>   
+>   	return copy_to_user(ifr->ifr_data, &cfg, sizeof(cfg)) ? -EFAULT : 0;
+>   }
+
