@@ -1,241 +1,181 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2045.outbound.protection.outlook.com [40.107.220.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436C22147F8;
-	Thu,  8 May 2025 05:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746681362; cv=none; b=Bl8Ic8Q1S4zED4l+nXK9PnybiZ3LmqDI8Me6YewaelUl8BBxi5VikoJLYoxjthkGh4F0+X5B9bwMzjvI/jXwSM87hDXX7jkfkT35R/0aWqAv9yi7d8FN5VBhe6pTdOJG0pbHQDL03Hyr1+2ZQwYO+c6HX7e81FhjfMLQ7FJsMn0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746681362; c=relaxed/simple;
-	bh=1v6DI/9WXyq4OQT7TwSDw43m/WmKKQeiOdRQ8aVrk7M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KvwpmxibgOpVKQIwZ3JLRy+t429y0vkReJvdr1jZ0cz1BixgKowUuqQWNydWtz6ST54MDKmGqFzjHcn0Vv9CNvi7giX7CAZrx8tuxuROxfc5FLOa+Gp4BGGERSxGBkTkJxLfjaXUpJ4O04xHYijUnPXh1w4J5j86CCe5v10w1O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=V+d+49YL; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5BD2A1D8;
+	Thu,  8 May 2025 05:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746681603; cv=fail; b=o2dCMAwi0gbJJ9wR4nDtlcr1iEJZtrxgYwis9By88b4JppynmJIObzE7N5Pr6waZ3jE/PCvAnjsLvmdKC6OZnQJiYEYv6aLXSUljfI1Yb+vJZ5VQP0mmhjAJOucb5DFgjWOjbkiUbSX9EC6Mi8BhB7D43XXpr3RZkaSlPQsW7p0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746681603; c=relaxed/simple;
+	bh=f+j8pvIK40u5apY1MgtHoIOuKmgv5NmbmgFWPnpuJdM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a2FDbRC+QuefIf8Faf++oD3vl/pPXhYnO1HhsnbQVO4cVBOSq1iYQBSZ173Lc1U3kWwiJnRYIGPX+H8qfrDE1VfUX9RyzitAfx7onLccgEkyPcSmn6wU4jQwAInT5NcohpIePwm1mJVNvI0aOC3zgd/8j0Weaafq6FGAcOEVfZA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=SWrV6wYZ; arc=fail smtp.client-ip=40.107.220.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="V+d+49YL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=wJ57py3kjq1HOOKAtKE+KQOWQ2pCiRGjulzU/iIvTiY=; b=V+d+49YL5VNC29vevrHNf17dby
-	IeN4qNwndVtf8tPeLigopf47ZpMy9Hrrqqu99ix59YtqO3ijz+axrvMc/qUQEqzJAv8yJo4W4BdQS
-	yuSVbpPpNOi4jZFU4OdwTKTM730fRsHqpPdp1rWNNO4NwIcvS8PLpC3w/lqi4Zv7udR/ltQCLmT/j
-	OtH4VRxXOqmzrOEv5h5ZkPKhRdkZMiYGoYLU9cxsYQXtt9pv1/CnA4N18kXhiVMMVXk+KdJpfd6ya
-	nH478bqMLWr3RjUQni2AmSV7Pd78ZqBQvEvZmAA7msMZ7rwqIrsnk1Wkm1z34TJyN0ma/DqlIbKSl
-	NFabn2sA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uCtbv-004RbY-0m;
-	Thu, 08 May 2025 13:15:56 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 08 May 2025 13:15:55 +0800
-Date: Thu, 8 May 2025 13:15:55 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: [v2 PATCH] crypto: marvell/cesa - Do not chain submitted requests
-Message-ID: <aBw-C_krkNsIoPlT@gondor.apana.org.au>
-References: <7e38e34adddb14d0a23a13cf738b6b7cccbfce6f.camel@gmail.com>
- <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
- <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
- <15fadc356b73a1e8e24183f284b5c0a44a53e679.camel@gmail.com>
- <Zw31JIEyh28vK9q7@gondor.apana.org.au>
- <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
- <Zw9AsgqKHJfySScx@gondor.apana.org.au>
- <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
- <aBsdTJUAcQgW4ink@gondor.apana.org.au>
- <aBt5Mxq1MeefwXGJ@Red>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SWrV6wYZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=I5oohjsh5Utu3UhcCon532fyT0PLQfuMti/2nHRKl5CfnL7DEqfiYIM93prkE+4YBO6LNfR9AOzQ2UzewMwAUn2ZURml78qO7//RvZhZT/l17kly8vaXm5004DLq0fj1j4OIqEksVMvmMcNKUc5y/xC+TbRan1hRW0rwQJ0MwWBzLkSDb9eQWHqvvHYDvUoxZd3eDB2IjehCvaKXauKW+1zPUKsX5nLP8mifkUEPkMKgo5szR2F9GIDsGj4poMDXqwsUIxzEy9tt5kvmayesB5Ce0k9PaPHmtlVTv3UA5e1n7xgqCuX8BXW6gFnOmekErfer05pXlmY7vTNdRiaCDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZfnhYz4MaxOJNOdh2EhwnzlefMrN5zTvfJ+jd6fEALs=;
+ b=cw4jJNIcBdf8Ott6fVywiq0qnA8glnmj0cGLzzXIRshRv2q8k7pIKWfD2t4OAXIpddBlY+DKsZJxISCZgu2mM4L2xc5Y9U3PvN1KJNi2TAQ0vQ1B+yIJnzb4gFZWOfHkWen55Il1A/8nWJWer6QhCYGsNUj6rqbMON9UGkiX1C1a3i1AmaNHyi2PaFe/C5sRjeAIROpz6PFJx2T7+9EcaClXl2+BWYL0TWyzrRhTr6ln5rL7Jg6pNRu7m5Qz0oWNEjijY5mDP90n2dbkXA6f2Asmo4dakw2DFyJM7rDx6uOCByqK+APNZIDMujCD0b9N6qH1p2ub3S3ERT7YcnuCew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZfnhYz4MaxOJNOdh2EhwnzlefMrN5zTvfJ+jd6fEALs=;
+ b=SWrV6wYZdmaWC2MfrJumK7uo83q1cuFSX1mwDVd4RDs1bZrz8NsbwsXB7IMdeWUbxtp1/dcft4ARePkvAF8BKcyabijQ9Hq2kcej/ifLYEOxpAEiJoR23A8YVgQlZZuYqmHYzcZKwt6lDi+AtielEyZzmmbj+wxVaTwBjOIPlsYE+r/yi6qwSS4AbNMcujgoHumjzB9CqLJKepi3aGa6/U4rkon64+RjeN+NGhaaR76F64qW9rZmagD+aNo+1hjZpreeVgWg2JskkjQcP7Ak/Uu5O43ioCQ5XyqRp4VC0UN44bJFBD7Ibn+/66Uqmu6oJ2BsDqf9Fn7PUJJzXmWjOQ==
+Received: from SJ0PR13CA0011.namprd13.prod.outlook.com (2603:10b6:a03:2c0::16)
+ by SJ0PR12MB6968.namprd12.prod.outlook.com (2603:10b6:a03:47b::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.20; Thu, 8 May
+ 2025 05:19:54 +0000
+Received: from MWH0EPF000989E9.namprd02.prod.outlook.com
+ (2603:10b6:a03:2c0:cafe::94) by SJ0PR13CA0011.outlook.office365.com
+ (2603:10b6:a03:2c0::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.19 via Frontend Transport; Thu,
+ 8 May 2025 05:19:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ MWH0EPF000989E9.mail.protection.outlook.com (10.167.241.136) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.18 via Frontend Transport; Thu, 8 May 2025 05:19:53 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 7 May 2025
+ 22:19:49 -0700
+Received: from vidyas-server.nvidia.com (10.126.231.35) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 7 May 2025 22:19:37 -0700
+From: Vidya Sagar <vidyas@nvidia.com>
+To: <lpieralisi@kernel.org>, <kw@linux.com>,
+	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <bhelgaas@google.com>,
+	<cassel@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<treding@nvidia.com>, <jonathanh@nvidia.com>, <kthota@nvidia.com>,
+	<mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V4] PCI: dwc: tegra194: Broaden architecture dependency
+Date: Thu, 8 May 2025 10:49:22 +0530
+Message-ID: <20250508051922.4134041-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250417074607.2281010-1-vidyas@nvidia.com>
+References: <20250417074607.2281010-1-vidyas@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBt5Mxq1MeefwXGJ@Red>
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989E9:EE_|SJ0PR12MB6968:EE_
+X-MS-Office365-Filtering-Correlation-Id: 21ceaf70-1774-4f02-342c-08dd8deff723
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?mZLQrvXPWdnyMVYsxd6szjtorzWAm64Q5tiHP7+Iwce254OTnPbQEQHHHhZ1?=
+ =?us-ascii?Q?k0JqM1CNcWzBrjUy2s9L0CCCP9wQSO7iWyWXEuSNKGWIPCdJDr+pR6IthpqQ?=
+ =?us-ascii?Q?6do2M3b2gGuHUPKVQDRrOdIxX9fYJHPr8G25mTkphTZtoJdL8hrqdIZ+7KP2?=
+ =?us-ascii?Q?izhYaZ95E4FAkJOVd1Aws+/nbcZEIzrX4lS1jROPhC1S+++Ouhhxg7x78Quz?=
+ =?us-ascii?Q?RCDuoHgY1DN7i+3mVaxiY7343DcJmbGTdwrB/ZcUBMVAIN8D6G3xUyF7XyNx?=
+ =?us-ascii?Q?7pwqJWlzduHUlSi+xTda9pyh4nIJAiuQZlVHJ0jimTMsC8ySrxB+x1I4vzNt?=
+ =?us-ascii?Q?Frxv5xkanu+7TeuFyscHg6gOxPP38ZFkp+kU34dRRDwRRpc5PGWJIEddF6+3?=
+ =?us-ascii?Q?Z78IAKuV4qRBJ4aXa5bUoCb0GYedyRCd5L7VGgjxc0RqDR0/1F7uYqnINXgs?=
+ =?us-ascii?Q?micfo1FVcR7dSw5+xepF+i2+i8tMyWsEl/x0giL7pPiJXGWTcb5fzBKx8QvG?=
+ =?us-ascii?Q?lK4C2oP2Kg6l2oDKcCZ6ls3Qygl7xhNbW5dcM6TSUdY7JUz/j5TVrJ/ceUp1?=
+ =?us-ascii?Q?p/4cOzX8zmygif5Afk1m86Wo/2iNb5bGDtZpT3I3K6BzvKEcXCJgLSDyYhuo?=
+ =?us-ascii?Q?5nx9I1NcW+YvLkTU7qMrV9p/BPMW5Az0QAImnWu+DzC1hC3aioNrWVuNtTAQ?=
+ =?us-ascii?Q?SRGTNKX9bM/lreDqVfgDSTx9ipLPOouP9EuT42Rgm27nmylKrnCF8mH22C6e?=
+ =?us-ascii?Q?Bdu1TYDGRmPNzgy3HmQth/b9mQx94b0MaoFAqRsCTquHm6NDxPv7KELhCQcZ?=
+ =?us-ascii?Q?pDa1GhQcpnhDyY0F0oA3L/7of9PKsbC6m1owzf+aUBkxnz26vQBrGw5utuGL?=
+ =?us-ascii?Q?RJj/bHlhX0d2pyRrzS3BPkzyItf6FO9XpK5yDLfjn6Fd4alNN65x443lw52W?=
+ =?us-ascii?Q?KKFgI4w5yFCfeU3RM1DvMAv98amvit3awA/pJ64y9c/KuX/IQYo9MAFFcs44?=
+ =?us-ascii?Q?m35x26kYXLnmeTlG+p6nETDgZvat3VPS7vOrSdzX8z8bYgYk8IQOA2knKyEO?=
+ =?us-ascii?Q?fEr8OzH2VXI3IIvEJvsy4738Or60S/aspgxGduXRxN1Hi+mgcIRhMlpMoLqT?=
+ =?us-ascii?Q?QfWYdEQUjdSuo5zP59ymjPNX4CLtF677pPoN0UUBA5x/Zfc5JTadGBTvGon7?=
+ =?us-ascii?Q?j3SPnKFwtDBGzaBzPm/4pYVT0YyiCouigbBck8rjPENkz49vPxBeo/S2rsLy?=
+ =?us-ascii?Q?fMvgeqFSNa8g535tgtwk8LaZVxyxGhNb4H2YmzOvQHyVTrq5wvPaLyLQPl4a?=
+ =?us-ascii?Q?tlMC/JzPPWBhVAC0B8JZi2mPFxsiFnARsDt11NyOiiH7TRexxuv/KQpHT/8H?=
+ =?us-ascii?Q?1noYqjsrRHq5JDk5FnxnQ0sLsSN8sX5RizJF07AoOpHwBIp6WvmDDu3PDrss?=
+ =?us-ascii?Q?C2Svq8OBHZW0FjQBlULHIuOxQJbuPAOZFrUCS6d00gOLGBuJv/Rk7WwpissD?=
+ =?us-ascii?Q?+uY7Qfmyr4jldsIXuAQi1pCS+aQhSGr1mIr4B718zxaHD2xH2yWLuhLAmA?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 05:19:53.8207
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 21ceaf70-1774-4f02-342c-08dd8deff723
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989E9.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6968
 
-On Wed, May 07, 2025 at 05:16:03PM +0200, Corentin Labbe wrote:
->
-> I tested this patch and my armada-388-clearfog-pro panic with:
+Replace ARCH_TEGRA_194_SOC dependency with a more generic ARCH_TEGRA
+check for the Tegra194 PCIe controller, allowing it to be built on
+Tegra platforms beyond Tegra194. Additionally, ensure compatibility
+by requiring ARM64 or COMPILE_TEST.
 
-Thanks for testing! I didn't realise that you had one of these.
-So just out of curiosity, does this driver actually pass the
-self-tests before this patch with CRYPTO_MANAGER_EXTRA_TESTS?
-
-Is your system SMP? How many CPUs?
-
-In any case, my patch screwed up the very first chaining and here
-is a fixed version:
-
----8<---
-This driver tries to chain requests together before submitting them
-to hardware in order to reduce completion interrupts.
-
-However, it even extends chains that have already been submitted
-to hardware.  This is dangerous because there is no way of knowing
-whether the hardware has already read the DMA memory in question
-or not.
-
-Fix this by splitting the chain list into two.  One for submitted
-requests and one for requests that have not yet been submitted.
-Only extend the latter.
-
-Reported-by: Klaus Kudielka <klaus.kudielka@gmail.com>
-Fixes: 85030c5168f1 ("crypto: marvell - Add support for chaining crypto requests in TDMA mode")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Link: https://patchwork.kernel.org/project/linux-pci/patch/20250128044244.2766334-1-vidyas@nvidia.com/
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 ---
- drivers/crypto/marvell/cesa/cesa.c |  2 +-
- drivers/crypto/marvell/cesa/cesa.h |  9 +++--
- drivers/crypto/marvell/cesa/tdma.c | 55 ++++++++++++++++++------------
- 3 files changed, 41 insertions(+), 25 deletions(-)
+v4:
+* Split the Tegra194 driver and phy driver changes
 
-diff --git a/drivers/crypto/marvell/cesa/cesa.c b/drivers/crypto/marvell/cesa/cesa.c
-index fa08f10e6f3f..9c21f5d835d2 100644
---- a/drivers/crypto/marvell/cesa/cesa.c
-+++ b/drivers/crypto/marvell/cesa/cesa.c
-@@ -94,7 +94,7 @@ static int mv_cesa_std_process(struct mv_cesa_engine *engine, u32 status)
- 
- static int mv_cesa_int_process(struct mv_cesa_engine *engine, u32 status)
- {
--	if (engine->chain.first && engine->chain.last)
-+	if (engine->chain_hw.first && engine->chain_hw.last)
- 		return mv_cesa_tdma_process(engine, status);
- 
- 	return mv_cesa_std_process(engine, status);
-diff --git a/drivers/crypto/marvell/cesa/cesa.h b/drivers/crypto/marvell/cesa/cesa.h
-index d215a6bed6bc..50ca1039fdaa 100644
---- a/drivers/crypto/marvell/cesa/cesa.h
-+++ b/drivers/crypto/marvell/cesa/cesa.h
-@@ -440,8 +440,10 @@ struct mv_cesa_dev {
-  *			SRAM
-  * @queue:		fifo of the pending crypto requests
-  * @load:		engine load counter, useful for load balancing
-- * @chain:		list of the current tdma descriptors being processed
-- *			by this engine.
-+ * @chain_hw:		list of the current tdma descriptors being processed
-+ *			by the hardware.
-+ * @chain_sw:		list of the current tdma descriptors that will be
-+ *			submitted to the hardware.
-  * @complete_queue:	fifo of the processed requests by the engine
-  *
-  * Structure storing CESA engine information.
-@@ -463,7 +465,8 @@ struct mv_cesa_engine {
- 	struct gen_pool *pool;
- 	struct crypto_queue queue;
- 	atomic_t load;
--	struct mv_cesa_tdma_chain chain;
-+	struct mv_cesa_tdma_chain chain_hw;
-+	struct mv_cesa_tdma_chain chain_sw;
- 	struct list_head complete_queue;
- 	int irq;
- };
-diff --git a/drivers/crypto/marvell/cesa/tdma.c b/drivers/crypto/marvell/cesa/tdma.c
-index 388a06e180d6..02b609ef7043 100644
---- a/drivers/crypto/marvell/cesa/tdma.c
-+++ b/drivers/crypto/marvell/cesa/tdma.c
-@@ -38,6 +38,15 @@ void mv_cesa_dma_step(struct mv_cesa_req *dreq)
- {
- 	struct mv_cesa_engine *engine = dreq->engine;
- 
-+	spin_lock_bh(&engine->lock);
-+	if (engine->chain_sw.first == dreq->chain.first) {
-+		engine->chain_sw.first = NULL;
-+		engine->chain_sw.last = NULL;
-+	}
-+	engine->chain_hw.first = dreq->chain.first;
-+	engine->chain_hw.last = dreq->chain.last;
-+	spin_unlock_bh(&engine->lock);
-+
- 	writel_relaxed(0, engine->regs + CESA_SA_CFG);
- 
- 	mv_cesa_set_int_mask(engine, CESA_SA_INT_ACC0_IDMA_DONE);
-@@ -96,25 +105,29 @@ void mv_cesa_dma_prepare(struct mv_cesa_req *dreq,
- void mv_cesa_tdma_chain(struct mv_cesa_engine *engine,
- 			struct mv_cesa_req *dreq)
- {
--	if (engine->chain.first == NULL && engine->chain.last == NULL) {
--		engine->chain.first = dreq->chain.first;
--		engine->chain.last  = dreq->chain.last;
-+	struct mv_cesa_tdma_desc *last = engine->chain_sw.last;
-+
-+	/*
-+	 * Break the DMA chain if the request being queued needs the IV
-+	 * regs to be set before lauching the request.
-+	 */
-+	if (!last || dreq->chain.first->flags & CESA_TDMA_SET_STATE) {
-+		engine->chain_sw.first = dreq->chain.first;
-+		last = dreq->chain.last;
-+		engine->chain_sw.last = last;
- 	} else {
--		struct mv_cesa_tdma_desc *last;
--
--		last = engine->chain.last;
- 		last->next = dreq->chain.first;
--		engine->chain.last = dreq->chain.last;
--
--		/*
--		 * Break the DMA chain if the CESA_TDMA_BREAK_CHAIN is set on
--		 * the last element of the current chain, or if the request
--		 * being queued needs the IV regs to be set before lauching
--		 * the request.
--		 */
--		if (!(last->flags & CESA_TDMA_BREAK_CHAIN) &&
--		    !(dreq->chain.first->flags & CESA_TDMA_SET_STATE))
--			last->next_dma = cpu_to_le32(dreq->chain.first->cur_dma);
-+		last->next_dma = cpu_to_le32(dreq->chain.first->cur_dma);
-+		last = dreq->chain.last;
-+		engine->chain_sw.last = last;
-+	}
-+	/*
-+	 * Break the DMA chain if the CESA_TDMA_BREAK_CHAIN is set on
-+	 * the last element of the current chain.
-+	 */
-+	if (last->flags & CESA_TDMA_BREAK_CHAIN) {
-+		engine->chain_sw.first = NULL;
-+		engine->chain_sw.last = NULL;
- 	}
- }
- 
-@@ -127,7 +140,7 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
- 
- 	tdma_cur = readl(engine->regs + CESA_TDMA_CUR);
- 
--	for (tdma = engine->chain.first; tdma; tdma = next) {
-+	for (tdma = engine->chain_hw.first; tdma; tdma = next) {
- 		spin_lock_bh(&engine->lock);
- 		next = tdma->next;
- 		spin_unlock_bh(&engine->lock);
-@@ -149,12 +162,12 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
- 								 &backlog);
- 
- 			/* Re-chaining to the next request */
--			engine->chain.first = tdma->next;
-+			engine->chain_hw.first = tdma->next;
- 			tdma->next = NULL;
- 
- 			/* If this is the last request, clear the chain */
--			if (engine->chain.first == NULL)
--				engine->chain.last  = NULL;
-+			if (engine->chain_hw.first == NULL)
-+				engine->chain_hw.last  = NULL;
- 			spin_unlock_bh(&engine->lock);
- 
- 			ctx = crypto_tfm_ctx(req->tfm);
--- 
-2.39.5
+v3:
+* Addressed warning from kernel test robot
 
+v2:
+* Addressed review comments from Niklas Cassel and Manivannan Sadhasivam
+
+ drivers/pci/controller/dwc/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index d9f0386396ed..815b6e0d6a0c 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -226,7 +226,7 @@ config PCIE_TEGRA194
+ 
+ config PCIE_TEGRA194_HOST
+ 	tristate "NVIDIA Tegra194 (and later) PCIe controller (host mode)"
+-	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
++	depends on ARCH_TEGRA && (ARM64 || COMPILE_TEST)
+ 	depends on PCI_MSI
+ 	select PCIE_DW_HOST
+ 	select PHY_TEGRA194_P2U
+@@ -241,7 +241,7 @@ config PCIE_TEGRA194_HOST
+ 
+ config PCIE_TEGRA194_EP
+ 	tristate "NVIDIA Tegra194 (and later) PCIe controller (endpoint mode)"
+-	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
++	depends on ARCH_TEGRA && (ARM64 || COMPILE_TEST)
+ 	depends on PCI_ENDPOINT
+ 	select PCIE_DW_EP
+ 	select PHY_TEGRA194_P2U
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.25.1
+
