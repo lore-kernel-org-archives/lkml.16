@@ -1,63 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE75620B21F;
-	Thu,  8 May 2025 17:27:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A65F28688A;
+	Thu,  8 May 2025 17:27:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746725235; cv=none; b=InofBijt3BuyJqHN3dL/SQlxuzqSCJNZw3Z/3uAB471wLWA1Bh8hkplzy/1KZY8VmCSty0IhdRbhHjplaY69geum6OciiFCRsl/KBx6NYAVDWZJGlwa3QJk2US6Gt57Beg1jlQeCHIl82QkF1QB0hAfj3vslDCSGao626Dhsfy0=
+	t=1746725235; cv=none; b=lIguLrH9tc/pVVHVuxH2zOwg6Xtil1Zel/9rEGIaUhln+7q6AHDL9w436Q0va2A3XtZ0XJC2HcpQmegc1roADKwAuWXY6eZ/ofLdOkmpV3Qp4C04I2BD233Kqb+aW1/xrEQx/eyBzBp4zQ5wQoWW1UWlm6Y49s6aFJ2KWUfj/6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746725235; c=relaxed/simple;
-	bh=Z1konojWv8bxnIxBBS6LNsNNq4m6F3O+yzUUkbVOZ2w=;
+	bh=vEvdE28UbdDVQdpKPNldflqMsU8sU0gNE4UdiHYgpuw=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=YI0QNlgXu5QH/nYqQi/ammoI6ttoN03geTaj6nj3wQX0B7xDWT6bevR1ZpnVsvUpgq2zwKJCE7gMkYcAjO+Lw/EgJgezVg9AZUS4B2DqccVPwIFGjDAP4LL5PC8t/piBp6tJCKUXO8TUunsJ7sThcVyYPNbSL9KvP6T38cBT5Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dUMFVvt5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GyAND9h0; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=Ki+clZ1d5H3S1+16I/4MzTYi97yKiXlZS+7AM/bSuDDldEpP5v5xSTnbnL+gfpmDp35Q3H59iIskQA+yokoxItKguDJ6R2KiGxDrCaiFtKUoOy8+nxaIC0EkiSzpeaKtplAUoULTumFXbrfYS8ib1VfuQVz9xPbsc7UWTO/ZH8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D1v5RnU8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2fhuYsJO; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dUMFVvt5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GyAND9h0"
-Date: Thu, 08 May 2025 17:27:11 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D1v5RnU8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2fhuYsJO"
+Date: Thu, 08 May 2025 17:27:10 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746725232;
+	s=2020; t=1746725231;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=J/4iXgm9XPEVlOc7w7CieT5wYvTfrlGDc+pF0CASN24=;
-	b=dUMFVvt5EZaev4dMdWCFHWCULaCdIIsSbp6dJVi7jD2EqK0PIylSXraC+lvbOabp5bwtoO
-	z5dZ70J7Dj4FDz/o2OYEo93AoTNeD8RLOfNbWuIlbTZWDP6l+tEQ/CQU2BV0X/RFIzwkwP
-	3bICKmQRdhiPw+zZRaZAsFxmdUteCzZ4cwo0Dotf5Yg3xOi2cc6gvGzaSI1rLsVTcDe3SC
-	Jl9WwzXrhBcu7U2zCeIElaHWALE8cQT74rDyiKNvaS7++4CAjbt70Ipmhpvi21DTix9/Oa
-	wP5ZtwX/JN6aLYYoeacQO9JPtzDCIKth1SgNvYN3UoM9rWHpySXEXgqqhkHs5A==
+	bh=6hWF8VELxe1fmB6u0bZ2jRFL1B2/8BfqZM9L4cSCSP0=;
+	b=D1v5RnU8PKGOofpwErtT9UhjvODnab0EEeWw4Z0DQpzdecZrpUrobrj1zIMTyGRXOQhFMb
+	zXWbJ6FaOgeYsqCz60fb/606cg+VdaDpyp4RE7BkoUel+4yJqHVDD/tJV+ECsz4vqhncZx
+	+COjxMEvRhxtku5n0ZqWQYDPkWk2Kd+mU6eDd31ZZb6wnBQXDgGbPtygcI6l3OEB97IFqx
+	aSLEY3AySv3K1h7egAcOzv8PMphoRKbpTlJ8mTXsnjy7fxBnuY3PPzap+f5G1kxXl1/jKg
+	htZCiG1mwZEpvncanzjAk8BjeKK6uRca4kt1OGfso09Dn3ScI/KD9J8gWNiqpg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746725232;
+	s=2020e; t=1746725231;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=J/4iXgm9XPEVlOc7w7CieT5wYvTfrlGDc+pF0CASN24=;
-	b=GyAND9h0Cr7X0X3VnSSZjbsJyRPwPNImbGvEIb5J1zinnL9CzENVWmZsaNzx7ly1Elexcw
-	esU6RGaO2zlIH0CA==
+	bh=6hWF8VELxe1fmB6u0bZ2jRFL1B2/8BfqZM9L4cSCSP0=;
+	b=2fhuYsJO3oYrOTe2WaRdFMHmbh2sgHTy/jNeaW2LZbOHLJ2X0f/FSjLbQ6wRouPJVra7XE
+	uk3ObwhxufzoqoDQ==
 From: "tip-bot2 for Frank Li" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: irq/msi] irqchip/gic-v3-its: Set IRQ_DOMAIN_FLAG_MSI_IMMUTABLE for ITS
+Subject: [tip: irq/msi] dt-bindings: PCI: pci-ep: Add support for iommu-map
+ and msi-map
 Cc: Frank Li <Frank.Li@nxp.com>, Thomas Gleixner <tglx@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250414-ep-msi-v18-3-f69b49917464@nxp.com>
-References: <20250414-ep-msi-v18-3-f69b49917464@nxp.com>
+ "Rob Herring (Arm)" <robh@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250414-ep-msi-v18-4-f69b49917464@nxp.com>
+References: <20250414-ep-msi-v18-4-f69b49917464@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174672523121.406.3458922274949729976.tip-bot2@tip-bot2>
+Message-ID: <174672523050.406.12783420937421276511.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,40 +68,120 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/msi branch of tip:
 
-Commit-ID:     fd120c38fefd26f1e23f308141f52098c1bbfb31
-Gitweb:        https://git.kernel.org/tip/fd120c38fefd26f1e23f308141f52098c1bbfb31
+Commit-ID:     a6aed6b9c79e57064fa8c028662214b436578e80
+Gitweb:        https://git.kernel.org/tip/a6aed6b9c79e57064fa8c028662214b436578e80
 Author:        Frank Li <Frank.Li@nxp.com>
-AuthorDate:    Mon, 14 Apr 2025 14:30:57 -04:00
+AuthorDate:    Mon, 14 Apr 2025 14:30:58 -04:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 07 May 2025 17:49:00 +02:00
 
-irqchip/gic-v3-its: Set IRQ_DOMAIN_FLAG_MSI_IMMUTABLE for ITS
+dt-bindings: PCI: pci-ep: Add support for iommu-map and msi-map
 
-Set the IRQ_DOMAIN_FLAG_MSI_IMMUTABLE flag for ITS, as it does not change
-the address/data pair after setup.
+Document the use of (msi|iommu)-map for PCI Endpoint (EP) controllers,
+which can use MSI as a doorbell mechanism. Each EP controller can support
+up to 8 physical functions and 65,536 virtual functions.
 
-Ensure compatibility with MSI users, such as PCIe Endpoint Doorbell, which
-require the address/data pair to remain unchanged. Enable PCIe endpoints to
-use ITS for triggering doorbells from the PCIe Root Complex (RC) side.
+Define how to construct device IDs using function bits [2:0] and virtual
+function index bits [31:3], enabling (msi|iommu)-map to associate each
+child device with a specific (msi|iommu)-specifier.
+
+The EP cannot rely on PCI Requester ID (RID) because the RID is determined
+by the PCI topology of the host system. Since the EP may be connected to
+different PCI hosts, the RID can vary between systems and is therefore not
+a reliable identifier.
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250414-ep-msi-v18-3-f69b49917464@nxp.com
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Link: https://lore.kernel.org/all/20250414-ep-msi-v18-4-f69b49917464@nxp.com
 
 ---
- drivers/irqchip/irq-gic-v3-its.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/pci/pci-ep.yaml | 68 ++++++++++++++-
+ 1 file changed, 68 insertions(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 0115ad6..fd6e7c1 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -5140,7 +5140,7 @@ static int its_init_domain(struct its_node *its)
- 	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
+diff --git a/Documentation/devicetree/bindings/pci/pci-ep.yaml b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+index f75000e..214caa4 100644
+--- a/Documentation/devicetree/bindings/pci/pci-ep.yaml
++++ b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+@@ -17,6 +17,24 @@ properties:
+   $nodename:
+     pattern: "^pcie-ep@"
  
- 	inner_domain->msi_parent_ops = &gic_v3_its_msi_parent_ops;
--	inner_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
-+	inner_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT | IRQ_DOMAIN_FLAG_MSI_IMMUTABLE;
++  iommu-map:
++    $ref: /schemas/types.yaml#/definitions/uint32-matrix
++    items:
++      items:
++        - description: Device ID (see msi-map) base
++          maximum: 0x7ffff
++        - description: phandle to IOMMU
++        - description: IOMMU specifier base (currently always 1 cell)
++        - description: Number of Device IDs
++          maximum: 0x80000
++
++  iommu-map-mask:
++    description:
++      A mask to be applied to each Device ID prior to being mapped to an
++      IOMMU specifier per the iommu-map property.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    maximum: 0x7ffff
++
+   max-functions:
+     description: Maximum number of functions that can be configured
+     $ref: /schemas/types.yaml#/definitions/uint8
+@@ -35,6 +53,56 @@ properties:
+     $ref: /schemas/types.yaml#/definitions/uint32
+     enum: [ 1, 2, 3, 4 ]
  
- 	return 0;
- }
++  msi-map:
++    description: |
++      Maps a Device ID to an MSI and associated MSI specifier data.
++
++      A PCI Endpoint (EP) can use MSI as a doorbell function. This is achieved by
++      mapping the MSI controller's address into PCI BAR<n>. The PCI Root Complex
++      can write to this BAR<n>, triggering the EP to generate IRQ. This notifies
++      the EP-side driver of an event, eliminating the need for the driver to
++      continuously poll for status changes.
++
++      However, the EP cannot rely on Requester ID (RID) because the RID is
++      determined by the PCI topology of the host system. Since the EP may be
++      connected to different PCI hosts, the RID can vary between systems and is
++      therefore not a reliable identifier.
++
++      Each EP can support up to 8 physical functions and up to 65,536 virtual
++      functions. To uniquely identify each child device, a device ID is defined
++      as
++         - Bits [2:0] for the function number (func)
++         - Bits [18:3] for the virtual function index (vfunc)
++
++      The resulting device ID is computed as:
++
++        (func & 0x7) | (vfunc << 3)
++
++      The property is an arbitrary number of tuples of
++      (device-id-base, msi, msi-base,length).
++
++      Any Device ID id in the interval [id-base, id-base + length) is
++      associated with the listed MSI, with the MSI specifier
++      (id - id-base + msi-base).
++    $ref: /schemas/types.yaml#/definitions/uint32-matrix
++    items:
++      items:
++        - description: The Device ID base matched by the entry
++          maximum: 0x7ffff
++        - description: phandle to msi-controller node
++        - description: (optional) The msi-specifier produced for the first
++            Device ID matched by the entry. Currently, msi-specifier is 0 or
++            1 cells.
++        - description: The length of consecutive Device IDs following the
++            Device ID base
++          maximum: 0x80000
++
++  msi-map-mask:
++    description: A mask to be applied to each Device ID prior to being
++      mapped to an msi-specifier per the msi-map property.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    maximum: 0x7ffff
++
+   num-lanes:
+     description: maximum number of lanes
+     $ref: /schemas/types.yaml#/definitions/uint32
