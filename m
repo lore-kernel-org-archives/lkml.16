@@ -1,153 +1,108 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F4E223DE4
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 22:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B58E224FD
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 22:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746742486; cv=none; b=DzaPps03w67Md85x7V1AxC74h1//t9GSNrab1n0Iruv4Pa/6cZobWMh482Lwqcv7mo5YoiqJJ6ZRlnwHLmpUwag9OB/td0ehD0kqHwZCQg5KMPcWTa154ndnI7M2uDquSQX8F6DB/ayM07HfqBsXuhajmV8rh96ASh4dQ7KjPDI=
+	t=1746742546; cv=none; b=Kt69yGZxCvdd/fBm5nzcVsUDsPFsThHn5tV3QkSAzbGLaXUGb96qC6euefikRm3zgPOFi+NEtBj6VdZtNJao8mkRNB842wnS+WDSGFKZlRhyJ2X3R7ONFh0xZwJ2SxlBO6GtvzIiiHsJk0Z68n8XSiRaxhkn+jd+DwDI/UWncW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746742486; c=relaxed/simple;
-	bh=oQhDfKn0pMpd3jEaJ5ukmAhurZ7x+QJ/lmdMNdMwE2Y=;
+	s=arc-20240116; t=1746742546; c=relaxed/simple;
+	bh=h1gJmKSPX8Aqf4DE5miz7vFOkB0UzrYOWBn1TTkc6tY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NIw26S448Ie57C0YqqVVODPBQOVaFoa3A7PfYIav3HeJv/K7i9snh28y7205ixa9Pr7YymWdAeWJRa7MXrxIt/mLQ3PeKGCaMGoeJUIF0Cv8bkJC25uxUVB4i4AngCF9mubuCmkgbmAbPA/zE9gcQuuBATxHSly1MmnmL4A9YYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=J1ymQxiY; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 In-Reply-To:Content-Type; b=Pfiij4uBpSHmD+TREXXYubAO2yzlzC72DYbXakXT7YJy4nrPNoTLPRCBggxD93mCrmwEvAj35ilG42bOwkliUN/LG/oGy7p9U7QhFyijN8itOuXhIEpgX4sJIdXNxMdHnpOrmqXcAx/43BGB1rXyzGK8SqrxxUiRufNXfplbAXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pnm/AbNs; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="J1ymQxiY"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-867347b8de9so95148339f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 15:14:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1746742483; x=1747347283; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9CK1elPKWXClSLPdRPqW5P03MZNYsbIZRsBDl9jKU4I=;
-        b=J1ymQxiY/w1ewYwN/07QPFeUtNMbMZfNC1cym//JUkwdy774nrgj5V7IvLoj6MKgvR
-         iTDaBoDAF1PO8M2qXz0nHUAhzf5jfG0VXShJMVwxhJGnFVv5fDji+kA1KUIqXNSPy9Zx
-         vw+ZGwdvOpNk2+4uHsTKLMdU0mmQ0UEzVX0vI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746742483; x=1747347283;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9CK1elPKWXClSLPdRPqW5P03MZNYsbIZRsBDl9jKU4I=;
-        b=CtrtiI9yZuvPoXUyHUlw3r81J8eJrdd9gnxeZRyfTUKTyjRWqpYWYzr5CYd1xGhN6x
-         BJah/pa9TfmthQCqKIAtdei98nlOaKHAey78JLuRR+ZfVE8dgsHsfRPMGBBEVb+bGW9o
-         LWriRvfwXyZYTYnTaSLd40vf3BT2Qr5dfRpSYYxud4LX+RAfOoK0Q8vtdjmp6eblbX5t
-         k4rbKIP0JCMerL83XzGcw2WESJx076ebNpgfT+34Wq2+5Nrs6mz4eSwSoeWkT1jsyxHV
-         IJTmEAsSBemPfpCbfKRem054KKyasj/OLolc6rVehYunFniAm0+0aVUgG9jYPgAdfNd0
-         LIuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUibJ1Vx2NeIwQclSuFU+u03rnwoq1DsK3PEen+4Bs5a8V4Bd0kBahI0ct9KlBbigUQmygebyNDQq7cfQ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZSQXBoqbixohS9+6FhseaHYXLAmVdyPC0CH9WX0dt+GtXVa3U
-	sL7aqDFep4Kq7W1xUPKJppIGrRzslD9NWIB9NM/gTMmGWFz8S4W73vbrY9mHKK0=
-X-Gm-Gg: ASbGncvENZ4SbV4Um4o1Z7qy70X/y4SdGgPjdni8EZ1J/NqCGIK9E/wlSjuazXYNz5w
-	1V1CTmAMJoNy3lXqIHajSXCwGyHcFMe0PxVPpfa7qo/rnmG+l1dYtymyiMCw8vFwC/KGF8UrNay
-	zeUAxhvWYB0TjFjBUkuSxDPF9/aYn7SBg7AHLjdpop8UiirSWB4t+RWxD+RIQWm3z393syIqp2y
-	ciAtu9tBqzxk+0koGWw72Ss8EChTShs9ELBv2JDLw93cD4tt71R5pnD8UwN3XMgbv0Ii3lFjAhm
-	mFScGVAifmBWRvViS/dGFbNs7Tnu4xakea8CVblmwYuh8/BnO/Q=
-X-Google-Smtp-Source: AGHT+IH5MQwed+065d9LOVuxEKO6ubkA9Ob6pEePe9HD+g9AN4JF3g2On82Lij+nTEGd4vyd0n7qaQ==
-X-Received: by 2002:a05:6602:1401:b0:867:c17:a6ff with SMTP id ca18e2360f4ac-86764496f6fmr113977539f.8.1746742483142;
-        Thu, 08 May 2025 15:14:43 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-867636e0efdsm15990639f.29.2025.05.08.15.14.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 15:14:42 -0700 (PDT)
-Message-ID: <a4558815-f400-41c9-973d-90680ceb3ede@linuxfoundation.org>
-Date: Thu, 8 May 2025 16:14:41 -0600
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pnm/AbNs"
+Message-ID: <904c9113-0b01-4b9d-995f-f2729426281e@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746742542;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+qPlOIrbF6O7aqwbaQXtNOg0sgeetX70jL3/HgUCUYs=;
+	b=pnm/AbNskz79gn7Jtq+/4DiJrPRL1aVTE2j/xFucRrcf1uWwe2LXY+GODZ6FuwGHNbQuN8
+	bEfms0aWUHaFGxp1Y0rxvLw0GnXwuHlpfBJk+fuwtjF2dVzHqRf2FaTqFv9bx6TI9ajhiR
+	rIDR3NAuVJs+2A68FeEVzt2Vm8AE0y8=
+Date: Thu, 8 May 2025 23:15:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] um: let 'make clean' properly clean underlying SUBARCH as
- well
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Richard Weinberger <richard@nod.at>, linux-um@lists.infradead.org,
- David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>
-References: <20250507074936.486648-1-masahiroy@kernel.org>
- <9ec50ce0-f60b-4d87-bc44-adaf2a1a97a1@linuxfoundation.org>
- <CAK7LNARF=ANEEeENSwcWeayympi6Svci+ScWGpWQimyWm8xUzA@mail.gmail.com>
+Subject: Re: [PATCH net-next] net: dsa: convert to ndo_hwtstamp_get() and
+ ndo_hwtstamp_set()
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: netdev@vger.kernel.org, =?UTF-8?Q?K=C3=83=C2=B6ry_Maincent?=
+ <kory.maincent@bootlin.com>, Kurt Kanzenbach <kurt@linutronix.de>,
+ Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Woojung Huh <woojung.huh@microchip.com>,
+ UNGLinuxDriver@microchip.com, Claudiu Manoil <claudiu.manoil@nxp.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Simon Horman <horms@kernel.org>, Richard Cochran <richardcochran@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org
+References: <20250508095236.887789-1-vladimir.oltean@nxp.com>
+ <21e9e805-1582-4960-8250-61fe47b2d0aa@linux.dev>
+ <20250508204059.msdda5kll4s7coti@skbuf>
+ <1aab25ca-aed5-4041-a42a-59922b909c02@linux.dev>
+ <20250508205641.dsoksrasn4wicz76@skbuf>
 Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <CAK7LNARF=ANEEeENSwcWeayympi6Svci+ScWGpWQimyWm8xUzA@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250508205641.dsoksrasn4wicz76@skbuf>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On 5/7/25 17:49, Masahiro Yamada wrote:
-> On Thu, May 8, 2025 at 6:38 AM Shuah Khan <skhan@linuxfoundation.org> wrote:
+On 08/05/2025 21:56, Vladimir Oltean wrote:
+> On Thu, May 08, 2025 at 09:48:40PM +0100, Vadim Fedorenko wrote:
+>> On 08/05/2025 21:40, Vladimir Oltean wrote:
+>>> On Thu, May 08, 2025 at 09:25:14PM +0100, Vadim Fedorenko wrote:
+>>>> The new interface also supports providing error explanation via extack,
+>>>> it would be great to add some error messages in case when setter fails.
+>>>> For example, HIRSCHMANN HellCreek switch doesn't support disabling
+>>>> of timestamps, it's not obvious from general -ERANGE error code, but can
+>>>> be explained by the text in extack message.
+>>>
+>>> I wanted to keep the patches spartan and not lose track of the conversion
+>>> subtleties in embelishments like extack messages which can be added later
+>>> and do not require nearly as much attention to the flow before and after.
+>>> I'm afraid if I say "yes" here to the request to add extack to hellcreek
+>>> I'm opening the door to further requests to do that for other DSA drivers,
+>>> and sadly I do not have infinite time to fulfill them. Plus, I would
+>>> like to finalize the conversion tree-wide by the end of this development
+>>> cycle.
+>>>
+>>> Even if I were to follow through with your request, I would do so in a
+>>> separate patch. I've self-reviewed this patch prior to posting it, and I
+>>> was already of the impression that it is pretty busy as it is.
 >>
->> On 5/7/25 01:49, Masahiro Yamada wrote:
->>> Building the kernel with O= is affected by stale in-tree build artifacts.
->>>
->>> So, if the source tree is not clean, Kbuild displays the following:
->>>
->>>     $ make ARCH=um O=build defconfig
->>>     make[1]: Entering directory '/.../linux/build'
->>>     ***
->>>     *** The source tree is not clean, please run 'make ARCH=um mrproper'
->>>     *** in /.../linux
->>>     ***
->>>     make[2]: *** [/.../linux/Makefile:673: outputmakefile] Error 1
->>>     make[1]: *** [/.../linux/Makefile:248: __sub-make] Error 2
->>>     make[1]: Leaving directory '/.../linux/build'
->>>     make: *** [Makefile:248: __sub-make] Error 2
->>>
->>> Usually, running 'make mrproper' is sufficient for cleaning the source
->>> tree for out-of-tree builds.
->>>
->>> However, building UML generates build artifacts not only in arch/um/,
->>> but also in the SUBARCH directory (i.e., arch/x86/). If in-tree stale
->>> files remain under arch/x86/, Kbuild will reuse them instead of creating
->>> new ones under the specified build directory.
->>>
->>> This commit makes 'make ARCH=um clean' recurse into the SUBARCH directory.
->>>
->>> Reported-by: Shuah Khan <skhan@linuxfoundation.org>
->>> Closes: https://lore.kernel.org/lkml/20250502172459.14175-1-skhan@linuxfoundation.org/
->>> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+>> I agree that the patch is pretty busy, and the extack additions should
+>> go into separate patch. The only thing which bothers me is that it may never
+>> happen if it's not done with this patch.
+> 
+> That may well be. But look at it another way, I wrote this patch in July
+> 2023 and never got to upstream it, then Kory pinged me because it's
+> necessary to get rid of the old API. I don't want to go back and spend
+> time on extack messages when there's still a long way to go, and the
+> priority is obviously somewhere else. I've added this request to my
+> to-do list, and if I still have time at the end of all conversions, I'll
+> go through DSA drivers and see what can be improved.
+> 
+>> Anyway, the conversion code looks good, so
 >>
->> It doesn't solve the problem. I still see arch/x86/realmode/rm/pasyms.h
->> after running make ARCH=um mrproper
+>> Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
 > 
-> 
-> Why not?
-> 
-> This patch allows 'make ARCH=um mrproper'
-> to clean up both arch/um and arch/x86/.
-> 
-> It is really simple to test the behavior.
-> 
-> 
-> [Without this patch]
-> 
-> masahiro@zoe:~/workspace/linux-kbuild(master)$ touch
-> arch/x86/realmode/rm/pasyms.h
-> masahiro@zoe:~/workspace/linux-kbuild(master)$ make ARCH=um mrproper
-> masahiro@zoe:~/workspace/linux-kbuild(master)$ ls arch/x86/realmode/rm/pasyms.h
-> arch/x86/realmode/rm/pasyms.h
-> 
-> [With this patch]
-> 
-> masahiro@zoe:~/workspace/linux-kbuild(kbuild)$ touch
-> arch/x86/realmode/rm/pasyms.h
-> masahiro@zoe:~/workspace/linux-kbuild(kbuild)$ make ARCH=um mrproper
->    CLEAN   arch/x86/realmode/rm
-> masahiro@zoe:~/workspace/linux-kbuild(kbuild)$ ls arch/x86/realmode/rm/pasyms.h
-> ls: cannot access 'arch/x86/realmode/rm/pasyms.h': No such file or directory
-> 
+> Thanks for the review, here and elsewhere. Do you want me to copy you on
+> the remaining conversions?
 
-I ran another controlled test starting from a totally clean repo
-and the building - looks good to me.
+Yes, please. I'm trying to follow all PTP-related things as it's my
+current focus.
 
-Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
-
-thanks,
--- Shuah
-
+Thanks,
+Vadim
