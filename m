@@ -1,147 +1,122 @@
-Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from e240-7.smtp-out.eu-north-1.amazonses.com (e240-7.smtp-out.eu-north-1.amazonses.com [23.251.240.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9B621018F;
-	Thu,  8 May 2025 07:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA051205E3E
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 07:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746690780; cv=none; b=Or5cvk4BUUcShffUloXLnQXrd5lgqkuHKl5xgdJ+BcNADcYzl9mu7Dtfq09vgieuguqlZRd138W2mcDwR9L5lEGwD9W1Itb+CgPW5dv4Xdby23VaDioi1GReRpRXuZTVc1gR68amsoFVTguT4SvIiNIWJ202TtNSzTIRS5dTouw=
+	t=1746690965; cv=none; b=UuuhiZ2E1V9jOpLBa76ZcNujyqB8fJCNe5QPVWUiKtstZRTzyl/k+/tEokrNYWnbQ59JK5fdVISGKX8etOzfTk0WumnSjuxkkAB+2Y86THetCZyi/z0cXiX++1OGeUMSTKKqAX442NG2bD+6nB1uvZ2B1uoB8lm+HH9twQcLMbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746690780; c=relaxed/simple;
-	bh=NISzvybwl1mOqxXyH4yE2rbPD5w8uHy8I9/W2uUzEI0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DtKgoJD1W+Vfh2VdyPaGTSRT9cyW1fpyLTDh+OFZ1p0wgzRbgW2J97oXQ4gIC+4vbuo9QAvH4gv3m35t8okgmwhPUaHKONEcyr4tP/iKiTZZvNHyXrf6CzdU7RWrPTyZd711CA0UBBbRF7/+C3Btfoyfpnv+EvY1iBfszCFKRQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=dYkY/0pD; arc=none smtp.client-ip=185.125.188.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1746690965; c=relaxed/simple;
+	bh=qLDSuqLDnn9gUERCxMtLaLOPaPwHsG3xsxRw8hu6dFA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S5gd9jtvihlP2JmHidZ0gRUKBbaup34QivFPEOp8MIlVLXv2bOlYvpZ1N5x04+YosH5chkxSjwR7bOniQE2zQKKhMEdVHlBj2VaqsfB5xobAIXdDwM1Rkt/0wbwFrED5UMEgBk+uFNUeSRYsuFYkw3v23YSNYGMF8laRx8ofeS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=AIWXG5oT; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=d4SpLLzi; arc=none smtp.client-ip=23.251.240.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="dYkY/0pD"
-Received: from [10.101.3.5] (unknown [213.157.19.150])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 5D1F13FBEE;
-	Thu,  8 May 2025 07:52:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1746690775;
-	bh=G6zo5KYbksyRNfmQ8KKx8XVCr5lsyu8SUY/gEaHPlbY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=dYkY/0pDZ84gMwQ+AKLc8UiT0CUE7jFkwOw7o1hkSZSXUI83tyhohsbbCE0ltzKZj
-	 rrnwCub67+2UYC8oouzCVnO/OjmIuXZ2FueW5WglNFuPmrsG5kh0iDxgJ5QSa3n4pp
-	 nkFK+UqidCNWffnHOiOSwfgdG7h0oY5HXzAX4Ck1yxrmgJvRSB96Xs5jaDvxP13Sji
-	 0tRKsOWJj2RdsDfDFEah1ETO7Ke2dq5Y5QmJ9FVh4SFZdn+biOHGADJsgmoN4BWyGJ
-	 PwQt1zOXqym5/3uhI0IDmNcF+Q9pFDyW/VSXHZz/HTnNxjU3kOhMbxpapLrCjV+fHu
-	 sgLqVD4Rqxisw==
-Message-ID: <7da224cd-fd9c-4c80-9a23-cb977420f50b@canonical.com>
-Date: Thu, 8 May 2025 00:52:55 -0700
+	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="AIWXG5oT";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="d4SpLLzi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1746690961;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=qLDSuqLDnn9gUERCxMtLaLOPaPwHsG3xsxRw8hu6dFA=;
+	b=AIWXG5oTKiKzDzK99kDPlSQh+++1OXty7+xeBzsrISSFpJ2jdXaopcpiwZ4gGym7
+	o7fayg5/w5cnpMaGPH/P3INsJlvpYjuH7sK5EoaVtYwvHccTsQkPl98sHIvkBaK7UUy
+	iouI4O2IM/RbbnC8L/TSfaycjtlChkt/wtjU2/AJPOKoFHCJo+NYHpWiWvdlRwLs2SX
+	478za0hkzdffsnIF0z44nhYIOvoDebKDXltqBo+qdcEZBY+i3WQHZ4LqH4wQKaxbVjo
+	15gZSnajplOnkMX7nBrxpV+aYUceliITbJjzDl2Q8uaV8xP3LPDUNtUINXsptJ+aglA
+	rNQDehFChA==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1746690961;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+	bh=qLDSuqLDnn9gUERCxMtLaLOPaPwHsG3xsxRw8hu6dFA=;
+	b=d4SpLLziG8v0oEmedqiC8fuLrVvNWTo0Sh5VoAnJYTSAvuYTcv8mmSHSOqEN1ntN
+	h+6mKposUz4GvmXcBxjaNUJYyiLxRmZkl/w+9N28UugRcrR/mdJujp8fYWvXzrUknyN
+	HChE7rA9jnZaCvTpBbiCxyg+uQ+pwUol0Y9clhx4=
+X-Forwarded-Encrypted: i=1; AJvYcCWqGfkuXYBWaqB9sA5Hs6rY/0EFHX2Ge5whSl9kpuU1DKGb0/FUhImlhsW8y0gFz/4+p4LSuMfM3kIrWTE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzAt4SR82FqhQB8tpXpaksFpzlcfIwZUpGhmm94v04y1/bGAGg
+	tZnCT+USN1KHGNDk21QHYY9elGRhSA0nVH2HNVEj4TXb/IvPPJB/uzHI1B9POn8/lJOEgSO08uV
+	DA90zyLyFKWNoX9tfba4d6lHIFsM=
+X-Google-Smtp-Source: AGHT+IE0WQ0NmOhk617CPniN3Q5Ev3kxPSUYvNkyL6aiheUQ6qDeRZnMU/o6VRn2ThWI6M/aNObwFC9YOCfv7w993BA=
+X-Received: by 2002:a17:903:22ca:b0:21c:fb6:7c3c with SMTP id
+ d9443c01a7336-22e5ea78834mr91634215ad.17.1746690958567; Thu, 08 May 2025
+ 00:55:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] Wire up the lsm_manage_policy syscall
-To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
- =?UTF-8?Q?Maxime_B=C3=A9lair?= <maxime.belair@canonical.com>,
- Song Liu <song@kernel.org>
-Cc: linux-security-module@vger.kernel.org, paul@paul-moore.com,
- jmorris@namei.org, serge@hallyn.com, mic@digikod.net, kees@kernel.org,
- stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
- takedakn@nttdata.co.jp, linux-api@vger.kernel.org,
- apparmor@lists.ubuntu.com, linux-kernel@vger.kernel.org
-References: <20250506143254.718647-1-maxime.belair@canonical.com>
- <20250506143254.718647-2-maxime.belair@canonical.com>
- <CAPhsuW4qY9B3KdhqrUOZoNBWQmO_RDwbH46my314WxrFwxbwkQ@mail.gmail.com>
- <aa3c41f9-6b25-4871-a4be-e08430e59730@canonical.com>
- <470689f0-223e-4d26-a919-8d48f383883b@I-love.SAKURA.ne.jp>
-Content-Language: en-US
-From: John Johansen <john.johansen@canonical.com>
-Autocrypt: addr=john.johansen@canonical.com; keydata=
- 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 lT9Q
-Organization: Canonical
-In-Reply-To: <470689f0-223e-4d26-a919-8d48f383883b@I-love.SAKURA.ne.jp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250507142552.9446-1-aha310510@gmail.com> <20250507153325.48726051dbbff4f3936a83ff@linux-foundation.org>
+ <CAO9qdTEL1xhBOXbSR4KHgmh0vpEeiia5ii9Ae959ahFHLVycRQ@mail.gmail.com>
+In-Reply-To: <CAO9qdTEL1xhBOXbSR4KHgmh0vpEeiia5ii9Ae959ahFHLVycRQ@mail.gmail.com>
+From: Ozgur Kara <ozgur@goosey.org>
+Date: Thu, 8 May 2025 07:56:00 +0000
+X-Gmail-Original-Message-ID: <CADvZ6Er478rF=4dy027Ykja_ZBTarFno+yqJvj60vchPCujCig@mail.gmail.com>
+X-Gm-Features: ATxdqUGDygGB01JmmID4n9NBdwwuJ-xu2d0184zhFq2fVSzhlR3fGQyrw7etQsU
+Message-ID: <01100196aee4ede3-0997795d-f545-4c3d-9d05-5f8a955561ca-000000@eu-north-1.amazonses.com>
+Subject: Re: [PATCH v3] mm/vmalloc: fix data race in show_numa_info()
+To: Jeongjun Park <aha310510@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, urezki@gmail.com, 
+	edumazet@google.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
+X-SES-Outgoing: 2025.05.08-23.251.240.7
 
-On 5/7/25 15:04, Tetsuo Handa wrote:
-> On 2025/05/08 0:37, Maxime Bélair wrote:
->> Again, each module decides which operations to expose through this syscall. In many cases
->> the operation will still require CAP_SYS_ADMIN or a similar capability, so environments
->> that choose this interface remain secure while gaining its advantages.
-> 
-> If the interpretation of "flags" argument varies across LSMs, it sounds like ioctl()'s
+Jeongjun Park <aha310510@gmail.com>, 8 May 2025 Per, 07:47 tarihinde =C5=9F=
+unu yazd=C4=B1:
+>
+> Andrew Morton <akpm@linux-foundation.org> wrote:
+> >
+> > On Wed,  7 May 2025 23:25:52 +0900 Jeongjun Park <aha310510@gmail.com> =
+wrote:
+> >
+> > > The following data-race was found in show_numa_info():
+> > >
+> > > ...
+> > >
+> > >
+> > > According to this report, there is a read/write data-race because m->=
+private
+> > > is accessible to multiple CPUs. To fix this, instead of allocating th=
+e heap
+> > > in proc_vmalloc_init() and passing the heap address to m->private,
+> > > show_numa_info() should allocate the heap.
+> > >
+> > > One thing to note is that show_numa_info() is called in a critical se=
+ction
+> > > of a spinlock, so it must be allocated on the heap with GFP_ATOMIC fl=
+ag.
+> >
+> > GFP_ATOMIC is unfortunate.  Can vmalloc_info_show() allocate the
+> > storage outside the lock and pass that pointer into show_numa_info()?
+> > That way will be more efficient also, less allocating and freeing.
+> >
+> >
+>
+> That's good idea! Definitely, if you modify vmalloc_info_show() to
+> allocate the heap before taking the spinlock and initialize the heap
+> to 0 at the beginning of the loop, we don't need to use GFP_ATOMIC,
+> and we only need to allocate the heap once, which is much more efficient.
+>
+> I'll send you v4 patch that reflects this right away.
+>
 
-yes that does feel like ioctls(), on the other hand defining them at the LSM level won't
-offer LSMs flexibility making it so the syscall covers fewer use cases. I am not opposed
-to either, it just hashing out what people want, and what is acceptable.
+Hello,
 
-> "cmd" argument. Also, there is prctl() which can already carry string-ish parameters
-> without involving open(). Why can't we use prctl() instead of lsm_manage_policy() ?
-> 
+I think so but i'm not sure if it will work because i just thought of
+it as an idea because we need to check if v is null or not.
 
-prctl() can be used, I used it for the unprivileged policy demo. It has its own set of
-problems. While LSM policy could be associated with the process doing the load/replacement
-or what ever operation, it isn't necessarily tied to it. A lot of LSM policy is not
-process specific making prctl() a poor fit.
+Regards,
 
-prctl() requires allocating a global prctl()
+Ozgur
 
-prctl() are already being filtered/controlled by LSMs making them a poort fit for
-use by an LSM in a stacking situation as it requires updating the policy of other
-LSMs on the system. Yes seccomp can filter the syscall but that still is an easier
-barrier to overcome than having to have instruction for how to allow your LSMs
-prctl() in multiple LSMs.
-
-
-Mickaël already argued the need for landlock to have syscalls. See
-https://lore.kernel.org/lkml/20200511192156.1618284-7-mic@digikod.net/
-and the numerous iterations before that.
-
-Ideally those could have been LSM syscalls, with landlock leveraging them. AppArmor
-is getting to where it has similar needs to landlock. Yes we can use ioctls, prctls,
-netlink, the fs, etc. it doesn't mean that those are the best interfaces to do so,
-and ideally any interface we use will be of benefit to some other LSMs in the future.
-
-
+> Regards,
+>
+> Jeongjun Park
+>
+>
+>
