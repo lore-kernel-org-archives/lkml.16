@@ -1,65 +1,30 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4621DF25C
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:17:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5C01DF25C;
+	Thu,  8 May 2025 12:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746706639; cv=none; b=tPopZ6wK8oKjvRwIVT07EhSJ7Ta/VOtvwwVd4zgd4LQiCsVSVE2Q3+JTuv7Q9yZ7eq3L5sEqtUpl3Vr/vUfsrZSmSmeS1cdIVbOxCOTogIwfgC8FOyd6BbDZrfPS8x9YN2SqnHGK6qr7CiGORjz5OXxnFJcAc2q3nNkN/qtUpis=
+	t=1746706650; cv=none; b=h+1XRrkUJuwDGHI0RyMtuUuTBIyb0I3H6YGCoGlzWCGooK2dsfjxhqmhsXEn/9MlWq/aUSpHpHh9F77TG9o4xd+sGFMI223jIk6PTBYlyyym/4HB22YxxUU0JXZJjAnZSHjdj3CunW0ZMFV5a/3EniBuzx4hGrbC0SQCDe2sdjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746706639; c=relaxed/simple;
-	bh=gI9+15/uiqpn2T7b42r1EP83YhqQAQmZi3IavWEk6Js=;
+	s=arc-20240116; t=1746706650; c=relaxed/simple;
+	bh=7xiyatHuEYO5siH784i+66R6gDk//PcjZEueVmEeyvo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DISiw90Q+VW71ux6XSpXTJ+1KRjCSQrDiz/fEM7BID+yFhvpmYknEimgEgMUUvw+nsjgcQPO0zEIaPOLwFK2cWbahw4vA6f3SfHVVvuQG2fBVYyYKClKajxuhReWnuUOqLZDFmONlZ96UKFHjLFBzuGz4+rjUgAIm0VRIR7zQto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=k3w/widk; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="k3w/widk"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-85b3f92c8f8so86695239f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:17:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1746706636; x=1747311436; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ITsof7vKMaX3jP45vYP8VvBDvnD7ar/ly91W1po1fYs=;
-        b=k3w/widkR97bsDT61lsM4hK+UnsGe+OLVgb5KbiBJQYmL7Idof7dIWDZQ5Aj5LJrKV
-         bZpxNWRFsDQtVkJC4jRsuxXKcunGSpiy691CTRdWzD9pnGhizU9V4lf5zD/14wKzk2Na
-         ShQCKJzCBKRFn1+nPMy0b7mZuEIsZ8Rb9OIV0VR4oAt/AFyhgMaGF+QBrhbS9+WCWaYv
-         lYZ8IVJTGxULjIswSIhurxkME4u6UUmu4o4daWrZD6OS7l7Ub7nlAtxsoumelTadM6m2
-         quwsUd9lD8NdnnkWHea/Z4sZI6S6bkE9QCLhSWXYePs+1Cb9XY+gggvcYO/s8IwnlfYD
-         eFqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746706636; x=1747311436;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ITsof7vKMaX3jP45vYP8VvBDvnD7ar/ly91W1po1fYs=;
-        b=Ubgq1oKImMgKYm7V0PjYr+lyMqmcKFZc/XFyW7JFf1aLQZonwrK6hVmAxIQeiV2WTz
-         MoDIn448Qt/Uo5OjQs8MKSwspoZ2OcfbPP4uX85sdUut0U685wDGGKYVu5x+hr3Aa2wb
-         nbahPEPLk0ofJig1wt0ay3TZA4EJQP6AHcyuI7BDv+cczdL+AfHsDDG3AAFZk4cUuN+i
-         V53YYgMAJXJvRz9rra5ia+SewSQ6d/kyiMmYUbCXkSjjsxNYtJ1tVzQ1zNXBvR+6nX5y
-         hZJIDpEw/vpJWTGeUQuFU/5BSxwdZP1asCJ7IbSsfqlk6+ayBfYIaQ/j1LW9D76a1r24
-         BctA==
-X-Forwarded-Encrypted: i=1; AJvYcCWVDfF3cLk+QdiuT9PtZv7xEoYF2zdQhGWYnZgeSPh5Ov/EFzKMeShmzypRnfa9FDQGkzfTIQqgHJHq0DE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7lxWU0Rdx6W6McwpkfKYMQA9cOB+yzsTOCzaRBFKwuWE6QDb0
-	/d26/SM0qpvl/n/H6vLy2148zBlxPw1T0qK+JM8frU58HzEptGrbniUGoWgAhPg=
-X-Gm-Gg: ASbGncum5xDPpU8+fo1/7hRPShP2fWS+QRpCeisorj2qNXu9dihDXi054SRQ5m9yzXi
-	TBXX0Yu3bNAS8ICxLtbqlW3WVzJ9myiHdVrm2DLRG3t5OjclVPREJl5KnGcmG0blkL2l4g1akgD
-	TKf8BwpJqpeIlqPXY6X4vHOGj+8+5IlpPA0XCEKXV8ZCKwcNUC99EPKimJSYdHaWFCfVbnbGx9b
-	waxyyYNdzY/j27Cfz1huUkHzmDvwbeMmGsFtEmcHb1CMc2fZjFIrlNy3OgK2OjN5YRR9X0B8JcE
-	gpZBavuyzZjsSgh/QG32bGTFgHymG+XV7LjWar8raP2EtLXZqBAE7/jb0xVD8u26jxWVupWJeqK
-	pYnxT
-X-Google-Smtp-Source: AGHT+IEpsfxrAkflVw0/hRABTEz4CwO/hvBuswU8lzk6t7nrXFnCj3fyA636Nq30np0oFo7xbeEBJA==
-X-Received: by 2002:a05:6602:3f85:b0:867:3e9e:89db with SMTP id ca18e2360f4ac-867473170e3mr934513939f.8.1746706636487;
-        Thu, 08 May 2025 05:17:16 -0700 (PDT)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-864aa2bb1bdsm294250539f.7.2025.05.08.05.17.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 05:17:15 -0700 (PDT)
-Message-ID: <1521c828-31f3-4e45-a651-750ce2e37364@riscstar.com>
-Date: Thu, 8 May 2025 07:17:14 -0500
+	 In-Reply-To:Content-Type; b=FFfBF6u0J0thAeMNIaUgD7DmEwnGOk+zJb1u+E9v7Gu4Mu932+SvZIyNm+BjexwkSF2OKhOTV1YtNKNP9QIwaJZZc8TYMofOSZiQwQ0RlIm3vQgnocSsjDxOv/UVfiTfDYr9ZnwkSMHCpvDeZX0jdMdolV5zWNdP2WWO8FLslTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4ZtWNH1XsWzYQtwc;
+	Thu,  8 May 2025 20:17:19 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 86C091A1A7E;
+	Thu,  8 May 2025 20:17:18 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP4 (Coremail) with SMTP id gCh0CgDnSl_KoBxoXus0Lw--.707S3;
+	Thu, 08 May 2025 20:17:16 +0800 (CST)
+Message-ID: <68172a9e-cf68-4962-8229-68e283e894e1@huaweicloud.com>
+Date: Thu, 8 May 2025 20:17:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,88 +32,146 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/6] dt-bindings: soc: spacemit: define spacemit,k1-ccu
- resets
-To: Krzysztof Kozlowski <krzk@kernel.org>, Yixun Lan <dlan@gentoo.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- alex@ghiti.fr, heylenay@4d2.org, inochiama@outlook.com,
- guodong@riscstar.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
- spacemit@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250506210638.2800228-1-elder@riscstar.com>
- <20250506210638.2800228-2-elder@riscstar.com>
- <20250507223554-GYA505240@gentoo>
- <22b7b5fc-6f5a-4ce8-ae12-a7423925c113@kernel.org>
+Subject: Re: [RFC PATCH v4 07/11] fs: statx add write zeroes unmap attribute
+To: Christoph Hellwig <hch@lst.de>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, linux-fsdevel@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-block@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
+ linux-scsi@vger.kernel.org, linux-xfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, tytso@mit.edu, john.g.garry@oracle.com,
+ bmarzins@redhat.com, chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com,
+ brauner@kernel.org, yi.zhang@huawei.com, chengzhihao1@huawei.com,
+ yukuai3@huawei.com, yangerkun@huawei.com
+References: <20250421021509.2366003-1-yi.zhang@huaweicloud.com>
+ <20250421021509.2366003-8-yi.zhang@huaweicloud.com>
+ <20250505132208.GA22182@lst.de> <20250505142945.GJ1035866@frogsfrogsfrogs>
+ <c7d8d0c3-7efa-4ee6-b518-f8b09ec87b73@huaweicloud.com>
+ <20250506043907.GA27061@lst.de>
+ <64c8b62a-83ba-45be-a83e-62b6ad8d6f22@huaweicloud.com>
+ <20250506121102.GA21905@lst.de>
+ <a39a6612-89ac-4255-b737-37c7d16b3185@huaweicloud.com>
+ <20250508050147.GA26916@lst.de>
 Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <22b7b5fc-6f5a-4ce8-ae12-a7423925c113@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <20250508050147.GA26916@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDnSl_KoBxoXus0Lw--.707S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXF43ZFW3Zry3Aw48Kw1xKrg_yoWrtrWDpF
+	W8WF1jkF4DKr13Cw1v9w4Igrn0vFs3AF15C39Ykr48Cw45XF13KFnaga40yF9rXryxZayD
+	tFZ0kFyUZa1Iy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	s2-5UUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On 5/8/25 7:02 AM, Krzysztof Kozlowski wrote:
-> On 08/05/2025 00:35, Yixun Lan wrote:
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            enum:
->>> +              - spacemit,k1-syscon-apbc
->>> +              - spacemit,k1-syscon-apmu
->>> +              - spacemit,k1-syscon-mpmu
->>> +    then:
->>> +      required:
->>> +        - clocks
->>> +        - clock-names
->>> +        - "#clock-cells"
->>>   
->>>   additionalProperties: false
->>>   
->>> diff --git a/include/dt-bindings/clock/spacemit,k1-syscon.h b/include/dt-bindings/clock/spacemit,k1-syscon.h
->>> index 35968ae982466..f5965dda3b905 100644
->>> --- a/include/dt-bindings/clock/spacemit,k1-syscon.h
->>> +++ b/include/dt-bindings/clock/spacemit,k1-syscon.h
->> would it be better to move all reset definition to its dedicated dir?
->> which like: include/dt-bindings/reset/spacemit,k1-syscon.h?
+On 2025/5/8 13:01, Christoph Hellwig wrote:
+> On Wed, May 07, 2025 at 03:33:23PM +0800, Zhang Yi wrote:
+>> On 2025/5/6 20:11, Christoph Hellwig wrote:
+>>> On Tue, May 06, 2025 at 07:16:56PM +0800, Zhang Yi wrote:
+>>>> Sorry, but I don't understand your suggestion. The
+>>>> STATX_ATTR_WRITE_ZEROES_UNMAP attribute only indicate whether the bdev
+>>>> and the block device that under the specified file support unmap write
+>>>> zeroes commoand. It does not reflect whether the bdev and the
+>>>> filesystems support FALLOC_FL_WRITE_ZEROES. The implementation of
+>>>> FALLOC_FL_WRITE_ZEROES doesn't fully rely on the unmap write zeroes
+>>>> commoand now, users simply refer to this attribute flag to determine
+>>>> whether to use FALLOC_FL_WRITE_ZEROES when preallocating a file.
+>>>> So, STATX_ATTR_WRITE_ZEROES_UNMAP and FALLOC_FL_WRITE_ZEROES doesn't
+>>>> have strong relations, why do you suggested to put this into the ext4
+>>>> and bdev patches that adding FALLOC_FL_WRITE_ZEROES?
+>>>
+>>> So what is the point of STATX_ATTR_WRITE_ZEROES_UNMAP?
+>>
+>> My idea is not to strictly limiting the use of FALLOC_FL_WRITE_ZEROES to
+>> only bdev or files where bdev_unmap_write_zeroes() returns true. In
+>> other words, STATX_ATTR_WRITE_ZEROES_UNMAP and FALLOC_FL_WRITE_ZEROES
+>> are not consistent, they are two independent features. Even if some
+>> devices STATX_ATTR_WRITE_ZEROES_UNMAP are not set, users should still be
+>> allowed to call fallcoate(FALLOC_FL_WRITE_ZEROES). This is because some
+>> devices and drivers currently cannot reliably ascertain whether they
+>> support the unmap write zero command; however, certain devices, such as
+>> specific cloud storage devices, do support it. Users of these devices
+>> may also wish to use FALLOC_FL_WRITE_ZEROES to expedite the zeroing
+>> process.
 > 
-> Please kindly trim the replies from unnecessary context. It makes it
-> much easier to find new content.
+> What are those "cloud storage devices" where you set it reliably,
+> i.e.g what drivers?
+
+I don't have these 'cloud storage devices' now, but Ted had mentioned
+those cloud-emulated block devices such as Google's Persistent Desk or
+Amazon's Elastic Block Device in. I'm not sure if they can accurately
+report the BLK_FEAT_WRITE_ZEROES_UNMAP feature, maybe Ted can give more
+details.
+
+https://lore.kernel.org/linux-fsdevel/20250106161732.GG1284777@mit.edu/
+
 > 
+>> Therefore, I think that the current point of
+>> STATX_ATTR_WRITE_ZEROES_UNMAP (possibly STATX_WRITE_ZEROES_UNMAP) should
+>> be to just indicate whether a bdev or file supports the unmap write zero
+>> command (i.e., whether bdev_unmap_write_zeroes() returns true). If we
+>> use standard SCSI and NVMe storage devices, and the
+>> STATX_ATTR_WRITE_ZEROES_UNMAP attribute is set, users can be assured
+>> that FALLOC_FL_WRITE_ZEROES is fast and can choose to use
+>> fallocate(FALLOC_FL_WRITE_ZEROES) immediately.
 > 
-> I don't get why such comments are appearing so late - at v6. There was
-> nothing from you about this in v1, v2 and v3, which finally got reviewed.
+> That's breaking the abstracton again.  An attribute must say something
+> about the specific file, not about some underlying semi-related feature.
 
-Stephen Boyd said "please rework this to use the auxiliary driver
-framework" on version 5 of the series; it was otherwise "done" at
-that point.
+OK.
 
-Doing this meant there was a much clearer separation of the clock
-definitions from the reset definitions.  And Yixun's suggestion
-came from viewing things in that context.
+> 
+>> Would you prefer to make STATX_ATTR_WRITE_ZEROES_UNMAP and
+>> FALLOC_FL_WRITE_ZEROES consistent, which means
+>> fallcoate(FALLOC_FL_WRITE_ZEROES) will return -EOPNOTSUPP if the block
+>> device doesn't set STATX_ATTR_WRITE_ZEROES_UNMAP ?
+> 
+> Not sure where the block device comes from here, both of these operate
+> on a file.
 
-Given the rework, I considered sending this as v1 of a new series
-but did not.
+I am referring to the block device on which the filesystem is mounted.
+The support status of the file is directly dependent on this block
+device.
 
-> I just feel people wait for maintainers to review and only after they
-> will add their 2 cents of nitpicks or even some more important things
-> potentially invalidating the review. Lesson for me: do not review
-> people's work before it reaches v10, right?
+> 
+>> If so, I'd suggested we need to:
+>> 1) Remove STATX_ATTR_WRITE_ZEROES_UNMAP since users can check the
+>>    existence by calling fallocate(FALLOC_FL_WRITE_ZEROES) directly, this
+>>    statx flag seems useless.
+> 
+> Yes, that was my inital thought.
+> 
+>> 2) Make the BLK_FEAT_WRITE_ZEROES_UNMAP sysfs interface to RW, allowing
+>>    users to adjust the block device's support state according to the
+>>    real situation.
+> 
+> No, it's a feature and not a flag.
+> 
 
-That's not what happened here--or at least, it's not as simple
-as that.  Your quick review was very much appreciated.
+I am a bit confused about the feature and the flag, I checked the other
+features, and it appears that features such as BLK_FEAT_ROTATIONAL allow
+to be modified, is this flexibility due to historical reasons or for the
+convenience of testing?
 
-Yixun:  Krzysztof was satisfied with things the way they're
-defined here.  Do you feel strongly I should make your suggested
-change?  Or are you OK with me just keeping things defined this
-way for the next version?  I'd like this question resolved before
-I send the next version.
+Think about this again, I suppose we should keep the
+BLK_FEAT_WRITE_ZEROES_UNMAP as read-only and add a new flag,
+BLK_FALG_WRITE_ZEROES_UNMAP_DISABLED, to disable the
+FALLOC_FL_WRITE_ZEROES. Since the Write Zeroes does not guarantee
+performance, and some devices may claim to support **UNMAP** Write Zeroes
+but exhibit extremely slow write-zeroes speeds. Users may want be able to
+disable it. Thoughts？
 
-Thank you.
-
-					-Alex
-
-> Best regards,
-> Krzysztof
+Thanks,
+Yi.
 
