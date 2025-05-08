@@ -1,142 +1,130 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4FC136A;
-	Thu,  8 May 2025 05:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58C21D6DDD
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 05:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746683179; cv=none; b=BovgIsznuRGEt95Afk+nzaOq8qsfjy8mSQ5rgUq1+v20oEyz3zmfDwKY/BjhdppB5uEL2e5/GQ5idtryZE7rN4G3atKC/AKkaaN3X1vNMqfjlx6kLr5VDZxpugfxGSlJDMPswp5EdHWM8xH2pDteNHsWTuqSXdq7uOYlVmIRTkg=
+	t=1746683252; cv=none; b=QUZ/oIRnMzxbIsFHn+W6f4XWM80ZESA2QK8AxKCLBra9YlSVESBfC5o/vB2b1/nPbVruqEcHbaw90rUgXYgDf5HwiwmmirfqwKGKtbX0PeoRvQco4/32SzgIGtTJApjvdVM5LO96wkb5Ftad6rHTf2vJYx1+Uh1P07pYF86w9js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746683179; c=relaxed/simple;
-	bh=ss/4RK5BjT/swp02jG+5lJstfWo3krG0HFi/UmsxU/E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TPpM5p1Wp6rsaTV/sNjcfZprXFp5E1urCflV+VmuSX+WSxpItguWuh21hsI1TEII5/7KqEqveuioyKJoBeyfYLpZ7ETKW1sl9KyWovKGYDSNvZZxEW+1VFV3CDVxV0QdfaIHNZOkSwMYr7fy1Yoeed9HEBjH69CRUAXQvcirgZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cnROXt0h; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746683252; c=relaxed/simple;
+	bh=M4+zHfcI33Z2cFnsOe/pEfEdRumAQbSlZAruITsX9Qo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=FNfy/oLKeu87jJy0IUAkxV09jlz9ocekzA9To6L3u6r4xrE2xA4DGDiOM042SwlmWMc7BlmNeGQAS+oRyBXlG6tRtLkOrezrcvNfbhH/IF7xRNPKkZV3EvR/xvn/aAMZys0jT0iGhv2QXK6ZrT7OxdOlQipLcfyXI3lgyVwC6pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J0lso/Ig; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cnROXt0h"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5484WkIk016749;
-	Thu, 8 May 2025 05:46:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ZlmY9+RE5tVTvzudHgirH8bQj5eAneibbTLM15Rcq+8=; b=cnROXt0hZByAcw74
-	LaeUiMakRYDoKLH0Yrt3pGOxp/rSxHXrORiI+OBsDsmfnX7Nq1xfDh8m/Y4ZZKqs
-	qf6MOjPufxI34ph4QMLZRGSwV7L08cGZ6+BptaWlP7Bx+lk+K0wUdXOZ6xERsWPu
-	yw5jV5IUPCRxV4z/BLDETXocRP5DFJDJaOFQr+HjavInPAtyDaXIjj/BHxfAkFK2
-	dk7p1OpbEt0X76CpTmrkNre/qQqE8T3Hya0h+eqz+yfOoxvmLXswy4+LIEalqq6j
-	it77Ulx7bnRbJfijlOCp4dt5JZ000bPezwNimvjNFgF4rypjcS7D4sdKhRBRKZxD
-	jip9tg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp684s2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 05:46:01 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5485k1TN026146
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 8 May 2025 05:46:01 GMT
-Received: from [10.218.11.38] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 7 May 2025
- 22:45:55 -0700
-Message-ID: <2f3e608b-5536-4c6d-b7ca-c8cf4c9d0b1b@quicinc.com>
-Date: Thu, 8 May 2025 11:15:53 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J0lso/Ig"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfe574976so3731245e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 22:47:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746683249; x=1747288049; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P5CTBM0j2lcGjU5ouKbWKErsqM/JgWcN5EvB9r2bUWU=;
+        b=J0lso/IgEf8WMvkdsb8Ms7uGVcSQ8yvr/yYY/RpsNi5/9dboZnbCiUfRXMgG4LDYCQ
+         V8A5gCvyZSizLpfcOvEIgnlmHS+9KU4l86cxYLhiTppPuQDv0bxQC9ZahjBiDW+Bvn3p
+         NT1flDCrShWXufuffPMvEGw/ckU2P/QqK0F1vs1Z1zW8GWfwXIGfNz1NBe+xq/54eY3G
+         5/P+aeRQA2cwzCTUIBFmr3dilbpYdQq2RByRDyx+sgij9xu5G+NI5hwqfMlzEIpvCl1J
+         1pauC4nK6mqOR5R2TtwE4hymbIiO213YWDyr2/dytIgygDej2QQeo+HYstPEKlRwlDzq
+         U7Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746683249; x=1747288049;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P5CTBM0j2lcGjU5ouKbWKErsqM/JgWcN5EvB9r2bUWU=;
+        b=RgXKBg7Qzz/K6XLv+Mlk42DXJRYUhdt019sQv3ujUiZz6oTVLDK0hK1pE2fWgz/zeE
+         v5CDb3s1Eu4s2e0/k2MIfC0BToTyUeJ2MximvKVXDgscKcCHWzDjyzNRfxSJUi6K2CHL
+         uIMLhk2ZK72G9zV7yKwtnfLjsmR4uk7fjamMl0i6tDYA5eWPElteagIl6KxH1awMEMM2
+         DVmz2PdRfOpYte4uf4wQtEG2UAvf5/ZY1u9QcE8rUa2wsrsHciHPzBXn8zO26E55ZL4y
+         KB60YS0ElHxtHBL57sxWRKDh8fWUonpIuNV4NEW+N7KcU7TGxnOrXlWohb3bb55ImfFc
+         esqA==
+X-Forwarded-Encrypted: i=1; AJvYcCWz6/zReAZbYEh5HeMMpjjNnDJ6UX3TdXDkH861am3J5qaU+H3OxSAvhKUj3dwOfRt1UsYoJIyrf/kh5s0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKa2enla6RFqxurHluz2FuYaKiS51Ur74N5RR4npyKr3jlOt3Z
+	1SkygyZTtLdzlg4WLZ8HaHQ4gQsIBN/1qIK68iTf4VKyayhEuzy1zHPgOMz92jE=
+X-Gm-Gg: ASbGncuDa8O06lnF4m6kghRBCWo+GMBPFCv2StpHoTQTfgqiWt5rlRWjfDtA2gQyphw
+	lshDbGtcQxHeyyH7eAf/t1ru9eyQtXrcCLf90GbbN/xhqivBtSE95aW3w5HCjBKiBvtDvJQcYCz
+	5t7/90mpuUBBWbl00mH/OSOCkYnhhLdNCkQhMpwloPx2Wd+kp/QlSHgoBMO9IIr+MP4Wi661+t3
+	ORZlLHTv13xO+p02G/dN5OJpd58f1k2k2PoUL3mnzCxJaMDuzdrpwyWv3tjo9VYQ+9r6UD1VlnU
+	kJvksa2DlYvJ1i7pnw/nYspviLj/I3T545aIZOtd0npTlA==
+X-Google-Smtp-Source: AGHT+IFcFCh0MsHBkg+J+VSER1ov0BEAS5iQlZeuPgTMA0LYLNvoc9VAJTqMWqYUfF3nzedFbo4nHw==
+X-Received: by 2002:a05:600c:35d3:b0:441:d437:ed19 with SMTP id 5b1f17b1804b1-441d44c4457mr42205415e9.11.1746683248755;
+        Wed, 07 May 2025 22:47:28 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442cd32f3c2sm24406215e9.15.2025.05.07.22.47.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 22:47:28 -0700 (PDT)
+Date: Thu, 8 May 2025 08:47:24 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Namjae Jeon <linkinjeon@kernel.org>
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Steve French <stfrench@microsoft.com>
+Subject: fs/smb/server/oplock.c:155 opinfo_get_list() warn: can 'opinfo' even
+ be NULL?
+Message-ID: <202505080231.7OXwq4Te-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/8] dt-bindings: serial: describe SA8255p
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC: <psodagud@quicinc.com>, <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
-        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
-        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>,
-        Nikunj Kela
-	<quic_nkela@quicinc.com>
-References: <20250506180232.1299-1-quic_ptalari@quicinc.com>
- <20250506180232.1299-2-quic_ptalari@quicinc.com>
- <35659475-862a-4678-a2a5-173c2254ae60@kernel.org>
-Content-Language: en-US
-From: Praveen Talari <quic_ptalari@quicinc.com>
-In-Reply-To: <35659475-862a-4678-a2a5-173c2254ae60@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA0NiBTYWx0ZWRfXwof7nuWtGvQz
- aYcHN86XHWH8ZvQrpqHN60WXkTvU5kxjbs4Kq8dZW03Vgl+eGhJGvcCzc0vEJg1hOnWLUINCcfe
- 0/sUtrUbGOwrMMsZeHZkSQscN9gdkaA6+yIFPgFQn+yaABUr3ZsDd3zMajDnXYQ5Uz5TYp8DDd6
- g5EQXTsdot7zx/9nLkrp4LNThNq9U8sMf1CKAF6IH89kKrmcJrbF53fIagrVwje7+EpTgBdOTE9
- WylO1o53ARFCtIlj6cs7rmGN1NX8y94AGgLtjOdEpUstYj4ELwofPHFTjY/WjZxaemVhKRa7Wtp
- CBvBaFsHAvcJhu7gmpD1iALFU522o6Y+GU2gEtV/i76DNACZjfpp/933V14NO1ZfsY54Is8By21
- 5MgjWCzuJh/7f4F9wr2xDQmYJCQtcac0ru+J1DgqyZQOmcUDHF9Az6wAyUA124p9EwwoMIq7
-X-Proofpoint-GUID: jgEl_RRUtbRNM5Xfh74gibIyVuhAC7vM
-X-Proofpoint-ORIG-GUID: jgEl_RRUtbRNM5Xfh74gibIyVuhAC7vM
-X-Authority-Analysis: v=2.4 cv=BvGdwZX5 c=1 sm=1 tr=0 ts=681c4519 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=zwwrgv8Ryh7oewfrMAYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_01,2025-05-07_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 priorityscore=1501 phishscore=0 impostorscore=0 mlxscore=0
- spamscore=0 mlxlogscore=950 malwarescore=0 bulkscore=0 suspectscore=0
- lowpriorityscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505080046
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Krzysztof
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   707df3375124b51048233625a7e1c801e8c8a7fd
+commit: 18b4fac5ef17f77fed9417d22210ceafd6525fc7 ksmbd: fix use-after-free in smb_break_all_levII_oplock()
+config: i386-randconfig-141-20250416 (https://download.01.org/0day-ci/archive/20250508/202505080231.7OXwq4Te-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
 
-Thank you for your patience. I consider your inputs as valuable learning.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202505080231.7OXwq4Te-lkp@intel.com/
 
-On 5/6/2025 11:53 PM, Krzysztof Kozlowski wrote:
-> On 06/05/2025 20:02, Praveen Talari wrote:
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - qcom,sa8255p-geni-uart
->> +      - qcom,sa8255p-geni-debug-uart
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    minItems: 1
-> Nothing changed here, this should be dropped based on previous discussion.
->
-> You sent this v5 on 8:02 PM of my time. *THEN* you responded to my
-> comment at v4 at 8:05 PM. That's the way to waste everyone's time.
->
-> I do not understand why interrupt is optional for a new, complete device
-> description.
+New smatch warnings:
+fs/smb/server/oplock.c:155 opinfo_get_list() warn: can 'opinfo' even be NULL?
 
-On this platform, there is no use case of waking up UART, so we consider 
-the  wake up IRQ as optional.
+vim +/opinfo +155 fs/smb/server/oplock.c
 
-Thanks,
+e2f34481b24db2f fs/cifsd/oplock.c      Namjae Jeon 2021-03-16  145  static struct oplock_info *opinfo_get_list(struct ksmbd_inode *ci)
+e2f34481b24db2f fs/cifsd/oplock.c      Namjae Jeon 2021-03-16  146  {
+e2f34481b24db2f fs/cifsd/oplock.c      Namjae Jeon 2021-03-16  147  	struct oplock_info *opinfo;
+e2f34481b24db2f fs/cifsd/oplock.c      Namjae Jeon 2021-03-16  148  
+e2f34481b24db2f fs/cifsd/oplock.c      Namjae Jeon 2021-03-16  149  	if (list_empty(&ci->m_op_list))
+e2f34481b24db2f fs/cifsd/oplock.c      Namjae Jeon 2021-03-16  150  		return NULL;
+e2f34481b24db2f fs/cifsd/oplock.c      Namjae Jeon 2021-03-16  151  
+18b4fac5ef17f77 fs/smb/server/oplock.c Namjae Jeon 2025-04-15  152  	down_read(&ci->m_lock);
+18b4fac5ef17f77 fs/smb/server/oplock.c Namjae Jeon 2025-04-15  153  	opinfo = list_first_entry(&ci->m_op_list, struct oplock_info,
+e2f34481b24db2f fs/cifsd/oplock.c      Namjae Jeon 2021-03-16  154  					op_entry);
 
-Praveen
+The list_first_entry() macro never returns NULL.  If the list is
+empty then it returns an invalid pointer.  Use
+list_first_entry_or_null().  We have the check for list_empty()
+at the start of the function but it's outside of the lock so it's
+probably not safe to assume it's still true.  (I haven't looked
+at the locking here outside of what the kbuild-bot includes in this
+email).
 
->
-> Best regards,
-> Krzysztof
+36322523dddb111 fs/smb/server/oplock.c Namjae Jeon 2023-05-19 @155  	if (opinfo) {
+c8efcc786146a95 fs/smb/server/oplock.c Namjae Jeon 2024-03-12  156  		if (opinfo->conn == NULL ||
+c8efcc786146a95 fs/smb/server/oplock.c Namjae Jeon 2024-03-12  157  		    !atomic_inc_not_zero(&opinfo->refcount))
+36322523dddb111 fs/smb/server/oplock.c Namjae Jeon 2023-05-19  158  			opinfo = NULL;
+36322523dddb111 fs/smb/server/oplock.c Namjae Jeon 2023-05-19  159  		else {
+36322523dddb111 fs/smb/server/oplock.c Namjae Jeon 2023-05-19  160  			if (ksmbd_conn_releasing(opinfo->conn)) {
+36322523dddb111 fs/smb/server/oplock.c Namjae Jeon 2023-05-19  161  				atomic_dec(&opinfo->refcount);
+e2f34481b24db2f fs/cifsd/oplock.c      Namjae Jeon 2021-03-16  162  				opinfo = NULL;
+36322523dddb111 fs/smb/server/oplock.c Namjae Jeon 2023-05-19  163  			}
+36322523dddb111 fs/smb/server/oplock.c Namjae Jeon 2023-05-19  164  		}
+36322523dddb111 fs/smb/server/oplock.c Namjae Jeon 2023-05-19  165  	}
+18b4fac5ef17f77 fs/smb/server/oplock.c Namjae Jeon 2025-04-15  166  	up_read(&ci->m_lock);
+e2f34481b24db2f fs/cifsd/oplock.c      Namjae Jeon 2021-03-16  167  
+e2f34481b24db2f fs/cifsd/oplock.c      Namjae Jeon 2021-03-16  168  	return opinfo;
+e2f34481b24db2f fs/cifsd/oplock.c      Namjae Jeon 2021-03-16  169  }
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
