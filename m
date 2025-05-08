@@ -1,154 +1,159 @@
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F8C262FDE
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 08:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.189.100.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A0F4B1E57
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 08:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746693299; cv=none; b=oyq+aGmc7Ck7Cwrhb+h/Q3EMK3FTfNcv4DXolOYPSAgmo4qSAB3kRAkzSge6ucunbvTOzJSt3kraF4P9MpJl9U1jLfy4f4ZUWlre3nb+3nbWVh3pcMvYoJZiMRnO1BymgePMjj66JB8iwkh677T31ll9GE0fyws0T2TvPev3g7o=
+	t=1746693438; cv=none; b=jHTQN9wUlNSapOXISEY6DxYNDflBK9fvaLmOZQdYdtWwFeHbYsh6+MK5SNq/lPKNV2uQ3UGmv/4rZgcMLEolmuVJ5p6XJvu5zMdGJtBnx8nuTD9nt3juZ1qngEtyAjfmjF/r6A4NceZJcUEliiv2whCPhS7BuWiBhIvfqhhdoMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746693299; c=relaxed/simple;
-	bh=fPq1khtFjMqgEkGiH2cq56ZqZMoJRgVj0jQyxNs8Puw=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=Jnrh5clXVVI1UWF+88q8zpaR/zcpB9uWbDCvoP2LwJ1gQX7U44hLlfzVfB3C5CnDbtCe7bRjAck8GnYCHRtpQLRXWlXdRIlwd8JNLN/JnM8v0xXtSNTfiww1opqgAGTlCocf738paJ2W7tEJy0m7oNILfaaPPYeh8GfmvhvlRx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com; spf=pass smtp.mailfrom=partner.samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Y3ligE1m; arc=none smtp.client-ip=211.189.100.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=partner.samsung.com
+	s=arc-20240116; t=1746693438; c=relaxed/simple;
+	bh=UnZgUVt+Cd48H6Gxupey/FinooCxbbBTr4OCkTqyW30=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IS9Giy3JsLp4mTCT9RwhMd7AHL+AaS5b/rZvglcAZR5+hCeMSHzu87Oz1/nNl7uoOH75EssiVJah2X28bQ1Crjg6Nwboi0JiNxQDRAfGB70J+/kpRSSWz7TrHM7IRcNoEfbXKI3h5JoQ6E0Jwc3iSZ6yCPXrCCmZdZtdG2EKotw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=dYi8D3PM; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y3ligE1m"
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20250508082455usoutp0112b6fa97ed05e55b44f1e5b3cc683d13~9f8CDpCqE0052200522usoutp01h;
-	Thu,  8 May 2025 08:24:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20250508082455usoutp0112b6fa97ed05e55b44f1e5b3cc683d13~9f8CDpCqE0052200522usoutp01h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1746692695;
-	bh=xFWdlrWsOanX/NVVNVan2uCPYqrJFZdos0xlcyL5mUY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=Y3ligE1mVdi0oLVYyHkkKGO4q0YE6QtQf9y4FkwyTxjUNj3LbzHuupM4T9Jk+RO4N
-	 hkCrb15Q5bx/JvRn/aFXpSFlrZYv1jWC+EHqZyaSVcZ7KWBoWCK5FE+63KS0/V4sKs
-	 R35qrHSNYGiBzwbsnNkyDuwNd0+zIJfhUMp83UFQ=
-Received: from ussmtxp1.samsung.com (u136.gpu85.samsung.co.kr
-	[203.254.195.136]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20250508082454uscas1p29b50ff4d2f31a53e732cebf11535a549~9f8BAo3ls1112411124uscas1p2B;
-	Thu,  8 May 2025 08:24:54 +0000 (GMT)
-Received: from ATXPVPPTAGT04.sarc.samsung.com (unknown [105.148.161.8]) by
-	ussmtxp1.samsung.com (KnoxPortal) with ESMTP id
-	20250508082453ussmtxp18e1b1380fd7c17414cdb8bad396b2f53~9f8A1OPYH1568415684ussmtxp1X;
-	Thu,  8 May 2025 08:24:53 +0000 (GMT)
-Received: from pps.filterd (ATXPVPPTAGT04.sarc.samsung.com [127.0.0.1]) by
-	ATXPVPPTAGT04.sarc.samsung.com (8.18.1.2/8.18.1.2) with ESMTP id
-	54876rUv037957; Thu, 8 May 2025 03:24:53 -0500
-Received: from webmail.sarc.samsung.com ([172.30.39.9]) by
-	ATXPVPPTAGT04.sarc.samsung.com (PPS) with ESMTP id 46df5w3mty-1; Thu, 08 May
-	2025 03:24:53 -0500
-Received: from sarc.samsung.com (105.148.145.5) by
-	au1ppexchange01.sarc.samsung.com (105.148.32.81) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
-	15.2.1544.4; Thu, 8 May 2025 03:24:51 -0500
-Date: Thu, 8 May 2025 11:24:43 +0300
-From: Pantelis Antoniou <p.antoniou@partner.samsung.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, Artem Krupotkin
-	<artem.k@samsung.com>, Charles Briere <c.briere@samsung.com>, "Wade
- Farnsworth" <wade.farnsworth@siemens.com>
-Subject: Re: [PATCH 0/1] Fix zero copy I/O on __get_user_pages allocated
- pages
-Message-ID: <20250508112443.49ff0414@sarc.samsung.com>
-In-Reply-To: <20250507145018.385c0a090a0d61c06e985ad9@linux-foundation.org>
-Organization: SARC
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="dYi8D3PM"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5fbe7a65609so1171456a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 01:37:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1746693435; x=1747298235; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d3yAv0PhhoFlOwGT9Vpb8yBJ5ZFaUviPQ0VRAAnAe30=;
+        b=dYi8D3PMm9u03zbJ2xkM1aeEq5sC2l6LudzCBqzFOYwTOJFMKs8E0GXVjJj8gLVGmx
+         ananJVYqURdhtLtXtkM2FSxGb/SGzbQOjWhKnBWJT42ksg142tEwEOtIc+WhJA/RAcba
+         6nQwE3IjBBk/BdjzCp07AxlphFrpje3DCy9JmL4woZMzX4Ua7hyIyMXqlkz9tQXM+QXI
+         Bj0Sud5RrFi5UsBc6DAB04jzvan25J4js5eJnkgZSfVtMRlbzH8/n9IuENIl3725T2Jq
+         ojG/HIngbRA3PVBTuEh09Fy+sH50D0IXSnBpqp0Ha7eqYgOY+Zij6fkFnmvsDh2W0Fey
+         Qnyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746693435; x=1747298235;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d3yAv0PhhoFlOwGT9Vpb8yBJ5ZFaUviPQ0VRAAnAe30=;
+        b=UFf2oBB3GzcYPKmpMMP/NNt1xvojoZc1IKDTmLdKjlCEZpDQS1KryhLisSHRPJpiiS
+         bKCX6pNCEBaq6+qwP9dhCVZiijrFhdW5mer8CUUz4at/lmMByBPkMvIhAdBnmdfHMGpp
+         5gx26axucan5HwUD6mWOYuETUyAoXaerdwAnuobs/GS11P7NHSACT4fGlxrfiVteeiIN
+         HgckRvEbcW5ZVMMXItKDzTo4OjWUpMrx2hdIQuWMsshSirANUJsyNlmBdsZzcxBCv/I/
+         HxsyyPHWNDUTZUhUqtfZO1ySFeOdVFbBTXdpEtFQEjO7SKXqAPB15/IB0cA0tBVWb29m
+         628w==
+X-Forwarded-Encrypted: i=1; AJvYcCX9sfpw2ig2CzL6lSKwS0UmjVt2T3TZMjon7ZlHs7cSG5ZtSqT/RfbZ09i7F4P1BvZ7ijMacrXxcoZ21gk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzspt6Gh0fYKYaFQicbOeY5JfzJ7aH34YfhRLil3IIzgxW8wssC
+	1DGiM21BSQFAFWaXNZkLbbwff+Fm3ThWYk0vOhDevAFtQK/3jmVfgAA9y2HbLWSEYYNuoxiY6WG
+	97q6yKbkNwtkeVuv8jAs7wnmWmvHEZyQA+2XsWQ==
+X-Gm-Gg: ASbGncux433vzq94WTiOFK2q21oU+bxNIy26CIuoGLJMQ17MyjpresCyOcs5Wbs9Adh
+	quQP39JNCk6sD2imV8RYX/98Ol7fwF2XvWaQ7l0kWx4N7iK9U9kiSm8uY1nrM+YyuzfFTeyBmHT
+	YZIh1hOge7MLbQhzVmfWjj8DTQISD0KpdNcc7Md5e8kBZuo/s7UuI=
+X-Google-Smtp-Source: AGHT+IHZ2rhB+iv4wHWS2kFS9398kogCHfihOoXvOhDhqZc6h3WfEVMvj050CiBlPWaNyledskveiDEA3cZvZP72aAk=
+X-Received: by 2002:a17:906:c10d:b0:ace:d66f:e2ed with SMTP id
+ a640c23a62f3a-ad1e8bf55e8mr654880966b.25.1746693434806; Thu, 08 May 2025
+ 01:37:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: au1ppexchange04.sarc.samsung.com (105.148.32.84) To
-	au1ppexchange01.sarc.samsung.com (105.148.32.81)
-X-CFilter-Loop: Reflected
+References: <20250306082615.174777-1-max.kellermann@ionos.com>
+ <20250309151907.GA178120@mail.hallyn.com> <CAKPOu+_vTuZqsBLfRH+kyphiWAtRfWq=nKAcAYu=Wn2JBAkkYg@mail.gmail.com>
+ <20250506132158.GA682102@mail.hallyn.com> <CAKPOu+9JCLVpJ-g_0WwLm5oy=9sq=c9rmoAJD6kNatpMZbbw9w@mail.gmail.com>
+ <CACmP8U+aLY7wmEqdb=a_tpDCY5LaPGb46DU+jSD3bCXX=JUAuA@mail.gmail.com>
+ <CAKPOu+_=ocLeEqcaSMjb5qqrvi6KAu3GYJa19Fqz_dm3a5F77w@mail.gmail.com> <CACmP8UJmC22+59RcHu_X3xpdUYP-i93rjdVQvZn6_Haj-F8tPw@mail.gmail.com>
+In-Reply-To: <CACmP8UJmC22+59RcHu_X3xpdUYP-i93rjdVQvZn6_Haj-F8tPw@mail.gmail.com>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Thu, 8 May 2025 10:37:04 +0200
+X-Gm-Features: ATxdqUF3az4N3FOazSPMnBdAataIURztGU21AUNdHQXvyCKx5MItY1Zad7HyxIE
+Message-ID: <CAKPOu+8+1uVrDJHwmHJd2d46-N6AwjR4_bbtoSJS+sx6J=rkjg@mail.gmail.com>
+Subject: Re: [PATCH] security/commoncap: don't assume "setid" if all ids are identical
+To: "Andrew G. Morgan" <morgan@kernel.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>, Andy Lutomirski <luto@kernel.org>, paul@paul-moore.com, 
+	jmorris@namei.org, kees@kernel.org, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-GUID: 4PeEZ1aymWH1pEADgeqC-xh1MxcKHdE7
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA3MyBTYWx0ZWRfXwC7v/t1idwe7
-	xe0rUmgQIin4dSxD3sdt8qMjeej6uOx7+D84agRnXQeM4q13fSM2DeCbzgjnY7hsvn1w7uKvgyP
-	mWNyrwpMH8GJiKdbveBHTQyePuQ5a8kVc2adKAPmafRneMhtz3kZx66UcayTujKVFaeMiGdizFg
-	1YcMNpXJgwz38+OVbA1DDtI180Cr/Tf1LmfzkNVZ+CvRrJ/FGpin8fO+PwQC7ClBCdwSKHYIOFT
-	O7Mn39zhBbauGyFdKLhRWQwbjcdf9srM2ReYgtg7+87kATYEMDBJK8OZz9T/vpjVY7Ioufzoesj
-	VTd8XfUS/UdJLA/A8iOWgyPoGbqJqbdotgoZLwAa4oVu0dEpndd6AuI/uZTrIG7U2FpGFeoXH9w
-	qtcMf2/5
-X-Proofpoint-ORIG-GUID: 4PeEZ1aymWH1pEADgeqC-xh1MxcKHdE7
-X-Proofpoint-Virus-Version: vendor=baseguard
-	engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
-	definitions=2025-05-08_02,2025-05-07_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_spam_notspam policy=outbound_spam
-	score=0 spamscore=0 adultscore=0 mlxscore=0 malwarescore=0 bulkscore=0
-	priorityscore=1501 impostorscore=0 suspectscore=0 mlxlogscore=809
-	lowpriorityscore=0 phishscore=0 clxscore=1015 classifier=spam adjust=0
-	reason=mlx scancount=1 engine=8.12.0-2504070000 definitions=main-2505080073
-X-CMS-MailID: 20250508082454uscas1p29b50ff4d2f31a53e732cebf11535a549
-X-CMS-RootMailID: 20250507154119uscas1p2a4055d14ab111fdb94a6378789c38d9d
-References: <CGME20250507154119uscas1p2a4055d14ab111fdb94a6378789c38d9d@uscas1p2.samsung.com>
-	<20250507154105.763088-1-p.antoniou@partner.samsung.com>
-	<20250507145018.385c0a090a0d61c06e985ad9@linux-foundation.org>
 
-On Wed, 7 May 2025 14:50:18 -0700
-Andrew Morton <akpm@linux-foundation.org> wrote:
+On Thu, May 8, 2025 at 5:32=E2=80=AFAM Andrew G. Morgan <morgan@kernel.org>=
+ wrote:
+> See the "bprm_set_creds" paragraph. My concern is that there is an
+> exploit vector associated with an abuser setting LD_LIBRARY_PATH=3D to
+> something nefarious, and then invoking a setuid program that happens
+> to re-exec itself for some reason. The first invocation will be as
+> before, but when the binary re-exec's itself, I am concerned that this
+> could cause the privileged binary to load an exploit.
 
-> On Wed, 7 May 2025 10:=E2=80=8A41:=E2=80=8A04 -0500 Pantelis Antoniou <p.=
-=E2=80=8Aantoniou@
-> partner.=E2=80=8Asamsung.=E2=80=8Acom> wrote: > Updates to network filesy=
-stems
-> enabled zero copy I/O by using the > netfslib common accessors.
-> Updates by whom? Are all the people who=20
-> On Wed, 7 May 2025 10:41:04 -0500 Pantelis Antoniou
-> <p.antoniou@partner.samsung.com> wrote:
->=20
-> > Updates to network filesystems enabled zero copy I/O by using the
-> > netfslib common accessors.
->=20
-> Updates by whom?  Are all the people who need to know about this being
-> cc'ed here?
->=20
+Let's talk about this potential vulnerability again. Consider the
+following code:
 
-I think the first cover letter contains that information.
+ #include <stdio.h>
+ #include <sys/prctl.h>
+ #include <unistd.h>
+ int main(int argc, char **argv) {
+   printf("ruid=3D%d euid=3D%d\n", getuid(), geteuid());
+   if (argc > 1) {
+     printf("setting NO_NEW_PRIVS\n");
+     prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
+   }
+   if (**argv) {
+     printf("re-exec\n");
+     execl(*argv, "", NULL);
+     perror("exec");
+   }
+ }
 
-> > One example of that is the 9p filesystem which is commonly used in
-> > qemu based setups for sharing files with the host.
-> >=20
-> > In our emulation environment we have noticed failing writes when
-> > performing I/O from a userspace mapped DRM GEM buffer object.
-> > The platform does not use VRAM, all graphics memory is regular DRAM
-> > memory, allocated via __get_free_pages
->=20
-> We should identify which kernel version(s) should be patched, please.=20
-> 6.16-rc1?  6.15?  -stable?
->=20
+Without my patch:
 
-The first occurance of the bug was on internal kernel tree that was
-based on 6.8.
+ $ /reexec
+ ruid=3D1000 euid=3D0
+ re-exec
+ ruid=3D1000 euid=3D0
+ $ /reexec 1
+ ruid=3D1000 euid=3D0
+ setting NO_NEW_PRIVS
+ re-exec
+ ruid=3D1000 euid=3D1000
 
-This patch is against 6.15-rc5.
+Without NO_NEW_PRIVS, the re-exec keeps the real/effective, but also
+gains setuid again, but the suid is no-op; the euid is already 0.
+With NO_NEW_PRIVS, the re-exec drops the euid=3D0, and doesn't regain it
+- the setuid bit is ignored.
 
-> I often make these decisions but in this case I have far too little
-> information to be able to do that.
->=20
+With my patch:
 
-No worries.
+ $ /reexec
+ ruid=3D1000 euid=3D0
+ re-exec
+ ruid=3D1000 euid=3D0
+ $ /reexec 1
+ ruid=3D1000 euid=3D0
+ setting NO_NEW_PRIVS
+ re-exec
+ ruid=3D1000 euid=3D0
 
-I see that this is picked up for mm unstable as is? Do you want
-me to generate a single patch merging the info of the cover letter
-and the single patch?
+Same without NO_NEW_PRIVS (but internally, the re-exec is not
+considered "secureexec" because the setuid bit is effectively a
+no-op).
+With NO_NEW_PRIVS, the setuid bit is ignored, but the process is
+allowed to keep the euid=3D0 - which is the whole point of my patch.
+Indeed, no new privs are gained - just like NO_NEW_PRIVS is
+documented!
 
-The reason for the split is that I was not sure if you needed to
-have all the sordid details included in the applied patch.
+Back to your LD_LIBRARY_PATH example: with my patch, glibc ignores
+LD_LIBRARY_PATH because effective!=3D=3Dreal (still).
 
-FWIW, we also have a buildroot patch that exhibits the problem
-in a much simplified way that what the original bug report came about.
-I don't think its appropriate content for the list, but I can
-share if anyone is curious about it.
+But without my patch, with the vanilla kernel, glibc does use
+LD_LIBRARY_PATH (effective=3D=3Dreal because effective was reset) and
+you're actually vulnerable! It seems to be quite opposite of what you
+have been assuming?
+(Don't get confused that the kernel has reverted the euid to 1000;
+this is a privileged superuser process with a full set of
+capabilities!)
 
-> Thanks.
+Am I missing something obvious, or is NO_NEW_PRIVS+reexec is a serious
+Linux kernel vulnerability? (And it is fixed by my patch)
 
-Regards
-
--- Pantelis
+Max
