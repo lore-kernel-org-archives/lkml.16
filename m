@@ -1,332 +1,465 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012041.outbound.protection.outlook.com [52.101.71.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D362022D4E6
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.41
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746711296; cv=fail; b=X3lCwuaVKYsiiEiZ9vb/Ym/4ALJvoX7zGuDxb01memRSDymUYpWyj/iZ5Jx1Lmq39NaTMBZR98JUtyMFh2gARE7CbO67axqmZUZgyeReBwPal9x2E2mUgx0Ym8UjVYob6R8UcqmMIbuT3ShMhtBVuGD4qbIuKYrQfzRlLxovzYg=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746711296; c=relaxed/simple;
-	bh=zf6MOfQX5wdYN3KUzhNxXu/jmJODvB/UqNS2ttPmwj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=l/9VV4uF4K7q8sOv7a5rzR9pGAJS5KCZmvVAI9+bThopUEZJHv383SVVA35mRryJA7VbJ86pxAhJ0MrqSiCRv5V+c2YM2NSdcOCuXtTgYTzGU37bagbdij0be7dvKiqiw/5kn0K8mnTY1iRJGPb6dQSQPm1sk2pck38T4UwE15I=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=IUU3l5fO; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=IUU3l5fO; arc=fail smtp.client-ip=52.101.71.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629A7215F46
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746711328; cv=none; b=GuZfq6i3mljeU9tAbuHgxr7RRUX4lSC5oSB9z0OCAuVeULbUnTzBoZZEPaw56N3MMJ4S36XZhtFjQMiHFyRu/OR/6/W4+asYxdCRRCoxo92wA9OQVohy2eFnrmnKP5oPvCswt3UOCWW297PNKRzc6ho4NSZ0ybhAcRK0WxFHFVs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746711328; c=relaxed/simple;
+	bh=So4f+jJaLPqD+D7bvApVfhV4eSpPtqn3tyyYtKpK7mc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=CB/B2bKqL+uCvtUMDVIDn17jSqvCuxNhrjpuSz/A3Cryc62Mjg5BMr2hgXcYRqAIPrKK6umGNoNj9uOPSh4mNhXOzW8ppVqTIlFmPV6mI8645aLAAu4/z1A41Q8lCWMFsXhTQwJCdgHIcMtpk+pZBxnZ+PyLkPjwi52pkzIgAhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WEVtiQVx; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="IUU3l5fO";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="IUU3l5fO"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=vzt8SasbEl7TlfkvJM4klLUa6CMClRpjVsVKgo7HRR1A2D2WEEZjyXU4uqprujp0r4ovGcDDYvdJiJ+qq+LPUCMUhv9CzXlcSvgF5t2v5pqc5kfJcDERRyXNvXw9XZIWR1cdVdn5cG1tFRUaES/8ovJ4op67L3uxgsfJHOjd9wCpHDCMTX6SZTIodN+Rs8SD4KaQDdRCZK4iJN1Qtx3II2UEkvsewmXjF9uMwFspC/zi0EqYKU+2bpud1pCOy3GmoAoLD7HekJz741TFvELinw/fHKwj9Y29lIBZvK80O/GwBruCu9E3U3MMXPN25mFL5DZb5LKLzCbDY+7tKA3aeg==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jZdQmj3mdDPvf6eggZITyWKpxVxFInuXLZ/S6Ysl0mQ=;
- b=abZ0a0RnGFohl7hk9xKhdO9HCG5GpB5Hk9edBr9oniSG52iA6V5/NzCAqHd8wjS90byGG1fWRRk0t7sLV8j91vE1CN4LAQwS9wAWvDE/iB9W4vdgiS9PDuC/QHsjA5KLzhayXe644SjkfD8AVkQdTh9vwjm1+0RU8zfuOfTPlEfiRfL+duqkeDBd1YkiL5ckcTBfd7W969yMEtnqP3JmJ2IT+7x4/91r1xmgAlilWJ52FouqrfiOPp17WFSe7EeMwvbHWSsx6CBXTnkbewf8C1IyKcedSf7G8VAAIlI6T+6JzlLrl0WHcYDOUdYojMDZzNssMUpZuiAXnuYIZ6Rjtg==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=google.com smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jZdQmj3mdDPvf6eggZITyWKpxVxFInuXLZ/S6Ysl0mQ=;
- b=IUU3l5fOwQ77dBfWVMkIbQ74pXKqaQpBCltYSy20iH+sZPBdVYViTTnSjXFLc0qaucRm8blT0dHCLgyqgwUsNr1vbDyr6K7fANNoozM0pbV8SeYf/RUQHviLUPbUlibX93nyzzB1kObUPDC8wIos5B9UoUMLcnIKiRF/bo6298g=
-Received: from DU7PR01CA0008.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:50f::29) by PA4PR08MB5984.eurprd08.prod.outlook.com
- (2603:10a6:102:ea::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.24; Thu, 8 May
- 2025 13:34:50 +0000
-Received: from DB5PEPF00014B95.eurprd02.prod.outlook.com
- (2603:10a6:10:50f:cafe::a6) by DU7PR01CA0008.outlook.office365.com
- (2603:10a6:10:50f::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.23 via Frontend Transport; Thu,
- 8 May 2025 13:34:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DB5PEPF00014B95.mail.protection.outlook.com (10.167.8.233) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.18
- via Frontend Transport; Thu, 8 May 2025 13:34:48 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ju5dLwt9w1VE+F8teW2A+vCFrj+Z4LMoaqenvh4o020HrzjhW6Dfep0zj+J3IzefKQOza3ya92JlKqML5IaBArDM9ruvOPBDHvAzmnXWmj0EhEzG6TmiCL2h2vYKRUz5DO0+tBR5CYKhVsVNnecto4C75w62sfz5z6xgHSkbsTGBXLlQgnplDymOzDm5B8VUQ2jmjiN+uRF7t2kC/dRG2PUVqZvecgxSrwW4rQWkhs28s7pKeu05mRDeBAdLaiTLhEMfyfWGQ+ejcsO/7X3yYNhz4DqPtuoxvkD4lzNxb39m6UKOSoHD55McCFCKi5LenZxcZqLzQugLa7T9Le0UoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jZdQmj3mdDPvf6eggZITyWKpxVxFInuXLZ/S6Ysl0mQ=;
- b=AdVKrV8fmEMkm7XdpIDBDbVId0z9LTLYfDWvFZmSktSfhSjRmkYmwCh+uQdpbGDzmC94deIPWQ36ZHCKLU0s9Tb33LWP9j1p154rydilERuIsbJYF33wrtMRExVkeeGy68MkEsIorsaWl3GV6V0mha7UA6RZyUcnRbH6+oP5igUDjI6ptA9QUtU2Av8Rq7YHLJkC2yXBIaCJ8B2+54TYx0m4jk5NPVueoh2ydR9gezGCsT30nv8v+t/6ybwrKGYk3uGMCK2bcFWcnB7YyIpM9baaz6NFxUShHz5hepOXd5r8W45Vr1bA0TxpYCNypXfwl+cBK4UbkZB31ckt+bJY3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jZdQmj3mdDPvf6eggZITyWKpxVxFInuXLZ/S6Ysl0mQ=;
- b=IUU3l5fOwQ77dBfWVMkIbQ74pXKqaQpBCltYSy20iH+sZPBdVYViTTnSjXFLc0qaucRm8blT0dHCLgyqgwUsNr1vbDyr6K7fANNoozM0pbV8SeYf/RUQHviLUPbUlibX93nyzzB1kObUPDC8wIos5B9UoUMLcnIKiRF/bo6298g=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20) by AS2PR08MB8384.eurprd08.prod.outlook.com
- (2603:10a6:20b:55b::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Thu, 8 May
- 2025 13:34:15 +0000
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739]) by GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739%4]) with mapi id 15.20.8699.024; Thu, 8 May 2025
- 13:34:15 +0000
-Date: Thu, 8 May 2025 14:34:12 +0100
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v2 3/3] arm64/boot: Disallow BSS exports to startup code
-Message-ID: <aByy1CFUieJQeofl@e129823.arm.com>
-References: <20250508114328.2460610-5-ardb+git@google.com>
- <20250508114328.2460610-8-ardb+git@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250508114328.2460610-8-ardb+git@google.com>
-X-ClientProxiedBy: LNXP265CA0089.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:76::29) To GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WEVtiQVx"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22e033b0f1aso10718085ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 06:35:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746711325; x=1747316125; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=umXRL51odZ+U28adyG5IqbnLQh785NI+zLPkHmpwwsU=;
+        b=WEVtiQVx5EGc2ArbBqlRweIG7s6180by/wZtX6eQz2K4kLwqCxUGQnghG3l+eitmdn
+         yTJ4onq7O2aH3mtMKJsGgXPO7xuy/nONg8IiYgoxsSeBJMz9vqcLyx8zru4lucChgYAv
+         TrGcJSA/PuaH4hAV1hp8m9un/50SD30TM8z1XRMhO2lO/JnoWHRuUMjkHqDrDrIwb6L1
+         1wK3VOpqMz5/aeFIISAR3jb5utDaZ0JRL5L6T5w/OAvwauMO6s0Hajzc/RAQMLawnrdQ
+         axovyqMRTNSnFUz5kApbko+nm2jLwm53IlyXrgS19yDcA/WPpG++ryf4Ca1xvZnac20j
+         0q0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746711325; x=1747316125;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=umXRL51odZ+U28adyG5IqbnLQh785NI+zLPkHmpwwsU=;
+        b=tvM2dfjRB0QVGbbjidHttWfVQjk8ZuSMZKqYrL/86CNwWiRjF64k+JGAV9XFz6ttve
+         cLtlc+rFJBdMSSzQYwOc/OKhi4Hft3lhHSJ5U+s4OW/yVgbKW6vPTwurIMHzg45rRzma
+         B6GxrRutmn63JkR+zwtlMk6163dOWANLNT1CT1p17qaZ3poJm3JB5DZyma5vtBLw/0sh
+         AzcvZfZmnwugjpwVs/I6OgRInz/dNs2grFd+kSFweVv96wFn3IQVOdHSKF5QUPDAgfiP
+         zzdf9jgfkQHNIc7wdU+B5kk9w8jhlFjzRk1nRmOqGEWnz/HuNJHpTG7l22umB9b+3zEF
+         sb9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUUxhQJ+tLZJNZsXpF0ly3TqAnRTqaOP883LuXGxuG0/D3t0TDRixMkGNLemkUhUOQ6reR4D6atKGyC2aA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtbuVUSfVj8AWMr1dmGmuG9CI8HGqMBVNoCz3BvhzO20IXJSpT
+	8ZavIcCaARY3zm1GHIwbBW27C0Fc5Ht52k2cizWwkArxPTSzjhL3crTB/kMAgPh2PFW6gjOkLvq
+	DNA==
+X-Google-Smtp-Source: AGHT+IGujTTizBC2NO5GtsoKrNA2DFFypxeWr+gCQllfmd13bBZQH9bmWcxSzOrS7mlhLhKrB6brjIgvzMA=
+X-Received: from plrr12.prod.google.com ([2002:a17:902:c60c:b0:223:225b:3d83])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:fa7:b0:220:d257:cdbd
+ with SMTP id d9443c01a7336-22e8a7fe95cmr50782475ad.48.1746711325460; Thu, 08
+ May 2025 06:35:25 -0700 (PDT)
+Date: Thu, 8 May 2025 06:35:22 -0700
+In-Reply-To: <aBvmxjxUrXEBa3sc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	GV1PR08MB10521:EE_|AS2PR08MB8384:EE_|DB5PEPF00014B95:EE_|PA4PR08MB5984:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8a1aeb1e-f171-4e26-91ae-08dd8e351ac7
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info-Original:
- =?us-ascii?Q?8fT8ZMm9b6i/d76CwUowSnGSup6Gf8Cm0l/ve//VB+Ojr+HNVcpAYmEItgB2?=
- =?us-ascii?Q?09ez5CRVbCe7Dw2Au683RfLdTnvFtxp1crMUykF1xXS6BRgDyzH20FwYTvew?=
- =?us-ascii?Q?LZz5SEYtUUgMha6ZBjiklOepru8Amvq1yBvbewdkoeCKDpXAdVDFdXi5ZbAe?=
- =?us-ascii?Q?DkQJAn3HmY6xfa58EFCCvzlfretd7HN3a7+3/+75gw0eCG/ZfU+6txbrD/iI?=
- =?us-ascii?Q?9wexwl3LQHeZyh791DsBQEMlh1N2Yph7TJIqcoXn4KKfmKDZfn0hS+Mp0Llk?=
- =?us-ascii?Q?TEbTb9r+GEx2aUmziyUwvHLeIa2QLO53gV62LhhN7Dm/kAfC4GNBtJCIW2Ut?=
- =?us-ascii?Q?helmQVJDQH+IXVb+Ij2sREcCOje/F4rczTvwK2h9Sxv3WbFPTZwf/lC4g3Fd?=
- =?us-ascii?Q?y53LXaOv9R3mpLYlEQ4VcYhPWyytPjMZSneASIYnFOHm3FF34xtxmNQ37/h5?=
- =?us-ascii?Q?nJaiCTh1cEjG25zYcn29HwT+mkf59dkJTM3R60UWJ95pnsz+4vIPZ08U5P5u?=
- =?us-ascii?Q?greOhD+dkQcEVb3qsN1UjCiqXds+h9YzUDvcq53aVmftlyh6hSyclZFi4G8C?=
- =?us-ascii?Q?tsrDLsmDJpadNX4ETmPkOVu0OR1bHOFn2S4hn4Gdv5T4IVohREq8Slvmng58?=
- =?us-ascii?Q?dr6WPcwBKJLU+Q2ON7rpRxGQJKAaCCMwaCVRyHP/FvzOkjp+C9/72zAX47vV?=
- =?us-ascii?Q?lxOFvPnoka73ltm8veooeNthtoSNsGlFoCcrkK/MazGRs7EsMIsmD8pdHwIx?=
- =?us-ascii?Q?j6KGdjLNZY1mmhWan1eyiyg6W+M24WuDcvqTdh3HpAg4S/fK9Qgpz+Juo1mf?=
- =?us-ascii?Q?zFmuHEJWhmXIAQuneergBR2TAV552FZSjRbR5/peu56LW1c8hyksA6SCVMnp?=
- =?us-ascii?Q?fXzseUhBr1auMipTJUxq6CTJlPy0BoMnSRUnOzHzzNb/54x85iVbM9Zq4c+D?=
- =?us-ascii?Q?Jb+jYH0j5WrFYZk+Wm5w60papyG57tktUhC5+MqRMNEEIT3t7oeZILYmdZ0W?=
- =?us-ascii?Q?AzGCxQ7140pwTqQcClTrraWlXbmepIOR+BUPma9lxjhI2hiw+wa7jSniNyy0?=
- =?us-ascii?Q?JTuQHSQjLLV8cd2MP+emSuvHhOSrLlAUbW5zw6YHZb8e+uBjw1bRupXY2Xx9?=
- =?us-ascii?Q?lnVhXFaW6znWmIb9j9m9amjdoaoCpP3cKQSoKny3Ytm0z6d5YhABwR+Pzd9A?=
- =?us-ascii?Q?lL9pBWOFzLjkFPysNlAp2KkOHzTnGPUZEDdyjSHR+97vIk6zaLoHQcC+1Qq0?=
- =?us-ascii?Q?yX7jAgnksAYn4cZYinWf1rs5IAIjJjrsX0ADlFEduIzRHTTkCMNcFTmVOhJM?=
- =?us-ascii?Q?xDQBMyIxtWYBZXOvA+7K7Gxp/oPFKfSZeWAgzT+IPTUC2NsCVuLCdPhKLpgE?=
- =?us-ascii?Q?+/UbAwpu021mjbeqknPQ3AMTtSu47Oi/JQaFTe6zgenM+bXMXhCin8Gyyg+I?=
- =?us-ascii?Q?40ALFXEmcF8=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB10521.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR08MB8384
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB5PEPF00014B95.eurprd02.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	09367c04-7569-4654-2db9-08dd8e35065b
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|35042699022|82310400026|376014|14060799003|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/KKDgOb4lHWHM+JXq0ETFflGDcpk7QD1aNOq3rVoLF73LIXE3fYQD2ZYFAj2?=
- =?us-ascii?Q?u+6o66OGnFPQOez8ncgpKmwSWqFdPdrvkiFaGTs/9GcNNxtilVdOBBVU8teD?=
- =?us-ascii?Q?GTTbqyP0mk2lI+LBwAAVSluxDNmpftN8YY4/CXIPv9/PWyKVyOijHYRpnbot?=
- =?us-ascii?Q?rSppC+zJZtGyMeqkcTXdcvetM4dW7SsuOrMFbpg0G2ElEpdwEL6ld7KcpA/N?=
- =?us-ascii?Q?1nQzQvxB8CSr5ggm7Jn0HRFx/0FvZHY0nRhenQYv2OUvKMAXcZgeu2LNEwyM?=
- =?us-ascii?Q?mLc+2z+PAje4e5tVfKAlU9VaU+bVYhxg4PyBAYs+wepp2n7WmtybHG9BofMm?=
- =?us-ascii?Q?WqloGHerK7pakHDl3Z8cWRuKloYduf7hLBBpY2tfSLs+garlvB+PawFi1pMg?=
- =?us-ascii?Q?XM5LTLmxl8RfCaOvSTaSYQQRPsBnYPEG/SqUbzVxMigY8IkyFXvrmmMaTKey?=
- =?us-ascii?Q?M31pyuJ/XQL2/E/RmWR7gs1xubNdhenbBviaOjSQ9TRTmz2U21QB/vC3vQgb?=
- =?us-ascii?Q?qg6bYfbpCPb14prrnhc6MPbWVrU6G1YoiF0yTo5mCrqPCjScjNP6m267/idP?=
- =?us-ascii?Q?Vi4FZxvbb/cZ+TkUy8sceUOxz5YJyLy4ZSZRyu9LxBCvwllP14kjygtf8JSa?=
- =?us-ascii?Q?9+VeIOT9m3B4KkneHE0iyF/1cFyAWK22GVFo1k30NsK2tBC3ni2ttZVke3QX?=
- =?us-ascii?Q?HIBGBjOhPwpj1KFlIwQqDZGurWOF0bYe0NmV49XK3qtaitOJrzx9L2cDFtif?=
- =?us-ascii?Q?ksCngrNCsay+a7vS1fBUjsvqJ9eOhaHt27yz9pbbA9YJI1iSQ+GYn9UOsUrm?=
- =?us-ascii?Q?pHm+z0AVCjElAueDVXLuqdOudO7i3ukKWYNV24N9a1bG9wXoRtwvepIstJHO?=
- =?us-ascii?Q?9IvPeHNwvVgoYjNS2lyHnr37pF7+kH2brSzO1B1fcyriV3ihQCtJHb8A92je?=
- =?us-ascii?Q?pZA3RDtT+BBB1V8t5LqybCu9tkQUCQlUBxVxNGXCavD94SEfilmmhD/VjstG?=
- =?us-ascii?Q?/od8yltERpo8s8njHEZw5tfxm0itNXM2H2OgS3xLjZwoyFw1YMh/4t1INvDo?=
- =?us-ascii?Q?yUjqBilbMAxiSHbFNpV8ffhwYnxXxELxQf8WDiG3lPAQM3ROFZlm/n7K0lDm?=
- =?us-ascii?Q?JnUH6C78MOeeYI3Ac/0drdLFjJyDjU3buHCWS1OQxLop1Fqy5TKhjhcPngI0?=
- =?us-ascii?Q?zPBuSp6v6wpqPYm0yeGvkZNdfbXelLldbAiCGNvBgwAzefP4KrmeNnf7UdfI?=
- =?us-ascii?Q?iving8Wdc/d72Talx2xs/nTV4m1jpsEdHpLv2ZbGdO5FNPJ0KQynNxqgpzwn?=
- =?us-ascii?Q?/eVPs4EWFL0/lz++E/JPKe//7n6Lw0uctXfnOdRXZgWkvRo9xyB2HtfcxwkN?=
- =?us-ascii?Q?qgM+TR0ZWYoYube31CWyTVAu37uvUYJdHMEOPsSQCBBxl+kzyXT1rnVXIi2R?=
- =?us-ascii?Q?H0hNiuMiXuVJPGEZKsCjhsHHVJr+Qy6JBJ1BXLBe88KLvtQP6phrBflsF8bq?=
- =?us-ascii?Q?u3+rAQnHK18yk1YVicQJxK0o9xV/GvLEcxwf?=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(35042699022)(82310400026)(376014)(14060799003)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 13:34:48.8974
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a1aeb1e-f171-4e26-91ae-08dd8e351ac7
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB5PEPF00014B95.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR08MB5984
-
-Hi Ard,
-
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> BSS might be uninitialized when entering the startup code, so forbid the
-> use by the startup code of any variables that live after __bss_start in
-> the linker map.
->
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  arch/arm64/kernel/image-vars.h  | 62 +++++++++++---------
->  arch/arm64/kernel/vmlinux.lds.S |  2 +
->  2 files changed, 35 insertions(+), 29 deletions(-)
->
-> diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
-> index c3b4c0479d5c..a928e0c0b45a 100644
-> --- a/arch/arm64/kernel/image-vars.h
-> +++ b/arch/arm64/kernel/image-vars.h
-> @@ -10,6 +10,12 @@
->  #error This file should only be included in vmlinux.lds.S
->  #endif
->
-> +#define PI_EXPORT_SYM(sym)		\
-> +	__PI_EXPORT_SYM(sym, __pi_ ## sym, Cannot export BSS symbol sym to startup code)
-> +#define __PI_EXPORT_SYM(sym, pisym, msg)\
-> +	PROVIDE(pisym = sym);		\
-> +	ASSERT((sym - KIMAGE_VADDR) < (__bss_start - KIMAGE_VADDR), #msg)
-> +
->  PROVIDE(__efistub_primary_entry		= primary_entry);
->
->  /*
-> @@ -36,37 +42,35 @@ PROVIDE(__pi___memcpy			= __pi_memcpy);
->  PROVIDE(__pi___memmove			= __pi_memmove);
->  PROVIDE(__pi___memset			= __pi_memset);
->
-> -PROVIDE(__pi_id_aa64isar1_override	= id_aa64isar1_override);
-> -PROVIDE(__pi_id_aa64isar2_override	= id_aa64isar2_override);
-> -PROVIDE(__pi_id_aa64mmfr0_override	= id_aa64mmfr0_override);
-> -PROVIDE(__pi_id_aa64mmfr1_override	= id_aa64mmfr1_override);
-> -PROVIDE(__pi_id_aa64mmfr2_override	= id_aa64mmfr2_override);
-> -PROVIDE(__pi_id_aa64pfr0_override	= id_aa64pfr0_override);
-> -PROVIDE(__pi_id_aa64pfr1_override	= id_aa64pfr1_override);
-> -PROVIDE(__pi_id_aa64smfr0_override	= id_aa64smfr0_override);
-> -PROVIDE(__pi_id_aa64zfr0_override	= id_aa64zfr0_override);
-> -PROVIDE(__pi_arm64_sw_feature_override	= arm64_sw_feature_override);
-> -PROVIDE(__pi_arm64_use_ng_mappings	= arm64_use_ng_mappings);
-> +PI_EXPORT_SYM(id_aa64isar1_override);
-> +PI_EXPORT_SYM(id_aa64isar2_override);
-> +PI_EXPORT_SYM(id_aa64mmfr0_override);
-> +PI_EXPORT_SYM(id_aa64mmfr1_override);
-> +PI_EXPORT_SYM(id_aa64mmfr2_override);
-> +PI_EXPORT_SYM(id_aa64pfr0_override);
-> +PI_EXPORT_SYM(id_aa64pfr1_override);
-> +PI_EXPORT_SYM(id_aa64smfr0_override);
-> +PI_EXPORT_SYM(id_aa64zfr0_override);
-> +PI_EXPORT_SYM(arm64_sw_feature_override);
-> +PI_EXPORT_SYM(arm64_use_ng_mappings);
->  #ifdef CONFIG_CAVIUM_ERRATUM_27456
-> -PROVIDE(__pi_cavium_erratum_27456_cpus	= cavium_erratum_27456_cpus);
-> -PROVIDE(__pi_is_midr_in_range_list	= is_midr_in_range_list);
-> +PI_EXPORT_SYM(cavium_erratum_27456_cpus);
-> +PI_EXPORT_SYM(is_midr_in_range_list);
-
-small nit:
-Would you rebase this patchset after
-commit 117c3b21d3c7 ("arm64: Rework checks for broken Cavium HW in the PI code")?
-Otherwise, I experience boot failure because of SCS related code:
-
-  ffff80008009fbc0 <is_midr_in_range_list>:
-  ffff80008009fbc0: d503245f   	bti	c
-  ffff80008009fbc4: d503201f   	nop
-  ffff80008009fbc8: d503201f   	nop
-  ffff80008009fbcc: f800865e   	str	x30, [x18], #0x8 ---- (1)
-  ffff80008009fbd0: d503233f   	paciasp
-  ...
-
-At pi phase, platform register initialized properly...
-So it makes panic on (1).
-
-Thanks!
+Mime-Version: 1.0
+References: <20250416002546.3300893-1-mlevitsk@redhat.com> <20250416002546.3300893-4-mlevitsk@redhat.com>
+ <aAgpD_5BI6ZcCN29@google.com> <2b1ec570a37992cdfa2edad325e53e0592d696c8.camel@redhat.com>
+ <71af8435d2085b3f969cb3e73cff5bfacd243819.camel@redhat.com> <aBvmxjxUrXEBa3sc@google.com>
+Message-ID: <aByzGilzBiTa-43C@google.com>
+Subject: Re: [PATCH 3/3] x86: KVM: VMX: preserve host's DEBUGCTLMSR_FREEZE_IN_SMM
+ while in the guest mode
+From: Sean Christopherson <seanjc@google.com>
+To: mlevitsk@redhat.com
+Cc: kvm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: multipart/mixed; charset="UTF-8"; boundary="MlINIt/uc2Bhy9cL"
 
 
->  #endif
-> -PROVIDE(__pi__ctype			= _ctype);
-> -PROVIDE(__pi_memstart_offset_seed	= memstart_offset_seed);
-> -
-> -PROVIDE(__pi_swapper_pg_dir		= swapper_pg_dir);
-> -
-> -PROVIDE(__pi__text			= _text);
-> -PROVIDE(__pi__stext               	= _stext);
-> -PROVIDE(__pi__etext               	= _etext);
-> -PROVIDE(__pi___start_rodata       	= __start_rodata);
-> -PROVIDE(__pi___inittext_begin     	= __inittext_begin);
-> -PROVIDE(__pi___inittext_end       	= __inittext_end);
-> -PROVIDE(__pi___initdata_begin     	= __initdata_begin);
-> -PROVIDE(__pi___initdata_end       	= __initdata_end);
-> -PROVIDE(__pi__data                	= _data);
-> -PROVIDE(__pi___bss_start		= __bss_start);
-> -PROVIDE(__pi__end			= _end);
-> +PI_EXPORT_SYM(_ctype);
-> +PI_EXPORT_SYM(memstart_offset_seed);
-> +
-> +PI_EXPORT_SYM(swapper_pg_dir);
-> +
-> +PI_EXPORT_SYM(_text);
-> +PI_EXPORT_SYM(_stext);
-> +PI_EXPORT_SYM(_etext);
-> +PI_EXPORT_SYM(__start_rodata);
-> +PI_EXPORT_SYM(__inittext_begin);
-> +PI_EXPORT_SYM(__inittext_end);
-> +PI_EXPORT_SYM(__initdata_begin);
-> +PI_EXPORT_SYM(__initdata_end);
-> +PI_EXPORT_SYM(_data);
->
->  #ifdef CONFIG_KVM
->
-> diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-> index 466544c47dca..e4a525a865c1 100644
-> --- a/arch/arm64/kernel/vmlinux.lds.S
-> +++ b/arch/arm64/kernel/vmlinux.lds.S
-> @@ -319,6 +319,7 @@ SECTIONS
->
->  	/* start of zero-init region */
->  	BSS_SECTION(SBSS_ALIGN, 0, 0)
-> +	__pi___bss_start = __bss_start;
->
->  	. = ALIGN(PAGE_SIZE);
->  	__pi_init_pg_dir = .;
-> @@ -332,6 +333,7 @@ SECTIONS
->  	. = ALIGN(SEGMENT_ALIGN);
->  	__pecoff_data_size = ABSOLUTE(. - __initdata_begin);
->  	_end = .;
-> +	__pi__end = .;
->
->  	STABS_DEBUG
->  	DWARF_DEBUG
-> --
-> 2.49.0.987.g0cc8ee98dc-goog
->
+--MlINIt/uc2Bhy9cL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---
-Sincerely,
-Yeoreum Yun
+On Wed, May 07, 2025, Sean Christopherson wrote:
+> On Thu, May 01, 2025, mlevitsk@redhat.com wrote:
+> > Any ideas on how to solve this then? Since currently its the common code that
+> > reads the current value of the MSR_IA32_DEBUGCTLMSR and it doesn't leave any
+> > indication about if it changed I can do either
+> > 
+> > 1. store old value as well, something like 'vcpu->arch.host_debugctl_old' Ugly IMHO.
+> > 
+> > 2. add DEBUG_CTL to the set of the 'dirty' registers, e.g add new bit for kvm_register_mark_dirty
+> > It looks a bit overkill to me
+> > 
+> > 3. Add new x86 callback for something like .sync_debugctl(). I vote for this option.
+> > 
+> > What do you think/prefer?
+> 
+> I was going to say #3 as well, but I think I have a better idea.
+> 
+> DR6 has a similar problem; the guest's value needs to be loaded into hardware,
+> but only somewhat rarely, and more importantly, never on a fastpath reentry.
+> 
+> Forced immediate exits also have a similar need: some control logic in common x86
+> needs instruct kvm_x86_ops.vcpu_run() to do something.
+> 
+> Unless I've misread the DEBUGCTLMSR situation, in all cases, common x86 only needs
+> to a single flag to tell vendor code to do something.  The payload for that action
+> is already available.
+> 
+> So rather than add a bunch of kvm_x86_ops hooks that are only called immediately
+> before kvm_x86_ops.vcpu_run(), expand @req_immediate_exit into a bitmap of flags
+> to communicate what works needs to be done, without having to resort to a field
+> in kvm_vcpu_arch that isn't actually persistent.
+> 
+> The attached patches are relatively lightly tested, but the DR6 tests from the
+> recent bug[*] pass, so hopefully they're correct?
+> 
+> The downside with this approach is that it would be difficult to backport to LTS
+> kernels, but given how long this has been a problem, I'm not super concerned about
+> optimizing for backports.
+> 
+> If they look ok, feel free to include them in the next version.  Or I can post
+> them separately if you want.
+
+And of course I forgot to attach the patches...
+
+--MlINIt/uc2Bhy9cL
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-KVM-x86-Convert-vcpu_run-s-immediate-exit-param-into.patch"
+
+From edaa5525a228bc8711c4cefca391b436e6b18803 Mon Sep 17 00:00:00 2001
+From: Sean Christopherson <seanjc@google.com>
+Date: Wed, 7 May 2025 13:46:03 -0700
+Subject: [PATCH 1/2] KVM: x86: Convert vcpu_run()'s immediate exit param into
+ a generic bitmap
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/include/asm/kvm_host.h |  6 +++++-
+ arch/x86/kvm/svm/svm.c          |  4 ++--
+ arch/x86/kvm/vmx/main.c         |  6 +++---
+ arch/x86/kvm/vmx/tdx.c          |  3 ++-
+ arch/x86/kvm/vmx/vmx.c          |  3 ++-
+ arch/x86/kvm/vmx/x86_ops.h      |  4 ++--
+ arch/x86/kvm/x86.c              | 11 ++++++++---
+ 7 files changed, 24 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 4c27f213ea55..62137a777f33 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1673,6 +1673,10 @@ static inline u16 kvm_lapic_irq_dest_mode(bool dest_mode_logical)
+ 	return dest_mode_logical ? APIC_DEST_LOGICAL : APIC_DEST_PHYSICAL;
+ }
+ 
++enum kvm_x86_run_flags {
++	KVM_RUN_FORCE_IMMEDIATE_EXIT	= BIT(0),
++};
++
+ struct kvm_x86_ops {
+ 	const char *name;
+ 
+@@ -1754,7 +1758,7 @@ struct kvm_x86_ops {
+ 
+ 	int (*vcpu_pre_run)(struct kvm_vcpu *vcpu);
+ 	enum exit_fastpath_completion (*vcpu_run)(struct kvm_vcpu *vcpu,
+-						  bool force_immediate_exit);
++						  u64 run_flags);
+ 	int (*handle_exit)(struct kvm_vcpu *vcpu,
+ 		enum exit_fastpath_completion exit_fastpath);
+ 	int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 5f8c571cbe7c..79b14fe4e3d8 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -4311,9 +4311,9 @@ static noinstr void svm_vcpu_enter_exit(struct kvm_vcpu *vcpu, bool spec_ctrl_in
+ 	guest_state_exit_irqoff();
+ }
+ 
+-static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu,
+-					  bool force_immediate_exit)
++static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
+ {
++	bool force_immediate_exit = run_flags & KVM_RUN_FORCE_IMMEDIATE_EXIT;
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 	bool spec_ctrl_intercepted = msr_write_intercepted(vcpu, MSR_IA32_SPEC_CTRL);
+ 
+diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
+index d1e02e567b57..fef3e3803707 100644
+--- a/arch/x86/kvm/vmx/main.c
++++ b/arch/x86/kvm/vmx/main.c
+@@ -175,12 +175,12 @@ static int vt_vcpu_pre_run(struct kvm_vcpu *vcpu)
+ 	return vmx_vcpu_pre_run(vcpu);
+ }
+ 
+-static fastpath_t vt_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
++static fastpath_t vt_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
+ {
+ 	if (is_td_vcpu(vcpu))
+-		return tdx_vcpu_run(vcpu, force_immediate_exit);
++		return tdx_vcpu_run(vcpu, run_flags);
+ 
+-	return vmx_vcpu_run(vcpu, force_immediate_exit);
++	return vmx_vcpu_run(vcpu, run_flags);
+ }
+ 
+ static int vt_handle_exit(struct kvm_vcpu *vcpu,
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index b952bc673271..7dbfad28debc 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -1020,8 +1020,9 @@ static void tdx_load_host_xsave_state(struct kvm_vcpu *vcpu)
+ 				DEBUGCTLMSR_FREEZE_PERFMON_ON_PMI | \
+ 				DEBUGCTLMSR_FREEZE_IN_SMM)
+ 
+-fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
++fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
+ {
++	bool force_immediate_exit = run_flags & KVM_RUN_FORCE_IMMEDIATE_EXIT;
+ 	struct vcpu_tdx *tdx = to_tdx(vcpu);
+ 	struct vcpu_vt *vt = to_vt(vcpu);
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 9ff00ae9f05a..e66f5ffa8716 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7317,8 +7317,9 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+ 	guest_state_exit_irqoff();
+ }
+ 
+-fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
++fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
+ {
++	bool force_immediate_exit = run_flags & KVM_RUN_FORCE_IMMEDIATE_EXIT;
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	unsigned long cr3, cr4;
+ 
+diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
+index b4596f651232..0b4f5c5558d0 100644
+--- a/arch/x86/kvm/vmx/x86_ops.h
++++ b/arch/x86/kvm/vmx/x86_ops.h
+@@ -21,7 +21,7 @@ void vmx_vm_destroy(struct kvm *kvm);
+ int vmx_vcpu_precreate(struct kvm *kvm);
+ int vmx_vcpu_create(struct kvm_vcpu *vcpu);
+ int vmx_vcpu_pre_run(struct kvm_vcpu *vcpu);
+-fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit);
++fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags);
+ void vmx_vcpu_free(struct kvm_vcpu *vcpu);
+ void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event);
+ void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
+@@ -133,7 +133,7 @@ void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event);
+ void tdx_vcpu_free(struct kvm_vcpu *vcpu);
+ void tdx_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
+ int tdx_vcpu_pre_run(struct kvm_vcpu *vcpu);
+-fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit);
++fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags);
+ void tdx_prepare_switch_to_guest(struct kvm_vcpu *vcpu);
+ void tdx_vcpu_put(struct kvm_vcpu *vcpu);
+ bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 75c0a934556d..d2ad83621595 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -10777,6 +10777,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		dm_request_for_irq_injection(vcpu) &&
+ 		kvm_cpu_accept_dm_intr(vcpu);
+ 	fastpath_t exit_fastpath;
++	u64 run_flags;
+ 
+ 	bool req_immediate_exit = false;
+ 
+@@ -11021,8 +11022,11 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		goto cancel_injection;
+ 	}
+ 
+-	if (req_immediate_exit)
++	run_flags = 0;
++	if (req_immediate_exit) {
++		run_flags |= KVM_RUN_FORCE_IMMEDIATE_EXIT;
+ 		kvm_make_request(KVM_REQ_EVENT, vcpu);
++	}
+ 
+ 	fpregs_assert_state_consistent();
+ 	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+@@ -11059,8 +11063,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		WARN_ON_ONCE((kvm_vcpu_apicv_activated(vcpu) != kvm_vcpu_apicv_active(vcpu)) &&
+ 			     (kvm_get_apic_mode(vcpu) != LAPIC_MODE_DISABLED));
+ 
+-		exit_fastpath = kvm_x86_call(vcpu_run)(vcpu,
+-						       req_immediate_exit);
++		exit_fastpath = kvm_x86_call(vcpu_run)(vcpu, run_flags);
+ 		if (likely(exit_fastpath != EXIT_FASTPATH_REENTER_GUEST))
+ 			break;
+ 
+@@ -11072,6 +11075,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 			break;
+ 		}
+ 
++		run_flags = 0;
++
+ 		/* Note, VM-Exits that go down the "slow" path are accounted below. */
+ 		++vcpu->stat.exits;
+ 	}
+
+base-commit: 94da2b969670d100730b5537f20523e49e989920
+-- 
+2.49.0.1015.ga840276032-goog
+
+
+--MlINIt/uc2Bhy9cL
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0002-KVM-x86-Drop-kvm_x86_ops.set_dr6-in-favor-of-a-new-K.patch"
+
+From fdb106317c1a743f79014157c13728ea021ad0b1 Mon Sep 17 00:00:00 2001
+From: Sean Christopherson <seanjc@google.com>
+Date: Wed, 7 May 2025 14:00:39 -0700
+Subject: [PATCH 2/2] KVM: x86: Drop kvm_x86_ops.set_dr6() in favor of a new
+ KVM_RUN flag
+
+Instruct vendor code to load the guest's DR6 into hardware via a new
+KVM_RUN flag, and remove kvm_x86_ops.set_dr6(), whose sole purpose was to
+load vcpu->arch.dr6 into hardware when DR6 can be read/written directly
+by the guest.
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/include/asm/kvm-x86-ops.h |  1 -
+ arch/x86/include/asm/kvm_host.h    |  2 +-
+ arch/x86/kvm/svm/svm.c             | 10 ++++++----
+ arch/x86/kvm/vmx/main.c            |  9 ---------
+ arch/x86/kvm/vmx/vmx.c             |  9 +++------
+ arch/x86/kvm/x86.c                 |  2 +-
+ 6 files changed, 11 insertions(+), 22 deletions(-)
+
+diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
+index 8d50e3e0a19b..9e0c37ea267e 100644
+--- a/arch/x86/include/asm/kvm-x86-ops.h
++++ b/arch/x86/include/asm/kvm-x86-ops.h
+@@ -49,7 +49,6 @@ KVM_X86_OP(set_idt)
+ KVM_X86_OP(get_gdt)
+ KVM_X86_OP(set_gdt)
+ KVM_X86_OP(sync_dirty_debug_regs)
+-KVM_X86_OP(set_dr6)
+ KVM_X86_OP(set_dr7)
+ KVM_X86_OP(cache_reg)
+ KVM_X86_OP(get_rflags)
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 62137a777f33..18be7835fb73 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1675,6 +1675,7 @@ static inline u16 kvm_lapic_irq_dest_mode(bool dest_mode_logical)
+ 
+ enum kvm_x86_run_flags {
+ 	KVM_RUN_FORCE_IMMEDIATE_EXIT	= BIT(0),
++	KVM_RUN_LOAD_GUEST_DR6		= BIT(1),
+ };
+ 
+ struct kvm_x86_ops {
+@@ -1727,7 +1728,6 @@ struct kvm_x86_ops {
+ 	void (*get_gdt)(struct kvm_vcpu *vcpu, struct desc_ptr *dt);
+ 	void (*set_gdt)(struct kvm_vcpu *vcpu, struct desc_ptr *dt);
+ 	void (*sync_dirty_debug_regs)(struct kvm_vcpu *vcpu);
+-	void (*set_dr6)(struct kvm_vcpu *vcpu, unsigned long value);
+ 	void (*set_dr7)(struct kvm_vcpu *vcpu, unsigned long value);
+ 	void (*cache_reg)(struct kvm_vcpu *vcpu, enum kvm_reg reg);
+ 	unsigned long (*get_rflags)(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 79b14fe4e3d8..ffa10c448efa 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -4360,10 +4360,13 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
+ 	svm_hv_update_vp_id(svm->vmcb, vcpu);
+ 
+ 	/*
+-	 * Run with all-zero DR6 unless needed, so that we can get the exact cause
+-	 * of a #DB.
++	 * Run with all-zero DR6 unless the guest can write DR6 freely, so that
++	 * KVM can get the exact cause of a #DB.  Note, loading guest DR6 from
++	 * KVM's snapshot is only necessary when DR accesses won't exit.
+ 	 */
+-	if (likely(!(vcpu->arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT)))
++	if (unlikely(run_flags & KVM_RUN_LOAD_GUEST_DR6))
++		svm_set_dr6(vcpu, vcpu->arch.dr6);
++	else if (likely(!(vcpu->arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT)))
+ 		svm_set_dr6(vcpu, DR6_ACTIVE_LOW);
+ 
+ 	clgi();
+@@ -5171,7 +5174,6 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
+ 	.set_idt = svm_set_idt,
+ 	.get_gdt = svm_get_gdt,
+ 	.set_gdt = svm_set_gdt,
+-	.set_dr6 = svm_set_dr6,
+ 	.set_dr7 = svm_set_dr7,
+ 	.sync_dirty_debug_regs = svm_sync_dirty_debug_regs,
+ 	.cache_reg = svm_cache_reg,
+diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
+index fef3e3803707..c85cbce6d2f6 100644
+--- a/arch/x86/kvm/vmx/main.c
++++ b/arch/x86/kvm/vmx/main.c
+@@ -489,14 +489,6 @@ static void vt_set_gdt(struct kvm_vcpu *vcpu, struct desc_ptr *dt)
+ 	vmx_set_gdt(vcpu, dt);
+ }
+ 
+-static void vt_set_dr6(struct kvm_vcpu *vcpu, unsigned long val)
+-{
+-	if (is_td_vcpu(vcpu))
+-		return;
+-
+-	vmx_set_dr6(vcpu, val);
+-}
+-
+ static void vt_set_dr7(struct kvm_vcpu *vcpu, unsigned long val)
+ {
+ 	if (is_td_vcpu(vcpu))
+@@ -943,7 +935,6 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
+ 	.set_idt = vt_op(set_idt),
+ 	.get_gdt = vt_op(get_gdt),
+ 	.set_gdt = vt_op(set_gdt),
+-	.set_dr6 = vt_op(set_dr6),
+ 	.set_dr7 = vt_op(set_dr7),
+ 	.sync_dirty_debug_regs = vt_op(sync_dirty_debug_regs),
+ 	.cache_reg = vt_op(cache_reg),
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index e66f5ffa8716..49bf58ca9ffd 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -5604,12 +5604,6 @@ void vmx_sync_dirty_debug_regs(struct kvm_vcpu *vcpu)
+ 	set_debugreg(DR6_RESERVED, 6);
+ }
+ 
+-void vmx_set_dr6(struct kvm_vcpu *vcpu, unsigned long val)
+-{
+-	lockdep_assert_irqs_disabled();
+-	set_debugreg(vcpu->arch.dr6, 6);
+-}
+-
+ void vmx_set_dr7(struct kvm_vcpu *vcpu, unsigned long val)
+ {
+ 	vmcs_writel(GUEST_DR7, val);
+@@ -7364,6 +7358,9 @@ fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
+ 		vmcs_writel(GUEST_RIP, vcpu->arch.regs[VCPU_REGS_RIP]);
+ 	vcpu->arch.regs_dirty = 0;
+ 
++	if (run_flags & KVM_RUN_LOAD_GUEST_DR6)
++		set_debugreg(vcpu->arch.dr6, 6);
++
+ 	/*
+ 	 * Refresh vmcs.HOST_CR3 if necessary.  This must be done immediately
+ 	 * prior to VM-Enter, as the kernel may load a new ASID (PCID) any time
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index d2ad83621595..d8ae62f49bd7 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -11044,7 +11044,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		set_debugreg(vcpu->arch.eff_db[3], 3);
+ 		/* When KVM_DEBUGREG_WONT_EXIT, dr6 is accessible in guest. */
+ 		if (unlikely(vcpu->arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT))
+-			kvm_x86_call(set_dr6)(vcpu, vcpu->arch.dr6);
++			run_flags |= KVM_RUN_LOAD_GUEST_DR6;
+ 	} else if (unlikely(hw_breakpoint_active())) {
+ 		set_debugreg(0, 7);
+ 	}
+-- 
+2.49.0.1015.ga840276032-goog
+
+
+--MlINIt/uc2Bhy9cL--
