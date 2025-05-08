@@ -1,65 +1,65 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147DC2836BE
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E651283158
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746722114; cv=none; b=qiAVZRB5N2KzU9FzMjW6FOj8aij4l35s5+hXpkbRW4gdN7qVJo/5tM47zQ/xhcwthAdB+4PS+C/Ys0g5YdMsmIE4ht/SmJPFd4WNb1HMMgYtLIvSJvjr/oDlQ8GAUQdw0godg/Y5cKXnX+oOFR8njoknNuhzJfYSG/rzLCsZHqc=
+	t=1746722128; cv=none; b=Q8+XQsV1V4w4XW0dpCjladPb/FBAdvNUC6BadZBhtdAm+9SuZUSE/nYX+/Tpd4JkfLxAD810WtkSlYI5vpbIAH7f5SUCRuGD7zAQxw8hNWBMD4xmU9duRnAJD32ayBO1DuNf+cy7sqPXz/ozLqS/Yaef4xWa+GFLCClwN7ZCucU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746722114; c=relaxed/simple;
-	bh=BTWMxiw7rvqrLaRjZ4NkbSbWPk2f46TuEVVrGDeWemM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lyC5+KN85FYW7U836v+zYkDupvtxyseT6c/AQewvGGeQ3nvcWWLEfIEz4L5ZE1OH/ab+cyI9hWPjj4OfSz87gg0S6qSbXmNiPhfzWiN57pOxy0W35/Dym2+jcF0ajHFfQtjB2DQXwNnqXqOJ2g+xGIEAdySRd3I6JiSCol4RXbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G36bsQfO; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746722128; c=relaxed/simple;
+	bh=98vXnldu3BmiisoGoWmdX4HwE8ZPCtGTXfUCtn6cp48=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=hMPUoG9Ph9MYZnep7z+Z2tWnLblSSz+F7g9jsOqFFrWSjB2wY6qRUeHk8Lo+pWArl0YxwcBOyBNHfthembn0gFJnxSKUUWLtWfjx+VWfpFCdc9GaLRAv8lnrQ9Kf/iQ7b4RDS+g/4B5JT/l5eLnPJXQxO0CXCdLGtGOxeU6+EMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=fKvAWwIO; arc=none smtp.client-ip=209.85.160.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G36bsQfO"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad1b94382b8so62893566b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 09:35:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="fKvAWwIO"
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2c2bb447e5eso929250fac.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 09:35:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746722111; x=1747326911; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jHyGHBJUaXvF+9cY/pYLHudacCmJqYOcWmvQRbveR/A=;
-        b=G36bsQfOI0C544D7OZQ28UXYvUE+7OhDwJFHoK1sb3o1AbzL14kM/dUv1ForCzC8MI
-         upy96VxRxeS/ZCVOVlGpqiPZy4FNUYgyJdngFQycc57++Wm90ok52w/wjO2wRyeempLs
-         tJvQ4WavVoQ/ox7cjLknbGAcyiuMwkTArXdi6zadqp+B/R8P+E4n5aobI7uzgcyOy/QA
-         GIgyT+0enwQ1yKIEpFkIvxLmavdlmF9pkoXAhLCYyMUCK0YTqB8z9puxmsR2dquO6Jsj
-         T85YJLFApxTDbiFMl0IBAQ03BYhkQxpQCNtixGl3ytzOr5Ek++Ohsn0rSz+2PJnQ9uUE
-         owag==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746722125; x=1747326925; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EJL2JF8HNdUlPHdXe0fsgW/lJ8QcVwXtjShT1s+tRu0=;
+        b=fKvAWwIOZZXRVUYNSStzOi3BJw7A8E4OtUrMjA1D2/a6J+AvWACIt6t3gjQ+IxoPzA
+         D82zXoyT6RpMz6hdqiA6YYMep2sbswh6ZfzVpGK6ZFBs4jdd1DCKEplDP0JhUevPdhEK
+         nRVRlG10kCbnIZDAOjCYUynrO0D6RqbmOoiHXyVcApWzv+zUtzP15kC5zQOiFG9/ng/Z
+         IMtmr18jvmI8WyuT3J+BYeDcn95ZIt11vKPoikVOrujIz3w4+BJDsNDRTO6E2+Ho39jg
+         /1adCX+Z6CAklpNdGowy0crFodCpBtTh4FWz5AjgMuo7/NaDMnf4DXc3zlKc0Tnjerqf
+         0Hvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746722111; x=1747326911;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1746722125; x=1747326925;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jHyGHBJUaXvF+9cY/pYLHudacCmJqYOcWmvQRbveR/A=;
-        b=vVw9lNeB4sW9yLpUoNl5Tj5SHLZ60ZpR5yc7kOrtGjv2AJFukVYeonIm9KWGw89lHA
-         uP7kJJQFHCMkYzwKqz7LPdCXgC3s/EIT1w2FkT7heJrp+d09VUltq7nNIjZ8eAjlsnOP
-         XmdgfOYnfeCOwkUGmB5sTpxBkYOr6DAAunS2SVtAtFyTI2zS5Z/dpXhlS+VR+WwaWl5o
-         t4WVnGc97TkDE5Go6B0DVCrN/VRmMjfrjdORpuDpf+RNVvnyuUey7GUeGV8E26JQrPMP
-         AQwsg+rAUTPGVquRxD+UM+4dAxuJSg+LQNgm9+jzCZILckguaENbKKhDOfY/J59MHDSi
-         Jq3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWwUPw77v62gyYKx+omkZFCAV2HoepNqMv7oRf1hkBtd+NFTSZNgqyXxPnPAvkvmj8ZQFrY4O2zzvexKWM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpUTci+I29vcQ3b3no3qC/WhhPxx34d0lotQfuKUF5kFcKudQC
-	pKuNWeUsjk8X7BWs/pHTZBk9QQ57N7FyEJEvxpdMpJ72CtVmCg/q
-X-Gm-Gg: ASbGnct+Dn0/xHFZ+BMZEFhx93iGKDSbtPrSBSnJowFe6S7mkhmqhvK9+3SDldyT95y
-	rCVEN9LXQA2OAX0TrbvXBl4pjTQN8K9dnn+UKiikCNcvFt0A1iCLvrPjakHmT8Mjwkck2H73r2r
-	byVVCWFA0JVZiD8g0HV76V2a0gR+CnpgCyKwUZevtfTAfQoUuFJvDr7BLo9eY82VUurM7xuLziC
-	aD4wQmF7bxOCGl3Uea+QvsDrziRwojRWJULJQCDpAlH901QGECBtwpjo+mmNQ9sytVDosjjXXiR
-	injb6Ncdfg5H4K/7Ixtv47o+6AslB3vS1XGICsdqtOK/rSr3yEtU1Y2tFRYxPC+WMl0jJHtZ7f4
-	2I7ow3NALJ1er7e5RjMckIXU/
-X-Google-Smtp-Source: AGHT+IF/vnEgyoZA4S7VuuJSjHpkb42qJGtYJlNelnZudTkzK2HCSDBh7frfbj0eBA5f/Yop6ipwzg==
-X-Received: by 2002:a17:907:7251:b0:acb:b864:829c with SMTP id a640c23a62f3a-ad218e5778bmr37505966b.10.1746722110966;
-        Thu, 08 May 2025 09:35:10 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:1126:4:14f7:eab6:23d5:4cab? ([2620:10d:c092:500::7:80fe])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197466adsm8949266b.92.2025.05.08.09.35.10
+        bh=EJL2JF8HNdUlPHdXe0fsgW/lJ8QcVwXtjShT1s+tRu0=;
+        b=FBJm9wpHotUi6gDKVjZvnvPQU4VJxCKABfTouboSra/Fn86sO0nRj51aCqakMiIahD
+         2cVAh/0eA2Z7tLpEjAaAeGZPR5fz7rwVKPQjoRa3Uks7BBdxCeRQb7bix0UMiSyIkMsC
+         RT4yYhHS8oq3PfOWHpjMTzklvyWBTjxr0lf4vqQf8+URzjd2Ce3oUo8fcpopzs4DmN1l
+         7fVXumMt2AkWVbL0PnqiWZmRzKB+YGmJS4pOuxRBx8NcaT2hvylNu6LoNaEhK79CDgzk
+         BdXf9sVg+dOq0055BLxqyqeQAEt+FC1sJL70Mgptlmb6JjLpGLHgDh2thgsHlG4gqyvp
+         PqTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXyVbDQ8wH92pVkDwGE5NpKJe8QOU6YAqZsl28PNPZhEWB4sEVvaqYNq68Us596H8Soz9rrOxBoOi6OBFk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLbLDZ3dHmoXROsk3/qZC9+FFk37Qam7j2FWdNvcfw+Za4k6XQ
+	xJe4IihnD//fXY3yq3/NcraHIjVARwZpgoG9GBVrf6UWOVemkxOkBpefgt76SaY=
+X-Gm-Gg: ASbGncsVpccAswkNsSnoa0DOwU5lRVaoOnTJl4jdYHa0PZC38XLQcVvloCGuNNnHi1X
+	guHOhMca1ZoenIgGtRiQPhfSwNlixE8DRuqnaeWvdJ6zCZ58OVu9QiMFTbC/H1b6n8uL2W5X57M
+	WG0YWKFSJ4Ol7E0hQzGrNnUQ3pNq8bSv1rIyy+n1kc0pIzSbJInTuUoh0BKOTjgiMOejWCb9Qhf
+	WlVcuhPV5jqUqzjunCFY5qbrvWM+iD/u/twHr9j0RIdoxOlh0cHf4RWsktQ42fBuiuO9GUxbT5s
+	FQZgAL//jqHPMCMVz/w7uQjWOXJy3czwHr8jfhZlElgSQ0rPAsKkgBwdxP1a50GLlI/4hW0QfSa
+	2cfjjJ3A+XysCd5xaZw==
+X-Google-Smtp-Source: AGHT+IHIJ0BuysYAybBvMTuPTyGsG2tzFb1OdQsBPE+ejZhEIUsRr/4qjoRxA88gOpIuEzDtbtwoxA==
+X-Received: by 2002:a05:6871:648:b0:2c1:ae41:6b5e with SMTP id 586e51a60fabf-2dba42aff39mr110953fac.16.1746722125260;
+        Thu, 08 May 2025 09:35:25 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e? ([2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2dba07912fbsm129204fac.25.2025.05.08.09.35.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 09:35:10 -0700 (PDT)
-Message-ID: <e706e2fc-201f-4e45-8dd9-e2e17c269466@gmail.com>
-Date: Thu, 8 May 2025 17:35:10 +0100
+        Thu, 08 May 2025 09:35:23 -0700 (PDT)
+Message-ID: <d2cdf491-d6d2-49d6-8ab1-34118023f279@baylibre.com>
+Date: Thu, 8 May 2025 11:35:23 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,101 +67,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/1] prctl: allow overriding system THP policy to always
-To: David Hildenbrand <david@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Cc: hannes@cmpxchg.org, shakeel.butt@linux.dev, riel@surriel.com,
- ziy@nvidia.com, baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com,
- linux-kernel@vger.kernel.org, kernel-team@meta.com
-References: <20250507141132.2773275-1-usamaarif642@gmail.com>
- <3b5d929f-ec2f-4444-825f-81e71f804033@redhat.com>
+Subject: Re: [PATCH v3 5/5] iio: adc: ad7606: add gain calibration support
+From: David Lechner <dlechner@baylibre.com>
+To: Angelo Dureghello <adureghello@baylibre.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250506-wip-bl-ad7606-calibration-v3-0-6eb7b6e72307@baylibre.com>
+ <20250506-wip-bl-ad7606-calibration-v3-5-6eb7b6e72307@baylibre.com>
+ <c999800bb5f6c1f2687ff9b257079dcf719dd084.camel@gmail.com>
+ <qaiqdak4pieewavl2ff4mpr2ywhw2bvnoob55buiinkisacar5@q6jhlb5klcf6>
+ <7f5f75c1-7750-4966-9362-2a46c5e5ba3e@baylibre.com>
+ <720e300f-f6e0-4c47-8e72-b3ab0a50fbed@baylibre.com>
 Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <3b5d929f-ec2f-4444-825f-81e71f804033@redhat.com>
+In-Reply-To: <720e300f-f6e0-4c47-8e72-b3ab0a50fbed@baylibre.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-
-On 08/05/2025 12:06, David Hildenbrand wrote:
-> On 07.05.25 16:00, Usama Arif wrote:
->> Allowing override of global THP policy per process allows workloads
->> that have shown to benefit from hugepages to do so, without regressing
->> workloads that wouldn't benefit. This will allow such types of
->> workloads to be run/stacked on the same machine.
->>
->> It also helps in rolling out hugepages in hyperscaler configurations
->> for workloads that benefit from them, where a single THP policy is
->> likely to be used across the entire fleet, and prctl will help override it.
->>
->> An advantage of doing it via prctl vs creating a cgroup specific
->> option (like /sys/fs/cgroup/test/memory.transparent_hugepage.enabled) is
->> that this will work even when there are no cgroups present, and my
->> understanding is there is a strong preference of cgroups controls being
->> hierarchical which usually means them having a numerical value.
->>
->>
->> The output and code of test program is below:
->>
->> [root@vm4 vmuser]# echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
->> [root@vm4 vmuser]# echo inherit > /sys/kernel/mm/transparent_hugepage/hugepages-2048kB/enabled
->> [root@vm4 vmuser]# ./a.out
->> Default THP setting:
->> THP is not set to 'always'.
->> PR_SET_THP_ALWAYS = 1
->> THP is set to 'always'.
->> PR_SET_THP_ALWAYS = 0
->> THP is not set to 'always'.
+On 5/8/25 11:27 AM, David Lechner wrote:
+> On 5/8/25 8:50 AM, David Lechner wrote:
+>> On 5/8/25 4:16 AM, Angelo Dureghello wrote:
+>>> Hi all,
+>>> On 07.05.2025 07:14, Nuno Sá wrote:
+>>>> On Tue, 2025-05-06 at 23:03 +0200, Angelo Dureghello wrote:
+>>>>> From: Angelo Dureghello <adureghello@baylibre.com>
+>>>>>
 > 
-> Some quick feedback:
+> ...
 > 
-> (1) The "always" in PR_SET_THP_ALWAYS does not look future proof. Why wouldn't someone want to force-disable them for a process (-> "never") or set it to some other new mode ("-> defer" that is currently on the list).
-
-Yes agree with this, I think there are 3 different possible ways forward for this which I outlined in [1] in reply to Zi Yan.
-I like flags2 approach, but let me know what you think.
-
-[1] https://lore.kernel.org/all/9ed673ad-764f-4f46-84a7-ef98b19d22ec@gmail.com/
-> 
-> (2) In your example, is the toggle specific to 2M THP or the global toggle ...? Unclear. And that makes this interface also suboptimal.
-
-In this approach you would overwrite inherit folio sizes, and I think thats the right approach. So if you have for e.g. 2M and 16K set to inherit,
-and the global one is set to madvise, doing PR_SET_THP_ALWAYS would change those folio to always.
-
-> 
-> (3) I'm a bit concerned about interaction with per-VMA settings (the one we already have, and order-specific ones that people were discussing). It's going to be a mess if we have global, per-process, per-vma and then some other policies (ebpf? whatever else?) on top.
-> 
-> 
-> The low-hanging fruit would be a per-process toggle that only controls the existing per-VMA toggle: for example, with the semantics that
-> 
-> (1) All new (applicable) VMAs start with VM_HUGEPAGE
-> (2) All existing (applicable) VMAs that are *not* VM_NOHUGEPAGE become VM_HUGEPAGE.
-> 
-> 
-> We did something similar with PR_SET_MEMORY_MERGE.
+>>>>> +		ret = fwnode_property_read_u32(child, "reg", &reg);
+>>>>> +		if (ret)
+>>>>> +			return ret;
+>>>>> +
+>>>>> +		/* channel number (here) is from 1 to num_channels */
+>>>>> +		if (reg < 1 || reg > num_channels) {
+>>>>> +			dev_warn(dev, "wrong ch number (ignoring): %d\n", reg);
+>>>>> +			continue;
+>>>>> +		}
+>>>>> +
+>>>>
+>>>> Sorry Angelo, just realized this now. Any reason for not treating the above as a real
+>>>> invalid argument? It's minor and not a big deal but odd enough...
+>>>>
+> Ah, I see what you fixed now in v4. All is OK.
 > 
 
-For this you mean the prctl command would do for_each_vma and set VM_HUGEPAGE to implement point 2.
-For having point 1, I think we will still need extra mm->flags, i.e. MMF_VM_THP_MADVISE/DEFER/ALWAYS/NEVER.
 
-I think it would have the same affect as what this patch is trying to do? But would be just more
-expensive in terms of both code changes and the cost of the actual call as you now have to walk
-all vmas. On the other hand you wont need the below diff in from v1. I do feel the current approach
-in the patch is simpler? But if your point 3 is better in terms of code maintainability, happy to make
-it the change to it in v2. 
+Oops, trimmed too much, that was in reply to my own comment not Nuno's.
 
-
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 2f190c90192d..0587dc4b8e2d 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -293,7 +293,8 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
-                if (vm_flags & VM_HUGEPAGE)
-                        mask |= READ_ONCE(huge_anon_orders_madvise);
-                if (hugepage_global_always() ||
--                   ((vm_flags & VM_HUGEPAGE) && hugepage_global_enabled()))
-+                   ((vm_flags & VM_HUGEPAGE) && hugepage_global_enabled()) ||
-+                   test_bit(MMF_THP_ALWAYS, &vma->vm_mm->flags))
-                        mask |= READ_ONCE(huge_anon_orders_inherit);
- 
-                orders &= mask; 
+>> Why is this not correct? Each input could have an amplifier with different
+>> series resistor value so this seems correct to me.
