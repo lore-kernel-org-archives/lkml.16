@@ -1,199 +1,176 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD07B221725
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21272253EF
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746707064; cv=none; b=P58uqJYaDiFiiYlfVqQFEgAUKoXqETCFPYyImzIByZT94MJEnoofO3KIBohvgPJGLz9+Aqd8fz6VTXjH8s4VYfK21x/WkHX1SHyotTBUjTaoMqdrizGPx6DM1weQdD29/vjInxLd4Ej0RIUlAuHSDgxBSJZt14dixAgnCEQwZp0=
+	t=1746707130; cv=none; b=roVoZkyFEJmYvWaM/iGYBwx8XxyeOQ5d5vYZtsWY0lnNV6Ui+Y/NCRx0bWLm4caFths7skCOrpEUc8OfoKpyRIGyPUxH5ciBZfnYPk/H5H+iWpK95uTiO0jmHfPewE2qPvknU+WOqK6GGW2MnK+Qz48HOpQJsYx6g/rvRLr9Wgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746707064; c=relaxed/simple;
-	bh=euuXHiLbWHlXdD01r1NgpXkzti+uOFQDaY5u0OFhkLM=;
+	s=arc-20240116; t=1746707130; c=relaxed/simple;
+	bh=GSPlMkE9xl1CKG6+aR4Lnpqmp6kkUaBOsXBjm7FdCs8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g7O9hOZCkGVszzE+p0oXSET5sookNxbSPvaWspLMOjFFkvDtrFD+7FJ1lohVrTjMFGD8GXHs3YAT4xeF6t4KQiY3k7kVx2Bdl36F/rL6pw/fM/P6d5fhzIoaUIFmAC9etMKwvgESY3Y0ir6BkCDxGYDPyVdQTZuDTMeIDI0PSlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bo+NAqAs; arc=none smtp.client-ip=209.85.167.47
+	 To:Cc:Content-Type; b=Xtqi3woBKbMqmFlcwjGsLJjMXp/NLdG7emAF1YOy/2k3j9ugWQ4Extlbs1LYC8wlYMbt5HzimNha9WYfrCNDbCDEKkCzzk7wNmEpu5r6rkhADR498JRulf7a/ZnLFH8nFOeHGa9wlQS7z/FYvG7WNhWOs5OYyaiWwSgkXcmTUbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ONaTa7mk; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bo+NAqAs"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so1133749e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:24:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ONaTa7mk"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54d98aa5981so1499808e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:25:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746707061; x=1747311861; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746707126; x=1747311926; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bYq9UdbXkspTJzU3jmebisflnUZ0+YdudwLiQZEMhwo=;
-        b=bo+NAqAscalhccSn5X2VMDJQU1TebCb06glaJ29SYdh0pZWajib7W0W1YR2VadQ5To
-         4M+RKzEmAxsY4OnyR+Q0In75uxXx9Wj/kG8veOU8aTDaTpAzKPZTY/+IWCRhmNr6lW1O
-         B4UmqWKgjfaxSVUN7PumAAkz8bCMeCZbAK0uCfTVWUPJpuwyopkzyDriS2xcrHl0J+Ow
-         qV41ECuC4VGKl0RJBmY1A+grJpKykHl/2AlLTg+kArMfw2CWzKnGkDfLeUWhJxcKGGaW
-         xlOQK4KydOLyvCobV8uiW5XQXvubvPbRBi+uqRjJrsUMtzlYzDyK0b4cg/jldBJ7fKwN
-         4U9A==
+        bh=SGXUIdTFQac7mJFRH+e+84EpMzV6neC01o/VEUKascg=;
+        b=ONaTa7mkd9jVBDhTxOiNjDB9oo7ZjFFzBT97onAVuG9S+UwGeCqO4hXZK/nqbJUC5t
+         2yJo4mux/6GIOUCviWK0mKOKdELAH4WroXckzdLgoeA5rmJ9Vq3E7TZrudMSm4/XLMSU
+         We0MQ/50Ns1jLNJ1iFHhLDLCobMR3pRT7CER365RgfcCCqK8pTxwLAVzHwOrcAfmrnQ3
+         p55KROtV+WfTFr2ua2Su1IXybLXufIrUacbo2ZwHgI97BYK6FDd2/vSDIXqjm9ApLE/e
+         zGp0bwKQ9lPRKEKvymtb7m/acWfQ8mZ/3YlUcbNuGnYsvDhvWBDj/BS03V+9LKduDxhs
+         jkNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746707061; x=1747311861;
+        d=1e100.net; s=20230601; t=1746707126; x=1747311926;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bYq9UdbXkspTJzU3jmebisflnUZ0+YdudwLiQZEMhwo=;
-        b=ubHGHbrMwPBofTv/HyweY1uwGlsgoOEvQb9lNGgwUOH5VXVgd5GjA+XyxRWVQ9mTeo
-         PMKZaLxhFzXj5V3/c/bgD6BGVZdjFKQS3PqRuCT3KjiGXZT3BOnCG3/zcBHLrGFHhxwD
-         mPsTeTZRbOhjawPfgqFf1EURgo1NDk1QbRyYt3lfMcwIZHMZ+pMsw+KsEJP1S5QtBoaF
-         Jfhsd6wBtSe+PKCSjODSNAPVORlozU0B2kgsyZOZbYfPX9ALQ/7Z26Hak1kio8ySlO9W
-         P7aR2aFgMfb8KviIkiQzSVvr/hZajXgOT8m4/S/IEuR7FwIzxMVDdy6UNlCSr0XYK6Jb
-         LnhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXDgB9+i8gah6LW8uRQM3TAA6p+BFNpzSfCSmgSoPurw7F2HflvJxqAxMbkzEqCJbzI11Nco6BZbHj016Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxyf4a34RCOWdsxAJQOLtnBpHOfCgSu/nCl6miB//NEqob16SMT
-	U50pDlvrZaA0MNgKpTceSFx7UxW4JFxPgzG8qx7UCUn6VHB1dthpmpQUmml3GWe34Zyo+Fg+ps5
-	EpQX8mahhQyBSlyZ0K2ExS1p3J2CTcdqRIX5zJu5n7uvu3tRSiLBR9JE=
-X-Gm-Gg: ASbGnct9JaFO53qHr7rusamVsU3i99hMnlMGXgh0UUAvHlpdJzRcld+mZogUz54cbFe
-	mdXeYZYS6aZuCkygEkdd4xN2qf1Fv9QC1iwvRjtoLNIiH059AtcSvzIhM//eF/UKYZeZ2zwQGgf
-	8WJFtJ3OWgGX6faZCMqXO9DuPluFn1DJi7n89DxyjgduRjXSAT1oUu
-X-Google-Smtp-Source: AGHT+IHPoJzLIhtFpzN/1sdhJyeU+LjrmCDNcg6Q3CdDJNa61d9LsaQZ5H7HHpgfMKAjEBI/JJxSi01QEQ+VLyZX92Q=
-X-Received: by 2002:a2e:a10f:0:b0:30d:e104:b67c with SMTP id
- 38308e7fff4ca-326b890cc7fmr11091271fa.39.1746707060441; Thu, 08 May 2025
- 05:24:20 -0700 (PDT)
+        bh=SGXUIdTFQac7mJFRH+e+84EpMzV6neC01o/VEUKascg=;
+        b=UriffJgNOSfYO29dpIgNbXbw3rWi1RpmulW0+CpnALivnut018F/EsmnL70yvjsUIn
+         u/QPqioks/MunD436jp+NgMCCm0CDH226xij88JeAXQL2N/9MqpHA36UGDsBREYlIL1T
+         Odbgmug+tS78cHIaPcUhCOW808aCivP6yP9tsrTEhQdssJIdDjiF0LBWfWKUMTxFb9Xo
+         kxTrZoJdS9+5Ml6DneN3jS5XXz24EyVr5HY1kubjvJ1Yb4S6wnQHGE00v7Tv7tYOxgkp
+         o+Yt+uB6vVDrnlz6IrRl5brUI0O8diZSIDuDmCDu8i3MaMAGR7LGS2AiricRYHogY4Rn
+         axAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXenKd76ZxqoRV1CBbzucLkmi+4IpYE6HpvkteN8qW+oj3bQ6KVw1/MRBpUliodsxER3pA0CTI2NQa4H/Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXre8PTfXHaN6hYcZQMdYg0yOw9yVeIfw9ApQtJD3nHccAnWAP
+	xgmfDH+CXeYV+H9lmyY8phGOFTq/HU52eyKzNFR5hfVehgcB8Nifg1gf+JBvNLQnZqszmeJs3V3
+	ZLsWcmHfcJ+xzZQnOxqFk+s6rSl6TPgxYslXG
+X-Gm-Gg: ASbGncv3jO2l8UeAXoDAVnhdk1GqXyAv+OgcvvzQfc5WuOptJecrKqM8q7lz2u9OVdw
+	JIlDY6Y/Xu2J7F3lDTJJwe8dDIhOqnybXQPbbE2oTOF4uq0K4rNpvwIv6mrII58YwT4GPeTljF8
+	PffZGZeW4aWT/aMa9SwMfchg5l1sNFls5iYFPj69Vi+ODzFGBcpaE8
+X-Google-Smtp-Source: AGHT+IHELJP6PjDmjgnoQ+DcewZezMvkPDTBk3DlAEgOIW2HtUu14uSoRBVrm2tBSd/cEMjU36ADUjG1Ap9y8UFRrr8=
+X-Received: by 2002:a05:651c:b11:b0:30b:f006:3f5 with SMTP id
+ 38308e7fff4ca-326b87dacdfmr7793251fa.15.1746707125568; Thu, 08 May 2025
+ 05:25:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503003620.45072-1-namhyung@kernel.org> <CACT4Y+Yr7vffLYG+YmyB=9Vn_oxdQqR_6U4d-_WeQoOtPXZ6iw@mail.gmail.com>
- <aBmei7cMf-MzzX5W@google.com> <CACT4Y+ameQFd3n=u+bjd+vKR6svShp3NNQzjsUo_UUBCZPzrBw@mail.gmail.com>
- <aBmvmmRKpeVd6aT3@google.com> <CACT4Y+bm4gCO_sGvEkxLQfw8JyrWvCzqV_H5h+oebt8kk1_Hwg@mail.gmail.com>
- <aBm1x2as1fraHXHz@google.com> <CACT4Y+aiU-dHVgTKEpyJtn=RUUyYJp8U5BjyWSOHm6b2ODp9cA@mail.gmail.com>
- <aBvwFPRwA2LVQJkO@google.com>
-In-Reply-To: <aBvwFPRwA2LVQJkO@google.com>
+References: <20250507180852.work.231-kees@kernel.org> <20250507181615.1947159-2-kees@kernel.org>
+ <CANpmjNPcYPvnQzMT3p+Vc2=EiEbR1WnykUEjuYc0bH2HOFi6HQ@mail.gmail.com>
+In-Reply-To: <CANpmjNPcYPvnQzMT3p+Vc2=EiEbR1WnykUEjuYc0bH2HOFi6HQ@mail.gmail.com>
 From: Dmitry Vyukov <dvyukov@google.com>
-Date: Thu, 8 May 2025 14:24:08 +0200
-X-Gm-Features: ATxdqUGsP-cGz5xol7t0MUfWkbJwMTGTSs06jyX6wDkhPuAbKmxfVW9d0Ia1KLE
-Message-ID: <CACT4Y+YacgzrUL1uTqxkPOjQm6ryn2R_nPs8dgnrP_iKA9yasQ@mail.gmail.com>
-Subject: Re: [RFC/PATCH] perf report: Support latency profiling in system-wide mode
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Date: Thu, 8 May 2025 14:25:13 +0200
+X-Gm-Features: ATxdqUEOMWVMkXbvXQaHqruZq4t8-pmXFLrRyvMg5ohXOpGrzDC1z300bwlcEE0
+Message-ID: <CACT4Y+betRmieWEHBdEf=gOLhWiNVRH5CSDeN6ykBtoP1GrzLA@mail.gmail.com>
+Subject: Re: [PATCH 2/8] init.h: Disable sanitizer coverage for __init and __head
+To: Marco Elver <elver@google.com>
+Cc: Kees Cook <kees@kernel.org>, Alexander Potapenko <glider@google.com>, 
+	Aleksandr Nogikh <nogikh@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Hou Wenlong <houwenlong.hwl@antgroup.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Sami Tolvanen <samitolvanen@google.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	kasan-dev@googlegroups.com, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Christoph Hellwig <hch@lst.de>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	sparclinux@vger.kernel.org, llvm@lists.linux.dev, 
+	syzkaller <syzkaller@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 8 May 2025 at 01:43, Namhyung Kim <namhyung@kernel.org> wrote:
+On Thu, 8 May 2025 at 14:23, Marco Elver <elver@google.com> wrote:
 >
-> On Tue, May 06, 2025 at 09:40:52AM +0200, Dmitry Vyukov wrote:
-> > On Tue, 6 May 2025 at 09:10, Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > > Where does the patch check that this mode is used only for system-wide profiles?
-> > > > > > Is it that PERF_SAMPLE_CPU present only for system-wide profiles?
-> > > > >
-> > > > > Basically yes, but you can use --sample-cpu to add it.
-> > > >
-> > > > Are you sure? --sample-cpu seems to work for non-system-wide profiles too.
-> > >
-> > > Yep, that's why I said "Basically".  So it's not 100% guarantee.
-> > >
-> > > We may disable latency column by default in this case and show warning
-> > > if it's requested.  Or we may add a new attribute to emit sched-switch
-> > > records only for idle tasks and enable the latency report only if the
-> > > data has sched-switch records.
-> > >
-> > > What do you think?
+> +Cc KCOV maintainers
+>
+> On Wed, 7 May 2025 at 20:16, Kees Cook <kees@kernel.org> wrote:
 > >
-> > Depends on what problem we are trying to solve:
+> > While __noinstr already contained __no_sanitize_coverage, it needs to
+> > be added to __init and __head section markings to support the Clang
+> > implementation of CONFIG_STACKLEAK. This is to make sure the stack depth
+> > tracking callback is not executed in unsupported contexts.
 > >
-> > 1. Enabling latency profiling for system-wide mode.
-> >
-> > 2. Switch events bloating trace too much.
-> >
-> > 3. Lost switch events lead to imprecise accounting.
-> >
-> > The patch mentions all 3 :)
-> > But I think 2 and 3 are not really specific to system-wide mode.
-> > An active single process profile can emit more samples than a
-> > system-wide profile on a lightly loaded system.
+> > The other sanitizer coverage options (trace-pc and trace-cmp) aren't
+> > needed in __head nor __init either ("We are interested in code coverage
+> > as a function of a syscall inputs"[1]), so this appears safe to disable
+> > for them as well.
 >
-> True.  But we don't need to care about lightly loaded systems as they
-> won't cause problems.
->
->
-> > Similarly, if we rely on switch events for system-wide mode, then it's
-> > equally subject to the lost events problem.
->
-> Right, but I'm afraid practically it'll increase the chance of lost
-> in system-wide mode.  The default size of the sample for system-wide
-> is 56 byte and the size of the switch is 48 byte.  And the default
-> sample frequency is 4000 Hz but it cannot control the rate of the
-> switch.  I saw around 10000 Hz of switches per CPU on my work env.
->
-> >
-> > For problem 1: we can just permit --latency for system wide mode and
-> > fully rely on switch events.
-> > It's not any worse than we do now (wrt both profile size and lost events).
->
-> This can be an option and it'd work well on lightly loaded systems.
-> Maybe we can just try it first.  But I think it's better to have an
-> option to make it work on heavily loaded systems.
->
-> >
-> > For problem 2: yes, we could emit only switches to idle tasks. Or
-> > maybe just a fake CPU sample for an idle task? That's effectively what
-> > we want, then your current accounting code will work w/o any changes.
-> > This should help wrt trace size only for system-wide mode (provided
-> > that user already enables CPU accounting for other reasons, otherwise
-> > it's unclear what's better -- attaching CPU to each sample, or writing
-> > switch events).
->
-> I'm not sure how we can add the fake samples.  The switch events will be
-> from the kernel and we may add the condition in the attribute.
->
-> And PERF_SAMPLE_CPU is on by default in system-wide mode.
->
-> >
-> > For problem 3: switches to idle task won't really help. There can be
-> > lots of them, and missing any will lead to wrong accounting.
->
-> I don't know how severe the situation will be.  On heavily loaded
-> systems, the idle task won't run much and data size won't increase.
-> On lightly loaded systems, increased data will likely be handled well.
->
->
-> > A principled approach would be to attach a per-thread scheduler
-> > quantum sequence number to each CPU sample. The sequence number would
-> > be incremented on every context switch. Then any subset of CPU should
-> > be enough to understand when a task was scheduled in and out
-> > (scheduled in on the first CPU sample with sequence number N, and
-> > switched out on the last sample with sequence number N).
->
-> I'm not sure how it can help.  We don't need the switch info itself.
-> What's needed is when the CPU was idle, right?
+> @ Dmitry, Aleksandr - Will this produce some unwanted side-effects for
+> syzbot? I also think it's safe, but just double checking.
 
-I mean the following.
-Each sample has a TID.
-We add a SEQ field, which is per-thread and is incremented after every
-rescheduling of the thread.
+I do not see any problems with this.
 
-When we see the last sample for (TID,SEQ), we pretend there is SCHED
-OUT event for this thread at this timestamp. When we see the first
-sample for (TID,SEQ+1), we pretend there is SCHED IN event for this
-thread at this timestamp.
-
-These SCHED IN/OUT events are not injected by the kernel. We just
-pretend they happen for accounting purposes. We may actually
-materialize them in the perf tool, or me may just update parallelism
-as if they happen.
-
-With this scheme we can lose absolutely any subset of samples, and
-still get very precise accounting. When we lose samples, the profile
-of course becomes a bit less precise, but the effect is local and
-recoverable.
-
-If we lose the last/first event for (TID,SEQ), then we slightly
-shorten/postpone the thread accounting in the process parallelism
-level. If we lose a middle (TID,SEQ), then parallelism is not
-affected.
-
-The switches from a thread to itself is not a problem. We will just
-inject a SCHED OUT followed by SCHED IN. But exactly the same happens
-now when the kernel injects these events.
-
-But if we switch to idle task and got no samples for some period of
-time on the CPU, then we properly inject SCHED OUT/IN that will
-account for the thread not actually running.
+> > Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/kcov.c?h=v6.14#n179 [1]
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+>
+> Acked-by: Marco Elver <elver@google.com>
+>
+> > ---
+> > Cc: Marco Elver <elver@google.com>
+> > Cc: Andrey Konovalov <andreyknvl@gmail.com>
+> > Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > Cc: <x86@kernel.org>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Ard Biesheuvel <ardb@kernel.org>
+> > Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> > Cc: Hou Wenlong <houwenlong.hwl@antgroup.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Masahiro Yamada <masahiroy@kernel.org>
+> > Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+> > Cc: Luis Chamberlain <mcgrof@kernel.org>
+> > Cc: Sami Tolvanen <samitolvanen@google.com>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> > Cc: <kasan-dev@googlegroups.com>
+> > ---
+> >  arch/x86/include/asm/init.h | 2 +-
+> >  include/linux/init.h        | 4 +++-
+> >  2 files changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/x86/include/asm/init.h b/arch/x86/include/asm/init.h
+> > index 8b1b1abcef15..6bfdaeddbae8 100644
+> > --- a/arch/x86/include/asm/init.h
+> > +++ b/arch/x86/include/asm/init.h
+> > @@ -5,7 +5,7 @@
+> >  #if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION < 170000
+> >  #define __head __section(".head.text") __no_sanitize_undefined __no_stack_protector
+> >  #else
+> > -#define __head __section(".head.text") __no_sanitize_undefined
+> > +#define __head __section(".head.text") __no_sanitize_undefined __no_sanitize_coverage
+> >  #endif
+> >
+> >  struct x86_mapping_info {
+> > diff --git a/include/linux/init.h b/include/linux/init.h
+> > index ee1309473bc6..c65a050d52a7 100644
+> > --- a/include/linux/init.h
+> > +++ b/include/linux/init.h
+> > @@ -49,7 +49,9 @@
+> >
+> >  /* These are for everybody (although not all archs will actually
+> >     discard it in modules) */
+> > -#define __init         __section(".init.text") __cold  __latent_entropy __noinitretpoline
+> > +#define __init         __section(".init.text") __cold __latent_entropy \
+> > +                                               __noinitretpoline       \
+> > +                                               __no_sanitize_coverage
+> >  #define __initdata     __section(".init.data")
+> >  #define __initconst    __section(".init.rodata")
+> >  #define __exitdata     __section(".exit.data")
+> > --
+> > 2.34.1
+> >
