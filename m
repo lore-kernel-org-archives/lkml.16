@@ -1,154 +1,153 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4F921D3E3
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 08:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C5D6BFC0;
+	Thu,  8 May 2025 08:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746694588; cv=none; b=atVWxphLs1Cy1rPCDKzQAbv/uB5XZMCw0VYH8go+rG67MEbxkzWOlZlkb5fNurhtG2tI5smkI5HYSAZMfvKUCFSVZjBbWlJ6ZPbJPxRxIS98w7HG4byxUlUyJOe/4d9gvLPu25n6ycE1GVa5HxXjA1uWdgYMeTslPrcF5EufSbM=
+	t=1746694676; cv=none; b=iAMeXG8gy6EkraG9iKYNkxCWbnK6uevMLTEjm99RSUePTO9cae5BXApgD+fJxZ8y/6d18zPkG50gt7HHSHumZSUlvQ67uCSLU9OFbePbjLHSMSSAelyKcyuVFyw2Ks47429i8ZximnnrEUTMMUULhHuhRt59AouwX+W/LhFQPj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746694588; c=relaxed/simple;
-	bh=ACs/sfIDpb6Unk9J4Os4KEZaN0et+NzQfGKKO5KpHSM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ow9zDbVvwuOtNh5IqvySqocl1fqSDmahlF3YirzsC8YZdDf02auowBcRrfaVNr/X56G1bLPLdOQ+3x0odr5uJHgcw4iMxaCMnpsZOTNXSd9gbtoPNO9VvZYh/XiCxj+ZTGUp/R/rok0VivC+jEEegxVUdE8Hp6l6YaJepX+tvhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dgOLVq9W; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746694676; c=relaxed/simple;
+	bh=wHPATXC9LkJsZRMeS2x8lNdgUXoYaxjzLb5iBN80POk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JniV7WAaodf2rj7jbpn/PQTnwgV3XAFYi9kv0UXCpGlX7wKh6f9iHDES8A2lI/Z9PBXKZs0l45UZmOwE3injKVNhF18+Apv4KJvxaTCnEd6J8SLlkQqCLzDXa/LS44Z/x3LdFXmootBM30TNKNB/q0xGHbvPA1uVhYIw/7cQzv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m+bi/J7r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dgOLVq9W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746694586;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aOjfC+LN17usEmwgstDmlQ8TxIaIPGoVKa8pXSXr8JI=;
-	b=dgOLVq9WJvB+mLSpXl77EVsxy7g/xn+N+LSEUiuy2gPiKIqkRW4ecQs9hsux6mcPZkUuK7
-	Y22PaSb8uMdbXf/swYeRYcoU5Xv9jvCPVHwnLr+idRIHq0mepfAWeBKNOpH8PS6Mv8mnjG
-	Zp5Vz8RnnExX9WIPEtP5m8Hv5Ee89Q4=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-477-1SHpq_9sOWm3yxAUYqMLKg-1; Thu, 08 May 2025 04:56:24 -0400
-X-MC-Unique: 1SHpq_9sOWm3yxAUYqMLKg-1
-X-Mimecast-MFC-AGG-ID: 1SHpq_9sOWm3yxAUYqMLKg_1746694583
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-22e7f041997so12556345ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 01:56:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746694583; x=1747299383;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aOjfC+LN17usEmwgstDmlQ8TxIaIPGoVKa8pXSXr8JI=;
-        b=o0+6NIOybS5bbJr/3Ij2KXPQXfcey9r5peJ6sr/vLFUPT8DKLw9jsYuBIE7b1HZ6wc
-         vFHtwtjduwKsStIc0iwbchg+lR2NZ97WBdXRKSFJ/VoOBgliuCosHdxYKO+mBUi/zayM
-         Pq7s2WdCcB9ASZcSIA2dEFnbXqTsFN3D/hcxZKQEMZ78NacIn/anMJPT4e1axzJWTTeX
-         KIvhJ/Ot6tjib+pI2Q0XiuNDHaLf5DBR8N3d1fD+qzJnsdSe3HTI8eZK1XSvCt4Zu8xa
-         rYhz+iKcFLGMBFVy8/d2qEOBXyK3WcD1jptfn99wKYYlKRTC4T0+jJSpj9oyr/pYDNS3
-         DE0w==
-X-Gm-Message-State: AOJu0YxpGQcZKYTFEoILWYoLA8yWP0YEbVVpArIEwtazuvcBxhUkQS84
-	BLg2cUZEMLhRzsSyGNOuC5D3xqLUKOJYevws/49ZYawiwQK8LcgIF1nImBBixP2J0LFvdEp/uLg
-	nB7IMp9W/6fqgi/yIJ5WC1je67kBpgUjGgQ0CgLAhwC7jtLgfF9TxBK/jvtHRhw==
-X-Gm-Gg: ASbGncswvEMh2NZhPlFHpFYpD3qLvHjutca4sb9dUPxHo31zrqOft7XS/UjC6D2VHze
-	ZvV3bzMw2D2IutaHO76xCiorPQ4bbcBoovhPWMtKl1IjKt9sZJN/FpEmVmRO5JvjAZXe3MrnBz3
-	AGGu6P2qEokUIHnYBjW5jiSotyn11mpsWlqImPGBn6J2TVT/uzkYrdzCzXnoZX1qmsJT1exKPHq
-	w3PGuc4ZgoLuMoepbWtEbkq3MYS0QbBSjfQVTgQ7HLU0D4m9CokuUSvCECSy+Vl24zzNNgQcA5R
-	XpKpFNSH3Qk5
-X-Received: by 2002:a17:903:1744:b0:22f:a921:db4a with SMTP id d9443c01a7336-22fa921db82mr16679305ad.45.1746694583382;
-        Thu, 08 May 2025 01:56:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHir1BGYfGeGr2WBHGYd/bWypOVZuEVrtE9+DRdnIGOsBpFbbagNrFbeU80omop6cm+laFLtg==
-X-Received: by 2002:a17:903:1744:b0:22f:a921:db4a with SMTP id d9443c01a7336-22fa921db82mr16679075ad.45.1746694583097;
-        Thu, 08 May 2025 01:56:23 -0700 (PDT)
-Received: from [192.168.68.51] ([180.233.125.65])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e15232718sm107628285ad.230.2025.05.08.01.56.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 01:56:22 -0700 (PDT)
-Message-ID: <fdeff5e5-daab-4967-a6bf-f71efd78507c@redhat.com>
-Date: Thu, 8 May 2025 18:56:17 +1000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m+bi/J7r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48B85C4CEEB;
+	Thu,  8 May 2025 08:57:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746694675;
+	bh=wHPATXC9LkJsZRMeS2x8lNdgUXoYaxjzLb5iBN80POk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m+bi/J7r34LfUr94fxQXkxjMN93ATfTaQ26PPYNkdilIHd3MkJ78rtWPVgL7iTZ3c
+	 DZZEL8XgkNfveoCLgQemc6R6LWGfBb98fV4a/b9oqP+4ttnKUy7KLhFbwHZYBtQgKE
+	 kaWTMbPIwphXJyXeF3QoOwjNv4B7c7egGeE/fiAzh57y9UdQx0acsfVHhWmVHBeeGu
+	 DcDcmZlpKWfcHJfQeAwvwfTyo7RyhpSvmnPKdUhic3BKS8Gh7m0ZLad/d4DcHQhLaA
+	 hPd5scmwhnFt8Acf71o5Tz8i1C/PxZyzByZBIDgJd0u2pznhweP4PDli34VM/Wrnn/
+	 vaGJoIVprpjpQ==
+Date: Thu, 8 May 2025 10:57:51 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-tip-commits@vger.kernel.org" <linux-tip-commits@vger.kernel.org>,
+	lkp <lkp@intel.com>, "x86@kernel.org" <x86@kernel.org>,
+	linux-um@lists.infradead.org
+Subject: [PATCH -v2] accel/habanalabs: Don't build the driver on UML
+Message-ID: <aBxyDyVT5QbOlhPq@gmail.com>
+References: <202505080003.0t7ewxGp-lkp@intel.com>
+ <174664324585.406.10812098910624084030.tip-bot2@tip-bot2>
+ <007a7132d1396912b1381e96cc4401a10071ed24.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: mm: Drop duplicate check in pmd_trans_huge()
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
- ryan.roberts@arm.com, peterx@redhat.com, joey.gouly@arm.com,
- yangyicong@hisilicon.com, shan.gavin@gmail.com
-References: <20250508035142.189726-1-gshan@redhat.com>
- <4e5941f8-7e61-4a63-a669-bee1601093a6@arm.com>
-Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <4e5941f8-7e61-4a63-a669-bee1601093a6@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <007a7132d1396912b1381e96cc4401a10071ed24.camel@sipsolutions.net>
 
-On 5/8/25 3:44 PM, Anshuman Khandual wrote:
-> On 5/8/25 09:21, Gavin Shan wrote:
->> pmd_val(pmd) is inclusive to pmd_present(pmd) since the PMD entry
->> value isn't zero when pmd_present() returns true. Just drop the
->> duplicate check done by pmd_val(pmd).
-> 
-> Agreed, pmd_val() is redundant here because a positive pmd_present()
-> also ensures a positive pmd_val().
-> 
-> #define pmd_present(pmd) pte_present(pmd_pte(pmd))
-> #define pte_present(pte) (pte_valid(pte) || pte_present_invalid(pte))
-> 
-> #define pte_valid(pte)           (!!(pte_val(pte) & PTE_VALID))
-> #define pte_present_invalid(pte) ((pte_val(pte) & (PTE_VALID |
-> 				  PTE_PRESENT_INVALID)) == PTE_PRESENT_INVALID)
-> 
-> pte_present() cannot return positive here unless either of the flags
-> PTE_VALID or PTE_PRESENT_INVALID is set which implies pte_val() would
-> also return positive.
-> 
-> Probably it would be better to add the above details in the commit
-> message here as well.
-> 
 
-Thanks, I've squashed those details to v2, which was just posted.
+* Johannes Berg <johannes@sipsolutions.net> wrote:
 
-> The earlier commit skipped dropping pmd_val() in order to keep then
-> proposed change confined to just adding new pmd_table() check, even
-> though pmd_val() redundancy was evident as well which should have
-> been dropped there after.
+> +linux-um
 > 
-> d1770e909898 ("arm64/mm: Check pmd_table() in pmd_trans_huge()")
+> On Wed, 2025-05-07 at 18:40 +0000, tip-bot2 for Ingo Molnar wrote:
+> > 
+> > To resolve these kinds of problems and to allow <asm/tsc.h> to be included on UML,
+> > add a simplified version of <asm/tsc.h>, which only adds the rdtsc() definition.
 > 
+> OK, weird, why would that be needed - UM isn't really X86.
+> 
+> >  arch/um/include/asm/tsc.h | 25 +++++++++++++++++++++++++
+> 
+> Feels that should be in arch/x86/um/asm/ instead, which I believe is
+> also included but then at least pretends to keep the notion that UML
+> could be ported to other architectures ;-)
+> 
+> > +static __always_inline u64 rdtsc(void)
+> > +{
+> > +       EAX_EDX_DECLARE_ARGS(val, low, high);
+> > +
+> > +       asm volatile("rdtsc" : EAX_EDX_RET(val, low, high));
+> > +
+> > +       return EAX_EDX_VAL(val, low, high);
+> > +}
+> 
+> Though I also wonder where this is called at all that would be relevant
+> for UML? If it's not then perhaps we should just make using it
+> unbuildable, a la
+> 
+> u64 __um_has_no_rdtsc(void);
+> #define rdtsc() __um_has_no_rdtsc()
+> 
+> or something like that... (and then of course keep it in the current
+> location). But looking at the 0-day report that'd probably break
+> building the driver on UML; while the driver doesn't seem important we
+> wouldn't really want that...
+> 
+> Actually, that's just because of the stupid quirk in UML/X86:
+> 
+> config DRM_ACCEL_HABANALABS
+>         tristate "HabanaLabs AI accelerators"
+>         depends on DRM_ACCEL
+>         depends on X86_64
+> 
+> that last line should almost certainly be "depends on X86 && X86_64"
+> because ARCH=um will set UM and X86_64, but not X86 since the arch
+> Kconfig symbols are X86 and UM respectively, but the UML subarch still
+> selects X86_64 ...
+> 
+> 
+> I dunno. I guess we can put rdtsc() into UML on x86 as I suggested about
+> the file placement, or we can also just fix the Kconfig there.
 
-Yes, agreed.
+The Kconfig solution looks much simpler to me too :)
 
->>
->> No functional changes intended.
->>
->> Signed-off-by: Gavin Shan <gshan@redhat.com>
->> ---
->> Found this by code inspection
->> ---
->>   arch/arm64/include/asm/pgtable.h | 3 +--
->>   1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
->> index d3b538be1500..2599b9b8666f 100644
->> --- a/arch/arm64/include/asm/pgtable.h
->> +++ b/arch/arm64/include/asm/pgtable.h
->> @@ -739,8 +739,7 @@ static inline int pmd_trans_huge(pmd_t pmd)
->>   	 * If pmd is present-invalid, pmd_table() won't detect it
->>   	 * as a table, so force the valid bit for the comparison.
->>   	 */
->> -	return pmd_val(pmd) && pmd_present(pmd) &&
->> -	       !pmd_table(__pmd(pmd_val(pmd) | PTE_VALID));
->> +	return pmd_present(pmd) && !pmd_table(__pmd(pmd_val(pmd) | PTE_VALID));
->>   }
->>   #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
->>
-> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> 
+Patch attached, does this look good to you?
 
 Thanks,
-Gavin
 
+	Ingo
+
+===================================>
+From: Ingo Molnar <mingo@kernel.org>
+Date: Wed, 7 May 2025 20:25:59 +0200
+Subject: [PATCH] accel/habanalabs: Don't build the driver on UML
+
+The following commit:
+
+  288a4ff0ad29 ("x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>")
+
+removed the <asm/msr.h> include from the accel/habanalabs driver, which broke
+the build on UML:
+
+   drivers/accel/habanalabs/common/habanalabs_ioctl.c:326:23: error: call to undeclared function 'rdtsc'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+
+Make the driver depend on 'X86 && X86_64', instead of just 'X86_64',
+thus it won't be built on UML.
+
+Suggested-by: Johannes Berg <johannes.berg@intel.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Ofir Bitton <obitton@habana.ai>
+Cc: Oded Gabbay <ogabbay@kernel.org>
+Link: https://lore.kernel.org/r/202505080003.0t7ewxGp-lkp@intel.com
+---
+ drivers/accel/habanalabs/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/accel/habanalabs/Kconfig b/drivers/accel/habanalabs/Kconfig
+index be85336107f9..1919fbb169c7 100644
+--- a/drivers/accel/habanalabs/Kconfig
++++ b/drivers/accel/habanalabs/Kconfig
+@@ -6,7 +6,7 @@
+ config DRM_ACCEL_HABANALABS
+ 	tristate "HabanaLabs AI accelerators"
+ 	depends on DRM_ACCEL
+-	depends on X86_64
++	depends on X86 && X86_64
+ 	depends on PCI && HAS_IOMEM
+ 	select GENERIC_ALLOCATOR
+ 	select HWMON
