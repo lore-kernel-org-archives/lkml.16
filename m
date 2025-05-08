@@ -1,192 +1,141 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2066.outbound.protection.outlook.com [40.107.212.66])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1497335966;
-	Thu,  8 May 2025 17:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746725069; cv=fail; b=PnN/+xLgD9zjG0WTRPihlIIQY/NpmyagTOlQUBfmVUtw/t9N8tWGTlWotWjP+VCvKMkbrEnP8vQwNwXww8eckA3V2QaC+lPK16vRYMOKN4AGiNRFavmDJejgxFRAF3yapsoNnNKx+Uj5W+1Id0dXyw0/0PwuBdBV9mX2vb8wQ7Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746725069; c=relaxed/simple;
-	bh=V48Q10jm62bWHdjgoOV+apRL1oSZPl7R64fZTAcJd6A=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=abS6r/l+L43PIkU4sjWo94fVnnqejQMK2sAkuuF0zI7quw49oI04SDGhDvdn/qenlPIYy1QA80toTtAa0iwYiBucRYTRsNLYgUbEKzEbIKKK2m0lfPAsVxK3EpKCB+ZsnA1EXURSzh0n+Jv2AOSeqDHyv5H2dSh+ck5Cp2rxITU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0ojMSGyd; arc=fail smtp.client-ip=40.107.212.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE781C5F39;
+	Thu,  8 May 2025 17:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746725187; cv=none; b=CwMqelab9mBb3O7E8/+YyNxqeFmhwlgpujvu2f5lnyeu+hzO3mKLommFcqphlVw1iVcpf9ihSIgpDuiI6Xq1DV9roxBfheyxn6KOB2JiDb4X3olO85uF/+X5Y6mguzJoHuRDKcIy65287r1cnijhgctDX2DbA65fni8F6GvQ7u8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746725187; c=relaxed/simple;
+	bh=Jpo8MnRTVZAwTUZCMoPP/8p7SeSX/YTuEV/BD+++lcE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hoQ6V+4lVNU1hy8n2DEi98Xj2R1FKFnffGsAec2aXgihpbRMFZ84xlGCRJW0MkcolpvVMBCApB7O1e2cWFxHi7I7Y/SLikq0gDPuqpm4Q14z+pYADULpR/VEFXIKhyY1U2EdNtMGZDY1drGJ4uwp5Zqwsr8ttlaZY1KyFAJDutY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=WVupt5vK; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0ojMSGyd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RvHtfkKxDpyz6OuVyp50qw0/o5CaZMTOrAZ3oK5o3QuG6imZO4oy5K1CbeQAnhDFPznM80mOqw2688rd9iDjLq2bO9y2SnnL+RZKdhhM88b2cnHBj4cx+v+QlSnormPQ8GEWAip7qOh7AB5QUgPuradHNOAvltnVg2ipzRpTNdHQFcdexy/ETdZevIHoJs2N9oM/ik4Jp4nFiYYMcIRRkQDN0+jN5NiXOmaoSRj3pyPbRau37ThHQb3eh9JOIg4dsqgIBVMRZ0Cfkw9zwOV3WhR3MX5uyZ9UB0BaniwyZBBl8P5632wJVntwk9fPY8QuKKaWjd4+Q5l3GdXKG9eBIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oq/2/QlfdXoVk81+oxjJXkEZLtMGiB6PBAfvk80Epxs=;
- b=uOeBWMpaw7cxKPGwfujLuE4yjH88dirgRRvCcr6qFQSkRK+E6i9fJf+rfVmvtKe2ispTf/qTav0JXp9HnNu3h9WIoEE6o8IzzDWlsPDlLwQQ9OLwPymb0E+4v5fLAx4dfKuUnYHB6fTOUr/UoW5Rikt3hFDuoWYyvRKI6x4dGp1wJMsR45BxDH4I9PFS833qRYDFZX79waNAhjDPWDhXDa6hAB0+DcKREUnAhDGhAihZKNcDgTeUyt1ikavP5XK50xBewSbuGGvRJvAlHQakZO6o0cRl2U/sUz2bNJ/GmUf6CcGkzAn/wm/7JQE50k/0QNEwGDfWIz+EWzNpVQvHng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kvack.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oq/2/QlfdXoVk81+oxjJXkEZLtMGiB6PBAfvk80Epxs=;
- b=0ojMSGydgL/GvgCRzViBvo2hDAHaYGeQBIeUIQXcS7t1IqpeWvH6A7nIZCKarMM2z3q758M0zgffXqetTtE5C4GMrFy7SqnF4w4vKp8iab5ZIhW3tPoaTtH0g6qljMc7I3SGmAkzb7DmyySpkS/B7xrTzGg2WREPpdUuiPooN7I=
-Received: from SA9PR13CA0158.namprd13.prod.outlook.com (2603:10b6:806:28::13)
- by CY8PR12MB8216.namprd12.prod.outlook.com (2603:10b6:930:78::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Thu, 8 May
- 2025 17:24:25 +0000
-Received: from SN1PEPF000252A3.namprd05.prod.outlook.com
- (2603:10b6:806:28:cafe::5e) by SA9PR13CA0158.outlook.office365.com
- (2603:10b6:806:28::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.19 via Frontend Transport; Thu,
- 8 May 2025 17:24:25 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF000252A3.mail.protection.outlook.com (10.167.242.10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Thu, 8 May 2025 17:24:25 +0000
-Received: from tlendack-t1.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 8 May
- 2025 12:24:24 -0500
-From: Tom Lendacky <thomas.lendacky@amd.com>
-To: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-CC: Mike Rapoport <rppt@kernel.org>, Andrew Morton
-	<akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, Michael Roth
-	<michael.roth@amd.com>, <stable@vger.kernel.org>
-Subject: [PATCH] memblock: Accept allocated memory before use in memblock_double_array()
-Date: Thu, 8 May 2025 12:24:10 -0500
-Message-ID: <da1ac73bf4ded761e21b4e4bb5178382a580cd73.1746725050.git.thomas.lendacky@amd.com>
-X-Mailer: git-send-email 2.46.2
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="WVupt5vK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=zVpWPkQC/BSrKmTaROIAJ2ktAZPNsmJUsbJbTHTQuig=; b=WVupt5vKzq+NYFhvA9EtHnjRUJ
+	LD/oMvqGztz+HzkcvcY7CfKwH15pJTHlYCxA64rFsiaKm7VsWZIOl2HuKGbtrGd3MVKsknG4iEluO
+	+WdSdlg4tfXeKr6j5zOXJ+saBgShePZHNs2fhsnCGto+3vjJI2LRdcpbw3PwEVOhlu+wvwODc9lhe
+	V+ETisC8tJWY8eCSIreGGDyAD8HPhkKl84cdB1vm0//SUKPq6zRRoMJ1VPqK4T459u7HW5DiurHsB
+	fmCP54Af1nCPFql81lIIY6XU3VdftiJKlhiQGiNJkww9kX+l/1BvkEHLaj6BIjgCFUm8GnAmDa4Qb
+	I1dDMv9g==;
+Received: from [61.8.144.177] (helo=phil.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uD50h-00086Y-9V; Thu, 08 May 2025 19:26:15 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Yao Zi <ziyao@disroot.org>,
+ Frank Wang <frank.wang@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Detlev Casanova <detlev.casanova@collabora.com>,
+ Shresth Prasad <shresthprasad7@gmail.com>, Chukun Pan <amadeus@jmu.edu.cn>,
+ Jonas Karlman <jonas@kwiboo.se>, Yao Zi <ziyao@disroot.org>
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] phy: rockchip: naneng-combphy: Add RK3528 support
+Date: Thu, 08 May 2025 19:26:13 +0200
+Message-ID: <5349721.GXAFRqVoOG@phil>
+In-Reply-To: <20250508135307.14726-1-ziyao@disroot.org>
+References:
+ <20250508134332.14668-2-ziyao@disroot.org>
+ <20250508135307.14726-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000252A3:EE_|CY8PR12MB8216:EE_
-X-MS-Office365-Filtering-Correlation-Id: d08a3771-e2a5-43b9-556f-08dd8e552e1b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YNx8gDEsVc9uZwD8PqoBrOBhA1q5UHZRevhHWL8GyCzO/j14LEDyttPovlYl?=
- =?us-ascii?Q?RXrFU+bs3znBkiW2FW4+Px0tfc1xKkmgNTQGXQHBDsyeCBoFmNlmZsLJXjSe?=
- =?us-ascii?Q?43XkMYNiDM0A2OpP75UArHmZ6Y7owWoyjlXo6r2nsrJaOlCS9DNZdYich29V?=
- =?us-ascii?Q?k6sx/oXQqwS8wNnDJdEKrbALhl0UyR0Fc1B4+YjrINTpxxPVVHhAYXkSs8zJ?=
- =?us-ascii?Q?30g9zQ3VmXjeD4vt2lIXYauJvmN4Dx1aMMpyNE60v8uVkJB2fIpbbhiTsxoF?=
- =?us-ascii?Q?4+A6q2f3IqJaGBxW5291y5pCESQeGJHekDpZ5/S+ByEuqfAxS3Y60VfCNMrb?=
- =?us-ascii?Q?ohfKNNMPI3sXXQOzYyvrBy0p5L048OWLxAjzAzWz0qTJt2w4/kUFWM5LMYXj?=
- =?us-ascii?Q?DIq7//04CtAfXMbqbtAP0Bp41iyT/NvEBTyILvvPZrDBfvOlXZM0JUNNO5m+?=
- =?us-ascii?Q?UAoKVw+OIYzg8u5MZGEBzCVX08lYSxMe2sEZ+zg+FHKNI8VS+OfVH9QCcftF?=
- =?us-ascii?Q?DETl3H9C3ICpwdvG8MEojE9EUKSTcsrjx1mu0vbzAGgR9ep7/cYIenI5qy9u?=
- =?us-ascii?Q?dJOOtpK+0EhtQkBke600nJRa++ycMz28iEqmA1NlmjRoTzZfo6PFtA5EwbGc?=
- =?us-ascii?Q?hlZXxGhS+zXxgKa+7cFhCjVC0rCbG/5u8wOOOACp/NH2KJMPJpQxHBxSatVo?=
- =?us-ascii?Q?+QIFjWDbI95kKa36zHXTVvnkmGwn+EFDqqDc2pIo31/iSJDvFmzQXtgslVXX?=
- =?us-ascii?Q?AjpHeZbjgNqhEqtbLHNCCJkGT8/c/Xxm5Hja4lrxFER93MGTdu/2dRSaEb67?=
- =?us-ascii?Q?0L7rhn8WRT/A0d8/k5KVHMlH/6iXet6NWPTdaczw8TpsBooioYsRPF40DpGx?=
- =?us-ascii?Q?C01a88hU63ifCjGi12n3GHPW2UHiGefeZYEzs6h/sUAb4rudwjs7BPYWi2+f?=
- =?us-ascii?Q?JqzpV8qd5PAnjLpd+U1OwnQy5AEvA+sCMhEL5EGtMfyPwCejW8tqBFkT6yut?=
- =?us-ascii?Q?kH8Qm+dl6+CQDvHUL9ZrHlmjij7Ugqz3VU1ouG+wNdaczYd4/jfkQpp5Llph?=
- =?us-ascii?Q?PCZUsL/s5pXeCtrzKb/akGIvdQCCzifMoApTtQ49K4wvsDdcEYMf8RpC6pW4?=
- =?us-ascii?Q?5bIrA/ACcDYuLwfw+YEe+qLDA3rO2DBmT6vy9Zltlr+D32gKWaFSIDyyHdXt?=
- =?us-ascii?Q?hZUWbuV03utRvCmX3aoYO48NeKxPCC7H1My2sy3cSGdyTnAERhHKE2NFjRTQ?=
- =?us-ascii?Q?pni3BusUPir6+4IynDp8WTryOCY5/bmPZFuMboQlCFviy4bm8tV6OkUMj0Nb?=
- =?us-ascii?Q?FwcQcGX7cAOoA7M7mdAtOS4655pZW+gekh2oQ7AR33Syz2nqeOWadQ4FRko6?=
- =?us-ascii?Q?sru35i01nyShfbTT3rIt8xsTGdX/I7eSVWQ+XehAVbZizPriGJZNgYvZzz7V?=
- =?us-ascii?Q?x6lyA4LP37RnE55IdkEW58ANIy3wEDE9O5m8w/H1uM4inFPSZMfrrIgPHE3a?=
- =?us-ascii?Q?Y7G6ie0O/oFGjxJgVSIAh0IY1YLjSSBv5/KU?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 17:24:25.2709
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d08a3771-e2a5-43b9-556f-08dd8e552e1b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000252A3.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8216
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-When increasing the array size in memblock_double_array() and the slab
-is not yet available, a call to memblock_find_in_range() is used to
-reserve/allocate memory. However, the range returned may not have been
-accepted, which can result in a crash when booting an SNP guest:
+Am Donnerstag, 8. Mai 2025, 15:53:06 Mitteleurop=C3=A4ische Sommerzeit schr=
+ieb Yao Zi:
+> Rockchip RK3528 integrates one naneng-combphy that is able to operate in
+> PCIe and USB3 mode. The control logic is similar to previous variants of
+> naneng-combphy but the register layout is apperantly different from the
+> RK3568 one.
+>=20
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> ---
+>  .../rockchip/phy-rockchip-naneng-combphy.c    | 180 +++++++++++++++++-
+>  1 file changed, 179 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c b/drivers=
+/phy/rockchip/phy-rockchip-naneng-combphy.c
+> index 1d1c7723584b..7c92f7ac3c7f 100644
+> --- a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
+> +++ b/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
+> @@ -20,7 +20,40 @@
+>  #define REF_CLOCK_25MHz			(25 * HZ_PER_MHZ)
+>  #define REF_CLOCK_100MHz		(100 * HZ_PER_MHZ)
+> =20
+> -/* COMBO PHY REG */
+> +/* RK3528 COMBO PHY REG */
+> +#define RK3528_PHYREG6				0x18
+> +#define  RK3528_PHYREG6_PLL_KVCO		GENMASK(12, 10)
+> +#define   RK3528_PHYREG6_PLL_KVCO_VALUE		0x2
+> +#define  RK3528_PHYREG6_SSC_DIR			GENMASK(5, 4)
+> +#define   RK3528_PHYREG6_SSC_UPWARD		0
+> +#define   RK3528_PHYREG6_SSC_DOWNWARD		1
+> +#define RK3528_PHYREG40				0x100
+> +#define  RK3528_PHYREG40_SSC_EN			BIT(20)
+> +#define  RK3528_PHYREG40_SSC_CNT		GENMASK(10, 0)
+> +#define   RK3528_PHYREG40_SSC_CNT_VALUE		0x17d
+> +#define RK3528_PHYREG42				0x108
+> +#define  RK3528_PHYREG42_CKDRV_CLK_SEL		BIT(29)
+> +#define   RK3528_PHYREG42_CKDRV_CLK_PLL		0
+> +#define   RK3528_PHYREG42_CKDRV_CLK_CKRCV	1
+> +#define  RK3528_PHYREG42_PLL_LPF_R1_ADJ		GENMASK(10, 7)
+> +#define   RK3528_PHYREG42_PLL_LPF_R1_ADJ_VALUE	0x9
+> +#define  RK3528_PHYREG42_PLL_CHGPUMP_CUR_ADJ	GENMASK(6, 4)
+> +#define   RK3528_PHYREG42_PLL_CHGPUMP_CUR_ADJ_VALUE 0x7
+> +#define  RK3528_PHYREG42_PLL_KVCO_ADJ		GENMASK(2, 0)
+> +#define   RK3528_PHYREG42_PLL_KVCO_ADJ_VALUE	0x0
+> +#define RK3528_PHYREG80				0x200
+> +#define  RK3528_PHYREG80_CTLE_EN		BIT(17)
+> +#define RK3528_PHYREG81				0x204
+> +#define  RK3528_PHYREG81_CDR_PHASE_PATH_GAIN_2X	BIT(5)
+> +#define  RK3528_PHYREG81_SLEW_RATE_CTRL		GENMASK(2, 0)
+> +#define   RK3528_PHYREG81_SLEW_RATE_CTRL_SLOW	0x7
+> +#define RK3528_PHYREG83				0x20c
+> +#define  RK3528_PHYREG83_RX_SQUELCH		GENMASK(2, 0)
+> +#define   RK3528_PHYREG83_RX_SQUELCH_VALUE	0x6
+> +#define RK3528_PHYREG86				0x218
+> +#define  RK3528_PHYREG86_RTERM_DET_CLK_EN	BIT(14)
 
-  RIP: 0010:memcpy_orig+0x68/0x130
-  Code: ...
-  RSP: 0000:ffffffff9cc03ce8 EFLAGS: 00010006
-  RAX: ff11001ff83e5000 RBX: 0000000000000000 RCX: fffffffffffff000
-  RDX: 0000000000000bc0 RSI: ffffffff9dba8860 RDI: ff11001ff83e5c00
-  RBP: 0000000000002000 R08: 0000000000000000 R09: 0000000000002000
-  R10: 000000207fffe000 R11: 0000040000000000 R12: ffffffff9d06ef78
-  R13: ff11001ff83e5000 R14: ffffffff9dba7c60 R15: 0000000000000c00
-  memblock_double_array+0xff/0x310
-  memblock_add_range+0x1fb/0x2f0
-  memblock_reserve+0x4f/0xa0
-  memblock_alloc_range_nid+0xac/0x130
-  memblock_alloc_internal+0x53/0xc0
-  memblock_alloc_try_nid+0x3d/0xa0
-  swiotlb_init_remap+0x149/0x2f0
-  mem_init+0xb/0xb0
-  mm_core_init+0x8f/0x350
-  start_kernel+0x17e/0x5d0
-  x86_64_start_reservations+0x14/0x30
-  x86_64_start_kernel+0x92/0xa0
-  secondary_startup_64_no_verify+0x194/0x19b
+I'd think staying with one layout would be best, so not doing this
+indentation here. Instead maybe follow the other ones like
 
-Mitigate this by calling accept_memory() on the memory range returned
-before the slab is available.
+#define RK3528_PHYREG6				0x18
+#define RK3528_PHYREG6_PLL_KVCO		GENMASK(12, 10)
+#define RK3528_PHYREG6_PLL_KVCO_VALUE		0x2
+#define RK3528_PHYREG6_SSC_DIR			GENMASK(5, 4)
+#define RK3528_PHYREG6_SSC_UPWARD		0
+#define RK3528_PHYREG6_SSC_DOWNWARD		1
 
-Prior to v6.12, the accept_memory() interface used a 'start' and 'end'
-parameter instead of 'start' and 'size', therefore the accept_memory()
-call must be adjusted to specify 'start + size' for 'end' when applying
-to kernels prior to v6.12.
+#define RK3528_PHYREG40				0x100
+#define RK3528_PHYREG40_SSC_EN			BIT(20)
+#define RK3528_PHYREG40_SSC_CNT		GENMASK(10, 0)
+#define RK3528_PHYREG40_SSC_CNT_VALUE		0x17d
 
-Cc: <stable@vger.kernel.org> # see patch description, needs adjustments for <= 6.11
-Fixes: dcdfdd40fa82 ("mm: Add support for unaccepted memory")
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
----
- mm/memblock.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+=2E..
 
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 0a53db4d9f7b..30fa553e9634 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -457,7 +457,14 @@ static int __init_memblock memblock_double_array(struct memblock_type *type,
- 				min(new_area_start, memblock.current_limit),
- 				new_alloc_size, PAGE_SIZE);
- 
--		new_array = addr ? __va(addr) : NULL;
-+		if (addr) {
-+			/* The memory may not have been accepted, yet. */
-+			accept_memory(addr, new_alloc_size);
-+
-+			new_array = __va(addr);
-+		} else {
-+			new_array = NULL;
-+		}
- 	}
- 	if (!addr) {
- 		pr_err("memblock: Failed to double %s array from %ld to %ld entries !\n",
+i.e. register + bits + blank line
 
-base-commit: fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
--- 
-2.46.2
+other than that
+
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+
 
