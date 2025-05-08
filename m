@@ -1,258 +1,291 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367E727979F
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D89422B8DB
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746721348; cv=none; b=Nf530pieI21pTm2qA+wbWeM3Ol6SdSMrQVc5VFS2USYzcXG3N3iP7dKHrxlO52vfJe4KjHIwTaXAIeZfd0J/A1OCQSE8OPdeqgDrMvkpvIHZATM5GnC3746NWn0l1FND+afaX4o7OKeH7CDVWaznideXZVDTev2IeVvqA0rY+8Y=
+	t=1746721453; cv=none; b=b4jHwDTTDA9UYArPgvYuJSDNrZB0I2ZEGirebo3kAEpRUe5JsNtHtMkFgwyDguIKKrat3TTaE7mz+XQz6OjDFSa0WS6XxrzZvE4qjMCAlvYmz7ei6V5u/Ya8pbfWAhk9FyoM/LfdUce/1IidlI2srbEkAz9+c21NOh6t5C4fQwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746721348; c=relaxed/simple;
-	bh=mrsjIDv3OYI8SMmb84JvrCrdEGbeijlrZ5u4z+WQTcA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=IwWKjUk8I0H2g7l5JMnzXTng2XkGumm6dBu0yNSwsRt9a3sW9G4+7YpcBKIYIArHrBUAIj5oQvQ8ikTOlOPWVFOqzEMXjO0BgFpoupBHSbOw3Rbwth2rI+94BfBfeohfFN048vJATV1J1OG7azomRLNaZFKQxGZ54KyVto8tsog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-86195b64df7so187768539f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 09:22:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746721345; x=1747326145;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+	s=arc-20240116; t=1746721453; c=relaxed/simple;
+	bh=t3tn6uKOL50qsUsO1X85bUcdjubnWdIaq7pkM+3x/94=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P+b1Ab6YqfffolEUON3xOyVVXiLQMUhfbn0eK930gjxPojexDBQNRf7uPBlaV8y8s5HJ0lMBBQ5wfLHyNEfAozvg++RTKAql908UojgZB0RQrbGe9JQKFfCaRM9AfMy6cYeUTN4sdM1dhlTOvsa5BrzOUxZlmymEf7v/nx9aT7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=k89WTFs3; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="k89WTFs3"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2c76a1b574cso516438fac.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 09:24:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746721449; x=1747326249; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=swiHo3/PazECIkroxGIMfS4xFp+4PWXCQQTAhtqVqwM=;
-        b=AKVA60cW9ZR5wmTzMtwMK/kBiZ8omBSn1ABCZOpM8Sbd6CRX8AY3gqtJjyikrkZrke
-         hxxCyM5neghd2FLSDXVxVGl04u5DbtJbt0dZacfbwiO3LgYKG1Px57hO0ipKEVcky79z
-         hUeV9X3aHHhq7PTqCUH5RaX9l/LFDCPrZyz+wBKKABcAukXgsiarVsaJ1mRPoAEkcsrT
-         Ugvc9R6nRyR7VyTD6h1Ry9mkiZ7fM/uk3+r91bMTL4ZYZGm75M7MVTOKb4xt+oRjwnvB
-         67nvt4KbYGixg4k0xAWl/9x3DA0tcB9doewUKPKCg+bZW432s+NWgQi3l93pso5oObQ3
-         TBxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQqgG9neONIhFER2Cb+QX3HvwLrLHR+Of520I3iAtXDvfT7GutzbERFDhHNtD36+s3LCz/ue9z84L39zA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzy6dPYoEGdIwU6axGKQihbzUYjXUnru4WO6q8NkfcOjSD4kLuI
-	9UCC9eG3VuU5JfGOSD3xio7ABRyGIbMu4WtH7z7YS6ZzzCWXkKpibBzZI/6XFdv4xxe9u4vOrHi
-	0gU1sg58Vtq3pK6elvOJ6/H3jyrT7kNuuypj/DHVc+bHd9mSbXySow0Q=
-X-Google-Smtp-Source: AGHT+IEWQzMkDe2kElFmS/4MJzQD2UVWOXOpJXFUityQsG77kRD0N7888xxla9a3ucVLMMtwX2WWQuxm1hENtF5glntdAXGT+YR4
+        bh=siSVab6apiCbyEuP9nd4RY6Qv93d0GsyI0YfHMYsfRU=;
+        b=k89WTFs3FFEYIe1zmfVRYNS4+Eb4Ch0ACoXN1A3XhmCn0WHOqYl5XWjX//TbJxh53e
+         SEEOEYKtSC64r7sy7f93SjiqvsJHoLriEJhHVXBQU4IVNuoMR5/U3Len7J+04hcvzH+/
+         e+ebEh8p5AkFazPmu7bkRU2WzuzNKua58yRr6zZCCcQ1UY7kotEJ5EBqMVi/8fVoCdZv
+         MyZUIIT/yXNrS9wf6uMgzO/RLiX8QRmh3oBsC16O80NgyoOkFtdEm4q7dXEpsrbfEtwS
+         YRxWCM/VlgaUOKIX5NE8M2MJ9HRzuRHwIvD0WX7fgMmhgI6RWvITIFC8sCX35kLaDo3j
+         T0Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746721449; x=1747326249;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=siSVab6apiCbyEuP9nd4RY6Qv93d0GsyI0YfHMYsfRU=;
+        b=XXSsIKod15/KcF0OPR1X5LzztU3YI0DGUnldbm+Fa5PMu90I7RmBqhEYpw+gtplYGo
+         oXGctLqK31MVJdNWRRg920mBQ+H+e1lMazzkZUvScaSoGmAeRYPV/MURNv+j1Pa2UAb/
+         4GsbYraomxQfEzI2ukwScqUE+b/BYW8NEHh+8VV7nSTDhhngkPGRZnhL6CwjJkNcVNR4
+         Xx8hN7Nn69ELrgofPT53r6ZVGLZgrBmgX/txlDI62Nv4L5Dgo5OoBAl3kGz7MhUX7z+L
+         wXf4duLgz1o2TQnRPleurWjPVwVsBdb5B4LQH2sNHKQv/SCL7EtcOpwqva+NjdT/NFLy
+         H7KA==
+X-Forwarded-Encrypted: i=1; AJvYcCXl1nQXOiBleW+dkOpn38BV5jDIYX4p4E2fUsXB8V/4GXcVzotAc10X33VCpY/MKlsKV61HEsD9BQy/gKA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza2avoda76xc3xeYjc+5z3ht9pcKJtUmLHaotNCYQyr+aThIvM
+	cigaIZpPsd3gj/BntWaz/42GVFdwdnhLa8BqyxdSvjy2/i1MTDWKANhXLz9sd6U=
+X-Gm-Gg: ASbGnctHrazTM87M1LkPlq02cJF+Buk8PldnyTcuWIbSMX96N68R9sIfVMuFgfnT4lC
+	Aq5WY0EObvLCW4F8cp1xBlkQJo7B3r/arroYWAtyWh7pFn/0digFCY9w5FGybdEXI+jyDTkYf0V
+	JYSxUSNj+h11w9CcKqAYqdXiXLCC926Eix7PGuPi/NWivu/nSXO5P0UIoBS9c1Z7/n3wOMt1Jfl
+	jeurP7I69AXj+dc/PUjbw76AKIlgy9ZI9otAyJxBtKpD2iAw57728VZ2oJh4k2RTR7vy0KvgDM7
+	f+r+uQ071YgKrWVtHjXcd8lX0BRpxuW2yt3Pdrodl5Q8DdVdXFsHsLHnfD81AUcJOI6eOZ/VPOe
+	ghmxcjqhstykQ1ojejQ==
+X-Google-Smtp-Source: AGHT+IGLtpO6UhBgIcL3xiXd/cc2aOBHyXvNzemxDzdALjywytk8j9FQbKGayZ/TpFw4miZ9NDoJ+g==
+X-Received: by 2002:a05:6871:780d:b0:2d5:1232:b081 with SMTP id 586e51a60fabf-2dba44dcbfcmr49186fac.29.1746721449161;
+        Thu, 08 May 2025 09:24:09 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e? ([2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2dba06ff158sm122755fac.19.2025.05.08.09.24.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 09:24:08 -0700 (PDT)
+Message-ID: <3fdf8296-8839-4b44-8048-3720b0f45787@baylibre.com>
+Date: Thu, 8 May 2025 11:24:08 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3e91:b0:3d3:e287:3e7a with SMTP id
- e9e14a558f8ab-3da7e20d81bmr199475ab.19.1746721345324; Thu, 08 May 2025
- 09:22:25 -0700 (PDT)
-Date: Thu, 08 May 2025 09:22:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681cda41.050a0220.a19a9.0118.GAE@google.com>
-Subject: [syzbot] [nilfs?] possible deadlock in nilfs_segctor_construct
-From: syzbot <syzbot+81394db39b0e2ed2db06@syzkaller.appspotmail.com>
-To: konishi.ryusuke@gmail.com, linux-kernel@vger.kernel.org, 
-	linux-nilfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] iio: magnetometer: qmc5883l: add mount matrix,
+ control features and power management
+To: Brajesh Patil <brajeshpatil11@gmail.com>, jic23@kernel.org,
+ lars@metafoo.de
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ marcelo.schmitt1@gmail.com
+References: <20250508120900.114348-1-brajeshpatil11@gmail.com>
+ <20250508120900.114348-3-brajeshpatil11@gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250508120900.114348-3-brajeshpatil11@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 5/8/25 7:09 AM, Brajesh Patil wrote:
+> Signed-off-by: Brajesh Patil <brajeshpatil11@gmail.com>
+> ---
+>  drivers/iio/magnetometer/qmc5883l.c | 89 +++++++++++++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+> 
+> diff --git a/drivers/iio/magnetometer/qmc5883l.c b/drivers/iio/magnetometer/qmc5883l.c
+> index 07c65f193def..d26f959ab8c5 100644
+> --- a/drivers/iio/magnetometer/qmc5883l.c
+> +++ b/drivers/iio/magnetometer/qmc5883l.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/iio/trigger.h>
+>  #include <linux/iio/trigger_consumer.h>
+>  #include <linux/iio/triggered_buffer.h>
+> +#include <linux/pm.h>
+>  #include <linux/regmap.h>
+>  #include <linux/types.h>
+> 
+> @@ -54,6 +55,10 @@
+>  #define QMC5883L_OSR_MASK           0xC0
+>  #define QMC5883L_OSR_SHIFT          6
+> 
+> +#define QMC5883L_SOFT_RST           0x80
+> +#define QMC5883L_ROL_PNT            0x40
+> +#define QMC5883L_INT_ENB            0x01
+> +
+>  static const char *const qmc5883l_modes[] = {
+>  	"standby", "continuous"
+>  };
+> @@ -80,12 +85,14 @@ static const int qmc5883l_odr_map[] = {
+>   * @client: I2C client structure
+>   * @lock: mutex to protect register access
+>   * @regmap: register map of the device
+> + * @orientation: Sensor mounting orientation matrix
+>   * @scan: buffer for triggered data reading
+>   */
+>  struct qmc5883l_data {
+>  	struct i2c_client *client;
+>  	struct mutex lock; /* Protects sensor read/write operations */
+>  	struct regmap *regmap;
+> +	struct iio_mount_matrix orientation;
+> 
+>  	struct {
+>  		__le16 chans[3];
+> @@ -102,6 +109,9 @@ static ssize_t qmc5883l_show_scale_avail(struct device *dev,
+>  					 struct device_attribute *attr, char *buf);
+>  static ssize_t qmc5883l_show_status(struct device *dev,
+>  				    struct device_attribute *attr, char *buf);
+> +static ssize_t qmc5883l_store_control(struct device *dev,
+> +				      struct device_attribute *attr,
+> +				      const char *buf, size_t count);
+> 
+>  static int qmc5883l_buffer_preenable(struct iio_dev *indio_dev)
+>  {
+> @@ -357,6 +367,15 @@ static int qmc5883l_read_measurement(struct qmc5883l_data *data,
+>  	return IIO_VAL_INT;
+>  }
+> 
+> +static const struct iio_mount_matrix *
+> +qmc5883l_get_mount_matrix(const struct iio_dev *indio_dev,
+> +			  const struct iio_chan_spec *chan)
+> +{
+> +	struct qmc5883l_data *data = iio_priv(indio_dev);
+> +
+> +	return &data->orientation;
+> +}
+> +
+>  static const struct iio_enum qmc5883l_mode_enum = {
+>  	.items = qmc5883l_modes,
+>  	.num_items = ARRAY_SIZE(qmc5883l_modes),
+> @@ -376,6 +395,7 @@ static const struct iio_chan_spec_ext_info qmc5883l_ext_info[] = {
+>  	IIO_ENUM_AVAILABLE("mode", IIO_SHARED_BY_TYPE, &qmc5883l_mode_enum),
+>  	IIO_ENUM("oversampling_ratio", IIO_SHARED_BY_TYPE, &qmc5883l_osr_enum),
+>  	IIO_ENUM_AVAILABLE("oversampling_ratio", IIO_SHARED_BY_TYPE, &qmc5883l_osr_enum),
+> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, qmc5883l_get_mount_matrix),
+>  	{ }
+>  };
+> 
+> @@ -383,6 +403,8 @@ static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(qmc5883l_show_odr_avail);
+>  static IIO_DEVICE_ATTR(scale_available, 0444, qmc5883l_show_scale_avail, NULL, 0);
+>  static IIO_DEVICE_ATTR(data_ready, 0444, qmc5883l_show_status, NULL, 0);
+>  static IIO_DEVICE_ATTR(overflow, 0444, qmc5883l_show_status, NULL, 0);
+> +static IIO_DEVICE_ATTR(soft_reset, 0200, NULL, qmc5883l_store_control, 0);
+> +static IIO_DEVICE_ATTR(pointer_rollover, 0200, NULL, qmc5883l_store_control, 0);
 
-syzbot found the following issue on:
+More custom attribute that probably aren't needed or need some justification.
 
-HEAD commit:    e8ab83e34bdc Merge tag 'arm64-fixes' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=146e70f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a9a25b7a36123454
-dashboard link: https://syzkaller.appspot.com/bug?extid=81394db39b0e2ed2db06
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=148c9a70580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1530b8d4580000
+A reset is usually only done on driver probe. Not sure what pointer rollover is.
+> 
+>  static ssize_t qmc5883l_show_odr_avail(struct device *dev,
+>  				       struct device_attribute *attr, char *buf)
+> @@ -416,6 +438,44 @@ static ssize_t qmc5883l_show_status(struct device *dev,
+>  	return -EINVAL;
+>  }
+> 
+> +/* Control attribute writes:
+> + * - soft_reset: performs device reset and re-init
+> + * - pointer_rollover: enables/disables rollover pointer
+> + */
+> +static ssize_t qmc5883l_store_control(struct device *dev, struct device_attribute *attr,
+> +				      const char *buf, size_t count)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct qmc5883l_data *data = iio_priv(indio_dev);
+> +	bool val;
+> +	int ret = 0;
+> +
+> +	ret = kstrtobool(buf, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (attr == &iio_dev_attr_soft_reset.dev_attr && val) {
+> +		mutex_lock(&data->lock);
+> +		ret = regmap_write(data->regmap, QMC5883L_CONTROL_REG_2,
+> +				   QMC5883L_SOFT_RST);
+> +		mutex_unlock(&data->lock);
+> +		msleep(50);
+> +
+> +		ret = qmc5883l_init(data);
+> +		if (ret < 0) {
+> +			dev_err(&data->client->dev, "Sensor Reinitialization Failed\n");
+> +			return ret;
+> +		}
+> +		dev_info(&data->client->dev, "Sensor successfully reinitialized\n");
+> +	} else if (attr == &iio_dev_attr_pointer_rollover.dev_attr) {
+> +		mutex_lock(&data->lock);
+> +		ret = regmap_update_bits(data->regmap, QMC5883L_CONTROL_REG_2,
+> +					 QMC5883L_ROL_PNT, val ? QMC5883L_ROL_PNT : 0);
+> +		mutex_unlock(&data->lock);
+> +	}
+> +	return ret ? ret : count;
+> +}
+> +
+>  static int qmc5883l_read_raw(struct iio_dev *indio_dev,
+>  			     struct iio_chan_spec const *chan, int *val, int *val2, long mask)
+>  {
+> @@ -599,6 +659,8 @@ static struct attribute *qmc5883l_attributes[] = {
+>  	&iio_dev_attr_scale_available.dev_attr.attr,
+>  	&iio_dev_attr_data_ready.dev_attr.attr,
+>  	&iio_dev_attr_overflow.dev_attr.attr,
+> +	&iio_dev_attr_soft_reset.dev_attr.attr,
+> +	&iio_dev_attr_pointer_rollover.dev_attr.attr,
+>  	NULL
+>  };
+> 
+> @@ -659,6 +721,27 @@ static const struct iio_info qmc5883l_info = {
+> 
+>  static const unsigned long qmc5883l_scan_masks[] = {0x7, 0};
+> 
+> +static int qmc5883l_suspend(struct device *dev)
+> +{
+> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> +	struct qmc5883l_data *data = iio_priv(indio_dev);
+> +
+> +	return qmc5883l_set_mode(data, QMC5883L_MODE_STANDBY);
+> +}
+> +
+> +static int qmc5883l_resume(struct device *dev)
+> +{
+> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> +	struct qmc5883l_data *data = iio_priv(indio_dev);
+> +
+> +	return qmc5883l_set_mode(data, QMC5883L_MODE_CONT);
+> +}
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-e8ab83e3.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b26f15c51ac7/vmlinux-e8ab83e3.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/05e91bf788d8/bzImage-e8ab83e3.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/09efd3b532ea/mount_0.gz
+The driver is currently only seting CONT mode when reading data, so having
+this in the suspend/resume doesn't make sense to me.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+81394db39b0e2ed2db06@syzkaller.appspotmail.com
+> +
+> +static const struct dev_pm_ops qmc5883l_pm_ops = {
+> +	.suspend = qmc5883l_suspend,
+> +	.resume = qmc5883l_resume,
+> +};
+> +
+>  static int qmc5883l_probe(struct i2c_client *client)
+>  {
+>  	struct regmap *regmap;
+> @@ -683,6 +766,10 @@ static int qmc5883l_probe(struct i2c_client *client)
+>  	data->regmap = regmap;
+>  	mutex_init(&data->lock);
+> 
+> +	ret = iio_read_mount_matrix(&client->dev, &data->orientation);
+> +	if (ret)
+> +		dev_warn(&client->dev, "Failed to read mount matrix: %d\n", ret);
+> +
+>  	indio_dev->name = "qmc5883l";
+>  	indio_dev->info = &qmc5883l_info;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+> @@ -693,6 +780,7 @@ static int qmc5883l_probe(struct i2c_client *client)
+>  	ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev,
+>  					      NULL, &qmc5883l_trigger_handler,
+>  					      &qmc5883l_buffer_setup_ops);
+> +
+>  	if (ret < 0) {
+>  		dev_err(&client->dev, "Failed to setup triggered buffer: %d\n", ret);
+>  		return ret;
+> @@ -730,6 +818,7 @@ static struct i2c_driver qmc5883l_driver = {
+>  	.driver = {
+>  		.name = "qmc5883l",
+>  		.of_match_table = qmc5883l_of_match,
+> +		.pm = pm_sleep_ptr(&qmc5883l_pm_ops),
+>  	},
+>  	.id_table = qmc5883l_id,
+>  	.probe = qmc5883l_probe,
+> --
+> 2.39.5
+> 
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-rc4-syzkaller-00296-ge8ab83e34bdc #0 Not tainted
-------------------------------------------------------
-segctord/5299 is trying to acquire lock:
-ffff88801189e090 (&nilfs->ns_sem){++++}-{4:4}, at: nilfs_segctor_construct+0x2b1/0x690 fs/nilfs2/segment.c:2485
-
-but task is already holding lock:
-ffff88801189e2a0 (&nilfs->ns_segctor_sem){++++}-{4:4}, at: nilfs_transaction_lock+0x253/0x4c0 fs/nilfs2/segment.c:357
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #5 (&nilfs->ns_segctor_sem){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       down_read+0x46/0x2e0 kernel/locking/rwsem.c:1524
-       nilfs_transaction_begin+0x365/0x710 fs/nilfs2/segment.c:221
-       nilfs_create+0xc9/0x2f0 fs/nilfs2/namei.c:95
-       lookup_open fs/namei.c:3701 [inline]
-       open_last_lookups fs/namei.c:3800 [inline]
-       path_openat+0x14f1/0x3830 fs/namei.c:4036
-       do_filp_open+0x1fa/0x410 fs/namei.c:4066
-       do_sys_openat2+0x121/0x1c0 fs/open.c:1429
-       do_sys_open fs/open.c:1444 [inline]
-       __do_sys_openat fs/open.c:1460 [inline]
-       __se_sys_openat fs/open.c:1455 [inline]
-       __x64_sys_openat+0x138/0x170 fs/open.c:1455
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #4 (sb_internal#2){.+.+}-{0:0}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
-       __sb_start_write include/linux/fs.h:1783 [inline]
-       sb_start_intwrite include/linux/fs.h:1966 [inline]
-       nilfs_transaction_begin+0x268/0x710 fs/nilfs2/segment.c:218
-       nilfs_page_mkwrite+0x8b0/0xc20 fs/nilfs2/file.c:95
-       do_page_mkwrite+0x14a/0x310 mm/memory.c:3287
-       do_shared_fault mm/memory.c:5594 [inline]
-       do_fault mm/memory.c:5656 [inline]
-       do_pte_missing mm/memory.c:4160 [inline]
-       handle_pte_fault mm/memory.c:5997 [inline]
-       __handle_mm_fault+0x18d2/0x5380 mm/memory.c:6140
-       handle_mm_fault+0x3f6/0x8c0 mm/memory.c:6309
-       do_user_addr_fault+0x764/0x1390 arch/x86/mm/fault.c:1388
-       handle_page_fault arch/x86/mm/fault.c:1480 [inline]
-       exc_page_fault+0x68/0x110 arch/x86/mm/fault.c:1538
-       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-
--> #3 (sb_pagefaults){.+.+}-{0:0}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
-       __sb_start_write include/linux/fs.h:1783 [inline]
-       sb_start_pagefault include/linux/fs.h:1948 [inline]
-       nilfs_page_mkwrite+0x21e/0xc20 fs/nilfs2/file.c:57
-       do_page_mkwrite+0x14a/0x310 mm/memory.c:3287
-       do_shared_fault mm/memory.c:5594 [inline]
-       do_fault mm/memory.c:5656 [inline]
-       do_pte_missing mm/memory.c:4160 [inline]
-       handle_pte_fault mm/memory.c:5997 [inline]
-       __handle_mm_fault+0x18d2/0x5380 mm/memory.c:6140
-       handle_mm_fault+0x3f6/0x8c0 mm/memory.c:6309
-       do_user_addr_fault+0x764/0x1390 arch/x86/mm/fault.c:1388
-       handle_page_fault arch/x86/mm/fault.c:1480 [inline]
-       exc_page_fault+0x68/0x110 arch/x86/mm/fault.c:1538
-       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-
--> #2 (&mm->mmap_lock){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       __might_fault+0xcc/0x130 mm/memory.c:7151
-       _copy_to_iter+0xf3/0x15a0 lib/iov_iter.c:184
-       copy_page_to_iter+0xa7/0x150 lib/iov_iter.c:362
-       copy_folio_to_iter include/linux/uio.h:198 [inline]
-       filemap_read+0x78d/0x11d0 mm/filemap.c:2753
-       blkdev_read_iter+0x30a/0x440 block/fops.c:809
-       new_sync_read fs/read_write.c:489 [inline]
-       vfs_read+0x4cd/0x980 fs/read_write.c:570
-       ksys_read+0x145/0x250 fs/read_write.c:713
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (&sb->s_type->i_mutex_key#8){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
-       inode_lock include/linux/fs.h:867 [inline]
-       set_blocksize+0x23b/0x500 block/bdev.c:203
-       sb_set_blocksize block/bdev.c:224 [inline]
-       sb_min_blocksize+0x119/0x210 block/bdev.c:239
-       init_nilfs+0x43/0x690 fs/nilfs2/the_nilfs.c:710
-       nilfs_fill_super+0x8f/0x650 fs/nilfs2/super.c:1060
-       nilfs_get_tree+0x4f4/0x870 fs/nilfs2/super.c:1228
-       vfs_get_tree+0x8f/0x2b0 fs/super.c:1759
-       do_new_mount+0x24a/0xa40 fs/namespace.c:3884
-       do_mount fs/namespace.c:4224 [inline]
-       __do_sys_mount fs/namespace.c:4435 [inline]
-       __se_sys_mount+0x317/0x410 fs/namespace.c:4412
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&nilfs->ns_sem){++++}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3909
-       __lock_acquire+0xaac/0xd20 kernel/locking/lockdep.c:5235
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
-       nilfs_segctor_construct+0x2b1/0x690 fs/nilfs2/segment.c:2485
-       nilfs_segctor_thread_construct fs/nilfs2/segment.c:2586 [inline]
-       nilfs_segctor_thread+0x6f7/0xe00 fs/nilfs2/segment.c:2700
-       kthread+0x70e/0x8a0 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-other info that might help us debug this:
-
-Chain exists of:
-  &nilfs->ns_sem --> sb_internal#2 --> &nilfs->ns_segctor_sem
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&nilfs->ns_segctor_sem);
-                               lock(sb_internal#2);
-                               lock(&nilfs->ns_segctor_sem);
-  lock(&nilfs->ns_sem);
-
- *** DEADLOCK ***
-
-1 lock held by segctord/5299:
- #0: ffff88801189e2a0 (&nilfs->ns_segctor_sem){++++}-{4:4}, at: nilfs_transaction_lock+0x253/0x4c0 fs/nilfs2/segment.c:357
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 5299 Comm: segctord Not tainted 6.15.0-rc4-syzkaller-00296-ge8ab83e34bdc #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2079
- check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3909
- __lock_acquire+0xaac/0xd20 kernel/locking/lockdep.c:5235
- lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
- down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
- nilfs_segctor_construct+0x2b1/0x690 fs/nilfs2/segment.c:2485
- nilfs_segctor_thread_construct fs/nilfs2/segment.c:2586 [inline]
- nilfs_segctor_thread+0x6f7/0xe00 fs/nilfs2/segment.c:2700
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
