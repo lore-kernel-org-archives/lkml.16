@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD871946A0;
-	Thu,  8 May 2025 17:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11CD2868BD;
+	Thu,  8 May 2025 17:27:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746725235; cv=none; b=Lk52b/EmgozI0n4XAleAe62LJc2CT/GtR95vxfjPp0RIpMSFtLfkyq90/UE049oXRCn7KF+es14xCTVhR8MME17YK3jIeBzdPnSDo6ezsmb0LSQaB7LB808++mm1hEMj9ruM8UBaImvx8cDf9BWnk/syEZkTRP8KXcUG6lCb68Q=
+	t=1746725237; cv=none; b=XJH7jhGNERstY0BKI41G24weV3G4tTRWUjMkAu3G3pJFgrSYAP3D1r5XUKIpC4nXrqvNBFcK+tgzXzgRzrg5IA0fwzR/c9Wm8vXXXaKZF6J437Jv2FF4/kPZ1cDdQAPLa7IQB55m0REKvZOx2EGpWdXxZiqI1n9mVjgcijzTcio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746725235; c=relaxed/simple;
-	bh=SQ44V2APk/bmlGRXlW3QfAfco3cL+4TDZ5i2BW2XiYY=;
+	s=arc-20240116; t=1746725237; c=relaxed/simple;
+	bh=TUjYufyEWAdhKNy6b5AnC63HGaQKiq+g1O16VYOpcLo=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=UgEQoizKNADwUM+hWNHiQLW4L5xKcGn1NOTqEhgNMP66HPJFI7pJPL4ToAD5FU37yBvueu4E/SuoORUeROmte9S0lCfrmcSw6e29w49mCs7FDD0yx7apTaXEVor97zOmVpM7Y1inVNmAalsz38x+JdJ6cdLuLI55B+cWVTCl1XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V2wt787r; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xtrCfbMU; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=pqrOlymbwb7XC8eHItjLoAhkYeSl6fgqUIEY0tBBhKGcLvZKpaKWhSvn/YzEjbgadCXizKswDOrTJrPVMO6ubQoLEZLkFhvgWHJcx2uH9SYMZ/Ck//Ee0210h/8AMWUx5PSSucwnjv4ezgaUjNEFIcOCKGq+ktCy+OA2D/0OxE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NwrKRFF6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uUKz3d07; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V2wt787r";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xtrCfbMU"
-Date: Thu, 08 May 2025 17:27:11 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NwrKRFF6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uUKz3d07"
+Date: Thu, 08 May 2025 17:27:12 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746725232;
+	s=2020; t=1746725233;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xfgmd7doSirp7FkJrQShwwczyzq2S2/iruioMOwrrxc=;
-	b=V2wt787raiHEqfoJefyAZDBzSbXg6xLtaXj+l1a6+of3EQG4PWeJ+U0LKdvulPrr8+5lZF
-	zA0wR4ZGnBUDRvdAwxk5k4Z5G40y1SZs1ZYgR5yUpx7pZQSxrB/KoSyQwLJc/O/Jhqh329
-	HmcEr4KK8tjCFc45Cb+FjRg3qkirPCUBOYIeigNeYdM/obzD6ZYDbI13tiIF7xzRIN4FH/
-	1ojdrRdWpqBaQ6FQmJhlVU/PYFpx1NlSgqhkk0zs1cnxfO9XImrXUBexECkPUwgnG4bNFm
-	JaOlWLL3pR9/31yQdm02LZEC0XD9ci6YPr+578KBSm2mNw1JULgW8ovHs5YpTw==
+	bh=jKAGGt1lCm2MoAITZlPlJwdFQyhFqCx8JhU7gXHohj0=;
+	b=NwrKRFF6Ml0bs7GylkJSTd/Zx/FfproHqFBvJu6JDXjGUrTcLkj6R/MA2vnjRjDtG6V579
+	QSKNdb1t01pJrLOW/51ot7d3hEdsj/xDfiEf2qFi6iwXs/dc8aITAIZxIi8nI7X0n93fQs
+	X8q64ETVmKwvuRjpJLpJM7u5GAR5cwDTl83VfMicOtszurAiSjmnU2puTmaFWnTU5C9tNE
+	H5Jb3r6JbUyapFnJzHu7AY9wuCJ1ipFy+xSWtsSwttvt3RhkPL0P3i0wSMpxnYt1Js0l7u
+	i4hVXfuhnn+6+HHOLpvR8GAh6JbOpNB0/HTxFqK5bt6OtBX4A6TGXgjpmtlLBg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746725232;
+	s=2020e; t=1746725233;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xfgmd7doSirp7FkJrQShwwczyzq2S2/iruioMOwrrxc=;
-	b=xtrCfbMUYzkxPNdr2zIZXRY7dwEIkqRJfhNp01fYGIxbwuCEL7bJmYeijjEsRMnhAN4JE2
-	STXRlK1L6tD9tCBA==
+	bh=jKAGGt1lCm2MoAITZlPlJwdFQyhFqCx8JhU7gXHohj0=;
+	b=uUKz3d07uVE9CPsR2SEcVfPbfzV0mpe2oEK6uMZaHGZuH5kapYUYQM1u4VN+LJVXUAkuqQ
+	m6FrXMklwZx0ftCA==
 From: "tip-bot2 for Frank Li" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/msi] irqdomain: Add IRQ_DOMAIN_FLAG_MSI_IMMUTABLE and
- irq_domain_is_msi_immutable()
+Subject: [tip: irq/msi] platform-msi: Add msi_remove_device_irq_domain() in
+ platform_device_msi_free_irqs_all()
 Cc: Frank Li <Frank.Li@nxp.com>, Thomas Gleixner <tglx@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250414-ep-msi-v18-2-f69b49917464@nxp.com>
-References: <20250414-ep-msi-v18-2-f69b49917464@nxp.com>
+ Marc Zyngier <maz@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250414-ep-msi-v18-1-f69b49917464@nxp.com>
+References: <20250414-ep-msi-v18-1-f69b49917464@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174672523199.406.14075204124200521213.tip-bot2@tip-bot2>
+Message-ID: <174672523272.406.13475096235281643458.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,53 +67,46 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/msi branch of tip:
 
-Commit-ID:     b8c7bfb7a0f01521297d688ca5fe1482c81e8910
-Gitweb:        https://git.kernel.org/tip/b8c7bfb7a0f01521297d688ca5fe1482c81e8910
+Commit-ID:     9a958e1fd40d6fae8c66385687a00ebd9575a7d2
+Gitweb:        https://git.kernel.org/tip/9a958e1fd40d6fae8c66385687a00ebd9575a7d2
 Author:        Frank Li <Frank.Li@nxp.com>
-AuthorDate:    Mon, 14 Apr 2025 14:30:56 -04:00
+AuthorDate:    Mon, 14 Apr 2025 14:30:55 -04:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 07 May 2025 17:49:00 +02:00
 
-irqdomain: Add IRQ_DOMAIN_FLAG_MSI_IMMUTABLE and irq_domain_is_msi_immutable()
+platform-msi: Add msi_remove_device_irq_domain() in platform_device_msi_free_irqs_all()
 
-Add the flag IRQ_DOMAIN_FLAG_MSI_IMMUTABLE and the API function
-irq_domain_is_msi_immutable() to check if the MSI controller retains an
-immutable address/data pair during irq_set_affinity().
+platform_device_msi_init_and_alloc_irqs() performs two tasks: allocating
+the MSI domain for a platform device, and allocate a number of MSIs in that
+domain.
 
-Ensure compatibility with MSI users like PCIe Endpoint Doorbell, which
-require the address/data pair to remain unchanged after setup. Use this
-function to verify if the MSI controller is immutable.
+platform_device_msi_free_irqs_all() only frees the MSIs, and leaves the MSI
+domain alive.
+
+Given that platform_device_msi_init_and_alloc_irqs() is the sole tool a
+platform device has to allocate platform MSIs, it makes sense for
+platform_device_msi_free_irqs_all() to teardown the MSI domain at the same
+time as the MSIs.
+
+This avoids warnings and unexpected behaviours when a driver repeatedly
+allocates and frees MSIs.
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250414-ep-msi-v18-2-f69b49917464@nxp.com
-
+Acked-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/all/20250414-ep-msi-v18-1-f69b49917464@nxp.com
 ---
- include/linux/irqdomain.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/base/platform-msi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index bb71111..bccfff5 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -231,6 +231,9 @@ enum {
- 	/* Irq domain must destroy generic chips when removed */
- 	IRQ_DOMAIN_FLAG_DESTROY_GC	= (1 << 10),
- 
-+	/* Address and data pair is mutable when irq_set_affinity() */
-+	IRQ_DOMAIN_FLAG_MSI_IMMUTABLE	= (1 << 11),
-+
- 	/*
- 	 * Flags starting from IRQ_DOMAIN_FLAG_NONCORE are reserved
- 	 * for implementation specific purposes and ignored by the
-@@ -691,6 +694,10 @@ static inline bool irq_domain_is_msi_device(struct irq_domain *domain)
- 	return domain->flags & IRQ_DOMAIN_FLAG_MSI_DEVICE;
+diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
+index 0e60dd6..70db08f 100644
+--- a/drivers/base/platform-msi.c
++++ b/drivers/base/platform-msi.c
+@@ -95,5 +95,6 @@ EXPORT_SYMBOL_GPL(platform_device_msi_init_and_alloc_irqs);
+ void platform_device_msi_free_irqs_all(struct device *dev)
+ {
+ 	msi_domain_free_irqs_all(dev, MSI_DEFAULT_DOMAIN);
++	msi_remove_device_irq_domain(dev, MSI_DEFAULT_DOMAIN);
  }
- 
-+static inline bool irq_domain_is_msi_immutable(struct irq_domain *domain)
-+{
-+	return domain->flags & IRQ_DOMAIN_FLAG_MSI_IMMUTABLE;
-+}
- #else	/* CONFIG_IRQ_DOMAIN_HIERARCHY */
- static inline int irq_domain_alloc_irqs(struct irq_domain *domain,
- 			unsigned int nr_irqs, int node, void *arg)
+ EXPORT_SYMBOL_GPL(platform_device_msi_free_irqs_all);
