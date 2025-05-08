@@ -1,93 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B03270ED0;
-	Thu,  8 May 2025 16:29:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94A22836A7;
+	Thu,  8 May 2025 16:29:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746721792; cv=none; b=SNwGms7Bi8sytDRBYV/VE7ndufp4vx/W2JPWo79cld4pENeT+WELmGVxB8eivujrgTAG6rakAsaMmZIUJdg7PP6QeD7h/clE6Jvp5JHcbmYwBYrbzmim3FARensyJsUHgbuGMMZnKEUItZ7VYl6fz2ps9vyEgqsaP8DWABGCd2k=
+	t=1746721794; cv=none; b=dy6p1Ae4r7A5xV9Gcrpkgm7+sxnTkZ9qsjz6lz53kTL/IYbFCC+QSYerUdSIKGUqn0I1Wx2mAypXbxPane9x9H2mBsSqn5AWMYrScBDm1ediw5GjXbEPkVCg87luSYuIx0B+7+s+/qsyB8WBuOW0X+GRrcwSyAmDAaFGrGCQdhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746721792; c=relaxed/simple;
-	bh=c05nwsF/Xsj3ZZ0udY2Gc5dtMsXMs8vJzGIq6HHgV7o=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=YWiOMHM2bRqWvgtwt/yrMKHR5fFKzrV3i4FQrgX1b7bODoPgK3bmT4/8rz8+JkDAV9acYxyc2eLRZFi337k5zyjuIcT+xeCSWiDATplKMjhKz5qreMo1hzswXNiGZiEuKAG1sH4eFob0WpGBY+N0RlZSsdtZsXJXWx4cOEPLLaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GKhuGYf1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746721794; c=relaxed/simple;
+	bh=td0/W1n9aOEtk0epnkPwUaZiByTowJBXnpm1ysKQLbM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GM09O/JQl1vd0ne40J8HJ1yrHSh2CDjlSNtYWWYFWHArbJeVZ3BcocfF4TyZdJGCUZ2bpitvWwt+AU+QggDJOmchnumsaRhvPDxvKyIX63T7z159eY6cIKsMqMnV9sLT4Vu3P3nzVBtnMyTJGg+c5YYrEx2be8fPixT5G+PyfcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H8yVftdY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GKhuGYf1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9057BC4CEE7;
-	Thu,  8 May 2025 16:29:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H8yVftdY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 575D7C4CEEB;
+	Thu,  8 May 2025 16:29:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746721791;
-	bh=c05nwsF/Xsj3ZZ0udY2Gc5dtMsXMs8vJzGIq6HHgV7o=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=GKhuGYf1nw/QHswWp155Zar4n0RUfca1/0d160veT51Bc0tnKmcOitaBDKdMt8k8d
-	 EXGdTkOugUgON7hRkQLqdFfPhOCWn26q8kBcHVdnMCYphP+Pu1niHNjT5eF28hBG53
-	 jCpEIXiPLvcp104roIEFnMQ/dtrK/bzzXTweT/s3PkL6mlFmL4uBQ3Ix1ILrDgTdWL
-	 Ak7eVihTMyLa8OlczX74d3rKdAN/fsL7VHKkzgC9xo+Mc+fUdMATqChBQcrbdwRs5H
-	 FIlFs6k/IH6gM0JqSXDCNKpholTu6CrRs6b4+PDN07eacUgnAeEu+f21N+gl8CsTOc
-	 s7IBciTEmxKnw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7118D380AA70;
-	Thu,  8 May 2025 16:30:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1746721793;
+	bh=td0/W1n9aOEtk0epnkPwUaZiByTowJBXnpm1ysKQLbM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H8yVftdYn0Keq8UVjV3B31mLlJzlC/VdjbYSrnPZgX9bB5sLHwM3uJAM+wusIR2R7
+	 N8FHP7zm0LXVWL2BTs+spGkZRHcuAi9E9me72T90cxkcvlD/6UhrvwivbYiVVNEnj6
+	 cbaJRk89RE+6FBBXvhlMNQxep0axJwkaa3vowHzGLQBe7wiYIf5D3/ABf8MC2CGeqK
+	 FTOR3/Ij3Kb13VxjqNs/0sWcy8zacL5fyfcUkmGMs1Z071OpPUTv7kblhdnLmW+/k4
+	 KumLLr3FRRu8uIiXlxGzhgCjt1vw2dmSeccMukJ3XRp1pNQjBP/wM5Mvfz02oaaWCP
+	 1WAXwqdFmj5hQ==
+Date: Thu, 8 May 2025 09:29:50 -0700
+From: Kees Cook <kees@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Mostafa Saleh <smostafa@google.com>, kvmarm@lists.linux.dev,
+	kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, will@kernel.org,
+	oliver.upton@linux.dev, broonie@kernel.org, catalin.marinas@arm.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	elver@google.com, andreyknvl@gmail.com, ryabinin.a.a@gmail.com,
+	akpm@linux-foundation.org, yuzenghui@huawei.com,
+	suzuki.poulose@arm.com, joey.gouly@arm.com, masahiroy@kernel.org,
+	nathan@kernel.org, nicolas.schier@linux.dev
+Subject: Re: [PATCH v2 0/4] KVM: arm64: UBSAN at EL2
+Message-ID: <202505080929.95B2310@keescook>
+References: <20250430162713.1997569-1-smostafa@google.com>
+ <202504301131.3C1CBCA8@keescook>
+ <868qn8hfnp.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH 1/6] f2fs: fix to return correct error number in
- f2fs_sync_node_pages()
-From: patchwork-bot+f2fs@kernel.org
-Message-Id: 
- <174672183025.2971823.13421016836031371111.git-patchwork-notify@kernel.org>
-Date: Thu, 08 May 2025 16:30:30 +0000
-References: <20250508051520.4169795-2-hch@lst.de>
-In-Reply-To: <20250508051520.4169795-2-hch@lst.de>
-To: Christoph Hellwig <hch@lst.de>
-Cc: jaegeuk@kernel.org, chao@kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <868qn8hfnp.wl-maz@kernel.org>
 
-Hello:
-
-This series was applied to jaegeuk/f2fs.git (dev)
-by Jaegeuk Kim <jaegeuk@kernel.org>:
-
-On Thu,  8 May 2025 07:14:27 +0200 you wrote:
-> From: Chao Yu <chao@kernel.org>
+On Wed, May 07, 2025 at 11:35:38AM +0100, Marc Zyngier wrote:
+> On Wed, 30 Apr 2025 19:32:23 +0100,
+> Kees Cook <kees@kernel.org> wrote:
+> > 
+> > On Wed, Apr 30, 2025 at 04:27:07PM +0000, Mostafa Saleh wrote:
+> > > Many of the sanitizers the kernel supports are disabled when running
+> > > in EL2 with nvhe/hvhe/proctected modes, some of those are easier
+> > > (and makes more sense) to integrate than others.
+> > > Last year, kCFI support was added in [1]
+> > > 
+> > > This patchset adds support for UBSAN in EL2.
+> > 
+> > This touches both UBSAN and arm64 -- I'm happy to land this via the
+> > hardening tree, but I expect the arm64 folks would rather take it via
+> > their tree. What would people like to have happen?
 > 
-> If __write_node_folio() failed, it will return AOP_WRITEPAGE_ACTIVATE,
-> the incorrect return value may be passed to userspace in below path,
-> fix it.
-> 
-> - sync_filesystem
->  - sync_fs
->   - f2fs_issue_checkpoint
->    - block_operations
->     - f2fs_sync_node_pages
->      - __write_node_folio
->      : return AOP_WRITEPAGE_ACTIVATE
-> 
-> [...]
+> FWIW, I have now taken this in kvmarm/next. A stable branch is
+> available at [1] for anyone to pull and resolve potential conflicts.
 
-Here is the summary with links:
-  - [f2fs-dev,1/6] f2fs: fix to return correct error number in f2fs_sync_node_pages()
-    https://git.kernel.org/jaegeuk/f2fs/c/43ba56a043b1
-  - [f2fs-dev,2/6] f2fs: return bool from __f2fs_write_meta_folio
-    https://git.kernel.org/jaegeuk/f2fs/c/39122e454419
-  - [f2fs-dev,3/6] f2fs: remove wbc->for_reclaim handling
-    https://git.kernel.org/jaegeuk/f2fs/c/402dd9f02ce4
-  - [f2fs-dev,4/6] f2fs: always unlock the page in f2fs_write_single_data_page
-    https://git.kernel.org/jaegeuk/f2fs/c/84c5d16711a3
-  - [f2fs-dev,5/6] f2fs: simplify return value handling in f2fs_fsync_node_pages
-    https://git.kernel.org/jaegeuk/f2fs/c/0638f28b3062
-  - [f2fs-dev,6/6] f2fs: return bool from __write_node_folio
-    https://git.kernel.org/jaegeuk/f2fs/c/80f31d2a7e5f
+Thanks!
 
-You are awesome, thank you!
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Kees Cook
