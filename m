@@ -1,152 +1,421 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9BE224882;
-	Thu,  8 May 2025 21:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA1924B28;
+	Thu,  8 May 2025 21:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746741266; cv=none; b=hGq1eNa8N6whQyf3xJF52oX21ZgYpSAZrA+/9RhxLYREVMPmno8Y8atBOUsfvCsUhZMAwP189HzxmzrFbZ1q9A6afqBPTI5KnyjFGA7yvRLjlkVbcnbVgivmWVXKofsWZJPQRfx7b3q19MbnT4Jxou+WrfcJnyl6Q25rcpV8lN8=
+	t=1746741485; cv=none; b=azNTR3y46iFvoCUVJtsnaEe7ZUSGdVPZCzbqaVgW3/GdxTavywCZ6Jpks4kI0hBtXmYVviLJFSw+ru8pagJLX4citk8Eme6vGfbxB9xchZcUHQEA2dga4Xi3WJe8HSG2RISeQaZwVuNHyrbG/XmyKfAwpUOkC4SuGlsu2MJlNNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746741266; c=relaxed/simple;
-	bh=zJAUDzhYWvqbLPmA0RiivyQSrmMiJPd04BPkKPjCIeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=duXcya3KorR8I7eXDV2jM7bDwyeR8Q98i6Cn0gc/AN6rvZZbBtnAUEdS4zAgY2nEW+amHFFQLzIH5CIVtrfxVi0paMvD1iJ7kSOiCuQ8W95lq+1R3fb4w3N8i7e2nYyfrUWlg/CRWMvEjkpP3O0wFW0diVkkaUFNLK/gyyj8Kpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QO++S96+; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746741485; c=relaxed/simple;
+	bh=4ozDT+SIIppBBtE/cACq0eOwl/6yqGdREzqAhx3tdJ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GYa81mvTPfgPZvH7/U9S+W6Z69lhx5jrq0DFDmY4qISIrSQYeiQyzMXNYZhVCYcyFvDJbuKFVuIIeYLJzCkJdIxznUPkwmv+JVpVSMB5jwj1yiFl7andbrxSHVofzBAqtUzzJY4vkTG9rhJyZu8zzrEaUSE1XSmlVRz0yP8Va5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gHJsfWaz; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QO++S96+"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43ede096d73so10415665e9.2;
-        Thu, 08 May 2025 14:54:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746741263; x=1747346063; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1nl5alJXZeEkOwentFRexqwkaWt/M+lbSbiqiz+7S6w=;
-        b=QO++S96+CcbwYudfXaH1S4QBi51UryDCV28Jm7xE6GmE4GP/f5uAPROfE5F/U/ZQUr
-         BTTJu6IqEnjoEuhVHfwz51iykGgubFgRA+Em3qKMdGFJjhmZNWU8pPmCQlqFD9i0Msjw
-         k+cdgpaPgB7C3D+IQNqgKCRksKRfqy0S718Nw29EO/1aKpJnVTm9OAFpJwmliBGyYaCE
-         kw2Pd3CDBL0X8M7AQcPO1Ot1V6/AaHcboAVwOpKZIa/M1d2rMz1crUfL9I7mFUrShe8V
-         mlsp6OolJDypYIJS/CDt45UsPKDZkvxqjRbj3UwLOgE2YvgoYa1rgUpJ8wZyC1ia8BcL
-         Dyxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746741263; x=1747346063;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1nl5alJXZeEkOwentFRexqwkaWt/M+lbSbiqiz+7S6w=;
-        b=C4uGjTnwEZYUap3cbDJW8qDtdDkwB46f+YDh0ApxB9S4Mh1PPazsd4xF8SDf01Bp7S
-         F7pOfDCY0gwbajn9SUGr3osi1mOuUBb8wkMjmOlueAOJKDffcMYI1BgQTlxbzoJWKU3t
-         QjgX6ZnpzK1CXRIMSR3COErH+CFoHOqMQlCyzO+BBIF+Frabd4i5M6vfUPCgcpbB+CGS
-         b2E3pge9OEJ9WITFfa6k1uUwwrFjfEEpHTdR1pjB2KWmuXk/IyNO1RxHcR5WX2RZTTpT
-         pkyLeAuzYRUJt9Mq5nDv2Xker1DnAVj6b7ZjIEpzHnYakJb1xc4tdet8F7WlC97Kx2oH
-         3rew==
-X-Forwarded-Encrypted: i=1; AJvYcCW0ZJNjo7DzsP6pWQx96XhUoQt8Us8X1TdXKA36f1vpjVkrhlBIe1RmRcg5mGRbfLPHPWLSuaObj3VNLSw=@vger.kernel.org, AJvYcCWJZn8QxFJDGKx/u/LU6vmJAB59/WI8Z2pg0esyKw5V2TXWshr855D5T44iGKnrhdFmc2XmvszeHawhrfc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxH2TmNlr8k9Qg6YZ4jDAvYclw/gQxKAG+/P9/NIuCGSJO7wJLz
-	X8zT9RSdcmx30771u8XvXUaQLEpCnYiM5yq2Cger29oNp6zEfpf2IMOmEg==
-X-Gm-Gg: ASbGncuSqc5i9OKBBd5ERwhk8rwy+3+5jxv+JT58pwo7bb4U73csaYmbHzVZqdvfO/q
-	FmBX7e+8UcTqtWLJmnOZCJt9uQfj9NJkCOYdAs14qVI4TBEw/1NTf5vdssHzXiAjMmpGUk9VEEl
-	8amcBwwNMaJ0guf1fkMIRAy0loHaUgtWKqjZul56UuVXfJsnWX5Iv/DgcsfUaGiTo8mRtEUDnXL
-	s0VF+T46xNux8kHEiz68/rSM1HOqnkYrxn6McRmfHgJ8m6Y/TwcyPec3eLbM97xgO8XlyaD6YHN
-	GJoBDq1QCopSZDEikpF/n29XGY6a9jAo0g+g++9m2s0Iraqm2lOw5LAncZxlP9zFhnFNYLPkFeY
-	ORZni/DNSFWEusNN/eyVQ4Qgv1128nl7tRM1TPQ==
-X-Google-Smtp-Source: AGHT+IE5i1ET0boq8mdS5lV60YxGe1tCFavZZYDoBfU4C87dLQnm9YecESXQC1vuwbPJO61Ms+G+4w==
-X-Received: by 2002:a05:600c:608b:b0:43e:afca:808f with SMTP id 5b1f17b1804b1-442d6ddd61emr8812085e9.31.1746741262429;
-        Thu, 08 May 2025 14:54:22 -0700 (PDT)
-Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d14e6d74sm41050385e9.21.2025.05.08.14.54.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 14:54:21 -0700 (PDT)
-Date: Thu, 8 May 2025 23:54:19 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Henry Martin <bsdhenrymartin@gmail.com>
-Cc: jassisinghbrar@gmail.com, jonathanh@nvidia.com, 
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v1] mailbox: tegra-hsp: Fix null-ptr-deref in
- tegra_hsp_doorbell_create()
-Message-ID: <s65c46x3a3jltt3nfnuop6oehsrduw6g6bdacbcugrbsy3fsdi@65xyv23uxuqd>
-References: <20250402144115.45564-1-bsdhenrymartin@gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gHJsfWaz"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548DANSQ009407;
+	Thu, 8 May 2025 21:57:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	H/c5wCC4PrD7yepboyL8e/nVX96kBpmeUZLIKejenvw=; b=gHJsfWazSTBVC9So
+	XXTN/CX9hKe3AJTFywel/GQf2r/nnmGoNTfOb1zDmvUzO4VmaLA38qUJOYhXEtrf
+	xeTaIRzToWkDVwsteOKH51vnUpokd6J1CwWu7UrU7HWvYOxptr7SUpPJ2qAmwyNu
+	uZidNX/DVdQdD8Z4uqOZW6FVTgGsK+XBIYFJ74L9P6XrD+eIglll0ZCXs0JyGavP
+	zIHsK+uYHnl5QSVusCeeRf/nRjMMjnobK4En4dHskJKFAxbdSnM2HdMn7/50NzCp
+	TO9liEJw71aXfn2zvphZIZFpXcuXTj5ev2oM+ivOP1rw4k0PyNuGUjee6S3362Nz
+	q+8dHA==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnpetkm4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 21:57:43 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 548LvgYE018928
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 8 May 2025 21:57:42 GMT
+Received: from [10.71.109.79] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
+ 14:57:41 -0700
+Message-ID: <0e87c261-08f9-4a4a-9916-0487a6dbc737@quicinc.com>
+Date: Thu, 8 May 2025 14:57:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yzwrgeq57o5b5zij"
-Content-Disposition: inline
-In-Reply-To: <20250402144115.45564-1-bsdhenrymartin@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] drm/panel: visionox-rm69299: support the variant
+ found in the SHIFT6mq
+To: <neil.armstrong@linaro.org>, David Airlie <airlied@gmail.com>,
+        "Simona
+ Vetter" <simona@ffwll.ch>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>
+CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Casey Connolly <casey.connolly@linaro.org>,
+        Caleb Connolly <caleb@connolly.tech>
+References: <20250507-topic-misc-shift6-panel-v1-0-64e8e98ff285@linaro.org>
+ <20250507-topic-misc-shift6-panel-v1-2-64e8e98ff285@linaro.org>
+Content-Language: en-US
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20250507-topic-misc-shift6-panel-v1-2-64e8e98ff285@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE5OSBTYWx0ZWRfX1qo6NbDvhgTe
+ plEFjl75U5frDWFk6ByLNwBExKfM2WpsSRdjnBQQAHxDfYDk5prvrL3LPyRxmUcKkIYn9o4eJyz
+ XL4Umd3GxU+0cZA/6PCi3oRMi8Nc0O4HEN7ygINM/8h9CetH7XIede+ttUPM5gBwJoJJvJhngnE
+ 7uJpdGW/5qr+dmTevotfiFMzWTmEfs35aLO7RNswBS6ocMHk1LWfJuA3k8XU/EymDYuGgULJsgn
+ eZJVmHlXXbOf4RmXEQuCH13MsD2Hj0RJ2qluVJSzbbp6j+wwvVFv2DegDWngKAxUvsQuHCP19yj
+ nQTM6sGCG+R89UTntYAgoqunzWPHnyIfOd1eCG0Xc3Ay5mxIdZOYTGqqgFhMiJyer6MngAUZHRQ
+ QZOIX7Rag1c/91U83U+cQWhpaWQkL10kZkDtLtBKnszAz+sGbenCAgwTGe/BIAPuamYOhu+L
+X-Proofpoint-ORIG-GUID: MJI1OBZinirfW_UzLPA5iWJ6iG03nh2Z
+X-Proofpoint-GUID: MJI1OBZinirfW_UzLPA5iWJ6iG03nh2Z
+X-Authority-Analysis: v=2.4 cv=Yt4PR5YX c=1 sm=1 tr=0 ts=681d28d7 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=kuvCIlgCnUscDMFZ:21 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=KKAkSRfTAAAA:8 a=NsWeV797_Utf8EiLlUcA:9 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_07,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 mlxscore=0 adultscore=0 spamscore=0 impostorscore=0
+ phishscore=0 lowpriorityscore=0 mlxlogscore=999 suspectscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505080199
 
 
---yzwrgeq57o5b5zij
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1] mailbox: tegra-hsp: Fix null-ptr-deref in
- tegra_hsp_doorbell_create()
-MIME-Version: 1.0
 
-On Wed, Apr 02, 2025 at 10:41:15PM +0800, Henry Martin wrote:
-> devm_kstrdup_const() returns NULL when memory allocation fails.
-> Currently, tegra_hsp_doorbell_create() does not check for this case,
-> which results in a NULL pointer dereference.
->=20
-> Fixes: a54d03ed01b4 ("mailbox: tegra-hsp: use devm_kstrdup_const()")
-> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+On 5/7/2025 2:43 AM, neil.armstrong@linaro.org wrote:
+> From: Caleb Connolly <caleb@connolly.tech>
+> 
+> Add support for another variant of the rm69299 panel. This panel is
+> 1080x2160 and is found in the shift-axolotl (SHIFT6mq).
+> 
+> Signed-off-by: Caleb Connolly <caleb@connolly.tech>
+> [narmstrong: removed cosmetic changes, fixed to apply, use enums to select mode]
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 > ---
->  drivers/mailbox/tegra-hsp.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
-> index ed9a0bb2bcd8..147406149fec 100644
-> --- a/drivers/mailbox/tegra-hsp.c
-> +++ b/drivers/mailbox/tegra-hsp.c
-> @@ -293,6 +293,8 @@ tegra_hsp_doorbell_create(struct tegra_hsp *hsp, cons=
-t char *name,
->  	db->channel.hsp =3D hsp;
-> =20
->  	db->name =3D devm_kstrdup_const(hsp->dev, name, GFP_KERNEL);
-> +	if (!db->name)
-> +		return ERR_PTR(-ENOMEM);
+>   drivers/gpu/drm/panel/panel-visionox-rm69299.c | 221 ++++++++++++++++++++++---
+>   1 file changed, 195 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-visionox-rm69299.c b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
+> index be3a9797fbced5222b313cf83f8078b919e2c219..26a79ab517723f23b7dc333235b81de264b5f30a 100644
+> --- a/drivers/gpu/drm/panel/panel-visionox-rm69299.c
+> +++ b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
+> @@ -5,6 +5,7 @@
+>   
+>   #include <linux/delay.h>
+>   #include <linux/module.h>
+> +#include <linux/property.h>
+>   #include <linux/mod_devicetable.h>
+>   #include <linux/gpio/consumer.h>
+>   #include <linux/regulator/consumer.h>
+> @@ -15,11 +16,17 @@
+>   #include <drm/drm_modes.h>
+>   #include <drm/drm_panel.h>
+>   
+> +enum visionox_rm69299_modes {
+> +	VISIONOX_RM69299_MODE_1080X2248_60HZ = 0,
+> +	VISIONOX_RM69299_MODE_1080X2160_60HZ
+> +};
+> +
+>   struct visionox_rm69299 {
+>   	struct drm_panel panel;
+>   	struct regulator_bulk_data supplies[2];
+>   	struct gpio_desc *reset_gpio;
+>   	struct mipi_dsi_device *dsi;
+> +	enum visionox_rm69299_modes mode;
+>   };
+>   
+>   static inline struct visionox_rm69299 *panel_to_ctx(struct drm_panel *panel)
+> @@ -81,10 +88,123 @@ static int visionox_rm69299_unprepare(struct drm_panel *panel)
+>   	return ret;
+>   }
+>   
+> +#define VISIONOX_RM69299_SHIFT_INIT_SEQ_LEN 432
+> +
+> +static const u8 visionox_rm69299_1080x2248_60hz_init_seq[VISIONOX_RM69299_SHIFT_INIT_SEQ_LEN][2] = {
 
-I don't think this is needed. First and foremost, db->name ends up not
-being used. It was meant to be used by debug code that never ended up
-being written, so at this point it's mostly here as a way to document
-what the doorbell mapping is (though even that's somewhat redundant
-since we already have macros that match the strings).
+Hi Neil,
 
-Secondly, these strings always come from tegra186_hsp_db_map, which is
-rodata and so the allocation path should never be taken, and hence the
-allocation can never fail.
+I see this being used for the 1080x2160 mode, but the name here seems to 
+imply that this is the init sequence for 1080x2248. Was that intended?
 
-So instead of trying to fix a non-existent problem we have two other
-options: one is to remove all traces of db->name (as well as the string
-in the mapping table), or we turn this into an assignment since we know
-that it's always rodata, so there's no need to copy it.
+> +	{ 0xFE, 0x40 }, { 0x05, 0x04 }, { 0x06, 0x08 }, { 0x08, 0x04 },
+> +	{ 0x09, 0x08 }, { 0x0A, 0x07 }, { 0x0B, 0xCC }, { 0x0C, 0x07 },
+> +	{ 0x0D, 0x90 }, { 0x0F, 0x87 }, { 0x20, 0x8D }, { 0x21, 0x8D },
+> +	{ 0x24, 0x05 }, { 0x26, 0x05 }, { 0x28, 0x05 }, { 0x2A, 0x05 },
+> +	{ 0x2D, 0x28 }, { 0x2F, 0x28 }, { 0x30, 0x32 }, { 0x31, 0x32 },
+> +	{ 0x37, 0x80 }, { 0x38, 0x30 }, { 0x39, 0xA8 }, { 0x46, 0x48 },
+> +	{ 0x47, 0x48 }, { 0x6B, 0x10 }, { 0x6F, 0x02 }, { 0x74, 0x2B },
+> +	{ 0x80, 0x1A }, { 0xFE, 0x40 }, { 0x93, 0x10 }, { 0x16, 0x00 },
+> +	{ 0x85, 0x07 }, { 0x84, 0x01 }, { 0x86, 0x0F }, { 0x87, 0x05 },
+> +	{ 0x8C, 0x00 }, { 0x88, 0x2E }, { 0x89, 0x2E }, { 0x8B, 0x09 },
+> +	{ 0x95, 0x00 }, { 0x91, 0x00 }, { 0x90, 0x00 }, { 0x8D, 0xD0 },
+> +	{ 0x8A, 0x03 }, { 0xFE, 0xA0 }, { 0x13, 0x00 }, { 0x33, 0x00 },
+> +	{ 0x0B, 0x33 }, { 0x36, 0x1E }, { 0x31, 0x88 }, { 0x32, 0x88 },
+> +	{ 0x37, 0xF1 }, { 0xFE, 0x50 }, { 0x00, 0x00 }, { 0x01, 0x00 },
+> +	{ 0x02, 0x00 }, { 0x03, 0xE9 }, { 0x04, 0x00 }, { 0x05, 0xF6 },
+> +	{ 0x06, 0x01 }, { 0x07, 0x2C }, { 0x08, 0x01 }, { 0x09, 0x62 },
+> +	{ 0x0A, 0x01 }, { 0x0B, 0x98 }, { 0x0C, 0x01 }, { 0x0D, 0xBF },
+> +	{ 0x0E, 0x01 }, { 0x0F, 0xF6 }, { 0x10, 0x02 }, { 0x11, 0x24 },
+> +	{ 0x12, 0x02 }, { 0x13, 0x4E }, { 0x14, 0x02 }, { 0x15, 0x70 },
+> +	{ 0x16, 0x02 }, { 0x17, 0xAF }, { 0x18, 0x02 }, { 0x19, 0xE2 },
+> +	{ 0x1A, 0x03 }, { 0x1B, 0x1F }, { 0x1C, 0x03 }, { 0x1D, 0x52 },
+> +	{ 0x1E, 0x03 }, { 0x1F, 0x82 }, { 0x20, 0x03 }, { 0x21, 0xB6 },
+> +	{ 0x22, 0x03 }, { 0x23, 0xF0 }, { 0x24, 0x04 }, { 0x25, 0x1F },
+> +	{ 0x26, 0x04 }, { 0x27, 0x37 }, { 0x28, 0x04 }, { 0x29, 0x59 },
+> +	{ 0x2A, 0x04 }, { 0x2B, 0x68 }, { 0x30, 0x04 }, { 0x31, 0x85 },
+> +	{ 0x32, 0x04 }, { 0x33, 0xA2 }, { 0x34, 0x04 }, { 0x35, 0xBC },
+> +	{ 0x36, 0x04 }, { 0x37, 0xD8 }, { 0x38, 0x04 }, { 0x39, 0xF4 },
+> +	{ 0x3A, 0x05 }, { 0x3B, 0x0E }, { 0x40, 0x05 }, { 0x41, 0x13 },
+> +	{ 0x42, 0x05 }, { 0x43, 0x1F }, { 0x44, 0x05 }, { 0x45, 0x1F },
+> +	{ 0x46, 0x00 }, { 0x47, 0x00 }, { 0x48, 0x01 }, { 0x49, 0x43 },
+> +	{ 0x4A, 0x01 }, { 0x4B, 0x4C }, { 0x4C, 0x01 }, { 0x4D, 0x6F },
+> +	{ 0x4E, 0x01 }, { 0x4F, 0x92 }, { 0x50, 0x01 }, { 0x51, 0xB5 },
+> +	{ 0x52, 0x01 }, { 0x53, 0xD4 }, { 0x58, 0x02 }, { 0x59, 0x06 },
+> +	{ 0x5A, 0x02 }, { 0x5B, 0x33 }, { 0x5C, 0x02 }, { 0x5D, 0x59 },
+> +	{ 0x5E, 0x02 }, { 0x5F, 0x7D }, { 0x60, 0x02 }, { 0x61, 0xBD },
+> +	{ 0x62, 0x02 }, { 0x63, 0xF7 }, { 0x64, 0x03 }, { 0x65, 0x31 },
+> +	{ 0x66, 0x03 }, { 0x67, 0x63 }, { 0x68, 0x03 }, { 0x69, 0x9D },
+> +	{ 0x6A, 0x03 }, { 0x6B, 0xD2 }, { 0x6C, 0x04 }, { 0x6D, 0x05 },
+> +	{ 0x6E, 0x04 }, { 0x6F, 0x38 }, { 0x70, 0x04 }, { 0x71, 0x51 },
+> +	{ 0x72, 0x04 }, { 0x73, 0x70 }, { 0x74, 0x04 }, { 0x75, 0x85 },
+> +	{ 0x76, 0x04 }, { 0x77, 0xA1 }, { 0x78, 0x04 }, { 0x79, 0xC0 },
+> +	{ 0x7A, 0x04 }, { 0x7B, 0xD8 }, { 0x7C, 0x04 }, { 0x7D, 0xF2 },
+> +	{ 0x7E, 0x05 }, { 0x7F, 0x10 }, { 0x80, 0x05 }, { 0x81, 0x21 },
+> +	{ 0x82, 0x05 }, { 0x83, 0x2E }, { 0x84, 0x05 }, { 0x85, 0x3A },
+> +	{ 0x86, 0x05 }, { 0x87, 0x3E }, { 0x88, 0x00 }, { 0x89, 0x00 },
+> +	{ 0x8A, 0x01 }, { 0x8B, 0x86 }, { 0x8C, 0x01 }, { 0x8D, 0x8F },
+> +	{ 0x8E, 0x01 }, { 0x8F, 0xB3 }, { 0x90, 0x01 }, { 0x91, 0xD7 },
+> +	{ 0x92, 0x01 }, { 0x93, 0xFB }, { 0x94, 0x02 }, { 0x95, 0x18 },
+> +	{ 0x96, 0x02 }, { 0x97, 0x4F }, { 0x98, 0x02 }, { 0x99, 0x7E },
+> +	{ 0x9A, 0x02 }, { 0x9B, 0xA6 }, { 0x9C, 0x02 }, { 0x9D, 0xCF },
+> +	{ 0x9E, 0x03 }, { 0x9F, 0x14 }, { 0xA4, 0x03 }, { 0xA5, 0x52 },
+> +	{ 0xA6, 0x03 }, { 0xA7, 0x93 }, { 0xAC, 0x03 }, { 0xAD, 0xCF },
+> +	{ 0xAE, 0x04 }, { 0xAF, 0x08 }, { 0xB0, 0x04 }, { 0xB1, 0x42 },
+> +	{ 0xB2, 0x04 }, { 0xB3, 0x7F }, { 0xB4, 0x04 }, { 0xB5, 0xB4 },
+> +	{ 0xB6, 0x04 }, { 0xB7, 0xCC }, { 0xB8, 0x04 }, { 0xB9, 0xF2 },
+> +	{ 0xBA, 0x05 }, { 0xBB, 0x0C }, { 0xBC, 0x05 }, { 0xBD, 0x26 },
+> +	{ 0xBE, 0x05 }, { 0xBF, 0x4B }, { 0xC0, 0x05 }, { 0xC1, 0x64 },
+> +	{ 0xC2, 0x05 }, { 0xC3, 0x83 }, { 0xC4, 0x05 }, { 0xC5, 0xA1 },
+> +	{ 0xC6, 0x05 }, { 0xC7, 0xBA }, { 0xC8, 0x05 }, { 0xC9, 0xC4 },
+> +	{ 0xCA, 0x05 }, { 0xCB, 0xD5 }, { 0xCC, 0x05 }, { 0xCD, 0xD5 },
+> +	{ 0xCE, 0x00 }, { 0xCF, 0xCE }, { 0xD0, 0x00 }, { 0xD1, 0xDB },
+> +	{ 0xD2, 0x01 }, { 0xD3, 0x32 }, { 0xD4, 0x01 }, { 0xD5, 0x3B },
+> +	{ 0xD6, 0x01 }, { 0xD7, 0x74 }, { 0xD8, 0x01 }, { 0xD9, 0x7D },
+> +	{ 0xFE, 0x60 }, { 0x00, 0xCC }, { 0x01, 0x0F }, { 0x02, 0xFF },
+> +	{ 0x03, 0x01 }, { 0x04, 0x00 }, { 0x05, 0x02 }, { 0x06, 0x00 },
+> +	{ 0x07, 0x00 }, { 0x09, 0xC4 }, { 0x0A, 0x00 }, { 0x0B, 0x04 },
+> +	{ 0x0C, 0x01 }, { 0x0D, 0x00 }, { 0x0E, 0x04 }, { 0x0F, 0x00 },
+> +	{ 0x10, 0x71 }, { 0x12, 0xC4 }, { 0x13, 0x00 }, { 0x14, 0x04 },
+> +	{ 0x15, 0x01 }, { 0x16, 0x00 }, { 0x17, 0x06 }, { 0x18, 0x00 },
+> +	{ 0x19, 0x71 }, { 0x1B, 0xC4 }, { 0x1C, 0x00 }, { 0x1D, 0x02 },
+> +	{ 0x1E, 0x00 }, { 0x1F, 0x00 }, { 0x20, 0x08 }, { 0x21, 0x66 },
+> +	{ 0x22, 0xB4 }, { 0x24, 0xC4 }, { 0x25, 0x00 }, { 0x26, 0x02 },
+> +	{ 0x27, 0x00 }, { 0x28, 0x00 }, { 0x29, 0x07 }, { 0x2A, 0x66 },
+> +	{ 0x2B, 0xB4 }, { 0x2F, 0xC4 }, { 0x30, 0x00 }, { 0x31, 0x04 },
+> +	{ 0x32, 0x01 }, { 0x33, 0x00 }, { 0x34, 0x03 }, { 0x35, 0x00 },
+> +	{ 0x36, 0x71 }, { 0x38, 0xC4 }, { 0x39, 0x00 }, { 0x3A, 0x04 },
+> +	{ 0x3B, 0x01 }, { 0x3D, 0x00 }, { 0x3F, 0x05 }, { 0x40, 0x00 },
+> +	{ 0x41, 0x71 }, { 0x83, 0xCE }, { 0x84, 0x02 }, { 0x85, 0x20 },
+> +	{ 0x86, 0xDC }, { 0x87, 0x00 }, { 0x88, 0x04 }, { 0x89, 0x00 },
+> +	{ 0x8A, 0xBB }, { 0x8B, 0x80 }, { 0xC7, 0x0E }, { 0xC8, 0x05 },
+> +	{ 0xC9, 0x1F }, { 0xCA, 0x06 }, { 0xCB, 0x00 }, { 0xCC, 0x03 },
+> +	{ 0xCD, 0x04 }, { 0xCE, 0x1F }, { 0xCF, 0x1F }, { 0xD0, 0x1F },
+> +	{ 0xD1, 0x1F }, { 0xD2, 0x1F }, { 0xD3, 0x1F }, { 0xD4, 0x1F },
+> +	{ 0xD5, 0x1F }, { 0xD6, 0x1F }, { 0xD7, 0x17 }, { 0xD8, 0x1F },
+> +	{ 0xD9, 0x16 }, { 0xDA, 0x1F }, { 0xDB, 0x0E }, { 0xDC, 0x01 },
+> +	{ 0xDD, 0x1F }, { 0xDE, 0x02 }, { 0xDF, 0x00 }, { 0xE0, 0x03 },
+> +	{ 0xE1, 0x04 }, { 0xE2, 0x1F }, { 0xE3, 0x1F }, { 0xE4, 0x1F },
+> +	{ 0xE5, 0x1F }, { 0xE6, 0x1F }, { 0xE7, 0x1F }, { 0xE8, 0x1F },
+> +	{ 0xE9, 0x1F }, { 0xEA, 0x1F }, { 0xEB, 0x17 }, { 0xEC, 0x1F },
+> +	{ 0xED, 0x16 }, { 0xEE, 0x1F }, { 0xEF, 0x03 }, { 0xFE, 0x70 },
+> +	{ 0x5A, 0x0B }, { 0x5B, 0x0B }, { 0x5C, 0x55 }, { 0x5D, 0x24 },
+> +	{ 0xFE, 0x90 }, { 0x12, 0x24 }, { 0x13, 0x49 }, { 0x14, 0x92 },
+> +	{ 0x15, 0x86 }, { 0x16, 0x61 }, { 0x17, 0x18 }, { 0x18, 0x24 },
+> +	{ 0x19, 0x49 }, { 0x1A, 0x92 }, { 0x1B, 0x86 }, { 0x1C, 0x61 },
+> +	{ 0x1D, 0x18 }, { 0x1E, 0x24 }, { 0x1F, 0x49 }, { 0x20, 0x92 },
+> +	{ 0x21, 0x86 }, { 0x22, 0x61 }, { 0x23, 0x18 }, { 0xFE, 0x40 },
+> +	{ 0x0E, 0x10 }, { 0xFE, 0xA0 }, { 0x04, 0x80 }, { 0x16, 0x00 },
+> +	{ 0x26, 0x10 }, { 0x2F, 0x37 }, { 0xFE, 0xD0 }, { 0x06, 0x0F },
+> +	{ 0x4B, 0x00 }, { 0x56, 0x4A }, { 0xFE, 0x00 }, { 0xC2, 0x09 },
+> +	{ 0x35, 0x00 }, { 0xFE, 0x70 }, { 0x7D, 0x61 }, { 0x7F, 0x00 },
+> +	{ 0x7E, 0x4E }, { 0x52, 0x2C }, { 0x49, 0x00 }, { 0x4A, 0x00 },
+> +	{ 0x4B, 0x00 }, { 0x4C, 0x00 }, { 0x4D, 0xE8 }, { 0x4E, 0x25 },
+> +	{ 0x4F, 0x6E }, { 0x50, 0xAE }, { 0x51, 0x2F }, { 0xAD, 0xF4 },
+> +	{ 0xAE, 0x8F }, { 0xAF, 0x00 }, { 0xB0, 0x54 }, { 0xB1, 0x3A },
+> +	{ 0xB2, 0x00 }, { 0xB3, 0x00 }, { 0xB4, 0x00 }, { 0xB5, 0x00 },
+> +	{ 0xB6, 0x18 }, { 0xB7, 0x30 }, { 0xB8, 0x4A }, { 0xB9, 0x98 },
+> +	{ 0xBA, 0x30 }, { 0xBB, 0x60 }, { 0xBC, 0x50 }, { 0xBD, 0x00 },
+> +	{ 0xBE, 0x00 }, { 0xBF, 0x39 }, { 0xFE, 0x00 }, { 0x51, 0x66 },
+> +};
+> +
+>   static int visionox_rm69299_prepare(struct drm_panel *panel)
+>   {
+>   	struct visionox_rm69299 *ctx = panel_to_ctx(panel);
+> -	int ret;
+> +	int ret, i;
+>   
+>   	ret = visionox_rm69299_power_on(ctx);
+>   	if (ret < 0)
+> @@ -92,28 +212,48 @@ static int visionox_rm69299_prepare(struct drm_panel *panel)
+>   
+>   	ctx->dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+>   
+> -	ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]) { 0xfe, 0x00 }, 2);
+> -	if (ret < 0) {
+> -		dev_err(ctx->panel.dev, "cmd set tx 0 failed, ret = %d\n", ret);
+> -		goto power_off;
+> -	}
+> -
+> -	ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]) { 0xc2, 0x08 }, 2);
+> -	if (ret < 0) {
+> -		dev_err(ctx->panel.dev, "cmd set tx 1 failed, ret = %d\n", ret);
+> -		goto power_off;
+> -	}
+> -
+> -	ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]) { 0x35, 0x00 }, 2);
+> -	if (ret < 0) {
+> -		dev_err(ctx->panel.dev, "cmd set tx 2 failed, ret = %d\n", ret);
+> -		goto power_off;
+> -	}
+> -
+> -	ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]) { 0x51, 0xff }, 2);
+> -	if (ret < 0) {
+> -		dev_err(ctx->panel.dev, "cmd set tx 3 failed, ret = %d\n", ret);
+> -		goto power_off;
+> +	if (ctx->mode == VISIONOX_RM69299_MODE_1080X2160_60HZ) {
+> +		for (i = 0; i < VISIONOX_RM69299_SHIFT_INIT_SEQ_LEN; i++) {
+> +			ret = mipi_dsi_dcs_write_buffer(ctx->dsi,
 
-Alternatively we could just leave this as-is. But then it's just a
-matter of time before someone else comes around to "fix" the same thing.
+Any reason for not using mipi_dsi_dcs_write_buffer_multi() here?
 
-Thierry
+Thanks,
 
---yzwrgeq57o5b5zij
-Content-Type: application/pgp-signature; name="signature.asc"
+Jessica Zhang
 
------BEGIN PGP SIGNATURE-----
+> +				visionox_rm69299_1080x2248_60hz_init_seq[i], 2);
+> +			if (ret < 0) {
+> +				dev_err(ctx->panel.dev,
+> +					"cmd set tx 0 failed, ret = %d\n", ret);
+> +				return ret;
+> +			}
+> +		}
+> +	} else {
+> +		ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]){ 0xfe, 0x00 },
+> +						2);
+> +		if (ret < 0) {
+> +			dev_err(ctx->panel.dev,
+> +				"cmd set tx 0 failed, ret = %d\n", ret);
+> +			return ret;
+> +		}
+> +
+> +		ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]){ 0xc2, 0x08 },
+> +						2);
+> +		if (ret < 0) {
+> +			dev_err(ctx->panel.dev,
+> +				"cmd set tx 1 failed, ret = %d\n", ret);
+> +			return ret;
+> +		}
+> +
+> +		ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]){ 0x35, 0x00 },
+> +						2);
+> +		if (ret < 0) {
+> +			dev_err(ctx->panel.dev,
+> +				"cmd set tx 2 failed, ret = %d\n", ret);
+> +			return ret;
+> +		}
+> +
+> +		ret = mipi_dsi_dcs_write_buffer(ctx->dsi, (u8[]){ 0x51, 0xff },
+> +						2);
+> +		if (ret < 0) {
+> +			dev_err(ctx->panel.dev,
+> +				"cmd set tx 3 failed, ret = %d\n", ret);
+> +			return ret;
+> +		}
+>   	}
+>   
+>   	ret = mipi_dsi_dcs_write(ctx->dsi, MIPI_DCS_EXIT_SLEEP_MODE, NULL, 0);
+> @@ -154,14 +294,38 @@ static const struct drm_display_mode visionox_rm69299_1080x2248_60hz = {
+>   	.flags = 0,
+>   };
+>   
+> +static const struct drm_display_mode visionox_rm69299_1080x2160_60hz = {
+> +	.clock = 158695,
+> +	.hdisplay = 1080,
+> +	.hsync_start = 1080 + 26,
+> +	.hsync_end = 1080 + 26 + 2,
+> +	.htotal = 1080 + 26 + 2 + 36,
+> +	.vdisplay = 2160,
+> +	.vsync_start = 2160 + 8,
+> +	.vsync_end = 2160 + 8 + 4,
+> +	.vtotal = 2160 + 8 + 4 + 4,
+> +	.flags = 0,
+> +};
+> +
+>   static int visionox_rm69299_get_modes(struct drm_panel *panel,
+>   				      struct drm_connector *connector)
+>   {
+>   	struct visionox_rm69299 *ctx = panel_to_ctx(panel);
+> +	const struct drm_display_mode *panel_mode;
+>   	struct drm_display_mode *mode;
+>   
+> -	mode = drm_mode_duplicate(connector->dev,
+> -				  &visionox_rm69299_1080x2248_60hz);
+> +	switch (ctx->mode) {
+> +	case VISIONOX_RM69299_MODE_1080X2248_60HZ:
+> +		panel_mode = &visionox_rm69299_1080x2248_60hz;
+> +		break;
+> +	case VISIONOX_RM69299_MODE_1080X2160_60HZ:
+> +		panel_mode = &visionox_rm69299_1080x2160_60hz;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	mode = drm_mode_duplicate(connector->dev, panel_mode);
+>   	if (!mode) {
+>   		dev_err(ctx->panel.dev, "failed to create a new display mode\n");
+>   		return 0;
+> @@ -191,6 +355,8 @@ static int visionox_rm69299_probe(struct mipi_dsi_device *dsi)
+>   	if (!ctx)
+>   		return -ENOMEM;
+>   
+> +	ctx->mode = (enum visionox_rm69299_modes)device_get_match_data(dev);
+> +
+>   	mipi_dsi_set_drvdata(dsi, ctx);
+>   
+>   	ctx->dsi = dsi;
+> @@ -240,7 +406,10 @@ static void visionox_rm69299_remove(struct mipi_dsi_device *dsi)
+>   }
+>   
+>   static const struct of_device_id visionox_rm69299_of_match[] = {
+> -	{ .compatible = "visionox,rm69299-1080p-display", },
+> +	{ .compatible = "visionox,rm69299-1080p-display",
+> +	  .data = (void *)VISIONOX_RM69299_MODE_1080X2248_60HZ },
+> +	{ .compatible = "visionox,rm69299-shift",
+> +	  .data = (void *)VISIONOX_RM69299_MODE_1080X2160_60HZ },
+>   	{ /* sentinel */ }
+>   };
+>   MODULE_DEVICE_TABLE(of, visionox_rm69299_of_match);
+> 
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmgdKAsACgkQ3SOs138+
-s6E5fRAAhotmsNGR/NTTbFP0mQ0LUtQJwoRJq/ZER+g2rsvCIPwZNvVosKOROAmZ
-3qQOP3Dm5AqyjodqnO+T4yeWjbszltue2om7zBHaHu1tenvB/uN3tb6Z58W4iXba
-+wxUXBeYdqwnWJIXj2agaF1kKg+Vg+0HhWuHSzjnqDE9cMZAR+B+EmRIZgw/X4Tz
-v1QV6ihmq6C30Cg14nMgNdRJVBuDnblrn1d0CclhQEofikNRfHtLw7heG2amKNqO
-h0xiJmNtZYYp7oruBaD1zMvwsUAuhdDxcN9mSOWmycMVBVX+8/o8SsE7YWN2gl3Z
-IBTcuVnLlC67KAy2fi5ksjQG2YGTwY3dkMAoYETdwEoc6nolkRuFwjHL/pgz3fwy
-U1R34TK+xX6L+qSRpCkz9j14ZFpPhFjyFpupkDnf5Yt3OioS1pqrA4oL6VyseJWd
-KO+mWjMEGyu1Do7MDRNo/Y8ayN6hRl5ywOkShodamDOk9QcPkYTDoRv4qfjMPI4G
-tfL44H0hiPhRXnTCTGgZ8aETlBFzER3aaOEsv7q6CTiIIJ13a/xCspZasuOmzeKd
-w2knMTC5H5EX8uZaw0yEalEI5ORs97hC/uA6fDdLJu7ETc1EF4QvGSq8vOZ5DMLl
-DAlKrSCnFon8+LKYeWBYS/igJwphzFvG4jMpvT5BLOl5di4/kCI=
-=3YIT
------END PGP SIGNATURE-----
-
---yzwrgeq57o5b5zij--
