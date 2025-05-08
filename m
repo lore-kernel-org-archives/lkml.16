@@ -1,151 +1,240 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E897195FE8;
-	Thu,  8 May 2025 06:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD042B9AA
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 06:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746687272; cv=none; b=Q1tEKhyolTEBQ90L+6m8D09ao3FeJ/6qZfFQ1miXoaSrYFEdfm35yINMSRKJA1yiDHUgMf7X9eUXIAXU54n6OHZPj7ReubgHwrGo+z4GjhFapCe7kpBQP+dNIUCq6c85nLZ6iM4Vu/h8leuz60uV8j3njPg1flSQQHjOawdTHwU=
+	t=1746687382; cv=none; b=OgZFvPx7p0MCJMV25j4845UF6LKXWe/B6UIAutExypSdFvKNuOlOfLIRWOJV11B1xtHKFL872cS2A2KsqRBAjL8GmZVRyC4ZsXVPmCo+OP6vU/WOv2BNJQiXyoK2FjIBVQ8mg6YqVaL25THEVeUncGtMb4wuFqon3RThj6dUtps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746687272; c=relaxed/simple;
-	bh=eRZIKtysuS6oTcrjeE85a1+Xwq0Zc6EtWiLFsCUxq20=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qDjecmCmr/WH9mEGasg71pS8Nx1yvnun0InMNQwXVQ2WqlC8KEovoIg9bKsXBgy/nKMntPHHYRgp2TLWPUeVRK/EeAqPl9lla/RusyvyFQQswslt7D5Q2K6BxRZqlvLSjZSW/GTc+5MvoD1hYp0g5j5HETA/pGxKqTQd19KUW9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ccndsvSv; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746687382; c=relaxed/simple;
+	bh=yfk+syG7UvFPjK49iCE8z/wbu+fKHybJxcTQoTCfacA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GK33YwSRZJDVdXRfuwAz61vzpBLSyd4rOlFLOTUwpAuxdXvMRj3XXXGxQQc2gOP6UmWAHDbbfl3XgD8KtdvPCy66CB5pMJTM+ymsm3XU+QW1V5773ihjmyBwfubNJPcPdAKvMLoVWZPCX7KylpUQ5vVCe3ZZUoSFxCOwM+ah2fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CtJ+uIFB; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ccndsvSv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746687272; x=1778223272;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eRZIKtysuS6oTcrjeE85a1+Xwq0Zc6EtWiLFsCUxq20=;
-  b=ccndsvSvvu9PSlOKL16573hY9QpfCgyfX8tFjDCqItOn0loAw416PosA
-   8doaatKMyoV9UmIlk7USWmeB5ZeyRNHe3TQrFZQBjk/CKCUlcAapmK50U
-   G5lpwmLOLGFWtGFQNfn3Yh6hlPXtEr34sfm7t6s/H2eYkE2lPTPyPqC4W
-   dJHVsvw9tdD9lK/p4CiwnH9rZo+CgI4Jn5l30DxqU1sQZS7vw2MBf0kR1
-   Oyiv6MW/GzIu9OO22X/dIPX1tAiKSw5DaOSe+wfFGIcIbUqUn4bxX3l0x
-   YDzfLRT0GJnXzkzkzq/Folzs0SPOUNuN8IzsvrmteIPck6UrjTmOp1vO+
-   A==;
-X-CSE-ConnectionGUID: ImxGJ9MBTZmvOn0yc7+4Aw==
-X-CSE-MsgGUID: yTe75xBXQkCCAMmkL+zR5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="59441404"
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="59441404"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 23:54:31 -0700
-X-CSE-ConnectionGUID: zjAAhvi/SFCAlbDqxA/ZUQ==
-X-CSE-MsgGUID: 9XKYUGeJRBOc703HN88BZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="137130582"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 07 May 2025 23:54:28 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCv9G-000Aip-0g;
-	Thu, 08 May 2025 06:54:26 +0000
-Date: Thu, 8 May 2025 14:54:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yang Li via B4 Relay <devnull+yang.li.amlogic.com@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Yang Li <yang.li@amlogic.com>
-Subject: Re: [PATCH] Bluetooth: fix socket matching ambiguity between BIS and
- CIS
-Message-ID: <202505081427.1Y3wyo7v-lkp@intel.com>
-References: <20250507-iso-v1-1-6f60d243e037@amlogic.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CtJ+uIFB"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-224341bbc1dso8613835ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 23:56:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746687380; x=1747292180; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kv5nIQYUHwKXVpDAEk6oAoPFzEzBx5U/yf9HqEFM2ZA=;
+        b=CtJ+uIFBGSSnAZcz3drZ5D2lpcxND7Rk5Oso4CZikLgR7RxCa4sLPZUmARg2lDZfPi
+         V98QJXJNo658UUmLeshLDjnkj86r4TcYK7bpKdl0eKZ6KcqDXqj8Ahund0Xao3PdmEbH
+         503JcmPj0xU0gzaqCgATYJw8ww6nqKpOVfbR2UacZXDkF3YqnASQr1ACHtrAlMinRemi
+         /eOjtdEv25gV7nD6douOoOPb2Gsa/NvQ5ycTxAFu4BNx4a3IPAeNrCcqv1hgj7bb6tBZ
+         r751pnsMy2Bv81Fh0hPiVVlF2KnsUEbBRbKvndNt8LNkATVJDVKP9hU/1u+1f0q0v+CT
+         jafQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746687380; x=1747292180;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kv5nIQYUHwKXVpDAEk6oAoPFzEzBx5U/yf9HqEFM2ZA=;
+        b=CWVIgeWqzFsKzZCLmR9R3wdYQw7yBaiFEaUBWRPINspwNNSbdyGhtqwxXxFogPTWxP
+         IOPKVXNrVWfJ9/tjT3xYGEnMAuqUcKuI9RuQyFLCIoVFbnRqcRkQyNl1AHDDPF0btwfO
+         6caha8oZaf5ElI8KXZITlo5+HfqSPtp26I8Nb5+2qaPk9n/bvArBweyrdktizpHGARrT
+         ysSxij77s0jmsu3BiFhuP6gyn3Uwksma68xVWAGn5NSiQbkSgFBkahDGdls4baqYWZXI
+         SPne74tnZESMEAj/GnZFELCkyB+ujwrUHOp6qGS8ISn1eKE/J/EfTaV3eNeXNPkGdq7B
+         DQfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUIaXeaPpji5AQ9RggayNcaoRKDkVpkRLoQI59gYOAj9K283pzfRmbfer2E5aYIgGnCzyagLpk8w3X4eGU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0+Q9ZTrqj9eMBeIx66lrh1Vsq8LFiDoP8ur7wNVuAnIhSLaKt
+	imTloTa3ew+6T1In/awK2UGthQ0F9SRNwZDz3zkH+rSS2QAzDppBJog+XRRx
+X-Gm-Gg: ASbGnctSW1uHuODQP92rp0FA8BrW479mNSFHS/+B3S+Wilk2AKFX7IOQ4ryHBmY7Sou
+	2I83qmB0RZm1SZ0gOX7R1mRw0iUNxhfFMKUYZ5IyczWopC5HGqBjZU2xKLUZ3R+gXw/Xcm8Lr9V
+	GDvPfyGcKZw9poabwMqV65PJn+Z9ctKoHMx6+29y8iWfdwG/Pv6XPtQMTBNNM0mSM2jsWlKG5zY
+	wBHD5M2errwiVXg0lZX2UJpn3xchfgWFyqbT3tGbI95coUrexGkqI8el7r8h3Uk32eC1pcF+nEP
+	D97XTNyDmHDiFPPNgZ8CNde9KFRWhonTtwFmTsox21Wsq6zGJwux
+X-Google-Smtp-Source: AGHT+IHxsERgycA8eNkC/Ri4FaFVk51rp5Z1uYjmooPdZ/f6gnCibov5sFSQL33WyqVCJtKOqfx3pA==
+X-Received: by 2002:a17:903:8c5:b0:227:e980:919d with SMTP id d9443c01a7336-22e5ecc4150mr93225215ad.47.1746687379746;
+        Wed, 07 May 2025 23:56:19 -0700 (PDT)
+Received: from localhost.localdomain ([118.46.108.16])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e151e950csm105470145ad.77.2025.05.07.23.56.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 23:56:19 -0700 (PDT)
+From: Jeongjun Park <aha310510@gmail.com>
+To: akpm@linux-foundation.org
+Cc: urezki@gmail.com,
+	edumazet@google.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Jeongjun Park <aha310510@gmail.com>
+Subject: [PATCH v4] mm/vmalloc: fix data race in show_numa_info()
+Date: Thu,  8 May 2025 15:55:58 +0900
+Message-ID: <20250508065558.149091-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507-iso-v1-1-6f60d243e037@amlogic.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Yang,
+The following data-race was found in show_numa_info():
 
-kernel test robot noticed the following build errors:
+==================================================================
+BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
 
-[auto build test ERROR on f3daca9b490154fbb0459848cc2ed61e8367bddc]
+read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
+ show_numa_info mm/vmalloc.c:4936 [inline]
+ vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
+ seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+ proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+....
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Yang-Li-via-B4-Relay/Bluetooth-fix-socket-matching-ambiguity-between-BIS-and-CIS/20250507-153347
-base:   f3daca9b490154fbb0459848cc2ed61e8367bddc
-patch link:    https://lore.kernel.org/r/20250507-iso-v1-1-6f60d243e037%40amlogic.com
-patch subject: [PATCH] Bluetooth: fix socket matching ambiguity between BIS and CIS
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20250508/202505081427.1Y3wyo7v-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250508/202505081427.1Y3wyo7v-lkp@intel.com/reproduce)
+write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
+ show_numa_info mm/vmalloc.c:4934 [inline]
+ vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
+ seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+ proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+....
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505081427.1Y3wyo7v-lkp@intel.com/
+value changed: 0x0000008f -> 0x00000000
+==================================================================
 
-All errors (new ones prefixed by >>):
+According to this report,there is a read/write data-race because m->private
+is accessible to multiple CPUs. To fix this, instead of allocating the heap
+in proc_vmalloc_init() and passing the heap address to m->private,
+vmalloc_info_show() should allocate the heap.
 
-   net/bluetooth/hci_event.c: In function 'hci_le_per_adv_report_evt':
->> net/bluetooth/hci_event.c:6469:60: error: 'ISO_LINK' undeclared (first use in this function); did you mean 'SCO_LINK'?
-    6469 |         mask |= hci_proto_connect_ind(hdev, &pa_sync->dst, ISO_LINK, &flags);
-         |                                                            ^~~~~~~~
-         |                                                            SCO_LINK
-   net/bluetooth/hci_event.c:6469:60: note: each undeclared identifier is reported only once for each function it appears in
-   net/bluetooth/hci_event.c: In function 'hci_le_big_info_adv_report_evt':
-   net/bluetooth/hci_event.c:7055:60: error: 'ISO_LINK' undeclared (first use in this function); did you mean 'SCO_LINK'?
-    7055 |         mask |= hci_proto_connect_ind(hdev, &pa_sync->dst, ISO_LINK, &flags);
-         |                                                            ^~~~~~~~
-         |                                                            SCO_LINK
+Fixes: a47a126ad5ea ("vmallocinfo: add NUMA information")
+Suggested-by: Eric Dumazet <edumazet@google.com>
+Suggested-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+---
+v4: Change the way counters array heap is allocated, per Andrew Morton's suggestion.
+    And fix it to call smp_rmb() in the correct location.
+- Link to v3: https://lore.kernel.org/all/20250507142552.9446-1-aha310510@gmail.com/
+v3: Following Uladzislau Rezki's suggestion, we check v->flags beforehand
+    to avoid printing uninitialized members of vm_struct.
+- Link to v2: https://lore.kernel.org/all/20250506082520.84153-1-aha310510@gmail.com/
+v2: Refactoring some functions and fix patch as per Eric Dumazet suggestion
+- Link to v1: https://lore.kernel.org/all/20250505171948.24410-1-aha310510@gmail.com/
+---
+ mm/vmalloc.c | 61 ++++++++++++++++++++++++++++------------------------
+ 1 file changed, 33 insertions(+), 28 deletions(-)
 
-
-vim +6469 net/bluetooth/hci_event.c
-
-  6449	
-  6450	static void hci_le_per_adv_report_evt(struct hci_dev *hdev, void *data,
-  6451					      struct sk_buff *skb)
-  6452	{
-  6453		struct hci_ev_le_per_adv_report *ev = data;
-  6454		int mask = hdev->link_mode;
-  6455		__u8 flags = 0;
-  6456		struct hci_conn *pa_sync;
-  6457	
-  6458		bt_dev_dbg(hdev, "sync_handle 0x%4.4x", le16_to_cpu(ev->sync_handle));
-  6459	
-  6460		hci_dev_lock(hdev);
-  6461	
-  6462		pa_sync = hci_conn_hash_lookup_pa_sync_handle
-  6463				(hdev,
-  6464				le16_to_cpu(ev->sync_handle));
-  6465	
-  6466		if (!pa_sync)
-  6467			goto unlock;
-  6468	
-> 6469		mask |= hci_proto_connect_ind(hdev, &pa_sync->dst, ISO_LINK, &flags);
-  6470		if (!(mask & HCI_LM_ACCEPT))
-  6471			goto unlock;
-  6472	
-  6473		if (!(flags & HCI_PROTO_DEFER))
-  6474			goto unlock;
-  6475	
-  6476		if (ev->data_status == LE_PA_DATA_COMPLETE &&
-  6477		    !test_and_set_bit(HCI_CONN_PA_SYNC, &pa_sync->flags)) {
-  6478			/* Notify iso layer */
-  6479			hci_connect_cfm(pa_sync, 0);
-  6480	
-  6481			/* Notify MGMT layer */
-  6482			mgmt_device_connected(hdev, pa_sync, NULL, 0);
-  6483		}
-  6484	
-  6485	unlock:
-  6486		hci_dev_unlock(hdev);
-  6487	}
-  6488	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 3ed720a787ec..112df5a86106 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -3100,7 +3100,7 @@ static void clear_vm_uninitialized_flag(struct vm_struct *vm)
+ 	/*
+ 	 * Before removing VM_UNINITIALIZED,
+ 	 * we should make sure that vm has proper values.
+-	 * Pair with smp_rmb() in show_numa_info().
++	 * Pair with smp_rmb() in vread_iter() and vmalloc_info_show().
+ 	 */
+ 	smp_wmb();
+ 	vm->flags &= ~VM_UNINITIALIZED;
+@@ -4914,28 +4914,29 @@ bool vmalloc_dump_obj(void *object)
+ #endif
+ 
+ #ifdef CONFIG_PROC_FS
+-static void show_numa_info(struct seq_file *m, struct vm_struct *v)
+-{
+-	if (IS_ENABLED(CONFIG_NUMA)) {
+-		unsigned int nr, *counters = m->private;
+-		unsigned int step = 1U << vm_area_page_order(v);
+ 
+-		if (!counters)
+-			return;
++/*
++ * Print number of pages allocated on each memory node.
++ *
++ * This function can only be called if CONFIG_NUMA is enabled
++ * and VM_UNINITIALIZED bit in v->flags is disabled.
++ */
++static void show_numa_info(struct seq_file *m, struct vm_struct *v,
++				 unsigned int *counters)
++{
++	unsigned int nr;
++	unsigned int step = 1U << vm_area_page_order(v);
+ 
+-		if (v->flags & VM_UNINITIALIZED)
+-			return;
+-		/* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
+-		smp_rmb();
++	if (!counters)
++		return;
+ 
+-		memset(counters, 0, nr_node_ids * sizeof(unsigned int));
++	memset(counters, 0, nr_node_ids * sizeof(unsigned int));
+ 
+-		for (nr = 0; nr < v->nr_pages; nr += step)
+-			counters[page_to_nid(v->pages[nr])] += step;
+-		for_each_node_state(nr, N_HIGH_MEMORY)
+-			if (counters[nr])
+-				seq_printf(m, " N%u=%u", nr, counters[nr]);
+-	}
++	for (nr = 0; nr < v->nr_pages; nr += step)
++		counters[page_to_nid(v->pages[nr])] += step;
++	for_each_node_state(nr, N_HIGH_MEMORY)
++		if (counters[nr])
++			seq_printf(m, " N%u=%u", nr, counters[nr]);
+ }
+ 
+ static void show_purge_info(struct seq_file *m)
+@@ -4962,8 +4963,11 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+ 	struct vmap_node *vn;
+ 	struct vmap_area *va;
+ 	struct vm_struct *v;
++	unsigned int *counters = NULL;
+ 	int i;
+ 
++	counters = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
++
+ 	for (i = 0; i < nr_vmap_nodes; i++) {
+ 		vn = &vmap_nodes[i];
+ 
+@@ -4979,6 +4983,11 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+ 			}
+ 
+ 			v = va->vm;
++			if (v->flags & VM_UNINITIALIZED)
++				continue;
++
++			/* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
++			smp_rmb();
+ 
+ 			seq_printf(m, "0x%pK-0x%pK %7ld",
+ 				v->addr, v->addr + v->size, v->size);
+@@ -5013,7 +5022,9 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+ 			if (is_vmalloc_addr(v->pages))
+ 				seq_puts(m, " vpages");
+ 
+-			show_numa_info(m, v);
++			if (IS_ENABLED(CONFIG_NUMA))
++				show_numa_info(m, v, counters);
++
+ 			seq_putc(m, '\n');
+ 		}
+ 		spin_unlock(&vn->busy.lock);
+@@ -5023,19 +5034,13 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+ 	 * As a final step, dump "unpurged" areas.
+ 	 */
+ 	show_purge_info(m);
++	kfree(counters);
+ 	return 0;
+ }
+ 
+ static int __init proc_vmalloc_init(void)
+ {
+-	void *priv_data = NULL;
+-
+-	if (IS_ENABLED(CONFIG_NUMA))
+-		priv_data = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
+-
+-	proc_create_single_data("vmallocinfo",
+-		0400, NULL, vmalloc_info_show, priv_data);
+-
++	proc_create_single("vmallocinfo", 0400, NULL, vmalloc_info_show);
+ 	return 0;
+ }
+ module_init(proc_vmalloc_init);
+--
