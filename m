@@ -1,134 +1,80 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E313122AE5D;
-	Thu,  8 May 2025 13:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D40922A4F1;
+	Thu,  8 May 2025 13:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746709814; cv=none; b=b0XLyks+GCcxc7a4FLbz4f6v+sddByKbIoS7+Zgo7dHzGr9+zLEoa4PYnd/42AkSHXIAKJxpm2twCAnTl8xEq1ylbO6PJEKpTZdVawI1vS43yl3tU0FtisUp3gGfNIlU+r7vOvw0ISMkO8uyEvyvYv2q5BWxNpdMOjUbYKdStUQ=
+	t=1746709821; cv=none; b=hxTP9AjfvjVjoG++uSmQFChAUrtVBpcP/WNcoImFwGVWhbU1mkmAHysMuthO4NE9bEiyqygtb4sAg8K2vQGjdtI90vyOZS1fLYrGNKqAi5l7l55zL0MF5JM5iPqTHpd7mrE54diQ3IBpCTZDdsixmN1fnv8x3edp3XCIQ7dGfYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746709814; c=relaxed/simple;
-	bh=1nCXsXmOyG+Pv6RWAre/pXlTAjQ5HdNmvbPbx7LtggI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ddgnrzo9uNguMFtPMqBfItJSGPcJXE6w1nw2utij/xBRDqCSlFCk0x3tzE5tCszQBomM63tqe8ueYQ1DkV5w1dUR/qZsZjSOo1bKr/56olcx43vnEizXEgXbsdOMnEjU0ksFMLCcrGIYNaPzzPL5TJqOega3Am/Xkgzm2xvUCPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GMTahloU; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746709821; c=relaxed/simple;
+	bh=pte1bCB2uCCVS7NjT5+1rghzcm7FMy84JWgVmHzg0K0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IIFmmXSvWuLzDIsVqE0pwlfpFeu/qDyYtg8z+XWXTKjegFOMZi+eAsCbGJ1BVodXiUfkZ+jozPMv/hpUOpGleydDiXi4Dl1SJqRV7N3ThzTt9P4ItL6jabv7EHcxWNgeUIo8cSLm7gPmhej2IamHM7U8MgGT6nQA7xNXgIXMcnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=CoY9UkqE; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GMTahloU"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2af2f15d1so125700966b.1;
-        Thu, 08 May 2025 06:10:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746709811; x=1747314611; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qMvBG083xP6dxkstmeCUA71FGvdXWAHknvGo9znoWPE=;
-        b=GMTahloURHxRXTzdYK2rRiwbLIh3LqPKhQ/mnupZwfr+6YMktQs/ZkwoVOTY0scPfb
-         em00sCpYKTaccbcxhHBRHWyEo1ttMzUoGhy/1pR72v9DoAupTzRz3Pzpa9mjhilJhkVy
-         7GE6h/0v3zP9Fe2LQxOiNBxLLkDIPQmPaCfBHE4Qq7CtlxBZMgeXw32/AODs0nkWJBgn
-         vCbhEGRfTKUOHHYlJ4GpQhdDKIn6hMvOYDfgX6KQMXOwi/OdczhZlG+sQyHrhQ763zPs
-         gbAV8VdiF/jmGULiFJx+6X34ezz+zemuy2PUTfyWjX091rD7zXWCPkAMfcJQT3OuItDw
-         uJng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746709811; x=1747314611;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qMvBG083xP6dxkstmeCUA71FGvdXWAHknvGo9znoWPE=;
-        b=JJTedNRjVFqNudnR65CU542nWP//Da7yU+xvsY/lOyl+kPYvGwbj3nTGO9blcMu4Z9
-         4v8UpcrfuCA7DIQuweHArH4tusK7nKmPkL/kU8YGig8v8BkyBqsxtAw3A3KpU9hnAsik
-         FZzpfeNB/A2k8HjBb4Eqo/xz1EUGnaXGIfkOCwQ1xFCZOlvDBPPgm97ERfCCVtBRlDiI
-         L0Rk27ulGw9HWnYUWFqCkDMGect7qmOKml5q54xIBvUc48dlb9gRuaSh5tEvnsGB2KzT
-         fcH9qHv2+T2xgbe2H+6ELdBkmIymDqpyTXJz/qT1o6kHngDSksOgx3OHPD7YJihOYqkn
-         ZZ8w==
-X-Forwarded-Encrypted: i=1; AJvYcCVwT0+4FyqwSEXogvHIXp7LRNiKXDIU6f+a2RtLyxgTsSsippyBTmRABDpWE/sbAGdHgTvNWH4PpUjcVmcD@vger.kernel.org, AJvYcCXqUQiFuod1B4DEHWvh2fE9MDDQAoCxL3ssh0VsuArAUD+geUkQm7NsuvcZA4VqwbFOh3rxuLsF9tQg@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK4yVS+wzZTHY2eHn7Oz4JLkena9o7mMZE2RSFcOetQz6dDxex
-	EkezExKpMqtNwmKeoJXQp4xlVmmO5UT8yN3K2F777M4XSHdpGg1X
-X-Gm-Gg: ASbGncup0BGax182fX0KBJEewScHQ5BMdUPQP3kT+gtBGEkViCpRZNZHsuh0ewtLvvW
-	sBGVnmELbqR4VoEL80bTh4rJVhoP+s/TjrtZTf2XIi1u7OmK+JNbsBSXjyv42vSRMc4I05BMo41
-	s24LTLjqT8EsudQ8axrPOAwKpYokh1EvnwDdAcghxS8O9OQ611MiWmikfhPB03eJYgkGCaqHJvu
-	9P6BK1/NKaHl6G2zTmQRrfC91INjQyNXe3N1ILPuezCTMkIYa6SnK/fRX0OgLhYF+OkZCzd/ZAk
-	m+H1arW+e3oyGkefh1U1AFKgPE+V8eSbJc1/HOV569QVtE2kfQ==
-X-Google-Smtp-Source: AGHT+IEB6ljN3284yI5Xfi8yEjwnnAJXLsYkUNbO+pXteYAHjEfhnYbAgRfFH7dO7rz+OnQx0ARB+Q==
-X-Received: by 2002:a17:907:9629:b0:aca:b72b:4576 with SMTP id a640c23a62f3a-ad1e8c4043bmr738658966b.33.1746709810784;
-        Thu, 08 May 2025 06:10:10 -0700 (PDT)
-Received: from [192.168.1.130] ([188.193.103.108])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1894c0371sm1074090066b.115.2025.05.08.06.10.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 06:10:10 -0700 (PDT)
-Message-ID: <35c08d79-1473-4c1e-b605-627c4ff00a92@gmail.com>
-Date: Thu, 8 May 2025 15:10:09 +0200
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="CoY9UkqE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=ppq7AHmk7VzTx8O0SoLweDhwIEA4fRyR9YaSrcEMytw=; b=CoY9UkqEO2eLQ09+3CpHiRxAKh
+	U2NIJOcRVEgzbYDlmEqhHYC1SwiE9DYoT87iEK5o+xK7X0grtEmEnijB929GVhFT8nF4be1wbIyVt
+	Mfc65cEW2T599xYxAB0hbm5wv+gQRJUmhJvz/1YrPBqkBYjjcmfA4cyAt/FXBlslidsHjKgecgbon
+	Q6OYO6mgQieLCmK5XCwl86oOJq64PnczyP+j3Nk1ND65A9Au/hTj/7fgTYy/jPKt38xSsGiR2Zuvp
+	4VPR/yjSAENEJTvGn20xmEqUvY1TFhO6i/v4BhAFfLJ7JXwolSN3CyB7FkvFuBo5Mv15Sem+5rJC1
+	Waoso+bQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uD10v-004aos-2w;
+	Thu, 08 May 2025 21:10:14 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 08 May 2025 21:10:13 +0800
+Date: Thu, 8 May 2025 21:10:13 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
+	Romain Perier <romain.perier@gmail.com>
+Subject: Re: [v3 PATCH] crypto: marvell/cesa - Do not chain submitted requests
+Message-ID: <aBytNdRyd5Ywh1Pq@gondor.apana.org.au>
+References: <15fadc356b73a1e8e24183f284b5c0a44a53e679.camel@gmail.com>
+ <Zw31JIEyh28vK9q7@gondor.apana.org.au>
+ <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
+ <Zw9AsgqKHJfySScx@gondor.apana.org.au>
+ <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
+ <aBsdTJUAcQgW4ink@gondor.apana.org.au>
+ <aBt5Mxq1MeefwXGJ@Red>
+ <aBw-C_krkNsIoPlT@gondor.apana.org.au>
+ <aBw_iC_4okpiKglQ@gondor.apana.org.au>
+ <aBypVwhHHzmqqN5K@Red>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/4] ARM: dts: stm32: add initial support for
- stm32mp157-ultra-fly-sbc board
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- =?UTF-8?B?QsO2cmdlIFN0csO8bXBmZWw=?= <boerge.struempfel@gmail.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250505115827.29593-1-goran.radni@gmail.com>
- <20250505115827.29593-5-goran.radni@gmail.com>
- <2d0ff289-06f6-4bde-a238-097d22573d4e@lunn.ch>
- <63665c17-da37-4b5b-9c2d-28d5a669680f@gmail.com>
- <3a7ef1bd-2c0e-4637-b0b6-2c0b73388618@lunn.ch>
-Content-Language: en-US
-From: Goran Radenovic <goran.radni@gmail.com>
-In-Reply-To: <3a7ef1bd-2c0e-4637-b0b6-2c0b73388618@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBypVwhHHzmqqN5K@Red>
 
-Hi Andrew,
+On Thu, May 08, 2025 at 02:53:43PM +0200, Corentin Labbe wrote:
+>
+> The board do not panic anymore, but have still selftest errors:
+> See the full boot log at kernel.montjoie.ovh/477935.log
 
-thank You once again for helpful hint.
+Do you have a boot log without this patch to compare? You seem
+to be getting skcipher failures as well as hash failures while
+the original report only had hash failures.
 
-Andrew Lunn wrote:
->>>> +	phy-handle = <&phy1>;
->>>> +
->>>> +	mdio {
->>>> +		#address-cells = <1>;
->>>> +		#size-cells = <0>;
->>>> +		compatible = "snps,dwmac-mdio";
->>>> +		phy1: ethernet-phy@1 {
->>>> +			reg = <1>;
->>>> +			interrupt-parent = <&gpiod>;
->>>> +			interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
->>> PHY interrupts are 99% time level, not edge.
->> That is correct, but I am facing strange behavior, when I set
->> IRQ_TYPE_LEVEL_LOW.
->> My board stops booting at:
->>
->> [    2.343233] Waiting for root device /dev/mmcblk0p4...
->> [   12.638818] platform 5a006000.usbphyc: deferred probe pending
->> [   12.643192] platform 49000000.usb-otg: deferred probe pending
->> [   12.649029] platform 48003000.adc: deferred probe pending
->> [   12.654277] platform 5800d000.usb: deferred probe pending
->> [   12.659744] platform 5800c000.usb: deferred probe pending
->> [   12.665089] amba 58005000.mmc: deferred probe pending
->> [   12.670239] amba 58007000.mmc: deferred probe pending
->> [   12.675185] platform 50025000.vrefbuf: deferred probe pending
->>
->> I must investigate this. If You have any idea, You are welcome to share it.
-> Could be an interrupt storm. The interrupt is not getting cleared
-> because of something missing in the PHY driver, so it just fires again
-> and again.
-
-After a brief investigation, I tend to agree with your assessment that 
-the issue lies in the driver—likely the stmmac driver — which is outside 
-the scope of my changes.
-
-Therefore, I would suggest keeping IRQ_TYPE_EDGE_FALLING for now, or 
-alternatively not using a hardware IRQ at all and falling back to 
-polling, as done in stm32mp15xx-dkx.dtsi.
-
-Best regards,
-Goran
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
