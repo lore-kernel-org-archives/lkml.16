@@ -1,385 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5D68472;
-	Thu,  8 May 2025 05:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 640708472
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 05:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746682995; cv=none; b=cKl6dINV8LQw59EAXsZaYEGuAmikdaJq4ZhU7Ebpr4Y2eJagIFmFi41dl8FPMrzYFGDcyVR+bKSImMEAzck5u1/aqUT4nuqi2psZbOygJHK7bRXkFnCjii3qWtohEKJGLJ0xirDVgebQT+taoO3cKlAEZCN5Dn5TX7dy4XPVlqE=
+	t=1746683070; cv=none; b=C1WWqj1txXTbV3JU3riltmWHOW24LhSXmKVk86RD6cO51jpBRUro72aMlxfxdHViQ2YQii6bVTJiIP0kfHEW68s3VQn6jwNf8HCqq8AISFg7ft2KdhnjpYIWOitqjSxhsLoS2lPOJanx958mgaTjDPnaLOhHTuEta4MQDk5xGuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746682995; c=relaxed/simple;
-	bh=bJnTVWWAoPsi/gOCsSmayqk7WS4HGxFcME0P4yAMNnk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fcc8jVegTiqwSwHkYmyKUcGxoc8XYtsltS3K0tIBlcM24BEZrWU+MldrkjCMst4qJg7C4wG1ahGef0rFIuJROQH9UgNwD5g0eqMsNpKsFD7qhRoxEvKPCDlEjxICFDStJ7XQwuAM2rdxeCnzozsiKQUq5RUbHBcjNIqH0tgwQ+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BZpYc3R1; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BZpYc3R1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746682993; x=1778218993;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bJnTVWWAoPsi/gOCsSmayqk7WS4HGxFcME0P4yAMNnk=;
-  b=BZpYc3R1sqll+ImXZ6yHGHvbDArb/w/Qurug2T7Pt+qEeZdEM2vKPaYS
-   m0TpjB40exo+LytWwVYQV34HbtBjnPihUcW4vYyPbdhhhfOrEN8IBIPY0
-   zm66OcB997NfUjAN0AIThmeMPE4BGwIfm8+dDtSVAQfr3FzW3Y8OVc8sM
-   ZTyry7s3T+isFfVqWe57tWNeNI8CLNCQyeTlWg/pPSHFjNPimF2rRxqlN
-   5P5uLvzA5nNoi5o3pdZsGKxn7kJn5cYstbbHcTMBp2ti8Oys/fQd1xiv4
-   C9z+eOFyX6yFHuGGH5j3bX44Bt+Vb8h4EysdpvvYMwhxyBGlKDCXhqCVq
-   Q==;
-X-CSE-ConnectionGUID: LpZ76HDBQ1e1PIbiwHShQg==
-X-CSE-MsgGUID: J9j+G0dZSpS3rTUSyrplsA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="73829759"
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="73829759"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 22:43:12 -0700
-X-CSE-ConnectionGUID: Wy1ixSdURoa0eiLmwwRbfA==
-X-CSE-MsgGUID: XdNwMjLTQf++QnlSFVtUhQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="137177988"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 07 May 2025 22:43:06 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCu2D-000AR5-0z;
-	Thu, 08 May 2025 05:43:05 +0000
-Date: Thu, 8 May 2025 13:42:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: luyulin <luyulin@eswincomputing.com>, linus.walleij@linaro.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kees@kernel.org,
-	gustavoars@kernel.org, brgl@bgdev.pl,
-	linux-hardening@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, zhengyu@eswincomputing.com,
-	ningyu@eswincomputing.com, huangyifeng@eswincomputing.com,
-	linmin@eswincomputing.com, fenglin@eswincomputing.com,
-	lianghujun@eswincomputing.com, luyulin <luyulin@eswincomputing.com>,
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: Re: [PATCH 2/2] pinctrl: eswin: Add eic7700 pinctrl driver
-Message-ID: <202505081214.tUfDpIv3-lkp@intel.com>
-References: <20250506091241.941-1-luyulin@eswincomputing.com>
+	s=arc-20240116; t=1746683070; c=relaxed/simple;
+	bh=0ePiEDjDcUm0cmeO17OxlWRoN9CVjKPQsbbioAJRyHc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sTb/UFX6VWYarAoU8n1+7Xpnc5vnFI3QzEOzQDIh57dx+kcvczkfy1M5x1Pd1Y4TQW6ztpPjXWK5Ov/OQiOB40VXp/wCEhGnYzL+N3QACJ0edjxCrcTSc+Cu1/nKTEMlAiXNPr4fLkXTKApBe8S5OtPAV7MtNa1YFaKFqTBCo+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0AD15106F;
+	Wed,  7 May 2025 22:44:17 -0700 (PDT)
+Received: from [10.163.54.182] (unknown [10.163.54.182])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D35D73F673;
+	Wed,  7 May 2025 22:44:23 -0700 (PDT)
+Message-ID: <4e5941f8-7e61-4a63-a669-bee1601093a6@arm.com>
+Date: Thu, 8 May 2025 11:14:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506091241.941-1-luyulin@eswincomputing.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: mm: Drop duplicate check in pmd_trans_huge()
+To: Gavin Shan <gshan@redhat.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
+ ryan.roberts@arm.com, peterx@redhat.com, joey.gouly@arm.com,
+ yangyicong@hisilicon.com, shan.gavin@gmail.com
+References: <20250508035142.189726-1-gshan@redhat.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250508035142.189726-1-gshan@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi luyulin,
+On 5/8/25 09:21, Gavin Shan wrote:
+> pmd_val(pmd) is inclusive to pmd_present(pmd) since the PMD entry
+> value isn't zero when pmd_present() returns true. Just drop the
+> duplicate check done by pmd_val(pmd).
 
-kernel test robot noticed the following build errors:
+Agreed, pmd_val() is redundant here because a positive pmd_present()
+also ensures a positive pmd_val().
 
-[auto build test ERROR on linusw-pinctrl/devel]
-[also build test ERROR on linusw-pinctrl/for-next robh/for-next linus/master v6.15-rc5 next-20250507]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+#define pmd_present(pmd) pte_present(pmd_pte(pmd))
+#define pte_present(pte) (pte_valid(pte) || pte_present_invalid(pte))
 
-url:    https://github.com/intel-lab-lkp/linux/commits/luyulin/pinctrl-eswin-Add-eic7700-pinctrl-driver/20250506-181212
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20250506091241.941-1-luyulin%40eswincomputing.com
-patch subject: [PATCH 2/2] pinctrl: eswin: Add eic7700 pinctrl driver
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20250508/202505081214.tUfDpIv3-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250508/202505081214.tUfDpIv3-lkp@intel.com/reproduce)
+#define pte_valid(pte)           (!!(pte_val(pte) & PTE_VALID))
+#define pte_present_invalid(pte) ((pte_val(pte) & (PTE_VALID |
+				  PTE_PRESENT_INVALID)) == PTE_PRESENT_INVALID)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505081214.tUfDpIv3-lkp@intel.com/
+pte_present() cannot return positive here unless either of the flags
+PTE_VALID or PTE_PRESENT_INVALID is set which implies pte_val() would
+also return positive.
 
-All errors (new ones prefixed by >>):
+Probably it would be better to add the above details in the commit
+message here as well.
 
->> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                       ^~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:123:9: note: in expansion of macro 'EIC7700_PIN'
-     123 |         EIC7700_PIN(0,   "chip_mode",           [0] = F_CHIP_MODE),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                                                        ^
-   drivers/pinctrl/pinctrl-eic7700.c:123:9: note: in expansion of macro 'EIC7700_PIN'
-     123 |         EIC7700_PIN(0,   "chip_mode",           [0] = F_CHIP_MODE),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
-     116 |         { \
-         |         ^
-   drivers/pinctrl/pinctrl-eic7700.c:123:9: note: in expansion of macro 'EIC7700_PIN'
-     123 |         EIC7700_PIN(0,   "chip_mode",           [0] = F_CHIP_MODE),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                       ^~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:124:9: note: in expansion of macro 'EIC7700_PIN'
-     124 |         EIC7700_PIN(1,   "mode_set0",           [0] = F_SDIO, [2] = F_GPIO),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                                                        ^
-   drivers/pinctrl/pinctrl-eic7700.c:124:9: note: in expansion of macro 'EIC7700_PIN'
-     124 |         EIC7700_PIN(1,   "mode_set0",           [0] = F_SDIO, [2] = F_GPIO),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
-     116 |         { \
-         |         ^
-   drivers/pinctrl/pinctrl-eic7700.c:124:9: note: in expansion of macro 'EIC7700_PIN'
-     124 |         EIC7700_PIN(1,   "mode_set0",           [0] = F_SDIO, [2] = F_GPIO),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                       ^~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:125:9: note: in expansion of macro 'EIC7700_PIN'
-     125 |         EIC7700_PIN(2,   "mode_set1",           [0] = F_SDIO, [2] = F_GPIO),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                                                        ^
-   drivers/pinctrl/pinctrl-eic7700.c:125:9: note: in expansion of macro 'EIC7700_PIN'
-     125 |         EIC7700_PIN(2,   "mode_set1",           [0] = F_SDIO, [2] = F_GPIO),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
-     116 |         { \
-         |         ^
-   drivers/pinctrl/pinctrl-eic7700.c:125:9: note: in expansion of macro 'EIC7700_PIN'
-     125 |         EIC7700_PIN(2,   "mode_set1",           [0] = F_SDIO, [2] = F_GPIO),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                       ^~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:126:9: note: in expansion of macro 'EIC7700_PIN'
-     126 |         EIC7700_PIN(3,   "mode_set2",           [0] = F_SDIO, [2] = F_GPIO),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                                                        ^
-   drivers/pinctrl/pinctrl-eic7700.c:126:9: note: in expansion of macro 'EIC7700_PIN'
-     126 |         EIC7700_PIN(3,   "mode_set2",           [0] = F_SDIO, [2] = F_GPIO),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
-     116 |         { \
-         |         ^
-   drivers/pinctrl/pinctrl-eic7700.c:126:9: note: in expansion of macro 'EIC7700_PIN'
-     126 |         EIC7700_PIN(3,   "mode_set2",           [0] = F_SDIO, [2] = F_GPIO),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                       ^~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:127:9: note: in expansion of macro 'EIC7700_PIN'
-     127 |         EIC7700_PIN(4,   "mode_set3",           [0] = F_SDIO, [2] = F_GPIO),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                                                        ^
-   drivers/pinctrl/pinctrl-eic7700.c:127:9: note: in expansion of macro 'EIC7700_PIN'
-     127 |         EIC7700_PIN(4,   "mode_set3",           [0] = F_SDIO, [2] = F_GPIO),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
-     116 |         { \
-         |         ^
-   drivers/pinctrl/pinctrl-eic7700.c:127:9: note: in expansion of macro 'EIC7700_PIN'
-     127 |         EIC7700_PIN(4,   "mode_set3",           [0] = F_SDIO, [2] = F_GPIO),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                       ^~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:128:9: note: in expansion of macro 'EIC7700_PIN'
-     128 |         EIC7700_PIN(5,   "xin",                 [0] = F_OSC),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                                                        ^
-   drivers/pinctrl/pinctrl-eic7700.c:128:9: note: in expansion of macro 'EIC7700_PIN'
-     128 |         EIC7700_PIN(5,   "xin",                 [0] = F_OSC),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
-     116 |         { \
-         |         ^
-   drivers/pinctrl/pinctrl-eic7700.c:128:9: note: in expansion of macro 'EIC7700_PIN'
-     128 |         EIC7700_PIN(5,   "xin",                 [0] = F_OSC),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                       ^~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:129:9: note: in expansion of macro 'EIC7700_PIN'
-     129 |         EIC7700_PIN(6,   "rtc_xin",             [0] = F_DISABLED),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                                                        ^
-   drivers/pinctrl/pinctrl-eic7700.c:129:9: note: in expansion of macro 'EIC7700_PIN'
-     129 |         EIC7700_PIN(6,   "rtc_xin",             [0] = F_DISABLED),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
-     116 |         { \
-         |         ^
-   drivers/pinctrl/pinctrl-eic7700.c:129:9: note: in expansion of macro 'EIC7700_PIN'
-     129 |         EIC7700_PIN(6,   "rtc_xin",             [0] = F_DISABLED),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                       ^~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:130:9: note: in expansion of macro 'EIC7700_PIN'
-     130 |         EIC7700_PIN(7,   "rst_out_n",           [0] = F_RESET),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                                                        ^
-   drivers/pinctrl/pinctrl-eic7700.c:130:9: note: in expansion of macro 'EIC7700_PIN'
-     130 |         EIC7700_PIN(7,   "rst_out_n",           [0] = F_RESET),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
-     116 |         { \
-         |         ^
-   drivers/pinctrl/pinctrl-eic7700.c:130:9: note: in expansion of macro 'EIC7700_PIN'
-     130 |         EIC7700_PIN(7,   "rst_out_n",           [0] = F_RESET),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                       ^~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:131:9: note: in expansion of macro 'EIC7700_PIN'
-     131 |         EIC7700_PIN(8,   "key_reset_n",         [0] = F_RESET),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                                                        ^
-   drivers/pinctrl/pinctrl-eic7700.c:131:9: note: in expansion of macro 'EIC7700_PIN'
-     131 |         EIC7700_PIN(8,   "key_reset_n",         [0] = F_RESET),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
-     116 |         { \
-         |         ^
-   drivers/pinctrl/pinctrl-eic7700.c:131:9: note: in expansion of macro 'EIC7700_PIN'
-     131 |         EIC7700_PIN(8,   "key_reset_n",         [0] = F_RESET),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                       ^~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:132:9: note: in expansion of macro 'EIC7700_PIN'
-     132 |         EIC7700_PIN(9,   "rst_in_n",            [0] = F_DISABLED),
-         |         ^~~~~~~~~~~
->> drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                                                        ^
-   drivers/pinctrl/pinctrl-eic7700.c:132:9: note: in expansion of macro 'EIC7700_PIN'
-     132 |         EIC7700_PIN(9,   "rst_in_n",            [0] = F_DISABLED),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
-     116 |         { \
-         |         ^
-   drivers/pinctrl/pinctrl-eic7700.c:132:9: note: in expansion of macro 'EIC7700_PIN'
-     132 |         EIC7700_PIN(9,   "rst_in_n",            [0] = F_DISABLED),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                       ^~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:133:9: note: in expansion of macro 'EIC7700_PIN'
-     133 |         EIC7700_PIN(10,  "por_in_n",            [0] = F_DISABLED),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                                                        ^
-   drivers/pinctrl/pinctrl-eic7700.c:133:9: note: in expansion of macro 'EIC7700_PIN'
-     133 |         EIC7700_PIN(10,  "por_in_n",            [0] = F_DISABLED),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
-     116 |         { \
-         |         ^
-   drivers/pinctrl/pinctrl-eic7700.c:133:9: note: in expansion of macro 'EIC7700_PIN'
-     133 |         EIC7700_PIN(10,  "por_in_n",            [0] = F_DISABLED),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                       ^~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:134:9: note: in expansion of macro 'EIC7700_PIN'
-     134 |         EIC7700_PIN(11,  "por_out_n",           [0] = F_DISABLED),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                                                        ^
-   drivers/pinctrl/pinctrl-eic7700.c:134:9: note: in expansion of macro 'EIC7700_PIN'
-     134 |         EIC7700_PIN(11,  "por_out_n",           [0] = F_DISABLED),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
-     116 |         { \
-         |         ^
-   drivers/pinctrl/pinctrl-eic7700.c:134:9: note: in expansion of macro 'EIC7700_PIN'
-     134 |         EIC7700_PIN(11,  "por_out_n",           [0] = F_DISABLED),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                       ^~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:135:9: note: in expansion of macro 'EIC7700_PIN'
-     135 |         EIC7700_PIN(12,  "gpio0",               [0] = F_GPIO),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                                                        ^
-   drivers/pinctrl/pinctrl-eic7700.c:135:9: note: in expansion of macro 'EIC7700_PIN'
-     135 |         EIC7700_PIN(12,  "gpio0",               [0] = F_GPIO),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
-     116 |         { \
-         |         ^
-   drivers/pinctrl/pinctrl-eic7700.c:135:9: note: in expansion of macro 'EIC7700_PIN'
-     135 |         EIC7700_PIN(12,  "gpio0",               [0] = F_GPIO),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                       ^~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:136:9: note: in expansion of macro 'EIC7700_PIN'
-     136 |         EIC7700_PIN(13,  "por_sel",             [0] = F_RESET),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                                                        ^
-   drivers/pinctrl/pinctrl-eic7700.c:136:9: note: in expansion of macro 'EIC7700_PIN'
-     136 |         EIC7700_PIN(13,  "por_sel",             [0] = F_RESET),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
-     116 |         { \
-         |         ^
-   drivers/pinctrl/pinctrl-eic7700.c:136:9: note: in expansion of macro 'EIC7700_PIN'
-     136 |         EIC7700_PIN(13,  "por_sel",             [0] = F_RESET),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:119:39: error: expected expression before 'static'
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                       ^~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:137:9: note: in expansion of macro 'EIC7700_PIN'
-     137 |         EIC7700_PIN(14,  "jtag0_tck",           [0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:119:72: error: expected '}' before '{' token
-     119 |                 .drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-         |                                                                        ^
-   drivers/pinctrl/pinctrl-eic7700.c:137:9: note: in expansion of macro 'EIC7700_PIN'
-     137 |         EIC7700_PIN(14,  "jtag0_tck",           [0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
-         |         ^~~~~~~~~~~
-   drivers/pinctrl/pinctrl-eic7700.c:116:9: note: to match this '{'
-     116 |         { \
-         |         ^
-   drivers/pinctrl/pinctrl-eic7700.c:137:9: note: in expansion of macro 'EIC7700_PIN'
-     137 |         EIC7700_PIN(14,  "jtag0_tck",           [0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
+The earlier commit skipped dropping pmd_val() in order to keep then
+proposed change confined to just adding new pmd_table() check, even
+though pmd_val() redundancy was evident as well which should have
+been dropped there after.
 
+d1770e909898 ("arm64/mm: Check pmd_table() in pmd_trans_huge()")
 
-vim +/static +119 drivers/pinctrl/pinctrl-eic7700.c
-
-   114	
-   115	#define EIC7700_PIN(_number, _name, ...) \
-   116		{ \
-   117			.number	= _number, \
-   118			.name = _name, \
- > 119			.drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-   120		}
-   121	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> No functional changes intended.
+> 
+> Signed-off-by: Gavin Shan <gshan@redhat.com>
+> ---
+> Found this by code inspection
+> ---
+>  arch/arm64/include/asm/pgtable.h | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index d3b538be1500..2599b9b8666f 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -739,8 +739,7 @@ static inline int pmd_trans_huge(pmd_t pmd)
+>  	 * If pmd is present-invalid, pmd_table() won't detect it
+>  	 * as a table, so force the valid bit for the comparison.
+>  	 */
+> -	return pmd_val(pmd) && pmd_present(pmd) &&
+> -	       !pmd_table(__pmd(pmd_val(pmd) | PTE_VALID));
+> +	return pmd_present(pmd) && !pmd_table(__pmd(pmd_val(pmd) | PTE_VALID));
+>  }
+>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+> 
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
