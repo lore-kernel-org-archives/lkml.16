@@ -1,367 +1,185 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03D2224AF2;
-	Thu,  8 May 2025 22:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974361D63F5
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 22:24:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746742944; cv=none; b=H90M6svubKjFUwRvA5gWQAYJCeefzw/PJPfzwU8C74jsXTVG0SeXI6QjzautOeKefeXiZPreXy2GEXOChp7Z1t4g9eEVb2bHZays41M7jG9n0vgLuyvQ9jpnGa0vKXALz3r5wBzjMSAeuILb0BqFeVI7scH5oFkZWdlsH1MGSmU=
+	t=1746743065; cv=none; b=Wazqjz0EJtHw2HX4VHzMTwFIkeTcX8O22U+eVXs1YGGBipsxNweidGBXk5bhFkaXIB2mHpKfskwyGxAuSKiwMtadHQo5M81yFRNUWC7kru4bRqWSkUwINacT0dCFl0w5fHNTjCN3VkI5VP82PiPDDcYyayqMBEX9Ep6XkmcVL5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746742944; c=relaxed/simple;
-	bh=x8ncZbBnesK2pUhqAMnfU/mEnGXb8MQmhLNwSQevhuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CYU30+aK1/rPsJdIREjOyPwN4lD40k5KKM0Vc60tVBMF7WI6cA/7ZkRORsujutFTSOBnYzxwhL7GrIqe5ujGfDGej/qtWpRdrMoS5eWH3SzzReQt4E0ZWzIMdo6Kbk1m9EJLExroO54vTFWq6HSdvnJqI7RkqG46BesMYFxGIPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lYodj+FP; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYodj+FP"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6f0c30a1ca3so18737806d6.1;
-        Thu, 08 May 2025 15:22:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746742942; x=1747347742; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fg3GK54oLt3wm9wAeXHbwjv1eDR1lDC2mM5d6wedhCA=;
-        b=lYodj+FPg6V1k6VGvIV88JL1Hu0Ld5CJVCcaYlC4a0MZZuL04/B+PEmJub4TFF+97H
-         7Cwqe+Tz6tt9yvGFQSg/6O5j9CjibkO5TYgYyUnv8NiQgldG7VdzIiTG3Ee410wdF2c5
-         zQyEYpC33kU/xyUzVQW9C2FMB0ovPDUZfDZZWHvMBfaTAlVbT3jDCLE23xwBArabw6kw
-         fyQqJ3s6qMV3oxVzyyNhLhxOND+B7ZCsSgJDA2u8FqqHYrxy6noDqiSNm0ePPuIUHu+U
-         jd7NcwpUF5VqW5Jr1dxRNVBa1AGszJrepsrk67pYe6TsKmbUzs5cfgufKlUfBVUT+Bj5
-         3WMQ==
+	s=arc-20240116; t=1746743065; c=relaxed/simple;
+	bh=EASvvr6zy4sNrYkdGbffGMgWuXnT6GZQq0R8l7eXBJ0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=cbV8y9zhMnm3hXAJj+i+HuWXPLZ0lk9Q9/fsV4wQiAxjYEnT0aIzjtnF/KPcQS6NW+o+mLnugb97N0hwLALhgD/dt1wGml2QbtOcZKmTUu6EuSHvTsgUT/j6HDCQDbi5GjgDc+SE22w5N7ZDETaPu63HeF4BN2KUQhRcDDc8XAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d9099f9056so26756195ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 15:24:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746742942; x=1747347742;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fg3GK54oLt3wm9wAeXHbwjv1eDR1lDC2mM5d6wedhCA=;
-        b=ZNbblpmGIIryobMzbVM4S7CbAcI86ImOjdcgBy3Hvfrm1LkU26JVA7RXYdmftVAz4U
-         cty9Vjuzwci+6XRHtTTR9LvVp0Es/VeIblXST0gaccBUNK5J64Sc0Z4EwHVpCXj9Mq7m
-         PrB2KrCCWS2bir3E+qmwx0JsoV1Y4KqADDn6Vgp0q6b96esSAs5hIE5h9cx7o/7gDmeZ
-         h9CLmrWFDW4aFZxUL/lgVveKS1oMhVwX6A+40OXgApXsZzqX4hwl7EEOhdoNt2YnZmPJ
-         DO7zICU9GeA5FOXBRhxqbNqkPMB5CgprnIx58SMOGqsuB8VziW+fOkJIbiHli+oxtRtE
-         49TA==
-X-Forwarded-Encrypted: i=1; AJvYcCVzWM9yBC2h3spUxfGbmWOCLUEiuVMiSEO0G/hWV3UT/EN4ra0vjUJwLDeZqZNaJP5a59xmgOgKttBj@vger.kernel.org, AJvYcCW+Iv3dDXNDO6xFfG9mmnB2YoZw6tWYkISr+KIQlDPflAUSgTFHS72KA4gzX2lWVBpw6YcuBjZyptCFv4E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0N7VxGmy31mkiEhHgcoycWtjohxCl/3LJLIMBlz/1nGJp1QFh
-	1pr43fvExi6q3b8FvJZA/LPCwMdlqzps00Pe3gEpZdz4+UV0hlHYT/9nOIM/
-X-Gm-Gg: ASbGnctVoF2KMunPlvPpNZRO39AU1z4RAUkFXBkTN3TX5hiw+YXsZaYj2up84h04Nrx
-	MXgB/6zhaIv2fAyqYvDK/B3Nf14R9CHkqVeo3KZ7TDODRU0Wc+KxQpVzJiIWSwQPfuiBhLm6P6c
-	uS7z54GJhcSIciWdmALBiXxWpq/argvkFVTkply8en+LHTbTfA1lCWseveWmTV3C932xKcK6E/v
-	lqiFb+adt1ctVEgHz4xRnNEocoavzYOZbN+rB6gh5SpWp5w9WX3N9gfb2QKbj0Da61RGE9b4nVC
-	7XIF02OYl9vQI7C4LWVBqpdejRA=
-X-Google-Smtp-Source: AGHT+IGPmKRd9i0agUYQ+31u6dVr+1AcCz/bSh5SwzVf+qyh1WTBCd3FwcBZCnD03Hf6e01yuwXv0Q==
-X-Received: by 2002:a05:6214:da5:b0:6f5:4079:3189 with SMTP id 6a1803df08f44-6f6e47b9beemr15826506d6.2.1746742941721;
-        Thu, 08 May 2025 15:22:21 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f6e39f4821sm5210406d6.33.2025.05.08.15.22.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 15:22:21 -0700 (PDT)
-Date: Fri, 9 May 2025 06:21:53 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	sophgo@lists.linux.dev, linux-rtc@vger.kernel.org
-Cc: Jingbao Qiu <qiujingbao.dlmu@gmail.com>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v15] rtc: sophgo: add rtc support for Sophgo CV1800 SoC
-Message-ID: <dm4l3wfcuygmuylz6uqn2g7wztg4tyrjbm24hqcpffjnpkwany@ib2nvjibq2wl>
-References: <20250507195626.502240-1-alexander.sverdlin@gmail.com>
+        d=1e100.net; s=20230601; t=1746743062; x=1747347862;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HqYpOk+kp9o/oe58c6ux0E83wKBz30NTkNCZ9/EBWws=;
+        b=Cs59YHKErZep+SyqdPOUY64DW2QaKH1DqX4IxUG+WinKDuJy9Zq5cVpufm7zp5w9C1
+         OJEVTEnLeVsGrul7QdtSWSjzx+ENJTbPqc6SZHPnGQdsC8c+5NrRpnINOkoBdWKn3GyS
+         6mY0h5ZA/LYLTyYYnm1i3RojMJ5kxwGWal6pcw4wjFPbw+zus4S5uUjyRQ10U73KcuDv
+         Sm5LKRM67AMuDyadlvWgO37yLKIRur+1s6P37Avkh6Odh530g+HAjSzM8VDxFKNI0LYJ
+         10or0aQFgvz+JwfW+9cvkgbhbkWZ78tfsQnr9R7E9tMr3Hygf+Gs4XUytuj9AWFM4Ufh
+         f8Ew==
+X-Gm-Message-State: AOJu0YzGoLdh+i0GD7H7Mas3HQOZwFI5+xkAJ/B79FHveaKEMwOn9wVN
+	ezkRyIxmFFj3lCHh5HwzIEyByeCatPjBUBrS/N9YRrs854qIgSiP503hoHE+eG3c31TlIhOeBBh
+	jd3o1mmkCRCdNkR3Ke5C2XFOpnAlPft3kpHr2Jj/fpXCozKofD192W7yiDg==
+X-Google-Smtp-Source: AGHT+IF8ouceDSj9KHS0v+Fp89FRYOMjYaJkw8MiHUUN0lYGNxLLlVy8apBQZeB+JkrzoaHpIqCEH9fDvs+rFQjMnKBhzugHQNfu
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507195626.502240-1-alexander.sverdlin@gmail.com>
+X-Received: by 2002:a05:6e02:3e90:b0:3d9:2fbe:2bb1 with SMTP id
+ e9e14a558f8ab-3da7e1f1d23mr18457395ab.12.1746743062736; Thu, 08 May 2025
+ 15:24:22 -0700 (PDT)
+Date: Thu, 08 May 2025 15:24:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <681d2f16.050a0220.a19a9.011f.GAE@google.com>
+Subject: [syzbot] [kernel?] BUG: unable to handle kernel NULL pointer
+ dereference in module_kobj_release
+From: syzbot <syzbot+3ea73421f5aa3f339e9e@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 07, 2025 at 09:56:20PM +0200, Alexander Sverdlin wrote:
-> From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> 
-> Implement the RTC driver for CV1800, which able to provide time alarm.
-> 
-> Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-> ---
-> Changelog:
-> v15:
-> - the only patch in the series left
-> - dropped changes to MAINTAINERS file
-> v14:
-> - https://lore.kernel.org/lkml/gztsdu5p4tzt7emlwiuc3z74f4tfgkclcyrl324prqzp6dqhhf@ezrdmmhvf2nm/T/
-> - platform device name "cv1800-rtc" -> "cv1800b-rtc"
-> v13:
-> - Change in the Kconfig dependency caused by the move of the previous
->   patch from MFD into SOC
-> v12:
-> - added MAINTAINERS entry
-> - depends on cv1800-rtcsys MFD driver
-> - use syscon for regmap
-> - get named clock from parent MFD
-> - corresponding platform device is expected to be instantiated by MFD stub
-> Changes since v10:
-> - only start RTC on set_time;
-> Changes since v9:
-> - further simplified bitmask macros;
-> - unconditional RTC start (rtc_enable_sec_counter()), otherwise
-> didn't start on SG2000;
-> - dropped ANA_CALIB modification (has been forgotten in v8 with
-> the drop of SW calibration to switch to HW calibration);
-> - successfully tested on SG2000;
-> 
-> 
->  drivers/rtc/Kconfig      |  12 +++
->  drivers/rtc/Makefile     |   1 +
->  drivers/rtc/rtc-cv1800.c | 218 +++++++++++++++++++++++++++++++++++++++
->  4 files changed, 232 insertions(+)
->  create mode 100644 drivers/rtc/rtc-cv1800.c
-> 
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index 0bbbf778ecfa..46593103db11 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -1395,6 +1395,18 @@ config RTC_DRV_ASM9260
->  	  This driver can also be built as a module. If so, the module
->  	  will be called rtc-asm9260.
->  
-> +config RTC_DRV_CV1800
-> +	tristate "Sophgo CV1800 RTC"
-> +	depends on SOPHGO_CV1800_RTCSYS || COMPILE_TEST
-> +	select MFD_SYSCON
-> +	select REGMAP
-> +	help
-> +	  If you say yes here you get support the RTC driver for Sophgo CV1800
-> +	  series SoC.
-> +
-> +	  This driver can also be built as a module. If so, the module will be
-> +	  called rtc-cv1800.
-> +
->  config RTC_DRV_DIGICOLOR
->  	tristate "Conexant Digicolor RTC"
->  	depends on ARCH_DIGICOLOR || COMPILE_TEST
-> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> index 489b4ab07068..621b30a33dda 100644
-> --- a/drivers/rtc/Makefile
-> +++ b/drivers/rtc/Makefile
-> @@ -44,6 +44,7 @@ obj-$(CONFIG_RTC_DRV_CADENCE)	+= rtc-cadence.o
->  obj-$(CONFIG_RTC_DRV_CMOS)	+= rtc-cmos.o
->  obj-$(CONFIG_RTC_DRV_CPCAP)	+= rtc-cpcap.o
->  obj-$(CONFIG_RTC_DRV_CROS_EC)	+= rtc-cros-ec.o
-> +obj-$(CONFIG_RTC_DRV_CV1800)	+= rtc-cv1800.o
->  obj-$(CONFIG_RTC_DRV_DA9052)	+= rtc-da9052.o
->  obj-$(CONFIG_RTC_DRV_DA9055)	+= rtc-da9055.o
->  obj-$(CONFIG_RTC_DRV_DA9063)	+= rtc-da9063.o
-> diff --git a/drivers/rtc/rtc-cv1800.c b/drivers/rtc/rtc-cv1800.c
-> new file mode 100644
-> index 000000000000..18bc542bbdb8
-> --- /dev/null
-> +++ b/drivers/rtc/rtc-cv1800.c
-> @@ -0,0 +1,218 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * rtc-cv1800.c: RTC driver for Sophgo cv1800 RTC
-> + *
-> + * Author: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/irq.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/rtc.h>
-> +
-> +#define SEC_PULSE_GEN          0x1004
-> +#define ALARM_TIME             0x1008
-> +#define ALARM_ENABLE           0x100C
-> +#define SET_SEC_CNTR_VAL       0x1010
-> +#define SET_SEC_CNTR_TRIG      0x1014
-> +#define SEC_CNTR_VAL           0x1018
-> +
-> +/*
-> + * When in VDDBKUP domain, this MACRO register
-> + * does not power down
-> + */
-> +#define MACRO_RO_T             0x14A8
-> +#define MACRO_RG_SET_T         0x1498
-> +
-> +#define ALARM_ENABLE_MASK      BIT(0)
-> +#define SEL_SEC_PULSE          BIT(31)
-> +
-> +struct cv1800_rtc_priv {
-> +	struct rtc_device *rtc_dev;
-> +	struct regmap *rtc_map;
-> +	struct clk *clk;
-> +	int irq;
-> +};
-> +
-> +static bool cv1800_rtc_enabled(struct device *dev)
-> +{
-> +	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
-> +	u32 reg;
-> +
-> +	regmap_read(info->rtc_map, SEC_PULSE_GEN, &reg);
-> +
-> +	return (reg & SEL_SEC_PULSE) == 0;
-> +}
-> +
-> +static void cv1800_rtc_enable(struct device *dev)
-> +{
-> +	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
-> +
-> +	/* Sec pulse generated internally */
-> +	regmap_update_bits(info->rtc_map, SEC_PULSE_GEN, SEL_SEC_PULSE, 0);
-> +}
-> +
-> +static int cv1800_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
-> +{
-> +	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
-> +
-> +	regmap_write(info->rtc_map, ALARM_ENABLE, enabled);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cv1800_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-> +{
-> +	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
-> +	unsigned long alarm_time;
-> +
-> +	alarm_time = rtc_tm_to_time64(&alrm->time);
-> +
-> +	cv1800_rtc_alarm_irq_enable(dev, 0);
-> +
-> +	regmap_write(info->rtc_map, ALARM_TIME, alarm_time);
-> +
-> +	cv1800_rtc_alarm_irq_enable(dev, alrm->enabled);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cv1800_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
-> +{
-> +	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
-> +	u32 enabled;
-> +	u32 time;
-> +
-> +	if (!cv1800_rtc_enabled(dev)) {
-> +		alarm->enabled = 0;
-> +		return 0;
-> +	}
-> +
-> +	regmap_read(info->rtc_map, ALARM_ENABLE, &enabled);
-> +
-> +	alarm->enabled = enabled & ALARM_ENABLE_MASK;
-> +
-> +	regmap_read(info->rtc_map, ALARM_TIME, &time);
-> +
-> +	rtc_time64_to_tm(time, &alarm->time);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cv1800_rtc_read_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
-> +	u32 sec;
-> +
-> +	if (!cv1800_rtc_enabled(dev))
-> +		return -EINVAL;
-> +
-> +	regmap_read(info->rtc_map, SEC_CNTR_VAL, &sec);
-> +
-> +	rtc_time64_to_tm(sec, tm);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cv1800_rtc_set_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
-> +	unsigned long sec;
-> +
-> +	sec = rtc_tm_to_time64(tm);
-> +
-> +	regmap_write(info->rtc_map, SET_SEC_CNTR_VAL, sec);
-> +	regmap_write(info->rtc_map, SET_SEC_CNTR_TRIG, 1);
-> +
-> +	regmap_write(info->rtc_map, MACRO_RG_SET_T, sec);
-> +
-> +	cv1800_rtc_enable(dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t cv1800_rtc_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct cv1800_rtc_priv *info = dev_id;
-> +
-> +	rtc_update_irq(info->rtc_dev, 1, RTC_IRQF | RTC_AF);
-> +
-> +	regmap_write(info->rtc_map, ALARM_ENABLE, 0);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static const struct rtc_class_ops cv1800_rtc_ops = {
-> +	.read_time = cv1800_rtc_read_time,
-> +	.set_time = cv1800_rtc_set_time,
-> +	.read_alarm = cv1800_rtc_read_alarm,
-> +	.set_alarm = cv1800_rtc_set_alarm,
-> +	.alarm_irq_enable = cv1800_rtc_alarm_irq_enable,
-> +};
-> +
+Hello,
 
-> +static int cv1800_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct cv1800_rtc_priv *rtc;
-> +	int ret;
-> +
-> +	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
-> +	if (!rtc)
-> +		return -ENOMEM;
-> +
-> +	rtc->rtc_map = device_node_to_regmap(pdev->dev.parent->of_node);
-> +	if (IS_ERR(rtc->rtc_map))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(rtc->rtc_map),
-> +				     "cannot get parent regmap\n");
-> +
-> +	rtc->irq = platform_get_irq(pdev, 0);
-> +	if (rtc->irq < 0)
-> +		return rtc->irq;
-> +
-> +	rtc->clk = devm_clk_get_enabled(pdev->dev.parent, "rtc");
-> +	if (IS_ERR(rtc->clk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(rtc->clk),
-> +				     "rtc clk not found\n");
-> +
-> +	platform_set_drvdata(pdev, rtc);
-> +
-> +	device_init_wakeup(&pdev->dev, 1);
-> +
-> +	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
-> +	if (IS_ERR(rtc->rtc_dev))
-> +		return PTR_ERR(rtc->rtc_dev);
-> +
-> +	rtc->rtc_dev->ops = &cv1800_rtc_ops;
-> +	rtc->rtc_dev->range_max = U32_MAX;
-> +
-> +	ret = devm_request_irq(&pdev->dev, rtc->irq, cv1800_rtc_irq_handler,
-> +			       IRQF_TRIGGER_HIGH, "rtc alarm", rtc);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret,
-> +				     "cannot register interrupt handler\n");
-> +
-> +	return devm_rtc_register_device(rtc->rtc_dev);
-> +}
-> +
+syzbot found the following issue on:
 
-I wonder whether the rtc driver may need reset (maybe optional) for this?
-If so, please add it.
+HEAD commit:    d76bb1ebb558 Merge tag 'erofs-for-6.15-rc6-fixes' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=155c58f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=224acb8d2ffe8753
+dashboard link: https://syzkaller.appspot.com/bug?extid=3ea73421f5aa3f339e9e
+compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
 
-Regards,
-Inochi
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/fa3fbcfdac58/non_bootable_disk-d76bb1eb.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/cf604d463f46/vmlinux-d76bb1eb.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/01922f2b5b5e/Image-d76bb1eb.gz.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+3ea73421f5aa3f339e9e@syzkaller.appspotmail.com
+
+ el0t_64_sync_handler+0x10c/0x138 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x1a4/0x1a8 arch/arm64/kernel/entry.S:600
+kobject: kobject_add_internal failed for raw_gadget with -EEXIST, don't try to register things with the same name in the same directory.
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
+Mem abort info:
+  ESR = 0x0000000096000046
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+  FSC = 0x06: level 2 translation fault
+Data abort info:
+  ISV = 0, ISS = 0x00000046, ISS2 = 0x00000000
+  CM = 0, WnR = 1, TnD = 0, TagAccess = 0
+  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+user pgtable: 4k pages, 52-bit VAs, pgdp=00000000440f6980
+[0000000000000008] pgd=0800000044a74403, p4d=080000004487c403, pud=0800000044880403, pmd=0000000000000000
+Internal error: Oops: 0000000096000046 [#1]  SMP
+Modules linked in:
+CPU: 0 UID: 0 PID: 3469 Comm: syz.0.4 Not tainted 6.15.0-rc5-syzkaller-00043-gd76bb1ebb558 #0 PREEMPT 
+Hardware name: linux,dummy-virt (DT)
+pstate: 614020c9 (nZCv daIF +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+pc : __lse__cmpxchg_case_acq_32 arch/arm64/include/asm/atomic_lse.h:271 [inline]
+pc : __cmpxchg_case_acq_32 arch/arm64/include/asm/cmpxchg.h:120 [inline]
+pc : __cmpxchg_acq arch/arm64/include/asm/cmpxchg.h:169 [inline]
+pc : raw_atomic_cmpxchg_acquire include/linux/atomic/atomic-arch-fallback.h:2055 [inline]
+pc : raw_atomic_try_cmpxchg_acquire include/linux/atomic/atomic-arch-fallback.h:2173 [inline]
+pc : atomic_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:1302 [inline]
+pc : queued_spin_lock include/asm-generic/qspinlock.h:111 [inline]
+pc : do_raw_spin_lock include/linux/spinlock.h:187 [inline]
+pc : __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:111 [inline]
+pc : _raw_spin_lock_irqsave+0x34/0x8c kernel/locking/spinlock.c:162
+lr : complete_with_flags kernel/sched/completion.c:20 [inline]
+lr : complete+0x24/0xa4 kernel/sched/completion.c:47
+sp : ffff80008948bba0
+x29: ffff80008948bba0 x28: fdf00000098d0000 x27: 0000000000000000
+x26: 0000000000000000 x25: 0000000000000000 x24: f6f000000485c968
+x23: ffff800081d77478 x22: 0000000000000000 x21: ffff80008256d388
+x20: 0000000000000008 x19: 0000000000000000 x18: 0000000000000000
+x17: 0000000000000000 x16: 0000000000000000 x15: ffff800081b610e0
+x14: 0000000000000164 x13: ffff8000828d1130 x12: 0000000000000001
+x11: 000000ece58db54c x10: 7fd9d1af9fae5191 x9 : 6105f830acda155c
+x8 : fdf00000098d11e8 x7 : fff000007f8d4b00 x6 : fff07ffffd022000
+x5 : fff000007f8ca588 x4 : 0000000000000000 x3 : 0000000000000000
+x2 : 0000000000000001 x1 : 0000000000000000 x0 : 0000000000000008
+Call trace:
+ __lse__cmpxchg_case_acq_32 arch/arm64/include/asm/atomic_lse.h:271 [inline] (P)
+ __cmpxchg_case_acq_32 arch/arm64/include/asm/cmpxchg.h:120 [inline] (P)
+ __cmpxchg_acq arch/arm64/include/asm/cmpxchg.h:169 [inline] (P)
+ raw_atomic_cmpxchg_acquire include/linux/atomic/atomic-arch-fallback.h:2055 [inline] (P)
+ raw_atomic_try_cmpxchg_acquire include/linux/atomic/atomic-arch-fallback.h:2173 [inline] (P)
+ atomic_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:1302 [inline] (P)
+ queued_spin_lock include/asm-generic/qspinlock.h:111 [inline] (P)
+ do_raw_spin_lock include/linux/spinlock.h:187 [inline] (P)
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:111 [inline] (P)
+ _raw_spin_lock_irqsave+0x34/0x8c kernel/locking/spinlock.c:162 (P)
+ complete_with_flags kernel/sched/completion.c:20 [inline]
+ complete+0x24/0xa4 kernel/sched/completion.c:47
+ module_kobj_release+0x14/0x20 kernel/params.c:946
+ kobject_cleanup lib/kobject.c:689 [inline]
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0xa4/0x114 lib/kobject.c:737
+ lookup_or_create_module_kobject.part.0+0xac/0xdc kernel/params.c:783
+ lookup_or_create_module_kobject+0x40/0x50 kernel/params.c:793
+ module_add_driver+0xf0/0x16c drivers/base/module.c:46
+ bus_add_driver+0xf8/0x208 drivers/base/bus.c:682
+ driver_register+0x60/0x128 drivers/base/driver.c:249
+ usb_gadget_register_driver_owner+0x54/0x13c drivers/usb/gadget/udc/core.c:1700
+ raw_ioctl_run drivers/usb/gadget/legacy/raw_gadget.c:595 [inline]
+ raw_ioctl+0x74c/0xd2c drivers/usb/gadget/legacy/raw_gadget.c:1306
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl fs/ioctl.c:892 [inline]
+ __arm64_sys_ioctl+0xb4/0xe8 fs/ioctl.c:892
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x48/0x110 arch/arm64/kernel/syscall.c:49
+ el0_svc_common.constprop.0+0x40/0xe0 arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x1c/0x28 arch/arm64/kernel/syscall.c:151
+ el0_svc+0xa0/0xe0 arch/arm64/kernel/entry-common.c:744
+ el0t_64_sync_handler+0x10c/0x138 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x1a4/0x1a8 arch/arm64/kernel/entry.S:600
+Code: b9000841 d503201f 52800001 52800022 (88e17c02) 
+---[ end trace 0000000000000000 ]---
+----------------
+Code disassembly (best guess):
+   0:	b9000841 	str	w1, [x2, #8]
+   4:	d503201f 	nop
+   8:	52800001 	mov	w1, #0x0                   	// #0
+   c:	52800022 	mov	w2, #0x1                   	// #1
+* 10:	88e17c02 	casa	w1, w2, [x0] <-- trapping instruction
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
