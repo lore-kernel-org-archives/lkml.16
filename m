@@ -1,104 +1,154 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8124B21D011;
-	Thu,  8 May 2025 08:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F8C262FDE
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 08:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.189.100.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746693292; cv=none; b=aWjN+SMyXZNRiLO1MApFm8dexQ/0+TaxJ2TWkLfZZOhboslJNe9c69E5sVAhb4yWGUW9nK5IGBZtzVeyBu3LNA6+mtuAHKCZfS+vk4CsjihkdorMhagCwDOidNKzhKInnoPtED++3iyDYHuNcncYy7i+As35c6mqz9blo5/Cv7g=
+	t=1746693299; cv=none; b=oyq+aGmc7Ck7Cwrhb+h/Q3EMK3FTfNcv4DXolOYPSAgmo4qSAB3kRAkzSge6ucunbvTOzJSt3kraF4P9MpJl9U1jLfy4f4ZUWlre3nb+3nbWVh3pcMvYoJZiMRnO1BymgePMjj66JB8iwkh677T31ll9GE0fyws0T2TvPev3g7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746693292; c=relaxed/simple;
-	bh=/yn0vOBSqs1gT1qgFskCzgf8UxOw44a5QvWI6DwYPmM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XqWjmCZcuSebtqHMqKckFs06lt6i6PKcKSxl3wPCqr6zMjCCc9VQQVrIxkkqlmmQ3tmBViN7W3xVL9AFmc369pFVotNstvU2wWUcRqGJL2YNgN1XqmtajIIVCsFwr5+HqZNq2zJd5XA3Px8KO5EiCNtThPoQdxXsbpCV64LzQEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lvHX6Jfr; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1746693299; c=relaxed/simple;
+	bh=fPq1khtFjMqgEkGiH2cq56ZqZMoJRgVj0jQyxNs8Puw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=Jnrh5clXVVI1UWF+88q8zpaR/zcpB9uWbDCvoP2LwJ1gQX7U44hLlfzVfB3C5CnDbtCe7bRjAck8GnYCHRtpQLRXWlXdRIlwd8JNLN/JnM8v0xXtSNTfiww1opqgAGTlCocf738paJ2W7tEJy0m7oNILfaaPPYeh8GfmvhvlRx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com; spf=pass smtp.mailfrom=partner.samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Y3ligE1m; arc=none smtp.client-ip=211.189.100.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=partner.samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lvHX6Jfr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1746693287;
-	bh=/yn0vOBSqs1gT1qgFskCzgf8UxOw44a5QvWI6DwYPmM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lvHX6Jfr7OJ3b9RU2pr9vKKmVzcczO72O3biC5VnlBbkLBYBi4j80YJi2EahlHN1c
-	 6I9FwWK2rI9vTlfgY0vX59fGYaiqUGpGcxReA8po/KwPkXIJBEPYgbVoK27U8P4nkQ
-	 X4QD/QaGCH6DAVicsxmX8fpMRCdFt6D/fag3nmUd43PN/6uB7xi1I6h2Cgt/WTqLpq
-	 SZEaWRHihGqfwPDfI/lIhJzyu9FoTR2A8LrpgfmZCRkdBpb7sSHMCQ9F4OpeDxNYKz
-	 VId7swgQvxQGPbEbgdeQEvtYfy088uRJpCZWNsQMmZX2KRcEXgt4abxmz6xz2/sV+O
-	 wA2RMcDIF2HaA==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 62D3417E02BE;
-	Thu,  8 May 2025 10:34:46 +0200 (CEST)
-Message-ID: <ff8da58b-9e87-46d9-b4d2-4059ef05780d@collabora.com>
-Date: Thu, 8 May 2025 10:34:45 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y3ligE1m"
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20250508082455usoutp0112b6fa97ed05e55b44f1e5b3cc683d13~9f8CDpCqE0052200522usoutp01h;
+	Thu,  8 May 2025 08:24:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20250508082455usoutp0112b6fa97ed05e55b44f1e5b3cc683d13~9f8CDpCqE0052200522usoutp01h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1746692695;
+	bh=xFWdlrWsOanX/NVVNVan2uCPYqrJFZdos0xlcyL5mUY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=Y3ligE1mVdi0oLVYyHkkKGO4q0YE6QtQf9y4FkwyTxjUNj3LbzHuupM4T9Jk+RO4N
+	 hkCrb15Q5bx/JvRn/aFXpSFlrZYv1jWC+EHqZyaSVcZ7KWBoWCK5FE+63KS0/V4sKs
+	 R35qrHSNYGiBzwbsnNkyDuwNd0+zIJfhUMp83UFQ=
+Received: from ussmtxp1.samsung.com (u136.gpu85.samsung.co.kr
+	[203.254.195.136]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20250508082454uscas1p29b50ff4d2f31a53e732cebf11535a549~9f8BAo3ls1112411124uscas1p2B;
+	Thu,  8 May 2025 08:24:54 +0000 (GMT)
+Received: from ATXPVPPTAGT04.sarc.samsung.com (unknown [105.148.161.8]) by
+	ussmtxp1.samsung.com (KnoxPortal) with ESMTP id
+	20250508082453ussmtxp18e1b1380fd7c17414cdb8bad396b2f53~9f8A1OPYH1568415684ussmtxp1X;
+	Thu,  8 May 2025 08:24:53 +0000 (GMT)
+Received: from pps.filterd (ATXPVPPTAGT04.sarc.samsung.com [127.0.0.1]) by
+	ATXPVPPTAGT04.sarc.samsung.com (8.18.1.2/8.18.1.2) with ESMTP id
+	54876rUv037957; Thu, 8 May 2025 03:24:53 -0500
+Received: from webmail.sarc.samsung.com ([172.30.39.9]) by
+	ATXPVPPTAGT04.sarc.samsung.com (PPS) with ESMTP id 46df5w3mty-1; Thu, 08 May
+	2025 03:24:53 -0500
+Received: from sarc.samsung.com (105.148.145.5) by
+	au1ppexchange01.sarc.samsung.com (105.148.32.81) with Microsoft SMTP Server
+	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+	15.2.1544.4; Thu, 8 May 2025 03:24:51 -0500
+Date: Thu, 8 May 2025 11:24:43 +0300
+From: Pantelis Antoniou <p.antoniou@partner.samsung.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, Artem Krupotkin
+	<artem.k@samsung.com>, Charles Briere <c.briere@samsung.com>, "Wade
+ Farnsworth" <wade.farnsworth@siemens.com>
+Subject: Re: [PATCH 0/1] Fix zero copy I/O on __get_user_pages allocated
+ pages
+Message-ID: <20250508112443.49ff0414@sarc.samsung.com>
+In-Reply-To: <20250507145018.385c0a090a0d61c06e985ad9@linux-foundation.org>
+Organization: SARC
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] dt-bindings: iommu: mediatek: mt8195 Accept up to 5
- interrupts
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Julien Massot <julien.massot@collabora.com>, kernel@collabora.com,
- Sen Chu <sen.chu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
- Macpaul Lin <macpaul.lin@mediatek.com>, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?=
- <nfraprado@collabora.com>, Hui Liu <hui.liu@mediatek.com>,
- Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Tinghan Shen <tinghan.shen@mediatek.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, iommu@lists.linux.dev
-References: <20250505-mt8395-dtb-errors-v1-0-9c4714dcdcdb@collabora.com>
- <20250505-mt8395-dtb-errors-v1-2-9c4714dcdcdb@collabora.com>
- <baeae909-4d12-4cbd-a063-7ad165304b96@kernel.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <baeae909-4d12-4cbd-a063-7ad165304b96@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: au1ppexchange04.sarc.samsung.com (105.148.32.84) To
+	au1ppexchange01.sarc.samsung.com (105.148.32.81)
+X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-GUID: 4PeEZ1aymWH1pEADgeqC-xh1MxcKHdE7
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA3MyBTYWx0ZWRfXwC7v/t1idwe7
+	xe0rUmgQIin4dSxD3sdt8qMjeej6uOx7+D84agRnXQeM4q13fSM2DeCbzgjnY7hsvn1w7uKvgyP
+	mWNyrwpMH8GJiKdbveBHTQyePuQ5a8kVc2adKAPmafRneMhtz3kZx66UcayTujKVFaeMiGdizFg
+	1YcMNpXJgwz38+OVbA1DDtI180Cr/Tf1LmfzkNVZ+CvRrJ/FGpin8fO+PwQC7ClBCdwSKHYIOFT
+	O7Mn39zhBbauGyFdKLhRWQwbjcdf9srM2ReYgtg7+87kATYEMDBJK8OZz9T/vpjVY7Ioufzoesj
+	VTd8XfUS/UdJLA/A8iOWgyPoGbqJqbdotgoZLwAa4oVu0dEpndd6AuI/uZTrIG7U2FpGFeoXH9w
+	qtcMf2/5
+X-Proofpoint-ORIG-GUID: 4PeEZ1aymWH1pEADgeqC-xh1MxcKHdE7
+X-Proofpoint-Virus-Version: vendor=baseguard
+	engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+	definitions=2025-05-08_02,2025-05-07_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_spam_notspam policy=outbound_spam
+	score=0 spamscore=0 adultscore=0 mlxscore=0 malwarescore=0 bulkscore=0
+	priorityscore=1501 impostorscore=0 suspectscore=0 mlxlogscore=809
+	lowpriorityscore=0 phishscore=0 clxscore=1015 classifier=spam adjust=0
+	reason=mlx scancount=1 engine=8.12.0-2504070000 definitions=main-2505080073
+X-CMS-MailID: 20250508082454uscas1p29b50ff4d2f31a53e732cebf11535a549
+X-CMS-RootMailID: 20250507154119uscas1p2a4055d14ab111fdb94a6378789c38d9d
+References: <CGME20250507154119uscas1p2a4055d14ab111fdb94a6378789c38d9d@uscas1p2.samsung.com>
+	<20250507154105.763088-1-p.antoniou@partner.samsung.com>
+	<20250507145018.385c0a090a0d61c06e985ad9@linux-foundation.org>
 
-Il 08/05/25 08:03, Krzysztof Kozlowski ha scritto:
-> On 05/05/2025 15:23, Julien Massot wrote:
->>
->> Fixes: 3b5838d1d82e3 ("arm64: dts: mt8195: Add iommu and smi nodes")
->> Signed-off-by: Julien Massot <julien.massot@collabora.com>
->> ---
->>   Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml b/Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml
->> index 75750c64157c868725c087500ac81be4e282c829..035941c2db32170e9a69a5363d8c05ef767bb251 100644
->> --- a/Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml
->> +++ b/Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml
->> @@ -97,7 +97,8 @@ properties:
->>       maxItems: 1
->>   
->>     interrupts:
->> -    maxItems: 1
->> +    minItems: 1
->> +    maxItems: 5
->>   
-> Every iommu or just some (as described in commit msg) can have 5
-> interrupts? Looks you miss here proper constraints per variant.
-> 
-Technically, all of the IOMMUs can have more than one interrupt - but it's not
-clear which one and why, as documentation is lacking.
+On Wed, 7 May 2025 14:50:18 -0700
+Andrew Morton <akpm@linux-foundation.org> wrote:
 
-Let's restrict this discussion to MT8195 anyway, as it's the only one declaring
-those 5 interrupts...
-...all of the IOMMUs declare just one, and mediatek,mt8195-iommu-infra declares 5.
+> On Wed, 7 May 2025 10:=E2=80=8A41:=E2=80=8A04 -0500 Pantelis Antoniou <p.=
+=E2=80=8Aantoniou@
+> partner.=E2=80=8Asamsung.=E2=80=8Acom> wrote: > Updates to network filesy=
+stems
+> enabled zero copy I/O by using the > netfslib common accessors.
+> Updates by whom? Are all the people who=20
+> On Wed, 7 May 2025 10:41:04 -0500 Pantelis Antoniou
+> <p.antoniou@partner.samsung.com> wrote:
+>=20
+> > Updates to network filesystems enabled zero copy I/O by using the
+> > netfslib common accessors.
+>=20
+> Updates by whom?  Are all the people who need to know about this being
+> cc'ed here?
+>=20
 
-P.S.: Nice catch!
+I think the first cover letter contains that information.
 
-Cheers,
-Angelo
+> > One example of that is the 9p filesystem which is commonly used in
+> > qemu based setups for sharing files with the host.
+> >=20
+> > In our emulation environment we have noticed failing writes when
+> > performing I/O from a userspace mapped DRM GEM buffer object.
+> > The platform does not use VRAM, all graphics memory is regular DRAM
+> > memory, allocated via __get_free_pages
+>=20
+> We should identify which kernel version(s) should be patched, please.=20
+> 6.16-rc1?  6.15?  -stable?
+>=20
+
+The first occurance of the bug was on internal kernel tree that was
+based on 6.8.
+
+This patch is against 6.15-rc5.
+
+> I often make these decisions but in this case I have far too little
+> information to be able to do that.
+>=20
+
+No worries.
+
+I see that this is picked up for mm unstable as is? Do you want
+me to generate a single patch merging the info of the cover letter
+and the single patch?
+
+The reason for the split is that I was not sure if you needed to
+have all the sordid details included in the applied patch.
+
+FWIW, we also have a buildroot patch that exhibits the problem
+in a much simplified way that what the original bug report came about.
+I don't think its appropriate content for the list, but I can
+share if anyone is curious about it.
+
+> Thanks.
+
+Regards
+
+-- Pantelis
