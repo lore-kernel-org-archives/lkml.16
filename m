@@ -1,166 +1,213 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B4D14D2A0
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934844C92
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746710272; cv=none; b=AnlRFLJXcb8c+tDNE/fPkdUeW5tDaJvmjMF9YCrBjzuQ6dEYd51+2i00iSJhxOHDigCfHGWrp4n12GwyHskRbe/FozvCaqNzRWt43YvJZS3q/292zu9pZZVsFMssHKVpPU+l+7vR6ztpJ32NeC2Y1gHZ7QrnAni813NVpoY8HXU=
+	t=1746710296; cv=none; b=NRuHpQKUUd3XhLVUirD++XjX6AOoGKoeLZJFaYcR6ljPPeruLYRmTc5aJ4a0FV5xYfbd4ncIW4u9tgFlgiLQ715jxcqx/ivRibOSV2litjL5Du4nvHTLKezChwO8tQOV4dfQsEp51TmlJsfUqR7NDoni1eRe3Y22+Jv2+Wubs7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746710272; c=relaxed/simple;
-	bh=ErPsB1GftNLSdtVkXNDPWtrGLm5oNECiIAZDxBNlw34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EemjQez9oVV5LQZ5/uQNcFidtNaypm5QRt6Gb+cx4n9nR9bxwkkiOj62ZQyCp0kc3nCmHL6boNCz+ktoAJvMd8e6dX9QSNLzmh7qyA+bMJs0Au9r+CAflkJH6T4vFYnv1H8StXikK26BDB49hV4jCoRNu+DN5ujyyZt5j5Q1txs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jCn+6HTV; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746710296; c=relaxed/simple;
+	bh=MSKi6HVp57FER7oekvaq/37trOD/ciVYt389Jyo3OlY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gkp09c4rvVGk5Pr8WC6jQm3fBbawYadfS1Eu7ObKOM7OqrhSTnIl6xfWQV+1aMerLa5t+ntDX/qoHqlyrZbBjTwO81q1jGWmeBIoV4cb5iHWfiiEneKQWGYIXeVYRJGCZuvpc8nGZUrPPQqdxSS+VeGQ+DRERa3xRKEGwJp8HZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=OXS7Xy6V; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=aWA2k+AZ reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jCn+6HTV"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548D15qQ010664
-	for <linux-kernel@vger.kernel.org>; Thu, 8 May 2025 13:17:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=l7e3Qtmja3PTSHxPd5n9Skwg
-	dogb1RFbMZ2gqpLdjXY=; b=jCn+6HTV0hnjPFR7xzK7RCVIAoUHdVfT2zkoAJwv
-	HsNgzpO2kOenPCLw9icECi0EQ8Qbgde+ZMwZdqfTDjAPvE+vdSPC6OGQsBR5/wnz
-	3g43tTnyPLsPN7tRms4BbJiSNOSRqa+F9OQZzm4/qRZ3B6uajAnkBD3qX3zr4YoJ
-	2ZyS/INY6JNrF55/gvkMYIpTURA4x6M06dfZiacgWq9zzQN/PLSCnu9N1awFxZzA
-	u5Rfhm9Mpr8kGfMv8R94X9pvkEYSnW2Q5quk5jm6hV9mWENTBGJkP2TIBCsDcG2L
-	hMq+VKptK6FKVRKa0kp/cPJlmzWBCnZ9DarLfPg7QInyNg==
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com [209.85.128.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnpmhd8k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 13:17:49 +0000 (GMT)
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-708b6b57e67so13940077b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 06:17:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746710267; x=1747315067;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l7e3Qtmja3PTSHxPd5n9Skwgdogb1RFbMZ2gqpLdjXY=;
-        b=JP2Y0eWLSbTG4a61FGptkHZbe/Ih11fr4sYMWdl7BSeBGPr3Kkt/ftrN+44usPv21x
-         uWc5B+uPh2/ssa/qhtlw0pw9Ph+q3JswlUblyRwqhq57SkMA4ajPB+5p8JocvRGztcs8
-         rwH+jzmHokvIhoGirHCNq0X7MNyyJXf7Ee9Nqgc5JviQBc4yv/3jDPLX4gttoKbDEBKG
-         SsFmBEuSFxlrlyb7eySCJOmoxOUbh6YCoymufpKO181v+uWL5srCupxcLhh60Oa9BFfS
-         4ysfjVAs/i5LefypKNrMqblsa24ycl337/pkmPlFFlJafEW+3rjK3utG5IuupqIYOPfy
-         cubw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8Hm68TOUZBo6OzgzHsyJImvNEc+2UD68NbRE2Tq3CGSC9Dw9+BiXE962qhgFS9l+4wXuZFrKW1Gj+hbs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBB4XUt1E2q3lZwWpdQ8A+dP8ygLYN47ITQffazEcNusS2LPzt
-	faE5woR8DeNe9yL6xg0asDi2EJYSOnLZXHX8zsT3jUY7IUbyZyji02XoYTHIV826nI9OZ35f9d1
-	HjYSEPbUWcjZeAFydvC7JbV1tH0iIKGS0O71DFwXbJ6GKmf1vRE5gvw51SdluCVMmMJSQHPzuHA
-	==
-X-Gm-Gg: ASbGnctt2Hbbjli4B+8zH7kDzsbyBAgQCeGjLmFVRrPalxmEY4i/UC2JvBQXA/9cx+D
-	i63S8NMYfROjVRzhfwaf4UOiYNvzzSoXz5xtpAWkeltFdJhTXwZ5mcGxHY+5YhSgUjLVs/E7Fp4
-	BYZWMjUcK5dpKviG2WJ8Gavb/hK6916sI25F1EqjnrR+TT6nIN2iPnCqVtNuHceyAK1GRWcUcrX
-	VXjKc+5Eb5N15ZnLDT7Jz+dvJiMM26z4w7GE0Bzzw/xWS5rbFWhmT5pnSpLPBMqrzX2tBq3xvVv
-	J3PRHh+/TheBtiT1OWdaoLbuR/i7dJod/IpFb/PnKl5A+cIgQ5OKm5SKEJS+skruyTZ4s6tto/4
-	=
-X-Received: by 2002:a05:690c:6a0b:b0:6fd:474a:60a8 with SMTP id 00721157ae682-70a1d9f78e5mr107500817b3.11.1746710267533;
-        Thu, 08 May 2025 06:17:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEH8xNL29tdew9hezclB47ncc6Ol3hKGwmQCYokRS50sHKFSsRnYKdUZ1yyl4p8l0FkVpf3yA==
-X-Received: by 2002:a05:6e02:338f:b0:3d0:47cf:869c with SMTP id e9e14a558f8ab-3da73933d66mr89992905ab.19.1746710256287;
-        Thu, 08 May 2025 06:17:36 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-320290183d5sm25207421fa.45.2025.05.08.06.17.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 06:17:35 -0700 (PDT)
-Date: Thu, 8 May 2025 16:17:28 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] soc: qcom: socinfo: Add support for new fields in
- revision 21
-Message-ID: <q6qtzibi6sk3ofu56brg4dxjs7zmeuo2u2xccvhsgs7r7fjnev@o6tje3mipv7m>
-References: <20250508131258.1605086-1-mukesh.ojha@oss.qualcomm.com>
- <20250508131258.1605086-2-mukesh.ojha@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="OXS7Xy6V";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="aWA2k+AZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1746710292; x=1778246292;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=POjYqgXRwbYBAO0i/Vef4iBDO4ORLm/SUKYKwW4Piz8=;
+  b=OXS7Xy6VJMRdm/0CMDTASAFvi3i3GQ3CkH5vAH/Ga7VOSixU07ftsG9w
+   2IGoUku4Lpaf4gboUOXHBE/Y+6lpOIrNfZAyZ2wsYEAJXd7qWCoXrQ+OY
+   IxqqXDbx65vEASg1bd8U4tp8Tx2EBpB3Sdl2qvzj76hE3fvnVOXkc8UQc
+   3Li2un18ur6mCvQETIoWWaY+Myw4vWfxXaUC46NGIghxNp6qMOELVaQIn
+   eUKYiNfnlc8RVtVjLzKuvsxbaok9qyGhYW3l/rkkfmG34/r1rhl1N//im
+   zBxe+0w42uApzRhg9cq2162+TpjpQdff1qWobM1pBeTySCyotgQPy5O8C
+   A==;
+X-CSE-ConnectionGUID: 6NI85Ig4TOyf0qRk8pnm9w==
+X-CSE-MsgGUID: lEc3wvynRw+11SJ8/K/fRg==
+X-IronPort-AV: E=Sophos;i="6.15,272,1739833200"; 
+   d="scan'208";a="43963318"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 08 May 2025 15:18:09 +0200
+X-CheckPoint: {681CAF11-22-45F3AE15-E90F7DFA}
+X-MAIL-CPID: 716EA28B452B08A8085D4D6410096CC6_5
+X-Control-Analysis: str=0001.0A006377.681CAF12.000A,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7FD45160A07;
+	Thu,  8 May 2025 15:18:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1746710285;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=POjYqgXRwbYBAO0i/Vef4iBDO4ORLm/SUKYKwW4Piz8=;
+	b=aWA2k+AZ0JpTpW02HhdxQEthPrktKgGw0y+Gaio5PblfqZlJE0DPipM+e0Bg1wC9j/HF9b
+	qt9gg/LIq3to/iaNvpE0SI9M9SVKvktDhqd5Qk34tLL0A3cwnYelqKc0Tj2JhFb5DTGOTB
+	4Sl5pFY3wGSCy9gR7UUDLZepuspTlfIkdOCNc2zZpgiSKLs2PhIlZh2Mvn9PyTixcj6KYB
+	YrhmCVvlLZGk0WK4XOUxLvf+ya58/mceqf/X60mQcf6Ajh5wR1QHCrbGmxPUiSIVXXbGEL
+	3zG6T1kTkNITdtEX4NeyH4SOVl6aLBvCcxsYihjiqXjfrJOBV7DlhHf0t4J/Cw==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Esben Haabendal <esben@geanix.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Stefan Wahren <wahrenst@gmx.net>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/1] arm64: Kconfig: Enable PINCTRL on i.MX platforms
+Date: Thu, 08 May 2025 15:18:04 +0200
+Message-ID: <6002097.iIbC2pHGDl@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <87a57nxogy.fsf@geanix.com>
+References:
+ <20250507124414.3088510-1-alexander.stein@ew.tq-group.com>
+ <5724399.aeNJFYEL58@steina-w> <87a57nxogy.fsf@geanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250508131258.1605086-2-mukesh.ojha@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=TpjmhCXh c=1 sm=1 tr=0 ts=681caefd cx=c_pps
- a=NMvoxGxYzVyQPkMeJjVPKg==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=onFjxjlXxLmf5A9ibekA:9
- a=CjuIK1q_8ugA:10 a=kLokIza1BN8a-hAJ3hfR:22
-X-Proofpoint-ORIG-GUID: eMOCFwrcr5WuAScgHqTe0ENLvZfZZwcC
-X-Proofpoint-GUID: eMOCFwrcr5WuAScgHqTe0ENLvZfZZwcC
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDExMSBTYWx0ZWRfX02eIat9lteCe
- Ff/+rIhu3hkSGkWtetVq8LpDHut3mHSYO6622eUGONHy1CMih2TLFSSuRcnTyBZLDa5KU57RT5W
- q5ZCTfbwMVK3lzzorwEwPg/EFiWOhN2SRmAbgiv9jYKwTv3cddoDyJqcSfUjXm28W4zUa8m9bF6
- hZn9NfI7QdyoyvVAlGOlPi3hp+3gYzvWds+0ETfUbR2S1BHAgqmAHLF89OgttgLKXWzx2kfmHuz
- o9ZfS4zS3D7+86OS9AiK+TR9p32ucHmw6iwUZlfqx/iN0Jxcfj2jqrYqPG6TisxKOGVzAUBD+CY
- 2oRaEhDLqD8FqImoZBTp7oMSIwWYzJU10AeokuoLz5t5K3RAvj9SYptM2d3XzTkebBJwWLdz8iQ
- HprTR6TvF3TZEcbYVMt2E1Ux+31xZLL4TdHDJONorYXoZZ8ZaU3xsQs7HOrp4O1GcVgXUkFA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_04,2025-05-07_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 suspectscore=0
- clxscore=1015 adultscore=0 malwarescore=0 mlxlogscore=999 spamscore=0
- impostorscore=0 mlxscore=0 phishscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505080111
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Thu, May 08, 2025 at 06:42:57PM +0530, Mukesh Ojha wrote:
-> Add the subpartfeature offset field to the socinfo structure
-> which came for version 21 of socinfo structure.
-> 
-> Subpart_feat_offset is subpart like camera, display, etc.,
-> and its internal feature available on a bin.
-> 
-> Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-> ---
-> Changes in v3:
->  - Removed debugfs entry as per comment from [Dmitry B].
+Am Donnerstag, 8. Mai 2025, 14:43:09 CEST schrieb Esben Haabendal:
+> "Alexander Stein" <alexander.stein@ew.tq-group.com> writes:
+>=20
+> > Hi Esben,
+> >
+> > Am Donnerstag, 8. Mai 2025, 10:18:35 CEST schrieb Esben Haabendal:
+> >> "Alexander Stein" <alexander.stein@ew.tq-group.com> writes:
+> >>
+> >> > Hi Esben,
+> >> >
+> >> > Am Donnerstag, 8. Mai 2025, 08:44:22 CEST schrieb Esben Haabendal:
+> >> >> "Alexander Stein" <alexander.stein@ew.tq-group.com> writes:
+> >> >>
+> >> >> > Hi Stefan,
+> >> >> >
+> >> >> > Am Mittwoch, 7. Mai 2025, 16:30:33 CEST schrieb Stefan Wahren:
+> >> >> >> Hi Alexander,
+> >> >> >>
+> >> >> >> [add Shawn and Esben]
+> >> >> >>
+> >> >> >> Am 07.05.25 um 14:44 schrieb Alexander Stein:
+> >> >> >> > Select PINCTRL for NXP i.MX SoCs.
+> >> >> >> could you please explain the motivation behind your change?
+> >> >> >>
+> >> >> >> Is it related to this commit 17d21001891402 ("ARM: imx: Allow us=
+er to
+> >> >> >> disable pinctrl")?
+> >> >> >
+> >> >> > Ah, thanks for the pointer. It might be the case.
+> >> >>
+> >> >> The goal of the patch mentioned above was to be able to build a ker=
+nel
+> >> >> for LS1021A without pinctrl framework enabled, as LS1021A does not =
+have
+> >> >> a pinctrl driver.
+> >> >>
+> >> >> With your patch, that would not be possible anymore.
+> >> >
+> >> > Why? LS1021A is arm, not arm64 which this patch is touching only.
+> >>
+> >> Good point :)  Sorry about that.
+> >>
+> >> > BTW: Commit b77bd3ba762f3 ("ARM: imx: Re-introduce the PINCTRL selec=
+tion")
+> >> > is actually doing the same for arm as there is some fallout from
+> >> > 17d21001891402.
+> >> >
+> >> >> > I noticed that, when using arch/arm64/defconfig and disabling all
+> >> >> > platforms despite ARCH_MXC before running make olddefconfig,
+> >> >> > CONFIG_PINCTRL gets disabled as well. No platform is enabling it.=
+ I
+> >> >> > noticed this when building in yocto and non-IMX platforms are dis=
+abled
+> >> >> > for build time reasons.
+> >> >>
+> >> >> But is that something that needs to be fixed?
+> >> >>
+> >> >> It sounds like quite a special use-case, and why not simply enable
+> >> >> CONFIG_PINCTRL in that case then?
+> >> >
+> >> > PINCTRL is crucial for any SoC to even boot, so this is an option wh=
+ich has
+> >> > to be set if that platform is enabled.
+> >>
+> >> Yes, but PINCTRL (framework) does not by itself do anything meaningful.
+> >> You need the correct pinctrl driver.
+> >>
+> >> Making the various SOC's select the corresponding pinctrl drivers makes
+> >> sense if it is required for booting under all circumstances. And this
+> >> should then indirectly enable/select PINCTRL and anything else needed
+> >> for that driver.
+> >
+> > If you prefer I don't mind enabling PINCTRL and the SoC-specific driver
+> > (e.g. PINCTRL_IMX8MP) depending on each SoC-support, e.g. SOC_IMX35 or
+> > SOC_IMX8M.
+>=20
+> For SOC_IMX35, it should be selected by default.
+>=20
+>     config PINCTRL_IMX35
+>             bool "IMX35 pinctrl driver"
+>             depends on OF
+>             depends on SOC_IMX35 || COMPILE_TEST
+>             default SOC_IMX35
+>=20
+> For the IMX8M* SoC's, that is not done, as there is only a common
+> SOC_IMX8M config entry, which corresponds to multiple pinctrl drivers,
+> which we probably don't want to select all of by default.
 
-No, the comment was to provide useful data. You didn't explain, what
-kind of offset this is. So, I'm sorry, NAK.
+Well, is the SoC support is enabled, it makes totally sense to enable a
+crucial driver like pinctrl by default. It's still deselectable after all.
 
-> 
-> Changes in v2: https://lore.kernel.org/lkml/20250425135946.1087065-2-mukesh.ojha@oss.qualcomm.com/
->  - Added debugfs entry and described more about the field in commit.
-> 
->  drivers/soc/qcom/socinfo.c       | 1 +
->  include/linux/soc/qcom/socinfo.h | 2 ++
->  2 files changed, 3 insertions(+)
-> 
-> diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
-> index 9a92c9c5713e..55acae79ec3a 100644
-> --- a/drivers/soc/qcom/socinfo.c
-> +++ b/drivers/soc/qcom/socinfo.c
-> @@ -608,6 +608,7 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
->  			   &qcom_socinfo->info.fmt);
->  
->  	switch (qcom_socinfo->info.fmt) {
-> +	case SOCINFO_VERSION(0, 21):
->  	case SOCINFO_VERSION(0, 20):
->  		qcom_socinfo->info.raw_package_type = __le32_to_cpu(info->raw_package_type);
->  		debugfs_create_u32("raw_package_type", 0444, qcom_socinfo->dbg_root,
-> diff --git a/include/linux/soc/qcom/socinfo.h b/include/linux/soc/qcom/socinfo.h
-> index c4dae173cc30..3666870b7988 100644
-> --- a/include/linux/soc/qcom/socinfo.h
-> +++ b/include/linux/soc/qcom/socinfo.h
-> @@ -84,6 +84,8 @@ struct socinfo {
->  	__le32 boot_core;
->  	/* Version 20 */
->  	__le32 raw_package_type;
-> +	/* Version 21 */
-> +	__le32 nsubpart_feat_array_offset;
->  };
->  
->  /* Internal feature codes */
-> -- 
-> 2.34.1
-> 
+> >> Having ARCH_MXC select PINCTRL as such is mostly pointless IMHO.
+> >> Enabling a driver framework without enabling any drivers for it, when
+> >> building a kernel where no SOC's requiring any pinctrl drivers is kind
+> >> of weird. If you want to do that, why not simply enable both ARCH_MXC
+> >> and PINCTRL in your yocto recipe?
+> >
+> > PINCTRL is currently only enabled because other SoCs happen to enable i=
+t,
+> > just this feels just plain wrong. If these platforms are disabled or
+> > removed for whatever reason, the other platforms should still work.
+>=20
+> As it is now, to build for let's say i.MX 8M Plus, you have to enable
+>     SOC_IMX8M
+>     PINCTRL_IMX8MP
+> to get a kernel that is likely to boot.
 
--- 
-With best wishes
-Dmitry
+Both SOC_IMX8M and SOC_IMX9 are enabled by default if ARCH_MXC is enabled
+too, even though you might not want to use both SoC families.
+
+> If you enable
+>     SOC_IMX8M
+>     PINCTRL
+> but not
+>     PINCTRL_IMX8MP
+> you won't have pinctrl support, and the kernel will probably not work as
+> expected.
+>=20
+> What am I missing?
+
+PINCTRL is not enabled bydefault if only ARCH_MXC is enabled. It just happe=
+ns
+that defconfig enables other platforms which in turn enable PINCTRL.
+If you prefer to explicitely enable CONFIG_PINCTRL=3Dy in defconfig
+I'm fine with that as well.
+
+Best regards
+Alexander
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
+
+
