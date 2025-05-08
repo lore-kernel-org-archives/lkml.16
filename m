@@ -1,33 +1,25 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A866335979;
-	Thu,  8 May 2025 07:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D0BC195FE8
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 07:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746688592; cv=none; b=eAm2axPq/jh8fwkjiRynB6Eq9naNw9/FvH8wIgGtfDrPOHnTt+Qe0xc0I2Bh/w+qxDEMlcIazoT1VYaHO9z75vZDUP9iesTStDTuB5OPydGZ4rGZLu2zwpqUsixAfax3JoMqnBXeRDbti2dlgrH72CD/21tM60957oqtFzVU5Rs=
+	t=1746688617; cv=none; b=bWnRXK+P/Xp34JwwRthc2JzIPbuW6J8L7iA/e1BHrTXBiSKTEqOExwDR9OqGnKsd3SotkRL5L6CmN+nuGkyhYQK27AmWYjfndiqq+KzDVNehWo+DgShaF9gFGfe+DMpJ/4nTy39XnzVH/zqmhtnnRRPrDzNq6DqEkTWClOy+u4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746688592; c=relaxed/simple;
-	bh=qetcnJ/bVlm8Wp3j6cJtVSuUtHSiJ8n35hJdXby+9Cw=;
+	s=arc-20240116; t=1746688617; c=relaxed/simple;
+	bh=5znAwNEjUxb9R+3/37XSy3080i0Uwe89td6C9yxqzAQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mKPv7cKXY3fkkijdKG9nnupIZ6orNLASh6R322Dk8u7u68NGeFA8YuzE14EBHYer0VINnFEq8I22xlcM0pquivfqZSXbOqEDJC7JbU1ImmUzi8h47ZD0PViKaGkJtzUtBjtrnSmPGx1DcXNPs3T736cZ25aQSGYdvkigrVaBBAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C2iKUczB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C2iKUczB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2EF9C4CEEB;
-	Thu,  8 May 2025 07:16:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746688592;
-	bh=qetcnJ/bVlm8Wp3j6cJtVSuUtHSiJ8n35hJdXby+9Cw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=C2iKUczBk55G28etcgq9KHU9b7FV5UUeEnM1OUAwpbZSaB6fxjGx25S0imvc69ugs
-	 P/j+/1zMpDKkoiuGDwm1x25T7QwP/T2almaEsRxsGkbwHJz8gGkk61eNjjEyCl7+qw
-	 AiZw0qAKOMV2Gf8u4atylY/STShTt8X3oyUNR62Z/DW9ylA8LJXnvqLC+FLTukiHoH
-	 cGh91qDKTtwgxiuuhDHTKM4w26TUsjWdyL4pz+rxlLgjB7MS2RRvNr+9EtXGXE7BaB
-	 I3of5s8rTOnR0v6WeBGegV+72JmQyuRtnWt9eZ1Cl71I1/DMCco6fvKkx8MDdNtv8T
-	 rH78ZYfXE0Esw==
-Message-ID: <a3ef7af4-3c6a-4bc6-912b-5819393dcd6a@kernel.org>
-Date: Thu, 8 May 2025 09:16:25 +0200
+	 In-Reply-To:Content-Type; b=W76NHKiRbXzvIYxxIDATpRZxPN3x4XPqpCBY+dlVF5bXg+iAfi+KaPozY0ZG6/3cctfdEbR3K1QTkl2DLUaYepv43Tw3OV9K/bQHZ27iaGWOhiUsNrtT7ONVXwPP/N9Ttw9k5M4gzYB+vsckEaEBVPOysRZZZ+NhZVlvag2bsXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60FBD106F;
+	Thu,  8 May 2025 00:16:44 -0700 (PDT)
+Received: from [10.163.54.182] (unknown [10.163.54.182])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC9A53F673;
+	Thu,  8 May 2025 00:16:45 -0700 (PDT)
+Message-ID: <f8c21905-a03a-4e4b-b897-71beb6b8b393@arm.com>
+Date: Thu, 8 May 2025 12:46:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,255 +27,205 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: display: rockchip: Convert
- cdn-dp-rockchip.txt to yaml
-To: Chaoyi Chen <kernel@airkyi.com>, Sandy Huang <hjc@rock-chips.com>,
- Heiko Stuebner <heiko@sntech.de>, Andy Yan <andy.yan@rock-chips.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Chaoyi Chen <chaoyi.chen@rock-chips.com>,
- Dragan Simic <dsimic@manjaro.org>, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250508064304.670-1-kernel@airkyi.com>
- <20250508064304.670-3-kernel@airkyi.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 2/2] mm: Optimize mremap() by PTE batching
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+ jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
+ ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
+ maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
+ willy@infradead.org, ioworker0@gmail.com, yang@os.amperecomputing.com,
+ baolin.wang@linux.alibaba.com, ziy@nvidia.com, hughd@google.com
+References: <20250507060256.78278-1-dev.jain@arm.com>
+ <20250507060256.78278-3-dev.jain@arm.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250508064304.670-3-kernel@airkyi.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250507060256.78278-3-dev.jain@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 08/05/2025 08:43, Chaoyi Chen wrote:
-> From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+On 5/7/25 11:32, Dev Jain wrote:
+> To use PTE batching, we want to determine whether the folio mapped by
+> the PTE is large, thus requiring the use of vm_normal_folio(). We want
+> to avoid the cost of vm_normal_folio() if the code path doesn't already
+> require the folio. For arm64, pte_batch_hint() does the job. To generalize
+> this hint, add a helper which will determine whether two consecutive PTEs
+> point to consecutive PFNs, in which case there is a high probability that
+> the underlying folio is large.
+> Next, use folio_pte_batch() to optimize move_ptes(). On arm64, if the ptes
+> are painted with the contig bit, then ptep_get() will iterate through all 16
+> entries to collect a/d bits. Hence this optimization will result in a 16x
+> reduction in the number of ptep_get() calls. Next, ptep_get_and_clear()
+> will eventually call contpte_try_unfold() on every contig block, thus
+> flushing the TLB for the complete large folio range. Instead, use
+> get_and_clear_full_ptes() so as to elide TLBIs on each contig block, and only
+> do them on the starting and ending contig block.
 > 
-> Convert cdn-dp-rockchip.txt to yaml.
-> 
-> Tested with:
-> 
-> 1. make ARCH=arm64 dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip,cdn-dp.yaml
-> 
-> 2. make ARCH=arm64 dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/rockchip/rockchip,cdn-dp.yaml
-
-Drop. You do not have to embed in commit msg standard makefile targets.
-We all know how to use it. You do not do it for C files, do you?
-
-> 
-> Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
 > ---
-
-...
-
-> -	};
-> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,cdn-dp.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,cdn-dp.yaml
-> new file mode 100644
-> index 000000000000..ed68b48a6743
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,cdn-dp.yaml
-
-Filename matching compatible.
-
-> @@ -0,0 +1,148 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/rockchip/rockchip,cdn-dp.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  include/linux/pgtable.h | 29 +++++++++++++++++++++++++++++
+>  mm/mremap.c             | 37 ++++++++++++++++++++++++++++++-------
+>  2 files changed, 59 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index b50447ef1c92..38dab1f562ed 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -369,6 +369,35 @@ static inline pgd_t pgdp_get(pgd_t *pgdp)
+>  }
+>  #endif
+>  
+> +/**
+> + * maybe_contiguous_pte_pfns - Hint whether the page mapped by the pte belongs
+> + * to a large folio.
+> + * @ptep: Pointer to the page table entry.
+> + * @pte: The page table entry.
+> + *
+> + * This helper is invoked when the caller wants to batch over a set of ptes
+> + * mapping a large folio, but the concerned code path does not already have
+> + * the folio. We want to avoid the cost of vm_normal_folio() only to find that
+> + * the underlying folio was small; i.e keep the small folio case as fast as
+> + * possible.
+> + *
+> + * The caller must ensure that ptep + 1 exists.
+> + */
+> +static inline bool maybe_contiguous_pte_pfns(pte_t *ptep, pte_t pte)
+> +{
+> +	pte_t *next_ptep, next_pte;
 > +
-> +title: Rockchip RK3399 specific extensions to the CDN Display Port
+> +	if (pte_batch_hint(ptep, pte) != 1)
+> +		return true;
 > +
-> +maintainers:
-> +  - Andy Yan <andy.yan@rock-chip.com>
-> +  - Heiko Stuebner <heiko@sntech.de>
-> +  - Sandy Huang <hjc@rock-chips.com>
+> +	next_ptep = ptep + 1;
+> +	next_pte = ptep_get(next_ptep);
+> +	if (!pte_present(next_pte))
+> +		return false;
 > +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: rockchip,rk3399-cdn-dp
+> +	return unlikely(pte_pfn(next_pte) - pte_pfn(pte) == 1);
+> +}
 > +
-> +  reg:
-> +    description:
-> +      CDN DP core register
+>  #ifndef __HAVE_ARCH_PTEP_TEST_AND_CLEAR_YOUNG
+>  static inline int ptep_test_and_clear_young(struct vm_area_struct *vma,
+>  					    unsigned long address,
+> diff --git a/mm/mremap.c b/mm/mremap.c
+> index 0163e02e5aa8..9c88a276bec4 100644
+> --- a/mm/mremap.c
+> +++ b/mm/mremap.c
+> @@ -170,6 +170,23 @@ static pte_t move_soft_dirty_pte(pte_t pte)
+>  	return pte;
+>  }
+>  
+> +/* mremap a batch of PTEs mapping the same large folio */
+> +static int mremap_folio_pte_batch(struct vm_area_struct *vma, unsigned long addr,
+> +		pte_t *ptep, pte_t pte, int max_nr)
+> +{
+> +	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+> +	struct folio *folio;
+> +	int nr = 1;
 
-Missing constraints. Drop description.
-
-Just look at other bindings.
-
-> +
-> +  assigned-clock-rates: true
-> +  assigned-clocks: true
-
-Drop these two
-
-> +
-> +  clocks:
-> +    minItems: 4
-
-No, look at other bindings.
-
-> +
-> +  clock-names:
-> +    items:
-> +      - const: core-clk
-> +      - const: pclk
-> +      - const: spdif
-> +      - const: grf
-> +
-> +  extcon:
-> +    description:
-> +      Phandle to the extcon device providing the cable state for the DP phy.
-
-Missing type, unless you could not add a type because of conflicts? This
-should be really fixed...
-
+A small nit - s/nr/nr_pages ?
 
 > +
-> +  interrupts:
-> +    maxItems: 1
+> +	if ((max_nr != 1) && maybe_contiguous_pte_pfns(ptep, pte)) {
 
-and here is maxItems. Why in other places you put minItems?
+Like mentioned earlier in v1, could maybe_contiguous_pte_pfns() here
+add some additional cost for buffers that are actually not mapped to
+contig physical pages.
 
+The test case you have mentioned in the cover demonstrating performance
+gains might have always been run just after boot, thus increasing the
+probability of contiguous physical mapping, which will not be the case
+on fragmented memory systems. In that case the proposed consecutive PFN
+comparison will always happen unconditionally without any benefit ?
+
+Just curious.
+
+From V1
+
+--------------------------------------------------------------------
+maybe_contiguous_pte_pfns() cost will be applicable for memory
+areas greater than a single PAGE_SIZE (i.e max_nr != 1) ? This
+helper extracts an additional consecutive pte, ensures that it
+is valid mapped and extracts pfn before comparing for the span.
+
+There is some cost associated with the above code sequence which
+looks justified for sequential access of memory buffers that has
+consecutive physical memory backing. But what happens when such
+buffers are less probable, will those buffers take a performance
+hit for all the comparisons that just turn out to be negative ?
+--------------------------------------------------------------------
+
+> +		folio = vm_normal_folio(vma, addr, pte);
+> +		if (folio && folio_test_large(folio))
+> +			nr = folio_pte_batch(folio, addr, ptep, pte, max_nr,
+> +					     flags, NULL, NULL, NULL);
+> +	}
+> +	return nr;
+> +}
 > +
-> +  phys:
-> +    minItems: 1
-> +    maxItems: 2
+>  static int move_ptes(struct pagetable_move_control *pmc,
+>  		unsigned long extent, pmd_t *old_pmd, pmd_t *new_pmd)
+>  {
+> @@ -177,7 +194,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>  	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	pte_t *old_ptep, *new_ptep;
+> -	pte_t pte;
+> +	pte_t old_pte, pte;
+>  	pmd_t dummy_pmdval;
+>  	spinlock_t *old_ptl, *new_ptl;
+>  	bool force_flush = false;
+> @@ -186,6 +203,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>  	unsigned long old_end = old_addr + extent;
+>  	unsigned long len = old_end - old_addr;
+>  	int err = 0;
+> +	int max_nr;
 
-Why is this flexible? It wasn't in original binding and you must
-document all the changes done to the binding in commit msg.
+A small nit - s/max_nr/max_nr_pages ?
 
-> +
-> +  ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +
-> +    properties:
-> +      port@0:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: Input of the CDN DP
-> +        properties:
-> +          endpoint@0:
-> +            description: Connection to the VOPB
-> +          endpoint@1:
-> +            description: Connection to the VOPL
-> +      port@1:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: Output of the CDN DP
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    minItems: 4
-
-No, look at other bindings.
-
-> +
-> +  reset-names:
-> +    items:
-> +      - const: spdif
-> +      - const: dptx
-> +      - const: apb
-> +      - const: core
-> +
-> +  rockchip,grf:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      This SoC makes use of GRF regs.
-
-For what? You did not say anything useful above, so instead explain the
-purpose.
-
-> +
-> +  "#sound-dai-cells":
-> +    const: 1
-
-Missing dai-common ref, unless this is not a DAI?
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - phys
-> +  - ports
-> +  - resets
-> +  - reset-names
-> +  - rockchip,grf
-> +
-> +unevaluatedProperties: false
-
-Where is any $ref? additionalProperties instead or add proper ref
+>  
+>  	/*
+>  	 * When need_rmap_locks is true, we take the i_mmap_rwsem and anon_vma
+> @@ -236,12 +254,13 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>  	flush_tlb_batched_pending(vma->vm_mm);
+>  	arch_enter_lazy_mmu_mode();
+>  
+> -	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
+> -				   new_ptep++, new_addr += PAGE_SIZE) {
+> -		if (pte_none(ptep_get(old_ptep)))
+> +	for (int nr = 1; old_addr < old_end; old_ptep += nr, old_addr += nr * PAGE_SIZE,
+> +				   new_ptep += nr, new_addr += nr * PAGE_SIZE) {
 
 
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/rk3399-cru.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/power/rk3399-power.h>
-> +    cdn_dp: dp@fec00000 {
-
-Drop unused label
-
-> +        compatible = "rockchip,rk3399-cdn-dp";
-> +        reg = <0x0 0xfec00000 0x0 0x100000>;
-> +        assigned-clocks = <&cru SCLK_DP_CORE>;
-> +        assigned-clock-rates = <100000000>;
-> +        interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&cru SCLK_DP_CORE>, <&cru PCLK_DP_CTRL>, <&cru SCLK_SPDIF_REC_DPTX>,
-> +                <&cru PCLK_VIO_GRF>;
-
-
-Best regards,
-Krzysztof
+> +		max_nr = (old_end - old_addr) >> PAGE_SHIFT;
+> +		old_pte = ptep_get(old_ptep);
+> +		if (pte_none(old_pte))
+>  			continue;
+>  
+> -		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
+>  		/*
+>  		 * If we are remapping a valid PTE, make sure
+>  		 * to flush TLB before we drop the PTL for the
+> @@ -253,8 +272,12 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>  		 * the TLB entry for the old mapping has been
+>  		 * flushed.
+>  		 */
+> -		if (pte_present(pte))
+> +		if (pte_present(old_pte)) {
+> +			nr = mremap_folio_pte_batch(vma, old_addr, old_ptep,
+> +						    old_pte, max_nr);
+>  			force_flush = true;
+> +		}
+> +		pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr, 0);
+>  		pte = move_pte(pte, old_addr, new_addr);
+>  		pte = move_soft_dirty_pte(pte);
+>  
+> @@ -267,7 +290,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>  				else if (is_swap_pte(pte))
+>  					pte = pte_swp_clear_uffd_wp(pte);
+>  			}
+> -			set_pte_at(mm, new_addr, new_ptep, pte);
+> +			set_ptes(mm, new_addr, new_ptep, pte, nr);
+>  		}
+>  	}
+>  
