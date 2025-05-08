@@ -1,111 +1,238 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25EDD1D63F5;
-	Thu,  8 May 2025 20:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0B94B1E72;
+	Thu,  8 May 2025 20:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746737368; cv=none; b=J+uxW9slsbnJ+mWbLj/xyf0MgSUkc/koj+GCLJIgH2chNzaDd8RWCp/YNhFgnAzX+swxxV8Wjq5P1/oDZeippRpV5Z6c36ZQWaFB58Ad6iqzvhFlqtPh/xMDv/3XYlMe8T2r93Uz6Nik+m0y3NekZu44CSMHA6APqOMPTIo0z58=
+	t=1746737617; cv=none; b=TE1M91MbogNwn9k3WZipsRJ2ervQBvCxx5jnP90wr3EDjoukqM4XKLOWKK9vb41bv/L1sjuKxz/5KNLVu5Is1WECS10L/0KI9wWERjFaCcLb0nPL8clDAad9PdWM7vOpyWg+9WpF0zJwQ01KVh/exGB/Bm+/mSOzX5RByBrr4bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746737368; c=relaxed/simple;
-	bh=QkqgnDA/kdh8NiKMnLO2InJpAElzsZBA/UFEt5uNoHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AXLGmoVLpjkrb/3k6+4VTyG835exGDRcfDIJwMfa717KvpYTLAG7iYRHRO6WVDhA0f+23Gu6gc0mRvBzAY+kwjzirg/UX3CVpJ99yVe/CGDBLuvBV7tcEzTqLe+pgqzO5Jg0t9cheB+91Cfl7ZJqFnFthSheCNaqJQI1U8kiMyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JMlKqetr; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746737617; c=relaxed/simple;
+	bh=9gxb0Nstx1cFhHegHtECuiS4tYtcXS2mu4BN9+QmJXw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=hCIyGawppFISWLLCZ7SnZ9zv1E32Xd5BExBQJPYsnaZgr1dITnbCPMTRbVT4l7XMzu1xq0t0Cu8dy5sIPn+yhr6Qc4+gTu48oHLSzvFWu35/X1bSqB1rj8gGmdfYUNk6DiecEebDfCcD+uODBFqj2zzUw0KFJtbiP2dEjeuWn/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KeFyK4dU; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JMlKqetr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hWA3Okv8QojCnFmChBVRHVH95q4ija3JUXWql+dARaA=; b=JMlKqetrrMtUUObbeNQXONoIA7
-	RnErBFgdchc1XcYIkkweQHs8M85/xeMPkYrP+Lin6DGHro+LgTJe9UsJPvYs1l3vvlFppiWEf8BtU
-	kJ71zS+0yd44w9BqgNw+HsgX259VwwAMdbbSY5U0cRoNh/E5BAXogPBxkwH4KV79UxGbors38PxB2
-	XOwhcrhaN50pNLdptVsvmZkr/AXoovtXirRdNbN9iB7rJ7zPuG3JOLZw6Ir7fPHsrnLl2YCCTCn/z
-	KNyjVfDwwCjamwCOgc7yAQUpxjLPGvf6jXrYhp84A1iuXhUFAo4iq76C5pmlIHHwSKBpxtzZxrxmm
-	EswnLwQg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uD8B1-0000000GAKv-02ZU;
-	Thu, 08 May 2025 20:49:07 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 61CB0300348; Thu,  8 May 2025 22:49:06 +0200 (CEST)
-Date: Thu, 8 May 2025 22:49:06 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brian Gerst <brgerst@gmail.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
-	kvm@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 5/9] x86/nmi: Add support to handle NMIs with source
- information
-Message-ID: <20250508204906.GJ4439@noisy.programming.kicks-ass.net>
-References: <20250507012145.2998143-1-sohil.mehta@intel.com>
- <20250507012145.2998143-6-sohil.mehta@intel.com>
- <20250507091442.GB4439@noisy.programming.kicks-ass.net>
- <55527575-e3b8-4cf6-b09c-b81437e0c892@intel.com>
- <20250508121544.GH4439@noisy.programming.kicks-ass.net>
- <D368D488-6D4E-4590-8E98-A7D7CD5E7F20@zytor.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KeFyK4dU"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548H7Jf6019182;
+	Thu, 8 May 2025 20:53:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	pok6Y6TZN7UspqlyXtZB/7WuOMJTTk31DNepaSh6qLQ=; b=KeFyK4dUMiPAkQ1C
+	02sNnrfUUZ9I+A7EXe97I16Vefl2fg+c4JP66iupZAjY9YkKUiCnblPobGAnZJsY
+	249J1YpBEzxCuGV32IMI8RjdTTW3mKZ89QLxUGILgZZfAC0FCGssPxVGZVS7Q6b8
+	FnXaybS/lhnXFH8gCRNglAtjRgD2qFA6wqJ442aioxphCUfJnPyxSKBsmdT/b2Ck
+	6qZsHFKrkifNzYYWOmAuUL5JpTVaDt0rPEGXUwqNM8B+KTXa8nPSZRU8qDjdnRlc
+	JUBop79S639fFx2nsqYcxrSj9LhpFtcyp7zYhKny1P++R7+Uc73Di4s7ab+6AFd/
+	xQU75A==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gsdj1xua-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 20:53:21 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 548KrLM0008879
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 8 May 2025 20:53:21 GMT
+Received: from [10.134.71.99] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
+ 13:53:20 -0700
+Message-ID: <9d20434f-f808-42a3-9282-d13c0a6f7fc5@quicinc.com>
+Date: Thu, 8 May 2025 13:53:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D368D488-6D4E-4590-8E98-A7D7CD5E7F20@zytor.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 11/14] drm/msm/dpu: blend pipes per mixer pairs config
+To: Jun Nie <jun.nie@linaro.org>, Rob Clark <robdclark@gmail.com>,
+        "Abhinav
+ Kumar" <quic_abhinavk@quicinc.com>,
+        Sean Paul <sean@poorly.run>,
+        "Marijn
+ Suijten" <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Dmitry Baryshkov <lumag@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250506-quad-pipe-upstream-v9-0-f7b273a8cc80@linaro.org>
+ <20250506-quad-pipe-upstream-v9-11-f7b273a8cc80@linaro.org>
+Content-Language: en-US
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20250506-quad-pipe-upstream-v9-11-f7b273a8cc80@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=PMAP+eqC c=1 sm=1 tr=0 ts=681d19c1 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8
+ a=COk6AnOGAAAA:8 a=qft9Go2SGYfpNTBrrzoA:9 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE4OCBTYWx0ZWRfXyRCGC4MqVIzf
+ eRtByoUkTbjXI64ZQnAIy1tcCAq2S8nRSddwxukJ/L5SgLc3TqN9iv2Qn5RHPrXJ6T3VXZJOpyT
+ IgvDuPkZwj+09M4MW3iHd/hGRda3eaNz4vgQyy7ZJzSS3aG04P9VgW1iiyvqfKYjpJG8Xkh4DE2
+ blwWhOSMxLiJRe2HJ+0rhYmcyvO6UqMfjqFSIGJxu6JZLx4AmuXZ7ZZLzjs8PhX4N6fMWlJcGPw
+ 6CU1n/B9Si+DD6QozhH+s5jGw3IsT1zLBRs66pPgycygrr4wii/I/fjIXou0p6buSFxLfUmT0cw
+ NZPmu8llL3eWV3mmu3m70iECUfMur7IlzlbQDnSS1yUf7mL6oUsVwVP9iFBqyeYdKGGwb81F1RD
+ 8J/Mzhb9vKOOk7sVAxJZbBn6Gf4kNlXHoJTu786OsEesRDE2WDjhrlXtl7QMlTCwF+Lc+pTG
+X-Proofpoint-GUID: 6GHp093XnzYSIz1uXl7QEyH-mZY95ocZ
+X-Proofpoint-ORIG-GUID: 6GHp093XnzYSIz1uXl7QEyH-mZY95ocZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_06,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 impostorscore=0 mlxscore=0 suspectscore=0 spamscore=0
+ bulkscore=0 priorityscore=1501 clxscore=1015 lowpriorityscore=0
+ mlxlogscore=999 adultscore=0 malwarescore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505080188
 
-On Thu, May 08, 2025 at 01:23:04PM -0700, H. Peter Anvin wrote:
-> On May 8, 2025 5:15:44 AM PDT, Peter Zijlstra <peterz@infradead.org> wrote:
 
-> >> Looks good, except when fred_event_data() returns 0. I don't expect it
-> >> to happen in practice. But, maybe with new hardware and eventually
-> >> different hypervisors being involved, it is a possibility.
-> >> 
-> >> We can either call it a bug that an NMI happened without source
-> >> information. Or be extra nice and do this:
-> >> 
-> >> if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) && type == NMI_LOCAL) {
-> >> 	source = fred_event_data(regs);
-> >> 	if (!source || (source & BIT(0)))
-> >> 		source = ~0UL;
-> >> }
-> >
-> >Perhaps also WARN about the !source case?
+
+On 5/6/2025 8:47 AM, Jun Nie wrote:
+> Currently, only 2 pipes are used at most for a plane. A stage structure
+> describes the configuration for a mixer pair. So only one stage is needed
+> for current usage cases. The quad-pipe case will be added in future and 2
+> stages are used in the case. So extend the stage to an array with array
+> size STAGES_PER_PLANE and blend pipes per mixer pair with configuration in
+> the stage structure.
 > 
-> A 0 should be interpreted such that NMI source is not available, e.g.
-> due to a broken hypervisor or similar.
+> Signed-off-by: Jun Nie <jun.nie@linaro.org>
 
-I'm reading that as an agreement for WARN-ing on 0. We should definitely
-WARN on broken hypervisors and similar.
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c    | 45 +++++++++++++++++++----------
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h |  3 +-
+>   2 files changed, 31 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> index d710b4eec7ad946a4cf74d6ac5f4db90e8dcf1fd..f35cb1f7a7d2c2c63b4228bc47b85bb57cddbe6b 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> @@ -392,7 +392,7 @@ static void _dpu_crtc_program_lm_output_roi(struct drm_crtc *crtc)
+>   static void _dpu_crtc_blend_setup_pipe(struct drm_crtc *crtc,
+>   				       struct drm_plane *plane,
+>   				       struct dpu_crtc_mixer *mixer,
+> -				       u32 num_mixers,
+> +				       u32 lms_in_pair,
+>   				       enum dpu_stage stage,
+>   				       const struct msm_format *format,
+>   				       uint64_t modifier,
+> @@ -426,7 +426,7 @@ static void _dpu_crtc_blend_setup_pipe(struct drm_crtc *crtc,
+>   	stage_cfg->multirect_index[stage][stage_idx] = pipe->multirect_index;
+>   
+>   	/* blend config update */
+> -	for (lm_idx = 0; lm_idx < num_mixers; lm_idx++)
+> +	for (lm_idx = 0; lm_idx < lms_in_pair; lm_idx++)
+>   		mixer[lm_idx].lm_ctl->ops.update_pending_flush_sspp(mixer[lm_idx].lm_ctl, sspp_idx);
+>   }
+>   
+> @@ -442,7 +442,7 @@ static void _dpu_crtc_blend_setup_mixer(struct drm_crtc *crtc,
+>   	const struct msm_format *format;
+>   	struct dpu_hw_ctl *ctl = mixer->lm_ctl;
+>   
+> -	uint32_t lm_idx, i;
+> +	uint32_t lm_idx, stage, i, pipe_idx, head_pipe_in_stage, lms_in_pair;
+>   	bool bg_alpha_enable = false;
+>   	DECLARE_BITMAP(fetch_active, SSPP_MAX);
+>   
+> @@ -463,15 +463,24 @@ static void _dpu_crtc_blend_setup_mixer(struct drm_crtc *crtc,
+>   		if (pstate->stage == DPU_STAGE_BASE && format->alpha_enable)
+>   			bg_alpha_enable = true;
+>   
+> -		for (i = 0; i < PIPES_PER_PLANE; i++) {
+> -			if (!pstate->pipe[i].sspp)
+> -				continue;
+> -			set_bit(pstate->pipe[i].sspp->idx, fetch_active);
+> -			_dpu_crtc_blend_setup_pipe(crtc, plane,
+> -						   mixer, cstate->num_mixers,
+> -						   pstate->stage,
+> -						   format, fb ? fb->modifier : 0,
+> -						   &pstate->pipe[i], i, stage_cfg);
+> +		/* loop pipe per mixer pair with config in stage structure */
+> +		for (stage = 0; stage < STAGES_PER_PLANE; stage++) {
+> +			head_pipe_in_stage = stage * PIPES_PER_STAGE;
+> +			for (i = 0; i < PIPES_PER_STAGE; i++) {
+> +				pipe_idx = i + head_pipe_in_stage;
+> +				if (!pstate->pipe[pipe_idx].sspp)
+> +					continue;
+> +				lms_in_pair = min(cstate->num_mixers - (stage * PIPES_PER_STAGE),
+> +						  PIPES_PER_STAGE);
+> +				set_bit(pstate->pipe[pipe_idx].sspp->idx, fetch_active);
+> +				_dpu_crtc_blend_setup_pipe(crtc, plane,
+> +							   &mixer[head_pipe_in_stage],
+> +							   lms_in_pair,
+> +							   pstate->stage,
+> +							   format, fb ? fb->modifier : 0,
+> +							   &pstate->pipe[pipe_idx], i,
+> +							   &stage_cfg[stage]);
+> +			}
+>   		}
+>   
+>   		/* blend config update */
+> @@ -503,7 +512,7 @@ static void _dpu_crtc_blend_setup(struct drm_crtc *crtc)
+>   	struct dpu_crtc_mixer *mixer = cstate->mixers;
+>   	struct dpu_hw_ctl *ctl;
+>   	struct dpu_hw_mixer *lm;
+> -	struct dpu_hw_stage_cfg stage_cfg;
+> +	struct dpu_hw_stage_cfg stage_cfg[STAGES_PER_PLANE];
+>   	int i;
+>   
+>   	DRM_DEBUG_ATOMIC("%s\n", dpu_crtc->name);
+> @@ -516,9 +525,9 @@ static void _dpu_crtc_blend_setup(struct drm_crtc *crtc)
+>   	}
+>   
+>   	/* initialize stage cfg */
+> -	memset(&stage_cfg, 0, sizeof(struct dpu_hw_stage_cfg));
+> +	memset(&stage_cfg, 0, sizeof(stage_cfg));
+>   
+> -	_dpu_crtc_blend_setup_mixer(crtc, dpu_crtc, mixer, &stage_cfg);
+> +	_dpu_crtc_blend_setup_mixer(crtc, dpu_crtc, mixer, stage_cfg);
+>   
+>   	for (i = 0; i < cstate->num_mixers; i++) {
+>   		ctl = mixer[i].lm_ctl;
+> @@ -535,8 +544,12 @@ static void _dpu_crtc_blend_setup(struct drm_crtc *crtc)
+>   			mixer[i].mixer_op_mode,
+>   			ctl->idx - CTL_0);
+>   
+> +		/*
+> +		 * call dpu_hw_ctl_setup_blendstage() to blend layers per stage cfg.
+> +		 * stage data is shared between PIPES_PER_STAGE pipes.
+> +		 */
+>   		ctl->ops.setup_blendstage(ctl, mixer[i].hw_lm->idx,
+> -			&stage_cfg);
+> +			&stage_cfg[i / PIPES_PER_STAGE]);
+>   	}
+>   }
+>   
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
+> index b0ed41108a32158c0bc3be2e25fc229b218fd6c5..7c74221380b2c05225c9f82ed6d33765042aec78 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
+> @@ -34,8 +34,9 @@
+>   #define DPU_MAX_PLANES			4
+>   #endif
+>   
+> -#define PIPES_PER_PLANE			2
+> +#define STAGES_PER_PLANE		1
+>   #define PIPES_PER_STAGE			2
+> +#define PIPES_PER_PLANE			(PIPES_PER_STAGE * STAGES_PER_PLANE)
+>   #ifndef DPU_MAX_DE_CURVES
+>   #define DPU_MAX_DE_CURVES		3
+>   #endif
+> 
+
