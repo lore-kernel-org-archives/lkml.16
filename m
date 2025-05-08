@@ -1,126 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CF17494
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 00:08:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9DDF9C1;
+	Thu,  8 May 2025 00:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746662905; cv=none; b=NydqPaSfDh8D6IidEIKufiknKgjLAR70A3c2I+PRv77pdOh0z6dkhB1+IqZ0KbG9XaocXiq0veEZgOKzbo9pF22eyXCWfY+ZfLErQ9/vwgag/NohKXfM3cHOOzrlSqFWTSL0MQKnDFZEjCITIOzWPDsy4CmlSkT6oiVV4kxwlyk=
+	t=1746662915; cv=none; b=M02qqBFZMrpNGOj0um8Z5TY1B3VjNv8nYWiVujhU5930kqHDyDtRsbgSBgVBkq5s97iVeel1BK71s0bPC2m+aU0Q8BrKq06NN3YhyHsN6KxA9nYgf/xMYmirEMtyl0ZPC1BBRmHmjBKjYaVrfxwFtMAfXxePSm8ElmZKdmQ7pZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746662905; c=relaxed/simple;
-	bh=utxXYxvQ5swiWcCpu/bpX8xPPoD44zsBkzBtvr5n9xY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GPdzNEjEiE8x54iBr0KgXhOGeB59fMGTV3iB2B024VIjVJoxmCep1iBPGTKjpFGasx7Hgq1HCVfr2eLn75MekCOZvtCVmIUVT+j8v0h6+1HuteJIWoV9viKvMYUAaU/TNAAFio1oO5f/LdjAVKk9CNIemqYMOQX8XwseoIQNb3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F4lHdvtv; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746662915; c=relaxed/simple;
+	bh=Muk/MzjAwA6106QZ1Bi2pRiDmNZk2l3pcRkfv/NE9NQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kG9s+vHsv+lLMbzdG8xtr9HePprudhx+RppKUAfNwIjycrpTClHHYOdTyWIaePFrSRjKdaFIvEPQpgJdlYVqXY8dLRQ0e6NN93WJ4YxCdWiElgHzEO0gIWFzb9m19dN2N7lrXPBgvrbcoyzojrSD/pzDTRO/Ype76Drjrcp5ZO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AZ0KGebR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F4lHdvtv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746662902;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=3geJ1eoe7Xmqv9/rYLss07fcoghDwsU4cpc+XIPcNxc=;
-	b=F4lHdvtvIKYn4DspR8JxZM9WaW18OiI8nHcwnQDZmqrgIuP6q2FjcExtxqawyWH0u7zaL1
-	R3V+C8SV6N5QKtTVaZX4TUN6jwn4pxR5a9qXAdi9OAeWDrMal1ZQnEuYBqCGesvs9aXfYt
-	F2JzkNQar9cZXDLz7djWFpK9IRcHyV4=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-344-V-OD92X0My69ApB0RwYkqw-1; Wed,
- 07 May 2025 20:08:18 -0400
-X-MC-Unique: V-OD92X0My69ApB0RwYkqw-1
-X-Mimecast-MFC-AGG-ID: V-OD92X0My69ApB0RwYkqw_1746662897
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 458481956080;
-	Thu,  8 May 2025 00:08:17 +0000 (UTC)
-Received: from gshan-thinkpadx1nanogen2.rmtau.csb (unknown [10.64.136.14])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 959971955F24;
-	Thu,  8 May 2025 00:08:13 +0000 (UTC)
-From: Gavin Shan <gshan@redhat.com>
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	david@redhat.com,
-	osalvador@suse.de,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	dakr@kernel.org
-Subject: [PATCH] drivers/base/memory: Skip handled sections in memory_dev_init()
-Date: Thu,  8 May 2025 10:08:01 +1000
-Message-ID: <20250508000801.178672-1-gshan@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZ0KGebR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B51AC4CEE2;
+	Thu,  8 May 2025 00:08:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746662915;
+	bh=Muk/MzjAwA6106QZ1Bi2pRiDmNZk2l3pcRkfv/NE9NQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AZ0KGebRspOOXu/KpsHBKhDPnjaP1+yjl977lToMltvNjB2UzblsZpZ7R1DMGkYi5
+	 +G4nUX/uiLsV7BSEoxAguyuHDYfeYTFsN0O7COn+tiWI4hSUgNKWwD7vd0ILOXoaaS
+	 vjwmTeqA4F3ynm3zA4VaQn7IeC+FHM4bPwR7ZrFaBqE5PrWneR6dJmMw5xTpriANcR
+	 OIZQ9lcNGsQmYt/9rewMkT1SOVUXM1QqPHsD5X7odk+IEJ2sJMRACXj9p2/FIvtEVO
+	 J1dQqIBWPBRsjKl4FPgqlK8f3odEPRr/es2Dl5UXUuBM8iDQNoEUu2DuzXIAV0+GNM
+	 I/LBaXL/ox3EQ==
+Date: Thu, 8 May 2025 02:08:32 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Xi Wang <xii@google.com>
+Cc: Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	David Rientjes <rientjes@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Chen Yu <yu.c.chen@intel.com>, Kees Cook <kees@kernel.org>,
+	Yu-Chun Lin <eleanor15x@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	jiangshanlai@gmail.com
+Subject: Re: [RFC/PATCH] sched: Support moving kthreads into cpuset cgroups
+Message-ID: <aBv2AG-VbZ4gcWpi@pavilion.home>
+References: <20250506183533.1917459-1-xii@google.com>
+ <aBqmmtST-_9oM9rF@slm.duckdns.org>
+ <CAOBoifh4BY1f4B3EfDvqWCxNSV8zwmJPNoR3bLOA7YO11uGBCQ@mail.gmail.com>
+ <aBtp98E9q37FLeMv@localhost.localdomain>
+ <CAOBoifgp=oEC9SSgFC+4_fYgDgSH_Z_TMgwhOxxaNZmyD-ijig@mail.gmail.com>
+ <aBuaN-xtOMs17ers@slm.duckdns.org>
+ <CAOBoifiv2GCeeDjax8Famu7atgkGNV0ZxxG-cfgvC857-dniqA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+In-Reply-To: <CAOBoifiv2GCeeDjax8Famu7atgkGNV0ZxxG-cfgvC857-dniqA@mail.gmail.com>
 
-It's unnecessary to iterate those sections and check their presence
-states if their block has been handled. In this specific case, the
-cursor of for_each_present_section_nr() can leap to the starting
-section of next block to bypass those covered sections, resulting
-in small performance gain. For example, the time consumed by the
-function drops by 12us on a X86 system with 100GB memory as Oscar
-tested.
+Le Wed, May 07, 2025 at 01:07:16PM -0700, Xi Wang a écrit :
+> On Wed, May 7, 2025 at 10:36 AM Tejun Heo <tj@kernel.org> wrote:
+> >
+> > Hello,
+> >
+> > On Wed, May 07, 2025 at 10:23:24AM -0700, Xi Wang wrote:
+> > > Overall I think your arguments depend on kernel and application threads are
+> > > significantly different for cpu affinity management, but there isn't enough
+> > > evidence for it. If cpuset is a bad idea for kernel threads it's probably not
+> > > a good idea for user threads either. Maybe we should just remove cpuset from
+> > > kernel and let applications threads go with boot time global variables and
+> > > set their own cpu affinities.
+> >
+> > I can't tell whether you're making a good faith argument. Even if you are,
+> > you're making one bold claim without much substance and then jumping to the
+> > other extreme based on that. This isn't a productive way to discuss these
+> > things.
+> >
+> > Thanks.
+> >
+> > --
+> > tejun
+> 
+> Yes this is still serious technical discussion. Frederic made several "we can't
+> have b because we already have / are working on a" statements which were not
+> very actionable. Deducing to a particular case is a quick way to simplify.
 
-Suggested-by: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: Gavin Shan <gshan@redhat.com>
----
- drivers/base/memory.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+I referred to a particular case (isolation) because you said this is your
+usecase. You still haven't explained us why the current affinity management for
+kthreads doesn't work for you.
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 19469e7f88c2..f612e43afe39 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -942,7 +942,7 @@ static const struct attribute_group *memory_root_attr_groups[] = {
- void __init memory_dev_init(void)
- {
- 	int ret;
--	unsigned long block_sz, block_id, nr;
-+	unsigned long block_sz, nr;
- 
- 	/* Validate the configured memory block size */
- 	block_sz = memory_block_size_bytes();
-@@ -956,22 +956,22 @@ void __init memory_dev_init(void)
- 
- 	/*
- 	 * Create entries for memory sections that were found during boot
--	 * and have been initialized. Use @block_id to track the last
--	 * handled block and initialize it to an invalid value (ULONG_MAX)
--	 * to bypass the block ID matching check for the first present
--	 * block so that it can be covered.
-+	 * and have been initialized.
- 	 */
--	block_id = ULONG_MAX;
- 	for_each_present_section_nr(0, nr) {
--		if (block_id != ULONG_MAX && memory_block_id(nr) == block_id)
--			continue;
--
--		block_id = memory_block_id(nr);
--		ret = add_memory_block(block_id, MEM_ONLINE, NULL, NULL);
-+		ret = add_memory_block(memory_block_id(nr), MEM_ONLINE,
-+				       NULL, NULL);
- 		if (ret) {
- 			panic("%s() failed to add memory block: %d\n",
- 			      __func__, ret);
- 		}
-+
-+		/*
-+		 * Forward to the last section in this block so that we will
-+		 * process the first section of the next block in the next
-+		 * iteration.
-+		 */
-+		nr = ALIGN(nr + 1, sections_per_block) - 1;
- 	}
- }
- 
+> I'd prefer to focus more on higher level technical tradeoffs.
+> 
+> Overall compartmentalization limits resource (cpu) sharing which limits
+> overcommit thus efficiency.
+> cpumask restrictions are not ideal but sometimes
+> necessary. Dynamically configurable cpumasks are better than statically
+> reserved cpus.
+
+For which usecase?
+
+> I do think the cgroup tree structure sometimes helps and we don't have to use
+> it for all cases.
+
+Also kernel threads are special beasts, even some !PF_NO_SETAFFINTIY kthreads
+have actual affinity preferences. If they can go through cpusets, this must be
+dealt with. And admins will need to know about those affinity preferences for
+each kthreads.
+
+Also do we want to be able to expose all the cgroup limits to kthreads? Even
+if only cpusets is allowed to have kthreads, does cpusets.mems make
+sense to be exposed for example?
+
+If your issue is ever resolved through cpusets, this will have to be maintained
+forever with all those subtleties in mind.
+
+I tend to think that CPU isolation is a very straightforward cpusets usecase:
+no load balancing, NULL domains and tasks usually don't compete much for the
+CPU since the point is to not be disturbed anyway.
+
+And NULL domains already exclude kernel threads, dynamically. So please give
+us a compelling reason for doing this.
+
+Thanks.
+
 -- 
-2.49.0
-
+Frederic Weisbecker
+SUSE Labs
