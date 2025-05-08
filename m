@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFF527510F;
-	Thu,  8 May 2025 14:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BD7275873;
+	Thu,  8 May 2025 14:39:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746715142; cv=none; b=kKC74CtPR1eW636zn5XfVNw62Woz5uHeJzS2bUSj19hu9wFMF6+IQ80NvndDiLHMX+LKdNht0f54Hi6CTMBdKjguLLRTqp35S4731j32sIfGBgFKklFjgvByQ+avH+NMpBynLByP4p3cfWSMUlTcEc0oeOUZdabs6Jm+o7fF9Zs=
+	t=1746715144; cv=none; b=IVdtUd803JJF8B2DBgqX123JNq4n+lB0bw0x+07BzcCoX7noyDEJyKo2z6p4s3KHLemHXiruReSncK3u4ZCchQJQexL2yFnej8gNJTjT7amHG7/9i9NJfvgAeFZElJXH/enoFs6m7bwuDfBqRI3wS+a6dcbXWAenhupxIt4swt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746715142; c=relaxed/simple;
-	bh=PzzI3I14PiyWPXZh+l4DtbAgHiPoWtQFR/ogfgbK28U=;
+	s=arc-20240116; t=1746715144; c=relaxed/simple;
+	bh=fAsk8LB0xqCO9tGcY4ShnRjZ0RH8OtKy42FSrNFZLkQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=thPI8+Hj0+bSDyY9xWfnMiQzV7FvzwOx5qUUSYvVcoA0ibkuyvt5YlUnAzvUP2GdZUXYReS3dnR/vr9AL236ie+rikLI9aWqtvyE5luOp20xnlQh6xLOPc2mH5f3iWVHWc3NV+zR/vqfGHllCyBVlMkgVKc0Bweqh2DHhCGr5qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Np/3PiOt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=CDmGS1XeYW5hskZ+fkKNSc7zpsKyLw51pdjoMW3k2rSnWtgHaOLkSeu9OaozYrUSKwf/DyJELWersFjJdrEJb7hZB54kZpQIZRWCN4bQXKQkzq8yazhfEpPai0zQLiX5V4fxXaqtxHw4PpMEOemM204YFlaZImogr7FxTarCtMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m+jUagS5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Np/3PiOt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA768C4CEE7;
-	Thu,  8 May 2025 14:39:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m+jUagS5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 533B2C4CEED;
+	Thu,  8 May 2025 14:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746715141;
-	bh=PzzI3I14PiyWPXZh+l4DtbAgHiPoWtQFR/ogfgbK28U=;
+	s=k20201202; t=1746715144;
+	bh=fAsk8LB0xqCO9tGcY4ShnRjZ0RH8OtKy42FSrNFZLkQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Np/3PiOtH7WRUC7ghcr+8mxSxM87tlsPb8xswco289hDTNBw2renrGaHzVYoqTX7f
-	 cKQYrtmmY/4h9e+IcwomvP2n2K1B2mBYhjRXIg/uwe2cahUXtSt/0CTqLgsIeJPtjp
-	 zRgP4CZFbLm4wT+wsDXuFB1ABPF5hF6g7jEFCWpN4YC2llGQh7C7xOreY7+tW9agcu
-	 nupmg89aPURBlTH/X6XV8BQQ8ebRlSn7NhUasK7LmpHfCwxYpBAOq3SUPyZdNh+MnF
-	 p/DzRuTYzYF+kZu6OLkzgd6zsK1wqRgNnffrzBfj6mOYth4e3NQzF1vjOMJbWATequ
-	 wwqh3+2+APSFA==
+	b=m+jUagS5MH6qWfXiT1UwVM13wkewdoJVfeW/qGI9Bl9kAHX58I0fHzpuPJaH2ovdd
+	 YkF+dtKettEllMaNOdtVdpioCKBWvA9T9RGPLsJNCF8f5oRxalcQ6e+WEyDGuBPQdL
+	 ArPQYBXRPz1j+UnIi8+luHF/homTUvJTuO2T18FslZME5/l5kiqU/sKwQ701eG8BDA
+	 jI58Ecj2Pb9p/qI0kof01v8Q+jUPuavLZ9kOxDAG2qPw2rmuiD93RowPWpZb5/83WF
+	 jZUqScH09PTOen6FqJzCMTOFcjvpd87ciVDi65UvRL6ap43XMMs5Ton0EZSqITzu54
+	 fI/0ThjwrqSgA==
 From: Mark Brown <broonie@kernel.org>
 To: Oder Chiou <oder_chiou@realtek.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, 
- linux-sound@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250507140907.255562-1-colin.i.king@gmail.com>
-References: <20250507140907.255562-1-colin.i.king@gmail.com>
-Subject: Re: [PATCH][next] ASoC: rt712-sdca: remove redundant else path of
- if statement
-Message-Id: <174671514005.7345.2238491722713316258.b4-ty@kernel.org>
-Date: Thu, 08 May 2025 23:39:00 +0900
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org, 
+ Colin Ian King <colin.i.king@gmail.com>
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ christophe.jaillet@wanadoo.fr
+In-Reply-To: <20250508084527.316380-1-colin.i.king@gmail.com>
+References: <20250508084527.316380-1-colin.i.king@gmail.com>
+Subject: Re: [PATCH][V2][next] ASoC: rt712-sdca: remove redundant else path
+ of if statement
+Message-Id: <174671514156.7345.16339489109303663127.b4-ty@kernel.org>
+Date: Thu, 08 May 2025 23:39:01 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,7 +49,7 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Wed, 07 May 2025 15:09:07 +0100, Colin Ian King wrote:
+On Thu, 08 May 2025 09:45:27 +0100, Colin Ian King wrote:
 > There is an if/else check where the else part is executed if
 > adc_vol_flag is true, this else path checks if adc_vol_flag
 > is true (which is a redundant second check) and the if path is
