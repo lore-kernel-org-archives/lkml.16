@@ -1,126 +1,117 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E7C27AC5A
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7B427A93D;
+	Thu,  8 May 2025 15:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716584; cv=none; b=tf1CZhR5Nsga4q+ddjregn+avJsgBgr+21eL4R18YWwS8XLTTAxOL0+l+9Ik2l4zT6XmVon/nrA6WCVkEoLeChwgjKxgQqe4h15UlQ5R6b++40Z/II3W+bdBNsaDUJOuKBA6D9YB6chlbG9+BP9Y0mrvisKWKgntaCH1a/7IW2g=
+	t=1746716587; cv=none; b=mkJu8xc2xpd/mUp07hH+3ejdUXq4BzVD7FEcLP4YCQy9xZOMuJDs2JAcNs3boI/zD4yEdv8Ytx5lE+lFkfR0q62/Agd3lKpc+kzHnCBZrmInS9EONj+ghzFK6QaPs4mMb27LVm01Id5vik/R/9Yw9404upmyBKFoAaxgIYlB8Cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716584; c=relaxed/simple;
-	bh=9AHgtL8RG7TPRu1Y6JSuPxMQpmSKTLNx3uaNOw+XK10=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QRCeZdpGvsueyjmbbyhLnpX4O8mrsIav2n6Pmm6x8pFyzel6ZV0J6Vh9wDfKH9aTctxSHBKdbi3S7lJA9uc7O3HAlJhuTrI1qlxoXm3zLMghGQ5rs5E202LxgRFPP88EpP3LhRatiOhc3ICvYkwjWpyEKf09RQqduJ/2JaOQOeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WgC8lVG6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cg8vMZze; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746716587; c=relaxed/simple;
+	bh=3DNsZF/rv9M8mb8kdwzH/JQLJ+WZ40H/gUZWj96QXyk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GGO8e5wrwFq7cprobbz/p5bYffzxz97LYkgBSpjHDtaZLYtKYSUlv2OLxY7pmO/l0xdU0auhFY9UFAv6B2Xt0P9o1A2F8I8q7ft6Ls1AKeI1F2IvQyjk96FzJh0Dhr179j87+Da5OiTsfyBt/4WQSpzphTTpYdGJMGKkvrsNqiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dR+pekXD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WgC8lVG6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cg8vMZze"
-From: "Ahmed S. Darwish" <darwi@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746716581;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FUL2DAK8gKuKEKvr1aqZE5KSLVlq28mMPWFiSzNt1C0=;
-	b=WgC8lVG6VTC+ya1mpS+OxvcHnLhfSutLvAUYDCT+RnyrV1cHz6kiQcXRM/vFdWi370/SoU
-	6GHK//zDSIXJiGX1BXQNNoaBMuY8Yr9Ffq798ysXxlrb5VHSa2ltUd3yH46kNx0q8dA6mt
-	cq96gsAfMxZ+Jy5uHXfZPtrxhx89IL0zRmpx+sF48TizTLiIiIZeLwLv00M+oS/MwJIjNi
-	8IRQnai2RONsG6qNjK6H+bUj+L5TuOK/xX2762CZfUyvun14KQNTIipf89kW12tMaflQbs
-	0HRzU/k+APTwlMr42JPr8J1DIFk8kzF9B+jecNs0fikD0qneOcX0cWkz9ZIEog==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746716581;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FUL2DAK8gKuKEKvr1aqZE5KSLVlq28mMPWFiSzNt1C0=;
-	b=cg8vMZzekLDr6A/n5CoNGTLIRKvXBtG5uDf+BUR30SCo+CyQgGyWRMyZKrJScB5+iK1j4B
-	7UmgG+aSf006kwDg==
-To: Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	x86@kernel.org,
-	x86-cpuid@lists.linux.dev,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v1 7/9] x86/cpu: Rename CPUID(0x2) descriptors iterator parameter
-Date: Thu,  8 May 2025 17:02:36 +0200
-Message-ID: <20250508150240.172915-8-darwi@linutronix.de>
-In-Reply-To: <20250508150240.172915-1-darwi@linutronix.de>
-References: <20250508150240.172915-1-darwi@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dR+pekXD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54750C4CEE7;
+	Thu,  8 May 2025 15:03:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746716587;
+	bh=3DNsZF/rv9M8mb8kdwzH/JQLJ+WZ40H/gUZWj96QXyk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dR+pekXDvSag6gWmTVpXa6O20ICVVYkjfE/GasaYdL3+F9TUw3Tb9Q2d/SZqrD+zM
+	 aGntAW6TR3VfEKycYDJZaKFxhppvioZFVjEhyGG5D5Vo6/ys9f1oGSR+w7CAMfHD9M
+	 w4MapSDD2uUtXbNV6a2Q5/e6KHabQXFbr3GOvbOMMRZQ0DSM0U49BZjbe832edfQOu
+	 77wgx9FbMWc3xcpmh8TrxjM4L+WaO+Dj/7Cq6wYHQG+1MXNWz1K0+Sly/3gjHK+kmB
+	 KFjDG9k6h3582IC8z+H3Tnctafob54WWCEmncdlU4wyu173Ie1njqRvH3jHx03nEb3
+	 fix7C51qweXlQ==
+Date: Thu, 8 May 2025 16:03:01 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Yannic Moog <y.moog@phytec.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, upstream@lists.phytec.de,
+	Benjamin Hahn <b.hahn@phytec.de>,
+	Teresa Remmet <t.remmet@phytec.de>,
+	Yashwanth Varakala <y.varakala@phytec.de>,
+	Jan Remmet <j.remmet@phytec.de>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt-bindings: add imx95-libra-rdk-fpsc
+Message-ID: <20250508-harsh-refusal-523e1a67d5d0@spud>
+References: <20250507-wip-y-moog-phytec-de-imx95-libra-v1-0-4b73843ad4cd@phytec.de>
+ <20250507-wip-y-moog-phytec-de-imx95-libra-v1-1-4b73843ad4cd@phytec.de>
+ <20250508-statistic-creation-ba17442921de@spud>
+ <7819efd4-bf7f-45d3-b2b3-a3d33092f476@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xPi/7yiMGX4/St+Y"
+Content-Disposition: inline
+In-Reply-To: <7819efd4-bf7f-45d3-b2b3-a3d33092f476@kernel.org>
 
-The CPUID(0x2) descriptors iterator has been renamed from:
 
-    for_each_leaf_0x2_entry()
+--xPi/7yiMGX4/St+Y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-to:
+On Thu, May 08, 2025 at 04:59:08PM +0200, Krzysztof Kozlowski wrote:
+> On 08/05/2025 16:57, Conor Dooley wrote:
+> > On Wed, May 07, 2025 at 03:13:12PM +0200, Yannic Moog wrote:
+> >> imx95-libra-rdk-fpsc is a development board based on the phyCORE-i.MX =
+95
+> >> Plus FPSC SoM. Add its description and binding.
+> >>
+> >> Signed-off-by: Yannic Moog <y.moog@phytec.de>
+> >> ---
+> >>  Documentation/devicetree/bindings/arm/fsl.yaml | 7 +++++++
+> >>  1 file changed, 7 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Document=
+ation/devicetree/bindings/arm/fsl.yaml
+> >> index 447054b52ea391f69d11409d51751a88bb8b539a..783550c61cd7e9aa12ffe7=
+8bfaa74478c19e0797 100644
+> >> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> >> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> >> @@ -1366,6 +1366,13 @@ properties:
+> >>                - fsl,imx95-19x19-evk       # i.MX95 19x19 EVK Board
+> >>            - const: fsl,imx95
+> >> =20
+> >> +      - description: PHYTEC i.MX 95 FPSC based Boards
+> >> +        items:
+> >> +          - enum:
+> >> +            - phytec,imx95-libra-rdk-fpsc     # Libra-i.MX 95 FPSC
+> >> +          - const: phytec,imx95-phycore-fpsc  # phyCORE-i.MX 95 FPSC
+> >> +          - const: fsl,imx95
+> >=20
+> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
+>=20
+>=20
+> Yes, but this still needs indentation fixes.
 
-    for_each_cpuid_0x2_desc()
+Oh true, I didn't notice that the bot was actually warning here, not
+borked.
 
-since it iterates over CPUID(0x2) cache and TLB "descriptors", not
-"entries".
+--xPi/7yiMGX4/St+Y
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In the macro's x86/cpu call-site, rename the parameter denoting the
-parsed descriptor at each iteration from 'entry' to 'desc'.
+-----BEGIN PGP SIGNATURE-----
 
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
----
- arch/x86/kernel/cpu/intel.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBzHpQAKCRB4tDGHoIJi
+0n2jAP97O/s8ByCOsS91A2ZRQ4MCxwcULpEMDFOih3J5T6H1qQEA+tXf7LZjNWop
+dlDT8OjObbKJwd/QRKHvuESKTwmRSAI=
+=Sp3/
+-----END PGP SIGNATURE-----
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index d4efca7e4bd6..cfcf9b3d270f 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -648,11 +648,11 @@ static unsigned int intel_size_cache(struct cpuinfo_x86 *c, unsigned int size)
- }
- #endif
- 
--static void intel_tlb_lookup(const struct leaf_0x2_table *entry)
-+static void intel_tlb_lookup(const struct leaf_0x2_table *desc)
- {
--	short entries = entry->entries;
-+	short entries = desc->entries;
- 
--	switch (entry->t_type) {
-+	switch (desc->t_type) {
- 	case STLB_4K:
- 		tlb_lli_4k = max(tlb_lli_4k, entries);
- 		tlb_lld_4k = max(tlb_lld_4k, entries);
-@@ -709,7 +709,7 @@ static void intel_tlb_lookup(const struct leaf_0x2_table *entry)
- 
- static void intel_detect_tlb(struct cpuinfo_x86 *c)
- {
--	const struct leaf_0x2_table *entry;
-+	const struct leaf_0x2_table *desc;
- 	union leaf_0x2_regs regs;
- 	u8 *ptr;
- 
-@@ -717,8 +717,8 @@ static void intel_detect_tlb(struct cpuinfo_x86 *c)
- 		return;
- 
- 	cpuid_leaf_0x2(&regs);
--	for_each_cpuid_0x2_desc(regs, ptr, entry)
--		intel_tlb_lookup(entry);
-+	for_each_cpuid_0x2_desc(regs, ptr, desc)
-+		intel_tlb_lookup(desc);
- }
- 
- static const struct cpu_dev intel_cpu_dev = {
--- 
-2.49.0
-
+--xPi/7yiMGX4/St+Y--
