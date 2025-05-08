@@ -1,203 +1,195 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2042.outbound.protection.outlook.com [40.107.92.42])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A071C278762;
-	Thu,  8 May 2025 15:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746718671; cv=fail; b=cVWOeiaSIvn6u8gVSZDjVAdxRJpTiz5ozePO9s72BzlvbXjU3tPIgbkA5kbNBRCCMs6P1F/IwcYFVdpfFUKZK34ayMmZaPgyK0AWjTaPD2D4l0IN5rCS1K4jF5zbYsMstJ4lPMzKKvSVWLr/WlMjgs4D0TMNgcMOrEzl8Ghtxok=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746718671; c=relaxed/simple;
-	bh=Dv7F2HkZIhYssqCQjHHCB/L3ErwmvjHcvFKdNamyVZw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rCFWnNo5/KNxT8eE8oKTYYc44nQXALDQS//+oFe3LI0ENN2EQ5OUW4iR4ehNZeUMHDk8YOX1YdO8BVhBpBZ6/sxq1rjtz3DfurLRf7WNsZACrISSj21yQmXNBLYYtxBrqC7Ddm+G2/DGTNWRFdjYEpWDQ3bxkVaBCzWRdYtzxoQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nPPDJeqq; arc=fail smtp.client-ip=40.107.92.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9FC278E42
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746718695; cv=none; b=TMrequ7G4y2qJvFCnKeMiza530QZt7W1f9HNaNvqpAm/NhUISoeQ7hq8rCtJ+eoCmpddgCSrNNJ05hipXch955yENAXC29cTQDKwpZcropSKm7ijjqdWYy1yfg/jAnXjF6GEOJBRgbCw7ssuXRWpAgwozrcVjPiBao36NFgJsk0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746718695; c=relaxed/simple;
+	bh=MWnsewZ5q/23GaQJidQkxPGjf8oIRVG9F9VPB5wHKGQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GEJAXFJOCfSQDW/CGM5j2qpZumIFwtLrEiQkR3FMkeLVk1Fw8CR2Wb4OUthbZxPcUivMUNE7TaEdGyQux1B0RtL9ecFQLRh2tvNshuYJqzEvJszDETQ720js60qp6jX7xSIDX/q4IYtgeGFOAqqRVvjgl4Fy17I3A4W2Vs/HOfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ecItQsWU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nPPDJeqq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zEvzsM4eW/A+DblKqiwWMtG7LOZ/8VeOs55cFTuoKKlpU36Xh1gIL9x08X8DKCo0vqSMO4NkzeW7ZCISiPZl4Q3Khg0EwIpihIZxgUdUGaaGyQl7bfaOMODo5N6lG0CQfCJ/vMGkaDX3wJNY1Ca/OmcmjzNukD7Rqp2X8Hs4JJP6Um3wXhoQnll+Uwq6YhW4MF1mXq/cU0tu+4TXz7oWclWtg84d33TVXR6MZpq1l9EyAaRUnSpAFI16d6ACtb3uunHQawgE0yCI8a0m7kM1eNn1XO3nsZVkA20X5tOXYx5MZZ7k/YfMVoU74sf7MexZTjhu3oScVDlTG/vjdHf0Lw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XPPSiC4bemJ6btGwWv8nhyyI5pW74t/KPs9A4MzZhyA=;
- b=tTRhXAsFxnwfTFW4WIUfFBT3xsDfEKQFNy5S6kJeuT7EjiH1qmnxk7N6vD2y47Po7/ikQHneqrxIrR3somkhl0/VAW8yXP5MvTJ5ilEB4DtKkHR86ooLm0tjXv/tzUyOSHgulBp01cWPfoEnBKSlKQbZxySfdHdRMK8t9VU+hk09Dj5CgW/itIVArRzoDHZqHRd67knv7H26eXgtwWriU2FmTQWxfJNgFllyVgENbKuyArkyTOocgZTN+vNkZl4VUStr7Sg82WmRaqp4ujpJWeynBzZWyoLf1XfFHgQWdf01aOrKctspEqzgQeNdmlOP5g7JHiqsv7W94i358a3M6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XPPSiC4bemJ6btGwWv8nhyyI5pW74t/KPs9A4MzZhyA=;
- b=nPPDJeqqdnQgxH+iQ3dP7WJiuup1uQzpVQ0mrCVV5IWVA87zLfkWdau7pxcnqw4wNmToToi70QRaoFfkk59bakWTrTNo4GdUrJNHtBR9kLU4P86mpK6fwibsCPUMAVyC/kb4+WWwRzl7uiDpD5hRJW7HGfUcWuIkMpfxrXXowuM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- SA1PR12MB9246.namprd12.prod.outlook.com (2603:10b6:806:3ac::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.24; Thu, 8 May 2025 15:37:39 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%7]) with mapi id 15.20.8722.020; Thu, 8 May 2025
- 15:37:38 +0000
-Date: Thu, 8 May 2025 11:37:34 -0400
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, Tony Luck <tony.luck@intel.com>,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	Smita.KoralahalliChannabasappa@amd.com,
-	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH v3 13/17] x86/mce: Unify AMD DFR handler with MCA Polling
-Message-ID: <20250508153734.GA1939543@yaz-khff2.amd.com>
-References: <20250415-wip-mca-updates-v3-0-8ffd9eb4aa56@amd.com>
- <20250415-wip-mca-updates-v3-13-8ffd9eb4aa56@amd.com>
- <20250507092042.GLaBsl6pczL50Qdr3e@fat_crate.local>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507092042.GLaBsl6pczL50Qdr3e@fat_crate.local>
-X-ClientProxiedBy: BN0PR02CA0033.namprd02.prod.outlook.com
- (2603:10b6:408:e5::8) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ecItQsWU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746718692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kNgdumueLsyUao68owW71ZuZc5Ooj3+4NxqtW1RSPzs=;
+	b=ecItQsWUUL4pKiusifNpPut86liv96SvR2a6JjGDHu/04vmTh58BBwKybBCUAB+n54C8ot
+	5w6moP/Kb9WqRHbx8bv+e1VL0g6U2zGPVK1ZtCF1c+XNv6/8+xQ4sBpz4gcuYvOjuHKWNu
+	8+osIBmK4Fm+vkd0xJ1MYBrorQVJ0CU=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-145-T1Jumb9KMly2evIFKAFrYA-1; Thu, 08 May 2025 11:38:11 -0400
+X-MC-Unique: T1Jumb9KMly2evIFKAFrYA-1
+X-Mimecast-MFC-AGG-ID: T1Jumb9KMly2evIFKAFrYA_1746718690
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39d917b1455so419841f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 08:38:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746718689; x=1747323489;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kNgdumueLsyUao68owW71ZuZc5Ooj3+4NxqtW1RSPzs=;
+        b=jrTsExL1oyZp7yjUQSRpSiew/GpgJ8XjoDiHmhwzMbRC4CdDSabkKlNSoAdVO5sFyo
+         OegXxOBpHPVJT4MA+bEGhfYt4tK/qcaW46swKuoX+EaS9BZx29dz4DcmOJjR2i7ps0AZ
+         Y3jOdeuu1NX4jYdFhtZeGQ9PiX6dVqxPkw9VR0l3VNDVuYbThDXWvmtc2E50lu2KpYVg
+         MsVDXMSMq8SXnIbla3vi5bJuGPWUk4tRxRv5QPmWvCa0J3Z8D2NhsPe+d2yy8nhAZvma
+         +F8Lrk/YpC7hHMP8Xa7+Nn81y/GwsehmGRjf7pJB4MyimZaP95Iliae7KgaDt6gKzwuP
+         ZrEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUtMaQLrOV5B2Mq3dxpjDFSzWpyhywCI+oA6IJuJ5s1tQXRQaAG5MFciQAm6qof3XGjLalYuVDWi+c5Wd0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywsoy0yhulZ4d9w0tDx2jNP7a0eizQSj18iubtnl4KNKMwoH4XB
+	BnAHhIxpKwNrnbkpqwLnqka0PifDJlXWHy+daKx4hZZ82LSGdHpN/npD73YABc//Jdv42bL94BW
+	m0LQVPuJVbe3nt6ZMN7b2nsPo/PzQoDdF6r9zTIM352PSe3141N8Lpw1/ITtKDQ==
+X-Gm-Gg: ASbGncsLTUuifWwBE696u5EtVJuD1jAHgTukuYJNfFooRknw9+CePtp9Qfu1wEbtlIu
+	X5nfVL6NkqnH4KRhQLmwZ1bLiFaGikzoPdXN5gH+ng3P6CVMYwcKAOID36vtZKzILAtaFEafmJX
+	kveRlEwkHrLVpytDJpYXRt3Jy2Pro2StWGRB0gIoRq60Qo0W9jUpMQXnEa2ngWow9aBUm/DRIJe
+	wI37FRgZr+eN58PPvtbTOqurvv63qINaLt4QVA/TtNzHfZv4/hrebAsDgByPGzwFqXd9bKMz8dP
+	gzcCuMRWK1La9MJw++7rgPrLKjdbxcShHBEEeVVkUVXGFXd0D03IDUHv+w654gr05a0pES48IBx
+	fDAk0euQKQxFcxw4a0e3MhZd862cu4YyTFIqMIeg=
+X-Received: by 2002:a05:6000:2411:b0:3a0:8ac5:16f8 with SMTP id ffacd0b85a97d-3a0b4a18f1bmr6233780f8f.20.1746718689665;
+        Thu, 08 May 2025 08:38:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHeRBpb/oIGiapcyP4cPbYWsRnSmfBqjZMmpGvYLTt1JIpEn2sUVwQBmQpL5eZWltFsaY/gSA==
+X-Received: by 2002:a05:6000:2411:b0:3a0:8ac5:16f8 with SMTP id ffacd0b85a97d-3a0b4a18f1bmr6233751f8f.20.1746718689248;
+        Thu, 08 May 2025 08:38:09 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f3e:5900:27aa:5f4a:b65c:3d3c? (p200300d82f3e590027aa5f4ab65c3d3c.dip0.t-ipconnect.de. [2003:d8:2f3e:5900:27aa:5f4a:b65c:3d3c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2cf38sm279454f8f.77.2025.05.08.08.38.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 08:38:08 -0700 (PDT)
+Message-ID: <4dc17506-6291-4b55-a257-8238c3c857f1@redhat.com>
+Date: Thu, 8 May 2025 17:38:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|SA1PR12MB9246:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5690268b-9d0d-4c8c-3b27-08dd8e464327
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?8cFQDnGb63jMiqo6Voi3H7WPegQKwWHGNde7AKbg5YuGd9ddN+CGQMAergPo?=
- =?us-ascii?Q?Fa3uzT94T6oKMzZ8NfaJgHu9fYuupQR5vt+sJPwJYnWWV5qgxxxYcHbbDjtm?=
- =?us-ascii?Q?Ke0uaz0OW8DCKkBhojOacB9BAUhlPf7Otz5MSiPY+8xvanuJDpslPZPbwCpc?=
- =?us-ascii?Q?yH4l2p8bA2XYt0c8W2t2EtuT53lxQ9OdjBlFT4D7suzRnkVhp8vU0HR6YJFe?=
- =?us-ascii?Q?DkODCh5Loo1XTDS6RnMzUaFy648x//sfnPrP8D/aOT0cpTlgp0p2TpeGHTEt?=
- =?us-ascii?Q?r+yoRypICUkqF6Xj18VZExnVJwPg1P9m82z1ijhM7YoVrO+GezD9JhDdp3/g?=
- =?us-ascii?Q?WnmNtSbrKpQNKJHtvKRoX3CITm5gantaC5W+cxOKEQd/GAQ86MLOQ4bYbz8/?=
- =?us-ascii?Q?fIIcR/xdTtAzQ0CDMBTMaZNmw0M7KsDS/eZ53oqRzYUbmbal2JgPEo6gd1VO?=
- =?us-ascii?Q?piu6SGVOa49LhXSKF7Iz4wPdx8qMjKy4MBz/wWF8aGuGasWbWI5jB5IqIzoq?=
- =?us-ascii?Q?fdRCQO0omvvEasG0hzdMssAboQMwIdXUKd7Nz085WNM/CFJLTRhutp1e92qK?=
- =?us-ascii?Q?zY1nOduWqikA7hOCFHFUa0ZFRnorHJ+h1ZwOHsZdgqisE+xThqRSTbMk9NVl?=
- =?us-ascii?Q?7TCm32JajgCWvyxcFIIJ23+pMf8bM/PEn+7B/21z54aruSiMz6WzxZs2WJuQ?=
- =?us-ascii?Q?CWti9DUmK8BG5vicShfMSZ5j0E/6SFIPLELK+ay/i92AhyRZkrz/HX1ieL5i?=
- =?us-ascii?Q?RTTL4lvuWWAi3c3G73wkD0mr9ov0yLCXz7D2fmCISWNOvsAA6m6vmyiM0p1V?=
- =?us-ascii?Q?gCrgv3N2TKL5Ef8/11byMVLPcPogUSUmhdcuZzRzrddaqZN9VcDTJhl1Wl3J?=
- =?us-ascii?Q?VZeQkTcehrNY/QYbvLDUC8KGYdRx6LTRG9t72voaROzsSBLs+zJmkipo1lDe?=
- =?us-ascii?Q?+gh4GOhg7y+EH2Z9OdkDNdkXyOzHgs1vR0cSTSj++vZA9Sbsbt5fjhvnpvSZ?=
- =?us-ascii?Q?/YmfC0DU1UAUt/lh67Ze74ejzvdXJz1nTw1MbM/B/JOVnyjSudK066Lha5nl?=
- =?us-ascii?Q?2MnPFUtR3yrAyxcRMIuy1iXisV7Vx+iFkFFOH/4MlHIrj1EuWbF4ROns4Wo1?=
- =?us-ascii?Q?XGSA5rOaxmLI0G2roWI/vJPmon7WkNGW2xuDu1iQl8mutyGvfS9YI25cLK7G?=
- =?us-ascii?Q?mVe9nRkDrrAf1WjxVhTQEN0rlmKCWxAKvcLAzd4S1VfRoo1iCCsI+dnqu/sc?=
- =?us-ascii?Q?nk/Eac45Sox/M8qU3wsrPTsuKQi9Ph/CltzUAV5y8vUqS6Ewm1O2qQYV8nB4?=
- =?us-ascii?Q?S9hkP275A0HJlWsvP7jzf89rGqeWQZM0hkdP5UOTEijf18Hw1CPfvWW+A0CO?=
- =?us-ascii?Q?9n4wRIOtJ9bM/X+q4D4oY2TZw/mpsVZMjDjlaTQsQjXUsz8VSkF+kpgKXZ4O?=
- =?us-ascii?Q?bV+iPcJQl+g=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?rJfPkYUIdv0EOglsL4EQHPL+F0L+1cktvOWad52eGZuq3XbnR/E0iBpNhrWS?=
- =?us-ascii?Q?88iDnTgqkewiY18jCeLHOdQPRcDcRRGtafl0n/RCTN6hbPCHtJqgjUa6PfX8?=
- =?us-ascii?Q?iew2LKONib9z7fApYpQRg/BxiGYHTdZqhcwVkfuUsy9gmVi+RJ2t8xVJHdPo?=
- =?us-ascii?Q?bm8vTIwtvzW928mJ273Fiaj1MWV6lVoJp+t6XXJyo7Xp83Bunadv2u+3MrTd?=
- =?us-ascii?Q?fScGjvF1XiOzsauCbfEq3FLpwpsYlgRyqkmoaap5gAshZr4jH7X3MDufvYI+?=
- =?us-ascii?Q?ni1IcualVj8/Ji/2FHkqxlYlnrVgA71CalpZXa32mr4Zz3jQxUavzIjBZI7R?=
- =?us-ascii?Q?5xAsUVlTWO7B8qZZK/sVqBZPnKZmkuljD0Ay4mp09P6akVOua+L1FAEKyLRF?=
- =?us-ascii?Q?fdCQyzsSbDCXCNUOIRmPImQNRmJXs4Bp/GvTBDdDZulkfFh8mBq+bSH4MAnJ?=
- =?us-ascii?Q?eX1a90XEm9t+7J6xD4kYv+v/j9uPqbdyk7Rsxm9XromkUhzAMaLfXEdUSPj3?=
- =?us-ascii?Q?C1+9i/eYrwBSPEdwxaWSpxil2taLjdcuw2UgbV6t4eTG/oIm0ffYeysWShLW?=
- =?us-ascii?Q?/P7MuI/aSGo0jTy6bAzVzAty2+JW4n4qqH5UhZs2DeXVm5PfAq6INlT7eIlS?=
- =?us-ascii?Q?R8IETSOtwC8lSIpm0WTiR3rb3z/dV66eNKXODBtLcbRyoTWA635goXub74Y/?=
- =?us-ascii?Q?Cmypzcob9nlj8SdeyQgg4uil4hRJlxD+6UIZgljCUPBzR3ZX5dXuJQOf9Z6w?=
- =?us-ascii?Q?rp7cvIW4M3wX0uCQDlFKRi/AMtd+UsSrLrXx3WdHB8as1OgVA5MWkJ7OhRAH?=
- =?us-ascii?Q?eq3k44oj/eOhLoEsIWcqsaJdLItDeyGScODgWz55/4Kh/f+3aR6YgPmAvILj?=
- =?us-ascii?Q?wWoBbPCHG3GAcIU3gExlhxlX3edHE8OPmH6kJbPFq8G4hiY6UYApzjn/AMVj?=
- =?us-ascii?Q?z0WikpXH8HaSn1/Hu2QYdSXtigSBuhiPgdY8Mr62LPTCD1AVPhYUikFsfUZK?=
- =?us-ascii?Q?5d2uwhnyAqntRxGv9orPdG3S0jCt3W1gD0l7hdfw2EoZjT0+JiCIAPWjccHK?=
- =?us-ascii?Q?DYCCLJA9lO4TXL67+u6hQ9ErpRPLIGFVwRINLO6fRdRfSlHYaRTPHDrIKb6f?=
- =?us-ascii?Q?uEsTdji6gez2ZuR634wpOo5VsYHJhyiezcJ6g5bqhQScwPhQd6mhrw/r0Avk?=
- =?us-ascii?Q?lI4X3770njSTEzW49HsM7vxtVAygNYZKvMdu0qvyAigpC5kBWTt0JNh/sGmj?=
- =?us-ascii?Q?RsH58aMn0vcJ1mvBYQo2oO9nTmgztwVwWatxy2zdYNJxi7x5F6ke+VFQ1bYE?=
- =?us-ascii?Q?t4vlWW0g5n2YIDBvKWBsfCpRHdJLQgqrZibmypIWm7QzilBCnfbZTkATFZW1?=
- =?us-ascii?Q?cjQJkqS4LyInnhNxtZy4uqQjvpJHt69B7b0/NXr/s3dGbizQa23Jjqj8WaK0?=
- =?us-ascii?Q?K1HeGh4R/+nvAbCI8x9kYqvyPbovidQZPSzfTga/RjN3aw3mAJuPzrrPzA4y?=
- =?us-ascii?Q?zxkceROsFRIpyD9HbStJ+VxzYgXDu2+XI/0Mn34CUCIMLXSvL5MeaWO5lFrk?=
- =?us-ascii?Q?2ib2Xr/FjTiCT8udcru45Zbeh0+TM3rXx2tUnRTp?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5690268b-9d0d-4c8c-3b27-08dd8e464327
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 15:37:38.3913
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YvGxNXPrGrwNiA70xQPSeCpzZmcFnjFSwEUi5pofrFNUdOtFYhGv1IGvUbYwe95crla+lQKphfObWzNDcptlPQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB9246
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] MAINTAINERS: add kernel/fork.c to relevant sections
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20250508152825.151889-1-lorenzo.stoakes@oracle.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250508152825.151889-1-lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 07, 2025 at 11:20:42AM +0200, Borislav Petkov wrote:
-> On Tue, Apr 15, 2025 at 02:55:08PM +0000, Yazen Ghannam wrote:
-> > +static bool smca_should_log_poll_error(enum mcp_flags flags, struct mce_hw_err *err)
-> > +{
-> > +	struct mce *m = &err->m;
-> > +
-> > +	/*
-> > +	 * If this is a deferred error found in MCA_STATUS, then clear
-> > +	 * the redundant data from the MCA_DESTAT register.
-> > +	 */
-> > +	if (m->status & MCI_STATUS_VAL) {
-> > +		if (m->status & MCI_STATUS_DEFERRED)
-> > +			mce_wrmsrq(MSR_AMD64_SMCA_MCx_DESTAT(m->bank), 0);
-> > +
-> > +		return true;
-> > +	}
-> > +
-> > +	/*
-> > +	 * If the MCA_DESTAT register has valid data, then use
-> > +	 * it as the status register.
-> > +	 */
-> > +	m->status = mce_rdmsrq(MSR_AMD64_SMCA_MCx_DESTAT(m->bank));
-> > +
+On 08.05.25 17:28, Lorenzo Stoakes wrote:
+> Currently kernel/fork.c both contains absolutely key logic relating to a
+> number of kernel subsystems and also has absolutely no assignment in
+> MAINTAINERS.
 > 
-> Superfluous newline.
+> Correct this by placing this file in relevant sections - mm core, exec,
+> scheduler and pidfd so people know who to contact when making changes here.
 > 
+> scripts/get_maintainers.pl can perfectly well handle a file being in
+> multiple sections, so this functions correctly.
+> 
+> Intent is that we keep putting changes to kernel/fork.c through Andrew's
+> tree.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
+>   MAINTAINERS | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ccc45b0ba843..55332d5bc499 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8830,6 +8830,7 @@ F:	include/linux/elf.h
+>   F:	include/uapi/linux/auxvec.h
+>   F:	include/uapi/linux/binfmts.h
+>   F:	include/uapi/linux/elf.h
+> +F:	kernel/fork.c
+>   F:	mm/vma_exec.c
+>   F:	tools/testing/selftests/exec/
+>   N:	asm/elf.h
+> @@ -15525,6 +15526,7 @@ F:	include/linux/mm.h
+>   F:	include/linux/mm_*.h
+>   F:	include/linux/mmdebug.h
+>   F:	include/linux/pagewalk.h
+> +F:	kernel/fork.c
+>   F:	mm/Kconfig
+>   F:	mm/debug.c
+>   F:	mm/init-mm.c
+> @@ -21742,6 +21744,7 @@ F:	include/linux/preempt.h
+>   F:	include/linux/sched.h
+>   F:	include/linux/wait.h
+>   F:	include/uapi/linux/sched.h
+> +F:	kernel/fork.c
+>   F:	kernel/sched/
 
-Ack.
+Acked-by: David Hildenbrand <david@redhat.com>
 
-> > +	if (!(m->status & MCI_STATUS_VAL))
-> > +		return false;
-> > +
-> > +	/*
-> > +	 * Gather all relevant data now and log the record before clearing
-> > +	 * the deferred status register. This avoids needing to go back to
-> > +	 * the polling function for these actions.
-> > +	 */
-> > +	mce_read_aux(err, m->bank);
-> > +
-> > +	if (m->status & MCI_STATUS_ADDRV)
-> > +		m->addr = mce_rdmsrq(MSR_AMD64_SMCA_MCx_DEADDR(m->bank));
-> > +
-> > +	smca_extract_err_addr(m);
-> > +	m->severity = mce_severity(m, NULL, NULL, false);
-> > +
-> > +	if (flags & MCP_QUEUE_LOG)
-> > +		mce_gen_pool_add(err);
-> > +	else
-> > +		mce_log(err);
-> 
-> Except you have a function which is called "should log" which also does the
-> logging.
-> 
-> And you have that same logging being done in machine_check_poll().
-> 
-> This code needs more designing.
-> 
+-- 
+Cheers,
 
-Okay, will do.
+David / dhildenb
 
-Thanks,
-Yazen
