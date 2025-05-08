@@ -1,71 +1,71 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35ED51D8E10
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF6F1DE3BB
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746699102; cv=none; b=GDZv7qdmBH+WzshyFUz54nsj6vcmXVL1ywcsYf6vdoUZPmJNWL45Mnn2dsq+ZPQP5S2ezjgucqGZxo7t7FCL9ToZMT7nXu4O4PJM38kBSbMq0HKQhQUKGRdEWTxc5s2s4D4JNq7lKVAFBW/Qzk2TojK+SP9oBVQf+88fWwn/hXI=
+	t=1746699192; cv=none; b=B16moie/ww5tz8z15wbPZxPjm/22lCPW0MGmB0VkE6JAxyqQFjMez7aqktnsiREpwaAVEpay8p4SPMXOTrrM3EtpyG8qxEmuOFzDcbr3QQ+A+sz0sNMFXpCf4+62wAjC0nbSWpmyx7cC0r/Wzzlzn5rmEO/11/d7wMAkiNahz7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746699102; c=relaxed/simple;
-	bh=On+eNzKuN+amPTz93qf1g6YDrx19UUM+He9OpXK3udA=;
+	s=arc-20240116; t=1746699192; c=relaxed/simple;
+	bh=GaU7b11uch6HEVNCi/BIgaqFmQ/4amSpG/dObURRasQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aL8HvemOEGiwQWMNpfgRRMeprAgoOz5LwuO8VhJocEBJ8jqdNZOKRobWPvDuts6dh255qP+TS2S/BI4FaK8WYPyMsF5dPpnFSW+HGiTGeMpLYCAdFyUOuZG2E4l0AWsAvZcO1g6nSjiUO8KdfJ051ys6jp17ww4/rzS1r7MwuO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=noVJKyBW; arc=none smtp.client-ip=209.85.160.41
+	 To:Cc:Content-Type; b=Flsu34p5+3KITokfNgU4/JMeN4a1db6EFECQMGeiKlRKjtiBUeH0cfRMRzYfSbL/sEl8mXnWKQM6vs4cdSuyyIPH8KIceHgNLmANE+Pn7yrOJs2VQwIEyUDdbaVeyVtR7WlIyLF6G+enOF0jQINdmDAc65IR2kEFCNcg+ZW34Es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z56VpmEf; arc=none smtp.client-ip=209.85.219.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="noVJKyBW"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2d0d25cebfeso691264fac.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 03:11:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z56VpmEf"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6f0c30a1cf8so14153056d6.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 03:13:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746699100; x=1747303900; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1746699188; x=1747303988; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=UZ5dCEOEywOXExzoNtHF395pMJNUPTYfr0213Oivri8=;
-        b=noVJKyBWunmeWfEWWFPz5/+pB8B1xK3ovAF4F2BJQw7M5AuqWRcCoSyT4twcRNZnKd
-         wKGeHuPvtlHdovn0vG7AAQiFtRp8XyAB6zMNM6ytTGMQnjXEDSs56iKA3rvZ6rpVJlc+
-         nhc8vVbHjuDFvLlU3zfcv3Zx1yKClEaJ82OrSRdfaJyttKxKAm158d8RDlwxSjQJspVT
-         UU/lxJVnWpX5+D2XbUFHxZKImBlhqqJVUrfWEheXfxEraWUD6r0gyLvi58cJ1cbU8SaY
-         SxM601BTNrnijiLT8pT0NQyxPCohHaNwWD8Xmw152/0vd43lgWdSvDoXwQ6u9obABvJK
-         w+Eg==
+        bh=GaU7b11uch6HEVNCi/BIgaqFmQ/4amSpG/dObURRasQ=;
+        b=z56VpmEfIr3G5KDQb/tzjCLh9LS0YOrxGz7zPE8YfcbybOktu/P8cuQBsEwqpoADdX
+         SbJ51/+mYNOgClsqPCFK4MfjRVCd+daCztCHyP5EnVz70gq6Su/JL8wGl92s5in/i/cf
+         Z0abIf57pTYZF3byCZ43Ez0YQcCwJuEjFzQyozvDbAppNMOwVix+DHWimqWSsXaZa09E
+         27BA2dXmcVXqFFsPmvkLo65/GCMKITUgVF1v3kLFXV4bXAQMjDkuj6sagdN8G7AItqnn
+         IbWahmTfqA1vEiHz0sdvOwTfAnxM+C4drcN10wGE0xTwaJSTUF6Kdohxg1heKTI5IS3l
+         4SMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746699100; x=1747303900;
+        d=1e100.net; s=20230601; t=1746699188; x=1747303988;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UZ5dCEOEywOXExzoNtHF395pMJNUPTYfr0213Oivri8=;
-        b=SAdrhCZivAuKshzHvQhNv42t/C9A6sqa88/K7uFbRAWF1fjqh4WghASQrkfgp/Koi8
-         DscHaS3tDPO2dcXuQl7RcMFf2nSxYJ0fd6s73JepWysps1FtZONC7SHv1qnTIE9R0bTg
-         PwreDEaZc6Uag3zQaKTQ8fpzAvIS9hR5OqDjUhEOeBbsZO+jxPPF1e8WcuCmOGaOFVW6
-         h0ioL+RbIL43ICl8udYw7Oj7pz3UOS/obt5sRnaiXVxPc8Y+2WPXGOF00H14ZfAag/vn
-         rxf24WmKuBe5AzV6S9EAW6RqH8fdLHrasIOayoMCiz7H2G8LLDQ9JlS3m+yCHYJYljKX
-         yi9w==
-X-Forwarded-Encrypted: i=1; AJvYcCV/K+HVIx3iWKVmf1BOAiFLas2pmL98EorRYJlM8FOIEV2P4cKPIMkWd62JTk2H7G+ovy2XRfrHcTRaCuU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywGJsxgk7fO8bwxQ7rdZBdHdH0wniOQdBMG4e+Jqs4Juilw+R8
-	XBWRig3badteOLbz8kU0KlH2e/bUq85ku06Xtn7Dqi9K9wTskSOllQVEG1lheNJIuv9AwHXlOR6
-	RD8NxpCv304iDTfXHLgvPoT1Ja5zsI7RBCW/mVg==
-X-Gm-Gg: ASbGncumazdGhWSrp1nA0qalNsjyI7azX2J45ka7XZJlNts0zWtP0gD+g9X0cZhCvIW
-	/xHHlxyVlmXA9wNM4hWk5Wk+eIcLBgYd5ySTWeyXb0t4+v1h8YjdsTMfAABNzLDnrBa+DGcSoFU
-	9J5kc/ea0CP2k2dedlMwQUwtk=
-X-Google-Smtp-Source: AGHT+IHHXXnIYY/blUtMMSgG++YLeS7dxymAnQLTsOYoZnzz6dKtVl2gZBaYez1Lnzo1dTAwj6L+w9Z+nAfO1s/JwvQ=
-X-Received: by 2002:a05:6870:7007:b0:2bc:69d8:a39e with SMTP id
- 586e51a60fabf-2db819c5ab1mr1885103fac.33.1746699100067; Thu, 08 May 2025
- 03:11:40 -0700 (PDT)
+        bh=GaU7b11uch6HEVNCi/BIgaqFmQ/4amSpG/dObURRasQ=;
+        b=AsfAGOAvpKRqcg9HdxJRaxew8D/7Rz/bce07434BsDwMN03lo6+jqZKLuNcW2xFV/m
+         kBMUahjIuoGR/qslh28JH1rjpjQTThUgTI+DYpVQQTaAdHGTJmxK388oA+V/9wA07aBy
+         1GHllwpgOArQQGuvBjBjrA5Zabo7udRn7q7CSzXmVwLhjFMDOZR9oEQ7drQrOR/6OPC1
+         neBvC4GV1zqZ1WdhcsVgp24atZlDqbbS40uQNj4ngc5uBPYU9GeT4w5BfLD4skdtpYPe
+         vsiYBhOXsDniW09PKnlzMvotEIMZWg51J3myxKirECdSM5EGEsg0QEv1SGEYsTQ4QvAt
+         5ImA==
+X-Forwarded-Encrypted: i=1; AJvYcCVcUi5HIYHdt9XYzD/uozsvhlUuru8FLqVX14T+TuM+0TMvFdVL10hfE1guq9DsKztQEKGBWz9HIeiipJw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyp43Xw1JhrOS8clR+Gz1+Npt9Gx7m6ElEEb7qbSHirZUwi5Kcl
+	RgVt4a1iL3GFiDBGhZRiu+Bxv1QGmXm+C30aBNnRktUUGyc/eoLhZT4eXDdp9dvobeT7TSMfvhA
+	u29R0K70ouO0QEf6mJZhusQABaUo+1Thqqk69+gvdw6OUWpIF1O4=
+X-Gm-Gg: ASbGncsg7ad+ry/qdP6UrchPfIuRob3QQj5QDwoljNMotbGlixDX3x3f3UucN72Jk0X
+	J/HM/dsPj8RBmrKrzC20ojmvPbVsAAiEwUMFUW8kHJXBpM8fEruGj1kz0EvNjNRnHZ/9vFXK0hI
+	l/J3mM27bdX3yvAA+44pqfdpM=
+X-Google-Smtp-Source: AGHT+IGHZuVXaUQ/u3XZJbuAZafur+n/lC9GK9G6Emz/GScjl53R/86ubfnNKLg/l/AxbJxOUCz0O2Jkui3OicdLBOk=
+X-Received: by 2002:a05:6808:200a:b0:3f8:e55c:16ea with SMTP id
+ 5614622812f47-40378032892mr1579070b6e.24.1746699177190; Thu, 08 May 2025
+ 03:12:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402233407.2452429-1-willmcvicker@google.com> <20250402233407.2452429-5-willmcvicker@google.com>
-In-Reply-To: <20250402233407.2452429-5-willmcvicker@google.com>
+References: <20250402233407.2452429-1-willmcvicker@google.com> <20250402233407.2452429-4-willmcvicker@google.com>
+In-Reply-To: <20250402233407.2452429-4-willmcvicker@google.com>
 From: Peter Griffin <peter.griffin@linaro.org>
-Date: Thu, 8 May 2025 11:11:29 +0100
-X-Gm-Features: ATxdqUH6wo2bEt1fpwg-JytKDz-8k2kgNoYHvmdBlsX3gPg4fgC2u7MgLMrGOfA
-Message-ID: <CADrjBPpDy0itLoxTif=iYYOQspStjsHFza6bn1wDTmWs7em44Q@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] arm64: dts: exynos: gs101: Add 'local-timer-stop'
- to cpuidle nodes
+Date: Thu, 8 May 2025 11:12:46 +0100
+X-Gm-Features: ATxdqUHvE3fzypmFP1S8IOQDU_RCSOzzbAgcVp5I5etYCYOISwNGGPhI-JRyTfE
+Message-ID: <CADrjBPphh0DgdeFSAZ9WDNqUOE=C8XasoW_9Hq=p1Q8onZj+AQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] clocksource/drivers/exynos_mct: Set local timer
+ interrupts as percpu
 To: Will McVicker <willmcvicker@google.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
 	=?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
@@ -73,69 +73,24 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
 	Alim Akhtar <alim.akhtar@samsung.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
 	Thomas Gleixner <tglx@linutronix.de>, Saravana Kannan <saravanak@google.com>, 
-	Donghoon Yu <hoony.yu@samsung.com>, Hosung Kim <hosung0.kim@samsung.com>, kernel-team@android.com, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Donghoon Yu <hoony.yu@samsung.com>, 
+	Hosung Kim <hosung0.kim@samsung.com>, kernel-team@android.com, 
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Youngmin Nam <youngmin.nam@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	Will Deacon <willdeacon@google.com>
+	Youngmin Nam <youngmin.nam@samsung.com>, linux-samsung-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-
-Hi Will,
 
 On Thu, 3 Apr 2025 at 00:34, Will McVicker <willmcvicker@google.com> wrote:
 >
-> From: Will Deacon <willdeacon@google.com>
+> From: Hosung Kim <hosung0.kim@samsung.com>
 >
-> In preparation for switching to the architected timer as the primary
-> clockevents device, mark the cpuidle nodes with the 'local-timer-stop'
-> property to indicate that an alternative clockevents device must be
-> used for waking up from the "c2" idle state.
+> To allow the CPU to handle it's own clock events, we need to set the
+> IRQF_PERCPU flag. This prevents the local timer interrupts from
+> migrating to other CPUs.
 >
-> Signed-off-by: Will Deacon <willdeacon@google.com>
-> [Original commit from https://android.googlesource.com/kernel/gs/+/a896fd98638047989513d05556faebd28a62b27c]
+> Signed-off-by: Hosung Kim <hosung0.kim@samsung.com>
+> [Original commit from https://android.googlesource.com/kernel/gs/+/03267fad19f093bac979ca78309483e9eb3a8d16]
 > Signed-off-by: Will McVicker <willmcvicker@google.com>
 > ---
 
 Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
-Tested-by: Peter Griffin <peter.griffin@linaro.org>
-
-Tested using gs101-oriole with linux-next plus this series. With these
-MCT timer changes and another series I will send shortly for
-exynos-pmu to program the correct hint to ACPM wakeup from c2 idle
-state is then functional.
-
-
->  arch/arm64/boot/dts/exynos/google/gs101.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-> index 3de3a758f113..fd0badf24e6f 100644
-> --- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-> @@ -155,6 +155,7 @@ ananke_cpu_sleep: cpu-ananke-sleep {
->                                 idle-state-name = "c2";
->                                 compatible = "arm,idle-state";
->                                 arm,psci-suspend-param = <0x0010000>;
-> +                               local-timer-stop;
->                                 entry-latency-us = <70>;
->                                 exit-latency-us = <160>;
->                                 min-residency-us = <2000>;
-> @@ -164,6 +165,7 @@ enyo_cpu_sleep: cpu-enyo-sleep {
->                                 idle-state-name = "c2";
->                                 compatible = "arm,idle-state";
->                                 arm,psci-suspend-param = <0x0010000>;
-> +                               local-timer-stop;
->                                 entry-latency-us = <150>;
->                                 exit-latency-us = <190>;
->                                 min-residency-us = <2500>;
-> @@ -173,6 +175,7 @@ hera_cpu_sleep: cpu-hera-sleep {
->                                 idle-state-name = "c2";
->                                 compatible = "arm,idle-state";
->                                 arm,psci-suspend-param = <0x0010000>;
-> +                               local-timer-stop;
->                                 entry-latency-us = <235>;
->                                 exit-latency-us = <220>;
->                                 min-residency-us = <3500>;
-> --
-> 2.49.0.472.ge94155a9ec-goog
->
