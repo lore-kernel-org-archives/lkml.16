@@ -1,150 +1,131 @@
-Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F425CB8;
-	Thu,  8 May 2025 21:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B043224893;
+	Thu,  8 May 2025 21:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746740951; cv=none; b=PS3SFVqFA9tz58PfQFgSD4E6qfi64quEwwmBI9xdMWzBXWa8KLWBHnRNfs512kQ4mStrTDTaHQAU4FXFLO6DZFhY6XVXiFOarGXzF7aUZb47Y/WYlxI27CiGdgxA4+pCv9a6KDwDgl/z1SA/mM5CwpE4N5RnSzTVNArdGKVmrSU=
+	t=1746741236; cv=none; b=mpzCckJNByEuqBs6PM22j6W0OqncmZEkcTHHCib29e0NJYLXqjsafWY5NTZMWV7Nj3lu1fzy0qm0x3XenQxW5kwAjaxG5pRsTHrjSImuPT1HNq+t/5L2VfkO3ZjMjU58b4CXeSBcGV6XhkD7CyoKOLh7jUXBwrjQNEy7RjsIbi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746740951; c=relaxed/simple;
-	bh=H0urki9LI3KNRa5Q+wG6DOyvCUCtfMf7YdnpvEjI7T0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FBJzI2LgtFhSgqZft0kXJpjA1FsBT7yzecnL5sCbF9CziQQoaP+GWgfo43PWCb24f8p+/rH40hq1iz0AgvtKq9pofPDrpduHf7t5KOR4ex2twZd5lwz+cGvIWQV4OYuWORMIk31dgl4dyelfeMWxSg0iyD42asTVPHDBGnQ9KFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=IC0yX2kZ; arc=none smtp.client-ip=52.119.213.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1746741236; c=relaxed/simple;
+	bh=8TstHJfVVJia44BPhsIMv3XGy+QhNfo4K77VkKRGC1Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fzr1aOaghXifmX+Ur+k2eVhP/aZMBnQZxv9BznkkTgovakdArGhP5JDxhBSzsVP+HxSXWPBxCBWFF2TuAci6gc+fKkvu995irk2wc9V0oDTfUQjEkqGA8P8ocoDu94gNPKTF/lGV/FZtnOrbgRrKM7lpVFI86O/vSpd0igX5HbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gdtwoJe3; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="IC0yX2kZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1746740950; x=1778276950;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=XMr3FDaYMjbSHc+Mc/4xTQjKYDslKxhh7yEkIw02wOc=;
-  b=IC0yX2kZV4gdyzBgWqgvI3hRxa1hF0/wwVgz2f20jrl5YLIzMcBpyJBZ
-   j57NLL6K+ytVlBQeB6IwOJNl1wLkM6V4PfxFcPG17MGA7YNLMc+1Obu/P
-   rqgNKug2dnxRMarx/w322VM5R9MBjI5PjwvsqLydXD6v2swx9FR/cpvEf
-   pkpKJ45V8/2ImRpjWpGy8kanjL3Pe7JmkaYNVPFAk6rIdw8hBdsr/sUm+
-   GfRmX5iaXvykO6amPbKZDCByk6ZLHDX3I1xeMSQaWvVzlj8y89uomqjdS
-   K+BoVcvKvXIvayaZbGESWpCG0Osh5gInieRVqGXdoF2NP/q/NhyrpYZIl
-   A==;
-X-IronPort-AV: E=Sophos;i="6.15,273,1739836800"; 
-   d="scan'208";a="91374175"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 21:49:05 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.21.151:8301]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.10.32:2525] with esmtp (Farcaster)
- id 8e2af0a3-db14-4683-9fa1-2122160a051f; Thu, 8 May 2025 21:49:04 +0000 (UTC)
-X-Farcaster-Flow-ID: 8e2af0a3-db14-4683-9fa1-2122160a051f
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.217) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 8 May 2025 21:49:03 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.106.100.30) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 8 May 2025 21:48:59 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <brauner@kernel.org>
-CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <daan.j.demeyer@gmail.com>,
-	<davem@davemloft.net>, <david@readahead.eu>, <edumazet@google.com>,
-	<horms@kernel.org>, <jack@suse.cz>, <jannh@google.com>, <kuba@kernel.org>,
-	<kuniyu@amazon.com>, <lennart@poettering.net>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
-	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
-Subject: Re: [PATCH v4 04/11] net: reserve prefix
-Date: Thu, 8 May 2025 14:47:45 -0700
-Message-ID: <20250508214850.62973-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250508-vorboten-herein-4ee71336e6f7@brauner>
-References: <20250508-vorboten-herein-4ee71336e6f7@brauner>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gdtwoJe3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746741235; x=1778277235;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8TstHJfVVJia44BPhsIMv3XGy+QhNfo4K77VkKRGC1Y=;
+  b=gdtwoJe3uM1DbkNKGO5p1LfMwuuKQ9NUrCaNp79y65L05knDca8AuSoi
+   GDowUT+qDptwakvwbhcDh4hS0ElK3613ai69E5V6ykAKhRw8Fgftvzd8n
+   qx7je8Vb/ZziAmQ8/NIrzclLEeSu+CbxqfjzIH3ywY3kaytZCbtD6AwLo
+   U3e5P5TRRwXu3xebKPAI1i6bMlE9mU9+WvAPdkzpT6HpzZINJ09qNNkQQ
+   CNHpBQcQkfGu1MqPT/pFwqwwb9AXSTQIfLIe7k3hoHAGfWugjQAONbTFQ
+   ECtGsUhQGAx1faI2ZespjbO4YFF+1loWadSyp4YX9FHrLNrd3vrB5Ott4
+   Q==;
+X-CSE-ConnectionGUID: f3O4Cy9PTjKYbdEgSZUnSg==
+X-CSE-MsgGUID: D+VXh7p3SOGzgymD27jLLg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48699953"
+X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
+   d="scan'208";a="48699953"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 14:53:54 -0700
+X-CSE-ConnectionGUID: 5lkXgYtJQ/uXfQg9CAH/og==
+X-CSE-MsgGUID: Onyfg4KISKauL5JZHoNrnQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
+   d="scan'208";a="167497670"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 08 May 2025 14:53:50 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uD9Bb-000BPD-36;
+	Thu, 08 May 2025 21:53:47 +0000
+Date: Fri, 9 May 2025 05:53:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <superm1@kernel.org>,
+	Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
+	Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+	"Cody T . -H . Chiu" <codyit@gmail.com>,
+	John Martens <johnfanv2@gmail.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alok Tiwari <alok.a.tiwari@oracle.com>
+Subject: Re: [PATCH v8 6/6] platform/x86: Add Lenovo Other Mode WMI Driver
+Message-ID: <202505090501.4WrdCVBb-lkp@intel.com>
+References: <20250505010659.1450984-7-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D035UWB001.ant.amazon.com (10.13.138.33) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505010659.1450984-7-derekjohn.clark@gmail.com>
 
-From: Christian Brauner <brauner@kernel.org>
-Date: Thu, 8 May 2025 08:16:29 +0200
-> On Wed, May 07, 2025 at 03:45:52PM -0700, Kuniyuki Iwashima wrote:
-> > From: Christian Brauner <brauner@kernel.org>
-> > Date: Wed, 07 May 2025 18:13:37 +0200
-> > > Add the reserved "linuxafsk/" prefix for AF_UNIX sockets and require
-> > > CAP_NET_ADMIN in the owning user namespace of the network namespace to
-> > > bind it. This will be used in next patches to support the coredump
-> > > socket but is a generally useful concept.
-> > 
-> > I really think we shouldn't reserve address and it should be
-> > configurable by users via core_pattern as with the other
-> > coredump types.
-> > 
-> > AF_UNIX doesn't support SO_REUSEPORT, so once the socket is
-> > dying, user can't start the new coredump listener until it's
-> > fully cleaned up, which adds unnecessary drawback.
-> 
-> This really doesn't matter.
-> 
-> > The semantic should be same with other types, and the todo
-> > for the coredump service is prepare file (file, process, socket)
-> > that can receive data and set its name to core_pattern.
-> 
-> We need to perform a capability check during bind() for the host's
-> coredump socket. Otherwise if the coredump server crashes an
-> unprivileged attacker can simply bind the address and receive all
-> coredumps from suid binaries.
+Hi Derek,
 
-As I mentioned in the previous thread, this can be better
-handled by BPF LSM with more fine-grained rule.
+kernel test robot noticed the following build warnings:
 
-1. register a socket with its name to BPF map
-2. check if the destination socket is registered at connect
+[auto build test WARNING on amd-pstate/linux-next]
+[also build test WARNING on amd-pstate/bleeding-edge linus/master v6.15-rc5 next-20250508]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Even when LSM is not availalbe, the cgroup BPF prog can make
-connect() fail if the destination name is not registered
-in the map.
+url:    https://github.com/intel-lab-lkp/linux/commits/Derek-J-Clark/platform-x86-Add-lenovo-wmi-driver-Documentation/20250505-123422
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git linux-next
+patch link:    https://lore.kernel.org/r/20250505010659.1450984-7-derekjohn.clark%40gmail.com
+patch subject: [PATCH v8 6/6] platform/x86: Add Lenovo Other Mode WMI Driver
+config: i386-randconfig-r133-20250508 (https://download.01.org/0day-ci/archive/20250509/202505090501.4WrdCVBb-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505090501.4WrdCVBb-lkp@intel.com/reproduce)
 
-> 
-> This is also a problem for legitimate coredump server updates. To change
-> the coredump address the coredump server must first setup a new socket
-> and then update core_pattern and then shutdown the old coredump socket.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505090501.4WrdCVBb-lkp@intel.com/
 
-So, for completeness, the server should set up a cgroup BPF
-prog to route the request for the old name to the new one.
+sparse warnings: (new ones prefixed by >>)
+>> drivers/platform/x86/lenovo-wmi-gamezone.c:128:38: sparse: sparse: Using plain integer as NULL pointer
+   drivers/platform/x86/lenovo-wmi-gamezone.c:142:38: sparse: sparse: Using plain integer as NULL pointer
+   drivers/platform/x86/lenovo-wmi-gamezone.c:155:12: sparse: sparse: context imbalance in 'lwmi_gz_profile_get' - different lock contexts for basic block
+   drivers/platform/x86/lenovo-wmi-gamezone.c:206:12: sparse: sparse: context imbalance in 'lwmi_gz_profile_set' - different lock contexts for basic block
 
-Here, the bpf map above can be reused to check if the socket
-name is registered in the map or route to another socket in
-the map.
+vim +128 drivers/platform/x86/lenovo-wmi-gamezone.c
 
-Then, the unprivileged issue below and the non-dumpable issue
-mentioned in the cover letter can also be resolved.
+fc3651e7b6ebda Derek J. Clark 2025-05-04  115  
+fc3651e7b6ebda Derek J. Clark 2025-05-04  116  /**
+fc3651e7b6ebda Derek J. Clark 2025-05-04  117   * lwmi_gz_thermal_mode_supported() - Get the version of the WMI
+fc3651e7b6ebda Derek J. Clark 2025-05-04  118   * interface to determine the support level.
+fc3651e7b6ebda Derek J. Clark 2025-05-04  119   * @wdev: The Gamezone WMI device.
+fc3651e7b6ebda Derek J. Clark 2025-05-04  120   * @supported: Pointer to return the support level with.
+fc3651e7b6ebda Derek J. Clark 2025-05-04  121   *
+fc3651e7b6ebda Derek J. Clark 2025-05-04  122   * Return: 0 on success, or an error code.
+fc3651e7b6ebda Derek J. Clark 2025-05-04  123   */
+fc3651e7b6ebda Derek J. Clark 2025-05-04  124  static int lwmi_gz_thermal_mode_supported(struct wmi_device *wdev,
+fc3651e7b6ebda Derek J. Clark 2025-05-04  125  					  int *supported)
+fc3651e7b6ebda Derek J. Clark 2025-05-04  126  {
+fc3651e7b6ebda Derek J. Clark 2025-05-04  127  	return lwmi_dev_evaluate_int(wdev, 0x0, LWMI_GZ_METHOD_ID_SMARTFAN_SUP,
+fc3651e7b6ebda Derek J. Clark 2025-05-04 @128  				     0, 0, supported);
+fc3651e7b6ebda Derek J. Clark 2025-05-04  129  }
+fc3651e7b6ebda Derek J. Clark 2025-05-04  130  
 
-The server is expected to have CAP_SYS_ADMIN, so BPF should
-play a role.
-
-
-> 
-> Now an unprivileged attacker can rebind the old coredump socket address
-> but there's still a crashing task that got scheduled out after it copied
-> the old coredump server address but before it connected to the coredump
-> server. The new server is now up and the old server's address has been
-> reused by the attacker. Now the crashing task gets scheduled back in and
-> connects to the unprivileged attacker and forwards its suid dump to the
-> attacker.
-> 
-> The name of the socket needs to be protected. This can be done by prefix
-> but the simplest way is what I did in my earlier version and to just use
-> a well-known name. The name really doesn't matter and all it adds is
-> potential for subtle bugs. I want the coredump code I have to maintain
-> to have as little moving parts as possible.
-> 
-> I'm happy to drop the patch to reserve the prefix as that seems to
-> bother you. But the coredump socket name won't be configurable. It'd be
-> good if we could just compromise here. Without the capability check on
-> bind we can just throw this all out as that's never going to be safe.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
