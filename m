@@ -1,136 +1,443 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A0128A1D7
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 20:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B5A1946A0;
+	Thu,  8 May 2025 20:12:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746735148; cv=none; b=FOfqax42d7Z7B2Oa2ph+2FHS/IMYNhHNrzFMqPLjWEUryOr/SxuahM4+FUj+PsqhrOdOQgEIgqQEogi0nKz0cVYS/RlDOGpPhbEqTmlP9mwg8gChDUXxYHHn8gyLg+PFBVO8FZZriuDyw2VhGjFn4prmx2Kj7eN9c/QeScS3WJY=
+	t=1746735165; cv=none; b=Ar7VBhdXeq3y2Y4TdYa649nZvZfkavWgmc+jEF+UjEbWRZ/AInqOCgucBsYj3FdJC609I3rBDlS/Avx42QCkQTHyP9DTAgxyGafq1upfgkeK87xnqNi7mv6/AYchot5Y9+nPQSx/In5IMvpUwSDqaIJCgHOHXl/0afIJpnrjKGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746735148; c=relaxed/simple;
-	bh=FGnh79h1JaPibhOon8q3InpS01FVYRvIoEJMbXV/Tso=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=mUC7C/XNTjldw8Nu5B7W8Scjj31GbLKh05l1l4YsTvcF3cEUHkY7pzv1wmu37rAp0qPNH3MXnuhPq+y9wX7NohuQV7oycaVzm8/EK8AcSTML2ykMeiCalIbLBO8ubN+zlWGSNgA0c+vZ5jwS73diXc4lGueVadiiZV1Ag53LVE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=RzNCjsTa; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1746735165; c=relaxed/simple;
+	bh=DtD1iqT35y3CGZBB6T1SSJcp3JBxXUvzlajKCvyKK1c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lhTE8Y8ksALFMr6bnC1hUPLfxddMIt9F7ag2SDXNw+j7RO4S/zfknPI96S6C6R2SFCJiaeMmmncqhHTm+CVyqDYQRXhaU8Ru2D+gPBnrI83BK/2drdBadvibkx3uDcKHs56v2w+r5xmnJBICBRqBI4uHEZ+z0zzlE+I0vdCu/xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IlC3RW+U; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="RzNCjsTa"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A944240E0238;
-	Thu,  8 May 2025 20:12:20 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 8mA2UOe24vF6; Thu,  8 May 2025 20:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746735133; bh=n6te/N3ZjRlAVY96QaLIowZ30H+qc32fuwt23LQZkHA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=RzNCjsTanmn9ZojxkjpkUhWglzfkJ/qkLwjq0PPKtwTIgC5BHsRPLbLPfDE8Y+xSv
-	 6PzZYNHYy5Naa2/p67Z8/iUJmhCGk/zwctslrqf2ZnV1BRzIDgVNFQYNVp/q4M2UJN
-	 Jax9+8sZcYd6Cwqqv7EHoxA15m5QgLny2srnXPZR3Az4qJLv/RooSvRJhWcomEjdvL
-	 40RUeRr7FSRGNXjrMSZhyHsRvpqn5V4hRI6rLBMg5ZRzORapfenUGGcMzGP0wL+WOq
-	 LG7/hFaWttAi82FYwa3nkbVqWqKMoun5cl8ehqyrex6G6kWvNp0zYG39ritHoQ/z1F
-	 8XX9/UBTHWnTa1Uby4J3U3ORfv8BO3MwbM1jLUxPhiWSEtm+PGrJzklpWcgnI3dr0U
-	 cwPOUdisheowW/e0O5IkGsq4Cv8NsFr/MXZGTYOfdHD4GayQJ6SnrUW+llGVYyd39d
-	 iYp/iRg9UkTNlDotIn5/IyT3Z0EDkk85GXrsScEr83WRvcaHhX5jIVYTqGuP6Vxs3P
-	 aUF6Uv+tDY3d/oRbYxR0Jve4gb9uuwZaqGfFGo2Vb8hcg5joevZ/lMCso9MK5EjQUy
-	 SjwK4SbxnASzbZwoKapa1BHWtZIdURt6YQGnT4lBZMh2ykJRvI8r6ESSMs3kIIUd54
-	 Fiv1LQhS7UYFBmLxZ09CRGAY=
-Received: from [IPv6:::1] (unknown [IPv6:2a02:3038:202:c9f1:9086:67fa:4e11:3647])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0918A40E015E;
-	Thu,  8 May 2025 20:11:58 +0000 (UTC)
-Date: Thu, 08 May 2025 22:11:52 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-CC: "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
- linux-kernel@vger.kernel.org, "Ahmed S . Darwish" <darwi@linutronix.de>,
- Andrew Cooper <andrew.cooper3@citrix.com>, Ard Biesheuvel <ardb@kernel.org>,
- Arnd Bergmann <arnd@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
- John Ogness <john.ogness@linutronix.de>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Subject: =?US-ASCII?Q?Re=3A_=5BRFC_PATCH_0/15=5D_x86=3A_Remove_su?=
- =?US-ASCII?Q?pport_for_TSC-less_and_CX8-less_CPUs?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <alpine.DEB.2.21.2505062228200.21337@angie.orcam.me.uk>
-References: <20250425084216.3913608-1-mingo@kernel.org> <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk> <98C88CE8-C3D5-4B75-8545-71DD47C67614@zytor.com> <alpine.DEB.2.21.2505051356340.31828@angie.orcam.me.uk> <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com> <20250505205405.GNaBklbdKLbadRATbr@fat_crate.local> <alpine.DEB.2.21.2505060059010.31828@angie.orcam.me.uk> <20250506141631.GEaBoZvzPCWh88xDzu@fat_crate.local> <alpine.DEB.2.21.2505062228200.21337@angie.orcam.me.uk>
-Message-ID: <8C172B63-38E1-427B-8511-25ECE5B9E780@alien8.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IlC3RW+U"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-af5499ca131so104942a12.3;
+        Thu, 08 May 2025 13:12:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746735162; x=1747339962; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FMf96FXuSnX5qhllALH1Rp7ykWLVVc//J13jd72kjmw=;
+        b=IlC3RW+UU4IuSX5JujLavMqGwkArOB2BarBXkTXU54NNWguAPfK2C//6kCCRjowb1u
+         BEePCnm/MZLscd/sa2ycQynrdX+DCwXPtZ2smY+kIWxeXg5PX38eenSQElsJPdoaESUM
+         sAU+OMge543j38SlZhVKjbzMrH5nysanFmhEr3kgJeRNxxjT1MaUQX6uBmha+8y64piW
+         EKt7n9KQ6hHJ44t/iW8TeYsy1QYckFXw5AY5K1205ljJz84Or4K1Jllf+AgGz8ZKJyEe
+         HgxgplKAzl6vs3zh+1qIu0nuaplyZ3Ao2l9mfRkleD5BY8WFHeLlOrTKC5K3yy3T2UlV
+         YE4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746735162; x=1747339962;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FMf96FXuSnX5qhllALH1Rp7ykWLVVc//J13jd72kjmw=;
+        b=NI1D/zZjt6vZGeR4ABSy0s6hK8VwExoDID+bMIM7bOYSGG9W3kuyLx3d5VXMQiB7GW
+         c3c10V81Im6zuTn2Pr1C6QoOdD+mFFO5BA14Kns0RT0ddccR/5vTgJ116pbfmYBKd6lL
+         eYZHPft4/ra1XIBvhdthfcfUGuQnr69kMZlwCQZ9tR0anIW5IH5TEY8m/InzXP17YuNo
+         PTm3sn0e3fkUPCe2W8Ko2yV5EttjVwrelt93ES1JyafAv0A3vzkLSPeyUcV6VFWjF3Lm
+         Ap99VD3w3L57XupNc/GhqaECwXPUZD/liqe7YHPo5mTLtG3Fb8iY73lUQbg6EvT3OJJp
+         wH2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUVFn4TyPUgnSTCglCzSCx8ns50/XmVk/kKWxOTzfXEceD77y3LhXlLlO88BhDnCo+tL1o/VOLAYle6BOzQ@vger.kernel.org, AJvYcCWKlbz/1s2Y7ffqHhyIQXmNGyZ9QL7RS19ou1xL1tLzrG1By0sqs/17IVPPR+bGGMsY7VpoQ5MEJHum7zQs@vger.kernel.org
+X-Gm-Message-State: AOJu0YyG964lJlZY9wP8IMOIYuwZ76KW8XlAvTwkj++8ylWRb+tIO0Aw
+	FLTciPAuhdJ5cohgeVYmza+C1o6LQPEFN7/Mg6miKGAkMu0en8fGIZ9clYgW6POqPkxe4/efRbu
+	hHY/8BrvKftPlGZiTLd0bbnIWvww=
+X-Gm-Gg: ASbGnctg9xMvBcD030FXFiXlW9i1qEJzWDFmEHD/fmWaoc1UyLgXAg4ZomZ32resTrt
+	4p7BEErZTHThoG3gVjPg2waGbL/FnbtOBQp+D8+bLK9Emlp+8xXCbf4An1jTUiUHIOS3BxaSVKJ
+	1ygJcYxA+H2A8n/FLp4mqEnA==
+X-Google-Smtp-Source: AGHT+IH6e7+ed1G549/Z8OklJ1akRAitkFCuoHZTNQf9ToGv6/llgXkTnKyiPfQLlz+Ew6c4JK4FwZ+5NaQf2W/o6dQ=
+X-Received: by 2002:a17:90b:3e83:b0:30a:a50a:8c93 with SMTP id
+ 98e67ed59e1d1-30c3d674dadmr436380a91.7.1746735162384; Thu, 08 May 2025
+ 13:12:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com> <20250508-topic-ubwc_central-v1-1-035c4c5cbe50@oss.qualcomm.com>
+In-Reply-To: <20250508-topic-ubwc_central-v1-1-035c4c5cbe50@oss.qualcomm.com>
+From: Connor Abbott <cwabbott0@gmail.com>
+Date: Thu, 8 May 2025 16:12:31 -0400
+X-Gm-Features: ATxdqUHnQejBvfmedAIjJ-kKl1wBYL5mqv2oNp-sfYWhNCI_Ftp14XuxAX2kJ04
+Message-ID: <CACu1E7H6FGm0npQnG+M3Jzn9RSL9CYkkDg3rtH+=on4_caPTZQ@mail.gmail.com>
+Subject: Re: [PATCH RFT 01/14] soc: qcom: Add UBWC config provider
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On May 8, 2025 4:51:27 PM GMT+02:00, "Maciej W=2E Rozycki" <macro@orcam=2Em=
-e=2Euk> wrote:
->On Tue, 6 May 2025, Borislav Petkov wrote:
+On Thu, May 8, 2025 at 2:13=E2=80=AFPM Konrad Dybcio <konradybcio@kernel.or=
+g> wrote:
 >
->> >  Doesn't work for ongoing driver maintenance
->>=20
->> Dunno, I'd concentrate my efforts on something, a *little* *bit* more m=
-odern=2E
->> At some point this is old rusty hw no matter from which way you look at=
- it and
->> it might as well be left to rest in its sunset days=2E
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 >
-> One doesn't exclude the other=2E  I do POWER9 or RISC-V stuff too=2E  Is=
-n't=20
->it modern enough?
+> Add a file that will serve as a single source of truth for UBWC
+> configuration data for various multimedia blocks.
 >
->> What I have problem with is wasting my time maintaining old, ancient hw=
- which
->> is not worth the electricity it needs to run=2E Especially if you can g=
-et
->> something orders of magnitudes better in *any* aspect you can think of,=
- and
->> actually get some real work done=2E
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  drivers/soc/qcom/Kconfig       |   8 ++
+>  drivers/soc/qcom/Makefile      |   1 +
+>  drivers/soc/qcom/ubwc_config.c | 255 +++++++++++++++++++++++++++++++++++=
+++++++
+>  include/linux/soc/qcom/ubwc.h  |  31 +++++
+>  4 files changed, 295 insertions(+)
 >
-> I don't want you let alone expect to waste time on anything you're not=
-=20
->interested in=2E  I'm trying to find a solution that saves you from that=
-=20
->while preferably keeping everyone happy enough, including myself=2E
+> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> index 58e63cf0036ba8554e4082da5184a620ca807a9e..2caadbbcf8307ff94f5afbdd1=
+481e5e5e291749f 100644
+> --- a/drivers/soc/qcom/Kconfig
+> +++ b/drivers/soc/qcom/Kconfig
+> @@ -296,3 +296,11 @@ config QCOM_PBS
+>           PBS trigger event to the PBS RAM.
 >
-> Real work?  I find engineering challenges enjoyable regardless of the ag=
-e=20
->of hardware involved and I don't want to take away anyone's daily bread=
-=20
->(including mine) by spending my free time on a project someone might have=
-=20
->commercial interest in and should pay for=2E  An obsolete platform is ide=
-al=20
->for this purpose=2E
->
-> And what's better and what's not is subjective=2E  I don't find all the =
-new=20
->stuff better, just as I don't all the old stuff=2E  At least the old gear=
-=20
->tends to be sturdy (once you've contained issues with the PSU) and likely=
-=20
->won't suffer from electromigration in a few years' time=2E  It can be eas=
-ier=20
->to repair too if a component does fail=2E
->
-> NB people also fancy old cars, or boats, or trains even, not because=20
->they're faster, more comfortable, or have any real advantage over modern=
-=20
->alternatives=2E
+>  endmenu
+> +
+> +config QCOM_UBWC_CONFIG
+> +       tristate
+> +       help
+> +         Most Qualcomm SoCs feature a number of Universal Bandwidth Comp=
+ression
+> +         (UBWC) engines across various IP blocks, which need to be initi=
+alized
+> +         with coherent configuration data. This module functions as a si=
+ngle
+> +         source of truth for that information.
+> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+> index acbca2ab5cc2a9ab3dce1ff38efd048ba2fab31e..b7f1d2a5736748b8772c090fd=
+24462fa91f321c6 100644
+> --- a/drivers/soc/qcom/Makefile
+> +++ b/drivers/soc/qcom/Makefile
+> @@ -39,3 +39,4 @@ obj-$(CONFIG_QCOM_ICC_BWMON)  +=3D icc-bwmon.o
+>  qcom_ice-objs                  +=3D ice.o
+>  obj-$(CONFIG_QCOM_INLINE_CRYPTO_ENGINE)        +=3D qcom_ice.o
+>  obj-$(CONFIG_QCOM_PBS) +=3D      qcom-pbs.o
+> +obj-$(CONFIG_QCOM_UBWC_CONFIG) +=3D ubwc_config.o
+> diff --git a/drivers/soc/qcom/ubwc_config.c b/drivers/soc/qcom/ubwc_confi=
+g.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..3f81fb2aab284dc9a5bcf53e5=
+d638aaba44b6f2d
+> --- /dev/null
+> +++ b/drivers/soc/qcom/ubwc_config.c
+> @@ -0,0 +1,255 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+> + */
+> +
+> +#include <linux/debugfs.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <linux/soc/qcom/ubwc.h>
+> +
+> +static const struct qcom_ubwc_cfg_data msm8937_data =3D {
+> +       .ubwc_enc_version =3D UBWC_1_0,
+> +       .ubwc_dec_version =3D UBWC_1_0,
+> +       .highest_bank_bit =3D 1,
+> +       .mdss_reg_bus_bw =3D 76800,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data msm8998_data =3D {
+> +       .ubwc_enc_version =3D UBWC_1_0,
+> +       .ubwc_dec_version =3D UBWC_1_0,
+> +       .highest_bank_bit =3D 2,
+> +       .mdss_reg_bus_bw =3D 76800,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data qcm2290_data =3D {
+> +       /* no UBWC */
+> +       .highest_bank_bit =3D 2,
+> +       .mdss_reg_bus_bw =3D 76800,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sa8775p_data =3D {
+> +       .ubwc_enc_version =3D UBWC_4_0,
+> +       .ubwc_dec_version =3D UBWC_4_0,
+> +       .ubwc_swizzle =3D 4,
+> +       .ubwc_bank_spread =3D true,
+> +       .highest_bank_bit =3D 0,
+> +       .macrotile_mode =3D true,
+> +       .mdss_reg_bus_bw =3D 74000,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sar2130p_data =3D {
+> +       .ubwc_enc_version =3D UBWC_3_0, /* 4.0.2 in hw */
+> +       .ubwc_dec_version =3D UBWC_4_3,
+> +       .ubwc_swizzle =3D 6,
+> +       .ubwc_bank_spread =3D true,
+> +       .highest_bank_bit =3D 0,
+> +       .macrotile_mode =3D true,
+> +       .mdss_reg_bus_bw =3D 74000,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sc7180_data =3D {
+> +       .ubwc_enc_version =3D UBWC_2_0,
+> +       .ubwc_dec_version =3D UBWC_2_0,
+> +       .ubwc_swizzle =3D 6,
+> +       .ubwc_bank_spread =3D true,
+> +       .highest_bank_bit =3D 1,
+> +       .mdss_reg_bus_bw =3D 76800,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sc7280_data =3D {
+> +       .ubwc_enc_version =3D UBWC_3_0,
+> +       .ubwc_dec_version =3D UBWC_4_0,
+> +       .ubwc_swizzle =3D 6,
+> +       .ubwc_bank_spread =3D true,
+> +       .highest_bank_bit =3D 1,
+> +       .macrotile_mode =3D true,
+> +       .mdss_reg_bus_bw =3D 74000,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sc8180x_data =3D {
+> +       .ubwc_enc_version =3D UBWC_3_0,
+> +       .ubwc_dec_version =3D UBWC_3_0,
+> +       .highest_bank_bit =3D 3,
+> +       .macrotile_mode =3D true,
+> +       .mdss_reg_bus_bw =3D 76800,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sc8280xp_data =3D {
+> +       .ubwc_enc_version =3D UBWC_4_0,
+> +       .ubwc_dec_version =3D UBWC_4_0,
+> +       .ubwc_swizzle =3D 6,
+> +       .ubwc_bank_spread =3D true,
+> +       .highest_bank_bit =3D 3,
+> +       .macrotile_mode =3D true,
+> +       .mdss_reg_bus_bw =3D 76800,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sdm670_data =3D {
+> +       .ubwc_enc_version =3D UBWC_2_0,
+> +       .ubwc_dec_version =3D UBWC_2_0,
+> +       .highest_bank_bit =3D 1,
+> +       .mdss_reg_bus_bw =3D 76800,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sdm845_data =3D {
+> +       .ubwc_enc_version =3D UBWC_2_0,
+> +       .ubwc_dec_version =3D UBWC_2_0,
+> +       .highest_bank_bit =3D 2,
+> +       .mdss_reg_bus_bw =3D 76800,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sm6115_data =3D {
+> +       .ubwc_enc_version =3D UBWC_1_0,
+> +       .ubwc_dec_version =3D UBWC_2_0,
+> +       .ubwc_swizzle =3D 7,
+> +       .ubwc_bank_spread =3D true,
+> +       .highest_bank_bit =3D 1,
+> +       .mdss_reg_bus_bw =3D 76800,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sm6125_data =3D {
+> +       .ubwc_enc_version =3D UBWC_1_0,
+> +       .ubwc_dec_version =3D UBWC_3_0,
+> +       .ubwc_swizzle =3D 1,
+> +       .highest_bank_bit =3D 1,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sm6150_data =3D {
+> +       .ubwc_enc_version =3D UBWC_2_0,
+> +       .ubwc_dec_version =3D UBWC_2_0,
+> +       .highest_bank_bit =3D 1,
+> +       .mdss_reg_bus_bw =3D 76800,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sm6350_data =3D {
+> +       .ubwc_enc_version =3D UBWC_2_0,
+> +       .ubwc_dec_version =3D UBWC_2_0,
+> +       .ubwc_swizzle =3D 6,
+> +       .ubwc_bank_spread =3D true,
+> +       .highest_bank_bit =3D 1,
+> +       .mdss_reg_bus_bw =3D 76800,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sm7150_data =3D {
+> +       .ubwc_enc_version =3D UBWC_2_0,
+> +       .ubwc_dec_version =3D UBWC_2_0,
+> +       .highest_bank_bit =3D 1,
+> +       .mdss_reg_bus_bw =3D 76800,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sm8150_data =3D {
+> +       .ubwc_enc_version =3D UBWC_3_0,
+> +       .ubwc_dec_version =3D UBWC_3_0,
+> +       .highest_bank_bit =3D 2,
+> +       .mdss_reg_bus_bw =3D 76800,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sm8250_data =3D {
+> +       .ubwc_enc_version =3D UBWC_4_0,
+> +       .ubwc_dec_version =3D UBWC_4_0,
+> +       .ubwc_swizzle =3D 6,
+> +       .ubwc_bank_spread =3D true,
+> +       /* TODO: highest_bank_bit =3D 2 for LP_DDR4 */
+> +       .highest_bank_bit =3D 3,
+> +       .macrotile_mode =3D true,
+> +       .mdss_reg_bus_bw =3D 76800,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sm8350_data =3D {
+> +       .ubwc_enc_version =3D UBWC_4_0,
+> +       .ubwc_dec_version =3D UBWC_4_0,
+> +       .ubwc_swizzle =3D 6,
+> +       .ubwc_bank_spread =3D true,
+> +       /* TODO: highest_bank_bit =3D 2 for LP_DDR4 */
+> +       .highest_bank_bit =3D 3,
+> +       .macrotile_mode =3D true,
+> +       .mdss_reg_bus_bw =3D 74000,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data sm8550_data =3D {
+> +       .ubwc_enc_version =3D UBWC_4_0,
+> +       .ubwc_dec_version =3D UBWC_4_3,
+> +       .ubwc_swizzle =3D 6,
+> +       .ubwc_bank_spread =3D true,
+> +       /* TODO: highest_bank_bit =3D 2 for LP_DDR4 */
+> +       .highest_bank_bit =3D 3,
+> +       .macrotile_mode =3D true,
+> +       .mdss_reg_bus_bw =3D 57000,
+> +};
+> +
+> +static const struct qcom_ubwc_cfg_data x1e80100_data =3D {
+> +       .ubwc_enc_version =3D UBWC_4_0,
+> +       .ubwc_dec_version =3D UBWC_4_3,
+> +       .ubwc_swizzle =3D 6,
+> +       .ubwc_bank_spread =3D true,
+> +       /* TODO: highest_bank_bit =3D 2 for LP_DDR4 */
+> +       .highest_bank_bit =3D 3,
+> +       .macrotile_mode =3D true,
+> +       /* TODO: Add mdss_reg_bus_bw with real value */
+> +};
+> +
+> +static const struct of_device_id qcom_ubwc_configs[] __maybe_unused =3D =
+{
+> +       { .compatible =3D "qcom,apq8096", .data =3D &msm8998_data },
+> +       { .compatible =3D "qcom,msm8917", .data =3D &msm8937_data },
+> +       { .compatible =3D "qcom,msm8937", .data =3D &msm8937_data },
+> +       { .compatible =3D "qcom,msm8953", .data =3D &msm8937_data },
+> +       { .compatible =3D "qcom,msm8956", .data =3D &msm8937_data },
+> +       { .compatible =3D "qcom,msm8976", .data =3D &msm8937_data },
+> +       { .compatible =3D "qcom,msm8996", .data =3D &msm8998_data },
+> +       { .compatible =3D "qcom,msm8998", .data =3D &msm8998_data },
+> +       { .compatible =3D "qcom,qcm2290", .data =3D &qcm2290_data, },
+> +       { .compatible =3D "qcom,qcm6490", .data =3D &sc7280_data, },
+> +       { .compatible =3D "qcom,sa8155p", .data =3D &sm8150_data, },
+> +       { .compatible =3D "qcom,sa8540p", .data =3D &sc8280xp_data, },
+> +       { .compatible =3D "qcom,sa8775p", .data =3D &sa8775p_data, },
+> +       { .compatible =3D "qcom,sc7180", .data =3D &sc7180_data },
+> +       { .compatible =3D "qcom,sc7280", .data =3D &sc7280_data, },
+> +       { .compatible =3D "qcom,sc8180x", .data =3D &sc8180x_data, },
+> +       { .compatible =3D "qcom,sc8280xp", .data =3D &sc8280xp_data, },
+> +       { .compatible =3D "qcom,sdm630", .data =3D &msm8937_data },
+> +       { .compatible =3D "qcom,sdm636", .data =3D &msm8937_data },
+> +       { .compatible =3D "qcom,sdm660", .data =3D &msm8937_data },
+> +       { .compatible =3D "qcom,sdm670", .data =3D &sdm670_data, },
+> +       { .compatible =3D "qcom,sdm845", .data =3D &sdm845_data, },
+> +       { .compatible =3D "qcom,sm4250", .data =3D &sm6115_data, },
+> +       { .compatible =3D "qcom,sm6115", .data =3D &sm6115_data, },
+> +       { .compatible =3D "qcom,sm6125", .data =3D &sm6125_data, },
+> +       { .compatible =3D "qcom,sm6150", .data =3D &sm6150_data, },
+> +       { .compatible =3D "qcom,sm6350", .data =3D &sm6350_data, },
+> +       { .compatible =3D "qcom,sm6375", .data =3D &sm6350_data, },
+> +       { .compatible =3D "qcom,sm7125", .data =3D &sc7180_data },
+> +       { .compatible =3D "qcom,sm7150", .data =3D &sm7150_data, },
+> +       { .compatible =3D "qcom,sm8150", .data =3D &sm8150_data, },
+> +       { .compatible =3D "qcom,sm8250", .data =3D &sm8250_data, },
+> +       { .compatible =3D "qcom,sm8350", .data =3D &sm8350_data, },
+> +       { .compatible =3D "qcom,sm8450", .data =3D &sm8350_data, },
+> +       { .compatible =3D "qcom,sm8550", .data =3D &sm8550_data, },
+> +       { .compatible =3D "qcom,sm8650", .data =3D &sm8550_data, },
+> +       { .compatible =3D "qcom,x1e80100", .data =3D &x1e80100_data, },
+> +       { .compatible =3D "qcom,x1p42100", .data =3D &x1e80100_data, },
+> +       { }
+> +};
+> +
+> +const struct qcom_ubwc_cfg_data *qcom_ubwc_config_get_data(void)
+> +{
+> +       const struct of_device_id *match;
+> +       struct device_node *root;
+> +
+> +       root =3D of_find_node_by_path("/");
+> +       if (!root)
+> +               return ERR_PTR(-ENODEV);
+> +
+> +       match =3D of_match_node(qcom_ubwc_configs, root);
+> +       of_node_put(root);
+> +       if (!match) {
+> +               pr_err("Couldn't find UBWC config data for this platform!=
+\n");
+> +               return ERR_PTR(-EINVAL);
+> +       }
+> +
+> +       return match->data;
+> +}
+> diff --git a/include/linux/soc/qcom/ubwc.h b/include/linux/soc/qcom/ubwc.=
+h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..450106e6aea06f9f752bb7312=
+ec3074e375eee4d
+> --- /dev/null
+> +++ b/include/linux/soc/qcom/ubwc.h
+> @@ -0,0 +1,31 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation
+> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+> + */
+> +
+> +#ifndef __QCOM_UBWC_H__
+> +#define __QCOM_UBWC_H__
+> +
+> +#include <linux/types.h>
+> +
+> +struct qcom_ubwc_cfg_data {
+> +       u32 ubwc_enc_version;
+> +       /* Can be read from MDSS_BASE + 0x58 */
+> +       u32 ubwc_dec_version;
+> +       u32 ubwc_swizzle;
+> +       int highest_bank_bit;
+> +       bool ubwc_bank_spread;
+> +       bool macrotile_mode;
+> +       u32 mdss_reg_bus_bw;
 
+This doesn't really seem relevant to UBWC?
 
-This fits very well, IMO, with Linus' suggestion to support this stuff out=
- of tree=2E I think this solution is the optimal one for all parties involv=
-ed=2E=2E=2E
+> +};
 
---=20
-Sent from a small device: formatting sucks and brevity is inevitable=2E 
+The comments should be copied over from the Adreno struct. That was
+the main way the meaning of most of these was documented and you're
+deleting it here.
+
+> +
+> +#define UBWC_1_0 0x10000000
+> +#define UBWC_2_0 0x20000000
+> +#define UBWC_3_0 0x30000000
+> +#define UBWC_4_0 0x40000000
+> +#define UBWC_4_3 0x40030000
+> +
+> +const struct qcom_ubwc_cfg_data *qcom_ubwc_config_get_data(void);
+> +
+> +#endif /* __QCOM_UBWC_H__ */
+>
+> --
+> 2.49.0
+>
