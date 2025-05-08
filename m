@@ -1,103 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE78615B102
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 06:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE3B21420E;
+	Thu,  8 May 2025 06:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746684604; cv=none; b=M8d21W3y3HA9bEYxAyDRC3wZjMlhgdGDEbj1dwlp/AadOytxepiOYA4AN0kCx3/AtEQ0MLKJzIs/AhkPrBaAhyfCJWuTYEfPtFn2yQuc4WFYFPuWqSKcDfGnbjH/YFN7NP19fYFXZB/EE6ZjTGrJhDVubUUvzYpXQ1YMblO7YJ4=
+	t=1746684628; cv=none; b=uhGimfxiIHWWtzKWG6Ak+emU37RR5IOKY9kyl4vscyQnQ2EDgmbpb3SEAqqu9A7DXsw9xXQhxeUe97RZdtOuJwovbC0ysyJ3f6sWfDFZq5+VfywysVIq6sFHVur4njHfCOjg+puWI9bluIUHM+9GvpGPJJ5FisEC64YrO8oTaso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746684604; c=relaxed/simple;
-	bh=LCn61LKFn2NcODa4bEjBVzTx3BUMcbOJY2k9EXdfpS8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FEnKUeowNMNFGJ66CcZMGL5iL0RTr+yvdlUqR4k+VrobIdG7sw2GyYUyBlmdKJUrDaEdYMF1yvV0wiUoezF2H/l5hnZPVly2lhlzSzzvQPXmN+UlCNhhFbpDZlfjdpchAnngtAQYTkUz/Rha0NG8m+/vkpu+j3d+i6qk00/Bhf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=xJC5jZSx; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="xJC5jZSx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E76FC4CEEB;
-	Thu,  8 May 2025 06:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1746684604;
-	bh=LCn61LKFn2NcODa4bEjBVzTx3BUMcbOJY2k9EXdfpS8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=xJC5jZSxJpc84c6uTHTuPGCtjLz+A3eh6kFi2fL63mJkYJZ/xyHhbqrVYrQF5No1s
-	 4RJNYRIvBsyLMpfcSWSQjf6BVWfzYf3mFxkkqDqSSscDb2qsY2eLEAUzQ9KXuHocue
-	 Nh+bdoine9g3TkKVOIDVDDLLDKfs4g8YrOY0+QWI=
-Date: Wed, 7 May 2025 23:10:03 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: fuqiang wang <fuqiang.wang@easystack.cn>
-Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young
- <dyoung@redhat.com>, kexec@lists.infradead.org,
- linux-kernel@vger.kernel.org, Coiby Xu <coxu@redhat.com>
-Subject: Re: [PATCH v4] x86/kexec: fix potential cmem->ranges out of bounds
-Message-Id: <20250507231003.c11c4b90d6a2b1f6ddce792e@linux-foundation.org>
-In-Reply-To: <20240108130720.228478-1-fuqiang.wang@easystack.cn>
-References: <20240108130720.228478-1-fuqiang.wang@easystack.cn>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746684628; c=relaxed/simple;
+	bh=K7oe0A7BgP4WD1oC62x+ywHGsTyFcCeJEXTseV/4mnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aXl3eGwVaNNYpXZFd1Jw2JVn7SMkEENZGflOvPpGwVAEBFoajW77pGPGC5mbLGbF+ALevJxdIADJSJ2pDzQWlio9nW5dMNX4VAGLmllheyip3dVLeo6qckLdxNb7VdEgAiI2b3UmVvqauSLSCrx2M17Kow8UOn+yPeLGsF6W8bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.147.253])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id BBFE9343097;
+	Thu, 08 May 2025 06:10:22 +0000 (UTC)
+Date: Thu, 8 May 2025 06:10:12 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Haylen Chu <heylenay@4d2.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Haylen Chu <heylenay@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	spacemit@lists.linux.dev, Inochi Amaoto <inochiama@outlook.com>,
+	Chen Wang <unicornxdotw@foxmail.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+	Alex Elder <elder@riscstar.com>
+Subject: Re: [PATCH v8 5/6] riscv: dts: spacemit: Add clock tree for SpacemiT
+ K1
+Message-ID: <20250508061012-GYB505240@gentoo>
+References: <20250416135406.16284-1-heylenay@4d2.org>
+ <20250416135406.16284-6-heylenay@4d2.org>
+ <aBxF81yqPgHP5oA_@ketchup>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBxF81yqPgHP5oA_@ketchup>
 
-On Mon,  8 Jan 2024 21:06:47 +0800 fuqiang wang <fuqiang.wang@easystack.cn> wrote:
+Hi Haylen,
 
-> In memmap_exclude_ranges(), elfheader will be excluded from crashk_res.
-> In the current x86 architecture code, the elfheader is always allocated
-> at crashk_res.start. It seems that there won't be a new split range.
-> But it depends on the allocation position of elfheader in crashk_res. To
-> avoid potential out of bounds in future, add a extra slot.
+On 05:49 Thu 08 May     , Haylen Chu wrote:
+> Hi Yixun,
 > 
-> The similar issue also exists in fill_up_crash_elf_data(). The range to
-> be excluded is [0, 1M], start (0) is special and will not appear in the
-> middle of existing cmem->ranges[]. But in cast the low 1M could be
-> changed in the future, add a extra slot too.
+> On Wed, Apr 16, 2025 at 01:54:05PM +0000, Haylen Chu wrote:
+> > Describe the PLL and system controllers that're capable of generating
+> > clock signals in the devicetree.
+> > 
+> > Signed-off-by: Haylen Chu <heylenay@4d2.org>
+> > Reviewed-by: Alex Elder <elder@riscstar.com>
+> > Reviewed-by: Yixun Lan <dlan@gentoo.org>
+> > ---
+> >  arch/riscv/boot/dts/spacemit/k1.dtsi | 75 ++++++++++++++++++++++++++++
+> >  1 file changed, 75 insertions(+)
+> > 
+> > diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+> > index c670ebf8fa12..584f0dbc60f5 100644
+> > --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
+> > +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 > 
-> Previously discussed link:
-> [1] https://lore.kernel.org/kexec/ZXk2oBf%2FT1Ul6o0c@MiWiFi-R3L-srv/
-> [2] https://lore.kernel.org/kexec/273284e8-7680-4f5f-8065-c5d780987e59@easystack.cn/
-> [3] https://lore.kernel.org/kexec/ZYQ6O%2F57sHAPxTHm@MiWiFi-R3L-srv/
+> I found that I forgot to make the nodenames of syscons consistent:
+> both "system-control" and "system-controller" are used, and pll should
+> be named as "clock-controller" instead.
+> 
+> Could you please drop the SoC devicetree patch then I could rework on
+> it and correct the mistake? 
+Sure, I can drop previous DT patch, and re-apply, thanks
 
-So.
+> Or I could follow up a clean up patch if
+> dropping isn't easy or doesn't follow the convention.
+> 
+> Thanks for your work,
+> Haylen Chu
+> 
+> > @@ -314,6 +346,17 @@ soc {
+> >  		dma-noncoherent;
+> >  		ranges;
+> >  
+> > +		syscon_apbc: system-control@d4015000 {
+> > +			compatible = "spacemit,k1-syscon-apbc";
+> > +			reg = <0x0 0xd4015000 0x0 0x1000>;
+> > +			clocks = <&osc_32k>, <&vctcxo_1m>, <&vctcxo_3m>,
+> > +				 <&vctcxo_24m>;
+> > +			clock-names = "osc", "vctcxo_1m", "vctcxo_3m",
+> > +				      "vctcxo_24m";
+> > +			#clock-cells = <1>;
+> > +			#reset-cells = <1>;
+> > +		};
+> > +
+> >  		uart0: serial@d4017000 {
+> >  			compatible = "spacemit,k1-uart", "intel,xscale-uart";
+> >  			reg = <0x0 0xd4017000 0x0 0x100>;
+> > @@ -409,6 +452,38 @@ pinctrl: pinctrl@d401e000 {
+> >  			reg = <0x0 0xd401e000 0x0 0x400>;
+> >  		};
+> >  
+> > +		syscon_mpmu: system-controller@d4050000 {
+> > +			compatible = "spacemit,k1-syscon-mpmu";
+> > +			reg = <0x0 0xd4050000 0x0 0x209c>;
+> > +			clocks = <&osc_32k>, <&vctcxo_1m>, <&vctcxo_3m>,
+> > +				 <&vctcxo_24m>;
+> > +			clock-names = "osc", "vctcxo_1m", "vctcxo_3m",
+> > +				      "vctcxo_24m";
+> > +			#clock-cells = <1>;
+> > +			#power-domain-cells = <1>;
+> > +			#reset-cells = <1>;
+> > +		};
+> > +
+> > +		pll: system-control@d4090000 {
+> > +			compatible = "spacemit,k1-pll";
+> > +			reg = <0x0 0xd4090000 0x0 0x1000>;
+> > +			clocks = <&vctcxo_24m>;
+> > +			spacemit,mpmu = <&syscon_mpmu>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		syscon_apmu: system-control@d4282800 {
+> > +			compatible = "spacemit,k1-syscon-apmu";
+> > +			reg = <0x0 0xd4282800 0x0 0x400>;
+> > +			clocks = <&osc_32k>, <&vctcxo_1m>, <&vctcxo_3m>,
+> > +				 <&vctcxo_24m>;
+> > +			clock-names = "osc", "vctcxo_1m", "vctcxo_3m",
+> > +				      "vctcxo_24m";
+> > +			#clock-cells = <1>;
+> > +			#power-domain-cells = <1>;
+> > +			#reset-cells = <1>;
+> > +		};
+> > +
+> >  		plic: interrupt-controller@e0000000 {
+> >  			compatible = "spacemit,k1-plic", "sifive,plic-1.0.0";
+> >  			reg = <0x0 0xe0000000 0x0 0x4000000>;
+> > -- 
+> > 2.49.0
+> > 
 
-When I merge this ancient fix against mainline, it goes OK.
-
-When I merge Coiby's "x86/crash: pass dm crypt keys to kdump kernel"
-on top of this fix,  things do not go OK.
-
-Here is what I did:
-
-int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
-{
-	unsigned int nr_ranges = 0;
-	int i, ret = 0;
-	unsigned long flags;
-	struct e820_entry ei;
-	struct crash_memmap_data cmd;
-	struct crash_mem *cmem;
-
-	/*
-	 * Using random kexec_buf for passing dm crypt keys may cause a range
-	 * split. So use two slots here.
-	 */
-	nr_ranges = 2;
-
-	/*
-	 * In the current x86 architecture code, the elfheader is always
-	 * allocated at crashk_res.start. But it depends on the allocation
-	 * position of elfheader in crashk_res. To avoid potential out of
-	 * bounds in future, add a extra slot.
-	 */
-	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
-	if (!cmem)
-		return -ENOMEM;
-
-	cmem->max_nr_ranges = nr_ranges;
-	cmem->nr_ranges = 0;
-
-	memset(&cmd, 0, sizeof(struct crash_memmap_data));
-
-Please triple check this, I changed a few things.
+-- 
+Yixun Lan (dlan)
