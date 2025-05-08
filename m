@@ -1,408 +1,228 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2077.outbound.protection.outlook.com [40.107.243.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A0B283CB0
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746724116; cv=none; b=dCyxHscxRggf5nTb2AfjH/E2dhjZyV+veKc699SMg8XasYih+5j6sZ4g68v5+Oz2aZJ5YGkq5nyExnKaeNIwZdqhh9d9tyhgrvN+wXWVW96MarScIsrFQUh5u/VhKZDhnF2iEWt3xFINegR9JjgJv/aUS6qdgtjZlh78dNDfTZc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746724116; c=relaxed/simple;
-	bh=em1tBnp4kQIsPEMpgWGL3qmfzkLWzjP/R1DFPNhDwXE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=XM7ABMq94ENoIrseivvJdjoeaVHL+lCaHBtLBQyGXiUj40r/I3XIcumoDF/jo1Q5HNQY1Fq5C6ZoAn3Wnl/WnbF8mz7M+KIw5sfA9p2sh21xwhcMSoEWMrMuSApwOtM1xd/GbrvZ7LW35/eSPNPo9Pig8juj7PYD4nJfPEwyxZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lYOOKlQm; arc=none smtp.client-ip=209.85.160.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A756917A2E2
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746724188; cv=fail; b=RVs27uC0RzVSkbGybJfb7ML3XXwTvBpcxDXrnCykvLTvVqbsMLPO9JlM4S0s+vKwidtDPnoZxlDK6QUVHpG435imdKZx0LCDRVgFBIdRb46BclIxPBdyYVQ6j5NyOqyWEwQnyJ8jmeYzOIrRyAzR6uHOVDev6UNJOJRSxGfeQY8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746724188; c=relaxed/simple;
+	bh=LQZLgdC4Q18+xOyDEDCkEVGchklCHH9wLarZmvAWyzo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=CYXyD4A65sp87fHHiktRUzG1iaZxcEuHjwRBK6fB9flNPA6M8uUo5cF9dOY/HP1Y3ELg0YjTxrrvv4EiKhxQQVQ8om8DvbfVzfeX8iY9J2GnFk5SXxB9YO64kUIvyJEqzXtVIgbc7dZX0QPh0UCq8+xfV0ywiTfM9ysIgBAF0qU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oSSoZR+v; arc=fail smtp.client-ip=40.107.243.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lYOOKlQm"
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2cc82edcf49so487704fac.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 10:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746724112; x=1747328912; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=f2YwqdISc2dwotWslccRbFlYjhHoFULc/EFeRMMYP7A=;
-        b=lYOOKlQmtgsy4J3ZTuYOhUEQxkwC9HYDx7ESXr6Fn8+AzW+gzq7nbEhpN6iGBFIz8y
-         L5ZeI16IdnUnrlTTdl0U4u2tOMcTCVrLc4KPMPpcd8c+IehkPhE+o0M45T6vUrcPAO+h
-         +aELMCf9umy5IBakpiV4JHzVWlZen0XfowxwwzzJ1EQJf1sN7Ct2mZ9LIirY3fHxOkku
-         FFUnFigmB6BPksnOhSxQScE/5IvUvOh45kNd+FaOcHL0iVqB4pO2r15KjzziMpC81ZMN
-         rJ4OWBdj0jS0Bpr78kcfRMJrsnZ0lclr1XvnRacCJ5IyGlS7pbLiyTHaVLH2ySsbqRSz
-         66hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746724112; x=1747328912;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f2YwqdISc2dwotWslccRbFlYjhHoFULc/EFeRMMYP7A=;
-        b=T8vincZX3DKsut4nquRlGWl/M1+y8cRjOIzjgClE8l/bokaJJmM5Mj2pnWFZm9LUX7
-         /scyqYIGt2GyvO78R/eSPwlOUzz6xD8caH/K8hWgiOgq1M1JXDzRJ5yLtNc3uOI0Hk+m
-         eTXZoLaUXDqRQyExitKLaMTdmlaLgFnFX7F7hcZq4S5sUcBZysa1SNMKbXUA2S9zNBO2
-         WGx/pd3tP4sbbQFqlM36ICUOupOBUClrDMu/9rWHN89r7lCF8dSQoFEFQlkOmoxBfSu8
-         5o70rQED2tH2+qDWKTS8f+xwJ5XD7LwjZ6j58PDxqxeGzCQLyd7kOzIYzeiA6s8Oa7cc
-         vmvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUOMcMpYpS6Y0ugTTLiPI38QAyX2BNzIxRnYzQcIBYlbq44Tk/A52sRo09ARVY+bSC5Aam0sn3RQIOQEqI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHL0zNVpPxXuCl4RDTWl8WJ1hoWj6leHNgV4sa8ZgxfnJHsLs7
-	rq0YelFaVKrddIYnux05m7dJ2+zPA7E1mNa8zOMPhziVVgbGkvaCifeuLe8vgLY=
-X-Gm-Gg: ASbGnctXnn4+p/pA0aWF3xIkDJQyL6IDGBzUxSGkMzMgRPtLvr2ROaQ8Wh5n5AOGzo5
-	6vHHh2G3EcsFTCc2aX+TVhGt3S0Uvp8hVvy/tVF0e9ZAGeU0ZJ5KZVMTigX6+9geESB2q3/3g3K
-	ME23IE807X0vb1RcJYjxfEhYkSVUljZeNIJYEPEDh1/59G/DcdIcAAWcLPAj9icM5cdFi8jdxNv
-	hN9rhd44qnRbE/ZkN+/dedgXM1dFsGbMg3chOlo1YPvdcDWp413ZRapkGG0/q4c9KU54GSj3PwD
-	4pRfAp7T9vtZs1bx/GjmyJ6M/JW1vaDzngCdRMxGpHCcpMJzjKC9gzA2e1Q4ouRxdRjD98XqZn9
-	JqErHOsIh6abdi2Qhvw==
-X-Google-Smtp-Source: AGHT+IEZ+CmWCUftoE4zJdFAG3HGArWNL3h8+sxMJvLhQ5GkZUsH+fOr4x43LX9y5yNz8F92yCwSuw==
-X-Received: by 2002:a05:6871:5827:b0:2d9:45b7:8ff4 with SMTP id 586e51a60fabf-2dba44dc797mr180877fac.26.1746724111971;
-        Thu, 08 May 2025 10:08:31 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e? ([2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2dba061c18fsm156268fac.9.2025.05.08.10.08.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 10:08:31 -0700 (PDT)
-Message-ID: <4fb74419-51bf-4294-82bf-545504ad0c3f@baylibre.com>
-Date: Thu, 8 May 2025 12:08:30 -0500
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oSSoZR+v"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sfgZALkfHmZ8SI66hxWsktNxsTHg8o5i9N+2qVa2iW35zrp67taPcfKkCDFS12yl3B5yFZAwEoahYMrZZcJajva9/5VJMoTCn3dWO0AWa4ExrjDO6kp0q/X/7wMUmSbBTNMXg88Jpsz6LPztocna7UUco99licc4IntpopJwPcKcKJFCMdjGkT+ux3d0eA2FyIL47rGBa2/MYRn8dFsNbVbXJvdNL/qUM0mEMKlqjZ8Q9PB/dG3nxGhJo8JYQ6brzS/Edz/FBT8PQtqy5Hnp+uJ59IDV5VKfkuehlOMIMcpzFZgqQPhWbH5psQf/l/hXUpYfwHfmGg8+gijLvGkOwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eWobsUJ6S76Gn4QXrYF+8JHZurmdTgzvlDT4d3McWZ4=;
+ b=piTUV28y2ZoqOd7qODlRgXfrLfsX7XdIMCH4IFZ+klZuGqJptx19/2bTcopRTJ1yVJAQOKmPiNFPhPw7pPiF1l+FstsQ/Zix043DQIxH29xuhfZtU1YX3gqQVG5Xvt3v8HrZfU9o2dWy+4K5W2Dyd0pXC+57tnzVcMlFYPXK/hX44/wl3hL4AWceT7K23fCl7gfdxeCQwlIbdYehpjciNn4QkAu03TvfUAx84PvAHQJ5r9lDAa2ntHZEIiAkDMOfML4xQFlRuxd2ntdgzfVs0jFPrx32b3ksQKOiUeLdvtkaB2uzfo8n3+fWxkIfuWNnSkaaNDULpgLEn9rCUHTjfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eWobsUJ6S76Gn4QXrYF+8JHZurmdTgzvlDT4d3McWZ4=;
+ b=oSSoZR+vCGNQVBcEXO3hFb3wPw4gQJPJatTUVswJQ3RCIJmbc041aleL06D+Ho0crfAe5nIUnqhVF9oOgTeWh9vsVyOr+hzC+BpWKzMhGWpMX7JinO0p+cb7GwBBPp1/ClDTQ/kvYL+CuUHxqTahl6HcUQbuaU67CP9ZPFGHKus=
+Received: from SJ0PR13CA0200.namprd13.prod.outlook.com (2603:10b6:a03:2c3::25)
+ by IA1PR12MB6281.namprd12.prod.outlook.com (2603:10b6:208:3e7::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.24; Thu, 8 May
+ 2025 17:09:37 +0000
+Received: from CY4PEPF0000EDD0.namprd03.prod.outlook.com
+ (2603:10b6:a03:2c3:cafe::b4) by SJ0PR13CA0200.outlook.office365.com
+ (2603:10b6:a03:2c3::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.20 via Frontend Transport; Thu,
+ 8 May 2025 17:09:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000EDD0.mail.protection.outlook.com (10.167.241.196) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Thu, 8 May 2025 17:09:36 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 8 May
+ 2025 12:09:36 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 8 May
+ 2025 12:09:35 -0500
+Received: from [172.19.71.207] (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Thu, 8 May 2025 12:09:35 -0500
+Message-ID: <e8077e22-d9e5-7dea-439f-bb52d67c145a@amd.com>
+Date: Thu, 8 May 2025 10:09:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] iio: adc: ad7405: add ad7405 driver
-To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
- Dragos Bogdan <dragos.bogdan@analog.com>,
- Antoniu Miclaus <antoniu.miclaus@analog.com>,
- Olivier Moysan <olivier.moysan@foss.st.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- Matti Vaittinen <mazziesaccount@gmail.com>,
- Tobias Sperling <tobias.sperling@softing.com>,
- Alisa-Dariana Roman <alisadariana@gmail.com>,
- Marcelo Schmitt <marcelo.schmitt@analog.com>,
- Matteo Martelli <matteomartelli3@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250508123107.3797042-1-pop.ioan-daniel@analog.com>
- <20250508123107.3797042-5-pop.ioan-daniel@analog.com>
-From: David Lechner <dlechner@baylibre.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH V1] accel/amdxdna: Support submit commands without
+ arguments
 Content-Language: en-US
-In-Reply-To: <20250508123107.3797042-5-pop.ioan-daniel@analog.com>
-Content-Type: text/plain; charset=UTF-8
+From: Lizhi Hou <lizhi.hou@amd.com>
+To: Mario Limonciello <mario.limonciello@amd.com>, <ogabbay@kernel.org>,
+	<quic_jhugo@quicinc.com>, <jacek.lawrynowicz@linux.intel.com>,
+	<dri-devel@lists.freedesktop.org>
+CC: <linux-kernel@vger.kernel.org>, <min.ma@amd.com>, <max.zhen@amd.com>,
+	<sonal.santan@amd.com>, <king.tam@amd.com>
+References: <20250507161500.2339701-1-lizhi.hou@amd.com>
+ <4534597b-70a0-4c6b-9ff5-950e69ca7b37@amd.com>
+ <670ccea1-5315-bbe5-995f-10aefabf9c28@amd.com>
+In-Reply-To: <670ccea1-5315-bbe5-995f-10aefabf9c28@amd.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+Received-SPF: None (SATLEXMB05.amd.com: lizhi.hou@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD0:EE_|IA1PR12MB6281:EE_
+X-MS-Office365-Filtering-Correlation-Id: e24b0855-8930-447e-fc3b-08dd8e531c7b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NDB4Ky93UGlCOWtMN0xZeU1RYkVna3hteGF4ZXhhZGxoY295eU83TXp3QUJL?=
+ =?utf-8?B?ZTg4UjRSWVlGTndWc2FJWExCT0piTlZrdWQvcUJoNWdNTGFzUWlnOGFrQ2NK?=
+ =?utf-8?B?Vi9sZjFjUzdlR2x4cFRZckpLSkNtVHJseUJXcXgrSEkyeTlYU3NqOVRLMzEw?=
+ =?utf-8?B?SWhRTWMyTmU5bGlRRVhWTTZlUXB6aCtMNkcya1ZQQzRwMUFaaTVJZm5adHpq?=
+ =?utf-8?B?UExwR3kvK1FxL2dLUUZhdm5MY3E4cFVEMzNZTWdYbTR5S2FuVW04OG5RY0Jh?=
+ =?utf-8?B?UTJHVUhkR2FnMm5ETVN0ZGQ4VFI2M3ZyUkNTekhkV0x1c1R3R1BWamlYNG1i?=
+ =?utf-8?B?MWFITHh0UjNNM3FLYjVYVE5TcUplTkRLZjB4ckNGejQ2UU5QUWw1R2ExYW5S?=
+ =?utf-8?B?Q3Uwb0ZsOEJnTmY2NXgySm5hVWxlMVVoMEsrV2c5MUNFdmhXTmlQYmpuTWo4?=
+ =?utf-8?B?RnZuNFVPK3hLTVRxZHZQaDQzYkg5OE9lUk1PQ2hEOWFQUU8zRmNRVXFyT0kx?=
+ =?utf-8?B?WlNBdk9lejE1QkpSb3FUL3dvaE44dUt0bVYreXI3cVNhajk0SUk3SGFaMFdT?=
+ =?utf-8?B?Qm1FanZaUEExOFNUekhPeTBrWHk0STFxRWVNZ1VuckcvZ1VmNDZQbEFxcGJ5?=
+ =?utf-8?B?b21QQVlxUWU1eXBmMTh2WXZMd1dHcTUyaE9ZR3IwMCs0RzN3MlZNRThkUzdC?=
+ =?utf-8?B?Q1U0RjE0RXY1S1h0TW9ncG5BRWJPOWhqNkE1ZlpqeklubjBHR1R2Vll5MXZX?=
+ =?utf-8?B?Qld3SS9oaGZEUU1aaEhwTWplN2x2ZFFPOTZ5UTY5bEwvZ3dJaEtGeUlqd0F4?=
+ =?utf-8?B?TzBLZHJrUlJhb0FzR1h0N1c2ZmN2TUhmTWhBaVZWSVNsVjVlMmtDUlNPVUMz?=
+ =?utf-8?B?anVuUkFZOHU0NmdQN1hOVjFhL01sNG9YQWo4VzBHYmtaeWE1V1hPYzlVNitY?=
+ =?utf-8?B?RnJWQ0hZWUpucFUwbFRKSEQrUGE5L0lVOEdSMllKK3NCTjd2M2xjYXJJUnRQ?=
+ =?utf-8?B?K05JQ0xZUDhqVThkWm9XUzVRQU9KcmpEc3dqNzhYcXpXcUhpcER2L2kzSWFY?=
+ =?utf-8?B?OW5XTmx0NzJkRXJvVnhKQ3I0b3duNmZSWFpBcUxhbTBTVGFIdFJwQ3VibGZu?=
+ =?utf-8?B?TW5mQ3lyRnhOcGt0eldVVklEeHYwbVZFZnJGSGxaTVhza0FUWThaWHF5MkhK?=
+ =?utf-8?B?c3dXMEZPQmJmd0xNVWgrOWFrcUN0ZFVxTHJhSG4xMHpYWUprZFhGOFVHR0JM?=
+ =?utf-8?B?Y2cxYnhydzgyc2ttbmRENE9UaXRDK0VubTg1VmpJbEQxSVFaZlZ6S3BNbzR2?=
+ =?utf-8?B?akdOc0dMdVBha3A0ZmVIVlhOcjZrV3pjRXpZSjg0bmY2ckZuSDV4VnZsNnFE?=
+ =?utf-8?B?WFRDbzRObzZzRVRpWExCcjlUbzNVWktELzk5TTV1cFFEeGlTQU5hand4S3or?=
+ =?utf-8?B?aW0wN2Zvcm1JaERDbzcxZXdPWnc2alZWZUpZTEQxcm1wTWNPNHE3cFpBd2ZM?=
+ =?utf-8?B?Ykppd1hjZFVudlAzWGd5T3Zza2JSQzFrVWZCUUgvZnNWZGdvNG1ESld6cS96?=
+ =?utf-8?B?MkYra0hiRm51SkVzOXhtd0I2R1RTeE4zWEwvVUk2ZVF6QitzWjRUSCt0b0hG?=
+ =?utf-8?B?ZWJoRi9WeWFUUUNUd0ZHaGNLR25hQWQ1OE9tQVNCaFdkdEMxRzdQYjh3TG15?=
+ =?utf-8?B?ZmgrM0s0MjlWQnZnaC9TcnNoWDFrcjAydDF3dnFQeXVZMzU4R1VEQ2N5cHA2?=
+ =?utf-8?B?QVFuMTJQWW5VOUlCUVdGTkEvWjBIWmgvb1NqN2QzczYyK0lwZlgySEhGSHFM?=
+ =?utf-8?B?S2Qwa3ZvYW1EeHNXUDVjR0YwQ3l5WWpjTlczU1E0SWQ4WnJCR3Q5YmdncUNX?=
+ =?utf-8?B?bkJxSW9zSTlpR1YrSDR3b0c2T0E4SlJwRUZyTm9zREVrL3A1OFBRb001S281?=
+ =?utf-8?B?ZUJuTEVZUTJ4OUZlWk5hTmtPL3JGOU5jOXZGc3g4SHF4SzViSkFVSkZMU1lu?=
+ =?utf-8?B?dTJ3OGNDMGFmU0g4SHNnZnBYNWJNL3lMbkl1bTFSNWtvZzIzdmJFZks3MWZx?=
+ =?utf-8?Q?7WVso2?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 17:09:36.6921
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e24b0855-8930-447e-fc3b-08dd8e531c7b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EDD0.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6281
 
-On 5/8/25 7:30 AM, Pop Ioan Daniel wrote:
-> Add support for the AD7405/ADUM770x, a high performance isolated ADC,
-> 1-channel, 16-bit with a second-order Σ-Δ modulator that converts an
-> analog input signal into a high speed, single-bit data stream.
-> 
-> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-> ---
+Merged to drm-misc-next
 
-...
-
-> diff --git a/drivers/iio/adc/ad7405.c b/drivers/iio/adc/ad7405.c
-> new file mode 100644
-> index 000000000000..5fe36ce61819
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad7405.c
-> @@ -0,0 +1,264 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Analog Devices AD7405 driver
-> + *
-> + * Copyright 2025 Analog Devices Inc.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/util_macros.h>
-> +
-> +#include <linux/iio/backend.h>
-> +#include <linux/iio/iio.h>
-> +
-> +const unsigned int ad7405_dec_rates[] = {
-> +	4096, 2048, 1024, 512, 256, 128, 64, 32,
-> +};
-> +
-> +struct ad7405_chip_info {
-> +	const char *name;
-> +	unsigned int max_rate;
-> +	struct iio_chan_spec channel[];
-
-Since there is only one channel, we can drop the [] here.
-
-> +};
-> +
-> +struct ad7405_state {
-> +	struct iio_backend *back;
-> +	/* lock to protect multiple accesses to the device registers */
-> +	struct mutex lock;
-
-This lock isn't used and can be removed.
-
-> +	const struct ad7405_chip_info *info;
-> +	unsigned int sample_frequency_tbl[ARRAY_SIZE(ad7405_dec_rates)];
-> +	unsigned int sample_frequency;
-> +	unsigned int ref_frequency;
-> +};
-> +
-> +static void ad7405_fill_samp_freq_table(struct ad7405_state *st)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(ad7405_dec_rates); i++)
-> +		st->sample_frequency_tbl[i] =
-> +			DIV_ROUND_CLOSEST_ULL(st->ref_frequency, ad7405_dec_rates[i]);
-> +}
-> +
-> +static int ad7405_set_sampling_rate(struct iio_dev *indio_dev,
-> +				    const struct iio_chan_spec *chan,
-> +				    unsigned int samp_rate)
-> +{
-> +	struct ad7405_state *st = iio_priv(indio_dev);
-> +	unsigned int dec_rate, idx;
-> +	int ret;
-> +
-> +	dec_rate = DIV_ROUND_CLOSEST_ULL(st->ref_frequency, samp_rate);
-> +
-> +	idx = find_closest_descending(dec_rate, ad7405_dec_rates,
-> +				      ARRAY_SIZE(ad7405_dec_rates));
-> +
-> +	dec_rate = ad7405_dec_rates[idx];
-> +
-> +	ret = iio_backend_oversampling_ratio_set(st->back, 0, dec_rate);
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->sample_frequency = DIV_ROUND_CLOSEST_ULL(st->ref_frequency, dec_rate);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad7405_read_raw(struct iio_dev *indio_dev,
-> +			   const struct iio_chan_spec *chan, int *val,
-> +			   int *val2, long info)
-> +{
-> +	struct ad7405_state *st = iio_priv(indio_dev);
-> +
-> +	switch (info) {
-
-This is missing an implementation for IIO_CHAN_INFO_SCALE and IIO_CHAN_INFO_OFFSET.
-
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		*val = st->sample_frequency;
-> +		return IIO_VAL_INT;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int ad7405_write_raw(struct iio_dev *indio_dev,
-> +			    struct iio_chan_spec const *chan, int val,
-> +			    int val2, long info)
-> +{
-> +	switch (info) {
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		if (val < 1)
-> +			return -EINVAL;
-> +		return ad7405_set_sampling_rate(indio_dev, chan, val);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int ad7405_read_avail(struct iio_dev *indio_dev,
-> +			     struct iio_chan_spec const *chan,
-> +			     const int **vals, int *type, int *length,
-> +			     long info)
-> +{
-> +	struct ad7405_state *st = iio_priv(indio_dev);
-> +
-> +	switch (info) {
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +			*vals = st->sample_frequency_tbl;
-> +			*length = ARRAY_SIZE(st->sample_frequency_tbl);
-> +			*type = IIO_VAL_INT;
-> +			return IIO_AVAIL_LIST;
-> +	default:
-> +			return -EINVAL;
-> +	}
-> +}
-> +
-> +static void ad7405_clk_disable_unprepare(void *clk)
-> +{
-> +	clk_disable_unprepare(clk);
-> +}
-> +
-> +static const struct iio_info ad7405_iio_info = {
-> +	.read_raw = &ad7405_read_raw,
-> +	.write_raw = &ad7405_write_raw,
-> +	.read_avail = &ad7405_read_avail,
-> +};
-> +
-> +#define AD7405_IIO_CHANNEL {							\
-> +	.type = IIO_VOLTAGE,							\
-> +	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),		\
-> +	.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),	\
-
-Would it make more sense to use IIO_CHAN_INFO_OVERSAMPLING_RATIO for controlling
-the decimation rate and have IIO_CHAN_INFO_SAMP_FREQ be read-only?
-
-Maybe also useful to have a read-only filter_type attribute to say that the
-backend is providing a sinc3 filter?
-
-> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |			\
-> +		BIT(IIO_CHAN_INFO_OFFSET),					\
-> +	.indexed = 1,								\
-> +	.channel = 0,								\
-> +	.channel2 = 1,								\
-> +	.differential = 1,							\
-> +	.scan_index = 0,							\
-> +	.scan_type = {								\
-> +		.sign = 'u',							\
-> +		.realbits = 16,							\
-> +		.storagebits = 16,						\
-> +	},									\
-> +}
-> +
-> +static const struct ad7405_chip_info ad7405_chip_info = {
-> +		.name = "AD7405",
-> +		.channel = {
-> +			AD7405_IIO_CHANNEL,
-> +		},
-> +};
-> +
-> +static const struct ad7405_chip_info adum7701_chip_info = {
-> +		.name = "ADUM7701",
-> +		.channel = {
-> +			AD7405_IIO_CHANNEL,
-> +		},
-> +};
-> +
-> +static const char * const ad7405_power_supplies[] = {
-> +	"vdd1",	"vdd2",
-> +};
-> +
-> +static int ad7405_probe(struct platform_device *pdev)
-> +{
-> +	const struct ad7405_chip_info *chip_info;
-> +	struct device *dev = &pdev->dev;
-> +	struct iio_dev *indio_dev;
-> +	struct ad7405_state *st;
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	st = iio_priv(indio_dev);
-> +
-> +	ret = devm_mutex_init(dev, &st->lock);
-> +	if (ret)
-> +		return ret;
-> +
-> +	chip_info = device_get_match_data(dev);
-> +	if (!chip_info)
-> +		return dev_err_probe(dev, -EINVAL, "no chip info\n");
-> +
-> +	ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(ad7405_power_supplies),
-> +					     ad7405_power_supplies);
-> +
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to get and enable supplies");
-> +
-> +	clk = devm_clk_get_enabled(dev, NULL);
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	ret = devm_add_action_or_reset(dev, ad7405_clk_disable_unprepare, clk);
-
-devm_clk_get_enabled() already make sure the clock is disabled when the dirver
-is removed, so this is not needed.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->ref_frequency = clk_get_rate(clk);
-> +	if (!(st->ref_frequency))
-
-Inner () not needed.
-
-> +		return -EINVAL;
-> +
-> +	ad7405_fill_samp_freq_table(st);
-> +
-> +	indio_dev->dev.parent = dev;
-> +	indio_dev->name = chip_info->name;
-> +	indio_dev->channels = chip_info->channel;
-> +	indio_dev->num_channels = 1;
-> +	indio_dev->info = &ad7405_iio_info;
-> +
-> +	st->back = devm_iio_backend_get(dev, NULL);
-> +	if (IS_ERR(st->back))
-> +		return dev_err_probe(dev, PTR_ERR(st->back),
-> +				     "failed to get IIO backend");
-> +
-> +	ret = iio_backend_chan_enable(st->back, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = devm_iio_backend_request_buffer(dev, st->back, indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = devm_iio_backend_enable(dev, st->back);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ad7405_set_sampling_rate(indio_dev, &indio_dev->channels[0],
-> +				       chip_info->max_rate);
-
-max_rate is never set, so will always be 0.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_iio_device_register(dev, indio_dev);
-> +}
-> +
-> +/* Match table for of_platform binding */
-> +static const struct of_device_id ad7405_of_match[] = {
-> +	{ .compatible = "adi,ad7405", .data = &ad7405_chip_info, },
-> +	{ .compatible = "adi,adum7701", .data = &adum7701_chip_info, },
-> +	{ .compatible = "adi,adum7702", .data = &adum7701_chip_info, },
-> +	{ .compatible = "adi,adum7703", .data = &adum7701_chip_info, },
-> +	{ /* end of list */ },
-
-	{ }
-
-We standardized on this style in the IIO subsystem.
-
-> +};
-> +MODULE_DEVICE_TABLE(of, ad7405_of_match);
-> +
-> +static struct platform_driver ad7405_driver = {
-> +	.driver = {
-> +		.name = "ad7405",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = ad7405_of_match,
-> +	},
-> +	.probe = ad7405_probe,
-> +};
-> +module_platform_driver(ad7405_driver);
-> +
-> +MODULE_AUTHOR("Dragos Bogdan <dragos.bogdan@analog.com>");
-> +MODULE_AUTHOR("Pop Ioan Daniel <pop.ioan-daniel@analog.com>");
-> +MODULE_DESCRIPTION("Analog Devices AD7405 driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_IMPORT_NS("IIO_BACKEND");
-
+On 5/7/25 10:31, Lizhi Hou wrote:
+>
+> On 5/7/25 09:29, Mario Limonciello wrote:
+>> On 5/7/2025 11:15 AM, Lizhi Hou wrote:
+>>> The latest userspace runtime allows generating commands which do not
+>>> have any argument. Remove the corresponding check in driver IOCTL to
+>>> enable this use case.
+>>>
+>>> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+>>
+>> Can the userspace handle discovery of the difference?  Or does this 
+>> need any sort of ABI discovery command introduced too?
+>>
+>> The code change itself below looks good to me though.
+>
+> Runtime will capture and handle the error with current driver.
+>
+> Even if runtime have a way to explicitly discovery the different, it 
+> will just report an error and fail the case.
+>
+>
+> Thanks,
+>
+> Lizhi
+>
+>>
+>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>>> ---
+>>>   drivers/accel/amdxdna/amdxdna_ctx.c | 22 ++++++++++++----------
+>>>   1 file changed, 12 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/drivers/accel/amdxdna/amdxdna_ctx.c 
+>>> b/drivers/accel/amdxdna/amdxdna_ctx.c
+>>> index 43442b9e273b..be073224bd69 100644
+>>> --- a/drivers/accel/amdxdna/amdxdna_ctx.c
+>>> +++ b/drivers/accel/amdxdna/amdxdna_ctx.c
+>>> @@ -496,11 +496,11 @@ static int amdxdna_drm_submit_execbuf(struct 
+>>> amdxdna_client *client,
+>>>                         struct amdxdna_drm_exec_cmd *args)
+>>>   {
+>>>       struct amdxdna_dev *xdna = client->xdna;
+>>> -    u32 *arg_bo_hdls;
+>>> +    u32 *arg_bo_hdls = NULL;
+>>>       u32 cmd_bo_hdl;
+>>>       int ret;
+>>>   -    if (!args->arg_count || args->arg_count > MAX_ARG_COUNT) {
+>>> +    if (args->arg_count > MAX_ARG_COUNT) {
+>>>           XDNA_ERR(xdna, "Invalid arg bo count %d", args->arg_count);
+>>>           return -EINVAL;
+>>>       }
+>>> @@ -512,14 +512,16 @@ static int amdxdna_drm_submit_execbuf(struct 
+>>> amdxdna_client *client,
+>>>       }
+>>>         cmd_bo_hdl = (u32)args->cmd_handles;
+>>> -    arg_bo_hdls = kcalloc(args->arg_count, sizeof(u32), GFP_KERNEL);
+>>> -    if (!arg_bo_hdls)
+>>> -        return -ENOMEM;
+>>> -    ret = copy_from_user(arg_bo_hdls, u64_to_user_ptr(args->args),
+>>> -                 args->arg_count * sizeof(u32));
+>>> -    if (ret) {
+>>> -        ret = -EFAULT;
+>>> -        goto free_cmd_bo_hdls;
+>>> +    if (args->arg_count) {
+>>> +        arg_bo_hdls = kcalloc(args->arg_count, sizeof(u32), 
+>>> GFP_KERNEL);
+>>> +        if (!arg_bo_hdls)
+>>> +            return -ENOMEM;
+>>> +        ret = copy_from_user(arg_bo_hdls, u64_to_user_ptr(args->args),
+>>> +                     args->arg_count * sizeof(u32));
+>>> +        if (ret) {
+>>> +            ret = -EFAULT;
+>>> +            goto free_cmd_bo_hdls;
+>>> +        }
+>>>       }
+>>>         ret = amdxdna_cmd_submit(client, cmd_bo_hdl, arg_bo_hdls,
+>>
