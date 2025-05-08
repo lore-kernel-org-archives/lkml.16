@@ -1,149 +1,254 @@
-Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378AE195FE8;
-	Thu,  8 May 2025 07:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BED221717
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 07:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746689814; cv=none; b=jsHFSs6o2b4Op+Tfg1/SClvwjZHsVxq6eeeIhCMrDWF5V8oMdYhk+SeU0xXtYmNE3rqpz+gCa0Q9HAdhMTzGk4ttrfiwYIdw+rF8dLx44oVJq1EnAVYFf1R8QpG+6JGsSbl597L7n68y76cvkeQiaBTd60DQizQOtucR/HmGabA=
+	t=1746689822; cv=none; b=Co6yKjUu5ZhVX2PEQ0bqhOC5+dS5ZP3mPNPomLTSIT+/oDuqOVeAZp8aH/yTbPX7o/KpwUmM65Tka7Jkm6M8hpLJzo57nZmfqMwVUXFQU8aKaKagPg8zwSjysMnjs6ERFhUE/l9rfziMFVRfEroInd0/ymYpcellPWFmY2HSB60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746689814; c=relaxed/simple;
-	bh=hGAbVqQFT69FqQTzOmATV5AJRMzSHoqIT19dRWp0pMY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=No7bORQbKVoNFQRmfVS8XERRDKoBR4K4iKqTufeTwS2ynMxkwBIlPfFK3B1eKzC90Hg1gWmiMa4DvrfN1XIYbAYsK20fy2T++IYQZ81opWl6JFJ67s8wf9bsknowYAo+V6OBN1zWOjHyct9+La01aoA41+nbaA06xZZHYvpup6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eN5tUL8c; arc=none smtp.client-ip=209.85.210.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746689822; c=relaxed/simple;
+	bh=UyudNj8jsYij4dkc08q2Csn7AOkH4eCsxDhrrTlIpiI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y2BNW9SIsRWbSSWdlf/JOtmvhLPLoHeczDGpkF3APQM9m4YIjfrZ7XV7LqHdzSc0LXhyqfNIc7CNa8s2wrG+ENyq+GgPLHsriOi7a3xwzV02bljU2zLEfCahsDaltGyEd0BqS9k5sttltm0VxAIy/YTJTaFrHJD9DdtAdJ5scmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QX9G3370; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eN5tUL8c"
-Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-736aa9d0f2aso923815b3a.0;
-        Thu, 08 May 2025 00:36:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746689812; x=1747294612; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9fwr70jRROQnhTfVJ4M+ZZqp2+Z1EXWKMCwGS7IUNFQ=;
-        b=eN5tUL8cw61K/XSDIC6pxdrSPAOQUjUBpquKJHe/HksTNiQyJusL+WtXSA4JCHvYWA
-         ipKjYsDfnf08flMtPoixHV3817Xnx0PDiauiwgyA98fuEVI4IqoG5GuVqaFqM7RWMP7b
-         mNBk8RkmpzoGgbTdqKvI8yjkcQzFEG2K4O+h/sHIe0/xAJctU7sag3/iYaduq3tMfeua
-         8f1OVj45WXcqaItAeMBj6nLNdTGPnyD7eJQO0HJ2ZpyJBL/ODEmHKOUYaAfgXa+/Tm1g
-         dn6FdfP8nXHsfrfI9XHie2xzjahOYadBFfh812jwmyWtKUnbABQfbqZIrOyQ5aRbT4Zq
-         hgyg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QX9G3370"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746689819;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qfpELmsMlIjDbBoLb7SKYzxZXv0bQCaJBscgT2aoxGA=;
+	b=QX9G3370slNY81uAol7tgdiS5fTCkhEXbBn1qKbdTt6885TbymPfazEUmK12Cb0AWkrOA1
+	mAf5T7CuNDN5zfccJhTIkjJecTUCJCGmGZlLPUGg0MUIWqD+5TEFqDTbRrwoV89Q5L8pnS
+	W13m4Rn7/jK7K/eHtDf9eadhZSw3wc0=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-74-gF2Td3PUNRa5yyRViRKjAw-1; Thu, 08 May 2025 03:36:58 -0400
+X-MC-Unique: gF2Td3PUNRa5yyRViRKjAw-1
+X-Mimecast-MFC-AGG-ID: gF2Td3PUNRa5yyRViRKjAw_1746689817
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-22e7343c777so6702205ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 00:36:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746689812; x=1747294612;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9fwr70jRROQnhTfVJ4M+ZZqp2+Z1EXWKMCwGS7IUNFQ=;
-        b=xIbHNAyAaw0/ac7meL1xjST1tRpPWdTYvTBn+dKldy+S6pZoweQ2rdri5Og9hpTHKl
-         /cFreIVmaoJjJBnVO2RPAatWJ1rw7v+rUd3K4UIoeb1xjnLeUrrJPrJPaZ/M1t+PuIsm
-         DYwyvTjt4oPd3NgiUGWv22YldSfX1joz1dwflNlUNpeOcL1AfIZAww2G8aDUyXHVl2lf
-         pyiixw5lqSvib1A93gnn4fgzru2fNg0KaQD6egeWHG4h70aLakOIjgByIKVJZtRrnnGL
-         oF9xeOtVc81pe/68jRD15RyFEnHlweDFN5cz93w/p5LLuSw97u6bfVHVDCoNsIBcAupr
-         JhjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0BCViFDxfwbadwsMFLkDimSJcB6IKOfRhQWeCbLB8uAdwIFnu6BUtSI699T3oismnLDEiAM+h@vger.kernel.org, AJvYcCUzB3SrwZXrVVHjHFj9hI3QV5guIzDHauFkfpDWAnuM1FTBRYH1suFZCnjMhayHatxVWhZSvPsl+A+wmZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcESY9YllYiU2rPnEUTys/WMReIDTax0Kg9uEnqE0btS6rSzcp
-	fknddi2IPahcKa7lqfvG7mLYW3hhYHAUDNP6BhcH/+cZlopDe/tt
-X-Gm-Gg: ASbGncvfpv+TGJ1X1kJdviCMlgN77pyGWtO8tb6PTo5ImpBCSWQSYskLpa+j/Moo1nE
-	HIhJW/Ty6gA/lefLttT5eotWvfPlLBDSykaadQHEgfDPyDMvwsrkb7QQcZKmwcmoCBhTXm2+G3k
-	pxeKPX+q3UehYdwCUpD4BSOulL1p51YYJm5oTG9CXu9iuqzDLcYHbe5Q3qSknYeqZdXMjlzmB69
-	fZF6CXbeXMyCW9JifEWyHBR2hIaKqcWh5/30qr6Y6gEvMJiiWL4dOZ/CBSIqRB717JqkeOCqGk2
-	EB7Bq/f4868JlEndyGNDIgTJlEsGV7CSP9xl3jxHXtD2n+6hdIf3ESdEyfH53FCwDTZxfA==
-X-Google-Smtp-Source: AGHT+IHPnNoxLhV7GIw/VlymXwTFp+WFlPFIfHMoS/t+AGVcolUKDOh9qji1dI06No4oykb/YQlDeA==
-X-Received: by 2002:a05:6a20:2d2b:b0:1f5:59e5:8ada with SMTP id adf61e73a8af0-2148b81f041mr10087427637.4.1746689812362;
-        Thu, 08 May 2025 00:36:52 -0700 (PDT)
-Received: from tom-QiTianM540-A739.. ([124.127.236.130])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7405905d16asm12570475b3a.127.2025.05.08.00.36.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 00:36:51 -0700 (PDT)
-From: Qiu-ji Chen <chenqiuji666@gmail.com>
-To: sean.wang@mediatek.com,
-	vkoul@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com
-Cc: dmaengine@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	baijiaju1990@gmail.com,
-	Qiu-ji Chen <chenqiuji666@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()
-Date: Thu,  8 May 2025 15:36:33 +0800
-Message-Id: <20250508073634.3719-1-chenqiuji666@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1746689817; x=1747294617;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qfpELmsMlIjDbBoLb7SKYzxZXv0bQCaJBscgT2aoxGA=;
+        b=m7iV+hfyEhCMbHb1eFk1v/p261fKNsreykVgoVSrIDf0X6E4K+RbJ6Awu0eull4v2r
+         7S1+7f6V/ZReiErXish1DF/qDTxEmIHmt9H8oRSyzL2teZblNh5h+VRTFfESG9+799Ia
+         jKG1ihzs1qSm51G3biHFbBswAeiZOeWN6UNlzuyJRFWBJ98Esx+9kvq5MTohW9tjJtN/
+         f0apbwe68Um5cwWCtVQ0UlPZfpUwsvyoojBjcpAxLtwuji1i2bd0+gHXPqhn4B3ZYOAs
+         Zs1tmPvR+Snb9MUYYvfnq662gkHrB5NhGX/YbRI5xgbzjScfxd3Li7/2Kw0Z2UXfAjqv
+         K9WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFI7oA2vvPJCx6QPQouzUJ+hwP4xzpnF9rxgwMyzol3/OnXhKwL65OEhsu7FyEq15AaXTwj5Aoz7bqs/I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvKt3q+gk1llrdy0/4k0n7B5sLovAISP0QIQvimvpqvmqchOZM
+	+N9ZzJ0JnQ1rWRSJkPKx+cz9lh6kWAgfVZp9BXtnxzuxeGOwgW8dIfaiSnSCj7isU1bMtLSRgmq
+	lBPHhOLsN1Beymm1ZIe0yKv7qe34A+eVMmV3U/Dj+isqqLj/7QYMYvTjicN/xgA==
+X-Gm-Gg: ASbGncsYx07C+2en3eF38POg/r8lS3kpW48RKUALxTtsfeeT1nQvO6fveBq8GtGWqtW
+	mhYDTmxpidseU71iTuu8D5UShIiHzQdLI2WSsQEeLV9VrzxdfI7M+OP2fDA62X3gRhQCfSzn24v
+	YcNDsAy4Td7zD7sEP1gJvBGHVPTbTSsUsUS4c+KMSy8k2gouh+sqvPhK3NyZ8o3z/YvYGa6lmAU
+	cVxsJmdkrCa2Lw70D9HqEK4dBJTmwCcNqvte4afYHXm2crQ+WBiWlMxVNP5g8Hm3/GWU3WLcetz
+	+LS1pa/ZYtMvFLiKwg==
+X-Received: by 2002:a17:902:f552:b0:220:e156:63e0 with SMTP id d9443c01a7336-22e5ea1919bmr81060965ad.8.1746689817372;
+        Thu, 08 May 2025 00:36:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFIp9mU4ALROa7MseJf7VbJ3xMqjgH+d2m1FTA51FX0ZMyejG1Jqn1rF0RHRIm4Vvn3E5OXEQ==
+X-Received: by 2002:a17:902:f552:b0:220:e156:63e0 with SMTP id d9443c01a7336-22e5ea1919bmr81060765ad.8.1746689816987;
+        Thu, 08 May 2025 00:36:56 -0700 (PDT)
+Received: from [10.72.120.7] ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e151e998bsm106310115ad.67.2025.05.08.00.36.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 00:36:55 -0700 (PDT)
+Message-ID: <4c1b573b-7258-4086-af15-b220a91a5017@redhat.com>
+Date: Thu, 8 May 2025 15:36:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 8/9] md: fix is_mddev_idle()
+To: Yu Kuai <yukuai1@huaweicloud.com>, axboe@kernel.dk, agk@redhat.com,
+ song@kernel.org, hch@lst.de, john.g.garry@oracle.com, hare@suse.de,
+ pmenzel@molgen.mpg.de
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yukuai3@huawei.com,
+ yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com
+References: <20250506124658.2537886-1-yukuai1@huaweicloud.com>
+ <20250506124903.2540268-1-yukuai1@huaweicloud.com>
+ <20250506124903.2540268-9-yukuai1@huaweicloud.com>
+From: Xiao Ni <xni@redhat.com>
+In-Reply-To: <20250506124903.2540268-9-yukuai1@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Fix a potential deadlock bug. Observe that in the mtk-cqdma.c
-file, functions like mtk_cqdma_issue_pending() and
-mtk_cqdma_free_active_desc() properly acquire the pc lock before the vc
-lock when handling pc and vc fields. However, mtk_cqdma_tx_status()
-violates this order by first acquiring the vc lock before invoking
-mtk_cqdma_find_active_desc(), which subsequently takes the pc lock. This
-reversed locking sequence (vc → pc) contradicts the established
-pc → vc order and creates deadlock risks.
 
-Fix the issue by moving the vc lock acquisition code from
-mtk_cqdma_find_active_desc() to mtk_cqdma_tx_status(). Ensure the pc lock
-is acquired before the vc lock in the calling function to maintain correct
-locking hierarchy. Note that since mtk_cqdma_find_active_desc() is a
-static function with only one caller (mtk_cqdma_tx_status()), this
-modification safely eliminates the deadlock possibility without affecting
-other components.
+在 2025/5/6 下午8:49, Yu Kuai 写道:
+> From: Yu Kuai <yukuai3@huawei.com>
+>
+> If sync_speed is above speed_min, then is_mddev_idle() will be called
+> for each sync IO to check if the array is idle, and inflight sync_io
+> will be limited if the array is not idle.
+>
+> However, while mkfs.ext4 for a large raid5 array while recovery is in
+> progress, it's found that sync_speed is already above speed_min while
+> lots of stripes are used for sync IO, causing long delay for mkfs.ext4.
+>
+> Root cause is the following checking from is_mddev_idle():
+>
+> t1: submit sync IO: events1 = completed IO - issued sync IO
+> t2: submit next sync IO: events2  = completed IO - issued sync IO
+> if (events2 - events1 > 64)
+>
+> For consequence, the more sync IO issued, the less likely checking will
+> pass. And when completed normal IO is more than issued sync IO, the
+> condition will finally pass and is_mddev_idle() will return false,
+> however, last_events will be updated hence is_mddev_idle() can only
+> return false once in a while.
+>
+> Fix this problem by changing the checking as following:
+>
+> 1) mddev doesn't have normal IO completed;
+> 2) mddev doesn't have normal IO inflight;
+> 3) if any member disks is partition, and all other partitions doesn't
+>     have IO completed.
+>
+> Also change rdev->last_events to unsigned long to cleanup type casting.
+>
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>   drivers/md/md.c | 81 ++++++++++++++++++++++++++-----------------------
+>   drivers/md/md.h |  3 +-
+>   2 files changed, 45 insertions(+), 39 deletions(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 541151bcfe81..0fde115e921f 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -8625,50 +8625,55 @@ void md_cluster_stop(struct mddev *mddev)
+>   	put_cluster_ops(mddev);
+>   }
+>   
+> -static int is_mddev_idle(struct mddev *mddev, int init)
+> +static bool is_rdev_holder_idle(struct md_rdev *rdev, bool init)
+>   {
+> +	unsigned long last_events = rdev->last_events;
+> +
+> +	if (!bdev_is_partition(rdev->bdev))
+> +		return true;
+> +
+> +	/*
+> +	 * If rdev is partition, and user doesn't issue IO to the array, the
+> +	 * array is still not idle if user issues IO to other partitions.
+> +	 */
+> +	rdev->last_events = part_stat_read_accum(rdev->bdev->bd_disk->part0,
+> +						 sectors) -
+> +			    part_stat_read_accum(rdev->bdev, sectors);
+> +
+> +	return init || rdev->last_events <= last_events;
+> +}
+> +
+> +/*
+> + * mddev is idle if following conditions are matched since last check:
+> + * 1) mddev doesn't have normal IO completed;
+> + * 2) mddev doesn't have inflight normal IO;
+> + * 3) if any member disk is partition, and other partitions don't have IO
+> + *    completed;
+> + *
+> + * Noted this checking rely on IO accounting is enabled.
+> + */
+> +static bool is_mddev_idle(struct mddev *mddev, int init)
+> +{
+> +	unsigned long last_events = mddev->normal_io_events;
+> +	struct gendisk *disk;
+>   	struct md_rdev *rdev;
+> -	int idle;
+> -	int curr_events;
+> +	bool idle = true;
+>   
+> -	idle = 1;
+> -	rcu_read_lock();
+> -	rdev_for_each_rcu(rdev, mddev) {
+> -		struct gendisk *disk = rdev->bdev->bd_disk;
+> +	disk = mddev_is_dm(mddev) ? mddev->dm_gendisk : mddev->gendisk;
+> +	if (!disk)
+> +		return true;
+>   
+> -		if (!init && !blk_queue_io_stat(disk->queue))
+> -			continue;
+> +	mddev->normal_io_events = part_stat_read_accum(disk->part0, sectors);
+> +	if (!init && (mddev->normal_io_events > last_events ||
+> +		      bdev_count_inflight(disk->part0)))
+> +		idle = false;
+>   
+> -		curr_events = (int)part_stat_read_accum(disk->part0, sectors) -
+> -			      atomic_read(&disk->sync_io);
+> -		/* sync IO will cause sync_io to increase before the disk_stats
+> -		 * as sync_io is counted when a request starts, and
+> -		 * disk_stats is counted when it completes.
+> -		 * So resync activity will cause curr_events to be smaller than
+> -		 * when there was no such activity.
+> -		 * non-sync IO will cause disk_stat to increase without
+> -		 * increasing sync_io so curr_events will (eventually)
+> -		 * be larger than it was before.  Once it becomes
+> -		 * substantially larger, the test below will cause
+> -		 * the array to appear non-idle, and resync will slow
+> -		 * down.
+> -		 * If there is a lot of outstanding resync activity when
+> -		 * we set last_event to curr_events, then all that activity
+> -		 * completing might cause the array to appear non-idle
+> -		 * and resync will be slowed down even though there might
+> -		 * not have been non-resync activity.  This will only
+> -		 * happen once though.  'last_events' will soon reflect
+> -		 * the state where there is little or no outstanding
+> -		 * resync requests, and further resync activity will
+> -		 * always make curr_events less than last_events.
+> -		 *
+> -		 */
+> -		if (init || curr_events - rdev->last_events > 64) {
+> -			rdev->last_events = curr_events;
+> -			idle = 0;
+> -		}
+> -	}
+> +	rcu_read_lock();
+> +	rdev_for_each_rcu(rdev, mddev)
+> +		if (!is_rdev_holder_idle(rdev, init))
+> +			idle = false;
+>   	rcu_read_unlock();
+> +
+>   	return idle;
+>   }
+>   
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index b57842188f18..1982f1f18627 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -132,7 +132,7 @@ struct md_rdev {
+>   
+>   	sector_t sectors;		/* Device size (in 512bytes sectors) */
+>   	struct mddev *mddev;		/* RAID array if running */
+> -	int last_events;		/* IO event timestamp */
+> +	unsigned long last_events;	/* IO event timestamp */
+>   
+>   	/*
+>   	 * If meta_bdev is non-NULL, it means that a separate device is
+> @@ -520,6 +520,7 @@ struct mddev {
+>   							 * adding a spare
+>   							 */
+>   
+> +	unsigned long			normal_io_events; /* IO event timestamp */
+>   	atomic_t			recovery_active; /* blocks scheduled, but not written */
+>   	wait_queue_head_t		recovery_wait;
+>   	sector_t			recovery_cp;
 
-This possible bug is found by an experimental static analysis tool
-developed by our team. This tool analyzes the locking APIs to extract
-function pairs that can be concurrently executed, and then analyzes the
-instructions in the paired functions to identify possible concurrency bugs
-including deadlocks, data races and atomicity violations.
 
-Fixes: b1f01e48df5a ("dmaengine: mediatek: Add MediaTek Command-Queue DMA controller for MT6765 SoC")
-Cc: stable@vger.kernel.org
-Signed-off-by: Qiu-ji Chen <chenqiuji666@gmail.com>
----
-V2:
-Revised the fix approach and updated the description to address the
-reduced protection scope of the vc lock in the V1 solution.
----
- drivers/dma/mediatek/mtk-cqdma.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Looks good to me
 
-diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
-index d5ddb4e30e71..e35271ac1eed 100644
---- a/drivers/dma/mediatek/mtk-cqdma.c
-+++ b/drivers/dma/mediatek/mtk-cqdma.c
-@@ -422,13 +422,10 @@ static struct virt_dma_desc *mtk_cqdma_find_active_desc(struct dma_chan *c,
- 	struct virt_dma_desc *vd;
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&cvc->pc->lock, flags);
- 	list_for_each_entry(vd, &cvc->pc->queue, node)
- 		if (vd->tx.cookie == cookie) {
--			spin_unlock_irqrestore(&cvc->pc->lock, flags);
- 			return vd;
- 		}
--	spin_unlock_irqrestore(&cvc->pc->lock, flags);
- 
- 	list_for_each_entry(vd, &cvc->vc.desc_issued, node)
- 		if (vd->tx.cookie == cookie)
-@@ -452,9 +449,11 @@ static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
- 	if (ret == DMA_COMPLETE || !txstate)
- 		return ret;
- 
-+	spin_lock_irqsave(&cvc->pc->lock, flags);
- 	spin_lock_irqsave(&cvc->vc.lock, flags);
- 	vd = mtk_cqdma_find_active_desc(c, cookie);
- 	spin_unlock_irqrestore(&cvc->vc.lock, flags);
-+	spin_unlock_irqrestore(&cvc->pc->lock, flags);
- 
- 	if (vd) {
- 		cvd = to_cqdma_vdesc(vd);
--- 
-2.34.1
+Reviewed-by: Xiao Ni <xni@redhat.com>
 
