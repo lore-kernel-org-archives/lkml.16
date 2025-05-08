@@ -1,110 +1,81 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2484B1E7A;
-	Thu,  8 May 2025 03:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F741ACED7
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 03:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746675270; cv=none; b=eFa9ULB3q4oKZLE8TNxqb44gX1nTXjl7t2LACyj2DU6TFr13NgKYtQpmzQ2v7yE1eTHUqqXTSMPcuTmVNJZfLfXOJB8cNq1VrdzjE+VBfMUl9bGnGCkSLyY9rrJIMmMJ8dHM849Npvoaaveg3i0vcKFtbpECRBhHBCAPNP3mOm8=
+	t=1746675348; cv=none; b=Br0PCixfvKJhgQ2llvQLyzjQkGwIUKI7kXN7+hHajs5UWZ/uQ+6/od5ZeawiKHDNRON9FlcnCo6AZOOLMliROnebea6jCANmI7Lwu26p9IuEUJsit6AbwLXK1YAKVm9wcf4tp8LQTfcGXWXK37KoFBviOxPDeKJIh7lWmA17gaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746675270; c=relaxed/simple;
-	bh=uXdkj+hTkdojfqIvqdoklrPedAqevSz+dSVNtv+pZw8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=qbaLgNKljBT5DxeXX0Xcbokc36YQIYv+nZd1TAxiOMBs7iP1iU8MGe1axwiohmPGoUndoabNEwX0PH2nmrCsZBH0iAkmjJi6fLQmCFtGnWnNhW0li4eZk+OFF8eE112sxSmNUb/LU5UK45RmKpHHuBz+9sYczVLAe64wP2hUJPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iKWrZ6NQ; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746675348; c=relaxed/simple;
+	bh=piZRPJMYQhGy4bkDpNIvJJwb9xrQI4jbepYvvYPxbxg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=mYNMXbE6p3lQuDC2O4Yqj683+96WG4k2VuLQgYbEcHG2McklHXNXbIWbsvTkFthPkBA7JPM+vpq+AdofZlJ/Z3Mhwdj9qPIyy7Dt1hNdNnQuHCU9IaHhwb9hVeC/0vCzcBBzmfr9XHzZt0w10Wj59TPsIsI9YTDZ3n91o0oCqOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=p0spf1qZ reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKWrZ6NQ"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54fc36323c5so9611e87.0;
-        Wed, 07 May 2025 20:34:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746675266; x=1747280066; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Vs79sT1z9pcn5mqMpa25QtZJuWH27z2drEI50rV/J2g=;
-        b=iKWrZ6NQl29bZWZRMGcQsvzpSgmg0h0+x4uRfgF7qsA1caqIf318WjqRNdCeXSAWow
-         ywS0KGGa2/CD58WoPWM78gtCBhAkDzg5IrQCrpazQcJdW6AKy2vyMp0MxMkz6GfLG80T
-         qzyJWyk6bNl+AI7PTKQsKKIWznzFT0xU8+YVJCLI1gIBIpNuYMoKvwox/cgB8dr5ExKB
-         7IAjaTpz8fAURM2YclpVE9AmXIjcXPk1ZIgrLV0fgDkpYZ2enlwBZJowxBgTGTcyZd7D
-         s4XV9fctIAvcEMWaKcqQBhMZg8GkLQzSVl4KjFEghxQAHwTERk4yFxIqccCFgNuI4ekA
-         ok9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746675266; x=1747280066;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Vs79sT1z9pcn5mqMpa25QtZJuWH27z2drEI50rV/J2g=;
-        b=IkU5mGrvG/QQRfAnGozyZMgplws2F9oY/wRdsjE0ZUJ9qOhD9NgayfWGPeT/gZR3Zm
-         AKUS7J22TEJYjsqFGy0mA1PS/V8jWOpFvhVqBB3iojs4gxHVckPAbXoOrGdFXDRbAVAh
-         kpWRPGOjGk/8G2NUF/G9wUIgQWSJwFQXO03M0AYwxquYzUyNFmG/mOm1eBANOnD73DHs
-         SxzniG0MNsxqMCv4CWzvZwYFjluegeVLVtXSu25rh6nBah2ljGPTpmC48ynW4bysRv20
-         l7ixvxpcfliKCrr8RfrbPSnfQ/vmApNMmFgxsW7zwLlQLp7dKsQUFa4fyjk+53Y2ua0S
-         TGEg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7d4OdwNNg158+vgrlgXzHlxj0XDMWkqhZ+U8p36gtg080hxpvfPoSxyDT+EjVpclMgDA9ZPSRMgUnTTOF@vger.kernel.org, AJvYcCXXWzAGXk0SNN8fn/aL4Yo6ugXFmM2M23ci4hecZw0BVMhh+yS1IUBWwA5z+VP6zBaPDk6TvXMNaSfO@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhZZNg9qkcHyNXzVJiasvUaC93sJRFsxJAh2nGARRSKn92akc2
-	q3+z1/RpfpZpUazYQQwzCog3DZu3N2bNXblpO9Dr7PmHdzc0ay1whze6HzJpOyt4ISq1Lw8z+Ji
-	iM3GvLqS8nVIpycyueQOZB9x34vg6IKRs
-X-Gm-Gg: ASbGncsjfnPxqUCNeuIAvK3Dglx5NXfZ3b+2F5BBqm/D6S3pxAGTrOdDdUxeUbhuqla
-	bycjnRETjx3zV2r1Gk9B7a+BzBZuzQGIkCUl5rFDOGev/wPpoYDyKdcqLZjrEXCc5CqBQgQgKI8
-	FB+I8OlZhwPEDAAzSrqd2M9P4=
-X-Google-Smtp-Source: AGHT+IFqdlXOoADn1dUreyEoDR3eL0pLNDbnFfRkc3P4LZdSrEXB4VzDHAxFfv9TfhdzPZ+wa3Z7HRzNKUSrRNzlSpQ=
-X-Received: by 2002:a05:6512:104a:b0:54e:784e:541 with SMTP id
- 2adb3069b0e04-54fbe41e56amr592572e87.14.1746675266286; Wed, 07 May 2025
- 20:34:26 -0700 (PDT)
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="p0spf1qZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=1T4TewOhq9jtD3mU3UmbygBVz/T5dQ2YuA0u2Yu5YGo=; b=p
+	0spf1qZGPnKHwlqS0AuIwacDygP7DKkn0dlDY1ROVNFMYJrk3N3sGCz9rv2KeW4w
+	4oUhcitRE199i59ZJz0pDhr3b/u1iI+BJRhj+ma9anBEtsVdTNU81kOBCWFbLTOx
+	l1gczxFkDzr7GCBXEOp/uZHnWGaUfOma4kF64q4urQ=
+Received: from 00107082$163.com ( [111.35.191.17] ) by
+ ajax-webmail-wmsvr-40-127 (Coremail) ; Thu, 8 May 2025 11:35:11 +0800 (CST)
+Date: Thu, 8 May 2025 11:35:11 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Kent Overstreet" <kent.overstreet@linux.dev>
+Cc: "Suren Baghdasaryan" <surenb@google.com>, akpm@linux-foundation.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] alloc_tag: avoid mem alloc and iter reset when reading
+ allocinfo
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <y6egptcxlbzgboykjorh3syxwy4wu37eolmjtwuwu36gtbfhgf@o3o34qii4gmq>
+References: <20250507175500.204569-1-00107082@163.com>
+ <a0ebf2e.b422.196abf97373.Coremail.00107082@163.com>
+ <CAJuCfpFAUdqqvFPfe_OLR76c0bX_ngwG=JKC42pVB+WAeX4w0w@mail.gmail.com>
+ <nubqzts4e6n3a5e7xljdsql7mxgzkobo7besgkfvnhn4thhxk3@reob3iac3psp>
+ <289b58f1.352d.196addbf31d.Coremail.00107082@163.com>
+ <y6egptcxlbzgboykjorh3syxwy4wu37eolmjtwuwu36gtbfhgf@o3o34qii4gmq>
+X-NTES-SC: AL_Qu2fBPqcuksq5yCYYukZnEYQheY4XMKyuPkg1YJXOp80lyTS1i8PZ25IJ2Ls0fmBKwSmoQmJUCZj9eRhRIVjWqgFK3ytXkkVok9qRhKNuA7h
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Steve French <smfrench@gmail.com>
-Date: Wed, 7 May 2025 22:34:15 -0500
-X-Gm-Features: ATxdqUF8pqJhrhpfqZJwWnmu5w6ANJvVwe4AwgVBbrR3xAJbThyFwTaiJ0wVX6k
-Message-ID: <CAH2r5mv5iu20LFsASnA=G3OUtrUAkp0CnKvckT+fbsYWzSAaLA@mail.gmail.com>
-Subject: [GIT PULL] ksmbd server fixes
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namjae Jeon <linkinjeon@kernel.org>, CIFS <linux-cifs@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <1ed4c8f7.3e12.196adf621a2.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:fygvCgD3_6hwJhxofp2mAA--.57328W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkAJHqmgcH4DcLgABsn
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-Please pull the following changes since commit
-ca91b9500108d4cf083a635c2e11c884d5dd20ea:
-
-  Merge tag 'v6.15-rc4-ksmbd-server-fixes' of
-git://git.samba.org/ksmbd (2025-04-28 16:56:01 -0700)
-
-are available in the Git repository at:
-
-  git://git.samba.org/ksmbd.git tags/v6.15-rc5-ksmbd-server-fixes
-
-for you to fetch changes up to 36991c1ccde2d5a521577c448ffe07fcccfe104d:
-
-  ksmbd: Fix UAF in __close_file_table_ids (2025-05-06 08:37:02 -0500)
-
-----------------------------------------------------------------
-4 ksmbd SMB3 server fixes, most also for stable
-- Fix UAF closing file table (e.g. in tree disconnect)
-- Fix potential out of bounds write
-- Fix potential memory leak parsing lease state in open
-- Fix oops in rename with empty target
-----------------------------------------------------------------
-Namjae Jeon (1):
-      ksmbd: prevent rename with empty string
-
-Norbert Szetei (1):
-      ksmbd: prevent out-of-bounds stream writes by validating *pos
-
-Sean Heelan (1):
-      ksmbd: Fix UAF in __close_file_table_ids
-
-Wang Zhaolong (1):
-      ksmbd: fix memory leak in parse_lease_state()
-
- fs/smb/server/oplock.c    |  7 +++++--
- fs/smb/server/smb2pdu.c   |  5 +++++
- fs/smb/server/vfs.c       |  7 +++++++
- fs/smb/server/vfs_cache.c | 33 ++++++++++++++++++++++++++-------
-
--- 
-Thanks,
-
-Steve
+CgpBdCAyMDI1LTA1LTA4IDExOjMxOjEyLCAiS2VudCBPdmVyc3RyZWV0IiA8a2VudC5vdmVyc3Ry
+ZWV0QGxpbnV4LmRldj4gd3JvdGU6Cj5PbiBUaHUsIE1heSAwOCwgMjAyNSBhdCAxMTowNjozNUFN
+ICswODAwLCBEYXZpZCBXYW5nIHdyb3RlOgo+PiBUaGFua3MgZm9yIHRoZSBmZWVkYmFja34KPj4g
+SSBhZ3JlZSB0aGF0IG1lbW9yeSBhbGxvY2F0aW9uIG5vcm1hbGx5IGRvc2Ugbm90IHRha2UgbWFq
+b3IgcGFydCBvZiBhIHByb2ZpbGluZyByZXBvcnQsCj4+IGV2ZW4gcHJvZmlsaW5nIGEgZmlvIHRl
+c3QsIGttZW1fY2FjaGVfYWxsb2Mgb25seSB0YWtlcyB+MSUgcGVyZiBzYW1wbGVzLgo+PiAKPj4g
+SSBkb24ndCBrbm93IHdoeSBJIGhhdmUgdGhpcyAidGhlIGxlc3MgbWVtb3J5IGFsbG9jYXRpb24s
+IHRoZSBiZXR0ZXInIG1pbmRzZXQsICBtYXliZQo+PiBJIHdhcyB3b3JyeWluZyBhYm91dCBtZW1v
+cnkgZnJhZ21lbnRhdGlvbiwgb3Igc29tZXRoaW5nIGVsc2UgSSAgbGVhcm5lZCBvbiBzb21lICJ0
+ZXh0Ym9vayIsCj4+IFRvIGJlIGhvbmVzdCwgSSAgaGF2ZSBuZXZlciBoYWQgcmVhbCBleHBlcmll
+bmNlIHdpdGggdGhvc2Ugd29ycmllcy4uLi4KPgo+SXQncyBhIGNvbW1vbiBiaWFzLiAiTWVtb3J5
+IGFsbG9jYXRpb25zIiB0YWtlIHVwIGEgbG90IG9mIGNvbmNlcHR1YWwKPnNwYWNlIGluIG91ciBo
+ZWFkcywgYW5kIGdlbmVyYWxseSBmb3IgZ29vZCByZWFzb24gLSBpLmUuIGhhbmRsaW5nIG1lbW9y
+eQo+YWxsb2NhdGlvbiBlcnJvcnMgaXMgb2Z0ZW4gYSBtYWpvciBjb25jZXJuLCBhbmQgeW91IGRv
+IGFsd2F5cyB3YW50IHRvIGJlCj5hd2FyZSBvZiBtZW1vcnkgbGF5b3V0Lgo+Cj5CdXQgdGhpcyBj
+YW4gdHVybiBpbnRvIGFuIGF2ZXJzaW9uIHRoYXQncyBlbnRpcmVseSBkaXNwcm9wb3J0aW9uYXRl
+IC0KPmUuZy4gdXNpbmcgbGlua2VkIGxpbmtlZCBsaXN0cyBhbmQgZml4ZWQgc2l6ZSBhcnJheXMg
+aW4gd2F5cyB0aGF0IGFyZQo+ZW50aXJlbHkgaW5hcHByb3ByaWF0ZSwgaW5zdGVhZCBvZiB2ZWN0
+b3JzIGFuZCBvdGhlciBiZXR0ZXIgZGF0YQo+c3RydWN0dXJlczsgZ29vZCBkYXRhIHN0cnVjdHVy
+ZXMgYWx3YXlzIHJlcXVpcmUgYWxsb2NhdGlvbnMuCj4KPlByb2ZpbGUsIHByb2ZpbGUsIHByb2Zp
+bGUsIGFuZCByZW1lbWJlciB5b3VyIGJhc2ljIENTIChiaWcgTyBub3RhdGlvbikgLQo+OTAlIG9m
+IHRoZSB0aW1lLCBzaW1wbGUgY29kZSB3aXRoIGdvb2QgYmlnIE8gcnVubmluZyB0aW1lIGlzIGFs
+bCB5b3UKPm5lZWQuCgpjb3B5IHRoYXR+IQoKVGhhbmtzCkRhdmlkCg==
