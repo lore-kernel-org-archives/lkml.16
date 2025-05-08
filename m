@@ -1,122 +1,75 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B613920D509;
-	Thu,  8 May 2025 03:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D698A1386DA
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 04:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746676484; cv=none; b=hRPfElMq5kIvYDto9WvlhgEGyO3ekP62JHrwY8EsC0AQOZeVyb80txqVt8pS4FK0arVr6ImX8tIrPN3CGs1t0MemK8/RUBwIxvM7TNGx52VE8E3OPTb+DfYkPgjIdgxot6BDGWYpOVftdekGLzbrOyVICW7wXcQX5HvOVu/zQko=
+	t=1746676822; cv=none; b=C4jFRqW/qMmsV9GArVjOVtxOP7JjG/O3h7mZ4a93/1EIXsRZbh02U+eBDBjotPtYxWNCKI0ShqRPhJCe565eZ+MOiTLbCdVrxg8Izl2JeatA8GkOvKc1TgA8GDq597s45vagpW/XXOMkxWhyDKzpKe0dAeM9JWljgE80FnXkQgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746676484; c=relaxed/simple;
-	bh=L+amYCo7f0kskSlXYKmJxzYlRQ+SWixbKLSI0Uo/hV8=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eWyOBQSIykU2wXQ5avkglvCp1Ikm0UEvtWBs+mR4Da3IWYToCsmxTlQmWjN1Rot6CgQP4nE/QyEAxehcdWwEmrY2gNSNNeGFvfSyj7LoLqo0qIGc1BbYYbKkbL/EoCvrL7oDoLuYZyFM09mLdbuvj7u5xvpDMKXgj+yD5ABC6ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=AC/xI81U; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="AC/xI81U"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id CE2F825F87;
-	Thu,  8 May 2025 05:54:38 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 7sHD2bTBtF5k; Thu,  8 May 2025 05:54:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1746676478; bh=L+amYCo7f0kskSlXYKmJxzYlRQ+SWixbKLSI0Uo/hV8=;
-	h=Date:From:To:Subject:References:In-Reply-To;
-	b=AC/xI81U/Fj1kxLUUFCdd5yLvQzysoo5ktQCJKnXNmuyuAbfUc4oqMk/vh/0cmDHU
-	 HQSMiGWnyERYw93CPzVlR6j8bHZKP+An6hRvDeVEi8l55XLYYhdYdwYfjCZaJUePY7
-	 QzbEkfN3cMRX7oFQoUet9vZ8DAc0RJHEAlq3Ybntafurkv5UjtXzlIB+fxXxItyAf7
-	 CFM0VCc3Rpyddqbcv2hdxeKCOinDl3V4efN7XQ5lzI+OMaBxL2L1v4meeJGbmHncRU
-	 4u0+F5ib3G3t1wSBEZP/50SAdNz+O+IxD1PscG7iro5WNOSbBqEg/OotnnzbEaBZtO
-	 tl1XJXuRS9ifA==
-Date: Thu, 8 May 2025 03:54:23 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Yanteng Si <si.yanteng@linux.dev>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH 0/4] Initial support for CTCISZ Ninenine Pi
-Message-ID: <aBwq7_WSDxd4W82N@pie.lan>
-References: <20250501044239.9404-2-ziyao@disroot.org>
- <d0575ec1-1901-4534-875c-fa9375e54e3d@linux.dev>
- <2f2c5e56-35b1-4d23-be52-0266bcb1ca98@linux.dev>
+	s=arc-20240116; t=1746676822; c=relaxed/simple;
+	bh=PmSVdl+UvuG5FG70NhIwEGyowO9u0Ll9gMgWbPIX5K8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bekkmijNz2OlkNBW2+KAVw4UMkfz4IULpP8AIhO09LIrtY0IB+zVVSEtPZgPI/kj4dzCiW8II0TDoHA8Hzs3Rt5EQuEmkCxuPzi8yESI0y8OIU4WQ8C2hk6YubZ+3tulADtq2/VufhbvFv4iX65xYdKw9CvkSv1LVF42BFDr/i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71B45106F;
+	Wed,  7 May 2025 21:00:08 -0700 (PDT)
+Received: from [10.162.43.19] (K4MQJ0H1H2.blr.arm.com [10.162.43.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48E9C3F5A1;
+	Wed,  7 May 2025 21:00:14 -0700 (PDT)
+Message-ID: <613ae7bd-b006-4f5a-8916-345001beb50f@arm.com>
+Date: Thu, 8 May 2025 09:30:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2f2c5e56-35b1-4d23-be52-0266bcb1ca98@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: mm: Drop duplicate check in pmd_trans_huge()
+To: Gavin Shan <gshan@redhat.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
+ anshuman.khandual@arm.com, ryan.roberts@arm.com, peterx@redhat.com,
+ joey.gouly@arm.com, yangyicong@hisilicon.com, shan.gavin@gmail.com
+References: <20250508035142.189726-1-gshan@redhat.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <20250508035142.189726-1-gshan@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 08, 2025 at 10:49:25AM +0800, Yanteng Si wrote:
+
+
+On 08/05/25 9:21 am, Gavin Shan wrote:
+> pmd_val(pmd) is inclusive to pmd_present(pmd) since the PMD entry
+> value isn't zero when pmd_present() returns true. Just drop the
+> duplicate check done by pmd_val(pmd).
 > 
+> No functional changes intended.
 > 
-> 在 5/7/25 6:08 PM, Yanteng Si 写道:
-> > 在 5/1/25 12:42 PM, Yao Zi 写道:
-> > > This series adds support for CTCISZ Ninenine Pi, which ships an Loongson
-> > > 2K0300 SoC and various peripherals. The vendor prefix and the board are
-> > > documented and basic SoC/board devicetrees are added.
-> > > 
-> > > I've successfully booted into console with vendor U-Boot, a bootlog
-> > > could be obtained here[1]. DTB and initramfs must be built into the
-> > > kernel as the vendor bootloader cannot pass them and upstream U-Boot
-> > > support for LoongArch is still WIP.
-> > > 
-> > > Thanks for your time and review.
-> > > 
-> > > [1]: https://gist.github.com/ziyao233/7fd2c8b3b51ef9b30fe5c17faae1bc4e
-> > > 
-> > > Yao Zi (4):
-> > >    dt-bindings: vendor-prefixes: Add CTCISZ Technology Co., LTD.
-> > >    dt-bindings: LoongArch: Add CTCISZ Ninenine Pi
-> > >    LoongArch: dts: Add initial SoC devicetree for Loongson 2K0300
-> > >    LoongArch: dts: Add initial devicetree for CTCISZ Ninenine Pi
-> > > 
-> > >   .../bindings/loongarch/loongson.yaml          |   5 +
-> > >   .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
-> > >   arch/loongarch/boot/dts/Makefile              |   1 +
-> > >   arch/loongarch/boot/dts/loongson-2k0300.dtsi  | 197 ++++++++++++++++++
-> > >   .../boot/dts/ls2k0300-ctcisz-nineninepi.dts   |  41 ++++
-> > >   5 files changed, 246 insertions(+)
-> > >   create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
-> > >   create mode 100644 arch/loongarch/boot/dts/ls2k0300-ctcisz-
-> > > nineninepi.dts
-> > 
-> > For all the patch sets:
-> > 
-> > Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
-> I'm sorry. As there is no consensus yet on the name
-> of the development board, could you please refrain
-> from picking my R_B until this discussion is completed?
-> Thank you so much for your understanding and cooperation!
-
-Sure. Anyway, thanks for your time and review!
-
-> Thanks,
-> Yanteng
-
-Best regards,
-Yao Zi
-
-> > 
-> > Thanks,
-> > Yanteng
-> > > 
-> > 
+> Signed-off-by: Gavin Shan <gshan@redhat.com>
+> ---
+> Found this by code inspection
+> ---
+>   arch/arm64/include/asm/pgtable.h | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> 
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index d3b538be1500..2599b9b8666f 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -739,8 +739,7 @@ static inline int pmd_trans_huge(pmd_t pmd)
+>   	 * If pmd is present-invalid, pmd_table() won't detect it
+>   	 * as a table, so force the valid bit for the comparison.
+>   	 */
+> -	return pmd_val(pmd) && pmd_present(pmd) &&
+> -	       !pmd_table(__pmd(pmd_val(pmd) | PTE_VALID));
+> +	return pmd_present(pmd) && !pmd_table(__pmd(pmd_val(pmd) | PTE_VALID));
+>   }
+>   #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+>   
+
+LGTM
+
+Reviewed-by: Dev Jain <dev.jain@arm.com>
