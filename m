@@ -1,159 +1,184 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5B91FCFDB
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A885279916
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746722755; cv=none; b=rV0XGODRm6L+4K75YHwWFmU+F9tnuPIg6DG3mBWDur3Vi5aB62caR0kMBxhGqMw4rCedOckWQqV0cEXk8RmiUUqbbHcioZackLVoNMIOu6UgBC+QDREBjo35C7f1bMNK2BdEEV/czQojnvDbHTlC69SZs0q7IPs4OaEg7hp4WH0=
+	t=1746722929; cv=none; b=o+tsxVq3AlfqBrgiPDj8M/poWIi39tKKU9DdwNEfJQNvuCX91op+H5SSDVBP8WCd14vbqRKRXmjx7FnuFtyouhbLyhWYeYlMLJ5vXJ1/tYN5mOLksFXfdEUf7WtIlUq291frVZI5NJnVe0+VoU/4FoQUqW4JPfhX3moZbcVDD5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746722755; c=relaxed/simple;
-	bh=sYeZLtpHPeuyHV/41fg3SXOFV2Tg9CfQcSP+Mkt6FAw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=sKUlxh8PWkbddg5jHTjDlEHcmhaJdNKaWIYWydH40/5UdYlLNAYGlu3Z7P1mzVydUBOsw5Ib70w+yR4m5xJoSiG4LagaDSKUOP/UvpLy6uf0BsJMg4avTk5xEjgrhDgWGvB+Q1r3EYMZZVpPpsKh/IA/fi0rjrPflbs2D/YLrnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mICO/toI; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746722929; c=relaxed/simple;
+	bh=KQmoh3AJHwEw2cboRfJvYLgzmcYfASo+BXAQJyUWAZI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PmKi1ZqXZmxAOaDXJcdkLfiVvqlxUyK4WicJAImBNFsmfU2vlddUwIdihaKKeSOeuFylY9N8LSmwokl6I7VMh23509YCXZXYM9v7rfkQfdkMim/8Rata/iT81Yhpn5FJuClmfL2mWyRdwJX8z2pmgQ2/hi0po2nITODUCp7c0jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=I2UVzOGc; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mICO/toI"
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-72b0626c785so1049270a34.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 09:45:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746722752; x=1747327552; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZS1DAu/OGipdaeYyDVfVQy+AhcyRGZVYwm5fK44jnLQ=;
-        b=mICO/toIb/HlwX+vg9U5ispi7FBErVNzk5S+GKrVfiMt8Y2sUWYVUeEWT5Wi8nCr6v
-         02++H8yzwEV94bOjpiHlmNrmIkO6VgiFtwGM41DxDhAI5RvKBGFjuMAaYm9v8XJNE9J4
-         Cy8eM65qmTdTqF3zci1lPbGYttDTMqQ1LnAnWTD124bQc5HqUbtuHfgffbi136fLyfa8
-         /O6TdBwVDV83oL5z3ml/Z4RYP8CbJ6CBSv0ybsnE5WvfAy/uSZiRKYvBhb6WzDEAFT1+
-         F+UMXMva8AbhPui8DGHBcDu3M3kMIEc9NB2MlYOXan5WQUjOCf5bSnQSCJo/QJwkuEIs
-         NcVQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="I2UVzOGc"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548D0Pvh010146
+	for <linux-kernel@vger.kernel.org>; Thu, 8 May 2025 16:48:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=IgbXxKI+z8z6kLlm8PuoMSAP
+	erf7Js6dwsIubjE5Tr8=; b=I2UVzOGcMKJj8+crKrDn54ygUMjmwoSmbAI4OhOp
+	WoknggJeGWVTb74KEEW4QnqoDRw3abRBuDYmxdte1cAN0c3hgPKOiZfliGeDBfP0
+	n0LRgUP8dz/x3z8znR7FvBL2+HDUpuhxKn91IZIg+lgsNnptOfQWVem53Goc78Sw
+	Ch6yfFPcYJGjzd9Pysbd0ldYlnmxVHDX6HYyKCi/dxUouei7e1S/Kiyib3XqXv/4
+	BuNGGdERc+0IKtTky/ALjt0UodXxK5N8b/f7msKT9ymaIbd5I1NKt6kSggEmjztW
+	u/FIDcSCHBNYANaETaIuuct8eeqMLk6/JGa5cMyu/wFNYw==
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp7a1hb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 16:48:46 +0000 (GMT)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-7394772635dso981793b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 09:48:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746722752; x=1747327552;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZS1DAu/OGipdaeYyDVfVQy+AhcyRGZVYwm5fK44jnLQ=;
-        b=TfnC/d6TaC+tXmlzZKkFYGBrpqj4x4HbRih48XZ8Jwe4VMIS+HBbr5tJfHbT6BNA1s
-         Kqv8eEXQ09ZpJQB1jm8jzE5GpxoJC6Ivj7Vk+NpvroJdbot5MYiJU7qB6uNHa/l7Q00Y
-         pCmXeOv5bpTfCFa5XjwffUd4hFaTy2mhxQg9qkY5qr7GXZz2VzgHITU/owon/oTeThEb
-         d6vYpZdyEjTcS9wQDxeT1P3yUtmpQWuPXjE/ifLBJmX2rQQ32M57DOhF3pI6yFa22ePq
-         BRqciHbDf464OEquE4J9yFzfiZhnd8oVHHO1SVAaR81z/tK5On4xyP/New97PGbmdsV0
-         iF5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVauvER3Mh+GSlrZFg9hRLKsyLVMo6WaesOqIVa3BgOlbbsQ+H2su4BPIOpfYT0qwkJDwJAPX3o9XorV/Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycbhbZCGzCHRZr2iv2f7LRPEUakjM2RmTrQ+G0VrhN7yxLxiBx
-	k/cwqzrUcmgRjv+Wj3cUpsgTbPSbnmqZvWNwJJ21WutaL3aCzvgSZVTXK8XwH/g=
-X-Gm-Gg: ASbGncuG4WDFBvPaPIykNZztNJoReDJwqyh6fPvII+TK4L/KD5zDv/ix5R/8e4BdfTB
-	4XXZe46q1+l5aKYdGyH+IGidkmBdOLqMMGxLAkUrgn1pZZZ5qXL4ADre6Iupl9N54jfZMvZjG6S
-	QYNbNsIL6Capmr6RZAchWGfsNVlCn9/fRTRDspfc/DIxgBF7dp6d6O2lL4GgrLR8kdYYvdop1pG
-	YCoiWsT+/qO7awqUHI1BUXIG9uoYWtC/ZFTKDrnZpTpnFYMTVyaJblGBugR7IwbhOjZOEDb/nm+
-	JEbV1p35PlFc491DkqrejXK0etL6B57oGF91e0NdN5eUX5HBYAHfHyPpw6BgFaRMZK4tfTXk9Wc
-	vsu3/c6wDpk0ZWq5ELw==
-X-Google-Smtp-Source: AGHT+IEZDZLOMxJDt8kLUDFqLwM51K2NVQLT54ITBkIlx9L3ppO4Dyj06GSMVCaofCpDgYIIbqiFjw==
-X-Received: by 2002:a05:6830:3788:b0:72c:10db:f210 with SMTP id 46e09a7af769-732269faf05mr352368a34.13.1746722752395;
-        Thu, 08 May 2025 09:45:52 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e? ([2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-732264d59e1sm102555a34.34.2025.05.08.09.45.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 09:45:51 -0700 (PDT)
-Message-ID: <37ae4941-da7e-4298-8269-b5faf29fffdd@baylibre.com>
-Date: Thu, 8 May 2025 11:45:50 -0500
+        d=1e100.net; s=20230601; t=1746722926; x=1747327726;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IgbXxKI+z8z6kLlm8PuoMSAPerf7Js6dwsIubjE5Tr8=;
+        b=nlp6R6nmdt09ULFoarwG+z/PcxAKCpzZwUQCR1NMDTWcBw73s1sB0thc5KIrUID/Y6
+         PQ6/ES+3A/o6Acu76E7AIHqPL57CdRjgZv0VCP/Yy/k8U2TT7pfS2+8vPjmfnXUFVLjo
+         Q/+nrAxm4SV7brPpx1FIWndC6wanuk6noQwyn4kKT0lOiQA0LWC3RkBcEdwHWLIx/cpp
+         m2bWTaysaf+6qbOLStfkYoGAWOvbNjcivB2ezVtOBAcInXSsmHvajzRSHdc53ZhyO3Pm
+         Xpk7bPFb/L4Bg48fopnaeV8endrN+k3AqP39ZeGHTFNTB1xOMFvmPhqY0XpuRe2FOluq
+         NE9A==
+X-Forwarded-Encrypted: i=1; AJvYcCXh6P6PDDBMLgd0lOBs9Lh0IH4fKKiM4AF3YrPFjCbJc9tSqaRx9nH41aKpA9kqpdL1IGzY/M0PfgpoTdM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwN/dhONZ0qv7bl6VDipP9OzBrmeqFBSr83xjXrHaf3LXWEObhW
+	ky1vpvBe9Sx4XbChPql0twMeg6eoOnjPCOpL79KjSKEEt+S2MlPCkI3Y2Am25tpulNHsoFm93Eg
+	oBC98AD7kKSe5ULsFMXxNQ2jiFzc9MNYHqb/YrQ5Y+tOl3Mf66vveOHBsKHalWex6+/0PRkA=
+X-Gm-Gg: ASbGncugv2IT4RfcGaoheL5vn/BlYdzdOPqlw4aSeQ47FZ96MELtY0+blpQkKVx1gww
+	ErQ7rnBXMe9/EjYfZi+ol1XKKzi+TwqF8UrhVKZZT4w4qBI9NzZ9gaxWPmO+uH3LnyQGvK2QYQD
+	FdTrYgMWTyB1q1WL/49S/mBgTONQTDJdVqZKMSeTiVEjWDfJLACqLpV1XnDlz9w9ltTV/3deeRM
+	uBO3BwFUOW+SaAwDmemz8byYY7mKuFW3+bfyoqu/WhN/7AhRY+NN9czJLA7IPtSeL4S3CgUzgDj
+	5wX1jAyYQLjiNG727OkwFlwXKYdjpaMZc6FjQqI=
+X-Received: by 2002:a05:6a00:2f44:b0:740:9d6b:db1a with SMTP id d2e1a72fcca58-7409d6bdceamr7328274b3a.15.1746722925758;
+        Thu, 08 May 2025 09:48:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH913otIr7kbg3QzAP18a2sNNmlEbDpHVmbC972l+FTxz+htTGHT9oY2SgdTCxM1m6OPFf/HA==
+X-Received: by 2002:a05:6a00:2f44:b0:740:9d6b:db1a with SMTP id d2e1a72fcca58-7409d6bdceamr7328252b3a.15.1746722925325;
+        Thu, 08 May 2025 09:48:45 -0700 (PDT)
+Received: from hu-mojha-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237704e07sm240194b3a.10.2025.05.08.09.48.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 09:48:44 -0700 (PDT)
+Date: Thu, 8 May 2025 22:18:40 +0530
+From: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] soc: qcom: socinfo: Add support for new fields in
+ revision 21
+Message-ID: <aBzgaKSspA0Af0sZ@hu-mojha-hyd.qualcomm.com>
+References: <20250425135946.1087065-1-mukesh.ojha@oss.qualcomm.com>
+ <20250425135946.1087065-2-mukesh.ojha@oss.qualcomm.com>
+ <mc6n7fbhjhe6cxyoqkxs23kjs7gsa5cihy6qwrcrnz4g3kwjms@vh3vfqzfprw2>
+ <aBzPn2OXapJLsikk@hu-mojha-hyd.qualcomm.com>
+ <s5fd3txerbwgzzgqnoovkffmijgub5dxfucqqskhdqyjqzkbyl@5cyycrfmubup>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] iio: adc: adi-axi-adc: add set decimation rate
-To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
- Dragos Bogdan <dragos.bogdan@analog.com>,
- Antoniu Miclaus <antoniu.miclaus@analog.com>,
- Olivier Moysan <olivier.moysan@foss.st.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- Matti Vaittinen <mazziesaccount@gmail.com>,
- Tobias Sperling <tobias.sperling@softing.com>,
- Marcelo Schmitt <marcelo.schmitt@analog.com>,
- Alisa-Dariana Roman <alisadariana@gmail.com>,
- Esteban Blanc <eblanc@baylibre.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250508123107.3797042-1-pop.ioan-daniel@analog.com>
- <20250508123107.3797042-3-pop.ioan-daniel@analog.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250508123107.3797042-3-pop.ioan-daniel@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <s5fd3txerbwgzzgqnoovkffmijgub5dxfucqqskhdqyjqzkbyl@5cyycrfmubup>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE0NyBTYWx0ZWRfXy5jNHZrWK4b0
+ 657rUATTE+1cKCQgFa8qboCHaPKCySaZoTugOoXp96Pmit+C+yOIkzYxl+vzV0jIvuRM1MVpuf5
+ fY1IRAEy/IXBfWX8gv4D/IWXSdvCc6yK83SQBz1eHiAT365xDOa2NOJO1LkRSXETAEIA9zch+cc
+ Gt2eVb/kR3WGItZ9mTON7hyQCoAh32NaPby+6BhERuc1hM7gSr36StIH2ivqkPEQ/ZaACraiKi7
+ HxVGBoJxkUIYXBOCqsFmtnsiDbZo2rja6lfnaWAdf+jHChp4CfYtjvvsp6v7gd0OE04akERjrE3
+ +RrFLR1gbDYQp7Dw5+J17NUFvgpMOhCq0NhBJmhr/yiK6e4dPDO/+eqhQ0oeUlqK3JGdLlEPv94
+ 2Ns7lVC6OUEVXylPKUzKYenyL/oQzjYsfPfajv1Db9u2TvgYGWCVmpJjqEyhtTjdFLmGzyD1
+X-Proofpoint-GUID: g9qrjeTAirR4-Flrkuvh6jzGrs3HjXmZ
+X-Authority-Analysis: v=2.4 cv=B/G50PtM c=1 sm=1 tr=0 ts=681ce06e cx=c_pps
+ a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=S0qan5B5_AHtxJkbWd0A:9
+ a=CjuIK1q_8ugA:10 a=2VI0MkxyNR6bbpdq8BZq:22
+X-Proofpoint-ORIG-GUID: g9qrjeTAirR4-Flrkuvh6jzGrs3HjXmZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_05,2025-05-08_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 spamscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505080147
 
-On 5/8/25 7:30 AM, Pop Ioan Daniel wrote:
-> Add support for setting decimation rate.
+On Thu, May 08, 2025 at 06:56:47PM +0300, Dmitry Baryshkov wrote:
+> On Thu, May 08, 2025 at 09:07:03PM +0530, Mukesh Ojha wrote:
+> > On Fri, Apr 25, 2025 at 08:28:51PM +0300, Dmitry Baryshkov wrote:
+> > > On Fri, Apr 25, 2025 at 07:29:45PM +0530, Mukesh Ojha wrote:
+> > > > Add the subpartfeature offset field to the socinfo structure
+> > > > which came for version 21 of socinfo structure.
+> > > > 
+> > > > Subpart_feat_offset is subpart like camera, display, etc.,
+> > > > and its internal feature available on a bin.
+> > > > 
+> > > > Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+> > > > ---
+> > > > Changes in v2:
+> > > >  - Added debugfs entry and described more about the field in commit.
+> > > > 
+> > > >  drivers/soc/qcom/socinfo.c       | 6 ++++++
+> > > >  include/linux/soc/qcom/socinfo.h | 2 ++
+> > > >  2 files changed, 8 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
+> > > > index 5800ebf9ceea..bac1485f1b27 100644
+> > > > --- a/drivers/soc/qcom/socinfo.c
+> > > > +++ b/drivers/soc/qcom/socinfo.c
+> > > > @@ -154,6 +154,7 @@ struct socinfo_params {
+> > > >  	u32 boot_cluster;
+> > > >  	u32 boot_core;
+> > > >  	u32 raw_package_type;
+> > > > +	u32 nsubpart_feat_array_offset;
+> > > >  };
+> > > >  
+> > > >  struct smem_image_version {
+> > > > @@ -608,6 +609,11 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
+> > > >  			   &qcom_socinfo->info.fmt);
+> > > >  
+> > > >  	switch (qcom_socinfo->info.fmt) {
+> > > > +	case SOCINFO_VERSION(0, 21):
+> > > > +		qcom_socinfo->info.nsubpart_feat_array_offset =
+> > > > +				   __le32_to_cpu(info->nsubpart_feat_array_offset);
+> > > > +		debugfs_create_u32("nsubpart_feat_array_offset", 0444, qcom_socinfo->dbg_root,
+> > > > +				   &qcom_socinfo->info.nsubpart_feat_array_offset);
+> > > 
+> > > An offset into what? If this provides additional data, then the data
+> > > should be visible in the debugfs. Not sure, what's the point in dumping
+> > > the offset here.
+> > 
+> > offset into info(struct socinfo) object.
+> > 
+> > I agree to you and I said the same in first version this is just offset
+> > and does not provide any debug info we would look from userspace.  For
+> > parity with other fields I did it for all newly added fields.
+> > I have dropped it in latest patch.
 > 
-> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-> ---
-> changes in v2:
->  - update ADI_AXI_ADC_REG_CHAN_USR_CTRL_2 register in a per-channel register
->  - rename ADI_AXI_ADC_DEC_RATE_MASK in
->    ADI_AXI_ADC_CHAN_USR_CTRL_2_DEC_RATE_N_MASK
->  - add channel index parameter to keep axi_adc_set_dec_rate generic
->  - remove ad7405 chip-specific struct
->  drivers/iio/adc/adi-axi-adc.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+> I'd rather see the decoded structure that is being pointed by this
+> offset.
+
+You mean info + info->nsubpart_feat_array_offset ? 
+
+There is more to it which I don't want to mention as they are not
+upstreamed yet and unrelated to this change.
+
+data = info + (offset + (part * sizeof(u32)));
+
+e.g., Here, part is a enum represents camera, display etc., and data
+represents their feature presents. Since, part is not upstream yet I
+don't feel we should expose this information to debugfs. We could always
+add them in debugfs when such things are standardized and upstreamed.
+
+-Mukesh
 > 
-> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
-> index 9e8c30230791..33eb8f337e0b 100644
-> --- a/drivers/iio/adc/adi-axi-adc.c
-> +++ b/drivers/iio/adc/adi-axi-adc.c
-> @@ -80,6 +80,9 @@
->  #define ADI_AXI_ADC_REG_CHAN_CTRL_3(c)		(0x0418 + (c) * 0x40)
->  #define   ADI_AXI_ADC_CHAN_PN_SEL_MASK		GENMASK(19, 16)
->  
-> +#define ADI_AXI_ADC_REG_CHAN_USR_CTRL_2(c)	(0x0424 + (c) * 0x40)
-> +#define   ADI_AXI_ADC_CHAN_USR_CTRL_2_DEC_RATE_N_MASK		GENMASK(15, 0)
-> +
->  /* IO Delays */
->  #define ADI_AXI_ADC_REG_DELAY(l)		(0x0800 + (l) * 0x4)
->  #define   AXI_ADC_DELAY_CTRL_MASK		GENMASK(4, 0)
-> @@ -242,6 +245,17 @@ static int axi_adc_test_pattern_set(struct iio_backend *back,
->  	}
->  }
->  
-> +static int axi_adc_set_dec_rate(struct iio_backend *back, unsigned int chan,
-> +				unsigned int rate)
-> +{
-> +	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
-> +
-> +	return regmap_update_bits(st->regmap,
-> +				  ADI_AXI_ADC_REG_CHAN_USR_CTRL_2(chan),
-> +				  ADI_AXI_ADC_CHAN_USR_CTRL_2_DEC_RATE_N_MASK,
-> +				  FIELD_PREP(ADI_AXI_ADC_CHAN_USR_CTRL_2_DEC_RATE_N_MASK, rate));
-
-Rate is getting a bit far past 80 chars, so would be nice to wrap that line.
-
-> +}
-> +
->  static int axi_adc_read_chan_status(struct adi_axi_adc_state *st, unsigned int chan,
->  				    unsigned int *status)
->  {
-> @@ -550,6 +564,7 @@ static const struct iio_backend_ops adi_axi_adc_ops = {
->  	.test_pattern_set = axi_adc_test_pattern_set,
->  	.chan_status = axi_adc_chan_status,
->  	.interface_type_get = axi_adc_interface_type_get,
-> +	.oversampling_ratio_set = axi_adc_set_dec_rate,
-
-Would make more sense if function was named axi_adc_oversampling_ratio_set.
-(Making the names match exactly (with namespace prefix added) make less info
-you have to hold in your head when reading the driver.)
-
->  	.debugfs_reg_access = iio_backend_debugfs_ptr(axi_adc_reg_access),
->  	.debugfs_print_chan_status = iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
->  };
-
+> -- 
+> With best wishes
+> Dmitry
