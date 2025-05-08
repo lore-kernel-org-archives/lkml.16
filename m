@@ -1,127 +1,187 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB63019D891
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A900A19D891
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746708789; cv=none; b=pZjDpO3TMeZHfGQ2+uaTRCT7pGZZCO4MAyl3UXI4UZQfg7sx3LmDDVvNZij7qRc8N/4NHzJZtaJbnfL4JfClEASM2hQfU332AspXAL6DUm/tLdQP0ZBj7Iyl9oXC7LqXetElJ7h+9qOExF2B2s0baKdJWExMBD8o2BigU7INJI8=
+	t=1746708801; cv=none; b=D4vWKbNi77Wf2AmF8dpqqNkeIb5S4DoadSqMJ590t+qjqedCO3DbdTr04TO9azi/7JSu8VH9bpjhQ2RxDqm/m5CUnyo1J7vF9jOD4kAG0WXE0m4Khv/tcHWPcu4qbQ2T9u3ESXJ+CTSkhfdvUUtALKzHeVD9Nnn7rMp6dIrP1RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746708789; c=relaxed/simple;
-	bh=euZ0Zj5ymVvdjh/3qOybPwtuZ+o3GzvdIi2/M+/nE94=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZgSMh22mjhh4YSNvVecb2vmOq84ksFBgXBAA/CWrnuFbCJ6JsrGSwe5yEDbc6vDabJrjxmO2V7NWyVGvVBR//JfStiNeG5UqYh8XFaj7vKMtwC6Q0B75b8+wDbRjzeD7V7UMU9YqrILEjh74BajJ7W9LKrxWkFasqQnnG98EwYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=XuAPBInV; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1746708801; c=relaxed/simple;
+	bh=MO7AvdqOlFy/SOhn30F4wpqxq56DaDUKnlWbBDMHtuo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IuzRhv7k/jZLGbDXdDR8fZ0NaTI4NZbUXuDh7nFuC2sS4ct/aDzCPJtcSfxTuJsCc2L28H2mHbco7h5OR6zzjZPZiDtpCX29kI4/cQqhX2ZZTflaUY9dRe+hMFC6aoOeP76V9I/E53LvPQCzDzHLlji4buw6ae47RhA+bebYj3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ecq2CBxc; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="XuAPBInV"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso6629805e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:53:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ecq2CBxc"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22e16234307so10721895ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:53:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1746708785; x=1747313585; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vh7Nh/LNhUg5Xl+qiW1/QFk8dwafIYEiWF4enwv0UK4=;
-        b=XuAPBInVOh8vOZ0JoRbZlweRshl2MR0cgRDvj6kGUVJTDyPLyDgZ/3zFEj0Pk/royw
-         LGvoPTO+kA0MYx5HLfbWbvmRr1OyDNAs12RmzD+Z95FZ8kmWievsmc/f1GlAK0iVypE5
-         l79uwp6G7SGKfEpSfmzYj33v56kTnZE/TebigloazKh3G24PIuaaV/fVNn9HQxiYF3zy
-         bd0weOcFncXSpAcnEx8owhvGkGq+o+TvAGQXbvZhAeSdAJc75ZNtd0CpTnNnm6JI6sP7
-         NUiia3gqTfgt0zg1+EdR2vgiFZuwn0/9M44tpJAj3BB6cNPvmfwapnIOCANvfDQFLsbh
-         XMpw==
+        d=gmail.com; s=20230601; t=1746708799; x=1747313599; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A2jdQICSbrWpPSzC616u74O39zxpPw10REWcsnl5lv4=;
+        b=Ecq2CBxcMuhgWZ3a5ItJYGzaRSMA5csSIHAfCBzM/Ca+ES/YLA+xlDQJz3kf5XKmSd
+         mTaeJkDSgCoCSxqKg/KA1sDJ0KmrKSxwDli6dgwgerHhuPY0Vz5V6Vy2PzOOAyptYyV8
+         eCurUqRiTpMx9KI7VfMv2FSvADZWo7Sa65TGHgH3RVWc1wO4fue02P2eu+LCq1pqnHLk
+         aqhy/BU8C2OSZrUIbljjW/G6m4JEJQMctdXaLBfsy5iDEiKasQWLT57GDrz0bdbyQTaE
+         DaFsCLAXN/w2r7zovWTFIzNHQzhIGTXnQQvWGnyvybav8zspzh05DO2coMURNYMJs58C
+         jvEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746708785; x=1747313585;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vh7Nh/LNhUg5Xl+qiW1/QFk8dwafIYEiWF4enwv0UK4=;
-        b=OH/His4xriZWTi1WuKHkca5FpsDJZRwi53cM+CFFMB+U5gQysdm0n20jzTbqhe7i/i
-         rz6jfX+pHDzoBkTvCqLAW7mnAEbqeahrHfsC4ZRVXaIEVPhTQYzikKu0a5uFPKnT9os7
-         qNFzPIGACSMpO/UqFuxF0hZSinSgi+aY8iRl3z6o77TYtkGjueciHfbMxkG4yc1ql9Xz
-         c9XtiqUN7d+72lft0WprU70+6lDy3pNAzA8WHuJnA3yvzoVLTZQMRkRU1rbTgQRub5+x
-         cVtH2KHRf+efaBpHc5os74BLxs0ACXgcxgunBVqD4TwCMquJz6q00Tb2BWC9GOZVko97
-         7+Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCX7699FST3bjBjO/gVcLLM4/f1WEV2wmM67U4LrCyMt2OSIfaiMRqRDk5/xY01aMAWvZ0UlNv0/LVykYtM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTvnwrirAibGpZi/0ur6nesLlsGoNCKAOnW6RkULsWnVdcDv/j
-	sPjCwSXlRYWFfh1s3DAj1NKxsDIQCg0vvqYiXbvZbkjq5L+9bdRNb3eEB3A6LOpHkjvk9PX46dj
-	/
-X-Gm-Gg: ASbGncuadBSpMxGYd+cY1Fvi5QA1fr7DPlAmOAyPX+GY7yOVP7z4VMEDQydvB7q1//5
-	FbS2of8oz2fw+noRX4LMXG6/3C02CllGa9XcjyytTU0MAN8QMGovhTQVhwcELmiY1eMPezg1dC8
-	7z3TkdzDypzk2AexamgOTAFQl3pwt/jANZk+I2/spK88a4xP0BHpuN7deZkinG9IhLZX/SKOR/2
-	aUtKu7URleQlfQQM7o6C/n8PwodvXRT8u2eEUGcR2mfEL2abLRgqYGkVWF/rcyAcXM737lAUWIl
-	pT4TnXKfhuwKdAOkLDxj0USdSt+c/ei+JpB48XzvMKKuf9915Cc=
-X-Google-Smtp-Source: AGHT+IFR8QCSoAU+f4KSrfc+O+GL0KH+EcLDchKk/zyNXpj2HtkBA6LUoeVtjpf2wnryhRhOk+2CgA==
-X-Received: by 2002:a05:600c:3150:b0:439:5f04:4f8d with SMTP id 5b1f17b1804b1-442d02ef128mr29446975e9.12.1746708785138;
-        Thu, 08 May 2025 05:53:05 -0700 (PDT)
-Received: from alex-rivos.lan ([2001:861:3382:ef90:e3eb:2939:f761:f7f1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32f238sm36021615e9.11.2025.05.08.05.53.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 05:53:04 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-	Andrew Jones <ajones@ventanamicro.com>
-Subject: [PATCH v3 1/3] riscv: Fix typo EXRACT -> EXTRACT
-Date: Thu,  8 May 2025 14:52:00 +0200
-Message-Id: <20250508125202.108613-2-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250508125202.108613-1-alexghiti@rivosinc.com>
-References: <20250508125202.108613-1-alexghiti@rivosinc.com>
+        d=1e100.net; s=20230601; t=1746708799; x=1747313599;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A2jdQICSbrWpPSzC616u74O39zxpPw10REWcsnl5lv4=;
+        b=av6KyZYKc1pa2d3cPFvBPxyG8GVBZbVT33FeR/2zHfeBhpWGzHPUGKHXJhIR5BIPX5
+         0g+PiesP5ZKNWkh1gtjT/TmDxdsWyeg0HRlkeSsOkd7DbpSKdTZndt9Io+AVhsc1u/OW
+         SupZHQSOP9L3nHxdly47qfgpVN1arFyWEoAbWAOUiKn99LxpqyXEGf0LPMWPg/4jw68B
+         HqGUNoBD8oCYkDGstYjqQ/oWTM2SlU3k8vB41u3uBjgtWk7ISc/Qn21MY5SBs2xrDOqT
+         BUf9npmb7VoX5Emi2djDs2+wIvjKgOmhrVn3xHYFM6NDNHL7xVGwXy4GIXHDQzulOLla
+         gCVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUS/INMx2VgcMscxz2Qu5xIlkEczlWNML2ROWA/RuEqhhexUO68uxajJJHlRZg9/ARqeuTV6QlstNndssc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeP9tjsxkpvL+nh6rsIuGF2GUqnKMRb7sCVyOpjRVEdcvx5EQB
+	M9RMRuBrLNraN3GVni5zsbWUOkR7jc3M3owRByTj7v8bKCkpKBt0
+X-Gm-Gg: ASbGncvMYmIaCJfYA/KGwtMRGVuu//fbQQf1lPVo+i5z37LoLxDHbkVjUvZauay1wHA
+	/v2cfBTw/uFea/GUYGJM45QyzgIrDVwrzKodUgIJFuod90/lvMw7o+FwHY/v+7Gv2nSqpBP5Bbb
+	eGeQpCNavs07uMgzdzhxUsfUbJ8MUGLkO1svceL7a/nSjqN0vH3jOH95QnFnfMFnfVBrfGW9FFQ
+	Vxx4ODMhldP6ocprZUB0upKbO1xf+Frd1lfdDqpRwvSuDE5cJTOQJZcSyR/tXzTKGuYMckVSNKX
+	LKyE3cQx8eDLvOjglKOnb69VLhHz9GMk4HjngGM+YKXqh5Cnvcfa
+X-Google-Smtp-Source: AGHT+IFwxfSao0kgRqnrILMlXsP5Q8tpHiPhGviH4oQ88rh5sv1UYwb+YKX9PMzCmcphLtnW6R4sAA==
+X-Received: by 2002:a17:903:2307:b0:22d:e57a:27b0 with SMTP id d9443c01a7336-22e846e080dmr46241045ad.2.1746708798807;
+        Thu, 08 May 2025 05:53:18 -0700 (PDT)
+Received: from [10.189.144.225] ([43.224.245.227])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1521fca5sm111609795ad.136.2025.05.08.05.53.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 05:53:18 -0700 (PDT)
+Message-ID: <93df9b24-3a37-48ff-aa21-5f27a76ecf90@gmail.com>
+Date: Thu, 8 May 2025 20:53:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] erofs: add 'fsoffset' mount option for file-backed
+ & bdev-based mounts
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, xiang@kernel.org,
+ chao@kernel.org, zbestahu@gmail.com, jefflexu@linux.alibaba.com,
+ dhavale@google.com, kzak@redhat.com
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ wangshuai12@xiaomi.com, Sheng Yong <shengyong1@xiaomi.com>
+References: <20250408122351.2104507-1-shengyong1@xiaomi.com>
+ <20250408122351.2104507-2-shengyong1@xiaomi.com>
+ <6389156c-c6df-4e02-ab46-3aaf6230ef76@linux.alibaba.com>
+Content-Language: en-US
+From: Sheng Yong <shengyong2021@gmail.com>
+In-Reply-To: <6389156c-c6df-4e02-ab46-3aaf6230ef76@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Simply fix a typo.
+On 5/8/25 12:09, Gao Xiang wrote:
+> Hi Yong,
+> 
+[...]
+>> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+>> index 4ac188d5d894..10656bd986bd 100644
+>> --- a/fs/erofs/internal.h
+>> +++ b/fs/erofs/internal.h
+>> @@ -43,6 +43,7 @@ struct erofs_device_info {
+>>       char *path;
+>>       struct erofs_fscache *fscache;
+>>       struct file *file;
+>> +    loff_t off;
+>>       struct dax_device *dax_dev;
+>>       u64 dax_part_off;
+> 
+> I wonder if it's possible to combine off as dax_part_off since
+> they are the same functionality...
 
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/include/asm/insn.h | 2 +-
- arch/riscv/kernel/vector.c    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Hi, Xiang,
 
-diff --git a/arch/riscv/include/asm/insn.h b/arch/riscv/include/asm/insn.h
-index 09fde95a5e8f..2a589a58b291 100644
---- a/arch/riscv/include/asm/insn.h
-+++ b/arch/riscv/include/asm/insn.h
-@@ -352,7 +352,7 @@ static __always_inline bool riscv_insn_is_c_jalr(u32 code)
- 	({typeof(x) x_ = (x); RV_X(x_, RVFDQ_FL_FS_WIDTH_OFF, \
- 				   RVFDQ_FL_FS_WIDTH_MASK); })
- 
--#define RVV_EXRACT_VL_VS_WIDTH(x) RVFDQ_EXTRACT_FL_FS_WIDTH(x)
-+#define RVV_EXTRACT_VL_VS_WIDTH(x) RVFDQ_EXTRACT_FL_FS_WIDTH(x)
- 
- /*
-  * Get the immediate from a J-type instruction.
-diff --git a/arch/riscv/kernel/vector.c b/arch/riscv/kernel/vector.c
-index 184f780c932d..901e67adf576 100644
---- a/arch/riscv/kernel/vector.c
-+++ b/arch/riscv/kernel/vector.c
-@@ -93,7 +93,7 @@ bool insn_is_vector(u32 insn_buf)
- 		return true;
- 	case RVV_OPCODE_VL:
- 	case RVV_OPCODE_VS:
--		width = RVV_EXRACT_VL_VS_WIDTH(insn_buf);
-+		width = RVV_EXTRACT_VL_VS_WIDTH(insn_buf);
- 		if (width == RVV_VL_VS_WIDTH_8 || width == RVV_VL_VS_WIDTH_16 ||
- 		    width == RVV_VL_VS_WIDTH_32 || width == RVV_VL_VS_WIDTH_64)
- 			return true;
--- 
-2.39.2
+Thanks for the review. Yes, they almost have the same functionality.
+Will combine them.
+> 
+>> @@ -199,6 +200,7 @@ enum {
+>>   struct erofs_buf {
+>>       struct address_space *mapping;
+>>       struct file *file;
+>> +    loff_t off;
+> 
+> I wonder if there is some other way to check
+> if it's a metabuf, so that we could just use sbi->dif0.off..
+> 
+> But not sure.
+
+It seems no specific fields could tell directly whether a buf is a
+metabuf. But I'll have a try.
+> 
+>>       struct page *page;
+>>       void *base;
+>>   };
+> 
+> ..
+> 
+>> +        if (sb->s_bdev)
+>> +            devsz = bdev_nr_bytes(sb->s_bdev);
+>> +        else if (erofs_is_fileio_mode(sbi))
+>> +            devsz = i_size_read(file_inode(sbi->dif0.file));
+>> +        else
+>> +            return invalfc(fc, "fsoffset only supports file or bdev 
+>> backing");
+>> +        if (sbi->dif0.off + (1 << sbi->blkszbits) > devsz)
+>> +            return invalfc(fc, "fsoffset exceeds device size");
+> 
+> I wonder if those checks are really necessary? even it exceeds
+> the device size, it won't find the valid on-disk superblock then.
+
+Will remove this check.
+> 
+>> +    }
+>> +
+[...]
+>> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+>> index 0671184d9cf1..671527b63c6d 100644
+>> --- a/fs/erofs/zdata.c
+>> +++ b/fs/erofs/zdata.c
+>> @@ -1624,7 +1624,8 @@ static void z_erofs_submit_queue(struct 
+>> z_erofs_frontend *f,
+>>                    bool *force_fg, bool readahead)
+>>   {
+>>       struct super_block *sb = f->inode->i_sb;
+>> -    struct address_space *mc = MNGD_MAPPING(EROFS_SB(sb));
+>> +    struct erofs_sb_info *sbi = EROFS_SB(sb);
+>> +    struct address_space *mc = MNGD_MAPPING(sbi);
+>>       struct z_erofs_pcluster **qtail[NR_JOBQUEUES];
+>>       struct z_erofs_decompressqueue *q[NR_JOBQUEUES];
+>>       struct z_erofs_pcluster *pcl, *next;
+>> @@ -1673,12 +1674,15 @@ static void z_erofs_submit_queue(struct 
+>> z_erofs_frontend *f,
+>>               if (bio && (cur != last_pa ||
+>>                       bio->bi_bdev != mdev.m_bdev)) {
+>>   drain_io:
+>> -                if (erofs_is_fileio_mode(EROFS_SB(sb)))
+>> +                if (erofs_is_fileio_mode(sbi)) {
+>>                       erofs_fileio_submit_bio(bio);
+>> -                else if (erofs_is_fscache_mode(sb))
+>> +                } else if (erofs_is_fscache_mode(sb)) {
+>>                       erofs_fscache_submit_bio(bio);
+>> -                else
+>> +                } else {
+>> +                    bio->bi_iter.bi_sector +=
+>> +                        sbi->dif0.off >> SECTOR_SHIFT;
+> 
+> How about multi-device? I guess we should modify
+> erofs_map_dev() directly rather than callers.
+Will fix fsoffset on multi device in the next version.
+
+thanks,
+shengyong
+> 
+> Thanks,
+> Gao Xiang
 
