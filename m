@@ -1,48 +1,80 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F7726561E;
-	Thu,  8 May 2025 09:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80C85A79B
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746696570; cv=none; b=sqZdUKsE/WnfB5n+ACdTouWryr630i5WBoV2qyLCJF0+cZW8Ct8f1lelgK1h+x+2au3+4L16SRmzVupKXn9D466DhWJufS6DyFgCzMigfixC74TzghzQuGZ1HoI8KKXtAmfMO4qTOe/aCudVPYy4RuFDQYqrqmyDXkvyjJgEiQU=
+	t=1746696650; cv=none; b=KQ4PTpF7a9jJRzQIcProS/Wk4qrxVs8KWA3r09hbJrAJxHxj10uI2IEymVXpMl6qiD1/dnr6Nn1pQTXhMFUqTWDsMP91kFNw6O8M7kz6MffMeLFPUC/+eaiksHHXkzApnixJFw6fM53r1z52+5+IqX+Bg/ZnhZCBA3I7w6kYOa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746696570; c=relaxed/simple;
-	bh=b+QRVuuaQDDP/B17F6zk5qSO093mgI3JlezK9WH6yIM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sdKH1ekR/C3uQmSkE34PgBnAOyHRwjmRS6prf0PF0lLkdDN1Esv8FauBBdj1sAd7ha21IIfcayJpG70ByLfxNzkUL5JR7eRmpM0F2+cEsRM8a9zuoTmBGqND1cy4H/lPi2md4zKrg0NctLOTxDI36NqozqBQX+Mv4vyANTV+ro4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R7Q3FYCM; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746696650; c=relaxed/simple;
+	bh=S4Q+GfVAd4eh///GSISGHgMpLX7nsFjgfbNXw/mE9e8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j2d0CLNcYU4n9jxWOA1yIwgx9niFX+xrInzKuuxj9QJK8seDhbp6HnJCuMKRG5eAtuMM8lkGOFAyvKhEUT9jA2HOnOaNPBXTuD40Z4SPSqUxFgoZlhQSae2R5Yz8fBa5D5pZzvksskwl5/2G6U6VIok1EsJap1f901oh9/trn70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=m1ttq6Bo; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pi3WmXj6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=m1ttq6Bo; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pi3WmXj6; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R7Q3FYCM"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5484WJa4025435;
-	Thu, 8 May 2025 09:29:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	wSttNrKjfcsS5u/VzVpuNaX2/1qwPC4wcthYtaGK+To=; b=R7Q3FYCMVC53djtC
-	AvEoDQpzmdiXTwCdr69KL9TqyQMN23GTdejLop3XfSJfwD4ZAxzE64pPdGNubITu
-	MjEig6yXi+kLQ4JJtfmIxnD0Dn6sCM29Bqh6spZvQvjI5ijiAeVSOS5EcyuyFkJs
-	sEyb7J/pS6qS8+CEGm7WUE7K47XH+pdW2DgI9WE+d/Qe4TFx2VhE25s3nBDvfOP9
-	ps0UVilP4uM9fZk3grIatS2gziAarFs4k17y9kt7kRUrbE6dIsV0VX2Twx6ZZqI3
-	feuR9uZaxEtp1ecb8/52f1anoQv9ioBJ89Jkj3VrvbXxkJ+qXBAkVylU5djebeLb
-	XImBuA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp10t1m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 09:29:25 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5489TOQS031672
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 8 May 2025 09:29:24 GMT
-Received: from [10.253.32.147] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
- 02:29:21 -0700
-Message-ID: <d388b471-482b-48ba-a504-694529535362@quicinc.com>
-Date: Thu, 8 May 2025 17:29:18 +0800
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="m1ttq6Bo";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pi3WmXj6";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="m1ttq6Bo";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pi3WmXj6"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3B1F821212;
+	Thu,  8 May 2025 09:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746696640; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=uv02PMz+WP7UJuv4Uqj1sGaorAILsG0RtLuM9fNYqpc=;
+	b=m1ttq6BonT2m6WJrqqN65L9LAfGiwGPdLVLMGha7PUYZqoY1HgULXKRIm5Mdk4iDwS96kW
+	AwYmRpJYqloos/yDe/c/74pVlr965MT8emIeH53qTB8QKbKzq7+rmsyVbUWQueQOTrJaGk
+	ff0NDjGFCVHNlzS/ueV+wUVe90wsAgA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746696640;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=uv02PMz+WP7UJuv4Uqj1sGaorAILsG0RtLuM9fNYqpc=;
+	b=pi3WmXj61BNGHR+JHrA0yTRRapPrRJbU1Vr+Ywh6uSiO0KlkwaVzw9oFwDzNieA7BSbNEq
+	XTwoRx43fhRMvGBA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746696640; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=uv02PMz+WP7UJuv4Uqj1sGaorAILsG0RtLuM9fNYqpc=;
+	b=m1ttq6BonT2m6WJrqqN65L9LAfGiwGPdLVLMGha7PUYZqoY1HgULXKRIm5Mdk4iDwS96kW
+	AwYmRpJYqloos/yDe/c/74pVlr965MT8emIeH53qTB8QKbKzq7+rmsyVbUWQueQOTrJaGk
+	ff0NDjGFCVHNlzS/ueV+wUVe90wsAgA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746696640;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=uv02PMz+WP7UJuv4Uqj1sGaorAILsG0RtLuM9fNYqpc=;
+	b=pi3WmXj61BNGHR+JHrA0yTRRapPrRJbU1Vr+Ywh6uSiO0KlkwaVzw9oFwDzNieA7BSbNEq
+	XTwoRx43fhRMvGBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E3B1E13A30;
+	Thu,  8 May 2025 09:30:39 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id nOs2Nr95HGgscQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 08 May 2025 09:30:39 +0000
+Message-ID: <9eb1bdbb-6a0c-4771-ae61-4ba9bd7fbd14@suse.de>
+Date: Thu, 8 May 2025 11:30:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,107 +82,316 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] tty: serdev: serdev-ttyport: Fix use-after-free in
- ttyport_close() due to uninitialized serport->tty
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Rob Herring <robh@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
-        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <liulzhao@qti.qualcomm.com>, <quic_chejiang@quicinc.com>,
-        <zaiyongc@qti.qualcomm.com>, <quic_zijuhu@quicinc.com>,
-        <quic_mohamull@quicinc.com>,
-        Panicker Harish <quic_pharish@quicinc.com>
-References: <20250430111617.1151390-1-quic_cxin@quicinc.com>
- <2025043022-rumbling-guy-26fb@gregkh>
+Subject: Re: [PATCH v3 1/3] drm/shmem-helper: Import dmabuf without mapping
+ its sg_table
+To: oushixiong1025@163.com, =?UTF-8?Q?Christian_K=C3=B6nig?=
+ <christian.koenig@amd.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Sean Paul <sean@poorly.run>,
+ Jocelyn Falempe <jfalempe@redhat.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Shixiong Ou <oushixiong@kylinos.cn>
+References: <20250507094728.603302-1-oushixiong1025@163.com>
 Content-Language: en-US
-From: Xin Chen <quic_cxin@quicinc.com>
-In-Reply-To: <2025043022-rumbling-guy-26fb@gregkh>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA4NCBTYWx0ZWRfX15gbxE1eM+co
- qJi3W0iCnxKutbiR1v9FNL3F0ARGpN1D6XhAshQJcOfLIRs0coLexxwXPMC22XBxbQuc0pHGAor
- gxM8tKBGvk0DeURoF7otQaOJwQmCEvhw3ewrV8L7qH3iYDHreO/hVXSVfxprUWnnXLlmvTVl+vx
- mnbXdrGNyykzti2GdZsFWaC7k6bv1Wc7g2be061R0kCVYIhUIA2/GxgjDuCE3R1SUZZSInPLPwB
- knf/DMwY83ZvdjOSCjg8Ve6uvw69wRs5ktsg0+WVg9scsaINFhjiZ6017fJpCsKkrH6jNhJC3XT
- MADM/liSiWwgvkr4RoDhfxu6fHNPt3xcnAOkXiGPsBUkiXIVpEXDjZlc+H7lyfJuM+hmQDqTehb
- 26/TeJ2ZVNpUk4a0lncmVyH5bbc5hGrghagoeRM63f133dhUze6ek/SdhONkc+OZ32CyUghb
-X-Proofpoint-GUID: EBVNWcEGwpa6T7g7W1fmMuJ-oqytpGNP
-X-Proofpoint-ORIG-GUID: EBVNWcEGwpa6T7g7W1fmMuJ-oqytpGNP
-X-Authority-Analysis: v=2.4 cv=W4o4VQWk c=1 sm=1 tr=0 ts=681c7975 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=EIDKYfb7kX6--GltqKcA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_03,2025-05-07_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=410 suspectscore=0 lowpriorityscore=0 phishscore=0
- priorityscore=1501 bulkscore=0 spamscore=0 mlxscore=0 adultscore=0
- clxscore=1015 malwarescore=0 impostorscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505080084
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250507094728.603302-1-oushixiong1025@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_TO(0.00)[163.com,amd.com];
+	FREEMAIL_ENVRCPT(0.00)[163.com,gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux.intel.com,kernel.org,gmail.com,ffwll.ch,poorly.run,redhat.com,lists.freedesktop.org,vger.kernel.org,kylinos.cn];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[kylinos.cn:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo]
 
+Hi
 
-On 4/30/2025 7:40 PM, Greg Kroah-Hartman wrote:
-> On Wed, Apr 30, 2025 at 07:16:17PM +0800, Xin Chen wrote:
->> When ttyport_open() fails to initialize a tty device, serport->tty is not
->> --- a/drivers/tty/serdev/serdev-ttyport.c
->> +++ b/drivers/tty/serdev/serdev-ttyport.c
->> @@ -88,6 +88,10 @@ static void ttyport_write_flush(struct serdev_controller *ctrl)
->>  {
->>  	struct serport *serport = serdev_controller_get_drvdata(ctrl);
->>  	struct tty_struct *tty = serport->tty;
->> +	if (!tty) {
->> +		dev_err(&ctrl->dev, "tty is null\n");
->> +		return;
->> +	}
-> 
-> What prevents tty from going NULL right after you just checked this?
+Am 07.05.25 um 11:47 schrieb oushixiong1025@163.com:
+> From: Shixiong Ou <oushixiong@kylinos.cn>
+>
+> [WHY]
+> 1. Drivers using DRM_GEM_SHADOW_PLANE_HELPER_FUNCS and
+>     DRM_GEM_SHMEM_DRIVER_OPS (e.g., udl, ast) do not require
+>     sg_table import.
+>     They only need dma_buf_vmap() to access the shared buffer's
+>     kernel virtual address.
+>
+> 2. On certain Aspeed-based boards, a dma_mask of 0xffff_ffff may
+>     trigger SWIOTLB during dmabuf import. However, IO_TLB_SEGSIZE
+>     restricts the maximum DMA streaming mapping memory, resulting in
+>     errors like:
+>
+>     ast 0000:07:00.0: swiotlb buffer is full (sz: 3145728 bytes), total 32768 (slots), used 0 (slots)
+>
+> [HOW]
+> Provide a gem_prime_import implementation without sg_table mapping
+> to avoid issues (e.g., "swiotlb buffer is full"). Drivers that do not
+> require sg_table can adopt this.
+>
+> Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+> ---
+> v1->v2:
+>          Patch rebase.
+> v2->v3:
+>          Rename the import callback function.
+>          Remove drm_gem_shmem_prime_export() and separate some codes
+>          to drm_gem_prime_import_self().
+>
+>   drivers/gpu/drm/drm_gem_shmem_helper.c | 51 ++++++++++++++++++++++++++
+>   drivers/gpu/drm/drm_prime.c            | 46 +++++++++++++++++------
+>   include/drm/drm_gem_shmem_helper.h     | 15 ++++++++
+>   include/drm/drm_prime.h                |  3 ++
+>   4 files changed, 104 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> index aa43265f4f4f..85900ec1954a 100644
+> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> @@ -800,6 +800,57 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
+>   }
+>   EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_sg_table);
+>   
+> +/**
+> + * drm_gem_shmem_prime_import_no_sgt - Import dmabuf without mapping its sg_table
+> + * @dev: Device to import into
+> + * @dma_buf: dma-buf object to import
+> + *
+> + * Drivers that use the shmem helpers but also wants to import dmabuf without
+> + * mapping its sg_table can use this as their &drm_driver.gem_prime_import
+> + * implementation.
+> + */
+> +struct drm_gem_object *drm_gem_shmem_prime_import_no_sgt(struct drm_device *dev,
+> +							 struct dma_buf *dma_buf)
+> +{
+> +	struct dma_buf_attachment *attach;
+> +	struct drm_gem_shmem_object *shmem;
+> +	struct drm_gem_object *obj;
+> +	size_t size;
+> +	int ret;
+> +
+> +	obj = drm_gem_prime_import_self(dev, dma_buf);
+> +	if (obj)
+> +		return obj;
+> +
+> +	attach = dma_buf_attach(dma_buf, dev->dev);
+> +	if (IS_ERR(attach))
+> +		return ERR_CAST(attach);
+> +
+> +	get_dma_buf(dma_buf);
+> +
+> +	size = PAGE_ALIGN(attach->dmabuf->size);
+> +
+> +	shmem = __drm_gem_shmem_create(dev, size, true, NULL);
+> +	if (IS_ERR(shmem)) {
+> +		ret = PTR_ERR(shmem);
+> +		goto fail_detach;
+> +	}
+> +
+> +	drm_dbg_prime(dev, "size = %zu\n", size);
+> +
+> +	shmem->base.import_attach = attach;
+> +	shmem->base.resv = dma_buf->resv;
+> +
+> +	return &shmem->base;
+> +
+> +fail_detach:
+> +	dma_buf_detach(dma_buf, attach);
+> +	dma_buf_put(dma_buf);
+> +
+> +	return ERR_PTR(ret);
+> +}
+> +EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_no_sgt);
+> +
+>   MODULE_DESCRIPTION("DRM SHMEM memory-management helpers");
+>   MODULE_IMPORT_NS("DMA_BUF");
+>   MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+> index d828502268b8..1e43b6022329 100644
+> --- a/drivers/gpu/drm/drm_prime.c
+> +++ b/drivers/gpu/drm/drm_prime.c
+> @@ -910,6 +910,38 @@ struct dma_buf *drm_gem_prime_export(struct drm_gem_object *obj,
+>   }
+>   EXPORT_SYMBOL(drm_gem_prime_export);
+>   
+> +
+> +/**
+> + * drm_gem_prime_import_self - Import a DMA-BUF exported from the same DRM device.
+> + * @dev: drm_device to check against
+> + * @dma_buf: dma-buf object to import
+> + *
+> + * This function checks if the DMA-BUF was exported from a GEM object belonging
+> + * to @dev. If so, it increments the GEM object's refcount and returns it directly.
+> + *
+> + * Return: GEM object if it belongs to @dev, NULL otherwise.
+> + */
+> +struct drm_gem_object *drm_gem_prime_import_self(struct drm_device *dev,
+> +						 struct dma_buf *dma_buf)
+> +{
+> +	struct drm_gem_object *obj;
+> +
+> +	if (dma_buf->ops == &drm_gem_prime_dmabuf_ops) {
+> +		obj = dma_buf->priv;
+> +		if (obj->dev == dev) {
+> +			/*
+> +			 * Importing dmabuf exported from our own gem increases
+> +			 * refcount on gem itself instead of f_count of dmabuf.
+> +			 */
+> +			drm_gem_object_get(obj);
+> +			return obj;
+> +		}
+> +	}
+> +
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL(drm_gem_prime_import_self);
+> +
 
-First sorry for reply so late for I have a long statutory holidays.
-Maybe I don't get your point. From my side, there is nothing to prevent it.
-Check here is to avoid code go on if tty is NULL.
-> 
-> And why print out that message, what can userspace do with it?
-> 
+I feel this helper is doing too much. Rather separate the test from the 
+policy. Do something like
 
-I add the print just ref to code in other place. This can't be used by
-userspace, but it can be used in DMesg log when system crashes.
->>
->>  	tty_driver_flush_buffer(tty);
->>  }
->> @@ -108,8 +112,10 @@ static int ttyport_open(struct serdev_controller *ctrl)
->>  	int ret;
->>
->>  	tty = tty_init_dev(serport->tty_drv, serport->tty_idx);
->> -	if (IS_ERR(tty))
->> +	if (IS_ERR(tty)) {
->> +		serport->tty = NULL;
->>  		return PTR_ERR(tty);
->> +	}
->>  	serport->tty = tty;
->>
->>  	if (!tty->ops->open || !tty->ops->close) {
->> @@ -156,6 +162,11 @@ static void ttyport_close(struct serdev_controller *ctrl)
->>
->>  	clear_bit(SERPORT_ACTIVE, &serport->flags);
->>
->> +	if (!tty) {
->> +		dev_err(&ctrl->dev, "tty is null\n");
->> +		return;
->> +	}
-> 
-> Again, what prevents it from changing right after you just checked it?
+bool drm_gem_prime_exported_dma_buf(dev, dma_buf)
+{
+     obj = dma_buf->priv;
 
-Same with above, there is nothing prevent it. Check here is to avoid code go on
-if tty is NULL.
-The check is for changes in ttyport_open(). In my project, it's possible that
-ttyport_close() and ttyport_write_flush() get called after ttyport_open()
-failed, at which time tty is invalid.
+     return (dma_buf->ops == drm_gem_prime_dmabuf_ops) && (obj->dev == dev)
+}
 
-thanks,
-Xin
+and in the callers do
+
+   if (drm_gem_prime_exported_dma_buf(dev, dma_buf)) {
+    /* ... */
+     obj = dma_buf->obj;
+     get(obj);
+     return obj;
+   }
+
+>   /**
+>    * drm_gem_prime_import_dev - core implementation of the import callback
+>    * @dev: drm_device to import into
+> @@ -933,17 +965,9 @@ struct drm_gem_object *drm_gem_prime_import_dev(struct drm_device *dev,
+>   	struct drm_gem_object *obj;
+>   	int ret;
+>   
+> -	if (dma_buf->ops == &drm_gem_prime_dmabuf_ops) {
+> -		obj = dma_buf->priv;
+> -		if (obj->dev == dev) {
+> -			/*
+> -			 * Importing dmabuf exported from our own gem increases
+> -			 * refcount on gem itself instead of f_count of dmabuf.
+> -			 */
+> -			drm_gem_object_get(obj);
+> -			return obj;
+> -		}
+> -	}
+> +	obj = drm_gem_prime_import_self(dev, dma_buf);
+> +	if (obj)
+> +		return obj;
+>   
+>   	if (!dev->driver->gem_prime_import_sg_table)
+>   		return ERR_PTR(-EINVAL);
+> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
+> index b4f993da3cae..6e8e907bc43e 100644
+> --- a/include/drm/drm_gem_shmem_helper.h
+> +++ b/include/drm/drm_gem_shmem_helper.h
+> @@ -287,6 +287,8 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
+>   				    struct sg_table *sgt);
+>   int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+>   			      struct drm_mode_create_dumb *args);
+> +struct drm_gem_object *drm_gem_shmem_prime_import_no_sgt(struct drm_device *dev,
+> +							 struct dma_buf *buf);
+>   
+>   /**
+>    * DRM_GEM_SHMEM_DRIVER_OPS - Default shmem GEM operations
+> @@ -298,4 +300,17 @@ int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+>   	.gem_prime_import_sg_table = drm_gem_shmem_prime_import_sg_table, \
+>   	.dumb_create		   = drm_gem_shmem_dumb_create
+>   
+> +/**
+> + * DRM_GEM_SHMEM_DRIVER_OPS_FOR_VMAP - shmem GEM operations
+> + * 				       without mapping sg_table on
+> + * 				       imported buffer.
+> + *
+> + * This macro provides a shortcut for setting the shmem GEM operations in
+> + * the &drm_driver structure for drivers that do not require a sg_table on
+> + * imported buffers. Only vmap is supported on imported buffer.
+
+That final sentence is misleading. It would still be possible to 
+pin/unpin and mmap the buffer. Only direct access from DMA-capable 
+hardware is not. (Right?)
+
+> + */
+> +#define DRM_GEM_SHMEM_DRIVER_OPS_FOR_VMAP \
+
+Rather call this DRM_GEM_SHMEM_DRIVER_OPS_NO_SGT please. Calling it 
+_FOR_VMAP seems misleading to me. Best regards Thomas
+> +	.gem_prime_import       = drm_gem_shmem_prime_import_no_sgt, \
+> +	.dumb_create            = drm_gem_shmem_dumb_create
+> +
+>   #endif /* __DRM_GEM_SHMEM_HELPER_H__ */
+> diff --git a/include/drm/drm_prime.h b/include/drm/drm_prime.h
+> index fa085c44d4ca..b5179a9cde93 100644
+> --- a/include/drm/drm_prime.h
+> +++ b/include/drm/drm_prime.h
+> @@ -100,6 +100,9 @@ struct dma_buf *drm_gem_prime_export(struct drm_gem_object *obj,
+>   unsigned long drm_prime_get_contiguous_size(struct sg_table *sgt);
+>   
+>   /* helper functions for importing */
+> +struct drm_gem_object *drm_gem_prime_import_self(struct drm_device *dev,
+> +						 struct dma_buf *dma_buf);
+> +
+>   struct drm_gem_object *drm_gem_prime_import_dev(struct drm_device *dev,
+>   						struct dma_buf *dma_buf,
+>   						struct device *attach_dev);
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
