@@ -1,143 +1,115 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C6D827605F
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9E726F478;
+	Thu,  8 May 2025 14:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746715906; cv=none; b=TA/lttjRHkf8iFSLI9SK2l7I/Fm1H1e93PSnUO0UYJczZptkvMCmpy4PiZx6enKdXBmvp7ZHNYo2wNT/i1nUs4dYxSQcQoF67JwwnSf2NGW+UaJ3cBd89MCP3WHP0BQ+vDg4UNGJZQOJQwGMO7u0D8ixT/2llpwcd4VuCVAKAm0=
+	t=1746715932; cv=none; b=rT5evFXbKDlwMc9FuPTFarNWxejP0VeuN9JNDrK9aa3otcQlOCEdZ+0F/mT9oOgdnCWaMjgjd/31rVo6hIneXRwdE/utdkf+npSCWVa66PwIcB6ig1AuyjbCqkqTas2yusZ9aTaS7itk6Ea2mUZA3unBcXpxlS/pbEciP6ancfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746715906; c=relaxed/simple;
-	bh=dv9G/jpRvgyddCILSX9zx5JXHZTeh7tKiJtjEkIXFPw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=IIsi+e2LPymSawhqxOcALTI81ZX4H3GQBnqyGijcidPelSLyfTvvO1iOxaFgRNi1RhM7W1h9SNLIejntFbFZjgmfa6lfM9cnar+V7fFjENbXxVGsul36z6n5BJe7V/iMtliBdNdfYu2wgpelYlUKser1CbSLIpLdjiQbMln+di8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id E0A8792009C; Thu,  8 May 2025 16:51:42 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id DC64E92009B;
-	Thu,  8 May 2025 15:51:42 +0100 (BST)
-Date: Thu, 8 May 2025 15:51:42 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: "H. Peter Anvin" <hpa@zytor.com>
-cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-    Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
-    "Ahmed S . Darwish" <darwi@linutronix.de>, 
-    Andrew Cooper <andrew.cooper3@citrix.com>, 
-    Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>, 
-    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-    John Ogness <john.ogness@linutronix.de>, 
-    Peter Zijlstra <peterz@infradead.org>, 
-    Thomas Gleixner <tglx@linutronix.de>, 
-    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
- CPUs
-In-Reply-To: <A5AC3B8B-335C-4594-B0DC-D9247B286A37@zytor.com>
-Message-ID: <alpine.DEB.2.21.2505062253240.21337@angie.orcam.me.uk>
-References: <20250425084216.3913608-1-mingo@kernel.org> <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk> <CAHk-=wicfBCyMj_x5BiL32o55jqXfnxgn=X5BZZjA-FFER82Jg@mail.gmail.com> <alpine.DEB.2.21.2505061104490.31828@angie.orcam.me.uk>
- <A5AC3B8B-335C-4594-B0DC-D9247B286A37@zytor.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1746715932; c=relaxed/simple;
+	bh=m9+dvvH99WOk1Q+YGo6PeA3k97JBnWhonrMgm9Unthw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sgohs6XQjd9Bs5++dPxZZ/EgXIkuvQQ8vSiXW445rdlwHjIsnXkPFaU53h2Rr9UTzMNrqZJ4V24m8TdO8ftZh8CKGOmGNZdo17cxAMfjsspeADLdSIjctjeU0LVKg0bjdeTBb+8aQkKHk8RqzONZumhp9USrcH28e4Omg4Hg/+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egLbwTX5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egLbwTX5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 842CDC4CEE7;
+	Thu,  8 May 2025 14:52:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746715932;
+	bh=m9+dvvH99WOk1Q+YGo6PeA3k97JBnWhonrMgm9Unthw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=egLbwTX5kYtcWDxF3pn+h6VTXTWbSAcexEh4T80EqMnZT8K3dD1DxveyRZl8dNWHF
+	 Bz8R0Tg7S0i3FFwyhV/YeWbXb5cmQbTumgVquKzqw8nALHHvpOJUQuyYOoaCOMT/k4
+	 DX13/JrDQOJpswCP4htG77iiUDstsLiVySJCsLY6ODNro4Co8VT8Y2A/6aehoLmfCN
+	 kGYElrH+djZQtFrObp8ha3Mj5tZ2nNkmEkULAq2XaFq1NUgFqe7Y3Ay343zkv0bC+v
+	 h3y6Pd38S5ty9c60ENFNakD/iCe0bPvjOV3xtB4pgesMSFWLWthUhpRdI/nMu8LI+c
+	 J+n+vAShgBMWA==
+Date: Thu, 8 May 2025 11:52:08 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf trace: Fix some more memory leaks
+Message-ID: <aBzFGKKubskQDLrs@x1>
+References: <20250401202715.3493567-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250401202715.3493567-1-irogers@google.com>
 
-On Tue, 6 May 2025, H. Peter Anvin wrote:
-
-> > No i486 has ever run Linux SMP.  Back in the day I tried hard to chase by 
-> >the spec a single i486 system built around the APIC and Intel MP Spec and 
-> >could not find any.  Compaq had some proprietary stuff (Corollary bus?) we 
-> >never had support for.  And we discarded support for the discrete i82489DX 
-> >APIC years ago anyway that some Pentium systems used too for the original 
-> >P5 microarchitecture or to go beyond dual.  So said emulation would have 
-> >to handle the UP case only, which ought to be straightforward and well 
-> >contained.
+On Tue, Apr 01, 2025 at 01:27:15PM -0700, Ian Rogers wrote:
+> The files.max is the maximum valid fd in the files array and so
+> freeing the values needs to be inclusive of the max value.
 > 
-> However, building a #UD instruction emulator is a project in itself that 
-> someone would have to take on. It isn't inherently simpler – quite the 
-> opposite – than the alternatives calling to a stub function than we have 
-> now.
+> Add missing thread__put of the found parent thread in
+> thread__e_machine.
 
- Perhaps my RISC background makes me view instruction emulation as simpler 
-than patching code.  It has been common throughout computing history too.  
-In any case it would contain all the handling in a single function called 
-from the generic #UD exception handler, something that could be `if 
-(IS_ENABLED(CONFIG_M486))' and therefore completely ignored for all the 
-newer platforms, and leaving the rest of the kernel code exactly the same 
-as we now have for CMPXCHG8B platforms.
+Split it into:
 
- My x86-fu is a bit rusty and surely I'm not familiar with all the recent 
-features, however I retain my 20+ years of past experience, most recently 
-with interfacing Atom systems via a JTAG probe to GDB over the remote 
-serial protocol (which did include writing instruction emulation in the 
-debug stub, specifically for MOV to/from debug registers or you wouldn't 
-be able to run e.g. BIOS initialisation with the debugger attached due to 
-the general-detect fault), and the i486/Pentium stuff is contemporary to 
-my experience, so writing such an emulation handler shouldn't be a big 
-deal to me.
+⬢ [acme@toolbx perf-tools-next]$ git log --oneline -2
+7900938850645ed4 (HEAD -> perf-tools-next) perf trace: Add missing thread__put() in thread__e_machine()
+8830091383b03498 perf trace: Free the files.max entry in files->table
+⬢ [acme@toolbx perf-tools-next]$ 
 
- Note that we'll only have to emulate it for the kernel itself, so the 
-emulation won't have to handle all the obscure corner cases, such as 
-16-bit address modes, odd segment prefixes, or VM86 mode.
+So that git --oneline is more descriptive, etc.
 
-> We have the tools to do it; there is now a full x86 instruction decoder 
-> in the kernel that one could use to do this, but...
+Thanks, applied to perf-tools-next,
+
+- Arnaldo
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-trace.c | 3 ++-
+>  tools/perf/util/thread.c   | 1 +
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 > 
-> a. Someone would have to take it on;
-> b. It will need continuous testing;
-> c. That someone would *also* have to go through the additional effort of 
->    keeping the mainline code clean for the maintainers of the modern 
->    hardware.
-
- I'd expect instruction emulation code to be zero-maintenance effort.  We 
-have had such bits in the MIPS platform and they haven't been touched in 
-decades.  It's not like machine instruction interpretation is ever going 
-to change.  And none of the x86 maintainters will have to care whether it 
-actually works, as nobody will see any adverse effect *unless* they build 
-an i486 kernel *and* actually run it on an i486 both at a time.  Anything 
-newer just won't ever trigger it.
-
-> And at some point we will be at a point where we were with i386 that the 
-> only users are occasional testers.
-
- I agree that the lack of the WP bit with the original i386 CPU was a real 
-showstopper and a maintenance nightmare, and still having code to handle 
-that misfeature would surely be a security hell nowadays too, so it had to 
-go as soon as feasible.  As a nice side effect it let us get rid of the 
-287/387 PC/AT-specific handling mess.
-
-> With regards to EISA, you still haven't clarified if there is a true use 
-> case or if this is a museum/nostalgia project. There isn't anything 
-> *wrong* with museum projects, not at all (I recently got to play 
-> SPACEWAR! on a real PDP-1; it was amazing) but imposing a maintenance 
-> burden on the mainline developers of one of the most heavily used 
-> architecture on the planet is not practical.
-
- There is no commercial value and no use case beyond making sure all the 
-pieces involved continue to run.  You can call it a museum/nostalgia 
-project if you prefer; for me it's the usual engineering challenge as 
-with everything I do around Linux.
-
- As already stated in my reply to Borislav I don't want to put any burden 
-on any maintainers and I'm trying to reduce it to zero while not losing 
-the features.  The lone presence of a piece of code isn't a burden unless 
-you actually have to do anything about it.
-
- I realise it's easier done with a niche kernel architecture than with one 
-of the mainstream ones.
-
-> If someone really wanted to, they could maybe fork off, say, arch/i486 
-> and maintain the a version of the kernel limited to these old machines, 
-> but it would require someone being willing to do the work.
-
- There's willingness and there's the availability of resources.  If it's 
-say 2KiB worth of source code difference that you don't have to look at 
-unless you run the platform that needs it, I'd argue I could maintain it, 
-but question whether it's worth forking in the first place rather than 
-keeping it in the main repo.
-
-  Maciej
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 58a2ce3ff2db..c02ea4e8b270 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -1657,7 +1657,7 @@ static const size_t trace__entry_str_size = 2048;
+>  
+>  static void thread_trace__free_files(struct thread_trace *ttrace)
+>  {
+> -	for (int i = 0; i < ttrace->files.max; ++i) {
+> +	for (int i = 0; i <= ttrace->files.max; ++i) {
+>  		struct file *file = ttrace->files.table + i;
+>  		zfree(&file->pathname);
+>  	}
+> @@ -1703,6 +1703,7 @@ static int trace__set_fd_pathname(struct thread *thread, int fd, const char *pat
+>  
+>  	if (file != NULL) {
+>  		struct stat st;
+> +
+>  		if (stat(pathname, &st) == 0)
+>  			file->dev_maj = major(st.st_rdev);
+>  		file->pathname = strdup(pathname);
+> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+> index 89585f53c1d5..415c0e5d1e75 100644
+> --- a/tools/perf/util/thread.c
+> +++ b/tools/perf/util/thread.c
+> @@ -471,6 +471,7 @@ uint16_t thread__e_machine(struct thread *thread, struct machine *machine)
+>  
+>  		if (parent) {
+>  			e_machine = thread__e_machine(parent, machine);
+> +			thread__put(parent);
+>  			thread__set_e_machine(thread, e_machine);
+>  			return e_machine;
+>  		}
+> -- 
+> 2.49.0.504.g3bcea36a83-goog
+> 
