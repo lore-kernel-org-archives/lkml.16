@@ -1,165 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C15224AFB;
-	Thu,  8 May 2025 22:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F4E223DE4
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 22:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746742362; cv=none; b=gmA9aIOXSjTPTt8J341CXSqtSIqGKtzz49F/0oapfgRhJK2sEtUKPMSbmV8c1IjIMF9UiDTakuoAC5/CFH+TvjOjqlTfkBV2UUydhMypa66lWXzF6dKvAIDZkfNBueVWbxoAdiGyqbGd6TtwVrarWJB/FDWIiIVAj6ECgJMdQXY=
+	t=1746742486; cv=none; b=DzaPps03w67Md85x7V1AxC74h1//t9GSNrab1n0Iruv4Pa/6cZobWMh482Lwqcv7mo5YoiqJJ6ZRlnwHLmpUwag9OB/td0ehD0kqHwZCQg5KMPcWTa154ndnI7M2uDquSQX8F6DB/ayM07HfqBsXuhajmV8rh96ASh4dQ7KjPDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746742362; c=relaxed/simple;
-	bh=VvvPjYDsHNVZTBtifZ5ix10ghsIB7IUwd4OQzaJUnI0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=STtYwJFf7k/WPiiYDTcteJe5DUqKle7muTJhS/ZUx3vxaD0g7M0a5KBVQnXQ15o1NCaL9MXs5xoQfkJ7UoYIkCnPZjUyrzseTyTFP4BcRVb4z4FW9g7bf223cBUPLuS/RM4a/GJTKuqMGxXa2WOmSBC20lCqcPGZQu+mbc9BZ6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWVldwk+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746742486; c=relaxed/simple;
+	bh=oQhDfKn0pMpd3jEaJ5ukmAhurZ7x+QJ/lmdMNdMwE2Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NIw26S448Ie57C0YqqVVODPBQOVaFoa3A7PfYIav3HeJv/K7i9snh28y7205ixa9Pr7YymWdAeWJRa7MXrxIt/mLQ3PeKGCaMGoeJUIF0Cv8bkJC25uxUVB4i4AngCF9mubuCmkgbmAbPA/zE9gcQuuBATxHSly1MmnmL4A9YYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=J1ymQxiY; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWVldwk+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 084B0C4CEE7;
-	Thu,  8 May 2025 22:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746742362;
-	bh=VvvPjYDsHNVZTBtifZ5ix10ghsIB7IUwd4OQzaJUnI0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kWVldwk+ydSU3WliLtNyNsMKotSrkTEOuJXNZe5XxUhOvpt9VNxmHXULxBk57OsVD
-	 EUGOMkPCaigeThUCud1DIFTMPnD1V3jUOWxIU1SeuQaw+JSemX/oI9Qzy/soOPcw2g
-	 1on3ZcC4wwpK/c5gY3RXMSKtcSid3F4XKK9m9QhtyYKwvKNHhcR+FxL5YN6r9J34PZ
-	 aXnZYbavuvjt08EnOOEA+y246jhhr3V9vGhsYWF1KDTLZooeyX0ZGsetdSc0l8/+Fn
-	 z/oYBs22mpogUCeQxMDGow1Mc4tyJrLNh0X0ZalrO0DoQmYEw8GTo0NLUcbWGR9t8X
-	 BpJYg+KOgXfBg==
-Date: Thu, 8 May 2025 22:12:37 +0000
-From: sergeh@kernel.org
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>, Andy Lutomirski <luto@kernel.org>,
-	paul@paul-moore.com, jmorris@namei.org, kees@kernel.org,
-	morgan@kernel.org, linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH] security/commoncap: don't assume "setid" if all ids are
- identical
-Message-ID: <aB0sVcjFZaCVEirH@lei>
-References: <20250306082615.174777-1-max.kellermann@ionos.com>
- <20250309151907.GA178120@mail.hallyn.com>
- <CAKPOu+_vTuZqsBLfRH+kyphiWAtRfWq=nKAcAYu=Wn2JBAkkYg@mail.gmail.com>
- <20250506132158.GA682102@mail.hallyn.com>
- <CAKPOu+9JCLVpJ-g_0WwLm5oy=9sq=c9rmoAJD6kNatpMZbbw9w@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="J1ymQxiY"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-867347b8de9so95148339f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 15:14:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1746742483; x=1747347283; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9CK1elPKWXClSLPdRPqW5P03MZNYsbIZRsBDl9jKU4I=;
+        b=J1ymQxiY/w1ewYwN/07QPFeUtNMbMZfNC1cym//JUkwdy774nrgj5V7IvLoj6MKgvR
+         iTDaBoDAF1PO8M2qXz0nHUAhzf5jfG0VXShJMVwxhJGnFVv5fDji+kA1KUIqXNSPy9Zx
+         vw+ZGwdvOpNk2+4uHsTKLMdU0mmQ0UEzVX0vI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746742483; x=1747347283;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9CK1elPKWXClSLPdRPqW5P03MZNYsbIZRsBDl9jKU4I=;
+        b=CtrtiI9yZuvPoXUyHUlw3r81J8eJrdd9gnxeZRyfTUKTyjRWqpYWYzr5CYd1xGhN6x
+         BJah/pa9TfmthQCqKIAtdei98nlOaKHAey78JLuRR+ZfVE8dgsHsfRPMGBBEVb+bGW9o
+         LWriRvfwXyZYTYnTaSLd40vf3BT2Qr5dfRpSYYxud4LX+RAfOoK0Q8vtdjmp6eblbX5t
+         k4rbKIP0JCMerL83XzGcw2WESJx076ebNpgfT+34Wq2+5Nrs6mz4eSwSoeWkT1jsyxHV
+         IJTmEAsSBemPfpCbfKRem054KKyasj/OLolc6rVehYunFniAm0+0aVUgG9jYPgAdfNd0
+         LIuw==
+X-Forwarded-Encrypted: i=1; AJvYcCUibJ1Vx2NeIwQclSuFU+u03rnwoq1DsK3PEen+4Bs5a8V4Bd0kBahI0ct9KlBbigUQmygebyNDQq7cfQ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZSQXBoqbixohS9+6FhseaHYXLAmVdyPC0CH9WX0dt+GtXVa3U
+	sL7aqDFep4Kq7W1xUPKJppIGrRzslD9NWIB9NM/gTMmGWFz8S4W73vbrY9mHKK0=
+X-Gm-Gg: ASbGncvENZ4SbV4Um4o1Z7qy70X/y4SdGgPjdni8EZ1J/NqCGIK9E/wlSjuazXYNz5w
+	1V1CTmAMJoNy3lXqIHajSXCwGyHcFMe0PxVPpfa7qo/rnmG+l1dYtymyiMCw8vFwC/KGF8UrNay
+	zeUAxhvWYB0TjFjBUkuSxDPF9/aYn7SBg7AHLjdpop8UiirSWB4t+RWxD+RIQWm3z393syIqp2y
+	ciAtu9tBqzxk+0koGWw72Ss8EChTShs9ELBv2JDLw93cD4tt71R5pnD8UwN3XMgbv0Ii3lFjAhm
+	mFScGVAifmBWRvViS/dGFbNs7Tnu4xakea8CVblmwYuh8/BnO/Q=
+X-Google-Smtp-Source: AGHT+IH5MQwed+065d9LOVuxEKO6ubkA9Ob6pEePe9HD+g9AN4JF3g2On82Lij+nTEGd4vyd0n7qaQ==
+X-Received: by 2002:a05:6602:1401:b0:867:c17:a6ff with SMTP id ca18e2360f4ac-86764496f6fmr113977539f.8.1746742483142;
+        Thu, 08 May 2025 15:14:43 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-867636e0efdsm15990639f.29.2025.05.08.15.14.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 15:14:42 -0700 (PDT)
+Message-ID: <a4558815-f400-41c9-973d-90680ceb3ede@linuxfoundation.org>
+Date: Thu, 8 May 2025 16:14:41 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] um: let 'make clean' properly clean underlying SUBARCH as
+ well
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Richard Weinberger <richard@nod.at>, linux-um@lists.infradead.org,
+ David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>
+References: <20250507074936.486648-1-masahiroy@kernel.org>
+ <9ec50ce0-f60b-4d87-bc44-adaf2a1a97a1@linuxfoundation.org>
+ <CAK7LNARF=ANEEeENSwcWeayympi6Svci+ScWGpWQimyWm8xUzA@mail.gmail.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <CAK7LNARF=ANEEeENSwcWeayympi6Svci+ScWGpWQimyWm8xUzA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKPOu+9JCLVpJ-g_0WwLm5oy=9sq=c9rmoAJD6kNatpMZbbw9w@mail.gmail.com>
 
-On Tue, May 06, 2025 at 04:51:39PM +0200, Max Kellermann wrote:
-> On Tue, May 6, 2025 at 3:22 PM Serge E. Hallyn <serge@hallyn.com> wrote:
-> > Just to quibble here: I don't use NO_NEW_PRIVS, but it seems to me quite
-> > likely that your claim is wrong here.  The whole SECBIT_KEEP_CAPS etc
-> > dance is based on the idea that you understand that once you exec, you
-> > lose some of your existing privilege.  Similarly, it seems quite
-> > likely to me that people using NO_NEW_PRIVS understand, expect, and
-> > count on the fact that their effective ids will be cleared on exec.
+On 5/7/25 17:49, Masahiro Yamada wrote:
+> On Thu, May 8, 2025 at 6:38 AM Shuah Khan <skhan@linuxfoundation.org> wrote:
+>>
+>> On 5/7/25 01:49, Masahiro Yamada wrote:
+>>> Building the kernel with O= is affected by stale in-tree build artifacts.
+>>>
+>>> So, if the source tree is not clean, Kbuild displays the following:
+>>>
+>>>     $ make ARCH=um O=build defconfig
+>>>     make[1]: Entering directory '/.../linux/build'
+>>>     ***
+>>>     *** The source tree is not clean, please run 'make ARCH=um mrproper'
+>>>     *** in /.../linux
+>>>     ***
+>>>     make[2]: *** [/.../linux/Makefile:673: outputmakefile] Error 1
+>>>     make[1]: *** [/.../linux/Makefile:248: __sub-make] Error 2
+>>>     make[1]: Leaving directory '/.../linux/build'
+>>>     make: *** [Makefile:248: __sub-make] Error 2
+>>>
+>>> Usually, running 'make mrproper' is sufficient for cleaning the source
+>>> tree for out-of-tree builds.
+>>>
+>>> However, building UML generates build artifacts not only in arch/um/,
+>>> but also in the SUBARCH directory (i.e., arch/x86/). If in-tree stale
+>>> files remain under arch/x86/, Kbuild will reuse them instead of creating
+>>> new ones under the specified build directory.
+>>>
+>>> This commit makes 'make ARCH=um clean' recurse into the SUBARCH directory.
+>>>
+>>> Reported-by: Shuah Khan <skhan@linuxfoundation.org>
+>>> Closes: https://lore.kernel.org/lkml/20250502172459.14175-1-skhan@linuxfoundation.org/
+>>> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+>>
+>> It doesn't solve the problem. I still see arch/x86/realmode/rm/pasyms.h
+>> after running make ARCH=um mrproper
 > 
-> One could define NO_NEW_PRIVS that way, but that's not how it is documented.
-> Of course, we can't rule out that somewhere, somebody exists who
-> relies on the current behavior, and that we must preserve it for ABI
-> stability (I think this was your point). If you desire ABI stability,
-> then this behavior should really be documented.
+> 
+> Why not?
+> 
+> This patch allows 'make ARCH=um mrproper'
+> to clean up both arch/um and arch/x86/.
+> 
+> It is really simple to test the behavior.
+> 
+> 
+> [Without this patch]
+> 
+> masahiro@zoe:~/workspace/linux-kbuild(master)$ touch
+> arch/x86/realmode/rm/pasyms.h
+> masahiro@zoe:~/workspace/linux-kbuild(master)$ make ARCH=um mrproper
+> masahiro@zoe:~/workspace/linux-kbuild(master)$ ls arch/x86/realmode/rm/pasyms.h
+> arch/x86/realmode/rm/pasyms.h
+> 
+> [With this patch]
+> 
+> masahiro@zoe:~/workspace/linux-kbuild(kbuild)$ touch
+> arch/x86/realmode/rm/pasyms.h
+> masahiro@zoe:~/workspace/linux-kbuild(kbuild)$ make ARCH=um mrproper
+>    CLEAN   arch/x86/realmode/rm
+> masahiro@zoe:~/workspace/linux-kbuild(kbuild)$ ls arch/x86/realmode/rm/pasyms.h
+> ls: cannot access 'arch/x86/realmode/rm/pasyms.h': No such file or directory
+> 
 
-ABI stability is about the most important thing to Linus, so yes, if
-documentation and code disagree, then we should fix the documentation,
-except in the case where the current behavior just really is wrong
-or insecure.
+I ran another controlled test starting from a totally clean repo
+and the building - looks good to me.
 
-> To me, the current implementation looks weird and buggy (but that's
-> just my opinion). The code figures that that it's a set-id exec when
-> effective!=real, which is indeed how set-id execution looks like, but
-> still that check is slightly off:
+Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
 
-Here's my current reading:
+thanks,
+-- Shuah
 
-The bprm->cred is initially set from current's, with suid and fsuid set
-to euid.  So new->euid will be same as old->euid.  Then
-bprm_creds_from_file() will call bprm_fill_uid() right before
-security_bprm_creds_from_file().  bprm_fill_uid() will set new->euid to
-the file's i_uid - only if the setuid bit is set AND only if not
-task_no_new_privs(current).  Meaning that for NNP tasks it never sets
-new->euid to the file's i_uid.
-
-I think the summary is that I don't object to your patch per se (except
-the ambient creds part, which I'll reply to later - oh and possibly the
-potential for capability dropping, also for later), but your
-terminology.  setuid and setgid mean something very specific: a file
-which, when any user executes it, causes execution to happen under the
-file's owner credentials.  And the behavior you are changing has nothing
-to do with that.  What you are changing is that a NNP process with
-different ruid and euid will continue to run, after exec, with those
-previous ruid and euid, whether or not the file is setXid.
-
-> 1. it's really only set-id when new!=old; checking real!=effective is
-> conceptually the wrong angle
-> 2. there may be other reasons why real!=effective
-> 
-> My patch is an attempt to fix this in an unintrusive way, by not
-> rewriting it but adding another check to rule out some special case.
-> If I were to rewrite this from scratch, I'd do it differently (only
-> compare new!=old), but I don't want to mess too much with security
-> code that I'm not very familiar with. I believe the guy who initially
-> wrote it made wrong assumptions, but maybe I'm just wrong, I'm not the
-> expert here.
-> 
-> > Note also that so far I'm only asking about the intent of the patch.
-> 
-> In a shared webhosting environment, we want to run an Apache (or
-> nginx) in each website's container. If the website owner does "chmod
-> 600", the Apache should not be able to read the file; but PHP
-> processes spawned by the Apache should have full access. Therefore, we
-> run Apache with a different fsuid; when Apache executes PHP, the fsuid
-> is reverted.
-> 
-> But how to spawn Apache with a different fsuid? Not possible directly
-> (fsuid is always reverted on exec), but by giving it a different euid
-> (and ruid = website uid), granting it access to that secondary uid.
-> After exec, Apache swaps uids, sets effective=real=apache_uid, and
-> fsuid=website_uid.
-> That works fine, until we enable NO_NEW_PRIVS - which is surprising,
-> because we indeed don't want any new privs - just keep the existing
-> ones.
-> The documentation doesn't explain this behavior, and we don't want to
-> omit NO_NEW_PRIVS as a workaround.
-> 
-> > Apart from that, I do think the implementation is wrong, because you
-> > are impacting non-NO_NEW_PRIVS behavior as well, such as calculation
-> > of cap_permitted and the clearing of ambient capabilities.
-> 
-> You are right, it affects all three code blocks that are checking
-> "is_setid", but why do you believe it's wrong?
-> I can move the new check to the bottom, covering only the
-> "secureexec=1" line, if that worries you.
-> 
-> What sure is flawed is that my patch description fails to mention the
-> other two changes. Sorry for that, I'll amend the description (if/when
-> we agree that my patch is ok).
-> 
-> Though I do believe that all 3 changes are correct. Why would you want
-> to clear ambient capabilities just because real!=effective? The
-> manpage says: "Executing a program that changes UID or GID due to the
-> set-user-ID or set-group-ID bits or executing a program that has  any
-> file  capabilities set will clear the ambient set."
-> 
-> Documentation and code disagree! Currently, the kernel does not check
-> for "changes UID/GID", but whether effective!=real. These two are
-> orthogonal, the kernel is buggy, and my patch makes it a little bit
-> more correct (but does not remove the wrong real!=effective check, see
-> above).
-> 
-> > And, I'm not sure the has_identical_uids_gids() is quite right, as I'm
-> > not sure what the bprm->cred->fsuid and suid make sense, though the
-> > process's fsuid and suid of course need to be checked.
-> 
-> Sorry, I don't get that. What do you mean?
-
-I meant I hadn't yet delved back into the location of bprm_fill_uid()
-etc, and I know that code has moved around a bit in the last few years.
