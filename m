@@ -1,129 +1,97 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610D16F073;
-	Thu,  8 May 2025 08:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F4D21D596;
+	Thu,  8 May 2025 08:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746691703; cv=none; b=oBRr/wOckIxAmQnFJUNDPkAxAFzFQlY/RW27spu+UgErI5CVE36cGazCbnRvJLQsbYgOPixl3MEtpp2HoqIbnfCXK2yOfAw0phmjir71n6l1LybjNyAalkdD6GWDOXdXdBjHUHdN8QSGCOQcBsGfBnmwnoyy+fzhIUOUl7Zl/m4=
+	t=1746691717; cv=none; b=bZ+c93YfNvDZBvz2W/Mnp5TkTNhs4ziuXTrjcJDOZxG6gEcCGx1YCAic2paF7BjLS9u09X9z8OPsIr4NPYUAhSu3jok4Hij47/ztR0KrJPCN0qtgj62aEGDrjKtVjSgxfT3NxzY7USDnim/MXH3FnMyJPMKCcY0cOmz2tDH0Kc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746691703; c=relaxed/simple;
-	bh=+sJ+nOd93uoWClQE2mhYQO1xYIQfotIWKMU2W7nPB2o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pwpvs1MkmZZO/eH6Kq5IbB73V9tRCViOswDdAFyb+wxoYtaP2GmGITf9c3ZnMdiEq1PmzSo+fgMcgwTPt9qqH0r/FzE3zvh2TIInocGtBS3l4vhZrOnpTXcSn5juMwU0BBI2NW0yBU4Hmx1cFrOvb1mv29xbH57j4Kcfjgb9DVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-5241abb9761so238255e0c.1;
-        Thu, 08 May 2025 01:08:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746691697; x=1747296497;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5pyh88RLi7QBn3vHcG2jBCwxHsg3m1PlM26ESBfjfQk=;
-        b=JdVUV14WGk68/k1HNNJGKorvTY7Q8kr0nz2kJuiUsEQOn70dC6/VuX/LS0IuBcV3OV
-         /v5sgnoLF7ggsPuZEenIWHr1XT1KzVWNE/PMvtKbvNZtel0tcHCqNh2JhTg4bQEFThqx
-         QSvAVz8KeK6KbHiinIXfOFDiLA5SM5qqjLoeutHb2IyoRAKixPYKT7TsgiFOSzKlEBRy
-         XXOmGPeqPeUehJKh/gyag4Pn7HUuJc8EwecAA7QzvpPgkhjhRIMdPlj2MFzoUgozGUeO
-         OZMAkxwPBbWX2ydgmnpjvZprveH/RJkmoxCNkRqf1o/wzPz4JOMssRchcboys89crIjB
-         PtdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9w1Jt9qaJgT/KogH8Sehsd8x74zE5gcGXD8gM8y0B4sgPYREpIUahvrn2BB1o3boSloTaQ0vPX1J2EpW1C7CFmvw=@vger.kernel.org, AJvYcCWmA69ukN0pd6k5LJOhKObgTMu/q6J6qr/j4LbVMc8tmJOGkoX9RtbCOA3ujQzBIkiBXmjNEqQVtwE=@vger.kernel.org, AJvYcCWnKkIO9botPEul9Adv7i+FXZyXxeL6K5z+wLxI9l5ZJ1d5kYj55rFn1psMm9q8YzDpE7lPpCVPFkBkD2nk@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRY/iSfJPFp3RdnMMXzU6xUnU80r6RpfxiHjZFDiQiankdG/ow
-	c51kzh2g1DdAsM2Wh3YOvDuixpSe/HPC7GYLzo9adtj9q1C/TNnLgyGPbbVR
-X-Gm-Gg: ASbGncsu4NRZ5Wlt741EbzMxhLBkQrnYaR7ciMvtQax7QZmiNO/wbW2sdAHz6m6uqdS
-	rDR7DO4eYy/4+9ViBRB1Z1hFf9RMoimHGP2CL0HmijA4m4A54Im+QhCMVaY4XXYmZt72BV+3k9p
-	AqeTYS4Ebz+9bI9KgmxCay85kXrkKwg+gb7FdyQvgjAjb+a/7OE9YGEgm1PCY8086s5WoinJkFx
-	Fwm/0VGxJxS8WzhYQJUPCx8WwXRXu7hAuIvsmeTnMv+/G6V7uvxX1WPKij/zokEhBWg6S/aO7N2
-	+UOGe5C70a1Qc6jbhaPFqRWD1T10jnItf43LZ89Oa2howKbTEQyWw1f4Xmf3ustiU9SWGQBYVYu
-	de7H3Sbo=
-X-Google-Smtp-Source: AGHT+IFaWIGOmB8cTBxOE+dYT4jEmG0XdjfXBvG0xeDCxKUTjA0Z0v02NnZ2wm1eKbLYbdO4+GchmA==
-X-Received: by 2002:a05:6122:7d0:b0:529:d14:67b6 with SMTP id 71dfb90a1353d-52c441af38fmr1708144e0c.7.1746691697402;
-        Thu, 08 May 2025 01:08:17 -0700 (PDT)
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52ae419c85csm2888631e0c.33.2025.05.08.01.08.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 01:08:17 -0700 (PDT)
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-5262475372eso197650e0c.2;
-        Thu, 08 May 2025 01:08:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWERG2zKGAiRQQbsYKzmFdvBqDBG3fMORz0BTLJezVvidt2qZuvm2KyBxeg20ibfYakqXIqPFvSvEg=@vger.kernel.org, AJvYcCXP7qTdcNYgGPIqAm8VRHqVlVK/mkm5ETkeP5G+mKfEYMmUzzKbztJyW7Q6bmaQwYCMFrepPKxTaOTyR5Zv7TIPaUM=@vger.kernel.org, AJvYcCXjRkBa3ovT+r4jzo9wMSLt4kSxUcX90GCgg5bTvI9E/h8U4uz4MLZg9Aa9+UXw3fwdBzeHOr3bbKhaLOaf@vger.kernel.org
-X-Received: by 2002:a05:6122:3295:b0:529:2644:5eec with SMTP id
- 71dfb90a1353d-52c441e2252mr1551202e0c.8.1746691696707; Thu, 08 May 2025
- 01:08:16 -0700 (PDT)
+	s=arc-20240116; t=1746691717; c=relaxed/simple;
+	bh=/O0T5gj+l3SiG8/jOeA1XTgLwp+ic/gfHfsw9rQ2A78=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qyqYExtLmJlx0/qjuAWQOML0POMnQOpoBG/ofw4atBwOCAJgTACiGgPAUfreHiil7L33RMbwRkJ1hO37k7D9ymtmOANvcoGpQsmbfdRNIPoCF+xrs4pgCwpIzmBZKdTGRB0Mb93h6baJ5GiG8R9L9KJSBg8mRpeBVTIfdID7dFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=jryb730/; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="jryb730/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=5LiG6Zuwrq9CMULY5+p0T63SktsHI9fzOPt2+pi9YiU=; b=jryb730/yRHkyy3N0TAzZsGYt0
+	CFzbHqWvzqB7bvj7NbQfo5bIe/9bE0UysKCrJZDhFqhj55taSjrR+AyXnFFi9wCdEEqzwc4+e8HnY
+	9Jl6zuFiHs7PgZUac9AbcnZDxylpAmtstdqx4sgYgFPNOKkbSkyVegegUid5vO8vtK1BmxvsWzi+F
+	nZY84ndyoN4j1BzTOalkqueg1IPAeefuv4QD3fxIpggcFRm2wiYqT5CmNLS4e/VSIjvVZnBtDJ5X3
+	HYtusZgOIWKj/7XID/fEQl88m3Gark+/Xj6KeID1mogTaN++I5ejbwm1PnVXQrC6wFcyMvPdWyrEm
+	7cLr9omg==;
+Received: from [223.233.71.203] (helo=[192.168.1.12])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uCwEk-005681-4c; Thu, 08 May 2025 10:08:22 +0200
+Message-ID: <751a4217-a506-ecf9-ac9f-1733c7c7c8d9@igalia.com>
+Date: Thu, 8 May 2025 13:38:11 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327151109.9648-1-tsogomonian@astralinux.ru>
-In-Reply-To: <20250327151109.9648-1-tsogomonian@astralinux.ru>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 8 May 2025 10:08:05 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUoZSXQwu6gZgbzUcFgjQh=ng7UZAGC5ke4GVB-zqqhqQ@mail.gmail.com>
-X-Gm-Features: ATxdqUHjjZXKNDvAcDrDPJ9dSfaDFZqswvwv39QmwuKKp-97On7DFcun-1asJ9A
-Message-ID: <CAMuHMdUoZSXQwu6gZgbzUcFgjQh=ng7UZAGC5ke4GVB-zqqhqQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] renesas: add zero check for prate variable
-To: Tigran Sogomonian <tsogomonian@astralinux.ru>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v3 3/3] exec: Add support for 64 byte 'tsk->real_comm'
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>, Petr Mladek <pmladek@suse.com>
+Cc: Bhupesh <bhupesh@igalia.com>, akpm@linux-foundation.org,
+ kernel-dev@igalia.com, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+ laoar.shao@gmail.com, mathieu.desnoyers@efficios.com,
+ arnaldo.melo@gmail.com, alexei.starovoitov@gmail.com,
+ andrii.nakryiko@gmail.com, mirq-linux@rere.qmqm.pl, peterz@infradead.org,
+ willy@infradead.org, david@redhat.com, viro@zeniv.linux.org.uk,
+ keescook@chromium.org, ebiederm@xmission.com, brauner@kernel.org,
+ jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com
+References: <20250507110444.963779-1-bhupesh@igalia.com>
+ <20250507110444.963779-4-bhupesh@igalia.com>
+ <aBtYDGOAVbLHeTHF@pathway.suse.cz>
+ <20250507132302.4aed1cf0@gandalf.local.home>
+From: Bhupesh Sharma <bhsharma@igalia.com>
+In-Reply-To: <20250507132302.4aed1cf0@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Tigran,
 
-On Thu, 27 Mar 2025 at 16:13, Tigran Sogomonian
-<tsogomonian@astralinux.ru> wrote:
-> To avoid division by zero, a check was added to the prate
-> variable, since no guarantees were found that it could not
-> be equal to zero.
+On 5/7/25 10:53 PM, Steven Rostedt wrote:
+> On Wed, 7 May 2025 14:54:36 +0200
+> Petr Mladek <pmladek@suse.com> wrote:
 >
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>>> To fix the same, Linus suggested in [1] that we can add the
+>>> following union inside 'task_struct':
+>>>         union {
+>>>                 char    comm[TASK_COMM_LEN];
+>>>                 char    real_comm[REAL_TASK_COMM_LEN];
+>>>         };
+>> Nit: IMHO, the prefix "real_" is misleading. The buffer size is still
+>>        limited and the name might be shrinked. I would suggest
+> Agreed.
 >
-> Signed-off-by: Tigran Sogomonian <tsogomonian@astralinux.ru>
-
-Thanks for your patch!
-
-> --- a/drivers/clk/renesas/rcar-gen3-cpg.c
-> +++ b/drivers/clk/renesas/rcar-gen3-cpg.c
-> @@ -205,6 +205,8 @@ static int cpg_z_clk_determine_rate(struct clk_hw *hw,
->                                                   prate * zclk->fixed_div);
+>>        something like:
+>>
+>> 	char    comm_ext[TASK_COMM_EXT_LEN];
+>> or
+>> 	char    comm_64[TASK_COMM_64_LEN]
+> I prefer "comm_ext" as I don't think we want to hard code the actual size.
+> Who knows, in the future we may extend it again!
 >
->         prate = req->best_parent_rate / zclk->fixed_div;
-> +       if (prate == 0)
-> +               return -EINVAL;
 
-prate can never be zero, as req->best_parent_rate is always larger or
-equal than zclk->max_rate, and zclk->fixed_div is a very small number
-(2 or 4).
+Ok, let me use 'comm_64' instead in v4.
 
->         min_mult = max(div64_ul(req->min_rate * 32ULL, prate), 1ULL);
->         max_mult = min(div64_ul(req->max_rate * 32ULL, prate), 32ULL);
->         if (max_mult < min_mult)
-> diff --git a/drivers/clk/renesas/rcar-gen4-cpg.c b/drivers/clk/renesas/rcar-gen4-cpg.c
-> index 31aa790fd003..4c9a7d699290 100644
-> --- a/drivers/clk/renesas/rcar-gen4-cpg.c
-> +++ b/drivers/clk/renesas/rcar-gen4-cpg.c
-> @@ -308,6 +308,8 @@ static int cpg_z_clk_determine_rate(struct clk_hw *hw,
->                                                   prate * zclk->fixed_div);
->
->         prate = req->best_parent_rate / zclk->fixed_div;
-> +       if (prate == 0)
-> +               return -EINVAL;
+Thanks for the review.
 
-Likewise.
-
->         min_mult = max(div64_ul(req->min_rate * 32ULL, prate), 1ULL);
->         max_mult = min(div64_ul(req->max_rate * 32ULL, prate), 32ULL);
->         if (max_mult < min_mult)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+Bhupesh
