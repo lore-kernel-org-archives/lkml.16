@@ -1,108 +1,141 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917FA1EE03D
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 06:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C971DE3C0;
+	Thu,  8 May 2025 06:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746685592; cv=none; b=gH5sIJ4gGebGje5uz+pTi/k40/b/FcK3JFIK7zq8aalw0k0IqvRuzSQQ+V8uKuuvlPceLS75O385H+dt/vX52w6i9pV7akIVSoI/HITI3/ajX97rNPIRnVMy4a2xgsV0QmSmKCot8mHtzaaAqOibqr2XphiiSUECRsh4ZTmJthc=
+	t=1746685621; cv=none; b=IAoRr4x3a5B0nWIqMySfoTGVb2kh5NKeezTx+NKIdaR7HvTYe7kZRb56VSlAodYviocWzo9ipSd35NuwJLQJV7KLYF9Xf0KimcRZ4nidGq3AginUGcPT1mMWfbKOR9Iv2s24z1eyrgFP0MT68W3iL3ZNhj2zaH/gqaOsJexWnaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746685592; c=relaxed/simple;
-	bh=RDPgm5xhma7QFLB18+5pqsvzgjikpNdaONSF0MiESTo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=UwiJ+Vb2KfWCBdzOC4Zr6S7qCHsrRN5TV6sFMwIfOTRQIyJNymnTn7sJXwXAYtqAD9XYqAtB/A6W/5AzQfr2AtKxMjie9vXWkMmrxhv0O731u23fAFY8E1t5ibXOaG3o5KVk1Ai5gIJLemgGELQiVZx8dim9ybqPYiQKvWjoQEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fnS3IeSp; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746685621; c=relaxed/simple;
+	bh=9j6WtAQ6uxKBDo5BIDuWyFtPZ0W6bM3nXpFKnwGq2uA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=PaYEsprnsUskyt3pqkUVZWbJ+JM3hwSsI1+QfC5fnWeqJgyMNwkGBvvi2i6mwJx3FmQrJ4/HHq0TI5aHxHByb+BwI1QhCa0IFD4ZXTU2kYPkZ1T747n7yTL1Qis3QcB5KK4hQuSfGHIKrRB+mDUSrkHLXGABeOooP7kptkEh0nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2N6cyUB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fnS3IeSp"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a0b6aa08e5so923818f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 23:26:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746685589; x=1747290389; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vrj9ukkKygc1G8rKTTqLX2onZSR0aOFlnCDnYrntq9Q=;
-        b=fnS3IeSprMBvRYeEMrUA2d8rKUtOZPD13FDaKWxGfIhU0WsZJvvVdKDKQMf5+7e1t5
-         v206AGlMvxUm1T6Bq4Hf1SxlVefN01MJn3cmlFpGswzHy4PsPxeTo3UXlQUARs56Q3nb
-         OkA223MdQu1harumoYixuEKA/lywl0gWJ6fn8JfhBiZTRmMrqMMy8mRBflCnZeuIP8rs
-         noPQ0JBL0wTO7hbvdVyDo+VfAVwkxwA0/+2O5V2oiD1zIyQ1nDZo/uv0FYhwpnFLBxKE
-         87M4bZgooqdYCK4kK1L17GSuoucVq7LSHeeV5KZq7oFG2xCaKeT/4qHtXKLIn54QOxr2
-         CApQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746685589; x=1747290389;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vrj9ukkKygc1G8rKTTqLX2onZSR0aOFlnCDnYrntq9Q=;
-        b=DmwL/0+l1da7isCWKyyzR6wgO1/HWb7LRRJ0fhO4TJq2zXsJFXDzywIoIy2pqgltJp
-         mE0h+7SopRJejYLrAPPIhfgc3yjSgraqvdzcnDTIZ8Lk+f8Vu9hGz2GMx0tuNUCKHwKe
-         335bdhH21/3WCIY35xRi2h4mNmfDlG1CwydudD58CW9W+13YzEAM8JuuK3DkNFX8/Rz7
-         z/SnvdNSTQ4EtDaStiKLb72KHkKVWflFQr7PwBxiVb8GR92UVtS/0okznL6ITRcnTrWJ
-         Gj6JrX8j2s7vILMdG5WUzSMJE3jK/ht9Bte5LjAc+Bsd1241KLWnUlQJ6ZLx5ai5SjhG
-         2VBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWrzNV/t6k6D6aRopaJN+9obsYwjCpvAPMRx6iU5HpXY3a3DtrKhVC9dcJYFowJPpoXQ5Pk0OWhXyQW0RA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtraPdMkbHPZ5T+ljFi8DyKIYvIfrmk2yVojCauQsRKH0fZ8jd
-	sbRdemrgv0z+mAP59KW6UQ9+s2a8kVQLZrmGMpJRxEADjQSzpzWST1W4CJQgpdg=
-X-Gm-Gg: ASbGncuJpjGg/8FXiKO5f6yJX12t1aWTe0o484UzlbEaUKMLhQ8aegqPlsvC1cmOD+B
-	/kdTXB7YVkS/vXXtK3y+LfdUmmJlv/y4p+yTqxaFPGmp4jfIEQxAOXenSjLb06dbpKLMu4v+1k4
-	tmQms1Dj+QGCBoKsfihX9LC8KDdJg+AoCqP/W0W8pQPfuNTHRxiFN006pWneXBUBz4azovf9OMF
-	sM1NLFOyDbIwxF/kQRv0N1j+gqU1sTztwncfUHiAmB1pvjhZQgLrIXoeyMVHswjR3F48ZzvU2Rn
-	VHyXIxtog5Ug/LQqu23tY6PBqYEDU6F/7vJn7C4rgC60lw==
-X-Google-Smtp-Source: AGHT+IFAMx7JUFXY3xA7TDuVFEdfH0Qfm/mO3IujmuFv9MragYBfI8mgTfu7zRm8OHQ8pIMC9sOyhA==
-X-Received: by 2002:a5d:64ed:0:b0:3a0:b138:4810 with SMTP id ffacd0b85a97d-3a0b99171ecmr1632328f8f.17.1746685588890;
-        Wed, 07 May 2025 23:26:28 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a099b178absm19380008f8f.97.2025.05.07.23.26.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 23:26:28 -0700 (PDT)
-Date: Thu, 8 May 2025 09:26:25 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Laurent M Coquerel <laurent.m.coquerel@intel.com>
-Cc: Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	George Abraham P <george.abraham.p@intel.com>,
-	Suman Kumar Chakraborty <suman.kumar.chakraborty@intel.com>,
-	Karthikeyan Gopal <karthikeyan.gopal@intel.com>,
-	qat-linux@intel.com, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH next] crypto: qat/qat_6xxx - Fix NULL vs IS_ERR() check in
- adf_probe()
-Message-ID: <aBxOkY99jQF7q-7M@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2N6cyUB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 721D7C4CEEB;
+	Thu,  8 May 2025 06:26:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746685620;
+	bh=9j6WtAQ6uxKBDo5BIDuWyFtPZ0W6bM3nXpFKnwGq2uA=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=N2N6cyUB3A6IkBJQplK8Yy7FLMIeqtCTEZbyapl7uw2mztA9Qa8i0/JmFg/n31/Yx
+	 SsPZX5c4Aw9h6gQaCJCPF0w9JypeD28R21/R3yiBOgELgXw6K4vEKDADeEEHzcYNUD
+	 PwrETqzbwOTsJx/u6ThoLOhLrNlQ2HEF6huY8f06OEjbFjt0jn0M3DQXgS8T6BiAR6
+	 vPTAAtk8kEryQ6IntMaIhzDiAduMEyAQnBwA0Jb491sCSexD1llIEr/HnU3AIyxapN
+	 Rh0qNPvKAJOk0zYTmzHiY1LYp1OtX6OniFn2QELNtNn92l6xXsiL50uRhUH07eI3SR
+	 gEq6TFQSUfqDg==
+Message-ID: <97cfb30a-daa5-44de-ab29-f20b35d49d72@kernel.org>
+Date: Thu, 8 May 2025 08:26:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/4] Exynos Thermal code improvement
+To: Anand Moon <linux.amoon@gmail.com>,
+ Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ "open list:SAMSUNG THERMAL DRIVER" <linux-pm@vger.kernel.org>,
+ "open list:SAMSUNG THERMAL DRIVER" <linux-samsung-soc@vger.kernel.org>,
+ "moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:CLANG/LLVM BUILD SUPPORT:Keyword:b(?i:clang|llvm)b"
+ <llvm@lists.linux.dev>
+References: <20250430123306.15072-1-linux.amoon@gmail.com>
+ <CANAwSgSXNuNFQ6RiqiLEBY3eCmxz2hQYfWTFij=Vi8S7rS-_TA@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CANAwSgSXNuNFQ6RiqiLEBY3eCmxz2hQYfWTFij=Vi8S7rS-_TA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The pcim_iomap_region() returns error pointers.  It doesn't return NULL
-pointers.  Update the check to match.
+On 08/05/2025 08:14, Anand Moon wrote:
+> Hi All,
+> 
+> On Wed, 30 Apr 2025 at 18:03, Anand Moon <linux.amoon@gmail.com> wrote:
+>>
+>> Hi All,
+>>
+>> This patch series is a rework of my previous patch series [1],
+>> where the code changes were not adequately justified.
+>>
+>> In this new series, I have improved the commit subject
+>> and commit message to better explain the changes.
+>>
+>> v6: Add new patch to use devm_clk_get_enabled
+>>     and Fix few typo in subject as suggested by Daniel.
+>> v5: Drop the guard mutex patch
+>> v4: Tried to address Lukasz review comments.
+>>
+>> Tested on Odroid U3 amd XU4 SoC boards.
+>> Build with clang with W=1 enable.
+>>
+> 
+> Genital Ping!!!
 
-Fixes: 17fd7514ae68 ("crypto: qat - add qat_6xxx driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/crypto/intel/qat/qat_6xxx/adf_drv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/intel/qat/qat_6xxx/adf_drv.c b/drivers/crypto/intel/qat/qat_6xxx/adf_drv.c
-index 2531c337e0dd..132e26501621 100644
---- a/drivers/crypto/intel/qat/qat_6xxx/adf_drv.c
-+++ b/drivers/crypto/intel/qat/qat_6xxx/adf_drv.c
-@@ -156,8 +156,8 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- 		/* Map 64-bit PCIe BAR */
- 		bar->virt_addr = pcim_iomap_region(pdev, bar_map[i], pci_name(pdev));
--		if (!bar->virt_addr) {
--			ret = -ENOMEM;
-+		if (IS_ERR(bar->virt_addr)) {
-+			ret = PTR_ERR(bar->virt_addr);
- 			return dev_err_probe(dev, ret, "Failed to ioremap PCI region.\n");
- 		}
- 	}
--- 
-2.47.2
+Huhu, nice. :)
+I make typos as well, but some typos are better to avoid. :)
 
+Anyway, !!! are exclamation marks and I think it is very difficult to
+scream at someone gently. I think this is contradictory to itself, so it
+does not feel gently at all.
+
+Plus you sent it 7 days ago and you are known to send poor quality,
+untested code, so just relax and wait.
+
+Best regards,
+Krzysztof
