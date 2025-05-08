@@ -1,163 +1,127 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18677227E82
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB63019D891
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746708743; cv=none; b=pKNDUeQy5qRPgM8/J4BxynZtlJV0BU3ti6Eg1UXPDoUnLOdLW51CaRJvDl0tCagUO+N2eBrMLS6NxKQHTizbF0yl/dqCutpFpEsox5oZvp4Q/eJ9JMHFN/MwMscbuwTqK/6NXVtWniOF/TFOdPRwFwDJQew6Zq8EEYBZ2lV0OCw=
+	t=1746708789; cv=none; b=pZjDpO3TMeZHfGQ2+uaTRCT7pGZZCO4MAyl3UXI4UZQfg7sx3LmDDVvNZij7qRc8N/4NHzJZtaJbnfL4JfClEASM2hQfU332AspXAL6DUm/tLdQP0ZBj7Iyl9oXC7LqXetElJ7h+9qOExF2B2s0baKdJWExMBD8o2BigU7INJI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746708743; c=relaxed/simple;
-	bh=4EEv/VR+O6eQtRtSYNR1r7VhlLlFGzV6XXC+IypFeGA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z4BdfnWmnnBS7/AeYi02Ji1V5jaJHmffOqUaJx07rsirjRqYmAgLZLcp0L4QL664wLwWF1C7dNrX7E5xTQhv6igyNkax28SSV6bMLktIGI3pp96IHcIXG5FEUztJpTQq/zfvpl1vZTDy+4WqiW3GziOWl8dAjiN1GDQjNrrN8fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=nS06MZyG; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1746708789; c=relaxed/simple;
+	bh=euZ0Zj5ymVvdjh/3qOybPwtuZ+o3GzvdIi2/M+/nE94=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZgSMh22mjhh4YSNvVecb2vmOq84ksFBgXBAA/CWrnuFbCJ6JsrGSwe5yEDbc6vDabJrjxmO2V7NWyVGvVBR//JfStiNeG5UqYh8XFaj7vKMtwC6Q0B75b8+wDbRjzeD7V7UMU9YqrILEjh74BajJ7W9LKrxWkFasqQnnG98EwYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=XuAPBInV; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="nS06MZyG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=MFGXgXVhRIMsvtkmQGMYgyfxAd9uaycap/esRlGZ1eo=; b=nS06MZyGHnra3A68B5FRn4AtR1
-	Cd3pq19j82mhaAHYfWb0QsWsfLA9NRRKS3BjHEfqE6NPklGG/8BbONBp82ekODxR27Wbc3zztqhAu
-	Vwcisfvmsrh2GB7Dr64L08kEOCrej+B+KjhuO/AxlUuNc2xU0KAM/l53MLjBsfAlKgn7nKhONZGtZ
-	nXrkWm6ZL/+mk4QbVrci56toprJf9nIRGqhOxtpBWorqI7nWcfBz456kvx68SPDmVL10kwu+UubkW
-	+T5kJemrd3fKy3s9dmW293+3cCWuumNY0DU9ExkboR55as797QPcmRUiIdUulx+osy1kmpnwAHsT+
-	x1XH1H1A==;
-Received: from [81.79.92.254] (helo=[192.168.0.101])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uD0eu-005Daq-FW; Thu, 08 May 2025 14:51:44 +0200
-Message-ID: <a1c9c680-2927-428c-95e9-2e79d14cec58@igalia.com>
-Date: Thu, 8 May 2025 13:51:42 +0100
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="XuAPBInV"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso6629805e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:53:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1746708785; x=1747313585; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vh7Nh/LNhUg5Xl+qiW1/QFk8dwafIYEiWF4enwv0UK4=;
+        b=XuAPBInVOh8vOZ0JoRbZlweRshl2MR0cgRDvj6kGUVJTDyPLyDgZ/3zFEj0Pk/royw
+         LGvoPTO+kA0MYx5HLfbWbvmRr1OyDNAs12RmzD+Z95FZ8kmWievsmc/f1GlAK0iVypE5
+         l79uwp6G7SGKfEpSfmzYj33v56kTnZE/TebigloazKh3G24PIuaaV/fVNn9HQxiYF3zy
+         bd0weOcFncXSpAcnEx8owhvGkGq+o+TvAGQXbvZhAeSdAJc75ZNtd0CpTnNnm6JI6sP7
+         NUiia3gqTfgt0zg1+EdR2vgiFZuwn0/9M44tpJAj3BB6cNPvmfwapnIOCANvfDQFLsbh
+         XMpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746708785; x=1747313585;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vh7Nh/LNhUg5Xl+qiW1/QFk8dwafIYEiWF4enwv0UK4=;
+        b=OH/His4xriZWTi1WuKHkca5FpsDJZRwi53cM+CFFMB+U5gQysdm0n20jzTbqhe7i/i
+         rz6jfX+pHDzoBkTvCqLAW7mnAEbqeahrHfsC4ZRVXaIEVPhTQYzikKu0a5uFPKnT9os7
+         qNFzPIGACSMpO/UqFuxF0hZSinSgi+aY8iRl3z6o77TYtkGjueciHfbMxkG4yc1ql9Xz
+         c9XtiqUN7d+72lft0WprU70+6lDy3pNAzA8WHuJnA3yvzoVLTZQMRkRU1rbTgQRub5+x
+         cVtH2KHRf+efaBpHc5os74BLxs0ACXgcxgunBVqD4TwCMquJz6q00Tb2BWC9GOZVko97
+         7+Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCX7699FST3bjBjO/gVcLLM4/f1WEV2wmM67U4LrCyMt2OSIfaiMRqRDk5/xY01aMAWvZ0UlNv0/LVykYtM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTvnwrirAibGpZi/0ur6nesLlsGoNCKAOnW6RkULsWnVdcDv/j
+	sPjCwSXlRYWFfh1s3DAj1NKxsDIQCg0vvqYiXbvZbkjq5L+9bdRNb3eEB3A6LOpHkjvk9PX46dj
+	/
+X-Gm-Gg: ASbGncuadBSpMxGYd+cY1Fvi5QA1fr7DPlAmOAyPX+GY7yOVP7z4VMEDQydvB7q1//5
+	FbS2of8oz2fw+noRX4LMXG6/3C02CllGa9XcjyytTU0MAN8QMGovhTQVhwcELmiY1eMPezg1dC8
+	7z3TkdzDypzk2AexamgOTAFQl3pwt/jANZk+I2/spK88a4xP0BHpuN7deZkinG9IhLZX/SKOR/2
+	aUtKu7URleQlfQQM7o6C/n8PwodvXRT8u2eEUGcR2mfEL2abLRgqYGkVWF/rcyAcXM737lAUWIl
+	pT4TnXKfhuwKdAOkLDxj0USdSt+c/ei+JpB48XzvMKKuf9915Cc=
+X-Google-Smtp-Source: AGHT+IFR8QCSoAU+f4KSrfc+O+GL0KH+EcLDchKk/zyNXpj2HtkBA6LUoeVtjpf2wnryhRhOk+2CgA==
+X-Received: by 2002:a05:600c:3150:b0:439:5f04:4f8d with SMTP id 5b1f17b1804b1-442d02ef128mr29446975e9.12.1746708785138;
+        Thu, 08 May 2025 05:53:05 -0700 (PDT)
+Received: from alex-rivos.lan ([2001:861:3382:ef90:e3eb:2939:f761:f7f1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32f238sm36021615e9.11.2025.05.08.05.53.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 05:53:04 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+	Andrew Jones <ajones@ventanamicro.com>
+Subject: [PATCH v3 1/3] riscv: Fix typo EXRACT -> EXTRACT
+Date: Thu,  8 May 2025 14:52:00 +0200
+Message-Id: <20250508125202.108613-2-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250508125202.108613-1-alexghiti@rivosinc.com>
+References: <20250508125202.108613-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/6] drm/sched: Port unit tests to new cleanup design
-To: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250424095535.26119-2-phasta@kernel.org>
- <20250424095535.26119-8-phasta@kernel.org>
- <894cf4cdb7e14b2a21dcf87bfeac4776cb695395.camel@mailbox.org>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <894cf4cdb7e14b2a21dcf87bfeac4776cb695395.camel@mailbox.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Simply fix a typo.
 
-Hi Philipp,
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/include/asm/insn.h | 2 +-
+ arch/riscv/kernel/vector.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-On 08/05/2025 12:03, Philipp Stanner wrote:
-> On Thu, 2025-04-24 at 11:55 +0200, Philipp Stanner wrote:
->> The unit tests so far took care manually of avoiding memory leaks
->> that
->> might have occurred when calling drm_sched_fini().
->>
->> The scheduler now takes care by itself of avoiding memory leaks if
->> the
->> driver provides the callback
->> drm_sched_backend_ops.kill_fence_context().
->>
->> Implement that callback for the unit tests. Remove the manual cleanup
->> code.
-> 
-> @Tvrtko: On a scale from 1-10, how much do you love this patch? :)
-
-Specific patch aside, it is the series as a whole I would like to be 
-sure there isn't a more elegant way to achieve the same end result.
-
-Like that sketch of a counter proposal I sent for the reasons listed 
-with it. Which were, AFAIR, to avoid needing to add more state machine, 
-to avoid mandating drivers have to keep an internal list, and to align 
-better with the existing prototypes in the sched ops table (where 
-everything operates on jobs).
-
-Regards,
-
-Tvrtko
-
->> Signed-off-by: Philipp Stanner <phasta@kernel.org>
->> ---
->>   .../gpu/drm/scheduler/tests/mock_scheduler.c  | 34 ++++++++++++-----
->> --
->>   1 file changed, 21 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
->> b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
->> index f999c8859cf7..a72d26ca8262 100644
->> --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
->> +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
->> @@ -228,10 +228,30 @@ static void mock_sched_free_job(struct
->> drm_sched_job *sched_job)
->>   	/* Mock job itself is freed by the kunit framework. */
->>   }
->>   
->> +static void mock_sched_fence_context_kill(struct drm_gpu_scheduler
->> *gpu_sched)
->> +{
->> +	struct drm_mock_scheduler *sched =
->> drm_sched_to_mock_sched(gpu_sched);
->> +	struct drm_mock_sched_job *job;
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&sched->lock, flags);
->> +	list_for_each_entry(job, &sched->job_list, link) {
->> +		spin_lock(&job->lock);
->> +		if (!dma_fence_is_signaled_locked(&job->hw_fence)) {
->> +			dma_fence_set_error(&job->hw_fence, -
->> ECANCELED);
->> +			dma_fence_signal_locked(&job->hw_fence);
->> +		}
->> +		complete(&job->done);
->> +		spin_unlock(&job->lock);
->> +	}
->> +	spin_unlock_irqrestore(&sched->lock, flags);
->> +}
->> +
->>   static const struct drm_sched_backend_ops drm_mock_scheduler_ops = {
->>   	.run_job = mock_sched_run_job,
->>   	.timedout_job = mock_sched_timedout_job,
->> -	.free_job = mock_sched_free_job
->> +	.free_job = mock_sched_free_job,
->> +	.kill_fence_context = mock_sched_fence_context_kill,
->>   };
->>   
->>   /**
->> @@ -300,18 +320,6 @@ void drm_mock_sched_fini(struct
->> drm_mock_scheduler *sched)
->>   		drm_mock_sched_job_complete(job);
->>   	spin_unlock_irqrestore(&sched->lock, flags);
->>   
->> -	/*
->> -	 * Free completed jobs and jobs not yet processed by the DRM
->> scheduler
->> -	 * free worker.
->> -	 */
->> -	spin_lock_irqsave(&sched->lock, flags);
->> -	list_for_each_entry_safe(job, next, &sched->done_list, link)
->> -		list_move_tail(&job->link, &list);
->> -	spin_unlock_irqrestore(&sched->lock, flags);
->> -
->> -	list_for_each_entry_safe(job, next, &list, link)
->> -		mock_sched_free_job(&job->base);
->> -
->>   	drm_sched_fini(&sched->base);
->>   }
->>   
-> 
+diff --git a/arch/riscv/include/asm/insn.h b/arch/riscv/include/asm/insn.h
+index 09fde95a5e8f..2a589a58b291 100644
+--- a/arch/riscv/include/asm/insn.h
++++ b/arch/riscv/include/asm/insn.h
+@@ -352,7 +352,7 @@ static __always_inline bool riscv_insn_is_c_jalr(u32 code)
+ 	({typeof(x) x_ = (x); RV_X(x_, RVFDQ_FL_FS_WIDTH_OFF, \
+ 				   RVFDQ_FL_FS_WIDTH_MASK); })
+ 
+-#define RVV_EXRACT_VL_VS_WIDTH(x) RVFDQ_EXTRACT_FL_FS_WIDTH(x)
++#define RVV_EXTRACT_VL_VS_WIDTH(x) RVFDQ_EXTRACT_FL_FS_WIDTH(x)
+ 
+ /*
+  * Get the immediate from a J-type instruction.
+diff --git a/arch/riscv/kernel/vector.c b/arch/riscv/kernel/vector.c
+index 184f780c932d..901e67adf576 100644
+--- a/arch/riscv/kernel/vector.c
++++ b/arch/riscv/kernel/vector.c
+@@ -93,7 +93,7 @@ bool insn_is_vector(u32 insn_buf)
+ 		return true;
+ 	case RVV_OPCODE_VL:
+ 	case RVV_OPCODE_VS:
+-		width = RVV_EXRACT_VL_VS_WIDTH(insn_buf);
++		width = RVV_EXTRACT_VL_VS_WIDTH(insn_buf);
+ 		if (width == RVV_VL_VS_WIDTH_8 || width == RVV_VL_VS_WIDTH_16 ||
+ 		    width == RVV_VL_VS_WIDTH_32 || width == RVV_VL_VS_WIDTH_64)
+ 			return true;
+-- 
+2.39.2
 
