@@ -1,231 +1,232 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58FE28688F
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:51:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746726702; cv=none; b=sENzLvq8G6b2q11vlfTlq1HcBOUOT2jDhu+yDOKZM+Vf6KkP9tihhbsWtIbSbqyiJqwkYncBLr9TtN0l5/IC5TDQXM9/P5HEk5gh859BC+uHxFXKew2tg/+Sy4BWoZo+yI2P8kjRql1OwF/ywY1AZc+mwNu2bii28cp8sumE00g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746726702; c=relaxed/simple;
-	bh=9vAzFk3ej36C8l8EyjCCniQrUpBP+z4T56uDvNxUQm0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GPm6UkFUj20UsiGOVqSKLzM0bl7CV79AvygnjGsk6mUL+D2pVc2ckQDypztcDGljuXPp4Seq7wBuwLXThjjmghJ9KT5Le3k28X5fwD6Va2y33APniNMC3rA+5ncHpM89ruuwflL/+sFDtXXXVWyyEjWUkYNB2AQ2v839jc22kXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DOw85hl3; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90AFD286D5E
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746726707; cv=fail; b=Xc6NuqN2beXZqQ2MvdwlBMCzMkpl4qu6oM59Op8u47rWoDn5wvInDPr1GqENu9XXr+IpcY0qKDL2A/KGCvzc26dAiAPnWP5Bon6yMIsNccJwLePFCSlyUwjvrRxs1kjJOh8OHjGKDvM9QDfIvW1J4g+qKPCBfdwHKCxvQfZDIaA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746726707; c=relaxed/simple;
+	bh=eWC04mOgvvxHlZP7bZXEOXOLoq5dHzGLI7eijwetYYA=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=h2lms4lgdRybgu4gtC17uN60aOvuuO1S3eXG4EqDk5knZ9NvCDrBS6iaIud9HcO88k5UagmVN0JTAbWJbFc073ZhXr6vp6D7kWf6irUX0Mas/2sRamcsNhiQUafBlRE1100vEb1+ywTBmIaBpxManLDrwwGTfilgGCviN4btq1k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MRH2mYfV; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DOw85hl3"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ace333d5f7bso215094466b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 10:51:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746726699; x=1747331499; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9vAzFk3ej36C8l8EyjCCniQrUpBP+z4T56uDvNxUQm0=;
-        b=DOw85hl3AJ61w+hMVetrqM15WFIxyi6c5SkG/BUGeAdLUM49oEoxmBmQ3KbmzGitCe
-         ImS9/9S9dH2fN6wz0WBe2t3IbyI8Lj9J4+9Ea2ShmG2rIkHSw/alcG+U6UrhDobsCvn3
-         wCsPWd6s58h77KiZ7XvHvOoXaxBSXpysxmGNu2i7giheelUX8I4aQESYbXee67KjFepr
-         0Afahb28Mq/VPWXvHBR+q2nLgxRJUOCDsGfQHwzbwzMFeYRN0cbGLW0a+EeqUckjfAlH
-         4gzmKKnG9u6W7eHwBXQT8D17GIGRMwNhZxyA/EfzGUrCNETVFIjcow5Bhppt3Z/m7AGR
-         hICA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746726699; x=1747331499;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9vAzFk3ej36C8l8EyjCCniQrUpBP+z4T56uDvNxUQm0=;
-        b=gDZ3NgJDECqzBylcKa5j1EPMUIbK5DPljkL5PO3qvpm5GK6vZBPvHzxosDKJM3AJ6x
-         Vn/G4Q6bqIl7zkA6gmOOJxDft6CDpZgXN6Gy+tC3YFDqhbxzlb1I0N14EFTfa0wnSDWQ
-         SHH1j4lKyNz44JrvPGTQ9OvMoubBYi2HY2xsQyn4+/iToFh2pnU2xuKzJTzJxyJPiq9Y
-         cpEuj2vupCn06dyOi+pWbbWifHjyZ9aed2fdTvFItljh999l8OEUAqgb825cgdnJzcp9
-         qH7t14jjmHvZYfYJyQlWr6j8Gucc2UYrZJb8I6M7qtc/VdKJLyUdoy5n8YiB2OazgyWx
-         r1Nw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNeTgrHvppDE3DeZjWGa5htZGEnaZC5CHwB30wLI/Ora+96GR1vMUFYKzgO307tbGLfBW15v7FQK+k5eU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFFasmunmL8zV1IHqITdNAlIvEr9dDoJq4aVa9r1g+4+OZneaJ
-	NuErFbf2LdWNa1gW4jrGFYLLhFBhZW/KhPgZZBOG9GRuHvTzloL1D6e89OFPDMqYcpYvBcyb4MX
-	UhTMTZ6DO3WQcEYCAr0kmzeumaPlJxxyP0lPi
-X-Gm-Gg: ASbGncsEPGCrWtAU5lYnQylPE2jostAPnyc57ibW32x+RV7i1vNpn41s4PDTaPCRPsB
-	/DyaDyF0NREmfUDVeWhmzbGNwXkIakB7l+FGrnUIdHuehtcF+EsP2qd13ewXqTJfPeoFG+1jDG8
-	0XHAJhYNUMosoLv89V3FfCvMSgptIsl8OKV+ugTSf4zpGKzQA8RZbRnw05
-X-Google-Smtp-Source: AGHT+IFiG34ocNaePZQu/GwsnHYMExr9loCqHISwhlhRSjlrs+ftDtZwnqSmiOG2ytHr2NPo/xMxS/swhzKAA8M9jhY=
-X-Received: by 2002:a17:907:97d6:b0:ad1:fa32:b608 with SMTP id
- a640c23a62f3a-ad219170628mr57695466b.42.1746726698675; Thu, 08 May 2025
- 10:51:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MRH2mYfV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746726706; x=1778262706;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=eWC04mOgvvxHlZP7bZXEOXOLoq5dHzGLI7eijwetYYA=;
+  b=MRH2mYfV3eOsBl1NRdRd76uQRv4G5Fu+7Y9BhrjIEv6UlOpd8PHkrbjY
+   PH6gWYlDiCVD4bCuolXDK4K57sYl1AfBNHMsCVvqi83i0PntBsSG9LYK3
+   CshfqaMjjtr1sR4xClC0HoYwvEeJSRF1Rvk/0V0A25nD48ucvgS9JlgFx
+   vl0M5ef3bjjMrsyFbdBStFoXMe+cjZfR7rjLErYF3VgVOewY8/ArGYmXc
+   2ksVkUJW9IR2zu0CwcEdFaQfQP/1e6wLqY+EZofws3SntjXPaVL2k/OOU
+   0KOoXZoXIy6eDCvPC463aHMlhLpzlLogH7FCUmUy4QBnam76azoexE47R
+   w==;
+X-CSE-ConnectionGUID: fbZbCJs8SPaECI4g8lBZGA==
+X-CSE-MsgGUID: efEVKUmXQX6xmSbL3vUecw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48442278"
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="48442278"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 10:51:44 -0700
+X-CSE-ConnectionGUID: kolvQWNbRI6s5s/xeYa0xg==
+X-CSE-MsgGUID: +ylj7gBGQXWxxjaVFMHYuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="136250261"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 10:51:43 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 8 May 2025 10:51:42 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 8 May 2025 10:51:42 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.44) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 8 May 2025 10:51:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EN4YZEGT1JIyPWW2J4t4LCEdp/Y4aTgBlqxidMW5pqxUPniMgTPssc4Y8858h9g50cOxi7LEOpmbeVCOf5cooHshS/8TqoYFVPsqGBjclyX1P0qXE94zuLyztaKrKcu0loYWMkB4wBMZ+E/rEeozf+kG25tmYvKa4PA+AFmRdMsiYFAmk1nYVixfVDjwGniDrIReKNVqLFwVEVqIb0/BnT5T7Wf+xojSz5xM1PGLE2aMmxYYKT1AUP0wQnFL2o6SSS/+cyL2moYdgtevcTsM7SIIEFUvXvDd2ui0xkXbPPcw6rq/zIGal8oTNicIdEbsiP1VRVvpYPKgC8u9H7dThA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6UjKGStsoyfnddRZ51UJf/0HFKmJoMw0Sju39hPLkBE=;
+ b=HJ44J3cOOQ2cwdRYauK6d1q9u3tMHQymFDcXS0j3ywJ4BdmZf9oEG7+9L0gJAXL30hC4Hs9CtM7rSJXF5BF2ADiBdT9kt4Y9kH4wnXAUI5mplyxcbDnZyfLBU4M1ggE4CLKWSxSaonX6wMsrTkKx2dYxc8dd7RaybtfjeyaxCw7lGQfYkVROW2fbSzg7DPz9laJzyIiN6O7G3OlHscbzGfLJGC9oRhuYZz/k/sVn5hV7SKQpdhAVDh9b/T3Qh33nMuaPpdsYxMuAaAGbZkxzbb71pTf3MqTnWAfAEzqE8rd5iTYyL+UYTkYIvUkt7/80cmVO2Us1TCCysGiiTMbWqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by IA1PR11MB6490.namprd11.prod.outlook.com (2603:10b6:208:3a6::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Thu, 8 May
+ 2025 17:51:26 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8722.021; Thu, 8 May 2025
+ 17:51:25 +0000
+Message-ID: <dafc0ab3-aaf7-4055-bf56-ffd5414f8895@intel.com>
+Date: Thu, 8 May 2025 10:51:23 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 07/30] x86/resctrl: Check all domains are offline in
+ resctrl_exit()
+To: James Morse <james.morse@arm.com>, <x86@kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>, Babu Moger
+	<Babu.Moger@amd.com>, <shameerali.kolothum.thodi@huawei.com>, "D Scott
+ Phillips OS" <scott@os.amperecomputing.com>, <carl@os.amperecomputing.com>,
+	<lcherian@marvell.com>, <bobo.shaobowang@huawei.com>,
+	<tan.shaopeng@fujitsu.com>, <baolin.wang@linux.alibaba.com>, Jamie Iles
+	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
+	<peternewman@google.com>, <dfustini@baylibre.com>, <amitsinght@marvell.com>,
+	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+	"Dave Martin" <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>, Shanker
+ Donthineni <sdonthineni@nvidia.com>, <fenghuay@nvidia.com>, Shaopeng Tan
+	<tan.shaopeng@jp.fujitsu.com>
+References: <20250508171858.9197-1-james.morse@arm.com>
+ <20250508171858.9197-8-james.morse@arm.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+Content-Language: en-US
+In-Reply-To: <20250508171858.9197-8-james.morse@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0130.namprd03.prod.outlook.com
+ (2603:10b6:a03:33c::15) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506183533.1917459-1-xii@google.com> <aBqmmtST-_9oM9rF@slm.duckdns.org>
- <CAOBoifh4BY1f4B3EfDvqWCxNSV8zwmJPNoR3bLOA7YO11uGBCQ@mail.gmail.com>
- <aBtp98E9q37FLeMv@localhost.localdomain> <CAOBoifgp=oEC9SSgFC+4_fYgDgSH_Z_TMgwhOxxaNZmyD-ijig@mail.gmail.com>
- <aBuaN-xtOMs17ers@slm.duckdns.org> <CAOBoifiv2GCeeDjax8Famu7atgkGNV0ZxxG-cfgvC857-dniqA@mail.gmail.com>
- <aBv2AG-VbZ4gcWpi@pavilion.home>
-In-Reply-To: <aBv2AG-VbZ4gcWpi@pavilion.home>
-From: Xi Wang <xii@google.com>
-Date: Thu, 8 May 2025 10:51:26 -0700
-X-Gm-Features: ATxdqUGmHNfwE-8VkB6qpw0w9vEhgm8bSSonqkVq6btmJis37oJqz-zs928L9ro
-Message-ID: <CAOBoifhWNi-j6jbP6B9CofTrT+Kr6TCSYYPMv7SQdbY5s930og@mail.gmail.com>
-Subject: Re: [RFC/PATCH] sched: Support moving kthreads into cpuset cgroups
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, David Rientjes <rientjes@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Waiman Long <longman@redhat.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Dan Carpenter <dan.carpenter@linaro.org>, Chen Yu <yu.c.chen@intel.com>, 
-	Kees Cook <kees@kernel.org>, Yu-Chun Lin <eleanor15x@gmail.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	jiangshanlai@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|IA1PR11MB6490:EE_
+X-MS-Office365-Filtering-Correlation-Id: a72abe7d-ed71-47a3-91d4-08dd8e58f3d4
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?UW9NU29panEzT2QvK2VTR2JLcGZUVFl6SUNmTnVReGwzL3dHdWd5bXAvRnRU?=
+ =?utf-8?B?OXlSRUhqQW93cHNFSDAvQ0c3cVZkeHkyS2RnVmRHdmxtZkprYkpLaTFwNEl1?=
+ =?utf-8?B?RkNjeWNnNGVUaUdXc2lQblNWbS8vWjlHcUZjZDMwS2doelFHNm5Mc0VQQUVp?=
+ =?utf-8?B?ekdNeFpENlpBbU50NW0rS2ZsUFBBVHB4Y3RqV3dsY25WeUI5K3lEbHhIbnN3?=
+ =?utf-8?B?WkRLVW8vdGcvMjA3Y0hOMDNpN0toUUJRR2V5RGJPQ2lKTmcyb3FubkRyaHJI?=
+ =?utf-8?B?TXNxamwrNXF2V3ovL0xDcCtXNkxtRGhMQk5rbStkZ0ZnQWN4WXpodUJrb3Ja?=
+ =?utf-8?B?elc2WWp3R0VxelVIZUVmNzFFbmRaSlNUV3NqTU02VCtIWVhoYk9rSnUxbWlY?=
+ =?utf-8?B?c2FVaDFmeStpbTQrOHZRbUoyVGVkMGdlY1BoRlZjTzVsVXFHbFJKSStDUlFD?=
+ =?utf-8?B?d0VCWmlWVGp1RnQ3dTBZeWRzYVE3QUgza1dZd0hMYUZVSjBobUREczFUai9J?=
+ =?utf-8?B?ZmJsemVUVjhob25sRHlKYzNCV1ozNjdZS2ozZjFJMVp2UmVnQWlueTR6dmJu?=
+ =?utf-8?B?bm1PK0tteGlFZ2J0VXlwV0R2Y2ZhSkloODZBOTRvNXI3YlZuRHlwL1hCWjRa?=
+ =?utf-8?B?dFhmN2xNdGpiS2FGQlpVMVdZTU1TT3hJRmZvYlE1bUpVZ3J6d3o1TE4vSUU5?=
+ =?utf-8?B?a0U5azdEZXJwZXRDL01iMEFKa1gxdmFqVk1BaHRSbGlRdTl5M0Q4UlBHeUh2?=
+ =?utf-8?B?WU9kN25LSS8xcUU3Z2ZHUHVvOGljYUM3alFzZDdkTmN2WmlnaWJaZGkzQ2Vq?=
+ =?utf-8?B?TUpvZDc1SEdEa1lJb0s1N1VPOXJua3M4aklITVFma1lFenM3QWI0K2tNRmR3?=
+ =?utf-8?B?VDRmS0NYbklFcUo2UG93R1J6V1N5aUxmck9VV3ZKdkpEQmR0WCsyRVVlbjN0?=
+ =?utf-8?B?eW5ydHdHTkp1bVBqTnh5aU0wODVGenBHTWo5bWdXQUZINkJ2R1JzdzExSi9X?=
+ =?utf-8?B?elhUOVZNWkpsd2xGU1VlUU5haGEzWVVBNGgxYlBaOHF0RUFSZDdIU3ZtelRu?=
+ =?utf-8?B?aHVjckN6QnRybk5vblZUYlVmU3NiNzdnMFo3b1BYUCtMN0xldWtMV3NhTXAr?=
+ =?utf-8?B?QXJicUZldHRkU2IvZnpJMHpnYVBIRk9IZVJmWjduUzRmVEE0NUFVUm5jNWVQ?=
+ =?utf-8?B?czFmM2VUcVBCakM3bFhoS2p6Q3g4Q2FDRG9jN0M3WFhYTjlkQ1B2clJ3WGdu?=
+ =?utf-8?B?KzMyMmR3T2pkTGI0WEM4aEZjMzl5OW1QU1hRQ2RFK0tmY2h3cURRVkZJV2I4?=
+ =?utf-8?B?VUU0aHpBd3JZK3AxNWFhT0tndUhnVUVKOU1LUHE0TWhqQnJTMHlBZFhiS3Z6?=
+ =?utf-8?B?R0xKdEdBMVplOFIrcDNDMjJwMDZta3ZhUTdxcXNGSHI1ekFpZ1ZQS04vcWVX?=
+ =?utf-8?B?S1AvT3FNdWt6QTJaUi9qN1kwUUgzTzFyQ1MwdFBwOU5qajhWY0hUZjdNaU9M?=
+ =?utf-8?B?YjNSNm9kRVo0cVBjZG8zbmUxeGFidElxamZkRENiNUs5cFJhbkRYMEJnWCtX?=
+ =?utf-8?B?UUtqL2d3NWRYVDdRNVJPK20wOGpNQWFrdktCT0lHR3o4eExnL3RaOVVGVXF0?=
+ =?utf-8?B?dVFvTTNMVG1LdHR0QXB5VkpIZ1hIb1lYbGpvRFUzbjJkT1JRM1dwVWxXZlkx?=
+ =?utf-8?B?VzViN1hzVmhlNU1JUDMxY3BJdHNadHR6eU9XVEtwRVR2cWRXeDhHMUFLUTA2?=
+ =?utf-8?B?YUVycFRyYkJzUUZOQ3QrTnZVczJId1BvckgzWUNtd1NmZHRtczVYQ3d4enpF?=
+ =?utf-8?B?SzY2YXgxUlptcmlMUmRNQkFRdXBtQnpTRjVkSmcxZU12ZGhWaVFsUTR6aGRM?=
+ =?utf-8?B?b0loZnVKeHloeHpJNVYvU3kxSXdYanhtOUFXcjg2UUdPeEw1alJHNzR0VDFj?=
+ =?utf-8?Q?mRWnns45wYs=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dVUvd3NlM3NzUjgyWEE2dEZsUDhhMXM1NWo1d2lvNFhlWFJuVStla2E3NHRm?=
+ =?utf-8?B?b2FOTnJBZjJPYTJjMExzUnVNa2Y4YWtSeVUwWVpRcnFZbUpML1JhNWQ1MEY2?=
+ =?utf-8?B?S0ZFZ0d3MVdEemEzZ0ZRSjc5aktSeDhsMXoxYTlOdWEwQnlzUlBwdVJKZWhY?=
+ =?utf-8?B?OU5zazlKUExJNGJ6d3M0ZVU0TUpqSXZXR2xxbmZHUE5wV29vUjIyTWg3b09H?=
+ =?utf-8?B?L0MrdFBBUkVKMFVEMUpkS0luM3V2SzdRT2pPQXM4NUJFZEZRekpEbmJpVUxy?=
+ =?utf-8?B?R3pYU01KM2p6a2RwUzg5ZHArSm9DTDhHYVM5NzdtSEJZM2M2aTdkcGtsV1ZW?=
+ =?utf-8?B?OGdmZlV3Ky9Ec3V6UEQ3Vm5xUE1xWE93RnFIWnJIMzR3amIxaVcvYnF5M2lG?=
+ =?utf-8?B?YnZsNmZkWHZRRSs4b1hEeEdHT0d1bzhUUWZ6UVdrZzgwV1N2ZzhRcThTRUwy?=
+ =?utf-8?B?R0xVUWlVTjlCNytEdzE3NnVBRGRFdUpwSVlYaTZ2VGZXa2xUZmlaWEI2YTQ1?=
+ =?utf-8?B?YlJrOGNRZmo4T2dwL2pzL2F6RHpjZ0x4ZHFIdDlvSEZML1VvUFVuZ05HaDVl?=
+ =?utf-8?B?WUhpWHdXeSsybTJxZjdkdit5T2N6ZFVUM2xNd3hPbk9vc0JTL2p1ZGRKM0Zr?=
+ =?utf-8?B?OGkvTnRCVVZTcFd0NHhPamZCc25NakwyUUtCZ1MveitYeldpZmVPYmNqRUJk?=
+ =?utf-8?B?VCtkbWl4eWFHYUFZZkJ2eXAva1lnK1VLVmZpTmszZk9VMTJCUlRTdGNrVVZB?=
+ =?utf-8?B?eFlNM0FaYTZxdm9nV3BZaGhmQkhJMDM4d0h3MFo5dHczeGtFeHZmRDdhdFly?=
+ =?utf-8?B?c0YxeFdOZ0JFMTVXUU5QL2ZrRHZrTFFzczlTaEZQNmdtc05ReEt4NXJJUk84?=
+ =?utf-8?B?TWVsa0I2ZVhibVIzb3kvNTdVNElGd3JiTTdNY2UvbHNiQlBWZzJYdFJZa2hj?=
+ =?utf-8?B?ejd3ak5NUEZRVm1LVEVzZ3EvcVFvOVp0bmEzRVMvMm9BUGY0Y29SbGxZU0tM?=
+ =?utf-8?B?NWExc1M3YlI2L3FsaUJ6RmcyWmtLU0lzYVpQMGVaS3pHNDFzVU9GMmVSL1Jk?=
+ =?utf-8?B?QjRGWjlKekRiOU5PZWJsUG5hNW4wREtEcURiS0JuL3FrbGlHbkFGbTJ2a0ZY?=
+ =?utf-8?B?VkdqWXFLWURxcDVBakVDNC9pQ3VTeldPSzlwK0hnOW9kMVVkb0xHcTl2eFVB?=
+ =?utf-8?B?T1EvWE1pY1BIb0FJdTBYUThRZ2JwN1I2cGFqMlhoVUFmeVM2MlF1Z25EYkFx?=
+ =?utf-8?B?UzBoNXhEV0l6a3p3MDNncnY5bTBvL3VFVDdvYzA5TVNHQ2FMMDBQbDMzWkdi?=
+ =?utf-8?B?Ui9XL0RhYXI2V3dScE11OEpjci9lQmRsS3dOckhTVy93TDJBQmNCV1hJeVhn?=
+ =?utf-8?B?SXh6d25iREFUcytVV2k3RXR5OUQreU13NlVIcjJEZzlPYW5WSjNZYkQzdjhz?=
+ =?utf-8?B?MjRZajl4WVczSnlHbzRnVzNGNHFIL1RNazRFNXMra3ZEc2ZSWjF4cHNXNlVt?=
+ =?utf-8?B?a3ZMcXdKUUM1OS93bEprYlpLRmVHc2xXb1hJSE5EMkZ3d3hBQmVkTEF6OUc4?=
+ =?utf-8?B?RVBUNTZBeFhQWDc2Um00WFYydjY4RDJRU1BjemRreUtwMFl2L1ZGZ2pYaTgz?=
+ =?utf-8?B?aFpsaUZvQjlvdzk4TjI1R2phaFE3bWdybVBXbnN4UDFrWHVZL0RjOUYxQjZl?=
+ =?utf-8?B?WVpjdUIvendrS3htT0c1WWdnTFN6QkhBWXFPSGtaUElTL2ZwUU8wbVVFcUt2?=
+ =?utf-8?B?L25rSVpoT0NpZ2pjWlZCeHVaRXZySDlicm9wbUNZaDRMTHpwVUZucjgwWDBN?=
+ =?utf-8?B?Sko5cERGZklreHFVTWwvbUtkZnExSGN0Nll3YVhBWHkvVDRnTjdMbktiOUxs?=
+ =?utf-8?B?SVc5NXBRY0hrOGY2ZFlMei85U01xbDFzZTc5WkhqTDdpNW9YSGhFRlhxQ0tk?=
+ =?utf-8?B?T0hYK2VKNzJzb01nZlFKanNMWUxSOEZaeCt3TDV2c0JKdXF0UFRheVNvc0dP?=
+ =?utf-8?B?STV4RjBucDRBN0R0RGhZbFdkZ1ExY0VTK2NCLzdYci8zaFh4d09QejEzZCt4?=
+ =?utf-8?B?ciszYzgvN3RBSDlWYTZNbTFLeFRlZUZzKzF5UlZpMFdSUzg0RnA3VmViRTVT?=
+ =?utf-8?B?cnFHa3U4aHZaYlI5anNiYTlXeTZ0d2xvalF3TFVtZkpIbUxhQUozOXVSRSt1?=
+ =?utf-8?B?TGc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a72abe7d-ed71-47a3-91d4-08dd8e58f3d4
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 17:51:25.7470
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: k/4Up3cb2Yn0yAborBYpLHhBlvZZ8qt5M0F6mq0risiWPkhmjrF1ML/AblDIQKECw1wQ8R17HhAe56Tevz0aH6vJPlNrVF0bhqJQvtsIK/w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6490
+X-OriginatorOrg: intel.com
 
-On Wed, May 7, 2025 at 5:08=E2=80=AFPM Frederic Weisbecker <frederic@kernel=
-.org> wrote:
->
-> Le Wed, May 07, 2025 at 01:07:16PM -0700, Xi Wang a =C3=A9crit :
-> > On Wed, May 7, 2025 at 10:36=E2=80=AFAM Tejun Heo <tj@kernel.org> wrote=
-:
-> > >
-> > > Hello,
-> > >
-> > > On Wed, May 07, 2025 at 10:23:24AM -0700, Xi Wang wrote:
-> > > > Overall I think your arguments depend on kernel and application thr=
-eads are
-> > > > significantly different for cpu affinity management, but there isn'=
-t enough
-> > > > evidence for it. If cpuset is a bad idea for kernel threads it's pr=
-obably not
-> > > > a good idea for user threads either. Maybe we should just remove cp=
-uset from
-> > > > kernel and let applications threads go with boot time global variab=
-les and
-> > > > set their own cpu affinities.
-> > >
-> > > I can't tell whether you're making a good faith argument. Even if you=
- are,
-> > > you're making one bold claim without much substance and then jumping =
-to the
-> > > other extreme based on that. This isn't a productive way to discuss t=
-hese
-> > > things.
-> > >
-> > > Thanks.
-> > >
-> > > --
-> > > tejun
-> >
-> > Yes this is still serious technical discussion. Frederic made several "=
-we can't
-> > have b because we already have / are working on a" statements which wer=
-e not
-> > very actionable. Deducing to a particular case is a quick way to simpli=
-fy.
->
-> I referred to a particular case (isolation) because you said this is your
-> usecase. You still haven't explained us why the current affinity manageme=
-nt for
-> kthreads doesn't work for you.
->
-> > I'd prefer to focus more on higher level technical tradeoffs.
-> >
-> > Overall compartmentalization limits resource (cpu) sharing which limits
-> > overcommit thus efficiency.
-> > cpumask restrictions are not ideal but sometimes
-> > necessary. Dynamically configurable cpumasks are better than statically
-> > reserved cpus.
->
-> For which usecase?
->
-> > I do think the cgroup tree structure sometimes helps and we don't have =
-to use
-> > it for all cases.
->
-> Also kernel threads are special beasts, even some !PF_NO_SETAFFINTIY kthr=
-eads
-> have actual affinity preferences. If they can go through cpusets, this mu=
-st be
-> dealt with. And admins will need to know about those affinity preferences=
- for
-> each kthreads.
->
-> Also do we want to be able to expose all the cgroup limits to kthreads? E=
-ven
-> if only cpusets is allowed to have kthreads, does cpusets.mems make
-> sense to be exposed for example?
->
-> If your issue is ever resolved through cpusets, this will have to be main=
-tained
-> forever with all those subtleties in mind.
->
-> I tend to think that CPU isolation is a very straightforward cpusets usec=
-ase:
-> no load balancing, NULL domains and tasks usually don't compete much for =
-the
-> CPU since the point is to not be disturbed anyway.
->
-> And NULL domains already exclude kernel threads, dynamically. So please g=
-ive
-> us a compelling reason for doing this.
->
-> Thanks.
->
-> --
-> Frederic Weisbecker
-> SUSE Labs
+Hi James,
 
-I think our problem spaces are different. Perhaps your problems are closer =
-to
-hard real-time systems but our problems are about improving latency of exis=
-ting
-systems while maintaining efficiency (max supported cpu util).
+On 5/8/25 10:18 AM, James Morse wrote:
+> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> index 88197afbbb8a..f617ac97758b 100644
+> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> @@ -4420,8 +4420,32 @@ int __init resctrl_init(void)
+>  	return ret;
+>  }
+>  
+> +static bool __exit resctrl_online_domains_exist(void)
+> +{
+> +	struct rdt_resource *r;
+> +
+> +	for_each_rdt_resource(r) {
+> +		if (!list_empty(&r->ctrl_domains) || !list_empty(&r->mon_domains))
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
 
-For hard real-time systems we sometimes throw cores at the problem and run =
-no
-more than one thread per cpu. But if we want efficiency we have to share cp=
-us
-with scheduling policies. Disconnecting the cpu scheduler with isolcpus res=
-ults
-in losing too much of the machine capacity. CPU scheduling is needed for bo=
-th
-kernel and userspace threads.
+This looks the same as before. Did you notice my comment in [1] about this list_empty() usage?
 
-For our use case we need to move kernel threads away from certain vcpu thre=
-ads,
-but other vcpu threads can share cpus with kernel threads. The ratio change=
-s
-from time to time. Permanently putting aside a few cpus results in a reduct=
-ion
-in machine capacity.
+Reinette
 
-The PF_NO_SETAFFINTIY case is already handled by the patch. These threads w=
-ill
-run in root cgroup with affinities just like before.
-
-The original justifications for the cpuset feature is here and the reasons =
-are
-still applicable:
-
-"The management of large computer systems, with many processors (CPUs), com=
-plex
-memory cache hierarchies and multiple Memory Nodes having non-uniform acces=
-s
-times (NUMA) presents additional challenges for the efficient scheduling an=
-d
-memory placement of processes."
-
-"But larger systems, which benefit more from careful processor and memory
-placement to reduce memory access times and contention.."
-
-"These subsets, or =E2=80=9Csoft partitions=E2=80=9D must be able to be dyn=
-amically adjusted, as
-the job mix changes, without impacting other concurrently executing jobs."
-
-https://docs.kernel.org/admin-guide/cgroup-v1/cpusets.html
-
--Xi
+[1] https://lore.kernel.org/lkml/91c31b70-3d41-40cb-b00b-aa39cbd07bc9@intel.com/
