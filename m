@@ -1,183 +1,101 @@
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84D8195FE8
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 07:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA8B195FE8;
+	Thu,  8 May 2025 07:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746690192; cv=none; b=rAfPQ2CFFlaIkRcez4S7D1hxAGDvbo/RqaKBKl9zCAeBO0IlyX9XUFKvCHgD1aIuFhKnqQpUGPIPp4GQzaKY6YvFeZLiz2ksWBpZ3a40z/tuYo7eN412XJ6XKfTtPH952W996a91for07ZH9eNh+qaTy/dArkL5vHgdM6oDEURo=
+	t=1746690201; cv=none; b=WAAGZahRxMcmRsZv1ONGp4fn88DEP8lBfMZ8le7RGpSB5pvW+a2c07uhegnk3hx/UWDMwqYVhhXbai8GVXqWxK2MFR4F4yPqNuK3r8AL2KlylHjrmZCeFjT7K2p/OwA3583WlfBgpJBWOckVH/nT7TBIu5cZwY1Fl0VKphS8BUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746690192; c=relaxed/simple;
-	bh=TBBFZTMlODgXtoBuDYQZVQz4zetWAVb7VUqV0hyrOog=;
+	s=arc-20240116; t=1746690201; c=relaxed/simple;
+	bh=Ym+Lkz4dVd8U8c1KC8lpqlMzy5nIzSo6HU+Kw5o5UVU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h79HUgFdmKbN1mqA/v3auUz6kcFGemcw9GCBaBVdgTk/dMhzGvzmIg/1Qfj3nNd/Dl7Br+9eLkUOuBK1Y+2lSE+Z+sH3Z65XdKEuzZRGNoLRsS8CA4iHSgZkJSdPO6f3Bhb8YTQ6TdNi6NRkoomqASYhX3p/TsLWDLvb9VEC4ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FaujTMY1; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=dsKV56W8PebpGUD3qUHz/gNN/AUoouZOUeejFBrzgecTm0Bo9Vqnn4nFrXFL8e6Dse4Ui30N4UY8zDWczhEvWpxdQmgBCTI1EhfkCeVh+aov8+EwUujfQF/Rga66SCF2hgV26i/ubZy1SPeHGoe2EsD5b3tgk7jChREh8qEwclY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaujTMY1"
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-51eb1a714bfso532811e0c.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 00:43:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746690189; x=1747294989; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/5+KEBtT2aBtAcU9qUPvo+iC2dk60rp413TigGZQUQQ=;
-        b=FaujTMY12nrUvnXEwimeO+FHIeUlDO1B+x9YBmcUh1IAkmh0dRSMKstf9j3gM75MjT
-         a6iLdMZzElTL746/dK2zOdisGIwUGQLu5p4ACA4MMT/SOZXO78ODRbZGRG1awLX3T4Dc
-         njMp4qaKy+Tah9+i6BWWHmuWS+Yx28glelIpthb+QwCJ+6ExESokQx+nLdtCYr5PnEID
-         bACl0vks6ko2NELh96RoivfGareltyVv375o4FSaRtcH0F7J7swz9UHcls/wtCjTbdly
-         EgMxrvmYwD9H3TXA9PHe3fqIKyUrRB4Ox0bgSh1wc8FbIInt+fDKWQWGJNzYUoYA0K/0
-         z0kw==
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-523ffbe0dbcso594546e0c.0;
+        Thu, 08 May 2025 00:43:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746690189; x=1747294989;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/5+KEBtT2aBtAcU9qUPvo+iC2dk60rp413TigGZQUQQ=;
-        b=O5JamUy4wBWpqKquIcnqkeSJ92BoPxN5P5nLO6eIr7rUhFvf0U1Kzgn7On7XbWIIvI
-         PUwnlbozsGvrRexCiBsAczdhYpkGHP2erlRZgSOdKEDuSeHLbOXgfpufCFh738RUOjLx
-         Carzd1Mu5aAxS29hihauPPebSawGrHljoZ9ICegp6VjxFb0B/B5v5mW1l8JyHxj5GgP/
-         4vbPvIU6f179Xd4ECefhpI7kb0X9tMZ7R0T2TlWKMg8ZpTB8JiafirqMQ8Q9Ks0JywEb
-         idasrwnMqJ4cTkx48KWVoV4APNOBykXFjFWI2Q2rBTmjA9T+nJf+dffWwrvyk7hpK+z0
-         +wew==
-X-Forwarded-Encrypted: i=1; AJvYcCVv9SQ1khqJCb8xxJKHH36ojTWgJoCwEWOCynnhvSWeoWMKidnI1MnIGfHyfiN04D6F6T5ao91RCWnDy4Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMNYiVev5N6Llc1tZorSAlK4oqJVDLzectRm7XQ5LRFRLq+PXr
-	ApfoM8ATF8Mswg8v5x8wF2Vlo881dcKWHzitl1DMe/ubn/Y2r1AsNT9xtggaMon4Y6ugoBFpDzK
-	8c2isDzZhFzlGVYKnifepbUHi/7E=
-X-Gm-Gg: ASbGncsfNK/GhHcJVr7NKHavQgEMwYVGG634MYrcJ+uOXt3WsAfcDXphUfxx64ihz/2
-	18pGonLdINWGr1VC2B80z4DNa6c2oK5zmgax7X3gtzgwSg4tu68qxKvFjIhhFBJeDJI77UbaAZC
-	aLqNVpbF1BMi3lTGXuco23Mg==
-X-Google-Smtp-Source: AGHT+IF7FWWXPxXOzLHYQKMnXVAoo5udvCIuu3X6taFvK22+XbMCcckbKjoLMt4SURdp+f1isPMZgS+Ysji5V4+Nfl0=
-X-Received: by 2002:a05:6122:1e06:b0:529:1a6a:cc2f with SMTP id
- 71dfb90a1353d-52c37a8bcd2mr4989998e0c.7.1746690189473; Thu, 08 May 2025
- 00:43:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746690197; x=1747294997;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D1mZPJi/TC7bkF9tYWR7m5qAV1sln0wgKCmrPsKpu/U=;
+        b=FpHc6Chxj4HflWa9YozHX6jsauPO9ADfXJNNUeq7xmvU5ebZ+WHPGcGljjWzj63b6r
+         yIgbS0PKMMUlTpZkqWdEKiaGucMQJYyTmh21A3vSgAwdgkn1j/OFdxMJwPAiSfAMW7AM
+         I9yLokxeNN0PD6MJXeYmr0m5Hr0CS0K0wMth+TqDrpo7p0Mfj2ZEr+R5ADINTkOUxqRD
+         5uBsj1PDwnolIZ5zvI3P0qQg6FkU51NWQPAwc+Fh6SH4PSOSZn7XnQMztpwRhciFDsvK
+         z0gRJVfbOa8ii0v162q9wXyvEyBS+Q0fkvbH6L149NSD+KEqTV/uoH679E2FbO2JEo2I
+         yF3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUSwoAF70fb2/j9pSVzn0W2epYP14S38rUd5T9wZrcTSZzIhK8tFB3TOxwQ7B7QeG9g17WXW1TWVn8YWLck@vger.kernel.org, AJvYcCUwyRQXTH0ZKRHW9p3ToRHYCiLVml21OVvyNb/bclBtXHnGi6ZeR/U9XXY40vgBMisQl34VGwBB@vger.kernel.org, AJvYcCV6C16ubE3QFM8L1ezR9P751hF7QE5+zX9Q4L5OTBTgiMwXglJzAl9VIDaz3lMe8scZg5jjrYwa5iMIoUanUJXhBOI=@vger.kernel.org, AJvYcCVeb2+q4JUpwJKYXUS1gcRcXi6bheV9zTxgo27LaKHyAb7F9CbCUaISM/JjW1dPPHKZN8jiMRB9hUJN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2yxIWzGHUzhAbg0jY2GdBtpKtmsBw0TZ+QXbMjDl+BgHCTJmk
+	lJmQgnOAdhF5hc878zjo69U91ku2dVLWuXZNG9FSikzB/3bPnQzuFw/YDM9T
+X-Gm-Gg: ASbGncsJfUkNFq0ZdjQm0x3r6blxmRByNhDLRAIumifH915WzjpikR4P7gfYdBzv06e
+	7mb+prBNvHSVgOuygM1uRDdZq+KFSnzQ0REpsTbzoKFAcsAIKz7h5zXLvsnWcWYJIgaPds9MmxG
+	kW2wHickaKXNbWEI655oQVL9qUpGuu7Mq3G+G4wkT2H63dFDm+8tPTdASxlzACQEk82C/CIVABJ
+	aEMSTFtyQVdBUhF2GcSvU/11Wnhzjh6bcTT6uxBzJx8GUgrIctKXwnXTpta4CCrhgU6pRaG9fV/
+	+YjKihvpWgTBollNrN1wiCFIiUBNbNmJUL9Fxi5a9lTtN2VEr5+LvLJ7HTD4iS0kNHFX5RNx2Rf
+	jL1E=
+X-Google-Smtp-Source: AGHT+IFuNabeBCcYQ+k8DwvRGbG1CP7k3GBFsUA8uOozojZOERjbyOPYyKnT9LNty+fvxibMuH7RuA==
+X-Received: by 2002:a05:6122:3290:b0:523:e2bd:b937 with SMTP id 71dfb90a1353d-52c379c81efmr5047428e0c.3.1746690196861;
+        Thu, 08 May 2025 00:43:16 -0700 (PDT)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52ae401eecasm2886570e0c.19.2025.05.08.00.43.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 00:43:16 -0700 (PDT)
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-879467794efso382550241.3;
+        Thu, 08 May 2025 00:43:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU7Vz1XAGrQv1uJDBQmuiC+8a4zmH2UIM5iYRqAiqSmgjG//hIGjrNJlDTlG8VPIxugygkNC55c4Fzc@vger.kernel.org, AJvYcCUCrZGYzpLmeT1xCqoxvrLsHzxOfFQiZ+KQwnb5n/7cS4afQuYDsrZP/aYboouZW+xLNo67KLzoWA5eN3pj@vger.kernel.org, AJvYcCWRWTNNKXwJqoadXi1otI7kHhGGXQQsaJf8SkBKePL7r0YwUmoincc6uslhG9RtFVsZqq1VVI1k@vger.kernel.org, AJvYcCXVHv3uje+4W2k0V0UDdXM5FiCvEMmwCny94d5HH5EdgNFUQxpzKuYksAifTbkKwYXtEWWgVjiDfP1A5J9Q4t+psU4=@vger.kernel.org
+X-Received: by 2002:a05:6102:334e:b0:4bb:623:e1f7 with SMTP id
+ ada2fe7eead31-4dc738955famr4431871137.16.1746690195810; Thu, 08 May 2025
+ 00:43:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <e89f3af69104c18e45362c6c48058edd2bddf501.1746677237.git.baolin.wang@linux.alibaba.com>
-In-Reply-To: <e89f3af69104c18e45362c6c48058edd2bddf501.1746677237.git.baolin.wang@linux.alibaba.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Thu, 8 May 2025 19:42:58 +1200
-X-Gm-Features: ATxdqUFV5fNeTsnqzRFZ9aw0PQBuboIh4qamDRWp2kWChzFg5jO55dnGwi3pWkE
-Message-ID: <CAGsJ_4wKCpDi7ov0rx4C=rfi90nSGQrDx=4JyKgug4NXC4cYgQ@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: mincore: use pte_batch_bint() to batch process
- large folios
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, david@redhat.com, ryan.roberts@arm.com, 
-	dev.jain@arm.com, ziy@nvidia.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
+References: <20250507173551.100280-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250507173551.100280-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 8 May 2025 09:43:03 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXDZhmo3n69rOxffkBfBTv4LCK+kSrxHsEPNXwvK4qWYQ@mail.gmail.com>
+X-Gm-Features: ATxdqUFoas8aJgrUByAlkGW74O02u3sZ5ocQGbHP-j-KPDbz6l1iLg3pGEPVMKU
+Message-ID: <CAMuHMdXDZhmo3n69rOxffkBfBTv4LCK+kSrxHsEPNXwvK4qWYQ@mail.gmail.com>
+Subject: Re: [PATCH net-next] dt-bindings: net: renesas-gbeth: Add support for
+ RZ/V2N (R9A09G056) SoC
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, netdev@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 8, 2025 at 4:09=E2=80=AFPM Baolin Wang
-<baolin.wang@linux.alibaba.com> wrote:
+On Wed, 7 May 2025 at 19:35, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> When I tested the mincore() syscall, I observed that it takes longer with
-> 64K mTHP enabled on my Arm64 server. The reason is the mincore_pte_range(=
-)
-> still checks each PTE individually, even when the PTEs are contiguous,
-> which is not efficient.
+> Document support for the GBETH IP found on the Renesas RZ/V2N (R9A09G056)
+> SoC. The GBETH controller on the RZ/V2N SoC is functionally identical to
+> the one found on the RZ/V2H(P) (R9A09G057) SoC, so `renesas,rzv2h-gbeth`
+> will be used as a fallback compatible.
 >
-> Thus we can use pte_batch_hint() to get the batch number of the present
-> contiguous PTEs, which can improve the performance. I tested the mincore(=
-)
-> syscall with 1G anonymous memory populated with 64K mTHP, and observed an
-> obvious performance improvement:
->
-> w/o patch               w/ patch                changes
-> 6022us                  549us                   +91%
->
-> Moreover, I also tested mincore() with disabling mTHP/THP, and did not
-> see any obvious regression for base pages.
->
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> ---
-> Changes from v1:
->  - Change to use pte_batch_hint() to get the batch number, per Ryan.
->
-> Note: I observed the min_t() can introduce a slight performance regressio=
-n
-> for base pages, so I change to add a batch size check for base pages,
-> which can resolve the performance regression issue.
-> ---
->  mm/mincore.c | 19 ++++++++++++++-----
->  1 file changed, 14 insertions(+), 5 deletions(-)
->
-> diff --git a/mm/mincore.c b/mm/mincore.c
-> index 832f29f46767..2e6a9123305e 100644
-> --- a/mm/mincore.c
-> +++ b/mm/mincore.c
-> @@ -21,6 +21,7 @@
->
->  #include <linux/uaccess.h>
->  #include "swap.h"
-> +#include "internal.h"
->
->  static int mincore_hugetlb(pte_t *pte, unsigned long hmask, unsigned lon=
-g addr,
->                         unsigned long end, struct mm_walk *walk)
-> @@ -105,6 +106,7 @@ static int mincore_pte_range(pmd_t *pmd, unsigned lon=
-g addr, unsigned long end,
->         pte_t *ptep;
->         unsigned char *vec =3D walk->private;
->         int nr =3D (end - addr) >> PAGE_SHIFT;
-> +       int step, i;
->
->         ptl =3D pmd_trans_huge_lock(pmd, vma);
->         if (ptl) {
-> @@ -118,16 +120,23 @@ static int mincore_pte_range(pmd_t *pmd, unsigned l=
-ong addr, unsigned long end,
->                 walk->action =3D ACTION_AGAIN;
->                 return 0;
->         }
-> -       for (; addr !=3D end; ptep++, addr +=3D PAGE_SIZE) {
-> +       for (; addr !=3D end; ptep +=3D step, addr +=3D step * PAGE_SIZE)=
- {
->                 pte_t pte =3D ptep_get(ptep);
->
-> +               step =3D 1;
->                 /* We need to do cache lookup too for pte markers */
->                 if (pte_none_mostly(pte))
->                         __mincore_unmapped_range(addr, addr + PAGE_SIZE,
->                                                  vma, vec);
-> -               else if (pte_present(pte))
-> -                       *vec =3D 1;
-> -               else { /* pte is a swap entry */
-> +               else if (pte_present(pte)) {
-> +                       unsigned int batch =3D pte_batch_hint(ptep, pte);
-> +
-> +                       if (batch > 1)
-> +                               step =3D min_t(unsigned int, batch, nr);
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Not quite sure if nr should be (end - addr) / PAGE_SIZE as nr
-is always the initial value. For example, nr =3D 50, and we have
-scanned 48 PTEs, then we have 2 ptes left. No?
+LGTM (limited info in the hardware docs due to censoring)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> +
-> +                       for (i =3D 0; i < step; i++)
-> +                               vec[i] =3D 1;
-> +               } else { /* pte is a swap entry */
->                         swp_entry_t entry =3D pte_to_swp_entry(pte);
->
->                         if (non_swap_entry(entry)) {
-> @@ -146,7 +155,7 @@ static int mincore_pte_range(pmd_t *pmd, unsigned lon=
-g addr, unsigned long end,
->  #endif
->                         }
->                 }
-> -               vec++;
-> +               vec +=3D step;
->         }
->         pte_unmap_unlock(ptep - 1, ptl);
->  out:
-> --
-> 2.43.5
->
+Gr{oetje,eeting}s,
 
-Thanks
-Barry
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
