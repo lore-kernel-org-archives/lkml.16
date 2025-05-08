@@ -1,108 +1,146 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1784D28A72F
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 19:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D612F28A1CF;
+	Thu,  8 May 2025 19:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746734308; cv=none; b=MZd/KCtGdNJI7fgzBom54XOcByL4bBrBOmDwi8Y0fC+ZvrmRzACcjxlE62t7xGHunZdsV8p5x8rtehH9NVdClugjGKVdSmsCJ1pPdCut9Lc5nMxTNrHFbEPtdfALC9Scprw7VACVk0J6WS/nlXUaMlzsmjVdQtmgPKBDF1l7IrU=
+	t=1746734372; cv=none; b=PEYNYMU7psenBTUgt0reY9jfB6jLsb0L4XthgwDNmBc4vaoztwARNIuH6I+S3aeRzfbBtdQSc0euDeoDPkSbiLYcx3YBlKUXIGbuLgxbCMpzXxWL5XYXdETJ1BIBmEqMPfZaTRgZIi0ezjDVMLfNGIHQC17O6mVEr6rwRFgZUnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746734308; c=relaxed/simple;
-	bh=J3cKKOH7s7U79ixbNkjgk4QebBIXp0UsdbtkJVytPIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RpRBqxzi5FQBhLzBjpi8ZAGoSCOipCfUeeHEwEflqe7LF4e0lQtmej/lrJqNZ91Atev2BMnBXpWYEWn0fXGOB/xXZOpMCxlzwpVNmsKsqBaFVNIWRuoV/yMZqAhJLsYsWx45DP8Z1C6GE3bDUyiVzvZcXUOOGYATNCv0/GIAZ7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=okVQq+H4; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746734372; c=relaxed/simple;
+	bh=D0eTZcDHThj7wFmuGHzLws3kPES381HlOCH3BoO5xv0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=itNiVnKwapISUp8+GYu7ZCwcPTdp+9oxIwCGbWiC5gxzUlR2wGNBc5BQZ7TiGT7U4y6BkcedXg3VCKlLCME6hjRB+uys1exaQGEJRAGk10ZRoQ9ncq2RAoHejgsZO5RVJP0tPhWwzmOoCheu7kgKqUiHmCKmnsrSDhbi+oFvnBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V3Efg+UQ; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="okVQq+H4"
-Date: Thu, 8 May 2025 15:58:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746734302;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=dT6RVuiifS8Rip44Q88vbxcm6+1Lj1H0/0sdfRyNf0s=;
-	b=okVQq+H46tP1gC21BTyPNa64Eu0BA1dN4Ov2yvXgRF+aPmKWi0jUTpaIM136Nqu+8KZ7rE
-	fuJ6XFy3m1lBo+wp895CrH/R7amKCtgeS+nts3BQGnOf2RecfFHJ4h9xs1zjd1POrjFqsV
-	Fuws3Q1dOUf1BJb6VreLJ6uZ/6ns7gA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] bcachefs fixes for 6.15-rc6
-Message-ID: <pdixxswan4bhmajjvnczxa2nxh5tm52itlttopnuk3w6lzv3ms@inq7k7aws2rg>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3Efg+UQ"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-3081f72c271so1467806a91.0;
+        Thu, 08 May 2025 12:59:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746734370; x=1747339170; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=XZ1A/jnQKBKmbW0+4UxhQaDHonKrklw/WpsEqGyizjs=;
+        b=V3Efg+UQbYphzzW43+Izuhfaw9bISJQetzyDGa7/3SI27WGYb1lhJ81ICOm1x1z5WY
+         B1mVUSG320yE6yA9naxFMIG3PXNDgKTVLGhjIgHeeN8GVej0I0K/pzfE29sh6YVGcsqO
+         aX04ImTjGhZuV7Lk42z+abNDpPBObKpEVIi2t7XAoQUw1/ucbet4I/ylZDILxhERihHe
+         JA8XGEfYENgonmms58DC4ZW87P5CXX9Zz2JN8wIpsQTEvqQlkbxqwgi2IjAMtzgzj53e
+         uHjxMOskGIN+JZfHgHeGrCuvq1lonJpWGMA6FRbPHTdwjR0LbYN+KTlOY969vUjFb5n1
+         8TaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746734370; x=1747339170;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XZ1A/jnQKBKmbW0+4UxhQaDHonKrklw/WpsEqGyizjs=;
+        b=j1s9Kp71nJJHeHMKzjvjAhPGUrwBCegRttMrzbLK+iujsOfZhI//WrevBxxqurDcVD
+         k09rGok8WOV+ST0LiJB2oi+owg/l2JfdatHoq2lgHH/XlkhLLgKHdZcn1BZudJfoL0Z1
+         IOhiXlo6pNJNpWNahADjphKV5BnwIOBfKeTZSOi3qhYoDRf+7UO9WTFl7KBeDg//wRXQ
+         AlRf2uUhcm71aao0TJ+V9PbhTO8kgbu5s3HePbiQWcvtiaEVGbDMGyCY2SQowSX9L7cQ
+         Z0+o2IJ7u+Hsbp+SCgL3emUm3lGmUTtg5IOzpSXbNp4Rj2R78Z/CI+LHO1og1S1ehM5K
+         foQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUhgS66y79TGCEatyl/Bdb1Ek9i7LwoZE0YcPDMCXZu7VX+/vTpMGZmtKpeXRO/bDIfk0DSl5tx@vger.kernel.org, AJvYcCW2bc198w6JxtfQi8Vl6GRQQcMFS7gLLAjEs/ECumwU9BCqEssmkxZSLgOPquY15XOzzmVnDcXJcuF5RGk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtTdXrlJL2bhrhmc9RO4cjVmb2AXYnl/rOD/rDYsQfFpQ3guU1
+	9Q4OWnGMqj6stmN+auxDXhceLLBNQE7rdGLGkfcdUGZkyNtSSxal
+X-Gm-Gg: ASbGncuvw38EPfVq1rntaOuXGC+TiSuPe1HKw1nkAXMN/JGZKbYmR0LiTOHEmpeF2iU
+	pEhoWBKmk9ndJeBWfOM4ZUCVuvn8GWT2sHC1yd7Hof37WFJXBTfHYFznAIiUCM/yUOTzVN6unzY
+	+pxVOQ2k+H9H/qfVgdlgVYYdqaUKqHzYdvavkEwG4lbCoqVdzfvbi/tZm9zkk6cxlIfXjnSP6FZ
+	NIezEppEn418qZISqmFtJjx+op596gto79KdX/iRpvf47ZgfupeX9H/fBiCC6OVHOhkV5saBbB6
+	Zrh103dt8KrYO0qY3aZYMH7jvNN44NmZJONCEsE04bPsfRDTULj8CE9SNSnStYkZpp4j+yz1CYI
+	ND+vy5Wv8maCvwfQ=
+X-Google-Smtp-Source: AGHT+IFVUh9N3HJOvnWcBK/H0I50OtcuVSPhl3G26tmbv8P7V/BrHlWrxEtmYbS8nKEssB5lL23tpw==
+X-Received: by 2002:a17:90b:1dc1:b0:2fe:9581:fbea with SMTP id 98e67ed59e1d1-30c3d6580famr1139524a91.29.1746734369785;
+        Thu, 08 May 2025 12:59:29 -0700 (PDT)
+Received: from [192.168.1.177] (46.37.67.37.rev.sfr.net. [37.67.37.46])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ad4d2f3f3sm2635327a91.12.2025.05.08.12.59.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 12:59:29 -0700 (PDT)
+Message-ID: <34c70ab9-bbc3-4e1e-8840-8ce8eec1d68a@gmail.com>
+Date: Thu, 8 May 2025 21:59:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.1 00/97] 6.1.138-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250508112609.711621924@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250508112609.711621924@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The following changes since commit 6846100b00d97d3d6f05766ae86a0d821d849e78:
 
-  bcachefs: Remove incorrect __counted_by annotation (2025-05-01 16:38:58 -0400)
 
-are available in the Git repository at:
+On 5/8/2025 1:30 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.138 release.
+> There are 97 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 10 May 2025 11:25:44 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.138-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-  git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-05-08
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels build tested on 
+BMIPS_GENERIC:
 
-for you to fetch changes up to 8e4d28036c293241b312b1fceafb32b994f80fcc:
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
-  bcachefs: Don't aggressively discard the journal (2025-05-07 17:10:10 -0400)
-
-----------------------------------------------------------------
-bcachefs fixes for 6.15-rc6
-
-- Some fixes to help with filesystem analysis: ensure superblock error
-  count gets written if we go ERO, don't discard the journal
-  aggressively (so it's available for list_journal -a).
-
-- Fix lost wakeup on arm causing us to get stuck when reading btree
-  nodes.
-
-- Fix fsck failing to exit on ctrl-c.
-
-- An additional fix for filesystems with misaligned bucket sizes: we now
-  ensure that allocations are properly aligned.
-
-- Setting background target but not promote target will now leave that
-  data cached on the foreground target, as it used to.
-
-- Revert a change to when we allocate the VFS superblock, this was done
-  for implementing blk_holder_ops but ended up not being needed, and
-  allocating a superblock and not setting SB_BORN while we do recovery
-  caused sync() calls and other things to hang.
-
-- Assorted fixes for harmless error messages that caused concern to
-  users.
-
-----------------------------------------------------------------
-Kent Overstreet (10):
-      bcachefs: thread_with_stdio: fix spinning instead of exiting
-      bcachefs: Improve want_cached_ptr()
-      bcachefs: Ensure proper write alignment
-      bcachefs: Add missing barriers before wake_up_bit()
-      bcachefs: fix hung task timeout in journal read
-      bcachefs: Call bch2_fs_start before getting vfs superblock
-      bcachefs: journal_shutdown is EROFS, not EIO
-      bcachefs: Filter out harmless EROFS error messages
-      bcachefs: Ensure superblock gets written when we go ERO
-      bcachefs: Don't aggressively discard the journal
-
- fs/bcachefs/alloc_foreground.c | 22 +++++++++++++++++++++-
- fs/bcachefs/btree_io.c         |  9 ++++++++-
- fs/bcachefs/buckets.h          |  1 +
- fs/bcachefs/ec.h               |  1 +
- fs/bcachefs/errcode.h          |  2 +-
- fs/bcachefs/extents.c          |  5 +++--
- fs/bcachefs/fs.c               | 11 +++--------
- fs/bcachefs/journal_io.c       |  4 +++-
- fs/bcachefs/journal_reclaim.c  |  7 ++++---
- fs/bcachefs/move.c             |  3 ++-
- fs/bcachefs/super.c            |  5 +++++
- fs/bcachefs/thread_with_file.c |  4 +++-
- 12 files changed, 55 insertions(+), 19 deletions(-)
