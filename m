@@ -1,188 +1,294 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2047.outbound.protection.outlook.com [40.107.101.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1F372632
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746701255; cv=none; b=i2PRjpWkOx7pp7p1h+zLChbwQIwdJQMM/ciBgHCffSnDxjvi42SuFIWaLWlPOSB5zIhIXTFzJPC2YJZRDX9up83yZ7KcbQbtwnQnYudadD2yKAkhcZRJqr2RsBJ0b18y5DNs3VdqRY2vY6TxA5+C7kc851vWcDea6U7e6FsITgw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746701255; c=relaxed/simple;
-	bh=0cKobRXvUf+DFCw1YjKv/NXBgtucGhl1ZO6NNdoT2Uc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XOZqjERC5oZtiGf8GoMKV6eFQcp9Ah2FILrtUYLyaEyNyUlB09TogJsElPnK/ftqPzminXJYCRDEy8jekkRQfAS0j5bg2naCyzq1TONO7qZBzkTXxv08qRVliZesw/s83qwxlEumC9P+b7EbNkCGppZg+NPmd35IS4GR1fgyko0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Gv/Kb+64; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471004B1E78;
+	Thu,  8 May 2025 10:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746701460; cv=fail; b=ttK2GpbwuJT8RDmNyNP56nwVLakgDVMU636bM9FXr6TPW0A81YPr93rD+n2I3VdgZKmnEUa9sKcu6VJOxgHBHfnjqSE8+dsb5Rb+OAQBdRaU2JPZc0z1YjCXNPo0zEeve0L1kJvcQkZctYqZVs1cvMib5oMP8vS7kW7qHQIMM0c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746701460; c=relaxed/simple;
+	bh=3bPCQKo+BJtU4ZRs5wDAkkJ09xktGJ+xsQbC3QdT71w=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=PvIb9qDiqDf6W/nble6LB96827TBGHcKas3zsryF8gwkxfRE8wi1SgkNsHgJDc453VYQOzXGOEdqePddKUdZycXO+hx0Zla3SH6vo3YJV0GewtDU9hCz18WgypAGxsvIDWVMsYBBUePwEEkO0AU7KP6hGGjw+xiRM0D0ob34OCE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=USFsIrzD; arc=fail smtp.client-ip=40.107.101.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Gv/Kb+64"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5484WiRd010134
-	for <linux-kernel@vger.kernel.org>; Thu, 8 May 2025 10:47:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=DJLcczpvmaxUKxKji1M3aDjS
-	LMp22wqvdaaWQcNcABU=; b=Gv/Kb+648EnqCkbT8oiSS/nnHx4/i6ee1pUgaNmQ
-	FnUjCk/UAGVjGYH+VGq/D25g+DQq0qKGlcFyPwANejgQf8y2UpnO8/UgdIKBKLS1
-	aNytjGviDAntLa98J128KzbAgX0nDDcuJKdVacTi4UbTMa+c9gYx8ac6c43JnapP
-	KozT/27PhRry8eHLRrBG2B90VDf1lG0SvYLz2qY+R8mAQBuFFBu/Uhoxlh20tF3s
-	dWlzP2EdfoLOwoF7dLiuIQM/wLZ51WSrniBRSogGH/tKt3XWmyTbJOAaocLoJYIt
-	NwWM4ZCfcXW1BbLRm//hlmW5SyCgvTk2Pu2lMwPzxU+VdQ==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp791qk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 10:47:33 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f617f20b2bso2501526d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 03:47:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746701251; x=1747306051;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DJLcczpvmaxUKxKji1M3aDjSLMp22wqvdaaWQcNcABU=;
-        b=WSJo0ag4E8fcKpT268BQk2B+ZZglDoIm62IFK6Y/9Fo3abBxi82G/90CtX39DKeyRL
-         c6BOC83FGdtYdAFHh07PQ+qwEzuDVLKFCIh0iEMjqHwtTjjdUTXBOx+hldGrJD7nyCDK
-         YOAkrG/eTi6LiMrkBxFFKx4DPm7wBx0b1IU8pEOuALsj4nojI0N1W+h2u3JgI4e4laBW
-         5lpVJ+tKcpnfIKb8HwL4VM0RjmjyAGsW8KefjYOSKmCSgYbe8T6ugW6Wt9+JyZMpXq1O
-         CuxbTu2P1B4JB2v20n1v/CBFi0OOa2Y7npAxU4lxdEdtSZiSR5qT3jh/nH9cSZJUwknw
-         fdwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXld66ZqwpX0kLyjru4rISuDDZdpuOUuAPn0gNManUogGhK0+SN76cYU1BBCcxIjb7n1lej/wGNa0XZtbU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzz/sJL2Rs7x/KEc+7pWXztYaQhceQmvlXZn086cAmM4jPcQrVP
-	t/fUXrdB4cPsjNnmcr0NE2+lf1yjb1dpN8V8zMMcV5kh+sYEfnbTUiTFxNv1T+A1JnD5WQl/LoD
-	Qbshe5d6Nti7YmhtvVs8SMfsSjqDdmpuuczk5cRKAHoYPuslTthlAjEbr6z0eVKDjguhIRX2wLw
-	==
-X-Gm-Gg: ASbGnctWiq5gcQFlnd2A9Cn09ipCTmq5oaERGyn9Q05fqZYhMgBkH7x89HNWzUs+xfQ
-	sT0pPCHwxndRtt/5Zrt0ZYJUl6nrVtTk7ryVEQp7ERcIErokCt3XQNCRQzhVfXU9cn3zteKA5xx
-	9Aszv3JRDUtl6EkY9EFIkEsoLxGkDW7yNMm0sS74W92XxxTHj+kIzN/1MDxqARwjSXjrURt5FC2
-	gpbntPAvqTaLK9TszHm5vO1C+axvDALeEyI96BQdJ790hXSuJm/nfTxn1wiPzRf+W8zKelzE/Ih
-	Io8qGkUVdwKg1kLoIs0dAxSN/H1dxP22tyzJ8TefAYZLqbRiZYGtFSQBWfjS2VXsLW9NPW7rFZY
-	=
-X-Received: by 2002:a05:6214:2405:b0:6e8:9bcd:bba6 with SMTP id 6a1803df08f44-6f5429e1f20mr112740446d6.7.1746701251154;
-        Thu, 08 May 2025 03:47:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEHl4JUcuFrO/9rVeQzXi9JZCdORJB3CJB1i85DoLPVXTX/Y5q6n8b+WwBx6so7vshDBnZtiA==
-X-Received: by 2002:a05:6214:2405:b0:6e8:9bcd:bba6 with SMTP id 6a1803df08f44-6f5429e1f20mr112740036d6.7.1746701250806;
-        Thu, 08 May 2025 03:47:30 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94f21a8sm2573813e87.197.2025.05.08.03.47.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 03:47:29 -0700 (PDT)
-Date: Thu, 8 May 2025 13:47:28 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Jun Nie <jun.nie@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Jessica Zhang <quic_jesszhan@quicinc.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 01/14] drm/atomic-helper: Add crtc check before
- checking plane
-Message-ID: <b5kl5whmagpxn4saimkj4qloowh73xggehdh5rnl6lmjvqf65j@esycoi7w2nmp>
-References: <20250506-quad-pipe-upstream-v9-0-f7b273a8cc80@linaro.org>
- <20250506-quad-pipe-upstream-v9-1-f7b273a8cc80@linaro.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="USFsIrzD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LLUDhCy119pyC7aHqecqvJu1vonl67EYGQ1aHpY4ssw8EI3LMhaGUzntc2mMZ4ytTDddajuyuagazMx100p5qlPZoMpqhEIde+4Gg0ytPMxGP/pnZKv5fwzaQwMZLUnrwCjxyGxmgtbVfKltjhdAWLQPWPpyVg+Rzyt7Cvk3jWQwgnR5mxFr1JRE7e2cSrKppKpsCpivxesMBh9GZ+2VJ5TAI11Sc+SsBSMM/NgiXKwhDCoS4KT780uoIsdsszDxqPJTbPuonT625lfW9/bO5oIv+Mb2EKcOJ0OHjTb4eDmaDKEK799b+HIuTQdfj4zV4/tdKQ6HMm3EsIBSezBJEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=foIPHErUSzFYGPToOGUIbqFLMSMhlY8Pv5h0FBxObW4=;
+ b=T1vtnptgoXF5kQ9/Y4wWvJB9yabh6hEhlTZVy+C/58P5LCexfzI1q9JjYwUNDcMcvAsQWzDbcvxqA1g9pLcnDQrVCl/Fyn9K2+wXIsPlHKmUWRfgRRyskilYmU7FKYhZLqvgm1MprY9ok9NR/rOh4nP8a0wwy1ya/Mp6xjPrzQ1agHoCo29CVhsEQuw/dtHQZ3rIFEt8NNOMQuz1GG3JLZr8l2jwxCYbtreawiJB8vzjnESC7Pmw2F0Q1FA+BxiJ9vvc2nbesxeVZmQ72gq6oYzmoAubB+6wtvQlbPbrUHEiXNbXxUmsd7AM4VfZKMzRna1eKO+j/dcths7naB6PGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=foIPHErUSzFYGPToOGUIbqFLMSMhlY8Pv5h0FBxObW4=;
+ b=USFsIrzDuvMeszluodxY8MOZm6GCHBrf01bWVhYlO0mAKmqLvymSoWhZACT0aksLVOR79vaAoQ4Dxp8X1GvV0GT7DtTFEIob+IZaLS6qhNZDgNVkjMBPlxtllP6LNsRdgHsBAYLdzT6XXBFqLr+0TAPhf2EiH8M0JDL6HNWk81SZXLheg4uHYmc80Xj3ws5YgQwHLcbzMHunNRscWc3fISXrTwQQr2m9l2VR08JKowURjUTTwSkjJiwxKhTgLf/j1VHI+PhtGgIFa4DmFFjRMBal5JOrW284EnAVie+ocaggmvhOIGVw0MZLzMHlvYgfPUKOut3wBnjq8r37mMqSCA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
+ by SJ0PR12MB6966.namprd12.prod.outlook.com (2603:10b6:a03:449::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.25; Thu, 8 May
+ 2025 10:50:52 +0000
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9%3]) with mapi id 15.20.8699.022; Thu, 8 May 2025
+ 10:50:52 +0000
+Message-ID: <9bf40c88-7b4d-45ba-946d-19e328be76c2@nvidia.com>
+Date: Thu, 8 May 2025 11:50:47 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] dt-bindings: dma: nvidia,tegra20-apbdma: convert
+ text based binding to json schema
+To: Charan Pedumuru <charan.pedumuru@gmail.com>, Vinod Koul
+ <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250507-nvidea-dma-v4-0-6161a8de376f@gmail.com>
+ <20250507-nvidea-dma-v4-2-6161a8de376f@gmail.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <20250507-nvidea-dma-v4-2-6161a8de376f@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P265CA0242.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:350::16) To SJ2PR12MB8784.namprd12.prod.outlook.com
+ (2603:10b6:a03:4d0::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506-quad-pipe-upstream-v9-1-f7b273a8cc80@linaro.org>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA5MyBTYWx0ZWRfXwTwERwe4xTNO
- ZiBGByDu2SPgJyX4xX1xrCvjgZhRPyXwbkvwFm2lbZULxR9SW4m5bIOVUlu556SnIxE8T6OAl8V
- hf/xDPUW/7W80JJWWdXczvzurG8xE8lXSmBDLY4BYGvkCIlIxxUjzHfzoxeii6BVeNAC8sXP+hE
- coH3N3LGIumeEN9CbNVOqXS2EwW2uvrFqSolKrurFnkvD/0MS/ArZJHGzxVLIkwqW1RyTVSKE7u
- zwmzm6z1egm+/kxlk6L75727ZZX+rbn880DJf0StpovWc4Q2jVJRXwQPauHGbWoYURdccCUYgzQ
- Nua7SvSbzn2pLinN/v9nnI0H/AwTRBQHbUi6c7xOdoxLHvc9/8tHMUdvqH+takIScNj90K+s1jN
- hTCbavegLG5a5a15wjT7CihlPay34nv9BAlu4z57mtVw5SpGaB3x4y9VFr5tr0U8RnbQ57w3
-X-Proofpoint-GUID: te1126rJXdnLfpP9QMWaKUfxVqz2_JkR
-X-Authority-Analysis: v=2.4 cv=B/G50PtM c=1 sm=1 tr=0 ts=681c8bc5 cx=c_pps
- a=wEM5vcRIz55oU/E2lInRtA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EgBjQOAtpNY6-goZWe0A:9 a=CjuIK1q_8ugA:10
- a=OIgjcC2v60KrkQgK7BGD:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: te1126rJXdnLfpP9QMWaKUfxVqz2_JkR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_03,2025-05-07_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 spamscore=0
- suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505080093
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|SJ0PR12MB6966:EE_
+X-MS-Office365-Filtering-Correlation-Id: 83959c3c-d6bd-4e02-b33e-08dd8e1e3399
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OTl6eXRxUkZ4Qk5xaUVVNWRDS2FnaUs0TENMc1paMVdwMkxXTVFJZ3ZJSWRT?=
+ =?utf-8?B?Rk5vM0Z3cGVzUkxZN2EzZkNyQldZOXhDSkNDUUFDT1QxVXlkbVlNM1U3cUdM?=
+ =?utf-8?B?cDNuUWV4N1p5SVZRc25Eam9Td3dZY0s4RkFHRU9qdGZxaEpmSXIrYUQ2eVFX?=
+ =?utf-8?B?OVkwZGZ5Tjk4VmVTWEVrU09HcXZKaTc0WTBJTlNYMFBpRVB2d3ZUVmFWVFpP?=
+ =?utf-8?B?N0NJMjhubWxiSURsUFdqNC9la1BRallZL0ROcmJzdjVHTUlRUjFWb0FkazNB?=
+ =?utf-8?B?Mm5xOVcwdVJMSHBUR1FsTE40ZnJEblhDYlNoNzd6M0tYbkVZOU5aZ25pR1JS?=
+ =?utf-8?B?TjN3VnV2RjhCUXdNRWczaUJ4Tm9FU1ZuOTR2WjJTaFpIZ2J0dVZsbklEdEd0?=
+ =?utf-8?B?NHFvb0h3UjROTUkyemhqaHFWemhnYWhOUDhpV1lBU3I3OTUrVGROeGV3Lzdl?=
+ =?utf-8?B?U3N5ZjRlRjA3Tk5SVTZ4SUVIOGhHMlVJem5IK0ZEbkdmN3FaNzZ1Ui9Qb2lT?=
+ =?utf-8?B?RVdXVjZ4SHg5dTIvMjNENmpBYUtncXVYSGptbXh5VmVYNzhRT3R0eHZadzRD?=
+ =?utf-8?B?Nk1CZ1owZ2FSd3pLQWQvM01US2RhVjMxTzJOQ3Y5SDF4WE5BVFBMdVZPM3Vp?=
+ =?utf-8?B?ZGU2TjBIOHpmTlJTb3dvbGlWdjhPWWQrMG4zS2kveXVyODB6YTMvVDhQb0Z0?=
+ =?utf-8?B?UUNwZVZ1MkN2SW84UjZuNTMzOGxRc0J1OXh1V3p2azlGMU5rVnFRVXpKYlRn?=
+ =?utf-8?B?ZkE4THhSSjZtN0pSbzhoaHZ4UlFRRWJ1Rjl1enhOSFJsOTNWdFhzTCtUNFFU?=
+ =?utf-8?B?YW9iRG83b1NzSmxxdDB0d05kM1p6VUJlNEZYUkwwSHVNaEtXYUEvSGFPWnNN?=
+ =?utf-8?B?bkVpWVRXR3BUVWVLZk1xeERMeFdYR3k5d1ZGNXNxci8xcDlvWCsrdE4xUVYr?=
+ =?utf-8?B?dS9iZ002RU9TVUt2N2ZuZm1pQ2F2MjBFNTNEVTh2cXM5N3QvRCtwTVJaR0NU?=
+ =?utf-8?B?Vk1Ia2pKbUdtTVNmSHhLT3phclFVdVlvbHpiVlloZmVlVmJzam5TRmhiR24x?=
+ =?utf-8?B?dFdpUmNuTWZjU2JYQ3RuVFc2ZzhFNVF2UjJWRDU5NVU2OEtCWUVDZGprWWY0?=
+ =?utf-8?B?SFBpcGNkNCtPdWNaclcvS0N5RzROSjBEQlRZSFBVUmxMT2JJaEYvWmdMWjA5?=
+ =?utf-8?B?MXI0cDAvWFhBblU5NW82OUVtdkZaZ1hTWHpKU3c5V2VCNHA4NThoOGgzWHR3?=
+ =?utf-8?B?STRPT1JRNnBVaHNCa3lYVThMaTMvT1haNS9wYUs1OUVmamU2cTk5YmVTZEEr?=
+ =?utf-8?B?TCswM2Yrem8zdWVFdlJyYTVwUGZnSVNaVkxuVHJ6NEVCc0gycjhTMXVwVVlt?=
+ =?utf-8?B?a1FkQzlvZWRwYXI2Z0xtQU1Jb2kvZmR0SDl2eUJxUXBnZUNUNnd1UFZHdlVh?=
+ =?utf-8?B?U3RqT0g2UE5KcmF6ZVc5UkZWb2ZhaVRYZFBwSEJqcC9XS2dhSi9VcFd3ODFm?=
+ =?utf-8?B?MEUwSDk5Y3NtL1I4WFEwWVN0QTNJWkp4OGZXTFdNV21ZRnRmcHYxRkl1ZU80?=
+ =?utf-8?B?WjNCekV6MGRTd1RUZ1F2cHZSVXI3Rit3R2UxWGcwcjhkZ3hhV3BYNXNwbUNi?=
+ =?utf-8?B?eGZWVlgwSTFrMlpncENQQlVhS2prSXhWdTdnSmRrQ3NCRCtuQStrMTAxYkND?=
+ =?utf-8?B?SW5LV2NJWnc3djhpWHFWZFhxYllSV1JWeEtNR05oNjBwZUsvRDBXdnZaMnpJ?=
+ =?utf-8?B?dktYNC9YUDdoMUJYV1Yzd1NoZmFyKzk3c1RIU2VBbkh3TkpsdjVjMEw0NXNZ?=
+ =?utf-8?B?ZnRtbmk4ZXYvbTdDUk9PNEpCMmJtNW0vMFJ2SlVnWG1LdkcxV3gycEdTREVT?=
+ =?utf-8?B?c3ErOExjVFVvNHUxN2VldVltRTRmaFVTdmIxdm5SeDdNVzZpZjc3QmtWNlB1?=
+ =?utf-8?Q?y9tQS+MHlxw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QXpKYzB6ZW9xdW5OdHR0K1c3eVYwZXdqNWQ0dXR5YjdXNWZjV2xZS2tSOVNw?=
+ =?utf-8?B?Ny9KWU1QYWVnTFBZZVV4RkJhOGRIL0xya2p1bTgyd3NldXJVTitKRjgvNW1q?=
+ =?utf-8?B?eFpqOEZKNzRBdnlHdmpDbGVjQVRQK1drOTQ0ckVXYlh0K2ZIemJjdWplQm1l?=
+ =?utf-8?B?MW1DS2hhclY0VGFjVjcwZFByUHZkZHFMOUsxcUNCalJ1d01KUmlka3B0Mmdm?=
+ =?utf-8?B?Q1lvc3EweHU4L3dxRWpldGZRUjRZNU56Q0lITmxkMXNXdytlaUVVVDRpZExO?=
+ =?utf-8?B?Y2hKRzB6cWsvMlBFVTN1b3h5eDkzZHA5Q2gyNHVjK2UyT2N5L0g3Y3h2Q3k5?=
+ =?utf-8?B?MkFvNG9udE8vY2RxekxpWVhMSkN0ZEplQWhLQ2tsckdOUnhWRVpNZWxnMXZI?=
+ =?utf-8?B?TktWYm43NHg3aFBUdTA1bHQwM253MGhMaUx6MlVmQ3RBY3lhUkpsMThuS1lr?=
+ =?utf-8?B?RVpJclJNS2hnVVZOWVNXeS95c2xCRDF3Qzg3VUxLL2ZlUmNQcFlEUnc4UjZC?=
+ =?utf-8?B?Nnk3MGlTdGVlbnlxeVhBQ2tRTVVsaHF6QUpNcWhZUkgxS0Y2L1hOUE5LNTdV?=
+ =?utf-8?B?N1pMcVh3OW1nVnFiYTNwVklPcWVpN2hmVzBhL2F3SXRaWDEwYXVleHZsTTdR?=
+ =?utf-8?B?d09OazZHKzNRcHNXQ3FKazBaaG9md3lJUGZoZW5UajUyZXEzcFdQajBVOWhB?=
+ =?utf-8?B?OU4wVkwxS2thYnNBY1RvRHZmNGNPVHRvdFV0WlFDVUhvRitBbEVOSUo0SWE3?=
+ =?utf-8?B?bkdZVnMvOXZFdzFWMm8rTnFJa0lJWHBZN29xTmRQdE1oVmJ0dGdOeXJyR2pQ?=
+ =?utf-8?B?ajg2eFM0WGY0UTZXMlZlVzZhdTB4Yk11R3ExM0NJdXh4M0FWb09SelN6R0Nn?=
+ =?utf-8?B?VlZxSlZucS9JSHRnMmwwMk15UzZ4YnJGNldIQXJzVVF0VnRrQmlEQUd6dnJj?=
+ =?utf-8?B?N2FvU0FPaDNoMDgyVlJXMXZuRlJZdlFML0VTc3NSMDVsUDEzRkRKV2lva3Fl?=
+ =?utf-8?B?Q25aM0cxQjBIYkJQME5NeXVjcW5iZEdLZHRUeUIrKzBBUjRGRDlnWG8vb3ZR?=
+ =?utf-8?B?NzhWYi9ZOG94aEtLVE9iMVBXczVjZlE2aEtIQTJrOVFVZmdFenRVWmQ0MkRw?=
+ =?utf-8?B?QU96ZFpwK3JzbkkrWFFtYnlRaWpjVUJBc2NtTVVvWjl3WkZDU2hrWTRRR2Y3?=
+ =?utf-8?B?S0g1Z3lJOVN6Tjc4Z2RwTHBQbTJvUVZHSi82MTBtaDlPd0dNQjNxbGg5cURI?=
+ =?utf-8?B?MWo4Y2VqVjAwU2xqb2RCaHpxREROSlFwTTZ6UlZEOVk4NmN5cHA5SDkwcTBH?=
+ =?utf-8?B?NXcrNE9xZmxWQmhERW1xSGg4dm5OM2taTm4wQnNJekFLNFJyMnJEbG1zQ08x?=
+ =?utf-8?B?bWhjSndlL3dsNDVQd0wrU0FEdFZERS9ZaGsvSkJJYm9NNmt6WXhvZGlXeFZ4?=
+ =?utf-8?B?dFNxYjByLzZENHhXdXRRekhYbFQvb0d6Nk4xZG9vNUkvR0FhS1NlTmRBYjRQ?=
+ =?utf-8?B?eDBzTGMvRzMxdzZWMllzeU5wU3c2UDJ5Q3hsK3g3MkJXRktNTFp4aHFPR3pi?=
+ =?utf-8?B?YVJHdDJVN0VnelVkWEZxaVVJWFdjaUdMQ2V1ZDkvR3greHd0WnhiMHdsWlNE?=
+ =?utf-8?B?emdMQVFLNHd0K0NNR0VoQWVmSHNQNzBOclpTVjVVYkNWREtDL3hocEJLck0v?=
+ =?utf-8?B?STg0TUNIakh5RElsdUFZMXErbnIwNUdHemd5dU5PQ2VsUlNYTzJVRDJ1WlBW?=
+ =?utf-8?B?MkRBazNOZlZtbzV6eHBtT09NN1N5UHdjRVlDKy96ZHp1bHdHcUVqMUxxQnhZ?=
+ =?utf-8?B?dTY4Wjdzd1RDUy9VNFdrOFBQVVBjbERqWVNQMDQ3UmNxeHR3akZxSGhjVEFx?=
+ =?utf-8?B?OUpHSFBRVXdzanJqcUdCZzFmUGlHL2wwY1V0QnIzcnRzSWpab3pNZktwN2VC?=
+ =?utf-8?B?SEMzdTc5MWN3eVA4VnJzK1pOT3Y2ZEh3dmtGamNhUFhMQy93TFc5a0NuRzRi?=
+ =?utf-8?B?UW9qT3V5UHFNYmVab2c5ZHdrYWpBSHZ1YjhVYUNhSmZMYUZEL1NpeldjYU1j?=
+ =?utf-8?B?Q2tVckt5UVZjYURVRm9zYWt2RGdDTDZLTkV5NlY4dzRUNmdaZmNlMGI0V1hw?=
+ =?utf-8?B?Smw1Q0lKcW1pckUvTVlrbWJMMTJNckdLZkNvcDR6MkRlbTVBSEpZK0w3ME5U?=
+ =?utf-8?B?amc9PQ==?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83959c3c-d6bd-4e02-b33e-08dd8e1e3399
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 10:50:52.5005
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RkvV2fLreHCoT/QbsuiJghgxgW36StmEEzH/+O2LQC5t1sZ7xtFMKOrs+kkuzQhzevQxBh8OLg4LovutHcP0sQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6966
 
-On Tue, May 06, 2025 at 11:47:31PM +0800, Jun Nie wrote:
-> Some display controller support flexible CRTC and DMA, such as the display
-> controllers in snapdragon SoCs. CRTC can be implemented with several mixers
-> in parallel, and plane fetching can be implemented with several DMA under
-> umberala of a virtual drm plane.
+
+
+On 07/05/2025 05:57, Charan Pedumuru wrote:
+> Update text binding to YAML.
+> Changes during conversion:
+> - Add a fallback for "nvidia,tegra30-apbdma" as it is
+>    compatible with the IP core on "nvidia,tegra20-apbdma".
+> - Update examples and include appropriate file directives to resolve
+>    errors identified by `dt_binding_check` and `dtbs_check`.
 > 
-> The mixer number is decided per panel resolution and clock rate constrain
-> first, which happens in CRTC side. Then plane is split per mixer number
-> and configure DMA accordingly.
-
-Here you are describing a behaviour of one particular driver as a reason
-to change the framework.
-
-> 
-> To support such forthcoming usage case, CRTC checking shall happen before
-> checking plane. Add the checking in the drm_atomic_helper_check_modeset().
-
-So, now drivers will get two calls to atomic_check(), one coming in
-circumstances which were not expected by the drivers before. Are you
-sure that this won't break anything?
-
-> 
-> Signed-off-by: Jun Nie <jun.nie@linaro.org>
+> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
 > ---
->  drivers/gpu/drm/drm_atomic_helper.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+>   .../bindings/dma/nvidia,tegra20-apbdma.txt         | 44 -----------
+>   .../bindings/dma/nvidia,tegra20-apbdma.yaml        | 90 ++++++++++++++++++++++
+>   2 files changed, 90 insertions(+), 44 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> index 5302ab3248985d3e0a47e40fd3deb7ad0d9f775b..5bca4c9683838c38574c8cb7c0bc9d57960314fe 100644
-> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> @@ -816,6 +816,25 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
->  			return ret;
->  	}
->  
-> +	for_each_new_crtc_in_state(state, crtc, new_crtc_state, i) {
-> +		const struct drm_crtc_helper_funcs *funcs;
+> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.txt b/Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.txt
+> deleted file mode 100644
+> index 447fb44e7abeaa7ca3010b9518533e786cce56a8..0000000000000000000000000000000000000000
+> --- a/Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.txt
+> +++ /dev/null
+> @@ -1,44 +0,0 @@
+> -* NVIDIA Tegra APB DMA controller
+> -
+> -Required properties:
+> -- compatible: Should be "nvidia,<chip>-apbdma"
+> -- reg: Should contain DMA registers location and length. This should include
+> -  all of the per-channel registers.
+> -- interrupts: Should contain all of the per-channel DMA interrupts.
+> -- clocks: Must contain one entry, for the module clock.
+> -  See ../clocks/clock-bindings.txt for details.
+> -- resets : Must contain an entry for each entry in reset-names.
+> -  See ../reset/reset.txt for details.
+> -- reset-names : Must include the following entries:
+> -  - dma
+> -- #dma-cells : Must be <1>. This dictates the length of DMA specifiers in
+> -  client nodes' dmas properties. The specifier represents the DMA request
+> -  select value for the peripheral. For more details, consult the Tegra TRM's
+> -  documentation of the APB DMA channel control register REQ_SEL field.
+> -
+> -Examples:
+> -
+> -apbdma: dma@6000a000 {
+> -	compatible = "nvidia,tegra20-apbdma";
+> -	reg = <0x6000a000 0x1200>;
+> -	interrupts = < 0 136 0x04
+> -		       0 137 0x04
+> -		       0 138 0x04
+> -		       0 139 0x04
+> -		       0 140 0x04
+> -		       0 141 0x04
+> -		       0 142 0x04
+> -		       0 143 0x04
+> -		       0 144 0x04
+> -		       0 145 0x04
+> -		       0 146 0x04
+> -		       0 147 0x04
+> -		       0 148 0x04
+> -		       0 149 0x04
+> -		       0 150 0x04
+> -		       0 151 0x04 >;
+> -	clocks = <&tegra_car 34>;
+> -	resets = <&tegra_car 34>;
+> -	reset-names = "dma";
+> -	#dma-cells = <1>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.yaml b/Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..a2ffd5209b3bf3f2171b55351a557a6e2085987d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.yaml
+> @@ -0,0 +1,90 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/nvidia,tegra20-apbdma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +		funcs = crtc->helper_private;
+> +title: NVIDIA Tegra APB DMA Controller
 > +
-> +		if (!funcs || !funcs->atomic_check)
-> +			continue;
+> +description:
+> +  The NVIDIA Tegra APB DMA controller is a hardware component that
+> +  enables direct memory access (DMA) on Tegra systems. It facilitates
+> +  data transfer between I/O devices and main memory without constant
+> +  CPU intervention.
 > +
-> +		ret = funcs->atomic_check(crtc, state);
-> +		if (ret) {
-> +			drm_dbg_atomic(crtc->dev,
-> +				       "[CRTC:%d:%s] atomic driver check failed\n",
-> +				       crtc->base.id, crtc->name);
-> +			return ret;
-> +		}
-> +	}
+> +maintainers:
+> +  - Jonathan Hunter <jonathanh@nvidia.com>
 > +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: nvidia,tegra20-apbdma
+> +      - items:
+> +          - const: nvidia,tegra30-apbdma
+> +          - const: nvidia,tegra20-apbdma
 > +
+> +  reg:
+> +    maxItems: 1
 > +
+> +  "#dma-cells":
+> +    const: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description:
+> +      Should contain all of the per-channel DMA interrupts in
+> +      ascending order with respect to the DMA channel index.
+> +    minItems: 1
+> +    maxItems: 32
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  reset-names:
+> +    const: dma
 
-Too many empty lines. But the main quesiton is: why are you calling it
-before mode_valid()? According to your description a better place would
-be in drm_atomic_helper_check_planes().
 
->  	ret = mode_valid(state);
->  	if (ret)
->  		return ret;
-> 
-> -- 
-> 2.34.1
-> 
+Krzysztof, given that there is only 1, isn't the preference to remove 
+this? I understand that this requires a driver change, but it should not 
+break compatibility.
+
+Jon
 
 -- 
-With best wishes
-Dmitry
+nvpublic
+
