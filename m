@@ -1,156 +1,115 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47E6136A;
-	Thu,  8 May 2025 12:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABFD1FF1D1;
+	Thu,  8 May 2025 12:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746706567; cv=none; b=EGNwwA3KnrJ+zEHf8CSZcf0J2rKc+ecFVYvKe8NLRhe8cofLjmbzF/1+CDZEokCh2utmKweSGA7ogqlqspqgDrztWRuToYW3iS0VwYWkZJKcQAxSKco3hQjRjV4AXB1J38NiYVXqeY513lnuVnsfaEYeThCeOdLeKd/BDFSTeCo=
+	t=1746706591; cv=none; b=gdFG6iyMxgPSOSjZxvm4ZKSjN37Py74gUhvWsDo3TDsDlIeyhYpUNtdZXameyKpizkWTp3uCkHB8UUK22EODCsmZFjxbRwgZoQWjaA22ja5z8E3kVutk8p9bDmpWB5DweNoNIAt/rBcht7cG6pi1xfRkuw752QEHlN5FBmOBnwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746706567; c=relaxed/simple;
-	bh=Sld0Gmq2W3ac2adnW1x7WQNzxebTEB2s99xXHqcK4/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XIsJjdS0XN35Y0GnfT59sFyQa1MfFMwXxvfLhlg5ghpULaUJOxXZXkRsC0DM/axTFJtGhE9dr8AM2Gh3HV5IYPqBJjgPauLOJu9jba+vJEe6YInRtGoxxUUu91Q6fvMqohygRthWVFg62yeGrKw6VfH2OxDpVWxucJ7XDC6+kO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hbvaA7DU; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746706591; c=relaxed/simple;
+	bh=Djcg18yMQCKOd2P1yzVFKWVY4SUB0DOptBmvsDrjuUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W36vnd9twosRsZGTrItee9AbXUpNOVqIWUoqyVSftxhxrW7k91FhcP2r4H2PdmkS1HW+Le4JqedFplAXVm4LmcTo6z/RQbO/oIp3M9f35qfvspRGX2f5JNOu/32MlU9SZUACm9JPEdTlQBZ0LmYMedz2O3qtuy5wmhwyRsVaz6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dyPwIgM6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hbvaA7DU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=9BWvRgIIiJKpl7FhGWRbkXSkt9i/d2nayBtfYXn3Jwk=; b=hbvaA7DU/b99tEN1KDtOOXAkrg
-	Zj5jUSd3xWjUl1g265LOT2rDJfRSpkC9lsM3sLH/cCc8YVVCs9Y3XgKezsYU/I3f9i3sZOy5FS9w1
-	rswzlSYPYHlbUb1Xg9PLpi5KNGOYMxTEpISZ29emDYUSWLXF1Xi+ihBkMla/nFBwatK6jzkqyYaTI
-	9PkMkS7YxlTOtq52GJKdfA1kStxvWfJmkx96ZqMkzbUUHGpoaFtTkp6pTFvlu5t4F/679WCK6MeU9
-	a3HIs+DMfWv1QrcKcdgRWBHOGnP4m20NQoR7auIr4QkijR4QISNUthlIVTGPKRmAe6o7cX+cOunAV
-	8QOLkavA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uD0AD-0000000G28P-1dAj;
-	Thu, 08 May 2025 12:15:45 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C254130026A; Thu,  8 May 2025 14:15:44 +0200 (CEST)
-Date: Thu, 8 May 2025 14:15:44 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brian Gerst <brgerst@gmail.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
-	kvm@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 5/9] x86/nmi: Add support to handle NMIs with source
- information
-Message-ID: <20250508121544.GH4439@noisy.programming.kicks-ass.net>
-References: <20250507012145.2998143-1-sohil.mehta@intel.com>
- <20250507012145.2998143-6-sohil.mehta@intel.com>
- <20250507091442.GB4439@noisy.programming.kicks-ass.net>
- <55527575-e3b8-4cf6-b09c-b81437e0c892@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dyPwIgM6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12359C4CEE7;
+	Thu,  8 May 2025 12:16:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746706590;
+	bh=Djcg18yMQCKOd2P1yzVFKWVY4SUB0DOptBmvsDrjuUg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dyPwIgM6dLRpPwAGJB+P+A0Tg46C/1980i9Ej2fwtdxfbsYKAlYxmgll9hE96OF3k
+	 BnMDLVvFRsoOlgR2Swvl/k5iX3dwwhj0HTQ0T/AC+KuEa6pH0PCkrRvwBlYmz0gPCV
+	 iUZEdqnQXr0nONr0dmRuwOitS/hhvjB9R7Vaht9lMlQPZtz2ktgc1yIU14q/g3WHM+
+	 E+dQ1HAKz4kW0myk5O5BGjMFOgBBud1y657kja9Mn2h/RW+R01zfyb5E44iVmfgHPt
+	 1IfQhKZ9efpI2F7gSt5p+jdYvZ3bktsxYhFG33WV9uK3T/A4C/wGNbLkKHeke04xU0
+	 Fmj4xuFCkVm0w==
+Message-ID: <32b295ae-4186-4d37-9bfb-15b81afaa5ec@kernel.org>
+Date: Thu, 8 May 2025 14:16:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <55527575-e3b8-4cf6-b09c-b81437e0c892@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/5] dt-bindings: iio: magnetometer: qst: Add QMC5883L
+ device tree binding
+To: Brajesh Patil <brajeshpatil11@gmail.com>, jic23@kernel.org,
+ lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, marcelo.schmitt1@gmail.com,
+ dlechner@baylibre.com
+References: <20250508120846.114262-1-brajeshpatil11@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250508120846.114262-1-brajeshpatil11@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 07, 2025 at 02:48:34PM -0700, Sohil Mehta wrote:
-> On 5/7/2025 2:14 AM, Peter Zijlstra wrote:
-> > On Tue, May 06, 2025 at 06:21:41PM -0700, Sohil Mehta wrote:
-> >>
-> >> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-> >> index a1d672dcb6f0..183e3e717326 100644
-> >> --- a/arch/x86/kernel/nmi.c
-> >> +++ b/arch/x86/kernel/nmi.c
-> > 
-> >>  static int nmi_handle(unsigned int type, struct pt_regs *regs)
-> >>  {
-> >>  	struct nmi_desc *desc = nmi_to_desc(type);
-> >> +	unsigned long source_bitmap = 0;
-> > 
-> > 	unsigned long source = ~0UL;
-> > 
-> 
-> Thanks! This makes the logic even simpler by getting rid of
-> match_nmi_source(). A minor change described further down.
-> 
-> Also, do you prefer "source" over "source_bitmap"? I had it as such to
-> avoid confusion between source_vector and source_bitmap.
+On 08/05/2025 14:08, Brajesh Patil wrote:
+> Signed-off-by: Brajesh Patil <brajeshpatil11@gmail.com>
 
-Yeah, I was lazy typing. Perhaps just call it bitmap then?
+Please run scripts/checkpatch.pl on the patches and fix reported
+warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
+patches and (probably) fix more warnings. Some warnings can be ignored,
+especially from --strict run, but the code here looks like it needs a
+fix. Feel free to get in touch if the warning is not clear.
 
-> >>  	nmi_handler_t ehandler;
-> >>  	struct nmiaction *a;
-> >>  	int handled=0;
-> >> @@ -148,16 +164,40 @@ static int nmi_handle(unsigned int type, struct pt_regs *regs)
-> >>  
-> >>  	rcu_read_lock();
-> >>  
-> >> +	/*
-> >> +	 * Activate NMI source-based filtering only for Local NMIs.
-> >> +	 *
-> >> +	 * Platform NMI types (such as SERR and IOCHK) have only one
-> >> +	 * handler registered per type, so there is no need to
-> >> +	 * disambiguate between multiple handlers.
-> >> +	 *
-> >> +	 * Also, if a platform source ends up setting bit 2 in the
-> >> +	 * source bitmap, the local NMI handlers would be skipped since
-> >> +	 * none of them use this reserved vector.
-> >> +	 *
-> >> +	 * For Unknown NMIs, avoid using the source bitmap to ensure all
-> >> +	 * potential handlers have a chance to claim responsibility.
-> >> +	 */
-> >> +	if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) && type == NMI_LOCAL)
-> >> +		source_bitmap = fred_event_data(regs);
-> > 
-> > 	if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) && type == NMI_LOCAL) {
-> > 		source = fred_event_data(regs);
-> > 		if (source & BIT(0))
-> > 			source = ~0UL;
-> > 	}
-> > 
-> 
-> Looks good, except when fred_event_data() returns 0. I don't expect it
-> to happen in practice. But, maybe with new hardware and eventually
-> different hypervisors being involved, it is a possibility.
-> 
-> We can either call it a bug that an NMI happened without source
-> information. Or be extra nice and do this:
-> 
-> if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) && type == NMI_LOCAL) {
-> 	source = fred_event_data(regs);
-> 	if (!source || (source & BIT(0)))
-> 		source = ~0UL;
-> }
+...
 
-Perhaps also WARN about the !source case?
+> +
+> +  mount-matrix:
+> +    description: |
+> +      A 3x3 rotation matrix describing how the magnetometer is mounted
+> +      on the device. This is used to orient the sensor measurements
+> +      to match the device's coordinate system.
+No supplies?
+
+Best regards,
+Krzysztof
