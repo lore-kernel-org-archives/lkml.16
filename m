@@ -1,300 +1,315 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDBE22068E;
-	Thu,  8 May 2025 21:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E5815B0EF;
+	Thu,  8 May 2025 21:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746739647; cv=none; b=LTz0bZGNXbKI1XO3weWTZWfqlnHOme6HILDEddsJAYq4W3BbQgoDLBx/6CaU9DtCL0XfHR9aosIW1YW9ohhKbFWn1mGyfg6J+cGIuwYvws4XzfZ6jS8H2CSa5HXqYivpm1sTBEF53kuLIkDT707mFdRUg7Ld2KSZ2DozP53OXuc=
+	t=1746739852; cv=none; b=QbV1xVc6J8TbbJP26p5UMTQg79IvfiZXUBAFBnEFrSKZdyVmMIX6+q/QzWnbqxs8wTkZlklDAkDFJNUA+mLhWX/BdklSypR0Bli892Q0op5rQXRMQs3Eu+vLs+tZfEPZrhol8OL7YcaKjMD8B8FuWgAVek+2plKVbGZqyXRUmcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746739647; c=relaxed/simple;
-	bh=l94ZU3KCPicExHOtSiAVCgSoXi/vYbcj9dNKqJ9c69k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pw5VnU34feaJE0TBNHhGVwVf4UxjfaRrLUALMq9WeOujpi+cz+p+sU0XdCogPgVqtNVHyFcxvKZzGAM+VoPvmFH7RpYCnJRZsaaYRyaDD+IH0+3yU+WzYH9RyVJ4vOPHcOKbuVhZFItdu2DeCYY2z6GyKTUsfCWwBFvegVhpSGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EjZneIB0; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746739852; c=relaxed/simple;
+	bh=RUKIICug20cm8XME6wtY4AykbgHsCJfzI3ZGDosJ3Z0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ktmKl95lHgzpekGQTVORyeHgbF7Kj9eUJfsYYY0LWq4IqrUwQyjRftl301egnuo96g5wUBFjU/N1snjurMnEj32mKen8Jt3LN5zo7QqRcjZ+B0ifyqcUE0kG41lM7bB9nTaVpUDSSU65k/DoLS4mHoKWPl+PVJoFaS5w22IbjmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ad+p4Q0V; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EjZneIB0"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a0b308856fso956575f8f.2;
-        Thu, 08 May 2025 14:27:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746739643; x=1747344443; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=J4eszvO5oARzZZ5it48CSfvqjiopwIx5Q1lcjvjROLo=;
-        b=EjZneIB0RteczBIo138+HPgsLaf4hP8hmAFYqS9paHYiplyIH2nInjmYWVvOT2r4o7
-         RCQ/1894mj87RtMKKhiE2rfkkkvRBuF9qJCu/68y9zeWZ/4VExGmWpXbsh65Savs6hzm
-         qdhoaZASvcfmyY9rwSxjZ1QPrRP0xGeFa12JFOHOHhBgxKul9UtNOGiDZE/nVv0P3IUF
-         PugHQ9XJFgFMl2X9MnkZHuPguXqwQYQZIXL2QOs6sZN37itk3KZKeWPlKsXmJg1YFk7U
-         68SItfHoE4p5diXWUTZbNAsyhcTL0ZEnh0miDw/+htHHKd/AXvWusxMHY2Y3yKP9GOjr
-         34ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746739643; x=1747344443;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J4eszvO5oARzZZ5it48CSfvqjiopwIx5Q1lcjvjROLo=;
-        b=HZCZggYxYIqrTU83vZsdIM9RU7j00jdww42lWbF0UmYOPdxi1FVdTtcVtu8rGx9Y8u
-         xGT2Ri+bksLN1uiOFGhm40Yg/Y/A3Fw7dQby3OBDJyJS1WbtrkuNr6Gb/hHfonmUYg1q
-         rG1z21SSqlflALR8akDDh+3IFjAC/LGxk4lnVwwqiMsMw5czc64l6jyS5KBiJsZFVmXd
-         jx5UrQOVVn91BhmWHguaivjESgopZU49fz0538qTjCU2W/UfqVf/XzRLXsGDJABFdKMg
-         M3iyFmnhTWpJQgdxAiqqbFCdxyqtQgvtbn4+y2LeAAz6Sv1Ho22TPvQi2oPBlMqQ4IZE
-         9YqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1MNjIg0koLltSh3Fz6HWQ6gkeLjRlkICqxWgfOYMtwCEFPEzgUYa12HHQcAVfBTgHd8FnOGZj9FS1@vger.kernel.org, AJvYcCUHd8Hxw9qdLh5gyOyh1/DenXgvt9J8NfJSWyBx3JihpZAI16hJIeD8UnCHjP9njNWrVCLxKuatNNXU4bvq@vger.kernel.org, AJvYcCVQs7AWIAOn72OparaJTKfiUy1AWoKyTJXFy1tFZNTZXb//bBVqfT2BJpZ36zoY0fq9+J4LnnNMdHKTWOxWxuZA@vger.kernel.org, AJvYcCW3zaY6EKFqoAS6jvRp6QbCEWBKQncdwFw8pZuHWQnrmGYjXOHa9b+wSPTqqrHKMh/OxMmrHp4P9xV8Cso=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM2mgMSMeHuDjbEnWXTyZcqcWY41P0nPaHc3OfSpbNtlmdOBut
-	BONpw4nUgegg3rgggPe4Jqd637TRNMJVptNp1QfSmv4pGwlRlaPE
-X-Gm-Gg: ASbGncuEw90tyFM5g0quuFd16WEZVUcCq3XBZhwj1IPTtxstJ14h244PM3eszJlGKjq
-	XYS/JDgujnkF4B9wpGk2g7b42xiARw6KTOR3QRBfVoYHog3tQ+Dyk72skboaRaLC9LP2VXtqRee
-	HeFqTb/grbnradkJVGD5C8VD0hX8lm+ta8ILoZvHcEIy75niQhuw9NSqlOPhJKlYFmUkJfHMc1N
-	H4bcf+8Ib0mKu5OtC0GduSVSmVxPpzg5zT4LL00Dsk7SfAskcmcMLt1+nbD/Y7vfV+MgsI+H4HR
-	Y+l2v74aMFuzLgGNI8GP3OS3ev0v11I6py3iJx9yGn0PORmsaH7ljdCA/EuLtqVz3lELk41qUhd
-	cYvkdqr94+A7offjLTXxR/iDE16FHhmWpYDTO9g==
-X-Google-Smtp-Source: AGHT+IH74btgcPmUEywWQiW4Gd8j2zqx6NgaQ+ZpRx92ZwJIbHHIZHWdcIkvmigDRMTO3XdwD5nxYg==
-X-Received: by 2002:a05:6000:2410:b0:3a0:9de8:88ef with SMTP id ffacd0b85a97d-3a1f64ae398mr825072f8f.49.1746739643177;
-        Thu, 08 May 2025 14:27:23 -0700 (PDT)
-Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ec912sm1075375f8f.23.2025.05.08.14.27.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 14:27:22 -0700 (PDT)
-Date: Thu, 8 May 2025 23:27:19 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Aaron Kling <webgeek1234@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
-Message-ID: <yczvbwanjadyfife3hnp2khxkgs77pokypqkxotlldjskshskt@xckrkfucg6xx>
-References: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
- <6920a557-9181-4c9c-98f4-a9be4e796a13@kernel.org>
- <CALHNRZ--to8B3zhg6zV90siL0x78BAjhS04DgfLwmnXEiOMe3g@mail.gmail.com>
- <83d17d6e-41c2-4729-94e6-5ccf480c766d@kernel.org>
- <CALHNRZ8+vnXrx7xw=qjpB34MX32hW_m7k+=CdePJpErBPPzv-g@mail.gmail.com>
- <53c943dc-5ea6-456b-a289-08212fc01d5d@kernel.org>
- <CALHNRZ8+X61YzQ_gYRkuAZrz2XFiZK36GDgk=801+384y2KnOQ@mail.gmail.com>
- <CALHNRZ-YZg3cKzRBMGaxRpejFMLSpOOz-FPQEaQVXFpFao40WA@mail.gmail.com>
- <CALHNRZ-jxC5PXqiG4tNShybaU9gZjTz4YT+VXgfQFNQ-Ox7crg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ad+p4Q0V"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548DGABX016832;
+	Thu, 8 May 2025 21:30:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	RD4CF6NmUfveOeZbPzTR3fagQtEkyvh8kENIJEz0KbY=; b=ad+p4Q0VaSypXeAo
+	CZSHXuraAid0E5jzCqjsvciDVqyTLRMBZ8wbEghiMYLIPH3TEHuB1b6GyFd1aWNN
+	FxUyrj//uhBNRu5DZ6TCo5r14geeOQTNLFa8PyPfWZdXUVf0cWwjRx50Ys5XmEV1
+	XEb/LwaIwdzCZDk4Eo+ba8JY4mHw240VOurDjS37aObLXu222T3jSwB8h4cePzjN
+	CVPfLZNQj1TE1wZ6pqUgb/4XiToc5BOvJogxiAoNgyZvux0PjvD+DNC4P3ff64uP
+	2L48cO+EIwYozirp8JiByKN5bvEO2StasrEHopai7Zg+vJIzAvQY1v9OoT816hwe
+	GKhaKA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp8tkx4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 21:30:36 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 548LUZWN001649
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 8 May 2025 21:30:35 GMT
+Received: from [10.71.109.79] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
+ 14:30:35 -0700
+Message-ID: <7ec6f0d8-971d-4607-82ad-9489ce2d352e@quicinc.com>
+Date: Thu, 8 May 2025 14:30:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2dq4oemmbh7zaoef"
-Content-Disposition: inline
-In-Reply-To: <CALHNRZ-jxC5PXqiG4tNShybaU9gZjTz4YT+VXgfQFNQ-Ox7crg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 14/14] drm/msm/dpu: Enable quad-pipe for DSC and
+ dual-DSI case
+To: Jun Nie <jun.nie@linaro.org>, Rob Clark <robdclark@gmail.com>,
+        "Abhinav
+ Kumar" <quic_abhinavk@quicinc.com>,
+        Sean Paul <sean@poorly.run>,
+        "Marijn
+ Suijten" <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Dmitry Baryshkov <lumag@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250506-quad-pipe-upstream-v9-0-f7b273a8cc80@linaro.org>
+ <20250506-quad-pipe-upstream-v9-14-f7b273a8cc80@linaro.org>
+Content-Language: en-US
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20250506-quad-pipe-upstream-v9-14-f7b273a8cc80@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Nfpx24jjqpgAizwo5PpdImZJ9z9dKxLv
+X-Proofpoint-ORIG-GUID: Nfpx24jjqpgAizwo5PpdImZJ9z9dKxLv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE5NCBTYWx0ZWRfX8jk7SQXcntR6
+ +rtFl+rIM/ATMww4jSszY3EEdlQQDXrIE8MkTOknX2JYzn5zdxlFINRG3SoaIP+lZ0RVfbMLdw3
+ ofORujZPNaUI+EdiwIa7Au9s4I6KKJm5F3OFz5nTiiENMT79DzNIA0dwU7tnJArlu2B2bjgBPRZ
+ J/3bvgGnkTla7d8lOWUul3/TvG1zAJyHwNjVDObf/BOZCswvDknIWk9i+SPoQOkJeYZitFdzpt5
+ Gd5H1HAeeRelK9r5ckSbanH1Ud1JMA9ZDDNRYWgxFzg2RK0/5g5fsk/fB/wqy1l2EicB9AWngZk
+ HoqsFnVGi0+hsEevoTfDcOJYxMiH2bEQpqx9+HFtlrxOPth8ceT5o/SsR2Tv+vJ2YeqDA8wcMyH
+ qWEhn0mE0wHEHEUFnagF4+Z2RTRKV6kSSEGlX/brT0kbkn6NN/kcaXFiFwMaaxPdiNo5z/JP
+X-Authority-Analysis: v=2.4 cv=e/4GSbp/ c=1 sm=1 tr=0 ts=681d227c cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8
+ a=COk6AnOGAAAA:8 a=L95mz036j096roKjO1sA:9 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_06,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0 clxscore=1015
+ mlxlogscore=999 spamscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0
+ mlxscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505080194
 
 
---2dq4oemmbh7zaoef
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
-MIME-Version: 1.0
 
-On Mon, Apr 28, 2025 at 08:21:55PM -0500, Aaron Kling wrote:
-> On Sun, Apr 20, 2025 at 8:45=E2=80=AFPM Aaron Kling <webgeek1234@gmail.co=
-m> wrote:
-> >
-> > On Tue, Apr 8, 2025 at 3:49=E2=80=AFAM Aaron Kling <webgeek1234@gmail.c=
-om> wrote:
-> > >
-> > > On Tue, Apr 8, 2025 at 3:17=E2=80=AFAM Krzysztof Kozlowski <krzk@kern=
-el.org> wrote:
-> > > >
-> > > > On 08/04/2025 09:35, Aaron Kling wrote:
-> > > > > On Tue, Apr 8, 2025 at 1:08=E2=80=AFAM Krzysztof Kozlowski <krzk@=
-kernel.org> wrote:
-> > > > >>
-> > > > >> On 07/04/2025 18:00, Aaron Kling wrote:
-> > > > >>> On Mon, Apr 7, 2025 at 7:59=E2=80=AFAM Krzysztof Kozlowski <krz=
-k@kernel.org> wrote:
-> > > > >>>>
-> > > > >>>> On 06/04/2025 23:12, Aaron Kling via B4 Relay wrote:
-> > > > >>>>> From: Aaron Kling <webgeek1234@gmail.com>
-> > > > >>>>>
-> > > > >>>>> This allows using pstore on all such platforms. There are some
-> > > > >>>>> differences per arch:
-> > > > >>>>>
-> > > > >>>>> * Tegra132: Flounder does not appear to enumerate pstore and =
-I do not
-> > > > >>>>>   have access to norrin, thus Tegra132 is left out of this co=
-mmit.
-> > > > >>>>> * Tegra210: Does not support ramoops carveouts in the bootloa=
-der, instead
-> > > > >>>>>   relying on a dowstream driver to allocate the carveout, hen=
-ce this
-> > > > >>>>>   hardcodes a location matching what the downstream driver pi=
-cks.
-> > > > >>>>> * Tegra186 and Tegra194 on cboot: Bootloader fills in the add=
-ress and
-> > > > >>>>>   size in a node specifically named /reserved-memory/ramoops_=
-carveout,
-> > > > >>>>>   thus these cannot be renamed.
-> > > > >>>>> * Tegra194 and Tegra234 on edk2: Bootloader looks up the node=
- based on
-> > > > >>>>>   compatible, however the dt still does not know the address,=
- so keeping
-> > > > >>>>>   the node name consistent on Tegra186 and newer.
-> > > > >>>>>
-> > > > >>>>> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> > > > >>>>> ---
-> > > > >>>>>  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 16 ++++++++++++++=
-++
-> > > > >>>>>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++++++++=
-++
-> > > > >>>>>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 13 +++++++++++++
-> > > > >>>>>  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 16 ++++++++++++++=
-++
-> > > > >>>>>  4 files changed, 61 insertions(+)
-> > > > >>>>>
-> > > > >>>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/=
-arm64/boot/dts/nvidia/tegra186.dtsi
-> > > > >>>>> index 2b3bb5d0af17bd521f87db0484fcbe943dd1a797..2e2b27deb957d=
-fd754e42dd03f5a1da5079971dc 100644
-> > > > >>>>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> > > > >>>>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> > > > >>>>> @@ -2051,6 +2051,22 @@ pmu-denver {
-> > > > >>>>>               interrupt-affinity =3D <&denver_0 &denver_1>;
-> > > > >>>>>       };
-> > > > >>>>>
-> > > > >>>>> +     reserved-memory {
-> > > > >>>>> +             #address-cells =3D <2>;
-> > > > >>>>> +             #size-cells =3D <2>;
-> > > > >>>>> +             ranges;
-> > > > >>>>> +
-> > > > >>>>> +             ramoops_carveout {
-> > > > >>>>
-> > > > >>>> Please follow DTS coding style for name, so this is probably o=
-nly ramoops.
-> > > > >>>
-> > > > >>> As per the commit message regarding tegra186: bootloader fills =
-in the
-> > > > >>> address and size in a node specifically named
-> > > > >>> /reserved-memory/ramoops_carveout, thus these cannot be renamed.
-> > > > >>
-> > > > >> That's not a reason to introduce issues. Bootloader is supposed =
-to
-> > > > >> follow same conventions or use aliases or labels (depending on t=
-he node).
-> > > > >>
-> > > > >> If bootloader adds junk, does it mean we have to accept that jun=
-k?
-> > > > >>
-> > > > >>>
-> > > > >>>>
-> > > > >>>> It does not look like you tested the DTS against bindings. Ple=
-ase run
-> > > > >>>> `make dtbs_check W=3D1` (see
-> > > > >>>> Documentation/devicetree/bindings/writing-schema.rst or
-> > > > >>>> https://www.linaro.org/blog/tips-and-tricks-for-validating-dev=
-icetree-sources-with-the-devicetree-schema/
-> > > > >>>> for instructions).
-> > > > >>>> Maybe you need to update your dtschema and yamllint. Don't rel=
-y on
-> > > > >>>> distro packages for dtschema and be sure you are using the lat=
-est
-> > > > >>>> released dtschema.
-> > > > >>>
-> > > > >>> The bot is reporting that the reg field is missing from the add=
-ed
-> > > > >>> ramoops nodes on t186, t194, and t234. However, as also mention=
-ed in
-> > > > >>> the commit message, this is intentional because it is expected =
-for the
-> > > > >>> bootloader to fill that in. It is not known at dt compile time.=
- Is
-> > > > >>> there a way to mark this as intentional, so dtschema doesn't fl=
-ag it?
-> > > > >>
-> > > > >> Fix your bootloader or chain load some normal one, like U-Boot.
-> > > > > How would chainloading a second bootloader 'fix' previous stage
-> > > > > bootloaders trampling on an out-of-sync hardcoded reserved-memory
-> > > > > address? It's possible for carveout addresses and sizes to change=
-=2E Not
-> > > > > from boot to boot on the same version of the Nvidia bootloader, b=
-ut
-> > > > > potentially from one version to another. Depending on if the
-> > > > > bootloader was configured with different carveout sizes.
-> > > > >
-> > > > > There is precedence for this. When blind cleanup was done on arm
-> > > > > device trees, a chromebook broke because the memory node has to be
-> > > > > named exactly '/memory' [0]. How is this any different from that =
-case?
-> > > >
-> > > > That was an existing node, so ABI.
-> > > >
-> > > > > These nodes are an ABI to an existing bootloader. Carveouts on th=
-ese
-> > > >
-> > > > You add new ABI, which I object to.
-> > > >
-> > > > > archs are set up in bl1 or bl2, which are not source available. I
-> > > > > could potentially hardcode things for myself in bl33, which is so=
-urce
-> > > > > available, but the earlier stages could still overwrite any chosen
-> > > > > block depending on how carveouts are configured. But even then, t=
-hat
-> > > > > will not change the behaviour of the vast majority of units that =
-use a
-> > > > > fully prebuilt boot stack direct from Nvidia. My intent here is f=
-or
-> > > > > pstore to work on such units without users needing to use a custom
-> > > > > bootloader.
-> > > > I understand your goal. What I still do not understand, why bootloa=
-der
-> > > > even bothers with ramoops carveout. It shouldn't and you should just
-> > > > ignore whatever bootloader provides, no?
-> > >
-> > > Mmm, I actually don't have the answer to this. Ramoops carveout
-> > > handling was added to t186 and t194 in cboot for L4T r32.7.3, fairly
-> > > late in the life cycle. But it has always been in edk2 for t194 and
-> > > t234 afaik. I could hazard some guesses, but don't have any
-> > > documentation on why the decision was made. Maybe Thierry or Jonathan
-> > > could chime in on why this was done.
-> > >
-> >
-> > Friendly reminder to the Tegra maintainers about this question.
-> >
-> In lieu of a response from the Tegra subsystem maintainers, I can only
-> hazard an assumption, Krzysztof. I presume the pstore carveout is
-> bootloader controlled because various stages of the boot stack can
-> dynamically allocate memory, and this became bootloader controlled to
-> prevent any of those from overwriting pstore. I worry about hardcoding
-> an address in the kernel dt, then finding out later that there's an
-> in-use configuration that overwrites or corrupts that section of ram
-> during boot. What are your thoughts on this? And is there any way for
-> this patch to proceed?
+On 5/6/2025 8:47 AM, Jun Nie wrote:
+> To support high-resolution cases that exceed the width limitation of
+> a pair of SSPPs, or scenarios that surpass the maximum MDP clock rate,
+> additional pipes are necessary to enable parallel data processing
+> within the SSPP width constraints and MDP clock rate.
+> 
+> Request 4 mixers and 4 DSCs for high-resolution cases where both DSC
+> and dual interfaces are enabled. More use cases can be incorporated
+> later if quad-pipe capabilities are required.
+> 
+> Signed-off-by: Jun Nie <jun.nie@linaro.org>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-I haven't been able to find anything out about this yet. Generally it's
-difficult to get the bootloaders updated for these devices. Tegra194 and
-Tegra234 may be new enough to make an update eventually go into a
-release, but for Tegra186 and older, I honestly wouldn't hold my
-breath.
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
 
-Thierry
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c         | 27 +++++++++++++++++------
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h         |  6 ++---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c      | 28 ++++++++----------------
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h |  2 +-
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h   |  2 +-
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h      |  2 +-
+>   6 files changed, 35 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> index a56d68de219910a827830293e8ff24f4cdee74e4..f22ca13b35e778fed3e6e02c581ef689a5544cfb 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> @@ -200,7 +200,7 @@ static int dpu_crtc_get_lm_crc(struct drm_crtc *crtc,
+>   		struct dpu_crtc_state *crtc_state)
+>   {
+>   	struct dpu_crtc_mixer *m;
+> -	u32 crcs[CRTC_DUAL_MIXERS];
+> +	u32 crcs[CRTC_QUAD_MIXERS];
+>   
+>   	int rc = 0;
+>   	int i;
+> @@ -1296,6 +1296,7 @@ static struct msm_display_topology dpu_crtc_get_topology(
+>   	struct drm_display_mode *mode = &crtc_state->adjusted_mode;
+>   	struct msm_display_topology topology = {0};
+>   	struct drm_encoder *drm_enc;
+> +	u32 num_rt_intf;
+>   
+>   	drm_for_each_encoder_mask(drm_enc, crtc->dev, crtc_state->encoder_mask)
+>   		dpu_encoder_update_topology(drm_enc, &topology, crtc_state->state,
+> @@ -1309,11 +1310,14 @@ static struct msm_display_topology dpu_crtc_get_topology(
+>   	 * Dual display
+>   	 * 2 LM, 2 INTF ( Split display using 2 interfaces)
+>   	 *
+> +	 * If DSC is enabled, try to use 4:4:2 topology if there is enough
+> +	 * resource. Otherwise, use 2:2:2 topology.
+> +	 *
+>   	 * Single display
+>   	 * 1 LM, 1 INTF
+>   	 * 2 LM, 1 INTF (stream merge to support high resolution interfaces)
+>   	 *
+> -	 * If DSC is enabled, use 2 LMs for 2:2:1 topology
+> +	 * If DSC is enabled, use 2:2:1 topology
+>   	 *
+>   	 * Add dspps to the reservation requirements if ctm is requested
+>   	 *
+> @@ -1325,14 +1329,23 @@ static struct msm_display_topology dpu_crtc_get_topology(
+>   	 * (mode->hdisplay > MAX_HDISPLAY_SPLIT) check.
+>   	 */
+>   
+> -	if (topology.num_intf == 2 && !topology.cwb_enabled)
+> -		topology.num_lm = 2;
+> -	else if (topology.num_dsc == 2)
+> +	num_rt_intf = topology.num_intf;
+> +	if (topology.cwb_enabled)
+> +		num_rt_intf--;
+> +
+> +	if (topology.num_dsc) {
+> +		if (dpu_kms->catalog->dsc_count >= num_rt_intf * 2)
+> +			topology.num_dsc = num_rt_intf * 2;
+> +		else
+> +			topology.num_dsc = num_rt_intf;
+> +		topology.num_lm = topology.num_dsc;
+> +	} else if (num_rt_intf == 2) {
+>   		topology.num_lm = 2;
+> -	else if (dpu_kms->catalog->caps->has_3d_merge)
+> +	} else if (dpu_kms->catalog->caps->has_3d_merge) {
+>   		topology.num_lm = (mode->hdisplay > MAX_HDISPLAY_SPLIT) ? 2 : 1;
+> -	else
+> +	} else {
+>   		topology.num_lm = 1;
+> +	}
+>   
+>   	if (crtc_state->ctm)
+>   		topology.num_dspp = topology.num_lm;
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
+> index 6eaba5696e8e6bd1246a9895c4c8714ca6589b10..455073c7025b0bcb970d8817f197d9bcacc6dca5 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
+> @@ -210,7 +210,7 @@ struct dpu_crtc_state {
+>   
+>   	bool bw_control;
+>   	bool bw_split_vote;
+> -	struct drm_rect lm_bounds[CRTC_DUAL_MIXERS];
+> +	struct drm_rect lm_bounds[CRTC_QUAD_MIXERS];
+>   
+>   	uint64_t input_fence_timeout_ns;
+>   
+> @@ -218,10 +218,10 @@ struct dpu_crtc_state {
+>   
+>   	/* HW Resources reserved for the crtc */
+>   	u32 num_mixers;
+> -	struct dpu_crtc_mixer mixers[CRTC_DUAL_MIXERS];
+> +	struct dpu_crtc_mixer mixers[CRTC_QUAD_MIXERS];
+>   
+>   	u32 num_ctls;
+> -	struct dpu_hw_ctl *hw_ctls[CRTC_DUAL_MIXERS];
+> +	struct dpu_hw_ctl *hw_ctls[CRTC_QUAD_MIXERS];
+>   
+>   	enum dpu_crtc_crc_source crc_source;
+>   	int crc_frame_skip_count;
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> index a125a477404fdafee6495f6d3778160f14a01a96..bbb0873a891879722f2b02767fc48b7406de70f8 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> @@ -55,7 +55,7 @@
+>   #define MAX_PHYS_ENCODERS_PER_VIRTUAL \
+>   	(MAX_H_TILES_PER_DISPLAY * NUM_PHYS_ENCODER_TYPES)
+>   
+> -#define MAX_CHANNELS_PER_ENC 2
+> +#define MAX_CHANNELS_PER_ENC 4
+>   #define MAX_CWB_PER_ENC 2
+>   
+>   #define IDLE_SHORT_TIMEOUT	1
+> @@ -675,22 +675,12 @@ void dpu_encoder_update_topology(struct drm_encoder *drm_enc,
+>   
+>   	dsc = dpu_encoder_get_dsc_config(drm_enc);
+>   
+> -	/* We only support 2 DSC mode (with 2 LM and 1 INTF) */
+> -	if (dsc) {
+> -		/*
+> -		 * Use 2 DSC encoders, 2 layer mixers and 1 or 2 interfaces
+> -		 * when Display Stream Compression (DSC) is enabled,
+> -		 * and when enough DSC blocks are available.
+> -		 * This is power-optimal and can drive up to (including) 4k
+> -		 * screens.
+> -		 */
+> -		WARN(topology->num_intf > 2,
+> -		     "DSC topology cannot support more than 2 interfaces\n");
+> -		if (topology->num_intf >= 2 || dpu_kms->catalog->dsc_count >= 2)
+> -			topology->num_dsc = 2;
+> -		else
+> -			topology->num_dsc = 1;
+> -	}
+> +	/*
+> +	 * Set DSC number as 1 to mark the enabled status, will be adjusted
+> +	 * in dpu_crtc_get_topology()
+> +	 */
+> +	if (dsc)
+> +		topology->num_dsc = 1;
+>   
+>   	connector = drm_atomic_get_new_connector_for_encoder(state, drm_enc);
+>   	if (!connector)
+> @@ -2176,8 +2166,8 @@ static void dpu_encoder_helper_reset_mixers(struct dpu_encoder_phys *phys_enc)
+>   	struct dpu_hw_mixer_cfg mixer;
+>   	int i, num_lm;
+>   	struct dpu_global_state *global_state;
+> -	struct dpu_hw_blk *hw_lm[2];
+> -	struct dpu_hw_mixer *hw_mixer[2];
+> +	struct dpu_hw_blk *hw_lm[MAX_CHANNELS_PER_ENC];
+> +	struct dpu_hw_mixer *hw_mixer[MAX_CHANNELS_PER_ENC];
+>   	struct dpu_hw_ctl *ctl = phys_enc->hw_ctl;
+>   
+>   	memset(&mixer, 0, sizeof(mixer));
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
+> index 61b22d9494546885db609efa156222792af73d2a..09395d7910ac87c035b65cf476350bf6c9619612 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
+> @@ -302,7 +302,7 @@ static inline enum dpu_3d_blend_mode dpu_encoder_helper_get_3d_blend_mode(
+>   
+>   	/* Use merge_3d unless DSC MERGE topology is used */
+>   	if (phys_enc->split_role == ENC_ROLE_SOLO &&
+> -	    dpu_cstate->num_mixers == CRTC_DUAL_MIXERS &&
+> +	    (dpu_cstate->num_mixers != 1) &&
+>   	    !dpu_encoder_use_dsc_merge(phys_enc->parent))
+>   		return BLEND_3D_H_ROW_INT;
+>   
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+> index 4cea19e1a20380c56ae014f2d33a6884a72e0ca0..77a7a5375d545483edb316e8428df12212191362 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+> @@ -24,7 +24,7 @@
+>   #define DPU_MAX_IMG_WIDTH 0x3fff
+>   #define DPU_MAX_IMG_HEIGHT 0x3fff
+>   
+> -#define CRTC_DUAL_MIXERS	2
+> +#define CRTC_QUAD_MIXERS	4
+>   
+>   #define MAX_XIN_COUNT 16
+>   
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
+> index 7c74221380b2c05225c9f82ed6d33765042aec78..94f117e36af83602e5254ebcf5f28de36fd79886 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
+> @@ -34,7 +34,7 @@
+>   #define DPU_MAX_PLANES			4
+>   #endif
+>   
+> -#define STAGES_PER_PLANE		1
+> +#define STAGES_PER_PLANE		2
+>   #define PIPES_PER_STAGE			2
+>   #define PIPES_PER_PLANE			(PIPES_PER_STAGE * STAGES_PER_PLANE)
+>   #ifndef DPU_MAX_DE_CURVES
+> 
 
---2dq4oemmbh7zaoef
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmgdIbcACgkQ3SOs138+
-s6EPdg/9FJ7BozzVacB7nhPg6uemBRYYOsL1skM6ffIwF4oaA5nciU/RZRgxmxoM
-UIdHklJWRmwCsqsVU/MU2kwgJIk7LezvpMq6+3ABsy4N0smAOFIctAt2HQ+IjFPn
-qc8GRyI28Y5j87haNS07mN3NhV0xOJ+IYebM8F7ZpLw4uf9C8uimcPi9r7MNl1OV
-UzvjYiZpCwSj12emLuDgclTOzGRjdC9+Bvlg6vOpcCU3cTX8VXakmGXAXAXOlJqo
-mkGNv0saleR4NVdZX/ZYJRl/e4bcAnanY1DIKk96a2lgBTuMvTfC/4MdylHaQX6R
-21NPZ+deuNxgqKIDq8VyTU89pYaRR7ksO0cjEJBsTWzF+27mFtBwfZ0mDzxLJ0z/
-R4dhPSKNUkOLHMK/SxvfK4KA7nuI2Pz75PiLWRo4sch/A5HFSZ0AqUcFT5UVEEHd
-skLYRvmNS25n2Uoy0LLC+ZTyXiUQUO/kcriAvXlBsxr4cocHD1+iWUDfXksGF0Cy
-e3c6+/L7lD7AScITYRpiqUTcBkemg1s4Xgt3MOO9qmjcdotyjfTpnfED5idJdzfH
-PSojivUn4l8QeQG+ItAUoX/5+D+E1Eteg/GRVaJJgumXsk8bDRrU81MwsdiqCote
-gjak11/KCbdKCSNW39vC7ct9DorHlzIhN2Zv53Ma3hEtaVzx/sc=
-=gRlR
------END PGP SIGNATURE-----
-
---2dq4oemmbh7zaoef--
