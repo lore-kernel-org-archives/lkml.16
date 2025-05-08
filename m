@@ -1,96 +1,111 @@
-Received: from mta-65-227.siemens.flowmailer.net (mta-65-227.siemens.flowmailer.net [185.136.65.227])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8594F270EA7
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6117C25291C
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746717750; cv=none; b=gPJV3V7ECc5QH3j82qFKoPIbhjjNUvisVcD1YkGiK/yqfxt5IculV2a01qQJE9zq2wMuLCAmC8A6HHpl3GxNDErhdfULKfwY7TFw6FrAdDhtsuW6R9Je++nXvaAkl5jKaZS9LmarXs/p1EVwk+e7VLC/CEJUSj5JxMTtlF99DVU=
+	t=1746717832; cv=none; b=HJKpe4pjUA6U6frKL6dLqSdHJ9ZkPQP4ICkGQOCeL7JWUr0W8CqDfTiZSG1WIHSB9N/pcUuJJ85jLvlOzFQjbpSJfKL68ljvxrOXGPd358ZqVPZzVHuGopWXjbIe4GzGDnFx3H4Yj+KQT4c6AOVkNbKU2AIufgGvilYdKz+5BTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746717750; c=relaxed/simple;
-	bh=5/2pypVm4lwsU5ymbD+hU4e7DKfSVOUl3zhaH7yP1+Y=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=taSPXxChmn8DBhu2CTfejQQ4Hfj6Hjmx47vm29UlFqR2qChCj43tWxnJd5ACh/EqlW652/wZqE8WkPlmqnyM2ADxIcJizDFJWVCmUVchm5TCSzoU7E2NbByczsgeb15P15GgoSRUO5gDIeKhJcbqg6bIgKZrI/RVUxGXeFjQVQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b=UXmAMz62; arc=none smtp.client-ip=185.136.65.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	s=arc-20240116; t=1746717832; c=relaxed/simple;
+	bh=UjVSOkc72L6KXnOBhHPewd2yG704iQi5eThAz2GFAiY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=opE/iq9DlSYQ10/fTQV3nulsede97PamHNqX5pStAii36uKuvpSRejSV1Dl17AQRhArBcAmXl2I3AVLX2aaXoCN4FOGsfRTmx4b29xUpA7hQFtwC318xpi+faNDAbMUPb7g3+qmDQFOPR/Rv0+yQFwhPPfWaA45ulpL7waB6ERo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kb+TN+dr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b="UXmAMz62"
-Received: by mta-65-227.siemens.flowmailer.net with ESMTPSA id 202505081512146c301d362802ec0e32
-        for <linux-kernel@vger.kernel.org>;
-        Thu, 08 May 2025 17:12:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
- d=siemens.com; i=diogo.ivo@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=uftzIXqC64HEGiRyuY9ElhNCZUYKd/Y/wyxroPYE6ng=;
- b=UXmAMz626eeoPOPP7HQs6gkM8vahr/Lrzcclaj2AWesCVLhTpF0XOvnVLF38SU61ybw8l0
- 8/br3R9xnAWyM/krI+kzelPavVfTte2RtGGre8djj9Q97Duvwm24B6d9pQHg1IyNEFgDpE5Z
- WkZQRsKf1kvsRub3qDuwvHkMzkPMvhFON5XNkrAOb2MqrzDxtiw6FhnEMcF3EsShmc55nXNw
- 3kBtksKGeIpRJpZWLRXg8IGpqyORLVEztcFEIXU57o5maF+Xj4tcw80oWkvgtP5PzOp+/hbh
- IP6cei7gNvIARgg3EZQ1D5vRr/1UsshwKFvTevTZCENnP5K1R1Sq5Etg==;
-Message-ID: <0fb49864-9c93-482b-b016-150357d9b2a7@siemens.com>
-Date: Thu, 8 May 2025 16:12:13 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kb+TN+dr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746717829;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LmtLx7Rand6Q1RhHvZvf339T+gMnpgr8dRSMfTD9lZQ=;
+	b=Kb+TN+drfW/T26TmHDBke0+caK76oIUA0P/1ylj2BvZn3ZpYA1mZiyau7KBC5uFZb8hH7R
+	hI8LpmyEJyD0wX+gUcIRNGbI041s0ECd8EPDM+Sx7Gu/f1WGYgeQWszhtXzGRMmWrtP+Za
+	ESDZMYZZnruHh1RHJgR4pDwHEAgJp0Q=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-295-_y33MF5vONSKqugeMaqFuQ-1; Thu, 08 May 2025 11:23:48 -0400
+X-MC-Unique: _y33MF5vONSKqugeMaqFuQ-1
+X-Mimecast-MFC-AGG-ID: _y33MF5vONSKqugeMaqFuQ_1746717827
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4768f9fea35so24160891cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 08:23:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746717827; x=1747322627;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LmtLx7Rand6Q1RhHvZvf339T+gMnpgr8dRSMfTD9lZQ=;
+        b=jxLHJA3hBYFdFdm6jVF6qiapJQb3Uveka22CJXgEY2kiwXfJYe7RiASwty0r5MkVzm
+         ykCDnAuMk/eSKasFKAyLxw71uV4zHtTSwQofDfVZFmb+N9lwS18RXwSlUQxP2j0Ie3/P
+         S2jwdj0+mUoJwylAU1GxJey+3ZzrgBKblKex930KVQDWDimdsgDghFTXx0vpMQsgVfkn
+         hhADMlcnCXLbpG40LqkpD6PWMleWTVzUwmbOR4w4hdIti4bZF4vB1ynSOmVoN2Fbn7fE
+         MAxcIFQJIvkKrQuin4yILzTR5hwybY11RYV/1gKtZhHXvg8tBsNizVOYXiiBL+03vhRR
+         L4sg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWgCMhxW7+SUPaHHziFatwtOIU5sKQra9l3U0fWuWqTLfZVy2dYQTZ/iBI0BKOc4/ta4w5nbPa8kwWudc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpJH7E+khOyg8h/3HPcWbC1AKxyvIejUhwGN54gKohxsX3y76g
+	6Mcqzg1eksPFCgAWimJoXbxIPFJsw72Ep85znxAGYPwH7ZxQnUfpVAVN2NWTVI5HdBLUcUVAmnc
+	p4Sa6N3xy7VyEpL2YWE7ByR+zRWdFhsRHPVj130GvbazJzsh8EF9NR6TePJyPJg==
+X-Gm-Gg: ASbGncvBmf3qpeZH48xypgg9d6HXJ+PpO8GnWiXljQJcMpLDDjz1zepvjRLrbkmLSF+
+	i6ixulLNU6ujAFsFM1+5pasyC3vWns1Vn5m6nvqp0Lp5+XaIC1JMz1MDWObppnCiaLsaUcS2DA6
+	g5kQsryWSs6ahpAX3v4xoNMyZXlyYjw6Fgy9PoYwfRAuMfKNijcvtODRenHRTLwJK7EZkXkCOG7
+	aofr9cWB+M1JfeDdUkotG+MOQabBwGIPXKwBFNd6CoUTty9VNpBP7dIKE9+jYqLB3h6UgIBGXt1
+	LVY=
+X-Received: by 2002:ac8:5890:0:b0:48e:9e05:cede with SMTP id d75a77b69052e-4922795d397mr104895481cf.52.1746717827342;
+        Thu, 08 May 2025 08:23:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGwQWKOyxL7yTe7WTS/VAVIG3t1FeqJdgFw+aUKFJf4zGei3LL4swQHmoLoCdwSeBUi1GtY0w==
+X-Received: by 2002:ac8:5890:0:b0:48e:9e05:cede with SMTP id d75a77b69052e-4922795d397mr104895031cf.52.1746717826831;
+        Thu, 08 May 2025 08:23:46 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49222d9f706sm35091881cf.53.2025.05.08.08.23.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 08:23:46 -0700 (PDT)
+Date: Thu, 8 May 2025 11:23:43 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
+	David Hildenbrand <david@redhat.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Lokesh Gidra <lokeshgidra@google.com>
+Subject: Re: [PATCH RFC] mm: userfaultfd: correct dirty flags set for both
+ present and swap pte
+Message-ID: <aBzMf6H9Lad6CaFQ@x1.local>
+References: <20250508090735.39756-1-21cnbao@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 1/2] watchdog: Add driver for Intel OC WDT
-From: Diogo Ivo <diogo.ivo@siemens.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-watchdog@vger.kernel.org, jan.kiszka@siemens.com,
- benedikt.niedermayr@siemens.com
-References: <20250317-ivo-intel_oc_wdt-v3-0-32c396f4eefd@siemens.com>
- <20250317-ivo-intel_oc_wdt-v3-1-32c396f4eefd@siemens.com>
- <daeedd95-1d4a-4d17-baa1-9c1580095de9@siemens.com>
-Content-Language: en-US
-In-Reply-To: <daeedd95-1d4a-4d17-baa1-9c1580095de9@siemens.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-1328357:519-21489:flowmailer
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250508090735.39756-1-21cnbao@gmail.com>
 
-Hello,
-
-On 4/8/25 9:31 AM, Diogo Ivo wrote:
-> Hello,
+On Thu, May 08, 2025 at 09:07:35PM +1200, Barry Song wrote:
+> From: Barry Song <v-songbaohua@oppo.com>
 > 
-> On 3/17/25 10:55 AM, Diogo Ivo wrote:
->> Add a driver for the Intel Over-Clocking Watchdog found in Intel
->> Platform Controller (PCH) chipsets. This watchdog is controlled
->> via a simple single-register interface and would otherwise be
->> standard except for the presence of a LOCK bit that can only be
->> set once per power cycle, needing extra handling around it.
->>
->> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->> Signed-off-by: Diogo Ivo <diogo.ivo@siemens.com>
->> ---
->> v2->v3:
->>   - Collect R-b from Guenter
->>
->> v1->v2:
->>   - Split v1 into two patches, adding the ACPI IDs in a separate patch
->>   - Initialize hearbeat module parameter to zero
->>   - Clarify wording around lock handling
->>   - Properly print resource with %pR when failing to obtain it
->>   - Enable compile testing and add dependency on HAS_IOPORT
->>   - Drop unneeded ACPI_PTR() and MODULE_ALIAS()
->> ---
->> ---
->>   drivers/watchdog/Kconfig        |  11 ++
->>   drivers/watchdog/Makefile       |   1 +
->>   drivers/watchdog/intel_oc_wdt.c | 233 ++++++++++++++++++++++++++++++ 
->> ++++++++++
->>   3 files changed, 245 insertions(+)
->>
+> As David pointed out, what truly matters for mremap and userfaultfd
+> move operations is the soft dirty bit. The current comment and
+> implementation—which always sets the dirty bit for present PTEs
+> and fails to set the soft dirty bit for swap PTEs—are incorrect.
+> This patch updates the behavior to correctly set the soft dirty bit
+> for both present and swap PTEs in accordance with mremap.
 > 
-> Gentle ping on this patch.
+> Reported-by: David Hildenbrand <david@redhat.com>
+> Closes: https://lore.kernel.org/linux-mm/02f14ee1-923f-47e3-a994-4950afb9afcc@redhat.com/
+> Cc: Peter Xu <peterx@redhat.com>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Lokesh Gidra <lokeshgidra@google.com>
+> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
 
-Another ping on this patch. Is there anything missing from my side
-blocking this?
+Acked-by: Peter Xu <peterx@redhat.com>
 
-Best regards,
-Diogo
+-- 
+Peter Xu
+
