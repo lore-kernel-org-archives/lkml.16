@@ -1,57 +1,58 @@
-Received: from smtp.smtpout.orange.fr (smtp-75.smtpout.orange.fr [80.12.242.75])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C522777E8;
-	Thu,  8 May 2025 14:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A253D27932B
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716066; cv=none; b=OtInaf0YH8aq8e3KlMrMgS0aAtsvL+R/OecS1dvrz6v5CJu6MbqOJJ+nTF7B7xmVs/sArHVw0UFrvL8cS7eRQVTkiUaLwz+5//F4VVgVVpQT3HDPG0g5HsGzBAcZ4WaEJExXBE5G0dNnyvOr/kV4etjOZeKUf1s1myC+uA9EUTI=
+	t=1746716067; cv=none; b=sNJw/fNvDrqOklwsz7DPCyUYfYUDjf00z2hSknDS9pIAqjbwCG/DNSFw4+oAt7YrVDc8AmybPpE5zAFrtc+rX58c3e4YSimXyd19P4VkI/QZaw4FeILAGAWA/ke3q0BviFwMwFsfxiG6yzWbTsro8tzHolhKhbDyg60dn+xnXd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716066; c=relaxed/simple;
-	bh=TQhY5/nwEPUHePZ/ZRYuRGHfWYdGSQVAkmlV74mRccc=;
+	s=arc-20240116; t=1746716067; c=relaxed/simple;
+	bh=nzqaHVCQLqt0ZT1op3rJmqmLSmefWiGiX5DRVh+qLWs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sjP9k/C7ALDfthYp/lPYgeoqXtevuBxq9JdnuxUd1RWMMxu0rIST9aRPddNK+wunCoiUgXbzPA9L5KPrSgta+bY9x81N0ADeId3kR4Vd3MXyJlYRR/0dCtadp4nEfkNZar37kLpiroM0IOIq4AKNzADm14s32GG2PwA3PpRZ0g4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=pu5pjZTD; arc=none smtp.client-ip=80.12.242.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	 MIME-Version; b=K1a2YnoDz8O/4+g0R//VduHD7HcgybFP1y8K27ro1uUulWnaKlE+yL3Iv8Pb4p/hUzvEr8/5/M8pXD708cEfyPYzMZ1IE80cmSGsfCPcuwWdlWvoIdV1pniN/6zhaeBxrqPpBT2lA4tfrGVbRZoUObElgHJN+Q9tYlIHgAoWwzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J+mP7vQE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="pu5pjZTD"
-Received: from localhost.localdomain ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id D2cYuomdl816KD2chuwCl7; Thu, 08 May 2025 16:53:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1746715999;
-	bh=wv0gFF8cjp95WfH6O3Ya/mrYzGv/I0yS3WPyMfk6Brg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=pu5pjZTDSnmp0qso0Hk3SEed2asw3XttZ7HJHAHaP6vC+ctFHmgBFaNJiHioxbe8M
-	 P+5LSgtiH68FxbU0PmdZJ9Sm4eJlLbqi0SHUtHmEOsfGXtGVc74s+ApyMPGlLxwu9i
-	 t+xt59oHMhRO8lvnh6HvNrx30QP/ym0t+gjt5j/EkHkB9X8+Mnf4C6f+u+bDHN8bCZ
-	 nLyG/SWrTVW+LT2lLzq/feEMwt9dJRCgriFHY7mZJ2pt3nYQok0gWHQ734V/XKp43w
-	 NPABeWQ0CyqEICvykLofJZt4NJbI05H58kjeuuyeUI1YjQaGILFw9VhfQ3fjlPgNLw
-	 7DRBVV8A+4jeQ==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 08 May 2025 16:53:19 +0200
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	netdev@vger.kernel.org
-Subject: [PATCH v2 2/4] net: airoha: Fix an error handling path in airoha_probe()
-Date: Thu,  8 May 2025 16:52:26 +0200
-Message-ID: <3791c95da3fa3c3bd2a942210e821d9301362128.1746715755.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <5c94b9b3850f7f29ed653e2205325620df28c3ff.1746715755.git.christophe.jaillet@wanadoo.fr>
-References: <5c94b9b3850f7f29ed653e2205325620df28c3ff.1746715755.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J+mP7vQE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746716064;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RanUlC3m67V8/d9vcVxV35xIkcuZaA6VEAbfrJ8XTQc=;
+	b=J+mP7vQEbGQghl36ZnopOKJ/5oSDMvKtk2VZkcCadSpSMZNYlURQEvrMJpzbtADI4nqexs
+	rwT0Pyvt+KVhK4cFaFGW3VsBLmWcq5i04Mk4nQ4nArYp3oLa2dOvTjJJvtrPLaAlLrLXPm
+	pKolRxOHb5AJqp6CUUtDG3scV3JG5po=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-509-dxeLHGibPSaCgKXFNI-U8A-1; Thu,
+ 08 May 2025 10:54:23 -0400
+X-MC-Unique: dxeLHGibPSaCgKXFNI-U8A-1
+X-Mimecast-MFC-AGG-ID: dxeLHGibPSaCgKXFNI-U8A_1746716062
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3522019560AF;
+	Thu,  8 May 2025 14:54:22 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.32])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 828DE19560B3;
+	Thu,  8 May 2025 14:54:19 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Subject: [PATCH v5 1/6] timers: Rename tmigr 'online' bit to 'available'
+Date: Thu,  8 May 2025 16:53:21 +0200
+Message-ID: <20250508145319.97794-9-gmonaco@redhat.com>
+In-Reply-To: <20250508145319.97794-8-gmonaco@redhat.com>
+References: <20250508145319.97794-8-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,35 +60,151 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-If an error occurs after a successful airoha_hw_init() call,
-airoha_ppe_deinit() needs to be called as already done in the remove
-function.
+The timer migration hierarchy excludes offline CPUs via the
+tmigr_is_not_available function, which is essentially checking the
+online bit for the CPU.
 
-Fixes: 00a7678310fe ("net: airoha: Introduce flowtable offload support")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Rename the online bit to available and all references in function names
+and tracepoint to generalise the concept of available CPUs.
+
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
-Changes in v2:
-  - Call airoha_ppe_init() at the right place in the error handling path
-    of the probe   [Lorenzo Bianconi]
+ include/trace/events/timer_migration.h |  4 ++--
+ kernel/time/timer_migration.c          | 22 +++++++++++-----------
+ kernel/time/timer_migration.h          |  2 +-
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
-Compile tested only.
----
- drivers/net/ethernet/airoha/airoha_eth.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/ethernet/airoha/airoha_eth.c
-index af8c4015938c..d435179875df 100644
---- a/drivers/net/ethernet/airoha/airoha_eth.c
-+++ b/drivers/net/ethernet/airoha/airoha_eth.c
-@@ -2967,6 +2967,7 @@ static int airoha_probe(struct platform_device *pdev)
- error_napi_stop:
- 	for (i = 0; i < ARRAY_SIZE(eth->qdma); i++)
- 		airoha_qdma_stop_napi(&eth->qdma[i]);
-+	airoha_ppe_init(eth);
- error_hw_cleanup:
- 	for (i = 0; i < ARRAY_SIZE(eth->qdma); i++)
- 		airoha_hw_cleanup(&eth->qdma[i]);
+diff --git a/include/trace/events/timer_migration.h b/include/trace/events/timer_migration.h
+index 47db5eaf2f9a..61171b13c687 100644
+--- a/include/trace/events/timer_migration.h
++++ b/include/trace/events/timer_migration.h
+@@ -173,14 +173,14 @@ DEFINE_EVENT(tmigr_cpugroup, tmigr_cpu_active,
+ 	TP_ARGS(tmc)
+ );
+ 
+-DEFINE_EVENT(tmigr_cpugroup, tmigr_cpu_online,
++DEFINE_EVENT(tmigr_cpugroup, tmigr_cpu_available,
+ 
+ 	TP_PROTO(struct tmigr_cpu *tmc),
+ 
+ 	TP_ARGS(tmc)
+ );
+ 
+-DEFINE_EVENT(tmigr_cpugroup, tmigr_cpu_offline,
++DEFINE_EVENT(tmigr_cpugroup, tmigr_cpu_unavailable,
+ 
+ 	TP_PROTO(struct tmigr_cpu *tmc),
+ 
+diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
+index 2f6330831f08..7efd897c7959 100644
+--- a/kernel/time/timer_migration.c
++++ b/kernel/time/timer_migration.c
+@@ -427,7 +427,7 @@ static DEFINE_PER_CPU(struct tmigr_cpu, tmigr_cpu);
+ 
+ static inline bool tmigr_is_not_available(struct tmigr_cpu *tmc)
+ {
+-	return !(tmc->tmgroup && tmc->online);
++	return !(tmc->tmgroup && tmc->available);
+ }
+ 
+ /*
+@@ -926,7 +926,7 @@ static void tmigr_handle_remote_cpu(unsigned int cpu, u64 now,
+ 	 * updated the event takes care when hierarchy is completely
+ 	 * idle. Otherwise the migrator does it as the event is enqueued.
+ 	 */
+-	if (!tmc->online || tmc->remote || tmc->cpuevt.ignore ||
++	if (!tmc->available || tmc->remote || tmc->cpuevt.ignore ||
+ 	    now < tmc->cpuevt.nextevt.expires) {
+ 		raw_spin_unlock_irq(&tmc->lock);
+ 		return;
+@@ -973,7 +973,7 @@ static void tmigr_handle_remote_cpu(unsigned int cpu, u64 now,
+ 	 * (See also section "Required event and timerqueue update after a
+ 	 * remote expiry" in the documentation at the top)
+ 	 */
+-	if (!tmc->online || !tmc->idle) {
++	if (!tmc->available || !tmc->idle) {
+ 		timer_unlock_remote_bases(cpu);
+ 		goto unlock;
+ 	}
+@@ -1435,19 +1435,19 @@ static long tmigr_trigger_active(void *unused)
+ {
+ 	struct tmigr_cpu *tmc = this_cpu_ptr(&tmigr_cpu);
+ 
+-	WARN_ON_ONCE(!tmc->online || tmc->idle);
++	WARN_ON_ONCE(!tmc->available || tmc->idle);
+ 
+ 	return 0;
+ }
+ 
+-static int tmigr_cpu_offline(unsigned int cpu)
++static int tmigr_cpu_unavailable(unsigned int cpu)
+ {
+ 	struct tmigr_cpu *tmc = this_cpu_ptr(&tmigr_cpu);
+ 	int migrator;
+ 	u64 firstexp;
+ 
+ 	raw_spin_lock_irq(&tmc->lock);
+-	tmc->online = false;
++	tmc->available = false;
+ 	WRITE_ONCE(tmc->wakeup, KTIME_MAX);
+ 
+ 	/*
+@@ -1455,7 +1455,7 @@ static int tmigr_cpu_offline(unsigned int cpu)
+ 	 * offline; Therefore nextevt value is set to KTIME_MAX
+ 	 */
+ 	firstexp = __tmigr_cpu_deactivate(tmc, KTIME_MAX);
+-	trace_tmigr_cpu_offline(tmc);
++	trace_tmigr_cpu_unavailable(tmc);
+ 	raw_spin_unlock_irq(&tmc->lock);
+ 
+ 	if (firstexp != KTIME_MAX) {
+@@ -1466,7 +1466,7 @@ static int tmigr_cpu_offline(unsigned int cpu)
+ 	return 0;
+ }
+ 
+-static int tmigr_cpu_online(unsigned int cpu)
++static int tmigr_cpu_available(unsigned int cpu)
+ {
+ 	struct tmigr_cpu *tmc = this_cpu_ptr(&tmigr_cpu);
+ 
+@@ -1475,11 +1475,11 @@ static int tmigr_cpu_online(unsigned int cpu)
+ 		return -EINVAL;
+ 
+ 	raw_spin_lock_irq(&tmc->lock);
+-	trace_tmigr_cpu_online(tmc);
++	trace_tmigr_cpu_available(tmc);
+ 	tmc->idle = timer_base_is_idle();
+ 	if (!tmc->idle)
+ 		__tmigr_cpu_activate(tmc);
+-	tmc->online = true;
++	tmc->available = true;
+ 	raw_spin_unlock_irq(&tmc->lock);
+ 	return 0;
+ }
+@@ -1850,7 +1850,7 @@ static int __init tmigr_init(void)
+ 		goto err;
+ 
+ 	ret = cpuhp_setup_state(CPUHP_AP_TMIGR_ONLINE, "tmigr:online",
+-				tmigr_cpu_online, tmigr_cpu_offline);
++				tmigr_cpu_available, tmigr_cpu_unavailable);
+ 	if (ret)
+ 		goto err;
+ 
+diff --git a/kernel/time/timer_migration.h b/kernel/time/timer_migration.h
+index ae19f70f8170..70879cde6fdd 100644
+--- a/kernel/time/timer_migration.h
++++ b/kernel/time/timer_migration.h
+@@ -97,7 +97,7 @@ struct tmigr_group {
+  */
+ struct tmigr_cpu {
+ 	raw_spinlock_t		lock;
+-	bool			online;
++	bool			available;
+ 	bool			idle;
+ 	bool			remote;
+ 	struct tmigr_group	*tmgroup;
 -- 
 2.49.0
 
