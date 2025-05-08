@@ -1,87 +1,237 @@
-Received: from mail-43171.protonmail.ch (mail-43171.protonmail.ch [185.70.43.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941132882AE
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.171
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 327C228C5C3
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746724858; cv=none; b=iESe6DTkpCjEOvl+LfBbEMMqbgFYzwnTRbCiDVeQr1G3uXxXq88KOi0MXDMXFeGlEMFXSaaIoSDla2TjFI4FHBNgdC4o5sjsPdRsIshIp1JQ6QFPs1rARw2IsmYj3epCQZZf+flHEZ48XrMSOrLLjzyFVQ6mnvRkGPemAGd5xNE=
+	t=1746724862; cv=none; b=gzhtVxcJXqBdswH3VnpKvVveRcz40MpHs/sKq4Tgvn5mwdG5/nApbunP3Qizs+9AgmgpYCpPruGurHzPlLzehj/w33fY547RxY448KrTbtxy4ema/rlgc4887GWkeJTo6StLyHSeoJTrTYWYJgdyjRni7C5Bqy63BQexPlBUiOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746724858; c=relaxed/simple;
-	bh=nYR+JQeqFAQOAPg6YnoXR5XOJU0Ab0oloBQbSOVfKXw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qpbIleZP//KXeMRqvlCbxgyt0gBXG+zqG65gEg0xlWBR23u2iuhtw3WOx4gVSnerVT9M88h2VnLUnkvlX9SSncbxUpONGD4XMIXBf9jNBkNW0z1OrDIIXlDlW3UIBeeFBgBEnHqu8ADbKmtuL7457BbMkR6M8+bO0EWDIKRlWtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=msmxaoqQ; arc=none smtp.client-ip=185.70.43.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="msmxaoqQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
-	s=protonmail; t=1746724844; x=1746984044;
-	bh=nYR+JQeqFAQOAPg6YnoXR5XOJU0Ab0oloBQbSOVfKXw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:From:To:
-	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=msmxaoqQ+AUd0iRjBbdNZ6XykDoNqWIH2sho6943mX7XkLJfOwNOZi0pTwcJzclxi
-	 5zQ7iRaatcQDITryH81QQ9Ikw4Sz6iJro1ZBXtRqjS2DTep/oRpg0WTqu99oUw424s
-	 V/HoE0TZCYURVMmBFnJ6nXUVC+rXMaE9sRovKzYrCGSFyw9sRSuW4fJLba7pOVy5Op
-	 TeQBzlYTwcjYxBbzLoxGwajx+fHtJTkTkiMoag3kiSvQGFiKHPqNVCRDprnLjew4Lk
-	 MTA/H6OzQGphwXsGIzaOYbYhePw4Te2uf1L90Ljrfwu8J2gr05+l77M4LSkjYWHErq
-	 /B0bpyI0pZeFQ==
-X-Pm-Submission-Id: 4Ztf6M1WRfz4wx9Y
-From: Esben Haabendal <esben@geanix.com>
-To: "Matti Vaittinen" <mazziesaccount@gmail.com>
-Cc: "Liam Girdwood" <lgirdwood@gmail.com>,  "Mark Brown"
- <broonie@kernel.org>,  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] regulator: bd718x7: Ensure SNVS power state is used as
- requested
-In-Reply-To: <54f3b79a-38d2-4760-ba1a-125172142255@gmail.com> (Matti
-	Vaittinen's message of "Mon, 05 May 2025 09:07:03 +0300")
-References: <20250501-bd718x7-snvs-reset-v1-1-1fcc7088200e@geanix.com>
-	<j3M49vfoxys9iFGLs2PwAULHoQsSQsHAKmaT1D2QCwyjUJNzjxXKESFYkXasW3_3owOakk-tXosNLIgfnMC6vQ==@protonmail.internalid>
-	<52221c62-689c-44d2-b65d-07a5301090b3@gmail.com>
-	<87tt638q7t.fsf@geanix.com>
-	<6JY6cJAFrLw-8XD2zgLh0lxzqzEVtz-49qgct8PAirT1ik1BU1glEyOJJg8lgYnivBWFz1vi7-faSRX_yCgmrQ==@protonmail.internalid>
-	<2996270f-d03e-45f7-9b6b-c5675c39515b@gmail.com>
-	<87ikmi82ut.fsf@geanix.com>
-	<0EMp5PpI517LdEsWqblAW-ZJ6PfGz88VnEcUGMml1jB3ztGKpkgTDWjcPUBE9Is3P3NErImIozuRketifUq9EQ==@protonmail.internalid>
-	<54f3b79a-38d2-4760-ba1a-125172142255@gmail.com>
-Date: Thu, 08 May 2025 19:20:42 +0200
-Message-ID: <87bjs3auj9.fsf@geanix.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1746724862; c=relaxed/simple;
+	bh=rGswDzSe5JGqnbD3yrim4qf81OAx0fUoFdSP4ZMfRHg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NMcWLBCz9DWISgh5O6gzCsGtskdu5W0j9gmpfHeGjtimkgKUC8RniRdy0ZQRPBHsHkA9PwiVVLOcYfUmgCqsdLv/hxIGSQ0KI+gdvkYvbDWOOtYr0kWH7P1NxsyjXxElDLOtA8QQ91+QrVHkI4cLduf44DKo19+lNEk5U4/NWeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B58225E9;
+	Thu,  8 May 2025 10:20:50 -0700 (PDT)
+Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C1D73F58B;
+	Thu,  8 May 2025 10:20:57 -0700 (PDT)
+From: James Morse <james.morse@arm.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Babu Moger <Babu.Moger@amd.com>,
+	James Morse <james.morse@arm.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com,
+	lcherian@marvell.com,
+	bobo.shaobowang@huawei.com,
+	tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>,
+	peternewman@google.com,
+	dfustini@baylibre.com,
+	amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>,
+	Dave Martin <dave.martin@arm.com>,
+	Koba Ko <kobak@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	fenghuay@nvidia.com,
+	Babu Moger <babu.moger@amd.com>,
+	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Subject: [PATCH v10 27/30] fs/resctrl: Remove unnecessary includes
+Date: Thu,  8 May 2025 17:18:55 +0000
+Message-Id: <20250508171858.9197-28-james.morse@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250508171858.9197-1-james.morse@arm.com>
+References: <20250508171858.9197-1-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-"Matti Vaittinen" <mazziesaccount@gmail.com> writes:
+When splitting and moving the resctrl code to live in fs/resctrl and
+arch/x86, some code was duplicated. This was done to keep the parser
+in the script that does the moving simple. This results in unnecessary
+includes in the arch and filesystem code.
 
-> On 03/05/2025 12:23, Esben Haabendal wrote:
->>
->> What do you think, should we leave it in the current state, or can we
->> figure out a way to allow the driver to actively change the watchdog
->> reset to go to SNVS power state?
->
-> I can't really think of a safe way other than adding a new property.
->
-> The IC is oldish, and AFACS, quite widely used. People seem to have
-> found a way to make it work without (in-tree) feature for changing the
-> reset target to the SNVS. I wouldn't try to implement this unless we
-> have a use-case really requiring it. So, I'd suggest you to do it in
-> boot. Still, if you have a valid case for this to be done in the driver
-> - then I have no reason to object adding a new binding + support in the
-> driver.
+Remove them.
 
-I have now implemted the PMIC setup in U-Boot, so am fine with dropping
-the patch for now.
+Signed-off-by: James Morse <james.morse@arm.com>
+Tested-by: Babu Moger <babu.moger@amd.com>
+Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
+---
+Changes since v7:
+ * Expanded the scope, removed many more includes.
+---
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 4 ----
+ arch/x86/kernel/cpu/resctrl/internal.h    | 5 -----
+ arch/x86/kernel/cpu/resctrl/monitor.c     | 3 ---
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 7 -------
+ fs/resctrl/internal.h                     | 2 --
+ fs/resctrl/monitor.c                      | 3 ---
+ fs/resctrl/pseudo_lock.c                  | 6 ------
+ fs/resctrl/rdtgroup.c                     | 2 --
+ 8 files changed, 32 deletions(-)
 
-For anyone else finding this thread later on, the advice is to setup the
-PMIC in bootloader or by some other low-level method. But if that for
-some reason is not feasible, you can continue the work / discussion we
-have had here in order to add a new binding + support in the driver for
-it.
+diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+index 0164d769aeca..1189c0df4ad7 100644
+--- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
++++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+@@ -16,10 +16,6 @@
+ #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/cpu.h>
+-#include <linux/kernfs.h>
+-#include <linux/seq_file.h>
+-#include <linux/slab.h>
+-#include <linux/tick.h>
+ 
+ #include "internal.h"
+ 
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 521db28efb3f..5e3c41b36437 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -3,11 +3,6 @@
+ #define _ASM_X86_RESCTRL_INTERNAL_H
+ 
+ #include <linux/resctrl.h>
+-#include <linux/sched.h>
+-#include <linux/kernfs.h>
+-#include <linux/fs_context.h>
+-#include <linux/jump_label.h>
+-#include <linux/tick.h>
+ 
+ #define L3_QOS_CDP_ENABLE		0x01ULL
+ 
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index c0a04fe2bcd9..3936bab81411 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -18,10 +18,7 @@
+ #define pr_fmt(fmt)	"resctrl: " fmt
+ 
+ #include <linux/cpu.h>
+-#include <linux/module.h>
+ #include <linux/resctrl.h>
+-#include <linux/sizes.h>
+-#include <linux/slab.h>
+ 
+ #include <asm/cpu_device_id.h>
+ 
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index 99c34a0610a4..241d0d7e1cb5 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -12,17 +12,10 @@
+ #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/cacheflush.h>
+-#include <linux/cacheinfo.h>
+ #include <linux/cpu.h>
+-#include <linux/cpumask.h>
+-#include <linux/debugfs.h>
+-#include <linux/kthread.h>
+-#include <linux/mman.h>
+ #include <linux/perf_event.h>
+ #include <linux/pm_qos.h>
+ #include <linux/resctrl.h>
+-#include <linux/slab.h>
+-#include <linux/uaccess.h>
+ 
+ #include <asm/cpu_device_id.h>
+ #include <asm/perf_event.h>
+diff --git a/fs/resctrl/internal.h b/fs/resctrl/internal.h
+index bfa9bfe070fe..ed7dfc071e6c 100644
+--- a/fs/resctrl/internal.h
++++ b/fs/resctrl/internal.h
+@@ -3,10 +3,8 @@
+ #define _ASM_X86_RESCTRL_INTERNAL_H
+ 
+ #include <linux/resctrl.h>
+-#include <linux/sched.h>
+ #include <linux/kernfs.h>
+ #include <linux/fs_context.h>
+-#include <linux/jump_label.h>
+ #include <linux/tick.h>
+ 
+ #define CQM_LIMBOCHECK_INTERVAL	1000
+diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
+index a76bfaa8d43e..bde2801289d3 100644
+--- a/fs/resctrl/monitor.c
++++ b/fs/resctrl/monitor.c
+@@ -18,13 +18,10 @@
+ #define pr_fmt(fmt)	"resctrl: " fmt
+ 
+ #include <linux/cpu.h>
+-#include <linux/module.h>
+ #include <linux/resctrl.h>
+ #include <linux/sizes.h>
+ #include <linux/slab.h>
+ 
+-#include <asm/cpu_device_id.h>
+-
+ #include "internal.h"
+ 
+ #define CREATE_TRACE_POINTS
+diff --git a/fs/resctrl/pseudo_lock.c b/fs/resctrl/pseudo_lock.c
+index 7305b232384e..ccc2f9213b4b 100644
+--- a/fs/resctrl/pseudo_lock.c
++++ b/fs/resctrl/pseudo_lock.c
+@@ -11,23 +11,17 @@
+ 
+ #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+ 
+-#include <linux/cacheflush.h>
+ #include <linux/cacheinfo.h>
+ #include <linux/cpu.h>
+ #include <linux/cpumask.h>
+ #include <linux/debugfs.h>
+ #include <linux/kthread.h>
+ #include <linux/mman.h>
+-#include <linux/perf_event.h>
+ #include <linux/pm_qos.h>
+ #include <linux/resctrl.h>
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
+ 
+-#include <asm/cpu_device_id.h>
+-#include <asm/perf_event.h>
+-
+-#include "../../events/perf_event.h" /* For X86_CONFIG() */
+ #include "internal.h"
+ 
+ /*
+diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+index b86309a9df8f..ec28228f6a8d 100644
+--- a/fs/resctrl/rdtgroup.c
++++ b/fs/resctrl/rdtgroup.c
+@@ -21,10 +21,8 @@
+ #include <linux/resctrl.h>
+ #include <linux/seq_buf.h>
+ #include <linux/seq_file.h>
+-#include <linux/sched/signal.h>
+ #include <linux/sched/task.h>
+ #include <linux/slab.h>
+-#include <linux/task_work.h>
+ #include <linux/user_namespace.h>
+ 
+ #include <uapi/linux/magic.h>
+-- 
+2.39.5
 
-/Esben
