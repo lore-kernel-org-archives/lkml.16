@@ -1,141 +1,108 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7074B1E77
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83254B1E78
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746698262; cv=none; b=df5ZUxuRZKEJ7SRxT++pOHhwOCGqF2II05vu8DDnZl7DUgswV06QTaupRklRPi1ffMRPNPvI0fQllbvH5zJl9Is4tSa9hDKD/v3Sy9KI4IWJnWxgDpBZAcCDaUWW2dO/vEl/FDjc4fESozn6+02zkGaNSz8EP5nkYGDRhiFjXiE=
+	t=1746698474; cv=none; b=d+Hn0/9NiosHCW1r7aWFXR1GgGpKfRlD18NM5+3K3OzBO+XjhW2muNubbPxG5zbiLfh0mJs9RpB0Z90Qz0Y/2+5otz1JMjHNhdCrrxh7kWSaEtkicfwJFlHQCtUjthNNbJe1VB6guGg6wq3nIwtYe8bYPTxgtAlUA+BwIHh6Ov8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746698262; c=relaxed/simple;
-	bh=fL0PF0ciMHijpVZKIhmCRftWb3VS4iR7YkNaqgChO70=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=R+Y+WuEUhNvL4jEWFtTZvVeOcw2cC8uzzQQ7h4WzF+uVIB1dXnnAar2shEFn/5Aqn4V59GHi1NH0mQ0Vkzr1kAmMgcTthU6ioYP8NwRftnKmTyanHEIoMhITAYvSmQ3+gs8YO5ebqLo5oVwXfhrZos0C7jcG8UOF43FG/L2h7tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-8649be94fa1so143342839f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 02:57:40 -0700 (PDT)
+	s=arc-20240116; t=1746698474; c=relaxed/simple;
+	bh=yCmPbavZasXyZK2LzAOfmhkicxEWdieO3xsj3pII0v8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SXNCZq04mSvmn18CXYXHRsrB2mB5EP4BZV47xphn0ClBT3wsjrULEamI3a48j+2SD9Xo3l+lETbRpq1G14yxRu4kNCjEV4I25MGgM0xLdZDU+HmbhiuMJR25sk/YWnruijmns7pMDtu9QwJ1DeD7OLEjlZ/wI5qKkaIrAU86xkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tH7SxnWE; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tH7SxnWE"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-3104ddb8051so7951541fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 03:01:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746698471; x=1747303271; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UKuIs4bD7hmTmBBuWS0gS4IWCByDc925DpPRPOTwVhk=;
+        b=tH7SxnWEsKdFK19bIvq/rjG38oXvNuzxNwTsFAK7G1nCCoLp8SZgqLUIr1KM4U9WSj
+         Wh/vxAPbfAw5in9PVHx5KFZgacVwKyFTlOR/vPHrVXSqKx7e/pSWmLd555vxTHMBps/N
+         IcAzZlFc1geRLCi82WACPXiW+awlqpJIIxZrpsNtQvTRp5kx5SDz3VCF5yzL7qWMzr40
+         tJvevSnTlz6f3ebmCE8HUbP9Rv/LTFKExdoSAPHRSCb8pMdGBmUhbhdY0RvEdUHxebh6
+         NyHmEg6Bt24tzv4u3PGps25sc7rjig+6SXD/DZouK7qPXIXnmNhWBJWhAo7YjSthWw2D
+         62LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746698259; x=1747303059;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RUCfGynVFEJKuLMrny80Q+YbM5PtJyNSmRbHwezz5vM=;
-        b=tiCuMin3gWjxgSVmSVSErWU0ETU9p3noxwT6pX6RJIlPqe+np65xj/SUVBqqH4bFa7
-         Aef1AJP1JCUMMrPeJeA1tYDzuY/TUDIAcqygo3vBcWWgAIqldttq12m6KPGC/7hozKnF
-         IcpYJSqco/0ouuAmHQwIG2Vp95kUFTUHg8hAeOYMD/9LyhCs5Pqt2B5/3K+NdYiBfDVr
-         Ut1fCqJYofVecuvPKl/gI6HtxJvq0d+/ReyysddubjWqOlbr45e6G/mmJUtJehNGg4TG
-         LpZq9kck+gPx8JsfezneSgwSmrWeUPvmPQRoZ9xXkkA4/JMvvyI0dSmKd4YGEQAOVpwM
-         gBmg==
-X-Forwarded-Encrypted: i=1; AJvYcCUusS1ugeDIq4hDz4Eiwlf9nx0W02bwAzdkPCz/Nzl0zwcVTiQtoR07KCXTIvtxrWh4vWbQhrUjrLEMROo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0T+NiDagj/4S7IA6qMRNxFKtlSvlWALa3HUDJDUOoQG8gHs24
-	7vVV/rgH1tIk8TYQ+RMbUW7IuLOjZOKFPjpUivHhyQCHXi4cTnn/8WWaQ2b7mehOXyqJCnNg37r
-	WqNa90EJuAzlPc82HgKM9+k54Dp5g5kBMv1+2oVkXrlU4wJKAKefX80U=
-X-Google-Smtp-Source: AGHT+IFT7VkgtPhwGFobw/iHcC09MH/+ek0+r6QttV/iOtQWwxRcqQzC4xMBMHSFJGMTImzmhcAqPlSzi3jtWCqyJhPT25+115nr
+        d=1e100.net; s=20230601; t=1746698471; x=1747303271;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UKuIs4bD7hmTmBBuWS0gS4IWCByDc925DpPRPOTwVhk=;
+        b=ZAXT3Ia67lcJ0xdE9GxpHru1UunIgu2OONgTpHX9xKL2H9RkAyWDR6TNnN/JRUHcyi
+         053fIqWbQaFEXvX0H67CD+TwnJG5rPCceNVNHNWvC8aY1av2zA+1udtFkrjaZ1lXYfPV
+         IKk3ouL7n7UoymNKr4kL+9qafGxZfDrYS7SyLCJ+zX7HyqEIX9siln6sneJ3eWehbCXb
+         2Ns1OSya5TZI7Iijoh0qRSBt8zVATNOz8dEhU1E54e7YxfhnVWO2hjHrfqwE7XQbJx+e
+         ejloGbFP+FV/OFqM9OqTWQvqLaKWCRY2jr5Thi6EQ8UJmk2iWXByC5bgmLx1zaefpfGX
+         UnaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5Sy6V96Kd98k30yFkXKMtvhDlLbgM1qqf4D7HTKlxgtzuabkSqTr92J7X/6MkS0nrPfLcxcjHAKOGY6w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnLG+LVqCAJmIWFLxWrIXrYKj4b42wHZavHpxiJh4qhymn77Pm
+	o5EmQvnpvuGT8kkQ8vWqw5yLfAzkaI1bus06mxZiQOXvz0eyH6t3m1IeggkC2AP+icBiIq8g9ux
+	+q5DZ
+X-Gm-Gg: ASbGncsPsdKGfraYMrFe6bRfwg6j3Bm3Mgmj+9HL0dFENhkHV7b4x2rKDIfOfD0WB1v
+	bKaeW7pfuO3RlhPU16bkSLNzqG1I1O5gs11gB9WHuCyw977ts+1bM83FdrOgW2I7nRCOXkxOMw4
+	1o/+xVC8jolWcSuTEh/dcNCoiSuSa8q4iNbeVl0TmqLW7h0XrXKKr2zPcX2x7zx/L6i5zZgDEPN
+	BXw913wg1GDz/l0j19X2aCtUIG0eHi6FDFB3e6kEA31BhJ6kZXR7Zh+XgU2emMiuC226kaHhQ4w
+	rp2c/Cq9TXV+9dQ6d5aRFrjFKYqnJ54S9E3izp9fNdMXqC11FNmABJ03/pXbpijaF8lbi6IuHnQ
+	xIx72NkczqrLxdEev8A==
+X-Google-Smtp-Source: AGHT+IE/s7lPN5vUCzksRaYR2B7bj4kJTFfHdhYwtVVBT+3QBxGeiK2BZt3LablW7b/dF67NnuKtHg==
+X-Received: by 2002:a17:907:7249:b0:ad1:fd0f:a0b5 with SMTP id a640c23a62f3a-ad1fe6fd715mr244883266b.30.1746698459943;
+        Thu, 08 May 2025 03:00:59 -0700 (PDT)
+Received: from google.com (201.31.90.34.bc.googleusercontent.com. [34.90.31.201])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1895095d7sm1054555166b.151.2025.05.08.03.00.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 03:00:59 -0700 (PDT)
+Date: Thu, 8 May 2025 10:00:55 +0000
+From: Matt Bobrowski <mattbobrowski@google.com>
+To: Viktor Malik <vmalik@redhat.com>
+Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v4 2/4] uaccess: Define pagefault lock guard
+Message-ID: <aByA1wael6H4tMo8@google.com>
+References: <cover.1746598898.git.vmalik@redhat.com>
+ <39416cac1d011661601caffc6ac38195c82ede86.1746598898.git.vmalik@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:14c6:b0:864:617a:13a1 with SMTP id
- ca18e2360f4ac-86747453d0bmr818286839f.14.1746698249561; Thu, 08 May 2025
- 02:57:29 -0700 (PDT)
-Date: Thu, 08 May 2025 02:57:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681c8009.050a0220.654ca.0000.GAE@google.com>
-Subject: [syzbot] [perf?] WARNING in __perf_event_overflow (2)
-From: syzbot <syzbot+2524754f17993441bf66@syzkaller.appspotmail.com>
-To: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
-	namhyung@kernel.org, netdev@vger.kernel.org, peterz@infradead.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <39416cac1d011661601caffc6ac38195c82ede86.1746598898.git.vmalik@redhat.com>
 
-Hello,
+On Wed, May 07, 2025 at 08:40:37AM +0200, Viktor Malik wrote:
+> Define a pagefault lock guard which allows to simplify functions that
+> need to disable page faults.
+> 
+> Signed-off-by: Viktor Malik <vmalik@redhat.com>
+> ---
+>  include/linux/uaccess.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+> index 7c06f4795670..1beb5b395d81 100644
+> --- a/include/linux/uaccess.h
+> +++ b/include/linux/uaccess.h
+> @@ -296,6 +296,8 @@ static inline bool pagefault_disabled(void)
+>   */
+>  #define faulthandler_disabled() (pagefault_disabled() || in_atomic())
+>  
+> +DEFINE_LOCK_GUARD_0(pagefault, pagefault_disable(), pagefault_enable())
 
-syzbot found the following issue on:
-
-HEAD commit:    f263336a41da selftests/bpf: Add btf dedup test covering mo..
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=16d3db68580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a9a25b7a36123454
-dashboard link: https://syzkaller.appspot.com/bug?extid=2524754f17993441bf66
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11d3db68580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/8b191964c33b/disk-f263336a.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/fde84e52fec4/vmlinux-f263336a.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/e2686ad850de/bzImage-f263336a.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2524754f17993441bf66@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 6044 at kernel/events/core.c:10226 __perf_event_overflow+0xaf9/0xe10 kernel/events/core.c:10226
-Modules linked in:
-CPU: 1 UID: 0 PID: 6044 Comm: syz.1.17 Not tainted 6.15.0-rc4-syzkaller-gf263336a41da #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
-RIP: 0010:__perf_event_overflow+0xaf9/0xe10 kernel/events/core.c:10226
-Code: 89 3e 4c 8b 3c 24 e9 c3 fc ff ff e8 21 77 d0 ff 49 bd 00 00 00 00 00 fc ff df 4c 8b 74 24 28 e9 06 fe ff ff e8 08 77 d0 ff 90 <0f> 0b 90 e9 1b ff ff ff e8 fa 76 d0 ff 48 c7 c7 80 b3 73 8b e8 0e
-RSP: 0000:ffffc90002f179c0 EFLAGS: 00010293
-RAX: ffffffff81ef47c8 RBX: ffff888011140c40 RCX: ffff88802fd43c00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffffc90002f17ad0 R08: ffff888011140e7f R09: 1ffff110022281cf
-R10: dffffc0000000000 R11: ffffed10022281d0 R12: ffffc90002f17f58
-R13: dffffc0000000000 R14: ffff888011140e78 R15: 0000000000000000
-FS:  00007f2cfb8cd6c0(0000) GS:ffff8881261cc000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f2cfb8cd0e8 CR3: 0000000032960000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- perf_swevent_overflow kernel/events/core.c:10324 [inline]
- perf_swevent_event+0x2f4/0x5e0 kernel/events/core.c:-1
- do_perf_sw_event kernel/events/core.c:10464 [inline]
- ___perf_sw_event+0x4a1/0x700 kernel/events/core.c:10491
- __perf_sw_event+0xfa/0x1a0 kernel/events/core.c:10503
- perf_sw_event include/linux/perf_event.h:1537 [inline]
- do_user_addr_fault+0x12e4/0x1390 arch/x86/mm/fault.c:1284
- handle_page_fault arch/x86/mm/fault.c:1480 [inline]
- exc_page_fault+0x68/0x110 arch/x86/mm/fault.c:1538
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-RIP: 0033:0x7f2cfa85eb1b
-Code: 00 74 24 80 3d d8 6b e8 00 00 0f b6 35 ce 6b e8 00 75 4c 80 3d c9 6b e8 00 00 75 43 40 84 f6 75 3e 66 0f 1f 44 00 00 48 89 ef <e8> 60 fa ff ff 8b 45 0c 85 c0 75 38 b9 40 42 0f 00 ba 81 00 00 00
-RSP: 002b:00007f2cfb8cd0f0 EFLAGS: 00010246
-RAX: 0000000000000001 RBX: 00007f2cfabb5fa8 RCX: 00007f2cfa98e969
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00007f2cfabb5fa0
-RBP: 00007f2cfabb5fa0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f2cfabb5fac
-R13: 0000000000000000 R14: 00007ffe3a7ce340 R15: 00007ffe3a7ce428
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+I can't help but mention that naming this scope-based cleanup helper
+`pagefault` just seems overly ambiguous. That's just me though...
