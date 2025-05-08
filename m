@@ -1,65 +1,48 @@
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12AF78F32
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64C378F32;
+	Thu,  8 May 2025 16:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746722517; cv=none; b=CzJ+iY7Dj0wlWBqEEtn6YvUaUjQVXvXuo+nESAz0O98pqeUBuKNfiZukNreyz1EDO2K4+/UCDa7TTAFJLd+pZlrWflG+UoMKZPEl0teJC2tj7tgKzMVMAZd5PUsn542koNCTWMyiOvLODqNzXVnFJWBv4qrW/ouWZiZDu2jf7hE=
+	t=1746722634; cv=none; b=lA6t+AvNTlf0TgQu8XUCUDjHFwD4jTWXgu8Cifs3wv++NkUxNS8+YpCV3tp6kuR/EcmGaDvP0zG/8uoHmj8EugSxDpxziKrQSBqLKLTDTEamMQ4cB66IHoeHTiElrYykhAjpPAuerTkNdKqYxeIFN9s5OH2k0HHW2SanEK6cIxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746722517; c=relaxed/simple;
-	bh=lQO1jHxaiYx52ybVdJLV2CjY0oqw5bUftoInQJ2KDP8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=s1w0xu+WpHBWv94r9Ec7ExyVVJeMWV6DRo+D6e4ieOST8L/4wyWO9yTTkN0Hcctc9ifb08ia+D0THRLUwTsdxMxNVu8qyL0DSwQpy4xNcg0R7axH+79+RQsMIbIBzA36gVh0IIn92v07Cct01igjoRaXr0tiplDP/9OM8IQjxik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=iKQlWLZR; arc=none smtp.client-ip=209.85.210.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746722634; c=relaxed/simple;
+	bh=jhgHhhEWR3p39tpsnJOLSNiWmpCcu4pZ9KMg5Ergn2A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ovUTMEDeSuUD3TVf88YE6l6wO9oun+L9wu6DQ8k4PNjSXxgnWTXAtYv+ixw7RllJ803kqu8dgi/1u0rRoefSmFhI0i1IWf8nQtXMgYyXIxDXz51UO6nmfpTzBMFQNrMPsQKynX3o5Dbb/ZQjnmTZGj4hoJgPsa+sCxHKzjEUsww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aqbnaF2b; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="iKQlWLZR"
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7301c227512so1032448a34.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 09:41:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746722513; x=1747327313; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SNOV3q6ACWoDC2oi9ipTkEmiaERn4Lb/0vudYXDkojM=;
-        b=iKQlWLZRmIgcFpoKq1X8P17IrPm0e0oIhqpT24TAjeaEEhz8DHgWQd1sHUXo+9yFDT
-         pm+Pu1aNRPS0lAMd07EEt35SOk6Owzh6/iQ4oDaPMDVgXaC52rK0RhYJo1zOte9QfjPk
-         WAm6ajepUQrmLPgu5cp7jJpsXRGE7hPI+16iveAOuWx+faPypBE2gPHOIN88u6Xkm7Vd
-         b2gtS+/11NfBJWlINQXXy4UpKkeaNnhGlXBHLM/6aHsIYN+wekjJmJJdCiA93YxOA2HQ
-         jNG1UlC8L8ieHX/hJwn4oK3NblRHt0VRW+bbAZM9ECTrwpsDDPXcFSrhKuelLsdZ0VJg
-         GAiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746722513; x=1747327313;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SNOV3q6ACWoDC2oi9ipTkEmiaERn4Lb/0vudYXDkojM=;
-        b=PjWwo9CvwP3Lf4+T+o8GOBaTqHk8Qt9ddPao1YMuoJx9p2mAvOS9EOFep7Pn9DAqiT
-         Z64k5H9y/erE9AgzqrTtiTZz43VNNk6FtazahQSPm4j/ekGwBBzRK5beI7fgPMSUKFwe
-         pRTIm8XDcXfm01dFdMPa5QJcqhxOtzlvZHt967rV1uCmiWtknObSBS/W1lzDeKXrsEYE
-         ajbd4tAHURdaqdeigkduK4AYlZuhkPZn/XM3wx5EREiB6bHqMWjNaBnLO0zB3A7uX+2u
-         zHYlL/cEQCPkvBYzmfvN1PbgK/49EksSk3+m/xNfKBA/t5zAMX9TFLx/SgYOFOIxqE95
-         N0TQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4PhXQ7PE1G7pQjokJBhi+zVepRNe7X3QBlzA8sihdKz8yi72zr9uPEz+gP8qDQaFsZr1sYFvL1Y5/CMg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5BV44wecPLDF4lFy7mfq4uQFXtypOlRWjw0U4tWy5vhoRtl8h
-	lvMCWRBnLCET2EsHXuvGo98c+8Yi2SFlY40rzoq9cJZAJK37m5DnV7n66WpVBEc=
-X-Gm-Gg: ASbGncuk3tzBpa19KA5oXHh1bQ4J4q01f1rLhWfr91O0Vhg8LaA1SKGaowvUcWHKU7c
-	biE5LSPq2s+TccUju6yad9JD5G+7IRc1wfLHaQDdOCJpKyTsChSS5suxoMHpSnFTV4/bdf/Omyf
-	kxSKOAhqWKZ+aScQuHPxvAg19iBPGByeQ4pOre2HgeAvok2rojGQSG03IXb5R/lZc8NeW2OtZEI
-	4S0ysZjruPK8vTOaD0QCerGQDcNTxKqLVhtfrjdJ3W3dY7C3UOBLPsE159CvfHbypmKndNuUIxf
-	g3kZ0IjNTtkE4GL91dwVFWdL2cU+aU+0oAVl5JaEVjXPndoR0OCjX3OBMMJv/kEK/yQ1IMyDv/C
-	plr4B/ge/lURac8ZCbw==
-X-Google-Smtp-Source: AGHT+IGNhnI7HfO8AULxSLmDUzdqJUBnRfjFQE3CN52ECHOPdXWRZ2JFQRrWSXPaydXFEJiS+fRYog==
-X-Received: by 2002:a05:6871:80d:b0:2d5:b7b7:2d6e with SMTP id 586e51a60fabf-2dba45e8ce5mr83184fac.38.1746722513514;
-        Thu, 08 May 2025 09:41:53 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e? ([2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2dba0b7ebfesm127024fac.46.2025.05.08.09.41.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 09:41:52 -0700 (PDT)
-Message-ID: <20c76ae9-02dd-4f77-8676-523892a33c1d@baylibre.com>
-Date: Thu, 8 May 2025 11:41:50 -0500
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aqbnaF2b"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548CwkvU008621;
+	Thu, 8 May 2025 16:43:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	cQgxzTpKegiTRxompQHqKWjAWoUKZvATIqLgXpZXQrQ=; b=aqbnaF2b9TiSacuB
+	4O0abu1L1n5zSiveGbwpe6ZyXQenExD0JqaN5kJMbsC6k1LRounaZ9n0dIvxruZv
+	Ls//RVR81NTyE9RX8hqzbVpxgKl+vQp6+hFkzCU1b0bAcG11g1NxWo6ye5ij4aJ0
+	PIhX8HuVrJm6nm5TcK/wk6vF4pNmXvMODNPb2J8hP8auZXWacTgOac0HDOvn5sKK
+	DNwSHWK6vpDeVxkklH5jYAi8FwLOhvI2EBYR6A/De/3UGgkbT8MXGz+aQRdITwX/
+	7rr0AFP67uWWiVB2yoH+WxvSIdE+gXYVZiTh+Ra3IMCCaHw4JpRZlTdiy/ySIad6
+	N450kg==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp5a0e2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 16:43:48 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 548GhlZK028393
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 8 May 2025 16:43:47 GMT
+Received: from [10.216.33.253] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
+ 09:43:42 -0700
+Message-ID: <36e01393-f56d-4c78-b08d-3626df9a7b9b@quicinc.com>
+Date: Thu, 8 May 2025 22:13:39 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,65 +50,157 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] iio: backend: update
- iio_backend_oversampling_ratio_set
-To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
- Dragos Bogdan <dragos.bogdan@analog.com>,
- Antoniu Miclaus <antoniu.miclaus@analog.com>,
- Olivier Moysan <olivier.moysan@foss.st.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- Matti Vaittinen <mazziesaccount@gmail.com>,
- Tobias Sperling <tobias.sperling@softing.com>,
- Marcelo Schmitt <marcelo.schmitt@analog.com>,
- Alisa-Dariana Roman <alisadariana@gmail.com>,
- Ramona Alexandra Nechita <ramona.nechita@analog.com>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250508123107.3797042-1-pop.ioan-daniel@analog.com>
- <20250508123107.3797042-2-pop.ioan-daniel@analog.com>
-From: David Lechner <dlechner@baylibre.com>
+Subject: Re: [PATCH v2 4/7] arm64: dts: qcom: qcs6490-rb3gen2: Add WSA8830
+ speakers amplifier
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@oss.qualcomm.com>, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+References: <20250429092430.21477-1-quic_pkumpatl@quicinc.com>
+ <20250429092430.21477-5-quic_pkumpatl@quicinc.com>
+ <af6200f6-2abb-432d-a196-01a7e77f2649@oss.qualcomm.com>
 Content-Language: en-US
-In-Reply-To: <20250508123107.3797042-2-pop.ioan-daniel@analog.com>
-Content-Type: text/plain; charset=UTF-8
+From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+In-Reply-To: <af6200f6-2abb-432d-a196-01a7e77f2649@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=Lu2Symdc c=1 sm=1 tr=0 ts=681cdf44 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=vC_a7ZyuHw2JGkk7z40A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 12CqDRlP2dcVMSshuwVXea_YcbfMjsjY
+X-Proofpoint-ORIG-GUID: 12CqDRlP2dcVMSshuwVXea_YcbfMjsjY
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE0NiBTYWx0ZWRfX1bzfFuHN6jEN
+ 9WwuPuydKX/IyP12Aw7bXrC1mcwxswM7VYKJz27ksSMVVrGaI4vc0TDziYYjOpkkOzZAuUfmY9q
+ URIFzxDhKngfb6KKwN1OvLUvOCI39WAsU4jLQ9mo8b5ZXWtZYUKglxFSPNbNBWrukdfd1W0pg0y
+ ZYWMp1N6IyAzaOd+OP8aS2cp5JmU0f7FxAfXJGl0L4nS3427L4c4prVWuVczZ07zlp0iCWFKcIF
+ LpG3Nc4YZfzj/WuXp6SnK/D9GPwLSDH7werzsDRiwhTtGlV4bo34kanGcjpBRextNWjmm/W5oHH
+ u+5YAtovxSveu8zt6hQ9NQ8BZIRIsS/K1gNiozXWfAzbBYkgrKvy9Syz2Q7XrwM5aHcKGXDaOuP
+ v6WsKSOytQw81aknum+cMR461WTBTCcqNPdrlRSTKjXFQeSShM0ffRHd8O2A5qLexDgF3+Pk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_05,2025-05-08_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=835
+ priorityscore=1501 suspectscore=0 clxscore=1015 adultscore=0 malwarescore=0
+ spamscore=0 impostorscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505080146
 
-On 5/8/25 7:30 AM, Pop Ioan Daniel wrote:
-> In the function iio_backend_oversampling_ratio_set the chan parameter
-> was added. The function can be used in contexts where the channel
-> must be specified. All affected files have been modified.
+
+
+On 4/29/2025 4:27 PM, Konrad Dybcio wrote:
+> On 4/29/25 11:24 AM, Prasad Kumpatla wrote:
+>> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+>>
+>> Add nodes for WSA8830 speakers amplifier on qcs6490-rb3gen2 board.
+>>
+>> Enable lpass_wsa and lpass_va macros along with pinctrl settings
+>> for audio.
+>>
+>> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+>> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+>> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+>> ---
+>>   arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 70 ++++++++++++++++++++
+>>   1 file changed, 70 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>> index 5fbcd48f2e2d..43cbdbe43afd 100644
+>> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>> @@ -19,6 +19,7 @@
+>>   #include "pm7325.dtsi"
+>>   #include "pm8350c.dtsi"
+>>   #include "pmk8350.dtsi"
+>> +#include "qcs6490-audioreach.dtsi"
+>>   
+>>   /delete-node/ &ipa_fw_mem;
+>>   /delete-node/ &rmtfs_mem;
+>> @@ -765,6 +766,44 @@
+>>   	};
+>>   };
+>>   
+>> +&lpass_dmic01_clk {
+>> +	drive-strength = <8>;
+>> +	bias-disable;
+>> +};
+>> +
+>> +&lpass_dmic01_data {
+>> +	bias-pull-down;
+>> +};
+>> +
+>> +&lpass_dmic23_clk {
+>> +	drive-strength = <8>;
+>> +	bias-disable;
+>> +};
+>> +
+>> +&lpass_dmic23_data {
+>> +	bias-pull-down;
+>> +};
+>> +
+>> +&lpass_va_macro {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&lpass_wsa_macro {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&lpass_wsa_swr_clk {
+>> +	drive-strength = <2>;
+>> +	slew-rate = <1>;
+>> +	bias-disable;
+>> +};
+>> +
+>> +&lpass_wsa_swr_data {
+>> +	drive-strength = <2>;
+>> +	slew-rate = <1>;
+>> +	bias-bus-hold;
+>> +};
 > 
-> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-> ---
-> changes in v2:
->  - remove iio_backend_set_dec_rate function and use 
->    iio_backend_oversampling_ratio_set function
->  drivers/iio/adc/ad4851.c           | 2 +-
->  drivers/iio/adc/adi-axi-adc.c      | 3 ++-
->  drivers/iio/industrialio-backend.c | 3 ++-
->  include/linux/iio/backend.h        | 3 ++-
->  4 files changed, 7 insertions(+), 4 deletions(-)
+> These properties should likely be moved to sc7280.dtsi
+Ack>
+>> +
+>>   &mdss {
+>>   	status = "okay";
+>>   };
+>> @@ -1039,6 +1078,31 @@
+>>   	status = "okay";
+>>   };
+>>   
+>> +&swr2 {
+>> +	status = "okay";
 > 
-> diff --git a/drivers/iio/adc/ad4851.c b/drivers/iio/adc/ad4851.c
-> index 98ebc853db79..a943d5aac9e5 100644
-> --- a/drivers/iio/adc/ad4851.c
-> +++ b/drivers/iio/adc/ad4851.c
-> @@ -321,7 +321,7 @@ static int ad4851_set_oversampling_ratio(struct iio_dev *indio_dev,
->  			return ret;
->  	}
->  
-> -	ret = iio_backend_oversampling_ratio_set(st->back, osr);
-> +	ret = iio_backend_oversampling_ratio_set(st->back, chan, osr);
+> Please keep a newline between the properties and first subnode
+Ack>
+> [...]
+> 
+>>   &tlmm {
+>>   	gpio-reserved-ranges = <32 2>, /* ADSP */
+>>   			       <48 4>; /* NFC */
+>> @@ -1095,6 +1159,12 @@
+>>   		 */
+>>   		bias-pull-up;
+>>   	};
+>> +
+>> +	sw_ctrl: sw-ctrl-state {
+> 
+> Not only non-descript, this node is not used
+Will check and update
 
-Isn't this a compile error? chan here is const struct iio_chan_spec *, not
-unsigned int.
+Thanks,
+Prasad>
+> Konrad
 
->  	if (ret)
->  		return ret;
->  
