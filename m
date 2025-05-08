@@ -1,107 +1,142 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCFD219319
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343E9A927;
+	Thu,  8 May 2025 12:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746709079; cv=none; b=fm5bVBKlNKfVrc1Ugj3o0yQHAFctrojlGqWp6f1DwFO4RlTgiq0JaEwVgfLR13hmt2QdcWB1/VXoBWPbvsutnWapDauftDjhUnuZUdQfKk6polAi2Cqp/AHXnO4EI8T5s2MvsR98AgpXYTCqZM82Si3PoHas224e1YFka7B1P/s=
+	t=1746709160; cv=none; b=DVkhQco3vqc0g3A34ACMc+s79Xl9a8I1o8UK0aAUmDrWFkiYsj78lVYRcytwUbmDDHSFNWufTxZe8DWylIxr5F+zY3rmRfIiYxL0CrTQDY5eMkDBvhd39yb+rd9UsvhrCB2Hpwp5dPOAwZDASXiNf9KqT3wvNo5RaOqYRY2FVAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746709079; c=relaxed/simple;
-	bh=fie8ocClExZ/oy9M+sB0ZEiqCjjIW+Pu/7pCGbHETXU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qi8Hz09kJAw2iIR89XAGXgiFQs9sUFCduhV0TUucMcg2BobPo87BOnDwkQ2ZaaENvQ2+EjSzVodJaM35jsvhJEu0qi7cWvAJqgvyfi2G2tRdsSOpZLA1MbPYsuDXhD9rSHvylTUb+6pmmTeWhr0b++9gQ3tRCpUBJT/F8MaXMP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P5q6afpg; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746709160; c=relaxed/simple;
+	bh=/3lfWDcmwojLa7hZq+5xkQZco1iAK/m0guYbSaXK5SE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HPhVeEo6kbGVs5szQ+g452cwHQuJioGt+CgyYj8zNslVJEdNQSZRVw/WAvbPMFlKaqcE+mpRNw5EMAhTMgEln+MqMpEj1c3igshNPJ2MZL/PsxxetAy7sauabySufDMYlMcwi50k2CEAf0BRPW0pWUO1T5G/DoYgrHwj/ffaNHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NfMGeA8c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P5q6afpg"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf7c2c351so900205e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:57:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746709075; x=1747313875; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GyfX9coirJq8Cdaxq/W+11Z0EprDF7VsHit7r1SH4b0=;
-        b=P5q6afpgQqcbcquSjaWapD6Jfnidy/bHerAnQhp92Rv9w5QHyvw1EQdhcOAnMGTbTN
-         lxTZFH8kziCGqLdotsuSX9ifMnrGDffbZ9OTlj8xgEOPUb9gRIuU1ncho8jpiOCCyKSk
-         4ozCaUzTflpGYASma6JWjUhcWsSg5c9RoelcbG49bovnIUdFOHwKd2S4aryeY21jljlw
-         b2DCouK28BOXg5w5rD5SUJDl5YmlesDpUJ/H9w2ie35jILfYO26em366xpJC0EQbvKfh
-         hg43P+9uksSbKNUR7H/cvlT1FS4T0OT9S59A4gWkqh61YshKh6MRfj9CaaYAy1L1E3zw
-         fzkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746709075; x=1747313875;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GyfX9coirJq8Cdaxq/W+11Z0EprDF7VsHit7r1SH4b0=;
-        b=s2C2LbIXbtRhlS4Lh+sERfznQjJc5X03VmkxfV6w3jysQttzkV6S5qONLu0Fs/UDWg
-         y6HRN3E6wOj7urz0HavjSzZZCb5ZtDwYVW+5ziiPUDXTJi5P2dO1IO52cnE2l0iS0RYi
-         iOmaLiYxLCq2SGCd8kPdpBlHt7MLXvODEPgvkYmdHRaNNjNyXIx13xP2ZRBNzcCFmcH4
-         KctJ6IohkN8sFMrb7UZ4AbS4WtPV3bMUBsNaz9ZwN2arrUlS7e0i0W1oDNCoJZS54x7T
-         UbEqHGccELtN9L+V/dtxige4tUP17jiAB9Cf6Nd69E/v77HJCAuftCnUzKYSjtxEtfkx
-         aTpw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvvw7Ymqnl0qWwcgihz0UStvpw3vgQ2osdQXO1GQY+S7XxtVxo7ejJlyXQZs3ftGlmwomcBk4Z4PLMLyY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvC237S0nw2/0j3IWy81lG3gdVgBTfJTvjHd9LsPcinmoKzdeU
-	lTmtBEjsNgj0A8ql9gYc928Tc7nFiG2l9PWVcefHskNuS7aa+C0d09so1uv0ulOoQRuVM7Hs2BH
-	c
-X-Gm-Gg: ASbGncsXWNvHYRQVfMNhAcNQxWl5q+DLu0jkBT1UZpldU9OyvuUVbXu37HCKLjZnmQ8
-	jJCsfRqTHlEDBFuxgg4MNvcR7eIKAy6cXzaumrX64KDWk4KYckHImvjZcywOe0qF8kcA2KkMIdl
-	f2m1E8tRhbC2i4U/jC0j99dsTpCfDBntqk21LrS/ohyzvmp/QxgDsFcbEVu+i6zxexU76zpce6l
-	e7XTkxuma3pXr7De4LAuIXdot9kvCWNWXS3JkFgfoKxtTDJtKfJ2J01TxUJhk8T5k94mf4hRVo1
-	sHAJ5x0Li2pmvSfHgnS2PC+NFHctRJ8XWIwd1PR4BGxDCA+mDlNSy4x2dCI=
-X-Google-Smtp-Source: AGHT+IEUVIi3T7YfyMxv2zjt1ItTGIIG2vX6ZluzfArIlt1K86WUAmIJcFc2kVGlurTkPNqOfZ9GHA==
-X-Received: by 2002:a05:600c:1da8:b0:439:a1c7:7b3a with SMTP id 5b1f17b1804b1-441d44bbf97mr24647605e9.1.1746709074954;
-        Thu, 08 May 2025 05:57:54 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd331221sm36183705e9.11.2025.05.08.05.57.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 05:57:54 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: peda@axentia.se, broonie@kernel.org, andersson@kernel.org, 
- krzk+dt@kernel.org, srinivas.kandagatla@linaro.org
-Cc: ivprusov@salutedevices.com, luca.ceresoli@bootlin.com, 
- zhoubinbin@loongson.cn, paulha@opensource.cirrus.com, lgirdwood@gmail.com, 
- robh@kernel.org, conor+dt@kernel.org, konradybcio@kernel.org, 
- perex@perex.cz, tiwai@suse.com, dmitry.baryshkov@oss.qualcomm.com, 
- linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- johan+linaro@kernel.org, Christopher Obbard <christopher.obbard@linaro.org>
-In-Reply-To: <20250327100633.11530-3-srinivas.kandagatla@linaro.org>
-References: <20250327100633.11530-1-srinivas.kandagatla@linaro.org>
- <20250327100633.11530-3-srinivas.kandagatla@linaro.org>
-Subject: Re: (subset) [PATCH v6 2/6] mux: gpio: add optional regulator
- support
-Message-Id: <174670907339.90037.743394782268502286.b4-ty@linaro.org>
-Date: Thu, 08 May 2025 14:57:53 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NfMGeA8c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C076C4CEE7;
+	Thu,  8 May 2025 12:59:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746709157;
+	bh=/3lfWDcmwojLa7hZq+5xkQZco1iAK/m0guYbSaXK5SE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=NfMGeA8ckaAossmf+7IrWIH36xpOj5TgNNJGLFMmnWv66MXlORDoDoeiUiIIGpOO/
+	 okwO6x3zo0mfgaiExxF6fQ5EZEIS8MD3uIyCaMxEgI5X5dabgnNjbsE9RxuXYf1Ofv
+	 MHY2c5U10QzV1EB2OpR/aXMeWRRzqPRTbL6BGEKo7CDs7QBQYWyN1oIdcKz4fluihd
+	 bCRa89NOlP/bpnfsbSQamw3c1HhmOhMJgxLFDCG5Hn3LGk8ieRBK1ZAy3Gi8sSp1cB
+	 h6bEMfcd2OJbaaGGvNDOdQsI1CsQFlVb26xzP7fuockjZCKIqyynan/tj9cnurx1NM
+	 5yF8P7eWNlDig==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Oliver Mangold" <oliver.mangold@pm.me>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
+  "Trevor Gross" <tmgross@umich.edu>,  "Asahi Lina" <lina@asahilina.net>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 1/5] rust: types: Add Ownable/Owned types
+In-Reply-To: <20250502-unique-ref-v10-1-25de64c0307f@pm.me> (Oliver Mangold's
+	message of "Fri, 02 May 2025 09:02:29 +0000")
+References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me>
+	<d6hUddIgwZqRCgQQQV7L2VG4idnic0hOdWqt67Itt_xixs1RI25dMrPZRMyoIe2W_FS4eL6X66J_iclD2aUA0Q==@protonmail.internalid>
+	<20250502-unique-ref-v10-1-25de64c0307f@pm.me>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Thu, 08 May 2025 14:24:21 +0200
+Message-ID: <87v7qbnvd6.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain
 
+"Oliver Mangold" <oliver.mangold@pm.me> writes:
 
-On Thu, 27 Mar 2025 10:06:29 +0000, srinivas.kandagatla@linaro.org wrote:
-> Some of the external muxes needs powering up using a regulator.
-> This is the case with Lenovo T14s laptop which has a external audio mux
-> to handle US/EURO headsets.
-> 
-> Add support to the driver to handle this optional regulator.
-> 
-> 
-> [...]
+> From: Asahi Lina <lina@asahilina.net>
+>
+> By analogy to AlwaysRefCounted and ARef, an Ownable type is a (typically
+> C FFI) type that *may* be owned by Rust, but need not be. Unlike
+> AlwaysRefCounted, this mechanism expects the reference to be unique
+> within Rust, and does not allow cloning.
+>
+> Conceptually, this is similar to a KBox<T>, except that it delegates
+> resource management to the T instead of using a generic allocator.
+>
+> Link: https://lore.kernel.org/all/20250202-rust-page-v1-1-e3170d7fe55e@asahilina.net/
+> Signed-off-by: Asahi Lina <lina@asahilina.net>
+> [ om:
+>   - split code into separate file and `pub use` it from types.rs
+>   - make from_raw() and into_raw() public
+>   - fixes to documentation
+> ]
+> Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  rust/kernel/types.rs         |   3 ++
+>  rust/kernel/types/ownable.rs | 117 +++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 120 insertions(+)
+>
+> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> index 9d0471afc9648f2973235488b441eb109069adb1..5d8a99dcba4bf733107635bf3f0c15840ec33e4c 100644
+> --- a/rust/kernel/types.rs
+> +++ b/rust/kernel/types.rs
+> @@ -11,6 +11,9 @@
+>  };
+>  use pin_init::{PinInit, Zeroable};
+>
+> +pub mod ownable;
+> +pub use ownable::{Ownable, OwnableMut, Owned};
+> +
+>  /// Used to transfer ownership to and from foreign (non-Rust) languages.
+>  ///
+>  /// Ownership is transferred from Rust to a foreign language by calling [`Self::into_foreign`] and
+> diff --git a/rust/kernel/types/ownable.rs b/rust/kernel/types/ownable.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..52e7a69019f1e2bbbe3cf715651b67a5a5c7c13d
+> --- /dev/null
+> +++ b/rust/kernel/types/ownable.rs
+> @@ -0,0 +1,117 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Owned reference types.
+> +
+> +use core::{
+> +    marker::PhantomData,
+> +    mem::ManuallyDrop,
+> +    ops::{Deref, DerefMut},
+> +    ptr::NonNull,
+> +};
+> +
+> +/// Types that may be owned by Rust code or borrowed, but have a lifetime managed by C code.
+> +///
+> +/// It allows such types to define their own custom destructor function to be called when
+> +/// a Rust-owned reference is dropped.
+> +///
+> +/// This is usually implemented by wrappers to existing structures on the C side of the code.
+> +///
+> +/// # Safety
+> +///
+> +/// Implementers must ensure that:
+> +/// - Any objects owned by Rust as [`Owned<T>`] stay alive while that owned reference exists (i.e.
+> +///   until the [`release()`](Ownable::release) trait method is called).
+> +/// - That the C code follows the usual mutable reference requirements. That is, the kernel will
+> +///   never mutate the [`Ownable`] (excluding internal mutability that follows the usual rules)
+> +///   while Rust owns it.
+> +pub unsafe trait Ownable {
+> +    /// Releases the object (frees it or returns it to foreign ownership).
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Callers must ensure that the object is no longer referenced after this call.
+> +    unsafe fn release(this: NonNull<Self>);
 
-Applied, thanks!
+We should probably add as a safety requirement that `this` points to a
+valid `Self`.
 
-[2/6] mux: gpio: add optional regulator support
-      https://git.kernel.org/krzk/linux/c/12d3c69ba2734b5908e0ac8ac2dcbd0cc28fef3a
 
 Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Andreas Hindborg
+
 
