@@ -1,88 +1,132 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616E227CCDC
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C807279325
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:08:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716880; cv=none; b=bIom2vcEz79xvv1tTb7w4XbCv6WiXtfexOoY5z7rnUovwT9AokvtvJDLewhVIrf9RcyM4fz8MK7NgOoS+lMR4T3/1V0wGUGa+UiSv0J6vkABnvtapcI1/aPL6IXuymWkdiGgc6jn5xXz/SRUjWsHvts9HRE3KR8APnNrvS8CjTM=
+	t=1746716941; cv=none; b=jXmmFMTCF0BTqq0vpbSx3EKJmbyUeawc8hz9K73X1u8ydcN99fF74l6/q7oka6NdqGP8NYXj0NLRSYrHr+xEhocp5Kb/GoWmjuCI5LNFp/qvXsYf62tZ8tnBT7x2CXyxvvsQbWp21PnQsSFT8066D8q5lGeSbVRog85WVln7o58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716880; c=relaxed/simple;
-	bh=pO36bLXEqsI5dmjb3fZVSCZpu0F+ckPnsDM8jsyHElA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y+fhjvXYjt/dZo7juX2dUrrj79ZnSb4giBPsQqrmBjq+vVcalywlxvYuNtnWpFTItLLd766NYdEgeBre2y/0pCsCLP2qW+17ql/1QdAKX4gobIsDSNItXE/RyUtsc/ANT4sUC+KnVu3g0mS58Mhircfl86T4qn6610x4/6KA7Z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 548F7qGx083296;
-	Fri, 9 May 2025 00:07:52 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 548F7o6P083277
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 9 May 2025 00:07:50 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <75c7424b-fec9-469b-8f73-50ab86948a24@I-love.SAKURA.ne.jp>
-Date: Fri, 9 May 2025 00:07:48 +0900
+	s=arc-20240116; t=1746716941; c=relaxed/simple;
+	bh=EUta3aTRjT21bXtQrcK4rhz7dH2rAHVXhefracRyNDo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZaqszQ1ZnYEgZF2ZfaP+OtWe8GcxLqBZX2ELcDryHfNcXubH94IrOzRHpEIRxKhkuBl14cAGiZJWy25Vank+ky3q76MuJCin76eHUttnkbiAAfa0JGB3HsM5NlUsyBIdB+dDhwMxMrVMv3sO76Qzm3SgcWJJPHOawthIhQmeQ8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uD2rJ-0006ko-49; Thu, 08 May 2025 17:08:25 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uD2rG-001kE3-0o;
+	Thu, 08 May 2025 17:08:22 +0200
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id CA5A940BC73;
+	Thu, 08 May 2025 15:08:21 +0000 (UTC)
+Date: Thu, 8 May 2025 17:08:15 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	linux-usb@vger.kernel.org, Ming Yu <tmyu0@nuvoton.com>
+Subject: Re: [PATCH v10 4/7] can: Add Nuvoton NCT6694 CANFD support
+Message-ID: <20250508-prudent-festive-puffin-83f666-mkl@pengutronix.de>
+References: <20250423094058.1656204-1-tmyu0@nuvoton.com>
+ <20250423094058.1656204-5-tmyu0@nuvoton.com>
+ <20250503-fulmar-of-sexy-upgrade-1184a7-mkl@pengutronix.de>
+ <CAOoeyxWbr6jfZjPvYFD+vHKMZ9CpM6SLt+2xo-4E-NnhGinfvg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] lsm: introduce security_lsm_manage_policy hook
-To: John Johansen <john.johansen@canonical.com>,
-        =?UTF-8?Q?Maxime_B=C3=A9lair?= <maxime.belair@canonical.com>,
-        linux-security-module@vger.kernel.org
-Cc: paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, mic@digikod.net,
-        kees@kernel.org, stephen.smalley.work@gmail.com,
-        casey@schaufler-ca.com, takedakn@nttdata.co.jp,
-        linux-api@vger.kernel.org, apparmor@lists.ubuntu.com,
-        linux-kernel@vger.kernel.org
-References: <20250506143254.718647-1-maxime.belair@canonical.com>
- <20250506143254.718647-3-maxime.belair@canonical.com>
- <9c68743f-5efa-4a77-a29b-d3e8f2b2a462@I-love.SAKURA.ne.jp>
- <6d785712-6d8e-491c-86d4-1cbe5895778f@canonical.com>
- <75c0385c-b649-46b0-907f-903e2217f460@I-love.SAKURA.ne.jp>
- <07a496b2-ed1f-4a18-88d1-7be36dba3a8a@canonical.com>
-Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <07a496b2-ed1f-4a18-88d1-7be36dba3a8a@canonical.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Virus-Status: clean
-X-Anti-Virus-Server: fsav402.rs.sakura.ne.jp
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fkxqes6nz57lm4hv"
+Content-Disposition: inline
+In-Reply-To: <CAOoeyxWbr6jfZjPvYFD+vHKMZ9CpM6SLt+2xo-4E-NnhGinfvg@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 2025/05/08 23:44, John Johansen wrote:
-> On 5/8/25 05:55, Tetsuo Handa wrote:
->> On 2025/05/08 17:25, John Johansen wrote:
->>> That is fine. But curious I am curious what the interface would look like to fit TOMOYO's
->>> needs.
->>
->> Stream (like "FILE *") with restart from the beginning (like rewind(fp)) support.
->> That is, the caller can read/write at least one byte at a time, and written data
->> is processed upon encountering '\n'.
->>
-> 
-> that can be emulated within the current sycall, where the lsm maintains a buffer.
 
-That cannot be emulated, for there is no event that is automatically triggered when
-the process terminates (i.e. implicit close() upon exit()) in order to release the
-buffer the LSM maintains.
+--fkxqes6nz57lm4hv
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v10 4/7] can: Add Nuvoton NCT6694 CANFD support
+MIME-Version: 1.0
 
-> Are you asking to also read data back out as well, that could be added, but doing
-> a syscall per byte here or through the fs is going to have fairly high overhead.
+On 08.05.2025 11:26:09, Ming Yu wrote:
+> > > This driver supports Socket CANFD functionality for NCT6694 MFD
+> > > device based on USB interface.
+> > >
+> > > Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
+> >
+> > The destroy functions nct6694_canfd_close() and nct6694_canfd_remove()
+> > are not the exact inverse of their init functions. Se comments inline.
+> >
+> > Please fix and add:
+> >
+> > Reviewed-by: Marc Kleine-Budde <mkl@pengutronix.de>
+> >
+> > Feel free to mainline this patch as part of the series outside of the
+> > linux-can-next tree. Better ask the netdev maintainers for their OK, to=
+o.
+> >
+> > What about transceiver delay compensation for higher CAN-FD bitrates?
+> > How does you device handle these?
+> >
+>=20
+> In the CAN CMD0's DBTP field, bit 23 is the TDC flag, I will add
+> support for enabling tdc, and firmware will automatically configure
+> tdco. Do you think this approach is appropriate?
 
-At least one byte means arbitrary bytes; that is, the caller does not need to read
-or write the whole policy at one syscall.
+Can you configure the TDC manually via USB?
 
-> 
-> Without understanding the requirement it would seem to me, that it would be
-> better to emulate that file buffer manipulation in userspace similar say C++
-> stringstreams, and then write the syscall when done.
+If the firmware does automatic TDCO configuration, does it take care of
+not enabling TCDO if the Data-BRP is > 2?
 
-The size of the whole policy in byte varies a lot.
+BTW: What's the CAN clock of the device? I want to add it to the
+can-utils' bitrate calculation tool.
 
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--fkxqes6nz57lm4hv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmgcyNwACgkQDHRl3/mQ
+kZzE7Af9FGhvmDVRrnQ/F4bSbWoG2NTq/f6c3fZSGEWA89N5tefMfjZvh7dlyYji
+VaHiukxhQV4tR1h1zXxI/eZ9VQA3NyE5dv4XDcTtPDQILQ03+/sEQOOCSoI8Nb+d
+1WJ6Wvj7apYZa6Qvl+s9K5JVrgaRiQOBFXeKIQYAqTaR0DpQ8nB0gYdClnRowTeB
+gTYVRD/j3fNoE6Cm2DTMs/rzDxp57S/RTZTWuqpbo6i39xQZnv4c6IX6kRHS51Lg
+pQQNi1JctlAO52n2YZnYbBVa3P6XM3f/qLDmL7PYzYFo4v5O19avY0wiuanBk+hK
+wllO7zAOx6+Zxj0ABxJ9edXuP0H61g==
+=EkV4
+-----END PGP SIGNATURE-----
+
+--fkxqes6nz57lm4hv--
