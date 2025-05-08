@@ -1,109 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1746283127;
-	Thu,  8 May 2025 15:10:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F71127A44C;
+	Thu,  8 May 2025 15:10:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746717002; cv=none; b=AtrS4CCuDtQ8vuXHkV/Y2j3sUo6C+25ljtakZEzjIS+/lQnIuQffjeMpLPTrdoQXsVhlt7pvYKqeyyD/1tvL9A3GO26ga/YiaFGzDAK//wqfi8wdC5vYQ9onHldpZmZP7HYBmLMKvRR5MMvJYmjltTOcRuLpyug0T//SLIlEOt4=
+	t=1746717031; cv=none; b=DCygWe6eKAA5jL7JIDg5UXjxmo3dWDVPyUJ7+eCSX09Ce4P7Y9fSvLH1s4RCtl+aC57d8+4TJ8+orGW1Cvx9to5Pi+UZo7+8HO+Xgf1YMa1NkzY94E8n+BiU+A/P1m6V3w3Rur8pDeE8lkUR8hNy1qIXVdeSVgTuZ0HIznak8Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746717002; c=relaxed/simple;
-	bh=rVR/N/7ODChG6fZhtF8ZvMaMmZ6Fx13049NqQCPPeMg=;
+	s=arc-20240116; t=1746717031; c=relaxed/simple;
+	bh=dhECve019k+MAhaJXpnJX0vZpEJhKyOVtBrA+Jc60Gw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NYVA/s+dFrrtML3YMLTI+/cwdIL1r8ZqOAWUODrrBCzeYTIlVcNyvWliUPbj2UBhsoCY4ydsS85Mjyalwf7O1ofcxz9EtH4nv62yduTVTovGone6ysrZ3q75UhW89PhW4MaACjRDiVzXGw8nR29KMPpQSZ88/7ELi+AgDhulth4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GkmD0J1l; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KKIKnS4rlhDv1km7tFA0zvNhEVSwvroycXF2naCYt3aSWnbvZ3eREKX5jyUiFXzh2/zuUzVtq9vGZJMawS4UiOOplzHM9iNmlp+dRXoHOTKleZ2n+hkKGqRZpOMqqwqKe6D9tW10ruLNLRtwzWzAGJm68A3S93KDZG7ebSBU/Q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jiLzLgnN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GkmD0J1l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22AECC4CEF0;
-	Thu,  8 May 2025 15:09:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jiLzLgnN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A144EC4CEE7;
+	Thu,  8 May 2025 15:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746717001;
-	bh=rVR/N/7ODChG6fZhtF8ZvMaMmZ6Fx13049NqQCPPeMg=;
+	s=k20201202; t=1746717031;
+	bh=dhECve019k+MAhaJXpnJX0vZpEJhKyOVtBrA+Jc60Gw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GkmD0J1lOEP2v5R6Gl6VpW7bpQlNU+pvI1gjVPllebBtvu3VgZcVkbVEEUACCHxKA
-	 hITDaX6O72YKW7Abv8VD3qWeh0KvPv/oGLqBhNCazutTxVMaqx8kVCZmEtEO6TAfBP
-	 46u+J3V7ImhbwA+1hvN7ONIeaLBJ25VEkS29d6ZOU7GG8KfRNU1MGC3Ww2ZaEFGdEx
-	 eDKIrKCdFJ7FxhlrE0n5HeR31facf7qqtvPXnMMkl/8L+mzQ1cFAqsGNwsVwhqzDuJ
-	 LQ/rXhCaKJqR73NioMyZwo+eCDJ1zg0u//SIEb+IvDkg21Rds8Ptm260xSuIJdS644
-	 1cd60ulMzEOBQ==
-Date: Thu, 8 May 2025 16:09:56 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Akhil R <akhilrajeev@nvidia.com>
-Cc: andi.shyti@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
-	ldewangan@nvidia.com, digetx@gmail.com, p.zabel@pengutronix.de,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: i2c: Specify reset as optional
-Message-ID: <20250508-atrocious-till-30aad5010c3e@spud>
-References: <20250506095936.10687-1-akhilrajeev@nvidia.com>
+	b=jiLzLgnNY0s2FTPN5+DxCy5Hc10iLZS6vuh/B+dVKZ6zKd/hSyVEe58/lA0bztS7m
+	 ymneFlZ/yNcmS1JXeh8kTaRgTz5yCcTkIK/jUSo8TmuSSw6fO+vGl2Ws+UplUycPtP
+	 lzWp5XeU8zpMwhowNEHlqbONMLjgB6e1qsLi2t6HE+UyGDvaVJNjNtlXqQcl3tQaj7
+	 +0cLGZF/sUQS2BjI1onrqLymbKDVh94UUXp7Dk6Z0OK4CYFRP0j2z6tEjIqCGsOEjb
+	 MmvOmdQFFn4kKRx6jCrBkW98MGqJmDnaMkgff4kBbIdgUaZBASIEA5NmQMfSdH3zOV
+	 M5I/xYSK1H5Yw==
+Date: Thu, 8 May 2025 17:10:28 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] net: airoha: Fix an error handling path in
+ airoha_probe()
+Message-ID: <aBzJZCIvE9u_IAM-@lore-desk>
+References: <5c94b9b3850f7f29ed653e2205325620df28c3ff.1746715755.git.christophe.jaillet@wanadoo.fr>
+ <3791c95da3fa3c3bd2a942210e821d9301362128.1746715755.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="iwu+DycW32HAkSb8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="V+aLiTt/t6jXV4qn"
 Content-Disposition: inline
-In-Reply-To: <20250506095936.10687-1-akhilrajeev@nvidia.com>
+In-Reply-To: <3791c95da3fa3c3bd2a942210e821d9301362128.1746715755.git.christophe.jaillet@wanadoo.fr>
 
 
---iwu+DycW32HAkSb8
+--V+aLiTt/t6jXV4qn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06, 2025 at 03:29:33PM +0530, Akhil R wrote:
-> Specify reset as optional in the description for controllers that has an
-> internal software reset available
-
-Optionality of properties is not determined by text. The property is not
-marked required in the binding, and therefore is optionally on all
-platforms. If some platforms require it, you should submit a patch making
-it mandatory there (via the required keyword).
-
-Cheers,
-Conor.
-
+> If an error occurs after a successful airoha_hw_init() call,
+> airoha_ppe_deinit() needs to be called as already done in the remove
+> function.
 >=20
-> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> Fixes: 00a7678310fe ("net: airoha: Introduce flowtable offload support")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 > ---
->  Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> Changes in v2:
+>   - Call airoha_ppe_init() at the right place in the error handling path
+>     of the probe   [Lorenzo Bianconi]
 >=20
-> diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yam=
-l b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
-> index b57ae6963e62..19aefc022c8b 100644
-> --- a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
-> +++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
-> @@ -97,7 +97,9 @@ properties:
-> =20
->    resets:
->      items:
-> -      - description: module reset
-> +      - description: |
-> +          Module reset. This property is optional for controllers in Teg=
-ra194 and later
-> +          chips where an internal software reset is available as an alte=
-rnative.
-> =20
->    reset-names:
->      items:
+> Compile tested only.
+> ---
+>  drivers/net/ethernet/airoha/airoha_eth.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/ether=
+net/airoha/airoha_eth.c
+> index af8c4015938c..d435179875df 100644
+> --- a/drivers/net/ethernet/airoha/airoha_eth.c
+> +++ b/drivers/net/ethernet/airoha/airoha_eth.c
+> @@ -2967,6 +2967,7 @@ static int airoha_probe(struct platform_device *pde=
+v)
+>  error_napi_stop:
+>  	for (i =3D 0; i < ARRAY_SIZE(eth->qdma); i++)
+>  		airoha_qdma_stop_napi(&eth->qdma[i]);
+> +	airoha_ppe_init(eth);
+
+it was actually a typo in my previous email but this should be clearly
+airoha_ppe_deinit().
+
+Regards,
+Lorenzo
+
+>  error_hw_cleanup:
+>  	for (i =3D 0; i < ARRAY_SIZE(eth->qdma); i++)
+>  		airoha_hw_cleanup(&eth->qdma[i]);
 > --=20
-> 2.43.2
->=20
+> 2.49.0
 >=20
 
---iwu+DycW32HAkSb8
-Content-Type: application/pgp-signature; name="signature.asc"
+--V+aLiTt/t6jXV4qn
+Content-Type: application/pgp-signature; name=signature.asc
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBzJRAAKCRB4tDGHoIJi
-0vgnAP9UM812drDNILFwXxq22fplvS0kxJiN9gGVH+/OGyOlEQD+JBBjHC1MU1Lt
-okfKuk6deNpkgC+viWGs12HgWWuu8g4=
-=9QSL
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaBzJZAAKCRA6cBh0uS2t
+rOayAQCaglkROsypWbnoARe9kkq6RYdKaAl4rjlfjKCEB8HWQQEAgs12WF2PhlvU
+iTcoAkcTJX4fuM85cyB9I8L+eeZi/wg=
+=QUnf
 -----END PGP SIGNATURE-----
 
---iwu+DycW32HAkSb8--
+--V+aLiTt/t6jXV4qn--
