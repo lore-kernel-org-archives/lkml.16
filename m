@@ -1,101 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB97A2AD20;
-	Thu,  8 May 2025 14:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFA226F440
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746714570; cv=none; b=rJbD4mNq4YiKfDZi8U1DhsdfzfcXpxKJOR6FG4toWOpR31xPQ2kTtxBd3KnLTDPwGLaFu5hKAaw3Gyafm7IjY+O1+hn/OF3Msd98yswyZoIuFY3SZ+JV3ItWQyhKgy7elcxCbrPCx1n0Sju9nDlPYvMtDLDKf9zbcToxxhRXXos=
+	t=1746714600; cv=none; b=QxdSgT8jIuLbsvFImN3OLZH24CQ+YTM/rJebStbWWswspv7G33HRr3AIb0Km8MQiYGmRyLOFE5fsE1iHKx1vX3AY5QY1gAC3bknznflzK3IPuKMQwRE5cTHdqMhJ9aV/fWric8Ga+59WaU0IUrMWsSj2BgMr0klvTV4qmf9CeE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746714570; c=relaxed/simple;
-	bh=W6JOmhmDyfPqPFSYQOBYwQNFj1DkKPisOWKe00hmnlU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=owoP98JkV0Siv1bHX43FfyFT2HHnBqxXGEIWYJVGqDfVu6/EOD9uJuoQeHZflrGNPPfIKdLurn5Y1jlGZDDr3O7DlKhBzFeE/X0K6BIzT9tnw4ErgkqsIr3lxzQ01LR1EV9Je4LC8x4rqtkMa1G4fzbm9zR9Rb5E5WQIo0U+M2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d5aFi3tW; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746714600; c=relaxed/simple;
+	bh=pifsycc66KzqpKaUgTJMqgSi5C71iSmELI/zL5LoQMU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lBECN/BJBd/c1Kqg8cS72Pe5kLNcZmpLzRxN4J7peIvNhZjoz0WaXfa9CQWWO9Y45BoTMTXOXYP/Q6mFufAEE6TcW7Rxo9ulssSlhQv147V+FVLDpJwqsPIAcbPtYV3tVsMkAN33oLD647TOfv0btTqtPRi15XG9/HpvjvNNo8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=djN4lqYb; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d5aFi3tW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746714569; x=1778250569;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=W6JOmhmDyfPqPFSYQOBYwQNFj1DkKPisOWKe00hmnlU=;
-  b=d5aFi3tWbNYP/k9vxouSpftrDg0tL6fID5u0HBdCk6GcFwdzLtXcQibP
-   ooBUh9ZRiYjG284jeN2GQtlJ0N6lWNmgXl5IOnTprR/n+iTmbcQsm8plS
-   7lD/6awhjcT5a6q2Aonrljyf3guS8HMnJMCAHDToQjoAePQjGeyq1bEfI
-   fs3S1E9rXX7sUv9OMb9IkJNfyDvCSMjrFz3cRb8pwLBX76Xd7o3EAEVkA
-   IY6zFHJyux/Q510w6jNuR+rJqau3P9gE3Wnam2KkMxZIX0QMvMwX9E1PO
-   8qaAnAPBV8HA6VNP1U+j9WbdKbUxTBHCufl6HE6m6mmJjdFU5US6ntONP
-   g==;
-X-CSE-ConnectionGUID: 9CqDSIbLScm7dDwC/JKxlQ==
-X-CSE-MsgGUID: Q5toD32VSmWPyeiz782j/g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="58711036"
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="58711036"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:29:29 -0700
-X-CSE-ConnectionGUID: emiuuaYYTdOAQc3k8ld2Sw==
-X-CSE-MsgGUID: +wzcBO0sR8O4NeZ8Np7T8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="136022167"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:29:27 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uD2FX-000000048QW-1SJc;
-	Thu, 08 May 2025 17:29:23 +0300
-Date: Thu, 8 May 2025 17:29:23 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, ikepanhc@gmail.com,
-	W_Armin@gmx.de, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net
-Subject: Re: [PATCH 1/2] platform/x86: Move Lenovo files into lenovo subdir
-Message-ID: <aBy_w42MapjiD6al@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250507190456.3004367-1-mpearson-lenovo@squebb.ca>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="djN4lqYb"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5488mHcx021197
+	for <linux-kernel@vger.kernel.org>; Thu, 8 May 2025 14:29:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	i/cgkTnxyg5jfdY6+Lyq4L5THEEwjAJtINqyd81Steg=; b=djN4lqYb4H0wJPQb
+	K4O5bAJWtsSJsQCa4f6s4FobiXgYyW5Hg+NLhQwSa1OaNpB9wJemiy+SiP+tUhpY
+	WKQp2BkM8Xv1WuUZwd/e11HMvOdT9VFL1AorrRfl7W9TxDDxvM8T2TobbhGEv+qk
+	dA7fIi5jp1xOo+v3eNpYndMyrRNA5285CnsYMJfKIKQCXQ+eGpkH9PnH/wCiSX62
+	iUvhPOPRwZDtvgEuUBqXLOvOTVrgS+6sLvi1ajrdsvnIAsjEF+iJbUfM4noUE3wP
+	DF/VY/7/VTlVFaX6NAVT33pyl37kG+c2uCStfuY7E7FSQIV0kpzWH5guSmeUY4mT
+	gUHmlw==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gsdj10ch-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 14:29:58 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6eeb8a269a7so3183926d6.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 07:29:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746714597; x=1747319397;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i/cgkTnxyg5jfdY6+Lyq4L5THEEwjAJtINqyd81Steg=;
+        b=SWzTrd5lqvNisN3ZNVw+WpX5vG9O7Gj3t7p6HoE9R+F+68IkD39zAlQ+s6u+tMRtYn
+         BUnAIo41CItq4X0u9yaFoG/jOkqmQ8FiXdLxhCTpOIuntE107FDqEF6EXoOAAB3AhGzU
+         +o01U/ZkFSe2H1FC8GqE5yfi1jqoGXh6F8T+pPsMZrl+bDcweJZA+OvtpD5jV0UMaMtx
+         JJbj6w0wbnZZuJFspWD1KjHdbguNEAQDKrK1egVDjtb+sBvOWz8kgvU1STNsW6iv61nc
+         DTn07Q5gOUsIbIDpUX1tliQLlPGPAnXzamXN+NFC793ANPpY6J9+mYvfM84AGIsq6qyV
+         5Fpg==
+X-Forwarded-Encrypted: i=1; AJvYcCVb7RX4fmTCAfEsF2HuKSYGkpGSsBpqoc1rLVpzZild3FqiLlnYv88avGKMAI2Lfi8Hb2o9/GMG7td7S9I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrqhsQ5Nmd2FpVqE06lyOK/jLtD9rZSvpBe+Q6kw4j15UkGUH7
+	vjqPagLH6WazxK/2MDIo/DEG5U6G8rMZMURkKfRo94HSMWrAcJY8MK26aNybu93w1OCsJ3fWdEC
+	Gfi6hkc/B2olBWbV6QaD250rzysQ1d6JrQeWswf9wYa/YW0CNiYZ78oyxJLvfmtE=
+X-Gm-Gg: ASbGncu/NZ8T5oaVSlHY0p7xzapkioGg5tFzRTedoG7Q8AsnifbY90OC3YoXdmxWyPm
+	SGjSSBp33STwDqou0noaUXlVk3mYdf1p6ZzvGymWPoXd2J+cITnCGXqNPFEriwsTgOthOzb1UOB
+	UjvffR73TuvmO95hXw9gOcuavzJagARhBjGHUlx3FEIm1isK+38UyfX+DtdVr0O7f2Lsv+FPRs1
+	uAOW4WaEEGGojT99G1yssweo1RhgK9GdlQBjUpeHdH3DLpLLgjiTlTxUwrl+Jx4NcZLcmaR1GIE
+	YUP869Lructb0JRnWeSkfn1+k4U5m0cXBBnfLK3WFDdBSNqlii83puz9kMNtkbYIvgU=
+X-Received: by 2002:a05:620a:390a:b0:7c3:c406:ec10 with SMTP id af79cd13be357-7caf741a8f3mr434991985a.14.1746714596769;
+        Thu, 08 May 2025 07:29:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEfaVl8OObnjHQhd/SJGAsLqOH3DFL4CG4ytZ/Pzo30OjRSwoRvlTataNc/c/g5GA7RSzbphQ==
+X-Received: by 2002:a05:620a:390a:b0:7c3:c406:ec10 with SMTP id af79cd13be357-7caf741a8f3mr434989785a.14.1746714596360;
+        Thu, 08 May 2025 07:29:56 -0700 (PDT)
+Received: from [192.168.65.105] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa7781cffdsm11366152a12.46.2025.05.08.07.29.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 07:29:55 -0700 (PDT)
+Message-ID: <7123afc3-ab67-43f7-b346-bdc336481992@oss.qualcomm.com>
+Date: Thu, 8 May 2025 16:29:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507190456.3004367-1-mpearson-lenovo@squebb.ca>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] ARM: dts: qcom: msm8226-motorola-falcon: add clocks,
+ power-domain to simpleFB
+To: Stanislav Jakubek <stano.jakubek@gmail.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, phone-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1746711762.git.stano.jakubek@gmail.com>
+ <cdb6915bf40c055c77a0beb2f49c20458adf7481.1746711762.git.stano.jakubek@gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <cdb6915bf40c055c77a0beb2f49c20458adf7481.1746711762.git.stano.jakubek@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=PMAP+eqC c=1 sm=1 tr=0 ts=681cbfe6 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8
+ a=uq1pj42CD5qt1GRQKNoA:9 a=QEXdDO2ut3YA:10 a=8aNmnrDM0H8A:10
+ a=iYH6xdkBrDN1Jqds4HTS:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDEyNCBTYWx0ZWRfX9ozD2cJt6RVL
+ /UvW5as7u8rqorOMTvcdj4mWR4CdcPe7LcQpEdlR/xocCtrq7buLydRoqcYyU21j3HJvIEEC2HL
+ d6p3uUNSoNGnT4lK4TwLibFV4dkHATzgCvtYPWuCpSLv9nUGR4ATscewnB6ZrQK2gc7a0WbptPp
+ UziVWVETjSHCeaV+orBHnh3j2uahXNRAVfnNOAL69SgWS8FiW/sIkaGEKiRc4o+InVOhqqwqvB/
+ OEBnr4htCbnV5Qm7gZ0tBRojulY4FdNJz5GR7/1HWLtLbl40BjsOpxihtHJs1EYlWwyZqG+Jg7Z
+ K4BFBA8QSwpOxlPSBqNb+XHHuRZUybC6sSDzM+iLVmf0n+RTonkrnmQZd8+wToogYacNAQrkbaZ
+ OEDakiRZj+Je8xLh4RFuFXuU9GGnp/vvo6KWeb0+gncsHd+C8tlWgd2ZxNq0PrUyh16gaTjv
+X-Proofpoint-GUID: cjRx4sCvj9Fo69BShfuhcaT37YYhH2iG
+X-Proofpoint-ORIG-GUID: cjRx4sCvj9Fo69BShfuhcaT37YYhH2iG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_05,2025-05-07_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 impostorscore=0 mlxscore=0 suspectscore=0 spamscore=0
+ bulkscore=0 priorityscore=1501 clxscore=1015 lowpriorityscore=0
+ mlxlogscore=663 adultscore=0 malwarescore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505080124
 
-On Wed, May 07, 2025 at 03:04:34PM -0400, Mark Pearson wrote:
-> Move all Lenovo specific files into their own sub-directory as part
-> of clean-up exercise.
-> Longer term goal is to break-up thinkpad_acpi to improve maintainability
-> and perhaps share more functionality with other non thinkpad Lenovo
-> platforms.
-
-...
-
-> Some questions that I didn't want to put in the commit comment:
+On 5/8/25 4:11 PM, Stanislav Jakubek wrote:
+> Makes the display work without clk_ignore_unused and pd_ignore_unused.
 > 
->  - I didn't know if now was a good time to propose this change. I
->    realise it could cause headaches for anybody with patches being
->    worked on. Please let me know what makes it easiest for maintainers
->    and other developers. If there is a particular branch that would be
->    better to do this against also let me know.
+> Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
+> ---
 
-For me Git handles renaming very well.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
->  - Should I be updating the MAINTAINERS file? I'm still not sure what
->    the protocol there is. I'm very happy to help review anything in the
->    lenovo directory, but I didn't want to make assumptions.
->  - I have tested on multiple platforms but I don't have any ideapads I
->    can use.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Konrad
