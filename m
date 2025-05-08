@@ -1,193 +1,162 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62079277816
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59E0221D90
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746718480; cv=none; b=Au27IIUsTMqoyY5dflfsfGNCsq7agCVA0KqUrOvtUSLvlmSU+vpnGnkx0JQ3+s53lHuoFUozjSJ+zkGBl8V1eyyODgWNO9Touu2DnUkJdI89FVlIhN13VzXambJmEnyLyqMVkEshfv3b9YNtrTjEq3H7zYWipEpD7c7lvBkzGzE=
+	t=1746718632; cv=none; b=ihEgcg7roP89fvjbnvwgUUfpFYem9XCn35ryv3luxWHxjXUcDmHAWmGUIAHbmAe5CdtbgEtMLRzfnxLu1bLL+apxUcVW3WY2CaTlboyPu3QB2CwOXit2RucczR2i1PkPzrE/4Im2/NJg/wvFwPYxPlZNTAgdLyuZxVjbKnerSnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746718480; c=relaxed/simple;
-	bh=gcIxBck903wC6+fYbT1hPtb7Kf1widiij7ZBobmZTSM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NVOFVMJw5Wbn7KvkY/AD6DRgRE4lseO5+RCl8cRK25LsLej0gETAIyvebsDK0GT2JdN7v6NBVBh0zzDhwfUvQEy/+ftdTylWSoPhHueDjaE15DRYzhqGsmUzi6vnJVPnzkN12LonGqIslQajze4osNivwUraj92Uw5SWKcuyays=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=on7dl3Xr; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746718632; c=relaxed/simple;
+	bh=KIJoKuXbOWQ1OYetx9oJLxCS+VoWimRs1SlFvXoImcw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m+KuE6UvdWvXbBRdSA1Ccn35R1QgTkcryTdB6HqZYU9HvwjYKYlGG8U6c5OyBU+11DTAcKXLrawHbxjTdUC0yZmpQe7E10ZeUANafOCP+W07OUVeNqzF4Tv0t70ZdpFqJzbKKusXqeBGpCBSBs48uOHJW74FJhJ6Hl7gnrqxMvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WmRlHQwD; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="on7dl3Xr"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3da73d35c11so188815ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 08:34:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746718477; x=1747323277; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VXm0ZBrwABOf6g7AdY2Q3tjscZRI3pFxv+5nt0U5acw=;
-        b=on7dl3XrGaFTWqXZ33VLhr3+KiUlRjOnMG9JMXJwzKnUxuVqBTWrRHW/81Z9GxgaqH
-         qbGFtmz4mBBIUCu2VCLu7fAEzU8zMsGaY+0P+NaKGtqq6T5nW3O/GQ2KYnfmTs+qpis9
-         EgAEm8bG21KKvgQsdp8ZYKyT6R8vkgXwD32AKOQ1bC2OgCTZXMsqzYStt99nwn+BG/3y
-         A38wI5oDH4p/6JJriACzbJV8aXljjksMrNENGbIbBYcMiZYOc11/xdFAjT/WCrC+pUEr
-         lJx4MiW9riEkUJkgq0etBFK7fJXMtUIi4h+0uVmdorH7VYFIxMGWX5lL1kc8m5eBCaWl
-         2U1Q==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WmRlHQwD"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5489c4qS012301
+	for <linux-kernel@vger.kernel.org>; Thu, 8 May 2025 15:37:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=RmEnv08TV/oKkS/GPCZOm8Rd
+	6FwX+L2I8PDAwGfsX1A=; b=WmRlHQwDqi5iLO38gGkdi6rirq/iXBIX33sgmsK5
+	cTGYryP5wysPFs7id6Mse8LgJEgZr7VLUGCiC3k9tUYGzvxCFDrqExwx1Pct2Zl1
+	gxNQcF9bKRgral28ZDRYf3qFe7Pc5oqrEAUOyvlAsBvePKau5rsIYd+Q4M7l8k17
+	ol6a4X62DlnVoNLMUyd9f+WZZ1pJmiwshs9bQ4yGcrHbOKrNYVbr7VxgO0k0o+eu
+	vJiSAPDNTAHq4ygZVyShFzuCBxCNrtCmK9FIzaYYjsVmiaw1mL1DF7xCd9ESJGmo
+	DW0Q7W/v1gFm1JyKl5UdY5AkQht2ketff+HjnoWNn+Wl5g==
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gt52ryun-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 15:37:09 +0000 (GMT)
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-742229c8d8eso416375b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 08:37:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746718477; x=1747323277;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VXm0ZBrwABOf6g7AdY2Q3tjscZRI3pFxv+5nt0U5acw=;
-        b=MXVrZLzcE8+AmMpitrGGxZ64T5GzWoWOjjTGF/CkzfOg7XQmToNP5C1ADtT3JMSE8S
-         011O7faQfqjVhee1RMp+MnQWL0u0h/vhfKCqViSHXKoLL3szaJCa4cPcXxNxHqeWWdZN
-         g62JDohTBaIX7gz5Pc0hRu+U9P3MFcAe0n0zd4PnU6Q02E9lAIXHDVfLfc9LiU4QvBTe
-         r7rKQXGh71wk5EDKBDJg+McJ8sx8chmEUVa/0zotF1Ezmd05PZb4zpBr+CU4xyLCPp9u
-         VufO1cQBfvcyScMeQ6/czAfg7gECkr/4PO9VR4UrZoys95JJii7VvxgS//6wckmAg5WX
-         vNUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMI2WOCFJwmt0v7vpdKbwBuDYRlu+YXqmbZmGdtCbfTLGPjJJH/N5baUyDhOo+Shjg5/0+knRc7lPmyZQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwszMH5zoxuWIoiJNrNaLeSQRkMlbDuKoGq2sx+BhtzoB0x2E9R
-	IF9E/f7oUykxzyRwOoYG/xg8nTyBNLXJQpbgTM3Ayjf50ApmLB36FI4W74bLU2bICa2kemrKDNs
-	pMGm5iN4vid82PuESX4v8DBjPeknfxhGQ85Oi
-X-Gm-Gg: ASbGncvSMhYIwCZdo4B22lefiFbTbhMl0cVq4qcW46ECy4ddXpxLIuuayRliG5VTuYo
-	vrdJZz7eMKwyyveGLVhWBNMKtrKt4Z3jvC4KfAUfZyb3fsX8Q2H2O0rGmQHiQv4owqJjaQ6lFEv
-	reIl9MIQu11hA/nzg/ef8gPyWKqStnH9ezZTTiJz8fKLvXzKeXKuw=
-X-Google-Smtp-Source: AGHT+IEmY29VLIxcHiOy88IrSXPvl4jrcnZ6oWdUWj9VlZWcwMFb59eThp1T3HbGq0HsKPusqumJ/JFwaYe/0SvE2tE=
-X-Received: by 2002:a05:6e02:338f:b0:3d5:bb1f:843e with SMTP id
- e9e14a558f8ab-3da796a4745mr3873215ab.29.1746718477199; Thu, 08 May 2025
- 08:34:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746718629; x=1747323429;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RmEnv08TV/oKkS/GPCZOm8Rd6FwX+L2I8PDAwGfsX1A=;
+        b=nYiwA1ZshF2K7m9G0cldfoqj+Y22whNWPI2CuD4fiT0tcrn72tBSr8Oxp5nd4yTE6b
+         m0gtlXrmwlQUzDrOGbWYljRyMbn/A32fovDc5io8aeLmiBNZrxx1CnTX7Nqhq/eRPYha
+         8pitrtmHQ8QWwEeugQVhEgqVX7XT4C33+sJo48qSbHGqxPH5E9PO38lcxyLq5sd+x3Zp
+         TBoeaMaTT3NumYWDR25h0+iaO9tYz2Xq6DYzwC4vmHVpgfbLKatQNTjAMNLkSzNDBRlB
+         s49c6a/jX2zkOXcUZ95XKpRqoAdqmMsZboDrp9HeCaZynWOxCupsOC+QzdMLeesAz7Hi
+         W8pw==
+X-Forwarded-Encrypted: i=1; AJvYcCWWdPqTpwvagJs0B345XSnhyasar1IRlDoWJY9I+zSmcjtcA5uKAWw8LONGVz2l48I+uEF1w3COotT2LDw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzO3mqw4wBzkidT1wZGFNH8E9iOQ9PFIq7Ivhk6g9i7CQO5b1eY
+	2kW/EgiC1pvUrgkfesIRr8sr34nFIacga+8URMwckkXKxYgHuxkiBkUCa7WIMnBuFiJOEBFoocB
+	bvnCJluKb5Vak0E2CMOwx9kebAnjAx01Yl0dsYGh0AFzyEnG8btqZ2FMf6I3zWyY=
+X-Gm-Gg: ASbGncuE/nTiGTEMKazVm2xDc4mDil8ABSIl3pP2RW4R8zVJZiJki/LKoHksSrL9IH4
+	BjZZ0cyzbwjRdYNOzcoA6BtWNSYTrTESfLQnwv1sGjSQYtBF2H7boMM7pnwToEntAHuOWg2wK3o
+	qsdNk17wFn1hhzDh6yZXS5blIMNaPQUiD8wsfbFxVvn/1WbLGd7nprzORJ9EFfNJfJOJJmU4jfq
+	wCCQlklBx57UGR+tb27R3WWbHyVgEX/EqIhB38oqpwf1ARtqTzfwMxdNmFeHQ1AwtUCYUqHZoEP
+	fa55CDriKBSYbbKV7gaC3g94mALj15nzmxN7uug=
+X-Received: by 2002:aa7:8190:0:b0:740:aa33:c6f8 with SMTP id d2e1a72fcca58-740aa33c770mr4023673b3a.7.1746718628744;
+        Thu, 08 May 2025 08:37:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGBuHs8eff+nm/YQYKx7SCqM7aiZdpEv9rjxEoFtDm6bDzLVik9n2O/69qr3z1oRa7Rjfte4w==
+X-Received: by 2002:aa7:8190:0:b0:740:aa33:c6f8 with SMTP id d2e1a72fcca58-740aa33c770mr4023641b3a.7.1746718628305;
+        Thu, 08 May 2025 08:37:08 -0700 (PDT)
+Received: from hu-mojha-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a97de2sm119972b3a.175.2025.05.08.08.37.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 08:37:07 -0700 (PDT)
+Date: Thu, 8 May 2025 21:07:03 +0530
+From: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] soc: qcom: socinfo: Add support for new fields in
+ revision 21
+Message-ID: <aBzPn2OXapJLsikk@hu-mojha-hyd.qualcomm.com>
+References: <20250425135946.1087065-1-mukesh.ojha@oss.qualcomm.com>
+ <20250425135946.1087065-2-mukesh.ojha@oss.qualcomm.com>
+ <mc6n7fbhjhe6cxyoqkxs23kjs7gsa5cihy6qwrcrnz4g3kwjms@vh3vfqzfprw2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1746627307.git.sandipan.das@amd.com> <CAP-5=fUEeFb3jh-MtxEEH0Z+HFAD0oxSc4uE66Rfg+BRzYRB5Q@mail.gmail.com>
- <9a76fcc7-a8e0-4b88-b93c-7dbf65bc695e@amd.com>
-In-Reply-To: <9a76fcc7-a8e0-4b88-b93c-7dbf65bc695e@amd.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 8 May 2025 08:34:26 -0700
-X-Gm-Features: ATxdqUFgDyfNDRfGkNXB5R6CnIvZeH9JhkEGpxdXOLCOBuOArjupnMk_-ndllEQ
-Message-ID: <CAP-5=fU3fk79xtNAGwk35PCkiii=QoBdhbzit1Ax9OsEtrPExg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] perf vendor events amd: Address event errata
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Stephane Eranian <eranian@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Ananth Narayan <ananth.narayan@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <mc6n7fbhjhe6cxyoqkxs23kjs7gsa5cihy6qwrcrnz4g3kwjms@vh3vfqzfprw2>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDEzNiBTYWx0ZWRfX4CaNZlpR71vi
+ kEY9nNYuIcmzFSlPL4lKAl53dk/Rcb2HSL58gO8zglbK1YkGfqgRHuNZ459sCTNvH8q1pnMRfn6
+ CTzby2EmSaOf2huuHT1omi1Y1vpiUSm5cHsCG9cfsZe3Ec87Jl1VuZmanm1RYFoqyqvGBMUq/Xh
+ /IvUWHSmgQzw0ph8iLOOd9dGc5ne9lqVDUUXU8YBV9JOFgpjD9GDSRqeMADo1b7Rl3mVuYu/RHM
+ 0nnp2aElYDQgWTi6XbAZ9En6HXABqMCOCwFd2X8yL/CG87RpV8v8FfgPxTlEATNzlCDU/IV5Wl7
+ wIlV4rjyWb1FDkla3cwuV6KmdC/TLqqIVdo3+ak/NWhLrLR9DaTa9md0SKhPMsG5gt/YBlK5yde
+ 5VrekvnfmxEIWllW7XGwPUCVHJMJg0oxi64q+tAoOZNwZpajV+werPbt17cTdLKzTOsAeo8r
+X-Authority-Analysis: v=2.4 cv=LKFmQIW9 c=1 sm=1 tr=0 ts=681ccfa5 cx=c_pps
+ a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=tTqnaQ_goHMJMu8gR3YA:9
+ a=CjuIK1q_8ugA:10 a=OpyuDcXvxspvyRM73sMx:22
+X-Proofpoint-ORIG-GUID: Mcm_GmFoIMB6zcdeD1yQPAuxrj6e80qZ
+X-Proofpoint-GUID: Mcm_GmFoIMB6zcdeD1yQPAuxrj6e80qZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_05,2025-05-08_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 clxscore=1015 lowpriorityscore=0 suspectscore=0
+ malwarescore=0 mlxscore=0 bulkscore=0 spamscore=0 phishscore=0 adultscore=0
+ priorityscore=1501 impostorscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505080136
 
-On Thu, May 8, 2025 at 3:56=E2=80=AFAM Sandipan Das <sandipan.das@amd.com> =
-wrote:
->
-> On 5/7/2025 9:26 PM, Ian Rogers wrote:
-> > On Wed, May 7, 2025 at 7:28=E2=80=AFAM Sandipan Das <sandipan.das@amd.c=
-om> wrote:
-> >>
-> >> Remove unreliable Zen 5 events and metrics. The following errata from
-> >> the Revision Guide for AMD Family 1Ah Models 00h-0Fh Processors have
-> >> been addressed.
-> >> #1569 PMCx078 Counts Incorrectly in Unpredictable Ways
-> >> #1583 PMCx18E May Overcount Instruction Cache Accesses
-> >> #1587 PMCx188 May Undercount IBS (Instruction Based Sampling) Fetch Ev=
-ents
-> >>
-> >> The document can be downloaded from
-> >> https://bugzilla.kernel.org/attachment.cgi?id=3D308095
-> >
-> > Hi Sandipan,
-> >
-> > the document is somewhat brief, for example:
-> > ```
-> > 1583 PMCx18E May Overcount Instruction Cache Accesses
-> >
-> > Description
-> > If PMCx18E[IcAccessTypes] is programmed to 18x (Instruction Cache
-> > Miss) or 1Fx (All Instruction Cache Accesses) then the performance
-> > counter may overcount.
-> >
-> > Potential Effect on System
-> > Inaccuracies in performance monitoring software may be experienced.
-> >
-> > Suggested Workaround
-> > None
-> >
-> > Fix Planned
-> > No fix planned
-> > ```
-> > Given being able to count instruction cache accesses (for example) is
-> > a useful feature, would it be possible to change:
-> > ```
-> > -  {
-> > -    "EventName": "ic_tag_hit_miss.instruction_cache_hit",
-> > -    "EventCode": "0x18e",
-> > -    "BriefDescription": "Instruction cache hits.",
-> > -    "UMask": "0x07"
-> > -  },
-> > ...
-> > ```
-> > to be say:
-> > ```
-> >   {
-> >     "EventName": "ic_tag_hit_miss.instruction_cache_hit",
-> >     "EventCode": "0x18e",
-> >     "BriefDescription": "Instruction cache hits. Note, this counter is
-> > affected by errata 1583.",
-> >     "UMask": "0x07",
-> >     "Experimental": "1"
-> >   },
-> > ```
-> > That is rather than remove the event, the event is tagged as
-> > experimental (taken to mean accuracy isn't guaranteed) and the errata
-> > is explicitly noted in the description. Currently the Experimental tag
-> > has no impact on what happens in the perf tool, for example, the
-> > "Deprecated" tag hides events in the `perf list` command and is
-> > commonly used when an event is renamed.
-> >
->
-> I agree that events like IC hits and misses are generally useful and am
-> fine with the idea of keeping them but my concern is that unless users
-> read the event description, there is no way for them to know if the
-> perf output that they are seeing may be unreliable. There is also no
-> guarantee that such events will be fixed in a future uarch. From a
-> quick glance, I couldn't find a mechanism that makes perf stat/report
-> show a warning for named events with known issues.
+On Fri, Apr 25, 2025 at 08:28:51PM +0300, Dmitry Baryshkov wrote:
+> On Fri, Apr 25, 2025 at 07:29:45PM +0530, Mukesh Ojha wrote:
+> > Add the subpartfeature offset field to the socinfo structure
+> > which came for version 21 of socinfo structure.
+> > 
+> > Subpart_feat_offset is subpart like camera, display, etc.,
+> > and its internal feature available on a bin.
+> > 
+> > Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+> > ---
+> > Changes in v2:
+> >  - Added debugfs entry and described more about the field in commit.
+> > 
+> >  drivers/soc/qcom/socinfo.c       | 6 ++++++
+> >  include/linux/soc/qcom/socinfo.h | 2 ++
+> >  2 files changed, 8 insertions(+)
+> > 
+> > diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
+> > index 5800ebf9ceea..bac1485f1b27 100644
+> > --- a/drivers/soc/qcom/socinfo.c
+> > +++ b/drivers/soc/qcom/socinfo.c
+> > @@ -154,6 +154,7 @@ struct socinfo_params {
+> >  	u32 boot_cluster;
+> >  	u32 boot_core;
+> >  	u32 raw_package_type;
+> > +	u32 nsubpart_feat_array_offset;
+> >  };
+> >  
+> >  struct smem_image_version {
+> > @@ -608,6 +609,11 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
+> >  			   &qcom_socinfo->info.fmt);
+> >  
+> >  	switch (qcom_socinfo->info.fmt) {
+> > +	case SOCINFO_VERSION(0, 21):
+> > +		qcom_socinfo->info.nsubpart_feat_array_offset =
+> > +				   __le32_to_cpu(info->nsubpart_feat_array_offset);
+> > +		debugfs_create_u32("nsubpart_feat_array_offset", 0444, qcom_socinfo->dbg_root,
+> > +				   &qcom_socinfo->info.nsubpart_feat_array_offset);
+> 
+> An offset into what? If this provides additional data, then the data
+> should be visible in the debugfs. Not sure, what's the point in dumping
+> the offset here.
 
-So I'm forgetting the flow, but rediscovering it. We do have an Errata
-json value as shown in:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/pmu-events/arch/arm64/ampere/ampereone/memory.json?h=3Dpe=
-rf-tools-next#n2
-```
-    {
-       "ArchStdEvent": "LD_RETIRED",
-       "Errata": "Errata AC03_CPU_52",
-       "BriefDescription": "Instruction architecturally executed,
-condition code check pass, load.
-Impacted by errata -"
-   },
-```
-It doesn't impact perf stat/record but it does get added to the event
-description for perf list:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/pmu-events/jevents.py?h=3Dperf-tools-next#n340
-```
-    if 'Errata' in jd:
-      extra_desc +=3D '  Spec update: ' + jd['Errata']
-```
-which means the perf list description ends up as "Instruction
-architecturally executed, condition code check pass, load. Impacted by
-errata -  Spec update: Errata AC03_CPU_52". We could change this so
-that the Errata is distinct in the encoded in perf json and then we
-could display the errata when perf stat/record parses the event. I'd
-be a little worried about this breaking things that parse perf's text
-output, but the impact would be limited to Zen5, Ampere and older
-Intel CPUs. We could also make the errata output conditional on
-passing a verbose flag to perf. Would just `perf list` support work
-for you or would the perf stat/record changes be a requirement for
-keeping these events?
+offset into info(struct socinfo) object.
 
-Thanks,
-Ian
+I agree to you and I said the same in first version this is just offset
+and does not provide any debug info we would look from userspace.  For
+parity with other fields I did it for all newly added fields.
+I have dropped it in latest patch.
+
+-Mukesh
+
