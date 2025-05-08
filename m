@@ -1,178 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from e240-11.smtp-out.eu-north-1.amazonses.com (e240-11.smtp-out.eu-north-1.amazonses.com [23.251.240.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705D933FD
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 02:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191DB1D5165;
+	Thu,  8 May 2025 02:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746670440; cv=none; b=oLUserqaX5QpL1XuP6zu0nBxeFZczNvnux/MGaVkvy4vNkbGyC1RUPhO9NAW7Ny/8sZtv6VvPA9Noed6HsB2KHidhfT1Gqra8l3La/ckcBdUhfoXb5HN5+JE+odOMoCJCuHAKBLXMeyNxHdKAtlrq29WDvmgrq81uLKuyokh/NA=
+	t=1746670445; cv=none; b=u+tY883HhKkevpm+6Il7/+OjG5koq/Kfbvvasri/CT1z7yMWcr611kyMKwQqtIwQLuteoC68BGrqhYPb/sFL9sO9FaN35pL9KuNFLkBY/4GUtAE/h6hpyw/+HmIwV0MwVjEQs9mgxXpQqtmYUJceD2pk8WgyVthDhno8268BZEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746670440; c=relaxed/simple;
-	bh=+Q252jHG9JN92fi3VdPj4HXb4/qTqJcPO864/86+b78=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=C8mF57ekBm0d1OILwtEtEd5sI7xaoeHegU7nG0QZc2NVBlnsa2SPNS4VSJBr9NelfMnU/qyU8ZP2pP67EIwoe6z9d1fOFJwpnaGaKa2KjHkXYXL2Uobk3N7WpmACzdiEVdtccMpARZA/ESgHxOECn7HGYIG0NjN9GZxCh3MuRZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SVEsJrqZ; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746670445; c=relaxed/simple;
+	bh=poefmGJfofvP15Nt36Hm35/aBbmaEdFRT7/Zbyr7/yE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=iT7kn2+pNwEQFf4Gg2tKnl7qcf5INytnVtcxDLRvB4lkZ5EXlY2Fqu+O9fNzWLW0BvZmHIlCvtSOvXApmwqR6lRvM83kMm/Z6lMlKIakenHuBw+sGADhbuQeEQFc0n+KJ9L93TQwi/eTW8toVWKEDqlHTO03zITptQI+qUigMk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=P07wVs0u; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=VyXn+uXp; arc=none smtp.client-ip=23.251.240.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SVEsJrqZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746670438; x=1778206438;
-  h=date:from:to:cc:subject:message-id;
-  bh=+Q252jHG9JN92fi3VdPj4HXb4/qTqJcPO864/86+b78=;
-  b=SVEsJrqZ5hQI00PZnckAoSgzmE+ebIY0uknoEkDQBLMBdJZfLGOcl+2e
-   Y20RIUPLm6tJUGzWVikPW+M96QXOqDGECu3AYfbU/SbAdVs2gQNTpurlU
-   KDvPGdCmW85h8Nm3JccY6XJ24XLVUBO4HzHj3Sf9ALdwtXygNW4FLhRDO
-   e4N7tSRydt2NLdeAPmWFJg3DV3w7cNdpL5j5fkXsklHreaGRLtc7wXJl7
-   kffOqOuPTLT7u0rxyGlVYjDccXel5R5G2dWim/bEy/qCHznADrIO2NEOJ
-   GUbyvlNmvs8nQc4gaaKbOQBX5SINb18pQrIb62puBl0d7PE1y/IBfwRQc
-   Q==;
-X-CSE-ConnectionGUID: igIRLyUXRme2DtgUQsda3Q==
-X-CSE-MsgGUID: /VXLOPHsS+yiNFzl0euXPA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48514332"
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="48514332"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 19:13:58 -0700
-X-CSE-ConnectionGUID: YRInsQYyQBSMXw5VbcNfpw==
-X-CSE-MsgGUID: Uch6KoezQHOwI9ogyWHPAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="141349254"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 07 May 2025 19:13:57 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCqlm-0009Kb-1f;
-	Thu, 08 May 2025 02:13:54 +0000
-Date: Thu, 08 May 2025 10:13:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:irq/urgent] BUILD SUCCESS
- 38a05c0b87833f5b188ae43b428b1f792df2b384
-Message-ID: <202505081045.YtW3s1v5-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="P07wVs0u";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="VyXn+uXp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1746670441;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type;
+	bh=poefmGJfofvP15Nt36Hm35/aBbmaEdFRT7/Zbyr7/yE=;
+	b=P07wVs0uKJuayteT8U7j5g1MuPLLaAB3JBY8e0NCuzBfSlLiObAaaqxiscMeIK6a
+	kCS4XWypQicuWjacwOlpYhxQv4oHdY4YAagHyBI2s/1qIQ5d+gS66R4sL2rBHMv+OcP
+	ypd+PAxBmEbwvRtCNkTJCKmGUThqD4G7rJGGvdpnl9g6ElwSHURLU82YaBevR4XOINY
+	haRHoshPNZ/Ps/q4fQpEntvvEUCm06SfyUqAeyWmm9Bnl1R6ifI8GRJH6Pss9RC7Jl3
+	XTS6mzUERkRXfaaTOhgoO0abkIQO0sR8HsX0tk7zMuz7lRbKHgBpZSVwVFY+PJsjRBR
+	iXbiidEZrg==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1746670441;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type:Feedback-ID;
+	bh=poefmGJfofvP15Nt36Hm35/aBbmaEdFRT7/Zbyr7/yE=;
+	b=VyXn+uXpescqmYp21gl4+QF45hTuoqGSuFqKno7WpdoX4jRruzEE82VcZFXRVOwI
+	TiWORE5PaHmpyVXHhw9O5HFaHGsOs7Wmr1lRoUowsXnE44kcFlXR5tNVLzIBFE26mEW
+	OTkY7qGZvcGs+fDhqJKHgp/CfjJ2EbekJYqlZd7c=
+X-Forwarded-Encrypted: i=1; AJvYcCUmYVU0hwrvssQ80uhDDG3WRQ3u7/MtAc2TlS9dllG5V6N8lrB72SAvsrPuF5347Iwu9OHZbj6m@vger.kernel.org, AJvYcCXl7+vbuE+u5CvUJsWBJnoyE2+yf2N8VZMCN6y0NlDfgYZ5kBl5SgPW0VXElrtvbSlVmZ/nqk9liZfOBPI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAXcsbd/PjxcCj8xPOSnNXSDx117J5v4s/k26qp0sEgvGnxowy
+	9UQMhM+fapeLvcV0mNHS+xB2snHGISmPz0G7ybrgEV+jDZA1pZawqPT2D7QtyaAgt1aoaE+0NnY
+	atg2eIZ+/Cj+7ouH969q+zdjqfXw=
+X-Google-Smtp-Source: AGHT+IHFHTyfZ4T9ifPqXr73kDs7FxJtuk6pjrvncrBRp7/QMzmuo2IRKunODixNeWJ3aNsMClg+F8wIGMj8cKoeL/0=
+X-Received: by 2002:a17:902:ec8e:b0:22e:5406:4f62 with SMTP id
+ d9443c01a7336-22e847ce326mr24568875ad.24.1746670438201; Wed, 07 May 2025
+ 19:13:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+From: Ozgur Kara <ozgur@goosey.org>
+Date: Thu, 8 May 2025 02:14:00 +0000
+X-Gmail-Original-Message-ID: <CADvZ6EoGrp9SCvkVKEV0i=NW-7XZmxbmZkmxd8TPFboPTAUF_g@mail.gmail.com>
+X-Gm-Features: ATxdqUEBQMdn1y1DGa-OqpAdEqho1UUS-FmqZpaLp_rDz0VPLAPMSxPSHAUfHd8
+Message-ID: <01100196adabd0d2-24bf9783-b3d5-4566-9f98-9eda0c1f4833-000000@eu-north-1.amazonses.com>
+Subject: [PATCH] net: ethernet: Fixe issue in nvmem_get_mac_address() where
+ invalid mac addresses
+To: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org
+Cc: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, 
+	Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
+X-SES-Outgoing: 2025.05.08-23.251.240.11
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/urgent
-branch HEAD: 38a05c0b87833f5b188ae43b428b1f792df2b384  irqchip/qcom-mpm: Prevent crash when trying to handle non-wake GPIOs
+From: Ozgur Karatas <ozgur@goosey.org>
 
-elapsed time: 7582m
+it's necessary to log error returned from
+fwnode_property_read_u8_array because there is no detailed information
+when addr returns an invalid mac address.
 
-configs tested: 101
-configs skipped: 6
+kfree(mac) should actually be marked as kfree((void *)mac) because mac
+pointer is of type const void * and type conversion is required so
+data returned from nvmem_cell_read() is of same type.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This patch fixes the issue in nvmem_get_mac_address() where invalid
+mac addresses could be read due to improper error handling.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                   randconfig-001-20250503    gcc-14.2.0
-arc                   randconfig-002-20250503    gcc-11.5.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250503    gcc-6.5.0
-arm                   randconfig-002-20250503    clang-21
-arm                   randconfig-003-20250503    gcc-6.5.0
-arm                   randconfig-004-20250503    clang-21
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250503    gcc-9.5.0
-arm64                 randconfig-002-20250503    clang-21
-arm64                 randconfig-003-20250503    clang-21
-arm64                 randconfig-004-20250503    gcc-7.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250503    gcc-14.2.0
-csky                  randconfig-002-20250503    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250503    clang-21
-hexagon               randconfig-002-20250503    clang-16
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250503    gcc-12
-i386        buildonly-randconfig-002-20250503    gcc-12
-i386        buildonly-randconfig-003-20250503    gcc-12
-i386        buildonly-randconfig-004-20250503    clang-20
-i386        buildonly-randconfig-005-20250503    gcc-12
-i386        buildonly-randconfig-006-20250503    gcc-12
-i386                                defconfig    clang-20
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250503    gcc-14.2.0
-loongarch             randconfig-002-20250503    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250503    gcc-11.5.0
-nios2                 randconfig-002-20250503    gcc-7.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250503    gcc-8.5.0
-parisc                randconfig-002-20250503    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc               randconfig-001-20250503    gcc-5.5.0
-powerpc               randconfig-002-20250503    gcc-9.3.0
-powerpc               randconfig-003-20250503    clang-21
-powerpc64             randconfig-001-20250503    gcc-7.5.0
-powerpc64             randconfig-002-20250503    gcc-10.5.0
-powerpc64             randconfig-003-20250503    gcc-7.5.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                 randconfig-001-20250503    clang-20
-riscv                 randconfig-002-20250503    gcc-9.3.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250503    gcc-7.5.0
-s390                  randconfig-002-20250503    gcc-8.5.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250503    gcc-5.5.0
-sh                    randconfig-002-20250503    gcc-5.5.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250503    gcc-8.5.0
-sparc                 randconfig-002-20250503    gcc-14.2.0
-sparc64               randconfig-001-20250503    gcc-10.5.0
-sparc64               randconfig-002-20250503    gcc-14.2.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250503    clang-21
-um                    randconfig-002-20250503    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250503    gcc-12
-x86_64      buildonly-randconfig-002-20250503    gcc-12
-x86_64      buildonly-randconfig-003-20250503    gcc-12
-x86_64      buildonly-randconfig-004-20250503    gcc-12
-x86_64      buildonly-randconfig-005-20250503    clang-20
-x86_64      buildonly-randconfig-006-20250503    clang-20
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250503    gcc-10.5.0
-xtensa                randconfig-002-20250503    gcc-14.2.0
+Signed-off-by: Ozgur Karatas <ozgur@goosey.org>
+
+---
+ net/ethernet/eth.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
+index 4e3651101b86..1c5649b956e9 100644
+--- a/net/ethernet/eth.c
++++ b/net/ethernet/eth.c
+@@ -549,12 +549,12 @@ int nvmem_get_mac_address(struct device *dev,
+void *addrbuf)
+                return PTR_ERR(mac);
+
+        if (len != ETH_ALEN || !is_valid_ether_addr(mac)) {
+-               kfree(mac);
++               kfree((void *)mac);
+                return -EINVAL;
+        }
+
+        ether_addr_copy(addrbuf, mac);
+-       kfree(mac);
++       kfree((void *)mac);
+
+        return 0;
+ }
+@@ -565,11 +565,16 @@ static int fwnode_get_mac_addr(struct
+fwnode_handle *fwnode,
+        int ret;
+
+        ret = fwnode_property_read_u8_array(fwnode, name, addr, ETH_ALEN);
+-       if (ret)
++       if (ret) {
++               pr_err("Failed to read MAC address property %s\n", name);
+                return ret;
++        }
+
+-       if (!is_valid_ether_addr(addr))
++       if (!is_valid_ether_addr(addr)) {
++               pr_err("Invalid MAC address read for %s\n", name);
+                return -EINVAL;
++        }
++
+        return 0;
+ }
 
 --
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.5
