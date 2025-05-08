@@ -1,141 +1,158 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0534C1C5D59
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4ABF1C84CD
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746698810; cv=none; b=CH02hunaz1bgjGhOj3URnBubnM0tAk3bSCoPJqc23yeHuCWy9UTQFSJl8JqHkzCzoW9OdpUjvNUETJQWU7IGwG32inCIAj0bqC4fUWnZz/61hiv37OC8HpY3114BmkvXM/trPTE+VMzRngVv16RtbhI5DpAU0bQ46VkEU9qlJN8=
+	t=1746698846; cv=none; b=i8zcHmPfIfwkxUrLVusfDLnn3N65yvQMglBxpBDhjkw4Y9kZ3mwVmZj/ZesIJe3afkFdzCq0zaf9+gfxmvM7gZV0S8hBKL+Fk0v7jCqnvN9dO3t0EybUEb5Az9y7ll5ggqV8RBveLEGxsaODBgGjZhLpLjMytMdkxFRM9ePfkwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746698810; c=relaxed/simple;
-	bh=9OFgkLwwQYyFgmgcN/DCjENMz0bPLUCBiHGhJdS/TZo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IvYKX5ressPTxp8jNWPa+ePdGC5pT8Xw+aWZg1ZXHgaBaYZ8uipKl/kj32vB6LFTjtvmQ86Or0lzd1AuBCf7RhVhDWq3gJra+XXW85l9Nuv3Cxvg9+smbzxFfdVhIoNNRyU4tzHIWmqPCWM9p1Zrbl9y9NqIn1ugMJwnuf7w82E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CgHnebkp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aJZl9/A/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CgHnebkp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aJZl9/A/; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1746698846; c=relaxed/simple;
+	bh=wbY05BM+oFyf5c7eesHOTO2O39mRvXwu5TpZihwG4+w=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jnF0xtZVzkpL/aTbIM/w6eF2RDAike8cjtGcQ8ClQV3i5XxMeMH4eK8Qu2psSe62HiJJCDq8SMQhYQSxjlkJoNj+zziCONmcCmkKJTL4Fkbi2+dehnpWxwhW1NxuRff82u9JdA+AUMfItOFL6pcic7804txdZkdMso5gEVyh2mE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mycs1VwF; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CgHnebkp";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aJZl9/A/";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CgHnebkp";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aJZl9/A/"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0F0D31F452;
-	Thu,  8 May 2025 10:06:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746698807; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2XZBC61pHArRi7h5c8bT0ngPckaZRAV64bLjA0KsKBA=;
-	b=CgHnebkpMOqj3Wr2Ei2GbHvl5OyOCxnyKedTJt8gWaflco2MCYS5YDPIPcc5AkkjHBPPpz
-	68II6zJzxQHI6qA05g37rOiF+C0tLcZdsRJNPowQyP8z0btXYwM/5YVt5aOAp+tlwdQg3C
-	vWV7x6L99RrYHIzA4upxVmT8e54bOq8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746698807;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2XZBC61pHArRi7h5c8bT0ngPckaZRAV64bLjA0KsKBA=;
-	b=aJZl9/A/0fxTusS6J6SsxYISvjp41x0XBqwtEn9fcE/C7P+zGgB60FPq2V0iNLgak1Q51B
-	S/vT7dk4qPs2I1BA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746698807; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2XZBC61pHArRi7h5c8bT0ngPckaZRAV64bLjA0KsKBA=;
-	b=CgHnebkpMOqj3Wr2Ei2GbHvl5OyOCxnyKedTJt8gWaflco2MCYS5YDPIPcc5AkkjHBPPpz
-	68II6zJzxQHI6qA05g37rOiF+C0tLcZdsRJNPowQyP8z0btXYwM/5YVt5aOAp+tlwdQg3C
-	vWV7x6L99RrYHIzA4upxVmT8e54bOq8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746698807;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2XZBC61pHArRi7h5c8bT0ngPckaZRAV64bLjA0KsKBA=;
-	b=aJZl9/A/0fxTusS6J6SsxYISvjp41x0XBqwtEn9fcE/C7P+zGgB60FPq2V0iNLgak1Q51B
-	S/vT7dk4qPs2I1BA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E3D2913712;
-	Thu,  8 May 2025 10:06:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zOBvNTaCHGjeewAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Thu, 08 May 2025 10:06:46 +0000
-Date: Thu, 8 May 2025 12:06:46 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Hannes Reinecke <hare@suse.de>
-Cc: Daniel Wagner <wagi@kernel.org>, 
-	James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
-	Chaitanya Kulkarni <kch@nvidia.com>, Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 01/14] nvmet-fcloop: track ref counts for nports
-Message-ID: <a42eca0f-8a13-443e-a380-86609d88b4ee@flourine.local>
-References: <20250507-nvmet-fcloop-v6-0-ca02e16fb018@kernel.org>
- <20250507-nvmet-fcloop-v6-1-ca02e16fb018@kernel.org>
- <4d262ac0-f27c-44d4-82c0-f50b31be606e@suse.de>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mycs1VwF"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3995ff6b066so446324f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 03:07:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746698842; x=1747303642; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=njSz3ssZ9vsO3uOFmBi11IJ5TO4pFxRuIrUMYY6uL3s=;
+        b=mycs1VwFg9fkwu2HQ5152SgC/cvMV4LhrdLq372/E59zeD4/4yrXuae0VVHxMRQJfT
+         blOHlWjHxRilAP9+66/YZ3u3aXMo8JVuL1aRpSRinBZTx8cKZdsLe9Fb0ZWfpokUzmHU
+         TLVYucGGQ/SNhu/tdZpBjNYQDzk0c/qgc5GRtgxfQD3WxNxuMNquXdudqawp6PpWhcJw
+         ERyUFqfuY9DFz0T1sPvWTaKULafMQSS8gR/mklbS27jZ7tUaajqU3E9tzKhG2SH/w4IF
+         0xvAJ2SZNy6rNm0v2ed1K4FubepjMzEFPBys+2kFjxbkgPF7IAUAAaQHEZkQUM9br+ga
+         dIpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746698842; x=1747303642;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=njSz3ssZ9vsO3uOFmBi11IJ5TO4pFxRuIrUMYY6uL3s=;
+        b=Hdo8pfdLXo/w3ekad12q7A/WXLQ5raoks9+5wsaVmnIilkQ8gkXQ0CcO5jEtzkUsQB
+         rdU6ylAlEykUF+NUhIAxbpq9Yj/qT8Ik4qRQMnqIBtBuWuOPYnkweIg5aDKFDkGwjtHO
+         py3plkuqlJftycrmzxifqNiqN6cqOSoWALqFiG+rs+dI6mHUkaP7rqZXHYRMaSiCQX7+
+         t3tYHEDwMFy42SZoMeztnoZnsEK4jQYQzwjOrZuxumF/v6/zeHEA6dzOqKAuA8eRDx8n
+         cXl1BFZKkuFV1QB55eqlVJNxZ7zjhi7k2+9XnIojXzO+QEhpZ9WGZFUTHPqN8F0LCq5D
+         3EDA==
+X-Forwarded-Encrypted: i=1; AJvYcCXqyuta5I8m0ZJxbw6OB4kjwNLzG2K5fgEVkXRYdyX1yeAaNAaiXcZPaRqIq3zjNwYXLmbADTbTc/5nYD4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ3Iqmdf4eV+wL8vVD6iAAUaspC9v8aVP/jE2dKwyUFFzYa1uf
+	zF3PNiuS/gAjeAW61fOl4efivDzmovhLimBLUovzsRQbeBk6f7lvR58hwTpAHh8=
+X-Gm-Gg: ASbGnctc72KLTKgC/ubC2720o3vSZ4o5oY4D30D3tlu74f3eqk0v28LaDnIOVv702lQ
+	TXMGqqDP8LkfiqWYV8gmclx9JLbr89c300BMVVKTsSxddB+ZfZG4z8vQFD+mYAI3bvfY2wcohMr
+	LbCtOZ08EBEP9xHiF5VkQ6HJ3pny/FieMaWZU9py/3fjRggezuDzrzT2bY1I7Zc5+cSuhDT7yBy
+	S7HrF1N4+U3K7WFNDFHljy5i5hsp2u6e9rQRJgvZydclbjAf7pvjYn0q1EmITX0+vOCB4ls+3q3
+	v/vsA3qDOWALvOjV9ndLTPbQ6qm8PQQh6Lo7oi0xYDWFWqq7FgxwIrf2XfF6XrojO+SoWU8pZtC
+	4QeKmJA5VV4zP
+X-Google-Smtp-Source: AGHT+IG5LFa6Ck9ZYFbUs7yGsWs+SbJIJB7ULfi1cZg9Cm/5pQcWo8uOLaQcTk9BEl1Kfmx1cnsDLQ==
+X-Received: by 2002:a05:6000:40e0:b0:3a0:9f24:7742 with SMTP id ffacd0b85a97d-3a0b4a4b4d7mr5131493f8f.41.1746698842004;
+        Thu, 08 May 2025 03:07:22 -0700 (PDT)
+Received: from [192.168.0.2] (host-87-8-31-78.retail.telecomitalia.it. [87.8.31.78])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd363940sm31699665e9.25.2025.05.08.03.07.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 03:07:21 -0700 (PDT)
+From: Angelo Dureghello <adureghello@baylibre.com>
+X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
+Subject: [PATCH v4 0/5] iio: adc: add ad7606 calibration support
+Date: Thu, 08 May 2025 12:06:04 +0200
+Message-Id: <20250508-wip-bl-ad7606-calibration-v4-0-91a3f2837e6b@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d262ac0-f27c-44d4-82c0-f50b31be606e@suse.de>
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.30
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAyCHGgC/43NQQ6CMBAF0KuYrq2ZTkurrryHcdGBQZuokEJQQ
+ ri7hY3GGOLy/8l/M4iGY+BG7FeDiNyFJlT3FMx6JfKLv59ZhiJlgYAZGNzJR6glXaUvnAUrc38
+ NFH2bVhLB6531FnSGIu3ryGV4zvbxlPIlNG0V+/lVp6b2H7VTEiSTKcwWFSmHB/L9dOZNXt3EB
+ Hf4xjLAJQwTppyhAnwJW0U/MP2J2SVMJ8wyObLsUIP7wsZxfAF9gpeqXwEAAA==
+X-Change-ID: 20250429-wip-bl-ad7606-calibration-20a396a60352
+To: Jonathan Cameron <jic23@kernel.org>, 
+ David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Michael Hennerich <michael.hennerich@analog.com>, 
+ devicetree@vger.kernel.org, Angelo Dureghello <adureghello@baylibre.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2400;
+ i=adureghello@baylibre.com; h=from:subject:message-id;
+ bh=wbY05BM+oFyf5c7eesHOTO2O39mRvXwu5TpZihwG4+w=;
+ b=owGbwMvMwCXGf3bn1e/btlsznlZLYsiQaeK783VzWaW8tUYbW2vlTU2RvSetO+dn7z+042PbT
+ P+/3inpHaUsDGJcDLJiiix1iREmobdDpZQXMM6GmcPKBDKEgYtTACbiNYPhn/qOtfLPde4tjr5j
+ dT25m3OH0HEugc3PHKY0TJ9p9Fb8zSZGhptd/bN5ti7ZaSqfVvr8elahSO75ixMmecwoWPlad8u
+ GChYA
+X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
+ fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
 
-On Wed, May 07, 2025 at 03:50:30PM +0200, Hannes Reinecke wrote:
-> > +	spin_lock_irqsave(&fcloop_lock, flags);
-> > +	tport = __unlink_target_port(nport);
-> >   	spin_unlock_irqrestore(&fcloop_lock, flags);
-> > -	if (!nport)
-> > -		return -ENOENT;
-> > +	if (!tport) {
-> > +		ret = -ENOENT;
-> > +		goto out_nport_put;
-> > +	}
-> >   	ret = __targetport_unreg(nport, tport);
-> 
-> The lock needs to extend across both lookup and unlink,
-> ie don't drop the lock in between.
+Add gain, offset and phase (as a delay) calibration support, for
+ad7606b, ad7606c16 and ad7606c18.
 
-No, this wont wor. There will be a nested lock in
-nvmet_fc_unregister_targetport. The lock only protects the list
-insert/delete/iterate operations not anything else.
+Calibration is available for devices with software mode capability. 
 
-FWIW, this is hasn't changed the unregister step was already done uside
-the lock.
+Offset and phase calibration is configurable by sysfs attributes, while
+gain calibration value in ohms must match the external RFilter value,
+when an external RFilter is available, so implemented through a specific
+devicetree "adi,rfilter-ohms" property.
 
-BTW, I've played with turning the spin lock into a mutex as there
-doesn't seem to be any necessity to use a spin lock then we could in
-theory keep the lock over the whole section but this is something I
-would leave for the future.
+This patchset depends on:
+https://lore.kernel.org/linux-iio/20250505131544.0a7477a2@jic23-huawei/
+
+Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+---
+Changes in v4:
+- fix ad7606_chan_calib_gain_setup appropriately to be called once.
+- Link to v3: https://lore.kernel.org/r/20250506-wip-bl-ad7606-calibration-v3-0-6eb7b6e72307@baylibre.com
+
+Changes in v3:
+- fix dt_bindings,
+- change sysfs calib_delay to convdelay,
+- fix sysfs documentation accordingly,
+- used u32 for reg and r_gain,
+- used DIV_ROUND_CLOSEST for setting r_gain,
+- minor syntax fixes,
+- Link to v2: https://lore.kernel.org/r/20250502-wip-bl-ad7606-calibration-v2-0-174bd0af081b@baylibre.com
+
+Changes in v2:
+- change phase_delay to calib_delay,
+- fix dt_bindings,
+- fix gain calibarion fdt parsing,
+- fix ad7606c-18 calib offset range,
+- fix calib offset calculation,
+- fix calib gain range,
+- Link to v1: https://lore.kernel.org/r/20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com
+
+---
+Angelo Dureghello (5):
+      Documentation: ABI: IIO: add calibconv_delay documentation
+      iio: core: add ADC delay calibration definition
+      iio: adc: ad7606: add offset and phase calibration support
+      dt-bindings: iio: adc: adi,ad7606: add gain calibration support
+      iio: adc: ad7606: add gain calibration support
+
+ Documentation/ABI/testing/sysfs-bus-iio            |  24 +++
+ .../devicetree/bindings/iio/adc/adi,ad7606.yaml    |  29 +++
+ drivers/iio/adc/ad7606.c                           | 221 +++++++++++++++++++++
+ drivers/iio/adc/ad7606.h                           |  12 ++
+ drivers/iio/industrialio-core.c                    |   1 +
+ include/linux/iio/types.h                          |   1 +
+ 6 files changed, 288 insertions(+)
+---
+base-commit: 2f122cfb4c5d0ee7e44ed34ccb2d148d4146c0a5
+change-id: 20250429-wip-bl-ad7606-calibration-20a396a60352
+
+Best regards,
+-- 
+Angelo Dureghello <adureghello@baylibre.com>
+
