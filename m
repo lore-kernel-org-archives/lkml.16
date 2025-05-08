@@ -1,94 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25B633FD;
-	Thu,  8 May 2025 02:08:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E001953A1
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 02:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746670087; cv=none; b=rztyqfZG6CM8ZzXrKnUhpfZ2YS5jijQz3+fBX5h2WY/1oGd1XvfV+eZ3WJGLmZ0jZZSDCdu+XNXSTL8EoyyKq/gnOu4avMPJFzfGIKYkZm7EcwaURpVs5uP467TrHQQXePCxVT/T5a7PFU7Ut1COQt6wY83VPFD1DFHo8Ik5Eqk=
+	t=1746670100; cv=none; b=b3N7YulwnHQ/DKgs+tdW/rMUx5MyZbrUgg5lO9hTnRP4HBcppVNVItiRty/673KzgkmZMj9qbJFiObD3evOx+VFZ94GLuxHQoDH1STxKxiZcLDL4fIGFHbgtQ8PSOa15Ufv6DEnkE6euxek/vs+C4jSTg/C5vVT0U8/k9FJH/20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746670087; c=relaxed/simple;
-	bh=J3b/UUQA6iXH+tQkT36vkOUsbgBL/i+qp8A0/9VdBC4=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Gr7kmR3dPjqoVz7VHXcA+H+huhkRkp/4htJBPR1W8T0Vyb5wIBRl7v5NcNQPsESDX8cKQl+bNZWiEehXM/LhMdXUCUeQjqwTuuBA2MZ5DnX40mF8YPCiFgg96LcL3qnt9g77UjOQ4QrsWk4HKCQ9kxazIBS2KI7l6W1ukvUs2Wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E+XXStZM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746670100; c=relaxed/simple;
+	bh=+fiuCkSuSeF8r/HyL/gskSHL4eQowWcyzkDlFyJiEVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t+JUF9MlwH+/xbkDjoVJjRaEXalnq6WxD5vuEdyCfKYuAGdUPNzV1V49CXUcmB7SmrTNWOc+YFQ30b+pOm4ACwncvjPWMJq02fJwvmIv24XFcWOQ70iEJXA/d9+LOw9MSq3jM7XBlVEfOTv2vu4uJKcj54975fIvzfmjlYnliEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=W+wrrW9e; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E+XXStZM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB3A4C4CEE2;
-	Thu,  8 May 2025 02:08:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746670087;
-	bh=J3b/UUQA6iXH+tQkT36vkOUsbgBL/i+qp8A0/9VdBC4=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=E+XXStZMIPJmNzaQvdM4tWEBQKd8W3/cchXFqNsnghig5javnyCf6M+L4Jl0lcvWY
-	 op4BJFrALjst41v+mnWNESfBqbSmllqZ8fzaR1MurFDiKVJvXobSWvn5vrbAQCkjHw
-	 eSpllkEvEQlgr5yCy8MVT9BRgtNjbswA93yVVVX6/QL3Tb6WqWbBnlBC5rlhxOObOB
-	 0WGRBtiQevwK5sxAQTPHbluw1Ls4NhxNVe6c9XdVGhHUOUhClJDZN/0pOHzq+b/hTk
-	 iRfL8UN5z9Oylxq9/SUAR38kEs/1xOwRuE2XPcg0ShTwRjjs+CIey+3VuIryHp0Pm2
-	 4vUJTig7gH4fg==
-Date: Wed, 07 May 2025 21:08:05 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="W+wrrW9e"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1746670091; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=XU2tUPMbXFANOISEpeXWUxvB5DcpMsMzlgYdMXpTRzg=;
+	b=W+wrrW9e6ag7GxBwGb1wh1lEu9JpBG2zlqz1meWSJ5URnIbS8ByvdJ74O0iE8bs9Qo0+GdXV+1xy/anuH59VvYmzDjiCWGYjgcAeUZBxDBhbvf6ncoSuW+mox3sIMDhKZWmf1sT3TDm4Aydh3csiMGtq3K2WWNf2+ptCjjuRpvE=
+Received: from 30.74.144.116(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WZyiDYG_1746670088 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 08 May 2025 10:08:09 +0800
+Message-ID: <5ffc814f-72e9-4173-9a77-5b45f941565c@linux.alibaba.com>
+Date: Thu, 8 May 2025 10:08:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Len Brown <len.brown@intel.com>, Kyle Tso <kyletso@google.com>, 
- linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
- devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, 
- Badhri Jagan Sridharan <badhri@google.com>, Pavel Machek <pavel@kernel.org>
-To: Amit Sunil Dhamne <amitsd@google.com>
-In-Reply-To: <20250507-batt_ops-v2-1-8d06130bffe6@google.com>
-References: <20250507-batt_ops-v2-0-8d06130bffe6@google.com>
- <20250507-batt_ops-v2-1-8d06130bffe6@google.com>
-Message-Id: <174667008518.3134866.16860556665392127379.robh@kernel.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: connector: extend ports property
- to model power connections
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm: khugepaged: convert set_huge_pmd() to take a
+ folio
+To: David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, dev.jain@arm.com, ziy@nvidia.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <8e33c8a65b46170dfd8ba6715d2115856a55b8f6.1746609191.git.baolin.wang@linux.alibaba.com>
+ <aBtMYHE9BgiT8nT-@casper.infradead.org>
+ <70785e68-5152-459f-b241-fa5abc3b88ae@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <70785e68-5152-459f-b241-fa5abc3b88ae@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-On Wed, 07 May 2025 18:00:22 -0700, Amit Sunil Dhamne wrote:
-> Extend ports property to model power lines going between connector to
-> charger or battery/batteries. As an example, connector VBUS can supply
-> power in & out of the battery for a DRP.
-> 
-> Additionally, add ports property to maxim,max33359 controller example.
-> 
-> Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
-> ---
->  .../bindings/connector/usb-connector.yaml          | 20 +++++++++++------
->  .../devicetree/bindings/usb/maxim,max33359.yaml    | 25 ++++++++++++++++++++++
->  2 files changed, 38 insertions(+), 7 deletions(-)
-> 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+On 2025/5/8 05:19, David Hildenbrand wrote:
+> On 07.05.25 14:04, Matthew Wilcox wrote:
+>> On Wed, May 07, 2025 at 05:26:12PM +0800, Baolin Wang wrote:
+>>> @@ -1476,13 +1476,13 @@ static int set_huge_pmd(struct vm_area_struct 
+>>> *vma, unsigned long addr,
+>>>           .pmd = pmdp,
+>>>       };
+>>> -    VM_BUG_ON(!PageTransHuge(hpage));
+>>> +    VM_BUG_ON(!folio_test_large(folio));
+>>
+>> I don't think this is aterribly useful assertion to keep in a static
+>> function with one caller, do you?
 
-yamllint warnings/errors:
+Yes. Will remove this VM_BUG_ON.
 
-dtschema/dtc warnings/errors:
+> I'll not that -- whatever we do here -- we can (finally) get rid of 
+> PageTransHuge.
 
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250507-batt_ops-v2-1-8d06130bffe6@google.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Right. I will remove the PageTransHuge in the next version.
