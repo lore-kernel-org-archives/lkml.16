@@ -1,163 +1,132 @@
-Received: from terminus.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F4A1E1E1D;
-	Thu,  8 May 2025 20:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1006C1E1E1D;
+	Thu,  8 May 2025 20:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746736057; cv=none; b=Zfd4xuawLLQr/trrACYbUSOHWtu+EsRRgQDFOOYCECUQxzIlcCY5IyBouvVp/lJCBskZM8gdR/Z9PplUeSSN6vnHNHPEiKdoeZZI/yYLsowRxYsDLQeu3MiEOTO5JuidiXfbByFX67EYpV1ioppJvzQTdprkOJiczj41LjOL/vc=
+	t=1746736079; cv=none; b=rJmC8v7BUBXn/GhGXO/wtn+OKMR4S698mhzbR2gJFiSRmhgqI8xA074p3R5M0uszTMV+7WDKtnsKcokYzQbkr3sNitjnvJmQY4De8Zd6p1zx1O4wGDLCGZ6T1cfOFGPGXS8oDolbJhGKnnbFShUCrk7uSLwvWd1QccheKuJkweU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746736057; c=relaxed/simple;
-	bh=Xft22+cWZ2gtYua59jdnOFdwhCdFN+oButPRI8uZPUs=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=fkbYTkFpIP31NB/A/+VHDIrkcYmBD1fs80hHQs3wtULB1DuWpuq02CYgswX3M0vpzZIiYytiuh14FUka6EuDqV3XxvuQuBtkOVObVntaEHQ32xyKiFS0AQd+w3f44cFsZnWzW0pMrv5QOwE9XMIGkyU8VV28kS3oTWp6za03X/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=KptbE85o; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1746736079; c=relaxed/simple;
+	bh=IWqkUmC/HtU7UDGaSHEgVSzn5B33kawytOqertPrlMA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M20SYJcCNeA1hNbTHAPTuNORkPGXSbf0Pe71XMeO8CFFGamUBY0VI2nu+3sr97PDcNdlbn4sINEWpW4xUeuXHrHbKxWp5SfP0b7fYgXjmxCQLYCAqo1GXkHqT5CUhlrvKd99Im/sdB3IO6GponEPtc1PaFqInWZErYNLW+Hig0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VrconPu9; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KptbE85o"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 548KN6bY2104994
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 8 May 2025 13:23:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 548KN6bY2104994
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1746735788;
-	bh=+NDA9AH+UV+1Djye1mB+qrw8jYKjbpRJSZagnaRFOyg=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=KptbE85oTPsvevZzt5/TglVYhLw7U9YJ8OrPuHzmc1aO9ddCs7dvwUPH6RZFy0fWv
-	 bXcQFoEWU13PbUtqo7Er7VbdK0SryqgSp7UoewJsHh7UqntiAp5FX+b9dL2C8meu7F
-	 AnDrJkcF2f2aoSONbvSWJv7db/YnHTUwglxIUZ6vNI61IHdmDlmry0gcSdyp0hicL2
-	 jsWvA6PzUYI6oOdfNWgCX9n5q3qYb5MkTM1sNGbAhsh2o1cdPEyX7LWSFiamKOZqzc
-	 XqSrQmcGDRPPd1SY6R+85COcvEK/9Rx6myWBbtEmOOQg5/p+ppXG8lzeFmAQI2TGu5
-	 5JIOQS+cN4YLQ==
-Date: Thu, 08 May 2025 13:23:04 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Peter Zijlstra <peterz@infradead.org>, Sohil Mehta <sohil.mehta@intel.com>
-CC: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Jacob Pan <jacob.pan@linux.microsoft.com>,
-        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
-        Nikolay Borisov <nik.borisov@suse.com>,
-        linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
-        kvm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v5_5/9=5D_x86/nmi=3A_Add_support?=
- =?US-ASCII?Q?_to_handle_NMIs_with_source_information?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250508121544.GH4439@noisy.programming.kicks-ass.net>
-References: <20250507012145.2998143-1-sohil.mehta@intel.com> <20250507012145.2998143-6-sohil.mehta@intel.com> <20250507091442.GB4439@noisy.programming.kicks-ass.net> <55527575-e3b8-4cf6-b09c-b81437e0c892@intel.com> <20250508121544.GH4439@noisy.programming.kicks-ass.net>
-Message-ID: <D368D488-6D4E-4590-8E98-A7D7CD5E7F20@zytor.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VrconPu9"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso10641275e9.3;
+        Thu, 08 May 2025 13:27:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746736075; x=1747340875; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YtJQMxYGFNll0psACjnIjhFMP7aU5XrgGwRcy9F2bBg=;
+        b=VrconPu9L/7ItdTaAtknvjg6rmV8QocFh0yjVYp+z/PXrdjhFQPKXzrYXYWw/nz6o8
+         MioM2Y8yADLc3uKEc9FFbo6Tktjs25zqUhUYYh5KIEM+wNas6vo69voEIdnv2jQaLawM
+         3X3sRhFWrGssFcGYNVozPVtuH9eR0k8wcSGshRT5hm3Z5u4kXnD9yxQQ4TXhW9DtYlxP
+         TWkX3/Y/W/zKM2ECiJNWYrdS461iyJ4SAEe00hk4Ai+vthciOMEXl2/V2c/NY6tTjwyH
+         WSOzyu8gXentgMdNCmm1GIcsPeSFFb/eKV+FkTMtd3WafA+GrKWA6sUEjcZ/NWeGTGFt
+         hmiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746736075; x=1747340875;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YtJQMxYGFNll0psACjnIjhFMP7aU5XrgGwRcy9F2bBg=;
+        b=AXS4/I6oQTmldKciO6WAxTiR5jW7J9Uct76PXDoDz6aPB8+mw4eBKWXHdmKnVIXF6z
+         JXXr5YQJd/ymE0DrYkkGkdMFIf7yECi9BRe5JcQieTk1xAcwEfWp9Zd11oNEjQqRXQQd
+         /BYWD7ep12kBwFTMlwsDBeZyDYFtzm8cAcEIPBlhf+NNNSAo26lfHYVp5mOibz9BNiRZ
+         DYCUIDGzFRKeS6tqFCOqQQ5r73/orb/iiLKgoBlfZ6FjrtHvvesMNHvMps01b5+K8OIN
+         zSkflH0DWeSM6ESIMM9Wq67kyQM2i+rDaLjE3Tr6bKiET0yU3n4sF30DPcws6zaVwzJh
+         ufew==
+X-Forwarded-Encrypted: i=1; AJvYcCUa+UnXnJn5VwBgNm3lpWnvqUFbM3TNrB1nNskWCRCCxoCnOVwA8Kd9E17swNvb/QhgjW7wjIQIBUiT@vger.kernel.org, AJvYcCUaVFFm1N5t7G118QiRSh1YQQbpEFGsn9J1BiP5i0hTAFJMVRr5cqjpU1gYTjVg6rFR8sA0rtVeJ1jvCl7M@vger.kernel.org, AJvYcCVlNbpqi+ST5UHvqxBY6b3m+rV/Rux24gR9rTXBJpP6o67Co751K0NriX9j0wWy5kWNmEWElAMsrnNQ@vger.kernel.org, AJvYcCWetnK1wQx1G9+ct3XUR58H9naA+9Czayuu1QCpst1sstYdinKhRgxYYtpenynfLujm9y8oHAQxHG2FsRI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyS+WurefoNjbDuRPdzcBDiokYPe5D1BQNJBcVSGWj9TCn0VO3o
+	h2gz68X+IcHGsBninF26TJk5b23reJuib/dWcZPRC66SvAcWw3pIj4c7lA==
+X-Gm-Gg: ASbGnct6a6s9kjKZx7S80pD2TYVuyIL6+qMgpINTgwIDEqC+VZ9wF5jpJcBkPR+1lZ5
+	VjFbHME3COQY9MFkEGERK46SSq/FhlTG9QudAKlceRALILnm1UnyXNaACNcqqNwMF7XzogqtKWw
+	lB6MdLrEnN1Q5okcTgj0LwhgPTeScAPGoeRQAepam1kSnzw9S1vhTdkuHZARL2oXJXix7UlkLlb
+	k4VEiXrmsY/danYDeQf9f1eUzTwgjRHZeYXel/ZaQxT0KEawXmdiYjF9TR0BFzgceMFSC3dTlwt
+	rLop//AdNe3rmQIFIRd1R2q7fgeOYe+C07UHMileVYGefbDC8bzysnXPGpHyEdqKShn2y9DAji+
+	v2g3uXCsmqjVefgTFOhwFsj++GgM=
+X-Google-Smtp-Source: AGHT+IFnWjQ33MMtDxBoEYIvCnklurS8mH7kZx1CC/YeUHC8q6GxC44TL9JcvWZRp5envBhfwaWZqw==
+X-Received: by 2002:a05:600c:6819:b0:43d:649:4e50 with SMTP id 5b1f17b1804b1-442d6d44db5mr6188455e9.13.1746736075099;
+        Thu, 08 May 2025 13:27:55 -0700 (PDT)
+Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd3aecb0sm49042075e9.28.2025.05.08.13.27.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 13:27:53 -0700 (PDT)
+Date: Thu, 8 May 2025 22:27:51 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Vishwaroop A <va@nvidia.com>
+Cc: broonie@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, jonathanh@nvidia.com, skomatineni@nvidia.com, 
+	ldewangan@nvidia.com, kyarlagadda@nvidia.com, smangipudi@nvidia.com, 
+	linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 2/3] arm64: tegra: Configure QSPI clocks and add
+ DMA
+Message-ID: <lvzu2huonk6fm7ce77xej7kiwqtwupvbr7ilpn2yppq2cmtrnb@jw2ohtmicprs>
+References: <20250506152350.3370291-1-va@nvidia.com>
+ <20250506152350.3370291-2-va@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gvljn3izqgvhquae"
+Content-Disposition: inline
+In-Reply-To: <20250506152350.3370291-2-va@nvidia.com>
+
+
+--gvljn3izqgvhquae
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH RESEND 2/3] arm64: tegra: Configure QSPI clocks and add
+ DMA
+MIME-Version: 1.0
 
-On May 8, 2025 5:15:44 AM PDT, Peter Zijlstra <peterz@infradead=2Eorg> wrot=
-e:
->On Wed, May 07, 2025 at 02:48:34PM -0700, Sohil Mehta wrote:
->> On 5/7/2025 2:14 AM, Peter Zijlstra wrote:
->> > On Tue, May 06, 2025 at 06:21:41PM -0700, Sohil Mehta wrote:
->> >>
->> >> diff --git a/arch/x86/kernel/nmi=2Ec b/arch/x86/kernel/nmi=2Ec
->> >> index a1d672dcb6f0=2E=2E183e3e717326 100644
->> >> --- a/arch/x86/kernel/nmi=2Ec
->> >> +++ b/arch/x86/kernel/nmi=2Ec
->> >=20
->> >>  static int nmi_handle(unsigned int type, struct pt_regs *regs)
->> >>  {
->> >>  	struct nmi_desc *desc =3D nmi_to_desc(type);
->> >> +	unsigned long source_bitmap =3D 0;
->> >=20
->> > 	unsigned long source =3D ~0UL;
->> >=20
->>=20
->> Thanks! This makes the logic even simpler by getting rid of
->> match_nmi_source()=2E A minor change described further down=2E
->>=20
->> Also, do you prefer "source" over "source_bitmap"? I had it as such to
->> avoid confusion between source_vector and source_bitmap=2E
->
->Yeah, I was lazy typing=2E Perhaps just call it bitmap then?
->
->> >>  	nmi_handler_t ehandler;
->> >>  	struct nmiaction *a;
->> >>  	int handled=3D0;
->> >> @@ -148,16 +164,40 @@ static int nmi_handle(unsigned int type, struc=
-t pt_regs *regs)
->> >> =20
->> >>  	rcu_read_lock();
->> >> =20
->> >> +	/*
->> >> +	 * Activate NMI source-based filtering only for Local NMIs=2E
->> >> +	 *
->> >> +	 * Platform NMI types (such as SERR and IOCHK) have only one
->> >> +	 * handler registered per type, so there is no need to
->> >> +	 * disambiguate between multiple handlers=2E
->> >> +	 *
->> >> +	 * Also, if a platform source ends up setting bit 2 in the
->> >> +	 * source bitmap, the local NMI handlers would be skipped since
->> >> +	 * none of them use this reserved vector=2E
->> >> +	 *
->> >> +	 * For Unknown NMIs, avoid using the source bitmap to ensure all
->> >> +	 * potential handlers have a chance to claim responsibility=2E
->> >> +	 */
->> >> +	if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) && type =3D=3D NMI=
-_LOCAL)
->> >> +		source_bitmap =3D fred_event_data(regs);
->> >=20
->> > 	if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) && type =3D=3D NMI_L=
-OCAL) {
->> > 		source =3D fred_event_data(regs);
->> > 		if (source & BIT(0))
->> > 			source =3D ~0UL;
->> > 	}
->> >=20
->>=20
->> Looks good, except when fred_event_data() returns 0=2E I don't expect i=
-t
->> to happen in practice=2E But, maybe with new hardware and eventually
->> different hypervisors being involved, it is a possibility=2E
->>=20
->> We can either call it a bug that an NMI happened without source
->> information=2E Or be extra nice and do this:
->>=20
->> if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) && type =3D=3D NMI_LOCA=
-L) {
->> 	source =3D fred_event_data(regs);
->> 	if (!source || (source & BIT(0)))
->> 		source =3D ~0UL;
->> }
->
->Perhaps also WARN about the !source case?
+On Tue, May 06, 2025 at 03:23:49PM +0000, Vishwaroop A wrote:
+> For Tegra234 devices, set QSPI0_2X_PM to 199.99 MHz and QSPI0_PM to
+> 99.99 MHz using PLLC as the parent clock. These frequencies enable
+> Quad IO reads at up to 99.99 MHz, the maximum achievable given PLL
+> and clock divider limitations. Introduce IOMMU property which is
+> needed for internal dma transfers.
+>=20
+> Signed-off-by: Vishwaroop A <va@nvidia.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 
-A 0 should be interpreted such that NMI source is not available, e=2Eg=2E =
-due to a broken hypervisor or similar=2E
+I've applied this now. The remaining discussions on the bindings patch
+are details about how to deal with IOMMU on older platforms, but this
+patch in isolation is just adding standard properties.
+
+Thanks,
+Thierry
+
+--gvljn3izqgvhquae
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmgdE8cACgkQ3SOs138+
+s6EMIRAAliY7GR+xDac7+0PmuP71PKaV5MtA/YTnq/5d7xUbjCtUfR7kXzjUzqKG
+mWKbwmdx75U2U3ATorGUa+pTK0Tj9Ews2blJx+K+alww20/MGqKY4wHQTbjZW9vq
+EsBPJ3p4LLL6gtmf0NBpPBCjH7dJYCCLOwAUeRV62QKZ4qv22TBlpfS+m8Ff2zPc
+JCCazFWMajzIBafGZ+N3p9pqc5W7mcHppFOs+46fX2dCvjTkEBLkCbQqx/4gJBPO
++eIdhJSivuVN9KSuShTsVC3WnCvIF/HCqFRvrj1X3gkxGCS63N2jmyr1/B5z8WnD
+x4l7hfdJ87WhQtpiN8/AZUKG7T9jCg4RHsnTHzC55DlnMR08DitjaCmH9cQGamm+
+YEJAPlmlwf4ArUr9JR3FC2Ol8hBM+J8Jo7P7RI8pIi7ZSPTc0aoFTDhDFsu3HOYi
+pr3zndqEm+Em5AXP0WAJ2qUDIF6/FyuDGy8hH/6Q1ppF6Je5UMHIf0rIFryGQL/x
+gGTweqx8CgtG7/I/nYW7NwsRiTgzHmnDzoFXaMt7pNc6r9P3Hs807cAnkPllG1yo
+dOuhedLJq2pNKVSKC4JTGak66uJyij1VdbzeR7irooiAZ+vpKCvGP91QKE09udiD
+btDZrdgW8Kwl+Sg8OJvRQXMp1vCTXJ9hZAP2XToxNWC7ckfz9VM=
+=wjHe
+-----END PGP SIGNATURE-----
+
+--gvljn3izqgvhquae--
