@@ -1,218 +1,201 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7AB27C856
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA961A239F
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716589; cv=none; b=XUg3ihIXc5lmaWkXD4RQykJCEsLN8K8Dw6zsjhyikEtzY0sro9FLnlPFXQ6Dcnx7EXD21j1tuL3jlaxEHiUZt3VqBBlz1fhrG72ixH2IaicPPZD/PlCdQPdLmyK6U3gzQeMdcTwfYaibmK3isLnJuZlyFBllAHpy0fL3WRkjXlU=
+	t=1746716634; cv=none; b=bXJoiAN+cxVrLIplkNaKbiMUoEV5GxfLbqU+7fED8FLNks3w/Diy495m0PoMzL4goJC0GEsKI7HhB0nAcMUNmstmkBHdFre/4TTXxMXxZXTnlbYnISq4ix+R6+kNh/TA0Yn1CCEobKdP7kA+duqn5D27xeeIiMW24CTe4JPEfd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716589; c=relaxed/simple;
-	bh=XJMUrvzkl7T7SJvE5TMLA06hwaBkEJ6l2urEVurF6Jw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=idf6TI54rHqMdZ/YGuBjOiz/3mJ+t97Sez2G7i5fC3p/uAYdqwyHnOABmPm4uhZOSwhyBGlRe5jMjcpJFKQsLgLrm4qQxp69A1RG2RY8omxZb96pK0TL8bUy2t30L4+cA4mMhJ/Gutp6k56EShu15he5QzS9/cWnxzlrrSU00Vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=b8U6WSTj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6vVvM+7l; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746716634; c=relaxed/simple;
+	bh=Te3Rp66uIuDKAYOuy9D6T8Qi0yB9d4NQxWotSp9mZVE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JDHXwN9npXX6gBvNzz8A8vqKw/Jo00IyayN69/7PKszpoIJ7Q1y4PXMGizmlEP0XXrChCSh5zwja/cwgLyYAHlJX3kLZamsGaXjbYahkNiX7k4fC4BKoXRLnDWthQalbYPJ8kjumPxN2cKSPDftm7N+JPKw0iTAveQRg5YtobLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XU4oLeqQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b8U6WSTj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6vVvM+7l"
-From: "Ahmed S. Darwish" <darwi@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746716586;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XU4oLeqQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746716631;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ry0BzcU6tq9UEbAb2PtgSqgInssbUst9H7FdYRIUqdQ=;
-	b=b8U6WSTjtJR6HLCAzAaNsKVYkSGWxdTNQSVtTchyRPgdFBkfP8U1U7NBJWiOV47iowFqx8
-	KlnZip5GP4Ch6y5q/PqcVW8G/FHzgJ2RZ3q5L5pWEDgHuQGKPeB2m5CkttCUHQobQJf6Ta
-	ZlS+PF6uEgapGZfb7joO6dcKjs2H/hh4TOxK+GQ87IxZ51XQauTanN7HDh3nqKeLNiCQcz
-	8kFj+Q8H+uhbd23hmTpwFY+SYmY+O/Ug7jnZ7pqyrSVnCBTClCQXpgCN+Fop5y1FoG8uCe
-	EgNSjaulmZqdO4C1iDl6cVnr/NyzR1BAvJJYXiikPqglkCWsZBFBVYBwgTq2jA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746716586;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ry0BzcU6tq9UEbAb2PtgSqgInssbUst9H7FdYRIUqdQ=;
-	b=6vVvM+7l+ofqV15G9B9fse4ureL8h6d6WpI51HI0CRpY9YTxF+0Orp4KFgum5Y2l4O+jNN
-	weE0qP4EU4GTnLCg==
-To: Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	x86@kernel.org,
-	x86-cpuid@lists.linux.dev,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v1 9/9] x86/cpuid: Rename native_cpuid_REG() to cpuid_native_REG()
-Date: Thu,  8 May 2025 17:02:38 +0200
-Message-ID: <20250508150240.172915-10-darwi@linutronix.de>
-In-Reply-To: <20250508150240.172915-1-darwi@linutronix.de>
-References: <20250508150240.172915-1-darwi@linutronix.de>
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0A3k4r7gW5UVXrE6QQjqPyS0bUfFQ+JNzCXgzNYHnZo=;
+	b=XU4oLeqQ/ZhIdGDDOX+NYkkwq5muKvTmPThv/snaR4dROBnXXDexhj33RPnCjtrghYBVTU
+	dPWkytPH4GMieRN9YY+ddLRVPZ4ILF9bN9Li4WcDHwaRyuFNWoUNj4wXy0gTFn2HgEbwvl
+	jg+qf0CbsYQ+bnruDLybms5juL8uJfA=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-209-knwAw2XPOeqQAgtNlXuLKg-1; Thu, 08 May 2025 11:03:50 -0400
+X-MC-Unique: knwAw2XPOeqQAgtNlXuLKg-1
+X-Mimecast-MFC-AGG-ID: knwAw2XPOeqQAgtNlXuLKg_1746716629
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a064c45f03so501299f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 08:03:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746716629; x=1747321429;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0A3k4r7gW5UVXrE6QQjqPyS0bUfFQ+JNzCXgzNYHnZo=;
+        b=i1VfDMZkU3wk60OttODHEJrfeqP8io8/rNsCog4JH2oWixobhwo/pa+uIC80xIwW7v
+         fMf6bQfo2hCDg2ZtpE8S8wVtJ07OI56ebO57Y/YsYWeBEw0zIBlBUxrvHrtFCZFWf/lk
+         eitbXvTR3hzMOkD7i5IKyP8CwB+XgzcMwqegKlvPH2m26mQ/BImnej1AsguG/84SQFIm
+         6yzvX9s3vkRVqI1aYrTbxkN5uM4iBE1uvuNRk16NUmSWESkrA3q+J1eVkrudsaW2mz1s
+         ANp88eVBdPKaJCLWt2dbU+s/WoXnSVrPd6OMEm8O2ehUfDZtIOAIilJ4uqspnqwr01mO
+         Z7hg==
+X-Gm-Message-State: AOJu0YwgWJGUiTj/+DKNx8teVbfd7TPsnIkjia2Nf0gqYA+kE2XUa1sM
+	641VKx+kasVk/c892n44+3JK3FNmKjtFHL02x7cAHmw4S3Qq8VcYnr/XyW9sMvmgjId4VKQmBI0
+	r53EPkXvxwyhjslprb6pKjC2P/QJZny0mz9cdF9QeRFqO2cQ5DqbD7Xbh5X2/vw==
+X-Gm-Gg: ASbGncueHrG/p4oQo4zhUE2PwpgF8/D8bCR6Y+qrD49XPv6FE2ksDVT92bHA2/8Tsao
+	xDyJ4aaaikqtWQdRiWW+ke9/3ZO/kE8J8tRzc7hGQhzPt7cnArhKy7PFIr+zhoR+LD4mAC3hNCJ
+	cg6aylzw3PTpzQA55GMl0NDDMTSY0Hj/Cb7dZ78AIssREM9B828YPMHVHcrrUQIoLK9YPvjqecs
+	tIvv3CkhrMJnFarF4TMc1vw6owFOaUwWZ0zrF4K5RgKWpbNqnmVyfAcOo+sM6T04nRL6HnMI30E
+	NjugeHUOt032NaSbANEW3BW7PFJwD3okdHSWb38fO3NoNBA+krdU+Zw0Y2vOPno/DG8WB/fzM+t
+	FVX54X+T0bLYjov3CS5dqY12ubqEJ7e1aN5U87i0=
+X-Received: by 2002:a05:6000:2a7:b0:3a0:8c01:d463 with SMTP id ffacd0b85a97d-3a0b990e2b2mr3562903f8f.9.1746716628728;
+        Thu, 08 May 2025 08:03:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGx8yXNIhT1hUz4xWiwQQ29Va0Sgz3iLNOyvxn9tuUzOatsvNXpRv8L6O8svQ44smramfRUxQ==
+X-Received: by 2002:a05:6000:2a7:b0:3a0:8c01:d463 with SMTP id ffacd0b85a97d-3a0b990e2b2mr3562840f8f.9.1746716628057;
+        Thu, 08 May 2025 08:03:48 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f3e:5900:27aa:5f4a:b65c:3d3c? (p200300d82f3e590027aa5f4ab65c3d3c.dip0.t-ipconnect.de. [2003:d8:2f3e:5900:27aa:5f4a:b65c:3d3c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2f58sm215860f8f.49.2025.05.08.08.03.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 08:03:47 -0700 (PDT)
+Message-ID: <99ed92b7-c1b2-4e12-a7ee-776a7f890b47@redhat.com>
+Date: Thu, 8 May 2025 17:03:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] Fix zero copy I/O on __get_user_pages allocated pages
+To: Pantelis Antoniou <p.antoniou@partner.samsung.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, Artem Krupotkin <artem.k@samsung.com>,
+ Charles Briere <c.briere@samsung.com>,
+ Wade Farnsworth <wade.farnsworth@siemens.com>, Peter Xu <peterx@redhat.com>
+References: <20250507154105.763088-1-p.antoniou@partner.samsung.com>
+ <CGME20250507154119uscas1p17799fe7589e4f1bd53d2d3dc7f44cb8c@uscas1p1.samsung.com>
+ <20250507154105.763088-2-p.antoniou@partner.samsung.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250507154105.763088-2-p.antoniou@partner.samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-In order to let all the APIs under <cpuid/api.h> have a shared "cpuid_"
-namespace, rename native_cpuid_REG() to cpuid_native_REG().
+On 07.05.25 17:41, Pantelis Antoniou wrote:
 
-To beetter align with the new namespace, also rename the internal
-NATIVE_CPUID_REG() macro to __CPUID_NATIVE_REG().
+Hi,
 
-Adjust all call-sites accordingly.
+> Recent updates to net filesystems enabled zero copy operations,
+> which require getting a user space page pinned.
+> 
+> This does not work for pages that were allocated via __get_user_pages
+> and then mapped to user-space via remap_pfn_rage.
 
-Suggested-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
----
- arch/x86/boot/compressed/pgtable_64.c   |  4 ++--
- arch/x86/include/asm/cpuid/api.h        | 12 ++++++------
- arch/x86/include/asm/microcode.h        |  2 +-
- arch/x86/kernel/cpu/microcode/amd.c     |  2 +-
- arch/x86/kernel/cpu/microcode/core.c    |  6 +++---
- arch/x86/kernel/head32.c                |  2 +-
- drivers/firmware/efi/libstub/x86-5lvl.c |  4 ++--
- 7 files changed, 16 insertions(+), 16 deletions(-)
+Right. Because the struct page of a VM_PFNMAP *must not be touched*. It 
+has to be treated like it doesn't exist.
 
-diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
-index d8c5de40669d..8cfe50988aa2 100644
---- a/arch/x86/boot/compressed/pgtable_64.c
-+++ b/arch/x86/boot/compressed/pgtable_64.c
-@@ -125,8 +125,8 @@ asmlinkage void configure_5level_paging(struct boot_params *bp, void *pgtable)
- 	 */
- 	if (IS_ENABLED(CONFIG_X86_5LEVEL) &&
- 			!cmdline_find_option_bool("no5lvl") &&
--			native_cpuid_eax(0) >= 7 &&
--			(native_cpuid_ecx(7) & (1 << (X86_FEATURE_LA57 & 31)))) {
-+			cpuid_native_eax(0) >= 7 &&
-+			(cpuid_native_ecx(7) & (1 << (X86_FEATURE_LA57 & 31)))) {
- 		l5_required = true;
- 
- 		/* Initialize variables for 5-level paging */
-diff --git a/arch/x86/include/asm/cpuid/api.h b/arch/x86/include/asm/cpuid/api.h
-index 7f4644747649..9f8a1176ad86 100644
---- a/arch/x86/include/asm/cpuid/api.h
-+++ b/arch/x86/include/asm/cpuid/api.h
-@@ -35,8 +35,8 @@ static inline void cpuid_native(u32 *eax, u32 *ebx,
- 	    : "memory");
- }
- 
--#define NATIVE_CPUID_REG(reg)					\
--static inline u32 native_cpuid_##reg(u32 op)			\
-+#define __CPUID_NATIVE_REG(reg)					\
-+static inline u32 cpuid_native_##reg(u32 op)			\
- {								\
- 	u32 eax = op, ebx, ecx = 0, edx;			\
- 								\
-@@ -48,10 +48,10 @@ static inline u32 native_cpuid_##reg(u32 op)			\
- /*
-  * Native CPUID functions returning a single datum:
-  */
--NATIVE_CPUID_REG(eax)
--NATIVE_CPUID_REG(ebx)
--NATIVE_CPUID_REG(ecx)
--NATIVE_CPUID_REG(edx)
-+__CPUID_NATIVE_REG(eax)
-+__CPUID_NATIVE_REG(ebx)
-+__CPUID_NATIVE_REG(ecx)
-+__CPUID_NATIVE_REG(edx)
- 
- #ifdef CONFIG_PARAVIRT_XXL
- # include <asm/paravirt.h>
-diff --git a/arch/x86/include/asm/microcode.h b/arch/x86/include/asm/microcode.h
-index 695e569159c1..755c9f693118 100644
---- a/arch/x86/include/asm/microcode.h
-+++ b/arch/x86/include/asm/microcode.h
-@@ -64,7 +64,7 @@ static inline u32 intel_get_microcode_revision(void)
- 	native_wrmsrl(MSR_IA32_UCODE_REV, 0);
- 
- 	/* As documented in the SDM: Do a CPUID 1 here */
--	native_cpuid_eax(1);
-+	cpuid_native_eax(1);
- 
- 	/* get the current revision from MSR 0x8B */
- 	native_rdmsr(MSR_IA32_UCODE_REV, dummy, rev);
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-index 4a10d35e70aa..d757383b653c 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -1098,7 +1098,7 @@ static enum ucode_state load_microcode_amd(u8 family, const u8 *data, size_t siz
- 
- static int __init save_microcode_in_initrd(void)
- {
--	unsigned int cpuid_1_eax = native_cpuid_eax(1);
-+	unsigned int cpuid_1_eax = cpuid_native_eax(1);
- 	struct cpuinfo_x86 *c = &boot_cpu_data;
- 	struct cont_desc desc = { 0 };
- 	enum ucode_state ret;
-diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
-index 1395fa72960f..9924b8238492 100644
---- a/arch/x86/kernel/cpu/microcode/core.c
-+++ b/arch/x86/kernel/cpu/microcode/core.c
-@@ -106,7 +106,7 @@ static bool __init check_loader_disabled_bsp(void)
- 	 * completely accurate as xen pv guests don't see that CPUID bit set but
- 	 * that's good enough as they don't land on the BSP path anyway.
- 	 */
--	if (native_cpuid_ecx(1) & BIT(31))
-+	if (cpuid_native_ecx(1) & BIT(31))
- 		return true;
- 
- 	if (x86_cpuid_vendor() == X86_VENDOR_AMD) {
-@@ -128,7 +128,7 @@ void __init load_ucode_bsp(void)
- 	if (!cpuid_feature())
- 		return;
- 
--	cpuid_1_eax = native_cpuid_eax(1);
-+	cpuid_1_eax = cpuid_native_eax(1);
- 
- 	switch (x86_cpuid_vendor()) {
- 	case X86_VENDOR_INTEL:
-@@ -162,7 +162,7 @@ void load_ucode_ap(void)
- 	if (dis_ucode_ldr)
- 		return;
- 
--	cpuid_1_eax = native_cpuid_eax(1);
-+	cpuid_1_eax = cpuid_native_eax(1);
- 
- 	switch (x86_cpuid_vendor()) {
- 	case X86_VENDOR_INTEL:
-diff --git a/arch/x86/kernel/head32.c b/arch/x86/kernel/head32.c
-index de001b2146ab..43aa1cfc1b65 100644
---- a/arch/x86/kernel/head32.c
-+++ b/arch/x86/kernel/head32.c
-@@ -146,7 +146,7 @@ void __init __no_stack_protector mk_early_pgtbl_32(void)
- 
- #ifdef CONFIG_MICROCODE_INITRD32
- 	/* Running on a hypervisor? */
--	if (native_cpuid_ecx(1) & BIT(31))
-+	if (cpuid_native_ecx(1) & BIT(31))
- 		return;
- 
- 	params = (struct boot_params *)__pa_nodebug(&boot_params);
-diff --git a/drivers/firmware/efi/libstub/x86-5lvl.c b/drivers/firmware/efi/libstub/x86-5lvl.c
-index 77359e802181..db347c91edb3 100644
---- a/drivers/firmware/efi/libstub/x86-5lvl.c
-+++ b/drivers/firmware/efi/libstub/x86-5lvl.c
-@@ -34,8 +34,8 @@ efi_status_t efi_setup_5level_paging(void)
- 		return EFI_SUCCESS;
- 
- 	/* check for 5 level paging support */
--	if (native_cpuid_eax(0) < 7 ||
--	    !(native_cpuid_ecx(7) & (1 << (X86_FEATURE_LA57 & 31))))
-+	if (cpuid_native_eax(0) < 7 ||
-+	    !(cpuid_native_ecx(7) & (1 << (X86_FEATURE_LA57 & 31))))
- 		return EFI_SUCCESS;
- 
- 	/* allocate some 32-bit addressable memory for code and a page table */
+> 
+> remap_pfn_range_internal() will turn on VM_IO | VM_PFNMAP vma bits.
+> VM_PFNMAP in particular mark the pages as not having struct_page
+> associated with them, which is not the case for __get_user_pages()
+> 
+> This in turn makes any attempt to lock a page fail, and breaking
+> I/O from that address range.
+> 
+> This patch address it by special casing pages in those VMAs and not
+> calling vm_normal_page() for them.
+> 
+> Signed-off-by: Pantelis Antoniou <p.antoniou@partner.samsung.com>
+> ---
+>   mm/gup.c | 22 ++++++++++++++++++----
+>   1 file changed, 18 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 84461d384ae2..e185c18c0c81 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -833,6 +833,20 @@ static inline bool can_follow_write_pte(pte_t pte, struct page *page,
+>   	return !userfaultfd_pte_wp(vma, pte);
+>   }
+>   
+> +static struct page *gup_normal_page(struct vm_area_struct *vma,
+> +		unsigned long address, pte_t pte)
+> +{
+> +	unsigned long pfn;
+> +
+> +	if (vma->vm_flags & (VM_MIXEDMAP | VM_PFNMAP)) {
+> +		pfn = pte_pfn(pte);
+> +		if (!pfn_valid(pfn) || is_zero_pfn(pfn) || pfn > highest_memmap_pfn)
+> +			return NULL;
+> +		return pfn_to_page(pfn);
+> +	}
+> +	return vm_normal_page(vma, address, pte);
+
+I enjoy seeing vm_normal_page() checks in GUP code.
+
+I don't enjoy seeing what you added before that :)
+
+If vm_normal_page() tells you "this is not a normal", then we should not 
+touch it. There is one exception: the shared zeropage.
+
+
+So, unfortunately, this is wrong.
+
 -- 
-2.49.0
+Cheers,
+
+David / dhildenb
 
