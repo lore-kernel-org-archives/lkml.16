@@ -1,111 +1,127 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E81227EAC;
-	Thu,  8 May 2025 12:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EFB2165E7;
+	Thu,  8 May 2025 12:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746708572; cv=none; b=tdGUOkJJr6Z175NJyhCXxQGC/h1oqmrtYXlOSTadp4pUc3SBEWhTSEncwr+mJu5OmXW4goAoSgJlnGxT2uiW/DsTewsfJihRD7tjlDHSc8Jc+W11KETjfGBzIi5vfokbW58vtR7vlbrBaTv979YloGFs2vbi64hiqi7w/d3yXFU=
+	t=1746708611; cv=none; b=bsGZwHTsD8RPMt8iTRXCANBEnIbl4+PxrbN+9qc58tLYtVYcMWf6t4qUCrx/d6IT26MsC3KEiRl2ZTno5uvzS3kUNXVQad9Si1J+9SjcdtQHbwvHamQhumbDaSJnOf1rkDZoHdi7KfXBbAP5xDbDgqIstJoPtAGbgrWAJyPxsag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746708572; c=relaxed/simple;
-	bh=58sdXjoEMjFVCflGE7ncCGuTV1pF4ageHSg4rQYhGrc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HSNyITYz7CGCpJFS7KTu2r5YBJCca7f+ZRimiaYe6JCKIj1bxWUXJKUazxnHyAQ7Neo5pT6IH8haOYeW72h9r32PjITXPnhngGcJLAbdyhjL83EF4XZu9XvZYtnhpQS4Jn7TXayU7Nk/5cyngI4puWJj54aur+IhyRF+tLnJ51s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d5M0omu2; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746708611; c=relaxed/simple;
+	bh=xYuNafxacf7RHIvvgPdPCXZN9xq30/baUz6q+qidB7U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IsjceFp2vpPERxHW7HTk1p8zNZNlSIQAjlwO7HmtrGDzsNRZNqbO+ulqhxnQCd6hWZx5+UPK4/QeTJ58JeVUZXY1nnI+WyOupf4ud5BKNGmufAcTnIER3xrtH8HI3V+EkuSVeRWlhmYkuyOZMgYlXa3uwbp67ObSKr4HjqJHeq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UqqUNfP5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d5M0omu2"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a108684f90so293807f8f.1;
-        Thu, 08 May 2025 05:49:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746708569; x=1747313369; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=g/Zo3idQAmdiJtBVtWzs8q7ppnKXkar6x4EUIEKDs8I=;
-        b=d5M0omu2vkB3KvgD++IKFDTQZ35W4vGmPS+dqvFOamNs4hJs096kVq+DgVeh8+o8u/
-         eRzsAT4jD++hQP6eBPxXcGdXFNJklvs2vvY8a3m9cTy4vV6aPzfSrHLpE/qwOqAkeH7y
-         rFc1GESkwpeuLbSjbUNBTft6iwU5vqBOqMYCCg8w673OR13Hlqgi/FyRUCfUJezLjpF+
-         8Q8TGSk6QSFx17ZoqOhpHIacG9sj+skaqcaYHA5ENy267TiV6oXeL8ekVazxXcpWDkj3
-         gAwsNABAUe870H09/hd1MoxiPaQPA9NhBYjTKjsAW7o5m6yU1KKnQ9BM28v02D0z9QtJ
-         hAeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746708569; x=1747313369;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g/Zo3idQAmdiJtBVtWzs8q7ppnKXkar6x4EUIEKDs8I=;
-        b=cJU52rJTRCscDycfBSOPIzNZ5H/6or9Yo3oEo682OtzdiXHn3iCjFmhmJCK14rb0OQ
-         TNc0gLBO+D/LZM5qvvAHYbMzie5H+gXJgQ7hCqdJ8S+e87O6SbmlGcR3LpOgw71shq3V
-         jyocIQgVU8z09Lxxdxj2x8CqTk/C6yk19Wdsd5g/r2smv0Uy5kxDiD+yEwOCaQHiR7jo
-         NLhXM0I16fsqTi4nbY6nXF0RXJXdJSwOhi6mUK85r1jP9GwtQnOPBN77cr349bLsaLTZ
-         LAS3jrCntQnzg1RrHv9/DrSu5EgIV4KpY1kH04m0UABOQgIBwqObOomUtEp4AESLkFz3
-         O2PQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdXxzBV8QVo/icTeZWvvxi1bXzAHcKdS5vvw0PjOiA4Z/oDEmet67Fv7QT7BHz+hEXCUhJ29MFOoTM2uqO@vger.kernel.org, AJvYcCXAk3ByXSOM+2szYpubj2ii4sBPnrHyTWVM0Y/J7d2Zvr8ZTauEpnh0/C3RQdnu96fU18uCn6hN6IxW3lw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2h3lbCIs09aMBk85njbEuGf1dUXSUDTl1wcNfWIzVCvOw874S
-	LtEOGIEQpe4XlxhS5Y2DMPgwJbzXW+w5c8qAExMKyKCcfFURxHRw
-X-Gm-Gg: ASbGncti9HsNksL7hIqAUGj9p8NPBLwM+l2ExEwZkc4YqhS6OYeSUeBq16UnrkJqpVi
-	caNDYoQkgTe7NtuiUyuO7dhv7KM19HG4NFgje6QlpCdWNidE4AXzcapVuJpizOA7AYK6P0RBsNu
-	fla+dnhPCQcX6MVY64i9vkiLYKBNt6zgDa579IR0Sy5y4SLHmB4cwUxh4DSxo8+j2yf5QVYREZo
-	oyhEaZAaZy76wrovrCjkrWqtNuA4t1e2nk5cvlnQFV+Y+G15b4VML2+VmW0wHI0m1aKwBZ36Fx3
-	m8JlgQTpdYIeZz+RySRKU8ILd8B94inyUjYyk1B3KA==
-X-Google-Smtp-Source: AGHT+IE4V0eQOUc88VL5le6hnYa/WX1pFmGHFpO8rruXlZMME8banCaS9znDvFn5HounZoV3whgt2w==
-X-Received: by 2002:a05:6000:2207:b0:3a0:90c3:eb0f with SMTP id ffacd0b85a97d-3a0ba098e52mr1870423f8f.12.1746708568626;
-        Thu, 08 May 2025 05:49:28 -0700 (PDT)
-Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a0b9af4ba1sm2879628f8f.59.2025.05.08.05.49.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 05:49:27 -0700 (PDT)
-Date: Thu, 8 May 2025 14:49:26 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [v2 PATCH] crypto: marvell/cesa - Do not chain submitted requests
-Message-ID: <aByoVvwNq2DMw1oi@Red>
-References: <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
- <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
- <15fadc356b73a1e8e24183f284b5c0a44a53e679.camel@gmail.com>
- <Zw31JIEyh28vK9q7@gondor.apana.org.au>
- <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
- <Zw9AsgqKHJfySScx@gondor.apana.org.au>
- <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
- <aBsdTJUAcQgW4ink@gondor.apana.org.au>
- <aBt5Mxq1MeefwXGJ@Red>
- <aBw-C_krkNsIoPlT@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UqqUNfP5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E757C4CEE9;
+	Thu,  8 May 2025 12:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746708610;
+	bh=xYuNafxacf7RHIvvgPdPCXZN9xq30/baUz6q+qidB7U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UqqUNfP5tWjaBUefvChrRuZH1QtEIZTU1yHKO8LANCTEkVJU80VFx9Fhwj4O3fA3p
+	 jqJQM9HP9AsXNlKb8w2j3CKlwCHlMlZZ2VtStXFqtQdncsYlFF92uSSIL1ZBgzr1Ph
+	 zpl7tp4uAXLNMPfDDcBoXidjS6cc17yTkHPwczWNVg/ykA/OlA/AB0L4p8bh9k5HfP
+	 BDQGuBPPiXLZDEgmY8ykbExasVzbW45qthxuvMsXdjVM9j79Ohsbvk8tLmXe8i9cth
+	 Qys1+n9HVhSTVqlmhk3LmsCyT9LHUSXVezjX8zPMOfcWvfyb0L9itGhVYhHB/hqvWg
+	 k09hvXwRsJXcg==
+Message-ID: <e463be7d-cf7b-4ea4-aa85-4dbe47ac4154@kernel.org>
+Date: Thu, 8 May 2025 14:50:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aBw-C_krkNsIoPlT@gondor.apana.org.au>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] dmaengine: tegra210-adma: Add Tegra264 support
+To: "Sheetal ." <sheetal@nvidia.com>, vkoul@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+ thierry.reding@gmail.com, jonathanh@nvidia.com, ldewangan@nvidia.com
+References: <20250508123520.973675-1-sheetal@nvidia.com>
+ <20250508123520.973675-3-sheetal@nvidia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250508123520.973675-3-sheetal@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Le Thu, May 08, 2025 at 01:15:55PM +0800, Herbert Xu a écrit :
-> On Wed, May 07, 2025 at 05:16:03PM +0200, Corentin Labbe wrote:
-> >
-> > I tested this patch and my armada-388-clearfog-pro panic with:
+On 08/05/2025 14:35, Sheetal . wrote:
 > 
-> Thanks for testing! I didn't realise that you had one of these.
-
-I have started a bot which try to build/boot automaticly all patches touching hardware I own.
-And for the moment it handles only linux-sunxi and crypto patches.
-Happy it found something.
-
-> So just out of curiosity, does this driver actually pass the
-> self-tests before this patch with CRYPTO_MANAGER_EXTRA_TESTS?
+> Signed-off-by: Sheetal <sheetal@nvidia.com>
+> ---
+>  drivers/dma/tegra210-adma.c | 194 ++++++++++++++++++++++++++++++------
+>  1 file changed, 164 insertions(+), 30 deletions(-)
 > 
-> Is your system SMP? How many CPUs?
-> 
+> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+> index ce80ac4b1a1b..1ed3ee590f5c 100644
+> --- a/drivers/dma/tegra210-adma.c
+> +++ b/drivers/dma/tegra210-adma.c
+> @@ -1,9 +1,8 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+> -/*
+> - * ADMA driver for Nvidia's Tegra210 ADMA controller.
+> - *
+> - * Copyright (c) 2016, NVIDIA CORPORATION.  All rights reserved.
+> - */
+> +// SPDX-FileCopyrightText: Copyright (c) 2016-2025 NVIDIA CORPORATION & AFFILIATES.
 
-It fails to pass selftest on 6.14.4.
-It has 2 CPU
+2016,2025
 
+Read about range:
+https://www.gnu.org/licenses/gpl-howto.en.html#copyright-notice
+
+I would be also happy to see first documented usage of
+SPDX-FileCopyrightText in license-rules, otherwise I have doubts we
+actually want this (and just because some drivers have it, is not good
+reason, because some drivers have bugs as well).
+
+
+Best regards,
+Krzysztof
