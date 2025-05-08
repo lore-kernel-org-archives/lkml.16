@@ -1,76 +1,79 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19ED252917
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:20:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A812253EE
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:20:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746714022; cv=none; b=Yk6bqdPdNcgCzl9sJQjTqIvaOV0DFOjnBPLpoeyKVivUZtz5NzeJGcKViRIC4XimM8yr426o5JwnTHCh7fT0KCX2xPMwYqSUSe52UFBa7RVh323TVzfiDu1g70JEjaoK0RSFLehFrxWoq8AVbMxeNp5+Fr6LbXFzzC7n/41Awfc=
+	t=1746714027; cv=none; b=H/tJvDZqwljjrHV28G3pDnNwjJGOJvfkNkqDcEoipFu45i2XZSRFQ530zU42ROaUTyOuM6cmYqPHEXv2ZkTCW8yBZHP8uQqpOoRpZMZI7nF/37UJX0Ye2VPvK9b+8ARsXL3GqZ6SgCDpk8LV9A7MgFuCurSSCMoTgUEl0UCisLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746714022; c=relaxed/simple;
-	bh=wThSVBwzmoJLTfHkfr41NVmaasgxmNoL/bVIkHKdo/Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=QeA0Dfzh9EHXKvAeCqQ+qxjav2CrfAXIkvWjFD8HBd5bVMscXdqY9sm7e1D6VkILc869zJvn/o8Z9gX2pLjJf/lb2JCmpQmJZPnq3QbtTQICl11StxgIBAt6d8aS0+sCw3bsGtn2GGQiXs1yFDDPXVufCD8YteQlBAILBHRFFcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bqgn8BW+; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1746714027; c=relaxed/simple;
+	bh=YvRNLSi/VrpoieogGKGsgCKAlWpBPuTAmyy56vB3yh0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RoyRixdUtg8tYXz25UCilszdPZTxXmmyfMgcLMC1NtTxMmYFtawjhjvf/4ONqzuZ0Ylyw5IJIap57JFvJhnTEuLtRNtEGiDu4bhqaoLRKd1jj3kfZu1WXHMX44KfIoifNVs394oCJlwMTWFePht7S0rnJ5aURh1zhhQnctbLBkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YP0DPSGY; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bqgn8BW+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YP0DPSGY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746714019;
+	s=mimecast20190719; t=1746714024;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1KcuC1xrFnlcJ1MsHim/31AFnZb3C+RZr0o19KYuHuI=;
-	b=bqgn8BW+r+Eqx5D6y/coF7qbXvAxn9gKwpWfQ+fBdk6sSq6DxWu6RJ7QDKKpcdRqdjQkyV
-	1YjUHZU2YjWHHBk7vyrDg7zGKnxaRosh9MQo71l39Lo9JeCs7RrTm8ctRKL0FwrfuHkHJC
-	p52B5ajqO9gBaWWnMb5Rhbs0tAJ28X8=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p/inhQIAJVDlclzovizj1G424bvRWbJSy56O+ePhgtM=;
+	b=YP0DPSGYq4TQlEjuIxYFBhPTNtVOArmcBGdc4aepgWbKmIu+gi3j9XRPqkXhA89GHd3Xj4
+	T1z2mVv4JBjFySGBc/pUcJJpzMz11Fk1lotA9x/QyIauFqhhPZLG+Ps4gtDHlr93dkxzne
+	FHAIMKj9Jgix3kbTVFv0rOgQ2GBKGq8=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-502-5do2M8nfNyeWLLXdy4huCA-1; Thu, 08 May 2025 10:20:18 -0400
-X-MC-Unique: 5do2M8nfNyeWLLXdy4huCA-1
-X-Mimecast-MFC-AGG-ID: 5do2M8nfNyeWLLXdy4huCA_1746714017
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-acbbb0009aeso88418066b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 07:20:18 -0700 (PDT)
+ us-mta-230-BXxLdWG8Na6y6MitNaGL8w-1; Thu, 08 May 2025 10:20:23 -0400
+X-MC-Unique: BXxLdWG8Na6y6MitNaGL8w-1
+X-Mimecast-MFC-AGG-ID: BXxLdWG8Na6y6MitNaGL8w_1746714022
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac710ace217so82847466b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 07:20:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746714017; x=1747318817;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1KcuC1xrFnlcJ1MsHim/31AFnZb3C+RZr0o19KYuHuI=;
-        b=wGxzQl2HEAxRKXxI9nGP8oOG1kP7jLPQ1Nz83PTWJm9gELyxaMftYgx65+/SEeXWuc
-         iE7PxJNwXPkWhr5iCEoT5Do43UfqOym4C6v0OwYJxcT2l0DBdLmvX8IUKTpZ0/92nDMB
-         /JLmoYhsP3VBE2BhcTyltxOwxeDB2f0eJf1qlXbj6SmzH862+X4TZ5ufAI+yPwYqSynF
-         sEFZb/Geaf3RpLn7cF5f3QGLo7dk4vvWJssRsMw/xxZ6H2sH8+myTbL68WmtvpujRkER
-         9u55lKx1lywo/Srkctt/wE2ZTrRKrkGw+nK6xZZYGmSfEvfRBYlPygdwMUwzVrZmYN6M
-         +tFQ==
-X-Gm-Message-State: AOJu0Yx6ld0/TM4WLFoYI0l1boUZ5p6o8KVK4TB8xDLCe1+9sbjwuNgt
-	5dAMT1gUOeM+L0UT1WpWUurXcAdEpPmJRKpL4c9iPnfO9OYfEn9X1i7f+O/Jcaox4IBUeFFgNwa
-	lH4nArscoitF6WrHXJuCodk78mGCQbuaG/XzcAnvgBiRT8LLSUr2dWcXr8hGLZA==
-X-Gm-Gg: ASbGncunpHHF5W1G6LdfEUvJcKGLz2QxcIERzMBrX2qfEu6CmFj5PHo6jMxFe8YgdBY
-	EAfl/qdU2uNujkK0ngxWd0LZBUbxqAsW5pmNg/e6upT0VyVnfiN92+l1SPiDOOi4MW5tg2xr6jS
-	O9uv52FGBfKUuuZRRvVxvX3KnrLxnj6Z4o/HMwY+mCVrcjWLZUm/vlUY4DrYEFfubO2pG3+oLYi
-	LfA5W9kUOTzIaDFeIsXINDT94W+alU1l/wazX6by11OYUADthhAtHwVIdjH4p3VLRV2Fay1pjH/
-	/mO1zul1k6Gi4vw8hquOBAqcWw==
-X-Received: by 2002:a17:906:a088:b0:ad2:e08:ea00 with SMTP id a640c23a62f3a-ad20e08f24bmr92964966b.9.1746714017413;
-        Thu, 08 May 2025 07:20:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEF/hUx02Zz2WoX+JCoxsMrV4CfxurR8vP/WKpaYlG35vY287928sPfk+pmToqAmT2lRFVVTA==
-X-Received: by 2002:a17:906:a088:b0:ad2:e08:ea00 with SMTP id a640c23a62f3a-ad20e08f24bmr92961466b.9.1746714016846;
-        Thu, 08 May 2025 07:20:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746714022; x=1747318822;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p/inhQIAJVDlclzovizj1G424bvRWbJSy56O+ePhgtM=;
+        b=W4hfx751YiI3MswnFiiJ9VRhLBiH8o8GN0jqSYT64GZjuc942g5KUyIoWWaw+Ha+9D
+         1Bv8lkizWgcE0tLPj773KErKHrgipWyzEOjmSsqw+W8/f3lMlw+zuB4aTlP5YBPy46xI
+         ElZi8tHpVZ6sNyhwJdav5u2qhnR30Zq12OpOVcwLakbwPzPj6kPv1f+6rc93TvBbLZeR
+         RVz6UHoSIi5jYt9HFtbqDDmdpYWNWZFMGplkXjg2O6aYMvHfuSCiDx7K8mIazaNN1vLd
+         3rLqAc1Jc7FotccCaGdkpp8JdpZtT9Y2yPxZ9+wFrA7RbNCHjbGuXY72baOc/6d2z/Jw
+         6PZA==
+X-Gm-Message-State: AOJu0YyLecss5glxa+FpnOJGQq0WD/guEBxQqONE1w/STtsaVWJP+I6x
+	u3mnFXe8Ds2MI2biMloisVZFtOTPAqDQKMjzZLhqquOKF1+DclKHosskG18WMW30qWiGhsYMBWB
+	Y7cyKCGh+j4toaqJeEvnkZmQNrRiijn26O49xwJJIKCnr2aWlXXBKPznqIQAVOA==
+X-Gm-Gg: ASbGncsfERLRx3LCAzHDfRpEkAlgD1y1cQ/+OOSEOHatW+m6oP11miwh4I61/2GMmx4
+	6XWwBpTtZi1pr8bEvC/wpUb6AFeKQJel8xBUwxgshg0JIu2hzvId3qtqsN4z9hKcFiYcj3wnrWn
+	7q8GZ9HtYBIOrGU1N90RybX50upLns3QC+sLlGvB+H2QoqNUJGZCkcYqFyvO/f8hJ/laJUvhvAo
+	00cmN3qgv747XhPS5YPi0q92KfNbaJxqBkk/+ZyqJHBdGjLGp31cRZ97843FAS9H/Zv4U+X5IA2
+	JQa+87zCPKR13HVku710Me0Z+A==
+X-Received: by 2002:a17:907:96a7:b0:ac7:b368:b193 with SMTP id a640c23a62f3a-ad1fe6f68b4mr342644366b.27.1746714022433;
+        Thu, 08 May 2025 07:20:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFRTgUh6IEfYQONbpJtEOHpIxAXun5putCZzRRkLB2V22yE0BXo1RjIX+rhP121YMlrUvpBiQ==
+X-Received: by 2002:a17:907:96a7:b0:ac7:b368:b193 with SMTP id a640c23a62f3a-ad1fe6f68b4mr342639966b.27.1746714021843;
+        Thu, 08 May 2025 07:20:21 -0700 (PDT)
 Received: from localhost.localdomain ([193.207.221.155])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a1e60sm1089667366b.47.2025.05.08.07.20.14
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189540d5bsm1096012366b.176.2025.05.08.07.20.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 07:20:15 -0700 (PDT)
+        Thu, 08 May 2025 07:20:21 -0700 (PDT)
 From: Stefano Garzarella <sgarzare@redhat.com>
 To: netdev@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Stefano Garzarella <sgarzare@redhat.com>,
 	virtualization@lists.linux.dev
-Subject: [PATCH net-next 0/2] vsock/test: improve sigpipe test reliability
-Date: Thu,  8 May 2025 16:20:03 +0200
-Message-ID: <20250508142005.135857-1-sgarzare@redhat.com>
+Subject: [PATCH net-next 1/2] vsock/test: retry send() to avoid occasional failure in sigpipe test
+Date: Thu,  8 May 2025 16:20:04 +0200
+Message-ID: <20250508142005.135857-2-sgarzare@redhat.com>
 X-Mailer: git-send-email 2.49.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20250508142005.135857-1-sgarzare@redhat.com>
+References: <20250508142005.135857-1-sgarzare@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,20 +82,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Running the tests continuously I noticed that sometimes the sigpipe
-test would fail due to a race between the control message of the test
-and the vsock transport messages.
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-While I was at it I also improved the test by checking the errno we
-expect.
+When the other peer calls shutdown(SHUT_RD), there is a chance that
+the send() call could occur before the message carrying the close
+information arrives over the transport. In such cases, the send()
+might still succeed. To avoid this race, let's retry the send() call
+a few times, ensuring the test is more reliable.
 
-Stefano Garzarella (2):
-  vsock/test: retry send() to avoid occasional failure in sigpipe test
-  vsock/test: check also expected errno on sigpipe test
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+ tools/testing/vsock/vsock_test.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
- tools/testing/vsock/vsock_test.c | 32 ++++++++++++++++++++++++--------
- 1 file changed, 24 insertions(+), 8 deletions(-)
-
+diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+index d0f6d253ac72..7de870dee1cf 100644
+--- a/tools/testing/vsock/vsock_test.c
++++ b/tools/testing/vsock/vsock_test.c
+@@ -1064,11 +1064,18 @@ static void test_stream_check_sigpipe(int fd)
+ 
+ 	have_sigpipe = 0;
+ 
+-	res = send(fd, "A", 1, 0);
+-	if (res != -1) {
+-		fprintf(stderr, "expected send(2) failure, got %zi\n", res);
+-		exit(EXIT_FAILURE);
+-	}
++	/* When the other peer calls shutdown(SHUT_RD), there is a chance that
++	 * the send() call could occur before the message carrying the close
++	 * information arrives over the transport. In such cases, the send()
++	 * might still succeed. To avoid this race, let's retry the send() call
++	 * a few times, ensuring the test is more reliable.
++	 */
++	timeout_begin(TIMEOUT);
++	do {
++		res = send(fd, "A", 1, 0);
++		timeout_check("send");
++	} while (res != -1);
++	timeout_end();
+ 
+ 	if (!have_sigpipe) {
+ 		fprintf(stderr, "SIGPIPE expected\n");
+@@ -1077,11 +1084,12 @@ static void test_stream_check_sigpipe(int fd)
+ 
+ 	have_sigpipe = 0;
+ 
+-	res = send(fd, "A", 1, MSG_NOSIGNAL);
+-	if (res != -1) {
+-		fprintf(stderr, "expected send(2) failure, got %zi\n", res);
+-		exit(EXIT_FAILURE);
+-	}
++	timeout_begin(TIMEOUT);
++	do {
++		res = send(fd, "A", 1, MSG_NOSIGNAL);
++		timeout_check("send");
++	} while (res != -1);
++	timeout_end();
+ 
+ 	if (have_sigpipe) {
+ 		fprintf(stderr, "SIGPIPE not expected\n");
 -- 
 2.49.0
 
