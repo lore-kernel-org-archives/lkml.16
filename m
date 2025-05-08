@@ -1,80 +1,155 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A060B210F5D;
-	Thu,  8 May 2025 05:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4E91386DA
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 05:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746680843; cv=none; b=E1aKxqmdhAWeWZ6OqG5pX1Nu+grvMaF8KCEw2BpWfjW8qHd+wOjWnvgdNslOnglrSo3n90EfPuYVLbuWp8GmUQsnZeqkRv4S0s+BJyMJDEIKuKjCegBnhmGLoiH5qpV5cXQ+AHqyegAVreLGi8aDP5JmktTA4Dew9BNWvqWQCZ8=
+	t=1746680880; cv=none; b=Kf2FK+qof84t10NJr+okF/iHoQbyaMpa799Sle4F+R62NYdyvOIpXOexPCgOcPreEGylwNZQOJIrZgDl+D3phdQBuYowo+umTbATd/YWhPAQaWzbqeKfeQhuVRriyQIPw4f1lhK7w4kjqjGDZmDzekQbklQocH7T2fDesWKS0O8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746680843; c=relaxed/simple;
-	bh=2AodfOl+DzZV+5X1clph/wNbzPwOOuBCV5AXOp3pEL4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WNWTXuYtjCGoAWdv5DS3GkEXq0QYCCcKYmby5PODC3qINfxNExdXtqBm5BmXo61ED/oRkofeABNBXT76OcmAvAOy7uvk8WQaz89ZK+YsjLTKGBkeW07GHuI9jTs21j+Mx9+GoX0VnDar53ubb5OtpGflKix4Oy8MbGz6WMRddnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=g3corOdq; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1746680880; c=relaxed/simple;
+	bh=762WzbtVDpriY6nKexgTUuobqBNCJcyYWb1XhpiJiRo=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=HV2/BSKKUBEmFx/clJHHlDi4vZmuEELC5O3655ndvenoKDNE5sXFpldnah120pxNuzVUdWY1ZgFMyWRbS5NniBf0X3K1iMFtuEFmRHZxXtOV7wtgTp2kVEDB4leDu4Mu9gJoYgMFYjOEptdExuDCrvgZda0F7kjJkHmBwpU6aCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MQ0XHQit; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="g3corOdq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=cjI3IizsYbTYi4iQOWq3owNuADZbruV8ZU1tsNatJEQ=; b=g3corOdqDQ3ypyVy4U3seRFY2w
-	USvAqrNk9eRoN263McUJRNOWEm3uWnKuB+4f+y7brYQzCWyesY1r9wynTzcciA6oIfv9BawFN5AlK
-	1yaG+SfHeFVg+lqLYkTzK4H1mN5DxnXxGcvimiNfDtKRvyeugiFKQbDbQ/h1T4agWd0cNLwCyEflK
-	4twoxuf6BXJwZk6/Y/FeGVZWsGLaDX19l9nDlUTe/yYVw1y452Do4d/vpocc8zKVs2LDNMtoxNxeJ
-	/m6CpuFChkWNviv/Utmo9KcUWZyBDokTElYej3mHwwlGVdOyQmIkCr6/D4Kg30xFbmNiWgdP7EiRV
-	bimj4xFQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uCtTX-004RSX-1W;
-	Thu, 08 May 2025 13:07:16 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 08 May 2025 13:07:15 +0800
-Date: Thu, 8 May 2025 13:07:15 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Ryan Wanner <ryan.wanner@microchip.com>
-Cc: linux-crypto@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
-Subject: Re: crypto self-test errors kernel 6.12.4
-Message-ID: <aBw8A0EhcDV3RXCV@gondor.apana.org.au>
-References: <468a8e17-d564-441d-9893-72b0ed48d8bb@microchip.com>
- <aBqvJJdXMcBpp9mC@gondor.apana.org.au>
- <9a725b81-9fed-4713-b56f-5b182f95e97a@microchip.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MQ0XHQit"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746680879; x=1778216879;
+  h=date:from:to:cc:subject:message-id;
+  bh=762WzbtVDpriY6nKexgTUuobqBNCJcyYWb1XhpiJiRo=;
+  b=MQ0XHQitQ420uPWCUXgtk1d5xhi/4P+vX9gQSUhEXsDZi+H2rvczT8EA
+   KnP/W1Wds/IWM/IBSl6IhIwCvsEdzT4NnMOthSV55f744GPu4pK/K0fkM
+   4eFZHnvVnEtdev2Si2dI/+91GrL3mvuFRQ5BC3Tp2mmvdFUUNfhqCGljI
+   igUoZnN0CwrOOVpCOoSHQRCh7G/tCaG1ql38TppvxXMP+tNSrGwLeAzOM
+   KUVnua7VDj3mwCP347aMAHNawHDcl8EbVyO92YWdbWb1B1ioVA2rxmVHn
+   VJ6i25i/QqGYjr71Unwe/ulx26ZuKcuFYGoo/4fMG2mdY+1IqoeBlLDxW
+   w==;
+X-CSE-ConnectionGUID: O2PZK+RkQLCLyR36YCKY+A==
+X-CSE-MsgGUID: J10ApREsSVCYkxyixNfiJA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="59797087"
+X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
+   d="scan'208";a="59797087"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 22:07:58 -0700
+X-CSE-ConnectionGUID: VUZCatPEQLGfL6fQt5k4fw==
+X-CSE-MsgGUID: HHe/F5l4S0i41I9uL7ntIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
+   d="scan'208";a="141136581"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 07 May 2025 22:07:57 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCtUA-000AFQ-2j;
+	Thu, 08 May 2025 05:07:54 +0000
+Date: Thu, 08 May 2025 13:07:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:locking/core] BUILD SUCCESS
+ cdb7d2d68cde6145a06a56c9d5d5d917297501c6
+Message-ID: <202505081312.AflvJqSd-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9a725b81-9fed-4713-b56f-5b182f95e97a@microchip.com>
 
-On Wed, May 07, 2025 at 08:27:18AM -0700, Ryan Wanner wrote:
->
-> Yes the config file is attached and here is the boot log, looks like it
-> is fixed on v6.15-rc5 and I do not see the error. Is there multiple
-> commits that fix this or where the async tests have been disabled?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/core
+branch HEAD: cdb7d2d68cde6145a06a56c9d5d5d917297501c6  locking/lockdep: Add number of dynamic keys to /proc/lockdep_stats
 
-Aha, so there were some fixes that went in after 6.12.  My pull
-request for 6.14 said:
+elapsed time: 2117m
 
-API:
+configs tested: 78
+configs skipped: 2
 
-- Remove physical address skcipher walking.
-- Fix boot-up self-test race.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-And these commits look like that they might help:
+tested configs:
+alpha               allnoconfig    gcc-14.2.0
+alpha              allyesconfig    clang-19
+alpha                 defconfig    gcc-14.2.0
+arc                allmodconfig    clang-19
+arc                 allnoconfig    gcc-14.2.0
+arc                allyesconfig    clang-19
+arc                   defconfig    gcc-14.2.0
+arm                allmodconfig    clang-19
+arm                 allnoconfig    clang-21
+arm                 allnoconfig    gcc-14.2.0
+arm                allyesconfig    clang-19
+arm                   defconfig    gcc-14.2.0
+arm64              allmodconfig    clang-19
+arm64               allnoconfig    gcc-14.2.0
+arm64                 defconfig    gcc-14.2.0
+csky                allnoconfig    gcc-14.2.0
+csky                  defconfig    gcc-14.2.0
+hexagon            allmodconfig    clang-19
+hexagon             allnoconfig    clang-21
+hexagon             allnoconfig    gcc-14.2.0
+hexagon            allyesconfig    clang-19
+hexagon               defconfig    gcc-14.2.0
+i386               allmodconfig    clang-20
+i386                allnoconfig    clang-20
+i386               allyesconfig    clang-20
+i386                  defconfig    clang-20
+loongarch          allmodconfig    gcc-14.2.0
+loongarch           allnoconfig    gcc-14.2.0
+loongarch             defconfig    gcc-14.2.0
+m68k               allmodconfig    gcc-14.2.0
+m68k                allnoconfig    gcc-14.2.0
+m68k               allyesconfig    gcc-14.2.0
+m68k                  defconfig    gcc-14.2.0
+microblaze         allmodconfig    gcc-14.2.0
+microblaze          allnoconfig    gcc-14.2.0
+microblaze         allyesconfig    gcc-14.2.0
+microblaze            defconfig    gcc-14.2.0
+mips                allnoconfig    gcc-14.2.0
+nios2               allnoconfig    gcc-14.2.0
+nios2                 defconfig    gcc-14.2.0
+openrisc            allnoconfig    clang-21
+openrisc            allnoconfig    gcc-14.2.0
+openrisc           allyesconfig    gcc-14.2.0
+parisc             allmodconfig    gcc-14.2.0
+parisc              allnoconfig    clang-21
+parisc              allnoconfig    gcc-14.2.0
+parisc             allyesconfig    gcc-14.2.0
+parisc64              defconfig    gcc-14.2.0
+powerpc            allmodconfig    gcc-14.2.0
+powerpc             allnoconfig    clang-21
+powerpc             allnoconfig    gcc-14.2.0
+powerpc            allyesconfig    gcc-14.2.0
+riscv              allmodconfig    gcc-14.2.0
+riscv               allnoconfig    clang-21
+riscv               allnoconfig    gcc-14.2.0
+riscv              allyesconfig    gcc-14.2.0
+s390               allmodconfig    gcc-14.2.0
+s390                allnoconfig    clang-21
+s390               allyesconfig    gcc-14.2.0
+sh                 allmodconfig    gcc-14.2.0
+sh                  allnoconfig    gcc-14.2.0
+sh                 allyesconfig    gcc-14.2.0
+sparc              allmodconfig    gcc-14.2.0
+sparc               allnoconfig    gcc-14.2.0
+um                 allmodconfig    clang-19
+um                  allnoconfig    clang-21
+um                 allyesconfig    clang-19
+x86_64              allnoconfig    clang-20
+x86_64             allyesconfig    clang-20
+x86_64                defconfig    clang-20
+x86_64                    kexec    clang-20
+x86_64                 rhel-9.4    clang-20
+x86_64             rhel-9.4-bpf    clang-18
+x86_64      rhel-9.4-kselftests    clang-20
+x86_64           rhel-9.4-kunit    clang-18
+x86_64             rhel-9.4-ltp    clang-18
+x86_64            rhel-9.4-rust    clang-18
+xtensa              allnoconfig    gcc-14.2.0
 
-      crypto: api - Fix boot-up self-test race
-      crypto: api - Call crypto_schedule_test outside of mutex
-
-If not then I guess you'd have to do a bisection search.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
