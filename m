@@ -1,107 +1,141 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B921DE3DF
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0534C1C5D59
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746698780; cv=none; b=BYvUS5o6qvboB7oJFhGXzs3SQH31hEJT9EpioXjB/PxLVgPhD/REvbl4Jjf3uasE2lJ2R/HzKBOKCgw9hfXV4kJCNot7YSL54/NK/AHQU4sIqLsVdfiiQ3mXomPiLqqJNpb1ROsbNUHwmYTQyU98eJIg7HGn0rnlZOO+pY7i894=
+	t=1746698810; cv=none; b=CH02hunaz1bgjGhOj3URnBubnM0tAk3bSCoPJqc23yeHuCWy9UTQFSJl8JqHkzCzoW9OdpUjvNUETJQWU7IGwG32inCIAj0bqC4fUWnZz/61hiv37OC8HpY3114BmkvXM/trPTE+VMzRngVv16RtbhI5DpAU0bQ46VkEU9qlJN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746698780; c=relaxed/simple;
-	bh=q7yD9E+5FXTgiEn9PuCJp38Irfbdm8jMWmnkpBAIlqE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G1LnDG9lt13HYcQZoKCqivPINS+7KyLZfI7hxoACcF///B5vQndGHYEoYg8/K3QonWon9Nn5jYfQWgM5AhswoljT9UHog5dOtFUsugGYDMVWWTn20QJdXi17AlDlVtNmI9foglurz4r/od+iKPN343DLheq1Zl7PO47MMnES6kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AHBosqfQ; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746698810; c=relaxed/simple;
+	bh=9OFgkLwwQYyFgmgcN/DCjENMz0bPLUCBiHGhJdS/TZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IvYKX5ressPTxp8jNWPa+ePdGC5pT8Xw+aWZg1ZXHgaBaYZ8uipKl/kj32vB6LFTjtvmQ86Or0lzd1AuBCf7RhVhDWq3gJra+XXW85l9Nuv3Cxvg9+smbzxFfdVhIoNNRyU4tzHIWmqPCWM9p1Zrbl9y9NqIn1ugMJwnuf7w82E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CgHnebkp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aJZl9/A/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CgHnebkp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aJZl9/A/; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AHBosqfQ"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e7387d4a334so721087276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 03:06:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746698778; x=1747303578; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Dt6fILG0823sTCQVUZRbrKoEDN8bmv7wajBdn4+1Hc=;
-        b=AHBosqfQ1XmF3ojUJqbdIaMCu1+VPtMBv4K6utJsMzCY6LZh7l2Nana0VNsdl2SuSX
-         uGkAARdEdWry4Rj6l/o4JLN1Zr0CEwdaFcmHSD3so2b58Oc7G2OQKb6gMpZTxItzs7Wi
-         z5lRkdbx21hv4Uc1JdbHCpV5QohPjM1Ax81iwJ0B/MKHhTp6wliBDuqNbXM6Kq2BhL8i
-         UVDEKnsWObTVzUTe2rrmq6c2zOspt8I9vUM9rLv9Q2lXCGw+EDkRA5FNKIcFOsh1qTBh
-         wkO+Pd97tDsXZ0asJWkzGUcxittVQAhmVWMg4ic26Hpwo8sGwOUQIJemzjbQ2a8p+V+d
-         Fk2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746698778; x=1747303578;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0Dt6fILG0823sTCQVUZRbrKoEDN8bmv7wajBdn4+1Hc=;
-        b=ZXINvwbT/3R/Hes1iCxVRpvfpeVv48rhOxqZw1W5lisAtbxDMKggoeyYH4ojtLTrjY
-         0Mg5ri7fZZK77fhlXVtEUtVJTVukvpaEklQdkhxWFGRNc9opuCoOWRImotfBE+jzIItG
-         mqIxyVcHw0DghLagdF9/5BhBz96Ygbe7efBTLlY0EadlZ1BFlcS/RSfdPSXPeqAN7SJw
-         wqB240Xw/ubrsmMHmRfRtFspWUXoxl23OEBl/1rKfR2UbRVRtAuXa7FUd5DHznDo7dfY
-         62o/oASgFFaxtCQJ/NXKIY3jexYDeTUTCWnkpVSJ1Z5svPGnYSDGgTOvq9hGEbvQKMaG
-         sWCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUy62eN9xjU7AyKzVUKBsOpdFJvPnX7UL137yRgs80nI0sfad49rBgdFQlWexOYJUCe6Rfux0H1vY217FI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaXVY1qIzMtK/UFpvQPepzX3mgqKX1Hi/HEQbdVKIkuirtFrOn
-	FGm9mCF2f0xBaGbsSBYrbcrizIJw5Zavbo414F5jx8tSRXxnKTF1KyRQBIKw+gA+/gDIYkunhTM
-	0oj8l6xl8bQxOk5NfAcsGVZc4Vuh2y03wcjV09g==
-X-Gm-Gg: ASbGncsGMvsZpLPgBKetXqJxWbWyC5j5ZFpdfqFvwT0ZscZ2hPojoVJNi783zvJM6r6
-	z28F87hFZqRfn2WVgqGijDO+hhKADz4LulRYoyEkLa6SuF+cD+WdkON6ON1uUaPbjOUvDfo1X+B
-	xAClhTpF+sOr6aVtdsl7GuZe4=
-X-Google-Smtp-Source: AGHT+IFLG8pqmlzvCqduNnPSERGgsArPUvpsmnVAsVQdb2qKBzJ4ictnEHeRy8JSqGPAm9xU4RfpdLw3POTBQQleFHg=
-X-Received: by 2002:a05:6902:238a:b0:e6b:8025:a9d2 with SMTP id
- 3f1490d57ef6-e78ef6612d3mr3061543276.24.1746698778096; Thu, 08 May 2025
- 03:06:18 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CgHnebkp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aJZl9/A/";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CgHnebkp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aJZl9/A/"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 0F0D31F452;
+	Thu,  8 May 2025 10:06:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746698807; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2XZBC61pHArRi7h5c8bT0ngPckaZRAV64bLjA0KsKBA=;
+	b=CgHnebkpMOqj3Wr2Ei2GbHvl5OyOCxnyKedTJt8gWaflco2MCYS5YDPIPcc5AkkjHBPPpz
+	68II6zJzxQHI6qA05g37rOiF+C0tLcZdsRJNPowQyP8z0btXYwM/5YVt5aOAp+tlwdQg3C
+	vWV7x6L99RrYHIzA4upxVmT8e54bOq8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746698807;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2XZBC61pHArRi7h5c8bT0ngPckaZRAV64bLjA0KsKBA=;
+	b=aJZl9/A/0fxTusS6J6SsxYISvjp41x0XBqwtEn9fcE/C7P+zGgB60FPq2V0iNLgak1Q51B
+	S/vT7dk4qPs2I1BA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746698807; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2XZBC61pHArRi7h5c8bT0ngPckaZRAV64bLjA0KsKBA=;
+	b=CgHnebkpMOqj3Wr2Ei2GbHvl5OyOCxnyKedTJt8gWaflco2MCYS5YDPIPcc5AkkjHBPPpz
+	68II6zJzxQHI6qA05g37rOiF+C0tLcZdsRJNPowQyP8z0btXYwM/5YVt5aOAp+tlwdQg3C
+	vWV7x6L99RrYHIzA4upxVmT8e54bOq8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746698807;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2XZBC61pHArRi7h5c8bT0ngPckaZRAV64bLjA0KsKBA=;
+	b=aJZl9/A/0fxTusS6J6SsxYISvjp41x0XBqwtEn9fcE/C7P+zGgB60FPq2V0iNLgak1Q51B
+	S/vT7dk4qPs2I1BA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E3D2913712;
+	Thu,  8 May 2025 10:06:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id zOBvNTaCHGjeewAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Thu, 08 May 2025 10:06:46 +0000
+Date: Thu, 8 May 2025 12:06:46 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Hannes Reinecke <hare@suse.de>
+Cc: Daniel Wagner <wagi@kernel.org>, 
+	James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	Chaitanya Kulkarni <kch@nvidia.com>, Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 01/14] nvmet-fcloop: track ref counts for nports
+Message-ID: <a42eca0f-8a13-443e-a380-86609d88b4ee@flourine.local>
+References: <20250507-nvmet-fcloop-v6-0-ca02e16fb018@kernel.org>
+ <20250507-nvmet-fcloop-v6-1-ca02e16fb018@kernel.org>
+ <4d262ac0-f27c-44d4-82c0-f50b31be606e@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417142513.312939-1-ulf.hansson@linaro.org>
- <20250417142513.312939-8-ulf.hansson@linaro.org> <aBuJD1izaMqKUJ_s@stanley.mountain>
-In-Reply-To: <aBuJD1izaMqKUJ_s@stanley.mountain>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 8 May 2025 12:05:42 +0200
-X-Gm-Features: ATxdqUFYpoIU6GGp0joDEQyexOZbHsuxgOGeWCwXDFxBwA4ofoG0Bbeb0aHcVlg
-Message-ID: <CAPDyKFrxzg2V5qjcnXQ=SyudkW4-nmSWG-8TkMOim+sSWKfboA@mail.gmail.com>
-Subject: Re: [PATCH 07/11] pmdomain: core: Export a common ->sync_state()
- helper for genpd providers
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Michael Grzeschik <m.grzeschik@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>, 
-	Abel Vesa <abel.vesa@linaro.org>, Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>, 
-	Peng Fan <peng.fan@oss.nxp.com>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	Johan Hovold <johan@kernel.org>, Maulik Shah <maulik.shah@oss.qualcomm.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4d262ac0-f27c-44d4-82c0-f50b31be606e@suse.de>
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -4.30
 
-On Wed, 7 May 2025 at 18:23, Dan Carpenter <dan.carpenter@linaro.org> wrote:
->
-> On Thu, Apr 17, 2025 at 04:25:05PM +0200, Ulf Hansson wrote:
-> > +void of_genpd_sync_state(struct device *dev)
-> > +{
-> > +     struct device_node *np = dev->of_node;
-> > +     struct generic_pm_domain *genpd;
-> > +
-> > +     if (!np)
-> > +             return;
-> > +
-> > +     mutex_lock(&gpd_list_lock);
-> > +     list_for_each_entry(genpd, &gpd_list, gpd_list_node) {
-> > +             if (genpd->provider == &np->fwnode) {
->
-> Presumably this would be "== of_fwnode_handle(np)) {" as well...
+On Wed, May 07, 2025 at 03:50:30PM +0200, Hannes Reinecke wrote:
+> > +	spin_lock_irqsave(&fcloop_lock, flags);
+> > +	tport = __unlink_target_port(nport);
+> >   	spin_unlock_irqrestore(&fcloop_lock, flags);
+> > -	if (!nport)
+> > -		return -ENOENT;
+> > +	if (!tport) {
+> > +		ret = -ENOENT;
+> > +		goto out_nport_put;
+> > +	}
+> >   	ret = __targetport_unreg(nport, tport);
+> 
+> The lock needs to extend across both lookup and unlink,
+> ie don't drop the lock in between.
 
-Yes, in fact there are a whole bunch of them in genpd. I am making
-preparatory patch to change all of them.
+No, this wont wor. There will be a nested lock in
+nvmet_fc_unregister_targetport. The lock only protects the list
+insert/delete/iterate operations not anything else.
 
->
-> regards,
-> dan carpenter
+FWIW, this is hasn't changed the unregister step was already done uside
+the lock.
 
-Thanks for reviewing!
-
-Kind regards
-Uffe
+BTW, I've played with turning the spin lock into a mutex as there
+doesn't seem to be any necessity to use a spin lock then we could in
+theory keep the lock over the whole section but this is something I
+would leave for the future.
