@@ -1,123 +1,246 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F74226556
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65C2227E89;
+	Thu,  8 May 2025 12:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746707249; cv=none; b=bakZOV2+CryLHKRM8HMAzDuifnf9jYuTKNS6F/5Zyft5ZMMK82Xu58PcrgJrOPy84N/BswGDJ1zidq5GbdMAY30jHsCz/vqsN+AYxQIPROMW9xBDHtYjYVZPqIRHQYzNlSkfnWo8GZfRZwQ2+Fq1D6aL/pgO8MjX7nSdr3/0TMI=
+	t=1746707251; cv=none; b=u0dmpEgseRry0yfnsU0LCEEiMVEu8wz/Tfgm291dLUv67//hMxOcfRm4Cka8Bm+IkTvcH6J3wW/Zkyptw9wtGgAC3wpwk6/xdZU/eoxn8jA6VtCzscsLj8RKCbt5UVIvXsJTREg6aEJK0WwpWqE+GlFHJDlrS0uoR9fIjZGe+ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746707249; c=relaxed/simple;
-	bh=knhgmqjC+LYrN4LfTA//Bbu1wdLXVvLef9E7e4pGDGA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=K4f3NDu8J+WI8CWB8Zl9q5K8QogLb62kxU4Oozi7YFOgobO1lsBR8U1ihM5qjJt9TTChWqNXKehSaWH1PVR+J+FRwim5f23qmFsk7NOMgoq8w8jyqUqYIb36zXLlkmc9MGr+wJOLzrRDGvHJ8FEdORvUxqA0UJqTYmlq0YyXlqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r3ZFm1s+; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1746707251; c=relaxed/simple;
+	bh=KaJyWY9o7KT1LtfUBQe5B6THOx9ebRzyhdQpLC6rhmY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=M4XNaXSTNH+4iG51jdmk8apvC01y91imZVzF41h12odCsLKlvBVKF9SMq5w8Ij/d/imKUVxV+PGSCeFnXZVdfMZ7FZLAedFfWya+FgSjpZxOfP+g382Er3Wg1LQT07zf/KCjo+56vMPmlJNsOouCksI+m9FoPpSKDWUfo3vElIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g1yhE/p9; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r3ZFm1s+"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so4357615e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:27:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746707246; x=1747312046; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zlt7vDOYRuKS+k9u/oUe5/3RWmsRW5OmWW9Gjm/Olvg=;
-        b=r3ZFm1s+/7YFZqB36+XdvQDuPisaFMeUKh6w2yC7FGRADcUV6U16JdDfMW5ndjaORX
-         JntsYWjQET1x9nEAnwzqUEYJc4+PgcCNKoZqOWwh1yL1dnWB07kx9tK0cdvG/Rx4Wt3Q
-         KmDO1DUdjUgdeiM4O1GtmTWdowSAbcQvRlNPde+d192v8wv3lmpLmVZDFhyykZ9+YLYN
-         2rnbcqEtXmgLftMel0PWL8eVwtbn0rbXyZdK98EjcPiOuI78jkU0nCHihh8LZyKDU9Yp
-         vSOf8FbKlqR34WykqbTqp88F2yVf3Wp9hC4gaB9UVYjtnCBPQZXUZMWQ6sQ+/2Wz+kzN
-         rPVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746707246; x=1747312046;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zlt7vDOYRuKS+k9u/oUe5/3RWmsRW5OmWW9Gjm/Olvg=;
-        b=LJSn8j5SOuWJy//dR9ZMJB3YN7simcz8OETrgIuSupxfDIFEvPRwcz0fEonvgvTJXT
-         F0WACh1RWg7aHutTxdMmoQltnmvIyuBw4vTOCxXjdoNAF1a5AFDhqxLb17o8U/PxxPI9
-         hcGVtBW+po39TNVLnRgbiytunW9r81Zy2ZEv3INZ+LwKTLLATS4eXMBLa8muTCsTDAjv
-         vDd1zh7WxKumgwJSp39k6TDnw1eEwyhQIpC+nHhI9GECX/Zyh8CEqhS85wA6Rt2tPeyo
-         PgaUXMBUt2/ZLcjx1ELveWURzqIOXuDpRlzjw1BA942K5qWlVBNzxCZm2gtpXMfSB5lt
-         E0EA==
-X-Forwarded-Encrypted: i=1; AJvYcCXcb+dPUqAQCCbsSowrqAkdHcwC5sHTskK0Bf/bde/IhnuQV70nX0sB0OUE5tJUJVixA2YI662KppQDjk8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEYj1tjjV2EAefZ03QU0Mo1hln7lF0L66eWdmhp3EE7TJLRpSf
-	3GA1JMslLap3ngZ3goAj765t5rz7oTdXiDsbClscbqb3drUKNevgZyMtXmY2X1NwYpy4Ur1/OLo
-	LNwfRVoUW7Skc1A==
-X-Google-Smtp-Source: AGHT+IFyPbf4TPezjTv7hjBojk1WoHQtD4cj1iM4uzg2wrEd2KfR4SSFofLNFplgX27HCXH8tEuxn7dXkdL9TuY=
-X-Received: from wmbem10.prod.google.com ([2002:a05:600c:820a:b0:43c:f8ae:4d6c])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:c0d2:10b0:441:d4e8:76c6 with SMTP id 5b1f17b1804b1-441d4e87833mr45345855e9.30.1746707245987;
- Thu, 08 May 2025 05:27:25 -0700 (PDT)
-Date: Thu, 8 May 2025 12:27:23 +0000
-In-Reply-To: <20250507211005.449435-3-ynaffit@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g1yhE/p9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746707250; x=1778243250;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=KaJyWY9o7KT1LtfUBQe5B6THOx9ebRzyhdQpLC6rhmY=;
+  b=g1yhE/p9plE5P+/vwvBl95PwZtfCC2TTxHRM9EbZQeZtoWJTcbYggUgp
+   nJjVkPtLatZgakx+aJIOmobnsSNhrI2gS0v2mbcntClobyhw68LiXMIc5
+   WXky3pvDOajbH7E6/Fv4zrSixca9BPuyvNLgoawhIF3HeOAZphKDZAgdH
+   xanrUOoEQ8t7wlzwzvg7OYdHB+WG5oQ3elFVuD2ZObIM59SrbcPfWLMwU
+   N1HcSSFq+GM+7fcBXdS/oB7XqYNsO6bsSn962wcZNS5EMhM7IL57DeNfo
+   hXRYKcv+840P6Yqj/PX08l8oPGpSlTMaNqtByoSRWwK9q47zWGtwfZqvv
+   Q==;
+X-CSE-ConnectionGUID: jer7XzTDRe2/9/EVqBX39Q==
+X-CSE-MsgGUID: 3WUHlaCGRw20OzHII38exQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="36115118"
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="36115118"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 05:27:30 -0700
+X-CSE-ConnectionGUID: qrBt83uRS8uBULUxx6LZGw==
+X-CSE-MsgGUID: MhwjLBJDTK+xXGQlFrq7ww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="136772857"
+Received: from amlin-018-114.igk.intel.com ([10.102.18.114])
+  by fmviesa010.fm.intel.com with ESMTP; 08 May 2025 05:27:25 -0700
+From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+To: donald.hunter@gmail.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	vadim.fedorenko@linux.dev,
+	jiri@resnulli.us,
+	anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com,
+	andrew+netdev@lunn.ch,
+	saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com,
+	jonathan.lemon@gmail.com,
+	richardcochran@gmail.com,
+	aleksandr.loktionov@intel.com,
+	milena.olech@intel.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	linux-rdma@vger.kernel.org,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Subject: [PATCH net-next v3 1/3] dpll: add phase-offset-monitor feature to netlink spec
+Date: Thu,  8 May 2025 14:21:26 +0200
+Message-Id: <20250508122128.1216231-2-arkadiusz.kubalewski@intel.com>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20250508122128.1216231-1-arkadiusz.kubalewski@intel.com>
+References: <20250508122128.1216231-1-arkadiusz.kubalewski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250507211005.449435-3-ynaffit@google.com>
-Message-ID: <aByjK9-FR6KsYx_7@google.com>
-Subject: Re: [PATCH v3 1/2] binder: Refactor binder_node print synchronization
-From: Alice Ryhl <aliceryhl@google.com>
-To: "Tiffany Y. Yang" <ynaffit@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Christian Brauner <brauner@kernel.org>, 
-	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, linux-kernel@vger.kernel.org, 
-	kernel-team@android.com
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 07, 2025 at 09:10:05PM +0000, Tiffany Y. Yang wrote:
-> +/**
-> + * print_next_binder_node_ilocked() - Print binder_node from a locked list
-> + * @m:          struct seq_file for output via seq_printf()
-> + * @node:       struct binder_node to print fields of
-> + * @prev_node:	struct binder_node we hold a temporary reference to (if any)
-> + *
-> + * Helper function to handle synchronization around printing a struct
-> + * binder_node while iterating through @node->proc->nodes or the dead nodes
-> + * list. Caller must hold either @node->proc->inner_lock (for live nodes) or
-> + * binder_dead_nodes_lock. This lock will be released during the body of this
-> + * function, but it will be reacquired before returning to the caller.
-> + *
-> + * Return:	pointer to the struct binder_node we hold a tmpref on
-> + */
-> +static struct binder_node *
-> +print_next_binder_node_ilocked(struct seq_file *m, struct binder_node *node,
-> +			       struct binder_node *prev_node)
-> +{
-> +	/*
-> +	 * Take a temporary reference on the node so that isn't removed from
-> +	 * its proc's tree or the dead nodes list while we print it.
-> +	 */
-> +	binder_inc_node_tmpref_ilocked(node);
-> +	/*
-> +	 * Live nodes need to drop the inner proc lock and dead nodes need to
-> +	 * drop the binder_dead_nodes_lock before trying to take the node lock.
-> +	 */
-> +	if (node->proc)
-> +		binder_inner_proc_unlock(node->proc);
-> +	else
-> +		spin_unlock(&binder_dead_nodes_lock);
-> +	if (prev_node)
-> +		binder_put_node(prev_node);
+Add enum dpll_feature_state for control over features.
 
-I don't buy this logic. Imagine the following scenario:
+Add dpll device level attribute:
+DPLL_A_PHASE_OFFSET_MONITOR - to allow control over a phase offset monitor
+feature. Attribute is present and shall return current state of a feature
+(enum dpll_feature_state), if the device driver provides such capability,
+otherwie attribute shall not be present.
 
-1. print_binder_proc is called, and we loop over proc->nodes.
-2. We call binder_inner_proc_unlock(node->proc).
-3. On another thread, binder_deferred_release() is called.
-4. The node is removed from proc->nodes and node->proc is set to NULL.
-5. Back in print_next_binder_node_ilocked(), we now call
-   spin_lock(&binder_dead_nodes_lock) and return.
-6. In print_binder_proc(), we think that we hold the proc lock, but
-   actually we hold the dead nodes lock instead. BOOM.
+Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
+Reviewed-by: Milena Olech <milena.olech@intel.com>
+Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+---
+v3:
+- replace feature flags and capabilities with per feature attribute
+  approach,
+- add dpll documentation for phase-offset-monitor feature.
+---
+ Documentation/driver-api/dpll.rst     | 16 ++++++++++++++++
+ Documentation/netlink/specs/dpll.yaml | 24 ++++++++++++++++++++++++
+ drivers/dpll/dpll_nl.c                |  5 +++--
+ include/uapi/linux/dpll.h             | 12 ++++++++++++
+ 4 files changed, 55 insertions(+), 2 deletions(-)
 
-What happens with the current code is that print_binder_proc() takes the
-proc lock again after the node was removed from proc->nodes, and then it
-exits the loop because rb_next(n) returns NULL when called on a node not
-in any rb-tree.
+diff --git a/Documentation/driver-api/dpll.rst b/Documentation/driver-api/dpll.rst
+index e6855cd37e85..04efb425b411 100644
+--- a/Documentation/driver-api/dpll.rst
++++ b/Documentation/driver-api/dpll.rst
+@@ -214,6 +214,22 @@ offset values are fractional with 3-digit decimal places and shell be
+ divided with ``DPLL_PIN_PHASE_OFFSET_DIVIDER`` to get integer part and
+ modulo divided to get fractional part.
+ 
++Phase offset monitor
++====================
++
++Phase offset measurement is typically performed against the current active
++source. However, some DPLL (Digital Phase-Locked Loop) devices may offer
++the capability to monitor phase offsets across all available inputs.
++The attribute and current feature state shall be included in the response
++message of the ``DPLL_CMD_DEVICE_GET`` command for supported DPLL devices.
++In such cases, users can also control the feature using the
++``DPLL_CMD_DEVICE_SET`` command by setting the ``enum dpll_feature_state``
++values for the attribute.
++
++  =============================== ========================
++  ``DPLL_A_PHASE_OFFSET_MONITOR`` attr state of a feature
++  =============================== ========================
++
+ Embedded SYNC
+ =============
+ 
+diff --git a/Documentation/netlink/specs/dpll.yaml b/Documentation/netlink/specs/dpll.yaml
+index 8feefeae5376..e9774678b3f3 100644
+--- a/Documentation/netlink/specs/dpll.yaml
++++ b/Documentation/netlink/specs/dpll.yaml
+@@ -240,6 +240,20 @@ definitions:
+       integer part of a measured phase offset value.
+       Value of (DPLL_A_PHASE_OFFSET % DPLL_PHASE_OFFSET_DIVIDER) is a
+       fractional part of a measured phase offset value.
++  -
++    type: enum
++    name: feature-state
++    doc: |
++      Allow control (enable/disable) and status checking over features.
++    entries:
++      -
++        name: disable
++        doc: |
++          feature shall be disabled
++      -
++        name: enable
++        doc: |
++          feature shall be enabled
+ 
+ attribute-sets:
+   -
+@@ -293,6 +307,14 @@ attribute-sets:
+           be put to message multiple times to indicate possible parallel
+           quality levels (e.g. one specified by ITU option 1 and another
+           one specified by option 2).
++      -
++        name: phase-offset-monitor
++        type: u32
++        enum: feature-state
++        doc: Receive or request state of phase offset monitor feature.
++          If enabled, dpll device shall monitor and notify all currently
++          available inputs for changes of their phase offset against the
++          dpll device.
+   -
+     name: pin
+     enum-name: dpll_a_pin
+@@ -483,6 +505,7 @@ operations:
+             - temp
+             - clock-id
+             - type
++            - phase-offset-monitor
+ 
+       dump:
+         reply: *dev-attrs
+@@ -499,6 +522,7 @@ operations:
+         request:
+           attributes:
+             - id
++            - phase-offset-monitor
+     -
+       name: device-create-ntf
+       doc: Notification about device appearing
+diff --git a/drivers/dpll/dpll_nl.c b/drivers/dpll/dpll_nl.c
+index fe9b6893d261..8de90310c3be 100644
+--- a/drivers/dpll/dpll_nl.c
++++ b/drivers/dpll/dpll_nl.c
+@@ -37,8 +37,9 @@ static const struct nla_policy dpll_device_get_nl_policy[DPLL_A_ID + 1] = {
+ };
+ 
+ /* DPLL_CMD_DEVICE_SET - do */
+-static const struct nla_policy dpll_device_set_nl_policy[DPLL_A_ID + 1] = {
++static const struct nla_policy dpll_device_set_nl_policy[DPLL_A_PHASE_OFFSET_MONITOR + 1] = {
+ 	[DPLL_A_ID] = { .type = NLA_U32, },
++	[DPLL_A_PHASE_OFFSET_MONITOR] = NLA_POLICY_MAX(NLA_U32, 1),
+ };
+ 
+ /* DPLL_CMD_PIN_ID_GET - do */
+@@ -105,7 +106,7 @@ static const struct genl_split_ops dpll_nl_ops[] = {
+ 		.doit		= dpll_nl_device_set_doit,
+ 		.post_doit	= dpll_post_doit,
+ 		.policy		= dpll_device_set_nl_policy,
+-		.maxattr	= DPLL_A_ID,
++		.maxattr	= DPLL_A_PHASE_OFFSET_MONITOR,
+ 		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+ 	},
+ 	{
+diff --git a/include/uapi/linux/dpll.h b/include/uapi/linux/dpll.h
+index bf97d4b6d51f..349e1b3ca1ae 100644
+--- a/include/uapi/linux/dpll.h
++++ b/include/uapi/linux/dpll.h
+@@ -192,6 +192,17 @@ enum dpll_pin_capabilities {
+ 
+ #define DPLL_PHASE_OFFSET_DIVIDER	1000
+ 
++/**
++ * enum dpll_feature_state - Allow control (enable/disable) and status checking
++ *   over features.
++ * @DPLL_FEATURE_STATE_DISABLE: feature shall be disabled
++ * @DPLL_FEATURE_STATE_ENABLE: feature shall be enabled
++ */
++enum dpll_feature_state {
++	DPLL_FEATURE_STATE_DISABLE,
++	DPLL_FEATURE_STATE_ENABLE,
++};
++
+ enum dpll_a {
+ 	DPLL_A_ID = 1,
+ 	DPLL_A_MODULE_NAME,
+@@ -204,6 +215,7 @@ enum dpll_a {
+ 	DPLL_A_TYPE,
+ 	DPLL_A_LOCK_STATUS_ERROR,
+ 	DPLL_A_CLOCK_QUALITY_LEVEL,
++	DPLL_A_PHASE_OFFSET_MONITOR,
+ 
+ 	__DPLL_A_MAX,
+ 	DPLL_A_MAX = (__DPLL_A_MAX - 1)
+-- 
+2.38.1
 
-Alice
