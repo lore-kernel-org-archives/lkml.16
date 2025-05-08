@@ -1,127 +1,193 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2039253345
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5602E253345;
+	Thu,  8 May 2025 14:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746714432; cv=none; b=TFZAjUjM8fqsz/TwNYJ5XS0a4XmN6KC/db+/n5yM5luqKf1nPF1xSwQuL9afwOFAs7ht6KvWhBKaCbRa29e/S7lfaZ798FGzQRxZnMk0+Fj4nlkwtAZ2z/4klMskbgVjE0LPZvxZxxHcdGKXP2pPy+O2CRGzxOXswRsM5GldbRI=
+	t=1746714438; cv=none; b=DdYe6KICV+qYlq/7YmRUqzyCfS54/17j6E34IMuTkjwkBKrBRz4xkm68pGIYuVsZBHtq4Q624cuVRQGoiZoGK8LmYuTZtD0ddj/aKQLAVUN1Dzet2nb81HZbtF3haCTZIe+slyYyGzSGuEsqWBvfDSkGNgWmsfFXbHYrcvH3V4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746714432; c=relaxed/simple;
-	bh=zkds43o5L5B/f6HNVac68bbzTS3DCgZhRIDrIzr3LLc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nA2pNSgxLhWWGKeYlest0fjab+qhbSZAbEvUK7kbp8TCOpDQs88jpm0TGIktCEYh9UF/e2nzTJGVXcuFhkXGhYqlEQKLBoelzR+Naq/KH3da253ElNqjnB5Mh2vyXQxPnCsN+9P1BSQbHJBzga9SDN6WFIAoVdWNOSgTKtrQeaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YJ+vvhv5; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746714438; c=relaxed/simple;
+	bh=inNKiF9nZuE5TZzlboihKKxxO+YidsZDOpnVoEQTlMc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GGp2jAQ1mHZ3kJy6c69moleVQMUVXho26Tc5chAmleP8Eh3gDvMUIfUBRIGht5DOF9mEB8d2L3VQA0F9jFEvJ5lgQeyLb4BOqtwtUqL9lIoSK6a3YTtH973UAuildehPAXuQCo9hOuFULuUy7Jy4fTDHKcSpv2kN/uahuy/m/ZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TJCiikU2; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YJ+vvhv5"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548D2dkJ016320
-	for <linux-kernel@vger.kernel.org>; Thu, 8 May 2025 14:27:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4Mep7YcpH9mzwrz4fqg9kB+zrqpI2pfxnFBXIq+LfRk=; b=YJ+vvhv5wxf0zoE+
-	FRCfleAoKhwz/ZkxHGa7gIFdg+hImF8d+4z4jqa58MSCjADTch7h5e7j6kcO53CA
-	+u1Z7UIt/pzYSvriICYPyOvGLh0SE2qPFXwMyBl5y2wmW8D8ht2IixG2yIXQBjNe
-	7TSTZelW0DKwGJkTfF7NHntZZudKkmoQV6Ts8lsJrFXSw+IiLHLjHFtafjPAZ+7z
-	U7qsVYO5xaDHf/pODUmle7MKIrCFNIzLYqufBDYav66HZwewUr5gWLMDphuS1LuP
-	Qrij5s3zu5Z3thxgI9Tof8rRNJolzGcYyO0Qtw6mG0RMMEDkisgNLm8pd7slh8LD
-	Hbnq0w==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp8sjwn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 14:27:09 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5560e0893so16389185a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 07:27:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJCiikU2"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-740b3a18e26so551052b3a.2;
+        Thu, 08 May 2025 07:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746714435; x=1747319235; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L1X5Gjv7/09h4a7I6zwRasGWexPXnv1aX5JDZjLolKU=;
+        b=TJCiikU2RfA9OjKddvyB/jfoD2riZ8RVNs9CD3Wg0DbdVHgdqwXqty6TG5CvIG8hZ7
+         cuHYf8jGcKezo6Jb44hMli6rEcXmE/s07SnE66+DeX09SwNSLWVSCLl/Q67K20CNF3RA
+         sHk5yifyYl98zZlvBPM+fmyim/O8Y8Cf3A2q27Y5FTdP+YAjCRQI2M+CrcgnVNWmZ4tl
+         GvbS27s4YZDHNQjix4aic07DW9qEMXkmdjTUWdLOl3WG6FTflpcXQW0bSfndlKBO0/g8
+         7Yd4pHcLDsFQeSY0IyTGeXkJXMlaThT3tUUxqHTzaIzbFSPfDht7UUZ0K7q+iA4N1iNM
+         uJ1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746714429; x=1747319229;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Mep7YcpH9mzwrz4fqg9kB+zrqpI2pfxnFBXIq+LfRk=;
-        b=r6Mf9vpEr4zgN48Z8AVNm0jHKT2jqLhRbCINJkBd+x5258nxl8IQzo8XUBh1Ha4k5e
-         9C9LvSf3sLTmH5UHGkB9gNturAfiB/kE3kPtXs++VAyNE6Jobz/TW6LMroC70b4eHE1O
-         A3hKdNBY2BmwyTFSRvesePADbR7JP4UFJZleKSJ1vlQWmh6Fu89vRgdEe6tjOvo8eX6L
-         apFvh9NtZUxwsAVWJRnJHbYtWs3lGUm4HxelMyqE35Y1cC2SFfDtnI4jrZ3BSF9raRa0
-         WJUUN4t9oaWZUaW2R9q2SPMiVV4mK1lMpwwjqn0XcZvEnWtKTq2HcOYVzsfp94mHkZQf
-         dmNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHMY2SS7KMgAgdds6vtqWUoJsBNnH17u4PvArywYyd0YoXMuRr9P9sJLB2olHmpUqFgg8ilnD7zs/jcuM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzo2FhQIlh97AF4/+NfmEj8mcIX0X+Um1n2e5MnQB7Zaknky1bc
-	JcvnthOO5HOpxnGL49xv78WeIWcnSq+ylcYkLSaQdUOpTnv6tEzr6VkZXFNUe+ufurq3f+AHU4g
-	sNHOomcJMNyjWjxM7qfkq0RGQ1TgtZ5roiicYHzY5v2ABEqTOytnwFioq14TMWRY=
-X-Gm-Gg: ASbGncsc+/q8h66+LZoics26ANnt+4nFDLnGEUdXf83AHb1nN6XshpAXee5IQGhEVls
-	vdOH1BPG0spNCNRK2fpGDcZlS0SCdtueLaN07S5Nf3FFnSCcgmNAZqqXSAL2+l49buJLKkAebB4
-	3xsMhfzHgwD7JDL9wEPEAriSW8lrsn0Vp0dm+7/1eiSQNj9d26PlBF7GKvpQ68jSixCKWav9IGb
-	eqax89QbCuD+1xP127TNFpgXnpeoDJiMv1DyV0YL0pt1DynkYtai87sW7kVklFA/nKtvzYcbr8O
-	G41UIySaWyangEiNqH5sEeo4sN5+BHr1yX7L7c/eEUdbyN83GqdYyp11CwqkX8RLLgg=
-X-Received: by 2002:a05:620a:3711:b0:7c5:687f:d79d with SMTP id af79cd13be357-7caf73aaec5mr405295785a.8.1746714428658;
-        Thu, 08 May 2025 07:27:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGvba6HeUAx7OKuoCqvOUbDJe875HzP+f08GjIi6W0s7XmhXMvoMzNxaPmK3JIBmw9hSJ9S6w==
-X-Received: by 2002:a05:620a:3711:b0:7c5:687f:d79d with SMTP id af79cd13be357-7caf73aaec5mr405294585a.8.1746714428345;
-        Thu, 08 May 2025 07:27:08 -0700 (PDT)
-Received: from [192.168.65.105] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad20d048485sm55528066b.127.2025.05.08.07.27.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 07:27:07 -0700 (PDT)
-Message-ID: <f22fe0a5-d39c-4a6e-9363-d02a6b17f01d@oss.qualcomm.com>
-Date: Thu, 8 May 2025 16:27:05 +0200
+        d=1e100.net; s=20230601; t=1746714435; x=1747319235;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=L1X5Gjv7/09h4a7I6zwRasGWexPXnv1aX5JDZjLolKU=;
+        b=wNlFngrd3d0SH8YuN8SHcKpvlOXNfa3PDxaCVaktHZdvqWZ6C+DTmFWS4kZhlC/JTR
+         +DwdfKEKIs0lxsCR3kk74Rjo5UjHDpDB7c8pL4CYQAc3CVGlnnuHNmVhv5GGYPrlucW0
+         R65Crky3A9fsbZC+IdrzoWHcluC5fYn3mVvSElhUbQAsCc7Stsc7b1YCmGdoO3RtVdGd
+         Enec6228yb9mpw76sVC7KqsccWbgf1FWmykq9YH0M2HurOLHYLg+BcZIJp54cSX5PxFc
+         4e9bj9GE7lYcU7QRyxm9ZR/pVcDEGYXxT3UVn/4KGpN8wH666Q0uHriikZ5BG2PCqbUp
+         jefA==
+X-Forwarded-Encrypted: i=1; AJvYcCUER7Yo6d/aD7nnoz6xXOkgMZj7j1Ureuj7/47JMcraNBC/UzegZZOlhinTG4emrdDNoRq8W0iWKvq1@vger.kernel.org, AJvYcCW0ALh28mZbBqWswhbeB5a4fPzeDjGTz7NJEKzORfnhiQdQzYdibXmubjuSk7uNUn/nb2mle5L/yKWL@vger.kernel.org, AJvYcCWi7JETv+mu/Dq10B8kaaBcRV1Js5rPxXKTdgU9oOxKS6C9NVUsqAgVgbNUz1Nn7VgvhyJOXEC1lZrNxHVG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8J6DXZXXc+fH7rgzpm28BH/gz0+znfg2H8A+dsk0/daSYqi64
+	/qCJcHPLbtuyo6oo/IcTOfJGS9LebsYYOuP7jjAihtYql51ZJAHL
+X-Gm-Gg: ASbGncuEKreS8LiLE/S0Y2EV23X2IhlLrKh73c7ed8jV8jL1sI5QSlu3vXc46mDSwy4
+	b7dOwaoPE24oZAFf3ihWWr+Z8cAiLYlAHpUxDEbmAzAXjgD6n2AH6AFuX0+6hi8iGwBNB8RYSKJ
+	uJNdWidl8kPPkcmLqPqnOUS2tB9kiMYciTdXxfqAe78DzTeQVfvmO2hmsJu42ZjtpbWPiFD8rRI
+	o+EO/Z1vW4hyt6Td5z4aRwQiFZY61b0NJ0Sw0+eKjp70QUb0Qiu1BR6Vj4bMzVS/RLo2fRHJ77s
+	4vZRJw7oOGdpAn29Oykgec80RIedlkKK79WFL+pgd2J2v+VOsYPVVA==
+X-Google-Smtp-Source: AGHT+IGX69fKV8SIz5ble6uUkvbicpRW5QmwPdXGWbWOXvCG1vLa4lPWJgZNrqXL8Q3jFUOwyoJcKw==
+X-Received: by 2002:a05:6a21:6d83:b0:1f5:86c6:5747 with SMTP id adf61e73a8af0-2159b05448fmr6089580637.32.1746714435380;
+        Thu, 08 May 2025 07:27:15 -0700 (PDT)
+Received: from localhost.localdomain ([123.16.133.44])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3b62502sm11383288a12.32.2025.05.08.07.27.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 07:27:14 -0700 (PDT)
+From: Nam Tran <trannamatk@gmail.com>
+To: lee@kernel.org
+Cc: andy@kernel.org,
+	geert@linux-m68k.org,
+	pavel@ucw.cz,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	christophe.jaillet@wanadoo.fr,
+	corbet@lwn.net,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	florian.fainelli@broadcom.com,
+	bcm-kernel-feedback-list@broadcom.com,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v8 0/5] auxdisplay: add support for TI LP5812 4x3 Matrix LED driver
+Date: Thu,  8 May 2025 21:26:48 +0700
+Message-Id: <20250508142648.7978-1-trannamatk@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250508132659.GL3865826@google.com>
+References: <20250508132659.GL3865826@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] ARM: dts: qcom: msm8226-motorola-falcon: add I2C
- clock frequencies
-To: Stanislav Jakubek <stano.jakubek@gmail.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, phone-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1746711762.git.stano.jakubek@gmail.com>
- <5a8191e3758e0df78b4213102f25ceadc28cd427.1746711762.git.stano.jakubek@gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <5a8191e3758e0df78b4213102f25ceadc28cd427.1746711762.git.stano.jakubek@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: x-YP7Bw1-hYF6ECA44PltUJSwECbwuBq
-X-Proofpoint-ORIG-GUID: x-YP7Bw1-hYF6ECA44PltUJSwECbwuBq
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDEyMyBTYWx0ZWRfX3p3CSrAf4FsP
- yt4Rc1ld7RQQbqKjgbuTHOoPiKxCSlY3iLdRPDcVePL+2YpnFCs1hX9dAZ+LBj7IwBR3Ashq1S0
- r/VmZ1Sn/dvreNdbN1+TmeRZhNJmGdhJFRXdw2AmSs/J/BVWiKbYYdqW75Y1lEsqSiB1kp/auRD
- SmYWkPMX6p5v2CJ+jd8UpsF4RSsd4NuCRx54Q6QT2eKFYCr98rs2BO7bpp2GYOwPUPhRDENMAMh
- VENlJbpj6jqheclyASkkqVdoBduVvii+Nh2z8kYASe3rqzu2nHOuOzGNkcXcK8bxbU35H90nki+
- APEkMWZz2C9gzSo7QHZNRGAzZoNSet05KSgJmluAJXVNfOr7dLLueltAXgSab+acFlChls5Sl5T
- 9zs5pFaMftiYnQvoJ8RGXOFEP+ZJeIquLwTNbR/3TGkoYsxOWvBtQeAJhT1YZ5kE6seb4ItC
-X-Authority-Analysis: v=2.4 cv=e/4GSbp/ c=1 sm=1 tr=0 ts=681cbf3d cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8
- a=TrkI-WLm7CqbamwRmuEA:9 a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_05,2025-05-07_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0 clxscore=1015
- mlxlogscore=754 spamscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0
- mlxscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505080123
+Content-Transfer-Encoding: 8bit
 
-On 5/8/25 4:11 PM, Stanislav Jakubek wrote:
-> While the currently supported hardware works fine with the default clock
-> frequencies of 100000 on both I2C2 and I2C3, downstream sources list the
-> frequencies as 100000 for I2C2 and 400000 for I2C3. Update them as such.
+On Thu, 8 May 2025 Lee Jones wrote:
+
+> On Thu, 08 May 2025, Andy Shevchenko wrote:
 > 
-> Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
-> ---
+> > First of all, I just noticed that you excluded Lee from the
+> > distribution list. Don't do that as he is a stakeholder here as well
+> > since it has not been decided yet where to go with your stuff.
+> > 
+> > On Wed, May 7, 2025 at 7:42 PM Nam Tran <trannamatk@gmail.com> wrote:
+> > > On Tue, 29 Apr 2025 Andy Shevchenko wrote:
+> > > > On Tue, Apr 29, 2025 at 8:02 PM Nam Tran <trannamatk@gmail.com> wrote:
+> > > > > On Mon, 28 Apr 2025 Pavel Machek wrote:
+> > > > > > > On Mon, 28 Apr 2025 Geert Uytterhoeven wrote:
+> > > > > >
+> > > > > > > > > > > - Move driver to drivers/auxdisplay/ instead of drivers/leds/.
+> > > > > > > > > > > - Rename files from leds-lp5812.c/.h to lp5812.c/.h.
+> > > > > > > > > > > - Move ti,lp5812.yaml binding to auxdisplay/ directory,
+> > > > > > > > > > >   and update the title and $id to match new path.
+> > > > > > > > > > > - No functional changes to the binding itself (keep Reviewed-by).
+> > > > > > > > > > > - Update commit messages and patch titles to reflect the move.
+> > > > > > > > > > > - Link to v7: https://lore.kernel.org/linux-leds/20250422190121.46839-1-trannamatk@gmail.com/
+> > > > > > > > > >
+> > > > > > > > > > Out of sudden without discussing with auxdisplay maintainers/reviewers?
+> > > > > > > > > > Thanks, no.
+> > > > > > > > > > Please, put into the cover letter the meaningful summary of what's
+> > > > > > > > > > going on and why this becomes an auxdisplay issue. Brief review of the
+> > > > > > > > > > bindings sounds more likely like LEDS or PWM subsystems.
+> > > > > > > > >
+> > > > > > > > > It is 4x3 matrix. That means it is not suitable for LEDs. I don't
+> > > > > > > > > believe it is suitable for PWM, either -- yes, it is 36 PWM outputs,
+> > > > > > > > > but...
+> > > > > > > >
+> > > > > > > > Is it intended to be used as a 4x3 matrix, or is this just an internal
+> > > > > > > > wiring detail, and should it be exposed as 12 individual LEDs instead?
+> > > > > > >
+> > > > > > > The 4×3 matrix is a real and fundamental aspect of the LP5812’s operation.
+> > > > > > > It is not just an internal wiring detail.
+> > > > > > > The device adopts a Time-Cross-Multiplexing (TCM) structure, where 4 output
+> > > > > > > pins control 12 LED dots individually through scanning. Each pin includes
+> > > > > > > both high-side and low-side drive circuits, meaning matrix multiplexing is
+> > > > > > > required for proper operation — it cannot be treated as 12 completely
+> > > > > > > independent LEDs.
+> > > > > >
+> > > > > > Scanning is really a detail.
+> > > > > >
+> > > > > > If this is used as rectangular 4x3 display, then it goes to auxdisplay.
+> > > > > >
+> > > > > > If this is used as a power LED, SD activity LED, capslock and numlock
+> > > > > > ... placed randomly all around the device, then it goes LED subsystem.
+> > > > >
+> > > > > The LP5812 is used for LED status indication in devices like smart speakers,
+> > > > > wearables, and routers, not as a structured rectangular display.
+> > > > >
+> > > > > Given that, it seems to match the LED subsystem better than auxdisplay, doesn't it?
+> > > >
+> > > > I have mixed feelings about all this. As per hardware organisation it
+> > > > sounds more like a matrix (for example. keyboard), where all entities
+> > > > are accessed on a scanline, but at the same time each of the entities
+> > > > may have orthogonal functions to each other. Have you checked with DRM
+> > > > for the sake of completeness?
+> > > > Personally I lean more to the something special, which doesn't fit
+> > > > existing subsystems. Auxdisplay subsystem more or less about special
+> > > > alphanumeric displays (with the exception of some FB kinda devices,
+> > > > that were even discussed to have drivers be removed). Also maybe FB
+> > > > might have something suitable, but in any case it looks quite
+> > > > non-standard...
+> > >
+> > > I understand your mixed feelings about where the LP5812 fits within
+> > > the existing subsystems.
+> > >
+> > > While the LP5812 uses a matrix-based structure for controlling LEDs,
+> > > it is not intended for displaying structured text or graphics. Instead,
+> > > it controls up to 4 RGB LEDs for status indication, where each RGB LED
+> > > consists of 3 individual color LEDs: red, green, and blue. Based on this,
+> > 
+> > So, you probably should have started with this. As I read above that
+> > this has to reside in drivers/leds/rgb for colour ones which seems to
+> > me closest to your case. On top you might add an upper level
+> > management to prevent users from using patterns whenever the LEDs are
+> > requested individually. So, this driver should represent 4 RGB leds
+> > and, possibly, the upper layer with those fancy stuff like breathing.
+> > 
+> > At least, based on the above it's my formal NAK from an auxdisplay perspective.
+> 
+> This is fine.
+> 
+> Just be aware, before you submit to LEDs again, that you need to use
+> what is available in the LEDs subsystem to it's fullest, before
+> hand-rolling all of your own APIs.  The first submission didn't use a
+> single LED API.  This, as before, would be a big NACK also.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Thanks for the clarification.
 
-Konrad
+Just to confirm — the current version of the driver is customized to allow
+user space to directly manipulate LP5812 registers and to support the
+device’s full feature set. Because of this, it doesn’t follow the standard
+LED interfaces.
+
+Given that, would it be acceptable to submit this driver under the misc subsystem instead?
+
+Best regards,
+Nam Tran
