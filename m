@@ -1,168 +1,161 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-244108.protonmail.ch (mail-244108.protonmail.ch [109.224.244.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC4522688B
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7999F226170
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746708173; cv=none; b=AjXr6JZuWe9PsDepctp+u/3YwaKGAueoz1iLvVqIAbYY6rbEiyyw8VqET6+FF67NgyBFyXzyRNUuEpYbOe36clnhE/XHnCBx+Tp6nsvJSGRrzetgbX3spCcTgLW/c1+xbD6rjntw02mN17ALS9xrtTTtmEUWf23EUrHALc9khzM=
+	t=1746708209; cv=none; b=gAM/TWfKLST6sGBGCkS61HnrVCRJREVxTWVKh9dvrqx15iAjNWMj6SJu6c9EFuqDRySORckueaxtuXAd18MIzmi3VNpnu06DoOjzHDkh2GWy3ersHL5NxRdYmFC685GnQFCewHYEFDpIbjw5RqdvBHcPqsQeAC6Bf+IH8ZOaY+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746708173; c=relaxed/simple;
-	bh=FJft4ykFn4r+3Ixy2UkaLsf7DlcyK2asv15fMXuVTE4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I3ScU8UnmBKSXJrkB9KY22qM+2A4tKyyKy0owDO3RbBnLpXrrFZcJHawHcp/4w0wIq2fJ/rGrpxkojpkjjp7DT6eFTPiWSs8FgShRccmHJXJxJUm83nXycPOeoPQt+/1R2d4YXVC+PCx9K9SqUH/abSgjCceiMixQEK/m6nIv2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=o3Oi/E6T; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1746708209; c=relaxed/simple;
+	bh=zG7qqson8ltj7u0zdwfOfJteViT6Z7xCoIr6JY2V/08=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YUV7L5gE3LS6dRhYjKSizU4Y2JRVBU2aIjg5VrOjIFZpLtPFDJoFsPGjeNkvLEC6EiZk6pnWSF3/EHdaWmYCfkItksUQjr3tFPNBa8QGko+3r/gXd4wTjHKeqtAjZZiEVF1CkmScutUcrnlK9iCFmki+Z7FQnJpih8Lwti4PxqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=OIkSZspv; arc=none smtp.client-ip=109.224.244.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="o3Oi/E6T"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3d9189e9a06so3775625ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:42:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1746708170; x=1747312970; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZPxzY778BTzrpTVkXEIU0dpBm2FrQRvJ11cMwg4f8Tc=;
-        b=o3Oi/E6TRorMuEq17Anh0PEI7v8Blwst1FTqP3/YFEKRWx70dxmqTtlkYjh+t4+3gG
-         KMNiKRU7CrKlJ5J0qjdkq7UwXzBmv58BbdWfVig+DfxIEWod7RAS/Rv+e/qlHyv//GHI
-         w+p/vCDgoRzpjDNz+YN4B8ocqvjImZZtCYpVyntwvCoxT2ctjjCW3ym8f6RelYhOWh73
-         1aFpPM7cVShlBCNuQk97G9UnDoEdI4i4LyuJ2GfU8Fu+tlSzukxB4dPNgdkBdgHrb293
-         1Fqk9qgtWg9hsiFt/+53b14nk9jDZxVVBjQGGyQlcclTiDDICKYW/82P31MX+ebnqLTv
-         eS8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746708170; x=1747312970;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZPxzY778BTzrpTVkXEIU0dpBm2FrQRvJ11cMwg4f8Tc=;
-        b=PhraEr2zRzNWyqflcbYrL4hC/K+PxSdOYN+N3oSsrQh1bk/2t4hE4DwOis0qs3Z33g
-         ybb2If1wJES6z6TrdpZonjXyjzCX1tcxZRSVKjkGOUQNzIpwGf7j5TN80Eud4rGBeTtM
-         upJKeX1mZjEpkrg5+B+G16M4qOFp3w4IjLh/rFLXMnYl+OqdeqGXG25OE1DBlwP7+dcQ
-         OjELVt5OXvZx3/FukB5RnCp3r1RHyN0UK3P7um5egHE6W+GmijfwOilCA8QaH4w1juC4
-         +jmkoM2Lz1TcZw2TgzNxPHnapFUyGbHiumCFUhiGQZA2bjTH8+W420oXcTfl+/ZpbvoW
-         JiUw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6PCCupecE0eeQJuaGp9zPFCkej7vxk4c/+j0fMPUPbSYos+e3TbmVNzZQIawWdk0MphqlaQxVlnxROEs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrVVESbHx1SUw2SktsMgQQTTYBHLTZ6WejsXz4d22R6nsRXwle
-	ycle94KuRvgEvnP1CjHqbvQsAOuXinr8v5zlC06vKy/OagdbR9o7mhn+J047hhQ=
-X-Gm-Gg: ASbGncu4zQRzXv8mXPeYIziXZ+5hYPLd6LkuWNI7ujQTS7ldCSHu7G2KAqkfBvP12ot
-	+vPzMPbBViCAbvy2nK13vAvaiaWmPwlllYahidcjmniML0SDffvZ4P/SZrs3ESyPF/29rchr6Qv
-	PkeRa2a+5bZAAAqE/jLSICGJNTJF9SrnFCUEpRBERpgXqPbcA2tqgGFeGtFyuP6zWhNaCU3fKkV
-	XqIPiu/E0eg9QFGyWq3dd25RUnuqxtz7c0nO5RbxdG6/2yAy9wKHmKrwYewbIwrS0U1zAvWkzrf
-	8SpobBlYipdOnXFmy5ptVTk60PcPsberFImNzk8UiI+qKLSluT7oZd51ntcjmNrdC+kQU7gVrgW
-	rt2Z1
-X-Google-Smtp-Source: AGHT+IHinvHLNqxRhaY2b6afbVsRjVu3/5Tnou0kd+6vPsXAPuyDnBpQ8CoLFULaXpnrzUsemLIJvg==
-X-Received: by 2002:a92:cdaf:0:b0:3d8:975:b825 with SMTP id e9e14a558f8ab-3da738d5b28mr84407595ab.5.1746708170546;
-        Thu, 08 May 2025 05:42:50 -0700 (PDT)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f88aa8e068sm3135636173.108.2025.05.08.05.42.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 05:42:50 -0700 (PDT)
-Message-ID: <5799153a-c9dc-4145-9993-7e5d99a6a0b8@riscstar.com>
-Date: Thu, 8 May 2025 07:42:48 -0500
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="OIkSZspv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
+	s=protonmail; t=1746708195; x=1746967395;
+	bh=0+XgH0rIRqKV07OTyvhe5YqpcOYz2bBf5mCHrTax72w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:From:To:
+	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=OIkSZspvQ4QqIyHkLoBDX1f0k8Cunqwe+LQyURHMMvZxOEboElm85r6ayAoW35GlN
+	 Z/S1BfBApmOZQvIiuTd1GIczM8VrooixpwCUYIUrKRMsf8kFNGwfR/H7qO0muDfsEP
+	 6kc+cxcFZ91D5BldZqvDZqWHo2Cb3L0xI31exXwPqjmy9kFcMtVgLl2pITatMJq/XR
+	 +2YnTkC038n5zWlehvX3OvTUI0G4yuNkNPwhdx57ZYDbhFdJXYlD3TkQBNDRlJxTl2
+	 q+id2RrZuiE4lR58Rh9pLtTayn/3CTIYodWPlCO127xpaX9+A6DG/O/kb1e0By0xOU
+	 /T6jR/nOdLUIA==
+X-Pm-Submission-Id: 4ZtWy62rNnz454
+From: Esben Haabendal <esben@geanix.com>
+To: "Alexander Stein" <alexander.stein@ew.tq-group.com>
+Cc: "Catalin Marinas" <catalin.marinas@arm.com>,  "Will Deacon"
+ <will@kernel.org>,  "Stefan Wahren" <wahrenst@gmx.net>,
+  <linux-arm-kernel@lists.infradead.org>,  <linux-kernel@vger.kernel.org>,
+  "Shawn Guo" <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/1] arm64: Kconfig: Enable PINCTRL on i.MX platforms
+In-Reply-To: <5724399.aeNJFYEL58@steina-w> (Alexander Stein's message of "Thu,
+	08 May 2025 14:25:44 +0200")
+References: <20250507124414.3088510-1-alexander.stein@ew.tq-group.com>
+	<7023673.LvFx2qVVIh@steina-w> <87ecwzy0pw.fsf@geanix.com>
+	<Etws1ew28TLJxt4SyQRijrPqBXWRnMQ518XgfauJ5tEfgI2y1mms25jjdVACQnjc2jZmc-PHiK4BIVQ4M8a09A==@protonmail.internalid>
+	<5724399.aeNJFYEL58@steina-w>
+Date: Thu, 08 May 2025 14:43:09 +0200
+Message-ID: <87a57nxogy.fsf@geanix.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/6] dt-bindings: soc: spacemit: define spacemit,k1-ccu
- resets
-To: Krzysztof Kozlowski <krzk@kernel.org>, Yixun Lan <dlan@gentoo.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- alex@ghiti.fr, heylenay@4d2.org, inochiama@outlook.com,
- guodong@riscstar.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
- spacemit@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250506210638.2800228-1-elder@riscstar.com>
- <20250506210638.2800228-2-elder@riscstar.com>
- <20250507223554-GYA505240@gentoo>
- <22b7b5fc-6f5a-4ce8-ae12-a7423925c113@kernel.org>
- <1521c828-31f3-4e45-a651-750ce2e37364@riscstar.com>
- <2ce8b9e5-562e-454f-9e2b-f2796d309063@kernel.org>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <2ce8b9e5-562e-454f-9e2b-f2796d309063@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 5/8/25 7:36 AM, Krzysztof Kozlowski wrote:
-> On 08/05/2025 14:17, Alex Elder wrote:
->> On 5/8/25 7:02 AM, Krzysztof Kozlowski wrote:
->>> On 08/05/2025 00:35, Yixun Lan wrote:
->>>>> +  - if:
->>>>> +      properties:
->>>>> +        compatible:
->>>>> +          contains:
->>>>> +            enum:
->>>>> +              - spacemit,k1-syscon-apbc
->>>>> +              - spacemit,k1-syscon-apmu
->>>>> +              - spacemit,k1-syscon-mpmu
->>>>> +    then:
->>>>> +      required:
->>>>> +        - clocks
->>>>> +        - clock-names
->>>>> +        - "#clock-cells"
->>>>>    
->>>>>    additionalProperties: false
->>>>>    
->>>>> diff --git a/include/dt-bindings/clock/spacemit,k1-syscon.h b/include/dt-bindings/clock/spacemit,k1-syscon.h
->>>>> index 35968ae982466..f5965dda3b905 100644
->>>>> --- a/include/dt-bindings/clock/spacemit,k1-syscon.h
->>>>> +++ b/include/dt-bindings/clock/spacemit,k1-syscon.h
->>>> would it be better to move all reset definition to its dedicated dir?
->>>> which like: include/dt-bindings/reset/spacemit,k1-syscon.h?
->>>
->>> Please kindly trim the replies from unnecessary context. It makes it
->>> much easier to find new content.
->>>
->>>
->>> I don't get why such comments are appearing so late - at v6. There was
->>> nothing from you about this in v1, v2 and v3, which finally got reviewed.
+"Alexander Stein" <alexander.stein@ew.tq-group.com> writes:
+
+> Hi Esben,
+>
+> Am Donnerstag, 8. Mai 2025, 10:18:35 CEST schrieb Esben Haabendal:
+>> "Alexander Stein" <alexander.stein@ew.tq-group.com> writes:
 >>
->> Stephen Boyd said "please rework this to use the auxiliary driver
->> framework" on version 5 of the series; it was otherwise "done" at
->> that point.
-> 
-> Stephen is a subsystem maintainer so his comments are fine or acceptable
-> to be late.
-> 
+>> > Hi Esben,
+>> >
+>> > Am Donnerstag, 8. Mai 2025, 08:44:22 CEST schrieb Esben Haabendal:
+>> >> "Alexander Stein" <alexander.stein@ew.tq-group.com> writes:
+>> >>
+>> >> > Hi Stefan,
+>> >> >
+>> >> > Am Mittwoch, 7. Mai 2025, 16:30:33 CEST schrieb Stefan Wahren:
+>> >> >> Hi Alexander,
+>> >> >>
+>> >> >> [add Shawn and Esben]
+>> >> >>
+>> >> >> Am 07.05.25 um 14:44 schrieb Alexander Stein:
+>> >> >> > Select PINCTRL for NXP i.MX SoCs.
+>> >> >> could you please explain the motivation behind your change?
+>> >> >>
+>> >> >> Is it related to this commit 17d21001891402 ("ARM: imx: Allow user to
+>> >> >> disable pinctrl")?
+>> >> >
+>> >> > Ah, thanks for the pointer. It might be the case.
+>> >>
+>> >> The goal of the patch mentioned above was to be able to build a kernel
+>> >> for LS1021A without pinctrl framework enabled, as LS1021A does not have
+>> >> a pinctrl driver.
+>> >>
+>> >> With your patch, that would not be possible anymore.
+>> >
+>> > Why? LS1021A is arm, not arm64 which this patch is touching only.
 >>
->> Doing this meant there was a much clearer separation of the clock
->> definitions from the reset definitions.  And Yixun's suggestion
->> came from viewing things in that context.
-> 
-> Weren't they applicable to v1 as well? How bindings could change with
-> change to auxiliary bus/driver?
-> 
+>> Good point :)  Sorry about that.
 >>
->> Given the rework, I considered sending this as v1 of a new series
->> but did not.
-> 
-> Sorry but no. Bindings headers at v1 are exactly the same or almost the
-> same as now:
-> 
-> https://lore.kernel.org/lkml/20250321151831.623575-2-elder@riscstar.com/
-> 
-> so this idea could have been given at v1, v2, v3, v4, v5 (that would be
-> late).... but at some point this is just unnecessary late nitpicking.
-> 
-> So what then? Imagine that you prepare v7 and some other person gives
-> you different comment about bindings or bindings headers. Then you
-> prepare v8. And then someone comes with one more, different comment,
-> because that person did not bother to review between v1-v8 (that
-> imaginary future v8), so you need to prepare v9.
-> 
-> I don't think this process is correct.
+>> > BTW: Commit b77bd3ba762f3 ("ARM: imx: Re-introduce the PINCTRL selection")
+>> > is actually doing the same for arm as there is some fallout from
+>> > 17d21001891402.
+>> >
+>> >> > I noticed that, when using arch/arm64/defconfig and disabling all
+>> >> > platforms despite ARCH_MXC before running make olddefconfig,
+>> >> > CONFIG_PINCTRL gets disabled as well. No platform is enabling it. I
+>> >> > noticed this when building in yocto and non-IMX platforms are disabled
+>> >> > for build time reasons.
+>> >>
+>> >> But is that something that needs to be fixed?
+>> >>
+>> >> It sounds like quite a special use-case, and why not simply enable
+>> >> CONFIG_PINCTRL in that case then?
+>> >
+>> > PINCTRL is crucial for any SoC to even boot, so this is an option which has
+>> > to be set if that platform is enabled.
+>>
+>> Yes, but PINCTRL (framework) does not by itself do anything meaningful.
+>> You need the correct pinctrl driver.
+>>
+>> Making the various SOC's select the corresponding pinctrl drivers makes
+>> sense if it is required for booting under all circumstances. And this
+>> should then indirectly enable/select PINCTRL and anything else needed
+>> for that driver.
+>
+> If you prefer I don't mind enabling PINCTRL and the SoC-specific driver
+> (e.g. PINCTRL_IMX8MP) depending on each SoC-support, e.g. SOC_IMX35 or
+> SOC_IMX8M.
 
-We'll stick with the original binding definition.	-Alex
+For SOC_IMX35, it should be selected by default.
 
+    config PINCTRL_IMX35
+            bool "IMX35 pinctrl driver"
+            depends on OF
+            depends on SOC_IMX35 || COMPILE_TEST
+            default SOC_IMX35
 
-> 
-> Best regards,
-> Krzysztof
+For the IMX8M* SoC's, that is not done, as there is only a common
+SOC_IMX8M config entry, which corresponds to multiple pinctrl drivers,
+which we probably don't want to select all of by default.
 
+>> Having ARCH_MXC select PINCTRL as such is mostly pointless IMHO.
+>> Enabling a driver framework without enabling any drivers for it, when
+>> building a kernel where no SOC's requiring any pinctrl drivers is kind
+>> of weird. If you want to do that, why not simply enable both ARCH_MXC
+>> and PINCTRL in your yocto recipe?
+>
+> PINCTRL is currently only enabled because other SoCs happen to enable it,
+> just this feels just plain wrong. If these platforms are disabled or
+> removed for whatever reason, the other platforms should still work.
+
+As it is now, to build for let's say i.MX 8M Plus, you have to enable
+    SOC_IMX8M
+    PINCTRL_IMX8MP
+to get a kernel that is likely to boot.
+
+If you enable
+    SOC_IMX8M
+    PINCTRL
+but not
+    PINCTRL_IMX8MP
+you won't have pinctrl support, and the kernel will probably not work as
+expected.
+
+What am I missing?
+
+/Esben
