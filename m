@@ -1,199 +1,214 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162C11990A7;
-	Thu,  8 May 2025 18:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD05D1990A7;
+	Thu,  8 May 2025 18:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746729687; cv=none; b=maib3Cg0yjs+5yXSs5XCrdDIuY6ekJcM8N+0qRat6yRC9OMjIHd9X8oVElRGMFmSKIoxlT9uBNxf4THOoLHJXHXafBswFaf8Gv0YLZ5UN/D4vSPOFq/YuBYkL1CV7/inRV3Q0IvjSUjL6ihUnWSrvtIN+w4DJ/mffCvm2XBYg+0=
+	t=1746729885; cv=none; b=SnJAxoo/Elh9ihd7m5+GnJZ/S3wXrKxw0f8X+pNk67bxe3VWs+cwNsF5Ug1vfDkyNihC/q2g6U0kj4DwEQp3uT7JslyxpPl7m+dSvMvT/bpDMv5tDEX8Ucch+skNfcH9PtozfHBUNTOyVTr3rdrBV2RtDJIeyFSMbZjgO5gCu4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746729687; c=relaxed/simple;
-	bh=IFjhEb84wH0qi6JVb7sBwK6FSX3UsXtNp/GN3Yy6cP8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QGFLYH4PmSSm8stovXHyL2ZCrGC0N4o4FUEhc7LWHSOScLS704agyk3WHOr2xnmqDvDzHCunwyoyxdIvC6Du5CPx13rHRiZztYLZ0TU05D0Kpiiel3XksKql1+V/20cuN8ev6KbessCZpf2wOf3MEci9b9fgFyMELkmaIsGIiPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MWucyzGw; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746729885; c=relaxed/simple;
+	bh=dqRqSBnC3dwidCawRqS5Y1XwJ/+DedVPHUqrvOth/Hg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WFzA8p2ULFwPOVCKYM73nl6OoZ9FR1dQxnyVrvcbh20WH9BiZQXch1yfHEOM0M4g/d7mGrtXjQfHQbhlfqYWA7jvB4CeCprJ0Q+lsHx6CgybtIKRpiUudKxX0YilksTWvUhojnP1s56MvuiDKwKacg1htt+b5xXm6atVV/I7Pvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IBOSApEK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWucyzGw"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3da79204277so8142535ab.3;
-        Thu, 08 May 2025 11:41:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746729685; x=1747334485; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yIIIefdaY9sYKEAXeUQFab1kLTouIAql70z4Rrnnjfg=;
-        b=MWucyzGwjL2RstzXpPlKxJDfOw1sf4twCEYFoNBj7z/zFG4GbTANL7iGgs2dBPzED9
-         UltVuP+m1mWLyxxXjzx2wEQ1ujR6WhDQHfQvrCGYo6dfal86Pkh9oojsPe4N+WPfWMU1
-         6qBbgRuC6ikd5ne0ZKPQIMGFCY85HcAkt4mLHwkwyDD21jMS6I+02AOJ20Z16bZnxUlI
-         sthqXeSEOayvrOObJi2q65/WdvHJAleGiJxgEnYA62+qy6/+h47/kDIDyZ9dj2l726ob
-         ybjIZodnaZDkUny6IdahjmoEhVu+mpqPwB0ttuYe38HTfEyAhTFPeMjaonT3Tc0Ra9qU
-         bcMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746729685; x=1747334485;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yIIIefdaY9sYKEAXeUQFab1kLTouIAql70z4Rrnnjfg=;
-        b=DHJ1XfhuGrgF4KkZ7LyVo4P0J3dD+6s8A7bAMAl750NKJ69Ufl3HDmGtc1pAVaXfoH
-         ZPT1JfA6SPFaD3EkEEUWpA/DxliG60x12lCdUYXGEqwCGbvPXN+czDVqgYcHKs9ES215
-         L2vurY0o4tJ4PjrTDxAerw6jnbHvDod04YQ1sin6thdwu+nG4onZBXDdfdmRxT8YzeTb
-         xzDCOJY9HqGIGZLHl4kMI/siUh314x7QdyPth1fuoMHe1G3Gi8VkpblZoSE8BLXx+fgT
-         bk3wzokhdpqVyukubzjJlQtjFiIL6NTPoigF7dOyBmr9dUMxrdyf1ObF2FeWdcN2RXhU
-         uvxw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEZGWcjxRo+ntl+eh4JsO57RH7hSRO4y2QBMNCljPD5lw9RNBJeK/HM4I0xrSXnJZfZXw8fgPKiA1F4nBh@vger.kernel.org, AJvYcCWXEFdTOWiaoEk9a6Qd92XjgYKcaOt3/hb7QsML3NuCfzIgQqvD/LzYIwWpQO1sGFqEs92TMpT2wT2A0Twe@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy75zxyqpg9YHPVSVZmvAFQXrrrxMa7uYQIZONfFmopa+XWcoDj
-	+PbK1DpdKZHLe+3Vt+Cs/SSsl/QXY5dXx3yBR5vlipNzfO/2OmGPKYhFcuAN+TE5gNzbD/+LG+d
-	5nNyfLG+72zAqhFNv1MXPRoMjI6s=
-X-Gm-Gg: ASbGncv4E6PGpDC1Jr6qcFas2NWe2S7aBxoBXjE8klB89bcBZcAPgOPtntQLmxp/ORQ
-	Ggofr1/W4m+M/e9UDXkXJjFvvSpLRgkIKnR7u/JgHusbC12fkdKf6pavu++6thADdQS05oGdeDw
-	cLtC9d40/6NWs5Qw2JtOolw54klbdAwPhS68+SKYj7ZZ8b1lZwPds=
-X-Google-Smtp-Source: AGHT+IEnu1L6F7VfV0Ubjw5sm0H1uMFjC+BmvIneeK2e24BLLnOMQ238GCHU+ApH04ZY1S2AcpFqb+ZwprrQ5Xvp1Oc=
-X-Received: by 2002:a05:6e02:1809:b0:3d8:19e8:e738 with SMTP id
- e9e14a558f8ab-3da7e20cfd3mr7774505ab.17.1746729684889; Thu, 08 May 2025
- 11:41:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IBOSApEK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CD5AC4CEE7;
+	Thu,  8 May 2025 18:44:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746729885;
+	bh=dqRqSBnC3dwidCawRqS5Y1XwJ/+DedVPHUqrvOth/Hg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IBOSApEKlDdxaoRxoCJRhA1Ceqmo4rvxVWyvoH+ZtUWyzwSfJKMlLRyPOvF3XnM+q
+	 2u6WiATBqZOxx0sox2pmXBcjxlTIb2t+32noNT8ntSEtseMZgjU7Oz5I2qtANrFDKZ
+	 NFBY2b1gosS8U3rRU++AgssunSJ2+12tyRHd/5W6VVErtEBxrQpOThJya7PNyQfHLf
+	 ERKDo+XZHQ9SO74GIvJhwDWLQdmrIW1Kz96OMOG4Jfdq1z1LKsrBaVItfFhKZv5SC8
+	 sLvpb58QoA9U0qwThc7EopU7cnwX4Hq/aNbI+K0Ml+GnUcVQeEZJKyTDqiv+rk0n7Q
+	 l5vFfwErF5flA==
+Date: Thu, 8 May 2025 11:44:42 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>,
+	Blake Jones <blakejones@google.com>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>
+Subject: Re: [PATCH v5 13/17] perf: Support deferred user callchains
+Message-ID: <aBz7mvEQwtlgNUjI@google.com>
+References: <20250424162529.686762589@goodmis.org>
+ <20250424162633.390748816@goodmis.org>
+ <20250508120321.20677bc6@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com> <20250508-topic-ubwc_central-v1-4-035c4c5cbe50@oss.qualcomm.com>
-In-Reply-To: <20250508-topic-ubwc_central-v1-4-035c4c5cbe50@oss.qualcomm.com>
-From: Rob Clark <robdclark@gmail.com>
-Date: Thu, 8 May 2025 11:41:12 -0700
-X-Gm-Features: ATxdqUGX42iaxTvC7pe_iBnJYk6Ho2xV2KhxTzfU1hlmmWDCQoDzombs5VYi5E8
-Message-ID: <CAF6AEGtcoMZ+WiW5_BA4NFpLZsoOrDbkY4xyvENGoS2FQVwQxw@mail.gmail.com>
-Subject: Re: [PATCH RFT 04/14] drm/msm/a6xx: Get a handle to the common UBWC config
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Dmitry Baryshkov <lumag@kernel.org>, Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250508120321.20677bc6@gandalf.local.home>
 
-On Thu, May 8, 2025 at 11:13=E2=80=AFAM Konrad Dybcio <konradybcio@kernel.o=
-rg> wrote:
->
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->
-> Start the great despaghettification by getting a pointer to the common
-> UBWC configuration, which houses e.g. UBWC versions that we need to
-> make decisions.
->
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c   | 16 ++++++++++++++--
->  drivers/gpu/drm/msm/adreno/adreno_gpu.c |  6 ++++++
->  drivers/gpu/drm/msm/adreno/adreno_gpu.h |  3 +++
->  3 files changed, 23 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/=
-adreno/a6xx_gpu.c
-> index b161b5cd991fc645dfcd69754b82be9691775ffe..89eb725f0950f3679d6214366=
-cfbd22d5bcf4bc7 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -585,8 +585,13 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
->         gpu_write(gpu, REG_A6XX_CP_PROTECT(protect->count_max - 1), prote=
-ct->regs[i]);
->  }
->
-> -static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
-> +static int a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
->  {
-> +       /* Inherit the common config and make some necessary fixups */
-> +       gpu->common_ubwc_cfg =3D qcom_ubwc_config_get_data();
+Hi Steve,
 
-This does look a bit funny given the devm_kzalloc() below.. I guess
-just so that the ptr is never NULL?
+On Thu, May 08, 2025 at 12:03:21PM -0400, Steven Rostedt wrote:
+> On Thu, 24 Apr 2025 12:25:42 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > +static void perf_event_callchain_deferred(struct callback_head *work)
+> > +{
+> > +	struct perf_event *event = container_of(work, struct perf_event, pending_unwind_work);
+> > +	struct perf_callchain_deferred_event deferred_event;
+> > +	u64 callchain_context = PERF_CONTEXT_USER;
+> > +	struct unwind_stacktrace trace;
+> > +	struct perf_output_handle handle;
+> > +	struct perf_sample_data data;
+> > +	u64 nr;
+> > +
+> > +	if (!event->pending_unwind_callback)
+> > +		return;
+> > +
+> > +	if (unwind_deferred_trace(&trace) < 0)
+> > +		goto out;
+> > +
+> > +	/*
+> > +	 * All accesses to the event must belong to the same implicit RCU
+> > +	 * read-side critical section as the ->pending_unwind_callback reset.
+> > +	 * See comment in perf_pending_unwind_sync().
+> > +	 */
+> > +	guard(rcu)();
+> > +
+> > +	if (!current->mm)
+> > +		goto out;
+> > +
+> > +	nr = trace.nr + 1 ; /* '+1' == callchain_context */
+> 
+> Hi Namhyung,
+> 
+> Talking with Beau about how Microsoft does their own deferred tracing, I
+> wonder if the timestamp approach would be useful.
+> 
+> This is where a timestamp is taken at the first request for a deferred
+> trace, and this is recorded in the trace when it happens. It basically
+> states that "this trace is good up until the given timestamp".
+> 
+> The rationale for this is for lost events. Let's say you have:
+> 
+>   <task enters kernel>
+>     Request deferred trace
+> 
+>     <buffer fills up and events start to get lost>
+> 
+>     Deferred trace happens (but is dropped due to buffer being full)
+> 
+>   <task exits kernel>
+> 
+>   <task enters kernel again>
+>     Request deferred trace  (Still dropped due to buffer being full)
+> 
+>     <Reader catches up and buffer is free again>
+> 
+>     Deferred trace happens (this time it is recorded>
+>   <task exits kernel>
+> 
+> How would user space know that the deferred trace that was recorded doesn't
+> go with the request (and kernel stack trace) that was done initially)?
 
-BR,
--R
+Right, this is a problem.
 
-> +       if (IS_ERR(gpu->common_ubwc_cfg))
-> +               return -EINVAL;
-> +
->         gpu->ubwc_config.rgb565_predicator =3D 0;
->         gpu->ubwc_config.uavflagprd_inv =3D 0;
->         gpu->ubwc_config.min_acc_len =3D 0;
-> @@ -663,6 +668,8 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *=
-gpu)
->                 gpu->ubwc_config.highest_bank_bit =3D 1;
->                 gpu->ubwc_config.min_acc_len =3D 1;
->         }
-> +
-> +       return 0;
->  }
->
->  static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
-> @@ -2540,7 +2547,12 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *d=
-ev)
->                 msm_mmu_set_fault_handler(gpu->aspace->mmu, gpu,
->                                 a6xx_fault_handler);
->
-> -       a6xx_calc_ubwc_config(adreno_gpu);
-> +       ret =3D a6xx_calc_ubwc_config(adreno_gpu);
-> +       if (ret) {
-> +               a6xx_destroy(&(a6xx_gpu->base.base));
-> +               return ERR_PTR(ret);
-> +       }
-> +
->         /* Set up the preemption specific bits and pieces for each ringbu=
-ffer */
->         a6xx_preempt_init(gpu);
->
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/ms=
-m/adreno/adreno_gpu.c
-> index 2348ffb35f7eb73a26da47881901d9111dca1ad9..b7f7eb8dcb272394dce8ed1e6=
-8310a394c1734a9 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> @@ -1149,6 +1149,12 @@ int adreno_gpu_init(struct drm_device *drm, struct=
- platform_device *pdev,
->                 speedbin =3D 0xffff;
->         adreno_gpu->speedbin =3D (uint16_t) (0xffff & speedbin);
->
-> +       adreno_gpu->common_ubwc_cfg =3D devm_kzalloc(dev,
-> +                                                  sizeof(*adreno_gpu->co=
-mmon_ubwc_cfg),
-> +                                                  GFP_KERNEL);
-> +       if (!adreno_gpu->common_ubwc_cfg)
-> +               return -ENOMEM;
-> +
->         gpu_name =3D devm_kasprintf(dev, GFP_KERNEL, "%"ADRENO_CHIPID_FMT=
-,
->                         ADRENO_CHIPID_ARGS(config->chip_id));
->         if (!gpu_name)
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/ms=
-m/adreno/adreno_gpu.h
-> index a8f4bf416e64fadbd1c61c991db13d539581e324..06be95d3efaee94e4107a484a=
-d3132e0a6a9ea46 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-> @@ -12,6 +12,8 @@
->  #include <linux/firmware.h>
->  #include <linux/iopoll.h>
->
-> +#include <linux/soc/qcom/ubwc.h>
-> +
->  #include "msm_gpu.h"
->
->  #include "adreno_common.xml.h"
-> @@ -243,6 +245,7 @@ struct adreno_gpu {
->                  */
->                 u32 macrotile_mode;
->         } ubwc_config;
-> +       const struct qcom_ubwc_cfg_data *common_ubwc_cfg;
->
->         /*
->          * Register offsets are different between some GPUs.
->
-> --
-> 2.49.0
->
+> 
+> If we add a timestamp, then it would look like:
+> 
+>   <task enters kernel>
+>     Request deferred trace
+>     [Record timestamp]
+> 
+>     <buffer fills up and events start to get lost>
+> 
+>     Deferred trace happens with timestamp (but is dropped due to buffer being full)
+> 
+>   <task exits kernel>
+> 
+>   <task enters kernel again>
+>     Request deferred trace  (Still dropped due to buffer being full)
+>     [Record timestamp]
+> 
+>     <Reader catches up and buffer is free again>
+> 
+>     Deferred trace happens with timestamp (this time it is recorded>
+>   <task exits kernel>
+> 
+> Then user space will look at the timestamp that was recorded and know that
+> it's not for the initial request because the timestamp of the kernel stack
+> trace done was before the timestamp of the user space stacktrace and
+> therefore is not valid for the kernel stacktrace.
+
+IIUC the deferred stacktrace will have the timestamp of the first
+request, right?
+
+> 
+> The timestamp would become zero when exiting to user space. The first
+> request will add it but would need a cmpxchg to do so, and if the cmpxchg
+> fails, it then needs to check if the one recorded is before the current
+> one, and if it isn't it still needs to update the timestamp (this is to
+> handle races with NMIs).
+
+Yep, it needs to maintain an accurate first timestamp.
+
+> 
+> Basically, the timestamp would replace the cookie method.
+> 
+> Thoughts?
+
+Sounds good to me.  You'll need to add it to the
+PERF_RECORD_DEFERRED_CALLCHAIN.  Probably it should check if sample_type
+has PERF_SAMPLE_TIME.  It'd work along with PERF_SAMPLE_TID (which will
+be added by the perf tools anyway).
+ 
+Thanks,
+Namhyung
+
+> 
+> > +
+> > +	deferred_event.header.type = PERF_RECORD_CALLCHAIN_DEFERRED;
+> > +	deferred_event.header.misc = PERF_RECORD_MISC_USER;
+> > +	deferred_event.header.size = sizeof(deferred_event) + (nr * sizeof(u64));
+> > +
+> > +	deferred_event.nr = nr;
+> > +
+> > +	perf_event_header__init_id(&deferred_event.header, &data, event);
+> > +
+> > +	if (perf_output_begin(&handle, &data, event, deferred_event.header.size))
+> > +		goto out;
+> > +
+> > +	perf_output_put(&handle, deferred_event);
+> > +	perf_output_put(&handle, callchain_context);
+> > +	perf_output_copy(&handle, trace.entries, trace.nr * sizeof(u64));
+> > +	perf_event__output_id_sample(event, &handle, &data);
+> > +
+> > +	perf_output_end(&handle);
+> > +
+> > +out:
+> > +	event->pending_unwind_callback = 0;
+> > +	local_dec(&event->ctx->nr_no_switch_fast);
+> > +	rcuwait_wake_up(&event->pending_unwind_wait);
+> > +}
+> > +
