@@ -1,44 +1,69 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF7286358;
-	Thu,  8 May 2025 13:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DCF7F477;
+	Thu,  8 May 2025 13:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746710318; cv=none; b=QE0ddH9YfAU2hj/YdKq9HImNBL0e/Dh+kU3TVZJu8A1hLoJNYBF5i2Nruyk4jeJd4sY9QrFysOi+KRD8n7Gnln5QLuX6siqWQEwL3RgVJwSBOPr7MPqtTHNhfG8nhHaBy1+/1/nysXmflO15VNh2/YxAs6wqoLr0+3BtdJDRpBI=
+	t=1746710366; cv=none; b=dC9+P4CL1W9XF6cCdagnz2v/KxvpO8BslfxONUIOb90c7GzA5od/5wPDrT+ZKwr/HUGvIfgtKVbunCAkMmb4Z8nnLs6MP3eG/KV0s+Jz7xw1xefeQGYCT+x9Zq9P1aVRoQMaxboY4pUJNxbsrXUdLwjv23rnF4qbSZg2s/9ID50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746710318; c=relaxed/simple;
-	bh=opaTfR9NJjO+sFAtpS4vg+nUn5uEqCiviCv+VqmE9Qg=;
+	s=arc-20240116; t=1746710366; c=relaxed/simple;
+	bh=mwlJfN+Lfy/+tFxLo5GorpTpyl8vbUUM9H3jpxrTN14=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i/L7ldtzFV8k0Uq5R29jL37CPimO4C3hDB11dlZO7gwgHFalZVHwKsRvHh0Oceg9IqUcoPK+KCMjxunB6U88WU01FfFDZh5yECtKMUyNUi6m6rabr7Ywnn9mgrI0hK7PFexocoG3cctAhqMLH08k53/hzIpM1nYE7dLNAk8yai0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=XIluJEh/; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=uOiF7+feuMopEsOGODtKRmotD3GLOeGKCZmGcdDy8dTgS7aPR0Gg5XZ1m+nUjTbD5Tq4BPkwmDMOuuClhqo+QhpmNE/3uN+IBPHjgGGz9a/u1Ej5IHU7SmZRykdyE8xyLWP6CqkyKYXyWBn/twXJQqabo21UD8k2pm9+bruMgDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AXuN5SIN; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XIluJEh/"
-Received: from ideasonboard.com (unknown [IPv6:2001:861:3a80:3300:7c3b:c7bf:b733:fa1b])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2C30E2E0;
-	Thu,  8 May 2025 15:18:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1746710301;
-	bh=opaTfR9NJjO+sFAtpS4vg+nUn5uEqCiviCv+VqmE9Qg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XIluJEh/xfv4vsIOpMBiZA0sZ80oJElq9TgfPsSI4x/16m9yn9TxZBPAXbgABco23
-	 fpAo2SYFwybCHzeX7/IZAznrMyCk7Gi2Gp4Fm2WAGY4XLhD/YQyVAmFtrQsnedw7I/
-	 Ma/9OzSclAchB4G25rd98XAFVHD5BAOVuQVcy8B8=
-Date: Thu, 8 May 2025 15:18:30 +0200
-From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-To: keke.li@amlogic.com
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kieran.bingham@ideasonboard.com, 
-	laurent.pinchart@ideasonboard.com, dan.scally@ideasonboard.com, jacopo.mondi@ideasonboard.com
-Subject: Re: [PATCH v9 10/10] Documentation: media: add documentation file
- c3-isp.rst
-Message-ID: <vqdqksb5ghl5pdzargeqlb2ynadw25zbxprrvbhg4kin4aotmc@7zgontkhlfdb>
-References: <20250427-c3isp-v9-0-e0fe09433d94@amlogic.com>
- <20250427-c3isp-v9-10-e0fe09433d94@amlogic.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AXuN5SIN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746710365; x=1778246365;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=mwlJfN+Lfy/+tFxLo5GorpTpyl8vbUUM9H3jpxrTN14=;
+  b=AXuN5SINS40pRlK6Dp5IKVHo5pLWNYCa9+SuiJLtGImp8sj2EeDLmWpZ
+   NPsrasuOcNT4ZbXBGJHqBaHz7qCdBkcqaQWqkmKc1EbJaCScEAVfNnFT/
+   PlT80vTo1fmPkjl91ROcFfjDOrh021D9Y9+BXdZAgj+6PYbQpVh18swrm
+   C6jGXF54o8Y12PHtEFtek2xNYupRLaPFfITVXEtfaaD6hlZdVbrh3kq7F
+   +B3r9PnS7EYQUJFrBH+vpfin91r1csCioZitsdEM+oONpHBgH9CKHZoJP
+   rAHg+7ZP0vDoIorQq8SyxYvVUfbYDyYKSoI8KsMpJ+s0obug0kJkTSeWp
+   w==;
+X-CSE-ConnectionGUID: zDp9Tnl5TAqnwbzYZOKf3g==
+X-CSE-MsgGUID: rLHayGXPRUevcArohXX9pw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="51153317"
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="51153317"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 06:19:24 -0700
+X-CSE-ConnectionGUID: wQANjt/cTd2bmbymrY9p6g==
+X-CSE-MsgGUID: Vqk59ioaSj2Qx1QsXXsqzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="167229229"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa002.jf.intel.com with ESMTP; 08 May 2025 06:19:21 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 22B551D7; Thu, 08 May 2025 16:19:19 +0300 (EEST)
+Date: Thu, 8 May 2025 16:19:19 +0300
+From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Vishal Annapurve <vannapurve@google.com>, 
+	"Huang, Kai" <kai.huang@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"seanjc@google.com" <seanjc@google.com>, "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
+	"bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
+	"x86@kernel.org" <x86@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC, PATCH 05/12] KVM: TDX: Add tdx_pamt_get()/put() helpers
+Message-ID: <o74datlk3nmbc6ihxisggvxzf6r25ebnh4wt5ureud4befy7nl@l3m74n6qksqx>
+References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
+ <20250502130828.4071412-6-kirill.shutemov@linux.intel.com>
+ <55c1c173bfb13d897eaaabcc04f38d010608a7e3.camel@intel.com>
+ <aBqxBmHtpSipnULS@yzhao56-desk.sh.intel.com>
+ <CAGtprH9GvBd0QLksKGan0V-RPsbJVPrsZ9PE=PPgHx11x4z1aA@mail.gmail.com>
+ <aBrIkdnpmKujtVxf@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,199 +72,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250427-c3isp-v9-10-e0fe09433d94@amlogic.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aBrIkdnpmKujtVxf@yzhao56-desk.sh.intel.com>
 
-Hi Keke
+On Wed, May 07, 2025 at 10:42:25AM +0800, Yan Zhao wrote:
+> On Tue, May 06, 2025 at 06:15:40PM -0700, Vishal Annapurve wrote:
+> > On Tue, May 6, 2025 at 6:04 PM Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > >
+> > > On Mon, May 05, 2025 at 08:44:26PM +0800, Huang, Kai wrote:
+> > > > On Fri, 2025-05-02 at 16:08 +0300, Kirill A. Shutemov wrote:
+> > > > > +static int tdx_pamt_add(atomic_t *pamt_refcount, unsigned long hpa,
+> > > > > +                   struct list_head *pamt_pages)
+> > > > > +{
+> > > > > +   u64 err;
+> > > > > +
+> > > > > +   hpa = ALIGN_DOWN(hpa, SZ_2M);
+> > > > > +
+> > > > > +   spin_lock(&pamt_lock);
+> > > >
+> > > > Just curious, Can the lock be per-2M-range?
+> > > Me too.
+> > > Could we introduce smaller locks each covering a 2M range?
+> > >
+> > > And could we deposit 2 pamt pages per-2M hpa range no matter if it's finally
+> > > mapped as a huge page or not?
+> > >
+> > 
+> > Are you suggesting to keep 2 PAMT pages allocated for each private 2M
+> > page even if it's mapped as a hugepage? It will lead to wastage of
+> > memory of 4 MB per 1GB of guest memory range. For large VM sizes that
+> > will amount to high values.
+> Ok. I'm thinking of the possibility to aligning the time of PAMT page allocation
+> to that of physical page allocation.
 
-On Sun, Apr 27, 2025 at 02:27:18PM +0800, Keke Li via B4 Relay wrote:
-> From: Keke Li <keke.li@amlogic.com>
->
-> Add the file 'c3-isp.rst' that documents the c3-isp driver.
->
-> Signed-off-by: Keke Li <keke.li@amlogic.com>
+No. That's mostly wasted memory. We need to aim to allocate memory only as
+needed. With huge pages wast majority of such allocations will never be
+needed.
 
-Sorry for the delay, the patch matches what was suggested with a few
-corrections on top, so
-Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-
-The series is ready in my opinion. Let me sync with maintainers on
-what is the fastest path to collect it.
-
-Thanks for the perseverance!
-
-> ---
->  Documentation/admin-guide/media/c3-isp.dot      |  26 ++++++
->  Documentation/admin-guide/media/c3-isp.rst      | 101 ++++++++++++++++++++++++
->  Documentation/admin-guide/media/v4l-drivers.rst |   1 +
->  MAINTAINERS                                     |   2 +
->  4 files changed, 130 insertions(+)
->
-> diff --git a/Documentation/admin-guide/media/c3-isp.dot b/Documentation/admin-guide/media/c3-isp.dot
-> new file mode 100644
-> index 000000000000..42dc931ee84a
-> --- /dev/null
-> +++ b/Documentation/admin-guide/media/c3-isp.dot
-> @@ -0,0 +1,26 @@
-> +digraph board {
-> +	rankdir=TB
-> +	n00000001 [label="{{<port0> 0 | <port1> 1} | c3-isp-core\n/dev/v4l-subdev0 | {<port2> 2 | <port3> 3 | <port4> 4 | <port5> 5}}", shape=Mrecord, style=filled, fillcolor=green]
-> +	n00000001:port3 -> n00000008:port0
-> +	n00000001:port4 -> n0000000b:port0
-> +	n00000001:port5 -> n0000000e:port0
-> +	n00000001:port2 -> n00000027
-> +	n00000008 [label="{{<port0> 0} | c3-isp-resizer0\n/dev/v4l-subdev1 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-> +	n00000008:port1 -> n00000016 [style=bold]
-> +	n0000000b [label="{{<port0> 0} | c3-isp-resizer1\n/dev/v4l-subdev2 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-> +	n0000000b:port1 -> n0000001a [style=bold]
-> +	n0000000e [label="{{<port0> 0} | c3-isp-resizer2\n/dev/v4l-subdev3 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-> +	n0000000e:port1 -> n00000023 [style=bold]
-> +	n00000011 [label="{{<port0> 0} | c3-mipi-adapter\n/dev/v4l-subdev4 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-> +	n00000011:port1 -> n00000001:port0 [style=bold]
-> +	n00000016 [label="c3-isp-cap0\n/dev/video0", shape=box, style=filled, fillcolor=yellow]
-> +	n0000001a [label="c3-isp-cap1\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
-> +	n0000001e [label="{{<port0> 0} | c3-mipi-csi2\n/dev/v4l-subdev5 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-> +	n0000001e:port1 -> n00000011:port0 [style=bold]
-> +	n00000023 [label="c3-isp-cap2\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
-> +	n00000027 [label="c3-isp-stats\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
-> +	n0000002b [label="c3-isp-params\n/dev/video4", shape=box, style=filled, fillcolor=yellow]
-> +	n0000002b -> n00000001:port1
-> +	n0000003f [label="{{} | imx290 2-001a\n/dev/v4l-subdev6 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
-> +	n0000003f:port0 -> n0000001e:port0 [style=bold]
-> +}
-> diff --git a/Documentation/admin-guide/media/c3-isp.rst b/Documentation/admin-guide/media/c3-isp.rst
-> new file mode 100644
-> index 000000000000..ac508b8c6831
-> --- /dev/null
-> +++ b/Documentation/admin-guide/media/c3-isp.rst
-> @@ -0,0 +1,101 @@
-> +.. SPDX-License-Identifier: (GPL-2.0-only OR MIT)
-> +
-> +.. include:: <isonum.txt>
-> +
-> +=================================================
-> +Amlogic C3 Image Signal Processing (C3ISP) driver
-> +=================================================
-> +
-> +Introduction
-> +============
-> +
-> +This file documents the Amlogic C3ISP driver located under
-> +drivers/media/platform/amlogic/c3/isp.
-> +
-> +The current version of the driver supports the C3ISP found on
-> +Amlogic C308L processor.
-> +
-> +The driver implements V4L2, Media controller and V4L2 subdev interfaces.
-> +Camera sensor using V4L2 subdev interface in the kernel is supported.
-> +
-> +The driver has been tested on AW419-C308L-Socket platform.
-> +
-> +Amlogic C3 ISP
-> +==============
-> +
-> +The Camera hardware found on C308L processors and supported by
-> +the driver consists of:
-> +
-> +- 1 MIPI-CSI-2 module: handles the physical layer of the MIPI CSI-2 receiver and
-> +  receives data from the connected camera sensor.
-> +- 1 MIPI-ADAPTER module: organizes MIPI data to meet ISP input requirements and
-> +  send MIPI data to ISP.
-> +- 1 ISP (Image Signal Processing) module: contains a pipeline of image processing
-> +  hardware blocks. The ISP pipeline contains three resizers at the end each of
-> +  them connected to a DMA interface which writes the output data to memory.
-> +
-> +A high-level functional view of the C3 ISP is presented below.::
-> +
-> +                                                                   +----------+    +-------+
-> +                                                                   | Resizer  |--->| WRMIF |
-> +  +---------+    +------------+    +--------------+    +-------+   |----------+    +-------+
-> +  | Sensor  |--->| MIPI CSI-2 |--->| MIPI ADAPTER |--->|  ISP  |---|----------+    +-------+
-> +  +---------+    +------------+    +--------------+    +-------+   | Resizer  |--->| WRMIF |
-> +                                                                   +----------+    +-------+
-> +                                                                   |----------+    +-------+
-> +                                                                   | Resizer  |--->| WRMIF |
-> +                                                                   +----------+    +-------+
-> +
-> +Driver architecture and design
-> +==============================
-> +
-> +With the goal to model the hardware links between the modules and to expose a
-> +clean, logical and usable interface, the driver registers the following V4L2
-> +sub-devices:
-> +
-> +- 1 `c3-mipi-csi2` sub-device - the MIPI CSI-2 receiver
-> +- 1 `c3-mipi-adapter` sub-device - the MIPI adapter
-> +- 1 `c3-isp-core` sub-device - the ISP core
-> +- 3 `c3-isp-resizer` sub-devices - the ISP resizers
-> +
-> +The `c3-isp-core` sub-device is linked to 2 video device nodes for statistics
-> +capture and parameters programming:
-> +
-> +- the `c3-isp-stats` capture video device node for statistics capture
-> +- the `c3-isp-params` output video device for parameters programming
-> +
-> +Each `c3-isp-resizer` sub-device is linked to a capture video device node where
-> +frames are captured from:
-> +
-> +- `c3-isp-resizer0` is linked to the `c3-isp-cap0` capture video device
-> +- `c3-isp-resizer1` is linked to the `c3-isp-cap1` capture video device
-> +- `c3-isp-resizer2` is linked to the `c3-isp-cap2` capture video device
-> +
-> +The media controller pipeline graph is as follows (with connected a
-> +IMX290 camera sensor):
-> +
-> +.. _isp_topology_graph:
-> +
-> +.. kernel-figure:: c3-isp.dot
-> +    :alt:   c3-isp.dot
-> +    :align: center
-> +
-> +    Media pipeline topology
-> +
-> +Implementation
-> +==============
-> +
-> +Runtime configuration of the ISP hardware is performed on the `c3-isp-params`
-> +video device node using the :ref:`V4L2_META_FMT_C3ISP_PARAMS
-> +<v4l2-meta-fmt-c3isp-params>` as data format. The buffer structure is defined by
-> +:c:type:`c3_isp_params_cfg`.
-> +
-> +Statistics are captured from the `c3-isp-stats` video device node using the
-> +:ref:`V4L2_META_FMT_C3ISP_STATS <v4l2-meta-fmt-c3isp-stats>` data format.
-> +
-> +The final picture size and format is configured using the V4L2 video
-> +capture interface on the `c3-isp-cap[0, 2]` video device nodes.
-> +
-> +The Amlogic C3 ISP is supported by `libcamera <https://libcamera.org>`_ with a
-> +dedicated pipeline handler and algorithms that perform run-time image correction
-> +and enhancement.
-> diff --git a/Documentation/admin-guide/media/v4l-drivers.rst b/Documentation/admin-guide/media/v4l-drivers.rst
-> index e8761561b2fe..3bac5165b134 100644
-> --- a/Documentation/admin-guide/media/v4l-drivers.rst
-> +++ b/Documentation/admin-guide/media/v4l-drivers.rst
-> @@ -10,6 +10,7 @@ Video4Linux (V4L) driver-specific documentation
->  	:maxdepth: 2
->
->  	bttv
-> +	c3-isp
->  	cafe_ccic
->  	cx88
->  	fimc
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5bbfda5662b3..e6f66a240917 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1262,6 +1262,8 @@ AMLOGIC ISP DRIVER
->  M:	Keke Li <keke.li@amlogic.com>
->  L:	linux-media@vger.kernel.org
->  S:	Maintained
-> +F:	Documentation/admin-guide/media/c3-isp.dot
-> +F:	Documentation/admin-guide/media/c3-isp.rst
->  F:	Documentation/devicetree/bindings/media/amlogic,c3-isp.yaml
->  F:	Documentation/userspace-api/media/v4l/metafmt-c3-isp.rst
->  F:	drivers/media/platform/amlogic/c3/isp/
->
-> --
-> 2.49.0
->
->
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
