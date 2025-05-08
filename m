@@ -1,103 +1,79 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F80422CBF9;
-	Thu,  8 May 2025 13:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6141227BA1
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746711795; cv=none; b=TIIbvY6A3hESwhrTBfrRP/jahuu04uhf6Z3f2UH3e0Atiy/lhzd4oTmk5Xe+4aFa0f8iuZ/GOk8yZY3fIJsV3qYOnDWZbkIE0erRxCgHtbuseqSVeHS5qzrPSKkx2bRPy3q0SsiVYB3pueUE8rZ+Gl3SW48elbxuEPYi2bHQpi4=
+	t=1746711817; cv=none; b=dnWKnR33ZlorLhbTtmZV/n3rC4gaH8BjcDrRM23ULxewBuYV/HziC6ml3XTWwA7lw5WFYBjhgKp9cPKOJCOhLYkrhOXA2A4ywpF3jnS7eA6HGi1Ab757twJlbXRFXpYvD/aBNDoVOpzDfDz60KtP3dZ2/eWjeVp6LbY358rUjF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746711795; c=relaxed/simple;
-	bh=aCE6iYiciFIdKSqWV0byF7RoB3J0cxLu0LwihXHKXtE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tp2zPkaeoRul5D2xBGdJ6w2tJZSMBpbvJPTyj3qFU8l8icvmqsPffLouKsQPcICFlTX3d5lm06/c073K+1/e8KkPFC7yMXd+uzusiKhIY70TVE24fth1FHLKDNz7r+Lp+qh009Xqhrde9GobMze8Jp7vdDnQsi5C1zmkjEeIlXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nkno3eCI; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nkno3eCI"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so9669895e9.2;
-        Thu, 08 May 2025 06:43:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746711792; x=1747316592; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=b4tVbEi1qNi8E/gdy3VXy8wc9mnT2zzjATf4UbjgX20=;
-        b=Nkno3eCILxmRVDvO5oOCpjK12OI0brqL1xOrmvzb7RswBo04BrOECG/K5+Bn4LXd+D
-         /yNXMPptg3wCnENpxOFwjnv7tFutThYtyjAXyeX2fTTnGfFwCl2pkktj+qya2CdPSQK2
-         EvmKqHgC/5MJSTyKdj7wu8Ge6qmv6BzRMiln4P7/ucefPPDDw3j7HMosFHeXszBrDafP
-         aKB0oXtZFL+u6VWSSWBbVOF963h1l03Z0lBWuVswgHXRqpYfmOhlqpit9tiSk7Ku9Wr7
-         6sO9JE7o3B8qE7r1SrBxerFAZA2kfTWnazfoGihnJjlsU6ZIKhEqJIOPbDw6XewWmSJ7
-         xsBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746711792; x=1747316592;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=b4tVbEi1qNi8E/gdy3VXy8wc9mnT2zzjATf4UbjgX20=;
-        b=LspWhLnSegwwmTgcS8UstHHfR0OOraJmxUbErj7Lty/ZXaam5jo8tJNIKIIC0IDmtw
-         ycA7dg+LIx5SENjKZpD70EaQb+NhbpipgRKQ7TNjz5+o/0zBRDrf3tz9LSpTNUPlzY9t
-         sEBSVz/ynzPYJOFpH5ae7UsAw//l/t4qM43C8oWPjTqjmz0/VGdVIpdY9Ytf6VAbfYIa
-         ApoxWeZTaN119nncfCVDvWuZZzfJh0CB3lw3pnDvmny0CpcDO/ns5Wt7SDnOptf5kaQ4
-         ZaoOX9ALimIc6YNlMY6A6lt51t23CrZ1fYJAY1gIVx2SoxVo9//x8nme2JSxZ5NS0Cxq
-         I/WA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDgBo1zRypLWVYTkmJMRxFtSI++iz8YMv89Qeqrx1fa3WN7RUzkHt0FAb2KrIz/9el4KkA4Z1vj/rIvQJg@vger.kernel.org, AJvYcCUR0BSU6x5FEdJW1j2FJ/u0uGbFowAXLQjimN9qSvfFvVT6HCbnvdN57Hv+DBgQjcj96BgOPAtjY0ZmziA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzw4TzzZco1KhEteSo8AuADsHavuxm67ZTLOc9THLkGh59/VPw
-	Q1pwOK34ZRTBCxOPokASkhJENRps3HkKVQJW31+YiUNNF47t+1A9
-X-Gm-Gg: ASbGncv5CHqVDY/qjBal4EIlagkeBh84eIjOjyNKA42ARz28WuukLdihS4WOXvwwJg6
-	CYaHJ/e8LhUkvR+IWKK3J7kvCkPy3CtKlOuHjpkucC7Fklva+qYvFIABGicCA8mkZP/oeEr9Iy7
-	DDO4nXKJbQFG603m03Kb0cd73pxqyEfcyQ6Guc69qZLcsn4YWdb8IJprroWZRChuvEsn2OgRPJO
-	j42jIGjDt6bzE3+zkcHSFIuy0DBSpi0jFu673NeZ0ZNYZ68VKdYCvK1CW61ryu+gNpRaHxKS3o2
-	jYNmwLCIl96igHWeG/jIfRqyWc9l8HOKPIEBVde7PA==
-X-Google-Smtp-Source: AGHT+IHFMBcxHiIp52o0F6tt+d3OgA2roN5kK/YH6p9byXgvoy9nOMhe4gnHT98HwmtQZBwp+sWs1g==
-X-Received: by 2002:a05:600c:3b29:b0:43d:83a:417d with SMTP id 5b1f17b1804b1-442d02ecb69mr33139155e9.12.1746711790720;
-        Thu, 08 May 2025 06:43:10 -0700 (PDT)
-Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-442d14e0437sm29360495e9.36.2025.05.08.06.43.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 06:43:09 -0700 (PDT)
-Date: Thu, 8 May 2025 15:43:07 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [v3 PATCH] crypto: marvell/cesa - Do not chain submitted requests
-Message-ID: <aBy06xyzh5kKC48a@Red>
-References: <Zw31JIEyh28vK9q7@gondor.apana.org.au>
- <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
- <Zw9AsgqKHJfySScx@gondor.apana.org.au>
- <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
- <aBsdTJUAcQgW4ink@gondor.apana.org.au>
- <aBt5Mxq1MeefwXGJ@Red>
- <aBw-C_krkNsIoPlT@gondor.apana.org.au>
- <aBw_iC_4okpiKglQ@gondor.apana.org.au>
- <aBypVwhHHzmqqN5K@Red>
- <aBytNdRyd5Ywh1Pq@gondor.apana.org.au>
+	s=arc-20240116; t=1746711817; c=relaxed/simple;
+	bh=Y55wLFIvvID7sOrwT7mRN800kTlffZtkYjyvo+A31sc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C5XiYkOgB1yv7rNEOFJm/B7cPK1Wow3SWz1zrAv6r/ZUnyq9Dh4f6Rbm9Z9VhDpIyFWfYHfz30ue7SHMx9KsVeEKakEOiwAq79pZtTG2ItmJ1rJ5TRwkOeY3UFlR5ob4B/wn88DZw69abYyotcfEtG+hM1KN3lYv/8OU1pu+Q8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABFD2C4CEE7;
+	Thu,  8 May 2025 13:43:34 +0000 (UTC)
+Date: Thu, 8 May 2025 09:43:42 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Aaron Lu <ziqianlu@bytedance.com>, Florian Bezdeka
+ <florian.bezdeka@siemens.com>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, Ben
+ Segall <bsegall@google.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
+ Peter Zijlstra <peterz@infradead.org>, Josh Don <joshdon@google.com>, Ingo
+ Molnar <mingo@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Xi
+ Wang <xii@google.com>, linux-kernel@vger.kernel.org, Juri Lelli
+ <juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Mel
+ Gorman <mgorman@suse.de>, Chengming Zhou <chengming.zhou@linux.dev>, Chuyi
+ Zhou <zhouchuyi@bytedance.com>, Clark Williams <clark.williams@gmail.com>,
+ daniel.wagner@suse.com, josephtsalisbury@gmail.com, lgoncalv@redhat.com,
+ Tom Zanussi <zanussi@kernel.org>, williams@redhat.com, dwagner@suse.de
+Subject: Re: [RFC PATCH v2 7/7] sched/fair: alternative way of accounting
+ throttle time
+Message-ID: <20250508094342.177ddf4d@gandalf.local.home>
+In-Reply-To: <ef402bac-3b41-4322-b5b2-224c874275e3@siemens.com>
+References: <20250409120746.635476-1-ziqianlu@bytedance.com>
+	<20250409120746.635476-8-ziqianlu@bytedance.com>
+	<099db50ce28f8b4bde37b051485de62a8f452cc2.camel@siemens.com>
+	<20250507090923.GA194948@bytedance>
+	<618bc3b199f19be916913301edb5ec832131e842.camel@siemens.com>
+	<20250508024525.GA628019@bytedance>
+	<ef402bac-3b41-4322-b5b2-224c874275e3@siemens.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aBytNdRyd5Ywh1Pq@gondor.apana.org.au>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Le Thu, May 08, 2025 at 09:10:13PM +0800, Herbert Xu a écrit :
-> On Thu, May 08, 2025 at 02:53:43PM +0200, Corentin Labbe wrote:
-> >
-> > The board do not panic anymore, but have still selftest errors:
-> > See the full boot log at kernel.montjoie.ovh/477935.log
-> 
-> Do you have a boot log without this patch to compare? You seem
-> to be getting skcipher failures as well as hash failures while
-> the original report only had hash failures.
-> 
+On Thu, 8 May 2025 08:13:39 +0200
+Jan Kiszka <jan.kiszka@siemens.com> wrote:
 
-6.14.4 boot log at http://kernel.montjoie.ovh/477911.log
+> On 08.05.25 04:45, Aaron Lu wrote:
+> > On Wed, May 07, 2025 at 11:33:42AM +0200, Florian Bezdeka wrote:  
+> >> To sum up: This series fixes (or seems to fix, let's wait for one more
+> >> week to be sure) a critical RT issue. Is there a chance that once we
+> >> made it into mainline that we see (official) backports? 6.12 or 6.1
+> >> would be nice.  
+> > 
+> > I don't think there will be official backports if this series entered
+> > mainline because stable kernels only take fixes while this series changed
+> > throttle behavior dramatically. Of course, this is just my personal
+> > view, and the maintainer will make the final decision.  
+> 
+> With 6.12 carrying RT in-tree and this patches serious fixing a hard
+> lock-up of that configuration, a backport to 6.12-stable would be
+> required IMHO. Backports beyond that should be a topic for the
+> (separate) rt-stable trees.
+>
+
+Agreed, and I'm adding the stable RT maintainers as well in case this needs
+to go earlier than 6.12.
+
+Thanks,
+
+-- Steve
