@@ -1,63 +1,81 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC02C2A1D8
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 05:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A975212D7C;
+	Thu,  8 May 2025 05:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746682041; cv=none; b=tNEywKWn8+TjsNNtschMb9ZElXI/oy+z1K3GprhhFK5Oimkct5jAEPHRGHpTZBh033KgXfmgpQ97evj//vKzSlM3sp/m1lzjaK5KJyWo5WXqy4fiTRHOYz07G95oQyUNl17gwMVj9WI9t9fpKolvhEVv+0bFRr+38HpD1QXMErY=
+	t=1746682080; cv=none; b=gR1i87zPwA844OO9y2xtuYH1BHW6xr8EVVIDR3UJzuipfoAVcLGBK2C1ySxCg3lAPYUXYNe1B5LNK4czNZlYcGywQlzqSaYw1aXgmJBSCmtDPrvk5Yt5rbXM/8bfpsCyJUY8Ljh+kWWku5QHJIN3DRCUExtXT0ix/2fLMojTofk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746682041; c=relaxed/simple;
-	bh=4eVHONngUeipKynYHcMZWrxwJWyW5f8MX0Jake1gWQM=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=WVGPqNuXoq2K6FKHQMR7dtvKx/amFR6N0tSDm2scLuu7wWnKYeSVna2rNuesQrDsfPuqui5d2YfMBbSUG9nqrC1pOz5cret4TbQN9J7eN9m1LqlbFew6Yx5Ugdr5rpS5KMsBUHHZ9OMQv9WAU3JSekiDvdo4zyftpFxLOtXjDbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net; spf=pass smtp.mailfrom=bit-philosophy.net; dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b=yIm8zVhO; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bit-philosophy.net
+	s=arc-20240116; t=1746682080; c=relaxed/simple;
+	bh=FKCN+xZrHEP+zcN12EM0hglv2leVoahfKiHhwm2cT64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YtAXkROVvBgR8yW5AvYOZBKDLAF/d2gUndoXLbuHNGzHTdOlqjjTMTlfhJKnnCYs3VGBc+XhSNScOyJQJRMWqvxl9UKDBxNjB2jHq+IkDczc3rsX6ct/5lOTKW7Iisju8O9Z7tOnD9CThLsnVxRjjfaC6QW/0GHqGfcpy05++jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QHX4nhr6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b="yIm8zVhO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=bit-philosophy.net; s=ds202411; h=Content-Transfer-Encoding:Content-Type:
-	Subject:From:To:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Xdd1gqiINkNUZ3bC1znyTd57Qf1MfMSQyx24/2C5B5s=; b=yIm8zVhOD9zJ+MULWReQ+jiBkM
-	Dp6FXYne00CZpUR1YWE7RVJubH+ITfq3jXNfbLHXl5SuUW7CEUgJFlHLcEqGgIxffWeDtaAA7djQA
-	67g5GDS8i4cNE6EmbVrVZOdT/SPuPG+pEZpTzHt02bFwQzd6rls9JtDiMjiMvNPu9rG+0sZKj6i9v
-	2CbT+wojv7xj130KFZntmbRKXvmNKXUmKgBTyUJ3HKRFikqo6NwfrMg6nA0FytNicuDKN40hvA2bV
-	dvMtLpCNn+I++y39rJDSogEE+nUGiO+X/+LopxrAZGGLa2lpbaj6dpnbUFOR+1HdAAU7+E42mD/1F
-	aqatIsSw==;
-Received: from smtp
-	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	id 1uCtmn-002Suz-M2
-	for linux-kernel@vger.kernel.org;
-	Thu, 08 May 2025 07:27:10 +0200
-Message-ID: <cea40831-31b9-4a8c-a742-bc119feaf50a@bit-philosophy.net>
-Date: Thu, 8 May 2025 07:27:10 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QHX4nhr6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C0ECC4CEE8;
+	Thu,  8 May 2025 05:27:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746682079;
+	bh=FKCN+xZrHEP+zcN12EM0hglv2leVoahfKiHhwm2cT64=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QHX4nhr6QpIwmQ/3U+cImX4n5o3AWeFtkg/K7JUPUnxXWa5/e4GMcXlmseceAOXF3
+	 0F+gWW+C3tqqBpewZj0348ScbF4KLeeomT1B3pbBGUxBU+mFpTS8E0qEJuyqSPgZ3I
+	 HusN0Ik055WaHFJYvwU+xyXifcnvuCpVVVxKqbig=
+Date: Thu, 8 May 2025 07:27:56 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jiayi Li <lijiayi@kylinos.cn>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: quirks: Add NO_LPM quirk for SanDisk Extreme 55AE
+Message-ID: <2025050825-census-slum-6f37@gregkh>
+References: <20250508033123.673964-1-lijiayi@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-kernel@vger.kernel.org
-From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <bitulla@bit-philosophy.net>
-Subject: Now supporting AKI Computers (was Low Jitter ,Fair Pay Philosophy)
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508033123.673964-1-lijiayi@kylinos.cn>
 
-Now supporting
+On Thu, May 08, 2025 at 11:31:23AM +0800, Jiayi Li wrote:
+> This device exhibits I/O errors during file transfers due to unstable
+> link power management (LPM) behavior. The kernel logs show repeated
+> warm resets and eventual disconnection when LPM is enabled:
+> 
+> [ 3467.810740] hub 2-0:1.0: state 7 ports 6 chg 0000 evt 0020
+> [ 3467.810740] usb usb2-port5: do warm reset
+> [ 3467.866444] usb usb2-port5: not warm reset yet, waiting 50ms
+> [ 3467.907407] sd 0:0:0:0: [sda] tag#12 sense submit err -19
+> [ 3467.994423] usb usb2-port5: status 02c0, change 0001, 10.0 Gb/s
+> [ 3467.994453] usb 2-5: USB disconnect, device number 4
+> 
+> The error -19 (ENODEV) occurs when the device disappears during write
+> operations. Adding USB_QUIRK_NO_LPM disables link power management
+> for this specific device, resolving the stability issues.
+> 
+> Signed-off-by: Jiayi Li <lijiayi@kylinos.cn>
+> ---
+>  drivers/usb/core/quirks.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
+> index 36d3df7d040c..2bb70a34d4c5 100644
+> --- a/drivers/usb/core/quirks.c
+> +++ b/drivers/usb/core/quirks.c
+> @@ -372,6 +372,9 @@ static const struct usb_device_id usb_quirk_list[] = {
+>  	/* SanDisk Corp. SanDisk 3.2Gen1 */
+>  	{ USB_DEVICE(0x0781, 0x55a3), .driver_info = USB_QUIRK_DELAY_INIT },
+>  
+> +	/* SanDisk Extreme 55AE */
+> +        { USB_DEVICE(0x0781, 0x55ae), .driver_info = USB_QUIRK_NO_LPM },
 
-https://www.google.com/search?q=AKI+Computers
+Nit, you forgot to use a tab here :(
 
-AKI also means "friend", and the spirit here was early influenced by 
-Amiga users.
+I think scripts/checkpatch.pl should have caught this, right?
 
-Also replaces "hacker" for me, that has gotten ill reputation.
+thanks,
 
-Light, Akis!
-Ywe.
-https://bit-philosophy.net/
+greg k-h
