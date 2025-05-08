@@ -1,85 +1,152 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE1F1C6FE2
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDFE175D53
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746695476; cv=none; b=KVTkStYci+GvevW7zlgQuXaFgdUhlbkWwI0FeoHLq1/+tzFLxLL0EN34qL5cQ7wg1r0HgA/HoRIdsaZmrjs0FZI8gM+QRjReQap1QaP5Rg4Dbp1iu6UVFmX6KWBkT0cRai/Qdt4rNsQcWCwWzp1AQquK7P/FXQqDJ+ibLNkWb9U=
+	t=1746695515; cv=none; b=LBg4vVRK2daE9IB54NyZdS8hmnxPVr3IL7t4BicZPWo4JzzuajTEBAmVPiKETXwvPIKgz7e/sx1lwtayhJgEbXs8YZKcOLb8NW24ZEWO6Qxa79sOeJVkZhagAJJFumtCAn2MdrHarWMDILPZ/J4Z07d64ICnIc7OfdOHMrVgh4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746695476; c=relaxed/simple;
-	bh=R/KnCgLEH1i4D71Srw4baGTHNIy8kR35e86GFY54Goo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jvFY6MlSCZ6dUU7K2O8o0co2q26n77VGZZnFp/PKb7+BOzLBBOfMch7Ll4RV2pHkCJtog0WDUaOM0SEqlRPBelY0vJWzAuyesVOnhwLes1vvX/qSJlbmAIOOn3e+67ZDkggEv+NLGNuz+348uF5dUsvJLSlxn3G04GeGFINehCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org; spf=pass smtp.mailfrom=fooishbar.org; dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b=mc8NzojB; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fooishbar.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b="mc8NzojB"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6f5499c21bbso16650766d6.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 02:11:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fooishbar.org; s=google; t=1746695473; x=1747300273; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=R/KnCgLEH1i4D71Srw4baGTHNIy8kR35e86GFY54Goo=;
-        b=mc8NzojBZLPm4XWSEHf+uVpqzB50tiiJSvOqRQBYKOsKnmm5wZdhbF8gBcQynIVnYv
-         LUa4eb9rcaRxuH04K3ov1nYkxsat1yP24BPNL9+21IVSGnLQrplkrxDEI7rfjKq0aMOp
-         wkTEYeGzbrL2c2MVkZDmP/ECvsCqrAcWtDoVPphlYVsrm0OpVmVXn9I92Wsidk6XPrRU
-         Udrs6WXAQokAVU4MKuVARVJs4HnF3IWc3Ar1OvAiHv2sPB9TuTj3rrAatSgEzwvPJPcp
-         dlZ7ProJnSSgFbvBB608Uwt0bYI/dnWC6bRMfxp9AYBH58MVaKrWXgKdfNN0L/Yxjk1w
-         ZPmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746695473; x=1747300273;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=R/KnCgLEH1i4D71Srw4baGTHNIy8kR35e86GFY54Goo=;
-        b=ZTbWc5kApKTfODfft4QEZbDCx2cNQDEHBo/evtldeiRKmCcBY4s63MeiQK4PsUHpXR
-         ykKcxsGTJDhdlj06+DN7npiBzaBdOoJgVbr+cogN/8MMITq6Nvt+kLYRS8U56FE/SSOT
-         rrEXF4xLOtU8U52hp/4iL9K7N5PjvrsWPxBsuRGPxhydWxf8mfhYxdsEl7n89WwGO3l6
-         sKA2Yt5RIvMkbYdU+sZIRl/lECnfoEOda07/rApzxAhXc4qTq+PRNQmM2EATxVgvHCdR
-         qZw5sbq2bZ82PDRn6lzxT4tfOipqUgJmOZBh9QAFRy+NKP5hCKB3D96BnZIncXCAuUM2
-         pR4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWU4qTqLSF3Ck4bYKpA2ukm4DQD3xHdtDPDUDkAhs/XgigevC9shn5hExphda0nrE31/RH9K/zx1s4Drts=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyO/lJbPv1Ma2eYFK0yFKmHkyzAm2jP0WCG33PoVBLDHqNhocEj
-	RvwtHY0B9OD2ySycqun8+RqQuepWidh0TmkcXknaGF03BRHjop77VwJtku+kfXjLPDvXiqcJEwb
-	5PrixaB1hbQUkOvLwit1wxRGmEz8bEEYt5T1sLA==
-X-Gm-Gg: ASbGnctdjCzUOQXqZWp6r/Y8fVMLTW4PJY3cnKTooPFQgDxALuzYAQvQdBix5lstb+S
-	hYRGx1+aC9AzpRLjG+k/brGgFtd5HZYFeNWWlBfgEKs2nrLL2aVtpMn07Ok/LdP6YXHDaQ2AA1I
-	iSaq/+qm9ZSKCr3Bq/OSpWZ3zqbbo0E2IV
-X-Google-Smtp-Source: AGHT+IG9krRjL8m6Nqh8vBxq10hmKPFSkTpU7prTYgzI5+0oR0UHRvJLVw5g47iLQx4N0PZMh49KSVcmraCObtRcUSI=
-X-Received: by 2002:a05:6214:202c:b0:6e8:87bd:386e with SMTP id
- 6a1803df08f44-6f542aa2f5emr102817566d6.33.1746695473355; Thu, 08 May 2025
- 02:11:13 -0700 (PDT)
+	s=arc-20240116; t=1746695515; c=relaxed/simple;
+	bh=kSWdw8IVCVEdiiVxcwOCCea5RImdBd+3SVN/TuOIsmo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=DnTlvsl7lY9mEynd/3Onx+3z2w7A1dCgrlGZtXh84selaPl97eePXi3SUanjm/saOxDi6yEJMM4bO8aOOn30mfEdAAJ3k/ftfEXKv6VvMdbxsnYTXLsB36U4BQXSslqxEAPjOA/nZUYXujOj77M+aRKs0zoPR/a2HcQqNsKtj1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uCxHz-0001pr-Kw; Thu, 08 May 2025 11:11:35 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uCxHz-001hZ8-0z;
+	Thu, 08 May 2025 11:11:35 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uCxHz-0003qM-0i;
+	Thu, 08 May 2025 11:11:35 +0200
+Message-ID: <a3febd3718397d7cf067e2ae637c2d633388f89f.camel@pengutronix.de>
+Subject: Re: [PATCH v6 5/6] reset: spacemit: define three more CCUs
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Alex Elder <elder@riscstar.com>, robh@kernel.org, krzk+dt@kernel.org, 
+ conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ alex@ghiti.fr,  dlan@gentoo.org
+Cc: heylenay@4d2.org, inochiama@outlook.com, guodong@riscstar.com, 
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+ spacemit@lists.linux.dev,  linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Date: Thu, 08 May 2025 11:11:35 +0200
+In-Reply-To: <20250506210638.2800228-6-elder@riscstar.com>
+References: <20250506210638.2800228-1-elder@riscstar.com>
+	 <20250506210638.2800228-6-elder@riscstar.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508084811.2472877-1-andyshrk@163.com>
-In-Reply-To: <20250508084811.2472877-1-andyshrk@163.com>
-From: Daniel Stone <daniel@fooishbar.org>
-Date: Thu, 8 May 2025 12:11:01 +0300
-X-Gm-Features: ATxdqUHI1TGK36gxgW3UTwFXlSUt0qN82uLoLuKNGHhJOVQj4yUNPKBYA-FhmgM
-Message-ID: <CAPj87rMJgJaj8p_2DLdM8p3phB+eQnMm7iAHgEe_R8sjuGox1w@mail.gmail.com>
-Subject: Re: [PATCH] drm/gem-framebuffer: log errors when gem size < afbc_size
-To: Andy Yan <andyshrk@163.com>
-Cc: tzimmermann@suse.de, simona@ffwll.ch, mripard@kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi Andy,
+On Di, 2025-05-06 at 16:06 -0500, Alex Elder wrote:
+> Three more CCUs on the SpacemiT K1 SoC implement only resets, not clocks.
+> Define these resets so they can be used.
+>=20
+> Signed-off-by: Alex Elder <elder@riscstar.com>
+> ---
+>  drivers/clk/spacemit/ccu-k1.c | 24 ++++++++++++++++
+>  drivers/reset/spacemit/k1.c   | 54 +++++++++++++++++++++++++++++++++++
+>  include/soc/spacemit/ccu_k1.h | 30 +++++++++++++++++++
+>  3 files changed, 108 insertions(+)
+>=20
+> diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.=
+c
+> index 6b1845e899e5f..bddc83aff23cd 100644
+> --- a/drivers/clk/spacemit/ccu-k1.c
+> +++ b/drivers/clk/spacemit/ccu-k1.c
+> @@ -939,6 +939,18 @@ static const struct spacemit_ccu_data k1_ccu_apmu_da=
+ta =3D {
+>  	.num		=3D ARRAY_SIZE(k1_ccu_apmu_hws),
+>  };
+> =20
+> +static const struct spacemit_ccu_data k1_ccu_rcpu_data =3D {
 
-On Thu, 8 May 2025 at 11:49, Andy Yan <andyshrk@163.com> wrote:
-> Let the user know what went wrong in drm_gem_fb_afbc_init
-> failure paths.
+The /* No clocks in the RCPU CCU */ comment belongs here, instead of in
+the reset driver.
 
-Thanks for this, and thanks also for using drm_dbg_kms() to make sure
-that userspace can't flood the log with errors.
+I wonder though, if these units have no clocks, why are they called
+CCUs? It doesn't make much sense to me to add their compatibles to the
+ccu-k1 driver only to load the reset aux driver. Why not just add a
+platform driver next to the aux driver in reset-spacemit.ko for these
+three?
 
-Reviewed-by: Daniel Stone <daniels@collabora.com>
+> +	.reset_name	=3D "rcpu-reset",
+> +};
+> +
+> +static const struct spacemit_ccu_data k1_ccu_rcpu2_data =3D {
+> +	.reset_name	=3D "rcpu2-reset",
+> +};
+> +
+> +static const struct spacemit_ccu_data k1_ccu_apbc2_data =3D {
+> +	.reset_name	=3D "apbc2-reset",
+> +};
+> +
+>  static int spacemit_ccu_register(struct device *dev,
+>  				 struct regmap *regmap,
+>  				 struct regmap *lock_regmap,
+> @@ -1106,6 +1118,18 @@ static const struct of_device_id of_k1_ccu_match[]=
+ =3D {
+>  		.compatible	=3D "spacemit,k1-syscon-apmu",
+>  		.data		=3D &k1_ccu_apmu_data,
+>  	},
+> +	{
+> +		.compatible	=3D "spacemit,k1-syscon-rcpu",
+> +		.data		=3D &k1_ccu_rcpu_data,
+> +	},
+> +	{
+> +		.compatible	=3D "spacemit,k1-syscon-rcpu2",
+> +		.data		=3D &k1_ccu_rcpu2_data,
+> +	},
+> +	{
+> +		.compatible	=3D "spacemit,k1-syscon-apbc2",
+> +		.data		=3D &k1_ccu_apbc2_data,
+> +	},
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, of_k1_ccu_match);
+> diff --git a/drivers/reset/spacemit/k1.c b/drivers/reset/spacemit/k1.c
+> index 19a34f151b214..27434a1928261 100644
+> --- a/drivers/reset/spacemit/k1.c
+> +++ b/drivers/reset/spacemit/k1.c
+> @@ -137,6 +137,57 @@ static const struct ccu_reset_controller_data k1_apm=
+u_reset_data =3D {
+>  	.count		=3D ARRAY_SIZE(apmu_resets),
+>  };
+> =20
+> +static const struct ccu_reset_data rcpu_resets[] =3D {
+> +	[RESET_RCPU_SSP0]	=3D RESET_DATA(RCPU_SSP0_CLK_RST,	0, BIT(0)),
+> +	[RESET_RCPU_I2C0]	=3D RESET_DATA(RCPU_I2C0_CLK_RST,	0, BIT(0)),
+> +	[RESET_RCPU_UART1]	=3D RESET_DATA(RCPU_UART1_CLK_RST, 0, BIT(0)),
+> +	[RESET_RCPU_IR]		=3D RESET_DATA(RCPU_CAN_CLK_RST,	0, BIT(0)),
+> +	[RESET_RCPU_CAN]	=3D RESET_DATA(RCPU_IR_CLK_RST,	0, BIT(0)),
+> +	[RESET_RCPU_UART0]	=3D RESET_DATA(RCPU_UART0_CLK_RST, 0, BIT(0)),
+> +	[RESET_RCPU_HDMI_AUDIO]	=3D RESET_DATA(AUDIO_HDMI_CLK_CTRL, 0, BIT(0)),
+> +};
+> +
+> +static const struct ccu_reset_controller_data k1_rcpu_reset_data =3D {
+> +	/* No clocks in the RCPU CCU */
 
-Cheers,
-Daniel
+This information is not useful in the reset driver.
+
+regards
+Philipp
