@@ -1,1181 +1,370 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730AD1E32BE;
-	Thu,  8 May 2025 03:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9004B1E5E
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 03:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746673774; cv=none; b=UJs/ePg/4IGWAGhgDGPnLRQVQanwSvZzzQNX3lPrsk1iLLJEqjy1tH8JeOGj2k5TjqQ/Cn71Of+xq8W2Ykwy67joqeYFkgG46+nrun+1niElAam+x07/c8E4xvo+PdX/EL4wUgTv6Il3KDChIBd3uuWioFlbxAcVcQ3c+O+HdV4=
+	t=1746673897; cv=none; b=JF1ra7qVAoSM2JNS9h5MwoPECNxh4/f8FPGgnEKY0l2oSvFcvdjLiyuDGj1OzhFbCNtaRaYy0LXCt8NFz4qZXl5c2YJbyTR6vVOkjoY1hatHQNba6SqdgnX3Q3c4GJIheB773fLop0rUVNTZxZpmqRZBUOAYWuxc+Ncq5NeFV7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746673774; c=relaxed/simple;
-	bh=ob2IMiP3W01pT5EoUPoYAwR7d1e4kq2jw0tfE0PMbyY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=KptKYpJxd5SkaTGRZ2XNoTZFALcmUDf98rbqviUHmYDITW7eVfvWH98Sv3RZmHr1omAFseyED0lBE5NtfkYlfmF75zx3ssHxkyXZenFn7tbi/Hipjk+7DaVAEoshTUN2r1FY9xOC5BhVlEsS6LtaSgxSHY0RqynB+tEnL1hxZCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hJoQS4vt; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746673897; c=relaxed/simple;
+	bh=nNiL1Ajt716S14UIfcSnW4WMq6eG3ETSCZncvvuRXgg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=GdGoHuOfHWL/HZLIjN1a7l5aMDtiCdVh4EZea3R+4vud+Qlkfe9iwDUoJIUdkCTiJcHJ7vobJh0k6nGK1xGdDcuZyq0wrNc5fKM342M+jVL4SZDo73riU1uMO9czaU/2pCU4tdZQ0LHx/+TzMBMKNNnoxYLxcagCkp5tV7XqXbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=cB4fONVM reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hJoQS4vt"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54839K661716640
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 7 May 2025 22:09:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746673760;
-	bh=+MyIwbO3e8lDIdK2uX/3mIDIc4SuviZCq/V/ADu+kEs=;
-	h=From:Date:Subject:References:In-Reply-To:To:CC;
-	b=hJoQS4vtqX+yrg6JcfMPXz8M1FKgltCG913dpJqwgbWsc6QOu3pGzmXmzmX4KykEO
-	 566a0FkU0MTGD6y46thhFngz5F3SjWA76eZgz+mQ8TX+dgTCsSCFSy3lh/XPk7hnua
-	 iS6qFZGzOW3sjbjHvHYm9kq62+xjJPLcMdOOF38s=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54839KkU102459
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 7 May 2025 22:09:20 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 7
- May 2025 22:09:19 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 7 May 2025 22:09:19 -0500
-Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54839J92066230;
-	Wed, 7 May 2025 22:09:19 -0500
-From: Bryan Brattlof <bb@ti.com>
-Date: Wed, 7 May 2025 22:09:20 -0500
-Subject: [PATCH v5 2/3] arm64: dts: ti: k3-am62l: add initial
- infrastructure
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="cB4fONVM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=n4D9IO2SObVKEvgcv1+XRceFXYX15/Sa2pmY4wvgK4s=; b=c
+	B4fONVMCOjpYRuqO+9C8/4ihIZ2Dn2ujHoPlY169/DQ3Qbd+S26xxafW8ZNLv7EH
+	TQE3XbzggSfXj+9J1E+72RGlKdctL7drsAmJc2mY9lPBLDtIo47LlW3WI/BS4cNl
+	UZtxuMeC96CuZsarpe8LI0AEuXLeyUG8fAK3T3AUoM=
+Received: from 00107082$163.com ( [111.35.191.17] ) by
+ ajax-webmail-wmsvr-40-127 (Coremail) ; Thu, 8 May 2025 11:10:44 +0800 (CST)
+Date: Thu, 8 May 2025 11:10:44 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Suren Baghdasaryan" <surenb@google.com>
+Cc: kent.overstreet@linux.dev, akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] alloc_tag: avoid mem alloc and iter reset when reading
+ allocinfo
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <CAJuCfpGtdzL5myXCUopJrBogzPOWVGt9cBRAiJS5FVAxgp8zag@mail.gmail.com>
+References: <20250507175500.204569-1-00107082@163.com>
+ <CAJuCfpGtdzL5myXCUopJrBogzPOWVGt9cBRAiJS5FVAxgp8zag@mail.gmail.com>
+X-NTES-SC: AL_Qu2fBPqcvEAv4iaeYukZnEYQheY4XMKyuPkg1YJXOp80lyTS1i8PZ25IJ2Ls0fmBKwSmoQmJUCZj9eRhRIVjWqgsqNQht2dhK4k8zNeEzOwE
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250507-am62lx-v5-2-4b57ea878e62@ti.com>
-References: <20250507-am62lx-v5-0-4b57ea878e62@ti.com>
-In-Reply-To: <20250507-am62lx-v5-0-4b57ea878e62@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Bryan Brattlof <bb@ti.com>
-X-Mailer: b4 0.13.0
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Message-ID: <e98dfcd.36a1.196addfc1be.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:fygvCgDXvxu0IBxo55KmAA--.56479W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqAZGqmgb7oIe+QANs3
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-From: Vignesh Raghavendra <vigneshr@ti.com>
-
-Add the initial infrastructure needed for the AM62L. ALl of which can be
-found in the Technical Reference Manual (TRM) located here:
-
-    https://www.ti.com/lit/pdf/sprujb4
-
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Signed-off-by: Bryan Brattlof <bb@ti.com>
----
-Changes in v4:
- - Corrected Copyright year
- - Used 'ranges' property in the fss{} node
-
-Changes in v3:
- - Added more nodes now that the SCMI interface is ready
-
-Changes in v1:
- - switched to non-direct links to TRM updates are automatic
- - fixed white space indent issues with a few nodes
- - separated out device tree bindings
----
- arch/arm64/boot/dts/ti/Makefile              |   3 +
- arch/arm64/boot/dts/ti/k3-am62l-main.dtsi    | 673 +++++++++++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-am62l-thermal.dtsi |  25 +
- arch/arm64/boot/dts/ti/k3-am62l-wakeup.dtsi  | 133 ++++++
- arch/arm64/boot/dts/ti/k3-am62l.dtsi         | 121 +++++
- arch/arm64/boot/dts/ti/k3-am62l3.dtsi        |  67 +++
- arch/arm64/boot/dts/ti/k3-pinctrl.h          |   2 +
- 7 files changed, 1024 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-index 3c3aa09a94b64..6c0e27c1042f9 100644
---- a/arch/arm64/boot/dts/ti/Makefile
-+++ b/arch/arm64/boot/dts/ti/Makefile
-@@ -33,6 +33,9 @@ dtb-$(CONFIG_ARCH_K3) += k3-am62-pocketbeagle2.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am62a7-sk.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am62a7-phyboard-lyra-rdk.dtb
- 
-+# Boards with AM62Lx SoCs
-+dtb-$(CONFIG_ARCH_K3) += k3-am62l3-evm.dtb
-+
- # Boards with AM62Px SoC
- dtb-$(CONFIG_ARCH_K3) += k3-am62p5-sk.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am62p5-verdin-nonwifi-dahlia.dtb
-diff --git a/arch/arm64/boot/dts/ti/k3-am62l-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62l-main.dtsi
-new file mode 100644
-index 0000000000000..f6fbaaede8c36
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62l-main.dtsi
-@@ -0,0 +1,673 @@
-+// SPDX-License-Identifier: GPL-2.0-only or MIT
-+/*
-+ * Device Tree file for the AM62L main domain peripherals
-+ * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
-+ *
-+ * Technical Reference Manual: https://www.ti.com/lit/pdf/sprujb4
-+ */
-+
-+&cbass_main {
-+	gic500: interrupt-controller@1800000 {
-+		compatible = "arm,gic-v3";
-+		reg = <0x00 0x01800000 0x00 0x10000>,	/* GICD */
-+		      <0x00 0x01840000 0x00 0xc0000>,	/* GICR */
-+		      <0x01 0x00000000 0x00 0x2000>,    /* GICC */
-+		      <0x01 0x00010000 0x00 0x1000>,    /* GICH */
-+		      <0x01 0x00020000 0x00 0x2000>;    /* GICV */
-+		ranges;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		/*
-+		 * vcpumntirq:
-+		 * virtual CPU interface maintenance interrupt
-+		 */
-+		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		gic_its: msi-controller@1820000 {
-+			compatible = "arm,gic-v3-its";
-+			reg = <0x00 0x01820000 0x00 0x10000>;
-+			socionext,synquacer-pre-its = <0x1000000 0x400000>;
-+			msi-controller;
-+			#msi-cells = <1>;
-+		};
-+	};
-+
-+	gpio0: gpio@600000 {
-+		compatible = "ti,am64-gpio", "ti,keystone-gpio";
-+		reg = <0x00 0x00600000 0x00 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&gic500>;
-+		interrupts = <GIC_SPI 260 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 261 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 262 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 263 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 264 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 265 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 267 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		power-domains = <&scmi_pds 34>;
-+		clocks = <&scmi_clk 140>;
-+		clock-names = "gpio";
-+		ti,ngpio = <126>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		status = "disabled";
-+	};
-+
-+	gpio2: gpio@610000 {
-+		compatible = "ti,am64-gpio", "ti,keystone-gpio";
-+		reg = <0x00 0x00610000 0x00 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&gic500>;
-+		interrupts = <GIC_SPI 280 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 281 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 282 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 283 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 284 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 285 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 286 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 287 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		power-domains = <&scmi_pds 35>;
-+		clocks = <&scmi_clk 141>;
-+		clock-names = "gpio";
-+		ti,ngpio = <79>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		status = "disabled";
-+	};
-+
-+	timer0: timer@2400000 {
-+		compatible = "ti,am654-timer";
-+		reg = <0x00 0x2400000 0x00 0x400>;
-+		interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&scmi_clk 47>;
-+		clock-names = "fck";
-+		power-domains = <&scmi_pds 15>;
-+		ti,timer-pwm;
-+	};
-+
-+	timer1: timer@2410000 {
-+		compatible = "ti,am654-timer";
-+		reg = <0x00 0x2410000 0x00 0x400>;
-+		interrupts = <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&scmi_clk 61>;
-+		clock-names = "fck";
-+		power-domains = <&scmi_pds 16>;
-+		ti,timer-pwm;
-+	};
-+
-+	timer2: timer@2420000 {
-+		compatible = "ti,am654-timer";
-+		reg = <0x00 0x2420000 0x00 0x400>;
-+		interrupts = <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&scmi_clk 66>;
-+		clock-names = "fck";
-+		power-domains = <&scmi_pds 17>;
-+		ti,timer-pwm;
-+	};
-+
-+	timer3: timer@2430000 {
-+		compatible = "ti,am654-timer";
-+		reg = <0x00 0x2430000 0x00 0x400>;
-+		interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&scmi_clk 80>;
-+		clock-names = "fck";
-+		power-domains = <&scmi_pds 18>;
-+		ti,timer-pwm;
-+	};
-+
-+	uart0: serial@2800000 {
-+		compatible = "ti,am64-uart", "ti,am654-uart";
-+		reg = <0x00 0x02800000 0x00 0x100>;
-+		interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 89>;
-+		clocks = <&scmi_clk 358>;
-+		clock-names = "fclk";
-+		status = "disabled";
-+	};
-+
-+	uart1: serial@2810000 {
-+		compatible = "ti,am64-uart", "ti,am654-uart";
-+		reg = <0x00 0x02810000 0x00 0x100>;
-+		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 77>;
-+		clocks = <&scmi_clk 312>;
-+		clock-names = "fclk";
-+		status = "disabled";
-+	};
-+
-+	uart2: serial@2820000 {
-+		compatible = "ti,am64-uart", "ti,am654-uart";
-+		reg = <0x00 0x02820000 0x00 0x100>;
-+		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 78>;
-+		clocks = <&scmi_clk 314>;
-+		clock-names = "fclk";
-+		status = "disabled";
-+	};
-+
-+	uart3: serial@2830000 {
-+		compatible = "ti,am64-uart", "ti,am654-uart";
-+		reg = <0x00 0x02830000 0x00 0x100>;
-+		interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 79>;
-+		clocks = <&scmi_clk 316>;
-+		clock-names = "fclk";
-+		status = "disabled";
-+	};
-+
-+	uart4: serial@2840000 {
-+		compatible = "ti,am64-uart", "ti,am654-uart";
-+		reg = <0x00 0x02840000 0x00 0x100>;
-+		interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 80>;
-+		clocks = <&scmi_clk 318>;
-+		clock-names = "fclk";
-+		status = "disabled";
-+	};
-+
-+	uart5: serial@2850000 {
-+		compatible = "ti,am64-uart", "ti,am654-uart";
-+		reg = <0x00 0x02850000 0x00 0x100>;
-+		interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 81>;
-+		clocks = <&scmi_clk 320>;
-+		clock-names = "fclk";
-+		status = "disabled";
-+	};
-+
-+	uart6: serial@2860000 {
-+		compatible = "ti,am64-uart", "ti,am654-uart";
-+		reg = <0x00 0x02860000 0x00 0x100>;
-+		interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 82>;
-+		clocks = <&scmi_clk 322>;
-+		clock-names = "fclk";
-+		status = "disabled";
-+	};
-+
-+	conf: syscon@9000000 {
-+		compatible = "syscon", "simple-mfd";
-+		ranges = <0x0 0x00 0x09000000 0x400000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		phy_gmii_sel: phy@1be000 {
-+			compatible = "ti,am654-phy-gmii-sel";
-+			reg = <0x1be000 0x8>;
-+			#phy-cells = <1>;
-+		};
-+
-+		epwm_tbclk: clock-controller@1e9100 {
-+			compatible = "ti,am62-epwm-tbclk";
-+			reg = <0x1e9100 0x4>;
-+			#clock-cells = <1>;
-+		};
-+	};
-+
-+	rti0: watchdog@e000000 {
-+		compatible = "ti,j7-rti-wdt";
-+		reg = <0x00 0x0e000000 0x00 0x100>;
-+		clocks = <&scmi_clk 273>;
-+		power-domains = <&scmi_pds 60>;
-+		assigned-clocks = <&scmi_clk 273>;
-+		assigned-clock-parents = <&scmi_clk 1>;
-+	};
-+
-+	rti1: watchdog@e010000 {
-+		compatible = "ti,j7-rti-wdt";
-+		reg = <0x00 0x0e010000 0x00 0x100>;
-+		clocks = <&scmi_clk 279>;
-+		power-domains = <&scmi_pds 61>;
-+		assigned-clocks = <&scmi_clk 279>;
-+		assigned-clock-parents = <&scmi_clk 1>;
-+	};
-+
-+	fss: bus@fc00000 {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges = <0x00 0x0fc00000 0x00 0x100>, // FSS Control
-+			 <0x00 0x0fc40000 0x00 0x100>, // OSPI0 Control
-+			 <0x05 0x00000000 0x01 0x00000000>; // OSPI0 Memory
-+
-+		ospi0: spi@fc40000 {
-+			compatible = "ti,am654-ospi", "cdns,qspi-nor";
-+			reg = <0x00 0x0fc40000 0x00 0x100>,
-+			      <0x05 0x00000000 0x01 0x00000000>;
-+			interrupts = <GIC_SPI 240 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&scmi_clk 134>;
-+			assigned-clocks = <&scmi_clk 134>;
-+			assigned-clock-rates = <166666666>;
-+			power-domains = <&scmi_pds 32>;
-+			#size-cells = <0>;
-+			cdns,fifo-depth = <256>;
-+			cdns,fifo-width = <4>;
-+			cdns,trigger-address = <0x0>;
-+			cdns,phase-detect-selector = <2>;
-+			status = "disabled";
-+		};
-+	};
-+
-+	usbss0: dwc3-usb@f900000 {
-+		compatible = "ti,am62-usb";
-+		reg = <0x00 0x0f900000 0x00 0x800>,
-+		      <0x00 0x0f908000 0x00 0x400>;
-+		clocks = <&scmi_clk 329>;
-+		clock-names = "ref";
-+		power-domains = <&scmi_pds 95>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		ti,syscon-phy-pll-refclk = <&wkup_conf 0x45000>;
-+		status = "disabled";
-+
-+		usb0: usb@31000000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x00 0x31000000 0x00 0x50000>;
-+			interrupts = <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>, /* irq.0 */
-+				     <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>; /* irq.0 */
-+			interrupt-names = "host", "peripheral";
-+			maximum-speed = "high-speed";
-+			dr_mode = "otg";
-+			snps,usb2-gadget-lpm-disable;
-+			snps,usb2-lpm-disable;
-+			bootph-all;
-+		};
-+	};
-+
-+	usbss1: dwc3-usb@f910000 {
-+		compatible = "ti,am62-usb";
-+		reg = <0x00 0x0f910000 0x00 0x800>,
-+		      <0x00 0x0f918000 0x00 0x400>;
-+		clocks = <&scmi_clk 336>;
-+		clock-names = "ref";
-+		power-domains = <&scmi_pds 96>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ti,syscon-phy-pll-refclk = <&wkup_conf 0x45004>;
-+		ranges;
-+		status = "disabled";
-+
-+		usb1: usb@31100000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x00 0x31100000 0x00 0x50000>;
-+			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>, /* irq.0 */
-+				     <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>; /* irq.0 */
-+			interrupt-names = "host", "peripheral";
-+			maximum-speed = "high-speed";
-+			dr_mode = "otg";
-+			snps,usb2-gadget-lpm-disable;
-+			snps,usb2-lpm-disable;
-+		};
-+	};
-+
-+	sdhci0: mmc@fa10000 {
-+		compatible = "ti,am62-sdhci";
-+		reg = <0x00 0xfa10000 0x00 0x1000>,
-+		      <0x00 0xfa18000 0x00 0x400>;
-+		interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 28>;
-+		clocks = <&scmi_clk 122>, <&scmi_clk 123>;
-+		clock-names = "clk_ahb", "clk_xin";
-+		assigned-clocks = <&scmi_clk 123>;
-+		assigned-clock-parents = <&scmi_clk 0>;
-+		bus-width = <8>;
-+		ti,clkbuf-sel = <0x7>;
-+		ti,otap-del-sel-legacy = <0x0>;
-+		ti,itap-del-sel-legacy = <0x0>;
-+		status = "disabled";
-+	};
-+
-+	sdhci1: mmc@fa00000 {
-+		compatible = "ti,am62-sdhci";
-+		reg = <0x00 0x0fa00000 0x00 0x1000>,
-+		      <0x00 0x0fa08000 0x00 0x400>;
-+		interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 26>;
-+		clocks = <&scmi_clk 106>, <&scmi_clk 107>;
-+		clock-names = "clk_ahb", "clk_xin";
-+		assigned-clocks = <&scmi_clk 107>;
-+		assigned-clock-parents = <&scmi_clk 0>;
-+		bus-width = <4>;
-+		ti,clkbuf-sel = <0x7>;
-+		ti,otap-del-sel-legacy = <0x0>;
-+		ti,itap-del-sel-legacy = <0x0>;
-+		status = "disabled";
-+	};
-+
-+	sdhci2: mmc@fa20000 {
-+		compatible = "ti,am62-sdhci";
-+		reg = <0x00 0x0fa20000 0x00 0x1000>,
-+		      <0x00 0x0fa28000 0x00 0x400>;
-+		interrupts = <GIC_SPI 238 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 27>;
-+		clocks = <&scmi_clk 114>, <&scmi_clk 115>;
-+		clock-names = "clk_ahb", "clk_xin";
-+		assigned-clocks = <&scmi_clk 115>;
-+		assigned-clock-parents = <&scmi_clk 0>;
-+		bus-width = <4>;
-+		ti,clkbuf-sel = <0x7>;
-+		ti,otap-del-sel-legacy = <0x0>;
-+		ti,itap-del-sel-legacy = <0x0>;
-+		status = "disabled";
-+	};
-+
-+	i2c0: i2c@20000000 {
-+		compatible = "ti,am64-i2c", "ti,omap4-i2c";
-+		reg = <0x00 0x20000000 0x00 0x100>;
-+		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 53>;
-+		clocks = <&scmi_clk 246>;
-+		clock-names = "fck";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c1: i2c@20010000 {
-+		compatible = "ti,am64-i2c", "ti,omap4-i2c";
-+		reg = <0x00 0x20010000 0x00 0x100>;
-+		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 54>;
-+		clocks = <&scmi_clk 250>;
-+		clock-names = "fck";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c2: i2c@20020000 {
-+		compatible = "ti,am64-i2c", "ti,omap4-i2c";
-+		reg = <0x00 0x20020000 0x00 0x100>;
-+		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 55>;
-+		clocks = <&scmi_clk 254>;
-+		clock-names = "fck";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c3: i2c@20030000 {
-+		compatible = "ti,am64-i2c", "ti,omap4-i2c";
-+		reg = <0x00 0x20030000 0x00 0x100>;
-+		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 56>;
-+		clocks = <&scmi_clk 258>;
-+		clock-names = "fck";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	mcan0: can@20701000 {
-+		compatible = "bosch,m_can";
-+		reg = <0x00 0x20701000 0x00 0x200>,
-+		      <0x00 0x20708000 0x00 0x8000>;
-+		reg-names = "m_can", "message_ram";
-+		power-domains = <&scmi_pds 47>;
-+		clocks = <&scmi_clk 179>, <&scmi_clk 174>;
-+		clock-names = "hclk", "cclk";
-+		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "int0", "int1";
-+		bosch,mram-cfg = <0x0 128 64 64 64 64 32 32>;
-+		status = "disabled";
-+	};
-+
-+	mcan1: can@20711000 {
-+		compatible = "bosch,m_can";
-+		reg = <0x00 0x20711000 0x00 0x200>,
-+		      <0x00 0x20718000 0x00 0x8000>;
-+		reg-names = "m_can", "message_ram";
-+		power-domains = <&scmi_pds 48>;
-+		clocks = <&scmi_clk 185>, <&scmi_clk 180>;
-+		clock-names = "hclk", "cclk";
-+		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "int0", "int1";
-+		bosch,mram-cfg = <0x0 128 64 64 64 64 32 32>;
-+		status = "disabled";
-+	};
-+
-+	mcan2: can@20721000 {
-+		compatible = "bosch,m_can";
-+		reg = <0x00 0x20721000 0x00 0x200>,
-+		      <0x00 0x20728000 0x00 0x8000>;
-+		reg-names = "m_can", "message_ram";
-+		power-domains = <&scmi_pds 49>;
-+		clocks = <&scmi_clk 191>, <&scmi_clk 186>;
-+		clock-names = "hclk", "cclk";
-+		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "int0", "int1";
-+		bosch,mram-cfg = <0x0 128 64 64 64 64 32 32>;
-+		status = "disabled";
-+	};
-+
-+	spi0: spi@20100000 {
-+		compatible = "ti,am654-mcspi", "ti,omap4-mcspi";
-+		reg = <0x00 0x20100000 0x00 0x400>;
-+		interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 72>;
-+		clocks = <&scmi_clk 299>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	spi1: spi@20110000 {
-+		compatible = "ti,am654-mcspi","ti,omap4-mcspi";
-+		reg = <0x00 0x20110000 0x00 0x400>;
-+		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 73>;
-+		clocks = <&scmi_clk 302>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	spi2: spi@20120000 {
-+		compatible = "ti,am654-mcspi","ti,omap4-mcspi";
-+		reg = <0x00 0x20120000 0x00 0x400>;
-+		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 74>;
-+		clocks = <&scmi_clk 305>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	spi3: spi@20130000 {
-+		compatible = "ti,am654-mcspi","ti,omap4-mcspi";
-+		reg = <0x00 0x20130000 0x00 0x400>;
-+		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 75>;
-+		clocks = <&scmi_clk 308>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	epwm0: pwm@23000000 {
-+		compatible = "ti,am64-epwm", "ti,am3352-ehrpwm";
-+		#pwm-cells = <3>;
-+		reg = <0x00 0x23000000 0x00 0x100>;
-+		power-domains = <&scmi_pds 40>;
-+		clocks = <&epwm_tbclk 0>, <&scmi_clk 164>;
-+		clock-names = "tbclk", "fck";
-+		status = "disabled";
-+	};
-+
-+	epwm1: pwm@23010000 {
-+		compatible = "ti,am64-epwm", "ti,am3352-ehrpwm";
-+		#pwm-cells = <3>;
-+		reg = <0x00 0x23010000 0x00 0x100>;
-+		power-domains = <&scmi_pds 41>;
-+		clocks = <&epwm_tbclk 1>, <&scmi_clk 165>;
-+		clock-names = "tbclk", "fck";
-+		status = "disabled";
-+	};
-+
-+	epwm2: pwm@23020000 {
-+		compatible = "ti,am64-epwm", "ti,am3352-ehrpwm";
-+		#pwm-cells = <3>;
-+		reg = <0x00 0x23020000 0x00 0x100>;
-+		power-domains = <&scmi_pds 42>;
-+		clocks = <&epwm_tbclk 2>, <&scmi_clk 166>;
-+		clock-names = "tbclk", "fck";
-+		status = "disabled";
-+	};
-+
-+	ecap0: pwm@23100000 {
-+		compatible = "ti,am3352-ecap";
-+		reg = <0x00 0x23100000 0x00 0x100>;
-+		power-domains = <&scmi_pds 22>;
-+		clocks = <&scmi_clk 99>;
-+		clock-names = "fck";
-+		#pwm-cells = <3>;
-+		status = "disabled";
-+	};
-+
-+	ecap1: pwm@23110000 {
-+		compatible = "ti,am3352-ecap";
-+		reg = <0x00 0x23110000 0x00 0x100>;
-+		power-domains = <&scmi_pds 23>;
-+		clocks = <&scmi_clk 100>;
-+		clock-names = "fck";
-+		#pwm-cells = <3>;
-+		status = "disabled";
-+	};
-+
-+	ecap2: pwm@23120000 {
-+		compatible = "ti,am3352-ecap";
-+		reg = <0x00 0x23120000 0x00 0x100>;
-+		power-domains = <&scmi_pds 24>;
-+		clocks = <&scmi_clk 101>;
-+		clock-names = "fck";
-+		#pwm-cells = <3>;
-+		status = "disabled";
-+	};
-+
-+	eqep0: counter@23200000 {
-+		compatible = "ti,am62-eqep";
-+		reg = <0x00 0x23200000 0x00 0x100>;
-+		power-domains = <&scmi_pds 29>;
-+		clocks = <&scmi_clk 127>;
-+		interrupts = <GIC_SPI 162 IRQ_TYPE_EDGE_RISING>;
-+		status = "disabled";
-+	};
-+
-+	eqep1: counter@23210000 {
-+		compatible = "ti,am62-eqep";
-+		reg = <0x00 0x23210000 0x00 0x100>;
-+		power-domains = <&scmi_pds 30>;
-+		clocks = <&scmi_clk 128>;
-+		interrupts = <GIC_SPI 163 IRQ_TYPE_EDGE_RISING>;
-+		status = "disabled";
-+	};
-+
-+	eqep2: counter@23220000 {
-+		compatible = "ti,am62-eqep";
-+		reg = <0x00 0x23220000 0x00 0x100>;
-+		power-domains = <&scmi_pds 31>;
-+		clocks = <&scmi_clk 129>;
-+		interrupts = <GIC_SPI 164 IRQ_TYPE_EDGE_RISING>;
-+		status = "disabled";
-+	};
-+
-+	elm0: ecc@25010000 {
-+		compatible = "ti,am64-elm";
-+		reg = <0x00 0x25010000 0x00 0x2000>;
-+		interrupts = <GIC_SPI 243 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 25>;
-+		clocks = <&scmi_clk 102>;
-+		clock-names = "fck";
-+		status = "disabled";
-+	};
-+
-+	tscadc0: tscadc@28001000 {
-+		compatible = "ti,am654-tscadc", "ti,am3359-tscadc";
-+		reg = <0x00 0x28001000 0x00 0x1000>;
-+		interrupts = <GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 0>;
-+		clocks = <&scmi_clk 0>;
-+		assigned-clocks = <&scmi_clk 0>;
-+		assigned-clock-parents = <&scmi_clk 2>;
-+		assigned-clock-rates = <60000000>;
-+		clock-names = "fck";
-+		status = "disabled";
-+
-+		adc {
-+			compatible = "ti,am654-adc", "ti,am3359-adc";
-+			#io-channel-cells = <1>;
-+		};
-+	};
-+
-+	dphy_tx0: phy@301c0000 {
-+		compatible = "ti,j721e-dphy";
-+		reg = <0x0 0x301c0000 0x0 0x1000>;
-+		clocks = <&scmi_clk 348>, <&scmi_clk 341>;
-+		clock-names = "psm", "pll_ref";
-+		power-domains = <&scmi_pds 86>;
-+		assigned-clocks = <&scmi_clk 341>;
-+		assigned-clock-parents = <&scmi_clk 0>;
-+		assigned-clock-rates = <25000000>;
-+		#phy-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	dsi0: dsi@30500000 {
-+		compatible = "ti,j721e-dsi";
-+		reg = <0x0 0x30500000 0x0 0x100000>,
-+		      <0x0 0x30270000 0x0 0x100>;
-+		clocks = <&scmi_clk 155>, <&scmi_clk 158>;
-+		clock-names = "dsi_p_clk", "dsi_sys_clk";
-+		power-domains = <&scmi_pds 38>;
-+		interrupt-parent = <&gic500>;
-+		interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-+		phys = <&dphy_tx0>;
-+		phy-names = "dphy";
-+		status = "disabled";
-+	};
-+
-+	gpmc0: memory-controller@3b000000 {
-+		compatible = "ti,am64-gpmc";
-+		reg = <0x00 0x3b000000 0x00 0x400>,
-+		      <0x00 0x50000000 0x00 0x8000000>;
-+		power-domains = <&scmi_pds 37>;
-+		clocks = <&scmi_clk 147>;
-+		clock-names = "fck";
-+		reg-names = "cfg", "data";
-+		interrupts = <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH>;
-+		gpmc,num-cs = <3>;
-+		gpmc,num-waitpins = <2>;
-+		interrupt-controller;
-+		gpio-controller;
-+		#interrupt-cells = <2>;
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		#gpio-cells = <2>;
-+		status = "disabled";
-+	};
-+
-+	oc_sram: sram@70800000 {
-+		compatible = "mmio-sram";
-+		reg = <0x00 0x70800000 0x00 0x10000>;
-+		ranges = <0x0 0x00 0x70800000 0x10000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		scmi_shmem: sram@0 {
-+			compatible = "arm,scmi-shmem";
-+			reg = <0x0 0x100>;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/ti/k3-am62l-thermal.dtsi b/arch/arm64/boot/dts/ti/k3-am62l-thermal.dtsi
-new file mode 100644
-index 0000000000000..55a83eaa88c94
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62l-thermal.dtsi
-@@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/*
-+ * Thermal limits for the AM62L
-+ * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
-+ *
-+ * Technical Reference Manual: https://www.ti.com/lit/pdf/sprujb4
-+ */
-+
-+#include <dt-bindings/thermal/thermal.h>
-+
-+thermal_zones: thermal-zones {
-+	main0_thermal: main0-thermal {
-+		polling-delay-passive = <250>;  /* milliSeconds */
-+		polling-delay = <500>;          /* milliSeconds */
-+		thermal-sensors = <&wkup_vtm0 0>;
-+
-+		trips {
-+			main0_crit: main0-crit {
-+				temperature = <105000>; /* milliCelsius */
-+				hysteresis = <2000>;    /* milliCelsius */
-+				type = "critical";
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/ti/k3-am62l-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62l-wakeup.dtsi
-new file mode 100644
-index 0000000000000..1e4ca8ec7babe
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62l-wakeup.dtsi
-@@ -0,0 +1,133 @@
-+// SPDX-License-Identifier: GPL-2.0-only or MIT
-+/*
-+ * Device Tree file for the AM62L wakeup domain peripherals
-+ * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
-+ *
-+ * Technical Reference Manual: https://www.ti.com/lit/pdf/sprujb4
-+ */
-+
-+#include <dt-bindings/bus/ti-sysc.h>
-+
-+&cbass_wakeup {
-+	wkup_vtm0: temperature-sensor@b00000 {
-+		compatible = "ti,j7200-vtm";
-+		reg = <0x00 0xb00000 0x00 0x400>,
-+		      <0x00 0xb01000 0x00 0x400>;
-+		power-domains = <&scmi_pds 46>;
-+		#thermal-sensor-cells = <1>;
-+	};
-+
-+	pmx0: pinctrl@4084000 {
-+		compatible = "pinctrl-single";
-+		reg = <0x00 0x4084000 0x00 0x8000>;
-+		pinctrl-single,register-width = <32>;
-+		pinctrl-single,function-mask = <0xffffffff>;
-+		#pinctrl-cells = <1>;
-+		bootph-all;
-+	};
-+
-+	wkup_gpio0: gpio@4201000 {
-+		compatible = "ti,am64-gpio", "ti,keystone-gpio";
-+		reg = <0x00 0x04201000 0x00 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&gic500>;
-+		interrupts = <GIC_SPI 276 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 704 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 705 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 706 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 707 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 708 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 709 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 710 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		power-domains = <&scmi_pds 36>;
-+		clocks = <&scmi_clk 142>;
-+		clock-names = "gpio";
-+		ti,ngpio = <7>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		status = "disabled";
-+	};
-+
-+	wkup_timer0: timer@2b100000 {
-+		compatible = "ti,am654-timer";
-+		reg = <0x00 0x2b100000 0x00 0x400>;
-+		interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&scmi_clk 85>;
-+		clock-names = "fck";
-+		power-domains = <&scmi_pds 19>;
-+		ti,timer-pwm;
-+	};
-+
-+	wkup_timer1: timer@2b110000 {
-+		compatible = "ti,am654-timer";
-+		reg = <0x00 0x2b110000 0x00 0x400>;
-+		interrupts = <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&scmi_clk 96>;
-+		clock-names = "fck";
-+		power-domains = <&scmi_pds 20>;
-+		ti,timer-pwm;
-+	};
-+
-+	wkup_i2c0: i2c@2b200000 {
-+		compatible = "ti,am64-i2c", "ti,omap4-i2c";
-+		reg = <0x00 0x2b200000 0x00 0x100>;
-+		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		power-domains = <&scmi_pds 57>;
-+		clocks = <&scmi_clk 262>;
-+		clock-names = "fck";
-+		status = "disabled";
-+	};
-+
-+	target-module@2b300050 {
-+		compatible = "ti,sysc-omap2", "ti,sysc";
-+		reg = <0x00 0x2b300050 0x00 0x4>,
-+		      <0x00 0x2b300054 0x00 0x4>,
-+		      <0x00 0x2b300058 0x00 0x4>;
-+		reg-names = "rev", "sysc", "syss";
-+		ranges = <0x0 0x00 0x2b300000 0x100000>;
-+		power-domains = <&scmi_pds 83>;
-+		clocks = <&scmi_clk 324>;
-+		clock-names = "fck";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+				 SYSC_OMAP2_SOFTRESET |
-+				 SYSC_OMAP2_AUTOIDLE)>;
-+		ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+				<SYSC_IDLE_NO>,
-+				<SYSC_IDLE_SMART>,
-+				<SYSC_IDLE_SMART_WKUP>;
-+		ti,syss-mask = <1>;
-+		ti,no-reset-on-init;
-+		status = "disabled";
-+
-+		wkup_uart0: serial@0 {
-+			compatible = "ti,am64-uart", "ti,am654-uart";
-+			reg = <0x0 0x100>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&scmi_clk 324>;
-+			assigned-clocks = <&scmi_clk 324>;
-+			assigned-clock-rates = <48000000>;
-+			clock-names = "fck";
-+			status = "disabled";
-+		};
-+	};
-+
-+	wkup_conf: syscon@43000000 {
-+		compatible = "syscon", "simple-mfd";
-+		reg = <0x00 0x43000000 0x00 0x20000>;
-+		ranges = <0x0 0x00 0x43000000 0x20000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		chipid: chipid@14 {
-+			compatible = "ti,am654-chipid";
-+			reg = <0x14 0x4>;
-+			bootph-all;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/ti/k3-am62l.dtsi b/arch/arm64/boot/dts/ti/k3-am62l.dtsi
-new file mode 100644
-index 0000000000000..19e73a2267503
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62l.dtsi
-@@ -0,0 +1,121 @@
-+// SPDX-License-Identifier: GPL-2.0-only or MIT
-+/*
-+ * Device Tree Source for AM62L SoC Family
-+ * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
-+ *
-+ * Technical Reference Manual: https://www.ti.com/lit/pdf/sprujb4
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+#include "k3-pinctrl.h"
-+
-+/ {
-+	model = "Texas Instruments K3 AM62L3 SoC";
-+	compatible = "ti,am62l3";
-+	interrupt-parent = <&gic500>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	firmware {
-+		optee {
-+			compatible = "linaro,optee-tz";
-+			method = "smc";
-+		};
-+
-+		psci: psci {
-+			compatible = "arm,psci-1.0";
-+			method = "smc";
-+		};
-+
-+		scmi: scmi {
-+			compatible = "arm,scmi-smc";
-+			arm,smc-id = <0x82004000>;
-+			shmem = <&scmi_shmem>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			scmi_clk: protocol@14 {
-+				reg = <0x14>;
-+				#clock-cells = <1>;
-+				bootph-all;
-+			};
-+
-+			scmi_pds: protocol@11 {
-+				reg = <0x11>;
-+				#power-domain-cells = <1>;
-+				bootph-all;
-+			};
-+		};
-+	};
-+
-+	a53_timer0: timer-cl0-cpu0 {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>, /* cntpsirq */
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>, /* cntpnsirq */
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>, /* cntvirq */
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>; /* cnthpirq */
-+	};
-+
-+	pmu: pmu {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	cbass_main: bus@f0000 {
-+		compatible = "simple-bus";
-+		ranges = <0x00 0x00600000 0x00 0x00600000 0x00 0x00010100>, /* GPIO */
-+			 <0x00 0x01000000 0x00 0x01000000 0x00 0x01b28400>, /* First Peripheral Window */
-+			 <0x00 0x00a40000 0x00 0x00a40000 0x00 0x00000400>, /* Timesync Router */
-+			 <0x00 0x08000000 0x00 0x08000000 0x00 0x00200000>, /* CPSW */
-+			 <0x00 0x09000000 0x00 0x09000000 0x00 0x00400000>, /* CTRL MMRs */
-+			 <0x00 0x0e000000 0x00 0x0e000000 0x00 0x1a001400>, /* Second Peripheral Window */
-+			 <0x00 0x301c0000 0x00 0x301c0000 0x00 0x00001000>, /* DPHY-TX */
-+			 <0x00 0x30200000 0x00 0x30200000 0x00 0x0000b000>, /* DSS */
-+			 <0x00 0x30270000 0x00 0x30270000 0x00 0x00390000>, /* DSI Wrapper */
-+			 <0x00 0x30500000 0x00 0x30500000 0x00 0x00100000>, /* DSI Config */
-+			 <0x00 0x31000000 0x00 0x31000000 0x00 0x00050000>, /* USB0 DWC3 Core Window */
-+			 <0x00 0x31100000 0x00 0x31100000 0x00 0x00050000>, /* USB1 DWC3 Core Window */
-+			 <0x00 0x3b000000 0x00 0x3b000000 0x00 0x00000400>, /* GPMC0 */
-+			 <0x00 0x45810000 0x00 0x45810000 0x00 0x03170000>, /* DMSS */
-+			 <0x00 0x50000000 0x00 0x50000000 0x00 0x08000000>, /* GPMC DATA */
-+			 <0x00 0x60000000 0x00 0x60000000 0x00 0x08000000>, /* FSS DAT1 */
-+			 <0x00 0x70800000 0x00 0x70800000 0x00 0x00018000>, /* OCSRAM */
-+			 <0x01 0x00000000 0x01 0x00000000 0x00 0x00310000>, /* A53 PERIPHBASE */
-+			 <0x04 0x00000000 0x04 0x00000000 0x01 0x00000000>, /* FSS DAT0 */
-+			 <0x05 0x00000000 0x05 0x00000000 0x01 0x00000000>, /* FSS DAT3 */
-+
-+			 /* Wakeup Domain Range */
-+			 <0x00 0x00a80000 0x00 0x00a80000 0x00 0x00034000>, /* GTC */
-+			 <0x00 0x00b00000 0x00 0x00b00000 0x00 0x00001400>, /* VTM */
-+			 <0x00 0x04080000 0x00 0x04080000 0x00 0x00008000>, /* PDGCFG */
-+			 <0x00 0x04201000 0x00 0x04201000 0x00 0x00000100>, /* GPIO */
-+			 <0x00 0x2b100000 0x00 0x2b100000 0x00 0x00100100>, /* Wakeup Peripheral Window */
-+			 <0x00 0x40800000 0x00 0x40800000 0x00 0x00014000>, /* DMA */
-+			 <0x00 0x43000000 0x00 0x43000000 0x00 0x00080000>; /* CTRL MMRs */
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+
-+		cbass_wakeup:  bus@43000000 {
-+			compatible = "simple-bus";
-+			 ranges = <0x00 0x00a80000 0x00 0x00a80000 0x00 0x00034000>, /* GTC */
-+				  <0x00 0x00b00000 0x00 0x00b00000 0x00 0x00001400>, /* VTM */
-+				  <0x00 0x04080000 0x00 0x04080000 0x00 0x00008000>, /* PDGCFG */
-+				  <0x00 0x04201000 0x00 0x04201000 0x00 0x00000100>, /* GPIO */
-+				  <0x00 0x2b100000 0x00 0x2b100000 0x00 0x00100100>, /* Wakeup Peripheral Window */
-+				  <0x00 0x40800000 0x00 0x40800000 0x00 0x00014000>, /* DMA */
-+				  <0x00 0x43000000 0x00 0x43000000 0x00 0x00080000>; /* CTRL MMRs */
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			bootph-all;
-+		};
-+	};
-+
-+	#include "k3-am62l-thermal.dtsi"
-+};
-+
-+/* Now include peripherals for each bus segment */
-+#include "k3-am62l-main.dtsi"
-+#include "k3-am62l-wakeup.dtsi"
-diff --git a/arch/arm64/boot/dts/ti/k3-am62l3.dtsi b/arch/arm64/boot/dts/ti/k3-am62l3.dtsi
-new file mode 100644
-index 0000000000000..da220b8515122
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62l3.dtsi
-@@ -0,0 +1,67 @@
-+// SPDX-License-Identifier: GPL-2.0-only or MIT
-+/*
-+ * Device Tree file for the AM62L3 SoC family (Dual Core A53)
-+ * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
-+ *
-+ * Technical Reference Manual: https://www.ti.com/lit/pdf/sprujb4
-+ */
-+
-+/dts-v1/;
-+
-+#include "k3-am62l.dtsi"
-+
-+/ {
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu-map {
-+			cluster0: cluster0 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
-+
-+				core1 {
-+					cpu = <&cpu1>;
-+				};
-+			};
-+		};
-+
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a53";
-+			reg = <0x000>;
-+			device_type = "cpu";
-+			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			compatible = "arm,cortex-a53";
-+			reg = <0x001>;
-+			device_type = "cpu";
-+			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+		};
-+	};
-+
-+	l2_0: l2-cache0 {
-+		compatible = "cache";
-+		cache-unified;
-+		cache-level = <2>;
-+		cache-size = <0x40000>;
-+		cache-line-size = <64>;
-+		cache-sets = <256>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/ti/k3-pinctrl.h b/arch/arm64/boot/dts/ti/k3-pinctrl.h
-index cac7cccc11121..0121413399d63 100644
---- a/arch/arm64/boot/dts/ti/k3-pinctrl.h
-+++ b/arch/arm64/boot/dts/ti/k3-pinctrl.h
-@@ -66,6 +66,8 @@
- #define AM62PX_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
- #define AM62PX_MCU_IOPAD(pa, val, muxmode)	(((pa) & 0x1fff)) ((val) | (muxmode))
- 
-+#define AM62LX_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
-+
- #define AM62X_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
- #define AM62X_MCU_IOPAD(pa, val, muxmode)	(((pa) & 0x1fff)) ((val) | (muxmode))
- 
-
--- 
-2.49.0
-
+CkF0IDIwMjUtMDUtMDggMDc6MzY6MTQsICJTdXJlbiBCYWdoZGFzYXJ5YW4iIDxzdXJlbmJAZ29v
+Z2xlLmNvbT4gd3JvdGU6Cj5PbiBXZWQsIE1heSA3LCAyMDI1IGF0IDU6NTXigK9QTSBEYXZpZCBX
+YW5nIDwwMDEwNzA4MkAxNjMuY29tPiB3cm90ZToKPj4KPj4gLS0tCj4+IFRoZSBwYXRjaCBpcyBu
+b3QgY29tcGxldGUsIGp1c3Qgd2FudCB0byBnZXQgZmVlZGJhY2tzIHdoZXRoZXIgdGhpcwo+PiB3
+b3J0aCBjYXJyeWluZyBvbi4KPgo+SW4gc3VjaCBjYXNlcyBpdCdzIGN1c3RvbWFyeSB0byBtYXJr
+IHRoZSBwYXRjaCBhcyBSRkMgd2hpY2ggc2F2ZXMgeW91Cj50aW1lIG9uIGV4cGxhaW5pbmcgeW91
+ciBtb3RpdmF0aW9uIDopCgpyb2dlciB0aGF0fiA6KQo+Cj4+IC0tLQo+PiBXaGVuIHJlYWRpbmcg
+L3Byb2MvYWxsb2NpbmZvLCBmb3IgZWFjaCByZWFkIHN5c2NhbGwsIHNlcV9maWxlIHdvdWxkCj4+
+IGludm9rZSBzdGFydC9zdG9wIGNhbGxiYWNrcy4gSW4gc3RhcnQgY2FsbGJhY2ssIGEgbWVtb3J5
+IGlzIGFsbG9jZWQKPj4gdG8gc3RvcmUgaXRlcmF0b3IgYW5kIHRoZSBpdGVyYXRvciB3b3VsZCBy
+ZXN0YXJ0IGZyb20gYmVnaW5uaW5nIHRvCj4+IHdhbGsgdG8gaXRzIHByZXZpb3VzIHBvc2l0aW9u
+Lgo+PiBFYWNoIHNlcV9maWxlIHJlYWQoKSB0YWtlcyBhdCBtb3N0IDQwOTYgYnl0ZXMsIGV2ZW4g
+cmVhZCB3aXRoIGEgbGFyZ2VyCj4+IHVzZXIgc3BhY2UgYnVmZmVyLCBtZWFuaW5nIHJlYWQgb3V0
+IC9wcm9jL2FsbG9jaW5mbywgdGVucyBvZiByZWFkCj4+IHN5c2NhbGxzIGFyZSBuZWVkZWQuIEZv
+ciBleGFtcGxlLCBhIDMwNjAzNiBieXRlcyBhbGxvY2luZm8gZmlsZXMgbmVlZAo+PiA3NiByZWFk
+czoKPj4KPj4gJCBzdWRvIGNhdCAvcHJvYy9hbGxvY2luZm8gIHwgd2MKPj4gICAgMzk2NCAgIDE2
+Njc4ICAzMDYwMzYKPj4KPj4gRm9yIHRob3NlIG49Mzk2NCBsaW5lcywgZWFjaCByZWFkIHRha2Vz
+IGFib3V0IG09Mzk2NC83Nj01MiBsaW5lcywKPj4gdGhlIGl0ZXIgd291bGQgYmUgcmV3aW5kaW5n
+Ogo+PiAgbSAgICBzdGVwcyBvbiAxc3QgcmVhZCwKPj4gIDIqbSAgc3RlcHMgb24gMm5kIHJlYWQK
+Pj4gIDMqbSAgc3RlcHMgb24gM3JkIHJlYWQKPj4gLi4uCj4+ICBuICBzdGVwcyBvbiB0aGUgbGFz
+dCByZWFkCj4+IHRvdGFsbHksIHRoZSBpdGVyYXRvciB3b3VsZCBiZSBpdGVyYXRlZCBPKG4qbi9t
+KSB0aW1lcy4KPj4gKEVhY2ggcmVhZCB3b3VsZCB0YWtlIG1vcmUgdGltZSB0aGFuIHByZXZpb3Vz
+IG9uZS4pCj4+Cj4+IFRvIHVzZSBhIHByaXZhdGUgZGF0YSBhbGxvY2VkIHdoZW4gL3Byb2MvYWxs
+b2NpbmZvIGlzIG9wZW5lZCwKPj4gdGhlIG4vbSBtZW1vcnkgYWxsb2N0aW9uIGNvdWxkIGJlIGF2
+b2lkLCBhbmQgdGhlcmUgaXMgbm8gbmVlZAo+PiB0byByZXN0YXJ0IHRoZSBpdGVyYXRvciBmcm9t
+IHZlcnkgYmVnaW5uaW5nIGV2ZXJ5dGltZS4KPj4gU28gb25seSAxIG1lbW9yeSBhbGxvY2F0aW9u
+IGFuZCBuIHN0ZXBzIGZvciBpdGVyYXRpbmcgYXJlIG5lZWRlZC4KPj4gKE9ubHkgd2hlbiBtb2R1
+bGUgY2hhbmdlZCwgdGhlIGl0ZXJhdG9yIHNob3VsZCBiZSBpbnZhbGlkYXRlZCBhbmQKPj4gcmVz
+dGFydC4pCj4KPlllYWgsIHlvdXIgY2hhbmdlIG1ha2VzIHNlbnNlIGFuZCBsb29rcyBsaWtlIGEg
+Z29vZCBvcHRpbWl6YXRpb24uIEZyb20KPmEgcXVpY2sgbG9vayBhdCB0aGUgY29kZSwgY29kZXRh
+Z19uZXh0X2N0KCkgc2hvdWxkIGhhbmRsZSB0aGUgY2FzZQo+d2hlbiBhIG1vZHVsZSBnZXRzIHJl
+bW92ZWQgZnJvbSB1bmRlciB1cyB3aGlsZSB3ZSBhcmUgbm90IGhvbGRpbmcKPmN0dHlwZS0+bW9k
+X2xvY2suIEknbGwgbmVlZCB0byB0YWtlIGFub3RoZXIgY2xvc2VyIGxvb2sgYXQgaXQgb25jZSB5
+b3UKPnBvc3QgYW4gb2ZmaWNpYWwgcGF0Y2guCj5UaGFua3MhCgpJIHRoaW5rIHRlc3RpbmcgbW9k
+dWxlIGluc2VydC9yZW1vdmUgd291bGQgYmUgYSBtYWpvciBlZmZvcnQuCkkgd2lsbCB0YWtlIHRp
+bWUgdG8gZG8gaXQgYW5kIHVwZGF0ZSBzb29uLgoKVGhhbmtzCgo+Cj4+Cj4+IFRpbWluZ3MgYmVm
+b3JlOgo+PiAgICAgICAgICQgdGltZSBjYXQgL3Byb2MvYWxsb2NpbmZvICA+IC9kZXYvbnVsbAo+
+Pgo+PiAgICAgICAgIHJlYWwgICAgMG0wLjAwN3MKPj4gICAgICAgICB1c2VyICAgIDBtMC4wMDBz
+Cj4+ICAgICAgICAgc3lzICAgICAwbTAuMDA3cwo+PiByZWFkLXN5c2NhbGxzIGdldCBzbG93ZXIg
+YW5kIHNsb3dlcjoKPj4gICAgICAgICByZWFkKDMsICJhbGxvY2luZm8gLSB2ZXJzaW9uOiAxLjBc
+biMgICAgIDwiLi4uLCAxMzEwNzIpID0gNDA4NSA8MC4wMDAwNjI+Cj4+ICAgICAgICAgLi4uCj4+
+ICAgICAgICAgcmVhZCgzLCAiICAgICAgICAgICAwICAgICAgICAwIGRyaXZlcnMvZ3AiLi4uLCAx
+MzEwNzIpID0gNDA0NiA8MC4wMDAxMzU+Cj4+ICAgICAgICAgcmVhZCgzLCAiICAgICAgICAgICAw
+ICAgICAgICAwIHNvdW5kL2NvcmUiLi4uLCAxMzEwNzIpID0gNDAyMSA8MC4wMDAxNTA+Cj4+ICAg
+ICAgICAgLi4uCj4+Cj4+IGFuZCB3aXRoIHRoZSBjaGFuZ2U6Cj4+ICAgICAgICAgJCB0aW1lIGNh
+dCAvcHJvYy9hbGxvY2luZm8gID4gL2Rldi9udWxsCj4+Cj4+ICAgICAgICAgcmVhbCAgICAwbTAu
+MDA0cwo+PiAgICAgICAgIHVzZXIgICAgMG0wLjAwMHMKPj4gICAgICAgICBzeXMgICAgIDBtMC4w
+MDNzCj4+IDdtcyBkcm9wIHRvIDRtcywgbW9yZSBmcmllbmRseSB0byBtb25pdG9yaW5nIHRvb2xz
+Lgo+Pgo+PiBEZXRhaWxlZCBzdHJhY2Ugc3RhdHMgYmVmb3JlIHRoZSBjaGFuZ2U6Cj4+ICAgICAg
+ICAgJCBzdWRvIHN0cmFjZSAtVCAtZSByZWFkIGNhdCAvcHJvYy9hbGxvY2luZm8gID4gL2Rldi9u
+dWxsCj4+ICAgICAgICAgcmVhZCgzLCAiXDE3N0VMRlwyXDFcMVwzXDBcMFwwXDBcMFwwXDBcMFwz
+XDA+XDBcMVwwXDBcMEA+XDJcMFwwXDBcMFwwIi4uLiwgODMyKSA9IDgzMiA8MC4wMDAwNDA+Cj4+
+ICAgICAgICAgcmVhZCgzLCAiYWxsb2NpbmZvIC0gdmVyc2lvbjogMS4wXG4jICAgICA8Ii4uLiwg
+MTMxMDcyKSA9IDQwODUgPDAuMDAwMDYyPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgNDA5
+NiAgICAgICAgMSBhcmNoL3g4Ni9rIi4uLiwgMTMxMDcyKSA9IDQwNjMgPDAuMDAwMDYyPgo+PiAg
+ICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBhcmNoL3g4Ni9rIi4uLiwgMTMx
+MDcyKSA9IDQwMjkgPDAuMDAwMDYxPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICA2NCAg
+ICAgICAgMSBrZXJuZWwvd29yIi4uLiwgMTMxMDcyKSA9IDQwNjQgPDAuMDAwMDYxPgo+PiAgICAg
+ICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBrZXJuZWwvc2NoIi4uLiwgMTMxMDcy
+KSA9IDQwNDEgPDAuMDAwMDUxPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgNDk5MiAgICAg
+ICAzOSBrZXJuZWwvaXJxIi4uLiwgMTMxMDcyKSA9IDQwNjEgPDAuMDAwMDcwPgo+PiAgICAgICAg
+IHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBrZXJuZWwvZnV0Ii4uLiwgMTMxMDcyKSA9
+IDQwNjAgPDAuMDAwMDcxPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAg
+MCBrZXJuZWwvYXVkIi4uLiwgMTMxMDcyKSA9IDQwMjUgPDAuMDAwMTIyPgo+PiAgICAgICAgIHJl
+YWQoMywgIiAgICAgICAgMTUzNiAgICAgICAgMyBrZXJuZWwvdHJhIi4uLiwgMTMxMDcyKSA9IDQw
+MTQgPDAuMDAwMDY0Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBr
+ZXJuZWwvdHJhIi4uLiwgMTMxMDcyKSA9IDQwNzkgPDAuMDAwMDY3Pgo+PiAgICAgICAgIHJlYWQo
+MywgIiAgICAgICAgICAgMCAgICAgICAgMCBrZXJuZWwvdHJhIi4uLiwgMTMxMDcyKSA9IDQwMzUg
+PDAuMDAwMDcyPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBrZXJu
+ZWwvYnBmIi4uLiwgMTMxMDcyKSA9IDQwNDQgPDAuMDAwMDc0Pgo+PiAgICAgICAgIHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBrZXJuZWwvYnBmIi4uLiwgMTMxMDcyKSA9IDQwNjEgPDAu
+MDAwMDYzPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCAuL2luY2x1
+ZGUvIi4uLiwgMTMxMDcyKSA9IDQwODQgPDAuMDAwMDYzPgo+PiAgICAgICAgIHJlYWQoMywgIiAg
+ICAgICAgICAgMCAgICAgICAgMCBrZXJuZWwvZXZlIi4uLiwgMTMxMDcyKSA9IDQwODQgPDAuMDAw
+MDcxPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgIDI3ODUyOCAgICAgICA2OCBtbS9tZW1vcnku
+Ii4uLiwgMTMxMDcyKSA9IDQwNjggPDAuMDAwMDcwPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAg
+ICAgICAgMCAgICAgICAgMCBtbS96c3dhcC5jIi4uLiwgMTMxMDcyKSA9IDQwOTEgPDAuMDAwMDgy
+Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBtbS9iYWxsb29uIi4u
+LiwgMTMxMDcyKSA9IDQwMzkgPDAuMDAwMDgzPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAg
+ICAgMCAgICAgICAgMCBmcy9zcGxpY2UuIi4uLiwgMTMxMDcyKSA9IDQwOTUgPDAuMDAwMDgzPgo+
+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBmcy9iaW5mbXRfIi4uLiwg
+MTMxMDcyKSA9IDQwMzkgPDAuMDAwMDc1Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgIDE5
+MiAgICAgICAgMyBmcy9wcm9jL2tjIi4uLiwgMTMxMDcyKSA9IDQwODggPDAuMDAwMDc2Pgo+PiAg
+ICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBpcGMvbXF1ZXVlIi4uLiwgMTMx
+MDcyKSA9IDQwMTcgPDAuMDAwMDc2Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAg
+ICAgICAgMCBzZWN1cml0eS9zIi4uLiwgMTMxMDcyKSA9IDQwNzUgPDAuMDAwMDcyPgo+PiAgICAg
+ICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBzZWN1cml0eS9zIi4uLiwgMTMxMDcy
+KSA9IDQwMjkgPDAuMDAwMDg0Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAg
+ICAgMCBzZWN1cml0eS90Ii4uLiwgMTMxMDcyKSA9IDQwNTMgPDAuMDAwMDc2Pgo+PiAgICAgICAg
+IHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBzZWN1cml0eS9hIi4uLiwgMTMxMDcyKSA9
+IDQwNTQgPDAuMDAwMDc4Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAg
+MCBjcnlwdG8vcnNhIi4uLiwgMTMxMDcyKSA9IDQwNDYgPDAuMDAwMDgxPgo+PiAgICAgICAgIHJl
+YWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBjcnlwdG8vYXN5Ii4uLiwgMTMxMDcyKSA9IDQw
+NzkgPDAuMDAwMDgxPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgMTcyOCAgICAgICAgOSBi
+bG9jay9ibGstIi4uLiwgMTMxMDcyKSA9IDQwMzQgPDAuMDAwMDg0Pgo+PiAgICAgICAgIHJlYWQo
+MywgIiAgICAgICAgICAgMCAgICAgICAgMCBpb191cmluZy9yIi4uLiwgMTMxMDcyKSA9IDQwNDQg
+PDAuMDAwMDg1Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBsaWIv
+Y3J5cHRvIi4uLiwgMTMxMDcyKSA9IDQwNTYgPDAuMDAwMzYzPgo+PiAgICAgICAgIHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBsaWIvcGxkbWZ3Ii4uLiwgMTMxMDcyKSA9IDQwNzkgPDAu
+MDAwMDkxPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgIDM4NCAgICAgICAgNiBkcml2ZXJz
+L3BjIi4uLiwgMTMxMDcyKSA9IDQwOTEgPDAuMDAwMDk4Pgo+PiAgICAgICAgIHJlYWQoMywgIiAg
+ICAgICAgICAgMCAgICAgICAgMCBkcml2ZXJzL3ZpIi4uLiwgMTMxMDcyKSA9IDQwNjggPDAuMDAw
+MDkzPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgNDA5NiAgICAgICAgMSBkcml2ZXJzL2Fj
+Ii4uLiwgMTMxMDcyKSA9IDQwODYgPDAuMDAwMDg5Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAg
+ICAxMTA0MCAgICAgIDIzMCBkcml2ZXJzL2FjIi4uLiwgMTMxMDcyKSA9IDQwMDEgPDAuMDAwMDkw
+Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBkcml2ZXJzL2FjIi4u
+LiwgMTMxMDcyKSA9IDQwMzAgPDAuMDAwMDk0Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAg
+ICAgMCAgICAgICAgMCBkcml2ZXJzL2RtIi4uLiwgMTMxMDcyKSA9IDQwMzEgPDAuMDAwMDk0Pgo+
+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBkcml2ZXJzL3hlIi4uLiwg
+MTMxMDcyKSA9IDQwODUgPDAuMDAwMDk3Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgNDIy
+NCAgICAgICAzMyBkcml2ZXJzL3R0Ii4uLiwgMTMxMDcyKSA9IDQwODYgPDAuMDAwMDk3Pgo+PiAg
+ICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBkcml2ZXJzL2lvIi4uLiwgMTMx
+MDcyKSA9IDQwMzggPDAuMDAwMDk3Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAg
+ICAgICAgMCBkcml2ZXJzL2lvIi4uLiwgMTMxMDcyKSA9IDQwMzQgPDAuMDAwMTAwPgo+PiAgICAg
+ICAgIHJlYWQoMywgIiAgICAgICAgICA2NCAgICAgICAgMiBkcml2ZXJzL2JhIi4uLiwgMTMxMDcy
+KSA9IDQwOTQgPDAuMDAwMTEwPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAg
+ICAgMCBkcml2ZXJzL2JhIi4uLiwgMTMxMDcyKSA9IDQwMjUgPDAuMDAwMTAwPgo+PiAgICAgICAg
+IHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBkcml2ZXJzL2RtIi4uLiwgMTMxMDcyKSA9
+IDQwNzcgPDAuMDAwMTA2Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAg
+MCBkcml2ZXJzL2kyIi4uLiwgMTMxMDcyKSA9IDQwNDkgPDAuMDAwMTAzPgo+PiAgICAgICAgIHJl
+YWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBkcml2ZXJzL2VkIi4uLiwgMTMxMDcyKSA9IDQw
+MzUgPDAuMDAwMTA4Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBk
+cml2ZXJzL2ZpIi4uLiwgMTMxMDcyKSA9IDQwNTIgPDAuMDAwMTA3Pgo+PiAgICAgICAgIHJlYWQo
+MywgIiAgICAgICAgICAgMCAgICAgICAgMCBuZXQvY29yZS9zIi4uLiwgMTMxMDcyKSA9IDQwNTcg
+PDAuMDAwMTE5Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgNTI0OCAgICAgICA4MiBuZXQv
+Y29yZS9yIi4uLiwgMTMxMDcyKSA9IDQwNTAgPDAuMDAwMTEwPgo+PiAgICAgICAgIHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBuZXQvY29yZS9kIi4uLiwgMTMxMDcyKSA9IDQwNDcgPDAu
+MDAwMTExPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBuZXQvZXRo
+dG9vIi4uLiwgMTMxMDcyKSA9IDQwNTkgPDAuMDAwMTEyPgo+PiAgICAgICAgIHJlYWQoMywgIiAg
+ICAgICAgICAzMiAgICAgICAgMSBuZXQvaXB2NC9yIi4uLiwgMTMxMDcyKSA9IDQwNTIgPDAuMDAw
+MTE2Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgMTkyMCAgICAgICAxMCBuZXQvaXB2NC9p
+Ii4uLiwgMTMxMDcyKSA9IDQwNDAgPDAuMDAwMTE2Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAg
+ICAgICAgMCAgICAgICAgMCBuZXQveGZybS94Ii4uLiwgMTMxMDcyKSA9IDQwNzEgPDAuMDAwMTE4
+Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBuZXQvaXB2Ni9pIi4u
+LiwgMTMxMDcyKSA9IDQwNTMgPDAuMDAwMTIwPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAg
+ICAgMCAgICAgICAgMCBuZXQvZGV2bGluIi4uLiwgMTMxMDcyKSA9IDQwNjQgPDAuMDAwMTIwPgo+
+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBsaWIvZGVjb21wIi4uLiwg
+MTMxMDcyKSA9IDM5OTYgPDAuMDAwMTIzPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAg
+MCAgICAgICAgMCBkcml2ZXJzL3ZpIi4uLiwgMTMxMDcyKSA9IDQwNDMgPDAuMDAwMTIxPgo+PiAg
+ICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBkcml2ZXJzL3VzIi4uLiwgMTMx
+MDcyKSA9IDQwNDUgPDAuMDAwMTIzPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAg
+ICAgICAgMCBkcml2ZXJzL3VzIi4uLiwgMTMxMDcyKSA9IDQwMjAgPDAuMDAwMTI2Pgo+PiAgICAg
+ICAgIHJlYWQoMywgIiAgICAgICAgICA2NCAgICAgICAgMSBkcml2ZXJzL3NjIi4uLiwgMTMxMDcy
+KSA9IDQwNDMgPDAuMDAwMTI4Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAg
+ICAgMCBkcml2ZXJzL25lIi4uLiwgMTMxMDcyKSA9IDQwOTQgPDAuMDAwMTMwPgo+PiAgICAgICAg
+IHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBkcml2ZXJzL2hpIi4uLiwgMTMxMDcyKSA9
+IDQwMjUgPDAuMDAwMTMyPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgIDY3MiAgICAgICAg
+NiBmcy9leHQ0L21iIi4uLiwgMTMxMDcyKSA9IDQwNzEgPDAuMDAwMTMyPgo+PiAgICAgICAgIHJl
+YWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBmcy9hdXRvZnMvIi4uLiwgMTMxMDcyKSA9IDQw
+MzggPDAuMDAwMTM0Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBm
+cy9mdXNlL2ZpIi4uLiwgMTMxMDcyKSA9IDQwOTMgPDAuMDAwMTM0Pgo+PiAgICAgICAgIHJlYWQo
+MywgIiAgICAgICAgICAgMCAgICAgICAgMCBkcml2ZXJzL2dwIi4uLiwgMTMxMDcyKSA9IDQwMzUg
+PDAuMDAwMTMzPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBkcml2
+ZXJzL2dwIi4uLiwgMTMxMDcyKSA9IDQwNDYgPDAuMDAwMTM1Pgo+PiAgICAgICAgIHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBzb3VuZC9jb3JlIi4uLiwgMTMxMDcyKSA9IDQwMjEgPDAu
+MDAwMTUwPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBzb3VuZC9j
+b3JlIi4uLiwgMTMxMDcyKSA9IDQwMDAgPDAuMDAwMTM0Pgo+PiAgICAgICAgIHJlYWQoMywgIiAg
+ICAgICAgMjA0OCAgICAgICAgMSBkcml2ZXJzL3ZpIi4uLiwgMTMxMDcyKSA9IDQwNzggPDAuMDAw
+MTM4Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgMzMyOCAgICAgIDEwNCBkcml2ZXJzL2dw
+Ii4uLiwgMTMxMDcyKSA9IDQwNDAgPDAuMDAwMTQzPgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAg
+ICAgICAgMCAgICAgICAgMCBmcy9vdmVybGF5Ii4uLiwgMTMxMDcyKSA9IDQwNzUgPDAuMDAwMTQx
+Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAgICAgMCAgICAgICAgMCBuZXQvbmV0ZmlsIi4u
+LiwgMTMxMDcyKSA9IDQwNjEgPDAuMDAwMTM5Pgo+PiAgICAgICAgIHJlYWQoMywgIiAgICAgICAg
+ICAgMCAgICAgICAgMCBuZXQveGZybS94Ii4uLiwgMTMxMDcyKSA9IDIwMjIgPDAuMDAwMTI5Pgo+
+PiAgICAgICAgIHJlYWQoMywgIiIsIDEzMTA3MikgICAgICAgICAgICAgICAgICAgICA9IDAgPDAu
+MDAwMTE0Pgo+Pgo+PiBBbmQgd2l0aCB0aGlzIGNoYW5nZToKPj4gJCBzdWRvIHN0cmFjZSAtVCAt
+ZSByZWFkIGNhdCAvcHJvYy9hbGxvY2luZm8gID4gL2Rldi9udWxsCj4+IHJlYWQoMywgIlwxNzdF
+TEZcMlwxXDFcM1wwXDBcMFwwXDBcMFwwXDBcM1wwPlwwXDFcMFwwXDBAPlwyXDBcMFwwXDBcMCIu
+Li4sIDgzMikgPSA4MzIgPDAuMDAwMDE4Pgo+PiByZWFkKDMsICJhbGxvY2luZm8gLSB2ZXJzaW9u
+OiAxLjBcbiMgICAgIDwiLi4uLCAxMzEwNzIpID0gNDA4NSA8MC4wMDAwNjY+Cj4+IHJlYWQoMywg
+IiAgICAgICAgNDA5NiAgICAgICAgMSBhcmNoL3g4Ni9rIi4uLiwgMTMxMDcyKSA9IDQwNjMgPDAu
+MDAwMDYyPgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgYXJjaC94ODYvayIuLi4s
+IDEzMTA3MikgPSA0MDI5IDwwLjAwMDA2Mj4KPj4gcmVhZCgzLCAiICAgICAgICAgIDY0ICAgICAg
+ICAxIGtlcm5lbC93b3IiLi4uLCAxMzEwNzIpID0gNDA2NCA8MC4wMDAwNjQ+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBrZXJuZWwvc2NoIi4uLiwgMTMxMDcyKSA9IDQwNDEgPDAu
+MDAwMDQ2Pgo+PiByZWFkKDMsICIgICAgICAgIDQ5OTIgICAgICAgMzkga2VybmVsL2lycSIuLi4s
+IDEzMTA3MikgPSA0MDYxIDwwLjAwMDA1Mz4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIGtlcm5lbC9mdXQiLi4uLCAxMzEwNzIpID0gNDA2MCA8MC4wMDAwNTQ+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBrZXJuZWwvYXVkIi4uLiwgMTMxMDcyKSA9IDQwMjUgPDAu
+MDAwMDUzPgo+PiByZWFkKDMsICIgICAgICAgIDE1MzYgICAgICAgIDMga2VybmVsL3RyYSIuLi4s
+IDEzMTA3MikgPSA0MDE0IDwwLjAwMDA1MT4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIGtlcm5lbC90cmEiLi4uLCAxMzEwNzIpID0gNDA3OSA8MC4wMDAwNTA+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBrZXJuZWwvdHJhIi4uLiwgMTMxMDcyKSA9IDQwMzUgPDAu
+MDAwMDUxPgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAga2VybmVsL2JwZiIuLi4s
+IDEzMTA3MikgPSA0MDQ0IDwwLjAwMDA1Mz4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIGtlcm5lbC9icGYiLi4uLCAxMzEwNzIpID0gNDA2MSA8MC4wMDAwNTM+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCAuL2luY2x1ZGUvIi4uLiwgMTMxMDcyKSA9IDQwODQgPDAu
+MDAwMDUyPgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAga2VybmVsL2V2ZSIuLi4s
+IDEzMTA3MikgPSA0MDg0IDwwLjAwMDA3Mj4KPj4gcmVhZCgzLCAiICAgICAgMjg2NzIwICAgICAg
+IDcwIG1tL21lbW9yeS4iLi4uLCAxMzEwNzIpID0gNDA2OCA8MC4wMDAwNzE+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBtbS96c3dhcC5jIi4uLiwgMTMxMDcyKSA9IDQwOTEgPDAu
+MDAwMDU2Pgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgbW0vYmFsbG9vbiIuLi4s
+IDEzMTA3MikgPSA0MDM5IDwwLjAwMDA1Nj4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIGZzL3NwbGljZS4iLi4uLCAxMzEwNzIpID0gNDA5NSA8MC4wMDAwNzY+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBmcy9iaW5mbXRfIi4uLiwgMTMxMDcyKSA9IDQwMzkgPDAu
+MDAwMDc1Pgo+PiByZWFkKDMsICIgICAgICAgICAxOTIgICAgICAgIDMgZnMvcHJvYy9rYyIuLi4s
+IDEzMTA3MikgPSA0MDg4IDwwLjAwMDA1Nz4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIGlwYy9tcXVldWUiLi4uLCAxMzEwNzIpID0gNDAxNyA8MC4wMDAwNTU+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBzZWN1cml0eS9zIi4uLiwgMTMxMDcyKSA9IDQwNzUgPDAu
+MDAwMDQ2Pgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgc2VjdXJpdHkvcyIuLi4s
+IDEzMTA3MikgPSA0MDI5IDwwLjAwMDA0NT4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIHNlY3VyaXR5L3QiLi4uLCAxMzEwNzIpID0gNDA1MyA8MC4wMDAwNTA+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBzZWN1cml0eS9hIi4uLiwgMTMxMDcyKSA9IDQwNTQgPDAu
+MDAwMDYwPgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgY3J5cHRvL3JzYSIuLi4s
+IDEzMTA3MikgPSA0MDQ2IDwwLjAwMDE4MT4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIGNyeXB0by9hc3kiLi4uLCAxMzEwNzIpID0gNDA3OSA8MC4wMDAwNTE+Cj4+IHJlYWQoMywg
+IiAgICAgICAgMTcyOCAgICAgICAgOSBibG9jay9ibGstIi4uLiwgMTMxMDcyKSA9IDQwMzQgPDAu
+MDAwMDcwPgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgaW9fdXJpbmcvciIuLi4s
+IDEzMTA3MikgPSA0MDQ0IDwwLjAwMDA3OD4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIGxpYi9jcnlwdG8iLi4uLCAxMzEwNzIpID0gNDA2NiA8MC4wMDAwNjc+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBhcmNoL3g4Ni9sIi4uLiwgMTMxMDcyKSA9IDQwODUgPDAu
+MDAwMDY2Pgo+PiByZWFkKDMsICIgICAgICAgIDcxNjggICAgICAgIDcgZHJpdmVycy9wYyIuLi4s
+IDEzMTA3MikgPSA0MDkwIDwwLjAwMDA2Nj4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIGRyaXZlcnMvdmkiLi4uLCAxMzEwNzIpID0gNDA2MyA8MC4wMDAwNjU+Cj4+IHJlYWQoMywg
+IiAgICAgICAgMTAyNCAgICAgICAgMSBkcml2ZXJzL2FjIi4uLiwgMTMxMDcyKSA9IDQwOTQgPDAu
+MDAwMDY3Pgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgZHJpdmVycy9hYyIuLi4s
+IDEzMTA3MikgPSA0MDIzIDwwLjAwMDA2Mz4KPj4gcmVhZCgzLCAiICAgICAgICAyMDQ4ICAgICAg
+ICAyIGRyaXZlcnMvYWMiLi4uLCAxMzEwNzIpID0gNDAyMCA8MC4wMDAwNjY+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBkcml2ZXJzL2RtIi4uLiwgMTMxMDcyKSA9IDQwOTQgPDAu
+MDAwMDY3Pgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgZHJpdmVycy94ZSIuLi4s
+IDEzMTA3MikgPSA0MDg3IDwwLjAwMDA2OD4KPj4gcmVhZCgzLCAiICAgICAgICAxMDI0ICAgICAg
+ICAxIGRyaXZlcnMvdHQiLi4uLCAxMzEwNzIpID0gNDA5MyA8MC4wMDAwNTY+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBkcml2ZXJzL2lvIi4uLiwgMTMxMDcyKSA9IDQwMzcgPDAu
+MDAwMDQ0Pgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgZHJpdmVycy9pbyIuLi4s
+IDEzMTA3MikgPSA0MDk1IDwwLjAwMDA2MT4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIGRyaXZlcnMvYmEiLi4uLCAxMzEwNzIpID0gNDA0NSA8MC4wMDAwNTk+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBkcml2ZXJzL2JhIi4uLiwgMTMxMDcyKSA9IDQwMTEgPDAu
+MDAwMDU3Pgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgZHJpdmVycy9tYSIuLi4s
+IDEzMTA3MikgPSA0MDg3IDwwLjAwMDA2ND4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIGRyaXZlcnMvaTIiLi4uLCAxMzEwNzIpID0gNDAyOCA8MC4wMDAwNTk+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBkcml2ZXJzL2VkIi4uLiwgMTMxMDcyKSA9IDQwNDggPDAu
+MDAwMDgwPgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgZHJpdmVycy9maSIuLi4s
+IDEzMTA3MikgPSA0MDgyIDwwLjAwMDA1ND4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIG5ldC9jb3JlL3MiLi4uLCAxMzEwNzIpID0gNDA5MSA8MC4wMDAwNjg+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBuZXQvY29yZS9mIi4uLiwgMTMxMDcyKSA9IDQwNDEgPDAu
+MDAwMDUzPgo+PiByZWFkKDMsICIgICAgICAgICAgMjAgICAgICAgIDEgbmV0L3NjaGVkLyIuLi4s
+IDEzMTA3MikgPSA0MDU0IDwwLjAwMDA1MT4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIG5ldC9ldGh0b28iLi4uLCAxMzEwNzIpID0gNDA0NSA8MC4wMDAwNTE+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBuZXQvaXB2NC9yIi4uLiwgMTMxMDcyKSA9IDQwNDAgPDAu
+MDAwMDUxPgo+PiByZWFkKDMsICIgICAgICAgIDIwNDggICAgICAgIDEgbmV0L2lwdjQvZiIuLi4s
+IDEzMTA3MikgPSA0MDU2IDwwLjAwMDA1MD4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIG5ldC94ZnJtL3giLi4uLCAxMzEwNzIpID0gNDA1MyA8MC4wMDAwNTY+Cj4+IHJlYWQoMywg
+IiAgICAgICAgMzA3MiAgICAgICAgNiBuZXQvaXB2Ni9pIi4uLiwgMTMxMDcyKSA9IDQwOTUgPDAu
+MDAwMDYwPgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgbmV0L2RldmxpbiIuLi4s
+IDEzMTA3MikgPSA0MDk0IDwwLjAwMDA2ND4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIGxpYi9kZWNvbXAiLi4uLCAxMzEwNzIpID0gNDAyMyA8MC4wMDAwNjM+Cj4+IHJlYWQoMywg
+IiAgICAgICAgMjA0OCAgICAgICAgMiBkcml2ZXJzL3VzIi4uLiwgMTMxMDcyKSA9IDQwNTMgPDAu
+MDAwMDYyPgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgZHJpdmVycy91cyIuLi4s
+IDEzMTA3MikgPSA0MDExIDwwLjAwMDA2OD4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIGRyaXZlcnMvaW4iLi4uLCAxMzEwNzIpID0gNDA5MiA8MC4wMDAwNTk+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICA2NCAgICAgICAgMSBkcml2ZXJzL3NjIi4uLiwgMTMxMDcyKSA9IDQwNjcgPDAu
+MDAwMDY0Pgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgZHJpdmVycy9uZSIuLi4s
+IDEzMTA3MikgPSA0MDU5IDwwLjAwMDA2Nz4KPj4gcmVhZCgzLCAiICAgICAgICAgICA4ICAgICAg
+ICAxIGRyaXZlcnMvaGkiLi4uLCAxMzEwNzIpID0gNDA1MCA8MC4wMDAwNTI+Cj4+IHJlYWQoMywg
+IiAgICAgICAgIDI1NiAgICAgICAgMSBmcy9leHQ0L21iIi4uLiwgMTMxMDcyKSA9IDQwMjQgPDAu
+MDAwMDcwPgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgZnMvYXV0b2ZzLyIuLi4s
+IDEzMTA3MikgPSA0MDgyIDwwLjAwMDA3MD4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIGZzL2Z1c2UvaW4iLi4uLCAxMzEwNzIpID0gNDA3NCA8MC4wMDAwNTQ+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBkcml2ZXJzL2dwIi4uLiwgMTMxMDcyKSA9IDQwNjYgPDAu
+MDAwMDYzPgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgZHJpdmVycy9ncCIuLi4s
+IDEzMTA3MikgPSA0MDkxIDwwLjAwMDA1Mj4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIGRyaXZlcnMvZ3AiLi4uLCAxMzEwNzIpID0gNDAyOSA8MC4wMDAwNjQ+Cj4+IHJlYWQoMywg
+IiAgICAgICAgICAgMCAgICAgICAgMCBkcml2ZXJzL2dwIi4uLiwgMTMxMDcyKSA9IDQwOTQgPDAu
+MDAwMDYyPgo+PiByZWFkKDMsICIgICAgICAgICAxMjggICAgICAgIDIgc291bmQvY29yZSIuLi4s
+IDEzMTA3MikgPSA0MDY5IDwwLjAwMDA2OD4KPj4gcmVhZCgzLCAiICAgICAgICAgIDY0ICAgICAg
+ICAxIHNvdW5kL3BjaS8iLi4uLCAxMzEwNzIpID0gNDA3NCA8MC4wMDAwNjk+Cj4+IHJlYWQoMywg
+IiAgICAgICAgIDM4NCAgICAgICAgNCBuZXQvYnJpZGdlIi4uLiwgMTMxMDcyKSA9IDQwMjEgPDAu
+MDAwMDU0Pgo+PiByZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgbmV0L25ldGZpbCIuLi4s
+IDEzMTA3MikgPSA0MDg0IDwwLjAwMDA1MD4KPj4gcmVhZCgzLCAiICAgICAgICAgICAwICAgICAg
+ICAwIG5ldC94ZnJtL3giLi4uLCAxMzEwNzIpID0gMTUxMyA8MC4wMDAwNDc+Cj4+IHJlYWQoMywg
+IiIsIDEzMTA3MikgICAgICAgICAgICAgICAgICAgICA9IDAgPDAuMDAwMDMwPgo+Pgo+PiBTaWdu
+ZWQtb2ZmLWJ5OiBEYXZpZCBXYW5nIDwwMDEwNzA4MkAxNjMuY29tPgo+PiAtLS0KPj4gIGxpYi9h
+bGxvY190YWcuYyB8IDMwICsrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiAgMSBmaWxl
+IGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0t
+Z2l0IGEvbGliL2FsbG9jX3RhZy5jIGIvbGliL2FsbG9jX3RhZy5jCj4+IGluZGV4IDI1ZWNjMTMz
+NGI2Ny4uZWM4M2NmNzk4MjA5IDEwMDY0NAo+PiAtLS0gYS9saWIvYWxsb2NfdGFnLmMKPj4gKysr
+IGIvbGliL2FsbG9jX3RhZy5jCj4+IEBAIC00NSwyMSArNDUsMTcgQEAgc3RydWN0IGFsbG9jaW5m
+b19wcml2YXRlIHsKPj4gIHN0YXRpYyB2b2lkICphbGxvY2luZm9fc3RhcnQoc3RydWN0IHNlcV9m
+aWxlICptLCBsb2ZmX3QgKnBvcykKPj4gIHsKPj4gICAgICAgICBzdHJ1Y3QgYWxsb2NpbmZvX3By
+aXZhdGUgKnByaXY7Cj4+IC0gICAgICAgc3RydWN0IGNvZGV0YWcgKmN0Owo+PiAgICAgICAgIGxv
+ZmZfdCBub2RlID0gKnBvczsKPj4KPj4gLSAgICAgICBwcml2ID0ga3phbGxvYyhzaXplb2YoKnBy
+aXYpLCBHRlBfS0VSTkVMKTsKPj4gLSAgICAgICBtLT5wcml2YXRlID0gcHJpdjsKPj4gLSAgICAg
+ICBpZiAoIXByaXYpCj4+IC0gICAgICAgICAgICAgICByZXR1cm4gTlVMTDsKPj4gLQo+PiAtICAg
+ICAgIHByaXYtPnByaW50X2hlYWRlciA9IChub2RlID09IDApOwo+PiArICAgICAgIHByaXYgPSAo
+c3RydWN0IGFsbG9jaW5mb19wcml2YXRlICopbS0+cHJpdmF0ZTsKPj4gICAgICAgICBjb2RldGFn
+X2xvY2tfbW9kdWxlX2xpc3QoYWxsb2NfdGFnX2N0dHlwZSwgdHJ1ZSk7Cj4+IC0gICAgICAgcHJp
+di0+aXRlciA9IGNvZGV0YWdfZ2V0X2N0X2l0ZXIoYWxsb2NfdGFnX2N0dHlwZSk7Cj4+IC0gICAg
+ICAgd2hpbGUgKChjdCA9IGNvZGV0YWdfbmV4dF9jdCgmcHJpdi0+aXRlcikpICE9IE5VTEwgJiYg
+bm9kZSkKPj4gLSAgICAgICAgICAgICAgIG5vZGUtLTsKPj4gLQo+PiAtICAgICAgIHJldHVybiBj
+dCA/IHByaXYgOiBOVUxMOwo+PiArICAgICAgIGlmIChub2RlID09IDApIHsKPj4gKyAgICAgICAg
+ICAgICAgIHByaXYtPnByaW50X2hlYWRlciA9IHRydWU7Cj4+ICsgICAgICAgICAgICAgICBwcml2
+LT5pdGVyID0gY29kZXRhZ19nZXRfY3RfaXRlcihhbGxvY190YWdfY3R0eXBlKTsKPj4gKyAgICAg
+ICAgICAgICAgIGNvZGV0YWdfbmV4dF9jdCgmcHJpdi0+aXRlcik7Cj4+ICsgICAgICAgfQo+PiAr
+ICAgICAgIC8vIFRPRE86IG5lZWQgdG8gY2hlY2sgaXRlciBpcyB2YWxpZCwgb3IgcmV3aW5kaW5n
+IGl0Lgo+PiArICAgICAgIHJldHVybiBwcml2LT5pdGVyLmN0ID8gcHJpdiA6IE5VTEw7Cj4+ICB9
+Cj4+Cj4+ICBzdGF0aWMgdm9pZCAqYWxsb2NpbmZvX25leHQoc3RydWN0IHNlcV9maWxlICptLCB2
+b2lkICphcmcsIGxvZmZfdCAqcG9zKQo+PiBAQCAtNzYsMTIgKzcyLDcgQEAgc3RhdGljIHZvaWQg
+KmFsbG9jaW5mb19uZXh0KHN0cnVjdCBzZXFfZmlsZSAqbSwgdm9pZCAqYXJnLCBsb2ZmX3QgKnBv
+cykKPj4KPj4gIHN0YXRpYyB2b2lkIGFsbG9jaW5mb19zdG9wKHN0cnVjdCBzZXFfZmlsZSAqbSwg
+dm9pZCAqYXJnKQo+PiAgewo+PiAtICAgICAgIHN0cnVjdCBhbGxvY2luZm9fcHJpdmF0ZSAqcHJp
+diA9IChzdHJ1Y3QgYWxsb2NpbmZvX3ByaXZhdGUgKiltLT5wcml2YXRlOwo+PiAtCj4+IC0gICAg
+ICAgaWYgKHByaXYpIHsKPj4gLSAgICAgICAgICAgICAgIGNvZGV0YWdfbG9ja19tb2R1bGVfbGlz
+dChhbGxvY190YWdfY3R0eXBlLCBmYWxzZSk7Cj4+IC0gICAgICAgICAgICAgICBrZnJlZShwcml2
+KTsKPj4gLSAgICAgICB9Cj4+ICsgICAgICAgY29kZXRhZ19sb2NrX21vZHVsZV9saXN0KGFsbG9j
+X3RhZ19jdHR5cGUsIGZhbHNlKTsKPj4gIH0KPj4KPj4gIHN0YXRpYyB2b2lkIHByaW50X2FsbG9j
+aW5mb19oZWFkZXIoc3RydWN0IHNlcV9idWYgKmJ1ZikKPj4gQEAgLTI0OSw3ICsyNDAsOCBAQCBz
+dGF0aWMgdm9pZCBfX2luaXQgcHJvY2ZzX2luaXQodm9pZCkKPj4gICAgICAgICBpZiAoIW1lbV9w
+cm9maWxpbmdfc3VwcG9ydCkKPj4gICAgICAgICAgICAgICAgIHJldHVybjsKPj4KPj4gLSAgICAg
+ICBpZiAoIXByb2NfY3JlYXRlX3NlcShBTExPQ0lORk9fRklMRV9OQU1FLCAwNDAwLCBOVUxMLCAm
+YWxsb2NpbmZvX3NlcV9vcCkpIHsKPj4gKyAgICAgICBpZiAoIXByb2NfY3JlYXRlX3NlcV9wcml2
+YXRlKEFMTE9DSU5GT19GSUxFX05BTUUsIDA0MDAsIE5VTEwsICZhbGxvY2luZm9fc2VxX29wLAo+
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2l6ZW9mKHN0cnVjdCBhbGxv
+Y2luZm9fcHJpdmF0ZSksIE5VTEwpKSB7Cj4+ICAgICAgICAgICAgICAgICBwcl9lcnIoIkZhaWxl
+ZCB0byBjcmVhdGUgJXMgZmlsZVxuIiwgQUxMT0NJTkZPX0ZJTEVfTkFNRSk7Cj4+ICAgICAgICAg
+ICAgICAgICBzaHV0ZG93bl9tZW1fcHJvZmlsaW5nKGZhbHNlKTsKPj4gICAgICAgICB9Cj4+IC0t
+Cj4+IDIuMzkuMgo+Pgo=
