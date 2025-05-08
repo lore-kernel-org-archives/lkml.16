@@ -1,95 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29509278150;
-	Thu,  8 May 2025 14:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0C7126F478
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746715850; cv=none; b=h1ZrNfgj+vOdFmf64ADpO+OReZ7ltN+tU4CWsAegSXU5SaBOF/k56X4n07bpx/9NDHbN0by9UNEeHyr5qw4kQNxcb0jtB8nCfDJjF8aLH/efb+jYU4IsfjLxZ2LeAjh0xoBk8Qdiy/b/ETU0p9tZxup18IxDQ2nkXLpFSwVC53k=
+	t=1746715897; cv=none; b=FqOqod+4Icn69RMCbHSIPXzN7oRecBvhaeWgyn/y3olUf2e6SnczmcKlbX3jhgGhIrilnCw0cuF+DPxax5milB73lwvqti1/aPgZrai91eIeWaSTQPi9mDVrNyrLI1MRCgUu6TmuNsentfKkC2y6lZ0IafQTvqlCJm2DIIiGAYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746715850; c=relaxed/simple;
-	bh=jH5SGcX3ZdcFxEoulSCBV2Phdw9LLtV84mxbdRu7o88=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=n6Cw3slLF1NG0TQvx/QZvO5GOP+xh7IZX/A2LLhNrnhgTbrkihZ8P5g59jdAUSyiH7t+M9Q27sxa6apLb9m6YKXSvncBxiq3PHllX6GI6W0OdsmTohV/xwVysuTgx0B0a0vxCXSyYBtpCLNMDZe9U15njVAkTekZN1YXiMx1HpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FtBK+lkM; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FtBK+lkM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746715849; x=1778251849;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=jH5SGcX3ZdcFxEoulSCBV2Phdw9LLtV84mxbdRu7o88=;
-  b=FtBK+lkMplz6Ioy4bKWL1I2nFofraf4HJ655+YOqyxe02auO9yliD/OX
-   exJo2WeLkTMjHOxA8OGn6HiffTXvTRSo6Ne8Dni/HaoKjvP71zf5Kg0jn
-   MSqecy3SnZAgfe/6ZFjqNTF5t5rYvolzD2BlSjQNnw0iRhSBvi0Sflnem
-   wW3+PXQsBffez0v72+RriaifS+U+SdvaIOU3PijxjsuR26f0lJGWXVO2z
-   Xhbm2iquE9pMhee1kS+5l5/FkMe2zJ/dAP6r1HFXrhllANAwWR1K+E4wX
-   Pc69N8JB1golCYTzz+NkMb2G/tGcW/ihDjWepUPn2tsQBewZA7/jYAwJe
-   Q==;
-X-CSE-ConnectionGUID: wSrA1B0hTBaRONDTTdTUiQ==
-X-CSE-MsgGUID: 31rN+qmoQbakQJuCz2B3fQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48372324"
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="48372324"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:50:47 -0700
-X-CSE-ConnectionGUID: axgp00/iTnewpBziKXtiTg==
-X-CSE-MsgGUID: pZ4zCB+EQimd1ypaXJ/xog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="167265552"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.196])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:50:43 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hdegoede@redhat.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
- wim@linux-watchdog.org, linux@roeck-us.net, 
- Yen-Chi Huang <jesse.huang@portwell.com.tw>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, 
- jay.chen@canonical.com
-In-Reply-To: <a04be962-b207-4085-af5b-523f59bffcbc@portwell.com.tw>
-References: <a04be962-b207-4085-af5b-523f59bffcbc@portwell.com.tw>
-Subject: Re: [PATCH v6] platform/x86: portwell-ec: Add GPIO and WDT driver
- for Portwell EC
-Message-Id: <174671583458.18151.3490608010947983443.b4-ty@linux.intel.com>
-Date: Thu, 08 May 2025 17:50:34 +0300
+	s=arc-20240116; t=1746715897; c=relaxed/simple;
+	bh=0rX2MpZ7h1KWbBVu9p5pM5Cpu/jNlATjNuO8xLlXn4M=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=kRyj2pUmkSyyKeJt4qHXr1aemhNVSfEJdcRybDDghdj4Us8cIa6IguTnMdxNjMfN9EKiHzbzpBFhttw09jfyKbpvwsAr4GiKoQ+ZLDQNM8hPu+gjZtaZkwPKcW462kHCxTxqXErucwLwwwHYnWKbk//ZN9vWmy7hq/6iywH6be8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 20ED492009C; Thu,  8 May 2025 16:51:27 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 19B7E92009B;
+	Thu,  8 May 2025 15:51:27 +0100 (BST)
+Date: Thu, 8 May 2025 15:51:27 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Borislav Petkov <bp@alien8.de>
+cc: "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, 
+    linux-kernel@vger.kernel.org, "Ahmed S . Darwish" <darwi@linutronix.de>, 
+    Andrew Cooper <andrew.cooper3@citrix.com>, 
+    Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>, 
+    Dave Hansen <dave.hansen@linux.intel.com>, 
+    John Ogness <john.ogness@linutronix.de>, 
+    Linus Torvalds <torvalds@linux-foundation.org>, 
+    Peter Zijlstra <peterz@infradead.org>, 
+    Thomas Gleixner <tglx@linutronix.de>, 
+    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
+ CPUs
+In-Reply-To: <20250506141631.GEaBoZvzPCWh88xDzu@fat_crate.local>
+Message-ID: <alpine.DEB.2.21.2505062228200.21337@angie.orcam.me.uk>
+References: <20250425084216.3913608-1-mingo@kernel.org> <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk> <98C88CE8-C3D5-4B75-8545-71DD47C67614@zytor.com> <alpine.DEB.2.21.2505051356340.31828@angie.orcam.me.uk> <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com>
+ <20250505205405.GNaBklbdKLbadRATbr@fat_crate.local> <alpine.DEB.2.21.2505060059010.31828@angie.orcam.me.uk> <20250506141631.GEaBoZvzPCWh88xDzu@fat_crate.local>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 06 May 2025 18:23:14 +0800, Yen-Chi Huang wrote:
+On Tue, 6 May 2025, Borislav Petkov wrote:
 
-> Adds a driver for the ITE Embedded Controller (EC) on Portwell boards.
-> It integrates with the Linux GPIO and watchdog subsystems to provide:
+> >  Doesn't work for ongoing driver maintenance
 > 
-> - Control/monitoring of up to 8 EC GPIO pins.
-> - Hardware watchdog timer with 1-255 second timeouts.
-> 
-> The driver communicates with the EC via I/O port 0xe300 and identifies
-> the hardware by the "PWG" firmware signature. This enables enhanced
-> system management for Portwell embedded/industrial platforms.
-> 
-> [...]
+> Dunno, I'd concentrate my efforts on something, a *little* *bit* more modern.
+> At some point this is old rusty hw no matter from which way you look at it and
+> it might as well be left to rest in its sunset days.
 
+ One doesn't exclude the other.  I do POWER9 or RISC-V stuff too.  Isn't 
+it modern enough?
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+> What I have problem with is wasting my time maintaining old, ancient hw which
+> is not worth the electricity it needs to run. Especially if you can get
+> something orders of magnitudes better in *any* aspect you can think of, and
+> actually get some real work done.
 
-The list of commits applied:
-[1/1] platform/x86: portwell-ec: Add GPIO and WDT driver for Portwell EC
-      commit: 83579675331059689e2869bf752ca9e17fadbd82
+ I don't want you let alone expect to waste time on anything you're not 
+interested in.  I'm trying to find a solution that saves you from that 
+while preferably keeping everyone happy enough, including myself.
 
---
- i.
+ Real work?  I find engineering challenges enjoyable regardless of the age 
+of hardware involved and I don't want to take away anyone's daily bread 
+(including mine) by spending my free time on a project someone might have 
+commercial interest in and should pay for.  An obsolete platform is ideal 
+for this purpose.
 
+ And what's better and what's not is subjective.  I don't find all the new 
+stuff better, just as I don't all the old stuff.  At least the old gear 
+tends to be sturdy (once you've contained issues with the PSU) and likely 
+won't suffer from electromigration in a few years' time.  It can be easier 
+to repair too if a component does fail.
+
+ NB people also fancy old cars, or boats, or trains even, not because 
+they're faster, more comfortable, or have any real advantage over modern 
+alternatives.
+
+  Maciej
