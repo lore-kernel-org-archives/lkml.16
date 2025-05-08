@@ -1,116 +1,115 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525C7EAF6;
-	Thu,  8 May 2025 09:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B729720409A;
+	Thu,  8 May 2025 09:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746695333; cv=none; b=nMlRoYAGFU3U4sFtEQ8Ek52epwV9W/ccPnyWSduAacz7lCtq5brmk7aGi1MUC+01r+o+uNuxcAy+CKg0k8F2sRIFOpEoKSwciYucekanbVQSc1ROjTUmaf9dIqdW2/bxZZmlyrn/4V+SlGxtF98R4lCoG5irRRu5OXLSZ1W1fhM=
+	t=1746695352; cv=none; b=Csk03JSCA5w5Qq7Fg5i5UmYIgBOZS9IEyUofT3kyY6vr9Sir6BVMrNqAZJ3Rm59vptd4bsrugI0ohk0rK59YN83w0rWlVn1+0BLgs3zHIxaZ2Si2i1a7kZdOPgmFfjuILPd/b2bTaxGogPf9NP8rCxeQeqsowIzu5l0z0BxZR/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746695333; c=relaxed/simple;
-	bh=8SkZUgZyYvBe6FFYuWQO+cRb9j2orVXbhXcmpKeqvUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JQ1SpRo/RrIVtgrDXpmv0L1/1fISzDyOfzEZteGLg0tM5e+8wtDcCgLlMha/BQK465sdtW596D277HMgbo+euaFb94AF9H5Z1b/mbGxz+5MoN67F6dFZNZ2vAJPQ9NkkJWkHB90mPBbyvOWHNo97NOKHcucVH3FgDr1/L/zQVoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=P1AzCW+u; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746695352; c=relaxed/simple;
+	bh=t+HiNP9OQuZN3c0EzA7EgzHkStGHipfmj78gNgzjdME=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=fd9WqtcN5kyPASfWOVfzSGHNe3Z7+1GjSIEqI2/G0HMokPBi38u0nmnMzRAftbmL4TdRb5MRTIFy4lFFoZt7UU4eev3VKHa+X/Ft/ZNgDwWGQvC+mNtuU6LSi+VytVFGbVTCPbgAmH4jQu/wyw6bd3SPnjKhheNP5b9OwovQSr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Jjjs+pEh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cFVRN/i8; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P1AzCW+u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746695327;
-	bh=id4tiKZeuAnKN2fZO6welXUYOflEk+8g59ZcxNs4qH0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=P1AzCW+u4qMYXiIX5/BSQNbnUd39IPimyLd2ADJx/I5yqQIj7pIyQMUb4wRSgSLPz
-	 VSNfFer0Q7SoWRzQ9ZF/Q0NcWwf1zdhz5q1uIv65m0knDjVPD0YI0atE4+wqjPJ92j
-	 F2TJAePl9VPhw2H6/tPpOhIlOX8dKNrFnLUsirQ+9/Eoqg+ZmJdg4yG7ZAWKwrzR3P
-	 MH5Kkd/JJTU6ZduOcTvmmhcZSahBE55wTBb5GQ0qw7L2LdM0Q3OIsysH7B/GWAzq2T
-	 vSsiC2jmDbaNeaOxLHVvhd8/ivd+KHHu+2KrXmlP3F/S4jNwygF1mFITVhynGo8VuZ
-	 ca75gcqzuS++w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZtRBk5lbmz4x21;
-	Thu,  8 May 2025 19:08:46 +1000 (AEST)
-Date: Thu, 8 May 2025 19:08:45 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: ilpo.jarvinen@linux.intel.com, bhelgaas@google.com,
- linux-pci@vger.kernel.org, kernel-team@meta.com,
- linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
-Subject: Re: [PATCH] PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
-Message-ID: <20250508190845.4cae8b62@canb.auug.org.au>
-In-Reply-To: <3840f086-91cf-4fec-8004-b272a21d86cf@paulmck-laptop>
-References: <3840f086-91cf-4fec-8004-b272a21d86cf@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jjjs+pEh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cFVRN/i8"
+Date: Thu, 08 May 2025 09:09:01 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746695342;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rqcdgsDFS76Ypx5VsTKgCynupNwSh+fIF0+FgZOOS9A=;
+	b=Jjjs+pEhB8dDsBYdKH+m9Ud8lbvtKpOZBdj/58IJeUy47bqO3sz/CyTSrB4njycfRZQHF9
+	cgE2UJR0GA3EVk08VRiMUA+WxKnOSi1KlQXJrBRdGZeZt+j3X6Qj/SF3UOxiIwBaFmPrVH
+	mWKaZBekf0b1GA1URSBeYmq6b9epPjCAufZIG8INaYw1gxNIuFeObNNPYvUyHqqrW2TTWd
+	WbA5YrtXS4gne4fghTqHvoB0WEpRTzUIxJipEFxiXxokNXkGJdvJCn9oBQUy2A8TEa3IVr
+	ez8d8Hn8Zgowrvoig7feIHP/NBsYlIaerllpj8N92cO0KKfbHUV7PfShPIzynw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746695342;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rqcdgsDFS76Ypx5VsTKgCynupNwSh+fIF0+FgZOOS9A=;
+	b=cFVRN/i8zIWZHwy1lQPa/Gh499L9NXe/yy5OqQ+bJkHI6xPHGBhcWyfrnzwcmuwC9cWQ/G
+	4Zu4RC/OQ/7LjiBA==
+From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/msr] accel/habanalabs: Don't build the driver on UML
+Cc: Johannes Berg <johannes.berg@intel.com>, kernel test robot <lkp@intel.com>,
+ Ingo Molnar <mingo@kernel.org>, Johannes Berg <johannes@sipsolutions.net>,
+ Ofir Bitton <obitton@habana.ai>, Oded Gabbay <ogabbay@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <202505080003.0t7ewxGp-lkp@intel.com>
+References: <202505080003.0t7ewxGp-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/1f9.u.3IHguvBWiXX3dmh2T";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Message-ID: <174669534192.406.16180090316398658392.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
---Sig_/1f9.u.3IHguvBWiXX3dmh2T
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+The following commit has been merged into the x86/msr branch of tip:
 
-Hi Paul,
+Commit-ID:     9cf78722003178b09c409df9aafe9d79e5b9a74e
+Gitweb:        https://git.kernel.org/tip/9cf78722003178b09c409df9aafe9d79e5b9a74e
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Wed, 07 May 2025 20:25:59 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 08 May 2025 11:02:46 +02:00
 
-On Wed, 7 May 2025 15:04:57 -0700 "Paul E. McKenney" <paulmck@kernel.org> w=
-rote:
->
-> PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
->=20
-> Builds with CONFIG_PREEMPT_RT=3Dy get the following build error:
->=20
-> drivers/pci/pcie/bwctrl.c:56:22: error: =E2=80=98pcie_bwctrl_lbms_rwsem=
-=E2=80=99 defined but not used [-Werror=3Dunused-variable]
->=20
-> Therefore, remove this unused variable.  Perhaps this should be folded
-> into the commit shown below.
->=20
-> Fixes: 0238f352a63a ("PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_S=
-EEN flag")
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Cc: "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux.intel.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: <linux-pci@vger.kernel.org>
->=20
-> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
-> index fdafa20e4587d..841ab8725aff7 100644
-> --- a/drivers/pci/pcie/bwctrl.c
-> +++ b/drivers/pci/pcie/bwctrl.c
-> @@ -53,7 +53,6 @@ struct pcie_bwctrl_data {
->   * (using just one rwsem triggers "possible recursive locking detected"
->   * warning).
->   */
-> -static DECLARE_RWSEM(pcie_bwctrl_lbms_rwsem);
->  static DECLARE_RWSEM(pcie_bwctrl_setspeed_rwsem);
-> =20
->  static bool pcie_valid_speed(enum pci_bus_speed speed)
+accel/habanalabs: Don't build the driver on UML
 
-I added that to linux-next today and will remove it when it is no
-longer needed.
+The following commit:
 
---=20
-Cheers,
-Stephen Rothwell
+  288a4ff0ad29 ("x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>")
 
---Sig_/1f9.u.3IHguvBWiXX3dmh2T
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+removed the <asm/msr.h> include from the accel/habanalabs driver, which broke
+the build on UML:
 
------BEGIN PGP SIGNATURE-----
+   drivers/accel/habanalabs/common/habanalabs_ioctl.c:326:23: error: call to undeclared function 'rdtsc'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgcdJ0ACgkQAVBC80lX
-0GwJcQf8CE7RayjNx5JFc7duQEtmFdNwWH6ceqhtR7LbFMfp9hC0R1tw5auPKrfW
-rUzR0iZiLbfhOhnPg/oL8jiNLDAqU8ueMLYqW9qVzkgtOa2LN9aFvGxIoJhKxY/6
-Gpnyt6oqGJVLBxqMPHYwtDRNWHpEmp63Wr3EkxG3JJk0X8EK+eFhGs8Na9gM/bi1
-tHmusQAlIBpPngj7hMX55E9lz0m8/PSIAAFNJiyOCwaOv16dLe7zpDlkBt5MHYxe
-SN7zYr7EIBvvDL2DURFB1dPb4kpzCAUyq9bqzHV5eTDkquD9npoSlf2iiuVif8jD
-OM1Yah10nyEDCRjgx81qDiMqim/MkA==
-=4Bpa
------END PGP SIGNATURE-----
+Make the driver depend on 'X86 && X86_64', instead of just 'X86_64',
+thus it won't be built on UML.
 
---Sig_/1f9.u.3IHguvBWiXX3dmh2T--
+Suggested-by: Johannes Berg <johannes.berg@intel.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Johannes Berg <johannes@sipsolutions.net>
+Cc: Ofir Bitton <obitton@habana.ai>
+Cc: Oded Gabbay <ogabbay@kernel.org>
+Link: https://lore.kernel.org/r/202505080003.0t7ewxGp-lkp@intel.com
+---
+ drivers/accel/habanalabs/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/accel/habanalabs/Kconfig b/drivers/accel/habanalabs/Kconfig
+index be85336..1919fbb 100644
+--- a/drivers/accel/habanalabs/Kconfig
++++ b/drivers/accel/habanalabs/Kconfig
+@@ -6,7 +6,7 @@
+ config DRM_ACCEL_HABANALABS
+ 	tristate "HabanaLabs AI accelerators"
+ 	depends on DRM_ACCEL
+-	depends on X86_64
++	depends on X86 && X86_64
+ 	depends on PCI && HAS_IOMEM
+ 	select GENERIC_ALLOCATOR
+ 	select HWMON
