@@ -1,101 +1,96 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DA34B1E45
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 06:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8654B1E45;
+	Thu,  8 May 2025 06:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746686006; cv=none; b=HU7JLhJqGa1T+MGH4dvp4L/H6vDTo3mdGsu9Jw/BZxVNJWBO9wonfID6ue8af8DwpJqyyLRJGfbIZJHO0MAVhvptCnmv8hVzhRdqvCUJ1Sjr11/Mb+vNGZLfAAa1AZL+wILDHJFG8wjDR4+R/5szYN4SEmFzjeS9jAgLFp7ycIU=
+	t=1746686163; cv=none; b=Ii2HazqKRVceNCMkBqvsG/OgEGEW6OVysSOKAkg5gDMQdiQJAkOamOHWSZCraiGhEJcWje65y9Cd4BW30RBCyjAoQ8Lrr9ZhJfJphYmqQjffujflMSi3f/LUbh4z5/+Uk9PsRi+4xgcIqe6cB8X5lNN8MeOCnDTTVi/uJJkW+GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746686006; c=relaxed/simple;
-	bh=v/gZOoYkpcXqBs6iIOIuHeFy9Ne5qxFjnODSuurr3zQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YwTRGeUC9KoGz+bZIoosOKK3a206pmxjSIqtG+ODv9eZK8QuM08yyzqYP4m4Z/j9bPVd6vLSdHAALCPpOh7W8gc/3tkYQ5N76SP7yOyRRK3+1FqQpso1qMLYEr0NLyk5G63zyILUJidAg4fyeGt23rDWJJRbwaaFYBHo/KDb8L0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XDnvnMnB; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1746686163; c=relaxed/simple;
+	bh=nUybPfIJN8nxlB8+l3za+c+gQiaPurdscHuMFvr6DO4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T+H+wti3uKbf6jYp5FsaKDzraDxlKU8AQ+lXYxHPD5x/+HLZ6vlxuqJ1vZwYXAQ9A7LHAg3O3meKx+zA8bjF1jcZx4Mcv65+A0kdBIAf+xDxLz7IMeW6YdaKmkL5YpKkUt+X25I3Ktx8s1A5ODQB6XCvq5ImxUYmv0g82FciGt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=QUSjx8Qj; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XDnvnMnB"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b1fde81de05so350910a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 23:33:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746686004; x=1747290804; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HlgheUo164rlqXvFGQwU6HpEq4bJ/pYk3yvNMQQtoWM=;
-        b=XDnvnMnBScY2mTm0aoQDPW7WOzY/gqxeRz5rg/Ci3LeWf+OWCz+v6lKCs+Zr5ySq7m
-         RhfmL750lT6c8aFW7Q+AgKwRQNMCRMXay8L8zn8T0pFZJZdv/8dzSzjF8/SkmJXUk+VO
-         VqIC6fV7/baigvrkQJX8L2KBciS1leJX18yXo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746686004; x=1747290804;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HlgheUo164rlqXvFGQwU6HpEq4bJ/pYk3yvNMQQtoWM=;
-        b=aVxId8V1r1EepL409J1ywAXYSyawmYdg9pzV6+j/WS4JfFCwucHFCTg4IOpW5Setu4
-         9yXsvKrLy3gVe3dEYVR47aI72Ay5GK5ylEIlNdRmoAoektbGpFUSPlctoY0X4D+eGwpz
-         L6zw57TVZA/ux8K9LeN/a91biF6e5Sn1jEopJRWu7jL8BbBtD5HgNp3d3kvDLbCnn9z8
-         dovwWAP0yf0q9936PD0wDKytT8rPE+TGVMDU7FZRE/gsgziRjOd+7SoIPWGglx8/Y9MQ
-         ggavmeQi7DViBAdf0EYiN+H4Of24lLNfSiLMu9Lx684VdfohFt/PCNBRUIt+6BpTgTXL
-         ZFHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUs3uJTXEVSEbp9Zsyk14ZJ6h87FzPjQmtmqYXCgfG96oPgPjJqie7aNIY56sYbjCXWO2CC1oC30Lku86A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9XC87jqtM9GAsFISd4I/0CgBKYe+kgsr1NmFYNoAksMv1jKrr
-	f/9BAsgEaOFf7fLpnZevOTkqDedJbMhfLh2iJo6a+Z4H72ozzf9J2kpUxLIw5g==
-X-Gm-Gg: ASbGncvzYx8h3H0ZnOZrHizi5lgoU1AbDvYlS5Ia5jPX/wnGnLW5ZFe13GKiTfTE6nR
-	x0PZaBusqBXD/rroY6Ib37bS9xHUeuFQkw4M7GudmB1yX5ozDsQ3dk+4VyvteiNWekdcqYpWrPj
-	aiwepDpuh+xlFQHt1xxhjQBuSNC0IXHkDVNAQNVmnLtuIV8GNOJ5Y760a22wN/ZD0LaDX2+GzMw
-	eldC7gCsml4+XfNUoyQQHLapnNsTFyfrV7QAngcap+J2Xzr9fthWd41z39JXx7TAMabW+nGi6Vp
-	akqF7HCXEWlv0jn65tu86UO5EMLgQ1VrhdjBvi/cfqqF
-X-Google-Smtp-Source: AGHT+IFTxdpBpcI+dt+ewP/ixBZ5/vcOfiMsuXdPx9TL9kjiJLwdfxwmdioqqOx3ETJijnVQIrm7Kg==
-X-Received: by 2002:a17:903:1b6d:b0:224:255b:c934 with SMTP id d9443c01a7336-22e5ee1e42emr85523305ad.51.1746686004087;
-        Wed, 07 May 2025 23:33:24 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:c794:38be:3be8:4c26])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e815806fdsm11012065ad.17.2025.05.07.23.33.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 23:33:23 -0700 (PDT)
-Date: Thu, 8 May 2025 15:33:17 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Christoph Hellwig <hch@infradead.org>, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>, Vitaly Wool <vitaly.wool@konsulko.se>, linux-mm@kvack.org, 
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Minchan Kim <minchan@kernel.org>, Igor Belousov <igor.b@beldev.am>, 
-	Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
-Message-ID: <fbftgni67wha2c6zdx3w5ccsxwlrr5yog6ifipkr4ft7h3hezo@kwb66muoctdj>
-References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
- <aBoK7f7rtfbPFGap@google.com>
- <m2dmxnhtvxano6lye7lr3saiobn4ygpln55xntlstfo4zwws5g@qpq7aagx3xwq>
- <b42gpp5qsa4j22ai2v4rwwkjhvfbcbf3lcnjoccz7xeidae5c7@ot2ocric3qzs>
- <aBsDj0IGQBJC_JMj@infradead.org>
- <unyov4aypoaotj56m5scgd4qtjfn2mceb4zdmtaek42dfqaq3t@lrrqwojlmudp>
- <aBxIlUYEPojTopek@infradead.org>
- <at4djawky2n5d2nrxor62osid3mkaid4ttmlmc3xwsju2hstun@bos2kgakshpa>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QUSjx8Qj"
+X-UUID: afc9ab5a2bd611f082f7f7ac98dee637-20250508
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=J+k3hUUer1eheTQ5q4p0oNapEKv+llZFBmeNNNPE+z8=;
+	b=QUSjx8QjXcBcFbUTnvERCNfWsHaaNBXDTfH9tym/UjrcKYbdyAT2x5jM24bnAZaM5TtMJzjstypTPEq+3yRTZCarzsnqNL/Kq2mnVDYT39HiR1e1aFg3npD2QmJyK9DJqwNTvg20jfioLHJDrD9W7P6JRETyVwthCp0/9SnzHhY=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:e1517d43-1ca9-400d-bc5d-0844d04bcae6,IP:0,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:-5
+X-CID-META: VersionHash:0ef645f,CLOUDID:b0b96c80-1eec-4f76-b81b-944fecd9abcd,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
+	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: afc9ab5a2bd611f082f7f7ac98dee637-20250508
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
+	(envelope-from <sirius.wang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 2036067457; Thu, 08 May 2025 14:35:52 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Thu, 8 May 2025 14:35:50 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Thu, 8 May 2025 14:35:50 +0800
+From: Sirius Wang <sirius.wang@mediatek.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Matthias
+ Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@mediatek.com>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-serial@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <wenst@chromium.org>,
+	<xavier.chang@mediatek.com>, Sirius Wang <sirius.wang@mediatek.com>
+Subject: [PATCH v2 1/3] dt-bindings: arm: Add compatible for MediaTek MT8189
+Date: Thu, 8 May 2025 14:35:40 +0800
+Message-ID: <20250508063546.289115-2-sirius.wang@mediatek.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250508063546.289115-1-sirius.wang@mediatek.com>
+References: <20250508063546.289115-1-sirius.wang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <at4djawky2n5d2nrxor62osid3mkaid4ttmlmc3xwsju2hstun@bos2kgakshpa>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On (25/05/08 15:17), Sergey Senozhatsky wrote:
-> On (25/05/07 23:00), Christoph Hellwig wrote:
-> > On Thu, May 08, 2025 at 02:58:14PM +0900, Sergey Senozhatsky wrote:
-> > > Oh, I didn't realize that zram was the only swap_slot_free_notify
-> > > user.  zram already handles REQ_OP_DISCARD/REQ_OP_WRITE_ZEROES so
-> > > I guess only swap-cluster needs some work.  Are there any
-> > > blockers/complications on the swap-cluster side?
-> > 
-> > I think the reason it was added it was so that the discard can be
-> > done non-blocking with a spinlock held.  Which seems a bit sketch
-> > when calling into a driver anyway..
-> 
-> swap_slot_free_notify is not guaranteed to free anything on the zram/zsmalloc
-> side. zram attempts to trylock entry
+This commit adds dt-binding documentation for the MediaTek MT8189
+reference board.
 
-.. I keep forgetting that slot-free can be called from an IRQ.  That's
-some complication.
+Signed-off-by: Sirius Wang <sirius.wang@mediatek.com>
+---
+ Documentation/devicetree/bindings/arm/mediatek.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
+index fa1646bc0bac..05e827076a7f 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek.yaml
++++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+@@ -372,6 +372,10 @@ properties:
+           - enum:
+               - mediatek,mt8188-evb
+           - const: mediatek,mt8188
++      - items:
++          - enum:
++              - mediatek,mt8189-evb
++          - const: mediatek,mt8189
+       - description: Google Hayato
+         items:
+           - const: google,hayato-rev1
+-- 
+2.45.2
+
