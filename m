@@ -1,101 +1,112 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D72B8C1E
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 04:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A7B79F2;
+	Thu,  8 May 2025 04:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746679125; cv=none; b=d6dDhuEz+q52BpbtVAHOQuNPuq2XPLIjEQwM9i8tZODDReVY3cLXjnr+wEnTfex3e5dls+d/NWUKVuhW3XZwZRN9ea4yTmZqFnFCdlH0TYZf7DbEfZKmY+i4Rt8Ab1/RQmsrSM1LrsFqQhmGj5pxexBCarxgZU/+4/gyRrFVZJY=
+	t=1746679594; cv=none; b=huGTRA3kqEvCgsMZTvPUbmTwkWFaeBRQMRNCzQVOE+wQIIaVNzQkN8QGQxXVELzlzQzb2MNtjo0+ipVq10buZZqAg+gdgSd6d52+8Z/voYczmQ6NRmbpwC30DYLrg7BB624On1RW1yZ++OvC1R6F16+fgyOOilgOz2R0F1Yf6ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746679125; c=relaxed/simple;
-	bh=25F9Wk1wh0L/9vN7D2CO1XgDgsiHRMiJDSvxCKq+tfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o1mBF/1xGe6vH41nTv6/PIIFaJcNhmAc2acaPumYhKWcFyzz388/WvaEBQS4fwPuvDmr6kkDO+OrOSsROCHWdfKxd1oTWBDJPN8v2q87igw4u3QhLJUoFXUEeoVlanSUf5fjPU+9ZJy9s5nPDNQU/XWMRP8sQOwuN0J7OpOc8wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=a8cdUKc7; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1746679594; c=relaxed/simple;
+	bh=iOwBhF2jWfxSznFO3EGfXN7A2okZzkQPd4jElYKwvcQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=f0yhJDw3jDzNvdvi+NTayliU0WrlUh1uwz/2XPR9HUWkjp42hf5ogJnUEZ8t2alv0wmcrbY4xSlmt0v5gf5J0X/bQ4PtAAXMu62KHXHmCdUBFvtLO8+6YfxNzxTVXjZZl0HBJg9yr2l59RY9VJKlAn7ej76PSIEBrmBJT431WbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=Wb5vANw1; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="a8cdUKc7"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-476977848c4so7238711cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 21:38:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="Wb5vANw1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1746679121; x=1747283921; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1cqTOyiEDcgpIamZxdiHYiIDNncwGcTc3EyIyp1gE8o=;
-        b=a8cdUKc74UP9w7hrFJmTjT0OasiGADdJDJ+Z6ypO8liUbD+rwE6B4RQfUeqO5XLfrN
-         0IMxpuUGFkO+xqa/N4nvXNZKvF9T0M09otnKrj7KeWphgTHHOkwlWYtv+5AApMPM4hpA
-         Fsg14cNNfy71uxgRLOb2W+IQ+FKW2lF6MwYcD8mlCMN5GGfZUL9GwoWaBlnJfYG1svDe
-         Y5AVh2Z/msv+b0PejxDfb3twQjZAUjMVsAgLOouDtNMys84A0KAlOGi8CyKNkZcDtOz8
-         NdCzN2JBrnfD2hjK5RsqYdpPsxJbY7C5dyM7bkMEOe9r248OSdg2GjR/UA6MbGl0fKYp
-         Pnzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746679121; x=1747283921;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1cqTOyiEDcgpIamZxdiHYiIDNncwGcTc3EyIyp1gE8o=;
-        b=PV+vb6RbrbYB3B/F6KlbJiwyNwrG7is2L2rk7SojWZLmAKdpQWicBW5b5PXFlCqKSC
-         TtQHCgGBz61h7c19FbFWSL9g/UP3P673RxM4fpWcEikqsd5SyYf2W92VQiwI1rGP+ytq
-         duQqItkQ3UT0yFy8vcS8FiV7L+SUskRKTZ9dGh+jnWKw7dkKKIwXDMovU7QQI/nNZogb
-         Skc7S9gafnsODdh4GQyyeGuIwRVlj6tyQxdgSh9RLlybd64MrT3LGTx2iXONEGKajQe2
-         ngDjTmCaulf0giMSu07X3Q01AZgNf8V9LhRvLz9dlOpR+u3QrdvBCCzDHeg1ghegPKrw
-         h5XA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/bph0eSL9vzJxBSP1PWyblCokFN6FplpZNJSR7lp+ZAT2taXBb3hyrrl0W4NJn53LH0Ko5kkuBL/0JOw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwweioWA1B3ZZfTpcP+nrcNyIgmk6ykYxDYea70MPCsYO69yM3e
-	OrABqGK5yAJ84L7yKQwQeYDhP2jNZDkaf/Cc43PEd+cbhvTVzRJvbHOLPWr+Tcg=
-X-Gm-Gg: ASbGncvj5ca7mJAjDs+DP9M66qoh4bT70nBK2JiemdfooPxwnMQL3hUg68DoLtQ4pK/
-	wuocPVQX+VWFl+6lXB+kllF/l8KXhwxIliwldzaolDPYepcXQS6ECyCevqFDURhKNd1MKzfU67V
-	CeOX7tBV8mq4waaUiWXHNmZXpsmQI8mikhNWtBbIDI7LO0k49r7szeB1AMbKBsrJte0mP3+JsEc
-	ISsCVGxdR4Ja4k+AbiECjObuHaBESRJSPxcZKcSwIFq3gdQj1caOUvjOI+TH85MOt7HnDBbSw7L
-	2g1BTvblv44N3klp+3IAbPA53aBPRut1gUedRC8=
-X-Google-Smtp-Source: AGHT+IG9SXx3+szVrANw7iRh1ucZW6wHm68iT4qY9p9QukDYzSxLw6oMm5attLANpOpVo2taKiUizw==
-X-Received: by 2002:a05:622a:354:b0:476:8296:17e5 with SMTP id d75a77b69052e-494495ba88fmr28566081cf.17.1746679120854;
-        Wed, 07 May 2025 21:38:40 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-49223457d50sm27837941cf.71.2025.05.07.21.38.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 21:38:40 -0700 (PDT)
-Date: Thu, 8 May 2025 00:38:35 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Zi Yan <ziy@nvidia.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Richard Chang <richardycc@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] Make MIGRATE_ISOLATE a standalone bit
-Message-ID: <20250508043835.GA320498@cmpxchg.org>
-References: <20250507211059.2211628-1-ziy@nvidia.com>
+	d=codeconstruct.com.au; s=2022a; t=1746679583;
+	bh=GMmUu/KwVYsXb2KtVn2/87+3MnBtGMcwkJMD5WiBllY=;
+	h=From:Date:Subject:To:Cc;
+	b=Wb5vANw1Ixzb/5PMbBiXMONaNULgnMNSVK6SM5bai/5pIV6ahRj3ou4emXCAxRTPF
+	 WQ8AvM+IQCBD2LcrD0SqQ9ecj0Vd22IRYow91mTAVVPx5E9HWMqCcEMJQljM2BQHDn
+	 JB9GhcWWtEqz6jMsxjqtdjH9qH6qbrhXoF/SMp5g2DgG84iOnAerTcwORPAbDTJWV6
+	 x36JAtGAEerrPEKftOi+kIJjvXdOerKKgVGORbS7qqdtBGayIHfF8h2rH2W0vjlvat
+	 LHCB16tS+JbC5VujFSU2GY6uLdcN43AZlGygkiwtYo0a58EXoPIbWE8tJiDKT/HKH8
+	 9uGzMXoV9eJxw==
+Received: from [127.0.1.1] (unknown [180.150.112.225])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id E602F6449A;
+	Thu,  8 May 2025 12:46:21 +0800 (AWST)
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+Date: Thu, 08 May 2025 14:16:00 +0930
+Subject: [PATCH net] net: mctp: Ensure keys maintain only one ref to
+ corresponding dev
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507211059.2211628-1-ziy@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250508-mctp-dev-refcount-v1-1-d4f965c67bb5@codeconstruct.com.au>
+X-B4-Tracking: v=1; b=H4sIAAc3HGgC/x2MQQqAIBAAvxJ7bsEMS/pKdAhdaw9pqEUg/T3pO
+ AwzBRJFpgRTUyDSzYmDr9C1DZh99Rsh28oghVRCCY2HySdaujGSM+HyGWkYjZPaCaV6qN1ZDT/
+ /cwZPGZb3/QC6QLrlaAAAAA==
+X-Change-ID: 20250508-mctp-dev-refcount-e67cf28f0553
+To: Jeremy Kerr <jk@codeconstruct.com.au>, 
+ Matt Johnston <matt@codeconstruct.com.au>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>
+X-Mailer: b4 0.14.2
 
-On Wed, May 07, 2025 at 05:10:55PM -0400, Zi Yan wrote:
-> 
-> Hi Johannes,
-> 
-> I incorporated all your feedback on v2 (see Changelog below), except the
-> "decoupling enum migratetype from the pageblock bits" one[1], since all
-> 5 migratetypes (not MIGRATE_ISOLATE) are just values and
-> "#define PB_migratetype_bits MIGRATE_TYPE_BITS" would take 5 bits
-> for migratetypes, which only requires 3 bits. Let me know if I
-> misunderstand your suggestion. Thanks.
+mctp_flow_prepare_output() is called in mctp_route_output(), which
+places outbound packets onto a given interface. The packet may represent
+a message fragment, in which case we provoke an unbalanced reference
+count to the underlying device. This causes trouble if we ever attempt
+to remove the interface:
 
-Right, it's better to stick with enum values. My main worry was that
-PB_migratetype_bits *usually* correspond to an enum migratetype, and
-MIGRATE_ISOLATE being the precarious exception. But I think it's much
-clearer with the special-casing in get/set_pageblock_migratetype()
-instead of the lower pfnmask functions. Thanks for moving that!
+    [   48.702195] usb 1-1: USB disconnect, device number 2
+    [   58.883056] unregister_netdevice: waiting for mctpusb0 to become free. Usage count = 2
+    [   69.022548] unregister_netdevice: waiting for mctpusb0 to become free. Usage count = 2
+    [   79.172568] unregister_netdevice: waiting for mctpusb0 to become free. Usage count = 2
+    ...
+
+Predicate the invocation of mctp_dev_set_key() in
+mctp_flow_prepare_output() on not already having associated the device
+with the key. It's not yet realistic to uphold the property that the key
+maintains only one device reference earlier in the transmission sequence
+as the route (and therefore the device) may not be known at the time the
+key is associated with the socket.
+
+Fixes: 67737c457281 ("mctp: Pass flow data & flow release events to drivers")
+Acked-by: Jeremy Kerr <jk@codeconstruct.com.au>
+Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+---
+Exercising the USB MCTP transport under qemu via usbredir surfaced this
+issue on disconnect. Devices on other transports such as I2C and serial
+tend to be disconnected less often and so the bug remained hidden for
+some time.
+---
+ net/mctp/route.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/net/mctp/route.c b/net/mctp/route.c
+index 4c460160914f0131f3191ca24dd51ec7a3fb8cc0..d9c8e5a5f9ce9aefbf16730c65a1f54caa5592b9 100644
+--- a/net/mctp/route.c
++++ b/net/mctp/route.c
+@@ -313,8 +313,10 @@ static void mctp_flow_prepare_output(struct sk_buff *skb, struct mctp_dev *dev)
+ 
+ 	key = flow->key;
+ 
+-	if (WARN_ON(key->dev && key->dev != dev))
++	if (key->dev) {
++		WARN_ON(key->dev != dev);
+ 		return;
++	}
+ 
+ 	mctp_dev_set_key(dev, key);
+ }
+
+---
+base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
+change-id: 20250508-mctp-dev-refcount-e67cf28f0553
+
+Best regards,
+-- 
+Andrew Jeffery <andrew@codeconstruct.com.au>
+
