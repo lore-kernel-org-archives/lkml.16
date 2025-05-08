@@ -1,108 +1,168 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1D31E5215;
-	Thu,  8 May 2025 13:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9724D18DB14
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746712279; cv=none; b=hjfBcdgcup9Sh0ISerTNXAtatkrXNlMTre8mMIBe19AzS8HUKxVWe/lH0g9v3mVSDpGP77DgA7RhFGcy/zAndbHbITTxOp8UcQjfx4EMfih3C4YrJBut2gUdnnZefH75rcLW4o2wKVgt/G8cnLf5POCd5C1o7VakirXPt+reEHA=
+	t=1746712324; cv=none; b=FlljiGWlq5Temg+HcMM7apPEy8vNylz15t7HK4S5Ucnio/RY9W5EUNXLG0TpUo5aoXzDIWqTxr1DRhAkhW6cXavVOhAmc3MyCJIR326lkmE8RYtl79C+GrHhzr0ImkMV1TjsT6UDUHfsTtPnegrCu9AgK0mkUR3uxKK2yhsBPXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746712279; c=relaxed/simple;
-	bh=6U4sCysadPAAKxSAmee2khkw+B2LWwszfo8nPySP0Fg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kvin+1jbkPGPyrn34j7PSrjG7/0HMWM1gDy3oZrbxD/xOw5kXIrDszD4amvKVcUZuUOp+Rvd94L6jeUcjlTr7CFgPalM3h+rFv4elw4eC9x6l1d/kf7L5bpdsULD8z10MJm5svboVWifdsulEJC4WqKQMjCl/AcCgX9NOldXS8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=2CVR4VQ2; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1746712324; c=relaxed/simple;
+	bh=A6cXM0OYInR03fp+Wpri2dLtkqD7DN0Lrk54dKtajiY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JmQbR7pJIoCAmUKFAz7NIWYWayz2JNT2WBAECjdfRwadqPsFUY1rYD+ZOp+w9Z7NapH24iUKO/kDDO2OA8G9Z5KtNA8LCiF0CrPizMS8Ykg0klFrV2X8E8yNQv7ItMtb9JdiIvkPDw4Ppl4/qsLS84kwipcl0zSMaCf1S+e8BRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Gsc3fiSd; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=KqPGj3jH; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2CVR4VQ2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=JDTh6xkMM8HQxsVT5/rBVpuKgI4QSLUTTTY/Sbbvo5Q=; b=2C
-	VR4VQ2M62NZxPSLLzrUzNUTFYv9AQDDuYnZtykMx5Wkgz7KgENeQqbaOZ3Tkvf3vIsYyee7AkfSPH
-	qknald7sN5FwxwrNmN2hgWFZFR8SdW8BJGMAHQxrXO4rY6OD6gW9q0yEOtGgAGyo5cx2TJnPuERO7
-	0q30G1rVlRaaAsA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uD1eZ-00C0VV-Ov; Thu, 08 May 2025 15:51:11 +0200
-Date: Thu, 8 May 2025 15:51:11 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Goran Radenovic <goran.radni@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	=?iso-8859-1?Q?B=F6rge_Str=FCmpfel?= <boerge.struempfel@gmail.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 4/4] ARM: dts: stm32: add initial support for
- stm32mp157-ultra-fly-sbc board
-Message-ID: <1281b9c4-ff94-4dfc-a531-45e3dbee3dfe@lunn.ch>
-References: <20250505115827.29593-1-goran.radni@gmail.com>
- <20250505115827.29593-5-goran.radni@gmail.com>
- <2d0ff289-06f6-4bde-a238-097d22573d4e@lunn.ch>
- <63665c17-da37-4b5b-9c2d-28d5a669680f@gmail.com>
- <3a7ef1bd-2c0e-4637-b0b6-2c0b73388618@lunn.ch>
- <35c08d79-1473-4c1e-b605-627c4ff00a92@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Gsc3fiSd";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="KqPGj3jH"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B29C0211ED;
+	Thu,  8 May 2025 13:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1746712321; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A6cXM0OYInR03fp+Wpri2dLtkqD7DN0Lrk54dKtajiY=;
+	b=Gsc3fiSd/BKuZQ4guwg7LMGqU8YEOJAmiT1yz3kA70qiIxh+n+44Bc870ByEnMdFnfYA7u
+	3vDmlbWcTJ3/H0dZyvnByqgaeywxRP4UPx2a13ssAxHU0+cMI7FPTLOhgTpFE0PEtOffMz
+	6GokkwsnEJNdM1+Zq0URW0GXCkyT1dk=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=KqPGj3jH
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1746712320; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A6cXM0OYInR03fp+Wpri2dLtkqD7DN0Lrk54dKtajiY=;
+	b=KqPGj3jH7XEXwoiAndxan8mPxq276leGp/v0yeU9KOIF60nodXcydmZYsftrCTtRPam0jA
+	pqIKGASptNk2ZfOc+Oj4tRmGTz/vjyCE1+bzJUQInGy0rPfuemu1PYH/Gme8Q3TyAeANPK
+	cN6BeP9b41rH/yBTb4UFxA2Ekdy5Vco=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7659413712;
+	Thu,  8 May 2025 13:52:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id v6hhGwC3HGiJPwAAD6G6ig
+	(envelope-from <mwilck@suse.com>); Thu, 08 May 2025 13:52:00 +0000
+Message-ID: <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
+ paths
+From: Martin Wilck <mwilck@suse.com>
+To: Kevin Wolf <kwolf@redhat.com>, dm-devel@lists.linux.dev
+Cc: hreitz@redhat.com, mpatocka@redhat.com, snitzer@kernel.org, 
+	bmarzins@redhat.com, linux-kernel@vger.kernel.org
+Date: Thu, 08 May 2025 15:51:59 +0200
+In-Reply-To: <20250429165018.112999-1-kwolf@redhat.com>
+References: <20250429165018.112999-1-kwolf@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <35c08d79-1473-4c1e-b605-627c4ff00a92@gmail.com>
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: B29C0211ED
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MID_RHS_MATCH_FROM(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Rspamd-Action: no action
 
-On Thu, May 08, 2025 at 03:10:09PM +0200, Goran Radenovic wrote:
-> Hi Andrew,
-> 
-> thank You once again for helpful hint.
-> 
-> Andrew Lunn wrote:
-> > > > > +	phy-handle = <&phy1>;
-> > > > > +
-> > > > > +	mdio {
-> > > > > +		#address-cells = <1>;
-> > > > > +		#size-cells = <0>;
-> > > > > +		compatible = "snps,dwmac-mdio";
-> > > > > +		phy1: ethernet-phy@1 {
-> > > > > +			reg = <1>;
-> > > > > +			interrupt-parent = <&gpiod>;
-> > > > > +			interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
-> > > > PHY interrupts are 99% time level, not edge.
-> > > That is correct, but I am facing strange behavior, when I set
-> > > IRQ_TYPE_LEVEL_LOW.
-> > > My board stops booting at:
-> > > 
-> > > [    2.343233] Waiting for root device /dev/mmcblk0p4...
-> > > [   12.638818] platform 5a006000.usbphyc: deferred probe pending
-> > > [   12.643192] platform 49000000.usb-otg: deferred probe pending
-> > > [   12.649029] platform 48003000.adc: deferred probe pending
-> > > [   12.654277] platform 5800d000.usb: deferred probe pending
-> > > [   12.659744] platform 5800c000.usb: deferred probe pending
-> > > [   12.665089] amba 58005000.mmc: deferred probe pending
-> > > [   12.670239] amba 58007000.mmc: deferred probe pending
-> > > [   12.675185] platform 50025000.vrefbuf: deferred probe pending
-> > > 
-> > > I must investigate this. If You have any idea, You are welcome to share it.
-> > Could be an interrupt storm. The interrupt is not getting cleared
-> > because of something missing in the PHY driver, so it just fires again
-> > and again.
-> 
-> After a brief investigation, I tend to agree with your assessment that the
-> issue lies in the driver—likely the stmmac driver — which is outside the
-> scope of my changes.
-> 
-> Therefore, I would suggest keeping IRQ_TYPE_EDGE_FALLING for now, or
-> alternatively not using a hardware IRQ at all and falling back to polling,
-> as done in stm32mp15xx-dkx.dtsi.
+Hello Kevin,
 
-Since edge is wrong, please use polling.
+[I'm sorry for the previous email. It seems that I clicked "send" in
+the wrong window].
 
-	Andrew
+On Tue, 2025-04-29 at 18:50 +0200, Kevin Wolf wrote:
+> Multipath cannot directly provide failover for ioctls in the kernel
+> because it doesn't know what each ioctl means and which result could
+> indicate a path error. Userspace generally knows what the ioctl it
+> issued means and if it might be a path error, but neither does it
+> know
+> which path the ioctl took nor does it necessarily have the privileges
+> to
+> fail a path using the control device.
+
+Thanks for this effort.
+
+I have some remarks about your approach. The most important one is that
+the DM_MPATH_PROBE_PATHS_CMD ioctl appears to be a dangerous command.
+It sends IO to possibly broken paths and waits for it to complete. In
+the common error case of a device not responding, this might cause the
+code to hang for a long time in the kernel ioctl code path, in
+uninterruptible sleep (note that these probing commands will be queued
+after other possibly hanging IO). In the past=C2=A0we have put a lot of
+effort into other code paths in multipath-tools and elsewhere to avoid
+this kind of hang to the extent possible. It seems to me that your set
+re-introduces this risk.
+
+Apart from that, minor observations are that in patch 2/2 you don't
+check whether the map is in queueing state, and I don't quite
+understand why you only check paths in the map's active path group
+without attempting a PG failover in the case where all paths in the
+current PG fail.
+
+I am wondering whether the DM_MPATH_PROBE_PATHS_CMD ioctl is necessary
+at all. Rather than triggering explicit path probing, you could have
+dm-mpath "handle" IO errors by failing the active path for "path
+errors". That would be similar to my patch set from 2021 [1], but it
+would avoid the extra IO and thus the additional risk of hanging in the
+kernel.
+
+Contrary to my set, you wouldn't attempt retries in the kernel, but
+leave this part to qemu instead, like in the current set. That would
+avoid Christoph's main criticism that "Failing over SG_IO does not make
+sense" [2].
+
+Doing the failover in qemu has the general disadvantage that qemu has
+no notion about the number of available and/or healthy paths; it can
+thus only guess the reasonable number of retries for any given I/O. But
+that's unavoidable, given that the idea to do kernel-level failover on
+SG_IO is rejected.
+
+Please let me know your thoughts.
+
+Best Regards
+Martin
+
+[1] https://lore.kernel.org/all/20210628151558.2289-1-mwilck@suse.com/
+[2] https://lore.kernel.org/all/20210701075629.GA25768@lst.de/
+
+
