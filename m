@@ -1,128 +1,89 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B761B28373
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 23:01:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C0B28373;
+	Thu,  8 May 2025 23:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746745287; cv=none; b=hJiDfL7BZ/vXxQ+dXEIBSpBrNoX11IPcL6ViXAEyHf8wbBZ+Iqck8X65mU8Kgbc5i+1oOuQMIHIXgmfHCuhw/Tc8HRuIuhiDYopJ2wayZ6B5VY1iCjoRNlYn9qmkBQQHXk2uGSHEqc1QIsPNeS/a+fDHUch0xwdj8aVTikCe4XU=
+	t=1746745375; cv=none; b=HWFLnP8loB1DKpmCvKmHfpQxWzHKCDR4WS6sNrfoD3ZgKFFIQhutLgPlhbhRSaMgHN6Pu0gxQhyOzv4o2zl07vJsT3ZMr8cuv/97H3JOlju+SsJRIs3mDCp4ERmwh00yOrYGTbpSGgX8anJP9THqo7IIqY8MX0qsHO342b6E6iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746745287; c=relaxed/simple;
-	bh=oEuSarxiPIA0IneriI2U0oIkS7qkQy2iN4xv7e9uIV4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hZ2+8uKrmokncxjVdjFbwtVvgdTWgAZmzOxbRr3pxw4/lgDiuGicsvthrkY4AnLpRBBIjzpcckf8RvXTf8eKBJ3+TBvAIRXRC6cB3trbLdU+qq1KNnWoY/GkxboAtrchLh932MVu5fplUYwliUuecqDtz0vlUztQ39eIgxDzU1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qK6Zu79Q; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746745375; c=relaxed/simple;
+	bh=gJWXUSndmVl17E9Y2XjPcpnu1BbAJjZMWMv8Wn7btwg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jNQ+UHP4LkwjEeXC185J4uTKSTI6jwLPkUs4843HcskNmORwxWGBMiETas2eVKwy41XsCfmEOY6GolCgycuCTiPCemNgXrocJ4BrENSv55vz6MJrGPVi+vb/+aVJwb8Oihf+6zBjNHyzizcywhi5QKGXxP0sxZ+nuR8NsvM++LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XzXBNlWk; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qK6Zu79Q"
-Message-ID: <4032b00c-1194-45b1-b1e5-4e9237ed7948@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746745283;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0podyQbI7EjhnM5+iaMAYRW3Emc7fSDLhAlACBiE+s0=;
-	b=qK6Zu79QrmwiVhmb0SUwlF/AmfkzMu19qf+dkBevTT2rvx0rNBA3gTno6MqT2qWTf4fMVs
-	gxD/PLt/EvSGIoMy129aGZ3w/Mkk5JRRS22r4+ABA1HHZbWa7Qf9RDrbOXY3uZqUb00KyB
-	qWyz0v9qW0KNNtOBJ9/V3dY4gkoObkE=
-Date: Thu, 8 May 2025 16:01:12 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XzXBNlWk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746745374; x=1778281374;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gJWXUSndmVl17E9Y2XjPcpnu1BbAJjZMWMv8Wn7btwg=;
+  b=XzXBNlWk0umolIKurcm04G5EToKkiVW6qC0Wb36uFbrfJLvG9j/RxM9R
+   0SIOO3dPDkwEKoObWvxFjU5BNcUqrnS0/O25CAd9NUxvjfVJLAzOgEsE7
+   UQQR4aOY4TMs06mEz8JFro/hfw8X6rQPyVh0EgCwtqoUFbvKMwT9NBYQE
+   5ZJiyD87p+aXZgbNXr9MVZd5WS06rIm0JdPt0SFsMOJXoGCMT4xF543Zs
+   HDcxrD2y+BvzJinwY+vOSxnnS62JV12fKmpv7ndMdW2gyMxLLXTQIeIYj
+   pZFyrxZDirO55oW72CArjqgh+oxnh4rMIruJ9+VT+DMY5yl1lLI69RIU2
+   w==;
+X-CSE-ConnectionGUID: TDyo2Y4DQd+K9SOVMwbZ8Q==
+X-CSE-MsgGUID: ejMedFMPQ7qcNvhyeemnmw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59552592"
+X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
+   d="scan'208";a="59552592"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 16:02:54 -0700
+X-CSE-ConnectionGUID: 69lszKMiQ3yJOV5I4+xNRg==
+X-CSE-MsgGUID: 2b7/HwreSfuCnASo2eFlJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
+   d="scan'208";a="136931250"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
+  by fmviesa010.fm.intel.com with ESMTP; 08 May 2025 16:02:53 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v3 0/5] intel-uncore-freq: Add agent_types and die_id attributes
+Date: Thu,  8 May 2025 16:02:37 -0700
+Message-ID: <20250508230250.1186619-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v6 05/14] riscv: sbi: add SBI FWFT extension calls
-To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-kselftest@vger.kernel.org
-Cc: Samuel Holland <samuel.holland@sifive.com>,
- Andrew Jones <ajones@ventanamicro.com>, Deepak Gupta <debug@rivosinc.com>
-References: <20250424173204.1948385-1-cleger@rivosinc.com>
- <20250424173204.1948385-6-cleger@rivosinc.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <20250424173204.1948385-6-cleger@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On 4/24/25 10:31 AM, ClÃ©ment LÃ©ger wrote:
-> Add FWFT extension calls. This will be ratified in SBI V3.0 hence, it is
-> provided as a separate commit that can be left out if needed.
-> 
-> Signed-off-by: Clément Léger <cleger@rivosinc.com>
-> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-> ---
->   arch/riscv/kernel/sbi.c | 20 +++++++++++++++++++-
->   1 file changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-> index d57e4dae7dac..070014ff35d4 100644
-> --- a/arch/riscv/kernel/sbi.c
-> +++ b/arch/riscv/kernel/sbi.c
-> @@ -299,6 +299,8 @@ static int __sbi_rfence_v02(int fid, const struct cpumask *cpu_mask,
->   	return 0;
->   }
->   
-> +static bool sbi_fwft_supported;
-> +
+Add two new attributes, so that orchestration software like Kubernetes can
+target specific dies and agents for uncore frequency control.
 
-super nit: Can declare this along with struct fwft_set_req so that they 
-are together ? You can move the sbi_fwft_set to below the struct 
-fwft_set_req.
+v3:
+Patch 1/5 has changes to change to loops
 
->   /**
->    * sbi_fwft_set() - Set a feature on the local hart
->    * @feature: The feature ID to be set
-> @@ -309,7 +311,15 @@ static int __sbi_rfence_v02(int fid, const struct cpumask *cpu_mask,
->    */
->   int sbi_fwft_set(u32 feature, unsigned long value, unsigned long flags)
->   {
-> -	return -EOPNOTSUPP;
-> +	struct sbiret ret;
-> +
-> +	if (!sbi_fwft_supported)
-> +		return -EOPNOTSUPP;
-> +
-> +	ret = sbi_ecall(SBI_EXT_FWFT, SBI_EXT_FWFT_SET,
-> +			feature, value, flags, 0, 0, 0);
-> +
-> +	return sbi_err_map_linux_errno(ret.error);
->   }
->   
->   struct fwft_set_req {
-> @@ -348,6 +358,9 @@ int sbi_fwft_set_cpumask(const cpumask_t *mask, u32 feature,
->   		.error = ATOMIC_INIT(0),
->   	};
->   
-> +	if (!sbi_fwft_supported)
-> +		return -EOPNOTSUPP;
-> +
->   	if (feature & SBI_FWFT_GLOBAL_FEATURE_BIT)
->   		return -EINVAL;
->   
-> @@ -679,6 +692,11 @@ void __init sbi_init(void)
->   			pr_info("SBI DBCN extension detected\n");
->   			sbi_debug_console_available = true;
->   		}
-> +		if (sbi_spec_version >= sbi_mk_version(3, 0) &&
-> +		    sbi_probe_extension(SBI_EXT_FWFT)) {
-> +			pr_info("SBI FWFT extension detected\n");
-> +			sbi_fwft_supported = true;
-> +		}
->   	} else {
->   		__sbi_set_timer = __sbi_set_timer_v01;
->   		__sbi_send_ipi	= __sbi_send_ipi_v01;
+v2:
+In patch 5/5 fix grammar as reported by Alok Tiwari
 
-Otherwise, LGTM.
+Srinivas Pandruvada (5):
+  platform/x86/intel-uncore-freq: Add attributes to show agent types
+  Documentation: admin-guide: pm: Add documentation for agent_types
+  platform/x86/intel: power-domains: Add interface to get Linux die ID
+  platform/x86/intel-uncore-freq: Add attributes to show die_id
+  Documentation: admin-guide: pm: Add documentation for die_id
 
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
+ .../pm/intel_uncore_frequency_scaling.rst     | 10 ++++
+ .../platform/x86/intel/tpmi_power_domains.c   | 34 +++++++++++--
+ .../platform/x86/intel/tpmi_power_domains.h   |  1 +
+ .../uncore-frequency-common.c                 | 34 +++++++++++++
+ .../uncore-frequency-common.h                 | 20 +++++++-
+ .../uncore-frequency/uncore-frequency-tpmi.c  | 49 +++++++++++++++++++
+ 6 files changed, 143 insertions(+), 5 deletions(-)
+
+-- 
+2.49.0
+
