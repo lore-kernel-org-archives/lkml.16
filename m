@@ -1,64 +1,63 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F033317BA5;
-	Thu,  8 May 2025 13:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F25223DC4;
+	Thu,  8 May 2025 13:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746710560; cv=none; b=GJxJhUWHJAc97EDi/8WX087bZJ9WWLMdO1w8brkwcyD3iX2yBFUx+Lkxyvkw/bAXyK/8fkRGPBUpVT137C9jXlHVRX3B7YQ505JD7B7JWANXrzAOVYX6EXJS4jLXTXePS7ElJw3Eya7clHcAFF7CIWDEmR2EOdyPUoyBIqQ2X6M=
+	t=1746710643; cv=none; b=Hgl4lC9KKVwlj0DehMc8IzNVT4PPBZnm1nBjcU1cyKQqY4nGQTpp+2fIL7vdispWZMP1W1kQObnMeWpIlO/23EAcZL/oItPWKVJFBJi451cNrXq6pLrh6XJM0oJIlemDsx98ylYKdXB0lPNmUpimQJWNAuIUWUA8463qXO9eBC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746710560; c=relaxed/simple;
-	bh=q6v3wv2CDrIH1LrNbNW1bP/KarqhU7EJLpdk97Qi7wE=;
+	s=arc-20240116; t=1746710643; c=relaxed/simple;
+	bh=y7mvlA1Xnu4MwYJ+kc7kN5PCaE5XZ0KZBGzbXCjmpgQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=poSfxRN4u/uy8sqBAvweZXWFLba3u7x8LiPHS8OtCA7uIqHYb3qrW0Mq9dm225plShL0cQ28XMGLhIs7crn4wk+uq2vZYcJTBlTY4mff75+MfW7VXg2qPOqXFTRfFPGdoOBRFOHCZhwFXW+hmU8OrquAU6Wj4QGq75mjIO7pTtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b1a1930a922so605205a12.3;
-        Thu, 08 May 2025 06:22:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746710558; x=1747315358;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3O6QW65hEVybU4HTPkPJYU+R7ruCJ42xt8K+t51LGkg=;
-        b=i5qySHlTWkZDJtkdc7P+ZgcI3WBCn1OpSPp5PYuYq2p5Cqw2ATy+K5VvpU0+MItpz5
-         f1LDWDcXSOm0GuTgOt9TlUnbd773nSQiuHbiIwtoYygF78jWTZR27NkhyyZtKt27gZfy
-         teHFH5V5chvu+vjObv9Aa/S23cci+FIIMSdgSg+yuO3SSml5moVIlz8365cvAl5oM7qK
-         uyOCih3mn3Z//vmIoS9uSpLAe6RYVeHs5CMaU51PFq7N42uesaf4DGZNVSTkFo7QBrtS
-         +/4CMb9/qjmonHrYgzJUnQIzp8sYatDOr+EA+ayxndOqVzNu16+5NPhNo14ga0WZlwKs
-         vZTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxyO0Vss7puWzwotMhn2eMf4kHJudJs/OhcQvTMQERQ3AVJyPga6z/ybZ0fsEifd/ZasS1M6uT4y4y@vger.kernel.org, AJvYcCXE6HRF6zo5GWgMpmosizleIsQTUkrTJxkZsBGFJ+2XSDlNR0+ceAMT1VCHj4/B7un9EqExrExGGAXlkPk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJQRN15eVEqJ/H0tcDej1lrzffgQY2CW/0/kBj4aHQz82O/tUC
-	5haTssZ8rVTq8u3mHN2/y08cPb3mZ6ASbf/WGzqZLBNP7msRblHn
-X-Gm-Gg: ASbGncvJ92d/E/nxXIp36ESS2I+5S3BiXdWq2DrqJi3PDWJ88vpJHhPgPue7nSXYPAr
-	X6Sbocu/YtP+eC55uIdt64KdumpjX8axjynPy2L4LC/EUwmVrZwtwpRaZdr0w8AyXnDqsxalQU3
-	x80kNgC69UTSPKcH8xZIBXtP8EzoDN8n5zE3aDlenHHDbxJzdVY6rwhPHXyEHuRrsWhZrom5QcG
-	SAe6wZNXn5FzkpDNYhKiYPptZvA/hXGcAMoV/xy5vIFzOsuAMguKksmCUuEXSt3YmbAstWHx9pp
-	8quOnOP6KNRWP9S9jPMU2Laiu5sUfNgIH9AHybg7OjcdigycMyxIiefQIAP19y3QNW8yn5vOACo
-	=
-X-Google-Smtp-Source: AGHT+IHvkK35BjLOowcxL9xTZop9MziWe5tFjZ+j9y8giZnaraoBWrpSDPE7TcvXZ/rDNEHnGivYaA==
-X-Received: by 2002:a05:6a20:2d27:b0:1f5:8179:4f43 with SMTP id adf61e73a8af0-2148c0f38f0mr10265113637.23.1746710558200;
-        Thu, 08 May 2025 06:22:38 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74058d7a397sm13182346b3a.28.2025.05.08.06.22.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 06:22:37 -0700 (PDT)
-Date: Thu, 8 May 2025 22:22:36 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Niklas Cassel <cassel@kernel.org>, Vidya Sagar <vidyas@nvidia.com>,
-	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, treding@nvidia.com,
-	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
-	sagar.tv@gmail.com
-Subject: Re: [PATCH V4] PCI: dwc: tegra194: Broaden architecture dependency
-Message-ID: <20250508132236.GB2764898@rocinante>
-References: <20250417074607.2281010-1-vidyas@nvidia.com>
- <20250508051922.4134041-1-vidyas@nvidia.com>
- <aByg1GUBno3Gzf4w@ryzen>
- <a6dx377rhakpl3gvvyofdbui5sbccf3fhw6o2qb55fmmx4v4fv@ifvzdjep2kp5>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UFOLd+XDFBUPZHeit0vHrdlbibGt8v0W8u3h2LW9aa1un8fDgFURYrLBmlypxVBxQbRpHWvMustmXH5V3IjIH3i3lz3TWfSymZzXrmFV7wunqrmhTMTUvjgk2n0onVuXyd3r+h0G7UaseCu3F6rxGlGjf4l9reaTqPrigJCIHT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JVXPbwJQ; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JVXPbwJQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746710642; x=1778246642;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=y7mvlA1Xnu4MwYJ+kc7kN5PCaE5XZ0KZBGzbXCjmpgQ=;
+  b=JVXPbwJQZK5ggOz4j3W+dsMzV0JDQdw8P9shEQtoWPYRIw7dKqdgZp04
+   WK9c45aFilNhXFSK5mN31yROdzeine0hdtefaNbX0ympseL8RtPT+Y+Ei
+   /HhJEsp7teGU8yjFcc0kYNXgz32MPVAle+hVAIkqLToVLat5/bkMFi/rd
+   FXnZ8XfwOZ9SWH8Q74UsLWpHAa798bS8Va+DzSkZFOAQT38o7S0gEZy1+
+   +Yp2EKYRiZoaGCUHigIhqbRwuwW2NARvBKDQMhAH08409kjYzI3bctC1s
+   994iVHqvl/k/gfEpA7XRghaRScT7ov3iuZ9+1c6rZR/NUwwWqxRHMGpgU
+   A==;
+X-CSE-ConnectionGUID: neNpTWDvQme7q9lEVLNURA==
+X-CSE-MsgGUID: QZm6Q3VgRV23kLSTwU7DRA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="36122512"
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="36122512"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 06:24:01 -0700
+X-CSE-ConnectionGUID: XhjkS3UVRPGR+da8fUZqKA==
+X-CSE-MsgGUID: tCGkOjPCQZCN+Uc8X3PJhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="141058445"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP; 08 May 2025 06:23:58 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 43B531D7; Thu, 08 May 2025 16:23:56 +0300 (EEST)
+Date: Thu, 8 May 2025 16:23:56 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, rick.p.edgecombe@intel.com, 
+	isaku.yamahata@intel.com, kai.huang@intel.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, kvm@vger.kernel.org, x86@kernel.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [RFC, PATCH 08/12] KVM: x86/tdp_mmu: Add phys_prepare() and
+ phys_cleanup() to kvm_x86_ops
+Message-ID: <t2im27kgcfsl2qltxbf3cear35szyoafczgvmmwootxthnbcdp@dasmg4bdfd6i>
+References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
+ <20250502130828.4071412-9-kirill.shutemov@linux.intel.com>
+ <aBn4pfn4aMXcFHd7@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,15 +66,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a6dx377rhakpl3gvvyofdbui5sbccf3fhw6o2qb55fmmx4v4fv@ifvzdjep2kp5>
+In-Reply-To: <aBn4pfn4aMXcFHd7@yzhao56-desk.sh.intel.com>
 
-Hello,
+On Tue, May 06, 2025 at 07:55:17PM +0800, Yan Zhao wrote:
+> On Fri, May 02, 2025 at 04:08:24PM +0300, Kirill A. Shutemov wrote:
+> > The functions kvm_x86_ops::link_external_spt() and
+> > kvm_x86_ops::set_external_spte() are used to assign new memory to a VM.
+> > When using TDX with Dynamic PAMT enabled, the assigned memory must be
+> > covered by PAMT.
+> > 
+> > The new function kvm_x86_ops::phys_prepare() is called before
+> > link_external_spt() and set_external_spte() to ensure that the memory is
+> > ready to be assigned to the virtual machine. In the case of TDX, it
+> > makes sure that the memory is covered by PAMT.
+> > 
+> > kvm_x86_ops::phys_prepare() is called in a context where struct kvm_vcpu
+> > is available, allowing the implementation to allocate memory from a
+> > per-VCPU pool.
+> > 
+> Why not invoke phys_prepare() and phys_cleanup() in set_external_spte_present()?
+> Or in tdx_sept_set_private_spte()/tdx_sept_link_private_spt()?
 
-[...]
-> Alternatively, since these are only platform-related Kconfig changes, I
-> could pick this up into the Tegra tree if I get Acked-bys from both
-> subsystems.
+Because the memory pool we allocated from is per-vcpu and we lost access
+to vcpu by then. And not all callers provide vcpu.
 
-No objections!  Go ahead, and thank you! :)
 
-	Krzysztof
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
