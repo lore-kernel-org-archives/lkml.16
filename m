@@ -1,105 +1,160 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D55199931
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEC714A4C7;
+	Thu,  8 May 2025 12:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746707188; cv=none; b=hdEeVmdO6dE2DSAHd0AYdifoO5Zrh1a+5/WQPI4TEJrrGXkeRYVypwSAFNswxRXahCUlN5nDUTAM1Msp6Kmrhmb+IXQoFbcRehMN5Gk3Lz/OIqhmJOeDtvf2Q+J92EYKb08GmQ/xOql1t96q+BfC/Blzdou6Hv4QgQB5ChflfxE=
+	t=1746707246; cv=none; b=msWbITtU2s73NARQ+5/CfivSEs1uZDNO7ysBCR6SfqRoBjF+xBr50F52lxxRYL9fQhbzsfb83ebXn6yrceEw5oaaR5HKv46Nh4yOtLJDtxbtsac+/Wr0sDoaigCKRP6PAlBicBovISy5dzo/xIL6leZE0R8yb2iRE076lMSvKYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746707188; c=relaxed/simple;
-	bh=JulDBx7+gMMk07sfoYJ6Yckp7iHWbGd/5055q91zNW8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OFgY9tsjGXc9MWyKkNIgF+8I0qYz4OQLmprLtF2ltBglreEtXrp2wT/hNNPAjpMS2k5GklpTofHaYlHGziKrWnQGV7WCdqxmk6NIm6UwK0Xr3PoYXMQmXUR4D03KUzJf32hPH9QReNTztKCNpGtsxJTcbdRpo3M3mjtXUd7P1Iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x3c0kjlp; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746707246; c=relaxed/simple;
+	bh=6GjyiTfn5SI4PebBO0uNWjR6eASjOV4bUgJNv0Jed3A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RYeJFwj7kk4ZzISeUakvDU1LiWzWoYbHPqZv/M2akaQsd+Eg3oxVE4hnsV8ng2IuqFHmFcBbKehuusVgwfmelVbRh+24svGQD3wD4+cAV2gt672rM892f5N3kKngceRTlI/msl1C49E5lWfsa3yPFy6Iow8iL55gklz3cPPsY84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VTMBHg7M; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x3c0kjlp"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39ee651e419so482458f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:26:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746707185; x=1747311985; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zuDfxCH33LiqZEZn5otDlZzjgELDv57+KJ96MnpE7U4=;
-        b=x3c0kjlpUbwgAj0o3P9gPJL0L9ChnIDZou/A4SLMMWWI0ruZ5N/o4jk6Ib4zcUosVQ
-         XKQ9kLq8/RMjU8fvt0Awo6WRgU8VlzDAiO9m5MFgLN8KCBZfd7VcZfN1W4DK0oClAGXa
-         ybMUnRuzdUJ03MzY3NmZcYLfm/wSNEm9PGpaUOih4i4wZG+r0utnlHERXH1IZtzj2s9v
-         pKKFY5teoHQoO0UMUAH6+Z+uVR7kI1EEL8Ela8QI6tAgyVRoLwjLCdaJR37z2o7JgkKR
-         /6d0JMWZKECHyM4pcGOcItm7oFuay5AHVYNAF6ljp3iio28OBeBmz2LO4AWqRVnuLPuY
-         pjFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746707185; x=1747311985;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zuDfxCH33LiqZEZn5otDlZzjgELDv57+KJ96MnpE7U4=;
-        b=w6cZj1lz0KodUG3I2riEaiIy72fQAyUzTke0Lekvj9U3iqcTTIbT80zv1m5iEfz8Wm
-         ifiMdQ47uxkxHK07M9d1cM2Ws8gbD2V2nVj6B/NXYW0JgaHOoDpq9PDjd2hAnPFSOYaC
-         iw1ebVhEz+SDQxY6izrqEqk+8S/CUK2jJ+ceXewuIm4+lTuN9u6kFdwrnOW35evmcSbq
-         EILMxRAiOyuGiqVOQxct1LhCsKcJWIhd3hH/+fVicvNw2Vg9PM/D+dAy6uCFgzccXwyn
-         5MCxvQPcvZcGfOki1XGtjmLpXWvuKOPIOMwzgVAPCdYdB8WEXhAW8ROR/oMv58Z+3t6U
-         FtxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX3vV3mhRxWsSblYRqFVXtBsSIQoMM4GvSrJFczFWbPMy/56zqNtvwNL9uE/KyX7kXF06/LT2fcZfqBZmw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzASrmBa1dhxYP6KNAM0jq4uQy4EV30oSmhXzRkYXwce7embAET
-	koeIFfFRLri5lOmNukAm5fB4RSTj3PWOpWAXhhxAWlap6/QcpsjSoQdOm/Z6ObydXg/lAe3vO4f
-	khwhHedjmI9QylLAYoghAwzGCIZ7J1NVnq9kY
-X-Gm-Gg: ASbGncsM4VY6HNZdXEEdQhuxVRqHPw61xHm/PmQdFD1NkyD+mStmR3B4zDb2zoN+y20
-	0IAFor15HrQEBmr4FeKerb+rBgqa6ovEYNCJLGAOyc6t2aW1puddwsGSAyi5mK/SEUYLaiGnXf7
-	vNxxT1Me4xWd7ck+U2Tg/uoH5gg5BHPCpyc0uusd6zv2Ql0OSe
-X-Google-Smtp-Source: AGHT+IHBz/sJpAHiuTBLGG0tLMbYKjUsbJ4DWgTAOgMsxgMSoqxTToKnYwzD+hlukKMzCAgbP+8UVhAAIXQCwVemSA8=
-X-Received: by 2002:a05:6000:18a9:b0:3a0:b941:dc24 with SMTP id
- ffacd0b85a97d-3a0b941dc86mr3186655f8f.11.1746707184919; Thu, 08 May 2025
- 05:26:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VTMBHg7M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746707245; x=1778243245;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6GjyiTfn5SI4PebBO0uNWjR6eASjOV4bUgJNv0Jed3A=;
+  b=VTMBHg7M6pffPze0+emr06uAUjZG8/KntYsoEEF6FSlNyWoC4hywLHMR
+   lWyO+pw1NxlETUeYzuqj+1OCZZa5QmJlXgsIXsJWlVq1dZVf9IEhK2oXO
+   zNGLi5kSl+bf4R5RgH7To9WHHgtMzsk2CqWQdOezQIY3WapMpyVSYjaLF
+   6jfK0y9b4B8NZgvI1gtpz3lYAJlb3GgyGBxOl2OmA/+81a54c2ALND6gP
+   EXFr8tyT6o4Y1OcuxR2GKOUL+QoWyoxXsDVaz6VRzC56BjscHdPKVOyLT
+   57SOrw/oH92JM8xJMetDGKVFG7YyMdaIYwppgWvT7wC4hpEtpe3LB6UUn
+   w==;
+X-CSE-ConnectionGUID: Nw0o8fcMQUePT2Gr5uknRg==
+X-CSE-MsgGUID: q2nApTZASEWdUgoPlVOVUA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="36115102"
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="36115102"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 05:27:25 -0700
+X-CSE-ConnectionGUID: 65W7j38jRyO6Pv3w4+EBiA==
+X-CSE-MsgGUID: fsyGWW4PQO+5/tmgOs6e+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="136772854"
+Received: from amlin-018-114.igk.intel.com ([10.102.18.114])
+  by fmviesa010.fm.intel.com with ESMTP; 08 May 2025 05:27:19 -0700
+From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+To: donald.hunter@gmail.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	vadim.fedorenko@linux.dev,
+	jiri@resnulli.us,
+	anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com,
+	andrew+netdev@lunn.ch,
+	saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com,
+	jonathan.lemon@gmail.com,
+	richardcochran@gmail.com,
+	aleksandr.loktionov@intel.com,
+	milena.olech@intel.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	linux-rdma@vger.kernel.org,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Subject: [PATCH net-next v3 0/3]  dpll: add all inputs phase offset monitor
+Date: Thu,  8 May 2025 14:21:25 +0200
+Message-Id: <20250508122128.1216231-1-arkadiusz.kubalewski@intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505214306.3843294-3-ynaffit@google.com> <aByhDepxNsCCr3rI@google.com>
-In-Reply-To: <aByhDepxNsCCr3rI@google.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 8 May 2025 14:26:13 +0200
-X-Gm-Features: ATxdqUGbU3BQWNJdLvnAsMxjyVMGme5RfN6TmygoyBiOEke0YqLH6Yo4uMQEdJI
-Message-ID: <CAH5fLghwpEE8GAjVTFOj0pBJ-HW=LvaWf_K3P9+optpjTsAfmw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] binder: Refactor binder_node print synchronization
-To: Tiffany Yang <ynaffit@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Christian Brauner <brauner@kernel.org>, 
-	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, linux-kernel@vger.kernel.org, 
-	kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 8, 2025 at 2:18=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> wr=
-ote:
->
-> On Mon, May 05, 2025 at 09:42:32PM +0000, Tiffany Yang wrote:
-> > +     if (node->proc)
-> > +             binder_inner_proc_unlock(node->proc);
-> > +     else
-> > +             spin_unlock(&binder_dead_nodes_lock);
->
-> I don't buy this logic. Imagine the following scenario:
->
-> 1. print_binder_proc is called, and we loop over proc->nodes.
-> 2. We call binder_inner_proc_unlock(node->proc).
-> 3. On another thread, binder_deferred_release() is called.
-> 4. The node is removed from proc->nodes and node->proc is set to NULL.
-> 5. Back in print_next_binder_node_ilocked(), we now call
->    spin_lock(&binder_dead_nodes_lock) and return.
-> 6. In print_binder_proc(), we think that we hold the proc lock, but
->    actually we hold the dead nodes lock instead. BOOM.
->
-> What happens with the current code is that print_binder_proc() takes the
-> proc lock again after the node was removed from proc->nodes, and then it
-> exits the loop because rb_next(n) returns NULL when called on a node not
-> in any rb-tree.
+Add dpll device level feature: phase offset monitor.
 
-Oh, there's a v3 of this. Let me resend it there.
+Phase offset measurement is typically performed against the current active
+source. However, some DPLL (Digital Phase-Locked Loop) devices may offer
+the capability to monitor phase offsets across all available inputs.
+The attribute and current feature state shall be included in the response
+message of the ``DPLL_CMD_DEVICE_GET`` command for supported DPLL devices.
+In such cases, users can also control the feature using the
+``DPLL_CMD_DEVICE_SET`` command by setting the ``enum dpll_feature_state``
+values for the attribute.
 
-Alice
+Implement feature support in ice driver for dpll-enabled devices.
+
+Verify capability:
+$ ./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/dpll.yaml \
+ --dump device-get
+[{'clock-id': 4658613174691613800,
+  'id': 0,
+  'lock-status': 'locked-ho-acq',
+  'mode': 'automatic',
+  'mode-supported': ['automatic'],
+  'module-name': 'ice',
+  'type': 'eec'},
+ {'clock-id': 4658613174691613800,
+  'id': 1,
+  'lock-status': 'locked-ho-acq',
+  'mode': 'automatic',
+  'mode-supported': ['automatic'],
+  'module-name': 'ice',
+  'phase-offset-monitor': 'disable',
+  'type': 'pps'}]
+
+Enable the feature:
+$ ./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/dpll.yaml \
+ --do device-set --json '{"id":1, "phase-offset-monitor":"enable"}'
+
+Verify feature is enabled:
+$ ./tools/net/ynl/pyynl/cli.py \
+ --spec Documentation/netlink/specs/dpll.yaml \
+ --dump device-get
+[
+ [...]
+ {'capabilities': {'all-inputs-phase-offset-monitor'},
+  'clock-id': 4658613174691613800,
+  'id': 1,
+ [...]
+  'phase-offset-monitor': 'enable',
+ [...]]
+
+v3:
+- removed patch 1/4:
+  "dpll: use struct dpll_device_info for dpll registration"
+
+
+Arkadiusz Kubalewski (3):
+  dpll: add phase-offset-monitor feature to netlink spec
+  dpll: add phase_offset_monitor_get/set callbacks
+  ice: add phase offset monitor for all PPS dpll inputs
+
+ Documentation/driver-api/dpll.rst             |  16 ++
+ Documentation/netlink/specs/dpll.yaml         |  24 +++
+ drivers/dpll/dpll_netlink.c                   |  76 ++++++-
+ drivers/dpll/dpll_nl.c                        |   5 +-
+ .../net/ethernet/intel/ice/ice_adminq_cmd.h   |  20 ++
+ drivers/net/ethernet/intel/ice/ice_common.c   |  26 +++
+ drivers/net/ethernet/intel/ice/ice_common.h   |   3 +
+ drivers/net/ethernet/intel/ice/ice_dpll.c     | 191 +++++++++++++++++-
+ drivers/net/ethernet/intel/ice/ice_dpll.h     |   6 +
+ drivers/net/ethernet/intel/ice/ice_main.c     |   4 +
+ include/linux/dpll.h                          |   8 +
+ include/uapi/linux/dpll.h                     |  12 ++
+ 12 files changed, 386 insertions(+), 5 deletions(-)
+
+
+base-commit: 46431fd5224f7f3bab2823992ae1cf6f2700f1ce
+-- 
+2.38.1
+
