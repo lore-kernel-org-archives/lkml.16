@@ -1,53 +1,53 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2CF22154B;
-	Thu,  8 May 2025 08:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9C8221703;
+	Thu,  8 May 2025 08:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746692156; cv=none; b=PqJI4OMTrtSEVD80yB2MUemBKPW4dUPhZshxWEW9L4hPq7wMlUcKnJMeBTgqy0oUFqZBsQCjdUfVX9bKLZlo3cZZYgjRmbniphVnpP9g9FpsKrNkj3pdmd14/bPwPEgtG167IhJV12p+z8jl/9P6rRYLwrt7t2rZtGZRD9mPPIQ=
+	t=1746692156; cv=none; b=p86+iE1skCUyMt9npWlhbqTK/+gRbDOwnaagulmR8TbvimbCUOfS7xH9MPhBdIPEecitZNNfpRM+NjsSL5pse+q5b2fBkSxqgqs5B0pwuddXad0aqmD0C4NdjqkgR45efJ1e2QRbnLm28U9oSsz/DQknHmRTgKdQsNA1e3wESV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746692156; c=relaxed/simple;
-	bh=30LrIKBBll7Dujcsr9mqzl8zpWmZeJP5Cm4yFdsay/g=;
+	bh=bMBDC2E0k7r7LlGWoG8vqXSEwP0TDJOcsYlfzYDFIPI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gOOfIihuafA3hB17aP+jxIf44Ujo+8mKrs6lbXTNWYv7pmSZIp78wxrHx4J3QbzfAZCy2wuxkM7MUZoBRSRDTx3iv6yH152gY73bHXJbSOo7hAOhvidf/upmCxZYlvIy/mZ1q3PaYoNCT2BteLBcAQlui+68Y9ZEozTLTuPC2Aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KrxKV25K; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version; b=HGalwAMWVKgkSiVeIvjzvB5Z3CuPrFoAZPnXLOgVjvgAtLaJFGPwlwpr9UCnSo7+9iL9Gh1yipRMStgKj/pCXQLG0UVhQnivCW561woJPk5EtL+hy0oYJRtQClIR/WbREeYyJkPAaeWQ8J1f02bC5C3N1DrN+COBalAgd30CDmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RXNSYOcS; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KrxKV25K"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5484WnJt016851;
-	Thu, 8 May 2025 08:15:40 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RXNSYOcS"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5484YDTd031703;
+	Thu, 8 May 2025 08:15:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=5rt8vsXqhX8
-	MUFon9nFsB+7zSyJRp5+P8BGxxhdTzb0=; b=KrxKV25Krl9BnTBTM2HYmZqioPQ
-	SgblALJ+owWXdpxsEJnTBEeP7QGvBdTgD5dUvH5shO1lqOOWpKcQDvkmo6EECjci
-	qsESSCgH2TSdRRlWisvd31wYTfT1yi5aRtXy08vlG8yVWZMDedv7y0VNWIWOGtlN
-	Z7bGwiVhpAc8B9CkoDGu1xWPWG2wh3UqqhNb+ECdAQ58O2TaiyUcTJHlNMr6few8
-	Er+JAodwGf5MIiq/ml3Giy3cebRHQEaCAlzB4Q2mdxCUS+wBXqhqfzLdmO1ToibA
-	T+2eYO9Pb0Fh1DYKZrtSNghrn+Y6RlJuVetYHdugV6n6hoL3J/RvXAhoTUA==
+	:mime-version:references:subject:to; s=qcppdkim1; bh=uPhyLJ5Z+Ws
+	nd0rb/dB0qgzyesiXKadq/4CcwVdIkrE=; b=RXNSYOcSLe0B4yKsnpfCFEeC28G
+	mwH6L1O7fm7v3BXEJftRy4m5zZ5Ed5KcYjFK9HXSUegNcyJmrCTAZvhGB9g5+AsN
+	XGxlnLkVQLiWurqBULIdP4UHXVsbxtgin5P58tjlaaErOls46fwV+NePmXQJNxdP
+	Tto3V4zXjc2+4G0axbVrwfWpbjYrzEXuQ97g8kDsM5J3dU5ujC/i/BVjlX9T3L1P
+	C5rejrMyW4nO2hHFt3GtuXVlUHWmbFP2f1HRJZk47g189T8VdsZIaHkTK8wnr91j
+	KrBePJGeObg6Pe/zQX0Z2267xp6Gd8VUo/ml428d/H3F3cZrcp0iXPLh3tQ==
 Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp68hdp-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnpgghev-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 08:15:39 +0000 (GMT)
+	Thu, 08 May 2025 08:15:37 +0000 (GMT)
 Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5488FbgP015295;
-	Thu, 8 May 2025 08:15:37 GMT
+	by APTAIPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5488FY8e015243;
+	Thu, 8 May 2025 08:15:34 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 46dc7mq5ft-1
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 46dc7mq5fd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 08:15:37 +0000
+	Thu, 08 May 2025 08:15:34 +0000
 Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5488FbOH015282;
-	Thu, 8 May 2025 08:15:37 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5488FYdd015232;
+	Thu, 8 May 2025 08:15:34 GMT
 Received: from cbsp-sh-gv.ap.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 5488FbsS015267
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 5488FXL6015229
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 08:15:37 +0000
+	Thu, 08 May 2025 08:15:34 +0000
 Received: by cbsp-sh-gv.ap.qualcomm.com (Postfix, from userid 4635958)
-	id 108D240CFD; Thu,  8 May 2025 16:15:36 +0800 (CST)
+	id DE7C140CFD; Thu,  8 May 2025 16:15:32 +0800 (CST)
 From: Wenbin Yao <quic_wenbyao@quicinc.com>
 To: catalin.marinas@arm.com, will@kernel.org,
         linux-arm-kernel@lists.infradead.org, andersson@kernel.org,
@@ -58,10 +58,11 @@ To: catalin.marinas@arm.com, will@kernel.org,
         linux-phy@lists.infradead.org
 Cc: krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
         quic_mrana@quicinc.com, quic_cang@quicinc.com, quic_qianyu@quicinc.com,
-        quic_wenbyao@quicinc.com
-Subject: [PATCH v3 4/5] arm64: dts: qcom: x1e80100-qcp: Add qref supply for PCIe PHYs
-Date: Thu,  8 May 2025 16:15:13 +0800
-Message-Id: <20250508081514.3227956-5-quic_wenbyao@quicinc.com>
+        quic_wenbyao@quicinc.com,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: [PATCH v3 2/5] arm64: dts: qcom: x1e80100: add bus topology for PCIe domain 3
+Date: Thu,  8 May 2025 16:15:11 +0800
+Message-Id: <20250508081514.3227956-3-quic_wenbyao@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250508081514.3227956-1-quic_wenbyao@quicinc.com>
 References: <20250508081514.3227956-1-quic_wenbyao@quicinc.com>
@@ -76,73 +77,63 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA3MiBTYWx0ZWRfX8/PD56QYFILF
- l1hmA/c9w/23dLojVeSdOLbmZ2a0w90rGiesv3wDg10NJDoguuqDDtqWznWwu9dJ9w8fIIdb6Ol
- WDji7LSmo0ndtKvVzLnPSzebadvFYG4k/xpeHSoyvZ1bbcfXi0Lj5BMAaw+r4UiWQpOurJU3uAr
- KKC7elYppIAx5LfPCqU4nZpE7uSbKxRwbm9OZkAJdtyjfSIntQ1I8Qv5/OgluBMfr6J25RhJ8U4
- rmQG6paZk9CV4/vvjClcvyJX1QJz3jg0+EsK1p7ZcH4yIOYKi0dt57VBzI7BWAZRP++sfqjtVqJ
- loAj7r2zCp+pYe2ECyfx9eAfzbIuwgahkyKmCiO0+7Rd/Rq8PFetj5fvtyRp9mNv/Mfgyk9bR+v
- +H+1SQ2e5TaqYmfBFSHJUoC4/k1WzyyPeoEnXrP0dt5sgLWThrUFZtZKqAJ7oQLv7wdmhXN2
-X-Proofpoint-GUID: -8fcnbdSkNyIeY4rp2aDy6GtK-sEpCZ9
-X-Proofpoint-ORIG-GUID: -8fcnbdSkNyIeY4rp2aDy6GtK-sEpCZ9
-X-Authority-Analysis: v=2.4 cv=BvGdwZX5 c=1 sm=1 tr=0 ts=681c682c cx=c_pps
+X-Authority-Analysis: v=2.4 cv=Ao/u3P9P c=1 sm=1 tr=0 ts=681c6829 cx=c_pps
  a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=OjqB7RjhM8taGROUhtwA:9
+ a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=iAUx9HIH3_1I80GXj-QA:9
  a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA3MiBTYWx0ZWRfX/bW8IVtUAo3U
+ iKGeRGiOwMZsunBcPfcFYcAz1/R0vSOY7KxfQ0MZ2QToQ7Tnu58BE0rbFg5Mcr2xvhD05P+vSGw
+ MAlqkuLTZt4mkUs5puJPvRGUVS2FFFvpaWNi1gNpMqVTteYWbOMVSxxE/IxeIUcKlKA8xwZ223s
+ t3ekRM+EOqPhDIbIP+Fo7H1OqUAu+l3WlOySskifs1ctRlY7+cRTam9RmUdWIbRHMeALlGLmfTR
+ 9mxYSx8NhNdCidiKvXSFZEO5txS3qUnMIMmIIVWtWeN2P3DSZXK+g2TJHipRQ5gyoGQJ63QeGhT
+ wBz5r3TXBQ/8MzwoG+jpna+thB9WfsfUqZwplNEHq3fycKU++dCMUfvrUJTuWsoJUh+LDKgtgg8
+ Jc0XWoYkgcvHW+x6hnWkq3VM4cAQCoeIsZy+pBix/jb7Rp4eujG/zdOIL96nFWLL1bNVHqfU
+X-Proofpoint-GUID: nizCpZqSH64bxL--A-Yf62QnIQvjwDu4
+X-Proofpoint-ORIG-GUID: nizCpZqSH64bxL--A-Yf62QnIQvjwDu4
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-08_02,2025-05-07_02,2025-02-21_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 priorityscore=1501 phishscore=0 impostorscore=0 mlxscore=0
- spamscore=0 mlxlogscore=916 malwarescore=0 bulkscore=0 suspectscore=0
- lowpriorityscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505080072
+ suspectscore=0 mlxscore=0 mlxlogscore=939 bulkscore=0 priorityscore=1501
+ spamscore=0 impostorscore=0 phishscore=0 malwarescore=0 lowpriorityscore=0
+ clxscore=1015 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505080072
 
 From: Qiang Yu <quic_qianyu@quicinc.com>
 
-All PCIe PHYs on X1E80100 require vdda-qref power supplies, but this is
-missing in the current PHY device tree node. The PCIe port can still
-function because the regulator L3J, which vdda-qref consumes, is voted by
-other components.
-
-Since the device tree should accurately describe the hardware, add the
-vdda-qref power supply explicitly in all PCIe PHY device nodes.
+Add pcie3port node to represent the PCIe bridge of PCIe3 so that PCI slot
+voltage rails can be described under this node in the board's dts.
 
 Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
 Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 ---
- arch/arm64/boot/dts/qcom/x1e80100-qcp.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-index ec2479f8f..a7f3ac142 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-@@ -994,6 +994,7 @@ &pcie3 {
- &pcie3_phy {
- 	vdda-phy-supply = <&vreg_l3c_0p8>;
- 	vdda-pll-supply = <&vreg_l3e_1p2>;
-+	vdda-qref-supply = <&vreg_l3j_0p8>;
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+index 46b79fce9..430f9d567 100644
+--- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
++++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+@@ -3287,6 +3287,17 @@ opp-128000000 {
+ 					opp-peak-kBps = <15753000 1>;
+ 				};
+ 			};
++
++			pcie3port: pcie@0 {
++				device_type = "pci";
++				compatible = "pciclass,0604";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++				bus-range = <0x01 0xff>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
+ 		};
  
- 	status = "okay";
- };
-@@ -1017,6 +1018,7 @@ &pcie4 {
- &pcie4_phy {
- 	vdda-phy-supply = <&vreg_l3i_0p8>;
- 	vdda-pll-supply = <&vreg_l3e_1p2>;
-+	vdda-qref-supply = <&vreg_l3j_0p8>;
- 
- 	status = "okay";
- };
-@@ -1053,6 +1055,7 @@ &pcie6a {
- &pcie6a_phy {
- 	vdda-phy-supply = <&vreg_l1d_0p8>;
- 	vdda-pll-supply = <&vreg_l2j_1p2>;
-+	vdda-qref-supply = <&vreg_l3j_0p8>;
- 
- 	status = "okay";
- };
+ 		pcie3_phy: phy@1be0000 {
 -- 
 2.34.1
 
