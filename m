@@ -1,291 +1,278 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11021138.outbound.protection.outlook.com [52.101.70.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8645D1D416E;
-	Thu,  8 May 2025 15:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746717479; cv=none; b=S5RU0cnwZPyorBTdBkAxBFIM1TfiLdNgrOpj3XgmatWWfj1MTkpZVbHfMXAH+rkLCod+NouOTgjEGADxeAVbrKRlSzGlV1PEQWvgPEvRw2tcuFJ7mYgABtYvn6lnPVh6i1kjypm6puzKKJyMzKN6kiIqjysed82bcxCaxIHFI6E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746717479; c=relaxed/simple;
-	bh=EIMrVNLlQ5gp+UeX3/Xy8F87NxnoEFd3XJ5c/nBufuE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FsbbhKu+mQZmZNVxu1kkHlIl0FGk0py4jHyo7vgJ8kNVe17QWnxASrnc6pBvhQWQBqgCU4OwKn52FPqKxGT/hMQLhoDIHEn930I+bNODISO2LRYt29iJvVZwqNmVnPEzS2nYewXIVgFYoZFYobFAQINRYKenw9dKtcKvANRaNOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lN//VMVG; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A76425291C;
+	Thu,  8 May 2025 15:19:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.138
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746717555; cv=fail; b=iK1xNJ/MGxT3N92OzXwneTszz446AQ/KdTSfdBLzoBII3ZBUAJwmMnt8F4L/C18NLfeQA2pUwEGm9VlaDB92RkBpHc0ABYgl6O0KKwS7m5qz88yns9TWfPEB+g4o/Wfxs7Egu9OOyxXH9skS/AzzvmE1Q3OLn2lZCB4+zCXP/S0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746717555; c=relaxed/simple;
+	bh=8Ijwq2w6Ve3W776Z8rO8KeM7nTHYGuILIK8aO17j9N0=;
+	h=Message-ID:Date:From:Subject:To:CC:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cYoD8gaSM45FZFDYDcAVOCqkMOs56hu6LW9JeTn3FgUr5M1HiPpUSwCWbXhp4zTRHn9Zf/15v/PsnbMZJmbjtvqNNqy+3tT5xg5ROOAA+cQXS23ZVxsCQFKuNx9ari/O/omhxdLmmRCBaSwzAq9wBKxlfc5ngfEauw/ODvh+fHU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=topic.nl; spf=pass smtp.mailfrom=topic.nl; dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b=XRsVVrQ9; arc=fail smtp.client-ip=52.101.70.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=topic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=topic.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lN//VMVG"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f6214f189bso2082937a12.2;
-        Thu, 08 May 2025 08:17:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746717476; x=1747322276; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=EIMrVNLlQ5gp+UeX3/Xy8F87NxnoEFd3XJ5c/nBufuE=;
-        b=lN//VMVG6uPwL478yoSDyK9y9khtdS3+iIkdwN9eRGTKHikatcZP4txE+vzuVOFd2B
-         3REDUFo6WJVYy9pZpsKHPTij/hlBNEILRfyvcBx+8O1iOcmuEIki+xA7QBhsuo6q1Qie
-         AfdeCYxt/sYvHwLuJBfcbOhbuhWLI+Ly8D0extZTV2IlWw9uCZkMsHJOaoh2KBAANYm8
-         sDY17DjB8PSMgkpmkJUknzKQu9qymy+4eLOeI7WU9BjIQUntRoauN/gtxRzzsHRljbN4
-         BTTalKQgFFR+rdbFl6qNHYMCO5wn2GiqsAh/a3OjGBClHu+Vq0pK2Q8a0gOE3SHduWZa
-         6Kzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746717476; x=1747322276;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EIMrVNLlQ5gp+UeX3/Xy8F87NxnoEFd3XJ5c/nBufuE=;
-        b=LIUCatFKrKHKl+136TAqNk0Q5ZEHtetIeo6AZ26E/nldP87+E11/SCJkDCN+crk257
-         5IshJ96Cg2A2Wo7c74YVQJbaipUa9EeShFhKk8ZitgQ8Twj6mdnTNTard056SNZ13aq5
-         aOu1nNYg2o62Vqe3ddf+ZCCkFqLlEbf+BhwO2m36MzdTqPtbvByNpbSL5L+Js/z599J8
-         8yryZOkypIaXheMLNxT9hLZl+U3RYBZLggwgMdII+67g4HJDvUCOax8u5TBF0E2/zZTi
-         oEzxMpFsLzYuuqis66hR2VfqN96U38K+wZhtowHUK3Mhfl5s3qVjwoh7tZEsN6mLUqjb
-         jbuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX8ZbqcaxNYqXBzHdIefbWohS73vI6jw4ui1ihB80YX3klRQvZKVxHlQAKcS3VPwn7FwIqqwrVszvYHEUk=@vger.kernel.org, AJvYcCXpB7I8APSyzkfTt0phT13swqASRETW0/nUZbYt1BgC2pex59S1MVLkUVO4trNAg0HpRF2tboMEFu18/0o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxV3GC//UsXryQcT5KhzBRKfs+jbcIGNA03bUSzTfILZ+WfweG/
-	zsnFw0R6b9HzKbaWRn0eBifLwkvBe7BhZdId3ztVZD7fjT3BtA1w
-X-Gm-Gg: ASbGncuf+V5Xeiyg8ZjIe4jgBwAGtV4gMIWxedCoXO45KGdVa9Kg1FPP3r3hIcuORJF
-	m47q7vLS9GomKpIaZOa5FeWokBjCNwpNWaRddSVShsCu53aeK1QnoYIzTcS4J1CZOlG6NaOw7Hk
-	ywYlt95srIZxYVmfc321D7gRoB+5PzsSNI1suVwBnh/05tg4Sa5xqOEzmwIojqE5LQRh75afh4O
-	LFBehZDrzB69UEBDPqYn6eteYTw/yxdLJLDAHclGSELu8fHeL1w74Eh+zpdk+2VGMyogDhrwamu
-	mYqzFvaWWsCn9jiuZvCgTwTTaiMgsJRdqaLz6ULJdBzIDXY=
-X-Google-Smtp-Source: AGHT+IFswzw6+N+zZ2kxh7yJJJlrqoWUt0n2Uf2f6V8sgncBDbxssN3i5Ai2EOrG4h7VARV9s4HtZg==
-X-Received: by 2002:a05:6402:51cb:b0:5f3:f04b:5663 with SMTP id 4fb4d7f45d1cf-5fbe9f4eff8mr7078272a12.24.1746717475504;
-        Thu, 08 May 2025 08:17:55 -0700 (PDT)
-Received: from [192.168.1.248] ([87.254.1.131])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5fb9c00ddd8sm4706896a12.58.2025.05.08.08.17.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 08:17:54 -0700 (PDT)
-Message-ID: <a1f5fa12-1e0d-429c-bc15-79911c2571d1@gmail.com>
-Date: Thu, 8 May 2025 16:17:42 +0100
+	dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b="XRsVVrQ9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ofQGpSeiL2QtYDzQsswyMrtIcrLogmu+EpkCIS06xYdPsbsv8+eHl8s0YZphk1Onn39BQMwad/E5dV/uWT3cA4si59MV9UOmgM9pjWwTpBIXsAFPFzC1R84WyLR8SDB7v1PCy9yjLpHeJ9WTuw/qk+ZFmYc9HALQsnhgpNruAyyGOEkCDVxTrHuwQBWoG2kHGiXtNlxvMF5GWePiyphUIWWWiXe/fnj18SutdrgiuIUabFQMxSsxi0pJVy9UU7wP0cFNnZspL4S2gRxajbeZ5TIqwwBnRCgVgos5NrpDO5Nd76d1cw/j7e9mHFRjaClr0O1FuvZaj7XlWHrbESvcrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KqAuMBcOONxLOcGnHh3ncpaXCoWxljUZvJs4IeTERMA=;
+ b=UrKwX3jOcpgcgzBLxlDUxLzbrzjgJ/keCmEahGS+6FL3N1rcHvqR+MTaAOGYxSLJoDa8M9/bgdHxX8ScGr/VX+dmYhL4sV1ff/lQNbgu6I/k96oPo+H/R/JMKzE9SgtT5X12okcep4WrL+bn00/a0LxfaNB5U8K8Y561yjBatL2E3FJ6ihelzAdc9k1Ky1TFvLV8I0NHcG37PfcYALChRyNJ9zixjkg/oF6jMUYoR2bc+tMFreztENqEOlpPN93bX2O/8/FZZH/kwSETTRIKjRKLoIbNIY41yv0Aapjr+0BRr4XZ/xuiQ3k8rhPbg6ZdiawljMeaCbmAvqHqNeqkmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 13.93.42.39) smtp.rcpttodomain=kernel.org smtp.mailfrom=topic.nl; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=topic.nl;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=topic.nl; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KqAuMBcOONxLOcGnHh3ncpaXCoWxljUZvJs4IeTERMA=;
+ b=XRsVVrQ9FPOc3SpXOqFAPUCv9MGVeTWApZa8vvVoH5uprjUjIYzKoCgYUnpea/LVnfJ5PjbOlpnX20LPWuaNV97q4273b3H9OvwiPuTINJ9f43EZL+hGScSnvs0f8B7xuDRayuc1fTk08F/LIHOZaOFL5XS0suSP64qapa7jQIg52x5ytFGmuqmhF+/bJWDo3KozWlSVWHrgL/00qoWOldGuwq2Da0i8VSQszV+XNzfMlR0wpSmfNEuqDOsAvcRSleo8nVS7a3g4PfWZExWEr2K+NQJfeMMaxUJy9cER4mqU8hyUtnKZDzAkvvlm9rdUL36qxknC3AfYH5lilk4fYQ==
+Received: from DU6P191CA0051.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:53e::7) by
+ AM9PR04MB8438.eurprd04.prod.outlook.com (2603:10a6:20b:411::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Thu, 8 May
+ 2025 15:19:08 +0000
+Received: from DB5PEPF00014B91.eurprd02.prod.outlook.com
+ (2603:10a6:10:53e:cafe::c) by DU6P191CA0051.outlook.office365.com
+ (2603:10a6:10:53e::7) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.23 via Frontend Transport; Thu,
+ 8 May 2025 15:19:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 13.93.42.39)
+ smtp.mailfrom=topic.nl; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=topic.nl;
+Received-SPF: Pass (protection.outlook.com: domain of topic.nl designates
+ 13.93.42.39 as permitted sender) receiver=protection.outlook.com;
+ client-ip=13.93.42.39; helo=westeu12-emailsignatures-cloud.codetwo.com; pr=C
+Received: from westeu12-emailsignatures-cloud.codetwo.com (13.93.42.39) by
+ DB5PEPF00014B91.mail.protection.outlook.com (10.167.8.229) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.18 via Frontend Transport; Thu, 8 May 2025 15:19:07 +0000
+Received: from DUZPR83CU001.outbound.protection.outlook.com (40.93.64.11) by westeu12-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Thu, 08 May 2025 15:19:06 +0000
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=topic.nl;
+Received: from AS8PR04MB8644.eurprd04.prod.outlook.com (2603:10a6:20b:42b::12)
+ by PAXPR04MB8591.eurprd04.prod.outlook.com (2603:10a6:102:21a::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.34; Thu, 8 May
+ 2025 15:19:04 +0000
+Received: from AS8PR04MB8644.eurprd04.prod.outlook.com
+ ([fe80::e86d:f110:534e:480a]) by AS8PR04MB8644.eurprd04.prod.outlook.com
+ ([fe80::e86d:f110:534e:480a%6]) with mapi id 15.20.8722.021; Thu, 8 May 2025
+ 15:19:04 +0000
+Message-ID: <583dc73e-23d3-4c8a-a457-f2bf71190e6a@topic.nl>
+Date: Thu, 8 May 2025 17:19:03 +0200
+User-Agent: Mozilla Thunderbird
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: Re: [PATCH 2/2] dt-bindings: usb: ti,usb8041: Add binding for TI
+ USB8044 hub controller
+To: Conor Dooley <conor@kernel.org>
+CC: linux-usb@vger.kernel.org,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250507131143.2243079-1-mike.looijmans@topic.nl>
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.3e03400f-766d-4690-8f43-cbea2cac93d8@emailsignatures365.codetwo.com>
+ <20250507131143.2243079-2-mike.looijmans@topic.nl>
+ <20250508-prewashed-jawline-37f53c0f9429@spud>
+Content-Language: en-US, nl
+Organization: Topic
+In-Reply-To: <20250508-prewashed-jawline-37f53c0f9429@spud>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: AM9P195CA0016.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:20b:21f::21) To AS8PR04MB8644.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42b::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][V2][next] ASoC: rt712-sdca: remove redundant else path of
- if statement
-To: Mark Brown <broonie@kernel.org>, Oder Chiou <oder_chiou@realtek.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
- christophe.jaillet@wanadoo.fr
-References: <20250508084527.316380-1-colin.i.king@gmail.com>
- <174671514156.7345.16339489109303663127.b4-ty@kernel.org>
-Content-Language: en-US
-From: "Colin King (gmail)" <colin.i.king@gmail.com>
-Autocrypt: addr=colin.i.king@gmail.com; keydata=
- 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
- FVPMkxl2UyaayDvhrO9kNXvl1SKCpdzCMQ==
-In-Reply-To: <174671514156.7345.16339489109303663127.b4-ty@kernel.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------p3qcs9yBrdpXIG9VCPHs0kvH"
+X-MS-TrafficTypeDiagnostic:
+	AS8PR04MB8644:EE_|PAXPR04MB8591:EE_|DB5PEPF00014B91:EE_|AM9PR04MB8438:EE_
+X-MS-Office365-Filtering-Correlation-Id: dc446405-c76d-4535-d79e-08dd8e43ad62
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|52116014|376014|1800799024|366016|13003099007|38350700014;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?utf-8?B?bVI4eG1FaVdRV0VHWWsvRlBnTEY0bFhrRWNJeGE3cGlvL3BUS0hlSTd0SWZT?=
+ =?utf-8?B?dXhOTzJxNDc0WVQ3SGoxMzZ0VXUwOFRUNk5TUVBWbWlBMkE0LzJJUXJ2emVN?=
+ =?utf-8?B?aWp1YWtmMkMxM250RUtLeVYyWHM5MS8wMDlHREFOZjdaM3VhSTMxdC9tTDNK?=
+ =?utf-8?B?Skp2WjJLUmt2NlhuUi9rRGVUaW1jQUNZaENQLzhqZlNNa2tPWWVtdDg0L3lu?=
+ =?utf-8?B?akVOOUtoZzN0THVWelA5Z0VwQWJic0IxWWhUQVBDNnVYTENPMzI4bDhVaGpM?=
+ =?utf-8?B?Mk1XQStEMXlBMUJ0L0pFaHhqMFg4YlNhRXdPTnVSL0tRaW1PZjBvRitnTUlI?=
+ =?utf-8?B?K0Q0R3BadHdsSC81Um9xd1FJM0YzSHBPUmlldit6dHl2aWtWQUlqQjVTeEVz?=
+ =?utf-8?B?RHlyOUd5T2QvbFZlaUhmYnF6SURHSTVrKzJMTm0yYzdIREdrdmIvL21QU3lI?=
+ =?utf-8?B?L1NzamVUTEREYWhCRlBReTFlbDNjcFg4NkhUSTVyNmk2cm9xRzAxYUlyWWww?=
+ =?utf-8?B?dTJ0RGFISDBNc1hGNmo1YUdldXpxUUh5Y2pVNk5rV3E2aXRvaTBEcmNqN3Y5?=
+ =?utf-8?B?MUFpR3VZdUo0VEZrNW1OUTF2cVNUWkpUcURwTjJDblNUZVF3andmMHlCalA3?=
+ =?utf-8?B?M3M0U2RpNU1KZEYyOXBEMHhuUzF1Vm45OVJybzdaRDJ6eS8zN0RhR1Y3L2xn?=
+ =?utf-8?B?WXpWUy9rcko4MDBWdHk5bXlRdzQydXQ0UFE1M0tjSEZXbVZscU9SR2pIZWRZ?=
+ =?utf-8?B?N1lQSXYyVDhoS0kvYmZNMG1sUU0wOU9zMXg1NTk1RUp4WUhqTTYrUG9SblNR?=
+ =?utf-8?B?RFBZTDVtejZHSS9lODNIVlJNTVdCYitJb2FQTkRKYnY4c1MwTElpbm9KbUQr?=
+ =?utf-8?B?ZFdKS2I5SGpydXdPUFFaVTRkdWhBWTZ1RHYrMVJyUG9EWEl1ZStjNVNUZlhv?=
+ =?utf-8?B?TitjMUE0d1o5MWpRS2s2M1lOS0Uvd01Id1Z3Zmt5bHg4OWdSQldxek1vK2M0?=
+ =?utf-8?B?bnVLTFJKYk05Z1VRaVgvUldYV0F2Q0xlZHd3RDhXVHIzVlhNcE1wVXJlcVR1?=
+ =?utf-8?B?dzZ6Sk9mcWlGT2IzYzhyTlNubnBZV1gwYUdTRUZwcHFhL3h6bVZpWEVkWHdM?=
+ =?utf-8?B?dWRPSWkyUE5GeDBCbWhsbS9pQ2s2T1o1NVJ6YkZuVXpxZ3diK1pSZmdSRWgw?=
+ =?utf-8?B?NHlqYVVUcU1KT2lTQks2VExxc1NiWTdZTG9zcExhZFozSGN6YU40NXFXdzBX?=
+ =?utf-8?B?SU5VeU1ScmdlakFXcnU1d0k0RnpWSUhDcWg5dXhvTms5STdpQmI5UzJrQ3NK?=
+ =?utf-8?B?cnY0N1REejA5VExtVjhZajNLYytZZGowNG1GQUw3cDM1M3NhYkNrRkMrbXc0?=
+ =?utf-8?B?bXdwWUNhbmpXdFZiWXZkREVQZk4wTW9BcWVET1B3UnYzYmRFeHBZMmZ0Y1Ny?=
+ =?utf-8?B?RWR4aEcrMFo4eHJTZ1pJekpnTDJBUW1GZ1dkcHNZTExpd1ZYZVJ5OEZiN1Iw?=
+ =?utf-8?B?c2VGa0h2bURNbnZGakIxdTBOOW5lUkxwR1JnVS9kb0tDamdMKzF1RU9lcndl?=
+ =?utf-8?B?K2c3UWtCcUdKVWYxMEhnUHAvSkZYK1NRNlVEQ3BWaG81TnQyYW1wOFZHTWdl?=
+ =?utf-8?B?MHUrNittV2hDd0FrQXAvMFliSm9NYjRuNXByZFlRZXhmRVBKamNwY0NxbXFu?=
+ =?utf-8?B?Znd6MEdBaEdkYloyK1BKWmJKZUY1VHpqZEQxYllGSHJrc2NhNXdBTlUrVEgv?=
+ =?utf-8?B?N2cxcVNQdG5zTzBiUDNmYjhLM1lNbGdyem1tU2creU9KRTlmcEx0SkljUS9Y?=
+ =?utf-8?B?NjY5dFM1a0QyOWhKdGlYN2JYTzY5bHRxaXc5ZENVUkNERU1xWTRENkRaOE44?=
+ =?utf-8?B?WWNNbm9UZXNUc2dFSi80bENFc0JVUktwaXNUS01sa0FjODY2Snh4a1BaNnFH?=
+ =?utf-8?Q?lTkf3Z2wArE=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8644.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(13003099007)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8591
+X-CodeTwo-MessageID: d66d0419-d32f-48f6-bc70-e35c61c94c70.20250508151906@westeu12-emailsignatures-cloud.codetwo.com
+X-CodeTwoProcessed: true
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ DB5PEPF00014B91.eurprd02.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	74690a05-e3e4-4177-f473-08dd8e43ab5e
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|14060799003|82310400026|35042699022|36860700013|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?THVkMFZqaEhjVE9FNFVZeGFONjFMeG5RZklPRC9aY01IdjhzZjNtZTR1cEtS?=
+ =?utf-8?B?SmNyWGNXSXdVdTV5d3ZWQ29rMWRZZHE5aEVKM1RIMmZCMlZrM3ZTbUcySHpi?=
+ =?utf-8?B?WU1YQWtseTVGZWhYZy9nNEZQVDhOZlh3dkZPejJ4aU91TFYrYVkzRWQvWVE2?=
+ =?utf-8?B?S0c1QkU3elppQ2VoMmZWUXoxL0RWbktFcmpLNitLQkN2UXdsTHZXelBmc2hr?=
+ =?utf-8?B?SEh6V1N2ODczL1JpbmN1WUU2UXJMQXo0bHRRRklrbENrMWlrQS9zWmNSY3R6?=
+ =?utf-8?B?NFRJanVDYWhlMEV4NWl5cDJoYWtvaWdZKzAyY2xESWt2S3ZKbHR0STF6eWNQ?=
+ =?utf-8?B?cmFLOExKQXpPNU5ncmRQUGR3N3BuL3FrQzRpRFlscTNYcXNDRXJRUnJmYUk4?=
+ =?utf-8?B?Z2U1ZUZHYmRYcUVzWnEwRkxKajBlVGd1N1dwOTFkYjAyUS9lNjdlU2pSWUJs?=
+ =?utf-8?B?SXp6VCszc2R6VjVZSVdtTmdGcW5Wc0pyeUV6dDVPVWZudUxlemlRTXIyV09y?=
+ =?utf-8?B?bzF1NmpKd1I0elJYaU4wWkVGb3FselJCREpHTHk4T3U1b3JUQ1p2MlBJaHFN?=
+ =?utf-8?B?dnY0QllYRXd1M3BCK2crNzA5MWFmbytvMUN2bFdZWGcwNUZYRGNDNFRWeWZG?=
+ =?utf-8?B?Q0tQdFhiZThJbGRLU1FvdTljckI4NTNCMHdtblc2N0JzZ0k3T3BqOVc0aDN2?=
+ =?utf-8?B?MjNVR1AremMya3Y5L3NCOHhTNFltNzVsWjkzVS9LQ29PNnBxYlQ2elJaWlla?=
+ =?utf-8?B?TXZJc0hJYmtEMzhUNEIwRkhUT2RWOUloUEF0ZmZ2TVZBWEZxd3VEQXRNMVhR?=
+ =?utf-8?B?N1daeEIxUUUwM1RteDlDS2tBbjJYT0J4U2Q5UzBLNm9wYjlyY3F4a2s1VnNC?=
+ =?utf-8?B?eWxQL2dwU1kydndtNzZhMzJabFU3UUt0V0ZwUnNNOFhyck5Ob1E3cjdRV3BX?=
+ =?utf-8?B?TmNkdVkwbklTeUpHbGVGaE02ZWc2YU5ISjVQYVlTOE9TUVJJUU9TNUthQ2RH?=
+ =?utf-8?B?YVM1VTlVdzNaa2llejdRL05BeUhwT1FiSkEyMVhVYXN0bFBRU0hJT3p1NXRY?=
+ =?utf-8?B?Vzd1RERCVU9SWGVUQXk0U3NWRm1FNGtHelJJS1htWGFBR0Y3RDFCeTVnUjNr?=
+ =?utf-8?B?Vmp4dWtrTXBSR0hWc2FaY3dwUjBJYkVuZzcrQVRuNUdGSXkrMndzREwvNFJU?=
+ =?utf-8?B?UEVVTTlQV3pnQ1Q4c055ckZIM09KdW9yaFZldTY5NW8ybzJQUUgrWXk2L1ZI?=
+ =?utf-8?B?NXc0WnZYMTcwcDUvZDlhNWtMeHMyV3loSHFVTUxseGlJeStLWllSZ1JIcld3?=
+ =?utf-8?B?RWdlSEFrSjg2VHdiVXE5Z1hjdk0zYUFGZ002U3JGdEpBYkxNbnB5NStneWlM?=
+ =?utf-8?B?QTltY1F5ZUtpbUlMUytwN2dBdGtESWV0MXhWQXZpUHpmRE1rOGJmZmo3ZGgz?=
+ =?utf-8?B?dmhaNXFHMGpiREx5QTZCd25PQkN1U3lNU1JteFNqRkZNaDJ0LzJzYmZXRkZr?=
+ =?utf-8?B?QlcvUzBXM2g1TjBQVE4wajBTbStENEFFTTZwMU11S3JrQncwRCs2YWJMMzhq?=
+ =?utf-8?B?MEIvc2FJelI0dm5kMXVBMWxTR3h5V1poL0ZlVTlsTUxDRzZ0cnJETlVoOUhH?=
+ =?utf-8?B?cnVVRnlkdWVGZVpwRUpmemhacUxIa2FoeXlLR083QXdnbmZhMXVLb2VaUTRJ?=
+ =?utf-8?B?OU1nVy9mZ2psUWpZMTFIRGQvSjFMNTd0QitEMmZtd0ZvK2NZb1h6U1phVyt4?=
+ =?utf-8?B?UjZmVUowNWZOcDFFcEpoMmZqVlh0T0k3Si95N1VXV1l5T3NlOGNwZWdoaUov?=
+ =?utf-8?B?UForREtiVzlvdmFzZUMrbTlLbTFKekRObXZxUWpqSDhOZVdsRk93eWZBejZL?=
+ =?utf-8?B?R1hLaXlMNjF2NjlSK0hiK0FXcTlwYmEySjA0eWllUWNUR2tTYzFaOUNQOUlD?=
+ =?utf-8?B?cng1YTBkUXZHTjQ4bkFFRkhaVEd5NXBYTE5YMExxYmdqUEl2WGI4cWl1YTcx?=
+ =?utf-8?B?QmNBeHZiOGtBPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:13.93.42.39;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu12-emailsignatures-cloud.codetwo.com;PTR:westeu12-emailsignatures-cloud.codetwo.com;CAT:NONE;SFS:(13230040)(376014)(1800799024)(14060799003)(82310400026)(35042699022)(36860700013)(13003099007);DIR:OUT;SFP:1102;
+X-OriginatorOrg: topic.nl
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 15:19:07.7727
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc446405-c76d-4535-d79e-08dd8e43ad62
+X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[13.93.42.39];Helo=[westeu12-emailsignatures-cloud.codetwo.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB5PEPF00014B91.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8438
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------p3qcs9yBrdpXIG9VCPHs0kvH
-Content-Type: multipart/mixed; boundary="------------aczClFZrqNVMn7iINuLqinRW";
- protected-headers="v1"
-From: "Colin King (gmail)" <colin.i.king@gmail.com>
-To: Mark Brown <broonie@kernel.org>, Oder Chiou <oder_chiou@realtek.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
- christophe.jaillet@wanadoo.fr
-Message-ID: <a1f5fa12-1e0d-429c-bc15-79911c2571d1@gmail.com>
-Subject: Re: [PATCH][V2][next] ASoC: rt712-sdca: remove redundant else path of
- if statement
-References: <20250508084527.316380-1-colin.i.king@gmail.com>
- <174671514156.7345.16339489109303663127.b4-ty@kernel.org>
-In-Reply-To: <174671514156.7345.16339489109303663127.b4-ty@kernel.org>
+On 08-05-2025 16:58, Conor Dooley wrote:
+> On Wed, May 07, 2025 at 03:11:43PM +0200, Mike Looijmans wrote:
+>> The TI USB8044 is similar to the USB8041.
+> Similar how? Why's a fallback not suitable?
 
---------------aczClFZrqNVMn7iINuLqinRW
-Content-Type: multipart/mixed; boundary="------------FmEAujzWJSm0fR6Vlyq8wfAo"
+I don't quite understand what is meant by "fallback" here?
 
---------------FmEAujzWJSm0fR6Vlyq8wfAo
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+It's similar in that the USB8044 provides the same functionality and can=20
+use the same driver as the USB8041, all that is needed is to add the=20
+PID/VID values.
 
-SGkgTWFyaywNCg0KTG9va2luZyBhdCB5b3VyIHJlcG8gSSB0aGluayB5b3UgYXBwbGllZCB0
-aGUgVjEgb2YgdGhlIHBhdGNoIGFuZCBub3QgdGhlIA0KVjIuDQoNCkNvbGluDQoNCk9uIDA4
-LzA1LzIwMjUgMTU6MzksIE1hcmsgQnJvd24gd3JvdGU6DQo+IE9uIFRodSwgMDggTWF5IDIw
-MjUgMDk6NDU6MjcgKzAxMDAsIENvbGluIElhbiBLaW5nIHdyb3RlOg0KPj4gVGhlcmUgaXMg
-YW4gaWYvZWxzZSBjaGVjayB3aGVyZSB0aGUgZWxzZSBwYXJ0IGlzIGV4ZWN1dGVkIGlmDQo+
-PiBhZGNfdm9sX2ZsYWcgaXMgdHJ1ZSwgdGhpcyBlbHNlIHBhdGggY2hlY2tzIGlmIGFkY192
-b2xfZmxhZw0KPj4gaXMgdHJ1ZSAod2hpY2ggaXMgYSByZWR1bmRhbnQgc2Vjb25kIGNoZWNr
-KSBhbmQgdGhlIGlmIHBhdGggaXMNCj4+IGFsd2F5cyB0YWtlbi4gUmVtb3ZlIHRoZSByZWR1
-bmRhbnQgY2hlY2sgYW5kIHJlbW92ZSB0aGUgZWxzZQ0KPj4gcGF0aCBzaW5jZSB0aGF0IGNh
-biBuZXZlciBvY2N1ci4NCj4+DQo+Pg0KPj4gWy4uLl0NCj4gDQo+IEFwcGxpZWQgdG8NCj4g
-DQo+ICAgICBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dp
-dC9icm9vbmllL3NvdW5kLmdpdCBmb3ItbmV4dA0KPiANCj4gVGhhbmtzIQ0KPiANCj4gWzEv
-MV0gQVNvQzogcnQ3MTItc2RjYTogcmVtb3ZlIHJlZHVuZGFudCBlbHNlIHBhdGggb2YgaWYg
-c3RhdGVtZW50DQo+ICAgICAgICBjb21taXQ6IDgxNDdlNzViZDVmMDk3N2Y2ZDM4OWY2Y2Ri
-NGYxMDk1NmNjM2Q4OGYNCj4gDQo+IEFsbCBiZWluZyB3ZWxsIHRoaXMgbWVhbnMgdGhhdCBp
-dCB3aWxsIGJlIGludGVncmF0ZWQgaW50byB0aGUgbGludXgtbmV4dA0KPiB0cmVlICh1c3Vh
-bGx5IHNvbWV0aW1lIGluIHRoZSBuZXh0IDI0IGhvdXJzKSBhbmQgc2VudCB0byBMaW51cyBk
-dXJpbmcNCj4gdGhlIG5leHQgbWVyZ2Ugd2luZG93IChvciBzb29uZXIgaWYgaXQgaXMgYSBi
-dWcgZml4KSwgaG93ZXZlciBpZg0KPiBwcm9ibGVtcyBhcmUgZGlzY292ZXJlZCB0aGVuIHRo
-ZSBwYXRjaCBtYXkgYmUgZHJvcHBlZCBvciByZXZlcnRlZC4NCj4gDQo+IFlvdSBtYXkgZ2V0
-IGZ1cnRoZXIgZS1tYWlscyByZXN1bHRpbmcgZnJvbSBhdXRvbWF0ZWQgb3IgbWFudWFsIHRl
-c3RpbmcNCj4gYW5kIHJldmlldyBvZiB0aGUgdHJlZSwgcGxlYXNlIGVuZ2FnZSB3aXRoIHBl
-b3BsZSByZXBvcnRpbmcgcHJvYmxlbXMgYW5kDQo+IHNlbmQgZm9sbG93dXAgcGF0Y2hlcyBh
-ZGRyZXNzaW5nIGFueSBpc3N1ZXMgdGhhdCBhcmUgcmVwb3J0ZWQgaWYgbmVlZGVkLg0KPiAN
-Cj4gSWYgYW55IHVwZGF0ZXMgYXJlIHJlcXVpcmVkIG9yIHlvdSBhcmUgc3VibWl0dGluZyBm
-dXJ0aGVyIGNoYW5nZXMgdGhleQ0KPiBzaG91bGQgYmUgc2VudCBhcyBpbmNyZW1lbnRhbCB1
-cGRhdGVzIGFnYWluc3QgY3VycmVudCBnaXQsIGV4aXN0aW5nDQo+IHBhdGNoZXMgd2lsbCBu
-b3QgYmUgcmVwbGFjZWQuDQo+IA0KPiBQbGVhc2UgYWRkIGFueSByZWxldmFudCBsaXN0cyBh
-bmQgbWFpbnRhaW5lcnMgdG8gdGhlIENDcyB3aGVuIHJlcGx5aW5nDQo+IHRvIHRoaXMgbWFp
-bC4NCj4gDQo+IFRoYW5rcywNCj4gTWFyaw0KPiANCg0K
---------------FmEAujzWJSm0fR6Vlyq8wfAo
-Content-Type: application/pgp-keys; name="OpenPGP_0x68C287DFC6A80226.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x68C287DFC6A80226.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+M.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+>
+>> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+>> ---
+>>
+>>   Documentation/devicetree/bindings/usb/ti,usb8041.yaml | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/ti,usb8041.yaml b/Doc=
+umentation/devicetree/bindings/usb/ti,usb8041.yaml
+>> index c2e29bd61e11..fd6b35a40a5b 100644
+>> --- a/Documentation/devicetree/bindings/usb/ti,usb8041.yaml
+>> +++ b/Documentation/devicetree/bindings/usb/ti,usb8041.yaml
+>> @@ -4,7 +4,7 @@
+>>   $id: http://devicetree.org/schemas/usb/ti,usb8041.yaml#
+>>   $schema: http://devicetree.org/meta-schemas/core.yaml#
+>>  =20
+>> -title: TI USB8041 USB 3.0 hub controller
+>> +title: TI USB8041 and USB8044 USB 3.0 hub controllers
+>>  =20
+>>   maintainers:
+>>     - Alexander Stein <alexander.stein@ew.tq-group.com>
+>> @@ -17,6 +17,8 @@ properties:
+>>       enum:
+>>         - usb451,8140
+>>         - usb451,8142
+>> +      - usb451,8440
+>> +      - usb451,8442
+>>  =20
+>>     reg: true
+>>  =20
+>> --=20
+>> 2.34.1
+>>
+>>
+>> Met vriendelijke groet / kind regards,
+>>
+>> Mike Looijmans
+>> System Expert
+>>
+>>
+>> TOPIC Embedded Products B.V.
+>> Materiaalweg 4, 5681 RJ Best
+>> The Netherlands
+>>
+>> T: +31 (0) 499 33 69 69
+>> E: mike.looijmans@topic.nl
+>> W: www.topic.nl
+>>
+>> Please consider the environment before printing this e-mail
 
-xsFNBE6TJCgBEACo6nMNvy06zNKj5tiwDsXXS+LhT+LwtEsy9EnraKYXAf2xwazc
-ICSjX06efanlyhB0figzQO0n/tP7BcfMVNG7n1+DC71mSyRK1ZERcG1523ajvdZO
-xbBCTvTitYOy3bjs+LXKqeVMhK3mRvdTjjmVpWnWqJ1LL+Hn12ysDVVfkbtuIm2N
-oaSEC8Ae8LSSyCMecd22d9PnLR4UeFgrWEkQsqROq6ZDJT9pBLGe1ZS0pVGhkRyB
-P9GP65oPev39SmfAx9R92SYJygCy0pPvBMWKvEZS/7bpetPNx6l2xu9UvwoeEbpz
-UvH26PHO3DDAv0ynJugPCoxlGPVf3zcfGQxy3otydNTWkP6Wh3Q85m+AlifgKZud
-jZLrO6c+fAw/jFu1UMjNuyhgShtFU7NvEzL3RqzFf9O1qM2muj83IeFQ1FZ65QAi
-CdTa3npz1vHc7N4uEQBUxyXgXfCI+A5yDnjHwzU0Y3RYS52TA3nfa08yLGPLTf5w
-yAREkFYou20vh5vRvPASoXx6auVf1MuxokDShVhxLpryBnlKCobs4voxN54BUO7m
-zuERXN8kadsxGFzItAyfKYzEiJrpUB1yhm78AecDyiPlMjl99xXk0zs9lcKriaBy
-VUv/NsyJFQj/kmdxox3XHi9K29kopFszm1tFiDwCFr/xumbZcMY17Yi2bQARAQAB
-zSdDb2xpbiBJYW4gS2luZyA8Y29saW4uaS5raW5nQGdtYWlsLmNvbT7CwZEEEwEI
-ADsCGwMFCwkIBwMFFQoJCAsFFgIDAQACHgECF4AWIQRwYtqk8AG5xmFnAM9owoff
-xqgCJgUCY8GcawIZAQAKCRBowoffxqgCJtd/EACIWcaxfVt/MH4qqo5ELsjCFPVp
-+RhVpQDWy8v9Np2YbTcZ4AY2Zj4Pq/HrZ3F/Bh02v85C6mNv8BDTKev6Qcq3BYw0
-iqw6/xLNvRcSFHM81mQI9xtnAWIWfI9k5hpX19QooPIIP3GOMdMc1uRUGTxTgTFA
-AsAswRY3kMzo6k7arQnUs9zbiZ9SmS43qWOIxzGnvneekHHDAcomc/oho7kgj6rK
-p/f9qRrhForkgVQwdj6iBlW934yRXzeFVF3wr7Lk5GQNIEkJiNQPZs54ojBS/Kx6
-3UTLT1HgOp6UY9RPEi9wubmUR+J6YjLRZMr5PCcA86EYmRoysnnJ8Q/SlBVD8npp
-GVEcuvrbH3MBfhmwOPDc3RyLkEtKfSTB92k1hsmRkx9zkyuUzhcSnqQnpWGJD+xt
-KHvcHRT7Uxaa+SDwUDM36BjkyVcZQy8c+Is2jA55uwNgPpiA7n82pTeT+FRGd+7i
-CLQHaryu6FO6DNDv09RbPBjIiC/q814aeKJaSILP1ld9/PEBrLPdm+6lG6OKOt9D
-DV6jPmfR96FydjxcmI1cgZVgPomSxv2JB1erOggB8rmX4hhWYsVQl1AXZs3LdEpJ
-6clmCPspn/ufZxHslgR9/WR1EvPMQc8XtssF55p8ehRIcVSXDRcMFr3ZuqMTXcL6
-8YbDmv5OGS95O1Gs4c0iQ29saW4gS2luZyA8Y29saW4ua2luZ0B1YnVudHUuY29t
-PsLBdwQTAQgAIQUCTwq47wIbAwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgAAKCRBo
-woffxqgCJo1bD/4gPIQ0Muy5TGHqTQ/bSiQ9oWjS5rAQvsrsVwcm2Ka7Uo8LzG8e
-grZrYieJxn3Qc22b98TiT6/5+sMa3XxhxBZ9FvALve175NPOz+2pQsAV88tR5NWk
-5YSzhrpzi7+klkWEVAB71hKFZcT0qNlDSeg9NXfbXOyCVNPDJQJfrtOPEuutuRuU
-hrXziaRchqmlhmszKZGHWybmPWnDQEAJdRs2Twwsi68WgScqapqd1vq2+5vWqzUT
-JcoHrxVOnlBq0e0IlbrpkxnmxhfQ+tx/Sw9BP9RITgOEFh6tf7uwly6/aqNWMgFL
-WACArNMMkWyOsFj8ouSMjk4lglT96ksVeCUfKqvCYRhMMUuXxAe+q/lxsXC+6qok
-Jlcd25I5U+hZ52pz3A+0bDDgIDXKXn7VbKooJxTwN1x2g3nsOLffXn/sCsIoslO4
-6nbr0rfGpi1YqeXcTdU2Cqlj2riBy9xNgCiCrqrGfX7VCdzVwpQHyNxBzzGG6JOm
-9OJ2UlpgbbSh6/GJFReW+I62mzC5VaAoPgxmH38g0mA8MvRT7yVpLep331F3Inmq
-4nkpRxLd39dgj6ejjkfMhWVpSEmCnQ/Tw81z/ZCWExFp6+3Q933hGSvifTecKQlO
-x736wORwjjCYH/A3H7HK4/R9kKfL2xKzD+42ejmGqQjleTGUulue8JRtpM1AQ29s
-aW4gSWFuIEtpbmcgKEludGVsIENvbGluIElhbiBLaW5nIGtleSkgPGNvbGluLmtp
-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
-=3DQKm6
------END PGP PUBLIC KEY BLOCK-----
 
---------------FmEAujzWJSm0fR6Vlyq8wfAo--
+--=20
+Mike Looijmans
+System Expert
 
---------------aczClFZrqNVMn7iINuLqinRW--
+TOPIC Embedded Products B.V.
+Materiaalweg 4, 5681 RJ Best
+The Netherlands
 
---------------p3qcs9yBrdpXIG9VCPHs0kvH
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+T: +31 (0) 499 33 69 69
+E: mike.looijmans@topic.nl
+W: www.topic.nl
 
------BEGIN PGP SIGNATURE-----
 
-wsF5BAABCAAjFiEEcGLapPABucZhZwDPaMKH38aoAiYFAmgcyxcFAwAAAAAACgkQaMKH38aoAiZj
-ow/+KPDslF7trDshJONBvc1ZlLZnZcbwTHJ1zGWXhDe8LbpdsRtwWTMbtWlB4+gsDeJstUw9UQn3
-hMf7vZ8X3mMvvgDz7ddzGY3IvH+ZZOXyJuq+/6pKl296gzaQlH+fnz/a3iuq4M4hyhzkITmTJexr
-1OrjnSsNIr9wrhTYYLMtPBGNG3Iz4p4Q+q9P6oSuiJSLwmYg5zJsimdMAT7DBFNClC9AYCWgxhHL
-kuM8UeURALKMS6AwNNGXq+YfCOh1Q2RZ5AJvQaxdE6/5cLquXhetMBQWCXo26+EDBLmgtQFeLM/z
-cEwM1BCgLdZdlbK29oWxlsQYgCosXn3A3II5FIoKQjF0uPrgKM0EUlqL3yVPui3XmuUkBTWUCPvx
-kPdehbNosH7vPZojAGHJ7vjM2DP0QFmaCxtuyHZZpbTQIL5H7uRYh6JmNzeOOFc/K7YmNxnus3AH
-SuKDxW7UpNvrdMxKT51W0GhfoOT8vCmwCULbKOJRSUn4JBVxRQIK4MW8BqGDfcOZ1WUxTzMTiaqq
-5CzN/GAkXim7goif6FbznyOvTmB4LE/SPWghxXVhguX9QRait0NtMKwtRLPg0H+CA9dH7qMXpOxt
-IeWssJ/tqaxe9RtTNYMLlG5MIo/SvxqdUq4Wjf942eEhotqZtUMMwVRkFSxBUQRVa4770nSIUBT4
-FRo=
-=1Hn8
------END PGP SIGNATURE-----
 
---------------p3qcs9yBrdpXIG9VCPHs0kvH--
