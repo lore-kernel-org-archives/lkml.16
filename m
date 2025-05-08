@@ -1,317 +1,103 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A139B28A1C9
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 19:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC9F1C3F0C
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 19:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746732223; cv=none; b=nWMCy/rMqu/Ep5PO/G89uO0p7zdmDmVjerq0GSG3q/0yMIIZODTXCBBozMRzwJgVmp8k3dcKTwsriD3yonqSEApaUE6yC26Ido3A+wJLwRxOztyByI70YNKQknGfAXRcmEPoG4cIlL5o+xJsw/vJ7fuB04GTt7eNhJZ4GoFoSDo=
+	t=1746732290; cv=none; b=IntoHvMvKcoyxNgQzr8Uxomb7wutI8jMflnuGE2TMvIDvdTwDZmjDd164PX3ZD9MjYpEGiplmRs5cPYf1Jt9tAYbxbFzNJimVMw3YO46MMm9FDFFkWHAxVxoB/oiAdl8IjCd7H3sEtU493ksh1/Z4XFxflK9/O/4UcfulHFfi44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746732223; c=relaxed/simple;
-	bh=HeIkrf/DTlLp0c59YdqAg+bDkVLnbRSgjhYsmzND7tI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C55HZQmeqsJ/u8xTJxy0MunIvo87G/BDBAxSGFeJ+sUm+24RRQ9dWn49gzZ3K32f19eaZdCr5hNI4twgD/nqk352WoFT05S3QoUxguWHcTdy3d/O7FaXdYhBE/FQpCFuGZb/lDoggR3ClQ42p5ou5JwV9KRvbATcYINNDe3KoCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=Tyxz/fox; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1746732290; c=relaxed/simple;
+	bh=kkV+F1ByaoKZGM9d+pbw2Ilzb3owLbh+EnVo+YHDRK8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I+6n/4oQz6Yzie7hiyItgs/1lWA/yEQOc3klYXmCMbAo9PJ0Ke9rg7VoITm4sQiedn26cSq/iqwHnwX2qhIkG4vsh54ZCzVZ9RyWPzMpSIwamyAm18PaAZZG5bK/N7LEfPJGzjLncTR2EM+HnhUCyb0biU1OaOxnFQqKFRFfu9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ei2lNr0+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="Tyxz/fox"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-708d90aa8f9so13268277b3.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 12:23:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1746732219; x=1747337019; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yRhUkqEtn8po9SOqhjXsORJmLCNwN2s1m7eTeLsarYo=;
-        b=Tyxz/foxfwZ4j6csDDPw8SfNzdqM6hx0uRJrzTvmrqBu1gyw+UtQm+RqkDQ2t2y9kZ
-         RXc8vdyGNE2T96ys79BRYJEqAoMadivU5a0hb7k9cHf/V0RWsqrlZbW4DwSssaxpDKKC
-         dCgT9orpLEFjhDDlzBRQNtHlRbdZZoYZ/Dr2WuOjJkfVrwssJ9FqBMGBMiV0DbL3gl0V
-         IvT6Ryd86G7aSljGIQ7LUlGcvQPq/lXWSEFv2EBs462pHpf31Wc/wZf1dVv1xutRr1QG
-         aanSsvP2Z0iOlx8vjJSwZC/75Y/YzYVUeDnbd65E9wH8TtjQCQGqVjDvcBe3g4LMJo64
-         JPdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746732219; x=1747337019;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yRhUkqEtn8po9SOqhjXsORJmLCNwN2s1m7eTeLsarYo=;
-        b=lrviU88q9+5wMSWbbounw8wcwCWQJieuzLThbN1TIU/h/itAJgzt4xWgaOrWqIFH4f
-         XtNx5++Gvl+mLAzT9OdKYEke/lwh0wjfhoajXjkbViKlH4j+f1DPmYXdKTvMdB0tT+gZ
-         0Zxck9mOYsaR3WMXK2regGwLIpMhcaXg8JC1lqYPiVW7vijAnckHBSHkcvZoKXDgzDEy
-         gDp54sVHgD5QR0tOUyYSdAGUpinmHeh1bbHueWdOvWASVxnWntgVW6VCOAhfgiEfp0R+
-         2APHIil0zkLcP0BJDBS2bL1Kfbq9TEJ9c+JMyYby0hSqF2c+g1IBw3lmb0htnYZILLVx
-         PPeg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCmYd4RkZA52qB+hn0PP7vKinsHgudywU0CRhcIxuJU8VsnQDv/lbtHhW/fGc35+vFhtL6ZVe4PomSK8Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwBNBz2YmtR5x4RP3AQUiYD/80rWN9ukzKBZNOQzCq2WAzb+Z7
-	u2B3vcdYSKf3mVI7y1amjPeDC8rdXHjUcvXR28l4lq6UcQ+7sPdgnrKWRN94L3RUTiRJvs33aZN
-	G3dgRr0+AaTfJxqSgH6Yjxu2pvNrrNdtaFSuZ
-X-Gm-Gg: ASbGncvctGATNg7avDmP2QjQpvUP6IVErRZ325b023dkLJrNCgfYD5C0hSYla62B724
-	SKQ+NH1jG3tFi+y/oNmdNpUMJ8OSGDH0llBby+MiqRzbeayQYLL45ERJpXufJjluY/8/HKwzvci
-	f24LrGrXh0nPCaKe6v7XgDKN96XZ2lBKPI
-X-Google-Smtp-Source: AGHT+IED/fFzObiqlk4Rt9s6INYP5yEdYEWukKq9oUrT2cbOt6YSVHmtA8/2kHDXPkHkmR//EUTs9/SW8Ppo8a3d4F0=
-X-Received: by 2002:a05:690c:201f:b0:702:5134:aaac with SMTP id
- 00721157ae682-70a3f9e40bfmr7935957b3.2.1746732219206; Thu, 08 May 2025
- 12:23:39 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ei2lNr0+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746732284;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7Jk9BcAtjAQU7ACRspfJrIgdim0aAe9DgFo93JV5TtM=;
+	b=Ei2lNr0+sDYaXhgh6RKKu8md2uMBxK1rF+3VRIG+z0fBz1XKq2ADb0xrkbay7frJyb35hr
+	Bh3FE2nFZTu3+EETo1oj1P2Tx5yeuuusd+Ok/dHb5Nx8XY6MUMvL3hhcg/a63xHO5gbXcl
+	M0WvvaUSfBPpwPEyID2gvTQWCIXNiSs=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-96-7h6oFesUMZyGiv2dv63_-A-1; Thu,
+ 08 May 2025 15:24:39 -0400
+X-MC-Unique: 7h6oFesUMZyGiv2dv63_-A-1
+X-Mimecast-MFC-AGG-ID: 7h6oFesUMZyGiv2dv63_-A_1746732268
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2D0A21955DB9;
+	Thu,  8 May 2025 19:24:28 +0000 (UTC)
+Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.80.141])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 23D901955F24;
+	Thu,  8 May 2025 19:24:25 +0000 (UTC)
+From: Waiman Long <longman@redhat.com>
+To: Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xi Wang <xii@google.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH v2] cgroup/cpuset: Extend kthread_is_per_cpu() check to all PF_NO_SETAFFINITY tasks
+Date: Thu,  8 May 2025 15:24:13 -0400
+Message-ID: <20250508192413.615512-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
- <20250502210034.284051-1-kpsingh@kernel.org> <87o6w7ge3o.fsf@microsoft.com>
- <CACYkzJ7Ur4kFaGZTDvcFJpn0ZwJ9V+=3ZefUURtkrQGfa68zLg@mail.gmail.com>
- <5dbc2a55a655f57a30be3ff7c6faa1d272e9b579.camel@HansenPartnership.com>
- <CAHC9VhSPLsi+GBtjJsQ8LUqPQW4aHtOL6gOqr9jfpR0i1izVZA@mail.gmail.com> <CAADnVQ+C2KNR1ryRtBGOZTNk961pF+30FnU9n3dt3QjaQu_N6Q@mail.gmail.com>
-In-Reply-To: <CAADnVQ+C2KNR1ryRtBGOZTNk961pF+30FnU9n3dt3QjaQu_N6Q@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Thu, 8 May 2025 15:23:26 -0400
-X-Gm-Features: AX0GCFuAJrhkB_YivBhm4MSlZcxwdgMv-eoNvShg9MjoBr-qIW4iuPknLt97V1o
-Message-ID: <CAHC9VhRjKV4AbSgqb4J_-xhkWAp_VAcKDfLJ4GwhBNPOr+cvpg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, KP Singh <kpsingh@kernel.org>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	Blaise Boscaccy <bboscaccy@linux.microsoft.com>, bpf <bpf@vger.kernel.org>, code@tyhicks.com, 
-	Jonathan Corbet <corbet@lwn.net>, "David S. Miller" <davem@davemloft.net>, 
-	David Howells <dhowells@redhat.com>, =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	James Morris <jmorris@namei.org>, Jan Stancek <jstancek@redhat.com>, 
-	Justin Stitt <justinstitt@google.com>, keyrings@vger.kernel.org, 
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>, 
-	clang-built-linux <llvm@lists.linux.dev>, Masahiro Yamada <masahiroy@kernel.org>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, Neal Gompa <neal@gompa.dev>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Nicolas Schier <nicolas@fjasle.eu>, nkapron@google.com, 
-	Roberto Sassu <roberto.sassu@huawei.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
-	Shuah Khan <shuah@kernel.org>, Matteo Croce <teknoraver@meta.com>, 
-	Cong Wang <xiyou.wangcong@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Thu, May 8, 2025 at 1:45=E2=80=AFPM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
-> On Wed, May 7, 2025 at 4:24=E2=80=AFPM Paul Moore <paul@paul-moore.com> w=
-rote:
-> > On Wed, May 7, 2025 at 1:48=E2=80=AFPM James Bottomley
-> > <James.Bottomley@hansenpartnership.com> wrote:
-> > >
-> > > I'm with Paul on this: if you could share your design ideas more full=
-y
-> > > than you have above that would help make this debate way more
-> > > technical.
-> >
-> > I think it would also help some of us, at the very least me, put your
-> > objections into context.  I believe the more durable solutions that
-> > end up in Linus' tree are combinations of designs created out of
-> > compromise, and right now we are missing the context and detail of
-> > your ideal solution to be able to do that compromise and get to a
-> > design and implementation we can all begrudgingly accept.  In the
-> > absence of a detailed alternate design, and considering that BPF
-> > signature validation efforts have sputtered along for years without
-> > any real success, we'll continue to push forward on-list with
-> > refinements to the current proposal in an effort to drive this to some
-> > form of resolution.
->
-> It sounds like you're asking for Linus's opinion.
+Commit ec5fbdfb99d1 ("cgroup/cpuset: Enable update_tasks_cpumask()
+on top_cpuset") enabled us to pull CPUs dedicated to child partitions
+from tasks in top_cpuset by ignoring per cpu kthreads. However, there
+can be other kthreads that are not per cpu but have PF_NO_SETAFFINITY
+flag set to indicate that we shouldn't mess with their CPU affinity.
+For other kthreads, their affinity will be changed to skip CPUs dedicated
+to child partitions whether it is an isolating or a scheduling one.
 
-At this point no, although of course he is welcome to comment if he
-likes.  What we've been asking for is some detail on your preferred
-solution; all we've seen on the various threads thus far has been a
-small number of short sentences that leave far too much ambiguity
-around important parts of the design.  Without any clear direction on
-your ideal solution, Blaise has been continuing forward with proposals
-that we believe solve at least one use case and can be extended in the
-future to support others.
+As all the per cpu kthreads have PF_NO_SETAFFINITY set, the
+PF_NO_SETAFFINITY tasks are essentially a superset of per cpu kthreads.
+Fix this issue by dropping the kthread_is_per_cpu() check and checking
+the PF_NO_SETAFFINITY flag instead.
 
-Blaise started this most recent effort by attempting to address the
-concerns brought up in previous efforts, you and others rejected this
-first attempt and directed Blaise towards a light skeleton and LSM
-based approach, which is where he is at with Hornet.  Once again, you
-reject this approach with minimal guidance on what would be
-acceptable, and our response is to ask for clarification on your
-preferred design.  We're not asking for a full working solution,
-simply a couple of paragraphs outlining the design with enough detail
-to put forward a working solution that isn't immediately NACK'd.
-We've made this request multiple times in the past, most recently this
-past weekend, where KP replied that he would be "happy" to share
-designs/code.  Unfortunately, since then all we've received from
-either you or KP since then has been effectively just a list of your
-objections on repeat; surely typing out a couple of paragraphs
-outlining a design would have been quicker, easier, and more
-constructive then your latest reply?
+Fixes: ec5fbdfb99d1 ("cgroup/cpuset: Enable update_tasks_cpumask() on top_cpuset")
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ kernel/cgroup/cpuset.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> This 'hornet' LSM attempts to implement signed bpf programs by
-> hacking into bpf internals:
-> https://lore.kernel.org/bpf/20250502184421.1424368-2-bboscaccy@linux.micr=
-osoft.com/
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index d0143b3dce47..967603300ee3 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -1130,9 +1130,11 @@ void cpuset_update_tasks_cpumask(struct cpuset *cs, struct cpumask *new_cpus)
+ 
+ 		if (top_cs) {
+ 			/*
+-			 * Percpu kthreads in top_cpuset are ignored
++			 * PF_NO_SETAFFINITY tasks are ignored.
++			 * All per cpu kthreads should have PF_NO_SETAFFINITY
++			 * flag set, see kthread_set_per_cpu().
+ 			 */
+-			if (kthread_is_per_cpu(task))
++			if (task->flags & PF_NO_SETAFFINITY)
+ 				continue;
+ 			cpumask_andnot(new_cpus, possible_mask, subpartitions_cpus);
+ 		} else {
+-- 
+2.49.0
 
-I guess there are always two sides to every story, but "hacking into
-bpf internals" is not how I would characterize the Hornet approach.
-Hornet reads the light skeleton BPF loader and the associated BPF maps
-(the original BPF program) passed in from userspace into a buffer in
-order to verify a signature across the two BPF programs (loader +
-original).
-
-Hornet does this to verify the provenance and load time integrity of
-BPF programs, two very basic security goals that people have wanted
-for BPF programs for years, Blaise is simply the most recent person to
-try and get something into Linus' tree.
-
-> It got 3 Nacks from bpf maintainers.
-> Let me recap our objections:
->
-> 1. Your definition of attack surface says that root is untrusted.
-> Yet this "hornet" LSM allowlists systemd as trusted.  Allegedly,
-> it's an intermediate solution ...
-
-The Hornet proposal is not the first thing to implement a transition
-mechanism, but if that is really the blocker you want to go with I'm
-sure Blaise would be happy to back out the change.  My understanding
-is that it is really about reducing warnings from systemd and nothing
-more.
-
-> 2. you propose to mangle every binary in the system that needs to load
-> bpf programs with an extra "signature" at the end of the binary that
-> breaks ELF format.  I already explained earlier that such an approach
-> was a border line acceptable solution for kernel modules, but
-> certainly not ok as a general approach for all binaries.
-
-Let's just ignore the "borderline" comment on kernel module signing;
-the fact is that kernel module signing has been an accepted part of
-the upstream Linux kernel for years now, which is part of why Blaise
-used that as a starting point for the Hornet approach: keep things
-simple and build on something that works.  This is especially
-important as we are still largely guessing about the details of your
-ideal solution.
-
-Based on some of the vague feedback from you and KP, this week Blaise
-has been experimenting with passing a signature via the bpf_attr
-struct, but until you provide more detail on-list it is still a
-guessing game as to what you might accept.  The kmod inspired
-signature-on-ELF approach has the advantage of being much more
-self-contained, which is the reason we saw it as a good starting point
-that could be augmented with additional schemes in the future if/when
-needed.
-
-> 3. To read this mangled ELF you do:
-> file =3D get_task_exe_file(current);
-> buf_sz =3D kernel_read_file(file, 0, &buf, INT_MAX, &sz, READING_EBPF);
-> A malicious user can give you a multi gigabyte file and your LSM will
-> happily read it into the kernel memory. It's an obvious DoS vector.
-
-The LSM hook used by Hornet happens well after all of the BPF based
-capability and access control checks.  If anything, the ability of a
-malicious user to tamper with the BPF program being loaded helps
-highlight the importance of validating signatures on BPF programs.  In
-the worst case, if the kernel can't allocate a buffer the
-kernel_read_file() will fail and an error will be returned to
-userspace.
-
-> 4. I said multiple times it's not ok to do
-> bpf_map->ops->map_lookup_elem() outside of the bpf subsystem.
-> You did 'git grep' and argued that something in the net/ directory
-> is doing that.  Well,
-> ./scripts/get_maintainer.pl `git grep -l -- '->map_lookup_elem' net/`
-> is your answer.  net/core/filter.c is a part of the bpf subsystem.
-> The bpf originated in networking.
-
-Yet BPF was extracted out as a standalone mechanism that has grown
-well beyond its initial use as a socket data filter.  From my
-perspective either BPF is a standalone entity and the
-map_lookup_elem() API is necessary for at least one current user, the
-socket fitler, or map_lookup_elem() isn't an API in which case BPF
-isn't the general purpose tool that everyone claims.
-
-This touches on another issue that I've brought up before in this
-thread which is important.  The LSM subsystem doesn't care about how
-the LSM is implemented; C, BPF, and Rust (work is obviously still very
-early on the Rust side) are all valid implementation languages, and we
-make it clear that if you can do something in one language, you should
-be able to do it another.  While I don't believe you or KP have
-explicitly stated that your objection to the Hornet approach is
-largely due to it being written in C, Daniel did make a comment that
-Hornet should be written as a BPF LSM.  From the perspective of the
-LSM, something is either "legal" to do in a LSM, or it isn't; we don't
-qualify that determination based on the source language of the
-implementation.
-
-> Also, do build 'hornet' LSM with LOCKDEP and see how many bpf map
-> lifetime rules you violated with that map_lookup_elem() call.
-
-I'm sure Blaise will look into that.  I'm sure that if you, KP,
-Daniel, or anyone else in BPF land wanted to provide an alternate API
-for map access I'm sure Blaise would be happy to rework his code.  As
-we've stated multiple times, don't just say "no" say "no" with a good
-description about how to move forward.
-
-> 5. I also explained that map->frozen =3D=3D true doesn't guarantee that
-> the map is immutable.  It only freezes the map from user space writes.
-
-For this initial use case, we believe that is sufficient and is inline
-with kernel module loading, which is a good analogy.  The most
-critical part as far as we are concerned is that userspace can not
-tamper with the BPF map once the signature has been verified.  Yes,
-another in-kernel component might be able to tamper with the BPF map,
-but in-kernel components can do a number of bad things; this is yet
-one more reason why validating code that executes in kernel context is
-important.
-
-> 6. Though bpf instructions have standardized format LSMs shouldn't not
-> be in the business of parsing them. New instructions are being added.
-> We don't need a headache that an LSM will start crashing/misbehaving
-> when a new instruction is added or extended.
-> bpf instruction parsing belongs in the bpf subsystem.
-
-The current Hornet implementation ignores things it doesn't know
-about, sticking to parts of the BPF instruction set that is currently
-defined.  Who knows what Hornet might look like in another few
-revisions, or if it is replaced with another approach, but if it
-becomes part of Linus' tree it should be trivial to update it along
-with BPF.  There is precedence for this with other LSMs and other
-kernel subsystems.
-
-> 7. You do: copy_from_bpfptr_offset(&map_fd, ...) then proceed with
-> content extraction, but this is a user controlled address. It's an
-> obvious TOCTOU bug. The user can replace that map_fd after your LSM
-> read it and before bpf verifier reads it. So the signature checking
-> from LSM is fundamentally broken. I already explained that the
-> signature check has to be done within a bpf subsystem.
-
-As mentioned *many* times before, please provide more information on
-this.  To start, where *exactly* in the BPF subsystem would you accept
-a signature check.
-
-> In the last kernel release we added 'bool kernel' parameter to
-> security_bpf_prog_load() LSM hook assuming that you're going to work
-> with us on actual solution for signed bpf programs, but so far you
-> ignored our feedback and accused us of artificially delaying a
-> solution to signed programs, though we told you that the "light
-> skeleton" (that you incorrectly attempt to use here) was designed
-> specifically as a building block towards signed bpf programs:
->
-> See the cover letter from 2021:
-> https://lore.kernel.org/bpf/20210514003623.28033-1-alexei.starovoitov@gma=
-il.com/
-
-...
-
-> When Blaise volunteered to work on signed progs we pointed him to
-> light skeleton assuming that you're going to work with us to finish
-> this complex task.
-
-In order to work effectively we need a more detailed explanation of
-what you want to see with respect to BPF signing.  Thus far we've only
-seen rejections with very hand-wavy explanations on how to proceed.
-KP indicated almost a week ago that he is happy to share a couple of
-paragraphs on a preferred BPF signing approach, but we're still left
-waiting with the only feedback being a repeat of previous rejections
-and more vitrol.
-
---=20
-paul-moore.com
