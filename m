@@ -1,263 +1,160 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC5122422D
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE9F22422D;
+	Thu,  8 May 2025 16:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746721098; cv=none; b=fq7OtND+6TPLXwKRe2bH3H53qxyN8glWFh7jGLun6AiCcs3BEzzGe3hveU761/wfP/IeX7Z1XvDtlg0cJnHfZ8/CGwCNpCjs5lnlb6hZ6oTAkM9lTgcr90RXngLiYToIPHrYeDW00YloBS8vmkeWpJ39R3KR846ApAth/Oap/hI=
+	t=1746721198; cv=none; b=XKdxS3NR4WwJ2mSz1/RvZNASPdr8aY8vGRDQQqX6tZewuPodSVAD3a2J31I1RJropo9IXVqEhPZ2QN5Pnan+0GirLFmIO1woOLjnfZRWrDYy5o4B7pFxzGbrA6f26Nup/MRIv2/H+g7kQqqhfsOXUJaREI+egkXlRBnhCpVj8kA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746721098; c=relaxed/simple;
-	bh=95iAkpqgWUsCaFg/nPZXVXeQYGaaeXUojdfwkMj6oF4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aeqbvmIUHNh9At+TB6RNtuZii9Hf7SyVbC1ZjFICBUcVT0V1v8Pl1AIqEP64PBFLqOvdrYSnOv/GjRRi7RVLIHHHKqVgCCuq5NsUieYd0Xe6PbnsYPyvHhA/G8YsCnexgHU38Us/28C40huOv0f+rQ9rtEWJEh1RlMQDzHncPSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=KfMsQ+kf; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746721198; c=relaxed/simple;
+	bh=e3pyHsNfoGdzYxZZUg3CeC5Pgg3Gylc5xxF193wq9zk=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=Br7Fsc4rBIqnn7enU5DvdVaxmVAnQN/Vo7cANLOoDxa33iHiHcFHPEz6O//uUXcCWrhlsK0p5PqbD5tasJQ8HzfAk179WpaG4/uUrY+DRZY++B+oLIeuq1CT43MpJhSRRj+dF6UufabZQs/rS9cbmFfFceg3QRNj0BDaU6BDNAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=b7qRc/1s; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="KfMsQ+kf"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-7306482f958so852924a34.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 09:18:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746721095; x=1747325895; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ecUE+2xeVl8wS4a2+a1A9Z46OEauXZuEihSjbq0kVG8=;
-        b=KfMsQ+kfAZUiVh7sVgsHHXm3VraufmvpZoTJ6t80jeXj/2g57ysK7hxQ4dpny1o7bK
-         V2kVK0cyWqmGhWUYzdoKVnyNrQcwZV1Zh3bC8dDnwczBvFS16JhghpP9Q2pILA7KkO5Z
-         v3TtlpRg5TboVdcxbTehveaNcGhk5zcauO8a9yJEQvoK+SV2fypgcfnRJO284sg3VjWx
-         UbUHtUGSu7s8SO3TGk6EYNc1jjcdl/It6oz+2MFP84kxz0ESnAj4QbMqkuI7wkV1ACE0
-         7fLJN0C3n4MfQqvpRYYxu0irCSBTDB1zpsRKDtf57GbgLsmSNj28pqEkZI9q3CI8yUro
-         mcLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746721095; x=1747325895;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ecUE+2xeVl8wS4a2+a1A9Z46OEauXZuEihSjbq0kVG8=;
-        b=SEsIQcNskjh1hIm7OPxktH+Vaf+T0Zad9I4dvUvHGIFbS1kn6V9FG3lPzEkijNAMTf
-         myduLzBw/YMOQ9NwlkFbjuM+JYtLUCOvthXDL8uRRryDpqoCVAr2+9wVgnavVlYhB3K9
-         r6jMvrJ8084SXqu1J0banfiN4rUcjrdcfpkjJXCGMaJqbm4q7b2XX3Nw6q+l/jsSGRqc
-         ffB0AdyHYcfxGKM9TfRkW/pj4rrMHcpd/3GQEAV/z/ggZGBE9YbeljLZg6GC5cLBrn/o
-         Kg3RTB1TkWpanayGssHUndX3UDadMOfb2XbszhgOfdp2trsLGbKQLJf7HWDHMfBqivig
-         etQw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1vzFOZgYSsXXKEpgzG43P72ggUddKrhQQTzhLE/9f9eA8fI+saNcAeetplaINB3srFnkDGAL8F2AiLGI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRuT4MuEpEp5oElQLAYJ6HJJbMLTrqjjgCH8cIpnoDy/7lABbq
-	dkVxK2lHi6ScTqCK5ruunVmjSFPMVPUKQcsgyQcbOkMFxWV9j93yi8B23Gq4smst4eZjKFRnDo6
-	2
-X-Gm-Gg: ASbGncsP/ukoXXSflCn54vY0wOyApfNlJ/WIPzgyQ/wAwM/OY+K5M92HAjqDj4gJWLl
-	PVfLBmmvW9ql8hRjrK5N3bUX1lUuDIS2OrEA19sdLelRmlrwyk7qIRPVn2hMmgf1nFOdv6uCwXe
-	N7pKqa+qPRjJHZkUz6g4YMuZ2aYONazWLM41tAiUruAXy7UzHtfvnLTJM9CZXcyMyCOEmwKNgrG
-	bZ2fXQwLy0AaE+N6wEsE9AIlHJVPeGWiNXkSaCz3sEKDOZqIHiIabu7VVTH1+WPnqMIMRMkGRjU
-	g039UCadL3UW8QvN39hFmNJvjoqkInXDHYq5EAdbWvYKZHBVajeD4dCs0wRZk2VLzBRug9439W7
-	W/VppKXt68hXMufYNkw==
-X-Google-Smtp-Source: AGHT+IH3ASarxNzR88hdBrG0ZTo0oeA2aFLhbbOkAvhlKMZfmu4PwM2QgUPG24NVoBdVqvNbrOFdoQ==
-X-Received: by 2002:a05:6830:7195:b0:72b:a5e0:f76 with SMTP id 46e09a7af769-732269bbf1dmr241491a34.4.1746721094883;
-        Thu, 08 May 2025 09:18:14 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e? ([2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-732264d78fbsm83047a34.32.2025.05.08.09.18.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 09:18:14 -0700 (PDT)
-Message-ID: <4c4c70d9-88d8-433d-a8d0-804b3c718a2b@baylibre.com>
-Date: Thu, 8 May 2025 11:18:13 -0500
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="b7qRc/1s"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5488lqDO019416;
+	Thu, 8 May 2025 16:19:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=3y7f/rfzEJvyCsfA3x73B/
+	n8u+CtoUu2v5pm9kfs7T4=; b=b7qRc/1slRJc5gGHo4bR9FbpNA9ojO8YWdwmHK
+	SB9pSO+NHgUOLuoUZdk65sAAMcdYbLyXzNTxw3rs6fEFXm+txwOzq3DpMX2m+HE4
+	wT5JWsD9P109dxD9LACyRpelmN/Bq8r/6TwdsJzQqMNQr/tV2ToPwuwwiZyW4ALr
+	F1pYi5i3fYZsh2p8W7Fa4HOe7yVfeuvSAoAJ2jNWCYCtq26uZjLhORc987LNjIdR
+	HGNBYZTRHwoBPk5LkIhqj9eKQyltEb++isLQKofSqfvFFq/5iSOyEccztWCxTTlP
+	ZHtKW/LmyEJFt/7YdnbrKmaNBP9Nxn1+YIDBLxEYeM0af2oQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gsdj1ahq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 16:19:40 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 548GJe0Z026651
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 8 May 2025 16:19:40 GMT
+Received: from [10.213.111.143] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
+ 09:19:33 -0700
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Subject: [PATCH v3 0/3] Support for Adreno 623 GPU
+Date: Thu, 8 May 2025 21:49:18 +0530
+Message-ID: <20250508-a623-gpu-support-v3-0-3cb31799d44e@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] iio: magnetometer: qmc5883l: add extended sysfs
- attributes and configuration options
-To: Brajesh Patil <brajeshpatil11@gmail.com>, jic23@kernel.org,
- lars@metafoo.de
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- marcelo.schmitt1@gmail.com
-References: <20250508120900.114348-1-brajeshpatil11@gmail.com>
- <20250508120900.114348-2-brajeshpatil11@gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250508120900.114348-2-brajeshpatil11@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIbZHGgC/3XPy2rDMBAF0F8xWneCHpGwTCj9j5KFNJZsLfyoZ
+ IuE4H+vqmxSaJd34J7LPEhyMbhEuuZBosshhWUuQbw1BEczDw5CXzLhlEvKmQCjuIBh3SHt67r
+ EDbxSulVUeNtKUmprdD7cKvl5febovvYib88jsSY5wGWawtY1WZ2YhIi1O7mUTN3smkudFIyCP
+ YONZsYRBn+DNE07ZAUcmERFbWtsr/VHWcAw46m47+RndwxpW+K9fpZZHf7/icyAgtYClUShfc9
+ fvcpl/kLw9g+CF8I4o+TZIbJe/CaO4/gGQG/iwm0BAAA=
+X-Change-ID: 20250213-a623-gpu-support-f6698603fb85
+To: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        "Konrad
+ Dybcio" <konradybcio@kernel.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Dmitry Baryshkov <lumag@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Jie Zhang <quic_jiezh@quicinc.com>,
+        "Akhil P
+ Oommen" <quic_akhilpo@quicinc.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746721173; l=1636;
+ i=quic_akhilpo@quicinc.com; s=20240726; h=from:subject:message-id;
+ bh=e3pyHsNfoGdzYxZZUg3CeC5Pgg3Gylc5xxF193wq9zk=;
+ b=8iwjAaoIjVe8w7OXVzgxUDQekZOZU0G1hr1zjQUpXfWORsARJCjpTYfXAyhdfuSulefmhwJJl
+ XbaAN7pumpaDHFsGaKYI8cT1DKUp2hPZYKp7rN6hOhD+PYvXr8IqCGg
+X-Developer-Key: i=quic_akhilpo@quicinc.com; a=ed25519;
+ pk=lmVtttSHmAUYFnJsQHX80IIRmYmXA4+CzpGcWOOsfKA=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=PMAP+eqC c=1 sm=1 tr=0 ts=681cd99c cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=Zgk8kBV0DBUZDr0MsEgA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDE0MiBTYWx0ZWRfX/qkCi+NBWrI9
+ 9Dj0t3yaxEL/KL4mGqQmo1mZVpLZ30fwZ+nk1/IEVd6VDywSU9qFqdmF4tZ2HeHmr3TFxul57DE
+ NkhfXVzl5iu9qhaxmlIiLUJwBdsngAwS1Xmk19hraREKT9BsqWqdfvFzQ3BnadFmiXH4AQs7E3k
+ B1PWwj67qyj+OQ8yvA2/NCZfPhoi1oN+bMo5H2JLy3/OsjNT03lQd0xR7dUI/zNDTFVRgwnJERt
+ zdF1lB0BLJ5ovQ1LiI6jvFdorZI6eOL0t3gzqqbAQg2lgeql0KADOZlMWlRDu9/ZmidP47L9onh
+ FmFIrIi1uyUAiQByLcrThrWPt6l015sGnEiGFGF5PrHrh+uleJzr2lNcJhgkRmHvFfpR1cIaXVQ
+ ADO49vshKlxWHiFceyr/zdQY6/dF0+BuXzOfiHg61gLRVTqCHCdfqigkrgtcKrO1taVfWJq2
+X-Proofpoint-GUID: kD3K_YKiGbcz1gqzE_IHHEpdnZUFi4S1
+X-Proofpoint-ORIG-GUID: kD3K_YKiGbcz1gqzE_IHHEpdnZUFi4S1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_05,2025-05-08_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 impostorscore=0 mlxscore=0 suspectscore=0 spamscore=0
+ bulkscore=0 priorityscore=1501 clxscore=1015 lowpriorityscore=0
+ mlxlogscore=999 adultscore=0 malwarescore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505080142
 
-On 5/8/25 7:08 AM, Brajesh Patil wrote:
-> Signed-off-by: Brajesh Patil <brajeshpatil11@gmail.com>
-> ---
+This series adds support for A623 GPU found in QCS8300 chipsets. This
+GPU IP is very similar to A621 GPU, except for the UBWC configuration
+and the GMU firmware.
 
-...
+Both DT patches are for Bjorn and the dt-bindings update for Rob Clark
+to pick up.
 
-> +
-> +static const struct iio_chan_spec_ext_info qmc5883l_ext_info[] = {
-> +	IIO_ENUM("mode", IIO_SHARED_BY_TYPE, &qmc5883l_mode_enum),
-> +	IIO_ENUM_AVAILABLE("mode", IIO_SHARED_BY_TYPE, &qmc5883l_mode_enum),
-> +	IIO_ENUM("oversampling_ratio", IIO_SHARED_BY_TYPE, &qmc5883l_osr_enum),
+---
+Changes in v3:
+- Rebased on top of v6.15-rc5
+- Dropped drm-msm patches since they are merged in v6.15
+- Correct GMU opp table in dt (Konrad)
+- Remove smmu_clk from gmu clock list (Konrad)
+- Update dt-bindings yaml with a new patch#1
+- Link to v2: https://lore.kernel.org/r/20250228-a623-gpu-support-v2-0-aea654ecc1d3@quicinc.com
 
-There is already IIO_CHAN_INFO_OVERSAMPLING_RATIO so we don't need to make this
-a custom attribute.
+Changes in v2:
+- Fix hwcg config (Konrad)
+- Split gpucc reg list patch (Rob)
+- Rebase on msm-next tip
+- Link to v1: https://lore.kernel.org/r/20250213-a623-gpu-support-v1-0-993c65c39fd2@quicinc.com
 
-> +	IIO_ENUM_AVAILABLE("oversampling_ratio", IIO_SHARED_BY_TYPE, &qmc5883l_osr_enum),
-> +	{ }
-> +};
-> +
-> +static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(qmc5883l_show_odr_avail);
-> +static IIO_DEVICE_ATTR(scale_available, 0444, qmc5883l_show_scale_avail, NULL, 0);
-> +static IIO_DEVICE_ATTR(data_ready, 0444, qmc5883l_show_status, NULL, 0);
-> +static IIO_DEVICE_ATTR(overflow, 0444, qmc5883l_show_status, NULL, 0);
+---
+Jie Zhang (3):
+      dt-bindings: display/msm/gmu: Add Adreno 623 GMU
+      arm64: dts: qcom: qcs8300: Add gpu and gmu nodes
+      arm64: dts: qcom: qcs8300-ride: Enable Adreno 623 GPU
 
-As far as I can tell, mode, data_ready and overflow are not standard attributes.
-I don't see them in Documentation/ABI/testing/sysfs-bus-iio*. So if these really
-are needed, we will need a justification of why these don't fit into any
-existing attributes.
+ .../devicetree/bindings/display/msm/gmu.yaml       | 34 ++++++++
+ arch/arm64/boot/dts/qcom/qcs8300-ride.dts          |  8 ++
+ arch/arm64/boot/dts/qcom/qcs8300.dtsi              | 91 ++++++++++++++++++++++
+ 3 files changed, 133 insertions(+)
+---
+base-commit: bc720facc421d0ff6d568323035d1a4d5d35ce84
+change-id: 20250213-a623-gpu-support-f6698603fb85
+prerequisite-message-id: <20250310-b4-branch-gfx-smmu-v6-2-15c60b8abd99@quicinc.com>
+prerequisite-patch-id: f8fd1a2020c940e595e58a8bd3c55d00d3d87271
+prerequisite-patch-id: 6a64b525e8ef33377b3cd885554b421fe8e6a192
 
-In the previous patch standby/continuous and data ready were handled internally
-already so I don't think need those.
-
-Overflow sounds like it could possibly be an event, but I didn't really look in
-to it.
-
-> +
-> +static ssize_t qmc5883l_show_odr_avail(struct device *dev,
-> +				       struct device_attribute *attr, char *buf)
-> +{
-> +	return sprintf(buf, "10 50 100 200\n");
-> +}
-> +
-> +static ssize_t qmc5883l_show_scale_avail(struct device *dev,
-> +					 struct device_attribute *attr, char *buf)
-> +{
-> +	return sprintf(buf, "2 8\n");
-> +}
-> +
-> +static ssize_t qmc5883l_show_status(struct device *dev,
-> +				    struct device_attribute *attr, char *buf)
-> +{
-> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> +	struct qmc5883l_data *data = iio_priv(indio_dev);
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	ret = regmap_read(data->regmap, QMC5883L_STATUS_REG, &val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (attr == (struct device_attribute *)&iio_dev_attr_data_ready.dev_attr.attr)
-> +		return sprintf(buf, "%d\n", !!(val & QMC5883L_DRDY));
-> +	else if (attr == (struct device_attribute *)&iio_dev_attr_overflow.dev_attr.attr)
-> +		return sprintf(buf, "%d\n", !!(val & QMC5883L_OVL));
-> +
-> +	return -EINVAL;
-> +}
-> +
->  static int qmc5883l_read_raw(struct iio_dev *indio_dev,
->  			     struct iio_chan_spec const *chan, int *val, int *val2, long mask)
->  {
-> @@ -275,6 +483,54 @@ static int qmc5883l_read_raw(struct iio_dev *indio_dev,
->  	return -EINVAL;
->  }
-> 
-> +static int qmc5883l_write_raw(struct iio_dev *indio_dev,
-> +			      struct iio_chan_spec const *chan,
-> +			      int val, int val2, long mask)
-> +{
-> +	struct qmc5883l_data *data = iio_priv(indio_dev);
-> +	int odr, range;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-
-Since the format for this is set to IIO_VAL_INT, val2 will always be 0 and can
-be dropped. Then we can turn this into a switch statemnt.
-
-> +		if (val == 10 && val2 == 0)
-> +			odr = QMC5883L_ODR_10HZ;
-> +		else if (val == 50 && val2 == 0)
-> +			odr = QMC5883L_ODR_50HZ;
-> +		else if (val == 100 && val2 == 0)
-> +			odr = QMC5883L_ODR_100HZ;
-> +		else if (val == 200 && val2 == 0)
-> +			odr = QMC5883L_ODR_200HZ;
-> +		else
-> +			return -EINVAL;
-> +
-> +		return qmc5883l_set_odr(data, odr);
-> +	case IIO_CHAN_INFO_SCALE:
-
-If scale is always an integer value, then we should set that in
-qmc5883l_write_raw_get_fmt() and we don't have to check val2 here either.
-
-> +		if (val == 2 && val2 == 0)
-> +			range = QMC5883L_RNG_2G;
-> +		else if (val == 8 && val2 == 0)
-> +			range = QMC5883L_RNG_8G;
-> +		else
-> +			return -EINVAL;
-> +
-> +		return qmc5883l_set_rng(data, range << QMC5883L_RNG_SHIFT);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int qmc5883l_write_raw_get_fmt(struct iio_dev *indio_dev,
-> +				      struct iio_chan_spec const *chan, long mask)
-> +{
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_SCALE:
-> +		return IIO_VAL_INT_PLUS_NANO;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
->  static irqreturn_t qmc5883l_trigger_handler(int irq, void *p)
->  {
->  	struct iio_poll_func *pf = p;
-> @@ -321,6 +577,7 @@ static irqreturn_t qmc5883l_trigger_handler(int irq, void *p)
->  		.storagebits = 16,          \
->  		.endianness = IIO_LE,           \
->  	},                      \
-> +	.ext_info = qmc5883l_ext_info,      \
->  }
-> 
->  static const struct iio_chan_spec qmc5883l_channels[] = {
-> @@ -337,6 +594,18 @@ static const struct iio_chan_spec qmc5883l_channels[] = {
->  	IIO_CHAN_SOFT_TIMESTAMP(3),
->  };
-> 
-> +static struct attribute *qmc5883l_attributes[] = {
-> +	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
-> +	&iio_dev_attr_scale_available.dev_attr.attr,
-> +	&iio_dev_attr_data_ready.dev_attr.attr,
-> +	&iio_dev_attr_overflow.dev_attr.attr,
-> +	NULL
-> +};
-> +
-> +static const struct attribute_group qmc5883l_attribute_group = {
-> +	.attrs = qmc5883l_attributes,
-> +};
-> +
->  static int qmc5883l_init(struct qmc5883l_data *data)
->  {
->  	int ret;
-> @@ -382,7 +651,10 @@ static int qmc5883l_init(struct qmc5883l_data *data)
->  }
-> 
->  static const struct iio_info qmc5883l_info = {
-> +	.attrs = &qmc5883l_attribute_group,
->  	.read_raw = &qmc5883l_read_raw,
-
-We can implement .read_avail here to avoid needing custom _available attributes.
-
-> +	.write_raw = &qmc5883l_write_raw,
-> +	.write_raw_get_fmt = &qmc5883l_write_raw_get_fmt,
->  };
-> 
->  static const unsigned long qmc5883l_scan_masks[] = {0x7, 0};
-> --
-> 2.39.5
-> 
+Best regards,
+-- 
+Akhil P Oommen <quic_akhilpo@quicinc.com>
 
