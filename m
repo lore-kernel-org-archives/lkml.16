@@ -1,116 +1,166 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D54238F80
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 00:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F2E3C26;
+	Thu,  8 May 2025 00:24:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746663752; cv=none; b=DWUWjyFXNbLxY62+JP6/nLiZkuYivvMcjbpF1czTDNvJ8UXIJ5rkFXMdU6/uZOJmjPulh9bj9fWRjyVSK5jifFjN6uEkHqSCZKeof2KkHgxGzY3QBJapDWbj3ZhLsgfgejRNYC0VtLjc7K699mdUOGOsKHGs8KBXJZriItEdyI8=
+	t=1746663876; cv=none; b=ZOPHAEuerkX29UaxXz6w4nraFLYc/L0H1yCf5yX4ExVQB2wEN77VlpYE0JAJfHYFg4b0jm5v3IyuXnrE6bSpTCQXHUW4uDeHxm6YZbzbfEe3SNl78e1s3S+3pe4GG8iDExJdTENWFAg57auXp0ZTl2vQUB2Gf+WBVHl9p6D63wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746663752; c=relaxed/simple;
-	bh=hskLJXjgM+5iBMzRzwuLWLkbYZ8zW4PVXh88bDdSItk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H/VqMo2hRf4pOvDTBtKyUBSgA9gIuL8F0CcTrzWnzCjmobSzD2tdov30kNr9qh6WeADu/ULZ/ErB9lJbrSlajouptDWlz7yXAyE9iX7IVmtDyfJJ7tq+2Z91stkqpN37raHa8sn1pui8QF1oEL9fUCdR+mrSG92F35Zc1Y5uVxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=dOVrgQtZ; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="dOVrgQtZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=SZYWknl8nEFAwI8QYUQ3xHDwD12l8aPLSAu95/JRXsc=; b=dOVrgQtZ35ATIQj1
-	wrR3niAM/dRqqIVqbUUN2EMSrh4vbSD2eRy/YBvNkM4Jy2JeQzKsJUSd98vQd8TN05+QzBlgelDKB
-	OkiKqlpwHsdY3UzGFRPUK8lhVQJT3GJOG71J9sEeWcrOnJlaLaP9hmQLbkaBRpbgJdiryPpa5AzSa
-	3+66jWWpJU7BhTS+N5/bQ8uvLAcVOYwy2vZVxsATID7QTTJ4p01mIAvRgzNaI6MEZTuBLywgpQStA
-	px9VJT3xSzUW/SvgFDge8NeP5qsk2aASgRQNV6OX4CygVQeZwKTm08dC5XNvA92zrp19rVT0PcvXX
-	j6i2hN+hHGUqA6vNjA==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1uCp1v-002HXY-3C;
-	Thu, 08 May 2025 00:22:28 +0000
-From: linux@treblig.org
-To: lee@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] mfd: sm501: Remove unused sm501_find_clock
-Date: Thu,  8 May 2025 01:22:27 +0100
-Message-ID: <20250508002227.204836-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1746663876; c=relaxed/simple;
+	bh=mDH+ZL79YTMq+Jv0bVy+9Pty09ZB23vy1luG3tCeplI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YDAMg+fBwkeSPfQNIh0Q8SzaoNTOZkbgx2SqTGAGYtTFCsIQyhgWsHi1U7nO9YhAdbcIfna+SaKGk0+NkhAlFVCxbvf9A+EvQOB4s2GjYuuyop1w+Ntbw1nxt+8BYvykb65wU4bviuKpxuizpUmWoAMQOzzPIoBz2IFxyM/2afU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96F3CC4CEE2;
+	Thu,  8 May 2025 00:24:33 +0000 (UTC)
+Date: Wed, 7 May 2025 20:24:44 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev,
+ joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+ kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ jstultz@google.com, qperret@google.com, will@kernel.org,
+ kernel-team@android.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 02/24] tracing: Introduce trace remotes
+Message-ID: <20250507202444.43963c84@gandalf.local.home>
+In-Reply-To: <20250506164820.515876-3-vdonnefort@google.com>
+References: <20250506164820.515876-1-vdonnefort@google.com>
+	<20250506164820.515876-3-vdonnefort@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Tue,  6 May 2025 17:47:58 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-sm501_find_clock() was added in 2007 as part of
-commit b6d6454fdb66 ("[PATCH] mfd: SM501 core driver")
-but hasn't been used.
+> +
+> +static bool trace_remote_loaded(struct trace_remote *remote)
+> +{
+> +	return remote->trace_buffer;
+> +}
+> +
+> +static bool trace_remote_busy(struct trace_remote *remote)
 
-Remove it.
+Can you add comments to what these functions are doing?
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- drivers/mfd/sm501.c | 43 -------------------------------------------
- 1 file changed, 43 deletions(-)
+Doesn't need to be kerneldoc (it actually shouldn't be), but describe why
+they would return true and why they would return false.
 
-diff --git a/drivers/mfd/sm501.c b/drivers/mfd/sm501.c
-index 7ee293b09f62..bdeea0047e1b 100644
---- a/drivers/mfd/sm501.c
-+++ b/drivers/mfd/sm501.c
-@@ -631,49 +631,6 @@ unsigned long sm501_set_clock(struct device *dev,
- 
- EXPORT_SYMBOL_GPL(sm501_set_clock);
- 
--/* sm501_find_clock
-- *
-- * finds the closest available frequency for a given clock
--*/
--
--unsigned long sm501_find_clock(struct device *dev,
--			       int clksrc,
--			       unsigned long req_freq)
--{
--	struct sm501_devdata *sm = dev_get_drvdata(dev);
--	unsigned long sm501_freq; /* the frequency achieveable by the 501 */
--	struct sm501_clock to;
--
--	switch (clksrc) {
--	case SM501_CLOCK_P2XCLK:
--		if (sm->rev >= 0xC0) {
--			/* SM502 -> use the programmable PLL */
--			sm501_freq = (sm501_calc_pll(2 * req_freq,
--						     &to, 5) / 2);
--		} else {
--			sm501_freq = (sm501_select_clock(2 * req_freq,
--							 &to, 5) / 2);
--		}
--		break;
--
--	case SM501_CLOCK_V2XCLK:
--		sm501_freq = (sm501_select_clock(2 * req_freq, &to, 3) / 2);
--		break;
--
--	case SM501_CLOCK_MCLK:
--	case SM501_CLOCK_M1XCLK:
--		sm501_freq = sm501_select_clock(req_freq, &to, 3);
--		break;
--
--	default:
--		sm501_freq = 0;		/* error */
--	}
--
--	return sm501_freq;
--}
--
--EXPORT_SYMBOL_GPL(sm501_find_clock);
--
- static struct sm501_device *to_sm_device(struct platform_device *pdev)
- {
- 	return container_of(pdev, struct sm501_device, pdev);
--- 
-2.49.0
+> +{
+> +	return trace_remote_loaded(remote) &&
+> +		(remote->nr_readers || remote->tracing_on ||
+> +		 !ring_buffer_empty(remote->trace_buffer));
+> +}
+> +
+> +static int trace_remote_load(struct trace_remote *remote)
+> +{
+> +	struct ring_buffer_remote *rb_remote = &remote->rb_remote;
+> +
+> +	lockdep_assert_held(&remote->lock);
+> +
+> +	if (trace_remote_loaded(remote))
+> +		return 0;
+> +
+> +	remote->trace_buffer_desc = remote->cbs->load_trace_buffer(remote->trace_buffer_size,
+> +								   remote->priv);
+> +	if (!remote->trace_buffer_desc)
+> +		return -ENOMEM;
 
+The error may not be -ENOMEM, have the load_trace_buffer return an ERR_PTR
+and then you can return:
+
+	if (IS_ERR(remote->trace_buffer_desc)
+		return PTR_ERR(remote->trace_buffer_desc);
+
+
+> +
+> +	rb_remote->desc = remote->trace_buffer_desc;
+> +	rb_remote->swap_reader_page = remote->cbs->swap_reader_page;
+> +	rb_remote->priv = remote->priv;
+> +	remote->trace_buffer = ring_buffer_remote(rb_remote);
+> +	if (!remote->trace_buffer) {
+
+Same here.
+
+> +		remote->cbs->unload_trace_buffer(remote->trace_buffer_desc, remote->priv);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void trace_remote_unload(struct trace_remote *remote)
+> +{
+> +	lockdep_assert_held(&remote->lock);
+> +
+> +	if (!trace_remote_loaded(remote) || trace_remote_busy(remote))
+> +		return;
+
+Can this cause leaks? Should trace_remote_unload() return an error value to
+let the caller know it wasn't unloaded?
+
+> +
+> +	ring_buffer_free(remote->trace_buffer);
+> +	remote->trace_buffer = NULL;
+> +	remote->cbs->unload_trace_buffer(remote->trace_buffer_desc, remote->priv);
+> +}
+> +
+
+Short description of what trace_remote_start does.
+
+> +static int trace_remote_start(struct trace_remote *remote)
+> +{
+> +	int ret;
+> +
+> +	lockdep_assert_held(&remote->lock);
+> +
+> +	if (remote->tracing_on)
+> +		return 0;
+> +
+> +	ret = trace_remote_load(remote);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = remote->cbs->enable_tracing(true, remote->priv);
+> +	if (ret) {
+> +		trace_remote_unload(remote);
+> +		return ret;
+> +	}
+> +
+> +	remote->tracing_on = true;
+> +
+> +	return 0;
+> +}
+> +
+
+Same for stop.
+
+-- Steve
+
+> +static int trace_remote_stop(struct trace_remote *remote)
+> +{
+> +	int ret;
+> +
+> +	lockdep_assert_held(&remote->lock);
+> +
+> +	if (!remote->tracing_on)
+> +		return 0;
+> +
+> +	ret = remote->cbs->enable_tracing(false, remote->priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ring_buffer_poll_remote(remote->trace_buffer, RING_BUFFER_ALL_CPUS);
+> +	remote->tracing_on = false;
+> +	trace_remote_unload(remote);
+> +
+> +	return 0;
+> +}
