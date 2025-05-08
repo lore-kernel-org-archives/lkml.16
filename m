@@ -1,137 +1,138 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51A8288C96;
-	Thu,  8 May 2025 20:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1A478F34
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 20:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746737102; cv=none; b=uGlclUW6K3qfiaw7MYcmlizdFz6A2bVzql8R3ZMHPx8PzTXtw3sqQi918hyF5ETCJUFlw1frYJsm/BCFFwVj0RpqG9hR0JzY1ruJrIBRccW20XkyGYuaBHXPKwj8O2DWtT9rZGJzg1j/ocxlFompm2AvwBA6PZc0hEtILfzBZF0=
+	t=1746737217; cv=none; b=DoNGVuO2a4Z6Z2l4bZuyVlov/H1mRvXmTtVHWSrpfZnWgfHNk+VY0oA0NJ+NRh4PL7TmpmnQSc6/XAGnaxhVVrF1FiDaLb76FMnn+ZxN12NToKeNTwbFPPJlANVotE+z+OC/oH27DO4LRYyyAbdoBEj4ReJXtNT0PR9/QfhY1tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746737102; c=relaxed/simple;
-	bh=DouCk8thK2P5zZ4AS87//vIXlGPgjxAOc78HwKw9Jdo=;
+	s=arc-20240116; t=1746737217; c=relaxed/simple;
+	bh=V2CHvHVl5DnZ6ldHppAkmVC2F7/rCBROZqalm35n2Y8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BcE900b1pQ0e/FHYQvcFl0NeFrbq+IV9Pf3wnaDhSETG/6emuZw1R5OXNkxNA6HOUWa+FQdNsDXyPMYYX75t/k/pKLXGtOpJpSl71VlIAhPlLpzsjDvzBdTFLuQHWXzszD3/TSxFodqX29Z/g+Ylo/iig9ZhRNh+vCJftFkQdqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IVi23faX; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=glpSNDXlbp/WN0qBEqMOJ92+z4cMaZrgCLnk72Ar579/HJUicLsC1MqMs7yE+1BE74k067VOYJ7Lvy5I6waO+rQydlAJpZGOpFeFVWM09MCyl7cHu+VJjALq99TluFYCiQqVDOXMBhSNv1yD4v7n9M6OGwl/W1e133lY2cdLeWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=VRwmvpPx; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IVi23faX"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf848528aso11415005e9.2;
-        Thu, 08 May 2025 13:45:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="VRwmvpPx"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c7913bab2cso154603985a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 13:46:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746737099; x=1747341899; darn=vger.kernel.org;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1746737213; x=1747342013; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=socg9X9NWsH5gVrrZlrt7sf1Or5cD/+VF6198Lz9YVE=;
-        b=IVi23faXFbOVGNQOAyUnoLGS159czd2MSwTjGPXJPCqppwzzN0oBPRWln+yvhrGjTt
-         UfO6J00x4EDia2zv27SXz+Q5IuS/MRbeuZFOJyxWKIdbf0vVkG+FXVndtfd4WUYIEFHh
-         zbqQvV9AQ82iqvKdb5dWFhDgsIqWYl2jiCuIyyS0JwQhQVeVQMog2yeraek8QUHwJsb9
-         Z6UeKpFsX+R+eHUY+iyAv/aAjga2kYiph9NXbt0itvjhG2e+WTaKd9od9fgQ397woHfQ
-         KRkk8l+J31CAkyaFbqEfTC3Ew634xd19k11fdI3dsane8719YfC0rvyLOXaAF7px0N1t
-         6/xg==
+        bh=zQEnUDiH17j0axkwQIQsd15gk3w4WvOGH1IVj+x3pR8=;
+        b=VRwmvpPxzjnxc+z6Qlow3V3JkxELJ9AUnwOaVY9XuWWywjA8H1BKqGhtHhpaw1m2Zk
+         T/WHABGL5sIR8nerhAmQc46AE4DcpZ70NiqvgDIZNGrRm/nZrXF/JEvQdFLbfQrrr1n9
+         Subf/+k8oifbODtCvJxcT/e5RKxboTTfB93tpvBLL/QDt4aOssVUYxxEMgbA5mMIuolp
+         nXetZ3n48OxyNdRoTR8JLDCge3BFb4J1GRkUlUQPKN0hCxELTfEMIlAZOh4Xd1psYR2C
+         yadNCR/wtXvYwVE/nm/VOXwsmORRSPiIC7arPr2m3fbLIePQ2FTExXv5AiTGmUeh0CnQ
+         Ps1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746737099; x=1747341899;
+        d=1e100.net; s=20230601; t=1746737213; x=1747342013;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=socg9X9NWsH5gVrrZlrt7sf1Or5cD/+VF6198Lz9YVE=;
-        b=URWseFBMcO3p4sqeGoD002q+eLsxOIDm28KJBwmYwUVwD6CPKB/7/Z9przSKZ5EJHl
-         Z99N0YdkwsdeZ3U7h87RTackveTvbyPxxbinChBXjP7d5peUt9qPKWsO+4ddkeDFv6VP
-         eEYGENmf82sYb5nVgTPd3PMv52kkSq7oxVjyXmcvVPJ6B7u2cVwnqCb7nbU4akDk2WlD
-         YUO8EC26xQbcqNvFuu+gAQgB1/3JNRlYUu9ISgj6cvuUoxvCLXpcaO/KDgO00X4CNun9
-         0R69xEZNfDyIqgq84rFcLDbU+qfaz9gnJpmsyVezVy7yCVdGHmAu+8X/uZrCKpWyWPab
-         dJlw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9WpX/VG8fQ2Aek60i6VSoE79/eXjF21S4c78f8hfOoQap3vDdHmRZczLmOgHYcoiRUn3VWhDRf7JdD5s=@vger.kernel.org, AJvYcCWMiDFoQrTX4OUR8G2QrKH6bx78ACSHrX7P1h+7w9HnyA0Ldpkf8rEZzLXyu7poD7Cqz96qTHd5xhq1SgAh@vger.kernel.org, AJvYcCXqM+BCzZFx9YL+nxFPAigAcdXliCZ/rgqzDTQst96lILvjJ1GbTaItBD3i4tcP0us19X4u6f+IBGyc@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVFv+QKo0vmZXHnrc9PF0swDpixA/bHMDBg5VqJD93AKP1y6gC
-	12XTeZCYh9zmA7vGCEtNymgF5TeZSeMnAUxiI698sU4nS+Nor2k9
-X-Gm-Gg: ASbGncvvZRmfacGRKgj7h8mWmxqdKOnSn/RmKaN9nbURx8St6xW9KwAEfQHVYSEety+
-	MNThIGQtd65bBWlEoOPi4RRNZMMVFQ4on3vJaCUqFsH3fos+dDk9jelf7PzXTZcXRrNEhxN0pf5
-	10+UPanM46gX7p3cvbLo7V1VeLx38qnS06+mFidV/eeuNKVsximEH89rconDjm3qIiL2VES+mPL
-	gX3hE/vp7uVYEWd1jazsN0Vt8uH7xWaRAkeJao7OZntKeZbg7YcswvcVljw8WurJ8kBF547jpsf
-	Tfks4Uu1JwqHDhdTBkrQ4JfKzGJZYi6CfnW8WHuVNhi/G18YsPST9dw+1Md3LWSmFiy4Qy9LXQ4
-	Z1ZEiyCIvRB8x9ovec+GjQjrgngE=
-X-Google-Smtp-Source: AGHT+IESDRX2lvASSErkuZb1xuJH8GXgYTQGA4pljvU+gcfPosWeExLiSPBN5Fmc7jrrId7UTlwePw==
-X-Received: by 2002:a05:600c:8708:b0:441:a715:664a with SMTP id 5b1f17b1804b1-442d6dd9d8cmr5184285e9.20.1746737098584;
-        Thu, 08 May 2025 13:44:58 -0700 (PDT)
-Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd3b7b83sm47260905e9.33.2025.05.08.13.44.56
+        bh=zQEnUDiH17j0axkwQIQsd15gk3w4WvOGH1IVj+x3pR8=;
+        b=Rk3vlitsFdm0TeLjEzsLjXR+kVaafh4aDymlBYPhsydESkDCMzZcYo5Lv28x/Z/23y
+         jYWc+WS5wj2TRR8uShr3Q+hykOrOK4QC7mm0Mh32UT9JOukw7bT7L8qaHx8Fbk0Vbloy
+         Q8Ye6bOIt/eYFkI0codwIRaRoQaigsCzUBBMfnHEmd2mLLHQx5th9rbh6mLYUTBMKA86
+         QgqzpsdHVg8ud4pAtEz9YuaWQ2b8vQufd1JUzY38XLbv6AvoO/TcXOR6jqPGiPvwBUKU
+         oWT824Wepiz43EOkO2QjZNahbAIwJ3+Ad2QMf6Kym9eGGoOhKnbWV9DFo14sA3xgOft5
+         Pnsw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQos9efVIPPYZWZS7ee2YdIthXHT3wnBvLEUAE8UwBvKLm1JCb02AD2iPLIUbYhLjd++mbqQG6oaje8/g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPjFGZ80NSorb6A51RDqa4pBe/jh7EfLnr3G3isOHvQ3oOprF2
+	3Jpm6zzPEcAEo7KRXC8UjOIi5P5FJff87UuS9QF5EG9iHX0h1grJgIhkxvhOeOc=
+X-Gm-Gg: ASbGncsbRfIJXCRcmacnRdt4fWPWhU259q6P2ArYSQboNY/oCx2GTHRg4B7lauBxmV3
+	iEkmCx+p0cNz45DpY+pzgNDZHgzNPZmfYbTme+kUhjrJMnSO5K47kz4f6TSLyKVuXAUA/pPov/J
+	Yf7tF6QID4dSdfAQ32L33Iwz8eYzcX54i4DF//LtCC67ILQREHSvFGh8wV0cA3KbVMHn3sq2P9f
+	0vJCQOVLwvL988I263koHaLFgxVw5k+YFBSSiz+KDTozAJYh/rxIFoXYIgdDnEqsltxToNN39x7
+	OSXovmCEQ1FhqYRHgDBNSaP8b/jNk7Hl3ixbJCw=
+X-Google-Smtp-Source: AGHT+IHeeTbu3oSEAaZfd20nR1n/PId7yFctl0Zs1lNl+athCGKHq7I+Zd6dkLIXBnQuGA3moXaPoQ==
+X-Received: by 2002:a05:620a:370b:b0:7c5:54d7:d744 with SMTP id af79cd13be357-7cd010f19bamr172019485a.23.1746737212814;
+        Thu, 08 May 2025 13:46:52 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cd00f98942sm38704085a.49.2025.05.08.13.46.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 13:44:57 -0700 (PDT)
-Date: Thu, 8 May 2025 22:44:54 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thierry Reding <treding@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Maxim Schwalm <maxim.schwalm@gmail.com>, Brad Griffis <bgriffis@nvidia.com>, 
-	David Heidelberg <david@ixit.cz>, Ion Agorria <ion@agorria.com>, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] ARM: tegra: Add device-tree for ASUS Transformer
- Pad LTE TF300TL
-Message-ID: <rtb2j3ch2sbxdcyenhjz5auqbs6lcjadstbpnhtd7m66q7ewl6@q7injesdjpnm>
-References: <20250503102950.32744-1-clamor95@gmail.com>
+        Thu, 08 May 2025 13:46:51 -0700 (PDT)
+Date: Thu, 8 May 2025 16:46:44 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Zi Yan <ziy@nvidia.com>
+Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Richard Chang <richardycc@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] mm/page_isolation: make page isolation a
+ standalone bit.
+Message-ID: <20250508204644.GB323143@cmpxchg.org>
+References: <20250507211059.2211628-1-ziy@nvidia.com>
+ <20250507211059.2211628-2-ziy@nvidia.com>
+ <20250508052409.GB320498@cmpxchg.org>
+ <13898284-B62B-412D-A592-856406F7D7C0@nvidia.com>
+ <D24FC56F-CED6-40DB-8216-6B705473106C@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rz77sh7gaqyro4cb"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250503102950.32744-1-clamor95@gmail.com>
+In-Reply-To: <D24FC56F-CED6-40DB-8216-6B705473106C@nvidia.com>
 
+On Thu, May 08, 2025 at 03:17:05PM -0400, Zi Yan wrote:
+> 
+> >>> @@ -426,7 +460,12 @@ void set_pageblock_migratetype(struct page *page, int migratetype)
+> >>>  		     migratetype < MIGRATE_PCPTYPES))
+> >>>  		migratetype = MIGRATE_UNMOVABLE;
+> >>>
+> >>> -	set_pfnblock_flags_mask(page, (unsigned long)migratetype,
+> >>> +#ifdef CONFIG_MEMORY_ISOLATION
+> >>> +	if (migratetype == MIGRATE_ISOLATE)
+> >>> +		set_pageblock_isolate(page);
+> >>
+> >> Are there paths actually doing this after the second patch?
+> >>
+> >> There are many instances that want to *read* the migratetype or
+> >> MIGRATE_ISOLATE, but only isolation code should be manipulating that
+> >> bit through the dedicated set/toggle_pageblock_isolate API.
+> >>
+> >> If there isn't one, it might be good to enforce this with a VM_WARN
+> >> instead.
+> >
+> > I checked all set_pageblock_migratetype() callers and do not see
+> > one using it for pageblock isolation. Let me replace the code
+> > with a VM_WARN and add a comment to tell users to use dedicated
+> > pageblock isolation APIs.
+> >
+> 
+> Actually, move_freepages_block_isolate() calls __move_freepages_block()
+> to move free pages to MIGRATE_ISOLATE pageblock and
+> set_pageblock_migratetype() is used inside __move_freepages_block().
+> So the branch has to stay. Will use the suggestion below.
 
---rz77sh7gaqyro4cb
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 0/3] ARM: tegra: Add device-tree for ASUS Transformer
- Pad LTE TF300TL
-MIME-Version: 1.0
+Ah, good catch. But looking at the callers, it's:
 
-On Sat, May 03, 2025 at 01:29:47PM +0300, Svyatoslav Ryhel wrote:
-> Add device-tree for ASUS Transformer Pad LTE TF300TL, which is NVIDIA
-> Tegra30-based tablet device.
->=20
-> ---
-> Changes from v2:
-> - optimized the schema for Transformers
-> ---
->=20
-> Svyatoslav Ryhel (3):
->   dt-bindings: arm: tegra: group Tegra30 based ASUS Transformers
->   dt-bindings: arm: tegra: Add Asus Transformer Pad TF300TL
->   ARM: tegra: Add device-tree for ASUS Transformer Pad LTE TF300TL
+move_freepages_block()
+move_freepages_block_isolate()
+try_to_claim_block()
 
-I've applied all of these. There's a checkpatch warning on patch 3/3
-because it doesn't seem to understand the pattern compatible defined
-in the audio card bindings.
+The last one would benefit from having the set_pageblock_migratetype()
+there explicitly, as this is what this function is supposed to do. It
+also should never set the isolation bit.
 
-As for the warning that Rob's bot pointed out, those are present for
-all Tegra30 boards and there are patches in the works to fix all of
-these, I just need to find the time to get them merged.
+move_freepages_block_isolate() has two set_pageblock_migratetype()
+calls already. And after the series, it should only manipulate the
+isolate bit, not change the actual migratetype anymore, right?
 
-Thierry
+Maybe it makes the most sense to move it into the three callers?
 
---rz77sh7gaqyro4cb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmgdF8YACgkQ3SOs138+
-s6HIAg/8Cb/Cd9nfoTiJMaYigAi1lwexoOzOB5ndbUzHxQyHapn3eUkOcKa72Xqd
-Vok7+pCBIqG31ShlwjpVQtausHs9N3kMbY/LEM/wpiwc7FHbnkXl/nu7yVCXKot4
-lG8WK7SXNNXgfQcJNHdLiGzDRcx/6e5Oto2C0JC4zE8CTKJJdRkMRr6dMSitJJ4e
-v8lrXv/7VvMn2k+e/1193kyIXGsJ/3xv4NjeD7+wQDUmsi9d1Ld2lNROAMxt+o5u
-iqeqKEIVr89snyGKnxnrtrzn6bdWZcC5Ib+sKHu4AH8qz5GwOXjp2IXSUFsjAcCi
-hSrsx//ht9oIRWNVDyjtxnCIVSSCeKS/d4Y39kZPbVRQsnK0h6/u7+B8wVa6CQ6u
-qGnHTyHHPH4AlOfcZ9m/7K9yxoG37lXdcPxfi784ZvOwbW/uicpOVGwGYsgb5DBC
-FY53l3Gs/yhI+IXN2l3oCRx7+74sk6lXVktyHsbI//Bl+FB/6S4lKqAFOhm+hoM2
-l3j2G5JRk9s8kRzaQbfJgsPd5est84Pnb43bnR/kg4MDKC7n/YowXLI1m9ao4quO
-E/Hhegnn9QxzIWVq5y/cPy4k5hiwXZ9t195tEN3gCOyGuoFJKRiA84T/T95Ka/td
-k8Qk7uPFlCb1no5ZRu1Lpccr8AY26jRXHaxELUNqAppiUKZFJlg=
-=VRUZ
------END PGP SIGNATURE-----
-
---rz77sh7gaqyro4cb--
+And then fortify set_pageblock_migratetype() after all.
