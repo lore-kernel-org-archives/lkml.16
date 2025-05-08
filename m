@@ -1,211 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A1C233701
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 23:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31C62101BD;
+	Thu,  8 May 2025 23:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746747217; cv=none; b=KL8elFHo/GuP8Ni4zynRjC98gvjGHOlmwpIFMKtAm91/C4Mf/QA5kRvygQCsaVMcI4EjHd5u3svL1KcEg2Y96AqOGg7yvXgGtkWCyTvxV90gGzApzVfK7pgCWMOZdVTs54vEaDZLLVYud//8kbsqZscToyIweSp4qWir47qSVVE=
+	t=1746747624; cv=none; b=ATk539xfdEM4o2IpRps3kq0KE5PWLBc8CKvqjEaMKIM3KfrWKgckkKOpKfS6v7yAUYl4WjQ1zHB6qQVameMKA2fGf+8enRc7Jb6pGwAUfq10mY3uOVNA7Us8L4133GBZCIKuwcLqFZcQECaNf+U2b9gopD9coN3zBclM8T2+6xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746747217; c=relaxed/simple;
-	bh=U7zgE6IzCLrPpMWVpq2+GUdcrSUMCh/2FsvZ9huMwiU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=loahuvOk+7E0O6tHKdUzNju9K7vHt2/fi95vcDDRpWU2wF8pjAr8RoXQv7EFQP8tACDciTBiB5vEhXzBvMRzOzWsg7z1K809BpO5RkRNepgTgUOIpX6XnTOkhwjuwhTfKCLIUP3a7xV5MPTjqTpLTYj2FJkpeG4q62dKXAtTh5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MGSIrDM8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746747624; c=relaxed/simple;
+	bh=UUWwBn0rncdSTvqDy6og+SIyhjFFbURwK0mnp5D1754=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LBpgGYJYqBPYIZYxC0Gba9oep1J5hIhMAv41/DGQcuswrywTEPg9aN8h+F0TIgpYcxGXRiAud5UpNYuXuUxp/vDyNOeOPJ+Wn8jIvIB7zzluBsIvrPBWmVqnl3ZeMtIB6RJyrEpS1gyM0XLQCTVQ9egjUSmqxuVm5dlmqsyNgL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K2q29rpP; arc=none smtp.client-ip=209.85.218.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MGSIrDM8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86F1BC4CEFB;
-	Thu,  8 May 2025 23:33:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746747217;
-	bh=U7zgE6IzCLrPpMWVpq2+GUdcrSUMCh/2FsvZ9huMwiU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MGSIrDM8OOsNfk8o7cQbfOhtCHTXe3lVBuo2ciQbEBz0UAol+TDpwUY1OgVvza6T/
-	 1xRRWr5r1P4zieSS47IzoNQa79a4c9o1TCCe380WYa6YK/427ib/EVju+PavWlGILE
-	 rpTdTLKRyKwx7QYfO/c+SjBMziIDQukHp3YVjNbJT4JFC+SZaRw13O8JdX/WAwYoY3
-	 lVBA0AVySc59GwMLyHytX3qo8H76b5P0gyoChsP7TdEaQrhV+KrN+PTVooe/3xhiwN
-	 bgQsHFEjYW1etL9nM1w9X+gJAJ/FVqq/rQyjjkipa67Bg5IAohjpqG+NE78vtzLaTX
-	 3HCURgF425Reg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 96C17CE1432; Thu,  8 May 2025 16:33:36 -0700 (PDT)
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: kernel-team@meta.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jon Pan-Doh <pandoh@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH v5 20/21] lib: Add trivial kunit test for ratelimit
-Date: Thu,  8 May 2025 16:33:34 -0700
-Message-Id: <20250508233335.1996059-20-paulmck@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <1bcf7d5e-b89c-4118-b872-c8896bdbdc19@paulmck-laptop>
-References: <1bcf7d5e-b89c-4118-b872-c8896bdbdc19@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2q29rpP"
+Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-ad221e3e5a2so3496366b.1;
+        Thu, 08 May 2025 16:40:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746747621; x=1747352421; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4XCAHAZpzbjMjFqk38iU3CCdfAml8ce6xfHMngiKe84=;
+        b=K2q29rpP5IMSzMzGbi3os3Lv3xzNurOKcWkOlmjo5FOfN33P7ppUjnEYrFoeDIsM96
+         7evP0kfifm8B1wf6XdpQy5l1lSO2tncDai9z4HZTheMQNaVW/3OBi2HkrcWW2vw2YkYZ
+         ORBj430/zcIMQIEuiWRbi1ISXycVT5/qKfq4DW84rmCm0pPsSLbCMM63T1OOzIOzcxgk
+         ZIJHrETQccD6o/3hpURDr3W0C8+FcBbfGr4QWnWcafrQrSVgZlTbvne6ts8Yn/eEok6z
+         jGMu9xfTteIXCJtqR3cdcItIZh3n6On7uTe3u7bf2N8bk//47hhg4X3dLvxlwMm8tiu0
+         3q6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746747621; x=1747352421;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4XCAHAZpzbjMjFqk38iU3CCdfAml8ce6xfHMngiKe84=;
+        b=W4dKP+Fqq0IIRptpLWw6haRK7QudZ6R5sG7tbjrNU18OtwinrpNq4ZwmbzYBFF2AlA
+         CNg/DBemjcJC0vdAVE7o1YIFPwLdIq2M70JlZcn/SR4XzbeLZhWC+JgBwT1GXrL5iJry
+         cN94jgVdnPYTARpVF9OOlqXevtSWZv7e5uHZs/tkO5+KGy7eyWhFMXhMV7yu+QYnhoiW
+         Afi68+q6k9JgoRwegEX4PoZYr8YI1TCW2eAWtIX5bHRfWlm1V6vSpwcFtHcVAkgFtb1/
+         UdBEmh6dgP1xIwU6UPBzN16OQ2fGwvjAO38FsEyJ7DZFgvSamnuNfMzz+Ij6MenhApqS
+         hJSA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzMPMkFjbHOHX7UTRUXg85r/o1WRA48rMsPLMd9tMFk+/7ZmnN/3BC0kHjRhI/DX6ddtHg515S@vger.kernel.org, AJvYcCWB2miFDTH+1RRaQfx/lYdPxYu8rSzqXcTsahCz7w9KIeFMx2hH28XnTe9HkF8qqXUar7rXEQ26cEy1yrsl@vger.kernel.org, AJvYcCWNdU8pm8HlyvvwRdN36utzL4TSujF2gdP36loy85GDsVSRKITqOGvlTyfSYPTSETT4gWqAPn+S99fIo/2eFwdIUx4A@vger.kernel.org, AJvYcCX+rS488oWLf0qMIDuKdsljRj9YIruGGaqqxzfddUHNC480lM+siAWgzmFrq9iog7S3cng=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXGekrwmil8ti0IHQ5BWiebiQsRfqWpq5tOnG9GSagawDsrBaf
+	YuDtsVIxQx2VuUr3LutpaLxTlUPpNL3lY0+uQSRtBEJHXgdD6Huqbma9RL3OnzcESUWPwrY7brx
+	MuR7Lw4FM4RWW9Cx/pRjS0civECM=
+X-Gm-Gg: ASbGncvdLCJJHKq5UeAkXEXEtuM+jvp5Wbxn3vHMd6iN2e0AblooYMzWbnS1LZxyIDQ
+	lt5WfuwfKw+qWUdH4HX+VcL1e39yKrKNuk1mwxLeRrJScEHd5anitaGLMQ8MnhnhNMgVrQDa78C
+	FSSH/7EbRbkf1dPkjgeTur26L8zpH/eOGy2K/zfdeBnvVnWI4O06WpEET9Q73Sf80R7zw=
+X-Google-Smtp-Source: AGHT+IHApQ5OFCfaQS1mUn74daoOJX19yzwZ3sgdO7xX9LpbyPb3Jm1cvNGKxG3HLWErcANGLvfkwfd4xsmogUZmAeU=
+X-Received: by 2002:a17:907:8b8b:b0:ace:6fa7:5ed3 with SMTP id
+ a640c23a62f3a-ad218ea5b8emr158033066b.4.1746747621004; Thu, 08 May 2025
+ 16:40:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <000000000000adb08b061413919e@google.com> <681c597f.050a0220.a19a9.00bd.GAE@google.com>
+In-Reply-To: <681c597f.050a0220.a19a9.00bd.GAE@google.com>
+From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Date: Fri, 9 May 2025 01:39:44 +0200
+X-Gm-Features: AX0GCFuVY9CBMsQxhMgZpZ1X-fEBQ2fptYrxdbELCJogxYT5Wfp2wwF916mNEpY
+Message-ID: <CAP01T7525zDpL8nhsLLULCK1Qzw8wVCmHuCX_81Z_HaQAs-q4g@mail.gmail.com>
+Subject: Re: [syzbot] [bpf?] possible deadlock in trie_delete_elem
+To: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
+Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, elic@nvidia.com, haoluo@google.com, 
+	hdanton@sina.com, jasowang@redhat.com, john.fastabend@gmail.com, 
+	jolsa@kernel.org, kafai@fb.com, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	lkp@intel.com, llvm@lists.linux.dev, martin.lau@linux.dev, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, 
+	michal.kukowski@infogain.com, michal.switala@infogain.com, mst@redhat.com, 
+	netdev@vger.kernel.org, norbert.kaminski@igglobal.com, 
+	norbert.kaminski@infogain.com, norkam41@gmail.com, 
+	oe-kbuild-all@lists.linux.dev, parav@nvidia.com, rostedt@goodmis.org, 
+	sdf@fomichev.me, sdf@google.com, song@kernel.org, songliubraving@fb.com, 
+	syzkaller-bugs@googlegroups.com, wojciech.gladysz@infogain.com, yhs@fb.com, 
+	yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Add a simple single-threaded smoke test for lib/ratelimit.c
+#syz fix: bpf: Convert lpm_trie.c to rqspinlock
 
-To run on x86:
-
-	make ARCH=x86_64 mrproper
-	./tools/testing/kunit/kunit.py run --arch x86_64 --kconfig_add CONFIG_RATELIMIT_KUNIT_TEST=y --kconfig_add CONFIG_SMP=y lib_ratelimit
-
-This will fail on old ___ratelimit(), and subsequent patches provide
-the fixes that are required.
-
-[ paulmck:  Apply timeout and kunit feedback from Petr Mladek. ]
-
-Link: https://lore.kernel.org/all/fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop/
-Link: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Jon Pan-Doh <pandoh@google.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Karolina Stolarek <karolina.stolarek@oracle.com>
----
- lib/Kconfig.debug          | 11 ++++++
- lib/tests/Makefile         |  1 +
- lib/tests/test_ratelimit.c | 79 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 91 insertions(+)
- create mode 100644 lib/tests/test_ratelimit.c
-
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 9fe4d8dfe5782..c239099218c2b 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -3232,6 +3232,17 @@ config TEST_OBJPOOL
- 
- 	  If unsure, say N.
- 
-+config RATELIMIT_KUNIT_TEST
-+	tristate "KUnit Test for correctness and stress of ratelimit" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  This builds the "test_ratelimit" module that should be used
-+	  for correctness verification and concurrent testings of rate
-+	  limiting.
-+
-+	  If unsure, say N.
-+
- config INT_POW_KUNIT_TEST
- 	tristate "Integer exponentiation (int_pow) test" if !KUNIT_ALL_TESTS
- 	depends on KUNIT
-diff --git a/lib/tests/Makefile b/lib/tests/Makefile
-index 5a4794c1826e7..1c7c2d20fe501 100644
---- a/lib/tests/Makefile
-+++ b/lib/tests/Makefile
-@@ -45,5 +45,6 @@ obj-$(CONFIG_STRING_KUNIT_TEST) += string_kunit.o
- obj-$(CONFIG_STRING_HELPERS_KUNIT_TEST) += string_helpers_kunit.o
- obj-$(CONFIG_USERCOPY_KUNIT_TEST) += usercopy_kunit.o
- obj-$(CONFIG_UTIL_MACROS_KUNIT) += util_macros_kunit.o
-+obj-$(CONFIG_RATELIMIT_KUNIT_TEST) += test_ratelimit.o
- 
- obj-$(CONFIG_TEST_RUNTIME_MODULE)		+= module/
-diff --git a/lib/tests/test_ratelimit.c b/lib/tests/test_ratelimit.c
-new file mode 100644
-index 0000000000000..0374107f5ea89
---- /dev/null
-+++ b/lib/tests/test_ratelimit.c
-@@ -0,0 +1,79 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <kunit/test.h>
-+
-+#include <linux/ratelimit.h>
-+#include <linux/module.h>
-+
-+/* a simple boot-time regression test */
-+
-+#define TESTRL_INTERVAL (5 * HZ)
-+static DEFINE_RATELIMIT_STATE(testrl, TESTRL_INTERVAL, 3);
-+
-+#define test_ratelimited(test, expected) \
-+	KUNIT_ASSERT_EQ(test, ___ratelimit(&testrl, "test_ratelimit_smoke"), (expected))
-+
-+static void test_ratelimit_smoke(struct kunit *test)
-+{
-+	// Check settings.
-+	KUNIT_ASSERT_GE(test, TESTRL_INTERVAL, 100);
-+
-+	// Test normal operation.
-+	test_ratelimited(test, true);
-+	test_ratelimited(test, true);
-+	test_ratelimited(test, true);
-+	test_ratelimited(test, false);
-+
-+	schedule_timeout_idle(TESTRL_INTERVAL - 40);
-+	test_ratelimited(test, false);
-+
-+	schedule_timeout_idle(50);
-+	test_ratelimited(test, true);
-+
-+	schedule_timeout_idle(2 * TESTRL_INTERVAL);
-+	test_ratelimited(test, true);
-+	test_ratelimited(test, true);
-+
-+	schedule_timeout_idle(TESTRL_INTERVAL - 40);
-+	test_ratelimited(test, true);
-+	schedule_timeout_idle(50);
-+	test_ratelimited(test, true);
-+	test_ratelimited(test, true);
-+	test_ratelimited(test, true);
-+	test_ratelimited(test, false);
-+
-+	// Test disabling.
-+	testrl.burst = 0;
-+	test_ratelimited(test, false);
-+	testrl.burst = 2;
-+	testrl.interval = 0;
-+	test_ratelimited(test, true);
-+	test_ratelimited(test, true);
-+	test_ratelimited(test, true);
-+	test_ratelimited(test, true);
-+	test_ratelimited(test, true);
-+	test_ratelimited(test, true);
-+	test_ratelimited(test, true);
-+
-+	// Testing re-enabling.
-+	testrl.interval = TESTRL_INTERVAL;
-+	test_ratelimited(test, true);
-+	test_ratelimited(test, true);
-+	test_ratelimited(test, false);
-+	test_ratelimited(test, false);
-+}
-+
-+static struct kunit_case sort_test_cases[] = {
-+	KUNIT_CASE_SLOW(test_ratelimit_smoke),
-+	{}
-+};
-+
-+static struct kunit_suite ratelimit_test_suite = {
-+	.name = "lib_ratelimit",
-+	.test_cases = sort_test_cases,
-+};
-+
-+kunit_test_suites(&ratelimit_test_suite);
-+
-+MODULE_DESCRIPTION("___ratelimit() KUnit test suite");
-+MODULE_LICENSE("GPL");
--- 
-2.40.1
-
+On Thu, 8 May 2025 at 09:21, syzbot
+<syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com> wrote:
+>
+> syzbot suspects this issue was fixed by commit:
+>
+> commit 47979314c0fe245ed54306e2f91b3f819c7c0f9f
+> Author: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+> Date:   Sun Mar 16 04:05:37 2025 +0000
+>
+>     bpf: Convert lpm_trie.c to rqspinlock
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=140598f4580000
+> start commit:   c2933b2befe2 Merge tag 'net-6.14-rc1' of git://git.kernel...
+> git tree:       net-next
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9d95beb2a3c260622518
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=108e1724580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=177035f8580000
+>
+> If the result looks correct, please mark the issue as fixed by replying with:
+>
+> #syz fix: bpf: Convert lpm_trie.c to rqspinlock
+>
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+>
