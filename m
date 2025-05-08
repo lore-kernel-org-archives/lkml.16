@@ -1,55 +1,57 @@
-Received: from mail-vk1-f201.google.com (mail-vk1-f201.google.com [209.85.221.201])
+Received: from mail-vs1-f73.google.com (mail-vs1-f73.google.com [209.85.217.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D492882B0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9CA28750B
 	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 18:46:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746730017; cv=none; b=SokzMl18RdQ+S76o/c9yIyMCRX/KNGuXmkHgDm1+RGpBLa+1b6hXcZuK5IcsGgOR2MLiKWAC3wLk7fjfnvbnXka8P/tyVO8Bc3RxVBzW44EKq//pi97LQ4CIb0ORnpdvHQfPEXhYExueqcfkK/9yA8mDr7pgaHwzoy9GZ9WqcA8=
+	t=1746730017; cv=none; b=VXaCd+EiyGixweAkY1ev3EnV8vvuwmZLEalkLDtRofoa8+gKRWtdr06c1KgdsOJdwrjfN9XaTJVFH/BGgHZ08dEdwlGSyxgJfFQuabgd8BlPSuTWUJaZmu1Zzji6vzpIJ/SMesUkJgJxKUGOhimQQIvOUBZLEH8ZtDXJwJ2uUFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746730017; c=relaxed/simple;
-	bh=JDJtvsLd6pAgSjFemxlKNebzWLSR94Q0gKRIgC16z9A=;
+	bh=2zlOsbrXOKvpKxOQtyINONcY1OAOsAyDfaqD4GbpVTc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Lj9NI1i1mUHwgcVQEvu1v38Lw4rLDCfIj4vHj+Vos56aw2j6YStKnJ4l4bN0NH68qhjZxrlvohF7v+HSeVpYyDB35MCW7vLIDQFNYmh9O4MGpBLwk7KMP6UHKKafw9w3yPvFaxmuhLTLHOJDVDoosV8Qjwvv+qG1HCbvLNOEQkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lFIGs2Z5; arc=none smtp.client-ip=209.85.221.201
+	 To:Cc:Content-Type; b=c+E/fiZBJoFRZ7mnuj2d2dkQDfKm9jjUmsvO8nLYUWufnyqAjvr2B2kA6oaIrU82gjY3LxIl/uxUaTgXWDTILrWVae3bKz+HHZOsSmrRWNPkq3j+yBYCz3gZhHItWDdfvXnTtjx29NCDuZCSqbnhRNkIpVP9pMi6x4Gl9XzDNxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dab/8Qes; arc=none smtp.client-ip=209.85.217.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lFIGs2Z5"
-Received: by mail-vk1-f201.google.com with SMTP id 71dfb90a1353d-52c51af3807so121825e0c.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dab/8Qes"
+Received: by mail-vs1-f73.google.com with SMTP id ada2fe7eead31-4ddb36b85e8so212772137.0
         for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 11:46:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746730014; x=1747334814; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IBAW9WzDfaO30Qr6hkH4oUfrnATBljwiWcxlfgotkDs=;
-        b=lFIGs2Z5QzRvguz3IfUza/Kw3VtQNtDPusHvDoNATVT72J0jN3U/HcOBuLPQvyHqyv
-         bDn6CBreNF1eil+AXAJjV93u0SrlhvfbCs2n6iswogMQ/DZoZSHi0qVF0e6c/XY8mNDM
-         26BM7OdC7ZpUZLlwXLL579+N/0DWLlNsPFIyqOFzmD9wpwu6T4AZAN2fq1vAdE6l10Qz
-         CY75UG7hOdOWjmgbAm0uD9WoWkiUaOFmEyNqzmAAyMPHhV8G80oxhASaHHGaS/ykMMeV
-         WShRCvHEIO0vaxQ2SO+gPebQchBXQTlH/O4J9N/wnO+6bRPhl/X+RpeWf8hjybs6CoJ7
-         RAMQ==
+        d=google.com; s=20230601; t=1746730013; x=1747334813; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ho5EBVy1X8wD8IAytwlI/FNNysTpSwOecb1lJqJ7yC0=;
+        b=dab/8QesuUddepHr57OdcWA2CcKbptQBNoTfSAZ9uSap1K9cXeVb4vCKEcSzsUzu2S
+         fC4QvYmdTF/wyGEA3Nm8xTtUy5DbOhqpVvT0WM4Obx4E1bDVJm815WMRIsQaOZtgDnes
+         lYqRvd75HgzpE26XJqWCVV+ISI3xgPpWqN/KxWvP/1Z0Z0VMfin35OOj5ayngT9ISmup
+         smkC3DjMYMoHyL/R9vFqNCueEEM1xORwd8eNI54tKFyd+Bk+PO8k+3CegP9grusKtcAn
+         PDs5niUsjsfnS6dqS1RTF1VVN/QjbN8twvwmhkpWKyTst4CF1ALMy3uzt1BHVuWVuPNi
+         W2IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746730014; x=1747334814;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IBAW9WzDfaO30Qr6hkH4oUfrnATBljwiWcxlfgotkDs=;
-        b=ht90Y4gxbG332zBRQ7RmNHunKcxsZ95S92QZo9feUq/8yBLwtm5YpLhAJFTDkmy8u3
-         F6m+TZ0gYrJ6BtqGN7jBQgrFxFw7RXaT+heGhXrvrgRvXrqYrbB9IekWJYiA9b8cKo1+
-         eC1AeCj7kAQ9xakEl06xYSYxhjVxwRLlSd1M9tMqwQWTo74jFSYh3IfMSOmMIWczcDfw
-         DCKLFIA/GBxGKNhCd1SwKnklTpbVjnlyP+ARuigiGTZlAHQxHR2/4LfjiGrbU3O06doA
-         VJHPhe1A/dlABltvYlRNijq8MD30QswKABm4z1Ikh1AKzeaKTCFFsvHaPB6rvoJCBTX9
-         USUg==
-X-Forwarded-Encrypted: i=1; AJvYcCWlb0g1oOabroPHiJsX29ZhfEFh0f9L7suY9fvk88JGzzn+RCgMx3zOE21Wz6TYBBqKmzqnbu38CoK1NjY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3IvOmRTgVbJ9G5Ip+FyA3rUzILSR/tl/0tp79vmYwV3TSKpG4
-	spoCpk8te+Sc8RmpCyand0drP7lrs1DfhZoxhAXfy+1iBUIudiu+OGtNain6yPHCm2QgwdP+l0V
-	WeGVESZPFeZsCBua7Cg==
-X-Google-Smtp-Source: AGHT+IFvlfYZC2prDcJoUl/Lv0MPGRDwzVSm29UhzJxGswg/cvFXev8EsLu92bMLUeQ0toOW4Nlb9mHr6Zg+i/u5
-X-Received: from vkben11.prod.google.com ([2002:a05:6122:280b:b0:529:1066:edac])
+        d=1e100.net; s=20230601; t=1746730013; x=1747334813;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ho5EBVy1X8wD8IAytwlI/FNNysTpSwOecb1lJqJ7yC0=;
+        b=GqbEFM/Lh+9ANj7PVzZURL6gjDNDlnPj8uxLSdtWGdv+SKGDz9BMte0abWCinZoXmj
+         B2etpmOL2hby62Yiq5wJ3rNVYhW1LCeIXkia6DSkLq1AjoUpjkca5wOiZjnjIR3loZhl
+         x8BCAg+JVoD666c7Z4PKNbZVTfYj1suTH2p0DpUSj6oV3sQF+T4fYnbGbuI6s8XO+zq/
+         3t82H5k/ry/D9QiOJTOD27xHLhUKFlnPVmNphqqmsyg4GMV72gzqsnpaLvEVxryitm7Y
+         FPjcX15z2edHLKsLxkTS9n+vunbVzfEmK2nvk7+S8Jnr2DmxHnDAVUSlVSjNp7/zFPI5
+         objQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWEB7gO0xD0eyZ7aXWa6S1PdSs5xRx+uEfEZ89FZa60aqWUpDsONKGx/lj4XLsteJ15co/I9aI2RHTWNqM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVJDDR5a44slCIK9uPSYbBClIsbBoYjwMd+1iV8mJgV1NMWk/g
+	DZfe8eOcyc3dHGTOamKeyNndOQXN3r9ACfoSYTNLHpkpxO9oSpon6gZQSfRhBdBVy1r/i+hI25T
+	kNvGMar6+Z6SR3KWqyw==
+X-Google-Smtp-Source: AGHT+IG+Ktw2TRWaNA2c/slycRN+I23OsKqIBnhedgC898fwZF1LQsk23WFexmZdOVeoiRImDSIoMtqhLLazt25f
+X-Received: from vsvj5.prod.google.com ([2002:a05:6102:3e05:b0:4dd:b44f:e267])
  (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6122:2a09:b0:526:1ddd:7603 with SMTP id 71dfb90a1353d-52c538183a0mr902501e0c.0.1746730014050;
- Thu, 08 May 2025 11:46:54 -0700 (PDT)
-Date: Thu,  8 May 2025 18:46:45 +0000
+ 2002:a05:6102:3e18:b0:4de:81a:7d3e with SMTP id ada2fe7eead31-4deed32b1fcmr767025137.2.1746730013348;
+ Thu, 08 May 2025 11:46:53 -0700 (PDT)
+Date: Thu,  8 May 2025 18:46:44 +0000
 In-Reply-To: <20250508184649.2576210-1-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250508184649.2576210-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.49.0.1015.ga840276032-goog
-Message-ID: <20250508184649.2576210-5-jthoughton@google.com>
-Subject: [PATCH v4 4/7] cgroup: selftests: Move cgroup_util into its own library
+Message-ID: <20250508184649.2576210-4-jthoughton@google.com>
+Subject: [PATCH v4 3/7] cgroup: selftests: Move memcontrol specific helpers
+ out of common cgroup_util.c
 From: James Houghton <jthoughton@google.com>
 To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org
 Cc: Maxim Levitsky <mlevitsk@redhat.com>, Axel Rasmussen <axelrasmussen@google.com>, 
@@ -69,113 +72,259 @@ Cc: Maxim Levitsky <mlevitsk@redhat.com>, Axel Rasmussen <axelrasmussen@google.c
 	David Matlack <dmatlack@google.com>, James Houghton <jthoughton@google.com>, cgroups@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-KVM selftests will soon need to use some of the cgroup creation and
-deletion functionality from cgroup_util.
+From: Sean Christopherson <seanjc@google.com>
 
-Suggested-by: David Matlack <dmatlack@google.com>
+Move a handful of helpers out of cgroup_util.c and into test_memcontrol.c
+that have nothing to with cgroups in general, in anticipation of making
+cgroup_util.c a generic library that can be used by other selftests.
+
+Make read_text() and write_text() non-static so test_memcontrol.c can
+use them.
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: James Houghton <jthoughton@google.com>
-Acked-by: Tejun Heo <tj@kernel.org>
+Acked-by: Michal Koutn=C3=BD <mkoutny@suse.com>
 ---
- tools/testing/selftests/cgroup/Makefile       | 21 ++++++++++---------
- .../selftests/cgroup/{ => lib}/cgroup_util.c  |  2 +-
- .../cgroup/{ => lib/include}/cgroup_util.h    |  4 ++--
- .../testing/selftests/cgroup/lib/libcgroup.mk | 19 +++++++++++++++++
- 4 files changed, 33 insertions(+), 13 deletions(-)
- rename tools/testing/selftests/cgroup/{ => lib}/cgroup_util.c (99%)
- rename tools/testing/selftests/cgroup/{ => lib/include}/cgroup_util.h (99%)
- create mode 100644 tools/testing/selftests/cgroup/lib/libcgroup.mk
+Sean's original patch[1] didn't build for me, hence the read_text() and
+write_text() change.
 
-diff --git a/tools/testing/selftests/cgroup/Makefile b/tools/testing/selftests/cgroup/Makefile
-index 1b897152bab6e..e01584c2189ac 100644
---- a/tools/testing/selftests/cgroup/Makefile
-+++ b/tools/testing/selftests/cgroup/Makefile
-@@ -21,14 +21,15 @@ TEST_GEN_PROGS += test_zswap
- LOCAL_HDRS += $(selfdir)/clone3/clone3_selftests.h $(selfdir)/pidfd/pidfd.h
- 
- include ../lib.mk
-+include lib/libcgroup.mk
- 
--$(OUTPUT)/test_core: cgroup_util.c
--$(OUTPUT)/test_cpu: cgroup_util.c
--$(OUTPUT)/test_cpuset: cgroup_util.c
--$(OUTPUT)/test_freezer: cgroup_util.c
--$(OUTPUT)/test_hugetlb_memcg: cgroup_util.c
--$(OUTPUT)/test_kill: cgroup_util.c
--$(OUTPUT)/test_kmem: cgroup_util.c
--$(OUTPUT)/test_memcontrol: cgroup_util.c
--$(OUTPUT)/test_pids: cgroup_util.c
--$(OUTPUT)/test_zswap: cgroup_util.c
-+$(OUTPUT)/test_core: $(LIBCGROUP_O)
-+$(OUTPUT)/test_cpu: $(LIBCGROUP_O)
-+$(OUTPUT)/test_cpuset: $(LIBCGROUP_O)
-+$(OUTPUT)/test_freezer: $(LIBCGROUP_O)
-+$(OUTPUT)/test_hugetlb_memcg: $(LIBCGROUP_O)
-+$(OUTPUT)/test_kill: $(LIBCGROUP_O)
-+$(OUTPUT)/test_kmem: $(LIBCGROUP_O)
-+$(OUTPUT)/test_memcontrol: $(LIBCGROUP_O)
-+$(OUTPUT)/test_pids: $(LIBCGROUP_O)
-+$(OUTPUT)/test_zswap: $(LIBCGROUP_O)
-diff --git a/tools/testing/selftests/cgroup/cgroup_util.c b/tools/testing/selftests/cgroup/lib/cgroup_util.c
-similarity index 99%
-rename from tools/testing/selftests/cgroup/cgroup_util.c
-rename to tools/testing/selftests/cgroup/lib/cgroup_util.c
-index 0ef3b8b8d7f74..4b975637351b2 100644
+[1]: https://lore.kernel.org/kvm/aBAlcrTtBDeQCL0X@google.com/
+---
+
+ tools/testing/selftests/cgroup/cgroup_util.c  | 82 +------------------
+ tools/testing/selftests/cgroup/cgroup_util.h  |  8 +-
+ .../selftests/cgroup/test_memcontrol.c        | 78 ++++++++++++++++++
+ 3 files changed, 83 insertions(+), 85 deletions(-)
+
+diff --git a/tools/testing/selftests/cgroup/cgroup_util.c b/tools/testing/s=
+elftests/cgroup/cgroup_util.c
+index 1e2d46636a0ca..0ef3b8b8d7f74 100644
 --- a/tools/testing/selftests/cgroup/cgroup_util.c
-+++ b/tools/testing/selftests/cgroup/lib/cgroup_util.c
-@@ -17,7 +17,7 @@
- #include <unistd.h>
- 
- #include "cgroup_util.h"
--#include "../clone3/clone3_selftests.h"
-+#include "../../clone3/clone3_selftests.h"
- 
++++ b/tools/testing/selftests/cgroup/cgroup_util.c
+@@ -20,7 +20,7 @@
+ #include "../clone3/clone3_selftests.h"
+=20
  /* Returns read len on success, or -errno on failure. */
- ssize_t read_text(const char *path, char *buf, size_t max_len)
-diff --git a/tools/testing/selftests/cgroup/cgroup_util.h b/tools/testing/selftests/cgroup/lib/include/cgroup_util.h
-similarity index 99%
-rename from tools/testing/selftests/cgroup/cgroup_util.h
-rename to tools/testing/selftests/cgroup/lib/include/cgroup_util.h
-index 139c870ecc285..b7006dc761aba 100644
---- a/tools/testing/selftests/cgroup/cgroup_util.h
-+++ b/tools/testing/selftests/cgroup/lib/include/cgroup_util.h
-@@ -2,9 +2,9 @@
- #include <stdbool.h>
- #include <stdlib.h>
- 
--#include "../kselftest.h"
+-static ssize_t read_text(const char *path, char *buf, size_t max_len)
++ssize_t read_text(const char *path, char *buf, size_t max_len)
+ {
+ 	ssize_t len;
+ 	int fd;
+@@ -39,7 +39,7 @@ static ssize_t read_text(const char *path, char *buf, siz=
+e_t max_len)
+ }
+=20
+ /* Returns written len on success, or -errno on failure. */
+-static ssize_t write_text(const char *path, char *buf, ssize_t len)
++ssize_t write_text(const char *path, char *buf, ssize_t len)
+ {
+ 	int fd;
+=20
+@@ -488,84 +488,6 @@ int cg_run_nowait(const char *cgroup,
+ 	return pid;
+ }
+=20
+-int get_temp_fd(void)
+-{
+-	return open(".", O_TMPFILE | O_RDWR | O_EXCL);
+-}
 -
-+#ifndef PAGE_SIZE
- #define PAGE_SIZE 4096
-+#endif
- 
- #define MB(x) (x << 20)
- 
-diff --git a/tools/testing/selftests/cgroup/lib/libcgroup.mk b/tools/testing/selftests/cgroup/lib/libcgroup.mk
-new file mode 100644
-index 0000000000000..7a73007204c39
---- /dev/null
-+++ b/tools/testing/selftests/cgroup/lib/libcgroup.mk
-@@ -0,0 +1,19 @@
-+CGROUP_DIR := $(selfdir)/cgroup
+-int alloc_pagecache(int fd, size_t size)
+-{
+-	char buf[PAGE_SIZE];
+-	struct stat st;
+-	int i;
+-
+-	if (fstat(fd, &st))
+-		goto cleanup;
+-
+-	size +=3D st.st_size;
+-
+-	if (ftruncate(fd, size))
+-		goto cleanup;
+-
+-	for (i =3D 0; i < size; i +=3D sizeof(buf))
+-		read(fd, buf, sizeof(buf));
+-
+-	return 0;
+-
+-cleanup:
+-	return -1;
+-}
+-
+-int alloc_anon(const char *cgroup, void *arg)
+-{
+-	size_t size =3D (unsigned long)arg;
+-	char *buf, *ptr;
+-
+-	buf =3D malloc(size);
+-	for (ptr =3D buf; ptr < buf + size; ptr +=3D PAGE_SIZE)
+-		*ptr =3D 0;
+-
+-	free(buf);
+-	return 0;
+-}
+-
+-int is_swap_enabled(void)
+-{
+-	char buf[PAGE_SIZE];
+-	const char delim[] =3D "\n";
+-	int cnt =3D 0;
+-	char *line;
+-
+-	if (read_text("/proc/swaps", buf, sizeof(buf)) <=3D 0)
+-		return -1;
+-
+-	for (line =3D strtok(buf, delim); line; line =3D strtok(NULL, delim))
+-		cnt++;
+-
+-	return cnt > 1;
+-}
+-
+-int set_oom_adj_score(int pid, int score)
+-{
+-	char path[PATH_MAX];
+-	int fd, len;
+-
+-	sprintf(path, "/proc/%d/oom_score_adj", pid);
+-
+-	fd =3D open(path, O_WRONLY | O_APPEND);
+-	if (fd < 0)
+-		return fd;
+-
+-	len =3D dprintf(fd, "%d", score);
+-	if (len < 0) {
+-		close(fd);
+-		return len;
+-	}
+-
+-	close(fd);
+-	return 0;
+-}
+-
+ int proc_mount_contains(const char *option)
+ {
+ 	char buf[4 * PAGE_SIZE];
+diff --git a/tools/testing/selftests/cgroup/cgroup_util.h b/tools/testing/s=
+elftests/cgroup/cgroup_util.h
+index 19b131ee77072..139c870ecc285 100644
+--- a/tools/testing/selftests/cgroup/cgroup_util.h
++++ b/tools/testing/selftests/cgroup/cgroup_util.h
+@@ -21,6 +21,9 @@ static inline int values_close(long a, long b, int err)
+ 	return labs(a - b) <=3D (a + b) / 100 * err;
+ }
+=20
++extern ssize_t read_text(const char *path, char *buf, size_t max_len);
++extern ssize_t write_text(const char *path, char *buf, ssize_t len);
 +
-+LIBCGROUP_C := lib/cgroup_util.c
+ extern int cg_find_unified_root(char *root, size_t len, bool *nsdelegate);
+ extern char *cg_name(const char *root, const char *name);
+ extern char *cg_name_indexed(const char *root, const char *name, int index=
+);
+@@ -49,11 +52,6 @@ extern int cg_enter_current_thread(const char *cgroup);
+ extern int cg_run_nowait(const char *cgroup,
+ 			 int (*fn)(const char *cgroup, void *arg),
+ 			 void *arg);
+-extern int get_temp_fd(void);
+-extern int alloc_pagecache(int fd, size_t size);
+-extern int alloc_anon(const char *cgroup, void *arg);
+-extern int is_swap_enabled(void);
+-extern int set_oom_adj_score(int pid, int score);
+ extern int cg_wait_for_proc_count(const char *cgroup, int count);
+ extern int cg_killall(const char *cgroup);
+ int proc_mount_contains(const char *option);
+diff --git a/tools/testing/selftests/cgroup/test_memcontrol.c b/tools/testi=
+ng/selftests/cgroup/test_memcontrol.c
+index 16f5d74ae762e..2908f4e0629db 100644
+--- a/tools/testing/selftests/cgroup/test_memcontrol.c
++++ b/tools/testing/selftests/cgroup/test_memcontrol.c
+@@ -24,6 +24,84 @@
+ static bool has_localevents;
+ static bool has_recursiveprot;
+=20
++int get_temp_fd(void)
++{
++	return open(".", O_TMPFILE | O_RDWR | O_EXCL);
++}
 +
-+LIBCGROUP_O := $(patsubst %.c, $(OUTPUT)/%.o, $(LIBCGROUP_C))
++int alloc_pagecache(int fd, size_t size)
++{
++	char buf[PAGE_SIZE];
++	struct stat st;
++	int i;
 +
-+LIBCGROUP_O_DIRS := $(shell dirname $(LIBCGROUP_O) | uniq)
++	if (fstat(fd, &st))
++		goto cleanup;
 +
-+CFLAGS += -I$(CGROUP_DIR)/lib/include
++	size +=3D st.st_size;
 +
-+EXTRA_HDRS := $(selfdir)/clone3/clone3_selftests.h
++	if (ftruncate(fd, size))
++		goto cleanup;
 +
-+$(LIBCGROUP_O_DIRS):
-+	mkdir -p $@
++	for (i =3D 0; i < size; i +=3D sizeof(buf))
++		read(fd, buf, sizeof(buf));
 +
-+$(LIBCGROUP_O): $(OUTPUT)/%.o : $(CGROUP_DIR)/%.c $(EXTRA_HDRS) $(LIBCGROUP_O_DIRS)
-+	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c $< -o $@
++	return 0;
 +
-+EXTRA_CLEAN += $(LIBCGROUP_O)
--- 
++cleanup:
++	return -1;
++}
++
++int alloc_anon(const char *cgroup, void *arg)
++{
++	size_t size =3D (unsigned long)arg;
++	char *buf, *ptr;
++
++	buf =3D malloc(size);
++	for (ptr =3D buf; ptr < buf + size; ptr +=3D PAGE_SIZE)
++		*ptr =3D 0;
++
++	free(buf);
++	return 0;
++}
++
++int is_swap_enabled(void)
++{
++	char buf[PAGE_SIZE];
++	const char delim[] =3D "\n";
++	int cnt =3D 0;
++	char *line;
++
++	if (read_text("/proc/swaps", buf, sizeof(buf)) <=3D 0)
++		return -1;
++
++	for (line =3D strtok(buf, delim); line; line =3D strtok(NULL, delim))
++		cnt++;
++
++	return cnt > 1;
++}
++
++int set_oom_adj_score(int pid, int score)
++{
++	char path[PATH_MAX];
++	int fd, len;
++
++	sprintf(path, "/proc/%d/oom_score_adj", pid);
++
++	fd =3D open(path, O_WRONLY | O_APPEND);
++	if (fd < 0)
++		return fd;
++
++	len =3D dprintf(fd, "%d", score);
++	if (len < 0) {
++		close(fd);
++		return len;
++	}
++
++	close(fd);
++	return 0;
++}
++
+ /*
+  * This test creates two nested cgroups with and without enabling
+  * the memory controller.
+--=20
 2.49.0.1015.ga840276032-goog
 
