@@ -1,71 +1,25 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28BA22D4FD
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 806A1221FB7
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746712813; cv=none; b=kzuN/iO4SEFj/jaX3mW6khMljHVnPUGe6pWRAXJC6YzWam54HBxAg+o/4Fqi5Hy3QGCAA8Zpn7t1h78WMhRaxM9fIVx8nWG/37HVpWt204j/opAVtALHMmR2XxpISJa+rJcjGHWWrenXmpHKgiyvrFJKJFSAG81OnrX5DxveGnI=
+	t=1746712849; cv=none; b=kNEIf9xAwApvSU5swvLV4eABmzQCuigvghb6o0bw3tF7pT+p6EwPgAHTrgz8GTm4MpIZ3+P453akuxM5NucYKceYfup1OZfRuaJ4tvZT61ai4WOIcj6R0WaDiEe9Dwtzfhg1PWZZlsBdipb8AAJoLVcnix4auR6vsVFxJdbAZIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746712813; c=relaxed/simple;
-	bh=0CBNblVGBwzC4K+9AanOCAcHMIo1KuKGB49HbiekJQI=;
+	s=arc-20240116; t=1746712849; c=relaxed/simple;
+	bh=s2xIjuySA6SGzDHu3XNacSaYItsTL86YTFB6z5DjUwM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kltRbJb3o6MAWVBoH919nxVpfdec9RIfw6uKpmmbR+9jNkey9OWvKJUDVSqgmpzuWFs0dI+saCeBYK6unOpBlk4zocmu9cnlJTWlvrXDtxxH6sSlnCCD2Vw66BUn9Eh3MghWcF20zgUpYZFyXVbrxo9dHJyKjgG1FTVB3N9vlys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OlLc5mLr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OlLc5mLr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746712810;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9N9KFBFAtHdvMwtJNTBznZFyJ6K9qRAlGv8LqfVMqBw=;
-	b=OlLc5mLryunthBx23rro8PQYJw/P/9PmLdXe4gV+Mlw4rJd7v4M+OF9quS4w8vlF5KKaYa
-	lBbmKfabq0iznQvhIDh3w5ozjmKFmYPq3Hp10NychL72XCj0bskBjFgpqzRSPhTbwWz7jP
-	3q36Pq1dXIoFDOwoj4K40p05ogp7pSk=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-589-n67Ljfj2M5qrKjNuNOt-BQ-1; Thu, 08 May 2025 10:00:09 -0400
-X-MC-Unique: n67Ljfj2M5qrKjNuNOt-BQ-1
-X-Mimecast-MFC-AGG-ID: n67Ljfj2M5qrKjNuNOt-BQ_1746712808
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d00017e9dso4707035e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 07:00:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746712808; x=1747317608;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9N9KFBFAtHdvMwtJNTBznZFyJ6K9qRAlGv8LqfVMqBw=;
-        b=rzjI/hZjRijviAigj6B+1wcd7UyoXCmC1JWxLwOIGaZAC3HEyaqjv2ZA4skTqpaZ8w
-         U4V5DJjjTyvA30tUsOWSSBWq2ppWTGGHMtk7L/3CdiYprHFiAwtahvR167ka0MtaS1oq
-         84hPL6v4Jsc9uL36CpLAhfpy5PxWOL+Emh+bIixNGeHfsHAhYdEH+ywITaf9i/0+BrSh
-         /AI/GTikIhMbGQ67EolzJ3IImkaQq2MYgYhUSjiCe3IyGKdpj+nyD40idM58gJuDa/x8
-         E8hbebkafv92u4rUsdQ84L1h+NNPKvScl66mn+ZuS1+GFqHzFVgdNnNK6mrS4vwL8v8Z
-         jaIw==
-X-Forwarded-Encrypted: i=1; AJvYcCXhBRVMZblH0VflIA9HT32YKsaaHLdGijix4CrKbHQj4VnQVrsPjFGThcIAAUUjhrQZ+zSbrHpgHwocM6s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbzzUXyzgs3i3M38uBp0ehcnCobMv4FDWfi4RHo92eIS/Fcfqk
-	LZkfMUBDfh9CKVxITlDuu0Ayh3rBcZLJ7OcdIfJQ6ZVX9Mry97UU06WgHsyfHXdWccBraK4rFqd
-	GAU3pqbHUQKXI21CIoQM0oJ2bvYGAR+yjckMFZ1s9eUIXzLha+KZ8pyKuGTBfSg==
-X-Gm-Gg: ASbGncvIVQvPktBtcv/EBtWTl6z/90u6UszvV9PFJB4KtvQLsL5Y/2y+wwD38vmcngy
-	8iOWV6vHe1g4QB1PqGDlXtWT5N9742toKw1XH/4wC+0umE7vqz8lmf3F7smmjQmf39K4zPib7M8
-	WN46PDFzEIGrcRg3QOuoWNed7brenFXgEIQFjukIP7RlalpZQ4MbFiJ1MXswTwG9Xh5YlHUE6bt
-	qm8VN71QWJYuY8hVnXKK/olY1BxYXtPBDqMGpRE8DvdHIJu89ZkLr0YYMbaDVkqnG1Hu3kC5QbB
-	qjKyLpsd1sRw1XTV
-X-Received: by 2002:a05:600c:5491:b0:43d:ac5:11ed with SMTP id 5b1f17b1804b1-441d44dc05amr62664165e9.24.1746712807960;
-        Thu, 08 May 2025 07:00:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGC2fc8m3vhbJavq1eX+bZPuWSNvi1AlBB3FQAZ2SaPCTNloEhwJvAd3tWCs+J3g6gFaFKD4A==
-X-Received: by 2002:a05:600c:5491:b0:43d:ac5:11ed with SMTP id 5b1f17b1804b1-441d44dc05amr62663825e9.24.1746712807597;
-        Thu, 08 May 2025 07:00:07 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:244b:910::f39? ([2a0d:3344:244b:910::f39])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd2b2050sm39103855e9.0.2025.05.08.07.00.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 07:00:07 -0700 (PDT)
-Message-ID: <244138b2-a90e-404d-946f-9ce25c6155e1@redhat.com>
-Date: Thu, 8 May 2025 16:00:05 +0200
+	 In-Reply-To:Content-Type; b=O7rFiBZU4oXD0dogq8wtUqoijy21UGt/tIyxrQbZ53Jm40XHSTj9C0mq6TQoD/+h4uAun+75m6QtuDRpJRJe9dpJPYr4jnzG8a3WONR0zqaAAE7XvPnEQ8S1RkaWtc1DBbNlIUPGYjORG8dHX8K4NuTlWCzbD8+ZBVOCr5Lyn3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4299D106F;
+	Thu,  8 May 2025 07:00:36 -0700 (PDT)
+Received: from [10.57.90.222] (unknown [10.57.90.222])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 672033F5A1;
+	Thu,  8 May 2025 07:00:44 -0700 (PDT)
+Message-ID: <9689bab0-fe44-40e4-a24d-72b778a521e6@arm.com>
+Date: Thu, 8 May 2025 15:00:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,148 +27,168 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 8/9] net: ethernet: ti: am65-cpsw: add network
- flow classification support
-To: Roger Quadros <rogerq@kernel.org>,
- Siddharth Vadapalli <s-vadapalli@ti.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Russell King <linux@armlinux.org.uk>, danishanwar@ti.com
-Cc: srk@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org,
+Subject: Re: [PATCH v4 00/11] Perf improvements for hugetlb and vmalloc on
+ arm64
+Content-Language: en-GB
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ David Hildenbrand <david@redhat.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org
-References: <20250505-am65-cpsw-rx-class-v2-0-5359ea025144@kernel.org>
- <20250505-am65-cpsw-rx-class-v2-8-5359ea025144@kernel.org>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250505-am65-cpsw-rx-class-v2-8-5359ea025144@kernel.org>
+References: <20250422081822.1836315-1-ryan.roberts@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250422081822.1836315-1-ryan.roberts@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 5/5/25 6:26 PM, Roger Quadros wrote:
-[...]
-> +/* validate the rxnfc rule and convert it to policer config */
-> +static int am65_cpsw_rxnfc_validate(struct am65_cpsw_port *port,
-> +				    struct ethtool_rxnfc *rxnfc,
-> +				    struct cpsw_ale_policer_cfg *cfg)
-> +{
-> +	struct ethtool_rx_flow_spec *fs = &rxnfc->fs;
-> +	int flow_type = AM65_CPSW_FLOW_TYPE(fs->flow_type);
-> +	struct ethhdr *eth_mask;
+Hi Will,
 
-(Minor nit only mentioned because of more relevant comments on previous
-patch) Please respect the reverse christmas tree order above.
+Just a bump on this; I believe it's had review by all the relavent folks (and
+has the R-b) tags. I was hoping to get this into v6.16, but getting nervous that
+time is running out to soak it in linux-next. Any chance you could consider pulling?
 
-> +
-> +	memset(cfg, 0, sizeof(*cfg));
-> +
-> +	if (flow_type & FLOW_RSS)
-> +		return -EINVAL;
-> +
-> +	if (fs->location == RX_CLS_LOC_ANY ||
-> +	    fs->location >= port->rxnfc_max)
-> +		return -EINVAL;
-> +
-> +	if (fs->ring_cookie == RX_CLS_FLOW_DISC)
-> +		cfg->drop = true;
-> +	else if (fs->ring_cookie > AM65_CPSW_MAX_QUEUES)
-> +		return -EINVAL;
-> +
-> +	cfg->port_id = port->port_id;
-> +	cfg->thread_id = fs->ring_cookie;
-> +
-> +	switch (flow_type) {
-> +	case ETHER_FLOW:
-> +		eth_mask = &fs->m_u.ether_spec;
-> +
-> +		/* etherType matching is supported by h/w but not yet here */
-> +		if (eth_mask->h_proto)
-> +			return -EINVAL;
-> +
-> +		/* Only support source matching addresses by full mask */
-> +		if (is_broadcast_ether_addr(eth_mask->h_source)) {
-> +			cfg->match_flags |= CPSW_ALE_POLICER_MATCH_MACSRC;
-> +			ether_addr_copy(cfg->src_addr,
-> +					fs->h_u.ether_spec.h_source);
-> +		}
-> +
-> +		/* Only support destination matching addresses by full mask */
-> +		if (is_broadcast_ether_addr(eth_mask->h_dest)) {
-> +			cfg->match_flags |= CPSW_ALE_POLICER_MATCH_MACDST;
-> +			ether_addr_copy(cfg->dst_addr,
-> +					fs->h_u.ether_spec.h_dest);
-> +		}
-> +
-> +		if ((fs->flow_type & FLOW_EXT) && fs->m_ext.vlan_tci) {
-> +			/* Don't yet support vlan ethertype */
-> +			if (fs->m_ext.vlan_etype)
-> +				return -EINVAL;
-> +
-> +			if (fs->m_ext.vlan_tci != VLAN_TCI_FULL_MASK)
-> +				return -EINVAL;
-> +
-> +			cfg->vid = FIELD_GET(VLAN_VID_MASK,
-> +					     ntohs(fs->h_ext.vlan_tci));
-> +			cfg->vlan_prio = FIELD_GET(VLAN_PRIO_MASK,
-> +						   ntohs(fs->h_ext.vlan_tci));
-> +			cfg->match_flags |= CPSW_ALE_POLICER_MATCH_OVLAN;
-> +		}
-> +
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int am65_cpsw_policer_find_match(struct am65_cpsw_port *port,
-> +					struct cpsw_ale_policer_cfg *cfg)
-> +{
-> +	struct am65_cpsw_rxnfc_rule *rule;
-> +	int loc = -EINVAL;
-> +
-> +	mutex_lock(&port->rxnfc_lock);
-> +	list_for_each_entry(rule, &port->rxnfc_rules, list) {
-> +		if (!memcmp(&rule->cfg, cfg, sizeof(*cfg))) {
-> +			loc = rule->location;
-> +			break;
-> +		}
-> +	}
-> +
-> +	mutex_unlock(&port->rxnfc_lock);
-> +
-> +	return loc;
-> +}
-> +
-> +static int am65_cpsw_rxnfc_add_rule(struct am65_cpsw_port *port,
-> +				    struct ethtool_rxnfc *rxnfc)
-> +{
-> +	struct ethtool_rx_flow_spec *fs = &rxnfc->fs;
-> +	struct am65_cpsw_rxnfc_rule *rule;
-> +	struct cpsw_ale_policer_cfg cfg;
-> +	int loc, ret;
-> +
-> +	if (am65_cpsw_rxnfc_validate(port, rxnfc, &cfg))
-> +		return -EINVAL;
-> +
-> +	/* need to check if similar rule is already present at another location,
-> +	 * if yes error out
-> +	 */
-> +	loc = am65_cpsw_policer_find_match(port, &cfg);
-> +	if (loc >= 0 && loc != fs->location) {
-> +		netdev_info(port->ndev,
-> +			    "rule already exists in location %d. not adding\n",
-> +			    loc);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* delete exisiting rule */
-> +	if (loc >= 0) {
-> +		mutex_lock(&port->rxnfc_lock);
+Thanks,
+Ryan
 
-The rxnfc_lock mutex is released and re-aquired after the previous
-lookup. Con some other thread delete the matching rule in-between and
-add another one at a different location?
 
-/P
+On 22/04/2025 09:18, Ryan Roberts wrote:
+> Hi All,
+> 
+> This is v4 of a series to improve performance for hugetlb and vmalloc on arm64.
+> Although some of these patches are core-mm, advice from Andrew was to go via the
+> arm64 tree. All patches are now acked/reviewed by relevant maintainers so I
+> believe this should be good-to-go.
+> 
+> The 2 key performance improvements are 1) enabling the use of contpte-mapped
+> blocks in the vmalloc space when appropriate (which reduces TLB pressure). There
+> were already hooks for this (used by powerpc) but they required some tidying and
+> extending for arm64. And 2) batching up barriers when modifying the vmalloc
+> address space for upto 30% reduction in time taken in vmalloc().
+> 
+> vmalloc() performance was measured using the test_vmalloc.ko module. Tested on
+> Apple M2 and Ampere Altra. Each test had loop count set to 500000 and the whole
+> test was repeated 10 times.
+> 
+> legend:
+>   - p: nr_pages (pages to allocate)
+>   - h: use_huge (vmalloc() vs vmalloc_huge())
+>   - (I): statistically significant improvement (95% CI does not overlap)
+>   - (R): statistically significant regression (95% CI does not overlap)
+>   - measurements are times; smaller is better
+> 
+> +--------------------------------------------------+-------------+-------------+
+> | Benchmark                                        |             |             |
+> |   Result Class                                   |    Apple M2 | Ampere Alta |
+> +==================================================+=============+=============+
+> | micromm/vmalloc                                  |             |             |
+> |   fix_align_alloc_test: p:1, h:0 (usec)          | (I) -11.53% |      -2.57% |
+> |   fix_size_alloc_test: p:1, h:0 (usec)           |       2.14% |       1.79% |
+> |   fix_size_alloc_test: p:4, h:0 (usec)           |  (I) -9.93% |  (I) -4.80% |
+> |   fix_size_alloc_test: p:16, h:0 (usec)          | (I) -25.07% | (I) -14.24% |
+> |   fix_size_alloc_test: p:16, h:1 (usec)          | (I) -14.07% |   (R) 7.93% |
+> |   fix_size_alloc_test: p:64, h:0 (usec)          | (I) -29.43% | (I) -19.30% |
+> |   fix_size_alloc_test: p:64, h:1 (usec)          | (I) -16.39% |   (R) 6.71% |
+> |   fix_size_alloc_test: p:256, h:0 (usec)         | (I) -31.46% | (I) -20.60% |
+> |   fix_size_alloc_test: p:256, h:1 (usec)         | (I) -16.58% |   (R) 6.70% |
+> |   fix_size_alloc_test: p:512, h:0 (usec)         | (I) -31.96% | (I) -20.04% |
+> |   fix_size_alloc_test: p:512, h:1 (usec)         |       2.30% |       0.71% |
+> |   full_fit_alloc_test: p:1, h:0 (usec)           |      -2.94% |       1.77% |
+> |   kvfree_rcu_1_arg_vmalloc_test: p:1, h:0 (usec) |      -7.75% |       1.71% |
+> |   kvfree_rcu_2_arg_vmalloc_test: p:1, h:0 (usec) |      -9.07% |   (R) 2.34% |
+> |   long_busy_list_alloc_test: p:1, h:0 (usec)     | (I) -29.18% | (I) -17.91% |
+> |   pcpu_alloc_test: p:1, h:0 (usec)               |     -14.71% |      -3.14% |
+> |   random_size_align_alloc_test: p:1, h:0 (usec)  | (I) -11.08% |  (I) -4.62% |
+> |   random_size_alloc_test: p:1, h:0 (usec)        | (I) -30.25% | (I) -17.95% |
+> |   vm_map_ram_test: p:1, h:0 (usec)               |       5.06% |   (R) 6.63% |
+> +--------------------------------------------------+-------------+-------------+
+> 
+> So there are some nice improvements but also some regressions to explain:
+> 
+> fix_size_alloc_test with h:1 and p:16,64,256 regress by ~6% on Altra. The
+> regression is actually introduced by enabling contpte-mapped 64K blocks in these
+> tests, and that regression is reduced (from about 8% if memory serves) by doing
+> the barrier batching. I don't have a definite conclusion on the root cause, but
+> I've ruled out the differences in the mapping paths in vmalloc. I strongly
+> believe this is likely due to the difference in the allocation path; 64K blocks
+> are not cached per-cpu so we have to go all the way to the buddy. I'm not sure
+> why this doesn't show up on M2 though. Regardless, I'm going to assert that it's
+> better to choose 16x reduction in TLB pressure vs 6% on the vmalloc allocation
+> call duration.
+> 
+> Changes since v3 [3]
+> ====================
+> - Applied R-bs (thanks all!)
+> - Renamed set_ptes_anysz() -> __set_ptes_anysz() (Catalin)
+> - Renamed ptep_get_and_clear_anysz() -> __ptep_get_and_clear_anysz() (Catalin)
+> - Only set TIF_LAZY_MMU_PENDING if not already set to avoid atomic ops (Catalin)
+> - Fix commet typos (Anshuman)
+> - Fix build warnings when PMD is folded (buildbot)
+> - Reverse xmas tree for variables in __page_table_check_p[mu]ds_set() (Pasha)
+> 
+> Changes since v2 [2]
+> ====================
+> - Removed the new arch_update_kernel_mappings_[begin|end]() API
+> - Switches to arch_[enter|leave]_lazy_mmu_mode() instead for barrier batching
+> - Removed clean up to avoid barriers for invalid or user mappings
+> 
+> Changes since v1 [1]
+> ====================
+> - Split out the fixes into their own series
+> - Added Rbs from Anshuman - Thanks!
+> - Added patch to clean up the methods by which huge_pte size is determined
+> - Added "#ifndef __PAGETABLE_PMD_FOLDED" around PUD_SIZE in
+>   flush_hugetlb_tlb_range()
+> - Renamed ___set_ptes() -> set_ptes_anysz()
+> - Renamed ___ptep_get_and_clear() -> ptep_get_and_clear_anysz()
+> - Fixed typos in commit logs
+> - Refactored pXd_valid_not_user() for better reuse
+> - Removed TIF_KMAP_UPDATE_PENDING after concluding that single flag is sufficent
+> - Concluded the extra isb() in __switch_to() is not required
+> - Only call arch_update_kernel_mappings_[begin|end]() for kernel mappings
+> 
+> Applies on top of v6.15-rc3. All mm selftests run and no regressions observed.
+> 
+> [1] https://lore.kernel.org/all/20250205151003.88959-1-ryan.roberts@arm.com/
+> [2] https://lore.kernel.org/all/20250217140809.1702789-1-ryan.roberts@arm.com/
+> [3] https://lore.kernel.org/all/20250304150444.3788920-1-ryan.roberts@arm.com/
+> 
+> Thanks,
+> Ryan
+> 
+> Ryan Roberts (11):
+>   arm64: hugetlb: Cleanup huge_pte size discovery mechanisms
+>   arm64: hugetlb: Refine tlb maintenance scope
+>   mm/page_table_check: Batch-check pmds/puds just like ptes
+>   arm64/mm: Refactor __set_ptes() and __ptep_get_and_clear()
+>   arm64: hugetlb: Use __set_ptes_anysz() and
+>     __ptep_get_and_clear_anysz()
+>   arm64/mm: Hoist barriers out of set_ptes_anysz() loop
+>   mm/vmalloc: Warn on improper use of vunmap_range()
+>   mm/vmalloc: Gracefully unmap huge ptes
+>   arm64/mm: Support huge pte-mapped pages in vmap
+>   mm/vmalloc: Enter lazy mmu mode while manipulating vmalloc ptes
+>   arm64/mm: Batch barriers when updating kernel mappings
+> 
+>  arch/arm64/include/asm/hugetlb.h     |  29 ++--
+>  arch/arm64/include/asm/pgtable.h     | 209 +++++++++++++++++++--------
+>  arch/arm64/include/asm/thread_info.h |   2 +
+>  arch/arm64/include/asm/vmalloc.h     |  45 ++++++
+>  arch/arm64/kernel/process.c          |   9 +-
+>  arch/arm64/mm/hugetlbpage.c          |  73 ++++------
+>  include/linux/page_table_check.h     |  30 ++--
+>  include/linux/vmalloc.h              |   8 +
+>  mm/page_table_check.c                |  34 +++--
+>  mm/vmalloc.c                         |  40 ++++-
+>  10 files changed, 329 insertions(+), 150 deletions(-)
+> 
+> --
+> 2.43.0
+> 
 
