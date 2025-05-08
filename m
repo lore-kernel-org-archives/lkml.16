@@ -1,150 +1,285 @@
-Received: from meesny.iki.fi (meesny.iki.fi [195.140.195.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8557F10F9;
-	Thu,  8 May 2025 07:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.140.195.201
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746688675; cv=pass; b=WfgG+7T/86slNQ7bbRbpmoCK6FvPq06gwN8szyqltLGKkrZfvToDxM+JFOtAqKjzCAd4bVF6AscNPq+qhI33dwstzCo5XnVWF8qClS7ZbPAsjeXfhsbFnDL4S7ID3ioe59/5ImM4bobzNZ+JwK5LAPtD50G2pAITokmKYgrTckU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746688675; c=relaxed/simple;
-	bh=vYCDu5efpnGg8Jut4LYEfxMi9552KR5R18/GTqYfT+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RBUy5iwNWIoE2CnoxDtUMA8NQcr0iiKUnSrVc50CnynM6zFQkvp2UdwiEbz3rWTrzdVgHGe9zawyBVKACY2VqY+RVtzv56majGfpLSuWd1hwR49msDx0tDWxuFiSfbuYE2dvGAzVEAR4Zv0VE7f2yFVtsLFGdIkfzUwbMp0G27k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b=iH/ZrBjU; arc=pass smtp.client-ip=195.140.195.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471631A2390
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 07:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746688700; cv=none; b=SGMyxbzdd80y/Pmkx/XCHR0MJQPqbRoagc+RJ/OdJZ1zf5kaACGGP1bFBbP4tPou26jB8YM4ZWXXMWkV4D7icTr0NUupWdY6QJUEWLgBSxq6Fuzrd+D0JmAcr1qO8EJQqqtmQn7J0iW/GMlMmoUz77mh5hU8vEJTOP5zdh4u9/0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746688700; c=relaxed/simple;
+	bh=S5miTwQjKtUGk4+tBA+XNJT4ocOUhvHK6OTAEig+7Y4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sr7LZacIS/yG+BqcrUySd4wRjcRT9s+H3rM57kWnYnzW52MFze+ZPn7D8kjGEC7R5nUVn6tR+yNTHksFikVh0zQusTQ5RIaaW2apFeeUwiSQ0D1innQxeBY0YSYcKbRYKcm2XxS8werigYD0Ih3Jg+55v1AWgqek99DnHxO4i8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UdaBgOgN; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b="iH/ZrBjU"
-Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-127c-61ff-fee2-b97e.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:127c:61ff:fee2:b97e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sailus)
-	by meesny.iki.fi (Postfix) with ESMTPSA id 4ZtNkZ3QzczyRf;
-	Thu,  8 May 2025 10:17:42 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
-	t=1746688663;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YvSTwCgucN+/YVAF7uGKKlxukvXhz2N1xjZsJoTLdT4=;
-	b=iH/ZrBjUdi0TnM5aoTYtlIy7Wrv1SUZDP3Af505alufDE5JHrZC7+FCymbrecP5rbi9BCT
-	RVnE0UodIZNeUa3Xv2NJSrGmPxc9eM/uZK00a0FCxSQaDI2hRZxUUmsF6jFyqxZ7w82iWi
-	RiVXrqD6Q2fy9Svu4RjjgMGGSSJfsaY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=meesny; t=1746688663;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YvSTwCgucN+/YVAF7uGKKlxukvXhz2N1xjZsJoTLdT4=;
-	b=w7ODN86qNPUOLsk/Vcr4VHwajVd1zxTI5aMWb3CoEQTpab6udQ68lTWBZ+SGCOCo1v2oIB
-	1BlZ8npBNPpStbPCF0cpl7uYP5LYmIs4Bye+fcXYcCd6XtSNe5WAJ5CW2AmVnkcHwBnCoj
-	L7+x7II/XAc30zGfOnJLC2MRVHJKfXQ=
-ARC-Seal: i=1; s=meesny; d=iki.fi; t=1746688663; a=rsa-sha256; cv=none;
-	b=uoNRvsm97R3i3S27vJUD4UOIBRD0osYd2Xs2uXUAmgf2szkUnBmT4XjhXJ06v3mlfJHUI8
-	Drg17RzoAe50gdKk/KnAgeTxwHX6CCF6fhqyhthbLcJtRvjmYkVUKVlWgCmptq7X3yYdgZ
-	cLcjoNIQ9HzVMFcdTFkkhNi+LA2IewU=
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
-Received: from valkosipuli.retiisi.eu (valkosipuli.local [192.168.4.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id A0F1D634C93;
-	Thu,  8 May 2025 10:17:41 +0300 (EEST)
-Date: Thu, 8 May 2025 07:17:41 +0000
-From: Sakari Ailus <sakari.ailus@iki.fi>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Pratap Nirujogi <pratap.nirujogi@amd.com>, W_Armin@gmx.de,
-	ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
-	king.li@amd.com, dantony@amd.com
-Subject: Re: [PATCH v12] platform/x86: Add AMD ISP platform config for OV05C10
-Message-ID: <aBxalXYus1R6Xbrr@valkosipuli.retiisi.eu>
-References: <20250505171302.4177445-1-pratap.nirujogi@amd.com>
- <aBosuj_TbH7bzjfZ@valkosipuli.retiisi.eu>
- <0d801367-da24-4596-83d9-08ccd89ca670@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UdaBgOgN"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-70a35432c21so1412327b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 00:18:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746688697; x=1747293497; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=X+w+9EINo0lX9EJXtPXbnuVVO6F/k1kru+gtfl2aKLk=;
+        b=UdaBgOgNgI6ckEC5syzbJLabpPaV7rTaqtHTU253E/0wQ4h92vy5nGxpPKTYQz9Ccj
+         Nkcbc/TjdvLNkM2aeC03rR2ipN5AlTYAUORecAlupW9dMR0pvFpPd04OKtOc3089bMN6
+         7oKABBDPYkAbcKmFQ6VSS+15wAy5ustQRVAWYBAf3gSubOJATpSYu6gs7MMFAcLikQe6
+         M+AkhuguLwxcMy6DzCEIU8cjtAxhfm2HTTfYtLSlHFTKYK0KqYWvEB/MlL2wI3/26mSi
+         zXXCsIywh0GuC8R/IA/1AGUM5JDeooZcsnmc6abFKuhnjQYUxMGJRWFu8iwBS8xoMlxi
+         IGxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746688697; x=1747293497;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X+w+9EINo0lX9EJXtPXbnuVVO6F/k1kru+gtfl2aKLk=;
+        b=SX0XqQPar2JxyLM5YwmhmgJdvyHB/FoTHEbVMs+U4sqRjm4kJq3/twXJCiOTwO70cU
+         fqpem/l6ASdb/Ng29XkjJWDVLgeD2pFBpkYmi4GlNiwdQSsoDk6Iygh+stDvl8h8RXGh
+         uLA8uWYI/MAcYXvpo2k+1f3GA+GXkVr+yX+TBSqm9q2FEMtgW/rclwSTsjyoyR5uFOhk
+         nRlljwx1eFccrdhBetP+hDnMjADGtuBoU1kuV4IsxYMC7isEx7+KT1JsNndIsmOpS4XU
+         XhctIO0GKztM51ZbnmLOA5UG1yn4J19E3khtu0fwYo8HOydnemflAK/LIIIUG0jR2nnj
+         A+bA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOsNUcsoUiBufQKGGDHpXlhgOIkpljnDFsrmzIz9Tp2reTFAa5pEiccwZVKM2EA6unFlKEHTJInG3daVE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyD4kTy5WtU7RtpPe5Fd1JFmD/m4Erec+X2QjUDMOPa1v56O+OW
+	yM2S2/bKkVMrDUKwp2kbgX1ACN1DxHfWMDcu41iaxc7OHBZ8ALBZoNV89tjuH+5yfRtk1la1dZ+
+	LYzg0L9wlhWulGfyBgtNp7PlXpSXX4ZNfedZffQ==
+X-Gm-Gg: ASbGncv9oC0sper2VMrmaopWCJBSPDb9LRK63Ktd7NBMjCU5rm1uDTlfqK3c5vJiiT2
+	Adkqc+cYrFjVCOU88Z74YcaBu1BOy7aukj85IxX1GGFJXYAEHZA2sOGk6eRWD3f1bpshL+vYoJG
+	DZhGDOBlFG1kJXkgR6jMkwyA==
+X-Google-Smtp-Source: AGHT+IH51os8fHvy3MAakr7dpD0MInwd0ULz+Lr+M+W4+Dm5+oufyZh79e6I8shKBJmO2DKjt0Mu77XsFMWH8KSoBhs=
+X-Received: by 2002:a05:690c:48c6:b0:708:7b42:7b98 with SMTP id
+ 00721157ae682-70a1da6db90mr83461097b3.9.1746688697118; Thu, 08 May 2025
+ 00:18:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d801367-da24-4596-83d9-08ccd89ca670@redhat.com>
+References: <20250206112225.3270400-1-quic_mohs@quicinc.com>
+ <20250206112225.3270400-4-quic_mohs@quicinc.com> <4ddd6855-3817-4dc4-81c4-d8ddaa039865@oss.qualcomm.com>
+In-Reply-To: <4ddd6855-3817-4dc4-81c4-d8ddaa039865@oss.qualcomm.com>
+From: Yongqin Liu <yongqin.liu@linaro.org>
+Date: Thu, 8 May 2025 15:18:06 +0800
+X-Gm-Features: ATxdqUFpg-ULIFAYhb5Zs4xVblqJNC1eTqm6s5EV0MB8ljI_jnDHI_Nm1Xe_U-A
+Message-ID: <CAMSo37U1kJq_gK8jiW9iMbhHXtn=Chr7NawiK4fPUPj4kyqH2w@mail.gmail.com>
+Subject: Re: [PATCH v6 3/4] soundwire: qcom: Add set_channel_map api support
+To: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+	Bard Liao <yung-chuan.liao@linux.intel.com>, Jaroslav Kysela <perex@perex.cz>, 
+	Takashi Iwai <tiwai@suse.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
+	Sanyog Kale <sanyog.r.kale@intel.com>, linux-arm-msm@vger.kernel.org, 
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, quic_pkumpatl@quicinc.com, 
+	kernel@oss.qualcomm.com, Jie Gan <jie.gan@oss.qualcomm.com>, 
+	Sumit Semwal <sumit.semwal@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Hans,
+Hi, Mohammad
 
-On Wed, May 07, 2025 at 11:13:18PM +0200, Hans de Goede wrote:
-> Hi Sakari,
-> 
-> On 6-May-25 5:37 PM, Sakari Ailus wrote:
-> > Hi Pratap,
-> > 
-> > On Mon, May 05, 2025 at 01:11:26PM -0400, Pratap Nirujogi wrote:
-> >> ISP device specific configuration is not available in ACPI. Add
-> >> swnode graph to configure the missing device properties for the
-> >> OV05C10 camera device supported on amdisp platform.
-> >>
-> >> Add support to create i2c-client dynamically when amdisp i2c
-> >> adapter is available.
-> >>
-> >> Co-developed-by: Benjamin Chan <benjamin.chan@amd.com>
-> >> Signed-off-by: Benjamin Chan <benjamin.chan@amd.com>
-> >> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> >> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> >> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> >> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
-> >> ---
-> 
-> <snip>
-> 
-> >> +/*
-> >> + * Remote endpoint AMD ISP node definition. No properties defined for
-> >> + * remote endpoint node for OV05C10.
-> > 
-> > How will this scale? Can you use other sensors with this ISP? Although if
-> > you get little from firmware, there's not much you can do. That being said,
-> > switching to DisCo for Imaging could be an easier step in this case.
-> 
-> Note I've already talked to AMD about the way the camera setup
-> is currently being described in ACPI tables is suboptimal and
-> how they really should use proper ACPI description using e.g.
-> a _CRS with an I2cSerialBus resource for the sensor.
+On Mon, 10 Feb 2025 at 11:30, Jie Gan <jie.gan@oss.qualcomm.com> wrote:
+>
+>
+>
+> On 2/6/2025 7:22 PM, Mohammad Rafi Shaik wrote:
+> > Added qcom_swrm_set_channel_map api to set the master channel mask for
+> > TX and RX paths based on the provided slots.
+> >
+> > Added a new field ch_mask to the qcom_swrm_port_config structure.
+> > This field is used to store the master channel mask, which allows more
+> > flexible to configure channel mask in runtime for specific active
+> > soundwire ports.
+> >
+> > Modified the qcom_swrm_port_enable function to configure master
+> > channel mask. If the ch_mask is set to SWR_INVALID_PARAM or is zero,
+> > the function will use the default channel mask.
+> >
+> > Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+> > Acked-by: Vinod Koul <vkoul@kernel.org>
+> > ---
 
-That's one thing, yes, but it's not enough to get rid of the board code.
+There is one "UBSAN: array index out of bounds" kernel panic reported
+by one of our db845c Android builds,
+the kernel panic is something like the following:
+    [   34.478844][   T12] CPU: 1 UID: 0 PID: 12 Comm: kworker/u32:0
+Tainted: G        W   E       6.15.0-rc5-mainline-g3d5bad71a798-4k #1
+PREEMPT  6c0487950a65cef6b999d2d67be1f493cc9d9cb7
+    [   34.495133][   T12] Tainted: [W]=WARN, [E]=UNSIGNED_MODULE
+    [   34.500663][   T12] Hardware name: Thundercomm Dragonboard 845c (DT)
+    [   34.507072][   T12] Workqueue: events_unbound deferred_probe_work_func
+    [   34.513667][   T12] pstate: 20400005 (nzCv daif +PAN -UAO -TCO
+-DIT -SSBS BTYPE=--)
+    [   34.521392][   T12] pc : qcom_swrm_set_channel_map+0x208/0x210
+[soundwire_qcom]
+    [   34.528776][   T12] lr : snd_soc_dai_set_channel_map+0x50/0x8c
+    [   34.534670][   T12] sp : ffffffc0800b3910
+    [   34.538715][   T12] x29: ffffffc0800b3910 x28: ffffff808e65d090
+x27: ffffffed1b8edec8
+    [   34.546622][   T12] x26: ffffffed1b8edec8 x25: ffffff808c579c80
+x24: ffffff808c6ff480
+    [   34.554527][   T12] x23: 0000000000000002 x22: ffffff808cebea80
+x21: ffffff808e639080
+    [   34.562433][   T12] x20: ffffff808e63a880 x19: ffffff808cebea80
+x18: ffffffc0800b50a0
+    [   34.570334][   T12] x17: 00000000e068a532 x16: 00000000e068a532
+x15: 00000000035fc49d
+    [   34.578241][   T12] x14: 000000003b9243a6 x13: 00000000ec1dbcad
+x12: ffffff93e1f38000
+    [   34.586145][   T12] x11: 0000009b0000009a x10: 0000008100000080
+x9 : 000000000000008e
+    [   34.594051][   T12] x8 : ffffff808e463080 x7 : 0000000000000000
+x6 : ffffffed1a0779c0
+    [   34.601951][   T12] x5 : ffffff808034ba80 x4 : ffffffc0800b3970
+x3 : 000000000000000d
+    [   34.609857][   T12] x2 : ffffffc0800b3930 x1 : 0000000000000010
+x0 : ffffff808cebea80
+    [   34.617763][   T12] Call trace:
+    [   34.620944][   T12]  qcom_swrm_set_channel_map+0x208/0x210
+[soundwire_qcom e3a7c79ee66106e972319e98e81c50cf82a5307f] (P)
+    [   34.631908][   T12]  sdm845_dai_init+0x1d8/0x2f4
+[snd_soc_sdm845 1c888555a3e29ffd70a1064d1f53d421696609ba]
+    [   34.641644][   T12]  snd_soc_link_init+0x48/0x88
+    [   34.646314][   T12]  snd_soc_bind_card+0x734/0xbc4
+    [   34.651157][   T12]  snd_soc_register_card+0xf8/0x110
+    [   34.656261][   T12]  devm_snd_soc_register_card+0x54/0xa0
+    [   34.661709][   T12]  sdm845_snd_platform_probe+0x13c/0x144
+[snd_soc_sdm845 1c888555a3e29ffd70a1064d1f53d421696609ba]
+    [   34.672314][   T12]  platform_probe+0xa8/0xe8
+    [   34.676715][   T12]  really_probe+0x11c/0x45c
+    [   34.681116][   T12]  __driver_probe_device+0xac/0x168
+    [   34.686219][   T12]  driver_probe_device+0x44/0x1b4
+    [   34.691150][   T12]  __device_attach_driver+0x108/0x184
+    [   34.696426][   T12]  bus_for_each_drv+0x114/0x170
+    [   34.701183][   T12]  __device_attach+0xc8/0x1a8
+    [   34.705757][   T12]  device_initial_probe+0x1c/0x2c
+    [   34.710678][   T12]  bus_probe_device+0x9c/0x128
+    [   34.715341][   T12]  deferred_probe_work_func+0xc8/0x134
+    [   34.720706][   T12]  process_one_work+0x26c/0x614
+    [   34.725462][   T12]  worker_thread+0x268/0x3b8
+    [   34.729954][   T12]  kthread+0x164/0x294
+    [   34.733923][   T12]  ret_from_fork+0x10/0x20
+    [   34.738251][   T12] Code: 39190109 54000061 2a1f03e0 d65f03c0 (d42aa240)
+    [   34.745094][   T12] ---[ end trace 0000000000000000 ]---
+    [   34.750456][   T12] Kernel panic - not syncing: UBSAN: array
+index out of bounds: Fatal exception
+    [   34.759398][   T12] SMP: stopping secondary CPUs
+    [   34.964362][   T12] Kernel Offset: 0x2c99200000 from 0xffffffc080000000
+    [   34.971037][   T12] PHYS_OFFSET: 0x80000000
+    [   34.975258][   T12] CPU features: 0x0000,00000248,01002650,8200721b
+    [   34.981581][   T12] Memory Limit: none
 
-> 
-> Although I must admit I did not bring up the ACPI DisCo for imaging
-> spec as something to also look at for future generations.
+With my investigation, IIUC, it seems related to the following tree variables:
+    #define QCOM_SDW_MAX_PORTS 14
+    #define SLIM_MAX_TX_PORTS 16
+    #define SLIM_MAX_RX_PORTS 13
 
-I think we should really try to get rid of the board code the raw cameras
-on ACPI systems currently depend on, in future systems, instead of just
-reducing it a little bit. MIPI DisCo for Imaging enables that.
+QCOM_SDW_MAX_PORTS is used to declare the pconfig array,
+SLIM_MAX_TX_PORTS and SLIM_MAX_RX_PORTS
+are used to declare the rx_ch and tx_ch arrays in the sdm845_dai_init
+function, which are finally passed
+to qcom_swrm_set_channel_map as the rx_slot and tx_slot,
 
-I guess you're not very familiar with Intel-based ChromeOS systems in this
-area? Maybe largely because they work out of the box. And there's no board
-code for these systems in the kernel. These are based (albeit I'm not quite
-sure about the latest ones) on older Linux-based definitions whereas newer
-MIPI DisCo for Imaging spec is OS-independent.
+And I could confirm that the panic is not reported if this commit is reverted.
+I also tried to add one debug line to print the value of the related
+numbers in qcom_swrm_set_channel_map,
+and here is the output
+    [ 34.143174][ T115] drivers/soundwire/qcom.c 1287
+qcom_swrm_set_channel_map tx_num=16, rx_num=13, QCOM_SDW_MAX_PORTS=14,
+ARRAY_SIZE(ctrl->pconfig)=15
 
-> 
-> Note that there currently is hw shipping using the somewhat
-> broken ACPI sensor description this glue driver binds to,
-> so we're stuck with dealing with these ACPI tables as they
-> are already out there in the wild.
+which could help to confirm the "array index out of bounds" error as well.
 
-I agree, there's little that can be done at this point.
+Could you please help to have a check, and give some suggestions?
 
-> 
-> But yes for future hw generations it would be good to have
-> a better description of the hw in ACPI.
+Thanks,
+Yongqin Liu
 
--- 
-Regards,
 
-Sakari Ailus
+> >   drivers/soundwire/qcom.c | 26 ++++++++++++++++++++++++++
+> >   1 file changed, 26 insertions(+)
+> >
+> > diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
+> > index 0f45e3404756..295a46dc2be7 100644
+> > --- a/drivers/soundwire/qcom.c
+> > +++ b/drivers/soundwire/qcom.c
+> > @@ -156,6 +156,7 @@ struct qcom_swrm_port_config {
+> >       u8 word_length;
+> >       u8 blk_group_count;
+> >       u8 lane_control;
+> > +     u8 ch_mask;
+> >   };
+> >
+> >   /*
+> > @@ -1048,9 +1049,13 @@ static int qcom_swrm_port_enable(struct sdw_bus *bus,
+> >   {
+> >       u32 reg = SWRM_DP_PORT_CTRL_BANK(enable_ch->port_num, bank);
+> >       struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
+> > +     struct qcom_swrm_port_config *pcfg;
+> >       u32 val;
+> >
+> > +     pcfg = &ctrl->pconfig[enable_ch->port_num];
+> >       ctrl->reg_read(ctrl, reg, &val);
+> > +     if (pcfg->ch_mask != SWR_INVALID_PARAM && pcfg->ch_mask != 0)
+> > +             enable_ch->ch_mask = pcfg->ch_mask;
+> >
+> >       if (enable_ch->enable)
+> >               val |= (enable_ch->ch_mask << SWRM_DP_PORT_CTRL_EN_CHAN_SHFT);
+> > @@ -1270,6 +1275,26 @@ static void *qcom_swrm_get_sdw_stream(struct snd_soc_dai *dai, int direction)
+> >       return ctrl->sruntime[dai->id];
+> >   }
+> >
+> > +static int qcom_swrm_set_channel_map(struct snd_soc_dai *dai,
+> > +                                  unsigned int tx_num, const unsigned int *tx_slot,
+> > +                                  unsigned int rx_num, const unsigned int *rx_slot)
+> > +{
+> > +     struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
+> > +     int i;
+> > +
+> > +     if (tx_slot) {
+> > +             for (i = 0; i < tx_num; i++)
+> > +                     ctrl->pconfig[i].ch_mask = tx_slot[i];
+> > +     }
+> > +
+> > +     if (rx_slot) {
+> > +             for (i = 0; i < rx_num; i++)
+> > +                     ctrl->pconfig[i].ch_mask = rx_slot[i];
+> > +     }
+> > +
+> It looks like a hack.
+> Consider the situation: if(tx_slot) is true and if(rx_slot) is true. So
+> the ch_mask always overwritten by rx_slot?
+>
+> > +     return 0;
+> I think you dont need the return value here. Just void is ok.
+>
+> Thanks,
+> Jie
+>
+> > +}
+> > +
+> >   static int qcom_swrm_startup(struct snd_pcm_substream *substream,
+> >                            struct snd_soc_dai *dai)
+> >   {
+> > @@ -1306,6 +1331,7 @@ static const struct snd_soc_dai_ops qcom_swrm_pdm_dai_ops = {
+> >       .shutdown = qcom_swrm_shutdown,
+> >       .set_stream = qcom_swrm_set_sdw_stream,
+> >       .get_stream = qcom_swrm_get_sdw_stream,
+> > +     .set_channel_map = qcom_swrm_set_channel_map,
+> >   };
+> >
+> >   static const struct snd_soc_component_driver qcom_swrm_dai_component = {
+>
+>
+
+
+--
+Best Regards,
+Yongqin Liu
+---------------------------------------------------------------
+#mailing list
+linaro-android@lists.linaro.org
+http://lists.linaro.org/mailman/listinfo/linaro-android
