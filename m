@@ -1,116 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26154262FCA;
-	Thu,  8 May 2025 08:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FCF262FC9;
+	Thu,  8 May 2025 08:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746693582; cv=none; b=IFLlbhOJWPE+ROPrJrU9k1HqkIkp4WcDvXOlfMcQwMTIK4DzYpLcbdHvnPYcL9AGz8ok6Tri1BKehJ7rlfZ6GWlb23ZD1uLOabuZt2+7+2HDxsAZ7jtE2fiA+n6OOE6djWT6Pd2OToMWnm0m/5IFdPR4Cp3KOo9l9vWD5V6RgbI=
+	t=1746693627; cv=none; b=n0QiVvg1za2aT/bcl7zqpi8kEgLAGSuKiQTCLm7XhJLT+AQd6BIED0tky1FyFc6fRH7ffn6k/Bc84HY77T9yMEwhziajs3c+HyksJMKIwuElW/N96jI+6lc4uPsKEe++zrhk5wfWJGDdMnlqn0Q6xpHxhZ1m8B4sbaO0DZ+4ovU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746693582; c=relaxed/simple;
-	bh=J1quForL1AyV+mxiU/+Tx5j7sIP7VxLUjzVH0JaG5GA=;
+	s=arc-20240116; t=1746693627; c=relaxed/simple;
+	bh=biF9LbNbWIVmr1lu/SJD7jTVvIudv3FbyuuHOOWKLi4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MeejwEoU00GlEecbDv7ABmXG4hKbcwEgVyASj1h9BTjp1gWOn6Abew60JnBOd2ovTdExG6/qaBSMbRNArNgfNvB/GXjS7CADH1j1aqyQ/3x8IO381wv2+6U7R59d3OKyII0v+RZ6QyIXVEMlHWrg+zG7bihXyLYT9/tIZIZn76U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QSrrnWQS; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=d6b0A0gvFrhZE9oobfydzJ3kJ4GhHIrXKOpB95xK4b0a1Ye3g8PPEJPQlHWU3fucmmVsJKz6eLjU9JZcWKehjd7SbUFsScHvrZsw62X1Fn7WY8MXUziDBCoKL5Jj+IvQMkFpKrlMgF6HYmOyIzu89MkkixXt2I4e3eiXXIkEdZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MLLFxppV; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QSrrnWQS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746693581; x=1778229581;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=J1quForL1AyV+mxiU/+Tx5j7sIP7VxLUjzVH0JaG5GA=;
-  b=QSrrnWQSGrInAW3NtGyF6D76MKdc0eXAq4tOuM58MXVCvbwoCkpfnJ0a
-   5kfdA8KquZc3JaNNFI9R++53yTniJcyDq/ZqwZ7U64GvKZwuGUsT6NBJd
-   7hB7iHRnVvcVexRpp0Qcf80eYww/IHQ5Br+fAwqQyFL6uMNigH9OYqTKT
-   yjpHWJvUER6ULDPYGOnuM9wYTFrzfSjJmteEls8zVcoSgh7sURquB/rJQ
-   eI3jS+ULYRKC6M5tpYPwwqnWst1rAr0jekBA7ZLhfAU+Y7uwDnhuZXdTX
-   8zmHo4lconP/2+SrLI1ojztv0do8+Ldjkgr4Cp8jmqjTZQ0uEAIq73IKL
-   w==;
-X-CSE-ConnectionGUID: bMF9fXM5Sc6osACjPjPBkw==
-X-CSE-MsgGUID: bXwVuhQeR9Wym7qZtrLSqg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52273876"
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="52273876"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 01:39:40 -0700
-X-CSE-ConnectionGUID: oQrkPq5kQgifWHGyg4j/xQ==
-X-CSE-MsgGUID: Pw0GmgEXRM65MOnUpmGxqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="135925309"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 08 May 2025 01:39:36 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCwn0-000AnH-04;
-	Thu, 08 May 2025 08:39:34 +0000
-Date: Thu, 8 May 2025 16:39:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Daniel Schultz <d.schultz@phytec.de>, nm@ti.com, vigneshr@ti.com,
-	kristo@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	robertcnelson@gmail.com, francesco.dolcini@toradex.com
-Cc: oe-kbuild-all@lists.linux.dev, upstream@lists.phytec.de,
-	w.egorov@phytec.de, Daniel Schultz <d.schultz@phytec.de>
-Subject: Re: [PATCH 4/4] arm64: dts: ti: k3-am62a7-*: Specify Temperature
- Grade
-Message-ID: <202505081648.oRdmP2QV-lkp@intel.com>
-References: <20250507050847.912756-4-d.schultz@phytec.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MLLFxppV"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf257158fso4637625e9.2;
+        Thu, 08 May 2025 01:40:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746693624; x=1747298424; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=biF9LbNbWIVmr1lu/SJD7jTVvIudv3FbyuuHOOWKLi4=;
+        b=MLLFxppVu1Z0fZCHsJnWTjnvDTIw3cde5GFAXARa+qgb3AZ67y33Lhp/ZLV0ZvN3Iw
+         j324BoPhy2FYNFkWFusFLuflfj31F+wnTEMf4C58Cur43EgK9kKenkI2gYznRujom65c
+         A/5sdSxLgu20/Mfh3cy2xQqD7RfJy/7eQa/8tW/ZGKMnNWZtxhvFUjYkXfXOAYIOYLBk
+         YFJ8zHcLAHMaNkub1Yk2qrR0v6cp0oyY0qPhyAVdJrr9vKMKqdHZyt2cOdimesjWFHqn
+         7uazVsP0Sdn84ecrqskkev+8focgYyXYyL1n/B40qZZsxo9tF1sNFcW5TvGsH6iy6baq
+         ROKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746693624; x=1747298424;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=biF9LbNbWIVmr1lu/SJD7jTVvIudv3FbyuuHOOWKLi4=;
+        b=XJrASmoDUA6EKYEWO2XaAOM4H4Lvz43Ca2VOHDI1SDQ6EOEaeCXTb+XwLb6Z6NWwg0
+         XE0+zKU2cORKSu+BiGP7591JGOIYjOLquX828QFQgX9GA9xS7xst+Y9oKtMkBdtXfU7+
+         JvP7wP64mo/kAYh6sn4QWFAe6FsVy5CZzqF68iEpt1tvSg7xMWfJDvGPX8NBtoLnPTFX
+         QwcchI/fdk7vVjq7AQ3Qxukv7i1iFCNZU+dgKs6n7yeCjtNYHYUrJoW9bdQf6SBNwvoz
+         Cr8rR4rg5x1os/PnQSZXGAE+INgplQe0qnqy27AWUY3eXG8M5Z/ABcAE5fvNf/u5P296
+         P4JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUW/WriAW1RNg8vl6dUBIHKBLNBMG/u6CiNqRm5beIRRRAL/myplRk5Wsok/W2BRw8Mk+n4ThJ1CyfERNw=@vger.kernel.org, AJvYcCWH6diyIMnfH1dPbtGBD4LeMoX6xrFiWXDoA8py8B87e/gP/huRSZ0q7GbkSTZhVlt/esiRGlT9hSQ/@vger.kernel.org, AJvYcCXRRnXxoIesHyrn+YqnMRUcgZiGBH9Vjuk2ZZeJE6MQqoosksQ0zlBqGTFo73w7qB0XhHNPkjt4E4M=@vger.kernel.org, AJvYcCXkD7ULxGp95fWE63H1Gya1bXmhixhjeGTUJBT4JRLYvthvjS/xsm5ohrWOUbTri+OdieJj3Djrbax7Ir0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrwwWbMqIfx+xvvmI+Mh/v6KSYkXB0qS2osz9cEfzGiHeYf23V
+	TjkAvhp7/FyK7za7j6n62RdNQ0bN1yjflwNpRx0I979Jv50pOBpm
+X-Gm-Gg: ASbGncvMUxEuTps28m+E8JB3KD4wLyhdVwJEnCK0r3zNbqY2M3EhBcFmER24si0IqoB
+	pfvUf7HGQoTJ2Fid12w2sulIZ4EAAuesbRYgBCy2LLfHHIGIPGYewULReyemzNsD7UYXVUPZLhe
+	jjXQwILx2QBfK+GbaraQCNmZs0sluR94uRmCS+oBvGOARgUJHKGChz2gsmvrjh2QcUm6ATI1Abq
+	crsX+7jwy0C/S9dXM9O5i+pKJwoSS9wRNbCHGjgo19Zqw90+TiWuATvNy3OMqJy5waEpwgokzyn
+	iPrXv4/cbLS+GisaMglUD1p4hiVmo9CHXl92FJAGIB2TYhHifyhNIutCTbkicz86qRZ1WLPFrX3
+	Oe9Wwlgep/Bg7NgktVE+NNSut+7k=
+X-Google-Smtp-Source: AGHT+IE9uqNT3gs5cTTSDhRlYuFC4GTWbpWQezWktgdQ2wds9Sy/hE9+Jxp8jSBAj09Y6gpoG60aQw==
+X-Received: by 2002:a05:600c:1c03:b0:43c:f85d:1245 with SMTP id 5b1f17b1804b1-441d44c7c41mr58471955e9.17.1746693623489;
+        Thu, 08 May 2025 01:40:23 -0700 (PDT)
+Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd35f40asm28526745e9.27.2025.05.08.01.40.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 01:40:22 -0700 (PDT)
+Date: Thu, 8 May 2025 10:40:20 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: webgeek1234@gmail.com
+Cc: Thomas Gleixner <tglx@linutronix.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] PCI: tegra: Allow building as a module
+Message-ID: <w2ertcizgmtu27kcike3lpw5dvhvqi2b4c6amqzwdfs2xtebfy@itrpen3oblhs>
+References: <20250507-pci-tegra-module-v6-0-5fe363eaa302@gmail.com>
+ <20250507-pci-tegra-module-v6-3-5fe363eaa302@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5kggnoviwlppqn34"
 Content-Disposition: inline
-In-Reply-To: <20250507050847.912756-4-d.schultz@phytec.de>
-
-Hi Daniel,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master v6.15-rc5 next-20250507]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Daniel-Schultz/arm64-dts-ti-k3-am625-Specify-Temperature-Grade/20250507-131122
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20250507050847.912756-4-d.schultz%40phytec.de
-patch subject: [PATCH 4/4] arm64: dts: ti: k3-am62a7-*: Specify Temperature Grade
-config: arm64-defconfig (https://download.01.org/0day-ci/archive/20250508/202505081648.oRdmP2QV-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250508/202505081648.oRdmP2QV-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505081648.oRdmP2QV-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> arch/arm64/boot/dts/ti/k3-am62a7-sk.dts:14:10: fatal error: k3-am62a-thermal-automative.dtsi: No such file or directory
-      14 | #include "k3-am62a-thermal-automative.dtsi"
-         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   compilation terminated.
+In-Reply-To: <20250507-pci-tegra-module-v6-3-5fe363eaa302@gmail.com>
 
 
-vim +14 arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+--5kggnoviwlppqn34
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v6 3/3] PCI: tegra: Allow building as a module
+MIME-Version: 1.0
 
-     9	
-    10	#include <dt-bindings/leds/common.h>
-    11	#include <dt-bindings/gpio/gpio.h>
-    12	#include <dt-bindings/net/ti-dp83867.h>
-    13	#include "k3-am62a7.dtsi"
-  > 14	#include "k3-am62a-thermal-automative.dtsi"
-    15	
+On Wed, May 07, 2025 at 10:25:54PM -0500, Aaron Kling via B4 Relay wrote:
+> From: Aaron Kling <webgeek1234@gmail.com>
+>=20
+> This changes the module macro back to builtin, which does not define an
+> exit function. This will prevent the module from being unloaded. There
+> are concerns with modules not cleaning up IRQs on unload, thus this
+> needs specifically disallowed. The remove callback is also dropped as it
+> is unused.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+What exactly are these concerns? I haven't done this lately, but I'm
+pretty sure that unbinding the PCI controller is something that I
+extensively tested back when this code was introduced. PCI is designed
+to be hot-pluggable, so there shouldn't be a need to prevent unloading
+of the controller.
+
+Rather than just forcing this to be always there, can we not fix any
+issues and keep this unloadable?
+
+Thierry
+
+--5kggnoviwlppqn34
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmgcbfAACgkQ3SOs138+
+s6Fz+A/8C7VaC4JinitRsZHtP4F8qGpgtEyHU0xDilJjzE9nyNjUuZ9JzEjmRmk9
+2LBWYKOWNKou1WycC86QEOKiP4QTBVVtS7SuTctUmm1q5CMRA3EmwQg5Grm6aIXA
+0ke8RS+ycqpoOxfp21HAX+06ZmcSNfXGvwd0lRTIDASygkNPU+SYrWrXptpJJEzl
+G/plwuuN0guIQGlJbi4N0Hy1WA4tz9/A89vdmmqoTP9lgpeGVyy0OHIRlUpVHjX+
+SLTAvvrCWdwcMPFbY+1Pn05SpwDfsDZFWzmQQIJw6nVWxPSsl8lr78h6SEZNMb0p
+WsEDQ9hiu0umMdgAt72kspcXRrXYyxFZlkc6mfMTlluOYaGmxIV0giKD34P9jKME
+QxgTXokluvh4Upy1R3xdOVtQlfGC3hFRkk9Kl64Lho6v9KM+6L3/vH9Ckl1KP3pu
+I3Dbxj+MGbIPv6+b5Zxpa7VTUbvzgWg0vkUVhByJZ4OizdDYMpKBahF9gSCrJoFK
+lr5GxmqFPV5ebkddsavHQIM4oLq4nLbnyclgqNRqNP2dpxRnnJkmOK+lkIBz5cX/
+uSagR6ocrkuc5xKNLMNdgxWDD87FoowGa+Tkagx+qrtF90chIpGAj1YJaufbVqOH
+79EUtQCPydxK6SJV5I93R+zQZ+UFmLJjS44g7Rcqn0A8hVXrmI4=
+=QGvC
+-----END PGP SIGNATURE-----
+
+--5kggnoviwlppqn34--
