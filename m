@@ -1,131 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065A0224AF3;
-	Thu,  8 May 2025 12:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD51B224AF3
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746708883; cv=none; b=hos3iBqzSTwRPJjWp2PsnQXb31i81TMClBkL92M5yuqbMud7ppTXy4m7OdlfEHVN8CXwBxpc1ZHaUmJZE7bhUQflXT46xd6D/Nxm+lvdo7FlbhcSOlqAwdEagkkLAg1N/bkcibONAn1ZYb6pQ9bGrJsF/Hx+vbsosQ0L5NKvvjs=
+	t=1746708888; cv=none; b=Qoe7VWOOQNGiLd1ZNoFcmtQSA8xGTyBSKE6CzkIXcuqLYsynbQT9fhodv15CQ37hvGpvL6o3EDJ6rg375/CU2614v/JP1/q4/qtmO6/0pyNK11WodYvpnYPUDyCCjjb+gqZYFXr4/E27d57FSEncrZZthCHF784Ee2utehr2Uws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746708883; c=relaxed/simple;
-	bh=S9eoTW4XJBQw+Xx3Yvv9LwoTc4xtq7hLIPTj83IOlyQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bgP0hBIwrkzKxjnXFuz0UT/RXtPpwoa5bwUBr7ob/w+Mr2gdoE+dCcDrthexx+bELT+UutgaVSgpXANKvmozJfmE9j0D6FgJLWv7TrgY6Ya9H9nwkiif32BhvXrLnnmthPMZzpWMNm3n+w5PZDQHTaV/W1WrykxJCkY0J07ESJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJJVjIY6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746708888; c=relaxed/simple;
+	bh=Ut5s6R9tRw13gFju4bD7gu9d90vFam5WdykQvgBBp4I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rtQbLsxcpXFH4lJnjiryO6c1SrQLcGmUejPS+TSjjXCFWmGsze/WfpPsRTNgl26DYp1VJ47ZNOGjHG/SXhlHhxO9phaXdohI7Zd652fAjkEej5NnqDwFyW+6IEgUggVJqtOGoyZHTEJcc+THExXqmVCeJSCyHN9kE508VaJd2PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x+GgUCd+; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJJVjIY6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FB0DC4CEE7;
-	Thu,  8 May 2025 12:54:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746708881;
-	bh=S9eoTW4XJBQw+Xx3Yvv9LwoTc4xtq7hLIPTj83IOlyQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uJJVjIY6HdOdH4RVivepNxYb66cIl89AYcbOO/ZJojD2R1hMpapDcP4BFzfnIMOc9
-	 qgWXoayMi8hkZxiK72zs/RskPLTBuk/Tspk4041PCwOyYbQJ5B8CCqQL34oMiwyMU9
-	 sJYlxiZ7n3sQfQ/VFlGMPLaKCBmSfR46Nak/COVSADhIjpT5qrofclpgic1dx2RbDv
-	 PoAFMck6eoG3NUfHUpxEesuFg1Eu2iXuKr7tVFeH0oUzuiTxHIXaMuDdbDLccXOZuZ
-	 CZNgxqQUtcxKllRiaUc+xzLR0JJjFA6YovdLIwzcRg4SZ/541VcsTmHugwGA4nhHLY
-	 JMacJGFaN0Grg==
-Message-ID: <179d3a2a-a8bf-44be-b601-e9817c203508@kernel.org>
-Date: Thu, 8 May 2025 14:54:34 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x+GgUCd+"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30bfe0d2b6dso7985951fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:54:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746708885; x=1747313685; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fmSnlmxJWeeD10oNDjS6EnBGlRIgti7Si5Ae3x1v+G8=;
+        b=x+GgUCd+J6wA12FZ8BvNl7PSD7cdI856uT9enxa3iFZ+RE4L7aM5PQzWQLvI9ay9rA
+         5ipU105qYh2oZlshkExvYs3ljKKgd2NV48Fo0A1hr+UYnp/2Zp1iezhth7JD4GSCk0xU
+         oLyrtby8lcPh0AGkeNN+BOHLrn//f9U7AQVbNagp8PB0pUeZUZHx2BViZJHc2CJSegdQ
+         kNwXY3eEmvwKQg8Hp2p6cZDG6VMvIMiU1fU42WxuZF3+otSEsTrudbpgIiwFvEr2+pCS
+         qA+0uuX061HqeWySw+P5AFxeiReq5f05h+XR5BIkg9EHJrct16d75SwTq8Dpz24IqCGe
+         wU3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746708885; x=1747313685;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fmSnlmxJWeeD10oNDjS6EnBGlRIgti7Si5Ae3x1v+G8=;
+        b=MpQX2gQg7Dw/fZjZIBBoAB59vjzdYq40Vvqk1wcKB6XjbjlUg7ffppb7KNbf7XCbbG
+         EEOU9zaFa/kuj7jKWDzb8AENzKjbjdVprQXs1FI+9h2GIXaghJPd35eGVDk2Ve97sgep
+         zQtj/Nrju2RE9VXRQLoOCobbSS/Ssi6XvJ8DINW/t/R9daZe4Jccf9I1UqPCouIUaXzf
+         l7w6LWcgml4rGKUSO9/hWHl93A+4JESoYQLOBQSyh546KQ1h1Sc5vY11fdGMywa2zbqM
+         eb+082O6fYiKxchfoSdxMlAMdC1uQ1m0vQRQs7uUOPkwlcqvsItmjnhc+Jg4P7sN+Ljh
+         6I7w==
+X-Forwarded-Encrypted: i=1; AJvYcCU+ezAM2Mtp2HmklGEPfqLKfDNHjquC+AVuYj8yDsMqmLAbL8t/uBSlmH97ZGzu3uIcicr/SNf6vx50+w4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza486JZF+RQxRJbRtxcaDcQ98eZ0pwsgky0iEfUM0VcIhjCVvg
+	1vg8wFj6MKQYWXt5o3FX5w6sU6Xkyhf33mW+VBXiT0KC0b+Iak4/5rEQAAxVBL//vstEe/wdWCy
+	ujdTJc+Rg6zklTsXj+0xmujzqHxWdr0mu6mL6EQ==
+X-Gm-Gg: ASbGnctHV1KV+QiZOu5EfCk0vdAgTzPxn5K2SYkTRTz1mFYT9ZNGBI6V1RqFscYwwRG
+	nf5IipS+MgPoW5cmTJLNyB22iaIjhTOIWFGbIDHBFJxXNMdPpN0T5SLzK43Q220KJuPsAen60sJ
+	fvyMOJNCZ4qN2qQGTMqu1pUw==
+X-Google-Smtp-Source: AGHT+IESDSB+M6cQqQKoi1no4CUO3/t7RnhD0N76Oc6h9qf9nOOdCGVN/uzMOa2kSVF2KTBgdhb1HyNQNUQQ07MCqDY=
+X-Received: by 2002:a2e:9fc5:0:b0:30c:523a:a84 with SMTP id
+ 38308e7fff4ca-326b88af180mr10273841fa.32.1746708885003; Thu, 08 May 2025
+ 05:54:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/6] mux: gpio: add optional regulator support
-To: Johan Hovold <johan@kernel.org>, srinivas.kandagatla@linaro.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: peda@axentia.se, broonie@kernel.org, andersson@kernel.org,
- krzk+dt@kernel.org, ivprusov@salutedevices.com, luca.ceresoli@bootlin.com,
- zhoubinbin@loongson.cn, paulha@opensource.cirrus.com, lgirdwood@gmail.com,
- robh@kernel.org, conor+dt@kernel.org, konradybcio@kernel.org,
- perex@perex.cz, tiwai@suse.com, dmitry.baryshkov@oss.qualcomm.com,
- linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- johan+linaro@kernel.org, Christopher Obbard <christopher.obbard@linaro.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20250327100633.11530-1-srinivas.kandagatla@linaro.org>
- <20250327100633.11530-3-srinivas.kandagatla@linaro.org>
- <Z-zvuhz2nkA5j4RZ@hovoldconsulting.com>
- <aBynhb6voxJvZtB7@hovoldconsulting.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <aBynhb6voxJvZtB7@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250505-sm8750-display-panel-v1-0-e5b5398482cc@linaro.org> <20250505-sm8750-display-panel-v1-2-e5b5398482cc@linaro.org>
+In-Reply-To: <20250505-sm8750-display-panel-v1-2-e5b5398482cc@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 8 May 2025 14:54:33 +0200
+X-Gm-Features: ATxdqUGekggxGo4UYqHnYKuHD3Y3vsGE4-NVmxpuSSBnslo0v5IlSxfK1_TPjro
+Message-ID: <CACRpkdZi3ryJ_D6NYaLS1Cmevp-Pmbdq6zTL5+a=cmXNq42N5g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/panel: Add Novatek NT37801 panel driver
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 08/05/2025 14:45, Johan Hovold wrote:
->> nit: "failed to get/enable mux supply" may be more consistent with the
->> other (non-capitalised error) messages and avoids repeating "gpio mux"
->> which will be added by driver core.
->>
->>> +
->>>  	ret = devm_mux_chip_register(dev, mux_chip);
->>>  	if (ret < 0)
->>>  		return ret;
->>
->> Either way:
->>
->> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
->> Tested-by: Johan Hovold <johan+linaro@kernel.org>
-> 
-> Can someone please pick this one and the binding update up for 6.16?
-> 
-> I see you recently volunteered to do so, Krzysztof? [1]
+Hi Krzysztof,
 
-Sure, thanks for ping. I'll take with your change in err msg.
+thanks for your patch!
 
-> 
-> Johan
-> 
-> [1] https://lore.kernel.org/all/20250501175303.144102-2-krzysztof.kozlowski@linaro.org/
+On Mon, May 5, 2025 at 11:16=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
+> Add driver for the Novatek NT37801 or NT37810 AMOLED DSI 1440x3200
+> panel in CMD mode, used on Qualcomm MTP8750 board (SM8750).
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Best regards,
-Krzysztof
+(...)
+> +static int novatek_nt37801_on(struct novatek_nt37801 *ctx)
+> +{
+> +       struct mipi_dsi_device *dsi =3D ctx->dsi;
+> +       struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D dsi };
+> +
+> +       dsi->mode_flags |=3D MIPI_DSI_MODE_LPM;
+> +
+> +       mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf0,
+> +                                    0x55, 0xaa, 0x52, 0x08, 0x01);
+
+The above is obviously some kind of unlocking
+sequence to open page 1 of some vendor registers.
+
+We know this because the exact same sequence appear in
+panel-innolux-p079zca.c  and panel-sony-tulip-truly-nt35521.c
+and the last argument is the page, so there we added
+a switch page macro making it clear what is going on.
+Could you do the same here?
+
+With this addressed:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
