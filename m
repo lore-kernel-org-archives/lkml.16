@@ -1,146 +1,187 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7435628C03F;
-	Thu,  8 May 2025 20:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2848528C5CF
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 20:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746735924; cv=none; b=kmDefHM2n74RbNI7bGetEArqkg7U3bHo083ECgHwQL6Sj4me6/1+LIdbiywrQYdpVN+/rdYXbDorKLNg9tuYfO96zPlL3e4zU8fzmFYxz9neMURyFe5bCsJgpIYSi0R/lUPQsQTpIfls5RuHwvE7Zj3gD4EeNCniqDlnRLLWX6I=
+	t=1746735936; cv=none; b=B5BvuNUonIdpmM82npYcFnncEEEEg8QvN8JGvNnOEeuhyhAcNYt/Qod6sp5yKI7Q2WSNLU3fHWTgp4jhEBWhbfGi8HoVRhJ3YAlCrSG7R22KIUzvUEJlOEcyb/E5TuyXIGOB037S7WVIGRXJADpELQQTVeQVLC3uoGV2GfwS8cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746735924; c=relaxed/simple;
-	bh=MsJOMVn1vxQ25UIx25I8nR9qjt4TSlX/PtY0sYN3QZ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EgZQpkmDXbkdZPyUzo/0VFOe4GYZX+HewtVnXsljwK38NiCXrgHwvCpFDHLmsIBSrISAc4n8lWiKHJA6F7nCF/KVusSvMVtmZgPUt6CgdMxuqFTheD7d2epj9ta6VKLyds2oRjOyIW9hF7KSqPvEWOHKzMSqkYnUmc9wkLfpgXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ApeXQDUb; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ApeXQDUb"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-74068f95d9fso1491483b3a.0;
-        Thu, 08 May 2025 13:25:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746735923; x=1747340723; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=2KKhlirT+mOzzcqtCv1gw0CpqB8qUWHpAj5Ser8V4Q0=;
-        b=ApeXQDUb0cY0v74ClzTg7uM/RZq7dRVvPSZglA5OAh/xTwtTQIz2+EtM+FaTI0DL86
-         AALfyQAd3HQEluLnD7HE5CbVIHJlzcluHANGO1be0lKA3RnlNlf0TAJ94Rgc+gJjvEXV
-         HIAdFzEAvR1Pnmz3xAvpmhN75GNcxDd1/mtqYPceSz5R0Op3e/f4D+jC/WMFOYqdr4q7
-         oghQwonJCExkDJECwmo8yzw+XeeJiHv+uzQHnmtWCahACefwzSNZ1kFn7AfAyYB3Pmrr
-         jCbMoV75+y1lT6xgIlPQ2npLfk9E+kCf7c8Dwx5jP1Ck7ZC3wqR4c78C9feJ+FxfV80k
-         lr7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746735923; x=1747340723;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2KKhlirT+mOzzcqtCv1gw0CpqB8qUWHpAj5Ser8V4Q0=;
-        b=igO322CpwoRYvpY/4vvx1fsgjkWcw9E/PlqAVxNvlnjrZYpL+Qm3fiTkep2TdgZLwN
-         PuAY0gqw8/wwxXOE+gprwDFkHOaQVxZTedmtYKi+ci30NSeK53We1n3pNXJ6xEGCS9P/
-         ymu/5BbU+LRiryH4fYk2RctDMrrc2+HnT93W4XSQSGPO0SVP1CXVvrqiQ0uLKjUhdS/5
-         wyHRUBkQcVtrO6LqUS/DCqDNUBfG7cuafnlhAjVCxYUUt8/1OQVq5xhDTT21AuSLtbyJ
-         gI9sr2K4oS2KBzkAlegoxWiOIp1EYjWyZdt5tFRkZfnRW7tvE/gfqJ76qhKvWaUoxq51
-         Q7dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkFpBBW40AOOouWoQgGkJ2Odydr0A5Jmn7ky3psUzLuCyw1/5yA17eue7+mCp2mr1X/3RQmis3@vger.kernel.org, AJvYcCVCTsDinUEv+jxLKWzq1Eimt1fRakpkAEaOHUcF/aQvco+nA3xcoz3TNqweqakktbgpy4zcQNlPgnQ/6Gk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYpc7pSXH7uNgX7Osm+umBifLhzyaimUciwp/H6zSXs4sCpJ6J
-	PQh1JerasOMt06qoeTGRLkDHhnzRY+EbAli7hwCh8Pv+JsH94YQD
-X-Gm-Gg: ASbGncss6HsgIjqvf6BH6xxeq+zlAVfqowem5GkrbfwtEk1i7s4E4LHOO7GxlqlgeG9
-	RhtQ76mtP7zyNuhExp+oTeemRrDPU16OcAfvE2VydICHZ34WzPxM/DxmlQcPda/hWtp5fi3OpiI
-	OIUD/KZ+Sjo29juPR/xRoa8hbVTgbVDgTACmTjyqw4MAidVS18ZNniNnblA8jelkIClPa0XpY5Y
-	MRLog0yz6m0k+ngrQRvSsUJl5BHtk/jcmAUmNEcUi5WlyCt8KUMYDyNt8WQ1ju8baDvBo46yQTx
-	dFNr8g+vWu58/AjuSQ2AffAWL4zbBkT3p6j57Jb1kpShPGUNzkqOKF23fFHjo/xJ7JYkHXWx9EM
-	lyg/knaBwFCe3EcM=
-X-Google-Smtp-Source: AGHT+IHkcU1/5M2Y+YPbh19OnZdCSlbYkXuOCfgJLAdBmpfseejR1+XFvAy6P48EsXxIs5IGQKWxbA==
-X-Received: by 2002:a05:6a00:21d0:b0:73e:10ea:1196 with SMTP id d2e1a72fcca58-7423bd6c3a9mr980529b3a.8.1746735922594;
-        Thu, 08 May 2025 13:25:22 -0700 (PDT)
-Received: from [192.168.1.177] (46.37.67.37.rev.sfr.net. [37.67.37.46])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7423770414dsm460950b3a.23.2025.05.08.13.25.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 13:25:22 -0700 (PDT)
-Message-ID: <3eccf673-efe0-4feb-906d-ce860497469a@gmail.com>
-Date: Thu, 8 May 2025 22:25:17 +0200
+	s=arc-20240116; t=1746735936; c=relaxed/simple;
+	bh=GkFms8Q6aKyCL3Gr2QweKHG4yGXfIq2w7/Eg1rsvABA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jnJBxYBZxncvx3ItijoEEX2WR4w8gD1BkvysgaXz9crwdZ+xJvwDhMWhO+JMEd6S6zZSuxw5xnkE4jHtdEkPOdqnYE6QEMlRQ1IwGvU/p7nRznWRozZuk6OWLzh3TT9T8n+Lolb0qzJIR0YR1N4KRhMCT/0hjCeNZvwY3RzWrSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from trampoline.thunk.org (pool-173-48-82-148.bstnma.fios.verizon.net [173.48.82.148])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 548KOOaX022511
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 8 May 2025 16:24:25 -0400
+Received: by trampoline.thunk.org (Postfix, from userid 15806)
+	id 371DE2E00E1; Thu, 08 May 2025 16:24:24 -0400 (EDT)
+Date: Thu, 8 May 2025 16:24:24 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: Christoph Hellwig <hch@lst.de>, "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        john.g.garry@oracle.com, bmarzins@redhat.com, chaitanyak@nvidia.com,
+        shinichiro.kawasaki@wdc.com, brauner@kernel.org, yi.zhang@huawei.com,
+        chengzhihao1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
+Subject: Re: [RFC PATCH v4 07/11] fs: statx add write zeroes unmap attribute
+Message-ID: <20250508202424.GA30222@mit.edu>
+References: <20250421021509.2366003-8-yi.zhang@huaweicloud.com>
+ <20250505132208.GA22182@lst.de>
+ <20250505142945.GJ1035866@frogsfrogsfrogs>
+ <c7d8d0c3-7efa-4ee6-b518-f8b09ec87b73@huaweicloud.com>
+ <20250506043907.GA27061@lst.de>
+ <64c8b62a-83ba-45be-a83e-62b6ad8d6f22@huaweicloud.com>
+ <20250506121102.GA21905@lst.de>
+ <a39a6612-89ac-4255-b737-37c7d16b3185@huaweicloud.com>
+ <20250508050147.GA26916@lst.de>
+ <68172a9e-cf68-4962-8229-68e283e894e1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/164] 6.12.28-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250507183820.781599563@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250507183820.781599563@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <68172a9e-cf68-4962-8229-68e283e894e1@huaweicloud.com>
 
-
-
-On 5/7/2025 8:38 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.28 release.
-> There are 164 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, May 08, 2025 at 08:17:14PM +0800, Zhang Yi wrote:
+> On 2025/5/8 13:01, Christoph Hellwig wrote:
+> >>
+> >> My idea is not to strictly limiting the use of FALLOC_FL_WRITE_ZEROES to
+> >> only bdev or files where bdev_unmap_write_zeroes() returns true. In
+> >> other words, STATX_ATTR_WRITE_ZEROES_UNMAP and FALLOC_FL_WRITE_ZEROES
+> >> are not consistent, they are two independent features. Even if some
+> >> devices STATX_ATTR_WRITE_ZEROES_UNMAP are not set, users should still be
+> >> allowed to call fallcoate(FALLOC_FL_WRITE_ZEROES). This is because some
+> >> devices and drivers currently cannot reliably ascertain whether they
+> >> support the unmap write zero command; however, certain devices, such as
+> >> specific cloud storage devices, do support it. Users of these devices
+> >> may also wish to use FALLOC_FL_WRITE_ZEROES to expedite the zeroing
+> >> process.
+> > 
+> > What are those "cloud storage devices" where you set it reliably,
+> > i.e.g what drivers?
 > 
-> Responses should be made by Fri, 09 May 2025 18:37:41 +0000.
-> Anything received after that time might be too late.
+> I don't have these 'cloud storage devices' now, but Ted had mentioned
+> those cloud-emulated block devices such as Google's Persistent Desk or
+> Amazon's Elastic Block Device in. I'm not sure if they can accurately
+> report the BLK_FEAT_WRITE_ZEROES_UNMAP feature, maybe Ted can give more
+> details.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.28-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> https://lore.kernel.org/linux-fsdevel/20250106161732.GG1284777@mit.edu/
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels build tested on 
-BMIPS_GENERIC:
+There's nothing really exotic about what I was referring to in terms
+of "cloud storage devices".  Perhaps a better way of describing them
+is to consider devices such as dm-thin, or a Ceph Block Device, which
+is being exposed as a SCSI or NVME device.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+The distinction I was trying to make is performance-related.  Suppose
+you call WRITE_ZEROS on a 14TB region.  After the WRITES_ZEROS
+complete, a read anywhere on that 14TB region will return zeros.
+That's easy.  But the question is when you call WRITE_ZEROS, will the
+storage device (a) go away for a day or more before it completes (which
+would be the case if it is a traditional spinning rust platter), or
+(b) will it be basically instaneous, because all dm-thin or a Ceph Block
+Device needs to do is to delete one or more entries in its mapping
+table.
 
+The problem is two-fold.  First, there's no way for the kernel to know
+whether a storage device will behave as (a) or (b), because SCSI and
+other storage specifications say that performance is out of scope.
+They only talk about the functional results (afterwards, if yout try
+to read from the region, you will get zeros), and are utterly silent
+about how long it migt take.  The second problem is that if you are an
+application program, there is no way you will be willing to call
+fallocate(WRITE_ZEROS, 14TB) if you don't know whether the disk will
+go away for a day or whether it will be instaneous.
+
+But because there is no way for the kernel to know whether WRITE_ZEROS
+will be fast or not, how would you expect the kernel to expose
+STATX_ATTR_WRITE_ZEROES_UNMAP?  Cristoph's formulation "breaking the
+abstraction" perfectly encapsulate the SCSI specification's position
+on the matter, and I agree it's a valid position.  It's just not
+terribly useful for the application programmer.
+
+Things which some programs/users might want to know or rely upon, but which is normally quite impossible are: 
+
+* Will the write zero / discard operation take a "reasonable" amount
+  of time?  (Yes, not necessarilly well defined, but we know it when
+  we see it, and hours or days is generally not reasonable.)
+
+* Is the operation reliable --- i.e., is the device allowed to
+  randomly decide that it won't actually zero the requested blocks (as
+  is the case of discard) whenever it feels like it.
+
+* Is the operation guaranteed to make the data irretreviable even in
+  face of an attacker with low-level access to the device.  (And this
+  is also not necessarily well defined; does the attacker have access
+  to a scanning electronic microscope, or can do a liquid nitrogen
+  destructive access of the flash device?)
+
+The UFS (Universal Flash Storage) spec comes the closest to providing
+commands that distinguish between these various cases, but for most
+storage specifications, like SCSI, it is absolutely requires peaking
+behind the abstraction barrier defined by the specification, and so
+ultimately, the kernel can't know.
+
+About the best you can do is to require manual configuration; perhaps a
+config file at the database or userspace cluster file system level
+because the system adminsitrator knows --- maybe because the hyperscale
+cloud provider has leaned on the storage vendor to tell them under
+NDA, storage specs be damned or they won't spend $$$ millions with
+that storage vendor ---  or because the database administrator discovers
+that using fallocate(WRITE_ZEROS) causes performance to tank, so they
+manually disable the use of WRITE_ZEROS.
+
+Could this be done in the kernel?  Sure.  We could have a file, say,
+/sys/block/sdXX/queue/write_zeros where the write_zeros file is
+writeable, and so the administrator can force-disable WRITES_ZERO by
+writing 0 into the file.  And could this be queried via a STATX
+attribute?  I suppose, although to be honest, I'm used to doing this
+by looking at the sysfs files.  For example, just recently I coded up
+the following:
+
+static int is_rotational (const char *device_name EXT2FS_ATTR((unused)))
+{
+	int		rotational = -1;
+#ifdef __linux__
+	char		path[1024];
+	struct stat	st;
+	FILE		*f;
+
+	if ((stat(device_name, &st) < 0) || !S_ISBLK(st.st_mode))
+		return -1;
+
+	snprintf(path, sizeof(path), "/sys/dev/block/%d:%d/queue/rotational",
+		major(st.st_rdev), minor(st.st_rdev));
+	f = fopen(path, "r");
+	if (!f) {
+		snprintf(path, sizeof(path),
+			"/sys/dev/block/%d:%d/../queue/rotational",
+			major(st.st_rdev), minor(st.st_rdev));
+		f = fopen(path, "r");
+	}
+	if (f) {
+		if (fscanf(f, "%d", &rotational) != 1)
+			rotational = -1;
+		fclose(f);
+	}
+#endif
+	return rotational;
+}
+
+Easy-peasy!   Who needs statx?   :-)
+
+
+						- Ted
