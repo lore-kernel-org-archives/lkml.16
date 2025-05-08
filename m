@@ -1,401 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03921229B16;
-	Thu,  8 May 2025 18:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 303A52874EB;
+	Thu,  8 May 2025 18:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746728013; cv=none; b=FwkJbMbaDSEnmAkfJrmgbiTE2PN7PHODNSN1Qaf885KF9uDYRsSnqNTbhtFPzpx9qyBtamH9MV7fZ8irqX1Cup8TdaGWb2XALPa7qH7ie5AxwmWXGV/y6E5dFNnJbAcnfB3qc9WpNShHQ8XfY5u3ZiPwrXDkmnX/FytrY2PJ590=
+	t=1746728016; cv=none; b=fJx/VjlUrTZVpBySjecAaiKrJ2K2a+CCwokfxawF/Pbca0hSvJrEYmKZjrowe22rtitbfVH6dvJomaJR9BDlky/6/fucehEdHqUEzQ506i9TSAj2lmbDjXHBWBPoJnOMvpGSkLhB1xWgHmxkAHm3eyiCE4dM8YWczin0J1kBrN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746728013; c=relaxed/simple;
-	bh=bDHdn95VekxzDJanXgTA48lEwL5W43wixFKSpHwJLcs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VWWli0jYP7NIR0ruL5+yX/NbIn1Ah3cp8wUo9i9ux6fwKAlhqw1HDJldRHWJB6fjfJuTxuZE1ccny1KqNYN7HIGeBzPZOGI7jazDhbR1+XYyV3HPSAnLOAxrfEA5Fsoy0+ayeAq/q+tLkdHMFP7lWqbgm2HYIo255CvD81cgE1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTwETgFn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746728016; c=relaxed/simple;
+	bh=7YNxL1Vm89Ly6NfdTnBUxIowWrliUwR2DRgb+MJjmrY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LdGs/0Bu3/IgIviWhr+jMkVSK7xAP91G7EzwEptTp7cJ3vOkXBDjSYDBUtEo5u+zsos7ctbuxzXN9kAqHuGDRlcA8qlJv9LBgNDngfj9PKh4oUjQyLe8ZTiB121icfAlKuYHr0zBCgu+vR57rYOYMk/KZCplMt88BL1R0MPHMC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=T3jLATy5; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTwETgFn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0D96C4CEE7;
-	Thu,  8 May 2025 18:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746728011;
-	bh=bDHdn95VekxzDJanXgTA48lEwL5W43wixFKSpHwJLcs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=CTwETgFnrOB7vyySHhuj/pCsic+K+giVtdx1wxWum9fnvATvxMuKJpZc/PoIWsv+c
-	 n0lp0gQPMj11qz9ZY2jXaZ0PhhKPcxw9CTuUYA2sBudl15DaF/IYNchH+3Rphw3XiK
-	 1VHylEBvUjwUmhbJTDvEab6lTd8g8JaU2KiUfrd7VGRHuKjdFie2rTgxjivfYpXNVo
-	 8m9ovfyusoz80w6WaAwfxUNXb4b2eJjXMVD/TBf6wWlWcCxaMin2rBpW8OQ/H2IpIU
-	 uxQkLuMINgT1rCeL0ElAXAfyhAeneDO5/UGMTzLrA+qzrqfUrp4lJCRVE2lv2S2Xtz
-	 xgyXoLeU3gcVg==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Thu, 08 May 2025 20:12:33 +0200
-Subject: [PATCH RFT 01/14] soc: qcom: Add UBWC config provider
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="T3jLATy5"
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A1790209846A;
+	Thu,  8 May 2025 11:13:33 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A1790209846A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746728013;
+	bh=LO/oU31zQKuZfvDv0dRtOXlLNZ7bEkZUhWrRkKEMaKI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=T3jLATy5Kr4R+l+iK6j0Iu/2R+WKgl56UrzjK/gv7IYcJVlPswenenA+T9uT/4heJ
+	 oHEH8osYF+vn+GvUUVPPoTjl3rMNdO4Q3ckRQEVzhxPfPBztqFb349jUE5M7IdcHJ/
+	 2lOkAkozHsEubravHQF9lk8GnZSYVEuhks5mtfsE=
+Message-ID: <2cd63d5d-21af-408b-869a-b38118f4cad6@linux.microsoft.com>
+Date: Thu, 8 May 2025 11:13:33 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250508-topic-ubwc_central-v1-1-035c4c5cbe50@oss.qualcomm.com>
-References: <20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com>
-In-Reply-To: <20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <lumag@kernel.org>, 
- Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746728002; l=10882;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=V9ixTYvvS78w1Iy5uh3EIkmQbXcpwcNzwrwRRDc3Tlk=;
- b=6BK4dBDtEYF8kw7dI4WaRvmGXiZkIibrZ5kUJoR19VgvDF/MaXXGMoiyrsscA35k9xY/rhWSf
- zrECU9TqgBTAQXNhvnvJzPBjNChbDHeEdn2bJV5RH6mawri6JM5STrl
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Drivers: hv: Introduce mshv_vtl driver
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Saurabh Singh Sengar <ssengar@microsoft.com>,
+ Naman Jain <namjain@linux.microsoft.com>, KY Srinivasan <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui <decui@microsoft.com>,
+ Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <20250506084937.624680-1-namjain@linux.microsoft.com>
+ <KUZP153MB1444BE7FD66EA9CA9B4B9A97BE88A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <be04a26f-866d-43e6-9a0b-15b91405503e@linux.microsoft.com>
+ <29edc00e-9797-4f4a-83b3-0b4158c94a16@linux.microsoft.com>
+ <KUZP153MB14448028621F8148D5129D9FBE8BA@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <1edea7f4-5ad2-4103-8eb5-9d5d9f0c7b0d@linux.microsoft.com>
+ <aBztdK82ZQQvnWsh@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <aBztdK82ZQQvnWsh@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Add a file that will serve as a single source of truth for UBWC
-configuration data for various multimedia blocks.
 
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- drivers/soc/qcom/Kconfig       |   8 ++
- drivers/soc/qcom/Makefile      |   1 +
- drivers/soc/qcom/ubwc_config.c | 255 +++++++++++++++++++++++++++++++++++++++++
- include/linux/soc/qcom/ubwc.h  |  31 +++++
- 4 files changed, 295 insertions(+)
+On 5/8/2025 10:44 AM, Wei Liu wrote:
+> On Thu, May 08, 2025 at 08:44:14AM -0700, Roman Kisel wrote:
+[...]
+>>
+>> You seem to know for whom it is broken, would be great to share this
+>> knowledge. When CONFIG_MSHV_VTL is set to "m", OpenHCL will break down
+>> without additional work. So why do we need to be able to build that
+>> as a module, to let someone build the firmware that doesn't work?
+>>
+>> So far the request comes off as absurd to me.
+>>
+> 
+> I don't think this is an absurd request.
+> 
+> While obviously Microsoft will only build the code as builtin, there are
+> bots that do randconfig build tests but never run the resulting binary.
 
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 58e63cf0036ba8554e4082da5184a620ca807a9e..2caadbbcf8307ff94f5afbdd1481e5e5e291749f 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -296,3 +296,11 @@ config QCOM_PBS
- 	  PBS trigger event to the PBS RAM.
- 
- endmenu
-+
-+config QCOM_UBWC_CONFIG
-+	tristate
-+	help
-+	  Most Qualcomm SoCs feature a number of Universal Bandwidth Compression
-+	  (UBWC) engines across various IP blocks, which need to be initialized
-+	  with coherent configuration data. This module functions as a single
-+	  source of truth for that information.
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index acbca2ab5cc2a9ab3dce1ff38efd048ba2fab31e..b7f1d2a5736748b8772c090fd24462fa91f321c6 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -39,3 +39,4 @@ obj-$(CONFIG_QCOM_ICC_BWMON)	+= icc-bwmon.o
- qcom_ice-objs			+= ice.o
- obj-$(CONFIG_QCOM_INLINE_CRYPTO_ENGINE)	+= qcom_ice.o
- obj-$(CONFIG_QCOM_PBS) +=	qcom-pbs.o
-+obj-$(CONFIG_QCOM_UBWC_CONFIG) += ubwc_config.o
-diff --git a/drivers/soc/qcom/ubwc_config.c b/drivers/soc/qcom/ubwc_config.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..3f81fb2aab284dc9a5bcf53e5d638aaba44b6f2d
---- /dev/null
-+++ b/drivers/soc/qcom/ubwc_config.c
-@@ -0,0 +1,255 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-+ */
-+
-+#include <linux/debugfs.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+
-+#include <linux/soc/qcom/ubwc.h>
-+
-+static const struct qcom_ubwc_cfg_data msm8937_data = {
-+	.ubwc_enc_version = UBWC_1_0,
-+	.ubwc_dec_version = UBWC_1_0,
-+	.highest_bank_bit = 1,
-+	.mdss_reg_bus_bw = 76800,
-+};
-+
-+static const struct qcom_ubwc_cfg_data msm8998_data = {
-+	.ubwc_enc_version = UBWC_1_0,
-+	.ubwc_dec_version = UBWC_1_0,
-+	.highest_bank_bit = 2,
-+	.mdss_reg_bus_bw = 76800,
-+};
-+
-+static const struct qcom_ubwc_cfg_data qcm2290_data = {
-+	/* no UBWC */
-+	.highest_bank_bit = 2,
-+	.mdss_reg_bus_bw = 76800,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sa8775p_data = {
-+	.ubwc_enc_version = UBWC_4_0,
-+	.ubwc_dec_version = UBWC_4_0,
-+	.ubwc_swizzle = 4,
-+	.ubwc_bank_spread = true,
-+	.highest_bank_bit = 0,
-+	.macrotile_mode = true,
-+	.mdss_reg_bus_bw = 74000,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sar2130p_data = {
-+	.ubwc_enc_version = UBWC_3_0, /* 4.0.2 in hw */
-+	.ubwc_dec_version = UBWC_4_3,
-+	.ubwc_swizzle = 6,
-+	.ubwc_bank_spread = true,
-+	.highest_bank_bit = 0,
-+	.macrotile_mode = true,
-+	.mdss_reg_bus_bw = 74000,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sc7180_data = {
-+	.ubwc_enc_version = UBWC_2_0,
-+	.ubwc_dec_version = UBWC_2_0,
-+	.ubwc_swizzle = 6,
-+	.ubwc_bank_spread = true,
-+	.highest_bank_bit = 1,
-+	.mdss_reg_bus_bw = 76800,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sc7280_data = {
-+	.ubwc_enc_version = UBWC_3_0,
-+	.ubwc_dec_version = UBWC_4_0,
-+	.ubwc_swizzle = 6,
-+	.ubwc_bank_spread = true,
-+	.highest_bank_bit = 1,
-+	.macrotile_mode = true,
-+	.mdss_reg_bus_bw = 74000,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sc8180x_data = {
-+	.ubwc_enc_version = UBWC_3_0,
-+	.ubwc_dec_version = UBWC_3_0,
-+	.highest_bank_bit = 3,
-+	.macrotile_mode = true,
-+	.mdss_reg_bus_bw = 76800,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sc8280xp_data = {
-+	.ubwc_enc_version = UBWC_4_0,
-+	.ubwc_dec_version = UBWC_4_0,
-+	.ubwc_swizzle = 6,
-+	.ubwc_bank_spread = true,
-+	.highest_bank_bit = 3,
-+	.macrotile_mode = true,
-+	.mdss_reg_bus_bw = 76800,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sdm670_data = {
-+	.ubwc_enc_version = UBWC_2_0,
-+	.ubwc_dec_version = UBWC_2_0,
-+	.highest_bank_bit = 1,
-+	.mdss_reg_bus_bw = 76800,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sdm845_data = {
-+	.ubwc_enc_version = UBWC_2_0,
-+	.ubwc_dec_version = UBWC_2_0,
-+	.highest_bank_bit = 2,
-+	.mdss_reg_bus_bw = 76800,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sm6115_data = {
-+	.ubwc_enc_version = UBWC_1_0,
-+	.ubwc_dec_version = UBWC_2_0,
-+	.ubwc_swizzle = 7,
-+	.ubwc_bank_spread = true,
-+	.highest_bank_bit = 1,
-+	.mdss_reg_bus_bw = 76800,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sm6125_data = {
-+	.ubwc_enc_version = UBWC_1_0,
-+	.ubwc_dec_version = UBWC_3_0,
-+	.ubwc_swizzle = 1,
-+	.highest_bank_bit = 1,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sm6150_data = {
-+	.ubwc_enc_version = UBWC_2_0,
-+	.ubwc_dec_version = UBWC_2_0,
-+	.highest_bank_bit = 1,
-+	.mdss_reg_bus_bw = 76800,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sm6350_data = {
-+	.ubwc_enc_version = UBWC_2_0,
-+	.ubwc_dec_version = UBWC_2_0,
-+	.ubwc_swizzle = 6,
-+	.ubwc_bank_spread = true,
-+	.highest_bank_bit = 1,
-+	.mdss_reg_bus_bw = 76800,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sm7150_data = {
-+	.ubwc_enc_version = UBWC_2_0,
-+	.ubwc_dec_version = UBWC_2_0,
-+	.highest_bank_bit = 1,
-+	.mdss_reg_bus_bw = 76800,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sm8150_data = {
-+	.ubwc_enc_version = UBWC_3_0,
-+	.ubwc_dec_version = UBWC_3_0,
-+	.highest_bank_bit = 2,
-+	.mdss_reg_bus_bw = 76800,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sm8250_data = {
-+	.ubwc_enc_version = UBWC_4_0,
-+	.ubwc_dec_version = UBWC_4_0,
-+	.ubwc_swizzle = 6,
-+	.ubwc_bank_spread = true,
-+	/* TODO: highest_bank_bit = 2 for LP_DDR4 */
-+	.highest_bank_bit = 3,
-+	.macrotile_mode = true,
-+	.mdss_reg_bus_bw = 76800,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sm8350_data = {
-+	.ubwc_enc_version = UBWC_4_0,
-+	.ubwc_dec_version = UBWC_4_0,
-+	.ubwc_swizzle = 6,
-+	.ubwc_bank_spread = true,
-+	/* TODO: highest_bank_bit = 2 for LP_DDR4 */
-+	.highest_bank_bit = 3,
-+	.macrotile_mode = true,
-+	.mdss_reg_bus_bw = 74000,
-+};
-+
-+static const struct qcom_ubwc_cfg_data sm8550_data = {
-+	.ubwc_enc_version = UBWC_4_0,
-+	.ubwc_dec_version = UBWC_4_3,
-+	.ubwc_swizzle = 6,
-+	.ubwc_bank_spread = true,
-+	/* TODO: highest_bank_bit = 2 for LP_DDR4 */
-+	.highest_bank_bit = 3,
-+	.macrotile_mode = true,
-+	.mdss_reg_bus_bw = 57000,
-+};
-+
-+static const struct qcom_ubwc_cfg_data x1e80100_data = {
-+	.ubwc_enc_version = UBWC_4_0,
-+	.ubwc_dec_version = UBWC_4_3,
-+	.ubwc_swizzle = 6,
-+	.ubwc_bank_spread = true,
-+	/* TODO: highest_bank_bit = 2 for LP_DDR4 */
-+	.highest_bank_bit = 3,
-+	.macrotile_mode = true,
-+	/* TODO: Add mdss_reg_bus_bw with real value */
-+};
-+
-+static const struct of_device_id qcom_ubwc_configs[] __maybe_unused = {
-+	{ .compatible = "qcom,apq8096", .data = &msm8998_data },
-+	{ .compatible = "qcom,msm8917", .data = &msm8937_data },
-+	{ .compatible = "qcom,msm8937", .data = &msm8937_data },
-+	{ .compatible = "qcom,msm8953", .data = &msm8937_data },
-+	{ .compatible = "qcom,msm8956", .data = &msm8937_data },
-+	{ .compatible = "qcom,msm8976", .data = &msm8937_data },
-+	{ .compatible = "qcom,msm8996", .data = &msm8998_data },
-+	{ .compatible = "qcom,msm8998", .data = &msm8998_data },
-+	{ .compatible = "qcom,qcm2290", .data = &qcm2290_data, },
-+	{ .compatible = "qcom,qcm6490", .data = &sc7280_data, },
-+	{ .compatible = "qcom,sa8155p", .data = &sm8150_data, },
-+	{ .compatible = "qcom,sa8540p", .data = &sc8280xp_data, },
-+	{ .compatible = "qcom,sa8775p", .data = &sa8775p_data, },
-+	{ .compatible = "qcom,sc7180", .data = &sc7180_data },
-+	{ .compatible = "qcom,sc7280", .data = &sc7280_data, },
-+	{ .compatible = "qcom,sc8180x", .data = &sc8180x_data, },
-+	{ .compatible = "qcom,sc8280xp", .data = &sc8280xp_data, },
-+	{ .compatible = "qcom,sdm630", .data = &msm8937_data },
-+	{ .compatible = "qcom,sdm636", .data = &msm8937_data },
-+	{ .compatible = "qcom,sdm660", .data = &msm8937_data },
-+	{ .compatible = "qcom,sdm670", .data = &sdm670_data, },
-+	{ .compatible = "qcom,sdm845", .data = &sdm845_data, },
-+	{ .compatible = "qcom,sm4250", .data = &sm6115_data, },
-+	{ .compatible = "qcom,sm6115", .data = &sm6115_data, },
-+	{ .compatible = "qcom,sm6125", .data = &sm6125_data, },
-+	{ .compatible = "qcom,sm6150", .data = &sm6150_data, },
-+	{ .compatible = "qcom,sm6350", .data = &sm6350_data, },
-+	{ .compatible = "qcom,sm6375", .data = &sm6350_data, },
-+	{ .compatible = "qcom,sm7125", .data = &sc7180_data },
-+	{ .compatible = "qcom,sm7150", .data = &sm7150_data, },
-+	{ .compatible = "qcom,sm8150", .data = &sm8150_data, },
-+	{ .compatible = "qcom,sm8250", .data = &sm8250_data, },
-+	{ .compatible = "qcom,sm8350", .data = &sm8350_data, },
-+	{ .compatible = "qcom,sm8450", .data = &sm8350_data, },
-+	{ .compatible = "qcom,sm8550", .data = &sm8550_data, },
-+	{ .compatible = "qcom,sm8650", .data = &sm8550_data, },
-+	{ .compatible = "qcom,x1e80100", .data = &x1e80100_data, },
-+	{ .compatible = "qcom,x1p42100", .data = &x1e80100_data, },
-+	{ }
-+};
-+
-+const struct qcom_ubwc_cfg_data *qcom_ubwc_config_get_data(void)
-+{
-+	const struct of_device_id *match;
-+	struct device_node *root;
-+
-+	root = of_find_node_by_path("/");
-+	if (!root)
-+		return ERR_PTR(-ENODEV);
-+
-+	match = of_match_node(qcom_ubwc_configs, root);
-+	of_node_put(root);
-+	if (!match) {
-+		pr_err("Couldn't find UBWC config data for this platform!\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return match->data;
-+}
-diff --git a/include/linux/soc/qcom/ubwc.h b/include/linux/soc/qcom/ubwc.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..450106e6aea06f9f752bb7312ec3074e375eee4d
---- /dev/null
-+++ b/include/linux/soc/qcom/ubwc.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2018, The Linux Foundation
-+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-+ */
-+
-+#ifndef __QCOM_UBWC_H__
-+#define __QCOM_UBWC_H__
-+
-+#include <linux/types.h>
-+
-+struct qcom_ubwc_cfg_data {
-+	u32 ubwc_enc_version;
-+	/* Can be read from MDSS_BASE + 0x58 */
-+	u32 ubwc_dec_version;
-+	u32 ubwc_swizzle;
-+	int highest_bank_bit;
-+	bool ubwc_bank_spread;
-+	bool macrotile_mode;
-+	u32 mdss_reg_bus_bw;
-+};
-+
-+#define UBWC_1_0 0x10000000
-+#define UBWC_2_0 0x20000000
-+#define UBWC_3_0 0x30000000
-+#define UBWC_4_0 0x40000000
-+#define UBWC_4_3 0x40030000
-+
-+const struct qcom_ubwc_cfg_data *qcom_ubwc_config_get_data(void);
-+
-+#endif /* __QCOM_UBWC_H__ */
+Thanks, Wei, for the thorough explanation!
+
+> 
+> Thanks,
+> Wei.
+> 
+>>>
+>>> - Saurabh
+>>>
+>>>>
+>>>>>
+>>>>> here is the diff for reference:
+>>>>> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig index
+>>>>> 57dcfcb69b88..c7f21b483377 100644
+>>>>> --- a/drivers/hv/Kconfig
+>>>>> +++ b/drivers/hv/Kconfig
+>>>>> @@ -73,7 +73,7 @@ config MSHV_ROOT
+>>>>>              If unsure, say N.
+>>>>>
+>>>>>     config MSHV_VTL
+>>>>> -       bool "Microsoft Hyper-V VTL driver"
+>>>>> +       tristate "Microsoft Hyper-V VTL driver"
+>>>>>            depends on HYPERV && X86_64
+>>>>>            depends on TRANSPARENT_HUGEPAGE
+>>>>>            depends on OF
+>>>>> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile index
+>>>>> 5e785dae08cc..c53a0df746b7 100644
+>>>>> --- a/drivers/hv/Makefile
+>>>>> +++ b/drivers/hv/Makefile
+>>>>> @@ -15,9 +15,11 @@ hv_vmbus-$(CONFIG_HYPERV_TESTING)    +=
+>>>>> hv_debugfs.o
+>>>>>     hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_utils_transport.o
+>>>>>     mshv_root-y := mshv_root_main.o mshv_synic.o mshv_eventfd.o
+>>>>> mshv_irq.o \
+>>>>>                   mshv_root_hv_call.o mshv_portid_table.o
+>>>>> +mshv_vtl-y := mshv_vtl_main.o
+>>>>>
+>>>>>     # Code that must be built-in
+>>>>>     obj-$(subst m,y,$(CONFIG_HYPERV)) += hv_common.o -obj-$(subst
+>>>>> m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o mshv_common.o
+>>>>> -
+>>>>> -mshv_vtl-y := mshv_vtl_main.o mshv_common.o
+>>>>> +obj-$(subst m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o ifneq
+>>>>> +($(CONFIG_MSHV_ROOT) $(CONFIG_MSHV_VTL),)
+>>>>> +    obj-y += mshv_common.o
+>>>>> +endif
+>>>>>
+>>>>> Regards,
+>>>>> Naman
+>>>>
+>>>> --
+>>>> Thank you,
+>>>> Roman
+>>>
+>>
+>> -- 
+>> Thank you,
+>> Roman
+>>
 
 -- 
-2.49.0
+Thank you,
+Roman
 
