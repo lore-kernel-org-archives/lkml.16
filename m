@@ -1,118 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086E2253953
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C50251785;
+	Thu,  8 May 2025 14:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746714248; cv=none; b=ZYThjVMUAHLS+pLd5zsydz2cBvT1AfwyNYXuoWUYx90PFADbbwfT2PZ29uuNRFU4mjPeUsEAm0eyrj0t2m06MulzSQGVgbgcx9fR0hCkeZNB0DnFZzwzQq+tBFp3Sy/LFnK2PY50SiAoxbuqe/PXsOUfSRkXYrpI5OInXqyGFa8=
+	t=1746714290; cv=none; b=qIwgaHClMRCvxg80Glt3ocKYpELXmhrmG2A73ono8KXy/mIuHAz1Rxe5imnIlFdd3eOSO3TqZ1fTERjLkVANYSbViE1JxPGkh/Gue0WDtt/JWRno4D/HK6zqaTN8ycxeyLB5daOGRi2ABe9EZstqRqlpGhJPWOIIRoYT9HaniIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746714248; c=relaxed/simple;
-	bh=hs7kf43kgJgGhkPDb3YEryLJjl7hpWdhZ2J0A5gnOaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gdRbgYQQdHeMsyS6Mmc7qBtyj1i/l0KwN1TEDkwNpZ1IlSdPmSsSHY5nwcbtlhFDBlfJ5oL1pHYSSmh5ROme/iEzhFN2z//KQEYqJfD9lIzqMjGmwUSSjR0gUxJDREROuhH8BNrw4t3ZVrdhWBbifToE1DgDq3sQYSBc1tFtfTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=swGD1fVr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746714290; c=relaxed/simple;
+	bh=Sm22wXtmKZQtfd+hSw+DQFlJs4OyDw1ovJXItERNn7U=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=CvBPMcX9WPvYQ3PF2YPJ2mng6Byk+UcTtwiQbtQhTMTgXjWyaSjXWz3JzO8j1nBo1cKIt5rCHKedGF2bNVTtyFINjxFmYQoT+c+nNsklRQhSuaXMUaLBwxcDOAEpqR/vkaOczaWCM4XRlEXWsxd2CWEwOueg2Q4FFAeaW+z16LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=FQsq2XS5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hXYaV1kg; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="swGD1fVr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB5FC4CEED;
-	Thu,  8 May 2025 14:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746714246;
-	bh=hs7kf43kgJgGhkPDb3YEryLJjl7hpWdhZ2J0A5gnOaY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=swGD1fVrjIOA88oPXwaBBDwCwyezYItH+173qKxwxQN7PYeC1Bo85BIJILt+XZ5iI
-	 4vF2ZyyxaYbo9ccHLYQUzEUc0NhVCVIKGl0hm2X2HBxNCHddagIFTUPCwvPx1RZ4nH
-	 Sayc58uHTc8X60Aj2ikJZoCzEbKH34rGf0xYQui6C/g74RakbwA7D63xrk2NgMX9Lw
-	 9ZbJc8fOW/pPGKb4jIFsnoqaL2exByWNxjsWWsWdlFDaqB6cuA0G87g1wia27Crcoi
-	 gSM+pvZJ04WJj8m5sTCnwLAvJdgEZ2Te1CSdn06aptn24kBi0q3zvqlqqFxzwHjWKK
-	 7503fPkZZ7ohw==
-Date: Thu, 8 May 2025 23:24:03 +0900
-From: Mark Brown <broonie@kernel.org>
-To: Florent Revest <revest@chromium.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, catalin.marinas@arm.com, will@kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	akpm@linux-foundation.org, thiago.bauermann@linaro.org,
-	jackmanb@google.com
-Subject: Re: [PATCH 0/4] mm: Avoid sharing high VMA flag bits
-Message-ID: <aBy-gy_fK8ohNUKx@finisterre.sirena.org.uk>
-References: <20250506095224.176085-1-revest@chromium.org>
- <aBoP9ILEv-z4bRAQ@finisterre.sirena.org.uk>
- <CABRcYmKqCVn7NbrXocyzmYif_ihkeOCvPHZ+jxMi3OPWs6EiTg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="FQsq2XS5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hXYaV1kg"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfout.phl.internal (Postfix) with ESMTP id E985C13802BC;
+	Thu,  8 May 2025 10:24:45 -0400 (EDT)
+Received: from phl-imap-10 ([10.202.2.85])
+  by phl-compute-12.internal (MEProxy); Thu, 08 May 2025 10:24:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1746714285;
+	 x=1746800685; bh=Q0vNQd2Navs1dNhoZrI0O4YE+DAKDw3Xmj33t2DJSJs=; b=
+	FQsq2XS5/co2bITztDh089EDWC4W37xb52Q7sSU8jXVkSa/EKf0tKuCJJ0Y6FdIQ
+	BjjlUgbexMwClKOW2rmV4zOS4WgO4h/xL2iLXDk+kQ2skpdlh8rBy4mansGFKFjt
+	LKY2sg3TiOr9yPnMSJnHZFKezs9pGZ1G8qQH1DIzVug3EgYaSeHYSUC+drewvI8z
+	eK6q0oYYEb/s5BPxs1ouJjLabGJpyCXr5ZkaN8nYC9TpFqsFEhzY2bhbM0B1V+S0
+	bwHroBChMWu/sR1J8IvZbjD2sHSDKELk616uR7w8XY3Mal2xX7e3cGIr3SI2OWQV
+	Y8gfiMom5/D4YD7c4floEw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746714285; x=
+	1746800685; bh=Q0vNQd2Navs1dNhoZrI0O4YE+DAKDw3Xmj33t2DJSJs=; b=h
+	XYaV1kgDFdobPupy8zBJH/SvzpJfNlO2/Tctx8hlc8zBVm/wfs7i8MckEkhU0r9V
+	fYCew9KSvlQ5lEvSwfqqmoR2KZ6Nk+qz/ZM1fcD2S84vCJ51xm8mHj+QBZJOmf20
+	rGUlm8k3CDXIezCIznSp8qxqX6rn9SPut99gmevB7h66MXcHKP130hkFcyWLBj1l
+	YntrMJNpS6YKtKxpwSovileBbY6IiUjMS3TpZHZOMW2hIDDy9+AtLNf293GlRbNn
+	xTxj/XGmr954Csj6Kfk9txzqr8/jqNLNIgssno+Nz5SHFU2ntJFUsrcCDzTkpA5x
+	r3UBQ1lm2/UqdvrBqZwKg==
+X-ME-Sender: <xms:rb4caKc9DNiWDiKKwSGq0YrfTzwJNZyueeMgct_yaksgqErWJbCBSA>
+    <xme:rb4caENmhOy3XwWZrurUdynBABfBqwreFEbGxyHlc3Q0Rh3rIEROAv06vwa2O77-Z
+    LHDwSU69n3WdP0shdE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeelleejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertder
+    tdejnecuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlh
+    gvnhhovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhveekjeeuueek
+    fefhleeljeehuedugfetffdvteekffejudelffdvjeekfeehvdenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhho
+    vhhosehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpoh
+    huthdprhgtphhtthhopehikhgvphgrnhhhtgesghhmrghilhdrtghomhdprhgtphhtthho
+    peifpggrrhhmihhnsehgmhigrdguvgdprhgtphhtthhopegrnhgurhhihidrshhhvghvtg
+    hhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepihhlphhordhj
+    rghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehisghmqd
+    grtghpihdquggvvhgvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgt
+    phhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinh
+    hugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhl
+    rghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:rb4caLgUZP_3e46bl1oOhOHCfi2UCqDCrsiwTvHK8X2DSM66g2i0fw>
+    <xmx:rb4caH-OvZaPmVG8DeHsYoORSfHCd1BZJ1tfmtWeKyDnCYb8_nua8w>
+    <xmx:rb4caGuKEziKBeW7cEFW0hOWRajsnAWTqP8amv05Dswkj2jtn0nrYg>
+    <xmx:rb4caOGtOFSclgaDN-ZbZnerTslv0wkAkOk1oAmiaqsWLfnizB0zUw>
+    <xmx:rb4caADtx346jJ0GYDqPX-1vaCv__rLG9KhYn0mUmqjyJC21FPqixo5A>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 0A6E93C0069; Thu,  8 May 2025 10:24:45 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3G+aMXgLa2YFDWGN"
-Content-Disposition: inline
-In-Reply-To: <CABRcYmKqCVn7NbrXocyzmYif_ihkeOCvPHZ+jxMi3OPWs6EiTg@mail.gmail.com>
-X-Cookie: Well begun is half done.
+X-ThreadId: T107eb5199b18744c
+Date: Thu, 08 May 2025 10:23:47 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>, ikepanhc@gmail.com,
+ "Armin Wolf" <W_Armin@gmx.de>,
+ "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ ibm-acpi-devel@lists.sourceforge.net
+Message-Id: <6d4f3523-0d3a-4f1a-bec9-d053fad8a509@app.fastmail.com>
+In-Reply-To: <09a628d3-5903-5d5d-b874-5e77bbdf939a@linux.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250507190456.3004367-1-mpearson-lenovo@squebb.ca>
+ <09a628d3-5903-5d5d-b874-5e77bbdf939a@linux.intel.com>
+Subject: Re: [PATCH 1/2] platform/x86: Move Lenovo files into lenovo subdir
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Thanks Ilpo,
+
+On Thu, May 8, 2025, at 10:01 AM, Ilpo J=C3=A4rvinen wrote:
+> On Wed, 7 May 2025, Mark Pearson wrote:
+>
+>> Move all Lenovo specific files into their own sub-directory as part
+>> of clean-up exercise.
+>> Longer term goal is to break-up thinkpad_acpi to improve maintainabil=
+ity
+>> and perhaps share more functionality with other non thinkpad Lenovo
+>> platforms.
+>>=20
+>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> ---
+>> Some questions that I didn't want to put in the commit comment:
+>>=20
+>>  - I didn't know if now was a good time to propose this change. I
+>>    realise it could cause headaches for anybody with patches being
+>>    worked on.
+>
+> Don't worry too much about other changes, if you don't recall anything=20
+> immediately, there likely isn't anything that significant. If we always
+> postpone useful reorganizations in fear that some hypothetical work wo=
+uld=20
+> have to rebase, it never gets done :-).
+>
+>>    Please let me know what makes it easiest for maintainers
+>>    and other developers. If there is a particular branch that would be
+>>    better to do this against also let me know.
+>
+> Once I've merged fixes branch into for-next (I should do that at lates=
+t=20
+> early next week if not already this week), it should be pretty=20
+> straightforward to handle such move without conflicts.
+>
+
+OK - thanks. If there's anything I can do to help let me know.
 
 
---3G+aMXgLa2YFDWGN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>>  - Should I be updating the MAINTAINERS file? I'm still not sure what
+>>    the protocol there is. I'm very happy to help review anything in t=
+he
+>>    lenovo directory, but I didn't want to make assumptions.
+>
+> You should certainly update MAINTAINERS in the same patch to the new=20
+> paths. If you want to make other changes, put them such as add your na=
+me=20
+> into some entry or create a generic LENOVO entry, put those into own=20
+> patch after the move please.
+>
 
-On Wed, May 07, 2025 at 03:09:50PM +0200, Florent Revest wrote:
+OK - I'll submit a v2 with that change. Thanks for the guidance
 
-> I just want to make sure I fully understand the point you're making
-> here, it seems that you are suggesting that 7677f7fd8be7
-> ("userfaultfd: add minor fault registration mode") and ae80e1629aea
-> ("mm: Define VM_SHADOW_STACK for arm64 when we support GCS") came in
-> from two different trees and independently chose to use the same bit
-> around the ~same time, is that right ? And that a conflict would have
-> appeared when they'd eventually get merged into a shared tree ?
+>>  - I have tested on multiple platforms but I don't have any ideapads I
+>>    can use.
+>
+> Given it's just moves file to new place, the threat of breaking someth=
+ing=20
+> that isn't detected by simple build test, isn't that high.
+>
+Agreed - thanks for the review.
 
-> I don't think that's what happened in this specific case though. As
-> far as I can tell, the former was merged in 2021 and the latter was
-> merged in late 2024. Also, since the hunks got added in very different
-
-Yes, indeed - I wrote that initial reply before I saw the actual change.
-I wasn't expecting a conflict but rather that what'd happened was that
-the bit was allocated independently in two different trees and then due
-to the way the allocations are scattered everywhere no conflict had
-flagged the issue.
-
-> parts of include/linux/mm.h, I don't think they caused a noticeable
-> merge conflict. But I agree it would probably be preferable if these
-> cases would cause some sort of noticeable merge conflict in the future
-
-Putting all the flags somewhere in the vicinity of each other would make
-the whole thing much more robust, or having some build assert for
-uniqueness.
-
-> I'll quickly respin this series to address my typos on patch 4 (sigh)
-> and add your Reviewed-by tag but just to be clear, my refactorings in
-> patches 2/3/4 currently focus on using VM_HIGH_ARCH macros
-> consistently, to make it a bit more obvious to a reader if two
-> features choose the same bit. But maybe what we would really need
-> instead is a more obvious way for these bits to be mutually exclusive
-> and to cause merge conflicts if they get added through independent
-> trees ? For example, my colleague Brendan Jackman suggested using an
-> enum for VMA flags bit offsets but I'm not sure what the sentiment is
-> around that.
-
-I think we need something here, although it wasn't what actually
-happened here the potential for the scenario I mentioned above to occur
-remains.
-
---3G+aMXgLa2YFDWGN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgcvoAACgkQJNaLcl1U
-h9BY0gf/dFflr/U3vGpugb7MR90AC1d+1+r2r6ToKtp08WD7Q+Dqe0+tiWFwAwXm
-5CbrPisJAZxEGWoKrTS2QI/q4fwBcKKaMZj897g7XqB3703bieY69nkScl1ibZkj
-TxffPqbETz3wMdIxmhwAoryJqUFza4Vr/DjqG7gHbHRRgOb/rZebckwXnym6xR8A
-8hP4fzSkF9Soti1v1djWf0Ni/R+B4JhNalBPWdoF3gbagH+Ev82IF/RVhL6SCeLe
-s2HhMNN1iYXvDsCXpkL7Gu95jFhFtcKSVfxqzBRXLG1HOT9o64xna4mze3AitMIl
-+XsRPhevIWCvICeM0z8SnfscVzgb9A==
-=+kmo
------END PGP SIGNATURE-----
-
---3G+aMXgLa2YFDWGN--
+Mark
