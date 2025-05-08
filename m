@@ -1,146 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40E62222D9;
-	Thu,  8 May 2025 14:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9CC253953;
+	Thu,  8 May 2025 14:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746714466; cv=none; b=LBi4quKFp14FAduKLDCrwL3noq27kYSrwkAq3UqtjW5t4x0AbR7qsJ7dEETjQdxRYd4Ow7Y0LqlzGfAHFRKsgeViGpJB75Z9ptG6nkoCd8YBqra8Q0HeKW/6HGUM8aEQLSAu3+MT/RiRLvjR6be3Z4YXwzc2Ygo8IrHtnjcCV8s=
+	t=1746714490; cv=none; b=XzAyN+Cr4eCGHttWhGKaBvp+ClNxaA1D8G6E2Uqx/ST8h06peb9fSpyPJigjIzBKIgrcgnJIpGSnym3eJTHlbO2fTssG2ty7FZxUxqNQmeUR+kR6eKrUpm9ZATHLYpQoO+Zj19+F5ePT7YraAtXX+W6o6ZBSCu9lPFQe+iKs9vE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746714466; c=relaxed/simple;
-	bh=imBtFIIv6sTlsgn+RcpBBQmVjn8hLyA7l3y4aXEQvO4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mLROr223TCA+PCvj46J9H/lHMwKr5vy7AFeWVBDh8PiZKPKnSazf9+TZIVOxrKUWnqPAyD3w954J4Eqh29ck9uij6hfvbWjh0oWCnV7iRD3yKoKnAW+tKpMcjRfQuhl3o41tEscDLjyaYX+in9DKyNzIXMfZZh5zjBivgIMo9M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=faxvOZU+; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1746714490; c=relaxed/simple;
+	bh=IY3VG/gRbQesJTL7PGEn0YX+FszGyoQR0i1Wr/j85Qc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hwqlBeWKvtu87mLhnI6qwi0k12d3D7XZGjy58n28yZF/IJTpHYKRe31oX+QtbNgWJNBuxE36EPJp86ZNm+0QghNW1SvPYVFUtrl4RfyCMyqKuquL3LpsFWYGD74NsAIu5bohO2BBCnAArjL9Kr0AJU+7HyXIalbWHqc6X7vxtsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i70ls6+T; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="faxvOZU+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i70ls6+T"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746714465; x=1778250465;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=imBtFIIv6sTlsgn+RcpBBQmVjn8hLyA7l3y4aXEQvO4=;
-  b=faxvOZU+XNOUoeHlvO9ehubgNVuSLL6bPkSUp0K1X10s0IfLInOc23Nq
-   BaKdhKRBKbSFXTqA0r0WztLySm72clVxKtRKiT8A4xpwEprfCc8re1aM0
-   ke+4/Y6BeQTFoF5XbYsQzUJrbhJZ2h4myOkRvFUrXhTjL3qQi7Z6MS1mE
-   SkZVQclgX2QgpxiFcJv18RCFeWEwwSSky8xe+WMJrChZq3G6D2AvUXas3
-   6PJQc7iL6XwhwCBCJmeK3J9/PqB5Z20cjcqdwgxMnZJ/LlA8fUIbWY22o
-   HN704f0OGPZxOwXi4K4SGPv/T6Lf+xKszyyW2UCqCsArKWTHdUx1JM71d
-   A==;
-X-CSE-ConnectionGUID: 97wt4hx3R2urzDxdpNZahQ==
-X-CSE-MsgGUID: 1OuXtnbNQ5Ct3kkRSgF7xw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48666357"
+  t=1746714489; x=1778250489;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IY3VG/gRbQesJTL7PGEn0YX+FszGyoQR0i1Wr/j85Qc=;
+  b=i70ls6+Tn7yvDvq2T3McTEscfVbJMnfaB0RWlVbqds+7kBwifScUPzHz
+   UAQtVCuavO6xzdDes4AEpRlvn9eXTZJt4VVUBPxgfyWvsn5oC0s5tZ/7W
+   w0uczTSgfd5FcWFu3c4izJK2klBiMBqSRDhUUoxGkTl2Jh43hvQ9Up97Y
+   Zza0OiYKtFubTEOSENoJAbJ6VpXhEmrRchZ881cz/9UtVEMmL+sSypkeH
+   zm/ud7v+ltHWoAqmxZMNLEOG+6OV80mHfq5ojciPQ0x+WI7Cfe8IGmW61
+   U/xWJQsbx+MZ7AjGgvfAi4nV/rb4z8iNRNmzsalwb1h7iGhjUACSIstAK
+   w==;
+X-CSE-ConnectionGUID: /Xgp2YLlSfehnor8qcdWNA==
+X-CSE-MsgGUID: 6ySq++zpS1C467VllERKlA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59496600"
 X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="48666357"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:27:44 -0700
-X-CSE-ConnectionGUID: Gby/xMVvQ5SLYM8T0t9O/w==
-X-CSE-MsgGUID: y9OM4uPATc+g2pOsSv43zQ==
+   d="scan'208";a="59496600"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:28:06 -0700
+X-CSE-ConnectionGUID: rdEp9pKSQSOxGK7lJDtSyw==
+X-CSE-MsgGUID: uy6WKA9hT6e5NY9UIu6Ijw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="137304624"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.196])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:27:40 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 8 May 2025 17:27:37 +0300 (EEST)
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-cc: Hans de Goede <hdegoede@redhat.com>, ikepanhc@gmail.com, 
-    Armin Wolf <W_Armin@gmx.de>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-    ibm-acpi-devel@lists.sourceforge.net
-Subject: Re: [PATCH 1/2] platform/x86: Move Lenovo files into lenovo subdir
-In-Reply-To: <6d4f3523-0d3a-4f1a-bec9-d053fad8a509@app.fastmail.com>
-Message-ID: <2640c7dc-5870-f57d-e1cd-535f5c48d950@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca> <20250507190456.3004367-1-mpearson-lenovo@squebb.ca> <09a628d3-5903-5d5d-b874-5e77bbdf939a@linux.intel.com> <6d4f3523-0d3a-4f1a-bec9-d053fad8a509@app.fastmail.com>
+   d="scan'208";a="136320287"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:27:56 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uD2E4-000000048Ph-1tm1;
+	Thu, 08 May 2025 17:27:52 +0300
+Date: Thu, 8 May 2025 17:27:52 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 05/26] bus: simple-pm-bus: Populate child nodes at
+ probe
+Message-ID: <aBy_aBkC7NpicXho@smile.fi.intel.com>
+References: <20250507071315.394857-1-herve.codina@bootlin.com>
+ <20250507071315.394857-6-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1638176208-1746714457=:922"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507071315.394857-6-herve.codina@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, May 07, 2025 at 09:12:47AM +0200, Herve Codina wrote:
+> The simple-pm-bus drivers handles several simple bus. When it is used
 
---8323328-1638176208-1746714457=:922
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+bus --> busses ?
 
-On Thu, 8 May 2025, Mark Pearson wrote:
-> On Thu, May 8, 2025, at 10:01 AM, Ilpo J=C3=A4rvinen wrote:
-> > On Wed, 7 May 2025, Mark Pearson wrote:
-> >
-> >> Move all Lenovo specific files into their own sub-directory as part
-> >> of clean-up exercise.
-> >> Longer term goal is to break-up thinkpad_acpi to improve maintainabili=
-ty
-> >> and perhaps share more functionality with other non thinkpad Lenovo
-> >> platforms.
-> >>=20
-> >> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> >> ---
-> >> Some questions that I didn't want to put in the commit comment:
-> >>=20
-> >>  - I didn't know if now was a good time to propose this change. I
-> >>    realise it could cause headaches for anybody with patches being
-> >>    worked on.
-> >
-> > Don't worry too much about other changes, if you don't recall anything=
-=20
-> > immediately, there likely isn't anything that significant. If we always
-> > postpone useful reorganizations in fear that some hypothetical work wou=
-ld=20
-> > have to rebase, it never gets done :-).
-> >
-> >>    Please let me know what makes it easiest for maintainers
-> >>    and other developers. If there is a particular branch that would be
-> >>    better to do this against also let me know.
-> >
-> > Once I've merged fixes branch into for-next (I should do that at latest=
-=20
-> > early next week if not already this week), it should be pretty=20
-> > straightforward to handle such move without conflicts.
-> >
->=20
-> OK - thanks. If there's anything I can do to help let me know.
->=20
->=20
-> >>  - Should I be updating the MAINTAINERS file? I'm still not sure what
-> >>    the protocol there is. I'm very happy to help review anything in th=
-e
-> >>    lenovo directory, but I didn't want to make assumptions.
-> >
-> > You should certainly update MAINTAINERS in the same patch to the new=20
-> > paths. If you want to make other changes, put them such as add your nam=
-e=20
-> > into some entry or create a generic LENOVO entry, put those into own=20
-> > patch after the move please.
-> >
->=20
-> OK - I'll submit a v2 with that change. Thanks for the guidance
+> with busses other than a compatible "simple-pm-bus", it don't populate
+> its child devices during its probe.
+> 
+> This confuses fw_devlink and results in wrong or missing devlinks.
+> 
+> Once a driver is bound to a device and the probe() has been called,
+> device_links_driver_bound() is called.
+> 
+> This function performs operation based on the following assumption:
+>     If a child firmware node of the bound device is not added as a
+>     device, it will never be added.
+> 
+> Among operations done on fw_devlinks of those "never be added" devices,
+> device_links_driver_bound() changes their supplier.
+> 
+> With devices attached to a simple-bus compatible device, this change
+> leads to wrong devlinks where supplier of devices points to the device
+> parent (i.e. simple-bus compatible device) instead of the device itself
+> (i.e. simple-bus child).
+> 
+> When the device attached to the simple-bus is removed, because devlinks
+> are not correct, its consumers are not removed first.
+> 
+> In order to have correct devlinks created, make the simple-pm-bus driver
+> compliant with the devlink assumption and create its child devices
+> during its probe.
 
-Yes but please wait until I've done the merge so you can base v2 on top of=
-=20
-it. Thanks.
+...
 
-> >>  - I have tested on multiple platforms but I don't have any ideapads I
-> >>    can use.
-> >
-> > Given it's just moves file to new place, the threat of breaking somethi=
-ng=20
-> > that isn't detected by simple build test, isn't that high.
-> >
-> Agreed - thanks for the review.
->=20
-> Mark
->=20
+>  	if (match && match->data) {
+>  		if (of_property_match_string(np, "compatible", match->compatible) == 0)
 
---=20
- i.
+Side note, there is an fwnode_is_device_compatible() API for such cases. And IIRC
+there is also OF variant of it.
 
---8323328-1638176208-1746714457=:922--
+> -			return 0;
+> +			goto populate;
+>  		else
+>  			return -ENODEV;
+>  	}
+
+...
+
+> +	if (pdev->dev.of_node)
+
+Why do you need this check? AFAICS it dups the one the call has already in it.
+
+> +		of_platform_depopulate(&pdev->dev);
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
