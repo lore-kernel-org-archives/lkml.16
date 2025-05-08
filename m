@@ -1,65 +1,65 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F0A286D62
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 18:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9B32253E0
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 18:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746727430; cv=none; b=bYqbOspIGNFmmeGqQ0R1C0KoIR30MhppCwajL0EOj0e4al/A5O7j5h251A+yvULIILxpHXCVr6QiYZwPpDQKLu6wg6Nu6vBCSUejtY4+mBqw63IvGj5RknE0/2upgKzDVSieAcjXzJ0cCq307Xke0ayOsfGKvdPfeyd9w0t+Aa0=
+	t=1746727521; cv=none; b=u/NHBaWL9DB3arH9sXmR9tv+Y+yvot32Yy3gAgR8dH2spOmIntR89w5emi2C1wHD6zB5JVq3akH5LaRSzStF5tQDXW/tzTm/25EN2rQf2cDvZDnfATC5EYQ6iR8RADhBvzgxhjCuSCHzHbYRJAmB3QYBH+hGyYDuLP12US7UNUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746727430; c=relaxed/simple;
-	bh=BPaM3uBsQYkug/7fouL8TiZUFIRkQwryGGOrlftw3rI=;
+	s=arc-20240116; t=1746727521; c=relaxed/simple;
+	bh=6lyNsx0n0oCa0zuPkywtGEH0b2NSWO9F2p7n98GsI58=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=No4bf1XvMtgo7R/c5DMWa+93kpACTdWkrULTNay2BDGVUfCRAV+JrdPBQfpQAx5yxzb9Od4sojzRNJI4nN7D88dkWcJcTaFAbHDVkzeyhgXZtQEWVmKyfG0d3MlnczkHNe6n+CAVT8LngGJ8pDJ2aYRQ753N+1L3GfC76P/HyPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=h/NKT0MV; arc=none smtp.client-ip=209.85.161.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 In-Reply-To:Content-Type; b=bILya4cAHr0xf8WaejBWQdYH4SreBJk3nFESXwLXQE41cf9xE/6RKLyrzfaOQb4gTPcFVwuoXjpdT2A8y1wpNfI9qfzbjhfmX/KrhH/62RZJb3Dn0s23AY4T7m31wluOG+az3D2b0RuEB+CVOOFB90uxACUKVfi6HIa+//OUvBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HNEtVYpI; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="h/NKT0MV"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-6060167af73so758761eaf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 11:03:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNEtVYpI"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-acb5ec407b1so216785566b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 11:05:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746727428; x=1747332228; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
+        d=gmail.com; s=20230601; t=1746727518; x=1747332318; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=eDIMXcUh+1t2oaHEL05AcYmEhaIiuHzLG4RdkwQs3gQ=;
-        b=h/NKT0MV3szo5YA+cTcEaMfm/g+f0KzQJ91PosONwMUNS0wToMj+tFls38jgaX1uPk
-         oOzMwrNE4VZBd+m2MuNC8R8iNS/DIQpoczEJb6rPaaX1jcu8CwuvfdP4yttusT6yyTfM
-         qPl21SWeECE2vCHispLqKCQZhaVar87SqRnOQtj1ZOcW9+2NRXWqhPPUJTBl5/2zFYfM
-         ay6NY5O9EN1S/u5TU8pkcohEr11mqVa1mTZXSizJxPXrnr8HD6/wQFoLXnvvAw3onxsU
-         7Mq+4mTzDcR8lB2ZQu3Fcy7MlIH3WZxucn6FVPqI/dKX4HZCGo0Oj30UwsFsBfG3HTXN
-         VfzA==
+        bh=e7hbLN/6f2Sh/M0mcYIBWUh9AjjCpvmSzUgBLIeIAR0=;
+        b=HNEtVYpIysX+Tkx/5JNQTxGCrYuV6uFcqWKfXQqfcdn69nKC9PkwVMUyCBUJy9CTgJ
+         fXX7ctozN9BW1bAZ/XGYOaF9+VWWgsCL5mO8OGf7ewZdNvbJUd79HuG5+oeJObtvStfB
+         RBsqTG8Xbjin8o5UyF+l07/eCgTdtmlS6EiTX1zwn646CsRNX2fXzFBqL5eztJ9+u/Vj
+         CLp2ImfSUb94+zyvq/Hu3fJKhwhF6cdd6SYOqOi+7bmtQTj2rI4TmvE0v3AmP9mP4rsX
+         mz5I1n+w1RFj4gLyY8RqtTM1VW2crepoFrA6X/0JRylu5hGpud8AqBXjc5k6DmhWjQZP
+         9gqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746727428; x=1747332228;
-        h=content-transfer-encoding:in-reply-to:content-language:from
+        d=1e100.net; s=20230601; t=1746727518; x=1747332318;
+        h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eDIMXcUh+1t2oaHEL05AcYmEhaIiuHzLG4RdkwQs3gQ=;
-        b=nbY2KKNMstsyhu80N3BaoAMSZ/EaTjfuWcpMk8oeH0ZbXMLLg7ymHGVyxMSDn/Cprd
-         k+HYGno1kvbwNANtBxdnQW3NwxnNvUn8NcL4yXqE7bpyui7aEMROk1y4zIxCy2P/1XZR
-         7v2//EFE00qI29t4rhB1UEAhr2ayhCGK9s33/DoZfw7Bz8u3xaX7wqDibclsOQe3Fjcy
-         rN0NOCkKk+dvsKBPUCC7syASuxEf669CmAFS5xE/zMot/ACw98w7VIII6tE6LWljfswP
-         RdyOGWgdwM3nNhGjeOIenwgGNV17N0jsjfJ0r4VDFZ1tvTePt047kMYGvWMPJQWhsNTJ
-         oTJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwCPDX3Rmvhu571XR1ewq4V0Ie5SRGCRjR9cEVkdjtXdlOWBxq/G/EDHaV99xLBr/bDwsFYf5SXbojMTA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxczLuYrarwey6TtIOf1HYApqkVJeOuteVT0zwVjmoTbOBW1/fN
-	9u+bHmoWrLei+YGj9Y6DXxuEl/0M+o8gxG1Z7oGhvx1bW6C4+Numl2jKroKhfEE=
-X-Gm-Gg: ASbGncv+H/ndcjgSXzdVkq0syL33gZBXdmEmRuoy6cEJR17tM6A3cNFY9D++e2jwpca
-	VgT/WVaj3aiM+Ztx/OthUG5Qdm2ALJ3FznGg1xJRSUpmqLx6IzYs73tnLetM/sLrf/exCxrJRxK
-	MjsLJo8UfYg5H3ys+SH9do4CAFNMwqU5R0+5XeddEdIt+6mRmRE5FabOR+tqNBoLH+ROwo0SzU3
-	mjIpR8vX93EFOJ/8zXNYIhDwBNg9wEXHtmOD/otaw7iiH3CDM9PVASKeVgWzn3exXWVWwWh3lwG
-	FKxI1Z9VBJaO4E98HXxFYrW4iX1zjeRsGEFw+HFRiCJiOC2EooKNngPq4oQRUpINnGcopi7CQ1S
-	g96RVtIE2nEiNcVv37g==
-X-Google-Smtp-Source: AGHT+IEf3U6aBnbW0K6M59yOkNClYiW3gx4S2YQp31BRyUSuIa+tQqcacAiU4K9X6FdN1TJqPPe90A==
-X-Received: by 2002:a05:6820:818d:b0:606:9ed9:c38 with SMTP id 006d021491bc7-6083fdc3f6cmr408574eaf.0.1746727427735;
-        Thu, 08 May 2025 11:03:47 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e? ([2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-403803995e7sm60463b6e.46.2025.05.08.11.03.46
+        bh=e7hbLN/6f2Sh/M0mcYIBWUh9AjjCpvmSzUgBLIeIAR0=;
+        b=YnOImfJ4CIXXcHu5DnmzszTn/+c3dd2nuA8xmTm6ySVcyhbrBdlYNB/rLZ8VW6J/TF
+         he3eayQGGScoxzzQ0NoAxG0I4/SuKYBW3l+U8kQK2ofltoDvtBYR6w0SF58kh+22nk/4
+         B78eGVFBaT5GXLPtJ+bHuiSxSt35zyjpNcfQA9xfSYqr/h5OqnE9lFtml6D2mUwJg/R/
+         mUBwAVR92ew3mMFFSXiwMx3jwSAHBUdjz87ee5AXbHpBk/4J4xaDVUqhuBkX0CZP/fMA
+         0snzM7yrfNFZ8u28QJ9tkDohGjUNJF+VJvVZsgyHBYu94felANLSRU632zThQwEfjzDs
+         ia5w==
+X-Forwarded-Encrypted: i=1; AJvYcCXytrPUatgzKySbYuR2M/e4+sZcapbRdGL2wWEL/baOWdznwgo+KnF/TCEd3BPDH89AG4NKeaZtZTKD2I4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynTBI9lKxAPUr8LcnweHgLYhd/NubBqqmvdi//vbn4lw+vZMNS
+	1ouVRw/elr4vdytVRAUAzn2Ew9GoCYAQNUMqZ7UaQKXLLnkf9EbW
+X-Gm-Gg: ASbGncvdAuTKUvEUKyxTWYUtkSdRbzblTpmIwK56+RLfdVvMjygAGQvPoIUy95VamDJ
+	p6GlyWFaY6tNfM6eNKC1S+EvdiD+YmHcJ+xM6ot275V+Jqax9Yvnvc4VBzIII4mFsTekHZ3skeo
+	VikVhw1nQH+OfN1NYjTSf5HtFnaO5jkmarnQ2PPrYsyUwanTcho29hY/akngY1L5zH1kOd1vUM/
+	yL2u58GyhvKXYqCIOCx5TOJ8+IH32+uzRMRnryatXl6PoOPK7h+zpLNmVofB5Yr2tYyfUWpHhRo
+	6e6mKFoppydJF4QZFrh2uTgwhtXhjb10obQ0DIpohH7sTm/Dop8xkxPm3trxp+VKcTTgKa2fbD5
+	iLg0PFja1ptdXyPxM1EkHsGiGqA==
+X-Google-Smtp-Source: AGHT+IFSbSzd1mKaH5gakwmdcCdpcWo+Wwbka7XYFXUOkAB0Q9AqaWPX9ZxwaQwOnuQs7wVgTXG0Og==
+X-Received: by 2002:a17:907:3cd4:b0:ac4:169:3664 with SMTP id a640c23a62f3a-ad218fa9075mr63541266b.33.1746727518000;
+        Thu, 08 May 2025 11:05:18 -0700 (PDT)
+Received: from ?IPV6:2a03:83e0:1126:4:1c6a:8675:ac47:a9d0? ([2620:10d:c092:500::4:d248])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad21988d43asm19420566b.178.2025.05.08.11.05.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 11:03:47 -0700 (PDT)
-Message-ID: <1f8e1576-a850-4ddc-9be1-16e59756c65a@baylibre.com>
-Date: Thu, 8 May 2025 13:03:46 -0500
+        Thu, 08 May 2025 11:05:17 -0700 (PDT)
+Message-ID: <e971dcf1-9ea4-4a20-bbc2-7ffc1ff15d37@gmail.com>
+Date: Thu, 8 May 2025 19:05:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,38 +67,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 08/12] iio: adc: ad7768-1: add multiple scan types to
- support 16-bits mode
-To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-Cc: andy@kernel.org, nuno.sa@analog.com, Michael.Hennerich@analog.com,
- marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
- linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
- broonie@kernel.org, jonath4nns@gmail.com,
- David Lechner <dlechner@baylire.com>
-References: <cover.1746662899.git.Jonathan.Santos@analog.com>
- <8b8f861422b15b1316a1513cd66abc544ab8c5bd.1746662899.git.Jonathan.Santos@analog.com>
-From: David Lechner <dlechner@baylibre.com>
+Subject: Re: [PATCH 0/1] prctl: allow overriding system THP policy to always
+To: David Hildenbrand <david@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc: hannes@cmpxchg.org, shakeel.butt@linux.dev, riel@surriel.com,
+ ziy@nvidia.com, baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com
+References: <20250507141132.2773275-1-usamaarif642@gmail.com>
+ <3b5d929f-ec2f-4444-825f-81e71f804033@redhat.com>
+ <e706e2fc-201f-4e45-8dd9-e2e17c269466@gmail.com>
+ <3f7ba97d-04d5-4ea4-9f08-6ec3584e0d4c@redhat.com>
 Content-Language: en-US
-In-Reply-To: <8b8f861422b15b1316a1513cd66abc544ab8c5bd.1746662899.git.Jonathan.Santos@analog.com>
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <3f7ba97d-04d5-4ea4-9f08-6ec3584e0d4c@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 5/8/25 12:04 PM, Jonathan Santos wrote:
-> When the device is configured to decimation x8, only possible in the
-> sinc5 filter, output data is reduced to 16-bits in order to support
-> 1 MHz of sampling frequency due to clock limitation.
-> 
-> Use multiple scan types feature to enable the driver to switch
-> scan type at runtime, making it possible to support both 24-bit and
-> 16-bit resolution.
-> 
-> Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> Reviewed-by: David Lechner <dlechner@baylire.com>
 
-Typo in my email: baylibre.com
 
-> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> ---
+On 08/05/2025 18:39, David Hildenbrand wrote:
+>>> We did something similar with PR_SET_MEMORY_MERGE.
+>>>
+>>
+>> For this you mean the prctl command would do for_each_vma and set VM_HUGEPAGE to implement point 2.
+> 
+> Yes. The expectation would be that the prctl is either a) triggered early when there are not that many VMAs yet or b) inherited during fork+exec such that the target process immediately gets it enabled for all VMAs.
+
+Yes that is the case for us as well, For us its mostly going to be a, i.e. exec_invoke called by systemd. But b will be good as well.
+> 
+>> For having point 1, I think we will still need extra mm->flags, i.e. MMF_VM_THP_MADVISE/DEFER/ALWAYS/NEVER.
+> 
+> Yes, and it's unclear what we really want here.
+
+Let me make a v2 and we might be able to have a better discussion once its done. I will move it to RFC.
+> 
+>>
+>> I think it would have the same affect as what this patch is trying to do? But would be just more
+>> expensive in terms of both code changes and the cost of the actual call as you now have to walk
+>> all vmas. On the other hand you wont need the below diff in from v1. I do feel the current approach
+>> in the patch is simpler? But if your point 3 is better in terms of code maintainability, happy to make
+>> it the change to it in v2.
+> 
+> Yes. Having a toggle that
+> 
+> a) Changes the default of new VMAs to be VM_HUGEPAGE
+> 
+> b) Modifies all existing VMAs that are not VM_NOHUGEPAGE to be VM_HUGEPAGE
+> 
+> c) Is inherited during fork+exec
+> 
+> Would not add any additional checks in our already-complicated THP allocation logic, it simply changes the default/value of VM_HUGEPAGE.
+> 
+> 
+> At least to me, this sounds like better semantics. Would that make your use case happy?
+> 
+
+Yes, this would work for us. Let me try and make this work in the way you described and also make it work for
+MADVISE and NEVER, will send that in v2.
+
+Thanks for the feedback!!
+
+
+
