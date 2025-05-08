@@ -1,115 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9E726F478;
-	Thu,  8 May 2025 14:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE8C82741CB
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746715932; cv=none; b=rT5evFXbKDlwMc9FuPTFarNWxejP0VeuN9JNDrK9aa3otcQlOCEdZ+0F/mT9oOgdnCWaMjgjd/31rVo6hIneXRwdE/utdkf+npSCWVa66PwIcB6ig1AuyjbCqkqTas2yusZ9aTaS7itk6Ea2mUZA3unBcXpxlS/pbEciP6ancfc=
+	t=1746715992; cv=none; b=ZqN0M8YZHoAO+IHMAq6g46whMmAH97XZ9vXMrvlg/9vfYFZtV9qd1EqxHf7M6Tr43qnJ8GW7a1hl59Bh3gUMsOTqUXu11KlMfMEHNuuWCJgFkR0kyZXzKponAPpnGpQlIekbdEacIiqFk/ImUZTS3TzO0bwf4ZGQ8yRfYssL87Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746715932; c=relaxed/simple;
-	bh=m9+dvvH99WOk1Q+YGo6PeA3k97JBnWhonrMgm9Unthw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sgohs6XQjd9Bs5++dPxZZ/EgXIkuvQQ8vSiXW445rdlwHjIsnXkPFaU53h2Rr9UTzMNrqZJ4V24m8TdO8ftZh8CKGOmGNZdo17cxAMfjsspeADLdSIjctjeU0LVKg0bjdeTBb+8aQkKHk8RqzONZumhp9USrcH28e4Omg4Hg/+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egLbwTX5; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egLbwTX5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 842CDC4CEE7;
-	Thu,  8 May 2025 14:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746715932;
-	bh=m9+dvvH99WOk1Q+YGo6PeA3k97JBnWhonrMgm9Unthw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=egLbwTX5kYtcWDxF3pn+h6VTXTWbSAcexEh4T80EqMnZT8K3dD1DxveyRZl8dNWHF
-	 Bz8R0Tg7S0i3FFwyhV/YeWbXb5cmQbTumgVquKzqw8nALHHvpOJUQuyYOoaCOMT/k4
-	 DX13/JrDQOJpswCP4htG77iiUDstsLiVySJCsLY6ODNro4Co8VT8Y2A/6aehoLmfCN
-	 kGYElrH+djZQtFrObp8ha3Mj5tZ2nNkmEkULAq2XaFq1NUgFqe7Y3Ay343zkv0bC+v
-	 h3y6Pd38S5ty9c60ENFNakD/iCe0bPvjOV3xtB4pgesMSFWLWthUhpRdI/nMu8LI+c
-	 J+n+vAShgBMWA==
-Date: Thu, 8 May 2025 11:52:08 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf trace: Fix some more memory leaks
-Message-ID: <aBzFGKKubskQDLrs@x1>
-References: <20250401202715.3493567-1-irogers@google.com>
+	s=arc-20240116; t=1746715992; c=relaxed/simple;
+	bh=dY6PQ8wf2SxhjmjTpHtT7MCQRc196ur0uJ4Zhkehbhw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=CINkgUqRB+/WWaD1JuTVj/OrSWQWBZ965rOOl4XlwNms4Q3BDMUFAJcTW91DWRmql50qrtGkYgmsAjkSoajx2g15UxxVQHqagyE5/G+m3nnFnGK1HdR5cJOHTyfMuatPBHVdSjlEAC+gJJH3tW7v/lng3f7Y3xxSaVTrzvVR9AU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id C18C992009C; Thu,  8 May 2025 16:53:09 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id BA28992009B;
+	Thu,  8 May 2025 15:53:09 +0100 (BST)
+Date: Thu, 8 May 2025 15:53:09 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+cc: "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, 
+    linux-kernel@vger.kernel.org, "Ahmed S . Darwish" <darwi@linutronix.de>, 
+    Andrew Cooper <andrew.cooper3@citrix.com>, 
+    Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>, 
+    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+    John Ogness <john.ogness@linutronix.de>, 
+    Peter Zijlstra <peterz@infradead.org>, 
+    Thomas Gleixner <tglx@linutronix.de>, 
+    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
+ CPUs
+In-Reply-To: <CAHk-=wjCiEk-kc-vOug2GKJdhHKce3vWALbqjybLPcKLHNmEbQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.2505062256170.21337@angie.orcam.me.uk>
+References: <20250425084216.3913608-1-mingo@kernel.org> <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk> <CAHk-=wicfBCyMj_x5BiL32o55jqXfnxgn=X5BZZjA-FFER82Jg@mail.gmail.com> <alpine.DEB.2.21.2505061104490.31828@angie.orcam.me.uk>
+ <A5AC3B8B-335C-4594-B0DC-D9247B286A37@zytor.com> <CAHk-=wjCiEk-kc-vOug2GKJdhHKce3vWALbqjybLPcKLHNmEbQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250401202715.3493567-1-irogers@google.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Apr 01, 2025 at 01:27:15PM -0700, Ian Rogers wrote:
-> The files.max is the maximum valid fd in the files array and so
-> freeing the values needs to be inclusive of the max value.
+On Tue, 6 May 2025, Linus Torvalds wrote:
+
+> > a. Someone would have to take it on;
+> > b. It will need continuous testing;
+> > c. That someone would *also* have to go through the additional effort of keeping the mainline code clean for the maintainers of the modern hardware.
 > 
-> Add missing thread__put of the found parent thread in
-> thread__e_machine.
+> I think the main issue is "when problems happen, people who
+> *shouldn't* have to care get reports".
 
-Split it into:
+ FWIW I can't agree more here.
 
-⬢ [acme@toolbx perf-tools-next]$ git log --oneline -2
-7900938850645ed4 (HEAD -> perf-tools-next) perf trace: Add missing thread__put() in thread__e_machine()
-8830091383b03498 perf trace: Free the files.max entry in files->table
-⬢ [acme@toolbx perf-tools-next]$ 
-
-So that git --oneline is more descriptive, etc.
-
-Thanks, applied to perf-tools-next,
-
-- Arnaldo
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-trace.c | 3 ++-
->  tools/perf/util/thread.c   | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
+> I really think that the way forward is basically what we did for ia64:
+> get rid of i486 support in mainline, and people who care about i486
+> can maintain a smallish patch that basically keeps it alive for them.
 > 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 58a2ce3ff2db..c02ea4e8b270 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -1657,7 +1657,7 @@ static const size_t trace__entry_str_size = 2048;
->  
->  static void thread_trace__free_files(struct thread_trace *ttrace)
->  {
-> -	for (int i = 0; i < ttrace->files.max; ++i) {
-> +	for (int i = 0; i <= ttrace->files.max; ++i) {
->  		struct file *file = ttrace->files.table + i;
->  		zfree(&file->pathname);
->  	}
-> @@ -1703,6 +1703,7 @@ static int trace__set_fd_pathname(struct thread *thread, int fd, const char *pat
->  
->  	if (file != NULL) {
->  		struct stat st;
-> +
->  		if (stat(pathname, &st) == 0)
->  			file->dev_maj = major(st.st_rdev);
->  		file->pathname = strdup(pathname);
-> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-> index 89585f53c1d5..415c0e5d1e75 100644
-> --- a/tools/perf/util/thread.c
-> +++ b/tools/perf/util/thread.c
-> @@ -471,6 +471,7 @@ uint16_t thread__e_machine(struct thread *thread, struct machine *machine)
->  
->  		if (parent) {
->  			e_machine = thread__e_machine(parent, machine);
-> +			thread__put(parent);
->  			thread__set_e_machine(thread, e_machine);
->  			return e_machine;
->  		}
-> -- 
-> 2.49.0.504.g3bcea36a83-goog
-> 
+> Because I suspect that the "patch to keep it working in practice" is
+> likely going to remain pretty small: it's the silly cmpxchg helper
+> wrappers, it's disabling ARCH_USE_CMPXCHG_LOCKREF, and probably a few
+> X86_FEATURE_CX8 tests.
+
+ Why would these have to be disabled if we have CMPXCHG8B emulation?  Yes,
+performance won't be stellar, but we talked it through already in the 
+context of my recent EV4 Alpha effort.  People ran FPU emulation back in 
+the day too rather than using soft-float, which would have surely reduced 
+the handling overhead.
+
+> And it probably (a) works fine and (b) won't be code that changs very
+> much upstream, so maintaining it outside the main tree is likely not a
+> lot of work.
+
+ Conversely dropping support for a subtarget in the kernel will likely 
+prompt the removal on the userland side, namely glibc, which will only 
+complicate things.
+
+> But because it's outside of the main tree, it won't cause pointless
+> noise from 0day bots etc, and won't affect people who care about
+> modern machines. And it can do various hacky things because the patch
+> would *only* be used by people who actually run on an i486-class
+> machine.
+
+ This is a fair point, although I'm not sure why the bots are expected to 
+complain about a piece of code once it's settled and does not change.  I 
+can't recall any mailing list traffic about MIPS instruction emulation for 
+legacy systems (and we made it a part of the uABI even) in what? -- 20 
+years or so.
+
+ And I'd prefer to stay away from hacks even at the cost of performance.  
+I don't find the emulation of CMPXCHG8B and maybe RDTSC if really needed 
+(possibly in a trivial way, such as returning an incrementing software 
+counter) a hack, but evolution.  It has happened before.
+
+> (Ok, if you actually care about the i486SX, the patch will be much
+> bigger, because it will have that whole FPU emulation code in it)
+
+ FWIW I'm fine to see FPU emulation code go, especially as it's something 
+that can be sorted in the userland for the so inclined.  Or you can run a 
+soft-float userland, for example in the form of a GCC multilib just as 
+done with numerous targets.
+
+  Maciej
