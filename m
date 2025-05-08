@@ -1,81 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94A22836A7;
-	Thu,  8 May 2025 16:29:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C66928469E
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:29:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746721794; cv=none; b=dy6p1Ae4r7A5xV9Gcrpkgm7+sxnTkZ9qsjz6lz53kTL/IYbFCC+QSYerUdSIKGUqn0I1Wx2mAypXbxPane9x9H2mBsSqn5AWMYrScBDm1ediw5GjXbEPkVCg87luSYuIx0B+7+s+/qsyB8WBuOW0X+GRrcwSyAmDAaFGrGCQdhs=
+	t=1746721796; cv=none; b=OVzC7SrM2w2RzpV71XEt4OkZVWLAuM8fICrAvL1ssBRe0dcdaYQJzaBA5MNnb/u7JlFP2knN6Zl2CcvVuQhC/BbWVJBe0ZajWqpHtmCdKhWq39jJd88kUlZaxrPg5jofL0ujhD1cPmSEXHQA6hNfdZxF+xU1vBFlrVCb0+Irea0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746721794; c=relaxed/simple;
-	bh=td0/W1n9aOEtk0epnkPwUaZiByTowJBXnpm1ysKQLbM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GM09O/JQl1vd0ne40J8HJ1yrHSh2CDjlSNtYWWYFWHArbJeVZ3BcocfF4TyZdJGCUZ2bpitvWwt+AU+QggDJOmchnumsaRhvPDxvKyIX63T7z159eY6cIKsMqMnV9sLT4Vu3P3nzVBtnMyTJGg+c5YYrEx2be8fPixT5G+PyfcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H8yVftdY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746721796; c=relaxed/simple;
+	bh=emnJpzLvbQJrpPs3WoUmBKPR9xHTU7DnXmw4yOQRzLI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=pOU+0g7aA34AcuZNHTqmbHeGoGP4lBV9RVbFprg+0+1vKz0aAjWIO3BBhJdZ+ZJS6iVb6IXpXCxv/ylHFBV+qvdsxvnxLIcCmRoe4Q9fBm0MtPDYMkPAQ24bePUxKGbmde/tGkgdiAC7Qvs+Qm1UGeZLCYnDsNj77jQd0Bcbjbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tU+rjwtk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H8yVftdY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 575D7C4CEEB;
-	Thu,  8 May 2025 16:29:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tU+rjwtk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E446C4CEE7;
+	Thu,  8 May 2025 16:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746721793;
-	bh=td0/W1n9aOEtk0epnkPwUaZiByTowJBXnpm1ysKQLbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H8yVftdYn0Keq8UVjV3B31mLlJzlC/VdjbYSrnPZgX9bB5sLHwM3uJAM+wusIR2R7
-	 N8FHP7zm0LXVWL2BTs+spGkZRHcuAi9E9me72T90cxkcvlD/6UhrvwivbYiVVNEnj6
-	 cbaJRk89RE+6FBBXvhlMNQxep0axJwkaa3vowHzGLQBe7wiYIf5D3/ABf8MC2CGeqK
-	 FTOR3/Ij3Kb13VxjqNs/0sWcy8zacL5fyfcUkmGMs1Z071OpPUTv7kblhdnLmW+/k4
-	 KumLLr3FRRu8uIiXlxGzhgCjt1vw2dmSeccMukJ3XRp1pNQjBP/wM5Mvfz02oaaWCP
-	 1WAXwqdFmj5hQ==
-Date: Thu, 8 May 2025 09:29:50 -0700
-From: Kees Cook <kees@kernel.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Mostafa Saleh <smostafa@google.com>, kvmarm@lists.linux.dev,
-	kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, will@kernel.org,
-	oliver.upton@linux.dev, broonie@kernel.org, catalin.marinas@arm.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	elver@google.com, andreyknvl@gmail.com, ryabinin.a.a@gmail.com,
-	akpm@linux-foundation.org, yuzenghui@huawei.com,
-	suzuki.poulose@arm.com, joey.gouly@arm.com, masahiroy@kernel.org,
-	nathan@kernel.org, nicolas.schier@linux.dev
-Subject: Re: [PATCH v2 0/4] KVM: arm64: UBSAN at EL2
-Message-ID: <202505080929.95B2310@keescook>
-References: <20250430162713.1997569-1-smostafa@google.com>
- <202504301131.3C1CBCA8@keescook>
- <868qn8hfnp.wl-maz@kernel.org>
+	s=k20201202; t=1746721796;
+	bh=emnJpzLvbQJrpPs3WoUmBKPR9xHTU7DnXmw4yOQRzLI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=tU+rjwtk17GU2wRRyE/SFme6MQYTwywF9tNYFSPdYwEtrmfYdmVRFir3yozKw9hDT
+	 LLsYip1ZNfh0d9Flxat3o7ppXslLx7LJ0Vo6ux48bJa71fh8xQmdp+ZgaQA5XdOVea
+	 mxwjJPZnnk8ZqNdpCaBy+se/VgtMMa6ToG5qiIUlb1BEmzEGgmeG7OGEqYMq1gV6bH
+	 99N92c8ghBRYZPAMLIzKdE4Hn2i+Oey2pv7RpNj30MZQ3Y45cYXru2MvQNlfq0tZne
+	 zjgZFST/5saA4SC4dMQkRxJp58ecGg6loX1xOqURBtKin2ArpaZIPcCPExWYrbaDfU
+	 VF0LoWmACrF4g==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAFDD380AA70;
+	Thu,  8 May 2025 16:30:35 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <868qn8hfnp.wl-maz@kernel.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [f2fs-dev] [PATCH 1/4] f2fs: return bool from
+ __f2fs_write_meta_folio
+From: patchwork-bot+f2fs@kernel.org
+Message-Id: 
+ <174672183439.2971823.3514035495469424112.git-patchwork-notify@kernel.org>
+Date: Thu, 08 May 2025 16:30:34 +0000
+References: <20250505092613.3451524-2-hch@lst.de>
+In-Reply-To: <20250505092613.3451524-2-hch@lst.de>
+To: Christoph Hellwig <hch@lst.de>
+Cc: jaegeuk@kernel.org, chao@kernel.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net
 
-On Wed, May 07, 2025 at 11:35:38AM +0100, Marc Zyngier wrote:
-> On Wed, 30 Apr 2025 19:32:23 +0100,
-> Kees Cook <kees@kernel.org> wrote:
-> > 
-> > On Wed, Apr 30, 2025 at 04:27:07PM +0000, Mostafa Saleh wrote:
-> > > Many of the sanitizers the kernel supports are disabled when running
-> > > in EL2 with nvhe/hvhe/proctected modes, some of those are easier
-> > > (and makes more sense) to integrate than others.
-> > > Last year, kCFI support was added in [1]
-> > > 
-> > > This patchset adds support for UBSAN in EL2.
-> > 
-> > This touches both UBSAN and arm64 -- I'm happy to land this via the
-> > hardening tree, but I expect the arm64 folks would rather take it via
-> > their tree. What would people like to have happen?
+Hello:
+
+This series was applied to jaegeuk/f2fs.git (dev)
+by Jaegeuk Kim <jaegeuk@kernel.org>:
+
+On Mon,  5 May 2025 11:25:58 +0200 you wrote:
+> __f2fs_write_meta_folio can only return 0 or AOP_WRITEPAGE_ACTIVATE.
+> As part of phasing out AOP_WRITEPAGE_ACTIVATE, switch to a bool return
+> instead.
 > 
-> FWIW, I have now taken this in kvmarm/next. A stable branch is
-> available at [1] for anyone to pull and resolve potential conflicts.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/f2fs/checkpoint.c | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
 
-Thanks!
+Here is the summary with links:
+  - [f2fs-dev,1/4] f2fs: return bool from __f2fs_write_meta_folio
+    https://git.kernel.org/jaegeuk/f2fs/c/39122e454419
+  - [f2fs-dev,2/4] f2fs: don't return AOP_WRITEPAGE_ACTIVATE from f2fs_write_single_data_page
+    (no matching commit)
+  - [f2fs-dev,3/4] f2fs: simplify return value handling in f2fs_fsync_node_pages
+    (no matching commit)
+  - [f2fs-dev,4/4] f2f2: return bool from __write_node_folio
+    (no matching commit)
 
-
+You are awesome, thank you!
 -- 
-Kees Cook
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
