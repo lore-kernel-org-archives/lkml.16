@@ -1,71 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023AC26868E;
-	Thu,  8 May 2025 14:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D73AB25742A
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746713502; cv=none; b=IFEU8DXBxS+LVMEzpaIc1Dg5PYmC+DvbO54UeMGvrvbq2eWEMxEISYS0yRXVy259fTuQP6MX3V6uS4GvwogbJ2aTztoyVP6okEEtO3UzKn6Do9P85V24Sjk58PERpagAcu2vzFsJZdx+7SbVTg5sR0Brt5IflvMwN+ZoJ9R3VFM=
+	t=1746713529; cv=none; b=YCSbIRxWM8Kv0ekg9JTAzjO61eraeP/OXw71sKNfTx8nndiqN4J/b9Jn8t4ldbGjilzBEHgzLzn/8Oc0zQQSn6cfErI4hBq3Vww2Mzoan1S8X+lIstKrGM/VwxwAkYuun6i9QL0FSPj7O76Gtr5nVqEPVPoBf6HTtXEgkMXqRpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746713502; c=relaxed/simple;
-	bh=XGz7CN8xky35QV4MItpPqWXXsHZx6uiwV0aRCv3dPCU=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ELXz6wW4j1/CMMLHQO3+DMSKSEAjAcs2W7dFcxM30k7fLFrBF0qJa0eljA8nvqeLkyUiepKHD4bwX6skECTThvitnBCpvHbKgJFXT5MaSvscGkPXxZn6UQHmaWjALHVfcNQ+hvMD0VNM7QysEjRHAKqQqEL8WSNdQn1zWJsnBL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WBk8BTtK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746713529; c=relaxed/simple;
+	bh=i8bUh+ZCe0rZP2zIF+tVxLgLBV4ZORcqen4purBbm+I=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=SkQYaUEFRNZ9mRFZMxrFA7KFAtxc9+jQLe2y0TiujjNC2beCYBJMhfTQcKSUNXh/XaRylTaD/+yNo7uhPXlBHRFd9LkEH8XUjLft4WeGwhCi0dC2eY2tee/7b5tYJKkU9xQNTsJuh8jYjmTrKkprSGp/Jdzomwgoq3TOScWo78I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PEkBdiGr; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WBk8BTtK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BBD4C4CEE9;
-	Thu,  8 May 2025 14:11:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746713500;
-	bh=XGz7CN8xky35QV4MItpPqWXXsHZx6uiwV0aRCv3dPCU=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=WBk8BTtKO02TgGWcYPcv1mlySZz9Q5dKoCAuVLl5R+aQh9TN4vOv3n6Ja/vfwVjW+
-	 HiP242sFjU87vRNFVidYM7gOx9oWEPZS963ZsH7Kju7s+TTvdTsJ7o/lZnIdSnxKRy
-	 Bf1OXf6qEkZzrF2eFMlJIv42wOEgcrAHSD0E3QZ5WdbBCumD0JoJcyIgVmPRiKTwnF
-	 mhUv6b0HqbNau8j7i7/K70ak+NQxNS08S544TSROHK9hSYzEUysStWe/lN/qErOIL+
-	 2my3xpgeDr3aYGe0C8htcfSB0SwvkjtWSc/Nln3AyQpyChdREiaJknIOFZR3dRCAB+
-	 19qOcV9wyRlDA==
-From: Lee Jones <lee@kernel.org>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Colin Foster <colin.foster@in-advantage.com>, 
- =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
- Marek Vasut <marek.vasut+renesas@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
- Jeff LaBundy <jeff@labundy.com>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250501145125.59952-3-krzysztof.kozlowski@linaro.org>
-References: <20250501145125.59952-3-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: mfd: Drop unrelated nodes from DTS
- example
-Message-Id: <174671349784.2457426.16761659932735162963.b4-ty@kernel.org>
-Date: Thu, 08 May 2025 15:11:37 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PEkBdiGr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746713527; x=1778249527;
+  h=date:from:to:cc:subject:message-id;
+  bh=i8bUh+ZCe0rZP2zIF+tVxLgLBV4ZORcqen4purBbm+I=;
+  b=PEkBdiGrSDGq1cnZdwx4nRLFecEejebUsR8mscM7rSPyPNPBBtAtR+Gi
+   ZrD6vXmSbqo41JHcMEpQrnDSFN1rRz8ib0ShI5PlIjturawakIrWkbYzC
+   btLP5WAZL9yBJW2/pcOcZKYpmR6kuKcUC7KI2uSRHzb2r9sJ31QUKKkUn
+   4hQhAfCiY+8oq9+roZ0YMOwJWtbGISxTLbDok8jIi6V5gcMNP7H+Ve1iK
+   s4xitbJD6XvM4Sfa3NALZmyrc5FMD9xJj2Pg1O1oQem9PhVpslS/lDvzB
+   oWPlgqVo3Q1xLlxZLblPr1zHSXCBwVBCnIIwsNJ8YOWZ7mjMEgI9qBx/i
+   g==;
+X-CSE-ConnectionGUID: LTDrHYVJTVWlpQ6hr4BZcQ==
+X-CSE-MsgGUID: lucgJFh9TROf3EUfWoMfhQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48611412"
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="48611412"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:12:06 -0700
+X-CSE-ConnectionGUID: rMcEpkLVRGej0s/xJNzmMg==
+X-CSE-MsgGUID: STCe+/6eRtSBBo7czmgK5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="141073482"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 08 May 2025 07:12:05 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uD1yl-000B1z-05;
+	Thu, 08 May 2025 14:12:03 +0000
+Date: Thu, 08 May 2025 22:11:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:irq/drivers] BUILD SUCCESS
+ 15568ffd59d4e7d8c39286a7159880afe327216d
+Message-ID: <202505082211.plsJaZeN-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-39345
 
-On Thu, 01 May 2025 16:51:26 +0200, Krzysztof Kozlowski wrote:
-> Binding example should not contain other nodes, e.g. consumers of
-> resource providers, because this is completely redundant and adds
-> unnecessary bloat.
-> 
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/drivers
+branch HEAD: 15568ffd59d4e7d8c39286a7159880afe327216d  irqchip/irq-vt8500: Switch to irq_domain_create_*()
 
-Applied, thanks!
+elapsed time: 1440m
 
-[1/2] dt-bindings: mfd: Drop unrelated nodes from DTS example
-      commit: a67c891b8e7da2afedb29ee3da68c52aa5e6902a
-[2/2] dt-bindings: mfd: Correct indentation and style in DTS example
-      commit: c3ddcd91220220c417850ede7303a9f37e222408
+configs tested: 72
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha          allnoconfig    gcc-14.2.0
+alpha         allyesconfig    clang-19
+alpha         allyesconfig    gcc-14.2.0
+arc           allmodconfig    clang-19
+arc           allmodconfig    gcc-14.2.0
+arc            allnoconfig    gcc-14.2.0
+arc           allyesconfig    clang-19
+arc           allyesconfig    gcc-14.2.0
+arm           allmodconfig    clang-19
+arm           allmodconfig    gcc-14.2.0
+arm            allnoconfig    clang-21
+arm           allyesconfig    clang-19
+arm           allyesconfig    gcc-14.2.0
+arm64         allmodconfig    clang-19
+arm64          allnoconfig    gcc-14.2.0
+csky           allnoconfig    gcc-14.2.0
+hexagon       allmodconfig    clang-17
+hexagon       allmodconfig    clang-19
+hexagon        allnoconfig    clang-21
+hexagon       allyesconfig    clang-19
+hexagon       allyesconfig    clang-21
+i386          allmodconfig    gcc-12
+i386           allnoconfig    gcc-12
+i386          allyesconfig    gcc-12
+i386             defconfig    clang-20
+loongarch     allmodconfig    gcc-14.2.0
+loongarch      allnoconfig    gcc-14.2.0
+m68k          allmodconfig    gcc-14.2.0
+m68k           allnoconfig    gcc-14.2.0
+m68k          allyesconfig    gcc-14.2.0
+microblaze    allmodconfig    gcc-14.2.0
+microblaze     allnoconfig    gcc-14.2.0
+microblaze    allyesconfig    gcc-14.2.0
+mips           allnoconfig    gcc-14.2.0
+nios2          allnoconfig    gcc-14.2.0
+openrisc       allnoconfig    gcc-14.2.0
+openrisc      allyesconfig    gcc-14.2.0
+parisc        allmodconfig    gcc-14.2.0
+parisc         allnoconfig    gcc-14.2.0
+parisc        allyesconfig    gcc-14.2.0
+powerpc       allmodconfig    gcc-14.2.0
+powerpc        allnoconfig    gcc-14.2.0
+powerpc       allyesconfig    clang-21
+powerpc       allyesconfig    gcc-14.2.0
+riscv         allmodconfig    clang-21
+riscv         allmodconfig    gcc-14.2.0
+riscv          allnoconfig    gcc-14.2.0
+riscv         allyesconfig    clang-16
+riscv         allyesconfig    gcc-14.2.0
+s390          allmodconfig    clang-18
+s390          allmodconfig    gcc-14.2.0
+s390           allnoconfig    clang-21
+s390          allyesconfig    gcc-14.2.0
+sh            allmodconfig    gcc-14.2.0
+sh             allnoconfig    gcc-14.2.0
+sh            allyesconfig    gcc-14.2.0
+sparc         allmodconfig    gcc-14.2.0
+sparc          allnoconfig    gcc-14.2.0
+um            allmodconfig    clang-19
+um             allnoconfig    clang-21
+um            allyesconfig    clang-19
+um            allyesconfig    gcc-12
+x86_64         allnoconfig    clang-20
+x86_64        allyesconfig    clang-20
+x86_64           defconfig    gcc-11
+x86_64               kexec    clang-20
+x86_64            rhel-9.4    clang-20
+x86_64        rhel-9.4-bpf    gcc-12
+x86_64      rhel-9.4-kunit    gcc-12
+x86_64        rhel-9.4-ltp    gcc-12
+x86_64       rhel-9.4-rust    clang-18
+xtensa         allnoconfig    gcc-14.2.0
 
 --
-Lee Jones [李琼斯]
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
