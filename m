@@ -1,91 +1,112 @@
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D14227AC47;
-	Thu,  8 May 2025 16:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F85527AC47
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746720411; cv=none; b=F4jPC5QONamblWAxRYbhgRcmS/6Dz0T1p8EmdQdojRxGOqU9cKYPMicOPqBuAfrGgYuLYeA9m70tOpuzWLaYlGkOgQWK9Ax0Y6Mq0ZlyLdpx8unbTdIkeIQE8ikdLO60tjTQDOVRlJEINh9YHTrzoBdRkcI4Df9+Nl5pDZZjD6s=
+	t=1746720449; cv=none; b=jk9UG7h9PQCHou1yu4aLo8i+E69qpmMetR60+AV9GdLhIGLqsg1krgILYJWP4Q/apNBHu9M1cDyRQPuOZ15yBip+CEubgf7l/lfI/jKWYoFl+Zyl5ASJtrsxlj5Ki2lbAbpnNgbNFhX+RskH+T45PdG7GOxjFpDto/S8/1Kl4gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746720411; c=relaxed/simple;
-	bh=OyskF42LM6Bxn6mh3FqN4hvTQ2IPXptkR5h/ItWp4+s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VfPhDw94MC1kZqCS9eXvYDgqS6PbhpuiDAVX9S624xgUgVWqyGRggGMjp2ikgP7yo+dYYIAA0Uu1aCoOPEH7iJ03G7TQOsrGdi0l8evJ0EX2Ev/7y6v97kHrLPRp3owm5XXTFOhpgR9dOy4frAbcdXT1938+Px4UVQJwaJA8G0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=xPehbiMa; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="xPehbiMa"
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4ZtcT46L4Nzlnfx6;
-	Thu,  8 May 2025 16:06:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1746720405; x=1749312406; bh=CQV5mSzjgEnmWgEB9C9eBlg0
-	5iQfM1JglqUd5jyRaCM=; b=xPehbiMaEnzZjy25zBHGqux/ZU6vkcDWgggsvUH4
-	xzaNbUoLrhQE15jdntRDvLKjB1N+EtLzXi36iP+Hl7I8SxrwvzWaqEIVN7lFwSOJ
-	xBiEI5ypd4XWqllaQr8KAUjONPPKtxBe3HU8OokcRQFP8CUu6te1zdtsYM87nx7Q
-	f1TYgkPa3Cn+b3EHKp+z3iT96+3bqXEmqDGIFRIb2u+MLh+7YgAQNNzfIOoPE9+E
-	ssd/w1m2SCDZCEOipdGMYgFhmThf8Bvj8omZduRGTtCdsGD1cwnONWGpg7jGLEnG
-	HdST4kX/sWLK2NxvXGDHX2fs73YngPt8dE1bjkb2seFqRA==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id 2AIYu1_hzvfV; Thu,  8 May 2025 16:06:45 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4ZtcSj1w5wzlssn9;
-	Thu,  8 May 2025 16:06:28 +0000 (UTC)
-Message-ID: <fd13e179-f2d8-4085-86da-c6b0fce2de5b@acm.org>
-Date: Thu, 8 May 2025 09:06:27 -0700
+	s=arc-20240116; t=1746720449; c=relaxed/simple;
+	bh=g2HdK6UHZQUgdwlah1zRHqAnikMxYB2BsiKBDt8GLZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mjQmQLXlLFFh9qJ5VVq7fLCCziusV44fWFOZQ3Btdlh6xtY8J+XhpnDnO90T8tlrdeS/7aX2wDHLOc/VhM2Er4M5GNchSxVjY4ZOmjVf6UyXwW5R1Nq1+F4PI8g8oFaWB2GqE94VVE0JUySg555D9aWA9SADX8zeceBarunIL2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C5B9236D;
+	Thu,  8 May 2025 09:07:17 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 313073F5A1;
+	Thu,  8 May 2025 09:07:25 -0700 (PDT)
+Date: Thu, 8 May 2025 17:07:22 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>
+Cc: Marc Zyngier <maz@kernel.org>, Per Larsen <perl@immunant.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, armellel@google.com,
+	catalin.marinas@arm.com, kernel-team@android.com,
+	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, qperret@google.com,
+	sebastianene@google.com, will@kernel.org, yuzenghui@huawei.com,
+	Per Larsen <perlarsen@google.com>
+Subject: Re: [PATCH 1/3] KVM: arm64: Restrict FF-A host version renegotiation
+Message-ID: <20250508-condor-of-angelic-pleasure-bfb5c4@sudeepholla>
+References: <CA+AY4XcaJa1_U3qXQUBj4wZJYc9hKmRX8FTNeDvV2auEnC_WrA@mail.gmail.com>
+ <86r017h00e.wl-maz@kernel.org>
+ <aBnNXyJn818ZEKOS@google.com>
+ <8634dfh47q.wl-maz@kernel.org>
+ <20250508-spectral-sage-whippet-4f7ac2@sudeepholla>
+ <CAMP5XgcCg+kB7tPwSYUcjfZqR_734cGEs_KX4st9SQOVLBV-Yw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] scsi: ufs: core: skip UFS clkscale if host
- asynchronous scan in progress
-To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com,
- mani@kernel.org, beanhuo@micron.com, avri.altman@wdc.com,
- junwoo80.lee@samsung.com, martin.petersen@oracle.com,
- quic_nguyenb@quicinc.com, quic_nitirawa@quicinc.com,
- quic_rampraka@quicinc.com, neil.armstrong@linaro.org,
- luca.weiss@fairphone.com, konrad.dybcio@oss.qualcomm.com,
- peter.wang@mediatek.com
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
- Alim Akhtar <alim.akhtar@samsung.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250508093854.3281475-1-quic_ziqichen@quicinc.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250508093854.3281475-1-quic_ziqichen@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMP5XgcCg+kB7tPwSYUcjfZqR_734cGEs_KX4st9SQOVLBV-Yw@mail.gmail.com>
 
-On 5/8/25 2:38 AM, Ziqi Chen wrote:
-> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-> index 1c53ccf5a616..04f40677e76a 100644
-> --- a/drivers/ufs/core/ufshcd.c
-> +++ b/drivers/ufs/core/ufshcd.c
-> @@ -1207,6 +1207,9 @@ static bool ufshcd_is_devfreq_scaling_required(struct ufs_hba *hba,
->   	if (list_empty(head))
->   		return false;
->   
-> +	if (hba->host->async_scan)
-> +		return false;
+On Thu, May 08, 2025 at 08:45:01AM -0700, Arve Hjønnevåg wrote:
+> On Thu, May 8, 2025 at 2:27 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > (just adding some additional info not particularly impacting the $subject
+> >  change implementation)
+> >
+> > On Thu, May 08, 2025 at 09:55:05AM +0100, Marc Zyngier wrote:
+> > > On Tue, 06 May 2025 10:29:41 +0100,
+> > > Per Larsen <perl@immunant.com> wrote:
+> > > >
+> >
+> > [...]
+> >
+> > > > Asssuming we drop this patch from the series and apply the rest, the
+> > > > hypervisor and host can negotiate FF-A 1.2. If the host then calls
+> > > > FFA_VERSION a second time to request FF-A 1.1, the hypervisor would
+> > > > return version 1.2 (without this patch).
+> > >
+> > > Why would it do that? Once a particular version has been negotiated, I
+> > > expect to be immutable.
+> > >
+> >
+> > Not suggesting that we need to support this, but it is technically possible
+> > today by loading FF-A as a module—first inserting and removing a module with
+> > v1.2 support, then loading one with v1.1 support. It can ever throw error
+> > as not supported to keep it simple.
+> >
+> 
+> I'm not sure how what you are suggesting here is different from what
+> this patch does. This patch does not alter what versions the host can
+> negotiate. The hypervisor already disallows negotiating a different
+> version once has_version_negotiated is set, the return code just
+> doesn't always reflect this. If you try to load the 1.0 driver in the
+> host after unloading the 1.1 driver similar to what you describe
+> above, then this CL will let the 1.0 driver know that the hypervisor
+> does not support 1.0 (I use 1.1 to 1.0 as the example here since this
+> is an issue even without the next CL in this patch series that bumps
+> the hypervisor supported version to 1.2). Without this CL, the 1.0
+> driver will now proceed making other ffa calls using 1.0 data
+> structures that the hypervisor will incorrectly interpret as 1.1 data
+> structures.
+> 
+> With this CL, loading a 1.2 driver after the initial 1.1 driver will
+> work as it did before by returning version 1.1 to the 1.2 driver to
+> let it know that _it_ needs to downgrade to 1.1. if it wants to
+> proceed. Loading the 1.0 driver after 1.1 will now fail at the version
+> negotiation stage however. This will be clearer, and more correct,
+> than getting FFA_RET_INVALID_PARAMETERS return codes from other ffa
+> calls when passing valid 1.0 parameters to those calls.
+> 
 
-Testing a boolean is never a proper way to synchronize code sections.
-As an example, the SCSI core could set hba->host->async_scan after this
-check completed and before the code below is executed. I think we need a
-better solution.
+Thanks for the detailed explanation. Sorry I didn't look at the change itself
+and I might have made assumptions as I just read
 
-Bart.
+  |  If the host then calls FFA_VERSION a second time to request FF-A 1.1,
+  |  the hypervisor would return version 1.2 (without this patch).
+
+So, my point was just that it is OK to even report it as NOT_SUPPORTED
+if FF-A proxy doesn't want to deal with all the compatibility for simplicity.
+
+-- 
+Regards,
+Sudeep
