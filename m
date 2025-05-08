@@ -1,414 +1,230 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C1715B0EF
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 21:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DD8191F77;
+	Thu,  8 May 2025 21:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746740511; cv=none; b=mhYoL+IH1COuOh0b2gB5lnsuipFND0Rb6U8gHX4eVUh+5LLmFUDjMn/5a7XqxfonZ+AP7d8yLahyOR4i9lgJN+lpPI3agnct+qXTsN0/FfvWt9QDAvdNr0t2mRxIWJL3xhlObJky17Iy0jkWwTJlrRB1OB7N9JrS9JtrUw7CGL0=
+	t=1746740625; cv=none; b=n0jMLnlLXzKAAEKXl+qW99RaZ7V582S+n6UKPz8pAZsm5QPvtuz8txxM0Pn3JuK00FeImS6QX9Dxf/AYmXvSEg4Z9CZWsIO+YOUnFbIwACAdmacIaUm4Wi8jlyiXoBrzg9HM2tob2aKnQdHkEqlT9PEbwppKnqiM3X5UvcxTCB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746740511; c=relaxed/simple;
-	bh=7Ip9/nzNt8NqPA4tzVtTMsMl0DklgqNyVgIWGPkPhfI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kjBeVYdGzPRBI/62BfQhEZFbv54wE9ptnjuepA9aVAMUab4/nuBRlDqDnFM6sQ1S17kDSLnU5JkE52fu2m4014QFv5iS3eMW7FQ1rzn1jFOdOXKSMwOZIgpov2fBZrNK1Laq7PFIWNnvXEOy/IxLbeTdVqgq5SQ7GEn6JCpao7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hHKsg41M; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746740625; c=relaxed/simple;
+	bh=J9Dmli0C5XnBzm1XsVjXcJ56mJMtmyK7n5kAZLDu9Iw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jRVQvOLeSGGqrRG97GbBnGPqejLnZixOPmjEx9bo1kDCIHah8qEnFKY1eaXxQlGyUD0WgBdo8C/P10wo50WSBqGrFgZdDcsmoD2UuKGEYeUaP22kBaeCsFT37yS3vqaTH059n7JLsoxnM/5uiMsB2qVHMB6pRJ/cc+T0xKFUbyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XPk6ob/q; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hHKsg41M"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4774611d40bso91211cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 14:41:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XPk6ob/q"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5f5bef591d6so2924882a12.1;
+        Thu, 08 May 2025 14:43:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746740508; x=1747345308; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1746740622; x=1747345422; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EmKk3GLSRxx8+Kwgcnr1XAp5wF86LzLkBPKCEHaK3X8=;
-        b=hHKsg41MgNGIOCTIlkU0oQyvyarSuc1dExZDrPNUeE2+P6oNP7/ZxsEQDzz9HaR2lf
-         RT8IMPZPZvWVfA4unloIGvFBNgdGqJqpL3s6CP/zvVOWvTej//Wvxuln5qS33LOU7qwE
-         6SnNuQL6lYfQer3gnHq1eASCFPAxiBWe9uLulI84en8MJUxX+/DMTYP4F4CWQgdDKvGp
-         AujGkMSet3eZnC7oLOoh9Sc/PuaKuCnUMueVoQgKZ1UjShGqk00MYDExke6ZAKTx/ET8
-         cQlJllReW9axSKAvwROJM85z2Hy3TDCyU0HsjQPa372H0TOKnZFdZtOMNyUBlDCmiUkN
-         XSiA==
+        bh=YxFI4RPqw5Oc72zgRf5XAcOfnV2sr6KPSZ5TqvC5GzI=;
+        b=XPk6ob/qSJxazmJKv5Gb1Yw/0WpajH5VzwhYrvSv5yV/9cUb5KsA5hCiRX6s2FdU0e
+         XG+T4K/cb+5EQKSpxAk6f4nImVjvyonmiuny/GB0Yt9+CRAYEHSebNmeoGl9AVeTeN3h
+         AKiskknVR7oJ3X1zL6zuKUYfip5ElDeMihIEOyxpyFBhNvAdoQWue8u9zlkIvF6NtfAc
+         3nH4G2uK/H0uo/MfpjN5f7//vZEKoBsG0haVxidQvdj5qkgJU7ammzrseHE4YhnWo96b
+         E3ancHn6/Ve0hAvm9Fsi4GeYIdjbiR46zsOvbw1nEv89+UHhVaq7V6D/0L7x10vLes9/
+         iNcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746740508; x=1747345308;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1746740622; x=1747345422;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EmKk3GLSRxx8+Kwgcnr1XAp5wF86LzLkBPKCEHaK3X8=;
-        b=VrHhaURQWHcY8zbdPyC0n/cDXICu5/k254RugeQjJ/1YalYNFgRYDkht35MGL49LRk
-         D4zakW8+/SC2YepR1dkyF8+xB8Zhi08m5OqC7C2ey4vP2/cP6Tq4gNSnLV1KVhoYXxwP
-         wWt9c9Hq8unMvTgEWpE1NH/OBGJHv1JtnMBuQVhTZl7QbhTxA7ebN3dbjbGxeFAOc7qI
-         zm/s/1fwoajhWkj4DixA0O7kXW1xa4ahV1AA9idwj0npOQzBnHuplqEjJOVa/JnB0erc
-         UnldnWuAT1Pd8ztFThLucnA6gACeCUP0vFc+nqhPqJao7ybd/CUXiz5hxSIKXxIb/ouM
-         sjIw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGPcA2+g7gC2aXwQ6nDq8UlK4b2xZ2FRetcHSczsudXnALfcIkW+MQGuyLUnrcTicZ9CjnWwRKsVZzZnc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOYFDGlt0Jqe+MwHHUfaR6I9VH+qjnd2jg6c4K9DNwTKuR9Qa+
-	sykZ7/fycp0XClOhGaz2VL06nJCtbftZpTcodvOs7LI/63LA3iOK9T13E9MQhx3tr14+DSSe0KX
-	ZCf3B2iQCu9zgqJtPvoEfVodWJdEoEZEjceebr+Fl1JfoNbbAfPqK1GE=
-X-Gm-Gg: ASbGncufXj9oxACJeP9Ui5hcgqDLydiUjCmisFjZDJqTWfyxlsNRJ/JmX7N3CcQLw/Z
-	4X+ovKwRSbUG/mb/xYs5Uaep6i++Oji1gKAY4dR8G3folGId24pa7pNgz7Gl8FBnWiiMG0wET4e
-	qvq2GTMjVNW6khoFANbbikSlSHQFvxDPcDWkM/7QJM55NzHYk3IrI=
-X-Google-Smtp-Source: AGHT+IF7q2Ij3uVjNzAszC8Nhjpr+Cen/gqEZNPE458JraRVOTyXNcyTUF7bxg1OzNGFhanICUsBRRdT5rUs0eAFHBY=
-X-Received: by 2002:a05:622a:64c:b0:476:f181:efeb with SMTP id
- d75a77b69052e-49452cc1a2dmr1310391cf.16.1746740508068; Thu, 08 May 2025
- 14:41:48 -0700 (PDT)
+        bh=YxFI4RPqw5Oc72zgRf5XAcOfnV2sr6KPSZ5TqvC5GzI=;
+        b=V0WNnjA5ye9S/nNLf2HzrFOb30wO5xEgZYi0hfv1w0sRKfGcY1WdR5Wb+QGgl979Au
+         IJlBoLd90V5CKLAUCgD90Yz7J1a04a5pVYxSFyrdjbtRasQY7IBuDrOlqg9duGnexmje
+         x7+PfEfusSy6yTLouqGQmqSbV5M1y8PQtk/xKQPqwyBUM3ZWJi+mEASch+oiV8ru6U7z
+         Xd3AEyRlpUMOfNODxFDjvZ/fgeEdV5WMdwhEJ0wP22VzYJCK9v8BdQe5tPuvV4dz39hq
+         OxTcHk7WbPRAWjMQIO/tbXd25W6QgokpAalZevBxg4RqsTTsKGO3y28gXvDP0vBdB5Qa
+         BDkw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdyOXfcWCo8rkJtYVa9EBV1tCmJ2Nv0cFVnXncuy6byip9qybj0nkKD7k+R2K4TfwczWNxbFd8XSUt8g==@vger.kernel.org, AJvYcCWYdXfZbC+oalRhJnf1nMMBZd228RH4qfBdyxCHSmVR0OVUm/rQaV2RQk8aUGR3gfkF8uiZlghaHIEzHymJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxt/ooOXXHZj90wR1dRpXp6PSXH4DQ88rsMG5dtOLcKBhn5NPSj
+	/r1P+1jI4GLg6kPszTXEr67443gaGLCnzcy4JD/PHa8XDo38XPpm
+X-Gm-Gg: ASbGncvOGM3PIN4n3JYw18U/1ebOfAL8DvLT/gkErW4tLLobnitif4BXZ0t8n61Vs51
+	FAAWYu3cgO4xoyxUDJqzRIrkbk8H3hMuLeuiMv6gcZWDbpJkXZk71a0Q219rdZkLpbQdW/Qva6N
+	FXHkEEtZna+022S7v1Pmoi+rEHB2eIXCD6RadzsJw3mq/87qHWe4wj+GoB3tgo0Sic2G0HmuaqL
+	LA5hlDvn8IK2SsBIAtW4LxY87hEwwT1UeRB8NAPEN3uQxrSWyMK1rORVq9FyGSBUP+HdhGDPu8t
+	etf0v+Jmro0a1chqt0P/+uTAs54I6+0mdMvKS/0+9Q==
+X-Google-Smtp-Source: AGHT+IGCr7kNM8GxAeQgVOtn9fqJtJDnlu2uiaxt+HwMB0B30ez3ZUtOBnpZPPI/kcG6uuMX/M3FFg==
+X-Received: by 2002:a17:907:9404:b0:aca:a162:67bb with SMTP id a640c23a62f3a-ad218e90a03mr130636466b.4.1746740621903;
+        Thu, 08 May 2025 14:43:41 -0700 (PDT)
+Received: from framework.. ([146.70.161.170])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad219746f06sm46007866b.107.2025.05.08.14.43.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 14:43:41 -0700 (PDT)
+From: Vadym Tytan <titanv3585@gmail.com>
+To: Roderick Colenbrander <roderick.colenbrander@sony.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org
+Cc: Vadym Tytan <titanv3585@gmail.com>
+Subject: [PATCH] HID: playstation: DS4: Add BT poll interval adjustment
+Date: Thu,  8 May 2025 23:41:32 +0200
+Message-ID: <20250508214305.836406-1-titanv3585@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250508210148.799578-1-titanv3585@gmail.com>
+References: <20250508210148.799578-1-titanv3585@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507175500.204569-1-00107082@163.com> <CAJuCfpGtdzL5myXCUopJrBogzPOWVGt9cBRAiJS5FVAxgp8zag@mail.gmail.com>
- <531adbba.b537.196b0868a8c.Coremail.00107082@163.com>
-In-Reply-To: <531adbba.b537.196b0868a8c.Coremail.00107082@163.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 8 May 2025 14:41:36 -0700
-X-Gm-Features: AX0GCFuCR9elxrj-B0jGMzMMGRNkb45rYCG_9syGViivQkpSvf8Wp1XcQfp2J6Y
-Message-ID: <CAJuCfpG4P2hKuUqQ=w-t72tT4dmh_7_VJPY6gw=nYk-C7DkEjA@mail.gmail.com>
-Subject: Re: [PATCH] alloc_tag: avoid mem alloc and iter reset when reading allocinfo
-To: David Wang <00107082@163.com>
-Cc: kent.overstreet@linux.dev, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 8, 2025 at 8:32=E2=80=AFAM David Wang <00107082@163.com> wrote:
->
->
->
-> At 2025-05-08 07:36:14, "Suren Baghdasaryan" <surenb@google.com> wrote:
-> >On Wed, May 7, 2025 at 5:55=E2=80=AFPM David Wang <00107082@163.com> wro=
-te:
-> >>
-> >> ---
-> >> The patch is not complete, just want to get feedbacks whether this
-> >> worth carrying on.
-> >
-> >In such cases it's customary to mark the patch as RFC which saves you
-> >time on explaining your motivation :)
-> >
-> >> ---
-> >> When reading /proc/allocinfo, for each read syscall, seq_file would
-> >> invoke start/stop callbacks. In start callback, a memory is alloced
-> >> to store iterator and the iterator would restart from beginning to
-> >> walk to its previous position.
-> >> Each seq_file read() takes at most 4096 bytes, even read with a larger
-> >> user space buffer, meaning read out /proc/allocinfo, tens of read
-> >> syscalls are needed. For example, a 306036 bytes allocinfo files need
-> >> 76 reads:
-> >>
-> >> $ sudo cat /proc/allocinfo  | wc
-> >>    3964   16678  306036
-> >>
-> >> For those n=3D3964 lines, each read takes about m=3D3964/76=3D52 lines=
-,
-> >> the iter would be rewinding:
-> >>  m    steps on 1st read,
-> >>  2*m  steps on 2nd read
-> >>  3*m  steps on 3rd read
-> >> ...
-> >>  n  steps on the last read
-> >> totally, the iterator would be iterated O(n*n/m) times.
-> >> (Each read would take more time than previous one.)
-> >>
-> >> To use a private data alloced when /proc/allocinfo is opened,
-> >> the n/m memory alloction could be avoid, and there is no need
-> >> to restart the iterator from very beginning everytime.
-> >> So only 1 memory allocation and n steps for iterating are needed.
-> >> (Only when module changed, the iterator should be invalidated and
-> >> restart.)
-> >
-> >Yeah, your change makes sense and looks like a good optimization. From
-> >a quick look at the code, codetag_next_ct() should handle the case
-> >when a module gets removed from under us while we are not holding
-> >cttype->mod_lock. I'll need to take another closer look at it once you
-> >post an official patch.
-> >Thanks!
-> >
-> The module tag container designed more "compact" than I imaged. It seems =
-that no
-> extra iterator validation needed for most situations, but I get anxious a=
-bout the following
-> possibility:
->
-> In between read() calls, module A removed and then module B inserted, acc=
-identally A
-> and B have same IDR id (id reused) and same "struct module" address (kmal=
-loc happened
-> to pick the cmod address kfree by module A).
-> If this happened, the `if (cmod !=3D iter->cmod)` check in codetag_next_c=
-t may not be
-> solid safe....
->
-> What about adding a clock/timestamp/expiration to cttype/module/iterator:
+Between v6.1 and v6.2 versions of Linux kernel,
+DualShock4 related code was moved from `hid-sony.c`
+to `hid-playstation.c` (near DualSense code) and
+Bluetooth poll interval adjustment functionality was lost
 
-I see there was a followup discussion but I don't think your question
-was answered. Instead of expiration I would suggest adding a timestamp
-in the struct codetag_module that would store the time module was
-loaded (basically the time when struct codetag_module gets created)
-and also add a timestamp in the struct codetag_iterator. Whenever
-iter->cmod gets assigned a new module during the walk (see
-https://elixir.bootlin.com/linux/v6.14.5/source/lib/codetag.c#L95) we
-update iterator's timestamp (iter->timestamp =3D cmod->timestamp) and
-then we can validate that the module was not replaced from under us by
-comparing ter->timestamp and cmod->timestamp. If the module was
-replaced from under us, the timestamps will not be equal, so we can
-reset the iterator.
+Signed-off-by: Vadym Tytan <titanv3585@gmail.com>
+---
+ CREDITS                       |  4 +++
+ drivers/hid/hid-playstation.c | 64 +++++++++++++++++++++++++++++++++--
+ 2 files changed, 65 insertions(+), 3 deletions(-)
 
->
-> diff --git a/include/linux/codetag.h b/include/linux/codetag.h
-> index d14dbd26b370..fc9f430090ae 100644
-> --- a/include/linux/codetag.h
-> +++ b/include/linux/codetag.h
-> @@ -54,6 +54,7 @@ struct codetag_iterator {
->         struct codetag_module *cmod;
->         unsigned long mod_id;
->         struct codetag *ct;
-> +       unsigned long expiration;
->  };
->
->  #ifdef MODULE
-> diff --git a/lib/codetag.c b/lib/codetag.c
-> index 42aadd6c1454..a795b152ce92 100644
-> --- a/lib/codetag.c
-> +++ b/lib/codetag.c
-> @@ -13,6 +13,8 @@ struct codetag_type {
->         struct idr mod_idr;
->         struct rw_semaphore mod_lock; /* protects mod_idr */
->         struct codetag_type_desc desc;
-> +       /* timestamping iterator expiration */
-> +       unsigned long clock;
->  };
->
->  struct codetag_range {
-> @@ -23,6 +25,8 @@ struct codetag_range {
->  struct codetag_module {
->         struct module *mod;
->         struct codetag_range range;
-> +       /* creation timestamp */
-> +       unsigned long timestamp;
->  };
->
->  static DEFINE_MUTEX(codetag_lock);
-> @@ -48,6 +52,7 @@ struct codetag_iterator codetag_get_ct_iter(struct code=
-tag_type *cttype)
->                 .cmod =3D NULL,
->                 .mod_id =3D 0,
->                 .ct =3D NULL,
-> +               .expiration =3D 0,
->         };
->
->         return iter;
-> @@ -93,6 +98,11 @@ struct codetag *codetag_next_ct(struct codetag_iterato=
-r *iter)
->
->                 if (cmod !=3D iter->cmod) {
->                         iter->cmod =3D cmod;
-> +                       iter->expiration =3D cmod->timestamp;
-> +                       ct =3D get_first_module_ct(cmod);
-> +               } else if (cmod->timestamp !=3D iter->expiration) {
-> +                       pr_warn("Same IDR id and module address, but diff=
-erent module!");
-> +                       iter->expiration =3D cmod->timestamp;
->                         ct =3D get_first_module_ct(cmod);
->                 } else
->                         ct =3D get_next_module_ct(iter);
-> @@ -101,6 +111,7 @@ struct codetag *codetag_next_ct(struct codetag_iterat=
-or *iter)
->                         break;
->
->                 iter->mod_id++;
-> +               iter->cmod =3D NULL;
->         }
->
->         iter->ct =3D ct;
-> @@ -169,6 +180,7 @@ static int codetag_module_init(struct codetag_type *c=
-ttype, struct module *mod)
->         struct codetag_module *cmod;
->         int err;
->
-> +       cttype->clock++;
->         range =3D get_section_range(mod, cttype->desc.section);
->         if (!range.start || !range.stop) {
->                 pr_warn("Failed to load code tags of type %s from the mod=
-ule %s\n",
-> @@ -188,6 +200,7 @@ static int codetag_module_init(struct codetag_type *c=
-ttype, struct module *mod)
->
->         cmod->mod =3D mod;
->         cmod->range =3D range;
-> +       cmod->timestamp =3D cttype->clock;
->
->         down_write(&cttype->mod_lock);
->         err =3D idr_alloc(&cttype->mod_idr, cmod, 0, 0, GFP_KERNEL);
->
->
->
->
->
-> And  I notice another issue: there are duplicating keys(file:line+module+=
-func) in allocinfo even without this patch:
-> On my workstation :
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->      1400832      114 ././common/inc/nv-linux.h:1117 [nvidia] func:nv_kme=
-m_cache_alloc_stack 840764
->            0        0 ././common/inc/nv-linux.h:1117 [nvidia] func:nv_kme=
-m_cache_alloc_stack 1
->            0        0 ././common/inc/nv-linux.h:1117 [nvidia] func:nv_kme=
-m_cache_alloc_stack 2
->            0        0 ././common/inc/nv-linux.h:1117 [nvidia] func:nv_kme=
-m_cache_alloc_stack 758
->            0        0 ././common/inc/nv-linux.h:1117 [nvidia] func:nv_kme=
-m_cache_alloc_stack 62951
->            0        0 ././common/inc/nv-linux.h:1117 [nvidia] func:nv_kme=
-m_cache_alloc_stack 1
->            0        0 ././common/inc/nv-linux.h:1117 [nvidia] func:nv_kme=
-m_cache_alloc_stack 325450
->        12288        1 ././common/inc/nv-linux.h:1117 [nvidia] func:nv_kme=
-m_cache_alloc_stack 1
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->        81920       20 drivers/iommu/amd/../iommu-pages.h:94 func:iommu_al=
-loc_pages_node 20
->      1441792      352 drivers/iommu/amd/../iommu-pages.h:94 func:iommu_al=
-loc_pages_node 352
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->          112        7 kernel/sched/sched.h:2587 func:alloc_user_cpus_ptr =
-1591
->           48        3 kernel/sched/sched.h:2587 func:alloc_user_cpus_ptr =
-12
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->           48        1 mm/mm_slot.h:28 func:mm_slot_alloc 4
->         2160       54 mm/mm_slot.h:28 func:mm_slot_alloc 10705
->
-> Most duplicating keys are from "*.h" files
-> On a KVM, duplication also happens to some "*.c" files:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 ./include/crypto/kpp.h:185 func:kpp_request_alloc
->            0        0 ./include/crypto/kpp.h:185 func:kpp_request_alloc
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 ./include/net/tcp.h:2548 func:tcp_v4_save_options
->            0        0 ./include/net/tcp.h:2548 func:tcp_v4_save_options
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 drivers/iommu/amd/../iommu-pages.h:94 func:iommu_al=
-loc_pages_node
->            0        0 drivers/iommu/amd/../iommu-pages.h:94 func:iommu_al=
-loc_pages_node
->            0        0 drivers/iommu/amd/../iommu-pages.h:94 func:iommu_al=
-loc_pages_node
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 drivers/iommu/intel/../iommu-pages.h:94 func:iommu_=
-alloc_pages_node
->            0        0 drivers/iommu/intel/../iommu-pages.h:94 func:iommu_=
-alloc_pages_node
->            0        0 drivers/iommu/intel/../iommu-pages.h:94 func:iommu_=
-alloc_pages_node
->            0        0 drivers/iommu/intel/../iommu-pages.h:94 func:iommu_=
-alloc_pages_node
->            0        0 drivers/iommu/intel/../iommu-pages.h:94 func:iommu_=
-alloc_pages_node
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 fs/binfmt_elf.c:1395 func:load_elf_library
->            0        0 fs/binfmt_elf.c:1395 func:load_elf_library
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 fs/binfmt_elf.c:1653 func:fill_files_note
->            0        0 fs/binfmt_elf.c:1653 func:fill_files_note
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 fs/binfmt_elf.c:1851 func:fill_note_info
->            0        0 fs/binfmt_elf.c:1851 func:fill_note_info
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 fs/binfmt_elf.c:1891 func:fill_note_info
->            0        0 fs/binfmt_elf.c:1891 func:fill_note_info
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 fs/binfmt_elf.c:1899 func:fill_note_info
->            0        0 fs/binfmt_elf.c:1899 func:fill_note_info
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 fs/binfmt_elf.c:2057 func:elf_core_dump
->            0        0 fs/binfmt_elf.c:2057 func:elf_core_dump
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 fs/binfmt_elf.c:2072 func:elf_core_dump
->            0        0 fs/binfmt_elf.c:2072 func:elf_core_dump
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 fs/binfmt_elf.c:532 func:load_elf_phdrs
->            0        0 fs/binfmt_elf.c:532 func:load_elf_phdrs
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 fs/binfmt_elf.c:885 func:load_elf_binary
->            0        0 fs/binfmt_elf.c:885 func:load_elf_binary
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 fs/binfmt_elf.c:910 func:load_elf_binary
->            0        0 fs/binfmt_elf.c:910 func:load_elf_binary
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 fs/fuse/fuse_i.h:1082 [fuse] func:fuse_folios_alloc
->            0        0 fs/fuse/fuse_i.h:1082 [fuse] func:fuse_folios_alloc
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 io_uring/io_uring.h:253 func:io_uring_alloc_async_d=
-ata
->            0        0 io_uring/io_uring.h:253 func:io_uring_alloc_async_d=
-ata
->            0        0 io_uring/io_uring.h:253 func:io_uring_alloc_async_d=
-ata
->            0        0 io_uring/io_uring.h:253 func:io_uring_alloc_async_d=
-ata
->            0        0 io_uring/io_uring.h:253 func:io_uring_alloc_async_d=
-ata
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 kernel/sched/sched.h:2587 func:alloc_user_cpus_ptr
->            0        0 kernel/sched/sched.h:2587 func:alloc_user_cpus_ptr
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 mm/mm_slot.h:28 func:mm_slot_alloc
->          160        4 mm/mm_slot.h:28 func:mm_slot_alloc
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 security/apparmor/domain.c:1136 func:change_hat
->            0        0 security/apparmor/domain.c:1136 func:change_hat
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 security/apparmor/domain.c:1455 func:aa_change_prof=
-ile
->            0        0 security/apparmor/domain.c:1455 func:aa_change_prof=
-ile
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 security/apparmor/domain.c:835 func:handle_onexec
->            0        0 security/apparmor/domain.c:835 func:handle_onexec
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 security/apparmor/domain.c:909 func:apparmor_bprm_c=
-reds_for_exec
->            0        0 security/apparmor/domain.c:909 func:apparmor_bprm_c=
-reds_for_exec
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->            0        0 security/apparmor/mount.c:738 func:aa_pivotroot
->            0        0 security/apparmor/mount.c:738 func:aa_pivotroot
->
->
->
-> My workstation have my own changes based on 6.15-rc5, but I didn't touch =
-any code about tags...
-> The KVM runs 6.15-rc5.
->
-> The script for checking:
->
-> #!/bin/env python
-> def fetch():
->     r =3D {}
->     with open("/proc/allocinfo") as f:
->         for l in f:
->             f =3D l.strip().split()[2]
->             if f not in r: r[f]=3D[]
->             r[f].append(l)
->     keys =3D []
->     for f, ls in r.items():
->         if len(ls) > 1: keys.append(f)
->     keys.sort()
->     for f in keys:
->         print "=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D"
->         for l in r[f]: print l,
->
-> fetch()
->
->
->
->
->
-> David
->
->
-> >>
+diff --git a/CREDITS b/CREDITS
+index f74d230992d6..137c3636e318 100644
+--- a/CREDITS
++++ b/CREDITS
+@@ -4001,6 +4001,10 @@ S: 44 Campbell Park Crescent
+ S: Edinburgh EH13 0HT
+ S: United Kingdom
+ 
++N: Vadym Tytan
++E: titanv3585@gmail.com
++D: Minor game controllers features
++
+ N: Thomas Uhl
+ E: uhl@sun1.rz.fh-heilbronn.de
+ D: Application programmer
+diff --git a/drivers/hid/hid-playstation.c b/drivers/hid/hid-playstation.c
+index 1468fb11e39d..fd51f00b0516 100644
+--- a/drivers/hid/hid-playstation.c
++++ b/drivers/hid/hid-playstation.c
+@@ -337,7 +337,7 @@ struct dualsense_output_report {
+  * 0x3F - disabled
+  */
+ #define DS4_OUTPUT_HWCTL_BT_POLL_MASK	0x3F
+-/* Default to 4ms poll interval, which is same as USB (not adjustable). */
++/* Default to 4ms poll interval, which is same as USB (adjustable). */
+ #define DS4_BT_DEFAULT_POLL_INTERVAL_MS	4
+ #define DS4_OUTPUT_HWCTL_CRC32		0x40
+ #define DS4_OUTPUT_HWCTL_HID		0x80
+@@ -542,6 +542,7 @@ static inline void dualsense_schedule_work(struct dualsense *ds);
+ static inline void dualshock4_schedule_work(struct dualshock4 *ds4);
+ static void dualsense_set_lightbar(struct dualsense *ds, uint8_t red, uint8_t green, uint8_t blue);
+ static void dualshock4_set_default_lightbar_colors(struct dualshock4 *ds4);
++static int dualshock4_set_bt_poll_interval(struct dualshock4 *ds4, uint8_t interval);
+ 
+ /*
+  * Add a new ps_device to ps_devices if it doesn't exist.
+@@ -1738,6 +1739,43 @@ static struct ps_device *dualsense_create(struct hid_device *hdev)
+ 	return ERR_PTR(ret);
+ }
+ 
++static ssize_t dualshock4_show_poll_interval(struct device *dev,
++				struct device_attribute
++				*attr, char *buf)
++{
++	struct hid_device *hdev = to_hid_device(dev);
++	struct ps_device *ps_dev = hid_get_drvdata(hdev);
++	struct dualshock4 *ds4 = container_of(ps_dev, struct dualshock4, base);
++
++	return sysfs_emit(buf, "%i\n", ds4->bt_poll_interval);
++}
++
++static ssize_t dualshock4_store_poll_interval(struct device *dev,
++				struct device_attribute *attr,
++				const char *buf, size_t count)
++{
++	struct hid_device *hdev = to_hid_device(dev);
++	struct ps_device *ps_dev = hid_get_drvdata(hdev);
++	struct dualshock4 *ds4 = container_of(ps_dev, struct dualshock4, base);
++	int ret;
++	u8 interval;
++
++	if (kstrtou8(buf, 0, &interval))
++		return -EINVAL;
++
++	ret = dualshock4_set_bt_poll_interval(ds4, interval);
++	if (ret)
++		return ret;
++
++	return count;
++}
++
++struct device_attribute dev_attr_dualshock4_bt_poll_interval = {
++	.attr	= { .name = "bt_poll_interval", .mode = 0644 },
++	.show	= dualshock4_show_poll_interval,
++	.store	= dualshock4_store_poll_interval,
++};
++
+ static void dualshock4_dongle_calibration_work(struct work_struct *work)
+ {
+ 	struct dualshock4 *ds4 = container_of(work, struct dualshock4, dongle_hotplug_worker);
+@@ -2493,6 +2531,9 @@ static void dualshock4_remove(struct ps_device *ps_dev)
+ 	struct dualshock4 *ds4 = container_of(ps_dev, struct dualshock4, base);
+ 	unsigned long flags;
+ 
++	if (ps_dev->hdev->bus == BUS_BLUETOOTH)
++		device_remove_file(&ps_dev->hdev->dev, &dev_attr_dualshock4_bt_poll_interval);
++
+ 	spin_lock_irqsave(&ds4->base.lock, flags);
+ 	ds4->output_worker_initialized = false;
+ 	spin_unlock_irqrestore(&ds4->base.lock, flags);
+@@ -2513,11 +2554,16 @@ static inline void dualshock4_schedule_work(struct dualshock4 *ds4)
+ 	spin_unlock_irqrestore(&ds4->base.lock, flags);
+ }
+ 
+-static void dualshock4_set_bt_poll_interval(struct dualshock4 *ds4, uint8_t interval)
++static int dualshock4_set_bt_poll_interval(struct dualshock4 *ds4, uint8_t interval)
+ {
++	if (interval >= DS4_OUTPUT_HWCTL_BT_POLL_MASK)
++		return -EINVAL;
++
+ 	ds4->bt_poll_interval = interval;
+ 	ds4->update_bt_poll_interval = true;
+ 	dualshock4_schedule_work(ds4);
++
++	return 0;
+ }
+ 
+ /* Set default lightbar color based on player. */
+@@ -2659,7 +2705,17 @@ static struct ps_device *dualshock4_create(struct hid_device *hdev)
+ 			goto err;
+ 	}
+ 
+-	dualshock4_set_bt_poll_interval(ds4, DS4_BT_DEFAULT_POLL_INTERVAL_MS);
++	if (hdev->bus == BUS_BLUETOOTH) {
++		ret = dualshock4_set_bt_poll_interval(ds4, DS4_BT_DEFAULT_POLL_INTERVAL_MS);
++		if (ret) {
++			hid_err(hdev, "Failed to set poll interval for DualShock4: %d\n", ret);
++			goto err;
++		}
++
++		ret = device_create_file(&hdev->dev, &dev_attr_dualshock4_bt_poll_interval);
++		if (ret)
++			hid_warn(hdev, "can't create sysfs bt_poll_interval attribute err: %d\n", ret);
++	}
+ 
+ 	ret = ps_device_set_player_id(ps_dev);
+ 	if (ret) {
+@@ -2678,6 +2734,8 @@ static struct ps_device *dualshock4_create(struct hid_device *hdev)
+ 	return &ds4->base;
+ 
+ err:
++	if (hdev->bus == BUS_BLUETOOTH)
++		device_remove_file(&hdev->dev, &dev_attr_dualshock4_bt_poll_interval);
+ 	ps_devices_list_remove(ps_dev);
+ 	return ERR_PTR(ret);
+ }
+-- 
+2.49.0
+
