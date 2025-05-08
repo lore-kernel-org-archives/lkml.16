@@ -1,92 +1,134 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB0F29A1
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 00:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1572380034
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 00:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746664132; cv=none; b=OY1JmzU+/BMSwN2KW+B+yE9bigBvaIHzSdC+LFq/5EfXGhve+HRQqWlfSy83weZYm+vtAAl0df1T1DJdhX7lH4u3wOnSkOtzSJloha7phBh1w1/m6SQWx4+2D+0jp8VqH01vIj2x+TRiJrqORw1Ekucb1JlWSAN5nbQQo4vXyRM=
+	t=1746664490; cv=none; b=oiOCN+mXJb6UeypxfUth7snYYraGIlS4n9TA7Btd0mL1yKRmKk1xceWVkGqfs0BuFbQqZtljjZyYARvARFTCA06xQOsXZIWoDqt8r1O92N3SfiKJZWmScBR0AzivBWw53gROxSqEkAkRQIVXsu4hMlwArDtvt+CI7NP1EPisk18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746664132; c=relaxed/simple;
-	bh=Y07RstIIdvctXcvte/3/DiHgKlO8xbZ2zrIyQ+Rhzc0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sGANkZGTdUhRgriOKdSsYEoFuavkjUfc+oL/u0dFVaFfhyUSBvBHdtPt+g7H4ltAnuHr7woWLb1jPGzyEGv1ZkEbzgngr5MFnChOagBbyXBioaIrxoh/T/AuUJ9Bbi2hsHa5BzsxEmwO+dmBnPPYv1Y3RVNkFwMfZV481E5Y/7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=IzuUtQV2; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+	s=arc-20240116; t=1746664490; c=relaxed/simple;
+	bh=E++WLKC1b5AMh3N+lcjBZDykyM88OV7ldVp6UoKnQ88=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tkQoPNtix3+SXhc0HBTGbkGch+QGpW9VvLPGBgTutKfRRj1CO9SwrogtP68byeqULJf7A2LQHbj/xaEaOswWDMGBcrBKraFLBGghbp0K5MUCAb2NplSC3jqZhNJKG6bzvSCnbJIDw7o3i0F+5Spwi2MJL/jfpAnZeigP528zhsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OSqRsCV4; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="IzuUtQV2"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b03bc416962so235863a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 17:28:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1746664130; x=1747268930; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rS+U0/mqHWG5lfLT69s9lUlVJUsqGvVjuXAMIKBkTLc=;
-        b=IzuUtQV2D+KvusyTsCg0RRjiH0oymygHK5REhctS2DwK04dlM2Fgx+XBSygC2sv40x
-         egW/f9gQncUtse0uXP94engJshUcOm1rmPf8CDr0LUkPFoZXI7ewTFAxXiYU85fIGpw9
-         BfhKeyi0Vax7IkttGLb4Gd9QUwgCw5rlZb6sEUZrCq3NomImz3Nlq56syCLLetTgcaJk
-         lmB93oYOjBd9lN4VF95G4HzD27nRwzs8PGFNnfmatHDkCYNW4GDb/vDfoTUQXSwWScbw
-         t1KGn3hq73SqhQHmeeDt0K7Zgn/TnFYTvSmVfVIKwUWixzP6Ym8NWYHustxsueoflREm
-         0w6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746664130; x=1747268930;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rS+U0/mqHWG5lfLT69s9lUlVJUsqGvVjuXAMIKBkTLc=;
-        b=NgbKWL5dfErF8ShLhIpOuHfZbkrMKH0UlbubB+qcwVtNSR7639LvG58OMlOmqraxCz
-         jn5CdZ4LClQZ6TJxlib0olOzmuRggfW3M71pOEsqvpQqJGszOtA+sUSxE6Z4h9FBfeal
-         lXCBa0VZGfXoQCLWBb/qWvxRqdXCsYFdDNfbeE6UCiNYU+yNgdc3jlp68naS3ibhBKTV
-         mLl1e8tf4bEmLFZi9RYce0oG2WgYs/L5lQGnkMu4UOhpyhCfx8VGJydGabPVg7qTdAeX
-         6nXSxVtH9+JlaIQBuFrjFmGkJltV5EnNwm+gD5ildNe3W8MuCs4GDHFxk7s9Ky9qTKdG
-         9APg==
-X-Forwarded-Encrypted: i=1; AJvYcCVrioGjBjqs7XsHR0wHJVFNSXrNi6hEETKfF1THDlP2D/ErRGU5VhE4DPShnGznpLg03g/+43WjcUuUtHs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxzrhw/TJq46qS6/1G9xxGwQhRKqlnoF2i0WbuaaUv9zHlXvVoc
-	PAgcMKJJtLX6TGFPU29yRxfYgxapddKoQhUt9nfjRn6aiAGBijZ11dXCNWXBuv8=
-X-Gm-Gg: ASbGncsgpHVESlmQ/NGdRcVOaeBgL01JvMMqI9zcNODs7YlvKdDxN8WpKUySrQ/eEcn
-	DHOqncV2RUjasovRutdpYLP/9jAAFWNNq2bcuxUg/hbq4Yr6nUQMneg8ZtYz08IcKp3RHLblX26
-	F9G6mndHhw492X67PtUi5wkl+9j6v7DTlNjfN0lx1STSfNrlWoO4ol0lcxMg3XuBNRTZUN0FiyS
-	Moe+48Qey5p2WQwqUE27VIYrq0krAG9rLtzpwaqSNQ51Fzh2tGW6271X3G9A3YB9z1+SOcpNJe4
-	GJ4bry0vgvjanJXTTCld9BggQG/U2Yp6giePkUxXmRhN/V0=
-X-Google-Smtp-Source: AGHT+IFq0W9eeoSq5bUfXHKxOZPIOOgjmxfCPv6cQ0U1CNtWqAfBDIHNsC+ZooZnSpv7K8wTVnRshg==
-X-Received: by 2002:a17:90b:4c88:b0:2ff:796b:4d05 with SMTP id 98e67ed59e1d1-30aac19c279mr8525757a91.11.1746664129934;
-        Wed, 07 May 2025 17:28:49 -0700 (PDT)
-Received: from x1 (97-120-122-6.ptld.qwest.net. [97.120.122.6])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ad474a05bsm900814a91.2.2025.05.07.17.28.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 17:28:49 -0700 (PDT)
-Date: Wed, 7 May 2025 17:28:47 -0700
-From: Drew Fustini <drew@pdp7.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Stephen Boyd <sboyd@kernel.org>
-Subject: Re: Add thead clk tree to linux-next
-Message-ID: <aBv6v5mVX3ofsRyG@x1>
-References: <aBvsGRZqbz11HPwM@x1>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OSqRsCV4"
+Message-ID: <ec73105c-f359-4156-8285-b471e3521378@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746664483;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pU21r1AALBbTx/oUKK/Y9bNXG599CWsACufdbKUbqOw=;
+	b=OSqRsCV4qL2fo52Kc0kdhJbHN7ycGcOhAPFKIhgbmwX7rTfdAlpHaDcJpo9fvsJ9NnZJfS
+	SBwKQi4dnGQT0j8jhx3iAgcyFnZj/GZMh2BW8YWIhZ+RJw6SxTKtD6NUdL5tP4J7UZw+qt
+	D1Ugcu2fXazyL3Vi18jQ7QXRm5LI7u0=
+Date: Wed, 7 May 2025 17:34:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBvsGRZqbz11HPwM@x1>
+Subject: Re: [PATCH 0/5] Enable hstateen bits lazily for the KVM RISC-V Guests
+To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>,
+ Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>
+Cc: kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-riscv <linux-riscv-bounces@lists.infradead.org>
+References: <20250505-kvm_lazy_enable_stateen-v1-0-3bfc4008373c@rivosinc.com>
+ <D9OYWFEXSA55.OUUXFPIGGBZV@ventanamicro.com>
+ <bc0f1273-d596-47dd-bcc6-be9894157828@linux.dev>
+ <D9Q05T702L8Y.3UTLG7VXIFXOK@ventanamicro.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <D9Q05T702L8Y.3UTLG7VXIFXOK@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, May 07, 2025 at 04:26:17PM -0700, Drew Fustini wrote:
-> Hi Stephen,
-> 
-> I'm the maintainer of T-Head SoCs like the TH1520 and I've just created
-> new branches for T-Head clk patches. Please add these to linux-next:
-> 
-> thead-clk-fixes git https://github.com/pdp7/linux.git#thead-clk-fixes
-> thead-clk for-next git https://github.com/pdp7/linux.git#thead-clk-for-next
 
-Apologies for typo 'thead-clk for-next'. Please use this:
+On 5/7/25 7:36 AM, Radim Krčmář wrote:
+> 2025-05-06T11:24:41-07:00, Atish Patra <atish.patra@linux.dev>:
+>> On 5/6/25 2:24 AM, Radim Krčmář wrote:
+>>> 2025-05-05T14:39:25-07:00, Atish Patra <atishp@rivosinc.com>:
+>>>> This series adds support for enabling hstateen bits lazily at runtime
+>>>> instead of statically at bootime. The boot time enabling happens for
+>>>> all the guests if the required extensions are present in the host and/or
+>>>> guest. That may not be necessary if the guest never exercise that
+>>>> feature. We can enable the hstateen bits that controls the access lazily
+>>>> upon first access. This providers KVM more granular control of which
+>>>> feature is enabled in the guest at runtime.
+>>>>
+>>>> Currently, the following hstateen bits are supported to control the access
+>>>> from VS mode.
+>>>>
+>>>> 1. BIT(58): IMSIC     : STOPEI and IMSIC guest interrupt file
+>>>> 2. BIT(59): AIA       : SIPH/SIEH/STOPI
+>>>> 3. BIT(60): AIA_ISEL  : Indirect csr access via siselect/sireg
+>>>> 4. BIT(62): HSENVCFG  : SENVCFG access
+>>>> 5. BIT(63): SSTATEEN0 : SSTATEEN0 access
+>>>>
+>>>> KVM already support trap/enabling of BIT(58) and BIT(60) in order
+>>>> to support sw version of the guest interrupt file.
+>>> I don't think KVM toggles the hstateen bits at runtime, because that
+>>> would mean there is a bug even in current KVM.
+>> This was a typo. I meant to say trap/emulate BIT(58) and BIT(60).
+>> This patch series is trying to enable the toggling of the hstateen bits
+>> upon first access.
+>>
+>> Sorry for the confusion.
+> No worries, it's my fault for misreading.
+> I got confused, because the code looked like generic lazy enablement,
+> while it's really only for the upper 32 bits and this series is not lazy
+> toggling any VS-mode visible bits.
+>
+>>>>                                                      This series extends
+>>>> those to enable to correpsonding hstateen bits in PATCH1. The remaining
+>>>> patches adds lazy enabling support of the other bits.
+>>> The ISA has a peculiar design for hstateen/sstateen interaction:
+>>>
+>>>     For every bit in an hstateen CSR that is zero (whether read-only zero
+>>>     or set to zero), the same bit appears as read-only zero in sstateen
+>>>     when accessed in VS-mode.
+>> Correct.
+>>
+>>> This means we must clear bit 63 in hstateen and trap on sstateen
+>>> accesses if any of the sstateen bits are not supposed to be read-only 0
+>>> to the guest while the hypervisor wants to have them as 0.
+>> Currently, there are two bits in sstateen. FCSR and ZVT which are not
+>> used anywhere in opensbi/Linux/KVM stack.
+> True, I guess we can just make sure the current code can't by mistake
+> lazily enable any of the bottom 32 hstateen bits and handle the case
+> properly later.
 
-thead-clk-fixes git https://github.com/pdp7/linux.git#thead-clk-fixes
-thead-clk-for-next git https://github.com/pdp7/linux.git#thead-clk-for-next
+I can update the cover letter and leave a comment about that.
 
-Thanks,
-Drew
+Do you want a additional check in sstateen 
+trap(kvm_riscv_vcpu_hstateen_enable_stateen)
+to make sure that the new value doesn't have any bits set that is not 
+permitted by the hypervisor ?
+
+>> In case, we need to enable one of the bits in the future, does hypevisor
+>> need to trap every sstateen access ?
+> We need to trap sstateen accesses if the guest is supposed to be able to
+> control a bit in sstateen, but the hypervisor wants to lazily enable
+> that feature and sets 0 in hstateen until the first trap.
+Yes. That's what PATCH 4 in this series does.
+> If hstateen is 1 for all features that the guest could control through
+> sstateen, we can and should just set the SE bit (63) to 1 as well.
+>
+>> As per my understanding, it should be handled in the hardware and any
+>> write access to to those bits should be masked
+>> with hstateen bit value so that it matches. That's what we do in Qemu as
+>> well.
+> Right, hardware will do the job most of the time.  It's really only for
+> the lazy masking, beause if we don't trap the stateen accesses, they
+> would differ from what the guest should see.
