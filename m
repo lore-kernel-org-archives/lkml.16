@@ -1,269 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762F32222D7;
-	Thu,  8 May 2025 16:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147DC2836BE
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746722110; cv=none; b=m1xpPQHA4AM2hVWXfEXRyro9TLK4SjQt4QZsY9CGEK/CePjCewx6SfZIS6dIQj93aFboRvwfF723/4BQ6V/QFCZGguEeTVlHwsYR8fRODC294OEjgVK8lMEjOSFOVjdSFLSugD2wjLLNmCFFeLDdboI3DS1pXO4zPhdMUEeb3iI=
+	t=1746722114; cv=none; b=qiAVZRB5N2KzU9FzMjW6FOj8aij4l35s5+hXpkbRW4gdN7qVJo/5tM47zQ/xhcwthAdB+4PS+C/Ys0g5YdMsmIE4ht/SmJPFd4WNb1HMMgYtLIvSJvjr/oDlQ8GAUQdw0godg/Y5cKXnX+oOFR8njoknNuhzJfYSG/rzLCsZHqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746722110; c=relaxed/simple;
-	bh=zw69N1sh7qesflqhTh0NK6JUMUolWi0TizEUEVcFxlA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=i+SL7x7cnTWz995PklCFf4nMpx+7WLDemxK/YMcSrmOnUFu27Ao4gXF02jPpz+Y//JTcttTzb4Dd1XONqfyqJ6PqnrHMCyTIUW57UIA8k+ZaAcgnAXV/bXFsGky26tDiN7KdxLUuGRwR8Ts4OfJjQOU93VYsU1XZvdNS8ogVL0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NDbz+7F1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746722114; c=relaxed/simple;
+	bh=BTWMxiw7rvqrLaRjZ4NkbSbWPk2f46TuEVVrGDeWemM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lyC5+KN85FYW7U836v+zYkDupvtxyseT6c/AQewvGGeQ3nvcWWLEfIEz4L5ZE1OH/ab+cyI9hWPjj4OfSz87gg0S6qSbXmNiPhfzWiN57pOxy0W35/Dym2+jcF0ajHFfQtjB2DQXwNnqXqOJ2g+xGIEAdySRd3I6JiSCol4RXbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G36bsQfO; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NDbz+7F1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B655EC4CEEB;
-	Thu,  8 May 2025 16:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746722110;
-	bh=zw69N1sh7qesflqhTh0NK6JUMUolWi0TizEUEVcFxlA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NDbz+7F1512FyEYzrZEBPqSbS3DRB6QCp0TbaWZM1jE9I6oaepgzR4qL/rT9QJ8CK
-	 gi199aO6exscuDS17FWNa2gcW+og7Tqzln97CHEm82itEs/+X6Ptz+tPRU9+LtOEJ1
-	 oOyOMpX6NOSC/6ah7uH5GPge09dC1EgTzQRwf6LKPEMbJNm4TAuFzSV9at1PQTzwM8
-	 mprtj7Df6HWFMlWNZcBO0JYtAt0dvM3b7E4yTaDwq2nTWk/R5bgkpQn0Zts22wndVF
-	 gPN2CfsVrT6FOAu6kVItwjjqIRlj1LcM5T/EmS6hohDxZcFyLTKFd0AVL5PZg3aYIm
-	 kwGDhqPgXnVhw==
-From: SeongJae Park <sj@kernel.org>
-To: Yunjeong Mun <yunjeong.mun@sk.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	honggyu.kim@sk.com,
-	Jonathan Corbet <corbet@lwn.net>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	kernel_team@skhynix.com
-Subject: Re: [PATCH 0/7] mm/damon: auto-tune DAMOS for NUMA setups including tiered memory
-Date: Thu,  8 May 2025 09:35:06 -0700
-Message-Id: <20250508163506.56305-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250508092833.800-1-yunjeong.mun@sk.com>
-References: 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G36bsQfO"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad1b94382b8so62893566b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 09:35:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746722111; x=1747326911; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jHyGHBJUaXvF+9cY/pYLHudacCmJqYOcWmvQRbveR/A=;
+        b=G36bsQfOI0C544D7OZQ28UXYvUE+7OhDwJFHoK1sb3o1AbzL14kM/dUv1ForCzC8MI
+         upy96VxRxeS/ZCVOVlGpqiPZy4FNUYgyJdngFQycc57++Wm90ok52w/wjO2wRyeempLs
+         tJvQ4WavVoQ/ox7cjLknbGAcyiuMwkTArXdi6zadqp+B/R8P+E4n5aobI7uzgcyOy/QA
+         GIgyT+0enwQ1yKIEpFkIvxLmavdlmF9pkoXAhLCYyMUCK0YTqB8z9puxmsR2dquO6Jsj
+         T85YJLFApxTDbiFMl0IBAQ03BYhkQxpQCNtixGl3ytzOr5Ek++Ohsn0rSz+2PJnQ9uUE
+         owag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746722111; x=1747326911;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jHyGHBJUaXvF+9cY/pYLHudacCmJqYOcWmvQRbveR/A=;
+        b=vVw9lNeB4sW9yLpUoNl5Tj5SHLZ60ZpR5yc7kOrtGjv2AJFukVYeonIm9KWGw89lHA
+         uP7kJJQFHCMkYzwKqz7LPdCXgC3s/EIT1w2FkT7heJrp+d09VUltq7nNIjZ8eAjlsnOP
+         XmdgfOYnfeCOwkUGmB5sTpxBkYOr6DAAunS2SVtAtFyTI2zS5Z/dpXhlS+VR+WwaWl5o
+         t4WVnGc97TkDE5Go6B0DVCrN/VRmMjfrjdORpuDpf+RNVvnyuUey7GUeGV8E26JQrPMP
+         AQwsg+rAUTPGVquRxD+UM+4dAxuJSg+LQNgm9+jzCZILckguaENbKKhDOfY/J59MHDSi
+         Jq3g==
+X-Forwarded-Encrypted: i=1; AJvYcCWwUPw77v62gyYKx+omkZFCAV2HoepNqMv7oRf1hkBtd+NFTSZNgqyXxPnPAvkvmj8ZQFrY4O2zzvexKWM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpUTci+I29vcQ3b3no3qC/WhhPxx34d0lotQfuKUF5kFcKudQC
+	pKuNWeUsjk8X7BWs/pHTZBk9QQ57N7FyEJEvxpdMpJ72CtVmCg/q
+X-Gm-Gg: ASbGnct+Dn0/xHFZ+BMZEFhx93iGKDSbtPrSBSnJowFe6S7mkhmqhvK9+3SDldyT95y
+	rCVEN9LXQA2OAX0TrbvXBl4pjTQN8K9dnn+UKiikCNcvFt0A1iCLvrPjakHmT8Mjwkck2H73r2r
+	byVVCWFA0JVZiD8g0HV76V2a0gR+CnpgCyKwUZevtfTAfQoUuFJvDr7BLo9eY82VUurM7xuLziC
+	aD4wQmF7bxOCGl3Uea+QvsDrziRwojRWJULJQCDpAlH901QGECBtwpjo+mmNQ9sytVDosjjXXiR
+	injb6Ncdfg5H4K/7Ixtv47o+6AslB3vS1XGICsdqtOK/rSr3yEtU1Y2tFRYxPC+WMl0jJHtZ7f4
+	2I7ow3NALJ1er7e5RjMckIXU/
+X-Google-Smtp-Source: AGHT+IF/vnEgyoZA4S7VuuJSjHpkb42qJGtYJlNelnZudTkzK2HCSDBh7frfbj0eBA5f/Yop6ipwzg==
+X-Received: by 2002:a17:907:7251:b0:acb:b864:829c with SMTP id a640c23a62f3a-ad218e5778bmr37505966b.10.1746722110966;
+        Thu, 08 May 2025 09:35:10 -0700 (PDT)
+Received: from ?IPV6:2a03:83e0:1126:4:14f7:eab6:23d5:4cab? ([2620:10d:c092:500::7:80fe])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197466adsm8949266b.92.2025.05.08.09.35.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 09:35:10 -0700 (PDT)
+Message-ID: <e706e2fc-201f-4e45-8dd9-e2e17c269466@gmail.com>
+Date: Thu, 8 May 2025 17:35:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/1] prctl: allow overriding system THP policy to always
+To: David Hildenbrand <david@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc: hannes@cmpxchg.org, shakeel.butt@linux.dev, riel@surriel.com,
+ ziy@nvidia.com, baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com
+References: <20250507141132.2773275-1-usamaarif642@gmail.com>
+ <3b5d929f-ec2f-4444-825f-81e71f804033@redhat.com>
+Content-Language: en-US
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <3b5d929f-ec2f-4444-825f-81e71f804033@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu,  8 May 2025 18:28:27 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
 
-> Hi Seongjae, I'm sorry for the delayed response due to the holidays.
 
-No worry, hope you had a good break :)
+On 08/05/2025 12:06, David Hildenbrand wrote:
+> On 07.05.25 16:00, Usama Arif wrote:
+>> Allowing override of global THP policy per process allows workloads
+>> that have shown to benefit from hugepages to do so, without regressing
+>> workloads that wouldn't benefit. This will allow such types of
+>> workloads to be run/stacked on the same machine.
+>>
+>> It also helps in rolling out hugepages in hyperscaler configurations
+>> for workloads that benefit from them, where a single THP policy is
+>> likely to be used across the entire fleet, and prctl will help override it.
+>>
+>> An advantage of doing it via prctl vs creating a cgroup specific
+>> option (like /sys/fs/cgroup/test/memory.transparent_hugepage.enabled) is
+>> that this will work even when there are no cgroups present, and my
+>> understanding is there is a strong preference of cgroups controls being
+>> hierarchical which usually means them having a numerical value.
+>>
+>>
+>> The output and code of test program is below:
+>>
+>> [root@vm4 vmuser]# echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
+>> [root@vm4 vmuser]# echo inherit > /sys/kernel/mm/transparent_hugepage/hugepages-2048kB/enabled
+>> [root@vm4 vmuser]# ./a.out
+>> Default THP setting:
+>> THP is not set to 'always'.
+>> PR_SET_THP_ALWAYS = 1
+>> THP is set to 'always'.
+>> PR_SET_THP_ALWAYS = 0
+>> THP is not set to 'always'.
+> 
+> Some quick feedback:
+> 
+> (1) The "always" in PR_SET_THP_ALWAYS does not look future proof. Why wouldn't someone want to force-disable them for a process (-> "never") or set it to some other new mode ("-> defer" that is currently on the list).
+
+Yes agree with this, I think there are 3 different possible ways forward for this which I outlined in [1] in reply to Zi Yan.
+I like flags2 approach, but let me know what you think.
+
+[1] https://lore.kernel.org/all/9ed673ad-764f-4f46-84a7-ef98b19d22ec@gmail.com/
+> 
+> (2) In your example, is the toggle specific to 2M THP or the global toggle ...? Unclear. And that makes this interface also suboptimal.
+
+In this approach you would overwrite inherit folio sizes, and I think thats the right approach. So if you have for e.g. 2M and 16K set to inherit,
+and the global one is set to madvise, doing PR_SET_THP_ALWAYS would change those folio to always.
 
 > 
-> On Fri,  2 May 2025 08:49:49 -0700 SeongJae Park <sj@kernel.org> wrote:
-> > Hi Yunjeong,
-> > 
-> > On Fri,  2 May 2025 16:38:48 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
-> > 
-> > > Hi SeongJae, thanks for your helpful auto-tuning patchset, which optimizes 
-> > > the ease of used of DAMON on tiered memory systems. I have tested demotion
-> > > mechanism with a microbenchmark and would like to share the result.
-> > 
-> > Thank you for sharing your test result!
-> > 
-> > [...]
-> > > Hardware. 
-> > > - Node 0: 512GB DRAM
-> > > - Node 1: 0GB (memoryless)
-> > > - Node 2: 96GB CXL memory
-> > > 
-> > > Kernel
-> > > - RFC patchset on top of v6.14-rc7 
-> > > https://lore.kernel.org/damon/20250320053937.57734-1-sj@kernel.org/
-> > > 
-> > > Workload
-> > > - Microbenchmark creates hot and cold regions based on the specified parameters.
-> > >   $ ./hot_cold 1g 100g
-> > > It repetitively performs memset on a 1GB hot region, but only performs memset
-> > > once on a 100GB cold region. 
-> > > 
-> > > DAMON setup
-> > > - My intention is to demote most of all regions of cold memory from node 0 to 
-> > > node 2. So, damo start with below yaml configuration:
-> > > ...
-> > > # damo v2.7.2 from https://git.kernel.org/pub/scm/linux/kernel/git/sj/damo.git/
-> > >    schemes:
-> > >    - action: migrate_cold
-> > >       target_nid: 2
-> > > ...
-> > >       apply_interval_us: 0
-> > >       quotas:
-> > >         time_ms: 0 s
-> > >         sz_bytes: 0 GiB
-> > >         reset_interval_ms: 6 s
-> > >         goals:
-> > >         - metric: node_mem_free_bp 
-> > >           target_value: 99%
-> > >           nid: 0
-> > >           current_value: 1
-> > >         effective_sz_bytes: 0 B
-> > > ...
-> > 
-> > Sharing DAMON parameters you used can be helpful, thank you!  Can you further
-> > share full parameters?  I'm especially interested in how the parameters for
-> > monitoring targets and migrate_cold scheme's target access pattern, and if
-> > there are other DAMON contexts or DAMOS schemes running together.
-> > 
+> (3) I'm a bit concerned about interaction with per-VMA settings (the one we already have, and order-specific ones that people were discussing). It's going to be a mess if we have global, per-process, per-vma and then some other policies (ebpf? whatever else?) on top.
 > 
-> Actually, I realized that the 'regions' field in my YAML configuration is 
-> incorrect. I've been using a configuration file that was create on another 
-> server, not the testing server.
-
-To my understanding, you use YAML configuration because DAMON user-space tool
-doesn't provide good interface for multiple kdamonds setup.  Starting from
-v2.7.5, DAMON user-space tool supports multiple kdamonds setup from the command
-line, and it supports setting target regions as NUMA nodes (--numa_node).
-Using those might be a better option for you.
-
-> As a result, the scheme is applied to wrong
-> region, causing the results to appear confusing. I've  fixed the issue and
-> confirmed that the demotion occured successfully. I'm sorry for any confusion
-> this may have caused.
-
-Glad to hear that the issue is fixed.
-
 > 
-> After fixing it up, Honggyu and I tested this patch again. I would like to
-> share two issues: 1) slow start of action, 2) action does not stop even when 
-> target is acheived. Below are the test configurations:
+> The low-hanging fruit would be a per-process toggle that only controls the existing per-VMA toggle: for example, with the semantics that
 > 
-> Hardware
-> - node 0: 64GB DRAM
-> - node 1: 0GB (memoryless)
-> - node 2: 96GB CXL memory
+> (1) All new (applicable) VMAs start with VM_HUGEPAGE
+> (2) All existing (applicable) VMAs that are *not* VM_NOHUGEPAGE become VM_HUGEPAGE.
 > 
-> Kernel
-> - This patchset on top of v6.15-rc4
 > 
-> Workload: microbenchmark that `mmap` and `memset` once for size GB
-> $ ./mmap 50
+> We did something similar with PR_SET_MEMORY_MERGE.
 > 
-> DAMON setup: just one contexts and schemes.
->     ...
->     schemes:
->     - action: migrate_cold
->       target_nid: 2
->       access_pattern:
->         sz_bytes:
->           min: 4.000 KiB
->           max: max
->         nr_accesses:
->           min: 0 %
->           max: 0 %
->         age:
->           min: 10 s
->           max: max
->       apply_interval_us: 0
->       quotas:
->         time_ms: 0 s
->         sz_bytes: 0 GiB
->         reset_interval_ms: 20 s
->         goals:
->         - metric: node_mem_free_bp
->           target_value: 50%
->           nid: 0
->           current_value: 1
->      ...
-> 
-> Two issues mentioned above are both caused by the calculation logic of 
-> `quota->esz`, which grows too slowly and increases gradually.
-> 
-> Slow start: 50GB of data is allocated on node 0, and the demotion first occurs
-> after about 15 minutes. This is because `quota->esz` is growing slowly even
-> when the `current` is lower than the `target`. 
 
-This is an intended design to avoid making unnecessary actions for only
-temporal access pattern.  On realistic workloads having a time scale, I think
-some delay is not a big problem.  I agree 15 minutes is too long, though.  But,
-the speed also depends on reset_interval_ms.  The quota grows up to 100% once
-per reset_interval_ms.  The quota size is 1 byte in minimum, so it takes at
-least 12 reset_interval_ms to make the size quota at least single 4K page size.
-Because reset_interval_ms is 20 seconds in this setup, 12 reset_interval_ms is
-four minutes (240 seconds).
+For this you mean the prctl command would do for_each_vma and set VM_HUGEPAGE to implement point 2.
+For having point 1, I think we will still need extra mm->flags, i.e. MMF_VM_THP_MADVISE/DEFER/ALWAYS/NEVER.
 
-My intended use of resset_interval_ms is setting it just not too short, to
-reduce unnecessary quota calculation overhead.  From my perspective, 20 seconds
-feels too long.  Is there a reason to set it so long?  If there is no reason,
-I'd recommend starting with 1 second reset_interval_ms and adjust for your
-setup if it doesn't work.
-
-And I realize this would better to be documented.  I will try to make this more
-clarified on the documentation when I get time.  Please feel free to submit a
-patch if you find a time faster than me :)
-
-> 
-> Not stop: the `target` is to maintain 50% free space on node 0, which we expect
-> to be about 32GB. However, it demoted more than intended, maintaing about 90%
-> free space as follows:
-> 
->   Per-node process memory usage (in MBs)
->   PID           Node 0 Node 1 Node 2 Total
->   ------------  ------ ------ ------ -----
->   1182 (watch)       2      0      0     2
->   1198 (mmap)     7015      0  44187 51201
->   ------------  ------ ------ ------ -----
->   Total           7017      0  44187 51204
-> 
-> This is becuase the `esz` decreased slowly after acheiving the `target`.
-> In the end, the demotion occured more excessively than intended.
-> 
-> We believe that the defference between `target` and `current` increases, the
-> `esz` should be raised more rapidly to increase the aggressiveness of action.
-> In the current implementation, the `esz` remains low even when the `current` is
-> below the `target`, leading to a slow start issue. Also, there is a not-stop
-> issue where high `esz` persist (decreasing slowly) even when an over_achieved
-> state. 
-
-This is yet another intended design.  The aim-oriented quota auto-tuning
-feature assumes there is an ideal amount of quota that fits for the current
-situation, that could dynamically change.  For example, proactively reclaiming
-cold memory aiming a modest level of memory pressure.
-
-For this case, I think you should have another scheme for promotion.  Please
-refer to the design and example implementation of the sample module.  Or, do
-you have a special reason to utilize only demotion scheme like this setup?  If
-so, please share.
-
-If you really need a feature that turns DAMOS on and off for given situation,
-DAMOS watermarks may be the right feature to look.  You could also override
-tuned quota from user space.  So you could monitor the free size of given NUMA
-node and set the tuned quota as zero, immediately, or jsut remove the scheme.
-
-Again, this might be due to the poor documentation.  Sorry about the poor
-documentation and thank you for letting me find this.  I'll try to make the
-documentation better.
-
-> 
-> > 
-> > Yes, as you intrpret, seems the auto-tuning is working as designed, but
-> > migration is not successfully happened.  I'm curious if migration is tried but
-> > failed.  DAMOS stats[1] may let us know that.  Can you check and share those?
-> > 
-> 
-> Thank you for providing the DAMOS stats information.
-> I will use it when analyzing with DAMON.
-
-Maybe an easiest way to monitor it is
-'damo report access --tried_regions_of X Y Z --style temperature-sz-hist'.
-
-> I would appreciate any feedback you
-> might have on the new
-> results.
-
-I wish my above replies helps a bit, and looking forward to anything I missed
-or your special reasons for your setup if you have.
+I think it would have the same affect as what this patch is trying to do? But would be just more
+expensive in terms of both code changes and the cost of the actual call as you now have to walk
+all vmas. On the other hand you wont need the below diff in from v1. I do feel the current approach
+in the patch is simpler? But if your point 3 is better in terms of code maintainability, happy to make
+it the change to it in v2. 
 
 
-Thanks,
-SJ
-
-[...]
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 2f190c90192d..0587dc4b8e2d 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -293,7 +293,8 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
+                if (vm_flags & VM_HUGEPAGE)
+                        mask |= READ_ONCE(huge_anon_orders_madvise);
+                if (hugepage_global_always() ||
+-                   ((vm_flags & VM_HUGEPAGE) && hugepage_global_enabled()))
++                   ((vm_flags & VM_HUGEPAGE) && hugepage_global_enabled()) ||
++                   test_bit(MMF_THP_ALWAYS, &vma->vm_mm->flags))
+                        mask |= READ_ONCE(huge_anon_orders_inherit);
+ 
+                orders &= mask; 
