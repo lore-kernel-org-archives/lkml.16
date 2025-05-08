@@ -1,116 +1,163 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDF422A4FE
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18677227E82
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746708729; cv=none; b=jAEi7WQuWDfHJsqpANo/nyimiHIaP1Y/JqpZViHTJ/j/YzEl6902ab/1szwBbaMiVYjnfpMYGMAm5/fdzRWNRljTQXKIhwebHg7J9Cq1GsFpSSsXnv1m6Arqd6+yawnrLwVxM3cPncf8Ejl2BSQJx529Tlaqm2qmaQny9rcQafI=
+	t=1746708743; cv=none; b=pKNDUeQy5qRPgM8/J4BxynZtlJV0BU3ti6Eg1UXPDoUnLOdLW51CaRJvDl0tCagUO+N2eBrMLS6NxKQHTizbF0yl/dqCutpFpEsox5oZvp4Q/eJ9JMHFN/MwMscbuwTqK/6NXVtWniOF/TFOdPRwFwDJQew6Zq8EEYBZ2lV0OCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746708729; c=relaxed/simple;
-	bh=NT06B1X/FUUW5+CqHRQJz4Mu4vdWZmihoXCWuyZQcj8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=cJUcc6XMdT5bxJNu7PGZ9E/oNYbtMDq0KfcAwHwas38MDEkzGGvoEUybzdG7RwuZWgm4PRO9KZ+cRX2eS+W8YIUEqYtnKF3xasNZ+cAjDRUDtCkeIVQQ5Plibq024w95P7Dke5EmjR5KncGYzb6qJzubqNWI7vJkRHrQWXVeKhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Xic5zdvG; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1746708743; c=relaxed/simple;
+	bh=4EEv/VR+O6eQtRtSYNR1r7VhlLlFGzV6XXC+IypFeGA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z4BdfnWmnnBS7/AeYi02Ji1V5jaJHmffOqUaJx07rsirjRqYmAgLZLcp0L4QL664wLwWF1C7dNrX7E5xTQhv6igyNkax28SSV6bMLktIGI3pp96IHcIXG5FEUztJpTQq/zfvpl1vZTDy+4WqiW3GziOWl8dAjiN1GDQjNrrN8fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=nS06MZyG; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Xic5zdvG"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a0b9303998so451578f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:52:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1746708724; x=1747313524; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KdVvIx+2NUw1S7/yaZTlAzKdxyvipEaCZdSyfI4dcfc=;
-        b=Xic5zdvGHQhyWLtYvEb4aR6OZyoLgtBqlhBGT0ezvFbvd9qGo/fk7NVWJmCbs28YAw
-         xqvi+16JclTRNxBR6o7GEqENaOlzGZNEEIF98m/rsglLkSzyW2UvkBjos8ZFyfSWgt+F
-         1/VDQV8hak+Wf/HykomHlczyLeryH8fuCbQzIS7PpKQ+VAEWK4+JLVk8SbX/8dWqxEB/
-         GwfaiTaQ4hItq88kRKD8QKu+hzPzXQgRTNb4ZuyCBFvcKFyTjqbHFzqqSJDtLY5fq1gA
-         9wU0I1PCBqTKEZlhnrP7OldrPvVjVIprKfnjgPmChwX8qoWHRDrMYwSjKxZ6v8ndijWm
-         6+5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746708724; x=1747313524;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KdVvIx+2NUw1S7/yaZTlAzKdxyvipEaCZdSyfI4dcfc=;
-        b=k9j1/TwBrTENd1QFNPMyOUdpdyBFjh7CnfpL62zqzEy8IYsI2BdQVsM6f9/POdCpRC
-         mvoxNjdFl5sZF0yFSf7P+XgOFyCwMap9GONlmAmOe4bTRBdWEtlFiAmkJSLw+dF17Udg
-         J8p5GtitEu4kCebg2TVI5RXvovA98QXt77Qwug20TvZwLg/8CH6KYHZl7WHqLlg7HeuP
-         LAk1fqO70W2VJkNggOPdaddpBh5Ic4GSaK1rT0qG7ZE1hfKpEo7kd88RL9Mq7/rEDkIG
-         35NIJWmPkclw1BuqduGFLh20LnpxT0W2C3hNdTVLwc5te6wBGmLzahJPeijD93nIZ5pf
-         fCjA==
-X-Forwarded-Encrypted: i=1; AJvYcCVk03Q31cHfVi0EnLtv3yIf3Lk7nrjIqkDr1tsYizAPdGXRV5pHshl3+vX37FYL6ge29k5pZXUAbE63Ay0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiX9CTdj/BAX6t2KiDUNqjwS22MIJ5WfUtawQjwavi85wMMN7K
-	b0W0hSL8nk3O/oxH7z9NkKLymRxE3UxlYeMiMSDmOoWjtpKHAiAqnrtHEaffOD6qPYCz5xl3cEI
-	m
-X-Gm-Gg: ASbGncsapF3YZLSLrkn7rEnDvt2Ry8ikQt2ZHeHV00iaQCLR1bPoA6Q9ElWcCuWvzC2
-	URwkBser8HgBzPnAbC+DFFpxUFaZv6j3yNsJNXJXi0QVnTZe6qW+46qf2tSLyiO2j/66yrD8b3a
-	L/3XxtZYnCJqEuRXkFRR7f0hPSjhlcXGvQnraekKMGSJ8TEVCFFDHlr6eXnNNWrx29fHDPMIvXs
-	lXpWKdTa7RH5oY4eSTGTr/qOTXDgAxRm10Yky/wUekaY9eXBv6zL15llcKb5rX4dsiGr4+Zfxql
-	ODi5Gv+KyfZdySJ5i4/dFx7q3d8+KMVaTVJH1VaPp/37IqEkv3M=
-X-Google-Smtp-Source: AGHT+IGVKMnGQaI/zbUmSTKxGatnQCUnEpGyEkFy3V8+2H2zyIaYBb7YrCU27l4UnVxFxrTx/IplyA==
-X-Received: by 2002:adf:f18f:0:b0:3a0:aeba:47d8 with SMTP id ffacd0b85a97d-3a0b994eb78mr2407869f8f.29.1746708724035;
-        Thu, 08 May 2025 05:52:04 -0700 (PDT)
-Received: from alex-rivos.lan ([2001:861:3382:ef90:e3eb:2939:f761:f7f1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0b6c9915csm4486425f8f.29.2025.05.08.05.52.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 05:52:03 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v3 0/3] Move duplicated instructions macros into asm/insn.h
-Date: Thu,  8 May 2025 14:51:59 +0200
-Message-Id: <20250508125202.108613-1-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="nS06MZyG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=MFGXgXVhRIMsvtkmQGMYgyfxAd9uaycap/esRlGZ1eo=; b=nS06MZyGHnra3A68B5FRn4AtR1
+	Cd3pq19j82mhaAHYfWb0QsWsfLA9NRRKS3BjHEfqE6NPklGG/8BbONBp82ekODxR27Wbc3zztqhAu
+	Vwcisfvmsrh2GB7Dr64L08kEOCrej+B+KjhuO/AxlUuNc2xU0KAM/l53MLjBsfAlKgn7nKhONZGtZ
+	nXrkWm6ZL/+mk4QbVrci56toprJf9nIRGqhOxtpBWorqI7nWcfBz456kvx68SPDmVL10kwu+UubkW
+	+T5kJemrd3fKy3s9dmW293+3cCWuumNY0DU9ExkboR55as797QPcmRUiIdUulx+osy1kmpnwAHsT+
+	x1XH1H1A==;
+Received: from [81.79.92.254] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uD0eu-005Daq-FW; Thu, 08 May 2025 14:51:44 +0200
+Message-ID: <a1c9c680-2927-428c-95e9-2e79d14cec58@igalia.com>
+Date: Thu, 8 May 2025 13:51:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/6] drm/sched: Port unit tests to new cleanup design
+To: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250424095535.26119-2-phasta@kernel.org>
+ <20250424095535.26119-8-phasta@kernel.org>
+ <894cf4cdb7e14b2a21dcf87bfeac4776cb695395.camel@mailbox.org>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <894cf4cdb7e14b2a21dcf87bfeac4776cb695395.camel@mailbox.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-The instructions parsing macros were duplicated and one of them had different
-implementations, which is error prone.
 
-So let's consolidate those macros in asm/insn.h.
+Hi Philipp,
 
-v1: https://lore.kernel.org/linux-riscv/20250422082545.450453-1-alexghiti@rivosinc.com/
-v2: https://lore.kernel.org/linux-riscv/20250508082215.88658-1-alexghiti@rivosinc.com/
+On 08/05/2025 12:03, Philipp Stanner wrote:
+> On Thu, 2025-04-24 at 11:55 +0200, Philipp Stanner wrote:
+>> The unit tests so far took care manually of avoiding memory leaks
+>> that
+>> might have occurred when calling drm_sched_fini().
+>>
+>> The scheduler now takes care by itself of avoiding memory leaks if
+>> the
+>> driver provides the callback
+>> drm_sched_backend_ops.kill_fence_context().
+>>
+>> Implement that callback for the unit tests. Remove the manual cleanup
+>> code.
+> 
+> @Tvrtko: On a scale from 1-10, how much do you love this patch? :)
 
-Changes in v3:
-- Fix patch 2 which caused build failures (linux riscv bot), but the
-  patchset is exactly the same as v2
+Specific patch aside, it is the series as a whole I would like to be 
+sure there isn't a more elegant way to achieve the same end result.
 
-Changes in v2:
-- Rebase on top of 6.15-rc5
-- Add RB tags
-- Define RV_X() using RV_X_mask() (Clément)
-- Remove unused defines (Clément)
-- Fix tabulations (Drew)
+Like that sketch of a counter proposal I sent for the reasons listed 
+with it. Which were, AFAIR, to avoid needing to add more state machine, 
+to avoid mandating drivers have to keep an internal list, and to align 
+better with the existing prototypes in the sched ops table (where 
+everything operates on jobs).
 
-Alexandre Ghiti (3):
-  riscv: Fix typo EXRACT -> EXTRACT
-  riscv: Strengthen duplicate and inconsistent definition of RV_X()
-  riscv: Move all duplicate insn parsing macros into asm/insn.h
+Regards,
 
- arch/riscv/include/asm/insn.h        | 199 ++++++++++++++++++++++++---
- arch/riscv/kernel/elf_kexec.c        |   2 +-
- arch/riscv/kernel/traps_misaligned.c | 137 +-----------------
- arch/riscv/kernel/vector.c           |   2 +-
- arch/riscv/kvm/vcpu_insn.c           | 128 +----------------
- 5 files changed, 181 insertions(+), 287 deletions(-)
+Tvrtko
 
--- 
-2.39.2
+>> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+>> ---
+>>   .../gpu/drm/scheduler/tests/mock_scheduler.c  | 34 ++++++++++++-----
+>> --
+>>   1 file changed, 21 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+>> b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+>> index f999c8859cf7..a72d26ca8262 100644
+>> --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+>> +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+>> @@ -228,10 +228,30 @@ static void mock_sched_free_job(struct
+>> drm_sched_job *sched_job)
+>>   	/* Mock job itself is freed by the kunit framework. */
+>>   }
+>>   
+>> +static void mock_sched_fence_context_kill(struct drm_gpu_scheduler
+>> *gpu_sched)
+>> +{
+>> +	struct drm_mock_scheduler *sched =
+>> drm_sched_to_mock_sched(gpu_sched);
+>> +	struct drm_mock_sched_job *job;
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&sched->lock, flags);
+>> +	list_for_each_entry(job, &sched->job_list, link) {
+>> +		spin_lock(&job->lock);
+>> +		if (!dma_fence_is_signaled_locked(&job->hw_fence)) {
+>> +			dma_fence_set_error(&job->hw_fence, -
+>> ECANCELED);
+>> +			dma_fence_signal_locked(&job->hw_fence);
+>> +		}
+>> +		complete(&job->done);
+>> +		spin_unlock(&job->lock);
+>> +	}
+>> +	spin_unlock_irqrestore(&sched->lock, flags);
+>> +}
+>> +
+>>   static const struct drm_sched_backend_ops drm_mock_scheduler_ops = {
+>>   	.run_job = mock_sched_run_job,
+>>   	.timedout_job = mock_sched_timedout_job,
+>> -	.free_job = mock_sched_free_job
+>> +	.free_job = mock_sched_free_job,
+>> +	.kill_fence_context = mock_sched_fence_context_kill,
+>>   };
+>>   
+>>   /**
+>> @@ -300,18 +320,6 @@ void drm_mock_sched_fini(struct
+>> drm_mock_scheduler *sched)
+>>   		drm_mock_sched_job_complete(job);
+>>   	spin_unlock_irqrestore(&sched->lock, flags);
+>>   
+>> -	/*
+>> -	 * Free completed jobs and jobs not yet processed by the DRM
+>> scheduler
+>> -	 * free worker.
+>> -	 */
+>> -	spin_lock_irqsave(&sched->lock, flags);
+>> -	list_for_each_entry_safe(job, next, &sched->done_list, link)
+>> -		list_move_tail(&job->link, &list);
+>> -	spin_unlock_irqrestore(&sched->lock, flags);
+>> -
+>> -	list_for_each_entry_safe(job, next, &list, link)
+>> -		mock_sched_free_job(&job->base);
+>> -
+>>   	drm_sched_fini(&sched->base);
+>>   }
+>>   
+> 
 
