@@ -1,75 +1,190 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2D24B1E5C;
-	Thu,  8 May 2025 14:02:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8E722D9F7;
+	Thu,  8 May 2025 14:03:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746712970; cv=none; b=etoCNvoJ4TBkLnT/GI+Xi9Bp3Nx/gsjpRcpRGM8RO0Jq5Cu2222gBbJv4x65YfiIoTKUl8YDKjQGG5gn/d7RafB9bvuf/AuXK7/QC6toRWzsvJUDg5n9s26OkKGl7/fnKpWlQ/A9YXFuNv92/pQUJqK6Y8zdygzmR5qWxez0lE8=
+	t=1746712985; cv=none; b=u47xmWkY8KaqLlnakWTTSCfBpdJdkGKgyIAtZXvmPVyv/vb2H8ccES9uo70lHdMTQcxNgfWXEB1dN+eRrf1idIbmj2aHNpUSOLOoN8c5uHkx/zE3GKkGaBfmee2AAvOteL3mXxYIldIz9R+KPABY7twja8K0Lg6ybt9mOVKCfb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746712970; c=relaxed/simple;
-	bh=0apuCMA1Sidjb3J3yeNoUIRz4VC95W7lpWJMIzhlHi8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Vwy3/YL6iwAhLozekyL4qAbHvdLl7Mahd5tW4hv5txIZ1G7FIX11QdSq+XMIREzz8J5Lfo6SCHDgNLrLxb8RvtYIegi3CMQq7tQ9p8eBFIol/eltVjyE7H720tgqzcmPBCAS+P0uDD51HmvwfGw+JkVB07Lj+oCAhqpo3rD+tLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83C04C4CEE7;
-	Thu,  8 May 2025 14:02:46 +0000 (UTC)
-Date: Thu, 8 May 2025 10:02:58 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Bhupesh Sharma <bhsharma@igalia.com>
-Cc: Petr Mladek <pmladek@suse.com>, akpm@linux-foundation.org,
- kernel-dev@igalia.com, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
- laoar.shao@gmail.com, mathieu.desnoyers@efficios.com,
- arnaldo.melo@gmail.com, alexei.starovoitov@gmail.com,
- andrii.nakryiko@gmail.com, mirq-linux@rere.qmqm.pl, peterz@infradead.org,
- willy@infradead.org, david@redhat.com, viro@zeniv.linux.org.uk,
- keescook@chromium.org, ebiederm@xmission.com, brauner@kernel.org,
- jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com
-Subject: Re: [PATCH v3 2/3] treewide: Switch memcpy() users of 'task->comm'
- to a more safer implementation
-Message-ID: <20250508100258.5ea70831@gandalf.local.home>
-In-Reply-To: <3fd1dd03-ce1c-37e5-98aa-a91ab5d210b3@igalia.com>
-References: <20250507110444.963779-1-bhupesh@igalia.com>
-	<20250507110444.963779-3-bhupesh@igalia.com>
-	<aBtSK5dFmtFXUaOE@pathway.suse.cz>
-	<4af48ad5-1aa7-46d0-bfca-7779294e355c@igalia.com>
-	<3fd1dd03-ce1c-37e5-98aa-a91ab5d210b3@igalia.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746712985; c=relaxed/simple;
+	bh=C/L/pftHGTCWGdWgJfT7sKUaqugtRJmVqtPPXBpoS98=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U3Ozt6/MRLk4X1MA0hJG3/K1kCqyQBYhzjQLapcHh1RpvUyNuYBBs0oYWXVOF1t8j3rG0jSV0/KsOwYl1F277yul1/2s5hBM4zKtcnUN/vtD0SKXdUxmQz0Nn7OVnfQPIL3N4Bg2+lghTJtIBTeKmM15Fg6ZuvlwTQQLDJUlPQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4wet2nT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4wet2nT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3777C4CEE7;
+	Thu,  8 May 2025 14:03:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746712985;
+	bh=C/L/pftHGTCWGdWgJfT7sKUaqugtRJmVqtPPXBpoS98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S4wet2nTFae/hq0ivrloA8WadwPEauM183hm9+Bu4YlWD2GkEMsbffzfnzdIYa8iy
+	 XUsPA30tiKJodYhuowT1dMdJWwlU3+XOnO/P6qK6MajeIsJzWIcopRtYo7mnp9LtIo
+	 2IE51HXnnaP3GYIFFO/fh8+OBvQtunqBJgkllvPicUyT2b2+jyO8gmIOGfkkp3taBP
+	 reI2//D4TvUWuAwwJklHmqglJe2fLRaPBiNohoQqJIXM2y2Ws6h4THDRxQ7mSUndyl
+	 2yakR5t27fi+iNZ75/KgbctlgpbjHN2yMe6t5fj9HchbYtEYh7xJa9VcAPnH+un7jB
+	 Ix8+r/CvflXYQ==
+Date: Thu, 8 May 2025 15:02:59 +0100
+From: Lee Jones <lee@kernel.org>
+To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v9 4/6] mfd: max77759: add Maxim MAX77759 core mfd driver
+Message-ID: <20250508140259.GN3865826@google.com>
+References: <20250430-max77759-mfd-v9-0-639763e23598@linaro.org>
+ <20250430-max77759-mfd-v9-4-639763e23598@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250430-max77759-mfd-v9-4-639763e23598@linaro.org>
 
-On Thu, 8 May 2025 13:52:01 +0530
-Bhupesh Sharma <bhsharma@igalia.com> wrote:
+On Wed, 30 Apr 2025, André Draszik wrote:
 
-> > [1].=20
-> > https://lore.kernel.org/linux-trace-kernel/20250507133458.51bafd95@gand=
-alf.local.home/
-> > =20
->=20
-> Sorry, pressed the send button too quickly :D
->=20
-> I instead meant - "I plan to=C2=A0 rebase my v4 on top of Steven's RFC, w=
-hich=20
-> might mean that this patch would no longer need to address the trace=20
-> events, but would still need to handle other places where tsk->comm=20
-> directly in memcpy() and replace it with 'get_task_comm()' instead".
+> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> Port Controller (TCPC), NVMEM, and a GPIO expander.
+> 
+> Fuel Gauge and TCPC have separate and independent I2C addresses,
+> register maps, and interrupt lines and are therefore excluded from the
+> MFD core device driver here.
+> 
+> The GPIO and NVMEM interfaces are accessed via specific commands to the
+> built-in microprocessor. This driver implements an API that client
+> drivers can use for accessing those.
+> 
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> 
+> ---
+> v6: really use postinc
+> 
+> v5:
+> * update all (I hope) of Lee's comments:
+> * file header C comment (not C++)
+> * drop references to 'MFD'
+> * extra indent register bit definitions
+> * make 'struct max77759' public
+> * drop comments that were used for visual separation only
+> * drop MAX77759_*_REG_LAST_REGISTER defines
+> * add comments to regmap ranges
+> * use longer lines
+> * sort local variable in reverse christmas tree order
+> * update comments in max77759_maxq_command()
+> * drop BUILD_BUG_ON()
+> * use dev_err() in max77759_maxq_command()
+> * reflow max77759_create_i2c_subdev() slightly and update error messages
+> * drop useless comment in max77759_add_chained_maxq()
+> * reflow max77759_probe()
+> * consistent upper-/lower-case in messages
+> 
+> v4:
+> * add missing build_bug.h include
+> * update an irq chip comment
+> * fix a whitespace in register definitions
+> 
+> v2:
+> * add kernel doc for max77759_maxq_command() and related structs
+> * fix an msec / usec typo
+> * add missing error handling of devm_mutex_init() (Christophe)
+> * align sentinel in max77759_of_id[] with max77759_i2c_id[]
+>   (Christophe)
+> * some tidy-ups in max77759_maxq_command() (Christophe)
+> 
+> max77759 Lee's updates
+> ---
+>  MAINTAINERS                  |   2 +
+>  drivers/mfd/Kconfig          |  20 ++
+>  drivers/mfd/Makefile         |   1 +
+>  drivers/mfd/max77759.c       | 690 +++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/max77759.h | 165 +++++++++++
+>  5 files changed, 878 insertions(+)
 
-Note I didn't switch all the events, just most of the sched events.
+This looks okay to me now.
 
-This may affect user space that parses the raw events and may expect a hard
-coded string instead of a dynamic one (as the sched_switch and sched_waking
-events do).
+I assume the other patches depend on this one?
 
-We will need to investigate before we make these changes, which is why I
-posted it as a RFC.
+[...]
 
--- Steve
+> diff --git a/drivers/mfd/max77759.c b/drivers/mfd/max77759.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..15723ac3ef49771eafd5c2e9984abc550eec7aa1
+> --- /dev/null
+> +++ b/drivers/mfd/max77759.c
+> @@ -0,0 +1,690 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright 2020 Google Inc
+> + * Copyright 2025 Linaro Ltd.
+> + *
+> + * Core driver for Maxim MAX77759 companion PMIC for USB Type-C
+> + */
+
+[...]
+
+> +int max77759_maxq_command(struct max77759 *max77759,
+> +			  const struct max77759_maxq_command *cmd,
+> +			  struct max77759_maxq_response *rsp)
+> +{
+> +	DEFINE_FLEX(struct max77759_maxq_response, _rsp, rsp, length, 1);
+> +	struct device *dev = regmap_get_device(max77759->regmap_maxq);
+> +	static const unsigned int timeout_ms = 200;
+> +	int ret;
+> +
+> +	if (cmd->length > MAX77759_MAXQ_OPCODE_MAXLENGTH)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * As a convenience for API users when issuing simple commands, rsp is
+> +	 * allowed to be NULL. In that case we need a temporary here to write
+> +	 * the response to, as we need to verify that the command was indeed
+> +	 * completed correctly.
+> +	 */
+> +	if (!rsp)
+> +		rsp = _rsp;
+> +
+> +	if (!rsp->length || rsp->length > MAX77759_MAXQ_OPCODE_MAXLENGTH)
+> +		return -EINVAL;
+> +
+> +	guard(mutex)(&max77759->maxq_lock);
+> +
+> +	reinit_completion(&max77759->cmd_done);
+> +
+> +	/*
+> +	 * MaxQ latches the message when the DATAOUT32 register is written. If
+> +	 * cmd->length is shorter we still need to write 0 to it.
+> +	 */
+> +	ret = regmap_bulk_write(max77759->regmap_maxq,
+> +				MAX77759_MAXQ_REG_AP_DATAOUT0, cmd->cmd,
+> +				cmd->length);
+> +	if (!ret && cmd->length < MAX77759_MAXQ_OPCODE_MAXLENGTH)
+> +		ret = regmap_write(max77759->regmap_maxq,
+> +				   MAX77759_MAXQ_REG_AP_DATAOUT32, 0);
+> +	if (ret) {
+> +		dev_err(dev, "writing command failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* wait for response from MaxQ */
+
+If you have to respin this patch, please s/wait/Wait/.
+
+If not, please send a subsequent patch.
+
+-- 
+Lee Jones [李琼斯]
