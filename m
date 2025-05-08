@@ -1,113 +1,187 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3F22641E8
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABA6F263F4E;
+	Thu,  8 May 2025 09:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746697366; cv=none; b=PWyOb5YklIqrkuX3kWBtfNujgJL+HnIjpg0rsitTiLogrJaOwEV24oAVHurXplOfzw8zZgKn5pY69gS/4obeiEK1VU84ZlgjXwNGN7g/oZdUzGbg82xQCX3NcfZNT73+uUdbYSimjlyV5UBcgiOS3mLjEJJf6r6KhEnYSrUlqGo=
+	t=1746697433; cv=none; b=dNxEqiAT+tMEZbpzl7N4QeqrDUGqGCWeRSeRd2hnfXfaofdTZ8BU4tEkXZfadwQG3k9rfLLguM4mJ6mKFzp3+E+uMQN4ht83D6ELagKsPuttAb5kMpCb99MXvG7cHlxbXkKpvG+vB/FaVwf+/BOglhQxNzG80qAUKzhhrVYbdcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746697366; c=relaxed/simple;
-	bh=GYGVxYwCi8UGgrfChrXrFi/Yc7pHAuC/FLqU8ZAbjeA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cYSuPM3loQykeaD58KBWGeCf/lfBEYDbDMfu9HA1celi0SbWKCQPeQDvB0K7r951HFTx9mz5TBxadBYN9bKC1hFFgVzQijseSf7NHskgn6zD1g+Q63zQJxjx+GVtPsVY59FGBSyVg99teAwNkqfGrIDv4fPsfeivJdfVXG+2DmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=j3sU1py5; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1746697433; c=relaxed/simple;
+	bh=H/WhQNKlzogJE4QdmSUmR0gkiVXIC0GbzPbzBw7pZ5k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SG4OsLfotsQplrwGWo2evWiQrAxULMo7X0qGDoTLnuxu1EGCbP+gRE0FfkEeR2875QvsZKSopQIoruMXJ2Ai/twRzLgddxuwvitlUCwtBUR/rQSCxl0wXwljCWRGRZLLDjSXZeZMDcMIc0r2J2hahdirBvjX5JiQqw4/BJvRDl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=J+KqvhBk; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="j3sU1py5"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 7F20EA0402;
-	Thu,  8 May 2025 11:42:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=FqcpfxV/1MzYuJfxO/fU
-	aFYv5o/e4eUrzT9SJNKucj8=; b=j3sU1py5rlsFW59UcDLeXlEUpgqOgu4nEeMS
-	jC2iKRwqy8LB1h/AjpluSZIg1PXou45w+xl9DtRSuHA0dXXjF31SHR5mBDPE2L5J
-	MbDdZAiV47WOrRMt7oNrkiESYRI6IPf0PR9UVXX9j2oWoPCW4pagUypcjejq9QUy
-	lrd/DjzBMyUVGYNAnru4hWF1XPN2MMdbjZpoSQIWQqoAdCFLlFX0SZLpVbvx7nGK
-	iU9l1gueruqDgOTZDZ7yroaUf4Y39vm0zodXpVublUn8nwWxO2lVBm+kAqMaK7Gv
-	/XjZujOkPXX0sgRnsweh/yrkj+v07H9QsxFpbjhS0e2VRasj7meMmMoU5V0hsQLc
-	tjjt7VhcS6B+97EvqA4IYaKm++22VG2RPKG/mLbhJqyQ68qGGFWzUh8OpKpPXS7j
-	+q0ETr5IfaxISJNFOY5cq+G8YXbfkrxkpN2ZRhL6JDSBYHwJIScQBrz7HkBBFTPi
-	gxEklY1occ0nihfMcLRpx6ej0PR6Q8v8BdM2eIp/NKLJJH7eNcyMnVx5R7cYjWoS
-	EhDoQp4NF7+ktNSAPSTLeF3IGNmyO/w2OR4YT7n1gMnydOszc+3NNZQd8KdUyJoU
-	kBiuhRJYgkDLzpUFCzbQii/vwuqO4xEiBw3sFNGM3LU6/ZFCPtfei5QlSGgumo2b
-	JqppW68=
-Message-ID: <1f5412e0-f332-428f-899f-26ca06a3b0a4@prolan.hu>
-Date: Thu, 8 May 2025 11:42:32 +0200
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="J+KqvhBk"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 382CD21199E0; Thu,  8 May 2025 02:43:51 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 382CD21199E0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746697431;
+	bh=T55MVOVWe61rHi3lJfC1UHDy1Z+yOeyzZCnQiMX1Uo4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J+KqvhBkERu+CQQma0RImBsW5LhVreeG9YYNffcEWSycBij+lh93WmlyNcF60pvxY
+	 5jBHglrAgT/MZ2QfE7n74bZ+Il6OEFOcm+jODe3kV8EbPDgU4U1/ggwjXDqA8w2hvf
+	 yulekqL+wc8ni0Xqki+vOAWIXEeX4rD6Ax8zRHSQ=
+Date: Thu, 8 May 2025 02:43:51 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	decui@microsoft.com, stephen@networkplumber.org, kys@microsoft.com,
+	paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
+	davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
+	longli@microsoft.com, ssengar@linux.microsoft.com,
+	linux-rdma@vger.kernel.org, daniel@iogearbox.net,
+	john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
+	hawk@kernel.org, tglx@linutronix.de, andrew+netdev@lunn.ch,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: mana: Add handler for hardware servicing
+ events
+Message-ID: <20250508094351.GA8528@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1746633519-17549-1-git-send-email-haiyangz@microsoft.com>
+ <20250508092924.GA2081@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] spi-nor: Verify written data in paranoid mode
-To: Richard Weinberger <richard@nod.at>
-CC: Michael Walle <mwalle@kernel.org>, linux-mtd
-	<linux-mtd@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>,
-	=?UTF-8?Q?Tam=C3=A1s_Szentendrei?= <szentendrei.tamas@prolan.hu>, "Tudor
- Ambarus" <tudor.ambarus@linaro.org>, pratyush <pratyush@kernel.org>, "Miquel
- Raynal" <miquel.raynal@bootlin.com>, Vignesh Raghavendra <vigneshr@ti.com>
-References: <20250415180434.513405-1-csokas.bence@prolan.hu>
- <D981O3AA6NK9.2EEVUPM62EV6S@kernel.org>
- <dd3c7cc0-a568-4046-b105-e6786b5c80f8@prolan.hu>
- <373620122.295980015.1744808943985.JavaMail.zimbra@nod.at>
- <c56c52c0-a824-4ad7-9847-e0e973f811ed@prolan.hu>
- <81225127.297167214.1744828878236.JavaMail.zimbra@nod.at>
-Content-Language: en-US, hu-HU
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <81225127.297167214.1744828878236.JavaMail.zimbra@nod.at>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94853667266
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508092924.GA2081@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Hi Richard,
-
-On 2025. 04. 16. 20:41, Richard Weinberger wrote:
-> ----- Ursprüngliche Mail -----
->> Von: "Csókás Bence" <csokas.bence@prolan.hu>
->>> I'm not so sure whether it makes sense at all.
->>> In it's current form, there is no recovery. So anything non-trivial
->>> on top of the MTD will just see an -EIO and has to give up.
->>> E.g. a filesystem will remount read-only.
->>
->> In our case, we use UBIFS on top of UBI, which in this case chooses
->> another eraseblock to hold the data instead, then re-tests (erase+write
->> cycles) the one which gave -EIO. Since the bus error is only transient,
->> it goes away by this time, and thus UBIFS will recover from this cleanly.
+On Thu, May 08, 2025 at 02:29:24AM -0700, Shradha Gupta wrote:
+> On Wed, May 07, 2025 at 08:58:39AM -0700, Haiyang Zhang wrote:
+> > To collaborate with hardware servicing events, upon receiving the special
+> > EQE notification from the HW channel, remove the devices on this bus.
+> > Then, after a waiting period based on the device specs, rescan the parent
+> > bus to recover the devices.
+> > 
+> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> > ---
+> >  .../net/ethernet/microsoft/mana/gdma_main.c   | 61 +++++++++++++++++++
+> >  include/net/mana/gdma.h                       |  5 +-
+> >  2 files changed, 65 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > index 4ffaf7588885..aa2ccf4d0ec6 100644
+> > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > @@ -352,11 +352,52 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8 arm_bit)
+> >  }
+> >  EXPORT_SYMBOL_NS(mana_gd_ring_cq, "NET_MANA");
+> >  
+> > +#define MANA_SERVICE_PERIOD 10
+> > +
+> > +struct mana_serv_work {
+> > +	struct work_struct serv_work;
+> > +	struct pci_dev *pdev;
+> > +};
+> > +
+> > +static void mana_serv_func(struct work_struct *w)
+> > +{
+> > +	struct mana_serv_work *mns_wk = container_of(w, struct mana_serv_work, serv_work);
+> > +	struct pci_dev *pdev = mns_wk->pdev;
+> > +	struct pci_bus *bus, *parent;
+> > +
+> > +	if (!pdev)
+> > +		goto out;
+> > +
+> > +	bus = pdev->bus;
+> > +	if (!bus) {
+> > +		dev_err(&pdev->dev, "MANA service: no bus\n");
+> > +		goto out;
+> > +	}
+> > +
+> > +	parent = bus->parent;
+> > +	if (!parent) {
+> > +		dev_err(&pdev->dev, "MANA service: no parent bus\n");
+> > +		goto out;
+> > +	}
+> > +
+> > +	pci_stop_and_remove_bus_device_locked(bus->self);
+> > +
+> > +	msleep(MANA_SERVICE_PERIOD * 1000);
+> > +
+> > +	pci_lock_rescan_remove();
+> > +	pci_rescan_bus(parent);
+> > +	pci_unlock_rescan_remove();
+> > +
+> > +out:
+> > +	kfree(mns_wk);
 > 
-> Are you sure about that?
+> Shouldn't gc->in_service be set to false again?
+
+ah, nevermind. That won't be needed. Thanks
 > 
-> I'd expect UBI to go into RO mode via a call path like:
-> ubi_eba_write_leb() -> ubi_io_write() -> mtd_write()
-> If mtd_write() returns an EIO, UBI will go into RO mode immediately.
+> > +}
+> > +
+> >  static void mana_gd_process_eqe(struct gdma_queue *eq)
+> >  {
+> >  	u32 head = eq->head % (eq->queue_size / GDMA_EQE_SIZE);
+> >  	struct gdma_context *gc = eq->gdma_dev->gdma_context;
+> >  	struct gdma_eqe *eq_eqe_ptr = eq->queue_mem_ptr;
+> > +	struct mana_serv_work *mns_wk;
+> >  	union gdma_eqe_info eqe_info;
+> >  	enum gdma_eqe_type type;
+> >  	struct gdma_event event;
+> > @@ -400,6 +441,26 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
+> >  		eq->eq.callback(eq->eq.context, eq, &event);
+> >  		break;
+> >  
+> > +	case GDMA_EQE_HWC_FPGA_RECONFIG:
+> > +	case GDMA_EQE_HWC_SOCMANA_CRASH:
 > 
-> (I'm assuming, your SPI-NOR has no bad block support, so ubi->bad_allowed
-> is false).
-
-You are right, in our case we had to patch bad_allowed to be true. But 
-the point is, that UBIFS _does_ get notified, and it _does_ go into RO 
-mode, instead of getting success from mtd_write(), even though the 
-written data was corrupted.
-
-On 2025. 04. 16. 14:38, Csókás Bence wrote:
- > We _could_ make it MTD-wide, in our case we only have a NOR Flash
- > onboard so this is where we added it. If it were in the MTD core, where
- > would it make sense?
- >
- > * mtd_write()
- > * mtd_write_oob()
- > * mtd_write_oob_std()
- > * or somewhere else entirely?
-
-I'm now starting to think mtd_write_oob() would be the right place for 
-it. Thoughts?
-
-Bence
-
+> may be we also add a log(dev_dbg) to indicate if the servicing is for
+> FPGA reconfig or socmana crash.
+> 
+> > +		if (gc->in_service) {
+> > +			dev_info(gc->dev, "Already in service\n");
+> > +			break;
+> > +		}
+> > +
+> > +		mns_wk = kzalloc(sizeof(*mns_wk), GFP_ATOMIC);
+> > +		if (!mns_wk) {
+> > +			dev_err(gc->dev, "Fail to alloc mana_serv_work\n");
+> > +			break;
+> > +		}
+> > +
+> > +		dev_info(gc->dev, "Start MANA service\n");
+> > +		gc->in_service = true;
+> > +		mns_wk->pdev = to_pci_dev(gc->dev);
+> > +		INIT_WORK(&mns_wk->serv_work, mana_serv_func);
+> > +		schedule_work(&mns_wk->serv_work);
+> > +		break;
+> > +
+> >  	default:
+> >  		break;
+> >  	}
+> > diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+> > index 228603bf03f2..13cfbcf67815 100644
+> > --- a/include/net/mana/gdma.h
+> > +++ b/include/net/mana/gdma.h
+> > @@ -58,8 +58,9 @@ enum gdma_eqe_type {
+> >  	GDMA_EQE_HWC_INIT_EQ_ID_DB	= 129,
+> >  	GDMA_EQE_HWC_INIT_DATA		= 130,
+> >  	GDMA_EQE_HWC_INIT_DONE		= 131,
+> > -	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
+> > +	GDMA_EQE_HWC_FPGA_RECONFIG	= 132,
+> >  	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
+> > +	GDMA_EQE_HWC_SOCMANA_CRASH	= 135,
+> >  	GDMA_EQE_RNIC_QP_FATAL		= 176,
+> >  };
+> >  
+> > @@ -388,6 +389,8 @@ struct gdma_context {
+> >  	u32			test_event_eq_id;
+> >  
+> >  	bool			is_pf;
+> > +	bool			in_service;
+> > +
+> >  	phys_addr_t		bar0_pa;
+> >  	void __iomem		*bar0_va;
+> >  	void __iomem		*shm_base;
+> > -- 
+> > 2.34.1
