@@ -1,25 +1,48 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1583B20C005;
-	Thu,  8 May 2025 10:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28EAF211A3F;
+	Thu,  8 May 2025 10:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746700972; cv=none; b=oJSTaN6+jAY7gFveGtHrhT6yUOu1MC1owSng7igJveLK0428gU/gJ1QI/OMrmDd6CQRMyAs3TiI/fJBtKRfeIjOq0ThoOdNOyCka7QpiplDPsKJKns/RVIeHCa1R2yn4dOupOei4yijwqz6F9z/lmfO6LoOkbg+SLRGG3D3Osjs=
+	t=1746700994; cv=none; b=u3OOUXlZBV1yTi2yRDZFKAME/azrYqrcDhLVjy3Dou/ok5DmKQX/e59GZtTyWE6vGfgnBPra9OCAgtgNjXy7PJtcyQ+tZQFCeeupb+2OLvLXLGH+kB7UufDN89JSRJea+7ymSOfyI6KkuFBQpwL/GHFRcOFmvjyJPmZ3pJ9tP7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746700972; c=relaxed/simple;
-	bh=RspmhIV+3nChPf+2TIf9e0WONsGhbGCCaCbivLAz0nk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QUDhGvblKiFfCxgEmpXexjAcnNYd5E5TFbwsqOynH9gsDEFYE3RpVrkE+YG2jD/DCZyxLWOZFi0rZGELk3l9QXRBqXBRiss/45yXpkDS0P/heRV/SaOkStmD7zBJfAwd+eNGCwi8eNj/JPPhTZWHV4Ajsy//Ay6c4KZSFmPEP9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08547106F;
-	Thu,  8 May 2025 03:42:39 -0700 (PDT)
-Received: from [10.1.38.30] (e122027.cambridge.arm.com [10.1.38.30])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 901BE3F5A1;
-	Thu,  8 May 2025 03:42:47 -0700 (PDT)
-Message-ID: <9c0b95c8-bf2d-4689-ac1f-ccacba826060@arm.com>
-Date: Thu, 8 May 2025 11:42:46 +0100
+	s=arc-20240116; t=1746700994; c=relaxed/simple;
+	bh=Oj+f3fNpaRmywlP/8WRe2gvKZdCHEW9rgRJAIINkey0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=pJflU1Tcd7Q5EF+Z9heHEzf+6HPDDdNHmAYvkhaKqIzMq6ziUFYTiywLoMdYW0DQcalkrwvahVuS8cxNiohqv5FjRaMOz85FiB0AZXm/eMsJhmXGv9hhfc2uKtVo3NTV1A/V0kjvdfGmy92/ZX/xYKn05pCCqTDX7fjy4rXL0i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=a1DInkkd; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="a1DInkkd"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5484X2c4010563;
+	Thu, 8 May 2025 10:42:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	/Tq41nLm+5muL4bx925dxv59LEk5NNNsuX/r1mf5DwM=; b=a1DInkkd8VNthU0k
+	2vTozj4pY+9xmXGYnJvMQHCbOEslm7JZdSHTrEyrYcC1yt+VsJzERbKySGmTsjYS
+	7xFQFRsw4PLpSTSnXjHpYTGqBieeYBme5K1sKzYgajt8mkxj+zwBS1jVp6ArZmW3
+	gqnqJ61kaJw6vwYtKbTTJVnzZGMPEYtssDxKWlaq9HgyoZqEwlrgLcorCMOYacqg
+	6LzEoBGqm175KDLTTjaxBDe7dAFG9nZ3zMl9ElJV7YOqeGjSOR/yiKD6Jh6aAd+0
+	cnoiCbSpC9eQr3JmBRvLp6d3g6ZDDjxZMLOJ7oDaVjd9i5j91JA7W5miNn+eqAS4
+	3id+mQ==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp79172-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 10:42:48 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 548AgmeM001995
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 8 May 2025 10:42:48 GMT
+Received: from [10.239.155.136] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
+ 03:42:43 -0700
+Message-ID: <933da6f7-c53b-4d29-9198-016b95d7dc9c@quicinc.com>
+Date: Thu, 8 May 2025 18:42:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,105 +50,145 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] drm/panfrost: show device-wide list of DRM GEM
- objects over DebugFS
-To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
- linux-kernel@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org,
- Boris Brezillon <boris.brezillon@collabora.com>, kernel@collabora.com,
- Rob Herring <robh@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-References: <20250507160713.1363985-1-adrian.larumbe@collabora.com>
- <20250507160713.1363985-4-adrian.larumbe@collabora.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250507160713.1363985-4-adrian.larumbe@collabora.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v2 2/3] scsi: ufs: qcom: Map devfreq OPP freq to UniPro
+ Core Clock freq
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+        Luca Weiss
+	<luca.weiss@fairphone.com>, <quic_cang@quicinc.com>,
+        <bvanassche@acm.org>, <mani@kernel.org>, <beanhuo@micron.com>,
+        <avri.altman@wdc.com>, <junwoo80.lee@samsung.com>,
+        <martin.petersen@oracle.com>, <quic_nguyenb@quicinc.com>,
+        <quic_nitirawa@quicinc.com>, <quic_rampraka@quicinc.com>,
+        <konrad.dybcio@oss.qualcomm.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        "Manivannan
+ Sadhasivam" <manivannan.sadhasivam@linaro.org>,
+        "James E.J. Bottomley"
+	<James.Bottomley@hansenpartnership.com>,
+        open list
+	<linux-kernel@vger.kernel.org>
+References: <20250507074415.2451940-1-quic_ziqichen@quicinc.com>
+ <20250507074415.2451940-3-quic_ziqichen@quicinc.com>
+ <D9PS51XVRKLP.1AHMCRH9CZFWU@fairphone.com>
+ <7c74a395-a8b8-4a12-9ddb-691f28c90885@quicinc.com>
+ <7ccbd722-c99a-43b3-9ceb-4c207521822d@linaro.org>
+Content-Language: en-US
+From: Ziqi Chen <quic_ziqichen@quicinc.com>
+In-Reply-To: <7ccbd722-c99a-43b3-9ceb-4c207521822d@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA5MyBTYWx0ZWRfX/hJma7aj3SRl
+ z5j+TD08KaESgXBmMv+6RSB+NNHm9YvZNm0QBJb9kLqwbeqXrjGQtWW4HwyP+gDsDC/9N9RLCkc
+ iKooTtl519OqV3KaC8iVkkYFLejt5ab2f5p9/6nnY7gok4pMjlvSmxpOhzsLFYlJzLAN04i2psa
+ 0zyX0mNZnKHv5LhuRL4chfPYfv+BFekYxN5aWt9yRa177orHaW0XNBQQeecX1N5Jq1H7ZAy7gVL
+ VUxemkElHiWfAMAI08CLYLe0Ep7a4Za6Rj80e9wV1lUYVgFLsNUJgUr5M93xCDZTIbPIZMo6hJf
+ KFUK0lph/W/5Pd8uUVSj8AdOTpAK8I+QYFpmQUoEDzUbTbX4ckNxHz8P492Guq1UtRcsajfCEwO
+ NlUbBk07LwcNPz+sN9WfE5hw82CD2rBU7pkmMnYI3Ibui0q+RBrlgp0N5gkDECbu5qq4F41W
+X-Proofpoint-GUID: nLAuIsnqO4otcvbnxe3QPSdzptv6EF0R
+X-Authority-Analysis: v=2.4 cv=B/G50PtM c=1 sm=1 tr=0 ts=681c8aa8 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8
+ a=COk6AnOGAAAA:8 a=OEBQwLZ44JOV8wgSCF8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: nLAuIsnqO4otcvbnxe3QPSdzptv6EF0R
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_03,2025-05-07_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 spamscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505080093
 
-On 07/05/2025 17:07, Adrián Larumbe wrote:
-> This change is essentially a Panfrost port of commit a3707f53eb3f
-> ("drm/panthor: show device-wide list of DRM GEM objects over DebugFS").
+
+
+On 5/7/2025 7:59 PM, neil.armstrong@linaro.org wrote:
+> On 07/05/2025 11:09, Ziqi Chen wrote:
+>> Hi Luca,
+>>
+>> On 5/7/2025 4:19 PM, Luca Weiss wrote:
+>>> Hi Ziqi,
+>>>
+>>> On Wed May 7, 2025 at 9:44 AM CEST, Ziqi Chen wrote:
+>>>> From: Can Guo <quic_cang@quicinc.com>
+>>>>
+>>>> On some platforms, the devfreq OPP freq may be different than the 
+>>>> unipro
+>>>> core clock freq. Implement ufs_qcom_opp_freq_to_clk_freq() and use 
+>>>> it to
+>>>> find the unipro core clk freq.
+>>>>
+>>>> Signed-off-by: Can Guo <quic_cang@quicinc.com>
+>>>> Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+>>>> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+>>>> ---
+>>>>   drivers/ufs/host/ufs-qcom.c | 81 +++++++++++++++++++++++++++++++ 
+>>>> +-----
+>>>>   1 file changed, 71 insertions(+), 10 deletions(-)
+>>>>
+>>>> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+>>>> index 7f10926100a5..804c8ccd8d03 100644
+>>>> --- a/drivers/ufs/host/ufs-qcom.c
+>>>> +++ b/drivers/ufs/host/ufs-qcom.c
+>>>> +static unsigned long ufs_qcom_opp_freq_to_clk_freq(struct ufs_hba 
+>>>> *hba,
+>>>> +                                                   unsigned long 
+>>>> freq, char *name)
+>>>> +{
+>>>> +    struct ufs_clk_info *clki;
+>>>> +    struct dev_pm_opp *opp;
+>>>> +    unsigned long clk_freq;
+>>>> +    int idx = 0;
+>>>> +    bool found = false;
+>>>> +
+>>>> +    opp = dev_pm_opp_find_freq_exact_indexed(hba->dev, freq, 0, true);
+>>>> +    if (IS_ERR(opp)) {
+>>>> +        dev_err(hba->dev, "Failed to find OPP for exact frequency 
+>>>> %lu\n", freq);
+>>>
+>>> I'm hitting this print on bootup:
+>>>
+>>> [    0.512515] ufshcd-qcom 1d84000.ufshc: Failed to find OPP for 
+>>> exact frequency 18446744073709551615
+>>> [    0.512571] ufshcd-qcom 1d84000.ufshc: Failed to find OPP for 
+>>> exact frequency 18446744073709551615
+>>>
+>>> Doesn't look like it's intended? The number is (2^64 - 1)
+>>>
+>> Yes, this is expected. During link startup, the frequency
+>> ULONG_MAX will be passed to ufs_qcom_set_core_clk_ctrl() and
+>> ufs_qcom_cfg_timer(). This frequency cannot be found through the API
+>> dev_pm_opp_find_freq_exact_indexed(). Therefore, we handle the
+>> frequency ULONG_MAX separately within Ufs_qcom_set_core_clk_ctrl()
+>> and ufs_qcom_cfg_timer().
+>>
+>> This print only be print twice during link startup. If you think print
+>> such print during bootup is not make sense, I can improve the code and
+>> update a new vwesion.
 > 
-> The DebugFS file is almost the same as in Panthor, minus the GEM object
-> usage flags, since Panfrost has no kernel-only BO's.
+> I think just don't call ufs_qcom_opp_freq_to_clk_freq() if freq==ULONG_MAX
 > 
-> Two additional GEM state flags which are displayed but aren't relevant
-> to Panthor are 'Purged' and 'Purgeable', since Panfrost implements an
-> explicit shrinker and a madvise ioctl to flag objects as reclaimable.
+Thanks Neil,  yes, it is a way , let me discuss internally and update 
+new version.
+
+BRs,
+Ziqi
+
+> Neil
 > 
-> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
-
-Minor point, but you've used "ptdev" rather than "pfdev" several times 
-in this patch - it would be good to avoid this.
-
-I'm also seeing a splat when running this, see below. I haven't got my 
-head around how this is happening, but I see it when glmark quits at the 
-end of the test.
-
-Steve
-
-[  399.505066] Unable to handle kernel NULL pointer dereference at virtual address 00000004 when write
-[  399.515519] [00000004] *pgd=00000000
-[  399.519541] Internal error: Oops: 805 [#1] SMP ARM
-[  399.524896] Modules linked in: panfrost gpu_sched drm_shmem_helper
-[  399.531817] CPU: 1 UID: 1000 PID: 316 Comm: glmark2-es2-drm Not tainted 6.15.0-rc5-00731-g9cc5b4d7da27 #1 NONE 
-[  399.543098] Hardware name: Rockchip (Device Tree)
-[  399.548350] PC is at panfrost_gem_free_object+0x8c/0x160 [panfrost]
-[  399.555371] LR is at trace_contention_end+0x4c/0xfc
-[  399.560822] pc : [<bf01a384>]    lr : [<c03d0170>]    psr: 60010013
-[  399.567823] sp : f22b1df8  ip : c2163e00  fp : c4b15800
-[  399.573658] r10: 00000009  r9 : c5f94c40  r8 : c4b15850
-[  399.579492] r7 : c4b15884  r6 : c7813614  r5 : c5f94f30  r4 : c7813400
-[  399.586784] r3 : 00000000  r2 : 00000000  r1 : 00000000  r0 : c5f94f30
-[  399.594075] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-[  399.602048] Control: 10c5387d  Table: 06c6c06a  DAC: 00000051
-[  399.608465] Register r0 information: slab kmalloc-1k start c5f94c00 pointer offset 816 size 1024
-[  399.618296] Register r1 information: NULL pointer
-[  399.623551] Register r2 information: NULL pointer
-[  399.628804] Register r3 information: NULL pointer
-[  399.634057] Register r4 information: slab kmalloc-1k start c7813400 pointer offset 0 size 1024
-[  399.643690] Register r5 information: slab kmalloc-1k start c5f94c00 pointer offset 816 size 1024
-[  399.653517] Register r6 information: slab kmalloc-1k start c7813400 pointer offset 532 size 1024
-[  399.663344] Register r7 information: slab kmalloc-1k start c4b15800 pointer offset 132 size 1024
-[  399.673171] Register r8 information: slab kmalloc-1k start c4b15800 pointer offset 80 size 1024
-[  399.682901] Register r9 information: slab kmalloc-1k start c5f94c00 pointer offset 64 size 1024
-[  399.692631] Register r10 information: non-paged memory
-[  399.698370] Register r11 information: slab kmalloc-1k start c4b15800 pointer offset 0 size 1024
-[  399.708101] Register r12 information: non-slab/vmalloc memory
-[  399.714521] Process glmark2-es2-drm (pid: 316, stack limit = 0x178bc4ea)
-[  399.722009] Stack: (0xf22b1df8 to 0xf22b2000)
-[  399.726874] 1de0:                                                       00000000 c4b15884
-[  399.736012] 1e00: c7813400 c4b15800 00000007 c4b15884 c4b15850 c6815000 00000009 c0bb3824
-[  399.745150] 1e20: 00000000 40086409 c7860800 c15fd008 00000008 c0bb588c c6815630 0000013c
-[  399.754288] 1e40: 0000e280 00000000 c1b35650 b235e000 f22b1f5c 00000008 f22b1e74 bec37550
-[  399.763426] 1e60: c6815630 c694ea00 c0bb47cc 00000051 00000000 00000007 00000000 00000000
-[  399.772564] 1e80: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[  399.781701] 1ea0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[  399.790839] 1ec0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[  399.799977] 1ee0: 00000000 00000000 00000000 00000000 00000000 356cc46f 00000000 40086409
-[  399.809115] 1f00: c694ea00 c03000c0 bec37550 c694ea00 c6815000 00000006 c4bf9b70 c058d694
-[  399.818253] 1f20: b2b47000 f22b1f50 00000001 c03002f0 00000000 c5f60900 00000000 b235e000
-[  399.827391] 1f40: 007e9000 c053d874 f22b1f50 00000001 f22b1f50 f22b1f50 004e0b14 c5f60940
-[  399.836528] 1f60: b235e000 b2b46fff c4abec0c b09e3000 b2bcffff 00000000 00000000 356cc46f
-[  399.845666] 1f80: 00000003 004e6b40 bec37550 40086409 00000036 c03002f0 c6815000 00000036
-[  399.854805] 1fa0: 01cb32a0 c03000c0 004e6b40 bec37550 00000006 40086409 bec37550 00000007
-[  399.863943] 1fc0: 004e6b40 bec37550 40086409 00000036 00000000 00000000 01cb2da0 01cb32a0
-[  399.873080] 1fe0: b6e4b08c bec37534 b6e3442f b6bb8f98 60010030 00000006 00000000 00000000
-[  399.882216] Call trace: 
-[  399.882222]  panfrost_gem_free_object [panfrost] from drm_gem_handle_delete+0x84/0xb0
-[  399.893813]  drm_gem_handle_delete from drm_ioctl+0x2b8/0x4f4
-[  399.900237]  drm_ioctl from sys_ioctl+0x428/0xe30
-[  399.905496]  sys_ioctl from ret_fast_syscall+0x0/0x1c
-[  399.911141] Exception stack(0xf22b1fa8 to 0xf22b1ff0)
-[  399.916783] 1fa0:                   004e6b40 bec37550 00000006 40086409 bec37550 00000007
-[  399.925922] 1fc0: 004e6b40 bec37550 40086409 00000036 00000000 00000000 01cb2da0 01cb32a0
-[  399.935058] 1fe0: b6e4b08c bec37534 b6e3442f b6bb8f98
-[  399.940702] Code: eb0018fa e5943218 e5942214 e1a00005 (e5823004) 
-[  399.947532] ---[ end trace 0000000000000000 ]---
+>>
+>> BRs.
+>> Ziqi
+>>
+>>> Regards
+>>> Luca
+>>>
+>>
+>>
+> 
 
