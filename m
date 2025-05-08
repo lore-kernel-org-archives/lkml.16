@@ -1,96 +1,146 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D307528A1ED
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 20:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DFC928BA82;
+	Thu,  8 May 2025 20:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746736637; cv=none; b=p2Io8QitVMjxSKpT4+hQniPzGXbmOIkykS7HVg4rZI9R57yPt3jOA8Sf90mQZCmMfEo/lDH1L3/1a8RC++NA6sEM5HXrmSjpUzLZ19eDa1vZR62KTc7kTeKUoRxVXgMZE1AiTDLvyIbzSWLdAGpD5h+br7T1ETPAHPvSwZj/iB4=
+	t=1746736669; cv=none; b=eaa2/rdIdvd9AtxfAPxwR3eQqDympGmiNX/kRD5wV0N7+O5s6jKB/lfohsKrZm7EFgd+jxcOB+gbbEYy4UEkU5QDuvf1QzvptAZnFzysgEW+lg6CJ/Fvl+ZyPFmnU9Nb/Fs93s6gJZTn/Wiun1P/RBb+EQFOk398oaskbGXfLVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746736637; c=relaxed/simple;
-	bh=A5FEGp8r+5od+JlaprBQcT/Ywrc2ivb4zcsH9pA1f9I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tv3k407J0ks0Fl3gBhsDT+N433WUGKOC3MMt1A7aFBmquKfTdWUipREz6nuginOwhnJroTKbSVIdItYyBoEFPeE/nkzZpqmConx7YSosczQWVwW7oukBg2nhrEyJp0GPLY9aWdckxmI/i2fhkryyJ0/12UO1hWBFVeuJ12VssSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JVAD62Em; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746736669; c=relaxed/simple;
+	bh=IlZ2JgLQeZR//pkXonNxC8ho6MNB8ZvszUYZZkkxipQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Jljn6jD741J+HSuupkq/Pr/lBU+440uSGAidmcBYZOehvFELRzG3XaI3WlWYVN+I5HmPeXfqquKVBIQFlMsdSnJo/WtXjU88I8XtPGG3fQWXsgrE+l038JWlChW3HGvKeuXHiwPpQKUrjt+Vnxzu7SkTnb7clxi5ufxGErUFUKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N4sYyo6N; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JVAD62Em"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30de488cf81so13046301fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 13:37:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N4sYyo6N"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso1802854b3a.2;
+        Thu, 08 May 2025 13:37:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746736634; x=1747341434; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A5FEGp8r+5od+JlaprBQcT/Ywrc2ivb4zcsH9pA1f9I=;
-        b=JVAD62EmfLHsumDHR0bQxa0np9QDUeruNBACU35Qk/clh1cAeTAxmP9NjOSLEuVxXN
-         0CVYCfGxNcbUYy1Ujev3hCnkwdiUcRMrQIh4G/N/pxOu1keQFTsaxRKidBXpZObj/lqO
-         l3uIuR5klgbhXGwVVUS0vXSD+fQ5LLl1E5283iLO7pT02kuzDQbUmcC9WbQvofe8JW4n
-         JHmE6AaqL7PjEBlK//liGKS1Gwrlx0nTeYlSC5BO5jQ9ObZsOohwHcititi/Hirt8JOW
-         2aN5H3a8rHQgch6VMhnJbvcN5oLQ3atUSoLI6+cZ7y74wX3zv3SAV7ntkt2gBGgSQxdc
-         UGzQ==
+        d=gmail.com; s=20230601; t=1746736667; x=1747341467; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ysNlZssSzwU7Kko7fU5Y5VNdzVq6jh3lbTMABCRGORU=;
+        b=N4sYyo6NpknHaJi33gxWsGIUkKdJg36EtdIjV5/330rGpK4EPlwKvIgyviRqmkC1nm
+         tCrp5iR7fMbto7MAGQDDIT7Npk6FDJtLIHuVczRfiQc94gZU3LR3n/Ut5FhwohLRAR1j
+         15pzunRFFHojHQJPgpw5gdF+U46Xq8859Ak6JGVsmHKClTUZ/xCOeJqQPiknSBlXGAnn
+         uoOf1ind4Z9VrjKla0jtyUF1REWfxXohXjw/joelgaIZVRpOAImD9PqI7nVn28CxKb21
+         9HS+i0bRqp/s2VkmFt6ZNdLxvEJl6lxSp9HJONTN9VYgmvySnwo4jr7KRJBxHazQhu/i
+         lKow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746736634; x=1747341434;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A5FEGp8r+5od+JlaprBQcT/Ywrc2ivb4zcsH9pA1f9I=;
-        b=lwsTkznbH99ywvnT7VbkQEQoGDIjxAuwh8OTEUhfMVGpA1Dg317EAcy39GECY9GZSg
-         zT+4SpMviR1A6+8+oxsAmkrQ9bo7tl7qtgmXl24bX7I8o3IR3hcTAQp1q3jhUjjG/72B
-         63w5DHpfJSDVhgBdHsP2YFQpBP6IrqYY9ttq1ECzrdJYJCg5fifhy9mTc6UDuRkYUAxo
-         elkLJQ91cxNCN4kPij0nKw+mPXSRBLyPUXQVYuJy4Tzqj02f00jz46pNV9oFn/VD+gaR
-         HdIu62uu2kDHH2iEQpPoEZNEld6Ilc4UgdbQATYXuBmVr5AxflnhLXae6gPNVbRSBike
-         Y0AA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmzV/vQRBUSduc36i6n++iYTtz9jo4kAcDB/rKNrUOmwz1PUJlJ+gj7sCC6MlRuYMcpi3I19O4ZAPcxtg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLTekzwFqg3Y5fI/SqqpucSOJDURzRINIaKNoiJ8m2LYitDoay
-	HbK8ffHs55hYcAIeDQWUVObsMckuoBDri//1Mvp9dxx00i8d/VrVcrrVKV7VpDw3Xmsqg3hk04j
-	jxU+mJ4t7YdactiQNqC0wdPb4zTrhn/lF2TuMiw==
-X-Gm-Gg: ASbGncvf1+TAOSTE1BGrGzdrv/luSSWd2zjhMVl26co4PzVWslsL95OR1+lrB0UCagi
-	AZ1L+d1CRXUi6F8Xf3RXBix+2/bRd35n18kio6IDQSaxrYf5odTzdcE8YmyZFYgm/fOesKnxq4n
-	q9QDQqIj3sH3NgDVbxi08gAw==
-X-Google-Smtp-Source: AGHT+IGVs8OBs3YrTtONe3XV7US68XWWpLWC5HM5bRwwTzVW+hZBYesbymsxYB94plP/2lMdY5IxGudKdxOVmw3MRXA=
-X-Received: by 2002:a05:651c:885:b0:30d:e104:d64a with SMTP id
- 38308e7fff4ca-326c46b2b7bmr4152421fa.38.1746736633880; Thu, 08 May 2025
- 13:37:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746736667; x=1747341467;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ysNlZssSzwU7Kko7fU5Y5VNdzVq6jh3lbTMABCRGORU=;
+        b=hxLB5+eRwjaY8FqQPOpw+HYpZI+kMHmk4alBoXv1zBizWnbnSOYg/+77luisjez3Hl
+         Af34Qtlti8nXhCEKdKiGa2U7Js4J9nsQUlG7dv3KGVycrKu8psnBz2rbIHCr8Np1CidM
+         inDzDx75kGFBGyHItyZrhPRReu0stGWxjzl/z7x2riiRCqfuoA4Mu1O9X4CYA8bKR4El
+         ClDM/bPT88BRGurXhd18SkgUQIeA3YYmVbxtiGwY+A2cwQuXJBiEN35VQ1ZDZ2JWHZHb
+         z8vB0x482MB4O8u1kY/Hw64wdQA9b8RgCjTS3EaIGMSBxd01KT4yBwTJLeM4TgRRtVBp
+         Wz8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUyqtijuMAissSIRQzSwwMaiCamcYR5NwIFSym5FkgNUx5+3rn8EZKhUpqRYEppKK73aAWbXskL@vger.kernel.org, AJvYcCVHkEyBIFj/LRsaObnh0d9hstFEX/VW09+B6PaoyXcMwY2fGC9vV47x8YM7C8BZX21kLu46F+RgqdwpsyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm6+nLftSXbaKhpjtK2bhd7J0sYY/kb0H5Kae7bjSmqN4cyd+0
+	VfA4KRMlob2NZmF0uFrceLmJZEnSw5jRPpZ2npAuSVqZx0I8iSwZ
+X-Gm-Gg: ASbGncuEM51By+cdYSmo5r8xRNFzJy2QAdpW7UJFC2z1uXlxlOvZkacGeq2+Ri45Hrk
+	6HIl7OJUKk04/8i3N/CNV0ZL7tczrwn/pKWiGcLrnksKNEskx49mLhxE2hSonIHtITKwK0eTdE2
+	sGlmMfQxrdqDVlEfCn4HKajt72LA8mxpBnCDFG0zY2EdyTfTtAHEX8BuJ3zA7aYVduI9XuWknry
+	UkQGDBj/Q/uQlwUzbQX7kH9Fdg9l4BQiMdXvIg/90AO5JwQK8nlx072tHZ/aplz+in1BXWIQxXZ
+	AapjF8LKIF1LUn/2To3GwcRgLNcoxwLfRNUYcFZDII7HVLZI/Med8annlTI/E4axTcQmf4QBctc
+	R/In0
+X-Google-Smtp-Source: AGHT+IE8J/x/3mlye21FbKe7QiKbsMD8WVJ2s7U14Sbz6Lrw05tImS1mJS2Dp9ZcKsHMnpb/yzmtrA==
+X-Received: by 2002:a05:6a00:a10:b0:736:6ecd:8e34 with SMTP id d2e1a72fcca58-7423c04129cmr967854b3a.18.1746736667316;
+        Thu, 08 May 2025 13:37:47 -0700 (PDT)
+Received: from [192.168.1.177] (46.37.67.37.rev.sfr.net. [37.67.37.46])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a8f520sm454541b3a.172.2025.05.08.13.37.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 13:37:46 -0700 (PDT)
+Message-ID: <3e25aec6-6726-4dfc-9ff1-21a3dc62446e@gmail.com>
+Date: Thu, 8 May 2025 22:37:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502100841.113091-1-brgl@bgdev.pl>
-In-Reply-To: <20250502100841.113091-1-brgl@bgdev.pl>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 8 May 2025 22:37:02 +0200
-X-Gm-Features: ATxdqUGIytDrG-RZcZQg2XJ82RlylEF1rDHHrGyUvjJm9IxmZt1ZkIxiitbTU0Y
-Message-ID: <CACRpkdZ+K8gw_L3TT=UmSEYo7fA2feYkaP-YAf5QaOrWywHu2Q@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: at91: drop unneeded dependency on OF_GPIO
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Paul Gazzillo <paul@pgazz.com>, Necip Fazil Yildiran <fazilyildiran@gmail.com>, 
-	oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.14 000/183] 6.14.6-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250507183824.682671926@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250507183824.682671926@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 2, 2025 at 12:09=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> This driver does not use any symbols from gpiolib-of.c. There's no
-> reason for it to select OF_GPIO directly. This addresses a kismet issue
-> reported by the build bot.
->
-> Fixes: 8e86af65f39d ("pinctrl: at91: allow building the module with COMPI=
-LE_TEST=3Dy")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202505010447.kUlI61vt-lkp@i=
-ntel.com/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Patch applied and pushed out, sorry for the delay!
+On 5/7/2025 8:37 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.14.6 release.
+> There are 183 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 09 May 2025 18:37:41 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.6-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Yours,
-Linus Walleij
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels build tested on 
+BMIPS_GENERIC:
+
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
+
