@@ -1,65 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0280253345;
-	Thu,  8 May 2025 15:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343AF253345
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746719807; cv=none; b=s54+96zooJrrWfnExpibkJdY/aC62RI9zf1TtAmycIFARFrjGW0e6syMThJlaMjpfNYGDfKNkwUPmq4j4pxo64SkEMlXy9tWlsHtXeHsj1UL5keSefhgo2Q1TqJVA35ykqL5zuUdZkyFgWvBr3HckDM/4cizv7zZJ2/ZLudHF88=
+	t=1746719814; cv=none; b=Q1ZoI5mUz4EyPuwKZaAK9e3KsGGSlXwQYBLWsUkKJa0t/aPDc4PMMlqkkiKqm7s2ZEvuKtD2dD+B6pJtC8nFZMf9VWffVoPppnFdgw9JTtJmGU+BrlBJXjvYi2m2m8DzXYKm3OJ+qM2qKtdHjv//rvEYD0VHfmKv52IykK+BnwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746719807; c=relaxed/simple;
-	bh=M28pVjPHrEv/rACw6iZSY40oD1Z45F5bY/GhP8fIzGA=;
+	s=arc-20240116; t=1746719814; c=relaxed/simple;
+	bh=NzmU7hUg2Eo9/PsDhUTmxOxWwQEJfzbQTEsxuA5Gf3w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nev9pOLLPAexidYRzI9LuBDVup4plpv/zgnY2PAOOm3BeNsGPiphE5tqu93inWlA9pFAc3lXh6iuXNY4jUEk3QY0e/o1Ufh1iNARfStOYXF/ByYUpFSFD9Z2TlEQuIHjZVKrwom7WMLnARonOizm/HCcNBSF9PBObkAfBGa2HY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SB8DOljx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UstbVLyGO2gb9TIpgHcv4UiJkyj2FNVhah6PxHqn3lG5RyPkgJnikX7o0e/AaVqKt11bWiijk2ZGnQ9ZwwnngvoORfZa5GFkQTnI8g8Om6dYpBizmq2N2MxjTX/IC5VorUoVmc6ePIPy8pB1mAszEfza3tgz/6bVpW52vkEhdA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=R6IX57+9; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SB8DOljx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32C06C4CEE7;
-	Thu,  8 May 2025 15:56:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746719805;
-	bh=M28pVjPHrEv/rACw6iZSY40oD1Z45F5bY/GhP8fIzGA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SB8DOljx5L/gbsKgsDIJkdMGoXwtfwCdhXeS8geafJlSCe6ESXxMa+26O+Z4srap1
-	 NBToJBpic/fvQ2NdOX44kEsjJ8aZS9kiDpG4FXlqEpG/5kJUoS/bqD95Y31K3G0zyw
-	 O73HsnUCnug3uxjdygP95BZDeVw/9CI72sW/qlwfk2r/4cs2ntMcajnW0EmhHbUjO9
-	 wac3FnjEexTGTm/TYtHQ/FJE6RA8xZuWVq7frHC5Xj5KprzH3aahbsNTbDCEL57ASv
-	 zVbUlWCgJnyIEHfBpcL0Mh47/UdA78PDUWhErOvH0/aL3xAFSPgDhHlRCjVLGWVF6e
-	 2APLxub7qfgyA==
-Date: Thu, 8 May 2025 08:56:44 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>,
-	Bernd Schubert <bschubert@ddn.com>,
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Luis Henriques <luis@igalia.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Stefan Hajnoczi <shajnocz@redhat.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>, 0@groves.net
-Subject: Re: [RFC PATCH 13/19] famfs_fuse: Create files with famfs fmaps
-Message-ID: <20250508155644.GM1035866@frogsfrogsfrogs>
-References: <20250421013346.32530-1-john@groves.net>
- <20250421013346.32530-14-john@groves.net>
- <nedxmpb7fnovsgbp2nu6y3cpvduop775jw6leywmmervdrenbn@kp6xy2sm4gxr>
- <20250424143848.GN25700@frogsfrogsfrogs>
- <5rwwzsya6f7dkf4de2uje2b3f6fxewrcl4nv5ba6jh6chk36f3@ushxiwxojisf>
- <20250428190010.GB1035866@frogsfrogsfrogs>
- <CAJfpegtR28rH1VA-442kS_ZCjbHf-WDD+w_FgrAkWDBxvzmN_g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="R6IX57+9"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5489cR9U012935
+	for <linux-kernel@vger.kernel.org>; Thu, 8 May 2025 15:56:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=qgSggGoSaaTirxIIz6qw++gt
+	kKF/4TziWlI+/J26LMQ=; b=R6IX57+9Bdp42AF8utBZnwKLJTClTorOMjHZqc8F
+	M4sh7MaMf5ZFvrhK3LiB2oJULsk1ekp0HYpQbvGD4xuVnqWVKHGloHjcNUTaysjl
+	BYcVxMj2s0sOW2As9Tam496OJFmqsmnrAJffax2WQ0Dl/wjySe4LiOFfGUULDkMP
+	qasYUs2W3K1Fug2bkCahhoFz6T3uuTt1L1SYej0w+yH2kG4kHNC/YmjKmaY6UEHZ
+	r80k0g2ibD3LBjVlNzGgd7w1QFUmDO2Te0kYAWzEaxfIwfbXdpf61VNK0g8gfCCQ
+	a2+f1OJFv+WRJFPcNHwaiRD79vQZPybMgrEayuwEL/MTsg==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gt52s1bf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 15:56:51 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7caee990722so217760885a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 08:56:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746719810; x=1747324610;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qgSggGoSaaTirxIIz6qw++gtkKF/4TziWlI+/J26LMQ=;
+        b=pIblMVn9HTsegFj9ZySUYmJaFwdbiYakcYuZdnCbz3D3hiIRskZxvJSJoelPyJdb5v
+         RwfXK45hm4j7+wSuGu4Hyha+GLrP2r7EQ0HNNM0rODVuBZSn91jiKk4zINZobXsoit6t
+         E0xgJ+6LaNIgc36bV03Pqw6yrGsTszWDjLqLHb6suCDEHDB5c5LBV3JfkUjM0WVT8hKf
+         yluDgNcxr17ZIfnDdKIUg4GgOHHoPkfOQZ22H6NzaCHGfs20BGjYYHeq34O2fhh+Dx1t
+         gWs0ASZKa8gMZqfWWvXsyLIjf/14T0EVP6JCRXuPpVIeWoYtVt/hSymzfqSGeiqTIkdB
+         Hq/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVd9m9q8OGB1FyRN08yc9rdIZLPMcqp6sY3ze7ji858ihQRCkX8bgA+aDLFZsLc4Sp7jK37kl2M2O/mfzg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKgVWwFYz2AokUz1OvBz4w7+HyxjjK8tTkOW0fVyriiGRsSjW5
+	6ZkonqJ+MA0vmOk5QS6TOrMsfnu3TEAe886pJTSgg28TgvbPcZh0/4oaUmGPGQRLqlC51x6Wn/x
+	POJBBPP2GgTdlIS978kg5okWRsNYDuP+otEXUpNq09PQthtvtVR9j/fEsM2EaOS0=
+X-Gm-Gg: ASbGnctVKL4VpqKTWTuNkNLh1v5EHNXqym9Ng0EvnZphWo269KdqqxoT0OyvDkCmdPP
+	HWqT3DKZ5fq0Xi6JVEjxgJSbpMzjsHg5xeeI6DnzLAFuvoJI4SeVkha4ZKGpQY0tEvh5KvVsNwx
+	Ruobz+sy+CXWOpSZ2zFzTZ+CuRLRfpIp5yuPGTLNSzcYkEenTgE5krbp1EWQgo7d4OHQayEfaU2
+	G/+8Zx3HJ/EU/83KElUg4ydMhl8GtO8pQKFREV8t4e6RI7B0s5njs5BjsHpUo+cOajo3SRLlY4Z
+	rlsupJGOb2zvrSgu84AmdegCjWlGu16L3McBGa+AA+1VjOMYwlq/rPwGouqFTVirADZZJXXOVsI
+	=
+X-Received: by 2002:a05:620a:2545:b0:7c5:56c0:a8 with SMTP id af79cd13be357-7cd010d00bcmr29271585a.1.1746719810470;
+        Thu, 08 May 2025 08:56:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGixeUJkkheEBcJbAWAvr37gbzvb0W5SgmK9smwf2A0ARB5ynnsyLO90GAT6o8F0rk31GEZPQ==
+X-Received: by 2002:a05:620a:2545:b0:7c5:56c0:a8 with SMTP id af79cd13be357-7cd010d00bcmr29268285a.1.1746719810075;
+        Thu, 08 May 2025 08:56:50 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc644fd0esm5453e87.6.2025.05.08.08.56.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 08:56:49 -0700 (PDT)
+Date: Thu, 8 May 2025 18:56:47 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] soc: qcom: socinfo: Add support for new fields in
+ revision 21
+Message-ID: <s5fd3txerbwgzzgqnoovkffmijgub5dxfucqqskhdqyjqzkbyl@5cyycrfmubup>
+References: <20250425135946.1087065-1-mukesh.ojha@oss.qualcomm.com>
+ <20250425135946.1087065-2-mukesh.ojha@oss.qualcomm.com>
+ <mc6n7fbhjhe6cxyoqkxs23kjs7gsa5cihy6qwrcrnz4g3kwjms@vh3vfqzfprw2>
+ <aBzPn2OXapJLsikk@hu-mojha-hyd.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,189 +86,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJfpegtR28rH1VA-442kS_ZCjbHf-WDD+w_FgrAkWDBxvzmN_g@mail.gmail.com>
+In-Reply-To: <aBzPn2OXapJLsikk@hu-mojha-hyd.qualcomm.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDEzOCBTYWx0ZWRfXzgp/0iCIOJue
+ UHa6OcDuwHzyE9WQmI9WrfSJ6rfRF++DyaBfyCoEPocaA6BSQ6FEDOrAvjOVfc6X5l8cIxm66hj
+ ViFubG4Avib+9P3Ni3wMZdlEeIIULtTQqhFsp1Bp+rKaQ5Kb4iHJ6hlReV+Mr8brRSQzvfEN8B/
+ a413edj3sD2A5SPIamnv0DLb5k9FK+cnr2HfTbVtFp/IssX2oWXwC0NlBf/zVWBR9oJmyPWn7mY
+ q1L6Js73ASVgUTq0v6HoweSZfsvBD+ctB7RfOgTf19GvyLaNUFjcmTCG+rS7vjqwf9WLZc07ycD
+ fdgapqxGe0LBynNsHEE1IVcC6gIzjCS5OmRssHpXFlLF/gnLPObnMIXE5FfM9LZ0sFhGipzUDg3
+ iHkBJbmpZFWGYOqvnD81Rd4ZrorpHc+iuQdaBkVA8fFN3wM7S7i0e+iRv7h/HFsaxTViYS0p
+X-Authority-Analysis: v=2.4 cv=LKFmQIW9 c=1 sm=1 tr=0 ts=681cd443 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=vRdO2_t4T5B777FPuRAA:9 a=CjuIK1q_8ugA:10
+ a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-ORIG-GUID: yskfBz15U5i6y93oh12cMBI5jefA1MI1
+X-Proofpoint-GUID: yskfBz15U5i6y93oh12cMBI5jefA1MI1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_05,2025-05-08_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 clxscore=1015 lowpriorityscore=0 suspectscore=0
+ malwarescore=0 mlxscore=0 bulkscore=0 spamscore=0 phishscore=0 adultscore=0
+ priorityscore=1501 impostorscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505080138
 
-On Tue, May 06, 2025 at 06:56:29PM +0200, Miklos Szeredi wrote:
-> On Mon, 28 Apr 2025 at 21:00, Darrick J. Wong <djwong@kernel.org> wrote:
+On Thu, May 08, 2025 at 09:07:03PM +0530, Mukesh Ojha wrote:
+> On Fri, Apr 25, 2025 at 08:28:51PM +0300, Dmitry Baryshkov wrote:
+> > On Fri, Apr 25, 2025 at 07:29:45PM +0530, Mukesh Ojha wrote:
+> > > Add the subpartfeature offset field to the socinfo structure
+> > > which came for version 21 of socinfo structure.
+> > > 
+> > > Subpart_feat_offset is subpart like camera, display, etc.,
+> > > and its internal feature available on a bin.
+> > > 
+> > > Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+> > > ---
+> > > Changes in v2:
+> > >  - Added debugfs entry and described more about the field in commit.
+> > > 
+> > >  drivers/soc/qcom/socinfo.c       | 6 ++++++
+> > >  include/linux/soc/qcom/socinfo.h | 2 ++
+> > >  2 files changed, 8 insertions(+)
+> > > 
+> > > diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
+> > > index 5800ebf9ceea..bac1485f1b27 100644
+> > > --- a/drivers/soc/qcom/socinfo.c
+> > > +++ b/drivers/soc/qcom/socinfo.c
+> > > @@ -154,6 +154,7 @@ struct socinfo_params {
+> > >  	u32 boot_cluster;
+> > >  	u32 boot_core;
+> > >  	u32 raw_package_type;
+> > > +	u32 nsubpart_feat_array_offset;
+> > >  };
+> > >  
+> > >  struct smem_image_version {
+> > > @@ -608,6 +609,11 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
+> > >  			   &qcom_socinfo->info.fmt);
+> > >  
+> > >  	switch (qcom_socinfo->info.fmt) {
+> > > +	case SOCINFO_VERSION(0, 21):
+> > > +		qcom_socinfo->info.nsubpart_feat_array_offset =
+> > > +				   __le32_to_cpu(info->nsubpart_feat_array_offset);
+> > > +		debugfs_create_u32("nsubpart_feat_array_offset", 0444, qcom_socinfo->dbg_root,
+> > > +				   &qcom_socinfo->info.nsubpart_feat_array_offset);
+> > 
+> > An offset into what? If this provides additional data, then the data
+> > should be visible in the debugfs. Not sure, what's the point in dumping
+> > the offset here.
 > 
-> > <nod> I don't know what Miklos' opinion is about having multiple
-> > fusecmds that do similar things -- on the one hand keeping yours and my
-> > efforts separate explodes the amount of userspace abi that everyone must
-> > maintain, but on the other hand it then doesn't couple our projects
-> > together, which might be a good thing if it turns out that our domain
-> > models are /really/ actually quite different.
+> offset into info(struct socinfo) object.
 > 
-> Sharing the interface at least would definitely be worthwhile, as
-> there does not seem to be a great deal of difference between the
-> generic one and the famfs specific one.  Only implementing part of the
-> functionality that the generic one provides would be fine.
+> I agree to you and I said the same in first version this is just offset
+> and does not provide any debug info we would look from userspace.  For
+> parity with other fields I did it for all newly added fields.
+> I have dropped it in latest patch.
 
-Well right now my barely functional prototype exposes this interface
-for communicating mappings to the kernel.  I've only gotten as far as
-exposing the ->iomap_{begin,end} and ->iomap_ioend calls to the fuse
-server with no caching, because the only functions I've implemented so
-far are FIEMAP, SEEK_{DATA,HOLE}, and directio.
+I'd rather see the decoded structure that is being pointed by this
+offset.
 
-So basically the kernel sends a FUSE_IOMAP_BEGIN command with the
-desired (pos, count) file range to the fuse server, which responds with
-a struct fuse_iomap_begin_out object that is translated into a struct
-iomap.
-
-The fuse server then responds with a read mapping and a write mapping,
-which tell the kernel from where to read data, and where to write data.
-As a shortcut, the write mapping can be of type
-FUSE_IOMAP_TYPE_PURE_OVERWRITE to avoid having to fill out fields twice.
-
-iomap_end is only called if there were errors while processing the
-mapping, or if the fuse server sets FUSE_IOMAP_F_WANT_IOMAP_END.
-
-iomap_ioend is called after read or write IOs complete, so that the
-filesystem can update mapping metadata (e.g. unwritten extent
-conversion, remapping after an out of place write, ondisk isize update).
-
-Some of the flags here might not be needed or workable; I was merely
-cutting and pasting the #defines from iomap.h.
-
-#define FUSE_IOMAP_TYPE_PURE_OVERWRITE	(0xFFFF) /* use read mapping data */
-#define FUSE_IOMAP_TYPE_HOLE		0	/* no blocks allocated, need allocation */
-#define FUSE_IOMAP_TYPE_DELALLOC	1	/* delayed allocation blocks */
-#define FUSE_IOMAP_TYPE_MAPPED		2	/* blocks allocated at @addr */
-#define FUSE_IOMAP_TYPE_UNWRITTEN	3	/* blocks allocated at @addr in unwritten state */
-#define FUSE_IOMAP_TYPE_INLINE		4	/* data inline in the inode */
-
-#define FUSE_IOMAP_DEV_SBDEV		(0)	/* use superblock bdev */
-
-#define FUSE_IOMAP_F_NEW		(1U << 0)
-#define FUSE_IOMAP_F_DIRTY		(1U << 1)
-#define FUSE_IOMAP_F_SHARED		(1U << 2)
-#define FUSE_IOMAP_F_MERGED		(1U << 3)
-#define FUSE_IOMAP_F_XATTR		(1U << 5)
-#define FUSE_IOMAP_F_BOUNDARY		(1U << 6)
-#define FUSE_IOMAP_F_ANON_WRITE		(1U << 7)
-
-#define FUSE_IOMAP_F_WANT_IOMAP_END	(1U << 15) /* want ->iomap_end call */
-
-#define FUSE_IOMAP_OP_WRITE		(1 << 0) /* writing, must allocate blocks */
-#define FUSE_IOMAP_OP_ZERO		(1 << 1) /* zeroing operation, may skip holes */
-#define FUSE_IOMAP_OP_REPORT		(1 << 2) /* report extent status, e.g. FIEMAP */
-#define FUSE_IOMAP_OP_FAULT		(1 << 3) /* mapping for page fault */
-#define FUSE_IOMAP_OP_DIRECT		(1 << 4) /* direct I/O */
-#define FUSE_IOMAP_OP_NOWAIT		(1 << 5) /* do not block */
-#define FUSE_IOMAP_OP_OVERWRITE_ONLY	(1 << 6) /* only pure overwrites allowed */
-#define FUSE_IOMAP_OP_UNSHARE		(1 << 7) /* unshare_file_range */
-#define FUSE_IOMAP_OP_ATOMIC		(1 << 9) /* torn-write protection */
-#define FUSE_IOMAP_OP_DONTCACHE		(1 << 10) /* dont retain pagecache */
-
-#define FUSE_IOMAP_NULL_ADDR		-1ULL	/* addr is not valid */
-
-struct fuse_iomap_begin_in {
-	uint32_t opflags;	/* FUSE_IOMAP_OP_* */
-	uint32_t reserved;
-	uint64_t ino;		/* matches st_ino provided by getattr/open */
-	uint64_t pos;		/* file position, in bytes */
-	uint64_t count;		/* operation length, in bytes */
-};
-
-struct fuse_iomap_begin_out {
-	uint64_t offset;	/* file offset of mapping, bytes */
-	uint64_t length;	/* length of both mappings, bytes */
-
-	uint64_t read_addr;	/* disk offset of mapping, bytes */
-	uint16_t read_type;	/* FUSE_IOMAP_TYPE_* */
-	uint16_t read_flags;	/* FUSE_IOMAP_F_* */
-	uint32_t read_dev;	/* FUSE_IOMAP_DEV_* */
-
-	uint64_t write_addr;	/* disk offset of mapping, bytes */
-	uint16_t write_type;	/* FUSE_IOMAP_TYPE_* */
-	uint16_t write_flags;	/* FUSE_IOMAP_F_* */
-	uint32_t write_dev;	/* FUSE_IOMAP_DEV_* */
-};
-
-struct fuse_iomap_end_in {
-	uint32_t opflags;	/* FUSE_IOMAP_OP_* */
-	uint32_t reserved;
-	uint64_t ino;		/* matches st_ino provided iomap_begin */
-	uint64_t pos;		/* file position, in bytes */
-	uint64_t count;		/* operation length, in bytes */
-	int64_t written;	/* bytes processed */
-
-	uint64_t map_length;	/* length of mapping, bytes */
-	uint64_t map_addr;	/* disk offset of mapping, bytes */
-	uint16_t map_type;	/* FUSE_IOMAP_TYPE_* */
-	uint16_t map_flags;	/* FUSE_IOMAP_F_* */
-	uint32_t map_dev;	/* FUSE_IOMAP_DEV_* */
-};
-
-/* out of place write extent */
-#define FUSE_IOMAP_IOEND_SHARED		(1U << 0)
-/* unwritten extent */
-#define FUSE_IOMAP_IOEND_UNWRITTEN	(1U << 1)
-/* don't merge into previous ioend */
-#define FUSE_IOMAP_IOEND_BOUNDARY	(1U << 2)
-/* is direct I/O */
-#define FUSE_IOMAP_IOEND_DIRECT		(1U << 3)
-
-/* is append ioend */
-#define FUSE_IOMAP_IOEND_APPEND		(1U << 15)
-
-struct fuse_iomap_ioend_in {
-	uint16_t ioendflags;	/* FUSE_IOMAP_IOEND_* */
-	uint16_t reserved;
-	int32_t error;		/* negative errno or 0 */
-	uint64_t ino;		/* matches st_ino provided iomap_begin */
-	uint64_t pos;		/* file position, in bytes */
-	uint64_t addr;		/* disk offset of new mapping, in bytes */
-	uint32_t written;	/* bytes processed */
-	uint32_t reserved1;
-};
-
-> > (Especially because I suspect that interleaving is the norm for memory,
-> > whereas we try to avoid that for disk filesystems.)
-> 
-> So interleaved extents are just like normal ones except they repeat,
-> right?  What about adding a special "repeat last N extent
-> descriptions" type of extent?
-
-Yeah, I suppose a mapping cache could do that.  From talking to John
-last week, it sounds like the mappings are supposed to be static for the
-life of the file, as opposed to ext* where truncates and fallocate can
-appear at any time.
-
-One thing I forgot to ask John -- can there be multiple sets of
-interleaved mappings per file?  e.g. the first 32g of a file are split
-between 4 memory controllers, whereas the next 64g are split between 4
-different domains?
-
-> > > But the current implementation does not contemplate partially cached fmaps.
-> > >
-> > > Adding notification could address revoking them post-haste (is that why
-> > > you're thinking about notifications? And if not can you elaborate on what
-> > > you're after there?).
-> >
-> > Yeah, invalidating the mapping cache at random places.  If, say, you
-> > implement a clustered filesystem with iomap, the metadata server could
-> > inform the fuse server on the local node that a certain range of inode X
-> > has been written to, at which point you need to revoke any local leases,
-> > invalidate the pagecache, and invalidate the iomapping cache to force
-> > the client to requery the server.
-> >
-> > Or if your fuse server wants to implement its own weird operations (e.g.
-> > XFS EXCHANGE-RANGE) this would make that possible without needing to
-> > add a bunch of code to fs/fuse/ for the benefit of a single fuse driver.
-> 
-> Wouldn't existing invalidation framework be sufficient?
-
-I'm a little confused, are you talking about FUSE_NOTIFY_INVAL_INODE?
-If so, then I think that's the wrong layer -- INVAL_INODE invalidates
-the page cache, whereas I'm talking about caching the file space
-mappings that iomap uses to construct bios for disk IO, and possibly
-wanting to invalidate parts of that cache to force the kernel to upcall
-the fuse server for a new mapping.
-
-(Obviously this only applies to fuse servers for ondisk filesystems.)
-
---D
-
-> Thanks,
-> Miklos
-> 
+-- 
+With best wishes
+Dmitry
