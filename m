@@ -1,80 +1,240 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351C322A811;
-	Thu,  8 May 2025 23:14:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA90215160;
+	Thu,  8 May 2025 23:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746746093; cv=none; b=HLKdOnlwSwg+5+3AApBxpwWgMFAlntFl+YJF/ZidFnauZtDOEXPhSSqgbA//NhdR6sqi7wcstm0XuZ4rUTJNuGvxe2sW5I32z+z1Nf+IWW+zRmaWu3bIhm5u8tK7ysmQDPQYwXQFULyzgzZqWb6VhZDD1sreWz+QQHkZGGybPM8=
+	t=1746746119; cv=none; b=bTrKyHotukT1NGvogd19qPQhekYxgORZWqPdHSJbAYeEg8tUQuVctBKru+7whtYfkCVGeuRv1AHoYM2dhNWB5iclTWURqgP2ui0C4pqFc58o+31WY1rJCgfQMUmknt0vvm7N/7slGRT55Pq5QSHY8+F8GASN8pwFg6D8SLwE2l8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746746093; c=relaxed/simple;
-	bh=b/rZbBu/kd8miGQyME180cFglbDpC6omgZiTM3EgZvE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=EUG9bGXE3jCFG3i1Eka7WxUfCy8029GbjhnWgPFqAKu1c6mQ4PO8CtWsYSO1kZWVfUD3mlbHxGz8u4fQY5w2qak8GTi0JRHfGLS493TX/zYmtQavhX/hN9yYPfAMNONvT8n+QOZneJt7mer20YVwVIOQvO/pKcineLrG6dZlYdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=muucR9EJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746746119; c=relaxed/simple;
+	bh=j/J5G2M4Tjpz0KLbEjIWvq8j4Ttv4JwvO/ZUttkD/cM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=FSudbYEZsoIDN3j0ZORUK7rHu/dIsYqMhHOO5r/Fbrf3VZi5sVQnH6Av0AUgShXKB8aYaj6YVGgSy8BRtjjjVzkqw2lH+cbTTfg/54BZ5WHSLVdBRGv4z8y2A8I8zOh+NwVFuzqy/OTOSB7uX/xhIhorKP9ih4F7qysCgXzAabg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5A2yn3u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="muucR9EJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58903C4CEE7;
-	Thu,  8 May 2025 23:14:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5A2yn3u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7B1FC4CEE7;
+	Thu,  8 May 2025 23:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746746092;
-	bh=b/rZbBu/kd8miGQyME180cFglbDpC6omgZiTM3EgZvE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=muucR9EJAc7m4NJf2H9VIUt1waSHNztv2dI0HxkkiYDyNzgZ20+vhc/hLIi7SplRQ
-	 G/ZPN5ry52zgZV+Vy47H0TIG4563fxjhHcXUBYyAYxlAjqhbcgRqxvlyD1DGFPaAjH
-	 nETZt1r3fGNF266oTJ4K9isd8g//Ojqy5xKqH8OqZtCMOzhr+KtQ31IFHTQp9E02u3
-	 2MtaMfiq0j0cxwK5ApE6IbFR6GxooQJ6iLlPTNt9NXt8sjoFhsphLeZFhltN1du7CH
-	 cj74y0Cb8lHczM05duqYh5D9W4mwdas5K17oxFuno1yqYfSgDDRfCE3lht3rlTwQH8
-	 BPK+YOn1pH/qw==
-Date: Thu, 8 May 2025 16:14:49 -0700 (PDT)
-From: Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
-To: Christoph Hellwig <hch@infradead.org>
-cc: Stefano Stabellini <sstabellini@kernel.org>, 
-    John Ernberg <john.ernberg@actia.se>, Juergen Gross <jgross@suse.com>, 
-    Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
-    Catalin Marinas <catalin.marinas@arm.com>, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, 
-    "iommu@lists.linux.dev" <iommu@lists.linux.dev>, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-    "imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [PATCH 2/2] xen: swiotlb: Implement map_resource callback
-In-Reply-To: <aBwvrLKD_VJapYkB@infradead.org>
-Message-ID: <alpine.DEB.2.22.394.2505081614450.3879245@ubuntu-linux-20-04-desktop>
-References: <20250502114043.1968976-1-john.ernberg@actia.se> <20250502114043.1968976-3-john.ernberg@actia.se> <alpine.DEB.2.22.394.2505021007460.3879245@ubuntu-linux-20-04-desktop> <75266eb7-66a4-4477-ae8a-cbd1ebbee8db@actia.se>
- <alpine.DEB.2.22.394.2505071602570.3879245@ubuntu-linux-20-04-desktop> <aBwvrLKD_VJapYkB@infradead.org>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	s=k20201202; t=1746746118;
+	bh=j/J5G2M4Tjpz0KLbEjIWvq8j4Ttv4JwvO/ZUttkD/cM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=C5A2yn3uP2/RSDnGxuvK2149R1tsa9hyTSJqH8t+EEOqDLRWsbk6+MRfgXwr2aFn2
+	 Btcml9N8kOLUCDn41gQcQvzTHgD7yD4XWvW3hZ19N0tSp5c+gB0JcMRuiBZvvlpaaq
+	 1nI5yX+UqJKoPIV3wgP0aCl6yxrsvHrOmNkCKMCj2bUd6DZVMIgLmIQT8HS6savv0G
+	 0BBfhaSGR6zuVZ7jGZviI/jWWXMnqLgCF91/qCJIPVUv0y7cdNiGo4pH816M9b9hNm
+	 ZHAt94Fz5G/ZQSA13WmcfSq6JTo4fYIagNn+kMi1BPsTIAGHcA4d3fJq4JFZ+FTHy9
+	 1YvVCa/y+2JSA==
+Date: Fri, 9 May 2025 01:15:06 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: linux-man@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
+Subject: man-pages-6.14 released
+Message-ID: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="te6szl43obedd5tr"
+Content-Disposition: inline
 
-On Wed, 7 May 2025, Christoph Hellwig wrote:
-> On Wed, May 07, 2025 at 04:09:15PM -0700, Stefano Stabellini wrote:
-> > > This mapping is not for a RAM backed address. In the eDMA case for the 
-> > > iMX8QXP the `phys` coming in here is the address of a register.
-> > 
-> > Ok, this information is important :-)
-> > 
-> > I am not certain whether the map_resource interface can only be called
-> > for MMIO addresses or if it can also be called for RAM-backed addresses
-> > with a size > PAGE_SIZE. In the latter case, we could run into the issue
-> > I was describing.
-> 
-> map_resource is intended for MMIO regions, although those could be >
-> PAGE_SIZE.  It must not be called on RAM.
 
-In that case, John, you can just use dma_direct_map_resource().
+--te6szl43obedd5tr
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: linux-man@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
+Subject: man-pages-6.14 released
+MIME-Version: 1.0
 
-That's because MMIO regions:
-- are 1:1 mapped on ARM
-- are 1:1 mapped on x86 for PV Dom0
-- might not be 1:1 mapped on x86 for PVH Dom0, but in this case we rely
-  on the IOMMU to do address translation
+Gidday!
 
-In none of these cases xen_phys_to_dma would give us any interesting
-results.  It would be the same as calling phys_to_dma.
+I'm proud to announce:
+
+	man-pages-6.14 - manual pages for GNU/Linux
+
+
+Tarball download:
+<https://www.kernel.org/pub/linux/docs/man-pages/>
+Git repository:
+<https://git.kernel.org/cgit/docs/man-pages/man-pages.git/>
+Online PDF book:
+<https://www.kernel.org/pub/linux/docs/man-pages/book/>
+
+Thanks to all the contributors to this release (in BCC)!
+And thanks to our sponsors!
+
+	-  Adfinis		<https://adfinis.com/>
+	-  Google		<https://opensource.google/>
+	-  Hudson River Trading	<https://www.hudsonrivertrading.com/>
+	-  Meta			<https://www.meta.com/>
+	-  Red Hat		<https://www.redhat.com/>
+
+
+Have a lovely night!
+Alex
+
+
+You are receiving this message either because:
+
+        a)  (BCC) You contributed to this release.
+
+        b)  You are subscribed to <linux-man@vger.kernel.org>,
+            <linux-kernel@vger.kernel.org>, or
+            <libc-alpha@sourceware.org>.
+
+        c)  (BCC) I have information (possibly inaccurate) that you are
+            the maintainer of a translation of the manual pages, or are
+            the maintainer of the manual pages set in a particular
+            distribution, or have expressed interest in helping with
+            man-pages maintenance, or have otherwise expressed interest
+            in being notified about man-pages releases.
+            If you don't want to receive such messages from me, or you
+            know of some other translator or maintainer who may want to
+            receive such notifications, send me a message.
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D Changes in man=
+-pages-6.14 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+Released: 2025-05-09, Aldaya
+
+
+New and rewritten pages
+-----------------------
+
+man2const/
+	UFFDIO_MOVE.2const
+
+man7/
+	mctp.7
+
+
+Newly documented interfaces in existing pages
+---------------------------------------------
+
+man2/
+	fanotify_init.2
+		FAN_REPORT_FD_ERROR
+		FAN_REPORT_MNT
+	fanotify_mark.2
+		FAN_PRE_ACCESS
+		FAN_MARK_MNTNS
+		FAN_MNT_ATTACH, FAN_MNT_DETACH
+	open_by_handle_at.2
+		AT_HANDLE_CONNECTABLE
+		AT_HANDLE_MNT_ID_UNIQUE
+
+man2const/
+	TIOCLINUX.2const
+		TIOCL_SELCHAR
+		TIOCL_SELWORD
+		TIOCL_SELLINE
+		TIOCL_SELPOINTER
+		TIOCL_SELCLEAR
+		TIOCL_SELMOUSEREPORT
+
+man3/
+	abs.3
+		uabs(3)
+		ulabs(3)
+		ullabs(3)
+		uimaxabs(3)
+
+man7/
+	fanotify.7
+		FAN_DENY_ERRNO()
+		FAN_REPORT_FD_ERROR
+		FAN_PRE_ACCESS
+		FAN_RESPONSE_INFO_AUDIT_RULE
+		FAN_REPORT_MNT
+		FAN_MNT_ATTACH, FAN_MNT_DETACH
+		FAN_EVENT_INFO_TYPE_MNT
+
+
+New and changed links
+---------------------
+
+man3/
+	uabs.3					(abs(3))
+	ulabs.3					(abs(3))
+	ullabs.3				(abs(3))
+	uimaxabs.3				(abs(3))
+
+
+Global changes
+--------------
+
+-  CREDITS, *
+   -  Move in-source contribution records to a new CREDITS file, and
+      update copyright notices to be uniform across the project.
+
+-  man/
+   -  Use GNU forward declarations of parameters for sizes of array
+      parameters.
+   -  \fX =3D> \f[X]
+   -  Use 'path' instead of 'pathname' for parameters.
+
+-  Release tarball
+   -  The size of the release tarball is around 0.1 MiB smaller, thanks
+      to having moved contribution records to the new CREDITS file, and
+      having simplified (and unified) copyright notices.
+
+
+Changes to individual files
+---------------------------
+
+The manual pages and other files in the repository have been improved
+beyond what this changelog covers.  To learn more about changes applied
+to individual pages, or the authors of changes, use git(1).
+
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D Linux Software=
+ Map =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+
+Begin4
+Title:          Linux man-pages
+Version:        6.14
+Entered-date:   2025-05-09
+Description:    Manual pages for GNU/Linux.  This package contains
+                manual pages for sections 2, 3, 4, 5, and 7, and
+                subsections of those.  Only a few pages are provided in
+                sections 1, 6, and 8, and none in 9.
+Keywords:       man pages
+Maintained-by:  Alejandro Colomar <alx@kernel.org>
+Primary-site:   http://www.kernel.org/pub/linux/docs/man-pages
+                2.6M  man-pages-6.14.tar.gz
+Copying-policy: several; the pages are all freely distributable as long as
+                nroff source is provided
+End
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--te6szl43obedd5tr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgdOvkACgkQ64mZXMKQ
+wqkkxA/+JZrLdSANw8DeuKRS9+CHwslImCVUokCQGmLMqSDNjffhOzThZVewKm7Q
+Ul8SaqO4ZhfzRMMlwz9tjqQRMIZ1DEQOcfBNFM+8wCMBP1VgdTj8dFuVbpqMnwGB
+jQrZF3JMank6DntQ97lXPiBceLFbg+vAdUKCAK9dDcrvQFpjWlXq7cQQiDhvgxhc
+e0lVcZ5boWLP0HNAaiZJjVb/CG92t6mT+ccHlC4NbTzYTAjPnoJcqubmYNB6+RGw
+Sc1uquT14I3qIOLnzMlkMzJI3lGepI6SIjb8cv43nepVYL6Ayo876E1eo9Crsl/f
+fbq66f0mkf2CHfJ2ijOEsAyursvIUQDqDLxutCK0YeCFGCeiLjwJhDnXvStTNcmE
+W9p4CDgKWk7K9vM1MMHJ4ACcfiM468c7GWL6ifo3yvmsbIR+uiDY+/JaKPExNLne
+7bOS9uHBdqjcMWYQUQyc5aSXD1eoPTtqxaJiYBTb97G+NlcF8b93ZOlnV5+Mjth9
+viibLSXLIY4+8qpe4uiXC7mklIeB/WE+gaPxBQu7Z16plAAsTg8CCjZTkiJNEW6I
+YHgE1jwLSSjgDqCg9fBknZTc6NXKr9G1vr5l39xv5JcyCnFLT+t48Li+opJQK0gr
+xe/INyZvty19uMCCwIZOdjnq0mR9uYqkwduPUG7rlv22FaV+Fn8=
+=2u16
+-----END PGP SIGNATURE-----
+
+--te6szl43obedd5tr--
