@@ -1,558 +1,181 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DA9215771;
-	Thu,  8 May 2025 06:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C9A1A8F84;
+	Thu,  8 May 2025 06:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746686166; cv=none; b=eLA23idpERslhljgOM1K/TfQNPAtNcG9XwAfAF8zacryx0pn8JqZ7TPhzi3NefBc7mcRqljxmyTr/qcp2SHOIYBNe/WPT5utAP2ZJPmW7xyH+nNz+ZkKLAykttjR3f+gbKBT6hkffBoYXKVZk5mL7X7jaJQ5jKLSPJ3RYGWQhy8=
+	t=1746686271; cv=none; b=ovGB4gjEcgSBsAQkSJte83BMYQBHQRLDJG51mhaQ5ycmyWxM8JDQNC9AoUjl/+8vW88UqCM9OAkiLFF+au7R/ll/XE/wP0QzB0qNYwfZfucFf+NN+yPzTNwN5LzFPqcqteQL/A4Q1bSmKNIq5Ff15RdrUSfxNSa53PbqvcPbC3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746686166; c=relaxed/simple;
-	bh=IandjbVvWBr6Cbch6MwFAT85MmSaU11sdRBGvsJyeqk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W3KMzPuRYEZ+MkBjVDaWwL53Vr6QGeH7TUvHlcQJatLYDAaQ9mqwtkh09Am/7cBSfMkCt18oOF+xlmCwbgomFqfjHzhcP6NDKKxlQjBCKw2pdw+NmIezftVXi7iSOlIB4Ge9G9ZPaBEbJW9hWo/biTqHOAVVfsaNyZ5xkH5BPVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=b5+SXnvk; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="b5+SXnvk"
-X-UUID: b23b85702bd611f082f7f7ac98dee637-20250508
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=lFomjJWftCTCfVwfT/NXTymPKCuMjn5hrKGdWRmMtek=;
-	b=b5+SXnvkGVh0JnLi3V8C4B09wjTBwmDERuCKaGpFUZrq83AIOai3P0uJTBCpP+HMWcnixNGTxScG7UlnKhRV3MtZYeufA0I74JW4esCusDOl4inHkitPTV+apO50SJxz6mkPghLansM4gXFhsQ5z8C6iFqZoVikTqpqLg21p7t0=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:09b88fc8-59be-42f2-81c5-7cb703af2284,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:d9b96c80-1eec-4f76-b81b-944fecd9abcd,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: b23b85702bd611f082f7f7ac98dee637-20250508
-Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw02.mediatek.com
-	(envelope-from <sirius.wang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 508956888; Thu, 08 May 2025 14:35:56 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Thu, 8 May 2025 14:35:54 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Thu, 8 May 2025 14:35:54 +0800
-From: Sirius Wang <sirius.wang@mediatek.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Matthias
- Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@mediatek.com>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-serial@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, <wenst@chromium.org>,
-	<xavier.chang@mediatek.com>, Sirius Wang <sirius.wang@mediatek.com>
-Subject: [PATCH v2 3/3] arm64: dts: mt8189: Add mt8189 dts evaluation board and Mafefile
-Date: Thu, 8 May 2025 14:35:42 +0800
-Message-ID: <20250508063546.289115-4-sirius.wang@mediatek.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250508063546.289115-1-sirius.wang@mediatek.com>
-References: <20250508063546.289115-1-sirius.wang@mediatek.com>
+	s=arc-20240116; t=1746686271; c=relaxed/simple;
+	bh=3Zl6mjGG1ou3Sz/cwJwlkQ6o772FtAwyLCq6piwjNnA=;
+	h=Date:From:To:Cc:Subject:References:Mime-Version:Message-ID:
+	 Content-Type; b=LKgxQ/Aa8ROwKFB7ZO7JLjtjUjt0wZ4PY/gefJMSxogTtMo0Qa24gt9LdRb3xlMhkNTctEH7U8OBcEgnFaaPOs10IobFFCm/Ve00KtkqBIfEBu2Y10KLtcS1tUjtNY3eGXsLC7v6thXPKKdCi1Fmpam3zQAlf/A33smJb9oATLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.com.cn; spf=pass smtp.mailfrom=kylinos.com.cn; arc=none smtp.client-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.com.cn
+X-QQ-mid: zesmtpgz8t1746686255t48e8b585
+X-QQ-Originating-IP: l4BNTlEKuI9xXDkt9tPQ6HMCueCI3VQCiijBZ079qZE=
+Received: from DESKTOP-SUAVFFI ( [118.249.225.48])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 08 May 2025 14:37:32 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 7708864450750070913
+Date: Thu, 8 May 2025 14:38:04 +0800
+From: "liudalin@kylinos.com.cn" <liudalin@kylinos.com.cn>
+To: "Pankit Garg" <pankit.garg@nxp.com>, 
+	"Conor Dooley" <conor@kernel.org>
+Cc: linux-rtc <linux-rtc@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"robh@kernel.org" <robh@kernel.org>, 
+	alexandre.belloni <alexandre.belloni@bootlin.com>, 
+	"Vikash Bansal" <vikash.bansal@nxp.com>, 
+	"Priyanka Jain" <priyanka.jain@nxp.com>, 
+	"Daniel Aguirre" <daniel.aguirre@nxp.com>, 
+	"Shashank Rebbapragada" <shashank.rebbapragada@nxp.com>, 
+	"Aman Kumar Pandey" <aman.kumarpandey@nxp.com>
+Subject: Re: RE: [EXT] Re: [PATCH v3 1/2] dt-bindings: rtc: Add pcf85053a support
+References: <20250507072618.153960-1-pankit.garg@nxp.com>, 
+	<20250507-zap-dyslexia-924cfd1b6ec9@spud>, 
+	 <AM0PR04MB6515B27367279C935A295379E78BA@AM0PR04MB6515.eurprd04.prod.outlook.com>
+X-Priority: 3
+X-GUID: 05D0529A-A065-4DA6-8B3E-D5E360349411
+X-Has-Attach: no
+X-Mailer: Foxmail 7.2.21.453[cn]
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Mime-Version: 1.0
+Message-ID: <5A950D2F65D63A8F+2025050814380293645828@kylinos.com.cn>
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:kylinos.com.cn:qybglogicsvrgz:qybglogicsvrgz8a-0
+X-QQ-XMAILINFO: OJxrSQW+uqfyGp9G3KJ/J8wL80q04oSm4ebkw/1JcnTyvD5hBzb+g4FO
+	1pCk10fy9ryLQBskT2uYmvPrtxur88UZag0Fw9Y/QcmFkleo3j7HMyVf2Yt5CmK0mFoq+Xe
+	eTDf3phwj+CCTqnxI4h84dO1MuM2TTdnYeKRnxnoltOjTkFVSaftOYm9al9v0ui4HQiVX26
+	nFGjwsxc3g0L5DtVZ4YxaH2MLIxjjSVKlVm05A1cKndy//RUOTWEdSmB83jcsfnRBvtvizf
+	RGAvW+rs4UEGhFvgKw/CaXATSkCJjrlqb6V3wCUKEfEMybRde7WNkg5r4qtV4tWkgFWOY6o
+	49dmdxgdy62YOISk+oUnu8huc+P6FkPhAuvFL/cr14XbdVEH64FaIt7IQhxn9dKmvm8GkkF
+	42aiN6/O/XM5Syu6b0Cxeah5AjiK37/l0mALFUdyzL+63368r+2LpKodxFQE7nrniRlY47W
+	1x96+Qs+kfvTCXM/LMEnbZrhymAYZk7UaurUvDOgBAn84cHWFmvdrubJ3IKADEJJgVt49/N
+	g9vehU5eo/HIp+46PImrVmaOaGI7GMFTuTJeBBkyoyJU9mX895YH39RaPwUsFdxz9nn1t6h
+	UB/Aq77ug7haknhK6pYZfGxy1nuZ/HLQ/snoSOFZlXv2Q+4ZpF0PauKUl26d5F92Irmc/+D
+	acQMqpfCFYpCBxXsvfD2bGOLOakGM5Uf5VwBvnYMd00tqib4zdL1pedm5NitzXkSqQO+pVf
+	5gnSeRTOFyR6EK190Q4iFHmM4MrPH/T+6/B1J73sQXBJGX9S2MBd5CdEgWSPM16Ph/pa2WC
+	m9+hW/a8wKyrXJoAKjuJiK8a6y19XfvQP03nvrcv3erk5RKlq66Yws4WPq1DUnOex+yyjHX
+	6DhkSo1WHquuBoFgDaWA3MGnp7+OFzL+TpB1fU/PCo29RX5s8cIZeLcn8ioNyBOD1jFTuJl
+	a/0YlihZzddGpoXOOsm0PypqeeF7ApLYPkUB2bbnbFtbx9QRVUHOa+SCaORCffX73qZepST
+	vYotvBmw==
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-RECHKSPAM: 0
 
-Add mt8189 dts evaluation board and Mafefile
+SGkgQmluYmluOgoKCgrCoMKgwqBUaGUgZGVzY3JpYmVkIGlzc3VlIGRvZXMgbm90IGhhcHBlbmVk
+wqAgd2l0aCBvciB3aXRob3V0IHRoZSBwYXRjaCBieSB0ZXN0LCBhcyB0aGUgaW50ZXJydXB0IGlz
+IG1hbmFnZWQgYnkgYWNwaS7CoAoKCgpUaGUgZGV2aWNlIGluZm8gYW5kIHRlc3QgcmVzdWx0IGFy
+ZSBhcyBmb2xsb3dzLgoKCgoxLiBEZXZpY2UgaW5mbwoKW+ezu+e7n+acqua/gOa0u11bcm9vdEBt
+YWlsIHRlc3RdIyBkbWlkZWNvZGUgLXEKQklPUyBJbmZvcm1hdGlvbgogICAgICAgIFZlbmRvcjog
+WkQtVEVDSAogICAgICAgIFZlcnNpb246IFYwOQogICAgICAgIFJlbGVhc2UgRGF0ZTogMDYvMTUv
+MjAyMgogICAgICAgIFJPTSBTaXplOiA4IE1CCiAgICAgICAgQ2hhcmFjdGVyaXN0aWNzOgogICAg
+ICAgICAgICAgICAgUENJIGlzIHN1cHBvcnRlZAogICAgICAgICAgICAgICAgQklPUyBpcyB1cGdy
+YWRlYWJsZQogICAgICAgICAgICAgICAgQklPUyBzaGFkb3dpbmcgaXMgYWxsb3dlZAogICAgICAg
+ICAgICAgICAgQm9vdCBmcm9tIENEIGlzIHN1cHBvcnRlZAogICAgICAgICAgICAgICAgU2VsZWN0
+YWJsZSBib290IGlzIHN1cHBvcnRlZAogICAgICAgICAgICAgICAgQklPUyBST00gaXMgc29ja2V0
+ZWQKICAgICAgICAgICAgICAgIFNlcmlhbCBzZXJ2aWNlcyBhcmUgc3VwcG9ydGVkIChpbnQgMTRo
+KQogICAgICAgICAgICAgICAgVVNCIGxlZ2FjeSBpcyBzdXBwb3J0ZWQKICAgICAgICAgICAgICAg
+IEZ1bmN0aW9uIGtleS1pbml0aWF0ZWQgbmV0d29yayBib290IGlzIHN1cHBvcnRlZAogICAgICAg
+ICAgICAgICAgVUVGSSBpcyBzdXBwb3J0ZWQKICAgICAgICBCSU9TIFJldmlzaW9uOiA0LjAKICAg
+ICAgICBGaXJtd2FyZSBSZXZpc2lvbjogMC40CgpTeXN0ZW0gSW5mb3JtYXRpb24KICAgICAgICBN
+YW51ZmFjdHVyZXI6IEdFSVQKICAgICAgICBQcm9kdWN0IE5hbWU6IFVUNjAwMC1MQjUKICAgICAg
+ICBWZXJzaW9uOiAxLjAKICAgICAgICBTZXJpYWwgTnVtYmVyOiBUQkQgYnkgT0VNCiAgICAgICAg
+VVVJRDogMDAxMTIyMzMtNDQ1NS02Njc3LTg4OTktYWFiYmNjZGRlZWZmCiAgICAgICAgV2FrZS11
+cCBUeXBlOiBQb3dlciBTd2l0Y2gKICAgICAgICBTS1UgTnVtYmVyOiBMb29uZ3Nvbl9TS1UKICAg
+ICAgICBGYW1pbHk6IFR5cGUxRmFtaWx5CgpCYXNlIEJvYXJkIEluZm9ybWF0aW9uCiAgICAgICAg
+TWFudWZhY3R1cmVyOiBHRUlUCiAgICAgICAgUHJvZHVjdCBOYW1lOiBHRy0zQTUwMDAtMDIKICAg
+ICAgICBWZXJzaW9uOiAxLjAKICAgICAgICBTZXJpYWwgTnVtYmVyOiBDaGFzc2lzIEJvYXJkIFNl
+cmlhbCNUbyBCZSBGaWxsZWQgQnkgTy5FLk0KICAgICAgICBBc3NldCBUYWc6IFR5cGUyIC0gQm9h
+cmQgQXNzZXQgVGFnCiAgICAgICAgRmVhdHVyZXM6CiAgICAgICAgICAgICAgICBCb2FyZCBpcyBh
+IGhvc3RpbmcgYm9hcmQKICAgICAgICAgICAgICAgIEJvYXJkIGlzIHJlcGxhY2VhYmxlCiAgICAg
+ICAgTG9jYXRpb24gSW4gQ2hhc3NpczogVHlwZTIgLSBCb2FyZCBDaGFzc2lzIExvY2F0aW9uCiAg
+ICAgICAgVHlwZTogTW90aGVyYm9hcmQKCi4uLgoKCjIuIFRoZSBzeXN0ZW0gZXhoaWJpdHMgYSB0
+aW1lb3V0IGVycm9yIHdoZW4gd2FpdGluZyBmb3IgYWxhcm0gc2lnbmFsIHJlc3BvbnNlwqB3aXRo
+b3V0IHRoZSBwYXRjaC4KClvns7vnu5/mnKrmv4DmtLtdW3Jvb3RAbWFpbCB0ZXN0XSMgY2F0IC9w
+cm9jL2ludGVycnVwdHMgfGdyZXAgYWNwaQogMjE6ICAgICAgICAgIDMgICAgICAgICAgMCAgICAg
+ICAgICAwICAgICAgICAgIDAgICBQQ0ggUElDICAgMSAgYWNwaQpb57O757uf5pyq5r+A5rS7XVty
+b290QG1haWwgdGVzdF0jClvns7vnu5/mnKrmv4DmtLtdW3Jvb3RAbWFpbCB0ZXN0XSMgLi9ydGMw
+MQpSVEMgUkVBRCBURVNUOgpSVEMgUkVBRCBURVNUIFBhc3NlZApDdXJyZW50IFJUQyBkYXRlL3Rp
+bWUgaXMgOC01LTIwMjUsIDA1OjUwOjA1LgpSVEMgQUxBUk0gVEVTVCA6QWxhcm0gdGltZSBzZXQg
+dG8gMDU6NTA6MTAuCldhaXRpbmcgNSBzZWNvbmRzIGZvciB0aGUgYWxhcm0uLi4KVGltZWQgb3V0
+IHdhaXRpbmcgZm9yIHRoZSBhbGFybQpSVEMgVVBEQVRFIElOVEVSUlVQVFMgVEVTVCA6ClJUQ19V
+SUVfT04gbm90IHN1cHBvcnRlZApSVEMgVGVzdHMgRG9uZSEKW+ezu+e7n+acqua/gOa0u11bcm9v
+dEBtYWlsIHRlc3RdIwpb57O757uf5pyq5r+A5rS7XVtyb290QG1haWwgdGVzdF0jIGNhdCAvcHJv
+Yy9pbnRlcnJ1cHRzIHxncmVwIGFjcGkKIDIxOiAgICAgICAgICA0ICAgICAgICAgIDAgICAgICAg
+ICAgMCAgICAgICAgICAwICAgUENIIFBJQyAgIDEgIGFjcGkKW+ezu+e7n+acqua/gOa0u11bcm9v
+dEBtYWlsIHRlc3RdIwoKCgoKMy4gVGhlcmUgaXMgbm8gZXJyb3Igd2l0aCB0aGUgcGF0Y2ggYXBw
+bGllZMKgYW5kIHRoZcKgaW50ZXJydXB0cyBhcmUgdHJpZ2dlcmVkIG9rClvns7vnu5/mnKrmv4Dm
+tLtdW3Jvb3RAbWFpbCB0ZXN0XSMgY2F0IC9wcm9jL2ludGVycnVwdHMgfGdyZXAgYWNwaQogMjE6
+ICAgICAgICAgIDAgICAgICAgICAgMCAgICAgICAgICAwICAgICAgICAgIDAgICBQQ0ggUElDICAg
+MSAgYWNwaQpb57O757uf5pyq5r+A5rS7XVtyb290QG1haWwgdGVzdF0jClvns7vnu5/mnKrmv4Dm
+tLtdW3Jvb3RAbWFpbCB0ZXN0XSMgLi9ydGMwMQpSVEMgUkVBRCBURVNUOgpSVEMgUkVBRCBURVNU
+IFBhc3NlZApDdXJyZW50IFJUQyBkYXRlL3RpbWUgaXMgOC01LTIwMjUsIDA2OjA5OjAzLgpSVEMg
+QUxBUk0gVEVTVCA6QWxhcm0gdGltZSBzZXQgdG8gMDY6MDk6MDguCldhaXRpbmcgNSBzZWNvbmRz
+IGZvciB0aGUgYWxhcm0uLi4KQWxhcm0gcmFuZy4KUlRDIEFMQVJNIFRFU1QgUGFzc2VkClJUQyBV
+UERBVEUgSU5URVJSVVBUUyBURVNUIDoKUlRDX1VJRV9PTiBub3Qgc3VwcG9ydGVkClJUQyBUZXN0
+cyBEb25lIQpb57O757uf5pyq5r+A5rS7XVtyb290QG1haWwgdGVzdF0jClvns7vnu5/mnKrmv4Dm
+tLtdW3Jvb3RAbWFpbCB0ZXN0XSMgY2F0IC9wcm9jL2ludGVycnVwdHMgfGdyZXAgYWNwaQogMjE6
+ICAgICAgICAgIDEgICAgICAgICAgMCAgICAgICAgICAwICAgICAgICAgIDAgICBQQ0ggUElDICAg
+MSAgYWNwaQpb57O757uf5pyq5r+A5rS7XVtyb290QG1haWwgdGVzdF0jCgoKCgoKCkZyb206wqBQ
+YW5raXQgR2FyZwoKCgpEYXRlOsKgMjAyNS0wNS0wOMKgMTM6MjEKCgoKVG86wqBDb25vciBEb29s
+ZXkKCgoKQ0M6wqBsaW51eC1ydGNAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgY29ub3IrZHRAa2VybmVsLm9y
+Zzsgcm9iaEBrZXJuZWwub3JnOyBhbGV4YW5kcmUuYmVsbG9uaUBib290bGluLmNvbTsgVmlrYXNo
+IEJhbnNhbDsgUHJpeWFua2EgSmFpbjsgRGFuaWVsIEFndWlycmU7IFNoYXNoYW5rIFJlYmJhcHJh
+Z2FkYTsgQW1hbiBLdW1hciBQYW5kZXkKCgoKU3ViamVjdDrCoFJFOiBbRVhUXSBSZTogW1BBVENI
+IHYzIDEvMl0gZHQtYmluZGluZ3M6IHJ0YzogQWRkIHBjZjg1MDUzYSBzdXBwb3J0CgoKCsKgCgoK
+CsKgCgoKCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KCgoKPiBGcm9tOiBDb25vciBEb29s
+ZXkgPGNvbm9yQGtlcm5lbC5vcmc+CgoKCj4gU2VudDogV2VkbmVzZGF5LCBNYXkgNywgMjAyNSA3
+OjUzIFBNCgoKCj4gVG86IFBhbmtpdCBHYXJnIDxwYW5raXQuZ2FyZ0BueHAuY29tPgoKCgo+IENj
+OiBsaW51eC1ydGNAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsg
+bGludXgtCgoKCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgY29ub3IrZHRAa2VybmVsLm9yZzsg
+cm9iaEBrZXJuZWwub3JnOwoKCgo+IGFsZXhhbmRyZS5iZWxsb25pQGJvb3RsaW4uY29tOyBWaWth
+c2ggQmFuc2FsIDx2aWthc2guYmFuc2FsQG54cC5jb20+OwoKCgo+IFByaXlhbmthIEphaW4gPHBy
+aXlhbmthLmphaW5AbnhwLmNvbT47IERhbmllbCBBZ3VpcnJlCgoKCj4gPGRhbmllbC5hZ3VpcnJl
+QG54cC5jb20+OyBTaGFzaGFuayBSZWJiYXByYWdhZGEKCgoKPiA8c2hhc2hhbmsucmViYmFwcmFn
+YWRhQG54cC5jb20+OyBBbWFuIEt1bWFyIFBhbmRleQoKCgo+IDxhbWFuLmt1bWFycGFuZGV5QG54
+cC5jb20+CgoKCj4gU3ViamVjdDogW0VYVF0gUmU6IFtQQVRDSCB2MyAxLzJdIGR0LWJpbmRpbmdz
+OiBydGM6IEFkZCBwY2Y4NTA1M2Egc3VwcG9ydAoKCgo+CgoKCj4gT24gV2VkLCBNYXkgMDcsIDIw
+MjUgYXQgMTI6NTY6MTdQTSArMDUzMCwgUGFua2l0IEdhcmcgd3JvdGU6CgoKCj4gPiBBZGQgZGV2
+aWNlIHRyZWUgYmluZGluZ3MgZm9yIE5YUCBQQ0Y4NTA1M2EgUlRDIGNoaXAuCgoKCj4gPgoKCgo+
+ID4gU2lnbmVkLW9mZi1ieTogUGFua2l0IEdhcmcgPHBhbmtpdC5nYXJnQG54cC5jb20+CgoKCj4g
+PiAtLS0KCgoKPiA+IFYyIC0+IFYzOiBNb3ZlZCBNQUlOVEFJTkVSUyBmaWxlIGNoYW5nZXMgdG8g
+dGhlIGRyaXZlciBwYXRjaAoKCgo+ID4gVjEgLT4gVjI6IEhhbmRsZWQgZHQtYmluZGluZ3MgYnkg
+dHJpdmlhbC1ydGMueWFtbAoKCgo+CgoKCj4gWW91IGZvcmdvdCB0byBhZGQgbXkgYWNrLgoKCgo+
+IEFja2VkLWJ5OiBDb25vciBEb29sZXkgPGNvbm9yLmRvb2xleUBtaWNyb2NoaXAuY29tPgoKCgrC
+oAoKCgpZZXMsIEkgZm9yZ290LiBJIHdpbGwgYWRkIGl0IGluIHY0LiBMZXQgbWUgd2FpdCBmb3Ig
+bW9yZSByZXZpZXcvY29tbWVudHMgZm9yIGNvdXBsZSBvZiBkYXlzLgoKCgrCoAoKCgo+CgoKCj4g
+PgoKCgo+ID4gLS0tCgoKCj4gPsKgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9y
+dGMvdHJpdmlhbC1ydGMueWFtbCB8IDIgKysKCgoKPiA+wqAgMSBmaWxlIGNoYW5nZWQsIDIgaW5z
+ZXJ0aW9ucygrKQoKCgo+ID4KCgoKPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcnRjL3RyaXZpYWwtcnRjLnlhbWwKCgoKPiBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9ydGMvdHJpdmlhbC1ydGMueWFtbAoKCgo+ID4gaW5kZXggNzMz
+MGE3MjAwODMxLi40N2JlN2JiYmZlZGQgMTAwNjQ0CgoKCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvcnRjL3RyaXZpYWwtcnRjLnlhbWwKCgoKPiA+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ydGMvdHJpdmlhbC1ydGMueWFtbAoKCgo+
+ID4gQEAgLTY1LDYgKzY1LDggQEAgcHJvcGVydGllczoKCgoKPiA+wqDCoMKgwqDCoMKgwqAgLSBt
+aWNyb2NyeXN0YWwscnY4NTIzCgoKCj4gPsKgwqDCoMKgwqDCoMKgICMgTlhQIExQQzMyeHggU29D
+IFJlYWwtdGltZSBDbG9jawoKCgo+ID7CoMKgwqDCoMKgwqDCoCAtIG54cCxscGMzMjIwLXJ0YwoK
+Cgo+ID4gK8KgwqDCoMKgwqAgIyBOWFAgUENGODUwNTNBIFJlYWwgVGltZSBDbG9jayBNb2R1bGUg
+d2l0aCBJMkMtQnVzCgoKCj4gPiArwqDCoMKgwqDCoCAtIG54cCxwY2Y4NTA1M2EKCgoKPiA+wqDC
+oMKgwqDCoMKgwqAgIyBJMkMgYnVzIFNFUklBTCBJTlRFUkZBQ0UgUkVBTC1USU1FIENMT0NLIElD
+CgoKCj4gPsKgwqDCoMKgwqDCoMKgIC0gcmljb2gscjIwMjVzZAoKCgo+ID7CoMKgwqDCoMKgwqDC
+oCAjIEkyQyBidXMgU0VSSUFMIElOVEVSRkFDRSBSRUFMLVRJTUUgQ0xPQ0sgSUMKCgoKPiA+IC0t
+CgoKCj4gPiAyLjI1LjEKCgoKPiA+CgoKCsKgCgoKCsKgCgoK
 
-Signed-off-by: Sirius Wang <sirius.wang@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/Makefile       |   1 +
- arch/arm64/boot/dts/mediatek/mt8189-evb.dts |  20 +
- arch/arm64/boot/dts/mediatek/mt8189.dtsi    | 430 ++++++++++++++++++++
- 3 files changed, 451 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8189-evb.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8189.dtsi
 
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index 3aa06476c6c0..ad2ac9e1bb79 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -87,6 +87,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8188-geralt-ciri-sku4.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8188-geralt-ciri-sku5.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8188-geralt-ciri-sku6.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8188-geralt-ciri-sku7.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt8189-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-asurada-hayato-r1.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-asurada-spherion-r0.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-evb.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt8189-evb.dts b/arch/arm64/boot/dts/mediatek/mt8189-evb.dts
-new file mode 100644
-index 000000000000..e5d9ce1b8e61
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8189-evb.dts
-@@ -0,0 +1,20 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (C) 2025 MediaTek Inc.
-+ * Author: Sirius Wang <sirius.wang@mediatek.com>
-+ */
-+/dts-v1/;
-+#include "mt8189.dtsi"
-+
-+/ {
-+	model = "MediaTek MT8189 evaluation board";
-+	compatible = "mediatek,mt8189-evb", "mediatek,mt8189";
-+
-+	chosen: chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8189.dtsi b/arch/arm64/boot/dts/mediatek/mt8189.dtsi
-new file mode 100644
-index 000000000000..50c7a3811e0f
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8189.dtsi
-@@ -0,0 +1,430 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (c) 2025 MediaTek Inc.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/ {
-+	compatible = "mediatek,mt8189";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	clk32k: oscillator-clk32k {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32000>;
-+		clock-output-names = "clk32k";
-+	};
-+
-+	clk13m: oscillator-clk13m {
-+		compatible = "fixed-factor-clock";
-+		#clock-cells = <0>;
-+		clocks = <&clk26m>;
-+		clock-mult = <1>;
-+		clock-div = <2>;
-+		clock-output-names = "clk13m";
-+	};
-+
-+	clk26m: oscillator-clk26m {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <26000000>;
-+		clock-output-names = "clk26m";
-+	};
-+
-+	clk104m: oscillator-clk104m {
-+		compatible = "fixed-factor-clock";
-+		#clock-cells = <0>;
-+		clocks = <&clk26m>;
-+		clock-mult = <4>;
-+		clock-div = <1>;
-+		clock-output-names = "clk104m";
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x000>;
-+			enable-method = "psci";
-+			clock-frequency = <2000000000>;
-+			capacity-dmips-mhz = <742>;
-+			cpu-idle-states = <&cpu_off_l>, <&cpu_cluster_off_l>, <&cpu_mcusys_off_l>,
-+					  <&cpu_system_vcore>, <&cpu_s2idle>;
-+			i-cache-size = <32768>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <128>;
-+			d-cache-size = <32768>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			performance-domains = <&performance 0>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu1: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x100>;
-+			enable-method = "psci";
-+			clock-frequency = <2000000000>;
-+			capacity-dmips-mhz = <742>;
-+			cpu-idle-states = <&cpu_off_l>, <&cpu_cluster_off_l>, <&cpu_mcusys_off_l>,
-+					  <&cpu_system_vcore>, <&cpu_s2idle>;
-+			i-cache-size = <32768>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <128>;
-+			d-cache-size = <32768>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			performance-domains = <&performance 0>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu2: cpu@200 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x200>;
-+			enable-method = "psci";
-+			clock-frequency = <2000000000>;
-+			capacity-dmips-mhz = <742>;
-+			cpu-idle-states = <&cpu_off_l>, <&cpu_cluster_off_l>, <&cpu_mcusys_off_l>,
-+					  <&cpu_system_vcore>, <&cpu_s2idle>;
-+			i-cache-size = <32768>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <128>;
-+			d-cache-size = <32768>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			performance-domains = <&performance 0>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu3: cpu@300 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x300>;
-+			enable-method = "psci";
-+			clock-frequency = <2000000000>;
-+			capacity-dmips-mhz = <742>;
-+			cpu-idle-states = <&cpu_off_l>, <&cpu_cluster_off_l>, <&cpu_mcusys_off_l>,
-+					  <&cpu_system_vcore>, <&cpu_s2idle>;
-+			i-cache-size = <32768>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <128>;
-+			d-cache-size = <32768>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			performance-domains = <&performance 0>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu4: cpu@400 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x400>;
-+			enable-method = "psci";
-+			clock-frequency = <2000000000>;
-+			capacity-dmips-mhz = <742>;
-+			cpu-idle-states = <&cpu_off_l>, <&cpu_cluster_off_l>, <&cpu_mcusys_off_l>,
-+					  <&cpu_system_vcore>, <&cpu_s2idle>;
-+			i-cache-size = <32768>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <128>;
-+			d-cache-size = <32768>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			performance-domains = <&performance 0>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu5: cpu@500 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x500>;
-+			enable-method = "psci";
-+			clock-frequency = <2000000000>;
-+			capacity-dmips-mhz = <742>;
-+			cpu-idle-states = <&cpu_off_l>, <&cpu_cluster_off_l>, <&cpu_mcusys_off_l>,
-+					  <&cpu_system_vcore>, <&cpu_s2idle>;
-+			i-cache-size = <32768>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <128>;
-+			d-cache-size = <32768>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			performance-domains = <&performance 0>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu6: cpu@600 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a78";
-+			reg = <0x600>;
-+			enable-method = "psci";
-+			clock-frequency = <3000000000>;
-+			capacity-dmips-mhz = <958>;
-+			cpu-idle-states = <&cpu_off_m>, <&cpu_cluster_off_m>, <&cpu_mcusys_off_m>,
-+					  <&cpu_system_vcore>, <&cpu_s2idle>;
-+			i-cache-size = <65536>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <65536>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			next-level-cache = <&l2_1>;
-+			performance-domains = <&performance 1>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu7: cpu@700 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a78";
-+			reg = <0x700>;
-+			enable-method = "psci";
-+			clock-frequency = <3000000000>;
-+			capacity-dmips-mhz = <958>;
-+			cpu-idle-states = <&cpu_off_m>, <&cpu_cluster_off_m>, <&cpu_mcusys_off_m>,
-+					  <&cpu_system_vcore>, <&cpu_s2idle>;
-+			i-cache-size = <65536>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <65536>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			next-level-cache = <&l2_1>;
-+			performance-domains = <&performance 1>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
-+				core1 {
-+					cpu = <&cpu1>;
-+				};
-+				core2 {
-+					cpu = <&cpu2>;
-+				};
-+				core3 {
-+					cpu = <&cpu3>;
-+				};
-+				core4 {
-+					cpu = <&cpu4>;
-+				};
-+				core5 {
-+					cpu = <&cpu5>;
-+				};
-+			};
-+
-+			cluster1 {
-+				core0 {
-+					cpu = <&cpu6>;
-+				};
-+				core1 {
-+					cpu = <&cpu7>;
-+				};
-+			};
-+		};
-+
-+		idle-states {
-+			entry-method = "psci";
-+
-+			cpu_off_l: cpu-off-l {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x00010000>;
-+				local-timer-stop;
-+				entry-latency-us = <97>;
-+				exit-latency-us = <252>;
-+				min-residency-us = <6710>;
-+			};
-+
-+			cpu_off_m: cpu-off-m {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x00010000>;
-+				local-timer-stop;
-+				entry-latency-us = <53>;
-+				exit-latency-us = <143>;
-+				min-residency-us = <2120>;
-+			};
-+
-+			cpu_cluster_off_l: cpu-cluster-off-l {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x01010001>;
-+				local-timer-stop;
-+				entry-latency-us = <109>;
-+				exit-latency-us = <325>;
-+				min-residency-us = <6710>;
-+			};
-+
-+			cpu_cluster_off_m: cpu-cluster-off-m {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x01010001>;
-+				local-timer-stop;
-+				entry-latency-us = <59>;
-+				exit-latency-us = <188>;
-+				min-residency-us = <2120>;
-+			};
-+
-+			cpu_mcusys_off_l: cpu-mcusys-off-l {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x02010007>;
-+				local-timer-stop;
-+				entry-latency-us = <1357>;
-+				exit-latency-us = <835>;
-+				min-residency-us = <6710>;
-+			};
-+
-+			cpu_mcusys_off_m: cpu-mcusys-off-m {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x02010007>;
-+				local-timer-stop;
-+				entry-latency-us = <1202>;
-+				exit-latency-us = <679>;
-+				min-residency-us = <2120>;
-+			};
-+
-+			cpu_system_vcore: cpu-system-vcore {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x020100ff>;
-+				local-timer-stop;
-+				entry-latency-us = <940>;
-+				exit-latency-us = <3500>;
-+				min-residency-us = <35200>;
-+			};
-+
-+			cpu_s2idle: cpu-s2idle {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x020180ff>;
-+				local-timer-stop;
-+				entry-latency-us = <10000>;
-+				exit-latency-us = <10000>;
-+				min-residency-us = <4294967295>;
-+			};
-+		};
-+
-+		l2_0: l2-cache0 {
-+			compatible = "cache";
-+			cache-level = <2>;
-+			cache-size = <131072>;
-+			cache-line-size = <64>;
-+			cache-sets = <512>;
-+			next-level-cache = <&l3_0>;
-+			cache-unified;
-+		};
-+
-+		l2_1: l2-cache1 {
-+			compatible = "cache";
-+			cache-level = <2>;
-+			cache-size = <262144>;
-+			cache-line-size = <64>;
-+			cache-sets = <512>;
-+			next-level-cache = <&l3_0>;
-+			cache-unified;
-+		};
-+
-+		l3_0: l3-cache {
-+			compatible = "cache";
-+			cache-level = <3>;
-+			cache-size = <1048576>;
-+			cache-line-size = <64>;
-+			cache-sets = <2048>;
-+			cache-unified;
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	memory: memory@40000000 {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0xC0000000>;
-+	};
-+
-+	timer: timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH 0>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		dma-ranges = <0x0 0x0 0x0 0x0 0x10 0x0>;
-+
-+		performance: performance-controller@11bc10 {
-+			compatible = "mediatek,cpufreq-hw";
-+			reg = <0 0x0011bc10 0 0x120>, <0 0x0011bd30 0 0x120>;
-+			#performance-domain-cells = <1>;
-+		};
-+
-+		gic: interrupt-controller@c000000 {
-+			compatible = "arm,gic-v3";
-+			#interrupt-cells = <4>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			interrupt-parent = <&gic>;
-+			interrupt-controller;
-+			reg = <0 0xc000000 0 0x40000>, /* distributor */
-+			      <0 0xc040000 0 0x200000>; /* redistributor */
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH 0>;
-+
-+			ppi-partitions {
-+				ppi_cluster0: interrupt-partition-0 {
-+					affinity = <&cpu0 &cpu1 &cpu2 &cpu3 &cpu4 &cpu5>;
-+				};
-+
-+				ppi_cluster1: interrupt-partition-1 {
-+					affinity = <&cpu6 &cpu7>;
-+				};
-+			};
-+		};
-+
-+		uart0: serial@11001000 {
-+			compatible = "mediatek,mt8189-uart", "mediatek,mt6577-uart";
-+			reg = <0 0x11001000 0 0x1000>;
-+			interrupts = <GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH 0>;
-+			clocks = <&clk26m>, <&clk26m>;
-+			clock-names = "baud", "bus";
-+			status = "disabled";
-+		};
-+	};
-+
-+	ulposc: oscillator-ulposc {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <520000000>;
-+		clock-output-names = "ulposc";
-+	};
-+
-+	ulposc3: oscillator-ulposc3 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <26000000>;
-+		clock-output-names = "ulposc3";
-+	};
-+};
--- 
-2.45.2
 
