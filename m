@@ -1,163 +1,225 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0A422172E;
-	Thu,  8 May 2025 08:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFEF223DE7
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 08:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746692537; cv=none; b=EceprA29wwAZWrsToCnXHuRkrRF2ExErmgSk0ylb41zRyi7+QwuuHN3Gbe1F6rDz6fvvKCv6cdFl2i96blIFuAo3srDGb9kbF/pRfduyei9HgttUZXbL4jhuWeUpWwBPmbVhcsrjuQEIrWvVr6Q++qB7C05W3tliVi8q02og27E=
+	t=1746692537; cv=none; b=JDXr4QO1CVm9cTJsAuUKMEFJPBEVuNd0v3wzTwUVJqzpc9FUY7Q05YhXTGhLtmyu4Fm3AVmLZdg6s5Ns2kew1uS54tYUHTX839mELOADSW2+O1pkEdTYpIym5Aq6Ot3Ik2StckOY6XHsfzbv26edPb9ZBOSg00hxwSxOTKx8o9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746692537; c=relaxed/simple;
-	bh=9Wc/hLynfq4stOHrbHVfhr0OWMN4PjXj493SenRBBxQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=OwkZvO0aG0g0G8jKHXW90EQWt9KA6Q1kzkKj5Vt2Ht+E2mIRfmYj1cAQWZN/aUpQKWSuuICpQBBlR9Yl/Hh7/BtznFrREubCrvkX1WLwEk99r+L3Lmrs/gHpx/VZwi1kUaRg1PSsYJhvsz0NUB7NBt0OQ/kEuJ7SwfGt0Pj8s0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=rTr5kv4J; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	bh=XWfLcjDKDI/D9TTc1clgQJz4Ie+db+3RU9g/MnHeVPo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K2oZoJYFBWwt23lP+xa6RTNELj1ZzTfsqz//dUxPlIp99t1KzTEXwIGwaC5vJ7yMUrKThe9m5fnJWbo8w0vuBlzqkB+rb99keEfnZ48J8g3Ve9yrdpJWp0DbTXz0j3mi01cO9C5JP2A3qDQKA0p98r0oVfa01zcbnEOPGu1aE98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ExCB/hzd; arc=none smtp.client-ip=209.85.217.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="rTr5kv4J"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
-	Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=CyA4fdewJCdynAxXbxpGy2pyASTRxTov0Q5FFYV+koE=; b=rTr5kv4JM8lEQaje0SpZ81EMpa
-	nRCOclH0h/mS3Slv643F5s7Zh1JSj1cHELrJHIxEBWvURQEG7RzjkcbEh181emB5FXRBKRG4ya3NK
-	6j0yG8NI4d4wVCP996ls4W3PBCWOLw2QNJXb8lXRY8/zYxCBQ/L9XjWZHJAGiwj7GBND0BYpSwthn
-	da7zvwhLD0EKJ0X255mQ+INCtR1FSzu/WJNnv59pDCHVNMfn9SlJsDoUXYWnqHdz6NwW1Rcf8Mz77
-	vaICt2hUCVUPyuthiCK4DTM8CclIrFCkN8OospG9kIyIVlj9I46f72ZwLzymXToqc+BBBfBvYox8h
-	21bbeKPw==;
-Received: from [223.233.71.203] (helo=[192.168.1.12])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uCwS4-0056VN-LH; Thu, 08 May 2025 10:22:08 +0200
-Message-ID: <3fd1dd03-ce1c-37e5-98aa-a91ab5d210b3@igalia.com>
-Date: Thu, 8 May 2025 13:52:01 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ExCB/hzd"
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4ddac386a29so237482137.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 01:22:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746692534; x=1747297334; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4SXfokFPPLJwoMKncfdiN1Zib++ikD4gCmyzaltHX8s=;
+        b=ExCB/hzdmRwTJfMTM+Vu9NLQkriENGUZ8ffvWr0kmbsAm1dAmYy45wfBkSq6jsTV9B
+         ov7WnQFQAB+Fn6gizFiQDOq6xQznaqm9H2t8zPUnVy5EjPHwnglAqaIj5AAlK912JLJS
+         kC1SFaERtL9n7KPOR2/W6RnBrLlrp/n3mwsRvjrZDbWUa49gTOr/FwBmQmfNfAo03oyx
+         o2IPARaROpk+4VE0onyWGehJg61F7mTY+wB6SAeP6Mwvt33cbSgBCAhXU8XofEJ5NDjM
+         X3QroJfi8VJkhHBMeI0P+hIOirUqGXKUOsGp8C8AX7OKwTBY7EqUlhGAyZBDNSpAuGgH
+         M8Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746692534; x=1747297334;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4SXfokFPPLJwoMKncfdiN1Zib++ikD4gCmyzaltHX8s=;
+        b=WaM8IQSM47vZ+daEgGaPanLh1NvnGBliT87fJRGgX9j/qMJDzm/GA0qx1rFpfVPt1h
+         x2Cm5A+q/RU++0gjQ9nZP+6MFz3B5SC2KJU7SlEjJsVMaI0mArv1QYLa0cXHdPxPi1yh
+         kw3gbzrketGA64ANyTTJvwHZdV9VUYFIzzyR0TN9ZHQuVanxJ8YpSSbPGucIO6yjz/22
+         XZgGrqhl07t0LvKJMw5N5XtfMO9OxnzqdQFZfSW4+qYwhARNfFjRimY6K6aJU9YU7yef
+         hQA6Jfh9QlA26W84t4pyvFLjFQU87sLllLjkzsIoooz7UONfV4WeFIdvwfsB1RvJtiKJ
+         T1yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTmdHVBz7RCavVb6rPVdhNcdd6f86SrEpChp9+FtYLGaJ4sOGwgvbF8AnrPkN/xWn11E0n6XI1jKRMQwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3ZewI5zP66u3ACr/xZp6gm7xuPJSjp2t5U7eTa82ThlS/+nji
+	iAxwRGHUtNPwBSgN6PA2dke4TbQBs15yxk1p6YkvALC2QmhdT+Efj3gS93E7+ZUQV48R6QA4Nud
+	/T+USc4g1V7Mx0y8lut8i88YTsBhklWG4rGz1sWbM1U6GRwgpMnw=
+X-Gm-Gg: ASbGncu0xk5+w9CWOThueuLgkhM3TwDatjtwnci7MqUrv8qz2vpqV6Y1rC8l2+Oqjdy
+	q6CDUKwiUSWAM2YBNdyg+8BubG7tRiGkxoT0wmzX6YyS0B1rRgGwJhCZRX9gWGgiNSSEmtmBucc
+	m7C+bEGOPW4yXYGrrWNKy8hpY0kzrYM/hd4fJsnJcStnZcr2T9SM5ngJU=
+X-Google-Smtp-Source: AGHT+IHlylVojaFVxlpNw0MP0NVcwjPbv2ez05UaIZkY1iM/eQuqvcRPbqM2LAtJO6AS4BNg/KZaVgxZfCYEVDeRey4=
+X-Received: by 2002:a05:6102:5090:b0:4dd:ad20:a333 with SMTP id
+ ada2fe7eead31-4ddad20abc1mr1297672137.10.1746692534570; Thu, 08 May 2025
+ 01:22:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v3 2/3] treewide: Switch memcpy() users of 'task->comm' to
- a more safer implementation
-Content-Language: en-US
-From: Bhupesh Sharma <bhsharma@igalia.com>
-To: Petr Mladek <pmladek@suse.com>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
- laoar.shao@gmail.com, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
- arnaldo.melo@gmail.com, alexei.starovoitov@gmail.com,
- andrii.nakryiko@gmail.com, mirq-linux@rere.qmqm.pl, peterz@infradead.org,
- willy@infradead.org, david@redhat.com, viro@zeniv.linux.org.uk,
- keescook@chromium.org, ebiederm@xmission.com, brauner@kernel.org,
- jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com
-References: <20250507110444.963779-1-bhupesh@igalia.com>
- <20250507110444.963779-3-bhupesh@igalia.com>
- <aBtSK5dFmtFXUaOE@pathway.suse.cz>
- <4af48ad5-1aa7-46d0-bfca-7779294e355c@igalia.com>
-In-Reply-To: <4af48ad5-1aa7-46d0-bfca-7779294e355c@igalia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250507183820.781599563@linuxfoundation.org>
+In-Reply-To: <20250507183820.781599563@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 8 May 2025 13:52:02 +0530
+X-Gm-Features: ATxdqUF56HpomFLeHyAStWrs4gBJAxYiq8xr1FI8Qqso3ZFo7BKUuCQKs_K1faQ
+Message-ID: <CA+G9fYvR12QXK9+uQYu_XiiH6AtyVT-Z_yx-f=1k0V2QpMGsCQ@mail.gmail.com>
+Subject: Re: [PATCH 6.12 000/164] 6.12.28-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, 8 May 2025 at 00:29, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.12.28 release.
+> There are 164 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 09 May 2025 18:37:41 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.12.28-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.12.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-On 5/8/25 1:47 PM, Bhupesh Sharma wrote:
-> Hi Petr,
->
-> On 5/7/25 5:59 PM, Petr Mladek wrote:
->> On Wed 2025-05-07 16:34:43, Bhupesh wrote:
->>> As Linus mentioned in [1], currently we have several memcpy() use-cases
->>> which use 'current->comm' to copy the task name over to local copies.
->>> For an example:
->>>
->>>   ...
->>>   char comm[TASK_COMM_LEN];
->>>   memcpy(comm, current->comm, TASK_COMM_LEN);
->>>   ...
->>>
->>> These should be modified so that we can later implement approaches
->>> to handle the task->comm's 16-byte length limitation (TASK_COMM_LEN)
->>> is a more modular way (follow-up patches do the same):
->>>
->>>   ...
->>>   char comm[TASK_COMM_LEN];
->>>   memcpy(comm, current->comm, TASK_COMM_LEN);
->>>   comm[TASK_COMM_LEN - 1] = 0;
->>>   ...
->>>
->>> The relevant 'memcpy()' users were identified using the following 
->>> search
->>> pattern:
->>>   $ git grep 'memcpy.*->comm\>'
->>>
->>> [1]. 
->>> https://lore.kernel.org/all/CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com/
->>>
->>> --- a/include/linux/coredump.h
->>> +++ b/include/linux/coredump.h
->>> @@ -53,7 +53,8 @@ extern void do_coredump(const kernel_siginfo_t 
->>> *siginfo);
->>>       do {    \
->>>           char comm[TASK_COMM_LEN];    \
->>>           /* This will always be NUL terminated. */ \
->>> -        memcpy(comm, current->comm, sizeof(comm)); \
->>> +        memcpy(comm, current->comm, TASK_COMM_LEN); \
->>> +        comm[TASK_COMM_LEN] = '\0'; \
->> I would expect that we replace this with a helper function/macro
->> which would do the right thing.
->>
->> Why is get_task_comm() not used here, please?
->>
->>>           printk_ratelimited(Level "coredump: %d(%*pE): " Format 
->>> "\n",    \
->> Also the name seems to be used for printing a debug information.
->> I would expect that we could use the bigger buffer here and print
->> the "full" name. Is this planed, please?
->>
->>>               task_tgid_vnr(current), (int)strlen(comm), comm, 
->>> ##__VA_ARGS__);    \
->>>       } while (0)    \
->>> diff --git a/include/trace/events/block.h 
->>> b/include/trace/events/block.h
->>> index bd0ea07338eb..94a941ac2034 100644
->>> --- a/include/trace/events/block.h
->>> +++ b/include/trace/events/block.h
->>> @@ -214,6 +214,7 @@ DECLARE_EVENT_CLASS(block_rq,
->>>           blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
->>>           __get_str(cmd)[0] = '\0';
->>>           memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
->>> +        __entry->comm[TASK_COMM_LEN - 1] = '\0';
->> Same for all other callers.
->>
->> That said, I am not sure if the larger buffer is save in all situations.
->>
->>>       ),
->>
->
-> Thanks for the review, I agree on using the helper / wrapper function 
-> to replace this open-coded memcpy + set last entry as '\0'.
->
-> However I see that Steven has already shared a RFC approach (see [1]), 
-> to use __string() instead of fixed lengths for 'task->comm' for 
-> tracing events.
-> I plan to  rebase my v4 on top of his RFC, which might mean that this 
-> patch would no longer be needed in the v4.
->
-> [1]. 
-> https://lore.kernel.org/linux-trace-kernel/20250507133458.51bafd95@gandalf.local.home/
->
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Sorry, pressed the send button too quickly :D
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-I instead meant - "I plan to  rebase my v4 on top of Steven's RFC, which 
-might mean that this patch would no longer need to address the trace 
-events, but would still need to handle other places where tsk->comm 
-directly in memcpy() and replace it with 'get_task_comm()' instead".
+## Build
+* kernel: 6.12.28-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: 483b39c5e6de6bcb0adeeab81c10cac4aa25f8ec
+* git describe: v6.12.26-167-g483b39c5e6de
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12=
+.26-167-g483b39c5e6de
 
-Thanks.
+## Test Regressions (compared to v6.12.24-499-g990f4938689a)
+
+## Metric Regressions (compared to v6.12.24-499-g990f4938689a)
+
+## Test Fixes (compared to v6.12.24-499-g990f4938689a)
+
+## Metric Fixes (compared to v6.12.24-499-g990f4938689a)
+
+## Test result summary
+total: 118401, pass: 96123, fail: 6121, skip: 15784, xfail: 373
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 139 total, 137 passed, 2 failed
+* arm64: 57 total, 56 passed, 1 failed
+* i386: 18 total, 16 passed, 2 failed
+* mips: 34 total, 33 passed, 1 failed
+* parisc: 4 total, 4 passed, 0 failed
+* powerpc: 40 total, 40 passed, 0 failed
+* riscv: 25 total, 23 passed, 2 failed
+* s390: 22 total, 21 passed, 1 failed
+* sh: 5 total, 5 passed, 0 failed
+* sparc: 4 total, 3 passed, 1 failed
+* x86_64: 49 total, 42 passed, 7 failed
+
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* lava
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+* rt-tests-cyclicdeadline
+* rt-tests-pi-stress
+* rt-tests-pmqtest
+* rt-tests-rt-migrate-test
+* rt-tests-signaltest
+
+--
+Linaro LKFT
+https://lkft.linaro.org
