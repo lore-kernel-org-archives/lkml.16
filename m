@@ -1,170 +1,256 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8A627470
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E072147F5
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746726530; cv=none; b=knnujjfnWdKE1ViHxS/Xl16r6o8I4dkSz43IndyWVokEZC4KBhSn2N5YgeG7az6nWYH7WFVwo65G671LPQca8QbL2+D2mXpVN2rfYY/p355cLYv/kGuVzEmtTzHkamv/tgKZhx3lvwzqRw2dCJM7NnuyvkHONGAt8EuFp+B/6yw=
+	t=1746726542; cv=none; b=E3kyRaLXNq+CCkOwjPKcw2dx3yzhyhNXr80MjCrGI2jfDRmZfDwBK8jC+XtXq3TeeEDkd5+4mKOpJ6fXaR0VGJBTRKaYEoKXrgx6ViwfZFVZqE8odWgk91ut8poGRFbtH9igCMOfzsWKg695almM2NxS39+6xlEhCS7ruY/kvIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746726530; c=relaxed/simple;
-	bh=Mn0ibbYww6nu7ChoXnb/V8up93JjOP9PQag24UPnr/s=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=LfLL5lv2jkLR0n2bO4XNHA2rprAkOdQe7ZTtGrMtwm+zn8jei8UoX0JI39haRMiHxZKdcqh49AstPQV6dMjkAAzgabD1YA93DbYbPJ5oplfT38zltoW9uAmodUNONb5uSLEiEC5cplhTvg/jYUw1QXK1EsbSh1LiSkgrpAEosxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=NQZjXSyd; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1746726542; c=relaxed/simple;
+	bh=Pkvl0wtVMUyRk12ulSDqU5JmAJ9uj9cTrxAK/pbd3FE=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=axb8UEpHmRFtaGeKwpIHyWFiTWAUWPopx9Z2qC56o5Y+i4SX+wIdLUstNYxZPj5EFdqc3qYZFeMBhZ+x103Cex2eWU36Wy8Jzwv54ZCHMy1J3U89XOuXX1ffq+rNgT/AOyMukIemAWONF/+wqsxuuHZaI8Kbo4rBtCafVPOxn7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BbPZsZrg; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="NQZjXSyd"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22e6a088e16so10377095ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 10:48:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BbPZsZrg"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54b10956398so471932e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 10:49:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1746726527; x=1747331327; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DYqLmfWWYnfjqyKiU4qtxry5bO8L2HemS6Lj3IB5Ozo=;
-        b=NQZjXSydwdMJMfOkGNMzs6nMKqE18ZiUXo6xOMyEoXLYC1G6ieZHRLWqRgVq/HyJRo
-         D4Tfikc2mryfpwlO1y3vb+M213/yWQe6626KwUxtinGVSWFtJfToTuchQpqnqYMM5yRL
-         WKRVx4N+M3soPOyOlvBVd9Ph3ovLHqbCQVrSP92UbN0yyrvmWjz3PcukGArHY90iCYD3
-         mZGIcDTCboyOJ/bzWUE+fX6a54/c1gurwUc5rvw/RzytMYLgazV1+FX2hBa+kBiqii+3
-         dL8UgfiWg7IbyAKRX/ANTBY6OKafsCLyCoa91ceZxMgqHKv3jcXM7D716X1bwkRfQ6Rz
-         bB0g==
+        d=gmail.com; s=20230601; t=1746726538; x=1747331338; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RLVpkrLXml6z3gsyisKKJHxZUHvDSbaVwN7SOYZwBDU=;
+        b=BbPZsZrg2RAyXm0X4MztXNI89u9U5U1wuH5RxkqApumZhl9wUyrRFyIdeSqREqxEDN
+         I+yGzqyfNcZy0lr+cKBVU//x4eG0xWIPGtLuTB5L8qGe7xDeQYWZl1RI0KeQh76R5ahD
+         c1rBkPNxeo4VJO+VfPpxQQcHLOk6TVgxMZwsnXz/l8RtL9tuOkiANqD3yQwz+m6jz/id
+         5y7XMZ1J6/g1k5Qbk1Rw5mgw4cb4En3ZoVSpFWU+zCswWWDotRyCtyu3A4Pr0CVh3RcL
+         xjQLhm2Lyc8vnRkLbBFzjYgJqHvkTrHA99/fL549lm0YaqeQd/QdBFcr67CuHP+fYX7k
+         4b5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746726527; x=1747331327;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1746726538; x=1747331338;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DYqLmfWWYnfjqyKiU4qtxry5bO8L2HemS6Lj3IB5Ozo=;
-        b=HqArnp+EDaVzqai3mKusOUgssEZNCquAkyqIdXIFd8ENWgwAZssxBb4yOcq5aX39oT
-         cT0bwGOfRnrW9lojTv/26GB3EzE/D6RJMCLd+fs+Z4L70/ek2fOk3Tct8lEv8uzngnGZ
-         bDE3NYCAdHZ2qabR70w1FOZFmwoNoXXJb+2tVx8SH/s1wpMrF9v6zqzOd3GcsEcigd7O
-         q6zuaLrqKtE70YuNgUGpGhTC4H8wp5d+HmwXJk157qTeXC0LrRF2VWgi6ldR6FfrfVgU
-         /BssYC73sJixLOIxDx1Zw3Kvk4ailTihvCAayfYAfYnfRYwLY8wFVb0cjgNw96ASe4HD
-         ZzzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAQZqY0fAPoZlnfo2fC2OjFgxGzG4MhANC3HvBf51syRyNWOMDXW11nkjnnXP88sI+QCe07BPVuYgwRTo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNtKlnx9skbXvxz5J7S6mAYZpnvYQl5pJGc6hObffcSY0VOb++
-	BjOyuAykmJhl8mo0yuL1Ci2bBPIaV91//EHSBnnnel/jCIrG3OAY3W73NiBJj3I=
-X-Gm-Gg: ASbGncvuNVW+zUlcQACmcmBY1mJgAXSr1VptJY8LfZcAQVw168hA8KQDmUxcfb7gJuZ
-	4uEovUUbDpyKc3DmBtamS/7TppRK3nA3D/JvXZxuvijOfsQwpU8CsY7qV5qxxCsfWqvEl0lHKz6
-	sC1JghKmi8uZQENRviJ8KWQkAqu0QvCJEqp5eCUGoQSoVfNJhWMbDEnuk3u0PORQQAcafe7CuKa
-	d0+BnmMBGQ+wGz5TtDr9+YsyFuBJTScmjn4RlNO2+xttd+nsbOis50Xxedy+U41xVE6EpvGFEUj
-	n2luV0mPQRLm6qg2EWMqLVTk/N4DVNk5AmyjoYKCg8eC
-X-Google-Smtp-Source: AGHT+IH82nPRzsrk8rYddBvn02C0V4vxqNATQ/FAfbV0gyTYbn992YmIneFZFLQQNKd12/Qa8kEAyA==
-X-Received: by 2002:a17:903:8cc:b0:223:517a:d4ed with SMTP id d9443c01a7336-22fc938ca63mr1882425ad.15.1746726527509;
-        Thu, 08 May 2025 10:48:47 -0700 (PDT)
-Received: from localhost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc7547838sm2322225ad.18.2025.05.08.10.48.46
+        bh=RLVpkrLXml6z3gsyisKKJHxZUHvDSbaVwN7SOYZwBDU=;
+        b=XrVbypFHnHGAev8NBb5BHDK+yX322kKNwVI7+ElqCRQjwId8EyTlJEp9rAU4WLu+2m
+         QtV091W+e8RBaL3LTAGuo6zMOp19YkmmHesx7mmzFDq+NM1PLMK/d9iaO3vxVXqhkLmj
+         x5+u65LlsSXQnXlKC0XPkVyk6/WtQtD+se7gjqYg0gGIqiQgJiRG24AcrJ+MxEma/dCy
+         w5nuVHJoMSy+mACgayWpUVpUY6eF3nawYgRDo5waDJAyGbF240LqaSxFQco9FUn1WyVu
+         MrBpHgXv+rZe3cM8Y/ZarhfZ9ev7bPAai3wq+sLNLCAcXOViNNUoAQsXP2AhXEfwMF3x
+         5mig==
+X-Forwarded-Encrypted: i=1; AJvYcCUlcElieXYzLycTg9qFn9Ac4HIXtVNNhgCzEyZoO51xnYtE2bN1H0a8s4HF5AiyEpukEHbtvDZanr7LVns=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyS/anbcg1R/qMCsbgFGAYYWM6TEnO0R8NMkSV6ywj/h3Yy+L0K
+	iM3OnAe5yqYPe7DeQe5VhPPHUicrGJAa4/Hp1XF1Tmcn4L0caWAC
+X-Gm-Gg: ASbGncugTswhZwQ6eFjzWGDChshldGttcG78wqTuyx/QPmtu1rj7d4JlofNKXKMuqpJ
+	iSXPy5DRk0IJBPN5uz170oKhlDt/BHFcDUJzcH2zXrmb/+p7Vsjc+KykLgjJYTMdi+DSixljEIg
+	5FS4Z94iEV3+EoiErg0ixDx2DZwsUUx3l7Rc1WSgYlyap9uq5R6MLkWHRvYm/uv9LB22B72u8wQ
+	7vUy4OwvSC8Wo3G5sATwVw5cYc4c9uS23VVMdTgbBkSPcQQd3Ug+/wJWJYfFWfVi/5sO/QOiokA
+	lmJkwDYg5WeBimshQCWbTtEDFwqvEIAQsRUMOnFxxUbIqbW+DUs7xpaqXLmM76Uyh1aj
+X-Google-Smtp-Source: AGHT+IHezibg8GmkS41ZH1NUhSUyDp2pWTDD5Cr9WM1wZKs3IJpCD+KsI2JrnLwYW9i6Hc+A6f/zsw==
+X-Received: by 2002:a05:6512:6286:b0:549:4ca4:504a with SMTP id 2adb3069b0e04-54fc6758da9mr67120e87.4.1746726538038;
+        Thu, 08 May 2025 10:48:58 -0700 (PDT)
+Received: from pc636 (host-95-203-26-194.mobileonline.telia.com. [95.203.26.194])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64ce953sm30346e87.256.2025.05.08.10.48.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 10:48:46 -0700 (PDT)
-Date: Thu, 08 May 2025 10:48:46 -0700 (PDT)
-X-Google-Original-Date: Thu, 08 May 2025 10:48:45 PDT (-0700)
-Subject:     Re: [PATCH] riscv: add Andes SoC family Kconfig support
-In-Reply-To: <Z8rMKZoDYmpNosSj@atctrx.andestech.com>
-CC: Conor Dooley <conor@kernel.org>, linux-riscv@lists.infradead.org,
-  linux-kernel@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, alex@ghiti.fr,
-  tim609@andestech.com
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: ben717@andestech.com
-Message-ID: <mhng-d0a8012c-c5c9-4309-ac08-bcb1dab85b26@palmer-ri-x1c9a>
+        Thu, 08 May 2025 10:48:57 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Thu, 8 May 2025 19:48:55 +0200
+To: Jeongjun Park <aha310510@gmail.com>
+Cc: akpm@linux-foundation.org, urezki@gmail.com, edumazet@google.com,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] mm/vmalloc: fix data race in show_numa_info()
+Message-ID: <aBzuh0qb1UPrT86s@pc636>
+References: <20250508165620.15321-1-aha310510@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508165620.15321-1-aha310510@gmail.com>
 
-On Fri, 07 Mar 2025 02:36:25 PST (-0800), ben717@andestech.com wrote:
-> On Thu, Mar 06, 2025 at 04:40:49PM +0000, Conor Dooley wrote:
->> [EXTERNAL MAIL]
->
->> Date: Thu, 6 Mar 2025 16:40:49 +0000
->> From: Conor Dooley <conor@kernel.org>
->> To: Ben Zong-You Xie <ben717@andestech.com>
->> Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
->>  paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
->>  alex@ghiti.fr
->> Subject: Re: [PATCH] riscv: add Andes SoC family Kconfig support
->>
->> On Wed, Mar 05, 2025 at 11:05:26AM +0800, Ben Zong-You Xie wrote:
->> > The first SoC in the Andes series is QiLai. It includes a high-performance
->> > quad-core RISC-V AX45MP cluster and one NX27V vector processor.
->>
->> I'd expect a config option like this to come with the user, which in
->> this case is the dts etc for a board using the QiLai SoC or drivers for
->> the SoC. Without dts or drivers, there's no reason to ever enable this,
->> so where are those patches?
->>
->> Cheers,
->> Conor.
->>
->
-> Hi Conor,
->
-> We are still preparing those patches for upstream, and we will add them
-> in the next patch series.
+On Fri, May 09, 2025 at 01:56:20AM +0900, Jeongjun Park wrote:
+> The following data-race was found in show_numa_info():
+> 
+> ==================================================================
+> BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
+> 
+> read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
+>  show_numa_info mm/vmalloc.c:4936 [inline]
+>  vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
+>  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+>  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+> ....
+> 
+> write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
+>  show_numa_info mm/vmalloc.c:4934 [inline]
+>  vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
+>  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+>  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+> ....
+> 
+> value changed: 0x0000008f -> 0x00000000
+> ==================================================================
+> 
+> According to this report,there is a read/write data-race because m->private
+> is accessible to multiple CPUs. To fix this, instead of allocating the heap
+> in proc_vmalloc_init() and passing the heap address to m->private,
+> vmalloc_info_show() should allocate the heap.
+> 
+> Fixes: a47a126ad5ea ("vmallocinfo: add NUMA information")
+> Suggested-by: Eric Dumazet <edumazet@google.com>
+> Suggested-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+> ---
+> v6: Change CONFIG_NUMA to must be check before doing any work related to the counters array.
+> - Link to v5: https://lore.kernel.org/all/20250508160800.12540-1-aha310510@gmail.com/
+> v5: Change heap to be allocated only when CONFIG_NUMA is enabled
+> - Link to v4: https://lore.kernel.org/all/20250508065558.149091-1-aha310510@gmail.com/
+> v4: Change the way counters array heap is allocated, per Andrew Morton's suggestion.
+>     And fix it to call smp_rmb() in the correct location.
+> - Link to v3: https://lore.kernel.org/all/20250507142552.9446-1-aha310510@gmail.com/
+> v3: Following Uladzislau Rezki's suggestion, we check v->flags beforehand
+>     to avoid printing uninitialized members of vm_struct.
+> - Link to v2: https://lore.kernel.org/all/20250506082520.84153-1-aha310510@gmail.com/
+> v2: Refactoring some functions and fix patch as per Eric Dumazet suggestion
+> - Link to v1: https://lore.kernel.org/all/20250505171948.24410-1-aha310510@gmail.com/
+> ---
+>  mm/vmalloc.c | 63 +++++++++++++++++++++++++++++-----------------------
+>  1 file changed, 35 insertions(+), 28 deletions(-)
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 3ed720a787ec..c1ea9713a1c0 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -3100,7 +3100,7 @@ static void clear_vm_uninitialized_flag(struct vm_struct *vm)
+>  	/*
+>  	 * Before removing VM_UNINITIALIZED,
+>  	 * we should make sure that vm has proper values.
+> -	 * Pair with smp_rmb() in show_numa_info().
+> +	 * Pair with smp_rmb() in vread_iter() and vmalloc_info_show().
+>  	 */
+>  	smp_wmb();
+>  	vm->flags &= ~VM_UNINITIALIZED;
+> @@ -4914,28 +4914,29 @@ bool vmalloc_dump_obj(void *object)
+>  #endif
+>  
+>  #ifdef CONFIG_PROC_FS
+> -static void show_numa_info(struct seq_file *m, struct vm_struct *v)
+> -{
+> -	if (IS_ENABLED(CONFIG_NUMA)) {
+> -		unsigned int nr, *counters = m->private;
+> -		unsigned int step = 1U << vm_area_page_order(v);
+>  
+> -		if (!counters)
+> -			return;
+> +/*
+> + * Print number of pages allocated on each memory node.
+> + *
+> + * This function can only be called if CONFIG_NUMA is enabled
+> + * and VM_UNINITIALIZED bit in v->flags is disabled.
+> + */
+> +static void show_numa_info(struct seq_file *m, struct vm_struct *v,
+> +				 unsigned int *counters)
+> +{
+> +	unsigned int nr;
+> +	unsigned int step = 1U << vm_area_page_order(v);
+>  
+> -		if (v->flags & VM_UNINITIALIZED)
+> -			return;
+> -		/* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
+> -		smp_rmb();
+> +	if (!counters)
+> +		return;
+>  
+> -		memset(counters, 0, nr_node_ids * sizeof(unsigned int));
+> +	memset(counters, 0, nr_node_ids * sizeof(unsigned int));
+>  
+> -		for (nr = 0; nr < v->nr_pages; nr += step)
+> -			counters[page_to_nid(v->pages[nr])] += step;
+> -		for_each_node_state(nr, N_HIGH_MEMORY)
+> -			if (counters[nr])
+> -				seq_printf(m, " N%u=%u", nr, counters[nr]);
+> -	}
+> +	for (nr = 0; nr < v->nr_pages; nr += step)
+> +		counters[page_to_nid(v->pages[nr])] += step;
+> +	for_each_node_state(nr, N_HIGH_MEMORY)
+> +		if (counters[nr])
+> +			seq_printf(m, " N%u=%u", nr, counters[nr]);
+>  }
+>  
+>  static void show_purge_info(struct seq_file *m)
+> @@ -4962,8 +4963,12 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+>  	struct vmap_node *vn;
+>  	struct vmap_area *va;
+>  	struct vm_struct *v;
+> +	unsigned int *counters;
+>  	int i;
+>  
+> +	if (IS_ENABLED(CONFIG_NUMA))
+> +		counters = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
+> +
+>  	for (i = 0; i < nr_vmap_nodes; i++) {
+>  		vn = &vmap_nodes[i];
+>  
+> @@ -4979,6 +4984,11 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+>  			}
+>  
+>  			v = va->vm;
+> +			if (v->flags & VM_UNINITIALIZED)
+> +				continue;
+> +
+> +			/* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
+> +			smp_rmb();
+>  
+>  			seq_printf(m, "0x%pK-0x%pK %7ld",
+>  				v->addr, v->addr + v->size, v->size);
+> @@ -5013,7 +5023,9 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+>  			if (is_vmalloc_addr(v->pages))
+>  				seq_puts(m, " vpages");
+>  
+> -			show_numa_info(m, v);
+> +			if (IS_ENABLED(CONFIG_NUMA))
+> +				show_numa_info(m, v, counters);
+> +
+>  			seq_putc(m, '\n');
+>  		}
+>  		spin_unlock(&vn->busy.lock);
+> @@ -5023,19 +5035,14 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+>  	 * As a final step, dump "unpurged" areas.
+>  	 */
+>  	show_purge_info(m);
+> +	if (IS_ENABLED(CONFIG_NUMA))
+> +		kfree(counters);
+>  	return 0;
+>  }
+>  
+>  static int __init proc_vmalloc_init(void)
+>  {
+> -	void *priv_data = NULL;
+> -
+> -	if (IS_ENABLED(CONFIG_NUMA))
+> -		priv_data = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
+> -
+> -	proc_create_single_data("vmallocinfo",
+> -		0400, NULL, vmalloc_info_show, priv_data);
+> -
+> +	proc_create_single("vmallocinfo", 0400, NULL, vmalloc_info_show);
+>  	return 0;
+>  }
+>  module_init(proc_vmalloc_init);
+> --
+LGTM:
 
-This is still "Needs Ack" in patchwork, so
+Reviewed-by: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+Thank you!
 
-Though like Conor says, we need the rest of the code to do anything 
-here, so that's really just a way to get it out of my queue ;)
-
->
-> Thanks,
-> Ben
->
->> >
->> > For further information, refer to [1].
->> >
->> > [1] https://www.andestech.com/en/products-solutions/andeshape-platforms/qilai-chip/
->> >
->> > Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
->> > ---
->> >  arch/riscv/Kconfig.errata | 2 +-
->> >  arch/riscv/Kconfig.socs   | 9 +++++++++
->> >  2 files changed, 10 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/arch/riscv/Kconfig.errata b/arch/riscv/Kconfig.errata
->> > index e318119d570d..be76883704a6 100644
->> > --- a/arch/riscv/Kconfig.errata
->> > +++ b/arch/riscv/Kconfig.errata
->> > @@ -12,7 +12,7 @@ config ERRATA_ANDES
->> >
->> >  config ERRATA_ANDES_CMO
->> >  	bool "Apply Andes cache management errata"
->> > -	depends on ERRATA_ANDES && ARCH_R9A07G043
->> > +	depends on ERRATA_ANDES && (ARCH_R9A07G043 || ARCH_ANDES)
->> >  	select RISCV_DMA_NONCOHERENT
->> >  	default y
->> >  	help
->> > diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
->> > index 1916cf7ba450..b89b6e0d1bc9 100644
->> > --- a/arch/riscv/Kconfig.socs
->> > +++ b/arch/riscv/Kconfig.socs
->> > @@ -1,5 +1,14 @@
->> >  menu "SoC selection"
->> >
->> > +config ARCH_ANDES
->> > +	bool "Andes SoCs"
->> > +	depends on MMU && !XIP_KERNEL
->> > +	select ERRATA_ANDES
->> > +	select ERRATA_ANDES_CMO
->> > +	select AX45MP_L2_CACHE
->> > +	help
->> > +	  This enables support for Andes SoC platform hardware.
->> > +
->> >  config ARCH_MICROCHIP_POLARFIRE
->> >  	def_bool ARCH_MICROCHIP
->> >
->> > --
->> > 2.34.1
->> >
->> >
->> > _______________________________________________
->> > linux-riscv mailing list
->> > linux-riscv@lists.infradead.org
->> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+--
+Uladzislau Rezki
