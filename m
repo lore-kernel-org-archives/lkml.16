@@ -1,231 +1,150 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D0BC195FE8
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 07:16:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746688617; cv=none; b=bWnRXK+P/Xp34JwwRthc2JzIPbuW6J8L7iA/e1BHrTXBiSKTEqOExwDR9OqGnKsd3SotkRL5L6CmN+nuGkyhYQK27AmWYjfndiqq+KzDVNehWo+DgShaF9gFGfe+DMpJ/4nTy39XnzVH/zqmhtnnRRPrDzNq6DqEkTWClOy+u4Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746688617; c=relaxed/simple;
-	bh=5znAwNEjUxb9R+3/37XSy3080i0Uwe89td6C9yxqzAQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W76NHKiRbXzvIYxxIDATpRZxPN3x4XPqpCBY+dlVF5bXg+iAfi+KaPozY0ZG6/3cctfdEbR3K1QTkl2DLUaYepv43Tw3OV9K/bQHZ27iaGWOhiUsNrtT7ONVXwPP/N9Ttw9k5M4gzYB+vsckEaEBVPOysRZZZ+NhZVlvag2bsXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60FBD106F;
-	Thu,  8 May 2025 00:16:44 -0700 (PDT)
-Received: from [10.163.54.182] (unknown [10.163.54.182])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC9A53F673;
-	Thu,  8 May 2025 00:16:45 -0700 (PDT)
-Message-ID: <f8c21905-a03a-4e4b-b897-71beb6b8b393@arm.com>
-Date: Thu, 8 May 2025 12:46:41 +0530
+Received: from meesny.iki.fi (meesny.iki.fi [195.140.195.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8557F10F9;
+	Thu,  8 May 2025 07:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.140.195.201
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746688675; cv=pass; b=WfgG+7T/86slNQ7bbRbpmoCK6FvPq06gwN8szyqltLGKkrZfvToDxM+JFOtAqKjzCAd4bVF6AscNPq+qhI33dwstzCo5XnVWF8qClS7ZbPAsjeXfhsbFnDL4S7ID3ioe59/5ImM4bobzNZ+JwK5LAPtD50G2pAITokmKYgrTckU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746688675; c=relaxed/simple;
+	bh=vYCDu5efpnGg8Jut4LYEfxMi9552KR5R18/GTqYfT+0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RBUy5iwNWIoE2CnoxDtUMA8NQcr0iiKUnSrVc50CnynM6zFQkvp2UdwiEbz3rWTrzdVgHGe9zawyBVKACY2VqY+RVtzv56majGfpLSuWd1hwR49msDx0tDWxuFiSfbuYE2dvGAzVEAR4Zv0VE7f2yFVtsLFGdIkfzUwbMp0G27k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b=iH/ZrBjU; arc=pass smtp.client-ip=195.140.195.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b="iH/ZrBjU"
+Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-127c-61ff-fee2-b97e.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:127c:61ff:fee2:b97e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sailus)
+	by meesny.iki.fi (Postfix) with ESMTPSA id 4ZtNkZ3QzczyRf;
+	Thu,  8 May 2025 10:17:42 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
+	t=1746688663;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YvSTwCgucN+/YVAF7uGKKlxukvXhz2N1xjZsJoTLdT4=;
+	b=iH/ZrBjUdi0TnM5aoTYtlIy7Wrv1SUZDP3Af505alufDE5JHrZC7+FCymbrecP5rbi9BCT
+	RVnE0UodIZNeUa3Xv2NJSrGmPxc9eM/uZK00a0FCxSQaDI2hRZxUUmsF6jFyqxZ7w82iWi
+	RiVXrqD6Q2fy9Svu4RjjgMGGSSJfsaY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
+	s=meesny; t=1746688663;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YvSTwCgucN+/YVAF7uGKKlxukvXhz2N1xjZsJoTLdT4=;
+	b=w7ODN86qNPUOLsk/Vcr4VHwajVd1zxTI5aMWb3CoEQTpab6udQ68lTWBZ+SGCOCo1v2oIB
+	1BlZ8npBNPpStbPCF0cpl7uYP5LYmIs4Bye+fcXYcCd6XtSNe5WAJ5CW2AmVnkcHwBnCoj
+	L7+x7II/XAc30zGfOnJLC2MRVHJKfXQ=
+ARC-Seal: i=1; s=meesny; d=iki.fi; t=1746688663; a=rsa-sha256; cv=none;
+	b=uoNRvsm97R3i3S27vJUD4UOIBRD0osYd2Xs2uXUAmgf2szkUnBmT4XjhXJ06v3mlfJHUI8
+	Drg17RzoAe50gdKk/KnAgeTxwHX6CCF6fhqyhthbLcJtRvjmYkVUKVlWgCmptq7X3yYdgZ
+	cLcjoNIQ9HzVMFcdTFkkhNi+LA2IewU=
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
+Received: from valkosipuli.retiisi.eu (valkosipuli.local [192.168.4.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id A0F1D634C93;
+	Thu,  8 May 2025 10:17:41 +0300 (EEST)
+Date: Thu, 8 May 2025 07:17:41 +0000
+From: Sakari Ailus <sakari.ailus@iki.fi>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Pratap Nirujogi <pratap.nirujogi@amd.com>, W_Armin@gmx.de,
+	ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
+	king.li@amd.com, dantony@amd.com
+Subject: Re: [PATCH v12] platform/x86: Add AMD ISP platform config for OV05C10
+Message-ID: <aBxalXYus1R6Xbrr@valkosipuli.retiisi.eu>
+References: <20250505171302.4177445-1-pratap.nirujogi@amd.com>
+ <aBosuj_TbH7bzjfZ@valkosipuli.retiisi.eu>
+ <0d801367-da24-4596-83d9-08ccd89ca670@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] mm: Optimize mremap() by PTE batching
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
- ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
- maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
- willy@infradead.org, ioworker0@gmail.com, yang@os.amperecomputing.com,
- baolin.wang@linux.alibaba.com, ziy@nvidia.com, hughd@google.com
-References: <20250507060256.78278-1-dev.jain@arm.com>
- <20250507060256.78278-3-dev.jain@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250507060256.78278-3-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0d801367-da24-4596-83d9-08ccd89ca670@redhat.com>
 
-On 5/7/25 11:32, Dev Jain wrote:
-> To use PTE batching, we want to determine whether the folio mapped by
-> the PTE is large, thus requiring the use of vm_normal_folio(). We want
-> to avoid the cost of vm_normal_folio() if the code path doesn't already
-> require the folio. For arm64, pte_batch_hint() does the job. To generalize
-> this hint, add a helper which will determine whether two consecutive PTEs
-> point to consecutive PFNs, in which case there is a high probability that
-> the underlying folio is large.
-> Next, use folio_pte_batch() to optimize move_ptes(). On arm64, if the ptes
-> are painted with the contig bit, then ptep_get() will iterate through all 16
-> entries to collect a/d bits. Hence this optimization will result in a 16x
-> reduction in the number of ptep_get() calls. Next, ptep_get_and_clear()
-> will eventually call contpte_try_unfold() on every contig block, thus
-> flushing the TLB for the complete large folio range. Instead, use
-> get_and_clear_full_ptes() so as to elide TLBIs on each contig block, and only
-> do them on the starting and ending contig block.
+Hi Hans,
+
+On Wed, May 07, 2025 at 11:13:18PM +0200, Hans de Goede wrote:
+> Hi Sakari,
 > 
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> ---
->  include/linux/pgtable.h | 29 +++++++++++++++++++++++++++++
->  mm/mremap.c             | 37 ++++++++++++++++++++++++++++++-------
->  2 files changed, 59 insertions(+), 7 deletions(-)
+> On 6-May-25 5:37 PM, Sakari Ailus wrote:
+> > Hi Pratap,
+> > 
+> > On Mon, May 05, 2025 at 01:11:26PM -0400, Pratap Nirujogi wrote:
+> >> ISP device specific configuration is not available in ACPI. Add
+> >> swnode graph to configure the missing device properties for the
+> >> OV05C10 camera device supported on amdisp platform.
+> >>
+> >> Add support to create i2c-client dynamically when amdisp i2c
+> >> adapter is available.
+> >>
+> >> Co-developed-by: Benjamin Chan <benjamin.chan@amd.com>
+> >> Signed-off-by: Benjamin Chan <benjamin.chan@amd.com>
+> >> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> >> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> >> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> >> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+> >> ---
 > 
-> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> index b50447ef1c92..38dab1f562ed 100644
-> --- a/include/linux/pgtable.h
-> +++ b/include/linux/pgtable.h
-> @@ -369,6 +369,35 @@ static inline pgd_t pgdp_get(pgd_t *pgdp)
->  }
->  #endif
->  
-> +/**
-> + * maybe_contiguous_pte_pfns - Hint whether the page mapped by the pte belongs
-> + * to a large folio.
-> + * @ptep: Pointer to the page table entry.
-> + * @pte: The page table entry.
-> + *
-> + * This helper is invoked when the caller wants to batch over a set of ptes
-> + * mapping a large folio, but the concerned code path does not already have
-> + * the folio. We want to avoid the cost of vm_normal_folio() only to find that
-> + * the underlying folio was small; i.e keep the small folio case as fast as
-> + * possible.
-> + *
-> + * The caller must ensure that ptep + 1 exists.
-> + */
-> +static inline bool maybe_contiguous_pte_pfns(pte_t *ptep, pte_t pte)
-> +{
-> +	pte_t *next_ptep, next_pte;
-> +
-> +	if (pte_batch_hint(ptep, pte) != 1)
-> +		return true;
-> +
-> +	next_ptep = ptep + 1;
-> +	next_pte = ptep_get(next_ptep);
-> +	if (!pte_present(next_pte))
-> +		return false;
-> +
-> +	return unlikely(pte_pfn(next_pte) - pte_pfn(pte) == 1);
-> +}
-> +
->  #ifndef __HAVE_ARCH_PTEP_TEST_AND_CLEAR_YOUNG
->  static inline int ptep_test_and_clear_young(struct vm_area_struct *vma,
->  					    unsigned long address,
-> diff --git a/mm/mremap.c b/mm/mremap.c
-> index 0163e02e5aa8..9c88a276bec4 100644
-> --- a/mm/mremap.c
-> +++ b/mm/mremap.c
-> @@ -170,6 +170,23 @@ static pte_t move_soft_dirty_pte(pte_t pte)
->  	return pte;
->  }
->  
-> +/* mremap a batch of PTEs mapping the same large folio */
-> +static int mremap_folio_pte_batch(struct vm_area_struct *vma, unsigned long addr,
-> +		pte_t *ptep, pte_t pte, int max_nr)
-> +{
-> +	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
-> +	struct folio *folio;
-> +	int nr = 1;
+> <snip>
+> 
+> >> +/*
+> >> + * Remote endpoint AMD ISP node definition. No properties defined for
+> >> + * remote endpoint node for OV05C10.
+> > 
+> > How will this scale? Can you use other sensors with this ISP? Although if
+> > you get little from firmware, there's not much you can do. That being said,
+> > switching to DisCo for Imaging could be an easier step in this case.
+> 
+> Note I've already talked to AMD about the way the camera setup
+> is currently being described in ACPI tables is suboptimal and
+> how they really should use proper ACPI description using e.g.
+> a _CRS with an I2cSerialBus resource for the sensor.
 
-A small nit - s/nr/nr_pages ?
+That's one thing, yes, but it's not enough to get rid of the board code.
 
-> +
-> +	if ((max_nr != 1) && maybe_contiguous_pte_pfns(ptep, pte)) {
+> 
+> Although I must admit I did not bring up the ACPI DisCo for imaging
+> spec as something to also look at for future generations.
 
-Like mentioned earlier in v1, could maybe_contiguous_pte_pfns() here
-add some additional cost for buffers that are actually not mapped to
-contig physical pages.
+I think we should really try to get rid of the board code the raw cameras
+on ACPI systems currently depend on, in future systems, instead of just
+reducing it a little bit. MIPI DisCo for Imaging enables that.
 
-The test case you have mentioned in the cover demonstrating performance
-gains might have always been run just after boot, thus increasing the
-probability of contiguous physical mapping, which will not be the case
-on fragmented memory systems. In that case the proposed consecutive PFN
-comparison will always happen unconditionally without any benefit ?
+I guess you're not very familiar with Intel-based ChromeOS systems in this
+area? Maybe largely because they work out of the box. And there's no board
+code for these systems in the kernel. These are based (albeit I'm not quite
+sure about the latest ones) on older Linux-based definitions whereas newer
+MIPI DisCo for Imaging spec is OS-independent.
 
-Just curious.
+> 
+> Note that there currently is hw shipping using the somewhat
+> broken ACPI sensor description this glue driver binds to,
+> so we're stuck with dealing with these ACPI tables as they
+> are already out there in the wild.
 
-From V1
+I agree, there's little that can be done at this point.
 
---------------------------------------------------------------------
-maybe_contiguous_pte_pfns() cost will be applicable for memory
-areas greater than a single PAGE_SIZE (i.e max_nr != 1) ? This
-helper extracts an additional consecutive pte, ensures that it
-is valid mapped and extracts pfn before comparing for the span.
+> 
+> But yes for future hw generations it would be good to have
+> a better description of the hw in ACPI.
 
-There is some cost associated with the above code sequence which
-looks justified for sequential access of memory buffers that has
-consecutive physical memory backing. But what happens when such
-buffers are less probable, will those buffers take a performance
-hit for all the comparisons that just turn out to be negative ?
---------------------------------------------------------------------
+-- 
+Regards,
 
-> +		folio = vm_normal_folio(vma, addr, pte);
-> +		if (folio && folio_test_large(folio))
-> +			nr = folio_pte_batch(folio, addr, ptep, pte, max_nr,
-> +					     flags, NULL, NULL, NULL);
-> +	}
-> +	return nr;
-> +}
-> +
->  static int move_ptes(struct pagetable_move_control *pmc,
->  		unsigned long extent, pmd_t *old_pmd, pmd_t *new_pmd)
->  {
-> @@ -177,7 +194,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
->  	struct mm_struct *mm = vma->vm_mm;
->  	pte_t *old_ptep, *new_ptep;
-> -	pte_t pte;
-> +	pte_t old_pte, pte;
->  	pmd_t dummy_pmdval;
->  	spinlock_t *old_ptl, *new_ptl;
->  	bool force_flush = false;
-> @@ -186,6 +203,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  	unsigned long old_end = old_addr + extent;
->  	unsigned long len = old_end - old_addr;
->  	int err = 0;
-> +	int max_nr;
-
-A small nit - s/max_nr/max_nr_pages ?
-
->  
->  	/*
->  	 * When need_rmap_locks is true, we take the i_mmap_rwsem and anon_vma
-> @@ -236,12 +254,13 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  	flush_tlb_batched_pending(vma->vm_mm);
->  	arch_enter_lazy_mmu_mode();
->  
-> -	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
-> -				   new_ptep++, new_addr += PAGE_SIZE) {
-> -		if (pte_none(ptep_get(old_ptep)))
-> +	for (int nr = 1; old_addr < old_end; old_ptep += nr, old_addr += nr * PAGE_SIZE,
-> +				   new_ptep += nr, new_addr += nr * PAGE_SIZE) {
-
-
-> +		max_nr = (old_end - old_addr) >> PAGE_SHIFT;
-> +		old_pte = ptep_get(old_ptep);
-> +		if (pte_none(old_pte))
->  			continue;
->  
-> -		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
->  		/*
->  		 * If we are remapping a valid PTE, make sure
->  		 * to flush TLB before we drop the PTL for the
-> @@ -253,8 +272,12 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  		 * the TLB entry for the old mapping has been
->  		 * flushed.
->  		 */
-> -		if (pte_present(pte))
-> +		if (pte_present(old_pte)) {
-> +			nr = mremap_folio_pte_batch(vma, old_addr, old_ptep,
-> +						    old_pte, max_nr);
->  			force_flush = true;
-> +		}
-> +		pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr, 0);
->  		pte = move_pte(pte, old_addr, new_addr);
->  		pte = move_soft_dirty_pte(pte);
->  
-> @@ -267,7 +290,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  				else if (is_swap_pte(pte))
->  					pte = pte_swp_clear_uffd_wp(pte);
->  			}
-> -			set_pte_at(mm, new_addr, new_ptep, pte);
-> +			set_ptes(mm, new_addr, new_ptep, pte, nr);
->  		}
->  	}
->  
+Sakari Ailus
