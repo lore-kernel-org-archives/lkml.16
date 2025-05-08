@@ -1,132 +1,108 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C9A227B94;
-	Thu,  8 May 2025 12:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655D922579B;
+	Thu,  8 May 2025 12:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746708957; cv=none; b=lOzDIckcnBIoCvdVCdiahb0PvA/WVs7sh7YT2Vdhh5UYzEsliegPOhsGqpLjhFFi8PjFAt5uo4B63NfjDW55RyGEAkre7Ex44jondrnQcYbuYqCONWu4UPNPST5zFZs90Br7UJyRfwb+GI6i6AQsrEoLC8up+VKM4nO1Vpanf+c=
+	t=1746708958; cv=none; b=PoQM7Z6UljZiu7DconZGla7fFHfX1QR+lu+58EmZ9vPSrwWiSr7a+xkAHTtSF06ePoJj9taQLd3StKrUmp9Cg44YRPfzaYIyiPiOCOFdfXo4sEns69uXKxLwYVvC2siFVUK7MbawmMmJXfd7+oAJ5s43hidxbK/NE8QzuC1D3eA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746708957; c=relaxed/simple;
-	bh=Lj45j4fOwe928+apVmd2LQmRdI6iPSMldwVQtJCnIBQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R7fFjSCw6niTzdWIIxOf0dB5ZhjkL5v1QmNaLIvSvwA2Op6FUVeVSMBmY48HaAzNZVrThS/Cy2nb04t9/L+mCI1MisilwfQAak0s2oGG04peMml0oVuxB1B2FcNe/yvehYFqOhwRjP4LClj/DyeawjFBuawe3w4CPRgF41g3wVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=bjRVISLB; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1746708958; c=relaxed/simple;
+	bh=P2hkK24gIBpekWVgzbZvUT9UAOj3974Lm4QOgZm4MU4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F9+fXCi42XBTkWYor+Tx1hGkZ3P98pAH+Rc8AHPDflIrT8YJdxXiIr6dCgy2PFTWUTvgdA5MIwBR0C8YA7BSBaxn1KONijQuewdiwODVDK04KVD0Vt3c+b/eVYHqkMnny9YrVquobVCwPMAjpHdXQZ1ZT37J/3vb/MuZWBtARO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=XPlPcIC0; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="bjRVISLB"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZtXDl0rVQz9tH2;
-	Thu,  8 May 2025 14:55:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1746708951;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c1U4rZGx6XERUK703NiiO7qOrMXmSyQcFqlgMieceks=;
-	b=bjRVISLBtHX5DfYSngZXkcLernXd84uYnUhhfzmlqWxXU9ogXS+VA1nVBWV9C1OFAPhqrl
-	DQwRHux+nTpoGHBRb/gwfeWNh70+kMhrQWYrv79phGNmIEqQXGFC49a2bgJPAHmLhdkwxt
-	ZFp+s7KYFMcqqnWUY3eI9hBea5SP0YjYFVmEo5lpFa4k3vI9fvdUMGMfwOoBrm+8Sqls4s
-	Qcc8j5qQPJHtt1XCPgM7RJ3+7TRvmqeAX2koZA923N0GkgcrDXU5tBajcjK6B2FKUpknB2
-	fqW9+yH4BbWCpv7P1pegCvQqVTLRoXqbMzB7aHwj2DPWWBsYwRCLPJGemPmoVw==
-Date: Thu, 8 May 2025 14:55:43 +0200
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, David Hildenbrand <david@redhat.com>, 
-	Dave Chinner <david@fromorbit.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH v4 1/5] mm/readahead: Honour new_order in
- page_cache_ra_order()
-Message-ID: <nepi5e74wtghvr6a6n26rdgqaa7tzitylyoamfnzoqu6s5gq4h@zqtve2irigd6>
-References: <20250430145920.3748738-1-ryan.roberts@arm.com>
- <20250430145920.3748738-2-ryan.roberts@arm.com>
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="XPlPcIC0"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39ee5ac4321so1215691f8f.1;
+        Thu, 08 May 2025 05:55:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1746708954; x=1747313754; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=p6AYNVAEWLWzZVYwdSbhFHON7qW08tK4r17ya22Q5uQ=;
+        b=XPlPcIC0Ng4UNTZiY1dUVjhVyMtIGmrfmrHqhcUfj/0CgSyWKAPhXUfICIFnLRCOCX
+         LBRsZ9AJ+z+SrJtuWv5+JB7Oq2dyB7s2VixxOwpf01bU9tMBNiJCRm9bZgVYDuOVCgGp
+         0DO4GiIZSK/mwtmK0YocxNijvsapPK7gvwAkPPZmetrHhvy7Cj1gBxLgb3Vxx62JbWY1
+         0nCzimV8vGy9RHgWlCR72yBXWnyOrIz1URka7aGgECf8pYek/m3AZguAuF0mWSqVG19A
+         m1I5XPpZVSU7uVmxvlebuQmppL9iPCr/3g+y34T3w20r6TebcSpDGyPFkSy035CSR6Tg
+         WpQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746708955; x=1747313755;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=p6AYNVAEWLWzZVYwdSbhFHON7qW08tK4r17ya22Q5uQ=;
+        b=QAG39Mzoy+Nifa8y0wJlv3Sol2PlWpSuSq4Fb82MoRW/YNXOYlQXBVHqoRQ8q8Su9i
+         zSYEoqI4YO2uDGFMW5tMqWKzQocBK3FSxwCvd8g2H0SSJdoyWqW4sCnbdxKK3Htp3qh2
+         B0rBhV0jfYbB3Hepo9yU067K2z0sfE7g7YlapCLNBXFFZPLsTfL4ha1ZPg4YpYdGwDPj
+         iAdnxMVz5c7Ad39W/P+qvm4YtP25oHFq94yTLRTS0AFsqXmPJE5SJZBBGL/fx76Yazy9
+         m1wBub1VsA6jnYlN3Vm1wMLwA5axg2d01uLSeuHf4qF2uhTcH8tadplGaT93dehh8tMv
+         NWoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWtw+KqCDUtJ7Rctd6bzmZKWImPwHbgYTOnUcjZtRm5Z+Fj74VVDUJS7FlOvFjeHEaQNn5a9+RDaK4v40o=@vger.kernel.org, AJvYcCXxZxXaXUSsrE6qBuSUmTu8prpjQ/iobTdgzF/+4cD1xF1b/QKToyhRTmTyLlZl8GkLjOb8c+74@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt8rKET4gviuYWO0vtjEHYYhk1pD3pwjyfog3lOWzPAjGYgUkz
+	qN7fXzuIH1rja8oLeEfOo9VSQSUKFEvGCRE/N6l4OTbYBIbMoNqhFE7z
+X-Gm-Gg: ASbGncsR8MyNHUc1DHQBF/yv4IlM7jo2lrlDas450zCDTs42Z4Jfkkqglq3JGElo0L4
+	btDckmWdaEXYM5vczRLZL8jF0e1occ032wefQJgBElJkXwWY+vwR9ZQg77+vXzgBG0gGbpqwt1i
+	cHNRj4dyJ1l7uU/mulcQbxxRJLMdhbxBx6kaWE0fYGoPFqUSQ5aG4rs8/RHcWi6rdKyqQX6L+oP
+	n92UMDz6geSxxAO7T+SAxNZIXLRSg9M30aV+EmghPce209Kqx6E1iTJTNCH/Csinyxo5LDXwwv1
+	ZivlyN6B9nnH343fDj+ZfOhbKamLganspQVtymmoL7BGAOIM1TsgquG4gWaa6CtnrQhvGhVXmt5
+	8T86YTgcrMDeNq1MIhg==
+X-Google-Smtp-Source: AGHT+IGTa2WWD3VgWj+uKDTBuDUhX771kiVc7NX3oQrzYhOmASsrPcy1MfhL6cDIuvZ78Xz9Lvk9Tg==
+X-Received: by 2002:a05:6000:184d:b0:39c:30d9:3b5c with SMTP id ffacd0b85a97d-3a0ba0efbf9mr2488623f8f.39.1746708954465;
+        Thu, 08 May 2025 05:55:54 -0700 (PDT)
+Received: from [192.168.1.3] (p5b05727d.dip0.t-ipconnect.de. [91.5.114.125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0b9af4ba1sm2897233f8f.59.2025.05.08.05.55.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 05:55:53 -0700 (PDT)
+Message-ID: <384739cf-4b2b-4c4c-81e6-19d4547dd395@googlemail.com>
+Date: Thu, 8 May 2025 14:55:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430145920.3748738-2-ryan.roberts@arm.com>
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.1 00/97] 6.1.138-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250508112609.711621924@linuxfoundation.org>
+Content-Language: de-DE
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250508112609.711621924@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hey Ryan,
+Am 08.05.2025 um 13:30 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.1.138 release.
+> There are 97 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-On Wed, Apr 30, 2025 at 03:59:14PM +0100, Ryan Roberts wrote:
-> FOLIO  0x0001a000  0x0001b000       4096       26       27      1      0
-> FOLIO  0x0001b000  0x0001c000       4096       27       28      1      0
-> FOLIO  0x0001c000  0x0001d000       4096       28       29      1      0
-> FOLIO  0x0001d000  0x0001e000       4096       29       30      1      0
-> FOLIO  0x0001e000  0x0001f000       4096       30       31      1      0
-> FOLIO  0x0001f000  0x00020000       4096       31       32      1      0
-> FOLIO  0x00020000  0x00024000      16384       32       36      4      2
-> FOLIO  0x00024000  0x00028000      16384       36       40      4      2
-> FOLIO  0x00028000  0x0002c000      16384       40       44      4      2
-> FOLIO  0x0002c000  0x00030000      16384       44       48      4      2
-> ...
-> 
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> ---
->  mm/readahead.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/mm/readahead.c b/mm/readahead.c
-> index 6a4e96b69702..8bb316f5a842 100644
-> --- a/mm/readahead.c
-> +++ b/mm/readahead.c
-> @@ -479,9 +479,6 @@ void page_cache_ra_order(struct readahead_control *ractl,
->  
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-So we always had a fallback to do_page_cache_ra() if the size of the
-readahead is less than 4 pages (16k). I think this was there because we
-were adding `2` to the new_order:
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-unsigned int min_ra_size = max(4, mapping_min_folio_nrpages(mapping));
 
-/*
- * Fallback when size < min_nrpages as each folio should be
- * at least min_nrpages anyway.
- */
-if (!mapping_large_folio_support(mapping) || ra->size < min_ra_size)
-	goto fallback;
+Beste Grüße,
+Peter Schneider
 
->  	limit = min(limit, index + ra->size - 1);
->  
-> -	if (new_order < mapping_max_folio_order(mapping))
-> -		new_order += 2;
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
-Now that you have moved this, we could make the lhs of the max to be 2
-(8k) instead of 4(16k).
-
-- unsigned int min_ra_size = max(4, mapping_min_folio_nrpages(mapping));
-+ unsigned int min_ra_size = max(2, mapping_min_folio_nrpages(mapping));
-
-I think if we do that, we might ramp up to 8k sooner rather than jumping
-from 4k to 16k directly?
-
-> -
->  	new_order = min(mapping_max_folio_order(mapping), new_order);
->  	new_order = min_t(unsigned int, new_order, ilog2(ra->size));
->  	new_order = max(new_order, min_order);
-> @@ -683,6 +680,7 @@ void page_cache_async_ra(struct readahead_control *ractl,
->  	ra->size = get_next_ra_size(ra, max_pages);
->  	ra->async_size = ra->size;
->  readit:
-> +	order += 2;
->  	ractl->_index = ra->start;
->  	page_cache_ra_order(ractl, ra, order);
->  }
-> -- 
-> 2.43.0
-> 
-
---
-Pankaj
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
