@@ -1,132 +1,131 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F12BA38;
-	Thu,  8 May 2025 07:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687AE21B19E;
+	Thu,  8 May 2025 07:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746688430; cv=none; b=ftH/VPpGQU4EC/D8rbjTLNmPt4xB+eOm9qchQmFpa1D3uxGs5pPERH5LXjl4+89d8Q9IPo9wXM6qG38P39jn3A3UzLCD/hM7yVl5rE6qweC8MitowXMEtmMvdCmxT964ieFwLNQUUIMDXLWFG2u+auHiQ29hUepUoDYfrClloCw=
+	t=1746688530; cv=none; b=IRRggk1yc5WLcivWJqJm7MtR8OY1yKLc95+3pFnx5oCs76TxYK8930VliSo9HbN6C5NlVqHAXUMbJ/wToLUQUA66LfwWDPv0Aj6OFkZOpywy5N5JceUUNF2cnDdDoQchLE/wDf5R7YSvI0DpH6yK4njwu9rSDZ47XvF/ehio+UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746688430; c=relaxed/simple;
-	bh=hrwGFHMMwMzLO3qU86OI8t/Nh3XTJsB3z/oENIE9U9I=;
+	s=arc-20240116; t=1746688530; c=relaxed/simple;
+	bh=9CJgYF+m7a3hBLPx/CB3JOZ6LoM9LEM8RXJiBJ1Ob3s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QUd3J7R5wuotH1g2wWz09NEKH9Sm2IxzOMkXnvg8R+jwBrAhP4Sy+p8ixoTHQBcg53le+PCUg9JXmksX0umBAG6ndW795JZERNAFg/MhcQ77LLKd/Fm4n/nbTSrNmIM4u5guvfG3Br8smENCrD254YwjzwaEpibS2ploMeyhwx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=KVEJD3ckJYqdYVnNLSe2+OS+Mi0EN2SuB5wGqFo486aXQLXdtsCcYjg+Y1QTVUAOuD93iL9G9h8lDYrpaC2VRIdQx9To7CKcpeoYzqMUmcglUlsEZAaqjs/elQVgrmGzAVdN+h10mCKN+ExMc7/pAx5BdVXlTOKezKBjfx2XEEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PYcQsW0z; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-52413efd0d3so219825e0c.2;
-        Thu, 08 May 2025 00:13:48 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PYcQsW0z"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-60638c07cabso432548eaf.3;
+        Thu, 08 May 2025 00:15:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746688527; x=1747293327; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+6hEwmNbvDrX8ZUAsqAq49EAFin/5oOteZQpulus6Tc=;
+        b=PYcQsW0z2SzPRJOFPnAe8d+NtMLEt/ez8fmIVKYcgi23rEhw2LAVxoxX1q0HZY2ZKG
+         i+OmdrLoRYHdYlYWapjgh4O/RZcCum0HXfiu/5GP2G4xkpaxTlIgKatiBXPGz3lHId7j
+         wyxy/Cy78lYvMiz4uYKkpeL9wxWxuTBipAXadU7OrupK4QAkeJ2yIqnMNyNItv3XCxW/
+         GFbw5QjbsRK9Xu37MvQsqlucJPjr8cKVCF7vNVmXvGXXK547hqurAKGtaZ6+Cbg17vKH
+         ogjX4FcbrGzRs5uuzSyll49H3cpP8X6ZYtCKrjOSUAXGd/CC/a54uM5HaTTWhGM9tt5O
+         4Avg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746688427; x=1747293227;
+        d=1e100.net; s=20230601; t=1746688527; x=1747293327;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=YCDiRMnhh5NRGE6kDeKql7Kl5Sr5vQvd1G2z+pchMa0=;
-        b=ZDoeHGGKMTvcWEJvCd/5p+CiRtbolvk0TTPyqjfYJXDZw+qnBNEgKHGxgi1xPWcjZk
-         fhlWIupOLOtDjIjutZRWWv7QlI3JjBNdGKjQlMvfjolbsIJ0uZyGN1eG71wCYYTW6qB8
-         G+T1I4VZ/qfalrX4MiQ+J513JMi+3nL0UyIHxuRQC/EluAnhvJT+B6XlAm2Zab7QZDuV
-         jrj35bJt8wj9/HQU7pqa5zjO7QF+Kwkiao51UZYS0YL76FGDSJpxFYel7fMhDsZx/WN1
-         +zGe+OjtJazSB/IKI7OaLRg9AqiJsPr0T9f2G+GSIGXU/4YlELO3Cth/rvbzxduvG8q1
-         YW6A==
-X-Forwarded-Encrypted: i=1; AJvYcCU6cWQlaPAu+D2oXcVYq1rAkyYtR72d5p0ziPgniuNxLPWcwCX+uwirOLuAn3N1jY5QnHArx7fLR6iiWw==@vger.kernel.org, AJvYcCU9AasIYaDLOA47POR4s7BIbVO6LZrKxYJ2wgkDBPrbJYD3wKX63FHjSKapFsB8X2a1h7zkmEsCzu1a@vger.kernel.org, AJvYcCVNWzVAtRT4ZCWPvPyW3yhQDMgmD41qpwMRWNbsygyLsJS3G1YEWi9jiKtjI7OYbmy+1MoCz1YcBg/x@vger.kernel.org, AJvYcCVwGYOq0/kT6N/Wzg28b9q7/giRZ6B5ralpUZeB/VtP8Xrtt7bJJlYbTtq4nezL72K6Ogq6Qbam9zxO@vger.kernel.org, AJvYcCWPpXZMzsmgqwcxZP0gDQKA4g837AsrCWOVGST4NzUwWUwI1i+YTxFAtbjWjAfJQT9hOsZN/D8UGIlL@vger.kernel.org, AJvYcCWfCmjc9Tk26fJ2mlXcAubQyhZO0G87Uyg+s93g0njmCeKLZLzBhbnjUKyivfP71tZbcCFxRvlXjfTK@vger.kernel.org, AJvYcCXF2utdp15OHTrzOag10UrrfIRCdjf/6QG4D49QSCzr5hstwDy9vhqQAnSUOQ/0GrlSbGJPU8i7kGu4A+sB@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqoMjjcgL245QVx7A6SCKCGTbZ4leWZ2Ds2FJzPtkg/IHXN7UT
-	mOpCnCoc9aEOd04ZbP38eQd07GhWsT+1XQwnq6f1ukRLcjbxzKhzbizHoVa6
-X-Gm-Gg: ASbGncv9AQLs30bzrFisedCFtzfjX171YLPsQNeFoam3x0p/kC8crscRZuzx6cgbv/h
-	sTS3hir/W+i3co0n8zi9Sy5eLmDj5qTneakcgb08UwrtfKAGfEnyEWOhSVDpiX4Ra2Or8Tf+zBz
-	4pmFxpVQ8Qu/0tT41zLnIrbsugFB+d0FL7e7Z1aFL/iNUIIAMzhKYyqqrlECtreTfH9SV8QJayu
-	71b6P6/UyE+GeNg4EfCoMTMAzOGdEYP62+cBCF1s8VivT+Gv+3tQ/x0k1NI+pfxJiRLtjQKfFEH
-	W3BO3fSvEOLhC9ul5sOFcEoWSX9yp5e3p7bPGtihCRfEtWO9IX7X+8xvVTv5EuKW11t6L6sKBP9
-	0RZU=
-X-Google-Smtp-Source: AGHT+IF2A/TDjmguwXYq3jSxg9o+koHTOBbSlXcLVMj1lgbKb5yCqhb2DL2IwH2HhmoWubyqUiPEIQ==
-X-Received: by 2002:ac5:c7da:0:b0:52c:4eb0:118d with SMTP id 71dfb90a1353d-52c4eb01601mr35484e0c.4.1746688426849;
-        Thu, 08 May 2025 00:13:46 -0700 (PDT)
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52ae41f2065sm2870684e0c.47.2025.05.08.00.13.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 00:13:46 -0700 (PDT)
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4ddb03095d3so162794137.0;
-        Thu, 08 May 2025 00:13:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUNj8OJor3vZ/dTBxqJZC3ZgPzzPP2+ehV1cJqek9OxNQkPC/wRWkfjtrylZ9TaVCYaGY4FVL+JCmQ4@vger.kernel.org, AJvYcCUtA2qJtyXPFPPy28Up9FnXEU7rYW/E8TlpWVt1uKSAXROvuqum/1RFmbE7WZRa9VMxgXWa3rIOsGQk@vger.kernel.org, AJvYcCVJpEhuHszeh3rrLo7LIhbYait2dWyIXX0RPhDAxROA7ESJi/URMULnsMdTF+1ZLswbSznkxssYagtjp6sg@vger.kernel.org, AJvYcCVTP7+rFGTJ62yCleLXcXsbj2fwLnRrOpBBGuyBlyp40pOflowX9nTuNEBJfiKcttJRx9TMGMA3SVJiAg==@vger.kernel.org, AJvYcCWLKCsk0LrjA3dkeYnBxnwJngTn/JrfSwU7/sVxYlROKiMJSe35NkuMoTwrIp2hddQhbXlgusEdyLY3@vger.kernel.org, AJvYcCX5X0LnAOacg3o95rdnBe4wDf7vtTgJaqCztpip75vA94AbWr9z6A/gq9BTrJyyVOJ0jVgd5qfKurNO@vger.kernel.org, AJvYcCX8Gwv3tJ80wkeBjV9dOwlIFrBll7/3VEj9XQ5cxVrAVc3CA1QvC7/UaLZGws30lqXt6dja4HovCVID@vger.kernel.org
-X-Received: by 2002:a05:6102:2c87:b0:4c1:c10d:cf65 with SMTP id
- ada2fe7eead31-4dc738bc3famr5378135137.25.1746688425863; Thu, 08 May 2025
- 00:13:45 -0700 (PDT)
+        bh=+6hEwmNbvDrX8ZUAsqAq49EAFin/5oOteZQpulus6Tc=;
+        b=wlXIAA/2oxFV5CxkSaVpTEPECRR2FcKHJL/WzYTUuD11nKU2nvt0guszzK8lZrixhj
+         3Xe4kfHRsDAiQuHdclxKdabVuQlnnvl0RneOqcv1DAfCkS52rX2zKp6wVSEbvEk6uYdb
+         O8EJcMuB/f+h7YnoYksai5WY9bzT+4Qvu0J1j7ahOBg8uR/JJxOZyzSqafyqkEwQZvf0
+         TbkInmset8SDGRe3jWXyybooUSkgGy61h2vJeWCHXX1QSMmUICt8DCyMD5Jm1c+d16Z9
+         kmVgPIPSbR3KpETUyhaocs2SqRRtrcDgdhyTDuFB4HdJoQwXIQcROVIRm4pfpt7Mgmqe
+         t4yA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/aCStPBb9POatu5vYaMUd6IDLiENMH7LwBdbUCWPT1Upz58Sbmt43kJ0XbN0eC74hBmtRz26FH34+Zg==@vger.kernel.org, AJvYcCWmUnH09k5GwhhA64CSceHFCmD6hp9rQ5FMoWu2qDi67haz+sJY91lqTjLxrg6NQ2Yl9xvKCQ406sjHp1s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRL1IQNQd/y9jhQGu4dRyqdGoZ3ooJchI4mZCLSdvHId57FDRg
+	RM76Z2sMcd94la7hDEe2jiEfLjZ3Yd8KNPD7tnDE3S8J76KOX9Q2L5NWxpUkzGQCv4gZxwvJAcP
+	AHx+fEu4wBSEyHmG0YFtdVVFpZGU=
+X-Gm-Gg: ASbGncvKL1becr6Tp0tUzOhv9MuF+/odbdr9fPCYvOh+vWGWjAATsHod723TmMEgaBu
+	oLnGzxAtOzdZzMMX9/JV4ePW3/6u9Ot5DqjIYWk8f814v3xNfyX0vFDN9LbW9ikmW65NdW16FE4
+	wx7LCdS8lXGYiX7Ny3irMwKr5DOHOmR+TkWCktZLBu8nZ626jemtxWoQ==
+X-Google-Smtp-Source: AGHT+IH2EyRJKsRob0eFF+uoEduxPFeAuaPWyoQOX+ekx3T7de4gceRUCwFsPI+rPxKDLq8u+Ohe4WJ4VNimGAumXD4=
+X-Received: by 2002:a05:6820:203:b0:607:e15c:be07 with SMTP id
+ 006d021491bc7-60828d4dcf9mr4371937eaf.7.1746688527253; Thu, 08 May 2025
+ 00:15:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
- <20250507071315.394857-24-herve.codina@bootlin.com> <8b97e095-dbed-438c-9c6d-d3c2c5929fc0@lunn.ch>
-In-Reply-To: <8b97e095-dbed-438c-9c6d-d3c2c5929fc0@lunn.ch>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 8 May 2025 09:13:33 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUVvOMavxSAKaSMOwj_zXR=5h8KrrqNg4RS2Yaw3WXpKg@mail.gmail.com>
-X-Gm-Features: ATxdqUHmcSjbjZfHI-fr6cqBy9DRd_HkLObPFwa-nuGiyXHv4iNIliDKKGB_NdU
-Message-ID: <CAMuHMdUVvOMavxSAKaSMOwj_zXR=5h8KrrqNg4RS2Yaw3WXpKg@mail.gmail.com>
-Subject: Re: [PATCH v2 23/26] misc: lan966x_pci: Introduce board specific data
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Herve Codina <herve.codina@bootlin.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
-	Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20250305083707.74218-1-zhangchunyan@iscas.ac.cn> <mhng-63c49bc7-0f86-47f7-bc41-0186f77b9d6f@palmer-ri-x1c9>
+In-Reply-To: <mhng-63c49bc7-0f86-47f7-bc41-0186f77b9d6f@palmer-ri-x1c9>
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Date: Thu, 8 May 2025 15:14:50 +0800
+X-Gm-Features: ATxdqUHZ_WeGypQ24ll_k9Tlw-2jyRAQMCglZpNZhX8QH-tmXjBcBV4g9oFBEAg
+Message-ID: <CAAfSe-vD_37uihLjGwOqQKnyKJaJ36OwxDeocMOhK4s6-cpzAA@mail.gmail.com>
+Subject: Re: [PATCH V5] raid6: Add RISC-V SIMD syndrome and recovery calculations
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: zhangchunyan@iscas.ac.cn, Paul Walmsley <paul.walmsley@sifive.com>, 
+	aou@eecs.berkeley.edu, Charlie Jenkins <charlie@rivosinc.com>, song@kernel.org, 
+	yukuai3@huawei.com, linux-riscv@lists.infradead.org, 
+	linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 8 May 2025 at 00:24, Andrew Lunn <andrew@lunn.ch> wrote:
-> On Wed, May 07, 2025 at 09:13:05AM +0200, Herve Codina wrote:
-> > Only one device-tree overlay (lan966x_evb_lan9662_nic.dtbo) is handled
-> > and this overlay is directly referenced in lan966x_pci_load_overlay().
-> >
-> > This avoid to use the code for an other board.
-> >
-> > In order to be more generic and to allow support for other boards (PCI
-> > Vendor/Device IDs), introduce the lan966x_pci_info structure and attach
-> > it to PCI Vendor/Device IDs handled by the driver.
-> >
-> > This structure contains information related to the PCI board such as
-> > information related to the dtbo describing the board we have to load.
-> >
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Hi Palmer,
+
+On Mon, 31 Mar 2025 at 23:55, Palmer Dabbelt <palmer@dabbelt.com> wrote:
 >
-> How big is the dtbo ?
+> On Wed, 05 Mar 2025 00:37:06 PST (-0800), zhangchunyan@iscas.ac.cn wrote:
+> > The assembly is originally based on the ARM NEON and int.uc, but uses
+> > RISC-V vector instructions to implement the RAID6 syndrome and
+> > recovery calculations.
+> >
+> > The functions are tested on QEMU running with the option "-icount shift=0":
 >
-> This is going in the right direction. I'm just wondering if each dtbo
-> should be wrapped in its own very slim PCI driver, which simply
-> registers its lan966x_pci_info structure to a core driver. Only the
-> needed dtbo will then be loaded into memory as a module, not them all.
+> Does anyone have hardware benchmarks for this?  There's a lot more code
+> here than the other targets have.  If all that unrolling is necessary for
+> performance on real hardware then it seems fine to me, but just having
+> it for QEMU doesn't really tell us much.
 
-Alternatively, the dtbo could be loaded through request_firmware().
-That could lead to a generic support option in the PCI core, which would
-fallback to loading pci-<vid>-<pid>.dtbo when no driver is available.
+I made tests on Banana Pi BPI-F3 and Canaan K230.
 
-> Pretty much all the pieces are here, so it can be done later.
+BPI-F3 is designed with SpacemiT K1 8-core RISC-V chip, the test
+result on BPI-F3 was:
 
-Exactly.
+  raid6: rvvx1    gen()  2916 MB/s
+  raid6: rvvx2    gen()  2986 MB/s
+  raid6: rvvx4    gen()  2975 MB/s
+  raid6: rvvx8    gen()  2763 MB/s
+  raid6: int64x8  gen()  1571 MB/s
+  raid6: int64x4  gen()  1741 MB/s
+  raid6: int64x2  gen()  1639 MB/s
+  raid6: int64x1  gen()  1394 MB/s
+  raid6: using algorithm rvvx2 gen() 2986 MB/s
+  raid6: .... xor() 2 MB/s, rmw enabled
+  raid6: using rvv recovery algorithm
 
-Gr{oetje,eeting}s,
+The K230 uses the XuanTie C908 dual-core processor, with the larger
+core C908 featuring the RVV1.0 extension, the test result on K230 was:
 
-                        Geert
+  raid6: rvvx1    gen()  1556 MB/s
+  raid6: rvvx2    gen()  1576 MB/s
+  raid6: rvvx4    gen()  1590 MB/s
+  raid6: rvvx8    gen()  1491 MB/s
+  raid6: int64x8  gen()  1142 MB/s
+  raid6: int64x4  gen()  1628 MB/s
+  raid6: int64x2  gen()  1651 MB/s
+  raid6: int64x1  gen()  1391 MB/s
+  raid6: using algorithm int64x2 gen() 1651 MB/s
+  raid6: .... xor() 879 MB/s, rmw enabled
+  raid6: using rvv recovery algorithm
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+We can see the fastest unrolling algorithm was rvvx2 on BPI-F3 and
+rvvx4 on K230 compared with other rvv algorithms.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I have only these two RVV boards for now, so no more testing data on
+more different systems, I'm not sure if rvv8 will be needed on some
+hardware or some other system environments.
+
+Thanks,
+Chunyan
