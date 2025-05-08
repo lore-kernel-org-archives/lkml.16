@@ -1,444 +1,367 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0489321FF3C
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 22:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03D2224AF2;
+	Thu,  8 May 2025 22:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746742852; cv=none; b=N5RB3+f7aT65w147vp+D159HhC7+QN6QrkhlXI3nEexZA+uaI2X8hAcEhTQIQeG8ZIchGOVt98zWhFitUpP9lPkAtkXsslTmLi7EYTJaHaZzVkj0qZ782Fv+JHigIncXLK0lrjBJQlW9NCapEbWNqhNDa6pKNSslfLtlP2Nrq2g=
+	t=1746742944; cv=none; b=H90M6svubKjFUwRvA5gWQAYJCeefzw/PJPfzwU8C74jsXTVG0SeXI6QjzautOeKefeXiZPreXy2GEXOChp7Z1t4g9eEVb2bHZays41M7jG9n0vgLuyvQ9jpnGa0vKXALz3r5wBzjMSAeuILb0BqFeVI7scH5oFkZWdlsH1MGSmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746742852; c=relaxed/simple;
-	bh=S+0b52l2Fqjnu/cRKenxGsypkbJnpIawppBpGhxfSbE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PQMGAFH4lm8Ru4SQpe70GF/4b867jDkLNoHpTt0TQempGSNLwplniQP0pvK0Mqo6605Vnh5Jl54WyhvlZi9swj1xeiY+/OrgnGgljp3i5dXttUA61NCrV8LcilaJBYrmD1UmvvUhTd0gFg8iyxbiVJxaQDkE4BULPI4PcEqk7Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FBb7LhH4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746742944; c=relaxed/simple;
+	bh=x8ncZbBnesK2pUhqAMnfU/mEnGXb8MQmhLNwSQevhuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CYU30+aK1/rPsJdIREjOyPwN4lD40k5KKM0Vc60tVBMF7WI6cA/7ZkRORsujutFTSOBnYzxwhL7GrIqe5ujGfDGej/qtWpRdrMoS5eWH3SzzReQt4E0ZWzIMdo6Kbk1m9EJLExroO54vTFWq6HSdvnJqI7RkqG46BesMYFxGIPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lYodj+FP; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FBb7LhH4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746742845;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=8oSlQOGx5PSAeVG5B2JhkthMK6xKfNEYwRdVE1GMRZ4=;
-	b=FBb7LhH4xA2Lx/zCriFmMwzpYWNgxBCKOwo7ACgPgLPfejWXZlk04Dwrpr7LC4pNDTDJR7
-	qH6uxCnvp2qEW0hNz8zHSN3aoB55jt9RHfpAq4penjlMVNJjtjw+FcooyASmwTc/XvqvdQ
-	/TEp+CI3H950mTVNyD5piAnVx/iJGrY=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-349-q5IpE_PaMNi_0oKvCTcSoQ-1; Thu, 08 May 2025 18:20:44 -0400
-X-MC-Unique: q5IpE_PaMNi_0oKvCTcSoQ-1
-X-Mimecast-MFC-AGG-ID: q5IpE_PaMNi_0oKvCTcSoQ_1746742843
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cf172ffe1so9828595e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 15:20:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYodj+FP"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6f0c30a1ca3so18737806d6.1;
+        Thu, 08 May 2025 15:22:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746742942; x=1747347742; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fg3GK54oLt3wm9wAeXHbwjv1eDR1lDC2mM5d6wedhCA=;
+        b=lYodj+FPg6V1k6VGvIV88JL1Hu0Ld5CJVCcaYlC4a0MZZuL04/B+PEmJub4TFF+97H
+         7Cwqe+Tz6tt9yvGFQSg/6O5j9CjibkO5TYgYyUnv8NiQgldG7VdzIiTG3Ee410wdF2c5
+         zQyEYpC33kU/xyUzVQW9C2FMB0ovPDUZfDZZWHvMBfaTAlVbT3jDCLE23xwBArabw6kw
+         fyQqJ3s6qMV3oxVzyyNhLhxOND+B7ZCsSgJDA2u8FqqHYrxy6noDqiSNm0ePPuIUHu+U
+         jd7NcwpUF5VqW5Jr1dxRNVBa1AGszJrepsrk67pYe6TsKmbUzs5cfgufKlUfBVUT+Bj5
+         3WMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746742843; x=1747347643;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8oSlQOGx5PSAeVG5B2JhkthMK6xKfNEYwRdVE1GMRZ4=;
-        b=W9EIb0oA+lIyJEc8IwTB44oCoWHe2MzKOgB3NL7ZZh5N5A0UQbEOPHXsPQQoJxuHGP
-         zZUQigV+7uG7UDgZqkzrwwtMEOh6DSCfVae7dfGyD+iQKMfC4A6Yy5pKnK9hqE41q4E3
-         C/1l2aE41dbxWpwGSj8IOmqgI+oxh8I/JxoWXHo592/lg8fkfiyBDhR9aF7B8XfTr7hp
-         1gp9z4dN2UfC89mLNayqW2r5fSVpTs+yNB/jUGkdyD9bNVp8XZsy5ewo9bDAcheU0MP4
-         sYA4dVKGQSz8dj5yy09UlG2xVBYHjwwXL0P/UbOTOIobJG+f+/q4RFlenTR3K7ZJ4R5m
-         YDew==
-X-Gm-Message-State: AOJu0YyK7ioXiwmjsHCgWQWX1FxMzrJi6hMN9ZE1XdE+8tpC6NzKvZr6
-	+Pk06iuNFQ+q62GnJ931W7sJCmMGYnTv8CujP8rXOlSh7Esa0qKuWMIF6yY93uikmofjQzY3IIQ
-	lQ5E5JqmvcrncDd3OpSR5E66SWMGDSzhAUgkvP6wEkXUget7MG8sNqNPt8rWa1+G/nJRX4cQZS7
-	vyoyx5vEkA87AlJO5o9j64klzimXYkzU/JiNBW/E2dYA==
-X-Gm-Gg: ASbGncvdcxcqYK+/M+v4NClrTImCjOAFPPIGmPqVjH77UXLqKvkiFqAN6MXUhbhNvse
-	09Y4ZwWVY6t95qZBxM+ULaeInBDED+9ar8XZHpVLvEED3IMd10Cy9YiEl7fvS/tU5DnFdjnQAr0
-	/9JqrtFmtqT8qT42vgNBNYKHxoq/lrdAfaQ+bEzCU0iziboi/2RwEYfrzyYo7bRyAylToyGMNM4
-	9v6AyGHHLDdwK1ZDmAWkLnFTYxLCitJsDuVQL5HDxqWRL4eG/63yL/nNLadMjwloK2FYvtZ6LRh
-	Y9nfddEWttPgVdGHvdZBLK/ADEa/tZOdPh8TYj6vpwFQ2DeDVsjaW9/OBs6zANYf1xMwgE/L
-X-Received: by 2002:a5d:59ae:0:b0:391:2c67:798f with SMTP id ffacd0b85a97d-3a1f64b5771mr893894f8f.41.1746742843099;
-        Thu, 08 May 2025 15:20:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IExtd4XQA/4NBIzZFkMCTxyRAAu0Q9sQeHtqaKbIjLYrVZYxEpbgKVOcMDojh/vgVIQ4jquVw==
-X-Received: by 2002:a5d:59ae:0:b0:391:2c67:798f with SMTP id ffacd0b85a97d-3a1f64b5771mr893877f8f.41.1746742842698;
-        Thu, 08 May 2025 15:20:42 -0700 (PDT)
-Received: from localhost (p200300d82f3e590027aa5f4ab65c3d3c.dip0.t-ipconnect.de. [2003:d8:2f3e:5900:27aa:5f4a:b65c:3d3c])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a1f58ebd6asm1231706f8f.35.2025.05.08.15.20.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 15:20:42 -0700 (PDT)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Xu <peterx@redhat.com>
-Subject: [PATCH v1] selftests/mm: add simple VM_PFNMAP tests based on mmap'ing /dev/mem
-Date: Fri,  9 May 2025 00:20:41 +0200
-Message-ID: <20250508222041.1647645-1-david@redhat.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1746742942; x=1747347742;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fg3GK54oLt3wm9wAeXHbwjv1eDR1lDC2mM5d6wedhCA=;
+        b=ZNbblpmGIIryobMzbVM4S7CbAcI86ImOjdcgBy3Hvfrm1LkU26JVA7RXYdmftVAz4U
+         cty9Vjuzwci+6XRHtTTR9LvVp0Es/VeIblXST0gaccBUNK5J64Sc0Z4EwHVpCXj9Mq7m
+         PrB2KrCCWS2bir3E+qmwx0JsoV1Y4KqADDn6Vgp0q6b96esSAs5hIE5h9cx7o/7gDmeZ
+         h9CLmrWFDW4aFZxUL/lgVveKS1oMhVwX6A+40OXgApXsZzqX4hwl7EEOhdoNt2YnZmPJ
+         DO7zICU9GeA5FOXBRhxqbNqkPMB5CgprnIx58SMOGqsuB8VziW+fOkJIbiHli+oxtRtE
+         49TA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzWM9yBC2h3spUxfGbmWOCLUEiuVMiSEO0G/hWV3UT/EN4ra0vjUJwLDeZqZNaJP5a59xmgOgKttBj@vger.kernel.org, AJvYcCW+Iv3dDXNDO6xFfG9mmnB2YoZw6tWYkISr+KIQlDPflAUSgTFHS72KA4gzX2lWVBpw6YcuBjZyptCFv4E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0N7VxGmy31mkiEhHgcoycWtjohxCl/3LJLIMBlz/1nGJp1QFh
+	1pr43fvExi6q3b8FvJZA/LPCwMdlqzps00Pe3gEpZdz4+UV0hlHYT/9nOIM/
+X-Gm-Gg: ASbGnctVoF2KMunPlvPpNZRO39AU1z4RAUkFXBkTN3TX5hiw+YXsZaYj2up84h04Nrx
+	MXgB/6zhaIv2fAyqYvDK/B3Nf14R9CHkqVeo3KZ7TDODRU0Wc+KxQpVzJiIWSwQPfuiBhLm6P6c
+	uS7z54GJhcSIciWdmALBiXxWpq/argvkFVTkply8en+LHTbTfA1lCWseveWmTV3C932xKcK6E/v
+	lqiFb+adt1ctVEgHz4xRnNEocoavzYOZbN+rB6gh5SpWp5w9WX3N9gfb2QKbj0Da61RGE9b4nVC
+	7XIF02OYl9vQI7C4LWVBqpdejRA=
+X-Google-Smtp-Source: AGHT+IGPmKRd9i0agUYQ+31u6dVr+1AcCz/bSh5SwzVf+qyh1WTBCd3FwcBZCnD03Hf6e01yuwXv0Q==
+X-Received: by 2002:a05:6214:da5:b0:6f5:4079:3189 with SMTP id 6a1803df08f44-6f6e47b9beemr15826506d6.2.1746742941721;
+        Thu, 08 May 2025 15:22:21 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f6e39f4821sm5210406d6.33.2025.05.08.15.22.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 15:22:21 -0700 (PDT)
+Date: Fri, 9 May 2025 06:21:53 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+	sophgo@lists.linux.dev, linux-rtc@vger.kernel.org
+Cc: Jingbao Qiu <qiujingbao.dlmu@gmail.com>, 
+	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v15] rtc: sophgo: add rtc support for Sophgo CV1800 SoC
+Message-ID: <dm4l3wfcuygmuylz6uqn2g7wztg4tyrjbm24hqcpffjnpkwany@ib2nvjibq2wl>
+References: <20250507195626.502240-1-alexander.sverdlin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507195626.502240-1-alexander.sverdlin@gmail.com>
 
-Let's test some basic functionality using /dev/mem. These tests will
-implicitly cover some PAT (Page Attribute Handling) handling on x86.
+On Wed, May 07, 2025 at 09:56:20PM +0200, Alexander Sverdlin wrote:
+> From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> 
+> Implement the RTC driver for CV1800, which able to provide time alarm.
+> 
+> Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+> ---
+> Changelog:
+> v15:
+> - the only patch in the series left
+> - dropped changes to MAINTAINERS file
+> v14:
+> - https://lore.kernel.org/lkml/gztsdu5p4tzt7emlwiuc3z74f4tfgkclcyrl324prqzp6dqhhf@ezrdmmhvf2nm/T/
+> - platform device name "cv1800-rtc" -> "cv1800b-rtc"
+> v13:
+> - Change in the Kconfig dependency caused by the move of the previous
+>   patch from MFD into SOC
+> v12:
+> - added MAINTAINERS entry
+> - depends on cv1800-rtcsys MFD driver
+> - use syscon for regmap
+> - get named clock from parent MFD
+> - corresponding platform device is expected to be instantiated by MFD stub
+> Changes since v10:
+> - only start RTC on set_time;
+> Changes since v9:
+> - further simplified bitmask macros;
+> - unconditional RTC start (rtc_enable_sec_counter()), otherwise
+> didn't start on SG2000;
+> - dropped ANA_CALIB modification (has been forgotten in v8 with
+> the drop of SW calibration to switch to HW calibration);
+> - successfully tested on SG2000;
+> 
+> 
+>  drivers/rtc/Kconfig      |  12 +++
+>  drivers/rtc/Makefile     |   1 +
+>  drivers/rtc/rtc-cv1800.c | 218 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 232 insertions(+)
+>  create mode 100644 drivers/rtc/rtc-cv1800.c
+> 
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index 0bbbf778ecfa..46593103db11 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -1395,6 +1395,18 @@ config RTC_DRV_ASM9260
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called rtc-asm9260.
+>  
+> +config RTC_DRV_CV1800
+> +	tristate "Sophgo CV1800 RTC"
+> +	depends on SOPHGO_CV1800_RTCSYS || COMPILE_TEST
+> +	select MFD_SYSCON
+> +	select REGMAP
+> +	help
+> +	  If you say yes here you get support the RTC driver for Sophgo CV1800
+> +	  series SoC.
+> +
+> +	  This driver can also be built as a module. If so, the module will be
+> +	  called rtc-cv1800.
+> +
+>  config RTC_DRV_DIGICOLOR
+>  	tristate "Conexant Digicolor RTC"
+>  	depends on ARCH_DIGICOLOR || COMPILE_TEST
+> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+> index 489b4ab07068..621b30a33dda 100644
+> --- a/drivers/rtc/Makefile
+> +++ b/drivers/rtc/Makefile
+> @@ -44,6 +44,7 @@ obj-$(CONFIG_RTC_DRV_CADENCE)	+= rtc-cadence.o
+>  obj-$(CONFIG_RTC_DRV_CMOS)	+= rtc-cmos.o
+>  obj-$(CONFIG_RTC_DRV_CPCAP)	+= rtc-cpcap.o
+>  obj-$(CONFIG_RTC_DRV_CROS_EC)	+= rtc-cros-ec.o
+> +obj-$(CONFIG_RTC_DRV_CV1800)	+= rtc-cv1800.o
+>  obj-$(CONFIG_RTC_DRV_DA9052)	+= rtc-da9052.o
+>  obj-$(CONFIG_RTC_DRV_DA9055)	+= rtc-da9055.o
+>  obj-$(CONFIG_RTC_DRV_DA9063)	+= rtc-da9063.o
+> diff --git a/drivers/rtc/rtc-cv1800.c b/drivers/rtc/rtc-cv1800.c
+> new file mode 100644
+> index 000000000000..18bc542bbdb8
+> --- /dev/null
+> +++ b/drivers/rtc/rtc-cv1800.c
+> @@ -0,0 +1,218 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * rtc-cv1800.c: RTC driver for Sophgo cv1800 RTC
+> + *
+> + * Author: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/irq.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/rtc.h>
+> +
+> +#define SEC_PULSE_GEN          0x1004
+> +#define ALARM_TIME             0x1008
+> +#define ALARM_ENABLE           0x100C
+> +#define SET_SEC_CNTR_VAL       0x1010
+> +#define SET_SEC_CNTR_TRIG      0x1014
+> +#define SEC_CNTR_VAL           0x1018
+> +
+> +/*
+> + * When in VDDBKUP domain, this MACRO register
+> + * does not power down
+> + */
+> +#define MACRO_RO_T             0x14A8
+> +#define MACRO_RG_SET_T         0x1498
+> +
+> +#define ALARM_ENABLE_MASK      BIT(0)
+> +#define SEL_SEC_PULSE          BIT(31)
+> +
+> +struct cv1800_rtc_priv {
+> +	struct rtc_device *rtc_dev;
+> +	struct regmap *rtc_map;
+> +	struct clk *clk;
+> +	int irq;
+> +};
+> +
+> +static bool cv1800_rtc_enabled(struct device *dev)
+> +{
+> +	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
+> +	u32 reg;
+> +
+> +	regmap_read(info->rtc_map, SEC_PULSE_GEN, &reg);
+> +
+> +	return (reg & SEL_SEC_PULSE) == 0;
+> +}
+> +
+> +static void cv1800_rtc_enable(struct device *dev)
+> +{
+> +	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
+> +
+> +	/* Sec pulse generated internally */
+> +	regmap_update_bits(info->rtc_map, SEC_PULSE_GEN, SEL_SEC_PULSE, 0);
+> +}
+> +
+> +static int cv1800_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
+> +{
+> +	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
+> +
+> +	regmap_write(info->rtc_map, ALARM_ENABLE, enabled);
+> +
+> +	return 0;
+> +}
+> +
+> +static int cv1800_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+> +{
+> +	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
+> +	unsigned long alarm_time;
+> +
+> +	alarm_time = rtc_tm_to_time64(&alrm->time);
+> +
+> +	cv1800_rtc_alarm_irq_enable(dev, 0);
+> +
+> +	regmap_write(info->rtc_map, ALARM_TIME, alarm_time);
+> +
+> +	cv1800_rtc_alarm_irq_enable(dev, alrm->enabled);
+> +
+> +	return 0;
+> +}
+> +
+> +static int cv1800_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
+> +{
+> +	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
+> +	u32 enabled;
+> +	u32 time;
+> +
+> +	if (!cv1800_rtc_enabled(dev)) {
+> +		alarm->enabled = 0;
+> +		return 0;
+> +	}
+> +
+> +	regmap_read(info->rtc_map, ALARM_ENABLE, &enabled);
+> +
+> +	alarm->enabled = enabled & ALARM_ENABLE_MASK;
+> +
+> +	regmap_read(info->rtc_map, ALARM_TIME, &time);
+> +
+> +	rtc_time64_to_tm(time, &alarm->time);
+> +
+> +	return 0;
+> +}
+> +
+> +static int cv1800_rtc_read_time(struct device *dev, struct rtc_time *tm)
+> +{
+> +	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
+> +	u32 sec;
+> +
+> +	if (!cv1800_rtc_enabled(dev))
+> +		return -EINVAL;
+> +
+> +	regmap_read(info->rtc_map, SEC_CNTR_VAL, &sec);
+> +
+> +	rtc_time64_to_tm(sec, tm);
+> +
+> +	return 0;
+> +}
+> +
+> +static int cv1800_rtc_set_time(struct device *dev, struct rtc_time *tm)
+> +{
+> +	struct cv1800_rtc_priv *info = dev_get_drvdata(dev);
+> +	unsigned long sec;
+> +
+> +	sec = rtc_tm_to_time64(tm);
+> +
+> +	regmap_write(info->rtc_map, SET_SEC_CNTR_VAL, sec);
+> +	regmap_write(info->rtc_map, SET_SEC_CNTR_TRIG, 1);
+> +
+> +	regmap_write(info->rtc_map, MACRO_RG_SET_T, sec);
+> +
+> +	cv1800_rtc_enable(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t cv1800_rtc_irq_handler(int irq, void *dev_id)
+> +{
+> +	struct cv1800_rtc_priv *info = dev_id;
+> +
+> +	rtc_update_irq(info->rtc_dev, 1, RTC_IRQF | RTC_AF);
+> +
+> +	regmap_write(info->rtc_map, ALARM_ENABLE, 0);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static const struct rtc_class_ops cv1800_rtc_ops = {
+> +	.read_time = cv1800_rtc_read_time,
+> +	.set_time = cv1800_rtc_set_time,
+> +	.read_alarm = cv1800_rtc_read_alarm,
+> +	.set_alarm = cv1800_rtc_set_alarm,
+> +	.alarm_irq_enable = cv1800_rtc_alarm_irq_enable,
+> +};
+> +
 
-These tests will only run when /dev/mem access to the first two pages
-in physical address space is possible and allowed; otherwise, the tests
-are skipped.
+> +static int cv1800_rtc_probe(struct platform_device *pdev)
+> +{
+> +	struct cv1800_rtc_priv *rtc;
+> +	int ret;
+> +
+> +	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
+> +	if (!rtc)
+> +		return -ENOMEM;
+> +
+> +	rtc->rtc_map = device_node_to_regmap(pdev->dev.parent->of_node);
+> +	if (IS_ERR(rtc->rtc_map))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(rtc->rtc_map),
+> +				     "cannot get parent regmap\n");
+> +
+> +	rtc->irq = platform_get_irq(pdev, 0);
+> +	if (rtc->irq < 0)
+> +		return rtc->irq;
+> +
+> +	rtc->clk = devm_clk_get_enabled(pdev->dev.parent, "rtc");
+> +	if (IS_ERR(rtc->clk))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(rtc->clk),
+> +				     "rtc clk not found\n");
+> +
+> +	platform_set_drvdata(pdev, rtc);
+> +
+> +	device_init_wakeup(&pdev->dev, 1);
+> +
+> +	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
+> +	if (IS_ERR(rtc->rtc_dev))
+> +		return PTR_ERR(rtc->rtc_dev);
+> +
+> +	rtc->rtc_dev->ops = &cv1800_rtc_ops;
+> +	rtc->rtc_dev->range_max = U32_MAX;
+> +
+> +	ret = devm_request_irq(&pdev->dev, rtc->irq, cv1800_rtc_irq_handler,
+> +			       IRQF_TRIGGER_HIGH, "rtc alarm", rtc);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret,
+> +				     "cannot register interrupt handler\n");
+> +
+> +	return devm_rtc_register_device(rtc->rtc_dev);
+> +}
+> +
 
-On current x86-64 with PAT inside a VM, all tests pass:
+I wonder whether the rtc driver may need reset (maybe optional) for this?
+If so, please add it.
 
-	TAP version 13
-	1..19
-	ok 1 madvise(MADV_DONTNEED) should be disallowed
-	ok 2 madvise(MADV_DONTNEED_LOCKED) should be disallowed
-	ok 3 madvise(MADV_FREE) should be disallowed
-	ok 4 madvise(MADV_WIPEONFORK) should be disallowed
-	ok 5 madvise(MADV_COLD) should be disallowed
-	ok 6 madvise(MADV_PAGEOUT) should be disallowed
-	ok 7 madvise(MADV_POPULATE_READ) should be disallowed
-	ok 8 madvise(MADV_POPULATE_WRITE) should be disallowed
-	ok 9 munmap() splitting
-	ok 10 mmap() after splitting
-	ok 11 mremap(MREMAP_FIXED)
-	ok 12 mremap() shrinking
-	ok 13 mremap() growing should be disallowed
-	ok 14 mprotect(PROT_NONE)
-	ok 15 SIGSEGV expected
-	ok 16 mprotect(PROT_READ)
-	ok 17 SIGSEGV not expected
-	ok 18 fork()
-	ok 19 SIGSEGV in child not expected
-	# Totals: pass:19 fail:0 xfail:0 xpass:0 skip:0 error:0
-
-However, we are able to trigger:
-
-[   27.888251] x86/PAT: pfnmap:1790 freeing invalid memtype [mem 0x00000000-0x00000fff]
-
-There are probably more things worth testing in the future, such as
-MAP_PRIVATE handling. But this set of tests is sufficient to cover most of
-the things we will rework regarding PAT handling.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Xu <peterx@redhat.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
-
-On current mm-unstable, the MADV_POPULATE_READ test fails because
-mm-unstable contains a patch [1] that must be dropped.
-
-[1] https://lore.kernel.org/all/20250507154105.763088-2-p.antoniou@partner.samsung.com/
-
----
- tools/testing/selftests/mm/Makefile |   1 +
- tools/testing/selftests/mm/pfnmap.c | 278 ++++++++++++++++++++++++++++
- 2 files changed, 279 insertions(+)
- create mode 100644 tools/testing/selftests/mm/pfnmap.c
-
-diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
-index ad4d6043a60f0..ae6f994d3add7 100644
---- a/tools/testing/selftests/mm/Makefile
-+++ b/tools/testing/selftests/mm/Makefile
-@@ -84,6 +84,7 @@ TEST_GEN_FILES += mremap_test
- TEST_GEN_FILES += mseal_test
- TEST_GEN_FILES += on-fault-limit
- TEST_GEN_FILES += pagemap_ioctl
-+TEST_GEN_FILES += pfnmap
- TEST_GEN_FILES += thuge-gen
- TEST_GEN_FILES += transhuge-stress
- TEST_GEN_FILES += uffd-stress
-diff --git a/tools/testing/selftests/mm/pfnmap.c b/tools/testing/selftests/mm/pfnmap.c
-new file mode 100644
-index 0000000000000..59be2f3221124
---- /dev/null
-+++ b/tools/testing/selftests/mm/pfnmap.c
-@@ -0,0 +1,278 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Basic VM_PFNMAP tests relying on mmap() of '/dev/mem'
-+ *
-+ * Copyright 2025, Red Hat, Inc.
-+ *
-+ * Author(s): David Hildenbrand <david@redhat.com>
-+ */
-+#define _GNU_SOURCE
-+#include <stdlib.h>
-+#include <string.h>
-+#include <stdint.h>
-+#include <unistd.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <signal.h>
-+#include <setjmp.h>
-+#include <linux/mman.h>
-+#include <sys/mman.h>
-+#include <sys/wait.h>
-+
-+#include "../kselftest.h"
-+#include "vm_util.h"
-+
-+static size_t pagesize;
-+static int pagemap_fd;
-+static int dev_mem_fd;
-+static sigjmp_buf env;
-+
-+static void signal_handler(int sig)
-+{
-+	if (sig == SIGSEGV)
-+		siglongjmp(env, 1);
-+	siglongjmp(env, 2);
-+}
-+
-+static void sense_support(void)
-+{
-+	char *addr, tmp;
-+	int ret;
-+
-+	dev_mem_fd = open("/dev/mem", O_RDONLY);
-+	if (dev_mem_fd < 0)
-+		ksft_exit_skip("Cannot open '/dev/mem': %s\n", strerror(errno));
-+
-+	/* We'll require the first two pages throughout our tests ... */
-+	addr = mmap(0, pagesize * 2, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
-+	if (addr == MAP_FAILED)
-+		ksft_exit_skip("Cannot mmap '/dev/mem'");
-+
-+	/* ... and want to be able to read from them. */
-+	ret = sigsetjmp(env, 1);
-+	if (!ret) {
-+		tmp = *addr + *(addr + pagesize);
-+		asm volatile("" : "+r" (tmp));
-+	}
-+	if (ret)
-+		ksft_exit_skip("Cannot read-access mmap'ed '/dev/mem'");
-+
-+	munmap(addr, pagesize * 2);
-+}
-+
-+static void test_madvise(void)
-+{
-+#define INIT_ADVICE(nr) { nr, #nr}
-+	const struct {
-+		int nr;
-+		const char *name;
-+	} advices[] = {
-+		INIT_ADVICE(MADV_DONTNEED),
-+		INIT_ADVICE(MADV_DONTNEED_LOCKED),
-+		INIT_ADVICE(MADV_FREE),
-+		INIT_ADVICE(MADV_WIPEONFORK),
-+		INIT_ADVICE(MADV_COLD),
-+		INIT_ADVICE(MADV_PAGEOUT),
-+		INIT_ADVICE(MADV_POPULATE_READ),
-+		INIT_ADVICE(MADV_POPULATE_WRITE),
-+	};
-+	char *addr;
-+	int ret, i;
-+
-+	addr = mmap(0, pagesize, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
-+	if (addr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
-+
-+	/* All these advices must be rejected. */
-+	for (i = 0; i < ARRAY_SIZE(advices); i++) {
-+		ret = madvise(addr, pagesize, advices[i].nr);
-+		ksft_test_result(ret && errno == EINVAL,
-+				 "madvise(%s) should be disallowed\n",
-+				 advices[i].name);
-+	}
-+
-+	munmap(addr, pagesize);
-+}
-+
-+static void test_munmap_splitting(void)
-+{
-+	char *addr1, *addr2;
-+	int ret;
-+
-+	addr1 = mmap(0, pagesize * 2, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
-+	if (addr1 == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
-+
-+	/* Unmap the first pages. */
-+	ret = munmap(addr1, pagesize);
-+	ksft_test_result(!ret, "munmap() splitting\n");
-+
-+	/* Remap the first page while the second page is still mapped. */
-+	addr2 = mmap(0, pagesize, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
-+	ksft_test_result(addr2 != MAP_FAILED, "mmap() after splitting\n");
-+
-+	if (addr2 != MAP_FAILED)
-+		munmap(addr2, pagesize);
-+	if (!ret)
-+		munmap(addr1 + pagesize, pagesize);
-+	else
-+		munmap(addr1, pagesize * 2);
-+}
-+
-+static void test_mremap_fixed(void)
-+{
-+	char *addr, *new_addr, *ret;
-+
-+	addr = mmap(0, pagesize * 2, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
-+	if (addr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
-+
-+	/* Reserve a destination area. */
-+	new_addr = mmap(0, pagesize * 2, PROT_READ, MAP_ANON | MAP_PRIVATE, -1, 0);
-+	if (new_addr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
-+
-+	/* mremap() over our destination. */
-+	ret = mremap(addr, pagesize * 2, pagesize * 2,
-+		     MREMAP_FIXED | MREMAP_MAYMOVE, new_addr);
-+	ksft_test_result(ret == new_addr, "mremap(MREMAP_FIXED)\n");
-+	if (ret != new_addr)
-+		munmap(new_addr, pagesize * 2);
-+	munmap(addr, pagesize * 2);
-+}
-+
-+static void test_mremap_shrinking(void)
-+{
-+	char *addr, *ret;
-+
-+	addr = mmap(0, pagesize * 2, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
-+	if (addr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
-+
-+	/* Shrinking is expected to work. */
-+	ret = mremap(addr, pagesize * 2, pagesize, 0);
-+	ksft_test_result(ret == addr, "mremap() shrinking\n");
-+	if (ret != addr)
-+		munmap(addr, pagesize * 2);
-+	else
-+		munmap(addr, pagesize);
-+}
-+
-+static void test_mremap_growing(void)
-+{
-+	char *addr, *ret;
-+
-+	addr = mmap(0, pagesize, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
-+	if (addr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
-+
-+	/* Growing is not expected to work. */
-+	ret = mremap(addr, pagesize, pagesize * 2, MREMAP_MAYMOVE);
-+	ksft_test_result(ret == MAP_FAILED,
-+			 "mremap() growing should be disallowed\n");
-+	if (ret == MAP_FAILED)
-+		munmap(addr, pagesize);
-+	else
-+		munmap(ret, pagesize * 2);
-+}
-+
-+static void test_mprotect(void)
-+{
-+	char *addr, tmp;
-+	int ret;
-+
-+	addr = mmap(0, pagesize, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
-+	if (addr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
-+
-+	/* With PROT_NONE, read access must result in SIGSEGV. */
-+	ret = mprotect(addr, pagesize, PROT_NONE);
-+	ksft_test_result(!ret, "mprotect(PROT_NONE)\n");
-+
-+	ret = sigsetjmp(env, 1);
-+	if (!ret) {
-+		tmp = *addr;
-+		asm volatile("" : "+r" (tmp));
-+	}
-+	ksft_test_result(ret == 1, "SIGSEGV expected\n");
-+
-+	/* With PROT_READ, read access must again succeed. */
-+	ret = mprotect(addr, pagesize, PROT_READ);
-+	ksft_test_result(!ret, "mprotect(PROT_READ)\n");
-+
-+	ret = sigsetjmp(env, 1);
-+	if (!ret) {
-+		tmp = *addr;
-+		asm volatile("" : "+r" (tmp));
-+	}
-+	ksft_test_result(!ret, "SIGSEGV not expected\n");
-+
-+	munmap(addr, pagesize);
-+}
-+
-+static void test_fork(void)
-+{
-+	char *addr, tmp;
-+	int ret;
-+
-+	addr = mmap(0, pagesize, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
-+	if (addr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
-+
-+	/* fork() a child and test if the child can access the page. */
-+	ret = fork();
-+	if (ret < 0) {
-+		ksft_test_result_fail("fork()\n");
-+		goto out;
-+	} else if (!ret) {
-+		ret = sigsetjmp(env, 1);
-+		if (!ret) {
-+			tmp = *addr;
-+			asm volatile("" : "+r" (tmp));
-+		}
-+		/* Return the result to the parent. */
-+		exit(ret);
-+	}
-+	ksft_test_result_pass("fork()\n");
-+
-+	/* Wait for our child and obtain the result. */
-+	wait(&ret);
-+	if (WIFEXITED(ret))
-+		ret = WEXITSTATUS(ret);
-+	else
-+		ret = -EINVAL;
-+
-+	ksft_test_result(!ret, "SIGSEGV in child not expected\n");
-+out:
-+	munmap(addr, pagesize);
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	int err;
-+
-+	ksft_print_header();
-+	ksft_set_plan(19);
-+
-+	pagesize = getpagesize();
-+	pagemap_fd = open("/proc/self/pagemap", O_RDONLY);
-+	if (pagemap_fd < 0)
-+		ksft_exit_fail_msg("opening pagemap failed\n");
-+	if (signal(SIGSEGV, signal_handler) == SIG_ERR)
-+		ksft_exit_fail_msg("signal() failed: %s\n", strerror(errno));
-+
-+	sense_support();
-+	test_madvise();
-+	test_munmap_splitting();
-+	test_mremap_fixed();
-+	test_mremap_shrinking();
-+	test_mremap_growing();
-+	test_mprotect();
-+	test_fork();
-+
-+	err = ksft_get_fail_cnt();
-+	if (err)
-+		ksft_exit_fail_msg("%d out of %d tests failed\n",
-+				   err, ksft_test_num());
-+	ksft_exit_pass();
-+}
--- 
-2.49.0
-
+Regards,
+Inochi
