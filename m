@@ -1,60 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC20221568;
-	Thu,  8 May 2025 06:44:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9FE2B9AA;
+	Thu,  8 May 2025 06:46:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746686682; cv=none; b=KiBRDfHadoFFeGIl8VwTGuIx7HLa9MwFwNlPsUSu6E1nI/QsIkLQdOjacZgEEDOjYZxxfxrWljfY6wO3fa3eEOOnqlY08UiEzU6MLOSMOCF7PW/jJmwtaOi7QEnBx0Zohf6RlybcEzk7HKWuK1O7QZ/RLutQQ+YNHuIxNQQbyfc=
+	t=1746686768; cv=none; b=kIwOA4DHlOITXEPGQo+iXcjMzqiXm02WjpmkH0hYMWqpHSQX83X+kVNnlEnVvUZW8nIe59U+LdA+fYE7Gbl92JYk3MFxi08qIfCXuak37w8pZmIbxcH5CXWdWxk6ewXS8oJOCHUTvFeLSlWMWzyJHSdBBjWhV9MDPVcalY+UY8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746686682; c=relaxed/simple;
-	bh=Hy0g0Il8Xl3COvvl59eRO9qYPHsgZeK09RVf7oNgihY=;
+	s=arc-20240116; t=1746686768; c=relaxed/simple;
+	bh=Rnttp0B4gsD8iFgx65pE7TbpwHuI1wrUwDwejsvJMrY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jmK5JiCHab0XVM4z9eZ4bmbsD29T0JrydsMfPTzCPslEXmrGzlh5eom2GgUyPcAzQCbIjtmOyYrgn2LCtmAD5+IF1ej0+dnklP6QDaFC53d6XgVpUHhEz2I1o7YGX2z3sZE2rkQdfBMnSk/RkxT9qKogrVzEs0tD+6XbU00lZwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qHP9aykz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EsjJReeLh8IFn+kAQslYSYR1UU5tFjRnOGmxa1NeQ/dptlOniKtZ66n1/OyIFM1xARKOVdGrTwXD5cnpMqiVTkm7ShhBYtnY7jeewLfn8Dk0bR4IxIuXluC6dEhFh8K+BjuolgYpYUGHMq5E/czfPgisRs1KM9LePTvYwy4S8hQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=T9/x7U66; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qHP9aykz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0624EC4CEED;
-	Thu,  8 May 2025 06:44:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746686681;
-	bh=Hy0g0Il8Xl3COvvl59eRO9qYPHsgZeK09RVf7oNgihY=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="T9/x7U66"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0321DC4CEEB;
+	Thu,  8 May 2025 06:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746686767;
+	bh=Rnttp0B4gsD8iFgx65pE7TbpwHuI1wrUwDwejsvJMrY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qHP9aykz1rHNs6oq2hKLyC5C2+8wP9LG4iSrr9nXjIyEhmw9OFG9hQtAqQLIXB20N
-	 o6sIhgvbqs6cHu1/gFRf3kB183UzoYLtyGKL4t0OdefJ04kg3sNXLlJhnkWH/OgjHZ
-	 3IaFgb4oYDKN0mOKWZqaMHR+ndsS45T5DYyg0Op8GKDqrTLupVLHDrojyKPa6isDH9
-	 SiyFNIGTHArebJytVBbTZEtVeui2PhCme/4oTyAYq8HSx/nAJGmNOiBA2iEluf6g5P
-	 1wg9zO+DuTQoFPWfHLCBZzWCccoL3yr9WPiRgQu0V9mvlNfi2dVFEi0bshRZ06B4fc
-	 nXdrcIHiCw5tw==
-Date: Thu, 8 May 2025 08:44:38 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: soc: fsl,ls1028a-reset: Drop extra "/" in
- $id
-Message-ID: <20250508-determined-terrier-of-tolerance-ad0ab1@kuoka>
-References: <20250507215903.2748698-1-robh@kernel.org>
+	b=T9/x7U66DjmSavu2KtNYPW7ue7y2no/nsM/ipglTqeD+kEP6NCicM4k7IkODowYrS
+	 2VsyTgTwzFqt9NrCkl6++wy6gh+tlpjwDgN2TQVSB8v6uEPIyd4pNB8vD+A9k9+7Vf
+	 vpWUx1/TCPj3S4tlePm8XlLVQwKRgWnhFTKlTGg4=
+Date: Thu, 8 May 2025 08:46:04 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	stable@vger.kernel.org, patches@lists.linux.dev,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, Liam Girdwood <lgirdwood@gmail.com>,
+	Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Marek Vasut <marex@denx.de>,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: [PATCH] rpmsg: qcom_smd: Fix uninitialized return variable in
+ __qcom_smd_send()
+Message-ID: <2025050852-refined-clatter-447a@gregkh>
+References: <CA+G9fYs+z4-aCriaGHnrU=5A14cQskg=TMxzQ5MKxvjq_zCX6g@mail.gmail.com>
+ <aAkhvV0nSbrsef1P@stanley.mountain>
+ <aBxR2nnW1GZ7dN__@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250507215903.2748698-1-robh@kernel.org>
+In-Reply-To: <aBxR2nnW1GZ7dN__@stanley.mountain>
 
-On Wed, May 07, 2025 at 04:59:02PM GMT, Rob Herring (Arm) wrote:
-> The $id value has a double "//". Drop it.
+On Thu, May 08, 2025 at 09:40:26AM +0300, Dan Carpenter wrote:
+> Hi Greg,
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> I'm sorry I forgot to add the:
+> 
+> Cc: stable@vger.kernel.org
+> 
+> to this patch.  Could we backport it to stable, please?
 
-Fixes: 9ca5a7d9d2e0 ("dt-bindings: soc: fsl: Add fsl,ls1028a-reset for reset syscon node")
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+What is the git id of it in Linus's tree?
 
-Best regards,
-Krzysztof
+thanks,
 
+greg k-h
