@@ -1,49 +1,65 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498C8136A;
-	Thu,  8 May 2025 12:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4621DF25C
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746706592; cv=none; b=coBrK3lu5dHrpduocahlgrCd8HVHlVOhB6f8xmuicBz39TZaVpZXWaJhl/MV0QwHf178DzXxjBbe0Djl3a5fcqF+hUK2ulcDaDfHrs4wErQhWmvPl/5klq1HyPf7OHlvPNqPTVC9aCLBTMX0AiWH3qdzhCKuEg8041sy9S+a4qQ=
+	t=1746706639; cv=none; b=tPopZ6wK8oKjvRwIVT07EhSJ7Ta/VOtvwwVd4zgd4LQiCsVSVE2Q3+JTuv7Q9yZ7eq3L5sEqtUpl3Vr/vUfsrZSmSmeS1cdIVbOxCOTogIwfgC8FOyd6BbDZrfPS8x9YN2SqnHGK6qr7CiGORjz5OXxnFJcAc2q3nNkN/qtUpis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746706592; c=relaxed/simple;
-	bh=/+MyKa2c23H6IuarHPujtgb7pa8hC7CWUMxIaIlmEDI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mxytEVYsvzjfBTXZ0zetIF347zlRl/X3c0TPPFnHMfugwT0bZKijSZH0AggsBV2QLx7xx/o5t6xJj2vwokA30KZVAXWYYSs74P7vDmjTBUd8G0rGQwBS3hyhjgC4adwGCZM5gRWvnfT4z+jC9xbd3j2ax9DZqYndkcwxdTsG7Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uT2VNFOt; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746706639; c=relaxed/simple;
+	bh=gI9+15/uiqpn2T7b42r1EP83YhqQAQmZi3IavWEk6Js=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DISiw90Q+VW71ux6XSpXTJ+1KRjCSQrDiz/fEM7BID+yFhvpmYknEimgEgMUUvw+nsjgcQPO0zEIaPOLwFK2cWbahw4vA6f3SfHVVvuQG2fBVYyYKClKajxuhReWnuUOqLZDFmONlZ96UKFHjLFBzuGz4+rjUgAIm0VRIR7zQto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=k3w/widk; arc=none smtp.client-ip=209.85.166.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uT2VNFOt"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 548CGENn1091456
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 8 May 2025 07:16:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746706574;
-	bh=15aok1oCi+ow5KG3/DT3pU2ISBdSkGTBhBS/f9pFazw=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=uT2VNFOtKoniv3xYTs8+bgmIt7UaDyl1H9flqDZSGyO2Ms0lVwp4VmNCFdwuwKDFW
-	 2jTD3OIU/npASKwQmi/e0rswcm31BzqByY0UJTdHnc799fstLlakBfmSZ9yuVZ4Nq2
-	 sM1IZlGoaPtQQCD5+oVWfzmHjUItGVTHB3vTSM2I=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 548CGDsv024274
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 8 May 2025 07:16:14 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
- May 2025 07:16:11 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 8 May 2025 07:16:11 -0500
-Received: from [172.24.227.115] (abhilash-hp.dhcp.ti.com [172.24.227.115])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 548CG7qW009348;
-	Thu, 8 May 2025 07:16:07 -0500
-Message-ID: <9cb4f94e-00e8-43d5-be7a-85dc1188e856@ti.com>
-Date: Thu, 8 May 2025 17:46:06 +0530
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="k3w/widk"
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-85b3f92c8f8so86695239f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:17:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1746706636; x=1747311436; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ITsof7vKMaX3jP45vYP8VvBDvnD7ar/ly91W1po1fYs=;
+        b=k3w/widkR97bsDT61lsM4hK+UnsGe+OLVgb5KbiBJQYmL7Idof7dIWDZQ5Aj5LJrKV
+         bZpxNWRFsDQtVkJC4jRsuxXKcunGSpiy691CTRdWzD9pnGhizU9V4lf5zD/14wKzk2Na
+         ShQCKJzCBKRFn1+nPMy0b7mZuEIsZ8Rb9OIV0VR4oAt/AFyhgMaGF+QBrhbS9+WCWaYv
+         lYZ8IVJTGxULjIswSIhurxkME4u6UUmu4o4daWrZD6OS7l7Ub7nlAtxsoumelTadM6m2
+         quwsUd9lD8NdnnkWHea/Z4sZI6S6bkE9QCLhSWXYePs+1Cb9XY+gggvcYO/s8IwnlfYD
+         eFqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746706636; x=1747311436;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ITsof7vKMaX3jP45vYP8VvBDvnD7ar/ly91W1po1fYs=;
+        b=Ubgq1oKImMgKYm7V0PjYr+lyMqmcKFZc/XFyW7JFf1aLQZonwrK6hVmAxIQeiV2WTz
+         MoDIn448Qt/Uo5OjQs8MKSwspoZ2OcfbPP4uX85sdUut0U685wDGGKYVu5x+hr3Aa2wb
+         nbahPEPLk0ofJig1wt0ay3TZA4EJQP6AHcyuI7BDv+cczdL+AfHsDDG3AAFZk4cUuN+i
+         V53YYgMAJXJvRz9rra5ia+SewSQ6d/kyiMmYUbCXkSjjsxNYtJ1tVzQ1zNXBvR+6nX5y
+         hZJIDpEw/vpJWTGeUQuFU/5BSxwdZP1asCJ7IbSsfqlk6+ayBfYIaQ/j1LW9D76a1r24
+         BctA==
+X-Forwarded-Encrypted: i=1; AJvYcCWVDfF3cLk+QdiuT9PtZv7xEoYF2zdQhGWYnZgeSPh5Ov/EFzKMeShmzypRnfa9FDQGkzfTIQqgHJHq0DE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7lxWU0Rdx6W6McwpkfKYMQA9cOB+yzsTOCzaRBFKwuWE6QDb0
+	/d26/SM0qpvl/n/H6vLy2148zBlxPw1T0qK+JM8frU58HzEptGrbniUGoWgAhPg=
+X-Gm-Gg: ASbGncum5xDPpU8+fo1/7hRPShP2fWS+QRpCeisorj2qNXu9dihDXi054SRQ5m9yzXi
+	TBXX0Yu3bNAS8ICxLtbqlW3WVzJ9myiHdVrm2DLRG3t5OjclVPREJl5KnGcmG0blkL2l4g1akgD
+	TKf8BwpJqpeIlqPXY6X4vHOGj+8+5IlpPA0XCEKXV8ZCKwcNUC99EPKimJSYdHaWFCfVbnbGx9b
+	waxyyYNdzY/j27Cfz1huUkHzmDvwbeMmGsFtEmcHb1CMc2fZjFIrlNy3OgK2OjN5YRR9X0B8JcE
+	gpZBavuyzZjsSgh/QG32bGTFgHymG+XV7LjWar8raP2EtLXZqBAE7/jb0xVD8u26jxWVupWJeqK
+	pYnxT
+X-Google-Smtp-Source: AGHT+IEpsfxrAkflVw0/hRABTEz4CwO/hvBuswU8lzk6t7nrXFnCj3fyA636Nq30np0oFo7xbeEBJA==
+X-Received: by 2002:a05:6602:3f85:b0:867:3e9e:89db with SMTP id ca18e2360f4ac-867473170e3mr934513939f.8.1746706636487;
+        Thu, 08 May 2025 05:17:16 -0700 (PDT)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-864aa2bb1bdsm294250539f.7.2025.05.08.05.17.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 05:17:15 -0700 (PDT)
+Message-ID: <1521c828-31f3-4e45-a651-750ce2e37364@riscstar.com>
+Date: Thu, 8 May 2025 07:17:14 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,280 +67,88 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-j722s-evm: Add overlay for TEVI
- OV5640
-To: "Kumar, Udit" <u-kumar1@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>
-CC: <vaishnav.a@ti.com>, <r-donadkar@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <jai.luthra@linux.dev>,
-        <linux-kernel@vger.kernel.org>
-References: <20250505115700.500979-1-y-abhilashchandra@ti.com>
- <20250505115700.500979-3-y-abhilashchandra@ti.com>
- <a6329e9d-409e-4f62-b26d-c4d0e49d772c@ti.com>
+Subject: Re: [PATCH v6 1/6] dt-bindings: soc: spacemit: define spacemit,k1-ccu
+ resets
+To: Krzysztof Kozlowski <krzk@kernel.org>, Yixun Lan <dlan@gentoo.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ alex@ghiti.fr, heylenay@4d2.org, inochiama@outlook.com,
+ guodong@riscstar.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+ spacemit@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250506210638.2800228-1-elder@riscstar.com>
+ <20250506210638.2800228-2-elder@riscstar.com>
+ <20250507223554-GYA505240@gentoo>
+ <22b7b5fc-6f5a-4ce8-ae12-a7423925c113@kernel.org>
 Content-Language: en-US
-From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-In-Reply-To: <a6329e9d-409e-4f62-b26d-c4d0e49d772c@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <22b7b5fc-6f5a-4ce8-ae12-a7423925c113@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Udit,
-Thanks for the review.
+On 5/8/25 7:02 AM, Krzysztof Kozlowski wrote:
+> On 08/05/2025 00:35, Yixun Lan wrote:
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            enum:
+>>> +              - spacemit,k1-syscon-apbc
+>>> +              - spacemit,k1-syscon-apmu
+>>> +              - spacemit,k1-syscon-mpmu
+>>> +    then:
+>>> +      required:
+>>> +        - clocks
+>>> +        - clock-names
+>>> +        - "#clock-cells"
+>>>   
+>>>   additionalProperties: false
+>>>   
+>>> diff --git a/include/dt-bindings/clock/spacemit,k1-syscon.h b/include/dt-bindings/clock/spacemit,k1-syscon.h
+>>> index 35968ae982466..f5965dda3b905 100644
+>>> --- a/include/dt-bindings/clock/spacemit,k1-syscon.h
+>>> +++ b/include/dt-bindings/clock/spacemit,k1-syscon.h
+>> would it be better to move all reset definition to its dedicated dir?
+>> which like: include/dt-bindings/reset/spacemit,k1-syscon.h?
+> 
+> Please kindly trim the replies from unnecessary context. It makes it
+> much easier to find new content.
+> 
+> 
+> I don't get why such comments are appearing so late - at v6. There was
+> nothing from you about this in v1, v2 and v3, which finally got reviewed.
 
-On 07/05/25 13:50, Kumar, Udit wrote:
-> Hello Vaishnav/Abhilash
-> 
-> Thanks for patch
-> 
-> On 5/5/2025 5:27 PM, Yemike Abhilash Chandra wrote:
->> From: Vaishnav Achath <vaishnav.a@ti.com>
->>
->> TechNexion TEVI OV5640 camera is a 5MP camera that can be used with
->> J722S EVM through the 22-pin CSI-RX connector. Add a reference overlay
->> for quad TEVI OV5640 modules on J722S EVM.
->>
->> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
->> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
->> ---
->>   arch/arm64/boot/dts/ti/Makefile               |   4 +
->>   .../k3-j722s-evm-csi2-quad-tevi-ov5640.dtso   | 358 ++++++++++++++++++
->>   2 files changed, 362 insertions(+)
->>   create mode 100644 
->> arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso
->>
->> diff --git a/arch/arm64/boot/dts/ti/Makefile 
->> b/arch/arm64/boot/dts/ti/Makefile
->> index 829a3b028466..76b750e4b8a8 100644
->> --- a/arch/arm64/boot/dts/ti/Makefile
->> +++ b/arch/arm64/boot/dts/ti/Makefile
->> @@ -123,6 +123,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-j721s2-evm-pcie1-ep.dtbo
->>   dtb-$(CONFIG_ARCH_K3) += k3-am67a-beagley-ai.dtb
->>   dtb-$(CONFIG_ARCH_K3) += k3-j722s-evm.dtb
->>   dtb-$(CONFIG_ARCH_K3) += k3-j722s-evm-csi2-quad-rpi-cam-imx219.dtbo
->> [..]
->> diff --git 
->> a/arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso 
->> b/arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso
->> new file mode 100644
->> index 000000000000..537224ea60e3
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso
->> @@ -0,0 +1,358 @@
->> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
->> +/*
->> + * 4 x TEVI OV5640 MIPI Camera module on RPI camera connector.
->> + *
->> + * Copyright (C) 2024 Texas Instruments Incorporated - 
->> https://www.ti.com/
->> + */
->> +
->> +/dts-v1/;
->> +/plugin/;
->> +
->> +#include <dt-bindings/gpio/gpio.h>
->> +#include "k3-pinctrl.h"
->> +
->> +&{/} {
->> +    clk_ov5640_fixed: clock-24000000 {
->> +        compatible = "fixed-clock";
->> +        #clock-cells = <0>;
->> +        clock-frequency = <24000000>;
->> +    };
->> +
-> 
-> Please check once , this is clock is 25M or 24M .
-> 
-> As I see CDC6CE025000ADLXT/U28 is marked as 25M OSC
-> 
+Stephen Boyd said "please rework this to use the auxiliary driver
+framework" on version 5 of the series; it was otherwise "done" at
+that point.
 
-This is the crystal clock with in the sensor.
+Doing this meant there was a much clearer separation of the clock
+definitions from the reset definitions.  And Yixun's suggestion
+came from viewing things in that context.
 
->> +    reg_2p8v: regulator-2p8v {
->> +        compatible = "regulator-fixed";
->> +        regulator-name = "2P8V";
->> +        regulator-min-microvolt = <2800000>;
->> +        regulator-max-microvolt = <2800000>;
->> +        vin-supply = <&vdd_sd_dv>;
->> +        regulator-always-on;
->> +    };
->> +
->> +    reg_1p8v: regulator-1p8v {
->> +        compatible = "regulator-fixed";
->> +        regulator-name = "1P8V";
->> +        regulator-min-microvolt = <1800000>;
->> +        regulator-max-microvolt = <1800000>;
->> +        vin-supply = <&vdd_sd_dv>;
->> +        regulator-always-on;
->> +    };
->> +
->> +    reg_3p3v: regulator-3p3v {
->> +        compatible = "regulator-fixed";
->> +        regulator-name = "3P3V";
->> +        regulator-min-microvolt = <3300000>;
->> +        regulator-max-microvolt = <3300000>;
->> +        vin-supply = <&vdd_sd_dv>;
->> +        regulator-always-on;
->> +    };
-> 
-> Sorry but on connector QSH-020-01-L-D-DP-A-K/J27, I see only 3v3 available.
-> 
-> May be I am missing something here but how you are getting 1v8 and 2v8 
-> supply
-> 
+Given the rework, I considered sending this as v1 of a new series
+but did not.
 
-Yes, 3.3V is provided as the main input supply to the sensor.
-However, required 1.8V and 2.8V rails from the 3.3V input.
-Please refer to [1] for detailed information.
+> I just feel people wait for maintainers to review and only after they
+> will add their 2 cents of nitpicks or even some more important things
+> potentially invalidating the review. Lesson for me: do not review
+> people's work before it reaches v10, right?
 
-> 
->> +};
->> +
->> +
->> +&main_pmx0 {
->> +    cam0_reset_pins_default: cam0-default-reset-pins {
->> +        pinctrl-single,pins = <
->> +            J722S_IOPAD(0x03c, PIN_OUTPUT, 7)
->> +        >;
->> +    };
->> +
-> 
-> Please mark GPIO you are using for this in comment
-> 
-> example
-> 
-> J722S_IOPAD(0x1dc, PIN_INPUT, 0) /* (C22) MCAN0_RX */
-> 
+That's not what happened here--or at least, it's not as simple
+as that.  Your quick review was very much appreciated.
 
-Sure. Will do that.
+Yixun:  Krzysztof was satisfied with things the way they're
+defined here.  Do you feel strongly I should make your suggested
+change?  Or are you OK with me just keeping things defined this
+way for the next version?  I'd like this question resolved before
+I send the next version.
 
-> 
->> +    cam1_reset_pins_default: cam1-default-reset-pins {
->> +        pinctrl-single,pins = <
->> +            J722S_IOPAD(0x044, PIN_OUTPUT, 7)
->> +        >;
->> +    };
->> +
->> +    cam2_reset_pins_default: cam2-default-reset-pins {
->> +        pinctrl-single,pins = <
->> +            J722S_IOPAD(0x04c, PIN_OUTPUT, 7)
->> +        >;
->> +    };
->> +
->> +    cam3_reset_pins_default: cam3-default-reset-pins {
->> +        pinctrl-single,pins = <
->> +            J722S_IOPAD(0x054, PIN_OUTPUT, 7)
->> +        >;
->> +    };
->> +};
->> +
->> +&exp1 {
->> +    p06-hog{
->> +        /* P06 - CSI01_MUX_SEL_2 */
->> +        gpio-hog;
->> +        gpios = <6 GPIO_ACTIVE_HIGH>;
->> +        output-high;
->> +        line-name = "CSI01_MUX_SEL_2";
-> 
-> As per table on page 29
-> 
-> CSI01_MUX_SEL_2 as low means, INPUT<-- A Port [CSI2 Connector]
-> 
-> Please check, if you want to drive this line high or low
+Thank you.
 
-These are RPI connectors, It should be high.
+					-Alex
 
-> 
->> +    };
->> +
->> +    p07-hog{
->> +        /* P01 - CSI23_MUX_SEL_2 */
->> +        gpio-hog;
->> +        gpios = <7 GPIO_ACTIVE_HIGH>;
->> +        output-high;
->> +        line-name = "CSI23_MUX_SEL_2";
->> +    };
-> 
-> Same as for CSI01_MUX_SEL_2, table on page-30
-> 
-> 
->> +};
->> +
->> +&main_gpio0 {
->> +    p15-hog {
->> +        /* P15 - CSI2_CAMERA_GPIO1 */
->> +        gpio-hog;
->> +        gpios = <15 GPIO_ACTIVE_HIGH>;
->> +        output-high;
->> +        line-name = "CSI2_CAMERA_GPIO1";
->> +    };
->> +
->> +    p17-hog {
->> +        /* P17 - CSI2_CAMERA_GPIO2 */
->> +        gpio-hog;
->> +        gpios = <17 GPIO_ACTIVE_HIGH>;
->> +        output-high;
->> +        line-name = "CSI2_CAMERA_GPIO2";
->> +    };
->> +
->> +    p19-hog {
->> +        /* P19 - CSI2_CAMERA_GPIO3 */
->> +        gpio-hog;
->> +        gpios = <19 GPIO_ACTIVE_HIGH>;
->> +        output-high;
->> +        line-name = "CSI2_CAMERA_GPIO3";
->> +    };
->> +
->> +    p21-hog {
->> +        /* P21 - CSI2_CAMERA_GPIO4 */
->> +        gpio-hog;
->> +        gpios = <21 GPIO_ACTIVE_HIGH>;
->> +        output-high;
->> +        line-name = "CSI2_CAMERA_GPIO4";
->> +    };
-> 
-> Please check once if P21 and rest above are pin number of SOC ?
-> 
+> Best regards,
+> Krzysztof
 
-Yes
-
-> 
->> +};
->> +
->> +&pca9543_0 {
->> +    #address-cells = <1>;
->> +    #size-cells = <0>;
->> +
->> +    i2c@0 {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +        reg = <0>;
->> +
->> +        ov5640_0: camera@3c {
->> +            compatible = "ovti,ov5640";
->> +            reg = <0x3c>;
->> +            clocks = <&clk_ov5640_fixed>;
->> +            clock-names = "xclk";
->> +
->> +            AVDD-supply = <&reg_2p8v>;
->> +            DOVDD-supply = <&reg_1p8v>;
->> +            DVDD-supply = <&reg_3p3v>;
->> +
->> +            pinctrl-names = "default";
->> +            pinctrl-0 = <&cam0_reset_pins_default>;
-> 
-> do you think, you should have reset-gpios as property for this ov5640 
-> and other nodes too ?
-> 
-
-Thanks for pointing this out. I will add that in the next revision.
-
-Thanks and Regards
-Yemike Abhilash Chandra
-
-
-[1]:https://www.technexion.com/wp-content/uploads/2023/09/product-brief_tevi-ov5640.pdf
-
-> 
->> +
->> [..]
