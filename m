@@ -1,304 +1,100 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE0D1CB31D
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 06:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F64D1CB31D
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 06:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746685095; cv=none; b=BNcbgVVmtpPrLGPE2vRiDqcL+XOZGiGFWyi0fPB6BnyaKuxrl0ANIXr1A+IMzorRIi77V8gX3/LKKH5yZkE45pRhkaPNzLs3QEvAoRRZwpBDgIiz7Nz12tG3IXM/Rs4p51ZyDyA3D3fn6MlUsvL+sixLk88jaRnqx2jdFFG9MDs=
+	t=1746685104; cv=none; b=RZMI/lPR1S5pB9VSY0Z3nlTGaRxaXMSgHkIcxMg7tlDuO31l7FG1UNmPHKg08l+TH3TiktsdZhjLNTAhvglGANlVKgYxGH3xXiBu3h9I+6Mus/kpVayyGvk8oO6MJr1+F9Q1Vk3TAQQ/iOed0Vgk3/rvG79UWaVMKYv46HwZ/D8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746685095; c=relaxed/simple;
-	bh=Bbkq/RYcxs1x98iS+sh1uTieG+gNR4+QIdZyuTIdfr8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qVgXawwqzQxleVwpW8pHvK3QCnRnrpIG7rIs11fQuoVKuiIg+hHU4BMG31qjzOGTa+HMzKlHU6MHv9rLnCKybZfu9NgFVDc5jQrGgLvaZuZ3x+I+1HHvU7xJYtoOLSa0qY2jCoFXwtaXe0F4Ic3ns82a3TcZ86XNTUWyenXq+mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=j7sQqUYp; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1746685104; c=relaxed/simple;
+	bh=XqBq4/xGPzOX+eDMZnGd+MB/OvHm44XA4eW9KOQu//4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PRzVCfDQqYYaUcI2iSx8MjeEtHiNOHziRZP5Uo5prVcNZGIZEpjFher6eCMYdyYfswN2hcWq+Pst6BTFlx9HVlpgil/LC+Xfz3GWZPpZQ6M/FE6O1lk2Jqh+lGLK4F3RnNAPBTj7egOgzVH42qBB8//+6RAcGcr7kz3uo3nffls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Iktx37Y4; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="j7sQqUYp"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-86135af1045so68557039f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 23:18:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Iktx37Y4"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736b0c68092so592743b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 23:18:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1746685091; x=1747289891; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ss9yl8sXdOiHdkgttMG6M1WflUBd6V/PJ9963b+7AH0=;
-        b=j7sQqUYp6tm5t6gJ7ptNSmWB2SFDGLhFy9p8HOy4/lE9p7cg8DXjXHYzcHTaWBppoN
-         JvFvaEZTxI3H6DpKaEWRH2uhTTgm8+d6xRYrsmPl0K+mKNYEgIerLZB5rzaDSg//tKlo
-         u4uMsvZmFoR0pg6meXDOi94FzE7zym/AT/x1WfZJuKvx4sw3oS7a5To95WRq7mvZIC+u
-         DcyDnmg9NZeAGpyfSqwvUB3ew8aKAI7qc5xe1HDNCXGsM/yE1AYDYeeLAkM+2rG8WXN9
-         c9zuS+dQJlM+4TA8BtiGvvTrkEMd4h7UkH3DnvXtVO69BK8Ol5A/IqkzRsZjcQKVPMWP
-         NU6w==
+        d=chromium.org; s=google; t=1746685102; x=1747289902; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=a5vDJd4sFj9Mbe4a4INcdSXmTrq/OgA3/EgwfJosPAI=;
+        b=Iktx37Y4chA4eOl/1sMGCyuBK7aU1lXoOh9hz6AL7QX0aKqQheyd/qSRu8wjbkCA8C
+         uGmx2cTlrhPNysBpYUzabZ3OJ1GmVxtes3uMgb6AHCSLarGRwVF/yVXXWbWF/Juux8ek
+         Dlyob0JLpbbE/kHqYp4eyd641C5jVcRGOLukY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746685091; x=1747289891;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ss9yl8sXdOiHdkgttMG6M1WflUBd6V/PJ9963b+7AH0=;
-        b=axsL6zv0baUlwatKWmNZpolnmRFBvTUEKscCWdp1o0rfDdVW5sPCX3P8jT96+XYSoS
-         Zjbv6X4DE++wVOYOdLaOpiTy4J+2cUVjnKvnJxE/0RY2md1A9ymhZHDb/TEGD32yIuq5
-         NGhWVEY6x+AF5cfRRF1Nd0tXu9oupIafi82+5PsjRb/zYZy9nbKt7M+F1zbtbbz51sBL
-         C6CXoV/IWIydWET8dvzpa5uYweruaHDpsfcbmyyKPSF1CZXAkAZ0Sm3YsbNXUi73Szhs
-         2W3+bqjdxF6vz2A30AnrGaDGCiB8nU4hMGP1GD+Wwhtm3g7WH2hBftb/cPjWWHlg2YxE
-         dREQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcbsUsD+HOibIWgbYMwV7vQ3H1upymXu6mt7elOud7R5/M09V1if6N3yQ/qCld8cOlIA/FbKkjXt2orG8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylSDil7Wfyug6s7Pe55UlObPZvau8anTcLxGoSm1lWAM1y8lou
-	A9VhUAMLW18lGqOL08cWBLxBbIHsH+K+w2Z54nRBpp/Sf2FIMOcE3Fi4BthLkKekOiSs9ITsguf
-	q73h6SXRIeLScHpYkhR371ayGi9/xmvhLUdFP+A==
-X-Gm-Gg: ASbGncv6GN4N12OvyhicI2UzzkQcHSuPjenB8iGV7s8kbnR+lZXW3uL1wIMQa2WOPgr
-	n87wftB3b+Bn2LWvhF84CRYO2F73TTEDeMNNDNRKxREdr6x8f7+AOeSUSSdx3ZmfguluefoA84p
-	cCxF6qttld/n+EDeXeZi+bxAM=
-X-Google-Smtp-Source: AGHT+IH2Ky4AFIJnI3fge0BtYV7Dksetv4YSLA/pbKoTobhDZ77LmyQiPq5k0ylButekku7Ka+EjOBB/t3SlisqxLk0=
-X-Received: by 2002:a05:6e02:3498:b0:3d8:1cba:1854 with SMTP id
- e9e14a558f8ab-3da7854d65bmr34465065ab.1.1746685091168; Wed, 07 May 2025
- 23:18:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746685102; x=1747289902;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a5vDJd4sFj9Mbe4a4INcdSXmTrq/OgA3/EgwfJosPAI=;
+        b=VtfznCtkIBmAb528wLqb8+hqer91j4eOJJk7jef8orzhkDhaKv9LNhC6YtGbBQ+Xig
+         cSjXZQcda6T1VukJnBXQzphr/Xz4WsIwVVHUBTx+ROiLiqmYfr+thfSMeZEKip9oGySO
+         2sv5wKIIPS3drSxtf7BcTPifmSQ1Vc0B1Ph7Lw+T9+bJCR6yD6/ApM7T2L23gjjSW9yu
+         XRckqwAYjnowlvhAAKEkzorVv85vmgvNa7Tu6WP+HDucAKj+aCvO015bzTi4PE+poaoq
+         hn2pr14pOn9RRaSRCUU4qG2P14zrGKwqhyoCMuYso7xLMB7K+vYOhoIbdT/puA1z8kUk
+         PK2A==
+X-Forwarded-Encrypted: i=1; AJvYcCU/+Bcv1fLWdWhyjOG2peVpWcm+aaCLJqxh6FK2iUgv5d04GFzTXDIDUf/kjrUXrfBH3QMtrga+Zl77jy4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMMdzmpBTBY8hzz6tmVq447lU9/r470xrrQIl8KOAfzXXiK+G+
+	DMLUB5OmC3l+Yny8bFaxu+ZLlCKMfsskI828OV/Yfct3PUki5A55bl06Lt6xfw==
+X-Gm-Gg: ASbGncttCA8EnVENEKq5FkmawsoYDBkPVyYmBaLH9cDrmjh3q0+f8TRpJht1kq6JXJW
+	jQVvfOlxMJYAnrTFtdaiCaFVwlNjPTVzF1RNBUSfHlnqHAacLo5emV5nADml0oPsOK/Tr5gYsty
+	7/upnyWGS668iKf+xWgmfhr0OuwW8BPZddIiUlUPY4mHdrxcmMeZW+fGlVplrsyc6So9m+7Dp04
+	blDp+aa7E1hrMfkFlUT5rYce6a8dWRRDnphxysfSbdCpFkn0svp3YBqHEtyTuEcpP8EJYWbJIxu
+	BQVqStaiPo5NJteGG/LW4FicnMDs0jlfQ8sI0dncgOQRvIzym7MgRKE=
+X-Google-Smtp-Source: AGHT+IEmjxbI0CoGYM3oDVwMMaIwRnvSdfZ4i+4zpM4DgPGGhHStpLMN0bKNgHpy3FaRRumZ4MX0qw==
+X-Received: by 2002:a17:902:f78d:b0:22e:7f20:52ed with SMTP id d9443c01a7336-22e7f2055admr31670455ad.20.1746685102508;
+        Wed, 07 May 2025 23:18:22 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:c794:38be:3be8:4c26])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3b53a6bsm8935238a12.22.2025.05.07.23.18.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 23:18:22 -0700 (PDT)
+Date: Thu, 8 May 2025 15:17:56 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Yosry Ahmed <yosry.ahmed@linux.dev>, Vitaly Wool <vitaly.wool@konsulko.se>, linux-mm@kvack.org, 
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Minchan Kim <minchan@kernel.org>, Igor Belousov <igor.b@beldev.am>, 
+	Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
+Message-ID: <at4djawky2n5d2nrxor62osid3mkaid4ttmlmc3xwsju2hstun@bos2kgakshpa>
+References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
+ <aBoK7f7rtfbPFGap@google.com>
+ <m2dmxnhtvxano6lye7lr3saiobn4ygpln55xntlstfo4zwws5g@qpq7aagx3xwq>
+ <b42gpp5qsa4j22ai2v4rwwkjhvfbcbf3lcnjoccz7xeidae5c7@ot2ocric3qzs>
+ <aBsDj0IGQBJC_JMj@infradead.org>
+ <unyov4aypoaotj56m5scgd4qtjfn2mceb4zdmtaek42dfqaq3t@lrrqwojlmudp>
+ <aBxIlUYEPojTopek@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com> <20250403112522.1566629-6-rkrcmar@ventanamicro.com>
-In-Reply-To: <20250403112522.1566629-6-rkrcmar@ventanamicro.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Thu, 8 May 2025 11:48:00 +0530
-X-Gm-Features: ATxdqUFfRqun2viiJMiaaVjkyhvi75M7M8EY7NCPCcyFAS9GGQ49YwBXAaDX928
-Message-ID: <CAAhSdy3y0-hz59Nrqvvhp=+cWJe1s50K7EpuZmKBqfy-XQFd1Q@mail.gmail.com>
-Subject: Re: [PATCH 3/5] KVM: RISC-V: remove unnecessary SBI reset state
-To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>, 
-	Mayuresh Chitale <mchitale@ventanamicro.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBxIlUYEPojTopek@infradead.org>
 
-On Thu, Apr 3, 2025 at 5:02=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar=
-@ventanamicro.com> wrote:
->
-> The SBI reset state has only two variables -- pc and a1.
-> The rest is known, so keep only the necessary information.
->
-> The reset structures make sense if we want userspace to control the
-> reset state (which we do), but I'd still remove them now and reintroduce
-> with the userspace interface later -- we could probably have just a
-> single reset state per VM, instead of a reset state for each VCPU.
->
-> Signed-off-by: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.com>
+On (25/05/07 23:00), Christoph Hellwig wrote:
+> On Thu, May 08, 2025 at 02:58:14PM +0900, Sergey Senozhatsky wrote:
+> > Oh, I didn't realize that zram was the only swap_slot_free_notify
+> > user.  zram already handles REQ_OP_DISCARD/REQ_OP_WRITE_ZEROES so
+> > I guess only swap-cluster needs some work.  Are there any
+> > blockers/complications on the swap-cluster side?
+> 
+> I think the reason it was added it was so that the discard can be
+> done non-blocking with a spinlock held.  Which seems a bit sketch
+> when calling into a driver anyway..
 
-Queued this patch for Linux-6.16
-
-Thanks,
-Anup
-
-> ---
->  arch/riscv/include/asm/kvm_aia.h  |  3 --
->  arch/riscv/include/asm/kvm_host.h | 12 ++++---
->  arch/riscv/kvm/aia_device.c       |  4 +--
->  arch/riscv/kvm/vcpu.c             | 58 +++++++++++++++++--------------
->  arch/riscv/kvm/vcpu_sbi.c         |  9 +++--
->  5 files changed, 44 insertions(+), 42 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/kvm_aia.h b/arch/riscv/include/asm/kv=
-m_aia.h
-> index 1f37b600ca47..3b643b9efc07 100644
-> --- a/arch/riscv/include/asm/kvm_aia.h
-> +++ b/arch/riscv/include/asm/kvm_aia.h
-> @@ -63,9 +63,6 @@ struct kvm_vcpu_aia {
->         /* CPU AIA CSR context of Guest VCPU */
->         struct kvm_vcpu_aia_csr guest_csr;
->
-> -       /* CPU AIA CSR context upon Guest VCPU reset */
-> -       struct kvm_vcpu_aia_csr guest_reset_csr;
-> -
->         /* Guest physical address of IMSIC for this VCPU */
->         gpa_t           imsic_addr;
->
-> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/k=
-vm_host.h
-> index 0e9c2fab6378..0c8c9c05af91 100644
-> --- a/arch/riscv/include/asm/kvm_host.h
-> +++ b/arch/riscv/include/asm/kvm_host.h
-> @@ -193,6 +193,12 @@ struct kvm_vcpu_smstateen_csr {
->         unsigned long sstateen0;
->  };
->
-> +struct kvm_vcpu_reset_state {
-> +       spinlock_t lock;
-> +       unsigned long pc;
-> +       unsigned long a1;
-> +};
-> +
->  struct kvm_vcpu_arch {
->         /* VCPU ran at least once */
->         bool ran_atleast_once;
-> @@ -227,12 +233,8 @@ struct kvm_vcpu_arch {
->         /* CPU Smstateen CSR context of Guest VCPU */
->         struct kvm_vcpu_smstateen_csr smstateen_csr;
->
-> -       /* CPU context upon Guest VCPU reset */
-> -       struct kvm_cpu_context guest_reset_context;
-> -       spinlock_t reset_cntx_lock;
-> +       struct kvm_vcpu_reset_state reset_state;
->
-> -       /* CPU CSR context upon Guest VCPU reset */
-> -       struct kvm_vcpu_csr guest_reset_csr;
->
->         /*
->          * VCPU interrupts
-> diff --git a/arch/riscv/kvm/aia_device.c b/arch/riscv/kvm/aia_device.c
-> index 39cd26af5a69..43e472ff3e1a 100644
-> --- a/arch/riscv/kvm/aia_device.c
-> +++ b/arch/riscv/kvm/aia_device.c
-> @@ -526,12 +526,10 @@ int kvm_riscv_vcpu_aia_update(struct kvm_vcpu *vcpu=
-)
->  void kvm_riscv_vcpu_aia_reset(struct kvm_vcpu *vcpu)
->  {
->         struct kvm_vcpu_aia_csr *csr =3D &vcpu->arch.aia_context.guest_cs=
-r;
-> -       struct kvm_vcpu_aia_csr *reset_csr =3D
-> -                               &vcpu->arch.aia_context.guest_reset_csr;
->
->         if (!kvm_riscv_aia_available())
->                 return;
-> -       memcpy(csr, reset_csr, sizeof(*csr));
-> +       memset(csr, 0, sizeof(*csr));
->
->         /* Proceed only if AIA was initialized successfully */
->         if (!kvm_riscv_aia_initialized(vcpu->kvm))
-> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-> index 2fb75288ecfe..b8485c1c1ce4 100644
-> --- a/arch/riscv/kvm/vcpu.c
-> +++ b/arch/riscv/kvm/vcpu.c
-> @@ -51,13 +51,40 @@ const struct kvm_stats_header kvm_vcpu_stats_header =
-=3D {
->                        sizeof(kvm_vcpu_stats_desc),
->  };
->
-> -static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
-> +static void kvm_riscv_vcpu_context_reset(struct kvm_vcpu *vcpu)
->  {
->         struct kvm_vcpu_csr *csr =3D &vcpu->arch.guest_csr;
-> -       struct kvm_vcpu_csr *reset_csr =3D &vcpu->arch.guest_reset_csr;
->         struct kvm_cpu_context *cntx =3D &vcpu->arch.guest_context;
-> -       struct kvm_cpu_context *reset_cntx =3D &vcpu->arch.guest_reset_co=
-ntext;
-> +       struct kvm_vcpu_reset_state *reset_state =3D &vcpu->arch.reset_st=
-ate;
->         void *vector_datap =3D cntx->vector.datap;
-> +
-> +       memset(cntx, 0, sizeof(*cntx));
-> +       memset(csr, 0, sizeof(*csr));
-> +
-> +       /* Restore datap as it's not a part of the guest context. */
-> +       cntx->vector.datap =3D vector_datap;
-> +
-> +       /* Load SBI reset values */
-> +       cntx->a0 =3D vcpu->vcpu_id;
-> +
-> +       spin_lock(&reset_state->lock);
-> +       cntx->sepc =3D reset_state->pc;
-> +       cntx->a1 =3D reset_state->a1;
-> +       spin_unlock(&reset_state->lock);
-> +
-> +       /* Setup reset state of shadow SSTATUS and HSTATUS CSRs */
-> +       cntx->sstatus =3D SR_SPP | SR_SPIE;
-> +
-> +       cntx->hstatus |=3D HSTATUS_VTW;
-> +       cntx->hstatus |=3D HSTATUS_SPVP;
-> +       cntx->hstatus |=3D HSTATUS_SPV;
-> +
-> +       /* By default, make CY, TM, and IR counters accessible in VU mode=
- */
-> +       csr->scounteren =3D 0x7;
-> +}
-> +
-> +static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
-> +{
->         bool loaded;
->
->         /**
-> @@ -72,16 +99,10 @@ static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcp=
-u)
->
->         vcpu->arch.last_exit_cpu =3D -1;
->
-> -       memcpy(csr, reset_csr, sizeof(*csr));
-> -
-> -       spin_lock(&vcpu->arch.reset_cntx_lock);
-> -       memcpy(cntx, reset_cntx, sizeof(*cntx));
-> -       spin_unlock(&vcpu->arch.reset_cntx_lock);
-> +       kvm_riscv_vcpu_context_reset(vcpu);
->
->         kvm_riscv_vcpu_fp_reset(vcpu);
->
-> -       /* Restore datap as it's not a part of the guest context. */
-> -       cntx->vector.datap =3D vector_datap;
->         kvm_riscv_vcpu_vector_reset(vcpu);
->
->         kvm_riscv_vcpu_timer_reset(vcpu);
-> @@ -113,8 +134,6 @@ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned=
- int id)
->  int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->  {
->         int rc;
-> -       struct kvm_cpu_context *cntx;
-> -       struct kvm_vcpu_csr *reset_csr =3D &vcpu->arch.guest_reset_csr;
->
->         spin_lock_init(&vcpu->arch.mp_state_lock);
->
-> @@ -134,24 +153,11 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->         /* Setup VCPU hfence queue */
->         spin_lock_init(&vcpu->arch.hfence_lock);
->
-> -       /* Setup reset state of shadow SSTATUS and HSTATUS CSRs */
-> -       spin_lock_init(&vcpu->arch.reset_cntx_lock);
-> -
-> -       spin_lock(&vcpu->arch.reset_cntx_lock);
-> -       cntx =3D &vcpu->arch.guest_reset_context;
-> -       cntx->sstatus =3D SR_SPP | SR_SPIE;
-> -       cntx->hstatus =3D 0;
-> -       cntx->hstatus |=3D HSTATUS_VTW;
-> -       cntx->hstatus |=3D HSTATUS_SPVP;
-> -       cntx->hstatus |=3D HSTATUS_SPV;
-> -       spin_unlock(&vcpu->arch.reset_cntx_lock);
-> +       spin_lock_init(&vcpu->arch.reset_state.lock);
->
->         if (kvm_riscv_vcpu_alloc_vector_context(vcpu))
->                 return -ENOMEM;
->
-> -       /* By default, make CY, TM, and IR counters accessible in VU mode=
- */
-> -       reset_csr->scounteren =3D 0x7;
-> -
->         /* Setup VCPU timer */
->         kvm_riscv_vcpu_timer_init(vcpu);
->
-> diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-> index f58368f7df1d..3d7955e05cc3 100644
-> --- a/arch/riscv/kvm/vcpu_sbi.c
-> +++ b/arch/riscv/kvm/vcpu_sbi.c
-> @@ -159,11 +159,10 @@ void kvm_riscv_vcpu_sbi_system_reset(struct kvm_vcp=
-u *vcpu,
->  void kvm_riscv_vcpu_sbi_request_reset(struct kvm_vcpu *vcpu,
->                                        unsigned long pc, unsigned long a1=
-)
->  {
-> -       spin_lock(&vcpu->arch.reset_cntx_lock);
-> -       vcpu->arch.guest_reset_context.sepc =3D pc;
-> -       vcpu->arch.guest_reset_context.a0 =3D vcpu->vcpu_id;
-> -       vcpu->arch.guest_reset_context.a1 =3D a1;
-> -       spin_unlock(&vcpu->arch.reset_cntx_lock);
-> +       spin_lock(&vcpu->arch.reset_state.lock);
-> +       vcpu->arch.reset_state.pc =3D pc;
-> +       vcpu->arch.reset_state.a1 =3D a1;
-> +       spin_unlock(&vcpu->arch.reset_state.lock);
->
->         kvm_make_request(KVM_REQ_VCPU_RESET, vcpu);
->  }
-> --
-> 2.48.1
->
+swap_slot_free_notify is not guaranteed to free anything on the zram/zsmalloc
+side. zram attempts to trylock entry and if it fails to acquire the ownership
+swap_slot_free_notify for that entry becomes a .miss_free.  So we just keep
+stale data in zspage (potentially, preventing it from being released if that
+was the last allocated object).  I don't know if .miss_free happens often in
+real life.
