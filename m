@@ -1,144 +1,106 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357C3221FBB;
-	Thu,  8 May 2025 10:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1A2222594
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746700473; cv=none; b=E5gwUPHSpFiUWOeYuxgcUNuZV7PnOWRn8RKUPXiIDul0ARkux3aoIZgOK7sIbQ/3Z6Gmjf9MFp0Q/vkj45n/89ufU49IdWTNdtjFQzuK16Y6RAV/smRYIfRa9d5jjG7eKO2XaLQ3qfUIL8nJvFi1CM6+Dt/PuiHmVWQvfEDU4wE=
+	t=1746700500; cv=none; b=laFs6J5c1zMpHkYvI6Lcxdz/t0/Qw2+/vA2l+y+HSiQyEXb3ynEWB5lMw7v/42b74++fuaRGTIBnoFdRGnDAfSgyZWDRaetHuPSe7Sg95TUxm7bTDp+q1SUD3034ZW9HN3UVEzkJLgU2GVhZkWKU8VkTrPIm+ohcICRW1CsRIFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746700473; c=relaxed/simple;
-	bh=akRbmWWy3uo32+sDV8dHAIM/IIfD+jvarYBomPIFZV8=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=RddRppWQfvb/sG8epm0pJgJoLkzcyJWUdtWwG/3NN6ZkDLZ3SEFKA/PTxvoUVtf5stuIPZnyHliRkRvd7h+Q3+MjjVfGEqAEMBUo/RUGQFClxcnhaIpdkOg3ArSsF9b4u6jcFb5G/z8JVOTFju34LaDNqf8gGWKHUvruUUECbXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Sy+ar1T4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DfTYiiQq; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746700500; c=relaxed/simple;
+	bh=XshUOr28r6ZZkb+yL1lgKFOURqljAiLtgGQWw8Tj5Xk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r5OjFwtRJBXhHS9NDguqReH+GixKinwEDUxkcw0Aha1zf952PkUle5drV9VCyctJPKiNKGYoBJVWn+02AuxXoJEEqEMU4gHHJg5oSPn9TeXN5yQxiInyiOWGI39zep4a/Y8NPkVjD6qZ5/6xW/g6M5j1bwA5Lg7rfjoRktrFDQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rqfpSduV; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Sy+ar1T4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DfTYiiQq"
-Date: Thu, 08 May 2025 10:34:29 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746700470;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XLEpIjw9+8EJkKD40HuKH2wm7JNGz7RqkCTlT0hBhBs=;
-	b=Sy+ar1T4kz4qr8Mpi7guhYpnlLLtVrVxsIYr+7D7Rh/AJ4sXoZd938YTuzZXVhDMIZ8arn
-	na7ysmEbNx5NcXvxo3vmWfztWMnAgu0kCRIs0rdbWxnFirOQ3U/cOpqfDbJTDkXLkNZRmP
-	SITyssX4bY98yJ5fZUqn+tofWZaEC1Pdo2fIn2N+eGNKY4gKUkNUDbgb42A4OYbz7mgzW8
-	x/4vmIEXPpX+GMwnIyT9e23u2BFtt4YXjFaKj+4IV3SitEzxacaIn36T6QEB9uBBgLjazb
-	MOgp7mi8tmT0k1dZp8iBu9sWA2rKcfgjzp3jlpQ9jJarhvLCPUy05LmJMTptVw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746700470;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XLEpIjw9+8EJkKD40HuKH2wm7JNGz7RqkCTlT0hBhBs=;
-	b=DfTYiiQqfZ6HSVwFxG3N9ULV9ePRS0vlG2g4bn6PoeMwfWRTGMr6iZmIZkkqtXmYh0BwVy
-	2yoq+ultuoyCm7CQ==
-From: "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf: Fix failing inherit_event() doing extra
- refcount decrement on parent
-Cc: Frederic Weisbecker <frederic@kernel.org>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250424161128.29176-2-frederic@kernel.org>
-References: <20250424161128.29176-2-frederic@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rqfpSduV"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso5555985e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 03:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746700497; x=1747305297; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lCD/xrhh7lmsv0m28M2TFBr3CCN+yhJ+7aC75XpUxc0=;
+        b=rqfpSduVzIwxiGLRblAFbGJW7jqAYmbz35uTd2AeMJQZop9AhUKFA6Jqa378MBVG54
+         4oatq5qVgG3iy/VKnzPePzWqXsqp0XipJO4L3LjsDTzVeapyGTTYLSIkNUT/N9zfJ8/U
+         iVl3B5KAfOUeOTRrB0Q7GExtmqAL/Zn1OT1GyCaN29r8T4rG/u1MRXyVWO6kY86NB3yu
+         bkTqycFGaiQSjxLb68scBicX+norFVYZl2K2CK+vqIsvIm+Lkl4rkkXWkhDAZ1ZkmWY1
+         RVp5/i1e2R9ylc8lT7R8MRAhQO78TlI4or0crPQdSRKJillRpwjsupFgIkZyBpBxkH4u
+         PDCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746700497; x=1747305297;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lCD/xrhh7lmsv0m28M2TFBr3CCN+yhJ+7aC75XpUxc0=;
+        b=El8LwJJF3QqAZmRIwxrww8X2+u6hUDwyBEL6wbxQ0abfYhKNExj1KbqSNZvKm9RlxC
+         WRnyqgfk00qYuvsc5RqZDcRDHCO68B5Ej5al9xZ8UBQ6DSLGs6fd4pb1u2TMJSxDaB5o
+         8fW/ixL0/RlcaGjQmtsJl6a7TyWU4WiOQJ9oUGnHDs88WegrUWjC+qKiawXOLqKMFPhv
+         9y8H1kke1ACatF5spNSFm/NeR38FUQOFy5fw4Rxj4Q//rbn2ZJxl+ralh+fPRWkDYZI7
+         3wj4cgEiFuMKeFVRkGsAlIaSe0T04Zfm7oCh8RuM3xFVTOs/h4HpmPzrRK42usaKCn59
+         mqKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ40+CmvtCzLTFFrem6xbMhot49E785/olEKvxIogIJ7n60IkzYjG/Ky3Xqv8y9ffDaGhOIKZuSAoiunY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLJNZaRCcLrH45Ha2bsh+87UiR+WHRhxuFF1mtgTeOHF1mNjIL
+	JJ5BAf+/v/0xCLbVVVNeGdxwVeiiq4Y97z6nJYl6ggpKOp13QxPatn1Ze066Jxw=
+X-Gm-Gg: ASbGncthJdXwVHXAyhG/OcJz7lDhu2KXKm/39zQD9r/A1NhdQlBWc8J5QA6swSOJmgG
+	lPLyrEh95qC/R2NXvADZvuDYEMOCDAlR2k9xV5GAm/68fATPlgQnXLH1YdZNQYgS72gaO1iFy7x
+	cHqu6fDter3hwCFOp5J5e/U5iuiozqdzb7TpVeLR4bofiUVs7gcklir1fN//A6FwEUUJbH/74/p
+	9fxEOSlJ10BMGxz1P7rUunFyyPa8Q6y9kgasH1vDtlcvJp3S7GpC52Spf2NTarFgL+1bbwtTC5o
+	uQDElv3YvIaZl+3pbg+LHB9M2o+JgLUapEOEul+vaARlZQ==
+X-Google-Smtp-Source: AGHT+IE2ZwRPPmNDwrBPPnDKpNkj/SmmhYpil9fT1HsszQFc0vAn/mcedhnk142mhnL007orG1uNYg==
+X-Received: by 2002:a05:600c:3483:b0:43c:f81d:34 with SMTP id 5b1f17b1804b1-441d44c4428mr58842365e9.9.1746700497085;
+        Thu, 08 May 2025 03:34:57 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442cd32835dsm32673715e9.6.2025.05.08.03.34.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 03:34:56 -0700 (PDT)
+Date: Thu, 8 May 2025 13:34:53 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Niklas Cassel <niklas.cassel@linaro.org>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] pmdomain: core: Fix error checking in
+ genpd_dev_pm_attach_by_id()
+Message-ID: <aByIzTj2t1I9Wrzw@stanley.mountain>
+References: <aBxPQ8AI8N5v-7rL@stanley.mountain>
+ <CAPDyKFoZiEAn8yT8a9VZqayR1=HPnMn+a51O3zUAUR3L6RXH=Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174670046994.406.11347888958227901456.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFoZiEAn8yT8a9VZqayR1=HPnMn+a51O3zUAUR3L6RXH=Q@mail.gmail.com>
 
-The following commit has been merged into the perf/core branch of tip:
+On Thu, May 08, 2025 at 12:14:41PM +0200, Ulf Hansson wrote:
+> On Thu, 8 May 2025 at 08:29, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> >
+> > The error checking for of_count_phandle_with_args() does not handle
+> > negative error codes correctly.  The problem is that "index" is a u32 so
+> > in the condition "if (index >= num_domains)" negative error codes stored
+> > in "num_domains" are type promoted to very high positive values and
+> > "index" is always going to be valid.
+> >
+> > Test for negative error codes first and then test if "index" is valid.
+> >
+> > Fixes: 3ccf3f0cd197 ("PM / Domains: Enable genpd_dev_pm_attach_by_id|name() for single PM domain")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> 
+> Thanks for the fix! It looks correct to me!
+> 
+> What puzzles me though, if this is a real problem I am sure we would
+> have been receiving bug reports, don't you think?
+> 
 
-Commit-ID:     f162bd64d95f42f42d1efdba555d898dd14af758
-Gitweb:        https://git.kernel.org/tip/f162bd64d95f42f42d1efdba555d898dd14af758
-Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Thu, 24 Apr 2025 18:11:25 +02:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Fri, 02 May 2025 12:40:40 +02:00
+I think it would only cause an issue for invalid devicetrees?  So it's
+probably not an issue people often see in real life.
 
-perf: Fix failing inherit_event() doing extra refcount decrement on parent
+regards,
+dan carpenter
 
-When inherit_event() fails after the child allocation but before the
-parent refcount has been incremented, calling put_event() wrongly
-decrements the reference to the parent, risking to free it too early.
-
-Also pmu_get_event() can't be holding a reference to the child
-concurrently at this point since it is under pmus_srcu critical section.
-
-Fix it with restoring the deleted free_event() function and call it on
-the failing child in order to free it directly under the verified
-assumption that its refcount is only 1. The refcount to the parent is
-then voluntarily omitted.
-
-Fixes: da916e96e2de ("perf: Make perf_pmu_unregister() useable")
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20250424161128.29176-2-frederic@kernel.org
----
- kernel/events/core.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 05136e8..882db7b 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5628,6 +5628,22 @@ static void _free_event(struct perf_event *event)
- }
- 
- /*
-+ * Used to free events which have a known refcount of 1, such as in error paths
-+ * of inherited events.
-+ */
-+static void free_event(struct perf_event *event)
-+{
-+	if (WARN(atomic_long_cmpxchg(&event->refcount, 1, 0) != 1,
-+				     "unexpected event refcount: %ld; ptr=%p\n",
-+				     atomic_long_read(&event->refcount), event)) {
-+		/* leak to avoid use-after-free */
-+		return;
-+	}
-+
-+	_free_event(event);
-+}
-+
-+/*
-  * Remove user event from the owner task.
-  */
- static void perf_remove_from_owner(struct perf_event *event)
-@@ -14184,7 +14200,7 @@ inherit_event(struct perf_event *parent_event,
- 
- 	pmu_ctx = find_get_pmu_context(child_event->pmu, child_ctx, child_event);
- 	if (IS_ERR(pmu_ctx)) {
--		put_event(child_event);
-+		free_event(child_event);
- 		return ERR_CAST(pmu_ctx);
- 	}
- 	child_event->pmu_ctx = pmu_ctx;
-@@ -14199,7 +14215,7 @@ inherit_event(struct perf_event *parent_event,
- 	if (is_orphaned_event(parent_event) ||
- 	    !atomic_long_inc_not_zero(&parent_event->refcount)) {
- 		mutex_unlock(&parent_event->child_mutex);
--		put_event(child_event);
-+		free_event(child_event);
- 		return NULL;
- 	}
- 
