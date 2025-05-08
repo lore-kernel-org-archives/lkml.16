@@ -1,106 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B1826FA54;
-	Thu,  8 May 2025 14:32:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC401D6195;
+	Thu,  8 May 2025 14:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746714723; cv=none; b=mNwwSRtEGku+fDVvLCDGHrS2GXRBo7Ubd6xKb4k3ePFE68LCFXL/hgi3SNzyVaX7wJ03gzBjQIy0a8GTYtoxUdwA67aAwyhmZyxGcAJ7BTq9nKFzxo+yMKz8KRQgW6kN4BA0/ShnarrT4WQJX/m2fwCVX5Bhng3JUnMk1+97usw=
+	t=1746714741; cv=none; b=FEeVXjg0Q0Wqc44zbWU1xmzFr+XxJ3A1wm/Zfd29nzqkf5b6O7Bo5CzRqlj/YUFBYz5gjRc7GNC1Z9vFY0yGQRjjQWGhzU4riaE/FUfCQC5omFhfOv7n+vEtMdl/c2JsbYaKLKOBR1RvsvMR/LHD35RrC9WhUB1o02gH6AEEDE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746714723; c=relaxed/simple;
-	bh=uVh0/3Gi74lEwZOQuHQj7aeM5bZU7QEGlE1JVLL5DOA=;
+	s=arc-20240116; t=1746714741; c=relaxed/simple;
+	bh=a8B3CrBH4iQmYkgsTJfyPccNfxKzYgWqojWrnciToUM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lzaQBGYuEw0VD+NA1Ot/bJI0HYct6umXd2LGulUsUWVkCGQHjQByZZ94uWPBC9Zflt5eKOrfFyviIHTQBiGLtbXtO8piQC7Q8bL0tAO/Wo7kHBaG0Toxt5bE5KLUivEPwKmyKlLg0Yd3yLliYpqIHgXX1kC5/iDr9jwRwtoluM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C/LLD/8N; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=M+SPz93+vh34pLGKSjgXZLNfAXPJFIOS81yzdbJYONoKXM9hezgkUCWB80oaSvAmVMTQdhnP5GjV7kRsLcAKEsbb7gpLgdMrMMVj4jxysgUXLJTzH6gmOJt+C2be8QvcQ8DK0166c4JaG70VCn494QEgCuIW0YV4id1FeY5DLO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s5udA0UL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C/LLD/8N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746714722; x=1778250722;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uVh0/3Gi74lEwZOQuHQj7aeM5bZU7QEGlE1JVLL5DOA=;
-  b=C/LLD/8NEiDVaBJn/tJ54KfBzQr9Khy6mY2AJZEOremDwVRzYQNduwLU
-   vb/x5LQOt9/BpmkgrSDiMX9YrvzItVskwSQhcU7iUp89sDbTFShomIBg0
-   nU1CJQXdWokT0iqa815H5CrP//0Rq8LzJSV+8QkiJdkX7V7CqA4ZyP94e
-   Iy2LLEvImcHYsuGtdyRqrjhao9ozd3LGKvv39yrEV9QXETOaPyMaTHUGB
-   3JA4lArwzZnS61hFi6/W/OJ3X2Yz2cPJgedmpr80/yM4ByepYTN9UiX4n
-   Oo4zLBmhLUFnHLbvIi2CYAtziWG7lXEdKwKrHABAW/NcK8RQrb65g8JzB
-   Q==;
-X-CSE-ConnectionGUID: xk7PMD/BSByrRfOPok35/g==
-X-CSE-MsgGUID: nfpC+XpEQB6xlGoknVqFIA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="47759511"
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="47759511"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:32:01 -0700
-X-CSE-ConnectionGUID: RXl21VRQTXCPesTxaQlhwg==
-X-CSE-MsgGUID: vLwtqeSWQuC75hJojVJD8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="136194494"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:31:58 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uD2Hy-000000048S7-1sFr;
-	Thu, 08 May 2025 17:31:54 +0300
-Date: Thu, 8 May 2025 17:31:54 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, ikepanhc@gmail.com,
-	W_Armin@gmx.de, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net
-Subject: Re: [PATCH 2/2] platform/x86: export thinkpad_acpi handles
-Message-ID: <aBzAWrgEgmnAnum-@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250507190456.3004367-1-mpearson-lenovo@squebb.ca>
- <20250507190456.3004367-2-mpearson-lenovo@squebb.ca>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s5udA0UL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03B29C4CEE7;
+	Thu,  8 May 2025 14:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746714741;
+	bh=a8B3CrBH4iQmYkgsTJfyPccNfxKzYgWqojWrnciToUM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s5udA0ULdtiDwGZ0YqUqg3WcqCGV3xSq8hcXUpditES2aBEr3s6hyjcuAWzh1DfZo
+	 TjWXsaG4ZNq+uglUj6sOHoyeAIbah6Bv9uTn5V3jBwXWYtctC61korsu2A9QEB0M3U
+	 /X+6GiMEgYY6Br0u1NaN8vb8qx1FCaHgJW+eV+nFkmomL7guBIkioFCng+bk5AImC8
+	 hw+nyYaWVY+697Dd7PWMj4nVFKOKTD2NqG02oi70AugSfwoFUceh82ovnVuVMOOXgH
+	 0lwzXQ/kYYUwnjptBzW58l6S/Bripf/qj3T/GMk53v15iVKTNyT3a0Ld2rpFg2ZHF3
+	 IMH2m79+kIiKQ==
+Date: Thu, 8 May 2025 23:32:18 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Sander Vanheule <sander@svanheule.net>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] regmap: remove MDIO support
+Message-ID: <aBzAcpYhpYE6X2Hq@finisterre.sirena.org.uk>
+References: <c5452c26-f947-4b0c-928d-13ba8d133a43@gmail.com>
+ <aBquZCvu4v1yoVWD@finisterre.sirena.org.uk>
+ <59109ac3-808d-4d65-baf6-40199124db3b@gmail.com>
+ <aBr70GkoQEpe0sOt@finisterre.sirena.org.uk>
+ <a975df3f-45a7-426d-8e29-f3b3e2f3f9e7@gmail.com>
+ <4cdbc8804ad23a24a9aa3bb12667031b5bada3a6.camel@svanheule.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="p5j8JsFgxDScXhWc"
+Content-Disposition: inline
+In-Reply-To: <4cdbc8804ad23a24a9aa3bb12667031b5bada3a6.camel@svanheule.net>
+X-Cookie: Well begun is half done.
+
+
+--p5j8JsFgxDScXhWc
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250507190456.3004367-2-mpearson-lenovo@squebb.ca>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, May 07, 2025 at 03:04:35PM -0400, Mark Pearson wrote:
-> Add API to be able to get the thinkpad_acpi various handles.
-> 
-> Will use this to start pulling some of the thinkpad_acpi functionality
-> into separate modules in the future.
+On Wed, May 07, 2025 at 10:23:49PM +0200, Sander Vanheule wrote:
 
-...
+> downstream in OpenWrt for a few months too, where they are using the regmap MDIO
+> support, but I understand that out-of-tree consumers aren't usually up for
+> consideration.
 
-> +#ifndef _TP_ACPI_H_
-> +#define _TP_ACPI_H_
+Given that there's not really a particularly strong push to remove the
+support that's actually relatively strong - if it was getting in the way
+of something then it'd be a differnet story, but if there's out of tree
+users we're aware of then removing it would be a minor roadblock to them
+getting upstreamed and might encourage them to do something less good.
 
-+ include for  acpi_handle typedef.
-Or it the forward declaration works
+--p5j8JsFgxDScXhWc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-acpi_handle;
+-----BEGIN PGP SIGNATURE-----
 
-but I haven't checked and my gut feelings that it's not correct syntax as
-compiler doesn't know what the heck this word means.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgcwG0ACgkQJNaLcl1U
+h9A+fAf+I0/FLpPZ+dR1Vh4eBldSpB0IC0Pu/3y/919kIPBbKrUdKk8XwaeC8CmQ
+HqAtxVqsTxcJ5NKl/xBQ4Ln5J3YV9PJreUdkWkqQbM7nsgue2PzeFKWCSB6Ip3Fu
+f1ra48rIu46Y6axTmrE6PuJDWoE1PE0Jz2ZcCWIFk236mYDLLvePPIq1dsd6Qig0
++dOEWM4vhbXt8vQtQKNJSXB9xZra+n+KQRaDKCAJdLSkf03exSYoJ0T5BdvebRgD
+fQI7siPohnXag4mQKzu4IeD1mx8eqQWGyWnjmO1Tw0LoUcWKEOdb3EST3gZIp1qt
+rrlw/XiOEpJzHpNQkekJMxy2utzEsA==
+=y15B
+-----END PGP SIGNATURE-----
 
-> +enum tp_acpi_handle_id {
-> +	TP_ROOT_HANDLE,
-> +	TP_EC_HANDLE,
-> +	TP_HKEY_HANDLE,
-> +};
-> +
-> +int tp_acpi_get_handle(enum tp_acpi_handle_id handle_id, acpi_handle *handle);
-> +
-> +#endif /* _TP_ACPI_H */
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+--p5j8JsFgxDScXhWc--
