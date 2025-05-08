@@ -1,201 +1,107 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B264C1E4BE
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 20:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22A01E4BE;
+	Thu,  8 May 2025 20:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746736355; cv=none; b=FDvbyZ8qL3kGphLqu/arpeEPLWAgxUUCKZlLRP42wZli2BxyEzXrVGCb0XIZ3X5mVGclLjjdbRfAFFGc44DUQ9/6T0cGb9BgL7/6kw6S/Bk2UoZsIfseP2k5ZiapdTcXWwPJprngumcneKlNoHg3NjsivxILo8f9mwY3hFTmnis=
+	t=1746736438; cv=none; b=WoTeFSXbNGIoj5qfc6rwKUpevL5tRw6xfOG8mL7ubsccx5sJr3PbcfvpBXYdhdGusbUeMEg6KhbmkqpCAiDX7soF3fvnAHIHC3IBUi+qz9PpnpTiVq5jFTTgCBwxf0pNP9dbenEhychnATnbdQNWXj8N9RsPFs9QWzBmfl2MJQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746736355; c=relaxed/simple;
-	bh=Qji27TG4Wcaik19NZMo+zT027xVFBqGmH7nzbnpDhDc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SX17S3r7XPnsjO8Zr7ZFNRr39jR9AXHWZbtPZkr2VKfqaC7W+Q5tJvASErHqeYlbDAu/lsR1qa5CfoN8XJofnJEztWkVh+toffy9FJSEurwDPrQo8gHs6zKjOg5ZMRnSrdENSEVm725ioPVtnMN3fpxZ738mnyYje1JVVT//gLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=R0ntjtPN; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1746736438; c=relaxed/simple;
+	bh=RsUbU+vi9fRQWrbDJCbg63cQUWQXAA2LxbmCIbgPy1E=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l9gmyodBa8zRfX+x+jAYARkgUHJeo15e8PNweO8ZR/PuiJxM175xHrRoSz1Few5X8l4kn6Kbxk3ktI3oB/caMwk5LavODYrUjkSIMXdYSG6xwCegtFpjZTPuEPoV3F/B/SAY8GRqkbYeyGM5/hOGjVtkEbsgTy4SCnqTDB6m56A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ig2Jqjj2; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="R0ntjtPN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=/28+qjO1dkftAcZ35PQFRGingKQttWDhQN5Wxoccutc=; b=R0ntjtPNIMdZYgcubDxwnAy0iw
-	vHAGlpfk9spdEEdEQDFKvRE5p7HxhB/+fd9RBX+oWijBz+avedxwU1k4uxdPQb7NjxtvSTfJb+IL9
-	y2odHfI4rk8zDWuUIzRjx5vZj3WJr7vBslcMTDTZNhLQ60/+T8fOBEAkIUEFNOc68UQKq5e00ldkI
-	zrn46MqMptyocW6EcZICXm0vmuXs0OvebopS8jHCKhHsMBvgJYPg4ywMog/w7pTgUvQ+JPIKz6ayR
-	vLKAl3mLEuxeUyaleFclIJZxqSDZ+jbSlTkqCW8C7jXoF+M73poqKcor+nK9hyyUCXEMJxGxBZ+rP
-	lF99P1OA==;
-Received: from [191.204.192.64] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uD7qf-005POI-CA; Thu, 08 May 2025 22:32:27 +0200
-Message-ID: <986dcbc0-0505-496a-ae75-e0c1bd7c2725@igalia.com>
-Date: Thu, 8 May 2025 17:32:24 -0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ig2Jqjj2"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39ee5a5bb66so999419f8f.3;
+        Thu, 08 May 2025 13:33:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746736435; x=1747341235; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FFjqdjitOvBr7aeCTW23haxFiv6r9WdSAxPsK6p7yTg=;
+        b=ig2Jqjj2LBtBWXCQJRH4UpxEBMJ8Litn4wG2H7eIH/RhrujRfmSOvgcy4A76a2tlm7
+         Vh/psUXjXhxuzwel/IMvBkkjhEi2nMgIlGs2VRJ1VNFmQFXFizLZXxC6LSmsGQ0O2lQL
+         euCvaWQ/fcpPR/MM1gVahA/Qplhrdnk0iyokF0Fq/NGSHj1cXnMUUovZB7aYK4k9EXc1
+         5NfwPLMtK2SEVhksAYTHOs33uXsAsxTd2iD4bVzFgklQCYnARtU3QY1qEM6OT/g2spay
+         FOGZa1LyjxPGJcbXQAjZdtypLIYgTq7roEBTTMil8m7UxKTC65dltH/FqwG3Rriuq2DA
+         2Vag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746736435; x=1747341235;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FFjqdjitOvBr7aeCTW23haxFiv6r9WdSAxPsK6p7yTg=;
+        b=ECBnCAtYOFLlr2i3bhXuhiYWE1FCTTBRhwgQ2YH4vdzgnfl1MSZAxqAvH5MqmRKjgf
+         Z5+XABtGWjDOp3795KTAquU+XktJ4VCj4ZV/gopfQQucU+wkabDFof2XM5PqgofBXnV7
+         C2bu+UG53KWak85WN79jAVbmrrMjuiPKyuPkUYI6XNfNJfJYAhcud3z2jEmgH1OBQ0Mm
+         i7566WvC65iKl9NND4kUs3AUZ6JkcCG86GQEO3JIgcOAquR83wpLOnuQzBcxFEqRAyQq
+         HObikqjDPDjajWshOUGF+t7nPayCNTUOkzlkhCT6Dly6ozkqVyitXL4BxGOu+ikSlhdg
+         hYHg==
+X-Forwarded-Encrypted: i=1; AJvYcCV4zZyHVGaAHtAvViS2kdJWXIWfW/HmMWDOElzzgiRKSybrdvywq5G/ABq3TaIl4qQhgy8o/5ihDqIa/Cvo@vger.kernel.org, AJvYcCVQHi/b5g/eNjV5CSu03LhFB0y2lC3fWjVcRMA47raPL2bdEUbtiqwKkpiKSSM/ol9g1PYXngQRaVUW@vger.kernel.org, AJvYcCVifWvjUY42xRxq3QtCDtonXz4bVUnW+Fnww5N2nXiCJOwzDsqazSyJJvBTrGAFwhKz1HqG41NOq97QKrk=@vger.kernel.org, AJvYcCX5qwowhmnd4gRpN+hMaRpd7/qJVtqmVHyjgOpUjgOREL0i8NjczidonRUkcT2GZTgtKkSaQJG4xc9f@vger.kernel.org
+X-Gm-Message-State: AOJu0YyC1xAkVgARG8IyD+OZcwTZpMwu1KBoEOhSkdJFs09+c0f6wJb0
+	KiCOWhLna5uk4p3R+DP4yQg60jX522/cg+OBMNn5ubIrt0/dpoL5eofQ7Q==
+X-Gm-Gg: ASbGncsbkZJ1NsJoOnwCdHdQhUvY5haAN6OXV2N9dBC0oxOcn1GywIZZkxMZD22namt
+	RCrl9rTSFP47CpCnGoQNzisrkan60wpBMe4hsTPF0uhFQoFyYslt25yep8GtN/cFhCaJ7u8CEw6
+	D4+He9I1y8mtSjA/Gi74VmU9FxuHePElhWvod0dPtiNbxq3fy3D2V1TZeys4KpWlwq1nFeyoo/U
+	7KMjZJgoMLMz6ra57Tp9I0KWvgucHu9aGL46zIDbbQPBC4li7s7Uam2jCA+2zd0sGb/hWuXplxp
+	7+hyFGIg110/AxOxCS7Gh/6zF6zci2WAJY08g6RQNHy80UTGVdOWB/vIpW4E+RMYZF7/zebSMJd
+	FET44NudxqtFEi2/SUbzdmekszJnUFSXF
+X-Google-Smtp-Source: AGHT+IHkJjWQMxRmUNg/ASA0bGx2IYBwfPUkW2FOyp76baMhEfIe54RW0bsxSEGZDxO1TZkfWPTXyw==
+X-Received: by 2002:a05:6000:2502:b0:3a0:ad55:ca0c with SMTP id ffacd0b85a97d-3a1f6427adfmr768853f8f.1.1746736434909;
+        Thu, 08 May 2025 13:33:54 -0700 (PDT)
+Received: from localhost (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a1f57de001sm967343f8f.20.2025.05.08.13.33.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 13:33:54 -0700 (PDT)
+From: Thierry Reding <thierry.reding@gmail.com>
+To: andi.shyti@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	onor+dt@kernel.org,
+	thierry.reding@gmail.com,
+	jonathanh@nvidia.com,
+	ldewangan@nvidia.com,
+	digetx@gmail.com,
+	p.zabel@pengutronix.de,
+	linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Akhil R <akhilrajeev@nvidia.com>
+Subject: Re: (subset) [PATCH 1/4] dt-bindings: i2c: Specify reset as optional
+Date: Thu,  8 May 2025 22:33:52 +0200
+Message-ID: <174673631321.1562471.9390298143703530461.b4-ty@nvidia.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250506095936.10687-1-akhilrajeev@nvidia.com>
+References: <20250506095936.10687-1-akhilrajeev@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 14/21] futex: Allow to resize the private local hash
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- linux-kernel@vger.kernel.org
-Cc: Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
- Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- Valentin Schneider <vschneid@redhat.com>, Waiman Long <longman@redhat.com>
-References: <20250416162921.513656-1-bigeasy@linutronix.de>
- <20250416162921.513656-15-bigeasy@linutronix.de>
-Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <20250416162921.513656-15-bigeasy@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Em 16/04/2025 13:29, Sebastian Andrzej Siewior escreveu:
-> The mm_struct::futex_hash_lock guards the futex_hash_bucket assignment/
-> replacement. The futex_hash_allocate()/ PR_FUTEX_HASH_SET_SLOTS
-> operation can now be invoked at runtime and resize an already existing
-> internal private futex_hash_bucket to another size.
+From: Thierry Reding <treding@nvidia.com>
+
+
+On Tue, 06 May 2025 15:29:33 +0530, Akhil R wrote:
+> Specify reset as optional in the description for controllers that has an
+> internal software reset available
 > 
-> The reallocation is based on an idea by Thomas Gleixner: The initial
-> allocation of struct futex_private_hash sets the reference count
-> to one. Every user acquires a reference on the local hash before using
-> it and drops it after it enqueued itself on the hash bucket. There is no
-> reference held while the task is scheduled out while waiting for the
-> wake up.
-> The resize process allocates a new struct futex_private_hash and drops
-> the initial reference. Synchronized with mm_struct::futex_hash_lock it
-> is checked if the reference counter for the currently used
-> mm_struct::futex_phash is marked as DEAD. If so, then all users enqueued
-> on the current private hash are requeued on the new private hash and the
-> new private hash is set to mm_struct::futex_phash. Otherwise the newly
-> allocated private hash is saved as mm_struct::futex_phash_new and the
-> rehashing and reassigning is delayed to the futex_hash() caller once the
-> reference counter is marked DEAD.
-> The replacement is not performed at rcuref_put() time because certain
-> callers, such as futex_wait_queue(), drop their reference after changing
-> the task state. This change will be destroyed once the futex_hash_lock
-> is acquired.
-> 
-> The user can change the number slots with PR_FUTEX_HASH_SET_SLOTS
-> multiple times. An increase and decrease is allowed and request blocks
-> until the assignment is done.
-> 
-> The private hash allocated at thread creation is changed from 16 to
->    16 <= 4 * number_of_threads <= global_hash_size
-> where number_of_threads can not exceed the number of online CPUs. Should
-> the user PR_FUTEX_HASH_SET_SLOTS then the auto scaling is disabled.
-> 
-> [peterz: reorganize the code to avoid state tracking and simplify new
-> object handling, block the user until changes are in effect, allow
-> increase and decrease of the hash].
-> 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->   include/linux/futex.h    |   3 +-
->   include/linux/mm_types.h |   4 +-
->   kernel/futex/core.c      | 290 ++++++++++++++++++++++++++++++++++++---
->   kernel/futex/requeue.c   |   5 +
->   4 files changed, 281 insertions(+), 21 deletions(-)
 > 
 
-[...]
+Applied, thanks!
 
->   static int futex_hash_allocate(unsigned int hash_slots, bool custom)
-> @@ -1273,16 +1442,23 @@ static int futex_hash_allocate(unsigned int hash_slots, bool custom)
->   	if (hash_slots && (hash_slots == 1 || !is_power_of_2(hash_slots)))
->   		return -EINVAL;
->   
-> -	if (mm->futex_phash)
-> -		return -EALREADY;
-> -
-> -	if (!thread_group_empty(current))
-> -		return -EINVAL;
-> +	/*
-> +	 * Once we've disabled the global hash there is no way back.
-> +	 */
-> +	scoped_guard(rcu) {
-> +		fph = rcu_dereference(mm->futex_phash);
-> +		if (fph && !fph->hash_mask) {
-> +			if (custom)
-> +				return -EBUSY;
-> +			return 0;
-> +		}
-> +	}
->   
->   	fph = kvzalloc(struct_size(fph, queues, hash_slots), GFP_KERNEL_ACCOUNT | __GFP_NOWARN);
->   	if (!fph)
->   		return -ENOMEM;
->   
-> +	rcuref_init(&fph->users, 1);
->   	fph->hash_mask = hash_slots ? hash_slots - 1 : 0;
->   	fph->custom = custom;
->   	fph->mm = mm;
-> @@ -1290,26 +1466,102 @@ static int futex_hash_allocate(unsigned int hash_slots, bool custom)
->   	for (i = 0; i < hash_slots; i++)
->   		futex_hash_bucket_init(&fph->queues[i], fph);
->   
-> -	mm->futex_phash = fph;
+[4/4] arm64: tegra: Add I2C aliases for Tegra234
+      commit: 34c6ba89e1487181b4278e5c1b329327439ec715
 
-If (hash_slots == 0), do we still need to do all of this work bellow? I 
-thought that using the global hash would allow to skip this.
-
-> +	if (custom) {
-> +		/*
-> +		 * Only let prctl() wait / retry; don't unduly delay clone().
-> +		 */
-> +again:
-> +		wait_var_event(mm, futex_pivot_pending(mm));
-> +	}
-> +
-> +	scoped_guard(mutex, &mm->futex_hash_lock) {
-> +		struct futex_private_hash *free __free(kvfree) = NULL;
-> +		struct futex_private_hash *cur, *new;
-> +
-> +		cur = rcu_dereference_protected(mm->futex_phash,
-> +						lockdep_is_held(&mm->futex_hash_lock));
-> +		new = mm->futex_phash_new;
-> +		mm->futex_phash_new = NULL;
-> +
-> +		if (fph) {
-> +			if (cur && !new) {
-> +				/*
-> +				 * If we have an existing hash, but do not yet have
-> +				 * allocated a replacement hash, drop the initial
-> +				 * reference on the existing hash.
-> +				 */
-> +				futex_private_hash_put(cur);
-> +			}
-> +
-> +			if (new) {
-> +				/*
-> +				 * Two updates raced; throw out the lesser one.
-> +				 */
-> +				if (futex_hash_less(new, fph)) {
-> +					free = new;
-> +					new = fph;
-> +				} else {
-> +					free = fph;
-> +				}
-> +			} else {
-> +				new = fph;
-> +			}
-> +			fph = NULL;
-> +		}
-> +
-> +		if (new) {
-> +			/*
-> +			 * Will set mm->futex_phash_new on failure;
-> +			 * futex_private_hash_get() will try again.
-> +			 */
-> +			if (!__futex_pivot_hash(mm, new) && custom)
-> +				goto again;
-
-Is it safe to use a goto inside a scoped_guard(){}?
-
-
+Best regards,
+-- 
+Thierry Reding <treding@nvidia.com>
