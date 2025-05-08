@@ -1,196 +1,189 @@
-Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F2D214A82;
-	Thu,  8 May 2025 05:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.185.170.37
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746683105; cv=pass; b=VtYukSClPbAD9h8qK/ZWu/oLpX9STN469xeLLwV0NwMs8wC+8VU8xF3mbFf+okfDm9dEPQN4Jxn90AREa8wSA35WYmu7+Mzt96iq660DwzHroSz7aDMGGx4pD010Ag33m+FNkA4LTrdM9/bzB2dN6ez0VhvRAua5XDgSPzv3PyI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746683105; c=relaxed/simple;
-	bh=Uf9a1i8ReGes8erD/DMJp00dttjBJpsRgLzV+yx45iU=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A59136A
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 05:45:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746683122; cv=none; b=QMCKGuNPETurBKPUuD7U0KcFXELThKrNk1SNcgePseFPXYwCPj742EOsETuo+3JYn8KUT6TM8kU0XauHOu21WkUzntVLpJyFXDZ2PdNVZCXQdC7br8zrWWtKwys6NCRH2obYDUSfQAPi0soUPQHaUuHwhmKPjHpPFLcLZgayATo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746683122; c=relaxed/simple;
+	bh=FB9f6IVd609o+G9xayU7fVt5zLMyXTB2Wk2y/kROpLw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f7DmvNic+OYh4uOaotmzQ4szyIkuRNXWKU8esG3+4Ixy2FHsTEEgwblLsSemJ4xMugJLRPoYqY4VsFl6i+tonOP51Sh8MrSjFXaHcK67BgjcQwyilaI2UsAwq3zpvi8XkJNr2jnWea4HnUC2Z+dwW0fGX2hykkINfntSM6zYQkE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b=daXwf0Ms; arc=pass smtp.client-ip=185.185.170.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	 Content-Type:Content-Disposition:In-Reply-To; b=qrxn5GQIwK9hFd5G9Ncar0wHtL1iH9a1z3HZ4Jk2MM3fWylVVQ+aMMW3Ut/vA8SWiU2DQ84I+clexpPAe3gB7OMk0jx5tfIC/uLFJhOw0xN5bNxmOpZD0Xw/ov0bIstyKBUlsShNfJJ/fFz6cQ5Qvz2mi38bTR85aYo24IEtfm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=yn/JVKKm; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="daXwf0Ms"
-Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-127c-61ff-fee2-b97e.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:127c:61ff:fee2:b97e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sailus)
-	by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 4ZtLgL5vMxz49PvQ;
-	Thu,  8 May 2025 08:44:46 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
-	t=1746683087;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4LpmtxyzH7OZvwjxTMiEA4Nd29xTsJw2FUUa5CYnOv0=;
-	b=daXwf0MsEmXugKkqimHQ8oGxSZBJyhm4T/VnfQLkWLpBm1Y5ueOafPKJtlrfs7zLM26+H7
-	nJpQdmTBadCjPrmmyRc4R9hYBJHtAh06i/7YxIi7mf32KBc9SQhrnzeukzkQWo7LLHf2Cz
-	zJZzve81cRwjCd+4h1fn68wgYvAT9AlJOJ9afT7kXCe7cES/eUN+rqHgXJ8kix/CnNC+xY
-	ldv1fco8Qc+bIKM+ni8dYRsIKLdRT5si5Iadi7r8W7oI/niSIvNrxQp2S9V6Z1FGf59vle
-	f+WbFrzZUbAc4oZ1u/pGZ54bzUQOXxku7q994vJU80PIlnie9VLSA3N6q/HBRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=lahtoruutu; t=1746683087;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4LpmtxyzH7OZvwjxTMiEA4Nd29xTsJw2FUUa5CYnOv0=;
-	b=qC1l7vU7Gqq6tqTBLh0cKF9ODW3Ct+m0XPOT8dfosQAqDW+UZcIXzA1/VNNu33GzfJXeYf
-	21MzKnyN+JTd6rTwuahCynhxuaD2x6Eh/8AtBtblnhBKcj/TpVS7ToB68dcNdjadGxwPhO
-	td0cEVaprgX9D/pGOadIYZASEmAG5cQBIRsma+dogjoFOKRF82JktOXoX21inD6RVQZejK
-	pq03F/6uZozdZfANEeEp11Ne7i2P8zdE7tH54YKJmQ8KV+NmSzHyG9blz/Ur73psRY2Nwk
-	I3L7ypR8J7t4AhCbmZzXANZbL7CFyiqLI5l1GxF9WhB2FUfBl9AO7kSNEUz4PQ==
-ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1746683087; a=rsa-sha256;
-	cv=none;
-	b=o2g+JAzJ67IuLrU6Zw/SQ4l1pF+U6+tNJgnH89dBoAMBa5+Tcni9JLQN3c45apAeINYKKh
-	yW51b8SB+TOqd9Km+8OKMnypZnCae+iHGInysKPchJ29bDQgue06svJxgNCKytlahXU7sd
-	1+lZCF7FR5W4hBo95pEdliKTnaL2rqfFWUifXC/VeRKjHzryYTTgdNQmR3b64CcJSWJN1L
-	eFQc37zJFnth1yg9a4dCr9zOFK3M2APyNK6wJ+Zzdx/DV7A6Zb4X26XWAD09OQE8aG63h0
-	/AwfoT75ccZlJDj4XJbDg8GMdrn6wFk3fcG1zrZswCoJE17KgFa+XqF2WjW1pg==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
-Received: from valkosipuli.retiisi.eu (valkosipuli.local [192.168.4.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 4632F634C93;
-	Thu,  8 May 2025 08:44:46 +0300 (EEST)
-Date: Thu, 8 May 2025 05:44:46 +0000
-From: Sakari Ailus <sakari.ailus@iki.fi>
-To: "Nirujogi, Pratap" <pnirujog@amd.com>
-Cc: Pratap Nirujogi <pratap.nirujogi@amd.com>, hdegoede@redhat.com,
-	W_Armin@gmx.de, ilpo.jarvinen@linux.intel.com,
-	mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org, benjamin.chan@amd.com, bin.du@amd.com,
-	gjorgji.rosikopulos@amd.com, king.li@amd.com, dantony@amd.com
-Subject: Re: [PATCH v12] platform/x86: Add AMD ISP platform config for OV05C10
-Message-ID: <aBxEzgtNs8JD3TEt@valkosipuli.retiisi.eu>
-References: <20250505171302.4177445-1-pratap.nirujogi@amd.com>
- <aBosuj_TbH7bzjfZ@valkosipuli.retiisi.eu>
- <9c99a76d-8fe4-4793-8036-67d2923a1e51@amd.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="yn/JVKKm"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1746683115; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=O3vNOpi48vOliJI6USQodPMEp9/pxxBw8nB5HQsOt0w=;
+	b=yn/JVKKmnqkCbq5KN8vEyWWzpAOL5QufUVyle1NbknYVeE7cjP83I+kyK4PQJMZzf6FW3Qd2syrybPP5qIU+ppdD0GmCvEC4EALs6hdIqCghCZ+nji2VQwHrqTS3EnymTVjrJhlnj6YnWU3PqKIo91CfFrDS6cQcdVsDzfkZwds=
+Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WZzhTaE_1746683114 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 08 May 2025 13:45:15 +0800
+Date: Thu, 8 May 2025 13:45:14 +0800
+From: Feng Tang <feng.tang@linux.alibaba.com>
+To: Lance Yang <lance.yang@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 2/3] kernel/hung_task: add option to dump system info
+ when hung task detected
+Message-ID: <aBxE6jXwjIDRdr1z@U-2FWC9VHC-2323.local>
+References: <20250507104322.30700-1-feng.tang@linux.alibaba.com>
+ <20250507104322.30700-3-feng.tang@linux.alibaba.com>
+ <6eb27fe4-9dad-4ea5-afd0-a5d1e3f60acb@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9c99a76d-8fe4-4793-8036-67d2923a1e51@amd.com>
+In-Reply-To: <6eb27fe4-9dad-4ea5-afd0-a5d1e3f60acb@linux.dev>
 
-Hi Pratap,
+Hi Lance,
 
-On Wed, May 07, 2025 at 04:16:04PM -0400, Nirujogi, Pratap wrote:
-> > > diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
-> > > new file mode 100644
-> > > index 000000000000..1520ebb94507
-> > > --- /dev/null
-> > > +++ b/drivers/platform/x86/amd/amd_isp4.c
-> > > @@ -0,0 +1,280 @@
-> > > +// SPDX-License-Identifier: GPL-2.0+
-> > > +/*
-> > > + * AMD ISP platform driver for sensor i2-client instantiation
-> > > + *
-> > > + * Copyright 2025 Advanced Micro Devices, Inc.
-> > > + */
-> > > +
-> > > +#include <linux/i2c.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/property.h>
-> > > +#include <linux/units.h>
-> > > +
-> > > +#define AMDISP_OV05C10_I2C_ADDR              0x10
-> > > +#define AMDISP_OV05C10_PLAT_NAME     "amdisp_ov05c10_platform"
-> > > +#define AMDISP_OV05C10_HID           "OMNI5C10"
-> > 
-> > What's the purpose of this _HID and is it present on actual firmware
-> > implementation? There's no such ACPI vendor ID as "OMNI".
-> > 
-> The (_HID, "OMNI5C10") is used to check if the OV05C10 ACPI device is
-> actually present before creating the AMD ISP4 platform driver. Yes, ACPI
-> entry is present for OV05C10 sensor in _SB/CAMF.
+Many thanks for the review!
+
+On Thu, May 08, 2025 at 11:02:22AM +0800, Lance Yang wrote:
+> Hi Feng,
 > 
->      Scope (_SB)
->      {
->          Device (CAMF)
->          {
->              Name (_HID, "OMNI5C10")  // _HID: Hardware ID
-
-Please tell your BIOS folks this ACPI ID is invalid. In the future, either
-allocate one yourself with your own vendor ID or get one from the sensor
-vendor, which they would have allocated using their own ACPI vendor ID.
-
->              Name (_DDN, "OV05C-RGB")  // _DDN: DOS Device Name
->              Name (_SUB, "OV05C")  // _SUB: Subsystem ID
+> Thanks for the patch series!
 > 
-> 
-> > > +#define AMDISP_OV05C10_REMOTE_EP_NAME        "ov05c10_isp_4_1_1"
-> > > +#define AMD_ISP_PLAT_DRV_NAME                "amd-isp4"
-> > > +
-> > > +/*
-> > > + * AMD ISP platform definition to configure the device properties
-> > > + * missing in the ACPI table.
-> > > + */
-> > > +struct amdisp_platform {
-> > > +     struct i2c_board_info board_info;
-> > > +     struct notifier_block i2c_nb;
-> > > +     struct i2c_client *i2c_dev;
-> > > +     struct mutex lock; /* protects i2c client creation */
-> > > +};
-> > > +
-> > > +/* Top-level OV05C10 camera node property table */
-> > > +static const struct property_entry ov05c10_camera_props[] = {
-> > > +     PROPERTY_ENTRY_U32("clock-frequency", 24 * HZ_PER_MHZ),
-> > > +     { }
-> > > +};
-> > > +
-> > > +/* Root AMD ISP OV05C10 camera node definition */
-> > > +static const struct software_node camera_node = {
-> > > +     .name = AMDISP_OV05C10_HID,
-> > > +     .properties = ov05c10_camera_props,
-> > > +};
-> > > +
-> > > +/*
-> > > + * AMD ISP OV05C10 Ports node definition. No properties defined for
-> > > + * ports node for OV05C10.
-> > > + */
-> > > +static const struct software_node ports = {
-> > > +     .name = "ports",
-> > > +     .parent = &camera_node,
-> > > +};
-> > > +
-> > > +/*
-> > > + * AMD ISP OV05C10 Port node definition. No properties defined for
-> > > + * port node for OV05C10.
-> > > + */
-> > > +static const struct software_node port_node = {
-> > > +     .name = "port@",
-> > > +     .parent = &ports,
-> > > +};
-> > > +
-> > > +/*
-> > > + * Remote endpoint AMD ISP node definition. No properties defined for
-> > > + * remote endpoint node for OV05C10.
+> On 2025/5/7 18:43, Feng Tang wrote:
+> > Kernel panic code utilizes sys_show_info() to dump needed system
+> > information to help debugging. Similarly, add this debug option for
+> > task hung case, and 'hungtask_print' is the knob to control what
+> > information should be printed out.
 > > 
-> > How will this scale? Can you use other sensors with this ISP? Although if
-> > you get little from firmware, there's not much you can do. That being said,
-> > switching to DisCo for Imaging could be an easier step in this case.
+> > Also clean up the code about dumping locks and triggering backtrace
+> > for all CPUs. One todo may be to merge this 'hungtask_print' with
+> > some sysctl knobs in hung_task.c.
 > > 
-> the scope of this driver is limited to ov05c10, and it can be enhanced to
-> support other sensor modules in future.
+> > Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+> > ---
+> >   kernel/hung_task.c | 29 ++++++++++++++++-------------
+> >   1 file changed, 16 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+> > index dc898ec93463..8229637be2c7 100644
+> > --- a/kernel/hung_task.c
+> > +++ b/kernel/hung_task.c
+> > @@ -58,12 +58,20 @@ static unsigned long __read_mostly sysctl_hung_task_check_interval_secs;
+> >   static int __read_mostly sysctl_hung_task_warnings = 10;
+> >   static int __read_mostly did_panic;
+> > -static bool hung_task_show_lock;
+> >   static bool hung_task_call_panic;
+> > -static bool hung_task_show_all_bt;
+> >   static struct task_struct *watchdog_task;
+> > +/*
+> > + * A bitmask to control what kinds of system info to be printed when a
+> > + * hung task is detected, it could be task, memory, lock etc. Refer panic.h
+> > + * for details of bit definition.
+> > + */
+> > +unsigned long hungtask_print;
+> > +core_param(hungtask_print, hungtask_print, ulong, 0644);
 > 
-> Sorry, I'm not familiar with the term DisCo. Could you please elaborate.
+> how about lockup_debug_print_mask?
 
-See my reply to Hans.
+The 3/3 patch has a 'lockup_print' as it is for soft/hard lockup :).
+The name follows the existing 'panic_print', and indeed it's actually
+a bitmask, how about 'hung_print_mask'?
 
--- 
-Regards,
+> 
+> It could be useful for debugging, but there are a few concerns:
+> 
+> 1) SYS_PRINT_* vs. hung_task_* priority conflict
+> - If SYS_PRINT_ALL_CPU_BT is set on the command line but
+> hung_task_all_cpu_backtrace is disabled, which one wins?
+> - Or should SYS_PRINT_ALL_CPU_BT force-enable hung_task_all_cpu_backtrace?
 
-Sakari Ailus
+With this patch, the 'hungtask_print' and hung_task_all_cpu_backtrace
+will be ORed, so yes, if user sets SYS_PRINT_ALL_CPU_BT explicitly, the
+all-cpu-backtrace will be printed.
+
+While the default value for hungtask_print is 0, and no system info will
+be dumped by default.
+
+Long term wise, I'm not sure if sysctl_hung_task_all_cpu_backtracemay 
+could be removed as its function can be covered by this print_mask knob.
+
+> 2) Duplicate prints
+> With SYS_PRINT_BLOCKED_TASKS enabled, processes in D state will be printed
+> twice, right?
+
+Good point. As sys_show_info() is a general API helper, the user may chose
+not to set SYS_PRINT_BLOCKED_TASKS when debugging task hung.
+
+In one recent bug we debugged with this patch, when the first "task hung" was
+shown, there were already dozens of tasks were in D state, which just hadn't
+hit the 120 seconds limit yet, and dumping them all helped in that case.
+
+> Also, we really should document how those command-line parameters work ;)
+
+Exactly! It currently just said 'refer panic.h' in code comment, maybe I
+should copy those definitions here as comments. How do you think? 
+
+Thanks,
+Feng
+
+> Thansk,
+> Lance
+> 
+> > +
+> > +static unsigned long cur_hungtask_print;
+> > +
+> >   #ifdef CONFIG_SMP
+> >   /*
+> >    * Should we dump all CPUs backtraces in a hung task event?
+> > @@ -163,11 +171,12 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+> >   	 */
+> >   	sysctl_hung_task_detect_count++;
+> > +	cur_hungtask_print = hungtask_print;
+> >   	trace_sched_process_hang(t);
+> >   	if (sysctl_hung_task_panic) {
+> >   		console_verbose();
+> > -		hung_task_show_lock = true;
+> > +		cur_hungtask_print |= SYS_PRINT_LOCK_INFO;
+> >   		hung_task_call_panic = true;
+> >   	}
+> > @@ -190,10 +199,10 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+> >   			" disables this message.\n");
+> >   		sched_show_task(t);
+> >   		debug_show_blocker(t);
+> > -		hung_task_show_lock = true;
+> > +		cur_hungtask_print |= SYS_PRINT_LOCK_INFO;
+> >   		if (sysctl_hung_task_all_cpu_backtrace)
+> > -			hung_task_show_all_bt = true;
+> > +			cur_hungtask_print |= SYS_PRINT_ALL_CPU_BT;
+> >   		if (!sysctl_hung_task_warnings)
+> >   			pr_info("Future hung task reports are suppressed, see sysctl kernel.hung_task_warnings\n");
+> >   	}
+> > @@ -242,7 +251,7 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+> >   	if (test_taint(TAINT_DIE) || did_panic)
+> >   		return;
+> > -	hung_task_show_lock = false;
+> > +	cur_hungtask_print = 0;
+> >   	rcu_read_lock();
+> >   	for_each_process_thread(g, t) {
+> >   		unsigned int state;
+> > @@ -266,14 +275,8 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+> >   	}
+> >    unlock:
+> >   	rcu_read_unlock();
+> > -	if (hung_task_show_lock)
+> > -		debug_show_all_locks();
+> > -
+> > -	if (hung_task_show_all_bt) {
+> > -		hung_task_show_all_bt = false;
+> > -		trigger_all_cpu_backtrace();
+> > -	}
+> > +	sys_show_info(cur_hungtask_print);
+> >   	if (hung_task_call_panic)
+> >   		panic("hung_task: blocked tasks");
+> >   }
