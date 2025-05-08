@@ -1,145 +1,97 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974B617D2;
-	Thu,  8 May 2025 03:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F24717D2
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 03:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746676222; cv=none; b=oyhh8SjOpyqqNTCUPKlXDO2ViVeqE4g9arXkH5KRoX1E5d/3kYHH1/67JWfGG7meWWMRtwj9NB/C/6fG9dWpN+KqoxoD+BBiqlit6IIJBccjnf1ccWUk2CY4EQX1/1QAnrsOnXctcNgxDKqWq5iZmBK8R2evFF4agtCBd0UUvR4=
+	t=1746676343; cv=none; b=AOh3C8PkPlGeKz8BYAcxgfqmJ04QYUC3Gp2tif0Vrk0VyhFPJwUB280WW1hLbU3sfHAXh5hmVLHa1PA3OmyGjqZ8ZBsnAgZd34zY0ipMzAr++etxmR/vWsNDKRHzVzT/vcxLx3XOIhBHifaC8MJdqL22H/25RED6xyt7XdZEqxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746676222; c=relaxed/simple;
-	bh=tuNZiVFrwQrm+x7n5iUKHGo+ld7F8+llunOxXqMNHMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=HRpJ5payx72R3YrBKuncqB0J7sgW/tuf35pygDJ6V2XVDtc7qz0xlEMcpAoxmMTWkt7fi1GPwsfcBhJ4N1Cmz0EYzQeaq7X/240By6j8cjBaocJDb+SJNqeqnqOK890PBkis08QN4qCLVGadGzvYs19i6heCoiur3OQKuyzDJFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=CSS8yJGh; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746676343; c=relaxed/simple;
+	bh=QQrD9WoTuStE5SI4dsDxQm1cAYrTiS8V/dJ/6LSkKvk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=a+cJDjCvLU0odS17bVJC6Z3oyofrzWsFy36ig1KVG0EwsuaXzhSpfTevNeEMcFiL5G+oakWt3B/igCEKiAyDWN9fhutJR6XPdWhjmfEVLqMSya+1RfD7OgJ0qHSrP+K9ngjzuXCwouMa7jFDSoAyqZrX/pxnOZDoA01Ou7+Wc68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JAZQBFPQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CSS8yJGh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746676216;
-	bh=I5tNE+h+Y/B7N8FRyCLg+H/v71ZNT6/GHqmi6l34iTA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=CSS8yJGhnvgbR6GSqNOSkh+Vq8n1js47FgVi23+yyzFRjBVFQgtufANsY89+4Zn4q
-	 yfEdIOctXWY8j8raX6ja6XEGl1L1+G4ASFFRegdG8RScU3lH8/WrdJQFRC/X1nCJOI
-	 0v0jtNJyOOXjLsD4rhbODZXuOYvSMpkRP+FdJ9cv+S9SDD5nT5wG9862/Y4Iwxsjbb
-	 FOjl9QEg9kr+4CjQxq5qegMZLPt22Pwik4C1zVXkaptiI5DwZwUKCsZZoAwnn7u3gT
-	 VhOnP+TW4WHoQF4W/wuSzhf5v6zR1yrE39y7Hg/6mnadVOlVQVz99KgZx1bmXLKWuW
-	 pXMTJIoHvdd4Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JAZQBFPQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746676340;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oW1Uefy+f4dgCipPdsbyESQqmd5EwkMRGfQFSNX/cxs=;
+	b=JAZQBFPQGJhvC8FibGFaOBJebS7BuCS+BaRohhy1O2xEIh4zlNJ9XuecBCvN7GNd672uwd
+	YEQLYKVG14Zyss+oMhnMjWB+jw4OFWdwT2ggwA/vw4XaZB3RkkZmiBlghQUDf8n9ODs9dr
+	cN6H7w3ZhvAVdcmOU+WDxTNHJh6Pvr4=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-161-0n-XLoZXNXCH5N2aVHTTAQ-1; Wed,
+ 07 May 2025 23:52:16 -0400
+X-MC-Unique: 0n-XLoZXNXCH5N2aVHTTAQ-1
+X-Mimecast-MFC-AGG-ID: 0n-XLoZXNXCH5N2aVHTTAQ_1746676335
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZtJ7C5G5mz4x0L;
-	Thu,  8 May 2025 13:50:14 +1000 (AEST)
-Date: Thu, 8 May 2025 13:50:14 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Jens Axboe <axboe@kernel.dk>, Andreas Gruenbacher <agruenba@redhat.com>,
- Steven Whitehouse <swhiteho@redhat.com>
-Cc: Christoph Hellwig <hch@lst.de>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the block tree with the gfs2 tree
-Message-ID: <20250508135014.408d6713@canb.auug.org.au>
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C77EB180036F;
+	Thu,  8 May 2025 03:52:14 +0000 (UTC)
+Received: from gshan-thinkpadx1nanogen2.rmtau.csb (unknown [10.64.136.14])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 24E77180049D;
+	Thu,  8 May 2025 03:52:08 +0000 (UTC)
+From: Gavin Shan <gshan@redhat.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	anshuman.khandual@arm.com,
+	ryan.roberts@arm.com,
+	gshan@redhat.com,
+	peterx@redhat.com,
+	joey.gouly@arm.com,
+	yangyicong@hisilicon.com,
+	shan.gavin@gmail.com
+Subject: [PATCH] arm64: mm: Drop duplicate check in pmd_trans_huge()
+Date: Thu,  8 May 2025 13:51:42 +1000
+Message-ID: <20250508035142.189726-1-gshan@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.w.3x=nVCdyL91RDnEzQKEG";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
---Sig_/.w.3x=nVCdyL91RDnEzQKEG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+pmd_val(pmd) is inclusive to pmd_present(pmd) since the PMD entry
+value isn't zero when pmd_present() returns true. Just drop the
+duplicate check done by pmd_val(pmd).
 
-Hi all,
+No functional changes intended.
 
-Today's linux-next merge of the block tree got a conflict in:
+Signed-off-by: Gavin Shan <gshan@redhat.com>
+---
+Found this by code inspection
+---
+ arch/arm64/include/asm/pgtable.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-  fs/gfs2/ops_fstype.c
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index d3b538be1500..2599b9b8666f 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -739,8 +739,7 @@ static inline int pmd_trans_huge(pmd_t pmd)
+ 	 * If pmd is present-invalid, pmd_table() won't detect it
+ 	 * as a table, so force the valid bit for the comparison.
+ 	 */
+-	return pmd_val(pmd) && pmd_present(pmd) &&
+-	       !pmd_table(__pmd(pmd_val(pmd) | PTE_VALID));
++	return pmd_present(pmd) && !pmd_table(__pmd(pmd_val(pmd) | PTE_VALID));
+ }
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
+-- 
+2.49.0
 
-between commit:
-
-  2abc01ae2685 ("gfs2: Use SECTOR_SIZE and SECTOR_SHIFT")
-
-from the gfs2 tree and commit:
-
-  65f8e62593e6 ("gfs2: use bdev_rw_virt in gfs2_read_super")
-
-from the block tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/gfs2/ops_fstype.c
-index 4856188c0dfe,7c1014ba7ac7..000000000000
---- a/fs/gfs2/ops_fstype.c
-+++ b/fs/gfs2/ops_fstype.c
-@@@ -214,28 -226,22 +214,22 @@@ static void gfs2_sb_in(struct gfs2_sbd=20
- =20
-  static int gfs2_read_super(struct gfs2_sbd *sdp, sector_t sector, int sil=
-ent)
-  {
-- 	struct super_block *sb =3D sdp->sd_vfs;
-- 	struct page *page;
-- 	struct bio_vec bvec;
-- 	struct bio bio;
-+ 	struct gfs2_sb *sb;
-  	int err;
- =20
-- 	page =3D alloc_page(GFP_KERNEL);
-- 	if (unlikely(!page))
-+ 	sb =3D kmalloc(PAGE_SIZE, GFP_KERNEL);
-+ 	if (unlikely(!sb))
-  		return -ENOMEM;
--=20
-- 	bio_init(&bio, sb->s_bdev, &bvec, 1, REQ_OP_READ | REQ_META);
-- 	bio.bi_iter.bi_sector =3D sector * (sb->s_blocksize >> SECTOR_SHIFT);
-- 	__bio_add_page(&bio, page, PAGE_SIZE, 0);
--=20
-- 	err =3D submit_bio_wait(&bio);
-+ 	err =3D bdev_rw_virt(sdp->sd_vfs->s_bdev,
- -			sector * (sdp->sd_vfs->s_blocksize >> 9), sb, PAGE_SIZE,
- -			REQ_OP_READ | REQ_META);
-++			sector * (sdp->sd_vfs->s_blocksize >> SECTOR_SHIFT),
-++			sb, PAGE_SIZE, REQ_OP_READ | REQ_META);
-  	if (err) {
-  		pr_warn("error %d reading superblock\n", err);
-- 		__free_page(page);
-+ 		kfree(sb);
-  		return err;
-  	}
-- 	gfs2_sb_in(sdp, page_address(page));
-- 	__free_page(page);
-+ 	gfs2_sb_in(sdp, sb);
-+ 	kfree(sb);
-  	return gfs2_check_sb(sdp, silent);
-  }
- =20
-
---Sig_/.w.3x=nVCdyL91RDnEzQKEG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgcKfYACgkQAVBC80lX
-0GzrXQf+LBvsvAYhK7EcMQwzE1ClhPpKPMJCkEfQRY+Kj1m6w8HRJd1ewjtXmWaD
-cKttEmb4eyKAHu5+uyQ97hphfdT5QJiWYfHlPlZlDH460vQh3tKDYYMGjwQZaKi3
-3eBUpi3SBCoShKWwzpwyaP1EyKB8kh0ZDJjMBU192FbKyfbhMw9CfcruO31f8blv
-uh2uhPcK0rEjpTo6ATa1WGDcBvifQoisRl0zVEKaYyw8p1uABB5KaPEi4GODFedR
-6si/36biRAITqaQBeSAzMAW69oNHBABtVVd7hQFq4ezpC7cXxT2mds+ZD9wGXev4
-b3tnXZtrMICDUT3LfheXXInVgYehew==
-=UBnQ
------END PGP SIGNATURE-----
-
---Sig_/.w.3x=nVCdyL91RDnEzQKEG--
