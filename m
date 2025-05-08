@@ -1,147 +1,191 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812C1252917;
-	Thu,  8 May 2025 14:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF71F2253EE;
+	Thu,  8 May 2025 14:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746714034; cv=none; b=ZcY2bziM4I4gp9IFN5edIi1p3hfYow4V8M+Vw5V9zURFnUgNl3jGkJn/xsG6k3eKOPNogvAIkAFvIG829ANddWTT+qGWmqqVTwGRKtVvQrUXSKp+CItCew4z3RunwN/uKP0C+ihKrMfXLpPofT5mzluLNoUnjwduTpJgVU+EF2I=
+	t=1746714172; cv=none; b=QmnzCJ6TcDLrhn2yQ0Wh3OxvTM6kBduTJwr0KFzoghSCei0oJjMsIJ0Jyliim/uxop3RsnkmdGcezPZc3gux/IS9KdRcnDI16uA/66ZcTrJ9WRnYRgdo/SFAo+IcFflYQ6j0avSHKGlZiaAGRabJPsymo8ydzg9TuR3DTv7c3MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746714034; c=relaxed/simple;
-	bh=cHhpldTiS697heQ8jF9oq0lqdYe2XmA+Hedchz/5inI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ifS+u50nIibhfsjva7u/gP8pvzWEtB8IFiMGCvPZvCc7g7Y+rr8QmF0dtazhcJxjbCczxD3eFQMPii0EOeaoZlPRg/2PFEjwnZvrICgwZeDCfkERGtyLbtg9pMLpSiQXBNo2eRff31Y2qAlSDn/XuYB4uaQPzeWvu4Qd8887pdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ahmO8JKY; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1746714172; c=relaxed/simple;
+	bh=L2A53b1SBH/XBk3vKsdtqa4zJbsmfjiXiuTZlUXMN+I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VUzZkAHjlPcYfuHavaojTc6vHs9Rlc+sr4S/H10So4lwCOyI4hXNVqvhZ+1Zu2ejvaMc8MRaK8OJj6bGeqdW/vFvEqT2Hynoelu76viIaAONpDgA2/SWb8xFD/ddkQBYvZioxFb+R4nIONNRyFjvZCbuoU5ENu0PSOevL8ycwN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kOekj9YY; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ahmO8JKY"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5488t3A5000532;
-	Thu, 8 May 2025 14:20:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=oBsvYhNSfnnaJukBuPXgWSSmMLLdrg
-	zw30jITZiQdG4=; b=ahmO8JKYKhBmI3cDYqsO9sryMnry5RVYsdK/gH8I87KX19
-	3cDp9fzQDuvnX5pWOZs9afep7q9vC6VYN7DzTWRUgCFwYQQ66e2EWOwCahmjuJGE
-	hi/ZWkGtlnmNZZddriDLnkRoYpbKZiTQcLW4aZuYrBGDbhwdwZRS1u7T8Pilo5ry
-	+rOAMaAcQH5IdxlaV45lQWP6sKyR7FfQfqi5aYqVFGmx9hY5qyUVevYr5ZuYBfro
-	2wPvA1//936BbzkKp0UpJ4sxtcc8JxUX4w3RNW/PgusPVj0eNGHSTvIxy1R8GuBr
-	AOqR+Z2pOASHNHOoyYSpcKRwobscrlwQ25Da1NkQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46gf3kv4ra-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 14:20:25 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 548EKHbJ015305;
-	Thu, 8 May 2025 14:20:24 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46gf3kv4r8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 14:20:24 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 548AWdIk014167;
-	Thu, 8 May 2025 14:20:23 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46dypkwwds-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 14:20:23 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 548EKMqU19464472
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 8 May 2025 14:20:22 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1DBE020049;
-	Thu,  8 May 2025 14:20:22 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DE59920040;
-	Thu,  8 May 2025 14:20:21 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu,  8 May 2025 14:20:21 +0000 (GMT)
-Date: Thu, 8 May 2025 16:20:20 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Daniel Axtens <dja@axtens.net>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        kasan-dev@googlegroups.com, linux-s390@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v5 1/1] kasan: Avoid sleepable page allocation from
- atomic context
-Message-ID: <aBy9pJdTyzBgOjSE@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <cover.1746604607.git.agordeev@linux.ibm.com>
- <0388739e3a8aacdf9b9f7b11d5522b7934aea196.1746604607.git.agordeev@linux.ibm.com>
- <20250507170554.53a29e42d3edda8a9f072334@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOekj9YY"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22e45088d6eso15050655ad.0;
+        Thu, 08 May 2025 07:22:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746714170; x=1747318970; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FvnCu4IDT4LGeI/g3VmpbphZW2h1OyuyN6JvDGAvzTQ=;
+        b=kOekj9YYMP6Uc4Wp+b9skXmqIovGl6Y606NlrN4NTLJfAtj5rsuF+UYJ4380ig83xr
+         oM8NmcD4l9ffCJCYIGx1DmcgZjDHTZZOcimyCx0RSqbfSlRPCmhRh07hQ66DjQh0L4Yd
+         hf4uXcWDc9ALJnH3n4JeetNDcDjJfEENVzu/W6usptDn4Rq6/T3Fyds/kWgZ5gn1PXuh
+         r0cGK3WLvMDQdTPjdr39VigZ5xyjfbNxbBHgZIDhVS9uvyvoiZhOB3HAZnV5o50dJ7X9
+         QEmrTWi3U6x6mfrwqw3UCeBD4eZr8XecElShUKDh5ZCOrKQXvgASDjTpuE7Iuxo2bSnB
+         Lafw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746714170; x=1747318970;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FvnCu4IDT4LGeI/g3VmpbphZW2h1OyuyN6JvDGAvzTQ=;
+        b=VHK1poIQY+j7GkYzDwaOVfAtqnPfkPWqel6eejrDszj6fY7KGjK+oIniGy4diNZKBa
+         y1/hoAhwgc8qWBLKMUiuRHN+5xhVSBk8e99XLTphKQ75ffCBypjiiNfGqKQ5RWU/twnj
+         jpvMaCfQ/+26zE+tZx8dOK7xuGDRMa2RcdqM5ah9wkmAUp05UMWD5jCHlkYpzfNXG8Ar
+         wbjhs23Fkne7U1fjn4TsebBFKTrzE24RfoiHIiDgAKbOn+Ef5CL44UMuPsv5zqeHIiT6
+         N0MZm3AlMxFeAOtbBptlxQuRreic6YtOo8hDkOiv7DUGkhlNtS3124cjqoybkHO4YH6V
+         tXBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWNhSlvKVUGJbNNhf3imIeQt1iQOxkkDAFgIMzSTqEWq0/vZuUfQD103ZpjOwjAgbtP5AVjN6COM+a+sOYqOvYzoT4t3Fa2@vger.kernel.org, AJvYcCX6cHtGWAVfyIommJe79khavhozgkelFSCMU7qebS4ug7Y6mRCzeVMd6BgCrOSrbxDR764OsEGFQ6Arxss=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw59aqvsJgPl2GIvPZ2UAHz3dRIJf+xOUVc+zP8owFaJNxW5+GN
+	JepSVvhAAixHMD+lTZ3AJf2DnbjRMZ6QMc2O0jVfuldmsjdMOPwc
+X-Gm-Gg: ASbGncsTtRJ1tAt2+DKxdRVL9jz/bXQYsKHpdmqqS3kf2jAzS6hcSJFJtHpeJ85yQR4
+	fQ22/HYNfW9mT6lSDf1bC4HNQRgjIvCebuQhn1TRe62q0jyr3JsLNiOCTxcOga75Wlpiygapzxy
+	7wVmGE4jBj6KIVABZx34D7BMcouTgniqLwLw12rV455yQQoOTzFOA13mcbA4bR5G+goNDQCWJ5p
+	1bWKC4H2IhzEbC36FAUZ7p66w3zCzWwzTf2N63HMsv17qrCQjJU+qXYQ+lta3gSvsmLAooYl0t4
+	129ZkuVLa73L4k24MjIffNNvzoaGKaU3k6bdwMCUWYT0xCxLjPw=
+X-Google-Smtp-Source: AGHT+IEpPz9g3uccJ8NXeUz59v7uobeMoLUYcXoSIjvFQ2UXU3lIbBbeHE1kJWqAB1HDb6q5luSshA==
+X-Received: by 2002:a17:903:41c1:b0:22e:4cae:5958 with SMTP id d9443c01a7336-22e5ea782b0mr92345145ad.18.1746714169736;
+        Thu, 08 May 2025 07:22:49 -0700 (PDT)
+Received: from VM-16-38-fedora.. ([43.135.149.86])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e173b584csm108021635ad.16.2025.05.08.07.22.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 07:22:48 -0700 (PDT)
+From: Jinliang Zheng <alexjlzheng@gmail.com>
+X-Google-Original-From: Jinliang Zheng <alexjlzheng@tencent.com>
+To: paul@paul-moore.com
+Cc: alexjlzheng@gmail.com,
+	alexjlzheng@tencent.com,
+	chrisw@osdl.org,
+	greg@kroah.com,
+	jmorris@namei.org,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	serge@hallyn.com,
+	wufan@linux.microsoft.com
+Subject: Re: [PATCH v2] securityfs: fix missing of d_delete() in securityfs_remove()
+Date: Thu,  8 May 2025 22:22:44 +0800
+Message-ID: <20250508142246.648785-1-alexjlzheng@tencent.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <CAHC9VhRx6SUqYHm7Nv6JKVzpANsnt-qPONcVqZh=hXOsWMqDBA@mail.gmail.com>
+References: <CAHC9VhRx6SUqYHm7Nv6JKVzpANsnt-qPONcVqZh=hXOsWMqDBA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507170554.53a29e42d3edda8a9f072334@linux-foundation.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: -h_qaOlO55CQud-hrKmm4MIkNdoM9j99
-X-Proofpoint-GUID: gcKNb_I5z1L24ObaFP9ozqtSONUBoIu-
-X-Authority-Analysis: v=2.4 cv=S/rZwJsP c=1 sm=1 tr=0 ts=681cbda9 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=7KtnEDDS5azdv5-FDD4A:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDEyMCBTYWx0ZWRfX5oNAmmUKn7st aBprH6+/8ICoXf2xtBa1OybNs5VHbsc1PgZiQQaXRxNpptOIGEebBmzUduBFL97Qn7WoBMKTN0b KgxCRv7P4hRcRhGcTSrdszynjtf3GvXmsc30SBjxIinhbWaPHb8bQswJANOFDKkrET6X8njm+mx
- W5w2sFtK++5/QhyNq2/sWV9UD/Y+JKGE7pqic4pQ5UR0sIooglrxbnck2WmnKiiFajLN5aRjgxx KAGWZy4Aske4EdnMGi7q4u0CRSzIb0BYZsCOqm1Sot9SiRS9bIpj9x+buaI5yYZWPXsj8BY0pCS UN7akEO1hWCHmc3iA6C6FWhkwm1xz1wxGLI07XiymUhszPHsJZHWoV8X+sPLdIhYnJfux4Y/1B+
- rbJcnUXxLMDR2+lzhUKkVzl31gyOAtq2y87uuBkdn1v/qlcxLmMMU7v+AGZ30dgS8g0p0sN6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_05,2025-05-07_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- bulkscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=723
- priorityscore=1501 impostorscore=0 suspectscore=0 phishscore=0
- clxscore=1015 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505080120
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 07, 2025 at 05:05:54PM -0700, Andrew Morton wrote:
-> Is this a crash, or a warning?  From the description I suspect it was a
-> sleep-while-atomic warning?
+On Wed, 7 May 2025 16:10:11 -0400, Paul Moore <paul@paul-moore.com> wrote:
+> On Wed, May 7, 2025 at 7:12 AM <alexjlzheng@gmail.com> wrote:
+> > From: Jinliang Zheng <alexjlzheng@tencent.com>
+> >
+> > Consider the following module code (just an example to make it easier to
+> > illustrate the problem, in fact the LSM module will not be dynamically
+> > unloaded):
+> >
+> >   static struct dentry *dentry;
+> >
+> >   static int __init securityfs_test_init(void)
+> >   {
+> >           dentry = securityfs_create_dir("standon", NULL);
+> >           return PTR_ERR(dentry);
+> >   }
+> >
+> >   static void __exit securityfs_test_exit(void)
+> >   {
+> >           securityfs_remove(dentry);
+> >   }
+> >
+> >   module_init(securityfs_test_init);
+> >   module_exit(securityfs_test_exit);
+> >
+> > and then:
+> >
+> >   insmod /path/to/thismodule
+> >   cd /sys/kernel/security/standon     <- we hold 'standon'
+> >   rmmod thismodule                    <- 'standon' don't go away
+> >   insmod /path/to/thismodule          <- Failed: File exists!
+> 
+> I mentioned this on your original patch, but I'll mention it again
+> with a bit more of an explanation behind it.  As you know, we don't
+> currently support dynamically loaded LSMs, which means the reproducer
+> above isn't really valid from a supported configuration perspective,
+> even if it does happen to trigger the behavior you are describing.
+> This may seem silly to you, but you really should stick with valid
+> configurations when trying to reproduce things as sometimes when
+> developers see an invalid/unsupported config they may stop reading and
+> dismiss your concern with a "don't do that!", which is surely not what
+> you want.
+> 
+> At the very least, I'm personally not sure we would want an
+> invalid/unsupported reproducer in the git log for the LSM subsystem.
 
-Correct, that is a complaint printed by __might_resched()
+Thank you for your reply. :)
 
-> Can we please have the complete dmesg output?
+To clarify, the reproducer code never invokes security_add_hooks(), thus
+this clearly does not constitute loading a new LSM. 
 
-I posted v6 with this output:
+However, if you believe the current approach might be misinterpreted,
+my v3 patch is available for consideration:
+- https://lore.kernel.org/all/20250508140438.648533-2-alexjlzheng@tencent.com/
 
-[    0.663336] BUG: sleeping function called from invalid context at ./include/linux/sched/mm.h:321
-[    0.663348] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 2, name: kthreadd
-[    0.663358] preempt_count: 1, expected: 0
-[    0.663366] RCU nest depth: 0, expected: 0
-[    0.663375] no locks held by kthreadd/2.
-[    0.663383] Preemption disabled at:
-[    0.663386] [<0002f3284cbb4eda>] apply_to_pte_range+0xfa/0x4a0
-[    0.663405] CPU: 0 UID: 0 PID: 2 Comm: kthreadd Not tainted 6.15.0-rc5-gcc-kasan-00043-gd76bb1ebb558-dirty #162 PREEMPT 
-[    0.663408] Hardware name: IBM 3931 A01 701 (KVM/Linux)
-[    0.663409] Call Trace:
-[    0.663410]  [<0002f3284c385f58>] dump_stack_lvl+0xe8/0x140 
-[    0.663413]  [<0002f3284c507b9e>] __might_resched+0x66e/0x700 
-[    0.663415]  [<0002f3284cc4f6c0>] __alloc_frozen_pages_noprof+0x370/0x4b0 
-[    0.663419]  [<0002f3284ccc73c0>] alloc_pages_mpol+0x1a0/0x4a0 
-[    0.663421]  [<0002f3284ccc8518>] alloc_frozen_pages_noprof+0x88/0xc0 
-[    0.663424]  [<0002f3284ccc8572>] alloc_pages_noprof+0x22/0x120 
-[    0.663427]  [<0002f3284cc341ac>] get_free_pages_noprof+0x2c/0xc0 
-[    0.663429]  [<0002f3284cceba70>] kasan_populate_vmalloc_pte+0x50/0x120 
-[    0.663433]  [<0002f3284cbb4ef8>] apply_to_pte_range+0x118/0x4a0 
-[    0.663435]  [<0002f3284cbc7c14>] apply_to_pmd_range+0x194/0x3e0 
-[    0.663437]  [<0002f3284cbc99be>] __apply_to_page_range+0x2fe/0x7a0 
-[    0.663440]  [<0002f3284cbc9e88>] apply_to_page_range+0x28/0x40 
-[    0.663442]  [<0002f3284ccebf12>] kasan_populate_vmalloc+0x82/0xa0 
-[    0.663445]  [<0002f3284cc1578c>] alloc_vmap_area+0x34c/0xc10 
-[    0.663448]  [<0002f3284cc1c2a6>] __get_vm_area_node+0x186/0x2a0 
-[    0.663451]  [<0002f3284cc1e696>] __vmalloc_node_range_noprof+0x116/0x310 
-[    0.663454]  [<0002f3284cc1d950>] __vmalloc_node_noprof+0xd0/0x110 
-[    0.663457]  [<0002f3284c454b88>] alloc_thread_stack_node+0xf8/0x330 
-[    0.663460]  [<0002f3284c458d56>] dup_task_struct+0x66/0x4d0 
-[    0.663463]  [<0002f3284c45be90>] copy_process+0x280/0x4b90 
-[    0.663465]  [<0002f3284c460940>] kernel_clone+0xd0/0x4b0 
-[    0.663467]  [<0002f3284c46115e>] kernel_thread+0xbe/0xe0 
-[    0.663469]  [<0002f3284c4e440e>] kthreadd+0x50e/0x7f0 
-[    0.663472]  [<0002f3284c38c04a>] __ret_from_fork+0x8a/0xf0 
-[    0.663475]  [<0002f3284ed57ff2>] ret_from_fork+0xa/0x38 
+While I personally find the v2 reproducer more readable and straightforward,
+I fully defer to your judgment on this matter.
 
-Thanks!
+thanks,
+Jinliang Zheng. :)
+
+> 
+> > Although the LSM module will not be dynamically added or deleted after
+> > the kernel is started, it may dynamically add or delete pseudo files
+> > for status export or function configuration in userspace according to
+> > different status, which we are not prohibited from doing so.
+> >
+> > In addition, securityfs_recursive_remove() avoids this problem by calling
+> > __d_drop() directly. As a non-recursive version, it is somewhat strange
+> > that securityfs_remove() does not clean up the deleted dentry.
+> >
+> > Fix this by adding d_delete() in securityfs_remove().
+> 
+> I wondering why we don't simply replace all instances of
+> securityfs_remove() with securityfs_recursive_remove(), or more likely
+> just remove the existing securityfs_remove() and rename the
+> securityfs_recursive_remove() to securityfs_remove().  Do any existing
+> LSMs rely on securityfs_remove() *not* acting recursively?
+> 
+> > Fixes: b67dbf9d4c198 ("[PATCH] add securityfs for all LSMs to use")
+> > Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
+> > ---
+> > changelog:
+> > v2: Modify the commit message to make it clearer
+> > v1: https://lore.kernel.org/all/20250426150931.2840-1-alexjlzheng@tencent.com/
+> > ---
+> >  security/inode.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/security/inode.c b/security/inode.c
+> > index da3ab44c8e57..d99baf26350a 100644
+> > --- a/security/inode.c
+> > +++ b/security/inode.c
+> > @@ -306,6 +306,7 @@ void securityfs_remove(struct dentry *dentry)
+> >                         simple_rmdir(dir, dentry);
+> >                 else
+> >                         simple_unlink(dir, dentry);
+> > +               d_delete(dentry);
+> >                 dput(dentry);
+> >         }
+> >         inode_unlock(dir);
+> > --
+> > 2.49.0
+> 
+> -- 
+> paul-moore.com
