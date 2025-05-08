@@ -1,361 +1,210 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01BB219A9D;
-	Thu,  8 May 2025 06:07:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DB3219A9D;
+	Thu,  8 May 2025 06:07:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746684467; cv=none; b=UIm2QVVDdGk+JzSERZYFKq/RfFUF533ihZFAgVQZXDCwZ3YFOm/eKrxcm/A4pTHDlZUv85XEukkGG52YkW0w/pM1ac9WoGnm/rj1JquxYqD9oDSPnqftz9CZRfsl1F32oEufgSzpx2nUrtPGmGcwVJLhnvWVtR3aKtyZB5W0kEY=
+	t=1746684474; cv=none; b=m/zS2OvOY8A9yk5ErAmGSW7AWl8h0BLfng1Kc7EdtWy4pMnH2FYr7UkYsR+gHWCIVKiga7CNGY6ah8c4RNzYs/ivn7xcAnkCrumO/1mlVWOIKKIDNl/G7qFskG9eCcHBnWT4bfH1gqnDDaJhhfajc6hd1fA8vTf6oeIxmMNEJjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746684467; c=relaxed/simple;
-	bh=KG+a76JSP5sk81rohkifQgQfIXTfa6ZRsNSlFXzr0zw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ERh7i4aUkG71bfasJ1vrHPToNf1nCBes9yu/xTZQjHvtRLbgjLkK7BSD1mkbfuAgcx/KBUqF/X0HZs452VZo/m5CuUsTFRtb7TaR7p9KfAoYQhiwxPEl4MXLO3cwm2JJzHhNKwPKtlfX9izmdX0CdnUrzmGDEIZVsLsGpDpEhgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4H+jxE4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746684474; c=relaxed/simple;
+	bh=hrmfO8tAr/cw382o+bzA/FlXqDpilUHVCNE5epju3bA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HxIDEY3+oRbYhTUEgvp2yKdJALJXrc7q59/XXnhHFAmDp3bNdZJGUjKeCyS71DjKa+2KY7Mw03erstidL31wOAOSQ/0HmTmGze2eW8QGuGZamo3xmE1k89LrTsnm+D0bDJRmHNLaUkh9JTwp4qfZDUdbuc9tFiEipKmstq4qYvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vKCyQ3xn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4H+jxE4"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2E775C4CEED;
-	Thu,  8 May 2025 06:07:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vKCyQ3xn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67F9AC4CEED;
+	Thu,  8 May 2025 06:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746684467;
-	bh=KG+a76JSP5sk81rohkifQgQfIXTfa6ZRsNSlFXzr0zw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=F4H+jxE4spJKrfm91CMSH/7nlVTQtovp9O0up+GwZ/eRCiadnkxPFrHQfNbQz4BH+
-	 HvDzNkoLzZncrhQtepibLsHE5LGQ0IdAaUIPy/Y/WptML3TBYYbE42bMQX5F2r9woS
-	 NUNZco0rGMfvBwsb4VBPOmxe/Y3LIEXnIiiSjlu3Cy4qPVpdigyxGgAteAxMkq/mFe
-	 0V7Asaxx4nr4/QIQPFXTjcSfqzBK+ABW51kk4o0n9xYY6+HeqIANePHehueYs7Pu8M
-	 lyzXcvFCNSt1CB7+Xl3/rKWPTa+84ph711yy1FQd6fdZD29dEhbL4mGfkf5U4qf5YC
-	 USARdHoLKk5ZA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C77C3ABC5;
-	Thu,  8 May 2025 06:07:47 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Thu, 08 May 2025 01:07:41 -0500
-Subject: [PATCH v2 4/4] memory: tegra210-emc: Support Device Tree EMC
- Tables
+	s=k20201202; t=1746684474;
+	bh=hrmfO8tAr/cw382o+bzA/FlXqDpilUHVCNE5epju3bA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vKCyQ3xnSUcVkfLKJ+4oR2f8+ALgiNFW2XpzCZ1ED1OfhX+JMIDb9gjZfY2+lLqr9
+	 VhxKBa7r3jGhw2C1TR7bRP8j/RcGZVN+GuDqTujsYo3M0j8JqUE7dijjQod91t8SCe
+	 S85/hgHZLXzN/N5sgLIScmF0QbldbvzdzxdGGeaOccgpHcmiu1L7HokE2jogH1qGDB
+	 MV+ey0c3w3CR12z5+FO7s15H5RcUe3Nx9SYSBH0vJB/D2vnUrc3erjM1S7g8shfobE
+	 aEU5f1oiKb4L+HpQsBrt2aWaskt7otCnYEsc1cNLOVbEu5g/XSw/ofeZMTARtfU/AH
+	 7M0RbLcxfrx5g==
+Message-ID: <17145d2f-5d07-4939-8381-74e27cde303c@kernel.org>
+Date: Thu, 8 May 2025 08:07:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: i3c: Add NXP P3H2x4x i3c-hub support
+To: Aman Kumar Pandey <aman.kumarpandey@nxp.com>,
+ linux-kernel@vger.kernel.org, linux-i3c@lists.infradead.org,
+ alexandre.belloni@bootlin.com, krzk+dt@kernel.org, robh@kernel.org,
+ conor+dt@kernel.org, devicetree@vger.kernel.org
+Cc: vikash.bansal@nxp.com, priyanka.jain@nxp.com,
+ shashank.rebbapragada@nxp.com, Frank.Li@nxp.com
+References: <20250508045711.2810207-1-aman.kumarpandey@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250508045711.2810207-1-aman.kumarpandey@nxp.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250508-tegra210-emc-dt-v2-4-d33dc20a1123@gmail.com>
-References: <20250508-tegra210-emc-dt-v2-0-d33dc20a1123@gmail.com>
-In-Reply-To: <20250508-tegra210-emc-dt-v2-0-d33dc20a1123@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, 
- devicetree@vger.kernel.org, Aaron Kling <webgeek1234@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746684462; l=11162;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=wBCb/oZACZh3ZRZiQEdvW29SGz+br/eq1aqiesw7voA=;
- b=7aFqFyx2PRPUMF7bOWk6YyliLUzsszTDH2ryqRjuwzw0SBdxrEDJbbAHTeF8+4kb2vGlAEw2K
- Uw47Z1gOXwvBTBXMkg+Qri8qpbtR4J4MWOiytHKYSA6i6VhcCA+cp9z
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
 
-From: Aaron Kling <webgeek1234@gmail.com>
+On 08/05/2025 06:57, Aman Kumar Pandey wrote:
+> Add bindings for the NXP P3H2x4x (P3H2440/P3H2441/P3H2840/P3H2841)
+> multiport I3C hub family. These devices connect to a host via
+> I3C/I2C/SMBus and allow communication with multiple downstream
+> peripherals.
+> 
+> Signed-off-by: Aman Kumar Pandey <aman.kumarpandey@nxp.com>
+> Signed-off-by: Vikash Bansal <vikash.bansal@nxp.com>
+> ---
+> V1 -> V2: Cleaned up coding style and addressed review comments
+> ---
+>  .../bindings/i3c/p3h2840-i3c-hub.yaml         | 332 ++++++++++++++++++
 
-These are generated by the Tegra210 Android bootloader. This is similar
-to the Tegra124 handling, so the support is based on that and modified
-to match Tegra210 by referencing the downstream Nvidia 4.9 kernel.
+Not much improved. I have doubts that you really looked at other bindings.
 
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
----
- drivers/memory/tegra/tegra210-emc-core.c | 246 +++++++++++++++++++++++++++++--
- 1 file changed, 236 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/memory/tegra/tegra210-emc-core.c b/drivers/memory/tegra/tegra210-emc-core.c
-index e63f6269057106ded054dea94d92d96cb9c13c06..0b8c7cd09679dc64b3fb04acf2bb5963dd7544fc 100644
---- a/drivers/memory/tegra/tegra210-emc-core.c
-+++ b/drivers/memory/tegra/tegra210-emc-core.c
-@@ -1783,6 +1783,226 @@ static void tegra210_emc_detect(struct tegra210_emc *emc)
- 		emc->num_channels = 1;
- }
- 
-+static struct device_node *
-+tegra_emc_find_node_by_ram_code(struct device_node *node, u32 ram_code)
-+{
-+	struct device_node *np;
-+	int err;
-+
-+	for_each_child_of_node(node, np) {
-+		u32 value;
-+
-+		err = of_property_read_u32(np, "nvidia,ram-code", &value);
-+		if (err || (value != ram_code))
-+			continue;
-+
-+		return np;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int load_one_timing_from_dt(struct tegra210_emc *emc,
-+				   struct tegra210_emc_timing *timing,
-+				   struct device_node *node)
-+{
-+	int err;
-+
-+#define EMC_READ_PROP(prop, dtprop) { \
-+	err = of_property_read_u32(node, dtprop, &timing->prop); \
-+	if (err) { \
-+		dev_err(emc->dev, "timing %pOFn: failed to read " #prop ": %d\n", \
-+			node, err); \
-+		return err; \
-+	} \
-+}
-+
-+#define EMC_READ_PROP_STRING(prop, dtprop) { \
-+	err = of_property_read_string(node, dtprop, (const char **)&timing->prop); \
-+	if (err) { \
-+		dev_err(emc->dev, "timing %pOFn: failed to read " #prop ": %d\n", \
-+			node, err); \
-+		return err; \
-+	} \
-+}
-+
-+#define EMC_READ_PROP_ARRAY(prop, dtprop, length) { \
-+	err = of_property_read_u32_array(node, dtprop, timing->prop, length); \
-+	if (err) { \
-+		dev_err(emc->dev, "timing %pOFn: failed to read " #prop ": %d\n", \
-+			node, err); \
-+		return err; \
-+	} \
-+}
-+
-+	EMC_READ_PROP_STRING(clock_src, "nvidia,source")
-+	EMC_READ_PROP_STRING(dvfs_ver, "nvidia,dvfs-version")
-+
-+	EMC_READ_PROP(revision, "nvidia,revision")
-+	EMC_READ_PROP(rate, "clock-frequency")
-+	EMC_READ_PROP(min_volt, "nvidia,emc-min-mv")
-+	EMC_READ_PROP(gpu_min_volt, "nvidia,gk20a-min-mv")
-+	EMC_READ_PROP(clk_src_emc, "nvidia,src-sel-reg")
-+	EMC_READ_PROP(num_burst, "nvidia,burst-regs-num")
-+	EMC_READ_PROP(emc_cfg_2, "nvidia,emc-cfg-2")
-+	EMC_READ_PROP(emc_sel_dpd_ctrl, "nvidia,emc-sel-dpd-ctrl")
-+	EMC_READ_PROP(emc_auto_cal_config, "nvidia,emc-auto-cal-config")
-+	EMC_READ_PROP(emc_auto_cal_config2, "nvidia,emc-auto-cal-config2")
-+	EMC_READ_PROP(emc_auto_cal_config3, "nvidia,emc-auto-cal-config3")
-+	EMC_READ_PROP(latency, "nvidia,emc-clock-latency-change")
-+	EMC_READ_PROP_ARRAY(burst_regs, "nvidia,emc-registers", timing->num_burst)
-+	EMC_READ_PROP(needs_training, "nvidia,needs-training")
-+	EMC_READ_PROP(trained, "nvidia,trained")
-+
-+	if (timing->revision >= 0x6) {
-+		EMC_READ_PROP(periodic_training, "nvidia,periodic_training")
-+		EMC_READ_PROP(trained_dram_clktree[C0D0U0], "nvidia,trained_dram_clktree_c0d0u0")
-+		EMC_READ_PROP(trained_dram_clktree[C0D0U1], "nvidia,trained_dram_clktree_c0d0u1")
-+		EMC_READ_PROP(trained_dram_clktree[C0D1U0], "nvidia,trained_dram_clktree_c0d1u0")
-+		EMC_READ_PROP(trained_dram_clktree[C0D1U1], "nvidia,trained_dram_clktree_c0d1u1")
-+		EMC_READ_PROP(trained_dram_clktree[C1D0U0], "nvidia,trained_dram_clktree_c1d0u0")
-+		EMC_READ_PROP(trained_dram_clktree[C1D0U1], "nvidia,trained_dram_clktree_c1d0u1")
-+		EMC_READ_PROP(trained_dram_clktree[C1D1U0], "nvidia,trained_dram_clktree_c1d1u0")
-+		EMC_READ_PROP(trained_dram_clktree[C1D1U1], "nvidia,trained_dram_clktree_c1d1u1")
-+		EMC_READ_PROP(current_dram_clktree[C0D0U0], "nvidia,current_dram_clktree_c0d0u0")
-+		EMC_READ_PROP(current_dram_clktree[C0D0U1], "nvidia,current_dram_clktree_c0d0u1")
-+		EMC_READ_PROP(current_dram_clktree[C0D1U0], "nvidia,current_dram_clktree_c0d1u0")
-+		EMC_READ_PROP(current_dram_clktree[C0D1U1], "nvidia,current_dram_clktree_c0d1u1")
-+		EMC_READ_PROP(current_dram_clktree[C1D0U0], "nvidia,current_dram_clktree_c1d0u0")
-+		EMC_READ_PROP(current_dram_clktree[C1D0U1], "nvidia,current_dram_clktree_c1d0u1")
-+		EMC_READ_PROP(current_dram_clktree[C1D1U0], "nvidia,current_dram_clktree_c1d1u0")
-+		EMC_READ_PROP(current_dram_clktree[C1D1U1], "nvidia,current_dram_clktree_c1d1u1")
-+		EMC_READ_PROP(run_clocks, "nvidia,run_clocks")
-+		EMC_READ_PROP(tree_margin, "nvidia,tree_margin")
-+	}
-+
-+	EMC_READ_PROP(num_burst_per_ch, "nvidia,burst-regs-per-ch-num")
-+	EMC_READ_PROP(num_trim, "nvidia,trim-regs-num")
-+	EMC_READ_PROP(num_trim_per_ch, "nvidia,trim-regs-per-ch-num")
-+	EMC_READ_PROP(num_mc_regs, "nvidia,burst-mc-regs-num")
-+	EMC_READ_PROP(num_up_down, "nvidia,la-scale-regs-num")
-+	EMC_READ_PROP(vref_num, "nvidia,vref-regs-num")
-+	EMC_READ_PROP(dram_timing_num, "nvidia,dram-timing-regs-num")
-+	EMC_READ_PROP(min_mrs_wait, "nvidia,min-mrs-wait")
-+	EMC_READ_PROP(emc_mrw, "nvidia,emc-mrw")
-+	EMC_READ_PROP(emc_mrw2, "nvidia,emc-mrw2")
-+	EMC_READ_PROP(emc_mrw3, "nvidia,emc-mrw3")
-+	EMC_READ_PROP(emc_mrw4, "nvidia,emc-mrw4")
-+	EMC_READ_PROP(emc_mrw9, "nvidia,emc-mrw9")
-+	EMC_READ_PROP(emc_mrs, "nvidia,emc-mrs")
-+	EMC_READ_PROP(emc_emrs, "nvidia,emc-emrs")
-+	EMC_READ_PROP(emc_emrs2, "nvidia,emc-emrs2")
-+	EMC_READ_PROP(emc_auto_cal_config4, "nvidia,emc-auto-cal-config4")
-+	EMC_READ_PROP(emc_auto_cal_config5, "nvidia,emc-auto-cal-config5")
-+	EMC_READ_PROP(emc_auto_cal_config6, "nvidia,emc-auto-cal-config6")
-+	EMC_READ_PROP(emc_auto_cal_config7, "nvidia,emc-auto-cal-config7")
-+	EMC_READ_PROP(emc_auto_cal_config8, "nvidia,emc-auto-cal-config8")
-+	EMC_READ_PROP(emc_fdpd_ctrl_cmd_no_ramp, "nvidia,emc-fdpd-ctrl-cmd-no-ramp")
-+	EMC_READ_PROP(dll_clk_src, "nvidia,dll-clk-src")
-+	EMC_READ_PROP(clk_out_enb_x_0_clk_enb_emc_dll, "nvidia,clk-out-enb-x-0-clk-enb-emc-dll")
-+
-+	if (timing->revision >= 0x7)
-+		EMC_READ_PROP_ARRAY(ptfv_list, "nvidia,ptfv", ARRAY_SIZE(timing->ptfv_list))
-+
-+	EMC_READ_PROP_ARRAY(burst_reg_per_ch, "nvidia,emc-burst-regs-per-ch",
-+			timing->num_burst_per_ch)
-+	EMC_READ_PROP_ARRAY(shadow_regs_ca_train, "nvidia,emc-shadow-regs-ca-train",
-+			timing->num_burst)
-+	EMC_READ_PROP_ARRAY(shadow_regs_quse_train, "nvidia,emc-shadow-regs-quse-train",
-+			timing->num_burst)
-+	EMC_READ_PROP_ARRAY(shadow_regs_rdwr_train, "nvidia,emc-shadow-regs-rdwr-train",
-+			timing->num_burst)
-+	EMC_READ_PROP_ARRAY(trim_regs, "nvidia,emc-trim-regs", timing->num_trim)
-+	EMC_READ_PROP_ARRAY(trim_perch_regs, "nvidia,emc-trim-regs-per-ch", timing->num_trim_per_ch)
-+	EMC_READ_PROP_ARRAY(vref_perch_regs, "nvidia,emc-vref-regs", timing->vref_num)
-+	EMC_READ_PROP_ARRAY(dram_timings, "nvidia,emc-dram-timing-regs", timing->dram_timing_num)
-+	EMC_READ_PROP_ARRAY(burst_mc_regs, "nvidia,emc-burst-mc-regs", timing->num_mc_regs)
-+	EMC_READ_PROP_ARRAY(la_scale_regs, "nvidia,emc-la-scale-regs", timing->num_up_down)
-+
-+#undef EMC_READ_PROP
-+#undef EMC_READ_STRING
-+#undef EMC_READ_PROP_ARRAY
-+
-+	return 0;
-+}
-+
-+#define NOMINAL_COMPATIBLE "nvidia,tegra21-emc-table"
-+#define DERATED_COMPATIBLE "nvidia,tegra21-emc-table-derated"
-+static int tegra210_emc_load_timings_from_dt(struct tegra210_emc *emc,
-+					     struct device_node *node)
-+{
-+	struct tegra210_emc_timing *timing;
-+	unsigned int num_nominal = 0, num_derated = 0;
-+	int err;
-+
-+	emc->num_timings = 0;
-+	for_each_child_of_node_scoped(node, child) {
-+		if (of_device_is_compatible(child, NOMINAL_COMPATIBLE))
-+			emc->num_timings++;
-+		else if (of_device_is_compatible(child, DERATED_COMPATIBLE))
-+			num_derated++;
-+	}
-+
-+	if (!emc->num_timings || (num_derated && (emc->num_timings != num_derated)))
-+		return -EINVAL;
-+
-+	emc->nominal = devm_kcalloc(emc->dev, emc->num_timings, sizeof(*timing),
-+				    GFP_KERNEL);
-+	if (!emc->nominal)
-+		return -ENOMEM;
-+
-+	if (num_derated) {
-+		num_derated = 0;
-+		emc->derated = devm_kcalloc(emc->dev, emc->num_timings, sizeof(*timing),
-+					    GFP_KERNEL);
-+		if (!emc->derated)
-+			return -ENOMEM;
-+	}
-+
-+	for_each_child_of_node_scoped(node, child) {
-+		if (of_device_is_compatible(child, NOMINAL_COMPATIBLE))
-+			timing = &emc->nominal[num_nominal++];
-+		else if (of_device_is_compatible(child, DERATED_COMPATIBLE))
-+			timing = &emc->derated[num_derated++];
-+		else
-+			continue;
-+
-+		err = load_one_timing_from_dt(emc, timing, child);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tegra210_emc_parse_dt(struct tegra210_emc *emc)
-+{
-+	struct device_node *node, *np = emc->dev->of_node;
-+	int ram_code, ret = 0;
-+
-+	if (!np) {
-+		dev_err(emc->dev, "Unable to find emc node\n");
-+		return -ENODEV;
-+	}
-+
-+	if (of_find_property(np, "nvidia,use-ram-code", NULL)) {
-+		ram_code = tegra_read_ram_code();
-+		node = tegra_emc_find_node_by_ram_code(np, ram_code);
-+
-+		if (!node) {
-+			dev_warn(emc->dev, "can't find emc table for ram-code\n");
-+			return -ENODEV;
-+		}
-+
-+		ret = tegra210_emc_load_timings_from_dt(emc, node);
-+		of_node_put(node);
-+	} else {
-+		ret = tegra210_emc_load_timings_from_dt(emc, np);
-+	}
-+
-+	return ret;
-+}
-+
- static int tegra210_emc_validate_timings(struct tegra210_emc *emc,
- 					 struct tegra210_emc_timing *timings,
- 					 unsigned int num_timings)
-@@ -1815,6 +2035,7 @@ static int tegra210_emc_probe(struct platform_device *pdev)
- 	struct device_node *np;
- 	unsigned int i;
- 	int err;
-+	bool have_dt_tables = false;
- 
- 	emc = devm_kzalloc(&pdev->dev, sizeof(*emc), GFP_KERNEL);
- 	if (!emc)
-@@ -1847,16 +2068,20 @@ static int tegra210_emc_probe(struct platform_device *pdev)
- 	np = pdev->dev.of_node;
- 
- 	/* attach to the nominal and (optional) derated tables */
--	err = of_reserved_mem_device_init_by_name(emc->dev, np, "nominal");
--	if (err < 0) {
--		dev_err(emc->dev, "failed to get nominal EMC table: %d\n", err);
--		return err;
--	}
-+	if (of_reserved_mem_device_init_by_name(emc->dev, np, "nominal") >= 0) {
-+		err = of_reserved_mem_device_init_by_name(emc->dev, np, "derated");
-+		if (err < 0 && err != -ENODEV) {
-+			dev_err(emc->dev, "failed to get derated EMC table: %d\n", err);
-+			goto release;
-+		}
-+	} else {
-+		err = tegra210_emc_parse_dt(emc);
-+		if (err < 0) {
-+			dev_err(emc->dev, "failed to get EMC tables: %d\n", err);
-+			return err;
-+		}
- 
--	err = of_reserved_mem_device_init_by_name(emc->dev, np, "derated");
--	if (err < 0 && err != -ENODEV) {
--		dev_err(emc->dev, "failed to get derated EMC table: %d\n", err);
--		goto release;
-+		have_dt_tables = true;
- 	}
- 
- 	/* validate the tables */
-@@ -1980,7 +2205,8 @@ static int tegra210_emc_probe(struct platform_device *pdev)
- 	debugfs_remove_recursive(emc->debugfs.root);
- 	tegra210_clk_emc_detach(emc->clk);
- release:
--	of_reserved_mem_device_release(emc->dev);
-+	if (!have_dt_tables)
-+		of_reserved_mem_device_release(emc->dev);
- 
- 	return err;
- }
-
--- 
-2.48.1
+Filename matching compatible.
 
 
+>  MAINTAINERS                                   |   8 +
+>  2 files changed, 340 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i3c/p3h2840-i3c-hub.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/i3c/p3h2840-i3c-hub.yaml b/Documentation/devicetree/bindings/i3c/p3h2840-i3c-hub.yaml
+> new file mode 100644
+> index 000000000000..f3b5aabf5fe0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i3c/p3h2840-i3c-hub.yaml
+> @@ -0,0 +1,332 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright 2025 NXP
+> +
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/i3c/p3h2840-i3c-hub.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: P3H2X4X I3C HUB
+
+nvidia? NXP? What is it?
+
+> +
+
+
+> +maintainers:
+> +  - Vikash Bansal <vikash.bansal@nxp.com>
+> +  - Aman Kumar Pandey <aman.kumarpandey@nxp.com>
+> +
+> +description: |
+> +  P3H2x4x (P3H2440/P3H2441/P3H2840/P3H2841) is a family of multiport I3C
+> +  hub devices that connect to:-
+> +  1. A host CPU via I3C/I2C/SMBus bus on upstream side and connect to multiple
+> +     peripheral devices on the downstream  side.
+> +  2. Have two Controller Ports which can support either
+> +     I2C/SMBus or I3C buses and connect to a CPU, BMC or SOC.
+> +  3. P3H2840/ P3H2841 are 8 port I3C hub with eight I3C/I2C Target Port.
+> +  4. P3H2440/ P3H2441 are 4 port I3C hub with four I3C/I2C Target Port.
+> +     Target ports can be configured as I2C/SMBus, I3C or GPIO and connect to
+> +     peripherals.
+> +
+> +allOf:
+> +  - $ref: i3c.yaml#
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^hub@[@.*]+,[0-9a-f]+$"
+
+Drop
+
+
+> +
+> +  Compatible:
+
+Nothing improved. There is no single code with such syntax and I asked
+to use existing files as an example. You just ignored that comment and
+this is not acceptable.
+
+
+> +    const: nxp,p3h2x4x
+
+No, you need specific compatibles.
+
+> +
+> +  cp0-ldo-enable:
+> +    type: boolean
+> +    description:
+> +      Enables the on-die LDO for controller Port 0.
+> +
+> +  cp1-ldo-enable:
+> +    type: boolean
+> +    description:
+> +      Enables the on-die LDO for controller Port 1.
+> +
+> +  tp0145-ldo-enable:
+> +    type: boolean
+> +    description:
+> +      Enables the on-die LDO for target ports 0/1/4/5.
+> +
+> +  tp2367-ldo-enable:
+> +    type: boolean
+> +    description:
+> +      Enables the on-die LDO for target ports 2/3/6/7.
+> +
+
+NAK for all above properties.
+
+> +  cp0-ldo-microvolt:
+
+Do you see anywhere device properties named like that? Without prefix?
+
+I am not going to review the rest. You did not try hard enough to
+fulfill previous review request, you did not really test it.
+
+Start from scratch from latest accepted schema or from example-schema.
+
+Best regards,
+Krzysztof
