@@ -1,110 +1,86 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F811AB52D;
-	Thu,  8 May 2025 22:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1028724B28
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 22:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746743598; cv=none; b=iUAA9gU2EzJRvMl0+X4P5NqPEwHvGVKT5hbB0FcAg4YxoAdCAQ4UoNotjF6Xa/qaGr90hvxsrXwZppEXZ+vsxFqFZoGtbIgyLR47QuZ9MSo+VTYFjHK3FxeEWH8i+xPDb7k2ug579ADACixEgQAMRmN5/ZhbEGq/cvUbx1gao34=
+	t=1746743917; cv=none; b=cCPKIwQGm2ESVy2LBVOYu5HJNAT9hTF88YX7bt40gcpDM020EjIeiGOnl+iCi2SE/D/9sA3+QMcowc+rBFe4FA9ZglE6ZU5aUQL39UMO3A++44CLDJ6hMNIY9Sex6NPl0g1yMxA+Y2HQJwpOLjFFFUcuRBGN1H1+GNIWoWvMl04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746743598; c=relaxed/simple;
-	bh=Dy9dAmDEtYv1D1W6Os+Dt16ZXrkNQpIpd0MNSk4apV4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O7C1ydvh03rO9+bJBWt8LCW3r/sKn9ii2+ZPGPuUfrsbK3QWbNOe1cbkjVJJtcVhQ0O4Wy4B6OY8dvdm9zX90OgJZqZVs8YFoj/ZvNp5quorfUNTmLprlTz7hipLsjhB64dcoH8xfw8uJQ56iYrvI5xXonxWUyiJKoaUb2FfaIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FSXIVHaI; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746743917; c=relaxed/simple;
+	bh=ubfU8ik9KR7qWEwFXC26OccxX7U5YYqWVoOrTFToFzI=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=pd/fya/Lpv7VQNFIUFjEgXykQcER63w4OQYAx/SWmj8tj6vEY2IfkN8gtEHvo9qMhJBxCg66xf/lzZN4qRC2zNQzXQFqB0e8TEDtLvSCDq9hvltsqAjwVL21rEenzgnWRV6wTIH+JQuqg6uqm6Jwg90HSjJC0U78arqdQby5eDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=VRk1d1sm; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FSXIVHaI"
-Message-ID: <de814321-7ede-4325-be9e-3dd40be68391@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746743590;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HV1W+KoOI60y8Ce+gIw6Y3x5sJ2+CPiqPPkkq5vBFig=;
-	b=FSXIVHaIvZLd/3dFmQP+DEjKwMczBbR7FVxNA0dt1iehlcJmWJTMeUWU2vV52R7ZjmXSi/
-	iZSiHbUXW/brHwj2ZaScr2boAQLjjy7IVhxH40k/jUPZy6464j5wWBzp43HORJSsyQAH/u
-	DYb9uje6klYkCpm74g+UuEhYvJAzkbI=
-Date: Thu, 8 May 2025 23:33:06 +0100
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="VRk1d1sm"
+Received: from [IPv6:::1] ([172.56.43.203])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 548Mc1BH2145558
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 8 May 2025 15:38:02 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 548Mc1BH2145558
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1746743883;
+	bh=1K13FyXuIq6scjZBNwzpY+RHoAidshJMTiiqhc1K+io=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=VRk1d1sm7qmXUVuWLMBEBpxM0cryrMGiHa7n/NtolziAUb6FUXsxOeneF45RttC4f
+	 dz2mrR68eKX5E6/gPoypmaFJu5j7QSDCmap59pixRhBjbnAs3EWsRtqDxmphePHJP8
+	 glGC2R4ly6SudbrGSamWHM/ihVREoiOXZasCf4ADmIbSokiEfAYwtFVv4RTC1wNW8z
+	 ryJi7zIXqf8upHAQGoxZlov+iV49glmdP4cPJv5sGg1mQJ5MCvUATMOCjkqZfGHPNL
+	 3YLtAHXRFYS9MNulpFXa3nxVj0zNwBIfozm4msT/oIItkMSE/74tZ0b260fmdn2IkT
+	 EFZiphmk/rM+A==
+Date: Thu, 08 May 2025 15:37:53 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Ahmed S. Darwish" <darwi@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+CC: Thomas Gleixner <tglx@linutronix.de>,
+        John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
+        x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 02/26] x86/cpu: Sanitize CPUID(0x80000000) output
+User-Agent: K-9 Mail for Android
+In-Reply-To: <3af01720-6bd1-40cd-9292-2c35ae22296c@citrix.com>
+References: <20250506050437.10264-1-darwi@linutronix.de> <20250506050437.10264-3-darwi@linutronix.de> <6b0c87e0-d98d-4394-85bd-8abf556ebf0f@citrix.com> <797B7A87-AAFB-4302-96E6-3FD956D614C2@zytor.com> <3af01720-6bd1-40cd-9292-2c35ae22296c@citrix.com>
+Message-ID: <59C811AB-F4DD-44EE-9645-E18C7DBE4C39@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next 1/3] net: cpsw: return proper RX timestamping
- filter in cpsw_hwtstamp_get()
-To: Vladimir Oltean <vladimir.oltean@nxp.com>, netdev@vger.kernel.org
-Cc: =?UTF-8?Q?K=C3=B6ry_Maincent?= <kory.maincent@bootlin.com>,
- Andrew Lunn <andrew@lunn.ch>, Siddharth Vadapalli <s-vadapalli@ti.com>,
- Roger Quadros <rogerq@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Richard Cochran <richardcochran@gmail.com>,
- Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org,
- linux-omap@vger.kernel.org
-References: <20250508194825.3058929-1-vladimir.oltean@nxp.com>
- <20250508194825.3058929-2-vladimir.oltean@nxp.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250508194825.3058929-2-vladimir.oltean@nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 08/05/2025 20:48, Vladimir Oltean wrote:
-> priv->rx_ts_enabled is a boolean variable (0 or 1). Overlapped over enum
-> hwtstamp_rx_filters, it makes cfg.rx_filter take the value of either
-> HWTSTAMP_FILTER_NONE (when 0) or HWTSTAMP_FILTER_ALL (when 1).
+On May 8, 2025 1:58:11 PM PDT, Andrew Cooper <andrew=2Ecooper3@citrix=2Ecom=
+> wrote:
+>On 08/05/2025 9:40 pm, H=2E Peter Anvin wrote:
+>> On May 7, 2025 1:50:48 AM PDT, Andrew Cooper <andrew=2Ecooper3@citrix=
+=2Ecom> wrote:
+>>> On 06/05/2025 6:04 am, Ahmed S=2E Darwish wrote:
+>>>> CPUID(0x80000000)=2EEAX returns the max extended CPUID leaf available=
+=2E  On
+>>>> x86-32 machines
+>>> How certain are you that it's all 32bit CPUs?=C2=A0 AIUI, it's an Inte=
+l
+>>> specific behaviour, not shared by other x86 vendors of the same era=2E
+>>>
+>>> ~Andrew
+>> All 64-bit machines require CPUID leaf 0x80000000=2E
+>
+>Yes, but why's that relevant?
+>
+>What I'm querying is the claim that all 32-bit machines behaved as Intel
+>did, and returned rubble for out-of-range leaves=2E
+>
+>~Andrew
 
-Hmm.. I have to disagree here. rx_ts_enabled is int, not bool:
+They did not=2E Non-Intel CPUs did, and do, report 0 for undefined levels=
+=2E=20
 
-struct cpsw_priv {
-         struct net_device               *ndev;
-         struct device                   *dev;
-         u32                             msg_enable;
-         u8                              mac_addr[ETH_ALEN];
-         bool                            rx_pause;
-         bool                            tx_pause;
-         bool                            mqprio_hw;
-         int                             fifo_bw[CPSW_TC_NUM];
-         int                             shp_cfg_speed;
-         int                             tx_ts_enabled;
-         int                             rx_ts_enabled;
-         struct bpf_prog                 *xdp_prog;
-	....
-
-
-And it's assigned a value of HWTSTAMP_FILTER_PTP_V2_EVENT in
-cpsw_hwtstamp_set(). Not sure this change is actually needed.
-
-> 
-> But this is inconsistent with what is returned in cpsw_hwtstamp_set().
-> There, HWTSTAMP_FILTER_ALL is refused (-ERANGE), and a subset of the RX
-> filters requestable by user space are all replaced with
-> HWTSTAMP_FILTER_PTP_V2_EVENT. So the driver should be reporting this
-> value during SIOCGHWTSTAMP as well.
-> 
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
->   drivers/net/ethernet/ti/cpsw_priv.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/ti/cpsw_priv.c b/drivers/net/ethernet/ti/cpsw_priv.c
-> index 6fe4edabba44..68d8f7ea0e44 100644
-> --- a/drivers/net/ethernet/ti/cpsw_priv.c
-> +++ b/drivers/net/ethernet/ti/cpsw_priv.c
-> @@ -687,7 +687,8 @@ static int cpsw_hwtstamp_get(struct net_device *dev, struct ifreq *ifr)
->   
->   	cfg.flags = 0;
->   	cfg.tx_type = priv->tx_ts_enabled ? HWTSTAMP_TX_ON : HWTSTAMP_TX_OFF;
-> -	cfg.rx_filter = priv->rx_ts_enabled;
-> +	cfg.rx_filter = priv->rx_ts_enabled ? HWTSTAMP_FILTER_PTP_V2_EVENT :
-> +			HWTSTAMP_FILTER_NONE;
->   
->   	return copy_to_user(ifr->ifr_data, &cfg, sizeof(cfg)) ? -EFAULT : 0;
->   }
-
+I believe even today Intel CPUs report the "last level" value for up to 0x=
+7fffffff=2E=2E=2E
