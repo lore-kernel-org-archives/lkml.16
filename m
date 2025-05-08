@@ -1,132 +1,108 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3122AE90
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 02:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1981DE4DC
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 02:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746672346; cv=none; b=hJKJtYquSVPv2XwhiDAy+AhN2HZFTVrQYhdgpoLiCIbzINPJIyXr5OpJxxHXDzfbKo4liROOnvMmbXtP0UCuVJHzkoLbjVYpnr1oBctgvua3n2Cja+QXuDEi9OTTin6mIAJ8FEtc9pLdpEfvKnM2C83JnRA8/0WoGQPKryPUM7I=
+	t=1746672589; cv=none; b=BKSw6nU2RBgBtcfnGf4R6BhUnIM3mgXGajz3Y8D2Iibv2hQ1//SAS3MNpZ8HStEfyRkPYbFIzMYqR/aCvUfS3iP/T7un+IZKdesM8MorUy6nSV3/zpyzT0J7sj8WqQjfe18H1js3d9TZgvk6YHT9afnE9ixPg9oQQGV6m8mp4c0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746672346; c=relaxed/simple;
-	bh=/5WCWgI24bM84Dtzld5+c+aKZGuP1T2BF3NZ2wLlr7M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rRxSrKv0qMw7ifHG08Tu0YyZ2upGim/Rgk8LeKSJIzaEulGklOFIsqwaS5YWMJm8CHV76EcWnXKrE/s8xkeD4mkcdHVcTkwPnuDkoevLZG1or6PHq5ebdB0PXou9JBpm8qQMIG8c32txuiYa+TQ8q5Hobm3uohMh7z/9PMCQs00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=hJe50r7b; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1746672589; c=relaxed/simple;
+	bh=LWtro9cEpYvHuFt0E2C5crZKY/DWfTGNe9lKkzAMZQM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=P/Fr6bc6vTgj4lqKl2Q0G3wlEmfbmH9RkeHouJmOP2um8zw/SVlA1XzhXaTFXhQDWI0SOClLqZ+Y2yt4bPyrfl+7cO/aqmRQ8UtAfwQi8ZNVKk32oZIpbzo7o9DqTjXG/nM0TX1ouW26UCnby9Vfsl9P/TJoAxy7k535HHmxJqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YPGBrEvL; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="hJe50r7b"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-739be717eddso458818b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 19:45:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1746672344; x=1747277144; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xMN3ycdXM7WXJWVuM9zDao6Nel7WEbQoKSNRydnAy8Q=;
-        b=hJe50r7bcD0CXUj2fwvBViSP5kg1zgLgA4UuuQ4BnZlTzVgMj4d7+hdtjWN1Mk3Dw4
-         vaNF//sJovJQLtAb7knBDbQAww+WZrZtcel5tJMnWalmOVK6QrPNcZBGPnGNhFor5Jd2
-         Y7+JfwlIwH/gYxFzhGq1j3158/TCfG1MHSxAdsNK6Iik3aX0VdAcjlxKPuRGQMkpe9f1
-         cYlkWJ6KLJVvjq14vQ++5s/IjjsrZ62r5PjYhLzOTeBZL/vyZJn2sZLUUE5dGUpH30eq
-         9rtg/H8c+JREqi4wd16G5sgZhyvA0QhzGrIbec3Pm8wTS3n6Qm9Qs1WKB/5/oq84B8/u
-         jO7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746672344; x=1747277144;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xMN3ycdXM7WXJWVuM9zDao6Nel7WEbQoKSNRydnAy8Q=;
-        b=uu0bRrwSkVYb5rFM4eles14BbBUI7odVUV1PSLrJ+Tn4ziOQREqLAFhcs8sE30b0N2
-         cdls9p/GnB453vSVunYIF5/+60d7OlHjLYKhiXlXpnV9Ef7MRBNSqte4o1fypJLjEO0w
-         qZz0SQUWvf5yAuu8W4+rq6zWGHRbeG0yfrO4rqMRtxluI7BRDDmEsvsxw0Fnd2lNuzvs
-         cCbjZzDJPq0UuqhXSmoXgl02Fuo8IuXBYsYF99CjOHyIfjJaAluQXC5rYQhDM0vB6r6a
-         fyq5zg49VVeHjpnxR/o69ROYaNTA0dW3b1Nbv1McDtMs3llY6tJoPPiSd1ti54sypWkF
-         aPTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXt5Ni0Z95gwyDDxRIcSGMPVXeOuvsj90yAkEPeu607l6h7SmnCO6daG90ltA/43CrMGziJvCZmbGDY06E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsF2OE170/ORVxQ7Nr7a7XvRgwamzbF3CCRvrFcw767CnQOrPi
-	LiR/lri0E6JbxEYX3+OGxYA7o9yf2L0bWBM3rohygDeDiHVocJ7q/NiGXs5OnA==
-X-Gm-Gg: ASbGncvPrKfpkpE0r9tpZ/vjuxrACc036uvcg1OUCpC4+NxXUB4Q76NwV+kbdafr+XM
-	7SJHKUcF0zTJnJVtIiqqjIJTsWgviQZPPpWiO2JRKC7NLhmPxRZ2rBbKCdQGHVGfiot5ZaYtNTK
-	XOnHm5sdhXcwK6+POS7ZNQdRqPs5Muf05T3J+vtYTo2HOA4/suZhwwBwAREUB7hoSUf6I+aR1PB
-	Yo7CF2rONYLzYqhGy72wOJRKpRbL0Bmpunh2cNqjvgbz0fFupDZ1JQsXB2Kfp1lC8GunyxYEIF1
-	pPlARLbBrEcIs7YfIo7DO0Y2LT5Zdva1iNZuSfckkI3SapIfdIk=
-X-Google-Smtp-Source: AGHT+IFC5rRBrL2xitz4oTZf+mKCO/t6OQgfIp2HFDLNWcGf2BMMkamhBdSpAuFlm/jvGpUvB8nTPA==
-X-Received: by 2002:a05:6a00:4406:b0:740:91e4:8107 with SMTP id d2e1a72fcca58-7409cbe6e94mr7197763b3a.0.1746672343636;
-        Wed, 07 May 2025 19:45:43 -0700 (PDT)
-Received: from bytedance ([115.190.40.14])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74059020f4esm12026864b3a.112.2025.05.07.19.45.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 19:45:43 -0700 (PDT)
-Date: Thu, 8 May 2025 10:45:25 +0800
-From: Aaron Lu <ziqianlu@bytedance.com>
-To: Florian Bezdeka <florian.bezdeka@siemens.com>
-Cc: Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>
-Subject: Re: [RFC PATCH v2 7/7] sched/fair: alternative way of accounting
- throttle time
-Message-ID: <20250508024525.GA628019@bytedance>
-References: <20250409120746.635476-1-ziqianlu@bytedance.com>
- <20250409120746.635476-8-ziqianlu@bytedance.com>
- <099db50ce28f8b4bde37b051485de62a8f452cc2.camel@siemens.com>
- <20250507090923.GA194948@bytedance>
- <618bc3b199f19be916913301edb5ec832131e842.camel@siemens.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YPGBrEvL"
+Message-ID: <2f2c5e56-35b1-4d23-be52-0266bcb1ca98@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746672572;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uO+pFkIESIfEB9NPR4KJeLeb/tgaXyqm4g7Fug6ky/Y=;
+	b=YPGBrEvL3SEMn5dr9nQ0x93QbPXx+XXXHVY97lsPhPkCKfFvYbBMLHlyOnnNnkbr8EPgLh
+	aOaNzBk5xrx+qzFXVRz9KyAzI9vdSEtPZHLJlNoJF9+SEOy9jS6XFN3IHu/Hu0w69ZKQ+K
+	39aN7dI6hI+rtRaw0FjdlkUkejBPUUo=
+Date: Thu, 8 May 2025 10:49:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <618bc3b199f19be916913301edb5ec832131e842.camel@siemens.com>
+Subject: Re: [PATCH 0/4] Initial support for CTCISZ Ninenine Pi
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+To: Yao Zi <ziyao@disroot.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+ Aradhya Bhatia <a-bhatia1@ti.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Binbin Zhou <zhoubinbin@loongson.cn>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+References: <20250501044239.9404-2-ziyao@disroot.org>
+ <d0575ec1-1901-4534-875c-fa9375e54e3d@linux.dev>
+Content-Language: en-US
+In-Reply-To: <d0575ec1-1901-4534-875c-fa9375e54e3d@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, May 07, 2025 at 11:33:42AM +0200, Florian Bezdeka wrote:
-> On Wed, 2025-05-07 at 17:09 +0800, Aaron Lu wrote:
-... ...
-> > It's just the warn_on_once() itself is incorrect, I'll remove it in next
-> > version, thanks for the report!
+
+
+在 5/7/25 6:08 PM, Yanteng Si 写道:
+> 在 5/1/25 12:42 PM, Yao Zi 写道:
+>> This series adds support for CTCISZ Ninenine Pi, which ships an Loongson
+>> 2K0300 SoC and various peripherals. The vendor prefix and the board are
+>> documented and basic SoC/board devicetrees are added.
+>>
+>> I've successfully booted into console with vendor U-Boot, a bootlog
+>> could be obtained here[1]. DTB and initramfs must be built into the
+>> kernel as the vendor bootloader cannot pass them and upstream U-Boot
+>> support for LoongArch is still WIP.
+>>
+>> Thanks for your time and review.
+>>
+>> [1]: https://gist.github.com/ziyao233/7fd2c8b3b51ef9b30fe5c17faae1bc4e
+>>
+>> Yao Zi (4):
+>>    dt-bindings: vendor-prefixes: Add CTCISZ Technology Co., LTD.
+>>    dt-bindings: LoongArch: Add CTCISZ Ninenine Pi
+>>    LoongArch: dts: Add initial SoC devicetree for Loongson 2K0300
+>>    LoongArch: dts: Add initial devicetree for CTCISZ Ninenine Pi
+>>
+>>   .../bindings/loongarch/loongson.yaml          |   5 +
+>>   .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>>   arch/loongarch/boot/dts/Makefile              |   1 +
+>>   arch/loongarch/boot/dts/loongson-2k0300.dtsi  | 197 ++++++++++++++++++
+>>   .../boot/dts/ls2k0300-ctcisz-nineninepi.dts   |  41 ++++
+>>   5 files changed, 246 insertions(+)
+>>   create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
+>>   create mode 100644 arch/loongarch/boot/dts/ls2k0300-ctcisz- 
+>> nineninepi.dts
 > 
-> You're welcome. IOW: I can ignore the warning. Great.
->
-
-Right :-)
-
-> I meanwhile forward ported the 5.15 based series that you provided to
-> 6.1 and applied massive testing in our lab. It looks very promising up
-> to now. Our freeze seems solved now.
+> For all the patch sets:
 > 
-
-Good to know this.
-
-> Thanks for you're help! Very much appreciated!
-> 
-
-You are welcome.
-
-> We updated one device in the field today - at customer site. It will
-> take another week until I can report success. Let's hope.
-> 
-> The tests based on 6.14 are also looking good.
-> 
-> To sum up: This series fixes (or seems to fix, let's wait for one more
-> week to be sure) a critical RT issue. Is there a chance that once we
-> made it into mainline that we see (official) backports? 6.12 or 6.1
-> would be nice.
-
-I don't think there will be official backports if this series entered
-mainline because stable kernels only take fixes while this series changed
-throttle behavior dramatically. Of course, this is just my personal
-view, and the maintainer will make the final decision.
+> Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
+I'm sorry. As there is no consensus yet on the name
+of the development board, could you please refrain
+from picking my R_B until this discussion is completed?
+Thank you so much for your understanding and cooperation!
 
 Thanks,
-Aaron
+Yanteng
+> 
+> 
+> Thanks,
+> Yanteng
+>>
+> 
+
