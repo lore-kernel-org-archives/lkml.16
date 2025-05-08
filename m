@@ -1,46 +1,46 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2055.outbound.protection.outlook.com [40.107.220.55])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2082.outbound.protection.outlook.com [40.107.237.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB9921420E;
-	Thu,  8 May 2025 05:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C0320E000;
+	Thu,  8 May 2025 05:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.82
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746680479; cv=fail; b=Y//jvj9zOiiNKLNyx8MDzIEsZ+iGMU6PzeOmTCseCujVIQaopVkDKqbLIXHvEjSw0bk8VayvSj1rmRO64Vx12Ilb5t3JrdSz8dOZnla8OuiXe/DUQXOGdGfHwkbVaWUkubZpPKER5JG9O6TvDfxltN/nYnQMUC/iWhA3I1eHUGs=
+	t=1746680478; cv=fail; b=SC5tfpCYiHdIfnvRaL+u8SgGcia3U0Efti0NX2fDPCSSYQ9wHYXAr5fdLLqgzrdWG5GGuTE3WjWFv3EPOM03t4XfU/Ye2HuZjQQczUoHVfwv97zQ7VNRccVZNPIkbJc0ekflnhq0HmZUuerpgd6XXR/U8Erqynx7urLjPGFRB3I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746680479; c=relaxed/simple;
-	bh=PTEdx4lWog3nfKCGYkKz4jfJEM/kgGgtH/KEgs7Hkrc=;
+	s=arc-20240116; t=1746680478; c=relaxed/simple;
+	bh=Pj7th5Kk1LbaOdfP8F1QmbaGJ9tUVaLO645VYNwWftY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t9b7ix5liu3QAL4JhB1Fq+DTuS6x2QHYaMtlSH75YdXqd3GvgjeivcTYDxhbtexkcwqKHvj53LyKzeG4MN3XGNZBwn/OYIazFn0KRFvXhKGeme1IQwuuxrSsnqpbrXfxZxoaEhvWGI85Tnd9uIjySyfMfQ7NxaDr3OHW+EJ0Wyw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3lvI9UAh; arc=fail smtp.client-ip=40.107.220.55
+	 MIME-Version:Content-Type; b=TmImhuX4vVXK0z8q2+0aflwTkBW8hy/4okLVEDTG/C/ptFT8JbenyuyRrxirYkidMP37/A3sUcOY9WatIIzUwQhmeCAgaAkWVcUfJo6KAA6I1WwMbQ8iAuNb+rcMxxIEzfR0AbDbAP4t1/GJte4w4Gk6zmUk7KxILJGkHpOt1do=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1DXAMwd2; arc=fail smtp.client-ip=40.107.237.82
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3lvI9UAh"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1DXAMwd2"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DpnOwe00b4PJDTpnSq/V9GxRcUhHneooOQpUffwLfdoAM4Kakg4cWXC7S3XfqVHlHTUv9eM6nV2E3/VxIxFJIJKBLu5gs60DvOCvQuiu7c42FqiIV8JyPx2MWGyGuMDd4ZwRLtC2E84GzZW6Z5D4gAALLN7mOU1IUDFcM4dyrncvOYFwWIhvG5h1y7IIBIwIWHjNHrVEWS31TTucRj7icnx1xmZhwi2+0dqo4IwbVfoo0hkv4AnAf9+PjbHXm5Z/HRH+G0xtdAdTZr9h0Ntk4vWN8xhBYbEeUZBFpK/6z9XtKHeTMzRbPGp0uB0J3IiJ+8CgknTi9a2QF1HaQwIcAA==
+ b=YtV+nKP41TQ//GN+EoRTI27bkBrt+Nk9QYU/WV/qaYHDkDQVLSbe9xRTP5YTZ/s5qZUgoiht1+Ynck9s7d1nr4FC+TcNkqqos4NzlM+3y9FLCKgLvp4rEal0BJ2pWUalUdxkVQjDaK8/YP98AubC25O886A97oZ3/2R8d9kvDc50F/tLqaQ6l2G/eKaAlR0n8zVakH2QAWQHbJOEknCkgXxn9V2YYRVQeeBg1kJeCXBo/MoXM1Lzo+6MvyxR298NBDIJgVEheUPh4UbTqzotlQHtp0PhM3rS00YN5Th7ofHqR7mMZHlybDQjd5NKvJITPSChFSBX3byRXPmSKL8olg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8Kfxj/MU57YdTuxCw6SyI+yUvYE0RsZ3yRGZK2i0fP4=;
- b=BnAvaNGBPlqV1R6R9R02RRCJzFcNHOgnfWyQncwKEs5OHX6dJ7w0wULXgq7kMI8SiBx0mmdAFmRaB/8F6wUiiUERHM263kIeD2O+MpKnB4HC0iT+1Hf7WFmU1nJnkfePh6mpjy9laMgr+gP4M6HiN0bFTwXvdLPGSSvdx85YzWkhmlKwQI6IZR9CE66FWd2d50g0Oo9r92alJs+Xq1HgOKlNus1p7oIMoCoGvinCgTpG4tvyNjOuzOjPS8d/CRHYOY3NsPDAi/dbolzafYfhBcowSqvYdm11H5/Jrp2fEzfuBW25knPJX2Ww5Wkr1s66AZdu4RzZuJwjr1HVhNapJw==
+ bh=vrmTijwsrplb1XYR1omfQow2aYPsKYWefZ1HrQbDvBQ=;
+ b=e5IuubaJ3Yy3AWQm6giPyiREpQfJOvlfmxRWpFS8I/uMFGfLTvDez5mKN0vWlmAecYJ18AA+kT05kmK8M5BkRALnqlz5E8HFr8LiSC6n6YHVVBBbSrEWwJL3RyWwAeFJa9cuKTiREed9smcQemnH2SYQlgMnGaaOiDfDkIygV6/BEXP09v1pPQ9OsZNYzlHwc7VgUWPlI7cCkI5lGbwjav8UsUCygnoGaPe3LxeeFonmQTXbzayUKfOIBBUvvcA0vQ4qmmQ+6gDhhxDkrp5ukl0Kezz03gAHxTdaEeUwjxcUzbPlg8D5h1+mps/VUchWqnol9mJH74IRzWwJBzCGlg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=davemloft.net smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8Kfxj/MU57YdTuxCw6SyI+yUvYE0RsZ3yRGZK2i0fP4=;
- b=3lvI9UAhfW8MZ8usiO/68vsgP8xf9p1TSMD+XXiqOa9bqLEqPALGBllEy9jm2h9IfBt3OrVRG2wBzSpAY4r6gb6Lg42x+YqvGyXkO/fO/L6ZIjN8fVkOdkvm5OIKTokFHta9UWv96hBneSrbhb3ZLb2tNl2OhSJEGEyxhADjypY=
-Received: from PH7P220CA0152.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:33b::10)
- by DS2PR12MB9638.namprd12.prod.outlook.com (2603:10b6:8:27b::13) with
+ bh=vrmTijwsrplb1XYR1omfQow2aYPsKYWefZ1HrQbDvBQ=;
+ b=1DXAMwd2tcgtr1XDYnbMrF8idwNVjAdIAKomqNhqocboycf/1qhEI7yzUA0AqMPwsRnF18yyhKvw0kLnGlZhclKecN4p8gVaPOZ7V08B2/1SWVcUKgb3C4S01AL/J8/4ixkACCB6PQofmR/QnTiX5JqiVLsz8G9VDKTi9B02y+E=
+Received: from PH7P220CA0155.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:33b::8)
+ by CYYPR12MB8890.namprd12.prod.outlook.com (2603:10b6:930:c7::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Thu, 8 May
- 2025 05:01:12 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Thu, 8 May
+ 2025 05:01:06 +0000
 Received: from CY4PEPF0000FCC4.namprd03.prod.outlook.com
- (2603:10b6:510:33b:cafe::56) by PH7P220CA0152.outlook.office365.com
- (2603:10b6:510:33b::10) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:510:33b:cafe::78) by PH7P220CA0155.outlook.office365.com
+ (2603:10b6:510:33b::8) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.32 via Frontend Transport; Thu,
- 8 May 2025 05:01:11 +0000
+ 8 May 2025 05:01:06 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,14 +50,18 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  CY4PEPF0000FCC4.mail.protection.outlook.com (10.167.242.106) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Thu, 8 May 2025 05:01:11 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ 15.20.8722.18 via Frontend Transport; Thu, 8 May 2025 05:01:06 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 8 May
- 2025 00:01:09 -0500
+ 2025 00:01:00 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 8 May
+ 2025 00:01:00 -0500
 Received: from xhdipdslab61.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Thu, 8 May 2025 00:01:05 -0500
+ Transport; Thu, 8 May 2025 00:00:56 -0500
 From: Abhijit Gangurde <abhijit.gangurde@amd.com>
 To: <shannon.nelson@amd.com>, <brett.creeley@amd.com>, <davem@davemloft.net>,
 	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
@@ -65,10 +69,11 @@ To: <shannon.nelson@amd.com>, <brett.creeley@amd.com>, <davem@davemloft.net>,
 CC: <allen.hubbe@amd.com>, <nikhil.agarwal@amd.com>,
 	<linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
 	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Abhijit Gangurde
-	<abhijit.gangurde@amd.com>, Andrew Boyer <andrew.boyer@amd.com>
-Subject: [PATCH v2 08/14] RDMA/ionic: Register auxiliary module for ionic ethernet adapter
-Date: Thu, 8 May 2025 10:29:51 +0530
-Message-ID: <20250508045957.2823318-9-abhijit.gangurde@amd.com>
+	<abhijit.gangurde@amd.com>, =?UTF-8?q?Pablo=20Casc=C3=B3n?=
+	<pablo.cascon@amd.com>
+Subject: [PATCH v2 06/14] net: ionic: Provide doorbell and CMB region information
+Date: Thu, 8 May 2025 10:29:49 +0530
+Message-ID: <20250508045957.2823318-7-abhijit.gangurde@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250508045957.2823318-1-abhijit.gangurde@amd.com>
 References: <20250508045957.2823318-1-abhijit.gangurde@amd.com>
@@ -78,450 +83,675 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: abhijit.gangurde@amd.com does not
+Received-SPF: None (SATLEXMB05.amd.com: abhijit.gangurde@amd.com does not
  designate permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC4:EE_|DS2PR12MB9638:EE_
-X-MS-Office365-Filtering-Correlation-Id: 49b859cc-26de-4e1d-53fb-08dd8ded5a46
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC4:EE_|CYYPR12MB8890:EE_
+X-MS-Office365-Filtering-Correlation-Id: a3d39bb1-5ab0-4ce3-e4a3-08dd8ded56f7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|7416014|36860700013|921020;
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|7416014|376014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6n9nwxnQbX75leGq7YiPZzdf5C1GTS5FXlfpvCT8FplqVnzCuNcZeZfqVxh6?=
- =?us-ascii?Q?3awJ07fWRt1HsHQfJ2AWdLYUMWIZYhBjczaFcYryUqDF8An7VCTu4U7lZXNq?=
- =?us-ascii?Q?+ThsMrOcpmICheBZPjD5atBq06/lcWljTMNkTgfMUrCnefEO5JwIYRqMiDEF?=
- =?us-ascii?Q?A/j2Wv+m5WcYHoq9wX/hmHgriAWg1iPFCo1LJnFV+M7WqcUfXR5A5dq2zkve?=
- =?us-ascii?Q?0/wg7pv9dDPV4gGUGWJB0Q3mmVRSc2FOghKugFXl0yJciLHMiiXo08I0Lrzi?=
- =?us-ascii?Q?l0lIzFmPz97BCpMC4HxI+hpHT9o5OFHzlGRyPvwc6dorPyjqRP03XQ5tgKZy?=
- =?us-ascii?Q?bZf3qkVcbh4IRAk6EqElc8rHmSlMsHfidOT2BBxZWNLlm0HMqerg0NEL/kyc?=
- =?us-ascii?Q?Ar1CwVZceRK2X+H1CuTxf3ED68DUmDYX5oCNrj8px/tR5CAA6iNRWLjkVCN7?=
- =?us-ascii?Q?OYmwWtgY96uBJjEhISXjQ4RPeZ0spOEmR1tftSrv4QV51/q9pcbVEBUyEee6?=
- =?us-ascii?Q?Fl+h5FUg4BKctf0GaSI0QXfoCfD3AVZdiOyNKWKYOauqwJGzKuoIc2BX3pMH?=
- =?us-ascii?Q?oWx+59ss8RHfuMpNOiduvi9tmGXI4x7dMGXgXFlIfoKf9uc/eMR8Rhh5DQ5j?=
- =?us-ascii?Q?j8Yu6eqE/DqlzAzyRO6ZVQe7KZo/kX9n6ovV09AI8y1xF+EiQqhM6PVMzv4R?=
- =?us-ascii?Q?3fDmodoC2QU6Eo6f1W8Txg4zWjn5/n7z3kR8VFQxqO1j3HlupiBfvMXmUELE?=
- =?us-ascii?Q?2Lp7NgOhi5LGrMjbawM2D8ZhIx0jEUdeOkJ9ZxtgKBfxVqoLcpaZbLDO90by?=
- =?us-ascii?Q?wTqwo8y6bdr1PpOFDR1R+XEXNcSM8QID5Ny+Vkxqj4xWDgvf8TbV33Iw9gSr?=
- =?us-ascii?Q?uH8ERevzexI9ZoanZ7hSUZCqSeS+sw3ICYAlQGH3fTTmTmq4fFM8iHZLC38g?=
- =?us-ascii?Q?riyY/WsmhjBE+oYnsRsYwj9A3+6SHY85eDHkqU8CswUExAqPpEGXMrD9avdp?=
- =?us-ascii?Q?NFbw6iA9CZGYewSg5gxLAvrk2yiq5yoBw+bYKXGugQWILkJEtu1yGZJ/qIi0?=
- =?us-ascii?Q?sk9Yb0gZvhfSl2UJUgIyM3B3heCKqpY5J8vbpCU7pPAPveKahNmqfR1mIUvI?=
- =?us-ascii?Q?/D6ZQ8R6zbPRJek5BfeLvTfcPSJpDgbvr5xQaccK6tg/uMuIh5cJVyHhkvFw?=
- =?us-ascii?Q?3Z9XtOGQoLFtD9/tfCAGuBLwf/vxBqBZ0XpNRnUFVX8jG3qxEHj/uFyWtAVb?=
- =?us-ascii?Q?aDZK9T6AF3rBOigZhM/uQR3QJ99Yy09HaON3KSBwEtXXDwKyfiDRmjFVkTs2?=
- =?us-ascii?Q?j3Tk7PQk4R0d5sT4r249VzHHnzk6JLIaALkfQVZTFCI8STwYhj1vipE/dpZr?=
- =?us-ascii?Q?kywFWjidYeBKJMLyWI7vEKlHLIRBYCTeZsstF0swjzMLtGAWc/9/wsgAcNPz?=
- =?us-ascii?Q?A4wV6zSn2p+hXcaGPltMTDoPhyZ/6aRjKrOw0Lm+Ql7ifM6ffqZKBDYAR71p?=
- =?us-ascii?Q?COVFphx9ht/bg2UGx1d+oeeGuzP1Res4Tthla27VjTaP5IPRrPTkdkbVPw?=
- =?us-ascii?Q?=3D=3D?=
+	=?utf-8?B?bHJRblBJMWVjTlZORG8vZk9ZeG8rK2Vkdk1nckpZSzNsWVAvWVNMYnBybzVY?=
+ =?utf-8?B?YmNPS2dWSEJKZExuTlJ3L1ZoTGRuVjJmRjNNR21EWWpOV0YzNW04V3pvNEFu?=
+ =?utf-8?B?amZhbXZET2d3UUdTRW0wOFp0cTZsL21paHJNcUQ1aVYxM2hId1dsaThzWERF?=
+ =?utf-8?B?bEE2SWNVSGcyS3l1a2VRa3RqQWFkRnRoWStHYTJha1NwSnlCVWFubXVEZWxS?=
+ =?utf-8?B?VG1zVFlEWXk3MWlIMFBKMURudTNoclIzaVpmbHF6M3FVekNBdW4wUzNoNnJE?=
+ =?utf-8?B?WkoyUnQ0b0hWVm94NGowaGN1Zk1ZZzczZjBiZ0M3V2Y0UitEMkNEVVdvRlRp?=
+ =?utf-8?B?Nk5KSjV6Vis2aGpyQTl5ZUpLbWNySVVoNmVrRE9oeUVuMkpteUVUOWltNEVQ?=
+ =?utf-8?B?UUNJYmhjT3N0bzZRNzhla3BuMmk1TWpCT01nNWx3aEdhdDdVYlpiRFp6QkRs?=
+ =?utf-8?B?SDlldlZFNUE5Z2ZicHc4UjBieXQwOVZTL0JrZmFUZDd6bUNPaEg3R2VJTm9u?=
+ =?utf-8?B?RVVXdVllZDRnOHArSnB4b0RTQ3pUQk00QTI2Wjc4dTlDcEtjREVlZEdyWDkx?=
+ =?utf-8?B?VlY1Skd2b3VsRHdRaUt6MjY3Q25kbmdneUZDakhHRnRDYk92alZtWk13TGZl?=
+ =?utf-8?B?dHJ3V2VyMGFEekZ5VTVFaVk4aHVNREkrSXBhdklkL0pkSDVtV0ZyNzBldVhJ?=
+ =?utf-8?B?anJFTWsrSDZqbFQvUG4vb2N4ajlBOHFLNWs5Vyt4WHBtcW9TZFVVU25GSkk4?=
+ =?utf-8?B?TmRxSzI2QWhNeUdDQThuNEphbFhoVCtnczhlUjFOWGVwL3Z5Y3pUaEVkbGRR?=
+ =?utf-8?B?SFQzNlcwcW41Um1hYVAvZ1NyNWY3OFhPclJPQURMMDNTME11OTVhS2U3NjVu?=
+ =?utf-8?B?cHQ1cnhNMm42a3RzaFpSNG10KzRoRGtkL3hmN1k4dk85YThtOWJyY2RkaUIw?=
+ =?utf-8?B?ajF6ZUVDUHFvcmx4WWhxcGZsaTF5ZWcxc2JZQmgzb0hYam5NM2t4d2ZCdjBs?=
+ =?utf-8?B?b2lVK055TkNaejVLaEMvRzVVTVordEhJc1g1emFyZlJJRVNtR3lqNjhqQWJ4?=
+ =?utf-8?B?RmhvY1UxZWJ5aUlkL1l1YjRMdmlZc2U0NWpKWmVtdlcrVXhqTDAvbGFIM1A5?=
+ =?utf-8?B?MHNkblJWcUdIUFJJVitkSitKV01JSDhNSG9uZzV2RnFyYTMzUTUxZEE0ZDI5?=
+ =?utf-8?B?V1B2WFZTUXp5V2JEbjhIblhHMlJOQi9ZdU5FQUdpUVJOYnR3VzMzVXhBcTJD?=
+ =?utf-8?B?S1RoaGZrdVRuRXJTRVVQZDRvc2ZWV0h2MDJkRXFiNDlXR1lxRDQ3bTZrOVlE?=
+ =?utf-8?B?VVF4djM5dHl0NkMxcnZSaTJBaC8zM2dRVno0UTgvT0pjM1NvSVRSRjRNR2Nj?=
+ =?utf-8?B?UlN6VEhUMVhWQ1BKdmkrQ2p6cGpCbkVpdmpFNWRBWE85aXhlT0RHL2MwWmhX?=
+ =?utf-8?B?VGltUnVJczFhTGpzSnVJd0c1MVNYczdKQmlYMCtpbm5HcFE0a0FjVGdjejVM?=
+ =?utf-8?B?QUVlNnQ0ZE8xNmpjcGtRYXlxZjNQTjBTSGJRSll1SmpERzlUQndXamhpMCtF?=
+ =?utf-8?B?YmMvSkxVcFFIdHpORHVKbEF0UXViNlhIQ05yVHJNcXlqY1IwZ0hlK3VZaTRr?=
+ =?utf-8?B?OUd4SWUzTVRJeFh3UDQ1dUdabkRxS2toRlNvQjNuYmRhV01Fa0hGNkpEMkVQ?=
+ =?utf-8?B?S1k4L3RkRW45NUZPWlltbERGaDRBcnZJT2NHaVBZRFNpbDNwKytFODhmV1JT?=
+ =?utf-8?B?ZWs4S0Z5ajQxV0gvSmV0NWs2WmpFOHQvSXY2QXVMNU9kMHBqTUxBSDBRTUxh?=
+ =?utf-8?B?cnlEUzZHRStMUUg1ZDdjMkRDMXdCdnZSUnVpQk4yWnQrM3JDVUg2cDI2SFVj?=
+ =?utf-8?B?ZVVBbU1Nd0Q2aHlwSi9vOVBmdlBoRlRhRm1IUlNhM1dDeHFsK1BabnEzZXlU?=
+ =?utf-8?B?M09icHhKREFYb3c0ZjFWU0svT2JtL1F3c0l6WDdoN2hZWVBZb25rLzRWZ3h6?=
+ =?utf-8?B?SzdTbHRSSy9WTzZBYjhqNXc3R3hEWHdTZHNQdTZBRGYxZkF0L3lMcE1vK3Vs?=
+ =?utf-8?B?VXhaTGsxWmZ6WVI3eGk1eUVRZVdpTXg0QzFuQT09?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(7416014)(36860700013)(921020);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 05:01:11.6356
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 05:01:06.0886
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49b859cc-26de-4e1d-53fb-08dd8ded5a46
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3d39bb1-5ab0-4ce3-e4a3-08dd8ded56f7
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	CY4PEPF0000FCC4.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS2PR12MB9638
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8890
 
-Register auxiliary module to create ibdevice for ionic
-ethernet adapter.
+The RDMA device needs information of controller memory bar and
+doorbell capability to share with user context. Discover CMB regions
+and express doorbell capabilities on device init.
 
-Co-developed-by: Andrew Boyer <andrew.boyer@amd.com>
-Signed-off-by: Andrew Boyer <andrew.boyer@amd.com>
+Reviewed-by: Shannon Nelson <shannon.nelson@amd.com>
+Co-developed-by: Pablo Cascón <pablo.cascon@amd.com>
+Signed-off-by: Pablo Cascón <pablo.cascon@amd.com>
 Co-developed-by: Allen Hubbe <allen.hubbe@amd.com>
 Signed-off-by: Allen Hubbe <allen.hubbe@amd.com>
 Signed-off-by: Abhijit Gangurde <abhijit.gangurde@amd.com>
 ---
-v1->v2
-  - Removed netdev references from ionic RDMA driver
-  - Moved to ionic_lif* instead of void* to convey information between
-    aux devices and drivers.
+ .../net/ethernet/pensando/ionic/ionic_api.h   |  22 ++
+ .../ethernet/pensando/ionic/ionic_bus_pci.c   |   2 +
+ .../net/ethernet/pensando/ionic/ionic_dev.c   | 270 +++++++++++++++++-
+ .../net/ethernet/pensando/ionic/ionic_dev.h   |  14 +-
+ .../net/ethernet/pensando/ionic/ionic_if.h    |  89 ++++++
+ .../net/ethernet/pensando/ionic/ionic_lif.c   |   2 +-
+ 6 files changed, 381 insertions(+), 18 deletions(-)
 
- drivers/infiniband/hw/ionic/ionic_ibdev.c   | 135 ++++++++++++++++++++
- drivers/infiniband/hw/ionic/ionic_ibdev.h   |  21 +++
- drivers/infiniband/hw/ionic/ionic_lif_cfg.c | 121 ++++++++++++++++++
- drivers/infiniband/hw/ionic/ionic_lif_cfg.h |  65 ++++++++++
- 4 files changed, 342 insertions(+)
- create mode 100644 drivers/infiniband/hw/ionic/ionic_ibdev.c
- create mode 100644 drivers/infiniband/hw/ionic/ionic_ibdev.h
- create mode 100644 drivers/infiniband/hw/ionic/ionic_lif_cfg.c
- create mode 100644 drivers/infiniband/hw/ionic/ionic_lif_cfg.h
-
-diff --git a/drivers/infiniband/hw/ionic/ionic_ibdev.c b/drivers/infiniband/hw/ionic/ionic_ibdev.c
-new file mode 100644
-index 000000000000..ca047a789378
---- /dev/null
-+++ b/drivers/infiniband/hw/ionic/ionic_ibdev.c
-@@ -0,0 +1,135 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (C) 2018-2025, Advanced Micro Devices, Inc. */
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_api.h b/drivers/net/ethernet/pensando/ionic/ionic_api.h
+index 5fd23aa8c5a1..bd88666836b8 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_api.h
++++ b/drivers/net/ethernet/pensando/ionic/ionic_api.h
+@@ -106,4 +106,26 @@ int ionic_intr_alloc(struct ionic_lif *lif, struct ionic_intr_info *intr);
+  */
+ void ionic_intr_free(struct ionic_lif *lif, int intr);
+ 
++/**
++ * ionic_get_cmb - Reserve cmb pages
++ * @lif:         Logical interface
++ * @pgid:        First page index
++ * @pgaddr:      First page bus addr (contiguous)
++ * @order:       Log base two number of pages (PAGE_SIZE)
++ * @stride_log2: Size of stride to determine CMB pool
++ * @expdb:       Will be set to true if this CMB region has expdb enabled
++ *
++ * Return: zero or negative error status
++ */
++int ionic_get_cmb(struct ionic_lif *lif, u32 *pgid, phys_addr_t *pgaddr,
++		  int order, u8 stride_log2, bool *expdb);
 +
-+#include <linux/module.h>
-+#include <linux/printk.h>
-+#include <net/addrconf.h>
++/**
++ * ionic_put_cmb - Release cmb pages
++ * @lif:        Logical interface
++ * @pgid:       First page index
++ * @order:      Log base two number of pages (PAGE_SIZE)
++ */
++void ionic_put_cmb(struct ionic_lif *lif, u32 pgid, int order);
 +
-+#include "ionic_ibdev.h"
+ #endif /* _IONIC_API_H_ */
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_bus_pci.c b/drivers/net/ethernet/pensando/ionic/ionic_bus_pci.c
+index bb75044dfb82..4f13dc908ed8 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_bus_pci.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_bus_pci.c
+@@ -272,6 +272,8 @@ static int ionic_setup_one(struct ionic *ionic)
+ 	}
+ 	ionic_debugfs_add_ident(ionic);
+ 
++	ionic_map_cmb(ionic);
 +
-+#define DRIVER_DESCRIPTION "AMD Pensando RoCE HCA driver"
-+#define DEVICE_DESCRIPTION "AMD Pensando RoCE HCA"
-+
-+MODULE_AUTHOR("Allen Hubbe <allen.hubbe@amd.com>");
-+MODULE_DESCRIPTION(DRIVER_DESCRIPTION);
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("NET_IONIC");
-+
-+static const struct auxiliary_device_id ionic_aux_id_table[] = {
-+	{ .name = "ionic.rdma", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(auxiliary, ionic_aux_id_table);
-+
-+static void ionic_destroy_ibdev(struct ionic_ibdev *dev)
+ 	err = ionic_init(ionic);
+ 	if (err) {
+ 		dev_err(dev, "Cannot init device: %d, aborting\n", err);
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_dev.c b/drivers/net/ethernet/pensando/ionic/ionic_dev.c
+index 57edcde9e6f8..c4d1ecb2d7e4 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_dev.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_dev.c
+@@ -199,13 +199,201 @@ void ionic_init_devinfo(struct ionic *ionic)
+ 	dev_dbg(ionic->dev, "fw_version %s\n", idev->dev_info.fw_version);
+ }
+ 
++static void ionic_map_disc_cmb(struct ionic *ionic)
 +{
-+	ib_unregister_device(&dev->ibdev);
-+	ib_dealloc_device(&dev->ibdev);
-+}
++	struct ionic_identity *ident = &ionic->ident;
++	u32 length_reg0, length, offset, num_regions;
++	struct ionic_dev_bar *bar = ionic->bars;
++	struct ionic_dev *idev = &ionic->idev;
++	struct device *dev = ionic->dev;
++	int err, sz, i;
++	u64 end;
 +
-+static struct ionic_ibdev *ionic_create_ibdev(struct ionic_aux_dev *ionic_adev)
-+{
-+	struct ib_device *ibdev;
-+	struct ionic_ibdev *dev;
-+	int rc;
++	mutex_lock(&ionic->dev_cmd_lock);
 +
-+	rc = ionic_version_check(&ionic_adev->adev.dev, ionic_adev->lif);
-+	if (rc)
-+		goto err_dev;
++	ionic_dev_cmd_discover_cmb(idev);
++	err = ionic_dev_cmd_wait(ionic, DEVCMD_TIMEOUT);
++	if (!err) {
++		sz = min(sizeof(ident->cmb_layout),
++			 sizeof(idev->dev_cmd_regs->data));
++		memcpy_fromio(&ident->cmb_layout,
++			      &idev->dev_cmd_regs->data, sz);
++	}
++	mutex_unlock(&ionic->dev_cmd_lock);
 +
-+	dev = ib_alloc_device(ionic_ibdev, ibdev);
-+	if (!dev) {
-+		rc = -ENOMEM;
-+		goto err_dev;
++	if (err) {
++		dev_warn(dev, "Cannot discover CMB layout, disabling CMB\n");
++		return;
 +	}
 +
-+	ionic_fill_lif_cfg(ionic_adev->lif, &dev->lif_cfg);
++	bar += 2;
 +
-+	ibdev = &dev->ibdev;
-+	ibdev->dev.parent = dev->lif_cfg.hwdev;
++	num_regions = le32_to_cpu(ident->cmb_layout.num_regions);
++	if (!num_regions || num_regions > IONIC_MAX_CMB_REGIONS) {
++		dev_warn(dev, "Invalid number of CMB entries (%d)\n",
++			 num_regions);
++		return;
++	}
 +
-+	strscpy(ibdev->name, "ionic_%d", IB_DEVICE_NAME_MAX);
-+	strscpy(ibdev->node_desc, DEVICE_DESCRIPTION, IB_DEVICE_NODE_DESC_MAX);
++	dev_dbg(dev, "ionic_cmb_layout_identity num_regions %d flags %x:\n",
++		num_regions, ident->cmb_layout.flags);
 +
-+	ibdev->node_type = RDMA_NODE_IB_CA;
-+	ibdev->phys_port_cnt = 1;
++	for (i = 0; i < num_regions; i++) {
++		offset = le32_to_cpu(ident->cmb_layout.region[i].offset);
++		length = le32_to_cpu(ident->cmb_layout.region[i].length);
++		end = offset + length;
 +
-+	/* the first two eq are reserved for async events */
-+	ibdev->num_comp_vectors = dev->lif_cfg.eq_count - 2;
++		dev_dbg(dev, "CMB entry %d: bar_num %u cmb_type %u offset %x length %u\n",
++			i, ident->cmb_layout.region[i].bar_num,
++			ident->cmb_layout.region[i].cmb_type,
++			offset, length);
 +
-+	addrconf_ifid_eui48((u8 *)&ibdev->node_guid,
-+			    ionic_lif_netdev(ionic_adev->lif));
++		if (end > (bar->len >> IONIC_CMB_SHIFT_64K)) {
++			dev_warn(dev, "Out of bounds CMB region %d offset %x length %u\n",
++				 i, offset, length);
++			return;
++		}
++	}
 +
-+	rc = ib_device_set_netdev(ibdev, ionic_lif_netdev(ionic_adev->lif), 1);
-+	if (rc)
-+		goto err_admin;
++	/* if first entry matches PCI config, expdb is not supported */
++	if (ident->cmb_layout.region[0].bar_num == bar->res_index &&
++	    le32_to_cpu(ident->cmb_layout.region[0].length) == bar->len &&
++	    !ident->cmb_layout.region[0].offset) {
++		dev_warn(dev, "No CMB mapping discovered\n");
++		return;
++	}
 +
-+	rc = ib_register_device(ibdev, "ionic_%d", ibdev->dev.parent);
-+	if (rc)
-+		goto err_register;
++	/* process first entry for regular mapping */
++	length_reg0 = le32_to_cpu(ident->cmb_layout.region[0].length);
++	if (!length_reg0) {
++		dev_warn(dev, "region len = 0. No CMB mapping discovered\n");
++		return;
++	}
 +
-+	return dev;
++	/* Verify first entry size matches expected 8MB size (in 64KB pages) */
++	if (length_reg0 != IONIC_BAR2_CMB_ENTRY_SIZE >> IONIC_CMB_SHIFT_64K) {
++		dev_warn(dev, "Unexpected CMB size in entry 0: %u pages\n",
++			 length_reg0);
++		return;
++	}
 +
-+err_register:
-+err_admin:
-+	ib_dealloc_device(&dev->ibdev);
-+err_dev:
-+	return ERR_PTR(rc);
++	sz = BITS_TO_LONGS((length_reg0 << IONIC_CMB_SHIFT_64K) /
++			    PAGE_SIZE) * sizeof(long);
++	idev->cmb_inuse = kzalloc(sz, GFP_KERNEL);
++	if (!idev->cmb_inuse) {
++		dev_warn(dev, "No memory for CMB, disabling\n");
++		idev->phy_cmb_pages = 0;
++		idev->phy_cmb_expdb64_pages = 0;
++		idev->phy_cmb_expdb128_pages = 0;
++		idev->phy_cmb_expdb256_pages = 0;
++		idev->phy_cmb_expdb512_pages = 0;
++		idev->cmb_npages = 0;
++		return;
++	}
++
++	for (i = 0; i < num_regions; i++) {
++		/* check this region matches first region length as to
++		 * ease implementation
++		 */
++		if (le32_to_cpu(ident->cmb_layout.region[i].length) !=
++		    length_reg0)
++			continue;
++
++		offset = le32_to_cpu(ident->cmb_layout.region[i].offset);
++
++		switch (ident->cmb_layout.region[i].cmb_type) {
++		case IONIC_CMB_TYPE_DEVMEM:
++			idev->phy_cmb_pages = bar->bus_addr + offset;
++			idev->cmb_npages =
++			    (length_reg0 << IONIC_CMB_SHIFT_64K) / PAGE_SIZE;
++			dev_dbg(dev, "regular cmb mapping: bar->bus_addr %pa region[%d].length %u\n",
++				&bar->bus_addr, i, length);
++			dev_dbg(dev, "idev->phy_cmb_pages %pad, idev->cmb_npages %u\n",
++				&idev->phy_cmb_pages, idev->cmb_npages);
++			break;
++
++		case IONIC_CMB_TYPE_EXPDB64:
++			idev->phy_cmb_expdb64_pages =
++				bar->bus_addr + (offset << IONIC_CMB_SHIFT_64K);
++			dev_dbg(dev, "idev->phy_cmb_expdb64_pages %pad\n",
++				&idev->phy_cmb_expdb64_pages);
++			break;
++
++		case IONIC_CMB_TYPE_EXPDB128:
++			idev->phy_cmb_expdb128_pages =
++				bar->bus_addr + (offset << IONIC_CMB_SHIFT_64K);
++			dev_dbg(dev, "idev->phy_cmb_expdb128_pages %pad\n",
++				&idev->phy_cmb_expdb128_pages);
++			break;
++
++		case IONIC_CMB_TYPE_EXPDB256:
++			idev->phy_cmb_expdb256_pages =
++				bar->bus_addr + (offset << IONIC_CMB_SHIFT_64K);
++			dev_dbg(dev, "idev->phy_cmb_expdb256_pages %pad\n",
++				&idev->phy_cmb_expdb256_pages);
++			break;
++
++		case IONIC_CMB_TYPE_EXPDB512:
++			idev->phy_cmb_expdb512_pages =
++				bar->bus_addr + (offset << IONIC_CMB_SHIFT_64K);
++			dev_dbg(dev, "idev->phy_cmb_expdb512_pages %pad\n",
++				&idev->phy_cmb_expdb512_pages);
++			break;
++
++		default:
++			dev_warn(dev, "[%d] Invalid cmb_type (%d)\n",
++				 i, ident->cmb_layout.region[i].cmb_type);
++			break;
++		}
++	}
 +}
 +
-+static int ionic_aux_probe(struct auxiliary_device *adev,
-+			   const struct auxiliary_device_id *id)
++static void ionic_map_classic_cmb(struct ionic *ionic)
 +{
-+	struct ionic_aux_dev *ionic_adev;
-+	struct ionic_ibdev *dev;
++	struct ionic_dev_bar *bar = ionic->bars;
++	struct ionic_dev *idev = &ionic->idev;
++	struct device *dev = ionic->dev;
++	int sz;
 +
-+	ionic_adev = container_of(adev, struct ionic_aux_dev, adev);
-+	dev = ionic_create_ibdev(ionic_adev);
-+	if (IS_ERR(dev))
-+		return dev_err_probe(&adev->dev, PTR_ERR(dev),
-+				     "Failed to register ibdev\n");
++	bar += 2;
++	/* classic CMB mapping */
++	idev->phy_cmb_pages = bar->bus_addr;
++	idev->cmb_npages = bar->len / PAGE_SIZE;
++	dev_dbg(dev, "classic cmb mapping: bar->bus_addr %pa bar->len %lu\n",
++		&bar->bus_addr, bar->len);
++	dev_dbg(dev, "idev->phy_cmb_pages %pad, idev->cmb_npages %u\n",
++		&idev->phy_cmb_pages, idev->cmb_npages);
 +
-+	auxiliary_set_drvdata(adev, dev);
-+	ibdev_dbg(&dev->ibdev, "registered\n");
-+
-+	return 0;
++	sz = BITS_TO_LONGS(idev->cmb_npages) * sizeof(long);
++	idev->cmb_inuse = kzalloc(sz, GFP_KERNEL);
++	if (!idev->cmb_inuse) {
++		idev->phy_cmb_pages = 0;
++		idev->cmb_npages = 0;
++	}
 +}
 +
-+static void ionic_aux_remove(struct auxiliary_device *adev)
++void ionic_map_cmb(struct ionic *ionic)
 +{
-+	struct ionic_ibdev *dev = auxiliary_get_drvdata(adev);
++	struct pci_dev *pdev = ionic->pdev;
++	struct device *dev = ionic->dev;
 +
-+	dev_dbg(&adev->dev, "unregister ibdev\n");
-+	ionic_destroy_ibdev(dev);
-+	dev_dbg(&adev->dev, "unregistered\n");
-+}
++	if (!(pci_resource_flags(pdev, 4) & IORESOURCE_MEM)) {
++		dev_dbg(dev, "No CMB, disabling\n");
++		return;
++	}
 +
-+static struct auxiliary_driver ionic_aux_r_driver = {
-+	.name = "rdma",
-+	.probe = ionic_aux_probe,
-+	.remove = ionic_aux_remove,
-+	.id_table = ionic_aux_id_table,
-+};
-+
-+static int __init ionic_mod_init(void)
-+{
-+	int rc;
-+
-+	rc = auxiliary_driver_register(&ionic_aux_r_driver);
-+	if (rc)
-+		goto err_aux;
-+
-+	return 0;
-+
-+err_aux:
-+	return rc;
-+}
-+
-+static void __exit ionic_mod_exit(void)
-+{
-+	auxiliary_driver_unregister(&ionic_aux_r_driver);
-+}
-+
-+module_init(ionic_mod_init);
-+module_exit(ionic_mod_exit);
-diff --git a/drivers/infiniband/hw/ionic/ionic_ibdev.h b/drivers/infiniband/hw/ionic/ionic_ibdev.h
-new file mode 100644
-index 000000000000..e13adff390d7
---- /dev/null
-+++ b/drivers/infiniband/hw/ionic/ionic_ibdev.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2018-2025, Advanced Micro Devices, Inc. */
-+
-+#ifndef _IONIC_IBDEV_H_
-+#define _IONIC_IBDEV_H_
-+
-+#include <rdma/ib_verbs.h>
-+#include <ionic_api.h>
-+
-+#include "ionic_lif_cfg.h"
-+
-+#define IONIC_MIN_RDMA_VERSION	0
-+#define IONIC_MAX_RDMA_VERSION	2
-+
-+struct ionic_ibdev {
-+	struct ib_device	ibdev;
-+
-+	struct ionic_lif_cfg	lif_cfg;
-+};
-+
-+#endif /* _IONIC_IBDEV_H_ */
-diff --git a/drivers/infiniband/hw/ionic/ionic_lif_cfg.c b/drivers/infiniband/hw/ionic/ionic_lif_cfg.c
-new file mode 100644
-index 000000000000..a02eb2f5bd45
---- /dev/null
-+++ b/drivers/infiniband/hw/ionic/ionic_lif_cfg.c
-@@ -0,0 +1,121 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (C) 2018-2025, Advanced Micro Devices, Inc. */
-+
-+#include <linux/kernel.h>
-+
-+#include <ionic.h>
-+#include <ionic_lif.h>
-+
-+#include "ionic_lif_cfg.h"
-+
-+#define IONIC_MIN_RDMA_VERSION	0
-+#define IONIC_MAX_RDMA_VERSION	2
-+
-+static u8 ionic_get_expdb(struct ionic_lif *lif)
-+{
-+	u8 expdb_support = 0;
-+
-+	if (lif->ionic->idev.phy_cmb_expdb64_pages)
-+		expdb_support |= IONIC_EXPDB_64B_WQE;
-+	if (lif->ionic->idev.phy_cmb_expdb128_pages)
-+		expdb_support |= IONIC_EXPDB_128B_WQE;
-+	if (lif->ionic->idev.phy_cmb_expdb256_pages)
-+		expdb_support |= IONIC_EXPDB_256B_WQE;
-+	if (lif->ionic->idev.phy_cmb_expdb512_pages)
-+		expdb_support |= IONIC_EXPDB_512B_WQE;
-+
-+	return expdb_support;
-+}
-+
-+void ionic_fill_lif_cfg(struct ionic_lif *lif, struct ionic_lif_cfg *cfg)
-+{
-+	union ionic_lif_identity *ident = &lif->ionic->ident.lif;
-+
-+	cfg->lif = lif;
-+	cfg->hwdev = &lif->ionic->pdev->dev;
-+	cfg->lif_index = lif->index;
-+	cfg->lif_hw_index = lif->hw_index;
-+
-+	cfg->dbid = lif->kern_pid;
-+	cfg->dbid_count = le32_to_cpu(lif->ionic->ident.dev.ndbpgs_per_lif);
-+	cfg->dbpage = lif->kern_dbpage;
-+	cfg->intr_ctrl = lif->ionic->idev.intr_ctrl;
-+
-+	cfg->db_phys = lif->ionic->bars[IONIC_PCI_BAR_DBELL].bus_addr;
-+
-+	if (IONIC_VERSION(ident->rdma.version, ident->rdma.minor_version) >=
-+	    IONIC_VERSION(2, 1))
-+		cfg->page_size_supported =
-+		    cpu_to_le64(ident->rdma.page_size_cap);
++	if (ionic->ident.dev.capabilities & cpu_to_le64(IONIC_DEV_CAP_DISC_CMB))
++		ionic_map_disc_cmb(ionic);
 +	else
-+		cfg->page_size_supported = IONIC_PAGE_SIZE_SUPPORTED;
-+
-+	cfg->rdma_version = ident->rdma.version;
-+	cfg->qp_opcodes = ident->rdma.qp_opcodes;
-+	cfg->admin_opcodes = ident->rdma.admin_opcodes;
-+
-+	cfg->stats_type = cpu_to_le16(ident->rdma.stats_type);
-+	cfg->npts_per_lif = le32_to_cpu(ident->rdma.npts_per_lif);
-+	cfg->nmrs_per_lif = le32_to_cpu(ident->rdma.nmrs_per_lif);
-+	cfg->nahs_per_lif = le32_to_cpu(ident->rdma.nahs_per_lif);
-+
-+	cfg->aq_base = le32_to_cpu(ident->rdma.aq_qtype.qid_base);
-+	cfg->cq_base = le32_to_cpu(ident->rdma.cq_qtype.qid_base);
-+	cfg->eq_base = le32_to_cpu(ident->rdma.eq_qtype.qid_base);
-+
-+	/*
-+	 * ionic_create_rdma_admin() may reduce aq_count or eq_count if
-+	 * it is unable to allocate all that were requested.
-+	 * aq_count is tunable; see ionic_aq_count
-+	 * eq_count is tunable; see ionic_eq_count
-+	 */
-+	cfg->aq_count = le32_to_cpu(ident->rdma.aq_qtype.qid_count);
-+	cfg->eq_count = le32_to_cpu(ident->rdma.eq_qtype.qid_count);
-+	cfg->cq_count = le32_to_cpu(ident->rdma.cq_qtype.qid_count);
-+	cfg->qp_count = le32_to_cpu(ident->rdma.sq_qtype.qid_count);
-+	cfg->dbid_count = le32_to_cpu(lif->ionic->ident.dev.ndbpgs_per_lif);
-+
-+	cfg->aq_qtype = ident->rdma.aq_qtype.qtype;
-+	cfg->sq_qtype = ident->rdma.sq_qtype.qtype;
-+	cfg->rq_qtype = ident->rdma.rq_qtype.qtype;
-+	cfg->cq_qtype = ident->rdma.cq_qtype.qtype;
-+	cfg->eq_qtype = ident->rdma.eq_qtype.qtype;
-+	cfg->udma_qgrp_shift = ident->rdma.udma_shift;
-+	cfg->udma_count = 2;
-+
-+	cfg->max_stride = ident->rdma.max_stride;
-+	cfg->expdb_mask = ionic_get_expdb(lif);
-+
-+	cfg->sq_expdb =
-+	    !!(lif->qtype_info[IONIC_QTYPE_TXQ].features & IONIC_QIDENT_F_EXPDB);
-+	cfg->rq_expdb =
-+	    !!(lif->qtype_info[IONIC_QTYPE_RXQ].features & IONIC_QIDENT_F_EXPDB);
++		ionic_map_classic_cmb(ionic);
 +}
 +
-+struct net_device *ionic_lif_netdev(struct ionic_lif *lif)
+ int ionic_dev_setup(struct ionic *ionic)
+ {
+ 	struct ionic_dev_bar *bar = ionic->bars;
+ 	unsigned int num_bars = ionic->num_bars;
+ 	struct ionic_dev *idev = &ionic->idev;
+ 	struct device *dev = ionic->dev;
+-	int size;
+ 	u32 sig;
+ 	int err;
+ 
+@@ -255,16 +443,11 @@ int ionic_dev_setup(struct ionic *ionic)
+ 	mutex_init(&idev->cmb_inuse_lock);
+ 	if (num_bars < 3 || !ionic->bars[IONIC_PCI_BAR_CMB].len) {
+ 		idev->cmb_inuse = NULL;
++		idev->phy_cmb_pages = 0;
++		idev->cmb_npages = 0;
+ 		return 0;
+ 	}
+ 
+-	idev->phy_cmb_pages = bar->bus_addr;
+-	idev->cmb_npages = bar->len / PAGE_SIZE;
+-	size = BITS_TO_LONGS(idev->cmb_npages) * sizeof(long);
+-	idev->cmb_inuse = kzalloc(size, GFP_KERNEL);
+-	if (!idev->cmb_inuse)
+-		dev_warn(dev, "No memory for CMB, disabling\n");
+-
+ 	return 0;
+ }
+ 
+@@ -277,6 +460,11 @@ void ionic_dev_teardown(struct ionic *ionic)
+ 	idev->phy_cmb_pages = 0;
+ 	idev->cmb_npages = 0;
+ 
++	idev->phy_cmb_expdb64_pages = 0;
++	idev->phy_cmb_expdb128_pages = 0;
++	idev->phy_cmb_expdb256_pages = 0;
++	idev->phy_cmb_expdb512_pages = 0;
++
+ 	if (ionic->wq) {
+ 		destroy_workqueue(ionic->wq);
+ 		ionic->wq = NULL;
+@@ -698,28 +886,79 @@ void ionic_dev_cmd_adminq_init(struct ionic_dev *idev, struct ionic_qcq *qcq,
+ 	ionic_dev_cmd_go(idev, &cmd);
+ }
+ 
++void ionic_dev_cmd_discover_cmb(struct ionic_dev *idev)
 +{
-+	return lif->netdev;
++	union ionic_dev_cmd cmd = {
++		.discover_cmb.opcode = IONIC_CMD_DISCOVER_CMB,
++	};
++
++	ionic_dev_cmd_go(idev, &cmd);
 +}
 +
-+int ionic_version_check(const struct device *dev, struct ionic_lif *lif)
-+{
-+	union ionic_lif_identity *ident = &lif->ionic->ident.lif;
-+	int rc;
+ int ionic_db_page_num(struct ionic_lif *lif, int pid)
+ {
+ 	return (lif->hw_index * lif->dbid_count) + pid;
+ }
+ 
+-int ionic_get_cmb(struct ionic_lif *lif, u32 *pgid, phys_addr_t *pgaddr, int order)
++int ionic_get_cmb(struct ionic_lif *lif, u32 *pgid, phys_addr_t *pgaddr,
++		  int order, u8 stride_log2, bool *expdb)
+ {
+ 	struct ionic_dev *idev = &lif->ionic->idev;
+-	int ret;
++	void __iomem *nonexpdb_pgptr;
++	phys_addr_t nonexpdb_pgaddr;
++	int i, idx;
+ 
+ 	mutex_lock(&idev->cmb_inuse_lock);
+-	ret = bitmap_find_free_region(idev->cmb_inuse, idev->cmb_npages, order);
++	idx = bitmap_find_free_region(idev->cmb_inuse, idev->cmb_npages, order);
+ 	mutex_unlock(&idev->cmb_inuse_lock);
+ 
+-	if (ret < 0)
+-		return ret;
++	if (idx < 0)
++		return idx;
 +
-+	if (ident->rdma.version < IONIC_MIN_RDMA_VERSION ||
-+	    ident->rdma.version > IONIC_MAX_RDMA_VERSION) {
-+		rc = -EINVAL;
-+		dev_err_probe(dev, rc,
-+			      "ionic_rdma: incompatible version, fw ver %u\n",
-+			      ident->rdma.version);
-+		dev_err_probe(dev, rc,
-+			      "ionic_rdma: Driver Min Version %u\n",
-+			      IONIC_MIN_RDMA_VERSION);
-+		dev_err_probe(dev, rc,
-+			      "ionic_rdma: Driver Max Version %u\n",
-+			      IONIC_MAX_RDMA_VERSION);
-+		return rc;
++	*pgid = (u32)idx;
++
++	if (idev->phy_cmb_expdb64_pages &&
++	    stride_log2 == IONIC_EXPDB_64B_WQE_LG2) {
++		*pgaddr = idev->phy_cmb_expdb64_pages + idx * PAGE_SIZE;
++		if (expdb)
++			*expdb = true;
++	} else if (idev->phy_cmb_expdb128_pages &&
++		  stride_log2 == IONIC_EXPDB_128B_WQE_LG2) {
++		*pgaddr = idev->phy_cmb_expdb128_pages + idx * PAGE_SIZE;
++		if (expdb)
++			*expdb = true;
++	} else if (idev->phy_cmb_expdb256_pages &&
++		  stride_log2 == IONIC_EXPDB_256B_WQE_LG2) {
++		*pgaddr = idev->phy_cmb_expdb256_pages + idx * PAGE_SIZE;
++		if (expdb)
++			*expdb = true;
++	} else if (idev->phy_cmb_expdb512_pages &&
++		  stride_log2 == IONIC_EXPDB_512B_WQE_LG2) {
++		*pgaddr = idev->phy_cmb_expdb512_pages + idx * PAGE_SIZE;
++		if (expdb)
++			*expdb = true;
++	} else {
++		*pgaddr = idev->phy_cmb_pages + idx * PAGE_SIZE;
++		if (expdb)
++			*expdb = false;
 +	}
+ 
+-	*pgid = ret;
+-	*pgaddr = idev->phy_cmb_pages + ret * PAGE_SIZE;
++	/* clear the requested CMB region, 1 PAGE_SIZE ioremap at a time */
++	nonexpdb_pgaddr = idev->phy_cmb_pages + idx * PAGE_SIZE;
++	for (i = 0; i < (1 << order); i++) {
++		nonexpdb_pgptr =
++			ioremap_wc(nonexpdb_pgaddr + i * PAGE_SIZE, PAGE_SIZE);
++		if (!nonexpdb_pgptr) {
++			ionic_put_cmb(lif, *pgid, order);
++			return -ENOMEM;
++		}
++		memset_io(nonexpdb_pgptr, 0, PAGE_SIZE);
++		iounmap(nonexpdb_pgptr);
++	}
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_NS(ionic_get_cmb, "NET_IONIC");
+ 
+ void ionic_put_cmb(struct ionic_lif *lif, u32 pgid, int order)
+ {
+@@ -729,6 +968,7 @@ void ionic_put_cmb(struct ionic_lif *lif, u32 pgid, int order)
+ 	bitmap_release_region(idev->cmb_inuse, pgid, order);
+ 	mutex_unlock(&idev->cmb_inuse_lock);
+ }
++EXPORT_SYMBOL_NS(ionic_put_cmb, "NET_IONIC");
+ 
+ int ionic_cq_init(struct ionic_lif *lif, struct ionic_cq *cq,
+ 		  struct ionic_intr_info *intr,
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_dev.h b/drivers/net/ethernet/pensando/ionic/ionic_dev.h
+index 68cf4da3c6b3..35566f97eaea 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_dev.h
++++ b/drivers/net/ethernet/pensando/ionic/ionic_dev.h
+@@ -35,6 +35,11 @@
+ #define IONIC_RX_MIN_DOORBELL_DEADLINE	(HZ / 100)	/* 10ms */
+ #define IONIC_RX_MAX_DOORBELL_DEADLINE	(HZ * 4)	/* 4s */
+ 
++#define IONIC_EXPDB_64B_WQE_LG2		6
++#define IONIC_EXPDB_128B_WQE_LG2	7
++#define IONIC_EXPDB_256B_WQE_LG2	8
++#define IONIC_EXPDB_512B_WQE_LG2	9
 +
-+	return 0;
-+}
-diff --git a/drivers/infiniband/hw/ionic/ionic_lif_cfg.h b/drivers/infiniband/hw/ionic/ionic_lif_cfg.h
-new file mode 100644
-index 000000000000..b095637c54cf
---- /dev/null
-+++ b/drivers/infiniband/hw/ionic/ionic_lif_cfg.h
-@@ -0,0 +1,65 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2018-2025, Advanced Micro Devices, Inc. */
+ struct ionic_dev_bar {
+ 	void __iomem *vaddr;
+ 	phys_addr_t bus_addr;
+@@ -171,6 +176,11 @@ struct ionic_dev {
+ 	dma_addr_t phy_cmb_pages;
+ 	u32 cmb_npages;
+ 
++	dma_addr_t phy_cmb_expdb64_pages;
++	dma_addr_t phy_cmb_expdb128_pages;
++	dma_addr_t phy_cmb_expdb256_pages;
++	dma_addr_t phy_cmb_expdb512_pages;
 +
-+#ifndef _IONIC_LIF_CFG_H_
+ 	u32 port_info_sz;
+ 	struct ionic_port_info *port_info;
+ 	dma_addr_t port_info_pa;
+@@ -351,8 +361,8 @@ void ionic_dev_cmd_adminq_init(struct ionic_dev *idev, struct ionic_qcq *qcq,
+ 
+ int ionic_db_page_num(struct ionic_lif *lif, int pid);
+ 
+-int ionic_get_cmb(struct ionic_lif *lif, u32 *pgid, phys_addr_t *pgaddr, int order);
+-void ionic_put_cmb(struct ionic_lif *lif, u32 pgid, int order);
++void ionic_dev_cmd_discover_cmb(struct ionic_dev *idev);
++void ionic_map_cmb(struct ionic *ionic);
+ 
+ int ionic_cq_init(struct ionic_lif *lif, struct ionic_cq *cq,
+ 		  struct ionic_intr_info *intr,
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_if.h b/drivers/net/ethernet/pensando/ionic/ionic_if.h
+index 02cda3536dcb..2fe96b0cb0ae 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_if.h
++++ b/drivers/net/ethernet/pensando/ionic/ionic_if.h
+@@ -56,6 +56,9 @@ enum ionic_cmd_opcode {
+ 	IONIC_CMD_VF_SETATTR			= 61,
+ 	IONIC_CMD_VF_CTRL			= 62,
+ 
++	/* CMB command */
++	IONIC_CMD_DISCOVER_CMB			= 80,
 +
-+#define IONIC_VERSION(a, b) (((a) << 16) + ((b) << 8))
-+#define IONIC_PAGE_SIZE_SUPPORTED	0x40201000 /* 4kb, 2Mb, 1Gb */
-+
-+#define IONIC_EXPDB_64B_WQE	BIT(0)
-+#define IONIC_EXPDB_128B_WQE	BIT(1)
-+#define IONIC_EXPDB_256B_WQE	BIT(2)
-+#define IONIC_EXPDB_512B_WQE	BIT(3)
-+
-+struct ionic_lif_cfg {
-+	struct device *hwdev;
-+	struct ionic_lif *lif;
-+
-+	int lif_index;
-+	int lif_hw_index;
-+
-+	u32 dbid;
-+	int dbid_count;
-+	u64 __iomem *dbpage;
-+	struct ionic_intr __iomem *intr_ctrl;
-+	phys_addr_t db_phys;
-+
-+	u64 page_size_supported;
-+	u32 npts_per_lif;
-+	u32 nmrs_per_lif;
-+	u32 nahs_per_lif;
-+
-+	u32 aq_base;
-+	u32 cq_base;
-+	u32 eq_base;
-+
-+	int aq_count;
-+	int eq_count;
-+	int cq_count;
-+	int qp_count;
-+
-+	u16 stats_type;
-+	u8 aq_qtype;
-+	u8 sq_qtype;
-+	u8 rq_qtype;
-+	u8 cq_qtype;
-+	u8 eq_qtype;
-+
-+	u8 udma_count;
-+	u8 udma_qgrp_shift;
-+
-+	u8 rdma_version;
-+	u8 qp_opcodes;
-+	u8 admin_opcodes;
-+
-+	u8 max_stride;
-+	bool sq_expdb;
-+	bool rq_expdb;
-+	u8 expdb_mask;
+ 	/* QoS commands */
+ 	IONIC_CMD_QOS_CLASS_IDENTIFY		= 240,
+ 	IONIC_CMD_QOS_CLASS_INIT		= 241,
+@@ -269,9 +272,11 @@ union ionic_drv_identity {
+ /**
+  * enum ionic_dev_capability - Device capabilities
+  * @IONIC_DEV_CAP_VF_CTRL:     Device supports VF ctrl operations
++ * @IONIC_DEV_CAP_DISC_CMB:    Device supports CMB discovery operations
+  */
+ enum ionic_dev_capability {
+ 	IONIC_DEV_CAP_VF_CTRL        = BIT(0),
++	IONIC_DEV_CAP_DISC_CMB       = BIT(1),
+ };
+ 
+ /**
+@@ -395,6 +400,7 @@ enum ionic_logical_qtype {
+  * @IONIC_Q_F_4X_DESC:      Quadruple main descriptor size
+  * @IONIC_Q_F_4X_CQ_DESC:   Quadruple cq descriptor size
+  * @IONIC_Q_F_4X_SG_DESC:   Quadruple sg descriptor size
++ * @IONIC_QIDENT_F_EXPDB:   Queue supports express doorbell
+  */
+ enum ionic_q_feature {
+ 	IONIC_QIDENT_F_CQ		= BIT_ULL(0),
+@@ -407,6 +413,7 @@ enum ionic_q_feature {
+ 	IONIC_Q_F_4X_DESC		= BIT_ULL(7),
+ 	IONIC_Q_F_4X_CQ_DESC		= BIT_ULL(8),
+ 	IONIC_Q_F_4X_SG_DESC		= BIT_ULL(9),
++	IONIC_QIDENT_F_EXPDB		= BIT_ULL(10),
+ };
+ 
+ /**
+@@ -2213,6 +2220,80 @@ struct ionic_vf_ctrl_comp {
+ 	u8      rsvd[15];
+ };
+ 
++/**
++ * struct ionic_discover_cmb_cmd - CMB discovery command
++ * @opcode: Opcode for the command
++ * @rsvd:   Reserved bytes
++ */
++struct ionic_discover_cmb_cmd {
++	u8	opcode;
++	u8	rsvd[63];
 +};
 +
-+int ionic_version_check(const struct device *dev, struct ionic_lif *lif);
-+void ionic_fill_lif_cfg(struct ionic_lif *lif, struct ionic_lif_cfg *cfg);
-+struct net_device *ionic_lif_netdev(struct ionic_lif *lif);
++/**
++ * struct ionic_discover_cmb_comp - CMB discover command completion.
++ * @status: Status of the command (enum ionic_status_code)
++ * @rsvd:   Reserved bytes
++ */
++struct ionic_discover_cmb_comp {
++	u8	status;
++	u8	rsvd[15];
++};
 +
-+#endif /* _IONIC_LIF_CFG_H_ */
++#define IONIC_MAX_CMB_REGIONS	16
++#define IONIC_CMB_SHIFT_64K	16
++
++enum ionic_cmb_type {
++	IONIC_CMB_TYPE_DEVMEM	= 0,
++	IONIC_CMB_TYPE_EXPDB64	= 1,
++	IONIC_CMB_TYPE_EXPDB128	= 2,
++	IONIC_CMB_TYPE_EXPDB256	= 3,
++	IONIC_CMB_TYPE_EXPDB512	= 4,
++};
++
++/**
++ * union ionic_cmb_region - Configuration for CMB region
++ * @bar_num:	CMB mapping number from FW
++ * @cmb_type:	Type of CMB this region describes (enum ionic_cmb_type)
++ * @rsvd:	Reserved
++ * @offset:	Offset within BAR in 64KB pages
++ * @length:	Length of the CMB region
++ * @words:	32-bit words for direct access to the entire region
++ */
++union ionic_cmb_region {
++	struct {
++		u8	bar_num;
++		u8	cmb_type;
++		u8	rsvd[6];
++		__le32	offset;
++		__le32	length;
++	} __packed;
++	__le32  words[4];
++};
++
++/**
++ * union ionic_discover_cmb_identity - CMB layout identity structure
++ * @num_regions:    Number of CMB regions, up to 16
++ * @flags:          Feature and capability bits (0 for express
++ *                  doorbell, 1 for 4K alignment indicator,
++ *                  31-24 for version information)
++ * @region:         CMB mappings region, entry 0 for regular
++ *                  mapping, entries 1-7 for WQE sizes 64,
++ *                  128, 256, 512, 1024, 2048 and 4096 bytes
++ * @words:          Full union buffer size
++ */
++union ionic_discover_cmb_identity {
++	struct {
++		__le32 num_regions;
++#define IONIC_CMB_FLAG_EXPDB	BIT(0)
++#define IONIC_CMB_FLAG_4KALIGN	BIT(1)
++#define IONIC_CMB_FLAG_VERSION	0xff000000
++		__le32 flags;
++		union ionic_cmb_region region[IONIC_MAX_CMB_REGIONS];
++	};
++	__le32 words[478];
++};
++
+ /**
+  * struct ionic_qos_identify_cmd - QoS identify command
+  * @opcode:  opcode
+@@ -3060,6 +3141,8 @@ union ionic_dev_cmd {
+ 	struct ionic_vf_getattr_cmd vf_getattr;
+ 	struct ionic_vf_ctrl_cmd vf_ctrl;
+ 
++	struct ionic_discover_cmb_cmd discover_cmb;
++
+ 	struct ionic_lif_identify_cmd lif_identify;
+ 	struct ionic_lif_init_cmd lif_init;
+ 	struct ionic_lif_reset_cmd lif_reset;
+@@ -3099,6 +3182,8 @@ union ionic_dev_cmd_comp {
+ 	struct ionic_vf_getattr_comp vf_getattr;
+ 	struct ionic_vf_ctrl_comp vf_ctrl;
+ 
++	struct ionic_discover_cmb_comp discover_cmb;
++
+ 	struct ionic_lif_identify_comp lif_identify;
+ 	struct ionic_lif_init_comp lif_init;
+ 	ionic_lif_reset_comp lif_reset;
+@@ -3240,6 +3325,9 @@ union ionic_adminq_comp {
+ #define IONIC_BAR0_DEV_CMD_DATA_REGS_OFFSET	0x0c00
+ #define IONIC_BAR0_INTR_STATUS_OFFSET		0x1000
+ #define IONIC_BAR0_INTR_CTRL_OFFSET		0x2000
++
++/* BAR2 */
++#define IONIC_BAR2_CMB_ENTRY_SIZE		0x800000
+ #define IONIC_DEV_CMD_DONE			0x00000001
+ 
+ #define IONIC_ASIC_TYPE_NONE			0
+@@ -3293,6 +3381,7 @@ struct ionic_identity {
+ 	union ionic_port_identity port;
+ 	union ionic_qos_identity qos;
+ 	union ionic_q_identity txq;
++	union ionic_discover_cmb_identity cmb_layout;
+ };
+ 
+ #endif /* _IONIC_IF_H_ */
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+index f89b458bd20a..1bd2202f263a 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+@@ -673,7 +673,7 @@ static int ionic_qcq_alloc(struct ionic_lif *lif, unsigned int type,
+ 			new->cmb_order = order_base_2(new->cmb_q_size / PAGE_SIZE);
+ 
+ 			err = ionic_get_cmb(lif, &new->cmb_pgid, &new->cmb_q_base_pa,
+-					    new->cmb_order);
++					    new->cmb_order, 0, NULL);
+ 			if (err) {
+ 				netdev_err(lif->netdev,
+ 					   "Cannot allocate queue order %d from cmb: err %d\n",
 -- 
 2.34.1
 
