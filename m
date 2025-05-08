@@ -1,98 +1,132 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0C317D2;
-	Thu,  8 May 2025 10:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99D4BE65
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746699371; cv=none; b=ijY39KXR8uIU9g1B9eTEWuEPiXkCiXOkmm6MaFe3hLd1zZtfmnBYiLp0EeNZULC9Y9GMSlO5vZ330fRPCwQKbaCvEM2jPLhfmAbSmtgTcNA3IQzZdt/4yFwT8nNC0d0aNMMPJlqCJZHRre8K3qS63p+0mZIs0Im567mbDTGssz4=
+	t=1746699516; cv=none; b=o0kqmH+3JvipOSGcc/VrSaopboH+lZquiLlJ1ZB0NxNg0F6Z92aIMTo6OIdGevOPQJuhqV0zb1fdPQ4VshOtEXDEDbipHZKDs7PBz2lvfwK5erS1SeO0nEAxpx+dJ70Uyezo6ulMoEmHopUVEsqNbJbwn+ok/hgY+kgOKx8YIV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746699371; c=relaxed/simple;
-	bh=g9h5dBR2Tsdm0mcREJJsn0oHY2aSXNZVhw/mHH+l0co=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=lAeQrKOcAZM4qn+xfib6vYomXJNy4OVQZEA/1LLiIh/5bKLp5gz25IhSF14al9k8qfBhjrOT6SHnMaoE307coJJeSAt6ABNwDAf1wwFn2tWaaoXKumkLqekkoYrdXcI08jk+zxwiatfes9p1l9hVoqZ4bX3V7fDajqd2DC+TZEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AzTOfDD2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0m/ciSZR; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746699516; c=relaxed/simple;
+	bh=4+5xC11//k7SELncU7TsWsMFz+BlhXNj6YltonqzUPE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=YUioVItfG6V50faDJzz83DTEyxY1sUmPqJpe9DacUI/KmcbaMex5cW4lPERu/JdeAIJcNoR1q5/nCQ6kWNeKWAgppOA08XGb8YbKgtKMsK9mHDt2gqGj5U2t3gQso9+lCr57tqK73kWmgPi8Sjxg4eg8NPmBfH+Km6xd41V1BDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=M9Mtw4vE; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AzTOfDD2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0m/ciSZR"
-Date: Thu, 08 May 2025 10:16:06 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746699367;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=aF/ltaJhvwVmyjwdyXtxwXVYsg5WVaAE27ZAcO+kXgo=;
-	b=AzTOfDD2QzoLSkcVpPLve+qa695CUR9AR349kJN7ya/Bk+SiyGWYPyN8G56zPyZZE9gF6d
-	n2F9gck2jpqBokpIOqTdNQbj4OwtZVRQmffIhdhpkzrMR/PmF4BIwI63Z8IIX1kACz6C0V
-	Vdv1VP7uVIjzr3FpjlnitanB1g7NFxIOtZm10NXUxFU2GtF+ogDayo8jLZjroUx9nxPR2h
-	VPCTR0vhzDncBJ2F80/aL3HqCgea164DPUiR5LlIby3aRsZPoMOT3wy0GDDKRXRMEyAdkR
-	NvggXQpazwRV/CoJqig6OZ0N/11UV5NwjbfMKuHZkmH81uBXJs5y2TcOsE1pGg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746699367;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=aF/ltaJhvwVmyjwdyXtxwXVYsg5WVaAE27ZAcO+kXgo=;
-	b=0m/ciSZRsotRBgudkW8T9KbDkq8wIJdEVNOMG0Al5f9/WThbXoDfugOhLlIsJ0kAFe2NBw
-	CSC4z6Gp60i9gnDA==
-From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: irq/core] genirq/cpuhotplug: Fix up lock guards conversion brainf..t
-Cc: Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="M9Mtw4vE"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 60C6E240101
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:18:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+	t=1746699506; bh=4+5xC11//k7SELncU7TsWsMFz+BlhXNj6YltonqzUPE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=M9Mtw4vEv6bpgKDIz15tCNIk7FQuaUi8d9hjJs/cz6v2WJBYX7otl4N25tkBpSVMq
+	 oRqvxoT0hrbzB3v2NJqjXprgRm+kzIXmI3+YcYN8l1gzCDI4R7JUVqQhh9h9VJO+3e
+	 6I4DGhlY4Hb1PmwmX8qtvNrq2n1Xhum0YwDZYRWmf62ymKKWMhhi0/MbiXV3sWMVak
+	 hy4Md6ac+dlLq10zpVFEFbXemuCEELsiG8g8PcJAv3M5goT/ya13pjjoBBy0C8CTM7
+	 UlltC5vQISPz7Kurw68RtoO1+spffHSRmCL4RGd3I/mS7tE251Lsd6xGAOHPUlgy7Q
+	 kj0b8smd1XHRA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4ZtSl427Mcz6trs;
+	Thu,  8 May 2025 12:18:24 +0200 (CEST)
+From: =?UTF-8?q?Martin=20Kepplinger-Novakovi=C4=87?= <martink@posteo.de>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de
+Cc: kernel@pengutronix.de,
+	festevam@gmail.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Martin=20Kepplinger-Novakovi=C4=87?= <martink@posteo.de>
+Subject: [PATCH] arm64: dts: imx8mp: Enable gpu passive throttling
+Date: Thu,  8 May 2025 10:18:02 +0000
+Message-Id: <20250508101802.489712-1-martink@posteo.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174669936666.406.16351332287608705670.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the irq/core branch of tip:
+Hook up the gpu as a passive cooling device to the thermal zones' alert
+trip point just like the cpu.
 
-Commit-ID:     c855506257063f444044d0a85a2e9ad9ab1c7ecd
-Gitweb:        https://git.kernel.org/tip/c855506257063f444044d0a85a2e9ad9ab1c7ecd
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Thu, 08 May 2025 12:05:38 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 08 May 2025 12:05:38 +02:00
+The gpu here consists of 3D GPU, 2D GPU and NPU.
 
-genirq/cpuhotplug: Fix up lock guards conversion brainf..t
+One way to test would be to set one "alert" trip point low enough
+and watch the cooling device state increase:
 
-The lock guard conversion converted raw_spin_lock_irq() to
-scoped_guard(raw_spinlock), which is obviously bogus and makes lockdep
-mightily unhappy.
+echo 10000 > /sys/class/thermal/thermal_zone0/trip_point_0_temp
+watch cat /sys/class/thermal/cooling_device*/cur_state
 
-Note to self: Copy and pasta without using brain is a patently bad idea.
+And of course set the trip point back to its original value and watch
+the cooling device states jump to 0 again.
 
-Fixes: 88a4df117ad6 ("genirq/cpuhotplug: Convert to lock guards")
-Reported-by: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Martin Kepplinger-Novaković <martink@posteo.de>
 ---
- kernel/irq/cpuhotplug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
-index 7bd4c2a..e77ca6d 100644
---- a/kernel/irq/cpuhotplug.c
-+++ b/kernel/irq/cpuhotplug.c
-@@ -243,7 +243,7 @@ int irq_affinity_online_cpu(unsigned int cpu)
- 	irq_lock_sparse();
- 	for_each_active_irq(irq) {
- 		desc = irq_to_desc(irq);
--		scoped_guard(raw_spinlock, &desc->lock)
-+		scoped_guard(raw_spinlock_irq, &desc->lock)
- 			irq_restore_affinity_of_irq(desc, cpu);
- 	}
- 	irq_unlock_sparse();
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+index 50a07c56faffc..dea9342d071c4 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+@@ -320,7 +320,10 @@ map0 {
+ 						<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ 						<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ 						<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-						<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++						<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&gpu3d THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&gpu2d THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&npu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
+ 			};
+ 		};
+@@ -350,7 +353,10 @@ map0 {
+ 						<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ 						<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ 						<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-						<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++						<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&gpu3d THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&gpu2d THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&npu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
+ 			};
+ 		};
+@@ -2229,6 +2235,7 @@ gpu3d: gpu@38000000 {
+ 				 <&clk IMX8MP_CLK_GPU_ROOT>,
+ 				 <&clk IMX8MP_CLK_GPU_AHB>;
+ 			clock-names = "core", "shader", "bus", "reg";
++			#cooling-cells = <2>;
+ 			assigned-clocks = <&clk IMX8MP_CLK_GPU3D_CORE>,
+ 					  <&clk IMX8MP_CLK_GPU3D_SHADER_CORE>;
+ 			assigned-clock-parents = <&clk IMX8MP_SYS_PLL2_1000M>,
+@@ -2245,6 +2252,7 @@ gpu2d: gpu@38008000 {
+ 				 <&clk IMX8MP_CLK_GPU_ROOT>,
+ 				 <&clk IMX8MP_CLK_GPU_AHB>;
+ 			clock-names = "core", "bus", "reg";
++			#cooling-cells = <2>;
+ 			assigned-clocks = <&clk IMX8MP_CLK_GPU2D_CORE>;
+ 			assigned-clock-parents = <&clk IMX8MP_SYS_PLL2_1000M>;
+ 			assigned-clock-rates = <1000000000>;
+@@ -2302,6 +2310,7 @@ npu: npu@38500000 {
+ 				 <&clk IMX8MP_CLK_ML_AXI>,
+ 				 <&clk IMX8MP_CLK_ML_AHB>;
+ 			clock-names = "core", "shader", "bus", "reg";
++			#cooling-cells = <2>;
+ 			power-domains = <&pgc_mlmix>;
+ 		};
+ 
+-- 
+2.39.5
+
