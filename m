@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3BA27A13C
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:02:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471EE27A90F
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:02:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716576; cv=none; b=eDB7nxCDTGyM8q8+ZBiicyJkPdj7Tm1gxz4JN5Fm2YSk/F4MT7M0VGl3ZXRHR46lOEb1x65Qpxg6kNB32rqZJGv8PtSriuVBw6Ft1zOvbrbPPyHOpGCZuO4cKqnZuh1bkO2OcufNqu/5M0yKuNV2LmLRfIw13wAyU9HCBp8sC5w=
+	t=1746716579; cv=none; b=GA6/KfnTQXRD0C4YwEh13o6PWxyEQPyk6CLodWki674l0eJquTvVX3kNimHUV9nmrxvY18d08SoH8Rs/WG7CLS+4YbVGk4p+RUeP+/1TQaI+zoZNsGQ3gWTFeVoC4ijAwgy8p+SJZY6FybD7Nn9+BCsexD/uSceooTth8FEx9tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716576; c=relaxed/simple;
-	bh=pLyBLISA1jVCwKlxy/h9Ji+QDPDETT7+/UIMCqqCApU=;
+	s=arc-20240116; t=1746716579; c=relaxed/simple;
+	bh=3PYcpfwLxTEKFv/bxLMLmifenYAM9sHe53k0E2HOZiM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r+AQa/50CimN2S2TdKju3HcdssAyaSJzkTOYgz7aglf8ln/JIhEQqYs2AXWVVFX0nVYn1LzVIn75IRP18eIJKw7E7usdnHS17nL1KqKmGtzqY1xtgmDOz4nG531j75HPkoLtfgw8OKjGV/4J0s41fwC2zpRBl0BwdKb10thgeZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eNcd90Rb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MaqB2Xkz; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=T7UkllHIjXD4JkhLIWquKXgafAg0J4GRFvypxNkJo9p/TIghFaksEXjtruWS3mRuGXXVIygfW/7IcL/vYIshr2VnVLuhBXZo7KSucChjbIcEPzYjkqpF2jc9jAl5smoAB+RQX+3JlvOdqU4CcpUGqktuJpcH6kN8Jz9KBSTZBBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iWgekgFr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RDKy2I5e; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eNcd90Rb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MaqB2Xkz"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iWgekgFr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RDKy2I5e"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746716573;
+	s=2020; t=1746716575;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=u0W/UPFWoW8PqfBXB7gf7n2lCel41MNGw4v1MeRpAvk=;
-	b=eNcd90RbhF8rPgC3KAl+diwKqMyoSpzdYd04HPYnle5/q7hAsBe9kBRlu6qDERNTzN2gtS
-	8bATJfeZXZ2PxxRSIQ+U1d/QB5nD7PuYqC3zOag4vSPnGItroIi3DjiZ0EDetrbxEGy9bK
-	iJO2ApTs+04UNa7ziQ8DfDkFsL3ioSPkrLI5Xmi64sIbf3F5n944dAHH4AIe7PsOD0GXZU
-	1ZE6K0LnjElseWNcI6cxxfbkmwWtK9p34V6f7DWg4cwXZf5RBOIYEsU75+Gqg49X7giB31
-	iOlrz4pocraiYOxhKVxuwqn58Rc/I1kpPusAfJFCrNdTfCR6WWSdHzqhDJSypQ==
+	bh=W5RMb9J6kkNDiesJ6oIzMO9/H9Rb3V4T9T68CUJaezU=;
+	b=iWgekgFr1YPydQPqkPnpd6CiVK0I9p219Brmo9CJO99x3eXEZrNjUECYGtXa9Q6qJ6WXGT
+	2tqlvM5z8j+j/nzgvmwc2YYzFja/tCd69EL3iTpsOdTWbEFEF9xT9VVXJmUhf6akBHmFyB
+	IIAbY0pPrQR9MetUMHWXSazjUbx2rscfP072XwsFqEfDyDIk8OPLihBUkvvWR/kTg7e8Tp
+	rqkrHUe+so+KWMIiiR75hX0Uenpyv2UxpS13Tq7sGUdbNQr/EQc9I/vlBDF7EDarsZaUOV
+	dYkgyesiH7sqI0eQu5m/0jmmdkrEIvsrt8PB6YcTKAkDDRpU/UXS5WcAs+uq9g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746716573;
+	s=2020e; t=1746716575;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=u0W/UPFWoW8PqfBXB7gf7n2lCel41MNGw4v1MeRpAvk=;
-	b=MaqB2XkzrUzsZD4/BRe8HY1BdS+WJbxSA9ubzHT56VLoYgeqsFGzJjuMUuwWJIjQn2W564
-	p4ZciaDgYzKS/2Bg==
+	bh=W5RMb9J6kkNDiesJ6oIzMO9/H9Rb3V4T9T68CUJaezU=;
+	b=RDKy2I5e0fIDhFK02KnoZzsN0H9tNp9RGc5022HUj5hkS9ddT9uN/Rcn1LdoQIrBjsgZ40
+	cq8lULW8NHV75BAA==
 To: Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -50,9 +50,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v1 4/9] x86/cpuid: Rename hypervisor_cpuid_base() to cpuid_hypervisor_base()
-Date: Thu,  8 May 2025 17:02:33 +0200
-Message-ID: <20250508150240.172915-5-darwi@linutronix.de>
+Subject: [PATCH v1 5/9] x86/cpuid: Rename cpuid_get_leaf_0x2_regs() to cpuid_leaf_0x2()
+Date: Thu,  8 May 2025 17:02:34 +0200
+Message-ID: <20250508150240.172915-6-darwi@linutronix.de>
 In-Reply-To: <20250508150240.172915-1-darwi@linutronix.de>
 References: <20250508150240.172915-1-darwi@linutronix.de>
 Precedence: bulk
@@ -63,117 +63,152 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In order to let all the APIs under <cpuid/api.h> have a shared "cpuid_"
-namespace, rename hypervisor_cpuid_base() to cpuid_hypervisor_base().
+Rename the CPUID(0x2) register accessor function:
 
-To align with the new style, also rename:
-
-    for_each_possible_hypervisor_cpuid_base(function)
+    cpuid_get_leaf_0x2_regs(regs)
 
 to:
 
-    for_each_possible_cpuid_hypervisor_base(function)
+    cpuid_leaf_0x2(regs)
 
-Adjust all call-sites accordingly.
+for consistency with other <cpuid/api.h> accessors that return full CPUID
+registers outputs like:
 
-Suggested-by: Ingo Molnar <mingo@kernel.org>
+    cpuid_leaf(regs)
+    cpuid_subleaf(regs)
+
+In the same vein, rename the CPUID(0x2) iteration macro:
+
+    for_each_leaf_0x2_entry()
+
+to:
+
+    for_each_cpuid_0x2_desc()
+
+to include "cpuid" in the macro name, and since what is iterated upon is
+CPUID(0x2) cache and TLB "descriptos", not "entries".  Prefix an
+underscore to that iterator macro parameters, so that the newly renamed
+'desc' parameter do not get mixed with "union leaf_0x2_regs :: desc[]" in
+the macro's implementation.
+
+Adjust all the affected call-sites accordingly.
+
+While at it, use "CPUID(0x2)" instead of "CPUID leaf 0x2" as this is the
+recommended style.
+
+References: 62e565273993 ("x86/cacheinfo: Standardize header files and CPUID references")
+References: 718f9038acc5 ("x86/cpuid: Remove obsolete CPUID(0x2) iteration macro")
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 ---
- arch/x86/include/asm/acrn.h           | 2 +-
- arch/x86/include/asm/cpuid/api.h      | 6 +++---
- arch/x86/include/asm/xen/hypervisor.h | 2 +-
- arch/x86/kernel/jailhouse.c           | 2 +-
- arch/x86/kernel/kvm.c                 | 2 +-
- arch/x86/kvm/cpuid.c                  | 2 +-
- 6 files changed, 8 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/cpuid/api.h | 34 ++++++++++++++++----------------
+ arch/x86/kernel/cpu/cacheinfo.c  |  4 ++--
+ arch/x86/kernel/cpu/intel.c      |  4 ++--
+ 3 files changed, 21 insertions(+), 21 deletions(-)
 
-diff --git a/arch/x86/include/asm/acrn.h b/arch/x86/include/asm/acrn.h
-index 1dd14381bcb6..b509c622e6f4 100644
---- a/arch/x86/include/asm/acrn.h
-+++ b/arch/x86/include/asm/acrn.h
-@@ -25,7 +25,7 @@ void acrn_remove_intr_handler(void);
- static inline u32 acrn_cpuid_base(void)
- {
- 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
--		return hypervisor_cpuid_base("ACRNACRNACRN", 0);
-+		return cpuid_hypervisor_base("ACRNACRNACRN", 0);
- 
- 	return 0;
- }
 diff --git a/arch/x86/include/asm/cpuid/api.h b/arch/x86/include/asm/cpuid/api.h
-index c0211fcdc706..0e4b53306e99 100644
+index 0e4b53306e99..e957f09d8a8f 100644
 --- a/arch/x86/include/asm/cpuid/api.h
 +++ b/arch/x86/include/asm/cpuid/api.h
-@@ -188,14 +188,14 @@ static __always_inline bool cpuid_function_is_indexed(u32 function)
- 	return false;
- }
+@@ -216,17 +216,17 @@ static inline u32 cpuid_hypervisor_base(const char *sig, u32 leaves)
+  */
  
--#define for_each_possible_hypervisor_cpuid_base(function) \
-+#define for_each_possible_cpuid_hypervisor_base(function) \
- 	for (function = 0x40000000; function < 0x40010000; function += 0x100)
- 
--static inline u32 hypervisor_cpuid_base(const char *sig, u32 leaves)
-+static inline u32 cpuid_hypervisor_base(const char *sig, u32 leaves)
+ /**
+- * cpuid_get_leaf_0x2_regs() - Return sanitized leaf 0x2 register output
++ * cpuid_leaf_0x2() - Return sanitized CPUID(0x2) register output
+  * @regs:	Output parameter
+  *
+- * Query CPUID leaf 0x2 and store its output in @regs.	Force set any
++ * Query CPUID(0x2) and store its output in @regs.  Force set any
+  * invalid 1-byte descriptor returned by the hardware to zero (the NULL
+  * cache/TLB descriptor) before returning it to the caller.
+  *
+- * Use for_each_leaf_0x2_entry() to iterate over the register output in
++ * Use for_each_cpuid_0x2_desc() to iterate over the register output in
+  * parsed form.
+  */
+-static inline void cpuid_get_leaf_0x2_regs(union leaf_0x2_regs *regs)
++static inline void cpuid_leaf_0x2(union leaf_0x2_regs *regs)
  {
- 	u32 base, eax, signature[3];
+ 	cpuid_leaf(0x2, regs);
  
--	for_each_possible_hypervisor_cpuid_base(base) {
-+	for_each_possible_cpuid_hypervisor_base(base) {
- 		cpuid(base, &eax, &signature[0], &signature[1], &signature[2]);
- 
- 		/*
-diff --git a/arch/x86/include/asm/xen/hypervisor.h b/arch/x86/include/asm/xen/hypervisor.h
-index bd0fc69a10a7..09b15a0e2d2e 100644
---- a/arch/x86/include/asm/xen/hypervisor.h
-+++ b/arch/x86/include/asm/xen/hypervisor.h
-@@ -43,7 +43,7 @@ extern struct start_info *xen_start_info;
- 
- static inline uint32_t xen_cpuid_base(void)
- {
--	return hypervisor_cpuid_base(XEN_SIGNATURE, 2);
-+	return cpuid_hypervisor_base(XEN_SIGNATURE, 2);
+@@ -251,34 +251,34 @@ static inline void cpuid_get_leaf_0x2_regs(union leaf_0x2_regs *regs)
  }
  
- struct pci_dev;
-diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
-index cd8ed1edbf9e..07da72de80ba 100644
---- a/arch/x86/kernel/jailhouse.c
-+++ b/arch/x86/kernel/jailhouse.c
-@@ -49,7 +49,7 @@ static uint32_t jailhouse_cpuid_base(void)
- 	    !boot_cpu_has(X86_FEATURE_HYPERVISOR))
- 		return 0;
+ /**
+- * for_each_leaf_0x2_entry() - Iterator for parsed leaf 0x2 descriptors
+- * @regs:   Leaf 0x2 register output, returned by cpuid_get_leaf_0x2_regs()
++ * for_each_cpuid_0x2_desc() - Iterator for parsed CPUID(0x2) descriptors
++ * @regs:   CPUID(0x2) register output, as returned by cpuid_leaf_0x2()
+  * @__ptr:  u8 pointer, for macro internal use only
+- * @entry:  Pointer to parsed descriptor information at each iteration
++ * @desc:   Pointer to parsed CPUID(0x2) descriptor at each iteration
+  *
+- * Loop over the 1-byte descriptors in the passed leaf 0x2 output registers
+- * @regs.  Provide the parsed information for each descriptor through @entry.
++ * Loop over the 1-byte descriptors in the passed CPUID(0x2) output registers
++ * @regs.  Provide the parsed information for each descriptor through @desc.
+  *
+  * To handle cache-specific descriptors, switch on @entry->c_type.  For TLB
+  * descriptors, switch on @entry->t_type.
+  *
+  * Example usage for cache descriptors::
+  *
+- *	const struct leaf_0x2_table *entry;
++ *	const struct leaf_0x2_table *desc;
+  *	union leaf_0x2_regs regs;
+  *	u8 *ptr;
+  *
+- *	cpuid_get_leaf_0x2_regs(&regs);
+- *	for_each_leaf_0x2_entry(regs, ptr, entry) {
+- *		switch (entry->c_type) {
++ *	cpuid_leaf_0x2(&regs);
++ *	for_each_cpuid_0x2_desc(regs, ptr, desc) {
++ *		switch (desc->c_type) {
+  *			...
+  *		}
+  *	}
+  */
+-#define for_each_leaf_0x2_entry(regs, __ptr, entry)				\
+-	for (__ptr = &(regs).desc[1];						\
+-	     __ptr < &(regs).desc[16] && (entry = &cpuid_0x2_table[*__ptr]);	\
+-	     __ptr++)
++#define for_each_cpuid_0x2_desc(_regs, _ptr, _desc)				\
++	for (_ptr = &(_regs).desc[1];						\
++	     _ptr < &(_regs).desc[16] && (_desc = &cpuid_0x2_table[*_ptr]);	\
++	     _ptr++)
  
--	return hypervisor_cpuid_base("Jailhouse\0\0\0", 0);
-+	return cpuid_hypervisor_base("Jailhouse\0\0\0", 0);
+ /*
+  * CPUID(0x80000006) parsing:
+diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
+index 6d61f7dff9e7..b6349c1792dd 100644
+--- a/arch/x86/kernel/cpu/cacheinfo.c
++++ b/arch/x86/kernel/cpu/cacheinfo.c
+@@ -388,8 +388,8 @@ static void intel_cacheinfo_0x2(struct cpuinfo_x86 *c)
+ 	if (c->cpuid_level < 2)
+ 		return;
+ 
+-	cpuid_get_leaf_0x2_regs(&regs);
+-	for_each_leaf_0x2_entry(regs, ptr, entry) {
++	cpuid_leaf_0x2(&regs);
++	for_each_cpuid_0x2_desc(regs, ptr, entry) {
+ 		switch (entry->c_type) {
+ 		case CACHE_L1_INST:	l1i += entry->c_size; break;
+ 		case CACHE_L1_DATA:	l1d += entry->c_size; break;
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index ade5557dd3f8..d4efca7e4bd6 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -716,8 +716,8 @@ static void intel_detect_tlb(struct cpuinfo_x86 *c)
+ 	if (c->cpuid_level < 2)
+ 		return;
+ 
+-	cpuid_get_leaf_0x2_regs(&regs);
+-	for_each_leaf_0x2_entry(regs, ptr, entry)
++	cpuid_leaf_0x2(&regs);
++	for_each_cpuid_0x2_desc(regs, ptr, entry)
+ 		intel_tlb_lookup(entry);
  }
  
- static uint32_t __init jailhouse_detect(void)
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 3be9b3342c67..35d3d2803c57 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -874,7 +874,7 @@ static noinline uint32_t __kvm_cpuid_base(void)
- 		return 0;	/* So we don't blow up on old processors */
- 
- 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
--		return hypervisor_cpuid_base(KVM_SIGNATURE, 0);
-+		return cpuid_hypervisor_base(KVM_SIGNATURE, 0);
- 
- 	return 0;
- }
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 7f43d8d24fbe..d153719302a2 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -236,7 +236,7 @@ static struct kvm_hypervisor_cpuid kvm_get_hypervisor_cpuid(struct kvm_vcpu *vcp
- 	struct kvm_cpuid_entry2 *entry;
- 	u32 base;
- 
--	for_each_possible_hypervisor_cpuid_base(base) {
-+	for_each_possible_cpuid_hypervisor_base(base) {
- 		entry = kvm_find_cpuid_entry(vcpu, base);
- 
- 		if (entry) {
 -- 
 2.49.0
 
