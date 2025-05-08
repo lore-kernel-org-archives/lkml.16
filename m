@@ -1,159 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BE9B665;
-	Thu,  8 May 2025 11:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A40B665;
+	Thu,  8 May 2025 11:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746704381; cv=none; b=Wimxls82fzwd4Hf00aSofXGmR9q1onrjqj/VgR8K9+LHIxEIYWcoTqfPtcaXumcltvM+jgBgaZdysUDqY2vKImPbCrMg+IfMub+o1ed2/7/FguhaHT/3g9Ry2eD42sF5a9ASrthYQcbwrfcE7j67c7SZ0eBVyWUsej/YWe55ZNk=
+	t=1746704396; cv=none; b=b+vx4CmwKp7vz5QIN6QhXxbQXBUhUu5sl2jAj3VvgyaswmxFzLOF1Fa+TVBOINCIMpJbhfqW9hwTzyPWTYNRx0rvHfMUgsFgs+yPyHwLm9I1Bu9oQR8pzFuIb6/XE0XgubIM2ipPudVQayEuyvVR44Tqzj2cvubifv8mIs3Y5qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746704381; c=relaxed/simple;
-	bh=6n86hy3rMqxNQ71b6i/pVdXx+OhqDBAI7c4kpIkAMqg=;
+	s=arc-20240116; t=1746704396; c=relaxed/simple;
+	bh=fPQdKvCJDhLYIvVC0aFX67n1LEU1/snDN+9EgYkgCFA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GwkpkUkB4DhPix9avDXdVIEEWQ4fcwENv5Du7fnyQb6qV2P17qyslLvRoCuBIZcMt2djhXqD1Zi/bWldhps9dV8G7hdgaQn/QfmWRZPskcLL9ga08sedfBlHT0xDtYtJPtOK7gWiQ5vAV7qiKcCLBiObNNdvhk6sX/kH55SbkWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HvfE9Iyc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MvteankjgQ7stMd7ac/PcCx4qjDbEOJIBhJMm/nt9dWQ3sn0NXIz2K34JdG9Xi0bW6EJl6cNeRmxIcAZTX/f5NU3cMQXQysvkcWZ8zRpoVrRbQX4Kd6gpVXBmS0+bwbiac+9ReR3e6cTfXw7O/gqSv4qnmXjY4avFEjohRhi49c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=V5q87i8f; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HvfE9Iyc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41B1CC4CEE7;
-	Thu,  8 May 2025 11:39:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746704379;
-	bh=6n86hy3rMqxNQ71b6i/pVdXx+OhqDBAI7c4kpIkAMqg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HvfE9Iyc7naKu96tX/O8Pbucv3qPoB0L+6iooJtv2SPEe+7/SrA8DYoCBRZrkVnpq
-	 zuUbmYZxwCzqzh4W+nPL3NPzE0V0DPcBlgh6buVUAY1ty4QsNQtoO0yVn2UhF3K2aX
-	 uO2aIY/xUm/m+KGeJFTGPGEMGhwPjdRjzg9hjOy323c8+BTyCL4MnetAzMEbukLJqv
-	 lAnPu+oXfiJ1HkNvhStqVyJEnyDt7/ly3avI88EH2yQxnb9EnahfVVWsaFLgk+1mjS
-	 XbHVlY6UpIZqS40umzUScL12xITq+OfYRi+mWUQneD095wjVBkv0wDBdTKLFuYKZK9
-	 w3s9Pe6kcUgRQ==
-Date: Thu, 8 May 2025 12:39:35 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
-	linux-i2c@vger.kernel.org,
-	prashanth kumar burujukindi <prashanthkumar.burujukindi@microchip.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] i2c: microchip-corei2c: add smbus support
-Message-ID: <20250508-unrefined-outhouse-3ff09d1e46b5@spud>
-References: <20250430-preview-dormitory-85191523283d@spud>
- <3421bf4a-afa1-4b4c-8421-bad7187d3d8e@quicinc.com>
- <7q4gdh3jcbnsptmdv6fywnwqta5nekof4wtut35apw5wphhkio@veeu4ogcm44h>
- <20250506-bunny-puma-996aafbf3f56@spud>
- <4xyehpobtsyj2k5xlhupq7x6z7es7bvzek4zsf4roramy5h7kn@duxhfxd4gxsq>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="V5q87i8f"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=SWSIVafegTr2c9lkZjFs/xIIH46FvLh6zwN5OpSFD8g=; b=V5q87i8fQLjOQROwPuiopR311X
+	iySMgEPmhBnZdSm/Ks/2C74Dtj2CL3mxmbQO8wtjd/M2mEiHAlEAO5TJgX9tP9/GyyL+EjiHQ4n6d
+	9B3YfPqF3rFF+swo7mnAP+pp1An2DSOZHLDgNPKbhPuu3Tz5l31unhyyNdIZm3osmFOP73gBcrCgQ
+	mbOYD0N6AeEsi4vi6lx8psw5CNGvPbfuXwVIODaaHdPG0nuq8YpzVuKbqFk4NRnzsk64E5OeGvZ4W
+	WslSavsExHmT3AxdihtslZXlj+dgTj1tZejY2s0/rPhTtznBe0279TmqDF+Ey43TJzEa2yStZ9kld
+	/o7/tTag==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uCzbJ-004Zgm-0z;
+	Thu, 08 May 2025 19:39:42 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 08 May 2025 19:39:41 +0800
+Date: Thu, 8 May 2025 19:39:41 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH] crypto: powerpc/poly1305 - Add missing poly1305_emit_arch
+Message-ID: <aByX_Y64C6lVRR8M@gondor.apana.org.au>
+References: <cover.1745815528.git.herbert@gondor.apana.org.au>
+ <915c874caf5451d560bf26ff59f58177aa8b7c17.1745815528.git.herbert@gondor.apana.org.au>
+ <242ebbf1-4ef0-41c3-83cb-a055c262ba4a@leemhuis.info>
+ <aBtF2jVZQwxGiHVk@gondor.apana.org.au>
+ <37cf099e-d5c2-40d8-bc31-77e1f9623b1c@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4nWIXehMR+Mogkoo"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4xyehpobtsyj2k5xlhupq7x6z7es7bvzek4zsf4roramy5h7kn@duxhfxd4gxsq>
+In-Reply-To: <37cf099e-d5c2-40d8-bc31-77e1f9623b1c@linux.ibm.com>
 
+On Thu, May 08, 2025 at 02:46:06PM +0530, Venkat Rao Bagalkote wrote:
+>
+> I tested this patch by applying on next-20250507, though it fixes the build
+> issue, it has introduced a boot warning.
 
---4nWIXehMR+Mogkoo
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+What was the last next tree that's known to be good on this machine?
 
-On Tue, May 06, 2025 at 02:04:55PM +0200, Andi Shyti wrote:
-> Hi Conor,
->=20
-> On Tue, May 06, 2025 at 11:56:19AM +0100, Conor Dooley wrote:
-> > On Mon, May 05, 2025 at 10:04:27PM +0200, Andi Shyti wrote:
-> > > On Wed, Apr 30, 2025 at 05:06:09PM +0530, Mukesh Kumar Savaliya wrote:
-> > > > On 4/30/2025 4:53 PM, Conor Dooley wrote:
-> > > > > From: prashanth kumar burujukindi <prashanthkumar.burujukindi@mic=
-rochip.com>
->=20
-> Do we want to keep lower case for names and surnames? Can I use
-> upper cases?
-
-I dunno, that's how it was provided, I'm a fan of self-determination in
-that regard.
-
-> > > > > In this driver the supported SMBUS commands are smbus_quick,
-> > > > > smbus_byte, smbus_byte_data, smbus_word_data and smbus_block_data.
-> > > > >=20
-> > > > Write completely in imperative mood. something like :
-> > > >=20
-> > > > Add support for SMBUS commands in driver
-> > > >=20
-> > > > Add support for SMBUS commands: smbus_quick, smbus_byte, smbus_byte=
-_data,
-> > > > smbus_word_data, and smbus_block_data.
-> > >=20
-> > > yes, I agree that the original commit log is a bit lazy written :-)
-> >=20
-> > I don't personally think the suggested wording makes any meaningful
-> > difference, but I can rework it if required.
->=20
-> The point of using the imperative form is to clearly state what
-> the patch does. Saying "the supported commands are..." feels a
-> bit lazy, in my opinion, and requires a peek into the change to
-> fully understand what the patch introduces.
->=20
-> To be honest, I wouldn't reject the patch over this, but it
-> doesn't hurt to expand the log a little.
-
-Right, I wouldn't either. Sure, it could have been better and I
-probably should have rewritten it when I sent it on - but I get more
-than a bit pissed off and opt to push back when people who aren't
-maintainers for some code come along with a review entirely about
-cosmetic parts of a commit message.
-
-> (No need to resend=E2=80=94you can just reply to this mail with your
-> updated commit log.)
-
-I was just about to do this, but noticed you picked the patch up
-already. Sorry for the delay there, I meant to do it yesterday but
-crashed out early. I'd just have changed it to
-"Add hardware support for the SMBUS commands smbus_quick, smbus_byte,
-smbus_byte_data, smbus_word_data and smbus_block_data, replacing the
-fallback to software emulation"
-or similar. If you fancy rebasing, maybe use that?
-
-> > > > Also mention below limitations here .
-> >=20
-> > I actually removed them from the commit message, since they're not
-> > limitations just what was and was not tested. I can put them back too
-> > if that's needed.
-> >=20
-> > > > SMBUS block read is supported by the controller but has not been te=
-sted due
-> > > > to lack of hardware. However, SMBUS I2C block read has been tested.
-> > >=20
-> > > Smbus i2c block has not been tested? If so, can we leave it out?
-> > > What is the interest to keep it in?
-> >=20
-> > What's the interest in adding any feature? Someone might want to use it.
->=20
-> What's the point of adding a feature that no one uses? :-)
-
-I wouldn't say no one, just neither Prashanth or I :-)
-
-> > We did not have a piece of hardware that uses it, so didn't do testing
-> > of that specific command, but a customer may well want to so we included
-> > it. Again, if you think removing it is the play, I can do that.
->=20
-> No worries, please leave it as it is if you think it will be
-> useful in the future. I just wanted to clarify.
-
-NW, thanks for picking it up.
-Conor.
-
---4nWIXehMR+Mogkoo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaByX9wAKCRB4tDGHoIJi
-0gJWAP9yEef/0krNdwUaY/1gfJSyA4gQbl6hozXYXIA3WH0TQAEAwoRYhAoTgzvC
-CUFWxxuvW79S3iBWkvhNZq85oJEHog8=
-=IE6v
------END PGP SIGNATURE-----
-
---4nWIXehMR+Mogkoo--
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
