@@ -1,101 +1,139 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15AE3227BA1;
-	Thu,  8 May 2025 13:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3B8153BD9
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746711866; cv=none; b=OKRI5+U0TE7j3S5DzV16mS0DCwPMRyxY770Djy3LUKBBkKyOCee0rOB+b7tuiFnBvDFSmpi9TmZrzjzXgm6O+0cAo0V2fvDeoqoHLuGERpTnooVjntpAyCCS9hzVfEc5IJYFsfpDaqVsJBA8j604erxq8/FNQ5+xyxpRfwAsYog=
+	t=1746711909; cv=none; b=QrlZsSpmdI2m70TCG9WVb6OC4XHmEE/BiLwH/bIFor065D8DqfJdXmcPOxSccASVCYEbumcMFfQ2EQhh3YhEKd6Se8leYsjgKzSSDqAT88eTHsV6pnb5VCoI4emoB5jaeZTBI8upp6YE8WqX/DckaqJOW0YQZvgJQ/6HUu2Jdb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746711866; c=relaxed/simple;
-	bh=vbK2zlww38wck9vMVg+gzO7EFS+YMqh3QyFokhlVYPk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p+V/z1yU5lj30D29FKe42FBQZhX/CUPpl0JyRvW/UFn7XafTCDe/xQmFBm76aG84MQssWN4pzAHKoNTUcXxWFK9PRvbmI7YgIDeoW+1vBwt5cZ8UzvmtzGp7wvYE5q7/LF4PksHNy+yBjQOpGXLY4csDx2PSmK/EdVrDAnBhVc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=XEDdEjmv; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1746711909; c=relaxed/simple;
+	bh=cKhpRuz/zY+9ViDO4LOnidnYyRBeKNH9aRjFZDkFw4Y=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=qDCMTegHSjefqgvwPoCx3tRiyOeCt5eM85q9ISK9xXEk4HohBEYqUKzarmrp+KHfzV5uwGcCL4A1r2tC0iJ9meQCTnI4Y/KPWo1QqQ7C11oNUzykTS9gOV+EJY/TorpI3bEWRvASZ+dTuF2aZ7xfHeLY56FqBWgcXKhCng4MV68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=cQW7GM1Q; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="XEDdEjmv"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 906A525C52;
-	Thu,  8 May 2025 15:44:23 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id lMjFUx90zjFi; Thu,  8 May 2025 15:44:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1746711853; bh=vbK2zlww38wck9vMVg+gzO7EFS+YMqh3QyFokhlVYPk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=XEDdEjmv+TFPMoZbsGPFMLUFPr3hv5wGVOsjsjMQTUgGxk5FaNTe2Fu7My9Rh88k+
-	 RUOVKcWm+67PqrZHn76PVs0tzCwx9modPkz7qznkABZI2UjyoTkLYv8+qNnlThjjRE
-	 TM9D6UHOlJWvMNqWKZcEuRSF+zDxe4QQBnex7qBLr1DAnXVIvgHnNZx8V8MnpDKQof
-	 pfh9oBipnyxIogtXdyz7n0zFBmvGx2fosjVZYIx2SZCLnuFh4fgduyk0XePlz8zzBD
-	 1Kd2jgxBeK6pvJDaLiGlJsv/9YFOApuTDUddmPC+McZFaGAANgnlz6G17CmGhL//51
-	 lHIcDT+Qrieyg==
-From: Yao Zi <ziyao@disroot.org>
-To: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Yao Zi <ziyao@disroot.org>,
-	Frank Wang <frank.wang@rock-chips.com>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Shresth Prasad <shresthprasad7@gmail.com>,
-	Chukun Pan <amadeus@jmu.edu.cn>,
-	Jonas Karlman <jonas@kwiboo.se>
-Cc: linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] dt-bindings: phy: rockchip: naneng-combphy: Add RK3528 variant
-Date: Thu,  8 May 2025 13:43:30 +0000
-Message-ID: <20250508134332.14668-4-ziyao@disroot.org>
-In-Reply-To: <20250508134332.14668-2-ziyao@disroot.org>
-References: <20250508134332.14668-2-ziyao@disroot.org>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="cQW7GM1Q"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a0b5b90b7aso142331f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 06:45:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1746711905; x=1747316705; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ddvWwlvmJ56gF3G0LSGRAILthDv6fgZpldIeC6gbgK4=;
+        b=cQW7GM1Q1aLe9GFL/jvzN8UjzwtNrxFbWiRuNkeZgtYsISYnFMiXgL9bhL0zlTR+9+
+         WR5RoL/uIeDYoFbZamLlHsFVCtHx1IbJ5GvF78YAr6iA7jsD8CMY6md99og6KD2fl7Ro
+         uDCr5FDIfmsNk6rut4sqMW4LhPNLYl0P3/rToa9L//0Z1v2a/X9coj8j1f6lvCIvftMG
+         J1Jx4b0SW92ZZEMpfkf70NwCyr4gLZeCQS4Wb9x88hmpvjlgHgg3ZpOg7TF4d3vN65RH
+         7d4zgkanVSOUqgCvd/+jox8ygS6BDEdfLVNUd2rfRQpKPLaNRcKxzRPILPILTR+JSGtq
+         Fm3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746711905; x=1747316705;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ddvWwlvmJ56gF3G0LSGRAILthDv6fgZpldIeC6gbgK4=;
+        b=lDJH4G5V/uY+LV+q/AR+BD3FIQReFFLFnlBLSj9QGupTJUqsrsd36qxpGuVbUlsOUv
+         1XkpXco04RrfAjX7NxrJ45Ma1qOsfQH8i/LSEmryW+duOKI4/qiLl07II4EyTJLGPAhU
+         rvVgj6LbJSJesKjIaaMFiANVaH0AJk+bWQxm4zCQ6tbE+vH5oqJGbEBYiBO0yM87VFxM
+         eR0MUgZtj0FB0XbxWABj893tKBpV576VFp3ui4wF1ORGbLQGeM9vXXdhTwKRIp7VJW9H
+         GMBo2lzSWozejyC2owre6g9cAldlW43OhLdq7g84RukU79MBTc/m8pc68mGVx6UhREhJ
+         UhEw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5aEB1Z59slV9Km1tYrQ6ab4iJ+OvpgoYXlgl2SbdAPKZqUldjNL2RYeuK4tOOpvAqDHjxluE+ycKLS5Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+b14vH+mhDpEKDCBkngXfngtgDKAOjtjsNo3k+PoFx+2zFZSU
+	TJGmkf3fm+/N2a/6jTfJBAxv5L/6d4oEtY1KU1endICJsiTG5OxnnukK+NcLs/c=
+X-Gm-Gg: ASbGncvr1N98SgrIwibZsZXrABrZjq79UlFSzr+Nf523hGSoJBFWUSDDWmCwjfvrlsU
+	7rwqzl76LPM4CXOTmuM90FqLm2Pztua1tLGtclsb8rGqKN72fexofugtkrvL+dCLRdzZknv84Yy
+	8YaPwRk/HP3ol01/L4SCQzBqDZXNiHZdCq1kwqWOTWavfOvV9CGYa/MB/eei5Wzb4Ilf0nWpeA+
+	inSS8/m5QHPoOT/SeRXcEBslGcMj0ppdGht5eA9TD6bj6sjJ9jP3B2IotCjoGahXxPos0buQbBF
+	FN81i8LueEwgJg3kAAY80GVAlUnZBPmvWgbde3DOI9N/it+eVkmX8/cPT2k=
+X-Google-Smtp-Source: AGHT+IFF1lCrGjkOjvYLS8FuS71T+NJYPZUDl1ROqgtA2qAAckMb6oaYDMoD6JX8fEG+cSaT0+BVjg==
+X-Received: by 2002:a05:6000:178e:b0:3a1:3543:a74a with SMTP id ffacd0b85a97d-3a13543abcdmr434102f8f.7.1746711905310;
+        Thu, 08 May 2025 06:45:05 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:a451:a252:64ea:9a0e])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ebe00sm26063f8f.38.2025.05.08.06.45.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 06:45:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 08 May 2025 15:45:03 +0200
+Message-Id: <D9QTOYMN362W.398FE9SQB0S4X@ventanamicro.com>
+Subject: Re: [PATCH 0/5] Enable hstateen bits lazily for the KVM RISC-V
+ Guests
+Cc: <kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>,
+ <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+To: "Atish Patra" <atish.patra@linux.dev>, "Anup Patel"
+ <anup@brainfault.org>, "Atish Patra" <atishp@atishpatra.org>, "Paul
+ Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
+ <palmer@dabbelt.com>, "Alexandre Ghiti" <alex@ghiti.fr>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+References: <20250505-kvm_lazy_enable_stateen-v1-0-3bfc4008373c@rivosinc.com> <D9OYWFEXSA55.OUUXFPIGGBZV@ventanamicro.com> <bc0f1273-d596-47dd-bcc6-be9894157828@linux.dev> <D9Q05T702L8Y.3UTLG7VXIFXOK@ventanamicro.com> <ec73105c-f359-4156-8285-b471e3521378@linux.dev>
+In-Reply-To: <ec73105c-f359-4156-8285-b471e3521378@linux.dev>
 
-Rockchip RK3528 ships one naneng-combphy which operates in either PCIe
-or USB 3 mode. Document its compatible string.
+2025-05-07T17:34:38-07:00, Atish Patra <atish.patra@linux.dev>:
+> On 5/7/25 7:36 AM, Radim Kr=C4=8Dm=C3=A1=C5=99 wrote:
+>> 2025-05-06T11:24:41-07:00, Atish Patra <atish.patra@linux.dev>:
+>>> On 5/6/25 2:24 AM, Radim Kr=C4=8Dm=C3=A1=C5=99 wrote:
+>>>> 2025-05-05T14:39:25-07:00, Atish Patra <atishp@rivosinc.com>:
+>>>>>                                                      This series exte=
+nds
+>>>>> those to enable to correpsonding hstateen bits in PATCH1. The remaini=
+ng
+>>>>> patches adds lazy enabling support of the other bits.
+>>>> The ISA has a peculiar design for hstateen/sstateen interaction:
+>>>>
+>>>>     For every bit in an hstateen CSR that is zero (whether read-only z=
+ero
+>>>>     or set to zero), the same bit appears as read-only zero in sstatee=
+n
+>>>>     when accessed in VS-mode.
+>>> Correct.
+>>>
+>>>> This means we must clear bit 63 in hstateen and trap on sstateen
+>>>> accesses if any of the sstateen bits are not supposed to be read-only =
+0
+>>>> to the guest while the hypervisor wants to have them as 0.
+>>> Currently, there are two bits in sstateen. FCSR and ZVT which are not
+>>> used anywhere in opensbi/Linux/KVM stack.
+>> True, I guess we can just make sure the current code can't by mistake
+>> lazily enable any of the bottom 32 hstateen bits and handle the case
+>> properly later.
+>
+> I can update the cover letter and leave a comment about that.
+>
+> Do you want a additional check in sstateen=20
+> trap(kvm_riscv_vcpu_hstateen_enable_stateen)
+> to make sure that the new value doesn't have any bits set that is not=20
+> permitted by the hypervisor ?
 
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- .../devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+I wanted to prevent kvm_riscv_vcpu_hstateen_lazy_enable() from being
+able to modify the bottom 32 bits, because they are guest-visible and
+KVM does not handle them correctly -- it's an internal KVM error that
+should be made obvious to future programmers.
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
-index 888e6b2aac5a..bd064754e537 100644
---- a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
-@@ -12,6 +12,7 @@ maintainers:
- properties:
-   compatible:
-     enum:
-+      - rockchip,rk3528-naneng-combphy
-       - rockchip,rk3562-naneng-combphy
-       - rockchip,rk3568-naneng-combphy
-       - rockchip,rk3576-naneng-combphy
-@@ -102,7 +103,9 @@ allOf:
-       properties:
-         compatible:
-           contains:
--            const: rockchip,rk3588-naneng-combphy
-+            enum:
-+             - rockchip,rk3528-naneng-combphy
-+             - rockchip,rk3588-naneng-combphy
-     then:
-       properties:
-         resets:
--- 
-2.49.0
+>>> In case, we need to enable one of the bits in the future, does hypeviso=
+r
+>>> need to trap every sstateen access ?
+>> We need to trap sstateen accesses if the guest is supposed to be able to
+>> control a bit in sstateen, but the hypervisor wants to lazily enable
+>> that feature and sets 0 in hstateen until the first trap.
+> Yes. That's what PATCH 4 in this series does.
 
+I was thinking about the correct emulation.
+
+e.g. guest sets sstateen bit X to 1, but KVM wants to handle the feature
+X lazily, which means that hstateen bit X is 0.
+hstateen bit SE0 must be 0 in that case, because KVM must trap the guest
+access to bit X and properly emulate it.
+When the guest accesses a feature controlled by sstateen bit X, KVM will
+lazily enable the feature and then set sstateen and hstateen bit X.
