@@ -1,120 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2060F17BA5;
-	Thu,  8 May 2025 13:16:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368A17F477;
+	Thu,  8 May 2025 13:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746710217; cv=none; b=Dmw8jH5feG6T7RvrRcjFWpJ4SGsrWGaEX6pHkmojAFK7p1CebJo2/XsEsSbrPYrI1ILPV7sEMTp9i68EIlugu8Lbqzy7eBKAj+OUdin0Alxj7ztSLZtewJj2sUWkI2S8r964NIuLAFYS6pYm5xS6efskh/fNZKuc9LDedw/JcwM=
+	t=1746710242; cv=none; b=O/XB1c1yesOAH7YgKqLS9rbFh9q0k9etYSDVABfpFrSwFMfjzs9kMVgV42VNQhh1g8287BvfJ352Orh91/vrbkGld29O7LHZJa1J5gZ8fbQNe0MzPMUXWhA+6SMarpF84dR2bnGaJiVA/n0YjoElWl0Vuj4oydjFcB6xZThz9kM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746710217; c=relaxed/simple;
-	bh=DmYv1BhRdwdssj9Hn9d+R6TbeoEowIXHu2HfHaVqAF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uOkyb6/P4CFAB04qQQ/W+1DYtw29Wgdllmb85km7k2e8vSApRi0zvs6SK0umMv8PszTwAKDewu274Y/tP1YZtQSp6OfLBt7E7lz9fEaYDzib3K/7+78eR+wPKgwM1RQtbubzmKMviflREuWToEaGifTF+TkpkNSr0RAZvr998sA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dBrhXZe4; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746710242; c=relaxed/simple;
+	bh=mnccy7esbwOoSqU2ZRFDXPvTDNT5Wjn866GGEtoo0nk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=G3LZOLPDDoQIU5X0h6/3yYHUu7z2Y6HGjnIPw8PzJu70kpfGZMsY6C0vwf+ALltupn4sRTnqmTHnDZki9yFzExOn01mR5bXHjneAClZjbaYoZmfrr9M6W7NuKyZ2CNwAaxqFv07AQ6eVK/UKmxxHYa3kKs7aXONK4UF8QWFtH/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ci4tw5th; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dBrhXZe4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746710216; x=1778246216;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DmYv1BhRdwdssj9Hn9d+R6TbeoEowIXHu2HfHaVqAF8=;
-  b=dBrhXZe4kNjoOFDU8j2Jc48JyMEsu0rQP/y/RezaGRPY3aXo1+NgBmVM
-   XAI32Wi9cJLoi9TGOri6MNqXhkKAG/FIreZxal6PtE/loMJ6VJSwOZOkH
-   HKJS8gBngkvFxosPzEztgwCVYbZu2Jn3ydbJ9yAOUjjHCq/vAJe87SE1C
-   E+62ja3sBzYHkPkFowhSxyn6D5KKC5o13DPCfeDk2Ij8Q09ZMk/BccDzs
-   x2TWzqUISzWW4uCupYrUWAQytnWlL/470ZrR8fkT0I3k0iBEGOfpW25L8
-   C9qCLMcpmRyutXtWQ2bwL5JuCmgB2wySikMfMOMq18WXqcIgGC8Rtir6R
-   Q==;
-X-CSE-ConnectionGUID: DfoMcpNeQi6+EKy0A51l0w==
-X-CSE-MsgGUID: apikCU3bQ4yk3Yq9zV3sdA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52300270"
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="52300270"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 06:16:55 -0700
-X-CSE-ConnectionGUID: dieNcDOZTKOjMru2aC3yxw==
-X-CSE-MsgGUID: kAVd3o24S3it0zdYcVDrjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="159595613"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa002.fm.intel.com with ESMTP; 08 May 2025 06:16:52 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 0FD5119D; Thu, 08 May 2025 16:16:50 +0300 (EEST)
-Date: Thu, 8 May 2025 16:16:50 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: "Huang, Kai" <kai.huang@intel.com>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "seanjc@google.com" <seanjc@google.com>, 
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "bp@alien8.de" <bp@alien8.de>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC, PATCH 05/12] KVM: TDX: Add tdx_pamt_get()/put() helpers
-Message-ID: <cu332ci4fvpgb6akgpg3p53336qndi36px5osfv57vcq5u3din@kxu2diy723tq>
-References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
- <20250502130828.4071412-6-kirill.shutemov@linux.intel.com>
- <55c1c173bfb13d897eaaabcc04f38d010608a7e3.camel@intel.com>
- <4bb2119a-ff6d-42b6-acf4-86d87b0e9939@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ci4tw5th"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D9A2C4CEE7;
+	Thu,  8 May 2025 13:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746710241;
+	bh=mnccy7esbwOoSqU2ZRFDXPvTDNT5Wjn866GGEtoo0nk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ci4tw5thzoad0Jy+2N7Yvb5nPs8oJF7LKzKLG/aOa1pyl08PSflc0I5tssLp6REel
+	 1DA/Om83ze1WcYe+wwKnhZ8aNPSbH3nhl0PoMQXIbtGh4hbEdLvw9Q8c09YpnjNYWT
+	 XSk+JZ0CmYJqcPCmAAE8RMrU+AnUj/2+Hy1h8WWTeEuz9JbCWbaByYWE3q2vrvMUF9
+	 ngCVKPr3xb4F+zO/ltHFRvDIvOQ7MXNQVtyAwhMqmIsTj8mKDxyJtM184HzhcfhDGu
+	 o8KzSwdTNI/SgLBcNwK+tQy3BfaAnReAsKMwr8OM2Vv4eQA9DFxeWcJh+29MHuoGOl
+	 QBfZw6Ituiegg==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@denx.de,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	srw@sladewatkins.net,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org,
+	Miguel Ojeda <ojeda@kernel.org>
+Subject: Re: [PATCH 6.12 000/164] 6.12.28-rc1 review
+Date: Thu,  8 May 2025 15:17:00 +0200
+Message-ID: <20250508131700.623429-1-ojeda@kernel.org>
+In-Reply-To: <20250507183820.781599563@linuxfoundation.org>
+References: <20250507183820.781599563@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4bb2119a-ff6d-42b6-acf4-86d87b0e9939@intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 07, 2025 at 09:31:22AM -0700, Dave Hansen wrote:
-> On 5/5/25 05:44, Huang, Kai wrote:
-> >> +static int tdx_pamt_add(atomic_t *pamt_refcount, unsigned long hpa,
-> >> +			struct list_head *pamt_pages)
-> >> +{
-> >> +	u64 err;
-> >> +
-> >> +	hpa = ALIGN_DOWN(hpa, SZ_2M);
-> >> +
-> >> +	spin_lock(&pamt_lock);
-> > Just curious, Can the lock be per-2M-range?
-> 
-> Folks, please keep it simple.
-> 
-> If there's lock contention on this, we'll fix the lock contention, or
-> hash the physical address into a fixed number of locks.
+On Wed, 07 May 2025 20:38:05 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.12.28 release.
+> There are 164 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 09 May 2025 18:37:41 +0000.
+> Anything received after that time might be too late.
 
-I had this idea in mind as well.
+Boot-tested under QEMU for Rust x86_64, arm64 and riscv64; built-tested
+for loongarch64:
 
-> But having it be
-> per-2M-range sounds awful. Then you have to size it, and allocate it and
-> then resize it if there's ever hotplug, etc...
-> 
-> Kirill, could you put together some kind of torture test for this,
-> please? I would imagine a workload which is sitting in a loop setting up
-> and tearing down VMs on a bunch of CPUs would do it.
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
 
-It has to be multiple parallel creation/teardown loops. With single TD we
-won't see much concurrency. Most of PAMT allocations comes from single
-VCPU.
+Thanks!
 
-And it makes sense to do with huge pages as it cuts number of allocated
-PAMT memory allocated on TD creation by factor of 10 in my setup.
-
-JFYI, booting a TD with huge pages consumes 1-2MB of PAMT memory. I doubt
-any optimization here is justifiable.
-
-> That ^ would be the worst possible case, I think. If you don't see lock
-> contention there, you'll hopefully never see it on real systems.
-> 
-> I *suspect* that real systems will get bottlenecked somewhere in the
-> page conversion process rather than on this lock. But it should be a
-> pretty simple experiment to run.
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Cheers,
+Miguel
