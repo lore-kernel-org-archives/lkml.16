@@ -1,118 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1548F1FDA8E
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 10:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DE61C5D59;
+	Thu,  8 May 2025 10:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746699629; cv=none; b=CDLNeLPSlzv2ZpTgfZpcbyzIV/kUhIP8ljdHzqwr+l6JqP3rFylA4cIGH1yT24uOYsAJIhXbD7Fjsetrd+1UG9ohO3BBY0ASoDRHEwKfVIkU+4kQFA7/Gq0inUmlSABy9Ihaik0YvtI5+GB9lCYAOt8lCdQfIV/haVWQtEOQPe4=
+	t=1746699636; cv=none; b=dTsySMtjYCDWoV1OGcy5tMotgMpzdZlnNWGGKr+FRuRJT4EpM7/T3q5/1cih2sMKxJL3ZUziUorTTVx7dS0jb55LOcLtOxuT/rBtWlnLQstxU8QUQVE3d8ySrUO4+BFJJgNJ/KKqLn+AQqp7Jwf3JKTSdOc9rVEpdEv4hgSpV30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746699629; c=relaxed/simple;
-	bh=EKC1MDZgWrXQlaptwmHFpj1K0dZR4L3pRVAVi3OGh3g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Uomzr8JAqFD5bRfxceg06bH9AJKYHN07W+lIOO5dCjdFIkeXMyEj/rGsd30pZ26GWkr/bY3CLu0AGYBpGyRh6ZkUgYocpkS4wQQsDe0HmBK5beD2YUcQ0zA4RJcW4FFPlN60C0SHqPb0dIicMIR3rC+lcpjhdgKAr0gqqXiWjEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZmZtDPx0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746699636; c=relaxed/simple;
+	bh=lSqIRxUmZm4AWVQH4oJ/nSKKRTQD0/VeIZXwE743ONw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PZ1apwzpx6fO9GqnJZtmsOLy95p6BYkH3+7+/JoaBS1fPt7kCYKfOYwsORyVa4elHAXNJJbyrCtOdZcc5Nnxn2GiCs9McUxOOkzX56osPEYAkQciGNa1+JGniCx47fw4UR64gSNOWC/Z58kO1cJ845D4zbDdE0ELfNyPP5C1fSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZCueXSvd; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZmZtDPx0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7CF15C4CEE9;
-	Thu,  8 May 2025 10:20:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746699628;
-	bh=EKC1MDZgWrXQlaptwmHFpj1K0dZR4L3pRVAVi3OGh3g=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=ZmZtDPx0UYHhqyOZvTCFRafPrgyp3NpA/za8Qyht092GGbwuXvcdGdqTSa4aMDno+
-	 MyOLuQWMpkvTIVdpLDsddNm2u4Bx3ZIF+eqV8ERFaS4FbPNbRMpxojd7usHcvNLVca
-	 pMkxthIHhcmbfLCUjS3ROkBd08gd8bikTVkNgfRxPrzwEHCzDx3btVXwQ+7hpIWPZz
-	 Bh1VIuY8Bvr37qupJOfHMVkrMIMgnJ00pCkIslQtyYQMxh2lGjLZZ2V0RChSJLzA1V
-	 2w62dIOkqNoLmeXLxckuOBxCTCTATVTsUKRB3WGFH5nqAJK0vd91N0ommKPMmjtLoe
-	 ZANEmp9/GYu2Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D3CC3ABBE;
-	Thu,  8 May 2025 10:20:28 +0000 (UTC)
-From: Ignacio Moreno Gonzalez via B4 Relay <devnull+Ignacio.MorenoGonzalez.kuka.com@kernel.org>
-Date: Thu, 08 May 2025 12:20:27 +0200
-Subject: [PATCH] mm: madvise: make MADV_NOHUGEPAGE a no-op if !THP
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZCueXSvd"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 548AKRIm1642666
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 8 May 2025 05:20:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746699627;
+	bh=MnVLBozF9fH/K3g5BWn/Ig8ulDGxgIJKkBYrwb5xGYU=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=ZCueXSvdfjO7wS95upT+vBQuL6wpwA/S6Uk5ddWJNct+q5nth/B7dJ3h7Dg/m53M8
+	 Z+xM7m/U7EBKbZKN1aLTaeVd5FEekEjj/Bp7PVTIMigTRVwLiK85I8D7Nzddxj73bS
+	 oGFViyhOHijEHjkPZPUb4xJuBeIB3LVg2suKFd40=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 548AKRJJ032178
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 8 May 2025 05:20:27 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
+ May 2025 05:20:27 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 8 May 2025 05:20:27 -0500
+Received: from pratham-Workstation-PC (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 548AKPtV008847;
+	Thu, 8 May 2025 05:20:26 -0500
+From: T Pratham <t-pratham@ti.com>
+To: T Pratham <t-pratham@ti.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Kamlesh Gurudasani <kamlesh@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        Manorit Chawdhry
+	<m-chawdhry@ti.com>, <linux-crypto@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 1/2] dt-bindings: crypto: Add binding for TI DTHE V2
+Date: Thu, 8 May 2025 15:37:40 +0530
+Message-ID: <20250508101723.846210-3-t-pratham@ti.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250508101723.846210-2-t-pratham@ti.com>
+References: <20250508101723.846210-2-t-pratham@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250508-madvise-nohugepage-noop-without-thp-v1-1-e7ceffb197f3@kuka.com>
-X-B4-Tracking: v=1; b=H4sIAGqFHGgC/x2NwQqFIBBFfyVm3YAZUb1febSwnHQWqai9F0T/n
- rU7Bw73npAoMiX4VCdE+nFi74o0dQWLVc4Qsi4OUshOdGLATelSETpvd0NBmQd9wD9n6/eM2QY
- k0ctmHvtWDxLKUoi08vG+fKfrugGPv6WIdQAAAA==
-X-Change-ID: 20250508-madvise-nohugepage-noop-without-thp-e0721b973d82
-To: Andrew Morton <akpm@linux-foundation.org>, 
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: yang@os.amperecomputing.com, willy@infradead.org, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, 
- Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746699627; l=1782;
- i=Ignacio.MorenoGonzalez@kuka.com; s=20220915; h=from:subject:message-id;
- bh=WkzJ0m077QxoI+DJujIZqVZ01oTbN6BGwiqxdFPO/Rw=;
- b=HOKlWk8Cdb9oLxFnVCfZg9m12ukVQDxIoiovVUj19FPzBgRmFxHHXyOSU5Q53OjwdQhCgF4zV
- awvIV6P9FYcCxg4MhvNDpGrgPL5lXCBVucnaF5yKAtHrhHwQSEiMk/F
-X-Developer-Key: i=Ignacio.MorenoGonzalez@kuka.com; a=ed25519;
- pk=j7nClQnc5Q1IDuT4eS/rYkcLHXzxszu2jziMcJaFdBQ=
-X-Endpoint-Received: by B4 Relay for
- Ignacio.MorenoGonzalez@kuka.com/20220915 with auth_id=391
-X-Original-From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-Reply-To: Ignacio.MorenoGonzalez@kuka.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+Add DT binding for Texas Instruments DTHE V2 crypto accelerator.
 
-VM_NOHUGEPAGE is a no-op if CONFIG_TRANSPARENT_HUGEPAGE is disabled. So
-it makes no sense to return an error when calling madvise() with
-MADV_NOHUGEPAGE in that case.
+DTHE V2 is introduced as a part of TI AM62L SoC and can currently be
+only found in it.
 
-Suggested-by: Matthew Wilcox <willy@infradead.org>
-Signed-off-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+Signed-off-by: T Pratham <t-pratham@ti.com>
 ---
-https://lore.kernel.org/linux-mm/20250502-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v1-1-113cc634cd51@kuka.com
+ .../bindings/crypto/ti,am62l-dthev2.yaml      | 50 +++++++++++++++++++
+ MAINTAINERS                                   |  6 +++
+ 2 files changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/ti,am62l-dthev2.yaml
 
-Here it is presented as a separate thread to avoid mixing stable and
-non-stable patches.
-
-This change makes calling madvise(addr, size, MADV_NOHUGEPAGE) on !THP
-kernels to return 0 instead of -EINVAL.
----
- include/linux/huge_mm.h | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index e893d546a49f464f7586db639fe216231f03651a..5fca742dc5ba784ffccea055b07247707d16cc67 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -509,6 +509,8 @@ bool unmap_huge_pmd_locked(struct vm_area_struct *vma, unsigned long addr,
- 
- #else /* CONFIG_TRANSPARENT_HUGEPAGE */
- 
-+#include <uapi/asm/mman.h>
+diff --git a/Documentation/devicetree/bindings/crypto/ti,am62l-dthev2.yaml b/Documentation/devicetree/bindings/crypto/ti,am62l-dthev2.yaml
+new file mode 100644
+index 000000000000..5486bfeb2fe8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/ti,am62l-dthev2.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/crypto/ti,am62l-dthev2.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- static inline bool folio_test_pmd_mappable(struct folio *folio)
- {
- 	return false;
-@@ -598,6 +600,9 @@ static inline bool unmap_huge_pmd_locked(struct vm_area_struct *vma,
- static inline int hugepage_madvise(struct vm_area_struct *vma,
- 				   unsigned long *vm_flags, int advice)
- {
-+	/* On a !THP kernel, MADV_NOHUGEPAGE is a no-op, but MADV_NOHUGEPAGE is not supported */
-+	if (advice == MADV_NOHUGEPAGE)
-+		return 0;
- 	return -EINVAL;
- }
++title: K3 SoC DTHE V2 crypto module
++
++maintainers:
++  - T Pratham <t-pratham@ti.com>
++
++properties:
++  compatible:
++    enum:
++      - ti,am62l-dthev2
++
++  reg:
++    maxItems: 1
++
++  dmas:
++    items:
++      - description: AES Engine RX DMA Channel
++      - description: AES Engine TX DMA Channel
++      - description: SHA Engine TX DMA Channel
++
++  dma-names:
++    items:
++      - const: rx
++      - const: tx1
++      - const: tx2
++
++required:
++  - compatible
++  - reg
++  - dmas
++  - dma-names
++
++additionalProperties: false
++
++examples:
++  - |
++    crypto@40800000 {
++        compatible = "ti,am62l-dthev2";
++        reg = <0x40800000 0x10000>;
++
++        dmas = <&main_bcdma 0 0 0x4700 0>,
++               <&main_bcdma 0 0 0xc701 0>,
++               <&main_bcdma 0 0 0xc700 0>;
++        dma-names = "rx", "tx1", "tx2";
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b119ae6b5f14..b990850b4994 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -24552,6 +24552,12 @@ S:	Odd Fixes
+ F:	drivers/clk/ti/
+ F:	include/linux/clk/ti.h
  
-
----
-base-commit: fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
-change-id: 20250508-madvise-nohugepage-noop-without-thp-e0721b973d82
-
-Best regards,
++TI DATA TRANSFORM AND HASHING ENGINE (DTHE) V2 CRYPTO ACCELERATOR DRIVER
++M:	T Pratham <t-pratham@ti.com>
++L:	linux-crypto@vger.kernel.org
++S:	Supported
++F:	Documentation/devicetree/bindings/crypto/ti,am62l-dthev2.yaml
++
+ TI DAVINCI MACHINE SUPPORT
+ M:	Bartosz Golaszewski <brgl@bgdev.pl>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 -- 
-Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-
+2.43.0
 
