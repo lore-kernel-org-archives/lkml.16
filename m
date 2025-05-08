@@ -1,627 +1,378 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2066.outbound.protection.outlook.com [40.107.243.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA032797B2
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 20:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746735644; cv=none; b=H6o1rtBHucQVQD+KYMf0dCr05ZLwn2juWZ25oRApc8fzJjByYbfDltYKMi5lg4AoVdm2QKT/3NC9jbNBaK80NbnhNXkBaN03tL1PAwRYUyMklJBhKO1gP4GDioCfxTdi0NsnBQWz8+xpiBQXz4dV+sx1jrqFAf07mIoaA5oxBOw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746735644; c=relaxed/simple;
-	bh=bTYyFAW/yeRI0k8vsOxZbUhU/gnf3b7gIfNhkQ9aK3k=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tGWy0kjDa6fxBkSFkvPyqVHY9+tczrmByfx3JnfZarvUvt3is0fisTDzfMsikzh4c3WIPfTaRMDFNUUfg9EAeZtXjfPGGkjtulqvQlF7IoKeawEBUEpcLaKFH623r6uA9BuN+QaY/sCxBkddr27CwN/xHwwmDdgNwEeuQB/XwW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fhK4ZCtZ; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CBD2797B2
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 20:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746735779; cv=fail; b=F+PtL39GUWbsfFNxcvjLnQLswad1Mag7qO9GsgAHzql67VPPjAW8LlLFdc+MX8WuR55K6B84L5VdYdMtXNTcWMGQtGbUiosOnau4pJARv2/q/o6dNtprRR+yELUYDtAnqTiGNGYmFSZoR8xrh1fimaHgPiUjZ3+kD0KmvI3j5Qo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746735779; c=relaxed/simple;
+	bh=lzmMnT4NdNcicG6mXO90PvIXr6jc+tdt53lqrg4E8qM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gP38S4X1AZMQav5soK9TQ0cUXk+ifeTV+UFehFDJDIeOZJ+DHh+bTptxBd1JmEWJy0HabeM1LMhQPj+zu/AUonuQcUNeLP9Zz1MjX8nX+vNtwCOWc2qLH1DV1fQp9PgC3qSeH8HYW4JSFkOqY58o++UENngjP4QQZX+caysRYGI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nEP2luiP; arc=fail smtp.client-ip=40.107.243.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fhK4ZCtZ"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5fbeadf2275so2564870a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 13:20:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746735640; x=1747340440; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+0HDmOq93rWprCUfN2a1cuCbw50LvApIv2LTytQEH44=;
-        b=fhK4ZCtZxZvMTzkq4ShNqtqsF8JtZhMh5o7XJyFBcl45wKT2zLqwJRyl9SctRo1T2S
-         hKwY1dW9qIWl2smLjyrVXUGXyJkMf1E/zevmVNl3yaUItcewJ5NiLc0SX8D9fOWiaTqC
-         KzEzPzisIZfX+2Smbrd5fidTdGcD4catkYCPlO2WwIV8C6snnj4gOnhoxsodHDCdd0k/
-         nXDKmoMNWM6yz3Zx8vrXTiASkbtUc0PYCkxmxHzUlgp1aTIRiX87h4B4BRv5UqMke8VW
-         irRJaKAq2XvHlQRSP/nkEGIJyj+MwJESKKtrbwZePCiP4c8NCMsfhjYDeBQaYqzEwUV2
-         BGnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746735640; x=1747340440;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+0HDmOq93rWprCUfN2a1cuCbw50LvApIv2LTytQEH44=;
-        b=CwYeIaX7LhxcERABriy2hR0q8yQ5xRHrqQLpubG/LUAwVKMfhsiUeqjShjioBNaoUm
-         meVTfYF7u0Xh7QjbInnvvziV9iRiG3jZ5MvGFZPI+zPLh/Uf7Rm3oleb8zvh7e/bRYAs
-         fMI0MdXQ69LQ5f+Xt2DMxcfUno+PuzDhAzZlxT3u4wxD5EFXCNlrIr2OhExCdQZ9TZPa
-         C5E8RG2cvsSkk05I/hxa5sLTNxpcUsQDSL5nMr/fbDUfLmZ9agXE/DlrB+o2c7M06IC7
-         fsG67Dxwwuvx6OeXMfXbtE2aKRS5coEQ91kN033ZKYa2a7Upg629x00IWwAIzz2H/ekk
-         d/ZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXp7TJBnhaudtjfsKBTkzQiFHONYeK4qCLauDEJXw18txK5mIdUzx600vTRgl9A27H9qmHPbLv/2VHqKRc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4A1pXSU4gOeJdSRkFHz/N1lMldnY3DJGNXK2WnYDDLFfC5e4b
-	fJ9bxqZ6dYOruo7p0zxazHiLJADNdGm4D8sst/PhCRqlYb6pMoaDBPEJnQDx7x8=
-X-Gm-Gg: ASbGncvBgHoWNKm/iU9lc31cjml9Xd0iB8C2Zgln0GlkYbh7qk+cg/CzWTQ8PmgXnY4
-	nC5EFW8uKRiodLEgeFNlJfUG2jQ/elDWR1130jDSXN7iCICellSLWBWoemIaTmNwk4bc9Tr31+F
-	g3063lfb0wNau5mur5A2fp6tjoioU2nW2vuUMlC74IhpC63xpzK9KYgiU9LOAi0aqNikf2VsH5F
-	5S1F4UM1zJfqyt2uoPnCRDTLruPM17eQNyXte9eZCyFfHsCRH5WPOSL/1/L1ypPc9rszqML8L+e
-	HZrkXaVGSeTnwRsdwECYWye26r4F9BxSlAHKwzOWjWClhWETWTIHpUBkTRhIkQJLfZsoB30=
-X-Google-Smtp-Source: AGHT+IEI/7uf0d58ww/vPGIkb9Rp22etgucrO2Ag5lYkTnkwmaIknxrOUtu+MUmCpl+havrQV2w1xw==
-X-Received: by 2002:a17:907:969f:b0:ace:bead:5ee1 with SMTP id a640c23a62f3a-ad219131246mr103603366b.42.1746735639533;
-        Thu, 08 May 2025 13:20:39 -0700 (PDT)
-Received: from localhost (93-44-188-26.ip98.fastwebnet.it. [93.44.188.26])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2192cf5casm38239766b.2.2025.05.08.13.20.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 13:20:39 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Thu, 8 May 2025 22:22:08 +0200
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Matthias Brugger <mbrugger@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Phi l Elwell <phil@raspberrypi.com>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	kernel-list@raspberrypi.com, linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v9 -next 04/12] clk: rp1: Add support for clocks provided
- by RP1
-Message-ID: <aB0ScIyG-HTLGVQ7@apocalypse>
-References: <cover.1745347417.git.andrea.porta@suse.com>
- <e8a9c2cd6b4b2af8038048cda179ebbf70891ba7.1745347417.git.andrea.porta@suse.com>
- <a61159b7b34c29323cdc428bb34acfa1@kernel.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nEP2luiP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vQkDKB45R7zQ6H5QYT+GUXn78F7fgraWsswx5hvFBYNEXm+/civXWt88NAPlw3YAkwb8kcuBnto+w9E5feqjsA0UFWiIqBZK4NLVecgAkijAoPdg51r0hXpaI2xarZBSl6Ho4JhpQG3e9zLWxVetPC+wLj5UJ2e6la5A7jxrfmygRk2R1LIX5+GGZAUzq0bnGogOlFmvyKBWrl5xCCXqM9iAI4CJXO1nkv/kgoJ95aIFNqzD+1G2kQ+zJvDbIIKafstBxXWiEo2Un4OOw3pWXE9E78vgJ9RUDRVCFwpfBRYKw37vYuw3K0hkLmEFwa1aTVWaZ/I5UlSbZg+JN5Nnzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9+tFCbZ+RplVLT5O0MVLvjkunh8PfChUONfKzqVRLAE=;
+ b=xCRzAV/gXjhZSCBgOeMPqyZdFppYz+gHq9tHUN+VVfghUNaGZTzeKbSnWTGj8k6x+spaDbifim0xm2iD3i5WGkeKj+/qdQeYvLkuN2wkCk80m4Gv7sYo69e8jfJJw4V/apOkmmnYrosZFjt6DEkBuQsjoAbOCSvLqzQXXSLVqCdGpfHklJN0qqRiHueOu5ga9Ycvy8d3FZNZIeoCviYvryK9i4v6oK5swFUs7ONwH/clIYJj9CkCdcGg6Z75N9Mx1QldozLdu3d9W4bPBmfFPmwvhQ1EKA4R2HFV9BYMhrKC4+7o1LYNbv+H72FSOLrgp9H+TTo41MPnkpRMHmcveg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9+tFCbZ+RplVLT5O0MVLvjkunh8PfChUONfKzqVRLAE=;
+ b=nEP2luiPGoWEPTC6z60w7tyY5ZjcFzEexoZxEBsR+9CJ0rDmuiLrcNgklDvFVp2nzQGjPaYONYVMuh8RHSzsRVkDVGSSoRph8CTmFM79AMKEZgfo9wiBpOISVcMGVBdJXYcyKaiWy2tfpa/4++BZ/TAbW0H8xujdhiK1bvzl+w+3lt07s1VfxkXmmQjZeO+C/qEFgutlU+ccxDKCov9nWX2rDOrcdPPcj0pliOuZfnOIYh8BC5bKazoUywTefKuFd8hQpk20Gq+uqgVi/+y5V3/WHYCUE1g7UU0k0zj6ktBv8ys4ly4klamSTtfaVeGkqPRDbBigTE37ojWrS/HZPw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ DS5PPF884E1ABEC.namprd12.prod.outlook.com (2603:10b6:f:fc00::658) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Thu, 8 May
+ 2025 20:22:46 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8722.020; Thu, 8 May 2025
+ 20:22:46 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Johannes Weiner <hannes@cmpxchg.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+ Oscar Salvador <osalvador@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Mel Gorman <mgorman@techsingularity.net>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Brendan Jackman <jackmanb@google.com>, Richard Chang <richardycc@google.com>,
+ linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>
+Subject: Re: [PATCH v3 1/4] mm/page_isolation: make page isolation a
+ standalone bit.
+Date: Thu, 08 May 2025 16:22:43 -0400
+X-Mailer: MailMate (2.0r6255)
+Message-ID: <50BB00FF-746E-4623-8F48-F74209EDBD0A@nvidia.com>
+In-Reply-To: <20250507211059.2211628-2-ziy@nvidia.com>
+References: <20250507211059.2211628-1-ziy@nvidia.com>
+ <20250507211059.2211628-2-ziy@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: BN1PR10CA0028.namprd10.prod.outlook.com
+ (2603:10b6:408:e0::33) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a61159b7b34c29323cdc428bb34acfa1@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|DS5PPF884E1ABEC:EE_
+X-MS-Office365-Filtering-Correlation-Id: c58efc62-9bba-4ec6-c9f5-08dd8e6e1867
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?V2dGT2pvK053V0xHeDRGaU1MZitRTTdKMStWcTM2aFd2c1RHcGhOVEFHM3Nh?=
+ =?utf-8?B?QUxKQTNYeFNudTY1cDB5Y0p4bEdXZ2VsaTFuc2x5TTJPeGZWK2R0TmE5Nng4?=
+ =?utf-8?B?bmVJY3BDM1lnNXRtYlBzeGc1RVVjOHcyQTRvMEhJSUFMUFloR0FlTndZNVkx?=
+ =?utf-8?B?eklBOHJ4N2lZangxNGR5MWlQNFRuazhEZ2lHUTNlSG9SSVVJU1QrYTZoSTZQ?=
+ =?utf-8?B?TGlNOEJEMFJnT2FQQmFZTVFLKzR5Um8vcWhwUExCVnhCd3U1RWpqd3JjVGtt?=
+ =?utf-8?B?Lzl6NU1zTjNhL29BSTNMdGtoUU1qVGkxZ3FlZmZ6VC90N1p3dCt2MmV6SUhV?=
+ =?utf-8?B?aE1wQWNPRWxwcys0b1BSeG0zWWNJZ0FVVjhzUldqdkI2RnpwOWZ5VlNHd2xM?=
+ =?utf-8?B?VzhPQXEwT2ZVeVV0aHJSSmlhT1E3R0E1dU44b1dkbXpZTGJjaXFTbVIyYjBY?=
+ =?utf-8?B?YlJyNUszejFTY1dBR1ZvcXlISXduVDRRR1dxYmwvc1hoTVFZa0hGc3MrdE5K?=
+ =?utf-8?B?Zk5EYmFrODBXMEp5THNPSVk0b3lmNUJPd0pwS1BkSCtRSHRwUFRmSzNNRHJJ?=
+ =?utf-8?B?Y0JuUDNNYmFyZGZFWi9mZFBaTWNNZHhCT0dUdXpRWmdrRExXT081RUJuSEN1?=
+ =?utf-8?B?WVZIWlZXQkFjZXd3NUFGb1UxZWYwUytJVDRRK2FydExyRTRxQlZ1b1lLRlF2?=
+ =?utf-8?B?SGd1TGhlV3pkWHM4aUxReUg2YVdabHNWZ21lU2xNQTJUUVJYNmozdWd5Rmpt?=
+ =?utf-8?B?bWJtRDQ5SUUzbG42TWJGT2NNUXJLa2dIWFRrN1RERkJJZmFhcGpMYkRJd0My?=
+ =?utf-8?B?aDU3KzJTSE8ybzY0SDFCNXJYakpqZ1dCMzRqeXNHclQvc2ZhS2xZWHhPY0FH?=
+ =?utf-8?B?dFFmWk45V09OWndjOXhZUC9ZWVExb0pONFFGL2JWT1gwcjk1WkJqMHhBYXZT?=
+ =?utf-8?B?MVp4YnNWdDR6aHpDdXNLdUNadlMwWmduL3RnNTZ5cEhzVUxQY2pSblBtUHVy?=
+ =?utf-8?B?NG9lTXZnNGIvaHBvUlNJbmRvY0tnbTU0Tk9jWDlZR3haV0Zzb3c4QUlBUTBR?=
+ =?utf-8?B?YXIrQ3hLMXZ3cXRSMFZRYklmL09EdnUvVWs2NUtwK3J3U1pnOXhMMUlid0wy?=
+ =?utf-8?B?aW83R2JuajZISWVPNFowaFA5SDIrc2hMc0tEbXJ1OWJvN3lGOUo5VTNUWkdx?=
+ =?utf-8?B?RnZoc1llR2ZHeDMwUkRsV3lwY3hDRGEvTGJmUW1aMUxLanJZTFJiOExCcUtG?=
+ =?utf-8?B?YWdtUkdJU0pHbWNMRHJUdWZBcXo2aG52WEcvWmtnRzZ1cnJEa1dTbUIvNG52?=
+ =?utf-8?B?czBtSXowWFI2dlR5UDBGbmdyRGcxcUxTazNBVEl1enhJZGM3UityaVRGeEtS?=
+ =?utf-8?B?dnFmZkRzYXRLUGJmTVRxOFNiTHBGOWlMaGJHOU9HMnI5bVZ3VXQ1VzQreHR4?=
+ =?utf-8?B?Mk9WSlFPSXNneDEvV0VzVm5VSStCditCb3ZrVEoxcGsvcmR0NndGQ0cyS2ty?=
+ =?utf-8?B?T001MDR6bU1RYkdGV25GUkxDb29wSlpQSG9WMzRyc3FKSWNEZ2gzQkNzZzg5?=
+ =?utf-8?B?U0ZibWNPdDVHdXNKbzZjSXkwYy8zWTdySUNQSTNianlyVzYyc3VVbi9nOTJ6?=
+ =?utf-8?B?Si83ZU56RHF4cFRoTzVHMkVQMVZ6aUV0QlBTblYrcDd1aDQzYTJ6WmFxK3lx?=
+ =?utf-8?B?eGtZZkN1bzlkemJNbHkvRC9iZlowRjZRbjRkTnZsZHpQMC9mWUcyRHFqU2Jh?=
+ =?utf-8?B?UlBZenJWK2RkZDBnMTVXR3F3ODMvOWtTNWh2cWpVbVFML09hRkpXc2FqYXBY?=
+ =?utf-8?B?cWdkbThCZy9UTUdLaG1oNVE2SjlDWjM4anN5d21xS1lHS0o1Zk52aGxTSDBX?=
+ =?utf-8?B?QVRKNzlVekY1aElIYXgwVUE2cHQrc0VZcjN3UHVUZTd6T0YvdzIyZ210V2cz?=
+ =?utf-8?Q?R5fuuIRjCn8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UElaU3F3eWRrSVhXZUlKWWJ5TUYwdEFsK1JDTUdiR0xPSnZUZDNoUUMvWWF2?=
+ =?utf-8?B?NlFXVjF0NWpDZXFGbXVoNFRWK2VnN2VuVys5RlJLUFowb0pPQkhUYURJVGR0?=
+ =?utf-8?B?bmpldXl2MDNTQmZRR3ZRTS9xcDhnQ09PM2FLZk1iYlNPelJYZXYrTjBmM1hQ?=
+ =?utf-8?B?MlVRdGkxdis5S00vQy90RHFqcGhGaDd5cHNvWU4xUXlrUUtnMXZIa285c3g1?=
+ =?utf-8?B?YVNRbit3VHdKOCtNdVJhMm9Qbm5oRlg3NktDQWZmb3ROZm9NNWZnazMwOXZm?=
+ =?utf-8?B?emZQN09vUVNYQXpDQVJTV0Qrem1HWTYrV09EQWNrZVJvclI2d1p6TkRPOXVE?=
+ =?utf-8?B?TC9CdVFkb2JLZThOVU5JRTZJMHJnZlVvUnRqSW1aYzlSQzFaR0VJOVBmVDJL?=
+ =?utf-8?B?ZExMWFBNSldVVVp4NmhlUklsTDI4VlJBSG9WbW85YTNjTFd3RVAvTkZlS01M?=
+ =?utf-8?B?TDc1Y0J1RHhVa203OUVjYU45U0tOcmVzOFBHalN3aE9mMms4R0JYbWlSTVJy?=
+ =?utf-8?B?aGxJT1c0VmRLaWRGL2Y4M21xVUgvWVhLZFhLQVZneXhlRG54L2IyUVllcmZR?=
+ =?utf-8?B?bGw5OUllelNQVUJISUJic2ZQd3RPRUFuQTByTXM1a3B5ZTcydzEzcnJmQUtt?=
+ =?utf-8?B?c2ROcUhiV2VjM20vTjZhbHlJWEFKR09Zbng1cjhTWnpsdXQ1T25rRkl2S0Iy?=
+ =?utf-8?B?clZISlJQbGovaDk1RmRsZzBKVnBWNkdFU0h6NWN0b2tnTURQREhLcDFmMk9Y?=
+ =?utf-8?B?ajVpRE4xZVRPVWlWa2pwRnlUYkxqNmJsQXE5TGN2eDhNamd4MzhpUXNIckVu?=
+ =?utf-8?B?R2w1TVRXMHExQ3d0L0UzTlVDQ2g3S2JTWXVVNWZzWGpTa1RaOGk4cTZSZ1lW?=
+ =?utf-8?B?VVVsU2lXZTlWU29rNmZNcVM2UkRJYmIzOC9WY2hiM1cyR1RkdkhMTndUenNT?=
+ =?utf-8?B?ZW9pV2E3V2JCSUlteVpBNVhscWsxaEpzYVZaWmFDd25QeDhyU3FzRUcrRUt1?=
+ =?utf-8?B?bWZFVnBML1RCUmZmeVVIdWpNaUdvV08xOFh6WDFBK0lMdXNZQ0tBUVFxZEd4?=
+ =?utf-8?B?aE5NQXVNd01kdkdwYU1lRTYrdjhLSWZiUnB0dWlrTDhjSXZTZktHWlJiVm5O?=
+ =?utf-8?B?bDR0WXdYOUhUNm9OUElWRHNpVXhOWHNtOHh3OVZKSkt2bXEwTzdyc1JFUmZV?=
+ =?utf-8?B?S0g4RjdabVBsQVE4SEZnZW9YczhlWDI0aDBKZkNRb05UNjNPZ0hLRTlVSXVD?=
+ =?utf-8?B?dlpCaWdzM0Y0aUJMbU5aZENBQ0JvYllFdDdLc3ZNVDJDM3BZeEk0cU42U0U1?=
+ =?utf-8?B?NWJ2dnVOTVZ0ZnlUdjBWL0c0MEJCVFppQ0N0U3RJb2U0VVpMS0pUeFJIbkpq?=
+ =?utf-8?B?Vlo0N05sdkpCN25Fb21tRUtENStEYlFUNjEvYW96Z2srVzM5MER6ZkV6dWdp?=
+ =?utf-8?B?QVBkcWFBcUxzTm5pSWxNRjBsdjdnb3pZYThxSjlCQXJRd0hGYWFHb1FiR3NE?=
+ =?utf-8?B?S2Z1MzBxVGJzYVFJRXRXSVB2WnpzZm1XOGpKaXpVbXdlZmpBOXRNdjNDYTZO?=
+ =?utf-8?B?WU1Ta2g3Y3VxU1ltQngwbHRRYWJSRVNLMEJwc0Fna0k0UnJmcTdXUVNEWHJk?=
+ =?utf-8?B?YjMyd3VNKzNjZ1JOS1dhMm4yMHdmZ3pTVzEreU5IS2hQRk8xWStMa1g0QjhV?=
+ =?utf-8?B?cUwzRUNRYWVSRlc1Mm5vMW81TWw1cWpJcXphSkd3eU5HUXoyRlJndlpoc2lS?=
+ =?utf-8?B?bW1SSXp0ejhOeXRZZGhPS3grU0FBN0tUWEVnb3UyV2xOOFpCazNmZXVHUldt?=
+ =?utf-8?B?aEFIK011dDNiOGpnSFFycTR0SjRnbkhDRzdBZDRqREhzU0REL0Y4OUR1c250?=
+ =?utf-8?B?VEIrVHpsUlJRSk1EendoaHpYRmhJbzN2TXZBWllzS0dpQVdIckNYQld0bzZr?=
+ =?utf-8?B?T3RCNGhlOFI4Uk8xYWkwM2VWckVRczVtWkVPOW1kLzgranJDSUwyRUplWHlY?=
+ =?utf-8?B?Z3ExS2ZWV1l1b1ZUVHNrSTVzYlJhTDVJT1NKVmhpcWZBR05xUHhpNFFPS3JE?=
+ =?utf-8?B?S095VFF2OWFSV3N0QjJLU1FGeE1NZTlhUCtCMmdLcWdReFNOZmszRUpFQ3Nm?=
+ =?utf-8?Q?SwMNAHki6XLLBnHdggtUasC7q?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c58efc62-9bba-4ec6-c9f5-08dd8e6e1867
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 20:22:46.4695
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Di5JFl6A4OwrFa+E3KQyoBcB3WWzhGTiSoM3JoR8ChoOIiPQZdFcbZ3rvDnpJR2/
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPF884E1ABEC
 
-Hi Stephen,
+On 7 May 2025, at 17:10, Zi Yan wrote:
 
-On 13:01 Wed 07 May     , Stephen Boyd wrote:
-> Quoting Andrea della Porta (2025-04-22 11:53:13)
-> > diff --git a/drivers/clk/clk-rp1.c b/drivers/clk/clk-rp1.c
-> > new file mode 100644
-> > index 000000000000..6b0b76fc6977
-> > --- /dev/null
-> > +++ b/drivers/clk/clk-rp1.c
-> > @@ -0,0 +1,1510 @@
-> [...]
-> > +static u8 rp1_clock_get_parent(struct clk_hw *hw)
-> > +{
-> > +       struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-> > +       struct rp1_clockman *clockman = clock->clockman;
-> > +       const struct rp1_clock_data *data = clock->data;
-> > +       u32 sel, ctrl;
-> > +       u8 parent;
-> > +
-> > +       /* Sel is one-hot, so find the first bit set */
-> > +       sel = clockman_read(clockman, data->sel_reg);
-> > +       parent = ffs(sel) - 1;
-> > +
-> > +       /* sel == 0 implies the parent clock is not enabled yet. */
-> > +       if (!sel) {
-> > +               /* Read the clock src from the CTRL register instead */
-> > +               ctrl = clockman_read(clockman, data->ctrl_reg);
-> > +               parent = (ctrl & data->clk_src_mask) >> CLK_CTRL_SRC_SHIFT;
-> > +       }
-> > +
-> > +       if (parent >= data->num_std_parents)
-> > +               parent = AUX_SEL;
-> > +
-> > +       if (parent == AUX_SEL) {
-> > +               /*
-> > +                * Clock parent is an auxiliary source, so get the parent from
-> > +                * the AUXSRC register field.
-> > +                */
-> > +               ctrl = clockman_read(clockman, data->ctrl_reg);
-> > +               parent = FIELD_GET(CLK_CTRL_AUXSRC_MASK, ctrl);
-> > +               parent += data->num_std_parents;
-> > +       }
-> > +
-> > +       return parent;
-> > +}
-> > +
-> > +static int rp1_clock_set_parent(struct clk_hw *hw, u8 index)
-> > +{
-> > +       struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-> > +       struct rp1_clockman *clockman = clock->clockman;
-> > +       const struct rp1_clock_data *data = clock->data;
-> > +       u32 ctrl, sel;
-> > +
-> > +       spin_lock(&clockman->regs_lock);
-> > +       ctrl = clockman_read(clockman, data->ctrl_reg);
-> > +
-> > +       if (index >= data->num_std_parents) {
-> > +               /* This is an aux source request */
-> > +               if (index >= data->num_std_parents + data->num_aux_parents) {
-> > +                       spin_unlock(&clockman->regs_lock);
-> > +                       return -EINVAL;
-> > +               }
-> > +
-> > +               /* Select parent from aux list */
-> > +               ctrl &= ~CLK_CTRL_AUXSRC_MASK;
-> > +               ctrl |= FIELD_PREP(CLK_CTRL_AUXSRC_MASK, index - data->num_std_parents);
-> > +               /* Set src to aux list */
-> > +               ctrl &= ~data->clk_src_mask;
-> > +               ctrl |= (AUX_SEL << CLK_CTRL_SRC_SHIFT) & data->clk_src_mask;
-> > +       } else {
-> > +               ctrl &= ~data->clk_src_mask;
-> > +               ctrl |= (index << CLK_CTRL_SRC_SHIFT) & data->clk_src_mask;
-> > +       }
-> > +
-> > +       clockman_write(clockman, data->ctrl_reg, ctrl);
-> > +       spin_unlock(&clockman->regs_lock);
-> > +
-> > +       sel = rp1_clock_get_parent(hw);
-> > +       WARN_ONCE(sel != index, "(%s): Parent index req %u returned back %u\n",
-> > +                 clk_hw_get_name(hw), index, sel);
-> 
-> Is this debug code? Why do we need to read back the parent here?
+> During page isolation, the original migratetype is overwritten, since
+> MIGRATE_* are enums and stored in pageblock bitmaps. Change
+> MIGRATE_ISOLATE to be stored a standalone bit, PB_migrate_isolate, like
+> PB_migrate_skip, so that migratetype is not lost during pageblock
+> isolation. pageblock bits needs to be word aligned, so expand
+> the number of pageblock bits from 4 to 8 and make PB_migrate_isolate bit =
+7.
+>
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> ---
+>  include/linux/mmzone.h          | 17 ++++++++++----
+>  include/linux/page-isolation.h  |  2 +-
+>  include/linux/pageblock-flags.h | 33 +++++++++++++++++++++++++-
+>  mm/page_alloc.c                 | 41 ++++++++++++++++++++++++++++++++-
+>  4 files changed, 86 insertions(+), 7 deletions(-)
+>
 
-This is more of like a sanity check, but I agree that without taking action
-it is not very helpful. Maybe we can use this check to return an appropriate
-error code in case the parent check is failing. With appropriate changes, also
-rp1_clock_set_rate_and_parent() could benefit from that. So I'll drop the WARN
-and it turn into a conditional return -EINVAL, for the error to be propagated
-to the CCF.
+Here is the fixup 1/3 to address Johannes=E2=80=99 comments.
 
-> 
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int rp1_clock_set_rate_and_parent(struct clk_hw *hw,
-> > +                                        unsigned long rate,
-> > +                                        unsigned long parent_rate,
-> > +                                        u8 parent)
-> > +{
-> > +       struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-> > +       struct rp1_clockman *clockman = clock->clockman;
-> > +       const struct rp1_clock_data *data = clock->data;
-> > +       u32 div = rp1_clock_choose_div(rate, parent_rate, data);
-> > +
-> > +       WARN_ONCE(rate > data->max_freq,
-> > +                 "(%s): Requested rate (%lu) > max rate (%lu)\n",
-> > +                 clk_hw_get_name(hw), rate, data->max_freq);
-> 
-> If the determine_rate function is implemented properly this is
-> impossible because we round the rate before calling this clk_op.
+From 7eb1d9fa58fdab216862436181e5d2baf2958c54 Mon Sep 17 00:00:00 2001
+From: Zi Yan <ziy@nvidia.com>
+Date: Thu, 8 May 2025 12:05:59 -0400
+Subject: [PATCH] fixup for mm/page_isolation: make page isolation a standal=
+one
+ bit
 
-Right, rp1_clock_choose_div_and_prate() which is called by rp1_clock_determine_rate()
-is doing the relevant check on max_freq, so I'll drop this WARN as it should never
-be true.
+1. keep the original is_migrate_isolate_page()
+2. move {get,set,clear}_pageblock_isolate() to mm/page_isolation.c
+3. use a single version for get_pageblock_migratetype() and
+   get_pfnblock_migratetype().
 
-> 
-> > +
-> > +       if (WARN_ONCE(!div,
-> > +                     "clk divider calculated as 0! (%s, rate %lu, parent rate %lu)\n",
-> > +                     clk_hw_get_name(hw), rate, parent_rate))
-> > +               div = 1 << CLK_DIV_FRAC_BITS;
-> 
-> This one also looks weird, does it assume round_rate didn't constrain
-> the incoming rate?
-> 
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+---
+ include/linux/mmzone.h          |  6 ------
+ include/linux/page-isolation.h  |  2 +-
+ include/linux/pageblock-flags.h | 24 ------------------------
+ mm/page_alloc.c                 | 25 ++++++++++---------------
+ mm/page_isolation.c             | 17 +++++++++++++++++
+ 5 files changed, 28 insertions(+), 46 deletions(-)
 
-Indeed, div can be 0 here but rp1_clock_determine_rate() would have returned an error,
-never reaching this conditional, so I think I can drop it.
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 9ec022a0b826..7ef01fe148ce 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -112,13 +112,7 @@ extern int page_group_by_mobility_disabled;
+ #define MIGRATETYPE_MASK (BIT(PB_migratetype_bits) - 1)
+ #endif
 
-> > +
-> > +       spin_lock(&clockman->regs_lock);
-> > +
-> > +       clockman_write(clockman, data->div_int_reg, div >> CLK_DIV_FRAC_BITS);
-> > +       if (data->div_frac_reg)
-> > +               clockman_write(clockman, data->div_frac_reg, div << (32 - CLK_DIV_FRAC_BITS));
-> > +
-> > +       spin_unlock(&clockman->regs_lock);
-> > +
-> > +       if (parent != 0xff)
-> > +               rp1_clock_set_parent(hw, parent);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int rp1_clock_set_rate(struct clk_hw *hw, unsigned long rate,
-> > +                             unsigned long parent_rate)
-> > +{
-> > +       return rp1_clock_set_rate_and_parent(hw, rate, parent_rate, 0xff);
-> > +}
-> > +
-> > +static void rp1_clock_choose_div_and_prate(struct clk_hw *hw,
-> > +                                          int parent_idx,
-> > +                                          unsigned long rate,
-> > +                                          unsigned long *prate,
-> > +                                          unsigned long *calc_rate)
-> > +{
-> > +       struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-> > +       const struct rp1_clock_data *data = clock->data;
-> > +       struct clk_hw *parent;
-> > +       u32 div;
-> > +       u64 tmp;
-> > +
-> > +       parent = clk_hw_get_parent_by_index(hw, parent_idx);
-> > +
-> > +       *prate = clk_hw_get_rate(parent);
-> > +       div = rp1_clock_choose_div(rate, *prate, data);
-> > +
-> > +       if (!div) {
-> > +               *calc_rate = 0;
-> > +               return;
-> > +       }
-> > +
-> > +       /* Recalculate to account for rounding errors */
-> > +       tmp = (u64)*prate << CLK_DIV_FRAC_BITS;
-> > +       tmp = div_u64(tmp, div);
-> > +
-> > +       /*
-> > +        * Prevent overclocks - if all parent choices result in
-> > +        * a downstream clock in excess of the maximum, then the
-> > +        * call to set the clock will fail.
-> > +        */
-> > +       if (tmp > data->max_freq)
-> > +               *calc_rate = 0;
-> > +       else
-> > +               *calc_rate = tmp;
-> > +}
-> > +
-> > +static int rp1_clock_determine_rate(struct clk_hw *hw,
-> > +                                   struct clk_rate_request *req)
-> > +{
-> > +       struct clk_hw *parent, *best_parent = NULL;
-> > +       unsigned long best_rate = 0;
-> > +       unsigned long best_prate = 0;
-> > +       unsigned long best_rate_diff = ULONG_MAX;
-> > +       unsigned long prate, calc_rate;
-> > +       size_t i;
-> > +
-> > +       /*
-> > +        * If the NO_REPARENT flag is set, try to use existing parent.
-> > +        */
-> > +       if ((clk_hw_get_flags(hw) & CLK_SET_RATE_NO_REPARENT)) {
-> > +               i = rp1_clock_get_parent(hw);
-> > +               parent = clk_hw_get_parent_by_index(hw, i);
-> > +               if (parent) {
-> > +                       rp1_clock_choose_div_and_prate(hw, i, req->rate, &prate,
-> > +                                                      &calc_rate);
-> > +                       if (calc_rate > 0) {
-> > +                               req->best_parent_hw = parent;
-> > +                               req->best_parent_rate = prate;
-> > +                               req->rate = calc_rate;
-> > +                               return 0;
-> > +                       }
-> > +               }
-> > +       }
-> > +
-> > +       /*
-> > +        * Select parent clock that results in the closest rate (lower or
-> > +        * higher)
-> > +        */
-> > +       for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
-> > +               parent = clk_hw_get_parent_by_index(hw, i);
-> > +               if (!parent)
-> > +                       continue;
-> > +
-> > +               rp1_clock_choose_div_and_prate(hw, i, req->rate, &prate,
-> > +                                              &calc_rate);
-> > +
-> > +               if (abs_diff(calc_rate, req->rate) < best_rate_diff) {
-> > +                       best_parent = parent;
-> > +                       best_prate = prate;
-> > +                       best_rate = calc_rate;
-> > +                       best_rate_diff = abs_diff(calc_rate, req->rate);
-> > +
-> > +                       if (best_rate_diff == 0)
-> > +                               break;
-> > +               }
-> > +       }
-> > +
-> > +       if (best_rate == 0)
-> > +               return -EINVAL;
-> > +
-> > +       req->best_parent_hw = best_parent;
-> > +       req->best_parent_rate = best_prate;
-> > +       req->rate = best_rate;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static const struct clk_ops rp1_pll_core_ops = {
-> > +       .is_prepared = rp1_pll_core_is_on,
-> > +       .prepare = rp1_pll_core_on,
-> > +       .unprepare = rp1_pll_core_off,
-> > +       .set_rate = rp1_pll_core_set_rate,
-> > +       .recalc_rate = rp1_pll_core_recalc_rate,
-> > +       .round_rate = rp1_pll_core_round_rate,
-> > +};
-> > +
-> > +static const struct clk_ops rp1_pll_ops = {
-> > +       .set_rate = rp1_pll_set_rate,
-> > +       .recalc_rate = rp1_pll_recalc_rate,
-> > +       .round_rate = rp1_pll_round_rate,
-> > +};
-> > +
-> > +static const struct clk_ops rp1_pll_ph_ops = {
-> > +       .is_prepared = rp1_pll_ph_is_on,
-> > +       .prepare = rp1_pll_ph_on,
-> > +       .unprepare = rp1_pll_ph_off,
-> > +       .recalc_rate = rp1_pll_ph_recalc_rate,
-> > +       .round_rate = rp1_pll_ph_round_rate,
-> > +};
-> > +
-> > +static const struct clk_ops rp1_pll_divider_ops = {
-> > +       .is_prepared = rp1_pll_divider_is_on,
-> > +       .prepare = rp1_pll_divider_on,
-> > +       .unprepare = rp1_pll_divider_off,
-> > +       .set_rate = rp1_pll_divider_set_rate,
-> > +       .recalc_rate = rp1_pll_divider_recalc_rate,
-> > +       .round_rate = rp1_pll_divider_round_rate,
-> > +};
-> > +
-> > +static const struct clk_ops rp1_clk_ops = {
-> > +       .is_prepared = rp1_clock_is_on,
-> > +       .prepare = rp1_clock_on,
-> > +       .unprepare = rp1_clock_off,
-> > +       .recalc_rate = rp1_clock_recalc_rate,
-> > +       .get_parent = rp1_clock_get_parent,
-> > +       .set_parent = rp1_clock_set_parent,
-> > +       .set_rate_and_parent = rp1_clock_set_rate_and_parent,
-> > +       .set_rate = rp1_clock_set_rate,
-> > +       .determine_rate = rp1_clock_determine_rate,
-> > +};
-> > +
-> > +static struct clk_hw *rp1_register_pll(struct rp1_clockman *clockman,
-> > +                                      struct rp1_clk_desc *desc)
-> > +{
-> > +       int ret;
-> > +
-> > +       desc->clockman = clockman;
-> > +
-> > +       ret = devm_clk_hw_register(clockman->dev, &desc->hw);
-> > +
-> 
-> Please drop this newline.
+-#ifdef CONFIG_MEMORY_ISOLATION
+ unsigned long get_pageblock_migratetype(const struct page *page);
+-#else
+-#define get_pageblock_migratetype(page)					\
+-	get_pfnblock_flags_mask(page, page_to_pfn(page), MIGRATETYPE_MASK)
+-
+-#endif
 
-Ack.
+ #define folio_migratetype(folio)					\
+ 	get_pageblock_migratetype(&folio->page)
+diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.=
+h
+index 51797dc39cbc..898bb788243b 100644
+--- a/include/linux/page-isolation.h
++++ b/include/linux/page-isolation.h
+@@ -5,7 +5,7 @@
+ #ifdef CONFIG_MEMORY_ISOLATION
+ static inline bool is_migrate_isolate_page(struct page *page)
+ {
+-	return get_pageblock_isolate(page);
++	return get_pageblock_migratetype(page) =3D=3D MIGRATE_ISOLATE;
+ }
+ static inline bool is_migrate_isolate(int migratetype)
+ {
+diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flag=
+s.h
+index 9fadae5892b2..00040e7df8c8 100644
+--- a/include/linux/pageblock-flags.h
++++ b/include/linux/pageblock-flags.h
+@@ -112,28 +112,4 @@ static inline void set_pageblock_skip(struct page *pag=
+e)
+ }
+ #endif /* CONFIG_COMPACTION */
 
-> 
-> > +       if (ret)
-> > +               return ERR_PTR(ret);
-> > +
-> > +       return &desc->hw;
-> > +}
-> > +
-> > +static struct clk_hw *rp1_register_pll_divider(struct rp1_clockman *clockman,
-> > +                                              struct rp1_clk_desc *desc)
-> > +{
-> > +       const struct rp1_pll_data *divider_data = desc->data;
-> > +       int ret;
-> > +
-> > +       desc->div.reg = clockman->regs + divider_data->ctrl_reg;
-> > +       desc->div.shift = __ffs(PLL_SEC_DIV_MASK);
-> > +       desc->div.width = __ffs(~(PLL_SEC_DIV_MASK >> desc->div.shift));
-> > +       desc->div.flags = CLK_DIVIDER_ROUND_CLOSEST;
-> > +       desc->div.lock = &clockman->regs_lock;
-> > +       desc->div.hw.init = desc->hw.init;
-> > +       desc->div.table = pll_sec_div_table;
-> > +
-> > +       desc->clockman = clockman;
-> > +
-> > +       ret = devm_clk_hw_register(clockman->dev, &desc->div.hw);
-> > +
-> 
-> Please drop this newline.
+-#ifdef CONFIG_MEMORY_ISOLATION
+-#define get_pageblock_isolate(page) \
+-	get_pfnblock_flags_mask(page, page_to_pfn(page),	\
+-			PB_migrate_isolate_bit)
+-#define clear_pageblock_isolate(page) \
+-	set_pfnblock_flags_mask(page, 0, page_to_pfn(page),	\
+-			PB_migrate_isolate_bit)
+-#define set_pageblock_isolate(page) \
+-	set_pfnblock_flags_mask(page, PB_migrate_isolate_bit,	\
+-			page_to_pfn(page),			\
+-			PB_migrate_isolate_bit)
+-#else
+-static inline bool get_pageblock_isolate(struct page *page)
+-{
+-	return false;
+-}
+-static inline void clear_pageblock_isolate(struct page *page)
+-{
+-}
+-static inline void set_pageblock_isolate(struct page *page)
+-{
+-}
+-#endif /* CONFIG_MEMORY_ISOLATION */
+-
+ #endif	/* PAGEBLOCK_FLAGS_H */
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index acf68ef041d8..04e301fb4879 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -381,16 +381,16 @@ unsigned long get_pfnblock_flags_mask(const struct pa=
+ge *page,
+ 	return (word >> bitidx) & mask;
+ }
 
-Ack.
+-#ifdef CONFIG_MEMORY_ISOLATION
+ unsigned long get_pageblock_migratetype(const struct page *page)
+ {
+ 	unsigned long flags;
 
-> 
-> > +       if (ret)
-> > +               return ERR_PTR(ret);
-> > +
-> > +       return &desc->div.hw;
-> > +}
-> > +
-> > +static struct clk_hw *rp1_register_clock(struct rp1_clockman *clockman,
-> > +                                        struct rp1_clk_desc *desc)
-> > +{
-> > +       const struct rp1_clock_data *clock_data = desc->data;
-> > +       int ret;
-> > +
-> > +       if (WARN_ON_ONCE(MAX_CLK_PARENTS <
-> > +              clock_data->num_std_parents + clock_data->num_aux_parents))
-> > +               return NULL;
-> 
-> Return an error pointer?
+ 	flags =3D get_pfnblock_flags_mask(page, page_to_pfn(page),
+ 			MIGRATETYPE_MASK);
++#ifdef CONFIG_MEMORY_ISOLATION
+ 	if (flags & PB_migrate_isolate_bit)
+ 		return MIGRATE_ISOLATE;
+-
++#endif
+ 	return flags;
+ }
 
-Ack.
+@@ -401,19 +401,12 @@ static __always_inline int get_pfnblock_migratetype(c=
+onst struct page *page,
 
-> 
-> > +
-> > +       /* There must be a gap for the AUX selector */
-> > +       if (WARN_ON_ONCE(clock_data->num_std_parents > AUX_SEL &&
-> > +                        desc->hw.init->parent_data[AUX_SEL].index != -1))
-> 
-> Why is there a gap? Can't the parents that the clk framework sees be
-> 
-> 	[0, num_std_parents) + [num_std_parents, num_aux_parents + num_std_parents)
-> 
-> without an empty parent in the middle?
+ 	flags =3D get_pfnblock_flags_mask(page, pfn,
+ 			MIGRATETYPE_MASK);
++#ifdef CONFIG_MEMORY_ISOLATION
+ 	if (flags & PB_migrate_isolate_bit)
+ 		return MIGRATE_ISOLATE;
+-
++#endif
+ 	return flags;
+ }
+-#else
+-static __always_inline int get_pfnblock_migratetype(const struct page *pag=
+e,
+-					unsigned long pfn)
+-{
+-	return get_pfnblock_flags_mask(page, pfn, MIGRATETYPE_MASK);
+-}
+-
+-#endif
 
-Not sure why it was done that way. Need to check with Raspberry guys.
+ /**
+  * set_pfnblock_flags_mask - Set the requested group of flags for a pagebl=
+ock_nr_pages block of pages
+@@ -461,11 +454,13 @@ void set_pageblock_migratetype(struct page *page, int=
+ migratetype)
+ 		migratetype =3D MIGRATE_UNMOVABLE;
 
-> 
-> > +               return NULL;
-> 
-> Return an error pointer?
+ #ifdef CONFIG_MEMORY_ISOLATION
+-	if (migratetype =3D=3D MIGRATE_ISOLATE)
+-		set_pageblock_isolate(page);
+-	else
++	if (migratetype =3D=3D MIGRATE_ISOLATE) {
++		set_pfnblock_flags_mask(page, PB_migrate_isolate_bit,
++				page_to_pfn(page), PB_migrate_isolate_bit);
++		return;
++	}
+ #endif
+-		set_pfnblock_flags_mask(page, (unsigned long)migratetype,
++	set_pfnblock_flags_mask(page, (unsigned long)migratetype,
+ 				page_to_pfn(page), MIGRATETYPE_MASK);
+ }
 
-Ack.
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index b2fc5266e3d2..b6a62132e20e 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -15,6 +15,23 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/page_isolation.h>
 
-> 
-> > +
-> > +       desc->clockman = clockman;
-> > +
-> > +       ret = devm_clk_hw_register(clockman->dev, &desc->hw);
-> > +
-> 
-> Drop this newline please.
++static inline bool get_pageblock_isolate(struct page *page)
++{
++	return get_pfnblock_flags_mask(page, page_to_pfn(page),
++			PB_migrate_isolate_bit);
++}
++static inline void clear_pageblock_isolate(struct page *page)
++{
++	set_pfnblock_flags_mask(page, 0, page_to_pfn(page),
++			PB_migrate_isolate_bit);
++}
++static inline void set_pageblock_isolate(struct page *page)
++{
++	set_pfnblock_flags_mask(page, PB_migrate_isolate_bit,
++			page_to_pfn(page),
++			PB_migrate_isolate_bit);
++}
++
+ /*
+  * This function checks whether the range [start_pfn, end_pfn) includes
+  * unmovable pages or not. The range must fall into a single pageblock and
+--=20
+2.47.2
 
-Ack.
 
-> 
-> > +       if (ret)
-> > +               return ERR_PTR(ret);
-> > +
-> > +       return &desc->hw;
-> > +}
-> [...]
-> > +
-> > +static const struct clk_parent_data clk_eth_parents[] = {
-> > +       { .hw = &pll_sys_sec_desc.div.hw },
-> > +       { .hw = &pll_sys_desc.hw },
-> > +};
-> > +
-> > +static struct rp1_clk_desc clk_eth_desc = REGISTER_CLK(
-> > +       .hw.init = CLK_HW_INIT_PARENTS_DATA(
-> > +               "clk_eth",
-> > +               clk_eth_parents,
-> > +               &rp1_clk_ops,
-> > +               0
-> > +       ),
-> > +       CLK_DATA(rp1_clock_data,
-> > +                .num_std_parents = 0,
-> > +                .num_aux_parents = 2,
-> > +                .ctrl_reg = CLK_ETH_CTRL,
-> > +                .div_int_reg = CLK_ETH_DIV_INT,
-> > +                .sel_reg = CLK_ETH_SEL,
-> > +                .div_int_max = DIV_INT_8BIT_MAX,
-> > +                .max_freq = 125 * HZ_PER_MHZ,
-> > +                .fc0_src = FC_NUM(4, 6),
-> > +       )
-> > +);
-> > +
-> > +static const struct clk_parent_data clk_sys_parents[] = {
-> > +       { .index = 0 },
-> > +       { .index = -1 },
-> 
-> Why is there a gap here?
 
-Same comment as above. Need to check.
-
-> 
-> > +       { .hw = &pll_sys_desc.hw },
-> > +};
-> > +
-> [...]
-> > +
-> > +static const struct regmap_config rp1_clk_regmap_cfg = {
-> > +       .reg_bits = 32,
-> > +       .val_bits = 32,
-> > +       .reg_stride = 4,
-> > +       .max_register = PLL_VIDEO_SEC,
-> > +       .name = "rp1-clk",
-> > +       .rd_table = &rp1_reg_table,
-> 
-> Do you want to set the 'disable_locking' field because you're
-> explicitly locking in this driver?
-
-Yes, let's avoid redundancy.
-
-> 
-> > +};
-> > +
-> > +static int rp1_clk_probe(struct platform_device *pdev)
-> > +{
-> > +       const size_t asize = ARRAY_SIZE(clk_desc_array);
-> > +       struct rp1_clk_desc *desc;
-> > +       struct device *dev = &pdev->dev;
-> > +       struct rp1_clockman *clockman;
-> > +       struct clk_hw **hws;
-> > +       unsigned int i;
-> > +
-> > +       clockman = devm_kzalloc(dev, struct_size(clockman, onecell.hws, asize),
-> > +                               GFP_KERNEL);
-> > +       if (!clockman)
-> > +               return -ENOMEM;
-> > +
-> > +       spin_lock_init(&clockman->regs_lock);
-> > +       clockman->dev = dev;
-> > +
-> > +       clockman->regs = devm_platform_ioremap_resource(pdev, 0);
-> > +       if (IS_ERR(clockman->regs))
-> > +               return PTR_ERR(clockman->regs);
-> > +
-> > +       clockman->regmap = devm_regmap_init_mmio(dev, clockman->regs,
-> > +                                                &rp1_clk_regmap_cfg);
-> > +       if (IS_ERR(clockman->regmap)) {
-> > +               dev_err_probe(dev, PTR_ERR(clockman->regmap),
-> > +                             "could not init clock regmap\n");
-> > +               return PTR_ERR(clockman->regmap);
-> > +       }
-> > +
-> > +       clockman->onecell.num = asize;
-> > +       hws = clockman->onecell.hws;
-> > +
-> > +       for (i = 0; i < asize; i++) {
-> > +               desc = clk_desc_array[i];
-> > +               if (desc && desc->clk_register && desc->data) {
-> > +                       hws[i] = desc->clk_register(clockman, desc);
-> > +                       if (IS_ERR_OR_NULL(hws[i]))
-> 
-> Why is NULL a possible return value?
-
-Right, IS_ERR() would be enough here since devm_clk_hw_register() in the rp1_register*()
-functions will return an error in faulty cases, and &desc->hw couldn't even be
-NULL.
- 
-> 
-> > +                               dev_err_probe(dev, PTR_ERR(hws[i]),
-> > +                                             "Unable to register clock: %s\n",
-> > +                                             clk_hw_get_name(hws[i]));
-> 
-> We pushed this into the core now so you can drop this. See commit
-> 12a0fd23e870 ("clk: Print an error when clk registration fails").
-
-Dropped.
-
-Many thanks,
-Andrea
-
-> 
-> > +               }
-> > +       }
-> > +
-> > +       platform_set_drvdata(pdev, clockman);
-> > +
-> > +       return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
-> > +                                          &clockman->onecell);
-> > +}
-> > +
+Best Regards,
+Yan, Zi
