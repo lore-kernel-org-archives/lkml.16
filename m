@@ -1,135 +1,108 @@
-Received: from e240-11.smtp-out.eu-north-1.amazonses.com (e240-11.smtp-out.eu-north-1.amazonses.com [23.251.240.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682521C8612;
-	Thu,  8 May 2025 10:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B4E4B1E5C;
+	Thu,  8 May 2025 10:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746699694; cv=none; b=WvZV1GK4zV4COB2nRebojEL5086eVP/hq+roLwJn6+jkYx7voXFXAU6P1nKrIobBL2U06Bfq4yjccKHoR6RA9bje6F0FS2hmN6ETj/tYvo4sFfxJj64bizYSnqASCaCvIhWyTYOPESeTuuGOFvrakxYeb88UoYOHHXuEetBMurI=
+	t=1746699829; cv=none; b=ZeBFd1bzGgX5tM4YUmJgcqJih3oIRAM87xd2quMh2+vTrTd+nQTh05/fA9vJd/47dC5OU4nwCn0S/wg4kPWNuFL2snuysc/nDDgncjPDmEZ3TcffexoLgIikGsVgv4rL9oBfF/W20ytrJwvokGbYpmZHFaQ60ibk2n2ptQIJYDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746699694; c=relaxed/simple;
-	bh=/8u1KODPrLFiUyf+6uu0tMV6N9iXNJ4ag3Xpu+q56xg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bG8huThZZlSkNHaAhQWFUcuH3X5lwzScY4dFHVpWdKZjx6k9dkhFQRilfaM5S0EPRY8RaJQel2p41ZgxPujj/uKGOWvs2ZeBLR1SwJ6yLwqxn/zZuH80kZhEb09Rpmt2LogYZyVrb5poNDmbtCREVtdnSALMEPZw6y/vSftnkbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=O6QgfjUj; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=ZeEyxzJn; arc=none smtp.client-ip=23.251.240.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
+	s=arc-20240116; t=1746699829; c=relaxed/simple;
+	bh=ykl+qSE/o+ewTuX2K86dTy7zS4FJM7xNZq8Dik1n11U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=biGpKZVaRVrjsjti5z3HXRd2Tab9NYUAJp+Dh6aJ6lRPsuGooW6ucRekT1gFAN+V0L2t+S5cdr/lp38NKC2Hx5jdHIqqiWJV3Rf0bFE5Y5EaSJV8Vlc5V8tKY54b/oJDA/XjYuQpHup5O+KErkUnW9ccMRj/eukKApbPmuRU3f8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JKIn6lrB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="O6QgfjUj";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="ZeEyxzJn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1746699690;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type;
-	bh=/8u1KODPrLFiUyf+6uu0tMV6N9iXNJ4ag3Xpu+q56xg=;
-	b=O6QgfjUjVSYPg/f6j4GfAHcTj4KwgdC2+3bdWtf+MN8INCghYPzJ/LBsZ6pcAx0o
-	Mqc8i7LBaR251bpGCfT6irkwIfI6auiBtiMWJKalT6HZN6VkYQUTH4Uk/pWJwWAbzlf
-	erm/2nAOcV7rgJonunzrcOcZxislmCicE3iITpyXAbO9IWLzckeoOBbUd87CMSY+ZR6
-	qosHllhHoDbOLNLgkOpKCrTsSdKy/FA+RxV4TcJAfEG72JqPA+9i00YrT4rBotzLD/A
-	EgB4I2NipEVEEfTNy/4h79Yr9StLX3bnre4bpu7kUXgNMn/6xMcgDy3l+h6Yq2wzGBl
-	AgitIjeg6A==
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1746699690;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Feedback-ID;
-	bh=/8u1KODPrLFiUyf+6uu0tMV6N9iXNJ4ag3Xpu+q56xg=;
-	b=ZeEyxzJnkeMfePQufQmyftio+C4s7MYiA+fQC8gVVSRJWYVdsStKKn2tr2aVvOUK
-	Rb6Ee7+fqogSPhIh1NKfuvtGa7XPYIGuliVe9weYYQ4LEAxXx/t+JVmVL8FTLBbNRSB
-	B8+WqJ4I6nDVfLvGBCWFPWq/eBKqZSPWCinNIRYk=
-X-Forwarded-Encrypted: i=1; AJvYcCUWYYXs7GnM1Pzb541hG/fp1LMgFfz5CYvKHmqB0QZJjY2orlK7l94b7lWEmmfaDpe9d35YxKnjs9BefVA=@vger.kernel.org, AJvYcCXroK05G17PFV3TffcRui1SkSS1kCR0ZNMzQ4dXyP0PRA7qfClXBNp03FteW92W8mc+EeLHVzB1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFt4Vy1ywjcN7tSQzLgAT/sfLEWxsRRbvyd6n3lfYMQdkm33u2
-	/SlV4HhmOt9nTmQ+e7HCncVhXruMzZZgt8hSUiCmZPe/D+QusmMbEhC8pMD3rHqZdTpwCKP26X/
-	olnuMCTxQWNboqmMfUvQTDKjSZbE=
-X-Google-Smtp-Source: AGHT+IEWWHYer6YlrEAMD9KQ9dotaFtd/lyg7ysgb7EU3ezigUEiXVfbU/UizDskSCDrYKfUSKyklj5LGEbbXIqI5Lk=
-X-Received: by 2002:a17:90b:3d8c:b0:306:b593:4557 with SMTP id
- 98e67ed59e1d1-30aac17a1a7mr10671549a91.4.1746699687895; Thu, 08 May 2025
- 03:21:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JKIn6lrB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54FFBC4CEF1;
+	Thu,  8 May 2025 10:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746699828;
+	bh=ykl+qSE/o+ewTuX2K86dTy7zS4FJM7xNZq8Dik1n11U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JKIn6lrBZ6QeRchHyrOxTKyVra23g1y0Th2o1nowCAA6gGwrzOT5q9T3Hw7oXORqN
+	 1Ntcs0y/VQsEA/XOS2vJ/eS9rCTAkM9T25hAMl9NSdv4L7OQOXWYPI4z3AW2ozG62k
+	 hsBzFejsR1/8TC/83SMFDz+/w7PibrK2kzo05tUEa+TBa/omAgSaXOF9J7ComZ2rC2
+	 y18lK34rNESZBQhfjogKMiPJz0xsB/XkQB6W9/ZYSwbw2pMV+lfgvb1E60HawJZfy/
+	 5HzB/+BfnB7Gffb5nIhwgPBAgTDwV8QivD8dI4K1kBNnO+cuBOZAzAQH+EFXEzJhlU
+	 9PBxAsWIv2TVQ==
+Message-ID: <c3739ed3-353b-4901-a65e-ced3f41a7f02@kernel.org>
+Date: Thu, 8 May 2025 12:23:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CADvZ6EoGrp9SCvkVKEV0i=NW-7XZmxbmZkmxd8TPFboPTAUF_g@mail.gmail.com>
-In-Reply-To: <CADvZ6EoGrp9SCvkVKEV0i=NW-7XZmxbmZkmxd8TPFboPTAUF_g@mail.gmail.com>
-From: Ozgur Kara <ozgur@goosey.org>
-Date: Thu, 8 May 2025 10:21:30 +0000
-X-Gmail-Original-Message-ID: <CADvZ6Eps=cb9Cm_C92UTF6B=umrnnGVsZG+z7H3h2wQy+HXi_g@mail.gmail.com>
-X-Gm-Features: ATxdqUE2usigunOejbmaJU3uCvDWQY8558XJ5AlxjSJTsyUQTWJe3cLonnDs6RU
-Message-ID: <01100196af6a2191-3abcd0ea-31eb-4cb7-a1a2-ffc925cdbeed-000000@eu-north-1.amazonses.com>
-Subject: [PATCH] net: ipv4: Fix destination address determination in flowi4_init_output
-To: Eric Dumazet <edumazet@google.com>, Neal Cardwell <ncardwell@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	netdev@vger.kernel.org, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
-X-SES-Outgoing: 2025.05.08-23.251.240.11
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] dt-bindings: crypto: Add binding for TI DTHE V2
+To: T Pratham <t-pratham@ti.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Kamlesh Gurudasani <kamlesh@ti.com>, Vignesh Raghavendra
+ <vigneshr@ti.com>, Praneeth Bajjuri <praneeth@ti.com>,
+ Manorit Chawdhry <m-chawdhry@ti.com>, linux-crypto@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250508101723.846210-2-t-pratham@ti.com>
+ <20250508101723.846210-3-t-pratham@ti.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250508101723.846210-3-t-pratham@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Ozgur Karatas <ozgur@goosey.org>
+On 08/05/2025 12:07, T Pratham wrote:
+> Add DT binding for Texas Instruments DTHE V2 crypto accelerator.
+> 
+> DTHE V2 is introduced as a part of TI AM62L SoC and can currently be
+> only found in it.
+> 
+> Signed-off-by: T Pratham <t-pratham@ti.com>
 
-flowi4_init_output() function returns an argument and if opt->srr is
-true and opt->faddr is assigned to be checked before opt->faddr is
-used but if opt->srr seems to be true and opt->faddr is not set
-properly yet.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-opt itself will be an incompletely initialized struct and this access
-may cause a crash.
-* added daddr
-* like readability by passing a single daddr argument to
-flowi4_init_output() call.
-
-Signed-off-by: Ozgur Karatas <ozgur@goosey.org>
-
----
- net/ipv4/syncookies.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
-index 5459a78b9809..2ff92d512825 100644
---- a/net/ipv4/syncookies.c
-+++ b/net/ipv4/syncookies.c
-@@ -408,6 +408,7 @@ struct sock *cookie_v4_check(struct sock *sk,
-struct sk_buff *skb)
-        struct flowi4 fl4;
-        struct rtable *rt;
-        __u8 rcv_wscale;
-+       __be32 daddr;
-        int full_space;
-        SKB_DR(reason);
-
-@@ -442,6 +443,17 @@ struct sock *cookie_v4_check(struct sock *sk,
-struct sk_buff *skb)
-                goto out_free;
-        }
-
-+        /* Safely determine destination address considered SRR option.
-+         * The flowi4 destination address is derived from opt->faddr
-if opt->srr is set.
-+         * However IP options are not always present in the skb and
-accessing opt->faddr
-+         * without validating opt->optlen and opt->srr can lead to
-undefined behavior.
-+         */
-+        if (opt && opt->optlen && opt->srr) {
-+                daddr = opt->faddr;
-+        } else {
-+                daddr = ireq->ir_rmt_addr;
-+        }
-+
-        tcp_ao_syncookie(sk, skb, req, AF_INET);
-
-        /*
-@@ -453,7 +465,7 @@ struct sock *cookie_v4_check(struct sock *sk,
-struct sk_buff *skb)
-        flowi4_init_output(&fl4, ireq->ir_iif, ireq->ir_mark,
-                           ip_sock_rt_tos(sk), ip_sock_rt_scope(sk),
-                           IPPROTO_TCP, inet_sk_flowi_flags(sk),
--                          opt->srr ? opt->faddr : ireq->ir_rmt_addr,
-+                          daddr,
-                           ireq->ir_loc_addr, th->source, th->dest, sk->sk_uid);
-        security_req_classify_flow(req, flowi4_to_flowi_common(&fl4));
-        rt = ip_route_output_key(net, &fl4);
---
-2.39.5
+Best regards,
+Krzysztof
