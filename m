@@ -1,145 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E9E22577D;
-	Thu,  8 May 2025 13:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CFF22577D
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746710827; cv=none; b=XPvDLn6mKktQ6t5Vm0nyroMfgnB24yJjRacem/iLuGgt8SqZXunOjnCk8oSotEI1YbVPAb2wRezZzY+Zvq1JANYfzCU98GcnPG0vD7yO0JlpD1sIqF8BclUF6pL5LKPvuZ9lKo4GM4lOU/Nac7hHYwq7T5dCPhGrICoT9wyzEFw=
+	t=1746710907; cv=none; b=R7qscljo3SKAVi9rgyB1kk7ii1/ojWgAJ0nXIkODM18Hsx27rif0BOjvihpRCTo/PoA08jY7GN9I1DFsaQDS4DWT6njZ5bCkEdESc1uNfB2pdnDbuXL95n7LdfnDF3yBscAuET3NmJKRCZZaAvv++QQRdd9976RNiZwlxk+dLh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746710827; c=relaxed/simple;
-	bh=D6Da8xHdnluvwpHVpZn3DSIuOqzeWnOu7ERlbSMv9HA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KgZGIMIul7sSA7Ns4oj4SQ9Z2lnIna80GteXzfbFgerTh8wC9XItLgYtcd9u+SWJdxfTVIWJ/Z1Pocax8AS9SvFWVlqy+K3SiyloxCo2bpsE3Ql0CFTU3XXXsaaa4Cf+Tth+oX+5w3sLIva8xWoJk3q267mdVByYvwkKFs1a4Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T16MpJ1m; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746710907; c=relaxed/simple;
+	bh=+L4RShj5f5vWujBc4hl7X7bkL3O1PyKno5T0QURiKrc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RTOShaLR//ldTKtKNs3JJwMcngS6jhSxX9N6SmenWM2crhuyyqY+Le6jMLfB1daLnpi6K9S1W0ytHdIuENZvfVxNU1drenjsX9XZuDvccl8rXvgQ/f8hDqDGBJxaEteaBqcln2ARFtKCp0O5M9rIGuwaz9wO/Qsft5jcYiwGU9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com; spf=pass smtp.mailfrom=ciq.com; dkim=pass (2048-bit key) header.d=ciq.com header.i=@ciq.com header.b=pRWh7vZu; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ciq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T16MpJ1m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746710824; x=1778246824;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=D6Da8xHdnluvwpHVpZn3DSIuOqzeWnOu7ERlbSMv9HA=;
-  b=T16MpJ1mI7wPvJxyW4MuzDbkDOaTcgmejVIJs93jGwL1nTLu+gT6H+F1
-   rOasmtnKUm83y7LfiMA+LBSo54GY6DE7mL0ZEjJLp9EqLYRBd1lOI23M4
-   rCJBqprMqUI+jqlkaKdDTjvXt8bBuaSP5duAXR6e5XkrjO/gMaBqLtMXk
-   d8PWtArDbCQih3MRvsyyLcDKTSFz4ry1MRy04dzL0AzIediwECO0Jv2LQ
-   rx23If6AZsFTn9HCkM+BKmr47+jE9thKfk0iar3D/GOe6ll/1AF83vmuK
-   WuE1nVzvCvHIISuMu0mSlqI/fFGFGKjmST3dvv15F/XL2LhQ0te5w5oC9
-   Q==;
-X-CSE-ConnectionGUID: QKpyri/OTtOQ/jdlrSctLw==
-X-CSE-MsgGUID: dppwZdmNQLOztLwagwVOkA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48201548"
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="48201548"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 06:27:04 -0700
-X-CSE-ConnectionGUID: zlF4lWxXT6ybGwDkh0Jg2g==
-X-CSE-MsgGUID: 39YJMuXwRM6ZJ7/m13RM+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="136304522"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 08 May 2025 06:27:01 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uD1H9-000Azn-1o;
-	Thu, 08 May 2025 13:26:59 +0000
-Date: Thu, 8 May 2025 21:26:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yangtao Li <frank.li@vivo.com>, slava@dubeyko.com,
-	glaubitz@physik.fu-berlin.de
-Cc: oe-kbuild-all@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hfs: export dbg_flags in debugfs
-Message-ID: <202505082102.YBG1Di7L-lkp@intel.com>
-References: <20250507145550.425303-1-frank.li@vivo.com>
+	dkim=pass (2048-bit key) header.d=ciq.com header.i=@ciq.com header.b="pRWh7vZu"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c7913bab2cso103817685a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 06:28:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ciq.com; s=s1; t=1746710904; x=1747315704; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W6+F7sC4lq7A9uwyyHv0JUmrfUrtoSWQI2+38pjZK+0=;
+        b=pRWh7vZuRyAPVq0mf295rzpaLpKDMLH1+ZQ8fyMKVbUA1y2oPiQlBRuob790LXYM2U
+         K1ryBNP9xI8VEKxGUaFYoU90Lqs9meCEEwslxwmmArPCrbwS1ujYEkGqI+hLNrJp8Z6U
+         rbP21HBX3Y7CQnkzvUT8LjU2TwATdTVPJaVS356UeHuBJAnuhy934Jft2JlhCcF04jF1
+         wpusVOMDvk87g9zKMz6LfPqQ/ncuCgXT0et6cVhwsA+JePI/T7oJdcZdwlveMloIyli9
+         IU4zsOJsIMt07875q2xGPyDDZRUcPkaz/exVWfLXKSu752n9GPT5Q1n7VXUVjUJJsyqI
+         zJ9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746710904; x=1747315704;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W6+F7sC4lq7A9uwyyHv0JUmrfUrtoSWQI2+38pjZK+0=;
+        b=tvLqkPji0noKN91zO4OoQXP5Dyyt6PmOxpgMm/O/PlhC7RROEuJFaFEpzP2nHOiWnj
+         +kKBD1ZnmzS/1TZs6GbMBWZuudbYkdWCCOma6ICJHJhrkiHVSAJUaaiiMTKR1N9TjdbJ
+         iGWKGc4+dI9HAWv4fSU+8ZIRpylXyd9vT6pFWfGaVliMEW3Cjn4je1zeZxPnhVPmhp7s
+         4lIpRWyklabPaqUDEa0/cZHIZX4oS4qzcYPTBMwP3i7z/Azq9CM6jQEGzgUNlGj87XpU
+         mTnOxsV1y1aszBJpKubtfE430CJHYcH1gFOmksiSVr5cYX6OIjuksCgiGLIfN6mr1url
+         uH9w==
+X-Forwarded-Encrypted: i=1; AJvYcCULuDY36oe8UySHehgoA7ThFTw0EkaYUHKayXgDkT2TsBJSkUM/9oW1HB7mkO6mb0cLaCVRZSiIOluxXc8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbReGYq/lb8BsVeKSqzf47HE9oXaHqJCfdDxwNhdPZr+Kilbvt
+	smFFDK6nNhp+rKvfu+vumTPe9VtD7yNeqHj6MK/YJo0/7ZSdk4HzQ7Z0MohwMlqBysXZhIiTU5u
+	CuTdpgDy5D4JcLsRZO/0vMfQHTApFUEU8k1ey6g==
+X-Gm-Gg: ASbGncs4OVvps5gVVhR+d19SWdlOevsykfKRoULXvdcVbEuKH5hu8oSgRij9H+rep6N
+	qSiArKdHkup01wsQqRM/17t+/gTWLliK0VALD1aaPi0XdOlQxb9qBVrX+iLsruEOYef+LO5eddR
+	8w1P8ujzRMvnG6Bd1KdOXLcw==
+X-Google-Smtp-Source: AGHT+IFAm5bd005VyseIS1dr9F6a/JBOZzKDKZuZ1gmuo0nUeW1bL4XJmAQifXGpoCCjFyCVBzgF3f33AxU4Tq3X+YE=
+X-Received: by 2002:a05:620a:1985:b0:7c7:a554:e2a5 with SMTP id
+ af79cd13be357-7caf7405679mr1060715285a.44.1746710904541; Thu, 08 May 2025
+ 06:28:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507145550.425303-1-frank.li@vivo.com>
+References: <20250507183820.781599563@linuxfoundation.org>
+In-Reply-To: <20250507183820.781599563@linuxfoundation.org>
+From: Brett Mastbergen <bmastbergen@ciq.com>
+Date: Thu, 8 May 2025 09:28:13 -0400
+X-Gm-Features: ATxdqUGQ979zRBf0y1uOq64HSCY88KmE0OF2th89NGdxTXyo1bgCaZ6VsUDVfCg
+Message-ID: <CAOBMUvigbAGXoCSVqCz0nZ+7Y9ausHqV01uY1Z6W1jgGJkQzzQ@mail.gmail.com>
+Subject: Re: [PATCH 6.12 000/164] 6.12.28-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Yangtao,
+On Wed, May 7, 2025 at 3:00=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.12.28 release.
+> There are 164 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 09 May 2025 18:37:41 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.12.28-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.12.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-kernel test robot noticed the following build warnings:
+Builds successfully.  Boots and works on qemu and Dell XPS 15 9520 w/
+Intel Core i7-12600H
 
-[auto build test WARNING on brauner-vfs/vfs.all]
-[also build test WARNING on linus/master v6.15-rc5 next-20250508]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Tested-by: Brett Mastbergen <bmastbergen@ciq.com>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Yangtao-Li/hfs-export-dbg_flags-in-debugfs/20250507-224016
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
-patch link:    https://lore.kernel.org/r/20250507145550.425303-1-frank.li%40vivo.com
-patch subject: [PATCH] hfs: export dbg_flags in debugfs
-config: m68k-defconfig (https://download.01.org/0day-ci/archive/20250508/202505082102.YBG1Di7L-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250508/202505082102.YBG1Di7L-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505082102.YBG1Di7L-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   fs/hfs/bnode.c: In function 'hfs_bnode_dump':
->> fs/hfs/bnode.c:176:29: warning: variable 'tmp' set but not used [-Wunused-but-set-variable]
-     176 |                         int tmp;
-         |                             ^~~
-   At top level:
-   cc1: note: unrecognized command-line option '-Wno-unterminated-string-initialization' may have been intended to silence earlier diagnostics
-
-
-vim +/tmp +176 fs/hfs/bnode.c
-
-^1da177e4c3f415 Linus Torvalds 2005-04-16  147  
-^1da177e4c3f415 Linus Torvalds 2005-04-16  148  void hfs_bnode_dump(struct hfs_bnode *node)
-^1da177e4c3f415 Linus Torvalds 2005-04-16  149  {
-^1da177e4c3f415 Linus Torvalds 2005-04-16  150  	struct hfs_bnode_desc desc;
-^1da177e4c3f415 Linus Torvalds 2005-04-16  151  	__be32 cnid;
-^1da177e4c3f415 Linus Torvalds 2005-04-16  152  	int i, off, key_off;
-^1da177e4c3f415 Linus Torvalds 2005-04-16  153  
-c2b3e1f76e5c902 Joe Perches    2013-04-30  154  	hfs_dbg(BNODE_MOD, "bnode: %d\n", node->this);
-^1da177e4c3f415 Linus Torvalds 2005-04-16  155  	hfs_bnode_read(node, &desc, 0, sizeof(desc));
-c2b3e1f76e5c902 Joe Perches    2013-04-30  156  	hfs_dbg(BNODE_MOD, "%d, %d, %d, %d, %d\n",
-^1da177e4c3f415 Linus Torvalds 2005-04-16  157  		be32_to_cpu(desc.next), be32_to_cpu(desc.prev),
-^1da177e4c3f415 Linus Torvalds 2005-04-16  158  		desc.type, desc.height, be16_to_cpu(desc.num_recs));
-^1da177e4c3f415 Linus Torvalds 2005-04-16  159  
-^1da177e4c3f415 Linus Torvalds 2005-04-16  160  	off = node->tree->node_size - 2;
-^1da177e4c3f415 Linus Torvalds 2005-04-16  161  	for (i = be16_to_cpu(desc.num_recs); i >= 0; off -= 2, i--) {
-^1da177e4c3f415 Linus Torvalds 2005-04-16  162  		key_off = hfs_bnode_read_u16(node, off);
-c2b3e1f76e5c902 Joe Perches    2013-04-30  163  		hfs_dbg_cont(BNODE_MOD, " %d", key_off);
-^1da177e4c3f415 Linus Torvalds 2005-04-16  164  		if (i && node->type == HFS_NODE_INDEX) {
-^1da177e4c3f415 Linus Torvalds 2005-04-16  165  			int tmp;
-^1da177e4c3f415 Linus Torvalds 2005-04-16  166  
-^1da177e4c3f415 Linus Torvalds 2005-04-16  167  			if (node->tree->attributes & HFS_TREE_VARIDXKEYS)
-^1da177e4c3f415 Linus Torvalds 2005-04-16  168  				tmp = (hfs_bnode_read_u8(node, key_off) | 1) + 1;
-^1da177e4c3f415 Linus Torvalds 2005-04-16  169  			else
-^1da177e4c3f415 Linus Torvalds 2005-04-16  170  				tmp = node->tree->max_key_len + 1;
-c2b3e1f76e5c902 Joe Perches    2013-04-30  171  			hfs_dbg_cont(BNODE_MOD, " (%d,%d",
-c2b3e1f76e5c902 Joe Perches    2013-04-30  172  				     tmp, hfs_bnode_read_u8(node, key_off));
-^1da177e4c3f415 Linus Torvalds 2005-04-16  173  			hfs_bnode_read(node, &cnid, key_off + tmp, 4);
-c2b3e1f76e5c902 Joe Perches    2013-04-30  174  			hfs_dbg_cont(BNODE_MOD, ",%d)", be32_to_cpu(cnid));
-^1da177e4c3f415 Linus Torvalds 2005-04-16  175  		} else if (i && node->type == HFS_NODE_LEAF) {
-^1da177e4c3f415 Linus Torvalds 2005-04-16 @176  			int tmp;
-^1da177e4c3f415 Linus Torvalds 2005-04-16  177  
-^1da177e4c3f415 Linus Torvalds 2005-04-16  178  			tmp = hfs_bnode_read_u8(node, key_off);
-c2b3e1f76e5c902 Joe Perches    2013-04-30  179  			hfs_dbg_cont(BNODE_MOD, " (%d)", tmp);
-^1da177e4c3f415 Linus Torvalds 2005-04-16  180  		}
-^1da177e4c3f415 Linus Torvalds 2005-04-16  181  	}
-c2b3e1f76e5c902 Joe Perches    2013-04-30  182  	hfs_dbg_cont(BNODE_MOD, "\n");
-^1da177e4c3f415 Linus Torvalds 2005-04-16  183  }
-^1da177e4c3f415 Linus Torvalds 2005-04-16  184  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Brett
