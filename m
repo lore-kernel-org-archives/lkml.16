@@ -1,281 +1,146 @@
-Received: from invmail3.skhynix.com (exvmail3.skhynix.com [166.125.252.90])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1B7F215F41
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 07:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01AE21018F
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 07:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746690500; cv=none; b=InpqV/8PADXmPheaMtN2ehjiCcEVK5Y+y6jTxfKrKIf+O2F5zxLvxhtfuFQdd5UT9WSIVS/hd2NkBTNJfQ8hGXRHiXq8UbMevgca11ZQtX4+P1gRMWRZo1z/q99e/ttboADOB8fBiuRH5BO315Mfh94DGBRJjH5E77MKnpU7D/Q=
+	t=1746690735; cv=none; b=ReWKOkoI4K5xVe4mtwMAvmbekvnC6pE7AOwTHWr/tN0j2v2jBCKUt39ix3PF3czrNeyRJ8nOWmgbxaDxcjW/hDJnwmaeCBN9LTQSbeZ8P1lDHdX/+GzJd3shG0jBEuqz7ARHU+KlAd/Rm48kd6VaAmfIrdiAYny4vzWywVIpJqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746690500; c=relaxed/simple;
-	bh=TtdqIUEYjXcMTuPnGG8Is3QfKnZXrWlI7F4wmJf/KOY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R+ENr+K2MeKuYvbKlO4ZDPmT9PJytkLxd5mlvHK+RDA8KiwhKpZVoWceyYSVmb9pJVj1N6gLczfFhm1ExMtgTjnvX5JoJaE+/dukLJFFyPkNkMgNFgbh6EsPIeW3B83jOSvVRR7M2ci8l7foUS4nFt89ChppU48bxOxU2Tl07Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc59-03fff7000000aab6-bd-681c61b29f13
-From: "yohan.joung" <yohan.joung@sk.com>
-To: jaegeuk@kernel.org,
-	chao@kernel.org,
-	daehojeong@google.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	pilhyun.kim@sk.com,
-	"yohan.joung" <yohan.joung@sk.com>
-Subject: [PATCH v4 2/2] f2fs: add ckpt_valid_blocks to the section entry
-Date: Thu,  8 May 2025 16:47:55 +0900
-Message-ID: <20250508074756.693-2-yohan.joung@sk.com>
-X-Mailer: git-send-email 2.49.0.windows.1
-In-Reply-To: <20250508074756.693-1-yohan.joung@sk.com>
-References: <20250508074756.693-1-yohan.joung@sk.com>
+	s=arc-20240116; t=1746690735; c=relaxed/simple;
+	bh=WCRZByRUZpxmsXzHGVCvKrD10+f8Bu3lRPM31G4RUNU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ew/rLTlanccAMUEhJov0RGjzs+dI0IwehDRhcL6ZogdplBrmTpKh9Ha+0Sz9knv1wOQXriT1wwH7JjphyX0LDnvSxora9XL9IezREjmZW9Lslie16xGC/4+YrZGAWpE6Q5FVVfiFX8P1p56k0LV1oCQOBGp1uLFvvz/tWZr/j0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e02cnDo+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e02cnDo+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746690732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9Ym5IsgJPELXlmxVUiqqeE5x95LD2/wvG6YGV47RIG4=;
+	b=e02cnDo+8Ut2CE4yePcuv5/M81XElr+h2fAEf6DGcAYl/obIIcp7e6ik3QHcSO3aolfO2w
+	W8FXBFC+4CHDvvCA9Ehu4jzlI5f8HoQH8WSVEU9+3Y+xzXtKkeTJS86XGnsu6Jef7AzHIm
+	hrVl+sk1ziYkAcAkNmR2L0hNIgHkHsE=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-221-uoOCdMg9OBicCzW3qE3Qrw-1; Thu,
+ 08 May 2025 03:52:09 -0400
+X-MC-Unique: uoOCdMg9OBicCzW3qE3Qrw-1
+X-Mimecast-MFC-AGG-ID: uoOCdMg9OBicCzW3qE3Qrw_1746690728
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 396331956089;
+	Thu,  8 May 2025 07:52:08 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.8])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8A9551955F24;
+	Thu,  8 May 2025 07:52:06 +0000 (UTC)
+Date: Thu, 8 May 2025 15:52:01 +0800
+From: Baoquan He <bhe@redhat.com>
+To: fuqiang wang <fuqiang.wang@easystack.cn>
+Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] x86/kexec: fix potential cmem->ranges out of bounds
+Message-ID: <aBxiod8BG9gR49Hl@MiWiFi-R3L-srv>
+References: <20240108130720.228478-1-fuqiang.wang@easystack.cn>
+ <aBxfflkkQXTetmbq@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrILMWRmVeSWpSXmKPExsXC9ZZnke6mRJkMg5YT5hanp55lspjavpfR
-	4sn6WcwWlxa5W1zeNYfNgdVjwaZSj02rOtk8di/4zOTxeZNcAEsUl01Kak5mWWqRvl0CV8bF
-	CQfYC7ZZVWx5uZO5gbHNoIuRk0NCwETiZPttZhj70MPpjCA2m4CGxJ/eXrC4iICTxP8b7exd
-	jFwczAJtjBLtR5tYQRLCAh4SnQe/gDWwCKhKzOv8x9bFyMHBK2AqsfSTCMRMTYkdX84zgdic
-	AmYSR/9cASsXAipZ8H0DG4jNKyAocXLmExYQm1lAXqJ562xmkF0SAj1sEmuWrGCBGCQpcXDF
-	DZYJjPyzkPTMQtKzgJFpFaNIZl5ZbmJmjrFecXZGZV5mhV5yfu4mRmBALqv9E7mD8duF4EOM
-	AhyMSjy8Dt7SGUKsiWXFlbmHGCU4mJVEeIsagUK8KYmVValF+fFFpTmpxYcYpTlYlMR5jb6V
-	pwgJpCeWpGanphakFsFkmTg4pRoYF7I/WNfGeLL5SpVBePHFiG92971u2dk6Zywqdaucq3Ly
-	x5yfsX6TKmYyxgW3HNroxWp6N3yjJENk4YXvGywlmtbOW6/9SXptTkTFydZP3acvNj+/3HWu
-	6/fDvPlFPn2Sm6KPBjA+Xe22l0NabH77mlOrDjSvms13oSq/aknGviPyXJ0t0XfqlFiKMxIN
-	tZiLihMBn6W0B0QCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFLMWRmVeSWpSXmKPExsXCNUNlju6mRJkMg0/7DSxOTz3LZDG1fS+j
-	xZP1s5gtLi1yt7i8aw6bxYS5V5ks3m+9x+jA7rFgU6nHplWdbB67F3xm8vh228Pj8ya5ANYo
-	LpuU1JzMstQifbsEroyLEw6wF2yzqtjycidzA2ObQRcjJ4eEgInEoYfTGUFsNgENiT+9vcwg
-	toiAk8T/G+3sXYxcHMwCbYwS7UebWEESwgIeEp0Hv4A1sAioSszr/MfWxcjBwStgKrH0kwjE
-	TE2JHV/OM4HYnAJmEkf/XAErFwIqWfB9AxuIzSsgKHFy5hMWEJtZQF6ieets5gmMPLOQpGYh
-	SS1gZFrFKJKZV5abmJljplecnVGZl1mhl5yfu4kRGGLLav9M2sH47bL7IUYBDkYlHl5Hb+kM
-	IdbEsuLK3EOMEhzMSiK8RY1AId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxe4akJQgLpiSWp2amp
-	BalFMFkmDk6pBsaGf2YpzQ8WKNmeX3H8joyVHPt25yqVHd3/5s8IfXu9T8/aeuOkY2aac9Ub
-	83+efOx+3vjEnkcfBL7Z6iyfIHRLsYuj8JClV8muzHtBDnsfXr6/V66Ev+tBe/2FZ5MurynY
-	u2XvgvAlmxzUj9uv2R5V0RZ86eqVq8K72H5vrF7ffKCeafaBP7MclFiKMxINtZiLihMBFdQ4
-	Hi0CAAA=
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBxfflkkQXTetmbq@MiWiFi-R3L-srv>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-when performing buffered writes in a large section,
-overhead is incurred due to the iteration through
-ckpt_valid_blocks within the section.
-when SEGS_PER_SEC is 128, this overhead accounts for 20% within
-the f2fs_write_single_data_page routine.
-as the size of the section increases, the overhead also grows.
-to handle this problem ckpt_valid_blocks is
-added within the section entries.
+On 05/08/25 at 03:38pm, Baoquan He wrote:
+> In memmap_exclude_ranges(), elfheader will be excluded from crashk_res.
+> In the current x86 architecture code, the elfheader is always allocated
+> at crashk_res.start. It seems that there won't be a new split range.
+> But it depends on the allocation position of elfheader in crashk_res. To
+> avoid potential out of bounds in future, add a extra slot. And using
+> random kexec_buf for passing dm crypt keys may cause a range split too,
+> add another extra slot here.
 
-Test
-insmod null_blk.ko nr_devices=1 completion_nsec=1  submit_queues=8
-hw_queue_depth=64 max_sectors=512 bs=4096 memory_backed=1
-make_f2fs /dev/block/nullb0
-make_f2fs -s 128 /dev/block/nullb0
-fio --bs=512k --size=1536M --rw=write --name=1
---filename=/mnt/test_dir/seq_write
---ioengine=io_uring --iodepth=64 --end_fsync=1
+Sorry, this should be from fuqiang wang, when I edited the patch to
+reply to his patch, I forgot that. Please help makes change to set
+Fuqiang as the patch author, I just adapted the content based on Coiby's
+patches.
 
-before
-SEGS_PER_SEC 1
-2556MiB/s
-SEGS_PER_SEC 128
-2145MiB/s
-
-after
-SEGS_PER_SEC 1
-2556MiB/s
-SEGS_PER_SEC 128
-2556MiB/s
-
-Signed-off-by: yohan.joung <yohan.joung@sk.com>
----
- fs/f2fs/segment.c | 41 +++++++++++++++++++++++++++++-------
- fs/f2fs/segment.h | 53 +++++++++++++++++++++++++++++++++++++----------
- 2 files changed, 76 insertions(+), 18 deletions(-)
-
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 671bc5a8fd4a..7a53f2d8a474 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -2447,7 +2447,7 @@ static void update_segment_mtime(struct f2fs_sb_info *sbi, block_t blkaddr,
-  * that the consecutive input blocks belong to the same segment.
-  */
- static int update_sit_entry_for_release(struct f2fs_sb_info *sbi, struct seg_entry *se,
--				block_t blkaddr, unsigned int offset, int del)
-+				unsigned int segno, block_t blkaddr, unsigned int offset, int del)
- {
- 	bool exist;
- #ifdef CONFIG_F2FS_CHECK_FS
-@@ -2492,15 +2492,22 @@ static int update_sit_entry_for_release(struct f2fs_sb_info *sbi, struct seg_ent
- 				f2fs_test_and_clear_bit(offset + i, se->discard_map))
- 			sbi->discard_blks++;
- 
--		if (!f2fs_test_bit(offset + i, se->ckpt_valid_map))
-+#ifdef CONFIG_F2FS_CHECK_FS
-+		if (__is_large_section(sbi))
-+			sanity_check_valid_blocks(sbi, segno);
-+#endif
-+		if (!f2fs_test_bit(offset + i, se->ckpt_valid_map)) {
- 			se->ckpt_valid_blocks -= 1;
-+			if (__is_large_section(sbi))
-+				get_sec_entry(sbi, segno)->ckpt_valid_blocks -= 1;
-+		}
- 	}
- 
- 	return del;
- }
- 
- static int update_sit_entry_for_alloc(struct f2fs_sb_info *sbi, struct seg_entry *se,
--				block_t blkaddr, unsigned int offset, int del)
-+				unsigned int segno, block_t blkaddr, unsigned int offset, int del)
- {
- 	bool exist;
- #ifdef CONFIG_F2FS_CHECK_FS
-@@ -2532,13 +2539,23 @@ static int update_sit_entry_for_alloc(struct f2fs_sb_info *sbi, struct seg_entry
- 	 * SSR should never reuse block which is checkpointed
- 	 * or newly invalidated.
- 	 */
-+#ifdef CONFIG_F2FS_CHECK_FS
-+	if (__is_large_section(sbi))
-+		sanity_check_valid_blocks(sbi, segno);
-+#endif
- 	if (!is_sbi_flag_set(sbi, SBI_CP_DISABLED)) {
--		if (!f2fs_test_and_set_bit(offset, se->ckpt_valid_map))
-+		if (!f2fs_test_and_set_bit(offset, se->ckpt_valid_map)) {
- 			se->ckpt_valid_blocks++;
-+			if (__is_large_section(sbi))
-+				get_sec_entry(sbi, segno)->ckpt_valid_blocks++;
-+		}
- 	}
- 
--	if (!f2fs_test_bit(offset, se->ckpt_valid_map))
-+	if (!f2fs_test_bit(offset, se->ckpt_valid_map)) {
- 		se->ckpt_valid_blocks += del;
-+		if (__is_large_section(sbi))
-+			get_sec_entry(sbi, segno)->ckpt_valid_blocks += del;
-+	}
- 
- 	return del;
- }
-@@ -2569,9 +2586,9 @@ static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
- 
- 	/* Update valid block bitmap */
- 	if (del > 0) {
--		del = update_sit_entry_for_alloc(sbi, se, blkaddr, offset, del);
-+		del = update_sit_entry_for_alloc(sbi, se, segno, blkaddr, offset, del);
- 	} else {
--		del = update_sit_entry_for_release(sbi, se, blkaddr, offset, del);
-+		del = update_sit_entry_for_release(sbi, se, segno, blkaddr, offset, del);
- 	}
- 
- 	__mark_sit_entry_dirty(sbi, segno);
-@@ -4700,12 +4717,16 @@ void f2fs_flush_sit_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 					&sit_in_journal(journal, offset));
- 				check_block_count(sbi, segno,
- 					&sit_in_journal(journal, offset));
-+				if (__is_large_section(sbi))
-+					set_ckpt_valid_blocks(sbi, segno);
- 			} else {
- 				sit_offset = SIT_ENTRY_OFFSET(sit_i, segno);
- 				seg_info_to_raw_sit(se,
- 						&raw_sit->entries[sit_offset]);
- 				check_block_count(sbi, segno,
- 						&raw_sit->entries[sit_offset]);
-+				if (__is_large_section(sbi))
-+					set_ckpt_valid_blocks(sbi, segno);
- 			}
- 
- 			__clear_bit(segno, bitmap);
-@@ -5029,6 +5050,12 @@ static int build_sit_entries(struct f2fs_sb_info *sbi)
- 	}
- 	up_read(&curseg->journal_rwsem);
- 
-+	/* update ckpt_ckpt_valid_block */
-+	if (__is_large_section(sbi)) {
-+		for (unsigned int segno = 0; segno < MAIN_SEGS(sbi); segno += SEGS_PER_SEC(sbi))
-+			set_ckpt_valid_blocks(sbi, segno);
-+	}
-+
- 	if (err)
- 		return err;
- 
-diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-index 5777b385e7d2..ebc90d3cb57c 100644
---- a/fs/f2fs/segment.h
-+++ b/fs/f2fs/segment.h
-@@ -211,6 +211,7 @@ struct seg_entry {
- 
- struct sec_entry {
- 	unsigned int valid_blocks;	/* # of valid blocks in a section */
-+	unsigned int ckpt_valid_blocks; /* # of valid blocks last cp in a section */
- };
- 
- #define MAX_SKIP_GC_COUNT			16
-@@ -347,22 +348,52 @@ static inline unsigned int get_valid_blocks(struct f2fs_sb_info *sbi,
- static inline unsigned int get_ckpt_valid_blocks(struct f2fs_sb_info *sbi,
- 				unsigned int segno, bool use_section)
- {
--	if (use_section && __is_large_section(sbi)) {
--		unsigned int secno = GET_SEC_FROM_SEG(sbi, segno);
--		unsigned int start_segno = GET_SEG_FROM_SEC(sbi, secno);
--		unsigned int blocks = 0;
--		int i;
-+	if (use_section && __is_large_section(sbi))
-+		return get_sec_entry(sbi, segno)->ckpt_valid_blocks;
-+	else
-+		return get_seg_entry(sbi, segno)->ckpt_valid_blocks;
-+}
-+
-+static inline void set_ckpt_valid_blocks(struct f2fs_sb_info *sbi,
-+		unsigned int segno)
-+{
-+	unsigned int secno = GET_SEC_FROM_SEG(sbi, segno);
-+	unsigned int start_segno = GET_SEG_FROM_SEC(sbi, secno);
-+	unsigned int blocks = 0;
-+	int i;
- 
--		for (i = 0; i < SEGS_PER_SEC(sbi); i++, start_segno++) {
--			struct seg_entry *se = get_seg_entry(sbi, start_segno);
-+	for (i = 0; i < SEGS_PER_SEC(sbi); i++, start_segno++) {
-+		struct seg_entry *se = get_seg_entry(sbi, start_segno);
- 
--			blocks += se->ckpt_valid_blocks;
--		}
--		return blocks;
-+		blocks += se->ckpt_valid_blocks;
- 	}
--	return get_seg_entry(sbi, segno)->ckpt_valid_blocks;
-+	get_sec_entry(sbi, segno)->ckpt_valid_blocks = blocks;
- }
- 
-+#ifdef CONFIG_F2FS_CHECK_FS
-+static inline void sanity_check_valid_blocks(struct f2fs_sb_info *sbi,
-+		unsigned int segno)
-+{
-+	unsigned int secno = GET_SEC_FROM_SEG(sbi, segno);
-+	unsigned int start_segno = GET_SEG_FROM_SEC(sbi, secno);
-+	unsigned int blocks = 0;
-+	int i;
-+
-+	for (i = 0; i < SEGS_PER_SEC(sbi); i++, start_segno++) {
-+		struct seg_entry *se = get_seg_entry(sbi, start_segno);
-+
-+		blocks += se->ckpt_valid_blocks;
-+	}
-+
-+	if (blocks != get_sec_entry(sbi, segno)->ckpt_valid_blocks) {
-+		f2fs_err(sbi,
-+			"Inconsistent ckpt valid blocks: "
-+			"seg entry(%d) vs sec entry(%d) at secno %d",
-+			blocks, get_sec_entry(sbi, segno)->ckpt_valid_blocks, secno);
-+		f2fs_bug_on(sbi, 1);
-+	}
-+}
-+#endif
- static inline void seg_info_from_raw_sit(struct seg_entry *se,
- 					struct f2fs_sit_entry *rs)
- {
--- 
-2.33.0
+> 
+> The similar issue also exists in fill_up_crash_elf_data(). The range to
+> be excluded is [0, 1M], start (0) is special and will not appear in the
+> middle of existing cmem->ranges[]. But in cast the low 1M could be
+> changed in the future, add a extra slot too.
+> 
+> Previously discussed link:
+> [1] https://lore.kernel.org/kexec/ZXk2oBf%2FT1Ul6o0c@MiWiFi-R3L-srv/
+> [2] https://lore.kernel.org/kexec/273284e8-7680-4f5f-8065-c5d780987e59@easystack.cn/
+> [3] https://lore.kernel.org/kexec/ZYQ6O%2F57sHAPxTHm@MiWiFi-R3L-srv/
+> 
+> Signed-off-by: fuqiang wang <fuqiang.wang@easystack.cn>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+> v4->v5:
+> - This is on top of Coiby's LUKS patchset in branch mm-nonmm-unstable of
+>   akpm/mm.git. I did some adaption based on Coiby's patches.
+> - [PATCH v9 0/8] Support kdump with LUKS encryption by reusing LUKS volume keys
+> 
+>  arch/x86/kernel/crash.c | 23 +++++++++++++++++++----
+>  1 file changed, 19 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index bcb534688dfe..749a60ce8b7f 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -165,8 +165,18 @@ static struct crash_mem *fill_up_crash_elf_data(void)
+>  	/*
+>  	 * Exclusion of crash region and/or crashk_low_res may cause
+>  	 * another range split. So add extra two slots here.
+> +	 *
+> +	 * Exclusion of low 1M may not cause another range split, because the
+> +	 * range of exclude is [0, 1M] and the condition for splitting a new
+> +	 * region is that the start, end parameters are both in a certain
+> +	 * existing region in cmem and cannot be equal to existing region's
+> +	 * start or end. Obviously, the start of [0, 1M] cannot meet this
+> +	 * condition.
+> +	 *
+> +	 * But in order to lest the low 1M could be changed in the future,
+> +	 * (e.g. [stare, 1M]), add a extra slot.
+>  	 */
+> -	nr_ranges += 2;
+> +	nr_ranges += 3;
+>  	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+>  	if (!cmem)
+>  		return NULL;
+> @@ -313,10 +323,15 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+>  	struct crash_mem *cmem;
+>  
+>  	/*
+> -	 * Using random kexec_buf for passing dm crypt keys may cause a range
+> -	 * split. So use two slots here.
+> +	 * In the current x86 architecture code, the elfheader is always
+> +	 * allocated at crashk_res.start. But it depends on the allocation
+> +	 * position of elfheader in crashk_res. To avoid potential out of
+> +	 * bounds in future, add an extra slot.
+> +	 *
+> +	 * And using random kexec_buf for passing dm crypt keys may cause a
+> +	 * range split too, add another extra slot here.
+>  	 */
+> -	nr_ranges = 2;
+> +	nr_ranges = 3;
+>  	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+>  	if (!cmem)
+>  		return -ENOMEM;
+> -- 
+> 2.41.0
+> 
 
