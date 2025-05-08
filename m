@@ -1,80 +1,66 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F671E1E1D;
-	Thu,  8 May 2025 20:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C78A1E1E1D
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 20:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746736116; cv=none; b=pLBBJ76oZ2yIwjAPIn8H4L3+a2OfTCZ52n0lOH2g+76wbhXRi3XDdvheKvJRPraScRgKPpv/iOUe6Sa9cRo1RPJ6Kmb+h3PL9NrMmiGs7FKGNOgdI4Lvd4NrmCXVCry9flWOq7dGHFpPCbzxTSkzT7GOOeW9CAlgfO24NrLREkc=
+	t=1746736129; cv=none; b=GPxpBilAtnV8/TqdQZE/ghCJQ5ukgjFQwMtgc6bXirInNzWna2jMumZVAMWZBwHsu6Oq/0wiyR2dHbRmkbHv1pZacImEHXNZ3S4Yj3wEwFdCCBoquD2T8OZ727UK5IXX8PGZtt/c2Lso+jRIqI3Bib66aEkUet8GbwLhZh6obb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746736116; c=relaxed/simple;
-	bh=glI2QyA2V4kwUucOfsrEIYTyDYNwfxLg42DzzZgissg=;
+	s=arc-20240116; t=1746736129; c=relaxed/simple;
+	bh=FB3CObSvNmqXo36iqoupKjaldVjHQZNvlqB3kZHu8kA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GUU8sQ9JWgU10vEHUrjSKhNjUFLejzrsZQ//Qz5cBLiWqRg2jN9RMTfF78DdgcpaOlJINRiNqAlJQPAq2YJuskyhgFhKBViSuGnDzvloTjoHfvgum2A2N0mUkB+mCmXe7ENwtsagclbAdFUvzMaUGJ8jdIEqhasuZibGCzXSAIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d16MN9ga; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rt+aiORNPRXtx+WpHw4hgGHVARhOUnXDUorlYLf26KCpLBFNSs3g/RIO/IQfvGEb0tVaePrucZ7DbHGcvAnWZ7aql9YhttCALzH/9rDjNvLKMc10fGCMlc7bfF5O1EGmDIiFWN8Ui0lPoueCfPZU4DzjlC+mvt7tXK/IzUB2Vy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k9FVFtZ7; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d16MN9ga"
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-525b44ec88aso445024e0c.3;
-        Thu, 08 May 2025 13:28:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746736113; x=1747340913; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/pc5D2wBbh6n4AHAVGKAJlI6vZAzUWJsMh1/Yq1dDS0=;
-        b=d16MN9gavssuSj3PnohD0slnV7NEBM1B81vgUy12FUnL0pyEmzz8csoO+SmKf/PLai
-         KM+sCS9pQij8rIf0a+oDq3xUcFgEw6cyCen8LAJ5sqQd+aowAdgJaS4jMRAmwkpX0vb8
-         HrLU7sXY5QhEYHQt7HhUcmHERbqhneO74wYVLOSyqsMoudPx9PLdHWhA0pM82xCe9OZ1
-         f/7jhUBMEn2G8ZHNYjZFgSY0KvklAftlWXlSfdG9Gm1kmqkIXEXhhKDhLSb3BCgB1ykq
-         r9ygBXAhHV8Q960mZmn1abbw+5XneEPqbBw9QCNDvnsjiTQ6/YYaC/0eVciCW0lG+/sP
-         fukg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746736113; x=1747340913;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/pc5D2wBbh6n4AHAVGKAJlI6vZAzUWJsMh1/Yq1dDS0=;
-        b=OBPuMgS84CFXXrQ04c4IgmPdWB327ZaT2p81wnDz/ucHsI7s+zv4whfRjpXwafnbeH
-         G8MohrSq5EjpJdvVv78T3+aDaefRQqU9IlfAMBWlZhqtcvvTy5DoaoArrCCWLQt12AIm
-         qA4mwvA5g+fferUAJt8gEi06+gI3OWdBHFM2HGig9zjSKyNOGXuJu67npucPa9j4olTb
-         PjYc5+BL35iTcf1/KNHVsdYoO3XJxn/ITGsL2s5jFJ0GzK4jJv38P7qCAFK754K84QNS
-         67y2Qz/W2oHHAqWyGwy9JaWBao9ujcvVd1Y0BNdy8vQreMHYjc5Z53/MfTJlfwy5pcGU
-         n+cg==
-X-Forwarded-Encrypted: i=1; AJvYcCVeezngOw/nG9ZUOKL1+BvhVXUqxORZoCHeC0vYqSVsawSuLkNTwnBvU9E4ST8uQcmING2nYiMYBcQ=@vger.kernel.org, AJvYcCWgaEIIoW1Bp5CA8n8aQjUCga7BIww/c1ujalR4D+r+wBMR6LV9RqOHWEDwdHOBo/SmF7C7v7MgPZjXl3o=@vger.kernel.org, AJvYcCXiSoM/0PETq9KGEcXPNzOMVzjr7SGNc4aSZ2rwsS8s+S4/1rubvQq1qupgovbqlet9Sj8/0xe4rgzMX0CBE+MnCQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwISI3m+AaLz7BzRZSYBVj5PZF824VsE1IraZwfUOOh+bgN71er
-	k84q7ZrvtXtjwuOLaHWmqsQ0SBMye+IJCYSw2umhaJGOtuAm7evh
-X-Gm-Gg: ASbGncsGQwWoGYiaKZXLsUDx5IqetFaQVWgVcwiqRTRjsYiWZ4o17p5oiZT3FiFIXU+
-	HEg1TvPt6o55KiRvHJYjn1ZBox4X125yfKhliiBBQNiP7vn9w3GJtvBINHK2O0TSi/a8B7qA1vm
-	2nfOVBd/zMj23LXdDOHc3G57yAWFPx21b4ex8YS24lnrBNiXZJKz2VkMlDSTRsupKa0Y12g36aO
-	FzD3S301MmwVERzGgjUKFeKShJmyUYAyaUxswQa2FgYXFHrNcWlwK1m5EdwqjB+p/camo8EAlA7
-	Hv9a6BpjMfHS9wCU9P90XiQm4T3Jz73sVNve8UAe
-X-Google-Smtp-Source: AGHT+IHH8Hb44S2pUrzpBoAuMzG/VFUuedek3qnL1aKjilRrz2XuP3PUIZdV2EDPHQ1l0mwZVNw7hQ==
-X-Received: by 2002:a05:6122:828d:b0:523:9ee7:7f8e with SMTP id 71dfb90a1353d-52c53c68f4amr1351138e0c.4.1746736113471;
-        Thu, 08 May 2025 13:28:33 -0700 (PDT)
-Received: from hiago-nb ([2804:1b3:a7c0:6030:ff91:5999:3ab5:5caf])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52c5375bcdcsm217781e0c.25.2025.05.08.13.28.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 13:28:32 -0700 (PDT)
-Date: Thu, 8 May 2025 17:28:26 -0300
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, linux-pm@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@oss.nxp.com>, daniel.baluta@nxp.com,
-	iuliana.prodan@oss.nxp.com, Fabio Estevam <festevam@gmail.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v2 3/3] remoteproc: imx_rproc: add power mode check for
- remote core attachment
-Message-ID: <20250508202826.33bke6atcvqdkfa4@hiago-nb>
-References: <20250507160056.11876-1-hiagofranco@gmail.com>
- <20250507160056.11876-4-hiagofranco@gmail.com>
- <CAPDyKFrHD1hVCfOK-JV5FJM+Cd9DoKKZGKcC94fxx6_9Bsri1g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k9FVFtZ7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746736127; x=1778272127;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FB3CObSvNmqXo36iqoupKjaldVjHQZNvlqB3kZHu8kA=;
+  b=k9FVFtZ7QlJ1tGqqpGdlNV2FKEw8Revb6/Rk3YyHlk9OO92nG2jmMXIp
+   GZ+uFVvJPTlJxKdr/+fHJ61OgYP/c/U9R3UXUXoQk0JOvG8Q60unPYQ5X
+   au1NPeuI6zGugz+lGhfGvk6u4TiYn7t5OVyLZ19D+GacW9JFX4BiAr3jU
+   gba16QEmg6YwRLxoyhNQTbpoMB02H4pdMiHmzOSjefyrQRYmjsU6y4l4V
+   rZ8LRrmV9PaTScQLjof5XFQ82NOr1fRbAir9h1mYa4zgyjPCwd6UiMt2T
+   SaS0FF4JiBnuBLglLbBr+T00P8zPojrXReM3eA0GDU3yiNGL7cUwsuYUQ
+   Q==;
+X-CSE-ConnectionGUID: XV3A7bJ4RyWfLgKQJEjevA==
+X-CSE-MsgGUID: mxJbSPu2TWm0OY5KVnnSGA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59205567"
+X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
+   d="scan'208";a="59205567"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 13:28:46 -0700
+X-CSE-ConnectionGUID: puZDWQyHR1S8yrl3bdfFVA==
+X-CSE-MsgGUID: GFXGe0+gTDCPu8nafAxQjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
+   d="scan'208";a="136287083"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 13:28:47 -0700
+Date: Thu, 8 May 2025 13:28:44 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghuay@nvidia.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v4 13/31] fs/resctrl: Add support for additional monitor
+ event display formats
+Message-ID: <aB0T_Ep2lJzfwjv5@agluck-desk3>
+References: <20250429003359.375508-1-tony.luck@intel.com>
+ <20250429003359.375508-14-tony.luck@intel.com>
+ <4aa0904d-9332-4796-90d6-d858711fc611@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,88 +69,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFrHD1hVCfOK-JV5FJM+Cd9DoKKZGKcC94fxx6_9Bsri1g@mail.gmail.com>
+In-Reply-To: <4aa0904d-9332-4796-90d6-d858711fc611@intel.com>
 
-Hello,
+On Thu, May 08, 2025 at 08:49:56AM -0700, Reinette Chatre wrote:
+> Hi Tony,
+> 
+> shortlog nit: "fs/resctrl: Support additional monitor event display formats"
+> 
+> On 4/28/25 5:33 PM, Tony Luck wrote:
+> > Resctrl was written with the assumption that all monitor events
+> > can be displayed as unsigned decimal integers.
+> > 
+> > Some telemetry events provide greater precision where architecture code
+> > uses a fixed point format with 18 binary places.
+> > 
+> > Add a "display_format" field to struct mon_evt which can specify
+> > that the value for the event be displayed as an integer for legacy
+> > events, or as a floating point value with six decimal places converted
+> > from the fixed point format received from architecture code.
+> 
+> There was no discussion on this during the previous version.
+> While this version addresses the issue of architecture changing the
+> format it does not address the issue of how to handle different
+> architecture formats. With this change any architecture that may
+> want to support any of these events will be required to translate
+> whatever format it uses into the one Intel uses to be translated
+> again into format for user space. Do you think this is reasonable? 
+> 
+> Alternatively, resctrl could add additional file that contains the
+> format so that if an architecture in the future needs to present data
+> differently, an interface will exist to guide userspace how to parse it.
+> Creation of such user interface cannot be delayed until the time
+> it is needed since then these formats would be ABI.
 
-On Thu, May 08, 2025 at 12:03:33PM +0200, Ulf Hansson wrote:
-> On Wed, 7 May 2025 at 18:02, Hiago De Franco <hiagofranco@gmail.com> wrote:
-> >
-> > From: Hiago De Franco <hiago.franco@toradex.com>
-> >
-> > When the remote core is started before Linux boots (e.g., by the
-> > bootloader), the driver currently is not able to attach because it only
-> > checks for cores running in different partitions. If the core was kicked
-> > by the bootloader, it is in the same partition as Linux and it is
-> > already up and running.
-> >
-> > This adds power mode verification through the SCU interface, enabling
-> > the driver to detect when the remote core is already running and
-> > properly attach to it.
-> >
-> > Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
-> > Suggested-by: Peng Fan <peng.fan@nxp.com>
+What if resctrl filesystem allows architecture to supply the number
+of binary places for fixed point values when enabling an event?
+
+That would allow h/w implementations to pick an appropriate precision
+for each new event. Different implementations of the same event
+(e.g. "core_energy") may pick different precision across architectures
+or between generations of the same architecture.
+
+File system code can then do:
+
+	if (binary_places == 0)
+		display as integer
+	else
+		convert to floating point (with one decimal place per
+		three binary places)
+
+Existing events are all integers and won't change (it would be weird
+for an architecture to report "mbm_local_bytes" with a fixed point
+rather than integer value).
+
+New events may report in either integer or floating point format
+with varying amounts of precision. But I'm not sure that would be
+a burden for writing tools that can run on different architectures.
+
+> > 
+> > Signed-off-by: Tony Luck <tony.luck@intel.com>
 > > ---
-> > v2: Dropped unecessary include. Removed the imx_rproc_is_on function, as
-> > suggested.
-> > ---
-> >  drivers/remoteproc/imx_rproc.c | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >
-> > diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> > index 627e57a88db2..9b6e9e41b7fc 100644
-> > --- a/drivers/remoteproc/imx_rproc.c
-> > +++ b/drivers/remoteproc/imx_rproc.c
-> > @@ -949,6 +949,19 @@ static int imx_rproc_detect_mode(struct imx_rproc *priv)
-> >                         if (of_property_read_u32(dev->of_node, "fsl,entry-address", &priv->entry))
-> >                                 return -EINVAL;
-> >
-> > +                       /*
-> > +                        * If remote core is already running (e.g. kicked by
-> > +                        * the bootloader), attach to it.
-> > +                        */
-> > +                       ret = imx_sc_pm_get_resource_power_mode(priv->ipc_handle,
-> > +                                                               priv->rsrc_id);
-> > +                       if (ret < 0)
-> > +                               dev_err(dev, "failed to get power resource %d mode, ret %d\n",
-> > +                                       priv->rsrc_id, ret);
-> > +
-> > +                       if (ret == IMX_SC_PM_PW_MODE_ON)
-> > +                               priv->rproc->state = RPROC_DETACHED;
-> > +
-> >                         return imx_rproc_attach_pd(priv);
+> >  include/linux/resctrl_types.h |  5 +++++
+> >  fs/resctrl/internal.h         |  2 ++
+> >  fs/resctrl/ctrlmondata.c      | 24 +++++++++++++++++++++++-
+> >  fs/resctrl/monitor.c          | 21 ++++++++++++---------
+> >  4 files changed, 42 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.h
+> > index 5ef14a24008c..6245034f6c76 100644
+> > --- a/include/linux/resctrl_types.h
+> > +++ b/include/linux/resctrl_types.h
 > 
-> Why is it important to potentially set "priv->rproc->state =
-> RPROC_DETACHED" before calling imx_rproc_attach_pd()?
+> This needs to be internal to resctrl fs.
+> resctrl_types.h should only contain the types required in asm/resctrl.h
 > 
-> Would it be possible to do it the other way around? First calling
-> imx_rproc_attach_pd() then get the power-mode to know if
-> RPROC_DETACHED should be set or not?
+> > @@ -50,4 +50,9 @@ enum resctrl_event_id {
+> >  #define QOS_NUM_MBM_EVENTS	(QOS_L3_MBM_LOCAL_EVENT_ID - QOS_L3_MBM_TOTAL_EVENT_ID + 1)
+> >  #define MBM_EVENT_IDX(evt)	((evt) - QOS_L3_MBM_TOTAL_EVENT_ID)
+> >  
+> > +/* Event value display formats */
 > 
-> The main reason why I ask, is because of how we handle the single PM
-> domain case. In that case, the PM domain has already been attached
-> (and powered-on) before we reach this point.
+> Please add details about what each format means (how it should
+> be interpreted).
+> 
+> Reinette
 
-I am not sure if I understood correcly, let me know if I missed
-something. From my understanding in this case it does not matter, since
-the RPROC_DETACHED will only be a flag to trigger the attach callback
-from rproc_validate(), when rproc_add() is called inside
-remoteproc_core.c.
-
-With that we can correcly attach to the remote core running, which was
-not possible before, where the function returns at "return
-imx_rproc_attach_pd(priv);" with the RPROC_OFFLINE state to
-rproc_validate().
-
-> 
-> >                 }
-> >
-> > --
-> > 2.39.5
-> >
-> 
-> Kind regards
-> Uffe
-
-Best Regards,
-Hiago.
+-Tony
