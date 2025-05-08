@@ -1,217 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6951DE4DC
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 03:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4821DE4DC;
+	Thu,  8 May 2025 03:28:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746674906; cv=none; b=cfH5zKULSMESIRQVZ2t1nCrzra8hxD2uXV0RiQN8LTSYt5wFSKf0dEPt4wDjvTYBGW6KdhcrGlh/L+PVeOtuC4OFfhKHHn64pY/BdgwYUedOhFfBsB7K/oEE+CN/jOugVUcf9oALHcwI6QUxsbHnX1E2mM/VYRL7ZSLY937f4yA=
+	t=1746674930; cv=none; b=Wj4sxeCDyhzAtAk/WnMKNyei2woSpp9iJWmRtGzhhEZvMB0P0a760m/GtACicWcnryCTqCD6GSzN18YsRDz6LdL69ALjulqtVtUwWsLGWqJvkqajImnGYshduU49z/1bFvoYnXqYYqsoReJokuMJmx9sfia+KtYyEhkQlJQN2+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746674906; c=relaxed/simple;
-	bh=c8nFFMxcfqaVoDAZ0wk09wvzmP7ztZbQ7lRJt36AzeE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=fmBqXkl1ve1ft0+o5D85trJGoLFscOOfWZNihU9/mpcHpmVhcrfKnwg7kCKuM9cJR0spDNxYc5o8KQ2gFKYEL3WmFdV3LqTtDSbO6BcIvAaPog07Q9fPoXFotp9TC3WKBU6O5TKDy0QQ05/rsMFNQgN+quw+3092RqQdPzHb9dE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bv9iIsOL; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746674930; c=relaxed/simple;
+	bh=vdAmVAbufuOs39noAWyicE6RZakZi51NyGvoS2Gr3As=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=FH4+TCX9tTP8S8bYW9hDNTZRx1nJyz8+iGa6xW2iVWYSxxbJoYeg+O1RcO3DfrzeCQR43LRPFiXT5VRmpVvGvNyh88WU3WAm3fj3IOdT2xsYADdUCMShWpiRWkS1ptlVBQwHV1R1zdd0QYaevPUCRfNm5jdgtgBoRVxvNqIEi2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENHPijUw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bv9iIsOL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746674904; x=1778210904;
-  h=date:from:to:cc:subject:message-id;
-  bh=c8nFFMxcfqaVoDAZ0wk09wvzmP7ztZbQ7lRJt36AzeE=;
-  b=bv9iIsOLnXerMDVfYclpJpHu4DEF3mKU9k8pkLn7Yqf0MW1vdEgnY5Ls
-   9kdWX+pWjKa3Lv7V5q4gRUY1GgnFqCdrj1ErxN+KQIs+u28PeLb4t+lyu
-   paH2gybZmk66fIch1RkeYUCRKpmu6yM8rPZI/1hSpRSqS5hBxNe0QS1BU
-   RUHA0hdLsmhwbAAigkr4imAtuSSmHTo0E8Ed5Nt3KIqSrfRnKAVSdgFeh
-   sluO+4m/RrZ2z1lMnM6NFMt0WXRDu3K6iE1iMCxDEHhppcKP+IJHAwb9P
-   FxeZErdk4cXPtFFp4eSeNtOm9DthUJzloYHbSJZ/rCdPgUGsFwnyoeEmi
-   A==;
-X-CSE-ConnectionGUID: fOMxe0ZQTDe2HI0lby+69g==
-X-CSE-MsgGUID: mgZZ21W7RtiSaLGISrkRdA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="59790367"
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="59790367"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 20:28:24 -0700
-X-CSE-ConnectionGUID: gYCBFRXsSICio4v6z4/mBw==
-X-CSE-MsgGUID: QWnPYab+RISw+t3mwbAXqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="136095888"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 07 May 2025 20:28:23 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCrvo-0009j2-1b;
-	Thu, 08 May 2025 03:28:20 +0000
-Date: Thu, 08 May 2025 11:27:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/wfamnae-next20250424] BUILD SUCCESS
- 604833e5a102945aa4596b80085ef9cada5e6d57
-Message-ID: <202505081133.YSZAinzd-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENHPijUw"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D5C7DC4CEE8;
+	Thu,  8 May 2025 03:28:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746674929;
+	bh=vdAmVAbufuOs39noAWyicE6RZakZi51NyGvoS2Gr3As=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=ENHPijUw2e8bBenUyJA/B5Fl0O8M1Vco9GZYiy/fbeuooQminhUsQ/vxPgEywxxqB
+	 6A4Si22NuGnUzknZV4/hWZpGYemjL7zw12MTTpxKPesWQsJ+A+q801D6EjeS5fGKUC
+	 8fpPERcaVhfIqtACyVlLsrCvc7FrfOACLq42NPaJymerWDd931B6X0Z6mWtRED77hR
+	 PjIBqhgElF8ua0JWFcR9Uz5uYP0GWt0NyeVwkw8zAJxsxJ359ZV039h97CS7rzoy0N
+	 VdBCeQlPqfW+MZWcm0TTxNt7QYJjIzgA57WJVo5DSehccTgMyYY70yYUcDHT5HXUyJ
+	 dFCxZWtMzxuag==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C417CC3ABBE;
+	Thu,  8 May 2025 03:28:49 +0000 (UTC)
+From: Keguang Zhang via B4 Relay <devnull+keguang.zhang.gmail.com@kernel.org>
+Date: Thu, 08 May 2025 11:28:42 +0800
+Subject: [PATCH] mtd: rawnand: loongson1: Fix inconsistent refcounting in
+ ls1x_nand_chip_init()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250508-loongson1-nand-fix-v1-1-27b26234c62c@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAOkkHGgC/x2MQQqAMAzAvjJ6tjAHOvQr4mHaqgXpZAMRZH93e
+ EwgeSFzEs4wmhcS35IlaoW2MbAeQXdGocrgrOtsZz2eMeqeo7aoQQk3edD5YfErUb8Fghpeiav
+ +p9NcygcEQdaqZAAAAA==
+To: Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-mips@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>, 
+ Keguang Zhang <keguang.zhang@gmail.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746674928; l=2384;
+ i=keguang.zhang@gmail.com; s=20231129; h=from:subject:message-id;
+ bh=Enffpow1/oAmcpIlxb54XqOtVEib/iLdUuIMLpplTqs=;
+ b=fYD8HRpmUt1FmYMRV3iW1cBEn4niKD1j8KhX3W660f8g/vV9SUM9UJ2xm+x1vbLINlw0u8KKW
+ vHC+7SwNRNmAPW6deUZAEbq+C+iM1dGovTg/E7gfvQniSTIjeTEuiSr
+X-Developer-Key: i=keguang.zhang@gmail.com; a=ed25519;
+ pk=FMKGj/JgKll/MgClpNZ3frIIogsh5e5r8CeW2mr+WLs=
+X-Endpoint-Received: by B4 Relay for keguang.zhang@gmail.com/20231129 with
+ auth_id=102
+X-Original-From: Keguang Zhang <keguang.zhang@gmail.com>
+Reply-To: keguang.zhang@gmail.com
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250424
-branch HEAD: 604833e5a102945aa4596b80085ef9cada5e6d57  overflow: Fix direct struct member initialization in _DEFINE_FLEX()
+From: Keguang Zhang <keguang.zhang@gmail.com>
 
-elapsed time: 10286m
+As reported by Dan,
+commit d2d10ede04b1 ("mtd: rawnand: Add Loongson-1 NAND Controller
+Driver"), leads to the following Smatch static checker warning:
 
-configs tested: 140
-configs skipped: 3
+drivers/mtd/nand/raw/loongson1-nand-controller.c:730 ls1x_nand_chip_init()
+warn: inconsistent refcounting 'chip_np->kobj.kref.refcount.refs.counter':
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Fix this issue by calling of_node_put() immediately after using chip_np.
+In addition, remove all unnecessary of_node_put(chip_np) calls.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                                 defconfig    gcc-14.2.0
-arc                   randconfig-001-20250501    gcc-13.3.0
-arc                   randconfig-002-20250501    gcc-14.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                         assabet_defconfig    clang-18
-arm                                 defconfig    clang-21
-arm                   randconfig-001-20250501    gcc-10.5.0
-arm                   randconfig-002-20250501    gcc-6.5.0
-arm                   randconfig-003-20250501    gcc-6.5.0
-arm                   randconfig-004-20250501    gcc-6.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250501    gcc-9.5.0
-arm64                 randconfig-002-20250501    gcc-7.5.0
-arm64                 randconfig-003-20250501    clang-21
-arm64                 randconfig-004-20250501    gcc-9.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250501    gcc-13.3.0
-csky                  randconfig-002-20250501    gcc-13.3.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250501    clang-21
-hexagon               randconfig-002-20250501    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250501    gcc-12
-i386        buildonly-randconfig-002-20250501    gcc-12
-i386        buildonly-randconfig-003-20250501    clang-20
-i386        buildonly-randconfig-004-20250501    clang-20
-i386        buildonly-randconfig-005-20250501    clang-20
-i386        buildonly-randconfig-006-20250501    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250501    gcc-14.2.0
-loongarch             randconfig-002-20250501    gcc-14.2.0
-m68k                             alldefconfig    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-m68k                       m5208evb_defconfig    gcc-14.2.0
-m68k                        stmark2_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250501    gcc-7.5.0
-nios2                 randconfig-002-20250501    gcc-7.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-openrisc                    or1ksim_defconfig    gcc-14.2.0
-parisc                           alldefconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                generic-64bit_defconfig    gcc-14.2.0
-parisc                randconfig-001-20250501    gcc-14.2.0
-parisc                randconfig-002-20250501    gcc-8.5.0
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                        fsp2_defconfig    gcc-14.2.0
-powerpc                     mpc512x_defconfig    clang-21
-powerpc               randconfig-001-20250501    clang-21
-powerpc               randconfig-002-20250501    gcc-7.5.0
-powerpc               randconfig-003-20250501    clang-21
-powerpc64             randconfig-001-20250501    clang-21
-powerpc64             randconfig-002-20250501    gcc-10.5.0
-powerpc64             randconfig-003-20250501    gcc-5.5.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250501    clang-21
-riscv                 randconfig-002-20250501    gcc-14.2.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250501    clang-21
-s390                  randconfig-002-20250501    clang-21
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                ecovec24-romimage_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250501    gcc-9.3.0
-sh                    randconfig-002-20250501    gcc-5.5.0
-sh                          rsk7203_defconfig    gcc-14.2.0
-sh                           se7724_defconfig    gcc-14.2.0
-sh                        sh7785lcr_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250501    gcc-10.3.0
-sparc                 randconfig-002-20250501    gcc-8.5.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250501    gcc-14.2.0
-sparc64               randconfig-002-20250501    gcc-8.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250501    gcc-11
-um                    randconfig-002-20250501    gcc-12
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250501    clang-20
-x86_64      buildonly-randconfig-002-20250501    gcc-12
-x86_64      buildonly-randconfig-003-20250501    gcc-11
-x86_64      buildonly-randconfig-004-20250501    clang-20
-x86_64      buildonly-randconfig-005-20250501    gcc-12
-x86_64      buildonly-randconfig-006-20250501    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250501    gcc-14.2.0
-xtensa                randconfig-002-20250501    gcc-12.4.0
-xtensa                         virt_defconfig    gcc-14.2.0
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/all/aBR535RZZT-sa6QZ@stanley.mountain/
+Fixes: d2d10ede04b1 ("mtd: rawnand: Add Loongson-1 NAND Controller Driver")
+Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
+---
+ drivers/mtd/nand/raw/loongson1-nand-controller.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/drivers/mtd/nand/raw/loongson1-nand-controller.c b/drivers/mtd/nand/raw/loongson1-nand-controller.c
+index 6a369b1c7d86..5f1bde21c8fc 100644
+--- a/drivers/mtd/nand/raw/loongson1-nand-controller.c
++++ b/drivers/mtd/nand/raw/loongson1-nand-controller.c
+@@ -703,27 +703,25 @@ static int ls1x_nand_chip_init(struct ls1x_nand_host *host)
+ 	if (!chip_np)
+ 		return dev_err_probe(dev, -ENODEV, "failed to get child node for NAND chip\n");
+ 
+-	chip->controller = &host->controller;
+-	chip->options = NAND_NO_SUBPAGE_WRITE | NAND_USES_DMA | NAND_BROKEN_XD;
+-	chip->buf_align = 16;
+-	nand_set_controller_data(chip, host);
+ 	nand_set_flash_node(chip, chip_np);
++	of_node_put(chip_np);
+ 	if (!mtd->name)
+ 		return dev_err_probe(dev, -EINVAL, "Missing MTD label\n");
+ 
++	nand_set_controller_data(chip, host);
++	chip->controller = &host->controller;
++	chip->options = NAND_NO_SUBPAGE_WRITE | NAND_USES_DMA | NAND_BROKEN_XD;
++	chip->buf_align = 16;
+ 	mtd->dev.parent = dev;
+ 	mtd->owner = THIS_MODULE;
+ 
+ 	ret = nand_scan(chip, 1);
+-	if (ret) {
+-		of_node_put(chip_np);
++	if (ret)
+ 		return dev_err_probe(dev, ret, "failed to scan NAND chip\n");
+-	}
+ 
+ 	ret = mtd_device_register(mtd, NULL, 0);
+ 	if (ret) {
+ 		nand_cleanup(chip);
+-		of_node_put(chip_np);
+ 		return dev_err_probe(dev, ret, "failed to register MTD device\n");
+ 	}
+ 
+
+---
+base-commit: 08710e696081d58163c8078e0e096be6d35c5fad
+change-id: 20250507-loongson1-nand-fix-279b7cdd6fad
+
+Best regards,
+-- 
+Keguang Zhang <keguang.zhang@gmail.com>
+
+
