@@ -1,213 +1,186 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4163B1E32C6
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CC1279784
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:02:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716562; cv=none; b=EBcRxqkX5Pj9oZ+5cjAkbA5ZhKXp8LE0C0ay2VxIL3sJXPKL03QbrlTOMt+xy4R3+SVCB38FFCbC2tpcglvsGcXvI4xjPdixMARKsT2qJnzg5lHyP6byJZz2gWhbrwHuMngsXLC+9aq7qpg9an5PKuxYlbUGKCdKtvQ/aLbxeOQ=
+	t=1746716567; cv=none; b=CmuJ3LuPpFL53kaqbFu2kt7lSPKI5ELRWHz8boZd2IHfAyaovDDnQcyiwPVQN7P+Q+Q0hWdfRXOMipi0aW8TptArbfn3yP0RJrO79Vvt3x3aDJrtHjp8QK0p3Ulzgzhiu3VD8OQzXs0DHD8VtmIe+WdH5WEgXT2EF6WItxXmHf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716562; c=relaxed/simple;
-	bh=EZCvFRjapwT1JiMrANLJ7ekCA73CkioldVqCMyA1sNU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FcjEoZ5/VlbbVhsC/mNdfxFLtu37QHd/vLh8gXb/7U3GDSghwDgFKcOLDFk+IpNXqVy1uzYQuaDBG2PngIzfUIVerd2R/TKV0yHFWlEK007dhGK0jbfz/m4kN5SJHgdejy6cpJDsPE6AW2rYLbGFoB7qI/WTQXvg0yrz6R4bjec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BH99HF57; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746716567; c=relaxed/simple;
+	bh=2mAnqkYc18lcfHBEKfiWQF6DjaHGoB11EEjw87oDQTQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZLSnoVjstitDfm1mjsmAIbR/XLLTzyN9GnqDCu4FPnxB6ShcipRFyHWKrVThanPD5n+H/cJ0o82LFlLOe2iSxZglGhj2EVGizQbf+LGOEDl+Bqc2NAqycL/A5TWdKb9KDn29pCBUKWTBWFh//2+J5HEJqO7ymkQu3fOoMW5OB7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bk8RhHLd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qI+A0EvZ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BH99HF57"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4775ce8a4b0so18128011cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 08:02:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746716559; x=1747321359; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nW1P+DXju6yG1XR81dsWPHfLBDLXKnzB7JGh49YcNog=;
-        b=BH99HF577pEYwChZV2646VxoPn+c9Qm6H4kCcoss6Apha+Fs2g0lLapU9C/DvgoPok
-         knjFa9hxO98p6Ftjthao6P++D3ONQ24jGYxaKTQ/pGfQTKG+y6OkVT80lY6COM1YxVUc
-         z7PanyBrrPN11fsM6s+PkK3+/QdZ1LWhVg7EilhgIajQ7Ye5nyCQXB2LU+VMsChvQaAy
-         W4EISy0lSv2rlUkUmfz6CiQTwqjmW0cGZwKJNTukzni+D/++YvrGiF5glprrMzUWdJ7k
-         qcuBQGzuOddKHf5Dg4nXtEh7EmnuqeMw6wD36tzpNibYAPIG2NQmPV6lZMPqdd4gTyZn
-         fkyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746716559; x=1747321359;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nW1P+DXju6yG1XR81dsWPHfLBDLXKnzB7JGh49YcNog=;
-        b=XJb5d/diGlB8w7378l4Ft6bhCU9B8HLIgC02aj46BwZ9Pgkvo6KF4ON5v6uhWbjENm
-         +ElXnQgdiH7LmGocEwMUmXKM2sVWpr42z0ZuHJODxpIY3a8AMmrgOe/RsIhqEcdq9JXG
-         KoesFOCGJi/gwqBMGpndAl3dIGJXiawb0o6p3G6UcL0uUZl+FyYNmbYp2dBRiUAOh8sJ
-         NPMuQi3MwxaaeIzxw2CH5z49hs96SF9lJUaabf4H7vaUrsHIQ53p0aL0pYTXaENaw0b+
-         JYVBfxJ8Wzh3RYstq2mfXkIqWKTJBkAUenLfB1UBPifoL5mEZ3sokCJLEK0plbZGq5Lm
-         zHHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZuiu5PTPYhKDWvKPS/CQpPADu7ubCP1p2t8HJw2120Uv/lL39tiIQLOH1t3nElACioRnWlZ2FRPgZuYA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0ByRb3YFjMrYOknXE6u7esNfG2fJdJNKByaEi9RpklB4bk7BW
-	r/3VaSwPMOO2gUC/b1FsKZ6zid1ae2QtkegLKaQfttK5z2YFKgaCsJJn8xTVHUy39RRb80XZ0/u
-	L/V/3zDTrfQJFkaXXtJC3MPXAvJuYynvlLdEi
-X-Gm-Gg: ASbGncslgRLf7Hh0Orr7ojhxxvrNLE9g5Q5zh9Aw06iSls1uOdGaGktu8MH1CzHxDfp
-	FOKjv/zZEJLCPEtmzLfEXCptqJOo+IPNvxpBAbxX5BOs1RLCx81KrIWJNb5MRwVPuTSK3p4393a
-	OgHdEu4tXXhhXf/YxSFW6h
-X-Google-Smtp-Source: AGHT+IFX2bbcbZYx5CWRt8rOHd81GYWCQ65Vrbx5GwA0ylDFOFZZIynXcSAh4JOJrwr3lCWbeujeVOk3ZZrLLvUwLsM=
-X-Received: by 2002:ac8:7c53:0:b0:476:b461:249b with SMTP id
- d75a77b69052e-49225b36f9dmr102225771cf.12.1746716558628; Thu, 08 May 2025
- 08:02:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bk8RhHLd";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qI+A0EvZ"
+From: "Ahmed S. Darwish" <darwi@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746716562;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=c2kf3EExoa/498HOrGmzKtVhO6kUQLl9SRNl4la3+N8=;
+	b=bk8RhHLdGlDctAVslXoOwRg1FhbFzWYivhNt4cbrHqRLeRAOIRBYtb3yG5vUucUlBK0uHk
+	duDqSFzKcyUn3YfGp6ZfkZ2dMh+60aLG+Fzz9cI/HoJykzHqw7YE3n4w2m7M+Re9aQi48J
+	oTBwna2ixciE1Qz5ZR2ZoCFtrM7lKqJAEN2+F/V6B/1qhT7paSV5ZiX1Bykg+PrbSqSt5C
+	3eh6/esiUmmjFfRQBVyvuR4aVwhLfECmM+iWrbSB4G05EmGwnzCkFCUTxuRERVBkEK+59S
+	8jXZ24YDarCYPkkhuLv+GRLExxxtpLpswqoD9Df/JgLHuqmfhDlZrh+yK7Tf2A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746716562;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=c2kf3EExoa/498HOrGmzKtVhO6kUQLl9SRNl4la3+N8=;
+	b=qI+A0EvZnUM3acoH3EustLRG7ldyjw+gxtNCwBrBbEatCGE4aWz+g+qz4RMqSwu2itJ7y/
+	vmcOc8DZA/u46GCw==
+To: Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	x86@kernel.org,
+	x86-cpuid@lists.linux.dev,
+	LKML <linux-kernel@vger.kernel.org>,
+	"Ahmed S. Darwish" <darwi@linutronix.de>
+Subject: [PATCH v1 0/9] x86/cpuid: Headers cleanup
+Date: Thu,  8 May 2025 17:02:29 +0200
+Message-ID: <20250508150240.172915-1-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CADvZ6EoGrp9SCvkVKEV0i=NW-7XZmxbmZkmxd8TPFboPTAUF_g@mail.gmail.com>
- <01100196af6a2181-4f17e5a7-799c-46cd-99f3-9393545834b1-000000@eu-north-1.amazonses.com>
- <CADVnQykrenhejQCcsNE6JBsk3bE5_rNTeQe3izrZd9qp8zmkYg@mail.gmail.com> <01100196b0157e73-161274ae-dd13-401c-b7ac-d7dd7d50f017-000000@eu-north-1.amazonses.com>
-In-Reply-To: <01100196b0157e73-161274ae-dd13-401c-b7ac-d7dd7d50f017-000000@eu-north-1.amazonses.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 8 May 2025 08:02:27 -0700
-X-Gm-Features: ATxdqUGRZWQV34Q6KIsWrg2SQHgdyWq0NfthQaiLCNVQULIzg_E48YaUwLGgimk
-Message-ID: <CANn89iKeafqV+pTptNZtEsjNchRSxe2mC7FOaWtwXNMaXjzcPQ@mail.gmail.com>
-Subject: Re: [PATCH] net: ipv4: Fix destination address determination in flowi4_init_output
-To: Ozgur Kara <ozgur@goosey.org>
-Cc: Neal Cardwell <ncardwell@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 8, 2025 at 6:28=E2=80=AFAM Ozgur Kara <ozgur@goosey.org> wrote:
->
-> Neal Cardwell <ncardwell@google.com>, 8 May 2025 Per, 15:54 tarihinde
-> =C5=9Funu yazd=C4=B1:
-> >
-> > On Thu, May 8, 2025 at 6:21=E2=80=AFAM Ozgur Kara <ozgur@goosey.org> wr=
-ote:
-> > >
-> > > From: Ozgur Karatas <ozgur@goosey.org>
-> > >
-> > > flowi4_init_output() function returns an argument and if opt->srr is
-> > > true and opt->faddr is assigned to be checked before opt->faddr is
-> > > used but if opt->srr seems to be true and opt->faddr is not set
-> > > properly yet.
-> > >
-> > > opt itself will be an incompletely initialized struct and this access
-> > > may cause a crash.
-> > > * added daddr
-> > > * like readability by passing a single daddr argument to
-> > > flowi4_init_output() call.
-> > >
-> > > Signed-off-by: Ozgur Karatas <ozgur@goosey.org>
-> >
-> > For bug fixes, please include a Fixes: footer; there are more details h=
-ere:
-> >    https://www.kernel.org/doc/html/v6.12/process/submitting-patches.htm=
-l
-> >
->
-> Hello Neal, I will pay attention to this sorry.
->
-> > > ---
-> > >  net/ipv4/syncookies.c | 14 +++++++++++++-
-> > >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/net/ipv4/syncookies.c b/net/ipv4/syncookies.c
-> > > index 5459a78b9809..2ff92d512825 100644
-> > > --- a/net/ipv4/syncookies.c
-> > > +++ b/net/ipv4/syncookies.c
-> > > @@ -408,6 +408,7 @@ struct sock *cookie_v4_check(struct sock *sk,
-> > > struct sk_buff *skb)
-> > >         struct flowi4 fl4;
-> > >         struct rtable *rt;
-> > >         __u8 rcv_wscale;
-> > > +       __be32 daddr;
-> > >         int full_space;
-> > >         SKB_DR(reason);
-> > >
-> > > @@ -442,6 +443,17 @@ struct sock *cookie_v4_check(struct sock *sk,
-> > > struct sk_buff *skb)
-> > >                 goto out_free;
-> > >         }
-> > >
-> > > +        /* Safely determine destination address considered SRR optio=
-n.
-> > > +         * The flowi4 destination address is derived from opt->faddr
-> > > if opt->srr is set.
-> > > +         * However IP options are not always present in the skb and
-> > > accessing opt->faddr
-> > > +         * without validating opt->optlen and opt->srr can lead to
-> > > undefined behavior.
-> > > +         */
-> > > +        if (opt && opt->optlen && opt->srr) {
-> > > +                daddr =3D opt->faddr;
-> > > +        } else {
-> > > +                daddr =3D ireq->ir_rmt_addr;
-> > > +        }
-> >
-> > Can you please explain how opt could be NULL, given how it is
-> > initialized, like this:
-> >         struct ip_options *opt =3D &TCP_SKB_CB(skb)->header.h4.opt;
-> > ?
-> >
-> > And can you please explain how opt->srr could be set if opt->optlen is
-> > 0? I'm not seeing how it's possible, given how the
-> > __ip_options_compile() code is structured. But perhaps I am missing
-> > something.
-> >
->
-> The issue is more nuanced than opt being only NULL, while opt =3D
-> &TCP_SKB_CB(skb)->header.h4.opt gives a valid pointer to a structure
-> and the contents of that structure might be uninitialized or invalid
-> in certain code paths.
+Hi,
 
-It must not.
+This is a CPUID headers cleanup series, on top of tip:x86/cpu.  It is a
+precursor for the upcoming v2 of the CPUID parser:
 
-TCP stack is called after IPv4 traversal.
+    [PATCH v1 00/26] x86: Introduce centralized CPUID model
+    https://lore.kernel.org/lkml/20250506050437.10264-1-darwi@linutronix.de
 
-We are not going to add in TCP defensive code.
+as suggested by Ingo here:
 
-Instead, if you think there is a bug in the way IPv4 options are
-decoded (before reaching TCP),
-please fix it in the correct layer.
+    https://lore.kernel.org/lkml/aBnSgu_JyEi8fvog@gmail.com
 
-Thanks.
+* Summary:
 
-> My patch adds defensive programming by checking three conditions
-> before accessing opt->faddr: whether opt itself is valid, opt->optlen
-> is non-zero and opt->srr is set.
-> This prevents undefined behavior when accessing opt->faddr in cases
-> where the structure's fields haven't been properly initialized.
->
-> The previous code (opt->srr ? opt->faddr : ireq->ir_rmt_addr) assumed
-> opt->srr was always valid, while the new code safely establishes daddr
-> =3D ireq->ir_rmt_addr as the default, only using opt->faddr when all
-> safety conditions are met.
->  However, the issue lies in the validity of the struct ip_options
-> content, particularly opt->srr and opt->faddr. If the
-> TCP_SKB_CB(skb)->header.h4.opt structure is uninitialized or reset
-> (e.g., via memset or incomplete parsing), fields like opt->optlen and
-> opt->srr may contain garbage values, leading to undefined behavior
-> when accessed.
->
-> A specific example of this vulnerability occurs during early SYN
-> transactions, particularly if tcp_v4_cookie_check() is called
-> directly.
+The current CPUID header structure is:
 
-How 'directly' is this done ? Are you talking about an out-of-tree code ?
+    include/asm/
+    ├── cpuid
+    │   ├── api.h
+    │   ├── leaf_0x2_api.h
+    │   └── types.h
+    └── cpuid.h
 
- In this scenario, opt->optlen might be zero while other
-> fields contain garbage values, which could lead to memory corruption
-> or security issues.
-> So this patch ensures robustness against invalid options, especially
-> in edge cases like malformed SYN packets, with minimal overhead.
->
-> am i mistaken? if there is missing information please forward it.
->
-> Regards
->
-> Ozgur
->
-> > thanks,
-> > neal
-> >
-> >
+Simplify it into:
+
+    include/asm/
+    ├── api.h
+    └── types.h
+
+Standardize the CPUID header namespace by enforcing a "cpuid_" prefix for
+all exported symbols.  That is:
+
+    have_cpuid_p()		➤	cpuid_feature()
+    hypervisor_cpuid_base()	➤	cpuid_hypervisor_base()
+    native_cpuid()		➤	cpuid_native()
+    native_cpuid_REG()		➤	cpuid_native_REG()
+
+Also rename:
+
+    cpuid_get_leaf_0x2_regs()	➤	cpuid_leaf_0x2()
+
+for consistency with the other <asm/cpuid/api.h> accessors that return
+full CPUID register output; i.e., cpuid_leaf() and cpuid_subleaf().
+
+Finally, rename:
+
+    for_each_leaf_0x2_entry()   ➤	for_each_cpuid_0x2_desc()
+
+to include "cpuid" in the iterator name, and since what is being iterated
+upon is CPUID(0x2) cache and TLB "descriptos", not "entries".
+
+* Testing:
+
+- Basic one-by-one allyesconfig compilation
+
+- Comparison of a before/after of below files:
+
+  - /proc/cpuinfo
+  - /sys/devices/system/cpu/
+  - /sys/kernel/debug/x86/topo/
+  - dmesg --notime | grep 'Last level [id]TLB entries'
+
+Thanks!
+
+8<--
+
+Ahmed S. Darwish (9):
+  x86/cpuid: Move CPUID(0x2) APIs into <cpuid/api.h>
+  x86/cpuid: Set <asm/cpuid/api.h> as the main CPUID header
+  x86/cpuid: Rename have_cpuid_p() to cpuid_feature()
+  x86/cpuid: Rename hypervisor_cpuid_base() to cpuid_hypervisor_base()
+  x86/cpuid: Rename cpuid_get_leaf_0x2_regs() to cpuid_leaf_0x2()
+  x86/cacheinfo: Rename CPUID(0x2) descriptors iterator parameter
+  x86/cpu: Rename CPUID(0x2) descriptors iterator parameter
+  x86/cpuid: Rename native_cpuid() to cpuid_native()
+  x86/cpuid: Rename native_cpuid_REG() to cpuid_native_REG()
+
+ arch/x86/boot/compressed/pgtable_64.c     |   4 +-
+ arch/x86/boot/compressed/sev.c            |   8 +-
+ arch/x86/coco/sev/core.c                  |   2 +-
+ arch/x86/events/intel/pt.c                |   2 +-
+ arch/x86/include/asm/acrn.h               |   2 +-
+ arch/x86/include/asm/cpuid.h              |   9 --
+ arch/x86/include/asm/cpuid/api.h          | 103 ++++++++++++++++++----
+ arch/x86/include/asm/cpuid/leaf_0x2_api.h |  73 ---------------
+ arch/x86/include/asm/cpuid/types.h        |   3 +-
+ arch/x86/include/asm/microcode.h          |   2 +-
+ arch/x86/include/asm/processor.h          |   2 +-
+ arch/x86/include/asm/xen/hypervisor.h     |   2 +-
+ arch/x86/kernel/acpi/cstate.c             |   2 +-
+ arch/x86/kernel/amd_nb.c                  |   2 +-
+ arch/x86/kernel/cpu/cacheinfo.c           |  18 ++--
+ arch/x86/kernel/cpu/common.c              |  12 +--
+ arch/x86/kernel/cpu/intel.c               |  16 ++--
+ arch/x86/kernel/cpu/microcode/amd.c       |   2 +-
+ arch/x86/kernel/cpu/microcode/core.c      |   8 +-
+ arch/x86/kernel/cpu/microcode/intel.c     |   2 +-
+ arch/x86/kernel/cpu/microcode/internal.h  |   4 +-
+ arch/x86/kernel/fpu/xstate.c              |   2 +-
+ arch/x86/kernel/head32.c                  |   2 +-
+ arch/x86/kernel/hpet.c                    |   2 +-
+ arch/x86/kernel/jailhouse.c               |   2 +-
+ arch/x86/kernel/kvm.c                     |   2 +-
+ arch/x86/kernel/paravirt.c                |   2 +-
+ arch/x86/kernel/process.c                 |   2 +-
+ arch/x86/kernel/smpboot.c                 |   2 +-
+ arch/x86/kernel/tsc.c                     |   2 +-
+ arch/x86/kvm/cpuid.c                      |   4 +-
+ arch/x86/mm/mem_encrypt_identity.c        |   6 +-
+ arch/x86/virt/svm/sev.c                   |   2 +-
+ arch/x86/xen/enlighten_pv.c               |   6 +-
+ drivers/acpi/acpi_pad.c                   |   2 +-
+ drivers/dma/ioat/dca.c                    |   2 +-
+ drivers/firmware/efi/libstub/x86-5lvl.c   |   4 +-
+ drivers/idle/intel_idle.c                 |   2 +-
+ drivers/platform/x86/intel/pmc/core.c     |   2 +-
+ sound/soc/intel/avs/tgl.c                 |   2 +-
+ 40 files changed, 159 insertions(+), 169 deletions(-)
+ delete mode 100644 arch/x86/include/asm/cpuid.h
+ delete mode 100644 arch/x86/include/asm/cpuid/leaf_0x2_api.h
+
+base-commit: c1ab4ce3cb759f69fb9085a060e568b73e8f5cd8
+-- 
+2.49.0
+
