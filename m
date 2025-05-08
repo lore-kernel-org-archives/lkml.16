@@ -1,151 +1,104 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85C62153CB;
-	Thu,  8 May 2025 12:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B35E2C190;
+	Thu,  8 May 2025 12:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746708273; cv=none; b=hG5BD7Akbw62aWIDlkkeJHn4FrAKyIZ1/zQiWcGYEtHnO6FiYJK81T7wH6uBE0o+MFEvyW6KWI+IPqrd6ZJK9SF24VdN3GLwaTvwqlexeSu4kPtjiBCM8QQsxoCTkCAmEsNFl1WpBsBlAQ4ovHrHOvAgNkl/5bn0iKYUzyUob+Y=
+	t=1746708360; cv=none; b=RlcUlSe6kKSNfmgedKkzWAPSQzOfkGmHyrvDf7uF+LMPm2/ByTQXKHTmyxvOnogNZDQ/l956mkxrXvbwL7s552N9XViXs3vkWG3bDOn4oU2p6S++U+vNLZozxFne5JAbBW9lTGgtnJR8o1P0CQZMFBwnNR3+9FI5KEYWuPMhcNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746708273; c=relaxed/simple;
-	bh=5+S6WOtSW5+xp4Q4Wv1CMtjgP3qalrD/+Wv37NFOBjo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZpQahfpM1rrxFxIKqP/Os+vhBGU5/9t8bwJKcScX1DqAEZJjTmdnLxjFlXvc5WLM9dFeS6MZCehZBTnY2N6SH7fVg5c9crg6LuP1TuQbj54t6s6THC3GxwdutSo9dsMP+I26rQVjt91+ZJ1Yyg7i7Ye9WfewXsXvuoQtUwhZYaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=cIjO0GS8; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746708360; c=relaxed/simple;
+	bh=gtvcZNEeXpPInbrf7rQ7RG25lTI5aprhGw3x58onNJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SSHwrSdtTQ+5JZn60siQ42dxqUxotBy+ypSKGAGFVmjVqYqo0IKB0ks8GF5tSko4ojn3Eq7P+Uz4Qo02Fthu0RyI49pvVBhaBya6P8QEnCFTU3Hp6MghNxnLQLiGinff79kAN9MOPeothyUQQIuqLHTUQmC77DtqTfRfzNaGGPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eiiWyhiN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cIjO0GS8"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 548Ci7w31100803
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 8 May 2025 07:44:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746708247;
-	bh=sTJliYfCtt4bgttWS5Hp986Wh6Lp9pytD8qb3eAhJ7U=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=cIjO0GS8qFsJ4lzYHSfhrXw7Xlg90ruLfJUbYB6a3PJYp9YxR4dlX8ZRRtPiVpIZC
-	 Gw9S+f3Z1W6kcV8xz+PXBufLihBYmPDVKiuok3Bm324ZnAn+oOE5hRhmk/ss7WVNeq
-	 91PJNeWirnnb9RrpwEZ1qt0tqb+POjtv98j2+0SI=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 548Ci7i5040304
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 8 May 2025 07:44:07 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
- May 2025 07:44:06 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 8 May 2025 07:44:06 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 548Ci6lI040835;
-	Thu, 8 May 2025 07:44:06 -0500
-Date: Thu, 8 May 2025 07:44:06 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-CC: "Kumar, Udit" <u-kumar1@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <vaishnav.a@ti.com>, <r-donadkar@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <jai.luthra@linux.dev>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-j722s-evm: Add overlay for TEVI
- OV5640
-Message-ID: <20250508124406.tb34bqhv66gqcb7j@swizzle>
-References: <20250505115700.500979-1-y-abhilashchandra@ti.com>
- <20250505115700.500979-3-y-abhilashchandra@ti.com>
- <a6329e9d-409e-4f62-b26d-c4d0e49d772c@ti.com>
- <9cb4f94e-00e8-43d5-be7a-85dc1188e856@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eiiWyhiN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EA45C4CEE7;
+	Thu,  8 May 2025 12:46:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746708360;
+	bh=gtvcZNEeXpPInbrf7rQ7RG25lTI5aprhGw3x58onNJE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eiiWyhiNlquLFFMTKbOZdZ/Sfam9B40u4DIuYyja1QolOwigVPF2m+ASdGwk/RZDm
+	 eDpw9Q3/5vN1Ard1bQxeec+TcRtbtbB5cFJFVLopvIQRAzxwvSFtUED8fDwvy9WH+Q
+	 4xVdzKCsYZIP428lefgyGofVq58WYRd4VZLtQCD9VPkti92uqQ9wLF1ET+NIITvbIV
+	 9mOof9MXdVK5UWwk7sHTkRdvGH57uTpWwBi0CAUhEnPGYqTPfyaeq8K6Vl4lFtHXps
+	 k6ouHLUAeTD5xUTAxCse+hVv0Q8xYHCC7HFGu4sLV+H217idiafvK5oWXG2u8Hzfl9
+	 tRwvaUvtiqBWg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uD0dR-000000004UX-3MnV;
+	Thu, 08 May 2025 14:45:57 +0200
+Date: Thu, 8 May 2025 14:45:57 +0200
+From: Johan Hovold <johan@kernel.org>
+To: srinivas.kandagatla@linaro.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: peda@axentia.se, broonie@kernel.org, andersson@kernel.org,
+	krzk+dt@kernel.org, ivprusov@salutedevices.com,
+	luca.ceresoli@bootlin.com, zhoubinbin@loongson.cn,
+	paulha@opensource.cirrus.com, lgirdwood@gmail.com, robh@kernel.org,
+	conor+dt@kernel.org, konradybcio@kernel.org, perex@perex.cz,
+	tiwai@suse.com, dmitry.baryshkov@oss.qualcomm.com,
+	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	johan+linaro@kernel.org,
+	Christopher Obbard <christopher.obbard@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v6 2/6] mux: gpio: add optional regulator support
+Message-ID: <aBynhb6voxJvZtB7@hovoldconsulting.com>
+References: <20250327100633.11530-1-srinivas.kandagatla@linaro.org>
+ <20250327100633.11530-3-srinivas.kandagatla@linaro.org>
+ <Z-zvuhz2nkA5j4RZ@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9cb4f94e-00e8-43d5-be7a-85dc1188e856@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <Z-zvuhz2nkA5j4RZ@hovoldconsulting.com>
 
-On 17:46-20250508, Yemike Abhilash Chandra wrote:
-> Hi Udit,
-> Thanks for the review.
+On Wed, Apr 02, 2025 at 10:05:14AM +0200, Johan Hovold wrote:
+> On Thu, Mar 27, 2025 at 10:06:29AM +0000, Srinivas Kandagatla wrote:
+> > From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > 
+> > Some of the external muxes needs powering up using a regulator.
+> > This is the case with Lenovo T14s laptop which has a external audio mux
+> > to handle US/EURO headsets.
+> > 
+> > Add support to the driver to handle this optional regulator.
+> > 
+> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > Tested-by: Christopher Obbard <christopher.obbard@linaro.org>
 > 
-> On 07/05/25 13:50, Kumar, Udit wrote:
-> > Hello Vaishnav/Abhilash
-> > 
-> > Thanks for patch
-> > 
-> > On 5/5/2025 5:27 PM, Yemike Abhilash Chandra wrote:
-> > > From: Vaishnav Achath <vaishnav.a@ti.com>
-> > > 
-> > > TechNexion TEVI OV5640 camera is a 5MP camera that can be used with
-> > > J722S EVM through the 22-pin CSI-RX connector. Add a reference overlay
-> > > for quad TEVI OV5640 modules on J722S EVM.
-> > > 
-> > > Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
-> > > Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-> > > ---
-> > >   arch/arm64/boot/dts/ti/Makefile               |   4 +
-> > >   .../k3-j722s-evm-csi2-quad-tevi-ov5640.dtso   | 358 ++++++++++++++++++
-> > >   2 files changed, 362 insertions(+)
-> > >   create mode 100644
-> > > arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/ti/Makefile
-> > > b/arch/arm64/boot/dts/ti/Makefile
-> > > index 829a3b028466..76b750e4b8a8 100644
-> > > --- a/arch/arm64/boot/dts/ti/Makefile
-> > > +++ b/arch/arm64/boot/dts/ti/Makefile
-> > > @@ -123,6 +123,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-j721s2-evm-pcie1-ep.dtbo
-> > >   dtb-$(CONFIG_ARCH_K3) += k3-am67a-beagley-ai.dtb
-> > >   dtb-$(CONFIG_ARCH_K3) += k3-j722s-evm.dtb
-> > >   dtb-$(CONFIG_ARCH_K3) += k3-j722s-evm-csi2-quad-rpi-cam-imx219.dtbo
-> > > [..]
-> > > diff --git
-> > > a/arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso
-> > > b/arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso
-> > > new file mode 100644
-> > > index 000000000000..537224ea60e3
-> > > --- /dev/null
-> > > +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso
-> > > @@ -0,0 +1,358 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only OR MIT
-> > > +/*
-> > > + * 4 x TEVI OV5640 MIPI Camera module on RPI camera connector.
-> > > + *
-> > > + * Copyright (C) 2024 Texas Instruments Incorporated -
-> > > https://www.ti.com/
-> > > + */
-> > > +
-> > > +/dts-v1/;
-> > > +/plugin/;
-> > > +
-> > > +#include <dt-bindings/gpio/gpio.h>
-> > > +#include "k3-pinctrl.h"
-> > > +
-> > > +&{/} {
-> > > +    clk_ov5640_fixed: clock-24000000 {
-> > > +        compatible = "fixed-clock";
-> > > +        #clock-cells = <0>;
-> > > +        clock-frequency = <24000000>;
-> > > +    };
-> > > +
-> > 
-> > Please check once , this is clock is 25M or 24M .
-> > 
-> > As I see CDC6CE025000ADLXT/U28 is marked as 25M OSC
-> > 
+> > @@ -82,6 +83,10 @@ static int mux_gpio_probe(struct platform_device *pdev)
+> >  		mux_chip->mux->idle_state = idle_state;
+> >  	}
+> >  
+> > +	ret = devm_regulator_get_enable_optional(dev, "mux");
+> > +	if (ret && ret != -ENODEV)
+> > +		return dev_err_probe(dev, ret, "Couldn't retrieve/enable gpio mux supply\n");
 > 
-> This is the crystal clock with in the sensor.
+> nit: "failed to get/enable mux supply" may be more consistent with the
+> other (non-capitalised error) messages and avoids repeating "gpio mux"
+> which will be added by driver core.
+> 
+> > +
+> >  	ret = devm_mux_chip_register(dev, mux_chip);
+> >  	if (ret < 0)
+> >  		return ret;
+> 
+> Either way:
+> 
+> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+> Tested-by: Johan Hovold <johan+linaro@kernel.org>
 
-Please cross check this - the camera *module* has a BAW crystal which is the
-source of clock to the sensor.
+Can someone please pick this one and the binding update up for 6.16?
 
+I see you recently volunteered to do so, Krzysztof? [1]
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+Johan
+
+[1] https://lore.kernel.org/all/20250501175303.144102-2-krzysztof.kozlowski@linaro.org/
