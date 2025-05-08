@@ -1,150 +1,116 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F1723D2AE
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525C7EAF6;
+	Thu,  8 May 2025 09:08:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746695278; cv=none; b=VH4NmQwxt4DVzn1Q3KnZOfyWVDKkz8g48ynbmzJvg4YZ+jGy74FHN8X195wt01kqg86n74EO66XsMLIPxkpEqikKCevcOq3itMdWHBem9ycMIXHJ4YfLOqKbG1en8y2+TyRUNvC8Ih+3sw+kS2YDbhr4jJ+Gjh7Ci1Am/CfTfAQ=
+	t=1746695333; cv=none; b=nMlRoYAGFU3U4sFtEQ8Ek52epwV9W/ccPnyWSduAacz7lCtq5brmk7aGi1MUC+01r+o+uNuxcAy+CKg0k8F2sRIFOpEoKSwciYucekanbVQSc1ROjTUmaf9dIqdW2/bxZZmlyrn/4V+SlGxtF98R4lCoG5irRRu5OXLSZ1W1fhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746695278; c=relaxed/simple;
-	bh=cFOGWnVtQr0saOTihmVXuGVu+LURGA/kQzStCBpjTyg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cwKOGMc0lOw5DRwvboFKYmX39NC6DJNhfIsqHLq2THOBC691gpxmKbpshA9IJFsaSikapsQdBxgFSZBUcziKOchFJZqzmtVKKFUd8JzkctceowdlHFokb/8PhsQ0fO2/zyIjpZH1MjrWrl6aFyo0RedDrCXK2ooKANDN3cYV3oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dzT8mBkY; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746695333; c=relaxed/simple;
+	bh=8SkZUgZyYvBe6FFYuWQO+cRb9j2orVXbhXcmpKeqvUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JQ1SpRo/RrIVtgrDXpmv0L1/1fISzDyOfzEZteGLg0tM5e+8wtDcCgLlMha/BQK465sdtW596D277HMgbo+euaFb94AF9H5Z1b/mbGxz+5MoN67F6dFZNZ2vAJPQ9NkkJWkHB90mPBbyvOWHNo97NOKHcucVH3FgDr1/L/zQVoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=P1AzCW+u; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dzT8mBkY"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a0b5b90b7aso101410f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 02:07:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746695275; x=1747300075; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lMpv5HRf7q1KKLcNwoafQJQk9nLYrnMRUfqpfBYSi/E=;
-        b=dzT8mBkYxfyp/V1mE2Vyk+GFlD7m3I1V8H/gPguooBC2tv8LGPIH6Z4TbXsbF0fOPn
-         SdEGjiBC80Az5UJ1Uwl8VsYVzsHmr1Pq1MWiDwMsySlAGZjydV1KC2+nJ5t1bxIhmR68
-         4FXveChc0mfOISF8tYy5ybqGN+qb6U0ObuymLU3ZeoSWJrrKrVlOWcXBa26OpvTFUJiV
-         +F/oh2IRBbKqk31gTKpjwmeZVkxiXHwn4McEoSxXOf/Mg5qhkJwMFEh4fZNNP3M01T1N
-         ZOOVTb1Zstcb65pqRCgH9pZj+e0lBnXdUvkx1dA1S/GzjvShnYyXTOordXHgsO89V00K
-         44AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746695275; x=1747300075;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lMpv5HRf7q1KKLcNwoafQJQk9nLYrnMRUfqpfBYSi/E=;
-        b=hnXOhD+7UjfvbKzt2faw1JxWOlP52yQVMrR+rLt2NJ0E4CL59aradG4MMBpL7esgP+
-         kp+NJL8Fo5X1ZLoDy8FLqKBqOIRQgDJsIOQZtCBj/ep2VZFGfpspEERAoJQNoOWOABix
-         Q5jLMeqh58BRt4xSanT+fphOp2i8lsX/4jGDb5IQvkeW+yMGDyt9DjsnJdyoDr2X54cL
-         VxA2gTAT0NnC7dA1fJWr9WaiSYSg9ImJkO6lQuQ3Cw7Dy7h9Alznl00gsRxmONtUjTP9
-         kXpq8UTkTTG6PBndISD8dZfKH+rjJs3E8wKwfKJy9zEugGtElX3HOfXNzAOlydR2JkQm
-         lrJA==
-X-Forwarded-Encrypted: i=1; AJvYcCWL+S4/7IfGTb77eZoBcTQYM7rZAWfCnp1+CAJfVxdpPLHbY1Amp12HPyHJVETMCg2yaBbM0Rs+XfSgtLQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJo3cRth4ZBVEzu7WSHCKgO8ts6y1K0ztSJ3e22DBtx6kDmSd5
-	si7QTwol7KJfRzoASkqZjOWVtIOlmt8krxMp6pqaAjKjIs1mY+KAXvzf7aSNvqs=
-X-Gm-Gg: ASbGncunAQGcDajVw2rEE2RAr1OAqt1yuwnfeNWea+4eOBOWFMt6VaE/Q7v71ZoXQuI
-	x8Ox6U/nL8wbp9WddxIa36CJcJ+UkhgUNZHlyPlnv2XwIhqS6dD7763pcU7/7cBS/vxm1NwQW5+
-	zEHh2gpOtrbnpUTvcA9Ri4YNm/0wyPS+zuHey1etFgsxszIYBeAOOPBQqJwxHa3VEke+v1xO4yy
-	r1mj2iQ4H/jri9lkVktCABY7A75aJWiMB2jd3zaAHC6U0C33+rTjvHYbZqb1EO6+6yzQuOblJWI
-	kL+tccjU7s24f1qy2M/M4dZcaspcpNr7DnhZz2y6YNRcVn50ng==
-X-Google-Smtp-Source: AGHT+IEPpTmtaFEr5272RyfI2A5wJm126PcKcCmO3UU4wfCfxMuNh81Fph52JbVRVXplQwXettz9FA==
-X-Received: by 2002:a5d:588b:0:b0:3a0:782e:9185 with SMTP id ffacd0b85a97d-3a0b49e9e45mr2153806f8f.2.1746695275227;
-        Thu, 08 May 2025 02:07:55 -0700 (PDT)
-Received: from kuoka.. ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0b5764733sm4867922f8f.22.2025.05.08.02.07.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 02:07:54 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Mark Brown <broonie@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	soc@lists.linux.dev
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [GIT PULL] memory: drivers: renesas for v6.16 (for SPI and arm-soc)
-Date: Thu,  8 May 2025 11:07:48 +0200
-Message-ID: <20250508090749.51379-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P1AzCW+u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746695327;
+	bh=id4tiKZeuAnKN2fZO6welXUYOflEk+8g59ZcxNs4qH0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=P1AzCW+u4qMYXiIX5/BSQNbnUd39IPimyLd2ADJx/I5yqQIj7pIyQMUb4wRSgSLPz
+	 VSNfFer0Q7SoWRzQ9ZF/Q0NcWwf1zdhz5q1uIv65m0knDjVPD0YI0atE4+wqjPJ92j
+	 F2TJAePl9VPhw2H6/tPpOhIlOX8dKNrFnLUsirQ+9/Eoqg+ZmJdg4yG7ZAWKwrzR3P
+	 MH5Kkd/JJTU6ZduOcTvmmhcZSahBE55wTBb5GQ0qw7L2LdM0Q3OIsysH7B/GWAzq2T
+	 vSsiC2jmDbaNeaOxLHVvhd8/ivd+KHHu+2KrXmlP3F/S4jNwygF1mFITVhynGo8VuZ
+	 ca75gcqzuS++w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZtRBk5lbmz4x21;
+	Thu,  8 May 2025 19:08:46 +1000 (AEST)
+Date: Thu, 8 May 2025 19:08:45 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: ilpo.jarvinen@linux.intel.com, bhelgaas@google.com,
+ linux-pci@vger.kernel.org, kernel-team@meta.com,
+ linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
+Subject: Re: [PATCH] PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
+Message-ID: <20250508190845.4cae8b62@canb.auug.org.au>
+In-Reply-To: <3840f086-91cf-4fec-8004-b272a21d86cf@paulmck-laptop>
+References: <3840f086-91cf-4fec-8004-b272a21d86cf@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2476; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=cFOGWnVtQr0saOTihmVXuGVu+LURGA/kQzStCBpjTyg=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoHHRlWbsbAFQq97t0KAdqrSkwvWfZRQTyzwNrF
- lAI8TxsExmJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBx0ZQAKCRDBN2bmhouD
- 179UD/49zZ3UpgAr2vDLFWDBNBHfYlp58/q6tWf1hqTuUKsHwB0kWAprD/ZAXKdf/4M3IlwYI0q
- pT/ByCDAt9N9kRg8s3cfs3eR0+VjN+HFE21+ml6ss00duM9Ujrmzn/CyiV9zdItjpGURh2R9asK
- d20mVaMAJ5TsM2iq3Hnmy2jf+O/bEbneaimBc1JFLgdkPXbqflAXUwlChC8iHhHldAJLfugOnW2
- rFn2dNNobiSigTBAZ6t4BFBl9LOcIhp67BvIDblrw6Bkt9JGgmfL68ctwKbQJ8Li7RgsZDgU8RZ
- bJUHj+mkRN5Hj/WeuW2FzL3LEGU6dzTT8QMR9OLCq9ocBg0aqlVCJU2BOXh5j+4nzM3QozUUeii
- RXE2oHJlA3ASHsbmJIGnFLpeXCbhYNo+y+0qMnDf5Kn2WaXgUwvn/q+DRPFrAwgAb+1jf+WYhnE
- MGimB9e1zYuslH2by/Av8cXinVy5bII5uV/iFKrHy+ze35QD6fY6dumxeR+cGgOR6/4e50VmTTU
- Oz1BjcGS/6vKbPJc6dWGo5cGIhihf3YL1zJMSeqxvA84bxJqML5UGyC9KX8R6lY+94d2t10Ark9
- zpwOhTuu4hK4Agmvhb1qsatvDx7hfZKdXvtBo4PLcbrJkRmHhR8h8hkSs3k2nHzhuNlLz0YgCl3 xemMhmYlhcYiRpw==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/1f9.u.3IHguvBWiXX3dmh2T";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi Mark,
+--Sig_/1f9.u.3IHguvBWiXX3dmh2T
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Feel free to pull stable tag with Renesas PRC IF memory controller driver
-changes exposing interface for the SPI driver:
+Hi Paul,
 
-https://lore.kernel.org/all/20250424090000.136804-8-biju.das.jz@bp.renesas.com/
+On Wed, 7 May 2025 15:04:57 -0700 "Paul E. McKenney" <paulmck@kernel.org> w=
+rote:
+>
+> PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
+>=20
+> Builds with CONFIG_PREEMPT_RT=3Dy get the following build error:
+>=20
+> drivers/pci/pcie/bwctrl.c:56:22: error: =E2=80=98pcie_bwctrl_lbms_rwsem=
+=E2=80=99 defined but not used [-Werror=3Dunused-variable]
+>=20
+> Therefore, remove this unused variable.  Perhaps this should be folded
+> into the commit shown below.
+>=20
+> Fixes: 0238f352a63a ("PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_S=
+EEN flag")
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> Cc: "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux.intel.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: <linux-pci@vger.kernel.org>
+>=20
+> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+> index fdafa20e4587d..841ab8725aff7 100644
+> --- a/drivers/pci/pcie/bwctrl.c
+> +++ b/drivers/pci/pcie/bwctrl.c
+> @@ -53,7 +53,6 @@ struct pcie_bwctrl_data {
+>   * (using just one rwsem triggers "possible recursive locking detected"
+>   * warning).
+>   */
+> -static DECLARE_RWSEM(pcie_bwctrl_lbms_rwsem);
+>  static DECLARE_RWSEM(pcie_bwctrl_setspeed_rwsem);
+> =20
+>  static bool pcie_valid_speed(enum pci_bus_speed speed)
 
+I added that to linux-next today and will remove it when it is no
+longer needed.
 
-Hi Arnd,
+--=20
+Cheers,
+Stephen Rothwell
 
-Please pull this into soc/drivers for v6.16.
+--Sig_/1f9.u.3IHguvBWiXX3dmh2T
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Best regards,
-Krzysztof
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgcdJ0ACgkQAVBC80lX
+0GwJcQf8CE7RayjNx5JFc7duQEtmFdNwWH6ceqhtR7LbFMfp9hC0R1tw5auPKrfW
+rUzR0iZiLbfhOhnPg/oL8jiNLDAqU8ueMLYqW9qVzkgtOa2LN9aFvGxIoJhKxY/6
+Gpnyt6oqGJVLBxqMPHYwtDRNWHpEmp63Wr3EkxG3JJk0X8EK+eFhGs8Na9gM/bi1
+tHmusQAlIBpPngj7hMX55E9lz0m8/PSIAAFNJiyOCwaOv16dLe7zpDlkBt5MHYxe
+SN7zYr7EIBvvDL2DURFB1dPb4kpzCAUyq9bqzHV5eTDkquD9npoSlf2iiuVif8jD
+OM1Yah10nyEDCRjgx81qDiMqim/MkA==
+=4Bpa
+-----END PGP SIGNATURE-----
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-mem-ctrl.git tags/memory-controller-drv-renesas-6.16
-
-for you to fetch changes up to 798dc3f19c9e3855c18c3afb610bc5d27195ef44:
-
-  memory: renesas-rpc-if: Add missing static keyword (2025-05-08 10:59:07 +0200)
-
-----------------------------------------------------------------
-Renesas memory controller drivers for v6.16
-
-Improvements and new device support for the Renesas RPC IF memory
-controller driver:
-1. Minor cleanup and improvements.
-2. Refactor the driver to accommodate for newly added Renesas RZ/G3E support:
-   - Acquire two resets instead of only one,
-   - Add RZ/G3E xSPI support with different register layout and its own,
-     new interface for Renesas SPI.
-
-----------------------------------------------------------------
-Biju Das (9):
-      memory: renesas-rpc-if: Fix RPCIF_DRENR_CDB macro error
-      memory: renesas-rpc-if: Move rpcif_info definitions near to the user
-      dt-bindings: memory: Document RZ/G3E support
-      memory: renesas-rpc-if: Move rpc-if reg definitions
-      memory: renesas-rpc-if: Use devm_reset_control_array_get_exclusive()
-      memory: renesas-rpc-if: Add regmap to struct rpcif_info
-      memory: renesas-rpc-if: Add wrapper functions
-      memory: renesas-rpc-if: Add RZ/G3E xSPI support
-      memory: renesas-rpc-if: Add missing static keyword
-
- .../memory-controllers/renesas,rzg3e-xspi.yaml     | 135 ++++
- drivers/memory/renesas-rpc-if-regs.h               | 147 +++++
- drivers/memory/renesas-rpc-if.c                    | 714 +++++++++++++++------
- drivers/memory/renesas-xspi-if-regs.h              | 105 +++
- include/memory/renesas-rpc-if.h                    |   4 +
- 5 files changed, 914 insertions(+), 191 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/renesas,rzg3e-xspi.yaml
- create mode 100644 drivers/memory/renesas-rpc-if-regs.h
- create mode 100644 drivers/memory/renesas-xspi-if-regs.h
+--Sig_/1f9.u.3IHguvBWiXX3dmh2T--
