@@ -1,80 +1,45 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E5F21D5B6
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 21:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75FF21D5AA;
+	Thu,  8 May 2025 21:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746738747; cv=none; b=sorP/vPAy3R0SIm63R2oNfH1N1YBH6TPWaIIm+sTbY5x0d84hvgCvwyH+Bmv/248IzIKFhxSeXliIJKOwiYIs8rxc3N8qn17/OY8+Lk+Ft5qQeFaUowVo38EFAlF4c95DOBKmLUgI99nyzh9hNEansoneAUf5hPd368j8n4hnUI=
+	t=1746738843; cv=none; b=ehwKXfx6C4m1DZruugGgfR9RlHHEN6Xet6eNEHyxnSmAty2DaxkaPO9jszvNLzPXZh22svIhGHaUkzP8RB7mPAIOudWDmkykUdUKqxLJgNKSNaV+j66LCZdi5OCJ+fJ48dUr6vTNapYVh+JWXCVkQtryY1hbSPrNMdfzJxwVW7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746738747; c=relaxed/simple;
-	bh=YhS+6KPuWVwLxVM7mzJLiWMqALq/dLhNIGvxHoCT1ao=;
+	s=arc-20240116; t=1746738843; c=relaxed/simple;
+	bh=fNe8Mm+hSQalygb6YYRSWyFmkSH/mSmdHjMuBS0PLQI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vBlgop7d4JhV8Jv3fFabpOviIc2c/cIbOg0hJ7X5t5V9DQtQ+HiWDt1pPiOwGo7opURhDeivLfpfh/nFtGHZfhg7scoqPOG4MI25MlbZ8U6P3UiDSWayNorUWkMprCcDP3/AXTpUwN2kRwfCaUqTiDBLnSNA3FzFwEHo0HnD4no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=C5eC9u/O; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=YtxS7n/pWotWyCpFaFFOqG+4pX27BjWCvtuOcTmw9fM6SEGaD4EH0MkVnRJAOjkXGmJVySDjsCNFOnqN2TILZrnafZ5ebRKkdpJ5pP1Mc+c2TvWmVFL6PIdUllwlmASpQBWjoLmY4zFRB3uXoDcvM2o8wUh7TBaWIVm299WfLsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oc4fWAPE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="C5eC9u/O"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6ecf99dd567so19440616d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 14:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1746738744; x=1747343544; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tU29vel0KvZfnj889e6ZUT0X+Nl6gYD+WNWpN7CwtWw=;
-        b=C5eC9u/OiZ/Q52OQZODGsYjLDZsMri6vfxJC56kVzttxJuQzGr/cKvwVWM6WhW8O2V
-         BC9uniRBzPMrp0WU+DqwVMqJSBKnrg8R7zhqrOP4fpJeGO1sCu6CsVGSzR8miA1HGM72
-         KnSwlkMIy3ymaNdlanGynYalVqpqvKmQH8CRYnCqhC1DSk7Juzx5bJyOrEzq3Z2cfqpk
-         ZTS0CJ0DEQ5qWwoBOvbV7L6vvfYlWHzWlkPwSYOacw9Z0SDSDv9yOYo0JKUzqvSwc+Gt
-         OMHbzETQJF/s57qFlpG9Y0LPCLUR9JxKpbQ1Ow36VoaJ6Np7PLb3nqpdw3VgOaw/yY1P
-         fzQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746738744; x=1747343544;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tU29vel0KvZfnj889e6ZUT0X+Nl6gYD+WNWpN7CwtWw=;
-        b=d8fBE4Kvmf1gLQvC+LN+rslcWRN1cGXKFxD6PVNqGqH/0dm99MZzY2+bNMClFaZpBq
-         KL3+s9Az33bQ9BAH1tHNQivE64bIC1Onr2XHiUhkxOewVPFX7s1dVifqV5trlUwFZngj
-         qjv6Sz/1pI+AMSTCeqlbU6QQHE90ST202pxFOJIOQtBuzKNIWTbpEHGE6g+L0erbNL3p
-         duf5tKGh68zLp1J5EOOfoNFpzOBy/of4VgIHgFt6tpI5ugORK9gILm0b2FEsFTsHAg7p
-         b0o13rTiqhniHSC8N4+cAul4Ky5Rl3fLqFOIFK348nLJpCse64ywk0ru5LgYbjeasXdc
-         mVTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWSNLWJT55r1F7hVCAj8RKQg6DUlnHNtCwncaf0+bU+mX1kVD/mqnxRuE/3NTDliLE/Tnme3CsCYio1CVU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqSLP8Kl629hFsFCPQ6UriHse+ZgCWOpxoZ4WCM+2tfJj5BjRm
-	6aF/EPQmIx2OUw7ZX+WctSTVaNQ59Q5UFDVbmhFyYD1vqhM2Cxz1HX6+z9l69kg=
-X-Gm-Gg: ASbGnctehkOJONlluZLeqL1PG2ZYf+6Bqsfn9jBWikRDK9+uVt61oCP7MoIM51xHg+r
-	K4lpx7kscypr+KsXYD1DYaeC5ko/COewMXtWdDT7PgIgSEfgEataQCnejNE0Hca1bKenx2NT++9
-	aNJTbxzCQzbZDo8pAQttlw0pOVaGyumNmcsIraDHFPL8xmngSKVtFbakEN8dPKuCnc/cHj7Og0H
-	QixOTWp5DFO0ztb/bhaIpIUEcZj2Heajy/AELALvpGLe9/5VPFbmeON8YMrKtcFgKQYWgQZ5u2u
-	EFnvVgFHz/UDHwScjAUOzkYISDNws+stV0DOw2M=
-X-Google-Smtp-Source: AGHT+IGF7xbJ1qfim1/hVx542EP6l4+04BZ69FZBusfv5EEKbuSVBLbfUnAInKDdaqIaR5h5ugkrDw==
-X-Received: by 2002:a05:6214:2588:b0:6ee:ba58:e099 with SMTP id 6a1803df08f44-6f6e47f260fmr11641336d6.15.1746738744634;
-        Thu, 08 May 2025 14:12:24 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f6e39f4795sm4453586d6.30.2025.05.08.14.12.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 14:12:23 -0700 (PDT)
-Date: Thu, 8 May 2025 17:12:23 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Zi Yan <ziy@nvidia.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Richard Chang <richardycc@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] mm/page_isolation: remove migratetype from
- undo_isolate_page_range()
-Message-ID: <20250508211223.GD323143@cmpxchg.org>
-References: <20250507211059.2211628-1-ziy@nvidia.com>
- <20250507211059.2211628-4-ziy@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oc4fWAPE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12836C4CEE7;
+	Thu,  8 May 2025 21:14:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746738843;
+	bh=fNe8Mm+hSQalygb6YYRSWyFmkSH/mSmdHjMuBS0PLQI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=Oc4fWAPESl8FZkvivrZxQpH4nymKKVt8t26kJCkwT32kq/O9NgrGj/IcfhrCrIDqO
+	 oLWYh9i0fFxAdR2lizCOEsFpto0+eODCSXV9qSliBxHwCAYGUM2sVo1j2q49IZ/G0Q
+	 I/09oMrGyY1QhFQvOVZ4RiUWCFxIyVRMzFdhb+kXOL7/XWagkEJFBsLrJ1WcNNMXyp
+	 8j7TzeQVAtjh/O+7uP4NxMPKSngiTyn8Dhhbm+gN1DrNvQCQS+WS0JOb9IjrNJ/AYe
+	 EBnK5udSX9QxnfIqoDbxfp+L3+Mh1kF6OglbFrfFrISsr8hrp/C2ZU6uc698XMFVau
+	 Bzqzt1xXJHogg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id A7A3BCE078D; Thu,  8 May 2025 14:14:02 -0700 (PDT)
+Date: Thu, 8 May 2025 14:14:02 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Zqiang <qiang.zhang1211@gmail.com>
+Cc: frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
+	urezki@gmail.com, boqun.feng@gmail.com, rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rcu/nocb: Fix possible invalid rdp's->nocb_cb_kthread
+ pointer access
+Message-ID: <b23a7caa-a548-4691-badc-4122907ea688@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250507112605.20910-1-qiang.zhang1211@gmail.com>
+ <20250507112605.20910-3-qiang.zhang1211@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,15 +48,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250507211059.2211628-4-ziy@nvidia.com>
+In-Reply-To: <20250507112605.20910-3-qiang.zhang1211@gmail.com>
 
-On Wed, May 07, 2025 at 05:10:58PM -0400, Zi Yan wrote:
-> Since migratetype is no longer overwritten during pageblock isolation,
-> undoing pageblock isolation no longer needs which migratetype to restore.
+On Wed, May 07, 2025 at 07:26:05PM +0800, Zqiang wrote:
+> In the preparation stage of CPU online, if the corresponding
+> the rdp's->nocb_cb_kthread does not exist, will be created,
+> there is a situation where the rdp's rcuop kthreads creation fails,
+> and then de-offload this CPU's rdp, does not assign this CPU's
+> rdp->nocb_cb_kthread pointer, but this rdp's->nocb_gp_rdp and
+> rdp's->rdp_gp->nocb_gp_kthread is still valid.
 > 
-> Signed-off-by: Zi Yan <ziy@nvidia.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
+> This will cause the subsequent re-offload operation of this offline
+> CPU, which will pass the conditional check and the kthread_unpark()
+> will access invalid rdp's->nocb_cb_kthread pointer.
+> 
+> This commit therefore use rdp's->nocb_gp_kthread instead of
+> rdp_gp's->nocb_gp_kthread for safety check.
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Let's see...
 
-The whole series is a great improvement.
+The rcu_nocb_cpu_offload() and rcu_nocb_cpu_deoffload() functions invoke
+cpus_read_lock(), and thus exclude all the CPU-hotplug notifiers,
+including the one that invokes rcutree_prepare_cpu().  There is also
+rcu_spawn_gp_kthread(), but that is an early_initcall() that happens
+before CPU hotplug can happen, at least for non-boot CPUs.
+
+So rcu_spawn_cpu_nocb_kthread() cannot run concurrently with either
+rcu_nocb_cpu_offload() or rcu_nocb_cpu_deoffload(), correct?
+
+It appears that all CPUs (try to) create their rcuoc and rcuog kthreads
+when they come online, regardless of the nohz_full and rcu_nocbs kernel
+boot parameters, some old tree_nocb.h comments notwithstanding.  ;-) The
+rcu_organize_nocb_kthreads() function looks to cover all CPUs as well,
+so ->nocb_gp_rdp will always be set after very early boot (give or take
+alloc_bootmem_cpumask_var() failure in rcu_nocb_setup() and checked for
+by the cpumask_available() in rcu_organize_nocb_kthreads()).
+
+The rcu_spawn_cpu_nocb_kthread() can fail to spawn the GP kthread,
+in which case both ->nocb_cb_kthread and ->nocb_gp_kthread remain
+NULL.
+
+If so, LGTM.
+
+							Thanx, Paul
+
+> Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
+> ---
+>  kernel/rcu/tree_nocb.h | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
+> index 1596812f7f12..6679140bb0b5 100644
+> --- a/kernel/rcu/tree_nocb.h
+> +++ b/kernel/rcu/tree_nocb.h
+> @@ -1146,7 +1146,6 @@ static bool rcu_nocb_rdp_offload_wait_cond(struct rcu_data *rdp)
+>  static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
+>  {
+>  	int wake_gp;
+> -	struct rcu_data *rdp_gp = rdp->nocb_gp_rdp;
+>  
+>  	WARN_ON_ONCE(cpu_online(rdp->cpu));
+>  	/*
+> @@ -1156,7 +1155,7 @@ static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
+>  	if (!rdp->nocb_gp_rdp)
+>  		return -EINVAL;
+>  
+> -	if (WARN_ON_ONCE(!rdp_gp->nocb_gp_kthread))
+> +	if (WARN_ON_ONCE(!rdp->nocb_gp_kthread))
+>  		return -EINVAL;
+>  
+>  	pr_info("Offloading %d\n", rdp->cpu);
+> @@ -1166,7 +1165,7 @@ static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
+>  
+>  	wake_gp = rcu_nocb_queue_toggle_rdp(rdp);
+>  	if (wake_gp)
+> -		wake_up_process(rdp_gp->nocb_gp_kthread);
+> +		wake_up_process(rdp->nocb_gp_kthread);
+>  
+>  	swait_event_exclusive(rdp->nocb_state_wq,
+>  			      rcu_nocb_rdp_offload_wait_cond(rdp));
+> -- 
+> 2.17.1
+> 
