@@ -1,98 +1,120 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A70C22687A
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5052253EE;
+	Thu,  8 May 2025 12:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746708008; cv=none; b=mfqw9Nc1lmD8n+aG/34NGUDHu4qE4gQjB+jj1qqFUuO4TtdWNw/k0x2eB+xGjQVtpGMWf7FpxjNqTI+RXOE8ERyTY38SXBh5butu4uZ1Lq0CeVTTBfa5mZ/6PvJkYWbGGgCjA0zoOCqLoy2hTQRJk22VHsh4yCP47w7yHbQs1gw=
+	t=1746708067; cv=none; b=imCvbe3sXv0XQm5XG2YUN6scy5FjxrdN6AQDUSj7hGFjgAnDMF1Qgz6Nte5N5WZgiZlHJzV1vMXIe5oq35Dpn2LpbrD7rMgXSqMHQ/ckBL6X6zGH4HqtuMfQJ40yBgz8r2Dz6rKagJkthKLaVKqF719hy3YLm2bltDfytuztWNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746708008; c=relaxed/simple;
-	bh=k5BZIpNSbnLLVf6GsMiXvLOEULV8LNBcK7VhrImMes4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RLbkUFJJgZZi24O8KmvKmO4mfJA06pdePktSFQv8MsxJhOxK8JzCQ8v7UsP0R4E1BXErnrAa/DvIpah6XLs1T7qj5URkFidjL7kXXlmcLzFgTtfEMbmMvpQA6EW5o9NIDEgxB/2LMc4ONgTHHWZjokDGNtVJLD7nNkQWMlaLGjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q7+J1Jt2; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q7+J1Jt2"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-3104ddb8051so9588441fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:40:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746708005; x=1747312805; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k5BZIpNSbnLLVf6GsMiXvLOEULV8LNBcK7VhrImMes4=;
-        b=Q7+J1Jt2QiiD2hZwMmzCr9aLKbiZog6DelK3WZjUKzc5Ckbh5fKs2QL8oEfdmhuCAg
-         K/6j+TI2eI3X090xIWs3im3Vio2k+qMbecXuP5dYfXA1VBAhgVBOWwsGL5FWx6jZvu6H
-         3Ms0Y7rCoAidusL2T6LL9w5J1iqoWtJyk056M+4mdn5aCwlIZN3TdOkatC3SlDyJglUj
-         Q0bD6tMjZKftNpzJnSGXDXNSrCC1LGD4WmmzbyW16YZ9HxP43hFP/4EYaXuNgfK/KlRn
-         ur5e/z8b4OYzWPTUJlCT7G3tlMFVgh7RSBdXs60MzyT6d6evqG9eJtyjfTnD9j94i5Ac
-         fN0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746708005; x=1747312805;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k5BZIpNSbnLLVf6GsMiXvLOEULV8LNBcK7VhrImMes4=;
-        b=Zj9Ey8h/7+ziZ9anQUfqy9lJvbE1+6yhmbFBeHldbXhphBUbEOVtyHehDpGXs82ZLe
-         t6Vyt4H5DBf6pR1J+Lt7OWdzmWhMiMSd5XbrzzKFtRmbj4bwbjYbfwj0GmKgWLK1h8oc
-         Ai92XW/FoPzoXFVdeuF6qsJMEkH21uid7t57Wrr9gLr89V5HkWVgqpavQ/5rhKlA/tDN
-         NgVrOmAibVjtE3BTLLSoQ8P2KwubAtgFb2flbV7y8lBcIy8N9UlShrVzvhTsZsFwrZf4
-         ViN7CjaxSrHaL3rFZHIC+cJDy1JDLAfcWOt/zBggKY4vJ36IOXVjdFCOI2ZJkVqih0jw
-         ti4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWLA2PNmA6sw8K4Iis8Ql3qCclWRgEIHJ5uPuVl41UVvr87kCmqUFYwcxjhf9peB4YG40D7eSKOetdVz1k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysRi7V/6kp2nAPiMGVxPbw9xH1MgOvJaUFxZZ1u8BdAyQX4bpT
-	BovWIVlf2YPDlqoj8qf527Iddhhlmc3gc0qfp1ozh527HEFRLN8Gxg9icoYTi+meNR4xY/viZfp
-	4weee4snrUn9UpXp5g30xV4lyVhpVz3Aw4QPhvA==
-X-Gm-Gg: ASbGncsmInVzqLGskvNIZR+1vrN6P9CWGqIRMq8NPHLNYWMWjq0n4IMpwwijW0By5vG
-	XCHwTrn24snnGyfcoldmaNxiGvwP+oCUWwhyDfRPSNtX/HVgPaGaYO82gWGpBbJtk15/ihtAUVz
-	c21mNTu+NrpdtpgKmR0aArRQ==
-X-Google-Smtp-Source: AGHT+IE9Q77Fc9oOyWJ9mYq6tNAso+9Vl6Y1CISquo5bvdrk2LvAwCog/GBR9BhmJk3ThE6vNrzoMsQVh3TPJJ+DPTE=
-X-Received: by 2002:a2e:be28:0:b0:30d:7c12:5725 with SMTP id
- 38308e7fff4ca-326b88dc5acmr12360541fa.33.1746708005111; Thu, 08 May 2025
- 05:40:05 -0700 (PDT)
+	s=arc-20240116; t=1746708067; c=relaxed/simple;
+	bh=LnQ4GKwkWAJRQ8vnWaq7ZRz7NNg7H7W0xynyLZNM6to=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HBepXBhWOv3Nu0CSTOcPtdbnryWrDVL5SWBaNVNSoHZIT+Kk47SO03WdW4lgmEKo8NnpD/FIM1JtDFaryuXMh6XrM/zvIVKuAx4NWRGs6IlFMuL75OTSPOFmu4FBfcVASqOoVcUhwhh3M6Li3mZjU3oHXgom7pTXwgaRgAu3za0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.147.253])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 09AA4342FA1;
+	Thu, 08 May 2025 12:41:04 +0000 (UTC)
+Date: Thu, 8 May 2025 12:40:59 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Alex Elder <elder@riscstar.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
+	sboyd@kernel.org, p.zabel@pengutronix.de, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	heylenay@4d2.org, inochiama@outlook.com, guodong@riscstar.com,
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+	spacemit@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v6 1/6] dt-bindings: soc: spacemit: define
+ spacemit,k1-ccu resets
+Message-ID: <20250508124059-GYA506797@gentoo>
+References: <20250506210638.2800228-1-elder@riscstar.com>
+ <20250506210638.2800228-2-elder@riscstar.com>
+ <20250507223554-GYA505240@gentoo>
+ <22b7b5fc-6f5a-4ce8-ae12-a7423925c113@kernel.org>
+ <1521c828-31f3-4e45-a651-750ce2e37364@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506092718.106088-1-clamor95@gmail.com> <20250506092718.106088-5-clamor95@gmail.com>
-In-Reply-To: <20250506092718.106088-5-clamor95@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 8 May 2025 14:39:54 +0200
-X-Gm-Features: ATxdqUE6Q61XCWcHKJmDK0yBWijzJI2jE1ft8w41_6SRUeW_38JBflpJsCLlEk0
-Message-ID: <CACRpkdZ9_GnsH=gYFumDE4a+Ois8eSyrn=s3qVFhHA7YyV3Y9A@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] drm: panel: Add support for Renesas R69328 based
- MIPI DSI panel
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1521c828-31f3-4e45-a651-750ce2e37364@riscstar.com>
 
-On Tue, May 6, 2025 at 11:27=E2=80=AFAM Svyatoslav Ryhel <clamor95@gmail.co=
-m> wrote:
+Hi Alex,
 
-> From: Maxim Schwalm <maxim.schwalm@gmail.com>
->
-> Driver adds support for panels with Renesas R69328 IC
->
-> Currently supported compatible is:
-> - jdi,dx12d100vm0eaa
->
-> Co-developed-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> Signed-off-by: Maxim Schwalm <maxim.schwalm@gmail.com>
-> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+On 07:17 Thu 08 May     , Alex Elder wrote:
+> On 5/8/25 7:02 AM, Krzysztof Kozlowski wrote:
+> > On 08/05/2025 00:35, Yixun Lan wrote:
+> >>> +  - if:
+> >>> +      properties:
+> >>> +        compatible:
+> >>> +          contains:
+> >>> +            enum:
+> >>> +              - spacemit,k1-syscon-apbc
+> >>> +              - spacemit,k1-syscon-apmu
+> >>> +              - spacemit,k1-syscon-mpmu
+> >>> +    then:
+> >>> +      required:
+> >>> +        - clocks
+> >>> +        - clock-names
+> >>> +        - "#clock-cells"
+> >>>   
+> >>>   additionalProperties: false
+> >>>   
+> >>> diff --git a/include/dt-bindings/clock/spacemit,k1-syscon.h b/include/dt-bindings/clock/spacemit,k1-syscon.h
+> >>> index 35968ae982466..f5965dda3b905 100644
+> >>> --- a/include/dt-bindings/clock/spacemit,k1-syscon.h
+> >>> +++ b/include/dt-bindings/clock/spacemit,k1-syscon.h
+> >> would it be better to move all reset definition to its dedicated dir?
+> >> which like: include/dt-bindings/reset/spacemit,k1-syscon.h?
+> > 
+> > Please kindly trim the replies from unnecessary context. It makes it
+> > much easier to find new content.
+> > 
+> > 
+> > I don't get why such comments are appearing so late - at v6. There was
+> > nothing from you about this in v1, v2 and v3, which finally got reviewed.
+> 
+> Stephen Boyd said "please rework this to use the auxiliary driver
+> framework" on version 5 of the series; it was otherwise "done" at
+> that point.
+> 
+> Doing this meant there was a much clearer separation of the clock
+> definitions from the reset definitions.  And Yixun's suggestion
+> came from viewing things in that context.
+> 
+> Given the rework, I considered sending this as v1 of a new series
+> but did not.
+> 
+> > I just feel people wait for maintainers to review and only after they
+> > will add their 2 cents of nitpicks or even some more important things
+> > potentially invalidating the review. Lesson for me: do not review
+> > people's work before it reaches v10, right?
+> 
+> That's not what happened here--or at least, it's not as simple
+> as that.  Your quick review was very much appreciated.
+> 
+> Yixun:  Krzysztof was satisfied with things the way they're
+> defined here.  Do you feel strongly I should make your suggested
+> change?  Or are you OK with me just keeping things defined this
+> way for the next version?  I'd like this question resolved before
+> I send the next version.
+> 
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+I was fine with squashing all definitions in one file for old version,
+but now, a new reset driver is introduced, I think it is deemed an
+independent header file? all newly added macros are related to reset.
 
-Yours,
-Linus Walleij
+-- 
+Yixun Lan (dlan)
