@@ -1,82 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756F918DB02;
-	Thu,  8 May 2025 14:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8B0252911
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746714298; cv=none; b=ASdHM3hAHi9ptptmRtWnU6w5v7N4QDFqhVBZ7LLrsJN5le3SOFZJwM+ycTXzR1ErJi1ZTPJizDra4m7kPrVQhJEYdy8XqQ8kEegjlXkqDG9fNtCiNeZQUpQR233o2Zj38WhxZjXKx6P5/5g9f0+ZkO9KPjVxRGS1rTvjwuGjzQ4=
+	t=1746714310; cv=none; b=S3QGMKWuZzdQ1N+CjYDSmC6P79AqnQbPfUfwfM+xS+UuUufLNNemdLVufb7fwJIhpSZA9GJbwNN1F5D6BbuFqZuFYIiDfAgmL3BtgbuRZhu855P08JucUMd0MMAQUda7RbKJa9OXL8ktWIJNRrHC71N5/ndi/dmBTD5JJDv4Apk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746714298; c=relaxed/simple;
-	bh=Vdi1Fvob149dmqTchXBuaWDmd/TVJPaIImKJVQ/mqSY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ta2B+sii0b1op+yoPDUIXKHfNZfGeCZiWx5IMgBbXHsPuBbV35uoZX4H0EltQ8hVTETBFatFFcNKJNR2kwoZhcMaGweGVzAQjq2GZgvgIS7PI9tJ23ume0hlUBcG+SjIzCcTOhk5gkEt5P7QyVg2wPlvTc+iDSXZerjPCxeFyZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YcSH3KgK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746714310; c=relaxed/simple;
+	bh=NXjCD/S01oxx9o6dfMvde6pbG13/wftDA7983YincL4=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=WtS6dinec1aA2eWD+8b75pCCR3XeIKOBIZrdcvE0oEOpjvO3M32sERX0hS17oNwDnEKripBk73rWT+soGAmhmYQrEfg+tEBRzzUIVwCtLMC6I+nKCsnedkbL/t7+zR2c6ZvEvyceghy0ZDLJF3pRsDfFT1tMuYDWU3AFmuO0pSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nDYK9xdw; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YcSH3KgK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73C36C4CEED;
-	Thu,  8 May 2025 14:24:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746714296;
-	bh=Vdi1Fvob149dmqTchXBuaWDmd/TVJPaIImKJVQ/mqSY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YcSH3KgK/5TvNlnL2uP4cMl2KGTLsf0aQzrQ6+z5GF8eAn5nIB3TORBg3hPIC450s
-	 O/yyiGvY3DxMMW/H89d7FNJH//bMMfEk7SNUic4Hy3GGxEP/9h5zuh3Z730pOzLzAC
-	 8oATpkupoYVkG6vFlkF7piAg7/TlGE4Dyq0DojLrlrP3L3Yue8pLDOudnPl0WK2u+g
-	 5b/OA+DemvffZXmqG0IRAJkNBX2w2GVnOQwuW6Z0neEZXeQJWxr0B8DuDyU3AdMkIv
-	 DG3oVm5AHkKtIKkI/gTybBZ1FKuY1xrYcHhrZEm1xDqKiz8vBvfQjqr5wWr6KHMjPi
-	 ypzebBI1olzwg==
-Date: Thu, 8 May 2025 23:24:53 +0900
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.14 000/183] 6.14.6-rc1 review
-Message-ID: <aBy-taLf9h-0_4iM@finisterre.sirena.org.uk>
-References: <20250507183824.682671926@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nDYK9xdw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746714308; x=1778250308;
+  h=date:from:to:cc:subject:message-id;
+  bh=NXjCD/S01oxx9o6dfMvde6pbG13/wftDA7983YincL4=;
+  b=nDYK9xdwUMNN79k1SZBhzrlSkTaPUQezrYnwFt6a7wN29dW8ntGy77Rx
+   RS7nAxoWY92swbvIDO+223F1301NLVN3MCcMqQOi6RXGebqALvRmoIpmP
+   v4ab30m3pNuNI2QhUR76W6NOTy1OlH6ZsAviThKK9+Ty9HV1tKKWQ5KZ4
+   Pqz15/Ir5SzputN7WGs+yPpo8YwIHkGWQuG4v8qPFUoOKQiS0Wv74X2ql
+   Mgmp4reKN5m7vZzEWlzHFb+2Ds4oxV88JEPOK11tCV62E2d9TD86+sbeu
+   UKAmkTZ0z0xD3HA/9nyMrV0NVF5tqzm6Vyyp9UbkXfcV3EjvEgqVN0Tch
+   w==;
+X-CSE-ConnectionGUID: frFxkfKLRnq+RZ4FGBep/A==
+X-CSE-MsgGUID: 1JjNqBPPQCCbFLe6LyEhiA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48408421"
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="48408421"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 07:25:07 -0700
+X-CSE-ConnectionGUID: I8U0R9h3RsGmWQmKDsLTCQ==
+X-CSE-MsgGUID: xkWyMmqURr6dLelsEtcbAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="140348248"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 08 May 2025 07:25:06 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uD2BM-000B2v-06;
+	Thu, 08 May 2025 14:25:04 +0000
+Date: Thu, 08 May 2025 22:24:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:irq/cleanups] BUILD SUCCESS
+ c63e393a16c9c4cf8c9b70fedf9f27b442874ef2
+Message-ID: <202505082204.NfzYc8IF-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="iuHOqhtFAq6wT/Gc"
-Content-Disposition: inline
-In-Reply-To: <20250507183824.682671926@linuxfoundation.org>
-X-Cookie: Well begun is half done.
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/cleanups
+branch HEAD: c63e393a16c9c4cf8c9b70fedf9f27b442874ef2  irqdomain: Consolidate coding style
 
---iuHOqhtFAq6wT/Gc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+elapsed time: 1453m
 
-On Wed, May 07, 2025 at 08:37:25PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.14.6 release.
-> There are 183 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+configs tested: 68
+configs skipped: 2
 
-Tested-by: Mark Brown <broonie@kernel.org>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
---iuHOqhtFAq6wT/Gc
-Content-Type: application/pgp-signature; name="signature.asc"
+tested configs:
+alpha                   allnoconfig    gcc-14.2.0
+alpha                  allyesconfig    gcc-14.2.0
+arc                    allmodconfig    gcc-14.2.0
+arc                     allnoconfig    gcc-14.2.0
+arc                    allyesconfig    gcc-14.2.0
+arc         randconfig-001-20250508    gcc-8.5.0
+arc         randconfig-002-20250508    gcc-12.4.0
+arm                    allmodconfig    gcc-14.2.0
+arm                     allnoconfig    clang-21
+arm                    allyesconfig    gcc-14.2.0
+arm         randconfig-001-20250508    clang-17
+arm         randconfig-002-20250508    clang-21
+arm64                  allmodconfig    clang-19
+arm64                   allnoconfig    gcc-14.2.0
+csky                    allnoconfig    gcc-14.2.0
+csky        randconfig-001-20250508    gcc-14.2.0
+csky        randconfig-002-20250508    gcc-12.4.0
+hexagon                allmodconfig    clang-17
+hexagon                 allnoconfig    clang-21
+hexagon                allyesconfig    clang-21
+hexagon     randconfig-002-20250508    clang-21
+i386                   allmodconfig    gcc-12
+i386                    allnoconfig    gcc-12
+i386                      defconfig    clang-20
+loongarch              allmodconfig    gcc-14.2.0
+loongarch               allnoconfig    gcc-14.2.0
+m68k                   allmodconfig    gcc-14.2.0
+m68k                    allnoconfig    gcc-14.2.0
+m68k                   allyesconfig    gcc-14.2.0
+microblaze             allmodconfig    gcc-14.2.0
+microblaze              allnoconfig    gcc-14.2.0
+microblaze             allyesconfig    gcc-14.2.0
+mips                    allnoconfig    gcc-14.2.0
+nios2                   allnoconfig    gcc-14.2.0
+openrisc                allnoconfig    gcc-14.2.0
+openrisc               allyesconfig    gcc-14.2.0
+openrisc                  defconfig    gcc-14.2.0
+parisc                 allmodconfig    gcc-14.2.0
+parisc                  allnoconfig    gcc-14.2.0
+parisc                 allyesconfig    gcc-14.2.0
+powerpc                allmodconfig    gcc-14.2.0
+powerpc                 allnoconfig    gcc-14.2.0
+powerpc                allyesconfig    clang-21
+riscv                  allmodconfig    clang-21
+riscv                   allnoconfig    gcc-14.2.0
+riscv                  allyesconfig    clang-16
+riscv       randconfig-002-20250508    gcc-14.2.0
+s390                   allmodconfig    clang-18
+s390                    allnoconfig    clang-21
+s390                   allyesconfig    gcc-14.2.0
+s390        randconfig-001-20250508    gcc-6.5.0
+s390        randconfig-002-20250508    gcc-9.3.0
+sh                     allmodconfig    gcc-14.2.0
+sh                      allnoconfig    gcc-14.2.0
+sh                     allyesconfig    gcc-14.2.0
+sh          randconfig-001-20250508    gcc-14.2.0
+sh          randconfig-002-20250508    gcc-10.5.0
+sparc                  allmodconfig    gcc-14.2.0
+sparc                   allnoconfig    gcc-14.2.0
+sparc       randconfig-002-20250508    gcc-6.5.0
+um                     allmodconfig    clang-19
+um                      allnoconfig    clang-21
+um                     allyesconfig    gcc-12
+x86_64                  allnoconfig    clang-20
+x86_64                 allyesconfig    clang-20
+x86_64                    defconfig    gcc-11
+x86_64                rhel-9.4-rust    clang-18
+xtensa                  allnoconfig    gcc-14.2.0
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgcvrUACgkQJNaLcl1U
-h9CYfwf8CGWgwryJ29G7rgSi9Z5M+/t1KzkmRJII5CWkeR94K+FSE1X7ENrqANa5
-E74+RpZJNyLFYogMQtWSXe4LIh2QI0jaMF9nR/Av+Pc2qyde1jc73D9/fqwANUGz
-AiD5t9eddk+8mnYnHf9Z4E7sjg+GHytjTfFExXpEyzF89PtqdKoG3zVm2xf4UJER
-c5sg/ZFZm1uIrQ4GpqEY6yHFrK7VSZeSyKChlupFLLdxfU9LxjnZ3vU8dreKt3Bp
-n+lv9OfTIphV19hEI7GC1c6irw6P3qNHh+0jjfxJueesTZEwfNJfySXbPFNVnubP
-cgLFVEYh8H8HYR8cL1d7hJUc8xjd7g==
-=tKdx
------END PGP SIGNATURE-----
-
---iuHOqhtFAq6wT/Gc--
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
