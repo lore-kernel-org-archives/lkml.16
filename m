@@ -1,82 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DA5230BD0;
-	Thu,  8 May 2025 23:42:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06105233129;
+	Thu,  8 May 2025 23:42:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746747754; cv=none; b=CLWWkQw5URC4NK7bxec52876GG8rjNjn46UN46ULQaJ4EvaCH6EdGX9CNiJmGwDhvj3liPo3O0tj880LblAHsTK2Y9GO9mw3N6NhOc6OUeuqoxppg99hVZztKxziUA8FNgXMLJe2hQS659jwW+n6ViEk9coNxi1ctZZfMaWSJgo=
+	t=1746747777; cv=none; b=NOfRLceXacpbfuhbEJuERwc4RHSJW/BfWrfgn/PRPy0iu/YkT9IWoNGiyE9zzfxwcTlOwhytGOkAzbyr1amH/RZQCCx8qTTRVlZISzUq7u80TsmN8y3/cgTajnBng9NFq8Ns3rpH9EDmqDkGIuscIx/hiukdX7ZLY6K4sSwOS9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746747754; c=relaxed/simple;
-	bh=xkjlkRzXy3gD07TO4pnDWxA5oWDgHXa+wX7fIFSjXqU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nTurzblRj0jXBsiBo0wqBFKXW44mWrUH6JyEGXU6nNLjxoaLGp1muIAqjH8LuonsRuplM8r55YdGhm0hxYjivFWLrQYmgYDiwLl+lt2ee1mRjoN57adBu3JREWnQbrmfxkd3CwMwYL4QeLfRON+b4CP9eMOAmQgfiy5GMiToZcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eCoHP2iM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746747777; c=relaxed/simple;
+	bh=0HUJOi3Q80Hprk30UXwi1aPiSk0vyf8b/ThO0wu7JTU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cZQf/BHGwyb4C477hueIAA7s1phBnFS2lHiDjdbQmLei1hLThcmW9cwVsW9GKiZ89hyaUBiWU8pgHpIbvN6dK4k/5ESwJnzpuAjyjap3uZH5n02890P/T8Fum+FzzkQbKbs3bPdPXRqH/66EnmOxK0xtGPShRiFSb+6urdpv/9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nN+Uhtc4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eCoHP2iM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F953C4CEEE;
-	Thu,  8 May 2025 23:42:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nN+Uhtc4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E528C4CEEF;
+	Thu,  8 May 2025 23:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746747753;
-	bh=xkjlkRzXy3gD07TO4pnDWxA5oWDgHXa+wX7fIFSjXqU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eCoHP2iMLCyu1EXO6H5ih0kCuk+ZgM727OgswRp34bvzkAIsCtLkkBBe/7UDQdLOx
-	 EMX9peaGxT8xWB3vtONkZx8z3GCyqWHfgyUwoiAhkOGlM8yqLZMfsOWGoRpQZIy8Lu
-	 GnSd6ESnyHCTALw6ybXLltCeZzuk2m/PducscSSWtK8c3iTlYmXSiNKvMpJqgObmf3
-	 C70BMFsMKYkEVTOTDI+7CRO4lJl2IzVbUGhHrt1MRsLgKOLOUKZBOrxYa5VAOVgaBz
-	 nCcQv/YPZqiDEUNc6dPdXNHGGhdzOEQZxpdi14UZoJe0v5RsokiuuKkcirTY/DCf11
-	 ARH05QrcY2NSQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 10694CE11D4; Thu,  8 May 2025 16:42:33 -0700 (PDT)
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: rcu@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	rostedt@goodmis.org,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH 3/3] rcutorture: Remove MAXSMP and CPUMASK_OFFSTACK from TREE01
-Date: Thu,  8 May 2025 16:42:30 -0700
-Message-Id: <20250508234230.1996554-3-paulmck@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <da86a280-f402-499f-a4ba-df626ca4c748@paulmck-laptop>
-References: <da86a280-f402-499f-a4ba-df626ca4c748@paulmck-laptop>
+	s=k20201202; t=1746747776;
+	bh=0HUJOi3Q80Hprk30UXwi1aPiSk0vyf8b/ThO0wu7JTU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nN+Uhtc462Hu+w/2C3kAAaTTRqv9Ak/xNFa/6zE1GtbE8Hid/gAx2Lx6ZYddSplug
+	 /oe6k6FGX+6ov8SIplmw+8dp6ccDDGtp7VkSmOMcoDRKrAKeIzXRre2QY0CT9GdyJX
+	 TsF/5N2bsa5FDw70uGkYZuti1nY610rqNOiWeli5a9gJu5ij2U1IFJZp5WMXfRqZJz
+	 Rrv8+ZS0x1l9+MyuXnXgvz3OPtgTQeLXwXsK3yzj0urs9fjPWGOwOXeoA9zLMuRPiY
+	 rNeTqq+cMGXtm7sBkHoAc7YqvSZDOmdwZH1ooMsuLld6UwPd6pwPUsr2LXlunSW7ii
+	 qOrUUDtKae7Mg==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-326c77c40b7so910741fa.1;
+        Thu, 08 May 2025 16:42:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUte0B/ItH8UXSHaCnWF08wpHn+tJnjYxHCenqgMDiS3dMupdMtcI/NrCCMCnvj4dBiQHjzFV4BLrs8N7mF@vger.kernel.org, AJvYcCVq31QE4hXYGW7j9WO2ibGMRJNwjDrTe13QdyeaSUr3OrTpcd1pDGE/UfUEq37+lHyEaQHNRwtQ8ivWLhc=@vger.kernel.org, AJvYcCXWJY7mC8vZUaHjjGz+dhK6tkq3vEM93N0+894mcVEWwVi4Mq6sjhDGxClCnyoUYCiSd0GUtyV6W0we8jdRxw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMx0rTO9qVv2gVoyuOVXeqfZPycBregYKXouAtDRLdcWjx7ktd
+	trV/8pdZ7JCCcvT0YvRnXExcOgsP8XMHyIXNne1Tf7IgYtcq+Uag9OxemgFCT2yjaYSIjX/1wyw
+	2LrMJG6Ir4zNWdT1/zrmWXbfI2ls=
+X-Google-Smtp-Source: AGHT+IFutgJYGooy1gvSEVR+svX/xeEYLIPC6W5LG+HLCFIxGaiTojj5a8p3cZK/OwyE1rr2/SV0O4b5KV2idQTmwYM=
+X-Received: by 2002:a2e:a581:0:b0:30b:e3d9:37db with SMTP id
+ 38308e7fff4ca-326c46b0e3bmr5332311fa.26.1746747775141; Thu, 08 May 2025
+ 16:42:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250507231403.377725-7-samitolvanen@google.com>
+In-Reply-To: <20250507231403.377725-7-samitolvanen@google.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 9 May 2025 08:42:18 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATt2hgPZyp_MP8DN=vYJ_TuvUQjU-U33ekbeVsLosE5uQ@mail.gmail.com>
+X-Gm-Features: ATxdqUFE3-GdXPp4I15WWFcPl25L6hm_U-yW6eCb7BzZSyDSLNfJ9cyOlThFr1E
+Message-ID: <CAK7LNATt2hgPZyp_MP8DN=vYJ_TuvUQjU-U33ekbeVsLosE5uQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] gendwarfksyms: Add more kABI rules
+To: Sami Tolvanen <samitolvanen@google.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Back in the day, rcutorture was about the only thing that tested off-stack
-CPU masks, but now any arm64 system with more than 256 CPUs tests it
-full time.  In fact, it is necessary to hack the kernel to prevent such
-a system from testing off-stack CPU masks.  This means that there is
-no longer much point in rcutorture going out of its way to test this.
-And given the differences in how CPUMASK_OFFSTACK is enabled in x86 and
-arm64, rcutorture would need to go out of its way.
+On Thu, May 8, 2025 at 8:14=E2=80=AFAM Sami Tolvanen <samitolvanen@google.c=
+om> wrote:
+>
+> Hi,
+>
+> While looking deeper into the genksyms hacks that have been
+> needed during Android's 5.10 and 5.15 GKI lifecycles so far,
+> we found a few instances that are not covered by the existing
+> gendwarfksyms kABI stability rules. The first case involved
+> appending new members to a partially opaque data structure, and
+> the second case completely changing opaque types due to a large
+> backport that was necessary for both stability and security.
+>
+> These patches add rules that allow distribution maintainers
+> to deal with structure size changes, and as a last resort, to
+> completely override a type string used for version calculation.
 
-This commit therefore removes CONFIG_CPUMASK_OFFSTACK=y (and the
-CONFIG_MAXSMP=y required to enable it on x86) from TREE01.
+Applied to linux-kbuild.
+Thanks.
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- tools/testing/selftests/rcutorture/configs/rcu/TREE01 | 2 --
- 1 file changed, 2 deletions(-)
 
-diff --git a/tools/testing/selftests/rcutorture/configs/rcu/TREE01 b/tools/testing/selftests/rcutorture/configs/rcu/TREE01
-index 8ae41d5f81a3e..54b1600c7eb5f 100644
---- a/tools/testing/selftests/rcutorture/configs/rcu/TREE01
-+++ b/tools/testing/selftests/rcutorture/configs/rcu/TREE01
-@@ -8,8 +8,6 @@ CONFIG_NO_HZ_IDLE=y
- CONFIG_NO_HZ_FULL=n
- CONFIG_RCU_TRACE=y
- CONFIG_HOTPLUG_CPU=y
--CONFIG_MAXSMP=y
--CONFIG_CPUMASK_OFFSTACK=y
- CONFIG_RCU_NOCB_CPU=y
- CONFIG_DEBUG_LOCK_ALLOC=n
- CONFIG_RCU_BOOST=n
--- 
-2.40.1
+> Sami
+>
+> ---
+>
+> v3:
+> - Added a patch to drop documentation section numbers based
+>   on Masahiro's suggestion.
+>
+> v2: https://lore.kernel.org/r/20250505212401.3379699-6-samitolvanen@googl=
+e.com/
+> - Cleaned up type string parsing based on Petr's feedback.
+>
+> v1: https://lore.kernel.org/r/20250430214049.2658716-6-samitolvanen@googl=
+e.com/
+>
+> ---
+>
+> Sami Tolvanen (5):
+>   gendwarfksyms: Clean up kABI rule look-ups
+>   gendwarfksyms: Add a kABI rule to override byte_size attributes
+>   gendwarfksyms: Add a kABI rule to override type strings
+>   Documentation/kbuild: Drop section numbers
+>   Documentation/kbuild: Add new gendwarfksyms kABI rules
+>
+>  Documentation/kbuild/gendwarfksyms.rst   | 141 +++++++++++++++++-----
+>  scripts/gendwarfksyms/dwarf.c            |  14 ++-
+>  scripts/gendwarfksyms/examples/kabi.h    |  21 +++-
+>  scripts/gendwarfksyms/examples/kabi_ex.c |   7 ++
+>  scripts/gendwarfksyms/examples/kabi_ex.h | 101 +++++++++++++++-
+>  scripts/gendwarfksyms/gendwarfksyms.h    |   2 +
+>  scripts/gendwarfksyms/kabi.c             | 143 ++++++++++++++---------
+>  scripts/gendwarfksyms/types.c            | 140 +++++++++++++++++++---
+>  8 files changed, 470 insertions(+), 99 deletions(-)
+>
+>
+> base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
+> --
+> 2.49.0.987.g0cc8ee98dc-goog
+>
+>
 
+
+--=20
+Best Regards
+Masahiro Yamada
