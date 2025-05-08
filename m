@@ -1,154 +1,99 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570C32638A6
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 08:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0D92627F5
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 08:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746693144; cv=none; b=in8/+/DssM4ndan15AQ7amvY9/RQEQGV7LxCKCbFsN+StOIWeeY7mLZxttPKnO8oXzc00IXs2t9nfUti9HN6KR50fe2YrS8OUOwnZACrdI6MPagGIAh+8r0L7DcNeVKnnIhJ+8nlBdUZPiT6jP8Rv86QJbmPE8t0AgJYl6nbVPc=
+	t=1746693145; cv=none; b=Go7YbtjbDgHf/mUbiq8aW1wfy7nEFMgN6WmcoKUd19EeqkpppXLWZlNQab8JMwEi1I85RYDwaytprK7lIP5muXOI5t4hG//BGCqRh81dRqyvSCqQn5Tzu+9u6a2rqCmLrthAT4URq9mS4CCsxeboSqiUynWWxD8EEePpQH1Vk70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746693144; c=relaxed/simple;
-	bh=99sIuYQv9yyYPOuX4dWNyMjpDSYVT8a3hkLHdw7sW/Y=;
+	s=arc-20240116; t=1746693145; c=relaxed/simple;
+	bh=N8mZbwrs/5/HrYcaufL1Ugn9aNRzeB+rYc/9Jk/Dr3s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P6zubpHuh/Z4AJcEdt8HGOpsjY/tVGZO9T3VKii5iTAFkF84JaXSEtuss1ZGs0Js/tz1GZ4nzXJaxl+SssA7LNyCOBytnZD24F0qCYBLX1i0SeGjyAmPOzCcg96t7T8j5h9RQLcSfr4mNalJ7mxCvDFMqcXw38TJmrqUKhdfLnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=eyeiwUwD; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	 To:Cc:Content-Type; b=nfjlswkwlY5BmwTd7RnfqbIZoBYRsvLpZZ0rCpnmtr99J/GZwbaYPD+MmrRgF61nhRD2qOSS6zhJtNmskpCOPqoclWqGj3Vj51nbc9wS6tptRCR6IfxetvXdvOWbKP9H8Dv+Fnb1bvUfmQ7BPH4lLP5L2A/pMpXJjgn9t06emoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uF8w/arX; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="eyeiwUwD"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-70a23f4fe8bso6827697b3.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 01:32:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uF8w/arX"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6f0ad74483fso8563256d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 01:32:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1746693141; x=1747297941; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746693143; x=1747297943; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=quaZx11+VGNrggf88njtg5xLklc9eFfI7c4+X9LIJ5o=;
-        b=eyeiwUwDy8WmvUUrw6HR1/xH8hzDgSNjEqMPKS/pwC58tREEdgjfwtfdWOCMhSFzJc
-         DJW5XK9kF7Cs4+g7fCSv4YelbBxQIW9lF4pl8CaTJ0nsqbBOYRX8Ml0E0uSGE20vkK18
-         o7JWzEdbgFQn6ad3PwkgKzLmg/akNSClNnb6w=
+        bh=N8mZbwrs/5/HrYcaufL1Ugn9aNRzeB+rYc/9Jk/Dr3s=;
+        b=uF8w/arXTrCXchwAXa2DikpL0JU18fH6YoZRKCb6GIOXrvuGZD0WnpITWSlRP/4QBh
+         l2hdV18bpSSq7k6O5GqL/lH5AjtBtAizMyE+gAgvCnMNoF+QOrX6VGLxP8EbP0ag0per
+         wYsM/Zq8eWYhSIHNRaPGazwSgHh5Ufu2P8ohYnopqy68pvbNhUHj1+dxucN+a+8VqSPY
+         Y7DRA0zXFBEklAHvHPpnIcw5qm/6tgJXyYT+ArKuxCkI2cQIKqGhOYnflH2xj2t7efKW
+         8xwFNg024OCwrncmslOdHPSPzJa0KOZbdoUJ2qJMrBU5z9XtMzVsvxQWjGtoXnSKC/iW
+         lqqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746693141; x=1747297941;
+        d=1e100.net; s=20230601; t=1746693143; x=1747297943;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=quaZx11+VGNrggf88njtg5xLklc9eFfI7c4+X9LIJ5o=;
-        b=r9vXvF5aPl23JFFmfNgREvtWl4FCcaKj5EFRPGap6SxUKCPEq3bzPwoxk6R3yk172P
-         SYxerDOqLEZIChgxy7+jaRcrDOkVBwttOW7VBQK5ZnL9he2z8JZpSRU2p6UoiHoeKYNM
-         jrZKFn0GNqnKmLRb+d2g4otePrZe/e/2RAKHf9AQSJB0ThvbyjuYxPO4DaJPXBk+fe7q
-         Frwybb13VVRvH4bF9lQgw5qBVlNcoEDIM3wzbwrcJPzarmkOqKpPsAQ1+giJ9rC7skhA
-         Z3gcwDWAv2XDBAvm+sEeRR3ytjGv1Lf/T7nxUoD5lxkxg5EcPX+Aqkk3pzT2BmKrQ9KO
-         jvbg==
-X-Gm-Message-State: AOJu0YxJQ4a+u247IGbYXRVw630s1OxEsaItFniecD5isKR93HuJvK0y
-	wfQexGgZaAMIc86MM65aIUGA+bdS08SYPtwu7MgpsK6xxlaA8/eZZQ16i1mUyoAKp8FrS+wC73D
-	lGgR97BHpm8PMmsnEaGiM7a6QgIHscb97Dvc4Kw==
-X-Gm-Gg: ASbGncsbZNtr8rMgz45vq1m1KJ+H6Xs7UG3xVBnxG2TOZLUlYuB/ocg0hffINofP26u
-	vSAxp2Gk7bvymVW0KjoamU9yY1WtWtoUdfazBB+CiFgbpiQAPqgzM1rNDiQVci/4Wx5W0VwpXLP
-	vrfo6cNec7CtfEyt7aB39a
-X-Google-Smtp-Source: AGHT+IE4CmJhrdoXRe32HoBH4jbtzbQ2hoNMjPwxRG6sk3WrTeunXaOWumwPqctZu6MIIYqzIKZAUd1PKmmcUuwqfyo=
-X-Received: by 2002:a05:690c:6085:b0:703:d7a6:6266 with SMTP id
- 00721157ae682-70a1d9f9304mr89735297b3.10.1746693141277; Thu, 08 May 2025
- 01:32:21 -0700 (PDT)
+        bh=N8mZbwrs/5/HrYcaufL1Ugn9aNRzeB+rYc/9Jk/Dr3s=;
+        b=knR2sZ1zA8MquadRCbjsno9CptLBirmeXbuA/ZBSOTB0isTFZHIcguZiSN9tYqDqhX
+         KfSoz938vNtU2W8aYFIasbsapHPlQIIbHOkFpO65aOKX1Mgvqzzh+H7i5urYInitF5pI
+         hY/G0r/C5vwHhO2sZ/oNc50shfuHszlTLDDkF2DbRhy9xwFcfYzLsimfc+L9V6ZGvQsr
+         L/OxYZWU1aBjz8fcpzrQZEZiyuv4Q7ZcMKxNfLUaTH2mIJ/RLSru0AeF3hT0nHMYeiEd
+         o20VkETO9Sf9zrYGe35PHIdMv0oduEuD7HfqqVoTWyOTaiiPNopjVIMqwDxUz0eBnQC/
+         0yxw==
+X-Forwarded-Encrypted: i=1; AJvYcCXolTCEJ4qctyZo7hYXlY3PQk5f6jzJVkFfLWYpDD4uTTZKSilTruPzh8S+Ho+AGRVSFloysCXR9DvZtLo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9siV0g6s7aHTVhSSxMPtRvtN5+d+c1nzpP9s1v9tqmjX3m7xs
+	M/lPZ9yQxNjfvf4lHNCj0Vb0zOswYj0Ibh6695RaMMuhwZw8rdM+9HBgCtOGBxjMmGvscEWtnwx
+	t5B0bxX4SjbpSSH3Fub2j+pyBtdGl7OxrHloY
+X-Gm-Gg: ASbGncscDnTAVDePLwPlAYDSYG0pxmvF9sIl6lT1bHSveXq80SJGIJcAAuKNmj0BqmY
+	glCM1zZpSUhmoUBCtulfP/N70DP+WBsO4DT+tEyrq3lJp9Z8JTgYMuzW4lbhUF123l/MBdPkalW
+	56djfgEt87QJL9r5ggMSKSLWpJ4xOh/drmCt3c1O5M/E2Zip3LqtK8JvqoFMMZqM4=
+X-Google-Smtp-Source: AGHT+IGCI9yCKt7dsF9BpZWhipvTKbTZ/CQVkEZcrPI1qI82H4Af2aJ5Eo5kObAwhe6gD1UjC6ZozUgCVkdmxL4SrRM=
+X-Received: by 2002:a05:6214:5086:b0:6d8:a8e1:b57b with SMTP id
+ 6a1803df08f44-6f542aad8c4mr120881656d6.36.1746693142679; Thu, 08 May 2025
+ 01:32:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424062154.2999219-1-dario.binacchi@amarulasolutions.com> <174643143452.2950397.16722215892279685541.b4-ty@linaro.org>
-In-Reply-To: <174643143452.2950397.16722215892279685541.b4-ty@linaro.org>
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Date: Thu, 8 May 2025 10:32:10 +0200
-X-Gm-Features: ATxdqUGGoyMhD-TPgWfLjSDF0XqnBspVuNvo1SR1O8IpFOj15QasDBjp5hm1sY0
-Message-ID: <CABGWkvrkVLRocFsZs9JLni4KDZCDyYDZxMzwA9AzAwipmUyTzQ@mail.gmail.com>
-Subject: Re: (subset) [PATCH v12 00/19] Support spread spectrum clocking for
- i.MX8M PLLs
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>, 
-	Stephen Boyd <sboyd@kernel.org>, linux-amarula@amarulasolutions.com, 
-	Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
-	Abel Vesa <abel.vesa@linaro.org>
+References: <20250507160012.3311104-1-glider@google.com> <20250507160012.3311104-2-glider@google.com>
+ <CANpmjNMUFmnVweY5zCkkszD39bhT3+eKk1-Qqc0LZTUdPN0x=Q@mail.gmail.com> <CAG_fn=VuaiTB11bJraxQjoVxp=0ML7Zoth1CYjczgUof3Rhqmw@mail.gmail.com>
+In-Reply-To: <CAG_fn=VuaiTB11bJraxQjoVxp=0ML7Zoth1CYjczgUof3Rhqmw@mail.gmail.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Thu, 8 May 2025 10:31:45 +0200
+X-Gm-Features: ATxdqUE7xSG_AG0WDgqD8g8zoZ_7fGDEsRbmK90FzbLlILhlobzg4Gki4bJ9d3g
+Message-ID: <CAG_fn=VYg3sveZ8ofNJsx6-rS6p2PDNGWAKj18LpYRu02hV6-A@mail.gmail.com>
+Subject: Re: [PATCH 2/5] kmsan: fix usage of kmsan_enter_runtime() in kmsan_vmap_pages_range_noflush()
+To: Marco Elver <elver@google.com>
+Cc: dvyukov@google.com, bvanassche@acm.org, kent.overstreet@linux.dev, 
+	iii@linux.ibm.com, akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	kasan-dev@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Shawn,
-
-On Mon, May 5, 2025 at 9:52=E2=80=AFAM Abel Vesa <abel.vesa@linaro.org> wro=
+On Thu, May 8, 2025 at 10:19=E2=80=AFAM Alexander Potapenko <glider@google.=
+com> wrote:
+>
+> On Wed, May 7, 2025 at 6:09=E2=80=AFPM Marco Elver <elver@google.com> wro=
 te:
->
->
-> On Thu, 24 Apr 2025 08:21:30 +0200, Dario Binacchi wrote:
-> > This version keeps the version v9 patches that can be merged and
-> > removes the patches that will need to be modified in case Peng's
-> > PR https://github.com/devicetree-org/dt-schema/pull/154 is accepted.
-> > The idea is to speed up the merging of the patches in the series
-> > that have already been reviewed and are not dependent on the
-> > introduction of the assigned-clocks-sscs property, and postpone
-> > the patches for spread spectrum to a future series once it becomes
-> > clear what needs to be done.
 > >
-> > [...]
+> > On Wed, 7 May 2025 at 18:00, Alexander Potapenko <glider@google.com> wr=
+ote:
+> > >
+> > > Only enter the runtime to call __vmap_pages_range_noflush(), so that =
+error
+> > > handling does not skip kmsan_leave_runtime().
+> > >
+> > > This bug was spotted by CONFIG_WARN_CAPABILITY_ANALYSIS=3Dy
+> >
+> > Might be worth pointing out this is not yet upstream:
+> > https://lore.kernel.org/all/20250304092417.2873893-1-elver@google.com/
 >
-> Applied, thanks!
->
-> [01/19] dt-bindings: clock: imx8mm: add VIDEO_PLL clocks
->         commit: 20e5d201b5d8f830e702d7d183f6b1b246b78d8a
-> [02/19] clk: imx8mm: rename video_pll1 to video_pll
->         commit: 26a33196b5b68cf199b6c4283a254aa92d2aaf4b
-> [03/19] dt-bindings: clock: imx8mp: add VIDEO_PLL clocks
->         commit: 2d50415e2457c6f6621c2faa3b01b11150fb9c67
-> [04/19] clk: imx8mp: rename video_pll1 to video_pll
->         commit: 21bb969f608cefd8d847cf6eb50a193d9f1fbb87
-> [05/19] dt-bindings: clock: imx8m-anatop: add oscillators and PLLs
->         commit: 2ba124053687c933031a6dc5b2e16ceaca250934
-> [10/19] clk: imx: add hw API imx_anatop_get_clk_hw
->         commit: 17e3c1a272d97e49b4f3fbfe1f1b889e120d2be8
-> [11/19] clk: imx: add support for i.MX8MM anatop clock driver
->         commit: 3cbc38cf42ca42d2dc9a93c949e0381ff919df71
-> [12/19] clk: imx: add support for i.MX8MN anatop clock driver
->         commit: 80badb1d7264e83b512475898e7459f464a009c9
-> [13/19] clk: imx: add support for i.MX8MP anatop clock driver
->         commit: 4c82bbe8b5437c7f16b2891ce33210c0f1410597
-> [14/19] clk: imx8mp: rename ccm_base to base
->         commit: 1a77907dbbecfbe5e6a1aec28afd49a1dc184b7a
-> [16/19] dt-bindings: clock: imx8m-clock: add PLLs
->         commit: 6a55647af3334f1d935ece67de4a838a864b53fc
->
+> Thanks! I'll update the description (here and in the other patch) and
+> post v2 later today.
 
-Please check the remaining patches, as they are required for correctly
-building the
-ones merged by Abel. The kernel test robot has already reported build error=
-s.
-
-Thanks and regards,
-Dario
-
-> Best regards,
-> --
-> Abel Vesa <abel.vesa@linaro.org>
-
-
-
---=20
-
-Dario Binacchi
-
-Senior Embedded Linux Developer
-
-dario.binacchi@amarulasolutions.com
-
-__________________________________
-
-
-Amarula Solutions SRL
-
-Via Le Canevare 30, 31100 Treviso, Veneto, IT
-
-T. +39 042 243 5310
-info@amarulasolutions.com
-
-www.amarulasolutions.com
+Since Andrew picked the changes up already, we've decided there's no
+need for a respin :)
