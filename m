@@ -1,141 +1,83 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8327322256E
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 21:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A852A2236EB;
+	Thu,  8 May 2025 21:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746740663; cv=none; b=mgP+tT++48IQ0pFfto9h85EyutG3pPE8Q2mc+IS2reuc269aCz1Tchqcag9ztEP/1tfbGri4hVmgkXn1slfGZwRsAtB2/leywaxOhVX0inU6dAzvU0ady/P85s1s8iyXPrJGh6WIF6etGJyIvHDg3tGCGlxm5H6gcF/884hq99s=
+	t=1746740669; cv=none; b=EQB1oQ3Ayqrri+A5V5jG0fARwxOZOk8oc9jg//WIdAFiTDkucniLLaZWYjrKt6s14D88iJ0DdD+L4QfocUQuz0HphPacEZRCqfqfSyifPcfMIgpiM31jVz+7cL/eXRfiewWwbugMPuq1fZGAjSMnJA5US5mmLdSxtnOL0KAsC+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746740663; c=relaxed/simple;
-	bh=aQSC+E0Fahye6dbTTPMAX+cp14yGUn51SmoB/H8LWhA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r+B3GHQFcHtDih7zq685BXzKG2U4LtUa6KqbrHKp8x+yHa+m6k4K6M5u8ms6cyipw2fLKoyYAhUk5lh8WGG50M3YL8zLuzMH4pPSShlG+Po7uL6WNtrOcRXm1qE6fmnu4i7K+mMCDicn+vTdK+E5+gS20wRHyU6TJl2b0lRagP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XY9OZrvV; arc=none smtp.client-ip=209.85.210.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746740669; c=relaxed/simple;
+	bh=r60Q6oOHc13fi6kMuHzPHXQmB8KxMckKssS5xTywd4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=B6JBiCDW07dKnYArc3t5l1zpMfzHnolRl3ktNrVt7izaaW7nDrdtLrAFKWbEGDr+wpSfusoTl+YEtZfGu97lmtYrBh9CMkOQneqv3H2ks6yQLohcLX8g191vlX0Q1/zAJ4+XgmawwTFyKgqw42ABpuF5QASe2i7exAYIdr7U4ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=GHYtCMHH; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XY9OZrvV"
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-72c16e658f4so845522a34.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 14:44:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746740659; x=1747345459; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=r4rrgleRHs8E8J9lRvZx/vc/Mrq/nsr1SKG+kIWRs0Y=;
-        b=XY9OZrvVhJ5RnUKGOAKMhJln9Wf+2Ent5Ugrs6jrd/N/CkyDFqvpWoeKC9p83TcBMs
-         N2PL1eFYDsnoDqX4Lh5nUwQ80+4Fv7MV3nwQ7R0p9tnQ7KYofK34+BpIngEiDp94jvvg
-         s2nMZfrZShOvgPpStWlwZhvRKqYcugmwISPgsR6P2tF5AIo61x18E1G6ccawGGtDkdCf
-         Ngei1DP4P31Lj5nIFolFZKowX/ehWnL8SxqgggV15cS2Qg0udiMf7lRB1QppHADDD05U
-         coMxow0F9jVoB5ZWpXUrA6j3R6Bjz1nKxXF+6J5P2/EOnqYR4pAI1dvYYtXd0Gs3Je4w
-         AYHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746740659; x=1747345459;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r4rrgleRHs8E8J9lRvZx/vc/Mrq/nsr1SKG+kIWRs0Y=;
-        b=BvGeasfU2CFgBnt90/lQI4Ehe68EXlWn668YHdjYwhqDWNUYlH4Rml0gycad6FYz6J
-         iL4o5h8wHsJz/lfocYOycG3rdTrkUj8gfDyMFDiXPQKseFQGwAHpSHeAJVbA2QbnnJUK
-         wzro+7y6wtyZyhuBqJedwHCSZhODkb2OOHmsbnAJw0AIN6HtyTEW/RajXjhh7kke1wtu
-         38iH4lH6QdKRPlgVatKYzqbKadDyRf3EyNp4AAw3wn9n4ID/Su85bTLffcpHhkflkqoa
-         NDJZO4gYGRBJlm63MbPGzQcpXgktRqtyODm5n6qtiesB0IZNJ1/GsSmsCJW42o58Ynlp
-         Xqzw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXINe0vWz8gCTUvKk3nyn55AiU7QdN97lyynGHAHWXGLifwBFrSiUBUOORag+y5JsI0aoFa0prQ2saPhY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCBS7bJYzjt820zJMdNEZc0x680dCrVrIEkWV3hyNuTkZGd2wJ
-	yc+nuKy70Bqnm/A0s+gcdAQP3yNimypdud8PIwzzbn2cXbJJPirj5agfW4HBbZY=
-X-Gm-Gg: ASbGncu2byM0xAt8JklXwzibmTD0AmXtrA/pbDiYXj12D1E5Sdkx+1GpiPlsmvTExG3
-	Uv3LFClXKC8v9VoGk/9lVdFtHp7j+2jqb13MXB8C95TftrFSUxpDGpmmdhUkZwCBZAMHCbfVagt
-	Xhj0ijoD0OIB8L890aQo0NhVnHzekicf/o9nD5QJSy898c0he4GizZs5vLQym7tMIrtPMqQq9Vl
-	9JW8JZGANwvqng+TSPUqg6YmYYJZfxlqRvlBcTjWBGFpprnn/aPdzDcEHsRfk+jJVJUSTHeh8Mq
-	OVPHFRHK9unvhDgaHf4PXwf2bJcGdXrwYvq0c8Y5oC62yUhM9Ub4c+hPqKume9D0gJs3LsaFUon
-	5ks52GrqoX74/zQ0TiQ==
-X-Google-Smtp-Source: AGHT+IEWxrdM7guJzCtW5zB5Io/5M/nAEqa1rWAlUXg+L9OfIUY/bZAREYTnD85qHAKnzpkD1d9V+g==
-X-Received: by 2002:a05:6830:380c:b0:72a:45bf:18d6 with SMTP id 46e09a7af769-73226ab0459mr938322a34.18.1746740659405;
-        Thu, 08 May 2025 14:44:19 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e? ([2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-732264b479asm273544a34.27.2025.05.08.14.44.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 14:44:19 -0700 (PDT)
-Message-ID: <43fd5216-9577-4773-86c3-e3035f3934b7@baylibre.com>
-Date: Thu, 8 May 2025 16:44:18 -0500
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GHYtCMHH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746740660;
+	bh=b30cAf0HlKZ41HJeMtOxc9R39dOx2HMgbAgXvchRW18=;
+	h=Date:From:To:Cc:Subject:From;
+	b=GHYtCMHHdhaAl3PnGJL0FL4GJihWxFkOD2BAmc2EeIY7skbYPDoAquzhwWwPk6NWi
+	 RM5F2PMDHp5ZQq8G4BJYa1FjsM8hDyeWXnaXbtEricn7ATrLN/wKk/ZWnF1kxujdm9
+	 AQRrA4TIkj0gP2lKF1j4RgxVspkg5DFa8JMcAPYtoohdFJSwQfoo6UrOLuGeQqcR2S
+	 uQw4IbG3Wti6uUCrGqBIXR4jnuTUDNJ6XVzUQFFUYceGh/euhoHXGK0XAdpETL2GRY
+	 jE7CFqI0J34nBXINWMA4cK4A3cyRsx+/+VfkqcquuRRnM46voJ9tdZ/3EketjwSOPT
+	 imd2nx8P3lC6w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZtlyX0mbmz4wcr;
+	Fri,  9 May 2025 07:44:19 +1000 (AEST)
+Date: Fri, 9 May 2025 07:44:17 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: gldrk <me@rarity.fan>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the pm tree
+Message-ID: <20250509074417.1accacbd@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/7] iio: make IIO_DMA_MINALIGN minimum of 8 bytes
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Eugen Hristev <eugen.hristev@linaro.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-0-814b72b1cae3@baylibre.com>
- <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-1-814b72b1cae3@baylibre.com>
- <20250508223959.70e909d2@pumpkin>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250508223959.70e909d2@pumpkin>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/HFzHmAC6eUSk6fyc_U+gicg";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 5/8/25 4:39 PM, David Laight wrote:
-> On Mon, 05 May 2025 11:31:42 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
-> 
->> Add a condition to ensure that IIO_DMA_MINALIGN is at least 8 bytes.
->> On some 32-bit architectures, IIO_DMA_MINALIGN is 4. In many cases,
->> drivers are using this alignment for buffers that include a 64-bit
->> timestamp that is used with iio_push_to_buffers_with_ts(), which expects
->> the timestamp to be aligned to 8 bytes. To handle this, we can just make
->> IIO_DMA_MINALIGN at least 8 bytes.
->>
->> Signed-off-by: David Lechner <dlechner@baylibre.com>
->> ---
->>  include/linux/iio/iio.h | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
->> index 638cf2420fbd85cf2924d09d061df601d1d4bb2a..7e1e3739328d103262071bd34ba5f6631163c122 100644
->> --- a/include/linux/iio/iio.h
->> +++ b/include/linux/iio/iio.h
->> @@ -775,8 +775,18 @@ static inline void *iio_device_get_drvdata(const struct iio_dev *indio_dev)
->>   * to in turn include IIO_DMA_MINALIGN'd elements such as buffers which
->>   * must not share  cachelines with the rest of the structure, thus making
->>   * them safe for use with non-coherent DMA.
->> + *
->> + * A number of drivers also use this on buffers that include a 64-bit timestamp
->> + * that is used with iio_push_to_buffer_with_ts(). Therefore, in the case where
->> + * DMA alignment is not sufficient for proper timestamp alignment, we align to
->> + * 8 bytes instead.
->>   */
->> +#if ARCH_DMA_MINALIGN < sizeof(s64)
->> +#define IIO_DMA_MINALIGN sizeof(s64)
->> +#else
->>  #define IIO_DMA_MINALIGN ARCH_DMA_MINALIGN
->> +#endif
-> 
-> Did you actually test this?
-> You can't use sizeof() in a pre-processor conditional.
+--Sig_/HFzHmAC6eUSk6fyc_U+gicg
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Pretty sure I did, but maybe I was asleep at the wheel. Anyway, this got caught
-by a build bot and I realized the mistake.
+Hi all,
 
-> 
-> 	David
-> 
->> +
->>  struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv);
->>  
->>  /* The information at the returned address is guaranteed to be cacheline aligned */
->>
-> 
+Commit
 
+  8979b0e76718 ("ACPICA: utilities: Fix overflow check in vsnprintf()")
+
+is missing a Signed-off-by from its author.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/HFzHmAC6eUSk6fyc_U+gicg
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgdJbIACgkQAVBC80lX
+0GxAxwgAmNzdKj/fZeujhsoM9tKrWkuNKMQwFTjQVWEbuO4tI1AS2Z//fCzKR6PB
+O+yPGKoJpCRUHFf9opmdB+bkSznNxYka8D60pCvVQQZ5r5AW+MAL4GXJvOqjWe/p
+D1cB5JL9co03NCIXPf8dXTbWZhcP+0GoAwEMRZQH8Nq+0przq+vACYSYXnNLCmF3
+B4ES+TjcrzIsykAjez3Mi+UL9uA7UD3Gu+7q4T9sCtjxGwgDUCI9AkRM7fNPPFXs
+Kj/4KPdoM2igD0pugQT3DTwOFe5YEerQaEFfu7YmmzpGj7jMxvUG91MCjKdzrRcH
+oxpllwQGLOuKzl72txjUX3zARCTm3g==
+=s3U2
+-----END PGP SIGNATURE-----
+
+--Sig_/HFzHmAC6eUSk6fyc_U+gicg--
