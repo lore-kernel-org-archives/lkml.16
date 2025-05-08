@@ -1,32 +1,33 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADFF427934D;
-	Thu,  8 May 2025 15:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C00027A139;
+	Thu,  8 May 2025 15:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716971; cv=none; b=SZ+cdpjyPMqSugSqRSzpTtFO9TacM0jmucjGQlyRLhjuMqNpnTEF84w6MwUmg2UDpwQ0XcNAQ073k6a48lRuIuoG9fMKKx4Uwc6d0cfdWjMZp8f1IMjR9GN3qwuppqCda0QNSWI20lPGHkinxuyXdZgfP+uIJV12pVpzvX3FfXg=
+	t=1746716999; cv=none; b=salbWHv0T74jV5bhoFVnslLP7r8iQDK5tunwZZ9r5zmoLl9SNYY9cgghq4ddtnU0YZAkIHAmy2fSotwOCsiMHwkKv6kjpZeUskVRFEJhh1qvBX2cqjhRoUaH59LT9b1tbyWs9k0BN6N0KQg2bVNGrxPWDtY2WY9JYNetQgdaXCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716971; c=relaxed/simple;
-	bh=dIUxDRQQ9VfT08/FY9cCuIoFDGDlW7Ej4+wOflv8zag=;
+	s=arc-20240116; t=1746716999; c=relaxed/simple;
+	bh=t34MMBMvfQim8CEA91C4auO/k4Ql4/Xe46xy2Wb35JA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GrgsOi+S1S7LE24WwoOKdmqNK7yPPnp/QiKenSi/gPFwGnuK2UNvyfOFTOAbzIR/PG1reWLaspZ+vpbaq0fOciQJM+uLjlfS59NnbaP6mKcHtkfg9M03LqlSC4PSw5W6A21fgihA0Nq/SrLwiJZOtA1zQhv+0mw2OLMuEFsQe2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jHYTkIPB; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	 In-Reply-To:Content-Type; b=RVCfJIp+Sx3D35ik6cKkHX3oE9vQ8X9/JYCVPu/csQPPnlkvmqFPfsJdUEDcsPAe9wOP5OqbM+rApcPvn8C+dLHehzSlH0vSh/pGh3c3dYJyxnRWDZg5QxnQKlz8TRcQSA36T6CQoW0r2VQv5uVLPImJ2u2yUjI4G9s9hJ7fHGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TcoLPAgh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jHYTkIPB"
-Received: from [10.137.184.60] (unknown [131.107.1.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 18C5A21199E9;
-	Thu,  8 May 2025 08:09:23 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 18C5A21199E9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746716963;
-	bh=HGRfFjvHvYenmbQuhVeAhm/NMBt8Vf8l9aGiCRvcDyk=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TcoLPAgh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A201CC4CEED;
+	Thu,  8 May 2025 15:09:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746716999;
+	bh=t34MMBMvfQim8CEA91C4auO/k4Ql4/Xe46xy2Wb35JA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jHYTkIPBCaYL0LF6HoXl5B1lqwE5C+JvjTrmzsy9SlZ5u2+BCJN27u6IsTD7kSKdk
-	 pzYrv/jq5Wnv5HVfgcRG7tCANUs1mu2IlODINDrllqGz8NLqIUwGiiQwi/ewB9lYjF
-	 hkW/R6irTp43W+4HZPvPGScqt5BqsFHCzUkn/Qew=
-Message-ID: <4273451f-5edb-4d39-86b9-022456bba950@linux.microsoft.com>
-Date: Thu, 8 May 2025 08:09:22 -0700
+	b=TcoLPAgh8wT5N0YGVl/YNYaOfyqcygNyciRozUz4xoPagwCuDyroz0r2tyMIGpAAg
+	 XwEbBrsQXsjbedF8zJCh05XA8h30CS+wUGrQzC+T0T0yffxGlQ9BSs9vkpPMtzZfTF
+	 S9NBFKpB3joav6BjwAMXkj3PVjTY5a/frCPX7YPc6QYoiIK0JH6993SJY9uEtNE7HG
+	 g4PEH838gwjbt6XcLehxrHZbi7JKO0wUfziCHtO9GR2hKnZmkMCUK9MLDYUxTMK1ma
+	 L/vi2eVu08SjfeHOg1yq37ym4PJFGKMM9ZA5YsZ/kI3Ep+dIEWVL4c63HLlPLyPVz1
+	 lCFtQqyR3jwXw==
+Message-ID: <3049a09f-f1c4-4c44-bced-53adcbb5731e@kernel.org>
+Date: Thu, 8 May 2025 17:09:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,94 +35,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next 0/2] arch/x86, x86/hyperv: Few fixes for the
- AP startup
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "apais@microsoft.com" <apais@microsoft.com>,
- "benhill@microsoft.com" <benhill@microsoft.com>,
- "bperkins@microsoft.com" <bperkins@microsoft.com>,
- "sunilmut@microsoft.com" <sunilmut@microsoft.com>,
- "ardb@kernel.org" <ardb@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
- "brgerst@gmail.com" <brgerst@gmail.com>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "dimitri.sivanich@hpe.com" <dimitri.sivanich@hpe.com>,
- "gautham.shenoy@amd.com" <gautham.shenoy@amd.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "hpa@zytor.com" <hpa@zytor.com>,
- "imran.f.khan@oracle.com" <imran.f.khan@oracle.com>,
- "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
- "jpoimboe@kernel.org" <jpoimboe@kernel.org>,
- "justin.ernst@hpe.com" <justin.ernst@hpe.com>,
- "kprateek.nayak@amd.com" <kprateek.nayak@amd.com>,
- "kyle.meyer@hpe.com" <kyle.meyer@hpe.com>,
- "kys@microsoft.com" <kys@microsoft.com>, "lenb@kernel.org"
- <lenb@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
- "nikunj@amd.com" <nikunj@amd.com>, "papaluri@amd.com" <papaluri@amd.com>,
- "patryk.wlazlyn@linux.intel.com" <patryk.wlazlyn@linux.intel.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "rafael@kernel.org" <rafael@kernel.org>,
- "russ.anderson@hpe.com" <russ.anderson@hpe.com>,
- "sohil.mehta@intel.com" <sohil.mehta@intel.com>,
- "steve.wahl@hpe.com" <steve.wahl@hpe.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
- "tiala@microsoft.com" <tiala@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>
-References: <20250507182227.7421-1-romank@linux.microsoft.com>
- <SN6PR02MB415715B9BE06E5B505F6DBB4D48BA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Subject: Re: [PATCH 1/2] mips: dts: pic32: pic32mzda: Rename the sdhci
+ nodename to match with common mmc-controller binding
+To: Charan Pedumuru <charan.pedumuru@gmail.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Ulf Hansson <ulf.hansson@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+References: <20250507-mchp-sdhci-v1-0-ed29de05295a@gmail.com>
+ <20250507-mchp-sdhci-v1-1-ed29de05295a@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB415715B9BE06E5B505F6DBB4D48BA@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250507-mchp-sdhci-v1-1-ed29de05295a@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 5/7/2025 9:22 PM, Michael Kelley wrote:
-> From: Roman Kisel <romank@linux.microsoft.com> Sent: Wednesday, May 7, 2025 11:22 AM
-[...]>
-> I think this works. It's unfortunate that Patch 1 adds 11 lines of code/comments that
-> Patch 2 then deletes, which seems like undesirable churn. I was expecting adding the
-> "cpu" parameter to come first, which then makes fixing the hv_snp_boot_ap() problem
-> more straightforward. But looking more closely, hv_snp_boot_ap() already has a
-> parameter erroneously named "cpu", so adding the correct "cpu" parameter isn't
-> transparent. Hence the order you've chosen is probably the best resolution for a
-> messy situation. :-)
-
-Thanks, Michael :) Looked as a good trade-off, went ahead with it. Will
-be happy to address any concerns of that folks might have!
-
+On 07/05/2025 08:29, Charan Pedumuru wrote:
+> Rename the sdhci nodename from "sdhci@" to "mmc@" to align with
+> linux common mmc-controller binding.
 > 
-> Michael
-> 
->>
->>   arch/x86/coco/sev/core.c             | 13 ++-----
->>   arch/x86/hyperv/hv_init.c            | 33 +++++++++++++++++
->>   arch/x86/hyperv/hv_vtl.c             | 54 ++++------------------------
->>   arch/x86/hyperv/ivm.c                | 11 ++++--
->>   arch/x86/include/asm/apic.h          |  8 ++---
->>   arch/x86/include/asm/mshyperv.h      |  7 ++--
->>   arch/x86/kernel/acpi/madt_wakeup.c   |  2 +-
->>   arch/x86/kernel/apic/apic_noop.c     |  8 ++++-
->>   arch/x86/kernel/apic/apic_numachip.c |  2 +-
->>   arch/x86/kernel/apic/x2apic_uv_x.c   |  2 +-
->>   arch/x86/kernel/smpboot.c            | 10 +++---
->>   include/hyperv/hvgdk_mini.h          |  2 +-
->>   12 files changed, 76 insertions(+), 76 deletions(-)
->>
->>
->> base-commit: 9b0844d87b1407681b78130429f798beb366f43f
->> --
->> 2.43.0
-> 
+> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
+> ---
 
--- 
-Thank you,
-Roman
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
+Best regards,
+Krzysztof
