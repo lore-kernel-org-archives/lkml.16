@@ -1,189 +1,192 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E979A225403;
-	Thu,  8 May 2025 12:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8630225403
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 12:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746707289; cv=none; b=gngUpsPJzyhdyE7weyoTatbQ4IR1dzgC530NK3YZmLbxuxCzn52UXEKAR24Q/qBgZm1a4P2/8/emZqVf2dsHj2q1guXqUI7IUJ+hn0azyyYrv3UT8vFhtK1gi5sXLNYWO82pySd38ril7T/ncxMDkNCt4f5Gpat2CaXtk1gy0K4=
+	t=1746707391; cv=none; b=RdTqJ5DjCbVnikwX+Bpa2fkkcALBFROT2VkR9p/VoZicsdYPhD97FAPbZxlj1Pd7uvt2ccoPtZHGr+CqTIQyMsbFru56mvCKu5li6BZuyY9O2mCRzuU9LXlqLJpBfGbbPqIAqDOpfLHzAIBuEG1neUpm3U5qb1D08LXi3EGkdiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746707289; c=relaxed/simple;
-	bh=3KsqTxB9tSG1Fili1I2FkJ28wEibLewLt0ndOHffSe8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lPGzLQhNP7z6B/h8SfhQ4xLUp9uXi434WhybuWMQy32AaHOrUMHQHPbImi0vJdARHRu7Zon5g+7n4Tj62S/GNTFOSCwfryDquNlMxTt/yQsryzMqGlyGXo0u4R1TTGQqp7P7yUlbRShK6sc/hvAeb7Gh0QPGa9jzbX3tC5CPYfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j0YO63BH; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746707391; c=relaxed/simple;
+	bh=TDGsCti3mPtYzlEBmLlDoOJKGEqKrgzVDiHCOzJhQgs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=exeS5KCd1+f9MQbgi5MlRt2ZvmG57zHFMqFgclAyjoPvwNEOSub7Sj6kJ53YGAWTb9LTpwUWas4km/zhhMDWLOf3ZJh94uVah5T2caXwUysSe5NsDkZZUkXdQ0uYpP3dcpv3BX7/vBlA+mDrnPl/reLWfCL6/5eHHbCBt6kR33Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=Omlxtdkx; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0YO63BH"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-549b159c84cso1109128e87.3;
-        Thu, 08 May 2025 05:28:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="Omlxtdkx"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-8647e143f28so76218639f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 05:29:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746707286; x=1747312086; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p8z0r+15z1JYVIXTcK2Gr5T3wzDdzK7vBnKTwGf2a+E=;
-        b=j0YO63BHBdr2QlDLSQ/CwezP5Fu66+7ayDp/JLO74F6kZnVwAgB901zYdidBoWRoO1
-         jHGPZq3vI3TZXBuZzv1gKOQSEokO0sAYsMIkAtbXXAOMO2/ZpUPQBCKOrXDUPO/NwB+T
-         WgC+9pRxuEiXmRiQnReJ7JBwIAJCGeHZuCQ/dhpS/EJTaUMZGUdIbyWRrOWA3URNMOk5
-         A9yLNSF8bbA/h9SOHGxbGYDzXniNkf9PqOg6cyqjYFwmwyLKOuJGezsNr0FSNh3Ti6qf
-         SoIJlJJjd8Tb+p7nPD2DHa51X42kSJWtYrCbTZYBh5TNEwyzSz7DRmqU9xidEOUIz+HJ
-         8Wtw==
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1746707388; x=1747312188; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EchSTz2ixLAWYTB96sLu87zXRfh/aWLsrM0Vf/7G5Gc=;
+        b=OmlxtdkxzJusAKKBcHr6DeLha/mV/iP9Nk7vwb3sM3rN+eDYqyA6iMFj8roR+ntE8s
+         w3wbjV9rXmL5tK6hNdeJg2Ku+xs9zYIqbImZcvIIZ09ImIwXEZuzFv+cnOGPhv9JMnct
+         n9rqYr9MemeaelbRsdpY7H3cChhDYiPq6AA0SxebbrWWpVdrzUqNI5h8jope7LhPQ2Rt
+         tN78rrZ8fFPfXcDv9hpH5sMaM1QoTX2nTJANH37k/8Qky3jq3cygzC/eJj9eeFp77Jv9
+         k0DudVv60jSxTP3IDc3wuqs+xwKJDt4ty24S6fDnKSGna9hf76botuhcqtLa72TX1PPG
+         otUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746707286; x=1747312086;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p8z0r+15z1JYVIXTcK2Gr5T3wzDdzK7vBnKTwGf2a+E=;
-        b=ouTOM3tMsEoe80JL2z0dHn/xb33XW7HndCdp1tqXMwt0fZkw771J0or/lBKeLU82B3
-         A1d4h42cMhDQMKBFCkH91jqp3AlKOxzwKRA88yYh4HE5+b3J7keHgv9mVDpckkmeNEnE
-         Xhu1ZJgFEmrTEQkhmMj8DpQFhkygFVwCILD4cy9/mxADOpuaz3kMpGV6fmmx2P+d3uI4
-         AvX7FMoBs5boLh8bp49YX4Jo2EBaMZUV2AAFkMmfhINPCnBeiN+vjKo3PtKxMMB2alC6
-         5bryXQwg55rbNgM+w2jTA4YiUgL2b6xsfzn9McJcN6rbjPRF3t/ADVAM0taifxfhJX6w
-         BAWw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5sCZHeJoNyT7CfiXVp8JYpHgLtC3XvWn+Rw46YhM+rjkPOCxXuHGGtqcjCuHVa8ZcjulkWVckBDU/+GRX@vger.kernel.org, AJvYcCVX8t/8O5w9L6kJD4ELFBZ5gfB+EW2qct5BlE3sQj59wFCByIzpUvBmAm3Y4Xs1CYlrqo2n5mnAgrih@vger.kernel.org, AJvYcCW85e0TZH/F59hi50Iq2VaqQuyugzze054bYKk+HaUMmpoeJplL/TnqR1MgVD0fdTgSd1aUkhkBoJeQEoU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVPt57WynyuXUv2RiL6zXHpRfqT6+XGwDn+WDA+6lXIlYMut1K
-	VIbayyYnnSkToWCTJSdd+nXAQDWJxajhkbrJSz9KQVcNKgB6e2EMDu374mn23vx/isqQasiRc6K
-	Z9ACHjZkG+MRRyPDTkV9Dycn8+VQ=
-X-Gm-Gg: ASbGncua49WzYlaOxd/GsOAwUslIW/j1EeUB2mUwhrc75gwrCoJCzLAOyNNupYMAI4d
-	9IFUMsgj2pk4qI+fG5tMQ9J0onXMWW2rFv8F1X2YqaPXt/1oA6nMP1fdcPdaXSI9AaMCv4fRKi4
-	LmzAI4GluWw2qi33o0Sf4arNY=
-X-Google-Smtp-Source: AGHT+IFx+c7QhYxDWjE4EmbzRUx3G3ONnk0IG0904JJGKwJoTt+Z7393cPHbLphhwJ+JrfZPDBxiOzO+or9IzRCNUDo=
-X-Received: by 2002:a05:6512:2386:b0:545:aa5:d44f with SMTP id
- 2adb3069b0e04-54fb9602480mr2498254e87.30.1746707285781; Thu, 08 May 2025
- 05:28:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746707388; x=1747312188;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EchSTz2ixLAWYTB96sLu87zXRfh/aWLsrM0Vf/7G5Gc=;
+        b=mprhk43whp943vpqXKDcDi22wg9nIwha6UdFN6PKMw1d5nZQ3kHfFcZrGTo60JbgA7
+         OO+ixfK5jmx9PPWJEmnAwQSuYJZw/6JeNpn3XqM6Duxd6szFW0zpxoYmPqbSVG6/7aNo
+         0cJ0KJDCCWaOYzlUP8AM//4t3cscmSrEWw/TAElJF7QhKvkvVctXTH3DAYH3CczCrbs/
+         r8PPSgCGhBnKEoFCpgcxwWndHFrr9tbar2tFBMszCvuULFMATAH9WOcHoy3jrYClYLHp
+         nzc9QE2dz0UXdi1yO696Rr1KRSpW81Fxa6C6Shgo8qmdEMBcyp0cVpq98oPob/dPn1qt
+         HXoA==
+X-Forwarded-Encrypted: i=1; AJvYcCWyPxADqZUCt8/9z3noen3ZYfgwTs6O8XWj5uX1nUyTiZi/p65b7a4cggpoNOBSDcdjs5LBpiXAArh8CFA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY1I2d5RYnH8sD1lhV2UCTgwSQPvKJVTt4nCi+1ZIbTbZ9mfVh
+	Ii1ZTzoKSaiLDt/z19KsRTN++GAeLM7xv7SJmAx0+I2AbkyaORgCPLUleCt4L4A=
+X-Gm-Gg: ASbGncsw3vDsWGthuZQasB5kNaN9hhY7X7BE3DsQFuxbO88YfbkKOnOMAcSF9mjL3RA
+	isP289vR6/8kvvYOo5TVPIzMN4hBIHYGM9HKMDtE9q3yP3LhPEhhBNZgTr1geHNWYlVA1ifBMa0
+	i1dUk/lE1bW+J8/3szwa1aLkuHU9MKhwrV6FGd7KJDxkBT8IIJxZnBjKaYHr1BytDVFX4MaUIPI
+	Tuft2LKocCCRF5Bs5GfHSOAGWT8LDSM3wdglTsc/lKmBVGrAm3GjNga+VkMwGTBbG8iral+JSV+
+	YpxwM8RQJOh0VmVMzS2ReXiF6Wc+JjY9kM+DyDooGtuaOVyoi9g6w/lMH0LZsGCM7h86dqQdenR
+	UdQHh
+X-Google-Smtp-Source: AGHT+IF690lf3lW382YdkiJiBkYc8A/KfmHLjKI68D6s9G2Rm2ydeiV8IBPkiN5nxv5k+Txl9dCHlg==
+X-Received: by 2002:a05:6602:3413:b0:867:17a6:9fd2 with SMTP id ca18e2360f4ac-8674737348bmr976931039f.9.1746707387766;
+        Thu, 08 May 2025 05:29:47 -0700 (PDT)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f88a8cf769sm3129157173.2.2025.05.08.05.29.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 05:29:47 -0700 (PDT)
+Message-ID: <65bc21e7-d936-492a-b095-4c1469932623@riscstar.com>
+Date: Thu, 8 May 2025 07:29:46 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508-tegra210-emc-dt-v2-0-d33dc20a1123@gmail.com>
- <qhhv27thjnbz7rtcfja767bpxjvwa6iivc2bphar7t2wobuzb7@aspkmrgp2ihy>
- <CALHNRZ-q7W9CfeD4ipmwFVqHm7oGfTgJpwNoVhfbSXFPDxF91Q@mail.gmail.com> <eba00bd5-fa1a-4cad-bb41-b395011235e1@kernel.org>
-In-Reply-To: <eba00bd5-fa1a-4cad-bb41-b395011235e1@kernel.org>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Thu, 8 May 2025 07:27:52 -0500
-X-Gm-Features: ATxdqUHRaY3O3xtWgGsmb_62eNklbNjNXPcEX8MqGjOaueoQDIt6kAZ04gvsNL0
-Message-ID: <CALHNRZ_WPUM8wKSLcyyZm4jc9onBYiP3oLd=39k4=hoqLzHhrA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] memory: tegra210-emc: Support Device Tree EMC Tables
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/6] reset: spacemit: define three more CCUs
+To: Philipp Zabel <p.zabel@pengutronix.de>, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
+ sboyd@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, alex@ghiti.fr, dlan@gentoo.org
+Cc: heylenay@4d2.org, inochiama@outlook.com, guodong@riscstar.com,
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+ spacemit@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250506210638.2800228-1-elder@riscstar.com>
+ <20250506210638.2800228-6-elder@riscstar.com>
+ <a3febd3718397d7cf067e2ae637c2d633388f89f.camel@pengutronix.de>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <a3febd3718397d7cf067e2ae637c2d633388f89f.camel@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 8, 2025 at 6:47=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
->
-> On 08/05/2025 13:37, Aaron Kling wrote:
-> > On Thu, May 8, 2025 at 2:41=E2=80=AFAM Thierry Reding <thierry.reding@g=
-mail.com> wrote:
-> >>
-> >> On Thu, May 08, 2025 at 01:07:37AM -0500, Aaron Kling via B4 Relay wro=
-te:
-> >>> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> >>> ---
-> >>> Changes in v2:
-> >>> - Add patch to describe the emc table bindings
-> >>> - Add patch to allow a fallback compatible on the tegra210 emc device=
- to
-> >>>   match firmware expectations
-> >>> - Add a patch to include the baseline emc tables on p2180
-> >>> - Link to v1: https://lore.kernel.org/r/20250430-tegra210-emc-dt-v1-1=
--99896fa69341@gmail.com
-> >>>
-> >>> ---
-> >>> Aaron Kling (4):
-> >>>       dt-bindings: memory-controllers: Describe Tegra210 EMC Tables
-> >>>       dt-bindings: memory-controllers: tegra210: Allow fallback compa=
-tible
-> >>>       arm64: tegra: Add EMC timings to P2180
-> >>>       memory: tegra210-emc: Support Device Tree EMC Tables
-> >>>
-> >>>  .../nvidia,tegra21-emc-table.yaml                  |  1692 +
-> >>>  .../memory-controllers/nvidia,tegra210-emc.yaml    |    44 +-
-> >>>  arch/arm64/boot/dts/nvidia/tegra210-p2180-emc.dtsi | 49749 +++++++++=
-++++++++++
-> >>>  arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi     |     1 +
-> >>>  drivers/memory/tegra/tegra210-emc-core.c           |   246 +-
-> >>>  5 files changed, 51721 insertions(+), 11 deletions(-)
-> >>
-> >> We've had discussions about this in the past, and I don't think this i=
-s
-> >> going to go anywhere. Device tree maintainers have repeatedly said tha=
-t
-> >> they won't accept this kind of binding, which is, admittedly, a bit no=
-n-
-> >> sensical. 50,000 lines of DT for EMC tables is just crazy.
-> >>
-> >> The existing binary table bindings were created to avoid the need for
-> >> this. I don't know how easy this is to achieve for all bootloaders, bu=
-t
-> >> the expectation was that these tables should be passed in their native
-> >> format.
-> >
-> > Mmm, this would definitely be an issue with my long term end goal of
-> > supporting the SHIELD t210 devices on mainline. The bootloader on
-> > those devices cannot be replaced due to secure boot and that variant
-> > of the bootloader only supports this dt table for emc. And support
-> > without emc reclocking would be rather unusable as a consumer media
-> > device. Unless the devices could get a bootloader update switching to
-> > the reserved memory tables before they go eol, but I don't see that as
-> > likely.
-> >
-> > So I guess the question goes to Krzysztof. I didn't have the bindings
->
-> What is the question exactly?
+On 5/8/25 4:11 AM, Philipp Zabel wrote:
+> On Di, 2025-05-06 at 16:06 -0500, Alex Elder wrote:
+>> Three more CCUs on the SpacemiT K1 SoC implement only resets, not clocks.
+>> Define these resets so they can be used.
+>>
+>> Signed-off-by: Alex Elder <elder@riscstar.com>
+>> ---
+>>   drivers/clk/spacemit/ccu-k1.c | 24 ++++++++++++++++
+>>   drivers/reset/spacemit/k1.c   | 54 +++++++++++++++++++++++++++++++++++
+>>   include/soc/spacemit/ccu_k1.h | 30 +++++++++++++++++++
+>>   3 files changed, 108 insertions(+)
+>>
+>> diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.c
+>> index 6b1845e899e5f..bddc83aff23cd 100644
+>> --- a/drivers/clk/spacemit/ccu-k1.c
+>> +++ b/drivers/clk/spacemit/ccu-k1.c
+>> @@ -939,6 +939,18 @@ static const struct spacemit_ccu_data k1_ccu_apmu_data = {
+>>   	.num		= ARRAY_SIZE(k1_ccu_apmu_hws),
+>>   };
+>>   
+>> +static const struct spacemit_ccu_data k1_ccu_rcpu_data = {
+> 
+> The /* No clocks in the RCPU CCU */ comment belongs here, instead of in
+> the reset driver.
+> 
+> I wonder though, if these units have no clocks, why are they called
+> CCUs? It doesn't make much sense to me to add their compatibles to the
+> ccu-k1 driver only to load the reset aux driver. Why not just add a
+> platform driver next to the aux driver in reset-spacemit.ko for these
+> three?
 
-If there's any way to get these bindings and the dt change accepted.
-Or getting the code change accepted without them. If there isn't, then
-there's no reason for me to put any more effort into this series and I
-need to start looking at alternatives. Like forking a downstream copy
-of this driver for my Android efforts. I'm trying very hard to avoid
-this as much as I can, though. The more downstream variation I have,
-the more maintenance work I have to do over time.
+In fact, the particular registers involved *do* have fields
+to control some clocks, but there is currently no use for
+them, so support for them isn't implemented.  The reset
+controls in those registers are needed now, however.
 
->
-> > or a copy of the tables in v1 of this series, mostly due to a
-> > misunderstanding, and was fairly asked to add them. That's this
-> > revision. Would you consider accepting this after any fixes? Or is
-> > this concept entirely dead in the water?
->
->
-> The binding here is far away from what is in general acceptable DTS
-> style, so in general this won't be easy to upstream. If we allow any
-> crap to be sent post factum, what is the benefit for companies to
-> actually took to community BEFORE they ship products? None, because that
-> crap will be always sent after release with explanation "we cannot
-> change now". Old platforms with Android bootloaders are in general
-> encouraged to move to something decent, like U-boot.
+I actually first implemented this as a small, separate reset
+driver, only to learn late in the process that these other
+clocks might be needed someday.
 
-I'm not even sure I can work around this by chainloading u-boot. With
-some hoop jumping, I could read in the dt tables in u-boot, but I'm
-not sure how simple it would be to write out a reserved memory table
-to match what mainline currently expects. And I can't just replace the
-entire boot stack due to secure boot.
+> 
+>> +	.reset_name	= "rcpu-reset",
+>> +};
+>> +
+>> +static const struct spacemit_ccu_data k1_ccu_rcpu2_data = {
+>> +	.reset_name	= "rcpu2-reset",
+>> +};
+>> +
+>> +static const struct spacemit_ccu_data k1_ccu_apbc2_data = {
+>> +	.reset_name	= "apbc2-reset",
+>> +};
+>> +
+>>   static int spacemit_ccu_register(struct device *dev,
+>>   				 struct regmap *regmap,
+>>   				 struct regmap *lock_regmap,
+>> @@ -1106,6 +1118,18 @@ static const struct of_device_id of_k1_ccu_match[] = {
+>>   		.compatible	= "spacemit,k1-syscon-apmu",
+>>   		.data		= &k1_ccu_apmu_data,
+>>   	},
+>> +	{
+>> +		.compatible	= "spacemit,k1-syscon-rcpu",
+>> +		.data		= &k1_ccu_rcpu_data,
+>> +	},
+>> +	{
+>> +		.compatible	= "spacemit,k1-syscon-rcpu2",
+>> +		.data		= &k1_ccu_rcpu2_data,
+>> +	},
+>> +	{
+>> +		.compatible	= "spacemit,k1-syscon-apbc2",
+>> +		.data		= &k1_ccu_apbc2_data,
+>> +	},
+>>   	{ }
+>>   };
+>>   MODULE_DEVICE_TABLE(of, of_k1_ccu_match);
+>> diff --git a/drivers/reset/spacemit/k1.c b/drivers/reset/spacemit/k1.c
+>> index 19a34f151b214..27434a1928261 100644
+>> --- a/drivers/reset/spacemit/k1.c
+>> +++ b/drivers/reset/spacemit/k1.c
+>> @@ -137,6 +137,57 @@ static const struct ccu_reset_controller_data k1_apmu_reset_data = {
+>>   	.count		= ARRAY_SIZE(apmu_resets),
+>>   };
+>>   
+>> +static const struct ccu_reset_data rcpu_resets[] = {
+>> +	[RESET_RCPU_SSP0]	= RESET_DATA(RCPU_SSP0_CLK_RST,	0, BIT(0)),
+>> +	[RESET_RCPU_I2C0]	= RESET_DATA(RCPU_I2C0_CLK_RST,	0, BIT(0)),
+>> +	[RESET_RCPU_UART1]	= RESET_DATA(RCPU_UART1_CLK_RST, 0, BIT(0)),
+>> +	[RESET_RCPU_IR]		= RESET_DATA(RCPU_CAN_CLK_RST,	0, BIT(0)),
+>> +	[RESET_RCPU_CAN]	= RESET_DATA(RCPU_IR_CLK_RST,	0, BIT(0)),
+>> +	[RESET_RCPU_UART0]	= RESET_DATA(RCPU_UART0_CLK_RST, 0, BIT(0)),
+>> +	[RESET_RCPU_HDMI_AUDIO]	= RESET_DATA(AUDIO_HDMI_CLK_CTRL, 0, BIT(0)),
+>> +};
+>> +
+>> +static const struct ccu_reset_controller_data k1_rcpu_reset_data = {
+>> +	/* No clocks in the RCPU CCU */
+> 
+> This information is not useful in the reset driver.
 
-The devices I'm talking about are not yet end of life, so it is
-physically possible for them to get a bootloader update to conform to
-the existing mainline model. But I'm just one guy trying to do 3rd
-party support for these devices, I can't affect what Nvidia does with
-the signed bootloader on these devices. I'd love to be able to swap
-out an open source bootloader on these, but the secure boot setup
-prevents that.
+Yes, I think this was just copy-pasted from the previous code.
+This won't be there in the next version.
 
-> 50 kB DTS is another point - I don't even understand why do you need it
-> if you claim this is coming from bootloader.
+					-Alex
 
-Like mentioned in the commit message for the 50k lines of dt
-additions, the existing bootloader will only write the trained values
-to dt nodes that already exist. If it doesn't find the nodes, it'll
-still do the training, but nothing will be written to the in-ram copy
-of the kernel dtb.
+> regards
+> Philipp
 
-Sincerely,
-Aaron
