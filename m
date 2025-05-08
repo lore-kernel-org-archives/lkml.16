@@ -1,106 +1,132 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264E74B1E48
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E23A945
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746697864; cv=none; b=ZyJfLLXi4P8aXCxkAL0aaKjiWE7YkN9QM6G5TEueZHwunG3neKrfOfAd++7DVvxsI+NHSoMb0MP7++LkdfUKxXGMZoUQmGwk1FAuUmm3lUc+9PNkMynfUU9jxdoJwANl22bXJFpHNYwrvWle2lDhRknhjjZt1qYQNnHmGdSfZJ8=
+	t=1746697935; cv=none; b=ExHNHCsGGI4JTFZTtY4oKNjOuxELQh7VzQoOrgDVHJ7djLgvDeSjGnXce798GTOC+MT1qWOsXpaALMiIDs7TQyApV959WOYK76Jy6CFEd7aI+Ml8+5VNsy5gYii3Pxzq0PbTZ9ZCAEDDc/2zMku56VYSwf7EqMF3oVQFiRL+E7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746697864; c=relaxed/simple;
-	bh=ilKpTcN1qWzpcVnlhS8lmE0PoQN0fNO30dAf76HsnHQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WD9wI4C1gpgSe0FG9LGYmRaZIKxe7Gl3zuxGyhvmhkGF4aE5+4l6nif3vYk1ZCHdc1a9I2H7mtIvsTvJcT7VcJTqnSbBzMz5j6unfb64+jH9j71EuuZ5UTLFXreoe/7omaAL1YkUuxR929Vd0OriiPM/U9FoLFWwI88RkcyMYlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2hQj3MkC; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1746697935; c=relaxed/simple;
+	bh=ldJGcwHxUQbFSFn7ER9icWj0fdUAIU+3z7ihgF/grG0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E0IehnWgtP6+S/WrSfo6jzXhr71xKN/qT7KaavDuFJ/LjckUP7W325YD5X9kmy5WPW8n7o62ourC0rUoL7Lx2sYIWlSRYWv/wq7oVeq1GDYiyMJPlK0ZOxLRX+58641CzzhhzWV6Cn6ygqz2smoUc4lYoATXJpYyCgON931wkN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=O87ZtX2c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=okbpSeg+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=O87ZtX2c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=okbpSeg+; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2hQj3MkC"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-44059976a1fso2969015e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 02:51:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746697861; x=1747302661; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sRYORIdHbCu+v7v6CRkN0ZTKr0/OiODNbHOIpEPqKvI=;
-        b=2hQj3MkCHoWEqacI2nvdHUxERFuGeYWTmfC9r8tuHAhq/2Mms1N8xwpV1PVwdXbF+3
-         jjIkXgqBC/ES6SmSsJUWUdf24jVXKB/OBMMlBRP2Kvci92qz+ZAaMcgcpRwkTiJpoZih
-         cGPsujZ9/R1f/WNwcWD6efuzCK6B9/MCn34sopLJxlxXwBdnF3tFEKKjo/COta94/FKn
-         LGvBUNR/15I8V6LkxRfengzxXorDeAE0aRVfPIQ/F1a58u4CrkHfR+Pc5oDaUidDDrjV
-         uqBp7Ga36Zm2k5ZhCRqinApSCTXliE5P49De6Rkn3Z279CtGKOstI0Pwh8+KCtBMXuem
-         bcxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746697861; x=1747302661;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sRYORIdHbCu+v7v6CRkN0ZTKr0/OiODNbHOIpEPqKvI=;
-        b=tpWkaU3j4SAbB0niiNXTTqRW9cuci/Y6kR2PMgUOSlzNnXSXAvockNy7EilMPZHryX
-         gPzaCCqV2MZjaN9O4S6Zo4HIyjkdtp4HrLPkQrhCWze4xMO0S0JBHOCaTXYHlBM9HV+o
-         cXc96M/v1TwnKKqP0B/tQA6CQ7XOhK8rByQl3bbvDW5TJc+vaM5VYmb4I2AhIaxssE2Q
-         Wot7aGZsrkP0wpiuOAqUSTze8U7yZ89sFmLqJsFpK6DlHV8ob1bnbSb2tZvd/e28VLpD
-         ZLwP9eIGuSfAISkinfFpstbctoK8bgYxnwANb6p2bw9KiPVj4zNmqgDfysH9smW0bXIm
-         6ejw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNg6RxVsyKWU1EJ0IOWmLWhEfLtqDcVrjnilSmMFN0JQnHkB3mvgEPEPPwDym+RVbYt201zc0Y7gy5JF8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmQuzMCDug6E3wLfOl3xejjNQPX/t62ei/0HG6cC8JAArtOBLN
-	T5ou1vdCT6nTaNqz/obEtV+hk55MQh4jVc84FiKDSACYgDd/PTlwSrVM2uLPoAFwpKY57k7ewl3
-	uTn+B+a4Wvl3/QA==
-X-Google-Smtp-Source: AGHT+IHLXsWRDgG3OD/xhwNN+TKEjftVuGlDJ1UzIgWhHqG8GP2ey/7z74RyCklt2SklhOgBNWfIa0zzBtlpALk=
-X-Received: from wmbhh5.prod.google.com ([2002:a05:600c:5305:b0:43d:55a1:bffc])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:698e:b0:43c:e478:889 with SMTP id 5b1f17b1804b1-441d448c8a4mr66281965e9.0.1746697861579;
- Thu, 08 May 2025 02:51:01 -0700 (PDT)
-Date: Thu, 8 May 2025 09:50:59 +0000
-In-Reply-To: <aBuQgY4wMv1CsVdo@Mac.home>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="O87ZtX2c";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="okbpSeg+";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="O87ZtX2c";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="okbpSeg+"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A080D1F385;
+	Thu,  8 May 2025 09:52:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746697931; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mGI0t+JOL24BbL8mdiNkqGXOqII4M7WbHgTz5T4ucgQ=;
+	b=O87ZtX2cXv0oOsNvO5bDNol3QhT/foJAuerBWQr6//t70qB+yGWrHtY0DRlGq4Jmuv2zSt
+	ovh92y+o5DVPWWzVGEWGZpyO5Th7lxEcuk4LYfdMlgELCShQ4Tal/mbVsUckoTJs5As322
+	8FjKW//vCXgJ5jyKF4f+PmQVZIHwvZk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746697931;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mGI0t+JOL24BbL8mdiNkqGXOqII4M7WbHgTz5T4ucgQ=;
+	b=okbpSeg+Avv9Ej3//v18q+suk5E16/6NIqBjP9IHe/nCe7yZTY8Z/JJHthjFtxmhfNhOqo
+	U/xE10rOqQg7MuAg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746697931; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mGI0t+JOL24BbL8mdiNkqGXOqII4M7WbHgTz5T4ucgQ=;
+	b=O87ZtX2cXv0oOsNvO5bDNol3QhT/foJAuerBWQr6//t70qB+yGWrHtY0DRlGq4Jmuv2zSt
+	ovh92y+o5DVPWWzVGEWGZpyO5Th7lxEcuk4LYfdMlgELCShQ4Tal/mbVsUckoTJs5As322
+	8FjKW//vCXgJ5jyKF4f+PmQVZIHwvZk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746697931;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mGI0t+JOL24BbL8mdiNkqGXOqII4M7WbHgTz5T4ucgQ=;
+	b=okbpSeg+Avv9Ej3//v18q+suk5E16/6NIqBjP9IHe/nCe7yZTY8Z/JJHthjFtxmhfNhOqo
+	U/xE10rOqQg7MuAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5C54813A30;
+	Thu,  8 May 2025 09:52:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id G5ZKFct+HGiBdwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 08 May 2025 09:52:11 +0000
+Date: Thu, 08 May 2025 11:52:11 +0200
+Message-ID: <87cycjv390.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Shenghao Ding <shenghao-ding@ti.com>
+Cc: <broonie@kernel.org>,
+	<andriy.shevchenko@linux.intel.com>,
+	<13564923607@139.com>,
+	<13916275206@139.com>,
+	<alsa-devel@alsa-project.org>,
+	<linux-kernel@vger.kernel.org>,
+	<baojun.xu@ti.com>,
+	<Baojun.Xu@fpt.com>,
+	<robinchen@ti.com>
+Subject: Re: [PATCH v1] ALSA: hda/tas2781: Create an independent lib to save the shared parts for both SPI and I2C driver
+In-Reply-To: <20250507045813.151-1-shenghao-ding@ti.com>
+References: <20250507045813.151-1-shenghao-ding@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250408-vma-v16-0-d8b446e885d9@google.com> <20250408-vma-v16-8-d8b446e885d9@google.com>
- <aBuE6a4rXB8qwXfF@Mac.home> <aBuOX0hTLZed3JND@Mac.home> <aBuQgY4wMv1CsVdo@Mac.home>
-Message-ID: <aBx-g4qapwBc0K8C@google.com>
-Subject: Re: [PATCH v16 8/9] task: rust: rework how current is accessed
-From: Alice Ryhl <aliceryhl@google.com>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	John Hubbard <jhubbard@nvidia.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Flag: NO
+X-Spam-Score: -3.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[139.com];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,139.com,alsa-project.org,vger.kernel.org,ti.com,fpt.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
 
-On Wed, May 07, 2025 at 09:55:29AM -0700, Boqun Feng wrote:
-> On Wed, May 07, 2025 at 09:46:23AM -0700, Boqun Feng wrote:
-> > On Wed, May 07, 2025 at 09:06:01AM -0700, Boqun Feng wrote:
-> > > Due to this:
-> > > 
-> > > 	https://lore.kernel.org/oe-kbuild-all/202505072116.eSYC8igT-lkp@intel.com/
-> > > 
-> > > , I think we should move this impl block into rust/kernel/mm.rs for now,
-> > > i.e. (in rust/kernel/mm.rs)
-> > > 
-> > >     impl crate::task::CurrentTask {
-> > >         pub fn mm(&self) -> Option<&MmWithUser> { ... }
-> > >     }
-> > > 
-> > > Thoughts?
-> > > 
-> > 
-> > Hmm.. this alone won't be enough, because miscdevice also uses mm. Maybe
-> > you could most of mm defined even when CONFIG_MMU=n but keep
-> > MmWithUserAsync only available when CONFIG_MMU=y?
-> > 
+On Wed, 07 May 2025 06:58:13 +0200,
+Shenghao Ding wrote:
 > 
-> Something like this, probably? But your choice ;-) Make CONFIG_RUST
-> select CONFIG_MMU is fine but the question is who is going to unselect
-> that at when?
+> Some common parts, such as struct tas2781_hda{...} and some audio
+> kcontrols are moved into an independent lib for code cleanup.
+> 
+> Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
 
-Please see:
-https://lore.kernel.org/r/20250508083540.3832900-1-aliceryhl@google.com
+Applied now.  Thanks.
 
-Alice
+
+Takashi
