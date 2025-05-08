@@ -1,84 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FC3226CE4
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A5F26AAAA;
+	Thu,  8 May 2025 14:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746713660; cv=none; b=kRdCCjJulL8poIGLemXF+INnOaYGhgzG/HakiaadgXDZo2os2P0RqhDHypgKvNx0pkoa5CbRC41NJMs+96q38pxh5KKjMUN29MTbnh4cN1c24rlk8hqpFdz18v3l0yWMq9zd2XJoTayUz24lB6ZUKJ86IOfmgV/HG2HerD1VkS0=
+	t=1746713757; cv=none; b=ItJfQUkikU6X69fzaFoWaUty3+x2u4FaUL60Vktb2lAw5czDuOwowajDfi7ZXfWihyqp9mnOuGOqei/wboUGDMnqcrQrn+rwnUOak2jE/zwhloZuhZVoIDfF+KDJ/F+hjRYbmuzwXFnxqYvOwjfV6HAw1D+9OyiwsQE9sYv+MLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746713660; c=relaxed/simple;
-	bh=gt74E+Pon54UuTZyO+orN5K3zqp0H68Z78zXQR5PoWQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ffAzCVzs8c/Tp0nvRk3ZQwBSGd/n2M/g/uN/Rb2wPRTjiukwVMcWmiZrwpvKAYQ2KLqa3IHnH+aJV8hGVY0xEUTDPPuToKXkJ9Krj4g3Gnj+8Z5ijZFwu428O9JvMzb0J+GaOlsFLdV79mp0ZHZSZyZ+ZkR518tOEtTAB427pTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=he7Zi8Ms; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746713757; c=relaxed/simple;
+	bh=qbGBXEmSNCxdNzsIynDhYoXEEWiIhWZoE2CIrXQZ9Fg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gsJ1cbe44DSW5SvKLYhBS2mDNzVtTJ9AnYVME4lFyWPaxEveYjvPMORfm3uctCmq/1FaJipkpjVEZ2xC0XRSyq76MEtDFUae0GCMtRNagsgULOXOZkcfuwz9x8SQNhwcwJzdRZsAWuR8XElYcr+xNsFH7W6BJ15Pjy21OuM6ZRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KCTxDK7Y; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="he7Zi8Ms"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCC04C4CEE7;
-	Thu,  8 May 2025 14:14:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746713658;
-	bh=gt74E+Pon54UuTZyO+orN5K3zqp0H68Z78zXQR5PoWQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=he7Zi8MsWAcaCp1UeQYK/PX5r7jt1vT6Xnos+NZAMfQWdjvKd7xElAu6KUAowFUar
-	 hdFL4WEX9iEBYQlR3wz8nu/RaZcKqwXOlLCPh8VEZDJkKFHjkswSJC6cm6fSnf3zPv
-	 wQ8qNCdvGWLIEprVTsmtTe7eEFbVVLWLNoHOnbTZa0QxzN5bE80O8HHvZCNSSxGHxS
-	 WfYt67aQE2/atLKVQWfCQgXGYxxnvVyMiQqkWxUuhgAUbixAMjmZ7EKcDo2r2B/+PZ
-	 yeuOtXtTqLzeOU4YXOEQTnX9E6+izRKWFRM4dRKaP7yPj4E4757SX1dCBBcoqqcdDt
-	 BVe8CL26U7aLQ==
-From: Lee Jones <lee@kernel.org>
-To: Karel Balej <balejk@matfyz.cz>, Lee Jones <lee@kernel.org>, 
- Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
- Orson Zhai <orsonzhai@gmail.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Chunyan Zhang <zhang.lyra@gmail.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: linux-kernel@vger.kernel.org
-In-Reply-To: <20250406-mfd-device-wakekup-leak-v1-0-318e14bdba0a@linaro.org>
-References: <20250406-mfd-device-wakekup-leak-v1-0-318e14bdba0a@linaro.org>
-Subject: Re: [PATCH 0/8] mfd: Fix wakeup source leaks on device unbind
-Message-Id: <174671365657.2459720.504749254225457244.b4-ty@kernel.org>
-Date: Thu, 08 May 2025 15:14:16 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KCTxDK7Y"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548C0mJj008209;
+	Thu, 8 May 2025 14:15:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=f+m+xTEPHEMKdR3eEwuuaViB2V+AZubNzaEp9oZeZ
+	wc=; b=KCTxDK7YBYMdup7/DgPxO2rjYr7IF2JE3q0pxUgU4PPLPTgVu5kT1BJVU
+	dA/eDM7E2rorFyXAAXrW0eDXDMwCqjorAjIQ+yI0rlfYAGGoDXU//hSfCcCtD5Me
+	pxkOMXAOGON9lwh1pPqF2mHsKQMjXf7f8vzxunAfRRYmqo3VJ5pCVsqF7xvPkGP2
+	TNo6k+J+IAxKWsLXn6cf5u0m44RAHvfM1Un9E7MmkKtz2DElgEA31pcj9iWuEjmP
+	nzfWKJI2Cg3XiCDbATG4Y/+NM1PenzhAxYFc6kUVXYpXly3e0h+ub+nbxgBDhzT+
+	Kk2HVnyjxL9wSlfySi/4UrHZXuiPw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ghg2bfkk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 14:15:49 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 548E9AAY009667;
+	Thu, 8 May 2025 14:15:49 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ghg2bfkf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 14:15:49 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 548Dux4V002826;
+	Thu, 8 May 2025 14:15:48 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46dxfp64hj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 14:15:48 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 548EFk6D51380482
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 8 May 2025 14:15:46 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A4EBB2004B;
+	Thu,  8 May 2025 14:15:46 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 91C8320043;
+	Thu,  8 May 2025 14:15:46 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu,  8 May 2025 14:15:46 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
+	id 3C41DE05EF; Thu, 08 May 2025 16:15:46 +0200 (CEST)
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Daniel Axtens <dja@axtens.net>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kasan-dev@googlegroups.com, linux-s390@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH v6 0/1] kasan: Avoid sleepable page allocation from atomic context
+Date: Thu,  8 May 2025 16:15:45 +0200
+Message-ID: <cover.1746713482.git.agordeev@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-39345
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: AKtVaM5uVmYE74Iy9WuCxbmTNkixOYKg
+X-Authority-Analysis: v=2.4 cv=VJLdn8PX c=1 sm=1 tr=0 ts=681cbc95 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=dt9VzEwgFbYA:10 a=c7xF9FPc4WhyVLjLziMA:9 a=zZCYzV9kfG8A:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDEyMCBTYWx0ZWRfX9evs2pW/vmvI uaQ9MXcNNnG2WrBEb/SSaxVUazPyJ/p7AwWxdoy3r7C0qY5G1W9mNyZvHZ/2+16PzTw37K//HUL zutS8z1JcDbiKXsTOs7Az7YeVzta+i1EnxTq8wWyxHn9OsGG/I+NLv6KckZXDhsXX2H7YbgkIuT
+ 5918/oA6NCLqzyHc4/2KK+mfT/NizNO68J8Bvza61/U5gHBS1/+WYlTryMGeU5xYzA82hvwW0vV Tsm/hhGOcwaAoVyC2LxfQwzirkBo+/kHOGri10XMD0l3kYZFnGHoAro37wu/tDKSMXdYx+uWhO3 XpA+s48NO/qIBXjA3u/s2MPyxBrZkWktG4fAeE/2ipJcinuSilGhpbF1u439yuV1+sbY9wb6Fdu
+ kEKyN2DpLAn7xPMQdiZKFY2jsRZzWaaW7+FdP0pEDMdqsEC2Rj8lxP57EnsdQIIhuba4Nbh2
+X-Proofpoint-ORIG-GUID: PNKKMLgrIrAIgjC9ptEXSfm69CYYsH-h
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_05,2025-05-07_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ mlxlogscore=608 malwarescore=0 lowpriorityscore=0 spamscore=0 adultscore=0
+ priorityscore=1501 clxscore=1015 bulkscore=0 impostorscore=0 mlxscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505080120
 
-On Sun, 06 Apr 2025 21:50:08 +0200, Krzysztof Kozlowski wrote:
-> Device can be unbound, so driver must also release memory for the wakeup
-> source.  Use devm for driver already having devm interface and manually
-> disable wakeup for drivers still having remove() callback to keep
-> consistent ordering of cleanups.
-> 
-> I did not update the drivers with suppress_bind_attrs and no error paths
-> after device_init_wakeup() because it would not bring any benefits.
-> 
-> [...]
+Hi All,
 
-Applied, thanks!
+Chages since v5:
+- full error message included into commit description
 
-[1/8] mfd: 88pm886: Fix wakeup source leaks on device unbind
-      commit: 0fcb3bee6f9e004b1d52ad6e090bcd0ff2cc7add
-[2/8] mfd: as3722: Fix wakeup source leaks on device unbind
-      commit: 16e0c58e342867fec5198fbd0af7f93f49d12f42
-[3/8] mfd: max14577: Fix wakeup source leaks on device unbind
-      commit: add4c382ae0185ebdde685b5992efcc3052e487f
-[4/8] mfd: max77541: Fix wakeup source leaks on device unbind
-      commit: e1b513336240d05e43fb4f0165e2ff242cc5c5aa
-[5/8] mfd: max77705: Fix wakeup source leaks on device unbind
-      commit: ae3311e911012dc433ba79ef9d5cb6d3eb144223
-[6/8] mfd: max8925: Fix wakeup source leaks on device unbind
-      commit: a58fa75ee660144620e42abeffd517c6dab40ce7
-[7/8] mfd: rt5033: Fix wakeup source leaks on device unbind
-      commit: c85164efc5486eb711b376a15aecfd37c292c09f
-[8/8] mfd: sprd-sc27xx: Fix wakeup source leaks on device unbind
-      commit: 7f8bb8ef012ee27b601b778b3ef33223f242604f
+Chages since v4:
+- unused pages leak is avoided
 
---
-Lee Jones [李琼斯]
+Chages since v3:
+- pfn_to_virt() changed to page_to_virt() due to compile error
+
+Chages since v2:
+- page allocation moved out of the atomic context
+
+Chages since v1:
+- Fixes: and -stable tags added to the patch description
+
+Thanks!
+
+Alexander Gordeev (1):
+  kasan: Avoid sleepable page allocation from atomic context
+
+ mm/kasan/shadow.c | 77 ++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 63 insertions(+), 14 deletions(-)
+
+-- 
+2.45.2
 
