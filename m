@@ -1,129 +1,118 @@
-Received: from e240-11.smtp-out.eu-north-1.amazonses.com (e240-11.smtp-out.eu-north-1.amazonses.com [23.251.240.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191DB1D5165;
-	Thu,  8 May 2025 02:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C964207F
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 02:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746670445; cv=none; b=u+tY883HhKkevpm+6Il7/+OjG5koq/Kfbvvasri/CT1z7yMWcr611kyMKwQqtIwQLuteoC68BGrqhYPb/sFL9sO9FaN35pL9KuNFLkBY/4GUtAE/h6hpyw/+HmIwV0MwVjEQs9mgxXpQqtmYUJceD2pk8WgyVthDhno8268BZEc=
+	t=1746670733; cv=none; b=Iiwx86dvX5Bw8MN/ONC5/I+b65EiaaSxYUg9zl1sleOIyU9F37lxQmXZrj4VEBSgQBWrwNvmzMXcd+d6AYvH27FpQm4b2qfGFAfraMYwTFpgBfYQbMbG0FWi89VrMPYIzK8SB/1bPBZ9lXspNv8tRNVyoUYVt+m+UHiFqfw4L50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746670445; c=relaxed/simple;
-	bh=poefmGJfofvP15Nt36Hm35/aBbmaEdFRT7/Zbyr7/yE=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=iT7kn2+pNwEQFf4Gg2tKnl7qcf5INytnVtcxDLRvB4lkZ5EXlY2Fqu+O9fNzWLW0BvZmHIlCvtSOvXApmwqR6lRvM83kMm/Z6lMlKIakenHuBw+sGADhbuQeEQFc0n+KJ9L93TQwi/eTW8toVWKEDqlHTO03zITptQI+qUigMk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=P07wVs0u; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=VyXn+uXp; arc=none smtp.client-ip=23.251.240.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
+	s=arc-20240116; t=1746670733; c=relaxed/simple;
+	bh=T+RnXUQbmJFL55OKPYAmXI0OwHOkltjZSvcKzFwVsR8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 References; b=QKkY4+lZBy1hJXEO4wgGRxwWX9GNT02GeXFnTgtOl9w687LITr2zb7e50TXh1xFZf4asHSPUwCUMh/DyIXLttr9eJnsy3F0l6b2QQlq/hiwzea9wzzsYATS5uSBdVXb9e+QWyT9Lzv58m1v5VQJZ2hJUD9TdpisLfMG9XjeoNUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=FPN0+1b/; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="P07wVs0u";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="VyXn+uXp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1746670441;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type;
-	bh=poefmGJfofvP15Nt36Hm35/aBbmaEdFRT7/Zbyr7/yE=;
-	b=P07wVs0uKJuayteT8U7j5g1MuPLLaAB3JBY8e0NCuzBfSlLiObAaaqxiscMeIK6a
-	kCS4XWypQicuWjacwOlpYhxQv4oHdY4YAagHyBI2s/1qIQ5d+gS66R4sL2rBHMv+OcP
-	ypd+PAxBmEbwvRtCNkTJCKmGUThqD4G7rJGGvdpnl9g6ElwSHURLU82YaBevR4XOINY
-	haRHoshPNZ/Ps/q4fQpEntvvEUCm06SfyUqAeyWmm9Bnl1R6ifI8GRJH6Pss9RC7Jl3
-	XTS6mzUERkRXfaaTOhgoO0abkIQO0sR8HsX0tk7zMuz7lRbKHgBpZSVwVFY+PJsjRBR
-	iXbiidEZrg==
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1746670441;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type:Feedback-ID;
-	bh=poefmGJfofvP15Nt36Hm35/aBbmaEdFRT7/Zbyr7/yE=;
-	b=VyXn+uXpescqmYp21gl4+QF45hTuoqGSuFqKno7WpdoX4jRruzEE82VcZFXRVOwI
-	TiWORE5PaHmpyVXHhw9O5HFaHGsOs7Wmr1lRoUowsXnE44kcFlXR5tNVLzIBFE26mEW
-	OTkY7qGZvcGs+fDhqJKHgp/CfjJ2EbekJYqlZd7c=
-X-Forwarded-Encrypted: i=1; AJvYcCUmYVU0hwrvssQ80uhDDG3WRQ3u7/MtAc2TlS9dllG5V6N8lrB72SAvsrPuF5347Iwu9OHZbj6m@vger.kernel.org, AJvYcCXl7+vbuE+u5CvUJsWBJnoyE2+yf2N8VZMCN6y0NlDfgYZ5kBl5SgPW0VXElrtvbSlVmZ/nqk9liZfOBPI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAXcsbd/PjxcCj8xPOSnNXSDx117J5v4s/k26qp0sEgvGnxowy
-	9UQMhM+fapeLvcV0mNHS+xB2snHGISmPz0G7ybrgEV+jDZA1pZawqPT2D7QtyaAgt1aoaE+0NnY
-	atg2eIZ+/Cj+7ouH969q+zdjqfXw=
-X-Google-Smtp-Source: AGHT+IHFHTyfZ4T9ifPqXr73kDs7FxJtuk6pjrvncrBRp7/QMzmuo2IRKunODixNeWJ3aNsMClg+F8wIGMj8cKoeL/0=
-X-Received: by 2002:a17:902:ec8e:b0:22e:5406:4f62 with SMTP id
- d9443c01a7336-22e847ce326mr24568875ad.24.1746670438201; Wed, 07 May 2025
- 19:13:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FPN0+1b/"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250508021842epoutp030769fb3cb7a7ea96b74feab176f90c2d~9a8SJG_6h1494714947epoutp03X
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 02:18:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250508021842epoutp030769fb3cb7a7ea96b74feab176f90c2d~9a8SJG_6h1494714947epoutp03X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1746670722;
+	bh=Xqd3gnZdKBz9lgx9DnnCblU1MVO/M3qzQIQBDCqbl94=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=FPN0+1b/jAR/3JyH8O9+/6L0kYWO9oGe+BRlNZpHcQywpUG9FubTu+IysQG4q69Aa
+	 /PzXhAO3HWuH3Lb7yIBTYqrwrHqRZacRw2FStrJ2XHIEwHme3G6B5e6jfAcNXBTXDH
+	 /bj7FaveRhMPVBowCdnefNceDeUzRMQPKIXJX4+U=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250508021841epcas5p316b5d6ee76c9179154a906fc24248e15~9a8RoKR6y0047300473epcas5p3L;
+	Thu,  8 May 2025 02:18:41 +0000 (GMT)
+Received: from epcas5p3.samsung.com (unknown [182.195.38.177]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZtG5X3XsTz6B9m9; Thu,  8 May
+	2025 02:18:40 +0000 (GMT)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250508021828epcas5p21b9313ec7c9e0da2e7e49db36854aa22~9a8FJ4UrQ1802518025epcas5p2B;
+	Thu,  8 May 2025 02:18:28 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250508021828epsmtrp142bfd6514d36904173d66915f5542bea~9a8FJJCzY3138131381epsmtrp1I;
+	Thu,  8 May 2025 02:18:28 +0000 (GMT)
+X-AuditID: b6c32a29-566fe7000000223e-73-681c1474c757
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	B7.EC.08766.4741C186; Thu,  8 May 2025 11:18:28 +0900 (KST)
+Received: from testpc11818.samsungds.net (unknown [109.105.118.18]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250508021827epsmtip165ed3cf3ae442efd71ea81fd23247178~9a8EMjRKL1333813338epsmtip1s;
+	Thu,  8 May 2025 02:18:27 +0000 (GMT)
+From: hexue <xue01.he@samsung.com>
+To: axboe@kernel.dk, asml.silence@gmail.com, io-uring@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: peiwei.li@samsung.com, hexue <xue01.he@samsung.com>
+Subject: [PATCH] Fix Hybrid Polling initialization issue
+Date: Thu,  8 May 2025 10:18:22 +0800
+Message-ID: <20250508021822.1781033-1-xue01.he@samsung.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Ozgur Kara <ozgur@goosey.org>
-Date: Thu, 8 May 2025 02:14:00 +0000
-X-Gmail-Original-Message-ID: <CADvZ6EoGrp9SCvkVKEV0i=NW-7XZmxbmZkmxd8TPFboPTAUF_g@mail.gmail.com>
-X-Gm-Features: ATxdqUEBQMdn1y1DGa-OqpAdEqho1UUS-FmqZpaLp_rDz0VPLAPMSxPSHAUfHd8
-Message-ID: <01100196adabd0d2-24bf9783-b3d5-4566-9f98-9eda0c1f4833-000000@eu-north-1.amazonses.com>
-Subject: [PATCH] net: ethernet: Fixe issue in nvmem_get_mac_address() where
- invalid mac addresses
-To: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org
-Cc: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, 
-	Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
-X-SES-Outgoing: 2025.05.08-23.251.240.11
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDLMWRmVeSWpSXmKPExsWy7bCSnG6JiEyGwZx2YYs5q7YxWqy+289m
+	8a71HIvFr+67jBaXd81hs3i2l9Pi7IQPrBZdF06xOXB47Jx1l93j8tlSj74tqxg9Pm+SC2CJ
+	4rJJSc3JLEst0rdL4Mq4/e0Aa8Fntoqd53+yNTBeYu1i5OCQEDCR+HhCtIuRi0NIYDejxN8j
+	P5m6GDmB4hISOx79YYWwhSVW/nvODlH0jVFi0o6dYAk2ASWJ/Vs+MILYIgKZEuffzQSzmQUs
+	Je50nGABsYUFLCS+tDxgB7FZBFQlvs5eDbaAV8BaYvKVWYwQC+QlFu9YzgwRF5Q4OfMJC8Qc
+	eYnmrbOZJzDyzUKSmoUktYCRaRWjZGpBcW56brFhgWFearlecWJucWleul5yfu4mRnCAamnu
+	YNy+6oPeIUYmDsZDjBIczEoivEWN0hlCvCmJlVWpRfnxRaU5qcWHGKU5WJTEecVf9KYICaQn
+	lqRmp6YWpBbBZJk4OKUamCJm7wvdWHv4sffCiexfpvD7btkTt+fgbB/T9ilKHLfPX9iuPp1l
+	Rqy4qyZblNK2lXOkbFc7bTJj+HjYq1i5fuGBjKd7efaf2+QeOTHetJ9dQer5drOtP45MuX70
+	R+2uKeydYrcM/CXClSZ8ymKXn75ydXXCo10KJyc7PFbeuuie8YIykzDWxfOsPr/X3du1PeBi
+	g5vjlL/Rnc2Sr7WP7ptQ0Fm+/2KJ05Wvm6J5ny6/WneuwNb8mNSR6dvKzCeG6J96/yXkEOM/
+	pUt8//oOxua/v+85Y2dty9QrMaoxl0vuuL54zVPpXHTAM1k7Yjnr+xaP9daFMUc2ttoVJC+w
+	ii62/dzB4NF+IO9PydGrDx4psRRnJBpqMRcVJwIAKtf6Ib8CAAA=
+X-CMS-MailID: 20250508021828epcas5p21b9313ec7c9e0da2e7e49db36854aa22
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-505,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250508021828epcas5p21b9313ec7c9e0da2e7e49db36854aa22
+References: <CGME20250508021828epcas5p21b9313ec7c9e0da2e7e49db36854aa22@epcas5p2.samsung.com>
 
-From: Ozgur Karatas <ozgur@goosey.org>
+Modify the defect that the timer is not initialized during IO transfer
+when passthrough is used with hybrid polling to ensure that the program
+can run normally.
 
-it's necessary to log error returned from
-fwnode_property_read_u8_array because there is no detailed information
-when addr returns an invalid mac address.
-
-kfree(mac) should actually be marked as kfree((void *)mac) because mac
-pointer is of type const void * and type conversion is required so
-data returned from nvmem_cell_read() is of same type.
-
-This patch fixes the issue in nvmem_get_mac_address() where invalid
-mac addresses could be read due to improper error handling.
-
-Signed-off-by: Ozgur Karatas <ozgur@goosey.org>
-
+Signed-off-by: hexue <xue01.he@samsung.com>
 ---
- net/ethernet/eth.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ io_uring/uring_cmd.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
-index 4e3651101b86..1c5649b956e9 100644
---- a/net/ethernet/eth.c
-+++ b/net/ethernet/eth.c
-@@ -549,12 +549,12 @@ int nvmem_get_mac_address(struct device *dev,
-void *addrbuf)
-                return PTR_ERR(mac);
+diff --git a/io_uring/uring_cmd.c b/io_uring/uring_cmd.c
+index e6701b7aa147..678a2f7d14ff 100644
+--- a/io_uring/uring_cmd.c
++++ b/io_uring/uring_cmd.c
+@@ -244,6 +244,11 @@ int io_uring_cmd(struct io_kiocb *req, unsigned int issue_flags)
+ 			return -EOPNOTSUPP;
+ 		issue_flags |= IO_URING_F_IOPOLL;
+ 		req->iopoll_completed = 0;
++		if (ctx->flags & IORING_SETUP_HYBRID_IOPOLL) {
++			/* make sure every req only blocks once */
++			req->flags &= ~REQ_F_IOPOLL_STATE;
++			req->iopoll_start = ktime_get_ns();
++		}
+ 	}
+ 
+ 	ret = file->f_op->uring_cmd(ioucmd, issue_flags);
+-- 
+2.43.0
 
-        if (len != ETH_ALEN || !is_valid_ether_addr(mac)) {
--               kfree(mac);
-+               kfree((void *)mac);
-                return -EINVAL;
-        }
-
-        ether_addr_copy(addrbuf, mac);
--       kfree(mac);
-+       kfree((void *)mac);
-
-        return 0;
- }
-@@ -565,11 +565,16 @@ static int fwnode_get_mac_addr(struct
-fwnode_handle *fwnode,
-        int ret;
-
-        ret = fwnode_property_read_u8_array(fwnode, name, addr, ETH_ALEN);
--       if (ret)
-+       if (ret) {
-+               pr_err("Failed to read MAC address property %s\n", name);
-                return ret;
-+        }
-
--       if (!is_valid_ether_addr(addr))
-+       if (!is_valid_ether_addr(addr)) {
-+               pr_err("Invalid MAC address read for %s\n", name);
-                return -EINVAL;
-+        }
-+
-        return 0;
- }
-
---
-2.39.5
