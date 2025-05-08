@@ -1,466 +1,123 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B1422577C;
-	Thu,  8 May 2025 12:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C53822332B;
+	Thu,  8 May 2025 12:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746707564; cv=none; b=o3LrtnyaZfzDMethSLJqq/teLsekH6SmONoe+ClI/mR1aeGX+PRJKfZxj1kY6bynGmr0QzPbFtEz7f3kEadKB1G/Z1D8Fj0J8OJMY/gJ06jjAd/PTNtyvvNqvytFYhzsNZvgaEvxm6wFm8tCZIvZiY9eQ9whETg21/ZTYHuVByI=
+	t=1746707668; cv=none; b=emxlyG13g97/Pn4b3ClmAhmtLTidcypL9QdaKLvE5rIKmCI8pTY98Rm14tbV6w8wvMTQWm9Z+BYAR0fPqN53vj5UclUpttSiw3Bo0LuGOcSVEBstiYxiqxtZFLHHymEyuGFnrnxaIGyWlat/KBDju9vbM25Rj872tZTyKB8+SGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746707564; c=relaxed/simple;
-	bh=Jwpu6YdHH3kNDY9JO80FOOQiXWmBMRZum5SYHEwWhVY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DA5tVrUTES/uH4kPfUzqKMbQVtXlrnRt00mwlDwLtMYpnTX3QU0wSD4Cw+QhL8VCb04m4d2tZRee7nmdNSEVhcss/mC355lKs+9/jXUrLZZykUg0Px81DKYb42J640hVrc/3U21zEV3uy9Ml7pyWk4f43DFizU72x1itoCocS88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=qWLNNLQL; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1746707668; c=relaxed/simple;
+	bh=xiKbxdt8+5AZr1b1CIHbKL+QvyDptDXPVRJXI7EII2Q=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uafE+MN0y05uaXPa0KHbmN6F7UQAfoGSzvzGPvu7Pkh6l9HlfwRMtSu3kuH/pzJFDgbM8LCj3lncCWIFyNhc4MVsqf64lUVgWjQWeCkm+jUujF3EMkaFUPWSBMGcaRsxMVCS/EUyo+e04Wh98Erm+WU6L4IutgvjSpFeOZRbI2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aTp1UTED; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="qWLNNLQL"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548BDZAP010473;
-	Thu, 8 May 2025 08:32:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=7dkvz
-	t5EByozw81MJjeobuPYPumFgB5VvJsZNm22UaE=; b=qWLNNLQL+FLIpqSn1VBtX
-	tbGLl+3U/4wbHwuuRtZTDjlU0s4dKCSMRk+f/bBxHwgHTiFXJ08MJ5nG1/2+U68P
-	ATXur7DEnjTkriSPRdGNo5Tgv4NHBU11+/EJAkcDv4GqGafGe9rfX3HGAVc2Ys0d
-	GIRszSpTVwAYkS5ea6BWfZFXnTFGHLDKlgFx1uwXD1tOvJR/1/86O84mMI/5ku0c
-	ldfQsGS+yX1TcDayM7D9TUQ1CN5naUPgZfA0XFqNWBUuNQ7oQJHnnGFxB94lfgGT
-	wk9Rlns5//CoD14/wy2E3h4Kdp2gx42ri12Myk6166bg8WHzj26Hr0S8iOJ8nO/c
-	Q==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 46gr04scxq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 May 2025 08:32:19 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 548CWIEi006307
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 8 May 2025 08:32:18 -0400
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Thu, 8 May 2025 08:32:18 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Thu, 8 May 2025 08:32:18 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Thu, 8 May 2025 08:32:18 -0400
-Received: from romlx5.adlk.analog.com ([10.48.65.73])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 548CVFtg002317;
-	Thu, 8 May 2025 08:32:09 -0400
-From: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-To: Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich
-	<Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        "David
- Lechner" <dlechner@baylibre.com>,
-        =?UTF-8?q?Nuno=20S=C3=A1?=
-	<nuno.sa@analog.com>,
-        Andy Shevchenko <andy@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
-        "Dragos Bogdan" <dragos.bogdan@analog.com>,
-        Antoniu Miclaus
-	<antoniu.miclaus@analog.com>,
-        Olivier Moysan <olivier.moysan@foss.st.com>,
-        Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-        Matti Vaittinen
-	<mazziesaccount@gmail.com>,
-        Tobias Sperling <tobias.sperling@softing.com>,
-        Alisa-Dariana Roman <alisadariana@gmail.com>,
-        Marcelo Schmitt
-	<marcelo.schmitt@analog.com>,
-        Matteo Martelli <matteomartelli3@gmail.com>,
-        Ioan Daniel <pop.ioan-daniel@analog.com>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 4/4] iio: adc: ad7405: add ad7405 driver
-Date: Thu, 8 May 2025 15:30:57 +0300
-Message-ID: <20250508123107.3797042-5-pop.ioan-daniel@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250508123107.3797042-1-pop.ioan-daniel@analog.com>
-References: <20250508123107.3797042-1-pop.ioan-daniel@analog.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aTp1UTED"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 548CXx4r1861770
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 8 May 2025 07:33:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746707639;
+	bh=F6fnSSy58jOAFukWndBiel7ol37QH7BTey2iymzdWF8=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=aTp1UTED+pWJfvS+7BSiGkIivvMcMQWkiuK0Kl5Jp9gYgzAZPNjmnqYX1qHFxQQqi
+	 qq7F2x12jl4TZCIbxL5oJnAj4IGVvhlB0teEt41gBXTLQX8TF20X+piNubcEfDm421
+	 XGi1G04H4cNdWx2KHbAW+ind4Fb3NapywNq9A3LM=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 548CXxuG034750
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 8 May 2025 07:33:59 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
+ May 2025 07:33:59 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 8 May 2025 07:33:59 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 548CXx0T075359;
+	Thu, 8 May 2025 07:33:59 -0500
+Date: Thu, 8 May 2025 07:33:59 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Bryan Brattlof <bb@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero
+ Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/3] arm64: dts: ti: k3-am62l: add initial
+ infrastructure
+Message-ID: <20250508123359.k72q4u45wzms7uaw@handpick>
+References: <20250507-am62lx-v5-0-4b57ea878e62@ti.com>
+ <20250507-am62lx-v5-2-4b57ea878e62@ti.com>
+ <20250508-illegal-caracara-from-hyperborea-b77eda@kuoka>
+ <bd33bfa6-9d31-457d-a1bf-66151e92900b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDEwMiBTYWx0ZWRfX+KzPkRwzC7e9
- Eb2pGr5YsoZ3yT2pxbOMdkcx+qY2aTz2DGh9YHrjHn/eT/+K0JWfFWPAC3P6QBSlFHoN7ssbqLP
- W2G2U9luF+5YaliiVqrtZxGeQKAwL67EsQ7diEXN9vvK8j4MA7CMFORjytG8bk7P3e1ZQP9+ESo
- ucA3XNCy7A6WbMY1uvstY7hri9ZhLc04iy8jtRnL7K919+3g3QLLDzjU/Ihl+Y2MMsu3tAwD9Vl
- r5XoR/pPcRnR0u3EiGzHttAbr4r5+Z2q0LPRdB5MLdjXFqDH2F2J41NhiCE87DpDXaidIIAzHWk
- B4ws+JrMUKGmh1hm4qTXYcWRL3E/YZqxHX1DvbQlD9VTAO4y9BHaDxolDM+NtmyVsPDMWvdTsGC
- jiNNwC2hcg6m7yHChyCmPmgUYJSz/NTtUfKC5O2WBGE4gSBvyEIXC9O4rJ29nS3Wrmoy6U+O
-X-Authority-Analysis: v=2.4 cv=cfnSrmDM c=1 sm=1 tr=0 ts=681ca453 cx=c_pps
- a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=gAnH3GRIAAAA:8 a=iGn3AVPVnOFhGmbdwOgA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: W-AngUH9k6PGkA-w2rdmeVWsuLwtmvVP
-X-Proofpoint-ORIG-GUID: W-AngUH9k6PGkA-w2rdmeVWsuLwtmvVP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-08_04,2025-05-07_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 bulkscore=0 suspectscore=0 phishscore=0 adultscore=0
- mlxlogscore=999 lowpriorityscore=0 clxscore=1011 malwarescore=0 mlxscore=0
- impostorscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505080102
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <bd33bfa6-9d31-457d-a1bf-66151e92900b@kernel.org>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Add support for the AD7405/ADUM770x, a high performance isolated ADC,
-1-channel, 16-bit with a second-order Σ-Δ modulator that converts an
-analog input signal into a high speed, single-bit data stream.
+On 08:56-20250508, Krzysztof Kozlowski wrote:
+> On 08/05/2025 08:52, Krzysztof Kozlowski wrote:
+> > On Wed, May 07, 2025 at 10:09:20PM GMT, Bryan Brattlof wrote:
+> >> +
+> >> +	uart6: serial@2860000 {
+> >> +		compatible = "ti,am64-uart", "ti,am654-uart";
+> >> +		reg = <0x00 0x02860000 0x00 0x100>;
+> >> +		interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
+> >> +		power-domains = <&scmi_pds 82>;
+> >> +		clocks = <&scmi_clk 322>;
+> >> +		clock-names = "fclk";
+> >> +		status = "disabled";
+> >> +	};
+> >> +
+> >> +	conf: syscon@9000000 {
+> >> +		compatible = "syscon", "simple-mfd";
+> > 
+> > Not much improved here. You cannot have such compatibles alone and the
+> > bindings test this.
+> > 
+> > Are you sure you tested this?
+> I now tested it and I am 100% sure you did not.
+> 
+> Use tools and computers instead of humans for finding trivial issues.
+> This is not really acceptable.
 
-Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
----
-changes in v2:
+Agree.
 
- - sort the includes in alphabetical order
- - delete headers that aren't used
- - remove min_rate member
- - remove ad7405_update_scan_mode because there is only one channel
- - rename axi_clk_gen to clk
- - remove unuseful members from ad7405 state struct
- - return -EINVAL on ad7405_write_raw
- - fix indentation
- - remove blank lines
- - remove chan, bits, sign parameters from AD7405_IIO_CHANNEL
- - remove shift = 0
- - add info_mask_shared_by_type with IIO_CHAN_INFO_SCALE and
-   IIO_CHAN_INFO_OFFSET flags
- - add scan_index, differential, channel2 in AD7405_IIO_CHANNEL
- - remove ad7405_channel_masks[]
- - remove unuseful members from ad7405_chip_info struct
- - remove platform_get_drvdata() from probe
- - use device_get_match_data to be able to use different chip info
- - use devm_clk_get_enabled() for efficiency
- - add devm_add_action_or_reset to disable_unprepare the clock when the driver
-   is removed
- - replace the devm_regulator_bulk_get_enable before applying any other signals
- - check for return value of 0 for st->ref_frequency
- - remove indio_dev->modes = INDIO_DIRECT_MODE
- - remove iio_backend_disable/enable that is done implicitly
-   by devm_iio_backend_enable()
- drivers/iio/adc/Kconfig  |  10 ++
- drivers/iio/adc/Makefile |   1 +
- drivers/iio/adc/ad7405.c | 264 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 275 insertions(+)
- create mode 100644 drivers/iio/adc/ad7405.c
+Bryan,
+In addition to bisect fails in this series, I see the following
+dtbs_check errors:
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index ad06cf556785..6ed1042636d9 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -251,6 +251,16 @@ config AD7380
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called ad7380.
- 
-+config AD7405
-+	tristate "Analog Device AD7405 ADC Driver"
-+	select IIO_BACKEND
-+	help
-+	  Say yes here to build support for Analog Devices AD7405, ADUM7701,
-+	  ADUM7702, ADUM7703 analog to digital converters (ADC).
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called ad7405.
-+
- config AD7476
- 	tristate "Analog Devices AD7476 1-channel ADCs driver and other similar devices from AD and TI"
- 	depends on SPI
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index 07d4b832c42e..8115f30b7862 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -26,6 +26,7 @@ obj-$(CONFIG_AD7291) += ad7291.o
- obj-$(CONFIG_AD7292) += ad7292.o
- obj-$(CONFIG_AD7298) += ad7298.o
- obj-$(CONFIG_AD7380) += ad7380.o
-+obj-$(CONFIG_AD7405) += ad7405.o
- obj-$(CONFIG_AD7476) += ad7476.o
- obj-$(CONFIG_AD7606_IFACE_PARALLEL) += ad7606_par.o
- obj-$(CONFIG_AD7606_IFACE_SPI) += ad7606_spi.o
-diff --git a/drivers/iio/adc/ad7405.c b/drivers/iio/adc/ad7405.c
-new file mode 100644
-index 000000000000..5fe36ce61819
---- /dev/null
-+++ b/drivers/iio/adc/ad7405.c
-@@ -0,0 +1,264 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Analog Devices AD7405 driver
-+ *
-+ * Copyright 2025 Analog Devices Inc.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/util_macros.h>
-+
-+#include <linux/iio/backend.h>
-+#include <linux/iio/iio.h>
-+
-+const unsigned int ad7405_dec_rates[] = {
-+	4096, 2048, 1024, 512, 256, 128, 64, 32,
-+};
-+
-+struct ad7405_chip_info {
-+	const char *name;
-+	unsigned int max_rate;
-+	struct iio_chan_spec channel[];
-+};
-+
-+struct ad7405_state {
-+	struct iio_backend *back;
-+	/* lock to protect multiple accesses to the device registers */
-+	struct mutex lock;
-+	const struct ad7405_chip_info *info;
-+	unsigned int sample_frequency_tbl[ARRAY_SIZE(ad7405_dec_rates)];
-+	unsigned int sample_frequency;
-+	unsigned int ref_frequency;
-+};
-+
-+static void ad7405_fill_samp_freq_table(struct ad7405_state *st)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(ad7405_dec_rates); i++)
-+		st->sample_frequency_tbl[i] =
-+			DIV_ROUND_CLOSEST_ULL(st->ref_frequency, ad7405_dec_rates[i]);
-+}
-+
-+static int ad7405_set_sampling_rate(struct iio_dev *indio_dev,
-+				    const struct iio_chan_spec *chan,
-+				    unsigned int samp_rate)
-+{
-+	struct ad7405_state *st = iio_priv(indio_dev);
-+	unsigned int dec_rate, idx;
-+	int ret;
-+
-+	dec_rate = DIV_ROUND_CLOSEST_ULL(st->ref_frequency, samp_rate);
-+
-+	idx = find_closest_descending(dec_rate, ad7405_dec_rates,
-+				      ARRAY_SIZE(ad7405_dec_rates));
-+
-+	dec_rate = ad7405_dec_rates[idx];
-+
-+	ret = iio_backend_oversampling_ratio_set(st->back, 0, dec_rate);
-+	if (ret)
-+		return ret;
-+
-+	st->sample_frequency = DIV_ROUND_CLOSEST_ULL(st->ref_frequency, dec_rate);
-+
-+	return 0;
-+}
-+
-+static int ad7405_read_raw(struct iio_dev *indio_dev,
-+			   const struct iio_chan_spec *chan, int *val,
-+			   int *val2, long info)
-+{
-+	struct ad7405_state *st = iio_priv(indio_dev);
-+
-+	switch (info) {
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		*val = st->sample_frequency;
-+		return IIO_VAL_INT;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ad7405_write_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan, int val,
-+			    int val2, long info)
-+{
-+	switch (info) {
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		if (val < 1)
-+			return -EINVAL;
-+		return ad7405_set_sampling_rate(indio_dev, chan, val);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ad7405_read_avail(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan,
-+			     const int **vals, int *type, int *length,
-+			     long info)
-+{
-+	struct ad7405_state *st = iio_priv(indio_dev);
-+
-+	switch (info) {
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+			*vals = st->sample_frequency_tbl;
-+			*length = ARRAY_SIZE(st->sample_frequency_tbl);
-+			*type = IIO_VAL_INT;
-+			return IIO_AVAIL_LIST;
-+	default:
-+			return -EINVAL;
-+	}
-+}
-+
-+static void ad7405_clk_disable_unprepare(void *clk)
-+{
-+	clk_disable_unprepare(clk);
-+}
-+
-+static const struct iio_info ad7405_iio_info = {
-+	.read_raw = &ad7405_read_raw,
-+	.write_raw = &ad7405_write_raw,
-+	.read_avail = &ad7405_read_avail,
-+};
-+
-+#define AD7405_IIO_CHANNEL {							\
-+	.type = IIO_VOLTAGE,							\
-+	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),		\
-+	.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),	\
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |			\
-+		BIT(IIO_CHAN_INFO_OFFSET),					\
-+	.indexed = 1,								\
-+	.channel = 0,								\
-+	.channel2 = 1,								\
-+	.differential = 1,							\
-+	.scan_index = 0,							\
-+	.scan_type = {								\
-+		.sign = 'u',							\
-+		.realbits = 16,							\
-+		.storagebits = 16,						\
-+	},									\
-+}
-+
-+static const struct ad7405_chip_info ad7405_chip_info = {
-+		.name = "AD7405",
-+		.channel = {
-+			AD7405_IIO_CHANNEL,
-+		},
-+};
-+
-+static const struct ad7405_chip_info adum7701_chip_info = {
-+		.name = "ADUM7701",
-+		.channel = {
-+			AD7405_IIO_CHANNEL,
-+		},
-+};
-+
-+static const char * const ad7405_power_supplies[] = {
-+	"vdd1",	"vdd2",
-+};
-+
-+static int ad7405_probe(struct platform_device *pdev)
-+{
-+	const struct ad7405_chip_info *chip_info;
-+	struct device *dev = &pdev->dev;
-+	struct iio_dev *indio_dev;
-+	struct ad7405_state *st;
-+	struct clk *clk;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	st = iio_priv(indio_dev);
-+
-+	ret = devm_mutex_init(dev, &st->lock);
-+	if (ret)
-+		return ret;
-+
-+	chip_info = device_get_match_data(dev);
-+	if (!chip_info)
-+		return dev_err_probe(dev, -EINVAL, "no chip info\n");
-+
-+	ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(ad7405_power_supplies),
-+					     ad7405_power_supplies);
-+
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to get and enable supplies");
-+
-+	clk = devm_clk_get_enabled(dev, NULL);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	ret = devm_add_action_or_reset(dev, ad7405_clk_disable_unprepare, clk);
-+	if (ret)
-+		return ret;
-+
-+	st->ref_frequency = clk_get_rate(clk);
-+	if (!(st->ref_frequency))
-+		return -EINVAL;
-+
-+	ad7405_fill_samp_freq_table(st);
-+
-+	indio_dev->dev.parent = dev;
-+	indio_dev->name = chip_info->name;
-+	indio_dev->channels = chip_info->channel;
-+	indio_dev->num_channels = 1;
-+	indio_dev->info = &ad7405_iio_info;
-+
-+	st->back = devm_iio_backend_get(dev, NULL);
-+	if (IS_ERR(st->back))
-+		return dev_err_probe(dev, PTR_ERR(st->back),
-+				     "failed to get IIO backend");
-+
-+	ret = iio_backend_chan_enable(st->back, 0);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_iio_backend_request_buffer(dev, st->back, indio_dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_iio_backend_enable(dev, st->back);
-+	if (ret)
-+		return ret;
-+
-+	ret = ad7405_set_sampling_rate(indio_dev, &indio_dev->channels[0],
-+				       chip_info->max_rate);
-+	if (ret)
-+		return ret;
-+
-+	return devm_iio_device_register(dev, indio_dev);
-+}
-+
-+/* Match table for of_platform binding */
-+static const struct of_device_id ad7405_of_match[] = {
-+	{ .compatible = "adi,ad7405", .data = &ad7405_chip_info, },
-+	{ .compatible = "adi,adum7701", .data = &adum7701_chip_info, },
-+	{ .compatible = "adi,adum7702", .data = &adum7701_chip_info, },
-+	{ .compatible = "adi,adum7703", .data = &adum7701_chip_info, },
-+	{ /* end of list */ },
-+};
-+MODULE_DEVICE_TABLE(of, ad7405_of_match);
-+
-+static struct platform_driver ad7405_driver = {
-+	.driver = {
-+		.name = "ad7405",
-+		.owner = THIS_MODULE,
-+		.of_match_table = ad7405_of_match,
-+	},
-+	.probe = ad7405_probe,
-+};
-+module_platform_driver(ad7405_driver);
-+
-+MODULE_AUTHOR("Dragos Bogdan <dragos.bogdan@analog.com>");
-+MODULE_AUTHOR("Pop Ioan Daniel <pop.ioan-daniel@analog.com>");
-+MODULE_DESCRIPTION("Analog Devices AD7405 driver");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("IIO_BACKEND");
+arch/arm64/boot/dts/ti/k3-am62l3-evm.dtb: serial@0: clock-names:0: 'fclk' was expected
+arch/arm64/boot/dts/ti/k3-am62l3-evm.dtb: spi@fc40000: '#address-cells' is a dependency of '#size-cells'
+arch/arm64/boot/dts/ti/k3-am62l3-evm.dtb: syscon@43000000: compatible: ['syscon', 'simple-mfd'] is too short
+arch/arm64/boot/dts/ti/k3-am62l3-evm.dtb: syscon@9000000: 'reg' is a required property
+
+I suggest doing a revisit of this for the next window.
+
+PS: https://github.com/nmenon/kernel_patch_verify is a tool I use and
+maintain which might help alleviate some of the easy checklist items -
+but this is probably not an authoritative tool and making sure, but if
+it helps you, please do use it - it is containerized for easy env setup
+(you could run kpv -V -C -L -3 for example on this series and get this:
+https://gist.github.com/nmenon/83f7e6924539d1c7e2eb6c5a4ee82706 )
+
 -- 
-2.34.1
-
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
