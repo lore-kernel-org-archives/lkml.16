@@ -1,127 +1,101 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 697C71D618E;
-	Thu,  8 May 2025 18:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6353281363;
+	Thu,  8 May 2025 18:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746728731; cv=none; b=min20reKjLE4/XofpcdtWZDYfexaBObbx05F2Lc1TYkwiN040Dm62y17fVeAl3XvH729riZaRdaN5+pLLvgNToi/vohXLYb9nT4fxw91JEidJszZ7Jw0xih+6cdIxUL2rJU0Vs7zettH9n9eCGkNNAulZ1DhvXXzxwfCtOrek4Y=
+	t=1746728797; cv=none; b=bM0Ju1DoRnZzGaLbwXQMoDJyoxZQPJe5BSIa4qig8YhnGtPAknmIlcEN5HZ0KuexUupYszCf+OPxwsGqbu+M5AoGanaa4T0ov0/nRB2nGtQr8qdQmSBJdVwwuDbUXu/H1ygeXAIU6rTIEKznSvU4o/cHJpqyjDhNE+fO9bO4ktw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746728731; c=relaxed/simple;
-	bh=yJM8+i0iPYMYmNqm1ryjBX4Or6+cWmb3ISw9re/R/1Y=;
+	s=arc-20240116; t=1746728797; c=relaxed/simple;
+	bh=TV/DfA1+9HMKHUzT+UR/gakV4+uuJ2aHJxXt+sNWNpo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jB43x0BS62k64QsaJZilCxa9qiq01XVbMYHPlXV3zzSPqYgmdNQZIsJNmvAvUYRM6mUQ7a2OFvQsS85D0E/IuiRjfMpcEK/NOotUdzaFBlDCiWmjIV1xYsR+FnjE5B/p0/GsxskGiMDcrSMkRAe/Pg0y3cvTX+5YUJFn6sBrMH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DRIBSlNf; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=WC6gCe1+xZPm4I3Y0pZWF7dbzlmTJVJgSa35ec6gS3dGb4Sj8IHLGU/d9Wjz+y1szCG0FY9pfvAx8XozEo2IFayZsyWlZx/piAZeqhV1OR5sI1t2+YQzc1Lfo1yaDE5DdXlOPCs/HJRAtAPs6VpudKXQPvPNbpjYWDonhLPTdJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0vX34Bv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DRIBSlNf"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30c1fe19b07so122817a91.2;
-        Thu, 08 May 2025 11:25:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746728729; x=1747333529; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=waEbCrslf02j0euz1Hyel1xKxpuwwD71wy+gaLfyWXA=;
-        b=DRIBSlNfN/qK05XsG3N5zmJ4Z3k9rV3LJ3Tbj0RGss8ijWCeLAKXeOjCK2s+ndajKY
-         +5VWHUxejER2thakONoyI4dE1b2RH5D+xHf4CvCVTrOYNrLI8bu/HE8kv+IcukiXRKYK
-         jl/zrgQZ+Il1gtjQXEWNkyBP+NgDjhe017XRqc7PZAQGCrH0Q8AI3jerrOphw+XOsXMF
-         GtTHE82ZmkVy9Ectknp6A+bXRIkEI8rtHHL4voDzvTq9VM5VvzhsJDkRuCbJ6sxFCPLW
-         W7faHShBEn7MENCU0jKV4Re44ttgLmcL3rvYZPgwl7zHhVRIeWy3l8X0GG/6QtTaGzZZ
-         TIbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746728729; x=1747333529;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=waEbCrslf02j0euz1Hyel1xKxpuwwD71wy+gaLfyWXA=;
-        b=stPTD4hhaSJN83pXmz9sjznYu2hAFzlVC2qdHepEIue0tpzL7QacQGTUj1R5E349ne
-         kblBmhtzp7cg8nz9/raz2Xu+9X4QGP+0deOwPNKYlw5NpgksRwDooFEA9hrhczK5ce6z
-         OX3bKRTihocy7koz9MPRjBsgmcQc76MCxprUAglSxoNLFUJJLFh/+N3R2cUWcpYL0V2x
-         oC5EObeFcEjRn7LO8IQG4yQ1TU+mbq19ckw9mOVZgVHiWtRNwaOdDUpK49Ngk/xiUdW9
-         8S2a5kgfFx5kkEBfhYYvDUgz3v97Y+4BM5wuCcont1IZCEf3zM/whnLv2wnW3VmvmFz/
-         xapQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXQ4irUpddXGw6mIbUsHGqLZRaIs9OSncW8lGDhRN2NzkNzNDaFMfqlx3CGip1JBsgE7o/ePlnDxTYzmnH3@vger.kernel.org, AJvYcCXaInNZ48HOTdrphWvkSP1KS0W4uxn08foZ4jpHx84u5HaqbuMcoQdGjumyoYPXaUIZrGh/2x3YBORXBeUm@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNsnZ5d1yGtaZznasx/+zTpKJrb88f45eiRQttt6woy5V9pGII
-	BGn5ZqxHCVQY7gfjmpkkwpz94xCTAp8lkVREjti+0yons0ivNoNDLOs9JZxb4zXNaHluIXww1Z/
-	yrzE62pJKsQ76qTLgpwq6G9Y2ARI=
-X-Gm-Gg: ASbGncv+0xX1rIaVqcryzBC0ToJ8MHhr1UGl5a5auuKFgNwWsZmi9TNAi6psA1ywCFD
-	oCiniT/z2BBt0KEqbMHJIuUzlVGplrJcR1KhZZyuGb0GAgva1u3BIdoPx810uZGP3Kw0hAE0WdN
-	XAk61zcBeSpo6ZPFg3YalAXw==
-X-Google-Smtp-Source: AGHT+IHm+1k+jR7TnUT8ZSpFd7U5tcrz5KJivMD+5bDfj/leop0E5igVUwVXpDEwEgoS20vzCAfVm+cD5wr/rcq2wGs=
-X-Received: by 2002:a17:90b:3812:b0:2ff:4be6:c5e2 with SMTP id
- 98e67ed59e1d1-30c3d669070mr276315a91.7.1746728729571; Thu, 08 May 2025
- 11:25:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0vX34Bv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53773C4AF09;
+	Thu,  8 May 2025 18:26:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746728796;
+	bh=TV/DfA1+9HMKHUzT+UR/gakV4+uuJ2aHJxXt+sNWNpo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=W0vX34BvhqERisc9pPDTrtpEzxpqUU7+fjntYQSiYl1vgqIrS7y455J4HVkP4tMiE
+	 9S5EC67d43f8FD2n3FGNXqXBY33xhNi6k5PiFNkIZ3S7GYaaOiwB88EmBPJYoSuo4p
+	 45+EwZUJPIyNEQBK2ZJwt6c/dPEW23FK1TWscFMq62I4dR5kl8r+pts0mDEUDiM9nR
+	 Aitf1znG+IiXkMTe6jqPCcMgPfxU3Nf0EfsdT5hMCNnpEQmloLPMm889X9nCgsz4pu
+	 99SJP0j5KjxL1DmNxwrJT8AJTAPYx8rAyriWW1hx5JXsMaywvQ9eDal1G8dUvBP0yL
+	 Iw3l+zBJiDN4A==
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-72c7336ed99so400502a34.0;
+        Thu, 08 May 2025 11:26:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUhho5o1o7dDGGNx+FdfpQ9tS3eFhzM1HGKfxSzIK+mEVFF+2gIIFnoI5hqjb2uEJfKylbtXhEiI2GFtA7X@vger.kernel.org, AJvYcCV2TFowXXW77kIyynry+sreFJMZcQrK/8Ls7TIBchJlmRgR9eAtaCL8Clk2rS3SW307lNu+hLc9Y+My@vger.kernel.org, AJvYcCWbTKAnTxVFUpEF2InJu5OicVhb0oK1TFN1m0VPmxvSMhJFb5lzo7TopzcHqE6agymM1NzIRG8G@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT9B4j6vvYmjL5KTi3e5FV+kMpQAdfUnA8n+30T3zz6ToOjL0y
+	/fGnBFXLksRt0SdNvunZ6CyoY5lb2mx82cpn1rysJfLIXH706L6CCr/KnhPCYjH1+LZ3HWm9oXR
+	xnN0tjUYa9qcPxgbo66MbUIAo7v0=
+X-Google-Smtp-Source: AGHT+IF2Nf5Fasy7Qu/XU0O/UO9AwN3maQCBaHAFkTPwDHkgmNIXFD8BqrcDfV+OFXwTKgnDslsqpJLbbTA5+Cs/0HQ=
+X-Received: by 2002:a05:6830:6611:b0:730:da:1165 with SMTP id
+ 46e09a7af769-73226ae9d31mr741954a34.21.1746728795645; Thu, 08 May 2025
+ 11:26:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com> <20250508-topic-ubwc_central-v1-7-035c4c5cbe50@oss.qualcomm.com>
-In-Reply-To: <20250508-topic-ubwc_central-v1-7-035c4c5cbe50@oss.qualcomm.com>
-From: Connor Abbott <cwabbott0@gmail.com>
-Date: Thu, 8 May 2025 14:25:18 -0400
-X-Gm-Features: ATxdqUGGKzILlDDNdGb-69ow4qakqzEaJcVTZgzzDN8Bbo3FXuGdXfNDVeMIZAU
-Message-ID: <CACu1E7H9_EkGFkjL1MRU9M-_YFHnPb5v9SxDg6fXm0m-imzC2Q@mail.gmail.com>
-Subject: Re: [PATCH RFT 07/14] drm/msm/a6xx: Resolve the meaning of UBWC_MODE
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250508023025.1301030-1-jeremy.linton@arm.com> <20250508-abiding-enigmatic-mustang-ab3bd2@sudeepholla>
+In-Reply-To: <20250508-abiding-enigmatic-mustang-ab3bd2@sudeepholla>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 8 May 2025 20:26:23 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jOmeKy84N0My7o+PvAybjdaxv9ZS8HT=X0momY7rzTuQ@mail.gmail.com>
+X-Gm-Features: ATxdqUH9Pj_neQFHcxXdnSIxaBpGj_wzwhGGHZ5DpVN043u7sQCsmcbIF9wohLs
+Message-ID: <CAJZ5v0jOmeKy84N0My7o+PvAybjdaxv9ZS8HT=X0momY7rzTuQ@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: PPTT: Fix processor subtable walk
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Jeremy Linton <jeremy.linton@arm.com>, rafael@kernel.org, lenb@kernel.org, 
+	jmeurin@google.com, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Maximilian Heyne <mheyne@amazon.de>, Yicong Yang <yangyicong@hisilicon.com>, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 8, 2025 at 2:14=E2=80=AFPM Konrad Dybcio <konradybcio@kernel.or=
-g> wrote:
+On Thu, May 8, 2025 at 11:13=E2=80=AFAM Sudeep Holla <sudeep.holla@arm.com>=
+ wrote:
 >
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> On Wed, May 07, 2025 at 09:30:25PM -0500, Jeremy Linton wrote:
+> > The original PPTT code had a bug where the processor subtable length
+> > was not correctly validated when encountering a truncated
+> > acpi_pptt_processor node.
+> >
+> > Commit 7ab4f0e37a0f4 ("ACPI PPTT: Fix coding mistakes in a couple of
+> > sizeof() calls") attempted to fix this by validating the size is as
+> > large as the acpi_pptt_processor node structure. This introduced a
+> > regression where the last processor node in the PPTT table is ignored
+> > if it doesn't contain any private resources. That results errors like:
+> >
+> >   ACPI PPTT: PPTT table found, but unable to locate core XX (XX)
+> >   ACPI: SPE must be homogeneous
+> >
+> > Furthermore, it fail in a common case where the node length isn't
+> > equal to the acpi_pptt_processor structure size, leaving the original
+> > bug in a modified form.
+> >
+> > Correct the regression by adjusting the loop termination conditions as
+> > suggested by the bug reporters. An additional check performed after
+> > the subtable node type is detected, validates the acpi_pptt_processor
+> > node is fully contained in the PPTT table. Repeating the check in
+> > acpi_pptt_leaf_node() is largely redundant as the node is already
+> > known to be fully contained in the table.
+> >
+> > The case where a final truncated node's parent property is accepted,
+> > but the node itself is rejected should not be considered a bug.
+> >
 >
-> This bit is set iff the UBWC version is 1.0. That notably does not
-> include QCM2290's "no UBWC".
+> Thanks for picking this up and describing the issue properly in the commi=
+t
+> message.
+>
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 
-While this is technically true, AFAIK the only difference between UBWC
-1.0 and 2.0 is that newer UBWC disables level 1 bank swizzling, which
-is why I originally wrote it this way. There's a bit of redundancy
-between the UBWC version and ubwc_swizzle bit 0.
+Applied, but it is a bit too late to push it for -rc6, so I'll queue
+it up for -rc7.
 
-Connor
-
->
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/=
-adreno/a6xx_gpu.c
-> index e1eab0906b6c460528da82a94a285ef181e0b479..d47726ea8818a9660eadd52d9=
-7dde1489a884684 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -663,10 +663,10 @@ static void a6xx_set_ubwc_config(struct msm_gpu *gp=
-u)
->         u8 uavflagprd_inv =3D adreno_is_a650_family(adreno_gpu) || adreno=
-_is_a7xx(adreno_gpu) ? 2 : 0;
->         const struct qcom_ubwc_cfg_data *cfg =3D adreno_gpu->common_ubwc_=
-cfg;
->         u32 hbb =3D adreno_gpu->ubwc_config.highest_bank_bit;
-> +       bool ubwc_mode =3D cfg->ubwc_enc_version =3D=3D UBWC_1_0;
->         bool amsbc =3D cfg->ubwc_enc_version >=3D UBWC_3_0;
->         u32 hbb_hi =3D hbb >> 2;
->         u32 hbb_lo =3D hbb & 3;
-> -       u32 ubwc_mode =3D adreno_gpu->ubwc_config.ubwc_swizzle & 1;
->         u32 level2_swizzling_dis =3D !(adreno_gpu->ubwc_config.ubwc_swizz=
-le & 2);
->
->         gpu_write(gpu, REG_A6XX_RB_NC_MODE_CNTL,
->
-> --
-> 2.49.0
->
+Thanks!
