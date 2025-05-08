@@ -1,176 +1,701 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AF52CCC0;
-	Thu,  8 May 2025 16:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0E327AC50
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 16:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746720192; cv=none; b=jI44SEU34bW7QZ3nrKgKd3Wi/uB09ZVMRwl0loHWGLKBs0TxOxyuyIsu9CEpoU4sZp/2bQ0O0CgVlbtgb5IBZu+NSaxIQvK+9JWnuQ+oLj/uLxVkicES5qaFQFP1fKmQyoWXP3xvQCqCDYtyEeYkg438NI3wRx5+YnRweX0QohE=
+	t=1746720237; cv=none; b=hWzLNvFzCExSHpRThvhUrA1ewprUXhDKrKtDwqGgtgX/ds2ceDWWE7rbzy85SiUPiPKkcJQow3MaFLvu/4Z7z2EmptT1lUFbDmJXPLj7Ljk3NIdJrSYYCQvHkutqUsCJBSJiJbJqavNWzvgJOi61r2sl0J8EKji3Bx1wuiA7HLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746720192; c=relaxed/simple;
-	bh=CDfe11rcN0+pev+XPdEEOzZuVEPrSuLFZ/WBZH4YLkM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RlhA8m/br3FVIHbgSfdTXXAvZ0r4ITte/zhRDhL/baHrcHdS5aAx6eOvjSF0/0m1zO22GzMoBejusReXv1bpDTuJWt5dS4cFG+UysQoB1ZCiHM9EVHIf3ocIPvpRPWaXkYpwhACfl7F9T/e2rrAh1yJwo02CmjWTMy/C884Fg4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18695C4CEEB;
-	Thu,  8 May 2025 16:03:09 +0000 (UTC)
-Date: Thu, 8 May 2025 12:03:21 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Namhyung Kim <namhyung@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, x86@kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, Mark Brown
- <broonie@kernel.org>, linux-toolchains@vger.kernel.org, Jordan Rome
- <jordalgo@meta.com>, Sam James <sam@gentoo.org>, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, Jens Remus <jremus@linux.ibm.com>, Florian
- Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>, Weinan Liu
- <wnliu@google.com>, Blake Jones <blakejones@google.com>, Beau Belgrave
- <beaub@linux.microsoft.com>, "Jose E. Marchesi" <jemarch@gnu.org>
-Subject: Re: [PATCH v5 13/17] perf: Support deferred user callchains
-Message-ID: <20250508120321.20677bc6@gandalf.local.home>
-In-Reply-To: <20250424162633.390748816@goodmis.org>
-References: <20250424162529.686762589@goodmis.org>
-	<20250424162633.390748816@goodmis.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746720237; c=relaxed/simple;
+	bh=sDTduiH5duq9nzrQk9bUcwjiQE27srNEN1ADhAVkqsw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dSycGeL1pfWm52QTHBdlWZG0g023IpG5VeXG5wiyQTVNkd3StIE/3PpE+DCF6kNy7OLO+hDtHMoa3VsQ51Yy+b/T1HnKxarTBDTo74UkWgYi48P35VcI39Df/LUtSeyKUwluI9opjrnskOxKxoJlNrQyMiYwBCs3PJhHHxdfpWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=YWfY+wrA; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="YWfY+wrA"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72bd5f25ea6so380490a34.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 09:03:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746720233; x=1747325033; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oJ2Auybmqe77zpsq1EbjQCxmsIAC9WCbVyTDFjFofh0=;
+        b=YWfY+wrAi0KJYnVQab222dVlWeJg/E4t7l0AwsceIiB5WXU1a8kG0f9Y57CiEoVBar
+         16KFTGbvEh3XIkxOMM4ymQV4mDXR8QDnCVIdp5A7dnO9ASBo8DnbNbbU4zXLZr+v14Ka
+         fxJnjOhyCBYyvisSQk2cfGVKrbiEJEbw7WUfCfwg7Ryx4BeQrUZmWdF0+M9gVet0goAf
+         BA0eCJRH3mlvAD53QNpkXMFBGEuH6nim22goJ2Etw/j3cIVMbsjkWvCHueX5mG6frZku
+         r60LUtdgikv6jWLKIceccsBaX0jeWgvPk0AibQFLGCS/HSI8zsHyTvj3KSJCH19mm7dN
+         kIRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746720233; x=1747325033;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oJ2Auybmqe77zpsq1EbjQCxmsIAC9WCbVyTDFjFofh0=;
+        b=mtkyYA3jarHLKFYwbl5kiQrMvwrS1qCnfbFD6WriQHxXPGzC8NCtLCcHuPBMZxUCOg
+         8FDy6EdsHYloVYVDzpEqu4UWVJYHX+T2dqX9UxD2jTWCKZP9EDOR8crA08xooQuELkBM
+         OMR4hEZsP/G1xas8IwLKaQLfVXWg5mZq+rFWXU99BNnsqt/PnrLKraSZRasCwOngkRZj
+         vaQTeNciHEnzTfr3Eyjxa5tgbuxxoobCE7MekiZU/IohDyNf5JM8w/3Bhm8M8hf92TZx
+         11QHGKcLQ6xV955id8q+Q60fPc6+zr3sWdTV9o11XeNBV4DlMFVUQVpAoVTMrwCHPmDc
+         MEqg==
+X-Forwarded-Encrypted: i=1; AJvYcCWha3JcGUTLnfo4hgWsxt02nV5y9yGtAtLtHJVc5fSI2A7pvOxz497CD3z20TOBTOOOAk+Rqo/gRRJJWUk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSPOmVYborkBkdgXiG90fl72ZwnmX/+7y6is0OOFPUeBSjx3UV
+	n8HXyxv6IkQ2T5NW16q7aHkw+q54cbZgLCfce0cDklB/U+OQQXi+92MTAmITf8cigKlC6+q8v19
+	H
+X-Gm-Gg: ASbGncvs63NnmlYMhk4RSWchbvzG2/53zb21XmqUhZq4WnpyyFoil6zPawz62NVt7NP
+	o0zSYe/kqQCk76ijoc2WPvAsstFCIFXHP6CvfQDcCjBs7SwcoFJFs3CbiWIFMVwe5aB8aO2DR6G
+	WOHvJweZH+NaQAAJB/up5cvqvXVdxyBa2L/SD/HLEt0n5S8ueP0xOD3sOE6Cbd4ECj+K1ZUrJl+
+	qEfka5LfC2XpH3zbgBycCaRzNTXGyk6XOa8hw8DGILY6FepZ2AHJwNYBYxrDg4ArM/NCuX9ksBd
+	LXRBqcEmPh3flROdG9awlMFw++KzVb385MAFRWsSp//ukDGxSomQ46wB3qb9kvOpJpV26ehVFKU
+	vZxx0XrNvxM3QvpoN/jOkeQyzkvhW
+X-Google-Smtp-Source: AGHT+IED/v7PAY2y2hARuh161CjGMUHyhUf6i7J7sT6oZ8p+nzPZE5Df4TSSsZV79KrJNYBU72bt/Q==
+X-Received: by 2002:a05:6830:648b:b0:72b:9b1f:2e1d with SMTP id 46e09a7af769-732269c8ce0mr224442a34.2.1746720232980;
+        Thu, 08 May 2025 09:03:52 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e? ([2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-732264d867csm71748a34.37.2025.05.08.09.03.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 09:03:52 -0700 (PDT)
+Message-ID: <297ec0b1-d6a4-4fc9-95c7-e7f3bef53d97@baylibre.com>
+Date: Thu, 8 May 2025 11:03:51 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/5] iio: magnetometer: qmc5883l: Add initial driver
+ support
+To: Brajesh Patil <brajeshpatil11@gmail.com>, jic23@kernel.org,
+ lars@metafoo.de
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ marcelo.schmitt1@gmail.com
+References: <20250508120900.114348-1-brajeshpatil11@gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250508120900.114348-1-brajeshpatil11@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 24 Apr 2025 12:25:42 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On 5/8/25 7:08 AM, Brajesh Patil wrote:
 
-> +static void perf_event_callchain_deferred(struct callback_head *work)
+This needs a description that explains why we would want to add this to the
+kernel.
+
+> Signed-off-by: Brajesh Patil <brajeshpatil11@gmail.com>
+> ---
+>  drivers/iio/magnetometer/Kconfig    |  13 +
+>  drivers/iio/magnetometer/Makefile   |   2 +
+>  drivers/iio/magnetometer/qmc5883l.c | 471 ++++++++++++++++++++++++++++
+>  3 files changed, 486 insertions(+)
+>  create mode 100644 drivers/iio/magnetometer/qmc5883l.c
+> 
+> diff --git a/drivers/iio/magnetometer/Kconfig b/drivers/iio/magnetometer/Kconfig
+> index 3debf1320ad1..97f375c75ff8 100644
+> --- a/drivers/iio/magnetometer/Kconfig
+> +++ b/drivers/iio/magnetometer/Kconfig
+> @@ -206,6 +206,19 @@ config SENSORS_HMC5843_SPI
+>  	  - hmc5843_core (core functions)
+>  	  - hmc5843_spi (support for HMC5983)
+> 
+> +config SENSORS_QMC5883L
+> +	tristate "QST QMC5883L 3-Axis Magnetometer"
+> +	depends on I2C
+> +	select REGMAP_I2C
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+> +	help
+> +	  Say Y here to build support for the QST QMC5883L 3-axis magnetometer
+> +	  through its I2C interface.
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called qmc5883l.
+> +
+>  config SENSORS_RM3100
+>  	tristate
+>  	select IIO_BUFFER
+> diff --git a/drivers/iio/magnetometer/Makefile b/drivers/iio/magnetometer/Makefile
+> index 9297723a97d8..f51e7595f5e3 100644
+> --- a/drivers/iio/magnetometer/Makefile
+> +++ b/drivers/iio/magnetometer/Makefile
+> @@ -27,6 +27,8 @@ obj-$(CONFIG_SENSORS_HMC5843)		+= hmc5843_core.o
+>  obj-$(CONFIG_SENSORS_HMC5843_I2C)	+= hmc5843_i2c.o
+>  obj-$(CONFIG_SENSORS_HMC5843_SPI)	+= hmc5843_spi.o
+> 
+> +obj-$(CONFIG_SENSORS_QMC5883L)		+= qmc5883l.c
+> +
+>  obj-$(CONFIG_SENSORS_RM3100)		+= rm3100-core.o
+>  obj-$(CONFIG_SENSORS_RM3100_I2C)	+= rm3100-i2c.o
+>  obj-$(CONFIG_SENSORS_RM3100_SPI)	+= rm3100-spi.o
+> diff --git a/drivers/iio/magnetometer/qmc5883l.c b/drivers/iio/magnetometer/qmc5883l.c
+> new file mode 100644
+> index 000000000000..68597cdd0ca8
+> --- /dev/null
+> +++ b/drivers/iio/magnetometer/qmc5883l.c
+> @@ -0,0 +1,471 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/delay.h>
+> +#include <linux/i2c.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/regmap.h>
+> +#include <linux/types.h>
+> +
+> +/* Register Addresses */
+> +#define QMC5883L_DATA_OUT_LSB_REG   0x00
+> +#define QMC5883L_STATUS_REG         0x06
+> +#define QMC5883L_TEMP_OUT_LSB_REG   0x07
+> +#define QMC5883L_CONTROL_REG_1      0x09
+> +#define QMC5883L_CONTROL_REG_2      0x0A
+> +#define QMC5883L_FBR_REG            0x0B
+> +#define QMC5883L_CHIP_ID_REG        0x0D
+> +#define QMC5883L_CHIP_ID            0xFF
+
+Usually, we add _REG_ in these names to make it obvious that it is a register
+address.
+
+> +
+> +/* Status Register Bits */
+> +#define QMC5883L_DRDY               0x01
+> +#define QMC5883L_OVL                0x02
+> +#define QMC5883L_DOR                0x04
+
+Should use the BIT() macro for these.
+
+> +
+> +/* Control Register 1 Configuration Bits */
+> +/* Mode (bits [1:0]) */
+> +#define QMC5883L_MODE_STANDBY       0x00
+> +#define QMC5883L_MODE_CONT          0x01
+> +#define QMC5883L_MODE_MASK          0x03
+
+Use GENMASK(1, 0) insted of 0x3.
+
+> +#define QMC5883L_MODE_SHIFT         0
+
+In the driver, we can use FIELD_PREP() with the _MASK value, then we don't need
+any of the _SHIFT macros.
+
+> +
+> +/* Output Data Rate - ODR (bits [3:2]) */
+> +#define QMC5883L_ODR_10HZ           0x00
+> +#define QMC5883L_ODR_50HZ           0x01
+> +#define QMC5883L_ODR_100HZ          0x02
+> +#define QMC5883L_ODR_200HZ          0x03
+> +#define QMC5883L_ODR_MASK           0x0C
+> +#define QMC5883L_ODR_SHIFT          2
+> +
+> +/* Full Scale Range - RNG (bits [5:4]) */
+> +#define QMC5883L_RNG_2G             0x00
+> +#define QMC5883L_RNG_8G             0x01
+> +#define QMC5883L_RNG_MASK           0x30
+> +#define QMC5883L_RNG_SHIFT          4
+> +
+> +/* Oversampling Ratio - OSR (bits [7:6]) */
+> +#define QMC5883L_OSR_512            0x00
+> +#define QMC5883L_OSR_256            0x01
+> +#define QMC5883L_OSR_128            0x02
+> +#define QMC5883L_OSR_64             0x03
+> +#define QMC5883L_OSR_MASK           0xC0
+> +#define QMC5883L_OSR_SHIFT          6
+
+Same comment applies to these, we can use GENMASK(), then we don't need the
+"(bits [A:B])" in the comment and we don't need the _SHIFT macros.
+
+> +
+> +static const int qmc5883l_odr_map[] = {
+> +	[QMC5883L_ODR_10HZ]  = 10,
+> +	[QMC5883L_ODR_50HZ]  = 50,
+> +	[QMC5883L_ODR_100HZ] = 100,
+> +	[QMC5883L_ODR_200HZ] = 200,
+> +};
+> +
+> +/**
+> + * struct qmc5883l_data - device instance specific data
+> + * @client: I2C client structure
+> + * @lock: mutex to protect register access
+> + * @regmap: register map of the device
+> + * @scan: buffer for triggered data reading
+> + */
+> +struct qmc5883l_data {
+> +	struct i2c_client *client;
+> +	struct mutex lock; /* Protects sensor read/write operations */
+> +	struct regmap *regmap;
+> +
+> +	struct {
+> +		__le16 chans[3];
+> +
+> +		s64 timestamp __aligned(8);
+
+		aligned_s64 timestamp;
+
+> +	} scan;
+> +};
+> +
+> +static int qmc5883l_init(struct qmc5883l_data *data);
+> +static int qmc5883l_set_mode(struct qmc5883l_data *data, unsigned int mode);
+
+Can we reorder things to avoid the forward declarations?
+
+> +
+> +static int qmc5883l_buffer_preenable(struct iio_dev *indio_dev)
 > +{
-> +	struct perf_event *event = container_of(work, struct perf_event, pending_unwind_work);
-> +	struct perf_callchain_deferred_event deferred_event;
-> +	u64 callchain_context = PERF_CONTEXT_USER;
-> +	struct unwind_stacktrace trace;
-> +	struct perf_output_handle handle;
-> +	struct perf_sample_data data;
-> +	u64 nr;
+> +	struct qmc5883l_data *data = iio_priv(indio_dev);
 > +
-> +	if (!event->pending_unwind_callback)
-> +		return;
-> +
-> +	if (unwind_deferred_trace(&trace) < 0)
-> +		goto out;
-> +
-> +	/*
-> +	 * All accesses to the event must belong to the same implicit RCU
-> +	 * read-side critical section as the ->pending_unwind_callback reset.
-> +	 * See comment in perf_pending_unwind_sync().
-> +	 */
-> +	guard(rcu)();
-> +
-> +	if (!current->mm)
-> +		goto out;
-> +
-> +	nr = trace.nr + 1 ; /* '+1' == callchain_context */
-
-Hi Namhyung,
-
-Talking with Beau about how Microsoft does their own deferred tracing, I
-wonder if the timestamp approach would be useful.
-
-This is where a timestamp is taken at the first request for a deferred
-trace, and this is recorded in the trace when it happens. It basically
-states that "this trace is good up until the given timestamp".
-
-The rationale for this is for lost events. Let's say you have:
-
-  <task enters kernel>
-    Request deferred trace
-
-    <buffer fills up and events start to get lost>
-
-    Deferred trace happens (but is dropped due to buffer being full)
-
-  <task exits kernel>
-
-  <task enters kernel again>
-    Request deferred trace  (Still dropped due to buffer being full)
-
-    <Reader catches up and buffer is free again>
-
-    Deferred trace happens (this time it is recorded>
-  <task exits kernel>
-
-How would user space know that the deferred trace that was recorded doesn't
-go with the request (and kernel stack trace) that was done initially)?
-
-If we add a timestamp, then it would look like:
-
-  <task enters kernel>
-    Request deferred trace
-    [Record timestamp]
-
-    <buffer fills up and events start to get lost>
-
-    Deferred trace happens with timestamp (but is dropped due to buffer being full)
-
-  <task exits kernel>
-
-  <task enters kernel again>
-    Request deferred trace  (Still dropped due to buffer being full)
-    [Record timestamp]
-
-    <Reader catches up and buffer is free again>
-
-    Deferred trace happens with timestamp (this time it is recorded>
-  <task exits kernel>
-
-Then user space will look at the timestamp that was recorded and know that
-it's not for the initial request because the timestamp of the kernel stack
-trace done was before the timestamp of the user space stacktrace and
-therefore is not valid for the kernel stacktrace.
-
-The timestamp would become zero when exiting to user space. The first
-request will add it but would need a cmpxchg to do so, and if the cmpxchg
-fails, it then needs to check if the one recorded is before the current
-one, and if it isn't it still needs to update the timestamp (this is to
-handle races with NMIs).
-
-Basically, the timestamp would replace the cookie method.
-
-Thoughts?
-
--- Steve
-
-
-> +
-> +	deferred_event.header.type = PERF_RECORD_CALLCHAIN_DEFERRED;
-> +	deferred_event.header.misc = PERF_RECORD_MISC_USER;
-> +	deferred_event.header.size = sizeof(deferred_event) + (nr * sizeof(u64));
-> +
-> +	deferred_event.nr = nr;
-> +
-> +	perf_event_header__init_id(&deferred_event.header, &data, event);
-> +
-> +	if (perf_output_begin(&handle, &data, event, deferred_event.header.size))
-> +		goto out;
-> +
-> +	perf_output_put(&handle, deferred_event);
-> +	perf_output_put(&handle, callchain_context);
-> +	perf_output_copy(&handle, trace.entries, trace.nr * sizeof(u64));
-> +	perf_event__output_id_sample(event, &handle, &data);
-> +
-> +	perf_output_end(&handle);
-> +
-> +out:
-> +	event->pending_unwind_callback = 0;
-> +	local_dec(&event->ctx->nr_no_switch_fast);
-> +	rcuwait_wake_up(&event->pending_unwind_wait);
+> +	return qmc5883l_set_mode(data, QMC5883L_MODE_CONT);
 > +}
 > +
+> +static int qmc5883l_buffer_postdisable(struct iio_dev *indio_dev)
+> +{
+> +	struct qmc5883l_data *data = iio_priv(indio_dev);
+> +
+> +	return qmc5883l_set_mode(data, QMC5883L_MODE_STANDBY);
+> +}
+> +
+> +static const struct iio_buffer_setup_ops qmc5883l_buffer_setup_ops = {
+> +	.preenable	= qmc5883l_buffer_preenable,
+> +	.postdisable	= qmc5883l_buffer_postdisable,
+> +};
+> +
+> +/* Register map access tables */
+> +static const struct regmap_range qmc5883l_readable_ranges[] = {
+> +	regmap_reg_range(QMC5883L_DATA_OUT_LSB_REG, QMC5883L_CHIP_ID_REG),
+> +};
+> +
+> +static const struct regmap_access_table qmc5883l_readable_table = {
+> +	.yes_ranges = qmc5883l_readable_ranges,
+> +	.n_yes_ranges = ARRAY_SIZE(qmc5883l_readable_ranges),
+> +};
+> +
+> +static const struct regmap_range qmc5883l_writable_ranges[] = {
+> +	regmap_reg_range(QMC5883L_CONTROL_REG_1, QMC5883L_FBR_REG),
+> +};
+> +
+> +static const struct regmap_access_table qmc5883l_writable_table = {
+> +	.yes_ranges = qmc5883l_writable_ranges,
+> +	.n_yes_ranges = ARRAY_SIZE(qmc5883l_writable_ranges),
+> +};
+> +
+> +static const struct regmap_range qmc5883l_volatile_ranges[] = {
+> +	regmap_reg_range(QMC5883L_DATA_OUT_LSB_REG, QMC5883L_TEMP_OUT_LSB_REG + 1),
+> +};
+> +
+> +static const struct regmap_access_table qmc5883l_volatile_table = {
+> +	.yes_ranges = qmc5883l_volatile_ranges,
+> +	.n_yes_ranges = ARRAY_SIZE(qmc5883l_volatile_ranges),
+> +};
+> +
+> +static const struct regmap_config qmc5883l_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = QMC5883L_CHIP_ID_REG,
+> +
+> +	.rd_table = &qmc5883l_readable_table,
+> +	.wr_table = &qmc5883l_writable_table,
+> +	.volatile_table = &qmc5883l_volatile_table,
+> +
+> +	.cache_type = REGCACHE_RBTREE,
+
+Regmap docs say:
+
+"Any new caches should usually use the maple tree cache unless they specifically
+require that there are never any allocations at runtime and can't provide
+defaults in which case they should use the flat cache."
+
+So why using RBTREE?
+
+> +};
+> +
+> +static int qmc5883l_set_mode(struct qmc5883l_data *data, unsigned int mode)
+> +{
+> +	int ret;
+> +
+> +	mutex_lock(&data->lock);
+> +	ret = regmap_update_bits(data->regmap, QMC5883L_CONTROL_REG_1,
+> +				 QMC5883L_MODE_MASK, mode << QMC5883L_MODE_SHIFT);
+> +	mutex_unlock(&data->lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static int qmc5883l_wait_measurement(struct qmc5883l_data *data)
+> +{
+> +	int tries = 150;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	while (tries-- > 0) {
+> +		ret = regmap_read(data->regmap, QMC5883L_STATUS_REG, &val);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		if (val & QMC5883L_OVL) {
+> +			dev_err(&data->client->dev, "data overflow\n");
+> +			return -EOVERFLOW;
+> +		}
+> +
+> +		if (val & QMC5883L_DRDY)
+> +			return 0;
+> +		usleep_range(5000, 6000);
+
+fsleep()
+
+> +	}
+> +
+> +	dev_err(&data->client->dev, "data not ready\n");
+> +	return -EIO;
+
+Would -ETIMEDOUT be more appropriate?
+
+> +}
+> +
+> +static int qmc5883l_read_measurement(struct qmc5883l_data *data,
+> +				     int idx, int *val)
+> +{
+> +	__le16 values[3];
+> +	int ret;
+> +
+> +	ret = qmc5883l_set_mode(data, QMC5883L_MODE_CONT);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = qmc5883l_wait_measurement(data);
+> +	if (ret < 0) {
+> +		qmc5883l_set_mode(data, QMC5883L_MODE_STANDBY);
+> +		return ret;
+> +	}
+> +
+> +	mutex_lock(&data->lock);
+
+Lock isn't protecting all register access.
+
+> +	ret = regmap_bulk_read(data->regmap, QMC5883L_DATA_OUT_LSB_REG,
+> +			       values, sizeof(values));
+> +	mutex_unlock(&data->lock);
+> +
+> +	qmc5883l_set_mode(data, QMC5883L_MODE_STANDBY);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*val = sign_extend32(le16_to_cpu(values[idx]), 15);
+> +	return IIO_VAL_INT;
+> +}
+> +
+> +static int qmc5883l_read_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan, int *val, int *val2, long mask)
+> +{
+> +	struct qmc5883l_data *data = iio_priv(indio_dev);
+> +	unsigned int rval;
+> +	__le16 temp_val;
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		if (chan->type == IIO_TEMP) {
+> +			ret = qmc5883l_set_mode(data, QMC5883L_MODE_CONT);
+> +			if (ret < 0)
+> +				return ret;
+> +
+> +			mutex_lock(&data->lock);
+> +			ret = regmap_bulk_read(data->regmap, QMC5883L_TEMP_OUT_LSB_REG,
+> +					       &temp_val, sizeof(temp_val));
+> +			mutex_unlock(&data->lock);
+> +
+> +			qmc5883l_set_mode(data, QMC5883L_MODE_STANDBY);
+
+If someone did a raw read during a buffered read, this would take it out of
+standby and the buffered read would stop working, no?
+
+Using iio_device_claim_direct() can solve this by not allowing raw read during
+buffered read. I think we could probably drop the mutex lock entirely from the
+driver and just rely on iio_device_claim_direct() instead.
+
+> +
+> +			if (!ret)
+> +				*val = sign_extend32(le16_to_cpu(temp_val), 15);
+> +
+> +			return ret ? ret : IIO_VAL_INT;
+> +		}
+> +		return qmc5883l_read_measurement(data, chan->scan_index, val);
+> +	case IIO_CHAN_INFO_SCALE:
+> +		if (chan->type == IIO_TEMP) {
+> +			/* scale = 124 / 10000 = 0.0124 °C/LSB */
+> +			*val = 124;
+> +			*val2 = 10000;
+> +			return IIO_VAL_FRACTIONAL;
+> +		}
+> +		ret = regmap_read(data->regmap, QMC5883L_CONTROL_REG_1, &rval);
+> +		if (ret < 0)
+> +			return ret;
+> +		rval = (rval & QMC5883L_RNG_MASK) >> QMC5883L_RNG_SHIFT;
+
+FIELD_GET() will simplify this.
+
+> +		*val = (rval == 0) ? 12000 : 3000;  /* ±2G:12000, ±8G:3000 LSB/G */
+> +		*val2 = 0;
+
+Don't need to set val2.
+
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_OFFSET:
+> +		if (chan->type == IIO_TEMP) {
+> +			/* offset = 287661 / 100 = 2876.61 °C */
+> +			*val = 287661;
+> +			*val2 = 100;
+> +			return IIO_VAL_FRACTIONAL;
+> +		}
+> +		return -EINVAL;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		ret = regmap_read(data->regmap, QMC5883L_CONTROL_REG_1, &rval);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		rval = (rval & QMC5883L_ODR_MASK) >> QMC5883L_ODR_SHIFT;
+> +
+> +		if (rval >= ARRAY_SIZE(qmc5883l_odr_map) || !qmc5883l_odr_map[rval])
+> +			return -EINVAL;
+> +
+> +		*val = qmc5883l_odr_map[rval];
+> +		*val2 = 0;
+> +		return IIO_VAL_INT;
+> +	}
+> +	return -EINVAL;
+> +}
+> +
+> +static irqreturn_t qmc5883l_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	struct qmc5883l_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	mutex_lock(&data->lock);
+
+If we do end up keeping the mutex lock, guard(mutex)(&data->lock); will help
+simplify things a bit in many of the functions like this.
+
+> +	ret = qmc5883l_wait_measurement(data);
+> +	if (ret < 0) {
+> +		mutex_unlock(&data->lock);
+> +		goto done;
+> +	}
+> +
+> +	ret = regmap_bulk_read(data->regmap, QMC5883L_DATA_OUT_LSB_REG,
+> +			       data->scan.chans, sizeof(data->scan.chans));
+> +	mutex_unlock(&data->lock);
+> +
+> +	if (ret < 0)
+> +		goto done;
+> +
+> +	iio_push_to_buffers_with_timestamp(indio_dev, &data->scan,
+> +					   iio_get_time_ns(indio_dev));
+> +
+> +done:
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/* Channel definitions */
+> +#define QMC5883L_CHANNEL(axis, idx)             \
+> +{                           \
+> +	.type = IIO_MAGN,               \
+> +	.modified = 1,                  \
+> +	.channel2 = IIO_MOD_##axis,         \
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),   \
+> +	.info_mask_shared_by_type =         \
+> +		BIT(IIO_CHAN_INFO_SCALE) |      \
+> +		BIT(IIO_CHAN_INFO_SAMP_FREQ),       \
+> +	.scan_index = idx,              \
+> +	.scan_type = {                  \
+> +		.sign = 's',                \
+> +		.realbits = 16,             \
+> +		.storagebits = 16,          \
+> +		.endianness = IIO_LE,           \
+> +	},                      \
+> +}
+
+Use tabs so that all of the \ line up nicely on the right.
+
+> +
+> +static const struct iio_chan_spec qmc5883l_channels[] = {
+> +	QMC5883L_CHANNEL(X, 0),
+> +	QMC5883L_CHANNEL(Y, 1),
+> +	QMC5883L_CHANNEL(Z, 2),
+> +	{
+> +		.type = IIO_TEMP,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE) |
+> +				      BIT(IIO_CHAN_INFO_OFFSET),
+> +		.scan_index = -1,
+> +	},
+> +	IIO_CHAN_SOFT_TIMESTAMP(3),
+> +};
+> +
+> +static int qmc5883l_init(struct qmc5883l_data *data)
+> +{
+> +	int ret;
+> +	u8 chip_id;
+> +	unsigned int chip_id_tmp;
+> +	unsigned int ctrl1;
+> +
+> +	ret = regmap_read(data->regmap, QMC5883L_CHIP_ID_REG, &chip_id_tmp);
+> +	if (ret < 0) {
+> +		dev_err(&data->client->dev, "Failed to read chip ID\n");
+> +		return ret;
+
+This is during probe, so return dev_err_probe() can be used here and for other
+error returns in this function.
+
+> +	}
+> +
+> +	chip_id = (u8)chip_id_tmp;
+> +	if (chip_id != QMC5883L_CHIP_ID) {
+> +		dev_err(&data->client->dev, "Invalid chip ID: 0x%02X (expected 0x%02X)\n",
+> +			chip_id, QMC5883L_CHIP_ID);
+> +		return -ENODEV;
+
+Usually, we don't consider a wrong ID an error though. There may be some
+comaptible chip that can use this driver but has a differet ID. Could change
+this to info or warning.
+
+> +	}
+> +
+> +	mutex_lock(&data->lock);
+
+This happens during probe, so mutex isn't needed here.
+
+> +	ret = regmap_write(data->regmap, QMC5883L_FBR_REG, 0x01);
+> +	if (ret < 0)
+> +		goto unlock;
+> +
+> +	ctrl1 = (QMC5883L_OSR_64 << QMC5883L_OSR_SHIFT) |
+> +		(QMC5883L_RNG_2G << QMC5883L_RNG_SHIFT) |
+> +		(QMC5883L_ODR_50HZ << QMC5883L_ODR_SHIFT) |
+> +		(QMC5883L_MODE_STANDBY << QMC5883L_MODE_SHIFT);
+
+As mentioned above, we can use FIELD_PREP() for these.
+
+> +
+> +	ret = regmap_write(data->regmap, QMC5883L_CONTROL_REG_1, ctrl1);
+> +	if (ret < 0)
+> +		goto unlock;
+> +
+> +	mutex_unlock(&data->lock);
+> +	dev_dbg(&data->client->dev,
+> +		"Initialized with OSR=64, RNG=2G, ODR=50Hz, Mode=Standby\n");
+> +	return 0;
+> +
+> +unlock:
+> +	mutex_unlock(&data->lock);
+> +	return ret;
+> +}
+> +
+> +static const struct iio_info qmc5883l_info = {
+> +	.read_raw = &qmc5883l_read_raw,
+> +};
+> +
+> +static const unsigned long qmc5883l_scan_masks[] = {0x7, 0};
+> +
+> +static int qmc5883l_probe(struct i2c_client *client)
+> +{
+> +	struct regmap *regmap;
+> +	struct qmc5883l_data *data;
+> +	struct iio_dev *indio_dev;
+> +	int ret;
+> +
+> +	regmap = devm_regmap_init_i2c(client, &qmc5883l_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(&client->dev, "Failed to initialize regmap\n");
+> +		return PTR_ERR(regmap);
+> +	}
+
+All error return paths can be simplified with return dev_err_probe().
+
+> +
+> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+> +	if (!indio_dev) {
+> +		dev_err(&client->dev, "Failed to allocate iio device\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	data = iio_priv(indio_dev);
+> +	data->client = client;
+> +	data->regmap = regmap;
+> +	mutex_init(&data->lock);
+> +
+> +	indio_dev->name = "qmc5883l";
+> +	indio_dev->info = &qmc5883l_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = qmc5883l_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(qmc5883l_channels);
+> +	indio_dev->available_scan_masks = qmc5883l_scan_masks;
+> +
+> +	ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev,
+> +					      NULL, &qmc5883l_trigger_handler,
+> +					      &qmc5883l_buffer_setup_ops);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "Failed to setup triggered buffer: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = qmc5883l_init(data);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "Failed to initialize device: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_iio_device_register(&client->dev, indio_dev);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "Failed to register IIO device: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	i2c_set_clientdata(client, indio_dev);
+
+Is this actually needed if there is no i2c_get_clientdata()?
+
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id qmc5883l_id[] = {
+> +	{ "qmc5883l", 0 },
+
+Can leave out the 0.
+
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, qmc5883l_id);
+> +
+> +static const struct of_device_id qmc5883l_of_match[] = {
+> +	{ .compatible = "qst,qmc5883l" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, qmc5883l_of_match);
+> +
+> +static struct i2c_driver qmc5883l_driver = {
+> +	.driver = {
+> +		.name = "qmc5883l",
+> +		.of_match_table = qmc5883l_of_match,
+> +	},
+> +	.id_table = qmc5883l_id,
+> +	.probe = qmc5883l_probe,
+> +};
+> +
+> +module_i2c_driver(qmc5883l_driver);
+> +
+> +MODULE_AUTHOR("Brajesh Patil <brajeshpatil11@gmail.com>");
+> +MODULE_DESCRIPTION("QMC5883L Driver");
+> +MODULE_LICENSE("GPL");
+> +
+> --
+> 2.39.5
+> 
+
