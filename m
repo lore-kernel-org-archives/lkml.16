@@ -1,208 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A44220F4F
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 07:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D0E220686;
+	Thu,  8 May 2025 07:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746689835; cv=none; b=YebCPEBcq6b7BQ0qiCQP+0cZeI58eTjJM06G+2Rhnr+UrDRHGHpXv34awGacV97LKEsZwcbDlixh1JOEdXWXLNGd9zQ3kZRmYJmc9UKam21d5YgitCEe/HbtPGPUjBGqWfyVipMqD+P7yLoFCEugnWZUF53bF/h4KM7G+t1Y4tc=
+	t=1746689924; cv=none; b=HlnVmQKqvfPN8LavayrEWjThF982OHWT2/IspLGvpqLv1tR//BUzJB925Vqc+uVq6iG1DeQ2cckUCVP8LXeRVxKf9AhbgxdnCEfnhg/mrL050bk0hZ+aluoEL0Bm3lX/8AW3+HAkAd9n9k9HAj5hIwrb5v0z8Syr6voNctOagUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746689835; c=relaxed/simple;
-	bh=4Jaa4N0WTUpYbd8+QpfWfHEYKBJOovkD+RP+EaFRBhw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EKJRX9TK8cDPo+dzDeUndr7q2x6K53VlPOSshq5LPwTeYNX6ruYCyG+3NQE28OlvjfsCx2J5iBnFDzD/xkNrS1rt/jEQhJvdSo33eKqE6cvMDSQwYStnhkS3xuW9vC2dqZhf0G68qKCg/pMOKlAqkVone8ONFQ26z3cLTnxW4pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cVK01zAJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cVK01zAJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746689833;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GezCcPBScg5KPaNeawmNmkgQU7p8LvvEy7wz0/a17Ms=;
-	b=cVK01zAJfjLdYRf1/is1gxU9soOm/Atexv82p75hofihcr/Fk6pcC1glH52o566Q3PtqKN
-	+8enKMGlY5zLTqUFj4/odqH7nwINV27uHD9L0HUgo7A7m7zm4fB/3RyFquafH2dA7CdGA/
-	Kz0ClooDNSuPwAGc/c8+VtqIzag+JMg=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-374-BhNx_AZbML-55hTSGwiY8w-1; Thu, 08 May 2025 03:37:12 -0400
-X-MC-Unique: BhNx_AZbML-55hTSGwiY8w-1
-X-Mimecast-MFC-AGG-ID: BhNx_AZbML-55hTSGwiY8w_1746689831
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39d9243b1c2so246123f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 00:37:12 -0700 (PDT)
+	s=arc-20240116; t=1746689924; c=relaxed/simple;
+	bh=00t+73t/o1ImybTkegnyFnImjLxdJcovYH6HVmTUJwA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=THtN2GGWFa8WhOb7Cb6/omQzWI6DdhAPyW7va93LoRhIF3ufPSZhQ31pGrr6RYzwpWPKwOQwITmiRVoJ2xy2YmNwLHhUFWjG4MBnr7GFrZqWx6f2AeJnYvlO9W0lKEobT8X81QwB/FZjv5QL1sjcojhyfP1Bl053OmdDxsGpp14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-879467794efso380411241.3;
+        Thu, 08 May 2025 00:38:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746689831; x=1747294631;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GezCcPBScg5KPaNeawmNmkgQU7p8LvvEy7wz0/a17Ms=;
-        b=TuEId0/pakyBTcjs/4U44rfwIl3SCvtfUiV0vuXZoj8BT/lMHJ26+tN9fVXKRuoxA3
-         gZ+WDxlNm5nNU84wBqIgaPopWi34PxkwOGD1SdAxYL9wVqUv9fpWN9pdo8g8sNh/ZmVM
-         ybYkgyKUZnExOUffbJndolaSNAbIikEumsSUj+gxVg35rv18xbaIt639ltm8WCarniLc
-         tjqEOj4Cz79tXwjcSU9wqaj2+q8KTCCZheUHNN969xg6G/RX3yC3UbyGWH5m4NrluO98
-         cQwaS9WSj6t5vx+K6LoAA/wdeboHeG7nxGZ7y875bkoowstS73+qmcwKZDOCd5A2u96a
-         54Fg==
-X-Forwarded-Encrypted: i=1; AJvYcCXqEBR4g2Tnq7Mwr2kPp3DH5jyMJx2U1ksCDHI5MxLbFPJlqKh5aCfKHVJDo3f9DPuzTsBxJsbehWxwvfs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSdz3VWsxnmyDzLI7TiPnm7YJCdACdlB47tWHIJLcLipHSUmOj
-	PPIMEPXZtAjVx5ljTfoytoyJTv/o8kP4XS+8O99aaHgmTTHjjufwyDMpcwCZlqXzQuTI/IpOMWb
-	DTiWfVgmoZ7Z5xxsGupuKTuhwzzS11gtI3eaeBfWhe0hdO4h52f/PAjEZNkZM1A==
-X-Gm-Gg: ASbGncsEndluwF6XMdx0OGt2u4nmFb+juGU3K+85iKEkH/FhRqar1LVOfHP1tsMgmzz
-	uANI4/JNdEuCpV5X+HPWxJsvvYyyPkdVB2ZBW4HpcL7FV5d5xT9nI1GfYzCFVysQ6jvE46nv3xP
-	5QYmvpydZEK/0cAAxczv2r0DCJ7VlGfJozBK/Pb4BSVLRgIsasXoip0ugaq+MriU88jiu9iAgj+
-	sQJv2f8pK0cS2oTKIfI+WMUEAGGHwHzs37KvmfEnwT1zR7LaSOMSI7dq0qlOEeRdFkURcEqIARK
-	vdGmHKpBOUUh5y/mhbAefak3/OkuyW8Zd//bv6L1Qsx2rVRiSq9vxeXuWWvpFHuyhgKTi5rUdQ6
-	fpbx/4WRkMolLwGrOB5088dDnifZRxlGo5bIVwio=
-X-Received: by 2002:a5d:64e8:0:b0:3a0:809f:1c95 with SMTP id ffacd0b85a97d-3a0b4a6868bmr5069696f8f.53.1746689830666;
-        Thu, 08 May 2025 00:37:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFfpkNjKotxnV6NRi8jDftDtvx5wtIETdy3ab7NqN203hY3QPoExdZ1fDzVF1kh2LAVn+THHA==
-X-Received: by 2002:a5d:64e8:0:b0:3a0:809f:1c95 with SMTP id ffacd0b85a97d-3a0b4a6868bmr5069666f8f.53.1746689830299;
-        Thu, 08 May 2025 00:37:10 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f3e:5900:27aa:5f4a:b65c:3d3c? (p200300d82f3e590027aa5f4ab65c3d3c.dip0.t-ipconnect.de. [2003:d8:2f3e:5900:27aa:5f4a:b65c:3d3c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae3ccdsm19537950f8f.38.2025.05.08.00.37.09
+        d=1e100.net; s=20230601; t=1746689920; x=1747294720;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8TdWX9BvnLKIzglHQcO1riqJBcVy449ZX9JhxrNyGJc=;
+        b=D1FI50+9blvocnAK2fXKTfdRuhR470mWgSnxJnb2D53398BH3nGSR5WBWE7QTY5jOd
+         LIeTtns52+TgLALTqIYHllQuakmTr80Rr6B+FTejrlchipa+sropDsMHOuZrYQghilRk
+         je4ugAZj0Pux46uv5RzzBMYzVf4+WQbUtrbxLrrvzLb1HodBycxVgex8FqOCfoEYsHLD
+         ic6owFsuPZBiZsWqXs+4lc0jJ2LeN24YUe+kqzxuEGnmRopHhzVbNobAh4kkA/lCD7uG
+         tKCIWVeNWmnyN0dz7as+zgvK8urskIcLqNsCxh9Q15Jqtju2bligOPZHEPfbcwuQcx1A
+         +7Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDAEjDJjb6k4zvN6QOubo8mbeBkzoSHD/STeOyPoBXhBKOjl1j3q4zSiaSM2C72ma7N/KhGq8PfuFEVz8=@vger.kernel.org, AJvYcCWacI4B6pOcJTsHTsLjd4pidEubUREe16O/mLq6tGHOEiP8ozWhYqHpYiBrb0oLAyxsEmjSdvCi1VpeBcEE@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtoXUsdr4TTR3DVomBppoXvT9QFiXXa2ciq5JkJmXmHdNgsa+V
+	u+L1GpB/zi1lNYdVk32hxdM0SOYQSNfkAGXyXYsY05jdVnJ+JAcNolosxaDD
+X-Gm-Gg: ASbGncvo0MKtf9ihvUCtCuDE9XlSORGssoL8hp1kIW/rKIfuaZJS0Qk7VCcxshZx0Co
+	+GkjWa1oQ9yGxFdgdGdnS06JJYKmcvk6vOCsgKAPOHxLHZ+W+WX91jgKimY+WYVb7sxjg4yxOJP
+	a0nMlaXWgXMJQDYPeZQZZ17VIPiaIcPGTVPpSEpDCFPw3AIaedu1qG/EOqGAyictZ6dWj3SkbxJ
+	Vl0AH+L1f9olXT/VGvBGtKgDSdaruzSy/CSEojezbMgIAIx9pOzqJ2a+3gR2wlV3YrP0zD2KmFC
+	Hjo0evB2UNY0DaPVfUOylUA/Kf/22+xrScvFcsPdvfHSlOlVD561hRi9cxJoxTI9OVGYlc343Ll
+	BgWj96JNdQDhbsQ==
+X-Google-Smtp-Source: AGHT+IEAYmuT9bt/EZYRX3xPr3Qjq/pFg7Y7gAsPnhq0IbyR7wEkcv0zepyahlrIQJ18LqWdDX2eBw==
+X-Received: by 2002:a05:6102:3e87:b0:4da:e6e1:c343 with SMTP id ada2fe7eead31-4dc738d46b9mr5292810137.23.1746689920050;
+        Thu, 08 May 2025 00:38:40 -0700 (PDT)
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ddba67c5a9sm17124137.30.2025.05.08.00.38.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 00:37:09 -0700 (PDT)
-Message-ID: <0fd1bf14-a664-49c0-a239-fdc45b8e3a39@redhat.com>
-Date: Thu, 8 May 2025 09:37:08 +0200
+        Thu, 08 May 2025 00:38:39 -0700 (PDT)
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4c6cf5e4cd5so602007137.2;
+        Thu, 08 May 2025 00:38:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUEUIlfsFtBbATlaW1ZNegBCzRTYZB6UJpjdTCDH6dLDjISr6jVcZd6iGHAwFmqOEcL3cOIbaWnXrZ70s/p@vger.kernel.org, AJvYcCWwQd5ZK7+edg53Y8Sp6j9befMaBaYGtWLgOlJP10oP1jyEi8AvNH+PxaDPRFAyUc8f1JTU3I/zPx2u99g=@vger.kernel.org
+X-Received: by 2002:a05:6102:15a4:b0:4dd:b86a:dac1 with SMTP id
+ ada2fe7eead31-4ddb86adb37mr323439137.3.1746689918794; Thu, 08 May 2025
+ 00:38:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mm: convert do_set_pmd() to take a folio
-To: Baolin Wang <baolin.wang@linux.alibaba.com>,
- Matthew Wilcox <willy@infradead.org>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, dev.jain@arm.com, ziy@nvidia.com, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <8e33c8a65b46170dfd8ba6715d2115856a55b8f6.1746609191.git.baolin.wang@linux.alibaba.com>
- <a2faee74256c22cff2238487a86b154d5520c334.1746609191.git.baolin.wang@linux.alibaba.com>
- <aBtNrQNlL7hjLrTZ@casper.infradead.org>
- <88060373-d0b8-404a-b53b-9b5a54f5ba6f@linux.alibaba.com>
- <aBuOjrH1UpyTf8I9@casper.infradead.org>
- <569e592c-1c30-4c03-bcee-c1670ac4e159@linux.alibaba.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <569e592c-1c30-4c03-bcee-c1670ac4e159@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250507074936.486648-1-masahiroy@kernel.org> <9ec50ce0-f60b-4d87-bc44-adaf2a1a97a1@linuxfoundation.org>
+ <b1e4e83c0965e10f2fe59826d19eaf131ec7aef9.camel@sipsolutions.net>
+In-Reply-To: <b1e4e83c0965e10f2fe59826d19eaf131ec7aef9.camel@sipsolutions.net>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 8 May 2025 09:38:26 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUwE7btR+ebG8-gvPb8GPnxUGPWw3yKR4qM4Uc_mYcHhg@mail.gmail.com>
+X-Gm-Features: ATxdqUHSUZJrVPRt7puYinzwH0Sbp9Bizhx3T3hxY8yiAcyEWRrVX-9gdHKQkgI
+Message-ID: <CAMuHMdUwE7btR+ebG8-gvPb8GPnxUGPWw3yKR4qM4Uc_mYcHhg@mail.gmail.com>
+Subject: Re: [PATCH] um: let 'make clean' properly clean underlying SUBARCH as well
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Shuah Khan <skhan@linuxfoundation.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Richard Weinberger <richard@nod.at>, 
+	linux-um@lists.infradead.org, David Gow <davidgow@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 08.05.25 04:23, Baolin Wang wrote:
-> 
-> 
-> On 2025/5/8 00:47, Matthew Wilcox wrote:
->> On Wed, May 07, 2025 at 08:36:54PM +0800, Baolin Wang wrote:
->>> On 2025/5/7 20:10, Matthew Wilcox wrote:
->>>> Because I see nowhere in this patch that you initialise 'page'.
->>>
->>> Please look at the following code in do_set_pmd(), and the 'page' will be
->>> initialized before using.
->>>
->>>           if (thp_disabled_by_hw() || vma_thp_disabled(vma, vma->vm_flags))
->>>                   return ret;
->>>
->>>           if (!thp_vma_suitable_order(vma, haddr, PMD_ORDER))
->>>                   return ret;
->>>
->>>           if (folio_order(folio) != HPAGE_PMD_ORDER)
->>>                   return ret;
->>>           page = &folio->page;
->>
->> Ah, fair, I missed that.
->>
->>>> And that's really the important part.  You seem to be assuming that a
->>>> folio will never be larger than PMD size, and I'm not comfortable with
->>>
->>> No, I have no this assumption. But do_set_pmd() is used to establish PMD
->>> mappings for the PMD-sized folios, and we already have PMD-sized checks to
->>> validate the folio size:
->>>
->>>           if (!thp_vma_suitable_order(vma, haddr, PMD_ORDER))
->>>                   return ret;
->>>
->>>           if (folio_order(folio) != HPAGE_PMD_ORDER)
->>>                   return ret;
->>>
->>>> that assumption.  It's a limitation I put in place a few years ago so we
->>>> didn't have to find and fix all those assumptions immediately, but I
->>>> imagine that some day we'll want to have larger folios.
->>>>
->>>> So unless you can derive _which_ page in the folio we want to map from
->>>
->>> IMO, for PMD mapping of a PMD-sized folio, we do not need to know _which_
->>> page in the folio we want to map, because we'll always map the entire
->>> PMD-sized folio.
->>
->> There's a difference between "Assert that the folio is PMD sized" inside
->> the function because we know there are still problems, and "Change the
->> interface so we can't specify which page inside the folio is the one
->> we're actually interested in".
-> 
-> Fair enough. So how about adding a new 'folio' parameter to
-> do_set_pmd(), similar to the set_pte_range() function prototype?
-> 
-> vm_fault_t do_set_pmd(struct vm_fault *vmf, struct folio *folio, struct
-> page *page)
+Hi Johannes,
 
-That's what I used for rmap functions. *Maybe* folio+idx is better: 
-might avoid having to lookup the page in some cases (probably in the 
-future).
+On Thu, 8 May 2025 at 07:29, Johannes Berg <johannes@sipsolutions.net> wrote:
+> On Wed, 2025-05-07 at 15:38 -0600, Shuah Khan wrote:
+> > My workflow:
+> >
+> > - Build kernel on x86_64 with CONFIG_AMD_MEM_ENCRYPT enabled
+> >
+> > - Check for arch/x86/realmode/rm/pasyms.h
+> >    ls arch/x86/realmode/rm/pasyms.h
+> >       arch/x86/realmode/rm/pasyms.h
+> >
+> > - make ARCH=um O=/linux/build
+> >
+> >    This patch cleans the source tree, but doesn't remove
+> >    arch/x86/realmode/rm/pasyms.h
+> >
+> > - ls arch/x86/realmode/rm/pasyms.h
+> >       arch/x86/realmode/rm/pasyms.h
+>
+> Is that even _expected_ to work? If you have x86 built first, I'd almost
+> expect you to have to do "make ARCH=x86 mrproper" before building
+> another ARCH. I don't see how ARCH=um would know how to do a full clean
+> up of ARCH=x86, unless this is somehow arch-independent?
+>
+> Or maybe that's not an issue with other architectures because UML is
+> special in that it uses parts of x86?
+
+Probably.
+I only use my linux-next source tree for fixing reported build issues on
+various architectures, and I never use make clean/mrproper.  Works fine.
+
+> Though I guess the patch here should make it do that, more or less, but
+> it can't, likely because you're also switching from in-tree build to O=
+> build?
+
+Yeah, mixing in-tree and out-of-tree builds causes issues.
+Never build in-tree in a source tree you use with O= (except for
+e.g. "make tags").
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Cheers,
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-David / dhildenb
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
