@@ -1,285 +1,134 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2077.outbound.protection.outlook.com [40.107.92.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC32028373;
-	Thu,  8 May 2025 23:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746745562; cv=fail; b=O2YPlml19No3j3XIAcfDv/Z6ZFtwDG3QODnghDdVz8/TkRByKOFD0PLShE0RjblQ1T6rkQ2YjSrwj3+jkqgmiVq6BJLSLAR6ENxM7qsLBxAiBhiAqmB6r9pDKpIaaJS1JT4TzBpZUw26KrteT9TswhWQomtm5Vinvl4rLPjcogo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746745562; c=relaxed/simple;
-	bh=NICxbyxxbawW/Uo4jNuyQnw8xbs7R0CEAZcVZ5RLpNU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=UL7e4RWX+1QefwC4bmzwPzXEUeEO8revkR4ku0SQsi36wYzMQg7JcqIKRjf74yNZE7PDlMZTxdmiZqRfRGmlWch9LD8GM9t7PzIZTpCySQP9n/ZuPlMSW1PtgxDiSqqPuy2O2SWVJEH2nLOvDHyMMNKDWdPg/3SxKhGPyzPOJHY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oiAgq5c0; arc=fail smtp.client-ip=40.107.92.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oiAgq5c0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Tz1vibaPtMiE1V4Is6udwqsRO3qn/6kiULmAepO8rbhzlawfos61l7l9hICl6hrERRSURLk6ZK1LTZEFIuvzCkRC8mmSpMM/sTNLKUfR1ypHPJ3YkgqAN19RSVUlX9VPXGLRPjxq++61KMCORoHPbgc81rnvj/fkNwbcL8Ki4eo42EwGD5UrWiXKCYeb1hWjZOI5Z/Pfu0Y8NAPyJoqswLE3YId8M+wqOM8gg0cUajd/f+7ns1Mo/OnLPb3pXVYWju2P2zfQ4PDw/zAWiFDiNX/I54XCyva5kkpN7K5sd+h5EyShwR64Q3ebTPyZhyASN2Cq9QJiN6UaS0EWtXrAOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a6cYkAMOgYj+7HOty4P3zrLSgHCveaa6RKBUFcPC4Lw=;
- b=st3QlF5z4miCO8UJt5fnXQusCgn/098pX0M81wXk+h53neY2Y/6+WeZ5vsx6DBDW8YWSH6nUTiADz4PMffffjj29MJuzD4yZYnNDnyshiWdqF+WUldjte5J8+fDwlYQMDvNqNGHG/+dZfMyyZR9yoRBkkxj1ZCX4F1mFTfLLFcEHvf3+Yys5kzMzODgdE4Y7mEfVcgUkWq5jLaZ0PrFglT6RQVadGE+kL8PgOdQTOQxlPAxdvQhHs8Eb6n1SDHIHRO5dvkylk/1XkJy5U4y/GngYHnsjn9mp9A6tLBL6oNDCwWVPfRJsfsCJTA+tjweug1kf3eXoUdsnjdXxClin2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a6cYkAMOgYj+7HOty4P3zrLSgHCveaa6RKBUFcPC4Lw=;
- b=oiAgq5c0P6Rked+ezKQmI3LMjShpdRSshCC8yXd/dNfSq6Ni5r0fvPMuR22ND6l3oX7KncjtGV87qFTfBt47/M4iC/5IyFB2pE3mNDNdlirsvn6G2XEV7TWsjshb/jFpKh1hs2HuvZxiHYcv/L+ljdDHCxyxfmDEt1a3A5gnLms=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6440.namprd12.prod.outlook.com (2603:10b6:8:c8::18) by
- DM6PR12MB4330.namprd12.prod.outlook.com (2603:10b6:5:21d::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.21; Thu, 8 May 2025 23:05:54 +0000
-Received: from DS0PR12MB6440.namprd12.prod.outlook.com
- ([fe80::6576:7d84:1c66:1620]) by DS0PR12MB6440.namprd12.prod.outlook.com
- ([fe80::6576:7d84:1c66:1620%5]) with mapi id 15.20.8678.028; Thu, 8 May 2025
- 23:05:54 +0000
-Message-ID: <8d892845-e134-4553-a6af-55d785c1ae98@amd.com>
-Date: Thu, 8 May 2025 19:05:52 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12] platform/x86: Add AMD ISP platform config for OV05C10
-Content-Language: en-GB
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Pratap Nirujogi <pratap.nirujogi@amd.com>, hdegoede@redhat.com,
- W_Armin@gmx.de, ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
- king.li@amd.com, dantony@amd.com
-References: <20250505171302.4177445-1-pratap.nirujogi@amd.com>
- <aBosuj_TbH7bzjfZ@valkosipuli.retiisi.eu>
- <9c99a76d-8fe4-4793-8036-67d2923a1e51@amd.com>
- <aBxEzgtNs8JD3TEt@valkosipuli.retiisi.eu>
-From: "Nirujogi, Pratap" <pnirujog@amd.com>
-In-Reply-To: <aBxEzgtNs8JD3TEt@valkosipuli.retiisi.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQZPR01CA0059.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:88::23) To DS0PR12MB6440.namprd12.prod.outlook.com
- (2603:10b6:8:c8::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A687828373;
+	Thu,  8 May 2025 23:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746745591; cv=none; b=eTgWs3epCRB/18jUbmlU5q2mFe+pacO0jM7fFzfE5SlFiq1C7hR3I7aI35ntrdES9vNfWPoG16O146lGOoKjx6PzzQzEhnJ+y9Yz108t6US9tEVsZfp7/2LuGX6YIF1CVpK5EsMLZgj/yzrEriyXUHuyGFfcyzN+BaY1ggK3oWw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746745591; c=relaxed/simple;
+	bh=ulMm7rqrJIHKwFX0YK5+lCgp7LyCluFPhyajxVbgkY0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WxR8a21BziJFiK3ksTNR6+iLRhLb9rx6oQ6YQ0JWVoe8ipR40wJmi+/RUcqhYlMXGldEU6erRlWqTmXHU1r5bPxOlaems0eJiOx1WuAaGS4g+TW5EDomlRM534tgpQlZfT2PY6/kHDqxEJt4BSgbhq+3cG6hJ/2wPEtSfN32ItA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-442d146a1aaso13915575e9.1;
+        Thu, 08 May 2025 16:06:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746745588; x=1747350388;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FoiIV8FtE0uJRUG8kQVuxMjsT68lmm2YHo//i4ka7q8=;
+        b=ZC/s8PyaZegKPg+aBmCmnbStO0jiWibOcJ/Ugaqwk5LN6oGMIYMiaUx6iw99ChBc4f
+         Gg3PJYj9YhZCCO7LdnIs7tBQDCcOi4v/VjwIYe9lIf3Stg/09Wb2BOwum17xJjiPkoq/
+         YlcNhJHkW+6vwDhY2mHKZVAfA4s2dKzhj4vecKwPW3P7oOZSoopdiclLH54zmk2BmPb5
+         s5HAsZz3HDRoalfehI9Txs8SZjN9LPBILF8D3m51gfRMscigokQoUHYK3K+hoz/LVn8D
+         DgDsdfVYRMr2LC3YwWECgO+4mSpgKsd1vlLlBDKZx+IfUqZ0eVPwGHflWJiRUqRrz6Ol
+         p6bg==
+X-Forwarded-Encrypted: i=1; AJvYcCUvsIjhpr0x7vKj1Dr+2EB3yR/fLh4v0xo/fO+lgBBwaBy2MMgp69+OC0FF9sEn7NLh8b+Z9nee8t7o@vger.kernel.org, AJvYcCXBW/V+qbVvUxTqzxDLqQic07J0p3WYmke4EXcAR+dVxo9wVK0tN5Z1hvOtfDxzlh7u4tncumILTL2YkM4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb7zYt/b+iHEX/tpbWbqFy31EXzu1jWj/bg78zriyH3N6qR3WR
+	fGlsgNgImw+ypgXSPqYe5PjSvHRuKhLQYg4PpWBjs1OiDBgd8Dmu
+X-Gm-Gg: ASbGnctaK3N1YuJzF9crVI8DAo5xLWel9RQ2mKpsWoV1cds8mJcv/csfb/tRJdYVYzL
+	Vk20zmHGvkB75EJvA5Am36TrgGe69udWLnuXQs69Wq9ywJVoDYqkK2kHGxJiwlKWm6ZIvtGL6wF
+	S1uYN5wWmj8eVv89egNAEBWxTKGK4FzLZiWsbTi6MgnpBtnHG38jieFTPhz/zyvk3qlCLzCu4rS
+	TNcY0LGZEApSfaBtJjwtBioYctihlk2pfKTbNEC9xxFW73sif0fGKVYRif2Z3XBrpGeBgNyMHHs
+	bGKq59o9o53f10X7rs18Ahj54kmvWGqadoBYhHPS02cVb5cVOsYS4w==
+X-Google-Smtp-Source: AGHT+IHNQzB0xFnmCyeMqMUKurP0DGqMvpxGFvmOZMa5kkoHtMJconRQOqn9jxf3vEjIATr9f9nnKw==
+X-Received: by 2002:a05:600c:8707:b0:43c:fd72:f039 with SMTP id 5b1f17b1804b1-442d6d3e13bmr8135445e9.11.1746745587595;
+        Thu, 08 May 2025 16:06:27 -0700 (PDT)
+Received: from iss.intel.com ([82.213.227.153])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd3aeccdsm50840155e9.32.2025.05.08.16.06.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 16:06:27 -0700 (PDT)
+From: Andrew Zaborowski <andrew.zaborowski@intel.com>
+To: x86@kernel.org,
+	linux-sgx@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Dave Hansen <dave.hansen@linux.intel.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	balrogg@gmail.com
+Subject: [PATCH v2] x86/sgx: Prevent attempts to reclaim poisoned pages
+Date: Fri,  9 May 2025 01:04:29 +0200
+Message-ID: <20250508230429.456271-1-andrew.zaborowski@intel.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6440:EE_|DM6PR12MB4330:EE_
-X-MS-Office365-Filtering-Correlation-Id: e4e5cf0a-1c34-450e-13a6-08dd8e84e256
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MWRJRmlFRlFTOU1idWd2cjBMKzc3WTlmZjNpYkU5UnRPYkUvaE1RVURlK3dO?=
- =?utf-8?B?OWdRWkhYQzk1L2tBQ0JSQ0pac3lhQm1LY1ZOQlhvOWVGRnJHUGFSYldYTkpq?=
- =?utf-8?B?MFNlMnY4clR4MExIUFZvSmFyMnczTXM2dmxXbWxqZmJqUnp3MUwreUJZcFMy?=
- =?utf-8?B?bDQ4QktIejZRRTJwZVF1b3ltMlNaVnM5NkpOTkNoMzJUUXk0ZUhEalNLS3Zt?=
- =?utf-8?B?UWRqOGx3ODVaUTJhK0ptSGtqMWh3aGlkYmhoQ3pySHhBem42M3N2VkpqM0Jh?=
- =?utf-8?B?MnZNcXV3YS9Fa21abkNCcjNxWHQzVmtPN2R4T2NjTDRINXFjc3dqL1VvdVJh?=
- =?utf-8?B?akJCMjF1bEc0YkhxRTJ2RURUSFBvWHhmV3E0TkFncHF1QU1rRThhOE1sNDRO?=
- =?utf-8?B?NkRnenVOZnB6anJ5RFlzaER4SXVPeVBOZzRNLytkUzNYVGhFem1MalI1ak5I?=
- =?utf-8?B?eEgyc2k3QzZuNUZjc04zdU9iOVlUWnJUa1l3dXlseTlXVjdSdjlORWx0QWFm?=
- =?utf-8?B?a2Z2YXcyMWNkSXJVNXVRdEd0aUNvRUZKT0MwK3RGOUcwVXlYeWN6S3FHR2t2?=
- =?utf-8?B?S0pjM1E3VG1nMUozR0NIamxBRXhVT0gzY3lsZVk5czdXYjJuTU9vYVFsSXFn?=
- =?utf-8?B?Z3cyZW9zdXVZQUdSR3JvZUJXRFBua2V4enFxMWFEUGVDMGpLREFidnJIWk5H?=
- =?utf-8?B?VUZIOFR6OGIvbG41QXVXSDU5cW1SbG81eWdGOG1nR2VUMTBMaUFEREVsSDVQ?=
- =?utf-8?B?L0puNzNlcEQxdEdremF3UTZzQjJSWHNyQnZXNjJyYkx4bHB1eXVBY1AyZVk2?=
- =?utf-8?B?ZWJxNGg2K3g1NHNockxjd3Bsa3F4c2pHMEVmbTZUT0pzT2FtRFVGeDZqWUF6?=
- =?utf-8?B?ZjhPQ2JFQ2hMQjJXcTNrWVFDYmFYdGxPSDAwMlQ1YnBoT1RkYzJjVmZERWg5?=
- =?utf-8?B?a0pZbkhGTjZtMm1sWDRjb1ZVQXlMdS9ha3Z4TllPNmFQU3NyTUdnWEtpSk5M?=
- =?utf-8?B?T2dVeFhvcFhqcThOZlpoblR2WDYwek82cTJ3NWErY0xLdURyODdUUDJ3aklY?=
- =?utf-8?B?bE1lY1RGUm44YjFoTTVmVTN5dURERjdtdk0vNmcyWnZTZEVkREsxcXBRZVFm?=
- =?utf-8?B?UldkaEZqeUJOd2tTby9oc2N3MElEeG9pa0wyOHdWdmVOODIrVWxjZG9kL2U2?=
- =?utf-8?B?dlMyOXRwT2xlZ1RXRlRSaHdxOG4yQks5UlY2VUtZOXRtQzlqVkIrUUw0RStB?=
- =?utf-8?B?MDNyaGFkbFRUTEdFRjhwZk1qQUpLWEFEY1BmSTRXbUJEMWNISEFNa2FCOHFq?=
- =?utf-8?B?NnZJN2tIaFpTZ25UNUMwNXJMaEo4QW9HL1RtVkpTZzZrNW5oYWw1cERtVGRI?=
- =?utf-8?B?aFZ3ZG5MUW9aT3RPdndBSFJnZFdtdU5GOFhjQ1NKSUM5N3NjOUlqSHdDL2lU?=
- =?utf-8?B?V202dFJQSEdtUTRjMlRMUUgrWmljT0RhdTFOM2JORURJRzkrSm5LS0JNaDFG?=
- =?utf-8?B?ZlluNElFRktkT2xJd2ZLR1hjSE02bXJVdmYvZDQ0dFBjOVNhcEo0SFphaE1Z?=
- =?utf-8?B?SU5OaFpIcDlYaTY1dTJaeC9tbkE4OUVVd2VseFFFa0hkS21WY0xENVJ4czlI?=
- =?utf-8?B?RDN5blVJZytCWVFOUWdya0o4NlVSNk1tM2NCa2M0UXVMa2dvUExSUU1HcmJ4?=
- =?utf-8?B?ZVEyejZMWHY3djFQckdHbGlUbExFSHFsOFdGU1NhanF6aGFtQWd2UWVYeGIz?=
- =?utf-8?B?R0I3U2xxWXdNcHFJdlI4NFZnRmFtSHZyL0U2TGxiSVhqZDZHZk5UOVRGMzRY?=
- =?utf-8?B?YnNPV1ZFVWZIWHZFbU1MbFhORVVQT0tCQXJhbGhLQWE1SUlvQnFBYmhLamNM?=
- =?utf-8?B?OEp1dUNUYzRHYWR3aUN6RzdnT1M2MEJaaU5xT0JpeFpycXdwM01pcHArTlVU?=
- =?utf-8?Q?kgNk211iHik=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6440.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b0F0bmxqNUwzekZUeTdrUE8weG03R21nUEZxaVhtWWtOcHBGeTZxNVRXY0g2?=
- =?utf-8?B?Y29BMGpwR2I2R05vNEpmazR1YUdiVEZoQWovYWtOREs0MWFPeUxsQlVWZy9J?=
- =?utf-8?B?OVdpaVJSNm1iZFVMM3lUQ2ljNVJMSW1RV21GNXUyeXBjUm9hOEVYdG5FdnVT?=
- =?utf-8?B?R0tRVCtiSVZtYnJKS0VVMGd1dzR4TmRlUldneEpwYWpWQ1NOenBJKzRJcEcx?=
- =?utf-8?B?YysvYVI4b1V3RnZBQTNOaXhYaXVDMlNIOXdMRG8zeVpIU3hjb2JhMlF3TmZa?=
- =?utf-8?B?djlyN09HYXdYUFFmSGpqdlIrSTBxZHM2MFpTL2ZJbXREVFNpVkl3MDIwT0hx?=
- =?utf-8?B?VWZrNExlcjVhT09ZRDl2bGRUTjR5TVhNVnJQUDFpOFlTYUhVNS80SjFXdExB?=
- =?utf-8?B?WHIwRzJlVEtIZDhhUm05YlZxcmhWRHhqTE8xMndJV1VpWmNmelplUkgrSTNR?=
- =?utf-8?B?a09hTUNacWVySGgvUk9qU3IySXM3U3krYWNMVm94dUIwQ3Ava1AwS01GTHh0?=
- =?utf-8?B?dVFVUkcvTW9RS2lhdG5vUzRjb28wRGFDWDR2c3BHWFMzc09Lay9YNFVHeXpa?=
- =?utf-8?B?dzlOb3JqYndOMzNranM1UDNpN25xcVBYTEpWbXlIcHY1R1pGTFlwcVJHamVK?=
- =?utf-8?B?UVFhZnpFcXZSU3B2NHlYYlJ1S1dVcGt4WXErZk4rVDBZWGNnRmhZRzVXSk1Y?=
- =?utf-8?B?ZkR2YTBPSzh5QXVPZ1BZb2pORitrTnFyZFFMSFRCSjM3MlVzQlBlN3RqWm5j?=
- =?utf-8?B?RklaekdRbTZoMUtIRm1Nb0wxS2pjWDNIY21TM1M1RG85M3NMTTM5LzNpa2ZQ?=
- =?utf-8?B?UzRHbHVndU1VaW9GbVAvRmtUdnJ5V0ozdHFxNXdYQ3RwMFJQK09ZZ05EZ2Rq?=
- =?utf-8?B?RXIwaVVVZEpuUWdURCtwK0J2YUhmUlRzak5WTnpJV1BRakdSUjFHaS9DNFd6?=
- =?utf-8?B?YUlVR2J6a3hybTdBb2p4OWlBelFiN2NmMEJ0cnV0QjVQNnduUHZmZThPTktR?=
- =?utf-8?B?bWl4b3pwZ2ZZc0dIMHR3Mkt5SGNRSFJYV2dlZ1ZXbjQyRmRub0Q5ck1nWnI4?=
- =?utf-8?B?czBoZUdhVW5qVklndXFBZWM5ZzNZd3ZPbFVCemlvWlRIdkJOc2x4Vlg0ZHJj?=
- =?utf-8?B?TXlsYllHNHQ1WTBpL0JFMm0xd1kzR1Zob2IxeVFUMEpBeTBHUnhTTlNlVXhY?=
- =?utf-8?B?dzM3VkFsb01XaGNIVXBzWTBrOXRqeVpYeFNXSjJYT3BHMjdBdGZNSmtkMFlh?=
- =?utf-8?B?UnlzcXdBSGpzUStyOVBPazJlM3lTOFV3L1orcFZZS2RVZDZnWThORzdibjlz?=
- =?utf-8?B?NWFUdmI1aU5Ma1BGUC95akkycWxvdUppTlNiWjBtVXlBb3V4WTlueFRuMnRX?=
- =?utf-8?B?RXBWY21lamg5dnFZcnBjQ1dLZFhlS2NDeEVhSXUvdGh4eXBqaHI1L2JtdWpW?=
- =?utf-8?B?cWxuWmNGL2ZNcFUyZ21NZjl4SmZ3S0ZDenBKclVGYWRKVHVkYmYzR0ZJRXZF?=
- =?utf-8?B?TjZwYXZySGk0cFRkT05Sb3dBaWpjUFhya0k4aDR1MEpoWm5VaHJnWHovTWl5?=
- =?utf-8?B?S1RVa1Q1WnE2NjJUVWEwMEd4ckRmcGF5Uk5mK3ZUaUg5TjkzczBjQldCdnRl?=
- =?utf-8?B?b2g1dmRRMGdaOHJscTdZTHhjL0hvZmhXd082QVozb2I3L09raVdncnRxdjdG?=
- =?utf-8?B?WXJoaWo3OGxrMEl1a04zUHdzWmlqUXorWjZvTWZpcENBaWRoRzRXNG1IcFBG?=
- =?utf-8?B?dVNlbHA4SkJrNC95ZWxYaXRSUlpQR0hhNFljczNLNzB4SkJwNHczRlZMTEh3?=
- =?utf-8?B?NWVyVjI5UHIwMmV5ektjWGNwWHRyUDdVdlc0bzRHdVVMOFJFVG9SZkJCeUkw?=
- =?utf-8?B?ZHlYMDltbzNORTNtNklrYmJRRjRHMDBvTm5PbDkzekVDbTlFSFBtdVVFS1kx?=
- =?utf-8?B?a1hyREtPWkJmWCs5bklDdVNRSkxZekYyR0wvOUhiYzRyRldFemhWY0JYRUIz?=
- =?utf-8?B?aWVTL0F1MVpJRFVJQUdldEhtNHp0ZEc4SHVGako5dXVDVXMySFF1WFhCQUls?=
- =?utf-8?B?cGo5THRoK1hnMlViV0p3c0Q3WGR2L3VIV05oczcwaFJHWURkaGkvZ3lvL0JG?=
- =?utf-8?Q?WSEAYe+CQ/x7umQeTUulL5CVX?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4e5cf0a-1c34-450e-13a6-08dd8e84e256
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6440.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 23:05:54.2833
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: C+SG+lFSZXryVfL7OFBmq3sorY7Htsbg7i045gjRzLhDA8p8B2hkOMahgXUQdOmbEWYy/RR2DXNfsMC3SRNNhQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4330
+Content-Transfer-Encoding: 8bit
 
-Hi Sakari,
+Pages used by an enclave only get epc_page->poison set in
+arch_memory_failure() but they currently stay on sgx_active_page_list until
+sgx_encl_release(), with the SGX_EPC_PAGE_RECLAIMER_TRACKED flag untouched.
 
-On 5/8/2025 1:44 AM, Sakari Ailus wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
-> 
-> 
-> Hi Pratap,
-> 
-> On Wed, May 07, 2025 at 04:16:04PM -0400, Nirujogi, Pratap wrote:
->>>> diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
->>>> new file mode 100644
->>>> index 000000000000..1520ebb94507
->>>> --- /dev/null
->>>> +++ b/drivers/platform/x86/amd/amd_isp4.c
->>>> @@ -0,0 +1,280 @@
->>>> +// SPDX-License-Identifier: GPL-2.0+
->>>> +/*
->>>> + * AMD ISP platform driver for sensor i2-client instantiation
->>>> + *
->>>> + * Copyright 2025 Advanced Micro Devices, Inc.
->>>> + */
->>>> +
->>>> +#include <linux/i2c.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/platform_device.h>
->>>> +#include <linux/property.h>
->>>> +#include <linux/units.h>
->>>> +
->>>> +#define AMDISP_OV05C10_I2C_ADDR              0x10
->>>> +#define AMDISP_OV05C10_PLAT_NAME     "amdisp_ov05c10_platform"
->>>> +#define AMDISP_OV05C10_HID           "OMNI5C10"
->>>
->>> What's the purpose of this _HID and is it present on actual firmware
->>> implementation? There's no such ACPI vendor ID as "OMNI".
->>>
->> The (_HID, "OMNI5C10") is used to check if the OV05C10 ACPI device is
->> actually present before creating the AMD ISP4 platform driver. Yes, ACPI
->> entry is present for OV05C10 sensor in _SB/CAMF.
->>
->>       Scope (_SB)
->>       {
->>           Device (CAMF)
->>           {
->>               Name (_HID, "OMNI5C10")  // _HID: Hardware ID
-> 
-> Please tell your BIOS folks this ACPI ID is invalid. In the future, either
-> allocate one yourself with your own vendor ID or get one from the sensor
-> vendor, which they would have allocated using their own ACPI vendor ID.
-> 
-Thanks for the feedback. I will share it with the BIOS team and make 
-sure its taken into account for future models.
+epc_page->poison is not checked in the reclaimer logic meaning that, if other
+conditions are met, an attempt will be made to reclaim an EPC page that was
+poisoned.  This is bad because 1. we don't want that page to end up added
+to another enclave and 2. it is likely to cause one core to shut down
+and the kernel to panic.
 
-Thanks,
-Pratap
+Specifically, reclaiming uses microcode operations including "EWB" which
+accesses the EPC page contents to encrypt and write them out to non-SGX
+memory.  Those operations cannot handle MCEs in their accesses other than
+by putting the executing core into a special shutdown state (affecting
+both threads with HT.)  The kernel will subsequently panic on the
+remaining cores seeing the core didn't enter MCE handler(s) in time.
 
->>               Name (_DDN, "OV05C-RGB")  // _DDN: DOS Device Name
->>               Name (_SUB, "OV05C")  // _SUB: Subsystem ID
->>
->>
->>>> +#define AMDISP_OV05C10_REMOTE_EP_NAME        "ov05c10_isp_4_1_1"
->>>> +#define AMD_ISP_PLAT_DRV_NAME                "amd-isp4"
->>>> +
->>>> +/*
->>>> + * AMD ISP platform definition to configure the device properties
->>>> + * missing in the ACPI table.
->>>> + */
->>>> +struct amdisp_platform {
->>>> +     struct i2c_board_info board_info;
->>>> +     struct notifier_block i2c_nb;
->>>> +     struct i2c_client *i2c_dev;
->>>> +     struct mutex lock; /* protects i2c client creation */
->>>> +};
->>>> +
->>>> +/* Top-level OV05C10 camera node property table */
->>>> +static const struct property_entry ov05c10_camera_props[] = {
->>>> +     PROPERTY_ENTRY_U32("clock-frequency", 24 * HZ_PER_MHZ),
->>>> +     { }
->>>> +};
->>>> +
->>>> +/* Root AMD ISP OV05C10 camera node definition */
->>>> +static const struct software_node camera_node = {
->>>> +     .name = AMDISP_OV05C10_HID,
->>>> +     .properties = ov05c10_camera_props,
->>>> +};
->>>> +
->>>> +/*
->>>> + * AMD ISP OV05C10 Ports node definition. No properties defined for
->>>> + * ports node for OV05C10.
->>>> + */
->>>> +static const struct software_node ports = {
->>>> +     .name = "ports",
->>>> +     .parent = &camera_node,
->>>> +};
->>>> +
->>>> +/*
->>>> + * AMD ISP OV05C10 Port node definition. No properties defined for
->>>> + * port node for OV05C10.
->>>> + */
->>>> +static const struct software_node port_node = {
->>>> +     .name = "port@",
->>>> +     .parent = &ports,
->>>> +};
->>>> +
->>>> +/*
->>>> + * Remote endpoint AMD ISP node definition. No properties defined for
->>>> + * remote endpoint node for OV05C10.
->>>
->>> How will this scale? Can you use other sensors with this ISP? Although if
->>> you get little from firmware, there's not much you can do. That being said,
->>> switching to DisCo for Imaging could be an easier step in this case.
->>>
->> the scope of this driver is limited to ov05c10, and it can be enhanced to
->> support other sensor modules in future.
->>
->> Sorry, I'm not familiar with the term DisCo. Could you please elaborate.
-> 
-> See my reply to Hans.
-> 
-> --
-> Regards,
-> 
-> Sakari Ailus
+Call sgx_unmark_page_reclaimable() to remove the affected EPC page from
+sgx_active_page_list on memory error to stop it being considered for
+reclaiming.
+
+Testing epc_page->poison in sgx_reclaim_pages() would also work but I assume
+it's better to add code in the less likely paths.
+
+The affected EPC page is not added to &node->sgx_poison_page_list until
+later in sgx_encl_release()->sgx_free_epc_page() when it is EREMOVEd.
+Membership on other lists doesn't change to avoid changing any of the
+lists' semantics except for sgx_active_page_list.  There's a "TBD" comment
+in arch_memory_failure() about pre-emptive actions, the goal here is not
+to address everything that it may imply.
+
+This also doesn't completely close the time window when a memory error
+notification will be fatal (for a not previously poisoned EPC page) --
+the MCE can happen after sgx_reclaim_pages() has selected its candidates
+or even *inside* a microcode operation (actually easy to trigger due to
+the amount of time spent in them.)
+
+The spinlock in sgx_unmark_page_reclaimable() is safe because
+memory_failure() runs in process context and no spinlocks are held,
+explicitly noted in a mm/memory-failure.c comment.
+
+Signed-off-by: Andrew Zaborowski <andrew.zaborowski@intel.com>
+---
+Changes in v2:
+ - improve commit message following Dave Hansen's input: explain why
+   the SGX ops crash, replace page with epc_page.  Improve the summary,
+   use the right prefix.
+
+ arch/x86/kernel/cpu/sgx/main.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
+index 671c26513..7076464d4 100644
+--- a/arch/x86/kernel/cpu/sgx/main.c
++++ b/arch/x86/kernel/cpu/sgx/main.c
+@@ -719,6 +719,8 @@ int arch_memory_failure(unsigned long pfn, int flags)
+ 		goto out;
+ 	}
+ 
++	sgx_unmark_page_reclaimable(page);
++
+ 	/*
+ 	 * TBD: Add additional plumbing to enable pre-emptive
+ 	 * action for asynchronous poison notification. Until
+-- 
+2.43.5
 
