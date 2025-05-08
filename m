@@ -1,114 +1,198 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D74F1C5F39
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04ED620E700
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 17:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746724698; cv=none; b=i3GPXkldr9legd2Lv9LI3Ys22USNOlNJTLlpkNGB8UloX44aO+DlVsUAZmNa1VoquRs6ZSdoE5jD2CilkwMNBGRpQD+byBx9pbwbXtXk7/5wov5iTcDfH9z5dozZI5XXjtAnMFjr9cSx/NsiGJBCxYYU2ZtYiHzEzukJvLh4qDo=
+	t=1746724759; cv=none; b=dwxz9mZOxP0yr42dvxx0FZaAxqPNde1GSZId9mT5xZoG/+X3bJiSc2Szw5lwT3Og9ikLddsLrzlCfT6+/w3HPkrtf1EKZ9+12eHDuivsVJbqgqefEmb0iexUfQELF/IrgJpa5jBdggMsJrSQ10xAHt7bgMxDdzpBrQX7hWikUuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746724698; c=relaxed/simple;
-	bh=IMCh+tq8j9wHnaZEbSrNFAcEhviUrY4c9Vtez+vwluc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=qGRbEljgW/Oaf+DVowqGaofOG7DnLwZt4R5HpXimitZvYsuGG0pRjtUPcfNcLapE05rT3W/0NLH08zre4uCiUCBT+CxdhgUmuYzRmIlr672nl1uVO8sxyZozAfy4eF3Offdob/w6yDj2mvJI2pzD4pRau476OiJVPD2SGRcdBJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=KVO43dDb reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="KVO43dDb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=xCN3jLSYPaDNZk6gL76QJxjo3ljN0XUkcNKSxLPeGbM=; b=K
-	VO43dDbqbiaAKH2Ao4zU6topieCra0PI2IMdGkQgyD3f+5a9V+2fEgqIUCONuEfB
-	V90h/f92rw0UxtXEQyayfD+DPmf0VRhT0CstlNkTi7pV06ZXSCNaT3MlqKOUamPa
-	8yXUKUtDvEesLpVBUM1yskH5gMNaAZJSzQ1wb1ZIGA=
-Received: from 00107082$163.com ( [111.35.191.17] ) by
- ajax-webmail-wmsvr-40-103 (Coremail) ; Fri, 9 May 2025 01:17:46 +0800 (CST)
-Date: Fri, 9 May 2025 01:17:46 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Kent Overstreet" <kent.overstreet@linux.dev>
-Cc: "Suren Baghdasaryan" <surenb@google.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] alloc_tag: avoid mem alloc and iter reset when reading
- allocinfo
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <5294252d.b74a.196b0d583c6.Coremail.00107082@163.com>
-References: <a0ebf2e.b422.196abf97373.Coremail.00107082@163.com>
- <CAJuCfpFAUdqqvFPfe_OLR76c0bX_ngwG=JKC42pVB+WAeX4w0w@mail.gmail.com>
- <nubqzts4e6n3a5e7xljdsql7mxgzkobo7besgkfvnhn4thhxk3@reob3iac3psp>
- <289b58f1.352d.196addbf31d.Coremail.00107082@163.com>
- <y6egptcxlbzgboykjorh3syxwy4wu37eolmjtwuwu36gtbfhgf@o3o34qii4gmq>
- <1ed4c8f7.3e12.196adf621a2.Coremail.00107082@163.com>
- <52tsrapmkfywv4kkdpravtfmxkhxchyua4wttpugihld4iws3r@atfgtbd5wwhx>
- <e1cc19.5287.196ae733594.Coremail.00107082@163.com>
- <y6d7vzvii5wvfby5446ukpvdmulwd5lzcyki6rpxckh432d6jz@xwtlwnkhztuo>
- <7bf1ee37.b6a4.196b0b6dce1.Coremail.00107082@163.com>
- <is4valhxssgmj7cjdlp2gfvyivhdflu75vzzbkjeiyb47wom55@yx5lfwsptamg>
- <5294252d.b74a.196b0d583c6.Coremail.00107082@163.com>
-X-NTES-SC: AL_Qu2fBPuZu04t4CWZYukXn0oTju85XMCzuv8j3YJeN500tSTu1xw5Zm9ZHnDfws6lOxmhoAi0Xj5Pz8ZQTIhae6+V4r8K4co45vCxTSEEu3gA
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	s=arc-20240116; t=1746724759; c=relaxed/simple;
+	bh=gz8Zmm0qKpeNP6Sr6sNKfMZ3SW3zM2PCkG/ptYGnJzE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZsjysG7C4Lo970NF0rBjhb6ji4GWd1sq23Q+ur/b5vyM6huh+t53LPwhI0R6H1Axrf3V1AORv53PvfRcEFaX+W/k+bPoge/GL0yj2sfN+vac85hlJ61NHEgm7ZFdR70Kjb323Oit1XDWYkXLFdJ1by/VcQo5Qj44C6GEm+uZBQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 795CB1E2F;
+	Thu,  8 May 2025 10:19:04 -0700 (PDT)
+Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C73043F58B;
+	Thu,  8 May 2025 10:19:11 -0700 (PDT)
+From: James Morse <james.morse@arm.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Babu Moger <Babu.Moger@amd.com>,
+	James Morse <james.morse@arm.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com,
+	lcherian@marvell.com,
+	bobo.shaobowang@huawei.com,
+	tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>,
+	peternewman@google.com,
+	dfustini@baylibre.com,
+	amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>,
+	Dave Martin <dave.martin@arm.com>,
+	Koba Ko <kobak@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	fenghuay@nvidia.com
+Subject: [PATCH v10 00/30] x86/resctrl: Move the resctrl filesystem code to /fs/resctrl
+Date: Thu,  8 May 2025 17:18:28 +0000
+Message-Id: <20250508171858.9197-1-james.morse@arm.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <64e0d38f.b791.196b0e73c9d.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:ZygvCgDX3+k75xxoIwgAAA--.449W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0hhHqmgcyMqBEAAWsW
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
 
-ClRoZSBpbXBhY3Qgb2YgYWNjdW11bGF0ZWQgaXRlcmF0b3IgcmV3aW5kaW5nIGNvdWxkIGJlIG9i
-c2VydmVkIHZpYToKCnN1ZG8gc3RyYWNlIC1UIC1lIHJlYWQgY2F0IC9wcm9jL2FsbG9jaW5mbyAg
-PiAvZGV2L251bGwKClRlbnMgb2YgcmVhZCBzaG91bGQgYmUgb2JzZXJ2ZWQgYW5kIGVhY2ggcmVh
-ZCBzaG91bGQgYmVjb21lIHNsb3dlciBhbmQgc2xvd2VyLgoKCiAKCkF0IDIwMjUtMDUtMDkgMDA6
-NTg6MjUsICJEYXZpZCBXYW5nIiA8MDAxMDcwODJAMTYzLmNvbT4gd3JvdGU6Cj4KPkF0IDIwMjUt
-MDUtMDkgMDA6MzQ6MjcsICJLZW50IE92ZXJzdHJlZXQiIDxrZW50Lm92ZXJzdHJlZXRAbGludXgu
-ZGV2PiB3cm90ZToKPj5PbiBGcmksIE1heSAwOSwgMjAyNSBhdCAxMjoyNDo1NkFNICswODAwLCBE
-YXZpZCBXYW5nIHdyb3RlOgo+Pj4gQXQgMjAyNS0wNS0wOCAyMTozMzo1MCwgIktlbnQgT3ZlcnN0
-cmVldCIgPGtlbnQub3ZlcnN0cmVldEBsaW51eC5kZXY+IHdyb3RlOgo+Pj4gPlRoZSBmaXJzdCBx
-dWVzdGlvbiBpcyAtIGRvZXMgaXQgbWF0dGVyPyBJZiB0aGUgb3B0aW1pemF0aW9uIGlzIGp1c3Qg
-Zm9yCj4+PiA+L3Byb2MvYWxsb2NpbmZvLCB3aG8ncyByZWFkaW5nIGl0IGF0IGEgaGlnaCBlbm91
-Z2ggcmF0ZSB0aGF0IHdlIGNhcmU/Cj4+PiA+Cj4+PiA+SWYgaXQncyBvbmx5IGJlaW5nIHVzZWQg
-aW50ZXJhY3RpdmVseSwgaXQgZG9lc24ndCBtYXR0ZXIuIElmIGl0J3MgYmVpbmcKPj4+ID5yZWFk
-IGF0IGEgaGlnaCByYXRlIGJ5IHNvbWUgc29ydCBvZiBwcm9maWxpbmcgcHJvZ3JhbSwgd2UnZCB3
-YW50IHRvIHNraXAKPj4+ID50aGUgdGV4dCBpbnRlcmZhY2UgZW50aXJlbHkgYW5kIGFkZCBhbiBp
-b2N0bCB0byByZWFkIHRoZSBkYXRhIG91dCBpbiBhCj4+PiA+YmluYXJ5IGZvcm1hdC4KPj4+IC4u
-Ll5fXiwgQWN0dWFsbHksIEkgaGF2ZSBiZWVuIHJ1bm5pbmcgdG9vbHMgcGFyc2luZyAvcHJvYy9h
-bGxvY2luZm8gZXZlcnkgNSBzZWNvbmRzCj4+PiAsYW5kIGZlZWRpbmcgZGF0YSB0byBhIHByb21l
-dGhldXMgc2VydmVyIGZvciBhIHF1aXRlIGxvbmcgd2hpbGUuLi4KPj4+IDUgc2Vjb25kcyBzZWVt
-cyBub3QgdGhhdCBmcmVxdWVudCwgYnV0IEkgYWxzbyBoYXZlIGFsbCBvdGhlciBwcm9jIGZpbGVz
-IHRvIHJlYWQsIAo+Pj4gSSB3b3VsZCBsaWtlIG9wdGltaXphdGlvbiBmb3IgYWxsIHRoZSBwcm9j
-IGZpbGVzLi4uLi4uCj4+PiAKPj4+IElvY3RsIG9yIG90aGVyIGJpbmFyeSBpbnRlcmZhY2VzIGFy
-ZSBpbmRlZWQgbW9yZSBlZmZpY2llbnQsIGJ1dCBtb3N0IGFyZQo+Pj4gbm90IHdlbGwgZG9jdW1l
-bnRlZCwgd2hpbGUgbW9zdCBwcm9jIGZpbGVzIGFyZSBzZWxmLWRvY3VtZW50ZWQuIElmIHByb2Mg
-ZmlsZXMKPj4+IGFyZSBlZmZpY2llbnQgZW5vdWdoLCBJIHRoaW5rIEkgd291bGQgc3RheSB3aXRo
-IHByb2MgZmlsZXMgZXZlbiB3aXRoIGEgYmluYXJ5Cj4+PiBpbnRlcmZhY2UgYWx0ZXJuYXRlIHRl
-bnMgb2YgZm9sZCBmYXN0ZXIuCj4+Cj4+VGhpcyB3b3VsZCBiZSBhIHBlcmZlY3QgcGxhY2UgZm9y
-IGEgYmluYXJ5IGludGVyZmFjZSwgeW91IGp1c3Qgd2FudCB0bwo+PnJldHVybiBhbiBhcnJheSBv
-Zgo+Pgo+PnN0cnVjdCBhbGxvY2F0ZWRfYnlfaXAgewo+Pgl1NjQJaXA7Cj4+CXU2NAlieXRlczsK
-Pj59Owo+Cj4KPgo+Pgo+PlByaW50aW5nIGl0IGluIHRleHQgZm9ybSByZXF1aXJlcyBzeW1ib2wg
-dGFibGUgbG9va3VwLCB3aGF0IHlvdSdyZQo+Pm9wdGltaXppbmcgaXMgbm9pc2UgY29tcGFyZWQg
-dG8gdGhhdCBhbmQgdnNucHJpbnRmKCkuCj4KPk9oLCBubywgdGhpcyBvcHRpbWl6YXRpb24gaXMg
-bW9zdGx5IGFjaGlldmVkIGJ5IGF2b2lkaW5nIGl0ZXIgcmV3aW5kaW5nLCBJIHRoaW5rCj5JIHRh
-bGsgYWJvdXQgdGhlIGV4dHJhIG1lbW9yeSBhbGxvY2F0aW9uICJ0b28gbXVjaCIuLi4uCj5UaGVz
-ZSBsaW5lcyBvZiBjb2RlOgo+LQl3aGlsZSAoKGN0ID0gY29kZXRhZ19uZXh0X2N0KCZwcml2LT5p
-dGVyKSkgIT0gTlVMTCAmJiBub2RlKQo+LQkJbm9kZS0tOwo+aGF2ZSBhY2N1bXVsYXRlZCB3YXkg
-dG9vIG11Y2guCj5UaGluayBpdCB0aGlzIHdheSwgYWR2YW5jaW5nIGl0ZXJhdG9yIG4gdGltZXMg
-dGFrZXMgMSUsIHJlYXNvbmFibGUgbm9pc2UKPmNvbXBhcmVkIHRvICBzeW1ib2wgbG9va3VwIGFu
-ZCBwcmludGYoKS4gVGhlIHByb2JsZW0gaXMgc2VxX2ZpbGUoKSB3b3VsZAo+cmVzdGFydCBhYm91
-dCA4MCB0aW1lcyB0byByZWFkIG91dCBhbGwgY29udGVudCBvZiAvcHJvYy9hbGxvY2luZm8sIGFj
-Y3VtdWxhdGVkCj50byBhIHRvdGFsIDQwKm4gaXRlcmF0b3IgYWR2YW5jZW1lbnQsIGhlbmNlIDEl
-IGJlY29tZSA0MCoxJSwgbm9pc2UgYmVjb21lIHNpZ25pZmljYW50Lgo+Cj5NeSB0ZXN0IHJlc3Vs
-dCBzaG93cyBhbiBpbXByb3ZlbWVudCBmcm9tIDdtcyB0byA0bXM6Cj4KPlRpbWluZ3MgYmVmb3Jl
-Ogo+CSQgdGltZSBjYXQgL3Byb2MvYWxsb2NpbmZvICA+IC9kZXYvbnVsbAo+Cj4JcmVhbAkwbTAu
-MDA3cwo+CXVzZXIJMG0wLjAwMHMKPglzeXMJMG0wLjAwN3MKPnJlYWQtc3lzY2FsbHMgZ2V0IHNs
-b3dlciBhbmQgc2xvd2VyOgo+CXJlYWQoMywgImFsbG9jaW5mbyAtIHZlcnNpb246IDEuMFxuIyAg
-ICAgPCIuLi4sIDEzMTA3MikgPSA0MDg1IDwwLjAwMDA2Mj4KPgkuLi4KPglyZWFkKDMsICIgICAg
-ICAgICAgIDAgICAgICAgIDAgZHJpdmVycy9ncCIuLi4sIDEzMTA3MikgPSA0MDQ2IDwwLjAwMDEz
-NT4KPglyZWFkKDMsICIgICAgICAgICAgIDAgICAgICAgIDAgc291bmQvY29yZSIuLi4sIDEzMTA3
-MikgPSA0MDIxIDwwLjAwMDE1MD4KPgkuLi4KPgo+YW5kIHdpdGggdGhlIGNoYW5nZToKPgkkIHRp
-bWUgY2F0IC9wcm9jL2FsbG9jaW5mbyAgPiAvZGV2L251bGwKPgo+CXJlYWwJMG0wLjAwNHMKPgl1
-c2VyCTBtMC4wMDBzCj4Jc3lzCTBtMC4wMDNzCj4K
+Changes since v8:
+ * Rebased onto the cpumask optimisations.
+ * Assorted commit message and comment clarifications.
+
+Changes otherwise noted on each patch.
+
+---
+
+Patches 24-29 should be squashed together when merged, taking the commit message
+of patch 25. It probably makes sense to drop the tags at that point as patch 25 is
+generated by a script, and impossible to review. They are posted like this to allow
+folk to re-generate patch 25, then review the differences on top. Not squashing them
+together would expose a ftrace build warning during bisect. (but who does that!)
+
+The result  should look like this:
+git://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git mpam/move_to_fs/v10_final
+
+I can also post the 'final' version to be picked up if that is less work.
+
+
+This series is based on rc5, and can be retrieved from:
+git://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git mpam/move_to_fs/v10
+
+With the exception of invalid configurations for the configurable-events, there
+should be no changes in behaviour caused by this series. It is now possible for
+throttle_mode to report 'undefined', but no known platform will do this.
+resctrl_exit() is now something that can be called, but x86 doesn't do this.
+
+The driving pattern is to make things like struct rdtgroup private to resctrl.
+Features like pseudo-lock aren't going to work on arm64, the ability to disable
+it at compile time is added.
+
+After this, I can start posting the MPAM driver to make use of resctrl on arm64.
+(What's MPAM? See the cover letter of the first series. [1])
+
+As ever - bugs welcome,
+Thanks,
+
+James
+
+[v9] https://lore.kernel.org/all/20250425173809.5529-1-james.morse@arm.com
+[v8] https://lore.kernel.org/all/20250411164229.23413-1-james.morse@arm.com
+[v7] https://lore.kernel.org/all/20250228195913.24895-1-james.morse@arm.com/
+[v6] https://lore.kernel.org/lkml/20250207181823.6378-1-james.morse@arm.com/
+[v5] https://lore.kernel.org/r/20241004180347.19985-1-james.morse@arm.com
+[v4] https://lore.kernel.org/all/20240802172853.22529-1-james.morse@arm.com/
+[v3] https://lore.kernel.org/r/20240614150033.10454-1-james.morse@arm.com
+[v2] https://lore.kernel.org/r/20240426150537.8094-1-Dave.Martin@arm.com
+[v1] https://lore.kernel.org/r/20240321165106.31602-1-james.morse@arm.com
+[1] https://lore.kernel.org/lkml/20201030161120.227225-1-james.morse@arm.com/
+
+
+Amit Singh Tomar (1):
+  x86/resctrl: Remove the limit on the number of CLOSID
+
+Dave Martin (3):
+  x86/resctrl: Squelch whitespace anomalies in resctrl core code
+  x86/resctrl: Prefer alloc(sizeof(*foo)) idiom in rdt_init_fs_context()
+  x86/resctrl: Relax some asm #includes
+
+James Morse (22):
+  x86/resctrl: Rename resctrl_sched_in() to begin with "resctrl_arch_"
+  x86/resctrl: Check all domains are offline in resctrl_exit()
+  x86/resctrl: resctrl_exit() teardown resctrl but leave the mount point
+  x86/resctrl: Drop __init/__exit on assorted symbols
+  x86/resctrl: Move is_mba_sc() out of core.c
+  x86/resctrl: Add end-marker to the resctrl_event_id enum
+  x86/resctrl: Expand the width of domid by replacing mon_data_bits
+  x86/resctrl: Split trace.h
+  x86/resctrl: Add 'resctrl' to the title of the resctrl documentation
+  fs/resctrl: Add boiler plate for external resctrl code
+  x86/resctrl: Move the filesystem bits to headers visible to fs/resctrl
+  x86/resctrl: Move enum resctrl_event_id to resctrl.h
+  x86/resctrl: Fix types in resctrl_arch_mon_ctx_{alloc,free}() stubs
+  x86/resctrl: Move pseudo lock prototypes to include/linux/resctrl.h
+  x86/resctrl: Always initialise rid field in rdt_resources_all[]
+  x86/resctrl: Remove a newline to avoid confusing the code move script
+  x86,fs/resctrl: Move the resctrl filesystem code to live in
+    /fs/resctrl
+  x86,fs/resctrl: Remove duplicated trace header files
+  fs/resctrl: Remove unnecessary includes
+  fs/resctrl: Change internal.h's header guard macros
+  x86,fs/resctrl: Move resctrl.rst to live under
+    Documentation/filesystems
+  MAINTAINERS: Add reviewers for fs/resctrl
+
+Yury Norov [NVIDIA] (4):
+  cpumask: relax cpumask_any_but()
+  find: add find_first_andnot_bit()
+  cpumask: add cpumask_{first,next}_andnot() API
+  x86/resctrl: Optimize cpumask_any_housekeeping()
+
+ Documentation/arch/x86/index.rst              |    1 -
+ Documentation/filesystems/index.rst           |    1 +
+ .../{arch/x86 => filesystems}/resctrl.rst     |    6 +-
+ MAINTAINERS                                   |    5 +-
+ arch/Kconfig                                  |    8 +
+ arch/x86/Kconfig                              |   11 +-
+ arch/x86/include/asm/resctrl.h                |   19 +-
+ arch/x86/kernel/cpu/resctrl/Makefile          |    2 +
+ arch/x86/kernel/cpu/resctrl/core.c            |   31 +-
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c     |  635 ---
+ arch/x86/kernel/cpu/resctrl/internal.h        |  399 +-
+ arch/x86/kernel/cpu/resctrl/monitor.c         |  918 +---
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c     | 1092 +----
+ .../resctrl/{trace.h => pseudo_lock_trace.h}  |   26 +-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c        | 4164 +---------------
+ arch/x86/kernel/process_32.c                  |    2 +-
+ arch/x86/kernel/process_64.c                  |    2 +-
+ fs/Kconfig                                    |    1 +
+ fs/Makefile                                   |    1 +
+ fs/resctrl/Kconfig                            |   39 +
+ fs/resctrl/Makefile                           |    6 +
+ fs/resctrl/ctrlmondata.c                      |  661 +++
+ fs/resctrl/internal.h                         |  426 ++
+ fs/resctrl/monitor.c                          |  929 ++++
+ fs/resctrl/monitor_trace.h                    |   33 +
+ fs/resctrl/pseudo_lock.c                      | 1105 +++++
+ fs/resctrl/rdtgroup.c                         | 4344 +++++++++++++++++
+ include/linux/cpumask.h                       |   75 +-
+ include/linux/find.h                          |   25 +
+ include/linux/resctrl.h                       |   36 +-
+ include/linux/resctrl_types.h                 |   16 +-
+ lib/find_bit.c                                |   11 +
+ 32 files changed, 7763 insertions(+), 7267 deletions(-)
+ rename Documentation/{arch/x86 => filesystems}/resctrl.rst (99%)
+ rename arch/x86/kernel/cpu/resctrl/{trace.h => pseudo_lock_trace.h} (56%)
+ create mode 100644 fs/resctrl/Kconfig
+ create mode 100644 fs/resctrl/Makefile
+ create mode 100644 fs/resctrl/ctrlmondata.c
+ create mode 100644 fs/resctrl/internal.h
+ create mode 100644 fs/resctrl/monitor.c
+ create mode 100644 fs/resctrl/monitor_trace.h
+ create mode 100644 fs/resctrl/pseudo_lock.c
+ create mode 100644 fs/resctrl/rdtgroup.c
+
+-- 
+2.39.5
+
