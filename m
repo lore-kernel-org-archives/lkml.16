@@ -1,95 +1,144 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8072AD20
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A94222C35C;
+	Thu,  8 May 2025 13:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746711072; cv=none; b=bg8KtrH89Nn/PIlT+M2LUhgLSWR1Q/WlCZB0B8rtkGCzc5Ke0r9frpR/HWAaegUDelwtEd4rTDTHmxdglBH3tEJVoZZ+6DCWpFhMKcHjnCsDmysn1UIzjGvRXsLWx6Lo1/wIj05uydg5OlbNIW58/0Kel2XXVSZx0a+qS4sgXFQ=
+	t=1746711074; cv=none; b=QGQaAltZM0rB2PHxwOMyd9kkhQ3YK40nYOv7yApakeTb4GNkrF4rdwOkWeTACNNjkW4gOuXHfxREc3zG766tXhw/tYwMLy3P/478sLX4FipTiKkjP84fu095NmT3GfPUa1Un0APlWXheU/Mx0Tc9/zSuJeaNd5Rq9JlpG7AEx/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746711072; c=relaxed/simple;
-	bh=PTIxFNCKUc6RCmBCpLXRdipjalC9UH6iNZPNrIkp7Uw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=mFtdDeNS35/5IUSg3PBUBoTq3RNT7ic3wrR4OmPhQHdia+fsdhOOYX5Pu7lmoudvyyOf9PhlfXhOZ8vMvTBZIXk9G7xfhtelSUY/AcywHhxopATKF963W3qNVVu1DZQ8oxSphdgU0cAOVxdehtuNuEiR0iBPep465YEvEQaXGGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Loz0hoos; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1746711074; c=relaxed/simple;
+	bh=cVo2ypHOoBcnxAxuinY99VdUGeiAKvhMoFre9aBsPLI=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=OzbQxLW7kCp/TiKQTqvS5FEe9jsmhHR1QN0zLkk1NRrvm6lTZkzRp2T3URvLpHhECKvYYha9gOTIZXtbKRjvekZ0j7A0EaYtMyqZUjVEvCMvLQUl61TYWNgWjSg1vf9zgG7rA/2CWf31xKWkejLqO8dFkouNyYZqKBPk3iRLYgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KIvhZg7e; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Loz0hoos"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43ceeb85ab2so454555e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 06:31:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KIvhZg7e"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c560c55bc1so119686685a.1;
+        Thu, 08 May 2025 06:31:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1746711068; x=1747315868; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1746711072; x=1747315872; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6S+40JPuRC3gzWdqTu3aQzXeyhaHlO7szVi8IcUpV9U=;
-        b=Loz0hoosxbjIh9XfGXwj59Q6xVNvJ/uHTMgTfSbilrV3FYkFJ3NjL9koJmZF5Hkq3f
-         w4XHy2UStdeBxIyVCH/ZfMSrGNPAiKhzdVPvRN52nhimI476gay5+HzmwznQv4pkPmL6
-         0R7C36boN5Z7+1xrwhf7+aIlcw8afzHWALVxbHpXMfqatfwsMYzVZB2/4reriCFC4G1r
-         Lu2FuuBSnxSGvDxSKUepZLTa4t6OEix7lVaNaYt5Ngl9/LdpDy0Lj966YOoowqDJbkIx
-         gwT39FjStKIuiY9RYZLOXzSMRatTWqlCrMZxJkFohyx2AEkawAVA9JvC7WZ2cWwjn8qi
-         wFnQ==
+        bh=J6qNFLQQGiatAczOdvaBp3/joWlyqexZCdKVh4bDNGc=;
+        b=KIvhZg7e8qt59XG6mT2exDW+Ftzr1eq+LfOX/BI+b6ztdJJyMkWPZOd3GW1OKg7N66
+         UYlhgcy+4bIgqdb9qfob9YlHjH32pkYSBWpVDlUdn8i9NPXLCh736o4/we/hNez+l9HR
+         ofWXXzIjfyyOfeKkaYyOBxkOtkhq/mLw9c2ua3uwSmcnDwlmueHinOKy4zxFKiKn+3zg
+         ROW/+KGovWmc8Qe/c16dkJftM4T8f9mi3olpvu4ulNiYeWBwSfHhxO8fxEr+Tf7dq+nS
+         I31pdVOAIXe2JldhS6PAlL9S4ZHWsiMt3pYhZUzfKa4sc/UbuVwDbCmH6yDGjHnA2n2L
+         3Asw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746711068; x=1747315868;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+        d=1e100.net; s=20230601; t=1746711072; x=1747315872;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=6S+40JPuRC3gzWdqTu3aQzXeyhaHlO7szVi8IcUpV9U=;
-        b=YF+FQ4ZW5UQcHXivovYOJPPz3P17VstWvBOVBmLxNsL8fF2DRAgMzaNgeuMDOpD4jY
-         +kYi7AsjfK0iPv3wbsOFdbiVubjK44t5ZnA8w8Zvvt7o49tPCiO4vTIi4rpJciUMtmh1
-         4JRnFVgfqYgZZbxkz2vF5TLQPXQMpGNQekF6xJ91bE83x36Hq81s5UyqL23WYXN3Lp/P
-         oyYqTncRZHHB5TIJB9Kmzbbk/8dqz+qyLmZ4T60gKizPnLGqFqevrX9GT3eg9IShHKx/
-         PaLdzP1g9oK6kdNBMyYTlaAB54hO1esPKwu9mVmrWKaJWT3ELdNg4P3mQ/PcUInhiYy0
-         hAYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbZyO8m48TT7K07n57x6HSi3UB/WZr0z5fW+oO1IhPp4XDUhV0kzRXUFX5OOkj37KshyZ1LGzCOfKMNNY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNGjBSyzpa/6SaNF/+5wlSuPkNEPtERb5psBYahijzKBC0iqcY
-	QmFL5GTmTcJ6nHe5jAEX2+egddGTb2DHBfPIbD3cZtPh0r6M5lA8PBv4hPMPpnI=
-X-Gm-Gg: ASbGncuA9dw7uHwPwqACvuTb7ch6O3uB2GbGWX2idMSTvUl+/ijFk7FGevOxk4OHBw7
-	DqipDsj7w/J9PQqQGfbbEEh59klNig2qmmJ18skKeR8zClUmlCnHz2wW1nud8sqJFep5vShxuIO
-	lXrhI/f8j5bp3SeVSBOJbKl4KtvHNnI5aypOc4rr6x/L74lKI7Jny4PK6X/kcarLfYYwVPAvEGy
-	/bHpsgYEIo5NAPZko6HC+7E7VtjGF90qQYEbXG6qyxROAl0CSqBYl+W3Bs51aPdCg3ygBeIQEBn
-	9zwKe0S/uagmGLiIn1R/1kSwH1dLLvBXsUSnvNLZF3o0chLS
-X-Google-Smtp-Source: AGHT+IGijAnvSUvNKAgb7ZNKd5QJJ9UF+zXOT/jF3FQWpi7RwPSldc9C2Ir4SMyQ4xieyEHWiNZ1qw==
-X-Received: by 2002:a05:600c:1d8c:b0:43b:c825:6cde with SMTP id 5b1f17b1804b1-441d44c4749mr23230845e9.3.1746711068529;
-        Thu, 08 May 2025 06:31:08 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:a451:a252:64ea:9a0e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32f238sm37108665e9.11.2025.05.08.06.31.08
+        bh=J6qNFLQQGiatAczOdvaBp3/joWlyqexZCdKVh4bDNGc=;
+        b=DlzKKvYHRfPOA619ezqbbOM5LN6s9UxcCD37hrfEmf7Z9joAmvUNf8bpXNudphCgN6
+         KAT0wzA3ku8DXD2v9wIDWblqBZ2RKCcagtKKVDq4MHvqN6F+vXXBw8L0W/QBx1kXxQ8U
+         HbOh4G3IiSBJb0EGf2XZ1qOvDrTUqkMgj8BSSM/qsnj6szt54e1yqG8bO9rJqZRk7jTt
+         Xf+YsTIeLniPmWR09BoS4HE/Sn1zDaTK52RcfXFpyh8tuGv0M97+00uVCU1Y1h81A0rV
+         49pA1SYfDIZKkGCs8sxckdW9Ap/7PUMKs+J5qP4nYFnHEDTflCWqLlH+fQsvoX6Qano2
+         2/iA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4m9TfM293A7ndIMk+0xtB+6XO1F1KDOpHWZCjW2cC4sD/tKIHOqVkNdGAyAfT/bKY4xc=@vger.kernel.org, AJvYcCWW0XEF9l86pigYsORQVn7cAuz+E0Q7G6q2CVuAmyz9UuzEhNN9P+EZNDKPpja59+heUcBmoMrO4eTkhr5y@vger.kernel.org, AJvYcCWWs6L28I/FR54ZYN3GqM5w5LDNBo9tduc2FFPmla7/DRFDO/0u+cnK9QAfIGB1S+Xt95OKo48u@vger.kernel.org
+X-Gm-Message-State: AOJu0YymOzaYZBAEF+AoIGWL3jwYgoIdf6riqh/lwoUFQQb9DSrhklek
+	im0vJdApnbJR4l9ws/dj28fjggKpp2HlELELwtiy7Ojc0ir+QEsD
+X-Gm-Gg: ASbGncsfCRSyCPnm3omzrfVfq+sFZj9TZGrKoCJBMud3TnN51j++OIUxlJn1go1Y+1O
+	ZzoKEvv0k9agXL+FOc8DoM30qlY/kOmjHPIRQ86Zg9zhvEg/jNNgGa/QnhnWgoB2YFkummOyB4O
+	WpOIklIGS6pjwOjxtQuaCTr4AC5VjhjG8pXkX2CZPgCq0l2dxYEM9BTvF7pNmQj+qhF+qPijREv
+	lkEIobwSSwWxq+sPTiSWAvDH3qzC6wOqXSEU3KQw6U446L5XJ7CkoaL0/AK+6MWyNYNB28g9URf
+	pT94lFJ3mbgAFmg8RmsTbMXDZxzjjrF9hxj9yK3ByIm1l8diO3Ck2XSvhF+LAD2QwdzddVnBX60
+	VxZozHj837aHnkal3yesB
+X-Google-Smtp-Source: AGHT+IEsVf9XFVh/uB8BMCYEqxrucJwShP06Ahgp4HpfPLdR2JLsnAvnAX2SJeygjN6BPt8dQeT+0w==
+X-Received: by 2002:a05:620a:c4c:b0:7c5:43c2:a908 with SMTP id af79cd13be357-7caf736d3ffmr1114654385a.6.1746711072083;
+        Thu, 08 May 2025 06:31:12 -0700 (PDT)
+Received: from localhost (141.139.145.34.bc.googleusercontent.com. [34.145.139.141])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7caf7528cdfsm355213785a.31.2025.05.08.06.31.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 06:31:08 -0700 (PDT)
+        Thu, 08 May 2025 06:31:11 -0700 (PDT)
+Date: Thu, 08 May 2025 09:31:11 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Jon Kohler <jon@nutanix.com>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: "ast@kernel.org" <ast@kernel.org>, 
+ "daniel@iogearbox.net" <daniel@iogearbox.net>, 
+ "davem@davemloft.net" <davem@davemloft.net>, 
+ "kuba@kernel.org" <kuba@kernel.org>, 
+ "hawk@kernel.org" <hawk@kernel.org>, 
+ "john.fastabend@gmail.com" <john.fastabend@gmail.com>, 
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+ "bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
+ "aleksander.lobakin@intel.com" <aleksander.lobakin@intel.com>, 
+ Jason Wang <jasowang@redhat.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ open list <linux-kernel@vger.kernel.org>
+Message-ID: <681cb21f4616e_2574d5294b3@willemb.c.googlers.com.notmuch>
+In-Reply-To: <CF84F28E-C3D0-44C0-8540-53E184BA1F79@nutanix.com>
+References: <20250506145530.2877229-1-jon@nutanix.com>
+ <20250506145530.2877229-2-jon@nutanix.com>
+ <681bc5f4b261e_20dc6429482@willemb.c.googlers.com.notmuch>
+ <CF84F28E-C3D0-44C0-8540-53E184BA1F79@nutanix.com>
+Subject: Re: [PATCH net-next 1/4] tun: rcu_deference xdp_prog only once per
+ batch
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 08 May 2025 15:31:07 +0200
-Message-Id: <D9QTEAUN0RNE.11G3ZW4IBGL5M@ventanamicro.com>
-Subject: Re: [PATCH 1/5] RISC-V: KVM: Lazy enable hstateen IMSIC & ISEL bit
-Cc: <kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>,
- <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-To: "Atish Patra" <atishp@rivosinc.com>, "Anup Patel" <anup@brainfault.org>,
- "Atish Patra" <atishp@atishpatra.org>, "Paul Walmsley"
- <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Alexandre Ghiti" <alex@ghiti.fr>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250505-kvm_lazy_enable_stateen-v1-0-3bfc4008373c@rivosinc.com> <20250505-kvm_lazy_enable_stateen-v1-1-3bfc4008373c@rivosinc.com>
-In-Reply-To: <20250505-kvm_lazy_enable_stateen-v1-1-3bfc4008373c@rivosinc.com>
 
-2025-05-05T14:39:26-07:00, Atish Patra <atishp@rivosinc.com>:
-> Currently, we enable the smstateen bit at vcpu configure time by
-> only checking the presence of required ISA extensions.
->
-> These bits are not required to be enabled if the guest never uses
-> the corresponding architectural state. Enable the smstaeen bits
-> at runtime lazily upon first access.
+Jon Kohler wrote:
+> =
 
-What is the advantage of enabling them lazily?
+> =
 
-To make the trap useful, we would have to lazily perform initialization
-of the AIA.  I think it would require notable changes to AIA, though...
+> > On May 7, 2025, at 4:43=E2=80=AFPM, Willem de Bruijn <willemdebruijn.=
+kernel@gmail.com> wrote:
+> > =
 
-Thanks.
+> > !-------------------------------------------------------------------|=
+
+> >  CAUTION: External Email
+> > =
+
+> > |-------------------------------------------------------------------!=
+
+> > =
+
+> > Jon Kohler wrote:
+> >> Hoist rcu_dereference(tun->xdp_prog) out of tun_xdp_one, so that
+> >> rcu_deference is called once during batch processing.
+> > =
+
+> > I'm skeptical that this does anything.
+> > =
+
+> > The compiler can inline tun_xdp_one and indeed seems to do so. And
+> > then it can cache the read in a register if that is the best use of
+> > a register.
+> =
+
+> The thought here is that if a compiler decided to not-inline tun_xdp_on=
+e
+> (perhaps it grew to big, or the compiler was being sassy), that the int=
+ent
+> would simply be that this wants to be called once-and-only-once. This
+> change just makes that intent more clear, and is a nice little cleanup.=
+
+> =
+
+> I=E2=80=99ve got a series that stacks on top of this that enables multi=
+-buffer support
+> and I can keep an eye on if that gets inlined or not.
+
+That will only give you one outcome with a specific compiler, platform
+and build configuration.
+
+I would just drop this and let the compiler handle such optimizations.=
