@@ -1,107 +1,157 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AC52797B1
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A827C276023;
+	Thu,  8 May 2025 15:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746718402; cv=none; b=YQzc4/B5Hc7nxDGTg8zEhkWVAQJNO9OVpVCun5TgLveQruc+9AxuLA6R5wFIpcZy5adFf2KKes6QoSKbF2Mgr0L1kexSqMdOHoPiOy6mONxaA5kIm5YrQDtghcSTp5NaYLI6p0/X/XmAP5Adc2pn6LWgBPIBDpFtDAhWibOAlCU=
+	t=1746718443; cv=none; b=UxuTFcTlhApDbBR64912qfOTExqFpIeH7jWFEMiFEpu+AIcLl6SiKJ1GhhmxRyYY8nBAI3xquvED+xCBOH6Y0Z51wkRKFkf5M9BTEFxjHVRswFrO6bsPaOpRpSiq2heBftM7XYTUXpNLDP+Mc3kpWTG6KJDpxRVln/9rpChLicI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746718402; c=relaxed/simple;
-	bh=i7UrJwqHyN6nLieuB0CXSWSKswqxfYhUPDWRmN9QmMs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WE/QAUgSg8FSl5DgYOw/XO160Nh0j3BU6ync7Pw/bn5G+iEOvbd3PmUeY2pkqTOMKlW/mmCYx3siZe7ItuBTqtafk0wC1VFzkq9bklYcseQop3pRgi/Y+z7cgXu8UV6LwmVnGi/c9Uyqh1SiOPRSRxksZqfxoOEbvjsuZsbmWxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X0jAqmOt; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746718443; c=relaxed/simple;
+	bh=+fhlOQ6G4aZ2woY1PB5/3AzIa84R8tnCvv9CqUxBVlQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M+re4FKsiqhtVhFjPYVkFds9WH8HWEdf6U4SeX49gU5CGZ7ZXquRSWLo0e/kdQVtMPv/bzoUTIJK4MU/CnICSrUUGvUW15lliyceHkyGX9wTUU59sJHQ7lk1k+5j4uO6uFUExl95SI0YC2TxCq1CFXSRUe1gXt4/Ss+SBlnxej8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OgeWeNUM; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X0jAqmOt"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47666573242so386131cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 08:33:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746718399; x=1747323199; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i7UrJwqHyN6nLieuB0CXSWSKswqxfYhUPDWRmN9QmMs=;
-        b=X0jAqmOticvMuT29XZluqKgbFwlliPQgqny3Ho6GCdxE1ur7ygVV+EDYsHL50pEOrj
-         JrtlzPV37KRrRaQgJ/Sel+CJrqbaGHGttslsxTA0qlDUYFapZff3yH+zXGceFnaQ3x25
-         9VXN4qF6v7CVgThQ8O7Z8QA1a3uEOGQSq1/xenlD1dedlLwjlqwoYE6n2rlXKNyGwwZs
-         rqxtyqQgK/pNfUcv8ahX2jnrvEdRdo/eYrP3wx8Bs8YJVSMHnj2PGeJlgPa/A/jdyQcq
-         cIMAQNkALMOomODyBJ7DYCpDQZPtoTqT+S2yoFJvKDFZd+W0Yz3noyIsi5Pa73cBJOhM
-         +G8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746718399; x=1747323199;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=i7UrJwqHyN6nLieuB0CXSWSKswqxfYhUPDWRmN9QmMs=;
-        b=aFTkULaMkpl7L0+mShIMPsyYIfozKyQDJn80o5YvjY9V0Z3TbPl8xoWQgP2g+hsgJ+
-         bJxpTFUCKBUbvAdKvFIwPiO/3gPpO8Io+9BR+IFwTvl08oxeXevVBZRDGZnH7B7AbHGg
-         qFtr9TaAGp/xVuHuIjoJsI7nKPZ3qLbC4ldfZ3/L1DRZo/qE4wBI8cYzRq7XOWIZapPw
-         Uq4gPaI8yb++BQYKoWb39qEPxIGA2eaVZbY/mhF5jewxhz7C0wVWH+bgPIKj1J0Ec+Vn
-         xpSuZOXdFSNo8uDyYv+0ob/qHVjz4Fl/Rlr3d8zg+sqQuXTEDf77MMoUeCXj867u9n2k
-         80Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCXY5Yq1wX/xeZHdiCbAwF8Ft8P1tUS7YPvvvnHmROH/glTiPH+eYU1Z9X3AIsmMgPX4SqgAFEw7tMM1QVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0bfHlSsOJl8LkREbjv2m4wzGsRnEmAHk3XJvE7jSDbp7yulIN
-	SWRtPuS/9kEeL8C6AuGQDXvEfncrYZto6GRhokSBM+TRocB3powHunPfYIsGD280owP6k92yqfD
-	a7htQyJyULKGhaK68zUqAYEW3/zcBshcLHrtG
-X-Gm-Gg: ASbGncvs3h4tZxtiGBKu2wp5Ban0cwkrq63ly2HG9DlFjFfh2BE4xKzsLXN8cYKJ2B+
-	uaF8380HAR3tcisCAhkdW3sKEPTfkO9j/tAo72Y7f4UaF6EEeb7Cuw9sf0THi+ssyU7zcm1D7b3
-	d1TpkFr9fYb2UEL4sPCPPt32sUGg0k2lW9Uaa0sd9QUnVm3wJ/ySc=
-X-Google-Smtp-Source: AGHT+IE4OkzE3XHXp4+6aW8TNjQUp5iW7YxwFqtVgU8d1NQstvfcrpdZRx67gM/walW7wD4fOOwCumAvE0yErbBTLqI=
-X-Received: by 2002:ac8:578a:0:b0:48a:7cd7:7e21 with SMTP id
- d75a77b69052e-494499ec7b9mr5044651cf.20.1746718399217; Thu, 08 May 2025
- 08:33:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OgeWeNUM"
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 256062115DCD;
+	Thu,  8 May 2025 08:34:01 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 256062115DCD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746718441;
+	bh=k9NF3ALRxjrJqIoCdrIpMYuhVmXJDYeiXE0oEu2XlwA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OgeWeNUMr44WtI2xhxaGcg0xtDVKB0z7Acf3/iPXuoyAjNQKzCoowBNeQxSkNoIK9
+	 usNvqSRIvGciornaWZzrzs19YAzomItcAEYYCyh1z6hlb3gYRd4gzsW4VwfD4PGvIS
+	 Gr0FI0wxStrL0v+clhNhxUr/Y7xjWvFbpJWHYYpI=
+Message-ID: <718eaa5a-a021-469d-9053-f622a53422b9@linux.microsoft.com>
+Date: Thu, 8 May 2025 08:34:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508090735.39756-1-21cnbao@gmail.com> <aBzMf6H9Lad6CaFQ@x1.local>
-In-Reply-To: <aBzMf6H9Lad6CaFQ@x1.local>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 8 May 2025 08:33:08 -0700
-X-Gm-Features: ATxdqUGxHcqt4ekvzUe2MnoOqj_5fDVgUtsq734BNASUrqc9o3A8YKRQls1Ed2w
-Message-ID: <CAJuCfpF39YCc_aC1qnSHxmn8QwT+BB+OSHUJqGHn_ABoS9pBeg@mail.gmail.com>
-Subject: Re: [PATCH RFC] mm: userfaultfd: correct dirty flags set for both
- present and swap pte
-To: Peter Xu <peterx@redhat.com>
-Cc: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
-	David Hildenbrand <david@redhat.com>, Lokesh Gidra <lokeshgidra@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Drivers: hv: Introduce mshv_vtl driver
+To: Michael Kelley <mhklinux@outlook.com>,
+ Saurabh Singh Sengar <ssengar@microsoft.com>,
+ Naman Jain <namjain@linux.microsoft.com>, KY Srinivasan <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>
+Cc: Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <20250506084937.624680-1-namjain@linux.microsoft.com>
+ <KUZP153MB1444858108BDF4B42B81C2A0BE88A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <8f83fbdb-0aee-4602-ad8a-58bbd22dbdc9@linux.microsoft.com>
+ <SN6PR02MB4157D124B1AF145E06431BD2D48BA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157D124B1AF145E06431BD2D48BA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 8, 2025 at 8:23=E2=80=AFAM Peter Xu <peterx@redhat.com> wrote:
->
-> On Thu, May 08, 2025 at 09:07:35PM +1200, Barry Song wrote:
-> > From: Barry Song <v-songbaohua@oppo.com>
-> >
-> > As David pointed out, what truly matters for mremap and userfaultfd
-> > move operations is the soft dirty bit. The current comment and
-> > implementation=E2=80=94which always sets the dirty bit for present PTEs
-> > and fails to set the soft dirty bit for swap PTEs=E2=80=94are incorrect=
-.
-> > This patch updates the behavior to correctly set the soft dirty bit
-> > for both present and swap PTEs in accordance with mremap.
-> >
-> > Reported-by: David Hildenbrand <david@redhat.com>
-> > Closes: https://lore.kernel.org/linux-mm/02f14ee1-923f-47e3-a994-4950af=
-b9afcc@redhat.com/
-> > Cc: Peter Xu <peterx@redhat.com>
-> > Cc: Suren Baghdasaryan <surenb@google.com>
-> > Cc: Lokesh Gidra <lokeshgidra@google.com>
-> > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
->
-> Acked-by: Peter Xu <peterx@redhat.com>
 
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
 
-The function was introduced in 6.8. We should probably CC stable as well.
+On 5/7/2025 9:03 PM, Michael Kelley wrote:
+> From: Roman Kisel <romank@linux.microsoft.com> Sent: Wednesday, May 7, 2025 12:21 PM
+>>
+>> On 5/7/2025 6:02 AM, Saurabh Singh Sengar wrote:
+>>>
+>> [..]
+>>
+>>>> +	}
+>>>> +
+>>>> +	local_irq_save(flags);
+>>>> +	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
+>>>> +	out = *this_cpu_ptr(hyperv_pcpu_output_arg);
+>>>> +
+>>>> +	if (copy_from_user(in, (void __user *)hvcall.input_ptr,
+>>>> hvcall.input_size)) {
+>>>
+>>> Here is an issue related to usage of user copy functions when interrupt are disabled.
+>>> It was reported by Michael K here:
+>>>
+>>> https://github.com/microsoft/OHCL-Linux-Kernel/issues/33
+>>
+>>   From the practical point of view, that memory will be touched by the
+>> user mode by virtue of Rust requiring initialization so the a possible
+>> page fault would be resolved before the IOCTL. OpenHCL runs without swap
+>> so the the memory will not be paged out to require page faults to be
+>> brought in back.
+>>
+>> I do agree that might be turned into a footgun by the user land if
+>> they malloc a page w/o prefaulting (so it's just a VA range, not backed
+>> with the physical page), and then send its address straight over here
+>> right after w/o writing any data to it. Perhaps likelier with the output
+>> data. Anyway, yes, relying on the user land doing sane things isn't
+>> the best approach to the kernel programming.
+>>
+>> If we're inclined to fix this, I'd encourage to take an approach that
+>> works for the confidential VMs as well so we don't have to fix that
+>> again when start upstreaming what we have for SNP and TDX. The
+>> allocation *must* be visible to the hypervisor in the confidential
+>> scenarios.
+>>
+>> Or, maybe we could avoid the allocations by reading the first byte
+>> of the user land buffer to "pre-fault" the page outside of the
+>> scope that disables interrupts. Why allocate if we can avoid that?
+>> Could set up also the SMP remote calls to run this on the desired
+>> CPU.
+>>
+>> Summarizing for the case you want to change this:
+>>
+>> 1. Keep interrupts disabled when reading/writing to/from the Hyper-V
+>>      driver allocated input and output pages.
+>> 2. If you decide to allocate separate pages, make sure they are
+>>      visible to the hypervisor in the confidential scenarios. I know
+>>      we're not talking SNP and TDX here just yet but it would be
+>>      a waste of time imho to build something here and scrape that
+>>      later. The issues with allocations are:
+>>          a) If allocating on-demand, we might fail the hypercall
+>>             because of OOM. That's certainly bad as the whole VM
+>>             will break down.
+>>          b) If allocating for the whole lifetime of the VM,
+>>             let us remember that we avoid using hypercalls
+>>             due to their runtime cost. We'll be keeping around
+>>             2 pages per CPU for the few times we need them.
+>> 3. Consider reading a byte from the user land buffers to make the page
+>>      fault happen outside of disabling interrupts. There is no
+>>      outswap (maybe could have disabling swap in Kconfig) so the page
+>>      will stay in the memory.
+>>
+>> If you're not changing this, feel free to keep my "Reviewed-by".
+>>
+> 
+> Regardless of what might be done to prevent a page fault, I don't
+> see an option to not fix this. copy_from_user() contains a call to
+> might_fault(), which in turn calls might_sleep(). The intent of these
+> runtime "annotations" is precisely for the kernel to check for such
+> errors and complain about them. The complaining is suppressed unless
+> CONFIG_DEBUG_ATOMIC_SLEEP is set, but we want to be able to
+> set that option for debugging purposes and not have this code
+> generating complaints.
 
->
-> --
-> Peter Xu
->
+I outlined the practical point of view above to emphasize that the
+existing code works very well (millions of VMs, and there is health
+monitoring in place) thanks to running as a firmware and the tooling.
+The VTL2 driver is run and useful only in that environment.
+
+I agree that this approach might raise eyebrows and, as evidenced,
+entails some arguing. If you must insist, perhaps for the sake of that
+code looking more conventional for the reader we could tweak this.
+If that's the choice, keeping this path lean should be the goal in
+my opinion.
+
+> 
+> Michael
+
+-- 
+Thank you,
+Roman
+
