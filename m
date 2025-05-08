@@ -1,60 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9772F43
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2BE1E22E9;
+	Thu,  8 May 2025 09:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746696068; cv=none; b=aim/4S7/oGSyE/m4VK8+M7i4kpRPj/D+Ikns5jfbZQNRX4RvpDqGZzQ5sAU7i+lydQXsJpI+ueTtZrxX7fbTA7KHaBQH9RYmEEHaY4TATqagY7tcvjctkEWeuMhl3dfPRIE9CHHR7Ny8un40KqmG178BZxJcUYiSsVMY3PONU5s=
+	t=1746696075; cv=none; b=uLQL73KjhVotI+s4vTS2iXdr8X0uMZ/3pp9h4hVb+Bc6JJv5m1D6J0t/MVF6kEDiegwQ1KCPigJrxeuDt6PaZrAR502wrfN4wv/OTsOsF5AnJNNioIOn81n581gK5f+0BwHTovKjLuSfL02MmHE/ekRnFN+nbuEfohruosr/NW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746696068; c=relaxed/simple;
-	bh=OR62SasjAQdChSGRrGGEq9q3azDTEFgd2S3u3Vq2rLk=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FWGgbb0TxvslBbmoeYOF9jTj5TH4WpgJjDzgGUUEjvMWlG+FaXUoN9oFqN2ROVW9nXgMVy4vOCKCCa1lG9bCDbFWfcmWh99oGPOWJTjBXQBI2OHNBYtPlIgGoWnkBJdsSq7DJL0potT60FL+AETiw9HTNl2uLgjstl7QgFS03X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m1v9dChi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746696075; c=relaxed/simple;
+	bh=ZZwOfmsV6qwFd2mkj0wiXHd0OARcjgbvTjj8X00+fkE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gqFwoCK4MsuB93F9MfV8h3I1ZlM+9/gbkUtm9oA0VUJF8U+M6ntv5w0bnGOjjXwMdoBNgxQtoDV/sd02HpuB/EC80xNTo/BsaOs9CKOfd6zaNpHPuejVklVyE9r3HTNUsbrdJfRsEU4cgKL5IIwSvnkNZWCMwduiT/q9Pnu98hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nsOgxZiK; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m1v9dChi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEECBC4CEE7;
-	Thu,  8 May 2025 09:21:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746696068;
-	bh=OR62SasjAQdChSGRrGGEq9q3azDTEFgd2S3u3Vq2rLk=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=m1v9dChi4TXb2iKccE7sjSfAL9V/oxPlCsJnxmZYEpGw7V/+xPN3+oRgS1wOWU72A
-	 OBwvnIvF6zeIbu3xn1xOfAg9Wr9Rs73RiVEbdUjA53Kl6UGbJM3xCAWP5XPHb+Ve/H
-	 WD/oaFBh5gZ1fb4IjKOVe+LR6ROJjNPHPIR6ddtLxcYozto7YKdBVm85s2wErIFUUT
-	 jqOCz6IlpEeL4qg9gbL3cINdkb21QC91QUUkCOCVYb1iiZPwGywi6rYksBY5EK4/Bv
-	 ZNKbeT8cX4VZ4L6Jz6S1NTeB0dGDBmHzNcCTpJH6zT5svSzGxCSc1ld+E0HPLBGpyL
-	 x3IwB+99q1xIA==
-Message-ID: <79648a2c-127d-4dfc-b75a-eace3d874fcb@kernel.org>
-Date: Thu, 8 May 2025 17:21:04 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nsOgxZiK"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac339f53df9so126572166b.1;
+        Thu, 08 May 2025 02:21:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746696072; x=1747300872; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZZwOfmsV6qwFd2mkj0wiXHd0OARcjgbvTjj8X00+fkE=;
+        b=nsOgxZiKD+pqEE3RM5jKd51q8s2SjNFYqEHnWEww8pazxHPlU5PEqs6/umzzclHZ6u
+         yTBmbTXaUYSnj/U6LTU0w2TAqSQRCarfAYNQTb44MYgqn5cGgFVTOknQmFUCFIBt4dzx
+         lXmeuq2HAgxHq3R6XLYyEtVym7P34jtH8tXm6E+fKdtvqwEVN6pO6vcIFrAaC+sDBbLk
+         TqGVLPGPMi8nmmL7p0eb6dFVaXd/4bne1zSWs1pTZByuu6JdxRWJbC1pk4924L3N45kO
+         E9C4iMIY/E2zn2nMj014zG540bVdg/QU1fHda/gEf+bJM+/vaLHgfVvUB+l01AHuntDo
+         YbHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746696072; x=1747300872;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZZwOfmsV6qwFd2mkj0wiXHd0OARcjgbvTjj8X00+fkE=;
+        b=wOlZa8NXIdmzab7k2VkFN/eGj8SoCffAyhgey3zCiK+Ca2bavLb+DWAdC8MIGDI26Y
+         lmbUjNG1pzZHt01E2WYZQEe+g9RLbi/UIyvs5A/kYLnVZqNezOXkVwMfp4TJ98UUJhkI
+         JixcGK3D2pyDSQ7NjuzOUVSD/36sx94tcMs4MijZlg5RpSAL/U7IhcVPDppzvS8hXLnt
+         OEC2HbZCC/qLOlSX7G0q/NCnAUSlQ/oSdK6iboJ5i+rPes6HfLRkA7kAod0wILQo5Bm0
+         Z6UEDF+3OyQPTGfpVusutrN6BE0MExmykJtWRHcQHRJ4RElEpLwj6OVzNrznCwf5bxTQ
+         XArA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0C3XfvAK/WIX7Ztg5GFPN6g+HSUra7OkFYBKfEejTltqvN5hkThVUgwuM8Z52fU7UJYmduOmbI02XHw==@vger.kernel.org, AJvYcCXHeAmi5HFbtqPOi5gWKnSQZFkdQgNjDRGbAxKEqhSk81v/C8nsbv8POAW4iqvDAAo0YDWy2bvJVmZY4TI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxO6sCtvQY+b75eX+V1xYaEMwABsH7Gugy6SqYPd+6Dlakp9qJR
+	EzWELTqObyusyX+0BjgT9k/Dwgk8Go1xlTXJmuy0w/2hPt5NHLQu
+X-Gm-Gg: ASbGncs+1Jq5NkflmEvHXnFHaDD8KzxAVDeUI8RcJu5bQCrSteiD5K6kGrAM5ADyaOC
+	WQLwZIE7EEYh/T/dgPLjZ2RneDuOOs9Cqo/0YLSIVi6ilACX22Zr65b1e2uFhYTjKE+nsWt72CT
+	ezZfi2DJh9pXU5SVHzX7GfXtQDIXVXMAZyBhxYSQTZlU0LU8dn1Tsm0X3pbFNRQ6aMvpyhT7Ume
+	gprZVU7BdXgH72HKyyzBXagK7LkfTyGAZpsVKl9RVovYAN269lrXrW7Sja/4RRb+apf/vF04YWe
+	G4lgUabnh+CtZcjRNYKYfgfuhwIzJualZIFRfI1HDCo=
+X-Google-Smtp-Source: AGHT+IFPf1Qh3KNKTnQO0udn+T730YYO2gH+fHK0l1zsCqoKftabDd58YKQBwuSfKFuy8+Fv+zV1Qw==
+X-Received: by 2002:a17:907:7da9:b0:acb:5f9a:72f4 with SMTP id a640c23a62f3a-ad1e8bf688cmr576012266b.30.1746696072039;
+        Thu, 08 May 2025 02:21:12 -0700 (PDT)
+Received: from [10.176.234.34] ([137.201.254.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189540d6esm1046713166b.185.2025.05.08.02.21.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 02:21:11 -0700 (PDT)
+Message-ID: <4575f37d5221048bfd061c561e42389ae569ca39.camel@gmail.com>
+Subject: Re: [PATCH v2 2/3] scsi: ufs: qcom: Map devfreq OPP freq to UniPro
+ Core Clock freq
+From: Bean Huo <huobean@gmail.com>
+To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com, 
+ bvanassche@acm.org, mani@kernel.org, beanhuo@micron.com,
+ avri.altman@wdc.com,  junwoo80.lee@samsung.com, martin.petersen@oracle.com,
+ quic_nguyenb@quicinc.com,  quic_nitirawa@quicinc.com,
+ quic_rampraka@quicinc.com, neil.armstrong@linaro.org, 
+ luca.weiss@fairphone.com, konrad.dybcio@oss.qualcomm.com
+Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, Manivannan
+	Sadhasivam <manivannan.sadhasivam@linaro.org>, "James E.J. Bottomley"
+	 <James.Bottomley@HansenPartnership.com>, open list
+	 <linux-kernel@vger.kernel.org>
+Date: Thu, 08 May 2025 11:21:10 +0200
+In-Reply-To: <20250507074415.2451940-3-quic_ziqichen@quicinc.com>
+References: <20250507074415.2451940-1-quic_ziqichen@quicinc.com>
+	 <20250507074415.2451940-3-quic_ziqichen@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, pilhyun.kim@sk.com
-Subject: Re: [PATCH v4 1/2] f2fs: add a method for calculating the remaining
- blocks in the current segment in LFS mode.
-To: "yohan.joung" <yohan.joung@sk.com>, jaegeuk@kernel.org,
- daehojeong@google.com
-References: <20250508074756.693-1-yohan.joung@sk.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250508074756.693-1-yohan.joung@sk.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 5/8/25 15:47, yohan.joung wrote:
-> In LFS mode, the previous segment cannot use invalid blocks,
-> so the remaining blocks from the next_blkoff of the current segment
-> to the end of the section are calculated.
-> 
-> Signed-off-by: yohan.joung <yohan.joung@sk.com>
+T24gV2VkLCAyMDI1LTA1LTA3IGF0IDE1OjQ0ICswODAwLCBaaXFpIENoZW4gd3JvdGU6Cj4gLcKg
+wqDCoMKgwqDCoMKgcmV0dXJuIHVmc19xY29tX3NldF9jb3JlX2Nsa19jdHJsKGhiYSwgZnJlcSk7
+Cj4gK8KgwqDCoMKgwqDCoMKgcmV0dXJuIHVmc19xY29tX3NldF9jb3JlX2Nsa19jdHJsKGhiYSwg
+ZmFsc2UsIGZyZXEpOwo+IMKgfQo+IMKgCj4gwqBzdGF0aWMgaW50IHVmc19xY29tX2Nsa19zY2Fs
+ZV9ub3RpZnkoc3RydWN0IHVmc19oYmEgKmhiYSwgYm9vbCBzY2FsZV91cCwKPiBAQCAtMjA4MSwx
+MSArMjEwMCw1MyBAQCBzdGF0aWMgaW50IHVmc19xY29tX2NvbmZpZ19lc2koc3RydWN0IHVmc19o
+YmEgKmhiYSkKPiDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIHJldDsKPiDCoH0KPiDCoAo+ICtzdGF0
+aWMgdW5zaWduZWQgbG9uZyB1ZnNfcWNvbV9vcHBfZnJlcV90b19jbGtfZnJlcShzdHJ1Y3QgdWZz
+X2hiYSAqaGJhLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1bnNpZ25lZCBsb25nIGZyZXEs
+IGNoYXIgKm5hbWUpCgoKVGhpcyB0YWIgaW5kZW50YXRpb24gaXMgc3RyYW5nZSEKCgo+ICt7Cj4g
+K8KgwqDCoMKgwqDCoMKgc3RydWN0IHVmc19jbGtfaW5mbyAqY2xraQoK
 
-Reviewed-by: Chao Yu <chao@kernel.org>
-
-Thanks,
