@@ -1,97 +1,130 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826ED20409A;
-	Thu,  8 May 2025 09:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCBCEAF6
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 09:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746695161; cv=none; b=TimzDpeFrMPg/rYba9otWkf7VQ9Sa+e9oZtIeJMeRCqhOEw/lOxwya945RiNCK6r042PJIcGL9YwNSMVy3snBK3I+xnovC/5JLaPmiOc/w6cQSkMg+SgZXjSR/DefwA7hGpltOh+VvWJTQ+JwEIcJDIcQq8WhMigiTK6DnU75j4=
+	t=1746695266; cv=none; b=C005LT9pt5BksG237sAe+DrOIh3qk6ByHVuI2gofoyDjLZIO8ndSBaG8o2UVRE0oKnnWFg1gBDVRMm/6UhTt6/r+uWMkySb27gTKdPDlQSCRbUdYIE+YBZmFYNZR1NU+1+NBX2oQ0O6/fCtTDQ0byN+TmcSIcjABKyZ1UyFLNJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746695161; c=relaxed/simple;
-	bh=6achUQsWn+DB8/6HkoXFzbxvkFv5PVHCi8xt2j5Sgcg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DVSLWBVrY5L5Bysqrc3RJLiJo76kmDN/V9UImwIsYXFuvgT9iQ1txTFbIYKsgpT9QGhn1fMZypKedaEC7+5F3f6TXN6VdsrX/lJkaJqJnh7/3mOnANbZFEfUMsUgMjWdEu+fXhz1fmp47380NAlYCLi2S4xDvH2IlU/5SQwcEYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fG9yr+a+; arc=none smtp.client-ip=209.85.218.54
+	s=arc-20240116; t=1746695266; c=relaxed/simple;
+	bh=TKwi/y4TtFwBOzXvq/iVApkONSwqtwirmTxVv59GJ04=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=WFZzkRwEWxA72kZVpbjU6r2QJ+qI4xNMM0O2sataIECp9zm0jeLsFflbl+fwaso/oikjuDOKklODUcgetxNctXPz7p8b49YNWKdOUEjDydoMzk2BOZwcAjBju06L6CzMUPjVLX4K2p3xH+GfivsDW9I5ckO8rp7Tk0YLNR80jH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LmSqX1iY; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fG9yr+a+"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-acbb85ce788so166530066b.3;
-        Thu, 08 May 2025 02:05:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmSqX1iY"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-30a8c9906e5so959622a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 02:07:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746695158; x=1747299958; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6achUQsWn+DB8/6HkoXFzbxvkFv5PVHCi8xt2j5Sgcg=;
-        b=fG9yr+a+9KEH11Kh7B0XVU0wL5Os6iecFs0bv4iYh25/mkgZF5DnBFlLt+T7W3vw80
-         KmkLQW8+kqbjUcTdm9TpwF6DyH0jDjnFMcMP5k+2Ksff/oCs9tTrBaUMB4zg3ko/svit
-         oLKAFQcxSXpGDT8lmdpaJBygTuen4SXuIembkXok2CSL0y8QdLmDEgHZcaSj3Zj0N+4v
-         mZTayAtismliRPKHVd2lIpMhGGab6X02fjOsnJj6LjGH/YVWaMcLzTHL4ZlkmblPFnzl
-         P/uwBBlnm7iYlP7u+qCeOMII47so8Da+aTtejKImmiTOvS/MzDIP+lOrquY2EHbPxeaP
-         cD0Q==
+        d=gmail.com; s=20230601; t=1746695264; x=1747300064; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=G59wmYTEp5CZVNWd3zANz7fLvnvyW6wlXmFfNSZ4Nas=;
+        b=LmSqX1iYBJJDHn7JKveZL0YK2MTJUM79oqQJMKVm1UXkdtTC01L+2sGVi6E+LurzW2
+         Gz7uqNxoYxr1XKOc2Tun1ffR2M50xqtSO0AyDtQnWOAuwkWahdPUYkFk7OxBdXKnaIS7
+         vfj6EivzH0L0yul88TBgEF1OBPh/QwvatOUhQ0sxmABMB0URFsEnvGJ3jxWyrp00x47a
+         wDRliYnvbBjeA03mKjwXkGsBedUbtLYLj1EbWeGa3KrAz0EdY7chjVP3hlRYr2lmOhvN
+         b2vgyd6XaU6uCN+vBBaj4dU6m2aVThBd08dy0XO4Z7XD9jgq7vuR7FERu9m+QiXRn/CP
+         ZgvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746695158; x=1747299958;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6achUQsWn+DB8/6HkoXFzbxvkFv5PVHCi8xt2j5Sgcg=;
-        b=FyG/B4Wl+rMcvSzhuTOWeHRF9TGGqfoU5fpk82QnXTlLJlgPG8ddaOn4+noTteKs3w
-         YLk52dZxlLfZCUTgaGMajffrjFljKITYjdEezaAbcWy3aMJOqVI02RHS5mnGx7cPCF8v
-         rzkA5AVGtViAdV3JETTR9GBRE9nAPv67tW/3gUYz1IYHvYiXk5+KiBTahJpmm/qdTwUs
-         1v1jqVscmEAjy5ffdMT0+WtZlFmmELemZLUCw6Wj/8lqroR48Sl2nQaTGeIcFwiMnhXA
-         o57xyf8NYIdlmb/BvQc6cCNfWsUz9N0vjtbXzsriVMNddxW3lSvu/RuU3VjpdEGJLJVq
-         H+HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNqB7OZouSnMFWEqCbpu1E1YMNEFNUrB5vbgDs/p+w3/XNTKKHmJQWOg7UCRJPiJCqRe9daYrjxggLDQ==@vger.kernel.org, AJvYcCVBR+q2c7srbLK8QlmxKTcnUYHxcdUHZ6HgblWS0PAPwpHIwhMBDLdKH7TFAnTCiqthvC+0EZuJtxwD5to=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMPv/3Vj2DPl8SPzKA2YPnpOscS6HPhUE8NAfn9U5Arh1rKg+K
-	M8rLPAchhN5yx90pv2+aVszVRiDItPLggywT5cu1Bd54axV399OT
-X-Gm-Gg: ASbGncvx+XmZQmWbHR+PVonsEo+HjewKQttnEwl7ZIDWpfHrMJOjDa6upR5pZDeZjBM
-	Cii0eBzol4cGC8h47EEJ5M2tzMYU8z6CsBepVdjlhPJvVN5YcMAphth1JzVlpmSHkGcYjiWyOQc
-	i+ebIee7PQQAy4+P0AaPYDbKLwH+bRJO/m1UYRHFnmlkpu6r9xCd95Mzhm4hndfzMPXVC+YOnEh
-	z7TF9mV4Y3vDOGO777wLLKDOEeyaKK63zASlpuu34sU7F+6hd0ugb7K4MJSDZMyqEgep0kCeAWU
-	6az1jtc3ChUNyHRbRrBhL7lTA7XHvOs7qnqEg9QH3iXDWG0HPqmthg==
-X-Google-Smtp-Source: AGHT+IFS+Gj0Na1Pvs++DDiNfGXmaqJZaf4S6YVs2QeojkZ/Be5tVn3O3mur8Faj4gySl9LO1GmznA==
-X-Received: by 2002:a17:907:868c:b0:abf:4ca9:55ff with SMTP id a640c23a62f3a-ad1e8c4bf54mr636436066b.32.1746695157432;
-        Thu, 08 May 2025 02:05:57 -0700 (PDT)
-Received: from [10.176.234.34] ([137.201.254.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189147329sm1046002766b.1.2025.05.08.02.05.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 02:05:57 -0700 (PDT)
-Message-ID: <525d2fc8f42db22fe046b7378e32458ffc27f1fe.camel@gmail.com>
-Subject: Re: [PATCH v2 1/3] scsi: ufs: qcom: Check gear against max gear in
- vop freq_to_gear()
-From: Bean Huo <huobean@gmail.com>
-To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com, 
- bvanassche@acm.org, mani@kernel.org, beanhuo@micron.com,
- avri.altman@wdc.com,  junwoo80.lee@samsung.com, martin.petersen@oracle.com,
- quic_nguyenb@quicinc.com,  quic_nitirawa@quicinc.com,
- quic_rampraka@quicinc.com, neil.armstrong@linaro.org, 
- luca.weiss@fairphone.com, konrad.dybcio@oss.qualcomm.com
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, Manivannan
-	Sadhasivam <manivannan.sadhasivam@linaro.org>, "James E.J. Bottomley"
-	 <James.Bottomley@HansenPartnership.com>, open list
-	 <linux-kernel@vger.kernel.org>
-Date: Thu, 08 May 2025 11:05:55 +0200
-In-Reply-To: <20250507074415.2451940-2-quic_ziqichen@quicinc.com>
-References: <20250507074415.2451940-1-quic_ziqichen@quicinc.com>
-	 <20250507074415.2451940-2-quic_ziqichen@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+        d=1e100.net; s=20230601; t=1746695264; x=1747300064;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G59wmYTEp5CZVNWd3zANz7fLvnvyW6wlXmFfNSZ4Nas=;
+        b=Jt//FyQ5px5huYGwZUM1KPCkw9D69e1to4LdDovsjeisTokH2d1ln5i0WLmz0fxsci
+         zaCeg0BjU7DZBWXKxBiZ5MpN8GKFE2oGXk/UChu3TXJaE/wnk5sf5OaQJ0rJS4+V3DJ2
+         FO5P5p1W8ZRQbk1mK0S2OXOuUxWvOJNq+eMqVbvkUB2BGBOPmUyWiNheuLiqhmB20YKA
+         mIfl+tWcL04xndad7xvb6rHwoTAs0rNwuodpbiyWES+08mjvEo2Dy3DuW8NMiB0XvVh5
+         8+q9CAVafnOvkzU16FHdskmTysHWHOsBNh0m6RYGrBBXJFapXhT58oPyxoSIoOanvOwU
+         gerw==
+X-Gm-Message-State: AOJu0YxWpnLSddApHkv81aCXByxLPJpMGMZmzmtVzSF43fWSG9PmdCH0
+	ca0WZLd06DkVRe624hGmkVyUI18YdBmkTU75dbxhOa34/8z3CEVd
+X-Gm-Gg: ASbGnctVn2wwAulPjc+h2sfiMfrveZViF4zcgjq6SjOTD2FX5KbXHEDK1LRapBQ46JK
+	M7d47GtBeYXbr7lSkIxTzaaDHRxIWZBhgwhAjQPrKSrqK5J8bOBOiT6KU1OeZlR32bq/VrMNjlV
+	gFWn/e2ZET6tVaJIxm9LDpcZzA7tTjYnyScCnB2+cDvMDXSJqJSZMOX8K9eGmIXiQEZEC5pLn7h
+	+CRhbYVc0YisNkflJjMggFqDMk5DpwcwKLcsTdjgSa16sg6mLRB8WY1bspDv2f8xWI28MtXBFYS
+	lMCQtxz6Hi1oC8EYPLQ+Jyv00fOe9bIlc4eSSn6H5/fkMWY8gLfdAw8tHQ==
+X-Google-Smtp-Source: AGHT+IGiE8488YJK1sIW3qbGbcFmbvSB7DRXNdU/o8vJJjPjJcjqo8+MYtY0hX9blpGRgL6LSyZMwQ==
+X-Received: by 2002:a17:90b:38c2:b0:2ff:592d:23bc with SMTP id 98e67ed59e1d1-30b28cdc729mr3619651a91.4.1746695263949;
+        Thu, 08 May 2025 02:07:43 -0700 (PDT)
+Received: from Barrys-MBP.hub ([118.92.10.104])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ad4d54ff6sm1696043a91.25.2025.05.08.02.07.40
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 08 May 2025 02:07:43 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: akpm@linux-foundation.org,
+	linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	Barry Song <v-songbaohua@oppo.com>,
+	David Hildenbrand <david@redhat.com>,
+	Peter Xu <peterx@redhat.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Lokesh Gidra <lokeshgidra@google.com>
+Subject: [PATCH RFC] mm: userfaultfd: correct dirty flags set for both present and swap pte
+Date: Thu,  8 May 2025 21:07:35 +1200
+Message-Id: <20250508090735.39756-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2025-05-07 at 15:44 +0800, Ziqi Chen wrote:
-> The vop freq_to_gear() may return a gear greater than the negotiated
-> max
-> gear, return the negotiated max gear if the mapped gear is greater
-> than it.
->=20
-> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+From: Barry Song <v-songbaohua@oppo.com>
 
-Reviewed-by: Bean Huo <beanhuo@micron.com>
+As David pointed out, what truly matters for mremap and userfaultfd
+move operations is the soft dirty bit. The current comment and
+implementation—which always sets the dirty bit for present PTEs
+and fails to set the soft dirty bit for swap PTEs—are incorrect.
+This patch updates the behavior to correctly set the soft dirty bit
+for both present and swap PTEs in accordance with mremap.
+
+Reported-by: David Hildenbrand <david@redhat.com>
+Closes: https://lore.kernel.org/linux-mm/02f14ee1-923f-47e3-a994-4950afb9afcc@redhat.com/
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Lokesh Gidra <lokeshgidra@google.com>
+Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+---
+ mm/userfaultfd.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index e8ce92dc105f..bc473ad21202 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -1064,8 +1064,13 @@ static int move_present_pte(struct mm_struct *mm,
+ 	src_folio->index = linear_page_index(dst_vma, dst_addr);
+ 
+ 	orig_dst_pte = folio_mk_pte(src_folio, dst_vma->vm_page_prot);
+-	/* Follow mremap() behavior and treat the entry dirty after the move */
+-	orig_dst_pte = pte_mkwrite(pte_mkdirty(orig_dst_pte), dst_vma);
++	/* Set soft dirty bit so userspace can notice the pte was moved */
++#ifdef CONFIG_MEM_SOFT_DIRTY
++	orig_dst_pte = pte_mksoft_dirty(orig_dst_pte);
++#endif
++	if (pte_dirty(orig_src_pte))
++		orig_dst_pte = pte_mkdirty(orig_dst_pte);
++	orig_dst_pte = pte_mkwrite(orig_dst_pte, dst_vma);
+ 
+ 	set_pte_at(mm, dst_addr, dst_pte, orig_dst_pte);
+ out:
+@@ -1100,6 +1105,9 @@ static int move_swap_pte(struct mm_struct *mm, struct vm_area_struct *dst_vma,
+ 	}
+ 
+ 	orig_src_pte = ptep_get_and_clear(mm, src_addr, src_pte);
++#ifdef CONFIG_MEM_SOFT_DIRTY
++	orig_src_pte = pte_swp_mksoft_dirty(orig_src_pte);
++#endif
+ 	set_pte_at(mm, dst_addr, dst_pte, orig_src_pte);
+ 	double_pt_unlock(dst_ptl, src_ptl);
+ 
+-- 
+2.39.3 (Apple Git-146)
+
