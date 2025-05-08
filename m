@@ -1,91 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E502741CB
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 14:57:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8D722A1F1;
+	Thu,  8 May 2025 14:57:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716230; cv=none; b=sNfPrAORdfDhtCdTd+RRmKKzM1YYd+Tu1DNgiQn2OGUFrzFjXufQ0aU+PklekHwXMLSEQFs4+2wiDQFQBxcxQY6CV9iYkKMA4hgOOciPI4RZQluARXNC+7bV/jPtqSwHvzruJyRIOCafAqxl09Yb9LX0Gnqd2P+S2jeKZR3fqMQ=
+	t=1746716244; cv=none; b=u6TJbgGNihl8VUZZRDN3O18Gca9dIck6X69M+H2LyE4stQr9TFims3IS0eOhswDKQ/ndkn/7AwA1kGIF11QZKXbkKfk2SwLWAh+fMfRZG0pW1FwsYR3YIyvdb8voZghq8728gwDjpIGUkOvRAH1j1IaYJrGpBbLJFjnzEBABnmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716230; c=relaxed/simple;
-	bh=u6YIWCcbD2cIB6QfQaeiHH3AqkjJXoUcIqRzbWkTC0g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ft8jUE3HEAwPKtzedze2Rak1Pn+IPnh9bCfPJP+2NMmfPBzO4U0gjRYZLsH82eBdV3wlWCeaf85GrMTJvOnSyyPEeRPbSEWzPGF0lgUx9aRoP/E4zL8/NyxegI+6tW5XNysvS5ZdPvHAStAGlxbUK8WXvOBGp6t1P04wRNpr/9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M3JeHbA7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746716244; c=relaxed/simple;
+	bh=9ar8QWK+6HF5F4izWOQj3DNDEiLV3HwPtOjT2Z51yv8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CqTm1mfx53QLY3llxBkyYszSOmQM35DhiMgmj3l1Y5jEbUkkcl/vMyeW860aN1mEWxKLzeiuFXXwlYlA4cPoF+ukT4GpU3KU8LnFH7fuz7z0W2Bw38dQZctErQ6jUHv4b1Ptm3BQHUh0Tyjym/bgKUWek6yOXSFJyL/I1BHoyGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pIlT50GW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M3JeHbA7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDC62C4CEE7;
-	Thu,  8 May 2025 14:57:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pIlT50GW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 932FCC4CEE7;
+	Thu,  8 May 2025 14:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746716230;
-	bh=u6YIWCcbD2cIB6QfQaeiHH3AqkjJXoUcIqRzbWkTC0g=;
-	h=From:Date:Subject:To:Cc:From;
-	b=M3JeHbA7WL0AZvAuLwdhhsH9A30wuyatAY8Dj2R8jy7HrSxCP8h9tI2TscFSk963u
-	 m9OhlUxtUeyfvRj7llu+WYCQlAx1305A/3dibeAXUV5ssuOK/PLKElGtp98WWHn+/7
-	 ly5hYffqiRdY4IwREQ6h4/nEXYiO9+YTYdNqhBhjl6GVwliihArGVjbF0p5eTdOnRj
-	 mGG5NujXfw02I2rRAlyamHqHyv/MnbUolysh3PU14zvxndRfKU67toVTX/1yZf9XdY
-	 HKkFka9q4BIHYCmXmn/RSFYchE0NJ+Sozjk5eudUvNoC5JSWy8S/fCOcx1q2bxXxBL
-	 p0LYaXZw7Nd7w==
-From: Daniel Wagner <wagi@kernel.org>
-Date: Thu, 08 May 2025 16:57:06 +0200
-Subject: [PATCH v2] nvme-pci: lock per namespace in nvme_poll_irqdisable
+	s=k20201202; t=1746716244;
+	bh=9ar8QWK+6HF5F4izWOQj3DNDEiLV3HwPtOjT2Z51yv8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pIlT50GWBoJI3mnGqjyogC67R8vDxXxo5QD9Hey3kuPw2J1mg/o0BgVW8IFOGk6S7
+	 I/5njV5SUiyKkXWe2+BCOwM4tycbiHHyUS3MEIk2TmNhPJyIcirBYQ7J7zbRSbQrDh
+	 216P6kLlSXMqbmx1osR97GnbKQOlY9qs8yPTtGR4c2tf9IQeKjQWe7/NJIELFE9ms/
+	 rgWzpXJ+mZiigdN4fs1N6Ase7ywBylQLi4vOu18Gm59hJBISiguTicV/h5TRwCMrGq
+	 gGiKYGN9imc8fMdLJP2SLV6IPj1KD4V3NNYemGuIxvTXpBYjVXnOOA1yeO1xB6QLYM
+	 A5AtIaoEzmGBQ==
+Date: Thu, 8 May 2025 15:57:18 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Yannic Moog <y.moog@phytec.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, upstream@lists.phytec.de,
+	Benjamin Hahn <b.hahn@phytec.de>,
+	Teresa Remmet <t.remmet@phytec.de>,
+	Yashwanth Varakala <y.varakala@phytec.de>,
+	Jan Remmet <j.remmet@phytec.de>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt-bindings: add imx95-libra-rdk-fpsc
+Message-ID: <20250508-statistic-creation-ba17442921de@spud>
+References: <20250507-wip-y-moog-phytec-de-imx95-libra-v1-0-4b73843ad4cd@phytec.de>
+ <20250507-wip-y-moog-phytec-de-imx95-libra-v1-1-4b73843ad4cd@phytec.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250508-nvme-pci-polling-v2-1-0c7e1edad476@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAEHGHGgC/32NQQ7CIBBFr9LM2jEU0wCuvIfpAulIJ1YgYIim6
- d3FHsDle8l/f4VCmanAuVshU+XCMTSQhw7cbIMn5KkxSCEHMQiNoT4Jk2NMcVk4eLRaO6vETdn
- JQpulTHd+78nr2Hjm8or5sz/U/mf/xGqPPUpjyQhBypymy4NyoOUYs4dx27YvmWYQOLEAAAA=
-X-Change-ID: 20250508-nvme-pci-polling-a88ca70b7ada
-To: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
- Hannes Reinecke <hare@kernel.org>
-Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Daniel Wagner <wagi@kernel.org>
-X-Mailer: b4 0.14.2
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uGPUkIg0ljVqE3bF"
+Content-Disposition: inline
+In-Reply-To: <20250507-wip-y-moog-phytec-de-imx95-libra-v1-1-4b73843ad4cd@phytec.de>
 
-From: Keith Busch <kbusch@kernel.org>
 
-We need to lock this queue for that condition because the timeout work
-executes per-namespace.
+--uGPUkIg0ljVqE3bF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reported-by: Hannes Reinecke <hare@kernel.org>
-Closes: https://lore.kernel.org/all/20240902130728.1999-1-hare@kernel.org/
-Fixes: a0fa9647a54e ("NVMe: add blk polling support")
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Daniel Wagner <wagi@kernel.org>
----
-Changes in v2:
-- disable irq first, then take the lock
-- Link to v1: https://patch.msgid.link/20250508-nvme-pci-polling-v1-1-29ae900e793d@kernel.org
----
- drivers/nvme/host/pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Wed, May 07, 2025 at 03:13:12PM +0200, Yannic Moog wrote:
+> imx95-libra-rdk-fpsc is a development board based on the phyCORE-i.MX 95
+> Plus FPSC SoM. Add its description and binding.
+>=20
+> Signed-off-by: Yannic Moog <y.moog@phytec.de>
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentati=
+on/devicetree/bindings/arm/fsl.yaml
+> index 447054b52ea391f69d11409d51751a88bb8b539a..783550c61cd7e9aa12ffe78bf=
+aa74478c19e0797 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -1366,6 +1366,13 @@ properties:
+>                - fsl,imx95-19x19-evk       # i.MX95 19x19 EVK Board
+>            - const: fsl,imx95
+> =20
+> +      - description: PHYTEC i.MX 95 FPSC based Boards
+> +        items:
+> +          - enum:
+> +            - phytec,imx95-libra-rdk-fpsc     # Libra-i.MX 95 FPSC
+> +          - const: phytec,imx95-phycore-fpsc  # phyCORE-i.MX 95 FPSC
+> +          - const: fsl,imx95
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 2e30e9be7408cba9dbb8918f066717b3a1c24010..c86af9e9211353d1713569c294899b0fde229020 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -1202,7 +1202,9 @@ static void nvme_poll_irqdisable(struct nvme_queue *nvmeq)
- 	WARN_ON_ONCE(test_bit(NVMEQ_POLLED, &nvmeq->flags));
- 
- 	disable_irq(pci_irq_vector(pdev, nvmeq->cq_vector));
-+	spin_lock(&nvmeq->cq_poll_lock);
- 	nvme_poll_cq(nvmeq, NULL);
-+	spin_unlock(&nvmeq->cq_poll_lock);
- 	enable_irq(pci_irq_vector(pdev, nvmeq->cq_vector));
- }
- 
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
----
-base-commit: 0ea9b1f7aabb8af08649048d04fa3cee44dac4ab
-change-id: 20250508-nvme-pci-polling-a88ca70b7ada
+--uGPUkIg0ljVqE3bF
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Best regards,
--- 
-Daniel Wagner <wagi@kernel.org>
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBzGTgAKCRB4tDGHoIJi
+0mIpAQDFZ7pwZBVIyTySKTZEy3Y13FwVLzSbzc+p71Y977kHbgEA8UuMBpqQg6DY
+l00dUGbvIZiCgpxFiB6rSMZ+Z+o2LQ8=
+=o519
+-----END PGP SIGNATURE-----
+
+--uGPUkIg0ljVqE3bF--
