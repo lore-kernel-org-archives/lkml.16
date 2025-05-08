@@ -1,109 +1,120 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5003F229B12;
-	Thu,  8 May 2025 13:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2060F17BA5;
+	Thu,  8 May 2025 13:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746710103; cv=none; b=Xf+rC0oMQTn1zYGPVm/N4xzvjS5sDWGevapa4HRrlX5aMZQoiVj9SlGM3CO7RV3GKBQMddxO3ctoHeYcpYuAQD//IxQ340rCreNK5VRjYM2K+B1KHsLg6NdmkbL9o7L2mjkwbSYVpbj1AVZJtWV9fFTB/Q2YujO0ZV0vD2i2Rfw=
+	t=1746710217; cv=none; b=Dmw8jH5feG6T7RvrRcjFWpJ4SGsrWGaEX6pHkmojAFK7p1CebJo2/XsEsSbrPYrI1ILPV7sEMTp9i68EIlugu8Lbqzy7eBKAj+OUdin0Alxj7ztSLZtewJj2sUWkI2S8r964NIuLAFYS6pYm5xS6efskh/fNZKuc9LDedw/JcwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746710103; c=relaxed/simple;
-	bh=v4yxCKGqkITaCULne5KJepKbLjyXsZTAGFgEsdT3jUE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ENqi3PmAbRzqzwdu8zQiWiXPJXxDPqPhd+lCLrzZYsJ+IGAGfDf1NqanrCd/fzEVkA9gm+B0bQ1D5LQMzFd296bE43J202/PW0UhE9Y8aqj3tcdMZ9SLC7HvIIRXZ5VvgLa+zSVYP20YTByJssu/v+GrP2nQVBLOOuSleDw0qAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=J+n2yeVB; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746710217; c=relaxed/simple;
+	bh=DmYv1BhRdwdssj9Hn9d+R6TbeoEowIXHu2HfHaVqAF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uOkyb6/P4CFAB04qQQ/W+1DYtw29Wgdllmb85km7k2e8vSApRi0zvs6SK0umMv8PszTwAKDewu274Y/tP1YZtQSp6OfLBt7E7lz9fEaYDzib3K/7+78eR+wPKgwM1RQtbubzmKMviflREuWToEaGifTF+TkpkNSr0RAZvr998sA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dBrhXZe4; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J+n2yeVB"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 548DEsGO1869654
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 8 May 2025 08:14:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746710095;
-	bh=3r7ePGaJL6m3bPjH+zRgwXHBgtp/XvvGiT+rsycxqik=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=J+n2yeVBacSVKBiN2jJ5qhJxdmECwPKlctLR8CYgDJ4zkTsBnhuUWON5k7Kx3MbNY
-	 XXZFc0fT73EFIHROthgsa0nL7/7gRHJcY9k85hA6GnPEbo2WNJ0q5IQfrLzd6Z243y
-	 NOFZyZHA9/u84oXcJFkXQA2927jcM2NcLWwnHn9g=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 548DEsB5121853
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 8 May 2025 08:14:54 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 8
- May 2025 08:14:54 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 8 May 2025 08:14:54 -0500
-Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 548DEsI9077292;
-	Thu, 8 May 2025 08:14:54 -0500
-Date: Thu, 8 May 2025 08:14:54 -0500
-From: Bryan Brattlof <bb@ti.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 1/3] dt-bindings: arm: ti: Add binding for AM62L SoCs
-Message-ID: <20250508131454.z7ihjlcxdlglypew@bryanbrattlof.com>
-X-PGP-Fingerprint: D3D1 77E4 0A38 DF4D 1853 FEEF 41B9 0D5D 71D5 6CE0
-References: <20250507-am62lx-v5-0-4b57ea878e62@ti.com>
- <20250507-am62lx-v5-1-4b57ea878e62@ti.com>
- <20250508-splendid-rapid-sawfish-f1ee18@kuoka>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dBrhXZe4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746710216; x=1778246216;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DmYv1BhRdwdssj9Hn9d+R6TbeoEowIXHu2HfHaVqAF8=;
+  b=dBrhXZe4kNjoOFDU8j2Jc48JyMEsu0rQP/y/RezaGRPY3aXo1+NgBmVM
+   XAI32Wi9cJLoi9TGOri6MNqXhkKAG/FIreZxal6PtE/loMJ6VJSwOZOkH
+   HKJS8gBngkvFxosPzEztgwCVYbZu2Jn3ydbJ9yAOUjjHCq/vAJe87SE1C
+   E+62ja3sBzYHkPkFowhSxyn6D5KKC5o13DPCfeDk2Ij8Q09ZMk/BccDzs
+   x2TWzqUISzWW4uCupYrUWAQytnWlL/470ZrR8fkT0I3k0iBEGOfpW25L8
+   C9qCLMcpmRyutXtWQ2bwL5JuCmgB2wySikMfMOMq18WXqcIgGC8Rtir6R
+   Q==;
+X-CSE-ConnectionGUID: DfoMcpNeQi6+EKy0A51l0w==
+X-CSE-MsgGUID: apikCU3bQ4yk3Yq9zV3sdA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52300270"
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="52300270"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 06:16:55 -0700
+X-CSE-ConnectionGUID: dieNcDOZTKOjMru2aC3yxw==
+X-CSE-MsgGUID: kAVd3o24S3it0zdYcVDrjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="159595613"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa002.fm.intel.com with ESMTP; 08 May 2025 06:16:52 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 0FD5119D; Thu, 08 May 2025 16:16:50 +0300 (EEST)
+Date: Thu, 8 May 2025 16:16:50 +0300
+From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: "Huang, Kai" <kai.huang@intel.com>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, "seanjc@google.com" <seanjc@google.com>, 
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC, PATCH 05/12] KVM: TDX: Add tdx_pamt_get()/put() helpers
+Message-ID: <cu332ci4fvpgb6akgpg3p53336qndi36px5osfv57vcq5u3din@kxu2diy723tq>
+References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
+ <20250502130828.4071412-6-kirill.shutemov@linux.intel.com>
+ <55c1c173bfb13d897eaaabcc04f38d010608a7e3.camel@intel.com>
+ <4bb2119a-ff6d-42b6-acf4-86d87b0e9939@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250508-splendid-rapid-sawfish-f1ee18@kuoka>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <4bb2119a-ff6d-42b6-acf4-86d87b0e9939@intel.com>
 
-On May  8, 2025 thus sayeth Krzysztof Kozlowski:
-> On Wed, May 07, 2025 at 10:09:19PM GMT, Bryan Brattlof wrote:
-> > Add the binding for TI's AM62L family of devices.
-> > 
-> > Signed-off-by: Bryan Brattlof <bb@ti.com>
-> > ---
-> > Changes in v1:
-> >  - separated out devicetree bindings
-> > ---
+On Wed, May 07, 2025 at 09:31:22AM -0700, Dave Hansen wrote:
+> On 5/5/25 05:44, Huang, Kai wrote:
+> >> +static int tdx_pamt_add(atomic_t *pamt_refcount, unsigned long hpa,
+> >> +			struct list_head *pamt_pages)
+> >> +{
+> >> +	u64 err;
+> >> +
+> >> +	hpa = ALIGN_DOWN(hpa, SZ_2M);
+> >> +
+> >> +	spin_lock(&pamt_lock);
+> > Just curious, Can the lock be per-2M-range?
 > 
-> <form letter>
-> This is a friendly reminder during the review process.
+> Folks, please keep it simple.
 > 
-> It looks like you received a tag and forgot to add it.
-> 
-> If you do not know the process, here is a short explanation:
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-> versions of patchset, under or above your Signed-off-by tag, unless
-> patch changed significantly (e.g. new properties added to the DT
-> bindings). Tag is "received", when provided in a message replied to you
-> on the mailing list. Tools like b4 can help here. However, there's no
-> need to repost patches *only* to add the tags. The upstream maintainer
-> will do that for tags received on the version they apply.
-> 
-> Please read:
-> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-> 
-> If a tag was not added on purpose, please state why and what changed.
-> </form letter>
+> If there's lock contention on this, we'll fix the lock contention, or
+> hash the physical address into a fixed number of locks.
 
-My apologies the last version I assumed the Un-Acked[0] comment was a 
-request to remove any trailers I picked up from you. I can add them back 
-to this patch if you wish
+I had this idea in mind as well.
 
-~Bryan
+> But having it be
+> per-2M-range sounds awful. Then you have to size it, and allocate it and
+> then resize it if there's ever hotplug, etc...
+> 
+> Kirill, could you put together some kind of torture test for this,
+> please? I would imagine a workload which is sitting in a loop setting up
+> and tearing down VMs on a bunch of CPUs would do it.
 
-[0] https://lore.kernel.org/all/f189ec8e-88fc-491f-8552-e1e5d0b7cde7@kernel.org/
+It has to be multiple parallel creation/teardown loops. With single TD we
+won't see much concurrency. Most of PAMT allocations comes from single
+VCPU.
+
+And it makes sense to do with huge pages as it cuts number of allocated
+PAMT memory allocated on TD creation by factor of 10 in my setup.
+
+JFYI, booting a TD with huge pages consumes 1-2MB of PAMT memory. I doubt
+any optimization here is justifiable.
+
+> That ^ would be the worst possible case, I think. If you don't see lock
+> contention there, you'll hopefully never see it on real systems.
+> 
+> I *suspect* that real systems will get bottlenecked somewhere in the
+> page conversion process rather than on this lock. But it should be a
+> pretty simple experiment to run.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
