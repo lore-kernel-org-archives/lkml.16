@@ -1,125 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66E3235346;
-	Thu,  8 May 2025 23:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FC9235364;
+	Thu,  8 May 2025 23:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746748191; cv=none; b=t0vNlicwTHs04eyMMjOdfJqCXwigVT9gfdP8L2lKD8v5npb0y/dlWLDHVPjEZIhWBhheQLkVgKfeOPB2cvR43+QsGy8indo7y6AXJrDWLgf/4QkINLquoROZRX3UgF9gzEzreXwgHzoVEs6+UyASCgLCsSNqexxYwhFQ779mFDg=
+	t=1746748193; cv=none; b=CR2QoMGVvFJCp0eiG5809FxL5GhmbAE2f3foygrn/iWo9HdGHjlT+Z7+A9EVlKN+AayS3u8r80PbD28Ip+nNm6nAO9YvWqr8aNxKb0c/EiiumpVNCd6AkvebjgwKaQlV4Q32Fsi4aFmtY9XFC/4syzSMKGi4UtKlF4cj5UQHd4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746748191; c=relaxed/simple;
-	bh=lL0EFNIiIcqpQh3uUwyWJQ72+MbHAoPc+7fJeD9cv2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Jy/7gHtU8kAwn+5VORaJ0nLoLSRFRrIpJ3EpHoegss1QSUDWPwlhGp0NoHAQqi/OFmHHP0ab8fKXCStdaDjNiHx7StB2X3745l3B+YJBfxUpOMoA4GP6KrxODioS/cnui7PQPpaYYVyMVVGM//i6Jy2dC8MMBcAhDXdRcuHQzJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ki+sy1Uu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746748193; c=relaxed/simple;
+	bh=kijDMJqlKD9yOwTzumhm7hP9dmi1d/mq0EYroDcjheQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SZvvI8EHboJuEk87Jk1gAwMasryF9gL50oDWrZCXd7sesI6O+m4xIEoj/ip37IqZBDge7hNVvCFY5qwweaymERdTRsHDUck8zEAWR+OBtHeXhb7xnc7Y/LDRv7KRek0QuadCz+h4lBt+RSIsgZUAg6ukPJ8/ktIf6IrPA0s9sR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=f1c0b3M7; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ki+sy1Uu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAF69C4CEE7;
-	Thu,  8 May 2025 23:49:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746748190;
-	bh=lL0EFNIiIcqpQh3uUwyWJQ72+MbHAoPc+7fJeD9cv2c=;
-	h=Date:From:To:Cc:Subject:Reply-To:From;
-	b=ki+sy1Uu2mXoOb83Es1O9jlyKZ8DOL5O0FDVjqRzJmVmYO7bClLEoK6+rf9tFDJHX
-	 989tcSDKrbrHzZzAo5OWaQ6GJvf03NNSAuLrVc7MQvE58SmV0BDuK40VyiX8d5MJRT
-	 1ZpTD71OCSKNh4YvbtcnnZfoC8MGtzB11rOARYhwUOm9ZTZypsrhssky7XfS0KjdtY
-	 6RNPBpk/wX31icPWOmX+K7Gc6UP8cMe+JdICUVlskLdPgzh6FYmp89nRiANVywY1uQ
-	 aXctuEnz28hfbZspPODTfbmUDeTsIY7JM6K2S2qrWsiO98iQ3WUH8jWOn0MMCoOXR0
-	 oGh9PDqIQcdWQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 53BB8CE11A4; Thu,  8 May 2025 16:49:50 -0700 (PDT)
-Date: Thu, 8 May 2025 16:49:50 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: rcu@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org
-Subject: [PATCH] rcu: Protect ->defer_qs_iw_pending from data race
-Message-ID: <e43b1a5c-1f26-491b-b3cb-b69fdbea153a@paulmck-laptop>
-Reply-To: paulmck@kernel.org
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="f1c0b3M7"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 33436260B4;
+	Fri,  9 May 2025 01:49:50 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id VPESXp933hLo; Fri,  9 May 2025 01:49:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1746748189; bh=kijDMJqlKD9yOwTzumhm7hP9dmi1d/mq0EYroDcjheQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=f1c0b3M7TFg29F5QhsevI49hCuPo4IrRvwmi8ks6DNd5Z/g60gSAXZ4rugDMUihhF
+	 PzsKj+ojPPyp5hq/zLgn5WKV8GgJSItjZVs2oe+ghP54ne6GU0Xqaaq81bMqHGVi+o
+	 PjA1vSGT6uvbfCIqDC8m4KkoAhRUAHHzAMZQMrUyES+bn7QomuB5ac16dAmBIMgxXV
+	 YJw8se8qNqodYfORFxtgSB8rBxN5+Nn0ck04iuAWtykgHlgLFMZ3HaBubBb9jVPiQF
+	 MEr3xEU9+9Q44CWW7MvAEfxSvQoQnwygerzELOC01ldEwSNOCal9i2ua7SNSfn7DD9
+	 Qph50B6duksmQ==
+From: Yao Zi <ziyao@disroot.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Yao Zi <ziyao@disroot.org>,
+	Chukun Pan <amadeus@jmu.edu.cn>
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 2/2] arm64: dts: rockchip: Enable SD-card interface on Radxa E20C
+Date: Thu,  8 May 2025 23:48:30 +0000
+Message-ID: <20250508234829.27111-4-ziyao@disroot.org>
+In-Reply-To: <20250508234829.27111-2-ziyao@disroot.org>
+References: <20250508234829.27111-2-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On kernels built with CONFIG_IRQ_WORK=y, when rcu_read_unlock() is
-invoked within an interrupts-disabled region of code [1], it will invoke
-rcu_read_unlock_special(), which uses an irq-work handler to force the
-system to notice when the RCU read-side critical section actually ends.
-That end won't happen until interrupts are enabled at the soonest.
+SD-card is available on Radxa E20C board.
 
-In some kernels, such as those booted with rcutree.use_softirq=y, the
-irq-work handler is used unconditionally.
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+---
+ .../boot/dts/rockchip/rk3528-radxa-e20c.dts   | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-The per-CPU rcu_data structure's ->defer_qs_iw_pending field is
-updated by the irq-work handler and is both read and updated by
-rcu_read_unlock_special().  This resulted in the following KCSAN splat:
-
-------------------------------------------------------------------------
-
-BUG: KCSAN: data-race in rcu_preempt_deferred_qs_handler / rcu_read_unlock_special
-
-read to 0xffff96b95f42d8d8 of 1 bytes by task 90 on cpu 8:
- rcu_read_unlock_special+0x175/0x260
- __rcu_read_unlock+0x92/0xa0
- rt_spin_unlock+0x9b/0xc0
- __local_bh_enable+0x10d/0x170
- __local_bh_enable_ip+0xfb/0x150
- rcu_do_batch+0x595/0xc40
- rcu_cpu_kthread+0x4e9/0x830
- smpboot_thread_fn+0x24d/0x3b0
- kthread+0x3bd/0x410
- ret_from_fork+0x35/0x40
- ret_from_fork_asm+0x1a/0x30
-
-write to 0xffff96b95f42d8d8 of 1 bytes by task 88 on cpu 8:
- rcu_preempt_deferred_qs_handler+0x1e/0x30
- irq_work_single+0xaf/0x160
- run_irq_workd+0x91/0xc0
- smpboot_thread_fn+0x24d/0x3b0
- kthread+0x3bd/0x410
- ret_from_fork+0x35/0x40
- ret_from_fork_asm+0x1a/0x30
-
-no locks held by irq_work/8/88.
-irq event stamp: 200272
-hardirqs last  enabled at (200272): [<ffffffffb0f56121>] finish_task_switch+0x131/0x320
-hardirqs last disabled at (200271): [<ffffffffb25c7859>] __schedule+0x129/0xd70
-softirqs last  enabled at (0): [<ffffffffb0ee093f>] copy_process+0x4df/0x1cc0
-softirqs last disabled at (0): [<0000000000000000>] 0x0
-
-------------------------------------------------------------------------
-
-The problem is that irq-work handlers run with interrupts enabled, which
-means that rcu_preempt_deferred_qs_handler() could be interrupted,
-and that interrupt handler might contain an RCU read-side critical
-section, which might invoke rcu_read_unlock_special().  In the strict
-KCSAN mode of operation used by RCU, this constitutes a data race on
-the ->defer_qs_iw_pending field.
-
-This commit therefore disables interrupts across the portion of the
-rcu_preempt_deferred_qs_handler() that updates the ->defer_qs_iw_pending
-field.  This suffices because this handler is not a fast path.
-
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 3c0bbbbb686fe..003e549f65141 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -624,10 +624,13 @@ notrace void rcu_preempt_deferred_qs(struct task_struct *t)
-  */
- static void rcu_preempt_deferred_qs_handler(struct irq_work *iwp)
- {
-+	unsigned long flags;
- 	struct rcu_data *rdp;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
+index 0942baba6b8f..d45b6594b2de 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
+@@ -18,6 +18,7 @@ / {
  
- 	rdp = container_of(iwp, struct rcu_data, defer_qs_iw);
-+	local_irq_save(flags);
- 	rdp->defer_qs_iw_pending = false;
-+	local_irq_restore(flags);
- }
+ 	aliases {
+ 		mmc0 = &sdhci;
++		mmc1 = &sdmmc;
+ 	};
  
- /*
+ 	chosen {
+@@ -130,6 +131,18 @@ vcc5v0_sys: regulator-5v0-vcc-sys {
+ 		regulator-max-microvolt = <5000000>;
+ 	};
+ 
++	vccio_sd: regulator-vccio-sd {
++		compatible = "regulator-gpio";
++		gpios = <&gpio4 RK_PB6 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&sdmmc_vol_ctrl_h>;
++		regulator-name = "vccio_sd";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++		states = <1800000 0x0>, <3300000 0x1>;
++		vin-supply = <&vcc5v0_sys>;
++	};
++
+ 	vdd_arm: regulator-vdd-arm {
+ 		compatible = "pwm-regulator";
+ 		pwms = <&pwm1 0 5000 PWM_POLARITY_INVERTED>;
+@@ -205,6 +218,12 @@ wan_led_g: wan-led-g {
+ 			rockchip,pins = <4 RK_PC0 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
++
++	sdmmc {
++		sdmmc_vol_ctrl_h: sdmmc-vol-ctrl-h {
++			rockchip,pins = <4 RK_PB6 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
+ };
+ 
+ &pwm1 {
+@@ -235,6 +254,17 @@ &sdhci {
+ 	status = "okay";
+ };
+ 
++&sdmmc {
++	bus-width = <4>;
++	cap-mmc-highspeed;
++	cap-sd-highspeed;
++	disable-wp;
++	sd-uhs-sdr104;
++	vmmc-supply = <&vcc_3v3>;
++	vqmmc-supply = <&vccio_sd>;
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0m0_xfer>;
+-- 
+2.49.0
+
