@@ -1,172 +1,138 @@
-Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F57F20F081;
-	Thu,  8 May 2025 05:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 084108C1E
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 05:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746683423; cv=none; b=iZwTZ7HXsLYJRJBuP6upBq/WK+PQlMWvWwVrxDoBsi3keZrYwCBNZEMwXnsUCg08mRvvLAgOIkM9N1NG9vGZv6aa8//8H9MsrU804gwKX6/y4qJ+YYjqAyobtTV28jHXn3b42SPEkG8iLXm5kWVN0es7v2/BLE03IvhZdS6Tfkc=
+	t=1746683534; cv=none; b=P54Sx9/Eor1Rj5hOi1gVHcG+XfqDPB7sn4FxaPGLV73lC4scxWNUxTgjkEhYv99aTFzA+ctrfGaRcenVp8zJZv6N6KWCyVw13f5HiK8q5R64syeV22KezMbn9eveHjKNx+8WjG3uWhrwuNXm9vSRfFCy/azXIiKl4zeDxoK67Co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746683423; c=relaxed/simple;
-	bh=9h1xbURXxGWrvKx9QCcbV1QCEaBoQJVsir3FtKD2gCs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UbUNToMQnNSJgXPcJ8Z85vF+3EtXBLSpCqk7TfphV36+a2lqFEVno2lexcLqSCtin6AKrmMIi36RoI9/4Vk3THLVf4PmQnZQhOiNfdQy0knxpj7609eEZ/xLKccfNLJxkekLSXKq1qPgpZ+ouWHrxPonBqp01cfqKRDxLZ1a/5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=mtVqxhw4; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=Q7g4GK4Q; arc=none smtp.client-ip=155.254.16.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
+	s=arc-20240116; t=1746683534; c=relaxed/simple;
+	bh=Bz3RK3w8Iqotrfm+jiRfcCmjyO9GogSAsriwYpQb9gs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=R+EoSxXn6rBjZWwljcrL0exVid4zaH/f5YXLVg1HjJxQFJ8WhuD2w65yzT6bVQHhMr3TbuNNOwRmtjynluTIDe1/XkkAVEAlN1vOhDXQARmVZHemCogCm3ruVmleGx8rcfar709D2U8QAqI4hknNpuwZPLnAbh4evchVoYZD3LU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=lFB3y/9s reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="mtVqxhw4";
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="Q7g4GK4Q"
-Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
-	by bayard.4d2.org (Postfix) with ESMTP id 8305B12FB447;
-	Wed, 07 May 2025 22:50:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1746683421; bh=9h1xbURXxGWrvKx9QCcbV1QCEaBoQJVsir3FtKD2gCs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mtVqxhw4uMfcFkqkn2govDBg6HdQT72/yv4YNkMaAMZ2W/qkCfX1waLVpD32rUYE6
-	 pdyZx/XcDqW7FEI0x26rojU6SejdMYGe/ue0olk1cN1M3jjP0P9/WY0Cu1vCIuzZaX
-	 4yJiwaOIWJBgqJayp0uWrbcg6CLXnftxGNNr7W9bulaQVVHh9agzmhWYNvCAVrOwXA
-	 mKVXUDHfYTwxE6Sn7bdVukTP4KajT9Qr+bbBxqiKZJamvCdSKhRsTpqtGmYNThoySm
-	 z8J15ghInqO+VDIeEeL0Fnd6FZWcXvLr1tNLxd/PdkugaDfZV6e7EeMEv7mEaCH07w
-	 tcOdpUiTgVJgg==
-X-Virus-Scanned: amavisd-new at 4d2.org
-Received: from bayard.4d2.org ([127.0.0.1])
- by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id ZB89_tY-Ofmk; Wed,  7 May 2025 22:49:47 -0700 (PDT)
-Received: from ketchup (unknown [183.217.82.204])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: heylenay@4d2.org)
-	by bayard.4d2.org (Postfix) with ESMTPSA id 896BA12FB439;
-	Wed, 07 May 2025 22:49:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1746683387; bh=9h1xbURXxGWrvKx9QCcbV1QCEaBoQJVsir3FtKD2gCs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q7g4GK4QYHgbQRvVz6WueosEuJM3dTt/iuT/Z69kHnZRsG0/sUiBbIyX4qx/VniWK
-	 SWoAyq3+YdPBynkoZy8PMBLF/6a8XVwYF5jAGJaYVLPi5fEU+SGJdnbQm1UbgERhb2
-	 knsws/s/c6KJgz3BRpNDaspFV50aUkpi/tE9GlVs9uCLSXth8ItSS7xFnDrato4Z2E
-	 nEkHMItd74NUdWtAF7qFWr95LFveUeghbIFwWhVVsKLYQ8iaIJjqrJaDTOo3SpXXaV
-	 B9bNrtnQXXwriCcCMqxef2UHdfSuvxPu+lB/kcc2Sk0GnC4zYzfLEo9n64czP8mj89
-	 yRq0ef7LoXY0A==
-Date: Thu, 8 May 2025 05:49:39 +0000
-From: Haylen Chu <heylenay@4d2.org>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Haylen Chu <heylenay@outlook.com>, Yixun Lan <dlan@gentoo.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	spacemit@lists.linux.dev, Inochi Amaoto <inochiama@outlook.com>,
-	Chen Wang <unicornxdotw@foxmail.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
-	Alex Elder <elder@riscstar.com>
-Subject: Re: [PATCH v8 5/6] riscv: dts: spacemit: Add clock tree for SpacemiT
- K1
-Message-ID: <aBxF81yqPgHP5oA_@ketchup>
-References: <20250416135406.16284-1-heylenay@4d2.org>
- <20250416135406.16284-6-heylenay@4d2.org>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="lFB3y/9s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=n0B34arbIHUnRtwFWU1yjtd7WuKCdlVvJWIjrc5VsAM=; b=l
+	FB3y/9sBMvCyHlIM7cHnOiOa23KzIAlU8Ui0PJGmwsRl53M77VyPOoUSEQggtVLw
+	cz8Q08M4j3vcaPdw9uMCnH6wxs8IG04khk8pYsNMXkJQbaGddR0rJ+773Gf5oCK7
+	XNHTwA9S/h/RFj5zjSgs9sPEzxmN2gjKauI1ZcF034=
+Received: from 00107082$163.com ( [111.35.191.17] ) by
+ ajax-webmail-wmsvr-40-130 (Coremail) ; Thu, 8 May 2025 13:51:48 +0800 (CST)
+Date: Thu, 8 May 2025 13:51:48 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Kent Overstreet" <kent.overstreet@linux.dev>
+Cc: "Suren Baghdasaryan" <surenb@google.com>, akpm@linux-foundation.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] alloc_tag: avoid mem alloc and iter reset when reading
+ allocinfo
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <52tsrapmkfywv4kkdpravtfmxkhxchyua4wttpugihld4iws3r@atfgtbd5wwhx>
+References: <20250507175500.204569-1-00107082@163.com>
+ <a0ebf2e.b422.196abf97373.Coremail.00107082@163.com>
+ <CAJuCfpFAUdqqvFPfe_OLR76c0bX_ngwG=JKC42pVB+WAeX4w0w@mail.gmail.com>
+ <nubqzts4e6n3a5e7xljdsql7mxgzkobo7besgkfvnhn4thhxk3@reob3iac3psp>
+ <289b58f1.352d.196addbf31d.Coremail.00107082@163.com>
+ <y6egptcxlbzgboykjorh3syxwy4wu37eolmjtwuwu36gtbfhgf@o3o34qii4gmq>
+ <1ed4c8f7.3e12.196adf621a2.Coremail.00107082@163.com>
+ <52tsrapmkfywv4kkdpravtfmxkhxchyua4wttpugihld4iws3r@atfgtbd5wwhx>
+X-NTES-SC: AL_Qu2fBPqTvE0r7iGZZekZnEYQheY4XMKyuPkg1YJXOp80mCXtyiAPZ25CNnXs0fmtIgemoQmaTyB17uBjdqV9RrrWGvturAP36k/33cU5ijBT
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416135406.16284-6-heylenay@4d2.org>
+Message-ID: <e1cc19.5287.196ae733594.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:gigvCgCXX0p1RhxoYkupAA--.15361W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0gNHqmgcKSWmQwALsq
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-Hi Yixun,
-
-On Wed, Apr 16, 2025 at 01:54:05PM +0000, Haylen Chu wrote:
-> Describe the PLL and system controllers that're capable of generating
-> clock signals in the devicetree.
-> 
-> Signed-off-by: Haylen Chu <heylenay@4d2.org>
-> Reviewed-by: Alex Elder <elder@riscstar.com>
-> Reviewed-by: Yixun Lan <dlan@gentoo.org>
-> ---
->  arch/riscv/boot/dts/spacemit/k1.dtsi | 75 ++++++++++++++++++++++++++++
->  1 file changed, 75 insertions(+)
-> 
-> diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-> index c670ebf8fa12..584f0dbc60f5 100644
-> --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-> +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-
-I found that I forgot to make the nodenames of syscons consistent:
-both "system-control" and "system-controller" are used, and pll should
-be named as "clock-controller" instead.
-
-Could you please drop the SoC devicetree patch then I could rework on
-it and correct the mistake? Or I could follow up a clean up patch if
-dropping isn't easy or doesn't follow the convention.
-
-Thanks for your work,
-Haylen Chu
-
-> @@ -314,6 +346,17 @@ soc {
->  		dma-noncoherent;
->  		ranges;
->  
-> +		syscon_apbc: system-control@d4015000 {
-> +			compatible = "spacemit,k1-syscon-apbc";
-> +			reg = <0x0 0xd4015000 0x0 0x1000>;
-> +			clocks = <&osc_32k>, <&vctcxo_1m>, <&vctcxo_3m>,
-> +				 <&vctcxo_24m>;
-> +			clock-names = "osc", "vctcxo_1m", "vctcxo_3m",
-> +				      "vctcxo_24m";
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +		};
-> +
->  		uart0: serial@d4017000 {
->  			compatible = "spacemit,k1-uart", "intel,xscale-uart";
->  			reg = <0x0 0xd4017000 0x0 0x100>;
-> @@ -409,6 +452,38 @@ pinctrl: pinctrl@d401e000 {
->  			reg = <0x0 0xd401e000 0x0 0x400>;
->  		};
->  
-> +		syscon_mpmu: system-controller@d4050000 {
-> +			compatible = "spacemit,k1-syscon-mpmu";
-> +			reg = <0x0 0xd4050000 0x0 0x209c>;
-> +			clocks = <&osc_32k>, <&vctcxo_1m>, <&vctcxo_3m>,
-> +				 <&vctcxo_24m>;
-> +			clock-names = "osc", "vctcxo_1m", "vctcxo_3m",
-> +				      "vctcxo_24m";
-> +			#clock-cells = <1>;
-> +			#power-domain-cells = <1>;
-> +			#reset-cells = <1>;
-> +		};
-> +
-> +		pll: system-control@d4090000 {
-> +			compatible = "spacemit,k1-pll";
-> +			reg = <0x0 0xd4090000 0x0 0x1000>;
-> +			clocks = <&vctcxo_24m>;
-> +			spacemit,mpmu = <&syscon_mpmu>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		syscon_apmu: system-control@d4282800 {
-> +			compatible = "spacemit,k1-syscon-apmu";
-> +			reg = <0x0 0xd4282800 0x0 0x400>;
-> +			clocks = <&osc_32k>, <&vctcxo_1m>, <&vctcxo_3m>,
-> +				 <&vctcxo_24m>;
-> +			clock-names = "osc", "vctcxo_1m", "vctcxo_3m",
-> +				      "vctcxo_24m";
-> +			#clock-cells = <1>;
-> +			#power-domain-cells = <1>;
-> +			#reset-cells = <1>;
-> +		};
-> +
->  		plic: interrupt-controller@e0000000 {
->  			compatible = "spacemit,k1-plic", "sifive,plic-1.0.0";
->  			reg = <0x0 0xe0000000 0x0 0x4000000>;
-> -- 
-> 2.49.0
-> 
+CkF0IDIwMjUtMDUtMDggMTI6MDc6NDAsICJLZW50IE92ZXJzdHJlZXQiIDxrZW50Lm92ZXJzdHJl
+ZXRAbGludXguZGV2PiB3cm90ZToKPk9uIFRodSwgTWF5IDA4LCAyMDI1IGF0IDExOjM1OjExQU0g
+KzA4MDAsIERhdmlkIFdhbmcgd3JvdGU6Cj4+IAo+PiAKPj4gQXQgMjAyNS0wNS0wOCAxMTozMTox
+MiwgIktlbnQgT3ZlcnN0cmVldCIgPGtlbnQub3ZlcnN0cmVldEBsaW51eC5kZXY+IHdyb3RlOgo+
+PiA+T24gVGh1LCBNYXkgMDgsIDIwMjUgYXQgMTE6MDY6MzVBTSArMDgwMCwgRGF2aWQgV2FuZyB3
+cm90ZToKPj4gPj4gVGhhbmtzIGZvciB0aGUgZmVlZGJhY2t+Cj4+ID4+IEkgYWdyZWUgdGhhdCBt
+ZW1vcnkgYWxsb2NhdGlvbiBub3JtYWxseSBkb3NlIG5vdCB0YWtlIG1ham9yIHBhcnQgb2YgYSBw
+cm9maWxpbmcgcmVwb3J0LAo+PiA+PiBldmVuIHByb2ZpbGluZyBhIGZpbyB0ZXN0LCBrbWVtX2Nh
+Y2hlX2FsbG9jIG9ubHkgdGFrZXMgfjElIHBlcmYgc2FtcGxlcy4KPj4gPj4gCj4+ID4+IEkgZG9u
+J3Qga25vdyB3aHkgSSBoYXZlIHRoaXMgInRoZSBsZXNzIG1lbW9yeSBhbGxvY2F0aW9uLCB0aGUg
+YmV0dGVyJyBtaW5kc2V0LCAgbWF5YmUKPj4gPj4gSSB3YXMgd29ycnlpbmcgYWJvdXQgbWVtb3J5
+IGZyYWdtZW50YXRpb24sIG9yIHNvbWV0aGluZyBlbHNlIEkgIGxlYXJuZWQgb24gc29tZSAidGV4
+dGJvb2siLAo+PiA+PiBUbyBiZSBob25lc3QsIEkgIGhhdmUgbmV2ZXIgaGFkIHJlYWwgZXhwZXJp
+ZW5jZSB3aXRoIHRob3NlIHdvcnJpZXMuLi4uCj4+ID4KPj4gPkl0J3MgYSBjb21tb24gYmlhcy4g
+Ik1lbW9yeSBhbGxvY2F0aW9ucyIgdGFrZSB1cCBhIGxvdCBvZiBjb25jZXB0dWFsCj4+ID5zcGFj
+ZSBpbiBvdXIgaGVhZHMsIGFuZCBnZW5lcmFsbHkgZm9yIGdvb2QgcmVhc29uIC0gaS5lLiBoYW5k
+bGluZyBtZW1vcnkKPj4gPmFsbG9jYXRpb24gZXJyb3JzIGlzIG9mdGVuIGEgbWFqb3IgY29uY2Vy
+biwgYW5kIHlvdSBkbyBhbHdheXMgd2FudCB0byBiZQo+PiA+YXdhcmUgb2YgbWVtb3J5IGxheW91
+dC4KPj4gPgo+PiA+QnV0IHRoaXMgY2FuIHR1cm4gaW50byBhbiBhdmVyc2lvbiB0aGF0J3MgZW50
+aXJlbHkgZGlzcHJvcG9ydGlvbmF0ZSAtCj4+ID5lLmcuIHVzaW5nIGxpbmtlZCBsaW5rZWQgbGlz
+dHMgYW5kIGZpeGVkIHNpemUgYXJyYXlzIGluIHdheXMgdGhhdCBhcmUKPj4gPmVudGlyZWx5IGlu
+YXBwcm9wcmlhdGUsIGluc3RlYWQgb2YgdmVjdG9ycyBhbmQgb3RoZXIgYmV0dGVyIGRhdGEKPj4g
+PnN0cnVjdHVyZXM7IGdvb2QgZGF0YSBzdHJ1Y3R1cmVzIGFsd2F5cyByZXF1aXJlIGFsbG9jYXRp
+b25zLgo+PiA+Cj4+ID5Qcm9maWxlLCBwcm9maWxlLCBwcm9maWxlLCBhbmQgcmVtZW1iZXIgeW91
+ciBiYXNpYyBDUyAoYmlnIE8gbm90YXRpb24pIC0KPj4gPjkwJSBvZiB0aGUgdGltZSwgc2ltcGxl
+IGNvZGUgd2l0aCBnb29kIGJpZyBPIHJ1bm5pbmcgdGltZSBpcyBhbGwgeW91Cj4+ID5uZWVkLgo+
+PiAKPj4gY29weSB0aGF0fiEKPgo+QW5vdGhlciB0aGluZyB0byBub3RlIGlzIHRoYXQgbWVtb3J5
+IGxheW91dCAtIGF2b2lkaW5nIHBvaW50ZXIgY2hhc2luZyAtCj5pcyBodWdlbHkgaW1wb3J0YW50
+LCBidXQgaXQnbGwgYWxtb3N0IG5ldmVyIHNob3cgdXAgYXMgYWxsb2NhdG9yIGNhbGxzLgo+Cj5U
+byBnaXZlIHlvdSBzb21lIGV4YW1wbGVzLCBtZW1wb29scyBhbmQgYmlvc2V0cyB1c2VkIHRvIGJl
+IHNlcGFyYXRlbHkKPmFsbG9jYXRlZC4gVGhpcyB3YXMgbWFpbmx5IHRvIG1ha2UgZXJyb3IgcGF0
+aHMgaW4gb3V0ZXIgb2JqZWN0Cj5jb25zdHJ1Y3RvcnMvZGVzdHJ1Y3RvcnMgZWFzaWVyIGFuZCBz
+YWZlcjogaW5zdGVhZCBvZiBrZWVwaW5nIHRyYWNrIG9mCj53aGF0J3MgaW5pdGlhbGl6ZWQgYW5k
+IHdoYXQncyBub3QsIGlmIHlvdSd2ZSBnb3QgYSBwb2ludGVyIHRvIGEKPm1lbXBvb2wvYmlvc2V0
+IHlvdSBjYWxsICpfZnJlZSgpIG9uIGl0Lgo+Cj4oUGVvcGxlIGhhZG4ndCB5ZXQgY2x1ZWQgdGhh
+dCB5b3UgY2FuIGp1c3Qga3phbGxvYygpIHRoZSBlbnRpcmUgb3V0ZXIKPm9iamVjdCwgYW5kIHRo
+ZW4gaWYgdGhlIGlubmVyIG9iamVjdCBpcyB6ZXJvZWQgaXQgd2Fzbid0IGluaXRpYWxpemVkKS4K
+Pgo+QnV0IHRoYXQgbWVhbnMgeW91J3JlIGFkZGluZyBhIHBvaW50ZXIgY2hhc2UgdG8gZXZlcnkg
+bWVtcG9vbF9hbGxvYygpCj5jYWxsLCBhbmQgc2luY2UgYmlvc2V0IGl0c2VsZiBoYXMgbWVtcG9v
+bHMgYWxsb2NhdGluZyBiaW9zIGhhZCBfdHdvXwo+dW5uZWNlc3NhcnkgcG9pbnRlciBkZXJlZnMu
+IFRoYXQncyBkZWF0aCBmb3IgcGVyZm9ybWFuY2Ugd2hlbiB5b3UncmUKPnJ1bm5pbmcgY2FjaGUg
+Y29sZCwgYnV0IHNpbmNlIGV2ZXJ5b25lIGJlbmNobWFya3MgY2FjaGUtaG90Li4uCj4KPihJIHdh
+cyB0aGUgb25lIHdobyBmaXhlZCB0aGF0KS4KPgo+QW5vdGhlciBiaWcgb25lIHdhcyBnZW5lcmlj
+X2ZpbGVfYnVmZmVyZWRfcmVhZCgpLiBNYWluIGJ1ZmZlcmVkIHJlYWQKPnBhdGgsIGV2ZXJ5b25l
+IHdhbnRzIGl0IHRvIGJlIGFzIGZhc3QgYXMgcG9zc2libGUuCj4KPkJ1dCB0aGUgY29yZSBpcyAo
+d2FzKSBhIGxvb3AgdGhhdCB3YWxrcyB0aGUgcGFnZWNhY2hlIHJhZGl4IHRyZWUgdG8gZ2V0Cj50
+aGUgcGFnZSwgdGhlbiBjb3BpZXMgNGsgb2YgZGF0YSBvdXQgdG8gdXNlcnNwYWNlICh0aGVyZSBn
+b2VzIGwxKSwgdGhlbgo+cmVwZWF0cyBhbGwgdGhhdCBwb2ludGVyIGNoYXNpbmcgZm9yIHRoZSBu
+ZXh0IDRrLiBQcmUgbGFyZ2UgZm9saW9zLCBpdAo+d2FzIGhvcnJpZmljLgo+Cj5Tb2x1dGlvbiAt
+IHZlY3Rvcml6ZSBpdC4gTG9vayB1cCBhbGwgdGhlIHBhZ2VzIHdlJ3JlIGNvcHlpbmcgZnJvbSBh
+bGwgYXQKPm9uY2UsIHN0dWZmIHRoZW0gaW4gYSAoZHluYW1pY2FsbHkgYWxsb2NhdGVkISBmb3Ig
+ZWFjaCByZWFkISkgdmVjdG9yLAo+YW5kIHRoZW4gZG8gdGhlIGNvcHlpbmcgb3V0IHRvIHVzZXJz
+cGFjZSBhbGwgYXQgb25jZS4gTWFzc2l2ZQo+cGVyZm9ybWFuY2UgZ2Fpbi4KPgo+T2YgY291cnNl
+LCB0byBkbyB0aGF0IEkgZmlyc3QgaGFkIHRvIGNsZWFuIHVwIGEgdGFuZ2xlZCAyNTArIGxpbmUK
+Pm1vbnN0cm9zaXR5IG9mIGhhbGYgYmFrZWQsIHBvb3JseSB0aG91Z2h0IG91dCAib3B0aW1pemF0
+aW9ucyIgKHRoZSB3b3JzdAo+c3BhZ2hldHRpIG9mIGdvdG9zIHlvdSdkIGV2ZXIgc2VlbikgYW5k
+IHR1cm4gaXQgaW50byBzb21ldGhpbmcKPm1hbmFnZWFibGUuLi4KPgo+U28gLSBrZWVwIHRoaW5n
+cyBzaW1wbGUsIGRvbid0IG92ZXJ0aGluayB0aGUgbGl0dGxlIHN0dWZmLCBzbyB5b3UgY2FuCj5z
+cG90IGFuZCB0YWNrbGUgdGhlIGJpZyBhbGdvcml0aG1pYyB3aW5zIDopCkkgd2lsbCBrZWVwIHRo
+aXMgaW4gbWluZH4hIDopCgpBbmQgdGhhbmtzIGZvciB0aGUgZW5saWdodGVuaW5nIG5vdGVzfiEh
+IAoKVGhvdWdoIEkgY291bGQgbm90IHF1aXRlIGNhdGNoIHVwIHdpdGggdGhlIGZpcnN0IG9uZSwg
+IEkgdGhpbmsgSSBnb3QgdGhlIHBvaW50Ogphdm9pZCB1bm5lY2Vzc2FyeSBwb2ludGVyIGNoYXNp
+bmcgYW5kICBrZWVwIHRoZSBwb2ludGVyIGNoYXNpbmcgYXMgc2hvcnQoYmFsYW5jZWQpIGFzIHBv
+c3NpYmxlfiAKClRoZSBzZWNvbmQgb25lLCBhYm91dCBjb3B5IDRrIGJ5IDRrLCBzZWVtcyAgcXVp
+dGUgc2ltaWxhciB0byBzZXFfZmlsZSwgYXQgbGVhc3QgdGhlICI0ayIgcGFydCwgbGl0ZXJhbGx5
+LgpzZXFfZmlsZSByZWFkKCkgIGRlZmF1bHRzIHRvIGFsbG9jIDRrIGJ1ZmZlciwgYW5kIHJlYWQg
+ZGF0YSB1bnRpbCBFT0Ygb3IgdGhlIDRrIGJ1ZmZlciBpcyBmdWxsLCAgIGFuZCBzdGFydCBvdmVy
+CmFnYWluIGZvciB0aGUgbmV4dCByZWFkKCkuICAgCk9uZSBzb2x1dGlvbiBjb3VsZCBiZSBtYWtl
+IGNoYW5nZXMgdG8gc2VxX2ZpbGUsIGRvIG5vdCBzdG9wIHVudGlsIHVzZXIgYnVmZmVyIGlzIGZ1
+bGwgZm9yIGVhY2ggcmVhZC4Ka2luZCBvZiBzaW1pbGFyIHRvIHlvdXIgc2Vjb25kIG5vdGUsIGlu
+IGEgc2VxdWVudGlhbCBzdHlsZSwgIEkgdGhpbmsuCklmICB1c2VyIHJlYWQgd2l0aCAxMjhLIGJ1
+ZmZlciwgIGFuZCBzZXFfZmlsZSBmaWxsIHRoZSBidWZmZXIgNGsgYnkgNGssIGl0IHdvdWxkIG9u
+bHkgbmVlZCB+MyByZWFkIGNhbGxzIGZvciBhbGxvY2luZm8uCihJIGRpZCBwb3N0IGEgcGF0Y2gg
+Zm9yIHNlcV9maWxlIHRvIGZpbGwgdXNlciBidWZmZXIsIGJ1dCBzdGFydC9zdG9wIHN0aWxsIGhh
+cHBlbnMgYXQgIDRrIGJvdW5kYXJ5ICwgc28gbm8gaGVscCBmb3IgCnRoZSBpdGVyYXRvciByZXdp
+bmRpbmcgd2hlbiByZWFkIC9wcm9jL2FsbG9jaW5mbyB5ZXQuCmh0dHBzOi8vbG9yZS5rZXJuZWwu
+b3JnL2xrbWwvMjAyNDEyMjAxNDA4MTkuOTg4Ny0xLTAwMTA3MDgyQDE2My5jb20vICkKVGhlIHNv
+bHV0aW9uIGluIHRoaXMgcGF0Y2ggaXMga2VlcGluZyB0aGUgaXRlcmF0b3IgYWxpdmUgYW5kIHZh
+bGlkIGNyb3NzIHJlYWQgYm91bmRhcnksIHRoaXMgY2FuICBhbHNvIGF2b2lkIHRoZSBjb3N0IGZv
+ciAKZWFjaCBzdGFydCBvdmVyLgoKCgpEYXZpZAoK
