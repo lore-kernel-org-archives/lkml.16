@@ -1,385 +1,159 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1767222D4C9
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F4122258F
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 13:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746712219; cv=none; b=pXyMkyKQ91lxEUSvPJvfLIGLkx1fbIJoFnibaJ0FEklkPx4gHhp4tG7Nfb8xrG4vR7VKIW7Ecau9LdYGo29S0LcbniKOeIs4oqiG2dP73UVcvoWDQRfdVHIOj/YW2Xer2wY48hBsY2rjkKXTInAitgTRYZd+zNr5QUxtNiX3fLg=
+	t=1746712259; cv=none; b=fZqg/4IzIzSM+ZOILOrOQ6ETKpNWXQZuzY+0M1Ee11EKHadk1aGrmskop/BbBkoGnm75twQK8AqOXJ/gr0Fho8qVfB9KLBMmJSH1SguHJ7TMW3S107n4E1SAfwGu7kTyM7pX39T+ONxhrqiimjvAzO1hU+bqUmLHBe1Ga8xQ+5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746712219; c=relaxed/simple;
-	bh=L98kzA/S1gVcG3tKfXm5VAvJL8bkz+KMHUt7l8hT7bs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=pOueut/b0yhQAaJPYxuVAD8qfOLpRNJ3JQUxoivUGe1qXL7hRq1GSGEwdly4xSDSQgX73NUJ5LsaVr8ZZxWFetMaeP6/D431tb5sWep18SPAOQagt7mpjx0ppZW941/E/W60jgxAXuxyS7qICBk+R0E8inioCtLoCBQZ94Wa5gM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=m/wawiMS; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=ZPvO9vkQ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1746712259; c=relaxed/simple;
+	bh=lJyOeEHegvLhoKBd+hxBA2/76N09zRsPJWC0/e4pNcQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qVky1pfis03sbYCFALMVDLVYvi4SUGZttPl688qD4WuheityKfacNPi8CNL6wHBGpQMOK4e1hrL1nE+Ve8eFglUf41CSrFpapiAeuzINu8i4G2qQleFW3cj77a80dBsEhpYd+gTUarBlfSed1SjppNr3CgivzxIxiY7cjm89v1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ojI6nTSz; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="m/wawiMS";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="ZPvO9vkQ"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id F0041211EB;
-	Thu,  8 May 2025 13:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1746712214; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L98kzA/S1gVcG3tKfXm5VAvJL8bkz+KMHUt7l8hT7bs=;
-	b=m/wawiMS44QAeIgTxQxnbLU+XlmIPxOF/gXjsRIecdEjQ6/TgGBIfFghGqTaZc20e1iIja
-	vMXKAq3ed+JmPkXPTWfb4tj3RdxalSSPyJ833Rorl4jz+mrvg/eyekVzWJGxc1IFMypYTg
-	s8yr9vQledqGiOshJhCORlDOvNe2Ojg=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1746712213; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L98kzA/S1gVcG3tKfXm5VAvJL8bkz+KMHUt7l8hT7bs=;
-	b=ZPvO9vkQKc/JtV6FLq5R9mO+jqtkr4shYs8hPo8q2TgKmoWoOP2752ej0yB/YNfEywjf4x
-	/5/7h7SsmXlMfBxEbA7gxj86BaDX0rdBY8s8N17t1Y8Y+Gboftyptz6pB/O4xQb7VVcpKU
-	oD0dehu71fptGfDmdH+T381F37Rf3g8=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A619413712;
-	Thu,  8 May 2025 13:50:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id bBsBJ5W2HGgVPwAAD6G6ig
-	(envelope-from <mwilck@suse.com>); Thu, 08 May 2025 13:50:13 +0000
-Message-ID: <f7b1688f2a17165ff5bfee7cc892c0067af7a9ca.camel@suse.com>
-Subject: Re: [PATCH 1/2] dm: Allow .prepare_ioctl to handle ioctls directly
-From: Martin Wilck <mwilck@suse.com>
-To: Kevin Wolf <kwolf@redhat.com>, dm-devel@lists.linux.dev
-Cc: hreitz@redhat.com, mpatocka@redhat.com, snitzer@kernel.org, 
-	bmarzins@redhat.com, linux-kernel@vger.kernel.org, Hannes Reinecke
- <hare@suse.com>
-Date: Thu, 08 May 2025 15:50:13 +0200
-In-Reply-To: <20250429165018.112999-2-kwolf@redhat.com>
-References: <20250429165018.112999-1-kwolf@redhat.com>
-		 <20250429165018.112999-2-kwolf@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ojI6nTSz"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3fbc00143d6so926224b6e.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 06:50:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746712257; x=1747317057; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ouj0qfvFepL9kOLcYrh4tsGA66IJWwOPF0qOB3iRvnM=;
+        b=ojI6nTSzB0FAs45s8pBE4cuCm4RNFUzDbu6brVJPpeCqTiK1rHpJMug416boPAsCBp
+         T8cj653RqLyjvVhcF0HQp+UkFGlaQdPCdV6XwR7aIl1LH1M0y7Kj1x9GDbzu3NBEoikJ
+         5zC5y32kaQH32kEk0RvxfRGYhL6ncUqoPbvs7YH9jmjHl4FNeTY+ithJvc3GQjJhcmMN
+         hlLrtIsq2lh9/8y7T3nlQcqPGkMavbhSM1f0oy0Fx77dcgEohn8GbEQe5ks6e4A+T0/w
+         xmi28YkRmKPVMAT9ERHaoGqjsbAef7U0UfYbXJ3V0HCYmiKa0fmcB92PmahuOHlSl/TJ
+         LCsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746712257; x=1747317057;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ouj0qfvFepL9kOLcYrh4tsGA66IJWwOPF0qOB3iRvnM=;
+        b=HbNmznfmZpd0NuLjp+gRo30NG9Or3jN7UyY3Aem8gpVwbHNXiAkFjfXgHpokrmY27W
+         IcO0aEwkrJ3Qb6RE02wFWjqhqnM/GWpgntVFRlGzyX1PMvpcxYGRizGvB2RTzCe3Ry03
+         uI59abNhnrhUhAnpnTxpSw4HthpF9gPcDra5d+UrfbPVoknKLOTwht+/O+gOMxbEwcP9
+         nvtEhoqvmi1Tnai1OUgY+SH4vDwYwN08v15RNS/9n+yeCnxKOJOnDEHUGh9MQ7h9JScj
+         LLjyqg7E6DCw+D3SsCarow7OV+Edxln1w0XUP++LJproSZ2CaunK+n/lje/uS5/SvhwL
+         dBNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8PseBAwQnBKVkj3rq6mu2AsvQfyrFXGrW7u6aBRaTnxQ20lYILMo2u0UbxlfYYteBfjrEn7vuheQhIKI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzT0ME/dVJZcTyLHSUNi3+7NA9XjxBYAtpd8YL8BlIcuqp+NmAt
+	mWFUdBpMPAM39Nq9TyEIuIz4Ci7Qrs+sTCUiKzO1aCe3GMI0YjnMJ1TR814Nkus=
+X-Gm-Gg: ASbGncsctcm4pRMwyUc6Z8ihtrogy5GTkoryP9U/Aj7grxp95r1Y7FDR49NjxVgEtbC
+	5YNUXEZD2rQuZqYuFId+kZLPDa6kD3i9NyTDHaav0sT9azpG7aLcuzKlA1T5p0tYUjKfxaiWMd0
+	AJQgp7TP0PZaN3HVgHDKGKxgWoLOeh1nrJFxa0To9ieSg7EOuz9C/RcMIY9hJIZz6/cdhygQ63A
+	/PRjW/fFqJZ5TxER9h5KBOoIQZEWJGRNz0fcKoFd3G4aMWLHdVRhSn9EnazpxLa54TEW/PauaeR
+	Wni0LbtupDq1GzpRFLZtDeL61HUULnwtFibR78OEYvIbzPvze4SriJdF0VfCK2VYla8ns+tr3Pv
+	EsjjlP74vvdN15QdyZQ==
+X-Google-Smtp-Source: AGHT+IHCPN64NvcV87IbwF3LkvQkpqFNuSONFbX3+kLtH8kqD7JwExKv4iDlgXtZ/SWM+8ccZ3oj8w==
+X-Received: by 2002:a05:6808:6f96:b0:403:371d:e56b with SMTP id 5614622812f47-40377f88f0dmr2261392b6e.32.1746712257128;
+        Thu, 08 May 2025 06:50:57 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e? ([2600:8803:e7e4:1d00:1120:d1cf:c64a:ac7e])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4036f3406fbsm1247028b6e.22.2025.05.08.06.50.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 May 2025 06:50:56 -0700 (PDT)
+Message-ID: <7f5f75c1-7750-4966-9362-2a46c5e5ba3e@baylibre.com>
+Date: Thu, 8 May 2025 08:50:56 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:mid]
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/5] iio: adc: ad7606: add gain calibration support
+To: Angelo Dureghello <adureghello@baylibre.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250506-wip-bl-ad7606-calibration-v3-0-6eb7b6e72307@baylibre.com>
+ <20250506-wip-bl-ad7606-calibration-v3-5-6eb7b6e72307@baylibre.com>
+ <c999800bb5f6c1f2687ff9b257079dcf719dd084.camel@gmail.com>
+ <qaiqdak4pieewavl2ff4mpr2ywhw2bvnoob55buiinkisacar5@q6jhlb5klcf6>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <qaiqdak4pieewavl2ff4mpr2ywhw2bvnoob55buiinkisacar5@q6jhlb5klcf6>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2025-04-29 at 18:50 +0200, Kevin Wolf wrote:
-> This adds a 'bool *forward' parameter to .prepare_ioctl, which allows
-> device mapper targets to accept ioctls to themselves instead of the
-> underlying device. If the target already fully handled the ioctl, it
-> sets *forward to false and device mapper won't forward it to the
-> underlying device any more.
->=20
-> In order for targets to actually know what the ioctl is about and how
-> to
-> handle it, pass also cmd and arg.
->=20
-> As long as targets restrict themselves to interpreting ioctls of type
-> DM_IOCTL, this is a backwards compatible change because previously,
-> any
-> such ioctl would have been passed down through all device mapper
-> layers
-> until it reached a device that can't understand the ioctl and would
-> return an error.
->=20
-> Signed-off-by: Kevin Wolf <kwolf@redhat.com>
-> ---
-> =C2=A0include/linux/device-mapper.h |=C2=A0 9 ++++++++-
-> =C2=A0drivers/md/dm-dust.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 4 +++-
-> =C2=A0drivers/md/dm-ebs-target.c=C2=A0=C2=A0=C2=A0 |=C2=A0 3 ++-
-> =C2=A0drivers/md/dm-flakey.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 4 +++-
-> =C2=A0drivers/md/dm-linear.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 4 +++-
-> =C2=A0drivers/md/dm-log-writes.c=C2=A0=C2=A0=C2=A0 |=C2=A0 4 +++-
-> =C2=A0drivers/md/dm-mpath.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 4 +++-
-> =C2=A0drivers/md/dm-switch.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 4 +++-
-> =C2=A0drivers/md/dm-verity-target.c |=C2=A0 4 +++-
-> =C2=A0drivers/md/dm-zoned-target.c=C2=A0 |=C2=A0 3 ++-
-> =C2=A0drivers/md/dm.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 17 +++++++++++------
-> =C2=A011 files changed, 44 insertions(+), 16 deletions(-)
->=20
-> diff --git a/include/linux/device-mapper.h b/include/linux/device-
-> mapper.h
-> index bcc6d7b69470..cb95951547ab 100644
-> --- a/include/linux/device-mapper.h
-> +++ b/include/linux/device-mapper.h
-> @@ -93,7 +93,14 @@ typedef void (*dm_status_fn) (struct dm_target
-> *ti, status_type_t status_type,
-> =C2=A0typedef int (*dm_message_fn) (struct dm_target *ti, unsigned int
-> argc, char **argv,
-> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 char *result, unsigned int maxlen);
-> =C2=A0
-> -typedef int (*dm_prepare_ioctl_fn) (struct dm_target *ti, struct
-> block_device **bdev);
-> +/*
-> + * Called with *forward =3D=3D true. If it remains true, the ioctl
-> should be
-> + * forwarded to bdev. If it is reset to false, the target already
-> fully handled
-> + * the ioctl and the return value is the return value for the whole
-> ioctl.
-> + */
-> +typedef int (*dm_prepare_ioctl_fn) (struct dm_target *ti, struct
-> block_device **bdev,
-> + =C2=A0=C2=A0=C2=A0 unsigned int cmd, unsigned long arg,
-> + =C2=A0=C2=A0=C2=A0 bool *forward);
-> =C2=A0
-> =C2=A0#ifdef CONFIG_BLK_DEV_ZONED
-> =C2=A0typedef int (*dm_report_zones_fn) (struct dm_target *ti,
-> diff --git a/drivers/md/dm-dust.c b/drivers/md/dm-dust.c
-> index 1a33820c9f46..e75310232bbf 100644
-> --- a/drivers/md/dm-dust.c
-> +++ b/drivers/md/dm-dust.c
-> @@ -534,7 +534,9 @@ static void dust_status(struct dm_target *ti,
-> status_type_t type,
-> =C2=A0 }
-> =C2=A0}
-> =C2=A0
-> -static int dust_prepare_ioctl(struct dm_target *ti, struct
-> block_device **bdev)
-> +static int dust_prepare_ioctl(struct dm_target *ti, struct
-> block_device **bdev,
-> + =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int cmd, unsigned long arg,
-> + =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool *forward)
-> =C2=A0{
-> =C2=A0 struct dust_device *dd =3D ti->private;
-> =C2=A0 struct dm_dev *dev =3D dd->dev;
-> diff --git a/drivers/md/dm-ebs-target.c b/drivers/md/dm-ebs-target.c
-> index b19b0142a690..6abb31ca9662 100644
-> --- a/drivers/md/dm-ebs-target.c
-> +++ b/drivers/md/dm-ebs-target.c
-> @@ -415,7 +415,8 @@ static void ebs_status(struct dm_target *ti,
-> status_type_t type,
-> =C2=A0 }
-> =C2=A0}
-> =C2=A0
-> -static int ebs_prepare_ioctl(struct dm_target *ti, struct
-> block_device **bdev)
-> +static int ebs_prepare_ioctl(struct dm_target *ti, struct
-> block_device **bdev,
-> + =C2=A0=C2=A0=C2=A0=C2=A0 unsigned int cmd, unsigned long arg, bool *for=
-ward)
-> =C2=A0{
-> =C2=A0 struct ebs_c *ec =3D ti->private;
-> =C2=A0 struct dm_dev *dev =3D ec->dev;
-> diff --git a/drivers/md/dm-flakey.c b/drivers/md/dm-flakey.c
-> index b690905ab89f..0fceb08f4622 100644
-> --- a/drivers/md/dm-flakey.c
-> +++ b/drivers/md/dm-flakey.c
-> @@ -638,7 +638,9 @@ static void flakey_status(struct dm_target *ti,
-> status_type_t type,
-> =C2=A0 }
-> =C2=A0}
-> =C2=A0
-> -static int flakey_prepare_ioctl(struct dm_target *ti, struct
-> block_device **bdev)
-> +static int flakey_prepare_ioctl(struct dm_target *ti, struct
-> block_device **bdev,
-> + unsigned int cmd, unsigned long arg,
-> + bool *forward)
-> =C2=A0{
-> =C2=A0 struct flakey_c *fc =3D ti->private;
-> =C2=A0
-> diff --git a/drivers/md/dm-linear.c b/drivers/md/dm-linear.c
-> index 66318aba4bdb..15538ec58f8e 100644
-> --- a/drivers/md/dm-linear.c
-> +++ b/drivers/md/dm-linear.c
-> @@ -119,7 +119,9 @@ static void linear_status(struct dm_target *ti,
-> status_type_t type,
-> =C2=A0 }
-> =C2=A0}
-> =C2=A0
-> -static int linear_prepare_ioctl(struct dm_target *ti, struct
-> block_device **bdev)
-> +static int linear_prepare_ioctl(struct dm_target *ti, struct
-> block_device **bdev,
-> + unsigned int cmd, unsigned long arg,
-> + bool *forward)
-> =C2=A0{
-> =C2=A0 struct linear_c *lc =3D ti->private;
-> =C2=A0 struct dm_dev *dev =3D lc->dev;
-> diff --git a/drivers/md/dm-log-writes.c b/drivers/md/dm-log-writes.c
-> index 8d7df8303d0a..d484e8e1d48a 100644
-> --- a/drivers/md/dm-log-writes.c
-> +++ b/drivers/md/dm-log-writes.c
-> @@ -818,7 +818,9 @@ static void log_writes_status(struct dm_target
-> *ti, status_type_t type,
-> =C2=A0}
-> =C2=A0
-> =C2=A0static int log_writes_prepare_ioctl(struct dm_target *ti,
-> - =C2=A0=C2=A0=C2=A0 struct block_device **bdev)
-> + =C2=A0=C2=A0=C2=A0 struct block_device **bdev,
-> + =C2=A0=C2=A0=C2=A0 unsigned int cmd, unsigned long arg,
-> + =C2=A0=C2=A0=C2=A0 bool *forward)
-> =C2=A0{
-> =C2=A0 struct log_writes_c *lc =3D ti->private;
-> =C2=A0 struct dm_dev *dev =3D lc->dev;
-> diff --git a/drivers/md/dm-mpath.c b/drivers/md/dm-mpath.c
-> index 6c98f4ae5ea9..909ed6890ba5 100644
-> --- a/drivers/md/dm-mpath.c
-> +++ b/drivers/md/dm-mpath.c
-> @@ -2022,7 +2022,9 @@ static int multipath_message(struct dm_target
-> *ti, unsigned int argc, char **arg
-> =C2=A0}
-> =C2=A0
-> =C2=A0static int multipath_prepare_ioctl(struct dm_target *ti,
-> - =C2=A0=C2=A0 struct block_device **bdev)
-> + =C2=A0=C2=A0 struct block_device **bdev,
-> + =C2=A0=C2=A0 unsigned int cmd, unsigned long arg,
-> + =C2=A0=C2=A0 bool *forward)
-> =C2=A0{
-> =C2=A0 struct multipath *m =3D ti->private;
-> =C2=A0 struct pgpath *pgpath;
-> diff --git a/drivers/md/dm-switch.c b/drivers/md/dm-switch.c
-> index dfd9fb52a6f3..bb1a70b5a215 100644
-> --- a/drivers/md/dm-switch.c
-> +++ b/drivers/md/dm-switch.c
-> @@ -517,7 +517,9 @@ static void switch_status(struct dm_target *ti,
-> status_type_t type,
-> =C2=A0 *
-> =C2=A0 * Passthrough all ioctls to the path for sector 0
-> =C2=A0 */
-> -static int switch_prepare_ioctl(struct dm_target *ti, struct
-> block_device **bdev)
-> +static int switch_prepare_ioctl(struct dm_target *ti, struct
-> block_device **bdev,
-> + unsigned int cmd, unsigned long arg,
-> + bool *forward)
-> =C2=A0{
-> =C2=A0 struct switch_ctx *sctx =3D ti->private;
-> =C2=A0 unsigned int path_nr;
-> diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-
-> target.c
-> index 4de2c226ac9d..34a9f9fbd0d1 100644
-> --- a/drivers/md/dm-verity-target.c
-> +++ b/drivers/md/dm-verity-target.c
-> @@ -994,7 +994,9 @@ static void verity_status(struct dm_target *ti,
-> status_type_t type,
-> =C2=A0 }
-> =C2=A0}
-> =C2=A0
-> -static int verity_prepare_ioctl(struct dm_target *ti, struct
-> block_device **bdev)
-> +static int verity_prepare_ioctl(struct dm_target *ti, struct
-> block_device **bdev,
-> + unsigned int cmd, unsigned long arg,
-> + bool *forward)
-> =C2=A0{
-> =C2=A0 struct dm_verity *v =3D ti->private;
-> =C2=A0
-> diff --git a/drivers/md/dm-zoned-target.c b/drivers/md/dm-zoned-
-> target.c
-> index 6141fc25d842..5da3db06da10 100644
-> --- a/drivers/md/dm-zoned-target.c
-> +++ b/drivers/md/dm-zoned-target.c
-> @@ -1015,7 +1015,8 @@ static void dmz_io_hints(struct dm_target *ti,
-> struct queue_limits *limits)
-> =C2=A0/*
-> =C2=A0 * Pass on ioctl to the backend device.
-> =C2=A0 */
-> -static int dmz_prepare_ioctl(struct dm_target *ti, struct
-> block_device **bdev)
-> +static int dmz_prepare_ioctl(struct dm_target *ti, struct
-> block_device **bdev,
-> + =C2=A0=C2=A0=C2=A0=C2=A0 unsigned int cmd, unsigned long arg, bool *for=
-ward)
-> =C2=A0{
-> =C2=A0 struct dmz_target *dmz =3D ti->private;
-> =C2=A0 struct dmz_dev *dev =3D &dmz->dev[0];
-> diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-> index ccccc098b30e..1726f0f828cc 100644
-> --- a/drivers/md/dm.c
-> +++ b/drivers/md/dm.c
-> @@ -411,7 +411,8 @@ static int dm_blk_getgeo(struct block_device
-> *bdev, struct hd_geometry *geo)
-> =C2=A0}
-> =C2=A0
-> =C2=A0static int dm_prepare_ioctl(struct mapped_device *md, int *srcu_idx=
-,
-> - =C2=A0=C2=A0=C2=A0 struct block_device **bdev)
-> + =C2=A0=C2=A0=C2=A0 struct block_device **bdev, unsigned int cmd,
-> + =C2=A0=C2=A0=C2=A0 unsigned long arg, bool *forward)
-> =C2=A0{
-> =C2=A0 struct dm_target *ti;
-> =C2=A0 struct dm_table *map;
-> @@ -434,8 +435,8 @@ static int dm_prepare_ioctl(struct mapped_device
-> *md, int *srcu_idx,
-> =C2=A0 if (dm_suspended_md(md))
-> =C2=A0 return -EAGAIN;
-> =C2=A0
-> - r =3D ti->type->prepare_ioctl(ti, bdev);
-> - if (r =3D=3D -ENOTCONN && !fatal_signal_pending(current)) {
-> + r =3D ti->type->prepare_ioctl(ti, bdev, cmd, arg, forward);
-> + if (r =3D=3D -ENOTCONN && *forward && !fatal_signal_pending(current)) {
-> =C2=A0 dm_put_live_table(md, *srcu_idx);
-> =C2=A0 fsleep(10000);
-> =C2=A0 goto retry;
-> @@ -454,9 +455,10 @@ static int dm_blk_ioctl(struct block_device
-> *bdev, blk_mode_t mode,
-> =C2=A0{
-> =C2=A0 struct mapped_device *md =3D bdev->bd_disk->private_data;
-> =C2=A0 int r, srcu_idx;
-> + bool forward =3D true;
-> =C2=A0
-> - r =3D dm_prepare_ioctl(md, &srcu_idx, &bdev);
-> - if (r < 0)
-> + r =3D dm_prepare_ioctl(md, &srcu_idx, &bdev, cmd, arg, &forward);
-> + if (!forward || r < 0)
-> =C2=A0 goto out;
-> =C2=A0
-> =C2=A0 if (r > 0) {
-> @@ -3630,10 +3632,13 @@ static int dm_pr_clear(struct block_device
-> *bdev, u64 key)
-> =C2=A0 struct mapped_device *md =3D bdev->bd_disk->private_data;
-> =C2=A0 const struct pr_ops *ops;
-> =C2=A0 int r, srcu_idx;
-> + bool forward =3D true;
-> =C2=A0
-> - r =3D dm_prepare_ioctl(md, &srcu_idx, &bdev);
-> + /* Not a real ioctl, but targets must not interpret non-DM ioctls
-> */
-> + r =3D dm_prepare_ioctl(md, &srcu_idx, &bdev, 0, 0, &forward);
-> =C2=A0 if (r < 0)
-> =C2=A0 goto out;
-> + WARN_ON_ONCE(!forward);
-> =C2=A0
-> =C2=A0 ops =3D bdev->bd_disk->fops->pr_ops;
-> =C2=A0 if (ops && ops->pr_clear)
+On 5/8/25 4:16 AM, Angelo Dureghello wrote:
+> Hi all,
+> On 07.05.2025 07:14, Nuno Sá wrote:
+>> On Tue, 2025-05-06 at 23:03 +0200, Angelo Dureghello wrote:
+>>> From: Angelo Dureghello <adureghello@baylibre.com>
+>>>
+
+...
+
+>>> +static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev,
+>>> +					struct iio_chan_spec *chan)
+>>> +{
+>>> +	struct ad7606_state *st = iio_priv(indio_dev);
+>>> +	unsigned int num_channels = st->chip_info->num_adc_channels;
+>>> +	struct device *dev = st->dev;
+>>> +	int ret;
+>>> +
+>>> +	device_for_each_child_node_scoped(dev, child) {
+>>> +		u32 reg, r_gain;
+>>> +
+> 
+> working on further features, i noticed this function is called
+> for each channel, that is not correct, so need to fix this,
+> will send a v4.
+
+Why is this not correct? Each input could have an amplifier with different
+series resistor value so this seems correct to me.
+
+> 
+> Regards,
+> angelo
+> 
+>>> +		ret = fwnode_property_read_u32(child, "reg", &reg);
+>>> +		if (ret)
+>>> +			return ret;
+>>> +
+>>> +		/* channel number (here) is from 1 to num_channels */
+>>> +		if (reg < 1 || reg > num_channels) {
+>>> +			dev_warn(dev, "wrong ch number (ignoring): %d\n", reg);
+>>> +			continue;
+>>> +		}
+>>> +
+>>
+>> Sorry Angelo, just realized this now. Any reason for not treating the above as a real
+>> invalid argument? It's minor and not a big deal but odd enough...
+>>
+>> - Nuno Sá
+>>
+>>> +		ret = fwnode_property_read_u32(child, "adi,rfilter-ohms",
+>>> +					       &r_gain);
+>>> +		if (ret == -EINVAL)
+>>> +			/* Keep the default register value. */
+>>> +			continue;
+>>> +		if (ret)
+>>> +			return ret;
+>>> +
+>>> +		if (r_gain > AD7606_CALIB_GAIN_MAX)
+>>> +			return dev_err_probe(st->dev, -EINVAL,
+>>> +					     "wrong gain calibration value.");
+>>> +
+>>> +		/* Chan reg is 1-based index. */
+>>> +		ret = st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
+>>> +			DIV_ROUND_CLOSEST(r_gain, AD7606_CALIB_GAIN_STEP));
+>>> +		if (ret)
+>>> +			return ret;
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
