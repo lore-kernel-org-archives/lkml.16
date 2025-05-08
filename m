@@ -1,46 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB1A2797A3;
-	Thu,  8 May 2025 14:55:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3455278169;
+	Thu,  8 May 2025 14:56:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716134; cv=none; b=h3RZntPAqXJnBn9bLHyvh8aBKOvBpgMkUjgiYqW95jOTLUD3uEIdb0LlE+EPvSDdB4yxNqOx95Mx0IfmBUzQb0ZYTCSHqqkHyX6yN1oPta8EsMH1/SupSO8K4exmImW4KAx+wTncNekMWEB/Rn4gvpFm/OnjvUu6s58SO4ynEFo=
+	t=1746716161; cv=none; b=VjP7tY69YhzsYmmgxtxwiHilHRtozXDvuAhBbELSfEYn5zbBCVgUF+dr3qKvAnFmJmYJpNxV9XkAwZKI2Pw+Ur+gWtO57jH89V1kIznNjK449f2mNOOfbZ8h5XfrMLTqKidMJlPR4RVkXMCaIdAbP+AK95TM6LHnnryINbI8W3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716134; c=relaxed/simple;
-	bh=1+vwrX2VH2xSClWzk21LoypRAIw4GKWmBFxIDy4xSKk=;
+	s=arc-20240116; t=1746716161; c=relaxed/simple;
+	bh=3sph70K7tbu8/YzMrRwGcqavagjwvO/xYYwjATmmdXg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EGNl7H8+lKjvtW69axbAJ4D3ZTjrLcM+VwU5LJRh6LjGjiP7lj7yLQzwALb4dm14UIpQy24XXrrioqDhcb25GC70CyAyC5ZKy2f0AnDOL517JXrTelukt1CR2+DqPnLYK+8cviJzfRCeSZegmt1w3f4KOC/y53SVRptEiE7ESz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhxBGcla; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=FIDC8bzhb2e1JbB1YLL96gqGcJPkd+zQZEB332vcYlIWd8rauoSzUXeO0DvWdId67bXxJ6Ld8ftM/Mmywz19orCa1zFRsFYwvM22H+tj7h9vy6a+Y/cCvJwDDcQQPxqIuvj5hgrAcPTh5uDPAueLmcgJ69d7RXZAZxCpVpfOmT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AAbuPQB9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhxBGcla"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2740C4CEE7;
-	Thu,  8 May 2025 14:55:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AAbuPQB9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0CC4C4CEED;
+	Thu,  8 May 2025 14:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746716133;
-	bh=1+vwrX2VH2xSClWzk21LoypRAIw4GKWmBFxIDy4xSKk=;
+	s=k20201202; t=1746716160;
+	bh=3sph70K7tbu8/YzMrRwGcqavagjwvO/xYYwjATmmdXg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BhxBGclanzLpmpop4xNy7mGbw62FZ/hY+7rR1r987RklleviyWtky9+UE+jPBjA4h
-	 G+D6gEhRnX2pm4JwhCrhcdMVMIG8dYLD2uIhdo8onOhmJ9hkQmzu2OPAtLa48+5Khp
-	 u2VtUe7Ht2OtK6/gIbG4PiQfKW2o87ymHiAdhfja9lM5nT4XPRPb9TY2f2KLdoJiJp
-	 X67l8rHWCAMxI1FVhg3j04CtkoSLvh76PJpSC4jiVfLd+IjYQUqn1oYY9asAxsm67w
-	 I+/6nR16xRSFDS+T36UVYSvSCi5HVXCc2Osd+SoL+STlXOgIpPpx3sp+FCUuaGYv4S
-	 ElBVJFgSDQpXA==
-Date: Thu, 8 May 2025 15:55:29 +0100
+	b=AAbuPQB9LmgaEoA8iWd4ABBrgsumCnyQWKSp8TzmXJGRnx2RcjOcFM9gmT4KP+gZM
+	 7MXlN3jJSTDLQUBXh3Tn8CZSxHHV+nO76VVc6YYayZ8wvcy6xR+cXJIQO91kVpTwo4
+	 66W/qtJD58QJvEmarBqimUgq5t1lMoRSGTTUQn3z+tdFG5boh5hrAaklcN9BSGHfrZ
+	 6o4xanrubBikkDhmoM8UHTqdEVAvzPmXaZm+vcDfJMWZB3UD78tNW7LyRatjm3xJXl
+	 pqIuA6IKZ7XdC9fyql5kjJCsZo+7qgpIqyTy5/FhPhRbDQHlphsNaYS+vlf0sXXP/T
+	 gHLzzKMoXx/Ww==
+Date: Thu, 8 May 2025 15:55:55 +0100
 From: Conor Dooley <conor@kernel.org>
 To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
+Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andrei Pistirica <andrei.pistirica@microchip.com>,
-	Chandra Mandal <purna.mandal@microchip.com>,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: serial: Convert microchip,pic32mzda-uart
- to DT schema
-Message-ID: <20250508-refinish-legible-dbbfb9d2fd99@spud>
-References: <20250507154937.1603190-1-robh@kernel.org>
+	Conor Dooley <conor+dt@kernel.org>, Joyce Ooi <joyce.ooi@intel.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Move altr,msi-controller to
+ interrupt-controller directory
+Message-ID: <20250508-donut-radiator-66d06a36e8e8@spud>
+References: <20250507154253.1593870-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,60 +50,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="li47EMabrVGucmAs"
+	protocol="application/pgp-signature"; boundary="MPh2K4ynGn9ngJl9"
 Content-Disposition: inline
-In-Reply-To: <20250507154937.1603190-1-robh@kernel.org>
+In-Reply-To: <20250507154253.1593870-1-robh@kernel.org>
 
 
---li47EMabrVGucmAs
+--MPh2K4ynGn9ngJl9
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 07, 2025 at 10:49:36AM -0500, Rob Herring (Arm) wrote:
-> Convert the Microchip PIC32 UART binding to DT schema. The binding was
-> unclear there are 3 interrupts. The functions were determined from the
-> driver. The 'cts-gpios' property is covered by serial.yaml schema.
+On Wed, May 07, 2025 at 10:42:53AM -0500, Rob Herring (Arm) wrote:
+> While altr,msi-controller is used with PCI, it is not a PCI host bridge
+> and is just an MSI provider. Move it with other MSI providers in the
+> 'interrupt-controller' directory.
 >=20
 > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Although...
-
-> diff --git a/Documentation/devicetree/bindings/serial/microchip,pic32mzda=
--uart.yaml b/Documentation/devicetree/bindings/serial/microchip,pic32mzda-u=
-art.yaml
-> new file mode 100644
-> index 000000000000..b176fd5b580e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/microchip,pic32mzda-uart.y=
-aml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/serial/microchip,pic32mzda-uart.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip PIC32 UART
-> +
-> +maintainers:
-> +  - Andrei Pistirica <andrei.pistirica@microchip.com>
-> +  - Purna Chandra Mandal <purna.mandal@microchip.com>
-
-I don't think either of these people still work for Microchip.
-(I don't have any idea actually who works on this device)
-
---li47EMabrVGucmAs
+--MPh2K4ynGn9ngJl9
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBzF4QAKCRB4tDGHoIJi
-0gLCAP97mPtcpMhwP17y4SgfNnzizuUNps68bgwbeksNCXdyvgEA3c5uwk9EsAtj
-Z/vMir4Bvn2sTP2hqNLH4ilOlpy1pg0=
-=Xc3M
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBzF+wAKCRB4tDGHoIJi
+0hx6AP9MH4cTQdoahYIWy4tKS1Uo3KGmbcyM5IZnCm2u05kBbAD9GLxG0FsIniey
+CsrB+KAm76x/ZHArBtB2OU0tQ6KOWw8=
+=/Kh0
 -----END PGP SIGNATURE-----
 
---li47EMabrVGucmAs--
+--MPh2K4ynGn9ngJl9--
