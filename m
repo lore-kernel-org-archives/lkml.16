@@ -1,123 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3C528A1EE
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 19:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C1722256E;
+	Thu,  8 May 2025 19:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746732986; cv=none; b=Rjc2y/zFeg/mxatOGHVHGRiMpOwbYyD4fwJQYUqtXEX4ak9uuOv1KtDDl/ZHhtJEX5j1A+OsAaFwZogzwFVPpSgjD73+sGKw50es7mGZ+VjipcQWBwLVY7QzDuIDhPWmUAXw7P2eM8vvRnQ3iCwQzTYlB2ObSU2BMO2N61KIEsE=
+	t=1746733182; cv=none; b=T1HLW4sKgOJJYNPy0BRSvZwoYDnpprEKgIYW5sVOkpi8dlJ0Mq6FBH9DXvlF+dJ0o4KhEIdWKJbTthPnMVDw7UqHIZgmtnRKBdD4jYg3poOGMGP8IQfqKoG7dyKQ3I/F/O2Ory7cYFP5ov1xzGiwOHIfkGdEWyI/QIdouo2AnpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746732986; c=relaxed/simple;
-	bh=sskzmfRBKrtyrvaDO+90bHXI7VeTet/0CWNnw2B6jzM=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:References:
-	 In-Reply-To:Content-Type; b=i5VoZv3dE9ztMsyqjZ4hM+7Yl0XetU6m18GeV1hvsgw/yfOo1zaFr5kuTAqe4eoQicyFQQPEpGCuNbx6+VliUCc/3zmAEhAqlqp4dLRqHdWkqgsQkrDA3yr2b7C5Ozp+w5VUQ4wQDj5cTjpPZqwxX4Kcm5ufg2sWpZKrkrpENXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EZWSrFlb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EZWSrFlb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746732983;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sMSK5ZAn41rIA+tVFhgcK/VSjG2CjNRjiAb9AYqMURE=;
-	b=EZWSrFlb+0qSRNZSIjY6hEomPo9Cq0YfdEJhFq5832hdxqr9J2Quo42c+KxHAsGkg8ZCKM
-	rqBHdsGjmIGMO8diXG9huGpr0tD500S++wIk5tCmfOHAQV1H2Ibydl3FhPHpBkl3oLfbC0
-	94M8Wk4SzZqYOvxZN7dOleasCAOspok=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-194-OH_bhozBPBK2DplYm2gwaA-1; Thu, 08 May 2025 15:36:22 -0400
-X-MC-Unique: OH_bhozBPBK2DplYm2gwaA-1
-X-Mimecast-MFC-AGG-ID: OH_bhozBPBK2DplYm2gwaA_1746732982
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f2c9e1f207so25296696d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 12:36:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746732980; x=1747337780;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sMSK5ZAn41rIA+tVFhgcK/VSjG2CjNRjiAb9AYqMURE=;
-        b=mk7PFqu35DP/H6JRHFxThYdE9YK8LifYlqxA1Jce90DhlbZzQWfHVJiAfKO1k1VQJx
-         ztv4J4K58WtK+5qaAU4L4lfuDbbUF1n+7vq/1cRV+4oOJPIlvjAoWLME2PAauWEKm8Oe
-         T0zL2vAe+ZZREWqwjtH/jEFrZh4wtcsi3E9Y1vWSsZgsc3C9aQCYjE4nSLi3oMAe4/qi
-         bKNxL/JVGqRbXPj5lGX/yhqtsuXLwtCtix4Lu5r1D8Xiya2RkSnGu/phlL+jM7pq+vhh
-         M1aXuqXf6Wrf7ozALW0vx0t7OTIP6qb8xt5usDmmfqo7GCZD3Sq5fvFv7iC4J7YGu5jL
-         6P1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVyNZTvfkkNLxGErlSRXbx4lfJxwjlRs3YJ43WVkBJE7G1Aaw8OFqnBCSYefreLesCoMZttKdeMLjY59YE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIZQUetkAIwIX0NMgoLBpx2tehem7mhGq533j3lTaLcfWUuPaP
-	DrRLT+zwKng7by8EWv/wrp6EqdTluag1JXe85uJPrd6E5+cXJuqhPBXHJZNo1H5BuWmMGGZTvfF
-	Q6xlKbSRDR4qVSk5cyxCtn6d95PlNZnTq2j3YRBGTQ/x0mo+zzWOqpoJR0Qg/oVzwUx8Fb5CF
-X-Gm-Gg: ASbGncu2zNf4FRrr7rzHbOHtEoRFaKEPuS8t3w0vVRGN+fBEq/C5vWmY9twJFyID+o3
-	EC27nvULLqrBshPyAjq1ckOa8ZrL+z1WbfahyPiFzbwzTTYp+DzBmd5T6Jnwka3+yAyaB8aZFM4
-	KHAMN1nugrzFoPOwNv1XGRFnTO+HeAb4p0cBjllAMwanb2jDtjLSeMIIX9rDX0mE48hSYFrlZDY
-	q0Fli0liVFUJXmC2KyM/7PD7isS4yqCRRekW6GxGAWyG7HXewOcssD4BIeo/nQYJtv792hlOzF/
-	C8P1iKynF1Bih8tnyBPyvE37ic6TlGm0RCNgjJDZ7ErUzYRJjGQG8tAE+w==
-X-Received: by 2002:ad4:5dcf:0:b0:6e8:f4a1:68a4 with SMTP id 6a1803df08f44-6f6e480e30bmr7967966d6.39.1746732980489;
-        Thu, 08 May 2025 12:36:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG0Sy72JbcvF90NKSywmPl3GyTkaZYXxFFXeLkdg2Kj45kGhvABU/5pAtNzbQo2gxKgW2G90A==
-X-Received: by 2002:ad4:5dcf:0:b0:6e8:f4a1:68a4 with SMTP id 6a1803df08f44-6f6e480e30bmr7967546d6.39.1746732979922;
-        Thu, 08 May 2025 12:36:19 -0700 (PDT)
-Received: from ?IPV6:2601:188:c102:9c40:1f42:eb97:44d3:6e9a? ([2601:188:c102:9c40:1f42:eb97:44d3:6e9a])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e3a538f8sm3316976d6.114.2025.05.08.12.36.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 12:36:19 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <1b558608-6496-4078-afde-5f0e10086781@redhat.com>
-Date: Thu, 8 May 2025 15:36:18 -0400
+	s=arc-20240116; t=1746733182; c=relaxed/simple;
+	bh=hAilNBFFJjfHY8ctZm9ZWAdpUqW4veJAA4tcgJfcKv0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X4f/QOvWbMXEseimM+coCZNwMmWRVxAHLEsx0d2mi1fL56BLYnprT9IZSir9AClkrTQmjRDSo5x7oBkCNN/vVBiADKxp8dBmhmaKwoCnJ7jkNlyJoEwlaoEBKM1vfOmNVK2RtvNf4n2dox8UDeTjymlOKRIo4s4nFmYJ3rPyGq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: j6okXO7BRz+Cfm7u87GUiA==
+X-CSE-MsgGUID: XpOIHBKOSQuSNC1DV0v1sg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="52346031"
+X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
+   d="scan'208";a="52346031"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 12:39:39 -0700
+X-CSE-ConnectionGUID: KWulWhzJQRmiBZud12T51w==
+X-CSE-MsgGUID: vbSx4htURVmghGEyUAS0wg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
+   d="scan'208";a="167470398"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 12:39:35 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uD75g-00000004DLl-1R5F;
+	Thu, 08 May 2025 22:39:32 +0300
+Date: Thu, 8 May 2025 22:39:32 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	nuno.sa@analog.com, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com,
+	Pop Paul <paul.pop@analog.com>
+Subject: Re: [PATCH v7 11/12] iio: adc: ad7768-1: add filter type and
+ oversampling ratio attributes
+Message-ID: <aB0IdPcjtcGFp6o-@smile.fi.intel.com>
+References: <cover.1746662899.git.Jonathan.Santos@analog.com>
+ <2180d8774a2fdef3900f86fbc8f25886503df479.1746662899.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cgroup/cpuset: drop useless cpumask_empty() in
- compute_effective_exclusive_cpumask()
-To: Yury Norov <yury.norov@gmail.com>, Tejun Heo <tj@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250508193207.388041-1-yury.norov@gmail.com>
-Content-Language: en-US
-In-Reply-To: <20250508193207.388041-1-yury.norov@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2180d8774a2fdef3900f86fbc8f25886503df479.1746662899.git.Jonathan.Santos@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 5/8/25 3:32 PM, Yury Norov wrote:
-> Empty cpumasks can't intersect with any others. Therefore, testing for
-> non-emptyness is useless.
->
-> Signed-off-by: Yury Norov <yury.norov@gmail.com>
-> ---
->   kernel/cgroup/cpuset.c | 6 ++----
->   1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> index 306b60430091..df308072f268 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -1388,14 +1388,12 @@ static int compute_effective_exclusive_cpumask(struct cpuset *cs,
->   		if (sibling == cs)
->   			continue;
->   
-> -		if (!cpumask_empty(sibling->exclusive_cpus) &&
-> -		    cpumask_intersects(xcpus, sibling->exclusive_cpus)) {
-> +		if (cpumask_intersects(xcpus, sibling->exclusive_cpus)) {
->   			cpumask_andnot(xcpus, xcpus, sibling->exclusive_cpus);
->   			retval++;
->   			continue;
->   		}
-> -		if (!cpumask_empty(sibling->effective_xcpus) &&
-> -		    cpumask_intersects(xcpus, sibling->effective_xcpus)) {
-> +		if (cpumask_intersects(xcpus, sibling->effective_xcpus)) {
->   			cpumask_andnot(xcpus, xcpus, sibling->effective_xcpus);
->   			retval++;
->   		}
+On Thu, May 08, 2025 at 02:05:26PM -0300, Jonathan Santos wrote:
+> Separate filter type and decimation rate from the sampling frequency
+> attribute. The new filter type attribute enables sinc3, sinc3+rej60
+> and wideband filters, which were previously unavailable.
+> 
+> Previously, combining decimation and MCLK divider in the sampling
+> frequency obscured performance trade-offs. Lower MCLK divider
+> settings increase power usage, while lower decimation rates reduce
+> precision by decreasing averaging. By creating an oversampling
+> attribute, which controls the decimation, users gain finer control
+> over performance.
+> 
+> The addition of those attributes allows a wider range of sampling
+> frequencies and more access to the device features. Sampling frequency
+> table is updated after every digital filter parameter change.
+> 
+> Changes in the sampling frequency are not allowed anymore while in
+> buffered mode.
 
-You are right. Non-emptiness check is useless.
+...
 
-Reviewed-by: Waiman Long <longman@redhat.com>
+>  static void ad7768_fill_samp_freq_tbl(struct ad7768_state *st)
+>  {
+> -	unsigned int i;
+> +	unsigned int i, freq_filtered, len = 0;
+> +
+> +	freq_filtered = DIV_ROUND_CLOSEST(st->mclk_freq, st->oversampling_ratio);
+> +	for (i = 0; i < ARRAY_SIZE(ad7768_mclk_div_rates); i++) {
+
+> +		st->samp_freq_avail[len] = DIV_ROUND_CLOSEST(freq_filtered,
+> +							     ad7768_mclk_div_rates[i]);
+
+Same comment as per previous patch.
+
+> +		/* Sampling frequency cannot be lower than the minimum of 50 SPS */
+> +		if (st->samp_freq_avail[len] >= 50)
+> +			len++;
+
+Actually I would rather see the assignment once.
+
+	... samp_freq_avail;
+
+	for (i = 0; i < ARRAY_SIZE(ad7768_mclk_div_rates); i++) {
+		/* Sampling frequency cannot be lower than the minimum of 50 SPS */
+		samp_freq_avail = DIV_ROUND_CLOSEST(freq_filtered, ad7768_mclk_div_rates[i]);
+		if (samp_freq_avail < 50)
+			continue;
+
+		st->samp_freq_avail[len++] = samp_freq_avail;
+	}
+
+> +	}
+> +
+> +	st->samp_freq_avail_len = len;
+> +}
+
+...
+
+> +	res = DIV_ROUND_CLOSEST(st->mclk_freq, freq * st->oversampling_ratio);
+>  
+>  	/* Find the closest match for the desired sampling frequency */
+> +	for (i = 0; i < ARRAY_SIZE(ad7768_mclk_div_rates); i++) {
+> +		diff_new = abs(res - ad7768_mclk_div_rates[i]);
+>  		if (diff_new < diff_old) {
+>  			diff_old = diff_new;
+>  			idx = i;
+>  		}
+>  	}
+
+Hmm... Wasn't the point to include util_macros.h to replace the above?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
