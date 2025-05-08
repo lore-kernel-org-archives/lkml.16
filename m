@@ -1,211 +1,134 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2825EACE
-	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDDE278E42
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 15:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746718796; cv=none; b=d7XfRrtCqqhyVRJRpFXlwnrZ+twPPoVR07KxdSy/HMcBENq8yhA7AD0rL4wE648/pv6mcixjK/1JGMdxMbpew7hjUnxZmbgez686412GBVnRPNpuWlzsD3++ZL72grl0G9Uqqu72x/ClMfwMMxjeLvfCUfaDmaRrOEu5Cy0WneU=
+	t=1746718859; cv=none; b=lbY8OWApUt+9N6YdH92Eg6ulYQZxM/fvbje1BLzEGnUNpooPBiUqsGUd0MPgOAGHBDKL+A8a1TFrrx2Poke3CqLaC6wvh42UDvdxdPYpl7bMoCfuAikWSqXESsSdN54LTPG6rm1debWhPooqNBgogk6sYCrfiheJgZsod490MW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746718796; c=relaxed/simple;
-	bh=zGgSvBygR5Mhm0MhcjS+WhbyTwWEVn8qGG+wu8U/nhw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OzS5qAaZPqJVzGBVrGOGEOTyE4GfBdHNt7Pu8Y5vzKaZV5rKB8cALkZ5iyrWETwVzbQd8wraD18zpWRU1SWFnmQ4chmyFvuzNcMHSyk9CPrT/YsXtChIsP1pIALatn0xC49wRLU18yqz8Vliu0E6hopOfwl//e9SgFAxouM9Kas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Ncy5rvtE; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1746718859; c=relaxed/simple;
+	bh=BudoP3nE0bpLdaJ5jrf66L37C2BHjnq7NOC0WAvQgeg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i89xNXn5GeC5SBLKhqdPa16DYxcENQLNMVa5EdASuXi+40Nj9bzu00+Tz0SJLEVIu2lFbBSgVGNVI9YzVRDCf0ycyQae2QheXJsu4tFvpXohauggNyIlz3ZV0snhKMnrHPyLzmuqxWq9bBB2gKyg2m7TrEBtKQIW5b/Lrnplz8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Ur8eMjfm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Ncy5rvtE"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e78e13d7af8so1188571276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 08:39:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1746718790; x=1747323590; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zGgSvBygR5Mhm0MhcjS+WhbyTwWEVn8qGG+wu8U/nhw=;
-        b=Ncy5rvtEr+yKuk1ElDnTTfQi64z6Ip+BqNHLNZkrKYsqbXI1Lfse63XaGG4vJ7eNrW
-         udb6x2pmqcVoEUqpK13N0bmORL5NqiIzCuKyA053YknzeKpPFANK1uZKuw8tMT6xgm4c
-         MlV+7dFTnpOE6la69BZWGC3NGFVlbChwN4sls=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Ur8eMjfm"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 548CjvQ0022865
+	for <linux-kernel@vger.kernel.org>; Thu, 8 May 2025 15:40:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=oOF+MnASMYrIA5de3GFHql4v
+	cdTwJ0Xq/bKgRzL4R4c=; b=Ur8eMjfmWQg4g9JIR+AJpDO+sHWG9LTjGeyx8Ekg
+	bDeNaTxA45kwH/ih2i42vwan8UbYQdoxXeIEdWTpsbQrqzYDHLwIWTuP+o8I6FjQ
+	Bhpwr3UOHhiv1RGJjUMwNoMCgpJ/kJ/em+dJOTscEBK5nr1Q51HnafeGCY5pVNFl
+	GCxzZRAlnAJc6+gx90eKea+OXUBb4oIrk76XsSD+yX68o7hQ4Lcor57qeciohwKM
+	MwVQTM4GSH2UgtPeAzfF7a+FhX/AdEeVPBeEoqfJQSFrPvl1sNQIrf1/6/ciUS6e
+	uPw41PSKOEAXWNBAhbXary+v/GsP+OtDZ7XNsKMUrTJPQA==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp81u4s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 15:40:56 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5d608e6f5so275062185a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 08:40:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746718790; x=1747323590;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zGgSvBygR5Mhm0MhcjS+WhbyTwWEVn8qGG+wu8U/nhw=;
-        b=AyOPaKsK5SR5kbZNoEF8iV3miNhurkAPzxzpxebx7F7lXqNE3mWqOG31OvOjeF6Wz0
-         +ySCOxNydDoXD9SiA/pGq2BRs26bOtQs1i9aF3dAGl110t6+TEc6eCsi0hDmx0f6bWWU
-         wYbPOXcqxrhQKUw1QqX80UlMM7ut5xJfDzmcc+znsw8P8EEt7UStm3StqYFCI7nhftxX
-         X2LxITZ9/V+lCJ2hTWqc8TvS1+qPh3dS4Q4fqklneyuVgiWRzFL3FJrcg+ddhE3UEk82
-         eEcl9TJoMvdqEovUCG3DvjkMvelmx250ED2f0r5Se1jJfdqGdb/I+7dcyYSCD2a+Acqd
-         oqgA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0VA/fJ/qUIZ87BxJsInKiPUEH/PYxJfr3ied4FmMeEGxGNVgmSnXcLxmPAIuZEnDST6rtsEqawAO2Ycw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3mtzoolnMzuE26Uy71PMY82vg+bhGm00gVJuQVU1HBKw46+jC
-	oowUNCbkBsgsgf1HFC0ifPRscRbd16CJROuTE1bZGKKKY+vElSj6jJB4vw66QzeKrBs/HBnBWxE
-	aabaGgH+9ofW1z3J3OVfu6EgAgeUgmBFJR0PN
-X-Gm-Gg: ASbGncshCCnilwZeRLIyYdRgn9/uUG6TLbDufR/xQ9988fllYwvsx5whuvyMxmuBu8S
-	7wpsOXXizymCReAknjVCd8CO1dySzx1dnbIZeD2fuNuvK7y4DCK7nOnxA5m8SR1cbTikoH0trJs
-	2b/u8YTBveN7o3swuv3YpmVE8=
-X-Google-Smtp-Source: AGHT+IHXUNedMm/ee9UjUMP3H6o2PVY2BdnSdIRfAJdinByZQwFeHkO2WU/PaBlGiWR5vWYZ1sOqJ8BIyU4l3UAYRWU=
-X-Received: by 2002:a05:6902:2404:b0:e72:bd60:9992 with SMTP id
- 3f1490d57ef6-e78810ca399mr9132402276.25.1746718790197; Thu, 08 May 2025
- 08:39:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746718855; x=1747323655;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oOF+MnASMYrIA5de3GFHql4vcdTwJ0Xq/bKgRzL4R4c=;
+        b=jed0ThKDqCy2pNrnMMmbwoHCP5I/YQevlMFPoMYAEbAaFmFqwv+Yt7SRIOgMmDKr98
+         EwVnJInTqoFX3c+9Mjv+pVSKNxyK6GB0gdty4Cp9iK3JADhznRnGHsYBuDl69Hiua9wT
+         F69/zSQGSmnDUY0vKvCPa1aVttIIIU+nc1uUX7L20py4VfDwJGr66yydya+se6JyulrY
+         94YlKRtSrCSXylLEi0oOQ5hV0bg45Eu3qTqIO181IrnDTUo9LGNq9dbFGZTpePW7d9eA
+         foMHIYuNjQ6DTXoMKqPoSk61rAHqruBTbLjWZ7NneViul2cKJEvpal7AtJsKbEUoWbnk
+         VuQw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsvMKuwyTBITouSm4tntKE8EJn9Xq1gDbiGt4xxkOzkxKKrTwI2S58pPhXqjc/8Xw5PMuniYmQeGmfeog=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrRsgTo44fmdiRzK61PXaYJQ5qD3P+4f9tkc8fhlDbab0Gggyz
+	v42dCAS0uVIkFLjwtV6q7tKKRzeL+IHLzoIBITXngnLEZmhlhy/11QqGfOkrujx0jxm/WV1Sutc
+	MBBYjg/R72ZLRX6v30xUG5TTlIxj2iEfjT04wqu3ajwlUAXQN0z/fx5srlDaOUTQ=
+X-Gm-Gg: ASbGncuSKbi/Bwq+yqyVJ9d58rSRpFTRYWeUYykiwmzl8vQEiU99KHSsvVgUV77fevR
+	AzE9r/6Hk2bEcJVkuyq9nkj5FguAWsb7PhfQrk0FtvPKCsVgzA7b5RW0j0IDtK3Y/2F8qszxgXP
+	nA9MEBWYFzRkbkw1mb1/hPRsvVkjN29rjsb9Unll9AIKH7ygyzNJMPVFjlXNEXqn74MsAckTBRK
+	0OzHQMhCj1VBbxAD9GDMiHF35zY08hS3pfKOvxf8k0CrGKA5WJAUplgBTqnlyXodxIfo5598TGy
+	FwjlAb9DEYAGMHPPQawmNRYWEflORGmIakBTBPkxEqQR58mZuf2cKeJHOR7PV5VHnyVo4hjU8Dg
+	=
+X-Received: by 2002:a05:620a:c51:b0:7c5:6dc7:7e7c with SMTP id af79cd13be357-7cd01116cabmr16250785a.26.1746718854964;
+        Thu, 08 May 2025 08:40:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH++qSy1o2LpXKpm27+d087eaP/M5azZLvvr1IACNhrczohQ43CEn/1wba7dJLQRJIXoyzPFg==
+X-Received: by 2002:a05:620a:c51:b0:7c5:6dc7:7e7c with SMTP id af79cd13be357-7cd01116cabmr16248385a.26.1746718854679;
+        Thu, 08 May 2025 08:40:54 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc644fa48sm1857e87.1.2025.05.08.08.40.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 08:40:53 -0700 (PDT)
+Date: Thu, 8 May 2025 18:40:52 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Wasim Nazir <quic_wasimn@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@quicinc.com, kernel@oss.qualcomm.com
+Subject: Re: [PATCH v6 4/4] arm64: dts: qcom: Add support for qcs9075
+ IQ-9075-EVK
+Message-ID: <k7xxfhkzv2cuoxnmcwysh5hdqsbwpwiidjgxumlgbhipcwujho@lkbn2poddg54>
+References: <20250429054906.113317-1-quic_wasimn@quicinc.com>
+ <20250429054906.113317-5-quic_wasimn@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423120643.66814-2-phasta@kernel.org> <e40cf04283e281e2d4a912ff75bce3c6cb8bcf97.camel@mailbox.org>
-In-Reply-To: <e40cf04283e281e2d4a912ff75bce3c6cb8bcf97.camel@mailbox.org>
-From: Zack Rusin <zack.rusin@broadcom.com>
-Date: Thu, 8 May 2025 11:39:39 -0400
-X-Gm-Features: ATxdqUFpw0z4RAQtvarRZRwXFu36Nb_-FLFq6AAv-w0zHtARcU9mfRR__scdbqA
-Message-ID: <CABQX2QP1U6nUc++5oZf0KVpfXCEMRwX9u0ykq2YNHuQSKx909Q@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/vmgfx: Use non-hybrid PCI devres API
-To: phasta@kernel.org
-Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000000807b60634a1a934"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429054906.113317-5-quic_wasimn@quicinc.com>
+X-Authority-Analysis: v=2.4 cv=M7xNKzws c=1 sm=1 tr=0 ts=681cd088 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=v055IAusiqpEkrIEdyEA:9 a=CjuIK1q_8ugA:10
+ a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: D3fKG8RSWW1UebKZM7LrgJINiZkn5nn9
+X-Proofpoint-GUID: D3fKG8RSWW1UebKZM7LrgJINiZkn5nn9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDEzNiBTYWx0ZWRfX6EhurlIlvXK2
+ 32suZkWqhNBQ4Fhxfy4n04CRPC3Z5RODIry9shuwpVWie5fSJhVCK5u49I2RbruvivupFAKXQiw
+ D3WP+81VrL6pfa5vCy7Lxe9zmw30WCyugRrFMDRW31KDZJeaZt1wb+oI9HGG882FawVRWfR275h
+ 0HzZzHd1FRsZYfAkahEKjPuOJZL6xfhtgjt9Hsf2o1PsKl+8Hy7Y77iLABuV0Qv8ATyO0zMpXcP
+ 9kG9quuAIglAgGZmk61zVci0Ua5RUWxOVmLwHcGVUkeTVNuR6UvMcu4Zy70bcwnOXzG8crGggrU
+ +K+Pj2Ws3gKC6ysAmy1lTfYweRFxGSKuIxAjFH5W3qk60f4DogCVEIGcg/5+ba3uQoIFTxGOTD3
+ VWnjKF/so/x9ps2U2RsSMCG67hUjMIyabmbxrKcCbMltNS2fOi9osCmyUgszz7mLcdxNFzSu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_05,2025-05-08_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
+ spamscore=0 mlxlogscore=772 bulkscore=0 impostorscore=0 clxscore=1015
+ suspectscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505080136
 
---0000000000000807b60634a1a934
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 29, 2025 at 11:19:04AM +0530, Wasim Nazir wrote:
+> Add initial device tree support for IQ-9075-EVK board,
+> based on Qualcomm's QCS9075M SOM. QCS9075M SOM is based on QCS9075 SOC.
+> 
+> Basic changes are supported for boot to shell.
 
-On Thu, May 8, 2025 at 6:40=E2=80=AFAM Philipp Stanner <phasta@mailbox.org>=
- wrote:
->
-> On Wed, 2025-04-23 at 14:06 +0200, Philipp Stanner wrote:
-> > vmgfx enables its PCI device with pcim_enable_device(). This,
-> > implicitly, switches the function pci_request_regions() into managed
-> > mode, where it becomes a devres function.
-> >
-> > The PCI subsystem wants to remove this hybrid nature from its
-> > interfaces. To do so, users of the aforementioned combination of
-> > functions must be ported to non-hybrid functions.
-> >
-> > Moreover, since both functions are already managed in this driver,
-> > the
-> > calls to pci_release_regions() are unnecessary.
-> >
-> > Remove the calls to pci_release_regions().
-> >
-> > Replace the call to sometimes-managed pci_request_regions() with one
-> > to
-> > the always-managed pcim_request_all_regions().
-> >
-> > Signed-off-by: Philipp Stanner <phasta@kernel.org>
->
-> *PING*
+For v7 please include UFS support. 'Boot to sheel' as 'no storage' means
+almost a useless board, which even can not boot the CI images.
 
-Thanks, that looks great. I missed it because the driver's name is
-vmwgfx. I'd be happy to fix the subject for you while pushing this to
-drm-misc-fixes, if you're ok with it of course. Otherwise:
-Reviewed-by: Zack Rusin <zack.rusin@broadcom.com>
+> 
+> Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../boot/dts/qcom/qcs9075-iq-9075-evk.dts     | 268 ++++++++++++++++++
+>  2 files changed, 269 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
+> 
 
-z
-
---0000000000000807b60634a1a934
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-6U6qgI8F5eiKsQyE0HgYrQJx/sDs9LLVZlaNiA3U8M8CgEnb8VhuH3BN/yXphhEQdJXb1TyaJA60
-SmHcZdEQZbl4EjwUcs3UIowmI/Mhi7ADQB7VNsO/BaOVBEQk53xH+4djY/cg7jvqTTeliY05j2Yx
-uwwXcDC4mWjGzxAT5DVqC8fKQvon1uc2heorHb555+sLdwYxAgMBAAGjggHYMIIB1DAOBgNVHQ8B
-Af8EBAMCBaAwgZMGCCsGAQUFBwEBBIGGMIGDMEYGCCsGAQUFBzAChjpodHRwOi8vc2VjdXJlLmds
-b2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3I2c21pbWVjYTIwMjMuY3J0MDkGCCsGAQUFBzABhi1o
-dHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMwZQYDVR0gBF4wXDAJ
-BgdngQwBBQMBMAsGCSsGAQQBoDIBKDBCBgorBgEEAaAyCgMCMDQwMgYIKwYBBQUHAgEWJmh0dHBz
-Oi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwQQYDVR0fBDowODA2
-oDSgMoYwaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMuY3JsMCIG
-A1UdEQQbMBmBF3phY2sucnVzaW5AYnJvYWRjb20uY29tMBMGA1UdJQQMMAoGCCsGAQUFBwMEMB8G
-A1UdIwQYMBaAFAApNp5ceroPry1QLdugI4UYsKCSMB0GA1UdDgQWBBQNDn2m/OLuDx9YjEqPLCDB
-s/VKNTANBgkqhkiG9w0BAQsFAAOCAgEAF463syOLTQkWZmEyyR60W1sM3J1cbnMRrBFUBt3S2NTY
-SJ2NAvkTAxbPoOhK6IQdaTyrWi8xdg2tftr5FC1bOSUdxudY6dipq2txe7mEoUE6VlpJid/56Mo4
-QJRb6YiykQeIfoJiYMKsyuXWsTB1rhQxlxfnaFxi8Xy3+xKAeX68DcsHG3ZU0h1beBURA44tXcz6
-fFDNPQ2k6rWDFz+XNN2YOPqfse2wEm3DXpqNT79ycU7Uva7e51b8XdbmJ6XVzUFmWzhjXy5hvV8z
-iF+DvP+KT1/bjO6aNL2/3PWiy1u6xjnWvobHuAYVrXxQ5wzk8aPOnED9Q8pt2nqk/UIzw2f67Cn9
-3CxrVqXUKm93J+rupyKVTGgKO9T1ODVPo665aIbM72RxSI9Wsofatm2fo8DWOkrfs29pYfy6eECl
-91qfFMl+IzIVfDgIrEX6gSngJ2ZLaG6L+/iNrUxHxxsaUmyDwBbTfjYwr10H6NKES3JaxVRslnpF
-06HTTciJNx2wowbYF1c+BFY4r/19LHygijIVa+hZEgNuMrVLyAamaAKZ1AWxTdv8Q/eeNN3Myq61
-b1ykTSPCXjBq/03CMF/wT1wly16jYjLDXZ6II/HYyJt34QeqnBENU9zXTc9RopqcuHD2g+ROT7lI
-VLi5ffzC8rVliltTltbYPc7F0lAvGKAxggJXMIICUwIBATBiMFIxCzAJBgNVBAYTAkJFMRkwFwYD
-VQQKExBHbG9iYWxTaWduIG52LXNhMSgwJgYDVQQDEx9HbG9iYWxTaWduIEdDQyBSNiBTTUlNRSBD
-QSAyMDIzAgxhPxw+eieHWB40hPkwDQYJYIZIAWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEIA7Z
-Wz+5Eht7fMm9m11Xo8pLbu1Y2Ngibl2bfcqymHncMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEw
-HAYJKoZIhvcNAQkFMQ8XDTI1MDUwODE1Mzk1MFowXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQME
-ASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJ
-YIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIBAFccv6TF9SFaA1q9cDm+tZatEgS6PLMzyGPjjJpw
-WKoCtdmgSpFESwCK+xIzBBDm3EenInNOjHxZxHjXjuIh9KDT3Q3v+spnWjU4Udf7HM2ksRB816e2
-5S155abFwzilh5jzQa346yoDENlN0h2DksCHT/mVneb6edIBETMv8uYlVAfGGasYC6y6CDagE3SK
-32k1y37M1cy/ieWoZa4ThpsFCKZIlhLxXIgNFomQbIHo0QDmMMT6E4e6u6yqBi1DG/SfNA0Xt+s0
-uArLdmnnMHpmbXMnm+QMAMVqcGVk4wIykMPdNgMScsBhj/Krqmn5oxJYene1vI64TdCNHZDLv/0=
---0000000000000807b60634a1a934--
+-- 
+With best wishes
+Dmitry
