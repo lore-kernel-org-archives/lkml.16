@@ -1,72 +1,130 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E79221FAF;
-	Thu,  8 May 2025 08:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5659721D596;
+	Thu,  8 May 2025 08:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746692145; cv=none; b=iBTCzZ+BpO2MXB5VHOCicubbGd0zMc8Y3UYpUitayB3a6OSjEkgIoWpKSrvs3JKPJsnBwrsGOiEbrJYdIwZbglomNWUrF9AFsKYp0BWw8b3DfmmY+K6kSn0CRDSntupAY2xyxB3MDz70MOleKDxAemILpQ9/SnW9dRB6i4yTcgE=
+	t=1746692154; cv=none; b=WIC2vgBeLuk8GFyVYuMusnwjQA7l/7X/+IZ/FWGzYkFrEl9wDQWbz7RVyGZPMsuNXul3NHffw7v/gTG+Su+/vZd3ejMD8O9MgsAiXiwMQZVzDYe35g6f7FFj60r431DxCsVlnq+q1JtWwSrmaKqMuEItD0oBK0qr4tPziWrEvyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746692145; c=relaxed/simple;
-	bh=7r6OTGgvged4uco8BW+BLg38bSJrp+WvRqlr9YTSWRU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uSwSX0cv1O0PhXd3RKd7gvK5GerjcpkXoaMwEvMlnT25Yb2j/qRX2J2SlgwOrDOLdZ3SiVTlh+6iktbOYwGz+qfD7TmYhixJ9sXTJ8alQBxDcVOR40b000KJdTf4ZJ0YlZ3X//emPV1kqC+D9AJa8/LvoKXvFvlYVQ0hOMV858E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=bfgaKB4v; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1746692154; c=relaxed/simple;
+	bh=qDHKqdI2kzge4E963zXMYiyfXzDTjL1j/9kQS9Q7VvE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=gFuErwpVqtTT2esvghENusm0CsFNkrTLJZu4JstPPizEXS22gYoDowVxvQmv0cemiNayyxhkUCirpnAdK4OtbOs/PLi7suUCoRd9qNvJ1Sx6iU3w19jG3+CbtK9TDc3C+0FqCL6ySWO0617h2j1+ASuoBXtSeZeVvmIvBHwaBVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=To8Mi28Y; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="bfgaKB4v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1746692142;
-	bh=7r6OTGgvged4uco8BW+BLg38bSJrp+WvRqlr9YTSWRU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bfgaKB4vrzTursOZlFORwMk/wp4advCrn57O6uhdlNElcWsKrQilcXdLZQA5cYlJl
-	 OAKG6Inmp4uKTeuGkeNFlV153FIuunxAuY2iXaBWSvvMdewGtnPLDbkI7+K/LQiDJB
-	 I5oSwtc+AG7YaLGkj9k6W616zq/0E8Q/cvoU9hZdP02Bf3AvhuzzUngWEd685986bb
-	 P23lWwUmd9xuq+HCci8PCoe+lWyjltOo4eYUpfThnaKrcsO7tk393+hEGOD5gls2Cy
-	 meTxEVjbHFbMCTNW6cxIv5LYBphOGAUs7AX49xaiLCycgIv8YZw37sp+tj+pHkyJgv
-	 3M+2lQ+Y8eUZw==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 47BB117E120C;
-	Thu,  8 May 2025 10:15:41 +0200 (CEST)
-Message-ID: <97ec1373-1662-49e5-aecd-407a2ab2c2aa@collabora.com>
-Date: Thu, 8 May 2025 10:15:41 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="To8Mi28Y"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5484WRl2014286;
+	Thu, 8 May 2025 08:15:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=wZqZjfKKEL4
+	gHkQeDdNNEMxYXCbXJUyz/t43Fq384O0=; b=To8Mi28YvOI7dXM4K12Ul1pF4wv
+	Yuqnm9mjIzojlnY8RVLn14gglk1ifzGu+Ur/5W0DRgEC1QHuLoTqkTv9Q3kpQ9vO
+	pSI1SXciTXmPpzIrxwuHPQWM9RTU93CebCpO3VCIvuNxSajkkrybT9FS279bhEyk
+	5/JoF1fe+EHDDAQCgcNSlFXRUjfVFG2Cmg3pQNkED0q8AiplffqCrW7QuggsD0u7
+	LPkbdPIrbvJEV2CpsETww4TA080Tv1oUoI0Z8l8GtNb/ybMWwbhSoiyK6Fjbc54O
+	+prKqNqd+enz8IxNfzzjCkpXlp9CQTr4xcb7wLQM6hd7jGubuYafvXKjneQ==
+Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp4ghns-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 08:15:35 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5488FX39006376;
+	Thu, 8 May 2025 08:15:33 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 46dc7mf84j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 08:15:33 +0000
+Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5488FWRb006369;
+	Thu, 8 May 2025 08:15:32 GMT
+Received: from cbsp-sh-gv.ap.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 5488FWbQ006367
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 08:15:32 +0000
+Received: by cbsp-sh-gv.ap.qualcomm.com (Postfix, from userid 4635958)
+	id 4234340D09; Thu,  8 May 2025 16:15:31 +0800 (CST)
+From: Wenbin Yao <quic_wenbyao@quicinc.com>
+To: catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, andersson@kernel.org,
+        konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org, kishon@kernel.org, sfr@canb.auug.org.au,
+        linux-phy@lists.infradead.org
+Cc: krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
+        quic_mrana@quicinc.com, quic_cang@quicinc.com, quic_qianyu@quicinc.com,
+        quic_wenbyao@quicinc.com
+Subject: [PATCH v3 1/5] arm64: Kconfig: enable PCI Power Control Slot driver for QCOM
+Date: Thu,  8 May 2025 16:15:10 +0800
+Message-Id: <20250508081514.3227956-2-quic_wenbyao@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250508081514.3227956-1-quic_wenbyao@quicinc.com>
+References: <20250508081514.3227956-1-quic_wenbyao@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: arm: Add compatible for MediaTek
- MT8189
-To: Sirius Wang <sirius.wang@mediatek.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Sean Wang <sean.wang@mediatek.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, wenst@chromium.org,
- xavier.chang@mediatek.com
-References: <20250508063546.289115-1-sirius.wang@mediatek.com>
- <20250508063546.289115-2-sirius.wang@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250508063546.289115-2-sirius.wang@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 481nWpG-Z0Tf3w32Kn2NujcWXhWrDIJB
+X-Authority-Analysis: v=2.4 cv=E5XNpbdl c=1 sm=1 tr=0 ts=681c6827 cx=c_pps
+ a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=8J9pHfFvgnT8GwhQ4KkA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDA3MiBTYWx0ZWRfXyXndZstS/ke/
+ pFeu7nnsC1ZpIGX+PFI21xntAs99z1S3b8TxeRjv+U0p8XibS/4weIKThXs5JJ6wA3Z7PlyOPcG
+ LHbXHhcMA1JQke/9ha52f7SKcHPlpXvQRiFMfVJPD4nIv11ybAZdPcROBDu7h9VRT6o+wahAbLB
+ bQwNCENcWcgLsy158HqIYBIXFs72y8gugp6DcxP9X8CPKC/vLKnEmVQBTQ1hUuWg/L7DIwC/bRb
+ SZQxrp/fDSHc/VpmK9GpL0FmfXeqNvjmnvFbSHyHfzoteNbzMcvTVlnV/JMx69ivAup8Cm0AkD3
+ RuOYDWmk8PlZfuQ07SomAJfHN9VQksfYfF7Joix8TQl4uVbDoYxivsfPkfzqTBjUapBGwfEC88s
+ aREqr7d2XSxbrKLT5b7NUG/DbySC5ezfMeZrWvWvAZVIuDSock4PGj3OJ63DLd2wBWLSYieR
+X-Proofpoint-ORIG-GUID: 481nWpG-Z0Tf3w32Kn2NujcWXhWrDIJB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_02,2025-05-07_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 suspectscore=0 adultscore=0 mlxscore=0 malwarescore=0
+ bulkscore=0 phishscore=0 spamscore=0 priorityscore=1501 mlxlogscore=797
+ lowpriorityscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505080072
 
-Il 08/05/25 08:35, Sirius Wang ha scritto:
-> This commit adds dt-binding documentation for the MediaTek MT8189
-> reference board.
-> 
-> Signed-off-by: Sirius Wang <sirius.wang@mediatek.com>
+From: Qiang Yu <quic_qianyu@quicinc.com>
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Enable the pwrctrl driver, which is utilized to manage the power supplies
+of the devices connected to the PCI slots. This ensures that the voltage
+rails of the standard PCI slots on some platforms eg. X1E80100-QCP can be
+correctly turned on/off if they are described under PCIe port device tree
+node.
 
+Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
+---
+ arch/arm64/Kconfig.platforms | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index a541bb029..0ffd65e36 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -270,6 +270,7 @@ config ARCH_QCOM
+ 	select GPIOLIB
+ 	select PINCTRL
+ 	select HAVE_PWRCTRL if PCI
++	select PCI_PWRCTRL_SLOT if PCI
+ 	help
+ 	  This enables support for the ARMv8 based Qualcomm chipsets.
+ 
+-- 
+2.34.1
 
