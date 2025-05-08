@@ -1,125 +1,179 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89333221FA0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E98B20C46F;
 	Thu,  8 May 2025 10:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746700473; cv=none; b=VJbCeDqMoyrjy2PISPQ9GoBNqJNwRxNzkEk8ag+oOsdODWnmhV3klhG2VMrSMXwQpc70rTs7Zmp7p4UnkjqPkWNcpY5Z9onGX9ODS4cZLvhGwv1oBDrh+aHcxZe5Zq7YkppFY9uF+2jru47YA44nnTRYYCLucnFjwLaPaYqh5nM=
+	t=1746700473; cv=none; b=Eidgh0PuaRLnzgzHcRRsWME/byuC0gVizw1aSmYy78KqkXjUxvSCEV92dI2RJhvRK7xC/WNmxNE58NzzW3bGDsBPgf+4RanhVvGkFfNc7j8ALZxcJQlHVq7LB4B9wmwjHkNQrssl4jtI7L840dVuLiFQbazkfBLlmvSNd9p056Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746700473; c=relaxed/simple;
-	bh=KuKPBoDjHDPZ4zNZNAc7e3c9x+J+qxdFTx8dGtAK3ss=;
-	h=Message-ID:Date:From:To:CC:Subject:References:Content-Type:
-	 MIME-Version; b=nVG3BZdpnqMt6kNBIvi3R7TmN6Bp2fmhh5JZ/TVDAF5ZEPlJ8kfU3XDIpiEAFQplYVOjlv93yxiUiixrR4+ktyG1KSNkyWqOkfV0GgOLMZy0sXr7rJCDsH2D/yD1LFx66R0ilvjwBcvjrHauxy8QPSNzGLkAsCpWKrMXyO4uuPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zor5QPT2; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=CuBMB7PSAhEF7x+0nxtqmfMmTY8lDbPHmMl7xX8mE2U=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=gJm17QsS/02TogS2yph6ULf23yadMP5ItfqIHhoKS8tJuzsv0zBsCwAZ8I6Oi9ORlV4AZrvfSDMEkskoy+qBvYdXEODOfEuJjyQkrw5YoDBj+ZmGAF2Okjugyhp/uHcg5JVgfFuQbGMk8iH/XNmhS9Bd5+QlPSO6jyFCwXnA+X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HF+AA810; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Dg8EGONJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zor5QPT2"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf680d351so11064265e9.0;
-        Thu, 08 May 2025 03:34:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746700470; x=1747305270; darn=vger.kernel.org;
-        h=mime-version:content-transfer-encoding:references:subject:cc:to
-         :from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=xizeysbD+2cKLonCxb9Ikg/JQWMKPiH+tr5vKFbIOfM=;
-        b=Zor5QPT2m5SKi6/mOJ61pDqc9bqaX6SlsOKripywQ+UZ4EinkQI27MI8eSfvYP6/8a
-         qr1UhsuCfflC5vwlnvVrT07eVx7pfJ7NGYTtF0ZJgAe3tg+shKJGcTHd8u+gCK++uftP
-         Kq4nd9A3tDxH7XMGdnz9ZluKNy661YH39LaumWZMazVKLZc57DNV45Eq7HGMzGgSY3vz
-         oKetOV4j7Q/BXvIwrfhfHL8vVNtgA6sekI59pM8FM44m7JOoNXbjRWnCnnRwu6DqBCCM
-         DVMobZq0/OgAUQGWuf8RarqCr5/e1yA/wD+wWLYpFxtVpp0aISn/yXrn4icyAUyPJJKr
-         cf7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746700470; x=1747305270;
-        h=mime-version:content-transfer-encoding:references:subject:cc:to
-         :from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xizeysbD+2cKLonCxb9Ikg/JQWMKPiH+tr5vKFbIOfM=;
-        b=qO8IwWV1hA4V5PQ5i0zJN/ZWHhhbk8HQXc9o44V/liBlJz3DzPpyulz420VWSiM76q
-         MuUx81eo/eecwdPVe1GvyFyKphZm9yJGqzKy+M/Zo+mcGVIN3qxY4hev5tYD5TsOgHOF
-         uwvvnZKRuxNleXDeksmnUWmucAz2ALgjZGN0Psk6sIl70UES8Y3KbG6L+S+sZNgXl1C7
-         HMl07DOXu9ZK28CAlUp047c7PbDn+ek7zOJq70LoEBAqLhQ6N+5f9QjCbN0bliVTOOnL
-         lpheYlVqc3HPl2cD7iYB4ONeTXKizd1FFRfkAWG5DRx4Z84DP9owN9+sOZjVO5YAvDTR
-         MZcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFVMeE+3vYPTdEIVGqsUlEUQtmdkc0mPjau850sXJ2p+oz0Od/y+7NKf8AW6alGF0fPPW8BT0xCO9yev4=@vger.kernel.org, AJvYcCVpZeiFYJIiIO22jrdUV0DsiJfzibAeHLXO2+EB0M+XLsNay70oEwCpUuImdRKGerTUXfwocSUm@vger.kernel.org, AJvYcCXKQAH1AVA890mwyd3l1ITcuVwDFWK7nzaHOoRA8q5BWdRKXFtMgAG2mN3/9RrpVCb4xPL3RwazTowz3eE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlXJWoT1OMmw52rqVYm9EAVY4o/13mTrQwm3hyP4YNApkfO1Ek
-	pwyMyaemb60t3pNfIPQN17fR4UTcHJlcLg70aA1Jzl7CTWUoMwuKO8mi4g==
-X-Gm-Gg: ASbGncvYdyyDWexakk0Pw2rxX0FizyhOdwnYsdG+jbtbRIMRqVVYTh1OmeBgYSfLAoV
-	99KY8NKoxw0hXMx+vN1MBXBQjgf+ZGw2UtMtqmrlFIgOP6kpiRXtv4+mrmCAZGvPS892iLJTyxB
-	iRFNdcz7qXZhhExr4TZkZjjQ7BcAF0KsvHs+cgBxw2We00Tv5y08g1T3PXeYjWzBG3Dqjl4nyUd
-	6KJDsh14FCL5GRAOWo6GKQ8qe525ABm0WKQNk6aF9vo8v5h7sJLPU9RF5+r2CoOhnVbdqF0CI7h
-	6tWLqRDnhFr8XdQZ9xHupPrMQtJ7pVda26FD3id8wg3vrl/m2fafciSxazq2
-X-Google-Smtp-Source: AGHT+IH0a9roXZBmBGMXIYr5UBAYL9NEGf0Evua2N7Ei76fP3u0l/UvqfgyhZORZuaF/Pyun04enog==
-X-Received: by 2002:a05:600c:818d:b0:439:9737:675b with SMTP id 5b1f17b1804b1-442d02e7047mr27334675e9.7.1746700469388;
-        Thu, 08 May 2025 03:34:29 -0700 (PDT)
-Received: from red.local ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a0bc2e17a3sm1668728f8f.62.2025.05.08.03.34.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 03:34:28 -0700 (PDT)
-Message-ID: <681c88b4.df0a0220.27ca51.39ec@mx.google.com>
-Date: Thu, 08 May 2025 03:34:28 -0700 (PDT)
-From: clabbe.montjoie@gmail.com
-To: ldewangan@nvidia.com,broonie@kernel.org,thierry.reding@gmail.com,jonathanh@nvidia.com,devnull+webgeek1234.gmail.com@kernel.org
-CC: linux-spi@vger.kernel.org,linux-tegra@vger.kernel.org,linux-kernel@vger.kernel.org,stable@vger.kernel.org,webgeek1234@gmail.com
-Subject: Re: [PATCH] spi: tegra114: Use value to check for invalid delays
-References: <20250506-spi-tegra114-fixup-v1-1-136dc2f732f3@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HF+AA810";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Dg8EGONJ"
+Date: Thu, 08 May 2025 10:34:29 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746700470;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=s4K76QvUlhZtCkTDl/xohikKwi0llkY+HdzHM5PDk6w=;
+	b=HF+AA810lpTTsu45ed4pP2a1VlS1yyUavmK30fvOvtarO9E7SRUywvJGz9wYHzyoBLaReQ
+	ycnAX45eeN0bkyyjK3BoVkqc4AdrvuDrEG5QUKVTZ3gbS9NQU5giRorFiZYkPqG+ZwDtBM
+	ZWFgc2VU8auTMAEIrSqNC2ib6QlVcuL3WLWChUwPqC9BFUAY9bypPE1JQWq83ZvQL9eexY
+	3A9wREme69jmbxqZIXfzixGc0xJj/Mh1gtxRAY8ilO5idJprMhcOGvTGlWtwp986cSWnnp
+	RgnIfGq+yoPkEuzUJ0/KjypHRnSgaU9jRZtVdR5uPromS8PtmTPqdd/Zz90UvA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746700470;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=s4K76QvUlhZtCkTDl/xohikKwi0llkY+HdzHM5PDk6w=;
+	b=Dg8EGONJcTajUhCuGiy85I4usWuYhv5zJ/FpIQzsyo4Emk187KsYL/F1ZRkBusKps0vSuP
+	8Vj85npaQI+n9OCw==
+From: "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf: Fix irq work dereferencing garbage
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-ID: <174670046919.406.15885032121099672652.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-> From: Aaron Kling <webgeek1234@gmail.com>
->=20
-> A delay unit of 0 is a valid entry, thus it is not valid to check for
-> unused delays. Instead, check the value field; if that is zero, the
-> given delay is unset.
->=20
-> Fixes: 4426e6b4ecf6 ("spi: tegra114: Don't fail set_cs_timing when delays a=
-re zero")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> ---
->  drivers/spi/spi-tegra114.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-> index 2a8bb798e95b954fe573f1c50445ed2e7fcbfd78..795a8482c2c700c3768bd50bf59=
-971256893a486 100644
-> --- a/drivers/spi/spi-tegra114.c
-> +++ b/drivers/spi/spi-tegra114.c
-> @@ -728,9 +728,9 @@ static int tegra_spi_set_hw_cs_timing(struct spi_device=
- *spi)
->  	u32 inactive_cycles;
->  	u8 cs_state;
-> =20
-> -	if ((setup->unit && setup->unit !=3D SPI_DELAY_UNIT_SCK) ||
-> -	    (hold->unit && hold->unit !=3D SPI_DELAY_UNIT_SCK) ||
-> -	    (inactive->unit && inactive->unit !=3D SPI_DELAY_UNIT_SCK)) {
-> +	if ((setup->value && setup->unit !=3D SPI_DELAY_UNIT_SCK) ||
-> +	    (hold->value && hold->unit !=3D SPI_DELAY_UNIT_SCK) ||
-> +	    (inactive->value && inactive->unit !=3D SPI_DELAY_UNIT_SCK)) {
->  		dev_err(&spi->dev,
->  			"Invalid delay unit %d, should be SPI_DELAY_UNIT_SCK\n",
->  			SPI_DELAY_UNIT_SCK);
->=20
-> ---
-> base-commit: 0d8d44db295ccad20052d6301ef49ff01fb8ae2d
-> change-id: 20250506-spi-tegra114-fixup-dbf6730db087
->=20
-> Best regards,
-> --=20
-> Aaron Kling <webgeek1234@gmail.com>
->=20
->=20
->=20
->=20
+The following commit has been merged into the perf/core branch of tip:
 
-Tested-by: Corentin LABBE <clabbe.montjoie@gmail.com>
-Tested-on: tegra124-jetson-tk1
+Commit-ID:     88d51e795539acd08bce028eff3aa78748b847a8
+Gitweb:        https://git.kernel.org/tip/88d51e795539acd08bce028eff3aa78748b847a8
+Author:        Frederic Weisbecker <frederic@kernel.org>
+AuthorDate:    Mon, 28 Apr 2025 13:11:47 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Fri, 02 May 2025 12:40:40 +02:00
 
-Thanks
-Regards
+perf: Fix irq work dereferencing garbage
+
+The following commit:
+
+	da916e96e2de ("perf: Make perf_pmu_unregister() useable")
+
+has introduced two significant event's parent lifecycle changes:
+
+1) An event that has exited now has EVENT_TOMBSTONE as a parent.
+   This can result in a situation where the delayed wakeup irq_work can
+   accidentally dereference EVENT_TOMBSTONE on:
+
+CPU 0                                          CPU 1
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/events/core.c | 31 +++++++++++++++----------------
+ 1 file changed, 15 insertions(+), 16 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 882db7b..e0ca4a8 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -208,7 +208,6 @@ static void perf_ctx_unlock(struct perf_cpu_context *cpuctx,
+ }
+ 
+ #define TASK_TOMBSTONE ((void *)-1L)
+-#define EVENT_TOMBSTONE ((void *)-1L)
+ 
+ static bool is_kernel_event(struct perf_event *event)
+ {
+@@ -2338,12 +2337,6 @@ static void perf_child_detach(struct perf_event *event)
+ 
+ 	sync_child_event(event);
+ 	list_del_init(&event->child_list);
+-	/*
+-	 * Cannot set to NULL, as that would confuse the situation vs
+-	 * not being a child event. See for example unaccount_event().
+-	 */
+-	event->parent = EVENT_TOMBSTONE;
+-	put_event(parent_event);
+ }
+ 
+ static bool is_orphaned_event(struct perf_event *event)
+@@ -5705,7 +5698,7 @@ static void put_event(struct perf_event *event)
+ 	_free_event(event);
+ 
+ 	/* Matches the refcount bump in inherit_event() */
+-	if (parent && parent != EVENT_TOMBSTONE)
++	if (parent)
+ 		put_event(parent);
+ }
+ 
+@@ -9998,7 +9991,7 @@ void perf_event_text_poke(const void *addr, const void *old_bytes,
+ 
+ void perf_event_itrace_started(struct perf_event *event)
+ {
+-	event->attach_state |= PERF_ATTACH_ITRACE;
++	WRITE_ONCE(event->attach_state, event->attach_state | PERF_ATTACH_ITRACE);
+ }
+ 
+ static void perf_log_itrace_start(struct perf_event *event)
+@@ -13922,10 +13915,7 @@ perf_event_exit_event(struct perf_event *event,
+ {
+ 	struct perf_event *parent_event = event->parent;
+ 	unsigned long detach_flags = DETACH_EXIT;
+-	bool is_child = !!parent_event;
+-
+-	if (parent_event == EVENT_TOMBSTONE)
+-		parent_event = NULL;
++	unsigned int attach_state;
+ 
+ 	if (parent_event) {
+ 		/*
+@@ -13942,6 +13932,8 @@ perf_event_exit_event(struct perf_event *event,
+ 		 */
+ 		detach_flags |= DETACH_GROUP | DETACH_CHILD;
+ 		mutex_lock(&parent_event->child_mutex);
++		/* PERF_ATTACH_ITRACE might be set concurrently */
++		attach_state = READ_ONCE(event->attach_state);
+ 	}
+ 
+ 	if (revoke)
+@@ -13951,18 +13943,25 @@ perf_event_exit_event(struct perf_event *event,
+ 	/*
+ 	 * Child events can be freed.
+ 	 */
+-	if (is_child) {
+-		if (parent_event) {
+-			mutex_unlock(&parent_event->child_mutex);
++	if (parent_event) {
++		mutex_unlock(&parent_event->child_mutex);
++
++		/*
++		 * Match the refcount initialization. Make sure it doesn't happen
++		 * twice if pmu_detach_event() calls it on an already exited task.
++		 */
++		if (attach_state & PERF_ATTACH_CHILD) {
+ 			/*
+ 			 * Kick perf_poll() for is_event_hup();
+ 			 */
+ 			perf_event_wakeup(parent_event);
+ 			/*
+ 			 * pmu_detach_event() will have an extra refcount.
++			 * perf_pending_task() might have one too.
+ 			 */
+ 			put_event(event);
+ 		}
++
+ 		return;
+ 	}
+ 
