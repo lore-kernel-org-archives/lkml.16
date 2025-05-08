@@ -1,92 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6495286895;
-	Thu,  8 May 2025 18:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3F1217707
+	for <linux-kernel@vger.kernel.org>; Thu,  8 May 2025 18:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746729107; cv=none; b=TnPYu+YOcxo06yT/IAFtC9EXZq6evey0QyHG6ZqyzgOHUizT/fSMpFgtwR2fWvNedyFiHlld8gvwrFL307VuQrxsaC+Sb07BM52IbXl0xZ0gSRyu0aSTISxzKk1zXr3bY6LhuC/aXG8za3D07lKDuOaKPBv0et9cZgPApIzkKcQ=
+	t=1746729158; cv=none; b=DRguzjc0Ew/2b+IcX36x94hO8nQPaV2SnXzw/Fv9fX9/pm5aV7l22SLMiGi1DmHxsu9XXjyOdvS3SHyormlZczpGHcCYL5RWssLNxnX8AVOxthBNS6GIokptA5JiKbTkJ/ECh6f653UsLdpsMDZnrK1P6TEkdQiYg6qOVGh8/so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746729107; c=relaxed/simple;
-	bh=lmW0Dg0L5hEpYSQrGyyAU2RGWEg1vYLosLy8p05Df9E=;
+	s=arc-20240116; t=1746729158; c=relaxed/simple;
+	bh=EDYr3bbdDG5rfawXqXNdwUwojhepOOUb87L8j7hKW70=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Myb0yBbGBrUJy8k5vDNVBHFqWgtqn5UWrIU/q/MZMXs7o4jzTIXtNQEDjx++fLEBG2NjylVxHo5pcDvnHtd2bMfXzrsG1ot5+uwyP/D1RLYx7I0H6h8NJ89+6qUTayzMo+tFwPV1ZXiur5D4UI7qb0NVwQ2uVJ7b0QJkiPdPvNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kbVWD+89; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=JfKFXCvNw1j1r7plOPnEEwmh44ggydJwCji/rpHrbwWuLJy2OgnLXL68ufJU/Ud650RbkVIZwA6OpDRxcMcHme2xXgU6AclbAw5VHRbEcPg8nwN1Pw/4iYOKT5o9vzmpuLInHzVOFgXyTTJrY45iVgcBEzf4cUgydb597I8jzYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h7MUludo; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kbVWD+89"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h7MUludo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746729106; x=1778265106;
+  t=1746729156; x=1778265156;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=lmW0Dg0L5hEpYSQrGyyAU2RGWEg1vYLosLy8p05Df9E=;
-  b=kbVWD+89TsaU5YN6EeJnLmwbUupdjkow/0bxOu/0lZXHnNbx6RQsEAMP
-   PcB1Zk0B1fIc/OI47O5I+ZtgGe1dyM0dEDCU7FGYnjuKtU7oA9vylHufi
-   JMBOd3EUX3y4iUck3Zf8aQsb/OG9QKrX9ZhC6KvWq++apEz9Jwd4KhI77
-   6bK12Q/shFFXesKqSqD6xhnzmIWe0RdQ3Q89vomA1Ep0uVEUqL7BHcxrO
-   ebXWClVt9Xa/z/hYRYwIjX5wHoWZWufgBwzMiniBk7g0Egm+rl9k2tjkj
-   qyEZoZJq9V7VxQ+r4uCDtl87wvsl5sGRQYQnWIsaq4MAOASvSbIiSHf31
-   g==;
-X-CSE-ConnectionGUID: GRsompNIStSFtz5SCJkYfA==
-X-CSE-MsgGUID: igImZrYDQXyD8wHkfRtOIw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="52185445"
+  bh=EDYr3bbdDG5rfawXqXNdwUwojhepOOUb87L8j7hKW70=;
+  b=h7MUludoYGQLnRTOh2jRLb/L1OLFJ9Uy6VWWsr4sjl2YY2n1Fm9M9hch
+   26wNrot0Vg7Cks0OHibtDVes7YHX16RU8DOwdCAIt8LeErXVNl3NY/K4E
+   etZtwddHJc87+mc8vrb5B667S3dqTuXdIIFer/T5pO7Pc9B79OqX744iU
+   MLTCFDy1DrV4aSaO7xJyc+nw326Ado4YnU7QQTKWxy/CNsS1KI8QfYehq
+   MXc+BHlQXTPQa4/drLiNkCbmtXX/8IPWJN34c9zefcMnCMqKd8VgT5Ms3
+   V9xIdrEfv3sf5v7ct7bcK8gLV85yoLU7ypv6DoMdT+h8s98En9FpKTrZ+
+   A==;
+X-CSE-ConnectionGUID: pGxvEXw2TAulQXujruYPHQ==
+X-CSE-MsgGUID: fB4YpTFtSGqx5yjOUV+3gA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="58747375"
 X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="52185445"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:31:45 -0700
-X-CSE-ConnectionGUID: XR1rcrq6RLiCNe1U0w4udg==
-X-CSE-MsgGUID: lI5CdtKsTd+NqPODxBCj3g==
+   d="scan'208";a="58747375"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:32:36 -0700
+X-CSE-ConnectionGUID: RMhvKwiGTa+Ifcwd2meL4A==
+X-CSE-MsgGUID: 7dUXf3dIScK2RT62+JbbFg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="136774458"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:31:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uD61r-00000004C9z-45LZ;
-	Thu, 08 May 2025 21:31:31 +0300
-Date: Thu, 8 May 2025 21:31:31 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 12/26] PCI: of: Set fwnode device of newly created PCI
- device nodes
-Message-ID: <aBz4gxUlnSgEtHn8@smile.fi.intel.com>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
- <20250507071315.394857-13-herve.codina@bootlin.com>
+   d="scan'208";a="167320513"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:32:35 -0700
+Date: Thu, 8 May 2025 11:32:33 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghuay@nvidia.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v4 01/31] x86,fs/resctrl: Drop rdt_mon_features variable
+Message-ID: <aBz4wZnuZRGxuAHB@agluck-desk3>
+References: <20250429003359.375508-1-tony.luck@intel.com>
+ <20250429003359.375508-2-tony.luck@intel.com>
+ <eb141d41-25e2-4e8a-bfdb-6d3e6a4e542b@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -95,31 +68,127 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250507071315.394857-13-herve.codina@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <eb141d41-25e2-4e8a-bfdb-6d3e6a4e542b@intel.com>
 
-On Wed, May 07, 2025 at 09:12:54AM +0200, Herve Codina wrote:
-> Device-tree node can be created when CONFIG_PCI_DYNAMIC_OF_NODES. Those
-> node are created and filled based on PCI core information but the
-> fwnode device field is not set.
+On Wed, May 07, 2025 at 08:28:56PM -0700, Reinette Chatre wrote:
+> Hi Tony,
 > 
-> When later an overlay is applied, this consuses fw_devlink. Indeed,
-
-consuses?
-
-> without any device attached to the node, fw_devlink considers that this
-> node will never become a device. When this node is pointed as a
-> supplier, devlink looks at its ancestors in order to find a node with a
-> device that could be used as the supplier.
+> On 4/28/25 5:33 PM, Tony Luck wrote:
+> > The fs/arch boundary is a little muddy for adding new monitor features.
 > 
-> In the PCI use case, this leads to links that wrongly use the PCI root
-> bridge device as the supplier instead of the expected PCI device.
+> It is not possible to accurately interpret what is meant with "little muddy".
+> Please add specific information that can be verified/reasoned about.
+
+I'll work on something more descriptive/useful.
+
+> > 
+> > Clean it up by making the mon_evt structure the source of all information
+> > about each event. In this case replace the bitmap of enabled monitor
+> > features with an "enabled" bit in the mon_evt structure.
 > 
-> Setting the fwnode device to the device of the PCI device allows devlink
-> to use this device as a supplier and so, correct links are created.
+> bit -> boolean?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Will fix ("bit" was left over from earlier implementation).
 
+> > 
+> > Change architecture code to inform file system code which events are
+> > available on a system with resctrl_enable_mon_event().
+> 
+> (nit: no need to mention that a patch changes code, it should be implied.)
+> 
+> This could be, "An architecture uses resctrl_enable_mon_event() to inform
+> resctrl fs which events are enabled on the system."
 
+Will update with this.
+
+> (I think we need to be cautious about the "available" vs "enabled"
+> distinction.)
+
+Maybe a comment above mon_event_all[]?
+
+/*
+ * All available events. Architecture code marks the ones that
+ * are supported by a system using resctrl_enable_mon_event()
+ * to set .enabled.
+ */
+struct mon_evt mon_event_all[QOS_NUM_EVENTS] = {
+
+> > 
+> > Replace the event and architecture specific:
+> > 	resctrl_arch_is_llc_occupancy_enabled()
+> > 	resctrl_arch_is_mbm_total_enabled()
+> > 	resctrl_arch_is_mbm_local_enabled()
+> > functions with calls to resctrl_is_mon_event_enabled() with the
+> > appropriate QOS_L3_* enum resctrl_event_id.
+> 
+> No mention or motivation for the new array. I think the new array is an
+> improvement and now it begs the question whether rdt_resource::evt_list is
+> still needed? It seems to me that any usage of rdt_resource::evt_list can
+> use the new mon_event_all[] instead?
+
+Good suggestion. rdt_resource::evt_list can indeed be dropped. A
+standalone patch to do so reduces lines of code:
+
+ include/linux/resctrl.h |  2 --
+ fs/resctrl/internal.h   |  2 --
+ fs/resctrl/monitor.c    | 18 +-----------------
+ fs/resctrl/rdtgroup.c   | 11 ++++++-----
+ 4 files changed, 7 insertions(+), 26 deletions(-)
+
+But I'll merge into one of the early patches to avoid adding new code to create
+the evt_list and then delete it again.
+
+> With struct mon_evt being independent like before this
+> patch it almost seems as though it prepared for multiple resources to
+> support the same event (do you know history here?). This appears to already
+> be thwarted by rdt_mon_features though ... although theoretically it could
+> have been "rdt_l3_mon_features".
+> Even so, with patch #4 adding the resource ID all event information is
+> centralized. Only potential issue may be if multiple resources use the
+> same event ... but since the existing event IDs already have resource
+> name embedded this does not seem to be of concern?
+
+The existing evt_list approach would corrupt the lists if the same event
+were added to multiple resources. Without the list this becomes
+possible, but seems neither desirable, nor useful.
+
+I will add a warning to resctrl_enable_mon_event() if architecture
+code tries to enable an already enabled event.
+> 
+> > 
+> > Signed-off-by: Tony Luck <tony.luck@intel.com>
+> > ---
+> 
+> ...
+> 
+> > @@ -866,14 +879,13 @@ static struct mon_evt mbm_local_event = {
+> >   */
+> >  static void l3_mon_evt_init(struct rdt_resource *r)
+> >  {
+> > +	enum resctrl_event_id evt;
+> > +
+> >  	INIT_LIST_HEAD(&r->evt_list);
+> >  
+> > -	if (resctrl_arch_is_llc_occupancy_enabled())
+> > -		list_add_tail(&llc_occupancy_event.list, &r->evt_list);
+> > -	if (resctrl_arch_is_mbm_total_enabled())
+> > -		list_add_tail(&mbm_total_event.list, &r->evt_list);
+> > -	if (resctrl_arch_is_mbm_local_enabled())
+> > -		list_add_tail(&mbm_local_event.list, &r->evt_list);
+> > +	for (evt = 0; evt < QOS_NUM_EVENTS; evt++)
+> > +		if (mon_event_all[evt].enabled)
+> > +			list_add_tail(&mon_event_all[evt].list, &r->evt_list);
+> >  }
+> 
+> This hunk can create confusion with it adding "all enabled events" to
+> a single resource. I understand that at this point only L3 supports monitoring
+> and this works ok, but in the context of this work it creates a caveat early
+> in series that needs to be fixed later (patch #4). This wrangling becomes
+> unnecessary if removing rdt_resource::evt_list.
+
+I'll see if I can get a clean sequence between these patches to avoid
+this confusion. Maybe evt_list removal needs to happen here.
+> 
+> Reinette
+
+-Tony
