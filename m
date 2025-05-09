@@ -1,128 +1,152 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C4F291176;
-	Fri,  9 May 2025 12:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCD01E50B;
+	Fri,  9 May 2025 12:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746795399; cv=none; b=IaRMPFFfn99P3l2Yo/AmN8AhznHgVKBzBFTUa4b59etd+v6Y8tf596rIE7c8IpU+QajNBxSR5tF7W7vqswXkm6eCypAG1zKb3H1NEPp5iBdSvnwWNZdXDf2GAzBs7PW1IFsb0bOA3zdDAel7FC5TmXBWe8W47AixuSc3P2eOScE=
+	t=1746795480; cv=none; b=dMRa0+dLv4SDFn+uBB06PRVbjRn2tFOce5BCBpI1ya2ruFLQy+FDkKnXl1L+21elNoyEHy6OyzVST408z2in5nDtWcpnHVAcGFyy3V1tuQ6CuUbVUaA/UUNLc5gwmt7D4uZdkoiUPizx02pGI82E7L3Ra5kJEBIJKUR/0ELkdd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746795399; c=relaxed/simple;
-	bh=eEulgBiddSPX2RK7TdqXaa1VbtpWWvwEmnOnDQcmVnk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uUByqwgNRPblfSurUWfvdUgWpNF+l5MJdCUSYw4nUMG1jOnwc2D1buV38lwe+l9UXVqdc41+SCnMrG7P30z2aNUabh0UcjKaye8K6ZMa/gD2XlartktEx8ePWizz+DMHrujzCzmhHCaLS4HDWP1W2haMmF3q2DWa7YkVHrOvJLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BS3sxEDZ; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746795480; c=relaxed/simple;
+	bh=ndAnXW6bg2EJMnwzBHjA708HhulGxBdlHjwhnFr1MuA=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Meiy9RrcCt0b4CNUm109B0yLmRIHcUIOP1P7L52HHhkRitpjRpMMmX6ovaPQhjJ30Dvo1qVk90bAHFf2d5nsoS+RsNUqQc7ZuyHjGSMw4N6Sy3utXWRnvf51ewOhvQWtHAsU0tO/Zb7lWw7fuXnp4Js9oLMSoLTb4gtXQARn3GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tu5HUi95; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BS3sxEDZ"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5fa828b4836so334775a12.2;
-        Fri, 09 May 2025 05:56:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746795396; x=1747400196; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=evkkZXoj/VhOqVAgoh4F9uXWFeC77YbHlW2Gg+VCwuE=;
-        b=BS3sxEDZSAkyGPoQ7TcBXbUG86HvLcuQz6PkXU6rcQzXU+zIVAqmeHbWU7ZUHGgQ5R
-         C0qtHi0VtT+BpA7MU/1Oa5LJwxyieLh+rWyq3xXJ5Xxtde5kiNrmSwYqBrVqAoaHtERN
-         wMNN1lCKs3h6Kc/lJGjn+9/herVyvx5ZuIq+agtnzwITQ1/5dazcOYObIOYq5gK8ScgW
-         iKt0yaKTDqkcavpRyjlv6RddOTS6gMH501GJqZmB+1J+7sfdJstt2PgAS37DOJQUpbg/
-         qpdobg1cgWM33DqPVAjE7ZUVVr78XjtsVD/tsyFU4ZHSy5M0lG+P1IFP+dvcZ6w/AqJ/
-         ebBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746795396; x=1747400196;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=evkkZXoj/VhOqVAgoh4F9uXWFeC77YbHlW2Gg+VCwuE=;
-        b=I2oeU1jcTzpfGmqBTaqrOxLi8v4ar6GN27KYZpcKH/KHfGl2NZp5nvdm/hKMoU5Oed
-         8r9NiJHmpXmPY6rwRRhFBsfKqNIQUafPEHMhouYMvsjSHKlorxKVR0N1oEzyH7S5w+NB
-         JFC7zjraQbCPIcN/zLHW6dRl5oalJt62mIMjfKipO+XmAIqJeIAAmYQWq9uno3vJs/cz
-         bnNVnTPh4lBHw1MxzJTzjFYK35LZuBLe5Hi16j1Ag2FPiLOpDCNdP+/dMsdMYH5FhAq7
-         gXqq/mKLTR99UnAbZFK+ALBs7LFyf91F1rhVyVFqI9tRwxKdwuKrYLZLiwfXOM/RRg9A
-         4u7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU3+M1MwzGRWFvTUFZpd6GaCJ9ljc9XC5PReV7nSPhBDfiGOZM9x1KV3Zplq5htjf2T+0WdRpvzpZ328jA=@vger.kernel.org, AJvYcCXaDEqomnXNcLd/cpYHy86YeOKUb1yzEjn0dmLGKErCQOuwCaCUnuLLa5+m0D82yXGArvWTcMH0@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOvoivfszicpdG2ORvZV6b/wP7SfQtqvAkDaS8y0nPHzDd6ewt
-	2qWjP4CfvJLupEv/nPHEqCvWyFEwaKbmJPgUnquJUYynGdORBOY9
-X-Gm-Gg: ASbGncv8L6AUh8ZuxgyeEj4vbf9/sXCcg0WLDfnYIFIP1/GxtFpzt7VqsH9QKs6yoqD
-	oo1mjyvK7UFbCsoLUQUbqil7njxtLxhGUhkxrZC7QGmOwvDsid6aMuLguywrbXg4k1AkoOwL5Tq
-	qSZjwnaP3WPdfouY/oUIa97gQ7cuvNAaOyPBYfxcAewjdiCU9+fqG6csYhhblC2vKoT0d2aFXTj
-	ZOsyMtOiqs7KvnetnR1j+8YSIgYuyZnabMGqH4n0wu34MfklpDGeV7wwnRVSMM7O7siVmK/sCfr
-	3k7CW+53KMNev3/AuWtPFYL5kTYB
-X-Google-Smtp-Source: AGHT+IETJc9VTIe+oklQHEE8vi1Z7BiidfOYztR4qgSvUyJTtTuPqagkaumWxFZ9cXcdOOfvW+M4Ag==
-X-Received: by 2002:a05:6402:4309:b0:5e5:c5f5:f6a with SMTP id 4fb4d7f45d1cf-5fca0735f19mr1031091a12.2.1746795395582;
-        Fri, 09 May 2025 05:56:35 -0700 (PDT)
-Received: from skbuf ([188.25.50.178])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9d70f51esm1326234a12.79.2025.05.09.05.56.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 05:56:34 -0700 (PDT)
-Date: Fri, 9 May 2025 15:56:31 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>, Jakob Unterwurzacher <jakobunt@gmail.com>
-Cc: Woojung Huh <woojung.huh@microchip.com>, UNGLinuxDriver@microchip.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, quentin.schulz@cherry.de,
-	Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	George McCollister <george.mccollister@gmail.com>
-Subject: Re: [PATCH] net: dsa: microchip: linearize skb for tail-tagging
- switches
-Message-ID: <20250509125631.cckfc2ychkyobqqo@skbuf>
-References: <20250509071820.4100022-1-jakob.unterwurzacher@cherry.de>
- <e76f230c-a513-4185-ae3f-72c033aeeb1e@lunn.ch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tu5HUi95"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E94CC4CEE4;
+	Fri,  9 May 2025 12:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746795480;
+	bh=ndAnXW6bg2EJMnwzBHjA708HhulGxBdlHjwhnFr1MuA=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=Tu5HUi95QreCXvpPlAYU8neJYudjSRRYZTrscpC2yvQsWNyI6fscahqk+tUi2huL8
+	 y1uJIGBmLwSR2P98LgzVVOlcA5FfyZqB8nzqB7gWKmTzdp2ujFKrQx+SBwjdAJzQW8
+	 UGkbR3TFAB/Ck2Zv0UXpOGdmWoFA3gEvRWreHWFQFHwBUQ8rYCsPrbeNgeallzNwKH
+	 p3TqMv7yL8Vbcug2Fujyh34I8h87Hx1wt7fTXUepBdjgK/Cb+sKrmrS4pZhmVEKNs2
+	 VGmDzbxZalxMtFd6EyBxA0tDft8tJlfM7X+kMyJKfYjmGBjhgWUHxKDOw5ZMB6Rwn8
+	 tpWIZGwiipMIg==
+Date: Fri, 9 May 2025 14:57:56 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Vincent Lefevre <vincent@vinc17.net>, 
+	"Andries E. Brouwer" <aeb@cwi.nl>, linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	libc-alpha@sourceware.org, "G. Branden Robinson" <branden@debian.org>, 
+	Carlos O'Donell <carlos@redhat.com>, Eugene Syromyatnikov <evgsyr@gmail.com>
+Subject: Re: man-pages-6.14 released
+Message-ID: <ib7p6mx6sltp2bu6vxw7n2urxuaq2lk4a6efsgnjym43svpvy3@wbgmnm6sy23o>
+References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
+ <20250509112627.GA924923@if>
+ <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
+ <20250509121454.GA952723@if>
+ <qghsrpxzxccbcuuctx56oq5xe7mtpkgljis7ovopr6ojmiz3js@vw5p5w7om4f4>
+ <20250509124829.GD3017@cventin.lip.ens-lyon.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="h76monlxzyenakhr"
 Content-Disposition: inline
-In-Reply-To: <e76f230c-a513-4185-ae3f-72c033aeeb1e@lunn.ch>
+In-Reply-To: <20250509124829.GD3017@cventin.lip.ens-lyon.fr>
 
-On Fri, May 09, 2025 at 02:31:00PM +0200, Andrew Lunn wrote:
-> On Fri, May 09, 2025 at 09:18:19AM +0200, Jakob Unterwurzacher wrote:
-> > The pointer arithmentic for accessing the tail tag does not
-> > seem to handle nonlinear skbs.
-> > 
-> > For nonlinear skbs, it reads uninitialized memory inside the
-> > skb headroom, essentially randomizing the tag, breaking user
-> > traffic.
-> 
-> Both tag_rtl8_4.c & tag_trailer.c also linearize, so i would say this
-> is correct.
-> 
-> What is interesting is that both xrs700x_rcv() and
-> sja1110_rcv_inband_control_extension() also don't call
-> skb_linearize().
-> 
-> Vladimir? George?
 
-Yes, it should be a more widespread problem.
+--h76monlxzyenakhr
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Vincent Lefevre <vincent@vinc17.net>, 
+	"Andries E. Brouwer" <aeb@cwi.nl>, linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	libc-alpha@sourceware.org, "G. Branden Robinson" <branden@debian.org>, 
+	Carlos O'Donell <carlos@redhat.com>, Eugene Syromyatnikov <evgsyr@gmail.com>
+Subject: Re: man-pages-6.14 released
+References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
+ <20250509112627.GA924923@if>
+ <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
+ <20250509121454.GA952723@if>
+ <qghsrpxzxccbcuuctx56oq5xe7mtpkgljis7ovopr6ojmiz3js@vw5p5w7om4f4>
+ <20250509124829.GD3017@cventin.lip.ens-lyon.fr>
+MIME-Version: 1.0
+In-Reply-To: <20250509124829.GD3017@cventin.lip.ens-lyon.fr>
 
-Have non-zero needed_tailroom:
-trailer
-ksz8795
-ksz9477
-ksz9893
-lan937x
-hellcreek
-sja1110
-xrs700x
+Hi Vincent,
 
-Call skb_linearize():
-trailer
-rtl8_4t
+On Fri, May 09, 2025 at 02:48:29PM +0200, Vincent Lefevre wrote:
+> Hi,
+>=20
+> On 2025-05-09 14:28:23 +0200, Alejandro Colomar wrote:
+> > On Fri, May 09, 2025 at 02:14:54PM +0200, Andries E. Brouwer wrote:
+> > > Hi Alejandro,
+> > >=20
+> > > > > I wonder about the legal status of such a change.
+> > > > > There is ownership of the pages, and a license that allows
+> > > > > others to do certain things.
+> > > >=20
+> > > > I also wonder about it.  We discussed it for several (~3) months, a=
+nd I
+> > > > documented links to the discussion in the commit message:
+> > > >=20
+> > > > commit 9f2986c34166085225bb5606ebfd4952054e1657
+> > > > Author: Alejandro Colomar <alx@kernel.org>
+> > > > Date:   Fri Apr 11 02:19:48 2025 +0200
+> > > >=20
+> > > >     *, CREDITS: Unify copyright notices
+> > > >    =20
+> > > >     Link: <https://lore.kernel.org/linux-man/jpin2dbnp5vpitnh7l4qmv=
+kamzq3h3xljzsznrudgioox3nn72@57uybxbe3h4p/T/#u>
+> > > >     Link: <https://www.linuxfoundation.org/blog/blog/copyright-noti=
+ces-in-open-source-software-projects>
+> > >=20
+> > > So I read this last link, and see
+> > >=20
+> > > "Don=E2=80=99t change someone else=E2=80=99s copyright notice without=
+ their permission
+> > > You should not change or remove someone else=E2=80=99s copyright noti=
+ce unless
+> > > they have expressly (in writing) permitted you to do so. This includes
+> > > third parties=E2=80=99 notices in pre-existing code."
+> >=20
+> > I understood that paragraph as not changing copyright notices from
+> > people unrelated to the project.
+>=20
+> I don't think so. But IMHO, it would be OK to provide the old copyright
+> notices in an indirect way: put them in a different file and just give
+> a reference to this file, as long as this file is distributed together
+> with the man pages and can be found easily.
 
-It should be only a matter of chance that the other taggers haven't come
-across non-linear skbs.
+Hmmm, I considered that the copyright attributed to the contributors
+and then a CREDITS file that lists the contributors is an indirect way
+of keeping the notices.  The CREDITS file is distributed together with
+the manual pages, and can be found easily (root of the repo).  It
+doesn't keep the original notice text verbatim, though.
 
-My opinion is that we should let taggers linearize when and if it is
-necessary, rather than doing so in the core. For example, sja1110 only
-needs to do so if (rx_header & SJA1110_RX_HEADER_HAS_TRAILER), which the
-core obviously does not know. Thus, I agree with the proposed fix.
 
-Jakob, when you resend v2 retargeted to "net" and with the Fixes: tag
-added, could you also address xrs700x and sja1110, or should I?
+Have a lovely day!
+Alex
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--h76monlxzyenakhr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgd+9QACgkQ64mZXMKQ
+wqlyxg//ft55E7NDQrIFXNtXYJMwA+2PqRn71LYd/vE/95VNz0wqV2DMPJzoQzsZ
+HUSkXdfoXjMLMg2usvltLaV/l3uwAlTlKTe3CHy1YAe4A0nj1NmfaXFynUj8M9zJ
+PfWBKl6uio4WBrMAfwTmhepR8E8HcwuUjIJNpaAJxi1BQgKrQedKTtsf5kVu4Xta
+Og15VqEZlUmPM4FMNmQq2/jUlSWDNXkZvKXp4n/MCYG1MdR9SxbS5vZUzvUH9JMo
+ffR6s6xwIzC2wrLe0a8QEg8FW+hZHGF9IxLvt8TCR6WHzBzbSZYYnetjDEvyZmb5
+qn9YcSL/zo3kwkJ0lnW8sfH/EOSBHHmbfwcwJKC47CNDU6ppBl4vwVXLuUBg5/Gh
+rvsXEkmS9O6F7mL0b1UHxhzivD167TBujNAhn/Baj9ECU2Pvs29U1T+sUg4yAvaF
+nWLzLN9vZ7mupfbdmAGvf4RpkUdcmjq0q29EPvmEuASzvW+JPhh9+jDwNitQ+q7e
+/A5IfL7CrFPJpGeESZDkaS7sM079F1VsP0wmUWzZw2ive3j1iSeeT7RvfVJx1qnS
+4upNypru8aRdxCpwS9o0Fw8XmdrhgyjberJp6ppSNstbjgdMPzUQlPnTNsytewU9
+h7yLi0upRxsodxSBurHqaSIqGgMIGgRp75cgAcy7+mhSoIrwB1M=
+=pHO/
+-----END PGP SIGNATURE-----
+
+--h76monlxzyenakhr--
