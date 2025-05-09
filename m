@@ -1,219 +1,129 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD96728ECE9
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3489228C99
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746788727; cv=none; b=SJm3mnx3l9mDu3tsHfTWfKXAn7CgmDrFRylzrXeXooyyqiQnEUyJg0idf57qPNfQiAuCb9nfiututApB02hcKDdywR8ND3p+sVwnHThmYuaOMA3Wmy8LcXpQxplMGVHNh5UyZMWV9zMNL4EnPO/EA7W/I9gnpEztPPA7l9i16M4=
+	t=1746788752; cv=none; b=Z2LntrQC0Y8rAfINd+N7iyFM50y/FEo0Dj1kj9gNHi7sWc5WF22q4GDvqdt45kwSQJ7lGrwqm09ZpINJKGJfFv2Yw+cdccRrREASZm/IhSFS8BrRNOolsyOTu10cSCOql36mV3GGWO0hVGwKxzOyKIFZGBGXwpm8MoKKpPGpDrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746788727; c=relaxed/simple;
-	bh=DHKZMjlwf/gT1smmGENNEyBQrJav66oZw/gezV56R20=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=SBuBlcGoPGfeBxwgA5W0FeCbbJT45reUM6CwhycPiJhSqBTkevmvD3Cq5ce8NrSXAOohP5Ur0QJ2UMcW5CmBl4m38tHQYmJjW3kQlAxXNQWgxVaXBaA5YHikmIu7xAdXmo1pgeVn3o2jUQ/Y0zHzQL5szQ9VPCEWNqxVLgwSiKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3da731b7df8so20493115ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:05:25 -0700 (PDT)
+	s=arc-20240116; t=1746788752; c=relaxed/simple;
+	bh=HtlxtTe7nrbfoONlv91HljKDl3ZjJxLieMuEZGdCo1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=lfe+/5suz/uw7WOXjbArijyFGLw3T+UWdxOfUrkH2Fa0/2KbP0f3n0QVmNniAgD5HLo6F1Keu/ZLp//aUVZNaeqwucEyLlP0dE9wMx3Q31Q4Q0gj0oboXGFkmW1MdKu168jKzJ7f6KG28lfR3h6VzpjaELBGR07QF9nztS3YeWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lZsXp7D9; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lZsXp7D9"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so19571915e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:05:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746788748; x=1747393548; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=irxrEhweCUXCqGm1VUjTuBVxoEJgZZgYdEdb4JaFlBI=;
+        b=lZsXp7D95KXVzcde7g1yuRsj7nHKIvTgG01gyMaIZGQ2K6nMcKLoeUuZfiZg+j1PX9
+         ydhisSgcbeXQFEqYkuNuYJAXmTPa8ozAEnEYC9JFNJYcnuEpdvk6m94ZF8jTuKNTlKTy
+         W3X/2JS/TVfyDFGsepnHfpsxL5D0T+sC7nzBNc2tATxNCDzkWq5h36H1A5pywB2+Mi0h
+         GDyU6vCQd//l2GPAJPjgDe/p+gOwPC3tZIUrxxH6SmcGyYKciIM/67UymaYAiJkFyz49
+         tA2/pJj8y2bIGFfPpNf1rV5wJxcG160hOwYwXjHjDT1TJMPg14M8KJ9dgvQcOHTKf192
+         UQ4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746788725; x=1747393525;
-        h=content-transfer-encoding:to:from:subject:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tc0ZuoFkPnk1RmxLqMAo492S/8BWHFi5cOSxHMIQTns=;
-        b=UkRQD5xM2MNCbjhLXTi6KR8pEurTGjGpOEHDufKpJJ4lGm97Y32SloQMFl5IuFms1T
-         2p1nSt39Gh0knGeySNWTcBbJL08wj3cs4sdLkWXAA4aowqCtv68wRHKCebH2iP+UL6ku
-         xbm6wBqklAIMP6bd1Cb0F5z16Yu/+AaGr8JuXD86Ul3Nrj5EkJ7et61nzncul1I5BLr3
-         +qdsFMZ4ctPs7LRMI5M+CBcjslhnQv2n49Th0b+yvn+zP0skLO+7skL9OJwxFczUjDsW
-         Jo0P7AyTdY+cmPf7tyGC2YakVKssfPKzvy8Cqu8gfsgRjPcAn5Hou0YkkJPHx6M15VEB
-         Smlw==
-X-Forwarded-Encrypted: i=1; AJvYcCViSI1n/Kv3D0f+Q9wbEGnd/UuQ29mBFiX6A7E3zIj5tSZryF9QvGKjy/HRNy6kjQbL5KjpnO7cR/q/K7s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykrtNvrhmwPjBwg6xd0KAbY83QQOsN35ntn0uc0rXDUS6Szv0F
-	K/YvYz8T3pxQp8feYpcICgkwEG6Oz9lbWiUMQZylHRQfCPnzcBVInXAbJIiX9dhaMMFRNqctDuJ
-	27DWdlYiW7td51B2Q+MZ4NzsWda3XgMx6+JHC5/bLyxK6uxMIKSdH6J0=
-X-Google-Smtp-Source: AGHT+IFkA0+oY8gN9QvJ8CXxLexUp/bhUxTD/dw7gf7YR8vhLWHtP3KuOGzjcZNqhWNSTfNIkZCXiaa65Najn/xcgYeQQkNBeKLk
+        d=1e100.net; s=20230601; t=1746788748; x=1747393548;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=irxrEhweCUXCqGm1VUjTuBVxoEJgZZgYdEdb4JaFlBI=;
+        b=chWEz/kryD4Kfd6kUFL79xxa5mbq1wT88a+//rtFzxxf9s9a7RKczh4/AKy51gM/Pd
+         3wOXOQcS8Qk0cLzh9Eld55HCFLIMNEEJAFcPJTZYUBF+hO1NAkM/H0DhwOXbm2RKEAGg
+         SsIjEI0D53J4NbQmWegvyBkXe661w8RPUK04BAweQAI3nHy+3qGZc+y0i1iVSfq2HBra
+         Ce6hkMW3MFhRJw5FB+hc2K02RqP5twyO8YKbAdeypL0zVoLhiZVNEeub90WtKZH0zsfg
+         D3YEG4iWUK1nsvTJsdwzo3bJl2e4LZrwja4J81TGklwgySuopVzpXg3XJIgKZWy9ZUyD
+         YQ2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX5MXv39N+GhnzKuirSKRXWGZT9MRj/mC41wyPKk89QdgR1XAzlvRh1ICJNV+uds0KA74DP5DO+Khar1RM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx/vRkEfBSRjpazgJs6E63zN83ZK9wskzXFkVSEUBQEbSpUqYE
+	LY+KkbysbVEpwfomaL8jYBTiBTQRSHwIWn+SZS5k9BqOpcWK52pdki4wgVAfoGI=
+X-Gm-Gg: ASbGnctvaDn+82JxuCf4Ws3tNElHr2Fj5TttRTD0pbsruCVmNPewvHj6dchLqovd15T
+	5ZZ1QuvN6qcAOiNdHBlmR6xs/hsGwOtnSaAk1/50NpaJYJo4V/0fv4vc+bJMbL05KtGlU5cOt7u
+	FMQM+FXl2vzlr830sVSQLfgGi6xVnHYpNOW2vHbzuzsIS8zs+GPO0vx6Q5atyOLuiKp2jTlOAX6
+	ySz83DItP3C953TpARL0ABL+6nY1CUAPE7MAnrcySgxalFYCAhgXN8c5r75X1qNla/omFzzewN9
+	/kfaqgHvkV2Thdi6LMI5+UjOiJ9wfMxQeeqTUDCR4yateA==
+X-Google-Smtp-Source: AGHT+IH+jBPAUs3aXz3zrzpBM/2GBSQQqn+LzvaGfSuxOybuE/QO/NbJAsghIVYoGpfZOS2NV7eWLw==
+X-Received: by 2002:a05:600c:8714:b0:43d:fa59:a685 with SMTP id 5b1f17b1804b1-442d6ddf58cmr18396045e9.33.1746788748089;
+        Fri, 09 May 2025 04:05:48 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a1f5a2d2c8sm2916601f8f.61.2025.05.09.04.05.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 04:05:47 -0700 (PDT)
+Date: Fri, 9 May 2025 14:05:44 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, linux-omap@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH v2 next] regulator: tps65219: regulator: tps65219: Fix error
+ codes in probe()
+Message-ID: <aB3hiEM0CB8m_X8m@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:5e85:b0:3da:71ec:985 with SMTP id
- e9e14a558f8ab-3da78531c85mr85194745ab.2.1746788724767; Fri, 09 May 2025
- 04:05:24 -0700 (PDT)
-Date: Fri, 09 May 2025 04:05:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681de174.050a0220.a19a9.012d.GAE@google.com>
-Subject: [syzbot] [kernel?] linux-next test error: kernel BUG in init_IRQ
-From: syzbot <syzbot+f23da7c24d8bef5c18ac@syzkaller.appspotmail.com>
-To: bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, mingo@redhat.com, 
-	sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com, tglx@linutronix.de, 
-	x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-Hello,
+There is a copy and paste error and we accidentally use "PTR_ERR(rdev)"
+instead of "error".  The "rdev" pointer is valid at this point.
 
-syzbot found the following issue on:
+Also there is no need to print the error code in the error message
+because dev_err_probe() already prints that.  So clean up the error
+message a bit.
 
-HEAD commit:    ed61cb3d78d5 Add linux-next specific files for 20250509
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=3D167624d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3D34d9647dd1e787d=
-b
-dashboard link: https://syzkaller.appspot.com/bug?extid=3Df23da7c24d8bef5c1=
-8ac
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-=
-1~exp1~20250402004600.97), Debian LLD 20.1.2
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/a58ec818f89c/disk-=
-ed61cb3d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/47a111a53991/vmlinux-=
-ed61cb3d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/904b8ca84d78/bzI=
-mage-ed61cb3d.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit=
-:
-Reported-by: syzbot+f23da7c24d8bef5c18ac@syzkaller.appspotmail.com
-
-CPU topo: Num. cores per package:     1
-CPU topo: Num. threads per package:   2
-CPU topo: Allowing 2 present CPUs plus 0 hotplug CPUs
-PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
-PM: hibernation: Registered nosave memory: [mem 0x0009f000-0x000fffff]
-PM: hibernation: Registered nosave memory: [mem 0xbfffd000-0xffffffff]
-[mem 0xc0000000-0xfffbbfff] available for PCI devices
-Booting paravirtualized kernel on KVM
-clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_=
-idle_ns: 19112604462750000 ns
-setup_percpu: NR_CPUS:8 nr_cpumask_bits:2 nr_cpu_ids:2 nr_node_ids:2
-percpu: Embedded 70 pages/cpu s246024 r8192 d32504 u1048576
-kvm-guest: PV spinlocks enabled
-PV qspinlock hash table entries: 256 (order: 0, 4096 bytes, linear)
-Kernel command line: earlyprintk=3Dserial net.ifnames=3D0 sysctl.kernel.hun=
-g_task_all_cpu_backtrace=3D1 ima_policy=3Dtcb nf-conntrack-ftp.ports=3D2000=
-0 nf-conntrack-tftp.ports=3D20000 nf-conntrack-sip.ports=3D20000 nf-conntra=
-ck-irc.ports=3D20000 nf-conntrack-sane.ports=3D20000 binder.debug_mask=3D0 =
-rcupdate.rcu_expedited=3D1 rcupdate.rcu_cpu_stall_cputime=3D1 no_hash_point=
-ers page_owner=3Don sysctl.vm.nr_hugepages=3D4 sysctl.vm.nr_overcommit_huge=
-pages=3D4 secretmem.enable=3D1 sysctl.max_rcu_stall_to_panic=3D1 msr.allow_=
-writes=3Doff coredump_filter=3D0xffff root=3D/dev/sda console=3DttyS0 vsysc=
-all=3Dnative numa=3Dfake=3D2 kvm-intel.nested=3D1 spec_store_bypass_disable=
-=3Dprctl nopcid vivid.n_devs=3D64 vivid.multiplanar=3D1,2,1,2,1,2,1,2,1,2,1=
-,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,=
-1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2 netrom.nr_ndevs=3D32 rose.rose_ndevs=3D32 s=
-mp.csd_lock_timeout=3D100000 watchdog_thresh=3D55 workqueue.watchdog_thresh=
-=3D140 sysctl.net.core.netdev_unregister_timeout_secs=3D140 dummy_hcd.num=
-=3D32 max_loop=3D32 nbds_max=3D32 panic_on_warn
-Unknown kernel command line parameters "spec_store_bypass_disable=3Dprctl n=
-bds_max=3D32 BOOT_IMAGE=3D/boot/bzImage", will be passed to user space.
-random: crng init done
-printk: log buffer data + meta data: 262144 + 917504 =3D 1179648 bytes
-software IO TLB: area num 2.
-Fallback order for Node 0: 0 1=20
-Fallback order for Node 1: 1 0=20
-Built 2 zonelists, mobility grouping on.  Total pages: 2097051
-Policy zone: Normal
-mem auto-init: stack:all(zero), heap alloc:on, heap free:off
-stackdepot: allocating hash table via alloc_large_system_hash
-stackdepot hash table entries: 1048576 (order: 12, 16777216 bytes, linear)
-SLUB: HWalign=3D64, Order=3D0-3, MinObjects=3D0, CPUs=3D2, Nodes=3D2
-allocated 167772160 bytes of page_ext
-Node 0, zone      DMA: page owner found early allocated 0 pages
-Node 0, zone    DMA32: page owner found early allocated 21222 pages
-Node 0, zone   Normal: page owner found early allocated 0 pages
-Node 1, zone   Normal: page owner found early allocated 19843 pages
-Kernel/User page tables isolation: enabled
-Dynamic Preempt: full
-Running RCU self tests
-Running RCU synchronous self tests
-rcu: Preemptible hierarchical RCU implementation.
-rcu: 	RCU lockdep checking is enabled.
-rcu: 	RCU restricting CPUs from NR_CPUS=3D8 to nr_cpu_ids=3D2.
-rcu: 	RCU callback double-/use-after-free debug is enabled.
-rcu: 	RCU debug extended QS entry/exit.
-	All grace periods are expedited (rcu_expedited).
-	Trampoline variant of Tasks RCU enabled.
-	Tracing variant of Tasks RCU enabled.
-rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
-rcu: Adjusting geometry for rcu_fanout_leaf=3D16, nr_cpu_ids=3D2
-Running RCU synchronous self tests
-RCU Tasks: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=3D1 rcu_task_=
-cpu_ids=3D2.
-RCU Tasks Trace: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=3D1 rcu=
-_task_cpu_ids=3D2.
-NR_IRQS: 4352, nr_irqs: 440, preallocated irqs: 16
-------------[ cut here ]------------
-kernel BUG at arch/x86/kernel/irqinit.c:90!
-Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
-CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.15.0-rc5-next-20250509-s=
-yzkaller #0 PREEMPT(full)=20
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
-gle 04/29/2025
-RIP: 0010:init_IRQ+0x1b7/0x1c0 arch/x86/kernel/irqinit.c:90
-Code: 5d 41 5e 41 5f 5d 2e e9 27 13 9c fa 89 d9 80 e1 07 80 c1 03 38 c1 0f =
-8c a8 fe ff ff 48 89 df e8 2f c7 64 f2 e9 9b fe ff ff 90 <0f> 0b 0f 1f 80 0=
-0 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 0000:ffffffff8ca07ee0 EFLAGS: 00010082
-RAX: 00000000fffffff4 RBX: 0000000000000010 RCX: 0000000000000000
-RDX: ffff888140403280 RSI: ffffffff8aa261c0 RDI: ffffffff8aa26180
-RBP: 1ffffffff196c30c R08: ffffffff8d459fd3 R09: 1ffffffff1a8b3fa
-R10: dffffc0000000000 R11: fffffbfff1a8b3fb R12: dffffc0000000000
-R13: 0000004000000000 R14: ffffffff8cb61900 R15: ffff8880b8a22908
-FS:  0000000000000000(0000) GS:ffff8881281a6000(0000) knlGS:000000000000000=
-0
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff88823ffff000 CR3: 000000000cb2e000 CR4: 00000000000000b0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- start_kernel+0x1cb/0x400 init/main.c:1003
- x86_64_start_reservations+0x2a/0x30 arch/x86/kernel/head64.c:308
- x86_64_start_kernel+0x66/0x70 arch/x86/kernel/head64.c:289
- common_startup_64+0x13e/0x147
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:init_IRQ+0x1b7/0x1c0 arch/x86/kernel/irqinit.c:90
-Code: 5d 41 5e 41 5f 5d 2e e9 27 13 9c fa 89 d9 80 e1 07 80 c1 03 38 c1 0f =
-8c a8 fe ff ff 48 89 df e8 2f c7 64 f2 e9 9b fe ff ff 90 <0f> 0b 0f 1f 80 0=
-0 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 0000:ffffffff8ca07ee0 EFLAGS: 00010082
-RAX: 00000000fffffff4 RBX: 0000000000000010 RCX: 0000000000000000
-RDX: ffff888140403280 RSI: ffffffff8aa261c0 RDI: ffffffff8aa26180
-RBP: 1ffffffff196c30c R08: ffffffff8d459fd3 R09: 1ffffffff1a8b3fa
-R10: dffffc0000000000 R11: fffffbfff1a8b3fb R12: dffffc0000000000
-R13: 0000004000000000 R14: ffffffff8cb61900 R15: ffff8880b8a22908
-FS:  0000000000000000(0000) GS:ffff8881281a6000(0000) knlGS:000000000000000=
-0
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff88823ffff000 CR3: 000000000cb2e000 CR4: 00000000000000b0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
+Fixes: 38c9f98db20a ("regulator: tps65219: Add support for TPS65215 Regulator IRQs")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+v2: Clean up the error message.
+    Also fix a typo in the Subject
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ drivers/regulator/tps65219-regulator.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+diff --git a/drivers/regulator/tps65219-regulator.c b/drivers/regulator/tps65219-regulator.c
+index b16b300d7f45..d80749cdae1d 100644
+--- a/drivers/regulator/tps65219-regulator.c
++++ b/drivers/regulator/tps65219-regulator.c
+@@ -454,9 +454,9 @@ static int tps65219_regulator_probe(struct platform_device *pdev)
+ 						  irq_type->irq_name,
+ 						  &irq_data[i]);
+ 		if (error)
+-			return dev_err_probe(tps->dev, PTR_ERR(rdev),
+-					     "Failed to request %s IRQ %d: %d\n",
+-					     irq_type->irq_name, irq, error);
++			return dev_err_probe(tps->dev, error,
++					     "Failed to request %s IRQ %d\n",
++					     irq_type->irq_name, irq);
+ 	}
+ 
+ 	irq_data = devm_kmalloc(tps->dev, pmic->dev_irq_size, GFP_KERNEL);
+@@ -477,9 +477,9 @@ static int tps65219_regulator_probe(struct platform_device *pdev)
+ 						  irq_type->irq_name,
+ 						  &irq_data[i]);
+ 		if (error)
+-			return dev_err_probe(tps->dev, PTR_ERR(rdev),
+-					     "Failed to request %s IRQ %d: %d\n",
+-					     irq_type->irq_name, irq, error);
++			return dev_err_probe(tps->dev, error,
++					     "Failed to request %s IRQ %d\n",
++					     irq_type->irq_name, irq);
+ 	}
+ 
+ 	return 0;
+-- 
+2.47.2
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
