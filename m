@@ -1,374 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E789C22D9FC
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 03:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3734964E;
+	Fri,  9 May 2025 03:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746761397; cv=none; b=O7o77MkavhOu+V8WNWJZqUio7WjYmWOloQJwNLmOQQixsmqVS7OAYK98RZCPnJuSRNQ644khboiJ3zY8MNido798q+eS4XMHOI+NSsRtyxr5frkt34ztlzY78DuFdUDw8yhBTNn5PMQ/80K6fb/A1qP11qyH3chCYQskcj485+s=
+	t=1746761483; cv=none; b=PkiUM/GBjhCu2hw31zYgb6KFfCJQIgaFrUlUXTHXYg2slQKQCS22lfujNdSfmLL5hIAkcP7xoZWZyzC10hQfFqaKZiStktREkHdCJvLMwqq0zBpBi9GO4goMWecjuS8cLO5RE/LNcThLI9ECwyYOqN0Gqbze7IVCazB+k3Fo6oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746761397; c=relaxed/simple;
-	bh=S1yi6rnhNlMVa5dLotn8dcdofZ1p332V+ifvPLisQj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DPUPkdv1d9iB/A0b1uUcN1oHQzcFFBWuFudvHIdiXUR1iHuaypIY0acK2BYt6lOqR97b3za37tUI5DBZULr2guvCIcSUOmE1bzwTJWb4Fx/Jd4kTHMlr+kljy2GiHAnURs1x6/viE2L4V6xgy9UNAzEybBi96aM4eLOiWl/3j8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cn4/m/Bd; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746761483; c=relaxed/simple;
+	bh=+Yt6T0u3fYfQL7cdc7BFMhOrNEKA8KJXzQY/Qxnx5gY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NBYg4PSaRXAURqE7dOdqaxS4SuefhqMSN4pT3LfBTsw2d65FB0aXt6qZCFbKXBU5+mY0tuf40CeofWJM5XEyW995Z4E9wjplPHI21RQjLI66vgljlvWqgP7WG6Z+Xq6BXWigZKsG8H+dQygQ/v+yIPl9aeSXusfsZJvz/+71y1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hbp3Y5e0; arc=none smtp.client-ip=209.85.217.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cn4/m/Bd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746761393;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aX5g4T/ui8zYWG/CR78eBjg3zZKc3gVFjYjjZQSVWQc=;
-	b=Cn4/m/BdAy4Gjba3tqQR2few+GUy5g24NvPvzpY/EfSbRiS9kAJD3fGmbdH+RMkFm2ctmh
-	71Z6MnU0kOTrFQaLimecvudNa3emHTdoY59+YRfr7Jb73H7304Q3dO9WMYWT2h+FR1tFbr
-	Mv1JOXd8A8Bt7qL+OG+aTF2WOqcymLM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-194-wz6MvrzNP5OeqswktbK8zQ-1; Thu,
- 08 May 2025 23:29:49 -0400
-X-MC-Unique: wz6MvrzNP5OeqswktbK8zQ-1
-X-Mimecast-MFC-AGG-ID: wz6MvrzNP5OeqswktbK8zQ_1746761388
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 79D1219560AE;
-	Fri,  9 May 2025 03:29:47 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.120])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7CBA219560AE;
-	Fri,  9 May 2025 03:29:40 +0000 (UTC)
-Date: Fri, 9 May 2025 11:29:35 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v6 1/8] ublk: have a per-io daemon instead of a per-queue
- daemon
-Message-ID: <aB12n00oLKp2Db6p@fedora>
-References: <20250507-ublk_task_per_io-v6-0-a2a298783c01@purestorage.com>
- <20250507-ublk_task_per_io-v6-1-a2a298783c01@purestorage.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hbp3Y5e0"
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4ddac386a29so605587137.3;
+        Thu, 08 May 2025 20:31:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746761480; x=1747366280; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4A2ix+KLqr1uAddQxC8meUMDCd4s6wELmtjquDmWLdA=;
+        b=Hbp3Y5e0nNVwKZRE2bWOf/nvF16Oqv6lsWvXkR20NeEYThlkm0kVKIDzPMOOkNYjOD
+         dXeKqUS/pN4PrxzDklt748QWkJuq7qCrU/FRmHfqff7MJ7YRcUjkC763BWnd6qZljIuQ
+         8LoQmjOY3iY/WdqSv4RZbc/xp1jijCvud0RFYa/jTmP6FZdN0CWxDnspQ9REb82zl/HH
+         zJMTDr/bVYgwUSDOVkbepbhek7e5U7la2qHfehDeoVt0vN300J4QDeEWbL8Fyrgye+zG
+         0pmm4ebBcLh0Uwwr7CF30Xof3Fvelst96kuzFvyJvm5DhCL4ps0wAM5A6PLdLRD0ETVP
+         OX9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746761480; x=1747366280;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4A2ix+KLqr1uAddQxC8meUMDCd4s6wELmtjquDmWLdA=;
+        b=ApLTyUdSZf+AnhF8cphmikc+XBe12TwPKgGwJeEwJPEtteBAn0uBsJznn6MhFsFZQr
+         JHVP8WcaYEGMMcMPj9NUgL7FmHFcaR3sXv9ItEb7dTKyREY/G4kp+zAR2/WeT8uNgm2F
+         KfFaADG32shB68bYlUCoYZcn8xsNDKDfgubszNFvp5oIM+QTwks8iiNun4tzUh7k5fzU
+         xz3KniG0lIsfem6+HywZlJ3jlCfisRQ3K82+4IG9/VFM9rHcLAzc44JrDWhquKlpapjF
+         dPy7uksDWvdCS/hds+oaQLnZvxE2N2G2nRanODNgkuREUiSii02cCnW2l54WdYQ8x3/J
+         ticw==
+X-Forwarded-Encrypted: i=1; AJvYcCWS8Fw3B+iz4LW/AUadfgl5oW3izjj/mObBB/1il+X0utKEjwCertAnW4MQMXT/jXTfsI0iGHvt@vger.kernel.org, AJvYcCX3qcac7BGGECl9sPHwSb+3AxTOokhFOg2mqVTA+F2/b03t1hlYLnm5yo5EQtGrlFwy0jhUcXGWXWpX5l4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzojKidh1dG7fIe3oWUCnHNQSStLbsGpGdCohuBpBmgOXR44tUd
+	4ugeoRN716ZzUdgElAZcycBqFozQFY9HjW9cY26+3gM6ePlap8dTMbKR1XEu+kwtgw23ffnG59R
+	gEllci7FQA+qdC2K3zRC+xvVTx2k=
+X-Gm-Gg: ASbGncssZP+m6iwKK5fDCoYWthK5NgMXEagPmc/RdNFUnhY3NzDGsMlggzAqSeGcr2c
+	Nxch+Jet8qCNoy09RcqGQs0lGEBuo0S7ZjmCcVPd0AMvVSZDCBsH1v9J/U+h9SsbM4ipGNJh37x
+	13gKH4SfdyEQki0dcAiGt0Zg==
+X-Google-Smtp-Source: AGHT+IGc5+Cslf0S1acbclvSNhn/uwwmcTG8ZUvvlGJo/X0wH/M3Gq+zbif2xm4TrTenOWf1MumTFqC9O986MUqRF8I=
+X-Received: by 2002:a05:6102:8097:b0:4c1:774b:3f7a with SMTP id
+ ada2fe7eead31-4deed3d4b5bmr1410263137.16.1746761480413; Thu, 08 May 2025
+ 20:31:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507-ublk_task_per_io-v6-1-a2a298783c01@purestorage.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+References: <20250509020238.3378396-1-xiaqinxin@huawei.com> <20250509020238.3378396-2-xiaqinxin@huawei.com>
+In-Reply-To: <20250509020238.3378396-2-xiaqinxin@huawei.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Fri, 9 May 2025 15:31:09 +1200
+X-Gm-Features: AX0GCFuxI4KztwbrtFwtCfTebZzuXx55Bo7QyZab2Vhdl2Eshu9OBelft6iLsz8
+Message-ID: <CAGsJ_4zrCiugrAPw-aExgSMZXYBBUqLyyWbcpKH8RdhKnHxj9g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] dma-mapping: benchmark: Add padding to ensure uABI
+ remained consistent
+To: Qinxin Xia <xiaqinxin@huawei.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Robin Murphy <robin.murphy@arm.com>
+Cc: yangyicong@huawei.com, hch@lst.de, iommu@lists.linux.dev, 
+	jonathan.cameron@huawei.com, prime.zeng@huawei.com, fanghao11@huawei.com, 
+	linux-kernel@vger.kernel.org, linuxarm@huawei.com, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 07, 2025 at 03:49:35PM -0600, Uday Shankar wrote:
-> Currently, ublk_drv associates to each hardware queue (hctx) a unique
-> task (called the queue's ubq_daemon) which is allowed to issue
-> COMMIT_AND_FETCH commands against the hctx. If any other task attempts
-> to do so, the command fails immediately with EINVAL. When considered
-> together with the block layer architecture, the result is that for each
-> CPU C on the system, there is a unique ublk server thread which is
-> allowed to handle I/O submitted on CPU C. This can lead to suboptimal
-> performance under imbalanced load generation. For an extreme example,
-> suppose all the load is generated on CPUs mapping to a single ublk
-> server thread. Then that thread may be fully utilized and become the
-> bottleneck in the system, while other ublk server threads are totally
-> idle.
-> 
-> This issue can also be addressed directly in the ublk server without
-> kernel support by having threads dequeue I/Os and pass them around to
-> ensure even load. But this solution requires inter-thread communication
-> at least twice for each I/O (submission and completion), which is
-> generally a bad pattern for performance. The problem gets even worse
-> with zero copy, as more inter-thread communication would be required to
-> have the buffer register/unregister calls to come from the correct
-> thread.
-> 
-> Therefore, address this issue in ublk_drv by allowing each I/O to have
-> its own daemon task. Two I/Os in the same queue are now allowed to be
-> serviced by different daemon tasks - this was not possible before.
-> Imbalanced load can then be balanced across all ublk server threads as
-> follows:
-> 
-> - specifying the new UBLK_F_RR_TAGS flag when creating the ublk device,
->   to ensure round-robin tag allocation
-> - having the ublk server threads issue FETCH_REQs in a round-robin
->   manner. As a small toy example, consider a system with a single ublk
->   device having 2 queues, each of depth 4. A ublk server having 4
->   threads could issue its FETCH_REQs against this device as follows
->   (where each entry is the qid,tag pair that the FETCH_REQ targets):
-> 
->   ublk server thread:	T0	T1	T2	T3
-> 			0,0	0,1	0,2	0,3
-> 			1,3	1,0	1,1	1,2
-> 
-> The combination of these two changes allow a ublk server to balance
-> load. For example, suppose a program quickly issues 4 I/Os concurrently.
-> Before this change, all 4 I/Os would have had to be serviced by the same
-> thread, and that thread may become a bottleneck. With this change, those
-> 4 I/Os would get tags 0-3 for the same queue, and would thus spread out
-> evenly over all the ublk server threads. Peak bandwidth in CPU-limited
-> workloads under imbalanced load thus will increase.
-> 
-> The UBLK_F_RR_TAGS flag is also added as a feature, so that ublk servers
-> can essentially test for the presence of this patch and tailor their
-> behavior accordingly.
-> 
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-> Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
+On Fri, May 9, 2025 at 2:02=E2=80=AFPM Qinxin Xia <xiaqinxin@huawei.com> wr=
+ote:
+>
+> The padding field in the structure was previously reserved to
+> maintain a stable interface for potential new fields, ensuring
+> compatibility with user-space shared data structures.
+> However,it was accidentally removed by tiantao in a prior commit,
+> which may lead to incompatibility between user space and the kernel.
+>
+> This patch reinstates the padding to restore the original structure
+> layout and preserve compatibility.
+>
+> Fixes: 8ddde07a3d28 ("dma-mapping: benchmark: extract a common header fil=
+e for map_benchmark definition")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
+
++Marek, +Robin
+
+Acked-by: Barry Song <baohua@kernel.org>
+
 > ---
->  drivers/block/ublk_drv.c      | 82 ++++++++++++++++++++++---------------------
->  include/uapi/linux/ublk_cmd.h |  8 +++++
->  2 files changed, 50 insertions(+), 40 deletions(-)
-> 
-> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> index cb612151e9a1de7630c49a2b78d278e005d52856..ff5beab32220ea96a1e15ab26c02f4883a6c3d6e 100644
-> --- a/drivers/block/ublk_drv.c
-> +++ b/drivers/block/ublk_drv.c
-> @@ -66,7 +66,8 @@
->  		| UBLK_F_USER_COPY \
->  		| UBLK_F_ZONED \
->  		| UBLK_F_USER_RECOVERY_FAIL_IO \
-> -		| UBLK_F_UPDATE_SIZE)
-> +		| UBLK_F_UPDATE_SIZE \
-> +		| UBLK_F_RR_TAGS)
->  
->  #define UBLK_F_ALL_RECOVERY_FLAGS (UBLK_F_USER_RECOVERY \
->  		| UBLK_F_USER_RECOVERY_REISSUE \
-> @@ -148,6 +149,8 @@ struct ublk_io {
->  		/* valid if UBLK_IO_FLAG_OWNED_BY_SRV is set */
->  		struct request *req;
->  	};
-> +
-> +	struct task_struct *task;
+>  include/linux/map_benchmark.h | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/include/linux/map_benchmark.h b/include/linux/map_benchmark.=
+h
+> index 62674c83bde4..2ac2fe52f248 100644
+> --- a/include/linux/map_benchmark.h
+> +++ b/include/linux/map_benchmark.h
+> @@ -27,5 +27,6 @@ struct map_benchmark {
+>         __u32 dma_dir; /* DMA data direction */
+>         __u32 dma_trans_ns; /* time for DMA transmission in ns */
+>         __u32 granule;  /* how many PAGE_SIZE will do map/unmap once a ti=
+me */
+> +       __u8 expansion[76];     /* For future use */
 >  };
->  
->  struct ublk_queue {
-> @@ -155,11 +158,9 @@ struct ublk_queue {
->  	int q_depth;
->  
->  	unsigned long flags;
-> -	struct task_struct	*ubq_daemon;
->  	struct ublksrv_io_desc *io_cmd_buf;
->  
->  	bool force_abort;
-> -	bool timeout;
->  	bool canceling;
->  	bool fail_io; /* copy of dev->state == UBLK_S_DEV_FAIL_IO */
->  	unsigned short nr_io_ready;	/* how many ios setup */
-> @@ -1069,11 +1070,6 @@ static inline struct ublk_uring_cmd_pdu *ublk_get_uring_cmd_pdu(
->  	return io_uring_cmd_to_pdu(ioucmd, struct ublk_uring_cmd_pdu);
->  }
->  
-> -static inline bool ubq_daemon_is_dying(struct ublk_queue *ubq)
-> -{
-> -	return !ubq->ubq_daemon || ubq->ubq_daemon->flags & PF_EXITING;
-> -}
-> -
->  /* todo: handle partial completion */
->  static inline void __ublk_complete_rq(struct request *req)
->  {
-> @@ -1207,13 +1203,13 @@ static void ublk_dispatch_req(struct ublk_queue *ubq,
->  	/*
->  	 * Task is exiting if either:
->  	 *
-> -	 * (1) current != ubq_daemon.
-> +	 * (1) current != io->task.
->  	 * io_uring_cmd_complete_in_task() tries to run task_work
-> -	 * in a workqueue if ubq_daemon(cmd's task) is PF_EXITING.
-> +	 * in a workqueue if cmd's task is PF_EXITING.
->  	 *
->  	 * (2) current->flags & PF_EXITING.
->  	 */
-> -	if (unlikely(current != ubq->ubq_daemon || current->flags & PF_EXITING)) {
-> +	if (unlikely(current != io->task || current->flags & PF_EXITING)) {
->  		__ublk_abort_rq(ubq, req);
->  		return;
->  	}
-> @@ -1286,13 +1282,10 @@ static void ublk_queue_cmd_list(struct ublk_queue *ubq, struct rq_list *l)
->  static enum blk_eh_timer_return ublk_timeout(struct request *rq)
->  {
->  	struct ublk_queue *ubq = rq->mq_hctx->driver_data;
-> +	struct ublk_io *io = &ubq->ios[rq->tag];
->  
->  	if (ubq->flags & UBLK_F_UNPRIVILEGED_DEV) {
-> -		if (!ubq->timeout) {
-> -			send_sig(SIGKILL, ubq->ubq_daemon, 0);
-> -			ubq->timeout = true;
-> -		}
-> -
-> +		send_sig(SIGKILL, io->task, 0);
->  		return BLK_EH_DONE;
->  	}
->  
-> @@ -1405,17 +1398,6 @@ static void ublk_queue_reinit(struct ublk_device *ub, struct ublk_queue *ubq)
->  	/* All old ioucmds have to be completed */
->  	ubq->nr_io_ready = 0;
->  
-> -	/*
-> -	 * old daemon is PF_EXITING, put it now
-> -	 *
-> -	 * It could be NULL in case of closing one quisced device.
-> -	 */
-> -	if (ubq->ubq_daemon)
-> -		put_task_struct(ubq->ubq_daemon);
-> -	/* We have to reset it to NULL, otherwise ub won't accept new FETCH_REQ */
-> -	ubq->ubq_daemon = NULL;
-> -	ubq->timeout = false;
-> -
->  	for (i = 0; i < ubq->q_depth; i++) {
->  		struct ublk_io *io = &ubq->ios[i];
->  
-> @@ -1426,6 +1408,17 @@ static void ublk_queue_reinit(struct ublk_device *ub, struct ublk_queue *ubq)
->  		io->flags &= UBLK_IO_FLAG_CANCELED;
->  		io->cmd = NULL;
->  		io->addr = 0;
-> +
-> +		/*
-> +		 * old task is PF_EXITING, put it now
-> +		 *
-> +		 * It could be NULL in case of closing one quiesced
-> +		 * device.
-> +		 */
-> +		if (io->task) {
-> +			put_task_struct(io->task);
-> +			io->task = NULL;
-> +		}
->  	}
->  }
->  
-> @@ -1447,7 +1440,7 @@ static void ublk_reset_ch_dev(struct ublk_device *ub)
->  	for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
->  		ublk_queue_reinit(ub, ublk_get_queue(ub, i));
->  
-> -	/* set to NULL, otherwise new ubq_daemon cannot mmap the io_cmd_buf */
-> +	/* set to NULL, otherwise new tasks cannot mmap io_cmd_buf */
->  	ub->mm = NULL;
->  	ub->nr_queues_ready = 0;
->  	ub->nr_privileged_daemon = 0;
-> @@ -1722,7 +1715,7 @@ static void ublk_uring_cmd_cancel_fn(struct io_uring_cmd *cmd,
->  		return;
->  
->  	task = io_uring_cmd_get_task(cmd);
-> -	if (WARN_ON_ONCE(task && task != ubq->ubq_daemon))
-> +	if (WARN_ON_ONCE(task && task != ubq->ios[pdu->tag].task))
->  		return;
->  
->  	if (!ubq->canceling)
-> @@ -1861,8 +1854,6 @@ static void ublk_mark_io_ready(struct ublk_device *ub, struct ublk_queue *ubq)
->  {
->  	ubq->nr_io_ready++;
->  	if (ublk_queue_ready(ubq)) {
-> -		ubq->ubq_daemon = current;
-> -		get_task_struct(ubq->ubq_daemon);
->  		ub->nr_queues_ready++;
->  
->  		if (capable(CAP_SYS_ADMIN))
-> @@ -1995,6 +1986,7 @@ static int ublk_fetch(struct io_uring_cmd *cmd, struct ublk_queue *ubq,
->  	}
->  
->  	ublk_fill_io_cmd(io, cmd, buf_addr);
-> +	WRITE_ONCE(io->task, get_task_struct(current));
->  	ublk_mark_io_ready(ub, ubq);
->  out:
->  	mutex_unlock(&ub->mutex);
-> @@ -2062,6 +2054,7 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
->  			       const struct ublksrv_io_cmd *ub_cmd)
->  {
->  	struct ublk_device *ub = cmd->file->private_data;
-> +	struct task_struct *task;
->  	struct ublk_queue *ubq;
->  	struct ublk_io *io;
->  	u32 cmd_op = cmd->cmd_op;
-> @@ -2076,13 +2069,14 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
->  		goto out;
->  
->  	ubq = ublk_get_queue(ub, ub_cmd->q_id);
-> -	if (ubq->ubq_daemon && ubq->ubq_daemon != current)
-> -		goto out;
->  
->  	if (tag >= ubq->q_depth)
->  		goto out;
->  
->  	io = &ubq->ios[tag];
-> +	task = READ_ONCE(io->task);
-> +	if (task && task != current)
-> +		goto out;
->  
->  	/* there is pending io cmd, something must be wrong */
->  	if (io->flags & UBLK_IO_FLAG_ACTIVE) {
-> @@ -2332,9 +2326,15 @@ static void ublk_deinit_queue(struct ublk_device *ub, int q_id)
->  {
->  	int size = ublk_queue_cmd_buf_size(ub, q_id);
->  	struct ublk_queue *ubq = ublk_get_queue(ub, q_id);
-> +	struct ublk_io *io;
-> +	int i;
-> +
-> +	for (i = 0; i < ubq->q_depth; i++) {
-> +		io = &ubq->ios[i];
-> +		if (io->task)
-> +			put_task_struct(io->task);
-> +	}
->  
-> -	if (ubq->ubq_daemon)
-> -		put_task_struct(ubq->ubq_daemon);
->  	if (ubq->io_cmd_buf)
->  		free_pages((unsigned long)ubq->io_cmd_buf, get_order(size));
->  }
-> @@ -2487,6 +2487,8 @@ static int ublk_add_tag_set(struct ublk_device *ub)
->  	ub->tag_set.numa_node = NUMA_NO_NODE;
->  	ub->tag_set.cmd_size = sizeof(struct ublk_rq_data);
->  	ub->tag_set.driver_data = ub;
-> +	if (ub->dev_info.flags & UBLK_F_RR_TAGS)
-> +		ub->tag_set.flags |= BLK_MQ_F_TAG_RR;
->  	return blk_mq_alloc_tag_set(&ub->tag_set);
->  }
->  
-> @@ -3062,14 +3064,14 @@ static int ublk_ctrl_end_recovery(struct ublk_device *ub,
->  	int ublksrv_pid = (int)header->data[0];
->  	int ret = -EINVAL;
->  
-> -	pr_devel("%s: Waiting for new ubq_daemons(nr: %d) are ready, dev id %d...\n",
-> -			__func__, ub->dev_info.nr_hw_queues, header->dev_id);
-> -	/* wait until new ubq_daemon sending all FETCH_REQ */
-> +	pr_devel("%s: Waiting for all FETCH_REQs, dev id %d...\n", __func__,
-> +		 header->dev_id);
-> +
->  	if (wait_for_completion_interruptible(&ub->completion))
->  		return -EINTR;
->  
-> -	pr_devel("%s: All new ubq_daemons(nr: %d) are ready, dev id %d\n",
-> -			__func__, ub->dev_info.nr_hw_queues, header->dev_id);
-> +	pr_devel("%s: All FETCH_REQs received, dev id %d\n", __func__,
-> +		 header->dev_id);
->  
->  	mutex_lock(&ub->mutex);
->  	if (ublk_nosrv_should_stop_dev(ub))
-> diff --git a/include/uapi/linux/ublk_cmd.h b/include/uapi/linux/ublk_cmd.h
-> index be5c6c6b16e098838a2bf790e588b79656defdda..3ba8f26d60bc70ade95b4f4d5990157af2bd5b2e 100644
-> --- a/include/uapi/linux/ublk_cmd.h
-> +++ b/include/uapi/linux/ublk_cmd.h
-> @@ -219,6 +219,14 @@
->   */
->  #define UBLK_F_UPDATE_SIZE		 (1ULL << 10)
->  
-> +/*
-> + * Force tags to be allocated round-robin on each queue. If ublk server
-> + * threads also issue FETCH_REQs against the queues in a round-robin
-> + * manner, load can be balanced across all threads even if it is issued
-> + * to the queues in an imbalanced way.
-> + */
-> +#define UBLK_F_RR_TAGS (1ULL << 11)
+>  #endif /* _KERNEL_DMA_BENCHMARK_H */
+> --
+> 2.33.0
+>
 
-Please make UBLK_F_RR_TAGS as one standalone patch, which is also helpful
-for evaluating round-robin performance, and doesn't have to be used by
-per-io task.
-
-Thanks,
-Ming
-
+Thanks
+Barry
