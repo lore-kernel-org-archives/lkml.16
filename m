@@ -1,412 +1,147 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68FB028D840;
-	Fri,  9 May 2025 09:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8097528D8FD
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 09:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746784101; cv=none; b=awdgjRCRsUbpSSehDb/nts5Hd9pi+PGm/RNp3rStwG4fJ/RTtDWgBR4cBSJFERdpjxj3O0Bs6q9FL9+9zsyQRByM8sDRhcirMzvwqjVLkFEcL0zGRwh4sxORkpHyeAKl2VAUTemPAG7P8ghC5V+d8tqs0Xqd1yzX8MdXtmN4FFI=
+	t=1746784141; cv=none; b=mPM082FyCxrJjeAjJFal7uNVxcFWZE4rk46GEkqr4cv+yG0W1Ygko0VrEdgGIO9OOtW6gxlMSdUjY/lmlJblZC85IgJOo5ujnR9T/WL9TNx2Rtu6qkS9prw4+rpMHVlFGUC1zFvM9FAnH4Ygj1SWhU+j4x06lKRFVgr8BjdvxvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746784101; c=relaxed/simple;
-	bh=XRzZnkx/rCvLH5gjjBlFfgJ1Y4g/7gPdDVjJMpFxq84=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=T2PN4/HSCUSgO5ucLvzpuaGDAeVlRFkze+p0nAIirAdzYEWZFOnaxQCale4rAbsJyD6ChTD9YzaypQ2LrS8HCgZByLFuta8Zdw1/6Ihx1kJVCRHMuOUM54Tbh6bwzNHREzR3Gn6PPMzDk9FGVxjyFUqt0hVVjCLm2NngZMXROcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=H2vOUS0u; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746784141; c=relaxed/simple;
+	bh=jMWjHD1rTFP9aLEdaVnBGZKpupXl27qmoo3tPrPAil0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ciRBO6VcCnDn6Wy0/83h+YgQZdh0xaU7S3ohnjWf5DsjjinWAabGOnXwO7diINUnqenDSXwdTcvyOvvnLN54mGkNrJ54VQIGZuu7+PImB3S2dLSRXs8739qx6lG6YSjP+sH3Ag4W35diNqZnFuPoI9eu7I7AU44YGjQYSvAzHQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VaNxtUL1; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="H2vOUS0u"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 19B7943AEF;
-	Fri,  9 May 2025 09:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746784090;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XO5jmDfTQYOtrhnjFDYRyo0QIM7Jb/EP6v2mQntXvlE=;
-	b=H2vOUS0u6y8QzUUcxUh1MHsuIldx5h01+PChLWPErrZ/HImhI1ppOKKfV1Wek8TzyecGvD
-	dgxKViNGdzIpnmUzHB3YA9O5nejy2fOErEYo8JeLjS50kX2Ku+RtqbOXM3Y93fmEviU3t2
-	jtLM8YC4oPyAOex56G5AjkTq9j+6ZE5qCofeypmcVDAttEJ0t+sU2y/V7Uq1RWfWpQXoiV
-	2guPj5cGtooBuzYH2PMyT4TN1BuC79vWkINsm5QXBkbnpR2lUwYk2PYF0eQkxW8RSjlzmI
-	Ijh+pu4QhachqURAufiFp6Jzl6lVsZGVVBderIYCS+TpwflpyXqBq5Zo4v6gRQ==
-From: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Date: Fri, 09 May 2025 11:45:44 +0200
-Subject: [PATCH v8 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VaNxtUL1"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5491VFJq014411
+	for <linux-kernel@vger.kernel.org>; Fri, 9 May 2025 09:48:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=5TZMgewoxR5IAJtnCtwQR+2k
+	wH5UKsrPDtd/6+1VrS0=; b=VaNxtUL1oVsr1dhcXJ2it5zo0ih7756dwy5nCFJO
+	iCeFWm22nhDmGndU8XM7nGAwb4X0RZxxlMA32BujW6AXWQkbqKlyu9xqAlGP0XRU
+	jjWF7+jY3XYvTVLP4FhQMWWapRHprrxzB9GqPO2ieM8kYLeZl6uI6vlG1OPy4lb5
+	oQt4y2m3yB+64ItM2hJubRcusZuwUJV7l0ak4Okdg1FVem+8hjZvPjvXa3UMKlFS
+	yyEfJlCSk+/UV+wdcJvOOjXtcDmy8y6KjbzwJfNJlQoqkkf/GkV7t2nte15mYhpE
+	RBBAVTkZPJImHp4wbZTwYjJCGeYBuHIVmxpkHSclSHWGlw==
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp4m734-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 09:48:57 +0000 (GMT)
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b00e4358a34so1276612a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 02:48:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746784137; x=1747388937;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5TZMgewoxR5IAJtnCtwQR+2kwH5UKsrPDtd/6+1VrS0=;
+        b=vJvTJVHn24Wpr7g1N/qhssExAklU5/XV9SOX6GUwAzDEVbaB2bfcBBE2iK3BB/nOBU
+         BHxvhTyHqf3Vin8sOlKpZlzUdkRluBwm37yNBk3CGJeywt8PWzQ9+JdP7lmzEh06qX6Y
+         sO/l7NseUbz287vrVKfpPi2ln4mP0y8uNhojycTQ6Z/9Uvc5s33nwuTWuovSSpAGaMLD
+         ntyjcYCyd+8UyiKKyelRQD/IkFeEIjG8/AphKOirSmfXP8FkUohK8jTtFd1cOMX+MBGP
+         DxcN4m7rbAbTzRkaGfU3HMkYmWmbpgP1LH5xc5T7CmYTMxmY5cTOqF0uMbQeIACFtHW3
+         8uYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUxe0j33tDX69cyu+0Smara09XWB1WqB+GNTOBDNr2HuRuBVkl1es+uEPPoxIVCUkoEPWr/UcG9cCXqVA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXZUZLhU+9K7QfvHIFUvaAu6d4XzIsbqop49NPnllHnrAeQBKf
+	gG1Sa43yPObiAkrtHh7WHfKGXEHILM7JsA6qHEUYtBWm1UZVPDFWLxT2BRRZi9vIU8lhL8KrM1S
+	l9iNEPD3vSfXfe7zBWWHvr3IXwdGCCiKiGBh1HBGSTymnkRegAp2zvAyBU7eI9AU=
+X-Gm-Gg: ASbGnctd8a5IzcGbq+CmY4SY65aOyed6yZTjd/doloGwOni/YF1fahq7ICD4e8iymc2
+	q9rh1abZ9wnxDw4n56gjgr7L6KnT/BfzEu7Ictrix1Vc5OrtyzPJ2UyoZFlCSd0oqA82oIhuDrG
+	fPElFDdifSaSJYoOVlkd8oaV+pvfejGAGgmB0gmlaXE6Cv9OmLvCXtznfb5RYjXF34Bvq+l7SmD
+	ZMVSSzIpgvjC4/rlqom78cU7AAlVPHvgaSfQ7a8cmP1/YTS/ruIEY0jOyRLPDaoGZk8/ssBNHgK
+	mosB3J0uq+ElXMHBqpc9mR7v8VgT
+X-Received: by 2002:a17:90b:4c81:b0:2ee:ab29:1a63 with SMTP id 98e67ed59e1d1-30c3cb19ac0mr4286938a91.3.1746784136707;
+        Fri, 09 May 2025 02:48:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFQi8+RQd67W36NgGcktMBBwIUKFCg/Vc4iwo6NQv7JDqt7T8xUwe8qLgeEJmPVVbmD8JtrUA==
+X-Received: by 2002:a17:90b:4c81:b0:2ee:ab29:1a63 with SMTP id 98e67ed59e1d1-30c3cb19ac0mr4286910a91.3.1746784136320;
+        Fri, 09 May 2025 02:48:56 -0700 (PDT)
+Received: from hu-pkondeti-hyd ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ad4fe239csm3624195a91.32.2025.05.09.02.48.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 02:48:55 -0700 (PDT)
+Date: Fri, 9 May 2025 15:18:51 +0530
+From: Pavan Kondeti <pavan.kondeti@oss.qualcomm.com>
+To: Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@oss.qualcomm.com,
+        Prasad Sodagudi <prasad.sodagudi@oss.qualcomm.com>,
+        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
+        Trilok Soni <quic_tsoni@quicinc.com>
+Subject: Re: [PATCH v6 2/3] firmware: qcom_scm: Support multiple waitq
+ contexts
+Message-ID: <a1aefddb-6914-42b8-9ba9-8eb27a0ce2f4@quicinc.com>
+References: <20250425-multi_waitq_scm-v6-0-cba8ca5a6d03@oss.qualcomm.com>
+ <20250425-multi_waitq_scm-v6-2-cba8ca5a6d03@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250509-pwm_sophgo-v8-2-cfaebeb8ee17@bootlin.com>
-References: <20250509-pwm_sophgo-v8-0-cfaebeb8ee17@bootlin.com>
-In-Reply-To: <20250509-pwm_sophgo-v8-0-cfaebeb8ee17@bootlin.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
- Inochi Amaoto <inochiama@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- =?utf-8?q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>, 
- linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
- sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Jingbao Qiu <qiujingbao.dlmu@gmail.com>, 
- Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvfedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsuceuohhnnhgvfhhilhhlvgcuoehthhhomhgrshdrsghonhhnvghfihhllhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekfffhteefueeutdekieelueeuvdeuvdejgedtveefffdvvdffgfeufffguddvhfenucfkphepvdgrtddumegtsgdugeemkeeflegtmeejtgdttdemrgegugejmeefvgelvgemvgekfedtmegsfegvtgenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeekfeeltgemjegttddtmegrgegujeemfegvlegvmegvkeeftdemsgefvggtpdhhvghloheplgduledvrdduieekrddurddufegnpdhmrghilhhfrhhomhepthhhohhmrghsrdgsohhnnhgvfhhilhhlvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhnohgthhhirghmrgesghhmrghilhdrtghom
- hdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrsghonhhnvghfihhllhgvsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehqihhujhhinhhgsggrohdrughlmhhusehgmhgrihhlrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: thomas.bonnefille@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425-multi_waitq_scm-v6-2-cba8ca5a6d03@oss.qualcomm.com>
+X-Proofpoint-GUID: nY8xgNzeqWFeT6n_7D18xaxDNVLF2T9y
+X-Authority-Analysis: v=2.4 cv=E5XNpbdl c=1 sm=1 tr=0 ts=681dcf8a cx=c_pps
+ a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=u9c1M-ofyWthsBcQn4sA:9
+ a=CjuIK1q_8ugA:10 a=3WC7DwWrALyhR5TkjVHa:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA5NCBTYWx0ZWRfX/5+IKARSWtrd
+ yYyda15f0grMn52bbT5oorPfWiKZ+mBbACMAapH651y+aZNpjwpsNbN8rczNVd+Jq1ljK44bnzM
+ cBt323HtbeqnpEu+PdWJbnO7EE+dMChYSsnnti/huOOaLoK4BldF+QMfI0bZX8+vCLYV51YYOVN
+ 4pczyVU0bvqNWesOCSnyvZg7I3czmTfpK4073nVy2TYLW9VNFuQOvT4cQelmpZQnQFJwDnBGFEj
+ Alj3PbHVWh7KW5GNtjLjM6aPCnevh7u1vCGTaUPStWEb5fdLVdm/Ynfp1NiRwAdDfC9We+iE8UK
+ mwo+et72EuSWpM6WEMvfutOkD5yCA7JZKil2IgMmZFDVBCzzvQk61vGABqWBRFORVef2QT+EGGe
+ CFxP2aWlKzQqTjdrvvDIHkNvSlCw+wkhb6hPKUW5hoXfI+luDGoAeOsZic98KmHeCO9Y/dPC
+X-Proofpoint-ORIG-GUID: nY8xgNzeqWFeT6n_7D18xaxDNVLF2T9y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_03,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 suspectscore=0 adultscore=0 mlxscore=0 malwarescore=0
+ bulkscore=0 phishscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
+ lowpriorityscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505090094
 
-From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+On Fri, Apr 25, 2025 at 04:48:02PM -0700, Unnathi Chalicheemala wrote:
+>  
+> +static int qcom_scm_query_waitq_count(struct qcom_scm *scm)
+> +{
+> +	int ret;
+> +	struct qcom_scm_desc desc = {
+> +		.svc = QCOM_SCM_SVC_WAITQ,
+> +		.cmd = QCOM_SCM_WAITQ_GET_INFO,
+> +		.owner = ARM_SMCCC_OWNER_SIP
+> +	};
+> +	struct qcom_scm_res res;
+> +
+> +	if (!__qcom_scm_is_call_available(scm->dev, QCOM_SCM_SVC_WAITQ, QCOM_SCM_WAITQ_GET_INFO)) {
+> +		dev_info(scm->dev, "Multi-waitqueue support unavailable\n");
+> +		return 1;
+> +	}
 
-Implement the PWM driver for CV1800.
+I am testing this patch on SM8750 and found that we are returning from
+here, do you know why it is happening? The first patch in this series
+does not check if scm call is available or not and I see scm returns the
+hwirq properly. I have commented out this block and able to see waitq
+count as 2, which is inline with what would be overlayed in the device
+tree.
 
-Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
----
- drivers/pwm/Kconfig      |  10 ++
- drivers/pwm/Makefile     |   1 +
- drivers/pwm/pwm-cv1800.c | 294 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 305 insertions(+)
+> +
+> +	ret = qcom_scm_call_atomic(scm->dev, &desc, &res);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return res.result[0] & GENMASK(7, 0);
+> +}
+> +
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 4731d5b90d7edcc61138e4a5bf7e98906953ece4..d0a3d9c4f625820ac2e6cf81bae11527124c68a2 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -202,6 +202,16 @@ config PWM_CROS_EC
- 	  PWM driver for exposing a PWM attached to the ChromeOS Embedded
- 	  Controller.
- 
-+config PWM_CV1800
-+	tristate "Sophgo CV1800 PWM driver"
-+	depends on ARCH_SOPHGO || COMPILE_TEST
-+	help
-+	  Generic PWM framework driver for the Sophgo CV1800 series
-+	  SoCs.
-+
-+	  To compile this driver as a module, build the dependencies
-+	  as modules, this will be called pwm-cv1800.
-+
- config PWM_DWC_CORE
- 	tristate
- 	depends on HAS_IOMEM
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 539e0def3f82fcb866ab83a0346a15f7efdd7127..20c49abde6082dc9b0dc0fa3eb68a0b57bceeeb1 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_PWM_CLK)		+= pwm-clk.o
- obj-$(CONFIG_PWM_CLPS711X)	+= pwm-clps711x.o
- obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
- obj-$(CONFIG_PWM_CROS_EC)	+= pwm-cros-ec.o
-+obj-$(CONFIG_PWM_CV1800)	+= pwm-cv1800.o
- obj-$(CONFIG_PWM_DWC_CORE)	+= pwm-dwc-core.o
- obj-$(CONFIG_PWM_DWC)		+= pwm-dwc.o
- obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
-diff --git a/drivers/pwm/pwm-cv1800.c b/drivers/pwm/pwm-cv1800.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..d5ba6f6e7e167789d1b3785ae3d262d954e2295d
---- /dev/null
-+++ b/drivers/pwm/pwm-cv1800.c
-@@ -0,0 +1,294 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Sophgo CV1800 PWM driver
-+ * Author: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-+ *
-+ * Limitations:
-+ * - The hardware emits the inactive level when disabled.
-+ * - This pwm device supports dynamic loading of PWM parameters. When PWMSTART
-+ *   is written from 0 to 1, the register value (HLPERIODn, PERIODn) will be
-+ *   temporarily stored inside the PWM. If you want to dynamically change the
-+ *   waveform during PWM output, after writing the new value to HLPERIODn and
-+ *   PERIODn, write 1 and then 0 to PWMUPDATE[n] to make the new value effective.
-+ * - Supports output frequency ranging from input_clock_rate/(2^30-1) to input_clock_rate/2.
-+ * - By setting HLPERIODn to 0, can produce 100% duty cycle.
-+ * - This hardware could support inverted polarity. By default, the value of the
-+ *   POLARITY register is 0x0. This means that HLPERIOD represents the number
-+ *   of low level beats.
-+ * - This hardware supports input mode and output mode, implemented through the
-+ *   Output-Enable/OE register. However, this driver has not yet implemented
-+ *   capture callback.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+
-+#define PWM_CV1800_POLARITY         0x40
-+#define PWM_CV1800_START            0x44
-+#define PWM_CV1800_DONE             0x48
-+#define PWM_CV1800_UPDATE           0x4c
-+#define PWM_CV1800_OE               0xd0
-+
-+#define PWM_CV1800_HLPERIOD(n)      (0x00 + ((n) * 0x08))
-+#define PWM_CV1800_PERIOD(n)        (0x04 + ((n) * 0x08))
-+
-+#define PWM_CV1800_UPDATE_MASK(n)   BIT(n)
-+#define PWM_CV1800_OE_MASK(n)       BIT(n)
-+#define PWM_CV1800_START_MASK(n)    BIT(n)
-+#define PWM_CV1800_POLARITY_MASK(n) BIT(n)
-+
-+#define PWM_CV1800_MAXPERIOD        0x3fffffff
-+#define PWM_CV1800_MINPERIOD        2
-+#define PWM_CV1800_CHANNELS         4
-+#define PWM_CV1800_PERIOD_RESET     BIT(1)
-+#define PWM_CV1800_HLPERIOD_RESET   BIT(0)
-+#define PWM_CV1800_REG_ENABLE(n)    BIT(n)
-+
-+struct cv1800_pwm {
-+	struct regmap *map;
-+	struct clk *clk;
-+	unsigned long clk_rate;
-+};
-+
-+static inline struct cv1800_pwm *to_cv1800_pwm_dev(struct pwm_chip *chip)
-+{
-+	return pwmchip_get_drvdata(chip);
-+}
-+
-+static const struct regmap_config cv1800_pwm_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.cache_type = REGCACHE_RBTREE,
-+	.reg_stride = 4,
-+};
-+
-+static int cv1800_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm,
-+			     bool enable)
-+{
-+	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
-+	u32 pwm_enabled;
-+
-+	regmap_read(priv->map, PWM_CV1800_START, &pwm_enabled);
-+	pwm_enabled &= PWM_CV1800_START_MASK(pwm->hwpwm);
-+
-+	/*
-+	 * If the parameters are changed during runtime, Register needs
-+	 * to be updated to take effect.
-+	 */
-+
-+	if (!enable) {
-+		if (pwm_enabled)
-+			regmap_clear_bits(priv->map, PWM_CV1800_START, BIT(pwm->hwpwm));
-+		return 0;
-+	} else if (pwm_enabled) {
-+		/*
-+		 * Updating the PWM parameters dynamically requires to send a pulse on the
-+		 * PWMUPDATE register's nth bit, the value is updated only once a zero has been
-+		 * written back to this nth bit
-+		 */
-+		regmap_set_bits(priv->map, PWM_CV1800_UPDATE, BIT(pwm->hwpwm));
-+		regmap_clear_bits(priv->map, PWM_CV1800_UPDATE, BIT(pwm->hwpwm));
-+	} else {
-+		regmap_set_bits(priv->map, PWM_CV1800_START, BIT(pwm->hwpwm));
-+	}
-+
-+	/* check and set OE/Output-Enable mode */
-+	regmap_set_bits(priv->map, PWM_CV1800_OE, BIT(pwm->hwpwm));
-+
-+	return 0;
-+}
-+
-+static void cv1800_pwm_set_polarity(struct pwm_chip *chip,
-+				    struct pwm_device *pwm,
-+				    enum pwm_polarity polarity)
-+{
-+	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
-+	u32 config_polarity = 0;
-+
-+	if (pwm->state.enabled)
-+		cv1800_pwm_enable(chip, pwm, false);
-+
-+	if (polarity == PWM_POLARITY_NORMAL)
-+		config_polarity = PWM_CV1800_POLARITY_MASK(pwm->hwpwm);
-+
-+	regmap_update_bits(priv->map, PWM_CV1800_POLARITY,
-+			   PWM_CV1800_POLARITY_MASK(pwm->hwpwm),
-+			   config_polarity);
-+}
-+
-+static int cv1800_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    const struct pwm_state *state)
-+{
-+	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
-+	u32 period_ticks, hlperiod_ticks;
-+	u64 ticks;
-+
-+	/*
-+	 * This hardware use PERIOD and HLPERIOD registers to represent PWM waves.
-+	 *
-+	 * The meaning of PERIOD is how many clock cycles (from the clock source)
-+	 * are used to represent PWM waves.
-+	 * PERIOD = rate(MHz) / target(MHz)
-+	 * PERIOD = period(ns) * rate(Hz) / NSEC_PER_SEC
-+	 */
-+	ticks = mul_u64_u64_div_u64(state->period, priv->clk_rate,
-+				    NSEC_PER_SEC);
-+	if (ticks < PWM_CV1800_MINPERIOD)
-+		return -EINVAL;
-+
-+	if (ticks > PWM_CV1800_MAXPERIOD)
-+		ticks = PWM_CV1800_MAXPERIOD;
-+	period_ticks = (u32)ticks;
-+
-+	/*
-+	 * The HLPERIOD register value represents the duration of the active portion
-+	 * of the PWM signal, which matches the polarity of the duty cycle.
-+	 * HLPERIOD = rate(MHz) / duty(MHz)
-+	 * HLPERIOD = duty(ns) * rate(Hz) / NSEC_PER_SEC
-+	 */
-+	ticks = mul_u64_u64_div_u64(state->duty_cycle, priv->clk_rate,
-+				    NSEC_PER_SEC);
-+	if (ticks > period_ticks)
-+		ticks = period_ticks;
-+	hlperiod_ticks = (u32)ticks;
-+
-+	if (state->polarity != pwm->state.polarity)
-+		cv1800_pwm_set_polarity(chip, pwm, state->polarity);
-+
-+	regmap_write(priv->map, PWM_CV1800_PERIOD(pwm->hwpwm), period_ticks);
-+	regmap_write(priv->map, PWM_CV1800_HLPERIOD(pwm->hwpwm), hlperiod_ticks);
-+
-+	cv1800_pwm_enable(chip, pwm, state->enabled);
-+
-+	return 0;
-+}
-+
-+static int cv1800_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				struct pwm_state *state)
-+{
-+	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
-+	u32 period_val, hlperiod_val;
-+	u64 period_ns = 0, duty_ns = 0;
-+	u32 enable = 0, polarity = 0;
-+
-+	regmap_read(priv->map, PWM_CV1800_PERIOD(pwm->hwpwm), &period_val);
-+	regmap_read(priv->map, PWM_CV1800_HLPERIOD(pwm->hwpwm), &hlperiod_val);
-+
-+	if (period_val != PWM_CV1800_PERIOD_RESET ||
-+	    hlperiod_val != PWM_CV1800_HLPERIOD_RESET) {
-+		period_ns = DIV_ROUND_UP_ULL(period_val * NSEC_PER_SEC,
-+					     priv->clk_rate);
-+		duty_ns = DIV_ROUND_UP_ULL(hlperiod_val * NSEC_PER_SEC,
-+					   priv->clk_rate);
-+
-+		regmap_read(priv->map, PWM_CV1800_START, &enable);
-+		enable &= PWM_CV1800_START_MASK(pwm->hwpwm);
-+
-+		regmap_read(priv->map, PWM_CV1800_POLARITY, &polarity);
-+		polarity &= PWM_CV1800_POLARITY_MASK(pwm->hwpwm);
-+	}
-+
-+	state->period = period_ns;
-+	state->duty_cycle = duty_ns;
-+	state->enabled = enable;
-+
-+	/*
-+	 * To ensure that duty and hlperiod represent the same polarity
-+	 * the following mapping needs to be completed.
-+	 *
-+	 * |----------|------------|------------|-----------|
-+	 * |  Linux   |  register  |    duty    | register  |
-+	 * | polarity |  polarity  |            | hlperiod  |
-+	 * |----------|------------|------------|-----------|
-+	 * |    1     |      0     | low level  | low level |
-+	 * |----------|------------|------------|-----------|
-+	 * |    0     |      1     | high level | high level|
-+	 * |----------|------------|------------|-----------|
-+	 */
-+	state->polarity = polarity ? PWM_POLARITY_NORMAL :
-+					   PWM_POLARITY_INVERSED;
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops cv1800_pwm_ops = {
-+	.apply = cv1800_pwm_apply,
-+	.get_state = cv1800_pwm_get_state,
-+};
-+
-+static int cv1800_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cv1800_pwm *priv;
-+	struct pwm_chip *chip;
-+	void __iomem *base;
-+	int ret;
-+
-+	chip = devm_pwmchip_alloc(dev, 4, sizeof(*priv));
-+	if (!chip)
-+		return PTR_ERR(chip);
-+	priv = to_cv1800_pwm_dev(chip);
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	priv->map = devm_regmap_init_mmio(&pdev->dev, base,
-+					  &cv1800_pwm_regmap_config);
-+	if (IS_ERR(priv->map))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(priv->map),
-+				     "Couldn't create PWM regmap\n");
-+
-+	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
-+	if (IS_ERR(priv->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk),
-+				     "clk not found\n");
-+
-+	ret = devm_clk_rate_exclusive_get(dev, priv->clk);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "failed to get exclusive rate\n");
-+
-+	priv->clk_rate = clk_get_rate(priv->clk);
-+	if (!priv->clk_rate)
-+		return dev_err_probe(&pdev->dev, -EINVAL,
-+				     "Invalid clock rate: %lu\n",
-+				     priv->clk_rate);
-+	else if (priv->clk_rate > NSEC_PER_SEC)
-+		return dev_err_probe(&pdev->dev, -EINVAL,
-+				     "Clock rate too high: %lu\n",
-+				     priv->clk_rate);
-+	 ;
-+
-+	chip->ops = &cv1800_pwm_ops;
-+
-+	ret = devm_pwmchip_add(dev, chip);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cv1800_pwm_dt_ids[] = {
-+	{ .compatible = "sophgo,cv1800-pwm" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cv1800_pwm_dt_ids);
-+
-+static struct platform_driver cv1800_pwm_driver = {
-+	.probe = cv1800_pwm_probe,
-+	.driver	= {
-+		.name = "cv1800-pwm",
-+		.of_match_table = cv1800_pwm_dt_ids,
-+	},
-+};
-+module_platform_driver(cv1800_pwm_driver);
-+
-+MODULE_AUTHOR("Jingbao Qiu");
-+MODULE_DESCRIPTION("Sophgo cv1800 PWM Driver");
-+MODULE_LICENSE("GPL");
-
--- 
-2.49.0
-
+Thanks,
+Pavan
