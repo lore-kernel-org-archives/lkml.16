@@ -1,108 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBEC73B2A0;
-	Fri,  9 May 2025 22:01:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544C8AD5E;
+	Fri,  9 May 2025 22:03:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746828120; cv=none; b=UmvVbbwCXZ1VbfHsiCaOA6/kH417TysGk9zVGRUhAZIyhQnQi7WmAhXeI+5wraUJDNS55Ki3xr9hcvbY1XtCbCiBjYkiM0zkjKty9T1q8eu9H2jOM0DkVZqwwUCq14jajAYy+h3Baqwb8NiQQ7eP8sjlYfIqAUR+/Th1I2Ax3nw=
+	t=1746828213; cv=none; b=kFwa0mFu+wLVyKYhq4PpADvW3Cltrt19VYryHkL5pUg1sUH2Uy7f5JPfPyg5qbZcUG8fy7TxQJ4wE7M6JL06k04cPnUDOdFe2Cw3zgDM0Sg9a1QNOX7G0he1+c1Tv6lledrbgmuECfUeLs0nU1OVUc25w5SZQyN9For20Pn9QiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746828120; c=relaxed/simple;
-	bh=gNZ3Syvjxa7YmkuREENTU9TsK6j8EtpbYbPGp0Oz+iM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D8tP9N/Jmuf5liCSHpP9v5oylx1l5GVNR0/PHBd5YZSYN2ZJiL6ZaFpeHKLfnDFwJ+RGHTmQ+Gvcq+HPv0gQqc19qbpYQAZu+NL81hWwSUZVtIl/cOnbvY+lAkGam7k4mBw7SgS5MfSyXvBelinYiOUVvoIBsuWwcWnbJbfBovs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SIzYbLGd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746828213; c=relaxed/simple;
+	bh=CW0sSNe6MztXpmpgZiLXHGBNXrv3XHCJSTcJb1kmYCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VEvM3cQVHi4S34i5dUW2OYwbfJlw/Pg32MeVr/D3uiI7KquRz+p87iw0NU76LAFqnFAGy0GzBVvfq8A+w+68vJBR35tLC05wCeHsByWmxp3OFifAO2nqMLwYnFDfyVRcw4u1WqA20UaD7JoEEnb0pGd4NqzUfqEnChRe/DkuXnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KKKenb+H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SIzYbLGd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA2B5C4CEE4;
-	Fri,  9 May 2025 22:01:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KKKenb+H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70309C4CEE4;
+	Fri,  9 May 2025 22:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746828118;
-	bh=gNZ3Syvjxa7YmkuREENTU9TsK6j8EtpbYbPGp0Oz+iM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SIzYbLGdKoxCOsVq94Z3lV63td2xvY+ylEJqzlgtqKp86q7mcV31BKzACjDfOtw0J
-	 k3uakoWbnAmEQ4CC9N1ER2LtjucJQnhC30Npo6Xko9BgUzLaeLWz1QpzGbiGIsFJ6q
-	 qyXbKgH50PayyUCY6qhovbnsv5MEc/NbUKNlR/u6XrBA2r9UA+UJWT76iMtN8v3FoL
-	 7Ee7VjXWZin5NJ19EFuoxh3P4XX8yusHSgK3p+ZxTdBaLaZjKuHWFxieLlGldgum86
-	 BNoIyDAhyrYRCuzh03K8PPQ0JByfbgA5tKRASU7/XtWHLsKmQHr+u6+kvgreDXSvoM
-	 LBrQ4f+yYMoAA==
-Date: Fri, 9 May 2025 15:01:57 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Sagi Maimon <maimon.sagi@gmail.com>
-Cc: jonathan.lemon@gmail.com, vadim.fedorenko@linux.dev,
- richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-Subject: Re: [PATCH v2] ptp: ocp: Limit SMA/signal/freq counts in show/store
- functions
-Message-ID: <20250509150157.6cdf620c@kernel.org>
-In-Reply-To: <20250508071901.135057-1-maimon.sagi@gmail.com>
-References: <20250508071901.135057-1-maimon.sagi@gmail.com>
+	s=k20201202; t=1746828212;
+	bh=CW0sSNe6MztXpmpgZiLXHGBNXrv3XHCJSTcJb1kmYCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KKKenb+HZAolgMcdij0Me9pwnJ4j0Y5oQNJ1gyVDskwvTyFX89NTvAOQunVX2YXgz
+	 n2Z0EMuWkojmkML2rxh19yIqZmBDEZ7UDV6I5HGdrB8H8PmgNWZ97Wp89zrSjKE3Wa
+	 Zt8rTyj6ajwD8sCIj9FCU4DwY+udHaCujRy165FlMwOW49BY3/+PlKrmzBlCQHqAJp
+	 UsjBHa6+JsAmLvOQBpheh7+zAtoTXagJIfYJdP0QfCzxF9PCCUZKi0UWs3hWT+n6Fu
+	 jZhprkK2zFVnbvJSLSiRpK9saJiEYb2jEWihNxEUdpwKmbTe6JtS+8hzdY3dG0GnmA
+	 7RfcJEjZrexMg==
+Date: Fri, 9 May 2025 17:03:30 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>, linux-arm-msm@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Felipe Balbi <balbi@kernel.org>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Jaroslav Kysela <perex@perex.cz>, linux-usb@vger.kernel.org,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	~postmarketos/upstreaming@lists.sr.ht,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Takashi Iwai <tiwai@suse.com>, phone-devel@vger.kernel.org,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Srinivas Kandagatla <srini@kernel.org>
+Subject: Re: [PATCH v2 1/5] ASoC: dt-bindings: qcom,q6afe: Document q6usb
+ subnode
+Message-ID: <174682821024.69850.896927438133345795.robh@kernel.org>
+References: <20250501-fp4-usb-audio-offload-v2-0-30f4596281cd@fairphone.com>
+ <20250501-fp4-usb-audio-offload-v2-1-30f4596281cd@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250501-fp4-usb-audio-offload-v2-1-30f4596281cd@fairphone.com>
 
-On Thu,  8 May 2025 10:19:01 +0300 Sagi Maimon wrote:
-> The sysfs show/store operations could access uninitialized elements in
-> the freq_in[], signal_out[], and sma[] arrays, leading to NULL pointer
-> dereferences. This patch introduces u8 fields (nr_freq_in, nr_signal_out,
-> nr_sma) to track the actual number of initialized elements, capping the
-> maximum at 4 for each array. The affected show/store functions are updated to
 
-This line is too long. I think the recommended limit for commit message
-is / was 72 or 74 chars.
+On Thu, 01 May 2025 08:48:47 +0200, Luca Weiss wrote:
+> Document the subnode for Q6USB, used for USB audio offloading.
+> 
+> Cc: Wesley Cheng <quic_wcheng@quicinc.com>
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+>  Documentation/devicetree/bindings/sound/qcom,q6afe.yaml | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
 
-> respect these limits, preventing out-of-bounds access and ensuring safe
-> array handling.
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-What do you mean by out-of-bounds access here. Is there any access with
-index > 4 possible? Or just with index > 1 for Adva?
-
-We need more precise information about the problem to decide if this is
-a fix or an improvement 
-
-> +	bp->sma_nr  = 4;
-
-nit: double space in all the sma_nr assignments
-
->  
->  	ptp_ocp_fb_set_version(bp);
->  
-> @@ -2862,6 +2870,9 @@ ptp_ocp_art_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
->  	bp->fw_version = ioread32(&bp->reg->version);
->  	bp->fw_tag = 2;
->  	bp->sma_op = &ocp_art_sma_op;
-> +	bp->signals_nr = 4;
-> +	bp->freq_in_nr = 4;
-> +	bp->sma_nr  = 4;
->  
->  	/* Enable MAC serial port during initialisation */
->  	iowrite32(1, &bp->board_config->mro50_serial_activate);
-> @@ -2888,6 +2899,9 @@ ptp_ocp_adva_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
->  	bp->flash_start = 0xA00000;
->  	bp->eeprom_map = fb_eeprom_map;
->  	bp->sma_op = &ocp_adva_sma_op;
-> +	bp->signals_nr = 2;
-> +	bp->freq_in_nr = 2;
-> +	bp->sma_nr  = 2;
->  
->  	version = ioread32(&bp->image->version);
->  	/* if lower 16 bits are empty, this is the fw loader. */
-> @@ -3002,6 +3016,9 @@ ptp_ocp_sma_show(struct ptp_ocp *bp, int sma_nr, char *buf,
->  	const struct ocp_selector * const *tbl;
->  	u32 val;
->  
-> +	if (sma_nr > bp->sma_nr)
-> +		return 0;
-
-Why are you returning 0 and not an error?
-
-As a matter of fact why register the sysfs files for things which don't
-exists?
--- 
-pw-bot: cr
