@@ -1,82 +1,96 @@
-Received: from fester.cwi.nl (fester.cwi.nl [192.16.191.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D281290BBA;
-	Fri,  9 May 2025 12:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.16.191.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1372900B7;
+	Fri,  9 May 2025 12:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746792905; cv=none; b=l55D6xLPSMZ5NaL7FqjxBbNNuhn+kb3ec5XtYzy2Xanzs/ROv0MZ7ZKxZePN+nSRccxrR45//0hvP3CXvI6ej+cYqC5jhrNVFsUkqTm05Vg2y5o+lXzf9p4F29cp8g30IhtUhpA4YWwoLo4xkqABHGLieqSvI47bPbeKr8Q7acw=
+	t=1746792928; cv=none; b=bA37NcD0XO3kruUU3cy5KV19iAyumt9arRDq9jq6NgF8gGkpAimo+DTT6IB5qnDN0312PfjjPQPoysGUY/olkgAEXI/+olm37ABZEYtiIRxVq+HMI6Jv7EX9cvoXUOdGCtoDXRr+jncODNMD9drQ5BkGOTHuROJFpbTW6cQG42A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746792905; c=relaxed/simple;
-	bh=w8lf4aCattWy655wtywesndN9RyYC3XakzWhwxDIkqs=;
+	s=arc-20240116; t=1746792928; c=relaxed/simple;
+	bh=jdDwlEDN05U0AGWNi15ITRXxy0SmyKbmQQzX7OkEV4I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ptvjdGahjj17oX/T4WM8EGPlOhgEXR3rVZifDY2QRi3emLJnnV6rOa8tbawGPnvQL4/s2cgDIN/Aw9+bvbKJjXniagLkG638TOTNTaEOwn1nJsIfyJdf5MfQRrziBAcIOmfxVPvZcisvdWetp6VfJC3KOrDtuBEr8IxaOlPoMHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cwi.nl; spf=pass smtp.mailfrom=cwi.nl; dkim=fail (1024-bit key) header.d=cwi.nl header.i=@cwi.nl header.b=qDzcXWr2 reason="signature verification failed"; arc=none smtp.client-ip=192.16.191.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cwi.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cwi.nl
+	 Content-Type:Content-Disposition:In-Reply-To; b=aRyIHW6ry8CMsL6yFVmNlg4p1hIdvsF/ipnwd9+j+9idiICr21UidcyiR9xF8wgpn0918TNSpJv/9UMcIrDIu43FCT1iCyXjIa5bxckEs/ROyU60i/zD7RjJ6lSTG7YE2tAvnPhnN4TbkY7mIEdmYw/W8aH9fNVM/G7XLRjaRgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QlnPJ3BQ; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=cwi.nl header.i=@cwi.nl header.b="qDzcXWr2"
-Received: from localhost (37-251-114-171.fixed.kpn.net [37.251.114.171])
-	(authenticated bits=0)
-	by fester.cwi.nl (8.15.2/8.15.2/Debian-14~deb10u1) with ESMTPSA id 549CEsxS029925
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Fri, 9 May 2025 14:14:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=cwi.nl; s=default;
-	t=1746792895; bh=w8lf4aCattWy655wtywesndN9RyYC3XakzWhwxDIkqs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qDzcXWr2dtvVzEtsuHi+5XUrgejNMbWe0K5uxwUGfJ0urKHt5ESXxwfrkjvGNlRw3
-	 X9xLuXpW9NCkHIe9/rLvKyvxADvAMiy+3Bc/bdQHk/E+PRH4KBU0EH6vSv4BPFAWEh
-	 x3y8WlkgdH8IDw3krxXsEGml8hON4SqICMsmQS34=
-Date: Fri, 9 May 2025 14:14:54 +0200
-From: "Andries E. Brouwer" <aeb@cwi.nl>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: "Andries E. Brouwer" <aeb@cwi.nl>, linux-man@vger.kernel.org,
-        linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
-Subject: Re: man-pages-6.14 released
-Message-ID: <20250509121454.GA952723@if>
-References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
- <20250509112627.GA924923@if>
- <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QlnPJ3BQ"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6f5440fcf81so37147776d6.0;
+        Fri, 09 May 2025 05:15:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746792925; x=1747397725; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PgRuZAJGVmPbGddsW8s6rmMSC40r4mQ4B4GOLIObhOw=;
+        b=QlnPJ3BQbgZjG9KDrEiayKhnn0Nz/QTRSnYRrPefUpE4W30OJlv/Lua/zKvrdFJe4q
+         PaqkllKGsTB6LLi+oel2jqzb77WbulAM6iuaqYgc81D7cl3l7Ujeo0YUCi3YFyr3BV+G
+         afxZLysvEx57AbcwLoGoUpSXEUibeFJQReBQCzHnchx+SiNeuymGb3mkhyFZsSCqvwGs
+         QsTEDSIbI3m2eInddvvlHCIDVTill7qkA1xIBwodRJjvur7if5NDVBfKbRALugBrjx1s
+         VmT+qnuJw4G10E5xL0jdyfLidOH3G7K+tXYDQpzWAYv6W+jihVfaqoYRAGkjufR0qb2f
+         LvZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746792925; x=1747397725;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PgRuZAJGVmPbGddsW8s6rmMSC40r4mQ4B4GOLIObhOw=;
+        b=g5zNkzi5YWIbn3hdxCHD5fH+MkkAVWB7jzdPFx9fsiqWEwSSw9yE98Ejb/fnTZ1oQO
+         i0KiRFu/gbag4fMVrFI8hJkNLu0Ik6mf5teNsletYrijSjLSUs/4GMF8TShczyd86ULN
+         AbN1LkJUH0zLeOgi8ORHA84A1tdYXnyjwpfNaCYq4wl8ZIZR11QWUGmkfMs2xV3vuI24
+         ZUBfgyUJwQixoeJd9KGLIzHIYrbt7nIbUdSlaeklN7Jim46rvBW72JbHdmYFVvj+QIXl
+         5qPwpircZY+GTZbPWHjongsZ0Dx2kf7zLCemYv20f8gyvNsP/fAanCfsefRHxLQ/H9Op
+         2Glw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKO67sOtQEyUAryFXqCSURCgtWcHpDtPrSGvv6lHb2tvVS3qdw30u2v9lT6yjTFZcJdBua/U3HnLv9hUjN@vger.kernel.org, AJvYcCVi7qqKe9B0rRk1F0OzHg9oaiaoGd8Jjl4ENN/sYy1A6qBOlBt2rt/xhOOn67zFdb751ZG1Ts7ssK9V@vger.kernel.org, AJvYcCXMDmVkiBj69vJheCwwyz9liLtwjzmvKHVpv1Ob1ML9/1Fyz8drnCwZy7zyFTtOyLqP/7ODs8692v19@vger.kernel.org
+X-Gm-Message-State: AOJu0YzR6KrQxzYjExzAGHhExmQD52+rnpwER8NUG2jFK1zylZBBO14c
+	AKJdmPaKT7Ktzm7zYsqt5OhM8sdFONej0f3LY3p2nZIy2LRBT/bk
+X-Gm-Gg: ASbGncsRqnOhU9OwMgauv0SYaoaaUAAG7Grf5862h4CI6RwOaXfTEzVpeJD7JO5breQ
+	zM9oNDHCrvPp5xCL4E3k0Ygd161RbPUcO1unzr2EHRDzJNYbkmMbjf33AuzJVqMOBOpAEavtWHO
+	jDCNOHO3r7uBsIS9F8lpPQdsfUQCmiJ+vet+rrharPy2KAWYhJgC+DQsuIDSONXhfUHGsgtl5G8
+	ixPDa/BP6Hzu4aCpbxfWAyDilMepf9HyLKDJE/sjdl1YvXZCng+rVY9RcWAT1yHPwJIWVhMW0dD
+	uvFMQZx+SxmCKYpx
+X-Google-Smtp-Source: AGHT+IGlDl+KwhD+opMZqZ8CkvISLydM7AoDmJhojnTg5u8fwNB+nRJ38uGYL7LaCFZ4Cmf7wUWC6w==
+X-Received: by 2002:ad4:5aa5:0:b0:6e8:ff2a:a658 with SMTP id 6a1803df08f44-6f6e47cafc3mr44984176d6.5.1746792925233;
+        Fri, 09 May 2025 05:15:25 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f6e3a472b3sm12728456d6.77.2025.05.09.05.15.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 05:15:24 -0700 (PDT)
+Date: Fri, 9 May 2025 20:14:57 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	=?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v8 0/2] riscv: pwm: sophgo: add pwm support for CV1800
+Message-ID: <sfqdke7xkxg3sr2acber6kjzbcnoay6bnu3enda2xe5wzdi6id@eqiqmkdeovlb>
+References: <20250509-pwm_sophgo-v8-0-cfaebeb8ee17@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
+In-Reply-To: <20250509-pwm_sophgo-v8-0-cfaebeb8ee17@bootlin.com>
 
-Hi Alejandro,
-
-> > I wonder about the legal status of such a change.
-> > There is ownership of the pages, and a license that allows
-> > others to do certain things.
+On Fri, May 09, 2025 at 11:45:42AM +0200, Thomas Bonnefille wrote:
+> The Sophgo CV1800 chip provides a set of four independent
+> PWM channel outputs.
+> This series adds PWM controller support for Sophgo cv1800.
 > 
-> I also wonder about it.  We discussed it for several (~3) months, and I
-> documented links to the discussion in the commit message:
-> 
-> commit 9f2986c34166085225bb5606ebfd4952054e1657
-> Author: Alejandro Colomar <alx@kernel.org>
-> Date:   Fri Apr 11 02:19:48 2025 +0200
-> 
->     *, CREDITS: Unify copyright notices
->     
->     Link: <https://lore.kernel.org/linux-man/jpin2dbnp5vpitnh7l4qmvkamzq3h3xljzsznrudgioox3nn72@57uybxbe3h4p/T/#u>
->     Link: <https://www.linuxfoundation.org/blog/blog/copyright-notices-in-open-source-software-projects>
+> Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> [Thomas since v8]
+> Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+> ---
 
-So I read this last link, and see
+As now we have pwm support for SG2042, I suggest sharing driver code and
+binding file with SG2042.
 
-"Don’t change someone else’s copyright notice without their permission
-You should not change or remove someone else’s copyright notice unless
-they have expressly (in writing) permitted you to do so. This includes
-third parties’ notices in pre-existing code."
-
-The main topic of that link is how one should document new contributions,
-and writing "by the contributors of the foo project" is OK for new stuff,
-of course provided the new contributor agrees.
-In my opinion it is illegal to change existing copyright notices,
-unless you get permission from all people involved, which seems unlikely.
-
-Andries
+Regards,
+Inochi
