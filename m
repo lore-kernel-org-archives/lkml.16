@@ -1,68 +1,70 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA2022424D
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 14:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4571E224B0B
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 14:33:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746801210; cv=none; b=lVM1HS9+BbXeU8THOTKQ5o9D5fXLCrflEGeLol+/uA+kVa7UIW1LeXwGEpmHkJWFKefk0mwogpyq9VWqQ6AMTUR9/+5x52ukwWYVqn/MYxHAAcjX3ColEqdX4gwZPdv0Tgw5QHHyrmNmhtBJNlO38Gr4wEVpgicBU7QVSOUs4xg=
+	t=1746801214; cv=none; b=u2hhWukd8jkWgAshlNz5Kb3D5eA6LkoBOcwpQr8LztDH5rhuyVN23Vv//ZLAIO+aNf1iwHYu0wrgZDYQH23yjPZ0cfit4QkjWmzxSGHwQCMOpBp2Cx5s0uJuVSRQW2YBV+iotvHpDDV5uLaSzyKwcExHeNB8JN3pzGlMXJyEU0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746801210; c=relaxed/simple;
-	bh=FFvBCknd8IuGRR/pjTvYSyuDF4+NszF59ge0pjk8rhk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PzIyio0viyy5mx9iPCgAJa7Np45lLEGZHAjYE0XKH0sMD4dvS2VLdUHZ++ObIzrqfbT5a8HKrGfDXZrVFNFc2ER7fsck/i+XRJNtE+jPAAvnYXqhhNIgxkxclCO2iV7/pzqbZwompTXu6Xlg1dS2XmAoAs+tPJ9tj8B42AGHwQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MF8VjHEg; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1746801214; c=relaxed/simple;
+	bh=cOsu4Qrb+3bx73g5aMRxtPG7+Gkx5amoz9G8WVXNU9c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=S8aMgZ7vbN89UFea9fbmPBnHl0FnKj/ha8/LzzpA/gd9AtT3kPm2wJvsy/9hpPRG3Zk2J/PZvNIjrHGKpwfli5JnbzGp1k/tUA4RbpYdCSi1hD1Ff7kOpzzUvvVxXNgaHoHm1liGjpcX7AAu+ZXRkXskdQ86fWibgkpMTCl7Jrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IGlukIfO; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MF8VjHEg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IGlukIfO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746801207;
+	s=mimecast20190719; t=1746801212;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=VL9vZro0BdFwyk98zVNm2YYJ6CabP26FrlBnQZyFPJw=;
-	b=MF8VjHEgyES1UTUSqoku4vgaE+5u9wKOZiJelhpFZ01K+Hr9/DZF+1ZCmQikBrI+w/WGuB
-	Sn12+RMALT9T7QzJ0PAbQCDt+IfBVKpG3z4uvEtjtUy643tq0dNcN37vteas665s66T6NI
-	UbVWgfn+z54QppdMCf5p5dO6hFUQz5k=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HiFig5XrzaKxrne/VffAS5Dccms79XHv1+bktez4Dgg=;
+	b=IGlukIfOWG4jWktiXvat+nTsy2yoteCK5ZGWIJAMitP2ZT53TkMooBjdceroK+ZJFcrx0k
+	QYmk8CivGtntH1rF0582IGsT+RuGzyG7guErGMC94rv1usyCryH1SpNY4ehzPCJfNiG7y7
+	7O5/ORRecNbov7MhHxJOZrx0T0N1AeI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-542-31BbSJBlORGr0OY5FguBnA-1; Fri, 09 May 2025 10:33:26 -0400
-X-MC-Unique: 31BbSJBlORGr0OY5FguBnA-1
-X-Mimecast-MFC-AGG-ID: 31BbSJBlORGr0OY5FguBnA_1746801205
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cf446681cso11315245e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 07:33:25 -0700 (PDT)
+ us-mta-596-Yck63TBFNh6yZ7AMYGQf0w-1; Fri, 09 May 2025 10:33:30 -0400
+X-MC-Unique: Yck63TBFNh6yZ7AMYGQf0w-1
+X-Mimecast-MFC-AGG-ID: Yck63TBFNh6yZ7AMYGQf0w_1746801210
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43f251dc364so13544045e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 07:33:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746801205; x=1747406005;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VL9vZro0BdFwyk98zVNm2YYJ6CabP26FrlBnQZyFPJw=;
-        b=EZjDr6G3Ncnw5LPFkrhOLv6WAlJ+QOR0kMzk0G3a5x2W+GufTPm4AAHURYoZkYAYs6
-         dieh4LH0WpDm374VyiniTmKLahl/gEohkabHEYkVETjNKF/7adpbAq4DfzfuK78rx1C4
-         /Hih0gNdcukaw+EDhl9z6kYOx0BEJLIDldaBZfgJvtcnNGcnrZdTq0hju2l03pgzSkN6
-         v7SVllw40qw+IEEP2+75DAb68t1/Ue+VTua5BB8ypxoq8VWLUFSN+HRJuaTrrIXpDtQx
-         J0ctpLYcqr/mZa1r81C6Qbp/Cq2/NAWKhBOsiQlH3WJFlfLk6cTCBLPSuj3Nct/DcSeU
-         0Gag==
-X-Forwarded-Encrypted: i=1; AJvYcCUBCyNOtCceicMQhNCKyRP1sUcKTPeLDKJBRwPLZGh7Y9uDRXaksqGcbEQJkIIb2xcVh2PxoLNlm4GRg0Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyhsm+GuyeGXpvSX8Oj2xhALxrSar0cUUf3LwG1iLG7invVBuyO
-	Gfo+lcFLfS23W1wzwOYtZQHZZpyeinsNzw8kAZvZ4Oj+letxubWM8UqU1u2GQidzPqqbSxuPptE
-	GNb4pJ/6rOxg6RcoxZLqmRE2y3mjBfpNpVJ3Dqnivi/m3WFCTFDcq8M7Y+MEcjw==
-X-Gm-Gg: ASbGncsbXTlKAIE6Dsyho1GsyNgNgtqeHPbJbTfQMRnsjv81Qsgpc6ShRWfMTVtCShp
-	+dB4+GYAQAlxTrdeeRRmd1QhrbwIkAj1L8XaWhJA8U2SS4VBq964ma6iQ6WabzpgWJDI/2jMzXF
-	UiUdKEQpMQhTaThL9J9YBcIvmrLZ0HIVr8PZ62/aHJ/pp2M9XBXnd/+IKhZcJmpwOIN1Z7zuBp4
-	UvSQmi5HtwSVfjqY6ULHL4Z4+dD6VGNYIcC9oGbF2/dYHHDMzSYGPZQDME356KpEa2A8idUWflE
-	p95dMVMHNHGx/f7KGkkP3PeRWtA2sRcxzolM+pi2a7OFqQvKxK+N7aQF1yXrGjcNwuHMwWZG4qA
+        d=1e100.net; s=20230601; t=1746801209; x=1747406009;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HiFig5XrzaKxrne/VffAS5Dccms79XHv1+bktez4Dgg=;
+        b=wQZLKhw8/x6P3Ka+MTTUytG0ABgt/bnhWFLPnHLwhZbMiaPV2uK2lS3DRB6loGbbF8
+         RThsKz01flstUUYKd/Agcbl5jsOei2E3QaMFtXkjGkGD4XdprISQZe9/lvU+QiOYOdw1
+         vL1TQxmZjLzvS7LfmChVLXKuSUs3Y78nD6yz/4DSAumEbva8X5KCy2lGRtaqK2Dxmapp
+         WlRRWaUAi6j3tnbUZSY+aVnt+yAyLHIjZYpGnFtg2arsB3M483+oT4JVR8KsmB01pyBT
+         uvvqeXRX5jwIyEKy42p/eyBLnR6j3m1WkOCZ1+55pOb72dqUcAs9IzSRHSYMRSXD2vs9
+         di+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWgbILyGQD7TEsW6KPecgtgunCbks9FGkHKAAvrH6vVy7Sh3xzCUSErOFozyTp430lKV8RILGe7yx9OyRw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzy812xpMR+xENLXqFq3m5QpzmAxhSCSFFeEkppjgjBdKWczsvH
+	Y28Lgho0mmWioSHC0GfmXStp5gUnvZAdrI9nCSiMspKhMoo6Ac2YbuKeFbohafpChe4URtj6gwU
+	i2/+mBkFmgYIwwXMTGg3xvxLuJyycviqZVsqCX4TDzg5aD5CW4UMMb5LxTe7NXg==
+X-Gm-Gg: ASbGncsvbAFJd0ihjOe5AHDj0GVWX92LiWvAl/mxZezHYR1rz5KlsBoAFJeje4qXS81
+	Jn6547z4z0hg8Q5wIhiZ5NoqD210pHXuOsHLTp5FEcy8cVyQLo+V6prIX2DATn+ToM+yTf2y/o0
+	FHUaFfgnFZldq7JFjF9lHurYT7COuOmFXfPOE41CZFj22f84h31Dwf2IpO9d6s5UmPOwvNE8fEP
+	z5SDH2uzTZOR+HA3ezi6zrul1VlDJnr07S+hDDnvcVTNlfRdLPGCvh/6qFnQdIpc5snW/JmRdAk
+	E4gsZWWmRxSSeqdpRXl7m9SZn5pARvKBu2bbc8wgpEVNBJgz1PcXOPkqDzcq6kgtUr1Yz7Inh+Y
 	=
-X-Received: by 2002:a05:600c:83ca:b0:43d:2313:7b4a with SMTP id 5b1f17b1804b1-442d6d18302mr36807135e9.3.1746801204806;
-        Fri, 09 May 2025 07:33:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHsWDESg6zUq+whRTNp61iivnxaZlKkiv8gH+MG5fYiPl5xSd+s4VyqNCOQwrNmOxuB7m8DQQ==
-X-Received: by 2002:a05:600c:83ca:b0:43d:2313:7b4a with SMTP id 5b1f17b1804b1-442d6d18302mr36806865e9.3.1746801204462;
-        Fri, 09 May 2025 07:33:24 -0700 (PDT)
+X-Received: by 2002:a05:600c:6819:b0:442:cab1:e092 with SMTP id 5b1f17b1804b1-442d6d1fadamr28833005e9.11.1746801209573;
+        Fri, 09 May 2025 07:33:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE4IBkLXeH3i+YVDUJRmaB8MUsHfZ+AUrzGIQQxg7u/gveAvDEEBf8Vr8fYNwiDc753UVZiWA==
+X-Received: by 2002:a05:600c:6819:b0:442:cab1:e092 with SMTP id 5b1f17b1804b1-442d6d1fadamr28832755e9.11.1746801209169;
+        Fri, 09 May 2025 07:33:29 -0700 (PDT)
 Received: from rh.redhat.com (p200300f6af1bce00e6fe5f11c0a7f4a1.dip0.t-ipconnect.de. [2003:f6:af1b:ce00:e6fe:5f11:c0a7:f4a1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67d5c7bsm32150775e9.4.2025.05.09.07.33.23
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67d5c7bsm32150775e9.4.2025.05.09.07.33.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 07:33:24 -0700 (PDT)
+        Fri, 09 May 2025 07:33:28 -0700 (PDT)
 From: Sebastian Ott <sebott@redhat.com>
 To: Marc Zyngier <maz@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>
@@ -77,10 +79,12 @@ Cc: Colton Lewis <coltonlewis@google.com>,
 	linux-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	Sebastian Ott <sebott@redhat.com>
-Subject: [PATCH 0/3] KVM: arm64: selftests: arch_timer_edge_cases fixes
-Date: Fri,  9 May 2025 16:33:09 +0200
-Message-ID: <20250509143312.34224-1-sebott@redhat.com>
+Subject: [PATCH 2/3] KVM: arm64: selftests: fix thread migration in arch_timer_edge_cases
+Date: Fri,  9 May 2025 16:33:11 +0200
+Message-ID: <20250509143312.34224-3-sebott@redhat.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250509143312.34224-1-sebott@redhat.com>
+References: <20250509143312.34224-1-sebott@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,20 +93,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some small fixes for arch_timer_edge_cases that I stumbled upon
-while debugging failures for this selftest on ampere-one.
+arch_timer_edge_cases tries to migrate itself across host cpus. Before
+the first test it migrates to cpu 0 by setting up an affinity mask with
+only bit 0 set. After that it looks for the next possible cpu in the
+current affinity mask which still has only bit 0 set. So there is no
+migration at all.
 
-Sebastian Ott (3):
-  KVM: arm64: selftests: fix help text for arch_timer_edge_cases
-  KVM: arm64: selftests: fix thread migration in arch_timer_edge_cases
-  KVM: arm64: selftests: arch_timer_edge_cases - workaround for
-    AC03_CPU_14
+Fix this by reading the default mask at start and use this to find
+the next cpu in each iteration.
 
- .../selftests/kvm/arm64/arch_timer_edge_cases.c      | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+Signed-off-by: Sebastian Ott <sebott@redhat.com>
+---
+ tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-
-base-commit: 9c69f88849045499e8ad114e5e13dbb3c85f4443
+diff --git a/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c b/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c
+index c4716e0c1438..a813b4c6c817 100644
+--- a/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c
++++ b/tools/testing/selftests/kvm/arm64/arch_timer_edge_cases.c
+@@ -849,17 +849,17 @@ static void guest_code(enum arch_timer timer)
+ 	GUEST_DONE();
+ }
+ 
++static cpu_set_t default_cpuset;
++
+ static uint32_t next_pcpu(void)
+ {
+ 	uint32_t max = get_nprocs();
+ 	uint32_t cur = sched_getcpu();
+ 	uint32_t next = cur;
+-	cpu_set_t cpuset;
++	cpu_set_t cpuset = default_cpuset;
+ 
+ 	TEST_ASSERT(max > 1, "Need at least two physical cpus");
+ 
+-	sched_getaffinity(0, sizeof(cpuset), &cpuset);
+-
+ 	do {
+ 		next = (next + 1) % CPU_SETSIZE;
+ 	} while (!CPU_ISSET(next, &cpuset));
+@@ -1046,6 +1046,8 @@ int main(int argc, char *argv[])
+ 	if (!parse_args(argc, argv))
+ 		exit(KSFT_SKIP);
+ 
++	sched_getaffinity(0, sizeof(default_cpuset), &default_cpuset);
++
+ 	if (test_args.test_virtual) {
+ 		test_vm_create(&vm, &vcpu, VIRTUAL);
+ 		test_run(vm, vcpu);
 -- 
 2.49.0
 
