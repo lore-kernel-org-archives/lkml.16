@@ -1,58 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8080321ABC9;
-	Fri,  9 May 2025 14:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2128023A6;
+	Fri,  9 May 2025 14:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746802181; cv=none; b=sb7vsT7eVIKS4GGToi6ecIBeuMvudfpM0gTYKzsLfGhNkTC5CLbI7u5d5bCRw3fU1kxIQU9lLl8AL4DSDz55svcGrgsJkdjSdIYiXW9ueEeinODR0K7HSNqfa8SfIJsTikYzd6iSChd3kCfoDZUFx5lpBNdZYS3WOMQruwlJyH4=
+	t=1746802216; cv=none; b=I6J/MMPNvgT86pXdsas9Mccyub9vGMlSWiQ/Ixp1aK7A+jRcqaSn+ScRnQeCpdc99U236yXhLJSOInx2HhzpD/ZbRJtx7rZC2/MCBhsgMJQ8Lyo7fUCgYW7jlXa9Y+2KgPqsB5qcmzJbBzWFcrsnaobZrniSfbkpetfvtV72nb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746802181; c=relaxed/simple;
-	bh=gGdOF/gEQWgew/HXHrjutcqpvcvaJtkPg4JwuG5uiak=;
+	s=arc-20240116; t=1746802216; c=relaxed/simple;
+	bh=aFiukFtu4i+F/1eg7Cg9rkmZ16PPBLIO7y7QaxznsV0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gfdgeg+GQG68RmaNmG3c+5t9a95HIKjtk3zF3qzbNep4Zh5EVbf+KebxfxJXVBPl/WVna+jGKumZ2MKATCjes0jeSdmdJWdirUiFPa/a0Nn90H6YI1lNNDMxB8sH2zYYNUr+hMzBhWj+rd98iUu4YjnW3ZNszmo+/xEwAXc2WPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=J0hUZ5Ed; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=n2gbdEYI8SKiLpAE14B63ErGTjVSSvQVn/RDpjU2QUqAcLUilI6GUFc2UsWujEEha6kBfU7V3g8dyM1QYpKBOOLyIEF5IG+JPjgmgIrdoufu+feVdCE14+gMwUbpsegQGA3JcMeLHEgEc/hmDzz1G4Dx9ogTUKvz5hw+kmfyhxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=nlZ1ey9r; arc=none smtp.client-ip=220.197.32.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="J0hUZ5Ed"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65305C4CEE4;
-	Fri,  9 May 2025 14:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746802180;
-	bh=gGdOF/gEQWgew/HXHrjutcqpvcvaJtkPg4JwuG5uiak=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J0hUZ5EdSyLDJCBhJ5SNSc14A9+lLvOpmSPKdzfb0KuJsAQUzl5nNxTc5MID5/aDN
-	 MO68D2WF9sFPPJ/RL3bByKzfhC7gBCWA/PuBWJRg/hsFmhfluDV8o0Pbr1juXKFyEa
-	 f5MPWPllM1AWjmmYp1m0zTDfVu6yrczte0FzZoPs=
-Date: Fri, 9 May 2025 16:47:55 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>, Kees Cook <kees@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Jiri Slaby <jirislaby@kernel.org>,
-	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, rcu@vger.kernel.org,
-	linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: Re: [PATCH 07/12] Input: sysrq: mv sysrq into drivers/tty/sysrq.c
-Message-ID: <2025050947-override-pulp-cc9f@gregkh>
-References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
- <20250509-jag-mv_ctltables_iter2-v1-7-d0ad83f5f4c3@kernel.org>
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="nlZ1ey9r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=8W4x/SOfsK5KukV+9m2Wm8bOWGZZSROVtNjLW9SKw4k=;
+	b=nlZ1ey9rhYWL6MQoeMZvKJ82l7lMwUfcl4SMECr6vhmuhYlzbO0cjPQ09gA1JP
+	StjMYyYrWNnXXMOBviGbhJsMasN1x2YBCDSMHJE4Y3kn5dFBsv9MoqWXLSwLoqX+
+	85821j/DVP1Ck5AwgZjnFKG2lqZjeIwkYwbQEWpGmegGU=
+Received: from dragon (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id M88vCgBnL_HwFR5oMpOoAA--.26367S3;
+	Fri, 09 May 2025 22:49:21 +0800 (CST)
+Date: Fri, 9 May 2025 22:49:19 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>
+Cc: shawnguo@kernel.org, tarang.raval@siliconsignals.io,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: imx8mp-var-som: Fix LDO5 shutdown causing
+ SD card timeout
+Message-ID: <aB4V76XU9Cyl48pl@dragon>
+References: <20250505055828.4160-1-himanshu.bhavani@siliconsignals.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,23 +49,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250509-jag-mv_ctltables_iter2-v1-7-d0ad83f5f4c3@kernel.org>
+In-Reply-To: <20250505055828.4160-1-himanshu.bhavani@siliconsignals.io>
+X-CM-TRANSID:M88vCgBnL_HwFR5oMpOoAA--.26367S3
+X-Coremail-Antispam: 1Uf129KBjvdXoW7WryUKw4kJw48Ww47trW8WFg_yoW3Xrb_Wa
+	18tanru3y3Ar9avr1rt3WxKrWSqw4qv3W7J3yUWrWqyFy2vay5JwsI93yrAw4rt39xtF1q
+	q343Xw4UWF1a9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjOVy7UUUUU==
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiAQVIZWgd+-h1qQABsC
 
-On Fri, May 09, 2025 at 02:54:11PM +0200, Joel Granados wrote:
-> Move both sysrq ctl_table and supported sysrq_sysctl_handler helper
-> function into drivers/tty/sysrq.c. Replaced the __do_proc_dointvec in
-> helper function with do_proc_dointvec as the former is local to
-> kernel/sysctl.c.
+On Mon, May 05, 2025 at 11:28:27AM +0530, Himanshu Bhavani wrote:
+> Fix SD card timeout issue caused by LDO5 regulator getting disabled
+> after boot.
 > 
-> This is part of a greater effort to move ctl tables into their
-> respective subsystems which will reduce the merge conflicts in
-> kernel/sysctl.c.
+> The kernel log shows LDO5 being disabled, which leads to a timeout
+> on USDHC2:
+> [   33.760561] LDO5: disabling
+> [   81.119861] mmc1: Timeout waiting for hardware interrupt.
 > 
-> Signed-off-by: Joel Granados <joel.granados@kernel.org>
-> ---
->  drivers/tty/sysrq.c | 38 ++++++++++++++++++++++++++++++++++++++
->  kernel/sysctl.c     | 30 ------------------------------
->  2 files changed, 38 insertions(+), 30 deletions(-)
+> To prevent this, set regulator-boot-on and regulator-always-on for
+> LDO5. Also add the vqmmc regulator to properly support 1.8V/3.3V
+> signaling for USDHC2 using a GPIO-controlled regulator.
 > 
+> Fixes: 6c2a1f4f71258 ("arm64: dts: imx8mp-var-som-symphony: Add Variscite Symphony board and VAR-SOM-MX8MP SoM")
+> Signed-off-by: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Applied, thanks!
+
