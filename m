@@ -1,262 +1,499 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2045.outbound.protection.outlook.com [40.107.223.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7554823BF9B;
-	Fri,  9 May 2025 16:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746806493; cv=none; b=r9pkY9F/Fb2FUTPZ/ZdDX6LvqunWhlfD9iePdj+tgeeWaFu5I09xdjZEtL/nssfkj2TLTpddTqB/fP5Y8kow6K+a578BBokZvlpjcFNtuozhg5uRr/xc5dMTIXKK+nfyazGlcnDfJfLxyH9Gu/9C2vtIYmn6VQ0C43uhNq7M0nU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746806493; c=relaxed/simple;
-	bh=1sO2q7isXcOVdKyyFEPtOhXb2RC9r2hkfe+fIhU8X10=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4BC233129
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746806513; cv=fail; b=EJjVXyPB8OfO3JXmqopIqCwXMcXyUV2eAjC7IJMuuF196B4KPsbeJ90yFgzbz8azMv4fxQKX93jfI+4nfHhn5S5L3rH/YVlY52FM8sQbnMrFFVVk12ZCm+VWST7HXvCCW3JVgigvj57evoz0NWW2XGWl5/Sa86B+OUziPTxNmSg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746806513; c=relaxed/simple;
+	bh=BhNnau9+dI9B0GqzM2Z9FKxpa5LzTUi2UraoO5MWroE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VGVk8MMohnIXq18diacC7bUY243vkkYCUIDRxMQxyjO38ZnXIPNL8c30qQ88C3QmE1065e7nrcE/dirE50aA5VhCbEHZxm2PYH3Bk300CitSLRR3harWTzHGdh9Lm4ADal1UQulHvoTQnjBmktYv8blcfYPHkDti/Rqz05M83/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j8d/NTXo; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:MIME-Version; b=KB7AWbn2VsHdaGeBEAr+Ei5YlJwmKOcPLKriQChWEek9BgVKeDgHB7dMmmqhegBnbiAva1vkzhqL22671GRgw6vu/TeAMTg9/PNiSAGrm2z2i/FviNbkAxAWfpy5oKs3sDmhnrunZnCo8tQZ0K/t1y4Q1EWVQbYxEPoQJq6hDIY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BUVO8l6D; arc=fail smtp.client-ip=40.107.223.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j8d/NTXo"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so22947055e9.2;
-        Fri, 09 May 2025 09:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746806490; x=1747411290; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T0fd0oIK5jgXt5kHPH3hhe9fXOJEwV245s5QgJQePWY=;
-        b=j8d/NTXow5VCWPYPYcHTgyXp78LtTrYXwO6LS76VLyPvGMTtug5+vOVkAtnYQwIkBj
-         81l0E3xYdxe4b/MfvpGTZ+1WLuVMxXEBsZVIiuY0KOqeT/7HVSjIAJ0z7VNpIn2Ent0L
-         AjWsA2OfodErWDSu9pT0VLsON+6G7QeyoL5Tyu8Fc/l2ZABgDHcqP/1yFVTt3feNj9kc
-         4c10N/SWkDHBYIJwr8msiQwvvgXRjZRIsh8YaPRWIa8zRGV/eiGxN48PoDdzn/ojuXZ5
-         XGeQHIfhT8PVjS+DoAD7ZIVBku+BVWmeGFFAbJa1UPswImk4tivjOi/thY7s7c0nZA80
-         asoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746806490; x=1747411290;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T0fd0oIK5jgXt5kHPH3hhe9fXOJEwV245s5QgJQePWY=;
-        b=D26VApw/wkb4Wh0Hhgfw/W55e/GyuuH3D1AZK0Fd0bZVPrHSDOPFVFZaXfQj4EzbpE
-         Fu2P9FXa4wliPU9ANccST07HLgWSh81Qvwz4CVKSdeinAqwS+LSqeoiRzP29xMNMuPfe
-         zULbJJ6e3Itf6g/EV3C7RVtWcUCD+dUHLrR5j/9brgQ+JDcNjWsgC6Z8/sC8tm+Vzvkf
-         +Tfc6lyI98jidyGcFbPZG7N0FnNbOYM+NCLp4N0xWwFZtcyVeHQ9fRgbXXSlNM7km4y8
-         Uz6T1R9pTYRE0CzYS/0wY0rNNqCVVwky6O45v1J2wJ3afgAptbvPjogLIB7ZXTYmb0UW
-         PjCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+SCd+dBALXXzKnWDuWQ2tA+jI+rJpAX414fpyvpPbGubzm2jX+SzUr2WyshSJrCzaokd1BYKjmt0aE4DD@vger.kernel.org, AJvYcCX8ppbCzlFRZlNramF+7PZLkdUmHGIoI25wupQDGyHtXUD8JzVOoNzarhJnNfE7Qvx9y0kVAGmvJ1o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzohpiMf0cb6vhhnumvEaAv6/SStHGXRm+Qm+Wyhvvuv1a141Rc
-	kd1uVohuDEx63P4b5SCoTqAKoam7Ri8+9pTPfMfH9AbG8j6KLAFR
-X-Gm-Gg: ASbGnctPrXN6n3zlBFfQ+WxB1qkwsAzus31rqHbD2AUshz0Lr07uaRDGotJQ3XFi95z
-	0PbIlfUWPDgKhOF7/kQb5p5Cr65WzM6+vSjvTYeMZK2gHZFjF40a6lctp/aeCof8VHiH8kJE+ai
-	psW13fMvcpo+WPHE8dzTI4iUB3IEAFswSavmhlADOPYcIXWQFVcu7zAuIHGaIjt3xkGh/dCvRU5
-	Fg0QCrULM/rwx3tZdV54EVjcQq6yWqv7ecR/8ameFj/kJ1m80EtrPdcR3FM4oZCW+vX+bYdPQu/
-	meJqwgVLKuij6+/znYDrubPYw417ucU3DcZ3zXJXsIo2/BuSyQiey9YN3/Wbe/D5vA==
-X-Google-Smtp-Source: AGHT+IE5ZGCvwY1usd/9AvsedxkXUQxg/voCx9GuGS6JXjEURS4mO+Dp+AmECOO1fBaFnzQ3Bh/WgA==
-X-Received: by 2002:a05:600c:46c3:b0:43c:f44c:72a6 with SMTP id 5b1f17b1804b1-442d6d18bdcmr37694525e9.2.1746806489270;
-        Fri, 09 May 2025 09:01:29 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:40e3:34f3:a241:140c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d687ac8csm33244475e9.33.2025.05.09.09.01.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 09:01:28 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v4 2/2] clk: renesas: r9a09g057: Add clock and reset entries for GBETH0/1
-Date: Fri,  9 May 2025 17:01:21 +0100
-Message-ID: <20250509160121.331073-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250509160121.331073-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250509160121.331073-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BUVO8l6D"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OVB+e6q/rR3aPvDpG/DyGt8Oc0Evly9LxV5NaQ79kRWSHuSdYJencQeilGzeiEVBYw+p1l3t9l/TA6FI4hV5QOjekjHI09xn3zApXCCxEQqcoHrKbLeX0pOJfgHEhg2RB0fyr9SyM9SZhVIxOX23/3vCkLdlGDJF4qacS4sAi7g+VZrBEAv9sib9rBRHxm+0EYR2NUQxUJnaMQxNqB0ulZNd6ESMMvyS60c5gNmJBDdVyPnZUk/pn7XwBOdM5+j50gyWb8T7ovurofVVZ4BJEugYnCNJ1YiyxpSYQjmuk5gwHYIDpcPAaC+hySCdi2nghegUIdgFgdcxIUAm1bUyVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Rk1OUUeTDu3+OgkhTtS9NTjTn1xpT35TdXoihJOPVw8=;
+ b=vpilngjYr7Y94gtqH6gt1JogYHLharwzLs1kZ/MBPZPf78wBjagxVItJUyxz6BEzqY5VCuOjLx3KZZslaDBHOop/Og297yFB48Da11gSPt35mIYjnm5SGnpBPfLdULpflG5lDgxCqP3JP2DiWfxfKbh7TetlpXAtuFS+jXmE4LfDGVs8ZaJ9REgVm7TeposPvn0UH7trOiw473FP0jeVjvRmhDUbn9jkgGm7Icb2pJJgiOtu580GhxlTfuXv56NaoaY5q9ac1gtPt3bbvC0LOjMVLN+1tOKL8+EFlXm89ldf7CIOSEduzf2vZ6aBwGLvagLhzJI9Jmm6HTK3YRw3SQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Rk1OUUeTDu3+OgkhTtS9NTjTn1xpT35TdXoihJOPVw8=;
+ b=BUVO8l6DirF4szVD7FUqVhV8+CVhm4TlU1FK8NER4pLKNJGdljNU2ENZDH3fUY6C3DCNK+fGIA+Aw5bgeCaV+GH+Qv6k+Pu7DffPo6evmL5M3/dVNIOVymRZ1fDhhsYxN1gFaQ52VyuXEOyx1LweZUELVgxPNTPLoKVi8syo2st0CpMq0M+S4K9xh3Tga9bqXzjgqztKf7xjQuQCAwIqNgBXotmLlMDWWvTuTDVgvGTVKg+7dkiPM2P5EKON4fo9fYIDEXMVnIKNTMRfmKVECsygxS8Z8Jh9bdcM1RP/xQR4T6OdU0eYmPn/a9iTapMKCyFJvvstLZ4mmZa0ASPPQg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ MW4PR12MB6780.namprd12.prod.outlook.com (2603:10b6:303:20e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.37; Fri, 9 May
+ 2025 16:01:46 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8722.020; Fri, 9 May 2025
+ 16:01:46 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+ David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+ Oscar Salvador <osalvador@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Mel Gorman <mgorman@techsingularity.net>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Brendan Jackman <jackmanb@google.com>, Richard Chang <richardycc@google.com>,
+ linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>
+Subject: Re: [PATCH v3 4/4] mm/page_isolation: remove migratetype parameter
+ from more functions.
+Date: Fri, 09 May 2025 12:01:44 -0400
+X-Mailer: MailMate (2.0r6255)
+Message-ID: <EB70C64C-4D97-4EAB-8BD6-180BE3297764@nvidia.com>
+In-Reply-To: <970A26A3-6E75-4474-997B-67B9547E15AC@nvidia.com>
+References: <20250507211059.2211628-1-ziy@nvidia.com>
+ <20250507211059.2211628-5-ziy@nvidia.com>
+ <C4D87FA7-4B3D-440F-9E5F-B57561AB4FE8@nvidia.com>
+ <970A26A3-6E75-4474-997B-67B9547E15AC@nvidia.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: BL0PR01CA0006.prod.exchangelabs.com (2603:10b6:208:71::19)
+ To DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|MW4PR12MB6780:EE_
+X-MS-Office365-Filtering-Correlation-Id: d1ced1b4-f460-4bad-1c4b-08dd8f12cc7a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?YPiSqHoM/KR07/T2HH7FdOG3E234gJqDrojNZBmXqjPCK4XfqI4PQETsKMmI?=
+ =?us-ascii?Q?5wrhr2io63gOSIGpy8t/eaSQkOBCJaZrk9hds0QDhnqA4elNgBcRsYew15Rm?=
+ =?us-ascii?Q?HPZMVvX7CJe9n7+lmA+/uuL35wVAbJzn+wAo9qbTQQeAmiXDGa8W7v+2eoZs?=
+ =?us-ascii?Q?u+drSdOQn2FJW6VHh2hRmPgWfdftPAtuUGPzN7GGUZUh1tfrxs5h743PezNe?=
+ =?us-ascii?Q?SFPIM61/a6jM9yGGfIX9XVt2cJ1ElilEjkc//M97CxPhRezmkxMOp9oyDVbC?=
+ =?us-ascii?Q?Rm/kjKSc/WjyDcf6b4oitm4v3ahiNdIlVDa+nhPv4p+7GWGHaPa9TG9qdBgs?=
+ =?us-ascii?Q?kO1E1FXvM61P1KGRETpEDjzTpW801bsHERm3hA0iKAKEV2+Ljdc7T5FgS7nO?=
+ =?us-ascii?Q?Nk1P1+lypZU0k7Sgh122SBiHE4/SSCYcflxYmktxPKdEDec+mfSxRmuA2k9R?=
+ =?us-ascii?Q?oMabBqks7wHwxQWXIiRUuw6N0FIaE/zcJd7LhpVr+hqUlKXmTSi71SG0g/Bq?=
+ =?us-ascii?Q?p30NIsmDQhy1GqUkV2+j7uBV7sX01gVy1iPCqpCxYm5DnfIwrFHYHTJAR2KT?=
+ =?us-ascii?Q?AX6MG48GOteO5BBZm4hZHtcrP1fskWw4LI0PdGS69HBHJ5S9K+OmHU7RN4ZA?=
+ =?us-ascii?Q?U0DNZpIEyXv7OcVtFzTzMpiVAtK4EHifHpVKvGjqr7QKq3IhVvhK7JFSkPSn?=
+ =?us-ascii?Q?hqtiWgxLgBXHFCVK1R4sCK7ooAryCa46JkQOns1SLOiBILPRw2PKJaiV7RDh?=
+ =?us-ascii?Q?lgIR9sT0DuZzXI8kcyxaWMQx7T7qUjiuiSuH09O7bs1Rn9kA4Q+f4Yvcfl7f?=
+ =?us-ascii?Q?9DEl7/yymDdlMCZpNAihbOWjCuBlRm1r1oGB7W3YPYr8a6kbiBUDJXMtxpfV?=
+ =?us-ascii?Q?u5AvhQCXT6axj55Tf2iYVtnGvyKrh3Ey5gdimvubwMgsY9sSWZ8L7KvfnUTu?=
+ =?us-ascii?Q?hCzH+dJoVWSIu0JDFfK+s2KbyRJ4lK4W7FILjeVrrdW0J4gYbYBfbsuR9sJ5?=
+ =?us-ascii?Q?2/xxrhfMbjCsSwoL1plBxywdIbD7+EH1pvmJxie/DzL9KEZn2jAzu55T4X/U?=
+ =?us-ascii?Q?xgr637LvGPcSVaH42dH05bkeenwJrPGWmnrUaHKuYiOgvX+8W3oie+ze7ly4?=
+ =?us-ascii?Q?DjwVBvaTWGWUHZFYCh/dYCWafAkzumfpuN9V0kEXTgQ5yYvMIb9PNKSBAbLo?=
+ =?us-ascii?Q?iSyR+WfFdaB2tK1s74Mvpen9XmXju18Bpl3VX3IUJQNMHoE8LwAxbMvRgbgg?=
+ =?us-ascii?Q?bUjUKbBb2l5GxLlKTPMR7hw6FwE7hyGW9P6+wAkkgY8IxuQyEn/hGUDFZiz4?=
+ =?us-ascii?Q?tkRhOrtj8gm/ZH4EuS5Wo1Jgv6V8OZEWhgHKwXQmv8nXstXjw1InzvMQX1Qb?=
+ =?us-ascii?Q?qp6EqYdkOHFhK5H4YCgwssWrmz5sGA6aLcfZJR+dIy0YWaJ0GEi6ZVJvQF8y?=
+ =?us-ascii?Q?nfq5tx3PjM0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?1ZHOqkQ1qH3Oep/KLDLIE3XXMAUXevompvUoWP4aX9DC7j9tNRRNsBvHI108?=
+ =?us-ascii?Q?NsvEv9FwCqxHOu4PfZPenGfCGj0tI/O7scFsJtqsQJsLWeHJ1QmTK+lw7a62?=
+ =?us-ascii?Q?/x87v2QUeR29YbWu96J/AFvJuxziDp0DmyjV+ZK/QCh4PKKjm3Sw2A9RVpOT?=
+ =?us-ascii?Q?ZMF4/yyRcIeceoVaoemvUPGc/Es4mZRBu9lEsShLvOAiv3pcbZQ+dcRCUV2B?=
+ =?us-ascii?Q?3gcPN5+TtsUarNjRlulZM5yaX/ws8M13kcFA0RyGq2cCrVqsRzmeBNTOjHYG?=
+ =?us-ascii?Q?TI4USwvU/d1vCgBSqWbqKwWUZiROnaNl4DI7d14Jz30bRqd0FLBYyWmUVeNj?=
+ =?us-ascii?Q?xOFgz+fBbFmCb6JRxvlzupwZCeKavJeZ1gwkj3JkgZjyUdxUkKjwHfg9raTz?=
+ =?us-ascii?Q?sVbrqQIQ5SqSegfIAWTX6T22ch7aWNFTH3uBDWaOCGE747SeXZf0Scxb0+cs?=
+ =?us-ascii?Q?CJ7BKFUh7fdOddcne2YVmT8fQ150gbGd8ctB2t/Xot09W1GNq7KUZ78HuZuz?=
+ =?us-ascii?Q?E1Pozjz27b17euhPmezgc0+0vVfzRFgPmumXYFm8j6kZii42RaaPrtIp/Ck+?=
+ =?us-ascii?Q?Vp2T37JwajZlexX21Gf5q8iOau1CaICszsPc1/ctXfgp0OKt5SLZWIA3n6Wo?=
+ =?us-ascii?Q?atZqQ9n5xlC4PNzUF3IYU+cY5NWK+DfOkQzjIY/CA+zRW/K5b9xMm+UZ/nz0?=
+ =?us-ascii?Q?TrC0/RKCUaBofTxPE2B7XI+6nftzd8NmaWLtaFYy9T1OHueE9sZ3UvveTslr?=
+ =?us-ascii?Q?o4GnNAexX/DubeLEbIR2FZrJGC+9lfQlfgECSBbIJgekg/nCSJDv8G6eFEOh?=
+ =?us-ascii?Q?4VJOPjQNIi7lBpsGsJewN1Wu4hn1zuFAnUMsYwFHEvQ/BIolgYARLWFCm1jI?=
+ =?us-ascii?Q?603D9kcCf+f9AhKmgelTGH4GQnLqLruhYitt2eXqB91TO6Jo/sP1woaj728y?=
+ =?us-ascii?Q?zdeYT3DaRviR8kIDJ31dzCZW0fEuXrQUN6DuUshmvaK5LhH0SzboYSQ0GVH4?=
+ =?us-ascii?Q?xZWKc8NXs71O0qJIOM66LKNNPb9y5e9siVwAyNw7hSd3OF3ozOmnrS4BTviE?=
+ =?us-ascii?Q?mAckqse5/Florjc2ml7L2GDjb7plbEcsLS39dv0rGmJqfNNmbUGeeINZvH2R?=
+ =?us-ascii?Q?XyAaq6g0UKKoBmZoIOIsoGwG3R74qC7jx8NrUxlDWw64hj4+wWcwW2Q/BnPP?=
+ =?us-ascii?Q?5ToZUVEDKuBLgfZLdeMgaDNeTq4mzTXT0Zfgz9abE3+TiI1K1MmINoMCfj/U?=
+ =?us-ascii?Q?xpfQVJ+S6tORPwGvkM5kbFN4fi9JX1lZULzmQGWXzWPFhqb9aCr4pa0XBqEb?=
+ =?us-ascii?Q?k+itBtgzhGQrD7fx+t6+v/b2C/HU9wOEchxUBM4MX0deTySkBK/0r3Z4aPA8?=
+ =?us-ascii?Q?+cpZg2PlQp1rpXfVLrpFWwvm3wgIbMJOAetSODsWrgDveBpJ6cyyUPXQ8TLs?=
+ =?us-ascii?Q?zF0O6z/0D1pDwsMY0T1F+gMVvYepUVjRf+ChCf5lYlbyEHkimiXzWYiGzpN3?=
+ =?us-ascii?Q?xdIOmU33oNIfKRu828PBb8fdkwYhZnhKl0vrVlap01TXXzw7qesqyv+pv6pa?=
+ =?us-ascii?Q?nkvAVpTZuKSgy/h1ftTxm6ZB+7dmdMybKEN4J4LH?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1ced1b4-f460-4bad-1c4b-08dd8f12cc7a
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 16:01:46.0775
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RiPVVR13J4JztQrcGaeK+rVBCeCtWi9ctJFQ5oboe3ekC0I/7L8b7OnefR5724DT
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6780
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 8 May 2025, at 21:56, Zi Yan wrote:
 
-Add clock and reset entries for GBETH instances. Include core clocks for
-PTP, sourced from PLLETH, and add PLLs, dividers, and static mux clocks
-used as clock sources for the GBETH IP.
+> On 8 May 2025, at 16:25, Zi Yan wrote:
+>
+>> On 7 May 2025, at 17:10, Zi Yan wrote:
+>>
+>>> migratetype is no longer overwritten during pageblock isolation,
+>>> start_isolate_page_range(), has_unmovable_pages(), and
+>>> set_migratetype_isolate() no longer need which migratetype to restore=
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-v3->v4:
-- Dropped adding CPG_SSEL1 and CPG_CSDIV0 macros in rzv2h-cpg.h
-  as they were already added by XSPI clocks patch
+>>> during isolation failure.
+>>>
+>>> For has_unmoable_pages(), it needs to know if the isolation is for CM=
+A
+>>> allocation, so adding CMA_ALLOCATION to isolation flags to provide th=
+e
+>>> information.
+>>>
+>>> alloc_contig_range() no longer needs migratetype. Replace it with
+>>> a newly defined acr_flags_t to tell if an allocation is for CMA. So d=
+oes
+>>> __alloc_contig_migrate_range().
+>>>
+>>> Signed-off-by: Zi Yan <ziy@nvidia.com>
+>>> ---
+>>>  drivers/virtio/virtio_mem.c    |  3 +--
+>>>  include/linux/gfp.h            |  6 +++++-
+>>>  include/linux/page-isolation.h | 15 +++++++++++---
+>>>  include/trace/events/kmem.h    | 14 +++++++------
+>>>  mm/cma.c                       |  2 +-
+>>>  mm/memory_hotplug.c            |  1 -
+>>>  mm/page_alloc.c                | 22 ++++++++++-----------
+>>>  mm/page_isolation.c            | 36 ++++++++++++--------------------=
+--
+>>>  8 files changed, 50 insertions(+), 49 deletions(-)
+>>
+>> Here is the fixup 3/3 to address the type issue reported by kernel tes=
+t robot.
+>>
+>> From 3c439f1f09b03c8362b43c0ac05e5f174f1a6655 Mon Sep 17 00:00:00 2001=
 
-v2->v3:
-- Used DEF_MOD_MUX_EXTERNAL() macro for external MUX clocks.
-- Renamed gbe0/1 external mux clock names
+>> From: Zi Yan <ziy@nvidia.com>
+>> Date: Thu, 8 May 2025 15:42:18 -0400
+>> Subject: [PATCH] fixup for mm/page_isolation: remove migratetype param=
+eter
+>>  from more functions.
+>>
+>> 1. fixed test_pages_isolated() and __test_page_isolated_in_pageblock()=
 
-v1->v2:
-- None
----
- drivers/clk/renesas/r9a09g057-cpg.c | 64 +++++++++++++++++++++++++++++
- drivers/clk/renesas/rzv2h-cpg.h     |  9 ++++
- 2 files changed, 73 insertions(+)
+>>    signature by using the new isol_flags_t type.
+>> 2. fixed test_pages_isolated() doc: flags -> isol_flags
+>>
+>> Signed-off-by: Zi Yan <ziy@nvidia.com>
+>> ---
+>>  include/linux/page-isolation.h | 2 +-
+>>  mm/page_isolation.c            | 6 +++---
+>>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> This is the second round of fixup 1/1 to address Johannes' comment on P=
+atch 4.
+>
+> From 760c00e808c74d62e8d879f281f38d6608c89296 Mon Sep 17 00:00:00 2001
+> From: Zi Yan <ziy@nvidia.com>
+> Date: Thu, 8 May 2025 20:54:40 -0400
+> Subject: [PATCH] fixup for fixup for mm/page_isolation: remove migratet=
+ype
+>  parameter from more functions.
+>
+> 1. change MEMORY_OFFLINE and CMA_ALLOCATION to isolate_mode_t enums.
+> 2. rename isol_flags_t to isolate_flags_t.
+> 2. REPORT_FAILURE becomes the only isolate_flags_t.
+>
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> ---
+>  include/linux/page-isolation.h | 26 +++++++++++++++++---------
+>  mm/memory_hotplug.c            |  2 +-
+>  mm/page_alloc.c                |  3 ++-
+>  mm/page_isolation.c            | 31 ++++++++++++++++++-------------
+>  4 files changed, 38 insertions(+), 24 deletions(-)
+>
 
-diff --git a/drivers/clk/renesas/r9a09g057-cpg.c b/drivers/clk/renesas/r9a09g057-cpg.c
-index 3c40e36259fe..da908e820950 100644
---- a/drivers/clk/renesas/r9a09g057-cpg.c
-+++ b/drivers/clk/renesas/r9a09g057-cpg.c
-@@ -29,6 +29,7 @@ enum clk_ids {
- 	CLK_PLLDTY,
- 	CLK_PLLCA55,
- 	CLK_PLLVDO,
-+	CLK_PLLETH,
- 	CLK_PLLGPU,
- 
- 	/* Internal Core Clocks */
-@@ -49,6 +50,14 @@ enum clk_ids {
- 	CLK_PLLVDO_CRU1,
- 	CLK_PLLVDO_CRU2,
- 	CLK_PLLVDO_CRU3,
-+	CLK_PLLETH_DIV_250_FIX,
-+	CLK_PLLETH_DIV_125_FIX,
-+	CLK_CSDIV_PLLETH_GBE0,
-+	CLK_CSDIV_PLLETH_GBE1,
-+	CLK_SMUX2_GBE0_TXCLK,
-+	CLK_SMUX2_GBE0_RXCLK,
-+	CLK_SMUX2_GBE1_TXCLK,
-+	CLK_SMUX2_GBE1_RXCLK,
- 	CLK_PLLGPU_GEAR,
- 
- 	/* Module Clocks */
-@@ -78,6 +87,19 @@ static const struct clk_div_table dtable_2_64[] = {
- 	{0, 0},
- };
- 
-+static const struct clk_div_table dtable_2_100[] = {
-+	{0, 2},
-+	{1, 10},
-+	{2, 100},
-+	{0, 0},
-+};
-+
-+/* Mux clock tables */
-+static const char * const smux2_gbe0_rxclk[] = { ".plleth_gbe0", "et0_rxclk" };
-+static const char * const smux2_gbe0_txclk[] = { ".plleth_gbe0", "et0_txclk" };
-+static const char * const smux2_gbe1_rxclk[] = { ".plleth_gbe1", "et1_rxclk" };
-+static const char * const smux2_gbe1_txclk[] = { ".plleth_gbe1", "et1_txclk" };
-+
- static const struct cpg_core_clk r9a09g057_core_clks[] __initconst = {
- 	/* External Clock Inputs */
- 	DEF_INPUT("audio_extal", CLK_AUDIO_EXTAL),
-@@ -90,6 +112,7 @@ static const struct cpg_core_clk r9a09g057_core_clks[] __initconst = {
- 	DEF_FIXED(".plldty", CLK_PLLDTY, CLK_QEXTAL, 200, 3),
- 	DEF_PLL(".pllca55", CLK_PLLCA55, CLK_QEXTAL, PLLCA55),
- 	DEF_FIXED(".pllvdo", CLK_PLLVDO, CLK_QEXTAL, 105, 2),
-+	DEF_FIXED(".plleth", CLK_PLLETH, CLK_QEXTAL, 125, 3),
- 	DEF_PLL(".pllgpu", CLK_PLLGPU, CLK_QEXTAL, PLLGPU),
- 
- 	/* Internal Core Clocks */
-@@ -115,6 +138,17 @@ static const struct cpg_core_clk r9a09g057_core_clks[] __initconst = {
- 	DEF_DDIV(".pllvdo_cru2", CLK_PLLVDO_CRU2, CLK_PLLVDO, CDDIV4_DIVCTL1, dtable_2_4),
- 	DEF_DDIV(".pllvdo_cru3", CLK_PLLVDO_CRU3, CLK_PLLVDO, CDDIV4_DIVCTL2, dtable_2_4),
- 
-+	DEF_FIXED(".plleth_250_fix", CLK_PLLETH_DIV_250_FIX, CLK_PLLETH, 1, 4),
-+	DEF_FIXED(".plleth_125_fix", CLK_PLLETH_DIV_125_FIX, CLK_PLLETH_DIV_250_FIX, 1, 2),
-+	DEF_CSDIV(".plleth_gbe0", CLK_CSDIV_PLLETH_GBE0,
-+		  CLK_PLLETH_DIV_250_FIX, CSDIV0_DIVCTL0, dtable_2_100),
-+	DEF_CSDIV(".plleth_gbe1", CLK_CSDIV_PLLETH_GBE1,
-+		  CLK_PLLETH_DIV_250_FIX, CSDIV0_DIVCTL1, dtable_2_100),
-+	DEF_SMUX(".smux2_gbe0_txclk", CLK_SMUX2_GBE0_TXCLK, SSEL0_SELCTL2, smux2_gbe0_txclk),
-+	DEF_SMUX(".smux2_gbe0_rxclk", CLK_SMUX2_GBE0_RXCLK, SSEL0_SELCTL3, smux2_gbe0_rxclk),
-+	DEF_SMUX(".smux2_gbe1_txclk", CLK_SMUX2_GBE1_TXCLK, SSEL1_SELCTL0, smux2_gbe1_txclk),
-+	DEF_SMUX(".smux2_gbe1_rxclk", CLK_SMUX2_GBE1_RXCLK, SSEL1_SELCTL1, smux2_gbe1_rxclk),
-+
- 	DEF_DDIV(".pllgpu_gear", CLK_PLLGPU_GEAR, CLK_PLLGPU, CDDIV3_DIVCTL1, dtable_2_64),
- 
- 	/* Core Clocks */
-@@ -130,6 +164,10 @@ static const struct cpg_core_clk r9a09g057_core_clks[] __initconst = {
- 	DEF_FIXED("iotop_0_shclk", R9A09G057_IOTOP_0_SHCLK, CLK_PLLCM33_DIV16, 1, 1),
- 	DEF_FIXED("usb2_0_clk_core0", R9A09G057_USB2_0_CLK_CORE0, CLK_QEXTAL, 1, 1),
- 	DEF_FIXED("usb2_0_clk_core1", R9A09G057_USB2_0_CLK_CORE1, CLK_QEXTAL, 1, 1),
-+	DEF_FIXED("gbeth_0_clk_ptp_ref_i", R9A09G057_GBETH_0_CLK_PTP_REF_I,
-+		  CLK_PLLETH_DIV_125_FIX, 1, 1),
-+	DEF_FIXED("gbeth_1_clk_ptp_ref_i", R9A09G057_GBETH_1_CLK_PTP_REF_I,
-+		  CLK_PLLETH_DIV_125_FIX, 1, 1),
- };
- 
- static const struct rzv2h_mod_clk r9a09g057_mod_clks[] __initconst = {
-@@ -233,6 +271,30 @@ static const struct rzv2h_mod_clk r9a09g057_mod_clks[] __initconst = {
- 						BUS_MSTOP(7, BIT(10))),
- 	DEF_MOD("usb2_0_pclk_usbtst1",		CLK_PLLDTY_ACPU_DIV4, 11, 7, 5, 23,
- 						BUS_MSTOP(7, BIT(11))),
-+	DEF_MOD_MUX_EXTERNAL("gbeth_0_clk_tx_i", CLK_SMUX2_GBE0_TXCLK, 11, 8, 5, 24,
-+						BUS_MSTOP(8, BIT(5)), 1),
-+	DEF_MOD_MUX_EXTERNAL("gbeth_0_clk_rx_i", CLK_SMUX2_GBE0_RXCLK, 11, 9, 5, 25,
-+						BUS_MSTOP(8, BIT(5)), 1),
-+	DEF_MOD_MUX_EXTERNAL("gbeth_0_clk_tx_180_i", CLK_SMUX2_GBE0_TXCLK, 11, 10, 5, 26,
-+						BUS_MSTOP(8, BIT(5)), 1),
-+	DEF_MOD_MUX_EXTERNAL("gbeth_0_clk_rx_180_i", CLK_SMUX2_GBE0_RXCLK, 11, 11, 5, 27,
-+						BUS_MSTOP(8, BIT(5)), 1),
-+	DEF_MOD("gbeth_0_aclk_csr_i",		CLK_PLLDTY_DIV8, 11, 12, 5, 28,
-+						BUS_MSTOP(8, BIT(5))),
-+	DEF_MOD("gbeth_0_aclk_i",		CLK_PLLDTY_DIV8, 11, 13, 5, 29,
-+						BUS_MSTOP(8, BIT(5))),
-+	DEF_MOD_MUX_EXTERNAL("gbeth_1_clk_tx_i", CLK_SMUX2_GBE1_TXCLK, 11, 14, 5, 30,
-+						BUS_MSTOP(8, BIT(6)), 1),
-+	DEF_MOD_MUX_EXTERNAL("gbeth_1_clk_rx_i", CLK_SMUX2_GBE1_RXCLK, 11, 15, 5, 31,
-+						BUS_MSTOP(8, BIT(6)), 1),
-+	DEF_MOD_MUX_EXTERNAL("gbeth_1_clk_tx_180_i", CLK_SMUX2_GBE1_TXCLK, 12, 0, 6, 0,
-+						BUS_MSTOP(8, BIT(6)), 1),
-+	DEF_MOD_MUX_EXTERNAL("gbeth_1_clk_rx_180_i", CLK_SMUX2_GBE1_RXCLK, 12, 1, 6, 1,
-+						BUS_MSTOP(8, BIT(6)), 1),
-+	DEF_MOD("gbeth_1_aclk_csr_i",		CLK_PLLDTY_DIV8, 12, 2, 6, 2,
-+						BUS_MSTOP(8, BIT(6))),
-+	DEF_MOD("gbeth_1_aclk_i",		CLK_PLLDTY_DIV8, 12, 3, 6, 3,
-+						BUS_MSTOP(8, BIT(6))),
- 	DEF_MOD("cru_0_aclk",			CLK_PLLDTY_ACPU_DIV2, 13, 2, 6, 18,
- 						BUS_MSTOP(9, BIT(4))),
- 	DEF_MOD_NO_PM("cru_0_vclk",		CLK_PLLVDO_CRU0, 13, 3, 6, 19,
-@@ -304,6 +366,8 @@ static const struct rzv2h_reset r9a09g057_resets[] __initconst = {
- 	DEF_RST(10, 13, 4, 30),		/* USB2_0_U2H1_HRESETN */
- 	DEF_RST(10, 14, 4, 31),		/* USB2_0_U2P_EXL_SYSRST */
- 	DEF_RST(10, 15, 5, 0),		/* USB2_0_PRESETN */
-+	DEF_RST(11, 0, 5, 1),		/* GBETH_0_ARESETN_I */
-+	DEF_RST(11, 1, 5, 2),		/* GBETH_1_ARESETN_I */
- 	DEF_RST(12, 5, 5, 22),		/* CRU_0_PRESETN */
- 	DEF_RST(12, 6, 5, 23),		/* CRU_0_ARESETN */
- 	DEF_RST(12, 7, 5, 24),		/* CRU_0_S_RESETN */
-diff --git a/drivers/clk/renesas/rzv2h-cpg.h b/drivers/clk/renesas/rzv2h-cpg.h
-index 68c223373916..cd6bcd4f2901 100644
---- a/drivers/clk/renesas/rzv2h-cpg.h
-+++ b/drivers/clk/renesas/rzv2h-cpg.h
-@@ -93,6 +93,7 @@ struct smuxed {
- 		.width = (_width), \
- 	})
- 
-+#define CPG_SSEL0		(0x300)
- #define CPG_SSEL1		(0x304)
- #define CPG_CDDIV0		(0x400)
- #define CPG_CDDIV1		(0x404)
-@@ -118,6 +119,14 @@ struct smuxed {
- #define SSEL1_SELCTL2	SMUX_PACK(CPG_SSEL1, 8, 1)
- #define SSEL1_SELCTL3	SMUX_PACK(CPG_SSEL1, 12, 1)
- 
-+#define CSDIV0_DIVCTL0	DDIV_PACK(CPG_CSDIV0, 0, 2, CSDIV_NO_MON)
-+#define CSDIV0_DIVCTL1	DDIV_PACK(CPG_CSDIV0, 4, 2, CSDIV_NO_MON)
-+
-+#define SSEL0_SELCTL2	SMUX_PACK(CPG_SSEL0, 8, 1)
-+#define SSEL0_SELCTL3	SMUX_PACK(CPG_SSEL0, 12, 1)
-+#define SSEL1_SELCTL0	SMUX_PACK(CPG_SSEL1, 0, 1)
-+#define SSEL1_SELCTL1	SMUX_PACK(CPG_SSEL1, 4, 1)
-+
- #define BUS_MSTOP_IDX_MASK	GENMASK(31, 16)
- #define BUS_MSTOP_BITS_MASK	GENMASK(15, 0)
- #define BUS_MSTOP(idx, mask)	(FIELD_PREP_CONST(BUS_MSTOP_IDX_MASK, (idx)) | \
--- 
-2.49.0
+This fixup has missing pieces. Let me send another one.
 
+> diff --git a/include/linux/page-isolation.h b/include/linux/page-isolat=
+ion.h
+> index 20c3f98b5afb..29b4ddcaea7a 100644
+> --- a/include/linux/page-isolation.h
+> +++ b/include/linux/page-isolation.h
+> @@ -22,17 +22,25 @@ static inline bool is_migrate_isolate(int migratety=
+pe)
+>  }
+>  #endif
+>
+> +/*
+> + * Isolation modes:
+> + * ISOLATE_MODE_NONE - isolate for other purposes than those below
+> + * MEMORY_OFFLINE    - isolate to offline (!allocate) memory e.g., ski=
+p over
+> + *		       PageHWPoison() pages and PageOffline() pages.
+> + * CMA_ALLOCATION    - isolate for CMA allocations
+> + */
+> +enum isolate_mode_t {
+> +	ISOLATE_MODE_NONE,
+> +	MEMORY_OFFLINE,
+> +	CMA_ALLOCATION,
+> +};
+> +
+>  /*
+>   * Isolation flags:
+> - * MEMORY_OFFLINE - isolate to offline (!allocate) memory e.g., skip o=
+ver
+> - *		    PageHWPoison() pages and PageOffline() pages.
+>   * REPORT_FAILURE - report details about the failure to isolate the ra=
+nge
+> - * CMA_ALLOCATION - isolate for CMA allocations
+>   */
+> -typedef unsigned int __bitwise isol_flags_t;
+> -#define MEMORY_OFFLINE		((__force isol_flags_t)BIT(0))
+> -#define REPORT_FAILURE		((__force isol_flags_t)BIT(1))
+> -#define CMA_ALLOCATION		((__force isol_flags_t)BIT(2))
+> +typedef unsigned int __bitwise isolate_flags_t;
+> +#define REPORT_FAILURE		((__force isolate_flags_t)BIT(0))
+>
+>  void set_pageblock_migratetype(struct page *page, int migratetype);
+>
+> @@ -40,10 +48,10 @@ bool pageblock_isolate_and_move_free_pages(struct z=
+one *zone, struct page *page)
+>  bool pageblock_unisolate_and_move_free_pages(struct zone *zone, struct=
+ page *page);
+>
+>  int start_isolate_page_range(unsigned long start_pfn, unsigned long en=
+d_pfn,
+> -			     isol_flags_t flags);
+> +			     isolate_mode_t mode, isolate_flags_t flags);
+>
+>  void undo_isolate_page_range(unsigned long start_pfn, unsigned long en=
+d_pfn);
+>
+>  int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn=
+,
+> -			isol_flags_t isol_flags);
+> +			isolate_flags_t isol_flags);
+>  #endif
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 155f0b4ff299..3dab006a537e 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -2005,7 +2005,7 @@ int offline_pages(unsigned long start_pfn, unsign=
+ed long nr_pages,
+>
+>  	/* set above range as isolated */
+>  	ret =3D start_isolate_page_range(start_pfn, end_pfn,
+> -				       MEMORY_OFFLINE | REPORT_FAILURE);
+> +				       MEMORY_OFFLINE, REPORT_FAILURE);
+>  	if (ret) {
+>  		reason =3D "failure to isolate range";
+>  		goto failed_removal_pcplists_disabled;
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 51d66f86b93d..3f208f8656f4 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -6787,7 +6787,8 @@ int alloc_contig_range_noprof(unsigned long start=
+, unsigned long end,
+>  	 */
+>
+>  	ret =3D start_isolate_page_range(start, end,
+> -			(alloc_flags & ACR_CMA) ? CMA_ALLOCATION : 0);
+> +		(alloc_flags & ACR_CMA) ? CMA_ALLOCATION : ISOLATE_MODE_NONE,
+> +		0);
+>  	if (ret)
+>  		goto done;
+>
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index 5f00d7113766..fd4818862654 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -48,7 +48,7 @@ static inline void set_pageblock_isolate(struct page =
+*page)
+>   *
+>   */
+>  static struct page *has_unmovable_pages(unsigned long start_pfn, unsig=
+ned long end_pfn,
+> -				isol_flags_t flags)
+> +				isolate_mode_t mode, isolate_flags_t flags)
+>  {
+>  	struct page *page =3D pfn_to_page(start_pfn);
+>  	struct zone *zone =3D page_zone(page);
+> @@ -63,7 +63,7 @@ static struct page *has_unmovable_pages(unsigned long=
+ start_pfn, unsigned long e
+>  		 * isolate CMA pageblocks even when they are not movable in fact
+>  		 * so consider them movable here.
+>  		 */
+> -		if (flags & CMA_ALLOCATION)
+> +		if (mode =3D=3D CMA_ALLOCATION)
+>  			return NULL;
+>
+>  		return page;
+> @@ -168,8 +168,9 @@ static struct page *has_unmovable_pages(unsigned lo=
+ng start_pfn, unsigned long e
+>   * present in [start_pfn, end_pfn). The pageblock must intersect with
+>   * [start_pfn, end_pfn).
+>   */
+> -static int set_migratetype_isolate(struct page *page, isol_flags_t iso=
+l_flags,
+> -			unsigned long start_pfn, unsigned long end_pfn)
+> +static int set_migratetype_isolate(struct page *page, isolate_mode_t m=
+ode,
+> +			isolate_flags_t isol_flags, unsigned long start_pfn,
+> +			unsigned long end_pfn)
+>  {
+>  	struct zone *zone =3D page_zone(page);
+>  	struct page *unmovable;
+> @@ -203,7 +204,7 @@ static int set_migratetype_isolate(struct page *pag=
+e, isol_flags_t isol_flags,
+>  				  end_pfn);
+>
+>  	unmovable =3D has_unmovable_pages(check_unmovable_start, check_unmova=
+ble_end,
+> -			isol_flags);
+> +			mode, isol_flags);
+>  	if (!unmovable) {
+>  		if (!pageblock_isolate_and_move_free_pages(zone, page)) {
+>  			spin_unlock_irqrestore(&zone->lock, flags);
+> @@ -309,6 +310,7 @@ __first_valid_page(unsigned long pfn, unsigned long=
+ nr_pages)
+>   * isolate_single_pageblock() -- tries to isolate a pageblock that mig=
+ht be
+>   * within a free or in-use page.
+>   * @boundary_pfn:		pageblock-aligned pfn that a page might cross
+> + * @mode:			isolation mode
+>   * @flags:			isolation flags
+>   * @isolate_before:	isolate the pageblock before the boundary_pfn
+>   * @skip_isolation:	the flag to skip the pageblock isolation in second=
+
+> @@ -327,7 +329,8 @@ __first_valid_page(unsigned long pfn, unsigned long=
+ nr_pages)
+>   * either. The function handles this by splitting the free page or mig=
+rating
+>   * the in-use page then splitting the free page.
+>   */
+> -static int isolate_single_pageblock(unsigned long boundary_pfn, isol_f=
+lags_t flags,
+> +static int isolate_single_pageblock(unsigned long boundary_pfn,
+> +			isolate_mode_t mode, isolate_flags_t flags,
+>  			bool isolate_before, bool skip_isolation)
+>  {
+>  	unsigned long start_pfn;
+> @@ -357,7 +360,8 @@ static int isolate_single_pageblock(unsigned long b=
+oundary_pfn, isol_flags_t fla
+>  		VM_BUG_ON(!get_pageblock_isolate(pfn_to_page(isolate_pageblock)));
+>  	} else {
+>  		ret =3D set_migratetype_isolate(pfn_to_page(isolate_pageblock),
+> -				flags, isolate_pageblock, isolate_pageblock + pageblock_nr_pages);=
+
+> +				mode, flags, isolate_pageblock,
+> +				isolate_pageblock + pageblock_nr_pages);
+>
+>  		if (ret)
+>  			return ret;
+> @@ -455,6 +459,7 @@ static int isolate_single_pageblock(unsigned long b=
+oundary_pfn, isol_flags_t fla
+>   * start_isolate_page_range() - mark page range MIGRATE_ISOLATE
+>   * @start_pfn:		The first PFN of the range to be isolated.
+>   * @end_pfn:		The last PFN of the range to be isolated.
+> + * @mode:		isolation mode
+>   * @flags:		isolation flags
+>   *
+>   * Making page-allocation-type to be MIGRATE_ISOLATE means free pages =
+in
+> @@ -488,7 +493,7 @@ static int isolate_single_pageblock(unsigned long b=
+oundary_pfn, isol_flags_t fla
+>   * Return: 0 on success and -EBUSY if any part of range cannot be isol=
+ated.
+>   */
+>  int start_isolate_page_range(unsigned long start_pfn, unsigned long en=
+d_pfn,
+> -			     isol_flags_t flags)
+> +			     isolate_mode_t mode, isolate_flags_t flags)
+>  {
+>  	unsigned long pfn;
+>  	struct page *page;
+> @@ -499,7 +504,7 @@ int start_isolate_page_range(unsigned long start_pf=
+n, unsigned long end_pfn,
+>  	bool skip_isolation =3D false;
+>
+>  	/* isolate [isolate_start, isolate_start + pageblock_nr_pages) pagebl=
+ock */
+> -	ret =3D isolate_single_pageblock(isolate_start, flags, false,
+> +	ret =3D isolate_single_pageblock(isolate_start, mode, flags, false,
+>  			skip_isolation);
+>  	if (ret)
+>  		return ret;
+> @@ -508,7 +513,7 @@ int start_isolate_page_range(unsigned long start_pf=
+n, unsigned long end_pfn,
+>  		skip_isolation =3D true;
+>
+>  	/* isolate [isolate_end - pageblock_nr_pages, isolate_end) pageblock =
+*/
+> -	ret =3D isolate_single_pageblock(isolate_end, flags, true,
+> +	ret =3D isolate_single_pageblock(isolate_end, mode, flags, true,
+>  			skip_isolation);
+>  	if (ret) {
+>  		unset_migratetype_isolate(pfn_to_page(isolate_start));
+> @@ -520,7 +525,7 @@ int start_isolate_page_range(unsigned long start_pf=
+n, unsigned long end_pfn,
+>  	     pfn < isolate_end - pageblock_nr_pages;
+>  	     pfn +=3D pageblock_nr_pages) {
+>  		page =3D __first_valid_page(pfn, pageblock_nr_pages);
+> -		if (page && set_migratetype_isolate(page, flags,
+> +		if (page && set_migratetype_isolate(page, mode, flags,
+>  					start_pfn, end_pfn)) {
+>  			undo_isolate_page_range(isolate_start, pfn);
+>  			unset_migratetype_isolate(
+> @@ -563,7 +568,7 @@ void undo_isolate_page_range(unsigned long start_pf=
+n, unsigned long end_pfn)
+>   */
+>  static unsigned long
+>  __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end=
+_pfn,
+> -				  isol_flags_t flags)
+> +				  isolate_flags_t flags)
+>  {
+>  	struct page *page;
+>
+> @@ -610,7 +615,7 @@ __test_page_isolated_in_pageblock(unsigned long pfn=
+, unsigned long end_pfn,
+>   * Returns 0 if true, -EBUSY if one or more pages are in use.
+>   */
+>  int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn=
+,
+> -			isol_flags_t isol_flags)
+> +			isolate_flags_t isol_flags)
+>  {
+>  	unsigned long pfn, flags;
+>  	struct page *page;
+> -- =
+
+> 2.47.2
+>
+>
+>
+> --
+> Best Regards,
+> Yan, Zi
+
+
+--
+Best Regards,
+Yan, Zi
