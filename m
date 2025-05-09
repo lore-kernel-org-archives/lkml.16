@@ -1,121 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD1722FDE7;
-	Fri,  9 May 2025 15:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9106125
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746805710; cv=none; b=GFH9P10SXVLfVZfx2sPgZJ3Vb0xhu8oCUn4/R3E62N3JMCp0N1sv8OhBEzDWLes0FQucZMomQX4Ei2gIun/giI/eUTzhiI/BZRUPcakUl8hLkx3q38Dal4ckgwG/jq9e8dGlLIIcPx3xUt+18y8CJplzW6WZBdcf7bgujTknLrQ=
+	t=1746805765; cv=none; b=XIfniJ+0mB1FEwKKz9gBIO4kMZuL0pP/7GuJoRdqr4ulOtW9X2FsV3ZF11xln7BiDix4Fi+zaXEoUp1S7rnXveLLshHHuD52lj5OkDcjVH1RNydpZhbZ2YtDbu1tRgXwfmMLS/WAixqx88zkOy7j3qIfETiVqNDeZmHEF7BVLpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746805710; c=relaxed/simple;
-	bh=Z/ccOXoCEaNihcY6p2Y764mYYL45MJ+rALkM+IUwoe8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rdw9WDRV0EbmW1ioT8/bnTUcgYXO3nPJQ4/d2VE/6jX48am8Yb9NYsPuHzsfDTF6dcK1GDNpFvLqUHu3hRTMS/WilZ2VfnjKMqwD37+c5s91/4YEVP50Y/MBk9AkQkwOFeQu5iM/nb7UApEGvduE0/MXzvX5ugRdavfLgYBnP64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IjWuvd9r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746805765; c=relaxed/simple;
+	bh=mvSGFbDLNDYEWHz+LKCdfPK5JWa4rBi7ioquuawqkrM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M06NFOIoSaVkzStKSE0xqIp+F8wc9JdzajZR5qEEvKPMjT+thGZG6icaMMLHiUVKddK3P3JE2aNn0epCEQX4WUm6vE1GYkF8JJr3m0A9RHHIDG2kuc3LiEn/HJdQ/Mo2GPyDdai9LbUmTC1ZxtMgJNOLiv9eZp10YfyTZrIKDqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QH3YPafp; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IjWuvd9r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4622BC4CEEF;
-	Fri,  9 May 2025 15:48:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746805710;
-	bh=Z/ccOXoCEaNihcY6p2Y764mYYL45MJ+rALkM+IUwoe8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IjWuvd9r7Fii+94cxA3vTZy6O0PSohuktwLs/ESa7TAcScbshAHwHs+MDfGMN9PVd
-	 BJ0HrtDxDkBmtM5aG2mnm5wIJ1ChHyEbib3TTm+SzK3Hxbl9pujKshBEc7prGkOy50
-	 CID/LqIok0SbvO4EEdzg6HtOBUQiAitMycu6crVcCR7JVMgu/yxWcVMqg5n732JzcZ
-	 DWPwwxiRINKNdw15G1mj+PL4iXMjYDanwJYKywWQ87f+2BhFruV/AQYq+RRtlC8XPr
-	 G5WRcy1j3I60HqaINX+pm2woaQQ6IeSxLI4zEBO0+xQf5/SszHTgKxtz9QCBRXTcIV
-	 qkjGGUqNjB9/g==
-Date: Fri, 9 May 2025 16:48:25 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Mike Looijmans <mike.looijmans@topic.nl>
-Cc: linux-usb@vger.kernel.org,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: usb: ti,usb8041: Add binding for TI
- USB8044 hub controller
-Message-ID: <20250509-flagman-bootleg-ad27822f7d53@spud>
-References: <20250507131143.2243079-1-mike.looijmans@topic.nl>
- <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.3e03400f-766d-4690-8f43-cbea2cac93d8@emailsignatures365.codetwo.com>
- <20250507131143.2243079-2-mike.looijmans@topic.nl>
- <20250508-prewashed-jawline-37f53c0f9429@spud>
- <583dc73e-23d3-4c8a-a457-f2bf71190e6a@topic.nl>
- <20250508-waving-sustainer-28fe228e01f8@spud>
- <d4604713-ffb3-4cb2-bcd8-14c0519ad608@topic.nl>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QH3YPafp"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22fcf9cf3c2so8828715ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 08:49:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1746805760; x=1747410560; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qh9teHdhlvql2ao90Sr6yaH8jYA82kXsk39D9NS6AMg=;
+        b=QH3YPafpBEQuwh2tJ4oAbTAJOh92a1NvpsHZ/4TroCz/mQpSrixe2MqMgyksen85T+
+         Rgw9Z87DnTAh1/R/unsL8JDth3TOzTMWpWgCHvvfsc8beHjPaCuLevZk8+cAnYdz6bdE
+         M78geNh5QutegeCRWWBq63Jca1XynJtZ8TRQM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746805760; x=1747410560;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qh9teHdhlvql2ao90Sr6yaH8jYA82kXsk39D9NS6AMg=;
+        b=AE0NSZO6A0WKVz4uzM6EV/h8Y99M3f+OkLf3kZ+jHre28v80xIeC6S0MQ1ufulQHQf
+         eo44c+ZeJE0/71IpbH/Gq3DaCDJBZmyhE7mnfHklTf+Gm68lnI1C58k55rNHjKrlVEHa
+         toqtsZ/FoBtGyHTbfXa97Ykrbme8zA3x+3HgVW/MHuK3dVCDua73a/cUkRmNaVQPBfL4
+         kNpMwJ0b2pa4N5J5aI3bMOemw/cupnXK2P3b6k/heJs3Jnr5J3tVvJRhwaIM1iQlclNa
+         Ca9Lnt5VBsKsEUSN7l13CbxdL+tUKELzm3Ug0PFaB6hQ7vWMnGjoT9EYTFV6lu7J27vE
+         YLwQ==
+X-Gm-Message-State: AOJu0YwpwdtK1mRRxZoIbpC5TNUc4rkV5tbjW18tFLXxP7Woa1u8wUW3
+	fcr+EOWx92fS6PCYOuYr37rXkkufUZAHupEU2iiB+Z87UcFvhob2XiEZwHiidHyzRpvYnkPB2+0
+	=
+X-Gm-Gg: ASbGncuoIByFca7KDQDd8qh5LsjBNzJku6GYoBjtL85xQMc5V4ewQadUrc2KR1qcMSR
+	zhJ0nPFOo0UMgKGgd2RWJLzr1ecs7P9hYr6oDnhN+jkdYkdQ0BHOMX2ASo/1c7PRaon+traZqPz
+	WxopW67+vBBHQUQg2fGXKiFu5us8c+0R+GyvPX1VseUJyI6xWx7cJXfQDRjixHsfJdbYjdcGJky
+	o+TZIld45GLYwk3EO9QQyPgY5u0esqSnGpvxBb+8asmXrJPuxIYFb/4cuPGc5Zv7xFpYq91/TU7
+	krMiylIdLkHSIPBhdidswXjkEsQE/v4sT+JELKRXaxIpJhYh/b3pmlnPQmLyW3vxYzbBTBtjpAv
+	TvW6qXnX9
+X-Google-Smtp-Source: AGHT+IGJBbx5U4Wrs1YxImEcUNNtLvqRPN9yF6NYrOvmqkjONe+Gy2rJiYmKurGj27moZJP5DVMDkQ==
+X-Received: by 2002:a17:902:ce83:b0:227:ac2a:2472 with SMTP id d9443c01a7336-22fc8c83d38mr61570285ad.28.1746805760646;
+        Fri, 09 May 2025 08:49:20 -0700 (PDT)
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com. [209.85.215.181])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2351b78df5sm1621126a12.63.2025.05.09.08.49.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 08:49:19 -0700 (PDT)
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b12b984e791so1814762a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 08:49:19 -0700 (PDT)
+X-Received: by 2002:a17:902:d507:b0:22d:b2c9:7fd7 with SMTP id
+ d9443c01a7336-22fc8b7945amr58222325ad.21.1746805758517; Fri, 09 May 2025
+ 08:49:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="n9g9I+OmmxWn4iaj"
-Content-Disposition: inline
-In-Reply-To: <d4604713-ffb3-4cb2-bcd8-14c0519ad608@topic.nl>
-
-
---n9g9I+OmmxWn4iaj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250509131249.340302366@goodmis.org> <20250509131316.483054226@goodmis.org>
+In-Reply-To: <20250509131316.483054226@goodmis.org>
+From: Doug Anderson <dianders@chromium.org>
+Date: Fri, 9 May 2025 08:49:06 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=W_xhfT=oVq9qXvRqUuhG5_Wvi9=mtV+GAh+Nwvp6a7Pg@mail.gmail.com>
+X-Gm-Features: ATxdqUFeCcpCmKDATfFo9mgy1FVbhxqgtDvmLaaJ2j3XTLZLDVxIsriIjzQ4X3I
+Message-ID: <CAD=FV=W_xhfT=oVq9qXvRqUuhG5_Wvi9=mtV+GAh+Nwvp6a7Pg@mail.gmail.com>
+Subject: Re: [for-next][PATCH 18/31] tracing: kdb: Use tracer_tracing_on/off()
+ instead of setting per CPU disabled
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Jason Wessel <jason.wessel@windriver.com>, 
+	Daniel Thompson <danielt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 09, 2025 at 07:56:35AM +0200, Mike Looijmans wrote:
-> On 08-05-2025 17:53, Conor Dooley wrote:
-> > On Thu, May 08, 2025 at 05:19:03PM +0200, Mike Looijmans wrote:
-> > > On 08-05-2025 16:58, Conor Dooley wrote:
-> > > > On Wed, May 07, 2025 at 03:11:43PM +0200, Mike Looijmans wrote:
-> > > > > The TI USB8044 is similar to the USB8041.
-> > > > Similar how? Why's a fallback not suitable?
-> > > I don't quite understand what is meant by "fallback" here?
-> > A fallback compatible, since you;re using the same match data as the
-> > 8041.
->=20
-> I think it would work. It would look strange though, having to put an
-> additional vid/pid in the devicetree to make it work.
+Hi,
 
-That's how a huge number of other devices work in devicetree when
-handling differs between devices.
+On Fri, May 9, 2025 at 6:13=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> From: Steven Rostedt <rostedt@goodmis.org>
+>
+> The per CPU "disabled" value was the original way to disable tracing when
+> the tracing subsystem was first created. Today, the ring buffer
+> infrastructure has its own way to disable tracing. In fact, things have
+> changed so much since 2008 that many things ignore the disable flag.
+>
+> The kdb_ftdump() function iterates over all the current tracing CPUs and
+> increments the "disabled" counter before doing the dump, and decrements i=
+t
+> afterward.
+>
+> As the disabled flag can be ignored, doing this today is not reliable.
+> Instead, simply call tracer_tracing_off() and then tracer_tracing_on() to
+> disable and then enabled the entire ring buffer in one go!
+>
+> Cc: Jason Wessel <jason.wessel@windriver.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Daniel Thompson <danielt@kernel.org>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Link: https://lore.kernel.org/20250505212235.549033722@goodmis.org
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace_kdb.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
 
-> > > It's similar in that the USB8044 provides the same functionality and =
-can use
-> > > the same driver as the USB8041, all that is needed is to add the PID/=
-VID
-> > > values.
-> > Is this onboard_dev_id_table table with the vid/pid used in combination
-> > with dt, or in-place of dt when device detection is dynamic? If the
-> > latter, why can't dt use a fallback compatible since the handling is
-> > identical to the 8041?
->=20
-> My basic understanding is:
->=20
-> The devicetree match creates a platform device that controls the reset pin
-> of the hub. It's basic task is to de-assert the reset, so the hub starts
-> negotiating. This part also works with the 8041 devicetree entry (which is
-> how I first tried to get it up and running).
->=20
-> The VID/PID table then matches the hub on the USB bus, which can then be
-> associated with its platform device. Since the 8044 reports a different
-> VID/PID, this part only worked when I added the entries to the tables.
+I'm not deeply familiar with the tracing system internals, but it
+seems reasonable to me.
 
-Right, so you do actually need to use the dt entry /and/ the dynamic
-data? In that case, there's little value in a fallback, since you need
-non-fallback information in the driver for things to work. If that's a
-correct understanding,
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+I did a quick sanity check and nothing went boom, too.
 
---n9g9I+OmmxWn4iaj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaB4jyQAKCRB4tDGHoIJi
-0pfCAQCGCGWallUTglxaL9aGMoqKHpRUBAoqvKbvaSLxA9HlwwEAwOUAI1MU7toT
-1VyheNOnj9KtDpaBM0yYX5amE/4BHAA=
-=hpeN
------END PGP SIGNATURE-----
-
---n9g9I+OmmxWn4iaj--
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
