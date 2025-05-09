@@ -1,681 +1,205 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3C9262FFE;
-	Fri,  9 May 2025 22:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAB125F79A
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 22:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746830554; cv=none; b=nNHK+Of9oIEPyzWjkEs2vpDBVO78k0bTZLGn7LeXDAgWtWPe/yKEuXRCAhMZgRbSCrBI93s7Dl6iMCQfdWV/Yyjr0fHh3t+a14TePGKwGzCHNWMaXihwN4MNhwL3zQz4GPhwaOcYe27d8zeVZX/8j+UJGAJm0KHA481U3UaI9nE=
+	t=1746830587; cv=none; b=M1niQvN3pkfjLMG7aTJP78OVk3E/1ZOI5klMBMwqJEQFXvQddBWiQw8VK1nGNY3Mjzp0f8oTf3XxiAiLyHtkGXLl/cTmHDVI9tg2yrzwA03bW6eb1x3p7rq9dHh90oRjSQhBuqqi57AOfcx+oql2VkX6lxGOwKIDONlZ+yrwf/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746830554; c=relaxed/simple;
-	bh=UJZQUK8D1H3zEiED8f40de5LqEEQaL3RXIbV8jJICRA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RSCa4cf8c6tBZ/NJHhLWFmXpU2ZL2tw+HMRnqV0WWauDxnIk4EndjdVpXzuZ2j7H43Ffd4OAUQcBpqlb4B3CXqeF3dsUBokzglYNNkl7F+2JfpVMGYRd07TDA8GtbOUQu/0CjnwaTmNoeKJsGnAPzXqSwE7IFCp4naVVdDDwKvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ejFZvLQK; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746830587; c=relaxed/simple;
+	bh=X3s/A98FzP6o/IwBvBfRnEUdSqajWx5/UiKO55G261s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rimLk8Gbws2SVoe4FiuEWpjgHSEWxIVgh/4bRAHy79B1UBdcXWd1yumgk9NncQulL/u2sf3+8YrAKlEkhlFC5iYHprq0g1vHfUCGPNNQZiSXmopl+DmXEUq0+6rfEOP6Zo4QgqFGYiDbjVHEhdKjhZCUSR+bAaQ5Zh8o97gJGRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OwTN4Abf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ejFZvLQK"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c5e1b40f68so315248485a.1;
-        Fri, 09 May 2025 15:42:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746830549; x=1747435349; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=msHOztbjyq9yqEIUeoH3IVEEQXo53ZrXdjUyNVKV2Yg=;
-        b=ejFZvLQKmufilBY1dr81h6NDfvV9spmODBue+z9T7Z+89IhWKdQY+DSGHOUf7hnQ64
-         /lLRnGs7zEiu74pvubzDyATVmDRt2YxS78nh/6B53KvR1ulHG2BVYtodS0DyBjnkSSX0
-         F65IzRHs5iYoFLlP2Z0/Spyem8yzcO/6rqzTCNJCoGgrj/Qv2D/MfD0HrWQFsFaLXX+L
-         PBY2HyKqNCo5vqTTbhgADZ7+yoZPgnP3l6HI9o3erE9L7CDjPsnzs/zBueLe5LUQp+M+
-         fHLef3ZFGlg0QwTvW1dbt31HBt6x2tYOjaONG81+RULQ0CmNeQgG8cgRj4t2RyO5i+Ku
-         SU4w==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OwTN4Abf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746830584;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hqGV7B3yX160YR3bgu/uMkDW4l2lwnLi1yCpVMj63Ls=;
+	b=OwTN4Abf1FEBRdFiLv2lb1mdHfK2V7XJiX9CNx7iPRnBvmynW9EHBJpXliljPbHrpnPl2A
+	2Ve1kdcc0BJHBKlZBAZPFE7sgobswyajmIvZ81tfmQjifepQU7JB4+ZVrbLbdVOGY7xtib
+	D20YLji334yXj0k7qrAur/kRETCyNkc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-518-GaeXBO1-PIOV5c6YQ5EBWw-1; Fri, 09 May 2025 18:43:03 -0400
+X-MC-Unique: GaeXBO1-PIOV5c6YQ5EBWw-1
+X-Mimecast-MFC-AGG-ID: GaeXBO1-PIOV5c6YQ5EBWw_1746830582
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43f405810b4so12792435e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 15:43:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746830549; x=1747435349;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=msHOztbjyq9yqEIUeoH3IVEEQXo53ZrXdjUyNVKV2Yg=;
-        b=YQggrQyhlKJCwzB38AJ1tNjtk0JZ3+2Df/TSgtgOXoL6I05jbl3zvLeU1EU07hnkHZ
-         +8otOzdrR1CYTWJhuFOK3pzrsH1RV+vGcEv3imBX25iYZx9EpFY7Gybmn6t3Z8D4sRks
-         74CmeJPxlbIoKkvrIyiRn3ypzJ4xbQMB2jU4eDgSfay+VT24KVJZ9L0b3RHh4pMOt1y4
-         e7d5Z6HrkSufUHlmTvkoqZRCD3XFOXSw2j820lYauVPmM3i8UcaNPLLpuMENgTzTNIT6
-         fTXOs/YURslptrd5Ty4uBYvvMsv3V82dBMut8uXk3GGpFO/h/rjUfcicJXhxxmqki31W
-         d4rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoCWhGJOHGtLOSsqlDDFOn0DSjLzGsXopZrAWw3M8gY1DyQu9QPznTwi8ckeiHfO25Ipjkg1lzBYog01Ib@vger.kernel.org, AJvYcCXfD0uAXyf0i9uTmDH5FnWX1baZ2FFVxF0az/z5uhrdiXsFvBuH7f0hG5eTwa3FDTeER+3cb22veEGB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/tdxI1hnP1YLJrwGOzKVuNHNYTkWVC4ULKDrJS7h7hRAG3MjY
-	nn62SmX8ewT/X5dMlMV5ulSotR8l0dxw2jaGFKS/UrMVy1vBmbG3
-X-Gm-Gg: ASbGncv6UmI8Rqk/m4AilzhY6QyFCF6dTQu49jAnOtZ0UqPI/OFaUUTL+1iWeaCn0cp
-	w6FArME8sqSUdc8rPLTYWIFh0R1eAqhYp9usTkNT3S2cKJBUD03n9KQOFcHfeXpJVn3567h4UeC
-	171t6e01qUeVPLFaA27mMEgTxXl+lcXolZYSImk9Jm2lCHkGcQhXL17dgTemo7L1m22aSOAlaPr
-	HwZd7PiUNrcui7GlSEQi0UBYXldSNOHfHjq6ZXSq5HGudV1ejnkG6wxAZ/crr8HFP5VtMEFmWKe
-	FqDMCoSim3X4LoYNuyjO304LIPw=
-X-Google-Smtp-Source: AGHT+IF2nmpQrGYnNJ3kGt9vg2TNZfXedBd1efP8m/k0Dzwcc27Blqyf+tRDQHXu1l4xl93RzqHNeA==
-X-Received: by 2002:a05:620a:4549:b0:7ca:d9e8:d722 with SMTP id af79cd13be357-7cd010f7058mr657732585a.17.1746830549496;
-        Fri, 09 May 2025 15:42:29 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cd00f98a89sm196704185a.53.2025.05.09.15.42.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 15:42:29 -0700 (PDT)
-Date: Sat, 10 May 2025 06:42:02 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Han Gao <rabenda.cn@gmail.com>, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, sophgo@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] riscv: dts: sophgo: add ziccrse for sg2042
-Message-ID: <yan76lhmlemqxw4ytpinvwuiucgqgmqxrekiepsygjqcmpw3i3@k67zshipj273>
-References: <cover.1746828006.git.rabenda.cn@gmail.com>
- <13d3da8f0979f50e561888164f1fbeba8cd11a3b.1746828006.git.rabenda.cn@gmail.com>
+        d=1e100.net; s=20230601; t=1746830582; x=1747435382;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hqGV7B3yX160YR3bgu/uMkDW4l2lwnLi1yCpVMj63Ls=;
+        b=uqzKMk8U4Ui5qkDJt0LHAQmMg7JA6XEz100OWGFOZAuW4ofCLUWip94ZR/o68YoJQ+
+         Uu6tpkHBxIYaS+SJAEQ0M5XCTtG0JjCsh2l9bV2wS7/y4tveb/UpTUKE1djPUTG8b6YP
+         BzqoLxqYphGsGxfJ1+KfnR9HzCzWxkbozmi9UDAGuKImqva6kyGxpQ8Qe+27ZkRnDMC9
+         AO+RIM6KXb5ehpn8wrnZQuGzQ0n5DUrP5Z5fWukP6LFaZ2fr3bA7UF4vGlvvei90bKKm
+         717salhCGgP8srVICA0d8kOR6FNnHDvLDmbv+6eU/EKQtR622il8ZqyRT3qq9ryNWmYA
+         tTXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ1SmmDooF4yWQvVnVwvfRLoD9SB3C01yZJ4CS4EKXs/A6dO+WtPr9wVopTzZs4br8LeK4c0Ik6r+ygsU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVgeSv4j2fntvlqB+1/mnZxLL6JsByD4gxaNGMhANTha0nDQ87
+	PYqlNG080hWZ0yWLrZTmVF2yWn2E69Yc/NOEOZtDUrOHHoObYh8C/Ut5a7NLm1cDSEX2mss3mgd
+	i00TMg5P6vmosi8WtZwwwnfBiUf/L3Lk9A+MvB4qBask1/MMYoPuonWEmFhQbXg==
+X-Gm-Gg: ASbGnctSXDV5wJD4U7/c38txBvjnwo1plw2Kls98Kf4cM8dLYJVaUNKbz7ojARZJbll
+	gheNXMfI2o7QX6ch3BbsJlsOcuCkpAEfdxO4C90yifygzPYxLJBWGombeQKPpVbzdJf+UVX+K1m
+	WQisifpTp/7uCzNpXn4zuIeRauuCG856DES13OQT0JXfcIj1ebMZowHqRcQYcK1+AItO5bjvgSA
+	4L6BD3iHseS5wyaqxMCkpqNsh9mdoZ8/XqgiWV+XZUVvrYe6w4YJqZzRQGENd/phYKcrW6pz9pf
+	aGOuExprf3MmBjx+/7UTcjY4RlfR7fdLyfbRGuwhGqxLV5K7v9c0hWbOyIH/XdU36fw6tXYQDGR
+	fYDBUnfqWNbGN30LBvQjkLEzcfXb/eQCfKArwr+Q=
+X-Received: by 2002:a05:600c:3586:b0:43c:f85d:1245 with SMTP id 5b1f17b1804b1-442d9cacc19mr31285315e9.17.1746830581949;
+        Fri, 09 May 2025 15:43:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGsy3alnT6xKlJrjS3ZVXFCnavqO8gnw/Rb1adntYbfLIz2Lu5ZcXD2+567BvK1y8Kqr5WLyw==
+X-Received: by 2002:a05:600c:3586:b0:43c:f85d:1245 with SMTP id 5b1f17b1804b1-442d9cacc19mr31285195e9.17.1746830581537;
+        Fri, 09 May 2025 15:43:01 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f45:5500:8267:647f:4209:dedd? (p200300d82f4555008267647f4209dedd.dip0.t-ipconnect.de. [2003:d8:2f45:5500:8267:647f:4209:dedd])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde27sm4664654f8f.17.2025.05.09.15.42.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 15:43:01 -0700 (PDT)
+Message-ID: <f691d2e0-5919-4581-8a24-1b543d798ae4@redhat.com>
+Date: Sat, 10 May 2025 00:42:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <13d3da8f0979f50e561888164f1fbeba8cd11a3b.1746828006.git.rabenda.cn@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/1] prctl: allow overriding system THP policy to always
+To: Johannes Weiner <hannes@cmpxchg.org>, Yafang Shao <laoar.shao@gmail.com>
+Cc: Usama Arif <usamaarif642@gmail.com>, Zi Yan <ziy@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ shakeel.butt@linux.dev, riel@surriel.com, baolin.wang@linux.alibaba.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, linux-kernel@vger.kernel.org, kernel-team@meta.com
+References: <96eccc48-b632-40b7-9797-1b0780ea59cd@gmail.com>
+ <8E3EC5A4-4387-4839-926F-3655188C20F4@nvidia.com>
+ <279d29ad-cbd6-4a0e-b904-0a19326334d1@gmail.com>
+ <CALOAHbCxhL=VM=E5UzNvQYZsrF4zdcQ1-49iEJ1UYvLsurtxCw@mail.gmail.com>
+ <ebfca8f2-40e5-485a-a060-621aa3a22376@gmail.com>
+ <CALOAHbDesDGyokKFSSr3hA1_WnFciQPXe_nboPq9v8OUPLv47g@mail.gmail.com>
+ <20250509051328.GF323143@cmpxchg.org>
+ <CALOAHbA617417UtcwMBJ9Zm_8BbAth57=ngN=tknw8h7nvCwNw@mail.gmail.com>
+ <41e60fa0-2943-4b3f-ba92-9f02838c881b@redhat.com>
+ <CALOAHbAvQDee2=5vsDqj77g5gAGdGpXFBbsC7tpKnCYEDZS3vw@mail.gmail.com>
+ <20250509164654.GA608090@cmpxchg.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250509164654.GA608090@cmpxchg.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 10, 2025 at 06:11:23AM +0800, Han Gao wrote:
-> sg2042 support Ziccrse ISA extension [1].
+>>>> - madvise
+>>>>    The sysadmin gently encourages the use of THP, but it is only
+>>>> enabled when explicitly requested by the application.
 > 
-> Link: https://lore.kernel.org/all/20241103145153.105097-12-alexghiti@rivosinc.com/ [1]
+> And this "user mode" or "manual mode", where applications self-manage
+> which parts of userspace they want to enroll.
 > 
-> Signed-off-by: Han Gao <rabenda.cn@gmail.com>
-> ---
->  arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi | 128 ++++++++++----------
->  1 file changed, 64 insertions(+), 64 deletions(-)
+> Both madvise() and unprivileged prctl() should work here as well,
+> IMO. There is no policy or security difference between them, it's just
+> about granularity and usability.
 > 
-> diff --git a/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi b/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
-> index 927e0260acbd..04a6875574bb 100644
-> --- a/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
-> +++ b/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
-> @@ -259,7 +259,7 @@ cpu0: cpu@0 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <0>;
+>>>> - never
+>>>>     The sysadmin discourages the use of THP, and "its use is only permitted
+>>>> with explicit approval" .
+> 
+> This one I don't quite agree with, and IMO conflicts with what David
+> is saying as well.
 
-I prefer to keep the maximum 74 chars per line. I suggest wrapping
-the string. This apply to all the change of this file.
+Yeah ... "never" does not mean "sometimes" in my reality :)
 
-Regards,
-Inochi
-
-> @@ -285,7 +285,7 @@ cpu1: cpu@1 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <1>;
-> @@ -311,7 +311,7 @@ cpu2: cpu@2 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <2>;
-> @@ -337,7 +337,7 @@ cpu3: cpu@3 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <3>;
-> @@ -363,7 +363,7 @@ cpu4: cpu@4 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <4>;
-> @@ -389,7 +389,7 @@ cpu5: cpu@5 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <5>;
-> @@ -415,7 +415,7 @@ cpu6: cpu@6 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <6>;
-> @@ -441,7 +441,7 @@ cpu7: cpu@7 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <7>;
-> @@ -467,7 +467,7 @@ cpu8: cpu@8 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <8>;
-> @@ -493,7 +493,7 @@ cpu9: cpu@9 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <9>;
-> @@ -519,7 +519,7 @@ cpu10: cpu@10 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <10>;
-> @@ -545,7 +545,7 @@ cpu11: cpu@11 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <11>;
-> @@ -571,7 +571,7 @@ cpu12: cpu@12 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <12>;
-> @@ -597,7 +597,7 @@ cpu13: cpu@13 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <13>;
-> @@ -623,7 +623,7 @@ cpu14: cpu@14 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <14>;
-> @@ -649,7 +649,7 @@ cpu15: cpu@15 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <15>;
-> @@ -675,7 +675,7 @@ cpu16: cpu@16 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <16>;
-> @@ -701,7 +701,7 @@ cpu17: cpu@17 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <17>;
-> @@ -727,7 +727,7 @@ cpu18: cpu@18 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <18>;
-> @@ -753,7 +753,7 @@ cpu19: cpu@19 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <19>;
-> @@ -779,7 +779,7 @@ cpu20: cpu@20 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <20>;
-> @@ -805,7 +805,7 @@ cpu21: cpu@21 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <21>;
-> @@ -831,7 +831,7 @@ cpu22: cpu@22 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <22>;
-> @@ -857,7 +857,7 @@ cpu23: cpu@23 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <23>;
-> @@ -883,7 +883,7 @@ cpu24: cpu@24 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <24>;
-> @@ -909,7 +909,7 @@ cpu25: cpu@25 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <25>;
-> @@ -935,7 +935,7 @@ cpu26: cpu@26 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <26>;
-> @@ -961,7 +961,7 @@ cpu27: cpu@27 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <27>;
-> @@ -987,7 +987,7 @@ cpu28: cpu@28 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <28>;
-> @@ -1013,7 +1013,7 @@ cpu29: cpu@29 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <29>;
-> @@ -1039,7 +1039,7 @@ cpu30: cpu@30 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <30>;
-> @@ -1065,7 +1065,7 @@ cpu31: cpu@31 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <31>;
-> @@ -1091,7 +1091,7 @@ cpu32: cpu@32 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <32>;
-> @@ -1117,7 +1117,7 @@ cpu33: cpu@33 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <33>;
-> @@ -1143,7 +1143,7 @@ cpu34: cpu@34 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <34>;
-> @@ -1169,7 +1169,7 @@ cpu35: cpu@35 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <35>;
-> @@ -1195,7 +1195,7 @@ cpu36: cpu@36 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <36>;
-> @@ -1221,7 +1221,7 @@ cpu37: cpu@37 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <37>;
-> @@ -1247,7 +1247,7 @@ cpu38: cpu@38 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <38>;
-> @@ -1273,7 +1273,7 @@ cpu39: cpu@39 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <39>;
-> @@ -1299,7 +1299,7 @@ cpu40: cpu@40 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <40>;
-> @@ -1325,7 +1325,7 @@ cpu41: cpu@41 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <41>;
-> @@ -1351,7 +1351,7 @@ cpu42: cpu@42 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <42>;
-> @@ -1377,7 +1377,7 @@ cpu43: cpu@43 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <43>;
-> @@ -1403,7 +1403,7 @@ cpu44: cpu@44 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <44>;
-> @@ -1429,7 +1429,7 @@ cpu45: cpu@45 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <45>;
-> @@ -1455,7 +1455,7 @@ cpu46: cpu@46 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <46>;
-> @@ -1481,7 +1481,7 @@ cpu47: cpu@47 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <47>;
-> @@ -1507,7 +1507,7 @@ cpu48: cpu@48 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <48>;
-> @@ -1533,7 +1533,7 @@ cpu49: cpu@49 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <49>;
-> @@ -1559,7 +1559,7 @@ cpu50: cpu@50 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <50>;
-> @@ -1585,7 +1585,7 @@ cpu51: cpu@51 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <51>;
-> @@ -1611,7 +1611,7 @@ cpu52: cpu@52 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <52>;
-> @@ -1637,7 +1637,7 @@ cpu53: cpu@53 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <53>;
-> @@ -1663,7 +1663,7 @@ cpu54: cpu@54 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <54>;
-> @@ -1689,7 +1689,7 @@ cpu55: cpu@55 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <55>;
-> @@ -1715,7 +1715,7 @@ cpu56: cpu@56 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <56>;
-> @@ -1741,7 +1741,7 @@ cpu57: cpu@57 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <57>;
-> @@ -1767,7 +1767,7 @@ cpu58: cpu@58 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <58>;
-> @@ -1793,7 +1793,7 @@ cpu59: cpu@59 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <59>;
-> @@ -1819,7 +1819,7 @@ cpu60: cpu@60 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <60>;
-> @@ -1845,7 +1845,7 @@ cpu61: cpu@61 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <61>;
-> @@ -1871,7 +1871,7 @@ cpu62: cpu@62 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <62>;
-> @@ -1897,7 +1897,7 @@ cpu63: cpu@63 {
->  			riscv,isa = "rv64imafdc";
->  			riscv,isa-base = "rv64i";
->  			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
-> -					       "zicntr", "zicsr", "zifencei",
-> +					       "ziccrse", "zicntr", "zicsr", "zifencei",
->  					       "zihpm", "xtheadvector";
->  			thead,vlenb = <128>;
->  			reg = <63>;
-> -- 
-> 2.47.2
 > 
+>>> "never" so far means "no thps, no exceptions". We've had serious THP
+>>> issues in the past, where our workaround until we sorted out the issue
+>>> for affected customers was to force-disable THPs on that system during boot.
+>>
+>> Right, that reflects the current behavior. What we aim to enhance is
+>> by adding the requirement that "its use is only permitted with
+>> explicit approval."
+> 
+> I think you're conflating a safety issue with a security issue.
+> 
+> David is saying there can be cases where the kernel is broken, and
+> "never" is a production escape hatch to disable the feature until a
+> kernel upgrade for the fix is possible. In such a case, it doesn't
+> make sense to override this decision based on any sort of workload
+> policy, privileged or not.
+> 
+> The way I understand you is that you want enrollment (and/or
+> self-management) only for blessed applications. Because you don't
+> generally trust workloads in the wild enough to switch the global
+> default away from "never", given the semantics of always/madvise.
+
+Assuming "never" means "never" and "always" means "always" ( crazy, 
+right? :) ), could be make use of "madvise" mode, which essentially 
+means "VM_HUGEPAGE" takes control?
+
+We'd need
+
+a) A way to enable THP for a process. Changing the default/vma settings 
+to VM_HUGEPAGE as discussed using a prctl could work.
+
+b) A way to ignore VM_HUGEPAGE for processes. Maybe the existing prctl 
+to force-disable THPs could work?
+
+-- 
+Cheers,
+
+David / dhildenb
+
