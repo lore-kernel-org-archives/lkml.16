@@ -1,381 +1,139 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E245295DAA
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EF4296167
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746796654; cv=none; b=BSxhAFPRNsCfJabMIFlBTrg4w/0WLIAhVZ1Kcg/Qeg2IEIacyl8JUtD5MfF9N3Cw8C0ZDy2fkAkGpzNUAsLxwHHVxsRgAf/a963iRlBob2IoPL38bqi6jJEupSaccDhS5/yxUHt1mUR4PR9K/QRyZ7vixOR2B3fOXU4KH8w1a8s=
+	t=1746796671; cv=none; b=ZCMGG6nGJHQdaZSpamBKdZrF+XZ1j3RRSlwq8c7Q99IGrjcAT9DN9/evdiwBuruwjRrrlB3qSb3jCvVykqqvrOiEHM3l6SVy1tp+Nrd9/7eQKvQ5LdCFMXdc/kmftExct2DBRz4Oz2yPazIVGJxwSGUHsAVwTCqrcIW0rUkN9BE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746796654; c=relaxed/simple;
-	bh=l/bL8Cdy19zVzYeeeRC3Bhazuunjmk5hRum5pM/tfQ0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=C9cAdMJQcs//L2JYy5v07WGeC45Fu/zrb/XYiqrOnfM0wOhTY6LvzMxxJkjfwifHDOgZRyNp/pWD/inNJEpt+lbyzx/Gbhxoc/9V3l3zY4jBtp+I50EclYPwkVnADjhtGy0Lb8kQOjx4hQFbAWw1Svw8/atxgIN1yfR0cjbnNaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XfoW4GBR; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1746796671; c=relaxed/simple;
+	bh=26bgPGM+XWHNh3zKWLPJuWSdDtdYX/ImWKydHaNQSZs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rP42WuAIrgtD0PJTGZwRyfQMu7OxAFGTG5hE7UMDSanJhLagSjNXi7O/MjCSF7etFHMM2AUrZ3/WlEp8BssIuOpyV8+IaBJxLx3UC7feRWKz3pbUCocmehVQtNxLJDi+sHSB0ccQbIDrM09kZl+xsDczMaXzILnAKrZ/JQPqw+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lWHmYOaD; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XfoW4GBR"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43e9a3d2977so14052055e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 06:17:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746796650; x=1747401450; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Nkys3MADPIj5Es68fiIJTGNjZ/cE1BlJNsvbA6coAk=;
-        b=XfoW4GBRv8s6+2SmJoxHLE24o+/GCCRXVIBJW1W2v1QBbJ/fVtsfSR9q1j6jG7Nt0j
-         eqGAA3e/59wszQSnnAXgZ02K3wa01B9wKyo6mKfQiotd+0J/nveJbldu1Zg+e64j/Ge3
-         x+BiTN36lyKp53IFkRPXq8Y+e4CUB0S1+lzG9NWN0hlvcrqzT366llG8YJJW1kJfdGAj
-         95Mg4pjbMAZzVDRavVdIyV79H13Kvk7fR1zwpwhQx29Obesrpqpfj25FWsyEH3vT6J1a
-         0HCwp68VF9/rbh2bpqZ7//q3Vf4kKe6pDslsPRxodalKR65uytXPIvpnUVT8GOeT+u2O
-         2v4w==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lWHmYOaD"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549Ahkxe025418
+	for <linux-kernel@vger.kernel.org>; Fri, 9 May 2025 13:17:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	SKPwnoZ4z7Zq1QPdVARuUad4atOXjNSus5NyMxTgizU=; b=lWHmYOaDVOS64iQx
+	gAimpzphqGRZjeVZBWY4fj/6W2tWL3efI9HtoYbq1lVhmARYW/pB1HLANoqVpYnn
+	AtCEvEQnViELvI1v7t3y/astKCB2e+3OO6fSjgs8SDIrHx3S+yVC4iJGLWMp9Uuw
+	647S1BnuCRvVuBAHlb3Wo5ElUmdxM5xvOsFxt4HcJhTnHN6OhK3OR2vBFfH5ZlAt
+	nun+a2aOBAhFd05k3wvSNsq/u9ylOrkC0bm8ck/Rswd6sucP7oojzFG6XsXInOhq
+	BdTM+3SzEf3u4sn6q3slL0T8a3Ly2czqt5C8ZPj5JE0CK6UNJlnBgGoLigmUQw/S
+	EZ+Jew==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp14ua1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 13:17:48 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-476783cbdb8so5454681cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 06:17:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746796650; x=1747401450;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Nkys3MADPIj5Es68fiIJTGNjZ/cE1BlJNsvbA6coAk=;
-        b=djiEwEBHpQqGtgnXJFK9CgNm5vcfVr4Sy1+7Qh1PgeVSve0AGrmSuXWWzig8PxpoeE
-         BZl+SFfkAZ3c6LdxZDphrr4DpCixSBN974DNaPvlpcvkovqPtXnQk2tY0EwBr8P0bHWz
-         bQmlUMDC87PngqV3eMbMkeliYXqb0FLC7tWFinNHBCrGkM14Ob0gxs5uaFZh7cg0FH9U
-         Y61Qr8Cbv76U5MuqMqwPWWm1PrkCHrn8M0YJwM+cOEID7el57RkRzntFHVOCwhIF0WLo
-         EuDG+OgOzu/u00w61loV8Lg7FNfeNiCSeCWdQ6xDI/eGxQBBxiOfr9RPEvnCgc1kLqd/
-         OVcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUgVBIqrcNO9VfU0NCNsq4ovS0D6y5UPgdm8yzcDdipwtnky5qogh77myIEmPGqFhdh/WYKR8EWw+S3cvE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDwFzyc1Ku4aJ/WrocExWiKF6E/MkiNjtJnYIfLy98xCCzFy19
-	7ni/AseA62n+mMXC2ww/du+T/UaFGsAaKS28ZBTo5qFRYEszsCC8crKsq69VhfUip7MC6GqmJB+
-	wdTHZWmldQVzHwKeB3g==
-X-Google-Smtp-Source: AGHT+IHJ6Ug2lZ+EwcnN/sajdCCAyKS2oET8piVm/uCVqDq6/j9BnOqfKPaK7OSzRMQ+TH//37e8HgXM+UiJR6KC
-X-Received: from wmbji3.prod.google.com ([2002:a05:600c:a343:b0:43c:eba5:f9b3])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3b0e:b0:43c:f6b0:e807 with SMTP id 5b1f17b1804b1-442d6ddea12mr29578065e9.31.1746796649880;
- Fri, 09 May 2025 06:17:29 -0700 (PDT)
-Date: Fri,  9 May 2025 14:17:06 +0100
-In-Reply-To: <20250509131706.2336138-1-vdonnefort@google.com>
+        d=1e100.net; s=20230601; t=1746796667; x=1747401467;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SKPwnoZ4z7Zq1QPdVARuUad4atOXjNSus5NyMxTgizU=;
+        b=PNSG4yM1OZFvjsw3h3yH3DRJgKlL9xFG3c6kvflC8CgODCuMpbzCpW3PrW4N7MIt4B
+         QV1+zBSq5JdKSUlRDK4effZzmIL9ejcQTGA8M2ib/4BgnmMwSmIFbKMuXS/nwDvugrSm
+         PAir1qzuo/OHyhfOVVRNPMF7FAMzCEL1dLPLWp5/JE2pmin68SR6hfzKG9oGrQlCH2Wq
+         eGQK86UjQpkjbudm49CPEt6BVso8uzFND3Oe8n8epvlgQpM32H9XsJXAxqChSQUBONI5
+         y5KWQIW1F3GItf8mgY2eLsETYf8oYBmB4oBqb0mEX+388lhNkKN6+IRePTIH3crZzEji
+         XnfA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+XAzFwRizBWQyJ35Syvom8Dqq2U2kwelWPxDGuxbaRbJSiz5kGIUHbqO+AYMEqNDVK6C+vvuEkTt7Sv4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAIcEQgONiEksGmdqNtdrShj+QPsDAj8P2PDXlfu/Oo+rCkDlE
+	6oaGcQGw+HK4ShrKeKdN5oU2hYERU4Vk9suDoz79eVsxSe8+qZfridh+ZhiBBnG5Ipb6zqMXQgC
+	NlQq/OwnOzUtPZDbAb0fZZ73oUga335O/4vVKl9+N52MqQ+qSr4GoYWYaQ1pjnnM=
+X-Gm-Gg: ASbGncv5GlakOhD9FrmOTDHD/kAkkNf7dXFntLO1VLny0xnR922UlAQGtPs5/9zPdo8
+	lta7+53nmchy0+nFg6GHmdrDkVeGByR7qLTdZKvjxWB7obP+dPG9odnrdW0ITOhc2EkYTs5mhjh
+	OlQCTdv7QkwR9n5CuQyl907Lz6ezhBEvatcAgTI+hmY13d5a0sHYpiKc6mKt4uS/QonH0w8X/N6
+	SyKgVJ7bu6zk/SyF8wQEZPMgzQax1o83FbfkAAdRFiYjNRtxxQm2RUV4ihCuzoozIou3IvkHKO3
+	d9Uzqc81j6Xj5pwQrpB61bJedGU3jOkiCxEChhhAUKY/QxqQ4SrSNL/nJefMC2Ma5y0=
+X-Received: by 2002:a05:620a:40cf:b0:7c7:a574:c0ac with SMTP id af79cd13be357-7cd010d4ea3mr193943685a.3.1746796667400;
+        Fri, 09 May 2025 06:17:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH+qsfdtZ6DmZdlZShEv27vJFf9u9wNMnx8fyO0XHAbQLPHn8efyDQhYxt7i9+0FpxG4WsvJA==
+X-Received: by 2002:a05:620a:40cf:b0:7c7:a574:c0ac with SMTP id af79cd13be357-7cd010d4ea3mr193940885a.3.1746796666870;
+        Fri, 09 May 2025 06:17:46 -0700 (PDT)
+Received: from [192.168.65.105] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9cbe4c83sm1414304a12.8.2025.05.09.06.17.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 06:17:46 -0700 (PDT)
+Message-ID: <5f5e512c-ae0e-43aa-856f-06820ac4b147@oss.qualcomm.com>
+Date: Fri, 9 May 2025 15:17:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250509131706.2336138-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.49.0.1015.ga840276032-goog
-Message-ID: <20250509131706.2336138-11-vdonnefort@google.com>
-Subject: [PATCH v4 10/10] KVM: arm64: np-guest CMOs with PMD_SIZE fixmap
-From: Vincent Donnefort <vdonnefort@google.com>
-To: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
-	suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, 
-	will@kernel.org
-Cc: qperret@google.com, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFT 13/14] drm/msm/a6xx: Drop cfg->ubwc_swizzle override
+To: Connor Abbott <cwabbott0@gmail.com>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+References: <20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com>
+ <20250508-topic-ubwc_central-v1-13-035c4c5cbe50@oss.qualcomm.com>
+ <CACu1E7E9yU-cygZxBqVypP7aFkXJCNTfXA2uqdvU84mi9T51Xg@mail.gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <CACu1E7E9yU-cygZxBqVypP7aFkXJCNTfXA2uqdvU84mi9T51Xg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDEzMCBTYWx0ZWRfX+EJNIOW6sd7m
+ axzHN/KslT2Jytp3ttp3aJh8jpzeXXrks4DtME30fP0UWkbxqH5s4kde2U/yf0+mh4nhOivRHom
+ Tsl1QvYE1GWduKf6ttVbj+H5jEnvOLn+GSELs0ZLjYf2yAkpygzt5NFf2Z8W3UEjbzBoDeXjU/1
+ 3EGS1wH9JdJ4r4i6HRzwBrwbyd/knayP2kUyiBSfHn8pXAb/9k8pWwFCsQiY1ErA2cLViKirCKN
+ rbCgo7X9Fs0RF4eOUI/k8C6U6M4PfDBNXL8KXpT86xqStLkPdVMW05Ervmf1NWcPNEu7a5G7gjw
+ hMSEJ1JxkWTKWSHBJijWc8+D1BbEwW0x/tWkFoI/U1DCm0FWf4IhPkbBQjns5kykRUNUDBPRCVf
+ KpPSqvliO6rMUofhT22d/SwIkU16o/r50DjlnssWZUaVzdUFMLIRYkl+L2rFpBQ88KYGvRa5
+X-Proofpoint-GUID: rNi1clQF0eReMbX4XS3TnPzaTaMghArz
+X-Proofpoint-ORIG-GUID: rNi1clQF0eReMbX4XS3TnPzaTaMghArz
+X-Authority-Analysis: v=2.4 cv=W4o4VQWk c=1 sm=1 tr=0 ts=681e007c cx=c_pps
+ a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=Olu6NZbg64VfH8RIhVIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=kacYvNCVWA4VmyqE58fU:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_05,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=902 suspectscore=0 lowpriorityscore=0 phishscore=0
+ priorityscore=1501 bulkscore=0 spamscore=0 mlxscore=0 adultscore=0
+ clxscore=1015 malwarescore=0 impostorscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505090130
 
-With the introduction of stage-2 huge mappings in the pKVM hypervisor,
-guest pages CMO is needed for PMD_SIZE size. Fixmap only supports
-PAGE_SIZE and iterating over the huge-page is time consuming (mostly due
-to TLBI on hyp_fixmap_unmap) which is a problem for EL2 latency.
+On 5/8/25 9:26 PM, Connor Abbott wrote:
+> On Thu, May 8, 2025 at 2:14 PM Konrad Dybcio <konradybcio@kernel.org> wrote:
+>>
+>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>
+>> On A663 (SA8775P) the value matches exactly.
+>>
+>> On A610, the value matches on SM6115, but is different on SM6125. That
+>> turns out not to be a problem, as the bits that differ aren't even
+>> interpreted.
+> 
+> This is definitely going to break userspace, because the kernel
+> doesn't expose the UBWC version, instead exposing just the swizzle and
+> userspace expects that it sets the right value for older UBWC versions
+> before it became configurable (0x7 for UBWC 1.0 and 0x6 for 2.0-3.0).
+> It looks like the data for SM6125 is just wrong.
 
-Introduce a shared PMD_SIZE fixmap (hyp_fixblock_map/hyp_fixblock_unmap)
-to improve guest page CMOs when stage-2 huge mappings are installed.
+Oh that's sad.. I'll drop this commit
 
-On a Pixel6, the iterative solution resulted in a latency of ~700us,
-while the PMD_SIZE fixmap reduces it to ~100us.
-
-Because of the horrendous private range allocation that would be
-necessary, this is disabled for 64KiB pages systems.
-
-Suggested-by: Quentin Perret <qperret@google.com>
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-Signed-off-by: Quentin Perret <qperret@google.com>
-
-diff --git a/arch/arm64/include/asm/kvm_pgtable.h b/arch/arm64/include/asm/kvm_pgtable.h
-index 1b43bcd2a679..2888b5d03757 100644
---- a/arch/arm64/include/asm/kvm_pgtable.h
-+++ b/arch/arm64/include/asm/kvm_pgtable.h
-@@ -59,6 +59,11 @@ typedef u64 kvm_pte_t;
- 
- #define KVM_PHYS_INVALID		(-1ULL)
- 
-+#define KVM_PTE_TYPE			BIT(1)
-+#define KVM_PTE_TYPE_BLOCK		0
-+#define KVM_PTE_TYPE_PAGE		1
-+#define KVM_PTE_TYPE_TABLE		1
-+
- #define KVM_PTE_LEAF_ATTR_LO		GENMASK(11, 2)
- 
- #define KVM_PTE_LEAF_ATTR_LO_S1_ATTRIDX	GENMASK(4, 2)
-diff --git a/arch/arm64/kvm/hyp/include/nvhe/mm.h b/arch/arm64/kvm/hyp/include/nvhe/mm.h
-index 230e4f2527de..b0c72bc2d5ba 100644
---- a/arch/arm64/kvm/hyp/include/nvhe/mm.h
-+++ b/arch/arm64/kvm/hyp/include/nvhe/mm.h
-@@ -13,9 +13,11 @@
- extern struct kvm_pgtable pkvm_pgtable;
- extern hyp_spinlock_t pkvm_pgd_lock;
- 
--int hyp_create_pcpu_fixmap(void);
-+int hyp_create_fixmap(void);
- void *hyp_fixmap_map(phys_addr_t phys);
- void hyp_fixmap_unmap(void);
-+void *hyp_fixblock_map(phys_addr_t phys);
-+void hyp_fixblock_unmap(void);
- 
- int hyp_create_idmap(u32 hyp_va_bits);
- int hyp_map_vectors(void);
-diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-index 97e0fea9db4e..9f3ffa4e0690 100644
---- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-+++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-@@ -220,16 +220,52 @@ static void guest_s2_put_page(void *addr)
- 	hyp_put_page(&current_vm->pool, addr);
- }
- 
-+static void *__fixmap_guest_page(void *va, size_t *size)
-+{
-+	if (IS_ALIGNED(*size, PMD_SIZE)) {
-+		void *addr = hyp_fixblock_map(__hyp_pa(va));
-+
-+		if (addr)
-+			return addr;
-+
-+		*size = PAGE_SIZE;
-+	}
-+
-+	if (IS_ALIGNED(*size, PAGE_SIZE))
-+		return hyp_fixmap_map(__hyp_pa(va));
-+
-+	WARN_ON(1);
-+
-+	return NULL;
-+}
-+
-+static void __fixunmap_guest_page(size_t size)
-+{
-+	switch (size) {
-+	case PAGE_SIZE:
-+		hyp_fixmap_unmap();
-+		break;
-+	case PMD_SIZE:
-+		hyp_fixblock_unmap();
-+		break;
-+	default:
-+		WARN_ON(1);
-+	}
-+}
-+
- static void clean_dcache_guest_page(void *va, size_t size)
- {
- 	WARN_ON(!PAGE_ALIGNED(size));
- 
- 	while (size) {
--		__clean_dcache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
--					  PAGE_SIZE);
--		hyp_fixmap_unmap();
--		va += PAGE_SIZE;
--		size -= PAGE_SIZE;
-+		size_t fixmap_size = size == PMD_SIZE ? size : PAGE_SIZE;
-+		void *addr = __fixmap_guest_page(va, &fixmap_size);
-+
-+		__clean_dcache_guest_page(addr, fixmap_size);
-+		__fixunmap_guest_page(fixmap_size);
-+
-+		size -= fixmap_size;
-+		va += fixmap_size;
- 	}
- }
- 
-@@ -238,11 +274,14 @@ static void invalidate_icache_guest_page(void *va, size_t size)
- 	WARN_ON(!PAGE_ALIGNED(size));
- 
- 	while (size) {
--		__invalidate_icache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
--					       PAGE_SIZE);
--		hyp_fixmap_unmap();
--		va += PAGE_SIZE;
--		size -= PAGE_SIZE;
-+		size_t fixmap_size = size == PMD_SIZE ? size : PAGE_SIZE;
-+		void *addr = __fixmap_guest_page(va, &fixmap_size);
-+
-+		__invalidate_icache_guest_page(addr, fixmap_size);
-+		__fixunmap_guest_page(fixmap_size);
-+
-+		size -= fixmap_size;
-+		va += fixmap_size;
- 	}
- }
- 
-diff --git a/arch/arm64/kvm/hyp/nvhe/mm.c b/arch/arm64/kvm/hyp/nvhe/mm.c
-index f41c7440b34b..e3b1bece8504 100644
---- a/arch/arm64/kvm/hyp/nvhe/mm.c
-+++ b/arch/arm64/kvm/hyp/nvhe/mm.c
-@@ -229,9 +229,8 @@ int hyp_map_vectors(void)
- 	return 0;
- }
- 
--void *hyp_fixmap_map(phys_addr_t phys)
-+static void *fixmap_map_slot(struct hyp_fixmap_slot *slot, phys_addr_t phys)
- {
--	struct hyp_fixmap_slot *slot = this_cpu_ptr(&fixmap_slots);
- 	kvm_pte_t pte, *ptep = slot->ptep;
- 
- 	pte = *ptep;
-@@ -243,10 +242,21 @@ void *hyp_fixmap_map(phys_addr_t phys)
- 	return (void *)slot->addr;
- }
- 
-+void *hyp_fixmap_map(phys_addr_t phys)
-+{
-+	return fixmap_map_slot(this_cpu_ptr(&fixmap_slots), phys);
-+}
-+
- static void fixmap_clear_slot(struct hyp_fixmap_slot *slot)
- {
- 	kvm_pte_t *ptep = slot->ptep;
- 	u64 addr = slot->addr;
-+	u32 level;
-+
-+	if (FIELD_GET(KVM_PTE_TYPE, *ptep) == KVM_PTE_TYPE_PAGE)
-+		level = KVM_PGTABLE_LAST_LEVEL;
-+	else
-+		level = KVM_PGTABLE_LAST_LEVEL - 1; /* create_fixblock() guarantees PMD level */
- 
- 	WRITE_ONCE(*ptep, *ptep & ~KVM_PTE_VALID);
- 
-@@ -260,7 +270,7 @@ static void fixmap_clear_slot(struct hyp_fixmap_slot *slot)
- 	 * https://lore.kernel.org/kvm/20221017115209.2099-1-will@kernel.org/T/#mf10dfbaf1eaef9274c581b81c53758918c1d0f03
- 	 */
- 	dsb(ishst);
--	__tlbi_level(vale2is, __TLBI_VADDR(addr, 0), KVM_PGTABLE_LAST_LEVEL);
-+	__tlbi_level(vale2is, __TLBI_VADDR(addr, 0), level);
- 	dsb(ish);
- 	isb();
- }
-@@ -273,9 +283,9 @@ void hyp_fixmap_unmap(void)
- static int __create_fixmap_slot_cb(const struct kvm_pgtable_visit_ctx *ctx,
- 				   enum kvm_pgtable_walk_flags visit)
- {
--	struct hyp_fixmap_slot *slot = per_cpu_ptr(&fixmap_slots, (u64)ctx->arg);
-+	struct hyp_fixmap_slot *slot = (struct hyp_fixmap_slot *)ctx->arg;
- 
--	if (!kvm_pte_valid(ctx->old) || ctx->level != KVM_PGTABLE_LAST_LEVEL)
-+	if (!kvm_pte_valid(ctx->old) || (ctx->end - ctx->start) != kvm_granule_size(ctx->level))
- 		return -EINVAL;
- 
- 	slot->addr = ctx->addr;
-@@ -296,13 +306,73 @@ static int create_fixmap_slot(u64 addr, u64 cpu)
- 	struct kvm_pgtable_walker walker = {
- 		.cb	= __create_fixmap_slot_cb,
- 		.flags	= KVM_PGTABLE_WALK_LEAF,
--		.arg = (void *)cpu,
-+		.arg = (void *)per_cpu_ptr(&fixmap_slots, cpu),
- 	};
- 
- 	return kvm_pgtable_walk(&pkvm_pgtable, addr, PAGE_SIZE, &walker);
- }
- 
--int hyp_create_pcpu_fixmap(void)
-+#ifndef CONFIG_ARM64_64K_PAGES
-+static struct hyp_fixmap_slot hyp_fixblock_slot;
-+static DEFINE_HYP_SPINLOCK(hyp_fixblock_lock);
-+
-+void *hyp_fixblock_map(phys_addr_t phys)
-+{
-+	hyp_spin_lock(&hyp_fixblock_lock);
-+	return fixmap_map_slot(&hyp_fixblock_slot, phys);
-+}
-+
-+void hyp_fixblock_unmap(void)
-+{
-+	fixmap_clear_slot(&hyp_fixblock_slot);
-+	hyp_spin_unlock(&hyp_fixblock_lock);
-+}
-+
-+static int create_fixblock(void)
-+{
-+	struct kvm_pgtable_walker walker = {
-+		.cb	= __create_fixmap_slot_cb,
-+		.flags	= KVM_PGTABLE_WALK_LEAF,
-+		.arg = (void *)&hyp_fixblock_slot,
-+	};
-+	unsigned long addr;
-+	phys_addr_t phys;
-+	int ret, i;
-+
-+	/* Find a RAM phys address, PMD aligned */
-+	for (i = 0; i < hyp_memblock_nr; i++) {
-+		phys = ALIGN(hyp_memory[i].base, PMD_SIZE);
-+		if (phys + PMD_SIZE < (hyp_memory[i].base + hyp_memory[i].size))
-+			break;
-+	}
-+
-+	if (i >= hyp_memblock_nr)
-+		return -EINVAL;
-+
-+	hyp_spin_lock(&pkvm_pgd_lock);
-+	addr = ALIGN(__io_map_base, PMD_SIZE);
-+	ret = __pkvm_alloc_private_va_range(addr, PMD_SIZE);
-+	if (ret)
-+		goto unlock;
-+
-+	ret = kvm_pgtable_hyp_map(&pkvm_pgtable, addr, PMD_SIZE, phys, PAGE_HYP);
-+	if (ret)
-+		goto unlock;
-+
-+	ret = kvm_pgtable_walk(&pkvm_pgtable, addr, PMD_SIZE, &walker);
-+
-+unlock:
-+	hyp_spin_unlock(&pkvm_pgd_lock);
-+
-+	return ret;
-+}
-+#else
-+void hyp_fixblock_unmap(void) { WARN_ON(1); }
-+void *hyp_fixblock_map(phys_addr_t phys) { return NULL; }
-+static int create_fixblock(void) { return 0; }
-+#endif
-+
-+int hyp_create_fixmap(void)
- {
- 	unsigned long addr, i;
- 	int ret;
-@@ -322,7 +392,7 @@ int hyp_create_pcpu_fixmap(void)
- 			return ret;
- 	}
- 
--	return 0;
-+	return create_fixblock();
- }
- 
- int hyp_create_idmap(u32 hyp_va_bits)
-diff --git a/arch/arm64/kvm/hyp/nvhe/setup.c b/arch/arm64/kvm/hyp/nvhe/setup.c
-index c19860fc8183..a48d3f5a5afb 100644
---- a/arch/arm64/kvm/hyp/nvhe/setup.c
-+++ b/arch/arm64/kvm/hyp/nvhe/setup.c
-@@ -312,7 +312,7 @@ void __noreturn __pkvm_init_finalise(void)
- 	if (ret)
- 		goto out;
- 
--	ret = hyp_create_pcpu_fixmap();
-+	ret = hyp_create_fixmap();
- 	if (ret)
- 		goto out;
- 
-diff --git a/arch/arm64/kvm/hyp/pgtable.c b/arch/arm64/kvm/hyp/pgtable.c
-index df5cc74a7dd0..c351b4abd5db 100644
---- a/arch/arm64/kvm/hyp/pgtable.c
-+++ b/arch/arm64/kvm/hyp/pgtable.c
-@@ -11,12 +11,6 @@
- #include <asm/kvm_pgtable.h>
- #include <asm/stage2_pgtable.h>
- 
--
--#define KVM_PTE_TYPE			BIT(1)
--#define KVM_PTE_TYPE_BLOCK		0
--#define KVM_PTE_TYPE_PAGE		1
--#define KVM_PTE_TYPE_TABLE		1
--
- struct kvm_pgtable_walk_data {
- 	struct kvm_pgtable_walker	*walker;
- 
--- 
-2.49.0.1015.ga840276032-goog
-
+Konrad
