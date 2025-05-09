@@ -1,121 +1,144 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F07267B88;
-	Fri,  9 May 2025 05:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96F4C267B88
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 05:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746768433; cv=none; b=eTDNeYQF5em2UHhM3kOQSf8Swtdo8boYqCyWFydH3qRpB72vtfa0uVCFaDggscOtXYHcEQJS0dTeA6hPVrKLoo0zIHM314WBm5TrmN58Lo3fB0FbGQ1wz1uehxdlPLCJn2v0G8mq4dfig8YeEChRyOEh2p3QaBQOe7TC8Enn8zY=
+	t=1746768438; cv=none; b=JBuJiy4uD5pt8Wl3kuxCRkjyrR6VJPp/tL0gun8YsY95BRqft+bTICK0VNw2Xz/9dz+rsLrGH7gdkOLF5+ad063jCN/7EZeX/+PlbtarrnotzFYy28k6TYYe2FgcmpYwHqIkWkQ+yAJwkR26+tvMQfnalzjqr5gSk9CYy3dJACs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746768433; c=relaxed/simple;
-	bh=teGjRKI8HcFvJZorUqrnedmjKly2mKr2X6AGbuiy/dM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=pJ32Hy8g5nvOYFPeEBMB0jPBSNFIuMVdK7OZoRhTwKCu2KSI+Rv9MOHsDgXch0SHnVT1nFkZRP21JGkCasfiP5cGxLITpfj5+KiTQRHzkowBIrQhMWq9fsOnC2HTdpLMsNipJr3vlXBBroUpD+z1vl1GBN9EB/Z+IAy2/9T1WhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=fOQzOkeq; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fOQzOkeq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746768428;
-	bh=MWKA45N7edEvMFJbAh/uCEiCGOpyAf4itXOEksYfYZQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=fOQzOkeqNvXv9yYOMJkuVopMR49v97QP02oI48f2r8NFn/MFEtXCgDJWz7zFAejT/
-	 h050dvNMeypsKsTlisgFrF62Z75OEBLFrLyjD5LBAxfD6mIGd2GUHEU9AU4wz2d5Xj
-	 c+Tudv7MaxLxz6zjTbzxJwqKS4e1AC9M2WmD2hXE4ogvYZv5OIyuONID8JQ5QmxG/O
-	 p2x5iQhb39ytnQpf6ltVK5bgRS6fjoDX86JCpIhXf8+G8xURSU6HlS/F3lcDuii08O
-	 SM9UUacJti3YC94qxt/ygPVliHCmVspa7d2Os8/qjPCc4HGtPxzgvub1SBtvs4YlXA
-	 vWX0JD73lnlZA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZtyDX37sGz4x5k;
-	Fri,  9 May 2025 15:27:08 +1000 (AEST)
-Date: Fri, 9 May 2025 15:27:07 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Andi Shyti
- <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: Alexey Charkov <alchark@gmail.com>, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the dt-krzk tree with the devicetree,
- i2c-host trees
-Message-ID: <20250509152707.0dca9d80@canb.auug.org.au>
+	s=arc-20240116; t=1746768438; c=relaxed/simple;
+	bh=OP+91uyP2eroydxY2AMrPk81AB9CmzRP+RSjQgTmsfE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aQ9JSNiYOrJ6lwy1g4iP6JSJBUujILNNGeyBbjYWJVUqm2rvT/IkE27pPIf8SHIE8Zk0FvjSmx7gFBd8APab9GNQ5uMpuJkIHEbdedSbo58o3S4S9rkiJTNFrJ4OM307sfARHtjnWB5oQtef/yKIsuy1G7dZbWKdU+637eIuKBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EEE91153B;
+	Thu,  8 May 2025 22:27:04 -0700 (PDT)
+Received: from [10.162.43.14] (K4MQJ0H1H2.blr.arm.com [10.162.43.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8172C3F58B;
+	Thu,  8 May 2025 22:27:08 -0700 (PDT)
+Message-ID: <e258ac09-2338-49cd-a9d7-8e3be8045d8a@arm.com>
+Date: Fri, 9 May 2025 10:57:05 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/./DUAztZq+TtO.0T9jkm4LH";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] Optimize mremap() for large folios
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
+ ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
+ maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
+ anshuman.khandual@arm.com, willy@infradead.org, ioworker0@gmail.com,
+ yang@os.amperecomputing.com, baolin.wang@linux.alibaba.com, ziy@nvidia.com,
+ hughd@google.com
+References: <20250507060256.78278-1-dev.jain@arm.com>
+ <3fe90c96-da4d-4240-bd58-0bed5fe7cf5f@lucifer.local>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <3fe90c96-da4d-4240-bd58-0bed5fe7cf5f@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---Sig_/./DUAztZq+TtO.0T9jkm4LH
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the dt-krzk tree got a conflict in:
+On 09/05/25 12:05 am, Lorenzo Stoakes wrote:
+> Dev - a general comment here - but let's slow things down a little please
+> :)
+> 
+> The mprotect() version of this is still outstanding fixes and likely will
+> need quite a bit of checking before we can ensure it's stabilised.
+> 
+> And now we have this mremap() series as well which also has had quite a few
+> quite significant issues that have needed addressing.
+> 
+> So can we try to focus on one at a time, and really try to nail down the
+> series before moving on to the next?
+> 
+> We also have outstanding review on the v1, which has now been split, which
+> does happen sometimes but perhaps suggests that it'd work better if you
+> waited a couple days or such to ensure things are settled before sending a
+> new version when there's quite a bit of feedback?
 
-  MAINTAINERS
+Sure, I should have waited my bad, I usually do, this time I was in a 
+haste with both series for no reason :( thanks for your detailed replies 
+btw!
 
-between commits:
+> 
+> This isn't a criticism really, sorry I don't mean to sound negative or such
+> - but this is more a process thing so we reviewers can keep up with things,
+> keep things rolling, and ensure you get your changes merged asap :)
+> 
+> Thanks, Lorenzo
+> 
+> On Wed, May 07, 2025 at 11:32:54AM +0530, Dev Jain wrote:
+>> Currently move_ptes() iterates through ptes one by one. If the underlying
+>> folio mapped by the ptes is large, we can process those ptes in a batch
+>> using folio_pte_batch(), thus clearing and setting the PTEs in one go.
+>> For arm64 specifically, this results in a 16x reduction in the number of
+>> ptep_get() calls (since on a contig block, ptep_get() on arm64 will iterate
+>> through all 16 entries to collect a/d bits), and we also elide extra TLBIs
+>> through get_and_clear_full_ptes, replacing ptep_get_and_clear.
+>>
+>> Mapping 512K of memory, memsetting it, remapping it to src + 512K, and
+>> munmapping it 10,000 times, the average execution time reduces from 1.9 to
+>> 1.2 seconds, giving a 37% performance optimization, on Apple M3 (arm64).
+>>
+>> Test program for reference:
+>>
+>> #define _GNU_SOURCE
+>> #include <stdio.h>
+>> #include <stdlib.h>
+>> #include <unistd.h>
+>> #include <sys/mman.h>
+>> #include <string.h>
+>> #include <errno.h>
+>>
+>> #define SIZE (1UL << 20) // 512 KB
+>>
+>> int main(void) {
+>>      void *new_addr, *addr;
+>>
+>>      for (int i = 0; i < 10000; ++i) {
+>>          addr = mmap((void *)(1UL << 30), SIZE, PROT_READ | PROT_WRITE,
+>>                      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+>>          if (addr == MAP_FAILED) {
+>>                  perror("mmap");
+>>                  return 1;
+>>          }
+>>          memset(addr, 0xAA, SIZE);
+>>
+>>          new_addr = mremap(addr, SIZE, SIZE, MREMAP_MAYMOVE | MREMAP_FIXED, addr + SIZE);
+>>          if (new_addr != (addr + SIZE)) {
+>>                  perror("mremap");
+>>                  return 1;
+>>          }
+>>          munmap(new_addr, SIZE);
+>>      }
+>>
+>> }
+>>
+>> v1->v2:
+>>   - Expand patch descriptions, move pte declarations to a new line,
+>>     reduce indentation in patch 2 by introducing mremap_folio_pte_batch(),
+>>     fix loop iteration (Lorenzo)
+>>   - Merge patch 2 and 3 (Anshuman, Lorenzo)
+>>   - Fix maybe_contiguous_pte_pfns (Willy)
+>>
+>> Dev Jain (2):
+>>    mm: Call pointers to ptes as ptep
+>>    mm: Optimize mremap() by PTE batching
+>>
+>>   include/linux/pgtable.h | 29 ++++++++++++++++++++++
+>>   mm/mremap.c             | 54 +++++++++++++++++++++++++++++------------
+>>   2 files changed, 68 insertions(+), 15 deletions(-)
+>>
+>> --
+>> 2.30.2
+>>
 
-  2b18eda58c86 ("dt-bindings: interrupt-controller: via,vt8500-intc: Conver=
-t to YAML")
-  785eb0bca34b ("dt-bindings: i2c: i2c-wmt: Convert to YAML")
-
-from the devicetree, i2c-host trees and commit:
-
-  47cbd5d8693d ("ARM: vt8500: MAINTAINERS: Include vt8500 soc driver in mai=
-ntainers entry")
-
-from the dt-krzk tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc MAINTAINERS
-index 3097f9470937,dcb10e7175b8..000000000000
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@@ -3443,8 -3427,8 +3443,9 @@@ M:	Alexey Charkov <alchark@gmail.com
-  M:	Krzysztof Kozlowski <krzk@kernel.org>
-  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-  S:	Odd Fixes
-+ F:	Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml
- -F:	Documentation/devicetree/bindings/i2c/i2c-wmt.txt
- +F:	Documentation/devicetree/bindings/i2c/wm,wm8505-i2c.yaml
- +F:	Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc=
-.yaml
-  F:	arch/arm/boot/dts/vt8500/
-  F:	arch/arm/mach-vt8500/
-  F:	drivers/clocksource/timer-vt8500.c
-
---Sig_/./DUAztZq+TtO.0T9jkm4LH
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgdkisACgkQAVBC80lX
-0Gwovwf9FLigwK7sjcxwUZMaQd8ssCkY9XEce//vnM87R5fiO9eIROIHu2SRlg5c
-Bx8lAnlas0lV/gMTJ/yTjqMSMIRKmraziPGti5g5/p4dVK/lzjlM6RAt3FtX6ezp
-bS3TvSjHcKUFroIUA48vGTK+imp9nnPrkpMy1dAPeUhNKfr1EoyoccddB6uAZYzs
-daIqWm+1OP/4/ObsJztE5oVzWScxAQyY/ujqR/AZ904VlvN8LNTeVFdoo8+mXiv9
-H4VzL81djUKc71IdGrPMrgPbaQQhZDDN5uWp4LuveJZekImQ6Ms1CZ3hnbMnHOt1
-CQ7klRr87ARNHCUJR52NlNScJmFXVw==
-=OSeB
------END PGP SIGNATURE-----
-
---Sig_/./DUAztZq+TtO.0T9jkm4LH--
