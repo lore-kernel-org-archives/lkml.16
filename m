@@ -1,145 +1,287 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2057.outbound.protection.outlook.com [40.107.102.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51452289825
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746797843; cv=none; b=iNv+S64bqz3wI39S5HCn62VXIY4QwP9wT3fCCluF5Ra2vHerBk1K36E27IAjI0j1I1nuKCojrcmFMlv/4Fx6QSgRgJPPaxwGc+Ns32OXQ460Eu9HvbKRj0mPmdfz/qZOVTn6gtkOXKGT8FeenZPw3i2bG8a/gAvGGJCCSHXQm94=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746797843; c=relaxed/simple;
-	bh=qb+XEUmhlx3kw8QCiQxtMMbGJ5P0bCkJDO2IKyTgjpU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SrJ/Y/6pIgn2PgnDPQDmTnXEW2KetWtt9nJd5XdKKLcnVPpLJAdL2qSzkUt6FTpC/3G5j/HrU5RWbwiR+AJxv++dQ3fAhwGJNUhtTB8SDOy0DyANlEPNrQgCHiJrnDcbaxX4hUzp0e+oLLCzCQPpK3mU05COWn9HdviDye3Zh54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EXmS5b2n; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17232EAC7;
+	Fri,  9 May 2025 13:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746797884; cv=fail; b=tbMhfZUGy2qw89WAPyyzzHgswgIu4mWh+VG9QAqI+bIC8o1jZ3lnyoZct2XKZOdoKqqmPQkVBiYOPaCyOsZapgN5Z0O3dfJNblG8J3LVWJOAfkSoAXisGa4BLPvtehvQha0vmHVn4sn1cavbsb3yuql3L2H9ssaXcfOl+QdLBgA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746797884; c=relaxed/simple;
+	bh=8qTPdlZWL31+xM2wd29iHnFmlFZIuUm9YJ6/eg2MYw4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=nqgIYMlV21HgOllLpNaolWkPQHlWYcpatWtYL/NvEwk/2cN5vIun/GEj5OlFa/qSCKch+8BfWu73gQrd8VPa9OXNUUGuVJ8aV73S8FKXD4PFVT+RGYb6qW2vp0RMcYrW2hb+TRvSs4KJLJdQ47fU1F3Poywxn5ZlHdVYiek+CM0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=e2Is/zMt; arc=fail smtp.client-ip=40.107.102.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EXmS5b2n"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549Bi0wk010135
-	for <linux-kernel@vger.kernel.org>; Fri, 9 May 2025 13:37:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	iOOyMJiEKwo0E2wR4rThFjXKnQmgdnx4JZVsMPqv+MI=; b=EXmS5b2n/lmS2bQ4
-	CW2Vr9rM/WGS5/AkIlhPpJWUy0r1vsBGPIco4kOoiAKRUcJt3Xuuogh9cSa03eBk
-	jkoSun1dkKF94Y893RF9AX/sDMbhjToeY1r1EgLQU93dMeCYihv0wk+8dD06HooW
-	BEkL4P4spVMQtYwGdVETFGPNtMMTmkl8hXaI5uZruaH9rhmoT6dgsjvCh1MxCWmJ
-	13I+duS7m5+nslS5MJAvGx1volYuoG3PW6TUrecMMYqAXIPHcPOF/fc9DmDRBfX+
-	tyPiUl/68csQvb2Z6kFb1lZBbVdF5s31Sl0Z4TKP1a97Ewys3tFgxgsWaXBCRZNu
-	2w3BlA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp7cw9v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 13:37:21 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5560e0893so23185085a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 06:37:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746797840; x=1747402640;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iOOyMJiEKwo0E2wR4rThFjXKnQmgdnx4JZVsMPqv+MI=;
-        b=FZd9iyqP8PHfwNHY1FhnECPBtjFtSldU4MBHvyoimQxgHqGTTj2DcRmbTmvdxYausT
-         s470KL0JHurrlo/l9tpXWbxHq3HICKx3r7AFTw5LIkrwsanXtDFirYI07+MDTd35eKxe
-         mw8KvWoB/9BNUbWXGnT8c1O3tePVZWJvkFWK7ParwXzWKD/thlnWDrzbi5ucVZ2QTBE+
-         gwLAJUHAZt8GMV+Qt8XPr48CHiKrNtkyW6lPkP3zUAhF55HbRTUkKbu476vTPlB8B5gC
-         BLbUaTnmbxhBK4uZ5+rgW35GHCUblbNv/tLGKBXZOWRrHyVdUwul/ZV1oHZ0jq6UJ8tG
-         D9kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVpBR8BhFHk3hUSmrTNFDEtv0lCKpkEujqH86bCNEtXenWi6GToL1zMElCgjNwVx1/A5KKOqkftO6nCPbI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFEbAoBHuDd9a+D5Zs7GeLNKRQRkRkFYOufMWNcpmarLADmbMc
-	2CTaSYhVp3spWoPF9KPhBZPYV5kf+BGmgpJMRF/N8Nx6NuKpTSJxvp02siP/zO03gzK+iY+fvTN
-	68JxJ6PVHTM7L/mzXPvcEfOYqIDRGAA+Ez+hsqJKturrhTU8Erkxg0MtUP+ccemXywAwjRo4=
-X-Gm-Gg: ASbGncvHeLnsbjxvRa3jAJnUt0rfvRlRVu8JK7T0gATj4qER7FljK1OJNLXBEw6kHKW
-	/cUpY59U+A6tLfIzCu3tU83SVpFgz6Gk72dhuVeYycwPUieiUqeYtnu93R1sQSoPDQXSVYuRA/W
-	qOaTOB0a9fu6acd+Hc96shgcietW2xfzjO0oPbPOwuzRAXzr4H+tlBG7gQzjPfTVjvsR7BF1OXu
-	LprW4gwj1tZwJ/Cjnl05uFoL2pQV6u/Qzq9cTT9goP++ywMTqBnwn7qlujZh9lX/lrUz6HfU/mu
-	aneQ3v2/AGhE+yLRz6elAiISe3KDINVxOIBiVRf35YpSy5lmb7yQBNfJNqvkEssrDww=
-X-Received: by 2002:a05:620a:bcc:b0:7ca:d396:11af with SMTP id af79cd13be357-7cd011520edmr199008085a.15.1746797840076;
-        Fri, 09 May 2025 06:37:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEuHC/kx6/TH6m3sFD70X3TGhAwdHUaPhxaRjn4iosPvYhb5stgDjoSjqTnyk/F9Gh1p1qG5g==
-X-Received: by 2002:a05:620a:bcc:b0:7ca:d396:11af with SMTP id af79cd13be357-7cd011520edmr199005285a.15.1746797839676;
-        Fri, 09 May 2025 06:37:19 -0700 (PDT)
-Received: from [192.168.65.105] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197c5b9csm150979366b.159.2025.05.09.06.37.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 06:37:19 -0700 (PDT)
-Message-ID: <dedbfb2f-012a-404f-87d1-2f3cd04b0e74@oss.qualcomm.com>
-Date: Fri, 9 May 2025 15:37:16 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="e2Is/zMt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rkyxZUQm41uOdgs2Rt6/TrQSwDQ5c1Wm6d1Nemg4n8LDyiv0Ymqihrkt0ltmdZMw6jP4OavLcVim7G7Rm9ti4axMctizAr32EpeLnyXTkSgsPfx+MVdwxNasa7+BVO3R463mYZU/gV3mdiPNNPRmTs7QyBItMT8SiZzxvyskt+5WpO4WhuthhLq28Jb0b4V3cTKhf8MAYxR8xeJjXyzyVo3F0g/vD7aVVEH9zaAwgA/VpXqG5plWQ55XG0nNLXOjErAdVNmGCoHCqFt0bRMjI5NGAia6w5fbVbdY+tM9az7VmLowVc6m6SaDO8znAShSOs9MISuLJOulNzCWBZEu0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JesImqvwE/v9i+fhEI0+JVHpdB3VIfuTw+1rE2SWBWU=;
+ b=jIAG91xVCQmjGinuR8RUhLyGYqPv3rtzDIMEDWCq6n3Wq1T4obWk5sxP4tNHfE0OlVKHBuU8QJVEadZQgB6vbnO/NudCAALEOT1CtoicJil6Wfq4bGIwVBiEI50Uk/C3BUdFTjFErpi0nYZ7TxOCCew8UOiG4l9qqKTpA0dQrR92MrapcSE9LOI+zqAcu3SpVojmOSxyA2GTUCxIjRoEbkH9cM1y6Kzd+aexOYCp1pwCe1grPSrtJ1CV1Uhv4hjn74MKF2073f3+6dwa8hrodX4Ut78YCOnsELJ20+d4mnlrPodYYrAw5oI380LY1YO0B5b2ddtm6XCt5tkAawUIwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JesImqvwE/v9i+fhEI0+JVHpdB3VIfuTw+1rE2SWBWU=;
+ b=e2Is/zMtLopvqhKj4gKEHCyV8R6yADhlrMebtxWQOQt1Nrj5KNdjnre7XEr0KtajBlWuLL13tLmSA1mCGTNURizWu+pkNIdIaVajqgXqWER0vNSXGc0sIxd/LPcdQpZJaYp/ty9n0n6Gkuie6EU8NMTunw2TZBkpoTfqoOfiBBUaebakKn0TWuyEg1UJHujrvRZeNyieCKoq4T6JkHKxX/gz/CD4kc98GwuDLNLQ4q43iPaOFzDJ7HibBzxbJZE2XiTFDEiLh9yf0Flt5a0IZvwdeQqhi2QMKsv26RYMk/a1f1JVHLlQbvWf4FijZeKJjZ2LgGBA5CSlz1+YUn3Ujg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
+ by DS7PR12MB9044.namprd12.prod.outlook.com (2603:10b6:8:e3::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.23; Fri, 9 May
+ 2025 13:38:00 +0000
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9%3]) with mapi id 15.20.8699.022; Fri, 9 May 2025
+ 13:38:00 +0000
+Message-ID: <cd801698-d7cf-4e9e-aa01-5525f8687ab0@nvidia.com>
+Date: Fri, 9 May 2025 14:37:54 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] cpufreq: tegra124: Allow building as a module
+To: webgeek1234@gmail.com, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-tegra@vger.kernel.org
+References: <20250508-tegra124-cpufreq-v4-0-d142bcbd0234@gmail.com>
+ <20250508-tegra124-cpufreq-v4-2-d142bcbd0234@gmail.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <20250508-tegra124-cpufreq-v4-2-d142bcbd0234@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0378.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:18e::23) To SJ2PR12MB8784.namprd12.prod.outlook.com
+ (2603:10b6:a03:4d0::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFT 13/14] drm/msm/a6xx: Drop cfg->ubwc_swizzle override
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Connor Abbott <cwabbott0@gmail.com>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-References: <20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com>
- <20250508-topic-ubwc_central-v1-13-035c4c5cbe50@oss.qualcomm.com>
- <CACu1E7E9yU-cygZxBqVypP7aFkXJCNTfXA2uqdvU84mi9T51Xg@mail.gmail.com>
- <5f5e512c-ae0e-43aa-856f-06820ac4b147@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <5f5e512c-ae0e-43aa-856f-06820ac4b147@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDEzMyBTYWx0ZWRfX47CGt150aakt
- ULfvi5QE+A4BEBxyW8n569H5S11gat1jPVYMBPZj1QfiUctt3hAYRJ8TXbA+XTXJtBBRK5RgQCp
- heE/LL8zKyXkrS3HUtapL3mX0hNOY93gszM+HnqIfn2NanSoOSqWMmBtguN63ink66wpXJsV0iI
- VGavNDqS/TFTFldqt4Q1Vwttt+sspTGGff4m5WWJYJcHaRJ8ivVG1fs4wsDnqYfBHEwhvh9g4Hh
- Qr9R4h5vfUf+mL/ow30nXZOK/ILRJ2w1v9GrBF6uh9sqgyaHwpXV6uViAYoS35gdu9sPOzt0tCg
- 7TGjXJcTxyWZhL48BlkidhOPuPMKsmrDTfkXFagRuS8IfJRUI254tSbB5xOm85KM4JvR4y2/7FJ
- vdAdmLhIsLXEAmErt+IVoU+OnDaOnwbFgAafCmdXQNS04XlsH67Gcmrg5k4scE2F3TZP2Tge
-X-Proofpoint-GUID: Wl30aD993pFoCRGJobg1Tt9SqvIMYnAU
-X-Authority-Analysis: v=2.4 cv=B/G50PtM c=1 sm=1 tr=0 ts=681e0511 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
- a=sEJkFV_Ntms1zBwlKkIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-ORIG-GUID: Wl30aD993pFoCRGJobg1Tt9SqvIMYnAU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_05,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 spamscore=0
- suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 adultscore=0
- mlxlogscore=897 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505090133
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|DS7PR12MB9044:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6e24ce1a-c4ab-4c78-4b32-08dd8efeb6e7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|10070799003|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZzBwS0ZoMUlOQ3pTaFpsWUJqOTNYeUw2RHI4ZTVTdG9mOTJNd1VlUng1ZGti?=
+ =?utf-8?B?VHZCcGlTWVRJa05Tcmo3cnF5YUxrZGYzS2EySGFHQWh5UVd3eUFZR3YyUjJG?=
+ =?utf-8?B?TTBFY2tiLzQ2N0NiZjVCUlRMbUViOUNDaFFnTnRKRXlMdUpZRjZGTXRKbnJm?=
+ =?utf-8?B?MStaeVI1bERsUXZmVG95YldPRGNtR2RhUFFYeWJvK29aVmdoTnhXbXNTdXFU?=
+ =?utf-8?B?Wkd0WUZhTlNmRGFxUkxpenRjajVnK1RjUWxieFF2NktvZ3RCQ0tXVHJsYm14?=
+ =?utf-8?B?bGxRelpCbHc4NXo0bHRLZG5iMGYvWklvczF4aFhWWHUraTQ2aytNWmZuT2Ny?=
+ =?utf-8?B?d2gyMjJIUnZLYmxMWm03bFNOUFoxbncwWmYzUzMxWmwzaWVJVEFtNnFNYjNQ?=
+ =?utf-8?B?RzlpK2c5VTlrTDlBYzhMcjJQV3pHZFNFdy80amhPcmZNcEZwS2ViNElMcW5R?=
+ =?utf-8?B?QzN6OTNZNU40VlZzczUvTy9xQysxR2pwVG1SWnUvTWJxbUxzSFk3MU45KzhP?=
+ =?utf-8?B?YXpJMmtXMlArSzJBYkRiTlR2ZkpSQ3QyV256UDZ5NVFmT1JTdkE1bU9SVWtn?=
+ =?utf-8?B?YlZBWFRPNHBEN1B2czBPR3V0M3dpNFVhZ0RVWlBkTndXSVdZM2pOMERPM3VN?=
+ =?utf-8?B?UnRwRFFkZWE1bTB5VE5iV1kvVHNWdlRQVlRGQlpoMlEwUEpQUFcvVU1TOFdC?=
+ =?utf-8?B?bjlOamxZOVYvcjZLZWd3UlRNaFJENGtYVzFmZnZBcHBKb09ORWJFK2RxdjhI?=
+ =?utf-8?B?MnhoSGl6YzZQWEFBOTRneFQ3djQ0OGNtY2NsYW9nN214TnRTT0JBbkFVeFZZ?=
+ =?utf-8?B?NW5IdmFEdnpBTWgzMEd2T3czS3E2Q2l1N1dPUU5FNXArS21DYThON3BnZlFP?=
+ =?utf-8?B?N3M3RnFnTnVqdWVqUUtRcWhzS2ZJMjZhYit3MVRiaVVLVDNTTkxYNmxDcE5n?=
+ =?utf-8?B?RkROcE41U0pER3JoNXAxUmpNbVZnVkZWWmh0TTVLS1plaEs2T1FFc1NyU002?=
+ =?utf-8?B?cHZ1aUUvQzRPM1NmYm0rbVNSTjRGdUpOd1BhT0YzYmo1eG85ZzJ2RTRwaGRz?=
+ =?utf-8?B?Y0ovZ2M2c1daU1c1TVNlTGhIVFcyRDlOZFVad3cvQ2pUc2svT2ZBaW9VRG92?=
+ =?utf-8?B?VXFEREJld1l3ejJ4Z0tFMHQ0Q09tc2xoRzN6YjNCRTA0bXlpSlUxbmh3OGFu?=
+ =?utf-8?B?ZVY2KytZeGdtVjN3RmppSlkvWXZYanlxT0pIVTQ3Y1J6bmpDMXk0aTJCdXIv?=
+ =?utf-8?B?b01tRW5lNmtFdFhlZ2F5dFpkTE0yNlUzN2d6akFnRmg4b0FhYkx5eVZhWmVq?=
+ =?utf-8?B?a3JmN1RkWm9EVlNYdXplZzBsMW1jQXRsV2IyblgwNmVuZHVqU2RWRWVNSGdM?=
+ =?utf-8?B?a01LaFdGSmZGWjNsOVdFUmhPNGRNeUlSSjkyR3IzYkZGVkJlK1NacllZWGY3?=
+ =?utf-8?B?SjNrdHFzZ0FJTkZEcjNBbTAwR0hVRXp1citJZTZhS0VFOCt6L09pcCtadjFJ?=
+ =?utf-8?B?UE85TjY2YnJDZmZVdjJ4UENvRUM2SytNMCtPSXFRTkFYeG9BdEZqY3N5R0M1?=
+ =?utf-8?B?enByZERQVTRpODdaUWkyQ2xoeWF0YXp6SXlhTTRSR29OeFJ4djFSa2xiWG1T?=
+ =?utf-8?B?TElYVTZHNVVYY1JUa3R1azF4dkVraGVKMUoxcVR4cnRaV3IxYmkraTZLc1Zh?=
+ =?utf-8?B?TXYxVWlGc09ESFlTT1J1YmxOdCtSZ2daWmQwdzh2NlRDVFhLZFdFL2dCdTZx?=
+ =?utf-8?B?Y3lCYTNhT2lxa0p0U2RnbDY2NHJBQitJWGo2ZmNDdFMrRkJZK3ZhTXB1a2Js?=
+ =?utf-8?B?R29TN1huWDgvZDI2TURaaGxMTG5iaGxtbktLL3JSMll2Yjc3b3U3UFZ5R3dy?=
+ =?utf-8?B?T01NZFl3ZlRraXllb0tLQXZIMFlxd1ZPbllJT0xXcDRubUtGcjNyZkpGbno2?=
+ =?utf-8?Q?Ep+Gvn++wXA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(10070799003)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?M2NHS2ptY2laWCtDdTFtVW0vRGFGS1M3d2U0M2twWTZvbkZYcjlYdzd1SGx2?=
+ =?utf-8?B?cUtuT0FLVG5NR2ZHSXhvZ1BkWjA2NTdQdEFCY3lXK1NjaFRyNXE0dUF1c0dt?=
+ =?utf-8?B?SEpjYmIvZnV5K2wvYUNpRnNwYzg3Q2ErakpyREJ3SWtESHRCTkRacHZWMjRP?=
+ =?utf-8?B?YTlDSE1EUU1JTUNZSWpVTE4wQ0tEQXZQaHA4T2VnV0JpZnBpSXhaS3IxMkpX?=
+ =?utf-8?B?U2dpRksxeUhjUno4Z3RZYnppWXVzLzBFdFZpU2J3OUZaQzZSdWVGd3c1Zk5S?=
+ =?utf-8?B?aUhQd0RWRm1BTDRwWE1XV1FVV3k5NTdMSEtVVCtIWXlIWGt5elhWeE9hZlJW?=
+ =?utf-8?B?c2Uva0pVbHlWbTVFNE5wYXJ2RjF1ZnhQQ1BaVTVyN1JOWWdQUG5xMERMRDBw?=
+ =?utf-8?B?azg1Um9Zb2hYWlRkWmpkaytrVzJWb256VE45clgyOHVLZVFKb0dDZDRReVpH?=
+ =?utf-8?B?NC9URDdBOTFINTJ2L3Q0VTcwczhLQytSQm5zSGVuT3Nucklhdk9jSmZnUXla?=
+ =?utf-8?B?TmRyYzMyd3MwWlZKa0FQQWRxbEdhMFc3VmFRWEtDSmRQL3V4SEFFUU9YdmJJ?=
+ =?utf-8?B?WWdITktPVDdVdnR1K1ExU0JIcnU3WS9EM3AxSmpEbWhaa0JzOEJkdG5wa3pZ?=
+ =?utf-8?B?amhSWGM0WTlSVlpEOGpMRXRTYWFGbTJnSTZWWnhnY0xWUktIRHZoVXJ6ZElY?=
+ =?utf-8?B?MzltWmpnTkx5dEJGQWdSN1VZZzZwSitOS3RpZlBMUWhreHlTT2ZHMHM5ZDhx?=
+ =?utf-8?B?U1Fld0dkdGNOSGFtcC9Lbm4zeCtjTCsxMmducG1XSUtjdTdaOERvV2N5S1hw?=
+ =?utf-8?B?TXZSMVZYWG84OUJ6R2JpZVovb3F4aWlDN0FHSnEwck1US1M3eWc0TXJKdTNY?=
+ =?utf-8?B?MVFEdXNkWWNBbE1aRlVDZUtybEVZRGZyR2pKM1ZBdFVkemtnNFc3OUMxRm9j?=
+ =?utf-8?B?S0xURlpJb1h6Y24zQnVGUnVTa3JnYmRqL3I1amQydVkxZGszOStaNWJ5MlBj?=
+ =?utf-8?B?ek5IM21RcmtwcUdKMm0wa2hqVkppL3BKNi9BOFNaZDM5cEp4NDRWcHJ3S3Q5?=
+ =?utf-8?B?QjV2dGZjZFE3U3NqdGlqMmEvM2FuaDhGcFdQcWFWWVFYMWh5eXB1V2JzUzJF?=
+ =?utf-8?B?VWN4elVIZ292QjI0TXBVam5Da1IvR0xSaGpmbGEvbG1SQ1A0YVpRUHMvb2FW?=
+ =?utf-8?B?dEkzYm13akJJNlgrcUR0V0p2UkpMRG11ODFYcFpBcTljZGlJT2RScTliVnJi?=
+ =?utf-8?B?YzJYMlJ1VkdNT3JiWG40UVZMMVZYSk5kWVQrelQ5cHovQWtUNUJHejErNDZu?=
+ =?utf-8?B?UXJVVTR5L0MxSzBuSzVtdFJ6cEcza1ZHQ2YvcGU4UGJYNXV3bk1NTkJBRHE1?=
+ =?utf-8?B?MFVGb3BlQlVVK2FiYUpRakxvNCtIVlVRV3pVem50enRLUkJTZCtmMVJPR2Nq?=
+ =?utf-8?B?SjNnbUJ6RHZKL3B5dEhRVnBMNk1mVmwrUzRNK2NoODZkSkJxSjRhYkcxc0FO?=
+ =?utf-8?B?dUxlVkxKOGVWTHg0V0VTWUcwUzl5QW8rT0FvOWFhV3VVR0c2Sjkrb2dGMURr?=
+ =?utf-8?B?aUFJTGZRVUliQTNUaGs5SEhRd3BLa0tiQnd0ZU5xcUxVUklVZmI1ZE1JZTBP?=
+ =?utf-8?B?cUFiT00vUmx0SkxPWTJrZXhjRUQ4a2p3eEMvOU4wWUdPMXk1MWRxYWdyL0tU?=
+ =?utf-8?B?NFN6Skc5VUpPRm9rTXZJTUp3L3V2WVhLakJhNUNtR0pHQTFKVDJzditsVkln?=
+ =?utf-8?B?UFBXeEs4ZWovQm9DKysvdmc4akpqdFAzN1ZDR24wKzFhZk5QZFlXM1k5aEww?=
+ =?utf-8?B?L1NPZnRYbzZaZGRpaTk5UStXVDZVaGcybEJpK0hqdEhuMFRpYTVyOGNuYjlV?=
+ =?utf-8?B?TW94dVRIZUZEK2NyNWE5VFRCbVViOUNWNnVLRjZ0UWI5d3Ztd092c3RYMW01?=
+ =?utf-8?B?UGhudnpsbjFrS1c3RlY0bHRmblplMWRYZWtoUzJVVFZHVDZ5MXI5clJlTFg2?=
+ =?utf-8?B?WFFieTdvWUc1WFJyckx4Y0NEY3ZwTzZXVFZPQ0x5T1Z3WUx1eGtkQ2VYek1W?=
+ =?utf-8?B?aHVJdXpXR1N0WUQ1enJqWE5XV1ZNN2xxUHNTU1RYZStnL2loazVxZHN0S3RI?=
+ =?utf-8?B?VE9nenE2eWpUakdNdTRDVGRYOWFydFk4ZG5hWVBtMS9BZzJYZUowMDVGNGJZ?=
+ =?utf-8?Q?Gls4nCtPlgaCO2UjE+vy9uqq7Q51Su+ZxL+06m5Wjmbf?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e24ce1a-c4ab-4c78-4b32-08dd8efeb6e7
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 13:38:00.1517
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ti3cKRioSTRdhnxtxSt2tCQeTSdbqi+tfolezCNO3gr5kapWfzqzzDcz88aGmvDckIwrWSy/7Ytb/UXueXN1CA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9044
 
-On 5/9/25 3:17 PM, Konrad Dybcio wrote:
-> On 5/8/25 9:26 PM, Connor Abbott wrote:
->> On Thu, May 8, 2025 at 2:14 PM Konrad Dybcio <konradybcio@kernel.org> wrote:
->>>
->>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->>>
->>> On A663 (SA8775P) the value matches exactly.
->>>
->>> On A610, the value matches on SM6115, but is different on SM6125. That
->>> turns out not to be a problem, as the bits that differ aren't even
->>> interpreted.
->>
->> This is definitely going to break userspace, because the kernel
->> doesn't expose the UBWC version, instead exposing just the swizzle and
->> userspace expects that it sets the right value for older UBWC versions
->> before it became configurable (0x7 for UBWC 1.0 and 0x6 for 2.0-3.0).
->> It looks like the data for SM6125 is just wrong.
+
+
+On 09/05/2025 01:04, Aaron Kling via B4 Relay wrote:
+> From: Aaron Kling <webgeek1234@gmail.com>
 > 
-> Oh that's sad.. I'll drop this commit
+> This requires three changes:
+> * A soft dependency on cpufreq-dt as this driver only handles power
+>    management and cpufreq-dt does the real operations
 
-Wait uh, we have this data in the common config.. why would it break
-userspace?
+Hmmm .. how is this handled for other drivers using the cpufreq-dt 
+driver? I see the imx driver has a dependency on this.
 
-Konrad
+> * Adding a remove routine to remove the cpufreq-dt device
+> * Adding a exit routine to handle cleaning up the driver
+> 
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> ---
+>   drivers/cpufreq/Kconfig.arm        |  2 +-
+>   drivers/cpufreq/tegra124-cpufreq.c | 36 ++++++++++++++++++++++++++++++++----
+>   2 files changed, 33 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index 4f9cb943d945c244eb2b29f543d14df6cac4e5d4..625f6fbdaaf5fd774e3b0bb996eb7ce980da41ee 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -238,7 +238,7 @@ config ARM_TEGRA20_CPUFREQ
+>   	  This adds the CPUFreq driver support for Tegra20/30 SOCs.
+>   
+>   config ARM_TEGRA124_CPUFREQ
+> -	bool "Tegra124 CPUFreq support"
+> +	tristate "Tegra124 CPUFreq support"
+>   	depends on ARCH_TEGRA || COMPILE_TEST
+>   	depends on CPUFREQ_DT
+>   	default y
+> diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
+> index bc0691e8971f9454def37f489e4a3e244100b9f4..b6059c91f2474c56809c403eca94eacf51df734f 100644
+> --- a/drivers/cpufreq/tegra124-cpufreq.c
+> +++ b/drivers/cpufreq/tegra124-cpufreq.c
+> @@ -16,6 +16,8 @@
+>   #include <linux/pm_opp.h>
+>   #include <linux/types.h>
+>   
+> +static struct platform_device *platform_device;
+
+Do we need this?
+
+> +
+>   struct tegra124_cpufreq_priv {
+>   	struct clk *cpu_clk;
+>   	struct clk *pllp_clk;
+> @@ -176,6 +178,21 @@ static int __maybe_unused tegra124_cpufreq_resume(struct device *dev)
+>   	return err;
+>   }
+>   
+> +static void tegra124_cpufreq_remove(struct platform_device *pdev)
+> +{
+> +	struct tegra124_cpufreq_priv *priv = dev_get_drvdata(&pdev->dev);
+> +
+> +	if (!IS_ERR(priv->cpufreq_dt_pdev)) {
+> +		platform_device_unregister(priv->cpufreq_dt_pdev);
+> +		priv->cpufreq_dt_pdev = ERR_PTR(-ENODEV);
+> +	}
+> +
+> +	clk_put(priv->pllp_clk);
+> +	clk_put(priv->pllx_clk);
+> +	clk_put(priv->dfll_clk);
+> +	clk_put(priv->cpu_clk);
+> +}
+> +
+>   static const struct dev_pm_ops tegra124_cpufreq_pm_ops = {
+>   	SET_SYSTEM_SLEEP_PM_OPS(tegra124_cpufreq_suspend,
+>   				tegra124_cpufreq_resume)
+> @@ -185,12 +202,12 @@ static struct platform_driver tegra124_cpufreq_platdrv = {
+>   	.driver.name	= "cpufreq-tegra124",
+>   	.driver.pm	= &tegra124_cpufreq_pm_ops,
+>   	.probe		= tegra124_cpufreq_probe,
+> +	.remove		= tegra124_cpufreq_remove,
+>   };
+>   
+>   static int __init tegra_cpufreq_init(void)
+>   {
+>   	int ret;
+> -	struct platform_device *pdev;
+>   
+>   	if (!(of_machine_is_compatible("nvidia,tegra124") ||
+>   		of_machine_is_compatible("nvidia,tegra210")))
+> @@ -204,15 +221,26 @@ static int __init tegra_cpufreq_init(void)
+>   	if (ret)
+>   		return ret;
+>   
+> -	pdev = platform_device_register_simple("cpufreq-tegra124", -1, NULL, 0);
+> -	if (IS_ERR(pdev)) {
+> +	platform_device = platform_device_register_simple("cpufreq-tegra124", -1, NULL, 0);
+> +	if (IS_ERR(platform_device)) {
+>   		platform_driver_unregister(&tegra124_cpufreq_platdrv);
+> -		return PTR_ERR(pdev);
+> +		return PTR_ERR(platform_device);
+>   	}
+>   
+>   	return 0;
+>   }
+>   module_init(tegra_cpufreq_init);
+>   
+> +static void __exit tegra_cpufreq_module_exit(void)
+> +{
+> +	if (platform_device && !IS_ERR(platform_device))
+> +		platform_device_unregister(platform_device);
+
+The device is unregistered in the remove. Why do we need this?
+
+> +
+> +	platform_driver_unregister(&tegra124_cpufreq_platdrv);
+> +}
+> +module_exit(tegra_cpufreq_module_exit);
+> +
+> +MODULE_SOFTDEP("pre: cpufreq-dt");
+>   MODULE_AUTHOR("Tuomas Tynkkynen <ttynkkynen@nvidia.com>");
+>   MODULE_DESCRIPTION("cpufreq driver for NVIDIA Tegra124");
+> +MODULE_LICENSE("GPL");
+> 
+
+-- 
+nvpublic
+
