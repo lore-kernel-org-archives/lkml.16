@@ -1,62 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA2522D4FD;
-	Fri,  9 May 2025 16:13:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0E91EEF9;
+	Fri,  9 May 2025 16:13:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746807204; cv=none; b=nOR0xE8xuOSgEuyojFAVADzmATbN2cqDlZc3HlTlWSDogprZaur6v47WHYvS6/SdXdvtp6eyLre9iQfNUyhBzR+XyKwJxgA0AniNqRuo4DbbZ+1YN6kI20SN27ey3TLbm5I+BMilUITonbptUD4CygCmPjDyquGdaEs5rc5iCxc=
+	t=1746807229; cv=none; b=dSDjTCzxpmCGnStXlm3XUhZnUKm1wrvmdA1vRXQN1l+ahoIpJQqesYujj3IHQ0SDvarnFLbz7okZC3BKTALoAfx0D9x2NowlP8SB+wFFjLFkc4ds7ddwul5BltoDrKDYbtR70rV+69VaHbE9khlIw031nHmNNwyE+C4gDaNr7r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746807204; c=relaxed/simple;
-	bh=90WLMcjZaIacrXRziNVygPsGLxcvNTB/TqZUVJKgH44=;
+	s=arc-20240116; t=1746807229; c=relaxed/simple;
+	bh=uFFdv/hSTyJmM0f7WK/XFsk1+vMgNlfUpcrghzEP2XE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AjeX9QgXDZInVEhrZ4XH8fwi+8dK33MazgfMZh+sIDtlXA7ZUwSocQ4iFV+kIoV2RHo1stj+x2CRw0iy7x7cRXvepf9FNAvZar08Q+5vmCF0PoJyZJjODol+k5opaSlwMHaLN1g9vIwY3sY94aVWZbYLQQvmYh59f6okEXIu4X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hg6v/O29; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DCplkAyDtmfy2JhHCz3q6TeCtIkOgSSjv8zEGMZevjavMNPjmCM+RTqCl2J1tRCTodtgB+k187mpkjjY1IkeGNN+kI0QPMxYFxBw0K2KAId0gbj9J/hn7BfNSGKcuPRBbGNsW5hB8Abtl9r8WVzOaiXRQG8AE+lLZoEdB/fO6Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wi2eOpED; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hg6v/O29"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 839FEC4CEE4;
-	Fri,  9 May 2025 16:13:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wi2eOpED"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23388C4CEE4;
+	Fri,  9 May 2025 16:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746807204;
-	bh=90WLMcjZaIacrXRziNVygPsGLxcvNTB/TqZUVJKgH44=;
+	s=k20201202; t=1746807229;
+	bh=uFFdv/hSTyJmM0f7WK/XFsk1+vMgNlfUpcrghzEP2XE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hg6v/O29HMpNA5LynknPfbR7Jzd0aPeq7YIiIAiy9O+1kWoEUj/BwVOpNWfPshrTg
-	 T3nj7Ca/OgY4Syrhu1SYrf9nyc1pgSVvImGTQ+zWRRbJqH1Ac0m88PeJUuhDl1MaPs
-	 GO+td8v60SirbtsGf2FhP0aPU1TM8tnPm0FfzTGxYoud6oSYH6hGy0dq80OwUxIwLi
-	 sybpdFa8W36A12ebvr2uBmItdXLoxwswAF3X2GBG4LItxeBA8AYDoHTgWVK3H/VQKJ
-	 yAx8cL70zc3WY5MTmZfEQZTvkgrkSkaudQ7ksKsneuYfVydjegvFFlaqIa/zjUO4RM
-	 RCghvCno/b1tw==
-Date: Fri, 9 May 2025 09:13:22 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>, Kees Cook <kees@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	rcu@vger.kernel.org, linux-mm@kvack.org,
-	linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH 09/12] sysctl: move cad_pid into kernel/pid.c
-Message-ID: <aB4polMnZXRCqcDD@bombadil.infradead.org>
-References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
- <20250509-jag-mv_ctltables_iter2-v1-9-d0ad83f5f4c3@kernel.org>
+	b=Wi2eOpEDOyXzvkIhsnn6NHqrfcEmbeGXEIQxGP06AbyFg/9w52FzuVFmEtkHfPv6H
+	 5VtwnQEdkojBMjZsp0GqNcfFVJd01ZHPOyzNHL4Af363bJ5W+9x8FNRHtEOzb9Mzf3
+	 PzglM4ThFEKfd3wNua8iWe1ofWa9gay+WcN4iCcLHAskN/s6VLjwvJ84SGw7GRNMEI
+	 eyLBeBpNYr9S1GEuN7Lv40NzLZM6MiL3ExOw/EXTxXnH9aR3JsfkjhIpx1YdAmonjc
+	 K+v2fHcIwz9v7stgsf2iSmpxG0x84tBxx7WopbrxrnHH2Vnvht7W8NxYeV0Ptt7Vyp
+	 yFBh/VKdsV3xg==
+Date: Fri, 9 May 2025 11:13:47 -0500
+From: Rob Herring <robh@kernel.org>
+To: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v8 1/2] dt-bindings: pwm: sophgo: add pwm for Sophgo
+ CV1800 series SoC
+Message-ID: <20250509161347.GA3649553-robh@kernel.org>
+References: <20250509-pwm_sophgo-v8-0-cfaebeb8ee17@bootlin.com>
+ <20250509-pwm_sophgo-v8-1-cfaebeb8ee17@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,20 +53,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250509-jag-mv_ctltables_iter2-v1-9-d0ad83f5f4c3@kernel.org>
+In-Reply-To: <20250509-pwm_sophgo-v8-1-cfaebeb8ee17@bootlin.com>
 
-On Fri, May 09, 2025 at 02:54:13PM +0200, Joel Granados wrote:
-> Move cad_pid as well as supporting function proc_do_cad_pid into
-> kernel/pic.c. Replaced call to __do_proc_dointvec with proc_dointvec
-> inside proc_do_cad_pid which requires the copy of the ctl_table to
-> handle the temp value.
+On Fri, May 09, 2025 at 11:45:43AM +0200, Thomas Bonnefille wrote:
+> From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
 > 
-> This is part of a greater effort to move ctl tables into their
-> respective subsystems which will reduce the merge conflicts in
-> kernel/sysctl.c.
+> Add devicetree binding to describe the PWM for Sophgo CV1800 SoC.
 > 
-> Signed-off-by: Joel Granados <joel.granados@kernel.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
 
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+As the sender, you have to add your S-o-b as well.
 
-  Luis
+Rob
