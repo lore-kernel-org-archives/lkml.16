@@ -1,119 +1,135 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F096278F34
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E517D255F22;
+	Fri,  9 May 2025 11:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746791433; cv=none; b=uhdKesm+3ChhKwLCcjBJYhg3e7J+9jeayIsQS1YfOwgPr6R97cLAGfbsRdWpPRoVLm2LVc2mBkUbBZFqdVzkzKZ6u5h+igPpcjnt6TPid0NEEnA9NKfj37p97OgZZs6zU8dPb0UEUkq4JJhN5WvLQt9z/dU7k7Vk/P+BxKGsexw=
+	t=1746791467; cv=none; b=ODyr8ow1moIrY5/eFG9zAbOwL065PkwZZv1Tq5SUW8glfrlBZ6CUgBG1m3brzt4tk7LJBx5GTR3sDBfqUg91c2D2+C0g9otQEj6UX/z1zcdqKklZpLmoukclMs7E+csaAVdV5wSHzJddlh9q2PbkJ+2LEHqvMdoh3U9WZKDcJ3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746791433; c=relaxed/simple;
-	bh=6bSX9UNo+ut9uhyeztVWH22aZ+WPLHdTGC7kWwCUCXg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dWhcnopxQ7hUbTCUwYAftTepTwC8kzqLm00FDD/XrIqVRfBE2mvEjK+Vfv3fMBZvYSOcv0a/uDrHDcKigl5MCQUY7Pu96ySGH+vtzBbuzZU9nrTpE9wiaqLAHSffB/G0ZK1fOI/o+bRAjmDHktr/BeXRTT8hDgO9Gwm0eMQpIp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rDMP5Xzr; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746791467; c=relaxed/simple;
+	bh=xWAVJ7WXntaXs6R6b/9gxW02yhTWzLotIqYjdIhWdpk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=hPHVu/IUX0hMHk3So7sbYbUy5nLBTnDQ1oYAGBrhk6GYJa/Cl0xR0IIUNAaZG1BLShXa/Fu2T81xQRyc4q7IsdSMjybPiIRU57NMkaZ0K9wFof4Xd8EbpOe6wYS2TlWdmnWDkWPpT2gA5n3R5B/5+PQ1L1+/JCeAbRdhRssUl2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=P2NFZNQi; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rDMP5Xzr"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54298ec925bso3078422e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:50:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746791430; x=1747396230; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6bSX9UNo+ut9uhyeztVWH22aZ+WPLHdTGC7kWwCUCXg=;
-        b=rDMP5XzrQ88umTP+9l67/zJpEOw9Tf5QRqmG8aid0Jm776jOYiSyw2ws4geCLljooS
-         JCnksf09yvbYgNnZrOpyZ4cmJktwmGqdGkqo2vEo5Io5P24KiCjl3aKESEHxnLLWs1NH
-         2lUA37eKUFR5c5QlKodJORWKFRN6wN+LCC8S3RKJcsImFCoknUUjmZiIZOSlyaFI/ftQ
-         iz02M+0jkawlqKfEL0vbGX54kzdzRkX5lP4Sge71epwG0v5DENaKpj/P1FEBxYwk9PeI
-         eRdTUV4XUD5FraSmI5vLEuJ+K5PdCjHH3uAAxFV/2TVnQpF1qz7ZGwUW01bx2ByhIc/c
-         LIFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746791430; x=1747396230;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6bSX9UNo+ut9uhyeztVWH22aZ+WPLHdTGC7kWwCUCXg=;
-        b=VIbfMaH4ZJaWwszcHqonE4UKazVwx/hpE4UY/0/BlZex8TjnTHeXAzrEMYOn25qA+c
-         yQFmzFHhN9tApDcc3KDlvTyZ125FPHbgumIqB9cYMjv8n4G2Iks7hObErhT/3q6OCi/w
-         Ycd6GEF+tAigKsac13jdoaKvqEDYECkZYRsZnN9D+a7iFlok7E0BqjYzdpaqBsPw9OIM
-         K328qzQSueH4A7djcKxg+tX26fJeEExfZlisJDb6RcyjOi/asZLy9mZJLzZ1+griwRvQ
-         FCcQen6Sv050czWdDf/w08APs1UXAOwyt2RIS/5fHyS+ESE3Inw73GLssk70PJqsg7GE
-         sAXg==
-X-Forwarded-Encrypted: i=1; AJvYcCVBGakDcaxJbffXLvmc/UFYzmjKveDkbvsgWagUIHSBEzTY8ymTnfo2DWw9+psXWj0r93ulc68P+96JBpo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcPQmOHvX5fLsmLG47hhMSe8yFFUuPLl9soOBGcYrI3n2eVlIZ
-	OI0jSFTvGMwwuYogwwxC1A1TlPteiX9ouqRDIqj7NujUT/vrDjIZNaDwp3xhqAV5Byldz5nRCpz
-	Wnj4oSvN1vIwL2698aYGZI7ZfDwoaBjUXdEL6uw==
-X-Gm-Gg: ASbGnctzxXrXadThFRSAU3ua7QNSkhKSJKE2hlkvFrZmY0NGNKZWSepICmw/jGuIKXG
-	SyWPEpixX/rzFaigl6FLCr6knbGKKNNUPAbXWnsek/qDBZDi0WlJtM6hUOO0d/DQUD+UuByaoGQ
-	wh5kjwk2XEvRWrZ2uncD67WsiQ8dv+0zk1
-X-Google-Smtp-Source: AGHT+IE9OA/TgX88UK8wnm39DMsSy6I7xruaMSROXFg88YbOwzBbcaNlmJPRpQ8Ckx3l33XEBcNwePAgT7TtPdM2+0E=
-X-Received: by 2002:a2e:a991:0:b0:300:26bc:4311 with SMTP id
- 38308e7fff4ca-326c4575642mr10757241fa.18.1746791429976; Fri, 09 May 2025
- 04:50:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="P2NFZNQi"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549BOjgC011683;
+	Fri, 9 May 2025 11:50:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	/wcjyC4RU0XzRhe03o9O3Yoll6G1rZmCSFvV0iAa+k0=; b=P2NFZNQiPeg6rBnl
+	apvrkTjvEkEWeX7mlYc62KKmAquKX3ChxF0FtRZEmDBPm0qgzxGNFj6jQ7nxdwc5
+	GEMoVTKOaejFavPOROH+rwO2kZ0YC9ZtexH70/1pbEF7jYtIqc7xlIhr8ZMnv2Sz
+	feSLhKQnzxCs44/BxhNy2ENtPoL7ceCqlMBeE0KI+igmTsvI5iHdjW31+qAPYU4F
+	0nZShgM1HOVpgvB9U8E3f/hm2rY0SEgm2jG5WEp4e1RkdhG3zN4CvhQfy9wSsiZG
+	dPoq0V1O/3/n8tkDd1KSbNLSeua6ZOld2Yn3kDGQe4HrYTuhAu/Plpd0ntOFFnjw
+	3V6ijQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnpmmhsd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 May 2025 11:50:44 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 549BoibW009832
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 9 May 2025 11:50:44 GMT
+Received: from [10.216.32.234] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 9 May 2025
+ 04:50:38 -0700
+Message-ID: <584c9160-165c-467a-9ef0-1b6fd0441012@quicinc.com>
+Date: Fri, 9 May 2025 17:20:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424-01-sun55i-emac0-v2-0-833f04d23e1d@gentoo.org>
- <20250424-01-sun55i-emac0-v2-3-833f04d23e1d@gentoo.org> <CAGb2v66a4ERAf_YhPkMWJjm26SsfjO3ze_Zp=QqkXNDLaLnBRg@mail.gmail.com>
- <20250425104128.14f953f3@donnerap.manchester.arm.com> <CAGb2v65QUrCjgHXWAb72Sdppqg1AUxXyD_ZcXShtkRSHCQBbOg@mail.gmail.com>
- <20250425160535.5a18adbb@donnerap.manchester.arm.com>
-In-Reply-To: <20250425160535.5a18adbb@donnerap.manchester.arm.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 9 May 2025 13:50:18 +0200
-X-Gm-Features: ATxdqUG6U2bPxTcfQiBy-oW1Lju29rGeV9-TYLkpQrHjbRn14HSqGi03f0yvO10
-Message-ID: <CACRpkdZH+NnP0-GkLe+nHK-Oi_Z=FzPaM=k1U-gZddp+P2+DTw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] arm64: dts: allwinner: a523: Add EMAC0 ethernet MAC
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Yixun Lan <dlan@gentoo.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Maxime Ripard <mripard@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Corentin Labbe <clabbe.montjoie@gmail.com>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 11/11] scsi: ufs: qcom: Prevent calling phy_exit before
+ phy_init
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <manivannan.sadhasivam@linaro.org>,
+        <James.Bottomley@HansenPartnership.com>, <martin.petersen@oracle.com>,
+        <bvanassche@acm.org>, <andersson@kernel.org>,
+        <neil.armstrong@linaro.org>
+CC: <quic_rdwivedi@quicinc.com>, <quic_cang@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>
+References: <20250503162440.2954-1-quic_nitirawa@quicinc.com>
+ <20250503162440.2954-12-quic_nitirawa@quicinc.com>
+ <104e863f-a5c6-432d-8f65-0fd87602b288@oss.qualcomm.com>
+Content-Language: en-US
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+In-Reply-To: <104e863f-a5c6-432d-8f65-0fd87602b288@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=TpjmhCXh c=1 sm=1 tr=0 ts=681dec14 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=EUspDBNiAAAA:8 a=IgDchYdROQb07t49yvYA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 7GUXL9fFmOILJ7u6gsJL1VsLiBh9R1dg
+X-Proofpoint-GUID: 7GUXL9fFmOILJ7u6gsJL1VsLiBh9R1dg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDExNCBTYWx0ZWRfXxFnx14iNA0W2
+ ZtlgknrmvaXtajTYoq0RWWHYb3Q67e3x6P0SR7AwVCz5pfTAaI6dpxLMnm+/rh8VvPJA4LkcHWv
+ fXUw3RVN3zT+T3ElvN21TlP9fR+wUlkDOSBJQ1TgoASSNUQTbHtnw6I+weDxwjgdVlw47yoD4I2
+ vBDmMa0iU6ONl9mrkcgGb867p7NkQQiQLyIVcPStQJzSF7S1DuwW/vSN1TNUScNb22DwCVwl6cq
+ bT6I+HA6rZPMe1SWxxQxrL/mXJ301Ln99yo4apjeLWQnxp5h055ZCoItKysYP171bkh82+fSSJE
+ x6YjfNIDsREEGPYoitl0d7oqfCl8tQNokOzxHAfuLHAB8vDeibU6zD1s6e4JfFBfXBSCUWMNzEa
+ d5Q6KZ2u7SivGupjYRf+hQpsczQW/kvrRWT6VhRowZLgBqxWj0QsLvSwUA0380UfUY0troG/
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_04,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 suspectscore=0
+ clxscore=1015 adultscore=0 malwarescore=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 mlxscore=0 phishscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505090114
 
-On Fri, Apr 25, 2025 at 5:05=E2=80=AFPM Andre Przywara <andre.przywara@arm.=
-com> wrote:
-> On Fri, 25 Apr 2025 22:35:59 +0800
-> Chen-Yu Tsai <wens@csie.org> wrote:
->
-> adding LinusW for a more generic pinctrl question ...
 
-OK!
 
-> > There isn't any assumption, as in we were fine with either the reset
-> > default or whatever the bootloader left it in. However in projects at
-> > work I learned that it's better to have explicit settings despite
-> > working defaults.
->
-> I totally agree, but my point was that this applies basically to every
-> pinctrl user. I usually think of the bias settings as "do we need
-> pull-ups or pull-downs", and if nothing is specified, I somewhat assume
-> bias-disable.
->
-> So I am fine with this being added here, but was wondering if we should
-> look at a more generic solution.
->
-> Linus: is bias-disable assumed to be the default, that pinctrl drivers
-> should set in absence of explicit properties? Or is this "whatever is in
-> the registers at boot" the default we have to live with?
+On 5/9/2025 5:08 PM, Konrad Dybcio wrote:
+> On 5/3/25 6:24 PM, Nitin Rawat wrote:
+>> Prevent calling phy_exit before phy_init to avoid abnormal power
+>> count and the following warning during boot up.
+>>
+>> [5.146763] phy phy-1d80000.phy.0: phy_power_on was called before phy_init
+>>
+>> Fixes: 7bac65687510 ("scsi: ufs: qcom: Power off the PHY if it was already powered on in ufs_qcom_power_up_sequence()")
+>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+>> ---
+>>   drivers/ufs/host/ufs-qcom.c | 1 -
+>>   1 file changed, 1 deletion(-)
+>>
+>> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+>> index a7e9e06847f8..db51e1e7d836 100644
+>> --- a/drivers/ufs/host/ufs-qcom.c
+>> +++ b/drivers/ufs/host/ufs-qcom.c
+>> @@ -482,7 +482,6 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
+>>
+>>   	if (phy->power_count) {
+>>   		ufs_qcom_phy_power_off(hba);
+>> -		phy_exit(phy);
+>>   	}
+> 
+> You can also remove the {} now
+Sure will review while posting next patchset.
+> 
+> since this is a fix for existing issues, which I don't think has any dependencies
+> on your other changes, please post it as the first patch so that the maintainer
+> can pick it up more easily
+> 
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> Konrad
 
-We have never hammered down the semantics of that, so it's a bit
-up to the specific driver how they implement it (yeah a grey area...)
-
-There are many drivers that are carful to not touch register boot
-values but others who set them to some default, and people
-have different opinions on that.
-
-Yours,
-Linus Walleij
