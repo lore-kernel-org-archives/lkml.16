@@ -1,56 +1,50 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB152367B1
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E69C4B1E5C;
+	Fri,  9 May 2025 16:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746807721; cv=none; b=I/wNlKUXlFVpw89Ny25mUDGeA3mtRSPc28wp/JkywS+paiBn4IrRx4BmtVZSrGZ4NJNDUYgc4mq9PTVLKIsrnahYTYsCUujdKM9F7zarUA/w7qyQe6ihpQL/Rt6sT1jfuVBeguGvBrygVGzKuMRPtxCt4VBzOzWy2LBNJdssyv4=
+	t=1746807948; cv=none; b=rfocGJWBOf4VI2sM6QbxRRuYihVnOR/ZmFTDomo+HrExZeM5+nPF6PjSKT4IqixAI4J7CYGvFGH8Vf/LvNjkB92xmGFZPwX8jTj5Dslnc/zdCDxAAJvGk5Jo21RlD131lAPrK6aK5oUQRbaZDV8t2vW4o3GLH7Lw6KI31g8RPSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746807721; c=relaxed/simple;
-	bh=rEj6hWkcGPaha1zLvnzaxpRj8FK8vW30ghmy4w7SLfQ=;
+	s=arc-20240116; t=1746807948; c=relaxed/simple;
+	bh=pWBgsTEX8GV7+i3t+seP0AVeCM2U+ftwb9bTfHMqsr4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k95EoIvvM6qRVwZkq21pqXANNkHWCIbuj2ZR0nJ35Tfeaq2F+RGgBiCjXHuQhfLCLeuF/HClkGHigN8kiRxINphX4zSWklFtdgrYG2BKj0d286B7K0qiDfuGuwxB4u40SET/PJT2yvZmT5Xx6xF9/owkfDHnYInjzPSSLbFWHP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=yJbb5Pv2; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+	 Content-Type:Content-Disposition:In-Reply-To; b=iiFwMaFG1hxb4ILsbUMcJYwQYtsR68lP80ddFdNB3bh9IDT3XnuhDd7mKFlpopy4wBhNMNr0PNdNfMvWsGA/wbSqbKRSkk+KuNFlSngCucqyqgOKd0OSEALYgarriBOIryLg6yOxenz/zgEz6DojumNBUqMwf3p7Q+XpRkNSkHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fjckqt4f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="yJbb5Pv2"
-Date: Fri, 9 May 2025 12:21:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1746807707;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oCay4j7C41YPfPP4dRmjz27ecUbg9JIQQ0y/wWYi3Yk=;
-	b=yJbb5Pv23OL+WAcAvl05L189sakxNU2wSigqZjyKPBKo6TN/zVF3XYwjSGhv/nOUsiEjL/
-	Tp8tSHES30I1yjcQmteNELFrqGV/wMzPapMmE2mcb5VxV89kHpNkfAWq0W5a43dR7bQeR3
-	tj08z9iGNCbD3M+FVqOr5t9j3yQAw8MY5HnYsz+l2fxXFwkjNx4XLdsQjaR13NvfRce8d1
-	NmvMvyE+Cg/sJgIBOCWV6X1i6kZ5PwdUwMWq5Wr7lzoRGnFI38esKrtfgKKKRoJSgurIpD
-	ac11fOF5/1DfHQHvguwizyJTVaY0X11phlrinCUlPVjjthsGKDpUWi0jK4cwVw==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-To: Sven Peter <sven@svenpeter.dev>
-Cc: Janne Grunau <j@jannau.net>, Neal Gompa <neal@gompa.dev>,
-	Hector Martin <marcan@marcan.st>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fjckqt4f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B95B4C4CEE4;
+	Fri,  9 May 2025 16:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746807948;
+	bh=pWBgsTEX8GV7+i3t+seP0AVeCM2U+ftwb9bTfHMqsr4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fjckqt4ff3yPZ9Z10wyhN9E27yWp8UPgNgf6MpU6+T/JD774nJHwwYaNW4sDl/SIv
+	 tfg1KoT010YGjS4DsOoZ9apCkuuoMfDPErP3HTTF2W39sCgP4tBvFreluPtO5wau4d
+	 2uhFEKXxRJl3DYzqRfZYf6lOtv1XFS4TpcbM+wktnwpetlf4PeuLGT6Bkqc9DgfxTi
+	 QgdakWKRAagwX8iDrcCZy7OUbgA0CasETjjnktKwlZ1fLZ3yogIzz/V+0gl87d4Nrh
+	 B1JmU4CKusHRWfFkwq077jjNOpgz//HQO7ovyXp1sTub4/91Pzypmi9kQQJEqm1NwS
+	 oaDsGvN7jKTFA==
+Date: Fri, 9 May 2025 11:25:46 -0500
+From: Rob Herring <robh@kernel.org>
+To: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Cc: linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
+	Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	linux-amarula@amarulasolutions.com, Abel Vesa <abelvesa@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Russell King <rmk+kernel@armlinux.org.uk>, asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 6/9] power: reset: macsmc-reboot: Add driver for
- rebooting via Apple SMC
-Message-ID: <aB4rliBFrUWWuNQ2@blossom>
-References: <20250503-smc-6-15-v4-0-500b9b6546fc@svenpeter.dev>
- <20250503-smc-6-15-v4-6-500b9b6546fc@svenpeter.dev>
- <aB39iJm9759RYAKW@blossom>
- <196f84ea-6567-4fe3-9bee-743bb289223e@app.fastmail.com>
+	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org
+Subject: Re: [PATCH v12 16/19] dt-bindings: clock: imx8m-clock: add PLLs
+Message-ID: <20250509162546.GA3704130-robh@kernel.org>
+References: <20250424062154.2999219-1-dario.binacchi@amarulasolutions.com>
+ <20250424062154.2999219-17-dario.binacchi@amarulasolutions.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,25 +53,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <196f84ea-6567-4fe3-9bee-743bb289223e@app.fastmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250424062154.2999219-17-dario.binacchi@amarulasolutions.com>
 
-> >
-> >> +		mdelay(100);
-> >> +		WARN_ON(1);
-> >
-> > ...What?
+On Thu, Apr 24, 2025 at 08:21:46AM +0200, Dario Binacchi wrote:
+> Though adding the PLLs to clocks and clock-names properties will break
+> the ABI, it is required to accurately describe the hardware. Indeed,
+> the Clock Control Module (CCM) receives clocks from the PLLs and
+> oscillators and generates clocks for on-chip peripherals.
 > 
-> This is done in a few drivers in drivers/power/reboot. If we haven't
-> rebooted after 100ms something's wrong with SMC. I'll add a comment.
+> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
-> drivers/power/reset/tps65086-restart.c:	WARN_ON(1);
-> drivers/power/reset/atc260x-poweroff.c:	WARN_ONCE(1, "Unable to power off system\n");
-> drivers/power/reset/mt6323-poweroff.c:	WARN_ONCE(1, "Unable to power off system\n");
-> drivers/power/reset/gpio-restart.c:	WARN_ON(1);
-> drivers/power/reset/regulator-poweroff.c:	WARN_ON(1);
+> ---
+> 
+> (no changes since v11)
+> 
+> Changes in v11:
+> - Fix conflict while rebasing on master
+> 
+> Changes in v7:
+> - Add 'Reviewed-by' tag of Krzysztof Kozlowski
+> 
+> Changes in v6:
+> - New
+> 
+>  .../bindings/clock/imx8m-clock.yaml           | 27 ++++++++++++++-----
+>  1 file changed, 21 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/imx8m-clock.yaml b/Documentation/devicetree/bindings/clock/imx8m-clock.yaml
+> index 4fec55832702..e83f08abd44c 100644
+> --- a/Documentation/devicetree/bindings/clock/imx8m-clock.yaml
+> +++ b/Documentation/devicetree/bindings/clock/imx8m-clock.yaml
+> @@ -29,12 +29,12 @@ properties:
+>      maxItems: 2
+>  
+>    clocks:
+> -    minItems: 6
+> -    maxItems: 7
+> +    minItems: 7
 
-Ohh, duh, ok. Cute.
+Increasing the minimum entries looks like an ABI break to me. The .dts 
+files not being in linux-next confirms that (from 0 warnings in 
+mainline):
 
-Can we do the WARN_ONCE(1, "Unable ...") pattern? Then we don't need a
-comment since the warn message makes it obvious.
+arch/arm64/boot/dts/freescale:859:50
+    122  clock-controller@30380000 (fsl,imx8mm-ccm): clock-names: ['osc_32k', 'osc_24m', 'clk_ext1', 'clk_ext2', 'clk_ext3', 'clk_ext4'] is too short
+    120  clock-controller@30380000 (fsl,imx8mp-ccm): clock-names: ['osc_32k', 'osc_24m', 'clk_ext1', 'clk_ext2', 'clk_ext3', 'clk_ext4'] is too short
+     61  clock-controller@30360000 (fsl,imx8mm-anatop): 'clocks' is a required property
+     61  clock-controller@30360000 (fsl,imx8mm-anatop): 'clock-names' is a required property
+     60  clock-controller@30360000 (fsl,imx8mp-anatop): 'clocks' is a required property
+     60  clock-controller@30360000 (fsl,imx8mp-anatop): 'clock-names' is a required property
+     36  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[35], [36], [37], [38], [39], [40]] is too short
+     36  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[24], [25], [26], [27], [28], [29]] is too short
+     32  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[34], [35], [36], [37], [38], [39]] is too short
+     28  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[22], [23], [24], [25], [26], [27]] is too short
+     26  clock-controller@30380000 (fsl,imx8mn-ccm): clock-names: ['osc_32k', 'osc_24m', 'clk_ext1', 'clk_ext2', 'clk_ext3', 'clk_ext4'] is too short
+     17  clock-controller@30360000 (fsl,imx8mq-anatop): 'clocks' is a required property
+     17  clock-controller@30360000 (fsl,imx8mq-anatop): 'clock-names' is a required property
+     14  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[44], [45], [46], [47], [48], [49]] is too short
+     14  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[23], [24], [25], [26], [27], [28]] is too short
+     13  clock-controller@30360000 (fsl,imx8mn-anatop): 'clocks' is a required property
+     13  clock-controller@30360000 (fsl,imx8mn-anatop): 'clock-names' is a required property
+     12  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[26], [27], [28], [29], [30], [31]] is too short
+     10  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[38], [39], [40], [41], [42], [43]] is too short
+      8  clock-controller@30380000 (fsl,imx8mn-ccm): clocks: [[22], [23], [24], [25], [26], [27]] is too short
+      8  clock-controller@30380000 (fsl,imx8mn-ccm): clocks: [[20], [21], [22], [23], [24], [25]] is too short
+      8  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[34], [35], [36], [37], [38], [39]] is too short
+      8  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[28], [29], [30], [31], [32], [33]] is too short
+      8  bcrmf@1 (brcm,bcm4329-fmac): $nodename:0: 'bcrmf@1' does not match '^wifi(@.*)?$'
+      6  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[41], [42], [43], [44], [45], [46]] is too short
+      6  clock-controller@30380000 (fsl,imx8mn-ccm): clocks: [[24], [25], [26], [27], [28], [29]] is too short
+      4  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[43], [44], [45], [46], [47], [48]] is too short
+      4  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[40], [41], [42], [43], [44], [45]] is too short
+      4  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[36], [37], [38], [39], [40], [41]] is too short
+      4  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[35], [36], [37], [38], [39], [40]] is too short
+
+Please fix the binding or drop what's been applied so far.
+
+Rob
+
