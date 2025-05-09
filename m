@@ -1,98 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDEC818DF8D;
-	Fri,  9 May 2025 16:35:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070642144AE
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746808554; cv=none; b=Uuw1o4BXm2pLKg6wO9/a0LofXIF+ZlUSUsDvHJjKsHCUnJ/Mw/4NK02PbQm1v9oEm6fpE5qE+lbb3Kc+DHcF+Taxv3+92+kp43aFWNO2slPf3LVoP5RTTSSgMOlCR0LsGlg+Vn1iokNH+eqkRUSJpVDLcWFdv/j5+81jDnCClKE=
+	t=1746808588; cv=none; b=KdG6Ay7ubrnbO3Yr3t2HJ1qog/WKrkTibPNehRqmubslWG6mG6wbCU2yLyeZHjdtbh6c+9DjsDrNFil4dMexDAQJhDAFfHFwM9OqqWZzE+0Bv9VEy1UeiipTGjKm0mgXONkPqMlNHSmr7GyHUWOK7ppQmyh5J0d4YIYn2herR1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746808554; c=relaxed/simple;
-	bh=I6f8x4iGGQ/6ezXUYixBV4CDobLsuQYJkTwCWtE3PLA=;
+	s=arc-20240116; t=1746808588; c=relaxed/simple;
+	bh=SElwm06j+DlRR4yCYm42BAqEpJ3JJLetNH0N75LAQZY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BvviZCOnIiIZc/ZWU18iJuHqVN+K5y8cjm4g+9NrCeGsKfsqT3zZzOO5f9fWGhCHP5tRKKm6bGyGDV1Yi6ud2OR+GwwpegAUTmsHar9KlWpcBxtn0iaAbN4xs41ARlONBmsJfxUmXRr2p2sVtX2JofNUX5A+woM/jwQ46WxPYbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8kDJ7G9; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=XEYTvB3RJdI29E6g/dKmQ6xg/vnzcJbjqpk8Lw25iO4h1zrwnjHUwusscS/4X0gkrZ3JN0DAeaiIDB9QyfjZU76eRTNqCqPr0td/mdR/ArqxizICN2jyltfTrPEsUkRKbFvXcfkL+6Qo9WkuxC16y7DSfvyY7XfNFVRta6nNr5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mihalicyn.com; spf=pass smtp.mailfrom=mihalicyn.com; dkim=pass (1024-bit key) header.d=mihalicyn.com header.i=@mihalicyn.com header.b=RnX2XLF3; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mihalicyn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mihalicyn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8kDJ7G9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 689A5C4CEF1;
-	Fri,  9 May 2025 16:35:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746808553;
-	bh=I6f8x4iGGQ/6ezXUYixBV4CDobLsuQYJkTwCWtE3PLA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=i8kDJ7G9bQ2O+uSanklGt7kI8E5hTqWfW2tLzM/uHVAbzNHUSqE3NwboUrLLzRWAp
-	 Bx34IXFqHPzMfEHDrst4kRk8JZgvl3+f9tiUE4A9sRA9mI33xkQRKvLVxfZsjL7vLO
-	 AQ1Ru16qLPvqvVtoxGotywgktKYMXdI6yQbOiQjYw+CHm0atppES7XgDxo5K6YPLU0
-	 sgDRCrAcekyJ5dqHh29mhPlwQCkZRWiZFZchbSHIxVBP/LHhkvtFr5h4pAw+8rZbvW
-	 bIT82pRJ0xxmaVIWdR2XhIkyVZnTZBy7K6Z60TyhcEWhLMOvc2QGiYJJpQb+mVsoZO
-	 fBPNn15pcE76w==
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-72c40235c34so718200a34.3;
-        Fri, 09 May 2025 09:35:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU2ZEAVGagVUAj6ATC1txhLnQypug3puDEvMPj8GbgnxPdhND51sIKhAi29GLHwFyH7B9s+JJ8Risg=@vger.kernel.org, AJvYcCVs8osOLjWtvg4aHwADgqtt5+JME4rboKrLchE0laQnFJ8d4yUrU5hyoh7Ae9C3++eQl3+ApSNoJkXKIJM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzlS2yWai1THSFQmihIK/Gsq0eiNizLlJSNAF/GcKwQKsrvH9U
-	7zmMb/5kSfRVKNH0PifMFUPJBedV5/h89WaVltdMtcxb0MHfBo1sgYC34M2PpF5QDDzfQ8fcA2B
-	zB0WEZ5Kc4U9K8VTtzurS9mOmjNU=
-X-Google-Smtp-Source: AGHT+IEv9CjHiPlnvDy5IOb3rZUcr8bYyMFTGmb7zMjbaUanNOyIS/EVm/gEihDRjAygoxhYpGTYdGAk36zJo7VtPco=
-X-Received: by 2002:a05:6870:5251:b0:29e:766d:e969 with SMTP id
- 586e51a60fabf-2dba42a441emr2471934fac.10.1746808552569; Fri, 09 May 2025
- 09:35:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=mihalicyn.com header.i=@mihalicyn.com header.b="RnX2XLF3"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54c090fc7adso3491983e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 09:36:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mihalicyn.com; s=mihalicyn; t=1746808584; x=1747413384; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zzddh/3eTx6uQ05Z0QrC85lC2xnXc5MveRhZzr/KB1o=;
+        b=RnX2XLF3idIdiYQEzvbzFqoxqPfoUkyCGUvSprCsOfMac+aFEygT0GMtuUavCNaxbH
+         O9cSRPZVRrzJbBpVj9swKkcgOhcFRQl/wqoTiHHS2Hg7sQC3pRDfiNl3iRv//aAvF+ZM
+         UFsdaCtIzqcJS0WoTGfZ/bC9Yswobjm1AwIx0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746808584; x=1747413384;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Zzddh/3eTx6uQ05Z0QrC85lC2xnXc5MveRhZzr/KB1o=;
+        b=SUy8S4LUxR5bAO9PS0zafken5iQ7cTG61Az4CymBntGj9n4iETsJGQMMGV4DPOOxMi
+         XlCvteZj6/GWDudUORKdXuT07UCUaR5g+s5wd6Aik+/LcIuj9/jUmQMgEBnIFgMXwdjd
+         9ASvIvIyEI9DNJ6YVmfgqPAFBrElEvZ10ShdXQKb1rcbtSAeH7/6RzrrLFA9pag4BnjB
+         XJB0CgiGmshhUoDQS3tWSY7XCK7OmKSVHoDZdgnhmCjgynO1JhGTmGmGS7zjeD/udfA/
+         d0RfWDja0wMHcOoHq2SddeP2ESMHsXxlBDzZb1QM9MnbFqrQOpRuYEGV+BReNbjN6gHb
+         UWXw==
+X-Forwarded-Encrypted: i=1; AJvYcCWGfU8MK9C3sWKxj0M4QCY0HW7vAwgwov/Qy0HxbBTZyzCzUKaPkbxJiA9dzlC1Do5cJSV2BpXaqweXPSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+EeBmJfvcfb57uOvGrDl+xSAL8ecuyr68x64jm1HRZDIDfylp
+	91+75OKAlttzZistt1+0eJMrru53XWH/Egar56t/Rn6IGx81m5SDtAd20ZHtxRn4Rr69XbbmaOr
+	jkL9dAS2pgIkHX7KiIKI/y6K+ayvnhwSzKpFrMQ==
+X-Gm-Gg: ASbGnctJwcLMlQBw1f4LQjqceDmGxsR8tds+hOJMpcORUua5tf6Mq6NdVMJVyPP6Ipx
+	hKEtATKWJlK1KhVwuFdF8nBU38qPdaRlxtDcpurhDqDa+GAxu/UMpmEjYyDEe6TZ17/Iy/J+l2w
+	A0oOsj39l/hAM3lupgCd6sN6Y=
+X-Google-Smtp-Source: AGHT+IH+OGShjApAd9yBXoPzGyz7erva33bTf7tcbh9TZCZv8N/0Z47UJruRu0/G2XeKDRmeA7pJn36NDyQUl8d5EeY=
+X-Received: by 2002:a05:651c:210a:b0:30d:b25d:72d0 with SMTP id
+ 38308e7fff4ca-326c457585amr16758911fa.17.1746808583777; Fri, 09 May 2025
+ 09:36:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506220057.5589-1-moonhee.lee.ca@gmail.com>
-In-Reply-To: <20250506220057.5589-1-moonhee.lee.ca@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 9 May 2025 18:35:41 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hRn0EKXNkYgbo8UMqj5Hq39LWn_Fseg38ZuQw2yCVtzw@mail.gmail.com>
-X-Gm-Features: ATxdqUEtrAsngD3bvjmsyDO6bu-yczjM4N5J20DvDwYRYdhreKQ77vuOammTAn0
-Message-ID: <CAJZ5v0hRn0EKXNkYgbo8UMqj5Hq39LWn_Fseg38ZuQw2yCVtzw@mail.gmail.com>
-Subject: Re: [PATCH v2] docs: fix typo in energy-model.rst
-To: Moon Hee Lee <moonhee.lee.ca@gmail.com>
-Cc: lukasz.luba@arm.com, rafael@kernel.org, len.brown@intel.com, 
-	pavel@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+References: <20250509-work-coredump-socket-v5-0-23c5b14df1bc@kernel.org> <20250509-work-coredump-socket-v5-3-23c5b14df1bc@kernel.org>
+In-Reply-To: <20250509-work-coredump-socket-v5-3-23c5b14df1bc@kernel.org>
+From: Alexander Mikhalitsyn <alexander@mihalicyn.com>
+Date: Fri, 9 May 2025 18:36:11 +0200
+X-Gm-Features: AX0GCFvUuqDpuhS2JQ9T3QaKQJ6V58kyD4zcgQGwY68-T7tQ-lOHd3RNIb0VEdI
+Message-ID: <CAJqdLrotSo_3gdq-eQhiBiA6Y76DV_Vi9x1sTZNjz97PZc=6PA@mail.gmail.com>
+Subject: Re: [PATCH v5 3/9] coredump: reflow dump helpers a little
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, Jann Horn <jannh@google.com>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+	Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
+	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-security-module@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 7, 2025 at 12:01=E2=80=AFAM Moon Hee Lee <moonhee.lee.ca@gmail.=
-com> wrote:
+Am Fr., 9. Mai 2025 um 12:26 Uhr schrieb Christian Brauner <brauner@kernel.org>:
 >
-> Fixes a grammar issue ("than" -> "then") and changes "re-use" to
-> "reuse" for consistency with modern spelling.
+> They look rather messy right now.
 >
-> Changes since v1:
-> - Limited scope to .rst files excluding translations, using:
->   find Documentation/ \
->     -path Documentation/translations -prune -o \
->     -name '*.rst' -print | xargs codespell
->
-> Signed-off-by: Moon Hee Lee <moonhee.lee.ca@gmail.com>
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+
+Reviewed-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+
 > ---
->  Documentation/power/energy-model.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/coredump.c | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
 >
-> diff --git a/Documentation/power/energy-model.rst b/Documentation/power/e=
-nergy-model.rst
-> index ada4938c37e5..490ddd483f46 100644
-> --- a/Documentation/power/energy-model.rst
-> +++ b/Documentation/power/energy-model.rst
-> @@ -230,7 +230,7 @@ Drivers must provide a pointer to the allocated and i=
-nitialized new EM
->  and will be visible to other sub-systems in the kernel (thermal, powerca=
-p).
->  The main design goal for this API is to be fast and avoid extra calculat=
-ions
->  or memory allocations at runtime. When pre-computed EMs are available in=
- the
-> -device driver, than it should be possible to simply re-use them with low
-> +device driver, then it should be possible to simply reuse them with low
->  performance overhead.
+> diff --git a/fs/coredump.c b/fs/coredump.c
+> index 41491dbfafdf..b2eda7b176e4 100644
+> --- a/fs/coredump.c
+> +++ b/fs/coredump.c
+> @@ -867,10 +867,9 @@ static int __dump_emit(struct coredump_params *cprm, const void *addr, int nr)
+>         struct file *file = cprm->file;
+>         loff_t pos = file->f_pos;
+>         ssize_t n;
+> +
+>         if (cprm->written + nr > cprm->limit)
+>                 return 0;
+> -
+> -
+>         if (dump_interrupted())
+>                 return 0;
+>         n = __kernel_write(file, addr, nr, &pos);
+> @@ -887,20 +886,21 @@ static int __dump_skip(struct coredump_params *cprm, size_t nr)
+>  {
+>         static char zeroes[PAGE_SIZE];
+>         struct file *file = cprm->file;
+> +
+>         if (file->f_mode & FMODE_LSEEK) {
+> -               if (dump_interrupted() ||
+> -                   vfs_llseek(file, nr, SEEK_CUR) < 0)
+> +               if (dump_interrupted() || vfs_llseek(file, nr, SEEK_CUR) < 0)
+>                         return 0;
+>                 cprm->pos += nr;
+>                 return 1;
+> -       } else {
+> -               while (nr > PAGE_SIZE) {
+> -                       if (!__dump_emit(cprm, zeroes, PAGE_SIZE))
+> -                               return 0;
+> -                       nr -= PAGE_SIZE;
+> -               }
+> -               return __dump_emit(cprm, zeroes, nr);
+>         }
+> +
+> +       while (nr > PAGE_SIZE) {
+> +               if (!__dump_emit(cprm, zeroes, PAGE_SIZE))
+> +                       return 0;
+> +               nr -= PAGE_SIZE;
+> +       }
+> +
+> +       return __dump_emit(cprm, zeroes, nr);
+>  }
 >
->  In order to free the EM, provided earlier by the driver (e.g. when the m=
-odule
+>  int dump_emit(struct coredump_params *cprm, const void *addr, int nr)
+>
 > --
-
-Applied as 6.16 material, thanks!
+> 2.47.2
+>
