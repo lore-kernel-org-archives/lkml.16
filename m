@@ -1,119 +1,96 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EB58632C
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 14:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9C823D2A0;
+	Fri,  9 May 2025 14:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746799771; cv=none; b=PF4v7WpvLvqJOHEBDr+vKvV+1IpfY4swvPKezwWcn3awFVBpnNSTuskHVOVnEfWQipb/nD3SmunQFLcN7ybBBJg4/qyIyyXNe/onTp+v/Xbm9BxXPtCy8JX52en7LT/ulmDku1O7dDJ+8X7oYTnSzObFtMQIvpYrjm/nJi8ODgc=
+	t=1746799803; cv=none; b=LQcTEpQfC1BquxfcSiy5EB9eqPAxyEF9Sa97GmJFfM2ht/n5NZCi+5HGn1pKOq1liaFBjmFrZBY89n7evAScdw5WK+6DZzcSShAET2KaKxHqFAUG9P3qItxWOltuGumTD9ycN1J3b8Pkx+/bzOzAtZ9LmSC7MHM9WHO1j0xltOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746799771; c=relaxed/simple;
-	bh=vQwnaN5SIa/H+Y6ee37jwTVs6F3pxmGriu6KQ74VZEo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nAranQTlsUhwsCZZVGtF4tqqyjMBexuBP6F37Xl334Seh9sVfPJHmshmO+F18EM82GTIko35zppfnQBTrWaN80v7FaDmUQLVYwH6pqKHPb1boFWbjMlL2MYTOF/lNIINd/2U+o3guNx5uyz6RNnQD6xux5YlWq/8PWo4Sfwu2mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GCvkRk4k; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746799803; c=relaxed/simple;
+	bh=af+UlDGvEnPRHtlg072O638zTmK/MXsSHJDlxvwBJf8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CxbBZ2OaIZJSA0sckkJtcvMOEh60APDSK3aSktWqlnO1Xv9e5jQIPCtSahdTlty8l533Q+DtSIj2JhHL6+pNvBmQ5cZ4uqLykQVv0QiCBY7QOj/u36slC6il/3DCZt6c45DhzXWCDRp3YNhmSuEoNgEXQJREmQhfCG71enb4kac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QSn1GeRA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GCvkRk4k"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22e42641d7cso234755ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 07:09:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746799769; x=1747404569; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jCiKxL6LvoeyY9W6b3RA5blUeHU2Mmy1DhVz0FZzVWc=;
-        b=GCvkRk4kEg52KvSZTakEcYv/YL0uT1qGB5CMIV23CBHwOIbUhemIDQ0yS0+Q/Td11Y
-         A4QU4ZF2Xb5wuagf8xxURV7rp6OuO7UPDBzBroBxUF1umxlASerewXL2YsUaufAJ2VqU
-         cfLIWXlDOzrbLimqmwWD4ghUt1fu1rVZuMWvfp30TSnaA8vEKP0I5NgGNwKWktK5yokD
-         8GvLDqWEeAl1+Xz00br358GmhxA57hhABolgqf2FiZ17mzX0SFLv6rDRshdB1cuJfSGN
-         YDuGAfyRWjnm5e8OYCYoy8arW7mDhbXVh7uexECpGojI8ZHO8pylz7C72XPF2lFATSn1
-         EMyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746799769; x=1747404569;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jCiKxL6LvoeyY9W6b3RA5blUeHU2Mmy1DhVz0FZzVWc=;
-        b=R3FsJwkQZhXRXCS/zvNWl17fbjGVzWPazlGJLHaow60BP9Kx98KdYzlI3iUCVY6R93
-         ebFkMtUgEYtY0PxNoEvoFROGtSdoTIMk+N4iAAXTPwSKL4ZKXfEWOgHEdxaLqjoL7Pvq
-         A6YxHqHP6RdueSr/aIJy63ucil710sdly68Xzo7K6M9biAg+VPuRryia+SOZgsRPLVPQ
-         9HFNU1Oa8828QcWdmx0tDbvTOEdYVWu6/fGTPpYgygryCd7G0AlFn716KLdkvxrbs4MS
-         l3tU69ofmgxDUGaSqX5PsU9sfeVtedYtjz1Rs0M1MvQgLMJsj3xamtq7tMgQIzki9vVW
-         fhYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUh/Ot74Hft23t/Co+AEJQEDfzvt1ZeOsJvW8IlK2homtzG5+Cgs+3EUXNrPFjLQFW1uuW6/LKK03EhNwI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVmS4JHO9P/zXUW1HBz+h5IEat1WJPXeNdJBlXKCt+wvRulrYV
-	lp6E8NT6YWz90DfRknIGrQGlXD5ZlQ1e9jLvjv8Q+wC7FEAgayZNwtPWvyYYw0MJ62AbSRoJvq2
-	oaJkHgMzTCeYsUriyTBz/tpdf6lOcFTKPht4x
-X-Gm-Gg: ASbGncsZkX2ubH4v5Kzk425/kdCXJE6VJzWjwI/nlOHKEJ1MMf+UI/e5te/z6l9DTvj
-	xk3BIs07iFWbJ8pWplYIOVH2cKwkTOpjx1v5JCfAZsaSctoHGU8g8a7z5vLtcou1DVXgCuUoFWn
-	FM2WLs2b5IxuqpY1NVSDt6eoM=
-X-Google-Smtp-Source: AGHT+IGMI/XDr8dUmvgSvSl1rg1l31oGTBGmNKBdui7zTK+cXuKqPn5F0+EqTjHwmKRPbjb5nSBKLROp6YQHQ8mm83g=
-X-Received: by 2002:a17:903:1c3:b0:224:a93:704d with SMTP id
- d9443c01a7336-22fca87efcdmr3648795ad.2.1746799768696; Fri, 09 May 2025
- 07:09:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QSn1GeRA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E82DCC4CEE4;
+	Fri,  9 May 2025 14:09:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746799802;
+	bh=af+UlDGvEnPRHtlg072O638zTmK/MXsSHJDlxvwBJf8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QSn1GeRA97cqq51SKJmTesTao/PVP6KsOEfzr+w/mw17GqaagBvS2bM/q9mHW4wJE
+	 LTtKGeDHXQAEULp1Vj+kEJC+LatnYuSrgdfcqPeZnk5V63kky1krpp8+MqOkgSMLUG
+	 B22zzyrArvjfx9gwzd7wSaPGhe14z6SUbvQi8T7FxfyPbk/Yv70fdKAWTmGISgqr0O
+	 8gCBoipnMeq3taS7XLYsZSJBg1wVWLPQw7qS9WHroHDYA/R+skWOlLBYY+RCyUYYkv
+	 eF66o+R7K9eqc30XLBCGp16bVvOBBxzO6eqRcyx5UXQiLZe7hIEf1HC8rvm8CIPDZY
+	 6DR0TAGvVSBWg==
+Date: Fri, 9 May 2025 15:09:57 +0100
+From: Lee Jones <lee@kernel.org>
+To: Artur Weber <aweber.kernel@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Stanislav Jakubek <stano.jakubek@gmail.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v8 4/9] mfd: bcm590xx: Add support for multiple device
+ types + BCM59054 compatible
+Message-ID: <20250509140957.GD2492385@google.com>
+References: <20250430-bcm59054-v8-0-e4cf638169a4@gmail.com>
+ <20250430-bcm59054-v8-4-e4cf638169a4@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509115126.63190-1-byungchul@sk.com>
-In-Reply-To: <20250509115126.63190-1-byungchul@sk.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Fri, 9 May 2025 07:09:16 -0700
-X-Gm-Features: ATxdqUEcD0TRlngE7OhKXE4b1mDY8XLhym2WmzKEPsqCbaP_I_Y7Ra0p4qdhPME
-Message-ID: <CAHS8izPFiytN_bM6cu2X8qbvyVTL6pFMeobW=qFwjgHbg5La9Q@mail.gmail.com>
-Subject: Re: [RFC 00/19] Split netmem from struct page
-To: Byungchul Park <byungchul@sk.com>, Pavel Begunkov <asml.silence@gmail.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org, 
-	akpm@linux-foundation.org, ast@kernel.org, daniel@iogearbox.net, 
-	davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch, 
-	edumazet@google.com, pabeni@redhat.com, vishal.moola@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250430-bcm59054-v8-4-e4cf638169a4@gmail.com>
 
-On Fri, May 9, 2025 at 4:51=E2=80=AFAM Byungchul Park <byungchul@sk.com> wr=
-ote:
->
-> The MM subsystem is trying to reduce struct page to a single pointer.
-> The first step towards that is splitting struct page by its individual
-> users, as has already been done with folio and slab.  This patchset does
-> that for netmem which is used for page pools.
->
-> Matthew Wilcox tried and stopped the same work, you can see in:
->
->    https://lore.kernel.org/linux-mm/20230111042214.907030-1-willy@infrade=
-ad.org/
->
-> Mina Almasry already has done a lot fo prerequisite works by luck, he
-> said :).  I stacked my patches on the top of his work e.i. netmem.
->
-> I focused on removing the page pool members in struct page this time,
-> not moving the allocation code of page pool from net to mm.  It can be
-> done later if needed.
->
-> There are still a lot of works to do, to remove the dependency on struct
-> page in the network subsystem.  I will continue to work on this after
-> this base patchset is merged.
->
-> This patchset is based on mm tree's mm-unstable branch.
->
+On Wed, 30 Apr 2025, Artur Weber wrote:
 
-This series largely looks good to me, but a couple of things:
+> The BCM59054 is another chip from the BCM590xx line of PMUs, commonly
+> used on devices with the BCM21664/BCM23550 chipsets.
+> 
+> Prepare the BCM590xx driver for supporting other devices by adding the
+> PMUID register values for supported chip types and store them in the
+> MFD data struct as "pmu_id". (These will be checked against the actual
+> PMUID register values in a later commit.)
+> 
+> Then, add a DT compatible for the BCM59054, and provide the PMU ID as
+> OF match data.
+> 
+> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+> ---
+> Changes in v6:
+> - Move PMUID value to MFD header
+> - Use PMUID value as OF data/device type value
+> - Add bcm59054 to I2C ID table
+> 
+> Changes in v4:
+> - Rewrite commit message description
+> - Rename "device_type" member to "dev_type"
+> - Drop awkward line break to fit function call
+> - Add PMU ID/revision parsing function
+> 
+> Changes in v3:
+> - Fix compilation warning about device_type pointer cast type
+> - Name the device types enum and use it as the type in the MFD struct
+> ---
+>  drivers/mfd/bcm590xx.c       | 12 +++++++++++-
+>  include/linux/mfd/bcm590xx.h |  7 +++++++
+>  2 files changed, 18 insertions(+), 1 deletion(-)
 
-- For deep changes like this to the page_pool, I think we need a
-before/after run to Jesper's currently out-of-tree benchmark to see
-any regressions:
-https://lore.kernel.org/netdev/20250309084118.3080950-1-almasrymina@google.=
-com/
+I can't merge this until Mark has provided the Regulator Acks.
 
-- Also please CC Pavel on iterations related to netmem/net_iov, they
-are reusing that in io_uring code for iouring rx rc as well.
-
---
-Thanks,
-Mina
+-- 
+Lee Jones [李琼斯]
