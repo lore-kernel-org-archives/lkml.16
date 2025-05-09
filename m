@@ -1,72 +1,48 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696EE21D3F6
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 22:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC191CCEE0;
+	Fri,  9 May 2025 22:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746830782; cv=none; b=KIDJ0Hg9ew+9dm4dguWyFvUZgu17WItr0Aj3nRM5YAZieQnCbwZB2E9SqpU/IaZEyNU6MeudYqQULWv8vzwVVv13mDDGLVQVivZhOkj93+Xq3XtfnnoEXtysKWLmd7QKO4TosJYhqfU+xPKi3ikEvSVaZTLgmeeCU8G4pmLaOGA=
+	t=1746830816; cv=none; b=ZoGLwlYygJV+7wTPG3pI3tCG1lgVMUDZVIYwnCNuElp4f/lciZjZmIKm5Yq1XnU6v3S/MXl3WIEvbFZAhdoX7xy3JGLrvaH4RTcyEs4cHUOVEX5za6wjvfuors0FAyApBp/Mn10+SS7As1Wj3S5jizGoeAyQI/rez5RNY9+EQZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746830782; c=relaxed/simple;
-	bh=LmhzGq5CA+i9dw0Q9VRHgaeexbUXN7cdMz8Ehua8V24=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UqfgSxsXXnoXRPag5eSKPEqBbke5pYfZe1UNpLc+mDtHZNkB0eFiWahxhz4uSlbDDMKkVT7cnv2czSvqfPfVNPy+poWXaLmh0UHG7c29aP/YCC76/1Q96buaUp+5BeOr5YajGHScCI93oZpuQEX3Ys4fueutouTG8Ll/2NLsVAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VVJwUiIH; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746830816; c=relaxed/simple;
+	bh=o47Nj8nSQJ9JRtIRifJzFyIDY8cYmh7L0SZOwPe8BTs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OZiQNiBrb2bWkdvwzqETWuBsA35jSxedvKNk115zx4lV7kfYFr9WpM42xsa9ckJ5tZmqfJXaDfZEYRblJPgMPcwuaCX6RSVBkMHJh8C3mjRrP3uWzPXapg7waYgIZvN2X8T1en23ni1Xx3YWpUha4AyhonF18KMmIGaw7KnFlaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=D2s7JSBC; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VVJwUiIH"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549CQkEe009505
-	for <linux-kernel@vger.kernel.org>; Fri, 9 May 2025 22:46:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="D2s7JSBC"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549BDsFm010638;
+	Fri, 9 May 2025 22:46:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	XmsX3zVPd1MJ+C/O6PKN+I4MPkP+RNbt3dycecHyCTU=; b=VVJwUiIHaWKTi23Z
-	FlkN8b+QEkzSnp4Nf0y2v4e6xnmzJjRB3eeDvAvIh0zxNY7CAxC1FJsFd3l3SjHa
-	CDEOSAOqZ4GoczhE3dfyILL3sjtSOv4D1ZgIv2MS+ejxBkGffL19m1G4rYRi02dH
-	NJo/gzMctJKlKAVhQHzMu+WCnlHxSaIZRDZKM1RCCtNVGKM5NJBCqxKVnc5u2dAf
-	02Sp8ct/kxdQIcvWTw9EtDSsSIinz5DI0BB3WfY9lW0ejFubiMMIUxK+DIHxUdad
-	cglsclDWTVc4sXojIVetXSxaa+PPKaqnfvb3YPA+68fu0gOWjiPTsEhOh+tgGszx
-	ITmDSw==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnpewux9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 22:46:17 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4766654b0c3so7940701cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 15:46:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746830777; x=1747435577;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XmsX3zVPd1MJ+C/O6PKN+I4MPkP+RNbt3dycecHyCTU=;
-        b=viVT6nAFg9lHDKn1hcP2JFChmaBzf+U/KCkqp3uvOsO+l5KpbeanHiuJHvckAxtxl6
-         ZQ4QbmsjpJdmxZbP2BP4zWd4YodPl9I0PLcWaQEPUU2M0vyX/QiVXqFwCHBDCraSClrF
-         rByhRiy/xxrXX5AJklGK0M3Kn87RvpRCzsETNMyyCv6uX0RnPuSRmPM+AyQa6LRdGW1L
-         tO0mjjbvjpokqfZLu2HcxIlVH7jcJwrgNcsUuoKC+gbn/47wQj7YN/M87Nqjdjr5OCB1
-         vfB3aG6djxoEObQDng+T/T2WXkKghP9nxTUSApLW8G4bXJQTLgf5fpKpaCcF+GTFWeHL
-         hqxg==
-X-Forwarded-Encrypted: i=1; AJvYcCWslUfCdvV6BSJ3+rzaTRwtPPOnAU2z3aQSDoOPBLahN2BchJ1m07WTlQNPctN64wivX9we0IB5YYLeUwo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKX7pi6d/o6LtWbwmhxm0keEsRtV5eaMAZkFy1/kF3uXwyT1iP
-	Z2kzqlc/NGwcIipjFGaPZJC/cpDbCZG87R17Y+1L1RrZSk32WB+3ulpSzwK/XsKPWe5ejsR+uQ3
-	ClorDktZQOJc38gR+1uKbFHh+6m2PuJfnMiMpFYOttGmNbaPnjQsUyFXoC49xWGHZVn815vY=
-X-Gm-Gg: ASbGnct5vw82HU2GrZpRtnwwTjJ6Qu5SJeSY8UOc2MH9RhqGPT9CtKrWaG3776WU6IG
-	TirxH5icHWTohuTEh49zTwrtokCi+GQru0YmdzTkB7QLuRgiPpf/QZsYav1REGVfIwn3OgCC7lv
-	hRMvOc+7zDYwq60LG1zZ+sJ8J79xT9i6WJAcA7g+zL3uEJSh7Rj5I529IW6x1bHKo9w+pH5d0Uo
-	5zDYSL/jwDgqjJatOBj4gRxMhh1fOPAldru9x5Gnw6jDg8YxcdjfH8jvZ2mn/ebh9jHtGCAQFlO
-	d/DOELF2r3Xqmg5Fd0/lB4Bsdj2gZds/oEiKjvrf7CrUBJbY+vrlx25LIZraDc5S0c8=
-X-Received: by 2002:a05:620a:2628:b0:7c9:2465:8731 with SMTP id af79cd13be357-7cd01042d16mr316449385a.0.1746830777047;
-        Fri, 09 May 2025 15:46:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG8mB29rNz9EPmqNSAKWxfwN3Ge2P5PmnwdY5r9Sv1sWFQYXOYKiy7Tvg31K2gb86LZkyrP2g==
-X-Received: by 2002:a05:620a:2628:b0:7c9:2465:8731 with SMTP id af79cd13be357-7cd01042d16mr316447585a.0.1746830776665;
-        Fri, 09 May 2025 15:46:16 -0700 (PDT)
-Received: from [192.168.65.158] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad219345735sm218522166b.64.2025.05.09.15.46.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 15:46:16 -0700 (PDT)
-Message-ID: <aa864626-3910-403b-a7f6-b3d86b4ed423@oss.qualcomm.com>
-Date: Sat, 10 May 2025 00:46:13 +0200
+	vo9dQjLWV8iMmF8fDbx9crO2WyeG2aLIqkY9Z9NGVGM=; b=D2s7JSBCF4A8vZm4
+	nb2wCJmbTACBek8UXBlyd/OuVmT80qLR3E/UCRNTdouZQwwMEhNpg7pojbPo14/L
+	cch1eGcVQaFUZOI+MQtjvK0gEogNP+SgvSjIih22nvRtymgaktiDFiErfOVGWhrf
+	idKa8NP+QbSe3yPFpMYW7B+1LeNFs0ktUeRrfLxVJDLoGQkd/G1gJcT3PilJyjtD
+	oGB50Yi+T8AaHpAMIccc0hWq3u7qRjATfftzbSgGeEaj6i4rnvW62tio5qvyX5Dq
+	xC+I5IguHQYGMN7gMJF1jkGI6sBKuxA8NUO4dT3Vgy6qwvrusH1L1Z83M1Gx/cjA
+	V1/UMw==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnpmnykh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 May 2025 22:46:46 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 549MkTnT025790
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 9 May 2025 22:46:29 GMT
+Received: from [10.134.71.99] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 9 May 2025
+ 15:46:28 -0700
+Message-ID: <b2b440e6-bb77-42ae-9f71-4635b17b230e@quicinc.com>
+Date: Fri, 9 May 2025 15:46:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,128 +50,153 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] soc: qcom: socinfo: Add support for new fields in
- revision 21
-To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250425135946.1087065-1-mukesh.ojha@oss.qualcomm.com>
- <20250425135946.1087065-2-mukesh.ojha@oss.qualcomm.com>
- <mc6n7fbhjhe6cxyoqkxs23kjs7gsa5cihy6qwrcrnz4g3kwjms@vh3vfqzfprw2>
- <aBzPn2OXapJLsikk@hu-mojha-hyd.qualcomm.com>
- <s5fd3txerbwgzzgqnoovkffmijgub5dxfucqqskhdqyjqzkbyl@5cyycrfmubup>
- <aBzgaKSspA0Af0sZ@hu-mojha-hyd.qualcomm.com>
- <03409f08-9612-40be-b8b2-6cebd5acd0a4@oss.qualcomm.com>
- <aB3TkK7wEjdxSSvQ@hu-mojha-hyd.qualcomm.com>
+Subject: Re: [PATCH v2 3/6] drm/panel: visionox-rm69299: switch to _multi
+ variants
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+        David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>
+CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Casey Connolly <casey.connolly@linaro.org>
+References: <20250509-topic-misc-shift6-panel-v2-0-c2c2d52abd51@linaro.org>
+ <20250509-topic-misc-shift6-panel-v2-3-c2c2d52abd51@linaro.org>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <aB3TkK7wEjdxSSvQ@hu-mojha-hyd.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20250509-topic-misc-shift6-panel-v2-3-c2c2d52abd51@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDIyOSBTYWx0ZWRfX3dc33+jkecmW
- +BM9X2vsgrJnjT77E4x8E+TT393j2DwPa3ZKUPiWJnkhx+jk4vyloh+QV/VYe6MttlIwPIP85F7
- WS/JaxzNutQqjJm02VgfH0/i3z0rq4sYvP2dBablGXR8trcN5Wbsw9lsYFohkAMIRw6c4GRAEO5
- 4FLwi9/wKxmhd3Rrrg4chMx4vXEjlEQ6oO8RLS0xai20OJXGs5WfhbgqW1xKwjKaXFC76CszIEj
- hmemn0LkYVAfGJ71ryqxEPW+1/3mT861AG27AB4xY3ucUvaya5EE9lcz67SY9HCglTkV39FkPJU
- 7FU9gZ4glauJPFoPY6YIXHzeuHLawZZiU55revDH6GbfnUgTyB/U7kt/m/Bz/1sktIcLzHRnx2J
- UO2AsoOuPyWu1B9uEAG+7mb8Gsz2UNGmQxjPSyiJkNO2Qk3y5ZuW1rWo/Gmj9c+IAJBCFPbN
-X-Proofpoint-ORIG-GUID: k_pgMcrgwAfllCengMddFVOMimaLBfhE
-X-Proofpoint-GUID: k_pgMcrgwAfllCengMddFVOMimaLBfhE
-X-Authority-Analysis: v=2.4 cv=Yt4PR5YX c=1 sm=1 tr=0 ts=681e85ba cx=c_pps
- a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=IPssWVxA-tG6VVCJEEYA:9
- a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=TpjmhCXh c=1 sm=1 tr=0 ts=681e85d6 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8
+ a=COk6AnOGAAAA:8 a=We4kPWDl41RPRepBkE0A:9 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 0SXrN_GSLV9Fi05YorV5z6dKTxaCHRKG
+X-Proofpoint-GUID: 0SXrN_GSLV9Fi05YorV5z6dKTxaCHRKG
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDIzMCBTYWx0ZWRfX8CEjGJ32SLip
+ Ro4dme3Bez6GlXciN16J8Hg0Q8ihIwiisCV8eU1bmD3AvYcbFbw7ojClw95J312bMpUFLQru+5l
+ 8ViBSGtBje6nVmITT/j569efV9r72nECO6VY6kyh4kh9wwB5PptU0yTHtNtuSEkzX62hL5QeCPF
+ vOFsz9vi9NkIuXgYz4xRD+X70ILZUSPriZJhvnMXphdzIo1DKJnUKhAyd0PpnACEwwAxn5r0lhM
+ gjrFAFiMBpr+J5B8bzHUxYQR1flZEc3jdjwD2cHiSRZUFwzkBOsokmwc4gv4UIdYlCmJatirjgZ
+ 2YWzP3I1TEuP8BYOcO35425GolTeNcyInLObE97wL07z11wvjMRQA6O8igFqmGWhWifcvCAEjEW
+ 6MHbv2qStIM01Jq67jqPCV0vgonvjo2j+gUIr98rmLmYPfDWKfc/HgD/qQqx/fhfLXGMhNxq
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-09_09,2025-05-09_01,2025-02-21_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 mlxscore=0 adultscore=0 spamscore=0 impostorscore=0
- phishscore=0 lowpriorityscore=0 mlxlogscore=999 suspectscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 classifier=spam authscore=0
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 suspectscore=0
+ clxscore=1015 adultscore=0 malwarescore=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 mlxscore=0 phishscore=0 classifier=spam authscore=0
  authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505090229
+ engine=8.19.0-2504070000 definitions=main-2505090230
 
-On 5/9/25 12:06 PM, Mukesh Ojha wrote:
-> On Thu, May 08, 2025 at 08:01:44PM +0200, Konrad Dybcio wrote:
->> On 5/8/25 6:48 PM, Mukesh Ojha wrote:
->>> On Thu, May 08, 2025 at 06:56:47PM +0300, Dmitry Baryshkov wrote:
->>>> On Thu, May 08, 2025 at 09:07:03PM +0530, Mukesh Ojha wrote:
->>>>> On Fri, Apr 25, 2025 at 08:28:51PM +0300, Dmitry Baryshkov wrote:
->>>>>> On Fri, Apr 25, 2025 at 07:29:45PM +0530, Mukesh Ojha wrote:
->>>>>>> Add the subpartfeature offset field to the socinfo structure
->>>>>>> which came for version 21 of socinfo structure.
->>>>>>>
->>>>>>> Subpart_feat_offset is subpart like camera, display, etc.,
->>>>>>> and its internal feature available on a bin.
->>>>>>>
->>>>>>> Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
->>>>>>> ---
->>>>>>> Changes in v2:
->>>>>>>  - Added debugfs entry and described more about the field in commit.
->>>>>>>
->>>>>>>  drivers/soc/qcom/socinfo.c       | 6 ++++++
->>>>>>>  include/linux/soc/qcom/socinfo.h | 2 ++
->>>>>>>  2 files changed, 8 insertions(+)
->>>>>>>
->>>>>>> diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
->>>>>>> index 5800ebf9ceea..bac1485f1b27 100644
->>>>>>> --- a/drivers/soc/qcom/socinfo.c
->>>>>>> +++ b/drivers/soc/qcom/socinfo.c
->>>>>>> @@ -154,6 +154,7 @@ struct socinfo_params {
->>>>>>>  	u32 boot_cluster;
->>>>>>>  	u32 boot_core;
->>>>>>>  	u32 raw_package_type;
->>>>>>> +	u32 nsubpart_feat_array_offset;
->>>>>>>  };
->>>>>>>  
->>>>>>>  struct smem_image_version {
->>>>>>> @@ -608,6 +609,11 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
->>>>>>>  			   &qcom_socinfo->info.fmt);
->>>>>>>  
->>>>>>>  	switch (qcom_socinfo->info.fmt) {
->>>>>>> +	case SOCINFO_VERSION(0, 21):
->>>>>>> +		qcom_socinfo->info.nsubpart_feat_array_offset =
->>>>>>> +				   __le32_to_cpu(info->nsubpart_feat_array_offset);
->>>>>>> +		debugfs_create_u32("nsubpart_feat_array_offset", 0444, qcom_socinfo->dbg_root,
->>>>>>> +				   &qcom_socinfo->info.nsubpart_feat_array_offset);
->>>>>>
->>>>>> An offset into what? If this provides additional data, then the data
->>>>>> should be visible in the debugfs. Not sure, what's the point in dumping
->>>>>> the offset here.
->>>>>
->>>>> offset into info(struct socinfo) object.
->>>>>
->>>>> I agree to you and I said the same in first version this is just offset
->>>>> and does not provide any debug info we would look from userspace.  For
->>>>> parity with other fields I did it for all newly added fields.
->>>>> I have dropped it in latest patch.
->>>>
->>>> I'd rather see the decoded structure that is being pointed by this
->>>> offset.
->>>
->>> You mean info + info->nsubpart_feat_array_offset ? 
->>>
->>> There is more to it which I don't want to mention as they are not
->>> upstreamed yet and unrelated to this change.
->>>
->>> data = info + (offset + (part * sizeof(u32)));
->>>
->>> e.g., Here, part is a enum represents camera, display etc., and data
->>> represents their feature presents. Since, part is not upstream yet I
->>> don't feel we should expose this information to debugfs. We could always
->>> add them in debugfs when such things are standardized and upstreamed.
->>
->> That's what Dmitry's saying - just add support for them
+
+
+On 5/9/2025 1:59 AM, Neil Armstrong wrote:
+> Switch to the DSI _multi variants to simplify error handling.
 > 
-> We definitely add support for this in the future.  In the meantime, does
-> the absence of the support prevent this socinfo field from being merged?
-> Without it, there could be inconsistencies between the boot firmware and
-> Linux for the SM8750 platform.
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-Why delay adding a couple struct definitions into the "future"? I feel
-like we spent more time on this thread that describing them would take
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
 
-Konrad
+> ---
+>   drivers/gpu/drm/panel/panel-visionox-rm69299.c | 48 +++++++-------------------
+>   1 file changed, 13 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-visionox-rm69299.c b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
+> index 156bca0197481b470fa85b2eab7c979b76e489b6..c3c14150a5546512151fb15c8e9a91269ca21c65 100644
+> --- a/drivers/gpu/drm/panel/panel-visionox-rm69299.c
+> +++ b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
+> @@ -72,30 +72,24 @@ static int visionox_rm69299_power_off(struct visionox_rm69299 *ctx)
+>   static int visionox_rm69299_unprepare(struct drm_panel *panel)
+>   {
+>   	struct visionox_rm69299 *ctx = panel_to_ctx(panel);
+> -	int ret;
+> +	struct mipi_dsi_multi_context dsi_ctx = { .dsi = ctx->dsi };
+>   
+>   	ctx->dsi->mode_flags = 0;
+>   
+> -	ret = mipi_dsi_dcs_write(ctx->dsi, MIPI_DCS_SET_DISPLAY_OFF, NULL, 0);
+> -	if (ret < 0)
+> -		dev_err(ctx->panel.dev, "set_display_off cmd failed ret = %d\n", ret);
+> +	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
+>   
+>   	/* 120ms delay required here as per DCS spec */
+> -	msleep(120);
+> +	mipi_dsi_msleep(&dsi_ctx, 120);
+>   
+> -	ret = mipi_dsi_dcs_write(ctx->dsi, MIPI_DCS_ENTER_SLEEP_MODE, NULL, 0);
+> -	if (ret < 0) {
+> -		dev_err(ctx->panel.dev, "enter_sleep cmd failed ret = %d\n", ret);
+> -	}
+> +	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
+>   
+> -	ret = visionox_rm69299_power_off(ctx);
+> -
+> -	return ret;
+> +	return visionox_rm69299_power_off(ctx);
+>   }
+>   
+>   static int visionox_rm69299_prepare(struct drm_panel *panel)
+>   {
+>   	struct visionox_rm69299 *ctx = panel_to_ctx(panel);
+> +	struct mipi_dsi_multi_context dsi_ctx = { .dsi = ctx->dsi };
+>   	int ret, i;
+>   
+>   	ret = visionox_rm69299_power_on(ctx);
+> @@ -104,36 +98,20 @@ static int visionox_rm69299_prepare(struct drm_panel *panel)
+>   
+>   	ctx->dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+>   
+> -	for (i = 0; i < ctx->desc->init_seq_len; i++) {
+> -		ret = mipi_dsi_dcs_write_buffer(ctx->dsi, &ctx->desc->init_seq[i * 2], 2);
+> -		if (ret < 0) {
+> -			dev_err(ctx->panel.dev,	"cmd tx failed, ret = %d\n", ret);
+> -			return ret;
+> -		}
+> -	}
+> +	for (i = 0; i < ctx->desc->init_seq_len; i++)
+> +		mipi_dsi_dcs_write_buffer_multi(&dsi_ctx, &ctx->desc->init_seq[i * 2], 2);
+>   
+> -	ret = mipi_dsi_dcs_write(ctx->dsi, MIPI_DCS_EXIT_SLEEP_MODE, NULL, 0);
+> -	if (ret < 0) {
+> -		dev_err(ctx->panel.dev, "exit_sleep_mode cmd failed ret = %d\n", ret);
+> -		goto power_off;
+> -	}
+> +	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
+>   
+>   	/* Per DSI spec wait 120ms after sending exit sleep DCS command */
+> -	msleep(120);
+> +	mipi_dsi_msleep(&dsi_ctx, 120);
+>   
+> -	ret = mipi_dsi_dcs_write(ctx->dsi, MIPI_DCS_SET_DISPLAY_ON, NULL, 0);
+> -	if (ret < 0) {
+> -		dev_err(ctx->panel.dev, "set_display_on cmd failed ret = %d\n", ret);
+> -		goto power_off;
+> -	}
+> +	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
+>   
+>   	/* Per DSI spec wait 120ms after sending set_display_on DCS command */
+> -	msleep(120);
+> +	mipi_dsi_msleep(&dsi_ctx, 120);
+>   
+> -	return 0;
+> -
+> -power_off:
+> -	return ret;
+> +	return dsi_ctx.accum_err;
+>   }
+>   
+>   static const struct drm_display_mode visionox_rm69299_1080x2248_60hz = {
+> 
+
