@@ -1,144 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C2711CBA;
-	Fri,  9 May 2025 06:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEC2266B4E
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 06:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746770443; cv=none; b=JAchwb+ztLo6HvYazQr7sRtTomRuzJzWl6H6NlDwH2niAWOn6X+G0UT4bMIrGVWvXQhw1KN5KaJRrYP4BkHOVf55CWwOz/mhdQ6GAH9b3k4yjI4xRiRdXAZz2Fn97MtYVXBDqoK/h3bLXq1MXQUKMy6+FEloGnMU9K1jOIKURPE=
+	t=1746770464; cv=none; b=RxO1d0yCZSosGei3sHdO6Xe8pWn8HPw+PMwdHOcUtjSG+sHSZbcYMzOYO2M1xvVlbUprZHtVBSTG6JeX7hQnvWdSwpfB7cz/GXDhKMmL8V0ruuTasMj47+j5F6Dsp57Zg0e2rVCW8/76dIwSb0OpXsc0+PFVm4iP0E8I82S0XUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746770443; c=relaxed/simple;
-	bh=2F9C7tIL0E1UVn2MTuipbuWXEc0JNCxH2nHehw68R0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qjvphs9mPurMLxxHCLYi0soAVblhP/DvgwE2FnGDWzjlMPEhQdiSCWwhGxtIMzZFTIjUkf1w2IE+vL1sOBrrarLBAAPEUWrJi74cf3JcTxnUMxSoLsIFNx0ilzYcTE7Rlf85Il2NM7vLGI6DNm+fNdh5+EFZh+L9dt6Nl2wRG9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwRtefw7; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwRtefw7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7E85C4CEED;
-	Fri,  9 May 2025 06:00:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746770443;
-	bh=2F9C7tIL0E1UVn2MTuipbuWXEc0JNCxH2nHehw68R0M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iwRtefw71D3zLS7KhS59GNlxf0NDjxLfSFg3UDnGLi82Bdt9bcuUsHDxgLpjVHYTt
-	 2sTBwATargPCOdzsUo7jUtkIYVhKBZUF1lKX93oLY2OzZFwPH4WIT1QpvdDhAwJF3f
-	 lQaGRFapkRKzfLU6I646LD/XcWUOidIy0GSso1yk4JgR0+TATk+8xe2LeHmehitf3k
-	 nkyhQbPaf1MuYANTzoUkYBrLSit4RWFuM6hEiNekBAz7oK9+qHr7siu6DGt+s/A2K/
-	 DZAHG5zw3u1tAnHCHcm98AOtz3ifAY43sQt6ZU0s1+9pm+7fjZkFj4H/D2+skPNFT+
-	 I0NuuhQ9nZ9/A==
-Date: Fri, 9 May 2025 08:00:32 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Kunwu Chan <kunwu.chan@hotmail.com>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	Martin Rodriguez Reboredo <yakoyoku@gmail.com>,
-	Borys Tyran <borys.tyran@protonmail.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Panagiotis Foliadis <pfoliadis@posteo.net>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	llvm@lists.linux.dev, Daniel Almeida <daniel.almeida@collabora.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 4/5] sched/core: Add __might_sleep_precision()
-Message-ID: <aB2aAEELa3253nBh@gmail.com>
-References: <20250506045843.51258-1-boqun.feng@gmail.com>
- <20250506045843.51258-5-boqun.feng@gmail.com>
+	s=arc-20240116; t=1746770464; c=relaxed/simple;
+	bh=iMC+wmxymIFqPTNdVrLvdX+TjkSiglWerKKQ9Lw+V1Q=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BFl+Q3Doikk835j2LBU6hIWDP/tobKkzulh8NOP6INylBXiyWuYMB6c1X1HbZba91VLugsNu67qrOxK7qQGm6doUYLp9ztJNZStCw1GmG8MwnTvbh3pBMJurDJTTvUVpstDeoLB4kaJamV+1WE5XnoFf3G9yM48YiHiV0xANorU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from mail.andestech.com (ATCPCS34.andestech.com [10.0.1.134])
+	by Atcsqr.andestech.com with ESMTPS id 54960Bnb078767
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
+	Fri, 9 May 2025 14:00:14 +0800 (+08)
+	(envelope-from ben717@andestech.com)
+Received: from atctrx.andestech.com (10.0.15.173) by ATCPCS34.andestech.com
+ (10.0.1.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 9 May
+ 2025 14:00:11 +0800
+Date: Fri, 9 May 2025 14:00:11 +0800
+From: Ben Zong-You Xie <ben717@andestech.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+CC: Conor Dooley <conor@kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>, <aou@eecs.berkeley.edu>,
+        <alex@ghiti.fr>, <tim609@andestech.com>
+Subject: Re: [PATCH] riscv: add Andes SoC family Kconfig support
+Message-ID: <aB2Z6zq+pQ1LxQ47@atctrx.andestech.com>
+References: <Z8rMKZoDYmpNosSj@atctrx.andestech.com>
+ <mhng-d0a8012c-c5c9-4309-ac08-bcb1dab85b26@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20250506045843.51258-5-boqun.feng@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <mhng-d0a8012c-c5c9-4309-ac08-bcb1dab85b26@palmer-ri-x1c9a>
+User-Agent: Mutt/2.1.4 (2021-12-11)
+X-ClientProxiedBy: ATCPCS33.andestech.com (10.0.1.100) To
+ ATCPCS34.andestech.com (10.0.1.134)
+X-DKIM-Results: atcpcs34.andestech.com; dkim=none;
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 54960Bnb078767
 
-
-* Boqun Feng <boqun.feng@gmail.com> wrote:
-
-> From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+On Thu, May 08, 2025 at 10:48:46AM -0700, Palmer Dabbelt wrote:
+> [EXTERNAL MAIL]
 > 
-> Add __might_sleep_precision(), Rust friendly version of
-> __might_sleep(), which takes a pointer to a string with the length
-> instead of a null-terminated string.
+> On Fri, 07 Mar 2025 02:36:25 PST (-0800), ben717@andestech.com wrote:
+> > On Thu, Mar 06, 2025 at 04:40:49PM +0000, Conor Dooley wrote:
+> > > [EXTERNAL MAIL]
+> > 
+> > > Date: Thu, 6 Mar 2025 16:40:49 +0000
+> > > From: Conor Dooley <conor@kernel.org>
+> > > To: Ben Zong-You Xie <ben717@andestech.com>
+> > > Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+> > >  paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+> > >  alex@ghiti.fr
+> > > Subject: Re: [PATCH] riscv: add Andes SoC family Kconfig support
+> > > 
+> > > On Wed, Mar 05, 2025 at 11:05:26AM +0800, Ben Zong-You Xie wrote:
+> > > > The first SoC in the Andes series is QiLai. It includes a high-performance
+> > > > quad-core RISC-V AX45MP cluster and one NX27V vector processor.
+> > > 
+> > > I'd expect a config option like this to come with the user, which in
+> > > this case is the dts etc for a board using the QiLai SoC or drivers for
+> > > the SoC. Without dts or drivers, there's no reason to ever enable this,
+> > > so where are those patches?
+> > > 
+> > > Cheers,
+> > > Conor.
+> > > 
+> > 
+> > Hi Conor,
+> > 
+> > We are still preparing those patches for upstream, and we will add them
+> > in the next patch series.
 > 
-> Rust's core::panic::Location::file(), which gives the file name of a
-> caller, doesn't provide a null-terminated
-> string. __might_sleep_precision() uses a precision specifier in the
-> printk format, which specifies the length of a string; a string
-> doesn't need to be a null-terminated.
+> This is still "Needs Ack" in patchwork, so
 > 
-> Modify __might_sleep() to call __might_sleep_precision() but the
-> impact should be negligible. When printing the error (sleeping
-> function called from invalid context), the precision string format is
-> used instead of the simple string format; the precision specifies the
-> the maximum length of the displayed string.
+> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
 > 
-> Note that Location::file() providing a null-terminated string for
-> better C interoperability is under discussion [1].
-> 
-> [1]: https://github.com/rust-lang/libs-team/issues/466
-> 
-> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Co-developed-by: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> Link: https://lore.kernel.org/r/20250410225623.152616-2-fujita.tomonori@gmail.com
-> ---
->  include/linux/kernel.h |  2 ++
->  kernel/sched/core.c    | 62 ++++++++++++++++++++++++++++--------------
->  2 files changed, 43 insertions(+), 21 deletions(-)
-> 
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index be2e8c0a187e..086ee1dc447e 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -87,6 +87,7 @@ extern int dynamic_might_resched(void);
->  #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
->  extern void __might_resched(const char *file, int line, unsigned int offsets);
->  extern void __might_sleep(const char *file, int line);
-> +extern void __might_sleep_precision(const char *file, int len, int line);
+> Though like Conor says, we need the rest of the code to do anything
+> here, so that's really just a way to get it out of my queue ;)
+>
 
-Ugh.
+I have not added the remaining code in the next version of this patch series.
+Instead, I’ve submitted a new patch series [1] that incorporates this patch.
+Maybe add your Acked-by tag to the new series and disregard this patch.
 
-Firstly, '_precision' is really ambiguous in this context and suggests 
-'precise sleep' or something like that, which this is not about at all. 
-So the naming here is all sorts of bad already.
-
-But more importantly, this is really a Rust problem. Does Rust really 
-have no NUL-terminated strings? It should hide them in shame and 
-construct proper, robust strings, instead of spreading this disease to 
-the rest of the kernel, IMHO ...
-
-Rust is supposed to be about increased security, right? How does extra, 
-nonsensical complexity for simple concepts such as strings achieve 
-that? If the Rust runtime wants to hook into debug facilities of the 
-Linux kernel then I have bad news: almost all strings used by kernel 
-debugging facilities are NUL-terminated.
-
-So I really don't like this patch. Is there no other way to do this?
+[1] https://patchwork.kernel.org/project/linux-riscv/cover/20250503151829.605006-1-ben717@andestech.com/
 
 Thanks,
+Ben
 
-	Ingo
+> > 
+> > Thanks,
+> > Ben
+> > 
+> > > >
+> > > > For further information, refer to [1].
+> > > >
+> > > > [1] https://www.andestech.com/en/products-solutions/andeshape-platforms/qilai-chip/
+> > > >
+> > > > Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
+> > > > ---
+> > > >  arch/riscv/Kconfig.errata | 2 +-
+> > > >  arch/riscv/Kconfig.socs   | 9 +++++++++
+> > > >  2 files changed, 10 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/arch/riscv/Kconfig.errata b/arch/riscv/Kconfig.errata
+> > > > index e318119d570d..be76883704a6 100644
+> > > > --- a/arch/riscv/Kconfig.errata
+> > > > +++ b/arch/riscv/Kconfig.errata
+> > > > @@ -12,7 +12,7 @@ config ERRATA_ANDES
+> > > >
+> > > >  config ERRATA_ANDES_CMO
+> > > >    bool "Apply Andes cache management errata"
+> > > > -  depends on ERRATA_ANDES && ARCH_R9A07G043
+> > > > +  depends on ERRATA_ANDES && (ARCH_R9A07G043 || ARCH_ANDES)
+> > > >    select RISCV_DMA_NONCOHERENT
+> > > >    default y
+> > > >    help
+> > > > diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+> > > > index 1916cf7ba450..b89b6e0d1bc9 100644
+> > > > --- a/arch/riscv/Kconfig.socs
+> > > > +++ b/arch/riscv/Kconfig.socs
+> > > > @@ -1,5 +1,14 @@
+> > > >  menu "SoC selection"
+> > > >
+> > > > +config ARCH_ANDES
+> > > > +  bool "Andes SoCs"
+> > > > +  depends on MMU && !XIP_KERNEL
+> > > > +  select ERRATA_ANDES
+> > > > +  select ERRATA_ANDES_CMO
+> > > > +  select AX45MP_L2_CACHE
+> > > > +  help
+> > > > +    This enables support for Andes SoC platform hardware.
+> > > > +
+> > > >  config ARCH_MICROCHIP_POLARFIRE
+> > > >    def_bool ARCH_MICROCHIP
+> > > >
+> > > > --
+> > > > 2.34.1
+> > > >
+> > > >
+> > > > _______________________________________________
+> > > > linux-riscv mailing list
+> > > > linux-riscv@lists.infradead.org
+> > > > http://lists.infradead.org/mailman/listinfo/linux-riscv
