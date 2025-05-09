@@ -1,48 +1,25 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A24F20E315;
-	Fri,  9 May 2025 05:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44CC31FF5E3;
+	Fri,  9 May 2025 05:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746768853; cv=none; b=Qqw4cvskTs8Z8IsUxKVObzhwLRznDxmJfN0ENSA913vHSDW9Ay8A8ihf+WKpzsXD0HXkwsBkOXZFErmTBfAQY9/462TrMg0e6NHh82oQ43erj4qkRZLxbuNdQYJhgU3xiHQ+KCJBP+xAW4dMXaElFGVpmq6H5YyOlhv6wQm49ZQ=
+	t=1746768955; cv=none; b=MEh7Hoa5sAw2OMlnLLxr/tcOyftYHhjO6APxa6vafuhdKGxEK5nPC6PHCamaHdLtzvkHcKJs2Vhni8Qs630bTQwwKjE+rL3FJvTLhv5hYsSnpGf87sQBt78h5+w9lRbMUmLLtcgfhlp3+bEilpF3VmSRtIgWRXx2eYVQlp0qDR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746768853; c=relaxed/simple;
-	bh=lV6qN20pLad+cm9mpExutnziNoWU2PexhuAq8LDbEhE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=R5sfOATDUiYo4NfqJdCoPtJtc/Bh+BDEmUEN36moYCPGaeP9m9AjGBao57P6TY5BFOTVwzD2wAQrmT6+/TScItRu0zIODgFnDyV5dgVjslhyFIU+EAbJ59VAyIPdE5sTxMdVq0QM9qqqit1ShE5ixAJKQAJL8BLxWof3odq6lWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Sx5qy/Pj; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Sx5qy/Pj"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54926dVW010313;
-	Fri, 9 May 2025 05:33:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4jcVICLH4uQlxeBQ6ksUX5aJGGjtnC7mMv6d27x6SsY=; b=Sx5qy/PjhxeGKE6g
-	OHUgAo0t9ptMtFqYaMdJSgbUDxuxANfn0c1RXQlXy1C9XhQ1A4kXKWXUexho9MCu
-	gRm2qJv2keIHkRAmE/BZGm6AOTM0LoFIWCg0IZvpXvHXOQzmKZ8gQ/G/VheYWf9X
-	4xstCWb7WwA448vEQHEmaiRGlGjN8LJawyPEqxyy5ibYmnSxrPy/atAOtjEgmzqX
-	VH3GhXIwistUP6AyDewxU2TMQa/KzI/25QQSmJ8T4vNb2FAgOvBpgPdmG2mRCMbb
-	DKr6fnHc14vcsWN+XxWikHazIdNvXqLCWEdhxiK+d5mRccJH5vY6sZjg76iJpI0/
-	0+iwDw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp7bj48-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 05:33:47 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5495XlG1007836
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 9 May 2025 05:33:47 GMT
-Received: from [10.239.155.136] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
- 22:33:43 -0700
-Message-ID: <7f0f1526-bae4-429c-977c-6c20ed443225@quicinc.com>
-Date: Fri, 9 May 2025 13:33:40 +0800
+	s=arc-20240116; t=1746768955; c=relaxed/simple;
+	bh=q8tnmVg/VhXwK3bTsXqED8fAGwEd9hNQOcYH/UvILzY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uNAzLw7OZUxD6SlOKrNUerznzmSuKduHGkWpEYY5cN9QYdCiUN+9L42gBi515BvcxMp0MEnZVD+UqGRpiF63nGSlhxIhiYQryClJZ6xf1gKgjqv2EncW/KWjH7RrOv1zgnDVgrbkMtn5xBAk1wGu4u/tIutKJefYkhX0qvzl7lE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A090153B;
+	Thu,  8 May 2025 22:35:41 -0700 (PDT)
+Received: from [10.162.43.14] (K4MQJ0H1H2.blr.arm.com [10.162.43.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C5773F58B;
+	Thu,  8 May 2025 22:35:48 -0700 (PDT)
+Message-ID: <ecd0bc7e-8af5-40d6-b118-1604d2851f6b@arm.com>
+Date: Fri, 9 May 2025 11:05:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,83 +27,382 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] scsi: ufs: qcom: Map devfreq OPP freq to UniPro
- Core Clock freq
-To: Bean Huo <huobean@gmail.com>, <quic_cang@quicinc.com>,
-        <bvanassche@acm.org>, <mani@kernel.org>, <beanhuo@micron.com>,
-        <avri.altman@wdc.com>, <junwoo80.lee@samsung.com>,
-        <martin.petersen@oracle.com>, <quic_nguyenb@quicinc.com>,
-        <quic_nitirawa@quicinc.com>, <quic_rampraka@quicinc.com>,
-        <neil.armstrong@linaro.org>, <luca.weiss@fairphone.com>,
-        <konrad.dybcio@oss.qualcomm.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        "Manivannan
- Sadhasivam" <manivannan.sadhasivam@linaro.org>,
-        "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>,
-        open list
-	<linux-kernel@vger.kernel.org>
-References: <20250507074415.2451940-1-quic_ziqichen@quicinc.com>
- <20250507074415.2451940-3-quic_ziqichen@quicinc.com>
- <4575f37d5221048bfd061c561e42389ae569ca39.camel@gmail.com>
+Subject: Re: [PATCH v1] selftests/mm: add simple VM_PFNMAP tests based on
+ mmap'ing /dev/mem
+To: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Ingo Molnar
+ <mingo@redhat.com>, Peter Xu <peterx@redhat.com>
+References: <20250508222041.1647645-1-david@redhat.com>
 Content-Language: en-US
-From: Ziqi Chen <quic_ziqichen@quicinc.com>
-In-Reply-To: <4575f37d5221048bfd061c561e42389ae569ca39.camel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA1MSBTYWx0ZWRfX1EWi31PsprNk
- 5Bk74kBi7qD8bP3FLp6vOQy9PdaDuWyH+0gOaHKYFcLSKC7iMlkEhHqGEZLb48SPacjFHdswgZt
- 4Wd1fS304TBsEOYW5WI9Ue4tpCA0LzWBHP61VN+oyp6uM6mDHeKK36zx9BxyD3Rs13XKSkBLUAN
- fFUqYOTJpj3/Mcyc2kGc0N3ndCGkEkheafBN5OC/hVHsfLvNRfB6UKAfldTSqpfpK/V6WfwpjEP
- RU9oOOdOK9JGZnaDOYqYPxV66d/83OdanmuVTxAbm6Naq9yTRITWhYD7XrRCe/rDwl/CA0pHh8N
- biWerdjkV5heP/9jH+twyopn/hckXcLTOqYQa5dUV2WXdOaNcVkN3AiXZdI/ES1SFT9w4fTnGL8
- 9pSVshW/9e1ftEV+rr1q2r4wkeD0+WzlCbQutxuMGRvP/hwxujoMggH5ssbxhMjsciKgM8ns
-X-Proofpoint-GUID: affFuECpaKcv-1JmpUaDn1Y1cZ3Bs7qd
-X-Authority-Analysis: v=2.4 cv=B/G50PtM c=1 sm=1 tr=0 ts=681d93bb cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=tK7kR3B1CNhtWZaus9oA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: affFuECpaKcv-1JmpUaDn1Y1cZ3Bs7qd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_02,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0 spamscore=0
- suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505090051
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <20250508222041.1647645-1-david@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-On 5/8/2025 5:21 PM, Bean Huo wrote:
-> On Wed, 2025-05-07 at 15:44 +0800, Ziqi Chen wrote:
->> -       return ufs_qcom_set_core_clk_ctrl(hba, freq);
->> +       return ufs_qcom_set_core_clk_ctrl(hba, false, freq);
->>   }
->>   
->>   static int ufs_qcom_clk_scale_notify(struct ufs_hba *hba, bool scale_up,
->> @@ -2081,11 +2100,53 @@ static int ufs_qcom_config_esi(struct ufs_hba *hba)
->>          return ret;
->>   }
->>   
->> +static unsigned long ufs_qcom_opp_freq_to_clk_freq(struct ufs_hba *hba,
->> +                                                                                                  unsigned long freq, char *name)
+On 09/05/25 3:50 am, David Hildenbrand wrote:
+> Let's test some basic functionality using /dev/mem. These tests will
+> implicitly cover some PAT (Page Attribute Handling) handling on x86.
 > 
-> 
-> This tab indentation is strange!
-> 
-Thanks Bean, it is my fault , I didn't change My IDE Tab indentation
-size to 8 characters, it is still 4 . let me update.
+> These tests will only run when /dev/mem access to the first two pages
+> in physical address space is possible and allowed; otherwise, the tests
+> are skipped.
 
-BRs,
-Ziqi
+Some generic comments:
+1. I think you should also update .gitignore?
+2. You can use ksft_exit_fail_perror() for wherever you want to print 
+strerror(errno).
+
 > 
->> +{
->> +       struct ufs_clk_info *clki
+> On current x86-64 with PAT inside a VM, all tests pass:
 > 
+> 	TAP version 13
+> 	1..19
+> 	ok 1 madvise(MADV_DONTNEED) should be disallowed
+> 	ok 2 madvise(MADV_DONTNEED_LOCKED) should be disallowed
+> 	ok 3 madvise(MADV_FREE) should be disallowed
+> 	ok 4 madvise(MADV_WIPEONFORK) should be disallowed
+> 	ok 5 madvise(MADV_COLD) should be disallowed
+> 	ok 6 madvise(MADV_PAGEOUT) should be disallowed
+> 	ok 7 madvise(MADV_POPULATE_READ) should be disallowed
+> 	ok 8 madvise(MADV_POPULATE_WRITE) should be disallowed
+> 	ok 9 munmap() splitting
+> 	ok 10 mmap() after splitting
+> 	ok 11 mremap(MREMAP_FIXED)
+> 	ok 12 mremap() shrinking
+> 	ok 13 mremap() growing should be disallowed
+> 	ok 14 mprotect(PROT_NONE)
+> 	ok 15 SIGSEGV expected
+> 	ok 16 mprotect(PROT_READ)
+> 	ok 17 SIGSEGV not expected
+> 	ok 18 fork()
+> 	ok 19 SIGSEGV in child not expected
+> 	# Totals: pass:19 fail:0 xfail:0 xpass:0 skip:0 error:0
+> 
+> However, we are able to trigger:
+> 
+> [   27.888251] x86/PAT: pfnmap:1790 freeing invalid memtype [mem 0x00000000-0x00000fff]
+> 
+> There are probably more things worth testing in the future, such as
+> MAP_PRIVATE handling. But this set of tests is sufficient to cover most of
+> the things we will rework regarding PAT handling.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Xu <peterx@redhat.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+> 
+> On current mm-unstable, the MADV_POPULATE_READ test fails because
+> mm-unstable contains a patch [1] that must be dropped.
+> 
+> [1] https://lore.kernel.org/all/20250507154105.763088-2-p.antoniou@partner.samsung.com/
+> 
+> ---
+>   tools/testing/selftests/mm/Makefile |   1 +
+>   tools/testing/selftests/mm/pfnmap.c | 278 ++++++++++++++++++++++++++++
+>   2 files changed, 279 insertions(+)
+>   create mode 100644 tools/testing/selftests/mm/pfnmap.c
+> 
+> diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
+> index ad4d6043a60f0..ae6f994d3add7 100644
+> --- a/tools/testing/selftests/mm/Makefile
+> +++ b/tools/testing/selftests/mm/Makefile
+> @@ -84,6 +84,7 @@ TEST_GEN_FILES += mremap_test
+>   TEST_GEN_FILES += mseal_test
+>   TEST_GEN_FILES += on-fault-limit
+>   TEST_GEN_FILES += pagemap_ioctl
+> +TEST_GEN_FILES += pfnmap
+>   TEST_GEN_FILES += thuge-gen
+>   TEST_GEN_FILES += transhuge-stress
+>   TEST_GEN_FILES += uffd-stress
+> diff --git a/tools/testing/selftests/mm/pfnmap.c b/tools/testing/selftests/mm/pfnmap.c
+> new file mode 100644
+> index 0000000000000..59be2f3221124
+> --- /dev/null
+> +++ b/tools/testing/selftests/mm/pfnmap.c
+> @@ -0,0 +1,278 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Basic VM_PFNMAP tests relying on mmap() of '/dev/mem'
+> + *
+> + * Copyright 2025, Red Hat, Inc.
+> + *
+> + * Author(s): David Hildenbrand <david@redhat.com>
+> + */
+> +#define _GNU_SOURCE
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <stdint.h>
+> +#include <unistd.h>
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <signal.h>
+> +#include <setjmp.h>
+> +#include <linux/mman.h>
+> +#include <sys/mman.h>
+> +#include <sys/wait.h>
+> +
+> +#include "../kselftest.h"
+> +#include "vm_util.h"
+> +
+> +static size_t pagesize;
+> +static int pagemap_fd;
+> +static int dev_mem_fd;
+> +static sigjmp_buf env;
+> +
+> +static void signal_handler(int sig)
+> +{
+> +	if (sig == SIGSEGV)
+> +		siglongjmp(env, 1);
+> +	siglongjmp(env, 2);
+> +}
+> +
+> +static void sense_support(void)
+> +{
+> +	char *addr, tmp;
+> +	int ret;
+> +
+> +	dev_mem_fd = open("/dev/mem", O_RDONLY);
+> +	if (dev_mem_fd < 0)
+> +		ksft_exit_skip("Cannot open '/dev/mem': %s\n", strerror(errno));
+> +
+> +	/* We'll require the first two pages throughout our tests ... */
+> +	addr = mmap(0, pagesize * 2, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+> +	if (addr == MAP_FAILED)
+> +		ksft_exit_skip("Cannot mmap '/dev/mem'");
+> +
+> +	/* ... and want to be able to read from them. */
+> +	ret = sigsetjmp(env, 1);
+> +	if (!ret) {
+> +		tmp = *addr + *(addr + pagesize);
+> +		asm volatile("" : "+r" (tmp));
+> +	}
+> +	if (ret)
+> +		ksft_exit_skip("Cannot read-access mmap'ed '/dev/mem'");
+> +
+> +	munmap(addr, pagesize * 2);
+> +}
+> +
+> +static void test_madvise(void)
+> +{
+> +#define INIT_ADVICE(nr) { nr, #nr}
+> +	const struct {
+> +		int nr;
+> +		const char *name;
+> +	} advices[] = {
+> +		INIT_ADVICE(MADV_DONTNEED),
+> +		INIT_ADVICE(MADV_DONTNEED_LOCKED),
+> +		INIT_ADVICE(MADV_FREE),
+> +		INIT_ADVICE(MADV_WIPEONFORK),
+> +		INIT_ADVICE(MADV_COLD),
+> +		INIT_ADVICE(MADV_PAGEOUT),
+> +		INIT_ADVICE(MADV_POPULATE_READ),
+> +		INIT_ADVICE(MADV_POPULATE_WRITE),
+> +	};
+> +	char *addr;
+> +	int ret, i;
+> +
+> +	addr = mmap(0, pagesize, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+> +	if (addr == MAP_FAILED)
+> +		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
+> +
+> +	/* All these advices must be rejected. */
+> +	for (i = 0; i < ARRAY_SIZE(advices); i++) {
+> +		ret = madvise(addr, pagesize, advices[i].nr);
+> +		ksft_test_result(ret && errno == EINVAL,
+> +				 "madvise(%s) should be disallowed\n",
+> +				 advices[i].name);
+> +	}
+> +
+> +	munmap(addr, pagesize);
+> +}
+> +
+> +static void test_munmap_splitting(void)
+> +{
+> +	char *addr1, *addr2;
+> +	int ret;
+> +
+> +	addr1 = mmap(0, pagesize * 2, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+> +	if (addr1 == MAP_FAILED)
+> +		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
+> +
+> +	/* Unmap the first pages. */
+> +	ret = munmap(addr1, pagesize);
+> +	ksft_test_result(!ret, "munmap() splitting\n");
+> +
+> +	/* Remap the first page while the second page is still mapped. */
+> +	addr2 = mmap(0, pagesize, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+> +	ksft_test_result(addr2 != MAP_FAILED, "mmap() after splitting\n");
+> +
+> +	if (addr2 != MAP_FAILED)
+> +		munmap(addr2, pagesize);
+> +	if (!ret)
+> +		munmap(addr1 + pagesize, pagesize);
+> +	else
+> +		munmap(addr1, pagesize * 2);
+> +}
+> +
+> +static void test_mremap_fixed(void)
+> +{
+> +	char *addr, *new_addr, *ret;
+> +
+> +	addr = mmap(0, pagesize * 2, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+> +	if (addr == MAP_FAILED)
+> +		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
+> +
+> +	/* Reserve a destination area. */
+> +	new_addr = mmap(0, pagesize * 2, PROT_READ, MAP_ANON | MAP_PRIVATE, -1, 0);
+> +	if (new_addr == MAP_FAILED)
+> +		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
+> +
+> +	/* mremap() over our destination. */
+> +	ret = mremap(addr, pagesize * 2, pagesize * 2,
+> +		     MREMAP_FIXED | MREMAP_MAYMOVE, new_addr);
+> +	ksft_test_result(ret == new_addr, "mremap(MREMAP_FIXED)\n");
+> +	if (ret != new_addr)
+> +		munmap(new_addr, pagesize * 2);
+> +	munmap(addr, pagesize * 2);
+> +}
+> +
+> +static void test_mremap_shrinking(void)
+> +{
+> +	char *addr, *ret;
+> +
+> +	addr = mmap(0, pagesize * 2, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+> +	if (addr == MAP_FAILED)
+> +		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
+> +
+> +	/* Shrinking is expected to work. */
+> +	ret = mremap(addr, pagesize * 2, pagesize, 0);
+> +	ksft_test_result(ret == addr, "mremap() shrinking\n");
+> +	if (ret != addr)
+> +		munmap(addr, pagesize * 2);
+> +	else
+> +		munmap(addr, pagesize);
+> +}
+> +
+> +static void test_mremap_growing(void)
+> +{
+> +	char *addr, *ret;
+> +
+> +	addr = mmap(0, pagesize, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+> +	if (addr == MAP_FAILED)
+> +		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
+> +
+> +	/* Growing is not expected to work. */
+> +	ret = mremap(addr, pagesize, pagesize * 2, MREMAP_MAYMOVE);
+> +	ksft_test_result(ret == MAP_FAILED,
+> +			 "mremap() growing should be disallowed\n");
+> +	if (ret == MAP_FAILED)
+> +		munmap(addr, pagesize);
+> +	else
+> +		munmap(ret, pagesize * 2);
+> +}
+> +
+> +static void test_mprotect(void)
+> +{
+> +	char *addr, tmp;
+> +	int ret;
+> +
+> +	addr = mmap(0, pagesize, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+> +	if (addr == MAP_FAILED)
+> +		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
+> +
+> +	/* With PROT_NONE, read access must result in SIGSEGV. */
+> +	ret = mprotect(addr, pagesize, PROT_NONE);
+> +	ksft_test_result(!ret, "mprotect(PROT_NONE)\n");
+> +
+> +	ret = sigsetjmp(env, 1);
+> +	if (!ret) {
+> +		tmp = *addr;
+> +		asm volatile("" : "+r" (tmp));
+> +	}
+> +	ksft_test_result(ret == 1, "SIGSEGV expected\n");
+> +
+> +	/* With PROT_READ, read access must again succeed. */
+> +	ret = mprotect(addr, pagesize, PROT_READ);
+> +	ksft_test_result(!ret, "mprotect(PROT_READ)\n");
+> +
+> +	ret = sigsetjmp(env, 1);
+> +	if (!ret) {
+> +		tmp = *addr;
+> +		asm volatile("" : "+r" (tmp));
+> +	}
+> +	ksft_test_result(!ret, "SIGSEGV not expected\n");
+> +
+> +	munmap(addr, pagesize);
+> +}
+> +
+> +static void test_fork(void)
+> +{
+> +	char *addr, tmp;
+> +	int ret;
+> +
+> +	addr = mmap(0, pagesize, PROT_READ, MAP_SHARED, dev_mem_fd, 0);
+> +	if (addr == MAP_FAILED)
+> +		ksft_exit_fail_msg("mmap() failed: %s\n", strerror(errno));
+> +
+> +	/* fork() a child and test if the child can access the page. */
+> +	ret = fork();
+> +	if (ret < 0) {
+> +		ksft_test_result_fail("fork()\n");
+> +		goto out;
+> +	} else if (!ret) {
+> +		ret = sigsetjmp(env, 1);
+> +		if (!ret) {
+> +			tmp = *addr;
+> +			asm volatile("" : "+r" (tmp));
+> +		}
+> +		/* Return the result to the parent. */
+> +		exit(ret);
+> +	}
+> +	ksft_test_result_pass("fork()\n");
+> +
+> +	/* Wait for our child and obtain the result. */
+> +	wait(&ret);
+> +	if (WIFEXITED(ret))
+> +		ret = WEXITSTATUS(ret);
+> +	else
+> +		ret = -EINVAL;
+> +
+> +	ksft_test_result(!ret, "SIGSEGV in child not expected\n");
+> +out:
+> +	munmap(addr, pagesize);
+> +}
+> +
+> +int main(int argc, char **argv)
+> +{
+> +	int err;
+> +
+> +	ksft_print_header();
+> +	ksft_set_plan(19);
+> +
+> +	pagesize = getpagesize();
+> +	pagemap_fd = open("/proc/self/pagemap", O_RDONLY);
+> +	if (pagemap_fd < 0)
+> +		ksft_exit_fail_msg("opening pagemap failed\n");
+> +	if (signal(SIGSEGV, signal_handler) == SIG_ERR)
+> +		ksft_exit_fail_msg("signal() failed: %s\n", strerror(errno));
+> +
+> +	sense_support();
+> +	test_madvise();
+> +	test_munmap_splitting();
+> +	test_mremap_fixed();
+> +	test_mremap_shrinking();
+> +	test_mremap_growing();
+> +	test_mprotect();
+> +	test_fork();
+> +
+> +	err = ksft_get_fail_cnt();
+> +	if (err)
+> +		ksft_exit_fail_msg("%d out of %d tests failed\n",
+> +				   err, ksft_test_num());
+> +	ksft_exit_pass();
+> +}
 
