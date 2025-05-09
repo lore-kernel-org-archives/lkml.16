@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE3C290DA1;
-	Fri,  9 May 2025 12:55:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D862918CD;
+	Fri,  9 May 2025 12:55:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746795306; cv=none; b=myKgREclvvnouwGRfb81SdOKk7oOkIn2qS/K3Us8VVkCffu/475c8CoKr/65viw7PHRI0nZ+634TawXqLIi4QBNltKiE0lA01C+p99xahoq1Qlo7Djg/TmhkOvoJcF+6mY4rHDyNhGmkdqy7CBL1JT531CLVCQ+iAIiP41k1Q6M=
+	t=1746795306; cv=none; b=j3HXn1cSYExo8tchWQWcOCWuVdEsBtd4OSHyL2JFssgRxE+GxFVw6j5lYV4lw11DXt2CZVIOoZbRwmdq+ud6Am2QXWTz5DC1Vg3Vi0Lslid6Az6+qWvLrX3Ar3deEUUh5ZbqzptmSWGvpoiqQ0Mup4gdiW6U8RnEXO+AUf6Ot54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746795306; c=relaxed/simple;
-	bh=c3c94OjA1q5qb8EGSYnHVBVy8iOw9HUdPL9oEFYfxLk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jWRrFYex4iLboGjQKE+BTxDHzX8A1LYIMDmQ+NpYLYv9Xi9+iRKZqpIozh69p7nWL/ZVK8qfv/U4ms2z94pHA7grrM5p5cXhTFpJQYVUr0bEClayoDsdFsALZ+Y8Ed/EGj5CkNgoUlxEU7opaVzVv188Ix25r0Fo/s4ONKUQ/FY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DimXxpcf; arc=none smtp.client-ip=10.30.226.201
+	bh=g7LsXDd+j505V+MKQpG5RDYoahnYOKgJjZC/QSb5FNw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=uedX5XRsgk8EwMTgYNpkYceUrE8QZ14lgn7uq4l2VT/oIV2ptRhXyudu1zadDDkBzLLGWf+cViSOeyAr9W6O9l1WvOi0Y4AJ82JM10dXAC4VHg7fbD/782+lkqcAilXjjZPZLoRivBADscGAcD5VPhOeRXYhF9ojA2LvKDiaGs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AZos1YGS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DimXxpcf"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AC6E0C4CEEB;
-	Fri,  9 May 2025 12:55:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZos1YGS"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0B7ABC116C6;
+	Fri,  9 May 2025 12:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746795305;
-	bh=c3c94OjA1q5qb8EGSYnHVBVy8iOw9HUdPL9oEFYfxLk=;
-	h=From:Subject:Date:To:Cc:From;
-	b=DimXxpcfw4ebKQKH7DiK6f8PW/85zKA5OAFMbEXfxOrhT0N20cI4VMF5gYPrckgiU
-	 F7rXr8UXkQwhA81+Aj1F6DhsPHy3xi0bQoho7o4uFaBrof6zFimYIV+Pvg/9KSFriQ
-	 Vln4fCLIj70oiahJ7qOxo9+5Me4NpybqeRxX9Yz9bhzRhjOtGiKPsuXO5kygpU0RuW
-	 9VXrlGN/WOzNTqjoSB7/h8d3vsVOWF1NMa7BAr+7G4U03ZkNyEFZcF+k7wtLdW2uVu
-	 dBf5mLXoYU41w2aADbw5csR/3VdK6kbIvay2kxYMvuY14x9NQyrGCFbb5qt8Z/Pvga
-	 +7Do9GVd7Wj5g==
+	s=k20201202; t=1746795306;
+	bh=g7LsXDd+j505V+MKQpG5RDYoahnYOKgJjZC/QSb5FNw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=AZos1YGSXt9UXSVIeC+gyN74Etce15A3NaBIuLDesNCwSOo8s0bEHwUU7oROdtf0n
+	 9HNQ7vhkC/1gkzBpfxg5tdCsy+6Z0fe9pgo5KGojPunL/cCbQ3ZcQ1EV9IsrZq0xBf
+	 SlePsaI7NgcgmhNKzIKwKXu7QrWh9AdvBxtte1MF3wn7WUBxFU8La9kaKH60ytbnuN
+	 R42jbaUt8pZVtpywz35pSPIf815RgDJ162w7DwLKl0+kvM2ZXGTLhV0uRRCXEJsajO
+	 +OcahojoTwqT7CXL4rpDUKZBhR1lxB/BJSbelppvDVoglsfj1mBey7V0UdaDqXQ1T0
+	 AHDQ5F/dS7JKA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C9DC3ABBC;
-	Fri,  9 May 2025 12:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01925C3ABCC;
+	Fri,  9 May 2025 12:55:06 +0000 (UTC)
 From: Joel Granados <joel.granados@kernel.org>
-Subject: [PATCH 00/12] sysctl: Move sysctls to their respective subsystems
- (second batch)
-Date: Fri, 09 May 2025 14:54:04 +0200
-Message-Id: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
+Date: Fri, 09 May 2025 14:54:10 +0200
+Subject: [PATCH 06/12] fork: mv threads-max into kernel/fork.c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,10 +40,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAO36HWgC/x3M3QpAQBBA4VfRXNtaI7ReRdJYg5G/djcpeXeby
- +/inAc8O2EPdfKA40u8HHtEliZgZ9onVjJEA2osdKGNWmhS29XZsAbqV/adBHaoDGVVSTmiNQP
- E+HQ8yv2Pm/Z9Pxv//uxoAAAA
-X-Change-ID: 20250509-jag-mv_ctltables_iter2-9a176a322c9d
+Message-Id: <20250509-jag-mv_ctltables_iter2-v1-6-d0ad83f5f4c3@kernel.org>
+References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
+In-Reply-To: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
 To: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
  Sami Tolvanen <samitolvanen@google.com>, 
  Daniel Gomez <da.gomez@samsung.com>, Kees Cook <kees@kernel.org>, 
@@ -68,126 +66,105 @@ Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org, 
  Joel Granados <joel.granados@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4502;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2440;
  i=joel.granados@kernel.org; h=from:subject:message-id;
- bh=c3c94OjA1q5qb8EGSYnHVBVy8iOw9HUdPL9oEFYfxLk=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGgd+xMW7Hzi52CWL9iWR+Z70SJ7b24h1VVTE
- 9+RcZ6N+tkWRYkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJoHfsTAAoJELqXzVK3
- lkFP/6IL/jqzfrkpLBdybK4gjSc6ouWp4ieAHXYsQp1S7DOTMfmtKoA3WGZiaS/e09VycqVxmV7
- QL7bIphe5aOAGsKRfnzXH/Hw7gCvdsJ7wIDxjbXyoEZUvdZyAOe8ZXj/dvFWk1mTifku+SVY/tF
- 0nAq1rIlLyFh8p7/3PU7knC9Chtj+lelUov03LWHsB7O1+aFpCDy2GRqkhDAeuYFPdE/iQes9mw
- 2NJXuX6auIitRw64qZDDYLrbz2ZhcXKmYkc1m5h4tcIdJPhMOcI5jBaz+xT709w9P0ojGopy/I4
- iRU6Cpv3crKjS07AYXf0mSucoF//u0OalGFPsTMJkN5usP8JcRovnwFrPa+cLE8uC09Z+WXtXIV
- InsEjNTX8XjAZFZ07Z3Im0b4DJaT8bb0HUN1qHPR/smJbhD5qy6XjyWAZ6v1GgsYF1No+2YtLVm
- 74Y6dZPLQqguGo8y7ok+l1LnUwN3yTYUlKz8oHZs4bVH3wIwcgGgmSjJ/E8AWrV+umAJ97WKW55
- TI=
+ bh=g7LsXDd+j505V+MKQpG5RDYoahnYOKgJjZC/QSb5FNw=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGgd+yQ/uWK/HG1C61w82jo0nQJAkZrwNaRTQ
+ Kzdwz6TUJcOyIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJoHfskAAoJELqXzVK3
+ lkFP5gcMAIFO2d6rVgT6EKcTmTnIIh5UBVX/xKxmcuUTXSbrkCQUFpfo23HIWCeg8lL9+/SmVc/
+ wMQuryABzQbKLqJgYFC1QWq55hJcvP+tU2PTyZkeJC/OVtzsTZQ/ekzJOYDMD5OXR7RA7MNpiHw
+ DWGtslYalBKnX4v/OZwXHpjwxW7ypE8DnYYz6VIp/aCFYqJydkFGyJZfbvlzKl+mHZoVO2Mrs4i
+ SmNFu7CS2gpbq2cBPi1pnre4gHOjRveT+FIx/NZOc1ttqqym6PVJsSQpnUGcTJwXZbwHWsFGhbj
+ 4u9+eNLUJC4qoDTTYLnroNX83r/N6o5QnbPCBWjuV3fKNVL21qaJnCrONdHewkNLIcIBCc/7Ojb
+ k12NIcmQoGPLGzmePG67PgJZq04KQsxm0xdPTiQAyBfhB5up3+XiLPdyLFmALcDrr286yquKuuc
+ Rbpu1HJEE6D/X+MWIPZsfT0K9KaTNq1tWG/NTJIcpSunVpPbn0ioZqiTeHwnwZDJdA4QNjcWEC7
+ d8=
 X-Developer-Key: i=joel.granados@kernel.org; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received: by B4 Relay for joel.granados@kernel.org/default with
  auth_id=239
 
-This series relocates sysctl tables from kern_table to their respective
-subsystems. It is mostly moves to core kernel subsystems but also
-includes mm/memory.c and 2 drivers (parisc and tty). With this series we
-are left with 8 ctl_tables out of the original 50 that existed within
-the kern_table array. With all this activity in kernel/sysctl.c, I took
-the liberty of removing unneeded include headers as well as outdated
-changelog comments.
+make sysctl_max_threads static as it no longer needs to be exported into
+sysctl.c.
 
-By decentralizing sysctl registrations, subsystem maintainers regain
-control over their sysctl interfaces, improving maintainability and
-reducing the likelihood of merge conflicts. All this is made possible by
-the work done to reduce the ctl_table memory footprint in commit
-d7a76ec87195 ("sysctl: Remove check for sentinel element in ctl_table
-arrays").
-
-A few comments on the process:
-1. If you see that the change is good and want to push it through a tree
-   different than sysctl, please tell me so I can remove it from this
-   series and try to avoid conflicts in linux-next.
-2. Apologies if you have received this in error. Please tell me if you
-   want to be removed from recipient list and note that it is difficult
-   to actually know who is interested in these "treewide" changes.
-
-Testing done by running sysctl selftests on x86_64 and 0-day.
-
-You can find the first batch here [1], if you are curious.
-
-Comments are greatly appreciated
-
-[1] https://lore.kernel.org/20250313-jag-mv_ctltables-v3-0-91f3bb434d27@kernel.org
-
-To: Luis Chamberlain <mcgrof@kernel.org>
-To: Petr Pavlu <petr.pavlu@suse.com>
-To: Sami Tolvanen <samitolvanen@google.com>
-To: Daniel Gomez <da.gomez@samsung.com>
-To: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-To: Ingo Molnar <mingo@redhat.com>
-To: Will Deacon <will@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-To: Waiman Long <longman@redhat.com>
-To: Paul E. McKenney <paulmck@kernel.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-To: Neeraj Upadhyay <neeraj.upadhyay@kernel.org>
-To: Joel Fernandes <joel@joelfernandes.org>
-To: Josh Triplett <josh@joshtriplett.org>
-To: Uladzislau Rezki <urezki@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Lai Jiangshan <jiangshanlai@gmail.com>
-To: Zqiang <qiang.zhang1211@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-To: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
-To: Helge Deller <deller@gmx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-modules@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: rcu@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-parisc@vger.kernel.org
-Cc: linux-serial@vger.kernel.org
+This is part of a greater effort to move ctl tables into their
+respective subsystems which will reduce the merge conflicts in
+kernel/sysctl.c.
 
 Signed-off-by: Joel Granados <joel.granados@kernel.org>
 ---
-Joel Granados (12):
-      module: Move modprobe_path and modules_disabled ctl_tables into the module subsys
-      locking/rtmutex: Move max_lock_depth into rtmutex.c
-      rcu: Move rcu_stall related sysctls into rcu/tree_stall.h
-      mm: move randomize_va_space into memory.c
-      parisc/power: Move soft-power into power.c
-      fork: mv threads-max into kernel/fork.c
-      Input: sysrq: mv sysrq into drivers/tty/sysrq.c
-      sysctl: Move tainted ctl_table into kernel/panic.c
-      sysctl: move cad_pid into kernel/pid.c
-      sysctl: Move sysctl_panic_on_stackoverflow to kernel/panic.c
-      sysctl: Remove (very) old file changelog
-      sysctl: Remove superfluous includes from kernel/sysctl.c
+ include/linux/sysctl.h |  3 ---
+ kernel/fork.c          | 20 +++++++++++++++++++-
+ kernel/sysctl.c        |  7 -------
+ 3 files changed, 19 insertions(+), 11 deletions(-)
 
- drivers/parisc/power.c       |  20 +++-
- drivers/tty/sysrq.c          |  38 +++++++
- include/linux/kmod.h         |   1 -
- include/linux/panic.h        |   2 -
- include/linux/rtmutex.h      |   2 -
- include/linux/sysctl.h       |   4 -
- kernel/fork.c                |  20 +++-
- kernel/locking/rtmutex.c     |  23 +++++
- kernel/locking/rtmutex_api.c |   5 -
- kernel/module/kmod.c         |  32 +++++-
- kernel/panic.c               |  60 +++++++++++
- kernel/pid.c                 |  32 ++++++
- kernel/rcu/tree_stall.h      |  33 +++++-
- kernel/sysctl.c              | 233 -------------------------------------------
- mm/memory.c                  |  18 ++++
- 15 files changed, 271 insertions(+), 252 deletions(-)
----
-base-commit: 7a94ff386a4a0d9322c56c0e998dd20468d869b1
-change-id: 20250509-jag-mv_ctltables_iter2-9a176a322c9d
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index ae762eabb7c9715e973356cadafbaaea3f20c7e9..30bcbc59d12d2f4cec7545e7ee3f5ea5f0eefbd7 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -284,7 +284,4 @@ static inline bool sysctl_is_alias(char *param)
+ }
+ #endif /* CONFIG_SYSCTL */
+ 
+-int sysctl_max_threads(const struct ctl_table *table, int write, void *buffer,
+-		size_t *lenp, loff_t *ppos);
+-
+ #endif /* _LINUX_SYSCTL_H */
+diff --git a/kernel/fork.c b/kernel/fork.c
+index c4b26cd8998b8e7b2b516e0bb0b1d4676ff644dc..ed39064b86c25849c4b21cf99ac68dded05038b3 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -3470,7 +3470,7 @@ int unshare_files(void)
+ 	return 0;
+ }
+ 
+-int sysctl_max_threads(const struct ctl_table *table, int write,
++static int sysctl_max_threads(const struct ctl_table *table, int write,
+ 		       void *buffer, size_t *lenp, loff_t *ppos)
+ {
+ 	struct ctl_table t;
+@@ -3492,3 +3492,21 @@ int sysctl_max_threads(const struct ctl_table *table, int write,
+ 
+ 	return 0;
+ }
++
++static const struct ctl_table fork_sysctl_table[] = {
++	{
++		.procname	= "threads-max",
++		.data		= NULL,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= sysctl_max_threads,
++	},
++};
++
++static int __init init_fork_sysctl(void)
++{
++	register_sysctl_init("kernel", fork_sysctl_table);
++	return 0;
++}
++
++subsys_initcall(init_fork_sysctl);
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 718140251972b797f5aa5a056de40e8856805eed..febf328054aa5a7b2462a256598f86f5ded87c90 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1630,13 +1630,6 @@ static const struct ctl_table kern_table[] = {
+ 		.proc_handler	= proc_do_cad_pid,
+ 	},
+ #endif
+-	{
+-		.procname	= "threads-max",
+-		.data		= NULL,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= sysctl_max_threads,
+-	},
+ 	{
+ 		.procname	= "overflowuid",
+ 		.data		= &overflowuid,
 
-Best regards,
 -- 
-Joel Granados <joel.granados@kernel.org>
+2.47.2
 
 
