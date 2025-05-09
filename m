@@ -1,134 +1,122 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49EFE231841
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D6F231841;
+	Fri,  9 May 2025 16:43:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746808999; cv=none; b=pLG27/hDgZDHTFr2yWszYbBHvqDw/nQuEEnkpUcg11pQzWPHFPDA1GsrwmdnsolsamhfipMdxCoHXA6SjRjotmitQWDhQ7Vn42AKfe6FihZ3YP4UIqXrgDZ2pUZQuSmiUx3iujCcfEUeWs5LVT3G5fIth7lZNHRJPV5uXR8oEIw=
+	t=1746809013; cv=none; b=fzoNk1QlSRP45vA0lDLDCp0ihEn550giWcD8x2j0H9czENLcmW3c+CNXqu4KBk0NdKsEhO0GsosLIBayRQHDe/Ko+0Pwlb+2TycEJvSFOUbRL3v3F8YfLsJ7f59LADTIAfJvuNRbVV/PsWFJmFmOa0x/3YVsO1MxQrD5aZ2DfDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746808999; c=relaxed/simple;
-	bh=ZXQKMYDJsw6I0LVk+NW1H0FwRmbkk1DOz3/fUm64324=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dR+iszcgVNh+nJNhGERI1j3zKSeky+T6CUSjrzCJWfvmsRBrXIz4WfG91We3LygXO9Td12UPGb7JXKxO9VleHwSLIeHzQzzhcXHnEF5bGYpZTsdNN68KezvueV0WXxweASmI2eEQhJuA2+VjO4AddO4if+p2sAAvQ91mz3oIsKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E0D21AC1;
-	Fri,  9 May 2025 09:43:06 -0700 (PDT)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D08B3F5A1;
-	Fri,  9 May 2025 09:43:15 -0700 (PDT)
-Date: Fri, 9 May 2025 17:43:12 +0100
-From: Dave Martin <Dave.Martin@arm.com>
-To: Peter Newman <peternewman@google.com>
-Cc: Reinette Chatre <reinette.chatre@intel.com>,
-	"Luck, Tony" <tony.luck@intel.com>,
-	Fenghua Yu <fenghuay@nvidia.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH v4 13/31] fs/resctrl: Add support for additional monitor
- event display formats
-Message-ID: <aB4woCcnPC5Mz7cf@e133380.arm.com>
-References: <20250429003359.375508-1-tony.luck@intel.com>
- <20250429003359.375508-14-tony.luck@intel.com>
- <4aa0904d-9332-4796-90d6-d858711fc611@intel.com>
- <aB0T_Ep2lJzfwjv5@agluck-desk3>
- <2a19f63a-f9b4-4632-bca2-2f64f6fed57b@intel.com>
- <aB3nGDzW6pNNkYTB@e133380.arm.com>
- <CALPaoCjzrGMTEYmTpH=9o_=N24apE0U057p6Mt6Knt9PoyFmzw@mail.gmail.com>
+	s=arc-20240116; t=1746809013; c=relaxed/simple;
+	bh=oXnee1VZARhUohEdYeUxwx5/k3rkR4bY04LGblDFCUA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qkKGUI0QTHbZG1j/6cMRdH+ickEdIM4nF3ej4bSs0x9MRvg2XpA9L7jY1t+1xqzRXH3pWXrWN+txUVbt7EL9zVnHaEa6gIt3A6dvdFfMZoGjdiFc18qQkHQAKq5QEEsWhaCQTRxmmGA9u9wd9FsvRpYXY6k94rdddLAz2LYN5to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aoby9jkY; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aoby9jkY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F384C4CEE4;
+	Fri,  9 May 2025 16:43:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746809012;
+	bh=oXnee1VZARhUohEdYeUxwx5/k3rkR4bY04LGblDFCUA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Aoby9jkYSsHIORaZ+1lT/gzkUu86s+SxgtJVAx1Kzbg0oKGjugREOivEIR5YQ8bRU
+	 ZOKU9PzT6k31bfe/aMEB4OesgnGZ39ZYdm9jqIPtDzoTlDEHuOXcaA5tJ/kaYOr55H
+	 y+y1gVZ8fAvdIR1JHKeIfFPHGOZ55gXHaVuUt+fOk0q+N0KFcH1Cckibd/bxEbBnRM
+	 OWXovWrOU7PPed7yHKipAzOMirLeuWd8OOftfmIqe84+3FYWe+OgI8sMLLe7raKg3n
+	 6ReKFxDiT/AFEQKhaGIe6qhYA/ORcdZlUXq1W0EEBX6AKd35xrdwV0yA6d0nyp9aDa
+	 Ap+yIoBkYS+CA==
+From: Alexey Gladkov <legion@kernel.org>
+To: Petr Pavlu <petr.pavlu@suse.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>
+Cc: linux-kernel@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	Alexey Gladkov <legion@kernel.org>
+Subject: [PATCH v2 0/6] Add generated modalias to modules.builtin.modinfo
+Date: Fri,  9 May 2025 18:42:31 +0200
+Message-ID: <20250509164237.2886508-1-legion@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1745591072.git.legion@kernel.org>
+References: <cover.1745591072.git.legion@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALPaoCjzrGMTEYmTpH=9o_=N24apE0U057p6Mt6Knt9PoyFmzw@mail.gmail.com>
 
-Hi,
+The modules.builtin.modinfo file is used by userspace (kmod to be specific) to
+get information about builtin modules. Among other information about the module,
+information about module aliases is stored. This is very important to determine
+that a particular modalias will be handled by a module that is inside the
+kernel.
 
-On Fri, May 09, 2025 at 04:46:30PM +0200, Peter Newman wrote:
-> Hi Dave,
-> 
-> On Fri, May 9, 2025 at 1:29 PM Dave Martin <Dave.Martin@arm.com> wrote:
+There are several mechanisms for creating modalias for modules:
 
-[...]
+The first is to explicitly specify the MODULE_ALIAS of the macro. In this case,
+the aliases go into the '.modinfo' section of the module if it is compiled
+separately or into vmlinux.o if it is builtin into the kernel.
 
-> > For example: scaling memory bandwidth percentages for MPAM is a
-> > nuisance because the hardware uses fixed-point values scaled by a power
-> > of 2, not by 100: the two scales can never match up anywhere except at
-> > multiples of 25%, leading to irregular increments when rounded to an
-> > integer percentage value and uncertainty about what the bandwidth_gran
-> > parameter means.  Round-trip conversions between the two
-> > representations become error-prone due to repeated rounding -- this
-> > proved quite fiddly to get right.  Precision beyond 1% increments may
-> > also be available in the hardware, but is not accessible through the
-> > resctrl interface.
-> 
-> Google users got annoyed with these rounding errors very quickly and
-> asked me to change the MBA interface to the raw, fixed-point value
-> used by the MPAM register interface. (but at least shifted down, since
-> the MBW_MIN/MAX fields are left-justified)
+The second is the use of MODULE_DEVICE_TABLE followed by the use of the
+modpost utility. In this case, vmlinux.o no longer has this information and
+does not get it into modules.builtin.modinfo.
 
-That's interesting.
+For example:
 
-Do you find a need to do things like step the bandwidth allocation for
-a control group?  So, as part of a tuning regime, the bandwidth value
-is read out, stepped to the next distinct hardware value and written
-back in?
+$ modinfo pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30
+modinfo: ERROR: Module pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30 not found.
 
-That kind of thing does not map in a convenient way onto the current
-interface, although fire-and-forget programming of a predetermined
-percentage works fine.
+$ modinfo xhci_pci
+name:           xhci_pci
+filename:       (builtin)
+license:        GPL
+file:           drivers/usb/host/xhci-pci
+description:    xHCI PCI Host Controller Driver
 
-Extending my model outline, a 6-bit MPAM MBW_PART implementation might
-be described by:
+The builtin module is missing alias "pci:v*d*sv*sd*bc0Csc03i30*" which will be
+generated by modpost if the module is built separately.
 
-	min: 1
-	max: 64
-	step size: 1
-	multiplier: 1
-	divisor: 64
+To fix this it is necessary to add the generated by modpost modalias to
+modules.builtin.modinfo.
 
-How easy / difficult do you think it would be for userspace to work
-with this, if resctrlfs were to expose the raw control (minus the
-ignored bits) with that metadata?
+Fortunately modpost already generates .vmlinux.export.c for exported symbols. It
+is possible to use this file to create a '.modinfo' section for builtin modules.
+The modules.builtin.modinfo file becomes a composite file. One part is extracted
+from vmlinux.o, the other part from .vmlinux.export.o.
 
-Needless to say, the max and divisor values would dependent on the
-hardware and possibly other factors.  They would be fixed for the
-lifetime of a single resctrl instance at the very least.
+Notes:
+- v2:
+  * Drop patch for mfd because it was already applied and is in linux-next.
+  * The generation of aliases for builtin modules has been redone as
+    suggested by Masahiro Yamada.
+  * Rebase to v6.15-rc5-136-g9c69f8884904
+  * v1: https://lore.kernel.org/all/cover.1745591072.git.legion@kernel.org/
 
-> > For backwards compatibility we probably shouldn't change that
-> > particular interface, but if we can avoid new instances of the same
-> > kind of problem then that would be a benefit: i.e., explicitly tell
-> > userspace how to scale a given parameter.
-> 
-> MBA is not programmed by percentage on AMD, so I'm not sure why this
-> is considered necessary for backwards compatibility.
+Alexey Gladkov (6):
+  scsi: Define MODULE_DEVICE_TABLE only if necessary
+  modules: Add macros to specify modinfo prefix
+  modpost: Make mod_device_table aliases more unique
+  modpost: Create modalias for builtin modules
+  kbuild: Move modules.builtin.modinfo to another makefile
+  kbuild: Create modules.builtin.modinfo for modpost results
 
-I presumed scripts (or pre-tuned data fed through them) are in practice
-pretty platform-specific, so that it will upset people if the interface
-changes between kernel versions at least on a given hardware family.
+ drivers/scsi/BusLogic.c     |  2 +-
+ include/linux/module.h      | 21 +++++++++++-----
+ include/linux/moduleparam.h |  7 ++++--
+ scripts/Makefile.vmlinux    | 50 +++++++++++++++++++++++++++++++++++++
+ scripts/Makefile.vmlinux_o  | 26 +------------------
+ scripts/mod/file2alias.c    | 34 ++++++++++++++++++++++---
+ scripts/mod/modpost.c       | 13 +++++++++-
+ scripts/mod/modpost.h       |  2 ++
+ 8 files changed, 116 insertions(+), 39 deletions(-)
 
-The divergence between AMD and Intel in this area is unfortunate, but
-absolute and proportional bandwidth measures do not really seem to be
-interchangeable -- so a truly unified interface may not be easy to
-achieve either.
+-- 
+2.49.0
 
-Having two control names in the interface might work, say:
-
-	MBP: proportion of total available memory bandwidth (%)
-
-	MBA: absolute memory bandwidth (B/s)
-
-Then just expose the one that the hardware implements natively (while
-still exposing MB as a backwards compatible alias if necessary).
-
-Cheers
----Dave
