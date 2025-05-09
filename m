@@ -1,160 +1,81 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921CD17D2;
-	Fri,  9 May 2025 01:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A70CBA53;
+	Fri,  9 May 2025 01:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746753476; cv=none; b=S3GCF/hHjJ+nCP4T2m5nhcabyDHy4c/4zxO43/PZ0wjO4uqCbxM4Kyq+aUspdE5g6xBWtgB/WPA4vQic1ReT1XhRestvbeMJRM7uzrJPVIBu7+/G+ZilmBJEOjj0imiwULnG2Bfgoym1nd0BL8H562ZjBNofz8Erv4/qrW7OYxI=
+	t=1746753970; cv=none; b=FRnQnootndoH7RIDIeM/BmZCKFiYoRm2BRYLoD9EyYNawz2h9XOE+GzKNikgM374aAEc/jOOyVR0lxgzcNOAYdY33g+o17ssdniGFirM19dYuNkJ+pxvCh0X9O72MrI6lR+nftXL1RiUJkYQ7GZf9ENe+q5BXTx+trKRKgq4Euw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746753476; c=relaxed/simple;
-	bh=8P30E5BnjmQ9M5SWvhiMmyw/gYVGi2MOum18NKNu26w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A/NujW0u8MKBqxJU0gdi7dibyLeVLf1v9/XDgAgXMTvbeW6QuUhm+yTa1u0ufPgrqIZcg7IhZY1k0HGIj6Gv/285teT5TNWE5R51nzRu80XG75Ufi3kNRywRoqtynWWeQLCk6KRYpv98x7fEzO7uXtKQrSUvpjldkHzLXT9blG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=AXAgfyT+; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1746753970; c=relaxed/simple;
+	bh=W2Kn1Meo1WO1OQfVj7njhn7xo955vvkHdnBFO5GErao=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AzLPhqzXxNK7syWtbNHECT7s/t68AZHrksGGh7PRJ4CPSwBKc+jQNu70qB8e904J7fLqkbo/AN1+OAS7wI20PrCOYpitDpLTlC21GJtQ88cYRrPrLIqZJnUibOnrzChsl+qBdCNizvcoSxWOb37l0MIRVMRHPXZ1AgOFNlSSIN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fMDvMc0Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="AXAgfyT+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=0kbl/khprjF8mImI+ZP0nZf02/u49AHVsD0wSVfffNE=; b=AXAgfyT+mGKTsg/i
-	pSHPxsdYb+720CcDMXjhDl6PEJ6aS9DNRu6mmD8NnF9MZH+LLaTEOdl+Ic7VG62bi7L42p6mPIQy7
-	gpKv9JIaCTtl29zi53d/X6Id90j+mO/WOTc+t5+GH6m41TEOhxTaMXHomktlDUSq8YK6eaLA09h5j
-	BF6VSL1QOZ3uQAiRjJQUjDiFex+g3MRLSaG5asF+QLBPBbj9/bR44fuiHU+XtGoQ/sFNT0kAAYoOY
-	5Vs2Z9M5nh0TwyzU6b+Mg6aFHH31/nR3iYDSkigkQN0TCU8B0FEKkOneAO/U1n0BtHWNegH2pfvbz
-	NaLXjTJM5xF8HRlCFQ==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1uDCN5-002Wwd-0m;
-	Fri, 09 May 2025 01:17:51 +0000
-From: linux@treblig.org
-To: mchehab@kernel.org,
-	linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] media: saa7164: Remove unused functions
-Date: Fri,  9 May 2025 02:17:50 +0100
-Message-ID: <20250509011750.292145-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fMDvMc0Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA8BBC4CEE7;
+	Fri,  9 May 2025 01:26:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746753969;
+	bh=W2Kn1Meo1WO1OQfVj7njhn7xo955vvkHdnBFO5GErao=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fMDvMc0YXCFTgqtrfugXQ1jFCIjWb2vSTc0lOFCGXY27nUXkVGWIbLoMQ0nXjvbLy
+	 qTsuWXPelekMmuAg3wdf6omHEM18OXYSHIJW17V7j0GMdNh1LrOZP2GkLZNT0A4T1G
+	 HYbx+bPLRuiRvgHJXmIIgpvqU5A5N3VrmHUVIbSednuJO6QKBd1Ly+h4kVSLRXscZW
+	 stuhYTNGc027UdNEa4nrY/ie+RgO7Z8XsHN38A2nGzn1jidWOe+AXyzWEmFJmbqYUp
+	 mOoGe+6459MuV3VHChiX4hfvKvexoIAqoJTnkzn/6p9eyuuSt7DDC9JWxFPbS2/nLJ
+	 klNryf39xwtBw==
+Date: Thu, 8 May 2025 18:26:07 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: Jon Kohler <jon@nutanix.com>, Willem de Bruijn
+ <willemdebruijn.kernel@gmail.com>, Zvi Effron <zeffron@riotgames.com>,
+ Stanislav Fomichev <stfomichev@gmail.com>, Jason Wang
+ <jasowang@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>,
+ Simon Horman <horms@kernel.org>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "bpf@vger.kernel.org"
+ <bpf@vger.kernel.org>, Jacob Keller <jacob.e.keller@intel.com>
+Subject: Re: [PATCH net-next v3] xdp: Add helpers for head length, headroom,
+ and metadata length
+Message-ID: <20250508182607.75993cf3@kernel.org>
+In-Reply-To: <3fed59c6-e959-4863-b1c5-1927ef0d61df@kernel.org>
+References: <20250506125242.2685182-1-jon@nutanix.com>
+	<aBpKLNPct95KdADM@mini-arch>
+	<681b603ac8473_1e4406294a6@willemb.c.googlers.com.notmuch>
+	<c8ad3f65-f70e-4c6e-9231-0ae709e87bfe@kernel.org>
+	<CAC1LvL3nE14cbQx7Me6oWS88EdpGP4Gx2A0Um4g-Vuxk4m_7Rw@mail.gmail.com>
+	<062e886f-7c83-4d46-97f1-ebbce3ca8212@kernel.org>
+	<681b96abe7ae4_1f6aad294c9@willemb.c.googlers.com.notmuch>
+	<B4F050C6-610F-4D04-88D7-7EF581DA7DF1@nutanix.com>
+	<e4cf6912-74fb-441f-ad05-82ea99d81020@kernel.org>
+	<6FF98F38-2AE5-4000-8827-81369C3FB429@nutanix.com>
+	<b99b73e8-0957-45f8-bd54-6c50640706df@kernel.org>
+	<B864BCB8-AEAE-4802-AB46-176D2CEEE862@nutanix.com>
+	<3fed59c6-e959-4863-b1c5-1927ef0d61df@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Thu, 8 May 2025 18:59:54 +0200 Jesper Dangaard Brouer wrote:
+> I do notice Jakub isn't a fan of the patch in general, but it seems
+> quite popular given the other high profile kernel developers that acked
+> in V3.  I think it increase code readability for people that are less
+> familiar with XDP code and meaning of the pointers (e.g. data_hard_start
+> vs. data_end vs. data vs. data_meta). (We don't even have some ascii art
+> showing these pointers).
 
-saa7164_cmd_signal() last use was removed in 2009 by
-commit 39e469ab6dee ("V4L/DVB (12940): SAA7164: IRQ / message timeout
-related change")
+Yup, ASCII art would be great, hopefully
 
-saa7164_buffer_display() was added in 2010 by
-commit add3f580a434 ("[media] saa7164: convert buffering structs to be more
-generic")
-but is unused.
+ DOC: Basic sk_buff geometry
 
-Remove them.
-
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- drivers/media/pci/saa7164/saa7164-buffer.c | 20 ----------------
- drivers/media/pci/saa7164/saa7164-cmd.c    | 28 ----------------------
- drivers/media/pci/saa7164/saa7164.h        |  2 --
- 3 files changed, 50 deletions(-)
-
-diff --git a/drivers/media/pci/saa7164/saa7164-buffer.c b/drivers/media/pci/saa7164/saa7164-buffer.c
-index 89c5b79a5b24..7820e4f47fd5 100644
---- a/drivers/media/pci/saa7164/saa7164-buffer.c
-+++ b/drivers/media/pci/saa7164/saa7164-buffer.c
-@@ -52,26 +52,6 @@
-  *						    | etc
-  */
- 
--void saa7164_buffer_display(struct saa7164_buffer *buf)
--{
--	struct saa7164_dev *dev = buf->port->dev;
--	int i;
--
--	dprintk(DBGLVL_BUF, "%s()   buffer @ 0x%p nr=%d\n",
--		__func__, buf, buf->idx);
--	dprintk(DBGLVL_BUF, "  pci_cpu @ 0x%p    dma @ 0x%08llx len = 0x%x\n",
--		buf->cpu, (long long)buf->dma, buf->pci_size);
--	dprintk(DBGLVL_BUF, "   pt_cpu @ 0x%p pt_dma @ 0x%08llx len = 0x%x\n",
--		buf->pt_cpu, (long long)buf->pt_dma, buf->pt_size);
--
--	/* Format the Page Table Entries to point into the data buffer */
--	for (i = 0 ; i < SAA7164_PT_ENTRIES; i++) {
--
--		dprintk(DBGLVL_BUF, "    pt[%02d] = 0x%p -> 0x%llx\n",
--			i, buf->pt_cpu, (u64)*(buf->pt_cpu));
--
--	}
--}
- /* Allocate a new buffer structure and associated PCI space in bytes.
-  * len must be a multiple of sizeof(u64)
-  */
-diff --git a/drivers/media/pci/saa7164/saa7164-cmd.c b/drivers/media/pci/saa7164/saa7164-cmd.c
-index 42bd8e76005b..a95662776ee8 100644
---- a/drivers/media/pci/saa7164/saa7164-cmd.c
-+++ b/drivers/media/pci/saa7164/saa7164-cmd.c
-@@ -295,34 +295,6 @@ static int saa7164_cmd_wait(struct saa7164_dev *dev, u8 seqno)
- 	return ret;
- }
- 
--void saa7164_cmd_signal(struct saa7164_dev *dev, u8 seqno)
--{
--	int i;
--	dprintk(DBGLVL_CMD, "%s()\n", __func__);
--
--	mutex_lock(&dev->lock);
--	for (i = 0; i < SAA_CMD_MAX_MSG_UNITS; i++) {
--		if (dev->cmds[i].inuse == 1) {
--			dprintk(DBGLVL_CMD,
--				"seqno %d inuse, sig = %d, t/out = %d\n",
--				dev->cmds[i].seqno,
--				dev->cmds[i].signalled,
--				dev->cmds[i].timeout);
--		}
--	}
--
--	for (i = 0; i < SAA_CMD_MAX_MSG_UNITS; i++) {
--		if ((dev->cmds[i].inuse == 1) && ((i == 0) ||
--			(dev->cmds[i].signalled) || (dev->cmds[i].timeout))) {
--			dprintk(DBGLVL_CMD, "%s(seqno=%d) calling wake_up\n",
--				__func__, i);
--			dev->cmds[i].signalled = 1;
--			wake_up(&dev->cmds[i].wait);
--		}
--	}
--	mutex_unlock(&dev->lock);
--}
--
- int saa7164_cmd_send(struct saa7164_dev *dev, u8 id, enum tmComResCmd command,
- 	u16 controlselector, u16 size, void *buf)
- {
-diff --git a/drivers/media/pci/saa7164/saa7164.h b/drivers/media/pci/saa7164/saa7164.h
-index eede47b686a3..e1bac1fe19d3 100644
---- a/drivers/media/pci/saa7164/saa7164.h
-+++ b/drivers/media/pci/saa7164/saa7164.h
-@@ -508,7 +508,6 @@ int saa7164_bus_get(struct saa7164_dev *dev, struct tmComResInfo* msg,
- int saa7164_cmd_send(struct saa7164_dev *dev,
- 	u8 id, enum tmComResCmd command, u16 controlselector,
- 	u16 size, void *buf);
--void saa7164_cmd_signal(struct saa7164_dev *dev, u8 seqno);
- int saa7164_irq_dequeue(struct saa7164_dev *dev);
- 
- /* ----------------------------------------------------------- */
-@@ -570,7 +569,6 @@ extern int saa7164_dvb_unregister(struct saa7164_port *port);
- extern struct saa7164_buffer *saa7164_buffer_alloc(
- 	struct saa7164_port *port, u32 len);
- extern int saa7164_buffer_dealloc(struct saa7164_buffer *buf);
--extern void saa7164_buffer_display(struct saa7164_buffer *buf);
- extern int saa7164_buffer_activate(struct saa7164_buffer *buf, int i);
- extern int saa7164_buffer_cfg_port(struct saa7164_port *port);
- extern struct saa7164_user_buffer *saa7164_buffer_alloc_user(
--- 
-2.49.0
-
+can be an inspiration.
