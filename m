@@ -1,147 +1,221 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243FF2609D6
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 21:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746827308; cv=none; b=aNIaWXu6kcdp8XSoR24+R571yVnsM7/dGzvZP+PS1k6B3k5ZuNSqVL2sSg8f29n2BmfLZEL9wVksoSPGnzLmoZIxJUGM1Sf5oLbJR5CQZ8MGDz3S97GPPiR76qfwmcZZPxEz/q0+QpCQoWX8J52d7c0XpuTNz21z7PY1OXZ9/Hk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746827308; c=relaxed/simple;
-	bh=jMiO8dfIWqztSqyBC/M/E5+POfZySH8C5EjWZ1zmoKs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pslfYmmMAX+V3CWZrXn4k6BYW/Uutbxmj+G/qINTi5KOaxFKInVs5UUNrmDWdT1dCH8vREfgqZlL4jsLBB6ILtxLJtu2hGvIxdsakzFC0af547SWOcAaMrXs3J4Hu1vuCdSb2kdZKTD3bL/EJPbDyS4b5fut0TtKadrS//TI9fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=aEBfc6CA; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8425E21ADAB;
+	Fri,  9 May 2025 21:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746827343; cv=pass; b=L7zRzMtIj9BWzKAt2aw47vfjqOhFjv/vctbiy4iB6err+zXQbM3tUQP7fCxPuyFglH/oz7WZGedTR0Zuyn47AIacL6l3b/BQcBf2XiLty6dH4h6GsMjCijsb7wAaut/5+ledNlYCKjyRj2AormRwrZ2AgYGNa6cDQoRCD+ko8LM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746827343; c=relaxed/simple;
+	bh=abXm0HE6er68zVYgwFTA1GAphj23JnOBQ9gx5P+1GEo=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=JXphyOvWzEh4x5qQhDk2w/E4otwAY/s0PFqDQXTZBtn04LJa9bMgkg6wmrN0O2d0Fu6G0GuXcjJVSpyZ6xCFc3GPrIEWeAP6P0XCPWOYUIm+SJ1oUEfFPVMGlt1VxW1PBmCDgdavn/G2Ru5ZeH+GkZTCChcYD3pgjAgOFPu/mjA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=G4ko6ZRc; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="aEBfc6CA"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549BwbvD002550
-	for <linux-kernel@vger.kernel.org>; Fri, 9 May 2025 21:48:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	fkn3x/u1u+KSHGaXD2ujk6gLEDw1t6RvipnTJM9byJU=; b=aEBfc6CAEW/1P5VD
-	rf8YMFtCf/5+TPYoyKd1Od1YS51NRKX6BgS+KKDzeoO9dusIJLged2z5xf5xV5cK
-	AQ/ogyrCkhUEdF3/+5uaw6CKeAyo6mejDWfZ+k+dV1ZsZIh8sU7efEGnfOm3DKlA
-	DF2BQg5bi4Vj5nRIjuGH3c4CQU0uesd7esPtIQwEPY12H8rp06qv3jcNJOS4rJaN
-	gimSPQltAo04eIc3ECexxUkScmRLR5C/Kvn3ViPZXmGYWTyYtKt8v1iJ3yQCpqgj
-	a82tG9Qw0p6o5d46Hi16fnmFDuHSpkjDWnBMWu5HEN3otQQPsPuNom2nATaBoAcL
-	TYO1FA==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp5dv8m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 21:48:26 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6f541067fa4so5751156d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 14:48:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746827305; x=1747432105;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fkn3x/u1u+KSHGaXD2ujk6gLEDw1t6RvipnTJM9byJU=;
-        b=BLgliuXXNG9tnaJziL0DKK5KppvH8YCyrqO/6NDmBEdz8aCjYUo/NBpsKHS3yhJyW1
-         BksZB7EE05Mh3o208qgTVKJr4LtnEMKeAK95sQuAZiYq9SRxC1T/Vap39TmzB3RZYgtQ
-         MdA5zT/jMnlz8V0id/dDJEOfT2jF5dBv/eUgInGFY5Um7WzWtf+vK8vcnEAQYc8xFTMT
-         93+m+lu5XSk3KtpKqMGcfcEoa1f82sbr5jGCro7vr6q/8KCnLBC/ctnTIVKbIQoJHmn2
-         ZHbJNzvolZGZzTwE+0Dm/RElQt1xRVYHgGObIsQd126tZfadPoLrC8VxofF6Rx+x20Cz
-         /xOA==
-X-Forwarded-Encrypted: i=1; AJvYcCXABxX5t0kAtD4+ykHHVvwzK1GJ5Bm7FZ9DIUIsLxu5cw82TLSZyUmYtlIqMAqx2hD6uZjaGFcQkoV48FU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVMmYGDjzRLM2CrGZvQOzVBjaD4N1cH95dxym6VUDh8aDUnJc1
-	iyV55uOHbXCvYp+Awq15+IyApCqkOd5mE01/4JIWq8YYNdKgONSXZkiHSh7N3jd8lyqadaRcyjp
-	gxbRhrmQLTqBxTBK7z3Zla++xxYmX3NsUhHOQEeuU18KzGhuRzY+J3Xw+HPRDkXQ=
-X-Gm-Gg: ASbGncuPrvZ4l3+AHTLnk3c86AEYvh0D39HfhBn0hBLv7VFwEd9HF3Jizj9cXeMJ5lN
-	C2PmN7ejfipULAFd2fo0za30mtm52cJc50nixYvCKrPus+Yn6efuOpmaEqjY0hnUY7NNQVObKc7
-	52Evdkqg1X5poDHBvTkOaqmqIK9F8Wn+0wThD5S3KmyDjJ5sbA5TWcjOS5VL5FUw+u0m+E/TWe1
-	vL4htSs2SkCScT5urvKpiDwV35lN6JWL9BaWtmaJtchguM471kxEvlEVsAtXnoHJZHuXxmfh0Qm
-	Sa6qMjFaodDqKMka6uquQR0x8nxz6aCJpIgeARDuA3GczbiC0DyYKaSwk7gPS5/olKc=
-X-Received: by 2002:ad4:5e85:0:b0:6e8:fd2b:1801 with SMTP id 6a1803df08f44-6f6e47bea88mr29484046d6.2.1746827305428;
-        Fri, 09 May 2025 14:48:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGSGc2XgNJYZeKKzikhTNArCWy0JPoDUUmmdsKTNg1QXI9xsFUIewBL4B3CBOAqNpYYGbz9XQ==
-X-Received: by 2002:ad4:5e85:0:b0:6e8:fd2b:1801 with SMTP id 6a1803df08f44-6f6e47bea88mr29483826d6.2.1746827305088;
-        Fri, 09 May 2025 14:48:25 -0700 (PDT)
-Received: from [192.168.65.158] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9cbe496asm1899058a12.6.2025.05.09.14.48.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 14:48:23 -0700 (PDT)
-Message-ID: <43dbdfaf-fc02-49f4-b2e6-5c08b1998d17@oss.qualcomm.com>
-Date: Fri, 9 May 2025 23:48:20 +0200
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="G4ko6ZRc"
+ARC-Seal: i=1; a=rsa-sha256; t=1746827286; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=X+ouvPLprLZlDjtU+xaaGX8yzdSw8jQtK38tEW9MWcU2o2blWfZrHoW87C23lA8Px0DMAtquinNVe2nNFXMSjzB+jboi3AdKw5zPTwgaIsrrl/8AfM15FAK38fvb9c+84FqsH30Zhhfn4NhoFxFBwEOT510X0bO/Gp0dkSYzzaM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746827286; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=X6cgvJS2QbWqSUKHmAdDovEvM2ZYY2qcB/moWbYd/XE=; 
+	b=Y3kOhpyuCCyMYr6aqqr11zidXflcatTMIrwGcIM4myD641kpYgS8gqOL/Fso1ij4QaMJKMZp8mDrqS0UglPTj8M4eDUXRXtMdgaUwpwWIjywx+Ecbjir6o3O2I/ECNDosTVduxURjviCUrWyBXL9xlyIgO1tKejzAAhG+5iqX6M=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746827286;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=X6cgvJS2QbWqSUKHmAdDovEvM2ZYY2qcB/moWbYd/XE=;
+	b=G4ko6ZRcGZe2Rbx4oMFderu5UzXTUmDUWpl85brNcnSMyv3N8XFRqyPiBC+qttJ2
+	OvP4aUbTRL0AfvUf0Jo1CjmYKvwuohw1s0eP7bX6mMqi13RZAuEG6eAbKMaEHMQDJFj
+	wp927vVWxQrtgckbIWyQnDbmDwW6/DP0e0Quo97U=
+Received: by mx.zohomail.com with SMTPS id 1746827283614312.2088686696102;
+	Fri, 9 May 2025 14:48:03 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] dt-bindings: clock: qcom: ipq5018: remove bindings
- for XO clock
-To: george.moussalem@outlook.com, Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
-        Lee Jones <lee@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250506-ipq5018-cmn-pll-v2-0-c0a9fcced114@outlook.com>
- <20250506-ipq5018-cmn-pll-v2-2-c0a9fcced114@outlook.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250506-ipq5018-cmn-pll-v2-2-c0a9fcced114@outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=XL0wSRhE c=1 sm=1 tr=0 ts=681e782a cx=c_pps
- a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=UqCG9HQmAAAA:8 a=1mxAAckyurNBcPisKkgA:9
- a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22
-X-Proofpoint-GUID: R278U8SXHelpHKjtdolHINII9zw2weWq
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDIxOSBTYWx0ZWRfX5hqrQlhC5vLR
- 8tCjn0pYGDmSi3mjJ2bX0n2GaDpXHei/E9XBCJQsayEjMHDruLrg+q3AmAdbfVPiltZC6q7Letl
- K0Z9nKkNRWsYknc0Q3YufzbRx9/EYDVy/CaSHkcDtTypclbrNTaTCJFW8qWjo7skREUDFqoS2lo
- 3Pje4ODHWWPC8CewwlQYSv7e74lK3PUARENGx38piNd+1cPt8tVTaxAj6etFVDr8jWFkAI5s4ZM
- 4lcWS0vhkVczMGjS1+mHp6rmbm8P5euQfyp+SBbuZjF2NbCoAc9H3QI7FJIKesrtN5PVCVLSbGz
- YGnaKgbxsSDDSqPWgX8NEiHwJOMJcaz/L6Cj0lCLzNZ1KvJmmSc8kK/cLRhrbuCUjEUbOj+GF93
- MHgP913Y2lei15rMCfPc69ye7ZqWTfgTfCRP74YZw1ko3Rsp5S7EEK+Fs1mDUu6jD98Ak5LC
-X-Proofpoint-ORIG-GUID: R278U8SXHelpHKjtdolHINII9zw2weWq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_08,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
- mlxlogscore=947 malwarescore=0 adultscore=0 priorityscore=1501 bulkscore=0
- spamscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505090219
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [PATCH 4/4] rust: drm: gem: Implement AlwaysRefCounted for all
+ gem objects automatically
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20250501183717.2058109-5-lyude@redhat.com>
+Date: Fri, 9 May 2025 18:47:46 -0300
+Cc: dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+ Asahi Lina <lina@asahilina.net>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <53D76D55-81EA-46F5-B125-B85BB9AFE269@collabora.com>
+References: <20250501183717.2058109-1-lyude@redhat.com>
+ <20250501183717.2058109-5-lyude@redhat.com>
+To: Lyude Paul <lyude@redhat.com>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
+X-ZohoMailClient: External
 
-On 5/6/25 7:43 AM, George Moussalem via B4 Relay wrote:
-> From: George Moussalem <george.moussalem@outlook.com>
-> 
-> The XO and its source clock must be always-on and is enabled in the GCC
-> during probe. As such, remove the bindings for them.
-> 
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+Hi Lyude,
+
+> On 1 May 2025, at 15:33, Lyude Paul <lyude@redhat.com> wrote:
+>=20
+> Currently we are requiring AlwaysRefCounted in most trait bounds for =
+gem
+> objects, and implementing it by hand for our only current type of gem
+> object. However, all gem objects use the same functions for reference
+> counting - and all gem objects support reference counting.
+>=20
+> We're planning on adding support for shmem gem objects, let's move =
+this
+> around a bit by instead making IntoGEMObject require AlwaysRefCounted =
+as a
+> trait bound, and then provide a blanket AlwaysRefCounted =
+implementation for
+> any object that implements IntoGEMObject so all gem object types can =
+use
+> the same AlwaysRefCounted implementation. This also makes things less
+> verbose by making the AlwaysRefCounted trait bound implicit for any
+> IntoGEMObject bound.
+>=20
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
 > ---
->  include/dt-bindings/clock/qcom,gcc-ipq5018.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/include/dt-bindings/clock/qcom,gcc-ipq5018.h b/include/dt-bindings/clock/qcom,gcc-ipq5018.h
-> index f3de2fdfeea11f4b8832b75a05e424ca347b3634..d4de5eaffee7b4cb81e0ff2dcbf9e6669c3da8f8 100644
-> --- a/include/dt-bindings/clock/qcom,gcc-ipq5018.h
-> +++ b/include/dt-bindings/clock/qcom,gcc-ipq5018.h
-> @@ -140,8 +140,6 @@
->  #define GCC_WCSS_DBG_IFC_NTS_BDG_CLK			131
->  #define GCC_WCSS_DBG_IFC_NTS_CLK			132
->  #define GCC_WCSS_ECAHB_CLK				133
-> -#define GCC_XO_CLK					134
-> -#define GCC_XO_CLK_SRC					135
->  #define GMAC0_RX_CLK_SRC				136
->  #define GMAC0_TX_CLK_SRC				137
->  #define GMAC1_RX_CLK_SRC				138
+> rust/kernel/drm/gem/mod.rs | 47 +++++++++++++++++++-------------------
+> 1 file changed, 24 insertions(+), 23 deletions(-)
+>=20
+> diff --git a/rust/kernel/drm/gem/mod.rs b/rust/kernel/drm/gem/mod.rs
+> index 55b2f1d056c39..929f6c9718362 100644
+> --- a/rust/kernel/drm/gem/mod.rs
+> +++ b/rust/kernel/drm/gem/mod.rs
+> @@ -10,7 +10,7 @@
+>     drm::driver::{AllocImpl, AllocOps},
+>     error::{to_result, Result},
+>     prelude::*,
+> -    types::{ARef, Opaque},
+> +    types::{ARef, AlwaysRefCounted, Opaque},
+> };
+> use core::{mem, ops::Deref, ptr, ptr::NonNull};
+>=20
+> @@ -36,7 +36,7 @@ fn close(
+> }
+>=20
+> /// Trait that represents a GEM object subtype
+> -pub trait IntoGEMObject: Sized + super::private::Sealed {
+> +pub trait IntoGEMObject: Sized + super::private::Sealed + =
+AlwaysRefCounted {
+>     /// Owning driver for this type
+>     type Driver: drm::Driver;
+>=20
+> @@ -52,6 +52,26 @@ pub trait IntoGEMObject: Sized + =
+super::private::Sealed {
+>     unsafe fn as_ref<'a>(self_ptr: *mut bindings::drm_gem_object) -> =
+&'a Self;
+> }
+>=20
+> +// SAFETY: All gem objects are refcounted.
+> +unsafe impl<T: IntoGEMObject> AlwaysRefCounted for T {
+> +    fn inc_ref(&self) {
+> +        // SAFETY: The existence of a shared reference guarantees =
+that the refcount is non-zero.
+> +        unsafe { bindings::drm_gem_object_get(self.as_gem_obj()) };
+> +    }
+> +
+> +    unsafe fn dec_ref(obj: NonNull<Self>) {
+> +        // SAFETY: We either hold the only refcount on `obj`, or one =
+of many - meaning that no one
+> +        // else could possibly hold a mutable reference to `obj` and =
+thus this immutable reference
+> +        // is safe.
+> +        let obj =3D unsafe { obj.as_ref() }.as_gem_obj();
+> +
+> +        // SAFETY:
+> +        // - The safety requirements guarantee that the refcount is =
+non-zero.
+> +        // - We hold no references to `obj` now, making it safe for =
+us to potentially deallocate it.
+> +        unsafe { bindings::drm_gem_object_put(obj) };
+> +    }
+> +}
+> +
+> /// Trait which must be implemented by drivers using base GEM objects.
+> pub trait DriverObject: BaseDriverObject<Object<Self>> {
+>     /// Parent `Driver` for this object.
+> @@ -110,10 +130,7 @@ unsafe fn as_ref<'a>(self_ptr: *mut =
+bindings::drm_gem_object) -> &'a Self {
+> }
+>=20
+> /// Base operations shared by all GEM object classes
+> -pub trait BaseObject
+> -where
+> -    Self: crate::types::AlwaysRefCounted + IntoGEMObject,
+> -{
+> +pub trait BaseObject: IntoGEMObject {
+>     /// Returns the size of the object in bytes.
+>     fn size(&self) -> usize {
+>         // SAFETY: `self.into_gem_obj()` is guaranteed to be a pointer =
+to a valid `struct
+> @@ -175,7 +192,7 @@ fn create_mmap_offset(&self) -> Result<u64> {
+>     }
+> }
+>=20
+> -impl<T> BaseObject for T where Self: crate::types::AlwaysRefCounted + =
+IntoGEMObject {}
+> +impl<T: IntoGEMObject> BaseObject for T {}
+>=20
+> /// A base GEM object.
+> ///
+> @@ -269,22 +286,6 @@ extern "C" fn free_callback(obj: *mut =
+bindings::drm_gem_object) {
+>     }
+> }
+>=20
+> -// SAFETY: Instances of `Object<T>` are always reference-counted.
+> -unsafe impl<T: DriverObject> crate::types::AlwaysRefCounted for =
+Object<T> {
+> -    fn inc_ref(&self) {
+> -        // SAFETY: The existence of a shared reference guarantees =
+that the refcount is non-zero.
+> -        unsafe { bindings::drm_gem_object_get(self.as_raw()) };
+> -    }
+> -
+> -    unsafe fn dec_ref(obj: NonNull<Self>) {
+> -        // SAFETY: `obj` is a valid pointer to an `Object<T>`.
+> -        let obj =3D unsafe { obj.as_ref() };
+> -
+> -        // SAFETY: The safety requirements guarantee that the =
+refcount is non-zero.
+> -        unsafe { bindings::drm_gem_object_put(obj.as_raw()) }
+> -    }
+> -}
+> -
+> impl<T: DriverObject> super::private::Sealed for Object<T> {}
+>=20
+> impl<T: DriverObject> Deref for Object<T> {
+> --=20
+> 2.48.1
+>=20
+>=20
 
-Let's skip this patch - when we add dt-bindings, we promise these values
-will be an ABI, leaving them in there, even if unused, will help
-introducing spurious entries
+Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+
