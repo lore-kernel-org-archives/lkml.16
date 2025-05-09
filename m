@@ -1,34 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4904A2920AE
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:13:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46612918FE
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:12:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746796380; cv=none; b=Wlx4PTka3Eq5TPjudJ5qegit1/P+tQFmtqoD1f2O31mBrHefHE9QJpxVWTVu5BcKMctHFEtBYUPko7gRvZ1uUX3GRBY31ItPcBw0bzzy1jmwSYFOjEAjpXXDlBkZ9+3dR7WGWXm2mPEuOT2D6T5QQ/zkLCaOk9d3L9JfN4FQEr8=
+	t=1746796379; cv=none; b=W0qLhBDUQM0aAiHOayjUmbSIvf3Umlx6RbDsYtyssEAGHrFU09D8vtowXugu4LfpwwvHbA/RmH4jtktrEm78Ef+/Xeqhjg62C9e4CJx4R8GafVOaCk3pYRQLXHfqIE3dx9jpE6zIjYV0lKppnLhI0QSseXfZNvyYHoOCAOcAolw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746796380; c=relaxed/simple;
-	bh=2xgcDWQ1Wm6asJEBC/4gPWKZccRqj0GwASpqR3U/o7Y=;
+	s=arc-20240116; t=1746796379; c=relaxed/simple;
+	bh=6O9ZY+vRjaugem8TgG5YHfcqQ/Puh0suiIv1HEG/R7g=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=b4j8XH2/XhHh3QF+pQhKEtrTZsYciREMVxdnswqG+5mxPWfbXUP3ZQWtAygdyE86mne6uXWWpynUerziB6wpW2yeWNgjnWzIBDrYdprJRcGYgKP44t3h9O+faPbQUTdwO3vtqzuzM7qKG66ZUhrXzlJbI5yNqD3o+2qnhYv5f00=
+	 Content-Type; b=GjRZrMidcE6VTQLubgKKgvYDShVMz+sUXmBd628k+uf1HLTpUTtmLEXX6/ZTFS6sSgp1R4jVADIiOEWqx8Rty4ikTGL5k557PpQCSdcKOJnV4mzrpZ/Mha+cWChNAY58u/BZsmcnY17aFW7dQd/bprlRCTG5q1HNA+JFoUh4uA8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F7ABC4CEF1;
-	Fri,  9 May 2025 13:13:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E761C4CEF0;
+	Fri,  9 May 2025 13:12:59 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uDNXP-00000002btm-2XWq;
+	id 1uDNXP-00000002bsF-0Pdd;
 	Fri, 09 May 2025 09:13:15 -0400
-Message-ID: <20250509131315.459424785@goodmis.org>
+Message-ID: <20250509131314.948496900@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 09 May 2025 09:13:01 -0400
+Date: Fri, 09 May 2025 09:12:58 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Tomas Glozar <tglozar@redhat.com>
-Subject: [for-next][PATCH 12/31] tracing/osnoise: Allow arbitrarily long CPU string
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH 09/31] ftrace: Show subops in enabled_functions
 References: <20250509131249.340302366@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -38,53 +37,125 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Tomas Glozar <tglozar@redhat.com>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Allocate kernel memory for processing CPU string
-(/sys/kernel/tracing/osnoise/cpus) also in osnoise_cpus_write to allow
-the writing of a CPU string of an arbitrary length.
+The function graph infrastructure uses subops of the function tracer.
+These are not shown in enabled_functions. Add a "subops:" section to the
+enabled_functions line to show what functions are attached via subops. If
+the subops is from the function_graph infrastructure, then show the entry
+and return callbacks that are attached.
 
-This replaces the 256-byte buffer, which is insufficient with the rising
-number of CPUs. For example, if I wanted to measure on every even CPU
-on a system with 256 CPUs, the string would be 456 characters long.
+Here's an example of the output:
+
+schedule_on_each_cpu (1)                tramp: 0xffffffffc03ef000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60     subops: {ent:trace_graph_entry+0x0/0x20 ret:trace_graph_return+0x0/0x150}
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Link: https://lore.kernel.org/20250425091839.343289-1-tglozar@redhat.com
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+Link: https://lore.kernel.org/20250410153830.5d97f108@gandalf.local.home
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_osnoise.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ include/linux/ftrace.h |  2 ++
+ kernel/trace/fgraph.c  |  2 ++
+ kernel/trace/ftrace.c  | 38 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 42 insertions(+)
 
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index e732c9e37e14..6819b93309ce 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -2302,7 +2302,7 @@ osnoise_cpus_read(struct file *filp, char __user *ubuf, size_t count,
-  * osnoise_cpus_write - Write function for "cpus" entry
-  * @filp: The active open file structure
-  * @ubuf: The user buffer that contains the value to write
-- * @cnt: The maximum number of bytes to write to "file"
-+ * @count: The maximum number of bytes to write to "file"
-  * @ppos: The current position in @file
-  *
-  * This function provides a write implementation for the "cpus"
-@@ -2320,10 +2320,11 @@ osnoise_cpus_write(struct file *filp, const char __user *ubuf, size_t count,
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index fbabc3d848b3..fc939ca2ff66 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -328,6 +328,7 @@ ftrace_func_t ftrace_ops_get_func(struct ftrace_ops *ops);
+  * DIRECT - Used by the direct ftrace_ops helper for direct functions
+  *            (internal ftrace only, should not be used by others)
+  * SUBOP  - Is controlled by another op in field managed.
++ * GRAPH  - Is a component of the fgraph_ops structure
+  */
+ enum {
+ 	FTRACE_OPS_FL_ENABLED			= BIT(0),
+@@ -349,6 +350,7 @@ enum {
+ 	FTRACE_OPS_FL_PERMANENT                 = BIT(16),
+ 	FTRACE_OPS_FL_DIRECT			= BIT(17),
+ 	FTRACE_OPS_FL_SUBOP			= BIT(18),
++	FTRACE_OPS_FL_GRAPH			= BIT(19),
+ };
+ 
+ #ifndef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 8d925cbdce3a..c5b207992fb4 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -1382,6 +1382,8 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+ 	/* Always save the function, and reset at unregistering */
+ 	gops->saved_func = gops->entryfunc;
+ 
++	gops->ops.flags |= FTRACE_OPS_FL_GRAPH;
++
+ 	ret = ftrace_startup_subops(&graph_ops, &gops->ops, command);
+ 	if (!ret)
+ 		fgraph_array[i] = gops;
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 6981830c3128..014cd2cedae3 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -4373,6 +4373,42 @@ static inline int print_rec(struct seq_file *m, unsigned long ip)
+ }
+ #endif
+ 
++static void print_subops(struct seq_file *m, struct ftrace_ops *ops, struct dyn_ftrace *rec)
++{
++	struct ftrace_ops *subops;
++	bool first = true;
++
++	list_for_each_entry(subops, &ops->subop_list, list) {
++		if (!((subops->flags & FTRACE_OPS_FL_ENABLED) &&
++		      hash_contains_ip(rec->ip, subops->func_hash)))
++			continue;
++		if (first) {
++			seq_printf(m, "\tsubops:");
++			first = false;
++		}
++#ifdef CONFIG_FUNCTION_GRAPH_TRACER
++		if (subops->flags & FTRACE_OPS_FL_GRAPH) {
++			struct fgraph_ops *gops;
++
++			gops = container_of(subops, struct fgraph_ops, ops);
++			seq_printf(m, " {ent:%pS ret:%pS}",
++				   (void *)gops->entryfunc,
++				   (void *)gops->retfunc);
++			continue;
++		}
++#endif
++		if (subops->trampoline) {
++			seq_printf(m, " {%pS (%pS)}",
++				   (void *)subops->trampoline,
++				   (void *)subops->func);
++			add_trampoline_func(m, subops, rec);
++		} else {
++			seq_printf(m, " {%pS}",
++				   (void *)subops->func);
++		}
++	}
++}
++
+ static int t_show(struct seq_file *m, void *v)
  {
- 	cpumask_var_t osnoise_cpumask_new;
- 	int running, err;
--	char buf[256];
-+	char *buf __free(kfree) = NULL;
- 
--	if (count >= 256)
--		return -EINVAL;
-+	buf = kmalloc(count, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
- 
- 	if (copy_from_user(buf, ubuf, count))
- 		return -EFAULT;
+ 	struct ftrace_iterator *iter = m->private;
+@@ -4425,6 +4461,7 @@ static int t_show(struct seq_file *m, void *v)
+ 						   (void *)ops->trampoline,
+ 						   (void *)ops->func);
+ 					add_trampoline_func(m, ops, rec);
++					print_subops(m, ops, rec);
+ 					ops = ftrace_find_tramp_ops_next(rec, ops);
+ 				} while (ops);
+ 			} else
+@@ -4437,6 +4474,7 @@ static int t_show(struct seq_file *m, void *v)
+ 			if (ops) {
+ 				seq_printf(m, "\tops: %pS (%pS)",
+ 					   ops, ops->func);
++				print_subops(m, ops, rec);
+ 			} else {
+ 				seq_puts(m, "\tops: ERROR!");
+ 			}
 -- 
 2.47.2
 
