@@ -1,261 +1,380 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A70241664;
-	Fri,  9 May 2025 18:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6777C23F417;
+	Fri,  9 May 2025 18:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746815917; cv=none; b=FCWwSb/lZgjOTWU0ZofKuEFsRXJMZYZDXrmOi/V1Srd1S8aTJue5nusG2/W7n3tgXO0xh5CqXQmlqx/B9Pkk85z2glTQDJ30FfFdjvOWqB3fKPQIZ6a/zf1Bi7imBPHjfbycHaXMtzNoUgfZXhhcLMZ0Y9cKE6Vg8HclDEIGbOQ=
+	t=1746815933; cv=none; b=P1C7H2dkFIUKqtTD1/UfaxSy68GRbQU/Tpi3lhLcNEtqW6GW2dFt7uvGzql9qOSczQC8WoiQq+eMSHdlmQom+3ULTFplftjTS71QRQoKJzFb+9Z0WQ9jDkCOcYxRDkGyY9GmW0mUjiKMRdSa5W+VhP7B04M/2S590n8H9Z3hnwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746815917; c=relaxed/simple;
-	bh=Qiv6epzPmbfHWOUJeoZ8ik0G7oKn1YrCqMbxsEEf+CY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SX5S0j/r7y5n1ilQ0SyL6Cn2TydTRUF8RAq1bUs5x7lyqxyiytW/mQZmwlBU1LYvBJ8/A05Y6I5InKfcqh9b4vJdTLcf9xhb6MyWmZMG1kdl/bVLINhYVE5wqgAiie5QN8iPSO0RCDZP/sLyIshvaZ1WhgwrqANDHTF7txnLoS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PPLYiSra; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746815933; c=relaxed/simple;
+	bh=QtwKxH7Ox65yxsmQJyOF0DBPCqTdkDUFcjdM6t1xUak=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sNlFWzI1dOam9OME18AJascVeYm4yl/4ZwYsiS52otWERsMEC6/FG6jgdBJoR+whE0rooqdYovKpjKNG68uN8Q2RyxvpuUGKcKZhvdhDmuq1Io2cPBbBN3X6TsRfvRpySsBMnpMqoRwZ7xzhjVmDX+TKDZi2vuL62m17QkHHJcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kc5OEvSz; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PPLYiSra"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso24035955e9.1;
-        Fri, 09 May 2025 11:38:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746815913; x=1747420713; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sBzonJ/RuSJVQf99llUENRykfQliSdPD+jdNDXviB4k=;
-        b=PPLYiSraKvgJ7jlw7F7Gm4moSwiKqj4AtznUhuwQkmyazgEwyW4eL6Y2rKCEQgms+G
-         czeCpmLIVe/OP4kPn0dedR2LqLdXXF6TdtiiY/DBFLNv/3PEPEMQUdZQReAQMXirwtyU
-         Sq0XxGGZM7Gw5IYOCUdFtlxMzyjZ27MrR+MSOw8CPFxGs+g1B8wploHPlwR+XKCsbz5Z
-         doAsjJgCcA0RRa8mv7hltNmVNxXTr8fK/0+EepzDF8/huM2trdTsz9mh1GtVM0xp58zy
-         DCYrmorB1WQBGCPXGiIE2lj1jcmuYtis4ABeZ6mvFWtrvTwjLlOb9BAaa5ZhiHwqO+mr
-         1EkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746815913; x=1747420713;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sBzonJ/RuSJVQf99llUENRykfQliSdPD+jdNDXviB4k=;
-        b=HLvPUEiJE/m4MT0cNpaK8Cl3hkjJNXyI5XiSTEOPIDCImbPYC4b8w7ntFzpTcZ5EOo
-         83cY8qP3YPk/DyEYcaZXvVr5cbPVdoLhZvyKr4SefNSPxze6BDbLh8s/zoiVNXv6U2Ac
-         yBsp/7KN4UVme3g+lKN4B6/DY6pkclVSZXojMPnrSTS7y91qJXNQ07lzZiP8mw47Q/km
-         Jh8J5cKUtf6liOzH/CbLtRZpOt7RR1zBRhQsvQnRrXRKqfuGq7rUmxL2srf4Ku6JhTnZ
-         L0SjAeJUEaeOT3kd2Ft8yZwtC0HzNLjbN3qLrMUQvPKgT++slXY/1gnrXQZbevDf5uiY
-         z7mw==
-X-Forwarded-Encrypted: i=1; AJvYcCV71ZwEHUMF4bqyDnB9tKoTj2VHqHyioEdINBQr3lzseQOqgRMypfwgXBpAXvpcHxA2CjLmv5ADjD6TIYt+@vger.kernel.org, AJvYcCWsxM9izggAmzFeXUklLBgnXU16HozEiUf0DrSKvG1bwnTaK2KY4z0bEOOw1opbp2O+Cx6VEw+0JPze@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2SAf4DQcfeTJpovrsUo5REGH++HAjUnT1uN6optE0T0BoOC1K
-	LrBsNoGjDFoaQHkN30KZaPd2zv8aT3E7+ZoxNFHv84XQjMi0kTZ1
-X-Gm-Gg: ASbGncvYhcyuWk6PBRr3gzd6JC2a2MdPmvCgcgc1gKc3VHWkqQYnwJdMMEOUKRNJ2yU
-	/FYoKKgGfyimruibSzmLJU5TLtih6Wdb+VA3ZTINxxpxBQSnSH5QZ82iGJggubmvj72WHWwMkqL
-	Q6rZasHNLrtj2uSiS3AewGk97FAemdBIUSQC47zbK6qGz3QQoUzxFmp5fyHp5PHIqP3/9noaVHT
-	GbGbo1sqyXGGfHr87UrqFcDlZNFE7UdIbgP/A9HXef6Ldpjw0T0CLCTBVgNWNGBg7/HKXh1fexa
-	I54qEAGQ4a+A3KBtVJi33xwLotnIKg0DT1Jkwgm9ryfcpEPYQHeNF85aTr5gKo8GfDlfxw==
-X-Google-Smtp-Source: AGHT+IHOHk8TJBRr0sBHN2EWnni4dWmQyRoi02AYzdaqeaER/SuMgxjuj7zd07Z+tSovwNvLSRBE6g==
-X-Received: by 2002:a5d:64e7:0:b0:38f:2ddd:a1bb with SMTP id ffacd0b85a97d-3a1f6423f98mr3755730f8f.8.1746815913342;
-        Fri, 09 May 2025 11:38:33 -0700 (PDT)
-Received: from localhost.localdomain ([78.210.112.240])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2d2f4sm3999878f8f.78.2025.05.09.11.38.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 11:38:32 -0700 (PDT)
-From: Antoni Pokusinski <apokusinski01@gmail.com>
-To: alexandre.belloni@bootlin.com,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	robh@kernel.org,
-	alexander.stein@ew.tq-group.com
-Cc: linux-rtc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Antoni Pokusinski <apokusinski01@gmail.com>
-Subject: [PATCH RESEND v4 3/3] rtc: pcf85063: add support for RV8063
-Date: Fri,  9 May 2025 20:37:50 +0200
-Message-Id: <20250509183750.95836-4-apokusinski01@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250509183750.95836-1-apokusinski01@gmail.com>
-References: <20250509183750.95836-1-apokusinski01@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kc5OEvSz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746815932; x=1778351932;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QtwKxH7Ox65yxsmQJyOF0DBPCqTdkDUFcjdM6t1xUak=;
+  b=Kc5OEvSzRYblZuB/jhgV+aovjps5cdGEdCxzS1Lxmsn5FSD1Wf+5JpU2
+   Gv4MIjyUIr0yljVU6A8PCdUlFWc1pEA+X4o5IpHjprA87VDxioUlxhkXm
+   Olu7eTFMSQ3m1yFL38ddObjBizMiaO2EPMydx8hrDZYmCFr6vFB3aWoPa
+   5qC5v95ZyABFXcCWo9o38JIsZZDxMNUBtfkvoOp15vyV3ongmVlTtKTlM
+   0XZ+D4OBX5vxD2HJifAnkYB0yMi9GiOhpH2SiLnZaTGTVdyVIAxHhRc2N
+   SPg+KmB1smkhT/ouIJEHBNgfKxhAczKfz7dsslqMfoNRW6Vmv4y31RGBk
+   A==;
+X-CSE-ConnectionGUID: pzPp4zbVQcShIDvqjD4oyA==
+X-CSE-MsgGUID: 8mlFOmUpQIubK9Tej/Mncw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59649555"
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="59649555"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 11:38:51 -0700
+X-CSE-ConnectionGUID: ylxpl6m5TPqiYokkCvZ9Jw==
+X-CSE-MsgGUID: IqHZR2MaQNqBYpXTw4x6Tg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="167781489"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 09 May 2025 11:38:43 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uDScL-000CMl-0u;
+	Fri, 09 May 2025 18:38:41 +0000
+Date: Sat, 10 May 2025 02:37:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Vladimir Oltean <vladimir.oltean@nxp.com>, netdev@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
+	Wei Fang <wei.fang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
+	Andrew Lunn <andrew@lunn.ch>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Simon Horman <horms@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: enetc: convert to ndo_hwtstamp_get() and
+ ndo_hwtstamp_set()
+Message-ID: <202505100217.0jMyMEHN-lkp@intel.com>
+References: <20250508114310.1258162-1-vladimir.oltean@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508114310.1258162-1-vladimir.oltean@nxp.com>
 
-Microcrystal RV8063 is a real-time clock with SPI interface. Its
-functionality is very similar to the RV8263 rtc.
+Hi Vladimir,
 
-Signed-off-by: Antoni Pokusinski <apokusinski01@gmail.com>
----
- drivers/rtc/Kconfig        | 21 +++++----
- drivers/rtc/rtc-pcf85063.c | 87 +++++++++++++++++++++++++++++++++++++-
- 2 files changed, 98 insertions(+), 10 deletions(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 838bdc138ffe..1b9be96faa13 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -483,15 +483,6 @@ config RTC_DRV_PCF8523
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rtc-pcf8523.
- 
--config RTC_DRV_PCF85063
--	tristate "NXP PCF85063"
--	select REGMAP_I2C
--	help
--	  If you say yes here you get support for the PCF85063 RTC chip
--
--	  This driver can also be built as a module. If so, the module
--	  will be called rtc-pcf85063.
--
- config RTC_DRV_PCF85363
- 	tristate "NXP PCF85363"
- 	select REGMAP_I2C
-@@ -971,6 +962,18 @@ config RTC_DRV_PCF2127
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rtc-pcf2127.
- 
-+config RTC_DRV_PCF85063
-+	tristate "NXP PCF85063"
-+	depends on RTC_I2C_AND_SPI
-+	select REGMAP_I2C if I2C
-+	select REGMAP_SPI if SPI_MASTER
-+	help
-+	  If you say yes here you get support for the PCF85063 and RV8063
-+	  RTC chips.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called rtc-pcf85063.
-+
- config RTC_DRV_RV3029C2
- 	tristate "Micro Crystal RV3029/3049"
- 	depends on RTC_I2C_AND_SPI
-diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
-index 03dfc58f4cd7..d9b67b959d18 100644
---- a/drivers/rtc/rtc-pcf85063.c
-+++ b/drivers/rtc/rtc-pcf85063.c
-@@ -17,6 +17,7 @@
- #include <linux/of.h>
- #include <linux/pm_wakeirq.h>
- #include <linux/regmap.h>
-+#include <linux/spi/spi.h>
- 
- /*
-  * Information for this driver was pulled from the following datasheets.
-@@ -29,6 +30,9 @@
-  *
-  *  https://www.microcrystal.com/fileadmin/Media/Products/RTC/App.Manual/RV-8263-C7_App-Manual.pdf
-  *  RV8263 -- Rev. 1.0 — January 2019
-+ *
-+ *  https://www.microcrystal.com/fileadmin/Media/Products/RTC/App.Manual/RV-8063-C7_App-Manual.pdf
-+ *  RV8063 -- Rev. 1.1 - October 2018
-  */
- 
- #define PCF85063_REG_CTRL1		0x00 /* status */
-@@ -559,6 +563,18 @@ static const struct pcf85063_config config_rv8263 = {
- 	.force_cap_7000 = 1,
- };
- 
-+static const struct pcf85063_config config_rv8063 = {
-+	.regmap = {
-+		.reg_bits = 8,
-+		.val_bits = 8,
-+		.max_register = 0x11,
-+		.read_flag_mask = BIT(7) | BIT(5),
-+		.write_flag_mask = BIT(5),
-+	},
-+	.has_alarms = 1,
-+	.force_cap_7000 = 1,
-+};
-+
- static int pcf85063_probe(struct device *dev, struct regmap *regmap, int irq,
- 			  const struct pcf85063_config *config)
- {
-@@ -725,14 +741,83 @@ static void pcf85063_unregister_driver(void)
- 
- #endif /* IS_ENABLED(CONFIG_I2C) */
- 
-+#if IS_ENABLED(CONFIG_SPI_MASTER)
-+
-+static const struct spi_device_id rv8063_id[] = {
-+	{ "rv8063" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(spi, rv8063_id);
-+
-+static const struct of_device_id rv8063_of_match[] = {
-+	{ .compatible = "microcrystal,rv8063" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, rv8063_of_match);
-+
-+static int rv8063_probe(struct spi_device *spi)
-+{
-+	const struct pcf85063_config *config = &config_rv8063;
-+	struct regmap *regmap;
-+
-+	regmap = devm_regmap_init_spi(spi, &config->regmap);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	return pcf85063_probe(&spi->dev, regmap, spi->irq, config);
-+}
-+
-+static struct spi_driver rv8063_driver = {
-+	.driver         = {
-+		.name   = "rv8063",
-+		.of_match_table = rv8063_of_match,
-+	},
-+	.probe          = rv8063_probe,
-+	.id_table	= rv8063_id,
-+};
-+
-+static int __init rv8063_register_driver(void)
-+{
-+	return spi_register_driver(&rv8063_driver);
-+}
-+
-+static void __exit rv8063_unregister_driver(void)
-+{
-+	spi_unregister_driver(&rv8063_driver);
-+}
-+
-+#else
-+
-+static int __init rv8063_register_driver(void)
-+{
-+	return 0;
-+}
-+
-+static void __exit rv8063_unregister_driver(void)
-+{
-+}
-+
-+#endif /* IS_ENABLED(CONFIG_SPI_MASTER) */
-+
- static int __init pcf85063_init(void)
- {
--	return pcf85063_register_driver();
-+	int ret;
-+
-+	ret = pcf85063_register_driver();
-+	if (ret)
-+		return ret;
-+
-+	ret = rv8063_register_driver();
-+	if (ret)
-+		pcf85063_unregister_driver();
-+
-+	return ret;
- }
- module_init(pcf85063_init);
- 
- static void __exit pcf85063_exit(void)
- {
-+	rv8063_unregister_driver();
- 	pcf85063_unregister_driver();
- }
- module_exit(pcf85063_exit);
+[auto build test ERROR on net-next/main]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Vladimir-Oltean/net-enetc-convert-to-ndo_hwtstamp_get-and-ndo_hwtstamp_set/20250508-194458
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20250508114310.1258162-1-vladimir.oltean%40nxp.com
+patch subject: [PATCH net-next] net: enetc: convert to ndo_hwtstamp_get() and ndo_hwtstamp_set()
+config: arm64-randconfig-002-20250509 (https://download.01.org/0day-ci/archive/20250510/202505100217.0jMyMEHN-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250510/202505100217.0jMyMEHN-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505100217.0jMyMEHN-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:6,
+                    from include/linux/kasan-checks.h:5,
+                    from include/asm-generic/rwonce.h:26,
+                    from arch/arm64/include/asm/rwonce.h:71,
+                    from include/linux/compiler.h:390,
+                    from include/linux/build_bug.h:5,
+                    from include/linux/container_of.h:5,
+                    from include/linux/list.h:5,
+                    from include/linux/timer.h:5,
+                    from drivers/net/ethernet/freescale/enetc/enetc.h:4,
+                    from drivers/net/ethernet/freescale/enetc/enetc.c:4:
+>> include/linux/stddef.h:8:16: error: expected identifier or '(' before 'void'
+    #define NULL ((void *)0)
+                   ^~~~
+   drivers/net/ethernet/freescale/enetc/enetc.h:495:50: note: in expansion of macro 'NULL'
+    #define enetc_hwtstamp_set(ndev, config, extack) NULL
+                                                     ^~~~
+   drivers/net/ethernet/freescale/enetc/enetc.c:3265:5: note: in expansion of macro 'enetc_hwtstamp_set'
+    int enetc_hwtstamp_set(struct net_device *ndev,
+        ^~~~~~~~~~~~~~~~~~
+>> include/linux/stddef.h:8:23: error: expected ')' before numeric constant
+    #define NULL ((void *)0)
+                          ^
+   drivers/net/ethernet/freescale/enetc/enetc.h:495:50: note: in expansion of macro 'NULL'
+    #define enetc_hwtstamp_set(ndev, config, extack) NULL
+                                                     ^~~~
+   drivers/net/ethernet/freescale/enetc/enetc.c:3265:5: note: in expansion of macro 'enetc_hwtstamp_set'
+    int enetc_hwtstamp_set(struct net_device *ndev,
+        ^~~~~~~~~~~~~~~~~~
+   In file included from include/linux/linkage.h:7,
+                    from include/linux/printk.h:8,
+                    from include/asm-generic/bug.h:22,
+                    from arch/arm64/include/asm/bug.h:26,
+                    from include/linux/ktime.h:24,
+                    from include/linux/timer.h:6,
+                    from drivers/net/ethernet/freescale/enetc/enetc.h:4,
+                    from drivers/net/ethernet/freescale/enetc/enetc.c:4:
+>> drivers/net/ethernet/freescale/enetc/enetc.c:3312:19: error: 'enetc_hwtstamp_set' undeclared here (not in a function); did you mean 'enetc_tstamp_tx'?
+    EXPORT_SYMBOL_GPL(enetc_hwtstamp_set);
+                      ^~~~~~~~~~~~~~~~~~
+   include/linux/export.h:70:16: note: in definition of macro '__EXPORT_SYMBOL'
+     extern typeof(sym) sym;     \
+                   ^~~
+   include/linux/export.h:84:33: note: in expansion of macro '_EXPORT_SYMBOL'
+    #define EXPORT_SYMBOL_GPL(sym)  _EXPORT_SYMBOL(sym, "GPL")
+                                    ^~~~~~~~~~~~~~
+   drivers/net/ethernet/freescale/enetc/enetc.c:3312:1: note: in expansion of macro 'EXPORT_SYMBOL_GPL'
+    EXPORT_SYMBOL_GPL(enetc_hwtstamp_set);
+    ^~~~~~~~~~~~~~~~~
+   In file included from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:6,
+                    from include/linux/kasan-checks.h:5,
+                    from include/asm-generic/rwonce.h:26,
+                    from arch/arm64/include/asm/rwonce.h:71,
+                    from include/linux/compiler.h:390,
+                    from include/linux/build_bug.h:5,
+                    from include/linux/container_of.h:5,
+                    from include/linux/list.h:5,
+                    from include/linux/timer.h:5,
+                    from drivers/net/ethernet/freescale/enetc/enetc.h:4,
+                    from drivers/net/ethernet/freescale/enetc/enetc.c:4:
+>> include/linux/stddef.h:8:16: error: expected identifier or '(' before 'void'
+    #define NULL ((void *)0)
+                   ^~~~
+   drivers/net/ethernet/freescale/enetc/enetc.h:494:43: note: in expansion of macro 'NULL'
+    #define enetc_hwtstamp_get(ndev, config)  NULL
+                                              ^~~~
+   drivers/net/ethernet/freescale/enetc/enetc.c:3314:5: note: in expansion of macro 'enetc_hwtstamp_get'
+    int enetc_hwtstamp_get(struct net_device *ndev,
+        ^~~~~~~~~~~~~~~~~~
+>> include/linux/stddef.h:8:23: error: expected ')' before numeric constant
+    #define NULL ((void *)0)
+                          ^
+   drivers/net/ethernet/freescale/enetc/enetc.h:494:43: note: in expansion of macro 'NULL'
+    #define enetc_hwtstamp_get(ndev, config)  NULL
+                                              ^~~~
+   drivers/net/ethernet/freescale/enetc/enetc.c:3314:5: note: in expansion of macro 'enetc_hwtstamp_get'
+    int enetc_hwtstamp_get(struct net_device *ndev,
+        ^~~~~~~~~~~~~~~~~~
+   In file included from include/linux/linkage.h:7,
+                    from include/linux/printk.h:8,
+                    from include/asm-generic/bug.h:22,
+                    from arch/arm64/include/asm/bug.h:26,
+                    from include/linux/ktime.h:24,
+                    from include/linux/timer.h:6,
+                    from drivers/net/ethernet/freescale/enetc/enetc.h:4,
+                    from drivers/net/ethernet/freescale/enetc/enetc.c:4:
+>> drivers/net/ethernet/freescale/enetc/enetc.c:3333:19: error: 'enetc_hwtstamp_get' undeclared here (not in a function); did you mean 'enetc_hwtstamp_set'?
+    EXPORT_SYMBOL_GPL(enetc_hwtstamp_get);
+                      ^~~~~~~~~~~~~~~~~~
+   include/linux/export.h:70:16: note: in definition of macro '__EXPORT_SYMBOL'
+     extern typeof(sym) sym;     \
+                   ^~~
+   include/linux/export.h:84:33: note: in expansion of macro '_EXPORT_SYMBOL'
+    #define EXPORT_SYMBOL_GPL(sym)  _EXPORT_SYMBOL(sym, "GPL")
+                                    ^~~~~~~~~~~~~~
+   drivers/net/ethernet/freescale/enetc/enetc.c:3333:1: note: in expansion of macro 'EXPORT_SYMBOL_GPL'
+    EXPORT_SYMBOL_GPL(enetc_hwtstamp_get);
+    ^~~~~~~~~~~~~~~~~
+--
+   In file included from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:6,
+                    from include/linux/kasan-checks.h:5,
+                    from include/asm-generic/rwonce.h:26,
+                    from arch/arm64/include/asm/rwonce.h:71,
+                    from include/linux/compiler.h:390,
+                    from include/linux/build_bug.h:5,
+                    from include/linux/container_of.h:5,
+                    from include/linux/list.h:5,
+                    from include/linux/timer.h:5,
+                    from enetc.h:4,
+                    from enetc.c:4:
+>> include/linux/stddef.h:8:16: error: expected identifier or '(' before 'void'
+    #define NULL ((void *)0)
+                   ^~~~
+   enetc.h:495:50: note: in expansion of macro 'NULL'
+    #define enetc_hwtstamp_set(ndev, config, extack) NULL
+                                                     ^~~~
+   enetc.c:3265:5: note: in expansion of macro 'enetc_hwtstamp_set'
+    int enetc_hwtstamp_set(struct net_device *ndev,
+        ^~~~~~~~~~~~~~~~~~
+>> include/linux/stddef.h:8:23: error: expected ')' before numeric constant
+    #define NULL ((void *)0)
+                          ^
+   enetc.h:495:50: note: in expansion of macro 'NULL'
+    #define enetc_hwtstamp_set(ndev, config, extack) NULL
+                                                     ^~~~
+   enetc.c:3265:5: note: in expansion of macro 'enetc_hwtstamp_set'
+    int enetc_hwtstamp_set(struct net_device *ndev,
+        ^~~~~~~~~~~~~~~~~~
+   In file included from include/linux/linkage.h:7,
+                    from include/linux/printk.h:8,
+                    from include/asm-generic/bug.h:22,
+                    from arch/arm64/include/asm/bug.h:26,
+                    from include/linux/ktime.h:24,
+                    from include/linux/timer.h:6,
+                    from enetc.h:4,
+                    from enetc.c:4:
+   enetc.c:3312:19: error: 'enetc_hwtstamp_set' undeclared here (not in a function); did you mean 'enetc_tstamp_tx'?
+    EXPORT_SYMBOL_GPL(enetc_hwtstamp_set);
+                      ^~~~~~~~~~~~~~~~~~
+   include/linux/export.h:70:16: note: in definition of macro '__EXPORT_SYMBOL'
+     extern typeof(sym) sym;     \
+                   ^~~
+   include/linux/export.h:84:33: note: in expansion of macro '_EXPORT_SYMBOL'
+    #define EXPORT_SYMBOL_GPL(sym)  _EXPORT_SYMBOL(sym, "GPL")
+                                    ^~~~~~~~~~~~~~
+   enetc.c:3312:1: note: in expansion of macro 'EXPORT_SYMBOL_GPL'
+    EXPORT_SYMBOL_GPL(enetc_hwtstamp_set);
+    ^~~~~~~~~~~~~~~~~
+   In file included from include/uapi/linux/posix_types.h:5,
+                    from include/uapi/linux/types.h:14,
+                    from include/linux/types.h:6,
+                    from include/linux/kasan-checks.h:5,
+                    from include/asm-generic/rwonce.h:26,
+                    from arch/arm64/include/asm/rwonce.h:71,
+                    from include/linux/compiler.h:390,
+                    from include/linux/build_bug.h:5,
+                    from include/linux/container_of.h:5,
+                    from include/linux/list.h:5,
+                    from include/linux/timer.h:5,
+                    from enetc.h:4,
+                    from enetc.c:4:
+>> include/linux/stddef.h:8:16: error: expected identifier or '(' before 'void'
+    #define NULL ((void *)0)
+                   ^~~~
+   enetc.h:494:43: note: in expansion of macro 'NULL'
+    #define enetc_hwtstamp_get(ndev, config)  NULL
+                                              ^~~~
+   enetc.c:3314:5: note: in expansion of macro 'enetc_hwtstamp_get'
+    int enetc_hwtstamp_get(struct net_device *ndev,
+        ^~~~~~~~~~~~~~~~~~
+>> include/linux/stddef.h:8:23: error: expected ')' before numeric constant
+    #define NULL ((void *)0)
+                          ^
+   enetc.h:494:43: note: in expansion of macro 'NULL'
+    #define enetc_hwtstamp_get(ndev, config)  NULL
+                                              ^~~~
+   enetc.c:3314:5: note: in expansion of macro 'enetc_hwtstamp_get'
+    int enetc_hwtstamp_get(struct net_device *ndev,
+        ^~~~~~~~~~~~~~~~~~
+   In file included from include/linux/linkage.h:7,
+                    from include/linux/printk.h:8,
+                    from include/asm-generic/bug.h:22,
+                    from arch/arm64/include/asm/bug.h:26,
+                    from include/linux/ktime.h:24,
+                    from include/linux/timer.h:6,
+                    from enetc.h:4,
+                    from enetc.c:4:
+   enetc.c:3333:19: error: 'enetc_hwtstamp_get' undeclared here (not in a function); did you mean 'enetc_hwtstamp_set'?
+    EXPORT_SYMBOL_GPL(enetc_hwtstamp_get);
+                      ^~~~~~~~~~~~~~~~~~
+   include/linux/export.h:70:16: note: in definition of macro '__EXPORT_SYMBOL'
+     extern typeof(sym) sym;     \
+                   ^~~
+   include/linux/export.h:84:33: note: in expansion of macro '_EXPORT_SYMBOL'
+    #define EXPORT_SYMBOL_GPL(sym)  _EXPORT_SYMBOL(sym, "GPL")
+                                    ^~~~~~~~~~~~~~
+   enetc.c:3333:1: note: in expansion of macro 'EXPORT_SYMBOL_GPL'
+    EXPORT_SYMBOL_GPL(enetc_hwtstamp_get);
+    ^~~~~~~~~~~~~~~~~
+
+
+vim +3312 drivers/net/ethernet/freescale/enetc/enetc.c
+
+  3264	
+  3265	int enetc_hwtstamp_set(struct net_device *ndev,
+  3266			       struct kernel_hwtstamp_config *config,
+  3267			       struct netlink_ext_ack *extack)
+  3268	{
+  3269		struct enetc_ndev_priv *priv = netdev_priv(ndev);
+  3270		int err, new_offloads = priv->active_offloads;
+  3271	
+  3272		switch (config->tx_type) {
+  3273		case HWTSTAMP_TX_OFF:
+  3274			new_offloads &= ~ENETC_F_TX_TSTAMP_MASK;
+  3275			break;
+  3276		case HWTSTAMP_TX_ON:
+  3277			new_offloads &= ~ENETC_F_TX_TSTAMP_MASK;
+  3278			new_offloads |= ENETC_F_TX_TSTAMP;
+  3279			break;
+  3280		case HWTSTAMP_TX_ONESTEP_SYNC:
+  3281			if (!enetc_si_is_pf(priv->si))
+  3282				return -EOPNOTSUPP;
+  3283	
+  3284			new_offloads &= ~ENETC_F_TX_TSTAMP_MASK;
+  3285			new_offloads |= ENETC_F_TX_ONESTEP_SYNC_TSTAMP;
+  3286			break;
+  3287		default:
+  3288			return -ERANGE;
+  3289		}
+  3290	
+  3291		switch (config->rx_filter) {
+  3292		case HWTSTAMP_FILTER_NONE:
+  3293			new_offloads &= ~ENETC_F_RX_TSTAMP;
+  3294			break;
+  3295		default:
+  3296			new_offloads |= ENETC_F_RX_TSTAMP;
+  3297			config->rx_filter = HWTSTAMP_FILTER_ALL;
+  3298		}
+  3299	
+  3300		if ((new_offloads ^ priv->active_offloads) & ENETC_F_RX_TSTAMP) {
+  3301			bool extended = !!(new_offloads & ENETC_F_RX_TSTAMP);
+  3302	
+  3303			err = enetc_reconfigure(priv, extended, NULL, NULL);
+  3304			if (err)
+  3305				return err;
+  3306		}
+  3307	
+  3308		priv->active_offloads = new_offloads;
+  3309	
+  3310		return 0;
+  3311	}
+> 3312	EXPORT_SYMBOL_GPL(enetc_hwtstamp_set);
+  3313	
+  3314	int enetc_hwtstamp_get(struct net_device *ndev,
+  3315			       struct kernel_hwtstamp_config *config)
+  3316	{
+  3317		struct enetc_ndev_priv *priv = netdev_priv(ndev);
+  3318	
+  3319		config->flags = 0;
+  3320	
+  3321		if (priv->active_offloads & ENETC_F_TX_ONESTEP_SYNC_TSTAMP)
+  3322			config->tx_type = HWTSTAMP_TX_ONESTEP_SYNC;
+  3323		else if (priv->active_offloads & ENETC_F_TX_TSTAMP)
+  3324			config->tx_type = HWTSTAMP_TX_ON;
+  3325		else
+  3326			config->tx_type = HWTSTAMP_TX_OFF;
+  3327	
+  3328		config->rx_filter = (priv->active_offloads & ENETC_F_RX_TSTAMP) ?
+  3329				     HWTSTAMP_FILTER_ALL : HWTSTAMP_FILTER_NONE;
+  3330	
+  3331		return 0;
+  3332	}
+> 3333	EXPORT_SYMBOL_GPL(enetc_hwtstamp_get);
+  3334	
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
