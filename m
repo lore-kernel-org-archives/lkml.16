@@ -1,65 +1,77 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A19735976;
-	Fri,  9 May 2025 09:37:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FB735976;
+	Fri,  9 May 2025 09:38:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746783478; cv=none; b=Vm4co7gYykkm8ZOhbn+koeNpdz4v5gc1rC8ENHcqe/e75X7OWzARc0v8cwc5JUI3cUQblwCNHt2O5uKGHOTNZwDcuJWGpjP4eH0qvN1iHQKDFxH4i8Txcs5rBupT9KqOfxo+08bLjLCL4gv0kCZaXdCwJwB5IWWvIU55mU7RU4I=
+	t=1746783489; cv=none; b=ZDhJ8o0Z4ewu3FCXx8FUD7WqplNRZ7FUduGrQKZNhQyHPzSXL7FeJTDiZNhBd22Q06Db285aehF/VbbS3WBVsFz5SJtDsFCq2/p5OegWlpqEjU3Vmeo2UqO9kmvIXWj75UTbO67BPn/XD7V/71B3WU2R1LwPjn2mo/1uMK8IpI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746783478; c=relaxed/simple;
-	bh=xyOJtjUQ7Rqu2zBQdpb/wjJlsQkJeZeAW3fBuv8lBKE=;
+	s=arc-20240116; t=1746783489; c=relaxed/simple;
+	bh=GKyHnY3Ghu2yiVf36Y/TrJp84COCpEcwGhvyMsI/YG8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=op21gQAN8AHAncT38mFlFQ6Jl8nLptr8DMldvrrUOgJot0yi9BiWKYYw9cpgt1N9gMcmYc+oW48rtDHjUju1T1sxoqxBmWKM0ZFPxhM1yLC1lx2otr1snNrXSQAWW3xRf7n5DLX5rLIkc7h+o8ZAip3srpTGaz4A3GMCMOlZnNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P6A+9MQf; arc=none smtp.client-ip=192.198.163.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=TICtB1Oe+fopwb7yo8Bz7JnbuWRPgMIVjzIIP3+cUkYp4Osj64XggrPhiJUlU7WALgV5ZpBFwN5LJGnb25GB55Hq2VUUR+uONYwtANUNTC52mrLJ2JV7hHXCljYBia86bH390xSdmPYlAQhKQh0KL+eMM/GVS9x1qyk/ScevoHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ik3mPqeL; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P6A+9MQf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ik3mPqeL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746783477; x=1778319477;
+  t=1746783487; x=1778319487;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=xyOJtjUQ7Rqu2zBQdpb/wjJlsQkJeZeAW3fBuv8lBKE=;
-  b=P6A+9MQfQkkrLEMtWuu6GPsHyvyDhFAbRoOZwyLk+fCJHG9b5xW0IwJp
-   5noXhwa/b8cUyD374k/fl9VcxQ4OdWOsM4qjOquwxsd7oMv43nagJ7bT9
-   oLsyrfP1erGLYZjZuBDkY+JG/XaaJEgVhkL8ehJYKu39GF5pQZhD6F5kC
-   g8jZj9XDA8l2tBYsMFa0HCB96Gmenvq/SPYuVxuFL47E7Q1ISR4OftQkZ
-   aAGKfeF3H4dXw5uPqymvQANiOOe8JecT+rHAhJJrE2oKC6rBMFiZIrA2k
-   aibcpV9D51BPWUSBzm4NUDfksAYtAdmgG9V2BF8vhKuZXc0qx9G8sihFB
+  bh=GKyHnY3Ghu2yiVf36Y/TrJp84COCpEcwGhvyMsI/YG8=;
+  b=ik3mPqeLNpQHns/JSK/lLniI2htObWmhm/T8j+897Tu46JV4mDSgDECI
+   2c/3FBnE4RC/ZJ9P8qk72+dVUQCLdsfM2szj0A6VqH9FzAkKSDRk8wsUJ
+   aFfg3BXJKCPFxim+0+Mxq68rxlMgtQjEM4Xua6inDkiS4ksVIXbXQH1lx
+   0jN8DVTD5GxKI9RUIJVQft5TRxKpKsBz+gEn5CNZ/fSz3b+hk/nK3u9VP
+   GLLteY4q7mzy2hee3+4FPs5X+29STxsfqRF6BPw60+mMcOaSkaKVwU/p3
+   R4jsDJyfhuAb86vnGf7EMnzVQNytMhFUzDimgiNnaHy7cGSeyfnhykLsb
    g==;
-X-CSE-ConnectionGUID: eSkUpEawTjmKP8FLeyqtKQ==
-X-CSE-MsgGUID: j/eXJ7rrQcqsfHvC9uGfiw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59268812"
+X-CSE-ConnectionGUID: CFWpUTrKQOCFmGkGcC4/Mg==
+X-CSE-MsgGUID: rS/akeDIQ2SWxW7Gs44DCw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59268838"
 X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
-   d="scan'208";a="59268812"
+   d="scan'208";a="59268838"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 02:37:56 -0700
-X-CSE-ConnectionGUID: FcjoOz+LTqGzJSCXcsQPZw==
-X-CSE-MsgGUID: LKHV/WWIQpqqcqFe3yg6Rw==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 02:38:06 -0700
+X-CSE-ConnectionGUID: 0/Te/Uk2TmuNkEJfgpnkUA==
+X-CSE-MsgGUID: qb8DGivuQBW3TKbXJfOpfw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
-   d="scan'208";a="136959749"
+   d="scan'208";a="136959750"
 Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
   by fmviesa008.fm.intel.com with ESMTP; 09 May 2025 02:37:51 -0700
 Received: from kbuild by 1992f890471c with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uDKAv-000BsL-18;
+	id 1uDKAv-000BsO-1B;
 	Fri, 09 May 2025 09:37:49 +0000
-Date: Fri, 9 May 2025 17:37:41 +0800
+Date: Fri, 9 May 2025 17:37:40 +0800
 From: kernel test robot <lkp@intel.com>
-To: ming.qian@oss.nxp.com, mchehab@kernel.org, hverkuil-cisco@xs4all.nl
-Cc: oe-kbuild-all@lists.linux.dev, nicolas@ndufresne.ca,
-	sebastian.fricke@collabora.com, shawnguo@kernel.org,
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-	linux-imx@nxp.com, xiahong.bao@nxp.com, eagle.zhou@nxp.com,
-	imx@lists.linux.dev, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3] media: amphion: Add H264 and HEVC profile and level
- control
-Message-ID: <202505091722.oiKjnVNJ-lkp@intel.com>
-References: <20250508053304.2057-1-ming.qian@oss.nxp.com>
+To: Markus Burri <markus.burri@mt.com>, linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Markus Burri <markus.burri@mt.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
+	Maciej Falkowski <maciej.falkowski@linux.intel.com>,
+	Oded Gabbay <ogabbay@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Nuno Sa <nuno.sa@analog.com>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, linuxppc-dev@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
+	linux-iio@vger.kernel.org
+Subject: Re: [PATCH v4 4/6] gpio: fix potential out-of-bound write
+Message-ID: <202505091754.285hHbr2-lkp@intel.com>
+References: <20250508130612.82270-5-markus.burri@mt.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,48 +80,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250508053304.2057-1-ming.qian@oss.nxp.com>
+In-Reply-To: <20250508130612.82270-5-markus.burri@mt.com>
 
-Hi,
+Hi Markus,
 
-kernel test robot noticed the following build warnings:
+kernel test robot noticed the following build errors:
 
-[auto build test WARNING on b64b134942c8cf4801ea288b3fd38b509aedec21]
+[auto build test ERROR on b4432656b36e5cc1d50a1f2dc15357543add530e]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/ming-qian-oss-nxp-com/media-amphion-Add-H264-and-HEVC-profile-and-level-control/20250508-133520
-base:   b64b134942c8cf4801ea288b3fd38b509aedec21
-patch link:    https://lore.kernel.org/r/20250508053304.2057-1-ming.qian%40oss.nxp.com
-patch subject: [PATCH v3] media: amphion: Add H264 and HEVC profile and level control
-config: x86_64-buildonly-randconfig-001-20250509 (https://download.01.org/0day-ci/archive/20250509/202505091722.oiKjnVNJ-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505091722.oiKjnVNJ-lkp@intel.com/reproduce)
+url:    https://github.com/intel-lab-lkp/linux/commits/Markus-Burri/iio-backend-fix-out-of-bound-write/20250508-211644
+base:   b4432656b36e5cc1d50a1f2dc15357543add530e
+patch link:    https://lore.kernel.org/r/20250508130612.82270-5-markus.burri%40mt.com
+patch subject: [PATCH v4 4/6] gpio: fix potential out-of-bound write
+config: x86_64-buildonly-randconfig-003-20250509 (https://download.01.org/0day-ci/archive/20250509/202505091754.285hHbr2-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505091754.285hHbr2-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505091722.oiKjnVNJ-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505091754.285hHbr2-lkp@intel.com/
 
-All warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
-   In file included from drivers/media/platform/amphion/vpu_color.c:17:
->> drivers/media/platform/amphion/vpu_helpers.h:74:38: warning: 'struct vpu_dec_codec_info' declared inside parameter list will not be visible outside of this definition or declaration
-      74 | u32 vpu_get_h264_v4l2_profile(struct vpu_dec_codec_info *hdr);
-         |                                      ^~~~~~~~~~~~~~~~~~
-   drivers/media/platform/amphion/vpu_helpers.h:75:36: warning: 'struct vpu_dec_codec_info' declared inside parameter list will not be visible outside of this definition or declaration
-      75 | u32 vpu_get_h264_v4l2_level(struct vpu_dec_codec_info *hdr);
-         |                                    ^~~~~~~~~~~~~~~~~~
-   drivers/media/platform/amphion/vpu_helpers.h:76:38: warning: 'struct vpu_dec_codec_info' declared inside parameter list will not be visible outside of this definition or declaration
-      76 | u32 vpu_get_hevc_v4l2_profile(struct vpu_dec_codec_info *hdr);
-         |                                      ^~~~~~~~~~~~~~~~~~
-   drivers/media/platform/amphion/vpu_helpers.h:77:36: warning: 'struct vpu_dec_codec_info' declared inside parameter list will not be visible outside of this definition or declaration
-      77 | u32 vpu_get_hevc_v4l2_level(struct vpu_dec_codec_info *hdr);
-         |                                    ^~~~~~~~~~~~~~~~~~
+>> drivers/gpio/gpio-virtuser.c:404:6: error: use of undeclared identifier 'size'; did you mean 'ksize'?
+     404 |         if (size >= sizeof(buf))
+         |             ^~~~
+         |             ksize
+   include/linux/slab.h:491:8: note: 'ksize' declared here
+     491 | size_t ksize(const void *objp);
+         |        ^
+   1 error generated.
 
 
-vim +74 drivers/media/platform/amphion/vpu_helpers.h
+vim +404 drivers/gpio/gpio-virtuser.c
 
-    73	
-  > 74	u32 vpu_get_h264_v4l2_profile(struct vpu_dec_codec_info *hdr);
+   393	
+   394	static ssize_t gpio_virtuser_direction_do_write(struct file *file,
+   395							const char __user *user_buf,
+   396							size_t count, loff_t *ppos,
+   397							bool atomic)
+   398	{
+   399		struct gpio_virtuser_line_data *data = file->private_data;
+   400		struct gpio_desc *desc = data->ad.desc;
+   401		char buf[32], *trimmed;
+   402		int ret, dir, val = 0;
+   403	
+ > 404		if (size >= sizeof(buf))
+   405			return -EINVAL;
+   406	
+   407		ret = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, user_buf, count);
+   408		if (ret < 0)
+   409			return ret;
+   410	
+   411		buf[ret] = '\0';
+   412	
+   413		trimmed = strim(buf);
+   414	
+   415		if (strcmp(trimmed, "input") == 0) {
+   416			dir = 1;
+   417		} else if (strcmp(trimmed, "output-high") == 0) {
+   418			dir = 0;
+   419			val = 1;
+   420		} else if (strcmp(trimmed, "output-low") == 0) {
+   421			dir = val = 0;
+   422		} else {
+   423			return -EINVAL;
+   424		}
+   425	
+   426		if (!atomic)
+   427			ret = gpio_virtuser_set_direction(desc, dir, val);
+   428		else
+   429			ret = gpio_virtuser_set_direction_atomic(desc, dir, val);
+   430		if (ret)
+   431			return ret;
+   432	
+   433		return count;
+   434	}
+   435	
 
 -- 
 0-DAY CI Kernel Test Service
