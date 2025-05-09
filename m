@@ -1,38 +1,38 @@
 Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E3A274664;
-	Fri,  9 May 2025 09:14:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54AD9277022;
+	Fri,  9 May 2025 09:14:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746782092; cv=none; b=i5t9Kv+EKx3j2vzclBRoc9dDk/OXlISlNjll0VNZj6p/eN6cPSULGQYbGLYuPDsdleV9ShHk3HgkLt8UBDj8rGIhru+L5eBq6aIqLhzvtnpspGozbdn9n9THjpbzUyLzTJSzr3k//7aQUAyyJmeht0G/9YpJJgoNotv4TcNmNYc=
+	t=1746782094; cv=none; b=TkfuM/FUsTlhasp+EQTAMd+sEhp5Z02N0M4QyCqgs4xa7THb6VyE4SVsFy2oyRsq+xVs74vLWEd4WRuS9O39mSicXKseZ7f2Y6b7xNbVOlnxcUvMAwLfM2yVdiVuLVMi7e+JvG014kiwaqfeZliRbZS2SuFd/8W0OUHok2ml6aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746782092; c=relaxed/simple;
-	bh=SRovOpnCGniNtSAYFKEgpxLUy5585/EJ4aVGunC2ZBc=;
+	s=arc-20240116; t=1746782094; c=relaxed/simple;
+	bh=JA+/ABK+d6/PwBt/x/ghKSUpxzD2D+hC+RaedoxvwHA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=P5T4VMdA0UrwnHB/hksh5QdyZDDUWC4WrdKxtMT4dNYRCLdLLBYC1GLHqbLNlP+ltm57+bU/G5p15j0JXvkoFCduhkutsexDjFIvHxWVcqa2fzdkJbRNt2o/BonX1wAVDFrC66kwmVagUx4d5xgnz9XS7QQMEkSUQeytLQT5MPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gFha+/GA; arc=none smtp.client-ip=217.70.183.195
+	 In-Reply-To:To:Cc; b=bzuUI0wmllnzA7FQIjutSrqw5GTdqt04yR5pQZ6hzyPqvyg4vdRwPOdBKFVu1voQiotmJ1C+ds12BRvCG0FlTdGkCWixv8oodE1wwsSSllCZ6kgphCR9bk8Px2WNJtifqdpvDGgO5SLjBjYanon8IvJ9zMwN0b4ChI4zbRKM6lM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Lo/802+h; arc=none smtp.client-ip=217.70.183.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gFha+/GA"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E094A1FD4D;
-	Fri,  9 May 2025 09:14:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Lo/802+h"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CCD2A1FCED;
+	Fri,  9 May 2025 09:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746782087;
+	t=1746782089;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wBBPIekBlFRh8GzKhjlK7YrZsktXr+KeMF/k8K6Twj0=;
-	b=gFha+/GA7FSJARqUHZjjNobradGF96lRLzM7WrooBI0yyGUSfICaHYLqAkzmIc7fbHm4HS
-	zEhGgDchR3KBXAbZkZ/jNPxFzTt9DaP0Dwj6AF9I3rfzOvs//fvHhP3qksQcf5p7ZMZ5rk
-	mhpnpahy1ovvaUvnqvp/7uC/pKrC+EpgGFAxp6OiIOXJm6mEaT5XvgRZ5uFYyAr5Ysv4ux
-	rTMXPKPrUEEFvOAhMptRGdUj3BHYzmMRF+rjoLQ6XJ88kyWfsXJLsr8OI7WFdMeSaNZ8l6
-	ShqPHsJNlRathRdmfo85rasvkVI5FstySLjLa+Y3GsghmpUvlYhSv5KvdgC3Vg==
-From: mathieu.dubois-briand@bootlin.com
-Date: Fri, 09 May 2025 11:14:38 +0200
-Subject: [PATCH v8 04/11] pwm: max7360: Add MAX7360 PWM support
+	bh=62nCa38zlyHvu4+rkDbxxjv8Ggs3mpE6yRSfCXC476k=;
+	b=Lo/802+hPpKxQrPsiMGsTJvl99ecVWGCrvxbrJA23owQWqrV+0BubroCVIQjQ3kxpxyUb5
+	12VV5nWvirrhW7JekK9W5xF9IfTwmmm+rFaiOks8dhLvlylD89D/+BUBTlp5Ruec7PUEQw
+	kVLojKFiQIvKAUkP6kMC29O7hnnS1uTPdVIVCad2oIr80VyowHXwnD7f2EBbq8J2lrnwo5
+	B8xewAitb9stmXqTgO7BMiGQLYfDrCYjmz6Kb2PilHTkU+XqQDqNyp4l8b5NpeHoUq3itB
+	V1q0AHFJF7ZgwjGuMZ/VafVK4suc7g4SDKM0PGDLj3zlHkv8xXLcHgU7gztdkw==
+From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Date: Fri, 09 May 2025 11:14:40 +0200
+Subject: [PATCH v8 06/11] gpio: regmap: Allow to allocate regmap-irq device
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250509-mdb-max7360-support-v8-4-bbe486f6bcb7@bootlin.com>
+Message-Id: <20250509-mdb-max7360-support-v8-6-bbe486f6bcb7@bootlin.com>
 References: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
 In-Reply-To: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -62,256 +62,119 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746782082; l=7295;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746782082; l=3825;
  i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=QcUNfPsxH2iFiOwmCjqQrIq/2BQoidPYzUJ8JFTX6JU=;
- b=SzfWupOvSyH2posZHtc4PQKV4wWiSLBFT9yiiYZKT2l6yksG7CMur+vp8OIpFW0ab8PrvhTkA
- bcbBbjtdgrmB0GWGJnWvpY/hu9eOL3pr8yZalNrWagXFY5QLn57f/bn
+ bh=JA+/ABK+d6/PwBt/x/ghKSUpxzD2D+hC+RaedoxvwHA=;
+ b=ZO693jZVTBUXqC/RK0pP4TV9hD5hPNk89Kr6NV6uGm1kwAyxwXsGUMDoozVMdMtMXO/dCK8ZM
+ m6KdKVlrkqeBmPPAKkzSYfPwqtwQw3Z1KnNhB+tMXxio0xbM884SAEY
 X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
  pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvvdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhenucggtffrrghtthgvrhhnpeevheffteettefffeetvdelledttddthfevhffgleehfedvveduudfhhedugfelgeenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhrtghpthhto
- heplhhinhhugidqphifmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepuhhklhgvihhnvghksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrgh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvvdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedthfegtedvvdehjeeiheehheeuteejleektdefheehgfefgeelhfetgedttdfhteenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghthhhivghurdguuhgsohhishdqs
+ ghrihgrnhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqphifmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepuhhklhgvihhnvghksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrgh
 X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+GPIO controller often have support for IRQ: allow to easily allocate
+both gpio-regmap and regmap-irq in one operation.
 
-Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
-8 independent PWM outputs.
-
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 ---
- drivers/pwm/Kconfig       |  10 +++
- drivers/pwm/Makefile      |   1 +
- drivers/pwm/pwm-max7360.c | 186 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 197 insertions(+)
+ drivers/base/regmap/regmap-irq.c |  4 +++-
+ drivers/gpio/gpio-regmap.c       | 21 +++++++++++++++++++--
+ include/linux/gpio/regmap.h      | 11 +++++++++++
+ 3 files changed, 33 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 4731d5b90d7e..0b22141cbf85 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -755,4 +755,14 @@ config PWM_XILINX
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-xilinx.
+diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regmap-irq.c
+index c1b0dcd7280f..45299d29fd0b 100644
+--- a/drivers/base/regmap/regmap-irq.c
++++ b/drivers/base/regmap/regmap-irq.c
+@@ -12,6 +12,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
++#include <linux/overflow.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+@@ -911,7 +912,8 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
+ 		if (ret < 0)
+ 			goto err_alloc;
  
-+config PWM_MAX7360
-+	tristate "MAX7360 PWMs"
-+	depends on MFD_MAX7360
-+	help
-+	  PWM driver for Maxim Integrated MAX7360 multifunction device, with
-+	  support for up to 8 PWM outputs.
+-		memcpy(d->prev_status_buf, d->status_buf, array_size(d->prev_status_buf));
++		memcpy(d->prev_status_buf, d->status_buf,
++		       array_size(d->chip->num_regs, sizeof(d->prev_status_buf[0])));
+ 	}
+ 
+ 	ret = regmap_irq_create_domain(fwnode, irq_base, chip, d);
+diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+index 87c4225784cf..9cbbbaf82609 100644
+--- a/drivers/gpio/gpio-regmap.c
++++ b/drivers/gpio/gpio-regmap.c
+@@ -215,6 +215,7 @@ EXPORT_SYMBOL_GPL(gpio_regmap_get_drvdata);
+  */
+ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config)
+ {
++	struct irq_domain *irq_domain;
+ 	struct gpio_regmap *gpio;
+ 	struct gpio_chip *chip;
+ 	int ret;
+@@ -295,8 +296,24 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
+ 	if (ret < 0)
+ 		goto err_free_gpio;
+ 
+-	if (config->irq_domain) {
+-		ret = gpiochip_irqchip_add_domain(chip, config->irq_domain);
++#ifdef CONFIG_REGMAP_IRQ
++	if (config->regmap_irq_chip) {
++		struct regmap_irq_chip_data *irq_chip_data;
 +
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-max7360.
-+
- endif
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 539e0def3f82..9c7701d8070b 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
- obj-$(CONFIG_PWM_LPSS)		+= pwm-lpss.o
- obj-$(CONFIG_PWM_LPSS_PCI)	+= pwm-lpss-pci.o
- obj-$(CONFIG_PWM_LPSS_PLATFORM)	+= pwm-lpss-platform.o
-+obj-$(CONFIG_PWM_MAX7360)	+= pwm-max7360.o
- obj-$(CONFIG_PWM_MESON)		+= pwm-meson.o
- obj-$(CONFIG_PWM_MEDIATEK)	+= pwm-mediatek.o
- obj-$(CONFIG_PWM_MICROCHIP_CORE)	+= pwm-microchip-core.o
-diff --git a/drivers/pwm/pwm-max7360.c b/drivers/pwm/pwm-max7360.c
-new file mode 100644
-index 000000000000..af2006ec7a96
---- /dev/null
-+++ b/drivers/pwm/pwm-max7360.c
-@@ -0,0 +1,186 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright 2025 Bootlin
-+ *
-+ * Author: Kamel BOUHARA <kamel.bouhara@bootlin.com>
-+ * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-+ *
-+ * Limitations:
-+ * - Only supports normal polarity.
-+ * - The period is fixed to 2 ms.
-+ * - Only the duty cycle can be changed, new values are applied at the beginning
-+ *   of the next cycle.
-+ * - When disabled, the output is put in Hi-Z.
-+ */
-+#include <linux/bits.h>
-+#include <linux/dev_printk.h>
-+#include <linux/err.h>
-+#include <linux/math64.h>
-+#include <linux/mfd/max7360.h>
-+#include <linux/minmax.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+#include <linux/time.h>
-+#include <linux/types.h>
-+
-+#define MAX7360_NUM_PWMS			8
-+#define MAX7360_PWM_MAX_RES			255
-+#define MAX7360_PWM_PERIOD_NS			(2 * NSEC_PER_MSEC)
-+
-+struct max7360_pwm_waveform {
-+	u8 duty_steps;
-+	bool enabled;
-+};
-+
-+static int max7360_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct regmap *regmap = pwmchip_get_drvdata(chip);
-+	int ret;
-+
-+	ret = regmap_write_bits(regmap, MAX7360_REG_PWMCFG(pwm->hwpwm),
-+				MAX7360_PORT_CFG_COMMON_PWM, 0);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_write_bits(regmap, MAX7360_REG_PORTS, BIT(pwm->hwpwm), BIT(pwm->hwpwm));
-+}
-+
-+static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
-+					   struct pwm_device *pwm,
-+					   const struct pwm_waveform *wf,
-+					   void *_wfhw)
-+{
-+	struct max7360_pwm_waveform *wfhw = _wfhw;
-+	u64 duty_steps;
-+
-+	/*
-+	 * Ignore user provided values for period_length_ns and duty_offset_ns:
-+	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of 0.
-+	 */
-+	duty_steps = mul_u64_u64_div_u64(wf->duty_length_ns, MAX7360_PWM_MAX_RES,
-+					 MAX7360_PWM_PERIOD_NS);
-+
-+	wfhw->duty_steps = min(MAX7360_PWM_MAX_RES, duty_steps);
-+	wfhw->enabled = !!wf->duty_length_ns;
-+
-+	return 0;
-+}
-+
-+static int max7360_pwm_round_waveform_fromhw(struct pwm_chip *chip, struct pwm_device *pwm,
-+					     const void *_wfhw, struct pwm_waveform *wf)
-+{
-+	const struct max7360_pwm_waveform *wfhw = _wfhw;
-+
-+	wf->period_length_ns = wfhw->enabled ? MAX7360_PWM_PERIOD_NS : 0;
-+	wf->duty_offset_ns = 0;
-+	wf->duty_length_ns = DIV_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PERIOD_NS,
-+					  MAX7360_PWM_MAX_RES);
-+
-+	return 0;
-+}
-+
-+static int max7360_pwm_write_waveform(struct pwm_chip *chip,
-+				      struct pwm_device *pwm,
-+				      const void *_wfhw)
-+{
-+	struct regmap *regmap = pwmchip_get_drvdata(chip);
-+	const struct max7360_pwm_waveform *wfhw = _wfhw;
-+	unsigned int val;
-+	int ret;
-+
-+	val = wfhw->enabled ? BIT(pwm->hwpwm) : 0;
-+	ret = regmap_write_bits(regmap, MAX7360_REG_GPIOCTRL, BIT(pwm->hwpwm), val);
-+	if (ret)
-+		return ret;
-+
-+	if (wfhw->duty_steps)
-+		return regmap_write(regmap, MAX7360_REG_PWM(pwm->hwpwm), wfhw->duty_steps);
-+
-+	return 0;
-+}
-+
-+static int max7360_pwm_read_waveform(struct pwm_chip *chip,
-+				     struct pwm_device *pwm,
-+				     void *_wfhw)
-+{
-+	struct regmap *regmap = pwmchip_get_drvdata(chip);
-+	struct max7360_pwm_waveform *wfhw = _wfhw;
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(regmap, MAX7360_REG_GPIOCTRL, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (val & BIT(pwm->hwpwm)) {
-+		wfhw->enabled = true;
-+		ret = regmap_read(regmap, MAX7360_REG_PWM(pwm->hwpwm), &val);
++		ret = devm_regmap_add_irq_chip_fwnode(config->parent, dev_fwnode(config->parent),
++						      config->regmap, config->regmap_irq_line,
++						      config->regmap_irq_flags, 0,
++						      config->regmap_irq_chip, &irq_chip_data);
 +		if (ret)
-+			return ret;
++			goto err_free_gpio;
 +
-+		wfhw->duty_steps = val;
-+	} else {
-+		wfhw->enabled = false;
-+		wfhw->duty_steps = 0;
-+	}
++		irq_domain = regmap_irq_get_domain(irq_chip_data);
++	} else
++#endif
++	irq_domain = config->irq_domain;
 +
-+	return 0;
-+}
++	if (irq_domain) {
++		ret = gpiochip_irqchip_add_domain(chip, irq_domain);
+ 		if (ret)
+ 			goto err_remove_gpiochip;
+ 	}
+diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
+index c722c67668c6..19b52ac03a5d 100644
+--- a/include/linux/gpio/regmap.h
++++ b/include/linux/gpio/regmap.h
+@@ -40,6 +40,11 @@ struct regmap;
+  * @drvdata:		(Optional) Pointer to driver specific data which is
+  *			not used by gpio-remap but is provided "as is" to the
+  *			driver callback(s).
++ * @regmap_irq_chip:	(Optional) Pointer on an regmap_irq_chip structure. If
++ *			set, a regmap-irq device will be created and the IRQ
++ *			domain will be set accordingly.
++ * @regmap_irq_line	(Optional) The IRQ the device uses to signal interrupts.
++ * @regmap_irq_flags	(Optional) The IRQF_ flags to use for the interrupt.
+  *
+  * The ->reg_mask_xlate translates a given base address and GPIO offset to
+  * register and mask pair. The base address is one of the given register
+@@ -78,6 +83,12 @@ struct gpio_regmap_config {
+ 	int ngpio_per_reg;
+ 	struct irq_domain *irq_domain;
+ 
++#ifdef CONFIG_REGMAP_IRQ
++	struct regmap_irq_chip *regmap_irq_chip;
++	int regmap_irq_line;
++	unsigned long regmap_irq_flags;
++#endif
 +
-+static const struct pwm_ops max7360_pwm_ops = {
-+	.request = max7360_pwm_request,
-+	.round_waveform_tohw = max7360_pwm_round_waveform_tohw,
-+	.round_waveform_fromhw = max7360_pwm_round_waveform_fromhw,
-+	.read_waveform = max7360_pwm_read_waveform,
-+	.write_waveform = max7360_pwm_write_waveform,
-+};
-+
-+static int max7360_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct pwm_chip *chip;
-+	struct regmap *regmap;
-+	int ret;
-+
-+	regmap = dev_get_regmap(dev->parent, NULL);
-+	if (!regmap)
-+		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
-+
-+	/*
-+	 * This MFD sub-device does not have any associated device tree node:
-+	 * properties are stored in the device node of the parent (MFD) device
-+	 * and this same node is used in phandles of client devices.
-+	 * Reuse this device tree node here, as otherwise the PWM subsystem
-+	 * would be confused by this topology.
-+	 */
-+	device_set_of_node_from_dev(dev, dev->parent);
-+
-+	chip = devm_pwmchip_alloc(dev, MAX7360_NUM_PWMS, 0);
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+	chip->ops = &max7360_pwm_ops;
-+
-+	pwmchip_set_drvdata(chip, regmap);
-+
-+	ret = devm_pwmchip_add(dev, chip);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
-+
-+	return 0;
-+}
-+
-+static struct platform_driver max7360_pwm_driver = {
-+	.driver = {
-+		.name = "max7360-pwm",
-+	},
-+	.probe = max7360_pwm_probe,
-+};
-+module_platform_driver(max7360_pwm_driver);
-+
-+MODULE_DESCRIPTION("MAX7360 PWM driver");
-+MODULE_AUTHOR("Kamel BOUHARA <kamel.bouhara@bootlin.com>");
-+MODULE_AUTHOR("Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>");
-+MODULE_LICENSE("GPL");
+ 	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
+ 			      unsigned int offset, unsigned int *reg,
+ 			      unsigned int *mask);
 
 -- 
 2.39.5
