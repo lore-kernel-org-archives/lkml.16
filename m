@@ -1,112 +1,84 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail.actia.se (mail.actia.se [212.181.117.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E34E27A44D
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF14D27055D
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746776856; cv=none; b=rjlC+X4NBJsmc0H/RgpWUt3f6YeCXPIgu195406uoblTm/WXeeSzMw22SQe3azIV5X1hvrvMG8H/UlAsptDpsRw4Wt9waU4ACWgLpIAsG89m9ZYqhmXWKwhKLyM2JS5nk/gqoW8COzfMmHAu5qrhCmhoTmILFataCVEGz4BEB74=
+	t=1746776895; cv=none; b=lVQI4tfpSMxnBy9byi0OhgqGA7LEtYvXJsJykqGjG6WKEE3dW4y+Dv73p299eRPDU/F5P+LTokpzdNuXukaO/QJggfPZ5VxuuZUn2sLDfT4nWsBLnXcgT+KWjddlHc2Wxw/DGd4wMEe6yNFhDJqimvoHYLZFhwvigU+m++clrHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746776856; c=relaxed/simple;
-	bh=nwn/1xFnDofNjE5zObbTyO3jQ7C6fJ/VDExirw9zwxQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RWHLTXOSVBVYzcoaNTklEg5ysbbxZkyzgnyxN1n9s/BBLPtGS0noSLcQwTVLi16k5/rc6IH4/MMTiGwuyCE634QACg1aqIHsJrPwYFZIw/NeJi0wD5xo97jH2VFJWHeVw2P26iMRoPXuG+4iDtiqoNxWERaGOqiEeR1FnqCmOLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N9UUwott; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N9UUwott"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-326c38c7346so5864881fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 00:47:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746776852; x=1747381652; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=nwn/1xFnDofNjE5zObbTyO3jQ7C6fJ/VDExirw9zwxQ=;
-        b=N9UUwottZ2v6W2iL27LrJ1qXg8mNe+3ZY5X63+nvtw0WtZi/tJQo7FEZ9WeKmCQzlr
-         eT6mR2q+HIdiReU9iz7oTJT6UtqHdu+8qa28T7A/q1cAMjH0CsSECUvU7SmMhxW9GCq6
-         L/m5HxpEiNLqY0WtZvn06Fh44RBadj4c6QldxSp+1l8TX4eqT1uXYXnXtpoU1S82xHlo
-         /nnDu40na/0WFrIWHGN4GNCNaeakaJAz6sMWmQiLYBKNmKrwcIvEKb2NiBrPPH3ZJm+F
-         8U2TIHy3X08VsVS6vrO2Sif29HnSyXv528lvW4MokrW4mq5xp/vSyNs4JUK4JdH2Tkyx
-         oQhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746776852; x=1747381652;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nwn/1xFnDofNjE5zObbTyO3jQ7C6fJ/VDExirw9zwxQ=;
-        b=OWwjm8aTqYoFKmThPSObj0wu90LpJx0l7m1rHCUMazhPZxbIXkGcPx1wS5jcdrDfo5
-         Lm4oy7+g3bUAjBPIRLR2052oQX5pfrihXFF5CuLxdxL4uZYSw3EM9YA9i5MtbOl5HeaG
-         tLv+yDnTuVTeIeKE+OkwJuT9jwbt4rn07ZN5BxooWwpUCKfOzRGvX6gDmqRHAs07Xk/g
-         cYo7sG9pxCojxU1JOKfMNtMXlV9srzs82qqXMiMnU2RWteDDZ3fKtKfpaI8c9v+SwxPh
-         HALaSEwI4giHKncAXXIvqM5R05P1uQBnisMzRVHXGY8Or3PSC2smLlLiY5VZ7UnoFiO0
-         oUhw==
-X-Forwarded-Encrypted: i=1; AJvYcCXnIu9JEp72Xatb3sfwF4AcPs8/mlehcejzEGrjpGnQuLGoPFtRJeXDiLsbyvdjrGLbybTR9av/Z+7Y4Dg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2eFFDlKWQSNzeaX4Ircq3Ws8GcMTS0Y+kgLpdeXnm5RR8sMUy
-	ZCAdlwSQrvnm9seL8JKK87AI/rlBjevffR+ytwgJ21Xei5ozTJLaO5coVJvif6Bnnoupu22U/Y3
-	jzrd+qtqVM2woeqmf5GEBfE6WCLOZcPZUim5U
-X-Gm-Gg: ASbGncssjaql1tq11FzubaRGD2CmRCdgjiCuiLUFQe6gXSgObxJKcHK5grv/5vaXcpf
-	kma2b5ke46grlZnnkbbmWX/tYVHorPY9sRn9rrbrvLBKhsQvoXtPwM8UjlGbk8GVERVdQ02rL5A
-	mCqoNqY0/5JuloiZEni4pB9NdPpJFdUtuOSbegNBqxHwQLr4HWh4HDtg0=
-X-Google-Smtp-Source: AGHT+IHvxm9nRo1BcrA9kxjbnZiSs4jSYmi+WIjgg0nbDn0V42esB6SSl4ogD0paL923V4yspKeBojmYT/Evqfb3XeY=
-X-Received: by 2002:a2e:a104:0:b0:30d:e104:cd56 with SMTP id
- 38308e7fff4ca-326c468a3d9mr10106721fa.39.1746776852294; Fri, 09 May 2025
- 00:47:32 -0700 (PDT)
+	s=arc-20240116; t=1746776895; c=relaxed/simple;
+	bh=6Bb1bCIHUhcZpksKyLvuXWjp5mJsajaLw4Ijf+x0huU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=McOTW9vynJRsdXQZp+P1s9DIudtaRgHIw4cgIIjPNlXyuuA3uDyKJLi7214su2gqzDzw00KEFt/51skoXsMSUz0KAiCFw4lf6v5OBbsCKXERCml2h9zQFQfd/OlZzQBZTD61be3v6NvRRH5w/BktICD3UAcFYGMPi5bTmyp9JRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
+Received: from S036ANL.actianordic.se (10.12.31.117) by S036ANL.actianordic.se
+ (10.12.31.117) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 9 May
+ 2025 09:48:04 +0200
+Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
+ S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%3]) with mapi id
+ 15.01.2507.039; Fri, 9 May 2025 09:48:04 +0200
+From: John Ernberg <john.ernberg@actia.se>
+To: Stefano Stabellini <sstabellini@kernel.org>, Christoph Hellwig
+	<hch@infradead.org>
+CC: Juergen Gross <jgross@suse.com>, Oleksandr Tyshchenko
+	<oleksandr_tyshchenko@epam.com>, Catalin Marinas <catalin.marinas@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>, "xen-devel@lists.xenproject.org"
+	<xen-devel@lists.xenproject.org>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: Re: [PATCH 2/2] xen: swiotlb: Implement map_resource callback
+Thread-Topic: [PATCH 2/2] xen: swiotlb: Implement map_resource callback
+Thread-Index: AQHbu1cR+sKkXAZoXEOAUfrcrER157O/dMAAgAX2O4CAAkbqgIAAVVAAgAE+k4CAAI9lgA==
+Date: Fri, 9 May 2025 07:48:03 +0000
+Message-ID: <df9da8af-3a10-4f8b-8e4a-63e4ba473e17@actia.se>
+References: <20250502114043.1968976-1-john.ernberg@actia.se>
+ <20250502114043.1968976-3-john.ernberg@actia.se>
+ <alpine.DEB.2.22.394.2505021007460.3879245@ubuntu-linux-20-04-desktop>
+ <75266eb7-66a4-4477-ae8a-cbd1ebbee8db@actia.se>
+ <alpine.DEB.2.22.394.2505071602570.3879245@ubuntu-linux-20-04-desktop>
+ <aBwvrLKD_VJapYkB@infradead.org>
+ <alpine.DEB.2.22.394.2505081614450.3879245@ubuntu-linux-20-04-desktop>
+In-Reply-To: <alpine.DEB.2.22.394.2505081614450.3879245@ubuntu-linux-20-04-desktop>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-esetresult: clean, is OK
+x-esetid: 37303A2955B14453667D66
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EDE583C0E761E94898DF9F230B77BD62@actia.se>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2025040820-REJECTED-6695@gregkh> <20250509072033.1335321-1-dvyukov@google.com>
- <2025050940-marrow-roundish-8b98@gregkh>
-In-Reply-To: <2025050940-marrow-roundish-8b98@gregkh>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Fri, 9 May 2025 09:47:20 +0200
-X-Gm-Features: AX0GCFu56T9Fwh6NOL-MLff4IDProsCbytk6OglpFiIlgFXBBwGRXwMKRhRLb6I
-Message-ID: <CACT4Y+aiQcbHfj2rB6pGKevUbUoYwrHMu+aC-xh0BCKE8D-8sQ@mail.gmail.com>
-Subject: Re: REJECTED: CVE-2025-0927: heap overflow in the hfs and hfsplus
- filesystems with manually crafted filesystem
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: cve@kernel.org, linux-cve-announce@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 9 May 2025 at 09:34, Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Fri, May 09, 2025 at 09:20:33AM +0200, Dmitry Vyukov wrote:
-> > > CVE-2025-0927 has now been rejected and is no longer a valid CVE.
-> >
-> > > Filesystem bugs due to corrupt images are not considered a CVE for any
-> > > filesystem that is only mountable by CAP_SYS_ADMIN in the initial user
-> > > namespace. That includes delegated mounting.
-> >
-> > I wonder if this should be the case only if the image is flagged by fsck
-> > as corrupted? Otherwise I am not sure what's "trusted". It's not about
-> > somebody's "honest eyes", right. E.g. in the context of insider risks
-> > the person providing an image may be considered "trusted", or in the
-> > context of Zero Trust Architecture nothing at all is considered trusted,
-> > or a trusted image may be tampered with while stored somewhere.
-> >
-> > Without any formal means to classify an image as corrupted or not,
-> > this approach does not look very practical to me. While flagging by fsck
-> > gives concrete workflow for any context that requires more security.
->
-> And how do we know of fsck can flag anything,
-
-By running fsck on the image. Or what do you mean?
-
-> AND which version of fsck?
-
-This needs to be answered as part of establishing the vulnerability
-triage process. I would go for a relatively fresh version. That will
-remove bugs fixed a long time ago, and if users rely on it for
-security purposes they have to update it.
-
-> We'll defer to the fs developers as to what they want here, but note, we
-> do not determine "trusted" or not, that is a use case that is outside of
-> our scope entirely.
-
-I think classification should be tied to users and use cases in the
-first place. I, as a developer, wouldn't want any CVEs assigned to my
-code, if I could just wish so :)
+SGkgU3RlZmFubywNCg0KT24gNS85LzI1IDE6MTQgQU0sIFN0ZWZhbm8gU3RhYmVsbGluaSB3cm90
+ZToNCj4gT24gV2VkLCA3IE1heSAyMDI1LCBDaHJpc3RvcGggSGVsbHdpZyB3cm90ZToNCj4+IE9u
+IFdlZCwgTWF5IDA3LCAyMDI1IGF0IDA0OjA5OjE1UE0gLTA3MDAsIFN0ZWZhbm8gU3RhYmVsbGlu
+aSB3cm90ZToNCj4+Pj4gVGhpcyBtYXBwaW5nIGlzIG5vdCBmb3IgYSBSQU0gYmFja2VkIGFkZHJl
+c3MuIEluIHRoZSBlRE1BIGNhc2UgZm9yIHRoZQ0KPj4+PiBpTVg4UVhQIHRoZSBgcGh5c2AgY29t
+aW5nIGluIGhlcmUgaXMgdGhlIGFkZHJlc3Mgb2YgYSByZWdpc3Rlci4NCj4+Pg0KPj4+IE9rLCB0
+aGlzIGluZm9ybWF0aW9uIGlzIGltcG9ydGFudCA6LSkNCj4+Pg0KPj4+IEkgYW0gbm90IGNlcnRh
+aW4gd2hldGhlciB0aGUgbWFwX3Jlc291cmNlIGludGVyZmFjZSBjYW4gb25seSBiZSBjYWxsZWQN
+Cj4+PiBmb3IgTU1JTyBhZGRyZXNzZXMgb3IgaWYgaXQgY2FuIGFsc28gYmUgY2FsbGVkIGZvciBS
+QU0tYmFja2VkIGFkZHJlc3Nlcw0KPj4+IHdpdGggYSBzaXplID4gUEFHRV9TSVpFLiBJbiB0aGUg
+bGF0dGVyIGNhc2UsIHdlIGNvdWxkIHJ1biBpbnRvIHRoZSBpc3N1ZQ0KPj4+IEkgd2FzIGRlc2Ny
+aWJpbmcuDQo+Pg0KPj4gbWFwX3Jlc291cmNlIGlzIGludGVuZGVkIGZvciBNTUlPIHJlZ2lvbnMs
+IGFsdGhvdWdoIHRob3NlIGNvdWxkIGJlID4NCj4+IFBBR0VfU0laRS4gIEl0IG11c3Qgbm90IGJl
+IGNhbGxlZCBvbiBSQU0uDQo+IA0KPiBJbiB0aGF0IGNhc2UsIEpvaG4sIHlvdSBjYW4ganVzdCB1
+c2UgZG1hX2RpcmVjdF9tYXBfcmVzb3VyY2UoKS4NCj4gDQo+IFRoYXQncyBiZWNhdXNlIE1NSU8g
+cmVnaW9uczoNCj4gLSBhcmUgMToxIG1hcHBlZCBvbiBBUk0NCj4gLSBhcmUgMToxIG1hcHBlZCBv
+biB4ODYgZm9yIFBWIERvbTANCj4gLSBtaWdodCBub3QgYmUgMToxIG1hcHBlZCBvbiB4ODYgZm9y
+IFBWSCBEb20wLCBidXQgaW4gdGhpcyBjYXNlIHdlIHJlbHkNCj4gICAgb24gdGhlIElPTU1VIHRv
+IGRvIGFkZHJlc3MgdHJhbnNsYXRpb24NCj4gDQo+IEluIG5vbmUgb2YgdGhlc2UgY2FzZXMgeGVu
+X3BoeXNfdG9fZG1hIHdvdWxkIGdpdmUgdXMgYW55IGludGVyZXN0aW5nDQo+IHJlc3VsdHMuICBJ
+dCB3b3VsZCBiZSB0aGUgc2FtZSBhcyBjYWxsaW5nIHBoeXNfdG9fZG1hLg0KDQpUaGFuayB5b3Ug
+Zm9yIGV4cGxhaW5pbmcuIEkgd2lsbCBzcGluIGEgVjIgaW5jb3Jwb3JhdGluZyB0aGlzLg0KVGhh
+bmtzISAvLyBKb2huIEVybmJlcmcNCg==
