@@ -1,87 +1,145 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4246D2AD0D
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226F526AAAE;
+	Fri,  9 May 2025 07:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746775241; cv=none; b=Luy1H7YR3eCHYjke6dJTKaW4nhBYjziZp+TMtVFnza1UE+iPPCyYiobmNSXXUqdauOZTtpLMFB0QIo+pOu9yYJbvwrUS+CR+0aWN2bsbFoMY2gdgqL5MJ2bDQtPkPpP+/tiGqQ8qsMdTQvOh/uhEp4eHbIMHMuGsnOnnGYGQij8=
+	t=1746775244; cv=none; b=SFWlvbmd4ce6s1Z9ubf7kG17K/ZJfT9qV0yI/mdd/RaYWpDQy3akTR0v4sRnowEzHtHnsf0DHhP2oD0fhEJLRxtCO0k8LZ4uSoKpele6TY4RopnTPcV3PHTpw1kquk0MQdlzWxkVS4hMJOg68hT9Jt8aNRqjWxNQtYFAlG2gJuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746775241; c=relaxed/simple;
-	bh=E52sUhwrPT88c00/iONr1WsHW3o/X2f1q2URFxRkf6Q=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CGwFIgQMktdw75KjiR49APOBJcvFGOTVNj/I8buIARnKv6fKkMomm6CmCswpF9KeAX0EDmNvmW6+q0L6oF9zFamScqAF+uN8kMrm5tlao9BpdmUZHJMOMSHOoFlhUSMniG2btj/BNVaKsizUlk875Neb4j+i/+oH0hcRudR5b+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jM9fwDPO; arc=none smtp.client-ip=209.85.208.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
+	s=arc-20240116; t=1746775244; c=relaxed/simple;
+	bh=LCin9QMurqszoVa8nmGgtDSKdrsw3cF/aGmoQNfc6tc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=acBR+A9KEEanGyCoVC3budRYGPc1rR1tbYaOlxMVJvYF5qYRnq+3nKXrcgXvq22S+OFzSV34tn3RnAqsTgsFKDeraMotQWnXxsqtyj2o/I7yAsznugckqs/KLQ58uWQZ+Q/J+/WRkrXOYEC0HQovxl8wRRJSnTWx0EvBrxf5rv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OHV3fg07; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jM9fwDPO"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5f92fc82c39so1728064a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 00:20:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OHV3fg07"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-acb5ec407b1so300785766b.1;
+        Fri, 09 May 2025 00:20:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746775238; x=1747380038; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E52sUhwrPT88c00/iONr1WsHW3o/X2f1q2URFxRkf6Q=;
-        b=jM9fwDPOul0Bj3bU7KZJTwktSAeEEZVoC0LPaXUGVqfqpTU0Bn+AKKExoCf34IHBKE
-         Y7LtK5bdjmAPREiJiv2hYYuN3D6ueQKWgfDcyZieP16eh8R7sy2rHqkmvDM9QfiO/Zup
-         CexSn7GcSpP4IdoZBoPkFtnJFNpIl9p0agT1vpA1IhM7q68Pl12OOZkKAfdwiadXi7VO
-         vFNl5Au7X6/zURpqNXe/qj17sqStx3YeSNG0hULIYNlvAjRaVpf/39ukcbv0g1Vd/HKj
-         0JGibf/B0fU2x5D2oWu8/nMXwO7pEWzEpMHm8oqpZey0CQEsufHpjhJh+h5//V7QKT/H
-         J8vA==
+        d=gmail.com; s=20230601; t=1746775241; x=1747380041; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/sDz3QKYpGwAxmXA5AboWC0JFHM3ow5nmHY1DDiphvs=;
+        b=OHV3fg074eQN6WRuhN0pJECfLTAm6TQTgGM5eMO1spJdbB98+9H8Rq7mZpSQRZvbyp
+         6XLfHfvrRpNVEKqm5d/yKvWwK6OdLa78jGtEOEyD0svNnzT8NTp1kmTVu9SQJQCqnk9I
+         JIXeqNHfJNt67P+bD9uBQL1qXa59Ngi1KpfCdLxTjbvpll/2jFZM+FwSMHfmei/MUJlU
+         3TFuIeqztFUn/lbF+r+jZF3529sXXAQBQHSdQBdkpT1KPCE+Nx5A8Bf7dhgPh0GCZ7Nz
+         mm49qwcclfSJ2MH/pr12sVeYwjv1TVJVEeSRMEsOm2bBRR5jGgjXV2y2S7SCZ4Fr/6G5
+         EnDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746775238; x=1747380038;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E52sUhwrPT88c00/iONr1WsHW3o/X2f1q2URFxRkf6Q=;
-        b=BxA7gzNI1V3K0Y8P0yoTOX/BKNBdWevNsAMy2OGne9kTUGpw1iHJkdj9MV9y5bwfgr
-         Xbi/4s2xOlfAt1kfDrZUsKCQQL3INGjnkZLzcMr4qxRi+easw5Cgm8nf4CNadOsAl/TE
-         zdAO3/T4WY2PAeWuRm5Gg7LgXRuXoc+Z0KWhNVBNQ9haD/WWP9uvedBGcZugfmJ10J7d
-         TiBWnSRYz/3XvsA0dtuW+i1oM+UDkrlNHbzkSB++G6OwgRienSy37PhgN8uNfP3wMcXP
-         KqcygP3/dhDThBkupQvj7PDjiqwEwhhjA4JC2rODrKqOj7BSbM6VfJQgMOuESiKsQO1s
-         /ynQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+8k2YOJJ2zpvq7/VYgCJqIeb8gX7o9ux0PLJw2tSujnNYvzGzrTm6VyNQU7DoMYXxlnXRyAX4S/B6Cd8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIS1q/qXstSbqrYWQDwspKUmzP4dhASL4ExFO7IJ8tQQunMszf
-	8hOYqc/J7TPpNmZ164EUAPOm7kcTw1Rge7YYMxQqZbCk5AZllXPIC2VGlWk6uT3WKNR1LR14EqE
-	VDhTSgA==
-X-Google-Smtp-Source: AGHT+IHudBw1Bfd8zPFPws5wwuo3sjzx9KmyClmMQ+BvrIpmJmJlojWkYFBO6H8lDZOgjAqcWyzvY9Csh0Vo
-X-Received: from edbig5.prod.google.com ([2002:a05:6402:4585:b0:5fb:f13a:53c9])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:3483:b0:5fc:9bc3:9eab
- with SMTP id 4fb4d7f45d1cf-5fca0770899mr1674022a12.17.1746775238596; Fri, 09
- May 2025 00:20:38 -0700 (PDT)
-Date: Fri,  9 May 2025 09:20:33 +0200
-In-Reply-To: <2025040820-REJECTED-6695@gregkh>
+        d=1e100.net; s=20230601; t=1746775241; x=1747380041;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/sDz3QKYpGwAxmXA5AboWC0JFHM3ow5nmHY1DDiphvs=;
+        b=H0OppJMMkx3qT/ektsDzGnsQbJxb2qsE0l6ZqS7i+0w9yZxd0RPH3gAj/RAfh5Fd8r
+         WssEzBAE/oxWu0q+LL1ybPeYUSXXKJK0qzU4JAtUbfFjslVmyMcmkloMrC3MGwidv6df
+         SdwTWfrSXaiOX6oaDtBQeDbsabzR3gaxR7WmTkiLQVrM9eTvnKTxl0P1kVqInrF2msvH
+         02dZHM/K1YYRF8z++8JfOzQVBw7TVoLZSfXmNoooA9S8giTvB/M+Pkj4WkT9uay91zXf
+         rlFHwTP4a11aexeL+nU75vNjaDs2joW+Z9D4yHSoHj4TNZyXJSYbjq9a0rR0WifQjCA/
+         bSYA==
+X-Forwarded-Encrypted: i=1; AJvYcCU1rsEQqHWY1e5388Itjr7iH+M7s+zoRcieH5kyKK/+R4hxesng/yP5gHk/U/chRL5Keo+xmBA3g+rSrKpU@vger.kernel.org, AJvYcCWVPLvL7ugTK/oiLh9vnjrQoqoSKNJBKNYa6hbJz5vtsFILWPVZuztuW+wrW9hqcD/WtMHwF8I/awRalmq5@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxWfpJa2UinqyP33YLM/LW5SdC4WADJu8jFgswQz/AbFB6pq7o
+	ZCIBfvHDAz3iykEFenM/IDaP0DyUg+VVvSho1ireweT+eIBR9pec1EH9vBj2D6J1NSIEX6laoq3
+	NVWZS6UxLAEM9t/SC0VrfeD1ArhVfB9aam3bvRw==
+X-Gm-Gg: ASbGncvD4MVJ6XKXTFJVVAG0gA5By24jYU79JS7c9CjbSikWN9Ww4SqFQOjGXc6JFgO
+	lYr5ftPV+ZMJrZaAGiyyfedvGq9LL9cghXoN47BevUREk85Rc02YvVUy1IQGTHosG2V10BdvwRo
+	Z95wcz+E3ugW8JjTg3TcxEcQ==
+X-Google-Smtp-Source: AGHT+IGYw+qCYvkMDPaJozX0lv/veDPACtLbQQF/EVWtO05cEA8cOXZKGzw+JAs16qdH5r+Wi269BniuMK0/MwC17Uc=
+X-Received: by 2002:a17:907:3f91:b0:ac7:805f:905a with SMTP id
+ a640c23a62f3a-ad218fa14cdmr219421366b.28.1746775240961; Fri, 09 May 2025
+ 00:20:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <2025040820-REJECTED-6695@gregkh>
-X-Mailer: git-send-email 2.49.0.1015.ga840276032-goog
-Message-ID: <20250509072033.1335321-1-dvyukov@google.com>
-Subject: Re: REJECTED: CVE-2025-0927: heap overflow in the hfs and hfsplus
- filesystems with manually crafted filesystem
-From: Dmitry Vyukov <dvyukov@google.com>
-To: gregkh@linuxfoundation.org
-Cc: cve@kernel.org, linux-cve-announce@vger.kernel.org, 
+MIME-Version: 1.0
+References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com> <20250509-fusectl-backing-files-v3-2-393761f9b683@uniontech.com>
+In-Reply-To: <20250509-fusectl-backing-files-v3-2-393761f9b683@uniontech.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 9 May 2025 09:20:30 +0200
+X-Gm-Features: ATxdqUFh6N-fDKy-wqu0GCk6TPtCnA8M2mH-wJCreI-a2bzUAoQyVA-JBPnJxeo
+Message-ID: <CAOQ4uxhuD0QF16jbYPqnoAUQHGw_ab3wi0ZONHVTXjCh0fug-Q@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] fs: fuse: add backing_files control file
+To: chenlinxuan@uniontech.com
+Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> CVE-2025-0927 has now been rejected and is no longer a valid CVE.
+On Fri, May 9, 2025 at 8:34=E2=80=AFAM Chen Linxuan via B4 Relay
+<devnull+chenlinxuan.uniontech.com@kernel.org> wrote:
+>
+> From: Chen Linxuan <chenlinxuan@uniontech.com>
+>
+> Add a new FUSE control file "/sys/fs/fuse/connections/*/backing_files"
+> that exposes the paths of all backing files currently being used in
+> FUSE mount points. This is particularly valuable for tracking and
+> debugging files used in FUSE passthrough mode.
+>
+> This approach is similar to how fixed files in io_uring expose their
+> status through fdinfo, providing administrators with visibility into
+> backing file usage. By making backing files visible through the FUSE
+> control filesystem, administrators can monitor which files are being
+> used for passthrough operations and can force-close them if needed by
+> aborting the connection.
+>
+> This exposure of backing files information is an important step towards
+> potentially relaxing CAP_SYS_ADMIN requirements for certain passthrough
+> operations in the future, allowing for better security analysis of
+> passthrough usage patterns.
+>
+> The control file is implemented using the seq_file interface for
+> efficient handling of potentially large numbers of backing files.
+> Access permissions are set to read-only (0400) as this is an
+> informational interface.
+>
+> FUSE_CTL_NUM_DENTRIES has been increased from 5 to 6 to accommodate the
+> additional control file.
+>
+> Some related discussions can be found at links below.
+>
+> Link: https://lore.kernel.org/all/4b64a41c-6167-4c02-8bae-3021270ca519@fa=
+stmail.fm/T/#mc73e04df56b8830b1d7b06b5d9f22e594fba423e
+> Link: https://lore.kernel.org/linux-fsdevel/CAOQ4uxhAY1m7ubJ3p-A3rSufw_53=
+WuDRMT1Zqe_OC0bP_Fb3Zw@mail.gmail.com/
+> Cc: Amir Goldstein <amir73il@gmail.com>
+> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+> ---
 
-> Filesystem bugs due to corrupt images are not considered a CVE for any
-> filesystem that is only mountable by CAP_SYS_ADMIN in the initial user
-> namespace. That includes delegated mounting.
+Looks good!
+With minor nits fixed, please feel free to add:
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+(instead of Cc:)
 
-I wonder if this should be the case only if the image is flagged by fsck
-as corrupted? Otherwise I am not sure what's "trusted". It's not about
-somebody's "honest eyes", right. E.g. in the context of insider risks
-the person providing an image may be considered "trusted", or in the
-context of Zero Trust Architecture nothing at all is considered trusted,
-or a trusted image may be tampered with while stored somewhere.
+...
 
-Without any formal means to classify an image as corrupted or not,
-this approach does not look very practical to me. While flagging by fsck
-gives concrete workflow for any context that requires more security.
+>  static const struct fs_context_operations fuse_ctl_context_ops =3D {
+> -       .get_tree       =3D fuse_ctl_get_tree,
+> +       .get_tree =3D fuse_ctl_get_tree,
+>  };
+>
+>  static int fuse_ctl_init_fs_context(struct fs_context *fsc)
+> @@ -358,10 +489,10 @@ static void fuse_ctl_kill_sb(struct super_block *sb=
+)
+>  }
+>
+>  static struct file_system_type fuse_ctl_fs_type =3D {
+> -       .owner          =3D THIS_MODULE,
+> -       .name           =3D "fusectl",
+> +       .owner =3D THIS_MODULE,
+> +       .name =3D "fusectl",
+>         .init_fs_context =3D fuse_ctl_init_fs_context,
+> -       .kill_sb        =3D fuse_ctl_kill_sb,
+> +       .kill_sb =3D fuse_ctl_kill_sb,
+>  };
 
+Please undo these whitespace changes.
+
+Thanks,
+Amir.
