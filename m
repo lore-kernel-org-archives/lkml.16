@@ -1,89 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3058521CC60;
-	Fri,  9 May 2025 19:26:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6118824061F;
+	Fri,  9 May 2025 19:26:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746818770; cv=none; b=gofAGLY4FX1TQajg/5HIIw1FWNOC7PCc/UeHYB5uT/+IoVrMtGb0jP6QV9hjL7AjIFeWZqYT3QUpYZYckJ4gvckS/ufA3DpI+z4PkDCYoq6okEO/S36HG56sK11Nm/OyPXd4qEW4Ooyce33oeE0PKSUPa6ITfb1lnz9LARP+60o=
+	t=1746818803; cv=none; b=Nbbzr9AXEs/hJ4nAUZoloFseJnL38Bo4nev1enssEZgE8DumvXlbkyvkFkWWuS2Lo/0ofiVSpjzuynxBXI3y80k7cUL+e1nHqJBUW36roXLKECYMLfopAR3dtyAbBmlUxpdIUJN37/y4qE4KmnEFVR4t3WdJBviDndZVE1npEkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746818770; c=relaxed/simple;
-	bh=KX5wDv025P3mKqHFA4TQwWOmuFq2r9EE0CNJ7idXzJU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ac585jX50mPJDykBcVOUcofOhkwC4jSBus/ppDwDnK1i99mv7sXYv8n8ed5m/xEpFj/A7NltNmV+QD2y16gW8Fwy8QWhqUtnnxdCoEPiktgN3NznY3aoDcbUGErqU4bUdsEqax9BMOhlsEDsItdnFjxiqVFCSsAnk5h3l9kHR8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xr8WBHF/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xr8WBHF/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2D27C4CEEE;
-	Fri,  9 May 2025 19:26:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746818770;
-	bh=KX5wDv025P3mKqHFA4TQwWOmuFq2r9EE0CNJ7idXzJU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Xr8WBHF/As8nQMEvL8FaQrG2ELOdaZhH6DDcTkuOQLzv33IjcDnrAhhZsw1ybmXKs
-	 am+6romLsSY6fCFrD36JV02epI5VtEaGjKNuEM6ZY7K8KfVF323TJXcjULBPnwbNiZ
-	 9fvot9g/9IFOW48/XRjkIXj9XIglO0frK6X3WqfdfDR1wy4Ugdkwedp9Fl9mgYHUOs
-	 UfNNQX/8nrK3hcu7HIn+A8+6myAg1ZiTTQ3WHHuIXgT0Nl3uPAS4gLvKMyPHBxJLB6
-	 Z2xJ6RrqZDMOIw+lim974APvwNisG2s1rAELeNj3anfeE+c5Q5EGQCFRe/LyBFHUZs
-	 rAiWFoWj4ODFA==
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3feb3f54339so2435580b6e.1;
-        Fri, 09 May 2025 12:26:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVLF65SOJwQ5qqzZ+fYXyGhA5PbkHfOyaQhc3K2PhV650PtCGeYxbseaCfQtY+j3036Dy0N3xIXgUGFbwOo@vger.kernel.org, AJvYcCVyhVh5MXsQDG7G/AwvoKJqY9KHxClSwyrkJgWf45zzgntBnCABo1aNoUhrVsmSo0zfOr6czcYvd29I@vger.kernel.org
-X-Gm-Message-State: AOJu0YwInILbOZTLxTH3KNNjc2lzUDcrKsWJgZ8pv4h22G2Wue1PLXlJ
-	20kM1QOJZ5j1LmrMY1prNHBkAOeAngPbNbQXvrw0VQCakKzRpXBN1nTS2DVwu6oP2/W2fY82pfE
-	R0TFMt6OaADnVKsWIi7QUgGGfaUg=
-X-Google-Smtp-Source: AGHT+IE8GmkxlxVpNu70SxPUR8JfgrMMof4cUdqC8atc5kXLt5jTxXJF796doymX5wIonc+sU/pvkvYOVBUg3NqQh7A=
-X-Received: by 2002:a05:6871:6a2:b0:2d4:edac:d9a9 with SMTP id
- 586e51a60fabf-2dba42a3b8bmr3120008fac.10.1746818759173; Fri, 09 May 2025
- 12:25:59 -0700 (PDT)
+	s=arc-20240116; t=1746818803; c=relaxed/simple;
+	bh=KhVx0ZtdZRxRMbsEKFrKcth3+kmgCy0v2+FzCIBaVCs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Mo824cT2l9C8z2s7nPeVCmTWlEDvJ4G36lZaBf6UZ2+HbvU1Y3sKNSa6YvXcqexLY7ibZaik728vLEBsZ5wyhVhsmFRuknv098VjFYjZn5LBf1ReHmrqj51hNe5H0xsH76HkJeGNdebCyyN81GMK9PV3Thk5FHKNsqTIjh8+lR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB20C4CEE4;
+	Fri,  9 May 2025 19:26:41 +0000 (UTC)
+Date: Fri, 9 May 2025 15:26:57 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Divya Indi <divya.indi@oracle.com>
+Subject: [PATCH] tracing: samples: Initialize trace_array_printk() with the
+ correct function
+Message-ID: <20250509152657.0f6744d9@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506213814.2365788-1-zaidal@os.amperecomputing.com>
- <20250506213814.2365788-5-zaidal@os.amperecomputing.com> <CAJZ5v0j-84MDP10YEL48GTPWy1SqHWAA_Dbq+X-k3PFi9brZPw@mail.gmail.com>
- <aBzwpS6t3V4zwrxn@zaid-VirtualBox>
-In-Reply-To: <aBzwpS6t3V4zwrxn@zaid-VirtualBox>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 9 May 2025 21:25:48 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g9qbKWHgL5gmSQN3vAbj3DUZH0LSdxtY2O5JXscbsGFg@mail.gmail.com>
-X-Gm-Features: ATxdqUHdAxHQrEBtvpSUAWFQbifenSse2G705J-U4DlXfrsupwkHQXQctlVxRWs
-Message-ID: <CAJZ5v0g9qbKWHgL5gmSQN3vAbj3DUZH0LSdxtY2O5JXscbsGFg@mail.gmail.com>
-Subject: Re: [PATCH v7 4/9] ACPI: APEI: EINJ: Remove redundant calls to einj_get_available_error_type
-To: Zaid Alali <zaidal@os.amperecomputing.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, lenb@kernel.org, james.morse@arm.com, 
-	tony.luck@intel.com, bp@alien8.de, robert.moore@intel.com, 
-	Jonathan.Cameron@huawei.com, ira.weiny@intel.com, Benjamin.Cheatham@amd.com, 
-	dan.j.williams@intel.com, arnd@arndb.de, Avadhut.Naik@amd.com, 
-	u.kleine-koenig@pengutronix.de, john.allen@amd.com, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	acpica-devel@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 8, 2025 at 7:58=E2=80=AFPM Zaid Alali <zaidal@os.amperecomputin=
-g.com> wrote:
->
-> On Wed, May 07, 2025 at 01:34:35PM +0200, Rafael J. Wysocki wrote:
-> > On Tue, May 6, 2025 at 11:38=E2=80=AFPM Zaid Alali
-> > <zaidal@os.amperecomputing.com> wrote:
-> > >
-> > > A single call to einj_get_available_error_type in init function is
-> > > sufficient to save the return value in a global variable to be used
-> > > later in various places in the code. This commit does not introduce
-> > > any functional changes, but only removing unnecessary redundant
-> > > function calls.
-> > >
-> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> > > Signed-off-by: Zaid Alali <zaidal@os.amperecomputing.com>
-> >
-> > Does this patch depend on patches [1-3/7]?  If not, I can pick it up
-> > as an optimization.
-> Hi Rafael,
->
-> No, this patch is does not depend on 1-3 patches. You can pick it up!
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Now applied as 6.16 material, thanks!
+When using trace_array_printk() on a created instance, the correct
+function to use to initialize it is:
+
+  trace_array_init_printk()
+
+Not
+
+  trace_printk_init_buffer()
+
+The former is a proper function to use, the latter is for initializing
+trace_printk() and causes the NOTICE banner to be displayed.
+
+Fixes: 89ed42495ef4a ("tracing: Sample module to demonstrate kernel access to Ftrace instances.")
+Fixes: 38ce2a9e33db6 ("tracing: Add trace_array_init_printk() to initialize instance trace_printk() buffers")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ samples/ftrace/sample-trace-array.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/samples/ftrace/sample-trace-array.c b/samples/ftrace/sample-trace-array.c
+index dac67c367457..4147616102f9 100644
+--- a/samples/ftrace/sample-trace-array.c
++++ b/samples/ftrace/sample-trace-array.c
+@@ -112,7 +112,7 @@ static int __init sample_trace_array_init(void)
+ 	/*
+ 	 * If context specific per-cpu buffers havent already been allocated.
+ 	 */
+-	trace_printk_init_buffers();
++	trace_array_init_printk(tr);
+ 
+ 	simple_tsk = kthread_run(simple_thread, NULL, "sample-instance");
+ 	if (IS_ERR(simple_tsk)) {
+-- 
+2.47.2
+
