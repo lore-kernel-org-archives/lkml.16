@@ -1,116 +1,134 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DDC32741C2;
-	Fri,  9 May 2025 08:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7F3178F44;
+	Fri,  9 May 2025 08:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746779121; cv=none; b=mRypnUfNKENWC+c1h7k04MNIaiLVMFK8Yroc3H8AYMIrd6IQrjMF4WIN+upbMA9emDOpWBPTmL8FROy5qZ42YHiJ4IVzj/XClzjG0EKq+A6loYDL7+DR63xYEkn/n7i0pUCliHELs9B/ImKL8hUoDmkCa3fOPT2csyI4zfVG3ug=
+	t=1746779282; cv=none; b=NgRMUMG2ohIvlaCxwZS20BWG24zV6oCIjvNb+ihHJSJ/7JtRNxlkBLCowZ1Z43c8hA3bAGGOLz6lKsJ7OuHW1S9JHbzyBNHaDKq+n7RVUQQLOsdgfm7wdksEAJwraHcUTe9ZMPQJikoX008Dsi4zz8VRIbOv23StyGCzJtl3Jws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746779121; c=relaxed/simple;
-	bh=FZBqXwcIMmYLzGhJ9dLe2kFxSIhbEIMwpZODYkuQj44=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u06+10bR95pvtnb5q4E5dmzvMzRpJlmYEPxyurst1hefCQbaQGs2kSFjx5AVYa4JdRTfkRbxxA2NgDzbGetKqDQp2RQOUeFYJQ+R9RITY7XOzb2iXcMc0Q5SWPF6lYSzDWHbg2SByRUkJKneY5qvj/yEvnE+zProfetc3FPk6oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xELnqpi5; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xELnqpi5"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5498PAbZ1345842
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 9 May 2025 03:25:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746779110;
-	bh=HCP/12rAyQwOl5LrFAi4QTkdDpc/orvAD1e4tN/2d7M=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=xELnqpi5bJF6eitop24E6D+ONFUP6vAFMe4viDUsGo918leyJuxKbUUP/VzPAV2qS
-	 xoV9sxH7fdjs5eTTB19jWdnUxuk4C0HVcMUIHD1x+X7l5lvEGOtH3csGwW340ZpscN
-	 sJJyR8R3NOE2W292EGMNF42N05Q62iAFN+TEgtvE=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5498PAm6095237
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 9 May 2025 03:25:10 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 9
- May 2025 03:25:09 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 9 May 2025 03:25:10 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5498P9uR003472;
-	Fri, 9 May 2025 03:25:09 -0500
-Date: Fri, 9 May 2025 03:25:09 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Prasanth Babu Mantena <p-mantena@ti.com>
-CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>
-Subject: Re: [PATCH v2] arm64: dts: ti: k3-j721e-common-proc-board: Enable
- OSPI1 on J721E
-Message-ID: <20250509082509.ogfs2ulyfgk6etxc@unshaved>
-References: <20250507050701.3007209-1-p-mantena@ti.com>
+	s=arc-20240116; t=1746779282; c=relaxed/simple;
+	bh=zt4Yp2rwhdxWjESu9/z/iyNWq4hu5etLj8FEIXCqoD0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eB37QMmoRS8gcGG9/XHV3tVgBOu0SMKS4Lg7YzDKhAfmV2uiDwWuQQ1B8MhaNaf+0xnuvnI5EpYu7YL6F9qxXBZywd4q8Ma5F/6PER5DZZ9Y5k/yxK5LIYItZTUcxmagw15eU/cCwbwuF9eAmZ/Xtf6n8vJfw/+dSpnFJUMkrzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.186])
+	by gateway (Coremail) with SMTP id _____8AxquCGvB1oCkPbAA--.55768S3;
+	Fri, 09 May 2025 16:27:50 +0800 (CST)
+Received: from [127.0.0.1] (unknown [223.64.68.186])
+	by front1 (Coremail) with SMTP id qMiowMBx2xp+vB1oJem_AA--.14742S2;
+	Fri, 09 May 2025 16:27:44 +0800 (CST)
+Message-ID: <9b32fba8-a096-416a-abba-338ef414def7@loongson.cn>
+Date: Fri, 9 May 2025 16:27:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250507050701.3007209-1-p-mantena@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V1] rtc: loongson: Add missing alarm notifications for
+ ACPI RTC events
+To: Liu Dalin <liudalin@kylinsec.com.cn>, alexandre.belloni@bootlin.com,
+ wangming01@loongson.cn
+Cc: chenhuacai@kernel.org, gaojuxin@loongson.cn, git@xen0n.name,
+ jiaxun.yang@flygoat.com, keguang.zhang@gmail.com, lixuefeng@loongson.cn,
+ linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250429062736.982039-1-liudalin@kylinsec.com.cn>
+ <20250509014046.7399-1-liudalin@kylinsec.com.cn>
+ <3c8eddda-ecce-4fdf-8773-3cfe8a09f237@loongson.cn>
+ <48586F8AA034EA7A+02ca49ef-db27-47a5-8de3-3407dcfb48a5@kylinsec.com.cn>
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+In-Reply-To: <48586F8AA034EA7A+02ca49ef-db27-47a5-8de3-3407dcfb48a5@kylinsec.com.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBx2xp+vB1oJem_AA--.14742S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ArWktFWDWFWxuw13Aw47Awc_yoW8KFyfpF
+	Z5Aa4qkrZ5tr18uF9Fqa4UWryjk34rJ398XFs7ta409anFyw12gr4YqFyq9F4DAr48GF4a
+	qw1j9ay3uFn093gCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvCb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1q6r43
+	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+	AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0
+	cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z2
+	80aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI
+	43ZEXa7IU8uuWJUUUUU==
 
-On 10:37-20250507, Prasanth Babu Mantena wrote:
-> J721E SoM has MT25QU512AB Serial NOR flash connected to
-> OSPI1 controller. Enable ospi1 node in device tree.
->
-> Fixes: cb27354b38f3b ("arm64: dts: ti: k3-j721e: Add DT nodes for few peripherials")
 
-Yes, cb27354b38f3b ("arm64: dts: ti: k3-j721e: Add DT nodes for few
-peripherials") did not enable the node, But back then, we used to
-ensure all nodes were left default (okay) and then disable unused
-nodes in board dts.
-
-BUT, we ended up having a bunch of maintenance issues and board bring
-up problems and looking at the rest of the ARM ecosystems (you can
-check the mailing list for all the discussions on the topic), we
-flipped the order for peripherals that need board level connectivity
-for functionality to be disabled in SoC.dtsi and enabled explicitly at
-board level and when that occurred, specifically:
-73676c480b72 ("arm64: dts: ti: k3-j721e: Enable OSPI nodes at the board
-level") which enabled ospi0 at SoM level, but missed fixing this up,
-whoops!
-
-I will fix this up locally when I apply this patch. but FYI.
-
-> Signed-off-by: Prasanth Babu Mantena <p-mantena@ti.com>
-> ---
-> Test log : https://gist.github.com/PrasanthBabuMantena/9dda540dce88282117de7e0e945e24ca
->  arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-> index e3d0ef6913b2..45311438315f 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-> @@ -573,6 +573,7 @@ &usb1 {
->  &ospi1 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&mcu_fss0_ospi1_pins_default>;
-> +	status = "okay";
->
->  	flash@0 {
->  		compatible = "jedec,spi-nor";
-> --
-> 2.34.1
+On 2025/5/9 16:06, Liu Dalin wrote:
 >
 >
+> 在 2025/5/9 15:12, Binbin Zhou 写道:
+>> Hi:
+>>
+>> On 2025/5/9 09:40, Liu Dalin wrote:
+>>> When an application sets and enables an alarm on Loongson RTC devices,
+>>> the alarm notification fails to propagate to userspace because the
+>>> ACPI event handler omits calling rtc_update_irq().
+>>>
+>>> As a result, processes waiting via select() or poll() on RTC device
+>>> files fail to receive alarm notifications.
+>>>
+>>> Fixes: 1b733a9ebc3d ("rtc: Add rtc driver for the Loongson family 
+>>> chips")
+>>> Signed-off-by: Liu Dalin <liudalin@kylinsec.com.cn>
+>> Technically I don't think this is a compliant patch, firstly this 
+>> patch should be V2 and also you should add "Changlog" for describing 
+>> the differences from the previous patch.
+>> Anyway, it's good to me.
+>
+> Ok! There is another problem, if regmap_write(priv->regmap,
+> TOY_MATCH0_REG, 0) move to the end of loongson_rtc_handler as 
+> 09471d8f5b39("rtc: loongson: clear TOY_MATCH0_REG in 
+> loongson_rtc_isr()"), the interrupt also can be triggered multiple times.
+>
+> So the regmap_write(priv->regmap,TOY_MATCH0_REG, 0) is move behind of 
+> rtc_update_irq by me, then the interrupt was triggered OK.
+>
+> Is there any problem ?
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+It is ok. That's where I added it when I suggested it before.
+
+Thanks.
+Binbin
+
+>
+>>
+>> Reviewed-by: Binbin Zhou <zhoubinbin@loongson.cn>
+>>
+>>> ---
+>>>   drivers/rtc/rtc-loongson.c | 8 ++++++++
+>>>   1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/drivers/rtc/rtc-loongson.c b/drivers/rtc/rtc-loongson.c
+>>> index 97e5625c064c..2ca7ffd5d7a9 100644
+>>> --- a/drivers/rtc/rtc-loongson.c
+>>> +++ b/drivers/rtc/rtc-loongson.c
+>>> @@ -129,6 +129,14 @@ static u32 loongson_rtc_handler(void *id)
+>>>   {
+>>>       struct loongson_rtc_priv *priv = (struct loongson_rtc_priv *)id;
+>>> +    rtc_update_irq(priv->rtcdev, 1, RTC_AF | RTC_IRQF);
+>>> +
+>>> +    /*
+>>> +     * The TOY_MATCH0_REG should be cleared 0 here,
+>>> +     * otherwise the interrupt cannot be cleared.
+>>> +     */
+>>> +    regmap_write(priv->regmap, TOY_MATCH0_REG, 0);
+>>> +
+>>>       spin_lock(&priv->lock);
+>>>       /* Disable RTC alarm wakeup and interrupt */
+>>>       writel(readl(priv->pm_base + PM1_EN_REG) & ~RTC_EN,
+>> Thanks.
+>> Binbin
+>>
+>>
+>>
+
