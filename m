@@ -1,149 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8924925F7BF;
-	Fri,  9 May 2025 23:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750E0B644
+	for <linux-kernel@vger.kernel.org>; Sat, 10 May 2025 00:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746835071; cv=none; b=uAInjmZfO4ANJBsTF62I4FGuU2WNbJmbwKYkqgmWXn3Hkn4kypdZK9wutAjP0Gpum4+IiWe7srfJCgyxOaUZTL7RSsXT5f07QilqW49vS7sauKBxs0GCBMm6Q1aXKqM0EfCGzq4wkCB3nkKxGVQhYKZa2F3kcFM7uD6ThAj7qdg=
+	t=1746835244; cv=none; b=u9uPnjVe0QwAdrewgQ8P6s4ISt3l8lU3ZEJE3jgTR6ZgnLkpEu9l5q8lDKynYUcqm7BaMNCB0auQ1UlTDMC86zHozYX3xWlHUpQKD84gZe548toRcet6LmcFqad8tAIRH9Dgrofj/tq/JPzRsqtaSdIy55MWTjpp8zspYPAqPyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746835071; c=relaxed/simple;
-	bh=z4bdwxQ4iirtZ/jvJ9eNfsPzh7HLffleNgJOXAIIh2I=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=jOShIMzYUbkpwk88XBPvZvKyfn14HDg271DoZ1BCPbUAUqKqFDsEbahDb/IxeaVzIHFIYh1+7fGS251lS/qjgwG4sfi5h9y98tQtTu6yXUFb8VoKabYOdqppQx6EtM2A2XBxGeg3dOLUyq8+B/ILjVkH7g2xDPDg2G4ac7B3Oxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iITW+Awe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746835244; c=relaxed/simple;
+	bh=5s/2YQ++C29YMzUmHKjcqZMNM6QVHZQumFk2x1xx3v4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PXGcKRrfc8P/y2Dk3uOIQsYUmDkY23pIzME3nyQzJr9UUTM8slKYL8Ti1cpJwpD6YbnEVAWIb1xutkVdodkyvZVAb4hKAF1EXcSCcT3l/oh90ibTkX0MuBZIHUx4s0ShOvZ+wDomZu5bD1tXvH+vv/VADinyL9Lhv/MRR4wI3J0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=by0/5LA9; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iITW+Awe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A0E8C4CEE4;
-	Fri,  9 May 2025 23:57:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746835070;
-	bh=z4bdwxQ4iirtZ/jvJ9eNfsPzh7HLffleNgJOXAIIh2I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=iITW+AweHByHjGtEP8JyDrHMmaZpMHJIohWHtBshoxEWsyyDp+AT9A0B1UvQ9OEzx
-	 uMxOVY3EMtWi8MAH7eI2fYItYSIYHD1WbUf+FAjFMyyloe/dN2F961uoV5BcVH92gQ
-	 DTsTLmhDDO1gi/89yqaW81URrwaEZBxg5nJNbM3DxUBx3WJkugt37aVT8cqVd0Ibq5
-	 IJziFr9SsKW99/nbTxynkN1lPmjrifPAtVYzTdTbvGO0kf/4/PP7fBcCbrPDiKI5f7
-	 j703su2lMShyhYxS7yf8QA/AUaZu8NbLTUzf1AlWYOJ3I/9pnso7CLM4EP+wyMuFea
-	 eeSqxIH3zjMVw==
-Date: Sat, 10 May 2025 08:57:44 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: paulcacheux@gmail.com, Paul Cacheux via B4 Relay
- <devnull+paulcacheux.gmail.com@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] tracing: protect trace_probe_log with mutex
-Message-Id: <20250510085744.3dab36f6e314c9e63a673d3e@kernel.org>
-In-Reply-To: <20250510074456.805a16872b591e2971a4d221@kernel.org>
-References: <20250502-fix-trace-probe-log-race-v2-0-511ecc1521ec@gmail.com>
-	<20250502-fix-trace-probe-log-race-v2-2-511ecc1521ec@gmail.com>
-	<20250510074456.805a16872b591e2971a4d221@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="by0/5LA9"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227b828de00so26725505ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 17:00:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746835241; x=1747440041; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aWH2xlqMgTDDgBH+DcFeQqtTTTd9MDqKNid4Rm6OJAU=;
+        b=by0/5LA9LPgA/qUJDYikKUhmL2PGGAgV9SD4/km0+2MvisvmvhrXGrMYsCX4RkXDqZ
+         ncr6K8AovAsQx2qgwfz/Yk6DItjA6E0c26p6WZYXlhj1S3yDTOb3D55+pqek8d3IqBhe
+         gNQ6h6f8GrzsvgxSd113xmz8UzAvdDh0gDSIbwm+RWmJEHhuENI8ZC9jTk7ItpucCAAp
+         8Jq6xxEyd1/Pg9oNKqqGYGCkf9zFdKSzZFWB39nHUPpSQsj88Su1SvYOJAIncBxl/NwD
+         DLMVmjdYQ5eAZ3nCxIr8flX1nY4msjFY3tvhk85MKgW9SBAD1kZI3iCcV9rI3go3cLKO
+         dHhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746835241; x=1747440041;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aWH2xlqMgTDDgBH+DcFeQqtTTTd9MDqKNid4Rm6OJAU=;
+        b=GRqyRJxWYzXmUlYftr2mwRoVhRAtJHSoH8ZTYh4gWoFJnNAKRycQiYWibJH/k4dUkx
+         5zCSaAzQnkGbdtmNYyqCkbvSQaq4i+lHcH1PriRHuprLNkzsgovLG5ayCiWjnwAH00Zq
+         9jCTDAzp4NQTbTEURoIMEojBbcPEseRtsyERO2ZjHMPIWCzxwmqVRMW/vtGYHgAWq2nu
+         glbMHfCLAXVOz5kzz19pyUnZ9Hp69kAxz2shvCfgD44T214nvmGEGX4iBsAIKhXIPLwB
+         tuEaifH6aTPF4btIfaTamaXm153Xs2AbVzD15GzQEx5F/GIgZoLaxzdlx8sghL0H/T1u
+         1qmA==
+X-Gm-Message-State: AOJu0YzZcfZsGgdvhpgTd79s8H8L2SseYOV6EG/qwm2Cjwa4ibdlb7HB
+	sxQKFdR01wPFjSO8+X03RAO5ymmcotkOQhi3RSJ86lM+2H0N9f8I
+X-Gm-Gg: ASbGncvJqBq2Ge6oMpUOiQfDk/EWZexZV/2PXA4d25DTRvqKkmUl191kakrGvhUEQxn
+	25ecioiwnlLPxG5SPI5GNpU1Al1OtK+ngtP7TLRnc4mRjlB32KS1QoJ0j+2dkK4AOBGcL2nCK5N
+	Hi7A/1k6U0AzA4es219ilPu21OSfJXyAVFFjNisMTbl7a4T0S5gjO8TyjTB+ryulliD1a/2DqdX
+	s2qLNr/K/vneObt3Lw+uYicRBd8hkUVLRpItTu4HjwxSXMAMyqSJED+cC0Vp9coCChtD6j80pRI
+	GOjY2r7S1yaHX7iWcGak4TAPHNgFHJm+QlxH4OZOiSJvz+UWaudgozn0V7EDEFzc74Hn
+X-Google-Smtp-Source: AGHT+IHPxQC1zqtb/Z2N6/E3h1fHhuyKeEqYoTjBs8erK6bNAd2Jghc5SuLaBdGIDtjrym8vhNZyCg==
+X-Received: by 2002:a17:902:ecd1:b0:223:58ff:c722 with SMTP id d9443c01a7336-22fc8c7c1famr91402605ad.28.1746835240389;
+        Fri, 09 May 2025 17:00:40 -0700 (PDT)
+Received: from fedora.. ([159.196.5.243])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2349ec816esm2033209a12.22.2025.05.09.17.00.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 17:00:39 -0700 (PDT)
+From: Wilfred Mallawa <wilfred.opensource@gmail.com>
+To: linux-nvme@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Alistair Francis <alistair.francis@wdc.com>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] nvmet: nvmet_sq_init(): fix use of uninitialized variable
+Date: Sat, 10 May 2025 09:59:05 +1000
+Message-ID: <20250509235904.915626-2-wilfred.opensource@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sat, 10 May 2025 07:44:56 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
 
-> On Fri, 02 May 2025 15:15:53 +0200
-> Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org> wrote:
-> 
-> > From: Paul Cacheux <paulcacheux@gmail.com>
-> > 
-> > The shared trace_probe_log variable can be accessed and modified
-> > by multiple processes using tracefs at the same time, this new
-> > mutex will guarantee it's always in a coherent state.
-> 
-> Actually that's not happen. For the create part (and currently the
-> event_log is used only in the creation), `dyn_event_ops_mutex` is already
-> held in create_dyn_event(). Thus, it is already serialized.
+This fixes a bug where an uninitialized return value is used in
+nvmet_sq_init().
 
-Oops, if user writes some commands not directly from dynevent,
-(e.g. tracefs/{kprobe_events,uprobe_events} )the mutex is not held.
-Hmm, we need to make another patch.
+Fixes: 206372d7c565 ("nvmet: support completion queue sharing")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202505091619.QFU1fxsd-lkp@intel.com/
+Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+---
+ drivers/nvme/target/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> And even if there are multiple events are done in parallel, this
-> is not enough because trace_probe_log::argc/argv can be changed
-> before other user finishs to use the log.
-
-But this is still valid. We need to reroute the creation to
-dynamic_events.
-
-Thank you,
-
-> 
-> Thank you,
-> 
-> > 
-> > There is no guarantee that multiple errors happening at the same
-> > time will each have the correct error message, but at least this
-> > won't crash.
-> > 
-> > Fixes: ab105a4fb894 ("tracing: Use tracing error_log with probe events")
-> > 
-> > Signed-off-by: Paul Cacheux <paulcacheux@gmail.com>
-> > ---
-> >  kernel/trace/trace_probe.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> > index 2eeecb6c95eea55502b83af6775b7b6f0cc5ab94..14a7a0b59cd20a8bc43e3e7c653e986081f924c8 100644
-> > --- a/kernel/trace/trace_probe.c
-> > +++ b/kernel/trace/trace_probe.c
-> > @@ -154,9 +154,11 @@ static const struct fetch_type *find_fetch_type(const char *type, unsigned long
-> >  }
-> >  
-> >  static struct trace_probe_log trace_probe_log;
-> > +static DEFINE_MUTEX(trace_probe_log_lock);
-> >  
-> >  void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
-> >  {
-> > +	guard(mutex)(&trace_probe_log_lock);
-> >  	trace_probe_log.subsystem = subsystem;
-> >  	trace_probe_log.argc = argc;
-> >  	trace_probe_log.argv = argv;
-> > @@ -165,11 +167,13 @@ void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
-> >  
-> >  void trace_probe_log_clear(void)
-> >  {
-> > +	guard(mutex)(&trace_probe_log_lock);
-> >  	memset(&trace_probe_log, 0, sizeof(trace_probe_log));
-> >  }
-> >  
-> >  void trace_probe_log_set_index(int index)
-> >  {
-> > +	guard(mutex)(&trace_probe_log_lock);
-> >  	trace_probe_log.index = index;
-> >  }
-> >  
-> > @@ -178,6 +182,8 @@ void __trace_probe_log_err(int offset, int err_type)
-> >  	char *command, *p;
-> >  	int i, len = 0, pos = 0;
-> >  
-> > +	guard(mutex)(&trace_probe_log_lock);
-> > +
-> >  	if (!trace_probe_log.argv)
-> >  		return;
-> >  
-> > 
-> > -- 
-> > 2.49.0
-> > 
-> > 
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index 042039011d7c..e30545586302 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -1012,7 +1012,7 @@ int nvmet_sq_init(struct nvmet_sq *sq, struct nvmet_cq *cq)
+ 	int ret;
+ 
+ 	if (!nvmet_cq_get(cq))
+-		return ret;
++		return -EINVAL;
+ 
+ 	ret = percpu_ref_init(&sq->ref, nvmet_sq_free, 0, GFP_KERNEL);
+ 	if (ret) {
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.49.0
+
