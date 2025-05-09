@@ -1,124 +1,101 @@
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810582405E4
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 18:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E35722D4CE
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 18:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746816808; cv=none; b=i46qiukOVtjblczAGuW88jtfgTF7r2zO/uydL4KiyzxovXXgArg0SiYvBSyOzlju5bnmw/TlLOAJKWGY/niNgQjObi/74N/X+9EZgl5mQHwBc/ahnc8/12hZs7RLaEt7we4di5SJcbv6AQSLuwCiTWElGuotYz6FwwhIIFtGrv0=
+	t=1746816965; cv=none; b=Cl+OOcUuzeGwOVEcBwtx2fu3090VFWwvKf0djZeUgRmPwSRtzYjAJu1Yi6MarZccFBecq2nawFRvehthiMgB51kw5N9fuM6LnP/RlbLXz0YACyfgyFvr0XYYWSK67KxcSPBgkOD0Agu/eIgkAufAjnhbRCeM7iSbUUeRbffKBAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746816808; c=relaxed/simple;
-	bh=pPb2yux8ncMb3CZqonAlRHIcg/L3bixa1GCZYae4d+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FCJP07nv6opLImnP8JCySsTriMhA6mbYQK4aatJZGrlDrAKf8eactHPxJTec3aLljDyVtixi8XNyCF/3l6H8jkAkGVicT8OoM9gk4CSil/6+mpuIgLgWIuVryo+cOx/s7g6QjxgDLS/d/jhzY9N/SawI3VZNk5uOOvJnNDd6SWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DAmP0kA7; arc=none smtp.client-ip=209.85.166.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1746816965; c=relaxed/simple;
+	bh=QuCYiFCKlJouVpEM+mb+CLCrMpmauHRnutNo7XMBzmI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=nrlvW/i4z1F6UklybyAQTUXkIJcIhGkk24JFy8w01lilXMBBVVIQXUzEnhEKWwve12+t6GZcQ2lJEyhkEavYJLlOSu+jOGb4Mb03w1iTmEVSzQkIKNVfKnD/t80jKhEsrXk/YXL1D8aMeh/3hJTRDbWSbvLujtlMqSqzfGW7O7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fe8v/2IC; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DAmP0kA7"
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-86135ac9542so98384539f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 11:53:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fe8v/2IC"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-441d1ed82faso16362525e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 11:56:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1746816805; x=1747421605; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=F9M5vO0rVZ27fsI0jmDeqg70dl9WZ31TiFo3VqdX2ds=;
-        b=DAmP0kA7GIo329pdFtQvTnWtJHnwcJ9l/Tpt32EIt0yZs8Y4xTakUAGecRzG1PfesD
-         hqS+ni8gMQ5MPI6nfMxywtnb/SYMNX5apMFMBWw0ACb5N/6x/bBaBM3lCtuOPXP1+mg3
-         fcStlhQz/H4cwEoEzYsijQ4pTofrep/oTQEyY=
+        d=linaro.org; s=google; t=1746816962; x=1747421762; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BbxtS5yi/0Srg9MgfDGhVG9mOHgxoToLsBc2u3rrXu4=;
+        b=Fe8v/2ICHuDgN/Hlfkrf8s4G93uq55ioshfw2fOzs6mlFczResIC0n2IYZlGe/D+Vv
+         cUXxDScQ49syLdjCl1GDdj4s52xrmP9EspuoflMb0rQTnZyxPeqtRu8Slc+41iX+NZPH
+         n7pFZIQFMYvF6rWB89/nxVFCCEEpoGhaNkyb2XwBaezTLUS2FxEM2EBsn0Fsg80a1u7q
+         Sft0i5t/VT9cD5bqfVBk24NazR4GUFZ6/Mk85rIhGZJC0XwEvjK2pR3rZb0ih5QIRhgV
+         eCxhDQQijzeyC8+hRDftVtXPaQAI2FAJCFNmBR79g9Q1Is8iuzMZ8bB7dAxvDKUMrutH
+         CkUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746816805; x=1747421605;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F9M5vO0rVZ27fsI0jmDeqg70dl9WZ31TiFo3VqdX2ds=;
-        b=PnVJ5s4s5DMGcq4YSgOXOJuJTXHm74jGXycOLct+cNtHngUWhikC04+ERD6mrJv9kV
-         3GspT2yJd6Ck4Cr8m55d5qSxXPLtoxyAiQteKB3jERG+DYjrQoCfGjd0iHAIGBST1hl2
-         FD39NZql3BwfZyvbvfd0wyC4XFh6KbByfeOLNiY0ZaS8+AAmaqexzwDROL4HUAAr75PH
-         VlbAS0eLd96gDdo5qrKziKH6qPko9IStitALgghA8Uey7ron2c0yoGvQAwU17m64AnNF
-         jKPQW57qnIMdXgPA1+nBevEU6B4bywv2lgSdiUDmAvdxt9AjpKhIazULMYgFQLGSnsrh
-         U8hQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUXylsRCGNW/vcBlj3MYc51/w/jecQVsrSDuxDzt/IeVSPzAK28slhqEQCJYvt2vy8/tMmU2M1cGKPB/M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD2I5TZHPz5ii8Toklk0fM93H9yT+cR7v7gxvjbZs1YjY+NTyK
-	vr7K1zQi2mTpXryzNALgcYa1rxX/QWNTWzwN5SDCxR7zuAfqb3QfPdRPcFPwrTk=
-X-Gm-Gg: ASbGncsj89viBhTqVtmw5UAyNr961L6eZZB8PxRdFkdGOwYx2yjgn0r3jIfxzAWnmDl
-	h1wlNliqVN5YE11U1WpqWHCvsnCNL1rFMQ7gfrXK2NVkVdYqS1vhiGW3DfHLlO7Q05lqP0Mi6De
-	pzCvvaRWiPeqdI2f4RRfaZAWSnFQs8wmc15pQWhM22z3kkSGYmu8o6/R67/CqjJBAHkQHv0Ipwo
-	jUKNgbaunrPQi2QisGlnwBjcMFCribvySkeJScG0rE1NUirfUm1cH2nOBusrhOqvfyJCmxcE17v
-	9zqgPFiR80EY2OQip4XOIcMDOAECiqgeuYyXvulaZJfDvLXNFSffsmyQU0EWOw==
-X-Google-Smtp-Source: AGHT+IHHhcCytqFUPDF35/kPT3/0/t4Ci198j+E83P+7wD1v00FjQaT1VCEeKAJMNE9MeCGbrOF93A==
-X-Received: by 2002:a05:6602:2594:b0:85b:5c9a:a9ce with SMTP id ca18e2360f4ac-867550aa561mr972489639f.6.1746816805533;
-        Fri, 09 May 2025 11:53:25 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fa2268628dsm514749173.144.2025.05.09.11.53.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 11:53:25 -0700 (PDT)
-Message-ID: <a8bf3665-1c3c-4742-a435-a0ef6914dfd4@linuxfoundation.org>
-Date: Fri, 9 May 2025 12:53:24 -0600
+        d=1e100.net; s=20230601; t=1746816962; x=1747421762;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BbxtS5yi/0Srg9MgfDGhVG9mOHgxoToLsBc2u3rrXu4=;
+        b=eYe65xr58InM2p5pPEII0+uEMcMHpBKSlVrSi6QPRxppCUQ6WhhF2uAxvwDLw3yhNe
+         Dz+0kVRHGZ+BWWZT9YX482rHMFFTok3ZVeabwV3zorOptJTlzMNqleftyE+9aJ7f27Qh
+         9OIoay4kNgkjIzIjhQQuMSO3RARvqFeTYHewCXHq+AZm4A02ipLuwgu28VJtnnIcsYJP
+         OSWB+YKhO1A1qdBFPLDFXNpu3JT5bRaa8zeoTRqfzSHZRQtG4HYmoU3FKdsPy3QYrJKV
+         QKGzJRgBankQm5d2IgfiyBZDmUHtxu7ctER2qN35donKqxlhpqos2GJno5kmrHlJscOp
+         4L9g==
+X-Forwarded-Encrypted: i=1; AJvYcCWIKfNsYkn/8DptQ0g470f9UsttgHOxbzQlcFCa2+t5ofSWbrOyiMxNngLyehyjfg2CpzK/DGExHnzglxc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDcb730ZEyDtLaIWojoXlf+poa6als9Se+D1cIBSAs59qmCylX
+	VXrC/Dn1aEgNUMLeEBQi7Ra4yhPziFXmxHzT4tDv1zAhSh55ELOWaJ/1Xh9RSR8=
+X-Gm-Gg: ASbGncsgtKGYRkAsmHqbDTDxYqEMx1zN+y/S/OjHDcdm/7UmD3ukABrBZpT/bG3Ruq0
+	393EHwAkwpo0aAzGliLBt49nu17qeYdRJ+6W1Cvef45qiKl5ZU4NQnIEuELs9jXs5o5TiCmj3RE
+	wIVouIAySJbmF8bivUNQvdSsX+yLHe54EJJuc3JslVgot6NlLgQ2NyuNrsRQztFPjSXFIN1lMMW
+	LwflvJFLcqJkg3/5bqwetL9ywwOqs5Jh31xYgI/NLuj7A3UTow/L1d+x2b+f4GiJAbdV9v2wClP
+	DjV83qfcaQsvDUpDi7SeLQoFQneh0JiaSY1lJybnbbyElcko7i0npcqt0uawIyPCFAzRPzVg
+X-Google-Smtp-Source: AGHT+IHYQkpkKi8CkEHzddCWOZceMUv66ifC4WqdnYwF4TBNK6QI+OtfU0ViTWxy69iYNRZgfgnN0g==
+X-Received: by 2002:a05:600c:1550:b0:43c:fabf:9146 with SMTP id 5b1f17b1804b1-442d6d6abfdmr45281565e9.17.1746816961791;
+        Fri, 09 May 2025 11:56:01 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d687ae10sm38009955e9.37.2025.05.09.11.56.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 11:56:01 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: I Hsin Cheng <richard120310@gmail.com>
+Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
+ tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
+ khilman@baylibre.com, jbrunet@baylibre.com, 
+ martin.blumenstingl@googlemail.com, christophe.jaillet@wanadoo.fr, 
+ skhan@linuxfoundation.org, dri-devel@lists.freedesktop.org, 
+ linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250505184338.678540-1-richard120310@gmail.com>
+References: <20250505184338.678540-1-richard120310@gmail.com>
+Subject: Re: [PATCH v2] drm/meson: Use 1000ULL when operating with
+ mode->clock
+Message-Id: <174681696108.3272668.11983752901167871124.b4-ty@linaro.org>
+Date: Fri, 09 May 2025 20:56:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] selftests/timens: Print TAP headers
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Shuah Khan <shuah@kernel.org>, "Bird, Timothy" <Tim.Bird@sony.com>,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- Kees Cook <kees@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>
-References: <20250502-selftests-timens-fixes-v1-0-fb517c76f04d@linutronix.de>
- <20250502-selftests-timens-fixes-v1-1-fb517c76f04d@linutronix.de>
- <5609c6de-e5cf-4f6d-8412-71149fae2580@linuxfoundation.org>
- <20250509172639-61bade20-67f9-4815-8316-1bb16749f8d9@linutronix.de>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250509172639-61bade20-67f9-4815-8316-1bb16749f8d9@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On 5/9/25 09:41, Thomas Weißschuh wrote:
-> +Cc Kees
-> 
-> On Wed, May 07, 2025 at 03:06:16PM -0600, Shuah Khan wrote:
->> On 5/2/25 06:03, Thomas Weißschuh wrote:
->>> The TAP specification requires that the output begins with a header line.
->>> These headers lines are missing in the timens tests.
->>>
->>> Print such a line.
->>
->> There is no cover letter for this - so I will respond to the first
->> patch.
-> 
-> Hm, I sent one and can also see it on lore.
-> 
->> The TAP information is added by the kselftest wrapper if
->> you were to run the test using ksefltest.
->>
->> The following will add the TAP header or if you use make kselftest
->> command from the main Makefile.
->>
->> make -C timens run_tests
->>
->> cd timens; make run_tests (will also add TAP header)
->>
->> The only time you won't see the TAP headers is when you run the test
->> from the test directory just as a command. Is this what you need
->> to do? I would rather not see TAP headers added to invidual tests
->> unless there is a good reason for it.
-> 
-> Yes, I am running each test on its own, as part of kunit based on [0].
-> I also looked at the vDSO selftests and those all print the TAP headers on
-> their own. The same for all of the x86 selftests I looked at.
+Hi,
 
-We have been a bit inconsistent with adding TAP headers to individual
-tests. We added them to some and then when we found out the nesting
-TAP headers issue, we stopped and never really cleaned up.
+On Tue, 06 May 2025 02:43:38 +0800, I Hsin Cheng wrote:
+> Coverity scan reported the usage of "mode->clock * 1000" may lead to
+> integer overflow. Use "1000ULL" instead of "1000"
+> when utilizing it to avoid potential integer overflow issue.
+> 
+> 
 
-Since we have this kunit use-case, I am going to take this series
-and see who complains. I don't think parsers are in the mix at least
-for majority of ksefltest runs.
+Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-fixes)
 
-thanks,
--- Shuah
+[1/1] drm/meson: Use 1000ULL when operating with mode->clock
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/eb0851e14432f3b87c77b704c835ac376deda03a
+
+-- 
+Neil
+
