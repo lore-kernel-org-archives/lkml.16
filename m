@@ -1,87 +1,83 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094FB23D29F;
-	Fri,  9 May 2025 03:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0A2F507
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 03:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746762198; cv=none; b=sfo0blfn3x43MnfzJBMzspMuGCZqn7CBKs1FNVA1jn9TKIeCuAUowNJrtPHwKhle8uiJoPvbeSHy9zv+BSiBO2zmKp/BGiqPL2hu9RphhQTICuhQp4fwJhrPT+Hx2TWb1LIMFKyDBR36/lKw6fdoimN1iVQZKcrJ6jnG40o785M=
+	t=1746762298; cv=none; b=B5v7EH5aWAjLF7AG/H942iX8AxdWDzeqUX7PHw3LBUSSTpQXN8aksWMUQnlYDYvaZLedaTOFowsYDf7ZqxZ4RZktjJnutZTVMIHIkh/SNzjDuptBIOUTShQsHZR7MJVx6zLNihw9DfKkIDqRuWazWLXwV260lTMUVnUnYaqLUpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746762198; c=relaxed/simple;
-	bh=dkgAWJ0H7e2FQVD5K7M0InW6zg3HUvA18Kt1Cavcnfs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hiA5BVDYHWThF3SZeNHDNG20Bk4wGRWJnZEDZnb0msesO1M7jii2oNICMYJRuxaLLeU8GuzbUyOOUxha39RLS4k2aWpymp/dWppS1C2XVWJZ6Cn0gRe1tMbgEq9f4/3xgFUP9msWoYAIv5qXqpEu+PHbptw1MfQqtTbTpy8961c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Rbk1b0vu; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Rbk1b0vu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=MgvkC7w5PYOeAubPmZHQ++5Bvo20B7PfGo6lMa0hvMU=; b=Rbk1b0vuTIPNlmgnw4AX5MTcUc
-	YFbjecLfSx9qZo8sdS3KQJG7Qpk7Gt0blMUB65/6JKWviwb+FuH1MnDZ8SwXiH5ZMT8FpAhXMN9lC
-	79tLEG91NQlAW8G97ERVpk/c/JfV/R+O6gBpwQIEzdzqT6tmduGO0dvzl35xFxxB89fd2x8BEJGhP
-	VEniirdHGbLSndSSf0NxvYZWAfgimLaNvz+Ssoep0di2aY06CjKx82uT95nHhaPRLW4YD7VSOPIu/
-	SKAhO0CnIG/3FDL/cZEzfPPoHvBG0/Dz7jCPvABMypIrape4Ow3pgZRckyTSmekwZCWLBUBrIJCc8
-	+4Qr4lAg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uDEBP-004kTa-2W;
-	Fri, 09 May 2025 11:13:56 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 09 May 2025 11:13:55 +0800
-Date: Fri, 9 May 2025 11:13:55 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [v3 PATCH] crypto: marvell/cesa - Do not chain submitted requests
-Message-ID: <aB1y8_T5uEEZhyrp@gondor.apana.org.au>
-References: <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
- <Zw9AsgqKHJfySScx@gondor.apana.org.au>
- <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
- <aBsdTJUAcQgW4ink@gondor.apana.org.au>
- <aBt5Mxq1MeefwXGJ@Red>
- <aBw-C_krkNsIoPlT@gondor.apana.org.au>
- <aBw_iC_4okpiKglQ@gondor.apana.org.au>
- <aBypVwhHHzmqqN5K@Red>
- <aBytNdRyd5Ywh1Pq@gondor.apana.org.au>
- <aBy06xyzh5kKC48a@Red>
+	s=arc-20240116; t=1746762298; c=relaxed/simple;
+	bh=k8vpAy09m6rAXeiZCRCU8xbEbO4dS+lbuZUL6Gu87M4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=MHYVGiw0uqa0gbYh9V356tacTNqbrvybqBc8a8f3vGm/c3N0gH564YNEsDGzElghn5w1XLZ2xjPfyaYvYpLk/1PzVSFEJKuvPmyJdWamzaOKMMihbQQYabNzXyWYFM77etbaEHNF5GyjUPgdVMCiaSMd3ue2r7Sr9dlX07WdzwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3da731b7df8so18029325ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 20:44:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746762296; x=1747367096;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zjbHBLRwEKLRlKAOMklMOk4ZYdb6TtkbrCbgIFm0odE=;
+        b=REf/GB+XoXJ3BI55c3jRNKCH1wMVQiSNtbI3S5BQZHM1C3hJtTPgitpn1cDfIC/mDC
+         VtIl6VEz2npu/zvj8A9LrtcaSHbNAb5t4mM6g+fFaJciP+lHgA2Jr+mHnOyjFXG3Q72j
+         0BirMyGMBRH58Gl9K5+yCLXLA9ZCsFPSudxTmZZZmOoygTqrF1ECIUFmnrY2Ke/r/JT+
+         kDURoBEoJ36pOI9GccrjuDzkjgT8WNybne1H9+Fycv4rq1QO1QAlqzJPNJib+8PFm7lG
+         toiLm6zmTDqJoOIEC2XL7azIhgb1Ihl1bXKR7iRdNdNFGekV1CMWGUpBgZ6NO2Nh9sfk
+         /hNA==
+X-Gm-Message-State: AOJu0YytIWfgLVVBXiMNSsX83RjmKeWJg6cg4Xv4TWoptJklasBSlyUX
+	6iEDcqSuhFe+6Hb+RtPk8/aWl0boWDanTEkClI3Lbzm+O7wjAAJrhxUEigFa51B+CdJbkcbey1i
+	Qghf48tiu4rG6T9ws98hlYmdzcrm6d9IKu1dE0/cUrcdL41wE+mJjEF0=
+X-Google-Smtp-Source: AGHT+IE9bTS1s/5x7z4gWspG/iyue59d/4q8FqLUqzN247cdaX2qHXd5m5cIJByyXBSJvg2D2+CBju6i62RMVW0SOpNdpn+NIBaW
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aBy06xyzh5kKC48a@Red>
+X-Received: by 2002:a05:6e02:370f:b0:3d9:3675:f531 with SMTP id
+ e9e14a558f8ab-3da7e33fd44mr20735765ab.6.1746762296280; Thu, 08 May 2025
+ 20:44:56 -0700 (PDT)
+Date: Thu, 08 May 2025 20:44:56 -0700
+In-Reply-To: <6711ae3d.050a0220.1e4b4d.000a.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <681d7a38.050a0220.a19a9.0123.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [ext4?] WARNING in ext4_journal_check_start (2)
+From: syzbot <syzbot+b75d75f957975f3d40e3@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 08, 2025 at 03:43:07PM +0200, Corentin Labbe wrote:
-> Le Thu, May 08, 2025 at 09:10:13PM +0800, Herbert Xu a écrit :
->
-> > Do you have a boot log without this patch to compare? You seem
-> > to be getting skcipher failures as well as hash failures while
-> > the original report only had hash failures.
-> > 
-> 
-> 6.14.4 boot log at http://kernel.montjoie.ovh/477911.log
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-OK so it looks like on your machine the skcipher ENOMEM failures
-were always there.
+***
 
-Let me stare at this a bit more.
+Subject: Re: [syzbot] [ext4?] WARNING in ext4_journal_check_start (2)
+Author: richard120310@gmail.com
 
-Thanks,
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git c964ced77262
+
+Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+---
+ fs/ext4/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 54bdd4884fe6..d799f424f218 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -2806,7 +2806,7 @@ static int ext4_writepages(struct address_space *mapping,
+ 	int ret;
+ 	int alloc_ctx;
+ 
+-	if (unlikely(ext4_forced_shutdown(sb)))
++	if (unlikely(ext4_forced_shutdown(sb)) || mapping->host->i_sb->s_writers.frozen == SB_FREEZE_COMPLETE)
+ 		return -EIO;
+ 
+ 	alloc_ctx = ext4_writepages_down_read(sb);
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.43.0
+
