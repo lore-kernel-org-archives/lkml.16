@@ -1,103 +1,81 @@
-Received: from smtp.smtpout.orange.fr (smtp-26.smtpout.orange.fr [80.12.242.26])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCD3275106;
-	Fri,  9 May 2025 09:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E9B276033
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 09:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746781811; cv=none; b=MVvSO+7jEvDBHaMQNiZ2S4rRtK6niiMqySP61nTbsuQBpLxUjnN0b6Z62OnPK6aZFHJc4zzVCVz2/nrydLUhZ8z+aopbdBtPT3pNIK14hCrRS/CPxXU1xuc4Z5BTFXze+b7kUimHFXas7JAtMFLZ3u3kAxfC3ZNdONte3kcY/rU=
+	t=1746781816; cv=none; b=DXQpRp9VrMblZpFxeYl33Xi8I2LQpjyiBsTls+zhbixtwT8IzA2nORoIuc86c+xOz8onhIaFIVeU4ynHER/TI5NJCTmDoguVvIy4H1sgsNMEyfKMOhI+qXLePS5u69Z+wOqgXsvGCtyMdU77K2VrSV3eTK8X615xCL/fJCobHIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746781811; c=relaxed/simple;
-	bh=hc89LVy2YgB2RbkxSw2z2iAGrxOpaXCRHJoRlySZKBs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B26ScbNqFCDg1mHBTk1ncVzaAXhcJBoRpZqxxsfrtgl3We/RdYOLQHGBRvrN8SlRwzwG4xT8PZgZDjE5PCmz25IJigbFDssyoI4ivTjytyxbuke+Y4f/7U4q40gPb1pqsre7apme7viAPHOdxo4UiDrnIYHtWIYOrtiXAFQq6n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=I9zSl3WC; arc=none smtp.client-ip=80.12.242.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1746781816; c=relaxed/simple;
+	bh=TGI4SrKtmS4fphlt8zgWTxMig/H//M7/WQzVEPgH6VI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KoRbJPvSSoKedWKZGBaRHwMESRbsVngFnQYIwLIBIonLUBzDHObtQAUwo+hPns/c/2FlsnoOnZ7vKrSzucUc77UUj7iekGPnscXCFazohtSRGOmFqvUKdzA5dBEwT2FNKxcA1ZYljFizMDorINMFAZGvTvU3mEB1u3TjaCzUBoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=HhH5sTbE; arc=none smtp.client-ip=220.197.32.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="I9zSl3WC"
-Received: from localhost.localdomain ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id DJk5un7myQJEDDJk5uxqHD; Fri, 09 May 2025 11:10:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1746781807;
-	bh=pDLt5pxHxdGAut4aWtyDiVnW//QILcNDde9fKTiC3fg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=I9zSl3WCzuABu3i/hGxZY/D2z9pLRS0semJTJM25tfWlls394EMChFOS5WE/lYGT8
-	 aiKvyYhxAcyNa621qncSSGJK340oZUVlrU9tbrtu0qtWWZOfi7LYZPpXkt+omOS2eK
-	 r5/FOto+Uwg5CW/MnLUM3emlxM5aCboYd5pWf3wn7QaEXkkMayHURiGJK0BrYNMvn+
-	 q4IXpMDiZ/vT3riAH+jdBgPhvFZzgsJubm+5CXb/c1NVNcLZpiR87ETnGGTrBYuioG
-	 t3JYewPyX0yfM9raFim3uDyPb789zkRcADjq17PmzvHomYMyFQ4/KmcUDNMfxKnhTl
-	 qR5vFNC0nhWyQ==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 09 May 2025 11:10:07 +0200
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Srinivas Kandagatla <srini@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Wesley Cheng <quic_wcheng@quicinc.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: [PATCH] ASoC: qcom: qdsp6: Add an error handling path in q6usb_component_probe()
-Date: Fri,  9 May 2025 11:09:55 +0200
-Message-ID: <7338875b20cb41693f803c6b9673cf7f3e5f089a.1746781775.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="HhH5sTbE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=67jPVQkEI0ojlmWSjXQh20w9nZ/1gSJIit9hh8AjfeI=;
+	b=HhH5sTbEic7wFPdaXfHxaJwrPlJL+4/3ntQYlQiQR6JQfI/L1RbE35pE9GlLho
+	IbQ7yfa8LvsoUOoxQdZUWKi8lcKe+ZqgwptSbH/7LTkcB2uIQTrd7WjlA+c+4qFv
+	Pcyj74zmgV/qVcnfNe61T9YXCnerPkPHs6V+QYA0fMLK0=
+Received: from [192.168.31.105] (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id M88vCgD3HwUIxh1ogQGlAA--.64732S2;
+	Fri, 09 May 2025 17:08:27 +0800 (CST)
+Message-ID: <f59f5f63-141c-46c4-b010-c4e752feefef@yeah.net>
+Date: Fri, 9 May 2025 17:08:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug#1103397: linux-image-amd64: Kernel Panic:
+ copy_fpstate_to_sigframe crashes.
+To: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+ Salvatore Bonaccorso <carnil@debian.org>, 1103397@bugs.debian.org
+Cc: Ben Hutchings <ben@decadent.org.uk>,
+ "Chang S. Bae" <chang.seok.bae@intel.com>, Lyle Li <LyleLi@zhaoxin.com>,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ aruna.ramakrishna@oracle.com, pbonzini@redhat.com, levymitchell0@gmail.com,
+ attofari@amazon.de, linux-kernel@vger.kernel.org, CobeChen@zhaoxin.com,
+ TimGuo@zhaoxin.com, LeoLiu-oc@zhaoxin.com, GeorgeXue@zhaoxin.com,
+ yunshen@zhaoxin.com, AlanSong@zhaoxin.com
+References: <4ac9f677-699e-4ef1-b160-9f1c6fe8e820@yeah.net>
+ <c566339b-d8d3-4f74-a3b8-8f373fbe3f47@yeah.net>
+ <174486226753.86424.3234605951040281675.reportbug@zx2>
+ <8bcebb19-17f6-47e6-976a-0c9560795cd7@yeah.net>
+ <aB0Q8S47iNeD1GOM@eldamar.lan>
+ <6cebe32d-0290-41d8-9629-d80ef3c159c3@yeah.net>
+ <acfbdc87-5146-4c39-831f-70b132f9f4b0@zhaoxin.com>
+Content-Language: en-US
+From: Larry Wei <larryw3i@yeah.net>
+In-Reply-To: <acfbdc87-5146-4c39-831f-70b132f9f4b0@zhaoxin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:M88vCgD3HwUIxh1ogQGlAA--.64732S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUsDGYDUUUU
+X-CM-SenderInfo: xodu25vztlq5hhdkh0dhw/1tbiNQsVUWgdxguTGgAA3L
 
-If an error occurs after a successful q6usb_dai_add_aux_device() call,
-some resources should be released as already done in the remove function.
+Dear TonyWWang-oc,
 
-Add an error handling path in the probe and the missing clean-up.
+Yes, but actually, these graphics cards are your products, and neither 
+C-960 nor C-1080 seem to be open source.The drivers provided on your 
+official website do not seem to be used for Debian.I downloaded your 
+drivers and extracted them, and I found that each file has the license 
+content.Can I assume that these drivers are open source?
 
-Fixes: 72b0b8b29980 ("ASoC: qcom: qdsp6: Add USB backend ASoC driver for Q6")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- sound/soc/qcom/qdsp6/q6usb.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+Regards,
 
-diff --git a/sound/soc/qcom/qdsp6/q6usb.c b/sound/soc/qcom/qdsp6/q6usb.c
-index adba0446f301..8044cb7e4dd8 100644
---- a/sound/soc/qcom/qdsp6/q6usb.c
-+++ b/sound/soc/qcom/qdsp6/q6usb.c
-@@ -327,8 +327,10 @@ static int q6usb_component_probe(struct snd_soc_component *component)
- 		return ret;
- 
- 	usb = snd_soc_usb_allocate_port(component, &data->priv);
--	if (IS_ERR(usb))
--		return -ENOMEM;
-+	if (IS_ERR(usb)) {
-+		ret = -ENOMEM;
-+		goto free_aux_devices;
-+	}
- 
- 	usb->connection_status_cb = q6usb_alsa_connection_cb;
- 	usb->update_offload_route_info = q6usb_update_offload_route;
-@@ -337,6 +339,12 @@ static int q6usb_component_probe(struct snd_soc_component *component)
- 	data->usb = usb;
- 
- 	return 0;
-+
-+free_aux_devices:
-+	auxiliary_device_delete(&data->uauxdev);
-+	auxiliary_device_uninit(&data->uauxdev);
-+
-+	return ret;
- }
- 
- static void q6usb_component_remove(struct snd_soc_component *component)
--- 
-2.49.0
+larryw3i
+
+On 5/9/25 16:31, Tony W Wang-oc wrote:
+> such as installing specific EC controller drivers or updating graphics 
+> card drivers. 
 
