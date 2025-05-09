@@ -1,96 +1,67 @@
-Received: from cventin.lip.ens-lyon.fr (cventin.lip.ens-lyon.fr [140.77.13.17])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5EF22A4D6;
-	Fri,  9 May 2025 12:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.77.13.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237CA28EA45;
+	Fri,  9 May 2025 13:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746795501; cv=none; b=OWtT74Q8mv7kYgZTaU82Bpf4eI9I0tYivQVv++WBgdKEuLxnJBkJa+3aMW9nlsACx27+1E3Zjgk8Z7bbWN9L7ZWaBMGNWN85R64mhyu3oypiNaN6BI/fT/371ysF4ATmwah6soA3xFUmN1HQ+OOWVJCpVJNOXQdwIzFDUqCzDE4=
+	t=1746795665; cv=none; b=VZ6ducTcmqZztxCP4E+8L5YDNnYjsMWDqimtqT2Gs5n4ZEknw+hzJCUnLWLCRsdo+BYeRpFKdowCVUe/Z0Mk8QgyJkcjdhweoa/UbWSWUcbyJkOQOi2OgZ+RNmvvAc7neDvdKJtvKCy7mruOXW+cXtSXW+GoxI6msjcg3PWQ4vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746795501; c=relaxed/simple;
-	bh=W5IN8KekiXhtsFvY8lSklWXRlcn4sRA+tLE3ZGCXS44=;
+	s=arc-20240116; t=1746795665; c=relaxed/simple;
+	bh=4golUNbzkJaW4FGVhyb62ZVAkVMJaWk67Gx8S8QZnKw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oo1qVZlsyL2naTs5uvryblQ0FJVoY7A0fvN+53cxTbn5jdXwSz4lPPjxV7NaUX9gSx62f1d0qYehEslxHXINjyvkTJc2tjxOlCXDSNuDVwM/dDlNpdQgGsFoRZb6iLrvxSFGK8FfPAzCjDBoUtvVCG4PBalnlotsfyJUSsl2uo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vinc17.net; spf=pass smtp.mailfrom=vinc17.net; arc=none smtp.client-ip=140.77.13.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vinc17.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinc17.net
-Received: from vlefevre by cventin.lip.ens-lyon.fr with local (Exim 4.98.2)
-	(envelope-from <vincent@vinc17.net>)
-	id 1uDN9R-0000000036V-1NWQ;
-	Fri, 09 May 2025 14:48:29 +0200
-Date: Fri, 9 May 2025 14:48:29 +0200
-From: Vincent Lefevre <vincent@vinc17.net>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: "Andries E. Brouwer" <aeb@cwi.nl>, linux-man@vger.kernel.org,
-	linux-kernel@vger.kernel.org, libc-alpha@sourceware.org,
-	"G. Branden Robinson" <branden@debian.org>,
-	Carlos O'Donell <carlos@redhat.com>,
-	Eugene Syromyatnikov <evgsyr@gmail.com>
-Subject: Re: man-pages-6.14 released
-Message-ID: <20250509124829.GD3017@cventin.lip.ens-lyon.fr>
-Mail-Followup-To: Vincent Lefevre <vincent@vinc17.net>,
-	Alejandro Colomar <alx@kernel.org>,
-	"Andries E. Brouwer" <aeb@cwi.nl>, linux-man@vger.kernel.org,
-	linux-kernel@vger.kernel.org, libc-alpha@sourceware.org,
-	"G. Branden Robinson" <branden@debian.org>,
-	Carlos O'Donell <carlos@redhat.com>,
-	Eugene Syromyatnikov <evgsyr@gmail.com>
-References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
- <20250509112627.GA924923@if>
- <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
- <20250509121454.GA952723@if>
- <qghsrpxzxccbcuuctx56oq5xe7mtpkgljis7ovopr6ojmiz3js@vw5p5w7om4f4>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bIGI6nqEBYg3Rnu83dpCYOR7TPaNlwjOvBwa5y+ZRVDao01Rx+k0GDVW1Mw5uNni3MwJ/EmEblpHIHuHTd2ngN9jK1PNbPXnpslLHZEZb7LT5Uu3USMAzQh+FNcpknFnoS7HHfkKV3hFvE6qBsFuHdXisT7kudgSHUO6u1j9yiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=b4Qbd4mF; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="b4Qbd4mF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=AfEelIj+BBvQA3qNO9D9UmBF4ba/BqaL4KcD9NEPvFk=; b=b4Qbd4mFlKccaQ6pTjFzKmIxvJ
+	7UxlLabbpE8L6hNRiAZYvKuJCdyW7pRWF2sUuETLFxviVxZ3x8ELYu7ZHKYUCaev5kVwGpcwxtfR0
+	WEwO3aOlmgx1as/vK5eSKGBJSE+3BiN8PPtG/Lr74jl+Xd9s2wsOV7G4JuNEiJFGQRQU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uDNL9-00C70E-Uz; Fri, 09 May 2025 15:00:35 +0200
+Date: Fri, 9 May 2025 15:00:35 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: leo.jt.wang@gmail.com
+Cc: robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
+	keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+	geert+renesas@glider.be, magnus.damm@gmail.com,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, george.kw.lee@fii-foxconn.com,
+	leo.jt.wang@fii-foxconn.com
+Subject: Re: [PATCH] ASPEED: bmc: Add device tree for Meta(Facebook) Clemente
+ compute-tray.
+Message-ID: <d8e561ec-e600-4b51-b901-6fd125eef8cc@lunn.ch>
+References: <681dc3eb.170a0220.1fd80.c9ce@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <qghsrpxzxccbcuuctx56oq5xe7mtpkgljis7ovopr6ojmiz3js@vw5p5w7om4f4>
-X-Mailer-Info: https://www.vinc17.net/mutt/
-User-Agent: Mutt/2.2.13+86 (bb2064ae) vl-169878 (2025-02-08)
+In-Reply-To: <681dc3eb.170a0220.1fd80.c9ce@mx.google.com>
 
-Hi,
+> +&mac0 {
+> +	status = "okay";
+> +	phy-mode = "rgmii-rxid";
 
-On 2025-05-09 14:28:23 +0200, Alejandro Colomar wrote:
-> On Fri, May 09, 2025 at 02:14:54PM +0200, Andries E. Brouwer wrote:
-> > Hi Alejandro,
-> > 
-> > > > I wonder about the legal status of such a change.
-> > > > There is ownership of the pages, and a license that allows
-> > > > others to do certain things.
-> > > 
-> > > I also wonder about it.  We discussed it for several (~3) months, and I
-> > > documented links to the discussion in the commit message:
-> > > 
-> > > commit 9f2986c34166085225bb5606ebfd4952054e1657
-> > > Author: Alejandro Colomar <alx@kernel.org>
-> > > Date:   Fri Apr 11 02:19:48 2025 +0200
-> > > 
-> > >     *, CREDITS: Unify copyright notices
-> > >     
-> > >     Link: <https://lore.kernel.org/linux-man/jpin2dbnp5vpitnh7l4qmvkamzq3h3xljzsznrudgioox3nn72@57uybxbe3h4p/T/#u>
-> > >     Link: <https://www.linuxfoundation.org/blog/blog/copyright-notices-in-open-source-software-projects>
-> > 
-> > So I read this last link, and see
-> > 
-> > "Don’t change someone else’s copyright notice without their permission
-> > You should not change or remove someone else’s copyright notice unless
-> > they have expressly (in writing) permitted you to do so. This includes
-> > third parties’ notices in pre-existing code."
-> 
-> I understood that paragraph as not changing copyright notices from
-> people unrelated to the project.
+Please see:
 
-I don't think so. But IMHO, it would be OK to provide the old copyright
-notices in an indirect way: put them in a different file and just give
-a reference to this file, as long as this file is distributed together
-with the man pages and can be found easily.
+https://patchwork.kernel.org/project/netdevbpf/patch/20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch/
 
--- 
-Vincent Lefèvre <vincent@vinc17.net> - Web: <https://www.vinc17.net/>
-100% accessible validated (X)HTML - Blog: <https://www.vinc17.net/blog/>
-Work: CR INRIA - computer arithmetic / Pascaline project (LIP, ENS-Lyon)
+Aspeed are supposed to be fixing their MAC driver, which is currently
+broken. You might want to apply some pressure to them to get the fixed
+merge. Until then, you should drop this broken node.
+
+	Andrew
