@@ -1,85 +1,172 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599502356B0;
-	Fri,  9 May 2025 16:17:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D043235059;
+	Fri,  9 May 2025 16:17:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746807447; cv=none; b=LF0/xsYK/dIBmOFQMoQt3TCOe1PsmLuoGaTnJcSIbOKGLMz9xi8wGttV3oRXmsdaPNAFxJnZ2L55ltAw8qUtzTGRCWH8y7huHBK9eL3oX+Vf1RyLWKtEzhpjfIMJVe1g00kPT9aVE5v6eLXobUo7KhpB/dmU7cszm8jPRxRGQz8=
+	t=1746807463; cv=none; b=KiAhinTbH3luKigCHIPjEm2cwDtqZqxnp+ZmO4JbPxDh3uBLpOVhV0AGaWLolUGOVuQGLg8FpSOZYmD2b4ruUbyZwqX1nnWrnicxP0Usjx2l2hEoPhRihj6FfMCKml1X0L9HjLpUv9Jt3QgMyoYqYCAfVAWYjfLIcbshOzSsJEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746807447; c=relaxed/simple;
-	bh=JvmifVntTROuG4HNctyOU2SJlSH36OpMWY3roz323xk=;
+	s=arc-20240116; t=1746807463; c=relaxed/simple;
+	bh=/FSy4Y5u8yi3L51i2Mvhg2Nfe0hzragk32vSsyBE6/w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NL8LBmLa+bWrmDRq7VrcRaBIPUmelfiI26YttfDGhaDaLNrYkCN7tTHCegbmHot8UOpOwhRtoISWHGPJ+8aGHgzFie2PeU2DgmZttE8gawsznWCG35xsaBqo9zWBgenUS40NP1CRfF7qmhlBKy+XRmM5cRzXudYYREDU5lntW6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gPNwRUP2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nLGazH3AFgWRl/kg12WOXbLk+Mmk6lu9D6EoAa0BjWu1q9aBs+NAVZizzXPPszFCqHDr1ezOEUrCZjXfeVhUCzMtJtD1kPE5/JOS86738ARDKpwnDoa3tAHY00OH3fedXgAgiBKRyLAE0A4xoy3U7sMv3s8AzsbxI84V/C+6YGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p1xovz5D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gPNwRUP2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06512C4CEE4;
-	Fri,  9 May 2025 16:17:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p1xovz5D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14E52C4CEEE;
+	Fri,  9 May 2025 16:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746807446;
-	bh=JvmifVntTROuG4HNctyOU2SJlSH36OpMWY3roz323xk=;
+	s=k20201202; t=1746807462;
+	bh=/FSy4Y5u8yi3L51i2Mvhg2Nfe0hzragk32vSsyBE6/w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gPNwRUP2MGA2UIlCItZX/6casE8468VMUCJPL6CJfpyiag7b/hUtikz7wMYy/Y2ig
-	 Xc2anaQJ/fLONYqf+Fsx27Ww8EVQCMLdG8m6FwLEcTl6HbSrhZqSn4/N1mpT4aEVnl
-	 PQeVDxJPeVlznU5tjEDBFw1gk7IKdnGKSRAs7hOR3KDIuoSfpQuZrZAyGG2Ec0Chn3
-	 LPIiiak9oaaIlbupCSlvXwQBxEtLx/IKfsPpxLQwikS0OJDpgqWbPpfCTSNa7sCovd
-	 KIs3ogp8/+GrCJDvwrwTZKjwDKmg/8uGpPS/PdVqLdOFb8c35MMOlmlZfDiosBHyDv
-	 nSI9+9Hv/rxlw==
-Date: Fri, 9 May 2025 09:17:24 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>, Kees Cook <kees@kernel.org>,
+	b=p1xovz5DW5Nhz241NhCdaXIQHQq8dLSs/NOrOUjUuFRCh3+socScZYGxmY+5+2hVp
+	 +iWmK6UjcQbbY/IDfaix96KBqyuFfSVec4ex1pGc3xDBlknjy/csfhxlmpEKYdmD/Y
+	 Y94hucb7yOecxhLgV4+glBISwW4jUOeRt1P4e/MXuQK6E5Sz4HghH5DAzxDKx06yIS
+	 u5ibSWiXjcmC68Cmy3/wc0hddNEYMy6EsFWm43/oFy2qyg5Bb047AkJcr+KMMpQNyV
+	 N0NadlwvBv1u6AdAGNwJ6TKpSpvnKRhB6rW86e8PJR4uG7BhCe3sHTweQxi/hgoAuR
+	 dO7Fl1RqouaxQ==
+Date: Fri, 9 May 2025 09:17:40 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	rcu@vger.kernel.org, linux-mm@kvack.org,
-	linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH 03/12] rcu: Move rcu_stall related sysctls into
- rcu/tree_stall.h
-Message-ID: <aB4qlJ7EKu-XjIO3@bombadil.infradead.org>
-References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
- <20250509-jag-mv_ctltables_iter2-v1-3-d0ad83f5f4c3@kernel.org>
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>,
+	Stephane Eranian <eranian@google.com>
+Subject: Re: [RFC/PATCHSET 00/11] perf mem: Add new output fields for data
+ source (v1)
+Message-ID: <aB4qpAc2GThyGaqg@google.com>
+References: <20250430205548.789750-1-namhyung@kernel.org>
+ <33984b44-ae3d-4fbd-b918-07289a3f1d8a@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250509-jag-mv_ctltables_iter2-v1-3-d0ad83f5f4c3@kernel.org>
+In-Reply-To: <33984b44-ae3d-4fbd-b918-07289a3f1d8a@amd.com>
 
-On Fri, May 09, 2025 at 02:54:07PM +0200, Joel Granados wrote:
-> Move sysctl_panic_on_rcu_stall and sysctl_max_rcu_stall_to_panic into
-> the kernel/rcu subdirectory. Make these static in tree_stall.h and
-> removed them as extern from panic.h as their scope is now confined into
-> one file.
+Hi Ravi,
+
+On Thu, May 08, 2025 at 09:42:41AM +0530, Ravi Bangoria wrote:
+> Hi Namhyung,
 > 
-> This is part of a greater effort to move ctl tables into their
-> respective subsystems which will reduce the merge conflicts in
-> kernel/sysctl.c.
+> I feel the overall idea is good. Running few simple perf-mem commands
+> on AMD works fine too. Few general feedback below.
+
+Thanks for your review!
+
 > 
-> Signed-off-by: Joel Granados <joel.granados@kernel.org>
+> > The name of some new fields are the same as the corresponding sort
+> > keys (mem, op, snoop) so I had to change the order whether it's
+> > applied as an output field or a sort key.  Maybe it's better to name
+> > them differently but I couldn't come up with better ideas.
+> 
+> 1) These semantic changes of the field name seems counter intuitive
+>    (to me). Example:
+> 
+>    -F mem:
+> 
+>      Without patch:
+> 
+>      $ perf mem report -F overhead,sample,mem --stdio
+>      # Overhead       Samples  Memory access
+>          39.29%             1  L3 hit
+>          37.50%            21  N/A
+>          23.21%            13  L1 hit
+> 
+>      With patch:
+> 
+>      $ perf mem report -F overhead,sample,mem --stdio
+>      #                          Memory
+>      # Overhead       Samples    Other
+>         100.00%            35   100.0%
 
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+Yep, that's because I split the 'mem' part to 'cache' and 'mem' because
+he_mem_stat can handle up to 8 entries.  As your samples hit mostly in
+the caches, you'd get the similar result when you run:
 
- Luis
+  $ perf mem report -F overhead,sample,cache --stdio
+
+> 
+>    -F 'snoop':
+> 
+>      Without patch:
+> 
+>      $ perf mem report -F overhead,sample,snoop --stdio
+>      # Overhead       Samples  Snoop
+>          60.71%            34  N/A
+>          39.29%             1  HitM
+>    
+>      With patchset:
+> 
+>      $ perf mem report -F overhead,sample,snoop --stdio
+>      #                         --- Snoop ----
+>      # Overhead       Samples     HitM  Other
+>         100.00%            35    39.3%  60.7%
+
+This matches to 'Overhead' distribution without patch, right?
+
+> 
+> 2) It was not intuitive (to me:)) that perf-mem overhead is calculated
+>    using sample->weight by overwriting sample->period. I also don't see
+>    it documented anywhere (or did I miss it?)
+
+I don't see the documentation and I also find it confusing.  Sometimes I
+think the weight is better but sometimes not. :(  At least we could add
+and option to control that (like --use-weight ?).
+
+Also we now have 'weight' output field so users can see it, althought it
+shows averages.
+
+> 
+>    perf report:
+> 
+>      $ perf report -F overhead,sample,period,dso --stdio
+>      # Overhead  Samples   Period  Shared Object
+>          80.00%       28  2800000  [kernel.kallsyms]
+>           5.71%        2   200000  ld-linux-x86-64.so.2
+>           5.71%        2   200000  libc.so.6
+>           5.71%        2   200000  ls
+>           2.86%        1   100000  libpcre2-8.so.0.11.2
+> 
+>    perf mem report:
+> 
+>      $ perf mem report -F overhead,sample,period,dso --stdio
+>      # Overhead  Samples   Period  Shared Object
+>          87.50%       28       49  [kernel.kallsyms]
+>           3.57%        2        2  ld-linux-x86-64.so.2
+>           3.57%        2        2  libc.so.6
+>           3.57%        2        2  ls
+>           1.79%        1        1  libpcre2-8.so.0.11.2
+> 
+> 3) Similarly, it was not intuitive (again, to me:)) that -F op/snoop/dtlb
+>    percentages are calculated based on sample->weight.
+
+Hmm.. ok.  Maybe better to use the original period for percentage
+breakdown in the new output fields.  For examples, in the above result
+you have 13 samples for L1 and 1 sample for L3 but the weight of L3
+access is bigger.  But I guess users probably want to see L1 access was
+dominant.
+
+> 
+> 4) I've similar recommended perf-mem command in perf-amd-ibs man page.
+>    Can you please update alternate command there.
+>    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/Documentation/perf-amd-ibs.txt?h=v6.15-rc5#n167
+
+Sure will do.
+
+Thanks,
+Namhyung
+
+> 
+> Please correct me if I'm missing anything.
+> 
+> Thanks,
+> Ravi
