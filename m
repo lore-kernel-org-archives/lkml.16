@@ -1,210 +1,151 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8555E26FA6C;
-	Fri,  9 May 2025 07:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481391990A7;
+	Fri,  9 May 2025 07:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746776494; cv=none; b=NG1PBqQKO7M/Ph4OlhQf2Wi3kxzv/RImJiRSsyp7pTolltUngDEgg+c7D5k9vpPTDcEVwA85AyGkcpFw+EHkFcfdaN+CpLgrJdEjNzf81oHf9Pj/kL11SWKpwxb9ffS3uhzLdxioZuEJ33fWS0LOA+Z295kh1ebA2E84Ir0z5TM=
+	t=1746776511; cv=none; b=OIfWmBjcyiOEJV7DXapiQHNQ99nL173yja442f25a91ZrtdvFq37bR9Khpiz4cQ1mahBnKhUu4gdZpOePkwoQns9g7C5Gye6ajwgMhPr7pnnxMz9VdPCMmO038sF7iJT3uUOyax9FW3koOlGj6gYrmHnM7CGDXTygd8Nwu6kyVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746776494; c=relaxed/simple;
-	bh=jyO31/jl+RDl/d/ZdCzc5ZoO0zv88j+FCcX6tIa4kvA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e4JjyQSeZeEl+XhYq+Da1SDmIqYJBtCcEFcZpEFb+JNhSWJgjw+O2Mjis/kCjOXH+engEVTv/mqy5yWv++5WL67D4sBkVOG1OeCy0eK7rQ9zprMjknRf/4TpxwIMrZH8YeSfrcLbnin81wFj7MLeVFh/J6hvQFcYC2YuYtsRb0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LxW/AdrP; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746776511; c=relaxed/simple;
+	bh=tcdXYt+d9QC9Jlh1NzRG+oQJPwhMPB5zQsOLpL3DEq0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=q3wzXlmjSFJcef4aLitQGVb8pSBhRYwCmiLKOS2NGp8FQgGiX3nJPdAgkJXRccyj4woULiQ3XvFWdoZsSL9X3/GeRG5rqvsnuWMo/hYVJUglJY4tgM9babLZaKt+3CHI788r5Z69fQ3fvoZllkc5VU1UcKoMK7xUEfYEWmUQYyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WffbsTHq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LxW/AdrP"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-708a853c362so17142697b3.2;
-        Fri, 09 May 2025 00:41:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746776491; x=1747381291; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ye7rIPGO7oKTOhURnZxVJsCn/qQWh5VCeJGEhsIu90E=;
-        b=LxW/AdrPPTEWFDzmLrK89bae22NsAaXFucsHc03Pda8EQVHVpUEPVv4d7uhCitvVun
-         nPnOWdrECeKbkDyne5kIEdSdpDeCuRNdQWgF78sGxhA0pqcTGcVIFB/O4IaH/HcEqSvU
-         +MRRKCAifF3IV8yq4diW5vntQQKb5FhklL46AUlg7Y8AqICfnwdCGSFSPCkPdxJo5v/F
-         YwR1bWJk6H2NpIQ2Jrsx+pK7Pe7p8mcyEStRDe7vm7pVhq8mhsVjKxBVz4UnO0Sqjme4
-         evZ7wp3iXVr3dY9GYCzXikS0rI2BTR4BIb68/Qw2EJsgYVkT4TMdqKhdUVoNnm525AZu
-         mcOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746776491; x=1747381291;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ye7rIPGO7oKTOhURnZxVJsCn/qQWh5VCeJGEhsIu90E=;
-        b=tg6wzBEEtlJuA5jlGznLW6d9+4WtY+wxxwRa4kkCg0nAFuCJRnEjYMr/BiFH2m5HX1
-         wPJyxZKIymUTiAk3ykVeGb7i5th8IbMeILxu69CFKx6OqukMRDzfpMX2ZX3jeaS0D+/G
-         TkMKscCTYEeST0/6P+SDJ9hi1/k4OfXQsEQqqc+bMDgeHcq84fx7OtTqbfspqrDh6cs4
-         zDUr5yI8c/9SQRdqftxHfEqp4/mB4Rj1tXyNPpZy9Z+HpdwTJkuI56WAKbaRhCE9V0/v
-         ZLlFVya4+6Gc7cJE6FjYDRbJ+IiLksZXUawSOxTeoTeEEHLgZUs2YYLVId5z1H4FuLf2
-         09BQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCPXr4Hr54Hrol4Iwe416AtYphl/px6qUkdzKl4BppMGI0Vc3Ps03XMX9kIngGTrun8WtgxqAqXhOc@vger.kernel.org, AJvYcCVJgSCNO0gloOt/q1yvu2Pv7ejy/S1bcmseBgqO46+wwfiHjC3hY6BsgkymAwINZZ6uycXoEFrbeQYU@vger.kernel.org, AJvYcCWSj3cW9Sdv00NC1kr2IKkpVFV/DAGpi14CGaPGN58YVrpFN+eZr+qr+uVYSIBkBYj4/ENp616leq1fXX8I@vger.kernel.org
-X-Gm-Message-State: AOJu0YywbP7CJqpLkXB6NEfzNjtBfq8tHXFvieKe7K8QpRuvhfK4cusT
-	qlD+r07q8RKKPii9J5T8YlenTVwm5W4TiqWJB+xNnWAZq+GKZeefDIxHY+WptZZkndZvBkG1hZT
-	WermsXXTq5qpI0uDbSoevWdLChuY=
-X-Gm-Gg: ASbGncv/fLW6p3oOcOXeeO+SZjrsnNKvbPNC0JTgDo9e7r7JTgGbOiFjc3YZkuOSuSv
-	lcyFBjGq5Fdlm9boYlXs87YA7SHKnxlp7G2tIXzs2zqMC7q7Zkp5bkLfHw9Wn8PhvmsTqdDsbMp
-	3CP62/4xS1mDtAp4NSltfKsSI=
-X-Google-Smtp-Source: AGHT+IGvkBefmqT0OnG87syXeRA3zl+7ZbjUE1o+Op5MMkoHcI93LSKQldFIuzU5TcJjgkm7YP+ahU+NuCOdLYn387w=
-X-Received: by 2002:a05:690c:3606:b0:708:be8b:8415 with SMTP id
- 00721157ae682-70a3f9ec7bamr32338747b3.1.1746776491333; Fri, 09 May 2025
- 00:41:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WffbsTHq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C723C4CEE4;
+	Fri,  9 May 2025 07:41:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746776510;
+	bh=tcdXYt+d9QC9Jlh1NzRG+oQJPwhMPB5zQsOLpL3DEq0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=WffbsTHq6x06a9pNizrSBArDb919iHJ0oRrCsLjoZNTJ1/mZFWsY7NcJstMPCqvHg
+	 e/aLaVrtKIg4T/dBQbQFuCgqC9GyfwEOJoi6HUzx6IjEVkZ8GAtdSocMK+um3wrUi8
+	 mNJ/TS9vP2T28xaPkESMGAm8DxAu2rVdvyVhzTCdunWvZVXhryxVxW1F2kK4NtFQZv
+	 FDYJMeaWJtIE/fMu9mUSqtfQyUXvtZFgJ0N+vCRheqA+dOkt6+0+u5NP+yqQUt8oGC
+	 4IxyWyTdc+O6F9BT1qlO5v/TEwymwPJAhgGfHR903x42kEntjY2CAS3I3sru9DNsbT
+	 iAta2lcHsuZBg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>,  Peter Zijlstra
+ <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,  Juri Lelli
+ <juri.lelli@redhat.com>,  Vincent Guittot <vincent.guittot@linaro.org>,
+  Dietmar Eggemann <dietmar.eggemann@arm.com>,  Steven Rostedt
+ <rostedt@goodmis.org>,  Ben Segall <bsegall@google.com>,  Mel Gorman
+ <mgorman@suse.de>,  Valentin Schneider <vschneid@redhat.com>,  Miguel
+ Ojeda <ojeda@kernel.org>,  Alex Gaynor <alex.gaynor@gmail.com>,  Gary Guo
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  Benno
+ Lossin <benno.lossin@proton.me>,  Alice Ryhl <aliceryhl@google.com>,
+  Trevor Gross <tmgross@umich.edu>,  Danilo Krummrich <dakr@kernel.org>,
+  Nathan Chancellor <nathan@kernel.org>,  Nick Desaulniers
+ <nick.desaulniers+lkml@gmail.com>,  Bill Wendling <morbo@google.com>,
+  Justin Stitt <justinstitt@google.com>,  FUJITA Tomonori
+ <fujita.tomonori@gmail.com>,  Tamir Duberstein <tamird@gmail.com>,  Kunwu
+ Chan <kunwu.chan@hotmail.com>,  Mitchell Levy <levymitchell0@gmail.com>,
+  Martin Rodriguez Reboredo <yakoyoku@gmail.com>,  Borys Tyran
+ <borys.tyran@protonmail.com>,  Christian Brauner <brauner@kernel.org>,
+  Panagiotis Foliadis <pfoliadis@posteo.net>,
+  linux-kernel@vger.kernel.org,  rust-for-linux@vger.kernel.org,
+  llvm@lists.linux.dev,  Daniel Almeida <daniel.almeida@collabora.com>,
+  Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 4/5] sched/core: Add __might_sleep_precision()
+In-Reply-To: <aB2aAEELa3253nBh@gmail.com> (Ingo Molnar's message of "Fri, 9
+	May 2025 08:00:32 +0200")
+References: <20250506045843.51258-1-boqun.feng@gmail.com>
+	<20250506045843.51258-5-boqun.feng@gmail.com> <aB2aAEELa3253nBh@gmail.com>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Fri, 09 May 2025 09:41:36 +0200
+Message-ID: <87plginscv.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509065237.2392692-1-paweldembicki@gmail.com>
- <20250509065237.2392692-2-paweldembicki@gmail.com> <272301e5-6561-499a-91eb-615fed4727fa@kernel.org>
-In-Reply-To: <272301e5-6561-499a-91eb-615fed4727fa@kernel.org>
-From: =?UTF-8?Q?Pawe=C5=82_Dembicki?= <paweldembicki@gmail.com>
-Date: Fri, 9 May 2025 09:41:20 +0200
-X-Gm-Features: ATxdqUHXjtSflO8ksX9UgpKJ0JRin_SxPFkWNwLey2-t_RPh9BHyKI_7T9j8Rjk
-Message-ID: <CAJN1KkxPOuZqRwysx3zu_5ChODn2wnizKXzfEZHD2AiHAbd0ig@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] hwmon: pmbus: mpq8785: Prepare driver for multiple
- device support
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, 
-	Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Noah Wang <noahwang.wang@outlook.com>, 
-	Naresh Solanki <naresh.solanki@9elements.com>, Fabio Estevam <festevam@gmail.com>, 
-	Michal Simek <michal.simek@amd.com>, Grant Peltier <grantpeltier93@gmail.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Shen Lichuan <shenlichuan@vivo.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Greg KH <gregkh@linuxfoundation.org>, 
-	Charles Hsu <ythsu0511@gmail.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-pt., 9 maj 2025 o 09:03 Krzysztof Kozlowski <krzk@kernel.org> napisa=C5=82(=
-a):
->
-> On 09/05/2025 08:51, Pawel Dembicki wrote:
-> > Refactor the driver to support multiple Monolithic Power Systems device=
-s.
-> > Introduce chip ID handling based on device tree matching.
-> >
-> > No functional changes intended.
-> >
-> > Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-> >
-> > ---
-> > v2:
-> >  - no changes done
-> > ---
-> >  drivers/hwmon/pmbus/mpq8785.c | 38 +++++++++++++++++++++++++++--------
-> >  1 file changed, 30 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/hwmon/pmbus/mpq8785.c b/drivers/hwmon/pmbus/mpq878=
-5.c
-> > index 331c274ca892..00ec21b081cb 100644
-> > --- a/drivers/hwmon/pmbus/mpq8785.c
-> > +++ b/drivers/hwmon/pmbus/mpq8785.c
-> > @@ -8,6 +8,8 @@
-> >  #include <linux/of_device.h>
-> >  #include "pmbus.h"
-> >
-> > +enum chips { mpq8785 };
->
-> Use Linux coding style, so:
-> 1. missing wrapping after/before each {}
-> 2. missing descriptive name for the type (mpq8785_chips)
-> 3. CAPITALICS see Linux coding style - there is a chapter exactly about
-> this.
->
->
+Ingo Molnar <mingo@kernel.org> writes:
 
-Sorry, I was thinking that it is a local pmbus tradition.
-Many drivers have the same enum without capitalics :
+> * Boqun Feng <boqun.feng@gmail.com> wrote:
+>
+>> From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+>> 
+>> Add __might_sleep_precision(), Rust friendly version of
+>> __might_sleep(), which takes a pointer to a string with the length
+>> instead of a null-terminated string.
+>> 
+>> Rust's core::panic::Location::file(), which gives the file name of a
+>> caller, doesn't provide a null-terminated
+>> string. __might_sleep_precision() uses a precision specifier in the
+>> printk format, which specifies the length of a string; a string
+>> doesn't need to be a null-terminated.
+>> 
+>> Modify __might_sleep() to call __might_sleep_precision() but the
+>> impact should be negligible. When printing the error (sleeping
+>> function called from invalid context), the precision string format is
+>> used instead of the simple string format; the precision specifies the
+>> the maximum length of the displayed string.
+>> 
+>> Note that Location::file() providing a null-terminated string for
+>> better C interoperability is under discussion [1].
+>> 
+>> [1]: https://github.com/rust-lang/libs-team/issues/466
+>> 
+>> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+>> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+>> Co-developed-by: Boqun Feng <boqun.feng@gmail.com>
+>> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+>> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+>> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+>> Link: https://lore.kernel.org/r/20250410225623.152616-2-fujita.tomonori@gmail.com
+>> ---
+>>  include/linux/kernel.h |  2 ++
+>>  kernel/sched/core.c    | 62 ++++++++++++++++++++++++++++--------------
+>>  2 files changed, 43 insertions(+), 21 deletions(-)
+>> 
+>> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+>> index be2e8c0a187e..086ee1dc447e 100644
+>> --- a/include/linux/kernel.h
+>> +++ b/include/linux/kernel.h
+>> @@ -87,6 +87,7 @@ extern int dynamic_might_resched(void);
+>>  #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
+>>  extern void __might_resched(const char *file, int line, unsigned int offsets);
+>>  extern void __might_sleep(const char *file, int line);
+>> +extern void __might_sleep_precision(const char *file, int len, int line);
+>
+> Ugh.
+>
+> Firstly, '_precision' is really ambiguous in this context and suggests 
+> 'precise sleep' or something like that, which this is not about at all. 
+> So the naming here is all sorts of bad already.
+>
+> But more importantly, this is really a Rust problem. Does Rust really 
+> have no NUL-terminated strings? It should hide them in shame and 
+> construct proper, robust strings, instead of spreading this disease to 
+> the rest of the kernel, IMHO ...
 
-grep -r "enum chips {" .
-./isl68137.c:enum chips {
-./bel-pfe.c:enum chips {pfe1100, pfe3000};
-./mp2975.c:enum chips {
-./ucd9200.c:enum chips { ucd9200, ucd9220, ucd9222, ucd9224, ucd9240,
-ucd9244, ucd9246,
-./zl6100.c:enum chips { zl2004, zl2005, zl2006, zl2008, zl2105,
-zl2106, zl6100, zl6105,
-./ucd9000.c:enum chips { ucd9000, ucd90120, ucd90124, ucd90160,
-ucd90320, ucd9090,
-./max16601.c:enum chips { max16508, max16600, max16601, max16602 };
-./q54sj108a2.c:enum chips {
-./bpa-rs600.c:enum chips { bpa_rs600, bpd_rs600 };
-./adm1275.c:enum chips { adm1075, adm1272, adm1273, adm1275, adm1276,
-adm1278, adm1281, adm1293, adm1294 };
-./max20730.c:enum chips {
-./mp2856.c:enum chips { mp2856, mp2857 };
-./tps53679.c:enum chips {
-./ltc2978.c:enum chips {
-./max34440.c:enum chips {
-./pim4328.c:enum chips { pim4006, pim4328, pim4820 };
-./fsp-3y.c:enum chips {
-./lm25066.c:enum chips { lm25056, lm25066, lm5064, lm5066, lm5066i };
-
-> > +
-> >  static int mpq8785_identify(struct i2c_client *client,
-> >                           struct pmbus_driver_info *info)
-> >  {
-> > @@ -53,26 +55,46 @@ static struct pmbus_driver_info mpq8785_info =3D {
-> >               PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
-> >               PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
-> >               PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP,
-> > -     .identify =3D mpq8785_identify,
-> > -};
-> > -
-> > -static int mpq8785_probe(struct i2c_client *client)
-> > -{
-> > -     return pmbus_do_probe(client, &mpq8785_info);
-> >  };
-> >
-> >  static const struct i2c_device_id mpq8785_id[] =3D {
-> > -     { "mpq8785" },
-> > +     { "mpq8785", mpq8785 },
-> >       { },
-> >  };
-> >  MODULE_DEVICE_TABLE(i2c, mpq8785_id);
-> >
-> >  static const struct of_device_id __maybe_unused mpq8785_of_match[] =3D=
- {
-> > -     { .compatible =3D "mps,mpq8785" },
-> > +     { .compatible =3D "mps,mpq8785", .data =3D (void *)mpq8785 },
-> >       {}
-> >  };
-> >  MODULE_DEVICE_TABLE(of, mpq8785_of_match);
-> >
-> > +static int mpq8785_probe(struct i2c_client *client)
-> > +{
-> > +     struct device *dev =3D &client->dev;
-> > +     struct pmbus_driver_info *info;
-> > +     enum chips chip_id;
-> > +
-> > +     info =3D devm_kmemdup(dev, &mpq8785_info, sizeof(*info), GFP_KERN=
-EL);
-> > +     if (!info)
-> > +             return -ENOMEM;
-> > +
-> > +     if (dev->of_node)
-> > +             chip_id =3D (uintptr_t)of_device_get_match_data(dev);
->
-> (kernel_ulong_t) instead
->
-> > +     else
-> > +             chip_id =3D i2c_match_id(mpq8785_id, client)->driver_data=
-;
->
-> Do not open-code i2c_get_match_data().
->
->
-> Best regards,
-> Krzysztof
-
+Not to discuss this particular patch or language interop in general, but
+I am curious why you think that null terminated strings are more robust
+than pointer + length strings? From the paragraph below, it seems you
+also believe that pointer + length is worse for security. Why is that?
 
 
 Best regards,
-Pawe=C5=82 Dembicki
+Andreas Hindborg
+
+
+>
+> Rust is supposed to be about increased security, right? How does extra, 
+> nonsensical complexity for simple concepts such as strings achieve 
+> that? If the Rust runtime wants to hook into debug facilities of the 
+> Linux kernel then I have bad news: almost all strings used by kernel 
+> debugging facilities are NUL-terminated.
+>
+> So I really don't like this patch. Is there no other way to do this?
+>
+> Thanks,
+>
+> 	Ingo
+
