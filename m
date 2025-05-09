@@ -1,73 +1,70 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2079.outbound.protection.outlook.com [40.107.244.79])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2089.outbound.protection.outlook.com [40.107.236.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F6C220F56;
-	Fri,  9 May 2025 20:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B643C25E83D
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 20:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.89
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746820870; cv=fail; b=Xhuumfv1SvrEJnkzph7MkpdNOWqE0VmAR0T04XzUE7aMJhAruGQ53cqrGF1i5xLqj1lSsiLKeR+KEfm27Ap6WjhsnqK+NKoFnjFMM7WbOnGkSqgp5g+4cFUqhbMM0o1HSvV/nVGPo0spZ5hDgoLWn7EXnTSAhMz22b6uJlbtMoo=
+	t=1746820879; cv=fail; b=ZzSjCbWyOZVo1MkyBMRmMRkD8sha1M8zl+fsqLwV+ESTu+wCfNpc5eaZIdEHdEeH5LETFyKaiRYUUr2/ghWumTkW5PUMCKet9j1OwlwZHqY1BkIuslgEGTxw6K7/4NjRENCAwqiucZKUvQVhctdO0NxsO6y4wcpmfebHeWPTy14=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746820870; c=relaxed/simple;
-	bh=3mHaTdBxShDD/4guUAJPQDAse7+tk9xYfWZpvfOeyvU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Ipp4+xTP6xNAMthKyRtOF4E4A1lmksa6FllievKTSLyTEaqDF684wtBHJtZw8LnKkJTNYtyQ4V4IFNdvb8qpbQFxWpuFyFGCjBmvDz7eYXmIkc6pN2HWWTY08rNEISTSIOOBh4NkZUNNj8hkckrYzgL9HP6TFIeyEKdPAfnldGs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=N8r1OxWC; arc=fail smtp.client-ip=40.107.244.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1746820879; c=relaxed/simple;
+	bh=1Gha8a+0uCJAXMsZP4RZ5A1onAPXFLIKnb13o/LRyHQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Yyi3yfWspqOHBl+4ixh5B2sBu2/yZ1tBPmeimd8ub60lnvIb5N2Lop1/zrPzqEeg62fT1GPHSV6l9yuLWP0FWudpGOuq2uaJG0mtGm1s1VRTZFkTElPPx7+04E5CcdLgG57m6AhPtyooNEw/ZHyT4ib7XHvXj9HuE6DgRuizYpg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rzj8BKVs; arc=fail smtp.client-ip=40.107.236.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="N8r1OxWC"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rzj8BKVs"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ezQ86644NnyukpLsRmOhP+g3xGs4I4+Z0nX5l68L+C5tPQrse73l3MUohCmcJopVfHp73KooqyUzGCuAkcgW57l7gyk52SC/a7+Kn87xDvfhwu0jTrfpq6c6CHqvKyHZXGBTllKMyPZtyyVRCXzVjsKRmTdPTxzArFcxrvT5vjAGj11clbAlnIW5MjTA42tHReJHfRUBg9VWKD8OcqQihzSyYAyAsyEOS440JnkTXr5O36IuxX/b+KpdufHmnYEQ5l3Z/kbVZ+qCxQ4jxeVnJVlD4MVsyYx5Iie73dHWuyejGvse1P2k4LiMK/d2ZEiHx8ruV+12s9iEXEKpxrOpnQ==
+ b=r8N0awc/OKero91OwrVUEaGFksKDWzo2aEDgTErKH2JnYd0drV1th/kJfJS7pQy1UiO/OEmUfDx+j8EMZlBzpwSdwPa+okl3arYrI+IlZYRRdpyVIdYbxdvTVjzWOK4Lt/0GUL2sqbt/8hCRqePUaMdPfJI33cq7fFGsl1UWcn/6a7tavDJdxIPsF9lknSzj9paqGCxgSj/2rebo1zUMWWersZKOMCwT1WxIvleuPEQN7r86TSJAkbW79SY1sekrNJ06KfzvWOqacsUFKQcrfoE4du1b/U8oTejf6sd5axGw0KBpen26fgF7IOLZhP8p67R5uYZNsh/59yDaEPLfkw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Plid8pfhMVaHlt2Ama5R0dRUJ9TQxRAVF1bpmOrEGfc=;
- b=uX4jrrPBHSLxS/l7ODRh3tdXhjhBv2BjpXW/AgtxT6G65i1ozj1NisLSsR2+ws1W6rIorFAeb/xVdbTe/OWWlDXpN81Wi9Th+i91tJv1eyudpqEVpLCc5SnPOCBJe/waMLWkWDA5Xu+EhN0OTzSmoX/ntCKou5EGC8BrSfN8a1VfYt8keV/Y9s7XqGDfy8saLg8KzJI8bQlds4Lm7OOqwY7UDuZQFueJnkTIg31mmmVYkmTRANqwcSg7/ycxQ9g12eSGUN+3N20T2MMom70uu3MtobEXuHoqPWQXN+DYRcsEnGY3wUCaWjITko7r47j1R2NVE5Xv/RYU4Iab4uN3XA==
+ bh=iiDlrJSByHeaurDWTxzOpZz0GTExLOnLA//XKs8Yd/0=;
+ b=hKydlEG9ROq5govw33VBRrOe4Bgy4tJGp6owPrXC9WpZbhSUHEloNwectOnV9wZBlBBfOm43jgjs6LHileZ2qqnMI0pPsXcUWR4Iw7btiS0FbxIfm7AvITJFH/E2V5JoFQRsUVmUmoDI8qE6AKcaWdbXU6tV83bbxIZ8K5Tts3So7gzLDkh6vgtXnRV6YUbt31/6zoGCP05FdPt5ZFG7q0cOgmGbNnzr8V07Vr+Z245z+zJWrqYZoPuHVbyNiCS8sDVD6xriKFlBq259+cCc/g3HmXrIc9kcJx6S1AJOcZ0rG2bG70CYvXxEHqNa1NMsTfuuHE2uw6zdbSEbSPTzTg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Plid8pfhMVaHlt2Ama5R0dRUJ9TQxRAVF1bpmOrEGfc=;
- b=N8r1OxWC5gZMZyHwf3cm5JfUmrwhJlOZDON76X9JU35sTRCMtXyQB9cwPord7XyX5YWdzKxHIZMYaeBqe9WROw3Qs0vZeFxl9hnV+ieLgwxrptD62wrIjvZcW3VE3RuzgFwKBGsgnOlYwfZDGz/eTUsP0EACn9Qobn4nf55MYto=
+ bh=iiDlrJSByHeaurDWTxzOpZz0GTExLOnLA//XKs8Yd/0=;
+ b=rzj8BKVs7be8t/RaXr47/JiC+zZMMPaJ9N27yoMBCsUv6v3Xw66W3M85HG9Dvl+4TeHDZZ4bFbUSfjIXrCqT28aC2o3/tmpSdPaebNIFPwnyzAdn7+Qi8KzfBfDL97vdq9HNVeqvu2Wdfva+KcbcHGH/8RoL19EDhBNA6cXNzmocRRXIcBlrW3fT/dUU9ruZA5Eqh3lm3UvK95WZU0X7jJTBhd282n4rP7fj0D1mqeZ/H9LP9iAOcCfDWnphgr0senVmlpz4e46oejoO+luuzQuclv8zUnwg3cgg05M0rW9042FhkL2tHQ8cVwNJc1pVvwdrMOEmbdv+WwqcSgS0kA==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SN7PR12MB7178.namprd12.prod.outlook.com (2603:10b6:806:2a6::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Fri, 9 May
- 2025 20:01:03 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.8722.020; Fri, 9 May 2025
- 20:01:03 +0000
-Message-ID: <6d8e91d9-8ae2-43e3-bf6f-4ccb063ef115@amd.com>
-Date: Fri, 9 May 2025 15:00:59 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 2/5] platform/x86: firmware_attributes_class: Add a
- high level API
-To: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- Joshua Grisham <josh@joshuagrisham.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>
-Cc: Antheas Kapenekakis <lkml@antheas.dev>,
- "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Prasanth Ksr <prasanth.ksr@dell.com>, Jorge Lopez <jorge.lopez2@hp.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Dell.Client.Kernel@dell.com
-References: <20250509-fw-attrs-api-v1-0-258afed65bfa@gmail.com>
- <20250509-fw-attrs-api-v1-2-258afed65bfa@gmail.com>
- <7cbfac66-e7fc-4035-b8ff-b40fe9592085@amd.com>
- <D9RW7Y6IU7Y0.GOM8TXTY9QPA@gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <D9RW7Y6IU7Y0.GOM8TXTY9QPA@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1PR02CA0015.namprd02.prod.outlook.com
- (2603:10b6:806:2cf::19) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ DM4PR12MB5865.namprd12.prod.outlook.com (2603:10b6:8:64::21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.24; Fri, 9 May 2025 20:01:14 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8722.020; Fri, 9 May 2025
+ 20:01:14 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: David Hildenbrand <david@redhat.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Richard Chang <richardycc@google.com>,
+	linux-kernel@vger.kernel.org,
+	Zi Yan <ziy@nvidia.com>
+Subject: [PATCH v4 0/4] Make MIGRATE_ISOLATE a standalone bit
+Date: Fri,  9 May 2025 16:01:07 -0400
+Message-ID: <20250509200111.3372279-1-ziy@nvidia.com>
+X-Mailer: git-send-email 2.47.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MN0PR03CA0015.namprd03.prod.outlook.com
+ (2603:10b6:208:52f::17) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,327 +72,190 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SN7PR12MB7178:EE_
-X-MS-Office365-Filtering-Correlation-Id: 82443536-f46b-4c6b-85b4-08dd8f3439f7
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|DM4PR12MB5865:EE_
+X-MS-Office365-Filtering-Correlation-Id: 880285b1-3d48-4e58-8e00-08dd8f344065
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YXI1bytweU1QcUdNOTh4S0FScmpyenNVbjhkTlduV3drNlNlYVBVc2JzQVJK?=
- =?utf-8?B?NnpJenVqT0VXYkpnUjdXZEFoRjIxems3MHZyNzI0N3RTMWVkUDVoclRsYU13?=
- =?utf-8?B?T0swOXpPNGFPdzA4UUJTZ3lXeXRwZm1Gb2lVdWNuU29mU0hlZGo0dStGZFBz?=
- =?utf-8?B?ZTFWNkxPK0gzdHRlelVraE8rSnoveFh3RDdOMmQwcGFzaXlrNXB1UUdxTStZ?=
- =?utf-8?B?U0M0SjhMbnZFMStpUnBweTBTUG9IUDEvaXJDSTlFNFMwZzE3WUtYUnZFRG15?=
- =?utf-8?B?a3pOemx0SmZ2WUNEMm1NRlZFZmpjZ05UNDVSQzR6NENrcDd0RHZHcjd3OFJX?=
- =?utf-8?B?bTZtZ2pqNDRqTE9xbWRhUGxOVFgzWWVUQjhoODZIa3VvTE93c3JDMVNaYzZN?=
- =?utf-8?B?ZEk4WmczdmdqWXZTVzB6bmZYZ0sreFFmVVVlUjBpVHB6cHhTS0dWTXlIWDUz?=
- =?utf-8?B?S01SOWl4N3dLL0ozcUVDbVN3bkMxVjhJeWZMRXNTTjFxOTVESHlxS0NKZ2ZT?=
- =?utf-8?B?NzVvSXVTYjBrSkN5VW5id0czcXF2d0swMm5FRVJ2NEJmQnlZeWE1VmFhZTM2?=
- =?utf-8?B?N3Rlc1hzS3RHWkF0WTVsUHJvWnVQczNWM3k2RDZJTENVaW1tN3VVOUdhK1lK?=
- =?utf-8?B?RzNFVWNybzRQZFpOVytPRWlrTys0QU9RNUc5dFp1Q1FJTloxY3NkYzlQaDQ1?=
- =?utf-8?B?SmNSRVErZHZEOWYySkVLa1BLQ0lWdW5WVWJnNTdXWXYzUnh0aXRmcm90Ymxz?=
- =?utf-8?B?bHluSDUwMXY2czBhMmx1ZVNlYS95bWNBb3BqL0MzeElMbHBhb1IxNVg4ZkRl?=
- =?utf-8?B?bDhobWlzTXhacDdDM0NoSG1aZHdLVWZoMkM5L1d5MVBpSFdMVG83NW55Zi9D?=
- =?utf-8?B?dVExTUhybktrc3R3Y1huUVJSMW9QRmNkZlNab0RUL2xBZDNzRUNBMXhIKzRI?=
- =?utf-8?B?SC9iYkVUemVML1JxNzFpK0RQYW8yWHJyZTRvSEQzaGVmdXlyb0FFU2RXMEtv?=
- =?utf-8?B?K2FSbnlkUWdnQW13SGNoUWVWMXZENUUxaHNKTEgvV1E3cFNqaFNKTlBnWnp5?=
- =?utf-8?B?WEJyVng5ajBvNGR4Rmx2elJVVEpkcnEwWmJTbENiMmo3NGNpN2xFQnJMZkJM?=
- =?utf-8?B?Mi9XS3cyQS9XWExNYm5PN2g1WTNjUWZ4TnJGMW5EcTM0TlNrbzhrRzhJNisx?=
- =?utf-8?B?V0tlRzBvam9ReGVwTkFvK2dIcGhHUkFIYjBhVVRiMXp4bkI4T0tGeHJJZWVM?=
- =?utf-8?B?clhxWVRQVlR6aTlnLy82WEZ3Wk5zcEhHWExLeGlpL1ZXamtzaWFHQk9xSkxC?=
- =?utf-8?B?VXQvQWZZV250U2lNczU4eFRZNm1UUktKbWRnT2p3aVV4ZTMxRnpFTVBtTStl?=
- =?utf-8?B?V0ZydTlRNDA5K1Q0dUI1djFTRE1EKzRSaUdOWFp2ei9nem1yZ0tDSlVhZm8z?=
- =?utf-8?B?YTlFVk14cmtIY0JlUFU2R3FuUWpFNXN4Z0czOWx4ODdRQXlsRUJZSFFrUWhi?=
- =?utf-8?B?UHFzZXc4QTNabngyTUYzSjZIWGtieCtCd0s0cW05clJSdHliM295R1lrT0xH?=
- =?utf-8?B?R1NaRVYxYllNQ09xQ04rYmlXRlhRNWFQS1J1cmxndFFlcFVMSnkwQk5CYmhV?=
- =?utf-8?B?MmVIc0RIdFRQd0N3aHpNL2p6STRucWVDNS9EQlBJaTltbmRjL3lDM2JOeEZJ?=
- =?utf-8?B?dnNaUC81VTVGWFJyNmxkZ0Z2RlpYU0Vjc1N3MFc5R0xlajQrS3E0cnZMbWJD?=
- =?utf-8?B?Y2hJU0xZTU53SDF0dkRPOVhRWXM5bldNb2NWWUZlRGppRDhVOHVCdUZzZ0gv?=
- =?utf-8?B?R3lvS21RVkZBVFFkYTBrNmtUMTNjY0NUVG1Ram14VjFBSXBzeU9wVktYZ0FE?=
- =?utf-8?B?ZU5OaHQzVGNLbzFTMWFxS0ltU0pSN05GK2x0dkRBaWtKdTNOR1Z6aXFXR3pZ?=
- =?utf-8?Q?kyYdBn45+/I=3D?=
+	=?us-ascii?Q?lszyGwzdIeaM+ZpXUh/aV0bzkiON9fdA8Ro8diwtZtVWnk/ajeqUDt4ygynX?=
+ =?us-ascii?Q?yo56rX90KEaCijPezl2PdHmNX4C0Ljie4nccmIP5hT3P2GQB2a+YoD81IdNB?=
+ =?us-ascii?Q?uYDEV1hXGHdpMNmnRr+bG9pTLl9fucMulUh20h5tuC9NxtMhEENDNTr763X4?=
+ =?us-ascii?Q?PbbGdrYbf6UPWkTkYmZBAlFo+kuZW1D/SjUseb6ZugjxHAQcRm4ybNzHDCO0?=
+ =?us-ascii?Q?naTLPPXm4HyYkr3e5Tx8fcfflkPecpE9DBKhTvzbyzS6L4flSagkbADHBcYk?=
+ =?us-ascii?Q?ka5P8KvseuEWCLIdSSFODFp4wG1GOnPx8M0Tfgz+OPF8z8xuIJVUwnk/8OAX?=
+ =?us-ascii?Q?SPGgll3mfCOJZqofrrCO3EXnjxB62vxHDLQO9hSxbe/rr+4Tv4zg7Ki8FZum?=
+ =?us-ascii?Q?sp+H5swkWR6cZZYIFtlf0m/PE+tO1fq6jWyDMRHMaAFz+GhoMIP2R1hQSU4e?=
+ =?us-ascii?Q?TavCIr+3UhzrRD5XrpLGWXZt4hsIaXDAnpAiJiWs02dIuDkiReZYPBPn3b8G?=
+ =?us-ascii?Q?YfIxP1TWliwXUawFP9Ig3crBYgdb3EUNhQ/C6DvBR2ChgnVdlFU/JG8oae0S?=
+ =?us-ascii?Q?qq6aTEoZkslnr9LdXWufS/328viD5b4Dx9n9ITierIdAkxHX8x6Nnipj/8Ib?=
+ =?us-ascii?Q?O03Dj3m4yghoz5m0G9VeAFiexj96Pak0xFbfuXehuoLBUKd7OuvZtDBuy7ew?=
+ =?us-ascii?Q?xKOrQrCOBJOBfyuP7YJtAZpmCSMcHmu2u8x5/GD/uMz6A9KGXwzr8mS/SpwT?=
+ =?us-ascii?Q?iHBrw1CR2K9320LIf8WRigyxTbOkZgB48nR9fwaUXI8bo8kZcy588i4kUYCm?=
+ =?us-ascii?Q?KPlENDfbVeTsaQp5KClCEUQZMXXXXk6lbN/qPLWszm/l1JB7rwv0Z80EU8GP?=
+ =?us-ascii?Q?GUiyaNHmrw3fEVoJ1iDqhThU5BzEDjyQ4US4RvcnW4yS+I1DjsSGFZCGJfEG?=
+ =?us-ascii?Q?f6GXRpclEhx/m6y1vfCB3oQGRbk3cXGhklM/4b4sM1wWfcJ6BxmaQcRI6l7e?=
+ =?us-ascii?Q?y7wxPuEsEmh3ktx6W8f0dt3gdrpQZovFJjKRLSxCGkUfAYFQOjbYAKFOoe6k?=
+ =?us-ascii?Q?YevfXRYQxAcbZV6LIBtc4nfCxQ21jIxgxXVa3u2uahC/qHSpapkGftu/fPHS?=
+ =?us-ascii?Q?xqfxZbm66/IEycw2PekfHveV6GwAGOQkOA60/N2NsIZlzCqQyI+jQGfDJ3Vy?=
+ =?us-ascii?Q?xiZNvOwmzJiMDGgCe0yK3zpK1uf1fDwXRL3WHCdrMBAesCe2UUmcdQ9XE1NT?=
+ =?us-ascii?Q?DzAUOH4muFRjEzg52wxtabPgq8CvBk9gh/1uezGoNliLZGQx/kQPGurJU5Ho?=
+ =?us-ascii?Q?djTcRxyKSgypdlw6gQqkc7O3A8fcPP47TOeyUl8zUxU7qYMbzuxHDfkmd8aQ?=
+ =?us-ascii?Q?udOumXtnWZbyHu8qdc1a/gMDs5w1CYnvsnGyd0yN+a0C882iBOyR1loy4H8/?=
+ =?us-ascii?Q?Q9UWkfpAyao=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?K2prNUNmTGd3QVRNTDhjc1RLN0ozMVgvZ3pYOWxya2hlZHpsZnJVN0VuS05U?=
- =?utf-8?B?T21wSCtzRTBpNU5NWWZ2NUI5YjFlYzdLSytIY2E1MUFQbEVCUFZGUzRZZy9W?=
- =?utf-8?B?Q1gvRWFmQWdRRDROcERRS0FBNVJyUUdFYVBySXJaYjEreWEzWndjZGx2VFhH?=
- =?utf-8?B?NlREcnQxK2p6OEFNbWIxay85d2VqeGhqWFB4ekU4ejJFc09GZlZtYjBzSzIx?=
- =?utf-8?B?SmhSYnZLbjIza2UwcHNkM2grUm1OR0NHRnU1WHJFSVFNYXR3UzhiWEM1cnJL?=
- =?utf-8?B?NkdaMHh4U3Y4VTBpZjlUaEM2K2tGM0MrWCs4bFlGOVpwSGptKzh2UkhINDQy?=
- =?utf-8?B?SXdmMWxZZjdQamNxTmE2ZEtiTjZPMXMzbVl5YUg3MldlbmNrdkRyUUM5V2Rv?=
- =?utf-8?B?SkVLdG5WUTFJQ2pYdHBqbG8wazBPeEF2N3FVQ0hZbDZrRm9CZkJlZkRwdEdq?=
- =?utf-8?B?eUF4WE8yTVcwUjEwMi9qRURZQjBWa1M1eWJPOFVuaXc1NEp4STJIdjJqanFG?=
- =?utf-8?B?OFBZUnlpT2g1SGIyWHJzZ2R0N3RDbHNKSENwbFFGRUxFUTVHS28zaGxDODl2?=
- =?utf-8?B?ZTEyUGdNUktBT0lrTHZUcFdwdEF0SHdHai94Q1hkWlJ6cS9RK2NYVzhla3p4?=
- =?utf-8?B?RDJITXdZUVZ1WjBxL2ZiQ3V1Q3RkZmMrK3M4NStQR0RKdjh6alRqQU5MRnYy?=
- =?utf-8?B?MTcvc1FkcEtnL1dFQTdkV1RpR0Q5SzQyRlBKSzJxbWdZWFhWa0l5ZXByUXRj?=
- =?utf-8?B?bWhuM3Q4Rmc3d0NRNGdHaXZsdGo1RkNjcUM4RVNRWUQrN0VMSWhhd0NFK2tm?=
- =?utf-8?B?OUNrWXdtaGQvM3YzalpwdUJRNDNUZFJzSHZQTDROT0xOczBLS2JLaHdFMWxT?=
- =?utf-8?B?UFpuY1Z3SEg3UVZCTnhHUkhQVDdwQVpHRmJpU09UZ1YvWkhLS3ovZFY5byt0?=
- =?utf-8?B?anhQNWo1dmsza0IrU3o1WFJ3d3NndHVGTFg0UVN1dStoQUFEVUtpQzBESXdR?=
- =?utf-8?B?cWVVSDlDY0RJeFhrbTBkU0YzOUV5SWtVMG9CQkF5Zy85QXU5QURlUG1iL0pG?=
- =?utf-8?B?Y21kREpXc2hKLzBlWFdpR3ErVmhiQzNhWitRS0pieXc5RVpNc1hVK3N1YmFG?=
- =?utf-8?B?T2JpTG5JL2REeHo4V21FcGZCSzhFT3VDV3pnYUl1TGpQMjNtQktJcXhKbStU?=
- =?utf-8?B?ZmlCWmk4bHVTNUpwSlpUR2tsZGZuU3cxdm1LVi9tMnowRmhHajIxeDZEV2hy?=
- =?utf-8?B?U2ZwVjZ4UXlZV0l3aUpZQlJoeDI4OERZeGRqUUZycHB6UHk4aFhqa1NIc2hs?=
- =?utf-8?B?SU9OdmN0cmQ5S3FOdGZEdGJlTjFCeGl3UFg2Ylg0cnlvUDRLcmRweXZjSE1l?=
- =?utf-8?B?Q3IrN2MwNlpzVmR2YzV3cVd0ampBbXJVSkcyUENldFVhNkxsMzU4bWZBQXRH?=
- =?utf-8?B?Zm1Bc0F4Z0IyREFUYlNIcDNCNDV1NEFUcUZKbFFPelRUd3NVVzZUYkdpV1Fm?=
- =?utf-8?B?QmxZMk5kMU9GekZ5NDVFRlI1QXVmNVRHTm5wMnB6MUN1U2ZZVVc4SGgvMnNL?=
- =?utf-8?B?enFTRE81UlhXTGVoZlQ0Rm85OG9RN2JHS25Oc2ozc3BmYXJHSmdmdGZndnhu?=
- =?utf-8?B?U1RpbEZNelVXS1VCck1qMVZkMGZHNlZqVFBtTWJjTVhueXdiKzNLai9IbEhD?=
- =?utf-8?B?TlpkT2xPYi8ybnVWUmtPVlpScm83Q2lFdmRhR24xYUlDUDYvR2hxdHNOVU1X?=
- =?utf-8?B?WFlEeWhnTjd3NHJGSmkwOTNNR0pWaHFESUVETkRYNUpXZ2hWUE9NamV0UDhk?=
- =?utf-8?B?SEVSMUJZUFhaNGc5WE9PRGwzT0FJbGt2NjFBNUhuVzgxU09TNEpaaGJTc0FY?=
- =?utf-8?B?cVRsUWVQcUpRUUxoQUwzLzA2RkxjZTVub1BmZFBLZXE4RU5CMFhmdENKajB5?=
- =?utf-8?B?RjhoWXZ0M01Qd1cxZUhQdllJcUVaQVI5UkQ2cWovakVVeS9lQkt4V004d3g3?=
- =?utf-8?B?YVdTVGtCTXQzSHVBVDhWaGZ4cGpzYXlqeUhINUw1Mk5uOXljSGNzMEFSeEs2?=
- =?utf-8?B?bTVoZTZYQlBPT1VUWHFPRFkreUN5bjRqZkZEZ0xETmtPcUovRHhOMjFoWnJB?=
- =?utf-8?Q?iZ8o7Am2pBCjI8cy4WhcYkhqn?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 82443536-f46b-4c6b-85b4-08dd8f3439f7
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+	=?us-ascii?Q?6+F7hcJFU7PsMEfvBcj3e5tjYlmtHrgcHYISFcG/L4Ki+cs4+oJTeV4ebuBS?=
+ =?us-ascii?Q?MF30XmPdYs/gnx71KKi7nxhrI17yjvgaEqsuQ/ZuXlIOt2ETfhNRCJtWeKhz?=
+ =?us-ascii?Q?P1Y0cez2t4PbK+6B0oLH9UkxEGQOBMuDnirW7NaezJ1YMZk1ZQB3cJIDhywl?=
+ =?us-ascii?Q?kGS40/Igho2YgGK2H17YRlx5fvJbuyBDAS9wo7DAj08dGHzvffjjUPVxp7i0?=
+ =?us-ascii?Q?xZmJFVQuKA84xQymWes4EJCKTXXOI69RYE7F/2ESk5rrImRklbrTSPwa+eX+?=
+ =?us-ascii?Q?FsCVV/wJ8f9w7XaqdWrTfa1lpBK6FCmg+tXg9p8TvI2NGvb9zmHqSdN/GxcI?=
+ =?us-ascii?Q?5RrJuqCHJczm42eEnRyN3gGHWXutsJl5we/TQ4OOi8ZtT6tIX5ZCEvrAAJ4E?=
+ =?us-ascii?Q?kslShwzFrE4oeuZ2dHjLmVrsMSbVzxk1kb36EJDQYM20WlPvY26IXXTdmMGm?=
+ =?us-ascii?Q?RdX6BqvronWPbAv7GfWdkLDTAhWyZetC8N7DordEWJg+c5Yhi3Utbjni+5Hj?=
+ =?us-ascii?Q?+PwFLN+rm8bsvWm9mjuuPOuJsHl2vkCvtv42Z4WuJhfZHDLF3/qyrxwtYvad?=
+ =?us-ascii?Q?AYHZudc7Yi7jFuOdh53lfp+X403dz+cWNS77DxE1avG4es0h3DNPxgR7Uff9?=
+ =?us-ascii?Q?vwC/USAYzjtGr03FA+2C5p3+DeCEFgHZAkUjArvlxqRv96MS2rIx6tujnQeO?=
+ =?us-ascii?Q?DbJ0PiTA1Afd82Z7Qn1RnZfsaKG6qOsNswUh7LTgActi2ZqX1OYJt/3NPSyY?=
+ =?us-ascii?Q?l23tEwI78N3JlthRtYB0RFLSDFMCrzc09Gm17qTam6zEfaNhVmYOEoZPN7dl?=
+ =?us-ascii?Q?JjkB1C+cwqfVa8tW8mJwt01t3OoP7pkHtyIdg7xINdW3xm6tkYHofiabZXXQ?=
+ =?us-ascii?Q?MUBjDSqdNgG9LQAgrHvy6n5ePp29jTqUKeRhNfloYf7sQyLdBlIAZxqiaLTX?=
+ =?us-ascii?Q?6J/qZeTJVDV0gIpxqT893FKlQ10ezj1mMQ+YBLl9MkItWPkNWmp7MnJmrY82?=
+ =?us-ascii?Q?4uabhjjVAcOp35/imMDgoExhYHKLDMBF2imjycPpnVaCIrbENv+vYQijYdzP?=
+ =?us-ascii?Q?CkLLCJ0CC5d1vJJD4ZA5ieI+viEQUS8h+6KGq1Mz9o2c0SSKy4GvQtMV1U1m?=
+ =?us-ascii?Q?x+9wv5HH9k1e670rkyXa+gybay2rVafAOtzK0WgoPYH9Kd1WAoTdUHHinXxX?=
+ =?us-ascii?Q?NGF5ZUAf4Yo7vJLaC0bK0/L6B+bPK23vldQMroK1r01FNjygyVpmprfGGv3u?=
+ =?us-ascii?Q?ovtPwpaFaobpzGPz8KNYhvyJOocceI6p9uPjXSfuaVQBW/r/m7Ehi0rkulXP?=
+ =?us-ascii?Q?V4gg/ildgB2xORLAZC5kBMv1l2YukVm8wAnekmbODf8OQrLFVG+owO3AoJoA?=
+ =?us-ascii?Q?hC5J+ZZ08DvP+VGhpf4g4ikZe7tHufZllswZggxYVuMOqAYYX1L3InOdUHRx?=
+ =?us-ascii?Q?MSxGsw53CPUhnTOAFqJalhc/ebPoD/ZcFKCnCKTA2mALcE5fvnuLegZtt1Zn?=
+ =?us-ascii?Q?PlMBb803fsqs4NGj8qKUkBV40Z19Wtuc6258ulp0TyNWlxndfZQpoCp9Bojs?=
+ =?us-ascii?Q?5rF4xevAYYZUFs4nH9Jvqc4bzt4AYw8VMgamrhKH?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 880285b1-3d48-4e58-8e00-08dd8f344065
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 20:01:03.2542
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 20:01:13.9219
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gBlV+LQbkV7LzHBnRrNrJRaj369wBfRn6EG18g2sFcfHXiqdJ/V8nNdXjupVXmiMciO771E/39AyVedl6dIqEg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7178
+X-MS-Exchange-CrossTenant-UserPrincipalName: OvvGmpdSEH/gbI637u+sClZYC4YWjqqksnoh+mczNu6Xnek0BngEYavT2BVG8rTb
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5865
 
-On 5/9/2025 2:56 PM, Kurt Borja wrote:
-> Hi Mario,
-> 
-> On Fri May 9, 2025 at 12:58 PM -03, Mario Limonciello wrote:
->> On 5/9/2025 2:48 AM, Kurt Borja wrote:
->>> Add an attribute configuration mechanism through the newly introduced
->>> `struct fwat_dev_config`, which makes use of other documented structs
->>> and callbacks.
->>>
->>> This API aims to be simple, yet flexible. In order to accomplish this,
->>> the following features were taken into account:
->>>
->>> * Ability to statically define attributes
->>> * Custom read/write callbacks for each attribute type
->>> * Ability to map attributes to numbers in order to differentiate them in
->>>     callbacks (`aux` number)
->>> * Ability to reuse read/write callbacks in different attributes
->>> * Ability to reuse property selection in different attributes
->>> * Optional visibility callback for dynamic attribute visibility
->>>
->>> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->>> ---
->>>    drivers/platform/x86/firmware_attributes_class.c | 249 ++++++++++++++++++++++-
->>>    drivers/platform/x86/firmware_attributes_class.h | 228 +++++++++++++++++++++
->>>    2 files changed, 474 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/platform/x86/firmware_attributes_class.c b/drivers/platform/x86/firmware_attributes_class.c
->>> index 58ab1495ba3bd449cfe17de2827a57a0c5937788..7cfb0f49f235728c7450a82a7e9d00b8963d3dea 100644
->>> --- a/drivers/platform/x86/firmware_attributes_class.c
->>> +++ b/drivers/platform/x86/firmware_attributes_class.c
->>> @@ -7,14 +7,233 @@
->>>    #include <linux/kobject.h>
->>>    #include <linux/module.h>
->>>    #include <linux/slab.h>
->>> +#include <linux/sysfs.h>
->>>    #include <linux/types.h>
->>>    #include "firmware_attributes_class.h"
->>>    
->>> +#define to_fwat_attribute_ext(_a) container_of_const(_a, struct fwat_attribute_ext, attr)
->>> +
->>> +struct fwat_attribute_ext {
->>> +	struct fwat_attribute attr;
->>> +	enum fwat_property prop;
->>> +	const struct fwat_attr_config *config;
->>> +};
->>> +
->>>    const struct class firmware_attributes_class = {
->>>    	.name = "firmware-attributes",
->>>    };
->>>    EXPORT_SYMBOL_GPL(firmware_attributes_class);
->>>    
->>> +static const char * const fwat_type_labels[] = {
->>> +	[fwat_type_integer]		= "integer",
->>> +	[fwat_type_string]		= "string",
->>> +	[fwat_type_enumeration]		= "enumeration",
->>> +};
->>> +
->>> +static const char * const fwat_prop_labels[] = {
->>> +	[FWAT_PROP_DISPLAY_NAME]		= "display_name",
->>> +	[FWAT_PROP_LANGUAGE_CODE]		= "display_name_language_code",
->>> +	[FWAT_PROP_DEFAULT]			= "default",
->>> +
->>> +	[FWAT_INT_PROP_MIN]			= "min_value",
->>> +	[FWAT_INT_PROP_MAX]			= "max_value",
->>> +	[FWAT_INT_PROP_INCREMENT]		= "scalar_increment",
->>> +
->>> +	[FWAT_STR_PROP_MIN]			= "min_length",
->>> +	[FWAT_STR_PROP_MAX]			= "max_length",
->>> +
->>> +	[FWAT_ENUM_PROP_POSSIBLE_VALUES]	= "possible_values",
->>> +};
->>> +
->>> +static ssize_t
->>> +fwat_type_show(struct device *dev, const struct fwat_attribute *attr, char *buf)
->>> +{
->>> +	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
->>> +	const struct fwat_attr_config *config = ext->config;
->>> +
->>> +	return sysfs_emit(buf, "%s\n", fwat_type_labels[config->type]);
->>> +}
->>> +
->>> +static ssize_t
->>> +fwat_property_show(struct device *dev, const struct fwat_attribute *attr, char *buf)
->>> +{
->>> +	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
->>> +	const struct fwat_attr_config *config = ext->config;
->>> +
->>> +	if (!config->ops->prop_read)
->>> +		return -EOPNOTSUPP;
->>> +
->>> +	return config->ops->prop_read(dev, config->aux, ext->prop, buf);
->>> +}
->>> +
->>> +static ssize_t
->>> +fwat_current_value_show(struct device *dev, const struct fwat_attribute *attr, char *buf)
->>> +{
->>> +	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
->>> +	const struct fwat_attr_config *config = ext->config;
->>> +	const char *str;
->>> +	long int_val;
->>> +	int ret;
->>> +
->>> +	switch (config->type) {
->>> +	case fwat_type_integer:
->>> +		ret = config->ops->integer_read(dev, config->aux, &int_val);
->>> +		if (ret)
->>> +			return ret;
->>> +
->>> +		return sysfs_emit(buf, "%ld\n", int_val);
->>> +	case fwat_type_string:
->>> +		ret = config->ops->string_read(dev, config->aux, &str);
->>> +		if (ret)
->>> +			return ret;
->>> +
->>> +		return sysfs_emit(buf, "%s\n", str);
->>> +	case fwat_type_enumeration:
->>> +		ret = config->ops->enumeration_read(dev, config->aux, &str);
->>> +		if (ret)
->>> +			return ret;
->>> +
->>> +		return sysfs_emit(buf, "%s\n", str);
->>> +	default:
->>> +		return -EOPNOTSUPP;
->>> +	}
->>> +}
->>> +
->>> +static ssize_t
->>> +fwat_current_value_store(struct device *dev, const struct fwat_attribute *attr,
->>> +			 const char *buf, size_t count)
->>> +{
->>> +	const struct fwat_attribute_ext *ext = to_fwat_attribute_ext(attr);
->>> +	const struct fwat_attr_config *config = ext->config;
->>> +	long int_val;
->>> +	int ret;
->>> +
->>> +	switch (config->type) {
->>> +	case fwat_type_integer:
->>> +		ret = kstrtol(buf, 0, &int_val);
->>> +		if (ret)
->>> +			return ret;
->>> +
->>> +		ret = config->ops->integer_write(dev, config->aux, int_val);
->>> +		break;
->>> +	case fwat_type_string:
->>> +		ret = config->ops->string_write(dev, config->aux, buf);
->>> +		break;
->>> +	case fwat_type_enumeration:
->>> +		ret = config->ops->enumeration_write(dev, config->aux, buf);
->>> +		break;
->>> +	default:
->>> +		return -EOPNOTSUPP;
->>> +	}
->>> +
->>> +	return ret ? ret : count;
->>> +}
->>> +
->>> +static struct attribute *
->>> +fwat_alloc_attr(struct device *dev, const struct fwat_attr_config *config,
->>> +		const char *attr_name, umode_t mode, enum fwat_property prop,
->>> +		ssize_t (*show)(struct device *dev, const struct fwat_attribute *attr,
->>> +				char *buf),
->>> +		ssize_t (*store)(struct device *dev, const struct fwat_attribute *attr,
->>> +				 const char *buf, size_t count))
->>> +{
->>> +	struct fwat_attribute_ext *fattr;
->>> +
->>> +	fattr = devm_kzalloc(dev, sizeof(*fattr), GFP_KERNEL);
->>> +	if (!fattr)
->>> +		return NULL;
->>> +
->>> +	fattr->attr.attr.name = attr_name;
->>> +	fattr->attr.attr.mode = mode;
->>> +	fattr->attr.show = show;
->>> +	fattr->attr.store = store;
->>> +	fattr->prop = prop;
->>> +	fattr->config = config;
->>> +	sysfs_attr_init(&fattr->attr.attr);
->>> +
->>> +	return &fattr->attr.attr;
->>> +}
->>> +
->>> +static struct attribute **
->>> +fwat_create_attrs(struct device *dev, const struct fwat_attr_config *config)
->>> +{
->>> +	struct attribute **attrs;
->>> +	enum fwat_property prop;
->>> +	unsigned int index = 0;
->>> +
->>> +	attrs = devm_kcalloc(dev, config->num_props + 3, sizeof(*attrs), GFP_KERNEL);
->>> +	if (!attrs)
->>> +		return NULL;
->>> +
->>> +	/*
->>> +	 * Create optional attributes
->>> +	 */
->> Just a nit here; this probably doesn't need to be a multiline comment.
->> a single line like this is fine:
->>
->> /* optional attributes */
->>
->>> +	for (; index < config->num_props; index++) {
->>> +		prop = config->props[index];
->>> +		attrs[index] = fwat_alloc_attr(dev, config, fwat_prop_labels[prop],
->>> +					       0444, prop, fwat_property_show, NULL);
->>> +	}
->>> +
->>> +	/*
->>> +	 * Create mandatory attributes
->>> +	 */
->>
->> Same as above
-> 
-> Ack for these two.
-> 
->>
->>> +	attrs[index++] = fwat_alloc_attr(dev, config, "type", 0444, 0, fwat_type_show, NULL);
->>> +	attrs[index++] = fwat_alloc_attr(dev, config, "current_value", 0644, 0,
->>
->> Is this permission right?  Some attributes could be considered more
->> sensitive can't they?
-> 
-> You are right. I assumed most drivers would want 0644 but think-lmi and
-> dell sysman use 0600.
-> 
-> I can add a mode_t mask to fwat_attr_config and use that for
-> current_value, while other properties would be masked by it, i.e.
-> `0444 & config->mode`
-> 
-> What do you think?
+Hi David and Oscar,
 
-Yeah; current_value is the only sensitive one.
+Can you take a look at Patch 2, which changes how online_pages() set
+online pageblock migratetypes? It used to first set all pageblocks to
+MIGRATE_ISOLATE, then let undo_isolate_page_range() move the pageblocks
+to MIGRATE_MOVABLE. After MIGRATE_ISOLATE becomes a standalone bit, all
+online pageblocks need to have a migratetype other than MIGRATE_ISOLATE.
+Let me know if there is any issue with my changes.
+
+Hi Johannes,
+
+Patch 2 now have set_pageblock_migratetype() not accepting
+MIGRATE_ISOLATE. I think it makes code better. Thank you for the great
+feedback.
+
+Hi all,
+
+This patchset moves MIGRATE_ISOLATE to a standalone bit to avoid
+being overwritten during pageblock isolation process. Currently,
+MIGRATE_ISOLATE is part of enum migratetype (in include/linux/mmzone.h),
+thus, setting a pageblock to MIGRATE_ISOLATE overwrites its original
+migratetype. This causes pageblock migratetype loss during
+alloc_contig_range() and memory offline, especially when the process
+fails due to a failed pageblock isolation and the code tries to undo the
+finished pageblock isolations.
+
+It is on top of mm-everything-2025-05-09-01-57 with v3 reverted.
+
+In terms of performance for changing pageblock types, no performance
+change is observed:
+
+1. I used perf to collect stats of offlining and onlining all memory of a
+40GB VM 10 times and see that get_pfnblock_flags_mask() and
+set_pfnblock_flags_mask() take about 0.12% and 0.02% of the whole process
+respectively with and without this patchset across 3 runs.
+
+2. I used perf to collect stats of dd from /dev/random to a 40GB tmpfs file
+and find get_pfnblock_flags_mask() takes about 0.05% of the process with and
+without this patchset across 3 runs.
+
+
+Changelog
+===
+From v3[2]:
+1. kept the original is_migrate_isolate_page()
+2. moved {get,set,clear}_pageblock_isolate() to mm/page_isolation.c
+3. used a single version for get_pageblock_migratetype() and
+   get_pfnblock_migratetype().
+4. replace get_pageblock_isolate() with
+   get_pageblock_migratetype() == MIGRATE_ISOLATE, a
+   get_pageblock_isolate() becomes private in mm/page_isolation.c
+5. made set_pageblock_migratetype() not accept MIGRATE_ISOLATE, so that
+   people need to use the dedicate {get,set,clear}_pageblock_isolate() APIs.
+6. changed online_page() from mm/memory_hotplug.c to first set pageblock
+   migratetype to MIGRATE_MOVABLE, then isolate pageblocks.
+7. added __maybe_unused to get_pageblock_isolate(), since it is only
+   used in VM_BUG_ON(), which could be not present when MM debug is off.
+   It is reported by kernel test robot.
+7. fixed test_pages_isolated() type issues reported by kernel test
+   robot.
+
+From v2[1]:
+1. Moved MIGRATETYPE_NO_ISO_MASK to Patch 2, where it is used.
+2. Removed spurious changes in Patch 1.
+3. Refactored code so that migratetype mask is passed properly for all
+callers to {get,set}_pfnblock_flags_mask().
+4. Added toggle_pageblock_isolate() for setting and clearing
+MIGRATE_ISOLATE.
+5. Changed get_pageblock_migratetype() when CONFIG_MEMORY_ISOLATION to
+handle MIGRATE_ISOLATE case. It acts like a parsing layer for
+get_pfnblock_flags_mask().
+
+
+Design
+===
+
+Pageblock flags are read in words to achieve good performance and existing
+pageblock flags take 4 bits per pageblock. To avoid a substantial change
+to the pageblock flag code, pageblock flag bits are expanded to use 8
+and MIGRATE_ISOLATE is moved to use the last bit (bit 7).
+
+It might look like the pageblock flags have doubled the overhead, but in
+reality, the overhead is only 1 byte per 2MB/4MB (based on pageblock config),
+or 0.0000476 %.
+
+Any comment and/or suggestion is welcome. Thanks.
+
+[1] https://lore.kernel.org/linux-mm/20250214154215.717537-1-ziy@nvidia.com/
+[2] https://lore.kernel.org/linux-mm/20250507211059.2211628-2-ziy@nvidia.com/
+
+
+Zi Yan (4):
+  mm/page_isolation: make page isolation a standalone bit.
+  mm/page_isolation: remove migratetype from
+    move_freepages_block_isolate()
+  mm/page_isolation: remove migratetype from undo_isolate_page_range()
+  mm/page_isolation: remove migratetype parameter from more functions.
+
+ drivers/virtio/virtio_mem.c     |   3 +-
+ include/linux/gfp.h             |   6 +-
+ include/linux/mmzone.h          |  17 +++--
+ include/linux/page-isolation.h  |  33 +++++++--
+ include/linux/pageblock-flags.h |   9 ++-
+ include/trace/events/kmem.h     |  14 ++--
+ mm/cma.c                        |   2 +-
+ mm/memory_hotplug.c             |  14 ++--
+ mm/page_alloc.c                 | 126 ++++++++++++++++++++++++--------
+ mm/page_isolation.c             | 114 +++++++++++++++--------------
+ 10 files changed, 226 insertions(+), 112 deletions(-)
+
+-- 
+2.47.2
 
