@@ -1,116 +1,297 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD5028FABC
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D8D28F94C;
+	Fri,  9 May 2025 11:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746791842; cv=none; b=C+IMetnGKW3f0MpWUfibOgrYM54GaHV8Vw3OzEG+pSP7gxW3LoLFS2KDYvsfcyeC/hDu+KzP33kgcPgr08LNoHb1N0x/KdhC9yt73zdFDLdYO8f0MCjRhT/ehJx51wITbMvFjXbarEvu7kEnrd0dmU6e0r3PiII/btUk9H0iID4=
+	t=1746791929; cv=none; b=avITQLhIko1n34LQr5doqIEX+HsHoatJtDbUSXnDjjiJx0aBppSNg3ff0Kb1wGH5iS7lAsnfzwC5GJUY0OVXg+Bn8CJ5+MGqk+BI88kKbk/EW6789Dm4p8zhOZCJrzLtR4zmaVABM5He8zVCyct9wszcHHVC1t8OEFPQqI8H3z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746791842; c=relaxed/simple;
-	bh=Q5IK9HN+g/ZwX1gC4emIwTwcU9muoYR6ijy3AT09hzg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UAAHL3ufaACUh3ybaNKlA0VIHkTJBZ1ARdErJgSYmZzKfaO1rm1vKNzwcYLxj9BZJW8o476X93iTksBqP4Y59DX8myYmAzEsqaCgFQ4SDOI29h4T7czgyAzJ6ZMqOA51aILiK8xMdALulfnVrZZvawSJWmqNdsstH8bjgvMUw/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PYTcJouf; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746791929; c=relaxed/simple;
+	bh=NCtLhYAHWoi/uYTZ/aBGFcs5EKhZrKwMb9yH3wrLyrY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mhSKCStvUvkqSpLt+O6yrnvIiE8g0SFRRi3ObqJ2LWomqToMx4bcGAn+XZ/cTQOYPx1eYgRUAC/UQPS/t5S9a1G4g8rzyMgGQFJhtI6+yxQu4JeYtv3dRklqzYjiLGke51XSxUdvGvsRRkWIOqD0BiO+NpSEhDVdmH452MSC3gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I7NIeZ26; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PYTcJouf"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-441d1ed82dbso18858185e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:57:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746791839; x=1747396639; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=th1/bFaPGJFRCo8JO8Rwr3mcmgSJq8KTF5FpG5MwqQU=;
-        b=PYTcJoufQeQNTiDL5uL+1fe/GzGTGyxOM7Ez6cVsgYGGECsVLPctTKZ43NH2IgSFkO
-         sKn7x63931pdlwIjCjKQWdOSf+opdjXmtL7cvtvFIeplx9YIk3gdpWRnvBjsWjFTC/ql
-         wrsYYtG1hPN3MUXn4i7Bx++ZkGMG1j0UHW6lLaSYz47QYS4sJZPhFmWpBWFPbcOJ0GYa
-         V8P7u8ToiGrD+VgawNhP4qtJ8MnxUx9gUk34juMidQOkcvE16eicjqWh0AjGYDi+5Xni
-         yDDNv5PFvI7NfBlO4oCiKdD54Ubpd9gnV2t5qdztYcS2Cw16gAVO54oc41z4Q7HaBcRy
-         wSaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746791839; x=1747396639;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=th1/bFaPGJFRCo8JO8Rwr3mcmgSJq8KTF5FpG5MwqQU=;
-        b=bj8t2k2gifmjIuQtUgC0rkKwDGALZIO/c1LOsjREne8AprOSb6mQamKKzmepasAuZY
-         Vz5An8CE3hkCRE3vt/FQ1qBDlCZfAnUNPh9fBUq/yerG9S7pG9OnSgXoJFzk3uu0dSjA
-         dKL2KkF0yOMn/5gXKHffCRWqMwHIHparh4wnr2XCtr5WflPVG60r5clCgp+Aag7dwcnN
-         pFjqgyRzQ2wMQ3rHVG9NHNFe9rerbqnzLcsjfuWiiK2zX6zGbII+3JPcWq3g6t1sGyNZ
-         9X/kr/8JyVR6YGZ6OrMOQ1LyE8+SU3W0nKxYgWUc1qgsMdtmdn0Jr1vr+LmaPkOHTDmq
-         yDMg==
-X-Forwarded-Encrypted: i=1; AJvYcCXFcWcCmIaV+KRLja1OJCwy8d6diiRJn4ble2dqerizpBgea3x1pXo+I0JhakOyUbWPlbPK6x1/4B/sxas=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaZvJjdjQWILi8Vqkqsy8cJWazmp7oTDRTHqJ8CsFX2TstEbMT
-	5q9Mt4jQVV9t46jXTqmyJga8EClAEa1s6x/RpTGylatAeDREPbg5nYxm6IEA7Zg=
-X-Gm-Gg: ASbGncthH8f8GS8Stp4KUaPgrIn1Cvd8lQixBeMoXs07nfASYgEznJp9HUhQ+XVu4hP
-	BysVVFFMhHq7JOgb99j+AtCLk4t+5KcUkU0mfvKQbHZVKTrXiz5mj7EaecUaemIv6S5EucEsO54
-	98NcpK+588iIETUJ3X1rUXT9BEtOFbbQGPncWKRPJGyHoBHtevddlI9uqLmEfVjPErV2oGq+7cI
-	sei4i6OEQttGBNEMzXmhyIw1BgtWxIsxVBwC+IxbJCN5fOhNbIiu63HRPyjYrPbsfk/f7mcqq/7
-	RiZguw/joTwEFiknBsEIavJgcON2EV30QIlTt6ET9O7/hJJTkRjcVcMhEHby5eKO+zWs3q7ip18
-	Tp9v8iYQ4009ySSI24cDzqK+1kUCZKmn87+ZEw0uOjpLvNcXIIQ==
-X-Google-Smtp-Source: AGHT+IGMhurb9PArmXo9wi/bzeveBgpvfyiPoLnFXyt7C3rq/dYKOcqicf2Ep0ffCf8DbUss6X3Ofg==
-X-Received: by 2002:a05:600c:a409:b0:43c:e7a7:aea0 with SMTP id 5b1f17b1804b1-442d780033fmr15039445e9.26.1746791838633;
-        Fri, 09 May 2025 04:57:18 -0700 (PDT)
-Received: from green.cable.virginm.net (nail-04-b2-v4wan-166353-cust693.vm26.cable.virginm.net. [82.35.130.182])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67ed1bcsm27032945e9.18.2025.05.09.04.57.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 04:57:18 -0700 (PDT)
-From: Terry Tritton <terry.tritton@linaro.org>
-To: Kees Cook <kees@kernel.org>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Terry Tritton <terry.tritton@linaro.org>
-Subject: [PATCH] selftests/seccomp: fix negative_ENOSYS tracer tests on arm32
-Date: Fri,  9 May 2025 12:56:22 +0100
-Message-Id: <20250509115622.64775-1-terry.tritton@linaro.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I7NIeZ26"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78CB0C4CEE4;
+	Fri,  9 May 2025 11:58:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746791928;
+	bh=NCtLhYAHWoi/uYTZ/aBGFcs5EKhZrKwMb9yH3wrLyrY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I7NIeZ269XV59LW9/W5Kjhzx1z/3bV/cS2nu5mvuVAwgoG35Ew8AU790+wdk+Stnf
+	 exoOqYV4Q2WFBGeGtS/ePa5N0ouamt3oZVnn/QcS+VDc+/87Q3ne6B+b+WRpcUlwzj
+	 7SUhFzLC8RawXUJpVdHPe96jsN5EpRkZ8+97vIF6XfKebmRqRl58Q93yvC0tdnQjLG
+	 v4X9UxLfXQjyQVMiXQWzqLgvClSHg96w5JDl6mMiNlsmmwR1c4h53erkE+zdvkyXuV
+	 Vhx3jMbmj2mY8vQXT6k0JE2U3pSAgWozB3EfIoz7e9P0FKDssmhubMVlaQVaLQ0GqF
+	 6303Fs5iimfIg==
+Date: Fri, 9 May 2025 12:58:42 +0100
+From: Srinivas Kandagatla <srini@kernel.org>
+To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v9 6/6] nvmem: max77759: add Maxim MAX77759 NVMEM driver
+Message-ID: <aB3t8vw9PO5hRpXg@srini-hackbase>
+References: <20250430-max77759-mfd-v9-0-639763e23598@linaro.org>
+ <20250430-max77759-mfd-v9-6-639763e23598@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250430-max77759-mfd-v9-6-639763e23598@linaro.org>
 
-TRACE_syscall.ptrace.negative_ENOSYS and TRACE_syscall.seccomp.negative_ENOSYS
-on arm32 are being reported as failures instead of skipping.
+On Wed, Apr 30, 2025 at 10:03:13AM +0100, André Draszik wrote:
+> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> Port Controller (TCPC), NVMEM, and a GPIO expander.
+> 
+> This driver exposes the non volatile memory using the platform device
+> registered by the core MFD driver.
+> 
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
 
-The teardown_trace_fixture function sets the test to KSFT_FAIL in case of a
-non 0 return value from the tracer process.
-Due to _metadata now being shared between the forked processes the tracer is
-returning the KSFT_SKIP value set by the tracee which is non 0.
+If the plan is to take this series via mfd here is my Ack
 
-Remove the setting of the _metadata.exit_code in teardown_trace_fixture.
+Acked-by: Srinivas Kandagatla <srini@kernel.org>
 
-Fixes: 24cf65a62266 ("selftests/harness: Share _metadata between forked processes")
-Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
----
- tools/testing/selftests/seccomp/seccomp_bpf.c | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index b2f76a52215a..c43a6f8f8cd5 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -1629,14 +1629,8 @@ void teardown_trace_fixture(struct __test_metadata *_metadata,
- {
- 	if (tracer) {
- 		int status;
--		/*
--		 * Extract the exit code from the other process and
--		 * adopt it for ourselves in case its asserts failed.
--		 */
- 		ASSERT_EQ(0, kill(tracer, SIGUSR1));
- 		ASSERT_EQ(tracer, waitpid(tracer, &status, 0));
--		if (WEXITSTATUS(status))
--			_metadata->exit_code = KSFT_FAIL;
- 	}
- }
- 
--- 
-2.39.5
-
+thanks,
+Srini
+> ---
+> v9:
+> * drop superfluous max77759_nvmem_is_valid() (Srini)
+> 
+> v8:
+> * replace MODULE_ALIAS() with .id_table (Krzysztof)
+> * drop previous tags
+> 
+> v5:
+> * follow API updates of max77759 core driver
+> 
+> v2:
+> * align sentinel in max77759_nvmem_of_id[] with other max77759 drivers
+>  (Christophe)
+> ---
+>  MAINTAINERS                    |   1 +
+>  drivers/nvmem/Kconfig          |  12 ++++
+>  drivers/nvmem/Makefile         |   2 +
+>  drivers/nvmem/max77759-nvmem.c | 145 +++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 160 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0db5e1fe64930e85265913e6a7dd2669c645cf42..b821502afc48f95d48fb8c6ac6941d1dd8e63582 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14670,6 +14670,7 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/*/maxim,max77759*.yaml
+>  F:	drivers/gpio/gpio-max77759.c
+>  F:	drivers/mfd/max77759.c
+> +F:	drivers/nvmem/max77759-nvmem.c
+>  F:	include/linux/mfd/max77759.h
+>  
+>  MAXIM MAX77802 PMIC REGULATOR DEVICE DRIVER
+> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> index 8671b7c974b933e147154bb40b5d41b5730518d2..3de07ef524906ad24a89e58abdfe93529a83c80f 100644
+> --- a/drivers/nvmem/Kconfig
+> +++ b/drivers/nvmem/Kconfig
+> @@ -154,6 +154,18 @@ config NVMEM_LPC18XX_OTP
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called nvmem_lpc18xx_otp.
+>  
+> +config NVMEM_MAX77759
+> +	tristate "Maxim Integrated MAX77759 NVMEM Support"
+> +	depends on MFD_MAX77759
+> +	default MFD_MAX77759
+> +	help
+> +	  Say Y here to include support for the user-accessible storage found
+> +	  in Maxim Integrated MAX77759 PMICs. This IC provides space for 30
+> +	  bytes of storage.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called nvmem-max77759.
+> +
+>  config NVMEM_MESON_EFUSE
+>  	tristate "Amlogic Meson GX eFuse Support"
+>  	depends on (ARCH_MESON || COMPILE_TEST) && MESON_SM
+> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+> index 5b77bbb6488bf89bfb305750a1cbf4a6731a0a58..a9d03cfbbd27e68d40f8c330e72e20378b12a481 100644
+> --- a/drivers/nvmem/Makefile
+> +++ b/drivers/nvmem/Makefile
+> @@ -34,6 +34,8 @@ obj-$(CONFIG_NVMEM_LPC18XX_EEPROM)	+= nvmem_lpc18xx_eeprom.o
+>  nvmem_lpc18xx_eeprom-y			:= lpc18xx_eeprom.o
+>  obj-$(CONFIG_NVMEM_LPC18XX_OTP)		+= nvmem_lpc18xx_otp.o
+>  nvmem_lpc18xx_otp-y			:= lpc18xx_otp.o
+> +obj-$(CONFIG_NVMEM_MAX77759)		+= nvmem-max77759.o
+> +nvmem-max77759-y			:= max77759-nvmem.o
+>  obj-$(CONFIG_NVMEM_MESON_EFUSE)		+= nvmem_meson_efuse.o
+>  nvmem_meson_efuse-y			:= meson-efuse.o
+>  obj-$(CONFIG_NVMEM_MESON_MX_EFUSE)	+= nvmem_meson_mx_efuse.o
+> diff --git a/drivers/nvmem/max77759-nvmem.c b/drivers/nvmem/max77759-nvmem.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..c9961ad0e232e152e924b5b06d7d93172760ac3a
+> --- /dev/null
+> +++ b/drivers/nvmem/max77759-nvmem.c
+> @@ -0,0 +1,145 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +//
+> +// Copyright 2020 Google Inc
+> +// Copyright 2025 Linaro Ltd.
+> +//
+> +// NVMEM driver for Maxim MAX77759
+> +
+> +#include <linux/dev_printk.h>
+> +#include <linux/device.h>
+> +#include <linux/device/driver.h>
+> +#include <linux/err.h>
+> +#include <linux/mfd/max77759.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/nvmem-provider.h>
+> +#include <linux/overflow.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/string.h>
+> +
+> +#define MAX77759_NVMEM_OPCODE_HEADER_LEN 3
+> +/*
+> + * NVMEM commands have a three byte header (which becomes part of the command),
+> + * so we need to subtract that.
+> + */
+> +#define MAX77759_NVMEM_SIZE (MAX77759_MAXQ_OPCODE_MAXLENGTH \
+> +			     - MAX77759_NVMEM_OPCODE_HEADER_LEN)
+> +
+> +struct max77759_nvmem {
+> +	struct device *dev;
+> +	struct max77759 *max77759;
+> +};
+> +
+> +static int max77759_nvmem_reg_read(void *priv, unsigned int offset,
+> +				   void *val, size_t bytes)
+> +{
+> +	struct max77759_nvmem *nvmem = priv;
+> +	DEFINE_FLEX(struct max77759_maxq_command, cmd, cmd, length,
+> +		    MAX77759_NVMEM_OPCODE_HEADER_LEN);
+> +	DEFINE_FLEX(struct max77759_maxq_response, rsp, rsp, length,
+> +		    MAX77759_MAXQ_OPCODE_MAXLENGTH);
+> +	int ret;
+> +
+> +	cmd->cmd[0] = MAX77759_MAXQ_OPCODE_USER_SPACE_READ;
+> +	cmd->cmd[1] = offset;
+> +	cmd->cmd[2] = bytes;
+> +	rsp->length = bytes + MAX77759_NVMEM_OPCODE_HEADER_LEN;
+> +
+> +	ret = max77759_maxq_command(nvmem->max77759, cmd, rsp);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (memcmp(cmd->cmd, rsp->rsp, MAX77759_NVMEM_OPCODE_HEADER_LEN)) {
+> +		dev_warn(nvmem->dev, "protocol error (read)\n");
+> +		return -EIO;
+> +	}
+> +
+> +	memcpy(val, &rsp->rsp[MAX77759_NVMEM_OPCODE_HEADER_LEN], bytes);
+> +
+> +	return 0;
+> +}
+> +
+> +static int max77759_nvmem_reg_write(void *priv, unsigned int offset,
+> +				    void *val, size_t bytes)
+> +{
+> +	struct max77759_nvmem *nvmem = priv;
+> +	DEFINE_FLEX(struct max77759_maxq_command, cmd, cmd, length,
+> +		    MAX77759_MAXQ_OPCODE_MAXLENGTH);
+> +	DEFINE_FLEX(struct max77759_maxq_response, rsp, rsp, length,
+> +		    MAX77759_MAXQ_OPCODE_MAXLENGTH);
+> +	int ret;
+> +
+> +	cmd->cmd[0] = MAX77759_MAXQ_OPCODE_USER_SPACE_WRITE;
+> +	cmd->cmd[1] = offset;
+> +	cmd->cmd[2] = bytes;
+> +	memcpy(&cmd->cmd[MAX77759_NVMEM_OPCODE_HEADER_LEN], val, bytes);
+> +	cmd->length = bytes + MAX77759_NVMEM_OPCODE_HEADER_LEN;
+> +	rsp->length = cmd->length;
+> +
+> +	ret = max77759_maxq_command(nvmem->max77759, cmd, rsp);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (memcmp(cmd->cmd, rsp->rsp, cmd->length)) {
+> +		dev_warn(nvmem->dev, "protocol error (write)\n");
+> +		return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int max77759_nvmem_probe(struct platform_device *pdev)
+> +{
+> +	struct nvmem_config config = {
+> +		.dev = &pdev->dev,
+> +		.name = dev_name(&pdev->dev),
+> +		.id = NVMEM_DEVID_NONE,
+> +		.type = NVMEM_TYPE_EEPROM,
+> +		.ignore_wp = true,
+> +		.size = MAX77759_NVMEM_SIZE,
+> +		.word_size = sizeof(u8),
+> +		.stride = sizeof(u8),
+> +		.reg_read = max77759_nvmem_reg_read,
+> +		.reg_write = max77759_nvmem_reg_write,
+> +	};
+> +	struct max77759_nvmem *nvmem;
+> +
+> +	nvmem = devm_kzalloc(&pdev->dev, sizeof(*nvmem), GFP_KERNEL);
+> +	if (!nvmem)
+> +		return -ENOMEM;
+> +
+> +	nvmem->dev = &pdev->dev;
+> +	nvmem->max77759 = dev_get_drvdata(pdev->dev.parent);
+> +
+> +	config.priv = nvmem;
+> +
+> +	return PTR_ERR_OR_ZERO(devm_nvmem_register(config.dev, &config));
+> +}
+> +
+> +static const struct of_device_id max77759_nvmem_of_id[] = {
+> +	{ .compatible = "maxim,max77759-nvmem", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, max77759_nvmem_of_id);
+> +
+> +static const struct platform_device_id max77759_nvmem_platform_id[] = {
+> +	{ "max77759-nvmem", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(platform, max77759_nvmem_platform_id);
+> +
+> +static struct platform_driver max77759_nvmem_driver = {
+> +	.driver = {
+> +		.name = "max77759-nvmem",
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +		.of_match_table = max77759_nvmem_of_id,
+> +	},
+> +	.probe = max77759_nvmem_probe,
+> +	.id_table = max77759_nvmem_platform_id,
+> +};
+> +
+> +module_platform_driver(max77759_nvmem_driver);
+> +
+> +MODULE_AUTHOR("André Draszik <andre.draszik@linaro.org>");
+> +MODULE_DESCRIPTION("NVMEM driver for Maxim MAX77759");
+> +MODULE_LICENSE("GPL");
+> 
+> -- 
+> 2.49.0.901.g37484f566f-goog
+> 
