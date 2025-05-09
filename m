@@ -1,192 +1,230 @@
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B1A22577C;
-	Fri,  9 May 2025 08:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED7F22D9EF;
+	Fri,  9 May 2025 08:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746779904; cv=none; b=nFRa/zWwWwEJ9Qu8vY8KiDy+r38qLLpDYQkAJlSDtgQXjRQg/zfPGCyCOG6m3qZrcIz/SzLCybESjUoKX2WJk+1GzSwmJLmKBIEcBWm56h+xfMuA5Tsz4RivZiHIVwgpPad8XQOxkshptft957PSDqUxhYOQxCnuTZOgXl/pzk8=
+	t=1746779956; cv=none; b=pkwyoqEx6/ONhQ9t8xHeJuOHiy3FrDyx0LwM/2GgL/rZp1TEyWEj605UtYehw3II8HLUpvDEV6/VSmWg5TD77J7GcZDN/kOMrgduG5FZU291jQ2WStO8OIjr03i7oHHChC13h9DFybhWx5hGlUAgE5tvFP8XbSAADylT9Dgr4HA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746779904; c=relaxed/simple;
-	bh=fmr4r3BEnQhHzRx/H0iPf40EUakfMySWJkPhts0T/Dk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VPqSYHvrCQ5dyucByZklEl6OxMI1g20S468IIS4JcStmDszSsIiriMV1wlsTlemvpiqktnz3y1NEL8v7vhHfL6WrA2/1MLqzqZKmKYFHG2uJcC+HM0nTuz66g8n94wFZjYTfzDl83torpowvDBlbwX/ZTqQtQvi7H6oSe1eGu80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-86d5e3ddb66so516266241.2;
-        Fri, 09 May 2025 01:38:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746779899; x=1747384699;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o6vBjFcppbWx6n+WHaEsE8iJ5qADa6/6dC++ZNGDg6Q=;
-        b=juTFdI4C+34ods4vn+2p2zyM9Sp3/MNm+rDOAUqP3p4o66AlNN7MDwLV0onCRpEiD/
-         OHSM4EiesMvg2FmyZcnG6KjtZPMSgflwkfI5s9Y21BDD+Apa+9LJ7Fg1vd2mh2FyUxAI
-         MNf45QioTK0pXUdoOTYZMd0f54YyMKqkJp5bW4z/PrfnGixqoSEy38FkbwSxiPy8q9Xi
-         yuJemJmqLyotZpK994K7jznbIYDltxfVuoZDPh7b9174kluIbB+4zwvCfrfL6oLBq6rD
-         aTe8uuckMgFQo2EZGn4zf3u4mc+p72TVGD+TV2tnC7rgPxAGWh8d9v3FLuDICh01p9uh
-         19wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUux4jrXVLNQBfY25cFqfbeJiFeO3OkVnd9l6BjwuWd7BW52NawHh8U/UDxBEX0xXEWqkT1IqsVdlj1yw2f@vger.kernel.org, AJvYcCWy0z9fAX3yIGPP7YuhTBQXaObpkUZR/B/jaEVApSfkEIhpskHE3tdB8L+lOsywR2eX9Ewmh+xwHrUW@vger.kernel.org, AJvYcCXJjipXXdOFUCmMAXbDSHsDT0PHEXiJNewMGFFD7vxoFJHrIWBHMXgfqIZXZCNE7IMztMoFr5SfN2tHGEriqijb@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEZBXj0EH0agjCDa9eB0v0qkOxkZwdpY1GpM48VOUpRfTP+pHs
-	2GQ301eLR/xNzLGC+vpHac9ShBRy2mOnwRAVlBzdUtt66jWq1lLJdgDpfWaZ
-X-Gm-Gg: ASbGncsHdALqzmCCnJl/TE9W87lDwz8DxKAp+9u9c+IAhx3sEu+7mGHQXyxwqnoGo80
-	3lpNUGeKerOChTVI5z4oZtGnf5aS4TVyYOwKaZrmV48KdtOgiNuTmZD42EOOMLKPr1xGw6VvCzr
-	RTMPOSOrQ901PP3xo/fBqTCgBvQk5Nqqdlk+HD3WqfahGK37YrRU5HR35wCpFD7qTJnSjBQ8waU
-	Kig+CjjlhwNQR8uopuekrix+A8SkvduBMWZRtIRJ+Zd84fNFs0WdWXRObvEYEsAvuNC6sPRkO9I
-	H2RLdxB2VIB6C518xTfsCHcyhjpk16egCa2UPobrfb49itycc+N3hYqt+EjoOjaiZ9EBKVFYdel
-	aAMBxol8=
-X-Google-Smtp-Source: AGHT+IFoh+G6QdcQx8yuTu16ZDoS0j36I6y1KaidTzvEKQS20poKTsrrxZUtTNsrbU++mqw4ayzsnw==
-X-Received: by 2002:a05:6102:800f:b0:4c1:9cb2:8389 with SMTP id ada2fe7eead31-4deed30e640mr2113947137.2.1746779898999;
-        Fri, 09 May 2025 01:38:18 -0700 (PDT)
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f61982eesm722669241.19.2025.05.09.01.38.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 01:38:18 -0700 (PDT)
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-527b70bd90dso713866e0c.3;
-        Fri, 09 May 2025 01:38:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV/393rVLiHn1rz9Kabt8rw1yRajT5QUh0oz6PG9tMoOwShJcT94RR25N/kQhKctRbigU+17qhbWipZmij9@vger.kernel.org, AJvYcCVhcftghJUkZIrng/N37atxKbWAL2uhaRorAT7SGq0OwUAUbgIOJgAmkWD3pI8qvQN7sEKnpo/5im/C@vger.kernel.org, AJvYcCVk1WmPSpQEhe6b7IoNywjpE7ykfeSkkIzWy+OcLSgqBe6sJ8OsyevkmsTo0z6fDGVV4XvOV8sOhH1zZh3ZIZDN@vger.kernel.org
-X-Received: by 2002:a05:6102:fa8:b0:4c3:6568:3e18 with SMTP id
- ada2fe7eead31-4deed37048dmr1886205137.15.1746779898071; Fri, 09 May 2025
- 01:38:18 -0700 (PDT)
+	s=arc-20240116; t=1746779956; c=relaxed/simple;
+	bh=qfaRMo2wtMzgLQqZfUWtuPe8LcZPsu987gHfKOZv9As=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=atTOUXNpBxJdUTuchJ2kRh5gWsZ2WiHC4B6E2LZwF830ulgyYsa5ty9bZnaNYdjBJJejDH0dk6+dMYyIMcE8phZ8WVtpL8V4YzW2X94wGhHRuMFZb/mKY3GOtrP0qzI/sZjq8+kQVcyAjct1K6MPQvCqBhmTn/g1gNBq4yAZdUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bqbDWuyS; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bqbDWuyS"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5492Qh2j014090;
+	Fri, 9 May 2025 08:39:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	9IEj+eT4/GgN/tMNrVIEzHLK7m88TuE6VDWHVwUzUHo=; b=bqbDWuySL5hc5Pkd
+	OCPxO5hA+mgZ7fFPC7fantH3S+Rl2WZJi8pBflJiahfKjzWP4K52LPurAI2P3zRc
+	BuOs5LjG2VquToT43eMmg+SfwbJMJBhb5ylJtK2ekcb5BI6WLvuniYtjvBRblLE8
+	K85EMx3/YHLdIYtmm8BMVxPZx/QbXyRDUDPVN6VzTcry1TZiiMJW4P6JZwiFBZzq
+	E1PlQ/Zkwt7Qjn8UvUX+VIY8d8XfEwbTFr/cxtfMc6hL2D13/vb8MDUxICiJ4WNK
+	aLTAQL8sGOi2faWZdoM8IONKjQvIrmnbhLnurvrlSGftBCIlAWOfCPR1JK9tTdcQ
+	OThQFg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp4m016-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 May 2025 08:39:08 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5498d7gP020223
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 9 May 2025 08:39:07 GMT
+Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 9 May 2025 01:39:02 -0700
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Date: Fri, 9 May 2025 14:08:47 +0530
+Subject: [PATCH v5 01/26] media: iris: Skip destroying internal buffer if
+ not dequeued
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-5-3906529757d2@bootlin.com>
-In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-5-3906529757d2@bootlin.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 9 May 2025 10:38:06 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVLo2w609eFOKRkYAfEMb8XOTNB-XzzZn_89VM-YV_-kA@mail.gmail.com>
-X-Gm-Features: AX0GCFvJSiFNvcVDdNdJn2WdyrzyZvvL3Z-R_r9rdaO_lM6jAipfu9beQmHxVro
-Message-ID: <CAMuHMdVLo2w609eFOKRkYAfEMb8XOTNB-XzzZn_89VM-YV_-kA@mail.gmail.com>
-Subject: Re: [PATCH v5 05/12] gpio: aggregator: refactor the code to add GPIO
- desc in the forwarder
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, 
-	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250509-video-iris-hevc-vp9-v5-1-59b4ff7d331c@quicinc.com>
+References: <20250509-video-iris-hevc-vp9-v5-0-59b4ff7d331c@quicinc.com>
+In-Reply-To: <20250509-video-iris-hevc-vp9-v5-0-59b4ff7d331c@quicinc.com>
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Stefan Schmidt
+	<stefan.schmidt@linaro.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Nicolas Dufresne
+	<nicolas.dufresne@collabora.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Dikshita Agarwal <quic_dikshita@quicinc.com>, <stable@vger.kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746779937; l=5761;
+ i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
+ bh=qfaRMo2wtMzgLQqZfUWtuPe8LcZPsu987gHfKOZv9As=;
+ b=HYwqvOXukmjYiKsLVvus2Eea6LY17eb/NzGFKFfvAIzDdr6og/H+t/ozhyOmouQ7Q/iGQ2Q5N
+ u4j5dw8kgU2A06vhsT9AS5seBDTDIooj6+m0ZRQ7VDQNE9pulc1MNqo
+X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
+ pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: krGrW_6vJ_BqK0SxaSggs7gXc5PVjp91
+X-Authority-Analysis: v=2.4 cv=E5XNpbdl c=1 sm=1 tr=0 ts=681dbf2c cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=mad7JUWUjgOo6fFp8yoA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA4MyBTYWx0ZWRfX+mDVR7qgDmWZ
+ nqWn+nkYpZrubhk6jFdyK4BWBPaZ24OXzBGeuLwQiIRyMZbbcR2hMfmUZAw3lh4WTSOQOcU8LY7
+ 7FMKpOjRS/uRxFqjjV503EzoPBSgDrZRSNkW7hELyzesiLl06iC2fcI4sq91RqckWvrkkxE3cf6
+ 6fgC82A8W6FBHqT5Anq5nMmE4BLCA+5/wSgr5ZlqIIvVXrxoqUJiDKdhUERgtc4QRGMU1JyZw+9
+ D2p2qVBbTryMCjeEz8oH9fN90c/Yuf8d0bN+fDrukW95H+Nhjcg1uD5evMRRTOb12WTtDMAa5Vs
+ 9xq+xQ8+6lfliRRwLckK18oAl+ztZuW/2dnFZ3J/bBr9oJYXXLH0Mmxja/3r0jx/PhtWXSTSDsl
+ dM/2y7eRaGQm3QyumaDd4o87WqpfIgJbfCQXQ1RXZRR+vg+YxQ8SUDQNb8YnsmV6iYPZLutl
+X-Proofpoint-ORIG-GUID: krGrW_6vJ_BqK0SxaSggs7gXc5PVjp91
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_03,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 suspectscore=0 adultscore=0 mlxscore=0 malwarescore=0
+ bulkscore=0 phishscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
+ lowpriorityscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505090083
 
-Hi Thomas,
+Firmware might hold the DPB buffers for reference in case of sequence
+change, so skip destroying buffers for which QUEUED flag is not removed.
 
-Thanks for your patch!
+Cc: stable@vger.kernel.org
+Fixes: 73702f45db81 ("media: iris: allocate, initialize and queue internal buffers")
+Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-QRD
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-HDK
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-QRD
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-HDK
+Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+---
+ drivers/media/platform/qcom/iris/iris_buffer.c | 20 +++++++++++++++++++-
+ drivers/media/platform/qcom/iris/iris_buffer.h |  3 ++-
+ drivers/media/platform/qcom/iris/iris_vdec.c   |  4 ++--
+ drivers/media/platform/qcom/iris/iris_vidc.c   |  4 ++--
+ 4 files changed, 25 insertions(+), 6 deletions(-)
 
-On Tue, 6 May 2025 at 17:21, Thomas Richard <thomas.richard@bootlin.com> wrote:
-> Create a dedicated function to add a GPIO desc in the forwarder. Instead of
-> passing an array of GPIO descs, now the GPIO descs are passed on by one to
-
-one by one
-
-> the forwarder.
-
-Also, the passed array is no longer stored as-is, but copied.
-
->
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
-
-> --- a/drivers/gpio/gpio-aggregator.c
-> +++ b/drivers/gpio/gpio-aggregator.c
-> @@ -509,6 +509,10 @@ devm_gpiochip_fwd_alloc(struct device *dev, unsigned int ngpios)
->         if (!fwd)
->                 return ERR_PTR(-ENOMEM);
->
-> +       fwd->descs = devm_kcalloc(dev, ngpios, sizeof(*fwd->descs), GFP_KERNEL);
-> +       if (!fwd->descs)
-> +               return ERR_PTR(-ENOMEM);
-> +
->         chip = &fwd->chip;
->
->         chip->label = label;
-> @@ -528,6 +532,36 @@ devm_gpiochip_fwd_alloc(struct device *dev, unsigned int ngpios)
->         return fwd;
->  }
->
-> +static int gpiochip_fwd_gpio_add(struct gpiochip_fwd *fwd,
-> +                                struct gpio_desc *desc,
-> +                                unsigned int offset)
-> +{
-> +       struct gpio_chip *parent = gpiod_to_chip(desc);
-> +       struct gpio_chip *chip = &fwd->chip;
-> +
-> +       if (offset > chip->ngpio)
-
->=
-
-> +               return -EINVAL;
-> +
-> +       /*
-> +        * If any of the GPIO lines are sleeping, then the entire forwarder
-> +        * will be sleeping.
-> +        * If any of the chips support .set_config(), then the forwarder will
-> +        * support setting configs.
-> +        */
-> +       if (gpiod_cansleep(desc))
-> +               chip->can_sleep = true;
-> +
-> +       if (parent && parent->set_config)
-> +               chip->set_config = gpio_fwd_set_config;
-> +
-> +       fwd->descs[offset] = desc;
-> +
-> +       dev_dbg(chip->parent, "%u => gpio %d irq %d\n", offset,
-> +               desc_to_gpio(desc), gpiod_to_irq(desc));
-> +
-> +       return 0;
-> +}
-> +
->  /**
->   * gpiochip_fwd_create() - Create a new GPIO forwarder
->   * @dev: Parent device pointer
-> @@ -559,26 +593,12 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
->
->         chip = &fwd->chip;
->
-> -       /*
-> -        * If any of the GPIO lines are sleeping, then the entire forwarder
-> -        * will be sleeping.
-> -        * If any of the chips support .set_config(), then the forwarder will
-> -        * support setting configs.
-> -        */
->         for (i = 0; i < ngpios; i++) {
-> -               struct gpio_chip *parent = gpiod_to_chip(descs[i]);
-> -
-> -               dev_dbg(dev, "%u => gpio %d irq %d\n", i,
-> -                       desc_to_gpio(descs[i]), gpiod_to_irq(descs[i]));
-> -
-> -               if (gpiod_cansleep(descs[i]))
-> -                       chip->can_sleep = true;
-> -               if (parent && parent->set_config)
-> -                       chip->set_config = gpio_fwd_set_config;
-> +               error = gpiochip_fwd_gpio_add(fwd, descs[i], i);
-> +               if (error)
-> +                       return ERR_PTR(error);
->         }
->
-> -       fwd->descs = descs;
-
-So the passed array is no longer stored, and thus the caller
-(gpio_aggregator_probe()) can free it after the call.
-
-> -
->         if (chip->can_sleep)
->                 mutex_init(&fwd->mlock);
->         else
->
-
-Gr{oetje,eeting}s,
-
-                        Geert
+diff --git a/drivers/media/platform/qcom/iris/iris_buffer.c b/drivers/media/platform/qcom/iris/iris_buffer.c
+index e5c5a564fcb81e77746df8c4797a10a07f2ae946..981fedb000ed5bf7aa79d34b8b581a5b4ca378a5 100644
+--- a/drivers/media/platform/qcom/iris/iris_buffer.c
++++ b/drivers/media/platform/qcom/iris/iris_buffer.c
+@@ -376,7 +376,7 @@ int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buf
+ 	return 0;
+ }
+ 
+-int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
++static int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane, bool force)
+ {
+ 	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
+ 	struct iris_buffer *buf, *next;
+@@ -396,6 +396,14 @@ int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
+ 	for (i = 0; i < len; i++) {
+ 		buffers = &inst->buffers[internal_buf_type[i]];
+ 		list_for_each_entry_safe(buf, next, &buffers->list, list) {
++			/*
++			 * during stream on, skip destroying internal(DPB) buffer
++			 * if firmware did not return it.
++			 * during close, destroy all buffers irrespectively.
++			 */
++			if (!force && buf->attr & BUF_ATTR_QUEUED)
++				continue;
++
+ 			ret = iris_destroy_internal_buffer(inst, buf);
+ 			if (ret)
+ 				return ret;
+@@ -405,6 +413,16 @@ int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
+ 	return 0;
+ }
+ 
++int iris_destroy_all_internal_buffers(struct iris_inst *inst, u32 plane)
++{
++	return iris_destroy_internal_buffers(inst, plane, true);
++}
++
++int iris_destroy_dequeued_internal_buffers(struct iris_inst *inst, u32 plane)
++{
++	return iris_destroy_internal_buffers(inst, plane, false);
++}
++
+ static int iris_release_internal_buffers(struct iris_inst *inst,
+ 					 enum iris_buffer_type buffer_type)
+ {
+diff --git a/drivers/media/platform/qcom/iris/iris_buffer.h b/drivers/media/platform/qcom/iris/iris_buffer.h
+index c36b6347b0770a5abd6d63c0c4e027560fbb2f64..00825ad2dc3a4bd1ace32d7e95d15b95276315b0 100644
+--- a/drivers/media/platform/qcom/iris/iris_buffer.h
++++ b/drivers/media/platform/qcom/iris/iris_buffer.h
+@@ -106,7 +106,8 @@ void iris_get_internal_buffers(struct iris_inst *inst, u32 plane);
+ int iris_create_internal_buffers(struct iris_inst *inst, u32 plane);
+ int iris_queue_internal_buffers(struct iris_inst *inst, u32 plane);
+ int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buffer);
+-int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane);
++int iris_destroy_all_internal_buffers(struct iris_inst *inst, u32 plane);
++int iris_destroy_dequeued_internal_buffers(struct iris_inst *inst, u32 plane);
+ int iris_alloc_and_queue_persist_bufs(struct iris_inst *inst);
+ int iris_alloc_and_queue_input_int_bufs(struct iris_inst *inst);
+ int iris_queue_buffer(struct iris_inst *inst, struct iris_buffer *buf);
+diff --git a/drivers/media/platform/qcom/iris/iris_vdec.c b/drivers/media/platform/qcom/iris/iris_vdec.c
+index 4143acedfc5744f16f026ab662e2eb7f714580ac..9c049b9671ccc6bff6c3af37b77fbe73a8ae3f2b 100644
+--- a/drivers/media/platform/qcom/iris/iris_vdec.c
++++ b/drivers/media/platform/qcom/iris/iris_vdec.c
+@@ -408,7 +408,7 @@ int iris_vdec_streamon_input(struct iris_inst *inst)
+ 
+ 	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+ 
+-	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
++	ret = iris_destroy_dequeued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -496,7 +496,7 @@ int iris_vdec_streamon_output(struct iris_inst *inst)
+ 
+ 	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+ 
+-	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
++	ret = iris_destroy_dequeued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/media/platform/qcom/iris/iris_vidc.c b/drivers/media/platform/qcom/iris/iris_vidc.c
+index ca0f4e310f77f98193554caa9eea2a8c1eec2524..663f5602b5ad29f273f01b59328da104b79e1d84 100644
+--- a/drivers/media/platform/qcom/iris/iris_vidc.c
++++ b/drivers/media/platform/qcom/iris/iris_vidc.c
+@@ -233,8 +233,8 @@ int iris_close(struct file *filp)
+ 	iris_session_close(inst);
+ 	iris_inst_change_state(inst, IRIS_INST_DEINIT);
+ 	iris_v4l2_fh_deinit(inst);
+-	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+-	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
++	iris_destroy_all_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
++	iris_destroy_all_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+ 	iris_remove_session(inst);
+ 	mutex_unlock(&inst->lock);
+ 	mutex_destroy(&inst->ctx_q_lock);
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.34.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
