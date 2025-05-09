@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194BF298981;
-	Fri,  9 May 2025 20:18:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E6F2989AF;
+	Fri,  9 May 2025 20:18:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746821892; cv=none; b=nosixSk8NNax1HQfFPyDZ/MR/gOYecBXql0nqwiKQNjslZbQM+EiTgrW5fatH3lykK3vR+K/m/oamhu+mEH2KVFf42Yd0keBMaspphxxWrDdQsXC0rcKx12RjvgX0TzDHbVwBdY8RzzXuaOCW9pQZzrzzK6VeThfdhAGZYgNqNc=
+	t=1746821893; cv=none; b=MZofZYmTuF92THmJKNaPWOMZSlEF3iI6BmF2Wsj/OYetre1W6dqKsBOOkKP78b1K5q+v7sQ2B6ibXvgjWh3LzMcfVc2YBLB7Ao98qW/Wm3rXzwmcADmR7Ohht2zYZLJBStmo93AzmLttyO28Uod54R9yL1c2eAy1FKi8mF7tsiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746821892; c=relaxed/simple;
-	bh=tqRr0VDNiKRXcBnyKkuPzzvRT0RMapGcWS2ATHR6mVQ=;
+	s=arc-20240116; t=1746821893; c=relaxed/simple;
+	bh=g3favnQ2TasT07axjoxQsRRs95xIcj3hy0hj5Qm7MVQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q9MQvpqDN52bvx6eaqR2QX+n0zHqWc4UQSh3HlsUujQlmT47/kdo1+rTNthFx8v5+GojGBJHyyaG6E7SZG3VGuJBw4YfCFMs6ymVmL1HC1GM6qtZxPZJF6qiLxuMllW5CIj5tv+1/MJf/jpPA7rVaEGF/aGOBN9Z0kpC976ir9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jV0nzlTL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FCd2fJKNOH4suGTPVTYP7CZBjZof/lNzYC0DsxnDGNV1pd2pGOCGC2d6Dd+5w8VcxTcq+B00wgGYw0qBcfRKPNvxkXUk4/gYg4irKgyL3VtR8yFlA/VNT3bq2SK3xN0os4jQRsKoto78wxpSY1IZtZ5bwWXNDPJRvgnHGMW0XP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eDMKCPXc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jV0nzlTL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05DD1C4CEEE;
-	Fri,  9 May 2025 20:18:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eDMKCPXc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B6A3C4CEE4;
+	Fri,  9 May 2025 20:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746821891;
-	bh=tqRr0VDNiKRXcBnyKkuPzzvRT0RMapGcWS2ATHR6mVQ=;
+	s=k20201202; t=1746821893;
+	bh=g3favnQ2TasT07axjoxQsRRs95xIcj3hy0hj5Qm7MVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jV0nzlTL85lwWcz/twJ5AX44M86vTFUpqkQHeC2hKg/CWriR60xBok/4zEceqEYCw
-	 Biqbv0GnzErMvwADeTzCM1UacTtXxI0SZ2r910ehXOYBBUikl+eQvNmXstX1h8Iudj
-	 iqWYnqQFG5vr4ld0LbuOQ+noUxhNXORnlrN8Y04IHwfpChgvusLovRfyIBR9o/nxue
-	 KoLHbSNjsnUVixfvmUG7fSLs8MHLUO9LGDQMSgObCiBEFetWvs43xrt0krN09Hr5vc
-	 Yq/EcAY2k3qmf5LpQePc+jtoF04Lnl2Z2m5aRQbC6a+NrGz4yeDdGBdLkloGDu3wq0
-	 TdrptcV7QY5Hw==
+	b=eDMKCPXcHmKQq6TFumRtM7si9IejQD31KydsxGJqnYYJ7dR6zkcBAJE5GSP5owKAZ
+	 jB2IULLblNQyheueODNyO6Psux44q1+bYDQnH2k6VD8vk/pps5Phx4DdnD/+J8isr6
+	 DutD3ozAjD2KTtr0312Axzu5MXUwgJhc0OP1Ltr/3oTQfMarC6rFUnvFi+Cgykn2H2
+	 frtBQCnoNFwZX3INp+bTtL2TBLRchO4xcMz4CLZXFqs0AiZxSCT3Ln44VmkOL5goNy
+	 1kPdhYd+JO4soKtpMkLOReZYgJ7+8bFQpm1HLNnMAW4MJ57zEWEESIYOe2fnjdfiyH
+	 cFUby31vXkvKw==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -41,9 +41,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Fazla Mehrab <a.mehrab@bytedance.com>,
 	Chen Zhongjin <chenzhongjin@huawei.com>,
 	Puranjay Mohan <puranjay@kernel.org>
-Subject: [PATCH v2 38/62] objtool: Generalize elf_create_section()
-Date: Fri,  9 May 2025 13:17:02 -0700
-Message-ID: <d4a18b96db831ea31d2f8781b39fa9a3d1ebc749.1746821544.git.jpoimboe@kernel.org>
+Subject: [PATCH v2 40/62] objtool: Introduce elf_create_reloc() and elf_init_reloc()
+Date: Fri,  9 May 2025 13:17:04 -0700
+Message-ID: <8c045c6e3048507898e9229ddd1aa7eb9ecbd0f6.1746821544.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1746821544.git.jpoimboe@kernel.org>
 References: <cover.1746821544.git.jpoimboe@kernel.org>
@@ -55,247 +55,269 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In preparation for the objtool klp diff subcommand, broaden the
-elf_create_section() interface to give callers more control and reduce
-duplication of some subtle setup logic.
+elf_create_rela_section() is quite limited in that it requires the
+caller to know how many relocations need to be allocated up front.
 
-While at it, make elf_create_rela_section() public so sections can be
-created by the upcoming klp diff code.
+In preparation for the objtool klp diff subcommand, allow an arbitrary
+number of relocations to be created and initialized on demand after
+section creation.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- tools/objtool/elf.c                 | 118 ++++++++++++++++------------
- tools/objtool/include/objtool/elf.h |   7 +-
- tools/objtool/orc_gen.c             |   6 +-
- 3 files changed, 77 insertions(+), 54 deletions(-)
+ tools/objtool/elf.c                 | 151 +++++++++++++++++++++++++---
+ tools/objtool/include/objtool/elf.h |   9 ++
+ 2 files changed, 145 insertions(+), 15 deletions(-)
 
 diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 38bf9ae86c89..c38b109f441f 100644
+index 1b5528065df7..8fc6e6c75b88 100644
 --- a/tools/objtool/elf.c
 +++ b/tools/objtool/elf.c
-@@ -1136,51 +1136,53 @@ static int elf_add_string(struct elf *elf, struct section *strtab, const char *s
+@@ -22,6 +22,8 @@
+ #include <objtool/warn.h>
+ 
+ #define ALIGN_UP(x, align_to) (((x) + ((align_to)-1)) & ~((align_to)-1))
++#define ALIGN_UP_POW2(x) (1U << ((8 * sizeof(x)) - __builtin_clz((x) - 1U)))
++#define MAX(a, b) ((a) > (b) ? (a) : (b))
+ 
+ static inline u32 str_hash(const char *str)
+ {
+@@ -897,10 +899,9 @@ elf_create_prefix_symbol(struct elf *elf, struct symbol *orig, size_t size)
+ 				 offset, size);
  }
  
- struct section *elf_create_section(struct elf *elf, const char *name,
--				   size_t entsize, unsigned int nr)
-+				   size_t size, size_t entsize,
-+				   unsigned int type, unsigned int align,
-+				   unsigned int flags)
+-static struct reloc *elf_init_reloc(struct elf *elf, struct section *rsec,
+-				    unsigned int reloc_idx,
+-				    unsigned long offset, struct symbol *sym,
+-				    s64 addend, unsigned int type)
++struct reloc *elf_init_reloc(struct elf *elf, struct section *rsec,
++			     unsigned int reloc_idx, unsigned long offset,
++			     struct symbol *sym, s64 addend, unsigned int type)
  {
- 	struct section *sec, *shstrtab;
--	size_t size = entsize * nr;
- 	Elf_Scn *s;
+ 	struct reloc *reloc, empty = { 0 };
  
--	sec = malloc(sizeof(*sec));
--	if (!sec) {
--		ERROR_GLIBC("malloc");
-+	if (name && find_section_by_name(elf, name)) {
-+		ERROR("section '%s' already exists", name);
-+		return NULL;
-+	}
-+
-+	sec = calloc(1, sizeof(*sec));
-+	if (!sec) {
-+		ERROR_GLIBC("calloc");
- 		return NULL;
- 	}
--	memset(sec, 0, sizeof(*sec));
+@@ -1002,12 +1003,14 @@ static int read_relocs(struct elf *elf)
  
- 	INIT_LIST_HEAD(&sec->symbol_list);
+ 		rsec->base->rsec = rsec;
  
-+	/* don't actually create the section, just the data structures */
-+	if (type == SHT_NULL)
-+		goto add;
-+
- 	s = elf_newscn(elf->elf);
- 	if (!s) {
- 		ERROR_ELF("elf_newscn");
- 		return NULL;
- 	}
- 
--	sec->name = strdup(name);
--	if (!sec->name) {
--		ERROR_GLIBC("strdup");
--		return NULL;
--	}
--
- 	sec->idx = elf_ndxscn(s);
- 
--	sec->data = elf_newdata(s);
--	if (!sec->data) {
--		ERROR_ELF("elf_newdata");
--		return NULL;
--	}
--
--	sec->data->d_size = size;
--	sec->data->d_align = 1;
--
- 	if (size) {
--		sec->data->d_buf = malloc(size);
--		if (!sec->data->d_buf) {
--			ERROR_GLIBC("malloc");
-+		sec->data = elf_newdata(s);
-+		if (!sec->data) {
-+			ERROR_ELF("elf_newdata");
-+			return NULL;
-+		}
-+
-+		sec->data->d_size = size;
-+		sec->data->d_align = 1;
-+
-+		sec->data->d_buf = calloc(1, size);
-+		if (!sec->data->d_buf) {
-+			ERROR_GLIBC("calloc");
- 			return NULL;
+-		nr_reloc = 0;
+-		rsec->relocs = calloc(sec_num_entries(rsec), sizeof(*reloc));
++		rsec->nr_alloc_relocs = sec_num_entries(rsec);
++		rsec->relocs = calloc(rsec->nr_alloc_relocs, sizeof(*reloc));
+ 		if (!rsec->relocs) {
+ 			ERROR_GLIBC("calloc");
+ 			return -1;
  		}
--		memset(sec->data->d_buf, 0, size);
- 	}
- 
- 	if (!gelf_getshdr(s, &sec->sh)) {
-@@ -1190,34 +1192,44 @@ struct section *elf_create_section(struct elf *elf, const char *name,
- 
- 	sec->sh.sh_size = size;
- 	sec->sh.sh_entsize = entsize;
--	sec->sh.sh_type = SHT_PROGBITS;
--	sec->sh.sh_addralign = 1;
--	sec->sh.sh_flags = SHF_ALLOC;
-+	sec->sh.sh_type = type;
-+	sec->sh.sh_addralign = align;
-+	sec->sh.sh_flags = flags;
- 
--	/* Add section name to .shstrtab (or .strtab for Clang) */
--	shstrtab = find_section_by_name(elf, ".shstrtab");
--	if (!shstrtab)
--		shstrtab = find_section_by_name(elf, ".strtab");
--	if (!shstrtab) {
--		ERROR("can't find .shstrtab or .strtab section");
--		return NULL;
-+	if (name) {
-+		sec->name = strdup(name);
-+		if (!sec->name) {
-+			ERROR("strdup");
-+			return NULL;
-+		}
 +
-+		/* Add section name to .shstrtab (or .strtab for Clang) */
-+		shstrtab = find_section_by_name(elf, ".shstrtab");
-+		if (!shstrtab) {
-+			shstrtab = find_section_by_name(elf, ".strtab");
-+			if (!shstrtab) {
-+				ERROR("can't find .shstrtab or .strtab");
-+				return NULL;
-+			}
-+		}
-+		sec->sh.sh_name = elf_add_string(elf, shstrtab, sec->name);
-+		if (sec->sh.sh_name == -1)
-+			return NULL;
-+
-+		elf_hash_add(section_name, &sec->name_hash, str_hash(sec->name));
- 	}
--	sec->sh.sh_name = elf_add_string(elf, shstrtab, sec->name);
--	if (sec->sh.sh_name == -1)
--		return NULL;
++		nr_reloc = 0;
+ 		for (i = 0; i < sec_num_entries(rsec); i++) {
+ 			reloc = &rsec->relocs[i];
  
-+add:
- 	list_add_tail(&sec->list, &elf->sections);
- 	elf_hash_add(section, &sec->hash, sec->idx);
--	elf_hash_add(section_name, &sec->name_hash, str_hash(sec->name));
- 
- 	mark_sec_changed(elf, sec, true);
- 
+@@ -1256,8 +1259,99 @@ struct section *elf_create_section(struct elf *elf, const char *name,
  	return sec;
  }
  
--static struct section *elf_create_rela_section(struct elf *elf,
--					       struct section *sec,
--					       unsigned int reloc_nr)
-+struct section *elf_create_rela_section(struct elf *elf, struct section *sec,
-+					unsigned int reloc_nr)
++static int elf_alloc_reloc(struct elf *elf, struct section *rsec)
++{
++	struct reloc *old_relocs, *old_relocs_end, *new_relocs;
++	unsigned int nr_relocs_old = sec_num_entries(rsec);
++	unsigned int nr_relocs_new = nr_relocs_old + 1;
++	unsigned long nr_alloc;
++	struct symbol *sym;
++
++	if (!rsec->data) {
++		rsec->data = elf_newdata(elf_getscn(elf->elf, rsec->idx));
++		if (!rsec->data) {
++			ERROR_ELF("elf_newdata");
++			return -1;
++		}
++
++		rsec->data->d_align = 1;
++		rsec->data->d_type = ELF_T_RELA;
++		rsec->data->d_buf = NULL;
++	}
++
++	rsec->data->d_size = nr_relocs_new * elf_rela_size(elf);
++	rsec->sh.sh_size   = rsec->data->d_size;
++
++	nr_alloc = MAX(64, ALIGN_UP_POW2(nr_relocs_new));
++	if (nr_alloc <= rsec->nr_alloc_relocs)
++		return 0;
++	rsec->nr_alloc_relocs = nr_alloc;
++
++	rsec->data->d_buf = realloc(rsec->data->d_buf,
++				    nr_alloc * elf_rela_size(elf));
++	if (!rsec->data->d_buf) {
++		ERROR_GLIBC("realloc");
++		return -1;
++	}
++
++	old_relocs = rsec->relocs;
++	new_relocs = calloc(nr_alloc, sizeof(struct reloc));
++	if (!new_relocs) {
++		ERROR_GLIBC("calloc");
++		return -1;
++	}
++
++	if (!old_relocs)
++		goto done;
++
++	/*
++	 * The struct reloc's address has changed.  Update all the symbols and
++	 * relocs which reference it.
++	 */
++
++	old_relocs_end = &old_relocs[nr_relocs_old];
++	for_each_sym(elf, sym) {
++		struct reloc *reloc;
++
++		reloc = sym->relocs;
++		if (!reloc)
++			continue;
++
++		if (reloc >= old_relocs && reloc < old_relocs_end)
++			sym->relocs = &new_relocs[reloc - old_relocs];
++
++		while (1) {
++			struct reloc *next_reloc = sym_next_reloc(reloc);
++
++			if (!next_reloc)
++				break;
++
++			if (next_reloc >= old_relocs && next_reloc < old_relocs_end)
++				set_sym_next_reloc(reloc, &new_relocs[next_reloc - old_relocs]);
++
++			reloc = next_reloc;
++		}
++	}
++
++	memcpy(new_relocs, old_relocs, nr_relocs_old * sizeof(struct reloc));
++
++	for (int i = 0; i < nr_relocs_old; i++) {
++		struct reloc *old = &old_relocs[i];
++		struct reloc *new = &new_relocs[i];
++		u32 key = reloc_hash(old);
++
++		elf_hash_del(reloc, &old->hash, key);
++		elf_hash_add(reloc, &new->hash, key);
++	}
++
++	free(old_relocs);
++done:
++	rsec->relocs = new_relocs;
++	return 0;
++}
++
+ struct section *elf_create_rela_section(struct elf *elf, struct section *sec,
+-					unsigned int reloc_nr)
++					unsigned int nr_relocs)
  {
  	struct section *rsec;
  	char *rsec_name;
-@@ -1230,22 +1242,23 @@ static struct section *elf_create_rela_section(struct elf *elf,
+@@ -1270,34 +1364,61 @@ struct section *elf_create_rela_section(struct elf *elf, struct section *sec,
  	strcpy(rsec_name, ".rela");
  	strcat(rsec_name, sec->name);
  
--	rsec = elf_create_section(elf, rsec_name, elf_rela_size(elf), reloc_nr);
-+	rsec = elf_create_section(elf, rsec_name, reloc_nr * elf_rela_size(elf),
-+				  elf_rela_size(elf), SHT_RELA, elf_addr_size(elf),
-+				  SHF_INFO_LINK);
+-	rsec = elf_create_section(elf, rsec_name, reloc_nr * elf_rela_size(elf),
++	rsec = elf_create_section(elf, rsec_name, nr_relocs * elf_rela_size(elf),
+ 				  elf_rela_size(elf), SHT_RELA, elf_addr_size(elf),
+ 				  SHF_INFO_LINK);
  	free(rsec_name);
  	if (!rsec)
  		return NULL;
  
--	rsec->data->d_type = ELF_T_RELA;
--	rsec->sh.sh_type = SHT_RELA;
--	rsec->sh.sh_addralign = elf_addr_size(elf);
- 	rsec->sh.sh_link = find_section_by_name(elf, ".symtab")->idx;
- 	rsec->sh.sh_info = sec->idx;
--	rsec->sh.sh_flags = SHF_INFO_LINK;
- 
--	rsec->relocs = calloc(sec_num_entries(rsec), sizeof(struct reloc));
--	if (!rsec->relocs) {
--		ERROR_GLIBC("calloc");
--		return NULL;
-+	if (reloc_nr) {
-+		rsec->data->d_type = ELF_T_RELA;
-+		rsec->relocs = calloc(sec_num_entries(rsec), sizeof(struct reloc));
-+		if (!rsec->relocs) {
-+			ERROR_GLIBC("calloc");
-+			return NULL;
-+		}
+-	rsec->sh.sh_link = find_section_by_name(elf, ".symtab")->idx;
+-	rsec->sh.sh_info = sec->idx;
+-
+-	if (reloc_nr) {
++	if (nr_relocs) {
+ 		rsec->data->d_type = ELF_T_RELA;
+-		rsec->relocs = calloc(sec_num_entries(rsec), sizeof(struct reloc));
++
++		rsec->nr_alloc_relocs = nr_relocs;
++		rsec->relocs = calloc(nr_relocs, sizeof(struct reloc));
+ 		if (!rsec->relocs) {
+ 			ERROR_GLIBC("calloc");
+ 			return NULL;
+ 		}
  	}
  
++	rsec->sh.sh_link = find_section_by_name(elf, ".symtab")->idx;
++	rsec->sh.sh_info = sec->idx;
++
  	sec->rsec = rsec;
-@@ -1260,7 +1273,8 @@ struct section *elf_create_section_pair(struct elf *elf, const char *name,
+ 	rsec->base = sec;
+ 
+ 	return rsec;
+ }
+ 
++struct reloc *elf_create_reloc(struct elf *elf, struct section *sec,
++			       unsigned long offset,
++			       struct symbol *sym, s64 addend,
++			       unsigned int type)
++{
++	struct section *rsec = sec->rsec;
++
++	if (!rsec) {
++		rsec = elf_create_rela_section(elf, sec, 0);
++		if (!rsec)
++			return NULL;
++	}
++
++	if (find_reloc_by_dest(elf, sec, offset)) {
++		ERROR_FUNC(sec, offset, "duplicate reloc");
++		return NULL;
++	}
++
++	if (elf_alloc_reloc(elf, rsec))
++		return NULL;
++
++	return elf_init_reloc(elf, rsec, sec_num_entries(rsec) - 1, offset, sym,
++			      addend, type);
++}
++
+ struct section *elf_create_section_pair(struct elf *elf, const char *name,
+ 					size_t entsize, unsigned int nr,
+-					unsigned int reloc_nr)
++					unsigned int nr_relocs)
  {
  	struct section *sec;
  
--	sec = elf_create_section(elf, name, entsize, nr);
-+	sec = elf_create_section(elf, name, nr * entsize, entsize,
-+				 SHT_PROGBITS, 1, SHF_ALLOC);
+@@ -1306,7 +1427,7 @@ struct section *elf_create_section_pair(struct elf *elf, const char *name,
  	if (!sec)
  		return NULL;
  
+-	if (!elf_create_rela_section(elf, sec, reloc_nr))
++	if (!elf_create_rela_section(elf, sec, nr_relocs))
+ 		return NULL;
+ 
+ 	return sec;
 diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-index ffdf9ec3882e..b366516b119d 100644
+index fc00f86bedba..5c663e475890 100644
 --- a/tools/objtool/include/objtool/elf.h
 +++ b/tools/objtool/include/objtool/elf.h
-@@ -116,11 +116,16 @@ struct elf {
- struct elf *elf_open_read(const char *name, int flags);
+@@ -47,6 +47,7 @@ struct section {
+ 	int idx;
+ 	bool _changed, text, rodata, noinstr, init, truncate;
+ 	struct reloc *relocs;
++	unsigned long nr_alloc_relocs;
+ };
  
- struct section *elf_create_section(struct elf *elf, const char *name,
--				   size_t entsize, unsigned int nr);
-+				   size_t size, size_t entsize,
-+				   unsigned int type, unsigned int align,
-+				   unsigned int flags);
- struct section *elf_create_section_pair(struct elf *elf, const char *name,
- 					size_t entsize, unsigned int nr,
- 					unsigned int reloc_nr);
+ struct symbol {
+@@ -139,6 +140,14 @@ void *elf_add_data(struct elf *elf, struct section *sec, const void *data,
  
-+struct section *elf_create_rela_section(struct elf *elf, struct section *sec,
-+					unsigned int reloc_nr);
+ unsigned int elf_add_string(struct elf *elf, struct section *strtab, const char *str);
+ 
++struct reloc *elf_create_reloc(struct elf *elf, struct section *sec,
++			       unsigned long offset, struct symbol *sym,
++			       s64 addend, unsigned int type);
 +
- struct symbol *elf_create_symbol(struct elf *elf, const char *name,
- 				 struct section *sec, unsigned int bind,
- 				 unsigned int type, unsigned long offset,
-diff --git a/tools/objtool/orc_gen.c b/tools/objtool/orc_gen.c
-index 6eff3d6a125c..9d380abc2ed3 100644
---- a/tools/objtool/orc_gen.c
-+++ b/tools/objtool/orc_gen.c
-@@ -127,7 +127,11 @@ int orc_create(struct objtool_file *file)
- 		return -1;
- 	}
- 	orc_sec = elf_create_section(file->elf, ".orc_unwind",
--				     sizeof(struct orc_entry), nr);
-+				     nr * sizeof(struct orc_entry),
-+				     sizeof(struct orc_entry),
-+				     SHT_PROGBITS,
-+				     1,
-+				     SHF_ALLOC);
- 	if (!orc_sec)
- 		return -1;
- 
++struct reloc *elf_init_reloc(struct elf *elf, struct section *rsec,
++			     unsigned int reloc_idx, unsigned long offset,
++			     struct symbol *sym, s64 addend, unsigned int type);
++
+ struct reloc *elf_init_reloc_text_sym(struct elf *elf, struct section *sec,
+ 				      unsigned long offset,
+ 				      unsigned int reloc_idx,
 -- 
 2.49.0
 
