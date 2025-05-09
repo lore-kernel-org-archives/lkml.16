@@ -1,136 +1,119 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554BE23D2AF;
-	Fri,  9 May 2025 14:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EB58632C
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 14:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746799728; cv=none; b=rcojiJgaFU+ODW7k35iItf81Xrt0LLvya5UU6+73NZOTN7c2tRwmQNP6/zT7vhHUH5NrMHE1EUSYFq42aekq/EUxCPb7DwO1J3D3mQszSu9eUQ6QG+RfOgNzWpXWqB18RB0uaAu1FcYx4rKSmyMplMTmZjP1A4yilYNa46mkMQY=
+	t=1746799771; cv=none; b=PF4v7WpvLvqJOHEBDr+vKvV+1IpfY4swvPKezwWcn3awFVBpnNSTuskHVOVnEfWQipb/nD3SmunQFLcN7ybBBJg4/qyIyyXNe/onTp+v/Xbm9BxXPtCy8JX52en7LT/ulmDku1O7dDJ+8X7oYTnSzObFtMQIvpYrjm/nJi8ODgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746799728; c=relaxed/simple;
-	bh=TT+lpPy+OMdPfeE2RJdWTHLt32F9aq+bILiEC9wSg4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Va+UKoQcaBb09XadydY+qDxvWDN/PSWen7hbXfpn1DZJLBIzg6jBJ1nTS54cRSaFIe012w6HjGmdfgOQwJmzVTyvQQ+JOsfs1Vn/8W6J5LUcvhNFk3fuRGxuqMuSkMrwQNUQj6BRuz9OcJBcBen9Aboz777O2jBuoAKd4KWUhUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jKvtZEwR; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1746799771; c=relaxed/simple;
+	bh=vQwnaN5SIa/H+Y6ee37jwTVs6F3pxmGriu6KQ74VZEo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nAranQTlsUhwsCZZVGtF4tqqyjMBexuBP6F37Xl334Seh9sVfPJHmshmO+F18EM82GTIko35zppfnQBTrWaN80v7FaDmUQLVYwH6pqKHPb1boFWbjMlL2MYTOF/lNIINd/2U+o3guNx5uyz6RNnQD6xux5YlWq/8PWo4Sfwu2mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GCvkRk4k; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jKvtZEwR"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AE6B840E015E;
-	Fri,  9 May 2025 14:08:38 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id YI9qHHUxPmSg; Fri,  9 May 2025 14:08:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746799714; bh=TjXS7ec2meU62v5WeiXGJiXDH2QWa1yq0kvc6VuthsE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jKvtZEwRcXVHqBJfIuqfg76A8nIMuSYZ5kppwCjOsExoYYfNrrIJQo1SEYabSuWmx
-	 9ejzW/d0gLQcHekjE+ajy9u1onLzu22p3itX93Xe4tnuRj/OBgtfw53Qflvp9+1Vsb
-	 ATeR47hNFTE/Skn2ZwT1DL3j5rxReHXV6C7dWG9Bm8wLOVvJmjfNqVqS+IebKeUnzx
-	 7dZkd0L80PYBeYgQwEI8vXolRWKOR1w7bn5le/1DCg/syy3Ft6Zdnoa6HVNlpxwM2l
-	 zi/JpRnks6+KoBhw06+BhCsY0KegLoR7ebULiB2mxJBHdEkvBTPKaJdX2yGbOfceHn
-	 UGCxRpQKR7nusOVzhpfJqJI4lVmGxH4qYVJwKXvC5V3nrqwRnD+6+VRJqMHPQUoF9x
-	 Y5ViyktyUyrXjyfVasLn3RDc0CFSJq2JxKFEU1jXXzB3oEB71433FAj5lHq/oG3mRX
-	 yAWiOHewO+W4SJIAW5ptM8QFh5NQT5aXLx/XLWsvtlrFWUMGQ9lL+O6obXlL4eLTAZ
-	 Dzs9RLiHxmTev+0GF2eQjQZseO8a5dxc75L9CADneDdpqfzqm6aq/xQoi/QCMLnAXu
-	 Oe7172o1jbizazQrm5lEAfoiKlveIHBPWvJtcradgbD+inaELzNycGqhVEBkP4ITtU
-	 T+TzB64bQvxhhnv3NrWhN4XQ=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D2DCF40E01CF;
-	Fri,  9 May 2025 14:08:26 +0000 (UTC)
-Date: Fri, 9 May 2025 16:08:21 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: x86@kernel.org, Tony Luck <tony.luck@intel.com>,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	Smita.KoralahalliChannabasappa@amd.com,
-	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH v3 14/17] x86/mce/amd: Enable interrupt vectors once
- per-CPU on SMCA systems
-Message-ID: <20250509140821.GQaB4MVUiLk-a5FWM-@fat_crate.local>
-References: <20250415-wip-mca-updates-v3-0-8ffd9eb4aa56@amd.com>
- <20250415-wip-mca-updates-v3-14-8ffd9eb4aa56@amd.com>
- <20250507193539.GPaBu2C_Gt7ksvRHoc@fat_crate.local>
- <20250508155300.GB1939543@yaz-khff2.amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GCvkRk4k"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22e42641d7cso234755ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 07:09:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746799769; x=1747404569; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jCiKxL6LvoeyY9W6b3RA5blUeHU2Mmy1DhVz0FZzVWc=;
+        b=GCvkRk4kEg52KvSZTakEcYv/YL0uT1qGB5CMIV23CBHwOIbUhemIDQ0yS0+Q/Td11Y
+         A4QU4ZF2Xb5wuagf8xxURV7rp6OuO7UPDBzBroBxUF1umxlASerewXL2YsUaufAJ2VqU
+         cfLIWXlDOzrbLimqmwWD4ghUt1fu1rVZuMWvfp30TSnaA8vEKP0I5NgGNwKWktK5yokD
+         8GvLDqWEeAl1+Xz00br358GmhxA57hhABolgqf2FiZ17mzX0SFLv6rDRshdB1cuJfSGN
+         YDuGAfyRWjnm5e8OYCYoy8arW7mDhbXVh7uexECpGojI8ZHO8pylz7C72XPF2lFATSn1
+         EMyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746799769; x=1747404569;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jCiKxL6LvoeyY9W6b3RA5blUeHU2Mmy1DhVz0FZzVWc=;
+        b=R3FsJwkQZhXRXCS/zvNWl17fbjGVzWPazlGJLHaow60BP9Kx98KdYzlI3iUCVY6R93
+         ebFkMtUgEYtY0PxNoEvoFROGtSdoTIMk+N4iAAXTPwSKL4ZKXfEWOgHEdxaLqjoL7Pvq
+         A6YxHqHP6RdueSr/aIJy63ucil710sdly68Xzo7K6M9biAg+VPuRryia+SOZgsRPLVPQ
+         9HFNU1Oa8828QcWdmx0tDbvTOEdYVWu6/fGTPpYgygryCd7G0AlFn716KLdkvxrbs4MS
+         l3tU69ofmgxDUGaSqX5PsU9sfeVtedYtjz1Rs0M1MvQgLMJsj3xamtq7tMgQIzki9vVW
+         fhYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUh/Ot74Hft23t/Co+AEJQEDfzvt1ZeOsJvW8IlK2homtzG5+Cgs+3EUXNrPFjLQFW1uuW6/LKK03EhNwI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVmS4JHO9P/zXUW1HBz+h5IEat1WJPXeNdJBlXKCt+wvRulrYV
+	lp6E8NT6YWz90DfRknIGrQGlXD5ZlQ1e9jLvjv8Q+wC7FEAgayZNwtPWvyYYw0MJ62AbSRoJvq2
+	oaJkHgMzTCeYsUriyTBz/tpdf6lOcFTKPht4x
+X-Gm-Gg: ASbGncsZkX2ubH4v5Kzk425/kdCXJE6VJzWjwI/nlOHKEJ1MMf+UI/e5te/z6l9DTvj
+	xk3BIs07iFWbJ8pWplYIOVH2cKwkTOpjx1v5JCfAZsaSctoHGU8g8a7z5vLtcou1DVXgCuUoFWn
+	FM2WLs2b5IxuqpY1NVSDt6eoM=
+X-Google-Smtp-Source: AGHT+IGMI/XDr8dUmvgSvSl1rg1l31oGTBGmNKBdui7zTK+cXuKqPn5F0+EqTjHwmKRPbjb5nSBKLROp6YQHQ8mm83g=
+X-Received: by 2002:a17:903:1c3:b0:224:a93:704d with SMTP id
+ d9443c01a7336-22fca87efcdmr3648795ad.2.1746799768696; Fri, 09 May 2025
+ 07:09:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250508155300.GB1939543@yaz-khff2.amd.com>
+References: <20250509115126.63190-1-byungchul@sk.com>
+In-Reply-To: <20250509115126.63190-1-byungchul@sk.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Fri, 9 May 2025 07:09:16 -0700
+X-Gm-Features: ATxdqUEcD0TRlngE7OhKXE4b1mDY8XLhym2WmzKEPsqCbaP_I_Y7Ra0p4qdhPME
+Message-ID: <CAHS8izPFiytN_bM6cu2X8qbvyVTL6pFMeobW=qFwjgHbg5La9Q@mail.gmail.com>
+Subject: Re: [RFC 00/19] Split netmem from struct page
+To: Byungchul Park <byungchul@sk.com>, Pavel Begunkov <asml.silence@gmail.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org, 
+	akpm@linux-foundation.org, ast@kernel.org, daniel@iogearbox.net, 
+	davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch, 
+	edumazet@google.com, pabeni@redhat.com, vishal.moola@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 08, 2025 at 11:53:00AM -0400, Yazen Ghannam wrote:
-> Let me flip it around. Why is this check needed at all?
+On Fri, May 9, 2025 at 4:51=E2=80=AFAM Byungchul Park <byungchul@sk.com> wr=
+ote:
+>
+> The MM subsystem is trying to reduce struct page to a single pointer.
+> The first step towards that is splitting struct page by its individual
+> users, as has already been done with folio and slab.  This patchset does
+> that for netmem which is used for page pools.
+>
+> Matthew Wilcox tried and stopped the same work, you can see in:
+>
+>    https://lore.kernel.org/linux-mm/20230111042214.907030-1-willy@infrade=
+ad.org/
+>
+> Mina Almasry already has done a lot fo prerequisite works by luck, he
+> said :).  I stacked my patches on the top of his work e.i. netmem.
+>
+> I focused on removing the page pool members in struct page this time,
+> not moving the allocation code of page pool from net to mm.  It can be
+> done later if needed.
+>
+> There are still a lot of works to do, to remove the dependency on struct
+> page in the network subsystem.  I will continue to work on this after
+> this base patchset is merged.
+>
+> This patchset is based on mm tree's mm-unstable branch.
+>
 
-As I said above, some BIOS f*ckup.
+This series largely looks good to me, but a couple of things:
 
-> Was there ever a real issue to resolve?
+- For deep changes like this to the page_pool, I think we need a
+before/after run to Jesper's currently out-of-tree benchmark to see
+any regressions:
+https://lore.kernel.org/netdev/20250309084118.3080950-1-almasrymina@google.=
+com/
 
-Not that I remember...
+- Also please CC Pavel on iterations related to netmem/net_iov, they
+are reusing that in io_uring code for iouring rx rc as well.
 
-> It seems to me the deferred error updates are just following what other code
-> did.
-
-Let's search the web for it:
-
-* https://bbs.archlinux.org/viewtopic.php?id=299379
-
-- silly guests, who cares
-
-* https://gitlab.com/qemu-project/qemu/-/issues/2571
-
-- another misguided qemu...
-
-Aha:
-
-https://lore.kernel.org/lkml/20241219124426.325747-1-pbonzini@redhat.com
-
-the usual virt silly stuff.
-
-> I figure the reason to have the platform give the offset to the OS is so
-> the OS doesn't hard code it (in case it needs to change). These offsets
-> were hard coded in the past (conflict between IBS/THR), and it caused
-> problems when the offsets switched in the hardware. The registers that
-> give the offsets were introduced soon after, I think.
-
-Right.
-
-> So the checks we do are defeating the purpose. The OS is still hard
-> coding the offsets. The goal of this change is to follow the intent of
-> the design. Sometimes we need to let go and trust [the BIOS]. ;)
-
-Look at you being silly :-P
-
-> Now we could update the checks to verify that an offset is not used for
-> multiple interrupt sources.
-
-... or, we won't do anything until someone in BIOS f*cks up again.
- 
-> Let's follow up with the design folks to be sure.
-
-Yah, sounds like we will have to verify them after all. You can see how
-universally widespread the trust in BIOS is...
-
-:-P
-
-In any case, whatever you do, when you axe off stuff, write in the commit
-message why you do so. Silently removing it is making me want to know why it
-is ok now.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--
+Thanks,
+Mina
