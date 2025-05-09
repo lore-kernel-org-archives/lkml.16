@@ -1,71 +1,112 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8469621324D;
-	Fri,  9 May 2025 14:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA50A1E5B82;
+	Fri,  9 May 2025 14:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746800252; cv=none; b=PNJlzrdafNeL65+Vj7TE69+6w89tRaOB+0KpBgkQNBxuXqyGoXYjcQeN/t/SKWLmI8HMZAcxQIDz0ElVCz1AaxUVT/NiqfFMwpNnfu9Gh5LEGwprvAR1Rpa38Fu5I/JxdkLtqqd3gBhUGdgBzuK54keKb1BqxOfu3ISKHH/qnK4=
+	t=1746800328; cv=none; b=f7DqV+bgijkh/7+8KDUQMmbPRANVU5SlRGLbLFHxewFO0b+kIziIaGoQU5ySoiE4DIFOUhhFnzkG63PT+zeCI4d9P9otC2o2zdcQhAK0Auar1B0noa+CvZQnkh1OWFREB7FlGD9RL52qzyh5gHrLsuY25H7UOIupPEdwka9Bg+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746800252; c=relaxed/simple;
-	bh=8YpPIiJRES6y9U9nDUVsp0fNxxDECRqz8HdY8Iy5l9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lH7mhSh1eNUZ3F8EGG+6bp0PX/QQdUj9bYLlQrRx7qaxcilFhw2uxyO7vPLlQ2P1uYTUnXBO8SZlHjKSexfpoKSLydbFKrMMnXgCp0I0DnAvhaeBEuwy1uMsiPLtfJ6/egcjAfL4UXgMnuSiFa2Dv2bTVJtPtP90oP3+GIGvufk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=SSkA9rzG; arc=none smtp.client-ip=220.197.32.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1746800328; c=relaxed/simple;
+	bh=K/Qfs3+JXPjQFxdXIhUR3acZ/8Eb5wwetSO8CwTUPJ8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=vAaY+lJP23CXoEfjSklucd8o11c5s4BUCfo/DHB0kv8nFjsyrdWDW1iCCB3XL98HtAOSjBu7VtbtyuxjPzszxypFy2Cq6QNBKRh3FnePzmnzpxGMHgb+sidooEhdn2s/ADdmrndfXxZopB9HzgyKAP+gAqlVBy1bs7mIwTRap7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=hewAkBeu; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="SSkA9rzG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=Kg1lOsicIGwMurHHg1lsBFSLBs1lOtH7DCGaQFmSoc4=;
-	b=SSkA9rzGzQPYLCmZq3aIZxQoDYOHXIIkCeFrJsIqAmFW1LByq3EGP4MrFBeYD/
-	xNj44kpFFaqkqBEvtsiUciWqUrgnVuTLwb+qqUUAkNWpUY9S6/X3SbQCVdyf49eJ
-	FOXSMjluCBPH6r+Ma45DCZmyLC4QNvMX16DqwHTgH/4iU=
-Received: from dragon (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id Mc8vCgCnB_pEDh5oyTOqAA--.49231S3;
-	Fri, 09 May 2025 22:16:38 +0800 (CST)
-Date: Fri, 9 May 2025 22:16:35 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Markus Niebel <Markus.Niebel@tq-group.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux@ew.tq-group.com, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: arm: add TQMa8XxS boards
-Message-ID: <aB4OQ+sVXz1Qima0@dragon>
-References: <20250424075533.1266435-1-alexander.stein@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="hewAkBeu"
+Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 7250722206;
+	Fri,  9 May 2025 16:18:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1746800324;
+	bh=WiABciZh5JeYfdXWgF7so0KTIPIEJer4ove2V2q8QQI=; h=From:To:Subject;
+	b=hewAkBeuJ/GBJorEuaZV7kTk3/dGRf/27fx6mM11wyI2t4CFdRNLQEUNE2k2tOCHv
+	 fhZDttEFj04i1OHoJ5pOgUM/m2gwn8+iwuXQGvMqqfxbH6k/FWcenBg4khGwpduwBI
+	 ozCGUv+EPGklAZWX3gDsEkL1Gj4vQqdeFgV8WMIURJ8BEKGcT/jTd1tyqAp7Zcx1gx
+	 6ld1+xt0Tz+xNCnPfkwklyEWevf7wVvObsbsSK6KJF+0KP7xr85JPeNRqDIbSJmaY0
+	 9fNuzPQRoopUviExzdX3Y8uExJafjosb1JmnGL5JUzT2yKRxjAyGK2U6vjLLWu4I3+
+	 PG4VJFXCcgtxA==
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Marek Vasut <marek.vasut@gmail.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	stable@vger.kernel.org,
+	Francesco Dolcini <francesco.dolcini@toradex.com>
+Subject: [PATCH v2] gpio: pca953x: fix IRQ storm on system wake up
+Date: Fri,  9 May 2025 16:18:28 +0200
+Message-Id: <20250509141828.57851-1-francesco@dolcini.it>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424075533.1266435-1-alexander.stein@ew.tq-group.com>
-X-CM-TRANSID:Mc8vCgCnB_pEDh5oyTOqAA--.49231S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUYD73DUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiBBFIZWgd-c1QIAAAsN
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 24, 2025 at 09:55:29AM +0200, Alexander Stein wrote:
-> From: Markus Niebel <Markus.Niebel@tq-group.com>
-> 
-> TQMa8XxS is a SOM series featuring NXP i.MX8X SoC.
-> They are called TQMa8XQPS and TQMa8XDPS respectively.
-> MB-SMARC-2 is a carrier reference design.
-> 
-> Signed-off-by: Markus Niebel <Markus.Niebel@tq-group.com>
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
 
-Applied both, thanks!
+If an input changes state during wake-up and is used as an interrupt
+source, the IRQ handler reads the volatile input register to clear the
+interrupt mask and deassert the IRQ line. However, the IRQ handler is
+triggered before access to the register is granted, causing the read
+operation to fail.
+
+As a result, the IRQ handler enters a loop, repeatedly printing the
+"failed reading register" message, until `pca953x_resume` is eventually
+called, which restores the driver context and enables access to
+registers.
+
+Fix by disabling the IRQ line before entering suspend mode, and
+re-enabling it after the driver context is restored in `pca953x_resume`.
+
+An irq can be disabled with disable_irq() and still wake the system as
+long as the irq has wake enabled, so the wake-up functionality is
+preserved.
+
+Fixes: b76574300504 ("gpio: pca953x: Restore registers after suspend/resume cycle")
+Cc: stable@vger.kernel.org
+Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+---
+v1 -> v2
+ - Instead of calling PM ops with disabled interrupts, just disable the
+   irq while going in suspend and re-enable it after restoring the
+   context in resume function.
+---
+ drivers/gpio/gpio-pca953x.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index ab2c0fd428fb..b852e4997629 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -1226,6 +1226,8 @@ static int pca953x_restore_context(struct pca953x_chip *chip)
+ 
+ 	guard(mutex)(&chip->i2c_lock);
+ 
++	if (chip->client->irq > 0)
++		enable_irq(chip->client->irq);
+ 	regcache_cache_only(chip->regmap, false);
+ 	regcache_mark_dirty(chip->regmap);
+ 	ret = pca953x_regcache_sync(chip);
+@@ -1238,6 +1240,10 @@ static int pca953x_restore_context(struct pca953x_chip *chip)
+ static void pca953x_save_context(struct pca953x_chip *chip)
+ {
+ 	guard(mutex)(&chip->i2c_lock);
++
++	/* Disable IRQ to prevent early triggering while regmap "cache only" is on */
++	if (chip->client->irq > 0)
++		disable_irq(chip->client->irq);
+ 	regcache_cache_only(chip->regmap, true);
+ }
+ 
+-- 
+2.39.5
 
