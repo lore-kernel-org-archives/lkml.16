@@ -1,151 +1,258 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5413133EC;
-	Fri,  9 May 2025 02:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A80F33EC;
+	Fri,  9 May 2025 02:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746758749; cv=none; b=iXv0vfMymAt4DPpSXgcPUX7LBpHezrKGfEf0rOkFi6KUp/nTpG5t3lsyWtMgeg60x3DDNph8+7TsIjJXHNsrgthk+5syolI2bvqCq9OX7jacQxF0SPwZBU95/9JHafMD01/brFkAPUzpmKHuTFALXmWywupW+uWdmNK+863KLJc=
+	t=1746758834; cv=none; b=n2yBnePQV4W++Ffa3eWdqEQZ8LKui2EJEZsP+2UZdmW7p39hs4TARLcM3UkDRIYLftjm9N2lGRA2lq1SSYBJW3msdp0p1I2vgpuOvaro5CPkxx8Jssiz/cEByrngnqNHw/FrlgyOKdLfBWuE2ezRuoruAlfyQf/wEGE1vnsXxcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746758749; c=relaxed/simple;
-	bh=QCt7W9cQubdkOh1wzz0DSW4wGR4LXBXeyzwonSK7vwE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BT/kGKZi7mNYGcQcKJtnacYV9Pc6zpZsjFQkvOJxmRMH/uY1rYnohqlAxHeQGbiizMHZ26wnHuoIKEV1NdXRKRwkYR8+2RDqkVOGbkrSXT1EaCNXHFh5OkmXJz7Xje0eTLLXBdWkz6IKyS/G+7elCkBYqwKuEOuruDUsIG/NGGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QfTjq4zK; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QfTjq4zK"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-74019695377so1298437b3a.3;
-        Thu, 08 May 2025 19:45:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746758748; x=1747363548; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mFS6mbwVeD+XxwjTe2L6G5xAyvfPHlOmCcGIREdnkRY=;
-        b=QfTjq4zKyBqeIIyvd/EaUuKlcSjsbB7mji2XCZYzX84nL2Vx5YDZzWz/K8MU7Uf5WJ
-         xKEXJWZzIgGSxkbnWfUJ8d/2eN5ijONlYPududbp76hMZUTugMW7Zs6L+odgjkqnRdCk
-         BGcH6cPJYQCnAl8v+a8cuMAttr55tPw8av1p3rxca4EWVriI0leec2UzxTRZxKoLsFU1
-         KUgm77cM/m6pyfXNfIs0g2j9srRbB5fL5F4z/3vyLhduR/lIGTITcGbJ4s8PTuJuX6bt
-         sPyhziOEcIs6i5obNOuWrTsqZZTEodmtDevb1A7AqMOfbDmR69WSwT9GW+dL28SoAGqm
-         /Vgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746758748; x=1747363548;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mFS6mbwVeD+XxwjTe2L6G5xAyvfPHlOmCcGIREdnkRY=;
-        b=bv1K7LQw5maonWyJNWSZNys0kKa2kinTtQ3/hAOxF4DlcGHS6Hfxq7jIjDTh1Jmx31
-         7mkEc3KzfPC3hx5fZvEhJAaJAtMxuZS3C19w0FrB8ruMtmBdSBg0oE9YxlDOpuJuJ2Kc
-         suGL0WHu57UPfOVSW2v6KznNjq0qmSKlfPVY3WbgbmRlSBg8CKPcVF2wgn6VHtVgU65b
-         vu4OTPlG/uQFc6qMSbtirYjw28hUBaxnn05qx9OqVgYq6hGFkCqJBitB4j3SS4YwQRsq
-         1UgvHIwCUrydXoJ74FLWBJeiXAFaLK13BHKbIWl/ltEwsAru2UMOd4Y8T7+RU5Eg2dzo
-         BeBA==
-X-Forwarded-Encrypted: i=1; AJvYcCVIPmi4wxBcQtJTf7EwEQOXEDdLkWtoTHTmZOXqlORulXIoCDhhg09PGJ49xvYH+EmngA7Q0Zyb7BxJgARp@vger.kernel.org, AJvYcCVWg3NL9zA7mvHeiHp+JXEbJigcxE5+UJ1OiR/mjhZp0lMnPfD9IMYvCnAbqQfvKazhrQBH+s5oMTV9ZO8HvG+Ysdn8x+cj@vger.kernel.org, AJvYcCVxNbK7PqPjrym+0wzSTfbdH/t5ISStVKhTrHpRov5bPKJ2nmwUo6bw/U9h3uxJBH8Keu4Ikk89yE4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyLtoX3TCPNjOJvwj+uUbAk3BuY/vmEn+G3A96n0YVKRj2ED1U
-	RRj+4y3rVXiUoDVhmxheeLz1JGGcD3fkA418geb0KvSuCJDAfOtQ
-X-Gm-Gg: ASbGncs8AA8AAyV42F8ZIozCjp7ms41yRHUr9D/J7rp824IQmKcCrbFFpHgTrwfv6vm
-	Hcr6xfx2zcZFP7qC4gjw3TyjE8jjuaEX+798mvk5uSTXWBxE2JmJ73viHN7NIFEp1jmomwJ5fGg
-	6ZIBW5S8Ocoq5OAQji3EAh06z5AltV0XA7xwaUFe/DucRhTCpaiqAlIKgUZKEREge8YPbMIpdgp
-	fPpVqeDnq8PdOWdfMPIZTfrNjSq9lCFV4M+vvtqAM/RR86lytOq1Cz5A1CSJd2OdlgesgG2okP3
-	Xw9P492gIdvB26jTZMmsSGQi4RlGqnwpRtcd+6ooHR/PA8Cyht1kkYoa5h+MC7aAoZ9JQsFSqPz
-	Ou0E=
-X-Google-Smtp-Source: AGHT+IEUVrYysCgJR3AWSOW4YGeY4h7f7UFx3jN2Vg1lkgbAWVswe0YqJKwqbpPKq8gyz9rTI69HwQ==
-X-Received: by 2002:a05:6a20:438f:b0:1f5:619a:8f75 with SMTP id adf61e73a8af0-215ababd87amr2530322637.2.1746758747592;
-        Thu, 08 May 2025 19:45:47 -0700 (PDT)
-Received: from localhost.localdomain ([14.22.11.165])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a0d007sm786835b3a.96.2025.05.08.19.45.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 19:45:47 -0700 (PDT)
-From: Jinliang Zheng <alexjlzheng@gmail.com>
-X-Google-Original-From: Jinliang Zheng <alexjlzheng@tencent.com>
-To: wufan@kernel.org
-Cc: alexjlzheng@gmail.com,
-	alexjlzheng@tencent.com,
-	chrisw@osdl.org,
-	greg@kroah.com,
-	jmorris@namei.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	paul@paul-moore.com,
-	serge@hallyn.com,
-	viro@zeniv.linux.org.uk,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH v3] securityfs: fix missing of d_delete() in securityfs_remove()
-Date: Fri,  9 May 2025 10:45:39 +0800
-Message-Id: <20250509024539.364945-1-alexjlzheng@tencent.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <CAKtyLkGK3JH7amgskrjMyUz1KZeVtAO_4bA_8iuBYvykgHRsRQ@mail.gmail.com>
-References: <CAKtyLkGK3JH7amgskrjMyUz1KZeVtAO_4bA_8iuBYvykgHRsRQ@mail.gmail.com>
+	s=arc-20240116; t=1746758834; c=relaxed/simple;
+	bh=YQSTXvAsk3kEwLsre9pFQg2X6xB3u0nbpW6UTL4YXlY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kjxlhD7Jgc04Zp+a36p+L3nBykS9icEffryt3gmV24Rs2xV29LoDhrB8pq3kcyKxhn/d5AAkelft8KeJJRoJxxth/OOR66ha32uzqPGqZpdpGHF0qlZWp9iS/m87XuHXlAysedFVPmrT6bXxtDvwfWFXWtGATH1eZSUzhRUvWEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5491K4NS005031;
+	Fri, 9 May 2025 02:46:59 GMT
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46d8c16v7c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 09 May 2025 02:46:58 +0000 (GMT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Thu, 8 May 2025 19:46:57 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Thu, 8 May 2025 19:46:55 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
+CC: <jaegeuk@kernel.org>, <chao@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>, <patches@lists.linux.dev>,
+        <linux-kernel@vger.kernel.org>, <jianqi.ren.cn@windriver.com>
+Subject: [PATCH 6.1.y] f2fs: fix to cover read extent cache access with lock
+Date: Fri, 9 May 2025 10:46:54 +0800
+Message-ID: <20250509024654.3233384-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=NIjV+16g c=1 sm=1 tr=0 ts=681d6ca2 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8 a=hSkVLCK3AAAA:8 a=t7CeM3EgAAAA:8 a=neBg-OAXQ6Q9hM991mYA:9
+ a=cQPPKAXgyycSBL8etih5:22 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: OMY2IBDys1QeeY5WjJrS-1oeglW7LmlT
+X-Proofpoint-ORIG-GUID: OMY2IBDys1QeeY5WjJrS-1oeglW7LmlT
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDAyNiBTYWx0ZWRfX4J2iRquCwYUl Bd0Vz2Hc15poZSi7WZd9dvk6NOSS5FcaEdzqAtSgR7JXdqHfIqFRXKiXI2WZAeLo0RxTndMvj5M 1gdPfZdOlH7/qCLwsR66juS2NngSHtee0f2LYJZ5ExqoeseSJTyK3HzMBBOa0uxhJnHyO3hyt/e
+ 0Z6SPe0+GUOnMeM8e0VjjcDDbNKO8mdLnpOF0+KyEOeDCuoU9bX6cIk/avIzJjqgSqK/VBq+t20 2GG0IlF0Rs5wIxvkjWPk2oqoO+iIHsZV9f1byLjWQ6KoYRsOzg3S5gG5urrCacyRHVVrrtLG+qU OrhuoEYGfBFnCJ1u0xYa0RxfJMGsn16GfpCflQiVjWHTD9dldKpfm1W/nS3wf2vjjfZquViAR/F
+ VO4HzKsvEc5R08lKDlypx4gfVqt2IKfpbo6Bq/oC6KZ1aCfvyS9k0gPESELFNHI6T3ruIh4G
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_01,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 bulkscore=0 mlxscore=0 spamscore=0 malwarescore=0
+ clxscore=1011 adultscore=0 impostorscore=0 mlxlogscore=999 phishscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
+ definitions=main-2505090026
 
-On Thu, 8 May 2025 18:55:30 -0700, Fan Wu <wufan@kernel.org> wrote:
-> On Thu, May 8, 2025 at 7:11 AM <alexjlzheng@gmail.com> wrote:
-> >
-> > From: Jinliang Zheng <alexjlzheng@tencent.com>
-> >
-> > Consider the following execution flow:
-> >
-> >   Thread 0: securityfs_create_dir("A")
-> >   Thread 1: cd /sys/kernel/security/A           <- we hold 'A'
-> >   Thread 0: securityfs_remove(dentry)           <- 'A' don't go away
-> >   Thread 0: securityfs_create_dir("A")          <- Failed: File exists!
-> >
-> > Although the LSM module will not be dynamically added or deleted after
-> > the kernel is started, it may dynamically add or delete pseudo files
-> > for status export or function configuration in userspace according to
-> > different status, which we are not prohibited from doing so.
-> >
-> > In addition, securityfs_recursive_remove() avoids this problem by calling
-> > __d_drop() directly. As a non-recursive version, it is somewhat strange
-> > that securityfs_remove() does not clean up the deleted dentry.
-> >
-> > Fix this by adding d_delete() in securityfs_remove().
-> >
-> > Fixes: b67dbf9d4c198 ("[PATCH] add securityfs for all LSMs to use")
-> > Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
-> > ---
-> > changelog:
-> > v3: Modify the commit message to avoid readers mistakenly thinking that the LSM is being dynamically loaded
-> > v2: https://lore.kernel.org/all/20250507111204.2585739-1-alexjlzheng@tencent.com/
-> > v1: https://lore.kernel.org/all/20250425092548.6828-1-alexjlzheng@tencent.com/
-> > ---
-> >  security/inode.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/security/inode.c b/security/inode.c
-> > index da3ab44c8e57..d99baf26350a 100644
-> > --- a/security/inode.c
-> > +++ b/security/inode.c
-> > @@ -306,6 +306,7 @@ void securityfs_remove(struct dentry *dentry)
-> >                         simple_rmdir(dir, dentry);
-> >                 else
-> >                         simple_unlink(dir, dentry);
-> > +               d_delete(dentry);
-> >                 dput(dentry);
-> >         }
-> >         inode_unlock(dir);
-> > --
-> > 2.49.0
-> >
-> >
-> 
-> Since this could impact efi_secret_unlink(), I would suggest adding linux-efi.
+From: Chao Yu <chao@kernel.org>
 
-Thank you for your reply. :)
+[ Upstream commit d7409b05a64f212735f0d33f5f1602051a886eab ]
 
-Did you mean cc to linux-efi?
+syzbot reports a f2fs bug as below:
 
-thanks,
-Jinliang Zheng.
+BUG: KASAN: slab-use-after-free in sanity_check_extent_cache+0x370/0x410 fs/f2fs/extent_cache.c:46
+Read of size 4 at addr ffff8880739ab220 by task syz-executor200/5097
 
-> 
-> -Fan
+CPU: 0 PID: 5097 Comm: syz-executor200 Not tainted 6.9.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0x169/0x550 mm/kasan/report.c:488
+ kasan_report+0x143/0x180 mm/kasan/report.c:601
+ sanity_check_extent_cache+0x370/0x410 fs/f2fs/extent_cache.c:46
+ do_read_inode fs/f2fs/inode.c:509 [inline]
+ f2fs_iget+0x33e1/0x46e0 fs/f2fs/inode.c:560
+ f2fs_nfs_get_inode+0x74/0x100 fs/f2fs/super.c:3237
+ generic_fh_to_dentry+0x9f/0xf0 fs/libfs.c:1413
+ exportfs_decode_fh_raw+0x152/0x5f0 fs/exportfs/expfs.c:444
+ exportfs_decode_fh+0x3c/0x80 fs/exportfs/expfs.c:584
+ do_handle_to_path fs/fhandle.c:155 [inline]
+ handle_to_path fs/fhandle.c:210 [inline]
+ do_handle_open+0x495/0x650 fs/fhandle.c:226
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+We missed to cover sanity_check_extent_cache() w/ extent cache lock,
+so, below race case may happen, result in use after free issue.
+
+- f2fs_iget
+ - do_read_inode
+  - f2fs_init_read_extent_tree
+  : add largest extent entry in to cache
+					- shrink
+					 - f2fs_shrink_read_extent_tree
+					  - __shrink_extent_tree
+					   - __detach_extent_node
+					   : drop largest extent entry
+  - sanity_check_extent_cache
+  : access et->largest w/o lock
+
+let's refactor sanity_check_extent_cache() to avoid extent cache access
+and call it before f2fs_init_read_extent_tree() to fix this issue.
+
+Reported-by: syzbot+74ebe2104433e9dc610d@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/linux-f2fs-devel/00000000000009beea061740a531@google.com
+Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+[Minor conflict resolved due to code context change.]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Verified the build test
+---
+ fs/f2fs/extent_cache.c | 45 ++++++++++++++++++++----------------------
+ fs/f2fs/f2fs.h         |  2 +-
+ fs/f2fs/inode.c        |  8 ++++----
+ 3 files changed, 26 insertions(+), 29 deletions(-)
+
+diff --git a/fs/f2fs/extent_cache.c b/fs/f2fs/extent_cache.c
+index f13143efc4b1..d7202de5401e 100644
+--- a/fs/f2fs/extent_cache.c
++++ b/fs/f2fs/extent_cache.c
+@@ -15,26 +15,23 @@
+ #include "node.h"
+ #include <trace/events/f2fs.h>
+ 
+-bool sanity_check_extent_cache(struct inode *inode)
++bool sanity_check_extent_cache(struct inode *inode, struct page *ipage)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+-	struct f2fs_inode_info *fi = F2FS_I(inode);
+-	struct extent_info *ei;
++	struct f2fs_extent *i_ext = &F2FS_INODE(ipage)->i_ext;
++	struct extent_info ei;
+ 
+-	if (!fi->extent_tree[EX_READ])
+-		return true;
++	get_read_extent_info(&ei, i_ext);
+ 
+-	ei = &fi->extent_tree[EX_READ]->largest;
++	if (!ei.len)
++		return true;
+ 
+-	if (ei->len &&
+-		(!f2fs_is_valid_blkaddr(sbi, ei->blk,
+-					DATA_GENERIC_ENHANCE) ||
+-		!f2fs_is_valid_blkaddr(sbi, ei->blk + ei->len - 1,
+-					DATA_GENERIC_ENHANCE))) {
+-		set_sbi_flag(sbi, SBI_NEED_FSCK);
++	if (!f2fs_is_valid_blkaddr(sbi, ei.blk, DATA_GENERIC_ENHANCE) ||
++	    !f2fs_is_valid_blkaddr(sbi, ei.blk + ei.len - 1,
++					DATA_GENERIC_ENHANCE)) {
+ 		f2fs_warn(sbi, "%s: inode (ino=%lx) extent info [%u, %u, %u] is incorrect, run fsck to fix",
+ 			  __func__, inode->i_ino,
+-			  ei->blk, ei->fofs, ei->len);
++			  ei.blk, ei.fofs, ei.len);
+ 		return false;
+ 	}
+ 	return true;
+@@ -444,24 +441,22 @@ void f2fs_init_read_extent_tree(struct inode *inode, struct page *ipage)
+ 
+ 	if (!__may_extent_tree(inode, EX_READ)) {
+ 		/* drop largest read extent */
+-		if (i_ext && i_ext->len) {
++		if (i_ext->len) {
+ 			f2fs_wait_on_page_writeback(ipage, NODE, true, true);
+ 			i_ext->len = 0;
+ 			set_page_dirty(ipage);
+ 		}
+-		goto out;
++		set_inode_flag(inode, FI_NO_EXTENT);
++		return;
+ 	}
+ 
+ 	et = __grab_extent_tree(inode, EX_READ);
+ 
+-	if (!i_ext || !i_ext->len)
+-		goto out;
+-
+ 	get_read_extent_info(&ei, i_ext);
+ 
+ 	write_lock(&et->lock);
+-	if (atomic_read(&et->node_cnt))
+-		goto unlock_out;
++	if (atomic_read(&et->node_cnt) || !ei.len)
++		goto skip;
+ 
+ 	en = __attach_extent_node(sbi, et, &ei, NULL,
+ 				&et->root.rb_root.rb_node, true);
+@@ -473,11 +468,13 @@ void f2fs_init_read_extent_tree(struct inode *inode, struct page *ipage)
+ 		list_add_tail(&en->list, &eti->extent_list);
+ 		spin_unlock(&eti->extent_lock);
+ 	}
+-unlock_out:
++skip:
++	/* Let's drop, if checkpoint got corrupted. */
++	if (f2fs_cp_error(sbi)) {
++		et->largest.len = 0;
++		et->largest_updated = true;
++	}
+ 	write_unlock(&et->lock);
+-out:
+-	if (!F2FS_I(inode)->extent_tree[EX_READ])
+-		set_inode_flag(inode, FI_NO_EXTENT);
+ }
+ 
+ void f2fs_init_extent_tree(struct inode *inode)
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 840a45855451..c9f401b5c706 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -4130,7 +4130,7 @@ void f2fs_leave_shrinker(struct f2fs_sb_info *sbi);
+ /*
+  * extent_cache.c
+  */
+-bool sanity_check_extent_cache(struct inode *inode);
++bool sanity_check_extent_cache(struct inode *inode, struct page *ipage);
+ struct rb_entry *f2fs_lookup_rb_tree(struct rb_root_cached *root,
+ 				struct rb_entry *cached_re, unsigned int ofs);
+ struct rb_node **f2fs_lookup_rb_tree_for_insert(struct f2fs_sb_info *sbi,
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index b8296b0414fc..b4aa0b88e668 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -448,15 +448,15 @@ static int do_read_inode(struct inode *inode)
+ 
+ 	init_idisk_time(inode);
+ 
+-	/* Need all the flag bits */
+-	f2fs_init_read_extent_tree(inode, node_page);
+-
+-	if (!sanity_check_extent_cache(inode)) {
++	if (!sanity_check_extent_cache(inode, node_page)) {
+ 		f2fs_put_page(node_page, 1);
+ 		f2fs_handle_error(sbi, ERROR_CORRUPTED_INODE);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
++	/* Need all the flag bits */
++	f2fs_init_read_extent_tree(inode, node_page);
++
+ 	f2fs_put_page(node_page, 1);
+ 
+ 	stat_inc_inline_xattr(inode);
+-- 
+2.34.1
+
