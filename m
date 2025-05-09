@@ -1,193 +1,295 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E966D219319
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF9522F16E
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746790911; cv=none; b=FMbBRtV5iy9jdSGc29KkvRsAe6eKqi8aslQHvhcufndfC2IG8wH2CxzgdLDfBuuO0zRljDUsAmOKeC6hriRcZECaEwSWYKjGerhxoLb7eRyzy2qnJpDk429Kd7H7ibOBzplN3gQ//wG5Lxdmj9ikMr92BBmEWdHZL0DY8qBCuAw=
+	t=1746790918; cv=none; b=AASoUrAzKraw50X54PfUTdY1IxSnrfU6GD8QL1oNo+mmjV1sRKNVrSZ0cfTiNn7igKtndHAjUQ/nLjVzSWdaBqeo3R59mzRTsm39d/XK5ur5fv67GYQfmLcyORX3dsbh5sDexx0mKKC/e9bBlLpwH2iqCEY0qci/gFQzejy0Elo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746790911; c=relaxed/simple;
-	bh=21R4CdsJlxo6ZIUB4aWnLHQhzIqhbI+E6wdmGGSh4zs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YQKSPA5VAhRYaQrcBHw9lKg42nOnRLsdqpUGOB6iBpIUFwBJbLZVOvRyNWkcgB7dBIylBcYjyGCHHTwPxjLva3UjDSpLv1FEsoTXayJI9g8Hdww3Iwi8uWOCRX+c3+PYPBIF8SCl+nEzKC+MlUJaW6Np4whZ9zXufpRjiorp95c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=ayri1AN/; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1746790918; c=relaxed/simple;
+	bh=n/DhnS3dvqyfizgdmvKGb6oSEoIOIb37y2SAnxG84tA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EP0AduD6wM0PDRu3KGSgYM8hbsI9eLBLZgv7A0tbOPfn2wIc0ia1Tj19WZmFI+1+mW0KVbH0OKqdLUxzKm3IlsFaJ5BTXhuXdOEKvrsxFfvK4pwZQRo47KtPn2OPKtwyBdHmvMD7yivLwzTNyyIvDUgoem40oHxFvaXk2uP2ooc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oxbBQcLB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="ayri1AN/"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-acae7e7587dso292953166b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:41:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1746790907; x=1747395707; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xqSqgdbr6mkrFUbRKHE1fLZLEEIHfO7KWsMJjVuS+q4=;
-        b=ayri1AN/SeBgJ2RHWOluJm//i1J26QV+grwv7cw760nXkqFlLPeqM3zfaIicoUnJQV
-         nR0ZkT2odUUfKWb61TYl5guqeewzxnJ9UpeOyzbuCRZq3DJltHrP/pBowx17XdQZ/+TM
-         bAYDL0AILCtYvyS+Hmq1aBlwNDmX5EknHeVUbG7SFjK6fDzCpNjhg4YxMlpkFfK7intx
-         5D9LEFukgf9Stu+h2kwp8wr9NIWnCYb4SyCCYZyvegjMqOGFnf/jHJ0+ghsaKYwkmoO/
-         rXLA0I5xGaS+lf9mnzuuHTw4q5BlxuBV4kJ/9/tMjl8hNqgZLskHGWJ2fKi0YE8s5yKI
-         tvEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746790907; x=1747395707;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xqSqgdbr6mkrFUbRKHE1fLZLEEIHfO7KWsMJjVuS+q4=;
-        b=h93kkb3PJNesNqfYlpgz8TvFtJdK02rMCC4PWQYUOHQVt6OQ9DTAlw/y9NRbNuNdI/
-         ouxdcX9ds6S+iUEaAshlOtQKHzVDcZdspuMDjTDN745QfuigTsLLfbknTw61rX7yN5Gp
-         NMXSOmVivRn5+J1jvDeIOLNGLqLm/YDQ1yBOzXGDE7qJfKjlslRajX3mfmsLBW6N3lcy
-         U6oyupM6JglKrO0NOb5UJqH1kuNYrX6sSzGPj1GSoa/f4H1GoX+l9g19VGytblUVSrhn
-         V7pfpka0D81fGgL8gzkfu1KvhmQxVZfZ2PyDXb2jE4PFM54EZ2sJpxgBvX4ZVeLlTrnl
-         Mrhg==
-X-Forwarded-Encrypted: i=1; AJvYcCXoFEiXy+rm0WQzHHloUDHlBeA8odhWIjIlb5CwmN4qRIeUYuCx6UOZQ4YFMsYfViFK38K/u5PCF49ntww=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrIhZCmd7alwHFsf5A39lLftsQjYxRguxzAc1icJY5LjG6oLSX
-	6KGDRcxtGdUBu0VLM0CJDv/vC2sBeDjVV2fAaAGSADc00YbcLfbrHFUJXuJ8E4M=
-X-Gm-Gg: ASbGnct5Nol63tWe/VHMNkz2unapJK4wgnsbiLpvUqlyFMofGCXc9TSmspDuphxQmCJ
-	4rze3LwBryK/ZWkwW68gVCsQ2auB1nHJpFf/L5X1CNO7VkotUVpcQ2G21ORhtyrGaxnBCRXNG9b
-	d3J7LF+xlcOrUEmtGcOaZQH28uslFRKHXBXU8ZuYl4NZZINQW/YePItZZoq5d7r6DKLkbhRr+Jg
-	mt77GPj+i5dDVpZoQXsy8wH9wejMtUrgUtONkxdZdpeiXSj+/Ch/HvHqiHP0P0LcwaD9MyBjkjF
-	dVGSaevv3vri5EwVGQc1Yuo3FaT758j/O8BJ+VgA8ZaVUQSP
-X-Google-Smtp-Source: AGHT+IG2j0Pea0l+03cwVMYbfwrcANbL1huFvD6sD/j4JhDPCTCSj3oUMBeHqG1csVa7s5Hq/oxNxw==
-X-Received: by 2002:a17:907:1907:b0:ac2:cae8:e153 with SMTP id a640c23a62f3a-ad218ea823fmr310536466b.4.1746790907122;
-        Fri, 09 May 2025 04:41:47 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197bd2a8sm138611966b.145.2025.05.09.04.41.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 04:41:46 -0700 (PDT)
-Message-ID: <b4771b63-3198-47c8-a83d-5133ba80d39b@tuxon.dev>
-Date: Fri, 9 May 2025 14:41:44 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oxbBQcLB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9682CC4CEE4;
+	Fri,  9 May 2025 11:41:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746790917;
+	bh=n/DhnS3dvqyfizgdmvKGb6oSEoIOIb37y2SAnxG84tA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oxbBQcLB7TQMY2KqPdu5qcI2huv7zoUOmkmbRA5X+im7G8Qdr8YCJJx7OAoYWEo+2
+	 2xrqL4+htrkvzaebZzLLY3HhRqsU8Yj7juwWUOQVKTcUhvkzP0NksYul28uJJC46wW
+	 uShRmGEwzrGCUJr7NRQJarbBQNg3azJb+k6NtYO0YWxEJOH4qUiEaMJU+NvHvsFmHu
+	 CaN1x9IoIpr2RpDVGWUE6mJLovDPHMIr48TKZ9RomXb8ajW3iCsZAQM0CZT4dcrEIk
+	 PgMbudXkru1eNjSA2ndcvEphyfpSyKoYXb0OTad9lf4kxE5ssZW+Ug9ba/lD2tp2IM
+	 TfwIwYRZOsGqQ==
+Date: Fri, 9 May 2025 13:41:55 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH v4 2/4] drm/panel: Add refcount support
+Message-ID: <20250509-rapid-flounder-of-devotion-6b26bb@houat>
+References: <20250331-b4-panel-refcounting-v4-0-dad50c60c6c9@redhat.com>
+ <20250331-b4-panel-refcounting-v4-2-dad50c60c6c9@redhat.com>
+ <87y0vkw8ll.fsf@intel.com>
+ <20250429-benign-sidewinder-of-defense-6dd4d8@houat>
+ <87o6wfwcef.fsf@intel.com>
+ <20250505-slim-bizarre-marten-a674ac@houat>
+ <CAN9Xe3RLazpAXdxxJmyF2QAShDtMSgdoxMdo6ecdYd7aZiP9kA@mail.gmail.com>
+ <874ixvtbxy.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
- Renesas RZ/G3S SoC
-To: Philipp Zabel <p.zabel@pengutronix.de>, bhelgaas@google.com,
- lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- geert+renesas@glider.be, magnus.damm@gmail.com, mturquette@baylibre.com,
- sboyd@kernel.org, saravanak@google.com
-Cc: linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250430103236.3511989-1-claudiu.beznea.uj@bp.renesas.com>
- <20250430103236.3511989-6-claudiu.beznea.uj@bp.renesas.com>
- <42a5119e547685f171be6f91e476a9b595599cf9.camel@pengutronix.de>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <42a5119e547685f171be6f91e476a9b595599cf9.camel@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="pxcula6ms75u4efb"
+Content-Disposition: inline
+In-Reply-To: <874ixvtbxy.fsf@intel.com>
 
-Hi, Philipp,
 
-On 09.05.2025 13:51, Philipp Zabel wrote:
-> Hi Claudiu,
-> 
-> On Mi, 2025-04-30 at 13:32 +0300, Claudiu wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
->> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
->> only as a root complex, with a single-lane (x1) configuration. The
->> controller includes Type 1 configuration registers, as well as IP
->> specific registers (called AXI registers) required for various adjustments.
->>
->> Other Renesas RZ SoCs (e.g., RZ/G3E, RZ/V2H) share the same AXI registers
->> but have both Root Complex and Endpoint capabilities. As a result, the PCIe
->> host driver can be reused for these variants with minimal adjustments.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->> ---
->>  MAINTAINERS                              |    8 +
->>  drivers/pci/controller/Kconfig           |    7 +
->>  drivers/pci/controller/Makefile          |    1 +
->>  drivers/pci/controller/pcie-rzg3s-host.c | 1561 ++++++++++++++++++++++
->>  4 files changed, 1577 insertions(+)
->>  create mode 100644 drivers/pci/controller/pcie-rzg3s-host.c
->>
-> [...]
->> diff --git a/drivers/pci/controller/pcie-rzg3s-host.c b/drivers/pci/controller/pcie-rzg3s-host.c
->> new file mode 100644
->> index 000000000000..c3bce0acd57e
->> --- /dev/null
->> +++ b/drivers/pci/controller/pcie-rzg3s-host.c
->> @@ -0,0 +1,1561 @@
-> [...]
->> +static int rzg3s_pcie_resets_bulk_set(int (*action)(int num, struct reset_control_bulk_data *rstcs),
->> +				      struct reset_control **resets, u8 num_resets)
->> +{
->> +	struct reset_control_bulk_data *data __free(kfree) =
->> +		kcalloc(num_resets, sizeof(*data), GFP_KERNEL);
->> +
->> +	if (!data)
->> +		return -ENOMEM;
->> +
->> +	for (u8 i = 0; i < num_resets; i++)
->> +		data[i].rstc = resets[i];
->> +
->> +	return action(num_resets, data);
->> +}
-> 
-> What is the purpose of this? Can't you just store struct
-> reset_control_bulk_data in struct rzg3s_pcie_host and call
-> reset_control_bulk_assert/deassert() directly?
+--pxcula6ms75u4efb
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 2/4] drm/panel: Add refcount support
+MIME-Version: 1.0
 
-Yes, I can. I was trying to avoid storing also the reset_control_bulk_data
-in struct rzg3s_pcie_host since all that is needed can be retrieved from
-the already parsed in probe cfg_resets and power_resets.
+On Thu, May 08, 2025 at 05:27:21PM +0300, Jani Nikula wrote:
+> On Mon, 05 May 2025, Anusha Srivatsa <asrivats@redhat.com> wrote:
+> > On Mon, May 5, 2025 at 2:54=E2=80=AFAM Maxime Ripard <mripard@kernel.or=
+g> wrote:
+> >
+> >> Hi Jani,
+> >>
+> >> On Tue, Apr 29, 2025 at 12:22:00PM +0300, Jani Nikula wrote:
+> >> > On Tue, 29 Apr 2025, Maxime Ripard <mripard@kernel.org> wrote:
+> >> > > Hi Jani,
+> >> > >
+> >> > > On Mon, Apr 28, 2025 at 07:31:50PM +0300, Jani Nikula wrote:
+> >> > >> On Mon, 31 Mar 2025, Anusha Srivatsa <asrivats@redhat.com> wrote:
+> >> > >> > Allocate panel via reference counting. Add _get() and _put() he=
+lper
+> >> > >> > functions to ensure panel allocations are refcounted. Avoid use
+> >> after
+> >> > >> > free by ensuring panel pointer is valid and can be usable till =
+the
+> >> last
+> >> > >> > reference is put.
+> >> > >> >
+> >> > >> > Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> >> > >> > Reviewed-by: Maxime Ripard <mripard@kernel.org>
+> >> > >> > Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+> >> > >> >
+> >> > >> > ---
+> >> > >> > v4: Add refcounting documentation in this patch (Maxime)
+> >> > >> >
+> >> > >> > v3: Add include in this patch (Luca)
+> >> > >> >
+> >> > >> > v2: Export drm_panel_put/get() (Maxime)
+> >> > >> > - Change commit log with better workding (Luca, Maxime)
+> >> > >> > - Change drm_panel_put() to return void (Luca)
+> >> > >> > - Code Cleanups - add return in documentation, replace bridge to
+> >> > >> > panel (Luca)
+> >> > >> > ---
+> >> > >> >  drivers/gpu/drm/drm_panel.c | 64
+> >> ++++++++++++++++++++++++++++++++++++++++++++-
+> >> > >> >  include/drm/drm_panel.h     | 19 ++++++++++++++
+> >> > >> >  2 files changed, 82 insertions(+), 1 deletion(-)
+> >> > >> >
+> >> > >> > diff --git a/drivers/gpu/drm/drm_panel.c
+> >> b/drivers/gpu/drm/drm_panel.c
+> >> > >> > index
+> >> bdeab5710ee324dc1742fbc77582250960556308..7b17531d85a4dc3031709919564d=
+2e4d8332f748
+> >> 100644
+> >> > >> > --- a/drivers/gpu/drm/drm_panel.c
+> >> > >> > +++ b/drivers/gpu/drm/drm_panel.c
+> >> > >> > @@ -355,24 +355,86 @@ struct drm_panel *of_drm_find_panel(const
+> >> struct device_node *np)
+> >> > >> >  }
+> >> > >> >  EXPORT_SYMBOL(of_drm_find_panel);
+> >> > >> >
+> >> > >> > +static void __drm_panel_free(struct kref *kref)
+> >> > >> > +{
+> >> > >> > +        struct drm_panel *panel =3D container_of(kref, struct
+> >> drm_panel, refcount);
+> >> > >> > +
+> >> > >> > +        kfree(panel->container);
+> >> > >> > +}
+> >> > >> > +
+> >> > >> > +/**
+> >> > >> > + * drm_panel_get - Acquire a panel reference
+> >> > >> > + * @panel: DRM panel
+> >> > >> > + *
+> >> > >> > + * This function increments the panel's refcount.
+> >> > >> > + * Returns:
+> >> > >> > + * Pointer to @panel
+> >> > >> > + */
+> >> > >> > +struct drm_panel *drm_panel_get(struct drm_panel *panel)
+> >> > >> > +{
+> >> > >> > +        if (!panel)
+> >> > >> > +                return panel;
+> >> > >> > +
+> >> > >> > +        kref_get(&panel->refcount);
+> >> > >> > +
+> >> > >> > +        return panel;
+> >> > >> > +}
+> >> > >> > +EXPORT_SYMBOL(drm_panel_get);
+> >> > >> > +
+> >> > >> > +/**
+> >> > >> > + * drm_panel_put - Release a panel reference
+> >> > >> > + * @panel: DRM panel
+> >> > >> > + *
+> >> > >> > + * This function decrements the panel's reference count and fr=
+ees
+> >> the
+> >> > >> > + * object if the reference count drops to zero.
+> >> > >> > + */
+> >> > >> > +void drm_panel_put(struct drm_panel *panel)
+> >> > >> > +{
+> >> > >> > +        if (panel)
+> >> > >> > +                kref_put(&panel->refcount, __drm_panel_free);
+> >> > >> > +}
+> >> > >> > +EXPORT_SYMBOL(drm_panel_put);
+> >> > >> > +
+> >> > >> > +/**
+> >> > >> > + * drm_panel_put_void - wrapper to drm_panel_put() taking a vo=
+id
+> >> pointer
+> >> > >> > + *
+> >> > >> > + * @data: pointer to @struct drm_panel, cast to a void pointer
+> >> > >> > + *
+> >> > >> > + * Wrapper of drm_panel_put() to be used when a function takin=
+g a
+> >> void
+> >> > >> > + * pointer is needed, for example as a devm action.
+> >> > >> > + */
+> >> > >> > +static void drm_panel_put_void(void *data)
+> >> > >> > +{
+> >> > >> > +        struct drm_panel *panel =3D (struct drm_panel *)data;
+> >> > >> > +
+> >> > >> > +        drm_panel_put(panel);
+> >> > >> > +}
+> >> > >> > +
+> >> > >> >  void *__devm_drm_panel_alloc(struct device *dev, size_t size,
+> >> size_t offset,
+> >> > >> >                               const struct drm_panel_funcs *fun=
+cs,
+> >> > >> >                               int connector_type)
+> >> > >> >  {
+> >> > >> >          void *container;
+> >> > >> >          struct drm_panel *panel;
+> >> > >> > +        int err;
+> >> > >> >
+> >> > >> >          if (!funcs) {
+> >> > >> >                  dev_warn(dev, "Missing funcs pointer\n");
+> >> > >> >                  return ERR_PTR(-EINVAL);
+> >> > >> >          }
+> >> > >> >
+> >> > >> > -        container =3D devm_kzalloc(dev, size, GFP_KERNEL);
+> >> > >> > +        container =3D kzalloc(size, GFP_KERNEL);
+> >> > >> >          if (!container)
+> >> > >> >                  return ERR_PTR(-ENOMEM);
+> >> > >> >
+> >> > >> >          panel =3D container + offset;
+> >> > >> > +        panel->container =3D container;
+> >> > >> >          panel->funcs =3D funcs;
+> >> > >> > +        kref_init(&panel->refcount);
+> >> > >>
+> >> > >> Hi Anusha, this should be done in drm_panel_init() instead.
+> >> > >>
+> >> > >> There are many users of drm_panel that don't use
+> >> devm_drm_panel_alloc()
+> >> > >> but allocate separately, and call drm_panel_init() only.
+> >> > >
+> >> > > That wouldn't really work, because then drivers would have allocat=
+ed
+> >> the
+> >> > > panel with devm_kzalloc and thus the structure would be freed when=
+ the
+> >> > > device is removed, no matter the reference counting state.
+> >> > >
+> >> > >> They'll all have refcount set to 0 instead of 1 like kref_init() =
+does.
+> >> > >>
+> >> > >> This means all subsequent get/put pairs on such panels will lead =
+to
+> >> > >> __drm_panel_free() being called! But through a lucky coincidence,=
+ that
+> >> > >> will be a nop because panel->container is also not initialized...
+> >> > >>
+> >> > >> I'm sorry to say, the drm refcounting interface is quite broken f=
+or
+> >> such
+> >> > >> use cases.
+> >> > >
+> >> > > The plan is to convert all panel drivers to that function, and Anu=
+sha
+> >> > > already sent series to do. It still needs a bit of work, but it sh=
+ould
+> >> > > land soon-ish.
+> >> > >
+> >> > > For the transitional period though, it's not clear to me what you =
+think
+> >> > > is broken at the moment, and / or what should be fixed.
+> >> > >
+> >> > > Would you prefer an explicit check on container not being 0, with a
+> >> > > comment?
+> >> >
+> >> > I'm looking at what it would take to add drm_panel support to i915 so
+> >> > that you could have drm_panel_followers on it. There are gaps of cou=
+rse,
+> >> > but initially it would mean allocating and freeing drm_panel ourselv=
+es,
+> >> > not via devm_drm_panel_alloc() nor devm_kzalloc(), because none of t=
+he
+> >> > other stuff is allocated that way. drm_panel would just sit as a
+> >> > sub-struct inside struct intel_panel, which is a sub-struct of struct
+> >> > intel_connector, which has its own allocation...
+> >>
+> >> I'm not entirely sure why you would need to allocate it from i915? The
+> >> drm_panel structure is only meant to be allocated by panel drivers, and
+> >> afaik no panel interface controller is allocating it.
+>=20
+> I'm looking into a use case involving drm_panel_follower, which requires
+> a drm_panel. I don't really need any of the other stuff in drm_panel.
+>=20
+> And basically you'd have one drm_panel per connector that is connected
+> to a panel, within the same driver.
 
-> 
->> +static int
->> +rzg3s_pcie_resets_init(struct device *dev, struct reset_control ***resets,
->> +		       struct reset_control *(*action)(struct device *dev, const char *id),
->> +		       const char * const *reset_names, u8 num_resets)
->> +{
->> +	*resets = devm_kcalloc(dev, num_resets, sizeof(struct reset_control *), GFP_KERNEL);
->> +	if (!*resets)
->> +		return -ENOMEM;
->> +
->> +	for (u8 i = 0; i < num_resets; i++) {
->> +		(*resets)[i] = action(dev, reset_names[i]);
->> +		if (IS_ERR((*resets)[i]))
->> +			return PTR_ERR((*resets)[i]);
->> +	}
->> +
->> +	return 0;
->> +}
-> 
-> Why not use devm_reset_control_bulk_get_exclusive() directly?
+That answers why you need a drm_panel pointer, but not really why the
+i915 needs to allocate it itself. The whole point of panel drivers it to
+decouple panel drivers from the connector driver (and everything
+upstream).
 
-I wasn't able to find a bulk_get_exclusive_deasserted() kind of API.
+drm_panel is always allocated by the panel driver itself. I don't really
+see a good reason to change that.
 
-This IP needs particular sequence for configuration. First, after power on,
-the following resets need to be de-asserted:
+If you don't have a panel descriptor in the ACPI tables, then you can
+always allocate a panel-edp driver or whatever from i915 and getting its
+drm_panel?
 
-	const char * const power_resets[] = {
-		"aresetn", "rst_cfg_b", "rst_load_b",
-	};
+Maxime
 
-then, after proper values are written into the configuration registers, the
-rest of the resets need to be de-asserted:
+--pxcula6ms75u4efb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	const char * const cfg_resets[] = {
-		"rst_b", "rst_ps_b", "rst_gp_b", "rst_rsm_b",
-	};
+-----BEGIN PGP SIGNATURE-----
 
-So I was trying to get and de-assert the power_resets in probe and just get
-the cfg_resets in the 1st step of the initialization, and later to
-de-assert the cfg_resets as well.
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaB3qAwAKCRAnX84Zoj2+
+dpjzAX0c2Euyfm4Ac/NoUi8k9RcC1HY0nQcpYh8G40SW9a2In5aEC72X49ity0mM
+Dvxb4u0BgO+6vme4i5AsbT6UZs3+oRtoRoQ+c4yxVeFrs++ver7+S44aqVouNmwp
+Uo4DkmS+mA==
+=aRaa
+-----END PGP SIGNATURE-----
 
-Now, after you pointed it out, maybe you are proposing to just
-get_exclusive everything in one shot and then to de-assert what is needed
-at proper moments with generic reset control APIs?
-
-Thank you for your review,
-Claudiu
+--pxcula6ms75u4efb--
