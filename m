@@ -1,172 +1,142 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6BF261591;
-	Fri,  9 May 2025 21:51:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C59425D1FC;
+	Fri,  9 May 2025 21:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746827515; cv=none; b=o+nRY/qe54gnVZ8hCbyX+NQgyU9WiJVWHf6xsNtbm4q74i8I3bOpBftdrkyCLEqE6ZOpQoq/xj8t2IVHu6OjLO20J6uJBkS7qBsZolgdn6AT0nbMiAZ/b/Qt+Q1dO52uGXXYf+XCJJcjRqytGBvVf38hPObfYMPpGGCCH2y6n2s=
+	t=1746827632; cv=none; b=a3fwbLK+XOX+wx+KZqL4ostwltCCLotqraey5ibIQJUxuIsMzfguAMJzZIk/zzAZCFM/JFPgqyFQPaJ0zhGtNWAv9G3jMPRpYm4Pi0tD+Io9vGhmXkUlVZPcDQfeeSxTFqJn44tz9Y8iyAcGyIZa3xzp+tf6hG1iZ9aZT7KTVkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746827515; c=relaxed/simple;
-	bh=CQWWcqMDBBBF5UcJdFGNxHIOQ0echENGKfhnm7IyDgM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JATEJ2ePIcnbeTuTh2Gv3V0hPN5iM/q9pDSep7I6rg/D6C9Giw7TyoxzOB/6Dd55uHdYoPJsD1TQlQi2J0/KkkELzYTup2mvI3A4+yrr7qaRY6D159XsfRAlWzeZrmzd0BJFot4n6iBRy5GXq8HvduNRIOkK+zzDDNPb/ysDDOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pxpVYRgb; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746827632; c=relaxed/simple;
+	bh=NiH+k6IfoKNrv7kJjvq02SqgFB+0uIsB7zsh4/p7lUs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=udPRXC7X1Ghenr3Puig3sDoHBIq6voeJHPJ8idBymSoLGGErnuSRogG9Ircu6rni+Y6CfDC6SsrW6GHl2vhJYHoAX3wh5Ef04ZvyU8k3gV3VP35z2nRrbHufVrHtaDN2CgWya2mOXwLlMajtbjazy8vO3IV+/E/rdFSH5GR+Wf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nb40qvkT; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pxpVYRgb"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2D92C1FCEF;
-	Fri,  9 May 2025 21:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746827511;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q8XrbGrufMg9tkAyXi8gfe2wyJbMN7aGWkJh4GV5ffc=;
-	b=pxpVYRgb7MjCpc0odJr+r5pNssgZtTpZNH4Fohl8kfnyXPdyoUbAsqh7gPyPAlMcQTgNDp
-	8z3zsNYkuM87Y3UiNMsV/Y6TkMHNPhMSo/veQY5/6YP3r8P0G0X+QXcxHg8GoxnNJzGf+j
-	Jy1w/NOp1RlQWbfJ24Gx0rxe5lxK5uVL9S0fMwOVITXqsYI1WrpE2mKDKw5Oe8ijWcGL8K
-	f2cQSC+nIljQtkrzTyG+Qp5o15vHFjgxiiKDsUVYOYKFIcUumq62Y3S5coGRvI4HxjVxuG
-	8JtSaaNP1OjyotCnhd5ulPSloO0gMMgzRE65JAhrNrRl8i4oHM/7w6xDODARLg==
-From: Olivier Benjamin <olivier.benjamin@bootlin.com>
-Date: Fri, 09 May 2025 23:51:40 +0200
-Subject: [PATCH v3 4/4] arm64: dts: rockchip: describe the OV8858 user
- camera on PinePhone Pro
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nb40qvkT"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30c35ac35dfso1763033a91.1;
+        Fri, 09 May 2025 14:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746827630; x=1747432430; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yHkbQJC2vfZe+igN8ZKegJaL309MbUilfmbTINeRmN0=;
+        b=Nb40qvkT96ockENj/wdkrX39vXT3XOeTwxNnYKGpQLUtm0haWz3iV3RUf3mos9W3t6
+         DZNyqW4eAhb4GSanA6F3beQiofcY3uVPOPIrvSW+n3Hct71jKmpwFZUklRHJ1HSl+5aw
+         HAbM+F2iy/jTQtBI3WQh6haYJY2rR8+1/YwIPbOuOfdMXf8bSyfI4rtvlIN+uPz+ggPt
+         X7wDMckMedYHDU7D9i7u2lhOm3gJNbDyd4xG8Rd6Wdqz7avabEsFcLeLhpKPKMh4hz3T
+         d85EC1S8lvNZujndGQFHlXkUQP3rOG8dTDnqxhNa5ZxN0SBMbxTe3F9qnJ9Yz0LlRkuz
+         DjCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746827630; x=1747432430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yHkbQJC2vfZe+igN8ZKegJaL309MbUilfmbTINeRmN0=;
+        b=U+FMNe+hKyeEZ1M5wLzyz1QP2OK4gHF2GjIUi8h855wF/i7SxHfjxAK++Ji7wcv6Bx
+         Sxz1/JQhgLEtTOzaf2lw/IyyPn50hKh0S5W3SYbF/GNiJCp2e/3njmcvUOomCfX3mcBQ
+         2Alpax9jLJAGoHnGecYC/2hdtjRYPWDGRQxFcwVEsgWKI63KFVENmgq4qnA70xIasIRk
+         5yrYtk58cMzE3Jo9C+COsiIKJH8SNYyQUaCgoKhr0R7ll4sCctLyUkfTtRCWz9tjbzyZ
+         CYK0EJv/IECNXl5cdB2izESyWKR7QWyR7VeSm/thAUIHi7itv/YMHxNanZgw6FU0o6A3
+         jeHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTfNhr57gmXxqdEy1jC3WxKordTvdGvlM69ddTDGBTEEsdA1eIszUs0XdWFLwxXqE6rn8TJGTQDFLvLd7YdzlWKHZf@vger.kernel.org, AJvYcCWjv9RjItfB6f7ml+KRbhg8xirldeEvnkz4PN8tc9jcJxwq9Pv1pvSQ/4zi4vMh0CGZVCY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy91Il2HT+T6GsNY5gEPeTrI28GYfeS9P5HDl2fLhYMjQJ8NfbX
+	G6F9gm/jtmlbm6omm7efZZb8++7nKJNHK04udQYWZdutPzsCh5czR+P8crEbC1eamEVbc8N//qS
+	cdTPqs+JFxbtFTU1YYm6LsUKVeEA=
+X-Gm-Gg: ASbGncsY9yTIrUG4ONIiNVrqiPqMq07gXJRhmo8ogUHSSzhUAwHf+NSfls+ZyskVnCE
+	bWOJ9I15TA/lpcMyJhcxEdPnSGjM7Ihw47YApLhjW3bUhE+Ldx9PjCHLEdLu/Zt3Ms3j5GWT9dO
+	ywHH6AZsugUdPT0SS2dij04KVbtBfyC0WZQdGxl3cUPzCRyJ8k
+X-Google-Smtp-Source: AGHT+IHOtgUxXnIkOjOIbpTNdvhRDUXpWuB9CdApfqdlPxp6khEaQW6lLupeh/DHx2cTjBU6h2YZAVwr8RxMvgysjME=
+X-Received: by 2002:a17:90a:e7ce:b0:30a:fe:140f with SMTP id
+ 98e67ed59e1d1-30c3d62c6dcmr7476368a91.28.1746827630268; Fri, 09 May 2025
+ 14:53:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250509-camera-v3-4-dab2772d229a@bootlin.com>
-References: <20250509-camera-v3-0-dab2772d229a@bootlin.com>
-In-Reply-To: <20250509-camera-v3-0-dab2772d229a@bootlin.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
- Nicholas Roth <nicholas@rothemail.net>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-media@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
- imx@lists.linux.dev, Olivier Benjamin <olivier.benjamin@bootlin.com>, 
- Dragan Simic <dsimic@manjaro.org>, Ondrej Jirman <megi@xff.cz>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleefjeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepqfhlihhvihgvrhcuuegvnhhjrghmihhnuceoohhlihhvihgvrhdrsggvnhhjrghmihhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegueegiedvvdevveevvddufeejvefftdeugfffkeeileehheefieehgfelfeeileenucfkphepvdgrtddumegvfeegmegvtgefkeemvdegvgdtmehfhegtvgemfhefgedvmeeiheekjeemfheiheeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvfeegmegvtgefkeemvdegvgdtmehfhegtvgemfhefgedvmeeiheekjeemfheiheeipdhhvghloheplgduledvrdduieekrddurddvtdgnpdhmrghilhhfrhhomhepohhlihhvihgvrhdrsggvnhhjrghmihhnsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrt
- ghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepfhgvshhtvghvrghmsehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhhriihksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegushhimhhitgesmhgrnhhjrghrohdrohhrgh
-X-GND-Sasl: olivier.benjamin@bootlin.com
+References: <20250509164524.448387100@goodmis.org> <20250509165156.135430576@goodmis.org>
+In-Reply-To: <20250509165156.135430576@goodmis.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 9 May 2025 14:53:38 -0700
+X-Gm-Features: ATxdqUG7vyKh6ckuiVc80QVrYGdO5Dyfg62nDuY0zs4zFQaHfF1xoIZCrXuqiWQ
+Message-ID: <CAEf4BzaKfvCu2T+jJ2e-CCt0N50urfx+p6kQfV899_jkmT_XKQ@mail.gmail.com>
+Subject: Re: [PATCH v8 15/18] perf: Have get_perf_callchain() return NULL if
+ crosstask and user are set
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add the description of the front/user camera (OV8858) on the PinePhone Pro
-to the device dts file.
-It receives commands over SCCB, an I2C-compatible protocol, at
-I2C address 0x36 and transmits data over CSI-MIPI.
-I confirmed this address experimentally.
+On Fri, May 9, 2025 at 9:52=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> From: Josh Poimboeuf <jpoimboe@kernel.org>
+>
+> get_perf_callchain() doesn't support cross-task unwinding for user space
+> stacks, have it return NULL if both the crosstask and user arguments are
+> set.
+>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/events/callchain.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+> index b0f5bd228cd8..abf258913ab6 100644
+> --- a/kernel/events/callchain.c
+> +++ b/kernel/events/callchain.c
+> @@ -224,6 +224,10 @@ get_perf_callchain(struct pt_regs *regs, bool kernel=
+, bool user,
+>         struct perf_callchain_entry_ctx ctx;
+>         int rctx, start_entry_idx;
+>
+> +       /* crosstask is not supported for user stacks */
+> +       if (crosstask && user)
+> +               return NULL;
 
-The pin control mapping was again extracted from the PinePhone Pro
-schematic v1.0 as well as the RK3399 datasheet revision 1.8.
+I think get_perf_callchain() supports requesting both user and kernel
+stack traces, and if it's crosstask, you can still get kernel (but not
+user) stack, if I'm reading the code correctly.
 
-Table 2-3 in section 2.8 of the RK3399 datasheet contains the mapping
-of IO functions for the SoC pins. Page 52 shows GPIO1_A4, page 54 shows
-GPIO2_B4.
+So by just returning NULL early you will change this behavior, no?
 
-For the reset (RESET) signal:
-page 11 quadrant D2             | p.18 q.B3-4 | p.18 q.C2
-RK3399_E.R28 -> GPIO1_A4 -> Camera2_RST -> MIPI_RST1 -> OV8858.12
-
-For the powerdown (PWDN) signal:
-page 9 quadrants D4-5          | p.18 q.B2
-RK3399_L.F31 -> GPIO2_B4 -> DVP_PDN0_H -> OV8858.14
-
-Helped-by: Dragan Simic <dsimic@manjaro.org>
-Co-developed-by: Ondrej Jirman <megi@xff.cz>
-Signed-off-by: Ondrej Jirman <megi@xff.cz>
-Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
----
- .../boot/dts/rockchip/rk3399-pinephone-pro.dts     | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
-index 588e2d8a049cc649aa227c7a885bd494f23fbdf8..460333915ed43ecc073dd7b5f4575402fb809876 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
-@@ -480,6 +480,27 @@ wcam_lens: camera-lens@c {
- 		/* Same I2c bus as both cameras, depends on vcca1v8_codec for power. */
- 		vcc-supply = <&vcc1v8_dvp>;
- 	};
-+
-+	ucam: camera@36 {
-+		compatible = "ovti,ov8858";
-+		reg = <0x36>;
-+		clocks = <&cru SCLK_CIF_OUT>; /* MIPI_MCLK1, derived from CIF_CLK0 */
-+		clock-names = "xvclk";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ucam_rst &ucam_pwdn>;
-+		dovdd-supply = <&vcc1v8_dvp>;
-+		reset-gpios = <&gpio1 RK_PA4 GPIO_ACTIVE_LOW>;
-+		powerdown-gpios = <&gpio2 RK_PB4 GPIO_ACTIVE_LOW>;
-+		orientation = <0>; /* V4L2_CAMERA_ORIENTATION_FRONT */
-+		rotation = <90>;
-+
-+		port {
-+			ucam_out: endpoint {
-+				remote-endpoint = <&mipi_in_ucam>;
-+				data-lanes = <1 2 3 4>;
-+			};
-+		};
-+	};
- };
- 
- &i2c3 {
-@@ -524,6 +545,24 @@ &io_domains {
- 	status = "okay";
- };
- 
-+&isp0 {
-+	status = "okay";
-+
-+	ports {
-+		port@0 {
-+			mipi_in_ucam: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&ucam_out>;
-+				data-lanes = <1 2 3 4>;
-+			};
-+		};
-+	};
-+};
-+
-+&isp0_mmu {
-+	status = "okay";
-+};
-+
- &isp1 {
- 	status = "okay";
- 
-@@ -599,6 +638,12 @@ camera {
- 		wcam_rst: wcam-rst {
- 			rockchip,pins = <1 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
-+		ucam_rst: ucam-rst {
-+			rockchip,pins = <1 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+		ucam_pwdn: ucam-pwdn {
-+			rockchip,pins = <2 RK_PB4 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
- 	};
- 
- 	leds {
-
--- 
-2.48.1
-
+> +
+>         entry =3D get_callchain_entry(&rctx);
+>         if (!entry)
+>                 return NULL;
+> @@ -249,9 +253,6 @@ get_perf_callchain(struct pt_regs *regs, bool kernel,=
+ bool user,
+>                 }
+>
+>                 if (regs) {
+> -                       if (crosstask)
+> -                               goto exit_put;
+> -
+>                         if (add_mark)
+>                                 perf_callchain_store_context(&ctx, PERF_C=
+ONTEXT_USER);
+>
+> @@ -261,7 +262,6 @@ get_perf_callchain(struct pt_regs *regs, bool kernel,=
+ bool user,
+>                 }
+>         }
+>
+> -exit_put:
+>         put_callchain_entry(rctx);
+>
+>         return entry;
+> --
+> 2.47.2
+>
+>
+>
