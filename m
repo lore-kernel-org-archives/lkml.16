@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C1D29209E;
-	Fri,  9 May 2025 12:55:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E422918CE;
+	Fri,  9 May 2025 12:55:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746795307; cv=none; b=Xx4wu4edqfYegjNNt9QPk1+fUKZBNyp72mf14zTPQ6aMRWgPQcxJ3pOKlD7CrXU99y8vAqFX8jFqi7dkIKSDlNYmdqQq7FbuDy5XwP8fkLJjw980/CrixYY2yJLeYX94zS2Jy6PXbupaS7OqoKGsa3or/mutKvTtOOOxklVBKnw=
+	t=1746795306; cv=none; b=DiT4ETivU8j4n8HyxS12+vfhNZsXo8ipepxyt1SkNkreX+Zxx5QljT9Z+LIJzKh2N6Abclg58QCn1gaTkjRz3MbDBmT/zaUaDrPJVvLGfK3BGucbBm2P9gw2i5vkurF6DISeBzzib8E9sX4f0Ms5a/YvJWNnm1cYhQr6N9uHEdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746795307; c=relaxed/simple;
-	bh=rapDihnXNpERecGhvKjpm1dlmjRPjcehXnhZxS8O2Xw=;
+	s=arc-20240116; t=1746795306; c=relaxed/simple;
+	bh=P7vQ+Tbjp/K5t8P7w4RO0B3Yk38DBPiFR2QdU7/KqCY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M1zu0U0Tqp6qcxdCml1uoKLuyNnJmum508vYG9jhZwUQCfRnNTN5uBGfTwo5dkUUoMMyVJHqhugto+kuRCA3tnh+6V27S80AUKnf1bfCjNh4szMRk4y8iVPN1UAUa6pRQb32dnwIHRw4MEINIyvN88mmPU3bUUKsNsbBiyj7sRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jbEENuG+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=dGHV4s7KWZsC5l45/o49blBIZTYg8PorZRx1hkOavzZX9P5uX0f49uwVB+1eeBqs6XQ9sfLDd7hzVISBBWwI543WiJ5Igi3cc7PU8BDg3NzF67lP/Mx05AnhBPjNjdw7G9Kix3hA/0RyVNPZo1Mq2K6TwFo8/xMzjxEXYr/D8dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRKl3dU8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jbEENuG+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 03C27C4AF0D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRKl3dU8"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1A7DBC16AAE;
 	Fri,  9 May 2025 12:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746795307;
-	bh=rapDihnXNpERecGhvKjpm1dlmjRPjcehXnhZxS8O2Xw=;
+	s=k20201202; t=1746795306;
+	bh=P7vQ+Tbjp/K5t8P7w4RO0B3Yk38DBPiFR2QdU7/KqCY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=jbEENuG+3tRAzgzvib7NK1u8He3UFwjseJ2zGfY5OJXb14oKKhGTqT+Tm+inity0J
-	 gHb7W5nOy5wmuKx1fmSTgtyhPbh2li11pX386h7283i5RaTpnzhRa4R0jGdGGevM1o
-	 RbonCeAJ3py5cY1zYtP6SRMdtX3KY5MPJMkTZi/+BJCa7TXr7KylFPMy+k/HR200YN
-	 f/ReEtZo/Ns37bbMV1FQ5kJaiPUoc1+Rm1frjUREmDn0uwu3K7p24OYLLNApWN33kC
-	 WJSNQ8lHD5cwna7ih+lMlu5TnnmhZj5EVyfzm3hbnoiCde5HEBRUXNr9N5gLNyY+DJ
-	 NrmvCMFaEDT5w==
+	b=TRKl3dU8E4j3qi3UUIM0MKpI/5kJ/jlA1ev2GjKCGCfQHqLwLyqQDTdgCPB3aFh7l
+	 hC/JjbWPSu5+MMz/1wxZai5N5qzRr25eTv9ZCWiEaO5ocpFBmzqq19W/cPxGgEm3KK
+	 +KNVkbVfR1Dhv6gyuWhb4jJTBgA8huIrDRQTWj0QPZ35UchczKQC52ur+FngEMdxm/
+	 wV/dhFBVzl3lQ/L5essicf116ufeSBmnM9I8oFcZzGZjvm9lqsXxSK8HdHFabu+6ya
+	 A8hqgTjqqoElObHwJVrQKTqJ1hBbiweZzK+fwdx3fbxasbvgGpAVX/Y2H0OH4OutWQ
+	 IPugJiowoiQLg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F1EC3ABC3;
-	Fri,  9 May 2025 12:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 118BCC3ABCD;
+	Fri,  9 May 2025 12:55:06 +0000 (UTC)
 From: Joel Granados <joel.granados@kernel.org>
-Date: Fri, 09 May 2025 14:54:09 +0200
-Subject: [PATCH 05/12] parisc/power: Move soft-power into power.c
+Date: Fri, 09 May 2025 14:54:11 +0200
+Subject: [PATCH 07/12] Input: sysrq: mv sysrq into drivers/tty/sysrq.c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250509-jag-mv_ctltables_iter2-v1-5-d0ad83f5f4c3@kernel.org>
+Message-Id: <20250509-jag-mv_ctltables_iter2-v1-7-d0ad83f5f4c3@kernel.org>
 References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
 In-Reply-To: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
 To: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
@@ -66,26 +66,28 @@ Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org, 
  Joel Granados <joel.granados@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2508;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3323;
  i=joel.granados@kernel.org; h=from:subject:message-id;
- bh=rapDihnXNpERecGhvKjpm1dlmjRPjcehXnhZxS8O2Xw=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGgd+yOtnQB/bJFt/7J5h4oiYG8sIaqpsH1ED
- v9nLDttnyWwn4kBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJoHfsjAAoJELqXzVK3
- lkFPFaAL/Ar0qxWKRezFimngFzcnCsml3mGCyVaueqDYkhIcXd9TAx4Vy2cbd8a6EyROmFFeF0r
- rVCXwDYsGMaqo2dGI1CisaSk43tUbGRUrAjy1d0hnUNKg2akUhqGpv0z5/KHp0bNdVtIEykxQwp
- RR4bF+33DGLOfOKwBq3XsCheE9gvVSvQStge4+MR/jNHTMy0ZW7CGAhCucj9EH8bpVa3GzHdYNV
- uS/c89PQ5kSKvJBi3Y252xpjBbYCDbEkn0tojDZJ7Ep0hIsQT9Mlph3bYXGt0hhgH9byKOQo/1j
- 8ooJpt5ydx76RfZ17U3pO1p/4eFA6wHWm6zYrMt6VbprDCuSg7BxIUfq7cWUA36mc06me/305ZO
- X73egkYLEiSbevWt4UoUxMOv/VavPwPfdrOBmByYPaB90vqcFqCUZUiY7O4kN0gV4yRARoL00K4
- NT03pMxoTZZpPF7Fh6dp0xpLzvZ2r5JvfKtIJnOR1h8SEFSXHPnid/uoqmvqLCUI42yfnmgd/76
- jc=
+ bh=P7vQ+Tbjp/K5t8P7w4RO0B3Yk38DBPiFR2QdU7/KqCY=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGgd+ySeocfEnB6M/redE7f06E8yJNij/bs4P
+ Rn9SWPKQMpjjIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJoHfskAAoJELqXzVK3
+ lkFP+aoL/0WNslAOaswPGE5r9au3d1aOofO6PbnFn0JoryOXftHrBATNDqzcfPhWQTSSk3KcENt
+ l2U9RK8OuosgPWWDQQQLsj6dS2MAwN05l65/fMWikpZqyo/v1X4hnCATduh0RNJ/wEUMIiJcXaQ
+ kiDpwosoj1mz1uSqSNnnl3d2VyVXLpYlcdAGVd2aX2PFeY9f0Iwe9eiCOy9gZ3iBoPfrabixgAM
+ PZMJB0WSDMI39Xqi8sPvisswxkpUcNnU+L7wWOPXB8F0ebq2UlR5vneGEZVbuRhkkxWpbxOubSJ
+ OnUhCPMT6TWkOlPwQqPYhkNK/+rEHHj4hlkuPC3LeEDDO4gf3mFROpz7TeQgx1V+7LqDISlevnU
+ 5k6X+ntypxbBCYvuz9BTBL+Xj/tionGXzm6FNmHQ88PwsZTHPePdH+euWB38xxpR+J/7Ckda28a
+ Mh/Zjusu6Dy6uenAJDr51bG9S/UkB6VEUeHTpw7luFEHmw3EmabRyGgoj2lko9Dk2tG3/7IjHp7
+ m8=
 X-Developer-Key: i=joel.granados@kernel.org; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received: by B4 Relay for joel.granados@kernel.org/default with
  auth_id=239
 
-Move the soft-power ctl table into parisc/power.c. As a consequence the
-pwrsw_enabled var is made static.
+Move both sysrq ctl_table and supported sysrq_sysctl_handler helper
+function into drivers/tty/sysrq.c. Replaced the __do_proc_dointvec in
+helper function with do_proc_dointvec as the former is local to
+kernel/sysctl.c.
 
 This is part of a greater effort to move ctl tables into their
 respective subsystems which will reduce the merge conflicts in
@@ -93,74 +95,114 @@ kernel/sysctl.c.
 
 Signed-off-by: Joel Granados <joel.granados@kernel.org>
 ---
- drivers/parisc/power.c | 20 +++++++++++++++++++-
- include/linux/sysctl.h |  1 -
- kernel/sysctl.c        |  9 ---------
- 3 files changed, 19 insertions(+), 11 deletions(-)
+ drivers/tty/sysrq.c | 38 ++++++++++++++++++++++++++++++++++++++
+ kernel/sysctl.c     | 30 ------------------------------
+ 2 files changed, 38 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/parisc/power.c b/drivers/parisc/power.c
-index 7a6a3e7f2825be5191e024e6c7af1cd688219b75..9d6c7bf72e2958348e263a7e82025038694ebfbc 100644
---- a/drivers/parisc/power.c
-+++ b/drivers/parisc/power.c
-@@ -83,7 +83,25 @@ static struct task_struct *power_task;
- #define SYSCTL_FILENAME	"sys/kernel/power"
+diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+index 6853c4660e7c2586487fea83c12f0b7780db1ee1..8a304189749f3e33af48141a1aba5e456616c7de 100644
+--- a/drivers/tty/sysrq.c
++++ b/drivers/tty/sysrq.c
+@@ -1119,6 +1119,44 @@ int sysrq_toggle_support(int enable_mask)
+ }
+ EXPORT_SYMBOL_GPL(sysrq_toggle_support);
  
- /* soft power switch enabled/disabled */
--int pwrsw_enabled __read_mostly = 1;
-+static int pwrsw_enabled __read_mostly = 1;
-+
-+static const struct ctl_table power_sysctl_table[] = {
-+	{
-+		.procname	= "soft-power",
-+		.data		= &pwrsw_enabled,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+	},
-+};
-+
-+static int __init init_power_sysctl(void)
++static int sysrq_sysctl_handler(const struct ctl_table *table, int write,
++				void *buffer, size_t *lenp, loff_t *ppos)
 +{
-+	register_sysctl_init("kernel", power_sysctl_table);
++	int tmp, ret;
++	struct ctl_table t = *table;
++
++	tmp = sysrq_mask();
++	t.data = &tmp;
++
++	ret = proc_dointvec_minmax(&t, write, buffer, lenp, ppos);
++
++	if (ret || !write)
++		return ret;
++
++	if (write)
++		sysrq_toggle_support(tmp);
++
 +	return 0;
 +}
 +
-+arch_initcall(init_power_sysctl);
- 
- /* main kernel thread worker. It polls the button state */
- static int kpowerswd(void *param)
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index 40a6ac6c9713f3504c4dfcb4fcc77dff7dce8ca6..ae762eabb7c9715e973356cadafbaaea3f20c7e9 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -242,7 +242,6 @@ int do_proc_douintvec(const struct ctl_table *table, int write,
- 				  int write, void *data),
- 		      void *data);
- 
--extern int pwrsw_enabled;
- extern int unaligned_enabled;
- extern int unaligned_dump_stack;
- extern int no_unaligned_warning;
++static const struct ctl_table sysrq_sysctl_table[] = {
++	{
++		.procname	= "sysrq",
++		.data		= NULL,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= sysrq_sysctl_handler,
++	},
++};
++
++static int __init init_sysrq_sysctl(void)
++{
++	register_sysctl_init("kernel", sysrq_sysctl_table);
++	return 0;
++}
++
++subsys_initcall(init_sysrq_sysctl);
++
+ static int __sysrq_swap_key_ops(u8 key, const struct sysrq_key_op *insert_op_p,
+ 				const struct sysrq_key_op *remove_op_p)
+ {
 diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index adc2d3ea127841d87b7073ed81d6121c9a60e59a..718140251972b797f5aa5a056de40e8856805eed 100644
+index febf328054aa5a7b2462a256598f86f5ded87c90..ebcc7d75acd9fecbf3c10f31480c3cb6960cb53e 100644
 --- a/kernel/sysctl.c
 +++ b/kernel/sysctl.c
-@@ -1594,15 +1594,6 @@ static const struct ctl_table kern_table[] = {
- 		.extra2		= SYSCTL_ONE,
+@@ -31,7 +31,6 @@
+ #include <linux/kernel.h>
+ #include <linux/kobject.h>
+ #include <linux/net.h>
+-#include <linux/sysrq.h>
+ #include <linux/highuid.h>
+ #include <linux/writeback.h>
+ #include <linux/ratelimit.h>
+@@ -964,26 +963,6 @@ int proc_dou8vec_minmax(const struct ctl_table *table, int write,
+ }
+ EXPORT_SYMBOL_GPL(proc_dou8vec_minmax);
+ 
+-#ifdef CONFIG_MAGIC_SYSRQ
+-static int sysrq_sysctl_handler(const struct ctl_table *table, int write,
+-				void *buffer, size_t *lenp, loff_t *ppos)
+-{
+-	int tmp, ret;
+-
+-	tmp = sysrq_mask();
+-
+-	ret = __do_proc_dointvec(&tmp, table, write, buffer,
+-			       lenp, ppos, NULL, NULL);
+-	if (ret || !write)
+-		return ret;
+-
+-	if (write)
+-		sysrq_toggle_support(tmp);
+-
+-	return 0;
+-}
+-#endif
+-
+ static int __do_proc_doulongvec_minmax(void *data,
+ 		const struct ctl_table *table, int write,
+ 		void *buffer, size_t *lenp, loff_t *ppos,
+@@ -1612,15 +1591,6 @@ static const struct ctl_table kern_table[] = {
+ 		.proc_handler	= proc_dostring,
  	},
  #endif
--#ifdef CONFIG_PARISC
+-#ifdef CONFIG_MAGIC_SYSRQ
 -	{
--		.procname	= "soft-power",
--		.data		= &pwrsw_enabled,
+-		.procname	= "sysrq",
+-		.data		= NULL,
 -		.maxlen		= sizeof (int),
 -		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
+-		.proc_handler	= sysrq_sysctl_handler,
 -	},
 -#endif
- #ifdef CONFIG_SYSCTL_ARCH_UNALIGN_ALLOW
+ #ifdef CONFIG_PROC_SYSCTL
  	{
- 		.procname	= "unaligned-trap",
+ 		.procname	= "cad_pid",
 
 -- 
 2.47.2
