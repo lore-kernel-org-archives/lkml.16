@@ -1,160 +1,65 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462A345038;
-	Fri,  9 May 2025 04:32:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF72322E;
+	Fri,  9 May 2025 04:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746765161; cv=none; b=YfEV1p3BKp4XTjMWWmUUyRy7RSEGwrWgwxWMw1zlNq6tFHeHLtYJ5QClAJ7GRBhCChZQRW4BmedDmc5BHKhwnTQez4Wc5EJadEz2o9LU7bDj8cN2gS+Cxww91NAcsjZ2Rlr1tZfw6btXzrTP+oq6GDlkI+ZQPEkU54g9RaQmtWg=
+	t=1746765446; cv=none; b=JeB/sHEIp4arIsFawLhTjIJJktM3iBjMHooV4+lgf8KY2DVl2JFuwTZw3JmZ4d2g0hkKc8j80AuVyeD+uvyUChr68fhx8P3p2wipfjVAnofiqNja7X1r0j9F35/EmHZabGfdr+MFovLoU6ve+vqSzPoSLrvYvgX67SAQwizHMWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746765161; c=relaxed/simple;
-	bh=6SpZpOdCh91riLUSXIvedwmiClTz32ulFuq5+lvGe2g=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=F7776exPD7BBTe06IVO/t/eEd806vXFfu4AMAgYgkirKG7H5wCo6CKQFf5tIhATDUDRsI3WvIiBQyBS/m26H48RQ6xzcNe3c580W1MhUkZOvG98RkqVlWT347guxND1UwNEutLjBIli2cPxRgsg3iJKQXKMOi3XV5MadnC8b/aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OjPCllhL; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746765446; c=relaxed/simple;
+	bh=Ipe4mV+J9vP7HklIxq6kVTdKpe3daV5fY9cIrl1hQLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=haYGcZZtcVSN0+1ecJAt4Gf1G9V9bUtPj3c9f18DDcgfYKrVYUHApmn/oPlZnrlPhmDN7f8xE8V+dblZYIxgmLIlHihIcsBqqutDCUFJPqWdySsETHx2kgGV47ZoM0UqDYNXFqg8One6NLN7g6H5qatjz49I4rFJwif0SAzDyqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=aYpjwn20; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OjPCllhL"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5492BdeL031131;
-	Fri, 9 May 2025 04:32:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4ESj9WZRGA6xPfWeT7exPlrQggSBgPisGdOU+OlSeWE=; b=OjPCllhL4HIQBmIV
-	b+7cjc2tDV98YDf9MO1z1XhyZdZPOHVnlukrZSvqhbbn9trlpKhRjfgCIWyXxMDJ
-	EGM9XwLw3w5aei0v7dTukEMU0khdgphn/5KSjmFhO7Ktu4r0UMSmtZmxiTqGJB/5
-	hFy+v5lsw7HAXfa97SFC6dxFIo2yq3Znrw/buBCFxJKLFF5YVOdeMFF0EXoDEaIo
-	lZFNNFmIEs04+6ESVdFqhLzO6f3xKYoJ/10p4CzJz8nZXBS9XzM9D9/1nhof2P7e
-	AbnP26bV1m6vf5zyPKJ6J4c4ItHKlf84p+/ctgU2HbR4rANKB/BrSoslYkbHHZx/
-	5D7jfA==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnpgkc1s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 04:32:28 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5494WRR2032074
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 9 May 2025 04:32:27 GMT
-Received: from [10.216.10.140] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 8 May 2025
- 21:32:21 -0700
-Message-ID: <4b2c24e4-d515-481d-a00b-d50ae57304dd@quicinc.com>
-Date: Fri, 9 May 2025 10:02:19 +0530
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="aYpjwn20"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=uP3s/ajzuYrNI5apkZ3sO7dk9TQmL1y6hyIKvcgbE4g=; b=aYpjwn200vewNojIuJx0oLbGh/
+	yX2ZngJLJ/izqqnTcXqdeo5V7KQNkyOVerj77kS9R09Hs7jtP5TLzINnTU/MiJSTEDH4lCXNXo3Kv
+	dOtiT4oN0qAEH+LmLjumG+upd6qmQLpq7cjb+F27mswN4G2XIhWKfJ+q+5x2SD7IH8yNQzSOTwhH1
+	W9rC6HNUeV8nwvi3SiK579NTtN4WzEW0M9Weo9EuCcfv9oOpMwtZILQ3t7llrX+lE3Mz5IbCd+MOO
+	b+k0xev8wzQaeIGcHb1jL5UiE7N0jbdUsYZY2NV5Vl1TZumXP7mSxq5PSDCYGvnHXlSQsryP7qZcf
+	CGeKZR4g==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uDFU0-0000000A70z-3vFd;
+	Fri, 09 May 2025 04:37:13 +0000
+Date: Fri, 9 May 2025 05:37:12 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: alexjlzheng@gmail.com
+Cc: paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+	greg@kroah.com, chrisw@osdl.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jinliang Zheng <alexjlzheng@tencent.com>
+Subject: Re: [PATCH v3] securityfs: fix missing of d_delete() in
+ securityfs_remove()
+Message-ID: <20250509043712.GK2023217@ZenIV>
+References: <20250508140438.648533-2-alexjlzheng@tencent.com>
+ <20250509032326.GJ2023217@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/8] dt-bindings: serial: describe SA8255p
-From: Praveen Talari <quic_ptalari@quicinc.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC: <psodagud@quicinc.com>, <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
-        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
-        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>,
-        Nikunj Kela
-	<quic_nkela@quicinc.com>
-References: <20250506180232.1299-1-quic_ptalari@quicinc.com>
- <20250506180232.1299-2-quic_ptalari@quicinc.com>
- <35659475-862a-4678-a2a5-173c2254ae60@kernel.org>
- <2f3e608b-5536-4c6d-b7ca-c8cf4c9d0b1b@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <2f3e608b-5536-4c6d-b7ca-c8cf4c9d0b1b@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=Ao/u3P9P c=1 sm=1 tr=0 ts=681d855c cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=towazdODhIRxSDStvoQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA0MSBTYWx0ZWRfX09bNplHkb4eF
- UB5gM+xVH/gyLxFgdCpfV/VGCZif4z3gDbI4MJw6ZU5a2tkYZCC3Bv3EcK1kzIK/nK9Z0RvQJYZ
- hWw1VgWk19vaZkCNYDMEoE8GwSZCfvNWgwwYbTrvBG/hPixO0Wn5NmOQExkhX6PZVQhzwWkCull
- 8HTQg6nehmd2sBATh0tLPnE9GCGeaJ1Xz+z8PbH/91G+mRq6yiC/MEWZuUaWcvSnGJLHkJq3fOE
- 3D6NzkMBxY1vo9DgGaDUHYz8T7X+jeQ00q7kwG0R9dgKjZ8gyOXINkWzt1UP1pKllsQXL3TYo2b
- Y3zO2uhyfNGFw1aCihKFGxejB4XF7SsuYiY645v8C0EHOWTNK+A3bNb2h2MHLWavDV544jUfjq0
- +SB7x4PDSPzCDii9iapvtzduTwaGtiZhAm4nnMR4qjFV1XUs16rGRNdyJvNylmHVQFPE17kG
-X-Proofpoint-GUID: UwkzuPyf1nnIO53aVq5Bulbbr-Yu-viO
-X-Proofpoint-ORIG-GUID: UwkzuPyf1nnIO53aVq5Bulbbr-Yu-viO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_01,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 mlxscore=0 mlxlogscore=926 bulkscore=0 priorityscore=1501
- spamscore=0 impostorscore=0 phishscore=0 malwarescore=0 lowpriorityscore=0
- clxscore=1015 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505090041
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509032326.GJ2023217@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Hi Krzysztof,
+On Fri, May 09, 2025 at 04:23:26AM +0100, Al Viro wrote:
 
-Thank for you review and valuable inputs.
+> I have fixes for some of that crap done on top of tree-in-dcache series;
+> give me an hour or two and I'll separate those and rebase to mainline...
 
-On 5/8/2025 11:15 AM, Praveen Talari wrote:
-> Hi Krzysztof
->
-> Thank you for your patience. I consider your inputs as valuable learning.
->
-> On 5/6/2025 11:53 PM, Krzysztof Kozlowski wrote:
->> On 06/05/2025 20:02, Praveen Talari wrote:
->>> +
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - qcom,sa8255p-geni-uart
->>> +      - qcom,sa8255p-geni-debug-uart
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  interrupts:
->>> +    minItems: 1
->> Nothing changed here, this should be dropped based on previous 
->> discussion.
->>
->> You sent this v5 on 8:02 PM of my time. *THEN* you responded to my
->> comment at v4 at 8:05 PM. That's the way to waste everyone's time.
->>
->> I do not understand why interrupt is optional for a new, complete device
->> description.
+Completely untested:
+git://git.kernel.org:/pub/scm/linux/kernel/git/viro/vfs.git #untested.securityfs
 
-To put it simply, because we are using the RX GPIO line as wake up IRQ 
-and not all SE related pins are mapped in the PDC,
-
-there is no specific wake-up pin to define. Therefore, the wake-up IRQ 
-should be considered optional.
-
-Thanks,
-
-Praveen
-
->
-> On this platform, there is no use case of waking up UART, so we 
-> consider the  wake up IRQ as optional.
->
-> Thanks,
->
-> Praveen
->
->>
->> Best regards,
->> Krzysztof
+on top of v6.15-rc5.  And I'm serious about the "untested" part - it builds
+with allmodconfig, but that's all I've checked.  So treat that as an outline
+of what could be done, but don't use as-is without serious testing.
