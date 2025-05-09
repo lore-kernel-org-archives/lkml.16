@@ -1,111 +1,110 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89924223DD8
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 09:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E8F220F58;
+	Fri,  9 May 2025 09:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746782608; cv=none; b=VNOzlPSgFG4vR3LCUjYnJZMODFV/jL+fbet/5QVe0NZecv1RgdaRpCm2m9/WSJNUwDtP5C+HEJ5JOCYVLRKjTLMZ2EstyFy2AYuQrEuzaYheLuaC+/HN+Jn8IjsdBShKri/ORwSZt+rPq4KtJEdGQB5Af6tcxgjKWn6aGVj3yaM=
+	t=1746782655; cv=none; b=FBmSqG4PguJ+aF9ktAhDH7Urvtb3Pqhhr0Kqiz3gD5CZ4z6maibsD7q2G4huhcvGwJ1zl9Kujz2UkIGfGJlcg3zYPEetQmJ+4wsrdBOQoaf3cjAOIwuX9X9C9oU9AXEUoJFIsa8OhYyv8T9gi5ZMixi7mDiRKYZbttccnoYPczg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746782608; c=relaxed/simple;
-	bh=ZLAlQn4Xz6Btlkr11HLNYm9CzqjdBymyvczaf64NZg8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JFpGOwNzDI3PAWHaG6a/JNv0gslw6NtlHlGl7Cik3KcGuUCtN415Pz4ibHXyxQuIvOzuRwNQUEfktU1jLIWKQgDge8V349ZmSfFw4JHhTVQGw5/16SaNRz6CA+k4XOos7a3osO5TSE938NLlNGf7DZEdCkn65o1GcL480ZKQFAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=lGv0sx9R; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1746782655; c=relaxed/simple;
+	bh=NO8fViOIlWT6Uf6dz/qzvniQhtjlz89wsnpB5ZiCryM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VNZeTVwAQVZ4NuqfGA52u6UAb5RF4dJsnsv/Z4ETnoXL+AV2vs3YPmBzZyy1OSGO84pkuW8QG+izSY3lF/FvPWRWuinnHk5tH8NFQTqg3pfDxsUbRWoR1QjUeXrBhCd2saTGryyTVddPvGN1FWy+GzMcI5YtXPPb/oRmAgruwME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YcsE6bxP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="lGv0sx9R"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Zv3T62yvvz9sPv;
-	Fri,  9 May 2025 11:23:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1746782602; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ag5tG00Nd+jJRRq7/gzvtwWW+WAHRV2sFjjJsI/AF94=;
-	b=lGv0sx9RQkNMYsHJWgut0rOhogf1/lLNGxETgmHZv0ux9zR4PPEHwlPPltEGyn99R1KSoM
-	ViFlDC7tFmkjZd8eBAf87v5UW2COzxoF9wmNN2hA4O1m4NZFi1RD74ON5wfOisNn1woeqt
-	Z9zK8H41cGX9jT4+ofQP7d/sfmlXVX+fbWgvTmLCfRssXA8dZObP0fn6ptHT077LAPM/MM
-	UWdHbgKipN760+qPs8zMBeHDZRZrNS1izvcOA1l2aelu3TlfOP7YpfhUv6QuU1UhUyKkpr
-	Oln+1U/pwRp2hr4ClM6RRb7n39XSNGlJ452640m8PAIowt+OozkpIW/Z9v6NQw==
-Message-ID: <a696aeba34894aaca4893f9adc6fa137d04b6c9e.camel@mailbox.org>
-Subject: Re: [PATCH v2] drm/vmgfx: Use non-hybrid PCI devres API
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Zack Rusin <zack.rusin@broadcom.com>, phasta@kernel.org
-Cc: Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,  dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Date: Fri, 09 May 2025 11:23:18 +0200
-In-Reply-To: <CABQX2QP1U6nUc++5oZf0KVpfXCEMRwX9u0ykq2YNHuQSKx909Q@mail.gmail.com>
-References: <20250423120643.66814-2-phasta@kernel.org>
-	 <e40cf04283e281e2d4a912ff75bce3c6cb8bcf97.camel@mailbox.org>
-	 <CABQX2QP1U6nUc++5oZf0KVpfXCEMRwX9u0ykq2YNHuQSKx909Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YcsE6bxP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79335C4CEE4;
+	Fri,  9 May 2025 09:24:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746782655;
+	bh=NO8fViOIlWT6Uf6dz/qzvniQhtjlz89wsnpB5ZiCryM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YcsE6bxPHtlMeGoEfUWsu3amaw+TmioeejKx71LNLw179IKHsce9U5b8pk45DCRfT
+	 WwccidsN1Im/ep9KLIjVLN+amMGhlOAygi36S/ByDfdbUUB1zGW52Af6NdBpUmkeaZ
+	 V2saQszdSuspUrTMT5tCwZXd6hT9+LTdjUUlfNiZDo855LVC4KXbxGH3AHCcK6gkB1
+	 mAqwSt5NQ82QB2aX5tEWqjy4lYpjvzjQuqT2I6+TE2Rk9gfDmxjxtbicXY2re1FbdV
+	 viP1/+fWm3UJWLbfwjZydJVHifkW+N1A1nn9RlQAloFcxXtFrRjN/XBfn4Qwg3kFiE
+	 FuFlHAKQ/x9hg==
+Message-ID: <6937a4da-303b-4c89-88d1-1b698127bfb7@kernel.org>
+Date: Fri, 9 May 2025 11:24:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-META: di6kykp7zde413b4e3sounqozm3sm5ro
-X-MBO-RS-ID: 76bcd7afd41cbb0191a
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] ARM: dts: rockchip: Sonoff-iHost: adjust SDIO for
+ stability
+To: Hao Zhang <hao.zhang@coolkit.cn>, heiko@sntech.de
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ tim@feathertop.org, linux-rockchip@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250509085657.309934-1-hao.zhang@coolkit.cn>
+ <20250509085657.309934-2-hao.zhang@coolkit.cn>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250509085657.309934-2-hao.zhang@coolkit.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2025-05-08 at 11:39 -0400, Zack Rusin wrote:
-> On Thu, May 8, 2025 at 6:40=E2=80=AFAM Philipp Stanner <phasta@mailbox.or=
-g>
-> wrote:
-> >=20
-> > On Wed, 2025-04-23 at 14:06 +0200, Philipp Stanner wrote:
-> > > vmgfx enables its PCI device with pcim_enable_device(). This,
-> > > implicitly, switches the function pci_request_regions() into
-> > > managed
-> > > mode, where it becomes a devres function.
-> > >=20
-> > > The PCI subsystem wants to remove this hybrid nature from its
-> > > interfaces. To do so, users of the aforementioned combination of
-> > > functions must be ported to non-hybrid functions.
-> > >=20
-> > > Moreover, since both functions are already managed in this
-> > > driver,
-> > > the
-> > > calls to pci_release_regions() are unnecessary.
-> > >=20
-> > > Remove the calls to pci_release_regions().
-> > >=20
-> > > Replace the call to sometimes-managed pci_request_regions() with
-> > > one
-> > > to
-> > > the always-managed pcim_request_all_regions().
-> > >=20
-> > > Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> >=20
-> > *PING*
->=20
-> Thanks, that looks great. I missed it because the driver's name is
-> vmwgfx. I'd be happy to fix the subject for you while pushing this to
-> drm-misc-fixes,
+On 09/05/2025 10:56, Hao Zhang wrote:
+> From: "hao.zhang" <hao.zhang@coolkit.cn>
+> 
+> Reduce max-frequency from 50MHz to 25MHz to improve WiFi module stability
+> on some Sonoff iHost units. Remove unsupported or redundant properties,
+> and keep only minimal, validated configuration.
+> 
+> Signed-off-by: hao.zhang <hao.zhang@coolkit.cn>
 
-But, I don't think that this is a bug. It's just a bit ugly and this
-patch performs cleanup work, but all the code behaves as intended,
-without leaks or stuff like that.
+Do not use login as name, especially that you did it right for the email
+address you sent it from.
 
-Thus, I think it should go to drm-misc-next instead of drm-misc-fixes.
 
-Regards
-
->  if you're ok with it of course. Otherwise:
-> Reviewed-by: Zack Rusin <zack.rusin@broadcom.com>
->=20
-> z
-
+Best regards,
+Krzysztof
