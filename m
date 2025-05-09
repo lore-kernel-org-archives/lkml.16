@@ -1,139 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0AC13C3CD;
-	Fri,  9 May 2025 16:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49EFE231841
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746808882; cv=none; b=Sq/CTMpe3JoXuVVi18qWqKRCY51perJcbhmQ2V4xnL23kPNXfYzbkL0lbAFeXryEAGkaFN235cJ8Xw9955O/qmMV1DOAlarP7GOq+VfPhotQu5de8n05FBRLgM6qc+kaeum7AoNwJK0xgHC3bPlHbuyyIgvu48z8Lvd6Fh16p4I=
+	t=1746808999; cv=none; b=pLG27/hDgZDHTFr2yWszYbBHvqDw/nQuEEnkpUcg11pQzWPHFPDA1GsrwmdnsolsamhfipMdxCoHXA6SjRjotmitQWDhQ7Vn42AKfe6FihZ3YP4UIqXrgDZ2pUZQuSmiUx3iujCcfEUeWs5LVT3G5fIth7lZNHRJPV5uXR8oEIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746808882; c=relaxed/simple;
-	bh=y0IAr64O+aYheRZ0wUGqwC1rzhN+VdRSDxf68VbESD8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OzznVyj6USl4rITllkUiWaEx9I5FfU1LIVqQRK8y60MwWPPPCpU/kKV/6lakPLG3hSvIqqKBa6/MCX3zI081n8iZrWozVhZ2ahSuzajy+LoC23DbbA/yut/DvHXb/sv0Ml4AcuFuFB/lEOA7mCyqirLpnGvcy7OJTaohPI8X0UE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wu6v7//0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wu6v7//0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C65DBC4CEED;
-	Fri,  9 May 2025 16:41:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746808881;
-	bh=y0IAr64O+aYheRZ0wUGqwC1rzhN+VdRSDxf68VbESD8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Wu6v7//0wo+4nft/qVjSdeZDbGipVhncxiMduFAq58PvUV9CkE03zxTiDKEfjQuai
-	 7kVWr4W5yEqIx9es2m8d0sewPlFcGhf5KGfbQ+s1vabZF67Dki3y8Ik77aymXoI++a
-	 W5jTMwgW231enFsIbIXaTXntGUKaFjUbcz0f1YEs2fArDSeooWHMs/rMnglkngC1cZ
-	 TYur2oJWrKgHRuKJoWROHZ7KTW+veRBl6k4lxLetWStVPyF2vrLHlclOw9DZ/+CdFD
-	 ZporQPZTGea7i92ysYV37dCQcwd7iik4ds4Weik61CN20OB/Y98dQoOnB67nXNJaUX
-	 etGnW7Aiemf6Q==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2c873231e7bso1877096fac.3;
-        Fri, 09 May 2025 09:41:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUKGG41KnDBn2uTa5wcKXrvzpDCsDssLjqBYhN98OHM1OKbzY/YIjPUGrMTfYuDNba9vBZZEio8S/oM2yA=@vger.kernel.org, AJvYcCUlUWSp5CfDPNbC1X17fT5MxUxHJH+vOTp4DsCYQVGpRPQ8YdPTRnRk0zVRjXSI2Z42ntw9U1neg4w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzA8Qdvrli2EGXYvIzNvB3//AmTw9BOE+pzbdnQDj6HvJbpBBxR
-	Ij2jau5buOmbFvp+HIjgQPW606KZiN17eOSMLBwDLHou0q5KyyXoruAjqErIDm8Tx+Hk4SgTrmQ
-	qyeLp03c3KPxDeTDPX9nAJgxraEY=
-X-Google-Smtp-Source: AGHT+IFpEyejOAgEPyjkdGwaTitBM/mMEi03IHz5RFan2KnBgN9t31wT0HOuCTPZzGWKSJZuETYd9A4NMQMsmtjo+UM=
-X-Received: by 2002:a05:6871:782:b0:2d6:6639:52d9 with SMTP id
- 586e51a60fabf-2dba45282c1mr2688171fac.32.1746808881126; Fri, 09 May 2025
- 09:41:21 -0700 (PDT)
+	s=arc-20240116; t=1746808999; c=relaxed/simple;
+	bh=ZXQKMYDJsw6I0LVk+NW1H0FwRmbkk1DOz3/fUm64324=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dR+iszcgVNh+nJNhGERI1j3zKSeky+T6CUSjrzCJWfvmsRBrXIz4WfG91We3LygXO9Td12UPGb7JXKxO9VleHwSLIeHzQzzhcXHnEF5bGYpZTsdNN68KezvueV0WXxweASmI2eEQhJuA2+VjO4AddO4if+p2sAAvQ91mz3oIsKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E0D21AC1;
+	Fri,  9 May 2025 09:43:06 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D08B3F5A1;
+	Fri,  9 May 2025 09:43:15 -0700 (PDT)
+Date: Fri, 9 May 2025 17:43:12 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: Peter Newman <peternewman@google.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+	"Luck, Tony" <tony.luck@intel.com>,
+	Fenghua Yu <fenghuay@nvidia.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v4 13/31] fs/resctrl: Add support for additional monitor
+ event display formats
+Message-ID: <aB4woCcnPC5Mz7cf@e133380.arm.com>
+References: <20250429003359.375508-1-tony.luck@intel.com>
+ <20250429003359.375508-14-tony.luck@intel.com>
+ <4aa0904d-9332-4796-90d6-d858711fc611@intel.com>
+ <aB0T_Ep2lJzfwjv5@agluck-desk3>
+ <2a19f63a-f9b4-4632-bca2-2f64f6fed57b@intel.com>
+ <aB3nGDzW6pNNkYTB@e133380.arm.com>
+ <CALPaoCjzrGMTEYmTpH=9o_=N24apE0U057p6Mt6Knt9PoyFmzw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507014728.6094-1-changwoo@igalia.com> <a82423bc-8c38-4d57-93da-c4f20011cc92@arm.com>
-In-Reply-To: <a82423bc-8c38-4d57-93da-c4f20011cc92@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 9 May 2025 18:41:10 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0ixh=ra-TDbC59rpZoGn0pRWmAMchHqoOb_XwB2XUzA7Q@mail.gmail.com>
-X-Gm-Features: ATxdqUEhekjKxOiCqJACIRj4Yucv3oDY0_mHhqtzyWszh96966OwdYTQVrriguk
-Message-ID: <CAJZ5v0ixh=ra-TDbC59rpZoGn0pRWmAMchHqoOb_XwB2XUzA7Q@mail.gmail.com>
-Subject: Re: [PATCH v2] PM: EM: Add inotify support when the energy model is updated.
-To: Changwoo Min <changwoo@igalia.com>, Lukasz Luba <lukasz.luba@arm.com>
-Cc: christian.loehle@arm.com, tj@kernel.org, rafael@kernel.org, 
-	pavel@kernel.org, kernel-dev@igalia.com, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, len.brown@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALPaoCjzrGMTEYmTpH=9o_=N24apE0U057p6Mt6Knt9PoyFmzw@mail.gmail.com>
 
-On Fri, May 9, 2025 at 12:55=E2=80=AFPM Lukasz Luba <lukasz.luba@arm.com> w=
-rote:
->
-> Hi Changwoo,
->
-> On 5/7/25 02:47, Changwoo Min wrote:
-> > The sched_ext schedulers [1] currently access the energy model through =
-the
-> > debugfs to make energy-aware scheduling decisions [2]. The userspace pa=
-rt
-> > of a sched_ext scheduler feeds the necessary (post-processed) energy-mo=
-del
-> > information to the BPF part of the scheduler.
-> >
-> > However, there is a limitation in the current debugfs support of the en=
-ergy
-> > model. When the energy model is updated (em_dev_update_perf_domain), th=
-ere
-> > is no way for the userspace part to know such changes (besides polling =
-the
-> > debugfs files).
-> >
-> > Therefore, add inotify support (IN_MODIFY) when the energy model is upd=
-ated.
-> > With this inotify support, the directory of an updated performance doma=
-in
-> > (e.g., /sys/kernel/debug/energy_model/cpu0) and its parent directory (e=
-.g.,
-> > /sys/kernel/debug/energy_model) are inotified. Therefore, a sched_ext
-> > scheduler (or any userspace application) monitors the energy model chan=
-ge
-> > in userspace using the regular inotify interface.
-> >
-> > Note that accessing the energy model information from userspace has man=
-y
-> > advantages over other alternatives, especially adding new BPF kfuncs. T=
-he
-> > userspace has much more freedom than the BPF code (e.g., using external
-> > libraries and floating point arithmetics), which may be infeasible (if =
-not
-> > impossible) in the BPF/kernel code.
-> >
-> > [1] https://lwn.net/Articles/922405/
-> > [2] https://github.com/sched-ext/scx/pull/1624
-> >
-> > Signed-off-by: Changwoo Min <changwoo@igalia.com>
-> > ---
-> >
-> > ChangeLog v1 -> v2:
-> >    - Change em_debug_update() to only inotify the directory of an updat=
-ed
-> >      performance domain (and its parent directory).
-> >    - Move the em_debug_update() call outside of the mutex lock.
-> >    - Update the commit message to clarify its motivation and what will =
-be
-> >      inotified when updated.
-> >
-> >   kernel/power/energy_model.c | 12 ++++++++++++
-> >   1 file changed, 12 insertions(+)
-> >
->
-> I have discussed that with Rafael and we have similar view.
-> The EM debugfs is not the right interface for this purpose.
->
-> A better design and mechanism for your purpose would be the netlink
-> notification. It is present in the kernel in thermal framework
-> and e.g. is used by Intel HFI
-> - drivers/thermal/intel/intel_hfi.c
-> - drivers/thermal/thermal_netlink.c
-> It's able to send to the user space the information from FW about
-> the CPUs' efficiency changes, which is similar to this EM modification.
+Hi,
 
-In addition, after this patch
+On Fri, May 09, 2025 at 04:46:30PM +0200, Peter Newman wrote:
+> Hi Dave,
+> 
+> On Fri, May 9, 2025 at 1:29 PM Dave Martin <Dave.Martin@arm.com> wrote:
 
-https://lore.kernel.org/linux-pm/3637203.iIbC2pHGDl@rjwysocki.net/
+[...]
 
-which is about to get into linux-next, em_dev_update_perf_domain()
-will not be the only place where the Energy Model can be updated.
+> > For example: scaling memory bandwidth percentages for MPAM is a
+> > nuisance because the hardware uses fixed-point values scaled by a power
+> > of 2, not by 100: the two scales can never match up anywhere except at
+> > multiples of 25%, leading to irregular increments when rounded to an
+> > integer percentage value and uncertainty about what the bandwidth_gran
+> > parameter means.  Round-trip conversions between the two
+> > representations become error-prone due to repeated rounding -- this
+> > proved quite fiddly to get right.  Precision beyond 1% increments may
+> > also be available in the hardware, but is not accessible through the
+> > resctrl interface.
+> 
+> Google users got annoyed with these rounding errors very quickly and
+> asked me to change the MBA interface to the raw, fixed-point value
+> used by the MPAM register interface. (but at least shifted down, since
+> the MBW_MIN/MAX fields are left-justified)
 
-Thanks!
+That's interesting.
+
+Do you find a need to do things like step the bandwidth allocation for
+a control group?  So, as part of a tuning regime, the bandwidth value
+is read out, stepped to the next distinct hardware value and written
+back in?
+
+That kind of thing does not map in a convenient way onto the current
+interface, although fire-and-forget programming of a predetermined
+percentage works fine.
+
+Extending my model outline, a 6-bit MPAM MBW_PART implementation might
+be described by:
+
+	min: 1
+	max: 64
+	step size: 1
+	multiplier: 1
+	divisor: 64
+
+How easy / difficult do you think it would be for userspace to work
+with this, if resctrlfs were to expose the raw control (minus the
+ignored bits) with that metadata?
+
+Needless to say, the max and divisor values would dependent on the
+hardware and possibly other factors.  They would be fixed for the
+lifetime of a single resctrl instance at the very least.
+
+> > For backwards compatibility we probably shouldn't change that
+> > particular interface, but if we can avoid new instances of the same
+> > kind of problem then that would be a benefit: i.e., explicitly tell
+> > userspace how to scale a given parameter.
+> 
+> MBA is not programmed by percentage on AMD, so I'm not sure why this
+> is considered necessary for backwards compatibility.
+
+I presumed scripts (or pre-tuned data fed through them) are in practice
+pretty platform-specific, so that it will upset people if the interface
+changes between kernel versions at least on a given hardware family.
+
+The divergence between AMD and Intel in this area is unfortunate, but
+absolute and proportional bandwidth measures do not really seem to be
+interchangeable -- so a truly unified interface may not be easy to
+achieve either.
+
+Having two control names in the interface might work, say:
+
+	MBP: proportion of total available memory bandwidth (%)
+
+	MBA: absolute memory bandwidth (B/s)
+
+Then just expose the one that the hardware implements natively (while
+still exposing MB as a backwards compatible alias if necessary).
+
+Cheers
+---Dave
