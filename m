@@ -1,238 +1,115 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE98E22FDE7
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2E821ADAB
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746805597; cv=none; b=OfBGycyrMNjwfsfakfsj6toxzSZMvgVIogrK8ZhmYQf1+zXtJiNpPrqcVIxeEhTOt6EaSLZNTb0Mx/sXTkO+Mv9wGTMc+6/Ync0TMAkkdRb19oquNsh7R+5vZKjVPMX5eIRjnFOh2fHl9d2/mFQBrZEQJ5Y28tveKoX0hCMBpiI=
+	t=1746805611; cv=none; b=FwEMkdlxdFZi1t7blube/2Zvy1YGXUqOZLb1c31XwcHKyAWxBCsqIdRF3qa5g501EwprP+krVzq/ziGJ4pf4PiYkjxg1nMl6llQj/utsEnUryWTgtJjr+A5biXGg84dtWc6d2zgyEe1ulNOspgsbBWdxOAGQ9c0YL5DwcbhRiAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746805597; c=relaxed/simple;
-	bh=DeBCrTmdTR5yKShLY0vZqCOTCX0K9ctcUoU2nBe6LVA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J2NPrsaE+bH4gPNmwjRY9aDBhVD6D9mK06xJSyk0MkUbNvFr3BsubAtSXHCUHkHgqg1cNIETcgFD+R6ALWXdjlfq+6/7tcacBAC0siZXd5Oips8gS+haDKmuYzqaaMaSTO+8MhyDSLHuR7t9Lro2c1XXN7guBfLZ/0w+YKFN3AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mihalicyn.com; spf=pass smtp.mailfrom=mihalicyn.com; dkim=pass (1024-bit key) header.d=mihalicyn.com header.i=@mihalicyn.com header.b=RYgdbCHf; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mihalicyn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mihalicyn.com
+	s=arc-20240116; t=1746805611; c=relaxed/simple;
+	bh=1ShT8UK0LokCHaO4QMELxKGLO2ce9JPvS0gf7gAFVE4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KT5juH3GyIMnlPaYFL1vAWodUPy98DOVVG//y3AG5rrPwb3EtxDAN+oS+u40wDYwDZ/vrM+lcTdKllG3Oj/IAA3umMU7Tl1tAAnCC7qUKVqepkCByY/Jc9XNWppb+tLUiv9/r3nE2D3BUMy3jO5QD7mdjvEJGFkKUyhvY44FmDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gOyWVYw7; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mihalicyn.com header.i=@mihalicyn.com header.b="RYgdbCHf"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54e816aeca6so3138361e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 08:46:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mihalicyn.com; s=mihalicyn; t=1746805593; x=1747410393; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9xNbDuhYMNEOPQ0iDaGg7WmsIQAL98DsMilo3FOILHE=;
-        b=RYgdbCHfoSKZLpdRCIWD/iPlUS9k46KL5BNo5lmTXtbn7IaDHnKqc50vvx/xBcKQzm
-         /JlDDMmg5gmbeYurfPcGQ5tibFSr7uRtrFIfXqbSfv8PP5Jm5UkwkvrRlPC+xCyIBU2z
-         mKPZgn+F80bC4/FqDYh50m47qBFef+DUY2FLc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746805593; x=1747410393;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9xNbDuhYMNEOPQ0iDaGg7WmsIQAL98DsMilo3FOILHE=;
-        b=HEahhoDxfK2H42nK17UsZEFEA9uaGqKYKwgt05dko7iFXacHOq/n5FuWS4g9MAP0Xe
-         vNPKCe+ABuV+2qhC3fmZgDWV8/eOHaxc+YocWZPrFakeMX6nQmXwx1hlLu7vjZkce1hg
-         6XfR2+xWjdjinHxEkd8p94XDM89foP1z2IgBehC8hyfQF/roQuqK5SPIDw7kB1guZuag
-         r/nYvVUxM46+Fk2+Q+ma2GG127IB1lpGrfR++SqdzA1KLx/SZD/AS9vF5rhcjRPbCI5g
-         VXAMH3U5OeeVuPFzRAaRWo52N7ZbGOXVp7URPAsGweuoUGVKcKCCy9/j9DJPCAW4ISue
-         0oSw==
-X-Forwarded-Encrypted: i=1; AJvYcCX6c1Rc7zYhAieUx8i//c52ZCbjnOlnJZNJbWMw8BgLjujjlAFjBQX3ectZtQRtMgoW2rTOqTj34LoSjjw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwR+twB32CGrYHVyuqNXjgT+ZAvUYjG8PGQ0I7+JrIWUUnq4Pwe
-	wW2zlJg30Xtjt1c4QxRSPk4Np/YFp52bPh4J1uvkbeAuy9Ht2ONmOFSmoScP0Gi357hII2VL9jb
-	Gypvm79Em6IPCvUzFOfsP6yxSy/Kre0hm3lUTbw==
-X-Gm-Gg: ASbGnctlfL4zxBkljU1/ssWrMVqetwQOdM8uDzJDlhjHbAsXGXnDKl+oXrOTv/Srnon
-	kWj2Hs/p/RVDWsQKeUk/HsMlXc0wq144LpLPWrsus6NwrF8xRvrqhkqfdhHWLGWYGpZgR0ePpwH
-	a0ACnToC31lKnqPSfz1LJFFn8=
-X-Google-Smtp-Source: AGHT+IHoJp8wBzITN88S1HfrprVuyMRPvWzwS4HbJbfLM7QXMEGjXdAedeYOhNSQ8zXWIJlwtoij1I0pkOJyZ9tEoRk=
-X-Received: by 2002:a05:651c:210a:b0:30c:aae:6d4a with SMTP id
- 38308e7fff4ca-326c4627d80mr18504001fa.26.1746805592184; Fri, 09 May 2025
- 08:46:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gOyWVYw7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746805610; x=1778341610;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1ShT8UK0LokCHaO4QMELxKGLO2ce9JPvS0gf7gAFVE4=;
+  b=gOyWVYw7ndL8mKEkh0Sw9FiKOz537YTcGzKzequNBya3OSavrgV+pH8r
+   RO/ur2gdKw0tuwhBCUXiyjZJwNUHW82/IiW1RWhgTj1NfFGkJChTfwYKH
+   CmHo+gERcYEGfsPeznEWixZ4tncjuGIFhcsE9cprZRso6ECAtMW1yXHIZ
+   5Wk1B64aP4pipRr07m8rXFrrToH46Pra2bnb3ceTczFOp/ALbDiz1jcx7
+   5kpwbulLHkl7Hxs25Uf8SI/R85H3LE8icnqN5WoRW15DTpasluschbYT2
+   CV2Nx5QSKaNUkODERCZgb5uMcqW6dUfqNcn0GMRuxq8SonxseNyNRDwds
+   g==;
+X-CSE-ConnectionGUID: yj614wrqTQ6FBkuL40SYUw==
+X-CSE-MsgGUID: MuCDdXAXRHyiggXk8BS31g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48644593"
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="48644593"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 08:46:49 -0700
+X-CSE-ConnectionGUID: 0AXXWekAQayK1orAOH+poA==
+X-CSE-MsgGUID: KKVqMy/jSIKSiQNnNkq5Mg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="173828701"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa001.jf.intel.com with ESMTP; 09 May 2025 08:46:47 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 6E1E41D7; Fri, 09 May 2025 18:46:46 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] genirq: Consistently use '%u' format specifier for irq
+Date: Fri,  9 May 2025 18:46:42 +0300
+Message-ID: <20250509154643.1499171-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509-work-coredump-socket-v5-0-23c5b14df1bc@kernel.org> <20250509-work-coredump-socket-v5-1-23c5b14df1bc@kernel.org>
-In-Reply-To: <20250509-work-coredump-socket-v5-1-23c5b14df1bc@kernel.org>
-From: Alexander Mikhalitsyn <alexander@mihalicyn.com>
-Date: Fri, 9 May 2025 17:46:21 +0200
-X-Gm-Features: AX0GCFuTWF2y33BQszs3BPl-6caIW4wVI9SlZUstCcjjk5CXp49SmJp1kj1c_ao
-Message-ID: <CAJqdLrqCkkA=TcEU0Oo5w=6Xrp=y1VepGZncBC4yKRU1hv2iDg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/9] coredump: massage format_corname()
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, Jann Horn <jannh@google.com>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>, 
-	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
-	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Christian!
+There are three cases in the genirq code when the irq, as an unsigned
+integer variable, is converted to text representation by sprintf().
+In two cases it uses '%d' specifier which is for signed values. While
+it's not a problem right now, potentially it might be in the future
+in case too big (> INT_MAX) number will appear there.
 
-Am Fr., 9. Mai 2025 um 12:25 Uhr schrieb Christian Brauner <brauner@kernel.org>:
->
-> We're going to extend the coredump code in follow-up patches.
-> Clean it up so we can do this more easily.
->
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> ---
->  fs/coredump.c | 41 ++++++++++++++++++++++++-----------------
->  1 file changed, 24 insertions(+), 17 deletions(-)
->
-> diff --git a/fs/coredump.c b/fs/coredump.c
-> index d740a0411266..281320ea351f 100644
-> --- a/fs/coredump.c
-> +++ b/fs/coredump.c
-> @@ -76,9 +76,15 @@ static char core_pattern[CORENAME_MAX_SIZE] = "core";
->  static int core_name_size = CORENAME_MAX_SIZE;
->  unsigned int core_file_note_size_limit = CORE_FILE_NOTE_SIZE_DEFAULT;
->
-> +enum coredump_type_t {
-> +       COREDUMP_FILE = 1,
-> +       COREDUMP_PIPE = 2,
-> +};
-> +
->  struct core_name {
->         char *corename;
->         int used, size;
-> +       enum coredump_type_t core_type;
->  };
->
->  static int expand_corename(struct core_name *cn, int size)
-> @@ -218,18 +224,21 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
->  {
->         const struct cred *cred = current_cred();
->         const char *pat_ptr = core_pattern;
-> -       int ispipe = (*pat_ptr == '|');
->         bool was_space = false;
->         int pid_in_pattern = 0;
->         int err = 0;
->
->         cn->used = 0;
->         cn->corename = NULL;
-> +       if (*pat_ptr == '|')
-> +               cn->core_type = COREDUMP_PIPE;
-> +       else
-> +               cn->core_type = COREDUMP_FILE;
->         if (expand_corename(cn, core_name_size))
->                 return -ENOMEM;
->         cn->corename[0] = '\0';
->
-> -       if (ispipe) {
-> +       if (cn->core_type == COREDUMP_PIPE) {
->                 int argvs = sizeof(core_pattern) / 2;
->                 (*argv) = kmalloc_array(argvs, sizeof(**argv), GFP_KERNEL);
->                 if (!(*argv))
-> @@ -247,7 +256,7 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
->                  * Split on spaces before doing template expansion so that
->                  * %e and %E don't get split if they have spaces in them
->                  */
-> -               if (ispipe) {
-> +               if (cn->core_type == COREDUMP_PIPE) {
->                         if (isspace(*pat_ptr)) {
->                                 if (cn->used != 0)
->                                         was_space = true;
-> @@ -353,7 +362,7 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
->                                  * Installing a pidfd only makes sense if
->                                  * we actually spawn a usermode helper.
->                                  */
-> -                               if (!ispipe)
-> +                               if (!(cn->core_type != COREDUMP_PIPE))
+Consistently use '%u' format specifier for irq which is declared as
+unsigned int in all these cases.
 
-Shouldn't it be:
-if (cn->core_type != COREDUMP_PIPE)
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ kernel/irq/debugfs.c | 2 +-
+ kernel/irq/proc.c    | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Except this, LGTM
+diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
+index 9004a17b93a2..3d6a5b3cfaf3 100644
+--- a/kernel/irq/debugfs.c
++++ b/kernel/irq/debugfs.c
+@@ -230,7 +230,7 @@ void irq_add_debugfs_entry(unsigned int irq, struct irq_desc *desc)
+ 	if (!irq_dir || !desc || desc->debugfs_file)
+ 		return;
+ 
+-	sprintf(name, "%d", irq);
++	sprintf(name, "%u", irq);
+ 	desc->debugfs_file = debugfs_create_file(name, 0644, irq_dir, desc,
+ 						 &dfs_irq_ops);
+ }
+diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
+index 94eba9a425c4..29c2404e743b 100644
+--- a/kernel/irq/proc.c
++++ b/kernel/irq/proc.c
+@@ -309,7 +309,7 @@ static bool name_unique(unsigned int irq, struct irqaction *new_action)
+ 
+ void register_handler_proc(unsigned int irq, struct irqaction *action)
+ {
+-	char name [MAX_NAMELEN];
++	char name[MAX_NAMELEN];
+ 	struct irq_desc *desc = irq_to_desc(irq);
+ 
+ 	if (!desc->dir || action->dir || !action->name || !name_unique(irq, action))
+@@ -345,7 +345,7 @@ void register_irq_proc(unsigned int irq, struct irq_desc *desc)
+ 		return;
+ 
+ 	/* create /proc/irq/1234 */
+-	sprintf(name, "%d", irq);
++	sprintf(name, "%u", irq);
+ 	desc->dir = proc_mkdir(name, root_irq_dir);
+ 	if (!desc->dir)
+ 		return;
+-- 
+2.47.2
 
-Reviewed-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
-
->                                         break;
->
->                                 /*
-> @@ -384,12 +393,12 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
->          * If core_pattern does not include a %p (as is the default)
->          * and core_uses_pid is set, then .%pid will be appended to
->          * the filename. Do not do this for piped commands. */
-> -       if (!ispipe && !pid_in_pattern && core_uses_pid) {
-> +       if (!(cn->core_type == COREDUMP_PIPE) && !pid_in_pattern && core_uses_pid) {
->                 err = cn_printf(cn, ".%d", task_tgid_vnr(current));
->                 if (err)
->                         return err;
->         }
-> -       return ispipe;
-> +       return 0;
->  }
->
->  static int zap_process(struct signal_struct *signal, int exit_code)
-> @@ -583,7 +592,6 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->         const struct cred *old_cred;
->         struct cred *cred;
->         int retval = 0;
-> -       int ispipe;
->         size_t *argv = NULL;
->         int argc = 0;
->         /* require nonrelative corefile path and be extra careful */
-> @@ -632,19 +640,18 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->
->         old_cred = override_creds(cred);
->
-> -       ispipe = format_corename(&cn, &cprm, &argv, &argc);
-> +       retval = format_corename(&cn, &cprm, &argv, &argc);
-> +       if (retval < 0) {
-> +               coredump_report_failure("format_corename failed, aborting core");
-> +               goto fail_unlock;
-> +       }
->
-> -       if (ispipe) {
-> +       if (cn.core_type == COREDUMP_PIPE) {
->                 int argi;
->                 int dump_count;
->                 char **helper_argv;
->                 struct subprocess_info *sub_info;
->
-> -               if (ispipe < 0) {
-> -                       coredump_report_failure("format_corename failed, aborting core");
-> -                       goto fail_unlock;
-> -               }
-> -
->                 if (cprm.limit == 1) {
->                         /* See umh_coredump_setup() which sets RLIMIT_CORE = 1.
->                          *
-> @@ -695,7 +702,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->                         coredump_report_failure("|%s pipe failed", cn.corename);
->                         goto close_fail;
->                 }
-> -       } else {
-> +       } else if (cn.core_type == COREDUMP_FILE) {
->                 struct mnt_idmap *idmap;
->                 struct inode *inode;
->                 int open_flags = O_CREAT | O_WRONLY | O_NOFOLLOW |
-> @@ -823,13 +830,13 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->                 file_end_write(cprm.file);
->                 free_vma_snapshot(&cprm);
->         }
-> -       if (ispipe && core_pipe_limit)
-> +       if ((cn.core_type == COREDUMP_PIPE) && core_pipe_limit)
->                 wait_for_dump_helpers(cprm.file);
->  close_fail:
->         if (cprm.file)
->                 filp_close(cprm.file, NULL);
->  fail_dropcount:
-> -       if (ispipe)
-> +       if (cn.core_type == COREDUMP_PIPE)
->                 atomic_dec(&core_dump_count);
->  fail_unlock:
->         kfree(argv);
->
-> --
-> 2.47.2
->
