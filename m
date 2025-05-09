@@ -1,101 +1,124 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.14])
+Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B32274655;
-	Fri,  9 May 2025 08:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9655B274FDF;
+	Fri,  9 May 2025 08:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746778683; cv=none; b=JyttUmQ7anvB/OKqQ+JZkcwXyNEulpTIjMA7rGfEtFkEFSGs+vfvAPB7eJIxxMz2QvHsQ+1mj5BJ71Re34c3Oh3gTPq+sfUU8z0CFDWRFSjQZtO8mAp4LXRSDKew5nRr6zBEx89pRjGXuqwztVN2uWS9tAunxgvG3RS4J2E8ZI8=
+	t=1746778708; cv=none; b=sL6dE0nwolx7hKssAtjDSEwSgw1JjaYouiaGZY1JBb6mE4pApkZjQrRlq01o8qQ74yIT0KSN3I2ZNrCYXXg+2C5dnjgLhe7Iqf+iK9tS+T/l15+0gxFiVLR08ODYZIoV2yIryUh+h+bEednViMNI84BL0+Y4uQLwa9+c/17YQbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746778683; c=relaxed/simple;
-	bh=LEc7U+I9G51sqHV7RljhvrdYtvuLXLnuCERRfYfMQ9M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fzrs9u2ijWqZSj9ioqDjDGt+e2QZP0vjiLv4FhQMdOnh3gLDSy+uReatSTLNhAW60ParsZpk650JtaDd9ZLZLS0i4lolr9akzOWMAYh0W7tKZFbxilfGJGXRpHfIdhCcM8L1oF3ldXl9d9VQ+tRRA/H56ngJu+bVa0uTPanZFUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=gkwARIDO; arc=none smtp.client-ip=1.95.21.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1746778708; c=relaxed/simple;
+	bh=qTDrVslHRModJfH+fXdAa5T/N1RdiaWo/7f1Q1waIYY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iQtXPtXV3pNj+7nUXMY9pChro/RlzGCEkU0tPEjlx1nUJODWRP8g4ReCy1p6VpM+5ecnsSI2jKyEML88qUp3DC8u8yrVTT3gq4G7zlaGKj4fLzCQz/sVCla2nJkKso03Ik2AiPwbBTdP5zSY2cYblZUtkuhwVho5/AeKfnv+23o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=SJkxpIem; arc=none smtp.client-ip=68.232.139.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="gkwARIDO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=MV3SBaP/NkJLElhKVQb3ChLAstdzKu69i8UbJJug81s=;
-	b=gkwARIDO8HqvFi5wDJfHa30q7ILPqvIcbpTEwH9BgxhvqMDwTfUGnY49gXSEXy
-	sfTavXq2+2Uw5iccg5Br1Twy8thHfjuLIcS8JnNOIonNqInAosvs4iGBrk01ze6N
-	ndNxfTguVrKHupZAvZ0zmTUdBAUWof589jGxgqZXLkRAM=
-Received: from dragon (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgD3n_wVuh1o3uioAA--.11456S3;
-	Fri, 09 May 2025 16:17:27 +0800 (CST)
-Date: Fri, 9 May 2025 16:17:25 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: maudspierings@gocontroll.com
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 3/8] MAINTAINERS: add maintainer for the Ka-Ro
- tx8p-ml81 COM module
-Message-ID: <aB26FRq/Ets5fiRK@dragon>
-References: <20250417-initial_display-v6-0-3c6f6d24c7af@gocontroll.com>
- <20250417-initial_display-v6-3-3c6f6d24c7af@gocontroll.com>
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="SJkxpIem"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1746778706; x=1778314706;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=qTDrVslHRModJfH+fXdAa5T/N1RdiaWo/7f1Q1waIYY=;
+  b=SJkxpIem6rlANQP9VyssKSFirne0riRu0du1smVQy4+b3OIUuzy4/CDz
+   rV3u3eoEanYnO1bnFGqGHgPP3N5jTvPrc0U3PNgt7NY1pAAWijKRli8KZ
+   TK5PAFad97BVM8gBqBnv19/1qsE4c0DyoTDZEz4qXnr8HmCMY/QIq3ml0
+   RLh/68xMggX4spakZgAFixLAW7vlS5xGqTDe/skQkIiTxiZIgeGOcEYNp
+   sKxMB5fSq6fUQSYZqKY+g6F7si5Ce7SggqvtIXOgD3JXStSiFeXQfDo55
+   TL75GEHwIzudSVieoviAWv6wYLFZiKB1PBa+m3lI2T+YlcllIPy2ikQ1l
+   g==;
+X-CSE-ConnectionGUID: v2JD8Ve1TreBvhRIQLP8Ow==
+X-CSE-MsgGUID: 5MTvQcvnRlOYbOHXyC4t8w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="199286265"
+X-IronPort-AV: E=Sophos;i="6.15,274,1739804400"; 
+   d="scan'208";a="199286265"
+Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
+  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 17:17:15 +0900
+Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
+	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 82396D480C;
+	Fri,  9 May 2025 17:17:13 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 3880CBDC9B;
+	Fri,  9 May 2025 17:17:13 +0900 (JST)
+Received: from iaas-rdma.. (unknown [10.167.135.44])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 595581A009A;
+	Fri,  9 May 2025 16:17:12 +0800 (CST)
+From: Li Zhijian <lizhijian@fujitsu.com>
+To: jgg@ziepe.ca,
+	leon@kernel.org,
+	linux-rdma@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Li Zhijian <lizhijian@fujitsu.com>
+Subject: [PATCH] IB/cm: Remove redundant WARN_ON in cm_free_priv_msg
+Date: Fri,  9 May 2025 16:18:40 +0800
+Message-ID: <20250509081840.40628-1-lizhijian@fujitsu.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417-initial_display-v6-3-3c6f6d24c7af@gocontroll.com>
-X-CM-TRANSID:Ms8vCgD3n_wVuh1o3uioAA--.11456S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWrZryDuF1xGw48Xw4fJw1DJrb_yoW8Jr4kpw
-	18Krs3CFn3JFsFkF1rKa1Yvw15ZFykGFW8uFZIv34vvFnxtFs0qw4DtwsI9rWDXF43Wr4r
-	JrnI9r17Ww47XaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UVCJPUUUUU=
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiEQFIZWgdteEUjgAAsG
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 17, 2025 at 12:14:04PM +0200, Maud Spierings via B4 Relay wrote:
-> From: Maud Spierings <maudspierings@gocontroll.com>
-> 
-> Add GOcontroll as unofficial maintainers of the Ka-Ro tx8p-ml81 COM
-> module bindings.
-> 
-> This support is not officially done by Ka-Ro electronics, if they at
-> some point will supporting mainline, this should be changed to them.
-> 
-> Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
-> ---
->  MAINTAINERS | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b5acf50fc6af4322dec0dad2169b46c6a1903e3c..1ca022081bcf564c8ec91fb6431570045495ec23 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12779,6 +12779,12 @@ S:	Maintained
->  F:	Documentation/hwmon/k8temp.rst
->  F:	drivers/hwmon/k8temp.c
->  
-> +KA-RO TX8P COM MODULE
-> +M:	Maud Spierings <maudspierings@gocontroll.com>
-> +L:	imx@lists.linux.dev
-> +S:	Maintained
-> +F:	arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81.dtsi
-> +
+Sometimes, the blktests triggered this WARN_ON():
+ ------------[ cut here ]------------
+ WARNING: CPU: 3 PID: 1330889 at cm.c:353 cm_free_priv_msg+0xaa/0xc0 [ib_cm]
+...
+ CPU: 3 UID: 0 PID: 1330889 Comm: kworker/u16:1 Tainted: G        W  OE      6.13.0-rc3+ #3
+ Tainted: [W]=WARN, [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+ Workqueue: ib_mad1 timeout_sends [ib_core]
+ RIP: 0010:cm_free_priv_msg+0xaa/0xc0 [ib_cm]
+...
+ Call Trace:
+  <TASK>
+  ? cm_free_priv_msg+0xaa/0xc0 [ib_cm]
+  ? __warn.cold+0x93/0xfa
+  ? cm_free_priv_msg+0xaa/0xc0 [ib_cm]
+  ? report_bug+0xff/0x140
+  ? handle_bug+0x58/0x90
+  ? exc_invalid_op+0x17/0x70
+  ? asm_exc_invalid_op+0x1a/0x20
+  ? cm_free_priv_msg+0xaa/0xc0 [ib_cm]
+  cm_process_send_error+0x64/0x1f0 [ib_cm]
+  timeout_sends+0x1e5/0x2d0 [ib_core]
+  process_one_work+0x156/0x310
+  worker_thread+0x252/0x390
+  ? __pfx_worker_thread+0x10/0x10
+  kthread+0xd2/0x100
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork+0x34/0x50
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork_asm+0x1a/0x30
+  </TASK>
+ ---[ end trace 0000000000000000 ]---
 
-I'm not fond of such changes, as MAINTAINERS file could be bloated
-quickly by individual DTS.
+In cm_process_send_error(), cm_free_priv_msg() will be called
+when (msg != cm_id_priv->msg) is true. And all other calling to
+cm_free_priv_msg() cases, msg is always the same as cm_id_priv->msg.
 
-Shawn
+So it's safe to remove this WARN_ON
 
->  KASAN
->  M:	Andrey Ryabinin <ryabinin.a.a@gmail.com>
->  R:	Alexander Potapenko <glider@google.com>
-> 
-> -- 
-> 2.49.0
-> 
-> 
+Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+---
+ drivers/infiniband/core/cm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
+index 142170473e75..1a8e5b0e4d85 100644
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -350,7 +350,7 @@ static void cm_free_priv_msg(struct ib_mad_send_buf *msg)
+ 
+ 	lockdep_assert_held(&cm_id_priv->lock);
+ 
+-	if (!WARN_ON(cm_id_priv->msg != msg))
++	if (cm_id_priv->msg == msg)
+ 		cm_id_priv->msg = NULL;
+ 
+ 	if (msg->ah)
+-- 
+2.44.0
 
