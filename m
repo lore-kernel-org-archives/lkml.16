@@ -1,169 +1,76 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23664964E;
-	Fri,  9 May 2025 03:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C501D88A4
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 03:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746761547; cv=none; b=EmAM797d3gpNDdIxVB5TMZC9wNSof3o9N+lmrf43r8eF48BQxYSum49WAWNQPjtJ1KhIRCcT7zCXR1mIKsna8NzPC3seQGffQssOK0eJ+YtZKMYTUaHKVqELKALZmX18GntiWlyf1BtjykiABZyKCeb1sZZIG4cUj63FpmJq28E=
+	t=1746761581; cv=none; b=TgNR4KU3TmXNXfTeFUoGdLfsCm6y1U1qKZR6T1FrfWcxForm7dUQUW4XeHTC6lnf3lSRJX5VtaNcPUrVCsbzY20ddsZToSLqGPUtDhzRG3VWOb12VH8ak1sEb9DlZ2S585J39tPuiZpzm25Mnv8MLnnn59UGdSg5SCVWjlS7pmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746761547; c=relaxed/simple;
-	bh=d6w0QC2FkkZmOZZCEXQM8m8PwqeRBreeSkfhxCr/u4Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nm/OMi0Lk9aDimgQG9DzadTpWb71/cGaZdLEUb/OLj6RScRjfQqKuXePdy40j9imh0m+WENYtB/I0MaEdZclgmAA9xeydRow3xnealr3DiRnA+NPTquytzbJuVO8UYZrecdaLLn0bmXkMG+pKh63GWFay1X3165awy8OaY4oAok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lp/93uEG; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746761581; c=relaxed/simple;
+	bh=rvryJxmKX4mc+nGRUBZnP1ySJowEcBkvwtk/IVIVfyo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KD4YnhaFaJTzDFIy+4dFQjPdYLUC/5o3EWcMv/cKcNJskP64ftQtZc8HOmLPXDLGLdRKHGK04VB+IMfACRbo1ne7K+OkpkDk7DiUyfYAghMG8yIaKjs1zWiDtFMPuLwGlgs2kWi5EEvl9/AlRCuFRrj5Ik56c81WUFvYf+8rGOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=dZ4U0jdt; arc=none smtp.client-ip=220.197.32.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lp/93uEG"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb3so2049016a91.1;
-        Thu, 08 May 2025 20:32:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746761545; x=1747366345; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ya3VczgHFOzFAyCfmPA4Y/mC3C+aSrcJSAyZCyQ9PTE=;
-        b=Lp/93uEG7XhmPEaUFgoqkm726yyzsBIlvWj6o89tyAIaQXe+p9qKLYxpaZFBpBY1LL
-         kg9bG7aW1cknbFeXyCKyl8Lwbj60QBmlt2FevL9mkUjH0xzy2y4MfdO3+kVjzoq54clv
-         sRDKrUX6ngiLCqHNqrcyphoNC7/eVsboJNfXhBLQm8tFbkG2xuuM8TuUrClokGSUawMp
-         funHsV23Xw4D40M2T/1QlW07H3Zh4940JNhdU+YEEYR3qG8Hm0ODJJMibxlUBEfwc7qH
-         AccK3lgKRC/zdwJQE5ib4phlyy3ivw1dhtSfv1/VVcSSXkBrFpV8EHf48Zg+XTedA5XP
-         2wnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746761545; x=1747366345;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ya3VczgHFOzFAyCfmPA4Y/mC3C+aSrcJSAyZCyQ9PTE=;
-        b=CmkWKsoOVEkTaw8z5YXAK65sz6huEWBVEIK7d/mmKkxayxN4SgW9gaVI/v98mxnD4f
-         +cOsLJGUAoPO9N1Bi5MmZZh1NorJbhxrnPFNuce8QOTax2/pSjMBMAGgQ75gTkOsdOit
-         NXfxREjIIIb94Q7FDyBcMePRq85Kl3LOSDaLxPv/5iFyUDowh36wvFFlGHiF0cKusDHb
-         4N+/fncKRL5KxzOBAjrwLNpMr2fxgIEzBMOUaIXuEaqbE1jp93o4iojycFZnktld2dRR
-         nSjOr57vLZ+Yn0ZcNeGU65tT68nWb8UGayhre+rmPTF84DQkw2KRs0tSiiMLFl/muICp
-         a88g==
-X-Forwarded-Encrypted: i=1; AJvYcCUJmsCVwEklxtWYuwa1Ky9UtP/I496B0PyxFKVUVJ6E9L8D2Cchnqv6513Y3SNSgF/gqvIXhCxcP/izGNA=@vger.kernel.org, AJvYcCUTjwVhf8hvPxcmGhg1SFzi59wecl80BQ5UsRfUH2gQoaLkThPFPzufLmoN24X2T9fgYT67@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyz2V4oBntW7gjpMTC0pT2YgOf0DI4MUbd1IkUZ1GFdToHPrkPv
-	iQOviv6559CeFqLKmMCoaDCuoqT0BaaK85vePCuy80NREnKuV+If3NQTMOhnSRfpgxHfWE9ACc8
-	FhH2hnM+tmnphGndz1F02hZp7dpJDIiJEAKBPuA==
-X-Gm-Gg: ASbGncs6OzFdzBBgqmiEKBlVs/HruucHfJq3ywEbkSrLEMQxkYPDEzOt3SCEfi+fTRT
-	io1/6Y/XuX/f4d0cuwhExmSzTszejX3h84AWp05PF1bmGuCUcf7sDQk7/TbVnxS9qdMLQJfrC3r
-	//FQkVVfhN59IAtYqvcVVWV1o=
-X-Google-Smtp-Source: AGHT+IGkXZFfrhbbd9BDItKA19ojDn/Iq3UrEv99hYGe8s2qyWB7NaatQnPLlDrpk1mRSaGA7fwLYogJ7Oi+heTJ6rE=
-X-Received: by 2002:a17:90b:1c04:b0:309:f53c:b0a0 with SMTP id
- 98e67ed59e1d1-30c3d63c365mr3229519a91.24.1746761544735; Thu, 08 May 2025
- 20:32:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="dZ4U0jdt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=owtz943ONJf4Hi65xs0lmnylyelZKNP4CjPK5N5RqTY=;
+	b=dZ4U0jdt+0Vxg3QlRLiHCl/r65AP5gbQHncu5eLtprOCie4HHmw18GcfdTpx85
+	BR5lBY8f6tCq/I66R6Mt1xMzJZ9EnBA5O8iOoQGxXoyRGdmMcfOXKC5AMWpN0SnH
+	M+t5ANDjlNStFeK3Nsxpz5axivHBNc7CS3vP+/LMOL8iI=
+Received: from [192.168.31.105] (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id M88vCgD3vxIGdx1omxWhAA--.59419S2;
+	Fri, 09 May 2025 11:31:20 +0800 (CST)
+Message-ID: <26c12da6-ce6c-449f-a7da-3e057f49085c@yeah.net>
+Date: Fri, 9 May 2025 11:31:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507112605.20910-1-qiang.zhang1211@gmail.com>
- <20250507112605.20910-3-qiang.zhang1211@gmail.com> <b23a7caa-a548-4691-badc-4122907ea688@paulmck-laptop>
-In-Reply-To: <b23a7caa-a548-4691-badc-4122907ea688@paulmck-laptop>
-From: Z qiang <qiang.zhang1211@gmail.com>
-Date: Fri, 9 May 2025 11:32:13 +0800
-X-Gm-Features: ATxdqUEaHndYcsUJJ2F87_gkE4VhxDkaNZ05UxRfazcxVWKhdmGnLLq18puEOUM
-Message-ID: <CALm+0cU8ndBcXsR_F1_XPcnb7+yvNoOynD7ucuZ6FfxAygDwqA@mail.gmail.com>
-Subject: Re: [PATCH] rcu/nocb: Fix possible invalid rdp's->nocb_cb_kthread
- pointer access
-To: paulmck@kernel.org
-Cc: frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org, 
-	urezki@gmail.com, boqun.feng@gmail.com, rcu@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug#1103397: linux-image-amd64: Kernel Panic:
+ copy_fpstate_to_sigframe crashes.
+To: Salvatore Bonaccorso <carnil@debian.org>, 1103397@bugs.debian.org
+Cc: Ben Hutchings <ben@decadent.org.uk>, TonyWWang-oc@zhaoxin.com,
+ "Chang S. Bae" <chang.seok.bae@intel.com>, Lyle Li <LyleLi@zhaoxin.com>,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ aruna.ramakrishna@oracle.com, pbonzini@redhat.com, levymitchell0@gmail.com,
+ attofari@amazon.de, linux-kernel@vger.kernel.org, CobeChen@zhaoxin.com,
+ TimGuo@zhaoxin.com, LeoLiu-oc@zhaoxin.com
+References: <4ac9f677-699e-4ef1-b160-9f1c6fe8e820@yeah.net>
+ <c566339b-d8d3-4f74-a3b8-8f373fbe3f47@yeah.net>
+ <174486226753.86424.3234605951040281675.reportbug@zx2>
+ <8bcebb19-17f6-47e6-976a-0c9560795cd7@yeah.net>
+ <aB0Q8S47iNeD1GOM@eldamar.lan>
+Content-Language: en-US
+From: Larry Wei <larryw3i@yeah.net>
+In-Reply-To: <aB0Q8S47iNeD1GOM@eldamar.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:M88vCgD3vxIGdx1omxWhAA--.59419S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUTiifDUUUU
+X-CM-SenderInfo: xodu25vztlq5hhdkh0dhw/1tbiCRdIPGgdZIFfqwAAsO
 
->
-> On Wed, May 07, 2025 at 07:26:05PM +0800, Zqiang wrote:
-> > In the preparation stage of CPU online, if the corresponding
-> > the rdp's->nocb_cb_kthread does not exist, will be created,
-> > there is a situation where the rdp's rcuop kthreads creation fails,
-> > and then de-offload this CPU's rdp, does not assign this CPU's
-> > rdp->nocb_cb_kthread pointer, but this rdp's->nocb_gp_rdp and
-> > rdp's->rdp_gp->nocb_gp_kthread is still valid.
-> >
-> > This will cause the subsequent re-offload operation of this offline
-> > CPU, which will pass the conditional check and the kthread_unpark()
-> > will access invalid rdp's->nocb_cb_kthread pointer.
-> >
-> > This commit therefore use rdp's->nocb_gp_kthread instead of
-> > rdp_gp's->nocb_gp_kthread for safety check.
->
-> Let's see...
->
-> The rcu_nocb_cpu_offload() and rcu_nocb_cpu_deoffload() functions invoke
-> cpus_read_lock(), and thus exclude all the CPU-hotplug notifiers,
-> including the one that invokes rcutree_prepare_cpu().  There is also
-> rcu_spawn_gp_kthread(), but that is an early_initcall() that happens
-> before CPU hotplug can happen, at least for non-boot CPUs.
->
-> So rcu_spawn_cpu_nocb_kthread() cannot run concurrently with either
-> rcu_nocb_cpu_offload() or rcu_nocb_cpu_deoffload(), correct?
+Salvatore Bonaccorso,
 
-Yes, the rcutree_prepare_cpu() is invoked under the cpus_write_lock()
-protection.
+Yes, let's just consider it as good. But in fact, there are still many 
+problems, such as the one mentioned above 
+(https://linux-hardware.org/?probe=271fabb7a4&log=dmesg), and almost all 
+laptops using Zhaoxin CPUs cannot adjust the backlight brightness, which 
+is **VERY HARMFUL** to the eyes!
 
->
-> It appears that all CPUs (try to) create their rcuoc and rcuog kthreads
-> when they come online, regardless of the nohz_full and rcu_nocbs kernel
-> boot parameters, some old tree_nocb.h comments notwithstanding.  ;-) The
-> rcu_organize_nocb_kthreads() function looks to cover all CPUs as well,
-> so ->nocb_gp_rdp will always be set after very early boot (give or take
-> alloc_bootmem_cpumask_var() failure in rcu_nocb_setup() and checked for
-> by the cpumask_available() in rcu_organize_nocb_kthreads()).
->
-> The rcu_spawn_cpu_nocb_kthread() can fail to spawn the GP kthread,
-> in which case both ->nocb_cb_kthread and ->nocb_gp_kthread remain
-> NULL.
+Regards,
 
-This is a low probability event, but it is possible, if this happens,
-and we test it with rcutorture configured with parameters
-nocbs_toggle and onoff_interval, it will trigger a null ptr access.
+larryw3i
 
-Thanks
-Zqiang
+On 5/9/25 04:15, Salvatore Bonaccorso wrote:
+> Did this felt through the cracks?
 
-
->
-> If so, LGTM.
->
->                                                         Thanx, Paul
->
-> > Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
-> > ---
-> >  kernel/rcu/tree_nocb.h | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
-> > index 1596812f7f12..6679140bb0b5 100644
-> > --- a/kernel/rcu/tree_nocb.h
-> > +++ b/kernel/rcu/tree_nocb.h
-> > @@ -1146,7 +1146,6 @@ static bool rcu_nocb_rdp_offload_wait_cond(struct rcu_data *rdp)
-> >  static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
-> >  {
-> >       int wake_gp;
-> > -     struct rcu_data *rdp_gp = rdp->nocb_gp_rdp;
-> >
-> >       WARN_ON_ONCE(cpu_online(rdp->cpu));
-> >       /*
-> > @@ -1156,7 +1155,7 @@ static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
-> >       if (!rdp->nocb_gp_rdp)
-> >               return -EINVAL;
-> >
-> > -     if (WARN_ON_ONCE(!rdp_gp->nocb_gp_kthread))
-> > +     if (WARN_ON_ONCE(!rdp->nocb_gp_kthread))
-> >               return -EINVAL;
-> >
-> >       pr_info("Offloading %d\n", rdp->cpu);
-> > @@ -1166,7 +1165,7 @@ static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
-> >
-> >       wake_gp = rcu_nocb_queue_toggle_rdp(rdp);
-> >       if (wake_gp)
-> > -             wake_up_process(rdp_gp->nocb_gp_kthread);
-> > +             wake_up_process(rdp->nocb_gp_kthread);
-> >
-> >       swait_event_exclusive(rdp->nocb_state_wq,
-> >                             rcu_nocb_rdp_offload_wait_cond(rdp));
-> > --
-> > 2.17.1
-> >
