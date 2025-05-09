@@ -1,182 +1,180 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8616238D49
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C3B023026D;
+	Fri,  9 May 2025 16:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746809861; cv=none; b=eQ+baMeSlU28p/Y+CC6GHUfmOjNptU3M/Tj5sxLNjimKZqJoJv+y5dRmTjoSkl6bSKxgl8kZ1qOQKZQ2tsNhtGTwRBVxkiJyd3Nl2R0fg80uOW0LqIS8nGJg9pJ0zZv0X9vvoDRYBlivIhWXg9dF0+c0RzGwFxi1fzVhCo9Ohxw=
+	t=1746809928; cv=none; b=AhhhRKMNLw7quxXC1I/zLcMCBYO/onu7sMDmdjSyLNM8+rS8bw7K3dcGa0T/ojhXGAsjVjysOoGl10AxG11q9EbsukrOJNHbjo+MTKRdE3Uo/HUaYYtP8+aRrzomqxdTnuuTPIjVp2na+oL58yWCrtPrGX1BmhTEg9o/EmR5JHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746809861; c=relaxed/simple;
-	bh=NO0nXmAnQ7j5tXqaFGEn07F6EM8NTqg7hgWX7A3fDLE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rp6WuJ+Sf/mt+BjsgalTpxtZeIfaPSbMfyC8AImKNdH2c1+oWx+l1lZFwwF5FeiwcKmsxNGJ3OcFj4hK/idN90kUMRK/4tzCTiVx1x6os5gOwGJcS8zrMFCkGHsjZgOyX3m107sKRgJGBuy70mgaVFAQK3pCQs6jNANFMPb5EaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jEzR0BAW; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746809928; c=relaxed/simple;
+	bh=7mAjBCwnH2ZUH875gXpsgSMs0EEgOEKXxWy4eLsWkVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j6UP8f7SPNGaRvOAAKDX+H4IzBfL1yGudWho0LN2fsudY9V4qEzlhyq013XDs8IFyj54I5EWY0DcnZofYSg7AMb8Hekute1tNs1FJSA5MjDYPIYFrEznkEkFZJYs8bwb5o55VAfa8ceJjR+Jv3QzEM+g1TZvXeChPTSyEq5T8Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=KyCyLRU6; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jEzR0BAW"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-48b7747f881so8111cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 09:57:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746809858; x=1747414658; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F24KyM+dHHK/8s58wGurnqx6fLbmKft8hdksqto3gWs=;
-        b=jEzR0BAWM3rnXF9PuCcuG4PBD28+vBKhXsmxgEvquhWclKHkkJJ9/pPeItdeeky2GE
-         MLZ5itZcUq/3pZU1HrGEkqtvq2GxGEC00BAenExSe+uYgeEcILCRBFh7WjWKi5MygNgi
-         CAuGQxw0DFmxTaddc4SYbyzNHKjfj9KsoyD+bSEpfUdyP8Qa+Uy9HQA1GIg9mPL9w8kx
-         Hl6uLdc3RQf8wJg0ARvfB16X6ShG7/t8mtSAEwTX4WKZflNONTkBUZo9Z50HTVzWNsx7
-         cfShVzoK3HL+DbvHXeyHQcQ98UaisBujRGsiGf0kyL4F5NCxFOIdZY5C9yMe4ExDThHl
-         q3rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746809858; x=1747414658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F24KyM+dHHK/8s58wGurnqx6fLbmKft8hdksqto3gWs=;
-        b=BbW1TTWNxNUAFdt1jFt39BzzBUfOkMgJzbAoCDV7nFoBmIDdpBY4UOGkeKRvfHEmAL
-         GouRTa1PCswPWLqLyBoB0rJ2IGJeVSBUpGQYWcXtyo5Q1PjbC7x0AWZDvYvWJK1+k5c3
-         Tb6+PaojRCylv0/L7zMNCdI2KVpKFUgZBvJPQINOn+6iAxOXAaM2UCZqf0pl8//dF2Cz
-         /q6Uw1T8omeBtWY/5BwT+3NkSmF7Zsw9wgUj+7RLg5ApfzZ6zL2ie29kRra+rtBB4q4m
-         Y6DYHM6NuspMS4VKDcHSdiPTSZo52eLl5IZSnFaHuagsLeLUg16ctn7yWjmmW6MuTDvT
-         G1Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCVDyFdN5gBgI7tn/LEjmr7b6ldhQwMOcglsD4Dp/26fZVZf1pXMeTzJRyjGDfyMqhVGa8n0jV0nwjLA54w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwB5lJVn0lm4Onm4JXg1HEJv6QxjeAxBtitg2FRg6cxH7FWIOMM
-	vxzkuRTM/MTjU4qveGjeOKjMVJNdQFfmVZIs5axQIp9vdRHYWYdJtL1f9afqIxi8MNcphnzT/ij
-	GiopctVVBZ5H7Ozq0gyIfdiLESfBvS2h0+cXf
-X-Gm-Gg: ASbGnct6jW8Vaobmf2umahJtwgYg1tkIzLwmB9DQTmxuNRvmQQ3qV/qSEM/Wq9s3NO+
-	Z0jQo2HUhpP6D71Nxr+ZDXea6YWIw2kUzKmhPR5rMGno2MWH8dv6t9TnElHQAzQ4atnKKIZIO3A
-	KlIbLTiwO2+mDrvSBsTQNA1G3F9hu50s4=
-X-Google-Smtp-Source: AGHT+IHHBbsmJ0bmeCCrkQJfIZZAurxuGxUrt4S1p/lpkCoKnn9OdxpzRAmNFP54h0k6EN8iq2GxI499tAqeBJVrPCg=
-X-Received: by 2002:ac8:5748:0:b0:477:8686:901d with SMTP id
- d75a77b69052e-49453c274f1mr4781501cf.1.1746809858305; Fri, 09 May 2025
- 09:57:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="KyCyLRU6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=fn7C/lj4+xfYek2/Hfb8+CYNC7tLiF8VaxxNp59+7qM=;
+	b=KyCyLRU6oKTazgTwC9TaR1sBfqeEFCKk//28RC+ayN1WST1UZr2RSLZP+iAICY
+	GaHbEUVCpw197BnPi84aITAyecl29CJxH6m/Q4Qe+scDvcFpIqwS01l5yXlmeQe5
+	D4hdT1/Om1/lp4GMXiRS1Fmz4yUGTYj/o5BuaDQML/iMA=
+Received: from [192.168.71.93] (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id PCgvCgDHdsYDNB5oCsJ+AA--.21817S2;
+	Sat, 10 May 2025 00:57:41 +0800 (CST)
+Message-ID: <4d77e199-8df8-4510-ad49-9a452a29c923@163.com>
+Date: Sat, 10 May 2025 00:57:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509061013.922944-1-00107082@163.com> <CAJuCfpH4eiSgZqdMTCUOU2VfYezZuLoJefc0wuOWor9eeNzNTA@mail.gmail.com>
- <152dd526.b05a.196b5e7b738.Coremail.00107082@163.com>
-In-Reply-To: <152dd526.b05a.196b5e7b738.Coremail.00107082@163.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Fri, 9 May 2025 09:57:27 -0700
-X-Gm-Features: AX0GCFvN6Os18FiJrCf9mnRsrDppqo2EjOlCjvvWSFSYDIoKEap76hfWqF2eGMw
-Message-ID: <CAJuCfpHi1nAQ5FbPECE12j2-m7ndYQ739rY=RuNCB6AxeJM=3w@mail.gmail.com>
-Subject: Re: [BUG?]Data key in /proc/allocinfo is a multiset
-To: David Wang <00107082@163.com>
-Cc: kent.overstreet@linux.dev, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 4/6] PCI: dwc: Use common PCI host bridge APIs for
+ finding the capabilities
+To: kernel test robot <lkp@intel.com>, lpieralisi@kernel.org,
+ bhelgaas@google.com, manivannan.sadhasivam@linaro.org,
+ ilpo.jarvinen@linux.intel.com, kw@linux.com
+Cc: oe-kbuild-all@lists.linux.dev, cassel@kernel.org, robh@kernel.org,
+ jingoohan1@gmail.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250505163420.198012-5-18255117159@163.com>
+ <202505092036.Sw8SstSY-lkp@intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <202505092036.Sw8SstSY-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:PCgvCgDHdsYDNB5oCsJ+AA--.21817S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAr17trWfAFW5uF48CrWkXrb_yoWrGFykpF
+	W5Jry2yFWrJryfWF4vya98W3WYvFnxAas8CF93Cw1SvFyavayUKFy09FW3Kr9agF4q9FWf
+	twsxGFWUArn8AF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U3Oz3UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWw9Io2geM5IYEwAAsj
 
-On Fri, May 9, 2025 at 9:36=E2=80=AFAM David Wang <00107082@163.com> wrote:
->
->
-> At 2025-05-09 23:56:32, "Suren Baghdasaryan" <surenb@google.com> wrote:
-> >On Thu, May 8, 2025 at 11:10=E2=80=AFPM David Wang <00107082@163.com> wr=
-ote:
-> >>
-> >> Just start a new thread for this[1].
-> >> There are duplications in /proc/allocinfo where same [file:line]
-> >> shows up several times:
-> >>
-> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>            0        0 ./include/crypto/kpp.h:185 func:kpp_request_allo=
-c
-> >>            0        0 ./include/crypto/kpp.h:185 func:kpp_request_allo=
-c
-> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>            0        0 ./include/net/tcp.h:2548 func:tcp_v4_save_option=
-s
-> >>            0        0 ./include/net/tcp.h:2548 func:tcp_v4_save_option=
-s
-> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>            0        0 drivers/iommu/amd/../iommu-pages.h:94 func:iommu=
-_alloc_pages_node
-> >>            0        0 drivers/iommu/amd/../iommu-pages.h:94 func:iommu=
-_alloc_pages_node
-> >>            0        0 drivers/iommu/amd/../iommu-pages.h:94 func:iommu=
-_alloc_pages_node
-> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>            0        0 drivers/iommu/intel/../iommu-pages.h:94 func:iom=
-mu_alloc_pages_node
-> >>            0        0 drivers/iommu/intel/../iommu-pages.h:94 func:iom=
-mu_alloc_pages_node
-> >>            0        0 drivers/iommu/intel/../iommu-pages.h:94 func:iom=
-mu_alloc_pages_node
-> >>            0        0 drivers/iommu/intel/../iommu-pages.h:94 func:iom=
-mu_alloc_pages_node
-> >>            0        0 drivers/iommu/intel/../iommu-pages.h:94 func:iom=
-mu_alloc_pages_node
-> >
-> >Yep, that happens when an inlined function allocates memory. It ends
-> >up inlined in different locations. Usually that's done by allocation
-> >helper functions.
-> >To fix this we need to wrap these allocator helpers with alloc_hooks:
-> >
-> >-static inline void *iommu_alloc_pages_node(int nid, gfp_t gfp, int orde=
-r)
-> >+static inline void *iommu_alloc_pages_node_noprof(int nid, gfp_t gfp,
-> >int order)
-> >{
-> >-        struct page *page =3D alloc_pages_node(nid, gfp | __GFP_ZERO,
-> >order);  struct skcipher_request *req;
-> >+        struct page *page =3D alloc_pages_node_noprof(nid, gfp |
-> >__GFP_ZERO, order);  struct skcipher_request *req;
-> >...
-> >}
-> >+#define iommu_alloc_pages_node(...)
-> >alloc_hooks(iommu_alloc_pages_node_noprof(__VA_ARGS__))
-> >
-> >See 2c321f3f70bc "mm: change inlined allocation helpers to account at
-> >the call site" for examples of how this was done before.
-> >Thanks,
-> >Suren.
->
-> Thanks for clarifying this, seems like a never-ending work...... >_<|||
 
-Like anything else in the kernel :)
 
->
-> >
-> >> ...
-> >>
-> >> The duplication make parsing tools a little bit more complicated:
-> >> the numbers need to be added up, group by key
-> >>        81920       20 drivers/iommu/amd/../iommu-pages.h:94 func:iommu=
-_alloc_pages_node 20
-> >>      1441792      352 drivers/iommu/amd/../iommu-pages.h:94 func:iommu=
-_alloc_pages_node 352
-> >>
-> >> The script for checking:
-> >> ```
-> >> #!/bin/env python
-> >> def fetch():
-> >>     r =3D {}
-> >>     with open("/proc/allocinfo") as f:
-> >>         for l in f:
-> >>             f =3D l.strip().split()[2]
-> >>             if f not in r: r[f]=3D[]
-> >>             r[f].append(l)
-> >>     keys =3D []
-> >>     for f, ls in r.items():
-> >>         if len(ls) > 1: keys.append(f)
-> >>     keys.sort()
-> >>     for f in keys:
-> >>         print "=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D"
-> >>         for l in r[f]: print l,
-> >>
-> >> fetch()
-> >> ```
-> >>
-> >> Thanks
-> >> David
-> >>
-> >> [1]. https://lore.kernel.org/lkml/531adbba.b537.196b0868a8c.Coremail.0=
-0107082@163.com/
-> >>
+On 2025/5/9 20:49, kernel test robot wrote:
+> Hi Hans,
+> 
+> kernel test robot noticed the following build warnings:
+> 
+> [auto build test WARNING on ca91b9500108d4cf083a635c2e11c884d5dd20ea]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Introduce-generic-bus-config-read-helper-function/20250506-004221
+> base:   ca91b9500108d4cf083a635c2e11c884d5dd20ea
+> patch link:    https://lore.kernel.org/r/20250505163420.198012-5-18255117159%40163.com
+> patch subject: [PATCH v11 4/6] PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
+> config: parisc-randconfig-r063-20250509 (https://download.01.org/0day-ci/archive/20250509/202505092036.Sw8SstSY-lkp@intel.com/config)
+> compiler: hppa-linux-gcc (GCC) 14.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505092036.Sw8SstSY-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202505092036.Sw8SstSY-lkp@intel.com/
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>     In function 'dw_pcie_read_cfg',
+>         inlined from 'dw_pcie_find_capability' at drivers/pci/controller/dwc/pcie-designware.c:219:9:
+>>> drivers/pci/controller/dwc/pcie-designware.c:212:14: warning: write of 32-bit data outside the bound of destination object, data truncated into 8-bit [-Wextra]
+>       212 |         *val = dw_pcie_read_dbi(pci, where, size);
+>           |         ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> 
+> vim +212 drivers/pci/controller/dwc/pcie-designware.c
+> 
+>     207	
+>     208	static int dw_pcie_read_cfg(void *priv, int where, int size, u32 *val)
+>     209	{
+>     210		struct dw_pcie *pci = priv;
+>     211	
+>   > 212		*val = dw_pcie_read_dbi(pci, where, size);
+>     213	
+>     214		return PCIBIOS_SUCCESSFUL;
+>     215	}
+>     216	
+> 
+
+Dear Maintainers,
+
+I don't know why the warning here is. I think the return value of 
+dw_pcie_read_dbi, whether u8/u16, will be automatically and forcibly 
+converted to u32.
+
+The following files have similar uses:
+
+drivers/pci/controller/dwc/pci-exynos.c
+static int exynos_pcie_rd_own_conf(struct pci_bus *bus, unsigned int devfn,
+				   int where, int size, u32 *val)
+{
+	struct dw_pcie *pci = to_dw_pcie_from_pp(bus->sysdata);
+
+	if (PCI_SLOT(devfn))
+		return PCIBIOS_DEVICE_NOT_FOUND;
+
+	*val = dw_pcie_read_dbi(pci, where, size);
+	return PCIBIOS_SUCCESSFUL;
+}
+
+drivers/pci/controller/dwc/pcie-histb.c
+static int histb_pcie_rd_own_conf(struct pci_bus *bus, unsigned int devfn,
+				  int where, int size, u32 *val)
+{
+	struct dw_pcie *pci = to_dw_pcie_from_pp(bus->sysdata);
+
+	if (PCI_SLOT(devfn))
+		return PCIBIOS_DEVICE_NOT_FOUND;
+
+	*val = dw_pcie_read_dbi(pci, where, size);
+	return PCIBIOS_SUCCESSFUL;
+}
+
+drivers/pci/controller/dwc/pcie-kirin.c
+static int kirin_pcie_rd_own_conf(struct pci_bus *bus, unsigned int devfn,
+				  int where, int size, u32 *val)
+{
+	struct dw_pcie *pci = to_dw_pcie_from_pp(bus->sysdata);
+
+	if (PCI_SLOT(devfn))
+		return PCIBIOS_DEVICE_NOT_FOUND;
+
+	*val = dw_pcie_read_dbi(pci, where, size);
+	return PCIBIOS_SUCCESSFUL;
+}
+
+
+drivers/pci/access.c
+int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
+			    int where, int size, u32 *val)
+{
+	void __iomem *addr;
+
+	addr = bus->ops->map_bus(bus, devfn, where);
+	if (!addr)
+		return PCIBIOS_DEVICE_NOT_FOUND;
+
+	if (size == 1)
+		*val = readb(addr);
+	else if (size == 2)
+		*val = readw(addr);
+	else
+		*val = readl(addr);
+
+	return PCIBIOS_SUCCESSFUL;
+}
+EXPORT_SYMBOL_GPL(pci_generic_config_read);
+
+
+
+
+May I ignore this warning? Could it be that I misunderstood something?
+
+
+Best regards,
+Hans
+
+
+
