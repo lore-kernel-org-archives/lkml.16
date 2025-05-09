@@ -1,147 +1,230 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F28322E
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 04:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801BC255E52
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 04:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746765809; cv=none; b=hRC1u2QSVuKetlD84xuVuxMrGecChDcvcuIAqJbjKIlcMIJXzi4B7hYBX44RFOHrgh3s79Lw6pPTIEsueI7wRA2NhlXs95miUMTnhdTW72j7IsKFExC8mzrSpaRXxKTFYvxOFfZW55Z7ipc4rUB0x7yHb/Bnf0V0s7EuNeELYUc=
+	t=1746765872; cv=none; b=FqPZd5l8R8U6ekTw0l3S8VmiY8uJC8V+8+a1go6UZsRRdopB67PoViwkR7Po0cwqdrVsj93tgPinf/jDjO0q6nguLPhnkV0+c9saszCvJ4wmSoTlgolQorCvZLvkdVQcDEipfg7U/sXUTpPIfUrvdhYvgb5adEGvlaXwFuv7MT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746765809; c=relaxed/simple;
-	bh=6vS+9ndATdRqq4O591q465VeiFzEQ35RcGwfqX/3lLk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=us2J4DKPwXDwJo14al8XmmrYqUxUPcdJESU1Na2UWTXzvsaf9swyK0jJgduNTUOG/uDtpLu1DDb2SYEDeWpUCErs5XxvOKF9SF3rptjGRyeLS8pwHRxc170AayClvBvgQHSXTu7tlXx7Sw8IhpyOaRcazS/Nn9Eo/UhyFEsmPk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-86184fa3d00so138894339f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 21:43:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746765807; x=1747370607;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Xi0HR6ic3akJ+aF/aO4A0Ekh2qNadtT1uQ1LPMqp764=;
-        b=CikI7IuXKpymaMCenBF8omHXbw2HNLvdjEI8G6qX648egclS9RSJZiuWo4FAbSbAZa
-         Y2hGP6ASBEf24Qm0Wr7Xzd7mVkXKYsTEv74WlMxjEDhfMn9sDy2UMNtkcvkSvIAhBVWB
-         /I3Z1H+Na0JSjVTj1R6tMYN+vIp1XeXNyBSt0QJEX/47wMTegnFCWgPBYJ2lBDY+3G2h
-         9IJo5vzSJ7WcgITdTZ2Rapa5sZnacNrB1c8vuHBlT0nbg53B8EYTJpDQF1c6i8/CBrsC
-         dgcpgw3MjQnjiB7aJ8VlExk2vD3IXI2zixb/AqzlvXU750XP1168MKPtfVf/8WlXbWEq
-         QZVA==
-X-Forwarded-Encrypted: i=1; AJvYcCWs1lp79GxDjaSeTzGhG7vY2ZqG2eZkVaCOA3oUOCopw4wnDqBOMRU6vaHOwyzpKZgtKPhO19c2h77heR4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOWN4N/3N215IXbfhZE3VC4OIjM0EOTLfXZN49R1Vm/LWUI7/L
-	gXTRH/yuaCglvIyhCu5AdUg+Ozd+dTGRRFD4Wc2MYjtAQ7wlE4rlCliQLHv4RCov4bQb39TCPLt
-	G1Px+nnoSQgbFqHsGaPakC65Md5gZvrf77oBFKCXAK2CfJKZSR67eEZg=
-X-Google-Smtp-Source: AGHT+IEw2yaaxwXAzGeCMdhEnT3LTjros0TrLPonVDAHSnPBHEOZsWRw804PNHdUpE6S4MnvirtuJbfnC3IGTIKdv1JePb0vB+q9
+	s=arc-20240116; t=1746765872; c=relaxed/simple;
+	bh=pelVH38dj7ZIeYj/VZ836U6fcV1p3jhMDgxAsqTWc88=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QErpEx1LwrX9Ud79VOxYZjeu7HZMALXzYg3r4ohZaGF+x7OdUJ9nuYNyFJJowhJbKQnthHxThqd9Ii55qmYQCDAg/yIkjct3LgaEIOctzAaFJU/G09W2pxgQeR6ZgIVvrKhe2STj6ofdievKjKJOOYLGLyAe3iEyRNuymIoNuKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PYwrdAcf; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PYwrdAcf"
+Message-ID: <d98c6c9f-b50d-4818-848f-326f6ab01439@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746765867;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uPd7lKzq5WbN+WoGreayvyL3ieufndbd9I+2UEAzdKg=;
+	b=PYwrdAcf8VMEQSBehZtii0ZbttCIlN7c/obum2QeIHfF+1eb8l9pkmV9W2raLV43yTIG60
+	1O0h0JEAonsLWSRpCOvXwgMv2sj1aCe/ILlZsN8cv0a3wJzmA3Qq/hwKXFgNkfN2qEPV/S
+	16ePPJjtvZD9KVFvhbf6oQKBBLvsuLo=
+Date: Fri, 9 May 2025 12:44:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:154e:b0:3d6:d18b:868c with SMTP id
- e9e14a558f8ab-3da7e1e71a0mr24516985ab.10.1746765807123; Thu, 08 May 2025
- 21:43:27 -0700 (PDT)
-Date: Thu, 08 May 2025 21:43:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681d87ef.050a0220.a19a9.0125.GAE@google.com>
-Subject: [syzbot] [jfs?] WARNING in jfs_rename
-From: syzbot <syzbot+9131ddfd7870623b719f@syzkaller.appspotmail.com>
-To: jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	shaggy@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    14c55b7bb0a8 Merge tag 'perf-tools-fixes-for-v6.15-2025-05..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=178078d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a42a9d552788177b
-dashboard link: https://syzkaller.appspot.com/bug?extid=9131ddfd7870623b719f
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16845a70580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1681d0f4580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/3edd34cd2f74/disk-14c55b7b.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a6d9796beefe/vmlinux-14c55b7b.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/90e0c0a88995/bzImage-14c55b7b.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/cb4a6659212d/mount_0.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=167008f4580000)
-
-Bisection is inconclusive: the issue happens on the oldest tested release.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14935a70580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=16935a70580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12935a70580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9131ddfd7870623b719f@syzkaller.appspotmail.com
-
-loop0: detected capacity change from 0 to 32768
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 5815 at fs/inode.c:417 drop_nlink+0xc5/0x110 fs/inode.c:417
-Modules linked in:
-CPU: 0 UID: 0 PID: 5815 Comm: syz-executor240 Not tainted 6.15.0-rc4-syzkaller-00319-g14c55b7bb0a8 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
-RIP: 0010:drop_nlink+0xc5/0x110 fs/inode.c:417
-Code: 70 07 00 00 be 08 00 00 00 e8 b7 84 e8 ff f0 48 ff 83 70 07 00 00 5b 41 5c 41 5e 41 5f 5d c3 cc cc cc cc cc e8 0c b3 88 ff 90 <0f> 0b 90 eb 81 44 89 f1 80 e1 07 80 c1 03 38 c1 0f 8c 5b ff ff ff
-RSP: 0018:ffffc9000403f8b0 EFLAGS: 00010293
-RAX: ffffffff82371c54 RBX: ffff88807ab92910 RCX: ffff888068d38000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffffea0001ebfef7 R09: 1ffffd40003d7fde
-R10: dffffc0000000000 R11: fffff940003d7fdf R12: 1ffff1100f57252b
-R13: 1ffff92000807f28 R14: ffff88807ab92958 R15: dffffc0000000000
-FS:  0000555585560380(0000) GS:ffff8881260fd000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000066c7e0 CR3: 000000007eb1a000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- jfs_rename+0xbb3/0x1610 fs/jfs/namei.c:1247
- vfs_rename+0xb99/0xec0 fs/namei.c:5121
- do_renameat2+0x878/0xc50 fs/namei.c:5270
- __do_sys_rename fs/namei.c:5317 [inline]
- __se_sys_rename fs/namei.c:5315 [inline]
- __x64_sys_rename+0x82/0x90 fs/namei.c:5315
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7ff16a8d0639
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffc9b984ab8 EFLAGS: 00000246 ORIG_RAX: 0000000000000052
-RAX: ffffffffffffffda RBX: 00007ffc9b984c98 RCX: 00007ff16a8d0639
-RDX: 0000000000000000 RSI: 0000200000000780 RDI: 00002000000003c0
-RBP: 00007ff16a949610 R08: 0000000000006221 R09: 0000000000000000
-R10: 00007ffc9b984980 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffc9b984c88 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
+Subject: Re: [PATCH RFC 2/3] kernel/hung_task: add option to dump system info
+ when hung task detected
+Content-Language: en-US
+To: Feng Tang <feng.tang@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Petr Mladek
+ <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+ linux-kernel@vger.kernel.org, llong@redhat.com, mhiramat@kernel.org,
+ amaindex@outlook.com
+References: <20250507104322.30700-1-feng.tang@linux.alibaba.com>
+ <20250507104322.30700-3-feng.tang@linux.alibaba.com>
+ <6eb27fe4-9dad-4ea5-afd0-a5d1e3f60acb@linux.dev>
+ <aBxE6jXwjIDRdr1z@U-2FWC9VHC-2323.local>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <aBxE6jXwjIDRdr1z@U-2FWC9VHC-2323.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+On 2025/5/8 13:45, Feng Tang wrote:
+> Hi Lance,
+> 
+> Many thanks for the review!
+> 
+> On Thu, May 08, 2025 at 11:02:22AM +0800, Lance Yang wrote:
+>> Hi Feng,
+>>
+>> Thanks for the patch series!
+>>
+>> On 2025/5/7 18:43, Feng Tang wrote:
+>>> Kernel panic code utilizes sys_show_info() to dump needed system
+>>> information to help debugging. Similarly, add this debug option for
+>>> task hung case, and 'hungtask_print' is the knob to control what
+>>> information should be printed out.
+>>>
+>>> Also clean up the code about dumping locks and triggering backtrace
+>>> for all CPUs. One todo may be to merge this 'hungtask_print' with
+>>> some sysctl knobs in hung_task.c.
+>>>
+>>> Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+>>> ---
+>>>    kernel/hung_task.c | 29 ++++++++++++++++-------------
+>>>    1 file changed, 16 insertions(+), 13 deletions(-)
+>>>
+>>> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+>>> index dc898ec93463..8229637be2c7 100644
+>>> --- a/kernel/hung_task.c
+>>> +++ b/kernel/hung_task.c
+>>> @@ -58,12 +58,20 @@ static unsigned long __read_mostly sysctl_hung_task_check_interval_secs;
+>>>    static int __read_mostly sysctl_hung_task_warnings = 10;
+>>>    static int __read_mostly did_panic;
+>>> -static bool hung_task_show_lock;
+>>>    static bool hung_task_call_panic;
+>>> -static bool hung_task_show_all_bt;
+>>>    static struct task_struct *watchdog_task;
+>>> +/*
+>>> + * A bitmask to control what kinds of system info to be printed when a
+>>> + * hung task is detected, it could be task, memory, lock etc. Refer panic.h
+>>> + * for details of bit definition.
+>>> + */
+>>> +unsigned long hungtask_print;
+>>> +core_param(hungtask_print, hungtask_print, ulong, 0644);
+>>
+>> how about lockup_debug_print_mask?
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Oops, typo: hungtask_* (not lockup_*)
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+> 
+> The 3/3 patch has a 'lockup_print' as it is for soft/hard lockup :).
+> The name follows the existing 'panic_print', and indeed it's actually
+> a bitmask, how about 'hung_print_mask'?
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+Yep, we should be following ’panic_print‘ pattern like 'hungtask_print',
+but I‘d rather go with 'hungtask_print_mask' ;)
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+> 
+>>
+>> It could be useful for debugging, but there are a few concerns:
+>>
+>> 1) SYS_PRINT_* vs. hung_task_* priority conflict
+>> - If SYS_PRINT_ALL_CPU_BT is set on the command line but
+>> hung_task_all_cpu_backtrace is disabled, which one wins?
+>> - Or should SYS_PRINT_ALL_CPU_BT force-enable hung_task_all_cpu_backtrace?
+> 
+> With this patch, the 'hungtask_print' and hung_task_all_cpu_backtrace
+> will be ORed, so yes, if user sets SYS_PRINT_ALL_CPU_BT explicitly, the
+> all-cpu-backtrace will be printed.
+> 
+> While the default value for hungtask_print is 0, and no system info will
+> be dumped by default.
+> 
+> Long term wise, I'm not sure if sysctl_hung_task_all_cpu_backtracemay
+> could be removed as its function can be covered by this print_mask knob.
 
-If you want to undo deduplication, reply with:
-#syz undup
+Afraid we cannot remove that knob — it would break user-space. Note that
+hungtask_print_mask should act as an extension (to provide more details
+when investigating hangs), and it must still follow hung-task detector's
+rules, IIUC.
+
+Hmm... SYS_PRINT_ALL_CPU_BT is a bit tricky here. Maybe we can directly
+enable hung_task_all_cpu_backtrace when SYS_PRINT_ALL_CPU_BT is set in
+hungtask_print_mask, while still allowing manual disabling to dump
+backtraces for all CPUs via hung_task_all_cpu_backtrace. This way, we
+keep its original semantics ;)
+
+> 
+>> 2) Duplicate prints
+>> With SYS_PRINT_BLOCKED_TASKS enabled, processes in D state will be printed
+>> twice, right?
+> 
+> Good point. As sys_show_info() is a general API helper, the user may chose
+> not to set SYS_PRINT_BLOCKED_TASKS when debugging task hung.
+> 
+> In one recent bug we debugged with this patch, when the first "task hung" was
+> shown, there were already dozens of tasks were in D state, which just hadn't
+> hit the 120 seconds limit yet, and dumping them all helped in that case.
+
+Makes sense to me. Right, SYS_PRINT_BLOCKED_TASKS doesn’t duplicate 
+prints, and
+catches all D-state tasks - even the ones not yet timed out.
+
+> 
+>> Also, we really should document how those command-line parameters work ;)
+> 
+> Exactly! It currently just said 'refer panic.h' in code comment, maybe I
+> should copy those definitions here as comments. How do you think?
+
+Yes. Both comments and kernel-doc are needed ;)
+
+Thanks,
+Lance
+
+> 
+> Thanks,
+> Feng
+> 
+>> Thansk,
+>> Lance
+>>
+>>> +
+>>> +static unsigned long cur_hungtask_print;
+>>> +
+>>>    #ifdef CONFIG_SMP
+>>>    /*
+>>>     * Should we dump all CPUs backtraces in a hung task event?
+>>> @@ -163,11 +171,12 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+>>>    	 */
+>>>    	sysctl_hung_task_detect_count++;
+>>> +	cur_hungtask_print = hungtask_print;
+>>>    	trace_sched_process_hang(t);
+>>>    	if (sysctl_hung_task_panic) {
+>>>    		console_verbose();
+>>> -		hung_task_show_lock = true;
+>>> +		cur_hungtask_print |= SYS_PRINT_LOCK_INFO;
+>>>    		hung_task_call_panic = true;
+>>>    	}
+>>> @@ -190,10 +199,10 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+>>>    			" disables this message.\n");
+>>>    		sched_show_task(t);
+>>>    		debug_show_blocker(t);
+>>> -		hung_task_show_lock = true;
+>>> +		cur_hungtask_print |= SYS_PRINT_LOCK_INFO;
+>>>    		if (sysctl_hung_task_all_cpu_backtrace)
+>>> -			hung_task_show_all_bt = true;
+>>> +			cur_hungtask_print |= SYS_PRINT_ALL_CPU_BT;
+>>>    		if (!sysctl_hung_task_warnings)
+>>>    			pr_info("Future hung task reports are suppressed, see sysctl kernel.hung_task_warnings\n");
+>>>    	}
+>>> @@ -242,7 +251,7 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+>>>    	if (test_taint(TAINT_DIE) || did_panic)
+>>>    		return;
+>>> -	hung_task_show_lock = false;
+>>> +	cur_hungtask_print = 0;
+>>>    	rcu_read_lock();
+>>>    	for_each_process_thread(g, t) {
+>>>    		unsigned int state;
+>>> @@ -266,14 +275,8 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+>>>    	}
+>>>     unlock:
+>>>    	rcu_read_unlock();
+>>> -	if (hung_task_show_lock)
+>>> -		debug_show_all_locks();
+>>> -
+>>> -	if (hung_task_show_all_bt) {
+>>> -		hung_task_show_all_bt = false;
+>>> -		trigger_all_cpu_backtrace();
+>>> -	}
+>>> +	sys_show_info(cur_hungtask_print);
+>>>    	if (hung_task_call_panic)
+>>>    		panic("hung_task: blocked tasks");
+>>>    }
+
