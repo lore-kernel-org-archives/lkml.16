@@ -1,159 +1,95 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEC2266B4E
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 06:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A61911CBA;
+	Fri,  9 May 2025 06:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746770464; cv=none; b=RxO1d0yCZSosGei3sHdO6Xe8pWn8HPw+PMwdHOcUtjSG+sHSZbcYMzOYO2M1xvVlbUprZHtVBSTG6JeX7hQnvWdSwpfB7cz/GXDhKMmL8V0ruuTasMj47+j5F6Dsp57Zg0e2rVCW8/76dIwSb0OpXsc0+PFVm4iP0E8I82S0XUQ=
+	t=1746770594; cv=none; b=nquoYlPYhGD7pbTiI1FL6xAzZSYVDBTasDaHpIg9MH6FpULr1mqUfOzczrc0wWT8yfSEwW80NbKPl/B/AG/HjK92gMZZr7zcKdH8nxtWqMu19WYy9vVBt3PgRG2FIGxyzEHeznS/sDvGKmvO0WFNYjIkraBLWmZlafgDPI+M8zA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746770464; c=relaxed/simple;
-	bh=iMC+wmxymIFqPTNdVrLvdX+TjkSiglWerKKQ9Lw+V1Q=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BFl+Q3Doikk835j2LBU6hIWDP/tobKkzulh8NOP6INylBXiyWuYMB6c1X1HbZba91VLugsNu67qrOxK7qQGm6doUYLp9ztJNZStCw1GmG8MwnTvbh3pBMJurDJTTvUVpstDeoLB4kaJamV+1WE5XnoFf3G9yM48YiHiV0xANorU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from mail.andestech.com (ATCPCS34.andestech.com [10.0.1.134])
-	by Atcsqr.andestech.com with ESMTPS id 54960Bnb078767
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
-	Fri, 9 May 2025 14:00:14 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from atctrx.andestech.com (10.0.15.173) by ATCPCS34.andestech.com
- (10.0.1.134) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 9 May
- 2025 14:00:11 +0800
-Date: Fri, 9 May 2025 14:00:11 +0800
-From: Ben Zong-You Xie <ben717@andestech.com>
-To: Palmer Dabbelt <palmer@dabbelt.com>
-CC: Conor Dooley <conor@kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>, <aou@eecs.berkeley.edu>,
-        <alex@ghiti.fr>, <tim609@andestech.com>
-Subject: Re: [PATCH] riscv: add Andes SoC family Kconfig support
-Message-ID: <aB2Z6zq+pQ1LxQ47@atctrx.andestech.com>
-References: <Z8rMKZoDYmpNosSj@atctrx.andestech.com>
- <mhng-d0a8012c-c5c9-4309-ac08-bcb1dab85b26@palmer-ri-x1c9a>
+	s=arc-20240116; t=1746770594; c=relaxed/simple;
+	bh=miqYtWyTKqalmWH/MGZunXZc53zAHSRNBQvWm45NGQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XKX0BS1tkQG0wbVMEyMcdcclYj2W9Gx5Cd35OG3kbjHHt0zpczaK1js4eTBR73ice2EdKZcp4pZGx1eE0ySQouW2nW9KWaa5B477g5ORC5g2y0Oh/Q253l2AOAiBXaZYQfTqSnE9Ck90f3cxG6PVUTGO67L2yun7K0suWNP82v4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDvfscBn; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDvfscBn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51685C4CEE4;
+	Fri,  9 May 2025 06:03:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746770593;
+	bh=miqYtWyTKqalmWH/MGZunXZc53zAHSRNBQvWm45NGQ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cDvfscBnFjzX5lYFVRWG6HqIvO2BmUHXP4zFLn5QBcuK2I4fgvV0Gqf+PjThAc0cx
+	 dtRc+LWiQv87umLgJ78pVfk0qpIROY64IG+qnWyNx4HlqTEQnUO+EyibIMB4bo/jOW
+	 RuM27JQIdkhpEXtKDmJot+11r9jRUXeM2f1Odv1r6JQTWkW/Xh/sdFnzlo68WpO92H
+	 Ro4xSyi7MCUWh2ikYungCMBqbZJaM0v6HxtY7MGie6Fz4Uv3r3VkcFOECk19h4lGKG
+	 eUeq4ceJoisr4sYDZ/6e3W8WD8FG20XVrGBoIUFSSG1rWws+U2kT4gc0cN7Xn01ztv
+	 ZrhXtKYGV+a5A==
+Date: Fri, 9 May 2025 08:03:11 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Yao Zi <ziyao@disroot.org>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Frank Wang <frank.wang@rock-chips.com>, 
+	Andy Yan <andy.yan@rock-chips.com>, Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, 
+	Detlev Casanova <detlev.casanova@collabora.com>, Shresth Prasad <shresthprasad7@gmail.com>, 
+	Chukun Pan <amadeus@jmu.edu.cn>, Jonas Karlman <jonas@kwiboo.se>, linux-phy@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v2 2/5] dt-bindings: phy: rockchip: naneng-combphy: Add
+ RK3528 variant
+Message-ID: <20250509-secret-smart-kangaroo-fd3b58@kuoka>
+References: <20250509004121.36058-2-ziyao@disroot.org>
+ <20250509004121.36058-4-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <mhng-d0a8012c-c5c9-4309-ac08-bcb1dab85b26@palmer-ri-x1c9a>
-User-Agent: Mutt/2.1.4 (2021-12-11)
-X-ClientProxiedBy: ATCPCS33.andestech.com (10.0.1.100) To
- ATCPCS34.andestech.com (10.0.1.134)
-X-DKIM-Results: atcpcs34.andestech.com; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 54960Bnb078767
+In-Reply-To: <20250509004121.36058-4-ziyao@disroot.org>
 
-On Thu, May 08, 2025 at 10:48:46AM -0700, Palmer Dabbelt wrote:
-> [EXTERNAL MAIL]
+On Fri, May 09, 2025 at 12:41:19AM GMT, Yao Zi wrote:
+> Rockchip RK3528 ships one naneng-combphy which operates in either PCIe
+> or USB 3 mode. Document its compatible string.
 > 
-> On Fri, 07 Mar 2025 02:36:25 PST (-0800), ben717@andestech.com wrote:
-> > On Thu, Mar 06, 2025 at 04:40:49PM +0000, Conor Dooley wrote:
-> > > [EXTERNAL MAIL]
-> > 
-> > > Date: Thu, 6 Mar 2025 16:40:49 +0000
-> > > From: Conor Dooley <conor@kernel.org>
-> > > To: Ben Zong-You Xie <ben717@andestech.com>
-> > > Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-> > >  paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-> > >  alex@ghiti.fr
-> > > Subject: Re: [PATCH] riscv: add Andes SoC family Kconfig support
-> > > 
-> > > On Wed, Mar 05, 2025 at 11:05:26AM +0800, Ben Zong-You Xie wrote:
-> > > > The first SoC in the Andes series is QiLai. It includes a high-performance
-> > > > quad-core RISC-V AX45MP cluster and one NX27V vector processor.
-> > > 
-> > > I'd expect a config option like this to come with the user, which in
-> > > this case is the dts etc for a board using the QiLai SoC or drivers for
-> > > the SoC. Without dts or drivers, there's no reason to ever enable this,
-> > > so where are those patches?
-> > > 
-> > > Cheers,
-> > > Conor.
-> > > 
-> > 
-> > Hi Conor,
-> > 
-> > We are still preparing those patches for upstream, and we will add them
-> > in the next patch series.
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+
+Eh, no...
+
+>  .../devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> This is still "Needs Ack" in patchwork, so
-> 
-> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
-> 
-> Though like Conor says, we need the rest of the code to do anything
-> here, so that's really just a way to get it out of my queue ;)
->
+> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
+> index 888e6b2aac5a..bd064754e537 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
+> @@ -12,6 +12,7 @@ maintainers:
+>  properties:
+>    compatible:
+>      enum:
+> +      - rockchip,rk3528-naneng-combphy
+>        - rockchip,rk3562-naneng-combphy
+>        - rockchip,rk3568-naneng-combphy
+>        - rockchip,rk3576-naneng-combphy
+> @@ -102,7 +103,9 @@ allOf:
+>        properties:
+>          compatible:
+>            contains:
+> -            const: rockchip,rk3588-naneng-combphy
+> +            enum:
+> +             - rockchip,rk3528-naneng-combphy
 
-I have not added the remaining code in the next version of this patch series.
-Instead, I’ve submitted a new patch series [1] that incorporates this patch.
-Maybe add your Acked-by tag to the new series and disregard this patch.
+Still not tested. Neither v1 nor v2 was ever tested.
 
-[1] https://patchwork.kernel.org/project/linux-riscv/cover/20250503151829.605006-1-ben717@andestech.com/
+Best regards,
+Krzysztof
 
-Thanks,
-Ben
-
-> > 
-> > Thanks,
-> > Ben
-> > 
-> > > >
-> > > > For further information, refer to [1].
-> > > >
-> > > > [1] https://www.andestech.com/en/products-solutions/andeshape-platforms/qilai-chip/
-> > > >
-> > > > Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
-> > > > ---
-> > > >  arch/riscv/Kconfig.errata | 2 +-
-> > > >  arch/riscv/Kconfig.socs   | 9 +++++++++
-> > > >  2 files changed, 10 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/arch/riscv/Kconfig.errata b/arch/riscv/Kconfig.errata
-> > > > index e318119d570d..be76883704a6 100644
-> > > > --- a/arch/riscv/Kconfig.errata
-> > > > +++ b/arch/riscv/Kconfig.errata
-> > > > @@ -12,7 +12,7 @@ config ERRATA_ANDES
-> > > >
-> > > >  config ERRATA_ANDES_CMO
-> > > >    bool "Apply Andes cache management errata"
-> > > > -  depends on ERRATA_ANDES && ARCH_R9A07G043
-> > > > +  depends on ERRATA_ANDES && (ARCH_R9A07G043 || ARCH_ANDES)
-> > > >    select RISCV_DMA_NONCOHERENT
-> > > >    default y
-> > > >    help
-> > > > diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-> > > > index 1916cf7ba450..b89b6e0d1bc9 100644
-> > > > --- a/arch/riscv/Kconfig.socs
-> > > > +++ b/arch/riscv/Kconfig.socs
-> > > > @@ -1,5 +1,14 @@
-> > > >  menu "SoC selection"
-> > > >
-> > > > +config ARCH_ANDES
-> > > > +  bool "Andes SoCs"
-> > > > +  depends on MMU && !XIP_KERNEL
-> > > > +  select ERRATA_ANDES
-> > > > +  select ERRATA_ANDES_CMO
-> > > > +  select AX45MP_L2_CACHE
-> > > > +  help
-> > > > +    This enables support for Andes SoC platform hardware.
-> > > > +
-> > > >  config ARCH_MICROCHIP_POLARFIRE
-> > > >    def_bool ARCH_MICROCHIP
-> > > >
-> > > > --
-> > > > 2.34.1
-> > > >
-> > > >
-> > > > _______________________________________________
-> > > > linux-riscv mailing list
-> > > > linux-riscv@lists.infradead.org
-> > > > http://lists.infradead.org/mailman/listinfo/linux-riscv
