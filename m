@@ -1,72 +1,62 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11B420C030
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 17:09:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE9E800;
+	Fri,  9 May 2025 17:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746810562; cv=none; b=c1bPSSRJsonHLeTw3LslfkVMmZPEcxuhlD+XIlBFX96ck7idhXbZCr6GrWsE1gZGx96zwe6EnZoEJs5Bli6bvMvE2yKDZUP1vbP9rIW2hSwq5BCWbDW30/qzUpKk4G9igy7JJJ5pUBRUeJokcuA2gGNW83Z/8GWxi8YP/4UoDps=
+	t=1746810632; cv=none; b=AwCYsssTVc0CunX0rtBZI6Zi48QpqAgT76vD81pyOojgQenFSjTuwZZ8/U+y2fEAqq5Lfrw98i1kjgTgVyds1T+Tmq644wuZVnoVDQMsyW+urQgBretqS8r+6XmlffLrKOlHwQuNDXWBqw38RHMVVp+42CJPhdqnUnLbsVBtE1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746810562; c=relaxed/simple;
-	bh=8/DLjgtB1UXxqodmz6qRqj1WIAPFgvTzfIhYvppbtXo=;
+	s=arc-20240116; t=1746810632; c=relaxed/simple;
+	bh=Rg26xVepbKv+GhXzyO57+ntaAAUnjE9KukxV2nugKoU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IHQVX8ORv7m6tKXwOuoFOkOIeWztLcIclPVuaNtqtVP/DCnjUG6bogphbchhYXb3ON5u4Hn72Stz5i528Q/o4rOLl5XlhdvrXC8AMfVoXIHv/1UzR27cpKr8i8978gahJZZH1rEiBR09G1Evp6nxdSjEM0JR36y95CZIzhRVTPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sfH0HX79; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=s1OLEh7OTZMKZoOYg8LjmVikpt/7w0rTHKUqPaF54i7o6n5bQo3CiArGn6wkA46s7d67o1H/ayKSpv0rPhzm7eUTotCtPGixdPexH+l4fU+sobmXm0D3ZqU3Mmawl3HaRRhWrO0RA7TXNFLnOSre0cnfE7z+dv7jLxSatFQRtV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EgcJs+2g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sfH0HX79"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so2632970b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 10:09:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746810560; x=1747415360; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5bcmHv8UeY0lDIEviX2vMPO5A6Q4ByVsdqO83gELMfU=;
-        b=sfH0HX79Q3h0HXcpQzhJMH+ynJxkBfZerxdP70bvfZQWl0a97wwtlyYlgUvJXTuOFw
-         i7WXuD7xgvUPS3H5njET7a8CcPhnRzil7XfX3s5fl8Uh4AKfom+6a/fosy1u9OI4It2h
-         fsCLve+kHskvVaNbBp3IojJHevtBr4oDLBaS10ruqiT5A0ZumrGR7cwmnDuFS73XLhHV
-         nDTtl/AKAfsMVDAkRQWw2pAw+ETlkqU3m/tFCm30wip/BQ5jUpZda7hEYnvjYRZsOwRL
-         mou/ati+dmt+tg1DF3JqEXk9FDJDmkuDTVtZyk3P9EjNJ/fw8soCwB1XMK79H4ZHFAE0
-         d/AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746810560; x=1747415360;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5bcmHv8UeY0lDIEviX2vMPO5A6Q4ByVsdqO83gELMfU=;
-        b=MPowb9Pzr4EthqRhWZRNcXkEaUzE6MJzMZFYF4WslXF1ROnlljCzLdCxLdtRbAGsqu
-         L1F1re7aqKWM4/dBVH4u2qwB54AXk9KhvsnXKD6Istselb6YABrPer4MJ/EUl+Kl8F6d
-         JtiIo+iSr5psINeP/7b7dOLDw5luFkPSFdzxxN5ozpvtB7Mx2coOlYE/7EuwV8UMz7N/
-         69qbNX2L5sv8d08FqJeeIxqKjfRXjyxtns3zX1Aa85qwF4FIGR8NHBC5OH6bAtYu6PCm
-         Hzkgxx6r8z4whxmcgm64pR/AZ4w4yn0nXYFDIUmw6CWijMBtZ57T6ro67gUzllr7IJAz
-         HhjA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ2bz6d/09AmAygyNyGOvdbc6G+tusNUrMHk6tbBRG0pe0sZFWnNOwol5kXpJ0UyIq8bQOuDCcf2Tg9tI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCTZpUhIYpLf1kms76/wHCi8TggYBJM+LGm7parUuSEG+laQff
-	zSZ0DW5UvpToycqyGMbjHZaFxqgtIJYzlJw3otswUKXhdvl+2s2r/NpSYMMxPoQ=
-X-Gm-Gg: ASbGncuBnYj6A9GPJfDwX6y1Jn7YILuE+IzNpFm7ZEOhBONmsQfkRCwqOLPSlgf5MT6
-	VWMGWHxxHQ2rTc1qnjPSwbJrJ5Jl/MxJcKAG/J8I6xxSyZNTBktbr0nSPeKhu8/ShSTOxBBm+S6
-	E83C7ugHHXfvFT/TFqsU3TOOF35ARzmIhzXE7XTgWOKsK7auIqz4psFHfymsxsm1c13qcm+rlcA
-	/Qs6Y2pGtUyYXjVynM7IdDol9Dus9h6dhGzU6/46hxalHDXBYyx7YfE8+jbiKk+UDsH9o7Z0rIV
-	wFGdGXn0sDY4n/PYa0RbFFt1Wfi95Mg5BRTgEqLZpEK1PINukVVe6w==
-X-Google-Smtp-Source: AGHT+IFRPnmnGbQ/2b09nBcZ6dbCbJlG5OB6PdW2GL91c+5hjt+11hwNV0GCAIrYhizbS30bdhbuzA==
-X-Received: by 2002:a05:6a21:32a3:b0:1fd:f8dc:7c0e with SMTP id adf61e73a8af0-215abb03b45mr6245910637.12.1746810559780;
-        Fri, 09 May 2025 10:09:19 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:1542:d6f4:7fe8:a35])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7423770414dsm1997749b3a.23.2025.05.09.10.09.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 10:09:19 -0700 (PDT)
-Date: Fri, 9 May 2025 11:09:17 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Beleswar Padhi <b-padhi@ti.com>
-Cc: andersson@kernel.org, afd@ti.com, hnagalla@ti.com, u-kumar1@ti.com,
-	jm@ti.com, jan.kiszka@siemens.com, christophe.jaillet@wanadoo.fr,
-	jkangas@redhat.com, eballetbo@redhat.com,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 00/35] Refactor TI K3 R5, DSP and M4 Remoteproc
- Drivers
-Message-ID: <aB42vd1dmPn0FaJI@p14s>
-References: <20250425104135.830255-1-b-padhi@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EgcJs+2g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01317C4CEE4;
+	Fri,  9 May 2025 17:10:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746810632;
+	bh=Rg26xVepbKv+GhXzyO57+ntaAAUnjE9KukxV2nugKoU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EgcJs+2gmQcQQRtPJko2aZpyTLaujeLaSLfxYN4PC77ilDL+fivFo95iZkjr2coCg
+	 x3R30fiwAmxHH9wGoQbqyklQqyRuT8riDJwThw+sKP4ZJCefANJEyCG4aeCAvpMWtf
+	 aCqWWPayvy8jp1rXDkjzswwulALDGa5NPOGL7euPyopTMMr/9a4W6YEX8zGMD/Y7e7
+	 G9tXQcmIUIi/Rf6SjgTsAQNdCHMtrfmMRHO6GqKSKT4HrZIRz6LtaPFMZ8ZefKa48L
+	 mBq/mDOO2dQ2h1QiRWRllwyWGZeY/14OeTnRo0sOh6CwDm4Ur1Gfwauj6fpVIYY6rs
+	 vopmEhIyNh3Bg==
+Date: Fri, 9 May 2025 10:10:28 -0700
+From: Kees Cook <kees@kernel.org>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	rcu@vger.kernel.org, linux-mm@kvack.org,
+	linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH 07/12] Input: sysrq: mv sysrq into drivers/tty/sysrq.c
+Message-ID: <202505091010.F2F8C676@keescook>
+References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
+ <20250509-jag-mv_ctltables_iter2-v1-7-d0ad83f5f4c3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,148 +65,143 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250425104135.830255-1-b-padhi@ti.com>
+In-Reply-To: <20250509-jag-mv_ctltables_iter2-v1-7-d0ad83f5f4c3@kernel.org>
 
-On Fri, Apr 25, 2025 at 04:11:00PM +0530, Beleswar Padhi wrote:
-> This series refactors a lot of functions & callbacks from
-> ti_k3_dsp_remoteproc.c, ti_k3_r5_remoteproc.c and ti_k3_m4_remoteproc.c
-> drivers. This is a consolidated and final series as part of the
-> refactoring of K3 remoteproc drivers. Below is the breakdown:
-> 1. PATCHES #1-#3 fixes important bugs in R5 and DSP drivers before refactoring
-> them into a common driver.
-> 2. PATCHES #4-#10 does the pre-cleanup and aligns R5, DSP, M4 data structures.
-> 3. PATCHES #11-#35 does the actual refactoring R5, DSP and M4 drivers into
-> ti_k3_common.c driver.
-> 
-> NOTE:
-> This series supersedes below series:
-> https://lore.kernel.org/all/20250219091042.263819-1-b-padhi@ti.com/
-> https://lore.kernel.org/all/20250417182001.3903905-1-b-padhi@ti.com/
-> https://lore.kernel.org/all/20250108063727.1416324-1-b-padhi@ti.com/
-> 
-> Testing Done:
-> 1. Tested boot of R5Fs, C66x DSPs, C71x DSPs across Jacinto J7* devices in
-> remoteproc mode and IPC-Only mode.
-> 2. Tested boot of M4F core _only_ in _AM62xx SK_ board in Remoteproc mode and
-> IPC-Only mode.
-> 3. Tested Core stop and detach operations from sysfs for R5Fs, C66x DSPs, C71x DSPs
-> 4. Tested device removal paths by executing 'modprobe -r ti_k3_dsp_remoteproc'
-> and 'modprobe -r ti_k3_r5_remoteproc'.
-> 5. Tested usecases where firmware not available at device probe time, but
-> later in sysfs, able to load firmware into a remotecore and start it. [R5Fs]
-> 6. Tested that each patch in this series generates no new warnings/errors.
-> 7. Tested IPC on AM64x EVM Device. [Thanks to Judith].
-> 
-> v11: Changelog:
-> 1. New patches: [v11 15/35] and [v11 18/35].
-> Broken down rproc_reset() and rproc_release() refactoring patches into more
-> atomic changes.
-> 2. Carried T/B on all patches from Judith.
-> 3. Carried A/B on [PATCH v11 13/35] by Andrew.
-> 
-> Link to v10:
-> https://lore.kernel.org/all/20250417182001.3903905-1-b-padhi@ti.com/
-> 
-> v10: Changelog:
-> 1. Re-ordered Bug Fixes to the start of the series, before starting pre-cleanup
-> and finally the actual refactor. [Andrew]
-> 2. Broken down commits into more atomic changes for ease of review. [Andrew].
-> 3. Updated commit messages to have uniform flow throughout the series.
-> 4. Carried R/B tags in applicable patches.
-> 5. Further patch specific changelog is attached with patches.
-> 
-> Link to v9:
-> https://lore.kernel.org/all/20250317120622.1746415-1-b-padhi@ti.com/
-> 
-> v9: Changelog:
-> 1. Added R5 cleanup & refactoring along with existing DSP, M4 refactoring into this series. [Andrew]
-> 2. Dropped Mailbox level IPC checks across R5, DSP, M4 drivers in IPC-only mode. [Andrew] 
-> 
-> Link to v8:
-> https://lore.kernel.org/all/20250103101231.1508151-1-b-padhi@ti.com/
-> 
-> v8: Changelog:
-> 1. Broken down refactoring into patches, each patch dealing with one function
-> for ease in review. [Andrew]
-> 
-> Links to older versions:
-> v7: https://lore.kernel.org/all/20240202175538.1705-1-hnagalla@ti.com/
-> v6: https://lore.kernel.org/all/20230913111644.29889-1-hnagalla@ti.com/
-> v5: https://lore.kernel.org/all/20230808044529.25925-1-hnagalla@ti.com/
-> v4: https://lore.kernel.org/all/20230801141117.2559-1-hnagalla@ti.com/
-> v3: https://lore.kernel.org/all/20230302171450.1598576-1-martyn.welch@collabora.com/
-> v2: https://lore.kernel.org/all/20230301111323.1532479-4-martyn.welch@collabora.com/
-> v1: https://lore.kernel.org/all/20220110040650.18186-1-hnagalla@ti.com/
-> 
-> Thanks,
-> Beleswar
-> 
-> Beleswar Padhi (33):
->   remoteproc: k3-r5: Refactor sequential core power up/down operations
->   remoteproc: k3-r5: Re-order internal memory initialization functions
->   remoteproc: k3-r5: Re-order k3_r5_release_tsp() function
->   remoteproc: k3-r5: Refactor Data Structures to Align with DSP and M4
->   remoteproc: k3-r5: Use k3_r5_rproc_mem_data structure for memory info
->   remoteproc: k3-{m4/dsp}: Add a void ptr member in rproc internal
->     struct
->   remoteproc: k3-m4: Add pointer to rproc struct within k3_m4_rproc
->   remoteproc: k3-m4: Use k3_rproc_mem_data structure for memory info
->   remoteproc: k3: Refactor shared data structures
->   remoteproc: k3: Refactor mailbox rx_callback functions into common
->     driver
->   remoteproc: k3: Refactor .kick rproc ops into common driver
->   remoteproc: k3-dsp: Correct Reset logic for devices without lresets
->   remoteproc: k3-m4: Introduce central function to put rproc into reset
->   remoteproc: k3: Refactor rproc_reset() implementation into common
->     driver
->   remoteproc: k3-dsp: Correct Reset deassert logic for devices w/o
->     lresets
->   remoteproc: k3-m4: Introduce central function to release rproc from
->     reset
->   remoteproc: k3: Refactor rproc_release() implementation into common
->     driver
->   remoteproc: k3-m4: Ping the mbox while acquiring the channel
->   remoteproc: k3: Refactor rproc_request_mbox() implementations into
->     common driver
->   remoteproc: k3-dsp: Don't override rproc ops in IPC-only mode
->   remoteproc: k3-dsp: Assert local reset during .prepare callback
->   remoteproc: k3: Refactor .prepare rproc ops into common driver
->   remoteproc: k3: Refactor .unprepare rproc ops into common driver
->   remoteproc: k3: Refactor .start rproc ops into common driver
->   remoteproc: k3: Refactor .stop rproc ops into common driver
->   remoteproc: k3: Refactor .attach rproc ops into common driver
->   remoteproc: k3: Refactor .detach rproc ops into common driver
->   remoteproc: k3: Refactor .get_loaded_rsc_table ops into common driver
->   remoteproc: k3: Refactor .da_to_va rproc ops into common driver
->   remoteproc: k3: Refactor of_get_memories() functions into common
->     driver
->   remoteproc: k3: Refactor mem_release() functions into common driver
->   remoteproc: k3: Refactor reserved_mem_init() functions into common
->     driver
->   remoteproc: k3: Refactor release_tsp() functions into common driver
-> 
-> Siddharth Vadapalli (2):
->   remoteproc: k3-r5: Drop check performed in
->     k3_r5_rproc_{mbox_callback/kick}
->   remoteproc: k3-dsp: Drop check performed in
->     k3_dsp_rproc_{mbox_callback/kick}
-> 
->  drivers/remoteproc/Makefile               |    4 +-
->  drivers/remoteproc/ti_k3_common.c         |  547 +++++++++++
->  drivers/remoteproc/ti_k3_common.h         |  113 +++
->  drivers/remoteproc/ti_k3_dsp_remoteproc.c |  616 +------------
->  drivers/remoteproc/ti_k3_m4_remoteproc.c  |  583 +-----------
->  drivers/remoteproc/ti_k3_r5_remoteproc.c  | 1012 +++++++--------------
+On Fri, May 09, 2025 at 02:54:11PM +0200, Joel Granados wrote:
+> Move both sysrq ctl_table and supported sysrq_sysctl_handler helper
+> function into drivers/tty/sysrq.c. Replaced the __do_proc_dointvec in
+> helper function with do_proc_dointvec as the former is local to
+> kernel/sysctl.c.
 
-I am done reviewing this set.  The work done herein is a textbook example on how
-refactoring should be done and I commend you for it.
+nit: do_proc_dointvec_minmax
 
-Mathieu
+> 
+> This is part of a greater effort to move ctl tables into their
+> respective subsystems which will reduce the merge conflicts in
+> kernel/sysctl.c.
+> 
+> Signed-off-by: Joel Granados <joel.granados@kernel.org>
 
->  6 files changed, 1072 insertions(+), 1803 deletions(-)
->  create mode 100644 drivers/remoteproc/ti_k3_common.c
->  create mode 100644 drivers/remoteproc/ti_k3_common.h
+But yes, this looks correct.
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+-Kees
+
+> ---
+>  drivers/tty/sysrq.c | 38 ++++++++++++++++++++++++++++++++++++++
+>  kernel/sysctl.c     | 30 ------------------------------
+>  2 files changed, 38 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+> index 6853c4660e7c2586487fea83c12f0b7780db1ee1..8a304189749f3e33af48141a1aba5e456616c7de 100644
+> --- a/drivers/tty/sysrq.c
+> +++ b/drivers/tty/sysrq.c
+> @@ -1119,6 +1119,44 @@ int sysrq_toggle_support(int enable_mask)
+>  }
+>  EXPORT_SYMBOL_GPL(sysrq_toggle_support);
+>  
+> +static int sysrq_sysctl_handler(const struct ctl_table *table, int write,
+> +				void *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +	int tmp, ret;
+> +	struct ctl_table t = *table;
+> +
+> +	tmp = sysrq_mask();
+> +	t.data = &tmp;
+> +
+> +	ret = proc_dointvec_minmax(&t, write, buffer, lenp, ppos);
+> +
+> +	if (ret || !write)
+> +		return ret;
+> +
+> +	if (write)
+> +		sysrq_toggle_support(tmp);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct ctl_table sysrq_sysctl_table[] = {
+> +	{
+> +		.procname	= "sysrq",
+> +		.data		= NULL,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sysrq_sysctl_handler,
+> +	},
+> +};
+> +
+> +static int __init init_sysrq_sysctl(void)
+> +{
+> +	register_sysctl_init("kernel", sysrq_sysctl_table);
+> +	return 0;
+> +}
+> +
+> +subsys_initcall(init_sysrq_sysctl);
+> +
+>  static int __sysrq_swap_key_ops(u8 key, const struct sysrq_key_op *insert_op_p,
+>  				const struct sysrq_key_op *remove_op_p)
+>  {
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index febf328054aa5a7b2462a256598f86f5ded87c90..ebcc7d75acd9fecbf3c10f31480c3cb6960cb53e 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -31,7 +31,6 @@
+>  #include <linux/kernel.h>
+>  #include <linux/kobject.h>
+>  #include <linux/net.h>
+> -#include <linux/sysrq.h>
+>  #include <linux/highuid.h>
+>  #include <linux/writeback.h>
+>  #include <linux/ratelimit.h>
+> @@ -964,26 +963,6 @@ int proc_dou8vec_minmax(const struct ctl_table *table, int write,
+>  }
+>  EXPORT_SYMBOL_GPL(proc_dou8vec_minmax);
+>  
+> -#ifdef CONFIG_MAGIC_SYSRQ
+> -static int sysrq_sysctl_handler(const struct ctl_table *table, int write,
+> -				void *buffer, size_t *lenp, loff_t *ppos)
+> -{
+> -	int tmp, ret;
+> -
+> -	tmp = sysrq_mask();
+> -
+> -	ret = __do_proc_dointvec(&tmp, table, write, buffer,
+> -			       lenp, ppos, NULL, NULL);
+> -	if (ret || !write)
+> -		return ret;
+> -
+> -	if (write)
+> -		sysrq_toggle_support(tmp);
+> -
+> -	return 0;
+> -}
+> -#endif
+> -
+>  static int __do_proc_doulongvec_minmax(void *data,
+>  		const struct ctl_table *table, int write,
+>  		void *buffer, size_t *lenp, loff_t *ppos,
+> @@ -1612,15 +1591,6 @@ static const struct ctl_table kern_table[] = {
+>  		.proc_handler	= proc_dostring,
+>  	},
+>  #endif
+> -#ifdef CONFIG_MAGIC_SYSRQ
+> -	{
+> -		.procname	= "sysrq",
+> -		.data		= NULL,
+> -		.maxlen		= sizeof (int),
+> -		.mode		= 0644,
+> -		.proc_handler	= sysrq_sysctl_handler,
+> -	},
+> -#endif
+>  #ifdef CONFIG_PROC_SYSCTL
+>  	{
+>  		.procname	= "cad_pid",
 > 
 > -- 
-> 2.34.1
+> 2.47.2
 > 
+> 
+
+-- 
+Kees Cook
