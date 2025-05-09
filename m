@@ -1,72 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DD72192F3;
-	Fri,  9 May 2025 18:09:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A00022B8C5;
+	Fri,  9 May 2025 18:09:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746814158; cv=none; b=AV+XQIRY2ajK6FB/TPLfOb+Ax9glQM9L+rP3UxbHLCAMl8gAEEl1Bzz+aPlXrWYOZ8rKRuMlgkbJ9/e4/HMa/1RNM2rB3dr/hFMxBRHHyXn8aJeHvWQRyxN8UwnFkk0+Tgo3lM9L1eqGoTcvBQqA1y8GW18rSd5HDhdQv3uBOQ4=
+	t=1746814193; cv=none; b=rgeN0iMjgh/RX7I4H47QQtrw93rbAwYjTWxxsuoh+/TLMvm8JizG0CAMEeodLbaM7SXPIMgy+Zx3Gs4YSLSHg3KKxhocWAy/H+vibkaNtoAS256wNmFPZgfRirhnhO00FCqcFVRhp/V0bxK6r4Ux/973cWKLRNlxfT+JHUvltLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746814158; c=relaxed/simple;
-	bh=cmje0Gqin1UMwYrEQVfW/u3H9mdsF20Jozm64dt9YDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h6aIA6sRlO89hRF58QdIuyMlx6MubICa0nXiw4O1mhMDvE0/fVoLNDQKOGbQPZDf/18r2Z7oCVkds0dalkw/DAEd3h5nw0Vu4JylCzsFRf3iXTJafwjqlYBSKputsPo4jvHu/CBeMM0ftQf0mp4rlkT6986ZZCZgge+SMgRoakg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Am4m4k/s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746814193; c=relaxed/simple;
+	bh=fDzciSBzJ9oWWmkY1tCDRVGmRWNKQ+dk5VcIIEfRcrE=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=SiPfl8JBOvzpTI/vy12TmovcduvGPYssds9M20gucxTMcYYRUd1qJsAjA9pOSe5LIsjTDvU6vx9g2lL+FVHUHStD0j+hUs2cAH05w7BkpSf4PxCv+1cDsdv0VGC6cIWPnnOrvH4694YsDYYmMWkCFFTn1Tf2J7CvYqSxkwyHzT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FUjpqbbF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Am4m4k/s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78A6BC4CEE4;
-	Fri,  9 May 2025 18:09:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FUjpqbbF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9905C4CEE4;
+	Fri,  9 May 2025 18:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746814157;
-	bh=cmje0Gqin1UMwYrEQVfW/u3H9mdsF20Jozm64dt9YDI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Am4m4k/s/uSA+9iHikVl3vssi2y3uBjthLsNORupTj8CpJx4R8d2XbA1rdooSBpIH
-	 11Q02LEfmtKlE0P5UJUZuype0h1P/jK9rRg8fC7v/1uHiLcvfI2YeZ3rP3rwWHAeNd
-	 idg6a26cCvSWHcIVO2eVLYZx29cEickdDmQDWezJaknApzvNAsxme2jtXRqrqL8yQd
-	 0c8YsLfr3JMSgQFDSRfIo3Oqj1uUc3crl9PRuuMYaKy9H2eWKx9lZYPKdCcv9E4lGS
-	 aSm9HUjEE3I2KYYgjebF9mOV5Od2ULi4ngH200yQT8t1x4qzOMuZVTr0Y+jrHCxFkd
-	 4YtENvW0P6COg==
-Date: Fri, 9 May 2025 13:09:15 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: linux-sound@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-	Jiaxin Yu <jiaxin.yu@mediatek.com>, Mark Brown <broonie@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Subject: Re: [PATCH v2 05/13] ASoC: dt-bindings: mt8192-afe-pcm: Allow
- specifying reserved memory region
-Message-ID: <174681415530.3876555.5160678199255318947.robh@kernel.org>
-References: <20250424102509.1083185-1-wenst@chromium.org>
- <20250424102509.1083185-6-wenst@chromium.org>
+	s=k20201202; t=1746814192;
+	bh=fDzciSBzJ9oWWmkY1tCDRVGmRWNKQ+dk5VcIIEfRcrE=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=FUjpqbbFRIoJvQnBaU7m8YiPBY1xIyksWKNRGZgUZcguSIQt26qXHv9CrL4xTNlNM
+	 qimf/lJAyQje9Qb4sFnVY7mfasY/r+YfjWpWhMMGKcbzetfM8fh2j1e8s7rTHmzxze
+	 FW721gDwtwWAn9zfjH+Dweu2ZOVmmPBb1hAtwZ4dnbhc91aK63uZcyNZKKxal7d4BW
+	 fheZ+epGzERt7UO8P0PzEDHsQ+IOfgCMSI2T7wqup/si/T+S6iHrrYuAg1YIG6f6xC
+	 DqkiHNTlD3MVgEoynWTpqmMb1OdP24alrdUwHhx++KoeQ+WM7f1AHpIGx+uNw13vR7
+	 rPmu9BcAw2BCg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70F09380DBCB;
+	Fri,  9 May 2025 18:10:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424102509.1083185-6-wenst@chromium.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3 bpf-next 0/2] bpf: Allow some trace helpers for all prog
+ types
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174681423125.3706849.17756143734628096783.git-patchwork-notify@kernel.org>
+Date: Fri, 09 May 2025 18:10:31 +0000
+References: <20250506061434.94277-1-yangfeng59949@163.com>
+In-Reply-To: <20250506061434.94277-1-yangfeng59949@163.com>
+To: Feng Yang <yangfeng59949@163.com>
+Cc: martin.lau@linux.dev, ast@kernel.org, daniel@iogearbox.net,
+ andrii@kernel.org, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
+ mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, davem@davemloft.net, tj@kernel.org,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
 
+Hello:
 
-On Thu, 24 Apr 2025 18:24:59 +0800, Chen-Yu Tsai wrote:
-> It is desirable to reserve memory for the audio frontend.
-> 
-> Allow the "memory-region" property, to be used to point to a reserved
-> memory region.
-> 
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> ---
->  Documentation/devicetree/bindings/sound/mt8192-afe-pcm.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
+This series was applied to bpf/bpf-next.git (master)
+by Andrii Nakryiko <andrii@kernel.org>:
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+On Tue,  6 May 2025 14:14:32 +0800 you wrote:
+> From: Feng Yang <yangfeng@kylinos.cn>
+> 
+> This series allow some trace helpers for all prog types.
+> 
+> if it works under NMI and doesn't use any context-dependent things,
+> should be fine for any program type. The detailed discussion is in [1].
+> 
+> [...]
+
+Here is the summary with links:
+  - [v3,bpf-next,1/2] bpf: Allow some trace helpers for all prog types
+    https://git.kernel.org/bpf/bpf-next/c/ee971630f20f
+  - [v3,sched_ext,2/2] sched_ext: Remove bpf_scx_get_func_proto
+    https://git.kernel.org/bpf/bpf-next/c/8c112a428b94
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
