@@ -1,77 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B6825F972;
-	Fri,  9 May 2025 21:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEFE231A21;
+	Fri,  9 May 2025 21:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746826220; cv=none; b=G1boOfBIEhViryduWYMoxjuo60e4sBW0yUZWKNq73mtVlGdiFUDirftCuV94AE5YCR7lRavgesQ4RweY9p27ofBXwtd0y8/x4HLGRG4u4/qW6qsni1ZHsNM97/K8601mx/iqRRRCDRXdk7amaUpOQl5kpG/rcVK15riLthRzMts=
+	t=1746826627; cv=none; b=rjShOpLVxB3ZyUzxs5w1FQVGLrkqJCMctwYL5Vn3paS6TlbPEwJinJh5mtBGR2WDkFzKli7MH/tQFsHYJNTAqDCWqNqenlM+enyymdi7VVxw9PqFn0QnROA+tVFWrXvY9/XAlvyG40NCr7HsaiLoM6KO0v8EWKJm7vvQljWRpts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746826220; c=relaxed/simple;
-	bh=k7aoIsLV3BF4vRFYtw+AgV3VQ/BY3u9sOY7ixkiXnOs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IZs2SypY9sBewH1D8jgkT7ZjZYoppP2Yo5Hoo9Syvr0fn5MsSBQNyA4O+uVvNi5WXy1K5MXdBwF/bvtTjJU8yHA2cbl2LFgVDFYm5FbVhmWlJoI5MHchjCX4DcqyacciPcNygRmjDWHPTVYqDLwpONuNYckBzsH6rwkPtkvG3gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OQ/DC7Id; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746826627; c=relaxed/simple;
+	bh=Pk19fn8HgewsfAPMOxuaW+DBv3DoTvro8u9F+0m0XpU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F0srPZL3L01eTewGSXTQPZVw0rbOMlbrA78qxbElj7Er6F6ZpSWDT8hCH2QkBxUgD1LZawjBnPF4ARCLthPHL6OgJJC271sGvH1SnG2NNqX93oEt7V0uJ1TvyVsfra9REpaEeMrRno2u89R87lSetyX35bqM3y2W8WW1JiiRqj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=acxN55X/; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OQ/DC7Id"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 048C9C4CEF3;
-	Fri,  9 May 2025 21:30:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746826219;
-	bh=k7aoIsLV3BF4vRFYtw+AgV3VQ/BY3u9sOY7ixkiXnOs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OQ/DC7IdyA2WFYBUvpZLFhIiHZRI/Q6n2zuL3DkODWN7oTcSPnJu16QyjaDfzTomY
-	 NVbM+kkHYng9urUQWhjfUoCQARBNBqLjhVivc0Nl2STmbWKf7V65x64MjBc9O321m3
-	 1XZnDxJlimepu+ABkwxhmZkqEGYOwuhv2q4eYVHX0wG7tvYw2kg8ScX4+n+JHENMr7
-	 AVvsxl7Kd4HBC1f8pt1aqTWufq21vGT70jqCVBQS7tjSmUI7pGyMzX8o4ZQ2GAsaEi
-	 euoovJ/44Dl6la4rqMWWqOLhRAQ+wtRZvS5AlnTen73m6K+vIyoEvOBqmv2ER66AVx
-	 4aFUWdKSXAE1A==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/2] perf test: Update sysfs path for core PMU caps
-Date: Fri,  9 May 2025 14:30:17 -0700
-Message-ID: <20250509213017.204343-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.49.0.1015.ga840276032-goog
-In-Reply-To: <20250509213017.204343-1-namhyung@kernel.org>
-References: <20250509213017.204343-1-namhyung@kernel.org>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="acxN55X/"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E52F140E023E;
+	Fri,  9 May 2025 21:37:01 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 662FpYmUc_7L; Fri,  9 May 2025 21:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746826617; bh=iaGMkFbQ4D/7qDFb5MMv0dLPYiVkli9ypk8n31O87eM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=acxN55X/AK1vJ+bf//5xYZyTOBb/sU3XjeSZX+N3dZpc4iyv3B/Vln3NfPCx76Ke8
+	 iEcadd5xLnOqPvvK5SbURqOJDfnomfxt+706k62TbxVbVZnv98AHwi4Tsmi1+OjPVM
+	 0jxveFKKdn5QIv+7Ej2ZUi01LLyToggOf1rEgbb14gq5tNlJJAYvXjyFaVis9IDWuL
+	 pf+4VDp54rxXomNp8zeYEo/w6MfttlspidxyrdmSGI+9L/ctr5uNbvP8a9cwaNo9TQ
+	 3chcs+T12iq5ZkCrUyGqMdrLUECo16tX3tnuJ+CPk9RaopkQ+44tTS5tKVe85o7bHQ
+	 vgv59frrT8PA8imvAsNs7Gl6MHtmd7vpP3gsRm1j646gxMSdmwIgZYzavTm/R0+Awq
+	 oQyj1WbyS8BlbfHNEx4W0S+EE7UF8QydmQZjuRSQyUBGB7eyENUIdum3oIQJy4jW27
+	 Aip5/r6cJcUPmOnLdFN3/SVk1hq7vCrNhjAV0yHCpUQunqq5zBQNZZ/h64LhUlGTpJ
+	 F2r+mT+Cls4+ztUBtPDxgDHk18sK5l2VwaCrUxo+X5Dwx2cUBubUJztY2bh+SKZK5S
+	 GyXEx+ON/gzposdGL2JxNPWBvPKgk5+Ss83bL5SLxms0qCs7VI48sK5lGRBhQ5WoMk
+	 s2G0z60cJryonRQBwXPvDbUA=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9AC8F40E0239;
+	Fri,  9 May 2025 21:36:42 +0000 (UTC)
+Date: Fri, 9 May 2025 23:36:35 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Weinan Liu <wnliu@google.com>,
+	Fazla Mehrab <a.mehrab@bytedance.com>,
+	Chen Zhongjin <chenzhongjin@huawei.com>,
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 43/62] x86/alternative: Define ELF section entry size
+ for alternatives
+Message-ID: <20250509213635.GFaB51YzAbFIlC37QS@fat_crate.local>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <68a8126c21f4ee054d6c4d6262d0f465b5babd89.1746821544.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <68a8126c21f4ee054d6c4d6262d0f465b5babd89.1746821544.git.jpoimboe@kernel.org>
 
-While cpu is a system device, it'd be better to use a path for
-event_source devices when it checks PMU capability.
+On Fri, May 09, 2025 at 01:17:07PM -0700, Josh Poimboeuf wrote:
+> +#define ALTINSTR_SIZE		14
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/record_lbr.sh | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+We have sizeof(struct alt_instr) to offer...
 
-diff --git a/tools/perf/tests/shell/record_lbr.sh b/tools/perf/tests/shell/record_lbr.sh
-index afad02d0180e023c..6fcb5e52b9b4fcf6 100755
---- a/tools/perf/tests/shell/record_lbr.sh
-+++ b/tools/perf/tests/shell/record_lbr.sh
-@@ -4,7 +4,8 @@
- 
- set -e
- 
--if [ ! -f /sys/devices/cpu/caps/branches ] && [ ! -f /sys/devices/cpu_core/caps/branches ]
-+if [ ! -f /sys/bus/event_source/devices/cpu/caps/branches ] &&
-+   [ ! -f /sys/bus/event_source/devices/cpu_core/caps/branches ]
- then
-   echo "Skip: only x86 CPUs support LBR"
-   exit 2
 -- 
-2.49.0.1015.ga840276032-goog
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
