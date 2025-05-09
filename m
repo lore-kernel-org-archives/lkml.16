@@ -1,127 +1,180 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628A5219A7D
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 14:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9351459F6;
+	Fri,  9 May 2025 14:29:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746800927; cv=none; b=KwDpbxbN6qFOy3I7ZqIFUw71qp2kjJLrR48RKeM1gViDOQ1DMOL9gISUOWJyNqyyz+oBtbMxvFnEsAZejPZ6mqcQu9GGP2ks5u4N5uMqeJ/0xbTE0pUbQViducSPr9V0EwfRFl8Y/T6ULjLGIPQZsH/XMfkS1f3mb5XDsxCqc3c=
+	t=1746800942; cv=none; b=a8nwnpId4zirXXGhLOC1HL/AqOfbKNhRh17St4Cfn+oylq3NDXx90bdEOmBsfsXutSBgZvc9whgLZAQWw66gBX9XvKnZkJ6WIaOMQb1rkHE7Kt3JBo9qYDo90ZXRtk4X8mu3OyFZU5W/5++93zFTp/zLXrDgMdC1sziRcZ4EYkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746800927; c=relaxed/simple;
-	bh=CgU3tjLzOyhvJq5Pp4GjEzks5l0APZ7dbooXRd0rgeg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SuPIVWQbpvHfonwAz9cwvmwXvaoicJeVdMJkrE3qTveDkE+Vzu/syq1Fw4mMpBMRYR6PXmsvspIBYaonWcmcvqtglshEvjsLSoJc6cxOcXpXwnIFAp9WiwA3bCfpn7wnAqrl+hCJf2BIIS2KukMpky5d5go0q9AqKVwaq4fuas4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DQtkc37V; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746800942; c=relaxed/simple;
+	bh=gnUetn2hcfK/UfHXLy4h7uMiWtOL/Fhby8PBL1AHwgY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xs3tHdEgO6K6hFbbRyuRwZHvqenG5rTFG59dLmtZdsBIwC+iRmLmF2iBAmPk2r1MVjp7CJnC3OPShZkaPJEPoR7RA377nqf5Rasc1N6Ci6yqQ+gHnjbVnikvYYbJbkEq4Yjkj7dgD6sAsSmM4O/vTvdrCtcOpfKTIGbZ3JYWIt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HXZ7+Nhj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DQtkc37V"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf7c2c351so1644975e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 07:28:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746800924; x=1747405724; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vGJa78Wq53wOh7pi/p5kq4kFJLRExrNSMcJZ7tCQjOo=;
-        b=DQtkc37VaIisJfIUB7nM6WJLmTkilWMNo5rhH3OT0thZcKAO+2L/tWzZD3dH6vHDic
-         8e0cDSvWmXvAPpvExSGQOaCSP/ll+/HfFWPUqPtavaDbmr+ll6t6Q1UvhjEkYQNaxSv9
-         xOP5MLhewnMu4ng+Q67YIAk6OR1PBMWSFil4ylsVLg9r8DhOwOHpoMMJSbMwDXk0R4Sd
-         T/cygQRRaUwN6sRPHTkdj20sxAifdcTbVKb/rJMkFfgCO7Ca/EMw+CwA6CjGLWd/l2Yc
-         MkIaz3g4WiSNIW5siZihYkcigJbk9lFYiI+E/bzffQPd4QQxXDWN5zvtvkaJEO4KtHrl
-         QbVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746800924; x=1747405724;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vGJa78Wq53wOh7pi/p5kq4kFJLRExrNSMcJZ7tCQjOo=;
-        b=n0FOCi5v2cagDKFJ+bVjiOQgznGb2Vf46SGt+Q3sgXsW3ATNwg/BVf7MhmO1ziXGno
-         yxvxJYqTk34lVp0FfgJ+rysWtIOKJLDvtwsl6/W5aVxeeQ+JIsCXj1M7hE/vXVCO3smW
-         DHW0pyYD1AfL4Qf9KlQknQPLqgwwSpXRqG4agCcWmGAprlp7pQOeszwaqFW/vCO5/qY7
-         4Bu8xiNS1K25GYqw1waxgVE7Qyht+YGxm13T/Ed/P/Ll2t42JcZC4tXkCpfkNI1olfLV
-         KbdWjpDlXHG8wdeJCLuPPTOv7y4gJlhmrhFglMu24JtWEhLv/sQsHsl/KDlXo8iHngf2
-         16oA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSMZX9D0S7dyVjJDnkeBqpqFAC9bZ/nNxve/5EXEqE1Z8ug9Ln3JuWwKe7s6XeRnxmr9ncOrVnDKwao5s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeENBAgXzguxN+ciC8ojaWEgZKeFKy1bQIJ9zCbq5N0EUNkcxn
-	jEX9uIXcsGTh9gBR1S10/dfRlJkuc8K52LJVMI58GyEZ2ZDHZXCpIyn3oWtOEzM=
-X-Gm-Gg: ASbGncvf7/qSH35pAEfq45U6Da4XKthZtB/YVIr0X5knB+lEEQfjQwNm1p+2KMUP5ti
-	Y3d7jGz0o5xkL86fkYY/YfnIQjmfZ2q6MbHqvtXcm9LOP6uQGMQqiCHkh8CruZhv8peQAODVfxz
-	Mbbl1bmtZEN8R78SxpsmjGbyAZYQnvos4eYhnAuusqJQBrwPefw6xDrb511prxEaGkTgokhmuHa
-	UmMiYeLuHBG8gREJIS7l2cBpKk2/gCJDk+Pm7vv+d03K8WZcLXysiPnll4Lk+ryzuZsg1DW/ArM
-	dyQv7NMjAC4ptyorB3GzD4R7Dr2FZ2zO9gxgWNSmlpKAuIvx+A==
-X-Google-Smtp-Source: AGHT+IEKYVR9f4KNy2kwsH3spQ+bStFwlfaO9+nceNqCzdyx5f265pzrXCR2cXu644nD++9/3pxs5A==
-X-Received: by 2002:a05:600c:1c8f:b0:439:a1c7:7b3a with SMTP id 5b1f17b1804b1-442d6d18d31mr10683505e9.1.1746800923692;
-        Fri, 09 May 2025 07:28:43 -0700 (PDT)
-Received: from kuoka.. ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d687ae10sm31255865e9.37.2025.05.09.07.28.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 07:28:42 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: qiang.zhao@nxp.com,
-	leoyang.li@nxp.com,
-	nathan@kernel.org,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Tom Rix <trix@redhat.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v2] soc: fsl: qe: remove unused qe_ic_from_irq function
-Date: Fri,  9 May 2025 16:28:35 +0200
-Message-ID: <174680087395.258053.1870729490363422870.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20230320125202.1721775-1-trix@redhat.com>
-References: <20230320125202.1721775-1-trix@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HXZ7+Nhj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C76BC4CEE4;
+	Fri,  9 May 2025 14:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746800941;
+	bh=gnUetn2hcfK/UfHXLy4h7uMiWtOL/Fhby8PBL1AHwgY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HXZ7+Nhjcv09B8TTkwvrsGEwo/ENIbLfTa8//bUjOqGg5hkFz8QbmX+1AgOKjk/Tq
+	 ODxV8XO6Ehk8MbWXZ9Uumkos0cQTdFL7lPkBH4RLX2rfnaWHzKSjwWm1w/UEIPKjbk
+	 kL10U85O0nlAG/qdieTJg/MvDUi+adyJRbaXIVpXN0BEbeOucVu5t4wthnzKEJWWU/
+	 wi5dqJvVCKgGNWTWiilusOrKyilItUfd8F+SFXQ6sr3kHbLI1htQOQA7KXm+ttWZH8
+	 qOko1RVla9JZMLFiFMjdCXuLQtZegLPJUiv/pel6Woa/I1jX5dGIszOe2je/XRF11o
+	 ROrKDw+P0BTrA==
+Date: Fri, 9 May 2025 15:28:53 +0100
+From: Will Deacon <will@kernel.org>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: =?utf-8?Q?Miko=C5=82aj?= Lenczewski <miko.lenczewski@arm.com>,
+	suzuki.poulose@arm.com, yang@os.amperecomputing.com, corbet@lwn.net,
+	catalin.marinas@arm.com, jean-philippe@linaro.org,
+	robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org,
+	paulmck@kernel.org, mark.rutland@arm.com, joey.gouly@arm.com,
+	maz@kernel.org, james.morse@arm.com, broonie@kernel.org,
+	oliver.upton@linux.dev, baohua@kernel.org, david@redhat.com,
+	ioworker0@gmail.com, jgg@ziepe.ca, nicolinc@nvidia.com,
+	mshavit@google.com, jsnitsel@redhat.com, smostafa@google.com,
+	kevin.tian@intel.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev
+Subject: Re: [RESEND PATCH v6 1/3] arm64: Add BBM Level 2 cpu feature
+Message-ID: <20250509142852.GA5845@willie-the-truck>
+References: <20250428153514.55772-2-miko.lenczewski@arm.com>
+ <20250428153514.55772-4-miko.lenczewski@arm.com>
+ <20250506142508.GB1197@willie-the-truck>
+ <78fec33d-fe66-4352-be11-900f456c9af3@arm.com>
+ <20250509134904.GA5707@willie-the-truck>
+ <9bb94fe8-d605-49b4-91f0-0ad6d527b320@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=883; i=krzysztof.kozlowski@linaro.org;
- h=from:subject:message-id; bh=fiZTHDyBdOc6qfmbBDJJ1y69SYbch4R9Dh77RsKvT8o=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoHhETObKRcExebKUkbIaGQ4dCmp1cl7Z+eKzDU
- 2FxOq4jCDyJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaB4REwAKCRDBN2bmhouD
- 12MFD/wKZlS5qkHWc9CUedyRVM+E7ub1Lod6PaAbk/31coox5iWvBj94XuurnOuKMUXmcfwl7rF
- +zIRQNJFPjPjkwOpJRjTwPg9vWktDjbBwQN5R64ChJnZt8N3aG2g6LGgFE/0YCOfJFzUVg8ZBFt
- 62ZO1fWQod3iFD1Zu3PcjmwYvTaf+VjfI3VGUZvNHJaaHLA9OQjxzJ3ntJdV26Nf1yHtEYPWV7/
- FMHZjDxKHK0YbtTSDXeNg490LGK+pTCreHLrmjbYMkw6dz+RlV69hHcqkKzY9cZm/9wZeOs2okZ
- eG7gn/v7oAxxTESLh3rXiggeQ2P33lfAL9XVQz4dnqd+7QERPpUx64aDciyg2L42a2UQea0qA46
- W3XbvX2k9qDz1FM2bo6UNGsIi3SO/6eVgQT/4pP3+EPQcpLXjeIXWFABGWub4gabk4sNNyhzkiX
- XZ2hdozSp+Qf4G1PgSPe8YGgegbvavAT06TMWaZvmBCcIKj8W8u+ozmC6+8KVJAdNs2L8Hq1fOe
- akJTeH9uzGd7Ycd0pjjUh87ndgOeTHaIuDpoVNjEa7Mv7i6pyj8SkcOMi7I8ZyzOzxhPWKh1EIg
- qKU5+wwCNXNv2I9wmnTh6z29IndiEPrwcJQe+IGqjf917f6nKyC1AAWkPXU/nAhTXKZGgHiMUNe D03zhhwT7Or58DQ==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <9bb94fe8-d605-49b4-91f0-0ad6d527b320@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-
-On Mon, 20 Mar 2023 08:52:02 -0400, Tom Rix wrote:
-> clang with W=1 reports
-> drivers/soc/fsl/qe/qe_ic.c:235:29: error: unused function
->   'qe_ic_from_irq' [-Werror,-Wunused-function]
-> static inline struct qe_ic *qe_ic_from_irq(unsigned int virq)
->                             ^
-> The use of this function was removed with
-> commit d7c2878cfcfa ("soc: fsl: qe: remove unused qe_ic_set_* functions")
+On Fri, May 09, 2025 at 03:16:01PM +0100, Ryan Roberts wrote:
+> On 09/05/2025 14:49, Will Deacon wrote:
+> > On Tue, May 06, 2025 at 03:52:59PM +0100, Ryan Roberts wrote:
+> >> On 06/05/2025 15:25, Will Deacon wrote:
+> >>> On Mon, Apr 28, 2025 at 03:35:14PM +0000, Mikołaj Lenczewski wrote:
+> >>>> +static bool has_bbml2_noabort(const struct arm64_cpu_capabilities *caps, int scope)
+> >>>> +{
+> >>>> +	if (!IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT))
+> >>>> +		return false;
+> >>>> +
+> >>>> +	if (scope & SCOPE_SYSTEM) {
+> >>>> +		int cpu;
+> >>>> +
+> >>>> +		/*
+> >>>> +		 * We are a boot CPU, and must verify that all enumerated boot
+> >>>> +		 * CPUs have MIDR values within our allowlist. Otherwise, we do
+> >>>> +		 * not allow the BBML2 feature to avoid potential faults when
+> >>>> +		 * the insufficient CPUs access memory regions using BBML2
+> >>>> +		 * semantics.
+> >>>> +		 */
+> >>>> +		for_each_online_cpu(cpu) {
+> >>>> +			if (!cpu_has_bbml2_noabort(cpu_read_midr(cpu)))
+> >>>> +				return false;
+> >>>> +		}
+> >>>
+> >>> This penalises large homogeneous systems and it feels unnecessary given
+> >>> that we have the ability to check this per-CPU. 
 > 
-> [...]
+> In case you didn't spot it, cpu_read_midr() is not actually reading a remote
+> cpu's midr. It's reading the cached midr in a per-cpu data structure. So I don't
+> think this will be very expensive in reality. And it's only run once during boot...
+> 
+> static inline unsigned int cpu_read_midr(int cpu)
+> {
+> 	WARN_ON_ONCE(!cpu_online(cpu));
+> 
+> 	return per_cpu(cpu_data, cpu).reg_midr;
+> }
 
+I know it's not reading a remote MIDR, that would be crazy :)
 
-Commit from 2021:
-https://lore.kernel.org/all/1619002613-18216-1-git-send-email-jiapeng.chong@linux.alibaba.com/
+But iterating over per-cpu variables sucks and we should be able to avoid
+it because this code already knows how to detect features locally.
 
-did not apply, but this applies.
+> 
+> > Can you use
+> >>> ARM64_CPUCAP_BOOT_CPU_FEATURE instead of ARM64_CPUCAP_SYSTEM_FEATURE
+> >>> to solve this?
+> >>
+> >> We are trying to solve for the case where the boot CPU has BBML2 but a secondary
+> >> CPU doesn't. (e.g. hetrogeneous system where boot CPU is big and secondary is
+> >> little and does not advertise the feature. I can't remember if we proved there
+> >> are real systems with this config - I have vague recollection that we did but my
+> >> memory is poor...).
+> >>
+> >> My understanding is that for ARM64_CPUCAP_BOOT_CPU_FEATURE, "If the boot CPU
+> >> has enabled this feature already, then every late CPU must have it". So that
+> >> would exclude any secondary CPUs without BBML2 from coming online?
+> > 
+> > Damn, yes, you're right. However, it still feels horribly hacky to iterate
+> > over the online CPUs in has_bbml2_noabort() -- the cpufeature framework
+> > has the ability to query features locally and we should be able to use
+> > that. We're going to want that should the architecture eventually decide
+> > on something like BBML3 for this.
+> 
+> For BBML3, we're looking for a minimum value in the BBM field of the FFMR, and
+> in that case the framework can handle it nicely with
+> ARM64_CPUCAP_SYSTEM_FEATURE. But the framework doesn't have any support for the
+> case where we need to look at all the midrs. So Suzuki came up with this method.
+> 
+> If/when we have BBML3 I was thinking we could retrospectively treat the CPUs in
+> the midr list as having an erratum that they don't advertise BBML3 when they
+> should (since the semantics are basically the same I expect/hope/have been
+> trying to ensure), so we can just implement workarounds to make it look like
+> they do have BBML3, then the framework does it's thing. Perhaps we can live with
+> this hack until we get to that point?
 
-I am annoying hitting this warning on every W=1 build, so:
+I think if you want to go down that route, then this needs to be detected
+locally on each CPU.
 
-Applied, thanks!
+> > What we have with BBML2_NOABORT seems similar to an hwcap in that we only
+> > support the capability if all CPUs have it (rejecting late CPUs without it
+> > in that case) but we can live without it if not all of the early CPUs
+> > have it. Unlikely hwcaps, though, we shouldn't be advertising this to
+> > userspace and we can't derive the capability solely from the sanitised
+> > system registers.
+> 
+> Agreed.
+> 
+> > 
+> > I wonder if we could treat it like an erratum in some way instead? That
+> > is, invert things so that CPUs which _don't_ have BBML2_NOABORT are
+> > considered to have a "BBM_CONFLICT_ABORT" erratum (which we obviously
+> > wouldn't shout about). Then we should be able to say:
+> > 
+> >   - If any of the early CPUs don't have BBML2_NOABORT, then the erratum
+> >     would be enabled and we wouln't elide BBM.
+> > 
+> >   - If a late CPU doesn't have BBML2_NOABORT then it can't come online
+> >     if the erratum isn't already enabled.
+> 
+> That's exactly the policy that this cludge provides. But it's using the midr to
+> check if the CPU has BBML2_NOABORT. I'm not sure I follow your point about a
+> "BBM_CONFLICT_ABORT" erratum?
 
-[1/1] soc: fsl: qe: remove unused qe_ic_from_irq function
-      https://git.kernel.org/krzk/linux-dt/c/d47f1233374597c348696c3da2142cc92a36fc90
+I was hoping that it would mean that each CPU can independently determine
+whether or not they have the erratum and then enable it as soon as they
+detect it. That way, there's no need to iterate over all the early cores.
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> I'm also at a massive disadvantage because I find the whole cpufeatures
+> framework impenetrable :)
+> 
+> I'll ping Suzuki to see if he can chime in here.
+
+Thanks,
+
+Will
