@@ -1,232 +1,380 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEB1235059;
-	Fri,  9 May 2025 16:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746808007; cv=fail; b=EVB6HR6bgwuo2Np+DC2WrbomRPgBJ17yqZ6BZq/zhLnfWfySA7z29ZoHFoNRcJar63pDL4fPk4B2rayLHtCbsOO9VsafbPvEatRC5qL//uXnm+k5tMdIzUAQAIJS0C1zmw5a+H6Aie9SIKjTVIa1EQqUT9oYglkGQbigv28QlX0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746808007; c=relaxed/simple;
-	bh=MBFT21aIRz5LIrok2KF9Pxjt9YwW0bUMP0r56/xYQ+4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=H0ruaTGuSvH6f7XSzE42wJcjkO67bndkqB+2KzmQ23uGhitPcBwdrozvkHOp5XT7J2OjNE8GzQZphznONUx5/6kqO7nF/gLJzVpsTBW1UEIo6asVEKQi0lt8I5/yaWpLE77yGooHy1nMLyquciOSiLVWalryvoF2TOoIHE4+IaY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OuWC6mFn; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90AD231841;
+	Fri,  9 May 2025 16:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746808114; cv=none; b=cD8oatvlf9VJjmed4qiAbZmY15a7RWAY7T8yDVFgXepFz2+Dm3aTsZ3hgAoID8VzFTWxC9eixoWWVFAQVxrTNyrtF4Lqvslby40Q09wDz/RdmwXPl/o8IpK+nMFz3xdRuAljQSmXrjWd1Rjgf1CvhwuOki/DvHGSKrapA5WkI5A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746808114; c=relaxed/simple;
+	bh=XhKWd7Cbton1PmuNKvkjSjQqgDhXUx4DilgBjLgbDPA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=R11c0UQh/YzNOqm5v7v8PnXvlgStMyyp3j69efQlVymDfgjPZ+QnBTeGwbRKzGWQKuVexgWHByB8NIK3WxyQMgVqfRFdH2iymbn2A/iUskDdEhIlTE1Xq55Poj6PX/LbLsiXpTnUg32KkQm1pTpQW58lgISRmeJZlHAtLiY8pPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AkFvJNV7; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OuWC6mFn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746808005; x=1778344005;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=MBFT21aIRz5LIrok2KF9Pxjt9YwW0bUMP0r56/xYQ+4=;
-  b=OuWC6mFnIyeQTXm0NAIz/RRCnnGkWuQSN/GNfyZyTwtBO1E61PJtdm73
-   19nzI2KM2rs8eV37bGwe6+AxDl6D4JTbDXxBHDnB9n0018UVnxCp0OGnm
-   RCMVAAjPz7o4EP3qphTwXzRAAd15YyePiOFTcABb4n8karB9TouCbLsbr
-   6BUO0AME7Owa8gd4no9KW+9jGnZVLpxAd6P/HFAzAkoQSYYptkK7uM48i
-   rPcYBbxQcnFdbFE+VFtsO4jC0qbJwC1HcJXhJZPn3SS7z+TSl+yOv3ooI
-   lt/XpFYgj1ScsVdfPK093l/096F9otVYoiF8w8JjGauzHo3lVhhi/H+Qt
-   w==;
-X-CSE-ConnectionGUID: S6wL7h2VQBC879+Z8VhpSQ==
-X-CSE-MsgGUID: G1Vds/h6SbqqOgaygBrjhA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="52296512"
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="52296512"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 09:26:41 -0700
-X-CSE-ConnectionGUID: 01bIQ/fOSSCG7Hz97QJa7w==
-X-CSE-MsgGUID: QwWClfIxQ6STS/+J7g8x+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="136611924"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 09:26:41 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 9 May 2025 09:26:41 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 9 May 2025 09:26:41 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.170)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 9 May 2025 09:26:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Whq7f0Ued5FvDdE4wtw7MCPMizj0mFw+thIaBFxPQhzp7+GHvbgBD7ZwOcK2sknzpEDWZS1yqpOf+47sMuPUrZSL6rPiiwmkcMRIzR5hRDkblcBmBGOmXbM2zZZjN/7jszfiQ3TvlxuMO8YjB4vb50mWYtW3mdKUUjnxeFabLsWAvvVW08b6ld186jXBtJ4EaBmpR7H2TrJp4WRKTgiQ+9Jjsgc2+U5x2ry2TxkkbnptEp90D+zun9zRsmNWvGXzPkcnszoahEoIkYZO/rYtN1SR+cQ27hoCrCAWn5lph4iKJI67fPwkBx8QuXbDeiUoaEaMCO8dPT8PFhhgINWZXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=l5OEZwJOW9l24hcjFtkmtCuuteLXzl0A6mlJhA/OXCg=;
- b=UzUV+yXGUQFwARDotchSiv8DrzUIhuVLXVWljtb75Wu0gPqHbmaFtbhv65cPpwwrPjd/lV0+ebJFNyaLxm1gbgplFjSdbV7UsVKD/bTnKEX/cpupdOPagC1RxwKPB1DVUdbZ10IN1So6PkW4sb+EbOywzlNLe7j7+qXRhN/Abt8+ULvHXd5O7g4dFYN8CL0OmN8BlT48EpBbBb5rRjb3213+iCdqszZxDYgYkMKUFz6cq0x1Mja/rPaEe4jvgwCGfS85f44cXT+F8BXbndgb9myM3bQ6+G4D22OBy2IHLmn2UPCWCK9tg8w7AggYrDJLn6MRlhsj7tDZUHkjvHSQsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by IA0PR11MB7953.namprd11.prod.outlook.com (2603:10b6:208:40d::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Fri, 9 May
- 2025 16:26:33 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8722.020; Fri, 9 May 2025
- 16:26:33 +0000
-Date: Fri, 9 May 2025 09:26:29 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Robert Richter <rrichter@amd.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
-	<gourry@gourry.net>, "Fabio M. De Francesco"
-	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
-	Robert Richter <rrichter@amd.com>
-Subject: Re: [PATCH v6 09/14] cxl/region: Factor out code to find the root
- decoder
-Message-ID: <681e2cb5ca5a9_27eca0294d7@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250509150700.2817697-1-rrichter@amd.com>
- <20250509150700.2817697-10-rrichter@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250509150700.2817697-10-rrichter@amd.com>
-X-ClientProxiedBy: MW4PR03CA0239.namprd03.prod.outlook.com
- (2603:10b6:303:b9::34) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AkFvJNV7"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54998f865b8so2546446e87.3;
+        Fri, 09 May 2025 09:28:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746808108; x=1747412908; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XNoGYCfFn1Ise+cYyN4rMghXeEvaDWlpHmEHwktQf4A=;
+        b=AkFvJNV7K3vKgyMJXu7X00SexEw/dw+8OL4WCXB7izGhCQYJGUivAeCb6VPPvMxfRV
+         9DJyEw723w6NfWM3tE+q8Z2ghKyTxleQf4SxOYx1K1Cz6WJbJfG0q3S1ikBGrZn79ttG
+         /Xqtw/fbm/yb/u01pGZsAemoar2omrLazDV+UZ5DAbI9DMDJ7an5IBfCGj335G2JOIb+
+         JkZwYE0lrsaLPDbm1xDQMUE+cTvHGNKZywwmzCBrV0jhlizk9UT+4sfji8hlKFuFbYbV
+         ZCfmGkuzorCh9RlxgzlrJGKnvxJ0Xt2qu7T3mQEQFTtte5bt1Y1Sp2S+24qJ5zyrIifG
+         /Alw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746808108; x=1747412908;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XNoGYCfFn1Ise+cYyN4rMghXeEvaDWlpHmEHwktQf4A=;
+        b=q4JhteL5H5F1GCgyZaBwkuaOh07INEx+y95xxL64xQqJO5l1aElyt51OpEvpwOV1w+
+         nBEimlp27+xPITiGpkub16gXfHD0rY6uQ66FP8F9lP+91/Jhl8M5LR8mVr80GxjmOZfc
+         T8GV7fkE9ws5To2as0bLujTXsaP8VForwOveZLGz5Pt5q5SUEWqAkYHj8V3U4bU0z7d0
+         ccLQnelr90FFSN1A8D4ZMKS16iunPvARqVEAu1GYc/RFek3yRHmQDAkL68FpNl4TT+UR
+         /lhKWtd5pLjsQVdxFFRhZeVFbE/7uNyNmzRcaQvjHqkyTabVWiGMx09alC6/urP4cqmx
+         MaMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGwhVMV+Z4SXxgsULm7tXEEwzbZAos6lMRR1zy2Jjvb0734JFKYdlqRnXVE5FZe3F0cgDUE4cNXjYW@vger.kernel.org, AJvYcCUsmtRx6cFssNKfJ5ViRdhLV9geYs9VPLgwAYnS18G/cQHB37N5lNL/p1JlPOL/OETbsNK8aUoMlei4@vger.kernel.org, AJvYcCXpjn2zVOuRkT3kiuqrso/Dze0nCWKU6TwYU77yhcVQdLwvxtGiHnptmfCrrAjSzXsF9i55bmv/p/QJVkg7@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAC6dE1bIETJznuc+fnBMFBN5826KYlEEs3yqDqI5OzhjBNzdb
+	d1z1HuHhNcki/Sqr2Dd1d5apcJUKzr/tSTvaFx5QfDQt5lYWLK57SvMKhitDPlE=
+X-Gm-Gg: ASbGncuHSag8NLIgZ8bxPP75V2z4cuIgpJxTNpC3cO462ccfoAVomy+/zRC6heKN1eG
+	IzxTJgZ3PetDAhWvM+FNy0nYUHQMUstEDL5B0JmUxKXn4DUxIhXQU2XNqU8Gj1cJ7WhRiu6jYkO
+	V8yQMocfuUXPvatJ7fkKBXfxp0uY+UyNKJE4SiqMpdtL+fc2hHhCGB/Xswegr4fKKfElpVtcKt6
+	OFqggvua8UPJ2ReCIqh842oEsTZZPmaxy8j2YntRyAfAB9THMGmIdgtNRTfAQ1Zg8XHcuU9F4Vb
+	siN17DxrU9mN23Vk6ombcO89nwa8ZEQS2vqCvsBpfIO8Zj4iRDyhlT3vRoo+Xg+o1fIcf+1rDVt
+	OQWnujYQPIoXE
+X-Google-Smtp-Source: AGHT+IH/EXb373raBKjt6WQfYf9//Y986Nd2SlGxe0WcdFkLId+97MeCHvJVp1WwYjOQkLDE9lalsA==
+X-Received: by 2002:a05:6512:6501:b0:54f:c074:869a with SMTP id 2adb3069b0e04-54fc67e28c9mr1175869e87.45.1746808107398;
+        Fri, 09 May 2025 09:28:27 -0700 (PDT)
+Received: from [10.0.0.100] (host-185-69-73-15.kaisa-laajakaista.fi. [185.69.73.15])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc645cdaasm325994e87.60.2025.05.09.09.28.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 09:28:27 -0700 (PDT)
+Message-ID: <aa852707-9be9-4e88-a0b3-034ebd47a9ac@gmail.com>
+Date: Fri, 9 May 2025 19:29:40 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA0PR11MB7953:EE_
-X-MS-Office365-Filtering-Correlation-Id: cbb7ce42-678e-4636-765c-08dd8f16430d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?ev9mB5jQYLl9fxQTT7K4H6P9vMW3TIFqaY+1bQgUkNsCuJh9oniWHqV9ul8K?=
- =?us-ascii?Q?BI/1DuJtT4XJwaLx+grefFiu3AmVH145zEt/yvB5Tkj0JhUCDMN1fvsBZ310?=
- =?us-ascii?Q?18vqNPq7GHlMc8NCE8C7PN26B0eojWHmTk+4769AfQy9mDvNEW5SMhf8MOxR?=
- =?us-ascii?Q?dJPJ/z0tsIlqJMyApX4ITmbhoknPMnvLMS9rti10JMQlkWZX019NhyxJjHF7?=
- =?us-ascii?Q?je7TcbnyPX2ZeoFHRXO6qX3P4BPkBl9oaagVVokRy0oB1lGb2UvfvGtQP9J+?=
- =?us-ascii?Q?U2pavC7Ruk4AAKv7nfjVmfsKd36nHowN8/cdTZK5rLGtod5/FIk5b+eNhc/r?=
- =?us-ascii?Q?f+Ye4EM8WC82HP++olkaRij40xzHVEy/cF+Gx6MGkXOZrAnOV70piNAfcMxK?=
- =?us-ascii?Q?g5mvTjKioMsqHpoa65CQAjGsQ+hNOINs8qvSQfaY7Pp4Bl+VCD9EYNR4GCvO?=
- =?us-ascii?Q?9K2q5pELJRp7Le6Uz+ZCzBgy3w844n3loPkLvY9/6ChJ21IsqZAnJ8D5Ka6m?=
- =?us-ascii?Q?7G3YtgdzFRxbmdpBvoh77Dy6Me2LaaLSlC2ah/QDMMmDsHoRre7uHGvpngVI?=
- =?us-ascii?Q?8bggQPZdOkoOudG0nBCnHyJ+TDErNo+vQCVX7XP8ulAaGvs/p1HAgdbeyfzl?=
- =?us-ascii?Q?bkQHIZyLYSRhxirVlQmUdjyBRcogFZcui0q3PuHJByXg5KYD7rzqv9e3kGaL?=
- =?us-ascii?Q?Ij+0XClAuWULuDS0ySHrMlAlwB7wNSdkwqJiU7UBZTktnd9UXd70bHdAVUao?=
- =?us-ascii?Q?YNYG+3xqGZ1mknEZPWvDoobTEsz2YgDiPifCbMWAqc6FJWJGMhNfKbDI+8Kw?=
- =?us-ascii?Q?Z1MeE6Q+bW/d5x9X85soRUXflFjp8S77+WoGdDXgLh8uUI9rN6bWzRvrT7d9?=
- =?us-ascii?Q?Gk1P0+Yv4sNvp4sOHk2afhIZ0Tp8w+5fAKncE9SPVNV9JwykCgYmRHAVymtJ?=
- =?us-ascii?Q?7DRnpPyHTFh6b4aY86FQFp56PBUJ1gtUUB+eKS0/6/M1gV965izF5SdiILu1?=
- =?us-ascii?Q?r7Mw1q4GbmbOoEM4g5zwuXbMNoH5aBjGmG64ufSew+xjzVzrB71wSoS04QBq?=
- =?us-ascii?Q?+Dtiro+YwvFeMZYQhXL4miPsOBJUaTnUuaE6kmHSxD86aQEbER6aE3V2UjGO?=
- =?us-ascii?Q?lqvAiQNIV6CAEzGwWLlUqOb3f00NG0wR1TM5VEaO/J5cAFOeF1b3z5EEloZ/?=
- =?us-ascii?Q?qdQrYN5xbfNAimQnGWK5GMM2LWSSJ+ToVDeCvqjBYQMFUu7L+dKxAAde3QT4?=
- =?us-ascii?Q?lqfLDjBZAY+HyE257I884jQai/QY5GVSpmY2tzjgRJi9JViwF6ksXpULy79e?=
- =?us-ascii?Q?iQeLDoIZAqlf0DTIQlCEoJ4D0wjvkoLS5VeEDgt+w64p9ez/qOm9cx7RigJW?=
- =?us-ascii?Q?zQKhvmsRrO9Rw8ZERl6gM/qnrVob64nr0rMfjW0x3gQXeEXQ/bRFfJW4o9+T?=
- =?us-ascii?Q?FuEi0Q4i+Fk=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?jP2LeYIT32mzbQXC1tC+npMT6oPF9z/d+NLA5y2TEXorcW9Bb/jzWKcLlR34?=
- =?us-ascii?Q?yfYQlF6o/YXeNjfsw3dGB0F13UdTqbStBbjxhWUTUpLa2XkAodmJCjL/ok9d?=
- =?us-ascii?Q?g3Ribm7uUbe/v9MpRC/qkd+FxehCxrTPchBy0dl3F2LGfHCXbSH8OkhK4T2O?=
- =?us-ascii?Q?K+78vTd7W6vhEZf9klPKPyMdWncLxGCpw2ElHCcGIpXVBgbfa2pDxRFP+Izr?=
- =?us-ascii?Q?M3OiOoQX4Ip628xWcfilwOQAXxsTE66x8A/GXKs+cJLGDWQApvDuswKmcPuN?=
- =?us-ascii?Q?6Ip3l2YJoZoYntQ/iPjM4ZwBTGzi1gsr/jLYRSzPRmCYRiqEgQXqTCCXFPac?=
- =?us-ascii?Q?B6X47xXN0h4OdSkrsEZ11b6gRTwwcyiDKIinhj36MWIozfCiuWZ6dwMOkmhU?=
- =?us-ascii?Q?a+nhJTfYF8yqvw7WU9lKUQreYLLcRbb9T68pRq7BbjM/YeEwJAxWX7hmR2zv?=
- =?us-ascii?Q?yIDe2atxvHTk02/oaOkkjPEwBfMSoCdOjMnXBfXQKYyPplkVJgi6mL1DlWXI?=
- =?us-ascii?Q?30iy+er8Pr/B2eAcZK11qlAlLrJHxp5mRs8yhvG8UJTsOuP+i99TvM3zv70O?=
- =?us-ascii?Q?+eLxGpdhSonlH9x9BFFF3vV2jGmWSOvIejeladCKik8LW5OWnQLjn8GKOTME?=
- =?us-ascii?Q?ej111E0Oyjoww5FxTfXVpoz1fUp96fUVY/2kRGU5wqZ8fKN0S3TV3BwKa/Jc?=
- =?us-ascii?Q?zj44jEvCXILA0JVNcmlVtGupMN16+bDpjUosS/d2z1HPyNOSXX0KYaMW6uWJ?=
- =?us-ascii?Q?SbMArDA3V19ZeAVJ32Q0L0itnnNtJ9cN5qrtjm2qTvEw4v1QqT4ZZCfjvXJR?=
- =?us-ascii?Q?ipD/TOSqy/s4eEdbIYrTyuuD475/Jn2oEmZ2rom+XCOWZBHHfFFqyE11Zv8+?=
- =?us-ascii?Q?2fhBZJFIarKN3/o475vMEB7K/buY9wZ0dwiO9n9mit+wA34n1geRbIrz9b+C?=
- =?us-ascii?Q?r3DV6Nx3RMdRoyKIo+wGPiyqPwPWFiIKRDEqIiRH6ctl2HRZ91eQQnA294Kw?=
- =?us-ascii?Q?JxxG+7DktfvjvF+OJyYujMZJYfqvU2iF8F2uNZmZHjCt2thrFSbVqo7Cn0IB?=
- =?us-ascii?Q?X7u3pxfNlDA1g9lEf9rrpCRpFtDIUB4o2ycz64kRtADvdOV0KU3yD+Whoovy?=
- =?us-ascii?Q?faqX76QbMZevVPt/PYejFstsf7h2c8Y75BBgAl1cL9BKVrN0sa4gjmIqU1iE?=
- =?us-ascii?Q?+EiLsUkxjmGKLaOG5MZ90fM7rhcII1orVw8Mw+F2zR8p3LRICvvTc5Og1mTi?=
- =?us-ascii?Q?/YkmwEz/LJ9cekcURraS0H/zSiaBxw73UUW5wkZL4FwlMwz26SVV7f0Av1gS?=
- =?us-ascii?Q?jpvNlqAIYNNjm150JwzrawKCzJWbkzf5PI1DXxcVqJT8l9vFY7qQ5XLO5kob?=
- =?us-ascii?Q?Fi7h2ou2JD3Hi09YXR7mZQYlypgw2SxVC9FPTe0spaqjfHOgyxjRq5Qpp/jp?=
- =?us-ascii?Q?met96c/ipxV1aak2L2GVhAvHxb9IadtterMsgC6Iy1Qju4Tn6ooZEWxwIP4/?=
- =?us-ascii?Q?qqX5bTJcMXj56zg/C98QamGXJkNydKczxD468Hzim0SW0RPK73tCJ//qhhKu?=
- =?us-ascii?Q?/gp5L11Y/fua7LfSH9fudvDUs1mVgHFo3AE2Cy7vk//bNuOyiXoHnSL2xC5C?=
- =?us-ascii?Q?lQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbb7ce42-678e-4636-765c-08dd8f16430d
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 16:26:33.4961
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZL3432h+BMjlJB1BxlezKEP8IsZtLzDvit988pY4gQOfbQLKXw/dC/XqhEvwn1SFcibhSkO/NI6HYClStoK5bD9fZaqis4cGi2uN51UX7Ds=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7953
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/8] drivers: soc: ti: k3-ringacc: handle absence of tisci
+To: Sai Sree Kartheek Adivi <s-adivi@ti.com>, vkoul@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, nm@ti.com,
+ ssantosh@kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ praneeth@ti.com, vigneshr@ti.com, u-kumar1@ti.com, a-chavda@ti.com
+References: <20250428072032.946008-1-s-adivi@ti.com>
+ <20250428072032.946008-6-s-adivi@ti.com>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+In-Reply-To: <20250428072032.946008-6-s-adivi@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Robert Richter wrote:
-> In function cxl_add_to_region() there is code to determine the root
-> decoder associated to an endpoint decoder. Factor out that code for
-> later reuse. This has the benefit of reducing cxl_add_to_region()'s
-> function complexity.
+
+
+On 28/04/2025 10:20, Sai Sree Kartheek Adivi wrote:
+> Handle absence of tisci with direct register writes. This will support
+> platforms that do not have tisci firmware like AM62L.
 > 
-> The reference count must be decremented after using the root decoder.
-> cxl_find_root_decoder() is paired with the put_cxl_root_decoder
-> cleanup helper that can be used for this.
-[..]
+> Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
+> ---
+>  drivers/soc/ti/k3-ringacc.c       | 162 +++++++++++++++++++++++++-----
+>  include/linux/soc/ti/k3-ringacc.h |   4 +
+>  2 files changed, 142 insertions(+), 24 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 59d0d6becbd1..45f5d2c7dfdf 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-[..]
-> @@ -3384,29 +3407,17 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+> diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
+> index 82a15cad1c6c4..49e0483676a14 100644
+> --- a/drivers/soc/ti/k3-ringacc.c
+> +++ b/drivers/soc/ti/k3-ringacc.c
+> @@ -45,6 +45,38 @@ struct k3_ring_rt_regs {
+>  	u32	hwindx;
+>  };
 >  
->  int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
+> +#define K3_RINGACC_RT_CFG_REGS_OFS	0x40
+> +#define K3_DMARING_CFG_ADDR_HI_MASK	GENMASK(3, 0)
+> +#define K3_DMARING_CFG_ASEL_SHIFT	16
+> +#define K3_DMARING_CFG_SIZE_MASK	GENMASK(15, 0)
+> +
+> +/**
+> + * struct k3_ring_cfg_regs - The RA Configuration Registers region
+> + *
+> + * @ba_lo: Ring Base Address Low Register
+> + * @ba_hi: Ring Base Address High Register
+> + * @size: Ring Size Register
+> + */
+> +struct k3_ring_cfg_regs {
+> +	u32	ba_lo;
+> +	u32	ba_hi;
+> +	u32	size;
+> +};
+> +
+> +#define K3_RINGACC_RT_INT_REGS_OFS		0x140
+> +#define K3_RINGACC_RT_INT_ENABLE_SET_COMPLETE	BIT(0)
+> +#define K3_RINGACC_RT_INT_ENABLE_SET_TR			BIT(2)
+> +
+> +struct k3_ring_intr_regs {
+> +	u32	enable_set;
+> +	u32	resv_4;
+> +	u32	clr;
+> +	u32	resv_16;
+> +	u32	status_set;
+> +	u32	resv_8;
+> +	u32	status;
+> +};
+> +
+>  #define K3_RINGACC_RT_REGS_STEP			0x1000
+>  #define K3_DMARING_RT_REGS_STEP			0x2000
+>  #define K3_DMARING_RT_REGS_REVERSE_OFS		0x1000
+> @@ -157,6 +189,8 @@ struct k3_ring_state {
+>   */
+>  struct k3_ring {
+>  	struct k3_ring_rt_regs __iomem *rt;
+> +	struct k3_ring_cfg_regs __iomem *cfg;
+> +	struct k3_ring_intr_regs __iomem *intr;
+>  	struct k3_ring_fifo_regs __iomem *fifos;
+>  	struct k3_ringacc_proxy_target_regs  __iomem *proxy;
+>  	dma_addr_t	ring_mem_dma;
+> @@ -465,16 +499,30 @@ static void k3_ringacc_ring_reset_sci(struct k3_ring *ring)
+>  	struct ti_sci_msg_rm_ring_cfg ring_cfg = { 0 };
+>  	struct k3_ringacc *ringacc = ring->parent;
+>  	int ret;
+> +	u32 reg;
+>  
+> -	ring_cfg.nav_id = ringacc->tisci_dev_id;
+> -	ring_cfg.index = ring->ring_id;
+> -	ring_cfg.valid_params = TI_SCI_MSG_VALUE_RM_RING_COUNT_VALID;
+> -	ring_cfg.count = ring->size;
+> +	if (!ringacc->tisci) {
+
+these are not in hot path, right?
+The reg can be moved here and in other functions.
+
+> +		if (ring->cfg == NULL)
+> +			return;
+> +		reg = readl(&ring->cfg->size);
+> +		reg &= ~K3_DMARING_CFG_SIZE_MASK;
+>  
+> -	ret = ringacc->tisci_ring_ops->set_cfg(ringacc->tisci, &ring_cfg);
+> -	if (ret)
+> -		dev_err(ringacc->dev, "TISCI reset ring fail (%d) ring_idx %d\n",
+> -			ret, ring->ring_id);
+> +		writel(reg, &ring->cfg->size);
+> +		wmb();
+> +		reg |= ring->size;
+> +
+> +		writel(reg, &ring->cfg->size);
+> +	} else {
+> +		ring_cfg.nav_id = ringacc->tisci_dev_id;
+> +		ring_cfg.index = ring->ring_id;
+> +		ring_cfg.valid_params = TI_SCI_MSG_VALUE_RM_RING_COUNT_VALID;
+> +		ring_cfg.count = ring->size;
+> +
+> +		ret = ringacc->tisci_ring_ops->set_cfg(ringacc->tisci, &ring_cfg);
+> +		if (ret)
+> +			dev_err(ringacc->dev, "TISCI reset ring fail (%d) ring_idx %d\n",
+> +				ret, ring->ring_id);
+> +	}
+>  }
+>  
+>  void k3_ringacc_ring_reset(struct k3_ring *ring)
+> @@ -494,16 +542,30 @@ static void k3_ringacc_ring_reconfig_qmode_sci(struct k3_ring *ring,
+>  	struct ti_sci_msg_rm_ring_cfg ring_cfg = { 0 };
+>  	struct k3_ringacc *ringacc = ring->parent;
+>  	int ret;
+> +	u32 reg;
+>  
+>  	ring_cfg.nav_id = ringacc->tisci_dev_id;
+>  	ring_cfg.index = ring->ring_id;
+>  	ring_cfg.valid_params = TI_SCI_MSG_VALUE_RM_RING_MODE_VALID;
+>  	ring_cfg.mode = mode;
+>  
+> -	ret = ringacc->tisci_ring_ops->set_cfg(ringacc->tisci, &ring_cfg);
+> -	if (ret)
+> -		dev_err(ringacc->dev, "TISCI reconf qmode fail (%d) ring_idx %d\n",
+> -			ret, ring->ring_id);
+> +	if (!ringacc->tisci) {
+> +		writel(ring_cfg.addr_lo, &ring->cfg->ba_lo);
+> +		writel((ring_cfg.addr_hi & K3_DMARING_CFG_ADDR_HI_MASK) +
+> +				(ring_cfg.asel << K3_DMARING_CFG_ASEL_SHIFT),
+> +				&ring->cfg->ba_hi);
+> +
+> +		reg = readl(&ring->cfg->size);
+> +		reg &= ~K3_DMARING_CFG_SIZE_MASK;
+> +		reg |= ring_cfg.count & K3_DMARING_CFG_SIZE_MASK;
+> +
+> +		writel(reg, &ring->cfg->size);
+> +	} else {
+> +		ret = ringacc->tisci_ring_ops->set_cfg(ringacc->tisci, &ring_cfg);
+> +		if (ret)
+> +			dev_err(ringacc->dev, "TISCI reconf qmode fail (%d) ring_idx %d\n",
+> +					ret, ring->ring_id);
+> +	}
+>  }
+>  
+>  void k3_ringacc_ring_reset_dma(struct k3_ring *ring, u32 occ)
+> @@ -570,15 +632,29 @@ static void k3_ringacc_ring_free_sci(struct k3_ring *ring)
+>  	struct ti_sci_msg_rm_ring_cfg ring_cfg = { 0 };
+>  	struct k3_ringacc *ringacc = ring->parent;
+>  	int ret;
+> +	u32 reg;
+
+this can be added to if (!ringacc->tisci) { } scope.>
+>  	ring_cfg.nav_id = ringacc->tisci_dev_id;
+>  	ring_cfg.index = ring->ring_id;
+>  	ring_cfg.valid_params = TI_SCI_MSG_VALUE_RM_ALL_NO_ORDER;
+>  
+> -	ret = ringacc->tisci_ring_ops->set_cfg(ringacc->tisci, &ring_cfg);
+> -	if (ret)
+> -		dev_err(ringacc->dev, "TISCI ring free fail (%d) ring_idx %d\n",
+> -			ret, ring->ring_id);
+> +	if (!ringacc->tisci) {
+> +		writel(ring_cfg.addr_lo, &ring->cfg->ba_lo);
+> +		writel((ring_cfg.addr_hi & K3_DMARING_CFG_ADDR_HI_MASK) +
+> +				(ring_cfg.asel << K3_DMARING_CFG_ASEL_SHIFT),
+> +				&ring->cfg->ba_hi);
+> +
+> +		reg = readl(&ring->cfg->size);
+> +		reg &= ~K3_DMARING_CFG_SIZE_MASK;
+> +		reg |= ring_cfg.count & K3_DMARING_CFG_SIZE_MASK;
+> +
+> +		writel(reg, &ring->cfg->size);
+> +	} else {
+> +		ret = ringacc->tisci_ring_ops->set_cfg(ringacc->tisci, &ring_cfg);
+> +		if (ret)
+> +			dev_err(ringacc->dev, "TISCI ring free fail (%d) ring_idx %d\n",
+> +					ret, ring->ring_id);
+> +	}
+>  }
+>  
+>  int k3_ringacc_ring_free(struct k3_ring *ring)
+> @@ -669,15 +745,31 @@ int k3_ringacc_get_ring_irq_num(struct k3_ring *ring)
+>  }
+>  EXPORT_SYMBOL_GPL(k3_ringacc_get_ring_irq_num);
+>  
+> +u32 k3_ringacc_ring_get_irq_status(struct k3_ring *ring)
+> +{
+> +	struct k3_ringacc *ringacc = ring->parent;
+> +	struct k3_ring *ring2 = &ringacc->rings[ring->ring_id];
+> +
+> +	return readl(&ring2->intr->status);
+> +}
+> +EXPORT_SYMBOL_GPL(k3_ringacc_ring_get_irq_status);
+> +
+> +void k3_ringacc_ring_clear_irq(struct k3_ring *ring)
+> +{
+> +	struct k3_ringacc *ringacc = ring->parent;
+> +	struct k3_ring *ring2 = &ringacc->rings[ring->ring_id];
+> +
+> +	writel(0xFF, &ring2->intr->status);
+> +}
+> +EXPORT_SYMBOL_GPL(k3_ringacc_ring_clear_irq);
+> +
+>  static int k3_ringacc_ring_cfg_sci(struct k3_ring *ring)
 >  {
-> -	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> -	struct cxl_port *port = cxled_to_port(cxled);
-> -	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
-> +	struct cxl_root_decoder *cxlrd __free(put_cxl_root_decoder) = NULL;
-
-Please avoid the "obj __free(...) = NULL" pattern. Per the documentation
-in include/linux/cleanup.h.
-
->  	struct range *hpa = &cxled->cxld.hpa_range;
-> -	struct cxl_decoder *cxld = &cxled->cxld;
-> -	struct device *cxlrd_dev, *region_dev;
-> -	struct cxl_root_decoder *cxlrd;
-> +	struct device *region_dev;
->  	struct cxl_region_params *p;
->  	struct cxl_region *cxlr;
->  	bool attach = false;
->  	int rc;
+>  	struct ti_sci_msg_rm_ring_cfg ring_cfg = { 0 };
+>  	struct k3_ringacc *ringacc = ring->parent;
+> +	u32 reg;
+>  	int ret;
 >  
-> -	cxlrd_dev = device_find_child(&cxl_root->port.dev, &cxld->hpa_range,
-> -				      match_root_decoder_by_range);
-> -	if (!cxlrd_dev) {
-> -		dev_err(cxlmd->dev.parent,
-> -			"%s:%s no CXL window for range %#llx:%#llx\n",
-> -			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
-> -			cxld->hpa_range.start, cxld->hpa_range.end);
-> +	cxlrd = cxl_find_root_decoder(cxled);
+> -	if (!ringacc->tisci)
+> -		return -EINVAL;
+> -
+>  	ring_cfg.nav_id = ringacc->tisci_dev_id;
+>  	ring_cfg.index = ring->ring_id;
+>  	ring_cfg.valid_params = TI_SCI_MSG_VALUE_RM_ALL_NO_ORDER;
+> @@ -688,11 +780,26 @@ static int k3_ringacc_ring_cfg_sci(struct k3_ring *ring)
+>  	ring_cfg.size = ring->elm_size;
+>  	ring_cfg.asel = ring->asel;
+>  
+> +	if (!ringacc->tisci) {
+> +		writel(ring_cfg.addr_lo, &ring->cfg->ba_lo);
+> +		writel((ring_cfg.addr_hi & K3_DMARING_CFG_ADDR_HI_MASK) +
+> +				(ring_cfg.asel << K3_DMARING_CFG_ASEL_SHIFT),
+> +				&ring->cfg->ba_hi);
+> +
+> +		reg = readl(&ring->cfg->size);
+> +		reg &= ~K3_DMARING_CFG_SIZE_MASK;
+> +		reg |= ring_cfg.count & K3_DMARING_CFG_SIZE_MASK;
+> +
+> +		writel(reg, &ring->cfg->size);
+> +		writel(K3_RINGACC_RT_INT_ENABLE_SET_COMPLETE | K3_RINGACC_RT_INT_ENABLE_SET_TR,
+> +				&ring->intr->enable_set);
+> +		return 0;
+> +	}
+> +
+>  	ret = ringacc->tisci_ring_ops->set_cfg(ringacc->tisci, &ring_cfg);
+>  	if (ret)
+>  		dev_err(ringacc->dev, "TISCI config ring fail (%d) ring_idx %d\n",
+> -			ret, ring->ring_id);
+> -
+> +				ret, ring->ring_id);
 
-...i.e. always instantiate and asssign a scope-based cleanup variable in
-one statement.
+suprious change? The alignment was correct.
 
-	cxlrd __free(put_cxl_root_decoder) = cxl_find_root_decoder(cxled);
+>  	return ret;
+>  }
+>  
+> @@ -1480,9 +1587,12 @@ struct k3_ringacc *k3_ringacc_dmarings_init(struct platform_device *pdev,
+>  
+>  	mutex_init(&ringacc->req_lock);
+>  
+> -	base_rt = devm_platform_ioremap_resource_byname(pdev, "ringrt");
+> -	if (IS_ERR(base_rt))
+> -		return ERR_CAST(base_rt);
+> +	base_rt = data->base_rt;
+> +	if (!base_rt) {
+> +		base_rt = devm_platform_ioremap_resource_byname(pdev, "ringrt");
+> +		if (IS_ERR(base_rt))
+> +			return ERR_CAST(base_rt);
+> +	}
+>  
+>  	ringacc->rings = devm_kzalloc(dev,
+>  				      sizeof(*ringacc->rings) *
+> @@ -1498,6 +1608,10 @@ struct k3_ringacc *k3_ringacc_dmarings_init(struct platform_device *pdev,
+>  		struct k3_ring *ring = &ringacc->rings[i];
+>  
+>  		ring->rt = base_rt + K3_DMARING_RT_REGS_STEP * i;
+> +		ring->cfg = base_rt + K3_RINGACC_RT_CFG_REGS_OFS +
+> +			    K3_DMARING_RT_REGS_STEP * i;
+> +		ring->intr = base_rt + K3_RINGACC_RT_INT_REGS_OFS +
+> +			     K3_DMARING_RT_REGS_STEP * i;
+>  		ring->parent = ringacc;
+>  		ring->ring_id = i;
+>  		ring->proxy_id = K3_RINGACC_PROXY_NOT_USED;
+> diff --git a/include/linux/soc/ti/k3-ringacc.h b/include/linux/soc/ti/k3-ringacc.h
+> index 39b022b925986..fcf6fbd4a8594 100644
+> --- a/include/linux/soc/ti/k3-ringacc.h
+> +++ b/include/linux/soc/ti/k3-ringacc.h
+> @@ -158,6 +158,9 @@ u32 k3_ringacc_get_ring_id(struct k3_ring *ring);
+>   */
+>  int k3_ringacc_get_ring_irq_num(struct k3_ring *ring);
+>  
+> +u32 k3_ringacc_ring_get_irq_status(struct k3_ring *ring);
+> +void k3_ringacc_ring_clear_irq(struct k3_ring *ring);
+> +
+>  /**
+>   * k3_ringacc_ring_cfg - ring configure
+>   * @ring: pointer on ring
+> @@ -262,6 +265,7 @@ struct k3_ringacc_init_data {
+>  	const struct ti_sci_handle *tisci;
+>  	u32 tisci_dev_id;
+>  	u32 num_rings;
+> +	void __iomem *base_rt;
+>  };
+>  
+>  struct k3_ringacc *k3_ringacc_dmarings_init(struct platform_device *pdev,
 
-Otherwise, this looks good.
+-- 
+Péter
+
