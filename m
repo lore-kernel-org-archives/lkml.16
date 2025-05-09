@@ -1,49 +1,81 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2166C22FF55;
-	Fri,  9 May 2025 18:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3DC23A994;
+	Fri,  9 May 2025 18:03:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746813799; cv=none; b=HYwIT/okTjMpBfAF6p/HVlimONXIaNgcrnZJH5Jle4O9yrAzUlnJqHoTq8i9WvhlyS1XZgsCsNDMbR2iUA69djoiLWiLAWcsZyNmsKur40oNWBO9Y45Jo/ABgvjq2lOsEX9mWmBNkTU7ALdBT7ALGnaP3U30PKvMBXTGg53fifk=
+	t=1746813831; cv=none; b=HThs9BeVNRxafeAUXomGCTFU4CD7XROVXp+6nUaKsunApBpT0h22hJN1zxsv8/+il+7CAFVD/lULRsjx4ij+IKp2rNjda+QIUWju4s28EPy7lL6v0JMKs+iZ9U0LFGJ1S2T9PJeX57m0hWap0Pkn9g7WgMXBK3DhSnUIVw2CWkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746813799; c=relaxed/simple;
-	bh=agWPrgdVFVFCV3wS8fucRGbSHpoVcf4Zz1I8aPAowlc=;
+	s=arc-20240116; t=1746813831; c=relaxed/simple;
+	bh=TMIiQS5YfSgbaasKX3QzBCK1/RYA4e4rftcFiPeXxS8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FDPff7Eo7BbxGYbnpAFUrYPrrE2US3AckgbNE+sDLo9XRWQtK1Rza7ufBGVmn3a6cq+Fay/j5mmzpQ1Mshs36J4BJMDkF4C94dxS20wmveNTzT4/6wlWyxRs481H7EHNgQW3EmiRB+knQlyid0t4SgapDkmWVDbBe0zcADH3Rl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UCNJU1BO; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ffT8uoRMZgUaG4W0KB43saNiVnIaydhysrH5EWbBrb9XIQhj5bj53iyXaVcf6RbDPvyqPx+i1synpd2Uksnxs/g08Cu4MRChvlFiuw/8kx/4Gk8f9DR4WxkTrtG/7SOqPTtbKMWLo3lQeaNOk3NkkzQhaRt206KNypKmMyVXdyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CRwRilSD; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UCNJU1BO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7NNy3XcZQY5E+n5cILbOTq7vvjJkGbBTsW0q+cK8Ogs=; b=UCNJU1BOKJB13Fi0tE0jzjpSka
-	aZIYeLpJIJ3h42m3B3UvKQ4beuFhCvtnarF2RNBXSvJQ1KoWTogRcWndg28AhC31xByvn+pcaTj3z
-	QPieR6sDAzsIytDTu0bKLVoWJ/di8fjSB+7D8OWm1zCzHkxbXx6PB0LHarqEO98MUHF7jtfSqyeGt
-	8QifsGMjJ9EcopYMJnQxLxCzDF6zacb93ZhFkuONoyOtBIx5Me7zSjO0Cvw3+d9AASfd8GEFX0ow9
-	cN5ob6R/K7uzPxb3AuBLfJ1OmFhQLpt+SjlBUwMAGp+ZUnbqmqh1A/vKh0k4t8zYDDm7TD2JmvtUT
-	u/19oCQg==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uDS3L-0000000DXhJ-02YZ;
-	Fri, 09 May 2025 18:02:31 +0000
-Date: Fri, 9 May 2025 19:02:30 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Byungchul Park <byungchul@sk.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org,
-	almasrymina@google.com, ilias.apalodimas@linaro.org,
-	harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
-	ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
-	edumazet@google.com, pabeni@redhat.com, vishal.moola@gmail.com
-Subject: Re: [RFC 19/19] mm, netmem: remove the page pool members in struct
- page
-Message-ID: <aB5DNqwP_LFV_ULL@casper.infradead.org>
-References: <20250509115126.63190-1-byungchul@sk.com>
- <20250509115126.63190-20-byungchul@sk.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CRwRilSD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746813830; x=1778349830;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TMIiQS5YfSgbaasKX3QzBCK1/RYA4e4rftcFiPeXxS8=;
+  b=CRwRilSDwM6EvLv3d66YeXGcQaJbsuD4dGaLDYwkPDIKE22pPqA+SVGF
+   mIdhEMc6DINlZABECe4tD8jamLlc8S2RfdOJ4YRioduIXqW918LSCbUZX
+   /wchVlxjKNA/yOdxWN3ooSV6tOpSmHdOlWDQXXPuRYaQG3NVyseKuA9NC
+   dFx6wEi0PKqcz16t5nULoMSYF7FVNNaAkIkCnkKdfRiO71EaHvFsaGOUq
+   sRCGEnaxTX5LIJzgFK8B7r7RecVkVS9ZHrLQLsFmRyGbusQ3XTOx9MIo3
+   IHLNGGZRCHKvtU0L5TOoIXmp7DwkKxBvwz1Jlhyr1NpReSlTVxze0n9cS
+   g==;
+X-CSE-ConnectionGUID: uieYRu5RTXS8vnXEqeTe/Q==
+X-CSE-MsgGUID: Qwn9x3ZXRp+LXtjjSuSGpw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48349969"
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="48349969"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 11:03:49 -0700
+X-CSE-ConnectionGUID: Wdk17spXQvK54qmPmDD3Cw==
+X-CSE-MsgGUID: 97+KdvmWSkqS2ddY1D4QhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="141802458"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 09 May 2025 11:03:40 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uDS4Q-000CL5-0U;
+	Fri, 09 May 2025 18:03:38 +0000
+Date: Sat, 10 May 2025 02:03:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+	Dragos Bogdan <dragos.bogdan@analog.com>,
+	Antoniu Miclaus <antoniu.miclaus@analog.com>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Tobias Sperling <tobias.sperling@softing.com>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>,
+	Alisa-Dariana Roman <alisadariana@gmail.com>,
+	Ramona Alexandra Nechita <ramona.nechita@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v2 1/4] iio: backend: update
+ iio_backend_oversampling_ratio_set
+Message-ID: <202505100131.FZe7C8ot-lkp@intel.com>
+References: <20250508123107.3797042-2-pop.ioan-daniel@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,102 +84,124 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250509115126.63190-20-byungchul@sk.com>
+In-Reply-To: <20250508123107.3797042-2-pop.ioan-daniel@analog.com>
 
-On Fri, May 09, 2025 at 08:51:26PM +0900, Byungchul Park wrote:
-> +++ b/include/linux/mm_types.h
-> @@ -20,6 +20,7 @@
->  #include <linux/seqlock.h>
->  #include <linux/percpu_counter.h>
->  #include <linux/types.h>
-> +#include <net/netmem_type.h> /* for page pool */
->  
->  #include <asm/mmu.h>
->  
-> @@ -118,17 +119,7 @@ struct page {
->  			 */
->  			unsigned long private;
->  		};
-> -		struct {	/* page_pool used by netstack */
-> -			/**
-> -			 * @pp_magic: magic value to avoid recycling non
-> -			 * page_pool allocated pages.
-> -			 */
-> -			unsigned long pp_magic;
-> -			struct page_pool *pp;
-> -			unsigned long _pp_mapping_pad;
-> -			unsigned long dma_addr;
-> -			atomic_long_t pp_ref_count;
-> -		};
-> +		struct __netmem_desc place_holder_1; /* for page pool */
->  		struct {	/* Tail pages of compound page */
->  			unsigned long compound_head;	/* Bit zero is set */
->  		};
+Hi Pop,
 
-The include and the place holder aren't needed.
+kernel test robot noticed the following build warnings:
 
-> diff --git a/include/net/netmem.h b/include/net/netmem.h
-> index 00064e766b889..c414de6c6ab0d 100644
-> --- a/include/net/netmem.h
-> +++ b/include/net/netmem.h
-> @@ -10,6 +10,7 @@
->  
->  #include <linux/mm.h>
->  #include <net/net_debug.h>
-> +#include <net/netmem_type.h>
+[auto build test WARNING on jic23-iio/togreg]
+[also build test WARNING on linus/master v6.15-rc5 next-20250509]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-... which I think means you don't need the separate header file.
+url:    https://github.com/intel-lab-lkp/linux/commits/Pop-Ioan-Daniel/iio-backend-update-iio_backend_oversampling_ratio_set/20250508-203339
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+patch link:    https://lore.kernel.org/r/20250508123107.3797042-2-pop.ioan-daniel%40analog.com
+patch subject: [PATCH v2 1/4] iio: backend: update iio_backend_oversampling_ratio_set
+config: i386-randconfig-061-20250509 (https://download.01.org/0day-ci/archive/20250510/202505100131.FZe7C8ot-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250510/202505100131.FZe7C8ot-lkp@intel.com/reproduce)
 
->  /* net_iov */
->  
-> @@ -20,15 +21,6 @@ DECLARE_STATIC_KEY_FALSE(page_pool_mem_providers);
->   */
->  #define NET_IOV 0x01UL
->  
-> -struct netmem_desc {
-> -	unsigned long __unused_padding;
-> -	unsigned long pp_magic;
-> -	struct page_pool *pp;
-> -	struct net_iov_area *owner;
-> -	unsigned long dma_addr;
-> -	atomic_long_t pp_ref_count;
-> -};
-> -
->  struct net_iov_area {
->  	/* Array of net_iovs for this area. */
->  	struct netmem_desc *niovs;
-> @@ -38,31 +30,6 @@ struct net_iov_area {
->  	unsigned long base_virtual;
->  };
->  
-> -/* These fields in struct page are used by the page_pool and net stack:
-> - *
-> - *        struct {
-> - *                unsigned long pp_magic;
-> - *                struct page_pool *pp;
-> - *                unsigned long _pp_mapping_pad;
-> - *                unsigned long dma_addr;
-> - *                atomic_long_t pp_ref_count;
-> - *        };
-> - *
-> - * We mirror the page_pool fields here so the page_pool can access these fields
-> - * without worrying whether the underlying fields belong to a page or net_iov.
-> - *
-> - * The non-net stack fields of struct page are private to the mm stack and must
-> - * never be mirrored to net_iov.
-> - */
-> -#define NET_IOV_ASSERT_OFFSET(pg, iov)             \
-> -	static_assert(offsetof(struct page, pg) == \
-> -		      offsetof(struct netmem_desc, iov))
-> -NET_IOV_ASSERT_OFFSET(pp_magic, pp_magic);
-> -NET_IOV_ASSERT_OFFSET(pp, pp);
-> -NET_IOV_ASSERT_OFFSET(dma_addr, dma_addr);
-> -NET_IOV_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
-> -#undef NET_IOV_ASSERT_OFFSET
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505100131.FZe7C8ot-lkp@intel.com/
 
-... but you do want to keep asserting that netmem_desc and
-net_iov have the same offsets.  And you want to assert that struct page
-is big enough to hold everything in netmem_desc, like we do for slab:
+sparse warnings: (new ones prefixed by >>)
+>> drivers/iio/adc/ad4851.c:324:60: sparse: sparse: incorrect type in argument 2 (different base types) @@     expected unsigned int chan @@     got struct iio_chan_spec const *chan @@
+   drivers/iio/adc/ad4851.c:324:60: sparse:     expected unsigned int chan
+   drivers/iio/adc/ad4851.c:324:60: sparse:     got struct iio_chan_spec const *chan
 
-static_assert(sizeof(struct slab) <= sizeof(struct page));
+vim +324 drivers/iio/adc/ad4851.c
 
+   295	
+   296	static int ad4851_set_oversampling_ratio(struct iio_dev *indio_dev,
+   297						 const struct iio_chan_spec *chan,
+   298						 unsigned int osr)
+   299	{
+   300		struct ad4851_state *st = iio_priv(indio_dev);
+   301		int val, ret;
+   302	
+   303		guard(mutex)(&st->lock);
+   304	
+   305		if (osr == 1) {
+   306			ret = regmap_clear_bits(st->regmap, AD4851_REG_OVERSAMPLE,
+   307						AD4851_OS_EN_MSK);
+   308			if (ret)
+   309				return ret;
+   310		} else {
+   311			val = ad4851_osr_to_regval(osr);
+   312			if (val < 0)
+   313				return -EINVAL;
+   314	
+   315			ret = regmap_update_bits(st->regmap, AD4851_REG_OVERSAMPLE,
+   316						 AD4851_OS_EN_MSK |
+   317						 AD4851_OS_RATIO_MSK,
+   318						 FIELD_PREP(AD4851_OS_EN_MSK, 1) |
+   319						 FIELD_PREP(AD4851_OS_RATIO_MSK, val));
+   320			if (ret)
+   321				return ret;
+   322		}
+   323	
+ > 324		ret = iio_backend_oversampling_ratio_set(st->back, chan, osr);
+   325		if (ret)
+   326			return ret;
+   327	
+   328		switch (st->info->resolution) {
+   329		case 20:
+   330			switch (osr) {
+   331			case 0:
+   332				return -EINVAL;
+   333			case 1:
+   334				val = 20;
+   335				break;
+   336			default:
+   337				val = 24;
+   338				break;
+   339			}
+   340			break;
+   341		case 16:
+   342			val = 16;
+   343			break;
+   344		default:
+   345			return -EINVAL;
+   346		}
+   347	
+   348		ret = iio_backend_data_size_set(st->back, val);
+   349		if (ret)
+   350			return ret;
+   351	
+   352		if (osr == 1 || st->info->resolution == 16) {
+   353			ret = regmap_clear_bits(st->regmap, AD4851_REG_PACKET,
+   354						AD4851_PACKET_FORMAT_MASK);
+   355			if (ret)
+   356				return ret;
+   357	
+   358			st->resolution_boost_enabled = false;
+   359		} else {
+   360			ret = regmap_update_bits(st->regmap, AD4851_REG_PACKET,
+   361						 AD4851_PACKET_FORMAT_MASK,
+   362						 FIELD_PREP(AD4851_PACKET_FORMAT_MASK, 1));
+   363			if (ret)
+   364				return ret;
+   365	
+   366			st->resolution_boost_enabled = true;
+   367		}
+   368	
+   369		if (st->osr != osr) {
+   370			ret = ad4851_scale_fill(indio_dev);
+   371			if (ret)
+   372				return ret;
+   373	
+   374			st->osr = osr;
+   375		}
+   376	
+   377		return 0;
+   378	}
+   379	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
