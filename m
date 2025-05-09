@@ -1,171 +1,367 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C100270579;
-	Fri,  9 May 2025 08:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434CB22D9EF
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 08:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746779518; cv=none; b=FcYJRol4Ml/CPvqKguKaTEUYjfmSl//RaiifXr0McthAC0Tg0YhfZLQ2Ov0h9vXY0R5IKzrhqCBpC8POsJyDQcE2h3KLC4GM0gQQBoFjQL6eSQnntaXOAFiHGBJ0/90t/wnLPgM1XOaxkNWW2Zr6j46TiNirjgeXYiVqU8VFdhU=
+	t=1746779517; cv=none; b=aVvI2HBNyXnl1pDlm7579S3UwC26wzafAqPNm7D2oqeuQHEODLq8Zfbc1CnUpeJVoxYwftV0kQgtH+pqMkc1smz2+waXvUm+qZ6o9dAYDZ//3GqUVWuXx3kIdRClthuHHMbeObqDFn41kVPIFdn3OOSI7Jy4bdcCW6bS8zDqfa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746779518; c=relaxed/simple;
-	bh=gsoVVqQmM9OvLNkpR6lzFSQD4KysSKLNzbTXMNg3T5M=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jZWQJ/NKzVkDNwO5vyFyeIp8fNr8AeUhaEHogx3+RI8ZP3Spn8vGBjKUCvVL2YpzeJ46rLvTdyFIgzaCqfMuMCu/3CC+NjJdHoDBo0jCgUbzPTE1JupHnRHEfFR63T9NBGoAr90x/NJSGVl8Uf17e5YbCjqDjGw4+15X9dSvVSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Zv2F56sdPzQkPv;
-	Fri,  9 May 2025 16:27:53 +0800 (CST)
-Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 65C861402CF;
-	Fri,  9 May 2025 16:31:52 +0800 (CST)
-Received: from huawei.com (10.67.174.76) by kwepemg500010.china.huawei.com
- (7.202.181.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 9 May
- 2025 16:31:51 +0800
-From: Yuntao Liu <liuyuntao12@huawei.com>
-To: <x86@kernel.org>, <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>
-CC: <seanjc@google.com>, <pbonzini@redhat.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <liuyuntao12@huawei.com>
-Subject: [PATCH -next] kvm: x86: fix infinite loop in kvm_guest_time_update when tsc is 0
-Date: Fri, 9 May 2025 08:19:34 +0000
-Message-ID: <20250509081934.33874-1-liuyuntao12@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1746779517; c=relaxed/simple;
+	bh=9lQZozOT//ZQ/czf66UkcCEnEqMNT17DHsbR/6BKiCc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=STxgcxW0HRSU9/6Ssj0H1MwmXrcdIUZ54BsjoD/13PISv3KR7gjxLSbTydDuc4JYzhifpcqtzG6FMJXrEvwJNTFj9WC/77XN+kWqIeczS4gMKhQ8/zCBCAKmTPnlh83LdNcajQH5Vms8d4iFkcbZ6+W3fmyXhioiH/z6WBqq8Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y54H9TvO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y54H9TvO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746779513;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mxQK0cexvFnlqB7R/upvH/pd3k+8Oz9YpLbSOHmnD6g=;
+	b=Y54H9TvOmadXmvOTg+dYHe91+ozZUfAvwUsPsy4yduglyeQShZu7WcACZP27VTwbdBF0p6
+	IYsTVarjjvVDoKOEDtxIx6xBR+CKkRP6pxKvcc0XemgdDGfnQ4qNvijLSw1ilm4dLjHj5N
+	aqo+/kn9KiPl2cocH/xhZFV2SEZO3z8=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-302-OxVlxgQBMmyiGSCjS0-IVw-1; Fri,
+ 09 May 2025 04:31:49 -0400
+X-MC-Unique: OxVlxgQBMmyiGSCjS0-IVw-1
+X-Mimecast-MFC-AGG-ID: OxVlxgQBMmyiGSCjS0-IVw_1746779508
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D115C1800446;
+	Fri,  9 May 2025 08:31:47 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.140])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B33EC1953B85;
+	Fri,  9 May 2025 08:31:41 +0000 (UTC)
+Date: Fri, 9 May 2025 16:31:31 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>,
+	Caleb Sander Mateos <csander@purestorage.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v6 7/8] selftests: ublk: kublk: decouple ublk_queues from
+ ublk server threads
+Message-ID: <aB29Y6OTjESOPVlc@fedora>
+References: <20250507-ublk_task_per_io-v6-0-a2a298783c01@purestorage.com>
+ <20250507-ublk_task_per_io-v6-7-a2a298783c01@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemg500010.china.huawei.com (7.202.181.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507-ublk_task_per_io-v6-7-a2a298783c01@purestorage.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Syzkaller testing detected a soft lockup.
+On Wed, May 07, 2025 at 03:49:41PM -0600, Uday Shankar wrote:
+> Add support in kublk for decoupled ublk_queues and ublk server threads.
+> kublk now has two modes of operation:
+> 
+> - (preexisting mode) threads and queues are paired 1:1, and each thread
+>   services all the I/Os of one queue
+> - (new mode) thread and queue counts are independently configurable.
+>   threads service I/Os in a way that balances load across threads even
+>   if load is not balanced over queues. requires passing --round_robin
+> 
+> The new mode of operation is exercised by the new test_generic_08, which
+> issues I/O against a single queue and verifies that each of the 8 ublk
+> server threads handles exactly 1/8 of the total I/O count. Under the old
+> mode of operation (i.e. without --round_robin), all I/O goes to one ublk
+> server thread, and the test fails.
+> 
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> ---
+>  tools/testing/selftests/ublk/Makefile              |  1 +
+>  tools/testing/selftests/ublk/file_backed.c         |  4 +-
+>  tools/testing/selftests/ublk/kublk.c               | 96 ++++++++++++++++++----
+>  tools/testing/selftests/ublk/kublk.h               |  3 +
+>  tools/testing/selftests/ublk/null.c                |  4 +-
+>  tools/testing/selftests/ublk/stripe.c              |  4 +-
+>  tools/testing/selftests/ublk/test_generic_08.sh    | 61 ++++++++++++++
+>  .../selftests/ublk/trace/count_ios_per_tid.bt      |  9 ++
+>  8 files changed, 160 insertions(+), 22 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/ublk/Makefile b/tools/testing/selftests/ublk/Makefile
+> index e2e7b1e52a06252f626df5606221d17e3106d0d3..f8579019f0d1f9185df098440611c3b75087073b 100644
+> --- a/tools/testing/selftests/ublk/Makefile
+> +++ b/tools/testing/selftests/ublk/Makefile
+> @@ -14,6 +14,7 @@ TEST_PROGS += test_generic_04.sh
+>  TEST_PROGS += test_generic_05.sh
+>  TEST_PROGS += test_generic_06.sh
+>  TEST_PROGS += test_generic_07.sh
+> +TEST_PROGS += test_generic_08.sh
+>  
+>  TEST_PROGS += test_null_01.sh
+>  TEST_PROGS += test_null_02.sh
+> diff --git a/tools/testing/selftests/ublk/file_backed.c b/tools/testing/selftests/ublk/file_backed.c
+> index 563f11a21604bbf5b9531f69f806d09cdd785960..72e22f54f7fe60d26096ace4eb4001987fbe7b15 100644
+> --- a/tools/testing/selftests/ublk/file_backed.c
+> +++ b/tools/testing/selftests/ublk/file_backed.c
+> @@ -50,7 +50,7 @@ static int loop_queue_tgt_rw_io(struct ublk_queue *q, const struct ublksrv_io_de
+>  
+>  	ublk_io_alloc_sqes(ublk_get_io(q, tag), sqe, 3);
+>  
+> -	io_uring_prep_buf_register(sqe[0], 0, tag, q->q_id, tag);
+> +	io_uring_prep_buf_register(sqe[0], 0, tag, q->q_id, ublk_get_io(q, tag)->buf_index);
 
-watchdog: BUG: soft lockup - CPU#3 stuck for 127s! [syz.1.2088:9817]
-Modules linked in:
-CPU: 3 PID: 9817 Comm: syz.1.2088 Tainted: G S                 6.6.0+
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
-RIP: 0010:__sanitizer_cov_trace_const_cmp4+0x8/0x20 kernel/kcov.c:313
-Code: bf 03 00 00 00 e9 48 fe ff ff 0f 1f 84 00 00 00 00 00 90 90 90 90
-90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 48 8b 0c 24 <89> f2 89
-   fe bf 05 00 00 00 e9 1a fe ff ff 66 2e 0f 1f 84 00 00 00
-RSP: 0018:ffff888016d8fad8 EFLAGS: 00000206
-RAX: 0000000000080000 RBX: ffff88810e242540 RCX: ffffffff901150d6
-RDX: 0000000000080000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffff888016d8fb50 R08: 0000000000000001 R09: ffffed1021c484af
-R10: 0000000000000000 R11: 0000000000000277 R12: 0000000000000000
-R13: fffffed357281918 R14: 0000000000000000 R15: 0000000000000001
-FS:  00007f2a8f6ea6c0(0000) GS:ffff888119780000(0000)
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000012c56c0 CR3: 000000000dce8001 CR4: 0000000000772ee0
-DR0: 0000000000000000 DR1: 0000000000d3eb1c DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
-PKRU: 80000000
-Call Trace:
- <TASK>
- kvm_get_time_scale arch/x86/kvm/x86.c:2458 [inline]
- kvm_guest_time_update+0x926/0xb00 arch/x86/kvm/x86.c:3268
- vcpu_enter_guest.constprop.0+0x1e70/0x3cf0 arch/x86/kvm/x86.c:10678
- vcpu_run+0x129/0x8d0 arch/x86/kvm/x86.c:11126
- kvm_arch_vcpu_ioctl_run+0x37a/0x13d0 arch/x86/kvm/x86.c:11352
- kvm_vcpu_ioctl+0x56b/0xe60 virt/kvm/kvm_main.c:4188
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:871 [inline]
- __se_sys_ioctl+0x12d/0x190 fs/ioctl.c:857
- do_syscall_x64 arch/x86/entry/common.c:51 [inline]
- do_syscall_64+0x59/0x110 arch/x86/entry/common.c:81
- entry_SYSCALL_64_after_hwframe+0x78/0xe2
+->buf_index can be calculated runtime by adding helper of ublk_io_buf_idx(io), so
+the extra field can be avoided, CPU is fast than memory.
 
-test case:
-18.689865147s ago: executing program 1 (id=2088):
-r0 = openat$kvm(0xffffffffffffff9c, &(0x7f0000002080), 0x0, 0x0)
-r1 = ioctl$KVM_CREATE_VM(r0, 0xae01, 0x0)
-r2 = ioctl$KVM_CREATE_VCPU(r1, 0xae41, 0x0)
-ioctl$KVM_RUN(r2, 0xae80, 0x0)
-ioctl$KVM_SET_TSC_KHZ(r2, 0xaea2, 0x1)
-socket$nl_route(0x10, 0x3, 0x0)
-r3 = socket$igmp(0x2, 0x3, 0x2)
-ioctl$sock_SIOCGIFINDEX(r3, 0x8933, &(0x7f00000001c0)={'netdevsim0\x00',
-<r4=>0x0})
-r5 = bpf$MAP_CREATE(0x0, &(0x7f0000000140)=@base={0x1, 0x4, 0x8000, 0x2,
-0x0, 0xffffffffffffffff, 0x0, '\x00', r4, 0xffffffffffffffff, 0x0, 0x0,
-0x0, 0x0, @void, @value, @void, @value}, 0x50)
-bpf$MAP_UPDATE_CONST_STR(0x2, &(0x7f0000000100)={{r5},
-&(0x7f0000000000), &(0x7f0000000040)='%ps    \x00'}, 0x20)
-bpf$MAP_DELETE_ELEM(0x3, &(0x7f00000000c0)={r5, &(0x7f0000001480)},
-0x20)
-ioctl$KVM_SET_USER_MEMORY_REGION(r1, 0x4020ae46,
-&(0x7f0000000000)={0x1ff, 0x3, 0x3000, 0x1000,
-&(0x7f0000fec000/0x1000)=nil})
-syz_kvm_setup_cpu$x86(r1, 0xffffffffffffffff,
-&(0x7f0000fe8000/0x18000)=nil, &(0x7f0000000100)=[@textreal={0x8, 0x0}],
-0x1, 0x0, 0x0, 0x0)
-ioctl$KVM_SET_USER_MEMORY_REGION(0xffffffffffffffff, 0x4020ae46, 0x0)
-openat$ipvs(0xffffffffffffff9c, 0x0, 0x2, 0x0)
-syz_kvm_setup_cpu$x86(0xffffffffffffffff, r2,
-&(0x7f0000fe8000/0x18000)=nil, &(0x7f00000000c0)=[@text64={0x40,
-&(0x7f0000000040)="26f2a70f3548b807000000000000000f23c00f21f835020008000f23f80fc73eb9330800000f326666470f3880be6cc468550f01cf360f01f80f30450f01c9",
-0x3f}], 0x1, 0x0, 0x0, 0x0)
-ioctl$KVM_RUN(r2, 0xae80, 0x0)
+>  	sqe[0]->flags |= IOSQE_CQE_SKIP_SUCCESS | IOSQE_IO_HARDLINK;
+>  	sqe[0]->user_data = build_user_data(tag,
+>  			ublk_cmd_op_nr(sqe[0]->cmd_op), 0, q->q_id, 1);
+> @@ -62,7 +62,7 @@ static int loop_queue_tgt_rw_io(struct ublk_queue *q, const struct ublksrv_io_de
+>  	sqe[1]->flags |= IOSQE_FIXED_FILE | IOSQE_IO_HARDLINK;
+>  	sqe[1]->user_data = build_user_data(tag, ublk_op, 0, q->q_id, 1);
+>  
+> -	io_uring_prep_buf_unregister(sqe[2], 0, tag, q->q_id, tag);
+> +	io_uring_prep_buf_unregister(sqe[2], 0, tag, q->q_id, ublk_get_io(q, tag)->buf_index);
+>  	sqe[2]->user_data = build_user_data(tag, ublk_cmd_op_nr(sqe[2]->cmd_op), 0, q->q_id, 1);
+>  
+>  	return 2;
+> diff --git a/tools/testing/selftests/ublk/kublk.c b/tools/testing/selftests/ublk/kublk.c
+> index 313689f94cd6361a9a0f4b9257085b2a62bc8b8c..27046bb6a13b99879ad164ff8eaabeba57e17387 100644
+> --- a/tools/testing/selftests/ublk/kublk.c
+> +++ b/tools/testing/selftests/ublk/kublk.c
+> @@ -478,8 +478,11 @@ static int ublk_thread_init(struct ublk_thread *t)
+>  	}
+>  
+>  	if (dev->dev_info.flags & UBLK_F_SUPPORT_ZERO_COPY) {
+> +		unsigned nr_ios = dev->dev_info.queue_depth * dev->dev_info.nr_hw_queues;
+> +		unsigned max_nr_ios_per_thread = nr_ios / dev->nthreads;
+> +		max_nr_ios_per_thread += !!(nr_ios % dev->nthreads);
+>  		ret = io_uring_register_buffers_sparse(
+> -			&t->ring, dev->dev_info.queue_depth);
+> +			&t->ring, max_nr_ios_per_thread);
+>  		if (ret) {
+>  			ublk_err("ublk dev %d thread %d register spare buffers failed %d",
+>  					dev->dev_info.dev_id, t->idx, ret);
+> @@ -612,18 +615,42 @@ int ublk_queue_io_cmd(struct ublk_io *io)
+>  
+>  static void ublk_submit_fetch_commands(struct ublk_thread *t)
+>  {
+> -	/*
+> -	 * Service exclusively the queue whose q_id matches our thread
+> -	 * index. This may change in the future.
+> -	 */
+> -	struct ublk_queue *q = &t->dev->q[t->idx];
+> +	struct ublk_queue *q;
+>  	struct ublk_io *io;
+> -	int i = 0;
+> +	int i = 0, j = 0;
+>  
+> -	for (i = 0; i < q->q_depth; i++) {
+> -		io = &q->ios[i];
+> -		io->t = t;
+> -		ublk_queue_io_cmd(io);
+> +	if (t->dev->dev_info.flags & UBLK_F_RR_TAGS) {
 
-ioctl$KVM_SET_TSC_KHZ(r2, 0xaea2, 0x1)
-user_tsc_khz = 0x1
-	|
-kvm_set_tsc_khz(struct kvm_vcpu *vcpu, u32 user_tsc_khz)
-	|
-	ioctl$KVM_RUN(r2, 0xae80, 0x0)
-		|
-		...
-	kvm_guest_time_update(struct kvm_vcpu *v)
-		|
-		if (kvm_caps.has_tsc_control)
-			tgt_tsc_khz = kvm_scale_tsc(tgt_tsc_khz,
-					    v->arch.l1_tsc_scaling_ratio);
-			|
-			kvm_scale_tsc(u64 tsc, u64 ratio)
-			|
-			__scale_tsc(u64 ratio, u64 tsc)
-			ratio=122380531, tsc=2299998, N=48
-			ratio*tsc >> N = 0.999... -> 0
-			|
-		kvm_get_time_scale
+You shouldn't depend on the generic feature of UBLK_F_RR_TAGS, which can be
+used for non-io-task too.
 
-In function __scale_tsc, it uses fixed point number to calculate
-tsc, therefore, a certain degree of precision is lost, the actual tsc
-value of 0.999... would be 0. In function kvm_get_time_scale
-tps32=tps64=base_hz=0, would lead second while_loop infinite. when
-CONFIG_PREEMPT is n, it causes a soft lockup issue.
+Here you need one helper of ublk_use_io_task(), or sort of flags.
 
-Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
----
- arch/x86/kvm/x86.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> +		/*
+> +		 * Lexicographically order all the (qid,tag) pairs, with
+> +		 * qid taking priority, and give this thread every Nth
+> +		 * entry, where N is the total number of threads. The
+> +		 * offset is controlled by the thread index. This takes
+> +		 * load which may be imbalanced across the queues and
+> +		 * balances it across the threads.
+> +		 */
+> +		const struct ublksrv_ctrl_dev_info *dinfo = &t->dev->dev_info;
+> +		int nr_ios = dinfo->nr_hw_queues * dinfo->queue_depth;
+> +		for (i = t->idx; i < nr_ios; i += t->dev->nthreads, j++) {
+> +			int q_id = i / dinfo->queue_depth;
+> +			int tag = i % dinfo->queue_depth;
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b011a9d0c82d..7a3633c069f0 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2531,10 +2531,12 @@ static void kvm_track_tsc_matching(struct kvm_vcpu *vcpu, bool new_generation)
-  * point number (mult + frac * 2^(-N)).
-  *
-  * N equals to kvm_caps.tsc_scaling_ratio_frac_bits.
-+ *
-+ * add 1 to compensate for precision loss.
-  */
- static inline u64 __scale_tsc(u64 ratio, u64 tsc)
- {
--	return mul_u64_u64_shr(tsc, ratio, kvm_caps.tsc_scaling_ratio_frac_bits);
-+	return mul_u64_u64_shr(tsc, ratio, kvm_caps.tsc_scaling_ratio_frac_bits) + 1;
- }
- 
- u64 kvm_scale_tsc(u64 tsc, u64 ratio)
--- 
-2.34.1
+I understand UBLK_F_RR_TAGS means that IO with adjacent tag should be
+handled locally, but the above actually does the opposite, only IOs with
+non-adjacent tags are handled in same pthread, can you explain a bit
+why UBLK_F_RR_TAGS helps for this way?
+
+> +			q = &t->dev->q[q_id];
+> +			io = &q->ios[tag];
+> +			io->t = t;
+> +			io->buf_index = j;
+> +			ublk_queue_io_cmd(io);
+> +		}
+> +	} else {
+> +		/*
+> +		 * Service exclusively the queue whose q_id matches our
+> +		 * thread index.
+> +		 */
+> +		struct ublk_queue *q = &t->dev->q[t->idx];
+> +		for (i = 0; i < q->q_depth; i++) {
+> +			io = &q->ios[i];
+> +			io->t = t;
+> +			io->buf_index = i;
+> +			ublk_queue_io_cmd(io);
+> +		}
+>  	}
+>  }
+>  
+> @@ -778,7 +805,8 @@ static void *ublk_io_handler_fn(void *data)
+>  		return NULL;
+>  	}
+>  	/* IO perf is sensitive with queue pthread affinity on NUMA machine*/
+> -	ublk_thread_set_sched_affinity(t, info->affinity);
+> +	if (info->affinity)
+> +		ublk_thread_set_sched_affinity(t, info->affinity);
+>  	sem_post(info->ready);
+>  
+>  	ublk_dbg(UBLK_DBG_THREAD, "tid %d: ublk dev %d thread %u started\n",
+> @@ -844,7 +872,7 @@ static int ublk_start_daemon(const struct dev_ctx *ctx, struct ublk_dev *dev)
+>  
+>  	ublk_dbg(UBLK_DBG_DEV, "%s enter\n", __func__);
+>  
+> -	tinfo = calloc(sizeof(struct ublk_thread_info), dinfo->nr_hw_queues);
+> +	tinfo = calloc(sizeof(struct ublk_thread_info), dev->nthreads);
+>  	if (!tinfo)
+>  		return -ENOMEM;
+>  
+> @@ -867,17 +895,24 @@ static int ublk_start_daemon(const struct dev_ctx *ctx, struct ublk_dev *dev)
+>  				 dinfo->dev_id, i);
+>  			goto fail;
+>  		}
+> +	}
+>  
+> +	for (i = 0; i < dev->nthreads; i++) {
+>  		tinfo[i].dev = dev;
+>  		tinfo[i].idx = i;
+>  		tinfo[i].ready = &ready;
+> -		tinfo[i].affinity = &affinity_buf[i];
+> +		/*
+> +		 * If threads are not tied to queues, setting thread
+> +		 * affinity based on queue affinity makes no sense.
+> +		 */
+> +		if (!(dinfo->flags & UBLK_F_RR_TAGS))
+> +			tinfo[i].affinity = &affinity_buf[i];
+>  		pthread_create(&dev->threads[i].thread, NULL,
+>  				ublk_io_handler_fn,
+>  				&tinfo[i]);
+>  	}
+>  
+> -	for (i = 0; i < dinfo->nr_hw_queues; i++)
+> +	for (i = 0; i < dev->nthreads; i++)
+>  		sem_wait(&ready);
+>  	free(tinfo);
+>  	free(affinity_buf);
+> @@ -901,7 +936,7 @@ static int ublk_start_daemon(const struct dev_ctx *ctx, struct ublk_dev *dev)
+>  		ublk_send_dev_event(ctx, dev, dev->dev_info.dev_id);
+>  
+>  	/* wait until we are terminated */
+> -	for (i = 0; i < dinfo->nr_hw_queues; i++)
+> +	for (i = 0; i < dev->nthreads; i++)
+>  		pthread_join(dev->threads[i].thread, &thread_ret);
+>   fail:
+>  	for (i = 0; i < dinfo->nr_hw_queues; i++)
+> @@ -1011,6 +1046,7 @@ static int ublk_stop_io_daemon(const struct ublk_dev *dev)
+>  
+>  static int __cmd_dev_add(const struct dev_ctx *ctx)
+>  {
+> +	unsigned nthreads = ctx->nthreads;
+>  	unsigned nr_queues = ctx->nr_hw_queues;
+>  	const char *tgt_type = ctx->tgt_type;
+>  	unsigned depth = ctx->queue_depth;
+> @@ -1034,6 +1070,23 @@ static int __cmd_dev_add(const struct dev_ctx *ctx)
+>  		return -EINVAL;
+>  	}
+>  
+> +	/* default to 1:1 threads:queues if nthreads is unspecified */
+> +	if (nthreads == -1)
+> +		nthreads = nr_queues;
+
+Maybe we can start 1:1 for nrthreads == 0, which looks more readable,
+and you needn't to set -1 default.
+
+> +
+> +	if (nthreads > UBLK_MAX_THREADS) {
+> +		ublk_err("%s: %u is too many threads (max %u)\n",
+> +				__func__, nthreads, UBLK_MAX_THREADS);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (nthreads != nr_queues && !(ctx->flags & UBLK_F_RR_TAGS)) {
+> +		ublk_err("%s: threads %u must be same as queues %u if "
+> +			"not using round robin\n",
+> +			__func__, nthreads, nr_queues);
+> +		return -EINVAL;
+> +	}
+> +
+>  	dev = ublk_ctrl_init();
+>  	if (!dev) {
+>  		ublk_err("%s: can't alloc dev id %d, type %s\n",
+> @@ -1054,6 +1107,7 @@ static int __cmd_dev_add(const struct dev_ctx *ctx)
+>  	info->nr_hw_queues = nr_queues;
+>  	info->queue_depth = depth;
+>  	info->flags = ctx->flags;
+> +	dev->nthreads = nthreads;
+>  	dev->tgt.ops = ops;
+>  	dev->tgt.sq_depth = depth;
+>  	dev->tgt.cq_depth = depth;
+> @@ -1249,6 +1303,7 @@ static int cmd_dev_get_features(void)
+>  		[const_ilog2(UBLK_F_USER_COPY)] = "USER_COPY",
+>  		[const_ilog2(UBLK_F_ZONED)] = "ZONED",
+>  		[const_ilog2(UBLK_F_USER_RECOVERY_FAIL_IO)] = "RECOVERY_FAIL_IO",
+> +		[const_ilog2(UBLK_F_RR_TAGS)] = "RR_TAGS",
+>  	};
+>  	struct ublk_dev *dev;
+>  	__u64 features = 0;
+> @@ -1290,8 +1345,10 @@ static void __cmd_create_help(char *exe, bool recovery)
+>  			exe, recovery ? "recover" : "add");
+>  	printf("\t[--foreground] [--quiet] [-z] [--debug_mask mask] [-r 0|1 ] [-g]\n");
+>  	printf("\t[-e 0|1 ] [-i 0|1]\n");
+> +	printf("\t[--nthreads threads] [--round_robin]\n");
+>  	printf("\t[target options] [backfile1] [backfile2] ...\n");
+>  	printf("\tdefault: nr_queues=2(max 32), depth=128(max 1024), dev_id=-1(auto allocation)\n");
+> +	printf("\tdefault: nthreads=nr_queues");
+>  
+>  	for (i = 0; i < sizeof(tgt_ops_list) / sizeof(tgt_ops_list[0]); i++) {
+>  		const struct ublk_tgt_ops *ops = tgt_ops_list[i];
+> @@ -1343,6 +1400,8 @@ int main(int argc, char *argv[])
+>  		{ "recovery_fail_io",	1,	NULL, 'e'},
+>  		{ "recovery_reissue",	1,	NULL, 'i'},
+>  		{ "get_data",		1,	NULL, 'g'},
+> +		{ "nthreads",		1,	NULL,  0 },
+> +		{ "round_robin",	0,	NULL,  0 },
+>  		{ 0, 0, 0, 0 }
+>  	};
+>  	const struct ublk_tgt_ops *ops = NULL;
+> @@ -1351,6 +1410,7 @@ int main(int argc, char *argv[])
+>  	struct dev_ctx ctx = {
+>  		.queue_depth	=	128,
+>  		.nr_hw_queues	=	2,
+> +		.nthreads	=	-1,
+>  		.dev_id		=	-1,
+>  		.tgt_type	=	"unknown",
+>  	};
+> @@ -1411,6 +1471,10 @@ int main(int argc, char *argv[])
+>  				ublk_dbg_mask = 0;
+>  			if (!strcmp(longopts[option_idx].name, "foreground"))
+>  				ctx.fg = 1;
+> +			if (!strcmp(longopts[option_idx].name, "nthreads"))
+> +				ctx.nthreads = strtol(optarg, NULL, 10);
+> +			if (!strcmp(longopts[option_idx].name, "round_robin"))
+> +				ctx.flags |= UBLK_F_RR_TAGS;
+
+maybe `--io_task` is more readable, and you can always enable UBLK_F_RR_TAGS
+for this '--io_task' ublk server feature.
+
+
+Thanks, 
+Ming
 
