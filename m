@@ -1,164 +1,131 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2FD291157;
-	Fri,  9 May 2025 12:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7F1290DAD
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 12:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746794720; cv=none; b=UBsfHQGWnPd+zF7eI0Gk+MSqjHMHmYn8QtQzoAdf4a3lZyu7tR9Wv6OBGFiDT3C9RphliMVfu2nze15Mnx36BqnIcbP/NLPgKNuVDGhX4/sB+CKYpmTiVvj5WGtRAAQJ9+r7kuObaBNLbyJz9NyuybviR25AKapqbrWZE7QHuDY=
+	t=1746794727; cv=none; b=U33yO+B5VzJiWYOng+6Q9PIVTht80XrV5f4VWurxUIl+UYHsYx3G8yo0cM7L1JpUZJNw+IDYfrwlspVJZB5GEoJcfOPTtM7UPVybnqrUvkuBhntMpTneJhHqkAqc+xg6BU6c0hNCDzQg9TmgPSiQozH4Jq3iU62QPaxOpQ9FsMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746794720; c=relaxed/simple;
-	bh=BKBlIPRSeUyGxnT8243TNn9ON4PZ2d/rVn9Qpr+/YTA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oEpj6Ghbnytv0plRaoak6Dum4B0XWrNqc5ZV8u1fwYHa6gh5Xl800PbQ0lUdZ0Rujvgt78S8MXokZNFKIQjs8QJB4Vtc8pG8vvIaRZ3bHwH/4oFRAqRr7X9I4xP132RsR41cbZJd1m1FupOqVhaqgEPPHssYrbXXk4wYZH40dmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=J8q8Vb3D; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1746794727; c=relaxed/simple;
+	bh=8NSBwkR/zU9DvjRNqknsrKz0iNJhVJvXcYxWAeswOCc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FWIP6KpnLrxj23eGfcqwytSjdervVycCMSrfPdIXwvQ/w5uAOPsYm4V1x1pFWH2lFfgUbjU7O7EbcM66vY5pnvqdrwtPuyPichnRNfNgN1p7xdfLA/9lV15XI4PXvoy7uNzJcfD1NzSfXoaX5xLIlqPhfknUA1G++Ku0nG1CCxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=hsrITmlC; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="J8q8Vb3D"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5494BviB017154;
-	Fri, 9 May 2025 12:45:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=xP9Vs2
-	7fdO3qCwq3XfEIE0V2SkGM89IPn3wz9QVdXEI=; b=J8q8Vb3D5AQDZYygntj/gZ
-	FSBf1uzOTTmqRjISzQ4/+lQxpC7ecTpzwnGK22RgZR7ZVKpVPPNzpyWgf/aRX99E
-	m/YIJ5y+TY2axu0UogY38YsQZNEWcafXRMqQ66k9A1FBgEpzOqWsirRx9bjq2tGi
-	FgV8DmYB9NrYrgHioKglMqL5aIqWwjuZ+XZMB5HpVI1OZe60DXo4jpanE5douoMw
-	5U68LEcLR0S4HRKbQMxBX614I3536YQscP/CbSZjoBiFlI5kIOPzHEE2AT1nxVK+
-	b+V9FnZBBzZs+go5v8iDjBY8XNlcpCS/aoGuCVT3X7zFEXhcRbkPST75OuzNtsOw
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46h46kutq5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 12:45:18 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 549AkYOh013765;
-	Fri, 9 May 2025 12:45:17 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46e062tyxe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 12:45:17 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 549CjD1N54133126
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 9 May 2025 12:45:13 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 457112008C;
-	Fri,  9 May 2025 12:45:13 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 605472008B;
-	Fri,  9 May 2025 12:45:11 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.43.107.211])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  9 May 2025 12:45:11 +0000 (GMT)
-Date: Fri, 9 May 2025 18:15:08 +0530
-From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Cc: bpf <bpf@vger.kernel.org>, Hari Bathini <hbathini@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: [linux-next][selftests/bpf] Kernel ABI header at
- 'tools/include/uapi/linux/if_xdp.h'
-Message-ID: <aB341KkxXB+gu3IV@linux.ibm.com>
-References: <c2bc466d-dff2-4d0d-a797-9af7f676c065@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="hsrITmlC"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70a2a42eb3eso23206927b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 05:45:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1746794725; x=1747399525; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5UptzkckGGe6JRswL/8UtUucPFjfcOJ9lUow8fGoTkk=;
+        b=hsrITmlCJMITj5ZIaEQpj5r0jUDmVlA8TzFbrwYnQWgTe3obJCta8s730myIjkNMg9
+         0kBeJ3byULVQUZfaj27cgcd0A0L0PmaDUqIeBLEPNGgkTusPzHfuayrzVHYHot37n3QS
+         9akdjGEWqho7sby3hmKk3nUPRptY2TuMhPFS8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746794725; x=1747399525;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5UptzkckGGe6JRswL/8UtUucPFjfcOJ9lUow8fGoTkk=;
+        b=I+btYJVrbGsJnjrA7TYMibZn7iZKPS0GTg5y7E3GklfnC0jk0xy1uEfI/Rll1349pk
+         XgcB512y6SRp2OsDqGdq1gL0EU5HUJvNu5giGwdAtdEoMTbGYSj6M1hPhFuSZxHtwtm2
+         GqkbAiVTYxmYDnv56aAn2qJMXiURq3r7Cfnyxwj+ok6714DIDeIrCjDLeqxxj/v2PFOI
+         WMEIWdABRNGyb6ykQkOCPNQIlsszSv/CZnEE4cevWPnKW/bw0IwkrvIjaekTVhZyO9rf
+         K5oMJtETT6W+VKKTvDTI4Twvr4mzOJZXVfgAzgB+XaO2XwStIMPk3wHv1SVjRFn2zpn4
+         dSMQ==
+X-Gm-Message-State: AOJu0YyZCbmQE/m3CVSa9uTMzgbX6pbLqMZVGBSVj7ketLyQ1AbPMLen
+	XdDFMO9NCP2gsh8aSlDCIu5v7M0V8BbhS2r7k6sHrvlceP/y7BtQmQL7W+Ca6FAZsdSeuXXoLKy
+	mLxu2RtHj2xELfLP8GSU4M6zbG3CyfXSRUXOp/g==
+X-Gm-Gg: ASbGnctWop02dXkJUZIejTBks0wo6L0sK5trHB36RBdIuoOek/gJSP90TBdh3a9OPDu
+	q/CWR1SXztuawiHBr5SzYqwy40FHNQozYHZoYm1VlCsf5mJiBE8V184N6+KC3uwFLQ6bfR1BJW8
+	nE8zJ7gqCHv+l0TWIsCw==
+X-Google-Smtp-Source: AGHT+IE+ZAuLmkz1arQbVX0YZvJVLhQ7nxcEKZcFN7pYHPM6BXlBBzNkNPkqSg4yVC9lFIj68cGkI7vjB1r4wxAuYWQ=
+X-Received: by 2002:a05:690c:2506:b0:708:11c7:d200 with SMTP id
+ 00721157ae682-70a3f9e3f61mr40837627b3.4.1746794724940; Fri, 09 May 2025
+ 05:45:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c2bc466d-dff2-4d0d-a797-9af7f676c065@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=LaM86ifi c=1 sm=1 tr=0 ts=681df8de cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=8nJEP1OIZ-IA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=6tX_wsqJ8x3pxrqpp-wA:9 a=3ZKOabzyN94A:10
- a=wPNLvfGTeEIA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDEyMyBTYWx0ZWRfX81B0S1uOUU60 IMgosEkj7L4zjh6/vBOnluXnhveb4o4sC78XL/zJ+bqB/pBGm/T47WMkmLhP/JnLqOwHyjO4ISN 4jcJxx0Ft3WtbgckGPplvKSDpgfIcbFMC3P5tvD5mJkFmK9YuYLCnlwzuxU2x5FJ8X5CHFJ/+Z7
- /pc9G+zVG3qjnpnTRPO1IKa/5aPu0zih2PKv1O0Q7cC3Ez26eVk9SwvCQt0kyXuzYxm2FIZQqSj wtQirTupWJ7IB0tcDosBdTbUH7BNAw3oKl94Jby0tdItk7TTjZJ73JTmq7qhg5prbBwQRoapNn8 tyS6xTd4lyGq6wry+71tWvw5gLlwxUH8IMhZRLfUokvczDGJXsm7EUFEeOAOQCtreaS61d3GOgJ
- 0URVECPmKRAaSm1iPwS80EpbuCik9v/VQtbdO6CLqyUJ7MWVWZLHt2uC9BEBtheYP31kLdRB
-X-Proofpoint-ORIG-GUID: gzCnkb2gXhegTp_tdTnth2Z8poKHT3q7
-X-Proofpoint-GUID: gzCnkb2gXhegTp_tdTnth2Z8poKHT3q7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_05,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- clxscore=1015 bulkscore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 impostorscore=0 spamscore=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505090123
+References: <20250424062154.2999219-1-dario.binacchi@amarulasolutions.com>
+ <20250424062154.2999219-12-dario.binacchi@amarulasolutions.com>
+ <aB1f74ufYoNmXfEn@finisterre.sirena.org.uk> <CABGWkvqySQugJpaj1s_jqGHkA5BONALJY5jn7JjZe=iLc5x60Q@mail.gmail.com>
+ <aB3EIxfwTbpQw7Eo@finisterre.sirena.org.uk>
+In-Reply-To: <aB3EIxfwTbpQw7Eo@finisterre.sirena.org.uk>
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Date: Fri, 9 May 2025 14:45:14 +0200
+X-Gm-Features: AX0GCFsMhC-bZIQbroR-iMbqMxImzouNrdaQ9uRaQFjqPmIkXBI_CX0YvsjmbY0
+Message-ID: <CABGWkvq+FQZ2A9vpv2XfDmbHgpNOSnZhCMdkKaeqhCcvdjzdAg@mail.gmail.com>
+Subject: Re: [PATCH v12 11/19] clk: imx: add support for i.MX8MM anatop clock driver
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	linux-amarula@amarulasolutions.com, Abel Vesa <abelvesa@kernel.org>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 09, 2025 at 05:38:12PM +0530, Venkat Rao Bagalkote wrote:
-> Hello,
-> 
-> 
-> I am observing build warnings. while compiling selftests/bpf on
-> the next-20250508 repo.
-> 
-> 
-> Warnings:
-> 
-> 
-> Warning: Kernel ABI header at 'tools/include/uapi/linux/if_xdp.h'
-> differs from latest version at 'include/uapi/linux/if_xdp.h'
-> 
-> 
-> Auto-detecting system features:
-> ...                                    llvm: [ on  ]
-> 
->   MKDIR    libbpf
->   TEST-HDR [test_progs] tests.h
->   MKDIR    bpftool
->   MKDIR    include
->   MKDIR    no_alu32
->   MKDIR    cpuv4
->   TEST-HDR [test_maps] tests.h
->   MKDIR    resolve_btfids
->   LIB      liburandom_read.so
->   SIGN-FILE sign-file
->   BINARY   uprobe_multi
->   MKDIR
->   GEN /root/linux-next/tools/testing/selftests/bpf/bpf-helpers.rst
->   GEN /root/linux-next/tools/testing/selftests/bpf/bpf-syscall.rst
->   GEN /root/linux-next/tools/testing/selftests/bpf/tools/build/libbpf/bpf_helper_defs.h
->   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/bpf.h
->   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/libbpf.h
->   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/btf.h
->   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/libbpf_common.h
->   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/libbpf_legacy.h
->   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/bpf_helpers.h
->   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/bpf_tracing.h
->   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/bpf_endian.h
->   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/skel_internal.h
->   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/bpf_core_read.h
->   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/libbpf_version.h
->   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/usdt.bpf.h
->   GEN /root/linux-next/tools/testing/selftests/bpf/bpf-syscall.2
->   GEN /root/linux-next/tools/testing/selftests/bpf/tools/build/libbpf/libbpf.pc
-> Warning: Kernel ABI header at 'tools/include/uapi/linux/if_xdp.h'
-> differs from latest version at 'include/uapi/linux/if_xdp.h'
->   INSTALL /root/linux-next/tools/testing/selftests/bpf/tools/include/bpf/bpf_helper_defs.h
->   INSTALL libbpf_headers
->   BINARY   urandom_read
->   CC      /root/linux-next/tools/test
-> 
-> 
-> If you happen to fix this, please add below tag.
-> 
-> 
-> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> 
-> 
-> 
-> Regards,
-> 
-> Venkat.
-> 
-Thanks for reporting it Venkat. I have sent the potential fix to https://lore.kernel.org/all/20250509123802.695574-1-skb99@linux.ibm.com/
+On Fri, May 9, 2025 at 11:00=E2=80=AFAM Mark Brown <broonie@kernel.org> wro=
+te:
+>
+> On Fri, May 09, 2025 at 10:34:38AM +0200, Dario Binacchi wrote:
+>
+> > From the log I see that you are testing a board with i.MX8MP, but it's
+> > probing the anatop for i.MX8MM.
+> > Is it possible that you have the CONFIG_CLK_IMX8MM option enabled?
+>
+> This is an arm64 defconfig so whatever that has set, including the
+> above.  Note that arm64 is supposed to be single kernel build for all
+> platforms so we shouldn't explode due to config options for other
+> platforms.
 
-Thanks,
-Saket
+Ok. I'll fix it asap.
+
+Thanks and regards,
+Dario
+
+>
+> Current -next defconfig:
+>
+>    https://builds.sirena.org.uk/f48887a98b78880b7711aca311fbbbcaad6c4e3b/=
+arm64/defconfig/config
+>
+> > I have personally tested the patches on i.MX8MN and i.MX8MP
+> > architectures, with only
+> > CONFIG_CLK_IMX8MN and CONFIG_CLK_IMX8MP enabled respectively, and I
+> > didn't encounter any issues.
+>
+> Given it's wide use for CI the defconfig really needs covering, any
+> random combination of options that can be set ought to work though.
+
+
+
+--=20
+
+Dario Binacchi
+
+Senior Embedded Linux Developer
+
+dario.binacchi@amarulasolutions.com
+
+__________________________________
+
+
+Amarula Solutions SRL
+
+Via Le Canevare 30, 31100 Treviso, Veneto, IT
+
+T. +39 042 243 5310
+info@amarulasolutions.com
+
+www.amarulasolutions.com
