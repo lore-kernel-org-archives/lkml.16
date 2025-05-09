@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610321C2324;
-	Fri,  9 May 2025 07:00:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC99B26C3A7;
+	Fri,  9 May 2025 07:03:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746774046; cv=none; b=PBsuXtbInWLnbpXRwxSgc/5RaW/6N1QcScrSPxSHdYYCPAELLQK8UMChuW6ZYDDYjd7DRNI5pXt0tizBGsofGjwY8SEAjsPYhHGU0Fyo1fdp3i74MVCQWGkYnED1DhKN9J+DyfLckpgc1VoZw3Z6njOiRE/QnI13dxaLWk6pLKc=
+	t=1746774232; cv=none; b=W3fpF/ZpagA9aZ7L0s5pvcv0kVPTmOgkf3ZBdxFaj+nEvYt/ayEvt1CsCHeTK1wkLYJMZNVDj1JzlBI6iOem2P/GpXVjN16E3Gzh62tOEc9ipJCdFLZAKJVvikhSMdxoVCNDwooIpWenYNKJ4wx8kX92dnCNoDsVgyC/IL/OBW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746774046; c=relaxed/simple;
-	bh=yfQkWx9DeJmRw8TBVfrP8PbDAnwkQi7w1kwefSN2X/E=;
+	s=arc-20240116; t=1746774232; c=relaxed/simple;
+	bh=0WwhJopkhycwO+EDKmA/3h2Xtcd2/NqM/2fimRhGpy4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oJh34a2SIhJlK9Rj/1ro7ANl9CbcaXvQWM7KNfo3/+Fx4WUD41MisZywWVv+uYsP9t7h2F0f4RjQ90gvc8DvthV1F9/6ku/ial8q850rKxHKyIqeOHUqsC+MfCeTIcIlxnbWCghE47FKmjyzDG/Pjb34Q2c9VBE3XJrvx//L3EA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I5TW3pVS; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ZRK/AOk4RzCx87R95tx+GlQ8vZwua1wREdX4nNLjlrN8RAqGYNp16Egb6DpkJnA5LR1sAXkSsHRayoh6gqxi7vV4vkJ5fkvfINJB4Ps6tir4zV458ga69FBchEhpW6oU5B0kNzBus33wOGpMHH3ZYZbEF0qsywiyEpbLeZKnFvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XBm8e5CG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I5TW3pVS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54714C4CEE4;
-	Fri,  9 May 2025 07:00:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XBm8e5CG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93A83C4CEE9;
+	Fri,  9 May 2025 07:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746774045;
-	bh=yfQkWx9DeJmRw8TBVfrP8PbDAnwkQi7w1kwefSN2X/E=;
+	s=k20201202; t=1746774232;
+	bh=0WwhJopkhycwO+EDKmA/3h2Xtcd2/NqM/2fimRhGpy4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=I5TW3pVST8qjxTKtl4nXW2aEgiYKXPJRDPncjobsXP9HiqxyKZG5VlS+/Ry+AO4I6
-	 Iw7+jREtjmvt1iQp6eyTSs0AYpIQYthYjQCeTAS86Tk7tqLknxL+HMMTtSs4KFhwgY
-	 owRB6sd/8of5Z5dorjNl41bkD8wT72b7fG66JRKFtLvByPjQkl08gHoaN0OvLQBE4e
-	 UgUKnuauyZL5rssVXVLFF4fsBbTVWLU1x5nnvDr1UP4J5w3iTpItuRoF9hYHRFtdeF
-	 8PeLubrhXgnK7PuFvTp6yLNVxIzf16P88Bs3BReSgKs/tixTrc+ceoG063pxdSeKfX
-	 cikpbm71pc9FQ==
-Message-ID: <606a3d9a-857a-4fd6-a9b9-76a9c8d60cea@kernel.org>
-Date: Fri, 9 May 2025 09:00:39 +0200
+	b=XBm8e5CGv9avQSxiXTeWn6d5TRwTP96MXxW/1RfS0GP5IT6bGvX9BayRE5+EFTOiy
+	 62wgEGqnbXZ+iVw1sxyTZzqKV/rQkndQAbZ3xYR2wQjJUpxY6PEWopL2KnYuzAi5NB
+	 OgAPpAnVFU7cLtH82ML1vYaT2byHomFBALHoVB8pIrXS5ZmgLpjpA0LZvCuGmd7z7W
+	 U1cUkfR3DXNAtDI+fNNTMjIxMeIHYwqyTnjkQgU3KG4gqJJqbiXQvmmqSb9uMteuUn
+	 pcwuYhyEL1oTFxz0NfAU+VUYggf8XdRCdEYbimE3xmdk7o1KATwZFvfvGM28HhTjlx
+	 VtwFoJaxsyQAg==
+Message-ID: <272301e5-6561-499a-91eb-615fed4727fa@kernel.org>
+Date: Fri, 9 May 2025 09:03:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,23 +35,23 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] dt-bindings: hwmon: Add bindings for mpq8785
- driver
+Subject: Re: [PATCH v2 1/5] hwmon: pmbus: mpq8785: Prepare driver for multiple
+ device support
 To: Pawel Dembicki <paweldembicki@gmail.com>, linux-hwmon@vger.kernel.org
 Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Noah Wang <noahwang.wang@outlook.com>, Michal Simek <michal.simek@amd.com>,
- Fabio Estevam <festevam@gmail.com>,
+ Noah Wang <noahwang.wang@outlook.com>,
  Naresh Solanki <naresh.solanki@9elements.com>,
+ Fabio Estevam <festevam@gmail.com>, Michal Simek <michal.simek@amd.com>,
  Grant Peltier <grantpeltier93@gmail.com>,
  Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Greg KH <gregkh@linuxfoundation.org>, Peter Zijlstra <peterz@infradead.org>,
- Shen Lichuan <shenlichuan@vivo.com>, Charles Hsu <ythsu0511@gmail.com>,
+ Shen Lichuan <shenlichuan@vivo.com>, Peter Zijlstra <peterz@infradead.org>,
+ Greg KH <gregkh@linuxfoundation.org>, Charles Hsu <ythsu0511@gmail.com>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-doc@vger.kernel.org
 References: <20250509065237.2392692-1-paweldembicki@gmail.com>
- <20250509065237.2392692-6-paweldembicki@gmail.com>
+ <20250509065237.2392692-2-paweldembicki@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -97,102 +97,92 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250509065237.2392692-6-paweldembicki@gmail.com>
+In-Reply-To: <20250509065237.2392692-2-paweldembicki@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 09/05/2025 08:51, Pawel Dembicki wrote:
-> Add device tree bindings for Monolithic Power Systems MPQ8785, MPM82504
-> and MPM3695 PMBus-compliant voltage regulators.
+> Refactor the driver to support multiple Monolithic Power Systems devices.
+> Introduce chip ID handling based on device tree matching.
 > 
-> These bindings also documents the optional
-> "mps,vout-fb-divider-ratio-permille" property.
+> No functional changes intended.
+> 
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 > 
 > ---
 > v2:
->   - remove mps,mpq8785 from trivial-devices.yaml
->   - fix alphabetical order
->   - rename voltage-scale-loop to mps,vout-fb-divider-ratio-permille
->   - add mps,vout-fb-divider-ratio-permille min and max values
->   - rewrite mps,vout-fb-divider-ratio-permille description
-
-If you are going to send a new version, then reorder the patches so the
-bindings are before the user (see submitting patches in DT doc dir).
-
-> 
-> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+>  - no changes done
 > ---
->  .../bindings/hwmon/pmbus/mps,mpq8785.yaml     | 88 +++++++++++++++++++
->  .../devicetree/bindings/trivial-devices.yaml  |  2 -
->  2 files changed, 88 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/mps,mpq8785.yaml
+>  drivers/hwmon/pmbus/mpq8785.c | 38 +++++++++++++++++++++++++++--------
+>  1 file changed, 30 insertions(+), 8 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/pmbus/mps,mpq8785.yaml b/Documentation/devicetree/bindings/hwmon/pmbus/mps,mpq8785.yaml
-> new file mode 100644
-> index 000000000000..3c61f5484326
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/pmbus/mps,mpq8785.yaml
-> @@ -0,0 +1,88 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hwmon/pmbus/mps,mpq8785.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Monolithic Power Systems Multiphase Voltage Regulators with PMBus
-> +
-> +maintainers:
-> +  - Charles Hsu <ythsu0511@gmail.com>
-> +
-> +description:
-> +  Monolithic Power Systems digital multiphase voltage regulators with PMBus.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mps,mpm3695
-> +      - mps,mpm3695-25
-> +      - mps,mpm82504
-> +      - mps,mpq8785
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  mps,vout-fb-divider-ratio-permille:
-> +    description:
-> +      The feedback resistor divider ratio, expressed in permille
-> +      (Vfb / Vout * 1000). This value is written to the PMBUS_VOUT_SCALE_LOOP
-> +      register and is required for correct output voltage presentation.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 1
+> diff --git a/drivers/hwmon/pmbus/mpq8785.c b/drivers/hwmon/pmbus/mpq8785.c
+> index 331c274ca892..00ec21b081cb 100644
+> --- a/drivers/hwmon/pmbus/mpq8785.c
+> +++ b/drivers/hwmon/pmbus/mpq8785.c
+> @@ -8,6 +8,8 @@
+>  #include <linux/of_device.h>
+>  #include "pmbus.h"
+>  
+> +enum chips { mpq8785 };
 
-maximum: 4095
-default: X
+Use Linux coding style, so:
+1. missing wrapping after/before each {}
+2. missing descriptive name for the type (mpq8785_chips)
+3. CAPITALICS see Linux coding style - there is a chapter exactly about
+this.
 
-required: block goes here, before allOf: block.
 
 > +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          const: mps,mpq8785
-> +    then:
-> +      properties:
-> +        mps,vout-fb-divider-ratio-permille:
-> +          maximum: 2047
+>  static int mpq8785_identify(struct i2c_client *client,
+>  			    struct pmbus_driver_info *info)
+>  {
+> @@ -53,26 +55,46 @@ static struct pmbus_driver_info mpq8785_info = {
+>  		PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
+>  		PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
+>  		PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP,
+> -	.identify = mpq8785_identify,
+> -};
+> -
+> -static int mpq8785_probe(struct i2c_client *client)
+> -{
+> -	return pmbus_do_probe(client, &mpq8785_info);
+>  };
+>  
+>  static const struct i2c_device_id mpq8785_id[] = {
+> -	{ "mpq8785" },
+> +	{ "mpq8785", mpq8785 },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(i2c, mpq8785_id);
+>  
+>  static const struct of_device_id __maybe_unused mpq8785_of_match[] = {
+> -	{ .compatible = "mps,mpq8785" },
+> +	{ .compatible = "mps,mpq8785", .data = (void *)mpq8785 },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, mpq8785_of_match);
+>  
+> +static int mpq8785_probe(struct i2c_client *client)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct pmbus_driver_info *info;
+> +	enum chips chip_id;
 > +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          const: mps,mpm82504
-
-That's enum with mpm3695
-
-> +    then:
-> +      properties:
-> +        mps,vout-fb-divider-ratio-permille:
-> +          maximum: 1023
+> +	info = devm_kmemdup(dev, &mpq8785_info, sizeof(*info), GFP_KERNEL);
+> +	if (!info)
+> +		return -ENOMEM;
 > +
+> +	if (dev->of_node)
+> +		chip_id = (uintptr_t)of_device_get_match_data(dev);
+
+(kernel_ulong_t) instead
+
+> +	else
+> +		chip_id = i2c_match_id(mpq8785_id, client)->driver_data;
+
+Do not open-code i2c_get_match_data().
+
+
 Best regards,
 Krzysztof
