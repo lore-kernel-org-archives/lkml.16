@@ -1,65 +1,107 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from cventin.lip.ens-lyon.fr (cventin.lip.ens-lyon.fr [140.77.13.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5BD291860
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829A922A4D6;
+	Fri,  9 May 2025 13:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.77.13.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746796256; cv=none; b=dOIznPVeCENvmeTXfjCPGBm9RPJO5A6UaVJRBUzkCkzXxDfr2lhF4iINzQOgMCj8hHYQoHeRLCY+cMBQ42/4/7CGBs80Mc7fK1u4YsZBiTczmNFsm4DRo/lnKml+bmCapgCFv983/j4Nez5kiljK1GcEGybjg7lCH05U2l/x+Xs=
+	t=1746796271; cv=none; b=pkWeC+jHlj7O9aJp1k7KsXqCTEcFm3BWc7XTC3rgPm8e8BrDNGvYcn6GoORJHOjOpdRcWmdTEHlAsN3YbzdfDIA7jKhBiDwlSAdwWDtmJ+GWAKnWU+B4KT8vhQDBt6jhWROi5BInw+NPAwoeVgqYowtcSw13L8ELDW+zuxyG9rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746796256; c=relaxed/simple;
-	bh=oR8kYbfSYqSZzys3+DWjn8paGvWczu9J0GtPLvrNKv8=;
+	s=arc-20240116; t=1746796271; c=relaxed/simple;
+	bh=UHjJUIvCnRxbSzKoN5s885Xm5PYJgxuoKDUt61SWGl0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CaNKwUeG63gQzZaOloQYgLQzKzaJIB4TqdqrWtFI6hMvl4ltmSncitiXzPfWRs4Tg62c2CsseaepZDP4WkSFyUA6/vQR9woviv1YHyCsv9kod5ybN8wAZxPnQQmL2kAE5mSB6UHgI12bcfeMnaoTjd1941EfavwOoFHyHrb2U1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=x2rBzAvE; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="x2rBzAvE"
-Date: Fri, 9 May 2025 09:10:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1746796242;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=59e1GCro0WbneHQa42anvap4yh18L8Tn1Jdf7L1xdeo=;
-	b=x2rBzAvElnG6TGCgmPuydA6mwOtLGxwMcukr7iwnachfNhT3vVHAJ0UOeHsHo9txStuAk6
-	9x7Tev7ubxwG4a4LQxi8lf4OYRYE4xsgu284Zgm0RyRwpNqERvC3o5N3H4GJjHFF/MeJ/G
-	gnNuCAYAz686/rzZeYj+MgzlWYuZsnTY5qD7VX2XHJ9wJPmHmzsMOCNjgbHYv3S+//ySMH
-	rbS4gVEMLpdDoZzHGanW7eBIAXnVeSs9/vrJdDx85bQIuZVlVoZEyeb7QL30LS4JfXZQ70
-	k8N6JJeqEQNDs1hyimaxjF7MmrpYYhTyQIVNoJKE4tRBz+G9hZrpMITpmVt8SA==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-To: sven@svenpeter.dev
-Cc: Janne Grunau <j@jannau.net>, Neal Gompa <neal@gompa.dev>,
-	Hector Martin <marcan@marcan.st>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 5/9] gpio: Add new gpio-macsmc driver for Apple Macs
-Message-ID: <aB3-yygZvdgiE6L8@blossom>
-References: <20250503-smc-6-15-v4-0-500b9b6546fc@svenpeter.dev>
- <20250503-smc-6-15-v4-5-500b9b6546fc@svenpeter.dev>
+	 Content-Type:Content-Disposition:In-Reply-To; b=W9XEhBtibrRkZnQNQpgQWlQpiwjbuO640Bn8OhnfsQAaA5tpc97dEQ9TRrOD0bBxpdianvC6Bp9d3dVUxTAGUThYTv78Cuhu6CG+17WPH5RT5WKnHMshW7FPzbhqiekdHojv5kcmjpoPDKoLywuoiztWDBV00Zty6yomQEgv3Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vinc17.net; spf=pass smtp.mailfrom=vinc17.net; arc=none smtp.client-ip=140.77.13.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vinc17.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinc17.net
+Received: from vlefevre by cventin.lip.ens-lyon.fr with local (Exim 4.98.2)
+	(envelope-from <vincent@vinc17.net>)
+	id 1uDNVL-000000003OM-1Gsi;
+	Fri, 09 May 2025 15:11:07 +0200
+Date: Fri, 9 May 2025 15:11:07 +0200
+From: Vincent Lefevre <vincent@vinc17.net>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: "Andries E. Brouwer" <aeb@cwi.nl>, linux-man@vger.kernel.org,
+	linux-kernel@vger.kernel.org, libc-alpha@sourceware.org,
+	"G. Branden Robinson" <branden@debian.org>,
+	Carlos O'Donell <carlos@redhat.com>,
+	Eugene Syromyatnikov <evgsyr@gmail.com>
+Subject: Re: man-pages-6.14 released
+Message-ID: <20250509131107.GE3017@cventin.lip.ens-lyon.fr>
+Mail-Followup-To: Vincent Lefevre <vincent@vinc17.net>,
+	Alejandro Colomar <alx@kernel.org>,
+	"Andries E. Brouwer" <aeb@cwi.nl>, linux-man@vger.kernel.org,
+	linux-kernel@vger.kernel.org, libc-alpha@sourceware.org,
+	"G. Branden Robinson" <branden@debian.org>,
+	Carlos O'Donell <carlos@redhat.com>,
+	Eugene Syromyatnikov <evgsyr@gmail.com>
+References: <uidtufql6ftz72im7w6zggeihwhuwgnpxwb7j46fbp6ryvzv4i@cwyp6ewepeob>
+ <20250509112627.GA924923@if>
+ <bn2rs76dkhejmthy2wvul4ho26zzlwtkfg474ztiwggkxz7f3d@g25omktsd3ug>
+ <20250509121454.GA952723@if>
+ <qghsrpxzxccbcuuctx56oq5xe7mtpkgljis7ovopr6ojmiz3js@vw5p5w7om4f4>
+ <20250509124829.GD3017@cventin.lip.ens-lyon.fr>
+ <ib7p6mx6sltp2bu6vxw7n2urxuaq2lk4a6efsgnjym43svpvy3@wbgmnm6sy23o>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250503-smc-6-15-v4-5-500b9b6546fc@svenpeter.dev>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ib7p6mx6sltp2bu6vxw7n2urxuaq2lk4a6efsgnjym43svpvy3@wbgmnm6sy23o>
+X-Mailer-Info: https://www.vinc17.net/mutt/
+User-Agent: Mutt/2.2.13+86 (bb2064ae) vl-169878 (2025-02-08)
 
-> +	count = smcgp->smc->key_count;
-> +	if (count > MAX_GPIO)
-> +		count = MAX_GPIO;
+On 2025-05-09 14:57:56 +0200, Alejandro Colomar wrote:
+> Hi Vincent,
+> 
+> On Fri, May 09, 2025 at 02:48:29PM +0200, Vincent Lefevre wrote:
+> > I don't think so. But IMHO, it would be OK to provide the old copyright
+> > notices in an indirect way: put them in a different file and just give
+> > a reference to this file, as long as this file is distributed together
+> > with the man pages and can be found easily.
+> 
+> Hmmm, I considered that the copyright attributed to the contributors
+> and then a CREDITS file that lists the contributors is an indirect way
+> of keeping the notices.  The CREDITS file is distributed together with
+> the manual pages, and can be found easily (root of the repo).  It
+> doesn't keep the original notice text verbatim, though.
 
-count = min(smcgp->smc->key_count, MAX_GPIO);
+This is my thought, and the fact that the CREDITS file gives fewer
+details might by an issue w.r.t. *old* copyright notices. That said,
+the CREDITS file would be more correct because incorrect things had
+been done on the copyright notices in the past.
+
+Let's give an example: commit 7d6b0208863d41c78785c47d564cf4b55906f0d1
+
+In this commit, text was moved from regex_t.3type to regex.3 (and
+the regex_t.3type contents got entirely removed, including its
+copyright notice), but the copyright notice of regex.3 was not
+updated to include the one from regex_t.3type:
+
+regex_t.3type had
+
+  Copyright (c) 2020-2022 by Alejandro Colomar <alx@kernel.org>
+  and Copyright (c) 2020 by Michael Kerrisk <mtk.manpages@gmail.com>
+
+but in this commit, regex.3 still had only
+
+  Copyright (C), 1995, Graeme W. Wilford. (Wilf.)
+
+  Modified 8 May 1998 by Joseph S. Myers (jsm28@cam.ac.uk)
+
+IMHO, due to potentially intractable issues with text moves between
+man pages, copyright notices should apply to the whole project, not
+to individual files. This is what CREDITS does.
+
+But also preserving old copyright information somewhere might be
+needed, even though it is incomplete (and perhaps give some warning
+about that).
+
+-- 
+Vincent Lefèvre <vincent@vinc17.net> - Web: <https://www.vinc17.net/>
+100% accessible validated (X)HTML - Blog: <https://www.vinc17.net/blog/>
+Work: CR INRIA - computer arithmetic / Pascaline project (LIP, ENS-Lyon)
