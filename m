@@ -1,115 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2E821ADAB
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F70228C9D;
+	Fri,  9 May 2025 15:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746805611; cv=none; b=FwEMkdlxdFZi1t7blube/2Zvy1YGXUqOZLb1c31XwcHKyAWxBCsqIdRF3qa5g501EwprP+krVzq/ziGJ4pf4PiYkjxg1nMl6llQj/utsEnUryWTgtJjr+A5biXGg84dtWc6d2zgyEe1ulNOspgsbBWdxOAGQ9c0YL5DwcbhRiAE=
+	t=1746805659; cv=none; b=ZEo+e5y7HJCWkRJms0F1rGuC/FGfGx9OSRtM2oN6QPQ8nrPue0TWGQ9dMylONWUX+KgZCTOn5SkMU0rw2NQsCsLuyV2XQiXGxfGIHPJlatZzar8MBtHvgR+gle2AjkmyIu8/vlK500k6MmN8WxZ2p7YpKzpPSYpRriYwDqX37B0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746805611; c=relaxed/simple;
-	bh=1ShT8UK0LokCHaO4QMELxKGLO2ce9JPvS0gf7gAFVE4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KT5juH3GyIMnlPaYFL1vAWodUPy98DOVVG//y3AG5rrPwb3EtxDAN+oS+u40wDYwDZ/vrM+lcTdKllG3Oj/IAA3umMU7Tl1tAAnCC7qUKVqepkCByY/Jc9XNWppb+tLUiv9/r3nE2D3BUMy3jO5QD7mdjvEJGFkKUyhvY44FmDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gOyWVYw7; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746805659; c=relaxed/simple;
+	bh=TjJRtu1IKdCYsfE1QjMqNHO1xvXGAyq+p+mPWyCIR54=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sdkHhXuyTTBxmVespaT0KTPPRcNhqZ9Ljnyobeeo+0bZNEILOpAUvNLnWE86VMKZonNUIpuqgj9fIK4MH/3sfjtqk91HbQ5h2kGZDxDIyjQTjr86uEMHQBXZSiodKL8kLX5yNBNGa/TPh0jaVneNBWebcFOSSGhmjvRANCP/2gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PmjnWLmb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gOyWVYw7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746805610; x=1778341610;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1ShT8UK0LokCHaO4QMELxKGLO2ce9JPvS0gf7gAFVE4=;
-  b=gOyWVYw7ndL8mKEkh0Sw9FiKOz537YTcGzKzequNBya3OSavrgV+pH8r
-   RO/ur2gdKw0tuwhBCUXiyjZJwNUHW82/IiW1RWhgTj1NfFGkJChTfwYKH
-   CmHo+gERcYEGfsPeznEWixZ4tncjuGIFhcsE9cprZRso6ECAtMW1yXHIZ
-   5Wk1B64aP4pipRr07m8rXFrrToH46Pra2bnb3ceTczFOp/ALbDiz1jcx7
-   5kpwbulLHkl7Hxs25Uf8SI/R85H3LE8icnqN5WoRW15DTpasluschbYT2
-   CV2Nx5QSKaNUkODERCZgb5uMcqW6dUfqNcn0GMRuxq8SonxseNyNRDwds
-   g==;
-X-CSE-ConnectionGUID: yj614wrqTQ6FBkuL40SYUw==
-X-CSE-MsgGUID: MuCDdXAXRHyiggXk8BS31g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48644593"
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="48644593"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 08:46:49 -0700
-X-CSE-ConnectionGUID: 0AXXWekAQayK1orAOH+poA==
-X-CSE-MsgGUID: KKVqMy/jSIKSiQNnNkq5Mg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="173828701"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 09 May 2025 08:46:47 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 6E1E41D7; Fri, 09 May 2025 18:46:46 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] genirq: Consistently use '%u' format specifier for irq
-Date: Fri,  9 May 2025 18:46:42 +0300
-Message-ID: <20250509154643.1499171-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PmjnWLmb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5AEBC4CEE4;
+	Fri,  9 May 2025 15:47:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746805659;
+	bh=TjJRtu1IKdCYsfE1QjMqNHO1xvXGAyq+p+mPWyCIR54=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PmjnWLmbRYHj+HLr0b8pdBekNsD15yqatuqPwgkiIJEzlfWq+aDvgqh/bvRDjnEc2
+	 yhdHJL9OaSbRjXUqyFeg2je3GDQUmxjmqJCAJYv8+iW3x4+4JiQNK2MicfbIrWSAGL
+	 61m0KhYJ3DXylQaZ2YzMebcxudYxUA/k8FiloJLEc6gvZ7rAZsfNlYdn0moxt+E3Tr
+	 JM11rbPK2c4y4dgbwvfGWtxSNghFIhQYP1pZYbBeSaKY9gUG45DsSJnj06wgfEshTu
+	 MPd27X/2a6BL/9Qa7UPVpnrvBg+XjQJrS/xYDn+4ySSuatKSz2ZyVWjKRMlux7OQKw
+	 MJB1sLZlSoboA==
+Date: Fri, 9 May 2025 08:47:36 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf trace: Fix some more memory leaks
+Message-ID: <aB4jmGT8M8bJEY9c@google.com>
+References: <20250401202715.3493567-1-irogers@google.com>
+ <aBzFGKKubskQDLrs@x1>
+ <aBzrkz0__S_eupgB@google.com>
+ <aB0QAUw7N9RaeVVO@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aB0QAUw7N9RaeVVO@x1>
 
-There are three cases in the genirq code when the irq, as an unsigned
-integer variable, is converted to text representation by sprintf().
-In two cases it uses '%d' specifier which is for signed values. While
-it's not a problem right now, potentially it might be in the future
-in case too big (> INT_MAX) number will appear there.
+On Thu, May 08, 2025 at 05:11:45PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, May 08, 2025 at 10:36:19AM -0700, Namhyung Kim wrote:
+> > On Thu, May 08, 2025 at 11:52:08AM -0300, Arnaldo Carvalho de Melo wrote:
+> > > On Tue, Apr 01, 2025 at 01:27:15PM -0700, Ian Rogers wrote:
+> > > > The files.max is the maximum valid fd in the files array and so
+> > > > freeing the values needs to be inclusive of the max value.
+> > > > 
+> > > > Add missing thread__put of the found parent thread in
+> > > > thread__e_machine.
+> > > 
+> > > Split it into:
+> > > 
+> > > ⬢ [acme@toolbx perf-tools-next]$ git log --oneline -2
+> > > 7900938850645ed4 (HEAD -> perf-tools-next) perf trace: Add missing thread__put() in thread__e_machine()
+> > > 8830091383b03498 perf trace: Free the files.max entry in files->table
+> > > ⬢ [acme@toolbx perf-tools-next]$ 
+> > > 
+> > > So that git --oneline is more descriptive, etc.
+> > > 
+> > > Thanks, applied to perf-tools-next,
+> > 
+> > PTAL this one as well.
+> > 
+> > https://lore.kernel.org/r/20250403054213.7021-1-namhyung@kernel.org
+> 
+> Split into two patches, as one fixes one long standing problem (from
+> 2017:
+> 
+>     perf trace: Fix leaks of 'struct thread' in set_filter_loop_pids()
+>     
+>     I've found some leaks from 'perf trace -a'.
+>     
+>     It seems there are more leaks but this is what I can find for now.
+>     
+>     Fixes: 082ab9a18e532864 ("perf trace: Filter out 'sshd' in the tracer ancestry in syswide tracing")
+> 
+> But the other fixes a more recent bug:
+> 
+>     perf trace: Fix leaks of 'struct thread' in fprintf_sys_enter()
+>     
+>     I've found some leaks from 'perf trace -a'.
+>     
+>     It seems there are more leaks but this is what I can find for now.
+>     
+>     Fixes: 70351029b55677eb ("perf thread: Add support for reading the e_machine type for a thread")
+> 
+> - Arnaldo
 
-Consistently use '%u' format specifier for irq which is declared as
-unsigned int in all these cases.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- kernel/irq/debugfs.c | 2 +-
- kernel/irq/proc.c    | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
-index 9004a17b93a2..3d6a5b3cfaf3 100644
---- a/kernel/irq/debugfs.c
-+++ b/kernel/irq/debugfs.c
-@@ -230,7 +230,7 @@ void irq_add_debugfs_entry(unsigned int irq, struct irq_desc *desc)
- 	if (!irq_dir || !desc || desc->debugfs_file)
- 		return;
- 
--	sprintf(name, "%d", irq);
-+	sprintf(name, "%u", irq);
- 	desc->debugfs_file = debugfs_create_file(name, 0644, irq_dir, desc,
- 						 &dfs_irq_ops);
- }
-diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
-index 94eba9a425c4..29c2404e743b 100644
---- a/kernel/irq/proc.c
-+++ b/kernel/irq/proc.c
-@@ -309,7 +309,7 @@ static bool name_unique(unsigned int irq, struct irqaction *new_action)
- 
- void register_handler_proc(unsigned int irq, struct irqaction *action)
- {
--	char name [MAX_NAMELEN];
-+	char name[MAX_NAMELEN];
- 	struct irq_desc *desc = irq_to_desc(irq);
- 
- 	if (!desc->dir || action->dir || !action->name || !name_unique(irq, action))
-@@ -345,7 +345,7 @@ void register_irq_proc(unsigned int irq, struct irq_desc *desc)
- 		return;
- 
- 	/* create /proc/irq/1234 */
--	sprintf(name, "%d", irq);
-+	sprintf(name, "%u", irq);
- 	desc->dir = proc_mkdir(name, root_irq_dir);
- 	if (!desc->dir)
- 		return;
--- 
-2.47.2
+Thanks for doing this!
+Namhyung
 
