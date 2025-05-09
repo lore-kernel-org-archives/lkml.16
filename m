@@ -1,63 +1,40 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEBB17C77;
-	Fri,  9 May 2025 00:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D7AC1F5FD;
+	Fri,  9 May 2025 00:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746751359; cv=none; b=Fd4NqwX9YZRRg7Mq/QvZ6N/e1D7fZYqbNB7qX4VtJVT9qxCp68GxTZwLLq3n30x+KfQC3tihwr5g/ikKcOsV2hTPQr70jUgaYrXOcqlMnrxH4R7QbyAZDJeH8xS1oV2Sf1kTM6oxFMkk3mUD+XZl95GR8F7LkZoB6sYgiRBIshs=
+	t=1746751407; cv=none; b=oe5BJAwVZRGn20cgjoxb3cf7zg3UOQI7IteWG5cOV2Jpd+jsw3P7mtvlFdyB93ulekDpVv3A1/8qpwlRO/oO6aP4BfDqumqS31VhlFRusIoQ/ubh8FnAedI78yPDzsJPZs7JrKhM3trPY7/1LBDD3Wgig1gAzq9fi4G6OCm7TYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746751359; c=relaxed/simple;
-	bh=5F0Ebypa56dkdq3mFfmHvCOR5W4vuwc/3YFGnZ8IL5Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SwEaq6aUJboFjlnkNs7MYpL7+TDJlMgOqkF/5y3RhNsBxAt8U75ZIA+eCODuH6+KC35EyiOJzShzNuLnGSO6z8Tb9SznDDUaxSnsTqL4V3w3/MiEjQIkAQ/fPKVf9l7P8coTa5jxFPT9uSg/MPoHdz4doMQX6rqr1IpUa1D84b4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=jjyc89RX; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1746751407; c=relaxed/simple;
+	bh=mrUpPE0EUKpDjR4ZljgRIVLcV4xGvjmPpGkgqkmaLZ8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CQumhoo8fli2rYKDnFiWT4Cn3961IG5i8YB4npcTmkOO6yt3Ynmbmcc3H26f4Lf0vzaC8iqNer23WNrSIoVed0a8h5tK05NbvrksZ148Hr3Yts9FqW1A6TpwQttKpMtM5RdykKXWrz1vKEG9+Nkb2N/RQ3n56Etw/lFNVgOlDcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=MGYaxESq; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="jjyc89RX"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 19AE12594D;
-	Fri,  9 May 2025 02:42:36 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id AY5mId9J0Whh; Fri,  9 May 2025 02:42:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1746751355; bh=5F0Ebypa56dkdq3mFfmHvCOR5W4vuwc/3YFGnZ8IL5Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=jjyc89RXOeTWRB0jsoaTS6cfMTSfCBdbU0kicXZBpnc37RyDOGmH8CqGsYrZ1lFsp
-	 hGh2HyiPEtGt98DmRJX0DYEx6pNbICSPnYh7YTwjxQde3nlviarjCuDUuRpRfV2Z1M
-	 soWc/kKfu2pfaH3U6vc++VmNdI/QVB5OG+XRN2pQtv5itGufk8UJ0iKpHYYSfmA80g
-	 +rRYBSi4giEJsd45AEwEYz5SAz9p4PGDZCzmFnb+JdxL3h+06uF0lY17lUq3zTQfa3
-	 MC5/dPAR3fYOnRe+d3JuykNoImMK6NU7TIl848iz9w4TvOKJDxOFXP59hAnAMJTJ0N
-	 SJn2Uwlr0LyoQ==
-From: Yao Zi <ziyao@disroot.org>
-To: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Yao Zi <ziyao@disroot.org>,
-	Frank Wang <frank.wang@rock-chips.com>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Shresth Prasad <shresthprasad7@gmail.com>,
-	Chukun Pan <amadeus@jmu.edu.cn>,
-	Jonas Karlman <jonas@kwiboo.se>
-Cc: linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MGYaxESq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Pk
+	wBpWHJdPYb2AnQNwr86bUir8BNrGUCWW793DJsGy8=; b=MGYaxESqnVk/fVGY8Z
+	rtk2C6TnLwCQqzTOdGA/00esinpfU9WEJV0YVV40O+WRxtdbaL3VMFkDXU5YJry9
+	TnfQnRvqwrx1MDP1GRhHK+M/sqhyW5jLxkgjxZ3QgRpxr76o3Kv04+4iI1cjXL+l
+	IoSmuNBC+CTcwd7Q9epy2bfto=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wD3P_OGTx1o4blZAA--.13887S2;
+	Fri, 09 May 2025 08:42:47 +0800 (CST)
+From: chenchangcheng <ccc194101@163.com>
+To: laurent.pinchart@ideasonboard.com,
+	ribalda@chromium.org
+Cc: hdegoede@redhat.com,
+	mchehab@kernel.org,
 	linux-kernel@vger.kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v2 2/5] dt-bindings: phy: rockchip: naneng-combphy: Add RK3528 variant
-Date: Fri,  9 May 2025 00:41:19 +0000
-Message-ID: <20250509004121.36058-4-ziyao@disroot.org>
-In-Reply-To: <20250509004121.36058-2-ziyao@disroot.org>
-References: <20250509004121.36058-2-ziyao@disroot.org>
+	linux-media@vger.kernel.org,
+	chenchangcheng <chenchangcheng@kylinos.cn>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH v8] media: uvcvideo: Fix bandwidth issue for Alcor camera.
+Date: Fri,  9 May 2025 08:42:45 +0800
+Message-Id: <20250509004245.45893-1-ccc194101@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,40 +42,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3P_OGTx1o4blZAA--.13887S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ZFWDKry5WFWfKF1xAr4UCFg_yoW8Ar1Dpa
+	1ruayFyryUJrWFganrJa1Fga15Janaka1fKFW3u34UZr45JryxZFy3K340q34qyan3Cw13
+	tryqqr9F93yvvr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jYVbkUUUUU=
+X-CM-SenderInfo: 5fffimiurqiqqrwthudrp/1tbiThVI3mgdTHNNmgAAsQ
 
-Rockchip RK3528 ships one naneng-combphy which operates in either PCIe
-or USB 3 mode. Document its compatible string.
+From: chenchangcheng <chenchangcheng@kylinos.cn>
 
-Signed-off-by: Yao Zi <ziyao@disroot.org>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Some broken device return wrong dwMaxPayloadTransferSize fields
+as follows:
+    [  218.632537] [pid:20427,cpu6,guvcview,8]uvcvideo: Device requested 2752512 B/frame bandwidth.
+    [  218.632598] [pid:20427,cpu6,guvcview,9]uvcvideo: No fast enough alt setting for requested bandwidth.
+
+When dwMaxPayloadTransferSize is greater than maxpsize,
+it will prevent the camera from starting.
+So use the bandwidth of maxpsize.
+
+Signed-off-by: chenchangcheng <chenchangcheng@kylinos.cn>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202505072016.LlOxF8BG-lkp@intel.com/
 ---
- .../devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/media/usb/uvc/uvc_video.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
-index 888e6b2aac5a..bd064754e537 100644
---- a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
-@@ -12,6 +12,7 @@ maintainers:
- properties:
-   compatible:
-     enum:
-+      - rockchip,rk3528-naneng-combphy
-       - rockchip,rk3562-naneng-combphy
-       - rockchip,rk3568-naneng-combphy
-       - rockchip,rk3576-naneng-combphy
-@@ -102,7 +103,9 @@ allOf:
-       properties:
-         compatible:
-           contains:
--            const: rockchip,rk3588-naneng-combphy
-+            enum:
-+             - rockchip,rk3528-naneng-combphy
-+             - rockchip,rk3588-naneng-combphy
-     then:
-       properties:
-         resets:
+diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
+index e3567aeb0007..0d5c17509ceb 100644
+--- a/drivers/media/usb/uvc/uvc_video.c
++++ b/drivers/media/usb/uvc/uvc_video.c
+@@ -262,6 +262,15 @@ static void uvc_fixup_video_ctrl(struct uvc_streaming *stream,
+ 
+ 		ctrl->dwMaxPayloadTransferSize = bandwidth;
+ 	}
++
++	if (stream->intf->num_altsetting > 1 &&
++	    ctrl->dwMaxPayloadTransferSize > stream->maxpsize) {
++		dev_warn_ratelimited(&stream->intf->dev,
++				   "the max payload transmission size (%d) exceededs the size of the ep max packet (%d). Using the max size.\n",
++				   ctrl->dwMaxPayloadTransferSize,
++				   stream->maxpsize);
++		ctrl->dwMaxPayloadTransferSize = stream->maxpsize;
++	}
+ }
+ 
+ static size_t uvc_video_ctrl_size(struct uvc_streaming *stream)
+
+base-commit: d76bb1ebb5587f66b0f8b8099bfbb44722bc08b3
 -- 
-2.49.0
+2.25.1
 
