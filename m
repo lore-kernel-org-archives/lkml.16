@@ -1,265 +1,219 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18C3290BB5;
-	Fri,  9 May 2025 13:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8CCEAC7;
+	Fri,  9 May 2025 13:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746797163; cv=none; b=EeMjiQeQt3xrkb5LL1WXCmzG/P+JoZJ+OmcOs9P4kHPplwrQnu1ZVavglLxobF8gkTPrU+48yBM0oWvzohdaNfmlAhacwhR1b1vOmw+37AAl1DH7K76Dq6RbbvcoTJ1FMDm9rM50ed57e1L7dpDwvGLWadFaFdzkXFUDlofuHF4=
+	t=1746797205; cv=none; b=qPUj3w5mfk8Eq9dd66is+PsV9uPNgn23MqnJ7oYjJG6WXFbx/Cw8klw+XGwpxLFEPw+qdsB6aH0gTsiPnV35HF6ceMvzsdcMns5mDCXhdUbP/NiTZGqkqSVjkFQmZMBG7aTGHSbxkLU87YuzGdDw4q3kf2junCHm5Z5+/0g6jlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746797163; c=relaxed/simple;
-	bh=bmNKU6jDpBxyG754IarJ2AIwRbx4qNvPX8RXrF1dT/w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JLqOL5DLKD1OEuttoHp8aeBilpTdMn3mXj8sKSb9mG+eW7B2KDngviJwCpY+WaIMtVSoUUOfwmBzlNhfVfYofOV+MnvdLcb6D2R2e1eFaoaZzK1Hxdq9iJfLJPKJKIFlSuAwR8T91LSe0AeRRxKF6tmsNYQd1+3Cr0/TapPBato=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=izd8avQd; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1746797205; c=relaxed/simple;
+	bh=4ljaswZvpLa11JnKtqLJZzlpXgbUNueMnGcwfKTV9KY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Hnd61pGdTLGdfqCNBn+sTQE7qkah1h4xaaqite59A+PTv2CJE59A7gK/eKFLfnIzZC6LkFhNQk3uwcl1oFML0XT4sHVT29Bgulbk18LJePUJSdgGJeZacjiJRNApPT+U0nyCAnce1Ft0/madR5PuMnZ0ge7aylQ+Z3R+BmLYI/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+ojOsY+; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izd8avQd"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a0b9af89f2so1240006f8f.3;
-        Fri, 09 May 2025 06:26:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+ojOsY+"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22e6a088e16so15850375ad.1;
+        Fri, 09 May 2025 06:26:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746797160; x=1747401960; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fnh5skZT3IHgfxP2xQW8NE9ADgg9y7aWX7aWGzVV/kA=;
-        b=izd8avQdsbxkoJcKJj88qk44Us8g2irOh8T8kRm9QBW91FCYd3I1z99k7dYOdQRM8T
-         a9g8EcZoWEvB+yTuU/TXQ04gQ2fPzNU+CHr0aUKkUr47i/kPk1xPMZtlSEBceq1qamDr
-         OVIpoLfXN1u1EYvCuQ8fRM4z0ja8wH6jDjz6BB/BK21beszEz1B9RvkjOK8ng3Ymexn0
-         MkL5//FvMcYrZ6IIdhjRqv8GkMei55REPsRJfHlQIHeavnI+l6sxUibV+iG2Yxy9b0sh
-         qxSh+WvqHz1ly4mh+G48gRYW5U1A60f917rxUCzEJtNYboTffczMjyEOgNXO7/WGsTGC
-         A7fg==
+        d=gmail.com; s=20230601; t=1746797201; x=1747402001; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=M99M9pqDd4HY7ZTat7gh8dmPe+mFUSH3NvZfT0ucCMI=;
+        b=Y+ojOsY+a/sMZxNxgDofV5WF4P/9rq203HpyuwUMcZup2BS/do/JxdPYXwcpSCvAs6
+         cH5sL2OZejeAPtUOGsGxYuYDuc5oJMeWnwdmSPCu2Ux8vnlW8sJpKCRuaUQJ+bel//J0
+         ltwOTke/+Xk1PZWUOp9Mdm14apZcICG3EtMt6e1KzW+iQNSgVbwhILSYCvS61lRuJGwO
+         6SqD2q/glWuCBeDhw8hE1EU0ixgPYfzBEiOVmYJVkzdujFbevQ7RqWEN3VK/vpazcd8Z
+         41SusGstvv6grZyLLZnsMWhOl1Bgu7jfY/gkE4G6rZY7d2gHHidhA8DBA+jKQXB4HPnP
+         BXbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746797160; x=1747401960;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fnh5skZT3IHgfxP2xQW8NE9ADgg9y7aWX7aWGzVV/kA=;
-        b=fc94WaSGyu7ikGyE+KtLfpDunaQtdF2I0WgAm449vXBhm0S4yhDotbTfHjxwy4XNN+
-         Y6NzE3GwpE6HMasGS34aLSsolNV5WucYjJtWl5Y9IBWYhz3x3M3+i4V20FIbyz1bkXX4
-         nQcvZq7OaNINB7AN+CgxwG+ECWJkFYXHqKrVB7ZFIBF/1XsWXK83HWuUw65S9yjo/eOE
-         HKEczbYlFuzrHijhMVoAcmqV4tqwvIdDOPHS2/257QBx2xvuTqDSdH4iAZBZlSZJTvUd
-         miMm7uwFZemhMXVNvmsu8GWxEcJ1cXDKBulxoPfRF/Y4d5c8xTrQve4feDF+0XLNwVEf
-         9SKA==
-X-Forwarded-Encrypted: i=1; AJvYcCVouwat8OHNb/AHvc6xQ3pU5aL9m+c6R5mpeRQv+ltZLYx05xb378Zd9v+ieDSwfoNgD9eAhxQOjFHpRuuw@vger.kernel.org, AJvYcCWrEZmuw+k2qB5oqRGOXGkahDUmz1LQuSzLmZnrK+NEaVJYvIPsEVzz0SPgyIJh4Xs2ZKKXRLNsWnjCtYx0VmSIEVs=@vger.kernel.org, AJvYcCXTHOZVPkpe3vZGAxsQHuXXcQRyh5i0JurlOrVhs83bZunYnK1NW6xmIV9y7JNkUHFTBHWiFdrZS70=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPW+fvutrC3tdWRH3BGndrl/UWptaEinFR3MKJrHjqp1LxOJ1r
-	+kXwFPzI+Jmcp09cBZfYdmw1m3cfZ6nTV5FIwRGe8y8gTD7zShF9m4PXkTOgDxx05JbnMgvvkAL
-	7pJmvbzWKkDTg6cYAw4sk3tIHVBk=
-X-Gm-Gg: ASbGnctksFVk8KY1YrONEwmBfztNLp+2cyuZ+VzS1ShpNiNUWyGfKhWIrBz57XUDrDW
-	QSG8IPX+5wVKi2KLktfuUOV4aRvdYZQxpiy+InBVv/FTDrzuvvK/ChXoTu27yNe+tkbWQOB9OZQ
-	a92Wax+ECB8PYPnih5RMp3/w1GJk3eRKu9
-X-Google-Smtp-Source: AGHT+IGguipPbGDs6MxNWP08TEDym5IQFlUgf8M0RYrcJaZSMMqBnIPVFMkGcdCp/haRy3/cHh5ys8NKzGRKRZNb7lU=
-X-Received: by 2002:a5d:64ab:0:b0:3a1:f635:1133 with SMTP id
- ffacd0b85a97d-3a1f64220b7mr3284300f8f.7.1746797159776; Fri, 09 May 2025
- 06:25:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746797201; x=1747402001;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M99M9pqDd4HY7ZTat7gh8dmPe+mFUSH3NvZfT0ucCMI=;
+        b=vd54j602V5GWSyshctNwDgBMwMhXvdrOq/TtYIt3CKpyNMv6wT+6S9yKnJRiIRKhf7
+         BVVQ1tghOaKHSxwIV/8ln4KuqW/SfwcewBt5Nbfm6JS1geQUe+5rJU6Ab1y9dgHNDlwH
+         SRBDZKLtVlv9wah3BFPBznVB8qlBmHJOHxo/uqxbYm6vFhNyreQYczvfegoNa6c4VtV0
+         mTfiQbOcU9IQ14zEFFjsaVR0Z3k1WszrxZr4Hu6vOP6v+wdiiQKv5107TXrDmv1BF5fi
+         /9CYBhHy3F4uGoWI9vZHChxBHvN3mBmc4k3r/bygeoUx/ACCZUPPd/hbAqUHhcODJ4Yp
+         uKFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUY2t9+1XHvCZ6zaYxX4QCWl8Roya+K2EiuV2ENQYwwJU39UdkDzu3MVUeJvg5SrPTjypFTQr1uzH7w@vger.kernel.org, AJvYcCVNf2WRy786nijvNfaxRkXvaVmpocklyoYhtVivB17WeJa65K8IOFmump0XHjjWNIn27o8FM9Jk+jcW@vger.kernel.org, AJvYcCVxHKerErTmIo+me8uq+64h2rVONJX5uLl1K+QhCTIFuAIWWRls8ToWXDayxhXumfW1yyezqhbaCTncd/c=@vger.kernel.org, AJvYcCX1zM5qXio66AfYa0xKifQM0ZrC7NHKjKYUNEmJpUNWZSlzbnkWxvfhDw2HqYX1QWtB283jCISQ7a0G58Qo@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8IIEfDgng40nSwPRNUHdBkAsII2UGk7XbsreUTk0uod0vIdTT
+	8YPZWougJXySLsz89kbp/PqVmpEZkgQ6EUqAIXJVAzJldft/in8I
+X-Gm-Gg: ASbGnctOQ0LLYCEejTtT0WGbApl9iTvIClheXYacCO+1zShqSt3ChY+x8QpE6SOyd1a
+	uzinS3IDIGGa44Gwp98bkYZ7lb1RmBhiMhrutN1J3emst6S85G/ZD2IJJY0vUYkKbe7rFlGGITG
+	u3MBHDEjAvlid0cXx4wA0mwWPKyUvLQerRqfcJoTlkqmZkcvl4eyd6K/0zuC6gVz8ZlPc/fD8XV
+	i7yck3BkmZtCKiyp+xL4+WwkdMKXkBVjCxUJnoRUDxSqO7iUfYMYiZa0NWNNiS/StXQzXRfZU6o
+	LVtGDahgl3rl7zdesBl63XVn1KVO7hCrv2I2VrdzFn+gf8WfErWZIBWNz2XRyVOeBQ8rKh3/C/5
+	cAC+vXu5S5RBlUQ==
+X-Google-Smtp-Source: AGHT+IF1kr7NFCr8YU3Cp/1fNg8yu3Ky0zpKNpL2nfPUiW9hl80G8AZThU5x1ZRytfbBPlKxXYUu7Q==
+X-Received: by 2002:a17:903:1c7:b0:215:6c5f:d142 with SMTP id d9443c01a7336-22fc93dbc45mr46429305ad.20.1746797201019;
+        Fri, 09 May 2025 06:26:41 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc7b2a004sm16950085ad.106.2025.05.09.06.26.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 06:26:39 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <d578893e-167a-404f-bdd0-8e5b187af816@roeck-us.net>
+Date: Fri, 9 May 2025 06:26:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428184152.428908-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250428184152.428908-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVtQEEW3SU+f7qTDq6NVhy3LhrrwOgECdrZMfUk6vWQ2A@mail.gmail.com>
-In-Reply-To: <CAMuHMdVtQEEW3SU+f7qTDq6NVhy3LhrrwOgECdrZMfUk6vWQ2A@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 9 May 2025 14:25:33 +0100
-X-Gm-Features: AX0GCFtuHgsDcYGE3aQn_vsxP1O3iXGewdDE2kmkNyVKV-ApOaTxI-h9UngzpnI
-Message-ID: <CA+V-a8uHMuj0uPrwBr9K3YeriBg6me+y7yyPEF1Vv4WXKc3+bQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] clk: renesas: rzv2h-cpg: Skip monitor checks for
- external clocks
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Richard Cochran <richardcochran@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] hwmon: pmbus: mpq8785: Implement VOUT feedback
+ resistor divider ratio configuration
+To: Pawel Dembicki <paweldembicki@gmail.com>, linux-hwmon@vger.kernel.org
+Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Noah Wang <noahwang.wang@outlook.com>, Michal Simek <michal.simek@amd.com>,
+ Naresh Solanki <naresh.solanki@9elements.com>,
+ Fabio Estevam <festevam@gmail.com>, Grant Peltier
+ <grantpeltier93@gmail.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Shen Lichuan <shenlichuan@vivo.com>, Peter Zijlstra <peterz@infradead.org>,
+ Greg KH <gregkh@linuxfoundation.org>, Charles Hsu <ythsu0511@gmail.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20250509065237.2392692-1-paweldembicki@gmail.com>
+ <20250509065237.2392692-5-paweldembicki@gmail.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250509065237.2392692-5-paweldembicki@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Geert,
+On 5/8/25 23:51, Pawel Dembicki wrote:
+> Implement support for setting the VOUT_SCALE_LOOP PMBus register
+> based on an optional device tree property
+> "mps,vout-fb-divider-ratio-permille".
+> 
+> This allows the driver to provide the correct VOUT value depending
+> on the feedback voltage divider configuration for chips where the
+> bootloader does not configure the VOUT_SCALE_LOOP register.
+> 
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+> 
+> ---
+> v2:
+>    - rename property to mps,vout-fb-divider-ratio-permille
+>    - add register value range checking
+> ---
+>   drivers/hwmon/pmbus/mpq8785.c | 21 +++++++++++++++++++++
+>   1 file changed, 21 insertions(+)
+> 
+> diff --git a/drivers/hwmon/pmbus/mpq8785.c b/drivers/hwmon/pmbus/mpq8785.c
+> index 34245d0d2125..1d0e7ac9daf4 100644
+> --- a/drivers/hwmon/pmbus/mpq8785.c
+> +++ b/drivers/hwmon/pmbus/mpq8785.c
+> @@ -12,6 +12,13 @@
+>   
+>   enum chips { mpq8785, mpm82504, mpm3695, mpm3695_25 };
+>   
+> +static u16 voltage_scale_loop_max_val[] = {
+> +	GENMASK(10, 0), /* mpq8785 */
+> +	GENMASK(9, 0), /* mpm82504 */
+> +	GENMASK(9, 0), /* mpm3695 */
+> +	GENMASK(11, 0), /* mpm3695_25 */
 
-Thank you for the review.
+Use
+	[... ] = GENMASK()
+as suggested.
 
-On Thu, May 8, 2025 at 5:06=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
-.org> wrote:
->
-> Hi Prabhakar,
->
-> On Mon, 28 Apr 2025 at 20:42, Prabhakar <prabhakar.csengg@gmail.com> wrot=
-e:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Introduce support for module clocks that may be sourced from an externa=
-l
-> > clock rather than the on-chip PLL. Add two new fields `external_clk` an=
-d
-> > `external_clk_mux_index` to `struct rzv2h_mod_clk` and `struct mod_cloc=
-k`
-> > to mark such clocks and record the mux index corresponding to the exter=
-nal
-> > input.
-> >
-> > Provide a new helper macro `DEF_MOD_MUX_EXTERNAL()` for concise declara=
-tion
-> > of external-source module clocks.
-> >
-> > In `rzv2h_mod_clock_is_enabled()`, detect when the parent mux selects t=
-he
-> > external source (by comparing the current mux index against
-> > `external_clk_mux_index`) and skip the normal CLK_MON register check in
-> > that case. Update `rzv2h_cpg_register_mod_clk()` to populate the new fi=
-elds
-> > from the SoC info.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> > v2->v3:
-> > - Renamed helper macro to `DEF_MOD_MUX_EXTERNAL()`.
-> > - Added a new field `external_clk_mux_index` to `struct mod_clock` to
-> >   store the mux index corresponding to the external input.
-> > - Updated the `rzv2h_mod_clock_is_enabled()` function to check if the
-> >   parent mux selects the external source by comparing the current mux
-> >   index against `external_clk_mux_index`.
-> > - Updated the `rzv2h_cpg_register_mod_clk()` function to populate the n=
-ew
-> >   fields from the SoC info.
-> > - Updated commit description
->
-> Thanks for the update!
->
-> LGTM. But as I will not apply the second patch yet anyway, I am a
-> little bit more pedantic with my comments below (no offense intended,
-> though ;-)
->
-No offense taken at all, I appreciate the thoroughness. I'll make the
-suggested adjustments :)
+> +};
+> +
+>   static int mpq8785_identify(struct i2c_client *client,
+>   			    struct pmbus_driver_info *info)
+>   {
+> @@ -99,6 +106,8 @@ static int mpq8785_probe(struct i2c_client *client)
+>   	struct device *dev = &client->dev;
+>   	struct pmbus_driver_info *info;
+>   	enum chips chip_id;
+> +	u32 voltage_scale;
+> +	int ret;
+>   
+>   	info = devm_kmemdup(dev, &mpq8785_info, sizeof(*info), GFP_KERNEL);
+>   	if (!info)
+> @@ -126,6 +135,18 @@ static int mpq8785_probe(struct i2c_client *client)
+>   		return -ENODEV;
+>   	}
+>   
+> +	if (!of_property_read_u32(dev->of_node,
 
-> > --- a/drivers/clk/renesas/rzv2h-cpg.c
-> > +++ b/drivers/clk/renesas/rzv2h-cpg.c
-> > @@ -119,6 +119,8 @@ struct pll_clk {
-> >   * @on_bit: ON/MON bit
-> >   * @mon_index: monitor register offset
-> >   * @mon_bit: monitor bit
-> > + * @external_clk: Boolean flag indicating whether the parent clock can=
- be an external clock
-> > + * @external_clk_mux_index: Index of the clock mux selection when the =
-source is an external clock
-> >   */
-> >  struct mod_clock {
-> >         struct rzv2h_cpg_priv *priv;
-> > @@ -129,6 +131,8 @@ struct mod_clock {
-> >         u8 on_bit;
-> >         s8 mon_index;
-> >         u8 mon_bit;
-> > +       bool external_clk;
-> > +       u8 external_clk_mux_index;
->
-> Perhaps combine these two fields into
->
->     s8 ext_clk_mux_index;
->
-> with -1 indicating not valid, cfr. mon_bit?
->
-Good point.
+s/of_property/device_property/ (and include linux/property.h) to make this
+usable from non-devicetree systems.
 
->
-> >  };
-> >
-> >  #define to_mod_clock(_hw) container_of(_hw, struct mod_clock, hw)
-> > @@ -567,10 +571,33 @@ static int rzv2h_mod_clock_is_enabled(struct clk_=
-hw *hw)
-> >  {
-> >         struct mod_clock *clock =3D to_mod_clock(hw);
-> >         struct rzv2h_cpg_priv *priv =3D clock->priv;
-> > +       bool skip_mon =3D false;
-> >         u32 bitmask;
-> >         u32 offset;
-> >
-> > -       if (clock->mon_index >=3D 0) {
-> > +       if (clock->mon_index >=3D 0 && clock->external_clk) {
->
-> I think the first condition can be dropped, as clock->external_clk
-> implies a valid mon_index.
->
-Agreed.
+Also, please swap this patch with the previous patch to address the concern
+about patch order (i.e., introduce the property first and then add support
+for the new chips).
 
-> > +               struct clk_hw *parent_hw;
-> > +               struct clk *parent_clk;
-> > +               struct clk_mux *mux;
-> > +               int index;
-> > +               u32 val;
-> > +
-> > +               parent_clk =3D clk_get_parent(hw->clk);
-> > +               if (IS_ERR(parent_clk))
->
-> Can this actually happen?
->
-No, I will drop this and add a comment.
+Thanks,
+Guenter
 
-> > +                       goto check_mon;
-> > +
-> > +               parent_hw =3D __clk_get_hw(parent_clk);
-> > +               mux =3D to_clk_mux(parent_hw);
-> > +
-> > +               val =3D readl(mux->reg) >> mux->shift;
-> > +               val &=3D mux->mask;
-> > +               index =3D clk_mux_val_to_index(parent_hw, mux->table, 0=
-, val);
-> > +               if (index =3D=3D clock->external_clk_mux_index)
-> > +                       skip_mon =3D true;
-> > +       }
-> > +
-> > +check_mon:
-> > +       if (clock->mon_index >=3D 0 && !skip_mon) {
-> >                 offset =3D GET_CLK_MON_OFFSET(clock->mon_index);
-> >                 bitmask =3D BIT(clock->mon_bit);
-> >
->
-> I am not so fond of the goto and the !skip_mon logic, and wonder
-> if we can improve? Perhaps spin of the index obtaining logic into a
-> parent_clk_mux_index() helper, and something like:
->
-Ok, I'll add a helper rzv2h_clk_mux_to_index().
+> +				  "mps,vout-fb-divider-ratio-permille",
+> +				  &voltage_scale)) {
+> +		if (voltage_scale > voltage_scale_loop_max_val[chip_id])
+> +			return -EINVAL;
+> +
+> +		ret = i2c_smbus_write_word_data(client, PMBUS_VOUT_SCALE_LOOP,
+> +						voltage_scale);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>   	return pmbus_do_probe(client, info);
+>   };
+>   
 
->     int mon_index =3D clock->mon_index;
->
->     if (clock->external_clk) {
->             if (parent_clk_mux_index(hw) =3D=3D clock->external_clk_mux_i=
-ndex))
->                     mon_index =3D -1;
->     }
->
->     if (mon_index >=3D 0) {
->             // do it
->     }
->
-Agreed, with this we can get rid of goto.
-
-> > --- a/drivers/clk/renesas/rzv2h-cpg.h
-> > +++ b/drivers/clk/renesas/rzv2h-cpg.h
-> > @@ -192,6 +192,8 @@ enum clk_types {
-> >   * @on_bit: ON bit
-> >   * @mon_index: monitor register index
-> >   * @mon_bit: monitor bit
-> > + * @external_clk: Boolean flag indicating whether the parent clock can=
- be an external clock
-> > + * @external_clk_mux_index: Index of the clock mux selection when the =
-source is an external clock
-> >   */
-> >  struct rzv2h_mod_clk {
-> >         const char *name;
-> > @@ -203,9 +205,12 @@ struct rzv2h_mod_clk {
-> >         u8 on_bit;
-> >         s8 mon_index;
-> >         u8 mon_bit;
-> > +       bool external_clk;
-> > +       u8 external_clk_mux_index;
->
-> s8 ext_clk_mux_index
->
-OK.
-
-Cheers,
-Prabhakar
