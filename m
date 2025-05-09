@@ -1,65 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB3321ABB3;
-	Fri,  9 May 2025 14:29:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6292222BC;
+	Fri,  9 May 2025 14:30:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746800991; cv=none; b=ZelwNm24Nq+t7e8WCoi9M2kmbfsI6pbNu+KIVyUN6y7GTfkc3B6wLLiBiSCOrUsQVHrRurGCTP45fAnBmI6Uce53jmHXyFtja0mNAhd90hTQ2RUY21KrfOo00vZ+LEK7UobjI5GYR5PX6fdoDNrFKXGo1Y9rEhj7KLulfJ418AQ=
+	t=1746801013; cv=none; b=Wp47h8s9eLhJczFatzyQl21rDivqo4Hocfqzr4/w/SUn0Tkeyc+IIbZnR19zrInTn7UJlsI5RqNin2RD/ELK/hMLlnodMB4uA/LMYeemWRebGABTGcg1/Tn9wcJ9fUuv2goQk6uJq7BXvBCJU6Lj3k+wlFGipf1pTVQLNSJG6nI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746800991; c=relaxed/simple;
-	bh=hCpsmv275HP5/aRH2UewqRLavvTOvDm0DnZfYSdwUqc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uw3O2XhPoS1656m8YTKGD9MNnKg4DbsyGlPstZrUVtt9xyKH8Yy2DU/URo6duM5eLtl04JXuvuSd0FGcNldFqZXqRc1f9m2kwp9B6mk7cjPbX6DyKU4uIMgwR6zRpPwSW86dZvisk3/YntzeP+C8D5/zuQVkq4v6pF760X+n2GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hf/65QZk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746801013; c=relaxed/simple;
+	bh=T69onzC5gDOMieIFB/H9JUWz7lbjuiw9X0DCqrP93JU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sfIgtZnyBtoEvjWFY8f8zuNFFJyaObGSJ/INWOwV4lDNqo/RzT9IgJUlvmmkLi2lS6xNF4bj8fcLu6qGCCduyIWANNP8ZXXw9n/LHOsfzy6N6utiGxSLzK6TxYsTgsu1ShXmObM+2n5XZ1A1dcwDqFLXKzZ8TBAB29gfta+rCt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ve12nKpK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hf/65QZk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9A1EC4CEE4;
-	Fri,  9 May 2025 14:29:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ve12nKpK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A160C4CEE4;
+	Fri,  9 May 2025 14:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746800990;
-	bh=hCpsmv275HP5/aRH2UewqRLavvTOvDm0DnZfYSdwUqc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=hf/65QZkELMwtvZ5hghLriehO3cvcjD/L1vjosRLjgQgWn3+bShC9kYPGRrI+LSxX
-	 QBVBDd096OmwbmDEsLyVm2taNgaWXijiCsGWW/e4dDJOcLnA497wfw0FAUS1p4+ZFC
-	 w5ptwZqZJMmy8TsjwnMiN2qQ3xkb2psc/X90klcmBbJ/tgGAl1gN/usXZsmWm5B9AR
-	 0H0J709ti0yNsTVEoeB0vk/qTslEtTpQVPfACdpAOhQl8xo/BPu/FY6bR5eiRUWwm9
-	 fZ8JvGcT6FiQjcubgNYnsGjYG7hdP4h48iOy9bBtoPL9b6kZCYFqmTdVNHR++C1br7
-	 HCMXnJzIvFbRQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 7BE27CE083E; Fri,  9 May 2025 07:29:50 -0700 (PDT)
-Date: Fri, 9 May 2025 07:29:50 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [BUG] Lockdep warning from "genirq/cpuhotplug: Convert to lock
- guards"
-Message-ID: <79f13909-71b2-4f48-af38-3c3dc8c7c419@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <a6f59b64-1604-4186-8a75-8ad776974a65@paulmck-laptop>
- <87plgil3da.ffs@tglx>
+	s=k20201202; t=1746801012;
+	bh=T69onzC5gDOMieIFB/H9JUWz7lbjuiw9X0DCqrP93JU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ve12nKpKNoLO5S+jGDn+GnuKSmtlyWwW4gCq55wNbmE+8aewcIX+EYVk67L0Emrms
+	 bSMYq1XjAW4UVMbr2mKrc0MyX2k7Ob9Uw8zIL+bndaJZrhbU7MCGAaVn8YDzoBdVLq
+	 3VjfNcBoBwE/ANJqCFtMghOvXQoRzrb90pbwB55GOklkdt9t7sNpTFHEbvNbH1v5nB
+	 kogBKX65ir+V/RxTTkE6nscV9kSyKMUO2sw1Y2vEFzh0TX+6Q3K2JBrzRnh6CZL6gX
+	 YOISaBd7S150QOMDWxVrXGdVBf4e4tbGDOHKgRzm2+A5GQzBs/xGQC7amEuKsqnzk+
+	 hTU+l6R3+po9w==
+Message-ID: <bdc3a680-d915-4b84-9d87-bfbe68372243@kernel.org>
+Date: Fri, 9 May 2025 16:30:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87plgil3da.ffs@tglx>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH] tracing: fprobe: Fix RCU warning message in list
+ traversal
+Content-Language: en-GB, fr-BE
+To: Breno Leitao <leitao@debian.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ kernel-team@meta.com
+References: <20250410-fprobe-v1-1-068ef5f41436@debian.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20250410-fprobe-v1-1-068ef5f41436@debian.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 09, 2025 at 08:12:01AM +0200, Thomas Gleixner wrote:
-> On Thu, May 08 2025 at 15:29, Paul E. McKenney wrote:
-> > Testing next-20250508 with lockdep enabled got a splat that is shown in
-> > all its glory below.  Reverting this commit makes the problem go away:
-> >
-> > 88a4df117ad6 ("genirq/cpuhotplug: Convert to lock guards")
+Hi Breno,
+
+On 10/04/2025 14:22, Breno Leitao wrote:
+> When CONFIG_PROVE_RCU_LIST is enabled, fprobe triggers the following
+> warning:
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=irq/core
+>     WARNING: suspicious RCU usage
+>     kernel/trace/fprobe.c:457 RCU-list traversed in non-reader section!!
+> 
+>     other info that might help us debug this:
+> 	#1: ffffffff863c4e08 (fprobe_mutex){+.+.}-{4:4}, at: fprobe_module_callback+0x7b/0x8c0
+> 
+>     Call Trace:
+> 	fprobe_module_callback
+> 	notifier_call_chain
+> 	blocking_notifier_call_chain
+> 
+> This warning occurs because fprobe_remove_node_in_module() traverses an
+> RCU list using RCU primitives without holding an RCU read lock. However,
+> the function is only called from fprobe_module_callback(), which holds
+> the fprobe_mutex lock that provides sufficient protection for safely
+> traversing the list.
+> 
+> Fix the warning by specifying the locking design to the
+> CONFIG_PROVE_RCU_LIST mechanism. Add the lockdep_is_held() argument to
+> hlist_for_each_entry_rcu() to inform the RCU checker that fprobe_mutex
+> provides the required protection.
 
-Very good, thank you, and feel free to add my Tested-by, though it
-appears to already be set in stone.
+@Breno: thank you for the patch, I have it applied for a while on a
+branch dedicated to our CI to avoid false positive reports.
 
-							Thanx, Paul
+Tested-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+
+Hopefully this fix can be sent to Linus before the v6.15 release :)
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
