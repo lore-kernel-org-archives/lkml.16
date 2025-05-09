@@ -1,79 +1,76 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9D6182D7;
-	Fri,  9 May 2025 00:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8CB1FB3;
+	Fri,  9 May 2025 00:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746751999; cv=none; b=kLulpU4gJU31o9J+bpEXw4BqG2kzKe5FGK11I0/PcpauAgndEBqyYMnHgLo5EbDRllHreypaAd0PGQAHTSlBGDA3bAp+XFwgkA10bZvts6rOWWjZZJ2L6+TAcGlAesIofv8J2GoEh2YpsZWorgzIVLVtNg+NXHjVdYKrqdyK2tA=
+	t=1746752142; cv=none; b=g1f5FXHiqVgWbl3N7B5OD6heJV8lgvaig/oxBkkBTsdY+DJ4XXnPviBo7Ev2Jb0ii5Dfu7bm+JM2rWk/9jSV9p4IcD+7VOcKtdAe0mMHNpkS4BYJLuQy1NqRn5OlR9IFiCFh3ET3lOy+df2cUtGp7GiToN/cw29iYV0SHWIEodg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746751999; c=relaxed/simple;
-	bh=7tI/QR0WcvB+2PsIli1CD4nwjW4vq1lR0fYJi7u2MyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k4cGcb9Zgcid6mXKiWu9XIfkPyk2wV0fWBqsTagE8IBuGel9wUZFA4CicgCmnuFAv/tNYvVVVIFDiWFK4G0Hpy026QxknHe4uDbiVev0N6hvAt32YPupLt1i+sLgx+po15jxBvpzrivcXJKyz6/Xl1mc2YFMiZXmyCftq0PRTrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Rt1Qb/aT; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1746752142; c=relaxed/simple;
+	bh=eTn9W/L1nGkQsdzjJjRUCj2PWr8huBWV8nhOzCKqDJs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UrdGCld6QocPWknrX0SgBW8G9wdIN1dTyA+SFuaPLO+ZaSp+uiE4JX+hYWtFhh7BrBiwc49RwCMrrpN3C/sa/sswh+4md0YpZr1Qrof3NDsp3+bxyQmAnQMtLaLT1yNqjC0rWI+nEf0vCUE3sZWhJYfY5in0k3g/4wpKo8WsBRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=D7ivdiFT; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Rt1Qb/aT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=zA9GVEDdxoja+P718OpSN889xJ4reyChIzkHQopHvjk=; b=Rt1Qb/aTe3ekyQswjV0W+4iq0G
-	Qoha1i3aG1xkEVffqfd+y8bSkAg46HbGCdr+2LGJlDzYmoamGppNZJ1P2+EQLkzPuawPYbsUMFCbF
-	WenC65o5DCGxF7RETTgpzSDS+8qMdAc3Q6Ga/fCbsC8GxQkKb+b+gyogg1NJeeJckGD2AU3vT7wSH
-	VKfpGLqPzkSJF60xIUrUKkt/DcQKGd58Og4fdU29UUniBV7FHYvaUeZ8IpOZb0mN2T+BX+UvT/LoZ
-	tY6l6f9FdkolK9arSy053oaxIEvZrG3/LN0bTMAWQwebCtRBkl3l1ylBOA7ZdXybQ76eo9mGwVT/5
-	OOJY5d9w==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uDBz7-004jGW-0l;
-	Fri, 09 May 2025 08:53:06 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 09 May 2025 08:53:05 +0800
-Date: Fri, 9 May 2025 08:53:05 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-	Thorsten Leemhuis <linux@leemhuis.info>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Danny Tsen <dtsen@linux.ibm.com>
-Subject: Re: [PATCH] crypto: powerpc/poly1305 - Add missing poly1305_emit_arch
-Message-ID: <aB1R8eIdc3ZA5rCo@gondor.apana.org.au>
-References: <cover.1745815528.git.herbert@gondor.apana.org.au>
- <915c874caf5451d560bf26ff59f58177aa8b7c17.1745815528.git.herbert@gondor.apana.org.au>
- <242ebbf1-4ef0-41c3-83cb-a055c262ba4a@leemhuis.info>
- <aBtF2jVZQwxGiHVk@gondor.apana.org.au>
- <37cf099e-d5c2-40d8-bc31-77e1f9623b1c@linux.ibm.com>
- <aBx9OAyiDx7MYAVs@gondor.apana.org.au>
- <20250508162954.GB1218@sol>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D7ivdiFT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=25OViHPlrDjlfagbh2iibN4Jl3Oh2Bhcbq18Fx0Ge1g=; b=D7ivdiFTtpG6ebtUmZmjZwDVYz
+	vfgxQXYR71pXVP1jzgcmSXzP736Kq6uFfWLtgIWzX9xX9tLrnJ7gWZUWsq+HB0AxCJymsFddOAJ7q
+	sg/5Kp8NO7NxSLtO3yLwduwliJpU3irKqG+0YQSpjXbBf18o0+vKr9J/G42eIeDbbCyEU4PkesNed
+	44d+a05LFjFegNU7U5unXpKRTqkspJuFEYeCuJm4+m0+yUdD8P65nU4GhkB13KvxyyAB2M8gKpnc/
+	G/+uIQdvuClUOKnlEyScmwgdO53ZT82C8RMezcsEIywYFbBjUgtTiqrwt/BEMW9GnY8CSWJE3p0Fy
+	rafAZMhA==;
+Received: from [50.39.124.201] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uDC1b-000000028r4-2aJW;
+	Fri, 09 May 2025 00:55:39 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH] Docs: driver-api/basics: add kobject_event interfaces
+Date: Thu,  8 May 2025 17:55:38 -0700
+Message-ID: <20250509005538.685678-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250508162954.GB1218@sol>
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 08, 2025 at 09:29:54AM -0700, Eric Biggers wrote:
->
-> My patchsets "Remove per-architecture poly1305 shash glue code" and
-> "Finish disentangling ChaCha, Poly1305, and BLAKE2s from CRYPTO", which included
-> commit 378a337ab40f, passed testing with qemu-system-ppc64 with -M pseries and
-> -cpu in [POWER7, POWER8, POWER9, Power10].  These issues, both the build failure
-> and test failure, were introduced by your patchset
-> "crypto: lib - Add partial block helper".
+Add the kernel-doc comments from lib/kobject_uevent.c to the
+"Kernel objects manipulation" section of driver API Basics.
 
-Thanks.  I'll try to reproduce this.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>
+---
+ Documentation/driver-api/basics.rst |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- linux-next-20250508.orig/Documentation/driver-api/basics.rst
++++ linux-next-20250508/Documentation/driver-api/basics.rst
+@@ -108,6 +108,9 @@ Kernel objects manipulation
+ .. kernel-doc:: lib/kobject.c
+    :export:
+ 
++.. kernel-doc:: lib/kobject_uevent.c
++   :export:
++
+ Kernel utility functions
+ ------------------------
+ 
