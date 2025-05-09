@@ -1,65 +1,66 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A5F274645
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 08:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FCA27466D
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 08:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746781188; cv=none; b=QHFwgYJ1395nPcIKNezYDxvPyCzEYu1FNBlL/k6ZsoNkz1dOF4VxmwgO8JP2Pudzgejm5YwNnwE0y4g1MEKLTiL1DkN3Ma3JnG8Wxq++ouzilEK1zjz7/je6hPoFq0aIPyaVS/DvFUTgp/y9HTmOhRArJYUmTviHgSWAgQJozXg=
+	t=1746781189; cv=none; b=SedzCjASvvJluD/CzJtBb4dWmNFBEtvv0VU8llnWiHpAwNJWi57kqv/cRWn0tJlUzRMvnz8uKp9wQTWdRFa+JTdZSGM+hZosBwWc3kWxBvy0xGt5gQg+AXW8Qh8yMaT18MI3Cbfv1dN/c+JJmGyD1u/PQ2+/QtfW605x+WN/JQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746781188; c=relaxed/simple;
-	bh=begbQC3Twc7/He76AAI8eeSeG2eczVhiBKL1kb6Uf2k=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qEzl6iO/dUOgvM/nfrRqecrJIrHMI6kIecRfUojsU8z48TNGX+44JOKYab1SBMHRsQfI/TQ173ljjoVUGnp65MfUgXuR4W0kTh1laf1wF6+c3pBUUtF/IYpszl4wyRKrDqDG8XCjs7jtzbZdSPEqnKcjeey/HFT0+TL1auwDDFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Gqxd1eP3; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1746781189; c=relaxed/simple;
+	bh=rAFzUZAkSv653DMA1Gt82SdKNPVMD+FcAEb6O/SlSkw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mQ8AJqwNIM1ZCKWsGpLvwxLI5gw2f1DM3Mk2UzV+c5MMifvDP0gJHeVpaR13/xveddUmBrBDrxmhb2oJ/F90cVNAmuCmQKsoF9dR5E7qKC+jRsBgWZ/qqXz/kkEKCLphIcsT0gocWY37xaQAr3XusrqrWVtQw8Q5fsBhExrHdJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WQmUwce9; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gqxd1eP3"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so11775965e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 01:59:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WQmUwce9"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso12729055e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 01:59:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746781184; x=1747385984; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gh/ALdVpxuaXhZUL5QFtMT28H7kuOgOyXFrKwM0kSAQ=;
-        b=Gqxd1eP3FucpHR5D1Fm5jmjwGwtF1LwOxgY8na0qx2e1QMxKTEN3f4Nug/RbtCYEr9
-         Or6dnV+ts86OK1Vu1t74lpVedzZZhUkSEWTIeR5/dW/S/bqrdTJ16LDiPOMKnfPPBTLQ
-         ZbTf4wNj1dDqRjAKMOfuR3LHTmZ0+QoYrdWXMtkMu+xQCxzDR6uKTSQWVb8ModUmMp8j
-         6KYlLj3eFcg+6QHbd1HDo75Guxz6JJMnVyDuP9xpSU0yO8zLDW2Q4LC34PtxJzMMP9BE
-         7dQfxcsXxe0dVP3ybaMVCnuYsYkGNvsLVACAzFs7g8jXIvgjyE64pGpxofsl02ih7jS7
-         oRsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746781184; x=1747385984;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1746781185; x=1747385985; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Gh/ALdVpxuaXhZUL5QFtMT28H7kuOgOyXFrKwM0kSAQ=;
-        b=GFatfqBBu5uK5j5mAPGkw8Mll73zYyr9TIrmXThfQHjCoNzThttODkUTW0NqSOJ4cp
-         LQNAt1qDpSBEVrweb/gie2DwyPmGXmv3urJj2TSURMX9I15O5RQRQTdWPAvz9HgO4Ndp
-         zQJ2m6/Wr1Oa7HCXjGpeZWDE6e1+k4aXAacqKEx7F1tWOYqsklwSpZ0gcNpezng5hgNc
-         WKz4h2AosvuE8QIi77OTnF+xkvRB2aqX957ahf3+MgeviNsBgQuQiFA0CVOfaj+6JJ3O
-         HtlF8uVQ1y5CgUyHFmuH5xNIccxY+0W3U7QmfJjrOAM1b5QcpKi0I80RWAm80ECisdcZ
-         YJfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQGWD4lvn6trhmatDAXD8igCy3I3jvcxvkE5kA3pMQzyVz7DRdqo0dzA4uiJAzkJt0X7Z/eJjxwl6kE0c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyM9ZnEf0P2KJrYwmpTTCZwnIZifTcSG76dSa2JMQb3IvhZvj0O
-	btMpthC2p8/U+xzEd4uWeU/FJN4W7qq4wi+u8yDGb0RkyR+CI8AVZPCcyuSRq6g=
-X-Gm-Gg: ASbGncsWJGojfANHz1RHo3M7VLZEWEAC64HLkVKIDvOc3bFwYYgaz4pNSdhmGuLY/3o
-	RsjZfsoKujtf1Q6NbmnvhzCfUwLoKvyfLiEWtC/Qxguf9uqKVoPenYx9b/5cNy/rm5UT7EGN1zf
-	sbaQlM5ji+e7lNYBXdJ/uR66q+GCAElZbCxSVJwI8iBSkKFyt0bviLlyyWQUt8vuRn6e1wOdjnh
-	dAo8aUbzLOFRSjihG9k5KneBl4jtR75etVuvKORXvz44zUTF2VEJgi2015zechlyq5pNMrPlgTZ
-	CRbvCTG76+qHEsBcI4cT5nPo7B7S3dAuXL6k6WxpxO5lu3Zm9MORJVEAw7qT3g==
-X-Google-Smtp-Source: AGHT+IFFgVDU4MTbGBoj+CE2O5CNv1Tuh+orHpIHTEsK15CNC20+hPfSaqIvpAo8yJceBmfZVzw5/A==
-X-Received: by 2002:a05:600c:1e02:b0:439:9737:675b with SMTP id 5b1f17b1804b1-442d6db8213mr21706195e9.7.1746781184525;
-        Fri, 09 May 2025 01:59:44 -0700 (PDT)
+        bh=T3uAu3A4YUWMgeScFXrknXczo0EYOFrNx11xrsJM7O0=;
+        b=WQmUwce9vfpx+a/iQTF6SCrAPLWhOsUtEDYFv08+H4w/72eZyBSAu+G3ZFGFT3ceDG
+         tnbYSIje/Ky5YYroxYuxqx7xBZ74JLkmt6XFmG2fiVEVlkkwGBCoJHetGlWsM33QUiuP
+         9cY028rrP8ABoZzTahAorVfzuxLT4iuVfKCTZgTlWINFdeybFLNskgtfzwWF45G1yDrU
+         AYGbGAISv4qivfPSjUxbmuJaryps0vyth/sgs021HrNxtLjUEvRrk/SjUjxdcVeXRs2X
+         EdUvkC45fJe1Vjk3rHmddisUegMvawv2riKIG+QgVScwGy4QL1kQVTgHnt5ioyBDHwo8
+         bZDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746781185; x=1747385985;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T3uAu3A4YUWMgeScFXrknXczo0EYOFrNx11xrsJM7O0=;
+        b=Gjw0mWuROlJRyRJsP72PIBUrAnue0PZglylLLQxIbzcZpDlndmc1YmnqfbNb1sTD4K
+         5+dYxdsbeMu2gkhMFANtErCGJQ3FiY9a94/ww5Ooo0pawpMEzV5thdCO6wm7qvredtkh
+         dI/LXJ2gosQlnDkpecXaabqMDLAlOy/wEY5AeCoS/kUn05WPY6NchUL2cdZWDeHm/wpP
+         fd7JjAyNESfE0hpBqWoGp1MbKckwTmCW0cVF3WmSreooQ9Y3uc2OpsgJLhZqPt0EMm6r
+         uVsE6maxgV6uZKpvRXmvNQKWpg8alJOt431QcwOqQ4rfEeD8PKVQYHDBxIS+lXquVyM1
+         fv9g==
+X-Forwarded-Encrypted: i=1; AJvYcCX/8rrNDkd2BYoMccgrDFprMWsgkCaxGrPBk4NoJ2QVvjlaosw4CNwTwJlnfNuqRWcvj+3IShWZBfDaFjE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm+2Ad446XyyhzSOeNFYJ3rbk5DQrCut4B92rc+TVhi4bArMiW
+	Dt+bcu043Gqr719wGeF33CpuLQ04Lo0kHSMb4Jtb3Uu3MBkVX1rVJphPwW/LZog=
+X-Gm-Gg: ASbGncvG7A950ZIhx9D5w0BBc80J1YtrR5PYiedKJTdLZiqOGHqZF3LjyJp7EURrL17
+	zCSHfYNtiDTvtVi0yQsbz5514XMRjs7aQGyxdKpLz0ej+yHhI6AMc87mN0j6D5xOLOp3ky0pf48
+	pZZEeUYzyKGha5FQe52E1ZVnKTxoDZLpq0a89/EX1vXU0aTQ2OlccR6Ns8CQOviPWabTKCDqjqN
+	CCRqRHS+l6aQM0uNQHaT/UyhMQctmH5JjOqAAWpmU/ldFLgRoawufWfWHsKvqG2pO6qSP/epm0z
+	m4bFCmOJWMMF25W854b3Grm06l3DEkZTbh11foZFyNuZbOQwHfFHYT65rGiQEg==
+X-Google-Smtp-Source: AGHT+IGGLXUusoILbS1CySmY5yLxrVw4d+a59DHYYC61SdUtYSIzuzu1CJOLjh+OwwTUyJ0NNUtfDQ==
+X-Received: by 2002:a05:600c:c1b:b0:440:6a68:826a with SMTP id 5b1f17b1804b1-442d6e05cf2mr22229985e9.13.1746781185559;
+        Fri, 09 May 2025 01:59:45 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67df639sm22369115e9.13.2025.05.09.01.59.43
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67df639sm22369115e9.13.2025.05.09.01.59.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 01:59:44 -0700 (PDT)
+        Fri, 09 May 2025 01:59:45 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: [PATCH v2 0/6] panel: visionox-rm69299: modernize & support the
- variant found in the SHIFT6mq
-Date: Fri, 09 May 2025 10:59:38 +0200
-Message-Id: <20250509-topic-misc-shift6-panel-v2-0-c2c2d52abd51@linaro.org>
+Date: Fri, 09 May 2025 10:59:39 +0200
+Subject: [PATCH v2 1/6] dt-bindings: display: visionox-rm69299: document
+ new compatible string
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,11 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPrDHWgC/4WNQQ7CIBBFr9LM2jFASouuvIfpAnEok1RooGk0T
- e8u9gIu30v++xsUykwFrs0GmVYunGIFdWrABRtHQn5WBiWUFlr0uKSZHb64OCyB/dLhbCNNKB/
- CKO1M23cS6nrO5Pl9lO9D5cBlSflzHK3yZ/83V4kCu5YMXYz3yujbxNHmdE55hGHf9y/bqJ6Kv
- wAAAA==
-X-Change-ID: 20250507-topic-misc-shift6-panel-1b0825c84761
+Message-Id: <20250509-topic-misc-shift6-panel-v2-1-c2c2d52abd51@linaro.org>
+References: <20250509-topic-misc-shift6-panel-v2-0-c2c2d52abd51@linaro.org>
+In-Reply-To: <20250509-topic-misc-shift6-panel-v2-0-c2c2d52abd51@linaro.org>
 To: Jessica Zhang <quic_jesszhan@quicinc.com>, 
  David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -85,61 +84,50 @@ Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
  Neil Armstrong <neil.armstrong@linaro.org>, 
  Caleb Connolly <caleb@connolly.tech>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1553;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=997;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=begbQC3Twc7/He76AAI8eeSeG2eczVhiBKL1kb6Uf2k=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBoHcP86ecbUVbY8XGHkeOFwBPL0TeGmWc+Z5Tjdhbs
- 6uYaUG+JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCaB3D/AAKCRB33NvayMhJ0bmBD/
- 0RaW9R/7cvEWGoMd84BC18u1Z7WkHKT5aTnR++KlVIG2iFejVA8J6T+HhTV/u9wW1DseMnEBUOfHUP
- fPdUhPyv/3hFJyhH9gJ0P9R1lpTc0oS/xhJm15NvQXMDpN7jZCQKq1xg+rsXTMZd73g5lNyERftpOH
- fBDTme8/rVPIZWpj8fYMQ8r0PbmxEzBBVhP1p0MiZYLVpe0EVxjsxYtzGzZJ5lQcWyrKyJ9pCgOCwO
- SBos9KMIZy2tIBSONNTF+3csyebot7cuMlPBiHeob774/p85o63kswYI8kRVkFXjDLtNbzyME+EW/I
- ixMjrZaO6muGUSlyP1JhQIViA8O2QNEAZubTQZV3Ltk4RXU8UVCIChBbGetz8mquPx9994CUaMh9i5
- rUXzeKuYwYwCptctvKpDKEO8/GsXeefxQMD6KO5wpeV+tsDBj3zV9Lictpj1kDF9Wf9tGWq4vtCzKr
- /BvUGITtdOnjK/lmlgS/3ixkseugjD3ityU/7/LKQUDuOjb3tBwS+RLQAZeKQ6rxHoBX602Z3BQZ9S
- K67+rhYc8aFDGGxB4nPcW2EH5Ymfs9Hc3lV7AJJrNC34Xs3YkE5uKy+360KBODAn2P4sHlE6EGQZsD
- AC8+xmG0ViqfEmX5jCcBxbNAH+P+egAssc0Pn/yv09My3yVUvUIeaKiIt8+g==
+ bh=RZnJ7ALArB3S7wde3YqyxUd7RDqI3oA1G2B1Dr/Q+do=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBoHcP9MKcRO9eIXObPviW/V5gNHncIf/stkVaVtTSb
+ nYclvCuJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCaB3D/QAKCRB33NvayMhJ0QEzD/
+ 95LJQICNhRzxZ4fY78+fdBWGHMKqvJi3xCj4wryHyTDLLvc7cIb8RMbbk1fBjxzw0nKBXTBiHL+1Ws
+ wRhxpfIfw2EXYauyhjvDrJ+gDaODcxbRtR+VriZDWaTe61aXeYRiVTsSLeg56xhgQ64iTj7IGj834X
+ MsCeaIeJ8rOdsKpPt7aL/cChhG8jfmT3jYWEWD7FHc1DKPI7BSqFkx23ZycuyD+qOSsRZR7xdr+HbG
+ lNjRqJabzwvJ0mPQEsr9XCWpv70J6a6xOHscpjDO1A5XyTB+eGzlqo0Smc4sqFnLKT6VXhvsQbe0zG
+ x0f9HblXFIU7Myx9NeuQW3ui8vVVrlXL8P/KYRi+Q4kxCmhzD0OZUab79dH/QXmUOgrPXk2nxAWPqJ
+ 7/ZHliXq/zSjUh5hN034abXLvSS+tNB3/K8iZAWgYfGD5zGEOaBxMVntGn7HYiVj7mGPqB+0ZPH+fJ
+ 4c4oMcmxseBJr28aTrH+g465Rqtxiq8JBBsWw9+YzJQgQcBw4xANAH7Cu3RHahc0i1lP6B++vdHP84
+ TAsgdfMONKDvxthNkpBxz3Q/Tv0L4/gNt/WdbDqNwNpkzy9Yriwufe9qIu9LZCD2OWhPJQDbmt+lAB
+ PGvf3e5yEvM4mFFeuiUHgKBRywMPHiE7JzziZfxLO+3f3L83mT7eKhaqLYMQ==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-Modernize the driver with panel_desc, _multi, const supplies and new panel
-init with refcounting.
+From: Caleb Connolly <caleb@connolly.tech>
 
-Re-spin of [1] and [2] to finally document and support this panel
-variant.
+Document a new compatible string for the second panel variant.
 
-[1] https://lore.kernel.org/all/20220123173650.290349-4-caleb@connolly.tech/
-[2] https://lore.kernel.org/all/20220123173650.290349-5-caleb@connolly.tech/
-
+Signed-off-by: Caleb Connolly <caleb@connolly.tech>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
-Changes in v2:
-- Add panel_desc to support the variant
-- Switch to _multi calls
-- Switch to const supplies
-- Switch to new panel alloc
-- Fix shift panel init seq name
-- Link to v1: https://lore.kernel.org/r/20250507-topic-misc-shift6-panel-v1-0-64e8e98ff285@linaro.org
+ Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
----
-Caleb Connolly (2):
-      dt-bindings: display: visionox-rm69299: document new compatible string
-      drm/panel: visionox-rm69299: support the variant found in the SHIFT6mq
+diff --git a/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml b/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
+index 30047a62fc111ff63cbbc275914ef8bb7cb4ffd6..f0a82f0ff79099cdccfd5c5001de0d319e94410f 100644
+--- a/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
++++ b/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
+@@ -18,7 +18,9 @@ allOf:
+ 
+ properties:
+   compatible:
+-    const: visionox,rm69299-1080p-display
++    enum:
++      - visionox,rm69299-1080p-display
++      - visionox,rm69299-shift
+ 
+   reg:
+     maxItems: 1
 
-Neil Armstrong (4):
-      drm/panel: visionox-rm69299: add plumbing to support panel variants
-      drm/panel: visionox-rm69299: switch to _multi variants
-      drm/panel: visionox-rm69299: switch to devm_regulator_bulk_get_const()
-      drm/panel: visionox-rm69299: switch to devm_drm_panel_alloc()
-
- .../bindings/display/panel/visionox,rm69299.yaml   |   4 +-
- drivers/gpu/drm/panel/panel-visionox-rm69299.c     | 253 +++++++++++++++------
- 2 files changed, 189 insertions(+), 68 deletions(-)
----
-base-commit: 08710e696081d58163c8078e0e096be6d35c5fad
-change-id: 20250507-topic-misc-shift6-panel-1b0825c84761
-
-Best regards,
 -- 
-Neil Armstrong <neil.armstrong@linaro.org>
+2.34.1
 
