@@ -1,46 +1,46 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2072.outbound.protection.outlook.com [40.107.101.72])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2069.outbound.protection.outlook.com [40.107.93.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E86235059
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D742367DF
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.69
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746808135; cv=fail; b=M2WUuDR/X/XOcYPpb3G1Zg0OQ1oK2IFh+fr+UKUsP0+UMhQE604EfHHvdonOXKqbzel6zIaSx29W24EXqA3+Kwp4E+m85+ipDi2LQ01dzqiO+2WKOKzFMf3vXPlo8NyMAE9yEZc3PVaRyaO62eEcMKOTeN7FxrgV9tXc8I420js=
+	t=1746808137; cv=fail; b=fJ8cOLyS7WkhfjvfqMtWLTa2x3FyhOQzLowBFa2I1/1AvBg+qPgxwFUGDGThxES+F06uYcYmgRUgmUNvy3I6ictmcmA2RN2g/CZhEpdqsq+wiB/FyG1GYKfCTuuOE9osZyxDjf8qSMOIZZsqRIP0tzbV5p12S13f6PHjZPr99J0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746808135; c=relaxed/simple;
-	bh=lDJwdN6FpWr2CYimiAJ0LT+Q5Qt+ziXpIImnAFoy8TA=;
+	s=arc-20240116; t=1746808137; c=relaxed/simple;
+	bh=sES+mICdg8aZ4Ab1ft3OOrg9QBVBojGezKIEpdOTvZw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bHLOpVVPzXD5/rfg+G+q/3zZo4Xk4XLaEIpWpZp2nr2Ldlp1Jw9OJIJJSyMt9Bkh6/lMpJn6mjWvQtJnwyTRJkUMp2AN+7TF1dntzsQTdujNQ+RXGbWk092iIm+/a1E2xBDhN/Y3gTQZupuZn/UjyC4MzhS/wFv5AcWWdqE+G4Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=W1RXO0gK; arc=fail smtp.client-ip=40.107.101.72
+	 MIME-Version:Content-Type; b=MhJWQgO1vHdACt9UEfdZbq23XPgy460R4vkRTdX7XT+QVVuvWrRC6cV90w9p5nAj+3RELzCBHJPjSl6g9oQ7IqWjywOPI3fRjvdfyWAQpya7IvU6pIhws514cqWuq/kMtGhiGGiWCdiirYRBFbXFIgDEcAq+ymysMc1VJvycLzM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=sYXeIzrn; arc=fail smtp.client-ip=40.107.93.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="W1RXO0gK"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="sYXeIzrn"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wLK9qG8CUA4iJ5ZZXIyjgG8PehnmD0PFnhyRBqiZKJCYSx25zYpt0DeSfejk4YDKfUiv6Yyi843P9P7eeRNz1O0E7PdqbDc82jYNz6NAWYpYwVuZTIEHr+zCC7faBNyCO0SCSIRI/0+m0OXU3Ukz+Kf2uO4bTvaSUzZAmloYNIxG6vqB5JGcZoh9bM2I+kgu7ZOhJR4Hwf62oH8b+xJvA7YWFeYAFyG1t8ZFHsRMHRLDInoBQJPXe+Nnsuo7Mkrn9X1DAZOcyZj/jsWVhoMvGOIcn04BNiMpgU8cBVWqmOaSBzZtwy32XFg08P2OZl/jgIKNpHPQArsQh1M1lRZ0gA==
+ b=Dfmdoz3v+JMIbg7g5SAfiYq+cReONmGvVEYtYzcXQsP73AJFGeTBaYiZzUiDYtCEieN/fMeDX3RBpjCUGa8fqLge1LoRGmlf41v5Bqi6jGF3ZM+A7vFlICqmNGT47QYafzt9fMyB5UVmp1+LRrEOKPM4BNOaPJadr2/3At6LfxcyHbGoFURz9cqApFRnvi57lr0UyN8Hx/d1IGBf2eP8ct5lzoh2QjBDSHIY+Uhb65PkPxemb9DLonnu6gIi44ogLu6jO3KwDL3uDsmITUoOsxuuCdSpTCZATJ6jvWKUwvnkulFjHYaM80j0eLaG3pW7Zic5l/M8iFnA7emS7wXyTQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fySsKOCqkIIh01NJVkR0I/ghRtxCo0vK49cfgTJbOb0=;
- b=qvk6g5M/0BjJt3n+IxeDajRAAaM04tjHzN0oaPrvOdQA+6AEEEIwUmNjYbVfRb33X6ourwaof4ZyFCEBRlLyn5/MGb0UaaF1rOEBxOIhMRQ8pZz5AILanlYeqWe2rwRDMrEjnIIk56QotKML9k3tjzZSyPrTov5SnckJthRqdhTvzLWOT4xAECMMlxph/zY1H0+2ea3P4cBtuK2Nkl1CUKGzO18k2MPaCw7Lz0tcgubxrzRMKUirzY7j9EDKDHvenAtxqorXCSeBnhBuJZ6VeCt7sXWxkI41ywJ75fmbbHwczVINhTr/agoVEBL9dBDFQfjw+obmwAiKy/YQycj6XA==
+ bh=KeMv565h5S+fFGgfHUsh+qQ0mpyPWuI5ZFspel/sS6Y=;
+ b=Yfvl+gKRATWmx2qkuK2egdLIHM0eQOeHEqec2VqoaEQozUyxZ7bl5VQKTFBuK9w3pQsn5AqhyYCx5PGBMs7M/dnM8aKRm012Njbcw4pCvuvAWN8zC+pq6idtNEkxdmBRXbOZ1eEN1dKVdZWJuLl9xaNfdsBS8nXjvf0wsZR4zls2CK6wxQpBhJR+JK04Pcrqf/iQU9s7XtMzKnaU6f+QYq0TEvopwX+sFzXxdXIpJtKcsYdi+mv5vOKVG1RTGL6sZt+nh2xXwlXXBfDhIFH5d0GMEJz+H2lWYZO+0Hu5uhG1g/kbZ3uKDPKxKTwQZNsQ2jZvHOjhWfjdbCwEW9uecw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fySsKOCqkIIh01NJVkR0I/ghRtxCo0vK49cfgTJbOb0=;
- b=W1RXO0gKofA2WAeLt0Yr9x6PGfnvVXzFBDoAaFplyoNgPs7N+lVRtXaH/olyBDF9ltvG+omfXHTIGkR3Ae1iYiUF04PMcsJpHBRfrjM9IfV2+GHSBf5eVee9MX8zfJ19V3DQLon1ouZ0wsiJOsPhnJH7wRAtebJ2prssvNXF6kM=
-Received: from BL1PR13CA0100.namprd13.prod.outlook.com (2603:10b6:208:2b9::15)
- by DS0PR12MB8526.namprd12.prod.outlook.com (2603:10b6:8:163::9) with
+ bh=KeMv565h5S+fFGgfHUsh+qQ0mpyPWuI5ZFspel/sS6Y=;
+ b=sYXeIzrn3E1zl341Ntqdqrq3QRtgVIGZltEKOj9j/w5hzqJqIK4Tsa4M95ZWe7LYoJoWEQgGd6cOPIrJepWEOoGinxlCGKwwywlm1wLJI199nKK5fKKaMLS76lqNT3VJIQAmvhJJ1QZCW99wyIAwz+QG3F1Gy6mxBimESjHBf+M=
+Received: from BL1PR13CA0114.namprd13.prod.outlook.com (2603:10b6:208:2b9::29)
+ by SA0PR12MB7479.namprd12.prod.outlook.com (2603:10b6:806:24b::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.20; Fri, 9 May
- 2025 16:28:52 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.24; Fri, 9 May
+ 2025 16:28:53 +0000
 Received: from BN3PEPF0000B074.namprd04.prod.outlook.com
- (2603:10b6:208:2b9:cafe::21) by BL1PR13CA0100.outlook.office365.com
- (2603:10b6:208:2b9::15) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:208:2b9:cafe::39) by BL1PR13CA0114.outlook.office365.com
+ (2603:10b6:208:2b9::29) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.20 via Frontend Transport; Fri,
- 9 May 2025 16:28:52 +0000
+ 9 May 2025 16:28:53 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,11 +50,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  BN3PEPF0000B074.mail.protection.outlook.com (10.167.243.119) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Fri, 9 May 2025 16:28:52 +0000
+ 15.20.8722.18 via Frontend Transport; Fri, 9 May 2025 16:28:53 +0000
 Received: from tiny.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 9 May
- 2025 11:28:51 -0500
+ 2025 11:28:52 -0500
 From: David Kaplan <david.kaplan@amd.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
 	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
@@ -62,9 +62,9 @@ To: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
 	<mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
 	<x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>
 CC: <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 03/20] x86/Kconfig: Add arch attack vector support
-Date: Fri, 9 May 2025 11:28:22 -0500
-Message-ID: <20250509162839.3057217-4-david.kaplan@amd.com>
+Subject: [PATCH v5 05/20] x86/bugs: Add attack vector controls for MDS
+Date: Fri, 9 May 2025 11:28:24 -0500
+Message-ID: <20250509162839.3057217-6-david.kaplan@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250509162839.3057217-1-david.kaplan@amd.com>
 References: <20250509162839.3057217-1-david.kaplan@amd.com>
@@ -80,88 +80,107 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B074:EE_|DS0PR12MB8526:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2762ceba-c60c-4a07-d1f2-08dd8f1695e2
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B074:EE_|SA0PR12MB7479:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2e84c552-db70-410d-3e33-08dd8f169651
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|1800799024;
+	BCL:0;ARA:13230040|7416014|36860700013|376014|1800799024|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?xEUlRnMI2l8EQbW3qtdfwI53k5gTd5o96r0yCSpTk0o92794mCZpSpWStfde?=
- =?us-ascii?Q?YGINz14ND23LMlFXsC5nJZaCPzmp+zQQAsHcGlODBtYALBF8nHBoHI1o0ip1?=
- =?us-ascii?Q?w6XbAVUid37VoTZKzE2f1UWevZ41bc27oXsBy81laeuvpq2V1wgIv3l9Ik72?=
- =?us-ascii?Q?ygqUKjPJLnaDvIIJy/Di9NszOokkB3vBZtlowYjdwWs38UNURwSQTayV+oKL?=
- =?us-ascii?Q?36sXJZpHZAZSz3Th+rsuhSYYm9RfkIpa2DfyjOAme8erqOB2uNrszdYxCtat?=
- =?us-ascii?Q?BgJutyNilNS6kLSAoR8PHPACy9X9mIbnv4lp6wz1JRuA7qqfVNMdU90+i6Wu?=
- =?us-ascii?Q?r4XsiKPDc4eCsdHgCCS3Ad9Vpa2tVnAautFEVzRC7hft7vlYbi+rncwwZoPv?=
- =?us-ascii?Q?ZVZlcCmxzWJ0W4THcCE5ZneD9iIIPsp66z1d4UK3pvb/AP7mLtZVwbJgEupu?=
- =?us-ascii?Q?MapuEEcDNCVtB+dq+zQ1rPXKVZZlvKNrsfOK5+1imlUYTNXq8SsHrr/kM3aw?=
- =?us-ascii?Q?g4GO2GjRcTt8SJIPsus6ZZbW9EV65u0foncNEWxNcMifMinZ+QJ3yWulth7+?=
- =?us-ascii?Q?V/exWafEswzR2aqX52rwXhzwi1JI1UenlQpj333j2d6lBui8iO9CRQOUMDyn?=
- =?us-ascii?Q?Nzub58qTdceYnhCIuKZnma6ZGWDBiAFb3z7c7LcfNbPolkXqj/h4oF2pjht1?=
- =?us-ascii?Q?1VvHYUgGzmgZou14qRx98+OUzXXjlvMiQW4hDQ5lNFuOqJjEoPSLtgBWZVN3?=
- =?us-ascii?Q?Oh0Qb6Z5E5yx0qmGktvDyrgcihAjhQeA2eF608Xh4bTJ79ZfZrs96WKxBaDH?=
- =?us-ascii?Q?buXRiE8UTfglRw7tKpzVlNuCjDkfKd+v8hE6yA4/cVboIpUvl6trIzqPzzwn?=
- =?us-ascii?Q?mMJm/IJGWxnEksshe3Y/ih4jrlRgNV4Oq/WQvsjXp2zufHhQuSoa8Jqv6c2/?=
- =?us-ascii?Q?mQ+3tRSzYLkf4AO8IEfKo82BpH+dxBs5e+keGW1iGy3AFU3uOFZjXAZLbIrq?=
- =?us-ascii?Q?GYCoEgLl6pFzLvM/Fhk4YqhHSfJjLGoOYhNER2yjbTcLrqTXyB5UaYEpAIEC?=
- =?us-ascii?Q?bE4mmRJl8bSTyy9cz+OYii5rYYXAgx45qBvOVVvWU+7P/jvYTDApt+h+UiDs?=
- =?us-ascii?Q?lBApYhJwIZPydQ9vUlTjPAbTAepRnaMOjIb7cKRguvIbPw+VFtpqdy3UxWyJ?=
- =?us-ascii?Q?wm690iF5lTfaUVTVrkLyP9PPcTmAf6X5miYzep368GLVeHpkatgK8ialuCQW?=
- =?us-ascii?Q?cr42IS0S/zvNBXyBEPE4u94lnp5dsVSLg/6e076fypY7E7tPKFsdRuX13Qhr?=
- =?us-ascii?Q?CukRWTbiBxUPz6TQZ6V4M19OLbELEKJRkqWkuhQ/NUta63h/569GQeme+/ER?=
- =?us-ascii?Q?NVpvvD1JIC0q6nGzuMg+XpJT2TeNu2VG3bgDVflWaVHqPfjkNQk2BoZlai4y?=
- =?us-ascii?Q?7aDHwyoIStECLAkZcup4ehVNeg4uha4IdIdzGNZXgKFS4rfy7dWaPSpGxXwa?=
- =?us-ascii?Q?8oQiGAoxWti12rqjrSEpWLQ9xVeTXQkGy1Wj?=
+	=?us-ascii?Q?wgqIF1sHCXrs9JSlWpBMv8MWAEWozzw8o1OiwHXBMnmtqUgjRBiS9XAqg7g9?=
+ =?us-ascii?Q?FBX5SHeSUimdUQ2qR7Q4FR8g1nXdDQ25/gJOgV+Hw+VIWcN/LlKa2xc/8iKU?=
+ =?us-ascii?Q?gUA8asxkom7cBu3myQS7dEJdIp3CyI/YqGA1R4S5EEo3mBUpsKseIhF1mnJE?=
+ =?us-ascii?Q?kMFXs2PuOnhArIx3+PsJGAy+g7vgzI+aMd6Ll59NbEn9S/DAhy4TNHs8WXTJ?=
+ =?us-ascii?Q?yvJcP86v+EP/P1WWLinhsxg1XQzmGC3wnosvLGYnIB0Pj/4ibZ8NrVH+NqCK?=
+ =?us-ascii?Q?GdXs3wKvFCLbNLPxnssSM1/Fi11NrBl9xysw+Zw2SFOP5y5suTDw2brFAEHU?=
+ =?us-ascii?Q?Y6FIcxe4nBazyM4rBk08mgCDS5BJg/ZFoywraqMH//veFDluxV7hnq0SQBzM?=
+ =?us-ascii?Q?ICdVab+MoUNhOpjAcgdsAp/S2p/NZ8fW4WIZHl4Bywaguc3w/NzpCAY0RuoR?=
+ =?us-ascii?Q?MNj5emhL95UEx6xs6pSylbCZ0Ua37BJSjHfbe3m/auJAvh+/45VFKlp/rhyG?=
+ =?us-ascii?Q?BgvllNzMNHIG0sdQ+ygzmVH2oyTF3349klIIEbgoWnaKyKwkGmdJb7kWP3HK?=
+ =?us-ascii?Q?+drKxdUyAScYAaNe6bovzWgU8x4lAnuGhB7KVtewwAi173otzzMc1KOw2Od+?=
+ =?us-ascii?Q?ymBeoM2RvkDqZ4ysJRML0uurDkBL5se/DlteGArTvOd0Jbg96twNvKYI/Hs+?=
+ =?us-ascii?Q?SfHX4k00M9Ix9vdcyF95HL9bpg9yL8FYXZegxZaD5iAdAQUnZ0R85Wk6e0gD?=
+ =?us-ascii?Q?v5o/ctbyk47U7zgZHQbDzoLwmBxSahOunb4EBgrETv/jMzY0ht/LSnrtjEmK?=
+ =?us-ascii?Q?/sg8VwuWcmhffwCtkSWyUzD62zVpv9h3Dm32wAEeS3/Ct+nlIXGMyAvgrsjO?=
+ =?us-ascii?Q?jZHSBcq6QU6T7a+kn4wdA+Fh7kWTjPynOto0rTswo9K3ZmEWKJHocGsilEGQ?=
+ =?us-ascii?Q?No+SStDHXcEy0tccZRlshR4eSmX29N5OMSQEVufvj93hEnXKuYHjQRDyuCM6?=
+ =?us-ascii?Q?Voe4m0azLu4z7MVfYYr744RQU1u/PJafruQe8JIjNTNB3zTUaDRm2CN2A+ZE?=
+ =?us-ascii?Q?34UQtwrDQsC/SKG7M2oXLo3f60ImAUfRWdwPpiQpUMfGqFfPBnPC/GIo2YHl?=
+ =?us-ascii?Q?ciIUM9tofaWPYYRCCVlrKFyqsvLRMt1rkQyJ6DJwZkBLD/NlgwmG5tYk26DA?=
+ =?us-ascii?Q?6IZbwd7wcYGLTZhyC1zcbst4V+TNlmDpyayZw/zxScEfoitCZSH0Uu53T+ZT?=
+ =?us-ascii?Q?f5z5LQsfX8pXcP8DJEZsitF8EOCW1YqVTSwmPFPIRgN+27Wo0A/Dd4vMNZtb?=
+ =?us-ascii?Q?SyR9o83J7QcF2fe3e98tZVYLzL+8Ajqf1FirRW80NJOanexBe32DmHkxjWf9?=
+ =?us-ascii?Q?pcvPfmxl1FrRmoVzEc14zaBVprSUci3cc0kU6CwHvyadxghs6BCmm/9X5uoJ?=
+ =?us-ascii?Q?ZclUgz2IY5/vrPJnC5PToYA1yudDArxoy+w4EqABE9NopGX6WMFZZ1VvqbcP?=
+ =?us-ascii?Q?T6b138S3l5810WYgpaufl2yNNXWJQ7R0hNgF?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 16:28:52.2781
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 16:28:53.0010
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2762ceba-c60c-4a07-d1f2-08dd8f1695e2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e84c552-db70-410d-3e33-08dd8f169651
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	BN3PEPF0000B074.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8526
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7479
 
-ARCH_HAS_CPU_ATTACK_VECTORS should be set for architectures which implement
-the new attack-vector based controls for CPU mitigations.  If an arch does
-not support attack-vector based controls then an attempt to use them
-results in a warning.
+Use attack vector controls to determine if MDS mitigation is required.
+The global mitigations=off command now simply disables all attack vectors
+so explicit checking of mitigations=off is no longer needed.
+
+If cross-thread attack mitigations are required, disable SMT.
 
 Signed-off-by: David Kaplan <david.kaplan@amd.com>
 ---
- arch/Kconfig     | 3 +++
- arch/x86/Kconfig | 1 +
- 2 files changed, 4 insertions(+)
+ arch/x86/kernel/cpu/bugs.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index b0adb665041f..a900f7a5baae 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -1755,4 +1755,7 @@ config ARCH_WANTS_PRE_LINK_VMLINUX
- 	  An architecture can select this if it provides arch/<arch>/tools/Makefile
- 	  with .arch.vmlinux.o target to be linked into vmlinux.
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 3dce7c3126ea..97d152c33e9e 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -419,13 +419,17 @@ static bool verw_clear_cpu_buf_mitigation_selected __ro_after_init;
  
-+config ARCH_HAS_CPU_ATTACK_VECTORS
-+	bool
-+
- endmenu
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 4c33c644b92d..af6350f056ae 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -74,6 +74,7 @@ config X86
- 	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if (PGTABLE_LEVELS > 2) && (X86_64 || X86_PAE)
- 	select ARCH_ENABLE_THP_MIGRATION if X86_64 && TRANSPARENT_HUGEPAGE
- 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
-+	select ARCH_HAS_CPU_ATTACK_VECTORS	if CPU_MITIGATIONS
- 	select ARCH_HAS_CACHE_LINE_SIZE
- 	select ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
- 	select ARCH_HAS_CPU_FINALIZE_INIT
+ static void __init mds_select_mitigation(void)
+ {
+-	if (!boot_cpu_has_bug(X86_BUG_MDS) || cpu_mitigations_off()) {
++	if (!boot_cpu_has_bug(X86_BUG_MDS)) {
+ 		mds_mitigation = MDS_MITIGATION_OFF;
+ 		return;
+ 	}
+ 
+-	if (mds_mitigation == MDS_MITIGATION_AUTO)
+-		mds_mitigation = MDS_MITIGATION_FULL;
++	if (mds_mitigation == MDS_MITIGATION_AUTO) {
++		if (should_mitigate_vuln(X86_BUG_MDS))
++			mds_mitigation = MDS_MITIGATION_FULL;
++		else
++			mds_mitigation = MDS_MITIGATION_OFF;
++	}
+ 
+ 	if (mds_mitigation == MDS_MITIGATION_OFF)
+ 		return;
+@@ -435,7 +439,7 @@ static void __init mds_select_mitigation(void)
+ 
+ static void __init mds_update_mitigation(void)
+ {
+-	if (!boot_cpu_has_bug(X86_BUG_MDS) || cpu_mitigations_off())
++	if (!boot_cpu_has_bug(X86_BUG_MDS))
+ 		return;
+ 
+ 	/* If TAA, MMIO, or RFDS are being mitigated, MDS gets mitigated too. */
+@@ -456,7 +460,7 @@ static void __init mds_apply_mitigation(void)
+ 	    mds_mitigation == MDS_MITIGATION_VMWERV) {
+ 		setup_force_cpu_cap(X86_FEATURE_CLEAR_CPU_BUF);
+ 		if (!boot_cpu_has(X86_BUG_MSBDS_ONLY) &&
+-		    (mds_nosmt || cpu_mitigations_auto_nosmt()))
++		    (mds_nosmt || smt_mitigations == SMT_MITIGATIONS_ON))
+ 			cpu_smt_disable(false);
+ 	}
+ }
 -- 
 2.34.1
 
