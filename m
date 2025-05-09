@@ -1,96 +1,68 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C539E28ECE1;
-	Fri,  9 May 2025 10:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB3A17BCE;
+	Fri,  9 May 2025 10:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746787065; cv=none; b=bTT4PYb02J5mmdfhs3z5zBKckpO/hrcpThr2pWFrvxV4FxcN3qUxuUtr6lvY8CcPgVbbPYl7kq31s+Ginoa5M0arSIN2xFA0qBmvlZ8rTjOMAvLFk2M4b4xiG9qTQ1Wu3sAegKf8K5RlLaCq6g4Hpo6XREQpFRxrFCi6qFUmWbM=
+	t=1746787089; cv=none; b=IABNu8xGqafML4Ov6TEGj00Y1QFG09KsVivcvAtM4WcH20e4TXeHHl8V4OroYssyd7q5Gsj5uCMOYuV18HyYmLA24RSf+dwDQ3r3MAOGcB7v2So7/DCA7/Dz9B2DmziEY8xX4qYHDTPh9mSKnIrUrobba2rlJy+uU42Vp/NcOLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746787065; c=relaxed/simple;
-	bh=AfXvqVxIz0QcRni0bewoQ8SDWdd4YjFQcafte966bIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qZu091q4/QEEH0gOrZnan7SgyxoLzJ9wEv2OOSxiXvz34p1+WwJKixR6SQc+Os6vxJg5sVBO7F47yArdPSF4hSR//UT7ozdWPawB0kfZDLK8LOjKjvlz9owG1pzfe98NHbYG2FuK1VS+KyYRQHZPlgBhMdvSn9gnvfB5E262SkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=h7UT3Xjs; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1746787089; c=relaxed/simple;
+	bh=h5vZ3RZrobbGTqXpKUDcyM+zgHHzgUsLiZ7YLN3JZoI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EZAdnBDKis3weo5fEcycIBe5CayBCgSZ17hEAbYJAfK/7Bsk9IYrdyVFDYKypJxhrKstce4DC32/m1kb6dqOkJTN9O+Tk3qAoGBsyEy9IAlvpD87Xop2TM6EuiyY2dRbRBw670lxmLnhzZ5CcMGj8nmagr03T6ICjzFRf2zOOYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=K0IpxkSZ; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="h7UT3Xjs"
-Received: from pendragon.ideasonboard.com (static-176-133-119-130.ftth.abo.bbox.fr [176.133.119.130])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 097798DB;
-	Fri,  9 May 2025 12:37:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1746787049;
-	bh=AfXvqVxIz0QcRni0bewoQ8SDWdd4YjFQcafte966bIs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h7UT3Xjs/pRKhU7lxaM7WRQzVzWXhWuGkKSZOVmofA/WwZhYru/+PZSvgknKuF1io
-	 7yJl7/1OKYS1WcQS+7fOrgo6TQiFhCzwe2JfRfSElkSSS8v4VRUhaCoeF/EqXEDaSY
-	 Noa+E4+cX5kKCjN0bwC/cIqTP8Qn2TJvN+XUtzZE=
-Date: Fri, 9 May 2025 12:37:33 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>
-Cc: Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, linux-media@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Enable MIPI filtering by DT on i.MX8M*
-Message-ID: <20250509103733.GE28896@pendragon.ideasonboard.com>
-References: <m3h61u9jy2.fsf@t19.piap.pl>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="K0IpxkSZ"
+Message-ID: <25482135-b7c5-499f-b5b6-acdfa794a037@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746787083;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ONPYX0QwJHMfIc+8sscJQjDDUYwa+bvuBMk/T9MfePk=;
+	b=K0IpxkSZyJ8oN5WKJjvCdtmb/nfj5trTGlH8vLOsz3GxKP6rFGI0NqoZ3unuWRLIa+Q3nO
+	BZu7IPHGJlwhCfsiXyAUIiU9Gk+3KMdflltxRXKhEmxbZjrHDI2lUT7po21WF8JwgTJqS2
+	mdcgr1VmIGKkJM/fC271C2H245MLlV8=
+Date: Fri, 9 May 2025 11:37:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <m3h61u9jy2.fsf@t19.piap.pl>
+Subject: Re: [PATCH net-next v2] net/mlx5: support software TX timestamp
+To: Stanislav Fomichev <stfomichev@gmail.com>, netdev@vger.kernel.org
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, saeedm@nvidia.com, tariqt@nvidia.com,
+ andrew+netdev@lunn.ch, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, leon@kernel.org,
+ Jason Xing <kerneljasonxing@gmail.com>
+References: <20250508235109.585096-1-stfomichev@gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250508235109.585096-1-stfomichev@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Krzysztof,
-
-Thank you for the patch.
-
-On Fri, May 09, 2025 at 12:07:01PM +0200, Krzysztof Hałasa wrote:
-> In addition to raw image data, certain MIPI sensors send additional
-> information like NULL packets or "embedded 8-bit non-image data".
-> Without DT (data type) filtering, these packets end up in the frame
-> buffer, corrupting it.
+On 09/05/2025 00:51, Stanislav Fomichev wrote:
+> Having a software timestamp (along with existing hardware one) is
+> useful to trace how the packets flow through the stack.
+> mlx5e_tx_skb_update_hwts_flags is called from tx paths
+> to setup HW timestamp; extend it to add software one as well.
 > 
-> Tested on i.MX8MP with IMX290 sensor.
-> 
-> Signed-off-by: Krzysztof Hałasa <khalasa@piap.pl>
-> 
-> diff --git a/drivers/media/platform/nxp/imx-mipi-csis.c b/drivers/media/platform/nxp/imx-mipi-csis.c
-> index 29523bb84d95..d53a4262b63d 100644
-> --- a/drivers/media/platform/nxp/imx-mipi-csis.c
-> +++ b/drivers/media/platform/nxp/imx-mipi-csis.c
-> @@ -654,8 +654,7 @@ static void mipi_csis_set_params(struct mipi_csis_device *csis,
->  	val = mipi_csis_read(csis, MIPI_CSIS_CMN_CTRL);
->  	val &= ~MIPI_CSIS_CMN_CTRL_LANE_NR_MASK;
->  	val |= (lanes - 1) << MIPI_CSIS_CMN_CTRL_LANE_NR_OFFSET;
-> -	if (csis->info->version == MIPI_CSIS_V3_3)
-> -		val |= MIPI_CSIS_CMN_CTRL_INTER_MODE;
-> +	val |= MIPI_CSIS_CMN_CTRL_INTER_MODE; /* enable filtering by DT */
+> Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+> Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+> ---
+> v2: rename mlx5e_tx_skb_update_hwts_flags (Tariq & Jason)
+> ---
 
-The condition was added because the CSIS in the i.MX8MM doesn't
-implement the INTERLEAVE_MODE field. We can't remove it unconditionally.
+LGMT,
+Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
 
-You mentioned i.MX8MP, that's a platform where I'd like to see proper
-support for *capturing* embedded data, not just dropping it. Have you
-looked at how this could be implemented ?
 
->  	mipi_csis_write(csis, MIPI_CSIS_CMN_CTRL, val);
->  
->  	__mipi_csis_set_format(csis, format, csis_fmt);
-
--- 
-Regards,
-
-Laurent Pinchart
