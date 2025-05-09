@@ -1,117 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3963B25D21D;
-	Fri,  9 May 2025 20:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAA778F40;
+	Fri,  9 May 2025 20:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.66.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746821732; cv=none; b=WX5k8XN+aT+LdmMKOM2nx+ecirCrE9WPJFFyh8xoDv+fM+2pmGF9ygn2Zl84/c/Yhaklr71ScDy/ori2f2QJN37bGYVBm2PBGbE9x7lM+KAwjh+EJdQe+cr5Aduf4V2yCKnDHGJfeqHfgQFdDx2zg2erniGFvgtlkW2RpskQeeA=
+	t=1746821839; cv=none; b=nQ6B9urdkkV0Jl+HSvf3kU8ivGLTQ/liWC37NUKfNnYElrY6iIrqceEGF9brFk9hWhOM4wnuLe8sKU/yntZpNs38sERFpm5aU4tJ2KeZGVCAmhirAqPTx5beILo8UDM80nQ1o7lTEz3QtdDQ4hEd/ctyWK1PURmFztH2fUOqrBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746821732; c=relaxed/simple;
-	bh=85iJBJYwWMlkkuUjn9Ku0vhsZtydLp9gqIiHKhkprX8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YhTSOCGPzpuieDa3GszDzPL8VdLJjynx0PS6nnsagtcpBHmR2huhO4SsdUWhzPX8GhiU/ynrTE/vzejgwOfwXNjjOa0uKrYiq0v8qvh6GkYvxtGhNmAbmaObPVlTpb/TkLEk5pGBZ6QHbEHCt4KsRaseIj3onikAJVNzHHS3wBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BAfjqjJd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BAfjqjJd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C51DC4CEE4;
-	Fri,  9 May 2025 20:15:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746821731;
-	bh=85iJBJYwWMlkkuUjn9Ku0vhsZtydLp9gqIiHKhkprX8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BAfjqjJdtd85DTyfue6Gz1RyKLMocoTfOhEaoFka4FdEU2ZVO8UrdiPMUau2TaYnB
-	 7GexyGqktnlFbZDfJw4NdlCsuA+WrYXdDyuGdzt/8MUPbi8iTVeUUarygI87cKhqXn
-	 OLY7yFFK6t+I4HXHtysC20ZPtSSR8SKiiz3bpPaJourEl9qLpmurBFQv5WZZZ5W6ix
-	 WYy7mu0LlPNToxFQrewai/tfnK09SCZF7oPF6ulpUSTrdeuUnUdbvH8jf0d/XfIVYw
-	 2fSR0o8R5cJHiTgDh0/WRHjv4dSpLE6waVAnUGIB7AN8ZDZPzcPOMIa4vjxVj/S+B8
-	 DYp/sCWYLmjyQ==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Rust fixes for 6.15 (2nd)
-Date: Fri,  9 May 2025 22:14:57 +0200
-Message-ID: <20250509201458.872943-1-ojeda@kernel.org>
+	s=arc-20240116; t=1746821839; c=relaxed/simple;
+	bh=G8/CFf9ZO+i2PIjLZ8xby/5gBn5P22+n8NyIA/gSLSM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c+oCgi0UGlObAMThiwjpqhhVwsYzOwAui8Z/StIZNmQqpbTzl1+fnI3YHU5vvM53q8WReUPQIRnkDIHh3kk73rTqQ6VDO72kvS9aps14pbC5A+IdyRJlqFAHK1YQe2WEkyqMAIP2TFUlZAQ41DWyYLDrHBXOOMpEoc01p7g93+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com; spf=pass smtp.mailfrom=mail.hallyn.com; arc=none smtp.client-ip=178.63.66.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.hallyn.com
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+	id 56608617; Fri,  9 May 2025 15:17:09 -0500 (CDT)
+Date: Fri, 9 May 2025 15:17:09 -0500
+From: "Serge E. Hallyn" <serge@hallyn.com>
+To: Max Kellermann <max.kellermann@ionos.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>, sergeh@kernel.org,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Andy Lutomirski <luto@kernel.org>, paul@paul-moore.com,
+	jmorris@namei.org, kees@kernel.org, morgan@kernel.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] security/commoncap: don't assume "setid" if all ids are
+ identical
+Message-ID: <20250509201709.GA708015@mail.hallyn.com>
+References: <20250306082615.174777-1-max.kellermann@ionos.com>
+ <20250309151907.GA178120@mail.hallyn.com>
+ <CAKPOu+_vTuZqsBLfRH+kyphiWAtRfWq=nKAcAYu=Wn2JBAkkYg@mail.gmail.com>
+ <20250506132158.GA682102@mail.hallyn.com>
+ <CAKPOu+9JCLVpJ-g_0WwLm5oy=9sq=c9rmoAJD6kNatpMZbbw9w@mail.gmail.com>
+ <aB0sVcjFZaCVEirH@lei>
+ <CAKPOu+89=+SFk1hKGLheMtPq+K47E9FRCo1DBQo9zGMwW=Tr2w@mail.gmail.com>
+ <87h61t7siv.fsf@email.froward.int.ebiederm.org>
+ <CAKPOu+8uw6SCO_hhOy_Kc_XihTDvJGoPrC1ujAHPYuiBghUb1g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKPOu+8uw6SCO_hhOy_Kc_XihTDvJGoPrC1ujAHPYuiBghUb1g@mail.gmail.com>
 
-Hi Linus,
+On Fri, May 09, 2025 at 06:53:11PM +0200, Max Kellermann wrote:
+> On Fri, May 9, 2025 at 4:45 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> > In particular __is_setuid or __is_setgid being true guarantees
+> > that has_identical_uids_gids will be false.
+> 
+> Sorry, no, that's completely wrong!
+> 
+> __is_setXid() compares effective with real.
+> has_identical_uids_gids() compares effective with effective, real with real etc.
+> 
+> See the difference?
+> 
+> > Which means has_identical_uids_gids adds nothing, and the patch is
+> > pointless.
+> 
+> Also wrong. If that were correct, then my patch would not have an
+> observable effect. But it does. Try it, try the small program I
+> posted!
+> 
+> It seems your whole email is based on this misunderstanding. Please reconsider.
+> 
+> > If your concern is LD_PRELOAD and the like please don't play with
+> > the uids/gids and instead just make certain bprm->secureexec gets
+> > set.
+> 
+> LD_PRELOAD is not my concern at all. I just observed that the current
 
-Please pull these fixes for Rust (second round).
+Right, it is an aside, though an important one.
 
-All commits have been in linux-next for two rounds.
+> kernel behavior can annul the LD_PRELOAD/suid protection as
+> implemented in glibc.
 
-No conflicts expected.
+Hm, but no, it doesn't annul glibc's protection, right?
 
-Thanks!
+The concern is that:
+a. musl doesn't implement LD_PRELOAD clearing
+b. with NNP, setuid-exec followed by setting NNP followed by exec,
+   will lead to different behavior from non-NNP.  In non-NNP,
+   you'll continue to have euid=0, ruid=1000, and caps.  With NNP,
+   you'll have euid=ruid=1000, and still full caps.
 
-Cheers,
-Miguel
+So, if someone is using NNP believing that it is a safe way to
+execute untrusted code with privilege, because they see they
+are now uid 1000, they will be confused.  Worse, they are
+subject with musl to LD_PRELOAD from the user before setuid-root.
 
-The following changes since commit 92a09c47464d040866cf2b4cd052bc60555185fb:
+So two things we can do are
 
-  Linux 6.15-rc5 (2025-05-04 13:55:04 -0700)
+1. have NNP drop privilege.
+2. have NNP not force euid to be ruid.
 
-are available in the Git repository at:
+(1) sort of makes sense since you've bothered to use NNP, but
+as Max, who is a user of NNP, says, that is not the behavior
+that would be useful to him.  It also leaves the non-NNP and
+NNP exec behavior - which is already - obviously - far too
+complicated - with yet more cases.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux.git tags/rust-fixes-6.15-2
+(2) is concerning because it is a change in behavior for NNP
+users, but on the other hand, it leaves us with fewer special
+cases.
 
-for you to fetch changes up to 5595c31c370957aabe739ac3996aedba8267603f:
+At this point I'm kind of leaning towards (2), though with the
+obvious modification Max has already found should be added (for
+secureexec).
 
-  x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST or Rust >= 1.88 (2025-05-07 00:11:47 +0200)
+> > I see no evidence
+> > in this conversation that anyone has surveyed the users of NO_NEW_PRIVS
+> > and verified how anyone actually uses it.  Without such evidence we
 
-----------------------------------------------------------------
-Rust fixes for v6.15 (2nd)
+Max is such a user.  I don't know what we can do to get input from
+more users.  Perhaps scan the debian codebase results at
 
-Toolchain and infrastructure:
+  https://codesearch.debian.net/search?q=NO_NEW_PRIVS&literal=1
 
- - Make CFI_AUTO_DEFAULT depend on !RUST or Rust >= 1.88.0.
+I'll take a look through those in a bit.
 
- - Clean Rust (and Clippy) lints for the upcoming Rust 1.87.0 and Rust
-   1.88.0 releases.
-
- - Clean objtool warning for the upcoming Rust 1.87.0 release by adding
-   one more noreturn function.
-
-----------------------------------------------------------------
-Miguel Ojeda (5):
-      objtool/rust: add one more `noreturn` Rust function for Rust 1.87.0
-      rust: allow Rust 1.87.0's `clippy::ptr_eq` lint
-      rust: clean Rust 1.88.0's `unnecessary_transmutes` lint
-      rust: clean Rust 1.88.0's warning about `clippy::disallowed_macros` configuration
-      rust: clean Rust 1.88.0's `clippy::uninlined_format_args` lint
-
-Paweł Anikiel (1):
-      x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST or Rust >= 1.88
-
- .clippy.toml                              |  2 +-
- arch/x86/Kconfig                          |  1 +
- drivers/gpu/nova-core/gpu.rs              |  2 +-
- init/Kconfig                              |  3 ++
- rust/bindings/lib.rs                      |  1 +
- rust/kernel/alloc/kvec.rs                 |  3 ++
- rust/kernel/list.rs                       |  3 ++
- rust/kernel/str.rs                        | 46 +++++++++++++++----------------
- rust/macros/kunit.rs                      | 13 +++------
- rust/macros/module.rs                     | 19 ++++---------
- rust/macros/paste.rs                      |  2 +-
- rust/pin-init/internal/src/pinned_drop.rs |  3 +-
- rust/uapi/lib.rs                          |  1 +
- tools/objtool/check.c                     |  1 +
- 14 files changed, 49 insertions(+), 51 deletions(-)
+> > have to assume that userspace depends upon the current behavior.
+> 
+> That's fine for me. But this behavior should be documented, because it
+> is rather surprising.
+> 
+> (In any case, we will keep the patch in our kernel fork because we
+> need this part of the kernel to work properly. Our machines don't run
+> any code that depends on the buggy behavior.)
+> 
+> Max
