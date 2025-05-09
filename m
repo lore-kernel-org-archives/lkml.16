@@ -1,47 +1,50 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237CA28EA45;
-	Fri,  9 May 2025 13:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFEBA28D8FD;
+	Fri,  9 May 2025 13:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746795665; cv=none; b=VZ6ducTcmqZztxCP4E+8L5YDNnYjsMWDqimtqT2Gs5n4ZEknw+hzJCUnLWLCRsdo+BYeRpFKdowCVUe/Z0Mk8QgyJkcjdhweoa/UbWSWUcbyJkOQOi2OgZ+RNmvvAc7neDvdKJtvKCy7mruOXW+cXtSXW+GoxI6msjcg3PWQ4vc=
+	t=1746795670; cv=none; b=S5V4iprUtq8x9PJIW3NqasL9Twtujotty8s6UoU/27nuyIilxkN06uPW7RunWV9RjQQG08V6s+HGPuFsXibeR4GsnAuJ0+wgpP3x7vmPhWiy1350389H5V1gxIlmKex5OWPLLoCBhHwLZfMGphrwb1LQ4pga7HQ9vIOIbWk6yCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746795665; c=relaxed/simple;
-	bh=4golUNbzkJaW4FGVhyb62ZVAkVMJaWk67Gx8S8QZnKw=;
+	s=arc-20240116; t=1746795670; c=relaxed/simple;
+	bh=9MZHj+GCA6WVB4FMrptSj25S8jGsj6thQNlGMW0sbAc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bIGI6nqEBYg3Rnu83dpCYOR7TPaNlwjOvBwa5y+ZRVDao01Rx+k0GDVW1Mw5uNni3MwJ/EmEblpHIHuHTd2ngN9jK1PNbPXnpslLHZEZb7LT5Uu3USMAzQh+FNcpknFnoS7HHfkKV3hFvE6qBsFuHdXisT7kudgSHUO6u1j9yiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=b4Qbd4mF; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=VvMOVsll/TGNVbgSPLx0OLLe4KoLOQ6r1NknCPMiQBSlzypopdwnCO7hNTPNeTmAn0y74gM/7YeRt6HeS7cLExck4PXf5yjtSFMoUpX4c+e1GJGW7F2TLZ1N1WHuDfqhm3VDsCucpow4bbFvdpbxXL2ndykd7VjyXD9HQNbXat0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hc0YNYDd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="b4Qbd4mF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=AfEelIj+BBvQA3qNO9D9UmBF4ba/BqaL4KcD9NEPvFk=; b=b4Qbd4mFlKccaQ6pTjFzKmIxvJ
-	7UxlLabbpE8L6hNRiAZYvKuJCdyW7pRWF2sUuETLFxviVxZ3x8ELYu7ZHKYUCaev5kVwGpcwxtfR0
-	WEwO3aOlmgx1as/vK5eSKGBJSE+3BiN8PPtG/Lr74jl+Xd9s2wsOV7G4JuNEiJFGQRQU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uDNL9-00C70E-Uz; Fri, 09 May 2025 15:00:35 +0200
-Date: Fri, 9 May 2025 15:00:35 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: leo.jt.wang@gmail.com
-Cc: robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
-	keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-	geert+renesas@glider.be, magnus.damm@gmail.com,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, george.kw.lee@fii-foxconn.com,
-	leo.jt.wang@fii-foxconn.com
-Subject: Re: [PATCH] ASPEED: bmc: Add device tree for Meta(Facebook) Clemente
- compute-tray.
-Message-ID: <d8e561ec-e600-4b51-b901-6fd125eef8cc@lunn.ch>
-References: <681dc3eb.170a0220.1fd80.c9ce@mx.google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hc0YNYDd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17993C4CEF2;
+	Fri,  9 May 2025 13:01:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746795669;
+	bh=9MZHj+GCA6WVB4FMrptSj25S8jGsj6thQNlGMW0sbAc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hc0YNYDdQxYj+hGWtJuWaFjmmumS2+YfNwPs0H+/caivA9zWJrCknFwa2UjtG+b0Z
+	 f1MsNn1WrEZwNv76YzlYSkiY27TZNTRfm0KE94QRh5UCsHADIrVawAelQYKDyUlzIq
+	 JLJYwL5jjomH09DlXd3GM+zVbaV/ZrZQwfdxKWhsrpsb+/r/8w4BSghc74FOOMbzO6
+	 L+aH2wFboVFc45Gazhp/Qdc+VAUHWZ8nWx18ZNfwHfY2jkbsUF/N6Ef6eTjvcbtp7p
+	 eCSj1fFF0MiEovmWIfm6ulfJrjwwF+6fteyY55aHjJR3oipX6ykcgxvJqdRF19EbLx
+	 V46RSjf1E4x8Q==
+Date: Fri, 9 May 2025 15:01:03 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Wilfred Mallawa <wilfred.opensource@gmail.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Alistair Francis <alistair@alistair23.me>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>
+Subject: Re: [PATCH v3] PCI: dw-rockchip: Add support for slot reset on link
+ down event
+Message-ID: <aB38j9p9nyrpL7HI@ryzen>
+References: <20250509-b4-pci_dwc_reset_support-v3-1-37e96b4692e7@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,18 +53,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <681dc3eb.170a0220.1fd80.c9ce@mx.google.com>
+In-Reply-To: <20250509-b4-pci_dwc_reset_support-v3-1-37e96b4692e7@wdc.com>
 
-> +&mac0 {
-> +	status = "okay";
-> +	phy-mode = "rgmii-rxid";
+On Fri, May 09, 2025 at 12:30:12PM +1000, Wilfred Mallawa wrote:
+> From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+> 
+> The PCIe link may go down in cases like firmware crashes or unstable
+> connections. When this occurs, the PCIe slot must be reset to restore
+> functionality. However, the current driver lacks link down handling,
+> forcing users to reboot the system to recover.
+> 
+> This patch implements the `reset_slot` callback for link down handling
+> for DWC PCIe host controller. In which, the RC is reset, reconfigured
+> and link training initiated to recover from the link down event.
+> 
+> This patch by extension fixes issues with sysfs initiated bus resets.
+> In that, currently, when a sysfs initiated bus reset is issued, the
+> endpoint device is non-functional after (may link up with downgraded link
+> status). With this patch adding support for link down recovery, a sysfs
+> initiated bus reset works as intended. Testing conducted on a ROCK5B board
+> with an M.2 NVMe drive.
+> 
+> Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+> ---
 
-Please see:
-
-https://patchwork.kernel.org/project/netdevbpf/patch/20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch/
-
-Aspeed are supposed to be fixing their MAC driver, which is currently
-broken. You might want to apply some pressure to them to get the fixed
-merge. Until then, you should drop this broken node.
-
-	Andrew
+Looks good to me:
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
