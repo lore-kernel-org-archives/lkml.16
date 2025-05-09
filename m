@@ -1,48 +1,48 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8D04B1E57;
-	Fri,  9 May 2025 22:49:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6AE4B1E57;
+	Fri,  9 May 2025 22:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746830948; cv=none; b=LGZALXxUe3FJJSk9h2JbW7BY3ZqJhNKjy0eI4YPSs/eCbcw1MBpbgDqTbscgVp9Qgt/uH/42ft4Uzc/yHX+/CYUEbA33ibOqWGB1Qz5/sbVkWCQrOfwdz+vtUkGpxuudbDCYyJQQS+HoyqhRH+kh+Keh4hxr6jLnwf/xSOXj3i8=
+	t=1746831082; cv=none; b=Zs/qHMJpF7GfixyPUh1I5S0kdBx3YpTA+JN24c8K8R6kEYkFwEpZQpuyHV91IJyY3Sp/EF63zQFpgtOITb2ihiXBtraRdG8zKWEwmDfQQ5vPxq9McVaK7l49ywZFz7jWs4K6Q/8CFdMKF7hWPfX9R1TXiZ0NCquQjBkLSDa/FbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746830948; c=relaxed/simple;
-	bh=qd3HHkCvT6RoXM5Wi3F6JfsJ84Tj727cFPy40P6JwDA=;
+	s=arc-20240116; t=1746831082; c=relaxed/simple;
+	bh=iQv01iDMWYeRVojulazRYD2QD5S7wKe+81J6Y2wy/Q8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZKyv8w+JSa1/BAsGyWSgRfU6hK8PvNn9xJHrYuTGjtr1+LjWSF2UOLCn0S6R1ZQxdQYktsGd5ORH0bukYid1H2j4HY1DjsVR1K3tfTfUdKZj4t8MIhbUxG59TfPJL0CdOSJITcmrMAT/U16Q1ZFPwD+xUT68NX4zjoTnv+crN5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=otvLlPU5; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:Content-Type; b=CEIblEMPxn5b8ruY0Fda057+546wkln6f/eBr4Hp+IOAuhf3lI/QAEr592KUPt3L7P8yTo5sbhmt1hiTzVckHFrMfZBsInMBiMqZAXGmpLhSsUpyxj2ON2DzY5ZCAye2M6oDe38oIt9PE09t4ZNMheqAHDXL27X1jDWb+iwNuxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ADHcwrVf; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="otvLlPU5"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549Bhxfo022749;
-	Fri, 9 May 2025 22:49:00 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ADHcwrVf"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549C2iZE009407;
+	Fri, 9 May 2025 22:50:57 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	X/M7B4QlGrtsLMZCbD2WHCXdmlwFM6v9WbDPN8DCkxY=; b=otvLlPU5KeTLHU0G
-	Vft5E2f4Kaf0GTRzVPxpz6c9byeNUr+lRXdk/rtzqjtiPI5ihPfMvek/U0YZkDBy
-	9oLLXdIAZqrY4Kag5I/vXHxyoek92MWEez+d373Om+ZOUmyNBCU9E3nKEirdrWLd
-	7ugEomaJPkIfhK7TLuc1DbV+r3oFKi2SaLksXSYWj5QDeITg9Lff1txGNX70Sa4g
-	xXfcZQMNm8bB6Iv4RdCj60JS+gujna7pG76uN8fT/ecK7o7dpC5EcVoIqTuIoxjY
-	l3ufhrvwwlcn7Bw6CfBbTNIe7CIDqS6UNG2Tl+L9CUsED5rwvMCVaqLIQgxtOslS
-	HyGUhw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp861r9-1
+	5uZwZk4gtJ5I3ahkx8ghB/vDJG75miTn9Ktz7rN+z88=; b=ADHcwrVfTTuP3K7O
+	wWJOOGU2z7/ru++Ps8BkyaQTRi1dNIP4K4ueuCYPaCjxny6LUEVaP2u1O7PJJvYa
+	i311yNe9QowyBfbE79TvIhAsNJ0WXb6rUFB9k8HwjgBCO8ndZ9kZXXFy9mLmHgBj
+	kjN6+O1ShL1G03R/uZiS4x/vml3HOI963P/UQpbzKUlI/17q7I3EIIXY/qU6hkb1
+	jpR3mvZ16rqznOpAk5hTeTaoRAt7Kl2M/rfKrDcafO+qCZCkN3nidHU0AwB+sNI+
+	p9XqUiJ/F4tfD5TNGXCnwHOarUV14UeWZ6C5EPe7wAo0191rvaZZObeKSlCoHBM2
+	HIhlWQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnpewv3y-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 22:48:59 +0000 (GMT)
+	Fri, 09 May 2025 22:50:57 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 549Mmx5H009241
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 549MouBG024608
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 9 May 2025 22:48:59 GMT
+	Fri, 9 May 2025 22:50:56 GMT
 Received: from [10.134.71.99] (10.80.80.8) by nasanex01b.na.qualcomm.com
  (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 9 May 2025
- 15:48:58 -0700
-Message-ID: <9a27cd5e-855b-4736-9dc1-14d2f7366774@quicinc.com>
-Date: Fri, 9 May 2025 15:48:58 -0700
+ 15:50:55 -0700
+Message-ID: <7a06efc6-e9ef-41c6-80e2-47624218c13b@quicinc.com>
+Date: Fri, 9 May 2025 15:50:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/6] drm/panel: visionox-rm69299: switch to
- devm_drm_panel_alloc()
+Subject: Re: [PATCH v2 6/6] drm/panel: visionox-rm69299: support the variant
+ found in the SHIFT6mq
 To: Neil Armstrong <neil.armstrong@linaro.org>,
         David Airlie
 	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
@@ -64,78 +64,220 @@ To: Neil Armstrong <neil.armstrong@linaro.org>,
         Abhinav Kumar <quic_abhinavk@quicinc.com>
 CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
-        Casey Connolly <casey.connolly@linaro.org>
+        Casey Connolly <casey.connolly@linaro.org>,
+        Caleb Connolly <caleb@connolly.tech>
 References: <20250509-topic-misc-shift6-panel-v2-0-c2c2d52abd51@linaro.org>
- <20250509-topic-misc-shift6-panel-v2-5-c2c2d52abd51@linaro.org>
+ <20250509-topic-misc-shift6-panel-v2-6-c2c2d52abd51@linaro.org>
 Content-Language: en-US
 From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <20250509-topic-misc-shift6-panel-v2-5-c2c2d52abd51@linaro.org>
+In-Reply-To: <20250509-topic-misc-shift6-panel-v2-6-c2c2d52abd51@linaro.org>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=M7xNKzws c=1 sm=1 tr=0 ts=681e865b cx=c_pps
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDIzMCBTYWx0ZWRfX/R9rDh9Gow7u
+ allE2CQWPJPOEirBwbY4JxImklm+1tl+oyVvWnS3OmY5MO2zxA40TE/pnv9eBgGzxDGUfwFphLE
+ mjAVVRuYQ9qzV1lFIVASVkRlNJsuEPYoYvGOO7q3QDt0XVLNyqItXEt0VQ2F3+BTCzkbmOu+3kg
+ RiJfEcFnalzrO34OMvAyJF3GVHBd64KIy64H5wcNe5bXj/lkFQLkZk2a/pijehl4ButNCVVznXu
+ vH8emaCnKoM71vDLuc9gFOT/DWEhocMXwfYi18YrwgjwJX1sVycUyaYzgfMSZ/rLc882UCptGG7
+ Vd8W3T9yTLP0t5QWT9B/E8h1XfJniob2G64GbucBpmfWGLgl2MLK2glYLtUuL+/b2dJhYPIGtdx
+ jXO0hoEG3y3r++GDuQ2WICGEW5ZBD995WCqk3pmxOXrFd/WQylu6HB8I4EVPrv/YhJrb2vD0
+X-Proofpoint-ORIG-GUID: Aso-ASKU8BLuha9bfvgMQZR8YKVcgRnJ
+X-Proofpoint-GUID: Aso-ASKU8BLuha9bfvgMQZR8YKVcgRnJ
+X-Authority-Analysis: v=2.4 cv=Yt4PR5YX c=1 sm=1 tr=0 ts=681e86d1 cx=c_pps
  a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8
- a=COk6AnOGAAAA:8 a=m1CBc06sofYiQK5y7b0A:9 a=QEXdDO2ut3YA:10
+ a=kuvCIlgCnUscDMFZ:21 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=h4Dyg9CvMN82XRjqx1sA:9 a=QEXdDO2ut3YA:10
  a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: llkJ1IQJzXP0srehKX5JVHri2d5iEyvZ
-X-Proofpoint-GUID: llkJ1IQJzXP0srehKX5JVHri2d5iEyvZ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDIzMCBTYWx0ZWRfX2kHY8CcHlQSP
- 6Khbq3SU6zS+y+KBrQ0EiV2QU9xllcQw5Iexu6s3hhUuAH6wkCnyZOWCUkpHwzBBBlLcHEYIqGM
- EUHYtpHBpH5VBO5riJGws9IwEyAdiOF4vyvH0trg140My3+PUwKRV5C/VD4120CVnfPuoxqparn
- 4RZttbwly2iCaGQWlw3WiqTjXZZChM6ZRujfO7gs4k19YUnRwZbjx/WTksKc7IQQXQfoxM/+aEW
- K5qxkks6nJh7t6tQr6u1jYB8C+BGeTNQ4mLxxshowYVoyCXoPrOm5pmZFF6twOdTuCxuELgn+/4
- ELWP9Y4CGRBykpkdlgJ5Qk4GMXA0J/VeHJdHwCqLHLF3wc7ISNeMkPfuWSveraV6j0DPhMTHFFF
- STKKCm6dziBnYTLGweprtakTnyXICZAax8timYEV/CeAmFRIXXxbs95/z6NvSr5ynXhvIAG/
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-09_09,2025-05-09_01,2025-02-21_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
- spamscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1015
- suspectscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505090230
+ clxscore=1015 mlxscore=0 adultscore=0 spamscore=0 impostorscore=0
+ phishscore=0 lowpriorityscore=0 mlxlogscore=999 suspectscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505090230
 
 
 
 On 5/9/2025 1:59 AM, Neil Armstrong wrote:
-> Switch to devm_drm_panel_alloc() to add panel refcounting.
+> From: Caleb Connolly <caleb@connolly.tech>
 > 
+> Add support for another variant of the rm69299 panel. This panel is
+> 1080x2160 and is found in the shift-axolotl (SHIFT6mq).
+> 
+> Signed-off-by: Caleb Connolly <caleb@connolly.tech>
+> [narmstrong: moved to panel_desc]
 > Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 
 Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
 
 > ---
->   drivers/gpu/drm/panel/panel-visionox-rm69299.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
+>   drivers/gpu/drm/panel/panel-visionox-rm69299.c | 132 +++++++++++++++++++++++++
+>   1 file changed, 132 insertions(+)
 > 
 > diff --git a/drivers/gpu/drm/panel/panel-visionox-rm69299.c b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-> index fe921d5fb1942c47c5b849e827c244d7fbde25a3..fda1caa9052dd1c61c2dc23934d5faa8a52a6e31 100644
+> index fda1caa9052dd1c61c2dc23934d5faa8a52a6e31..f0791ce499409d353b65b9d1d84efce5b01a7d41 100644
 > --- a/drivers/gpu/drm/panel/panel-visionox-rm69299.c
 > +++ b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-> @@ -167,7 +167,9 @@ static int visionox_rm69299_probe(struct mipi_dsi_device *dsi)
->   	struct visionox_rm69299 *ctx;
->   	int ret;
+> @@ -39,6 +39,117 @@ static const u8 visionox_rm69299_1080x2248_60hz_init_seq[][2] = {
+>   	{ 0xfe, 0x00 }, { 0xc2, 0x08 }, { 0x35, 0x00 }, { 0x51, 0xff },
+>   };
 >   
-> -	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> +	ctx = devm_drm_panel_alloc(dev, struct visionox_rm69299, panel,
-> +				   &visionox_rm69299_drm_funcs,
-> +				   DRM_MODE_CONNECTOR_DSI);
->   	if (!ctx)
->   		return -ENOMEM;
+> +static const u8 visionox_rm69299_1080x2160_60hz_init_seq[][2] = {
+> +	{ 0xfe, 0x40 }, { 0x05, 0x04 }, { 0x06, 0x08 }, { 0x08, 0x04 },
+> +	{ 0x09, 0x08 }, { 0x0a, 0x07 }, { 0x0b, 0xcc }, { 0x0c, 0x07 },
+> +	{ 0x0d, 0x90 }, { 0x0f, 0x87 }, { 0x20, 0x8d }, { 0x21, 0x8d },
+> +	{ 0x24, 0x05 }, { 0x26, 0x05 }, { 0x28, 0x05 }, { 0x2a, 0x05 },
+> +	{ 0x2d, 0x28 }, { 0x2f, 0x28 }, { 0x30, 0x32 }, { 0x31, 0x32 },
+> +	{ 0x37, 0x80 }, { 0x38, 0x30 }, { 0x39, 0xa8 }, { 0x46, 0x48 },
+> +	{ 0x47, 0x48 }, { 0x6b, 0x10 }, { 0x6f, 0x02 }, { 0x74, 0x2b },
+> +	{ 0x80, 0x1a }, { 0xfe, 0x40 }, { 0x93, 0x10 }, { 0x16, 0x00 },
+> +	{ 0x85, 0x07 }, { 0x84, 0x01 }, { 0x86, 0x0f }, { 0x87, 0x05 },
+> +	{ 0x8c, 0x00 }, { 0x88, 0x2e }, { 0x89, 0x2e }, { 0x8b, 0x09 },
+> +	{ 0x95, 0x00 }, { 0x91, 0x00 }, { 0x90, 0x00 }, { 0x8d, 0xd0 },
+> +	{ 0x8a, 0x03 }, { 0xfe, 0xa0 }, { 0x13, 0x00 }, { 0x33, 0x00 },
+> +	{ 0x0b, 0x33 }, { 0x36, 0x1e }, { 0x31, 0x88 }, { 0x32, 0x88 },
+> +	{ 0x37, 0xf1 }, { 0xfe, 0x50 }, { 0x00, 0x00 }, { 0x01, 0x00 },
+> +	{ 0x02, 0x00 }, { 0x03, 0xe9 }, { 0x04, 0x00 }, { 0x05, 0xf6 },
+> +	{ 0x06, 0x01 }, { 0x07, 0x2c }, { 0x08, 0x01 }, { 0x09, 0x62 },
+> +	{ 0x0a, 0x01 }, { 0x0b, 0x98 }, { 0x0c, 0x01 }, { 0x0d, 0xbf },
+> +	{ 0x0e, 0x01 }, { 0x0f, 0xf6 }, { 0x10, 0x02 }, { 0x11, 0x24 },
+> +	{ 0x12, 0x02 }, { 0x13, 0x4e }, { 0x14, 0x02 }, { 0x15, 0x70 },
+> +	{ 0x16, 0x02 }, { 0x17, 0xaf }, { 0x18, 0x02 }, { 0x19, 0xe2 },
+> +	{ 0x1a, 0x03 }, { 0x1b, 0x1f }, { 0x1c, 0x03 }, { 0x1d, 0x52 },
+> +	{ 0x1e, 0x03 }, { 0x1f, 0x82 }, { 0x20, 0x03 }, { 0x21, 0xb6 },
+> +	{ 0x22, 0x03 }, { 0x23, 0xf0 }, { 0x24, 0x04 }, { 0x25, 0x1f },
+> +	{ 0x26, 0x04 }, { 0x27, 0x37 }, { 0x28, 0x04 }, { 0x29, 0x59 },
+> +	{ 0x2a, 0x04 }, { 0x2b, 0x68 }, { 0x30, 0x04 }, { 0x31, 0x85 },
+> +	{ 0x32, 0x04 }, { 0x33, 0xa2 }, { 0x34, 0x04 }, { 0x35, 0xbc },
+> +	{ 0x36, 0x04 }, { 0x37, 0xd8 }, { 0x38, 0x04 }, { 0x39, 0xf4 },
+> +	{ 0x3a, 0x05 }, { 0x3b, 0x0e }, { 0x40, 0x05 }, { 0x41, 0x13 },
+> +	{ 0x42, 0x05 }, { 0x43, 0x1f }, { 0x44, 0x05 }, { 0x45, 0x1f },
+> +	{ 0x46, 0x00 }, { 0x47, 0x00 }, { 0x48, 0x01 }, { 0x49, 0x43 },
+> +	{ 0x4a, 0x01 }, { 0x4b, 0x4c }, { 0x4c, 0x01 }, { 0x4d, 0x6f },
+> +	{ 0x4e, 0x01 }, { 0x4f, 0x92 }, { 0x50, 0x01 }, { 0x51, 0xb5 },
+> +	{ 0x52, 0x01 }, { 0x53, 0xd4 }, { 0x58, 0x02 }, { 0x59, 0x06 },
+> +	{ 0x5a, 0x02 }, { 0x5b, 0x33 }, { 0x5c, 0x02 }, { 0x5d, 0x59 },
+> +	{ 0x5e, 0x02 }, { 0x5f, 0x7d }, { 0x60, 0x02 }, { 0x61, 0xbd },
+> +	{ 0x62, 0x02 }, { 0x63, 0xf7 }, { 0x64, 0x03 }, { 0x65, 0x31 },
+> +	{ 0x66, 0x03 }, { 0x67, 0x63 }, { 0x68, 0x03 }, { 0x69, 0x9d },
+> +	{ 0x6a, 0x03 }, { 0x6b, 0xd2 }, { 0x6c, 0x04 }, { 0x6d, 0x05 },
+> +	{ 0x6e, 0x04 }, { 0x6f, 0x38 }, { 0x70, 0x04 }, { 0x71, 0x51 },
+> +	{ 0x72, 0x04 }, { 0x73, 0x70 }, { 0x74, 0x04 }, { 0x75, 0x85 },
+> +	{ 0x76, 0x04 }, { 0x77, 0xa1 }, { 0x78, 0x04 }, { 0x79, 0xc0 },
+> +	{ 0x7a, 0x04 }, { 0x7b, 0xd8 }, { 0x7c, 0x04 }, { 0x7d, 0xf2 },
+> +	{ 0x7e, 0x05 }, { 0x7f, 0x10 }, { 0x80, 0x05 }, { 0x81, 0x21 },
+> +	{ 0x82, 0x05 }, { 0x83, 0x2e }, { 0x84, 0x05 }, { 0x85, 0x3a },
+> +	{ 0x86, 0x05 }, { 0x87, 0x3e }, { 0x88, 0x00 }, { 0x89, 0x00 },
+> +	{ 0x8a, 0x01 }, { 0x8b, 0x86 }, { 0x8c, 0x01 }, { 0x8d, 0x8f },
+> +	{ 0x8e, 0x01 }, { 0x8f, 0xb3 }, { 0x90, 0x01 }, { 0x91, 0xd7 },
+> +	{ 0x92, 0x01 }, { 0x93, 0xfb }, { 0x94, 0x02 }, { 0x95, 0x18 },
+> +	{ 0x96, 0x02 }, { 0x97, 0x4f }, { 0x98, 0x02 }, { 0x99, 0x7e },
+> +	{ 0x9a, 0x02 }, { 0x9b, 0xa6 }, { 0x9c, 0x02 }, { 0x9d, 0xcf },
+> +	{ 0x9e, 0x03 }, { 0x9f, 0x14 }, { 0xa4, 0x03 }, { 0xa5, 0x52 },
+> +	{ 0xa6, 0x03 }, { 0xa7, 0x93 }, { 0xac, 0x03 }, { 0xad, 0xcf },
+> +	{ 0xae, 0x04 }, { 0xaf, 0x08 }, { 0xb0, 0x04 }, { 0xb1, 0x42 },
+> +	{ 0xb2, 0x04 }, { 0xb3, 0x7f }, { 0xb4, 0x04 }, { 0xb5, 0xb4 },
+> +	{ 0xb6, 0x04 }, { 0xb7, 0xcc }, { 0xb8, 0x04 }, { 0xb9, 0xf2 },
+> +	{ 0xba, 0x05 }, { 0xbb, 0x0c }, { 0xbc, 0x05 }, { 0xbd, 0x26 },
+> +	{ 0xbe, 0x05 }, { 0xbf, 0x4b }, { 0xc0, 0x05 }, { 0xc1, 0x64 },
+> +	{ 0xc2, 0x05 }, { 0xc3, 0x83 }, { 0xc4, 0x05 }, { 0xc5, 0xa1 },
+> +	{ 0xc6, 0x05 }, { 0xc7, 0xba }, { 0xc8, 0x05 }, { 0xc9, 0xc4 },
+> +	{ 0xca, 0x05 }, { 0xcb, 0xd5 }, { 0xcc, 0x05 }, { 0xcd, 0xd5 },
+> +	{ 0xce, 0x00 }, { 0xcf, 0xce }, { 0xd0, 0x00 }, { 0xd1, 0xdb },
+> +	{ 0xd2, 0x01 }, { 0xd3, 0x32 }, { 0xd4, 0x01 }, { 0xd5, 0x3b },
+> +	{ 0xd6, 0x01 }, { 0xd7, 0x74 }, { 0xd8, 0x01 }, { 0xd9, 0x7d },
+> +	{ 0xfe, 0x60 }, { 0x00, 0xcc }, { 0x01, 0x0f }, { 0x02, 0xff },
+> +	{ 0x03, 0x01 }, { 0x04, 0x00 }, { 0x05, 0x02 }, { 0x06, 0x00 },
+> +	{ 0x07, 0x00 }, { 0x09, 0xc4 }, { 0x0a, 0x00 }, { 0x0b, 0x04 },
+> +	{ 0x0c, 0x01 }, { 0x0d, 0x00 }, { 0x0e, 0x04 }, { 0x0f, 0x00 },
+> +	{ 0x10, 0x71 }, { 0x12, 0xc4 }, { 0x13, 0x00 }, { 0x14, 0x04 },
+> +	{ 0x15, 0x01 }, { 0x16, 0x00 }, { 0x17, 0x06 }, { 0x18, 0x00 },
+> +	{ 0x19, 0x71 }, { 0x1b, 0xc4 }, { 0x1c, 0x00 }, { 0x1d, 0x02 },
+> +	{ 0x1e, 0x00 }, { 0x1f, 0x00 }, { 0x20, 0x08 }, { 0x21, 0x66 },
+> +	{ 0x22, 0xb4 }, { 0x24, 0xc4 }, { 0x25, 0x00 }, { 0x26, 0x02 },
+> +	{ 0x27, 0x00 }, { 0x28, 0x00 }, { 0x29, 0x07 }, { 0x2a, 0x66 },
+> +	{ 0x2b, 0xb4 }, { 0x2f, 0xc4 }, { 0x30, 0x00 }, { 0x31, 0x04 },
+> +	{ 0x32, 0x01 }, { 0x33, 0x00 }, { 0x34, 0x03 }, { 0x35, 0x00 },
+> +	{ 0x36, 0x71 }, { 0x38, 0xc4 }, { 0x39, 0x00 }, { 0x3a, 0x04 },
+> +	{ 0x3b, 0x01 }, { 0x3d, 0x00 }, { 0x3f, 0x05 }, { 0x40, 0x00 },
+> +	{ 0x41, 0x71 }, { 0x83, 0xce }, { 0x84, 0x02 }, { 0x85, 0x20 },
+> +	{ 0x86, 0xdc }, { 0x87, 0x00 }, { 0x88, 0x04 }, { 0x89, 0x00 },
+> +	{ 0x8a, 0xbb }, { 0x8b, 0x80 }, { 0xc7, 0x0e }, { 0xc8, 0x05 },
+> +	{ 0xc9, 0x1f }, { 0xca, 0x06 }, { 0xcb, 0x00 }, { 0xcc, 0x03 },
+> +	{ 0xcd, 0x04 }, { 0xce, 0x1f }, { 0xcf, 0x1f }, { 0xd0, 0x1f },
+> +	{ 0xd1, 0x1f }, { 0xd2, 0x1f }, { 0xd3, 0x1f }, { 0xd4, 0x1f },
+> +	{ 0xd5, 0x1f }, { 0xd6, 0x1f }, { 0xd7, 0x17 }, { 0xd8, 0x1f },
+> +	{ 0xd9, 0x16 }, { 0xda, 0x1f }, { 0xdb, 0x0e }, { 0xdc, 0x01 },
+> +	{ 0xdd, 0x1f }, { 0xde, 0x02 }, { 0xdf, 0x00 }, { 0xe0, 0x03 },
+> +	{ 0xe1, 0x04 }, { 0xe2, 0x1f }, { 0xe3, 0x1f }, { 0xe4, 0x1f },
+> +	{ 0xe5, 0x1f }, { 0xe6, 0x1f }, { 0xe7, 0x1f }, { 0xe8, 0x1f },
+> +	{ 0xe9, 0x1f }, { 0xea, 0x1f }, { 0xeb, 0x17 }, { 0xec, 0x1f },
+> +	{ 0xed, 0x16 }, { 0xee, 0x1f }, { 0xef, 0x03 }, { 0xfe, 0x70 },
+> +	{ 0x5a, 0x0b }, { 0x5b, 0x0b }, { 0x5c, 0x55 }, { 0x5d, 0x24 },
+> +	{ 0xfe, 0x90 }, { 0x12, 0x24 }, { 0x13, 0x49 }, { 0x14, 0x92 },
+> +	{ 0x15, 0x86 }, { 0x16, 0x61 }, { 0x17, 0x18 }, { 0x18, 0x24 },
+> +	{ 0x19, 0x49 }, { 0x1a, 0x92 }, { 0x1b, 0x86 }, { 0x1c, 0x61 },
+> +	{ 0x1d, 0x18 }, { 0x1e, 0x24 }, { 0x1f, 0x49 }, { 0x20, 0x92 },
+> +	{ 0x21, 0x86 }, { 0x22, 0x61 }, { 0x23, 0x18 }, { 0xfe, 0x40 },
+> +	{ 0x0e, 0x10 }, { 0xfe, 0xa0 }, { 0x04, 0x80 }, { 0x16, 0x00 },
+> +	{ 0x26, 0x10 }, { 0x2f, 0x37 }, { 0xfe, 0xd0 }, { 0x06, 0x0f },
+> +	{ 0x4b, 0x00 }, { 0x56, 0x4a }, { 0xfe, 0x00 }, { 0xc2, 0x09 },
+> +	{ 0x35, 0x00 }, { 0xfe, 0x70 }, { 0x7d, 0x61 }, { 0x7f, 0x00 },
+> +	{ 0x7e, 0x4e }, { 0x52, 0x2c }, { 0x49, 0x00 }, { 0x4a, 0x00 },
+> +	{ 0x4b, 0x00 }, { 0x4c, 0x00 }, { 0x4d, 0xe8 }, { 0x4e, 0x25 },
+> +	{ 0x4f, 0x6e }, { 0x50, 0xae }, { 0x51, 0x2f }, { 0xad, 0xf4 },
+> +	{ 0xae, 0x8f }, { 0xaf, 0x00 }, { 0xb0, 0x54 }, { 0xb1, 0x3a },
+> +	{ 0xb2, 0x00 }, { 0xb3, 0x00 }, { 0xb4, 0x00 }, { 0xb5, 0x00 },
+> +	{ 0xb6, 0x18 }, { 0xb7, 0x30 }, { 0xb8, 0x4a }, { 0xb9, 0x98 },
+> +	{ 0xba, 0x30 }, { 0xbb, 0x60 }, { 0xbc, 0x50 }, { 0xbd, 0x00 },
+> +	{ 0xbe, 0x00 }, { 0xbf, 0x39 }, { 0xfe, 0x00 }, { 0x51, 0x66 },
+> +};
+> +
+>   static inline struct visionox_rm69299 *panel_to_ctx(struct drm_panel *panel)
+>   {
+>   	return container_of(panel, struct visionox_rm69299, panel);
+> @@ -135,6 +246,19 @@ static const struct drm_display_mode visionox_rm69299_1080x2248_60hz = {
+>   	.flags = 0,
+>   };
 >   
-> @@ -190,8 +192,6 @@ static int visionox_rm69299_probe(struct mipi_dsi_device *dsi)
->   		return PTR_ERR(ctx->reset_gpio);
->   	}
+> +static const struct drm_display_mode visionox_rm69299_1080x2160_60hz = {
+> +	.clock = 158695,
+> +	.hdisplay = 1080,
+> +	.hsync_start = 1080 + 26,
+> +	.hsync_end = 1080 + 26 + 2,
+> +	.htotal = 1080 + 26 + 2 + 36,
+> +	.vdisplay = 2160,
+> +	.vsync_start = 2160 + 8,
+> +	.vsync_end = 2160 + 8 + 4,
+> +	.vtotal = 2160 + 8 + 4 + 4,
+> +	.flags = 0,
+> +};
+> +
+>   static int visionox_rm69299_get_modes(struct drm_panel *panel,
+>   				      struct drm_connector *connector)
+>   {
+> @@ -225,9 +349,17 @@ const struct visionox_rm69299_panel_desc visionox_rm69299_1080p_display_desc = {
+>   	.init_seq_len = ARRAY_SIZE(visionox_rm69299_1080x2248_60hz_init_seq),
+>   };
 >   
-> -	drm_panel_init(&ctx->panel, dev, &visionox_rm69299_drm_funcs,
-> -		       DRM_MODE_CONNECTOR_DSI);
->   	drm_panel_add(&ctx->panel);
->   
->   	dsi->lanes = 4;
+> +const struct visionox_rm69299_panel_desc visionox_rm69299_shift_desc = {
+> +	.mode = &visionox_rm69299_1080x2160_60hz,
+> +	.init_seq = (const u8 *)visionox_rm69299_1080x2160_60hz_init_seq,
+> +	.init_seq_len = ARRAY_SIZE(visionox_rm69299_1080x2160_60hz_init_seq),
+> +};
+> +
+>   static const struct of_device_id visionox_rm69299_of_match[] = {
+>   	{ .compatible = "visionox,rm69299-1080p-display",
+>   	  .data = &visionox_rm69299_1080p_display_desc },
+> +	{ .compatible = "visionox,rm69299-shift",
+> +	  .data = &visionox_rm69299_shift_desc },
+>   	{ /* sentinel */ }
+>   };
+>   MODULE_DEVICE_TABLE(of, visionox_rm69299_of_match);
 > 
 
