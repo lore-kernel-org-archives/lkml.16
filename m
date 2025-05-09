@@ -1,91 +1,91 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1AF238172;
-	Fri,  9 May 2025 18:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D63323BCE7
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 18:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746815317; cv=none; b=tCNpXEKHnxi0vq7QDTD0xcV/Oloj+fy/KTBupSsximi5Vv+VL86ttrYRXyY1eT8ZwgQZdAlRGdlKDhfI0Vvo2YJ1gsegytpg2HdypLSaid104re2gYGAo2wf9tJUl+pdTYemQXoJioyuNhwqLHCPPA6AmbuKWU+fngHppf280ns=
+	t=1746815371; cv=none; b=BSKaGg86yfueInaz0opy2xFaL+V/h9JY90UFdp/xlhAGVjhI0ccYfJdTvF5X8Hi7SWeHlEia/tZpTg+0ny7q+d2eCDK87Tqmznjq2eDqoPa5Ag1WQ7IwCvXXJnLVZntbZUR4UTJO3bq4eu1frI666twv8uV1QgQ5Wg4wtlqB+nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746815317; c=relaxed/simple;
-	bh=10fWKQkNnHsqIbf/pw3ZTsZtcdW11Mi85qpJNxHdr28=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DfBGKGNd8s302tXyk3PHyaXhAO2qtJbQxa/vQOJyNSG/s89sTbICUVYWRBBLJkBXkDNPG3VdS3Qh0IlnHO0jzzt85G5Vquq3WsdTDSmmzJDyBYRLUxXvIaDGsF3U/V93nEx5B8LqThoCtCEdBxooI67VDvXYLuIM2ZhXboISfV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=AYbnBLQB; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1746815371; c=relaxed/simple;
+	bh=TZ/CioQKPmReLVBRaY4JcPT8DKNM7VLtQX0w+Wrv/+I=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=etmEuL1vbaYRXOUa3bCYLT34RosFxkpUYHL4bm0tu8/6LPo+0ZUBz929k9MPquHWsKsxTx8/FKrzN72bacC+VkE+bWOOM421R5g89Z12PrYAIJ7tO2xjRDi6My8UHWwDVKxyIDWCIuRsemnpy6vtdtSvefcf9Ml7eyFIcixrwWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WITzpjs6; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="AYbnBLQB"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-74248a3359fso564457b3a.2;
-        Fri, 09 May 2025 11:28:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WITzpjs6"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22e540fa2d0so19308795ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 11:29:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1746815315; x=1747420115; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AVjmITvg5xwQUhBH3cPWu+1Rci6sKZeIVD+X8Tz7B6Y=;
-        b=AYbnBLQBGpTjp4qqM5x5rME4jKnQ2sztadWaKg67B7gLiTJGsHIyOaq2cZaKBsInK4
-         +i6/D4AXyNsfN/+ACIkd/xx+2Zmave6jUzAOBv460Q7uJhiQVESshau07d4BWOfON8Bs
-         0PC957BYTrdAUWnrN6CJqR+20M4Mpo6WS1AOyiSIz4WCDgeJW+vYoo1I/eSI71Q96kP+
-         vp4HeqHtau0MACVztknNCnLCLkdCiJ/KRxCuT+gdOC4QSg8fe3b70jTKOnE7wLv0nFIb
-         IVqBAkr2B1lfGoqzu7sshrCH7PKhROj9iwORAoisfVInGYmIQvi1z/dFfGLU5NKUePxw
-         gepg==
+        d=google.com; s=20230601; t=1746815369; x=1747420169; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OmUdZ7NWf24NGQucaka4MppQGDe1r3WG/B9nuhCN99s=;
+        b=WITzpjs6JY4Ll1aVaTo3Pc8LltuVb5DqJxFwTJvf9FdYUhXfhkm9Q2huSqhQnM3txo
+         aekxlXVx9YrHkOhy41JWljkE+ONcQfkGdOEKeePoJ0KJLe8EPkes8BrNBWBLGi+hp0ly
+         QJYOQX+m5idx0bFHOuNjYdNxJDy2hY5hezUATrgAE1ujjm6veYJmD/x/N5yXLyJcWLss
+         XzJYtGtoadFpb1ATZYFGdSwgnGQZddNmKZKX3E0TEqibntfdmYMjCqE3RYUG9VFS5/fX
+         hcBMANDF/Dsv41g/IGaTbHNoLQVsSvPXU/7GQ+Ntqy7xx80HASDXViu/cnjWvLZbuwjM
+         Lhdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746815315; x=1747420115;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AVjmITvg5xwQUhBH3cPWu+1Rci6sKZeIVD+X8Tz7B6Y=;
-        b=MTF16kTkDPbRdtqnLS3X9Yybbhy25HxViRimEul2UCqOrP7ZXB3Ry2mgr5JC2x9G0I
-         sMn73hApfdpWkBbjPSJy5XUoV65r6aRpZ8PdvcPsUcd9tyNyqxgzSgYpB7uRHYv81+oC
-         eC727DpdeZWGUef/xNhoimPgDyHpy9TlcWBIXp3RvhyelfpPFcLnXYSD3xwtT7Ya5Vng
-         dZbTjfPkboymGKOGK/lx2NMRjsBcu9hnBHWvulUHxmFrDdg8U2wfhpyFGAJWwRI6ffPT
-         S3uv9YEYefBiX6Lpya+V+MSYXpR2cBsR1o8ijBz9OJNZ6iHMZ4KtlDTJVndPmZqQlnKi
-         mNSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVakknxfzUs/T3StL4pSLbKvc7Xyrb3PSBzH+u7plPaSRTDmyYoYNbwGqHfX0YEn7Z2KJlGqZxMhjPF@vger.kernel.org, AJvYcCVjmLE+cDVjhhKfkrnnTeCgLIezo8sTAYi7hft6WPkvYe4JAMw/GXCU0B5k8i7vj1VudIgI8iWfoVmfHaH+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLPrEnl/UzsN2EKZ28TMQ2PHkWOLwhFbbaF+qA/gyr9B43Yc6P
-	0DzYgSIzVxzcxCy69+x37IwbyefVLwgvAzHJ3fICVWYre0PIl+XltbwNG7GK442OpGtBWZ9bMI3
-	hrAJm6ZGazUlh5PpXyEQyzcLLB3s=
-X-Gm-Gg: ASbGnctuSmJEbQI+mWZwm2Y+ggV/2n3jQN27TP38JfUucwC5NhJ5g0wyC/8GwkN1AM5
-	IzdOCzPLeATtxaUASbAuASezBSNsp45pPc1pAehtezFsOY2gkdWVJz9bpANqItlbH4ndTa6Uluj
-	KlyuOt3j2RJ3tf5CWK7mYLdOM9fSvXGIldSs+UFJbflpjbjf1YZ1HpIzKLn9Gp1fa5Uw==
-X-Google-Smtp-Source: AGHT+IEwd7AiDoJxpDhyTHw6FTDd796IjH1JzgkpmVh4628MtJYKSWng6hqIPivs5wHI5s0eCiBfNcWPOBCx0dc2UHI=
-X-Received: by 2002:a17:902:f70a:b0:225:abd2:5e39 with SMTP id
- d9443c01a7336-22fc8c8eac0mr65654585ad.30.1746815315465; Fri, 09 May 2025
- 11:28:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746815369; x=1747420169;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OmUdZ7NWf24NGQucaka4MppQGDe1r3WG/B9nuhCN99s=;
+        b=OnMfJYI74AT6PxRGqjaV+5As1ahlPg94CvrxuONE2JNbDPLFwhRMu4mfspvY8Lb4cI
+         OiOa0E1OqeFqeyjI2Snk4h1y8rWb3zH5lZdGyPjsdn53rvQcSTcTAxpn4++u0VTahkWM
+         +S3+eTxC91KmojtTxSoL51OI1yt0m1C4koP31uafc5/ErRrozfvs3zg6l2K6IgKFrpSx
+         WhV03Wf73SIojvnRaoyWJuAQ/+wNNAF1EtyXg620tLQIV357hUpjvAsFT3KCMngEpj1G
+         viBjiPgP5/ugHsSLKdyWRomdBrqGIEeWaWYvcdY1gvEYdBNYA+rsZvreuBN+NBP8db5y
+         /3/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVXzO5RSFAy0XyHhMNrYvkk8cvAes/KioUXlpWGnwXP1afaqIc68TCEhrwpMDDR3z8VuIVL2IVDrGYvOFc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9HdyKp/gtxv7DHCjjgzXd+SKcK3VNILA4AHRKauau9TMyy9s0
+	aW/kWq14y3jeUOkuXrziICA5m8Ilv66+6DLhkTmmszUNt6THU3ENTFyayzgs1vSi822ragAF2qg
+	sew==
+X-Google-Smtp-Source: AGHT+IFrOu+Urvz0vnEY64t3GWYiH2n9+rMd9iGS1EvnXRCr73zi7B72X8HzZk53Hxmd3/d9MS5cFDIYAAg=
+X-Received: from pjbrr8.prod.google.com ([2002:a17:90b:2b48:b0:2fc:13d6:b4cb])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e841:b0:223:60ce:2451
+ with SMTP id d9443c01a7336-22fc8b33427mr57550815ad.15.1746815369640; Fri, 09
+ May 2025 11:29:29 -0700 (PDT)
+Date: Fri, 9 May 2025 11:29:28 -0700
+In-Reply-To: <20250509081615.248896-1-chao.gao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250509150114.299962-2-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250509150114.299962-2-krzysztof.kozlowski@linaro.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Fri, 9 May 2025 20:28:24 +0200
-X-Gm-Features: AX0GCFt7pQHVyrf4n1xvCNGZ9D5D94k38mJZKPZaIgxrW2CstAdBDU6m2wUQANg
-Message-ID: <CAFBinCDt1jDv=jhDoW3UtBUL8BuLL8PpJPKjpC1Sf5fifnw+6g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: meson: Drop unused aml_pctl_find_group_by_name()
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Xianwei Zhao <xianwei.zhao@amlogic.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-amlogic@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250506093740.2864458-6-chao.gao@intel.com> <20250509081615.248896-1-chao.gao@intel.com>
+Message-ID: <aB5JiE6LupZhmqJ7@google.com>
+Subject: Re: [PATCH v6a 6/8] x86/fpu: Remove xfd argument from __fpstate_reset()
+From: Sean Christopherson <seanjc@google.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: bp@alien8.de, chang.seok.bae@intel.com, dave.hansen@intel.com, 
+	dave.hansen@linux.intel.com, ebiggers@google.com, hpa@zytor.com, 
+	john.allen@amd.com, kees@kernel.org, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mingo@redhat.com, oleg@redhat.com, 
+	pbonzini@redhat.com, peterz@infradead.org, rick.p.edgecombe@intel.com, 
+	stanspas@amazon.de, tglx@linutronix.de, weijiang.yang@intel.com, 
+	x86@kernel.org, xin3.li@intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, May 9, 2025 at 5:01=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> aml_pctl_find_group_by_name() is not used anywhere, as reported by W=3D1
-> clang build:
->
->   pinctrl-amlogic-a4.c:600:2: error: unused function 'aml_pctl_find_group=
-_by_name' [-Werror,-Wunused-function]
->
-> Fixes: 6e9be3abb78c ("pinctrl: Add driver support for Amlogic SoCs")
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Fri, May 09, 2025, Chao Gao wrote:
+> The initial values for fpstate::xfd differ between guest and host fpstates.
+> Currently, the initial values are passed as an argument to
+> __fpstate_reset(). But, __fpstate_reset() already assigns different default
+> features and sizes based on the type of fpstates (i.e., guest or host). So,
+> handle fpstate::xfd in a similar way to highlight the differences in the
+> initial xfd value between guest and host fpstates
+> 
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Chao Gao <chao.gao@intel.com>
+> Link: https://lore.kernel.org/all/aBuf7wiiDT0Wflhk@google.com/
+> ---
+> v6a: new.
+> 
+> Note: this quick revision is just intended to ensure that the feedback
+> has been properly addressed.
+
+Both patches LGTM.
