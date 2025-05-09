@@ -1,183 +1,261 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9503E22F778;
-	Fri,  9 May 2025 16:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A235230D01;
+	Fri,  9 May 2025 16:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746806591; cv=none; b=Ec/HVTrVt22Z6ERJ4elQk6Fsipvo6UuLC07BS9qKV4RkwCiV44nXDKE+y/1Zst9lI01m4x8tw5SiBiKNehlXjo1rb3AV/U2TZDeMNxCq7hFzA85pycHpsHZm4nJSrSuSdvIqmtLh5xnewVLcMwHyrnwxSn9cZUPSJQFPGySEkmY=
+	t=1746806684; cv=none; b=n30izbbBWwAuZ1/tK0efUxV5pk/ElUttWW2bDU+jVFxqFRSVa1zT0v7ZdxQWfZGskjL58bKU8amLW1QMMsplG9eD7Drx4OAKH/mcW5cI2EwYWT2lkNlAlTbKemtvNaMsi87vMNPYI1qpYf3Vu65GlPm8BEwR+E9nmIZyUqcc6Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746806591; c=relaxed/simple;
-	bh=GPRzG8VKelEecZ0Yee3qUa2iBon8T40y70Gj2OBr1HM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sqnM0cLEd+dq/UXUGd2KzAqJxigXZSl45CygnVDLnROFfD3qkBP8I7k5hb0IJ4h7TH6DvcIBpWigghGXcksIez8urgj7HeqCI7XgCqQK/icjTavAPP0YC7R9sKVboIJteifzXI7L4DVTtp6sGPNDAtlpDYTJie5bJK/rz1eO53I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M0krhn6W; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746806684; c=relaxed/simple;
+	bh=UWT3e7uRPGygOVjf8h2Eu768cYnpXn0Oj3p6hUoKpp0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CqKgoKqpB3xi2gRoVfnS80Vq2XClCeYRvDSnktxgftGqDCPXxYVRovREg6wxH5QNnu3MtIi7p4pIrunQyTT9FHyspoLR8vXjDU/5i1nhX1QwBgG8Hgo1hmBLy3VpPY73ED7QrtPPXIi38LRIZXlJOhyXfOZBDw6izU3STsK++tI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=idJY/O0/; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M0krhn6W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746806590; x=1778342590;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GPRzG8VKelEecZ0Yee3qUa2iBon8T40y70Gj2OBr1HM=;
-  b=M0krhn6WJp60ST81plttPwPqlJ3NNaNs+2+u/56eDKN7YjnYENRWFb9z
-   HslGLWR6XY7PzmwOE76WXUwJR+O4/7E+RSdM6OEytcjTksqlmAdDGkmca
-   qPrQ9xiCmfcRw6XjKfJ7Iz7izL9NubRYwwcNPIsQH8AA7PLAsQguqp22i
-   syWJhcKs8YIZMH2uSuLW9WjihY2PeUsWexQmW3nLgvr0iX7QI5Fwb84/s
-   ZRD5rFChtE+96UhlmetgxvvRQTDy9w6eqNqqRvxz8ig/ZsGJX0aaP8ZNi
-   NZAeIY4zibtflToRBLttaBdzc6nI6iEDUk27Cw8JSvR9ni+Lv7lwoH4H6
-   g==;
-X-CSE-ConnectionGUID: 3/9UCTJgS86E5VXJUurdpg==
-X-CSE-MsgGUID: jnNoTPj/SWW5wUdp2gcreg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59298917"
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="59298917"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 09:03:09 -0700
-X-CSE-ConnectionGUID: dy+/pV5jSsi3tjZGAqV3RA==
-X-CSE-MsgGUID: S0q6RtYJShW0dQiK2NFvgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="137641752"
-Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.108.200]) ([10.125.108.200])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 09:03:08 -0700
-Message-ID: <14b64c8d-a5fc-42eb-8160-590c17bbbd99@intel.com>
-Date: Fri, 9 May 2025 09:03:06 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="idJY/O0/"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac30d4ee128so35772466b.0;
+        Fri, 09 May 2025 09:04:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746806681; x=1747411481; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pX1Xn48JWPNWwoKS70iDCarEMhnhyPor/kZZ40HpF8o=;
+        b=idJY/O0/fatA+6TH+Gyxgj2XlssMSpuxlPhcPqh5jmG+bnM/I71LNwbheCTE8EhgUp
+         RkQxjTExsYwOB3jIVbb3fS0Gu43j5u4DNG2i2PkF0OJCw9E/XDjJ7cBtLWU6ZjXlyOXb
+         c9MQ+mYTCETWWlaVhGaeUcRUt0Ch6W5Rc22G4IFnf7Lltn8Wv23rvqKz2hr/97nIHcv3
+         C3I1AtO2U8xhAS4e0Tc1Y0FVJY1Rh6IXqVJTp52cEQywin1zZQ6wfeuo/DkqLzwMNFsf
+         dIAojB+Kf3AJxsFNFcrWX1oXoy7WligXi4DRUKv07VrL248CikD1AJmr4OUQdZ6ZWppo
+         yOEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746806681; x=1747411481;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pX1Xn48JWPNWwoKS70iDCarEMhnhyPor/kZZ40HpF8o=;
+        b=nnW8HyrpsW2PhrG3hO/Xs8NVNJMVKSsKXKp45aICLEBilgGuYbnCWdvi50icCk40Vs
+         zh5KjYWr6+NVbWWQF7z5TVQVvDRrfoR+qzDo97Dfj/C++wIdFTI9P3yL4V/4bBDVR8UW
+         f7J2fk9WMpdAjvKdA8qnetISZrXBLmHD7ba6xjWPGM4y+7B8LwtRrDRsaiaBUkH1/TnF
+         qRKnE+Mz83YBpgudcRv2PIuWKdCVgO4HUujpnA2a6Esz+8bhl3TZ73DBbu3LssRDmqNv
+         9Hw42u1+k/K2irS4hlAKqg4Rqe00PjS8hW+Sp8SkU1zTQezeG1FmnFfCMZDA02rxwxDw
+         UskQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOb9L5bpI/oG38x36nJyI1tlWavfpcdcGJXQqFI9O96HQyxxrNIRUmFIV7c+qrqN0Pr1ZDaMf1FLL7V+H9@vger.kernel.org, AJvYcCWny2LI6o+KOuellrBc4H0HtHMP/OTzjCoovnh6E8IvSeRYyaW7co9vxDwmaRx/egkCXEXHm7pp0x4N@vger.kernel.org, AJvYcCXu+aKc1Lzi90jr+PQohMXMQgYp74C8UPybDRcRVhEdJlOy0m2VuMRKXEn4gE6UsgsBIApIQbP1jPKG@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTqh5WQjQjVBP4R/hBBpxwzxXTZS0+DfL6+r/1tTUTiDPKaPzb
+	obnXroe7LiDVTQ0Z51vi9uD2ey6NJIRuvQY8r5aTNKDCAZSGDV6Ltl8g4Qlg
+X-Gm-Gg: ASbGncsp6GBpgA6lhS6XFcZRSlunSriuroXIgxNHijQqvOnSfONoiYh8vybdvsw4/IA
+	o31hfKT1O5x4emmEOGF0qjV2XEobJmKqy07en4c95CHhBzSuz92BrUk0wx1FrkKpg4klJFrqYHc
+	S8s9kJhBD1dR9AVrFkVQZR2Dvjg8IWV93CFkeCrabfBvfNo2K92mDzI2n7UpTfyHO054HZnvwSD
+	LIbgvIpY+4fp7AY+pTAoKqZXF6vOP8VENkQZgn7/eXS1fbxDF1grlAH7aZn4ouiZ/RS2x0ics3D
+	OQ5NPThMJC6WcGqaAIHJ1/enDh3G
+X-Google-Smtp-Source: AGHT+IF3sn8zNRPNDYSOtNhbc70HEDVqm9+kB+9U0d1DvOs91XcZhkaM1rCdhEtleM44NPXP0GTkbA==
+X-Received: by 2002:a17:907:75f2:b0:ad2:2493:8361 with SMTP id a640c23a62f3a-ad2249383e7mr65020566b.11.1746806680433;
+        Fri, 09 May 2025 09:04:40 -0700 (PDT)
+Received: from skbuf ([188.25.50.178])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2192c8f98sm172443166b.10.2025.05.09.09.04.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 09:04:39 -0700 (PDT)
+Date: Fri, 9 May 2025 19:04:36 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+	Chester Lin <chester62515@gmail.com>,
+	Matthias Brugger <mbrugger@suse.com>,
+	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
+	NXP S32 Linux Team <s32@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, larisa.grigore@nxp.com,
+	arnd@linaro.org, andrei.stefanescu@nxp.com,
+	dan.carpenter@linaro.org, linux-spi@vger.kernel.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 01/14] spi: spi-fsl-dspi: Define regmaps per device
+Message-ID: <20250509160436.ohx57lp7a3w2dhog@skbuf>
+References: <20250509-james-nxp-spi-v1-0-32bfcd2fea11@linaro.org>
+ <20250509-james-nxp-spi-v1-1-32bfcd2fea11@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/14] cxl: Address translation support, part 1:
- Cleanups and refactoring
-To: Robert Richter <rrichter@amd.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Gregory Price <gourry@gourry.net>,
- "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Terry Bowman <terry.bowman@amd.com>
-References: <20250509150700.2817697-1-rrichter@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250509150700.2817697-1-rrichter@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509-james-nxp-spi-v1-1-32bfcd2fea11@linaro.org>
 
+On Fri, May 09, 2025 at 12:05:48PM +0100, James Clark wrote:
+>  static const struct fsl_dspi_devtype_data devtype_data[] = {
+>  	[VF610] = {
+>  		.trans_mode		= DSPI_DMA_MODE,
+>  		.max_clock_factor	= 2,
+>  		.fifo_size		= 4,
+> +		.regmap			= &dspi_regmap_config[DSPI_REGMAP]
 
+Comma at the end, please. Just like you didn't have to modify the
+previous line to add this new assignment, so shouldn't any future
+contributor. The comment applies throughout the entire patch set.
 
-On 5/9/25 8:06 AM, Robert Richter wrote:
-> This series is the first part of adding support for CXL address
-> translation. It contains cleanup and code refactoring in preparation
-> of the actual implementation that will be sent in part 2. Cleanup and
-> code refactoring have been split in a separate series to reduce the
-> number of patches of the series. Even without address translation on
-> top this rework improves esp. the region code, cleans it up,
-> simplifies it and adds debugging messages to better analyze region
-> creation failures:
-> 
-> Content of patches:
-> 
->  * Patches 1: Remove else after return.
-> 
->  * Patches 2-3: Cleanups and comments around cxl_hdm_decode_init().
-> 
->  * Patches 4-6: Adding and modifying helper functions.
-> 
->  * Patches 7-11: Refactoring of endpoint decoder setup and cxl_find*()
->    including cleanup helpers.
-> 
->  * Patches 12-14: Adding and modifying debug messages.
-> 
-> v6:
->  * added tags to SOB chain,
->  * added more occurences to remove-else-after-return (Alison),
->  * updated description of cxl_port_pick_region_decoder() (Fabio),
-> 
-> v5:
->  * added tags to SOB chain,
->  * made comment a oneliner in cxl_hdm_decode_init() (Jonathan),
->  * updated patch description introducing parent_port_of() (Fabio),
->  * removed EXPORT_SYMBOL_NS_GPL() of function parent_port_of() (Dan),
->  * renamed functions to cxl_port_pick_region_decoder() and
->    cxl_rr_assign_decoder(), updated descriptions (Dan),
->  * added patch to replace put_cxl_root() by a cleanup helper,
->  * using __free() for reference counting of cxl_find_*() functions,
->    added cleanup helpers (Dan),
->  * dropped patch adding CFMWS memory log messages (Dan),
-> 
-> v4:
->  * rebased onto cxl/next, commit 0a14566be090 ("cxl/Documentation:
->    Remove 'mixed' from sysfs mode doc"),
->  * added tags to SOB chain,
->  * reworked comments in cxl_hdm_decode_init() (dropped moving comment
->    and updated patch that modifies comments) (Jonathan),
->  * reworded patch description that removes duplicate call of
->    cxl_find_decoder_early() (Jonathan),
->  * moved some patches out of this rework and cleanup series (Dave,
->    Jonathan),
-> 
-> v3:
->  * added tags to SOB chain,
->  * fixed NULL pointer dereference in cxl_find_root_decoder() (Alison),
->  * updated subject line of patches that add kernel messages and
->    included example log messages (Alison),
-> 
-> v2:
->  * rebased onto cxl/next,
->  * added tags to SOB chain,
->  * move patches with cleanups and refactoring into this separate
->    series (Dave),
->  * added patch "cxl/acpi: Unify CFMWS memory log messages with SRAT
->    messages" to improve CFMWS log messages,
->  * renamed endpoint decoder functions to cxl_endpoint_decoder_*() (Li),
->  * reworded patch description that moves find_cxl_root() and reworks
->    cxl_find_root_decoder() (Terry),
->  * small changes to cxl_find_root_decoder()/
->    cxl_endpoint_decoder_initialize() (Jonanthan),
->  * updated comment in cxl_port_find_switch_decoder() (Ben),
->  * cxl_endpoint_decoder_initialize(): Simplify variable declaration
->    (Jonathan, Ben),
->  * cxl_find_decoder_early(): Added comment on function usage (Gregory),
->  * reordered patches and reworded some of the subject for a better
->    structure.
-> 
-> Robert Richter (14):
->   cxl: Remove else after return
->   cxl/pci: Moving code in cxl_hdm_decode_init()
->   cxl/pci: Add comments to cxl_hdm_decode_init()
->   cxl: Introduce parent_port_of() helper
->   cxl/region: Rename function to cxl_port_pick_region_decoder()
->   cxl/region: Avoid duplicate call of cxl_port_pick_region_decoder()
->   cxl/region: Move find_cxl_root() to cxl_add_to_region()
->   cxl/port: Replace put_cxl_root() by a cleanup helper
->   cxl/region: Factor out code to find the root decoder
->   cxl/region: Factor out code to find a root decoder's region
->   cxl/region: Add function to find a port's switch decoder by range
->   cxl/region: Add a dev_warn() on registration failure
->   cxl/region: Add a dev_err() on missing target list entries
->   cxl: Add a dev_dbg() when a decoder was added to a port
-> 
->  drivers/cxl/acpi.c        |  10 ++-
->  drivers/cxl/core/cdat.c   |   2 +-
->  drivers/cxl/core/hdm.c    |   3 +-
->  drivers/cxl/core/memdev.c |   4 +-
->  drivers/cxl/core/pci.c    |  48 +++++++----
->  drivers/cxl/core/port.c   |  23 ++---
->  drivers/cxl/core/region.c | 177 +++++++++++++++++++++++---------------
->  drivers/cxl/cxl.h         |  13 +--
->  drivers/cxl/port.c        |  15 +---
->  9 files changed, 173 insertions(+), 122 deletions(-)
-> 
-> 
-> base-commit: 8e62ba590160f91abba6490d9c17aa13bada4752
+>  	},
+>  	[LS1021A] = {
+>  		/* Has A-011218 DMA erratum */
+>  		.trans_mode		= DSPI_XSPI_MODE,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 4,
+> +		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
+>  	},
+>  	[LS1012A] = {
+>  		/* Has A-011218 DMA erratum */
+>  		.trans_mode		= DSPI_XSPI_MODE,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 16,
+> +		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
+>  	},
+>  	[LS1028A] = {
+>  		.trans_mode		= DSPI_XSPI_MODE,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 4,
+> +		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
+>  	},
+>  	[LS1043A] = {
+>  		/* Has A-011218 DMA erratum */
+>  		.trans_mode		= DSPI_XSPI_MODE,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 16,
+> +		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
+>  	},
+>  	[LS1046A] = {
+>  		/* Has A-011218 DMA erratum */
+>  		.trans_mode		= DSPI_XSPI_MODE,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 16,
+> +		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
+>  	},
+>  	[LS2080A] = {
+>  		.trans_mode		= DSPI_XSPI_MODE,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 4,
+> +		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
+>  	},
+>  	[LS2085A] = {
+>  		.trans_mode		= DSPI_XSPI_MODE,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 4,
+> +		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
+>  	},
+>  	[LX2160A] = {
+>  		.trans_mode		= DSPI_XSPI_MODE,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 4,
+> +		.regmap			= &dspi_regmap_config[DSPI_XSPI_REGMAP]
+>  	},
+>  	[MCF5441X] = {
+>  		.trans_mode		= DSPI_DMA_MODE,
+>  		.max_clock_factor	= 8,
+>  		.fifo_size		= 16,
+> +		.regmap			= &dspi_regmap_config[DSPI_REGMAP]
+>  	},
+>  };
+>  
+> @@ -1167,54 +1231,6 @@ static int dspi_resume(struct device *dev)
+>  
+>  static SIMPLE_DEV_PM_OPS(dspi_pm, dspi_suspend, dspi_resume);
+>  
+> -static const struct regmap_range dspi_volatile_ranges[] = {
+> -	regmap_reg_range(SPI_MCR, SPI_TCR),
+> -	regmap_reg_range(SPI_SR, SPI_SR),
+> -	regmap_reg_range(SPI_PUSHR, SPI_RXFR3),
+> -};
+> -
+> -static const struct regmap_access_table dspi_volatile_table = {
+> -	.yes_ranges	= dspi_volatile_ranges,
+> -	.n_yes_ranges	= ARRAY_SIZE(dspi_volatile_ranges),
+> -};
+> -
+> -static const struct regmap_config dspi_regmap_config = {
+> -	.reg_bits	= 32,
+> -	.val_bits	= 32,
+> -	.reg_stride	= 4,
+> -	.max_register	= 0x88,
+> -	.volatile_table	= &dspi_volatile_table,
+> -};
+> -
+> -static const struct regmap_range dspi_xspi_volatile_ranges[] = {
+> -	regmap_reg_range(SPI_MCR, SPI_TCR),
+> -	regmap_reg_range(SPI_SR, SPI_SR),
+> -	regmap_reg_range(SPI_PUSHR, SPI_RXFR3),
+> -	regmap_reg_range(SPI_SREX, SPI_SREX),
+> -};
+> -
+> -static const struct regmap_access_table dspi_xspi_volatile_table = {
+> -	.yes_ranges	= dspi_xspi_volatile_ranges,
+> -	.n_yes_ranges	= ARRAY_SIZE(dspi_xspi_volatile_ranges),
+> -};
+> -
+> -static const struct regmap_config dspi_xspi_regmap_config[] = {
+> -	{
+> -		.reg_bits	= 32,
+> -		.val_bits	= 32,
+> -		.reg_stride	= 4,
+> -		.max_register	= 0x13c,
+> -		.volatile_table	= &dspi_xspi_volatile_table,
+> -	},
+> -	{
+> -		.name		= "pushr",
+> -		.reg_bits	= 16,
+> -		.val_bits	= 16,
+> -		.reg_stride	= 2,
+> -		.max_register	= 0x2,
+> -	},
+> -};
+> -
+>  static int dspi_init(struct fsl_dspi *dspi)
+>  {
+>  	unsigned int mcr;
+> @@ -1272,7 +1288,6 @@ static int dspi_target_abort(struct spi_controller *host)
+>  static int dspi_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node *np = pdev->dev.of_node;
+> -	const struct regmap_config *regmap_config;
+>  	struct fsl_dspi_platform_data *pdata;
+>  	struct spi_controller *ctlr;
+>  	int ret, cs_num, bus_num = -1;
+> @@ -1355,11 +1370,7 @@ static int dspi_probe(struct platform_device *pdev)
+>  		goto out_ctlr_put;
+>  	}
+>  
+> -	if (dspi->devtype_data->trans_mode == DSPI_XSPI_MODE)
+> -		regmap_config = &dspi_xspi_regmap_config[0];
+> -	else
+> -		regmap_config = &dspi_regmap_config;
+> -	dspi->regmap = devm_regmap_init_mmio(&pdev->dev, base, regmap_config);
+> +	dspi->regmap = devm_regmap_init_mmio(&pdev->dev, base, dspi->devtype_data->regmap);
 
-Applied to cxl/next. Thanks Robert!
+I know there are other coding conventions floating around, but for this
+driver please try to stick to a limit of ~80 characters limit for lines
+which don't contain strings.
 
+>  	if (IS_ERR(dspi->regmap)) {
+>  		dev_err(&pdev->dev, "failed to init regmap: %ld\n",
+>  				PTR_ERR(dspi->regmap));
+> @@ -1370,7 +1381,7 @@ static int dspi_probe(struct platform_device *pdev)
+>  	if (dspi->devtype_data->trans_mode == DSPI_XSPI_MODE) {
+>  		dspi->regmap_pushr = devm_regmap_init_mmio(
+>  			&pdev->dev, base + SPI_PUSHR,
+> -			&dspi_xspi_regmap_config[1]);
+> +			&dspi_regmap_config[DSPI_PUSHR]);
+>  		if (IS_ERR(dspi->regmap_pushr)) {
+>  			dev_err(&pdev->dev,
+>  				"failed to init pushr regmap: %ld\n",
+> 
+> -- 
+> 2.34.1
+> 
+
+With the change request addressed, please add my tag and keep it in
+subsequent submissions.
+
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
