@@ -1,142 +1,98 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8145623E32D
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 18:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449D81E9B2A;
+	Fri,  9 May 2025 18:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746815060; cv=none; b=MB1KYXeaZtVmGNzhQc2ZrCTvaXtNVEbYtUg3fTkTfZXd02CxYZZ4mgXiX0ozs6qq8vYRCiFf2yzKcrUPc+qcJIlYhnemE6BmdX/l6J6mUmh2r5kiCyK/SZyCckg0MLxQsY7o+QoUrVO/hJnRl5/Dy4SioMS4NDkGPxB/Ad534Bw=
+	t=1746815153; cv=none; b=gYRrQLisEJ0C8kK5Vck9UOH02S1V7K0pVoZH04/v6OB2KquiFoa23seo5fegMpuBtyHS//ezq9AjH0THkueDdPCm0wR/OnZ6DpZRSDPl2iYtomiVjwU/QeUtWFrG+BYTQCXL6S2ogSgogokEAtvyxVCDwRPDw4KxZ1Tnz2+WeO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746815060; c=relaxed/simple;
-	bh=dmEDUd2MAksdGuyMaIYfV/evhD42SfWsITizphcH7IQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S6h29G2nc3v8b5jHBarlr6qRTpzpuFLZBwYKRqnLugD4+olFUoYfWge8lbbFBiAFLj3JPt99iTNcW3jiq22m01I4A6cDz4HhmEOb1CUd8o9bRvT7a2tn+ewLBvlfwvK4wgko55ObwdmtqZV7wQn9V2YXoawuQnoyVgJXIcRvhcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=A92b7SEp; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1746815153; c=relaxed/simple;
+	bh=/S5/2X8AbB/pNFoxjHsyadCSPGuOCM0nt3xfn3LCHqI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lpO1daaW1b7pnyv8TGGT98MEvwknWBrIQ3ku5rSfdawov/Svcuj3wOwW3f4XU2eFAnBTVKmmTcVoW1dCbr+aTsS+36wn3SflATr75g8orKVrjRHnEl5yYFgl9LZDttDZ/uBcOKM4jZRac16cvLNxys7bxeetDLCGAgZzR7K7lUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z5dwTCOC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A92b7SEp"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so3037913e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 11:24:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746815056; x=1747419856; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aXSgPFuFz+fNGABAM7JsWHcPwhMV/Um0ycmbxkQJ5u4=;
-        b=A92b7SEp3f9UEn/ns0ATB5v6WT776x7JpWxO0uM7mD8v0I4kmikHIk9W/IAk979AEz
-         ra88l0JKuMjg6WLgDEl7CL0vFypiPu+lHKLk4gAhznOJMnajNedFAIhdOw5jmQHnLdmL
-         v9XLYkaFZybawLuh7X+BUG1dSxi+S7qz6GayM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746815056; x=1747419856;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aXSgPFuFz+fNGABAM7JsWHcPwhMV/Um0ycmbxkQJ5u4=;
-        b=AkDVGEoJ81Aj0Z0FpiuGaSDY/dIx1cG4NDoZf8gf1xJ1K92c0d8ggXI48BMDhm+zhy
-         vG5Fx0Kei8AKeun1DoWG2m+W+IsfaIVywJCdiod4O/s5XqzCo3JFfQFnFPvgexHfQFsO
-         +hdc6SoynsgJJkp2ZqzzOk1E/6b+/s3qoTTtwfRLQCeyZJORz0y9LH2EGvoKXlZB3cPD
-         tSi6tCLsjf6yGKUWJnJBp550JY+v4DoOWm2MKv2Xvu9vxktjG8U8XTqoaXfnJx9BLfo4
-         /OtlthcSAZXoG7QpfIbYggJ/SIyPPFNwbHXOvbTJKTFZfT4YzD2XmET/fq8h4Gb8aoIT
-         lNZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhzn/Kf2g5kETM3H0w6+awAO8baFtAJaXf+5xTIfh2Wcgpc1y04tR/rR0zSgHjxA3ycLJHVr1no6Wysy4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxMG1dTVzkyVex0GqmnxdR5V5oICAGzdVSILuBx0tooehGN0Ao
-	oGybcw/Am1gb1c8G/B20hQb39755SDOaby2CSSuP7lBHsOc+IVz6xkY7e3eXeA==
-X-Gm-Gg: ASbGncvLBAPns+MFLrN6+KNl6cl6eIyJz7FJ5qT5+HfjnksTxKA+ZY7/kZZzPfN+ucN
-	c1GPSUIH6woecTdVv+hhZwzoMwarsE3kuRYrPcsnSq23Dshlw9c7xoWY3ZKfdvJ6LaJ+NY6qACY
-	Om7I5Cdu5lxalvCXVUsAmk1kxA93cx06kTGsXiciJYBRwu6wajgyJh++5jypRO4Mt5tvr3Xq5ya
-	EpUL1bht+PGkXdVOHJAPZl4NIn2xXbsrkFn56I/xbP2FLRXCGw/wTG3OV3xURN59OO3II6MAStm
-	u0El56AYg4R+y7FEem8ud4hhEpmPW6r4XLdVWJIczsv6tfAaDkUf+UMThJBMFVq8PmQhk5RRhfT
-	08hZs+qzh1iHwpl7MicIrvhyO/FUGjDc=
-X-Google-Smtp-Source: AGHT+IG1edMScKGbHzfRhfZyEuDSvbr+Wl5F6wdkbHLnOVyRsXgnr8JzOVlmPHkNqFi2Fch4VmkWaA==
-X-Received: by 2002:a05:6512:3e01:b0:54e:85bc:d150 with SMTP id 2adb3069b0e04-54fc67ec33amr1483266e87.53.1746815056482;
-        Fri, 09 May 2025 11:24:16 -0700 (PDT)
-Received: from ribalda.c.googlers.com (228.231.88.34.bc.googleusercontent.com. [34.88.231.228])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64b6bc9sm349410e87.147.2025.05.09.11.24.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 11:24:16 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Fri, 09 May 2025 18:24:16 +0000
-Subject: [PATCH 4/4] media: uvcvideo: Populate all errors in uvc_probe()
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z5dwTCOC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6EEEC4CEE9;
+	Fri,  9 May 2025 18:25:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746815152;
+	bh=/S5/2X8AbB/pNFoxjHsyadCSPGuOCM0nt3xfn3LCHqI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Z5dwTCOCxfWjLjcHTfsnKMf0qT/NFdSEwKvc0tXxVcqRaOx6sGvaV8Zd69JEieICG
+	 Yqm1FBQt36eIcCF8CBNun2aImppfTj25JxYs2dF5muW9x8QCZi13Ts3hOipH44i/p8
+	 WlNWuAsI4tFUt5fWUdJ95BzGKuA4QI2t2PYLPKqg8uWRpevGzYvbwK0Zk+nypjxsPA
+	 BOhQFgLZ0ba5p1UnarJUjWVKsFFajv6fdvWbH4EaEK56WqGgC40Yf4UICyep+sbXlB
+	 fkH+h3COlIAHNr3t63HDTNnLoahrzQteFHSzHp1Sa5BMlRWAYeOaKFXV788T+fC4ma
+	 VeKlEpOCuNP+A==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5fbf0324faaso4764596a12.1;
+        Fri, 09 May 2025 11:25:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUSGjCF5LZaGCcxrWxIA+mpRWSuFH1uWDJ1JSD3eKY/o8Lbu4BRbbTkOI54M7HKJVlV13kl44qSYh7ggA==@vger.kernel.org, AJvYcCUYWY/PxJak0wN0ND296cwzipyWoaCRfUpRSW96Ht4D1PugFxVv8W7A7h/FZBnOgnij+VO2JK8F5fhvsg==@vger.kernel.org, AJvYcCUqzwNns7Ohyn38MmzVDOkOJfKt3kZ2mamQ+1gxBltY48Y8+UpmDqaZjLeesJzRpkcunta58K3yuwtkja06pEsC64IW@vger.kernel.org, AJvYcCWA1V+XvD0tco86RVQghuixiifJAEGLNltUleU31bGmdEdvVKT8JuUsiC70JWE4VKMc+Vej9N9KwDT6lb+Q@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy39h5mu5XhkJiBW9ENrtvftpCduwMNIHOMQmsbHlx8yufI6pU/
+	hJngR49BFq5+R0pnQKDmxDttqkgknpsf+5q1hdpeih4SdSuYUMhJySU3q2K4yAhGgzsYgrG6+gm
+	O3cBiVmV488cI6ZZf5oFC4yatbA==
+X-Google-Smtp-Source: AGHT+IEcIMbpkScLHgHgxaAzEqTSRT+fIcmeokOsQ0WUYhs+OzquHc3VvXBWePDg0cjwD1dWL/+vCyq0j+CeAikC1Bk=
+X-Received: by 2002:a17:906:f255:b0:ad2:23fb:59fc with SMTP id
+ a640c23a62f3a-ad223fb7c5fmr236260766b.21.1746815151271; Fri, 09 May 2025
+ 11:25:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250509-uvc-followup-v1-4-73bcde30d2b5@chromium.org>
-References: <20250509-uvc-followup-v1-0-73bcde30d2b5@chromium.org>
-In-Reply-To: <20250509-uvc-followup-v1-0-73bcde30d2b5@chromium.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Hans de Goede <hdegoede@redhat.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.14.2
+References: <20250506192033.77338015@canb.auug.org.au> <CAMuHMdX_K7EA4kE2mqxv+BkfR_oQmcpek2B3LxiYxMjSMfwjAw@mail.gmail.com>
+In-Reply-To: <CAMuHMdX_K7EA4kE2mqxv+BkfR_oQmcpek2B3LxiYxMjSMfwjAw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 9 May 2025 13:25:40 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJRw18vN+gXL1H11hMRNQ-6HGS1z2533z7Rb293tSvW6g@mail.gmail.com>
+X-Gm-Features: AX0GCFtBENcHB_I9zSrzCsGWPQZu3qXpNFL7bfKn_iQj-3IH77pSHD1aprn9u8I
+Message-ID: <CAL_JsqJRw18vN+gXL1H11hMRNQ-6HGS1z2533z7Rb293tSvW6g@mail.gmail.com>
+Subject: Re: linux-next: build warnings after merge of the renesas tree
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, 
+	Devicetree Compiler <devicetree-compiler@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now we are replacing most of the error codes with -ENODEV.
-Instead, Populate the error code from the functions called by
-uvc_probe().
+On Tue, May 6, 2025 at 5:05=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68k=
+.org> wrote:
+>
+> Hi Stephen,
+>
+> On Tue, 6 May 2025 at 11:20, Stephen Rothwell <sfr@canb.auug.org.au> wrot=
+e:
+> > After merging the renesas tree, today's linux-next build (arm64 defconf=
+ig)
+> > produced these warnings:
+> >
+> > arch/arm64/boot/dts/renesas/r8a779g0.dtsi:1269.24-1283.5: Warning (spi_=
+bus_bridge): /soc/spi@e6ea0000: incorrect #address-cells for SPI bus
+> >   also defined at arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts=
+:463.9-478.3
+> > arch/arm64/boot/dts/renesas/r8a779g0.dtsi:1269.24-1283.5: Warning (spi_=
+bus_bridge): /soc/spi@e6ea0000: incorrect #size-cells for SPI bus
+> >   also defined at arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts=
+:463.9-478.3
+> > arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dtb: Warning (spi_bus=
+_reg): Failed prerequisite 'spi_bus_bridge'
+> >
+> > Introduced by commit
+> >
+> >   c29748ccad88 ("arm64: dts: renesas: sparrow-hawk: Add MSIOF Sound sup=
+port")
+>
+> Thanks, this is a known conflict between SPI bus bindings and dtc:
+>   - Serial engines that can be SPI controllers must use "spi" as their
+>     node names,
+>   - Dtc assumes nodes named "spi" are always SPI controllers.
 
-Take this opportunity to replace a generic error code from
-uvc_scan_device() into something more meaningful.
+I think you can disable 'spi_bus_bridge' warning by overriding or
+appending DTC_FLAGS in arch/arm64/boot/dts/renesas/Makefile.
 
-Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
- drivers/media/usb/uvc/uvc_driver.c | 15 ++++-----------
- 1 file changed, 4 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index da24a655ab68cc0957762f2b67387677c22224d1..cdf4bbe582272277a6a95267e9752010adc51b6b 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -1866,7 +1866,7 @@ static int uvc_scan_device(struct uvc_device *dev)
- 
- 	if (list_empty(&dev->chains)) {
- 		dev_info(&dev->udev->dev, "No valid video chain found.\n");
--		return -1;
-+		return -ENODEV;
- 	}
- 
- 	/* Add GPIO entity to the first chain. */
-@@ -2239,7 +2239,6 @@ static int uvc_probe(struct usb_interface *intf,
- 	/* Parse the Video Class control descriptor. */
- 	ret = uvc_parse_control(dev);
- 	if (ret < 0) {
--		ret = -ENODEV;
- 		uvc_dbg(dev, PROBE, "Unable to parse UVC descriptors\n");
- 		goto error;
- 	}
-@@ -2275,22 +2274,16 @@ static int uvc_probe(struct usb_interface *intf,
- 		goto error;
- 
- 	/* Scan the device for video chains. */
--	if (uvc_scan_device(dev) < 0) {
--		ret = -ENODEV;
-+	if (uvc_scan_device(dev) < 0)
- 		goto error;
--	}
- 
- 	/* Initialize controls. */
--	if (uvc_ctrl_init_device(dev) < 0) {
--		ret = -ENODEV;
-+	if (uvc_ctrl_init_device(dev) < 0)
- 		goto error;
--	}
- 
- 	/* Register video device nodes. */
--	if (uvc_register_chains(dev) < 0) {
--		ret = -ENODEV;
-+	if (uvc_register_chains(dev) < 0)
- 		goto error;
--	}
- 
- #ifdef CONFIG_MEDIA_CONTROLLER
- 	/* Register the media device node */
-
--- 
-2.49.0.1015.ga840276032-goog
-
+Rob
