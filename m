@@ -1,113 +1,240 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06D02110;
-	Fri,  9 May 2025 14:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35EE2110
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 14:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746800771; cv=none; b=KyyEmQT6MhZ14KXOVzYFm3Jezg/6MCuUnIq4IyInt1Ky7QLLl7olql2uKR3bgkTTH/07jhlRnktAjDBlCKLjt6t5tltBwVgfpF93X41Kx+WaFwcZZsxBaqW8tfc1a7GLJb6DL3IkUpbI6GMwmff48yP79w5XsbZOgzzGfRfHVXQ=
+	t=1746800820; cv=none; b=Zb6ofeFk9SYbmTHUVl5emCD8M8CPsiRDlvJux3B4IjHme4I3h6yS2yoX9Wmity/oM54lg0jJxREhi8OZERp26scTZUXODtA5ndJ0xTM1QpVRFBIkzODiSHCS62l1ucOqf5dtPZrjPJerBpBMV4EjcoiTgS0e+P22MEP2l7l2SqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746800771; c=relaxed/simple;
-	bh=4ufOcVydqxVVIvINctf2UypbLRoZqZIntPZ1NEBHHrg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lOKGAcqAA/DNNr2e439wFj84tpddW1+Hq6ebfObLxOw00P73vKa2W+HhtsQT1Oj8UPSTaUdSTVoShxYC7WLv+NyJ0OQkx5ldexkfQEUUxoERaXST+ALe2/AxrcYz3QcRnE4iXslITn/Je6deFXQzrX9E71XF/cTFfXm0ydZXZ44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qx8gIq78; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746800820; c=relaxed/simple;
+	bh=dfI1XQ06pm+RwwZuvsgWrC3w74XG/uNfQ1+5HHMCiIg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Jz/96ocn4Gl50ZS+0LOG1EipVx61oyvfRog8y51vs085Qjj8ZCGq+vnc6Xo2JA0rwc6Vd7L2GUnkQWvoG/sKmErfQC25tdobVecjF29Ak3PwhTTTbiZcIV7oeilB/3HyFIRODamtuyYNJC9wiMnKX3utxcD/ReXUPUpMDemnX8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=mlFaRE7g; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qx8gIq78"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDFF2C4CEE4;
-	Fri,  9 May 2025 14:26:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746800770;
-	bh=4ufOcVydqxVVIvINctf2UypbLRoZqZIntPZ1NEBHHrg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qx8gIq78juITgvNr32N9pAP36xz7pzHCx6hrpnzvO7iOFM6Qn5T9hwASFaiE5lju6
-	 VsOn5n1SU6c4kbXZFPaSG1PPegaNoe0kUu6Ih6dIw6h4SBo4ZWuAwqapL6tbsvsDMH
-	 tR2s0WP+2LKnLJjOm22BQLSz/cbNUeAjty1AZ2Ub5knDzN42IqmaNpRwpvjBPr7HaU
-	 +6xFYQVmzimfaBIHIWVTAAAbGtIGwPe56mljfmwMc3omkMKPYlpgJkqseH3sPhdtmL
-	 66FE7PSPa1sg13pc3xnIjA/VfPFnXDfNHNHIWqimfFuDgPrtOOeiVA6zAxMPHPhpe8
-	 tXbR7h+SwutaA==
-Date: Fri, 9 May 2025 15:26:04 +0100
-From: Lee Jones <lee@kernel.org>
-To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v10 0/3] Maxim Integrated MAX77759 PMIC MFD-based drivers
-Message-ID: <20250509142604.GF2492385@google.com>
-References: <20250509-max77759-mfd-v10-0-962ac15ee3ef@linaro.org>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="mlFaRE7g"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=xcMcmNP1V8nnDAsJC1Qdyo8awocg5tbRjm5hYQIYwCA=; b=mlFaRE7goJIA7a/dtWhjCovRGq
+	A+A6iQc8RvBHnZOCzA0XKdfCzoMcwk4G2LzosXd24ED+Z53q2pUrAtpltZJ2/4BYRrrGJr5CV8AbM
+	adlbmTJMl0YaAM1Bh9J6zShqOX1OdPK1h8MZPH39ne6BfMrfqDLHYNdRD8O01dET+lgrDAW9AReD4
+	CkDp3LnnuN92oSLxm1NvjJuEn+qydL9Xl8p9irqBBRFUu+CFK1i6vJZ4yKBIRyAlI+7ni7/uoQjN4
+	CWgQTnGj3Yk1srYMBGR7moMYGw8tW6yTPUROXcCE6W3CICq8kJv58fF0BcfTxkEDD35uvZiAe/9jj
+	sGh7VhPA==;
+Received: from [191.204.192.64] (helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uDObs-005mcX-BF; Fri, 09 May 2025 16:26:32 +0200
+From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	kernel-dev@igalia.com,
+	Kees Cook <keescook@chromium.org>,
+	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+Subject: [PATCH] drm: drm_auth: Convert mutex usage to guard(mutex)
+Date: Fri,  9 May 2025 11:26:27 -0300
+Message-ID: <20250509142627.639419-1-andrealmeid@igalia.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250509-max77759-mfd-v10-0-962ac15ee3ef@linaro.org>
 
-On Fri, 09 May 2025, André Draszik wrote:
+Replace open-coded mutex handling with cleanup.h guard(mutex). This
+simplifies the code and removes the "goto unlock" pattern.
 
-> Hi,
-> 
-> This series improves support for the Maxim Integrated MAX77759
-> companion PMIC for USB Type-C applications using the MFD framework.
-> 
-> This series must be applied in-order, due to interdependencies of some
-> of the patches:
-> * to avoid use of undocumented compatibles by the newly added drivers,
->   the bindings are added first in this series
-> * patch 1 ("dt-bindings: gpio: add max77759 binding") also creates a
->   new MAINTAINERS entry, including a wildcard match for the other
->   bindings in this series
-> * patch 3 ("dt-bindings: mfd: add max77759 binding") references the
->   bindings added in patch 1 and 2 and can not work if those aren't
->   available
-> * patch 4 ("mfd: max77759: add Maxim MAX77759 core mfd driver") adds
->   the core MFD driver, which also exposes an API to its leaf drivers
->   and is used by patches 5 and 6
-> * patches 5 and 6 won't compile without patch 4
-> 
-> The MAX77759 PMIC includes Battery Charger, Fuel Gauge, temperature
-> sensors, USB Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
-> 
-> This PMIC is used on the Google Pixel 6 and 6 Pro (oriole / raven).
-> 
-> This series adds support for the top-level MFD device, the gpio, and
-> nvmem cells. Other components are excluded for the following reasons:
-> 
->     While in the same package, Fuel Gauge and TCPC have separate and
->     independent I2C addresses, register maps, interrupt lines, and
->     aren't part of the top-level package interrupt hierarchy.
->     Furthermore, a driver for the TCPC part exists already (in
->     drivers/usb/typec/tcpm/tcpci_maxim_core.c).
-> 
->     I'm leaving out temperature sensors and charger in this submission,
->     because the former are not in use on Pixel 6 and I therefore can
->     not test them, and the latter can be added later, once we look at
->     the whole charging topic in more detail.
-> 
-> To make maintainers' work easier, I am planning to send the relevant
-> DTS and defconfig changes via a different series, unless everything
-> is expected to go via Lee's MFD tree in one series?
-> 
-> Cheers,
-> Andre'
+Tested with igt tests core_auth and core_setmaster.
 
-Okay, this (and the DT bindings) has been applied and submitted for
-testing.  Once successful, I'll get a PR out for the other maintainers
-to pull from.
+Signed-off-by: André Almeida <andrealmeid@igalia.com>
+---
 
-Note to self: ib-mfd-gpio-nvmem-6.16
+For more information about guard(mutex):
+https://www.kernel.org/doc/html/latest/core-api/cleanup.html
+---
+ drivers/gpu/drm/drm_auth.c | 64 ++++++++++++++------------------------
+ 1 file changed, 23 insertions(+), 41 deletions(-)
 
+diff --git a/drivers/gpu/drm/drm_auth.c b/drivers/gpu/drm/drm_auth.c
+index 22aa015df387..d6bf605b4b90 100644
+--- a/drivers/gpu/drm/drm_auth.c
++++ b/drivers/gpu/drm/drm_auth.c
+@@ -95,7 +95,7 @@ int drm_getmagic(struct drm_device *dev, void *data, struct drm_file *file_priv)
+ 	struct drm_auth *auth = data;
+ 	int ret = 0;
+ 
+-	mutex_lock(&dev->master_mutex);
++	guard(mutex)(&dev->master_mutex);
+ 	if (!file_priv->magic) {
+ 		ret = idr_alloc(&file_priv->master->magic_map, file_priv,
+ 				1, 0, GFP_KERNEL);
+@@ -103,7 +103,6 @@ int drm_getmagic(struct drm_device *dev, void *data, struct drm_file *file_priv)
+ 			file_priv->magic = ret;
+ 	}
+ 	auth->magic = file_priv->magic;
+-	mutex_unlock(&dev->master_mutex);
+ 
+ 	drm_dbg_core(dev, "%u\n", auth->magic);
+ 
+@@ -118,13 +117,12 @@ int drm_authmagic(struct drm_device *dev, void *data,
+ 
+ 	drm_dbg_core(dev, "%u\n", auth->magic);
+ 
+-	mutex_lock(&dev->master_mutex);
++	guard(mutex)(&dev->master_mutex);
+ 	file = idr_find(&file_priv->master->magic_map, auth->magic);
+ 	if (file) {
+ 		file->authenticated = 1;
+ 		idr_replace(&file_priv->master->magic_map, NULL, auth->magic);
+ 	}
+-	mutex_unlock(&dev->master_mutex);
+ 
+ 	return file ? 0 : -EINVAL;
+ }
+@@ -248,41 +246,33 @@ int drm_setmaster_ioctl(struct drm_device *dev, void *data,
+ {
+ 	int ret;
+ 
+-	mutex_lock(&dev->master_mutex);
++	guard(mutex)(&dev->master_mutex);
+ 
+ 	ret = drm_master_check_perm(dev, file_priv);
+ 	if (ret)
+-		goto out_unlock;
++		return ret;
+ 
+ 	if (drm_is_current_master_locked(file_priv))
+-		goto out_unlock;
++		return ret;
+ 
+-	if (dev->master) {
+-		ret = -EBUSY;
+-		goto out_unlock;
+-	}
++	if (dev->master)
++		return -EBUSY;
+ 
+-	if (!file_priv->master) {
+-		ret = -EINVAL;
+-		goto out_unlock;
+-	}
++	if (!file_priv->master)
++		return -EINVAL;
+ 
+-	if (!file_priv->is_master) {
+-		ret = drm_new_set_master(dev, file_priv);
+-		goto out_unlock;
+-	}
++	if (!file_priv->is_master)
++		return drm_new_set_master(dev, file_priv);
+ 
+ 	if (file_priv->master->lessor != NULL) {
+ 		drm_dbg_lease(dev,
+ 			      "Attempt to set lessee %d as master\n",
+ 			      file_priv->master->lessee_id);
+-		ret = -EINVAL;
+-		goto out_unlock;
++		return -EINVAL;
+ 	}
+ 
+ 	drm_set_master(dev, file_priv, false);
+-out_unlock:
+-	mutex_unlock(&dev->master_mutex);
++
+ 	return ret;
+ }
+ 
+@@ -299,33 +289,27 @@ int drm_dropmaster_ioctl(struct drm_device *dev, void *data,
+ {
+ 	int ret;
+ 
+-	mutex_lock(&dev->master_mutex);
++	guard(mutex)(&dev->master_mutex);
+ 
+ 	ret = drm_master_check_perm(dev, file_priv);
+ 	if (ret)
+-		goto out_unlock;
++		return ret;
+ 
+-	if (!drm_is_current_master_locked(file_priv)) {
+-		ret = -EINVAL;
+-		goto out_unlock;
+-	}
++	if (!drm_is_current_master_locked(file_priv))
++		return -EINVAL;
+ 
+-	if (!dev->master) {
+-		ret = -EINVAL;
+-		goto out_unlock;
+-	}
++	if (!dev->master)
++		return -EINVAL;
+ 
+ 	if (file_priv->master->lessor != NULL) {
+ 		drm_dbg_lease(dev,
+ 			      "Attempt to drop lessee %d as master\n",
+ 			      file_priv->master->lessee_id);
+-		ret = -EINVAL;
+-		goto out_unlock;
++		return -EINVAL;
+ 	}
+ 
+ 	drm_drop_master(dev, file_priv);
+-out_unlock:
+-	mutex_unlock(&dev->master_mutex);
++
+ 	return ret;
+ }
+ 
+@@ -337,7 +321,7 @@ int drm_master_open(struct drm_file *file_priv)
+ 	/* if there is no current master make this fd it, but do not create
+ 	 * any master object for render clients
+ 	 */
+-	mutex_lock(&dev->master_mutex);
++	guard(mutex)(&dev->master_mutex);
+ 	if (!dev->master) {
+ 		ret = drm_new_set_master(dev, file_priv);
+ 	} else {
+@@ -345,7 +329,6 @@ int drm_master_open(struct drm_file *file_priv)
+ 		file_priv->master = drm_master_get(dev->master);
+ 		spin_unlock(&file_priv->master_lookup_lock);
+ 	}
+-	mutex_unlock(&dev->master_mutex);
+ 
+ 	return ret;
+ }
+@@ -355,7 +338,7 @@ void drm_master_release(struct drm_file *file_priv)
+ 	struct drm_device *dev = file_priv->minor->dev;
+ 	struct drm_master *master;
+ 
+-	mutex_lock(&dev->master_mutex);
++	guard(mutex)(&dev->master_mutex);
+ 	master = file_priv->master;
+ 	if (file_priv->magic)
+ 		idr_remove(&file_priv->master->magic_map, file_priv->magic);
+@@ -376,7 +359,6 @@ void drm_master_release(struct drm_file *file_priv)
+ 	/* drop the master reference held by the file priv */
+ 	if (file_priv->master)
+ 		drm_master_put(&file_priv->master);
+-	mutex_unlock(&dev->master_mutex);
+ }
+ 
+ /**
 -- 
-Lee Jones [李琼斯]
+2.49.0
+
