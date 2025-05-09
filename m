@@ -1,279 +1,166 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B169293732;
-	Fri,  9 May 2025 13:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747466BB5B
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746796494; cv=none; b=RRppFYtrqSHF+6mUgkUKu4nLPGRKY9091udT5D3+sGp3/9idHccJYfnHnIhfYGwm0skmEJbQBtdMEpVfH/xLq4/qbuLc0lk1GTddMfZ7SaEtIql9sWktaLbnCtiPZb1R8rNDUhC/WI0rqLN75ijdx8NM20hc+J36YPQduEW/jXk=
+	t=1746796539; cv=none; b=LDBuK6G3OrJYWJLKXxVdpQHc48coMuPSVHcIsD3Jdxsrouipzt6hWVzMfz5D7DomtfBy0Ae390M91X2gdSGsLg0ruCR2r/Fj5PDLl149qFyk7CkjoodCiEkatDzD3kJmlq58JBXdtbs2r6Km+Mh+ZxEkAOyX+4dRJmRegw33dDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746796494; c=relaxed/simple;
-	bh=N9zytOPNIvQxno7Kw6VbqKpx4a7jKPlguadF9cZ3xWM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=o2GWLFXRwbF42rl0Wq/SZ4smR6R1Krg6BmpApnRogWf35oHEyogKRkkOgR2l1U7ezFskSB+Zs/19uE6m7YKJWI3+lIBOJ2viPR7I5SEdUJ4fijQ4t5RJJHDaRVMltEisstK9Lj8WIHIKpaSaPbU9we9p3o+FeA12+vcBIM6Ne3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=mDeG47eJ; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1746796539; c=relaxed/simple;
+	bh=UXyzzDpdehczTMF4+3xLIH5vpakhzPYgYGKSHcHP8YU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ec4d6pDWr7lUE4t0CfCXbUCOb7sASn6JuLz/oiZF7foPlKTf1YMwH9QrylUn+sdh+/uSzEKKwk06Cv3dzgKST3aeRnQWcm7fVe3l0OyFmOAmykaLeL6tlDIEa9+0vowV85M1lxLNk0EEJ4MuAVY7erbryzM8PVSMaM+Ebly2PHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=wPSI/vr3; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="mDeG47eJ"
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="wPSI/vr3"
+Date: Fri, 9 May 2025 09:15:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1746796534;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/fUy2yKh/RPLz65MGjD30fnH1nOIBpirqiwEvJyIpAQ=;
+	b=wPSI/vr3u7SF6YoZXAxqTcCV3vNyXtHP702KgSsJfIP001Re4QxA4KKir7k+2xF8WKhEtR
+	MxLxGF26N6mm9JyRJVvLPSHOt3usxmKhfqCNPUlYvJupgrNNo1kHOVb62VqGkQ9JL2Pl+v
+	8vhrbDHt/9MdIfWxF2vK6khuTnnV9AYsi28eYyt+i0t+Il8YbKvw6KPW5A8IgnRr4UU5QJ
+	IBvq4amg/uhS+5fEQsQ7Us10in8UzaccSCMTCAwSO4UlHozBHx3N1dfFbPSmJyWm1x3P2V
+	hey2AhkAnmGGJzT11fgVKNicTlm6tXcPwM5WXn5fAb8S3UdIb8f/ZTSTyz12CA==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: sven@svenpeter.dev
+Cc: Janne Grunau <j@jannau.net>, Neal Gompa <neal@gompa.dev>,
+	Hector Martin <marcan@marcan.st>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v4 0/9] Apple Mac System Management Controller
+Message-ID: <aB3_8QidjfNRPmOG@blossom>
+References: <20250503-smc-6-15-v4-0-500b9b6546fc@svenpeter.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1746796490;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5axwq5ukixnZASkqSTZMmJAzeb3lPrAspoP9HlhWjSw=;
-	b=mDeG47eJZKpstpn0HYUuRIY91JnYd5NZlJsQdZU8dfctwKLiqcdr1UBqGKUi/8MKZ6TH6i
-	HC7cPnMlBRYNcejsm5W7v6RQAjDnPvVGdMg8rzgAYIL9s0evaEgaySXv2reXFhdgv7AjBB
-	odwBm9ZrQ+OQBwOnCtRgXKjZydn2zFW7HbT2G/f7pfyQtLc/Qik2J6QeXpRSdMU1vyk6Gw
-	qJHQ/2dvYh2SSrEZXRmJG3mhf/ypiDAHfB6aRsrbf/KvS0129LJMqhXMbWO3doGZ5CzJvf
-	csT4PkppY88Y6LhsP5xz0mij8XoGukg4vAK3JL86bQEwf1pIIukusDDAtukryA==
-Content-Type: multipart/signed;
- boundary=6655860ab50d87daa0204e489dd2504ca4fc9154ff9510bb077e41da56ae;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Fri, 09 May 2025 15:14:31 +0200
-Message-Id: <D9RNO4O3YN4X.1G09DC9I8JGJF@cknow.org>
-Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <kernel@collabora.com>
-Subject: Re: [PATCH v2 2/5] arm64: dts: rockchip: move rock 5b to include
- file
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Sebastian Reichel" <sebastian.reichel@collabora.com>,
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-References: <20250508-rock5bp-for-upstream-v2-0-677033cc1ac2@kernel.org>
- <20250508-rock5bp-for-upstream-v2-2-677033cc1ac2@kernel.org>
- <D9RN1HZAXH1M.3H228KWQJ9CR0@cknow.org> <2653568.Lt9SDvczpP@diego>
- <dbwzgqfzc4ax6skthp4bkyhhixcm4fohzbcr4px3ugbx7ntmwx@ipncpit75fau>
-In-Reply-To: <dbwzgqfzc4ax6skthp4bkyhhixcm4fohzbcr4px3ugbx7ntmwx@ipncpit75fau>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250503-smc-6-15-v4-0-500b9b6546fc@svenpeter.dev>
 X-Migadu-Flow: FLOW_OUT
 
---6655860ab50d87daa0204e489dd2504ca4fc9154ff9510bb077e41da56ae
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+Hi Sven,
 
-Hi,
-
-On Fri May 9, 2025 at 3:08 PM CEST, Sebastian Reichel wrote:
-> On Fri, May 09, 2025 at 02:54:00PM +0200, Heiko St=C3=BCbner wrote:
->> Am Freitag, 9. Mai 2025, 14:44:57 Mitteleurop=C3=A4ische Sommerzeit schr=
-ieb Diederik de Haas:
->> > On Thu May 8, 2025 at 7:48 PM CEST, Sebastian Reichel wrote:
->> > > Radxa released some more boards, which are based on the original
->> > > Rock 5B. Move its board description into an include file to avoid
->> > > unnecessary duplication.
->> >=20
->> > Aren't you moving it *out of* an/the include file?
->> > If so, the patch Subject and the above line should be updated so that
->> > they correctly reflect what is changed in this patch.
->> >=20
->> > The above text is correct (and the same ...) as patch 1, but in this
->> > patch you move things out of the dtsi which are unique per board.
->> >=20
->> > > NOTE: this should be merged with the previous commit to ensure
->> > > bisectability. The rename happens in a separete commit during
->> > > development because git does not properly detect the rename when
->> > > the original filename is reused in the same commit. This means
->> > >
->> > > 1. it's a lot harder to review the changes
->> > > 2. it's a lot harder to rebase the patch series
->> >=20
->> > Or did I fall prey to the exact thing you described here?
->>=20
->> I think Sebastian's idea  is, that I squash both patches when applying.
->> This split makes it easy(er) to review because patch1 is just a rename.
->>=20
->> And merging them when applying then makes it again not break bisectabili=
-ty.
->
-> Correct. This is a lot easier to review than what git generates when
-> having these two patches squashed together, which is a huge diff of
-> all 1000+ lines in the file (I tried really hard to convince it that
-> this is mostly a rename with --find-renames and --find-copies). You
-> can see this kind of mess in patch 2 of the ROCK 5T series that
-> Nicolas just send (I will comment on that and suggest to do the same
-> thing I did to ease review. In his case it should even be possible
-> to do it in a bisectable way without needing a squash :)).
-
-Thank you both for the clarification :-)
+Everything here looks good to me. I left a few minor comments through
+out but overall nothing scary here to me :)
 
 Cheers,
-  Diederik
+Alyssa
 
->> > > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
->> > > ---
->> > >  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts  | 52 +++++++++++++=
-+++++++++++
->> > >  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi | 40 -------------=
------
->> > >  2 files changed, 52 insertions(+), 40 deletions(-)
->> > >
->> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/=
-arm64/boot/dts/rockchip/rk3588-rock-5b.dts
->> > > new file mode 100644
->> > > index 0000000000000000000000000000000000000000..9407a7c9910ada1f6c80=
-3d2e15785a9cbd9bd655
->> > > --- /dev/null
->> > > +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
->> > > @@ -0,0 +1,52 @@
->> > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> > > +
->> > > +/dts-v1/;
->> > > +
->> > > +#include "rk3588-rock-5b.dtsi"
->> > > +
->> > > +/ {
->> > > +	model =3D "Radxa ROCK 5B";
->> > > +	compatible =3D "radxa,rock-5b", "rockchip,rk3588";
->> > > +};
->> > > +
->> > > +&sdio {
->> > > +	max-frequency =3D <200000000>;
->> > > +	no-sd;
->> > > +	no-mmc;
->> > > +	non-removable;
->> > > +	bus-width =3D <4>;
->> > > +	cap-sdio-irq;
->> > > +	disable-wp;
->> > > +	keep-power-in-suspend;
->> > > +	wakeup-source;
->> > > +	sd-uhs-sdr12;
->> > > +	sd-uhs-sdr25;
->> > > +	sd-uhs-sdr50;
->> > > +	sd-uhs-sdr104;
->> > > +	vmmc-supply =3D <&vcc3v3_pcie2x1l0>;
->> > > +	vqmmc-supply =3D <&vcc_1v8_s3>;
->> > > +	pinctrl-names =3D "default";
->> > > +	pinctrl-0 =3D <&sdiom0_pins>;
->> > > +	status =3D "okay";
->> > > +};
->> > > +
->> > > +&uart6 {
->> > > +	pinctrl-names =3D "default";
->> > > +	pinctrl-0 =3D <&uart6m1_xfer &uart6m1_ctsn &uart6m1_rtsn>;
->> > > +	status =3D "okay";
->> > > +};
->> > > +
->> > > +&pinctrl {
->> > > +	usb {
->> > > +		vcc5v0_host_en: vcc5v0-host-en {
->> > > +			rockchip,pins =3D <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
->> > > +		};
->> > > +	};
->> > > +};
->> > > +
->> > > +&vcc5v0_host {
->> > > +	enable-active-high;
->> > > +	gpio =3D <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
->> > > +	pinctrl-names =3D "default";
->> > > +	pinctrl-0 =3D <&vcc5v0_host_en>;
->> > > +};
->> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi b/arch=
-/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
->> > > index 17f4fd054cd3d1c4e23ccfe014a9c4b9d7ad1a06..6052787d2560978d2bae=
-6cfbeea5fc1d419d583a 100644
->> > > --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
->> > > +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
->> > > @@ -8,9 +8,6 @@
->> > >  #include "rk3588.dtsi"
->> > > =20
->> > >  / {
->> > > -	model =3D "Radxa ROCK 5B";
->> > > -	compatible =3D "radxa,rock-5b", "rockchip,rk3588";
->> > > -
->> > >  	aliases {
->> > >  		mmc0 =3D &sdhci;
->> > >  		mmc1 =3D &sdmmc;
->> > > @@ -139,10 +136,6 @@ vcc5v0_host: regulator-vcc5v0-host {
->> > >  		regulator-always-on;
->> > >  		regulator-min-microvolt =3D <5000000>;
->> > >  		regulator-max-microvolt =3D <5000000>;
->> > > -		enable-active-high;
->> > > -		gpio =3D <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
->> > > -		pinctrl-names =3D "default";
->> > > -		pinctrl-0 =3D <&vcc5v0_host_en>;
->> > >  		vin-supply =3D <&vcc5v0_sys>;
->> > >  	};
->> > > =20
->> > > @@ -488,12 +481,6 @@ pcie3_vcc3v3_en: pcie3-vcc3v3-en {
->> > >  			rockchip,pins =3D <1 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
->> > >  		};
->> > >  	};
->> > > -
->> > > -	usb {
->> > > -		vcc5v0_host_en: vcc5v0-host-en {
->> > > -			rockchip,pins =3D <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
->> > > -		};
->> > > -	};
->> > >  };
->> > > =20
->> > >  &pwm1 {
->> > > @@ -530,27 +517,6 @@ &sdmmc {
->> > >  	status =3D "okay";
->> > >  };
->> > > =20
->> > > -&sdio {
->> > > -	max-frequency =3D <200000000>;
->> > > -	no-sd;
->> > > -	no-mmc;
->> > > -	non-removable;
->> > > -	bus-width =3D <4>;
->> > > -	cap-sdio-irq;
->> > > -	disable-wp;
->> > > -	keep-power-in-suspend;
->> > > -	wakeup-source;
->> > > -	sd-uhs-sdr12;
->> > > -	sd-uhs-sdr25;
->> > > -	sd-uhs-sdr50;
->> > > -	sd-uhs-sdr104;
->> > > -	vmmc-supply =3D <&vcc3v3_pcie2x1l0>;
->> > > -	vqmmc-supply =3D <&vcc_1v8_s3>;
->> > > -	pinctrl-names =3D "default";
->> > > -	pinctrl-0 =3D <&sdiom0_pins>;
->> > > -	status =3D "okay";
->> > > -};
->> > > -
->> > >  &sfc {
->> > >  	pinctrl-names =3D "default";
->> > >  	pinctrl-0 =3D <&fspim2_pins>;
->> > > @@ -566,12 +532,6 @@ flash@0 {
->> > >  	};
->> > >  };
->> > > =20
->> > > -&uart6 {
->> > > -	pinctrl-names =3D "default";
->> > > -	pinctrl-0 =3D <&uart6m1_xfer &uart6m1_ctsn &uart6m1_rtsn>;
->> > > -	status =3D "okay";
->> > > -};
->> > > -
->> > >  &spi2 {
->> > >  	status =3D "okay";
->> > >  	assigned-clocks =3D <&cru CLK_SPI2>;
->> >=20
->> >=20
->>=20
->>=20
->>=20
->>=20
-
-
---6655860ab50d87daa0204e489dd2504ca4fc9154ff9510bb077e41da56ae
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaB3/wwAKCRDXblvOeH7b
-biJWAPwP5+nFvMYlxo+Uf4SxONp4EbIR9ujXYtqplfzzKyENUAD/R5g1zPNEXBx4
-wQAeV1eNLGfh/kvi5dsnxCAolMKa5Qs=
-=Gk0H
------END PGP SIGNATURE-----
-
---6655860ab50d87daa0204e489dd2504ca4fc9154ff9510bb077e41da56ae--
+Le Sat, May 03, 2025 at 10:06:47AM +0000, Sven Peter via B4 Relay a écrit :
+> Hi,
+> 
+> It's been quite a while (end of 2022) since the last version of this
+> series was sent by Russel. I'd like to pick this up again and get SMC
+> upstream.
+> 
+> I've taken the last version from the ML and worked in the review
+> comments and some other changed:
+> 
+>   - Added documentation for all functions and structs
+>   - Fixed dt-bindings and re-ordered commits so that the mfd one comes
+>     last and can include the gpio subdevice
+>   - Added the reset driver and corresponding bindings
+>   - Reworked the atomic mode inside SMC since the previous implementation
+>     called mutex_lock from atomic context
+>   - Removed the backend split for now which lead to a quite intense discussion
+>     for the previous versions which hadn't been solved as far as I could tell
+>     from the old threads.
+>     It's also been 2+ years and I haven't heard of any backend implementation
+>     for T2 or even older macs. It's also unclear to me which sub-devices
+>     are actually useful there because at least GPIO and shutdown/reboot
+>     from this series will not work as-is there.
+>     I'd rather have this initial version which only supports M1+ macs upstream
+>     and then iterate there if any other backend is developed.
+>     I'll gladly help to re-introduce backend support if it's ever required.
+> 
+> Dependencies:
+> The code and dt-bindings themselves apply cleanly to 6.15-rc1 but
+> the device tree changes require the already merged SPMI controller
+> and SPMI NVMEM series which will be part of 6.16.
+> The series is also using the printf format specifiers which will
+> land in 6.16 via the drm-misc tree.
+> A tree with all dependencies for testing is available at
+> https://github.com/AsahiLinux/linux/commits/sven/smc-v4/.
+> 
+> Merging:
+> The dt-binding patches all depend on each other such that they all
+> should probably go together with the mfd device itself.
+> The following commits also depend on mfd due to the new header file and
+> will either have to go through the mfd tree as well or we'll need an
+> immutable branch there.
+> I'll take the device tree updates through our tree which also has the
+> previous device tree updates these depend on.
+> 
+> v3: https://lore.kernel.org/asahi/Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk/
+> v2: https://lore.kernel.org/asahi/YxdInl2qzQWM+3bs@shell.armlinux.org.uk/
+> v1: https://lore.kernel.org/asahi/YxC5eZjGgd8xguDr@shell.armlinux.org.uk/
+> 
+> Best,
+> 
+> Sven
+> 
+> ---
+> Hector Martin (5):
+>       gpio: Add new gpio-macsmc driver for Apple Macs
+>       power: reset: macsmc-reboot: Add driver for rebooting via Apple SMC
+>       arm64: dts: apple: t8103: Add SMC node
+>       arm64: dts: apple: t8112: Add SMC node
+>       arm64: dts: apple: t600x: Add SMC node
+> 
+> Russell King (Oracle) (2):
+>       dt-bindings: gpio: Add Apple Mac SMC GPIO block
+>       dt-bindings: mfd: Add Apple Mac System Management Controller
+> 
+> Sven Peter (2):
+>       dt-bindings: power: reboot: Add Apple Mac SMC Reboot Controller
+>       mfd: Add Apple Silicon System Management Controller
+> 
+>  .../devicetree/bindings/gpio/apple,smc-gpio.yaml   |  37 ++
+>  .../devicetree/bindings/mfd/apple,smc.yaml         |  71 +++
+>  .../bindings/power/reset/apple,smc-reboot.yaml     |  52 ++
+>  MAINTAINERS                                        |   7 +
+>  arch/arm64/boot/dts/apple/t600x-die0.dtsi          |  35 ++
+>  arch/arm64/boot/dts/apple/t8103.dtsi               |  35 ++
+>  arch/arm64/boot/dts/apple/t8112.dtsi               |  35 ++
+>  drivers/gpio/Kconfig                               |  10 +
+>  drivers/gpio/Makefile                              |   1 +
+>  drivers/gpio/gpio-macsmc.c                         | 246 ++++++++
+>  drivers/mfd/Kconfig                                |  15 +
+>  drivers/mfd/Makefile                               |   1 +
+>  drivers/mfd/macsmc.c                               | 657 +++++++++++++++++++++
+>  drivers/power/reset/Kconfig                        |  11 +
+>  drivers/power/reset/Makefile                       |   1 +
+>  drivers/power/reset/macsmc-reboot.c                | 362 ++++++++++++
+>  include/linux/mfd/macsmc.h                         | 337 +++++++++++
+>  17 files changed, 1913 insertions(+)
+> ---
+> base-commit: 8b7e6734e2231a549a23943678ee3452bd19a1fe
+> change-id: 20250304-smc-6-15-f0ed619e31d4
+> 
+> Best regards,
+> -- 
+> Sven Peter <sven@svenpeter.dev>
+> 
+> 
