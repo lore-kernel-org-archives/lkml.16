@@ -1,90 +1,227 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC44292080
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899DD2918CF;
+	Fri,  9 May 2025 13:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746798440; cv=none; b=fHq5tXUeffLizGNJJDNdPMGA94MLcv7rKle3oCLpy62rk+Way3ViHnls0EwZh5jbTeDwElw7TmzOBrX9561ZJ2upCtONeTx//0etcX+f+J60E2nAEcFgJ07ymBMafr2dZfhmlY/5omIIc1XfSD9q7DGqzaPHGym/av3AsrIveL0=
+	t=1746798556; cv=none; b=qT7P+jReVIUO1vQXd1nzNmEAXfLhBc5mdTEJWa8fTA2EfhG7zx0Pgt8BgDUgMERqUlc1c/6eoukwBLQdcauEsTdAkCcrd2IIdhLgqxxGk4hlOeehhYdlLQ1gB4dxWJrvqqKURxxpxVaVa8cAr8czEuZowka0g45pVv5Q5ODNnCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746798440; c=relaxed/simple;
-	bh=19/dP4VfkNEVe2LcoQ05RVZZNWswiSYWxvRpKa/npjA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jnC0wyQir+lGj1oj4i9VjdrpbM+B6XAKNSS+e2b914B7F3pED+DOsuxisth3nn1oloS870EzEl6iw6PGrCuAYKwe19Xy0IYoTthz9NG5E5OMCnvvDEtgF2ZFGm4xDvfNSkMxG4RelHoaMcwSr7aZHDg0kOql+PyiOrBWmIEwyXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xFMde+FP; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746798556; c=relaxed/simple;
+	bh=ddxFekODOqJy1oQlp1NZDYc/Pj9lvlATNoTbz761B5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VtCWacSf4WlHBRYgY4YJaeZeC19kEz+VzGjDeQovep4jafz/9aJDJT2yudrFwsfZt8OyqFct1Nx+uM/Y+v+UtUZa8HNRh/vss6EU6MTNJFM3W+p+jh59c8wVxUyHY5Q57FOXjixhpLPrVRVvWFKu4YvtnDfCA4aYxYgGPv+Q1Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pQ+uoXUp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xFMde+FP"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22fa47f295dso143995ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 06:47:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746798437; x=1747403237; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=urYmpWFWl6CDsuhCCFO1tExwtSh9HbDy0YPdVsGqs7Y=;
-        b=xFMde+FPZRex76Yg8IfxXTmc+hvU8sKeUVDXluDPyA+9Tg62fTJpofQcOsS3x4sCR7
-         rEcBOLzZc70UX7OKLnFgf7H+MTZXw23ntHG0xAmyOaNeznI6AqRIHtJNgjrNdlVDD+sv
-         wI8EC6wAosfPaBwyRQROyRhXMhKxQ2JP1nMvUfiBZD69nKJSbkeNP761IHlsErNmIhKi
-         4fofqgsJcn3tujLg+Rw6QJrtgFhyUi4UF7AZlEzzfs69wnG2bcptHT7hBZ50NB1NyiWj
-         NMe4QWFuftRjTt35EPrUOqAWb6BS4PikM3LwsBNHlqT6qdxmyPiSQYZhNy7Llq4zcOGH
-         I/0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746798437; x=1747403237;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=urYmpWFWl6CDsuhCCFO1tExwtSh9HbDy0YPdVsGqs7Y=;
-        b=VrdVyIF/0sp8u+cEFVM73s+m6Gor5yny3qONpLpNJmeXHV2seOrpBck55CzfkQlM2e
-         okPm94nUXT28S2wtUggHhparP2h+hxggnW4pNbFZBmYfh+ErWUKMpY87/U9i+iAG9/7X
-         l2w/HVFePRlgGQNR9LhHLKtRJwXAqlQE4LP4mv/LzfmnDA7qNem4+OuVbHS57mssGYa1
-         +7Ja9IT5AzrZ+RxhYSVzdymz4wRGODbvEFJ52N8DJJvZKCK9YD1XlwMCaEvRGxpH/Q8x
-         WOkuqadu2PQrn0irR0cKa8ZW65Cyz+bykOZ+Cnq7cjR9n+6e1ec5TJTfCg6av9PLKv6X
-         Q/vg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ0ldgUEqai7b+HnqSfXNtXcFbWA7eTR3i/T2lJjPdTYz3V7ocjyPayo1f/sTnJUZarwvXwLWbkpI6eaE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZAtCaaNm+dNMcnS6bdN3m01WIffYLBeUAkqWzxMbMzn5R+64N
-	twvM/bJGHoSYWK1/e293a4ze+bKp/3XHYtpmt4HZr/w8xnYd2bEtxUPBaBcjvVu5MgmApYYQrs1
-	pxnRue8Rf8/S7uL3yZsksmnKPRFdu6abAA6wc
-X-Gm-Gg: ASbGnct0X3+0xf91J23TQui+j4zxax4JYBRCJJmZx0TDiLyneF5IHg27KBO2bWIv6Lj
-	+k4wyeGKrUrTPNCquBtDeQL4WWoQgfy3ZqWtTMpbo0oIwvZTE6PpDLBMNjkw6v8gI2Qyrj2nbPW
-	hKZPNu2PCj3UWTPsll2v0yKYQ=
-X-Google-Smtp-Source: AGHT+IFGki/GalQf4cuGdwsycPmdJYmOtIwwXz5djtoG4uzjXnLPSM+HE+TjHYTL4SSNm4jusi/2k1FCXOfBGZvzZfo=
-X-Received: by 2002:a17:903:2f8f:b0:21d:dca4:21ac with SMTP id
- d9443c01a7336-22fca880a59mr2792035ad.6.1746798436384; Fri, 09 May 2025
- 06:47:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pQ+uoXUp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDF75C4CEE4;
+	Fri,  9 May 2025 13:49:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746798553;
+	bh=ddxFekODOqJy1oQlp1NZDYc/Pj9lvlATNoTbz761B5o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pQ+uoXUpmF/3twCcIi3Lai3o3xk3GzjXh4Vtzef2xl+XK5lS7fyBbQ0UFZzYOkYpV
+	 dUtfTp8YyM+m1uCBcNG1HQvDk6Nf7/h0n9vLEZ88nS1jLaw3kZC+MJWQAs8/6JfmCW
+	 GLX/BJFBUp0BoBJxFAMpMHQQxyx062Ra3vAXfp7i5GUtnfWbItEAT9nUXEUdmY+WZG
+	 QaS5XlRufjGUUzac2Gdf4KQVW4gTJmD7URMBqCpPwQgEQkWKKaXQtwRRvrcbUiQUCW
+	 JAx1/diS1biH2qZn4t9dRTFqD8Klqp6AjFPQ8OnLTIf9OgIEOCwF0ak/GgLb9J7aoh
+	 g4HQFuPfD/y3w==
+Date: Fri, 9 May 2025 14:49:05 +0100
+From: Will Deacon <will@kernel.org>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: =?utf-8?Q?Miko=C5=82aj?= Lenczewski <miko.lenczewski@arm.com>,
+	suzuki.poulose@arm.com, yang@os.amperecomputing.com, corbet@lwn.net,
+	catalin.marinas@arm.com, jean-philippe@linaro.org,
+	robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org,
+	paulmck@kernel.org, mark.rutland@arm.com, joey.gouly@arm.com,
+	maz@kernel.org, james.morse@arm.com, broonie@kernel.org,
+	oliver.upton@linux.dev, baohua@kernel.org, david@redhat.com,
+	ioworker0@gmail.com, jgg@ziepe.ca, nicolinc@nvidia.com,
+	mshavit@google.com, jsnitsel@redhat.com, smostafa@google.com,
+	kevin.tian@intel.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev
+Subject: Re: [RESEND PATCH v6 1/3] arm64: Add BBM Level 2 cpu feature
+Message-ID: <20250509134904.GA5707@willie-the-truck>
+References: <20250428153514.55772-2-miko.lenczewski@arm.com>
+ <20250428153514.55772-4-miko.lenczewski@arm.com>
+ <20250506142508.GB1197@willie-the-truck>
+ <78fec33d-fe66-4352-be11-900f456c9af3@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509115126.63190-1-byungchul@sk.com> <20250509115126.63190-18-byungchul@sk.com>
-In-Reply-To: <20250509115126.63190-18-byungchul@sk.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Fri, 9 May 2025 06:47:03 -0700
-X-Gm-Features: ATxdqUENBVO5b237iXl1zx5MBh5FOCktoOh4mLpWuXNPgspC-UYrNQ0QGPP7tZQ
-Message-ID: <CAHS8izPC9bcdb4-Urw7-1zhYaJzM1cAUJzXPpJp30hgLiwr0_Q@mail.gmail.com>
-Subject: Re: [RFC 17/19] netmem: remove __netmem_get_pp()
-To: Byungchul Park <byungchul@sk.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org, 
-	akpm@linux-foundation.org, ast@kernel.org, daniel@iogearbox.net, 
-	davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch, 
-	edumazet@google.com, pabeni@redhat.com, vishal.moola@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <78fec33d-fe66-4352-be11-900f456c9af3@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Fri, May 9, 2025 at 4:51=E2=80=AFAM Byungchul Park <byungchul@sk.com> wr=
-ote:
->
-> There are no users of __netmem_get_pp().  Remove it.
->
-> Signed-off-by: Byungchul Park <byungchul@sk.com>
+On Tue, May 06, 2025 at 03:52:59PM +0100, Ryan Roberts wrote:
+> On 06/05/2025 15:25, Will Deacon wrote:
+> > On Mon, Apr 28, 2025 at 03:35:14PM +0000, Mikołaj Lenczewski wrote:
+> >> The Break-Before-Make cpu feature supports multiple levels (levels 0-2),
+> >> and this commit adds a dedicated BBML2 cpufeature to test against
+> >> support for, as well as a kernel commandline parameter to optionally
+> >> disable BBML2 altogether.
+> >>
+> >> This is a system feature as we might have a big.LITTLE architecture
+> >> where some cores support BBML2 and some don't, but we want all cores to
+> >> be available and BBM to default to level 0 (as opposed to having cores
+> >> without BBML2 not coming online).
+> >>
+> >> To support BBML2 in as wide a range of contexts as we can, we want not
+> >> only the architectural guarantees that BBML2 makes, but additionally
+> >> want BBML2 to not create TLB conflict aborts. Not causing aborts avoids
+> >> us having to prove that no recursive faults can be induced in any path
+> >> that uses BBML2, allowing its use for arbitrary kernel mappings.
+> >> Support detection of such CPUs.
+> >>
+> >> Signed-off-by: Mikołaj Lenczewski <miko.lenczewski@arm.com>
+> >> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> >> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+> >> ---
+> >>  .../admin-guide/kernel-parameters.txt         |  3 +
+> >>  arch/arm64/Kconfig                            | 19 +++++
+> >>  arch/arm64/include/asm/cpucaps.h              |  2 +
+> >>  arch/arm64/include/asm/cpufeature.h           |  5 ++
+> >>  arch/arm64/kernel/cpufeature.c                | 71 +++++++++++++++++++
+> >>  arch/arm64/kernel/pi/idreg-override.c         |  2 +
+> >>  arch/arm64/tools/cpucaps                      |  1 +
+> >>  7 files changed, 103 insertions(+)
+> >>
+> >> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> >> index d9fd26b95b34..2749c67a4f07 100644
+> >> --- a/Documentation/admin-guide/kernel-parameters.txt
+> >> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> >> @@ -449,6 +449,9 @@
+> >>  	arm64.no32bit_el0 [ARM64] Unconditionally disable the execution of
+> >>  			32 bit applications.
+> >>  
+> >> +	arm64.nobbml2	[ARM64] Unconditionally disable Break-Before-Make Level
+> >> +			2 support
+> > 
+> > Hmm, I'm not sure we really want this. It opens up the door for folks to
+> > pass 'id_aa64mmfr2.bbm=2' without updating the allow-list which feels
+> > like it's going to make crashes harder to reason about.
+> > 
+> > Is there a compelling reason to add this right now?
+> 
+> I don't think there is a *compelling* reason. This came about from Suzuki's
+> feedback at [1]. He was keen to have a mechanism to disable BBML2 in case issues
+> were found.
+> 
+> But simpler is usually better; I'd be ok with removing.
 
-Reviewed-by: Mina Almasry <almasrymina@google.com>
+We can always add it back if we really need it, but adding an allowlist
+*and* a mechanism to override the allowlist at the same time seems overly
+pessimistic to me :)
 
---=20
-Thanks,
-Mina
+> >> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> >> index 9c4d6d552b25..7a85a1bdc6e9 100644
+> >> --- a/arch/arm64/kernel/cpufeature.c
+> >> +++ b/arch/arm64/kernel/cpufeature.c
+> >> @@ -2200,6 +2200,70 @@ static bool hvhe_possible(const struct arm64_cpu_capabilities *entry,
+> >>  	return arm64_test_sw_feature_override(ARM64_SW_FEATURE_OVERRIDE_HVHE);
+> >>  }
+> >>  
+> >> +static bool cpu_has_bbml2_noabort(unsigned int cpu_midr)
+> >> +{
+> >> +	/*
+> >> +	 * We want to allow usage of bbml2 in as wide a range of kernel contexts
+> >> +	 * as possible. This list is therefore an allow-list of known-good
+> >> +	 * implementations that both support bbml2 and additionally, fulfill the
+> >> +	 * extra constraint of never generating TLB conflict aborts when using
+> >> +	 * the relaxed bbml2 semantics (such aborts make use of bbml2 in certain
+> >> +	 * kernel contexts difficult to prove safe against recursive aborts).
+> >> +	 *
+> >> +	 * Note that implementations can only be considered "known-good" if their
+> >> +	 * implementors attest to the fact that the implementation never raises
+> >> +	 * TLBI conflict aborts for bbml2 mapping granularity changes.
+> >> +	 */
+> >> +	static const struct midr_range supports_bbml2_noabort_list[] = {
+> >> +		MIDR_REV_RANGE(MIDR_CORTEX_X4, 0, 3, 0xf),
+> >> +		MIDR_REV_RANGE(MIDR_NEOVERSE_V3, 0, 2, 0xf),
+> >> +		{}
+> >> +	};
+> >> +
+> >> +	return is_midr_in_range_list(cpu_midr, supports_bbml2_noabort_list);
+> > 
+> > This doesn't compile against latest mainline as is_midr_in_range_list()
+> > no longer takes the midr.
+> 
+> Will ask Miko to fix.
+
+Cheers. v6.15-rc1 is probably the right base to use as that's what I've
+based for-next/mm on.
+
+> >> +static bool has_bbml2_noabort(const struct arm64_cpu_capabilities *caps, int scope)
+> >> +{
+> >> +	if (!IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT))
+> >> +		return false;
+> >> +
+> >> +	if (scope & SCOPE_SYSTEM) {
+> >> +		int cpu;
+> >> +
+> >> +		/*
+> >> +		 * We are a boot CPU, and must verify that all enumerated boot
+> >> +		 * CPUs have MIDR values within our allowlist. Otherwise, we do
+> >> +		 * not allow the BBML2 feature to avoid potential faults when
+> >> +		 * the insufficient CPUs access memory regions using BBML2
+> >> +		 * semantics.
+> >> +		 */
+> >> +		for_each_online_cpu(cpu) {
+> >> +			if (!cpu_has_bbml2_noabort(cpu_read_midr(cpu)))
+> >> +				return false;
+> >> +		}
+> > 
+> > This penalises large homogeneous systems and it feels unnecessary given
+> > that we have the ability to check this per-CPU. Can you use
+> > ARM64_CPUCAP_BOOT_CPU_FEATURE instead of ARM64_CPUCAP_SYSTEM_FEATURE
+> > to solve this?
+> 
+> We are trying to solve for the case where the boot CPU has BBML2 but a secondary
+> CPU doesn't. (e.g. hetrogeneous system where boot CPU is big and secondary is
+> little and does not advertise the feature. I can't remember if we proved there
+> are real systems with this config - I have vague recollection that we did but my
+> memory is poor...).
+> 
+> My understanding is that for ARM64_CPUCAP_BOOT_CPU_FEATURE, "If the boot CPU
+> has enabled this feature already, then every late CPU must have it". So that
+> would exclude any secondary CPUs without BBML2 from coming online?
+
+Damn, yes, you're right. However, it still feels horribly hacky to iterate
+over the online CPUs in has_bbml2_noabort() -- the cpufeature framework
+has the ability to query features locally and we should be able to use
+that. We're going to want that should the architecture eventually decide
+on something like BBML3 for this.
+
+What we have with BBML2_NOABORT seems similar to an hwcap in that we only
+support the capability if all CPUs have it (rejecting late CPUs without it
+in that case) but we can live without it if not all of the early CPUs
+have it. Unlikely hwcaps, though, we shouldn't be advertising this to
+userspace and we can't derive the capability solely from the sanitised
+system registers.
+
+I wonder if we could treat it like an erratum in some way instead? That
+is, invert things so that CPUs which _don't_ have BBML2_NOABORT are
+considered to have a "BBM_CONFLICT_ABORT" erratum (which we obviously
+wouldn't shout about). Then we should be able to say:
+
+  - If any of the early CPUs don't have BBML2_NOABORT, then the erratum
+    would be enabled and we wouln't elide BBM.
+
+  - If a late CPU doesn't have BBML2_NOABORT then it can't come online
+    if the erratum isn't already enabled.
+
+Does that work? If not, then perhaps the cpufeature/cpuerrata code needs
+some surgery for this.
+
+> How do you see this working with ARM64_CPUCAP_BOOT_CPU_FEATURE? Or do you just
+> think that all systems will always be homogeneous with respect to FEAT_BBM?
+
+That's probably wishful thinking, sadly :(
+
+Will
