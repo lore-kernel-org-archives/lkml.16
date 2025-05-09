@@ -1,143 +1,114 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD8923535B
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 17:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0C6233144
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 17:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746812173; cv=none; b=cE2JRjHDO6p7IN05RRcF9Yyy49s0K+ZIeotAciyjzFgiqs2oUs+KhvlAnO3sdIEhVYJrA12+XBL5rkmWR1fzWuVdZ2j5EeQcP16ILYhqEGF6BPWpQ39tZG1GpsQVEP9sy6JG9lMaVxX5IDZqf6dvW/GkMCwBB05f5W9kZOg3+Qw=
+	t=1746812359; cv=none; b=uTNGZS+wW7pEXaqO1gTRR8SYyWRsbRyt0MDF5kOLI1I4+PJ8X9wDrQp1KUtKfwMK6S7jKWwjvJ2yB3hVplP9s+5E60fA/9pGek5Hd8gOypx35kkgfqJfo0UG0FJsxbnbtrk65SlvjB7wn92pLqFLepXUmSxXsPM5OwY36mEDtOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746812173; c=relaxed/simple;
-	bh=p/HkqmeWqXcl+NmY60t42MGEK9dVO94OTagr+6UU7oQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AyUAv4tVNZ+wI6PvISjHUNwGXTOjCbRBakoa1E4srJqH9ge3UpRctBlfChLhdbueRQWZml/1Jh1coeJCHszPGE3WJma6zQZ6dN5VH9IqpobPF9KmpM+RZirxtcQUd9m0YvHi4JR7rOgtdwFIdPbFsrhIupnEErd+VVPWyFSgEgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=hGE8249x; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1746812359; c=relaxed/simple;
+	bh=LfrZCmzoSG/oOv69lKZc62lKRYOxuwevfizEFv6KoOM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jiyQwJb3NLIXEhyWzhhHqLjY2av9AVK0lQsR0SGtMXlWvzxAu1ndGFYsjYMf/3gxqhGfCS0AfXLd3+XgfmymHEuOq8t1oVDkSGPfl2JEt5V4d7Cuxk93NVhcx+cxqDYnBWjW/QA8eDeuyEPXN04QwFN5QpmJhc4HCpcxYqhaKdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com; spf=pass smtp.mailfrom=dubeyko.com; dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b=LPm3qxWQ; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dubeyko.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="hGE8249x"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=0xspxWDvDTHB9zeZZsUEHKBZ5YKd1smCBy8bz97UshE=; b=hGE8249xXTGeZDgZ
-	wC/9ggj/hHECEUie4uiOuJpkU8SQWAY8CsBb+FKW/aYHNVBdOukuD1vjGVXa3FVLAamL52vSJ30w6
-	4Ovfn0AbyRWE6dLQHHvpF0wydbGg0ealq+x7huFI6nYRD3fd9lAPtiiwd9pq06jGh8a0ti4hHJDBp
-	8DM9MdKWbQVpXs8eiNkuhv/lMiZA89v7f3bz9gjDfOGrAArXDGFnYEBfw0jH5Q++mxIyE/Sl+jNgW
-	SK2Ttax2B2lKD6lC899t1/EIEhL0XHoPHv/yP50xjHlD13Cy2C+q89Qp85ULB3irqO7YXZbUW7w/t
-	bzJoOL2YlLH3yVh30A==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1uDRdq-002jHl-19;
-	Fri, 09 May 2025 17:36:10 +0000
-Date: Fri, 9 May 2025 17:36:10 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Lee Jones <lee@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mfd: sm501: Remove unused sm501_find_clock
-Message-ID: <aB49Co-q19pf3yO0@gallifrey>
-References: <20250508002227.204836-1-linux@treblig.org>
- <20250509142945.GH2492385@google.com>
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b="LPm3qxWQ"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22fa414c565so16913615ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 10:39:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dubeyko-com.20230601.gappssmtp.com; s=20230601; t=1746812356; x=1747417156; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Awyu6yx0XWHa7ZiRVrCdZHl8L0TrAJxNWpvp17USw3Q=;
+        b=LPm3qxWQ8pnjwAu6kxyJdVODFnhiWz6NZKK+DW0rUcnqvXjy+gGyKdQl6ZtOufOM7i
+         TxWjUkV6AOLrEFVxqQxOsoQEcjeBwYKB5xrbUhDsaKwTEFN2JQKbDt3JNUWAx7h7Z+2l
+         CBz6xpvsv5xt1c4IqGTZTjSLp961YkVsCg9qDWPwevAksMmwdsI+gm2/pwxdKuOvO4Ow
+         XlROs0z/zakzqlT8WRqqZiGbDzE7djFcv+SVeumhgxyxrzFs2cYigSZCmjHVPLbXh61S
+         hLbyS9dZSHdKh9NuPLDpOsgxgFGKt51+xSLqgs+0tIuS/G6ZBCAA20+9S5ghIqTX0A90
+         dTSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746812356; x=1747417156;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Awyu6yx0XWHa7ZiRVrCdZHl8L0TrAJxNWpvp17USw3Q=;
+        b=IR9B+3tDeYrLU0OVaKCsIlqGKBrQSU36rjgvtFHOTIOORpJAsyKKqslw0Jk13vHtk5
+         UxTEGixbUtognJO9gEIHaUJeFV5lUa5pLo3c0scaxVNJolcVM1eqpS0A8lfkRU5f7FyU
+         rnK+xRUBjji4W0pUFlwm9DqVub0aKp2Okm60QYrs0A/bX2efZwqrAorgh9sm0BiPomL1
+         McTRgUbHZ34wdqaI7sFZOPWNw58+VuQN2SJFJYAgp9F0tluxifjYTUCRaVRrtvRvOD9Z
+         9fGmaIkKJwP0+kZVGNRxhgaQKNzQuYYWuzQJEIyp4NhGmOwFFDzjHiG47jFO7Ba7zm6o
+         PjdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUvWxcsiRUCPI8ily7ycR+68BLw7pc5hUHsSIaxaY9mUN1L4dGOfXrxQ7FhAuS7SKsG33wXRQCwXj0ZQCU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB27jqhbmCRERXdM+lLKNxorxq8u57YVbEs4AGGsDYu/LeAAj7
+	W3At+pFYZ0sOkoJKf/bNZR56LpSEjq63tJO46hI6TXhAnWNWPxnjYgBpjIhiEEc=
+X-Gm-Gg: ASbGncvfxVszIdfv+jBmNDHv89LsXkp9FwY0qe0MnVplZFD+q8qjBQnROSU/7f+v6g1
+	T78p5Sl6eDwXEvTXh0X7f3MZFiwMHYV9DXup8QYuVZaaZfM5EigF7VEox0Ile2dHj1I5zjesZU/
+	1wS5vFfQeIsGV5K/9pGmOhIi9psNoW3GIJMxmml+JJadPDu94tdVOFUd0rBQXEmC+vPDk+wLwlI
+	tQPavy/8Butw5qeVZhFfSW0+3Hixhm6FXMrYSkrK6yCdkGdpIrsE8Z8hZOpMqFE38Zml2z7QezH
+	sYWpDHPGrNb9QX0c/fxi8+aqX6+DkQNyKSuDtK+x/Y4PIzD7iC+0
+X-Google-Smtp-Source: AGHT+IHGEwIyBm7xgc5W0YMlKDOYo4LdM3owzYLLhxcicqaKrdscfNIqz3QiEtNKj0ZCYv/G3JnZUA==
+X-Received: by 2002:a17:902:cecb:b0:22f:a932:5374 with SMTP id d9443c01a7336-22fc918d1a7mr71694425ad.48.1746812356347;
+        Fri, 09 May 2025 10:39:16 -0700 (PDT)
+Received: from pop-os.attlocal.net ([2600:1700:6476:1430:f242:4c31:ff5d:e2b7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc82a50b3sm19857515ad.240.2025.05.09.10.39.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 10:39:15 -0700 (PDT)
+Message-ID: <e87e0fce1391a34ccd3f62581f8dc62d03b5c022.camel@dubeyko.com>
+Subject: Re: [PATCH] hfs: export dbg_flags in debugfs
+From: Viacheslav Dubeyko <slava@dubeyko.com>
+To: Yangtao Li <frank.li@vivo.com>, glaubitz@physik.fu-berlin.de
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 09 May 2025 10:39:12 -0700
+In-Reply-To: <20250507145550.425303-1-frank.li@vivo.com>
+References: <20250507145550.425303-1-frank.li@vivo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250509142945.GH2492385@google.com>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
-X-Uptime: 17:35:41 up 12 days,  1:49,  1 user,  load average: 0.00, 0.00, 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
 
-* Lee Jones (lee@kernel.org) wrote:
-> On Thu, 08 May 2025, linux@treblig.org wrote:
-> 
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > sm501_find_clock() was added in 2007 as part of
-> > commit b6d6454fdb66 ("[PATCH] mfd: SM501 core driver")
-> > but hasn't been used.
-> > 
-> > Remove it.
-> > 
-> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> > ---
-> >  drivers/mfd/sm501.c | 43 -------------------------------------------
-> 
-> Looks like you missed: include/linux/sm501.h.
+Hi Yangtao,
 
-Oops! Sorry about that, v2 posted; message id 20250509173521.49596-1-linux@treblig.org
+On Wed, 2025-05-07 at 08:55 -0600, Yangtao Li wrote:
+> hfs currently has some function tracking points,
+> which are helpful for problem analysis, but rely on
+> modifying the DBG_MASK macro.
+>=20
+> Modifying the macro requires recompiling the kernel,
+> and the control of the log is more troublesome.
+>=20
+> Let's export this debug facility to debugfs so that
+> it can be easily controlled through the node.
+>=20
+> node:
+> 	/sys/kernel/debug/hfs/dbg_flags
+>=20
+> for_each_bit:
+>=20
+> 	DBG_BNODE_REFS=C2=A0 0x00000001
+> 	DBG_BNODE_MOD=C2=A0=C2=A0 0x00000002
+> 	DBG_CAT_MOD=C2=A0=C2=A0=C2=A0=C2=A0 0x00000004
+> 	DBG_INODE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000008
+> 	DBG_SUPER=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000010
+> 	DBG_EXTENT=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000020
+> 	DBG_BITMAP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00000040
+>=20
 
-Thanks for the review,
+Frankly speaking, if we would like to rework the debugging framework in
+HFS/HFS+, then I prefer to switch on pr_debug() and to use dynamic
+debug framework of Linux kernel [1]. It will provide the more flexible
+solution.
 
-Dave
+Thanks,
+Slava.
 
-> >  1 file changed, 43 deletions(-)
-> > 
-> > diff --git a/drivers/mfd/sm501.c b/drivers/mfd/sm501.c
-> > index 7ee293b09f62..bdeea0047e1b 100644
-> > --- a/drivers/mfd/sm501.c
-> > +++ b/drivers/mfd/sm501.c
-> > @@ -631,49 +631,6 @@ unsigned long sm501_set_clock(struct device *dev,
-> >  
-> >  EXPORT_SYMBOL_GPL(sm501_set_clock);
-> >  
-> > -/* sm501_find_clock
-> > - *
-> > - * finds the closest available frequency for a given clock
-> > -*/
-> > -
-> > -unsigned long sm501_find_clock(struct device *dev,
-> > -			       int clksrc,
-> > -			       unsigned long req_freq)
-> > -{
-> > -	struct sm501_devdata *sm = dev_get_drvdata(dev);
-> > -	unsigned long sm501_freq; /* the frequency achieveable by the 501 */
-> > -	struct sm501_clock to;
-> > -
-> > -	switch (clksrc) {
-> > -	case SM501_CLOCK_P2XCLK:
-> > -		if (sm->rev >= 0xC0) {
-> > -			/* SM502 -> use the programmable PLL */
-> > -			sm501_freq = (sm501_calc_pll(2 * req_freq,
-> > -						     &to, 5) / 2);
-> > -		} else {
-> > -			sm501_freq = (sm501_select_clock(2 * req_freq,
-> > -							 &to, 5) / 2);
-> > -		}
-> > -		break;
-> > -
-> > -	case SM501_CLOCK_V2XCLK:
-> > -		sm501_freq = (sm501_select_clock(2 * req_freq, &to, 3) / 2);
-> > -		break;
-> > -
-> > -	case SM501_CLOCK_MCLK:
-> > -	case SM501_CLOCK_M1XCLK:
-> > -		sm501_freq = sm501_select_clock(req_freq, &to, 3);
-> > -		break;
-> > -
-> > -	default:
-> > -		sm501_freq = 0;		/* error */
-> > -	}
-> > -
-> > -	return sm501_freq;
-> > -}
-> > -
-> > -EXPORT_SYMBOL_GPL(sm501_find_clock);
-> > -
-> >  static struct sm501_device *to_sm_device(struct platform_device *pdev)
-> >  {
-> >  	return container_of(pdev, struct sm501_device, pdev);
-> > -- 
-> > 2.49.0
-> > 
-> 
-> -- 
-> Lee Jones [李琼斯]
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+[1]=C2=A0https://www.kernel.org/doc/html/v4.14/admin-guide/dynamic-debug-ho=
+wto.html
