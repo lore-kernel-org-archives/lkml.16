@@ -1,240 +1,129 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35EE2110
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 14:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8621E5B82;
+	Fri,  9 May 2025 14:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746800820; cv=none; b=Zb6ofeFk9SYbmTHUVl5emCD8M8CPsiRDlvJux3B4IjHme4I3h6yS2yoX9Wmity/oM54lg0jJxREhi8OZERp26scTZUXODtA5ndJ0xTM1QpVRFBIkzODiSHCS62l1ucOqf5dtPZrjPJerBpBMV4EjcoiTgS0e+P22MEP2l7l2SqU=
+	t=1746800907; cv=none; b=BAOb7n2X+B+v/1ZwSVORKAi5KFFCD21PUPm4nLEDXMaemSEkp0dYJ5F7j695LlraGbPM5P1Ww2ZHDuu0H8xixMGcI1v+4CeiJDgw/p5cLaxe2AGO/9Ytt1Za/JCK4/U0gYrVOFofv48Ixga+gHn3/9a2yYIPZJJD2JWi2v89idk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746800820; c=relaxed/simple;
-	bh=dfI1XQ06pm+RwwZuvsgWrC3w74XG/uNfQ1+5HHMCiIg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Jz/96ocn4Gl50ZS+0LOG1EipVx61oyvfRog8y51vs085Qjj8ZCGq+vnc6Xo2JA0rwc6Vd7L2GUnkQWvoG/sKmErfQC25tdobVecjF29Ak3PwhTTTbiZcIV7oeilB/3HyFIRODamtuyYNJC9wiMnKX3utxcD/ReXUPUpMDemnX8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=mlFaRE7g; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1746800907; c=relaxed/simple;
+	bh=fNRLig7bAYi1L1Kq7n0i/6zijpbMaAknetCXULDY9CM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ksJny0jhVHTzkHXk7Rw1W4Cvhii6VzjvjKABXNmp+eZkiWo5G5uSsYQLlieIRSQgUif+1QlOL9TUfHYwglTzS3e9UCFFOuYdHOj1o1/22P+Jjbs7JH8iBLe/eTRSWXZXE5R37t/eIPkS3MSmtpO/6kHKCYa4J5VXexFVDtzpCRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CDeY3Ffu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="mlFaRE7g"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=xcMcmNP1V8nnDAsJC1Qdyo8awocg5tbRjm5hYQIYwCA=; b=mlFaRE7goJIA7a/dtWhjCovRGq
-	A+A6iQc8RvBHnZOCzA0XKdfCzoMcwk4G2LzosXd24ED+Z53q2pUrAtpltZJ2/4BYRrrGJr5CV8AbM
-	adlbmTJMl0YaAM1Bh9J6zShqOX1OdPK1h8MZPH39ne6BfMrfqDLHYNdRD8O01dET+lgrDAW9AReD4
-	CkDp3LnnuN92oSLxm1NvjJuEn+qydL9Xl8p9irqBBRFUu+CFK1i6vJZ4yKBIRyAlI+7ni7/uoQjN4
-	CWgQTnGj3Yk1srYMBGR7moMYGw8tW6yTPUROXcCE6W3CICq8kJv58fF0BcfTxkEDD35uvZiAe/9jj
-	sGh7VhPA==;
-Received: from [191.204.192.64] (helo=localhost.localdomain)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1uDObs-005mcX-BF; Fri, 09 May 2025 16:26:32 +0200
-From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com,
-	Kees Cook <keescook@chromium.org>,
-	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-Subject: [PATCH] drm: drm_auth: Convert mutex usage to guard(mutex)
-Date: Fri,  9 May 2025 11:26:27 -0300
-Message-ID: <20250509142627.639419-1-andrealmeid@igalia.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CDeY3Ffu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51886C4CEE4;
+	Fri,  9 May 2025 14:28:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746800906;
+	bh=fNRLig7bAYi1L1Kq7n0i/6zijpbMaAknetCXULDY9CM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CDeY3FfuWHHr5ejCUZjrZfxLJ19JvZe/RsVbusBSk3mJbCZBndZddB5O2dP/eV8HK
+	 ik/fCKZlR7BGiQ8VI7eGCgcWeQOEahApJyI22knewmpxyfvWp3wlc9gq8Ak86xvDzp
+	 pBbq/9/fR4Kky+db9ieJJltllj/DLGK2f2fHtldJI4g721+ez5je893Bp8YPKGaAfL
+	 FOPT+WtvsI5JyP6T1rRcCX09RcQlvcfP80a5gCTNvqotCeJzW7gkrH+4tQR/I/m241
+	 w3WWYeZcEBdUTPqwtf9w+4hHfkhMWt0JJiQiGKgkNxCuNbrtZaQgSajZFKkSkQxAfD
+	 MJHjru/wqRDkw==
+Date: Fri, 9 May 2025 15:28:19 +0100
+From: Lee Jones <lee@kernel.org>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
+	linux@roeck-us.net, jdelvare@suse.com,
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
+	Ming Yu <tmyu0@nuvoton.com>
+Subject: Re: [PATCH v10 1/7] mfd: Add core driver for Nuvoton NCT6694
+Message-ID: <20250509142819.GG2492385@google.com>
+References: <20250423094058.1656204-1-tmyu0@nuvoton.com>
+ <20250423094058.1656204-2-tmyu0@nuvoton.com>
+ <20250501122214.GK1567507@google.com>
+ <CAOoeyxVL2MV83CJaYCXMiw0b5YUzk728H4B9GY1q9h_P8D43fg@mail.gmail.com>
+ <20250502080754.GD3865826@google.com>
+ <CAOoeyxWpYmcg1_FBXYqDfMi28R5ZXp2Sk2PhUo=cL10Nn3iVEw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOoeyxWpYmcg1_FBXYqDfMi28R5ZXp2Sk2PhUo=cL10Nn3iVEw@mail.gmail.com>
 
-Replace open-coded mutex handling with cleanup.h guard(mutex). This
-simplifies the code and removes the "goto unlock" pattern.
+On Fri, 02 May 2025, Ming Yu wrote:
 
-Tested with igt tests core_auth and core_setmaster.
+> Lee Jones <lee@kernel.org> 於 2025年5月2日 週五 下午4:08寫道：
+> >
+> ...
+> > > > > +static const struct mfd_cell nct6694_devs[] = {
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
+> > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
+> > > >
+> > > > These are all identical.
+> > > >
+> > > > I thought you were going to use PLATFORM_DEVID_AUTO?  In fact, you are
+> > > > already using PLATFORM_DEVID_AUTO since you are calling
+> > > > mfd_add_hotplug_devices().  So you don't need this IDs.
+> > > >
+> > > > MFD_CELL_NAME() should do.
+> > > >
+> > >
+> > > Yes, it uses PLATFORM_DEVID_AUTO, but in my implementation, the
+> > > sub-devices use cell->id instead of platform_device->id, so it doesn't
+> > > affect the current behavior.
+> > > However, if you think there's a better approach or that this should be
+> > > changed for consistency or correctness, I'm happy to update it, please
+> > > let me know your recommendation.
+> > >
+> > > When using MFD_CELL_NAME(), the platform_device->id for the GPIO
+> > > devices is assigned values from 1 to 16, and for the I2C devices from
+> > > 1 to 6, but I need the ID offset to start from 0 instead.
+> >
+> > Oh no, don't do that.  mfd_cell isn't supposed to be used outside of MFD.
+> >
+> > Just use the platform_device id-- if you really need to start from 0.
+> >
+> > As an aside, I'm surprised numbering starts from 1.
+> >
+> 
+> OK, I will use platform_device->id instead. However, I'm still unsure
+> why the ID starts from1.
+> 
+> Additionally, I noticed that when calling mfd_add_devices()
+> separately, the IDs are also assigned consecutively (e.g., GPIO: 1~16,
+> I2C: 17~22, ...).
+> 
+> Do you have any recommendations on how I should implement this?
 
-Signed-off-by: André Almeida <andrealmeid@igalia.com>
----
+If you are to use this mechanism, you'd have to submit separate
+mfd_add_devices() calls I guess.
 
-For more information about guard(mutex):
-https://www.kernel.org/doc/html/latest/core-api/cleanup.html
----
- drivers/gpu/drm/drm_auth.c | 64 ++++++++++++++------------------------
- 1 file changed, 23 insertions(+), 41 deletions(-)
+However, this all seems a bit silly for simple, contextless (where
+device 3 is identical to device 10, etc) enumeration.  Can you use IDA
+instead?
 
-diff --git a/drivers/gpu/drm/drm_auth.c b/drivers/gpu/drm/drm_auth.c
-index 22aa015df387..d6bf605b4b90 100644
---- a/drivers/gpu/drm/drm_auth.c
-+++ b/drivers/gpu/drm/drm_auth.c
-@@ -95,7 +95,7 @@ int drm_getmagic(struct drm_device *dev, void *data, struct drm_file *file_priv)
- 	struct drm_auth *auth = data;
- 	int ret = 0;
- 
--	mutex_lock(&dev->master_mutex);
-+	guard(mutex)(&dev->master_mutex);
- 	if (!file_priv->magic) {
- 		ret = idr_alloc(&file_priv->master->magic_map, file_priv,
- 				1, 0, GFP_KERNEL);
-@@ -103,7 +103,6 @@ int drm_getmagic(struct drm_device *dev, void *data, struct drm_file *file_priv)
- 			file_priv->magic = ret;
- 	}
- 	auth->magic = file_priv->magic;
--	mutex_unlock(&dev->master_mutex);
- 
- 	drm_dbg_core(dev, "%u\n", auth->magic);
- 
-@@ -118,13 +117,12 @@ int drm_authmagic(struct drm_device *dev, void *data,
- 
- 	drm_dbg_core(dev, "%u\n", auth->magic);
- 
--	mutex_lock(&dev->master_mutex);
-+	guard(mutex)(&dev->master_mutex);
- 	file = idr_find(&file_priv->master->magic_map, auth->magic);
- 	if (file) {
- 		file->authenticated = 1;
- 		idr_replace(&file_priv->master->magic_map, NULL, auth->magic);
- 	}
--	mutex_unlock(&dev->master_mutex);
- 
- 	return file ? 0 : -EINVAL;
- }
-@@ -248,41 +246,33 @@ int drm_setmaster_ioctl(struct drm_device *dev, void *data,
- {
- 	int ret;
- 
--	mutex_lock(&dev->master_mutex);
-+	guard(mutex)(&dev->master_mutex);
- 
- 	ret = drm_master_check_perm(dev, file_priv);
- 	if (ret)
--		goto out_unlock;
-+		return ret;
- 
- 	if (drm_is_current_master_locked(file_priv))
--		goto out_unlock;
-+		return ret;
- 
--	if (dev->master) {
--		ret = -EBUSY;
--		goto out_unlock;
--	}
-+	if (dev->master)
-+		return -EBUSY;
- 
--	if (!file_priv->master) {
--		ret = -EINVAL;
--		goto out_unlock;
--	}
-+	if (!file_priv->master)
-+		return -EINVAL;
- 
--	if (!file_priv->is_master) {
--		ret = drm_new_set_master(dev, file_priv);
--		goto out_unlock;
--	}
-+	if (!file_priv->is_master)
-+		return drm_new_set_master(dev, file_priv);
- 
- 	if (file_priv->master->lessor != NULL) {
- 		drm_dbg_lease(dev,
- 			      "Attempt to set lessee %d as master\n",
- 			      file_priv->master->lessee_id);
--		ret = -EINVAL;
--		goto out_unlock;
-+		return -EINVAL;
- 	}
- 
- 	drm_set_master(dev, file_priv, false);
--out_unlock:
--	mutex_unlock(&dev->master_mutex);
-+
- 	return ret;
- }
- 
-@@ -299,33 +289,27 @@ int drm_dropmaster_ioctl(struct drm_device *dev, void *data,
- {
- 	int ret;
- 
--	mutex_lock(&dev->master_mutex);
-+	guard(mutex)(&dev->master_mutex);
- 
- 	ret = drm_master_check_perm(dev, file_priv);
- 	if (ret)
--		goto out_unlock;
-+		return ret;
- 
--	if (!drm_is_current_master_locked(file_priv)) {
--		ret = -EINVAL;
--		goto out_unlock;
--	}
-+	if (!drm_is_current_master_locked(file_priv))
-+		return -EINVAL;
- 
--	if (!dev->master) {
--		ret = -EINVAL;
--		goto out_unlock;
--	}
-+	if (!dev->master)
-+		return -EINVAL;
- 
- 	if (file_priv->master->lessor != NULL) {
- 		drm_dbg_lease(dev,
- 			      "Attempt to drop lessee %d as master\n",
- 			      file_priv->master->lessee_id);
--		ret = -EINVAL;
--		goto out_unlock;
-+		return -EINVAL;
- 	}
- 
- 	drm_drop_master(dev, file_priv);
--out_unlock:
--	mutex_unlock(&dev->master_mutex);
-+
- 	return ret;
- }
- 
-@@ -337,7 +321,7 @@ int drm_master_open(struct drm_file *file_priv)
- 	/* if there is no current master make this fd it, but do not create
- 	 * any master object for render clients
- 	 */
--	mutex_lock(&dev->master_mutex);
-+	guard(mutex)(&dev->master_mutex);
- 	if (!dev->master) {
- 		ret = drm_new_set_master(dev, file_priv);
- 	} else {
-@@ -345,7 +329,6 @@ int drm_master_open(struct drm_file *file_priv)
- 		file_priv->master = drm_master_get(dev->master);
- 		spin_unlock(&file_priv->master_lookup_lock);
- 	}
--	mutex_unlock(&dev->master_mutex);
- 
- 	return ret;
- }
-@@ -355,7 +338,7 @@ void drm_master_release(struct drm_file *file_priv)
- 	struct drm_device *dev = file_priv->minor->dev;
- 	struct drm_master *master;
- 
--	mutex_lock(&dev->master_mutex);
-+	guard(mutex)(&dev->master_mutex);
- 	master = file_priv->master;
- 	if (file_priv->magic)
- 		idr_remove(&file_priv->master->magic_map, file_priv->magic);
-@@ -376,7 +359,6 @@ void drm_master_release(struct drm_file *file_priv)
- 	/* drop the master reference held by the file priv */
- 	if (file_priv->master)
- 		drm_master_put(&file_priv->master);
--	mutex_unlock(&dev->master_mutex);
- }
- 
- /**
 -- 
-2.49.0
-
+Lee Jones [李琼斯]
