@@ -1,128 +1,213 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF3A274643;
-	Fri,  9 May 2025 12:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B2A277022
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 12:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746792228; cv=none; b=sybXniYEXp3SGQFRvQbLBBkX6/YnqYCZpXtoZUkjPNWsUMx3VxvqECRkxQN5/oLHsBKJZhNhOg1pKQe0PoO/36ovYjP6qdFkrdB/tGLL/6pI6YvyBwpVkNnbl2wxlOk6zQPTSl21JMdzIaswp+z5FpKEy94K3/Dw5gFtHpXu9ck=
+	t=1746792243; cv=none; b=cv2MneVrtSYqa5UCoCSoCzfR9KRLtRYpOMjh9yt4pT2wMzuzGpQ0mobWBU+6UkO6jwZ4CBycpYBncHabelI7HtPVEQLepDrPVakyZV2i62VRnHJrhyWQPDWsSDh7hwiTVhm05QxVTh7TX/78sgsyA5Wv2fx/36VUh16oepnQlcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746792228; c=relaxed/simple;
-	bh=zMk3Ur7keZic+WklbtXFWS6gObTJIJhCYMILZ9CiGdg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SpGHQ1/Di7rEduh1/OwMiIlV3lIO9ziKLFlVhY+tJkx58h0pRTZS2FrI53AcRF5v3e++k4CtV7oL5u75o2Mnnrcbx8Gv54NyOi4IRB695zmANMoGQF6hxeVenltg1bfkiP5HT06jxLUeESI+73ZjunjZyUvFfWJiA10HHsCspek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=mlGh+L/e; arc=none smtp.client-ip=220.197.32.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1746792243; c=relaxed/simple;
+	bh=febGSRdrLcdNcz/MNs5qI7r+1QmVGLqc/6gvMvQ6LfQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KzNKx+FZkVphxWC4hT2yDjiF4Ss1OU1eRI6sZGBb+OKxYL7tiCgIXCeyVQAjSEXOKME9iCcdi0/EYTHVqkaKEL8WvNNAKFLLIIHde1SzcptEdtIHCEU+FFedq+VyqfjtxGpnSEnxpYE9hshHNGcAztTehGZ/73qY+Mo9P2KlVFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=COX1iJoP; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="mlGh+L/e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=uZznWLba/NrZlGr5Qa9wgXdmAIeUPmYseOlEvibVjwc=;
-	b=mlGh+L/e3yD5Rzxyt5H4YE5WgU95NUq48DtszJYSAK09t/qKPMO2tb5qPO1ANa
-	CO673MDq3NgqiHbSRopshU79k8zJukP3ey48IEnX4Qkfdka1wZIaOXr7jETDafFC
-	6D0y8KiZxyUvBGEnGDjZ8UUDzIl3iL/FuD1aBPN4ml7Gw=
-Received: from dragon (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgC3N_Ke7h1oXnOrAA--.65461S3;
-	Fri, 09 May 2025 20:01:36 +0800 (CST)
-Date: Fri, 9 May 2025 20:01:34 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>, Stephen Boyd <sboyd@kernel.org>,
-	linux-amarula@amarulasolutions.com,
-	Conor Dooley <conor+dt@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
-Subject: Re: (subset) [PATCH v12 00/19] Support spread spectrum clocking for
- i.MX8M PLLs
-Message-ID: <aB3unsCzCFUkdp9i@dragon>
-References: <20250424062154.2999219-1-dario.binacchi@amarulasolutions.com>
- <174643143452.2950397.16722215892279685541.b4-ty@linaro.org>
- <CABGWkvrkVLRocFsZs9JLni4KDZCDyYDZxMzwA9AzAwipmUyTzQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="COX1iJoP"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3d9327d0720so18148785ab.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 05:04:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1746792240; x=1747397040; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9CemopbrpuOPESs7KqAo/mdFnUJ307GHWAfAAUzTtio=;
+        b=COX1iJoPJDeV197p3lcganUTefShThbH+aINzy8SqP3DFoAEfLo4qmjj1AG0uZjgMm
+         qfJcnmdtigb6aQ40A9a4fhvsmSNTuaR8GQjmAKIJF86pYfWqmj9JSehCSFm+x7qD2jr5
+         u1ThceuQ31+a1xLROPizpw6MK+ZwPJ9p3cDw9CEQgHr9cOSPZHDVF36lq9OWtBC6H2pZ
+         5TAd7gazXITP9wnKAa1pwnq4vBsMjQSx1BNohW6LIOHlN3zSoIrA+vPZN1W0G7675VDo
+         mb4XTEX19q2gwFVm/34aekSgL+gAFcgUVQ6tZX+obmr3VGfz3DJ8WLzybVjvcnZsYupK
+         2JNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746792240; x=1747397040;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9CemopbrpuOPESs7KqAo/mdFnUJ307GHWAfAAUzTtio=;
+        b=xTpN/XO59z4UKNlekBwor/wL42hgYU2ppl6fp75W3y1BnxAvjoD5PpdBPuxZLllGZ1
+         YEDclZOiSNKK+7XyOUo7/7eiScbyvPnHCf0rqw9OaVUTCNbTSN/DvuswMod6YKUhLi/v
+         L2swjuQsq66F5w2iGWF42EWUJInsdX5L3vwqooLmRciZTQh0SWNp5e3wbfupTUea255s
+         Wx2dZJ8aBqFNsG4gMhspFutufpjSBAUFxd2sm4RVB3G+NcoinVEFJFWQ5oRk6hgOKlHL
+         1Bd6IImAnAuaoat+ezUehb7VdI3nvnwEj6SlvexamvBRiz62fJ0T+7TIOLtoTbKb3VBY
+         yo0w==
+X-Forwarded-Encrypted: i=1; AJvYcCUXd0iyRfVFcQ5qcHKGWwYlu9fS54g4TMweBqfZNcjvHiEJRjYx9pHT0zbrDEeOfAQs9cYPbNiLzZmtl1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjyA1vJehj9HKMwQAC1WVUCtQLMJd1OM/pK3x4QrImUSCh9YhT
+	tK4NL7KYT5UIEzn+I9h24ol0vmnTzjkZ45hmfTFF7UC4pObGS0brlQcH/1z/H6VNr96BfwCsnDk
+	IYaOeSMbWZlXSfnyKT+kS75+b9SBZxF2UQ+D1gA==
+X-Gm-Gg: ASbGncuc3YdZSXx6JRGqRkVFirpjUEwQdFRK6OpNawitj089PfMJokUpw9xdPc/pAOl
+	gpheJA+MFaNZANqZnNu2YaBs+Bprbb5V52EdKbk8MWNo85Tjb/d5/ploEUtkBV9i33lrlutmK/I
+	YpylbT66A1ofWWjF+tGw4ATaY=
+X-Google-Smtp-Source: AGHT+IECSUjDmuckOfBIScHTJxj3yWladB++b87BYQiYMUU7S/HWB3IxwAUCkCTuDfYz1SRdlxZmyMh2LjW4TJKLUvU=
+X-Received: by 2002:a05:6e02:b4c:b0:3d9:6485:39f0 with SMTP id
+ e9e14a558f8ab-3da7e1e7848mr39704745ab.9.1746792240369; Fri, 09 May 2025
+ 05:04:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABGWkvrkVLRocFsZs9JLni4KDZCDyYDZxMzwA9AzAwipmUyTzQ@mail.gmail.com>
-X-CM-TRANSID:Ms8vCgC3N_Ke7h1oXnOrAA--.65461S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXw1kGFWrCr1furWUWr13CFg_yoW5WrWUpa
-	4SkayqyrWDJFy8GF9Fyr45ta40qw4DZay8Jw1Ygr90v34YqF15JFW7Kry5KFyUG3yfC39r
-	tay5Xw1ku3WYvFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j4c_fUUUUU=
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCxNIZWgd37UzoAAAs5
+References: <20250508142842.1496099-2-rkrcmar@ventanamicro.com>
+ <20250508142842.1496099-4-rkrcmar@ventanamicro.com> <CAAhSdy2nOBndtJ46yHbdjc2f0cNoPV3kjXth-q57cXt8jZA6bQ@mail.gmail.com>
+ <D9RHYLQHCFP1.24E5305A5VDZH@ventanamicro.com>
+In-Reply-To: <D9RHYLQHCFP1.24E5305A5VDZH@ventanamicro.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Fri, 9 May 2025 17:33:49 +0530
+X-Gm-Features: AX0GCFus3LXSrSKkS2ynuu10JrArNnS8WLRjt1i8r_eLHo_szj5ZQVIc9wOXqvw
+Message-ID: <CAAhSdy2U_LsoVm=4jdZQWdOkPkCH8c2bk6rsts8rY+ZGKwVuUg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] RISC-V: KVM: add KVM_CAP_RISCV_MP_STATE_RESET
+To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 08, 2025 at 10:32:10AM +0200, Dario Binacchi wrote:
-> Hello Shawn,
-> 
-> On Mon, May 5, 2025 at 9:52 AM Abel Vesa <abel.vesa@linaro.org> wrote:
+On Fri, May 9, 2025 at 2:16=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar=
+@ventanamicro.com> wrote:
+>
+> 2025-05-09T12:25:24+05:30, Anup Patel <anup@brainfault.org>:
+> > On Thu, May 8, 2025 at 8:01=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkr=
+cmar@ventanamicro.com> wrote:
+> >>
+> >> Add a toggleable VM capability to modify several reset related code
+> >> paths.  The goals are to
+> >>  1) Allow userspace to reset any VCPU.
+> >>  2) Allow userspace to provide the initial VCPU state.
+> >>
+> >> (Right now, the boot VCPU isn't reset by KVM and KVM sets the state fo=
+r
+> >>  VCPUs brought up by sbi_hart_start while userspace for all others.)
+> >>
+> >> The goals are achieved with the following changes:
+> >>  * Reset the VCPU when setting MP_STATE_INIT_RECEIVED through IOCTL.
 > >
+> > Rather than using separate MP_STATE_INIT_RECEIVED ioctl(), we can
+> > define a capability which when set, the set_mpstate ioctl() will reset =
+the
+> > VCPU upon changing VCPU state from RUNNABLE to STOPPED state.
+>
+> Yeah, I started with that and then realized it has two drawbacks:
+>
+>  * It will require larger changes in userspaces, because for
+>    example QEMU now first loads the initial state and then toggles the
+>    mp_state, which would incorrectly reset the state.
+>
+>  * It will also require an extra IOCTL if a stopped VCPU should be
+>    reset
+>     1) STOPPED -> RUNNING (=3D reset)
+>     2) RUNNING -> STOPPED (VCPU should be stopped)
+>    or if the current state of a VCPU is not known.
+>     1) ???     -> STOPPED
+>     2) STOPPED -> RUNNING
+>     3) RUNNING -> STOPPED
+>
+> I can do that for v3 if you think it's better.
+
+Okay, for now keep the MP_STATE_INIT_RECEIVED ioctl()
+
+>
+> >>  * Preserve the userspace initialized VCPU state on sbi_hart_start.
+> >>  * Return to userspace on sbi_hart_stop.
 > >
-> > On Thu, 24 Apr 2025 08:21:30 +0200, Dario Binacchi wrote:
-> > > This version keeps the version v9 patches that can be merged and
-> > > removes the patches that will need to be modified in case Peng's
-> > > PR https://github.com/devicetree-org/dt-schema/pull/154 is accepted.
-> > > The idea is to speed up the merging of the patches in the series
-> > > that have already been reviewed and are not dependent on the
-> > > introduction of the assigned-clocks-sscs property, and postpone
-> > > the patches for spread spectrum to a future series once it becomes
-> > > clear what needs to be done.
-> > >
-> > > [...]
+> > There is no userspace involvement required when a Guest VCPU
+> > stops itself using SBI HSM stop() call so STRONG NO to this change.
+>
+> Ok, I'll drop it from v3 -- it can be handled by future patches that
+> trap SBI calls to userspace.
+>
+> The lack of userspace involvement is the issue.  KVM doesn't know what
+> the initial state should be.
+
+The SBI HSM virtualization does not need any KVM userspace
+involvement.
+
+When a VCPU stops itself using SBI HSM stop(), the Guest itself
+provides the entry address and argument when starting the VCPU
+using SBI HSM start() without any KVM userspace involvement.
+
+In fact, even at Guest boot time all non-boot VCPUs are brought-up
+using SBI HSM start() by the boot VCPU where the Guest itself
+provides entry address and argument without any KVM userspace
+involvement.
+
+>
+> >>  * Don't make VCPU reset request on sbi_system_suspend.
 > >
-> > Applied, thanks!
+> > The entry state of initiating VCPU is already available on SBI system
+> > suspend call. The initiating VCPU must be resetted and entry state of
+> > initiating VCPU must be setup.
+>
+> Userspace would simply call the VCPU reset and set the complete state,
+> because the userspace exit already provides all the sbi information.
+>
+> I'll drop this change.  It doesn't make much sense if we aren't fixing
+> the sbi_hart_start reset.
+>
+> >> The patch is reusing MP_STATE_INIT_RECEIVED, because we didn't want to
+> >> add a new IOCTL, sorry. :)
+> >>
+> >> Signed-off-by: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.com>
+> >> ---
+> >> If you search for cap 7.42 in api.rst, you'll see that it has a wrong
+> >> number, which is why we're 7.43, in case someone bothers to fix ARM.
+> >>
+> >> I was also strongly considering creating all VCPUs in RUNNABLE state -=
+-
+> >> do you know of any similar quirks that aren't important, but could be
+> >> fixed with the new userspace toggle?
 > >
-> > [01/19] dt-bindings: clock: imx8mm: add VIDEO_PLL clocks
-> >         commit: 20e5d201b5d8f830e702d7d183f6b1b246b78d8a
-> > [02/19] clk: imx8mm: rename video_pll1 to video_pll
-> >         commit: 26a33196b5b68cf199b6c4283a254aa92d2aaf4b
-> > [03/19] dt-bindings: clock: imx8mp: add VIDEO_PLL clocks
-> >         commit: 2d50415e2457c6f6621c2faa3b01b11150fb9c67
-> > [04/19] clk: imx8mp: rename video_pll1 to video_pll
-> >         commit: 21bb969f608cefd8d847cf6eb50a193d9f1fbb87
-> > [05/19] dt-bindings: clock: imx8m-anatop: add oscillators and PLLs
-> >         commit: 2ba124053687c933031a6dc5b2e16ceaca250934
-> > [10/19] clk: imx: add hw API imx_anatop_get_clk_hw
-> >         commit: 17e3c1a272d97e49b4f3fbfe1f1b889e120d2be8
-> > [11/19] clk: imx: add support for i.MX8MM anatop clock driver
-> >         commit: 3cbc38cf42ca42d2dc9a93c949e0381ff919df71
-> > [12/19] clk: imx: add support for i.MX8MN anatop clock driver
-> >         commit: 80badb1d7264e83b512475898e7459f464a009c9
-> > [13/19] clk: imx: add support for i.MX8MP anatop clock driver
-> >         commit: 4c82bbe8b5437c7f16b2891ce33210c0f1410597
-> > [14/19] clk: imx8mp: rename ccm_base to base
-> >         commit: 1a77907dbbecfbe5e6a1aec28afd49a1dc184b7a
-> > [16/19] dt-bindings: clock: imx8m-clock: add PLLs
-> >         commit: 6a55647af3334f1d935ece67de4a838a864b53fc
-> >
-> 
-> Please check the remaining patches, as they are required for correctly
-> building the
-> ones merged by Abel. The kernel test robot has already reported build errors.
+> > Upon creating a VM, only one VCPU should be RUNNABLE and all
+> > other VCPUs must remain in OFF state. This is intentional because
+> > imagine a large number of VCPUs entering Guest OS at the same
+> > time. We have spent a lot of effort in the past to get away from this
+> > situation even in the host boot flow. We can't expect user space to
+> > correctly set the initial MP_STATE of all VCPUs. We can certainly
+> > think of some mechanism using which user space can specify
+> > which VCPU should be runnable upon VM creation.
+>
+> We already do have the mechanism -- the userspace will set MP_STATE of
+> VCPU 0 to STOPPED and whatever VCPUs it wants as boot with to RUNNABLE
+> before running all the VCPUs for the first time.
 
-I assume the remaining patches are DTS ones?  If so, I do not see how
-clock drivers would require DTS change to build correctly.  Do you have
-a pointer to the reported build errors?
+Okay, nothing to be done on this front.
 
-My understanding about the build dependency is the opposite, i.e. the
-DTS changes require clock defines merged by Abel to build?  In that
-case, I suggest Abel pick up the whole series with my ack on DTS changes.
+>
+> The userspace must correctly set the initial MP state anyway, because a
+> resume will want a mp_state that a fresh boot.
+>
+> > The current approach is to do HSM state management in kernel
+> > space itself and not rely on user space. Allowing userspace to
+> > resetting any VCPU is fine but this should not affect the flow for
+> > SBI HSM, SBI System Reset, and SBI System Suspend.
+>
+> Yes, that is the design I was trying to change.  I think userspace
+> should have control over all aspects of the guest it executes in KVM.
 
-Acked-by: Shawn Guo <shawnguo@kernel.org>
+For SBI HSM, the kernel space should be the only entity managing.
 
-Alternatively, I can pick up the remaining patches after clock changes
-land on mainline (the next -rc1).
+>
+> Accelerating SBI in KVM is good, but userspace should be able to say how
+> the unspecified parts are implemented.  Trapping to userspace is the
+> simplest option.  (And sufficient for ecalls that are not a hot path.)
+>
 
-Shawn
+For the unspecified parts, we have KVM exits at appropriate places
+e.g. SBI system reset, SBI system suspend, etc.
 
+Regards,
+Anup
