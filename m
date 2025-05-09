@@ -1,192 +1,169 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C76A23D2AF
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F4226FD95
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746776006; cv=none; b=nTPRKyhk3XAVCJJRlRfxpBJfZMLlkhmreWu7cluj3aCEoBWeXsKriLX1E6/S+i9hLTrpi6P3ocMYD8Xdhw0M7+BoYwz9dRnvUZVcGO+NeV2Gqz21yaw27IhSOCNPMsbpvpy0v2UeCy6ZVsAj+gVelgk4pkv7Rcj5u2qoVRAyR3M=
+	t=1746776027; cv=none; b=ft9sXkiCxJ7tQQqRZRvDcKLwCG+StuMMy9xGW1MWjuDY2jP6B4BRDb6D8k5K2PQU3WjQSzwE6CSXiWt4yNCk1D5SkoNZD4bBCw5whZQjH2FHu+OxwPFUEyg7pQ0/SIfyvUgF7ddBAqyzaj45E7+c1za4qtVIHIeuOlywp7jwEjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746776006; c=relaxed/simple;
-	bh=yRcMZWWIn9IwWXeqtxsIt7Ke1M1EkjF7RXIEeGnVKIQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CwcZLxFxrP6gC0f62o30IUAMbZKro6A7XvWgWp3v5hz6kmFCBCQCC/ZMwvCstpdYInzMdgxN1KHc/Vwvy+aGY3RBIY5hG0Tro/DbO8lthTmXuDO9pKbCLaChG2jVjkmpVSFIT0fz0sOX1Q4A7kDmzu7JB9QAv51Ki6/GxmOHD9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zv11f21THz4f3lVL
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:32:54 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 58E971A07C0
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:33:20 +0800 (CST)
-Received: from hulk-vt.huawei.com (unknown [10.67.174.121])
-	by APP3 (Coremail) with SMTP id _Ch0CgCHJsG1rx1oiZnNLg--.58746S2;
-	Fri, 09 May 2025 15:33:20 +0800 (CST)
-From: Chen Ridong <chenridong@huaweicloud.com>
-To: akpm@linux-foundation.org,
-	paulmck@kernel.org,
-	bigeasy@linutronix.de,
-	legion@kernel.org,
-	roman.gushchin@linux.dev,
-	brauner@kernel.org,
-	tglx@linutronix.de,
-	frederic@kernel.org,
-	peterz@infradead.org,
-	oleg@redhat.com,
-	joel.granados@kernel.org,
-	viro@zeniv.linux.org.uk,
-	lorenzo.stoakes@oracle.com,
-	avagin@google.com,
-	mengensun@tencent.com,
-	linux@weissschuh.net,
-	jlayton@kernel.org,
-	ruanjinjie@huawei.com,
-	kees@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	lujialin4@huawei.com,
-	chenridong@huaweicloud.com
-Subject: [RFC next v2 0/5] ucount: add rlimit cache for ucount
-Date: Fri,  9 May 2025 07:20:49 +0000
-Message-Id: <20250509072054.148257-1-chenridong@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1746776027; c=relaxed/simple;
+	bh=FWyuxhoonZwohLikNd7BSVrApuwXrx4iVj+WWJE6P+I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=apAvbpAwg08LWo+hNblmQLZyblnkpv7bxxmpsQUkjpKxJKeqYLLUqpfu6ouP1bbRsrHMQQKBxV2N0IxFIka6MH94EdtrN8rGHuNV7SRCL6FyKUhrtmpg1FM3YtDjblS6t4/MzDTrN1HkQUy5p8BOiJ/GdZLSzKxfn+uqtajixR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NqMo78rL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NqMo78rL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746776024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=VpG7PvH0UplrJjw105ZtScpJjsINX/Nh8S8T5pYtBeg=;
+	b=NqMo78rLEop9adMqbY1hkrc5avVgSNUkKvVLpEJO6C8HANhn16uORfmy6TbKeQETU6xMw6
+	Bw/uZXE3PvDiNalqeSmU8e9RB/AOjrqBJtc1e6j81lHOmgK1WQwyhHyPnCahe9fSS+8XkT
+	Mu6N3NUVb6hNQIquUmg9JC4zt3uLn+4=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-614-Ch1BYn7kMLaIE58Cbj6CqQ-1; Fri, 09 May 2025 03:33:42 -0400
+X-MC-Unique: Ch1BYn7kMLaIE58Cbj6CqQ-1
+X-Mimecast-MFC-AGG-ID: Ch1BYn7kMLaIE58Cbj6CqQ_1746776022
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a0b2e56da1so727164f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 00:33:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746776021; x=1747380821;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VpG7PvH0UplrJjw105ZtScpJjsINX/Nh8S8T5pYtBeg=;
+        b=RZX4IPCX9XH/QDqLMRLO8k1YO+m4lUNruMfub+Cq0s4v3Dt+giasP8MpGzOsnCKOsP
+         tuPLX099lQBbYmIDMF4fqg7W5LFSEjtRj2NgGgICfASlr+VCeP0aHDTcQIgKygZVVkns
+         KnR3rYbqy0XCuqhZhBc/YvxL+dhU180e28gokgnHIgcQqxouMnOGQf4YW4C3Gm6N4HH4
+         80Gj/hXCct1wnPIhP7bmatxH6aSiGepRKIBHbhoLU5AjEu5+XyUFBp9ibhAPJLAV39R5
+         PPnVZaE0DmK588pKu3/GVMHE8LwAxZCxNLWI/MoEZ3kBbuZzin/3wpvHnMwkLran9zsG
+         73Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCV/dRa0aVbNN/UeaOAY9od0dU6nP6e0LUgW0hGbH7BUZR0/F87ONmiuYBL8l7XWqAYrco/ZEJPvspFbDiE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8fjdMJNKXppvVFUVzkA6dgt9SepQGfmt/Dwk6u9zCD25HNkTn
+	6EQjRXjrDl+9K2m9mKMmzNaT/5fYuk7i/RoVIc4OCq9TTVnE1AdUTtPWjitTEON5tgaU8eIB4q2
+	MsgzTmXWejov4HiGzefqwnSa0fKE8FJo2IWxfcZKmoO3CtIuu1DJr3EgbTh1TkA==
+X-Gm-Gg: ASbGncsL0fsxKoiJ9cmUNrLjJprcm8DVqJIGvfdbTVWldsdFcHcaPRMC3IGEHesu6K/
+	UOofGqhUcwLHzhAAug67aiZqjnTCucVMh02LsMC4rI82ZoRY0ZmHpEg0QAYjkjQRErSOuqEPHr2
+	n7h9sYASPxOkB4hDd9kmyIdfAe3jzivIClG+os0aXy/P36ae/NREYu2Zs7kGRPEYlSJodriyobb
+	+Ti4bNXCgl1Ewb5TPIsHqwbxYwIpGuc3SceQGoMjh/pMxL624gWSqLroq1QTo51HrqCGamA517S
+	1PVXb2FQ3UVndAawLEH1AIASA6FL9VauZrxBpc2AaA8qBooX8Ia2Kesrr2PK7xKzCWkdIgLUsnG
+	krMB02UU9vOKtM46roQUE8WHovswYmTLm3Wf9oWk=
+X-Received: by 2002:a05:6000:2ce:b0:3a0:b7e7:1076 with SMTP id ffacd0b85a97d-3a1f646d9ecmr1609195f8f.11.1746776021675;
+        Fri, 09 May 2025 00:33:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFLJJiTiA7hsFL7Ee2bBJr6joX3bZAuOsH7kejhhjJDWeCmlPlWcMLLBoFlmQYM8P+6GnsmoQ==
+X-Received: by 2002:a05:6000:2ce:b0:3a0:b7e7:1076 with SMTP id ffacd0b85a97d-3a1f646d9ecmr1609184f8f.11.1746776021306;
+        Fri, 09 May 2025 00:33:41 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f45:5500:8267:647f:4209:dedd? (p200300d82f4555008267647f4209dedd.dip0.t-ipconnect.de. [2003:d8:2f45:5500:8267:647f:4209:dedd])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32835dsm62966135e9.6.2025.05.09.00.33.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 00:33:40 -0700 (PDT)
+Message-ID: <d91f6f10-a17e-4bbc-94a1-41b43b41c1ec@redhat.com>
+Date: Fri, 9 May 2025 09:33:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgCHJsG1rx1oiZnNLg--.58746S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAr45Ww17GFWfGrWxWFWfKrg_yoWrCr1xpr
-	WSy3sxJr4kJF17Jr1S934kX34Sg3yrAF4UGFs5C34fA3Z8GFyFyr1fta4FvryDKrZ3Ja4j
-	qrWjg3yDCa1qvaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcS
-	sGvfC2KfnxnUUI43ZEXa7sREhiSPUUUUU==
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] selftests/mm: add simple VM_PFNMAP tests based on
+ mmap'ing /dev/mem
+To: Dev Jain <dev.jain@arm.com>, linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Ingo Molnar
+ <mingo@redhat.com>, Peter Xu <peterx@redhat.com>
+References: <20250508222041.1647645-1-david@redhat.com>
+ <ecd0bc7e-8af5-40d6-b118-1604d2851f6b@arm.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <ecd0bc7e-8af5-40d6-b118-1604d2851f6b@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The will-it-scale test case signal1 [1] has been observed. and the test
-results reveal that the signal sending system call lacks linearity.
-To further investigate this issue, we initiated a series of tests by
-launching varying numbers of dockers and closely monitored the throughput
-of each individual docker. The detailed test outcomes are presented as
-follows:
+On 09.05.25 07:35, Dev Jain wrote:
+> 
+> 
+> On 09/05/25 3:50 am, David Hildenbrand wrote:
+>> Let's test some basic functionality using /dev/mem. These tests will
+>> implicitly cover some PAT (Page Attribute Handling) handling on x86.
+>>
+>> These tests will only run when /dev/mem access to the first two pages
+>> in physical address space is possible and allowed; otherwise, the tests
+>> are skipped.
+> 
 
-	| Dockers     |1      |4      |8      |16     |32     |64     |
-	| Throughput  |380068 |353204 |308948 |306453 |180659 |129152 |
+Hi Dev,
 
-The data clearly demonstrates a discernible trend: as the quantity of
-dockers increases, the throughput per container progressively declines.
-In-depth analysis has identified the root cause of this performance
-degradation. The ucouts module conducts statistics on rlimit, which
-involves a significant number of atomic operations. These atomic
-operations, when acting on the same variable, trigger a substantial number
-of cache misses or remote accesses, ultimately resulting in a drop in
-performance.
+> Some generic comments:
+> 1. I think you should also update .gitignore?
 
-Notably, even though a new user_namespace is created upon docker startup,
-the problem persists. This is because all these dockers share the same
-parent node, meaning that rlimit statistics continuously modify the same
-atomic variable.
+I wonder if we could add a checkpatch warning for that, it keeps on 
+happening :)
 
-Currently, when incrementing a specific rlimit within a child user
-namespace by 1, the corresponding rlimit in the parent node must also be
-incremented by 1. Specifically, if the ucounts corresponding to a task in
-Docker B is ucount_b_1, after incrementing the rlimit of ucount_b_1 by 1,
-the rlimit of the parent node, init_ucounts, must also be incremented by 1.
-This operation should be ensured to stay within the limits set for the
-user namespaces.
-
-	init_user_ns                             init_ucounts
-	^                                              ^
-	|                        |                     |
-	|<---- usr_ns_a(docker A)|usr_ns_a->ucount---->|
-	|                        |                     |
-	|<---- usr_ns_b(docker B)|usr_ns_a->ucount---->|
-					^
-					|
-					|
-					|
-					ucount_b_1
-
-What is expected is that dockers operating within separate namespaces
-should remain isolated and not interfere with one another. Regrettably,
-the current signal system call fails to achieve this desired level of
-isolation.
-
-Proposal:
-
-To address the aforementioned issues, the concept of implementing a cache
-for each namespace's rlimit has been proposed. If a cache is added for
-each user namespace's rlimit, a certain amount of rlimits can be allocated
-to a particular namespace in one go. When resources are abundant, these
-resources do not need to be immediately returned to the parent node. Within
-a user namespace, if there are available values in the cache, there is no
-need to request additional resources from the parent node.
-
-	init_user_ns                             init_ucounts
-	^                                              ^
-	|                        |                     |
-	|<---- usr_ns_a(docker A)|usr_ns_a->ucount---->|
-	|                        |                     |
-	|<---- usr_ns_b(docker B)|usr_ns_b->ucount---->|
-			^		^
-			|		|
-			cache_rlimit--->|
-					|
-					ucount_b_1
+> 2. You can use ksft_exit_fail_perror() for wherever you want to print
+> strerror(errno).
 
 
-The ultimate objective of this solution is to achieve complete isolation
-among namespaces. After applying this patch set, the final test results
-indicate that in the signal1 test case, the performance does not
-deteriorate as the number of containers increases. This effectively meets
-the goal of linear scalability.
+Makes sense, thanks!
 
-	| Dockers     |1      |4      |8      |16     |32     |64     |
-	| Throughput  |381809 |382284 |380640 |383515 |381318 |380120 |
-
-Challenges:
-
-When checking the pending signals in the parent node using the command
- cat /proc/self/status | grep SigQ, the retrieved value includes the
-cached signal counts from its child nodes. As a result, the SigQ value
-in the parent node fails to accurately and instantaneously reflect the
-actual number of pending signals.
-
-	# cat /proc/self/status | grep SigQ
-	SigQ:	16/6187667
-
-TODO:
-
-Add cache for the other rlimits.
-
-[1] https://github.com/antonblanchard/will-it-scale/blob/master/tests/
-
-Chen Ridong (5):
-  user_namespace: add children list node
-  usernamespace: make usernamespace rcu safe
-  user_namespace: add user_ns iteration helper
-  uounts: factor out __inc_rlimit_get_ucounts/__dec_rlimit_put_ucounts
-  ucount: add rlimit cache for ucount
-
- include/linux/user_namespace.h |  23 ++++-
- kernel/signal.c                |   2 +-
- kernel/ucount.c                | 181 +++++++++++++++++++++++++++++----
- kernel/user.c                  |   2 +
- kernel/user_namespace.c        |  60 ++++++++++-
- 5 files changed, 243 insertions(+), 25 deletions(-)
 
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
