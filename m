@@ -1,99 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB86D290D9B;
-	Fri,  9 May 2025 12:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E03139B;
+	Fri,  9 May 2025 12:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746794866; cv=none; b=oJdkskxKbbWbIUQJ3u9GeGxkJl5gyJb9XsU0SqORu6tR1sEuWYGM+YrkdRxdCY4vgbpNKRhjij9Z5S1q/SPKjSPKu7TJ8yZpYmy8oQnFHzEh+H19AFThrxE609YOXyjsn9VKNh/eWS+d7q2q57+2izV6SojjWjIUXOY4pCa+DN0=
+	t=1746794865; cv=none; b=pm1sIFzYNpzmuDK0w+P2blz7mFUESX9zUSHAQeKL43czNSeoRLnwL6S9PFFZ0J8DyHhSU+mNYWZ8IZYw8DLocLFsYijRXjECf0wwm7PNKKzv105UOlVGz4G5SNfjw0UIIsC2nc0+J+HPBuWFxnA8crMn2TWmNcpUBNKUMFsx2Oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746794866; c=relaxed/simple;
-	bh=Sgl4dmv2d30oYMAuM3YMqPWMtQeY4TyzuoWF79Ce3xA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gfIz1b5ogauPk3lYyeCqTAFZ/319zmdG7Pgq742+YxHN+5JDMNAwTIPApevij7564wOFtSsDRcT/XzgEmvPPgQlNp4d1lzAO2wNf7RG/JobUAt1Ptf7oAD40m9eXEDxrwFlJcfuSVEvHCcEsGvun88rO7R9EgFqtmHT+azBOKhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D4DBC4CEEF;
-	Fri,  9 May 2025 12:47:38 +0000 (UTC)
-Date: Fri, 9 May 2025 13:47:36 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Ankit Agrawal <ankita@nvidia.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Oliver Upton <oliver.upton@linux.dev>,
-	Sean Christopherson <seanjc@google.com>,
-	Marc Zyngier <maz@kernel.org>,
-	"joey.gouly@arm.com" <joey.gouly@arm.com>,
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
-	"shahuang@redhat.com" <shahuang@redhat.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"david@redhat.com" <david@redhat.com>,
-	Aniket Agashe <aniketa@nvidia.com>, Neo Jia <cjia@nvidia.com>,
-	Kirti Wankhede <kwankhede@nvidia.com>,
-	"Tarun Gupta (SW-GPU)" <targupta@nvidia.com>,
-	Vikram Sethi <vsethi@nvidia.com>, Andy Currid <acurrid@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>,
-	Zhi Wang <zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	Uday Dhoke <udhoke@nvidia.com>, Dheeraj Nigam <dnigam@nvidia.com>,
-	Krishnakant Jaju <kjaju@nvidia.com>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-	"sebastianene@google.com" <sebastianene@google.com>,
-	"coltonlewis@google.com" <coltonlewis@google.com>,
-	"kevin.tian@intel.com" <kevin.tian@intel.com>,
-	"yi.l.liu@intel.com" <yi.l.liu@intel.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"gshan@redhat.com" <gshan@redhat.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"ddutile@redhat.com" <ddutile@redhat.com>,
-	"tabba@google.com" <tabba@google.com>,
-	"qperret@google.com" <qperret@google.com>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 1/1] KVM: arm64: Allow cacheable stage 2 mapping using
- VMA flags
-Message-ID: <aB35aOZzdKZKMOht@arm.com>
-References: <aAjci3rddHt_R_x3@arm.com>
- <20250423130323.GE1648741@nvidia.com>
- <SA1PR12MB71996988916E1FB15149DD13B0802@SA1PR12MB7199.namprd12.prod.outlook.com>
- <aBDTpu_ACoXAPoE2@arm.com>
- <20250429141437.GC2260709@nvidia.com>
- <aBD4RsUZp-BmcLwC@arm.com>
- <20250429164430.GD2260709@nvidia.com>
- <aBEV5gxYoDFct9PC@arm.com>
- <20250429181926.GE2260709@nvidia.com>
- <SA1PR12MB71992BC382DA4ED506100590B088A@SA1PR12MB7199.namprd12.prod.outlook.com>
+	s=arc-20240116; t=1746794865; c=relaxed/simple;
+	bh=lE1yrC7THVc4nzkqlGbFuHn6zVttoh/FamryFZZzE0U=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XM2HDFI0l9VWHewCjhCQHcljFBbCbNq+PzU+hMYwx/d+0E38lE+po6AGaClVj7E5T4NIdN+HyK3/rYkJB8tjl+YNaQOPjaMgYe5WfL7bA7Lrma8PwyZTEhxC2Wa8lqSWixAddkEtxtFiouPKgaROx1VTax+XV4e2rn9Tg2UFwLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DywruXM1; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DywruXM1"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5f4d0da2d2cso3648728a12.3;
+        Fri, 09 May 2025 05:47:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746794862; x=1747399662; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k8ZIx9Wf+0ssahSZtddtwRmi5eBnM6hzKyzjSP+8iMc=;
+        b=DywruXM19zzntBw4f3P6zpkGB9mxsNn8YmdLmXfjJPDydvfUkGsQvth6VjQ8jqEuGp
+         wlI638ZLUIfqx7ikttLEiD6RhOO/nOHccAV4/Zw6LFXQ5qOKf7mMfbfzHG7HOuW4QN9B
+         kHZdWB2gTmQajS3v2AEGuXUlm4WXAx1kZlAJMF33ksRc2bpf0CL49sFfQHHmxdvlT2AZ
+         x54wyd2GbW9mB7UFQysATTFBmr8sYt+jiuE+4d8+2xZaJ0NZ3NFz8P0ewulhOqeRoVxK
+         veAY/X8LDTKGM2QoEiUKHG9fVv6SWoU4GdWB7l/M/waROiPkvkN2eQ47kb2RDCb9OpGe
+         b8TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746794862; x=1747399662;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=k8ZIx9Wf+0ssahSZtddtwRmi5eBnM6hzKyzjSP+8iMc=;
+        b=AQFITubvis44RDXlwpEMyqRaifAhPyctvKKSN0reRp8XLJh8S3RY+l2BXaVrU85l3D
+         KdVXVgRFN3iz+Xzp2/7f9vCzsTcqBQTIYPRuNFbqL3VBfKxP6etuVZol9CPe1zg6K/lz
+         BDi5yio28diqu72VC7uN7PHN9FcZqILd9mu9VYuDh4+Qg2tLqo7a7aQxbfn2Z3CrpeeU
+         +zN1GU7epyXyRKGlpBj9C+e2Dddv/gnOCfZ9JdwBT4EqtYfAvbMRXUVgLRE/cmBLFBOl
+         BfYnZ9qbPktTMZYgQqijTvDTAPuUNBOqyuTuxpL5VYst6pwyXlXqNoHxFShaELpvqz0d
+         LmGg==
+X-Forwarded-Encrypted: i=1; AJvYcCU4TbBwT0FnvzK+RkPYD5qxJObgIo8q2fRiMWDNQdmUfBKcrTKDRCza54pQQKRwa+Uqy93nHIiH/gQ=@vger.kernel.org, AJvYcCVhhIux+MrfZ38w9B2sww2sToIIHIv3gYxjpY5QoOXxrKo3rcj3ljy8QSjCEe3C95DkE05AQUvG06T2w13b@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjCilHEpTaj123MorB+oJ09NMotm6vOtePKzCyCi4zijqwsMN7
+	4MsWf1Hh0DUgtB7axWwibe4xN6P70ikBRJm6IQZ32N5kEFg0UwU/Pbrv8ny7
+X-Gm-Gg: ASbGnctW3emXwqtmhM+GPxYMiiIIngN5ukszlfmoMhA5UNVfxY2hJ+3ssQmI1RCbgNo
+	6tqfhR1NdUGy3VW5v9S0+ea0jwrYIHWDwijfJt8GZO4Gs+G2odk8nbLstTH84K4ylrM0vpTULbY
+	31Cn/YtIxeiCV/y/FaYiQ96Mv9zOYHMZ49ENbhcBW6sTjkO0BIvLBg+Jw59/TfX908/yaWvvsAd
+	zmMSazNUb8krHFDM0WpNlR4qrp6DLfZSP2fbORr6c5MfHSEi4dZ5Ufk4JJ1XGmsiaJwY+gDPlRH
+	3s+SUiiauAr84fEkXhyyJ9yTqDJ+RKLQUb5GSSh7
+X-Google-Smtp-Source: AGHT+IGSI8Tnw7s989vnn2nfEYRSiAHvuBsmKY5a3i+2m1Q45ERIvfCDzWPGQm8KGBi9egfzmyVk7g==
+X-Received: by 2002:a05:6402:2115:b0:5fb:2105:c62c with SMTP id 4fb4d7f45d1cf-5fca0731354mr2818289a12.3.1746794861819;
+        Fri, 09 May 2025 05:47:41 -0700 (PDT)
+Received: from [10.5.0.2] ([45.94.208.210])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9cc4f790sm1335508a12.38.2025.05.09.05.47.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 05:47:41 -0700 (PDT)
+Message-ID: <310975db928bbd57411da9ff18746df8836fe642.camel@gmail.com>
+Subject: Re: [PATCH] iio: adc: ad4851: fix ad4858 chan pointer handling
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 09 May 2025 13:47:41 +0100
+In-Reply-To: <20250509101657.6742-1-antoniu.miclaus@analog.com>
+References: <20250509101657.6742-1-antoniu.miclaus@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SA1PR12MB71992BC382DA4ED506100590B088A@SA1PR12MB7199.namprd12.prod.outlook.com>
 
-On Wed, May 07, 2025 at 03:26:05PM +0000, Ankit Agrawal wrote:
-> >> Unless FWB implies CTR_EL0.DIC (AFAIK, it doesn't) we may be
-> >> restricting some CPUs.
-> >
-> > Yes, it will further narrow the CPUs down.
-> > 
-> > However, we just did this discussion for BBML2 + SMMUv3 SVA. I think
-> > the same argument holds. If someone is crazy enough to build a CPU
-> > with CXLish support and uses an old core without DIC, IDC and S2FWB
-> > then they are going to have a bunch of work to fix the SW to support
-> > it. Right now we know of no system that exists like this..
-> >
-> > Jason
-> 
-> Catalin, do you agree if I can go ahead and add the check for
-> ARM64_HAS_CACHE_DIC?
+On Fri, 2025-05-09 at 13:16 +0300, Antoniu Miclaus wrote:
+> The pointer returned from ad4851_parse_channels_common() is incremented
+> internally as each channel is populated. In ad4858_parse_channels(),
+> the same pointer was further incremented while setting ext_scan_type
+> fields for each channel. This resulted in indio_dev->channels being set
+> to a pointer past the end of the allocated array, potentially causing
+> memory corruption or undefined behavior.
+>=20
+> Fix this by iterating over the channels using an explicit index instead
+> of incrementing the pointer. This preserves the original base pointer
+> and ensures all channel metadata is set correctly.
+>=20
+> Fixes: 6250803fe2ec ("iio: adc: ad4851: add ad485x driver")
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> ---
 
-As long as we don't leave out some hardware that has FWB but not DIC,
-that's fine by me.
+LGTM
 
--- 
-Catalin
+Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+
+> =C2=A0drivers/iio/adc/ad4851.c | 14 +++++++-------
+> =C2=A01 file changed, 7 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/iio/adc/ad4851.c b/drivers/iio/adc/ad4851.c
+> index 98ebc853db79..f1d2e2896f2a 100644
+> --- a/drivers/iio/adc/ad4851.c
+> +++ b/drivers/iio/adc/ad4851.c
+> @@ -1034,7 +1034,7 @@ static int ad4858_parse_channels(struct iio_dev
+> *indio_dev)
+> =C2=A0	struct device *dev =3D &st->spi->dev;
+> =C2=A0	struct iio_chan_spec *ad4851_channels;
+> =C2=A0	const struct iio_chan_spec ad4851_chan =3D AD4858_IIO_CHANNEL;
+> -	int ret;
+> +	int ret, i =3D 0;
+> =C2=A0
+> =C2=A0	ret =3D ad4851_parse_channels_common(indio_dev, &ad4851_channels,
+> =C2=A0					=C2=A0=C2=A0 ad4851_chan);
+> @@ -1042,15 +1042,15 @@ static int ad4858_parse_channels(struct iio_dev
+> *indio_dev)
+> =C2=A0		return ret;
+> =C2=A0
+> =C2=A0	device_for_each_child_node_scoped(dev, child) {
+> -		ad4851_channels->has_ext_scan_type =3D 1;
+> +		ad4851_channels[i].has_ext_scan_type =3D 1;
+> =C2=A0		if (fwnode_property_read_bool(child, "bipolar")) {
+> -			ad4851_channels->ext_scan_type =3D
+> ad4851_scan_type_20_b;
+> -			ad4851_channels->num_ext_scan_type =3D
+> ARRAY_SIZE(ad4851_scan_type_20_b);
+> +			ad4851_channels[i].ext_scan_type =3D
+> ad4851_scan_type_20_b;
+> +			ad4851_channels[i].num_ext_scan_type =3D
+> ARRAY_SIZE(ad4851_scan_type_20_b);
+> =C2=A0		} else {
+> -			ad4851_channels->ext_scan_type =3D
+> ad4851_scan_type_20_u;
+> -			ad4851_channels->num_ext_scan_type =3D
+> ARRAY_SIZE(ad4851_scan_type_20_u);
+> +			ad4851_channels[i].ext_scan_type =3D
+> ad4851_scan_type_20_u;
+> +			ad4851_channels[i].num_ext_scan_type =3D
+> ARRAY_SIZE(ad4851_scan_type_20_u);
+> =C2=A0		}
+> -		ad4851_channels++;
+> +		i++;
+> =C2=A0	}
+> =C2=A0
+> =C2=A0	indio_dev->channels =3D ad4851_channels;
