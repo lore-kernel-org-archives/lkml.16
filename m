@@ -1,78 +1,75 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA4A22F77E
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD5A2248B5
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746804991; cv=none; b=G3cK6zIwxCpaEIMYKBJxLzRvD0rC9vsXNq5YfRHtWjSz3KnITdgMA4E9qmKO81VUt4AK5S6y/Sqkfa4jhlF4OLFXVnGlVvzLFjfpsTsj+HrX+Ix965oE8I+QvHLzO31FsfesVDQUfKU39vbuyPs75C0VwpauPZfIzqvKR9vQDLE=
+	t=1746805105; cv=none; b=H1Xvt54TPbwZFUMHRM7WekY/OGnQgR4OopdKYC8VibzAVfuUO/qGLfGs/nAJc9wYt81zIE+w86m/CG9gwDAbiTDZX9tQZe9rq6eVYB9+Rqbe6nFpJp6x2nOzNO2R23oXZXo8luXNKJoWE7TUtyBofOMAYPBZ4deoC4w/9Ob9FgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746804991; c=relaxed/simple;
-	bh=1cQPManCRf2qssTtiyLAbSJojHVEj61IhLqzlxHSmIg=;
+	s=arc-20240116; t=1746805105; c=relaxed/simple;
+	bh=noz0Li/huB4LRgS81b/FMznl0BJ4hfLjaKLd0QhACsA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Nl5CzBdKCivOqcnUWDB77KATeBD+Vl8psX/+gxlTcxfextaTruOYGExWGCdxhFdznOYHM4ARCDVWNYlkXs4g8bm8rYPAe48wch5EJAKVE1DY5gO2t7alBadGLmn9l+FeCqisV4aGjvWA4TfZQZzPnTQiDxZly82cEflArfrx6ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mu5I6qN+; arc=none smtp.client-ip=209.85.128.53
+	 MIME-Version:Content-Type; b=B8S0ug8iv8BBeKzBmF6fYkpiwzFpd8neJUtfG0I62a8FvO7twQI4I0jFxKpZkH6cAN1P+Ti5NQ1ecgvxS/pkyPFQasb2WvQDbJ9VPBZWoz14ht515iG/VqkNvEoZHRyQSA39nrNLNVp6XdiT2gw0ywovxdWJG/5L5KfwYF7meWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TQcWVgYa; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mu5I6qN+"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf680d351so19440955e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 08:36:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TQcWVgYa"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so14412145e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 08:38:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746804988; x=1747409788; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1746805101; x=1747409901; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Yr3gBMo8q6x68iJStgZPxOvmsn126Utqtuli+zeHGe0=;
-        b=mu5I6qN+HNYJIw/rtPo92V0y3Op6iHuYWVQgphie592wUpT4hcXi8zK9aVmnNrth2X
-         3nfnovSVQfEvjFefkH9YqSHXm/YfBrhCsAaUMC7lsJWlyCWnXFSspwxljZ1bhKpvsS2w
-         124BUR8rrEEzr6PHsawiBwf/f+aNKjq0kArMBFM10/w7+EthXVylY0z2Jm3xz635g8FK
-         ZKF/TDAeabWhn12nDs04Yv6iFoJzoA4W61CDGtTS2YFP4uyW9WLqMlg/ZV6dmes1Flay
-         I115TKcuM+jvd1Pca6IomErXSXS+hESA9r/GijNIQmpbPSZoE5lfy8vOhvLADd07N+aW
-         wyGw==
+        bh=TBLBH35fihBkmIGbw4EWVRYhi7XRZ3Q7hPPc7aK4Fu4=;
+        b=TQcWVgYapErxyiuiUxkCA4XgilRQIRMsIfFJ7HMCzVSqg5dHLK7NqWLK1vBcy1M9Tn
+         ToD2KP+NREE7/M8+hyG9WgEiLWBZZdc/C3cNpj2RKXPb1FKvVkWkqhgp06Ka4k+Hr0ep
+         a/q3ZVWQEvXfoM5+s+ZPRdC11qy3S+AwCtsfr52HN7+XM3s5VdxHppkd2GOdqhjQbNZl
+         1guYNN/0+7UCQUXJfXUsr9rd68E/NRzXlm52L1GBzhoAnfdGOAEDkHe2PFz4hGMcy4fe
+         cQKaG81hVZyR78zRcCWCU4sR/UHrsJW1xVeia9MfFhbGohuwboJkeY2+8sfYRNJEVMhJ
+         00EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746804988; x=1747409788;
+        d=1e100.net; s=20230601; t=1746805101; x=1747409901;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Yr3gBMo8q6x68iJStgZPxOvmsn126Utqtuli+zeHGe0=;
-        b=cB6A4+OGkNzsK3KWsJtPkZ+4W0AbgCfbY+aKw168mSfM5Y3rz6vHle7Uc91pVkAtir
-         u+GOixLibCO23hAblImVMkCi1pTFqcbdJRNW445EHH+POotp+s06y64PRpW52SBsvtG2
-         pnbGDyjMZt3jC1jY5VYtV0t24onY5eR2s9yuuSTsrHOhs23QwKuICFQz+uoqL4ZYmKDq
-         eiaUChv+Bd9Q9O2OGanHughvXqkOFjkSK0xPv6wELIKscOSMl1tsFJpuzrKVXjx+egZe
-         VQ1PwRRBN6jZgTWNuFegFn7bX4GGe/uFLr+ssLrWWB7RDwTWkETN7kewcANHpSHjYDt2
-         KaQA==
-X-Forwarded-Encrypted: i=1; AJvYcCXm3V7ynv3vMBj3Y7OjxgL4nus08R91MrgASWg03r8HwCLpwtLcCa0jPBrRL4DKTNVTj549uL8klXPoeV8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV01HMy1tuu/IYrQS9Mgt5xiQHZPtqGRdFJXDiz0dWcpAON+Mt
-	VZ19uk+5pTrt/RQiwO5SEiUJef8D+DcNGHWg9+EP3Jhhfk7ni6O0vFNKm5xRCCA=
-X-Gm-Gg: ASbGncs50rubhi0+kiKXvxFIuqtgLLvkoIvZ4/exMXlOQGffRTTsSpooit2Pm2X1gr7
-	DvElozxtnEDl068u/jp1CnJzv4btmDIjzJAHIVOB++sro6dZJrS8b0U6Vx0V2BBdVLWViG83SNa
-	g1foBl4cFOYNRqLnNRXjwOTxcJSqM/KNjsrXbGQmn1sMZv/Z1v1uz1tKUKHEH6Bw5rt9pqY12E9
-	zka50snFvhBHSrTbwWbOWfptR6U8WzE6ppz5QhNfTtkCY1sCpPUT1Z7da1+gzQ5pv4MIWGLfK2+
-	VSGk0GH+ZiIxYBdMEQmapPiKPJ2QmNUkTGKY9hiQxFa6WcAMToUcSzYoMp7EdQ==
-X-Google-Smtp-Source: AGHT+IG1sfy4S5snxPV3S5e2QLDaSy+3C3D6NenHJmcIMFakCtQ2zu63e4yW4tOoetvrZI25/EewmA==
-X-Received: by 2002:a5d:584f:0:b0:3a0:9f24:774c with SMTP id ffacd0b85a97d-3a1f6a3c21bmr3326299f8f.13.1746804987712;
-        Fri, 09 May 2025 08:36:27 -0700 (PDT)
+        bh=TBLBH35fihBkmIGbw4EWVRYhi7XRZ3Q7hPPc7aK4Fu4=;
+        b=dTou0E51TEmY68EBPT3yzTxB238FmAm0H1DDXXc/1fDbBV4GEo8sJvwFNbbo29kPnZ
+         eDKIEqW7H3ak9pZmN5YpUBB7iK09MXkguRjhkZnXN8T4NxyJQ9DPDpFE01Aq8qs67tHG
+         ZL6hoy6iV0vKHYeveEto4jGn8HUFflcu/hoQ0IsiP/hhGncTX7wl4qGJYkC3p1YDyT9l
+         YtimcqIJu3T7fjU3VOiiD6UONjHhCgEAy3NjcvEng/lDe4CKwQuRbsJokMde6ETaKLoI
+         FAWJby09qvhW/u6T4+e5fLbq8ajf4qPeV3/GUh5s6LbM8QwDaTe5iAtQMJ4eVj0ooG/O
+         FkTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUGlUAlTnHw4mGP9bjgalYygE4wLZsSuZnxdm23yoYDvalTAqsnSDcMuxP1OdKC9y6mx6vykmk5N+QuE5E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfrzxoDTigb2x+3KREeM0tP6GEOjuvQP/GuwWLOLC4+TbsTyEm
+	ihXLaBvGHrpzKrjR81JMmU3sM4J61s5AYx02uIkE8VD1jBtkpBOlRO3+XyuLLfI=
+X-Gm-Gg: ASbGncvckQnmTSlJePcek4kp5DzLqq4FbbXdwQm+D7SazZd+zYX43yoJjpeEQyRycIR
+	WIqITnaAp1znT9Uclvcukml9Ku56EYD4b1cP1Z/oSgKaI7dZ3TyF2Zg/mfISwqI28GcEuKAoPWB
+	lRoMfL9BgwZoXuoELxa+XxrLN2tHMdhal5hGKdAbJiGovT7D99jXVgqxrrpyBnxDqABILJmZtMg
+	+t/xpX5Tp0r2sjcN65oAcPQlHTNoVALadOhFsF8l2wzoER4Nwx5SP1Gak6aowcHescwWOetPNto
+	zvoaZKjtr51kN0ZCCu/wMpBQvyDaTu5/gDN791VpvJBmU5QVBI1ZQX91K9nPBY+Z1O1oti3B
+X-Google-Smtp-Source: AGHT+IH4IMLRaSDitW8aRp2/HH30bVFdM1w5jTbdL4Xe/FdZrAqsFjuKiUSdh0mozDMKtmaE8Kz62A==
+X-Received: by 2002:a05:600c:8205:b0:43b:c857:e9d7 with SMTP id 5b1f17b1804b1-442d6d98a88mr32790695e9.5.1746805101395;
+        Fri, 09 May 2025 08:38:21 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ec912sm3551824f8f.23.2025.05.09.08.36.27
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ebe4fsm3663912f8f.39.2025.05.09.08.38.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 08:36:27 -0700 (PDT)
+        Fri, 09 May 2025 08:38:21 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, 
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
  Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Kelvin Zhang <kelvin.zhang@amlogic.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Zelong Dong <zelong.dong@amlogic.com>, 
- Conor Dooley <conor.dooley@microchip.com>
-In-Reply-To: <20250411-a4-a5-reset-v6-0-89963278c686@amlogic.com>
-References: <20250411-a4-a5-reset-v6-0-89963278c686@amlogic.com>
-Subject: Re: (subset) [PATCH v6 0/3] Add support for Amlogic A4/A5 Reset
-Message-Id: <174680498703.3102335.4935499750020158309.b4-ty@linaro.org>
-Date: Fri, 09 May 2025 17:36:27 +0200
+ Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, 
+ =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+In-Reply-To: <20250323-fernsehfee-v1-0-2621341cd37a@posteo.net>
+References: <20250323-fernsehfee-v1-0-2621341cd37a@posteo.net>
+Subject: Re: [PATCH 0/3] Board support for Fernsehfee 3.0
+Message-Id: <174680510066.3108291.15538800849859736861.b4-ty@linaro.org>
+Date: Fri, 09 May 2025 17:38:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,30 +77,33 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.14.2
 
 Hi,
 
-On Fri, 11 Apr 2025 19:38:14 +0800, Kelvin Zhang wrote:
-> Add dt-binding compatibles and device nodes for Amlogic A4/A5 reset.
+On Sun, 23 Mar 2025 13:37:49 +0100, J. Neuschäfer wrote:
+> Fernsehfee[1] ("TV fairy") is a family of set-top boxes marketed as
+> ad-blocking appliances. This patchset adds board support in the form of
+> a device tree for the third generation, Fernsehfee 3.0.
 > 
-> Imported from f20240918074211.8067-1-zelong.dong@amlogic.com
+> [1]: https://fernsehfee.de/ (German), https://www.telefairy.com/ (English)
 > 
-> Changes in v6:
-> - Rebased onto the latest v6.16/arm64-dt.
-> - Link to v5: https://lore.kernel.org/r/20250320-a4-a5-reset-v5-0-296f83bf733d@amlogic.com
 > 
 > [...]
 
-Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.16/drivers)
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.16/arm-dt)
 
-[1/3] dt-bindings: reset: Add compatible for Amlogic A4/A5 Reset Controller
-      https://git.kernel.org/amlogic/c/87b480e04af45833deb5af1584694b0077805ea6
+[1/3] dt-bindings: vendor-prefixes: Add TC Unterhaltungselektronik AG
+      https://git.kernel.org/amlogic/c/40f983aa2d809b4934a260c76b82e9ff19c09a88
+[2/3] dt-bindings: arm: amlogic: Add TCU Fernsehfee 3.0 board
+      https://git.kernel.org/amlogic/c/eb7af1268e0042e83607918229cd62c3669cdcb8
+[3/3] ARM: dts: amlogic: Add TCU Fernsehfee 3.0
+      https://git.kernel.org/amlogic/c/dac928757928a8ea06eaf5694d5deae53a21616f
 
 These changes has been applied on the intermediate git tree [1].
 
-The v6.16/drivers branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+The v6.16/arm-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
 for inclusion in their intermediate git branches in order to be sent to Linus during
 the next merge window, or sooner if it's a set of fixes.
 
