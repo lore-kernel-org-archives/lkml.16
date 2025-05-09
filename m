@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD96A22CBF6;
-	Fri,  9 May 2025 17:30:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A314685;
+	Fri,  9 May 2025 17:30:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746811819; cv=none; b=Dez0emfn467879TcMhrWVUnYZy5vbCIoF110TZkzBbq19V/N+ChJb5Y1IJagV7AFt9KvPNr/IbZ/Sy42WZk8EPBlblIkADG+qS/vxs62lfLyhDwp8r41VcarjbebMIenbjeuTgC9V7EpURBR2DvQpwS2lYm6qg6C+22FywVubuU=
+	t=1746811852; cv=none; b=SN2RKNfhqmImEPN+e4fP7mNSeIXxnG/VW0vM4Dd8FcwhriXP9WoIfM5ZHTb+pUaCCQ/pOGaLOw165dKHZEDFM3EmAcVo/hX4/D0rV45iGR9E9nNPeTbbn6TMMzqYzSN0vlpbRhj6uoQZZjFpVsPxVITn+dZUga6sJvSgNh3fZgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746811819; c=relaxed/simple;
-	bh=mW7Q4WOzI5YU1FYLOgmozqSQi3IAzhyUp6jsc2gvljI=;
+	s=arc-20240116; t=1746811852; c=relaxed/simple;
+	bh=Fhgn8bV+mXLSIupaCfWBqIukLoMw0l54J1jMVK0fZUQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GSKfsrOPwMvd90r+WXKIYepS4apUtvi/XRx/qpc/1zE+GLgeoyhugSxa4jNqGqFn2GWW6mJ5IaDRGirpXsj4K6mIpudg3RVCXKnelf5+JQ0NY1pHy/QJObLkF/8ta2PI7IKt7B9l89qSuJX6Wn6txg1Zcl8IDidyRDx5f0xdgeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7G5iLCm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UVyS24xSepUZie/Y6PoKJf4N2zYiBP06grJhl5S0yn3JdK6AMkkT4otIxARFtBvVRf3RI4W/4PgpYzsTr25ksV1l8FmuLXPdpTHSkhomRK168D5lJkjefbrq3Gem+lQBmO1gMythuMq64x6/i2AEIloouU+O9qw4wDggrLFdZ4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJnUsD7n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7G5iLCm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B7BEC4CEE4;
-	Fri,  9 May 2025 17:30:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJnUsD7n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 245A5C4CEE4;
+	Fri,  9 May 2025 17:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746811818;
-	bh=mW7Q4WOzI5YU1FYLOgmozqSQi3IAzhyUp6jsc2gvljI=;
+	s=k20201202; t=1746811852;
+	bh=Fhgn8bV+mXLSIupaCfWBqIukLoMw0l54J1jMVK0fZUQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j7G5iLCmXAjHqnDymoGSMYCHKt0FGONZ2280C13jjahlcYvubNWIgN9NnDcCqdQnu
-	 AEO58bEaRAqF14/wxZDzBySNJp3+LSN0Y74nNO7YDkmqh7EqPV2ge7s3dXT0BUhSaq
-	 VGZLa6RVkWQv2g+dTRak/4qnig5LDJfO1RV6ibSJdYly7zm6+P0W4xbCfk5vZC+GzO
-	 2m7mL+xResoyVFbcavHB6yjSJYO+FMm+HYOCMjo6ikq2vwh868xV2zec2bzWmTz+D3
-	 0nYEDHor6jzucViInfWQJ32KQ6OdKkkEzpLZt2R+zg3SKxemCNK26WyuLt8ELwxxad
-	 7iqtTUsTqya+w==
-Date: Fri, 9 May 2025 18:30:14 +0100
-From: Simon Horman <horms@kernel.org>
-To: Ozgur Kara <ozgur@goosey.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: ethernet: Fixe issue in nvmem_get_mac_address()
- where invalid mac addresses
-Message-ID: <20250509173014.GQ3339421@horms.kernel.org>
-References: <01100196adabd19e-0056f10b-0ffb-4076-8a6b-779f87c327b6-000000@eu-north-1.amazonses.com>
+	b=NJnUsD7nqQr6LQPkMQdSHIe5+Aog7deA7WrAUwnNf5PNnRSvcsvdaVVe+xRJxazWU
+	 xFNn1BVp9/vEt8dPVBlFrqASfqs7jxOP/u1n2EGlHbBPeeOtc3WFk5163mMmfioKNx
+	 va8jtkMJx+oryemckVYzPDUVxBc3oQe8DykkhvI1V/hbLWeP1QEP4X+gECIvkrtaHA
+	 Oyu86oUcAwKjjZBuZ0Gh2Iu+YDURIHYTcuzJF3V+FyP8Q2knbMModB+EGaXhu6IiOJ
+	 hPrArPUrxgcOUaBFtjym9ZJDYSlpbdp/B6EEIrf+CyHomL/UDWCm2D2KaGI4kRKEaT
+	 d5ALFhpNXm4Yg==
+Date: Fri, 9 May 2025 07:30:51 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Waiman Long <longman@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Xi Wang <xii@google.com>
+Subject: Re: [PATCH v2] cgroup/cpuset: Extend kthread_is_per_cpu() check to
+ all PF_NO_SETAFFINITY tasks
+Message-ID: <aB47y64qlbsnql07@slm.duckdns.org>
+References: <20250508192413.615512-1-longman@redhat.com>
+ <aB4AmUtEM-qQ1Xoa@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,45 +46,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <01100196adabd19e-0056f10b-0ffb-4076-8a6b-779f87c327b6-000000@eu-north-1.amazonses.com>
+In-Reply-To: <aB4AmUtEM-qQ1Xoa@localhost.localdomain>
 
-On Thu, May 08, 2025 at 02:14:00AM +0000, Ozgur Kara wrote:
-> From: Ozgur Karatas <ozgur@goosey.org>
+Hello,
+
+On Fri, May 09, 2025 at 03:18:17PM +0200, Frederic Weisbecker wrote:
+...
+> But this makes me realize I overlooked that when I introduced the unbound kthreads
+> centralized affinity.
 > 
-> it's necessary to log error returned from
-> fwnode_property_read_u8_array because there is no detailed information
-> when addr returns an invalid mac address.
-
-Maybe "useful" would be better wording than "necessary".
-Logging doesn't seem to be a hard requirement to me.
-
-Moreover, I'm not sure that logging is appropriate.
-E.g. fwnode_get_mac_addr() is called by fwnode_get_mac_address(),
-which is in turn called by acpi_get_mac_address(), which logs if call
-fails.
-
-> kfree(mac) should actually be marked as kfree((void *)mac) because mac
-> pointer is of type const void * and type conversion is required so
-> data returned from nvmem_cell_read() is of same type.
-
-It seems to me that nvmem_cell_read returns void *.
-So a good approach would be to change type of mac to void *.
-In any case I don't think casting away const is the right approach;
-what is the point of const if it is selectively ignored?
-
-Also, I think this should be a separate patch to the logging change:
-one patch per issue. If there is more than one patch then I would
-suggest collecting them together in a patch-set with a cover letter.
-
+> cpuset_update_tasks_cpumask() seem to blindly affine to subpartitions_cpus
+> while unbound kthreads might have their preferences (per-nodes or random cpumasks).
 > 
-> This patch fixes the issue in nvmem_get_mac_address() where invalid
-> mac addresses could be read due to improper error handling.
+> So I need to make that pass through kthread API.
 
-I don't see any changes to the program flow for error handling in this patch.
-It doesn't seem like a fix to me.
+I wonder whether it'd be cleaner if all kthread affinity restrictions go
+through housekeeping instead of cpuset modifying the cpumasks directly so
+that housekeeping keeps track of where different classes of kthreads can run
+and tell e.g. workqueue what to do.
 
-> 
-> Signed-off-by: Ozgur Karatas <ozgur@goosey.org>
+Thanks.
 
 -- 
-pw-bot: changes-requested
+tejun
