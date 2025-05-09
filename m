@@ -1,113 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-73.smtpout.orange.fr [80.12.242.73])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C8D26A0BD;
-	Fri,  9 May 2025 06:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7B422D9F2;
+	Fri,  9 May 2025 06:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746771549; cv=none; b=r3SxbiDqaryO8+a67hPwaUZySBVly5e/H1K/Z4fAVLTWX75tpPI2ucGMB8dNz39xPl4+Nkb9wMT5MkmV0nGrNKRsOPcV7+oT4YHVnwouhq3Pl8ydJC9N7yaCs7fPE1ULA34ym/oNjvBlWhExcEdJkrBwuOsTzUznWQ6cRg4Mu7Q=
+	t=1746771713; cv=none; b=XmqcoWInYZLBolIohQszGz8JAWMvXG+MZIGv30Ffsl3dhzskTh13p1IBwVyp+3SWjL5wRoli4K7zfFxuQuRP0tgYYXcFD5ucA9psSmNW8uYRLSSe2Z6iKmbx5rT577bOoK0XqeZTwHKqpLKEyAlxvk2Lry0fTb0fz2uilgu5alI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746771549; c=relaxed/simple;
-	bh=NYM1/STB/SI2JzqgJlobo7dJE80eQHq/fsb0VCpU9RQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lMdKjxs0hrV8UbQco8ekY908wLQAYeSd9+DyEjFMlI6r4suQlWWrAEKI3Z5pxbEEXsECWsiUh7B3QVHW6x6xtPPQVj/clvyF/Z9eXX354QKcwD7IUTh88bfgfPlLUu9tMAz/IW4tvduBkw07E+4hW4M3tuzZVtiKJNt3SQg/BWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Jf35wBd1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746771713; c=relaxed/simple;
+	bh=eMIbIZO2LNu1ba9vmPFWelJExTJoxfAefdLcbQm2tMo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eYHieh6S85onfy6MSIIn8m8/xZ5YKg3c3G2j13k/Z5+7FwDxtQVI5KPpXUZ4/+NqLqrOW9/ppcphzj70pW2LpKheYi9vsafquwC7kQGpMfaK80Oc7MGRbEPm8knS2L4efMfCl37aTSswP6aM2kYuBEm4Mft9Nqv3eEbvaC3JdGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=OZgC/Hn3; arc=none smtp.client-ip=80.12.242.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Jf35wBd1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 866D6C4CEE4;
-	Fri,  9 May 2025 06:19:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746771548;
-	bh=NYM1/STB/SI2JzqgJlobo7dJE80eQHq/fsb0VCpU9RQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Jf35wBd1dAn1FMXBlyvwKAPBK+QlZtSeAYasNL4hs+ZTIqS/R/HHL0j0PaTmWWWNu
-	 6dRsc2KRapfXpq4QgqRPbmyGs7mbtoVsZpafv3vab+Bi7iza8rbNMCU+51dCndLHrY
-	 5+AxpKOIE8rzuy7X6E0VUbt44NpsltTf4Zo1QayA=
-Date: Fri, 9 May 2025 08:19:05 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>, Palmer Dabbelt <palmer@rivosinc.com>,
-	linux-riscv <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH 6.6 000/129] 6.6.90-rc2 review
-Message-ID: <2025050917-dismay-scary-7261@gregkh>
-References: <20250508112618.875786933@linuxfoundation.org>
- <CA+G9fYsKqxUExVW1rEhU8_5pYOuhkzXyeL9TmTyGVsV2-C-PFQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="OZgC/Hn3"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id DH65uEvkuKbq8DH65ukVB8; Fri, 09 May 2025 08:20:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1746771640;
+	bh=5JKgoLO4kNRuFom4Pfd5tvVV/+IdX7PZ3xj8Bm8rDJY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=OZgC/Hn39/X/p3DbTI7Cq+n2Y/vEEOgufGvGfZqQElJWXBfGse5SlpmHRJPJobTAJ
+	 37GBaRuT2m+7oaNc2wd5dti3Ns9WxmDBa2oHYrpkFU5Bi11qmn7pFFp0LMk5SO7y2q
+	 urSQggVgZZa/N/JnuyouFN422hV6vQJzEk6Hue9Q8Eur0xiIPbfcOkMfdI8nrn/qOQ
+	 QOBrNwaptoHxFvPEYYigXJrz5Pi0LS86S9RA1xR2WxZRaTaNkg6ySP0tCRar9ZtAL0
+	 wRW02YKUKUrJ2U3Xy5Mod18zXDsLHHvNbeeH6CQirxea0GP50MbULn6IzY/4i4Hp4m
+	 GKb/CikKi5CVQ==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Fri, 09 May 2025 08:20:40 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <22aaebb7-553b-4571-8a43-58a523241082@wanadoo.fr>
+Date: Fri, 9 May 2025 08:20:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYsKqxUExVW1rEhU8_5pYOuhkzXyeL9TmTyGVsV2-C-PFQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] extcon: adc-jack: Fix wakeup source leaks on
+ device unbind
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi
+ <cw00.choi@samsung.com>, Hans de Goede <hdegoede@redhat.com>,
+ Chen-Yu Tsai <wens@csie.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20250501-device-wakeup-leak-extcon-v2-0-7af77802cbea@linaro.org>
+ <20250501-device-wakeup-leak-extcon-v2-1-7af77802cbea@linaro.org>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250501-device-wakeup-leak-extcon-v2-1-7af77802cbea@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 08, 2025 at 06:16:12PM +0530, Naresh Kamboju wrote:
-> On Thu, 8 May 2025 at 17:00, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 6.6.90 release.
-> > There are 129 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sat, 10 May 2025 11:25:47 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.90-rc2.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
+Le 01/05/2025 à 16:33, Krzysztof Kozlowski a écrit :
+> Device can be unbound, so driver must also release memory for the wakeup
+> source.  Do not use devm interface, because it would change the order of
+> cleanup.
 > 
-> Regressions on riscv with allyesconfig and allmodconfig builds failed with
-> clang-20 and gcc-13 toolchain on the stable-rc 6.6.90-rc1 and 6.6.90-rc2
+> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>   drivers/extcon/extcon-adc-jack.c | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> * riscv, build
->   - clang-20-allmodconfig
->   - gcc-13-allmodconfig
->   - gcc-13-allyesconfig
-> 
-> Regression Analysis:
->  - New regression? Yes
->  - Reproducibility? Yes
-> 
-> Build regression: riscv uprobes.c unused variable 'start'
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> ## Build error riscv
-> arch/riscv/kernel/probes/uprobes.c: In function 'arch_uprobe_copy_ixol':
-> arch/riscv/kernel/probes/uprobes.c:170:23: error: unused variable
-> 'start' [-Werror=unused-variable]
->   170 |         unsigned long start = (unsigned long)dst;
->       |                       ^~~~~
-> cc1: all warnings being treated as errors
+> diff --git a/drivers/extcon/extcon-adc-jack.c b/drivers/extcon/extcon-adc-jack.c
+> index 46c40d85c2ac89599ffbe7b6d11b161b295d5564..557930394abd25771799733a22121d1f8e254918 100644
+> --- a/drivers/extcon/extcon-adc-jack.c
+> +++ b/drivers/extcon/extcon-adc-jack.c
+> @@ -164,6 +164,7 @@ static void adc_jack_remove(struct platform_device *pdev)
+>   {
+>   	struct adc_jack_data *data = platform_get_drvdata(pdev);
+>   
+> +	device_init_wakeup(&pdev->dev, false);
 
-Oh that's wierd.  riscv defines flush_icache_range() as "empty" so then
-this patch does nothing in these older kernels.  Ah, it's an inline
-function in newer kernel trees as well so that the build warning isn't
-there anymore.
+Hi,
 
-As this change feels odd for 6.6 and older kernels, AND it's causing
-build warnings, I'm just going to drop it and if the riscv maintainers
-really want it applied to these trees, will take a working backport from
-them.
+Shouldn't this be:
 
-thanks,
+	if (data->wakeup_source)
+		device_init_wakeup(&pdev->dev, false);
 
-greg k-h
+to match how things are done in the probe?
+
+CJ
+
+>   	free_irq(data->irq, data);
+>   	cancel_work_sync(&data->handler.work);
+>   }
+> 
+
