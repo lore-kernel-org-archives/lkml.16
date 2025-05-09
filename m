@@ -1,136 +1,69 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ABCA28EA44;
-	Fri,  9 May 2025 10:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C95C28F521;
+	Fri,  9 May 2025 10:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746785606; cv=none; b=D/jLvQfKDn++qupEdBweWgY6IB+Tg7eS9N+SnALJdMz5Y3+M0WBxq3Xv0mZE0qoWDppJ1etqSdcQeddwSLSKr4uq+qOWVLFHTb3zr27F9KEay7dkLVOMrRMspJXvEqz3njx+GdinIAYFrfuzkA9ncOF87hG+ZOFVlSGR30xuo/c=
+	t=1746785611; cv=none; b=KLoesT4/RH2cAaltZdjubx8IqAm9tj0BNUS2pJxwgbImfZNUvYCiIAKvweorh/uALJjrKjOBHXZeytKht05PlR7fGLJztPOiBpkC5ka9h0rqVNIKC0JXIoXbTfmh+tMICI3F9x83jkVn3BTWZswz4TElwYdkIhCEJwrcoFWlaB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746785606; c=relaxed/simple;
-	bh=eheSknn2THWCqMhu/QSVH4frT7M4Uuq3n5+Qbd+NYcE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=TPSwD/x1Wue15Ft1l6NGd7NT1DOhUkCkuDc2kbJEBUDMYG4Tozynsxyx1uOL6Z/WxnBN5KAPjxqwbz0vFVbWhQs8IDnAHkstxAdSVRXmvYRN6hfxgFbJM8t7WVBSa2HVl1Iyz7vkAMP1yDvX/P100kA4pVX2rMwxef4fLjX4Hd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BefuLuEY; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1746785611; c=relaxed/simple;
+	bh=i2ouzxQBdefH+i2o/XeUfGDkchgNAn5bKFkd/HjKI2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SiCZIjtGmBPj7Nn9vagMleHgboWdj/Ls3ofH0ucyTlS/C8LI8IMpC56jUOd4BII0oB6YfStwRrevH8HqhvfZLiApnKGfEfJ0avtQXjQYV3Q0N0WKu3SF+Y7NtCj2uMcKHPiaCR9K9DUZW2e/s60Dk/vl3/I4SN76h+vl2Oz9D8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=SwAlCaBP; arc=none smtp.client-ip=220.197.32.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BefuLuEY"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id B079E2111571; Fri,  9 May 2025 03:13:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B079E2111571
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746785604;
-	bh=km0lQIF3NA+f3D6n5s967/qB/wGbEZ8pGu9m1a7cwt0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BefuLuEY7t1KJ8cb7O5BZ3ssurzZrp2ed+2ZhNgirvLSygKKshwV9fHIzgd2Y3G5q
-	 D2vScBhsEM0ykCLMtJVyDTcqrCD04Dxgk/8DWvEc3fg2WJ6yXG7Sk1FcKSn+VmzNP/
-	 NH1M0tvhB3MmqZ+FE6JkkEYa5Movp5B15Qu7NTm4=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="SwAlCaBP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=Kze5h2h8k5Lwn+zJ0PPawJ/lXrKJAnhMldQ/t7GAho4=;
+	b=SwAlCaBP9h8HzTJ+rkN9kQAdcr9cesJouIrJL/OQUnI2sWb4c7LFkfo2iTPO71
+	cIiskaZwkRrysvrtWzCk5QQs/brJpTlAoZZ9V32z/PJdEzys4xUKuheRZhUMs5sk
+	dab8ZaIZT07kX0bdv/28nkjbRON7kaqJH95TYHnROCYyo=
+Received: from dragon (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id Mc8vCgD35_4l1R1oPKqnAA--.56775S3;
+	Fri, 09 May 2025 18:12:54 +0800 (CST)
+Date: Fri, 9 May 2025 18:12:52 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: max.oss.09@gmail.com
+Cc: max.krummenacher@toradex.com, Conor Dooley <conor+dt@kernel.org>,
+	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
 	Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=EF=BF=BD=7EDski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH v3 2/4] PCI: hv: Allow dynamic MSI-X vector allocation
-Date: Fri,  9 May 2025 03:13:22 -0700
-Message-Id: <1746785602-4600-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1746785566-4337-1-git-send-email-shradhagupta@linux.microsoft.com>
-References: <1746785566-4337-1-git-send-email-shradhagupta@linux.microsoft.com>
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] arm64: dts: imx8-colibri: Add PCIe support
+Message-ID: <aB3VJOWagJEF2xbB@dragon>
+References: <20250422115051.1867349-1-max.oss.09@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422115051.1867349-1-max.oss.09@gmail.com>
+X-CM-TRANSID:Mc8vCgD35_4l1R1oPKqnAA--.56775S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUza9aUUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiAR9IZWgduGdwKwAAsC
 
-Allow dynamic MSI-X vector allocation for pci_hyperv PCI controller
-by adding support for the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN and using
-pci_msix_prepare_desc() to prepare the MSI-X descriptors.
+On Tue, Apr 22, 2025 at 01:50:49PM +0200, max.oss.09@gmail.com wrote:
+> From: Max Krummenacher <max.krummenacher@toradex.com>
+> 
+> The needed drivers to support PCIe for i.MX 8QXP have been
+> added.
+> Configure PCIe for the Colibri iMX8X SoM.
+> 
+> The pcieb block is connected to the on module Wi-Fi/BT module.
+> 
+> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 
-Feature support added for both x86 and ARM64
-
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- Changes in v3:
- * Add arm64 support
----
- Changes in v2:
- * split the patch to keep changes in PCI and pci_hyperv controller
-   seperate
- * replace strings "pci vectors" by "MSI-X vectors"
----
- drivers/pci/controller/pci-hyperv.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index ac27bda5ba26..8c8882cb0ad2 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -598,7 +598,8 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
- 	return cfg->vector;
- }
- 
--#define hv_msi_prepare		pci_msi_prepare
-+#define hv_msi_prepare			pci_msi_prepare
-+#define hv_msix_prepare_desc		pci_msix_prepare_desc
- 
- /**
-  * hv_arch_irq_unmask() - "Unmask" the IRQ by setting its current
-@@ -727,6 +728,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
- #define FLOW_HANDLER		NULL
- #define FLOW_NAME		NULL
- #define hv_msi_prepare		NULL
-+#define hv_msix_prepare_desc	pci_msix_prepare_desc
- 
- struct hv_pci_chip_data {
- 	DECLARE_BITMAP(spi_map, HV_PCI_MSI_SPI_NR);
-@@ -2063,6 +2065,7 @@ static struct irq_chip hv_msi_irq_chip = {
- static struct msi_domain_ops hv_msi_ops = {
- 	.msi_prepare	= hv_msi_prepare,
- 	.msi_free	= hv_msi_free,
-+	.prepare_desc	= hv_msix_prepare_desc,
- };
- 
- /**
-@@ -2084,7 +2087,7 @@ static int hv_pcie_init_irq_domain(struct hv_pcibus_device *hbus)
- 	hbus->msi_info.ops = &hv_msi_ops;
- 	hbus->msi_info.flags = (MSI_FLAG_USE_DEF_DOM_OPS |
- 		MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_MULTI_PCI_MSI |
--		MSI_FLAG_PCI_MSIX);
-+		MSI_FLAG_PCI_MSIX | MSI_FLAG_PCI_MSIX_ALLOC_DYN);
- 	hbus->msi_info.handler = FLOW_HANDLER;
- 	hbus->msi_info.handler_name = FLOW_NAME;
- 	hbus->msi_info.data = hbus;
--- 
-2.34.1
+Applied, thanks!
 
