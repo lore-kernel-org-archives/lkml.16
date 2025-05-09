@@ -1,121 +1,169 @@
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3734964E;
-	Fri,  9 May 2025 03:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23664964E;
+	Fri,  9 May 2025 03:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746761483; cv=none; b=PkiUM/GBjhCu2hw31zYgb6KFfCJQIgaFrUlUXTHXYg2slQKQCS22lfujNdSfmLL5hIAkcP7xoZWZyzC10hQfFqaKZiStktREkHdCJvLMwqq0zBpBi9GO4goMWecjuS8cLO5RE/LNcThLI9ECwyYOqN0Gqbze7IVCazB+k3Fo6oo=
+	t=1746761547; cv=none; b=EmAM797d3gpNDdIxVB5TMZC9wNSof3o9N+lmrf43r8eF48BQxYSum49WAWNQPjtJ1KhIRCcT7zCXR1mIKsna8NzPC3seQGffQssOK0eJ+YtZKMYTUaHKVqELKALZmX18GntiWlyf1BtjykiABZyKCeb1sZZIG4cUj63FpmJq28E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746761483; c=relaxed/simple;
-	bh=+Yt6T0u3fYfQL7cdc7BFMhOrNEKA8KJXzQY/Qxnx5gY=;
+	s=arc-20240116; t=1746761547; c=relaxed/simple;
+	bh=d6w0QC2FkkZmOZZCEXQM8m8PwqeRBreeSkfhxCr/u4Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NBYg4PSaRXAURqE7dOdqaxS4SuefhqMSN4pT3LfBTsw2d65FB0aXt6qZCFbKXBU5+mY0tuf40CeofWJM5XEyW995Z4E9wjplPHI21RQjLI66vgljlvWqgP7WG6Z+Xq6BXWigZKsG8H+dQygQ/v+yIPl9aeSXusfsZJvz/+71y1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hbp3Y5e0; arc=none smtp.client-ip=209.85.217.49
+	 To:Cc:Content-Type; b=nm/OMi0Lk9aDimgQG9DzadTpWb71/cGaZdLEUb/OLj6RScRjfQqKuXePdy40j9imh0m+WENYtB/I0MaEdZclgmAA9xeydRow3xnealr3DiRnA+NPTquytzbJuVO8UYZrecdaLLn0bmXkMG+pKh63GWFay1X3165awy8OaY4oAok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lp/93uEG; arc=none smtp.client-ip=209.85.216.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hbp3Y5e0"
-Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4ddac386a29so605587137.3;
-        Thu, 08 May 2025 20:31:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lp/93uEG"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb3so2049016a91.1;
+        Thu, 08 May 2025 20:32:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746761480; x=1747366280; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4A2ix+KLqr1uAddQxC8meUMDCd4s6wELmtjquDmWLdA=;
-        b=Hbp3Y5e0nNVwKZRE2bWOf/nvF16Oqv6lsWvXkR20NeEYThlkm0kVKIDzPMOOkNYjOD
-         dXeKqUS/pN4PrxzDklt748QWkJuq7qCrU/FRmHfqff7MJ7YRcUjkC763BWnd6qZljIuQ
-         8LoQmjOY3iY/WdqSv4RZbc/xp1jijCvud0RFYa/jTmP6FZdN0CWxDnspQ9REb82zl/HH
-         zJMTDr/bVYgwUSDOVkbepbhek7e5U7la2qHfehDeoVt0vN300J4QDeEWbL8Fyrgye+zG
-         0pmm4ebBcLh0Uwwr7CF30Xof3Fvelst96kuzFvyJvm5DhCL4ps0wAM5A6PLdLRD0ETVP
-         OX9w==
+        d=gmail.com; s=20230601; t=1746761545; x=1747366345; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ya3VczgHFOzFAyCfmPA4Y/mC3C+aSrcJSAyZCyQ9PTE=;
+        b=Lp/93uEG7XhmPEaUFgoqkm726yyzsBIlvWj6o89tyAIaQXe+p9qKLYxpaZFBpBY1LL
+         kg9bG7aW1cknbFeXyCKyl8Lwbj60QBmlt2FevL9mkUjH0xzy2y4MfdO3+kVjzoq54clv
+         sRDKrUX6ngiLCqHNqrcyphoNC7/eVsboJNfXhBLQm8tFbkG2xuuM8TuUrClokGSUawMp
+         funHsV23Xw4D40M2T/1QlW07H3Zh4940JNhdU+YEEYR3qG8Hm0ODJJMibxlUBEfwc7qH
+         AccK3lgKRC/zdwJQE5ib4phlyy3ivw1dhtSfv1/VVcSSXkBrFpV8EHf48Zg+XTedA5XP
+         2wnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746761480; x=1747366280;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4A2ix+KLqr1uAddQxC8meUMDCd4s6wELmtjquDmWLdA=;
-        b=ApLTyUdSZf+AnhF8cphmikc+XBe12TwPKgGwJeEwJPEtteBAn0uBsJznn6MhFsFZQr
-         JHVP8WcaYEGMMcMPj9NUgL7FmHFcaR3sXv9ItEb7dTKyREY/G4kp+zAR2/WeT8uNgm2F
-         KfFaADG32shB68bYlUCoYZcn8xsNDKDfgubszNFvp5oIM+QTwks8iiNun4tzUh7k5fzU
-         xz3KniG0lIsfem6+HywZlJ3jlCfisRQ3K82+4IG9/VFM9rHcLAzc44JrDWhquKlpapjF
-         dPy7uksDWvdCS/hds+oaQLnZvxE2N2G2nRanODNgkuREUiSii02cCnW2l54WdYQ8x3/J
-         ticw==
-X-Forwarded-Encrypted: i=1; AJvYcCWS8Fw3B+iz4LW/AUadfgl5oW3izjj/mObBB/1il+X0utKEjwCertAnW4MQMXT/jXTfsI0iGHvt@vger.kernel.org, AJvYcCX3qcac7BGGECl9sPHwSb+3AxTOokhFOg2mqVTA+F2/b03t1hlYLnm5yo5EQtGrlFwy0jhUcXGWXWpX5l4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzojKidh1dG7fIe3oWUCnHNQSStLbsGpGdCohuBpBmgOXR44tUd
-	4ugeoRN716ZzUdgElAZcycBqFozQFY9HjW9cY26+3gM6ePlap8dTMbKR1XEu+kwtgw23ffnG59R
-	gEllci7FQA+qdC2K3zRC+xvVTx2k=
-X-Gm-Gg: ASbGncssZP+m6iwKK5fDCoYWthK5NgMXEagPmc/RdNFUnhY3NzDGsMlggzAqSeGcr2c
-	Nxch+Jet8qCNoy09RcqGQs0lGEBuo0S7ZjmCcVPd0AMvVSZDCBsH1v9J/U+h9SsbM4ipGNJh37x
-	13gKH4SfdyEQki0dcAiGt0Zg==
-X-Google-Smtp-Source: AGHT+IGc5+Cslf0S1acbclvSNhn/uwwmcTG8ZUvvlGJo/X0wH/M3Gq+zbif2xm4TrTenOWf1MumTFqC9O986MUqRF8I=
-X-Received: by 2002:a05:6102:8097:b0:4c1:774b:3f7a with SMTP id
- ada2fe7eead31-4deed3d4b5bmr1410263137.16.1746761480413; Thu, 08 May 2025
- 20:31:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746761545; x=1747366345;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ya3VczgHFOzFAyCfmPA4Y/mC3C+aSrcJSAyZCyQ9PTE=;
+        b=CmkWKsoOVEkTaw8z5YXAK65sz6huEWBVEIK7d/mmKkxayxN4SgW9gaVI/v98mxnD4f
+         +cOsLJGUAoPO9N1Bi5MmZZh1NorJbhxrnPFNuce8QOTax2/pSjMBMAGgQ75gTkOsdOit
+         NXfxREjIIIb94Q7FDyBcMePRq85Kl3LOSDaLxPv/5iFyUDowh36wvFFlGHiF0cKusDHb
+         4N+/fncKRL5KxzOBAjrwLNpMr2fxgIEzBMOUaIXuEaqbE1jp93o4iojycFZnktld2dRR
+         nSjOr57vLZ+Yn0ZcNeGU65tT68nWb8UGayhre+rmPTF84DQkw2KRs0tSiiMLFl/muICp
+         a88g==
+X-Forwarded-Encrypted: i=1; AJvYcCUJmsCVwEklxtWYuwa1Ky9UtP/I496B0PyxFKVUVJ6E9L8D2Cchnqv6513Y3SNSgF/gqvIXhCxcP/izGNA=@vger.kernel.org, AJvYcCUTjwVhf8hvPxcmGhg1SFzi59wecl80BQ5UsRfUH2gQoaLkThPFPzufLmoN24X2T9fgYT67@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyz2V4oBntW7gjpMTC0pT2YgOf0DI4MUbd1IkUZ1GFdToHPrkPv
+	iQOviv6559CeFqLKmMCoaDCuoqT0BaaK85vePCuy80NREnKuV+If3NQTMOhnSRfpgxHfWE9ACc8
+	FhH2hnM+tmnphGndz1F02hZp7dpJDIiJEAKBPuA==
+X-Gm-Gg: ASbGncs6OzFdzBBgqmiEKBlVs/HruucHfJq3ywEbkSrLEMQxkYPDEzOt3SCEfi+fTRT
+	io1/6Y/XuX/f4d0cuwhExmSzTszejX3h84AWp05PF1bmGuCUcf7sDQk7/TbVnxS9qdMLQJfrC3r
+	//FQkVVfhN59IAtYqvcVVWV1o=
+X-Google-Smtp-Source: AGHT+IGkXZFfrhbbd9BDItKA19ojDn/Iq3UrEv99hYGe8s2qyWB7NaatQnPLlDrpk1mRSaGA7fwLYogJ7Oi+heTJ6rE=
+X-Received: by 2002:a17:90b:1c04:b0:309:f53c:b0a0 with SMTP id
+ 98e67ed59e1d1-30c3d63c365mr3229519a91.24.1746761544735; Thu, 08 May 2025
+ 20:32:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509020238.3378396-1-xiaqinxin@huawei.com> <20250509020238.3378396-2-xiaqinxin@huawei.com>
-In-Reply-To: <20250509020238.3378396-2-xiaqinxin@huawei.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 9 May 2025 15:31:09 +1200
-X-Gm-Features: AX0GCFuxI4KztwbrtFwtCfTebZzuXx55Bo7QyZab2Vhdl2Eshu9OBelft6iLsz8
-Message-ID: <CAGsJ_4zrCiugrAPw-aExgSMZXYBBUqLyyWbcpKH8RdhKnHxj9g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] dma-mapping: benchmark: Add padding to ensure uABI
- remained consistent
-To: Qinxin Xia <xiaqinxin@huawei.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Robin Murphy <robin.murphy@arm.com>
-Cc: yangyicong@huawei.com, hch@lst.de, iommu@lists.linux.dev, 
-	jonathan.cameron@huawei.com, prime.zeng@huawei.com, fanghao11@huawei.com, 
-	linux-kernel@vger.kernel.org, linuxarm@huawei.com, stable@vger.kernel.org
+References: <20250507112605.20910-1-qiang.zhang1211@gmail.com>
+ <20250507112605.20910-3-qiang.zhang1211@gmail.com> <b23a7caa-a548-4691-badc-4122907ea688@paulmck-laptop>
+In-Reply-To: <b23a7caa-a548-4691-badc-4122907ea688@paulmck-laptop>
+From: Z qiang <qiang.zhang1211@gmail.com>
+Date: Fri, 9 May 2025 11:32:13 +0800
+X-Gm-Features: ATxdqUEaHndYcsUJJ2F87_gkE4VhxDkaNZ05UxRfazcxVWKhdmGnLLq18puEOUM
+Message-ID: <CALm+0cU8ndBcXsR_F1_XPcnb7+yvNoOynD7ucuZ6FfxAygDwqA@mail.gmail.com>
+Subject: Re: [PATCH] rcu/nocb: Fix possible invalid rdp's->nocb_cb_kthread
+ pointer access
+To: paulmck@kernel.org
+Cc: frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org, 
+	urezki@gmail.com, boqun.feng@gmail.com, rcu@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 9, 2025 at 2:02=E2=80=AFPM Qinxin Xia <xiaqinxin@huawei.com> wr=
-ote:
 >
-> The padding field in the structure was previously reserved to
-> maintain a stable interface for potential new fields, ensuring
-> compatibility with user-space shared data structures.
-> However,it was accidentally removed by tiantao in a prior commit,
-> which may lead to incompatibility between user space and the kernel.
+> On Wed, May 07, 2025 at 07:26:05PM +0800, Zqiang wrote:
+> > In the preparation stage of CPU online, if the corresponding
+> > the rdp's->nocb_cb_kthread does not exist, will be created,
+> > there is a situation where the rdp's rcuop kthreads creation fails,
+> > and then de-offload this CPU's rdp, does not assign this CPU's
+> > rdp->nocb_cb_kthread pointer, but this rdp's->nocb_gp_rdp and
+> > rdp's->rdp_gp->nocb_gp_kthread is still valid.
+> >
+> > This will cause the subsequent re-offload operation of this offline
+> > CPU, which will pass the conditional check and the kthread_unpark()
+> > will access invalid rdp's->nocb_cb_kthread pointer.
+> >
+> > This commit therefore use rdp's->nocb_gp_kthread instead of
+> > rdp_gp's->nocb_gp_kthread for safety check.
 >
-> This patch reinstates the padding to restore the original structure
-> layout and preserve compatibility.
+> Let's see...
 >
-> Fixes: 8ddde07a3d28 ("dma-mapping: benchmark: extract a common header fil=
-e for map_benchmark definition")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
+> The rcu_nocb_cpu_offload() and rcu_nocb_cpu_deoffload() functions invoke
+> cpus_read_lock(), and thus exclude all the CPU-hotplug notifiers,
+> including the one that invokes rcutree_prepare_cpu().  There is also
+> rcu_spawn_gp_kthread(), but that is an early_initcall() that happens
+> before CPU hotplug can happen, at least for non-boot CPUs.
+>
+> So rcu_spawn_cpu_nocb_kthread() cannot run concurrently with either
+> rcu_nocb_cpu_offload() or rcu_nocb_cpu_deoffload(), correct?
 
-+Marek, +Robin
+Yes, the rcutree_prepare_cpu() is invoked under the cpus_write_lock()
+protection.
 
-Acked-by: Barry Song <baohua@kernel.org>
+>
+> It appears that all CPUs (try to) create their rcuoc and rcuog kthreads
+> when they come online, regardless of the nohz_full and rcu_nocbs kernel
+> boot parameters, some old tree_nocb.h comments notwithstanding.  ;-) The
+> rcu_organize_nocb_kthreads() function looks to cover all CPUs as well,
+> so ->nocb_gp_rdp will always be set after very early boot (give or take
+> alloc_bootmem_cpumask_var() failure in rcu_nocb_setup() and checked for
+> by the cpumask_available() in rcu_organize_nocb_kthreads()).
+>
+> The rcu_spawn_cpu_nocb_kthread() can fail to spawn the GP kthread,
+> in which case both ->nocb_cb_kthread and ->nocb_gp_kthread remain
+> NULL.
 
-> ---
->  include/linux/map_benchmark.h | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/include/linux/map_benchmark.h b/include/linux/map_benchmark.=
-h
-> index 62674c83bde4..2ac2fe52f248 100644
-> --- a/include/linux/map_benchmark.h
-> +++ b/include/linux/map_benchmark.h
-> @@ -27,5 +27,6 @@ struct map_benchmark {
->         __u32 dma_dir; /* DMA data direction */
->         __u32 dma_trans_ns; /* time for DMA transmission in ns */
->         __u32 granule;  /* how many PAGE_SIZE will do map/unmap once a ti=
-me */
-> +       __u8 expansion[76];     /* For future use */
->  };
->  #endif /* _KERNEL_DMA_BENCHMARK_H */
-> --
-> 2.33.0
->
+This is a low probability event, but it is possible, if this happens,
+and we test it with rcutorture configured with parameters
+nocbs_toggle and onoff_interval, it will trigger a null ptr access.
 
 Thanks
-Barry
+Zqiang
+
+
+>
+> If so, LGTM.
+>
+>                                                         Thanx, Paul
+>
+> > Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
+> > ---
+> >  kernel/rcu/tree_nocb.h | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
+> > index 1596812f7f12..6679140bb0b5 100644
+> > --- a/kernel/rcu/tree_nocb.h
+> > +++ b/kernel/rcu/tree_nocb.h
+> > @@ -1146,7 +1146,6 @@ static bool rcu_nocb_rdp_offload_wait_cond(struct rcu_data *rdp)
+> >  static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
+> >  {
+> >       int wake_gp;
+> > -     struct rcu_data *rdp_gp = rdp->nocb_gp_rdp;
+> >
+> >       WARN_ON_ONCE(cpu_online(rdp->cpu));
+> >       /*
+> > @@ -1156,7 +1155,7 @@ static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
+> >       if (!rdp->nocb_gp_rdp)
+> >               return -EINVAL;
+> >
+> > -     if (WARN_ON_ONCE(!rdp_gp->nocb_gp_kthread))
+> > +     if (WARN_ON_ONCE(!rdp->nocb_gp_kthread))
+> >               return -EINVAL;
+> >
+> >       pr_info("Offloading %d\n", rdp->cpu);
+> > @@ -1166,7 +1165,7 @@ static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
+> >
+> >       wake_gp = rcu_nocb_queue_toggle_rdp(rdp);
+> >       if (wake_gp)
+> > -             wake_up_process(rdp_gp->nocb_gp_kthread);
+> > +             wake_up_process(rdp->nocb_gp_kthread);
+> >
+> >       swait_event_exclusive(rdp->nocb_state_wq,
+> >                             rcu_nocb_rdp_offload_wait_cond(rdp));
+> > --
+> > 2.17.1
+> >
