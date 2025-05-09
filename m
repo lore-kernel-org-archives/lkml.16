@@ -1,545 +1,238 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2051.outbound.protection.outlook.com [40.107.236.51])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7E7290D8A;
-	Fri,  9 May 2025 12:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746794159; cv=fail; b=E4Ou/BCim9k+LFOwZz1TSaWPmdrvPjXSchXmY2QX3AfN1QhMtm3WUv0YOaJGrN2SS4tYNGJUnAmearRVVOlfprR73rKbcxzXsAUaa4w4QUHoxxUjs/YpH6RhTviSTmKcwcE0xlhBKsXUDHeepsOkkRhFp4vszk3hYB7VxrGGmck=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746794159; c=relaxed/simple;
-	bh=c2N6vP2dDd6n0RxIcj66uKHA+feuCGAfyLAGC4eu6Co=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cx/hvP2gMa9ZYkfbzXOyWw41G6RPkCQSgd/hCpya+MWLXS2HNZ0/fiKxtMD9u5+Q4gu0FM+myuaYh+tZ8Y8Z5EKvr3zt8pDhPoGlVZtGQywy9MNvcMvF1n0EUTKaHj4gddks28poduncoYvivorxUY2zK2UsBw1NLfj+GiwQrkc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gvn1D41y; arc=fail smtp.client-ip=40.107.236.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gvn1D41y"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=J8+XtoBJ1q15/8TcsYyntPpi8LhHhrSq5tmEXcrdkoV1/Rak6iZG/IWozylEs6G5vt64hfxzNGP+4KxDi2gsj+OFoTVPgCZ+eBBdCLbs3x5x9xWkYe0EuL32RwQLJzaJ4bMeWK+SSx1Ks4ciftn3FgkGQOF3iEcfd8KfzptomZyRGduDwofLJ/EW4G+yOH002LwKsePAvQB0AFaJHEOs7i8TABcASWfGbQUYrJco/Xz0t9auMmK9RYnib8N0KybgD2X2N5RV002tD2sN/jT+s/KHu/E4kcW6e6GvILznDI6VE4O2TXuQYMvMJncvEelUSLEMU3lhHeobsK73bHg04A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DEvJgej0Y0yAUHYnHR/XuuTZYQF1tJsOT1+hh41kzkw=;
- b=TW8BPRLrT92XM2kNFiU2OJK0bCZxdnNpoPEKo5T2RGDCFDrAlJD2bawAWenSY2WgRhxjT+ELPW+DSXsM2v/vs0souUV5brmIE+ImoWZy2R/kmX2vv7O30xDRzI3KcULay22c+lkYz9YtGsGTsKkpBEDOKQdwX0WeZX/BpIFsZ6D+w/ukL5lSPUfHpecEddOuUek/UwlSBWBZ/kGKTzRAYrkmM1ZkwlGJqWsi/hN06dkHXNWC0PZDC/buj+gHRM4ldBws63yh6zgMnVz8Ld/1fVubR55oezowRmFEgKBjchur9uAS/Ive+6zOFP2ceLRR2UxM8ETsNCxC/fQEViW6Vg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DEvJgej0Y0yAUHYnHR/XuuTZYQF1tJsOT1+hh41kzkw=;
- b=gvn1D41yQ4IeY1nDYBI6badp6iZNDJ4TZxxOLkHvnIa4137keLWdUExBn1hwLlCqB9nnFIhOuvLE2alDjpX0YuDDCFpB+nWlShzznlvQDbDXU+edE9uZLYWN8baCHWZi1Cb9ar/ambL0zNp+gLbUU252Vl85FNVvuOhKtuAxjq1Q5dvbNOiqb8wPoo8D+5twF8UPbcYpxfSCFWCg/HiuLYT1ANDGP+3F6a1il1iKhZHiOPB7q2gaU10sppwse9/39gRhny9ssoLLTZUsfMGoJrYfvuQzLWCBn1qOmPF8nhd4BRDF/gJh5E5P0ZDxF0y6jdyE6k6sIRl7pQDipotVXw==
-Received: from DM6PR08CA0040.namprd08.prod.outlook.com (2603:10b6:5:1e0::14)
- by LV3PR12MB9186.namprd12.prod.outlook.com (2603:10b6:408:197::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Fri, 9 May
- 2025 12:35:51 +0000
-Received: from DS1PEPF0001709D.namprd05.prod.outlook.com
- (2603:10b6:5:1e0:cafe::cf) by DM6PR08CA0040.outlook.office365.com
- (2603:10b6:5:1e0::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.33 via Frontend Transport; Fri,
- 9 May 2025 12:35:51 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- DS1PEPF0001709D.mail.protection.outlook.com (10.167.18.107) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.18 via Frontend Transport; Fri, 9 May 2025 12:35:51 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 9 May 2025
- 05:35:42 -0700
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 9 May 2025 05:35:41 -0700
-Received: from build-va-bionic-20241022.nvidia.com (10.127.8.12) by
- mail.nvidia.com (10.126.190.182) with Microsoft SMTP Server id 15.2.1544.14
- via Frontend Transport; Fri, 9 May 2025 05:35:37 -0700
-From: Vishwaroop A <va@nvidia.com>
-To: <krzk@kernel.org>, <broonie@kernel.org>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <thierry.reding@gmail.com>,
-	<jonathanh@nvidia.com>, <skomatineni@nvidia.com>, <ldewangan@nvidia.com>,
-	<kyarlagadda@nvidia.com>, <smangipudi@nvidia.com>, <bgriffis@nvidia.com>,
-	<linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Vishwaroop A <va@nvidia.com>
-Subject: [PATCH v2] spi: tegra210-quad: Add support for internal DMA
-Date: Fri, 9 May 2025 12:35:21 +0000
-Message-ID: <20250509123521.3471650-2-va@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250509123521.3471650-1-va@nvidia.com>
-References: <20250509123521.3471650-1-va@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7F2291163;
+	Fri,  9 May 2025 12:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746794165; cv=none; b=pNBT21kM+YQixygq9+dO8sfHPDCDw7P3Pp6/YSWTrzB0bU/U5KbwgkR4Ocz44qSNXewmGghxAy3DOOYkKlSBneGLLjhwyford/U4dMbansOXaK4Hh9ytTYrcuMThO0zmK0nWh026zSjMh2ybg/biGxqH/iCm7xQsWda8ra9VPyo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746794165; c=relaxed/simple;
+	bh=iFG6U4TNU0CiwWw5zXUbd1SGuqdNDV0zCwWyjsJlnBs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DYiBDDSqbeBoSWeV4j3PaLG/Xydp1ByS54+G13Hl3tzz9ImufdUpj8ZCR9oJFiyYwZ9NZ6jPBQ6e58s9cmc/mXWvZbzfYEZ53ZIgZ2fqXxCXpz2EKCI4IhurbFyXKjxL2RKjN9O2osLoSYjCgHD7x0gmIfrJw+3wV9ixkX1G4dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zv7kl6J0kz4f3kvq;
+	Fri,  9 May 2025 20:35:27 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id E6B2A1A0359;
+	Fri,  9 May 2025 20:35:53 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP4 (Coremail) with SMTP id gCh0CgAHa1+l9h1osHmaLw--.17418S3;
+	Fri, 09 May 2025 20:35:51 +0800 (CST)
+Message-ID: <7118c684-db9d-4bf1-a8dc-48c4cf698eba@huaweicloud.com>
+Date: Fri, 9 May 2025 20:35:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF0001709D:EE_|LV3PR12MB9186:EE_
-X-MS-Office365-Filtering-Correlation-Id: e83e41b6-8e63-4aa1-fcdb-08dd8ef60892
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|82310400026|36860700013|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?mb4cHiQiETkUDwKGg2TRuZ5ICUXxoGLSHpWbukXmhiOoAueAJgEwGCIgxbCx?=
- =?us-ascii?Q?eMMGNYtKap20vtynhjbDy9a92b8GhyFXMib6tWTNUjLXDIQxrCuXXT6aMg9a?=
- =?us-ascii?Q?H/SHrYv6TZ5om1c0D7aF7rnBDIKqOHTwwYH0nWOhZRMV9maf5GlH9Dyq3ia0?=
- =?us-ascii?Q?gvgY7IHwl6AqVG9KFn3UrWq7bUV9k+PqSlyMLfntGJ5eThYnCHa2+PcuQt/R?=
- =?us-ascii?Q?HHV/vZKUjJ9bAZVRLe+S2vpVSGUm3mKY9oTxJ0Y80x90ZWIC1/uFa/ba36Zo?=
- =?us-ascii?Q?moVh8diW0W64PC/5y3hii55rBnFbQ3ZYP41TTWf2F9Admb0lleEafPtaoHZj?=
- =?us-ascii?Q?8qsWj5Pv9Meephk+qsk5BM1qeDbVZWkOlAPzXZDXqgQWijKt+UmOdFd58ZEV?=
- =?us-ascii?Q?UmLLIeXbtB95n59Haa8xeaUC41aDkfd2UQFdoZsIJuHhcDnZGrobaUS7ddIN?=
- =?us-ascii?Q?4GIiVQVIQcD2x9rWR9HQsaQMCHOtZywQIbQr8oCFI0l3lCpeGKfmkNvJJ4/b?=
- =?us-ascii?Q?ByeeXKi5qEC5mfT2jgJHeou+vef3kXhjUxbgAYTTGVQEaxIRaGIeXH1gqtFX?=
- =?us-ascii?Q?EL48wO5dJaMIQhjPAE+n/yo1jSiGg31Q4j0I2vyrQuZNbisOilGC77pheI9G?=
- =?us-ascii?Q?ZC6V9ea9mwPFs6HUHKw3/2IAGBH5a3txNTqElW5TTwpjQjE6KAU4cUQ5C3Fc?=
- =?us-ascii?Q?i2NmctvvCdgkTXthPcF8iJbgomZudX144w7Uu18j4NqgbEvP9IZoVWsx3Iet?=
- =?us-ascii?Q?sebpLfOOgCPDVMqxHK3ZhkwdykM8DecpfMvMMR61kAgMJVJQz2QHslG7V0A0?=
- =?us-ascii?Q?JTtU7qOtHTBKdghFfhiqOW2fwYWtR7Bkr6nslwlPql2i3VjfrDk1YRAb648V?=
- =?us-ascii?Q?7C27O/cP7Vh3tkOndY5o3+l/Afl8qHqcN2VndN2lDkTRXmIy/+O4MMObJTTU?=
- =?us-ascii?Q?iImML5ozieQHi7AUw72eJ5ht0hLvzw1+86gXVvA1e44kuh54E9Q1mJIxO18M?=
- =?us-ascii?Q?Q0czpHF0p5iIvRYiqkYSEQMtS5lTqtXOKbO85leKa51/ybEG/+aJDeSrzq/u?=
- =?us-ascii?Q?G17xomm2hmLUOOqvjPnOMMzvp6fBEdVNH5YB8EvARIdR/rf0qpD38n5p5BP6?=
- =?us-ascii?Q?H2vvssM6QSlHvYlw/vT+EZkmm0wWp9B1YvtO4Qr6sQxkjqbocj3dRrXyaV4X?=
- =?us-ascii?Q?+nmIo7t11GztXUlAHJDQz2Jn7h+YcME2WrvhaxtQIayq/LZ2OCu4uv+v1UqG?=
- =?us-ascii?Q?I625fk+fl3LggWQbmeo4GE65s2UZfjXbwUo/FfmfP9putVDCc0ocw5mqPwdY?=
- =?us-ascii?Q?qUlNyLrqO+kUUtrz0V5ThA419LGqJeE2qYf/ejLQBZuxF2hzp5dGEXkprKFl?=
- =?us-ascii?Q?TmrAzfFYZFvDHnbdDVZ1UyWcRPV11MamI6703L3lZmr3ux16Z+lkHXemUvn7?=
- =?us-ascii?Q?8pUB++FwZ9CoKdgSCSGny4R51cHTWwflNCB34Ylqp6kqIywelsSe89WCkN5r?=
- =?us-ascii?Q?EPYxKw/or3EVolzBX/A9ZRu+uYvqedK0uA0TgyqVOhL/jfEdyiBnyucOKQ?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(82310400026)(36860700013)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 12:35:51.2103
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e83e41b6-8e63-4aa1-fcdb-08dd8ef60892
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF0001709D.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9186
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v4 07/11] fs: statx add write zeroes unmap attribute
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: Christoph Hellwig <hch@lst.de>, "Darrick J. Wong" <djwong@kernel.org>,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ john.g.garry@oracle.com, bmarzins@redhat.com, chaitanyak@nvidia.com,
+ shinichiro.kawasaki@wdc.com, brauner@kernel.org, yi.zhang@huawei.com,
+ chengzhihao1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
+References: <20250421021509.2366003-8-yi.zhang@huaweicloud.com>
+ <20250505132208.GA22182@lst.de> <20250505142945.GJ1035866@frogsfrogsfrogs>
+ <c7d8d0c3-7efa-4ee6-b518-f8b09ec87b73@huaweicloud.com>
+ <20250506043907.GA27061@lst.de>
+ <64c8b62a-83ba-45be-a83e-62b6ad8d6f22@huaweicloud.com>
+ <20250506121102.GA21905@lst.de>
+ <a39a6612-89ac-4255-b737-37c7d16b3185@huaweicloud.com>
+ <20250508050147.GA26916@lst.de>
+ <68172a9e-cf68-4962-8229-68e283e894e1@huaweicloud.com>
+ <20250508202424.GA30222@mit.edu>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <20250508202424.GA30222@mit.edu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgAHa1+l9h1osHmaLw--.17418S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxKr4rJryDuw4UKryUtr47Jwb_yoWxur13pF
+	WFgF4Fyr4DKFyrAwn2vw4xuF1YyrZ3JFy5Grs5Gw10kws8ZF1SgFn7K3yFvasrJr97Wa1j
+	qFWYqFyDGanYyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	s2-5UUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Previous generations of Tegra supported DMA operations by an external
-DMA controller, but the QSPI on Tegra234 devices now have an internal
-DMA controller.
+On 2025/5/9 4:24, Theodore Ts'o wrote:
+> On Thu, May 08, 2025 at 08:17:14PM +0800, Zhang Yi wrote:
+>> On 2025/5/8 13:01, Christoph Hellwig wrote:
+>>>>
+>>>> My idea is not to strictly limiting the use of FALLOC_FL_WRITE_ZEROES to
+>>>> only bdev or files where bdev_unmap_write_zeroes() returns true. In
+>>>> other words, STATX_ATTR_WRITE_ZEROES_UNMAP and FALLOC_FL_WRITE_ZEROES
+>>>> are not consistent, they are two independent features. Even if some
+>>>> devices STATX_ATTR_WRITE_ZEROES_UNMAP are not set, users should still be
+>>>> allowed to call fallcoate(FALLOC_FL_WRITE_ZEROES). This is because some
+>>>> devices and drivers currently cannot reliably ascertain whether they
+>>>> support the unmap write zero command; however, certain devices, such as
+>>>> specific cloud storage devices, do support it. Users of these devices
+>>>> may also wish to use FALLOC_FL_WRITE_ZEROES to expedite the zeroing
+>>>> process.
+>>>
+>>> What are those "cloud storage devices" where you set it reliably,
+>>> i.e.g what drivers?
+>>
+>> I don't have these 'cloud storage devices' now, but Ted had mentioned
+>> those cloud-emulated block devices such as Google's Persistent Desk or
+>> Amazon's Elastic Block Device in. I'm not sure if they can accurately
+>> report the BLK_FEAT_WRITE_ZEROES_UNMAP feature, maybe Ted can give more
+>> details.
+>>
+>> https://lore.kernel.org/linux-fsdevel/20250106161732.GG1284777@mit.edu/
+> 
+> There's nothing really exotic about what I was referring to in terms
+> of "cloud storage devices".  Perhaps a better way of describing them
+> is to consider devices such as dm-thin, or a Ceph Block Device, which
+> is being exposed as a SCSI or NVME device.
 
-Introduce routines to initialize and configure internal DMA channels
-for both transmit and receive paths. Set up DMA mapping functions to
-manage buffer addresses effectively.
+OK, then correctly reporting the BLK_FEAT_WRITE_ZEROES_UNMAP feature
+should no longer be a major problem. It seems that we do not need to
+pay much attention to enabling this feature manually.
 
-The variable err is changed to num_errors to more accurately represent
-its purpose in the code. The updated name clarifies that the variable
-tracks the number of errors encountered during execution, rather than
-serving as a generic error flag or code.
+> 
+> The distinction I was trying to make is performance-related.  Suppose
+> you call WRITE_ZEROS on a 14TB region.  After the WRITES_ZEROS
+> complete, a read anywhere on that 14TB region will return zeros.
+> That's easy.  But the question is when you call WRITE_ZEROS, will the
+> storage device (a) go away for a day or more before it completes (which
+> would be the case if it is a traditional spinning rust platter), or
+> (b) will it be basically instaneous, because all dm-thin or a Ceph Block
+> Device needs to do is to delete one or more entries in its mapping
+> table.
 
-Tegra241 device supports DMA via an external DMA controller (GPCDMA), so
-enable this.
+Yes.
 
-Signed-off-by: Vishwaroop A <va@nvidia.com>
----
- drivers/spi/spi-tegra210-quad.c | 223 +++++++++++++++++++-------------
- 1 file changed, 130 insertions(+), 93 deletions(-)
+> 
+> The problem is two-fold.  First, there's no way for the kernel to know
+> whether a storage device will behave as (a) or (b), because SCSI and
+> other storage specifications say that performance is out of scope.
+> They only talk about the functional results (afterwards, if yout try
+> to read from the region, you will get zeros), and are utterly silent
+> about how long it migt take.  The second problem is that if you are an
+> application program, there is no way you will be willing to call
+> fallocate(WRITE_ZEROS, 14TB) if you don't know whether the disk will
+> go away for a day or whether it will be instaneous.
+> 
+> But because there is no way for the kernel to know whether WRITE_ZEROS
+> will be fast or not, how would you expect the kernel to expose
+> STATX_ATTR_WRITE_ZEROES_UNMAP?  Cristoph's formulation "breaking the
+> abstraction" perfectly encapsulate the SCSI specification's position
+> on the matter, and I agree it's a valid position.  It's just not
+> terribly useful for the application programmer.
 
-diff --git a/drivers/spi/spi-tegra210-quad.c b/drivers/spi/spi-tegra210-quad.c
-index a93e19911ef1..953a4a74afeb 100644
---- a/drivers/spi/spi-tegra210-quad.c
-+++ b/drivers/spi/spi-tegra210-quad.c
-@@ -111,6 +111,9 @@
- #define QSPI_DMA_BLK				0x024
- #define QSPI_DMA_BLK_SET(x)			(((x) & 0xffff) << 0)
- 
-+#define QSPI_DMA_MEM_ADDRESS			0x028
-+#define QSPI_DMA_HI_ADDRESS			0x02c
-+
- #define QSPI_TX_FIFO				0x108
- #define QSPI_RX_FIFO				0x188
- 
-@@ -167,9 +170,9 @@ enum tegra_qspi_transfer_type {
- };
- 
- struct tegra_qspi_soc_data {
--	bool has_dma;
- 	bool cmb_xfer_capable;
- 	bool supports_tpm;
-+	bool has_ext_dma;
- 	unsigned int cs_count;
- };
- 
-@@ -605,13 +608,16 @@ static void tegra_qspi_dma_unmap_xfer(struct tegra_qspi *tqspi, struct spi_trans
- 
- 	len = DIV_ROUND_UP(tqspi->curr_dma_words * tqspi->bytes_per_word, 4) * 4;
- 
--	dma_unmap_single(tqspi->dev, t->tx_dma, len, DMA_TO_DEVICE);
--	dma_unmap_single(tqspi->dev, t->rx_dma, len, DMA_FROM_DEVICE);
-+	if (t->tx_buf)
-+		dma_unmap_single(tqspi->dev, t->tx_dma, len, DMA_TO_DEVICE);
-+	if (t->rx_buf)
-+		dma_unmap_single(tqspi->dev, t->rx_dma, len, DMA_FROM_DEVICE);
- }
- 
- static int tegra_qspi_start_dma_based_transfer(struct tegra_qspi *tqspi, struct spi_transfer *t)
- {
- 	struct dma_slave_config dma_sconfig = { 0 };
-+	dma_addr_t rx_dma_phys, tx_dma_phys;
- 	unsigned int len;
- 	u8 dma_burst;
- 	int ret = 0;
-@@ -634,60 +640,88 @@ static int tegra_qspi_start_dma_based_transfer(struct tegra_qspi *tqspi, struct
- 		len = tqspi->curr_dma_words * 4;
- 
- 	/* set attention level based on length of transfer */
--	val = 0;
--	if (len & 0xf) {
--		val |= QSPI_TX_TRIG_1 | QSPI_RX_TRIG_1;
--		dma_burst = 1;
--	} else if (((len) >> 4) & 0x1) {
--		val |= QSPI_TX_TRIG_4 | QSPI_RX_TRIG_4;
--		dma_burst = 4;
--	} else {
--		val |= QSPI_TX_TRIG_8 | QSPI_RX_TRIG_8;
--		dma_burst = 8;
-+	if (tqspi->soc_data->has_ext_dma) {
-+		val = 0;
-+		if (len & 0xf) {
-+			val |= QSPI_TX_TRIG_1 | QSPI_RX_TRIG_1;
-+			dma_burst = 1;
-+		} else if (((len) >> 4) & 0x1) {
-+			val |= QSPI_TX_TRIG_4 | QSPI_RX_TRIG_4;
-+			dma_burst = 4;
-+		} else {
-+			val |= QSPI_TX_TRIG_8 | QSPI_RX_TRIG_8;
-+			dma_burst = 8;
-+		}
-+
-+		tegra_qspi_writel(tqspi, val, QSPI_DMA_CTL);
- 	}
- 
--	tegra_qspi_writel(tqspi, val, QSPI_DMA_CTL);
- 	tqspi->dma_control_reg = val;
- 
- 	dma_sconfig.device_fc = true;
-+
- 	if (tqspi->cur_direction & DATA_DIR_TX) {
--		dma_sconfig.dst_addr = tqspi->phys + QSPI_TX_FIFO;
--		dma_sconfig.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
--		dma_sconfig.dst_maxburst = dma_burst;
--		ret = dmaengine_slave_config(tqspi->tx_dma_chan, &dma_sconfig);
--		if (ret < 0) {
--			dev_err(tqspi->dev, "failed DMA slave config: %d\n", ret);
--			return ret;
--		}
-+		if (tqspi->tx_dma_chan) {
-+			dma_sconfig.dst_addr = tqspi->phys + QSPI_TX_FIFO;
-+			dma_sconfig.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+			dma_sconfig.dst_maxburst = dma_burst;
-+			ret = dmaengine_slave_config(tqspi->tx_dma_chan, &dma_sconfig);
-+			if (ret < 0) {
-+				dev_err(tqspi->dev, "failed DMA slave config: %d\n", ret);
-+				return ret;
-+			}
- 
--		tegra_qspi_copy_client_txbuf_to_qspi_txbuf(tqspi, t);
--		ret = tegra_qspi_start_tx_dma(tqspi, t, len);
--		if (ret < 0) {
--			dev_err(tqspi->dev, "failed to starting TX DMA: %d\n", ret);
--			return ret;
-+			tegra_qspi_copy_client_txbuf_to_qspi_txbuf(tqspi, t);
-+			ret = tegra_qspi_start_tx_dma(tqspi, t, len);
-+			if (ret < 0) {
-+				dev_err(tqspi->dev, "failed to starting TX DMA: %d\n", ret);
-+				return ret;
-+			}
-+		} else {
-+			if (tqspi->is_packed)
-+				tx_dma_phys = t->tx_dma;
-+			else
-+				tx_dma_phys = tqspi->tx_dma_phys;
-+			tegra_qspi_copy_client_txbuf_to_qspi_txbuf(tqspi, t);
-+			tegra_qspi_writel(tqspi, lower_32_bits(tx_dma_phys),
-+					  QSPI_DMA_MEM_ADDRESS);
-+			tegra_qspi_writel(tqspi, (upper_32_bits(tx_dma_phys) & 0xff),
-+					  QSPI_DMA_HI_ADDRESS);
- 		}
- 	}
- 
- 	if (tqspi->cur_direction & DATA_DIR_RX) {
--		dma_sconfig.src_addr = tqspi->phys + QSPI_RX_FIFO;
--		dma_sconfig.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
--		dma_sconfig.src_maxburst = dma_burst;
--		ret = dmaengine_slave_config(tqspi->rx_dma_chan, &dma_sconfig);
--		if (ret < 0) {
--			dev_err(tqspi->dev, "failed DMA slave config: %d\n", ret);
--			return ret;
--		}
-+		if (tqspi->rx_dma_chan) {
-+			dma_sconfig.src_addr = tqspi->phys + QSPI_RX_FIFO;
-+			dma_sconfig.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+			dma_sconfig.src_maxburst = dma_burst;
-+			ret = dmaengine_slave_config(tqspi->rx_dma_chan, &dma_sconfig);
-+			if (ret < 0) {
-+				dev_err(tqspi->dev, "failed DMA slave config: %d\n", ret);
-+				return ret;
-+			}
- 
--		dma_sync_single_for_device(tqspi->dev, tqspi->rx_dma_phys,
--					   tqspi->dma_buf_size,
--					   DMA_FROM_DEVICE);
-+			dma_sync_single_for_device(tqspi->dev, tqspi->rx_dma_phys,
-+						   tqspi->dma_buf_size, DMA_FROM_DEVICE);
- 
--		ret = tegra_qspi_start_rx_dma(tqspi, t, len);
--		if (ret < 0) {
--			dev_err(tqspi->dev, "failed to start RX DMA: %d\n", ret);
--			if (tqspi->cur_direction & DATA_DIR_TX)
--				dmaengine_terminate_all(tqspi->tx_dma_chan);
--			return ret;
-+			ret = tegra_qspi_start_rx_dma(tqspi, t, len);
-+			if (ret < 0) {
-+				dev_err(tqspi->dev, "failed to start RX DMA: %d\n", ret);
-+				if (tqspi->cur_direction & DATA_DIR_TX)
-+					dmaengine_terminate_all(tqspi->tx_dma_chan);
-+				return ret;
-+			}
-+
-+		} else {
-+			if (tqspi->is_packed)
-+				rx_dma_phys = t->rx_dma;
-+			else
-+				rx_dma_phys = tqspi->rx_dma_phys;
-+
-+			tegra_qspi_writel(tqspi, lower_32_bits(rx_dma_phys),
-+					  QSPI_DMA_MEM_ADDRESS);
-+			tegra_qspi_writel(tqspi, (upper_32_bits(rx_dma_phys) & 0xff),
-+					  QSPI_DMA_HI_ADDRESS);
- 		}
- 	}
- 
-@@ -726,9 +760,6 @@ static int tegra_qspi_start_cpu_based_transfer(struct tegra_qspi *qspi, struct s
- 
- static void tegra_qspi_deinit_dma(struct tegra_qspi *tqspi)
- {
--	if (!tqspi->soc_data->has_dma)
--		return;
--
- 	if (tqspi->tx_dma_buf) {
- 		dma_free_coherent(tqspi->dev, tqspi->dma_buf_size,
- 				  tqspi->tx_dma_buf, tqspi->tx_dma_phys);
-@@ -759,16 +790,29 @@ static int tegra_qspi_init_dma(struct tegra_qspi *tqspi)
- 	u32 *dma_buf;
- 	int err;
- 
--	if (!tqspi->soc_data->has_dma)
--		return 0;
-+	if (tqspi->soc_data->has_ext_dma) {
-+		dma_chan = dma_request_chan(tqspi->dev, "rx");
-+		if (IS_ERR(dma_chan)) {
-+			err = PTR_ERR(dma_chan);
-+			goto err_out;
-+		}
- 
--	dma_chan = dma_request_chan(tqspi->dev, "rx");
--	if (IS_ERR(dma_chan)) {
--		err = PTR_ERR(dma_chan);
--		goto err_out;
--	}
-+		tqspi->rx_dma_chan = dma_chan;
- 
--	tqspi->rx_dma_chan = dma_chan;
-+		dma_chan = dma_request_chan(tqspi->dev, "tx");
-+		if (IS_ERR(dma_chan)) {
-+			err = PTR_ERR(dma_chan);
-+			goto err_out;
-+		}
-+
-+		tqspi->tx_dma_chan = dma_chan;
-+	} else {
-+		if (!device_iommu_mapped(tqspi->dev)) {
-+			dev_warn(tqspi->dev,
-+				 "IOMMU not enabled in device-tree, falling back to PIO mode\n");
-+			return 0;
-+		}
-+	}
- 
- 	dma_buf = dma_alloc_coherent(tqspi->dev, tqspi->dma_buf_size, &dma_phys, GFP_KERNEL);
- 	if (!dma_buf) {
-@@ -779,14 +823,6 @@ static int tegra_qspi_init_dma(struct tegra_qspi *tqspi)
- 	tqspi->rx_dma_buf = dma_buf;
- 	tqspi->rx_dma_phys = dma_phys;
- 
--	dma_chan = dma_request_chan(tqspi->dev, "tx");
--	if (IS_ERR(dma_chan)) {
--		err = PTR_ERR(dma_chan);
--		goto err_out;
--	}
--
--	tqspi->tx_dma_chan = dma_chan;
--
- 	dma_buf = dma_alloc_coherent(tqspi->dev, tqspi->dma_buf_size, &dma_phys, GFP_KERNEL);
- 	if (!dma_buf) {
- 		err = -ENOMEM;
-@@ -1128,15 +1164,12 @@ static int tegra_qspi_combined_seq_xfer(struct tegra_qspi *tqspi,
- 			if (WARN_ON_ONCE(ret == 0)) {
- 				dev_err_ratelimited(tqspi->dev,
- 						    "QSPI Transfer failed with timeout\n");
--				if (tqspi->is_curr_dma_xfer &&
--				    (tqspi->cur_direction & DATA_DIR_TX))
--					dmaengine_terminate_all
--						(tqspi->tx_dma_chan);
--
--				if (tqspi->is_curr_dma_xfer &&
--				    (tqspi->cur_direction & DATA_DIR_RX))
--					dmaengine_terminate_all
--						(tqspi->rx_dma_chan);
-+				if (tqspi->is_curr_dma_xfer) {
-+					if ((tqspi->cur_direction & DATA_DIR_TX) && tqspi->tx_dma_chan)
-+						dmaengine_terminate_all(tqspi->tx_dma_chan);
-+					if ((tqspi->cur_direction & DATA_DIR_RX) && tqspi->rx_dma_chan)
-+						dmaengine_terminate_all(tqspi->rx_dma_chan);
-+				}
- 
- 				/* Abort transfer by resetting pio/dma bit */
- 				if (!tqspi->is_curr_dma_xfer) {
-@@ -1251,10 +1284,12 @@ static int tegra_qspi_non_combined_seq_xfer(struct tegra_qspi *tqspi,
- 						  QSPI_DMA_TIMEOUT);
- 		if (WARN_ON(ret == 0)) {
- 			dev_err(tqspi->dev, "transfer timeout\n");
--			if (tqspi->is_curr_dma_xfer && (tqspi->cur_direction & DATA_DIR_TX))
--				dmaengine_terminate_all(tqspi->tx_dma_chan);
--			if (tqspi->is_curr_dma_xfer && (tqspi->cur_direction & DATA_DIR_RX))
--				dmaengine_terminate_all(tqspi->rx_dma_chan);
-+			if (tqspi->is_curr_dma_xfer) {
-+				if ((tqspi->cur_direction & DATA_DIR_TX) && tqspi->tx_dma_chan)
-+					dmaengine_terminate_all(tqspi->tx_dma_chan);
-+				if ((tqspi->cur_direction & DATA_DIR_RX) && tqspi->rx_dma_chan)
-+					dmaengine_terminate_all(tqspi->rx_dma_chan);
-+			}
- 			tegra_qspi_handle_error(tqspi);
- 			ret = -EIO;
- 			goto complete_xfer;
-@@ -1323,7 +1358,7 @@ static bool tegra_qspi_validate_cmb_seq(struct tegra_qspi *tqspi,
- 			return false;
- 		xfer = list_next_entry(xfer, transfer_list);
- 	}
--	if (!tqspi->soc_data->has_dma && xfer->len > (QSPI_FIFO_DEPTH << 2))
-+	if (!tqspi->soc_data->has_ext_dma && xfer->len > (QSPI_FIFO_DEPTH << 2))
- 		return false;
- 
- 	return true;
-@@ -1384,41 +1419,43 @@ static irqreturn_t handle_dma_based_xfer(struct tegra_qspi *tqspi)
- 	unsigned int total_fifo_words;
- 	unsigned long flags;
- 	long wait_status;
--	int err = 0;
-+	int num_errors = 0;
- 
- 	if (tqspi->cur_direction & DATA_DIR_TX) {
- 		if (tqspi->tx_status) {
--			dmaengine_terminate_all(tqspi->tx_dma_chan);
--			err += 1;
--		} else {
-+			if (tqspi->tx_dma_chan)
-+				dmaengine_terminate_all(tqspi->tx_dma_chan);
-+			num_errors++;
-+		} else if (tqspi->tx_dma_chan) {
- 			wait_status = wait_for_completion_interruptible_timeout(
- 				&tqspi->tx_dma_complete, QSPI_DMA_TIMEOUT);
- 			if (wait_status <= 0) {
- 				dmaengine_terminate_all(tqspi->tx_dma_chan);
- 				dev_err(tqspi->dev, "failed TX DMA transfer\n");
--				err += 1;
-+				num_errors++;
- 			}
- 		}
- 	}
- 
- 	if (tqspi->cur_direction & DATA_DIR_RX) {
- 		if (tqspi->rx_status) {
--			dmaengine_terminate_all(tqspi->rx_dma_chan);
--			err += 2;
--		} else {
-+			if (tqspi->rx_dma_chan)
-+				dmaengine_terminate_all(tqspi->rx_dma_chan);
-+			num_errors++;
-+		} else if (tqspi->rx_dma_chan) {
- 			wait_status = wait_for_completion_interruptible_timeout(
- 				&tqspi->rx_dma_complete, QSPI_DMA_TIMEOUT);
- 			if (wait_status <= 0) {
- 				dmaengine_terminate_all(tqspi->rx_dma_chan);
- 				dev_err(tqspi->dev, "failed RX DMA transfer\n");
--				err += 2;
-+				num_errors++;
- 			}
- 		}
- 	}
- 
- 	spin_lock_irqsave(&tqspi->lock, flags);
- 
--	if (err) {
-+	if (num_errors) {
- 		tegra_qspi_dma_unmap_xfer(tqspi, t);
- 		tegra_qspi_handle_error(tqspi);
- 		complete(&tqspi->xfer_completion);
-@@ -1444,9 +1481,9 @@ static irqreturn_t handle_dma_based_xfer(struct tegra_qspi *tqspi)
- 	/* continue transfer in current message */
- 	total_fifo_words = tegra_qspi_calculate_curr_xfer_param(tqspi, t);
- 	if (total_fifo_words > QSPI_FIFO_DEPTH)
--		err = tegra_qspi_start_dma_based_transfer(tqspi, t);
-+		num_errors = tegra_qspi_start_dma_based_transfer(tqspi, t);
- 	else
--		err = tegra_qspi_start_cpu_based_transfer(tqspi, t);
-+		num_errors = tegra_qspi_start_cpu_based_transfer(tqspi, t);
- 
- exit:
- 	spin_unlock_irqrestore(&tqspi->lock, flags);
-@@ -1474,28 +1511,28 @@ static irqreturn_t tegra_qspi_isr_thread(int irq, void *context_data)
- }
- 
- static struct tegra_qspi_soc_data tegra210_qspi_soc_data = {
--	.has_dma = true,
-+	.has_ext_dma = true,
- 	.cmb_xfer_capable = false,
- 	.supports_tpm = false,
- 	.cs_count = 1,
- };
- 
- static struct tegra_qspi_soc_data tegra186_qspi_soc_data = {
--	.has_dma = true,
-+	.has_ext_dma = true,
- 	.cmb_xfer_capable = true,
- 	.supports_tpm = false,
- 	.cs_count = 1,
- };
- 
- static struct tegra_qspi_soc_data tegra234_qspi_soc_data = {
--	.has_dma = false,
-+	.has_ext_dma = false,
- 	.cmb_xfer_capable = true,
- 	.supports_tpm = true,
- 	.cs_count = 1,
- };
- 
- static struct tegra_qspi_soc_data tegra241_qspi_soc_data = {
--	.has_dma = false,
-+	.has_ext_dma = true,
- 	.cmb_xfer_capable = true,
- 	.supports_tpm = true,
- 	.cs_count = 4,
--- 
-2.17.1
+Yes.
+
+> 
+> Things which some programs/users might want to know or rely upon, but which is normally quite impossible are: 
+> 
+> * Will the write zero / discard operation take a "reasonable" amount
+>   of time?  (Yes, not necessarilly well defined, but we know it when
+>   we see it, and hours or days is generally not reasonable.)
+> 
+> * Is the operation reliable --- i.e., is the device allowed to
+>   randomly decide that it won't actually zero the requested blocks (as
+>   is the case of discard) whenever it feels like it.
+> 
+> * Is the operation guaranteed to make the data irretreviable even in
+>   face of an attacker with low-level access to the device.  (And this
+>   is also not necessarily well defined; does the attacker have access
+>   to a scanning electronic microscope, or can do a liquid nitrogen
+>   destructive access of the flash device?)
+
+Yes.
+
+> 
+> The UFS (Universal Flash Storage) spec comes the closest to providing
+> commands that distinguish between these various cases, but for most
+> storage specifications, like SCSI, it is absolutely requires peaking
+> behind the abstraction barrier defined by the specification, and so
+> ultimately, the kernel can't know.
+> 
+> About the best you can do is to require manual configuration; perhaps a
+> config file at the database or userspace cluster file system level
+> because the system adminsitrator knows --- maybe because the hyperscale
+> cloud provider has leaned on the storage vendor to tell them under
+> NDA, storage specs be damned or they won't spend $$$ millions with
+> that storage vendor ---  or because the database administrator discovers
+> that using fallocate(WRITE_ZEROS) causes performance to tank, so they
+> manually disable the use of WRITE_ZEROS.
+
+Yes, this is indeed what we should consider.
+
+> 
+> Could this be done in the kernel?  Sure.  We could have a file, say,
+> /sys/block/sdXX/queue/write_zeros where the write_zeros file is
+> writeable, and so the administrator can force-disable WRITES_ZERO by
+> writing 0 into the file.  And could this be queried via a STATX
+> attribute?  I suppose, although to be honest, I'm used to doing this
+> by looking at the sysfs files.  For example, just recently I coded up
+> the following:
+> 
+> static int is_rotational (const char *device_name EXT2FS_ATTR((unused)))
+> {
+> 	int		rotational = -1;
+> #ifdef __linux__
+> 	char		path[1024];
+> 	struct stat	st;
+> 	FILE		*f;
+> 
+> 	if ((stat(device_name, &st) < 0) || !S_ISBLK(st.st_mode))
+> 		return -1;
+> 
+> 	snprintf(path, sizeof(path), "/sys/dev/block/%d:%d/queue/rotational",
+> 		major(st.st_rdev), minor(st.st_rdev));
+> 	f = fopen(path, "r");
+> 	if (!f) {
+> 		snprintf(path, sizeof(path),
+> 			"/sys/dev/block/%d:%d/../queue/rotational",
+> 			major(st.st_rdev), minor(st.st_rdev));
+> 		f = fopen(path, "r");
+> 	}
+> 	if (f) {
+> 		if (fscanf(f, "%d", &rotational) != 1)
+> 			rotational = -1;
+> 		fclose(f);
+> 	}
+> #endif
+> 	return rotational;
+> }
+> 
+> Easy-peasy!   Who needs statx?   :-)
+> 
+
+Yes. as I replied earlier, I'm going to implement this with a new flag,
+BLK_FALG_WRITE_ZEROES_UNMAP_DISABLED, similar to the existing
+BLK_FLAG_WRITE_CACHE_DISABLED. Make
+/sys/block/<disk>/queue/write_zeroes_unmap to read-write. Regarding
+whether to rename it to 'write_zeroes', I need to reconsider, as the
+naming aligns perfectly with FALLOC_FL_WRITE_ZEROES, but the **UNMAP**
+semantics cannot be adequately expressed.
+
+Thank you for your detailed explanation and suggestions!
+
+Best regards.
+Yi.
 
