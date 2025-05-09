@@ -1,170 +1,264 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E655F4964E;
-	Fri,  9 May 2025 03:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1605F507
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 03:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746761665; cv=none; b=TFqLmePzPDmWZqFzh+NFOSeolRRAln+lZkZ1lZZmT4djOHXv0ukhVOmuPOJLzfeaEKk7ghe9eu86ND4rIM8j4EkdWqkAdV+bPHZ3rftv0bSfVotdFC6cRQEZiwP88kW991KO9CJ/EoQN3cVhtc+8G1e+j17R1hT+tO9Gi91AF/Q=
+	t=1746761815; cv=none; b=S2ygTkT0MCQYM+RSmoSRUSr+N+5VaMlgDFdTxejyCcGabeA65mUZqrhLSxy4H+IdTpEDgfM0uzeBARfizTgmL65txsarZijaO7FyT0lGJpiII0bzoE0L9qgmoq+ccSIu+69EQJbKvyI730cDzkEgffu//3xD+U7I7OlHSewM/Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746761665; c=relaxed/simple;
-	bh=YCgZ4EmtM1kqBGsyn395LmBrCpWTYHWfQgzhyYcGRZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DbVQZFjnzueTmoKZ5MCAKqlwsmXR2mo/heZHCSS53JiZc+gZggiM3gPmGu7kVhn7wsgiGZJZ4WlpQvuWnkyICveiROYN8IcQG39pfWkQXF/PoC0pPdabunG9KnJomndVjhYD7xm5EPbT7BRx6wcPQyrVWTNvQxZSsg+EYGlcLqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j9bIKj4I; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746761815; c=relaxed/simple;
+	bh=K/+fOBkcgKY49K4p66gzZun3tBynXrNsVIDrp0j2+nA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FwUXd28d7IgtZVdXS4I6eU+aLHUcpiphVUtsI8LYiEa9LBTa4vCA2aWsRndNJDS4yQ0JSKQhUwQUqrU6XssIXCmEO3sgARwINkAGLQLxpWrPm2XxW/F0eQiOcRwk9xTIflMYj2Imdop6dbn4yvCdxC6Q2GaxxZ7FoGexpEvObFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=pAVs/++R; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j9bIKj4I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746761665; x=1778297665;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YCgZ4EmtM1kqBGsyn395LmBrCpWTYHWfQgzhyYcGRZ8=;
-  b=j9bIKj4I0e8yth4EB0PTVQMTUzUx9rvR62LpznqFyUEAG5Ze3L/yUAFU
-   K6wKvEWj35J6SHfV/Se21YmqyeXxH8L6jx+3QIZw3K8qa+Ti+LyaUgCpy
-   DX8vy5pd01Nhfbq0OLHYKQDqZD9ecBCuPyr0BhiP4k0BGK7gz3BvV5XSg
-   PXEnstiynFU/5LRlqz7NLnhWWEmL/kJxQnRpos5iXhBPK9clrrfDG03dt
-   aZ7Qtt9t/ORBQDw8X4ZPbxflqFPHy1Kwm/ry9eth/LOEpeS/COF7Qxety
-   DC1eOhAOh8pazULW9ZoiWuSW1rv5zvHIjUzyhJbLSi/5bqQe6HURGVtK0
-   g==;
-X-CSE-ConnectionGUID: rBUfTvW9T6GEK/rLBAfOHQ==
-X-CSE-MsgGUID: 7FdGuy5ZSo6k3qNRaFnnOQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48483754"
-X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
-   d="scan'208";a="48483754"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 20:34:24 -0700
-X-CSE-ConnectionGUID: QD+cWyvyQn+XNLNUU53Muw==
-X-CSE-MsgGUID: NJ4z7ZqrSxOD44aNuGeZCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,274,1739865600"; 
-   d="scan'208";a="167432410"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 08 May 2025 20:34:18 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uDEV6-000BdH-0t;
-	Fri, 09 May 2025 03:34:16 +0000
-Date: Fri, 9 May 2025 11:33:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Lorenz Bauer <lmb@isovalent.com>, Arnd Bergmann <arnd@arndb.de>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Lorenz Bauer <lmb@isovalent.com>
-Subject: Re: [PATCH bpf-next v3 1/3] btf: allow mmap of vmlinux btf
-Message-ID: <202505091116.jHtyWJW4-lkp@intel.com>
-References: <20250505-vmlinux-mmap-v3-1-5d53afa060e8@isovalent.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="pAVs/++R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Bh
+	Uw7rxgmDTaFu1ZdyXygSiSwcDEDULentCxZPvFIqA=; b=pAVs/++Rm6bF78LPts
+	Kz/np45QMZi0IEyYqRbNtEOOzriGOi4/oBTFO2nUjeaO0Bs/b/7bbtwo++U0o1Xg
+	top/wSCnN6b3VuWwT/J+aBI27rX7LwsG0wlK4YBd4Ese7FWuAMNPb6hU/CKKhh0f
+	yEr/VRD7Ea1UdZIcvRi22EnHM=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wAXdfCKdB1o2Hx1AA--.7654S2;
+	Fri, 09 May 2025 11:20:43 +0800 (CST)
+From: oushixiong1025@163.com
+To: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sean Paul <sean@poorly.run>,
+	Jocelyn Falempe <jfalempe@redhat.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Shixiong Ou <oushixiong@kylinos.cn>
+Subject: [PATCH v4 1/3] drm/shmem-helper: Import dmabuf without mapping its sg_table
+Date: Fri,  9 May 2025 11:20:38 +0800
+Message-Id: <20250509032040.185730-1-oushixiong1025@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505-vmlinux-mmap-v3-1-5d53afa060e8@isovalent.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAXdfCKdB1o2Hx1AA--.7654S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxtryrZFyUGFy8ZryDXw4xZwb_yoWxtw4kpF
+	sxAryUtrW5tFWqg393Awn7Zas09w409a1Iq3yfJw4Y93WktF1qkFn5Ar90vFyUAryDJF1S
+	qFyDAFyrCryjkF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jnPEfUUUUU=
+X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXBFID2gdc4IbigAAsf
 
-Hi Lorenz,
+From: Shixiong Ou <oushixiong@kylinos.cn>
 
-kernel test robot noticed the following build warnings:
+[WHY]
+1. Drivers using DRM_GEM_SHADOW_PLANE_HELPER_FUNCS and
+   DRM_GEM_SHMEM_DRIVER_OPS (e.g., udl, ast) do not require
+   sg_table import.
+   They only need dma_buf_vmap() to access the shared buffer's
+   kernel virtual address.
 
-[auto build test WARNING on 38d976c32d85ef12dcd2b8a231196f7049548477]
+2. On certain Aspeed-based boards, a dma_mask of 0xffff_ffff may
+   trigger SWIOTLB during dmabuf import. However, IO_TLB_SEGSIZE
+   restricts the maximum DMA streaming mapping memory, resulting in
+   errors like:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Lorenz-Bauer/btf-allow-mmap-of-vmlinux-btf/20250506-024103
-base:   38d976c32d85ef12dcd2b8a231196f7049548477
-patch link:    https://lore.kernel.org/r/20250505-vmlinux-mmap-v3-1-5d53afa060e8%40isovalent.com
-patch subject: [PATCH bpf-next v3 1/3] btf: allow mmap of vmlinux btf
-config: arc-randconfig-r073-20250508 (https://download.01.org/0day-ci/archive/20250509/202505091116.jHtyWJW4-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505091116.jHtyWJW4-lkp@intel.com/reproduce)
+   ast 0000:07:00.0: swiotlb buffer is full (sz: 3145728 bytes), total 32768 (slots), used 0 (slots)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505091116.jHtyWJW4-lkp@intel.com/
+[HOW]
+Provide a gem_prime_import implementation without sg_table mapping
+to avoid issues (e.g., "swiotlb buffer is full"). Drivers that do not
+require sg_table can adopt this.
 
-All warnings (new ones prefixed by >>):
+Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+---
+v1->v2:
+	Patch rebase.
+v2->v3:
+	Rename the import callback function.
+	Remove drm_gem_shmem_prime_export() and separate some codes
+	to drm_gem_prime_import_self(). 
+v3->v4:
+	Separate the test from the policy.
+	Rename the macro.
 
-   In file included from arch/arc/include/asm/page.h:136,
-                    from arch/arc/include/asm/thread_info.h:16,
-                    from include/linux/thread_info.h:60,
-                    from include/asm-generic/preempt.h:5,
-                    from ./arch/arc/include/generated/asm/preempt.h:1,
-                    from include/linux/preempt.h:79,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:7,
-                    from include/linux/umh.h:4,
-                    from include/linux/kmod.h:9,
-                    from include/linux/module.h:17,
-                    from kernel/bpf/sysfs_btf.c:6:
-   kernel/bpf/sysfs_btf.c: In function 'btf_sysfs_vmlinux_mmap':
->> kernel/bpf/sysfs_btf.c:43:51: warning: passing argument 1 of 'virt_to_pfn' makes pointer from integer without a cast [-Wint-conversion]
-      43 |                                      virt_to_page(addr));
-         |                                                   ^~~~
-         |                                                   |
-         |                                                   long unsigned int
-   include/asm-generic/memory_model.h:18:46: note: in definition of macro '__pfn_to_page'
-      18 | #define __pfn_to_page(pfn)      (mem_map + ((pfn) - ARCH_PFN_OFFSET))
-         |                                              ^~~
-   kernel/bpf/sysfs_btf.c:43:38: note: in expansion of macro 'virt_to_page'
-      43 |                                      virt_to_page(addr));
-         |                                      ^~~~~~~~~~~~
-   arch/arc/include/asm/page.h:123:53: note: expected 'const void *' but argument is of type 'long unsigned int'
-     123 | static inline unsigned long virt_to_pfn(const void *kaddr)
-         |                                         ~~~~~~~~~~~~^~~~~
+ drivers/gpu/drm/drm_gem_shmem_helper.c | 57 ++++++++++++++++++++++++++
+ drivers/gpu/drm/drm_prime.c            | 36 ++++++++++++----
+ include/drm/drm_gem_shmem_helper.h     | 15 +++++++
+ include/drm/drm_prime.h                |  3 ++
+ 4 files changed, 102 insertions(+), 9 deletions(-)
 
-
-vim +/virt_to_pfn +43 kernel/bpf/sysfs_btf.c
-
-    17	
-    18	static int btf_sysfs_vmlinux_mmap(struct file *filp, struct kobject *kobj,
-    19					  const struct bin_attribute *attr,
-    20					  struct vm_area_struct *vma)
-    21	{
-    22		unsigned long pages = PAGE_ALIGN(attr->size) >> PAGE_SHIFT;
-    23		size_t vm_size = vma->vm_end - vma->vm_start;
-    24		unsigned long addr = (unsigned long)attr->private;
-    25		int i, err = 0;
-    26	
-    27		if (addr != (unsigned long)__start_BTF || !PAGE_ALIGNED(addr))
-    28			return -EINVAL;
-    29	
-    30		if (vma->vm_pgoff)
-    31			return -EINVAL;
-    32	
-    33		if (vma->vm_flags & (VM_WRITE | VM_EXEC | VM_MAYSHARE))
-    34			return -EACCES;
-    35	
-    36		if (vm_size >> PAGE_SHIFT > pages)
-    37			return -EINVAL;
-    38	
-    39		vm_flags_mod(vma, VM_DONTDUMP, VM_MAYEXEC | VM_MAYWRITE);
-    40	
-    41		for (i = 0; i < pages && !err; i++, addr += PAGE_SIZE)
-    42			err = vm_insert_page(vma, vma->vm_start + i * PAGE_SIZE,
-  > 43					     virt_to_page(addr));
-    44	
-    45		if (err)
-    46			zap_vma_pages(vma);
-    47	
-    48		return err;
-    49	}
-    50	
-
+diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+index aa43265f4f4f..8fa160c3635e 100644
+--- a/drivers/gpu/drm/drm_gem_shmem_helper.c
++++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+@@ -800,6 +800,63 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
+ }
+ EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_sg_table);
+ 
++/**
++ * drm_gem_shmem_prime_import_no_sgt - Import dmabuf without mapping its sg_table
++ * @dev: Device to import into
++ * @dma_buf: dma-buf object to import
++ *
++ * Drivers that use the shmem helpers but also wants to import dmabuf without
++ * mapping its sg_table can use this as their &drm_driver.gem_prime_import
++ * implementation.
++ */
++struct drm_gem_object *drm_gem_shmem_prime_import_no_sgt(struct drm_device *dev,
++							 struct dma_buf *dma_buf)
++{
++	struct dma_buf_attachment *attach;
++	struct drm_gem_shmem_object *shmem;
++	struct drm_gem_object *obj;
++	size_t size;
++	int ret;
++
++	if (drm_gem_prime_exported_dma_buf(dev, dma_buf)) {
++		/*
++		 * Importing dmabuf exported from our own gem increases
++		 * refcount on gem itself instead of f_count of dmabuf.
++		 */
++		obj = dma_buf->priv;
++		drm_gem_object_get(obj);
++		return obj;
++	}
++
++	attach = dma_buf_attach(dma_buf, dev->dev);
++	if (IS_ERR(attach))
++		return ERR_CAST(attach);
++
++	get_dma_buf(dma_buf);
++
++	size = PAGE_ALIGN(attach->dmabuf->size);
++
++	shmem = __drm_gem_shmem_create(dev, size, true, NULL);
++	if (IS_ERR(shmem)) {
++		ret = PTR_ERR(shmem);
++		goto fail_detach;
++	}
++
++	drm_dbg_prime(dev, "size = %zu\n", size);
++
++	shmem->base.import_attach = attach;
++	shmem->base.resv = dma_buf->resv;
++
++	return &shmem->base;
++
++fail_detach:
++	dma_buf_detach(dma_buf, attach);
++	dma_buf_put(dma_buf);
++
++	return ERR_PTR(ret);
++}
++EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_no_sgt);
++
+ MODULE_DESCRIPTION("DRM SHMEM memory-management helpers");
+ MODULE_IMPORT_NS("DMA_BUF");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+index d828502268b8..5bcf483520b8 100644
+--- a/drivers/gpu/drm/drm_prime.c
++++ b/drivers/gpu/drm/drm_prime.c
+@@ -910,6 +910,26 @@ struct dma_buf *drm_gem_prime_export(struct drm_gem_object *obj,
+ }
+ EXPORT_SYMBOL(drm_gem_prime_export);
+ 
++
++/**
++ * drm_gem_prime_exported_dma_buf -
++ * checks if the DMA-BUF was exported from a GEM object belonging to @dev.
++ * @dev: drm_device to check against
++ * @dma_buf: dma-buf object to import
++ *
++ * Return: true if the DMA-BUF was exported from a GEM object belonging
++ * to @dev, false otherwise.
++ */
++
++bool drm_gem_prime_exported_dma_buf(struct drm_device *dev,
++				    struct dma_buf *dma_buf)
++{
++	struct drm_gem_object *obj = dma_buf->priv;
++
++	return (dma_buf->ops == &drm_gem_prime_dmabuf_ops) && (obj->dev == dev);
++}
++EXPORT_SYMBOL(drm_gem_prime_exported_dma_buf);
++
+ /**
+  * drm_gem_prime_import_dev - core implementation of the import callback
+  * @dev: drm_device to import into
+@@ -933,16 +953,14 @@ struct drm_gem_object *drm_gem_prime_import_dev(struct drm_device *dev,
+ 	struct drm_gem_object *obj;
+ 	int ret;
+ 
+-	if (dma_buf->ops == &drm_gem_prime_dmabuf_ops) {
++	if (drm_gem_prime_exported_dma_buf(dev, dma_buf)) {
++		/*
++		 * Importing dmabuf exported from our own gem increases
++		 * refcount on gem itself instead of f_count of dmabuf.
++		 */
+ 		obj = dma_buf->priv;
+-		if (obj->dev == dev) {
+-			/*
+-			 * Importing dmabuf exported from our own gem increases
+-			 * refcount on gem itself instead of f_count of dmabuf.
+-			 */
+-			drm_gem_object_get(obj);
+-			return obj;
+-		}
++		drm_gem_object_get(obj);
++		return obj;
+ 	}
+ 
+ 	if (!dev->driver->gem_prime_import_sg_table)
+diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
+index b4f993da3cae..9ee697ff52ea 100644
+--- a/include/drm/drm_gem_shmem_helper.h
++++ b/include/drm/drm_gem_shmem_helper.h
+@@ -287,6 +287,8 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
+ 				    struct sg_table *sgt);
+ int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+ 			      struct drm_mode_create_dumb *args);
++struct drm_gem_object *drm_gem_shmem_prime_import_no_sgt(struct drm_device *dev,
++							 struct dma_buf *buf);
+ 
+ /**
+  * DRM_GEM_SHMEM_DRIVER_OPS - Default shmem GEM operations
+@@ -298,4 +300,17 @@ int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+ 	.gem_prime_import_sg_table = drm_gem_shmem_prime_import_sg_table, \
+ 	.dumb_create		   = drm_gem_shmem_dumb_create
+ 
++/**
++ * DRM_GEM_SHMEM_DRIVER_OPS_NO_SGT - shmem GEM operations
++ *                                   without mapping sg_table on
++ *                                   imported buffer.
++ *
++ * This macro provides a shortcut for setting the shmem GEM operations in
++ * the &drm_driver structure for drivers that do not require a sg_table on
++ * imported buffers.
++ */
++#define DRM_GEM_SHMEM_DRIVER_OPS_NO_SGT \
++	.gem_prime_import       = drm_gem_shmem_prime_import_no_sgt, \
++	.dumb_create            = drm_gem_shmem_dumb_create
++
+ #endif /* __DRM_GEM_SHMEM_HELPER_H__ */
+diff --git a/include/drm/drm_prime.h b/include/drm/drm_prime.h
+index fa085c44d4ca..ec83f1c077a4 100644
+--- a/include/drm/drm_prime.h
++++ b/include/drm/drm_prime.h
+@@ -100,6 +100,9 @@ struct dma_buf *drm_gem_prime_export(struct drm_gem_object *obj,
+ unsigned long drm_prime_get_contiguous_size(struct sg_table *sgt);
+ 
+ /* helper functions for importing */
++bool drm_gem_prime_exported_dma_buf(struct drm_device *dev,
++				    struct dma_buf *dma_buf);
++
+ struct drm_gem_object *drm_gem_prime_import_dev(struct drm_device *dev,
+ 						struct dma_buf *dma_buf,
+ 						struct device *attach_dev);
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.17.1
+
