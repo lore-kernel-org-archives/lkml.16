@@ -1,243 +1,297 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBBD290D87
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C47D277003;
+	Fri,  9 May 2025 13:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746798768; cv=none; b=KiAkNbTNC04z/VtPWKxL/pxeK7WLlXT8Lnj3uJfmKWoZeTQnjx8jmMrNFaWktPmIbBNb1wwnlSi/0sLynEB/7MD2faTTGhFvDnALRk/GdJvhDDEm8aDSRtHWtJNTJrB7Ypp1sBBoQIU129aq9GAg5aT7RwuSY4t2Pgb5DMSaWiQ=
+	t=1746798899; cv=none; b=iilQvdw2bT+0XBTytoGCFir2EMnup55Mr87Y2B5SlNt6nnx1HqV9Gpuz2QNZ6I/u1xxe9T1XRhLKwkZVi0E6BKSCSNkyJG7m4ru+2DZ4vB015UpmSfZXuHac/kHpjX+/ZRoBLn/bY5BZ4huBzFUitzxxpO85kicUbcsBgoUcltU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746798768; c=relaxed/simple;
-	bh=MGubqGeYpC0ja1MkjjJEf4XgAx5U8n0/6/HTY5IM2hw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MYHltwle7EYQxUuTwvlAxyi3GUC7twf8SAaegYfax+caRQNkBhcSVOOTEK0p62QUHNcCdDhNfvzo1rJ+C6Y4/AnEKTSBMOSiWbs/4ZfdIy9pUNiJ0DRfGUAS+VdfRZsYBzQOCFBMJy4ZBUoA95Kk6MyMI9NnItB6L5Ky4fgmFm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c51lr94F; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746798899; c=relaxed/simple;
+	bh=kOK8ffgLkfBZTjFDWR6huYmQ6GfSpjDsOUCV/7DmqTM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YOjtGR94rgBQYse47qX9cK8VQOkKOQcY9UtqRn4O/j2TmnL3zFkHfpIAtn8QIHjeVkq+9gyPdRc1pp72wQ8cDkYHPEP60DjSZvuVnkpQo0pRXf/13b1mMhj5pNsZFvlktPLIeS93WXuYZz7WU3yvVjjSUh0wqE8U/aitdQhj9Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G1pZv1b9; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c51lr94F"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3fbc00143d6so1882306b6e.3
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 06:52:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1pZv1b9"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22e7eff58a0so20186825ad.3;
+        Fri, 09 May 2025 06:54:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746798765; x=1747403565; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vG/sdowqIMmjoKGncX6ih2QtRKdIX5Cx2o9iXTqzu6w=;
-        b=c51lr94FojXtkv6EESidmhw8j6pGGXwZ9OPs2q1Oi0BjUEiXr2N1aTmMkqgGYkjDyt
-         yMWyTu6AAlTXzqW7ESqIQ+GrHF/8E/8t3Pph6vDd+EF1mSbv4G8yWZ+PNaUvI6WwswxK
-         GMa5IEtSeyHSxwSZDskM/0fAMVYMsweWTtwmYYnNrnqQEcjOSmRwNxd5mSnfjQMVT1Wc
-         yhX3eSnvtQyzl7MCmcm9ecAHuLfmmnccU61aqoayXUzHznU0DLN0BkmJjdiGeqNh4Ekk
-         fk1aQqPOjir34L01IxtWtK1QFpnQDSDmIp8xmBPeMlgfWYLMOIfMrwIhaiRKTFgLgbfw
-         J8GA==
+        d=gmail.com; s=20230601; t=1746798897; x=1747403697; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=HjPEbAslOM8khAqWQvdf6mvMkrymNkVDTRKMIC8N4zI=;
+        b=G1pZv1b9QV0QhKxjMwwT4NdiLnVI83WDw8O1NfLI4AGGdhadnAWkSeupXM2BgNMWQ2
+         ENnlal61gFhyDK9ZUgefPaJkLCSGhPxO/179jINbeasTOyrrYBRMwGAj/DJpCDKluHGk
+         lhJ7OXUvvjP4Q2ao4Ma58j0INPUH8dG6stpWyptOtjRcAU6kDaFBrHVhyvRjgtilG77d
+         U3Caa8yOd+kVna19YuqVOCqBN6qSVYD6PtQcOcJOsLsUWMf523EDQ0nr83sJTUPUPmFg
+         hoHQEyUxl7l4k9pkwp04M83XLwNmvkwTJ3Mu2Hpk8eVtiwCMkyJu142wg9alfl1m8+rL
+         70Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746798765; x=1747403565;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vG/sdowqIMmjoKGncX6ih2QtRKdIX5Cx2o9iXTqzu6w=;
-        b=Zo50YP1FhpxP1vxxEK5weop+6xV4HZJgVdakIJ+QATAYQxW9rWsQGaPAxFwVcmmRf3
-         1T/08kTjFeuQlP3ZXv2mCrGgBwgTRjbGKLFKP07P5gQkv7kNeIm9hw8PggIBhyklbIZT
-         8ldgA2oZmZrvCLaw+IVSI0rlhFozAqaE9jJLQd7IL1tRjzQmy992TmqNe7nxH/poZ6Oc
-         +eUsQ9lkOiB1ig4zncsIYvWabtOsAPvyxc9fCBLRXkXGLfwB7fUC+nd9Lco9geEbcHl/
-         0qFlQDNhCU4G1qeQOBEKCRiSSMsCULgTyszP65031rtgk2TJt5I6hD359neuYE+bG5v7
-         jYSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWA1Pe8O+N+mFU+T+pHxbSXhNTx2VK8DwwKRNiZq+6kMgrbcAl2Tqg0fkOPN17WMUxqEfRcJlWf6DcyqDc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQRvAU1+LdE+1uGIJC0ENoUvFrmdZpoom7a0GwC2WlJ01CD9uL
-	XVJjfBX0zn35HUqvGhEl54tY8zKJ6lzwvCjBBPxj8r/sF97Let80ta4+graD5zLy/VUhPcg3vET
-	Fgfdx29AiZLbGMUw0+jD7AWK3BbH/ZRwh9fFyjQ==
-X-Gm-Gg: ASbGncvoPAJQNRPhavIG5/yZqupja9CSuZpP6t/6QNwZiVQzcAjsYzNnCanWkwLtfVG
-	maWQmebCEUiWV+XkLZtxNDPpOr+Dn9PcaUR+l2ctUynP24H6AvX8/PE5110QAQHlj4zzecv3O8d
-	M9DtR93NqtnExq7TCLdwfLLg==
-X-Google-Smtp-Source: AGHT+IGfTYNQXb38Qd3XEblVwFr61ZWUCt+JRdOJ06/p2uEstoNfALhHpSjlt/PkHSMkxNxM78UZKpOwOfIpsf1xSn8=
-X-Received: by 2002:a05:6808:23d4:b0:3f8:c486:9b27 with SMTP id
- 5614622812f47-4037fe522a5mr2143056b6e.22.1746798764909; Fri, 09 May 2025
- 06:52:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746798897; x=1747403697;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HjPEbAslOM8khAqWQvdf6mvMkrymNkVDTRKMIC8N4zI=;
+        b=ekGEgGdhRd1jFmq/zOSEjjrrNaXx5dghgFqMfzMNrQcdV4sLlyxBLp62ctAXoE6bSd
+         nUvZ57zaIMsmbZN/wEIcoZHh5yGRaE1h7vNyCyVPU9MQknB8KtVq2QBkJ7r5Z3nmzUBZ
+         AzPzzzAoHQmaqTo0P48Yf2yXtQ/IDU9quyp/tbvtKGyB6c7KeZHuf0jDhHziDNVWy86d
+         gpFyfr7JGWJ+2B4hzK9Q5yNojx1gKf0ZREiJD1tr5MCaWMM/4OMp3Jg7GKD6OxRX/NFa
+         1AZN3h/TDbuO2kHoyRZpndZTTwcRm0161GP/Gff7JDxI/3k3b3jq4Y952HAVILx3Zo6U
+         jJgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUy8NZjwm6RhROssNBt81tKl3D+9YmDU2gH6Lq/Z8HlcSe5+uauKvPwgvWfI4timjKjLTkHG4q9DLWm@vger.kernel.org, AJvYcCWLTBcwMEAU4x1GehZ3JfzCMYjKEWUa7eXcIwFcrRy4MPtmUlJDJ/x+jzjOYNCEoJLzL9J5cAWUDDezrBIO@vger.kernel.org, AJvYcCWfxq9/zWc8Ozlq26fscVipX1ORw5o0ymWjySlqpliJbRjjCSPgr2y0V+gjc9U2mVbYaa1YgJTkyC2W/h8=@vger.kernel.org, AJvYcCXjmZuCoTaQSFmsW72ll+mK+a8Z0xGyV9hl45YSykEDmjrnuie3e0TD0/L03RdulxsDb+Gj/7bgXu2Q@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1rJSGoE9d9rJJeiL72Wc8wYXYd9lx7lamEexYzoyboLrE9TN3
+	jxhMB9pGdOXhk5mINteOmjSQkAwtUh3MW3FNtL4jEBu07QC6IUkr
+X-Gm-Gg: ASbGnctG4rduaTpoXn0ZBVrhdsxxFKbeITPXH2vtepEsM7cOikPSDw1KFDpRD5riajg
+	w2+OS1Q+DWqgSmQUpIqfD1Hi7DnPsPU+KxnTLjxZsMhyFktX+yRPflG1g13OtUpTufyYeAz/s+i
+	GCaFy6/Z66S4ZMI7C4CeAm4QnReVYUPbzYEtmV0eVdYMwn3UvcBSixMXZU2nDMpJERdbwdNYbX1
+	EDbzkwWyYy6H+enkAYGfvKJIlovN2efmMvBig9lq80HAUT2sGqkQ/htXsSfL+gft5fMTrxqSJXu
+	yQvs6/oHnYDYQIz0rd9ILes+HMRISiZtenKCJ/AM3XEvpF9263MKw9XKqXkaf4ENs/UM0m77f3l
+	vtMG35XzmvduarA==
+X-Google-Smtp-Source: AGHT+IFNab2h5nbWwNqPeIs4h1OD9ciEWSqIsqQkZOIEEjog19nYd0vsEvL4MLY6A9E1QOb5DkmddA==
+X-Received: by 2002:a17:902:e84d:b0:22e:62cf:498f with SMTP id d9443c01a7336-22fc8e961a1mr55842795ad.38.1746798897167;
+        Fri, 09 May 2025 06:54:57 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc828b4d9sm16938695ad.191.2025.05.09.06.54.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 May 2025 06:54:56 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <45d1a08c-8a7f-4b6e-8068-4ab0e63abbf3@roeck-us.net>
+Date: Fri, 9 May 2025 06:54:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509-max77759-mfd-v10-0-962ac15ee3ef@linaro.org>
-In-Reply-To: <20250509-max77759-mfd-v10-0-962ac15ee3ef@linaro.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Fri, 9 May 2025 14:52:34 +0100
-X-Gm-Features: ATxdqUFUdIagbNNE69FQ_bG89w8nhF65-rjxSwOObUqDQgd3C6_gz2Uofy98FnM
-Message-ID: <CADrjBPpZseD+9ZQ8BK+++VH=Zsgnn1fbjpiMKvC7XvD0wA7Cag@mail.gmail.com>
-Subject: Re: [PATCH v10 0/3] Maxim Integrated MAX77759 PMIC MFD-based drivers
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
-	Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/5] hwmon: pmbus: mpq8785: Add support for MPM82504
+To: Pawel Dembicki <paweldembicki@gmail.com>, linux-hwmon@vger.kernel.org
+Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Noah Wang <noahwang.wang@outlook.com>, Fabio Estevam <festevam@gmail.com>,
+ Naresh Solanki <naresh.solanki@9elements.com>,
+ Michal Simek <michal.simek@amd.com>, Grant Peltier
+ <grantpeltier93@gmail.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Peter Zijlstra <peterz@infradead.org>, Shen Lichuan <shenlichuan@vivo.com>,
+ Greg KH <gregkh@linuxfoundation.org>, Charles Hsu <ythsu0511@gmail.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20250509065237.2392692-1-paweldembicki@gmail.com>
+ <20250509065237.2392692-3-paweldembicki@gmail.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250509065237.2392692-3-paweldembicki@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Andr=C3=A9,
-
-On Fri, 9 May 2025 at 14:22, Andr=C3=A9 Draszik <andre.draszik@linaro.org> =
-wrote:
->
-> Hi,
->
-> This series improves support for the Maxim Integrated MAX77759
-> companion PMIC for USB Type-C applications using the MFD framework.
->
-> This series must be applied in-order, due to interdependencies of some
-> of the patches:
-> * to avoid use of undocumented compatibles by the newly added drivers,
->   the bindings are added first in this series
-> * patch 1 ("dt-bindings: gpio: add max77759 binding") also creates a
->   new MAINTAINERS entry, including a wildcard match for the other
->   bindings in this series
-> * patch 3 ("dt-bindings: mfd: add max77759 binding") references the
->   bindings added in patch 1 and 2 and can not work if those aren't
->   available
-> * patch 4 ("mfd: max77759: add Maxim MAX77759 core mfd driver") adds
->   the core MFD driver, which also exposes an API to its leaf drivers
->   and is used by patches 5 and 6
-> * patches 5 and 6 won't compile without patch 4
->
-> The MAX77759 PMIC includes Battery Charger, Fuel Gauge, temperature
-> sensors, USB Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
->
-> This PMIC is used on the Google Pixel 6 and 6 Pro (oriole / raven).
->
-> This series adds support for the top-level MFD device, the gpio, and
-> nvmem cells. Other components are excluded for the following reasons:
->
->     While in the same package, Fuel Gauge and TCPC have separate and
->     independent I2C addresses, register maps, interrupt lines, and
->     aren't part of the top-level package interrupt hierarchy.
->     Furthermore, a driver for the TCPC part exists already (in
->     drivers/usb/typec/tcpm/tcpci_maxim_core.c).
->
->     I'm leaving out temperature sensors and charger in this submission,
->     because the former are not in use on Pixel 6 and I therefore can
->     not test them, and the latter can be added later, once we look at
->     the whole charging topic in more detail.
->
-> To make maintainers' work easier, I am planning to send the relevant
-> DTS and defconfig changes via a different series, unless everything
-> is expected to go via Lee's MFD tree in one series?
->
-> Cheers,
-> Andre'
->
-> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+On 5/8/25 23:51, Pawel Dembicki wrote:
+> Add support for the Monolithic Power Systems MPM82504 digital voltage
+> regulator. MPM82504 uses PMBus direct format for voltage output.
+> 
+> Tested with device tree based matching.
+> 
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+> 
 > ---
+> v2:
+>    - fixed signedess for temperatures < 0 deg C
+>    - remove empty lines
+> ---
+>   Documentation/hwmon/mpq8785.rst | 20 +++++++++++++++-----
+>   drivers/hwmon/pmbus/mpq8785.c   | 30 +++++++++++++++++++++++++++++-
+>   2 files changed, 44 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/hwmon/mpq8785.rst b/Documentation/hwmon/mpq8785.rst
+> index bf8176b87086..be228ee58ce2 100644
+> --- a/Documentation/hwmon/mpq8785.rst
+> +++ b/Documentation/hwmon/mpq8785.rst
+> @@ -6,6 +6,7 @@ Kernel driver mpq8785
+>   Supported chips:
+>   
+>     * MPS MPQ8785
+> +  * MPS MPM82504
+>   
+>       Prefix: 'mpq8785'
+>   
+> @@ -20,21 +21,30 @@ buck converter. The MPQ8785 offers a very compact solution that achieves up to
+>   wide input supply range. The MPQ8785 operates at high efficiency over a wide
+>   output current load range.
+>   
+> +The MPM82504 is a quad 25A, scalable, fully integrated power module with a PMBus
+> +interface. The device offers a complete power solution that achieves up to 25A
+> +per output channel. The MPM82504 has four output channels that can be paralleled
+> +to provide 50A, 75A, or 100A of output current for flexible configurations.
+> +The device can also operate in parallel with the MPM3695-100 and additional
+> +MPM82504 devices to provide a higher output current. The MPM82504 operates
+> +at high efficiency across a wide load range.
+> +
+>   The PMBus interface provides converter configurations and key parameters
+>   monitoring.
+>   
+> -The MPQ8785 adopts MPS's proprietary multi-phase digital constant-on-time (MCOT)
+> +The devices adopts MPS's proprietary multi-phase digital constant-on-time (MCOT)
+>   control, which provides fast transient response and eases loop stabilization.
+> -The MCOT scheme also allows multiple MPQ8785 devices to be connected in parallel
+> -with excellent current sharing and phase interleaving for high-current
+> +The MCOT scheme also allows multiple devices or chennels to be connected in
 
-For the series: -
+channels
 
-Acked-by: Peter Griffin <peter.griffin@linaro.org>
+> +parallel with excellent current sharing and phase interleaving for high-current
+>   applications.
+>   
+>   Fully integrated protection features include over-current protection (OCP),
+>   over-voltage protection (OVP), under-voltage protection (UVP), and
+>   over-temperature protection (OTP).
+>   
+> -The MPQ8785 requires a minimal number of readily available, standard external
+> -components, and is available in a TLGA (5mmx6mm) package.
+> +All supported modules require a minimal number of readily available, standard
+> +external components. The MPQ8785 is available in a TLGA (5mmx6mm) package
+> +and the MPM82504 is available in a BGA (15mmx30mmx5.18mm) package.
+>   
+>   Device compliant with:
+>   
+> diff --git a/drivers/hwmon/pmbus/mpq8785.c b/drivers/hwmon/pmbus/mpq8785.c
+> index 00ec21b081cb..9a4a211b2aeb 100644
+> --- a/drivers/hwmon/pmbus/mpq8785.c
+> +++ b/drivers/hwmon/pmbus/mpq8785.c
+> @@ -8,7 +8,9 @@
+>   #include <linux/of_device.h>
+>   #include "pmbus.h"
+>   
+> -enum chips { mpq8785 };
+> +#define PMBUS_READ_TEMPERATURE_1_SIGN	BIT(9)
+
+s/PMBUS/MPM82504/
+
+because this is not a standard bit. Needs to include linux/bits.h
+or better linux/bitops.h (see below).
+
+> +
+> +enum chips { mpq8785, mpm82504 };
+
+Please keep those in alphabetic order.
+>   
+>   static int mpq8785_identify(struct i2c_client *client,
+>   			    struct pmbus_driver_info *info)
+> @@ -36,6 +38,23 @@ static int mpq8785_identify(struct i2c_client *client,
+>   	return 0;
+>   };
+>   
+> +static int mpm82504_read_word_data(struct i2c_client *client, int page,
+> +				   int phase, int reg)
+> +{
+> +	int ret;
+> +
+> +	ret = pmbus_read_word_data(client, page, phase, reg);
+> +
+> +	if (ret < 0 || reg != PMBUS_READ_TEMPERATURE_1)
+> +		return ret;
+> +
+> +	/* Fix PMBUS_READ_TEMPERATURE_1 signedness */
+> +	if (ret & PMBUS_READ_TEMPERATURE_1_SIGN)
+> +		ret |= GENMASK(15, 10);
+
+Better use sign_extend32(ret, PMBUS_READ_TEMPERATURE_1_SIGN) & 0xffff.
+The mask is a bit odd but there is no sign_extend16(), but this makes it
+more obvious what is done here.
+
+Also, this needs to include linux/bitops.h.
+
+> +
+> +	return ret;
+> +}
+> +
+>   static struct pmbus_driver_info mpq8785_info = {
+>   	.pages = 1,
+>   	.format[PSC_VOLTAGE_IN] = direct,
+> @@ -59,12 +78,14 @@ static struct pmbus_driver_info mpq8785_info = {
+>   
+>   static const struct i2c_device_id mpq8785_id[] = {
+>   	{ "mpq8785", mpq8785 },
+> +	{ "mpm82504", mpm82504 },
+>   	{ },
+>   };
+>   MODULE_DEVICE_TABLE(i2c, mpq8785_id);
+>   
+>   static const struct of_device_id __maybe_unused mpq8785_of_match[] = {
+>   	{ .compatible = "mps,mpq8785", .data = (void *)mpq8785 },
+> +	{ .compatible = "mps,mpm82504", .data = (void *)mpm82504 },
+
+Alphabetic order.
+
+>   	{}
+>   };
+>   MODULE_DEVICE_TABLE(of, mpq8785_of_match);
+> @@ -88,6 +109,13 @@ static int mpq8785_probe(struct i2c_client *client)
+>   	case mpq8785:
+>   		info->identify = mpq8785_identify;
+>   		break;
+> +	case mpm82504:
+> +		info->format[PSC_VOLTAGE_OUT] = direct;
+> +		info->m[PSC_VOLTAGE_OUT] = 8;
+> +		info->b[PSC_VOLTAGE_OUT] = 0;
+> +		info->R[PSC_VOLTAGE_OUT] = 2;
+> +		info->read_word_data = mpm82504_read_word_data;
+> +		break;
+
+Same here, with case statements. Sorry, I should have noticed in v1.
 
 Thanks,
+Guenter
 
-Peter
+>   	default:
+>   		return -ENODEV;
+>   	}
 
-
-> Changes in v10:
-> - collect tag for nvmem
-> - rebase against next-20250509
-> - drop already-merged bindings patches
-> - update a comment in core driver (Lee)
-> - Link to v9: https://lore.kernel.org/r/20250430-max77759-mfd-v9-0-639763=
-e23598@linaro.org
->
-> Changes in v9:
-> - nvmem: drop superfluous max77759_nvmem_is_valid() (Srini)
-> - collect tags
-> - Link to v8: https://lore.kernel.org/r/20250429-max77759-mfd-v8-0-72d72d=
-c79a1f@linaro.org
->
-> Changes in v8:
-> - gpio: switch to gpio_chip::set_rv() (Bartosz)
-> - gpio, nvmem: replace MODULE_ALIAS() with .id_table (Krzysztof)
-> - gpio, nvmem: drop previous tags due to above
-> - Link to v7: https://lore.kernel.org/r/20250428-max77759-mfd-v7-0-edfe40=
-c16fe8@linaro.org
->
-> Changes in v7:
-> - rebased against next-20250424
-> - Link to v6: https://lore.kernel.org/r/20250325-max77759-mfd-v6-0-c0870c=
-a662ba@linaro.org
->
-> Changes in v6:
-> - add one missing change in core driver
-> - Link to v5: https://lore.kernel.org/r/20250325-max77759-mfd-v5-0-69bd6f=
-07a77b@linaro.org
->
-> Changes in v5:
-> - core: incorporate Lee's comments (hoping I didn't miss any :-)
-> - Link to v4: https://lore.kernel.org/r/20250312-max77759-mfd-v4-0-b908d6=
-06c8cb@linaro.org
->
-> Changes in v4:
-> - collect tags
-> - mfd: add missing build_bug.h include
-> - mfd: update an irq chip comment
-> - mfd: fix a whitespace in register definitions
-> - Link to v3: https://lore.kernel.org/r/20250228-max77759-mfd-v3-0-0c3627=
-d42526@linaro.org
->
-> Changes in v3:
-> - collect tags
-> - mfd: drop gpio-controller and gpio-cells, GPIO is provided by the
->   child (Rob)
-> - gpio: drop duplicate init of 'handled' variable in irq handler
-> - gpio: use boolean with IRQ_RETVAL() (Linus)
-> - gpio: drop 'virq' variable inside irq handler to avoid confusion
->   (Linus)
-> - gpio: drop assignment of struct gpio_chip::owner (Linus)
-> - Link to v2: https://lore.kernel.org/r/20250226-max77759-mfd-v2-0-a65ebe=
-2bc0a9@linaro.org
->
-> Changes in v2:
-> - reorder bindings patches to avoid validation failures
-> - add dependency information to cover letter (Krzysztof)
-> - fix max77759_gpio_direction_from_control() in gpio driver
-> - gpio: drop 'interrupts' property from binding and sort properties
->   alphabetically (Rob)
-> - nvmem: drop example from nvmem binding as the MFD binding has a
->   complete one (Rob)
-> - nvmem: rename expected nvmem subdev nodename to 'nvmem-0' (Rob)
-> - mfd: add kernel doc
-> - mfd: fix an msec / usec typo
-> - mfd: error handling of devm_mutex_init (Christophe)
-> - whitespace fixes & tidy-ups (Christophe)
-> - Link to v1: https://lore.kernel.org/r/20250224-max77759-mfd-v1-0-2bff36=
-f9d055@linaro.org
->
-> ---
-> Andr=C3=A9 Draszik (3):
->       mfd: max77759: add Maxim MAX77759 core mfd driver
->       gpio: max77759: add Maxim MAX77759 gpio driver
->       nvmem: max77759: add Maxim MAX77759 NVMEM driver
->
->  MAINTAINERS                    |   4 +
->  drivers/gpio/Kconfig           |  13 +
->  drivers/gpio/Makefile          |   1 +
->  drivers/gpio/gpio-max77759.c   | 530 +++++++++++++++++++++++++++++++
->  drivers/mfd/Kconfig            |  20 ++
->  drivers/mfd/Makefile           |   1 +
->  drivers/mfd/max77759.c         | 690 +++++++++++++++++++++++++++++++++++=
-++++++
->  drivers/nvmem/Kconfig          |  12 +
->  drivers/nvmem/Makefile         |   2 +
->  drivers/nvmem/max77759-nvmem.c | 145 +++++++++
->  include/linux/mfd/max77759.h   | 165 ++++++++++
->  11 files changed, 1583 insertions(+)
-> ---
-> base-commit: ed61cb3d78d585209ec775933078e268544fe9a4
-> change-id: 20250224-max77759-mfd-aaa7a3121b62
->
-> Best regards,
-> --
-> Andr=C3=A9 Draszik <andre.draszik@linaro.org>
->
