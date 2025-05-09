@@ -1,277 +1,176 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2031F237176
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9C923817A;
+	Fri,  9 May 2025 16:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746806429; cv=none; b=PPtbu9AwQqKRX4AocxFLhX9eSr+baRHaDScFFZ0vnc+KzzoJFOd47aOf63f3isn8NHcBGNoMcnYuZMvqTLMpXLHP7bxfDa+DkfRq6jhLKje67ZY0fFMJeOFtPcBSgWE7Ne60jS7U4sa2U8hnI/pcLBOM6k+GBRnJn+sVB8Hl2C8=
+	t=1746806429; cv=none; b=X8PcavGUBf2AhA5DcWq5rblb1SKbhQKX1ZKrCsoxUmn8y3urdOhtHCp/27zMmq5ZTdiApxzLZhMm9NXGXQc4Rpcom1X8V9WMoK76WVkWfA/CSulF+pjwojMXnNNGpbaImCanmPymvEv+qwRbKyuZxvUO47rrEX19+W5w/9mypi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746806429; c=relaxed/simple;
-	bh=heGBJ3SeFAFWjkC+/u9VZBpvC4hEwAlPEmXlIY/Cze0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GKPZv+Vhx6P91mCpxUjzRy95RKdU6dex/w9oLDbPaPSs/wDALtoXMIPuw5fFVGy0DOJmnYPg0mFmHvfWnPjSP7unAKfuO+HobooRtzLwuHfWBP5T4PqwrhydEOolEAsKxqQk/KTHndcZ+Lj3YBd40IpUB6V7tCvo5Jk7HYUE8R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=euyjOW7W; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	bh=KfIHN/86orJ7nKka+FJYVTfaWZnIOh2Jd1eqQpCx/P4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dJbtoHGjtaHrZiYqTdwhKhxOyDinls4NRiB6UsJkl6vnseUjN2uJYXAbFMkIcakFTS7whof51kIzoECw4SjYRehysQ13KyuAoKxOmaAZG8QaNlWOlGk8hQm+dQU4ozGOgiZz+e69DL3aFnWBNRffcIUpESHHwxE3aMpMzJG4uAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mCj9cQ1J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="euyjOW7W"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746806423;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g9IyEqqXTR0rneb1m3RreWD1KdVSsI1Pzjo/c6NQGY0=;
-	b=euyjOW7W0ASBc42Cp4GNoTRgM/lK6HVDnR8xfPcU+mtIhrLMGfT+Lfd8l5W5hq9pJ9lKXg
-	n7HyDwcD5zrvcQOkZSGxB1HaiJAN0YGl7S0Uqm0cAUKyIyG2p5laTOMKDIdGXQloPIcSgl
-	7FdZHCdLeNIeY+ifBccmRPyWi7PZXq0=
-From: Dawei Li <dawei.li@linux.dev>
-To: andersson@kernel.org,
-	mathieu.poirier@linaro.org
-Cc: linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dawei.li@linux.dev,
-	set_pte_at@outlook.com
-Subject: [PATCH v2 1/3] rpmsg: char: Reuse eptdev logic for anon device
-Date: Fri,  9 May 2025 23:59:25 +0800
-Message-Id: <20250509155927.109258-2-dawei.li@linux.dev>
-In-Reply-To: <20250509155927.109258-1-dawei.li@linux.dev>
-References: <20250509155927.109258-1-dawei.li@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mCj9cQ1J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE25DC4CEED;
+	Fri,  9 May 2025 16:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746806429;
+	bh=KfIHN/86orJ7nKka+FJYVTfaWZnIOh2Jd1eqQpCx/P4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mCj9cQ1JPMPcXPWQy0TEfXoK1zM7XOVSEknGtzYgKFW0dihIWuG8T5GXJIeZ1Cl4X
+	 QWchwoGNG/AFG1055je1pRe/sI54BBfWbUY4JcRmde66nwE9kEICBr3X2Z3vGrdCAw
+	 zC+VQP+ks+64VrrNv/WWrQg/IiuSu6sto9LjbMrtay1G+/0f4T9n/LO9gT1MVNcOTK
+	 L8NO8ACl2M2wMi3rM2Udq4AIpLrJL9jOPWp08PAS1x5yKlXZC7f7QX5dfjgq5QOsnK
+	 XZgsDJCO/pOkv0TNabWfltJFJA8fHdvIEvvv4d5atnHQOa34mPSVMw319kRyK6A9c7
+	 I0gNNFc3DfcJw==
+Received: by pali.im (Postfix)
+	id 00CDC5BA; Fri,  9 May 2025 18:00:25 +0200 (CEST)
+Date: Fri, 9 May 2025 18:00:25 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org, kw@linux.com,
+	bhelgaas@google.com, heiko@sntech.de, yue.wang@amlogic.com,
+	neil.armstrong@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
+	khilman@baylibre.com, jbrunet@baylibre.com,
+	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3 3/3] PCI: aardvark: Remove redundant MPS configuration
+Message-ID: <20250509160025.s65aw5ix6s7533b5@pali>
+References: <20250506173439.292460-1-18255117159@163.com>
+ <20250506173439.292460-4-18255117159@163.com>
+ <20250506174110.63ayeqc4scmwjj6e@pali>
+ <8a6adc24-5f40-4f22-9842-b211e1ef5008@163.com>
+ <ff6abbf6-e464-4929-96e6-16e43c62db06@163.com>
+ <20250507163620.53v5djmhj3ywrge2@pali>
+ <oy5wlkvp7nrg65hmbn6cwjcavkeq7emu65tsh4435gxllyb437@7ai23qsmpesy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <oy5wlkvp7nrg65hmbn6cwjcavkeq7emu65tsh4435gxllyb437@7ai23qsmpesy>
+User-Agent: NeoMutt/20180716
 
-Current uAPI implementation for rpmsg ctrl & char device manipulation is
-abstracted in procedures below:
+On Friday 09 May 2025 12:38:48 Manivannan Sadhasivam wrote:
+> On Wed, May 07, 2025 at 06:36:20PM +0200, Pali Rohár wrote:
+> > On Wednesday 07 May 2025 23:06:51 Hans Zhang wrote:
+> > > On 2025/5/7 23:03, Hans Zhang wrote:
+> > > > On 2025/5/7 01:41, Pali Rohár wrote:
+> > > > > On Wednesday 07 May 2025 01:34:39 Hans Zhang wrote:
+> > > > > > The Aardvark PCIe controller enforces a fixed 512B payload size via
+> > > > > > PCI_EXP_DEVCTL_PAYLOAD_512B, overriding hardware capabilities and PCIe
+> > > > > > core negotiations.
+> > > > > > 
+> > > > > > Remove explicit MPS overrides (PCI_EXP_DEVCTL_PAYLOAD and
+> > > > > > PCI_EXP_DEVCTL_PAYLOAD_512B). MPS is now determined by the PCI core
+> > > > > > during device initialization, leveraging root port configurations and
+> > > > > > device-specific capabilities.
+> > > > > > 
+> > > > > > Aligning Aardvark with the unified MPS framework ensures consistency,
+> > > > > > avoids artificial constraints, and allows the hardware to operate at
+> > > > > > its maximum supported payload size while adhering to PCIe
+> > > > > > specifications.
+> > > > > > 
+> > > > > > Signed-off-by: Hans Zhang <18255117159@163.com>
+> > > > > > ---
+> > > > > >   drivers/pci/controller/pci-aardvark.c | 2 --
+> > > > > >   1 file changed, 2 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/pci/controller/pci-aardvark.c
+> > > > > > b/drivers/pci/controller/pci-aardvark.c
+> > > > > > index a29796cce420..d8852892994a 100644
+> > > > > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > > > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > > > > @@ -549,9 +549,7 @@ static void advk_pcie_setup_hw(struct
+> > > > > > advk_pcie *pcie)
+> > > > > >       reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+> > > > > >       reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
+> > > > > >       reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
+> > > > > > -    reg &= ~PCI_EXP_DEVCTL_PAYLOAD;
+> > > > > >       reg &= ~PCI_EXP_DEVCTL_READRQ;
+> > > > > > -    reg |= PCI_EXP_DEVCTL_PAYLOAD_512B;
+> > > > > >       reg |= PCI_EXP_DEVCTL_READRQ_512B;
+> > > > > >       advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+> > > > > > -- 
+> > > > > > 2.25.1
+> > > > > > 
+> > > > > 
+> > > > > Please do not remove this code. It is required part of the
+> > > > > initialization of the aardvark PCI controller at the specific phase,
+> > > > > as defined in the Armada 3700 Functional Specification.
+> > > > > 
+> > > > > There were reported more issues with those Armada PCIe controllers for
+> > > > > which were already sent patches to mailing list in last 5 years. But
+> > > > > unfortunately not all fixes were taken / applied yet.
+> > > > 
+> > > > Hi Pali,
+> > > > 
+> > > > I replied to you in version v2.
+> > > > 
+> > > > Is the maximum MPS supported by Armada 3700 512 bytes?
+> > 
+> > IIRC yes, 512-byte mode is supported. And I think in past I was testing
+> > some PCIe endpoint card which required 512-byte long payload and did not
+> > worked in 256-byte long mode (not sure if the card was not able to split
+> > transaction or something other was broken, it is quite longer time).
+> > 
+> > > > What are the default values of DevCap.MPS and DevCtl.MPS?
+> > 
+> > Do you mean values in the PCI-to-PCI bridge device of PCIe Root Port
+> > type?
+> > 
+> > Aardvark controller does not have the real HW PCI-to-PCI bridge device.
+> > There is only in-kernel emulation drivers/pci/pci-bridge-emul.c which
+> > create fake kernel PCI device in the hierarchy to make kernel and
+> > userspace happy. Yes, this is deviation from the PCIe standard but well,
+> > buggy HW is also HW.
+> > 
+> > And same applies for the pci-mvebu.c driver for older Marvell PCIe HW.
+> > 
+> 
+> Oh. Then this patch is not going to change the MPS setting of the root bus. But
+> that also means that there is a deviation in what the PCI core expects for a
+> root port and what is actually programmed in the hw.
 
-Current uAPI implementation for rpmsg ctrl & char device manipulation is
-abstracted in procedures below:
-- fd = open("/dev/rpmsg_ctrlX")
-- ioctl(fd, RPMSG_CREATE_EPT_IOCTL, &info); /dev/rpmsgY devnode is
-  generated.
-- fd_ep = open("/dev/rpmsgY", O_RDWR)
-- operations on fd_ep(write, read, poll ioctl)
-- ioctl(fd_ep, RPMSG_DESTROY_EPT_IOCTL)
-- close(fd_ep)
-- close(fd)
+Yes, exactly this aardvark PCIe controller deviates from the PCIe spec
+in lot of things. That is why it is needed to be really careful about
+such changes.
 
-This /dev/rpmsgY abstraction is less favorable for:
-- Performance issue: It's time consuming for some operations are
-invovled:
-  - Device node creation.
-    Depends on specific config, especially CONFIG_DEVTMPFS, the overall
-    overhead is based on coordination between DEVTMPFS and userspace
-    tools such as udev and mdev.
+Same applies for pci-mvebu.c. Both are PCIe controllers on Marvell
+hardware, but it questionable from who both these IPs and hence source
+of the issues.
 
-  - Extra kernel-space switch cost.
+Also these PCIe controllers have lot of HW bugs and documented and
+undocumented erratas (for things which should work, but does not).
 
-  - Other major costs brought by heavy-weight logic like device_add().
+So it is not just as "enable or disable this bit and it would work". It
+is needed to properly check if such functionality is provided by HW and
+whether there is not some documented/undocumented errata for this
+feature which could say "its broken, do not try to set this bit".
 
-- /dev/rpmsgY node can be opened only once. It doesn't make much sense
-    that a dynamically created device node can be opened only once.
+> Even in this MPS case, if the PCI core decides to scale down the MPS value of
+> the root port, then it won't be changed in the hw and the hw will continue to
+> work with 512B? Shouldn't the controller driver change the hw values based on
+> the values programmed by PCI core of the emul bridge?
 
-- For some container application such as docker, a client can't access
-  host's dev unless specified explicitly. But in case of /dev/rpmsgY, which
-  is generated dynamically and whose existence is unknown for clients in
-  advance, this uAPI based on device node doesn't fit well.
+Marvell PCIe controllers has their own ways how to configure different
+things of PCIe HW via custom platform registers. This is something which
+needs to be properly understood and implemented as 1:1 mapping to kernel
+root port emulator. Drivers should do it but it is unfinished. And as I
+already said I stopped any development in this area years ago when PCIe
+maintainers stopped taking my fixes for these drivers. As I said I'm not
+going to spend my free time to investigate again issues there, prepare
+fixes for them and just let them dropped into trash as nobody is
+interested in them. I have other more useful things to do in my free
+time.
 
-An anon inode based approach is introduced to address the issues above.
-Rather than generating device node and opening it, rpmsg code just make
-a anon inode representing eptdev and return the fd to userspace.
-
-The legacy abstraction based on struct dev and struct cdev is honored
-for:
-- Avoid legacy uAPI break(RPMSG_CREATE_EPT_IOCTL)
-- Reuse existing logic:
-  -- dev_err() and friends.
-  -- Life cycle management of struct device.
-
-Signed-off-by: Dawei Li <dawei.li@linux.dev>
----
- drivers/rpmsg/rpmsg_char.c | 80 ++++++++++++++++++++++++++------------
- 1 file changed, 56 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
-index eec7642d2686..5b2a883d6236 100644
---- a/drivers/rpmsg/rpmsg_char.c
-+++ b/drivers/rpmsg/rpmsg_char.c
-@@ -91,7 +91,8 @@ int rpmsg_chrdev_eptdev_destroy(struct device *dev, void *data)
- 	/* wake up any blocked readers */
- 	wake_up_interruptible(&eptdev->readq);
- 
--	cdev_device_del(&eptdev->cdev, &eptdev->dev);
-+	if (eptdev->dev.devt)
-+		cdev_device_del(&eptdev->cdev, &eptdev->dev);
- 	put_device(&eptdev->dev);
- 
- 	return 0;
-@@ -132,21 +133,17 @@ static int rpmsg_ept_flow_cb(struct rpmsg_device *rpdev, void *priv, bool enable
- 	return 0;
- }
- 
--static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
-+static int __rpmsg_eptdev_open(struct rpmsg_eptdev *eptdev)
- {
--	struct rpmsg_eptdev *eptdev = cdev_to_eptdev(inode->i_cdev);
- 	struct rpmsg_endpoint *ept;
- 	struct rpmsg_device *rpdev = eptdev->rpdev;
- 	struct device *dev = &eptdev->dev;
- 
--	mutex_lock(&eptdev->ept_lock);
- 	if (eptdev->ept) {
--		mutex_unlock(&eptdev->ept_lock);
- 		return -EBUSY;
- 	}
- 
- 	if (!eptdev->rpdev) {
--		mutex_unlock(&eptdev->ept_lock);
- 		return -ENETRESET;
- 	}
- 
-@@ -164,21 +161,32 @@ static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
- 	if (!ept) {
- 		dev_err(dev, "failed to open %s\n", eptdev->chinfo.name);
- 		put_device(dev);
--		mutex_unlock(&eptdev->ept_lock);
- 		return -EINVAL;
- 	}
- 
- 	ept->flow_cb = rpmsg_ept_flow_cb;
- 	eptdev->ept = ept;
--	filp->private_data = eptdev;
--	mutex_unlock(&eptdev->ept_lock);
- 
- 	return 0;
- }
- 
--static int rpmsg_eptdev_release(struct inode *inode, struct file *filp)
-+static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
- {
- 	struct rpmsg_eptdev *eptdev = cdev_to_eptdev(inode->i_cdev);
-+	int ret;
-+
-+	mutex_lock(&eptdev->ept_lock);
-+	ret = __rpmsg_eptdev_open(eptdev);
-+	if (!ret)
-+		filp->private_data = eptdev;
-+	mutex_unlock(&eptdev->ept_lock);
-+
-+	return ret;
-+}
-+
-+static int rpmsg_eptdev_release(struct inode *inode, struct file *filp)
-+{
-+	struct rpmsg_eptdev *eptdev = filp->private_data;
- 	struct device *dev = &eptdev->dev;
- 
- 	/* Close the endpoint, if it's not already destroyed by the parent */
-@@ -400,12 +408,13 @@ static void rpmsg_eptdev_release_device(struct device *dev)
- 	struct rpmsg_eptdev *eptdev = dev_to_eptdev(dev);
- 
- 	ida_free(&rpmsg_ept_ida, dev->id);
--	ida_free(&rpmsg_minor_ida, MINOR(eptdev->dev.devt));
-+	if (eptdev->dev.devt)
-+		ida_free(&rpmsg_minor_ida, MINOR(eptdev->dev.devt));
- 	kfree(eptdev);
- }
- 
--static struct rpmsg_eptdev *rpmsg_chrdev_eptdev_alloc(struct rpmsg_device *rpdev,
--						      struct device *parent)
-+static struct rpmsg_eptdev *__rpmsg_chrdev_eptdev_alloc(struct rpmsg_device *rpdev,
-+							struct device *parent, bool cdev)
- {
- 	struct rpmsg_eptdev *eptdev;
- 	struct device *dev;
-@@ -428,33 +437,50 @@ static struct rpmsg_eptdev *rpmsg_chrdev_eptdev_alloc(struct rpmsg_device *rpdev
- 	dev->groups = rpmsg_eptdev_groups;
- 	dev_set_drvdata(dev, eptdev);
- 
--	cdev_init(&eptdev->cdev, &rpmsg_eptdev_fops);
--	eptdev->cdev.owner = THIS_MODULE;
-+	if (cdev) {
-+		cdev_init(&eptdev->cdev, &rpmsg_eptdev_fops);
-+		eptdev->cdev.owner = THIS_MODULE;
-+	}
- 
- 	return eptdev;
- }
- 
--static int rpmsg_chrdev_eptdev_add(struct rpmsg_eptdev *eptdev, struct rpmsg_channel_info chinfo)
-+static struct rpmsg_eptdev *rpmsg_chrdev_eptdev_alloc(struct rpmsg_device *rpdev,
-+						      struct device *parent)
-+{
-+	return __rpmsg_chrdev_eptdev_alloc(rpdev, parent, true);
-+}
-+
-+static int __rpmsg_chrdev_eptdev_add(struct rpmsg_eptdev *eptdev,
-+				     struct rpmsg_channel_info chinfo, bool cdev)
- {
- 	struct device *dev = &eptdev->dev;
- 	int ret;
- 
- 	eptdev->chinfo = chinfo;
- 
--	ret = ida_alloc_max(&rpmsg_minor_ida, RPMSG_DEV_MAX - 1, GFP_KERNEL);
--	if (ret < 0)
--		goto free_eptdev;
--	dev->devt = MKDEV(MAJOR(rpmsg_major), ret);
-+	if (cdev) {
-+		ret = ida_alloc_max(&rpmsg_minor_ida, RPMSG_DEV_MAX - 1, GFP_KERNEL);
-+		if (ret < 0)
-+			goto free_eptdev;
- 
-+		dev->devt = MKDEV(MAJOR(rpmsg_major), ret);
-+	}
-+
-+	/* Anon inode device still need dev name for dev_err() and friends */
- 	ret = ida_alloc(&rpmsg_ept_ida, GFP_KERNEL);
- 	if (ret < 0)
- 		goto free_minor_ida;
- 	dev->id = ret;
- 	dev_set_name(dev, "rpmsg%d", ret);
- 
--	ret = cdev_device_add(&eptdev->cdev, &eptdev->dev);
--	if (ret)
--		goto free_ept_ida;
-+	ret = 0;
-+
-+	if (cdev) {
-+		ret = cdev_device_add(&eptdev->cdev, &eptdev->dev);
-+		if (ret)
-+			goto free_ept_ida;
-+	}
- 
- 	/* We can now rely on the release function for cleanup */
- 	dev->release = rpmsg_eptdev_release_device;
-@@ -464,7 +490,8 @@ static int rpmsg_chrdev_eptdev_add(struct rpmsg_eptdev *eptdev, struct rpmsg_cha
- free_ept_ida:
- 	ida_free(&rpmsg_ept_ida, dev->id);
- free_minor_ida:
--	ida_free(&rpmsg_minor_ida, MINOR(dev->devt));
-+	if (cdev)
-+		ida_free(&rpmsg_minor_ida, MINOR(dev->devt));
- free_eptdev:
- 	put_device(dev);
- 	kfree(eptdev);
-@@ -472,6 +499,11 @@ static int rpmsg_chrdev_eptdev_add(struct rpmsg_eptdev *eptdev, struct rpmsg_cha
- 	return ret;
- }
- 
-+static int rpmsg_chrdev_eptdev_add(struct rpmsg_eptdev *eptdev, struct rpmsg_channel_info chinfo)
-+{
-+	return __rpmsg_chrdev_eptdev_add(eptdev, chinfo, true);
-+}
-+
- int rpmsg_chrdev_eptdev_create(struct rpmsg_device *rpdev, struct device *parent,
- 			       struct rpmsg_channel_info chinfo)
- {
--- 
-2.25.1
-
+> But until that is fixed, this patch should be dropped.
