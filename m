@@ -1,73 +1,76 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D438328ECDA
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA2D28F501
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746788668; cv=none; b=pMfAN+suv3l7fX5DsXKutKB7RQlnPIAjxeE+yq+X61yv5z4tYCroi7ALeqgMVirepievCMq92CmCE8Q19zbOli4sLF9d8uVSHYM2mNLqdbgJ2GA99IwP7gHW+HABvu0fMFgf98cF1noVbKLFhlKTEEcrqwzjqyzpfWToTW41o5w=
+	t=1746788678; cv=none; b=RWmc0N+DOUQH4T9eDJFzaZ2R/HwzwsOqUxaGcpTqfBHEVifqBM0cfGOnMFEBQYtq4Np/5VQ62M87q3aDvCQXi2rrQ182k4Q7a/BN4z1cxA2hh5K55K8nO5kLhZrDZQYHiSPCw316th/3enuyNWhrrrbh2HqvGX22NTheFjvH+XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746788668; c=relaxed/simple;
-	bh=yM95fF0Jei5vqJ3/y+feByrpKShwlWgTmgWBG472VeA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GycYbDtW7WGFuf75StQb+IL+KpoBqFbZjD++eLKacpiQGjSt/M/n2jLw3R94/3l6b/qVuIxAQ46Ab93IQ5KWv7LyzUceFYvNrd/F94gKY100NOadJvzyCaQiswNGCMdFiHq9Wi0LWeJYmDNOCIimUnG90ZAEejIkV/wCpoEtyfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pTCbSaGJ; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1746788678; c=relaxed/simple;
+	bh=xq9/lr0ckddmJlPg5ez1SbbCWYcaXPPvQeWDl7s5Uqo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uILzLCfjcZN849pJvG/XYm6BdjorRmmCC1Dzdr6f0FNXHHGHl254GVhJqRmMD7daNzv4ZJASc9pFOey397pACVajw7OM0DwB31jIDWM/RY01gYUZlLgnEVrFLTxIQLojjkIJwhQQFXcd0VHKUaWb3L5tTO2OI9D67MmV+s4DC2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a9aMR3YT; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pTCbSaGJ"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so21663095e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:04:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a9aMR3YT"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a1c85e77d7so796894f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:04:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746788665; x=1747393465; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3yJCNV9ygDRNtqgzkE30hTda74O4Y8KfcrRRQ3zGk4A=;
-        b=pTCbSaGJald0fZjq9+mR0EflJWr6J8mo3SnzchHKAdSYPUHnhtnPw3eyRup5IPrzQz
-         7lifPq0ExbqV773l/3bjCkvvuW4jNRWLv8tjBMjapZKNdEUeiv6mLWLU247keMzQKj0A
-         LeTWtNEnAqqwul1/+PzZqN7S6EVYr/NPJkN5NkwyqgbwmEcUON0QzQiTOVy4V3NwKiZo
-         rrn82lCKtaKYYWU/WPCWnBpWh8SuZB5gOOcRfaElty+68A1upvKZwy6BswSwce4hHo7p
-         Nz0Cx+s0hDHK5KVTRXl8eIFQ84HOogfhZApbHnBfMB3LI1+dGhhoL6MkLGLa4gh45XQE
-         I3zw==
+        d=linaro.org; s=google; t=1746788675; x=1747393475; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RFGeu4rqa4NbdBxLMRAKny6nuW4xYvTJilVyN9sQWDs=;
+        b=a9aMR3YTafGfMtz0ClHPCksXqJFVSYWezaZ1JoJjGLXYQiRGjxjFoid/ryt5wg71eM
+         xNt6Pna1GjrQ9ZaMyHdbedjfb9MzXVnPBdRm2gmiT89s3vanheEorXWyj2VzYd2cxTiq
+         DN943+hBc8XVVuyNr5B3RY0w6moFTggh9fYnVg5PP7dlv5FUfNorvTw+4/zR6j7L4xEr
+         GE1Ix5sMhV7ywVfqyiFAflwc1RAEccJjMX+DlmpqrsrGWecrwZFuRLqtrD4V6uu4P+6X
+         W+W8U6PmZIyXL9VSi9HvorTkr8YnQaCmu8WCv4qc8ttZsRHsSmpZva3BGvNCwgC4/HOM
+         kf0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746788665; x=1747393465;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3yJCNV9ygDRNtqgzkE30hTda74O4Y8KfcrRRQ3zGk4A=;
-        b=LZOPtSQKjjccQ11NisIlxp/zsK8h/yKl4cKDnc1NlY6KhUIKr4d483t36fT3dkmN98
-         m7GCndPm50AKTAw10UM4qWmczrXP89jeLNRf85guOdbTRs/KedrHB53G3yQKbrCOCOx8
-         +lGJLYWz8I3pT2SFM/+vjpsPMvh6fqd4IaSUjFg3fmk9y4U2l9kF8aXomDTWXNi8oNYx
-         j30yDretXcMAZdNIcTjkDQkuzw0FtU36YSQag2djH2g+EYd6KdXarsa/i1d7AnIH9Ini
-         p6h1kr2Z8aP6aAzxRQ7WxbSDYqRh0xVT+nKY8/7wUwdCWA5FTxTJi98mTqdzfAyXdBKI
-         UUvg==
-X-Forwarded-Encrypted: i=1; AJvYcCWN2IBh1OE7wQ3L/7KShcfIP2b3iaER11wWNYpTyV/S1vHa9GbzFgKwa80fwJkVn4Y7S+1WUJhmuvo0vCw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcIvpGjf0/owZAbObDo5E9JHZ6gE9OlhCYK6HfYkilh18B6OOn
-	JQ5JPIvQU7pxk+H5OZE+dRa8uwZ9GLwvRyOzpTo88N6zoqMWZIB6LGIQytOutZjxW00WHCUvU+u
-	7
-X-Gm-Gg: ASbGncu9Aew6sjob7yPGVGO3EoQ6/msanb1eI31t6+JQHBzzjlXjIdaSewTn3mi7MYx
-	yeIhtSFFWi9gFGsRy6D1oL+3AwQkj3TpUQ+B7aJ7nyb4imcUMzhY1eGBYyYZQ8KfVJpqU2KRmIU
-	aHUNAmSqgDF2G/4CpV1+Km8GKmS3/1l3OgRJzdewVKQ+qhPtqg+iCtQuuOvhcpX/QfE0Uiztvkk
-	rLg38w9vrnPgNBDfZSB1kPrsoN6y9q3v1lDVDmR66yZCAlROZJpWouhbTRNOrh2YIhMP/uHyIXM
-	zHq32NlmAR7zDvz+aElUco/lK+RAJ8GyRzMFzABq/pbl/w==
-X-Google-Smtp-Source: AGHT+IFw8W+AkGKpeFKjDzyDOm27ntxoNpUsFE65aEkWAInoVy+JgWVEmUmGVOr2GtLsFyJO7gfMIQ==
-X-Received: by 2002:a05:600c:8205:b0:43b:c857:e9d7 with SMTP id 5b1f17b1804b1-442d6d98a88mr23417245e9.5.1746788663606;
-        Fri, 09 May 2025 04:04:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746788675; x=1747393475;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RFGeu4rqa4NbdBxLMRAKny6nuW4xYvTJilVyN9sQWDs=;
+        b=tk/Cem6NgJU4TFtPp67mMoixLEs7Bhoq0PQEl5vfDdiJI4MshMedFBhrwapKRCocKn
+         QKVcNCv/FOQCIqfL/sZznQDORrM4ihKki8oPBOIDuJjaMFivezSqK4s6polpQlrJQ8H4
+         7XXZS5powNvEvjtWgQ8niu1uw0uzybnycuQAb7X2iezLk60KYmJzg78+G6sdTm061El9
+         ihxgTcsTSekNq6E6LCRw9dH8oSKpM11ZUJbj8zHY9stFhh8zdv/GhRo0cQpKDEFLzZup
+         bfBmHSpaXAoH2f37iIyeV7U0QZojEqUDPXUqT/uSN0amZcjGVGYEZmNGYktfxFpHoCbK
+         sMPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVExlxezCPu+OTK4qAWOOwENep5ta+O9Q/I2sXxuPKHGRZPp9smTr7+oGxTKiZpaB2EDXsrIqF41kl0vnw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAXrcPWaGqdfKk2eXV8jPbjkVF4pfnXNUQp3vMhi7+j2zoZO01
+	jcscOh/4+trUj4xuGps/Nne235aRifov9LDxztm3FdEtwWs9G69LAQklJlqgbcU=
+X-Gm-Gg: ASbGncvdxUakVfQ5DMMh1NQwCu7zSPIcKbFXxHuv1vDSVviXgUjA7jdVa8v9s0/SN/A
+	Pw+GG8uVw8iXMdO2k9GC+hIriRf5x9UNi3EwhiMGgB1zPGk98+FnEYk/Qwo0BroAKs073FolKgT
+	IKQLH1WSBHXWng0DYy9re07+k4HmIW+TSx00l50wAg0njV41bHyW1Q2pbn42z+LFK+/C5gmnT1s
+	MOphYg5meGJiGC4RHL5OXw3VpuMknJNesATLd1eHVrp5Km6QMKrVtyRB2aHbdFgUFvBiaY+spxl
+	Lr6WFK8ZSYGdf4k4aeci9bbn9v4WVsxbQx4INnw6wBKGSg==
+X-Google-Smtp-Source: AGHT+IFoLOmKX914wuAyiGBAuaM7PeEJMdeV8PiUZxo0dtylTjuaMjYw6oH6HF/eoBRmbKUgAyX7qA==
+X-Received: by 2002:adf:fa87:0:b0:3a1:f684:39a7 with SMTP id ffacd0b85a97d-3a1f6843a51mr2176018f8f.0.1746788674618;
+        Fri, 09 May 2025 04:04:34 -0700 (PDT)
 Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442d68585d1sm25970195e9.31.2025.05.09.04.04.22
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a1f5a4d21esm2931116f8f.99.2025.05.09.04.04.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 04:04:23 -0700 (PDT)
-Date: Fri, 9 May 2025 14:04:19 +0300
+        Fri, 09 May 2025 04:04:34 -0700 (PDT)
+Date: Fri, 9 May 2025 14:04:31 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
 To: Patrice Chotard <patrice.chotard@foss.st.com>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Christophe Kerello <christophe.kerello@foss.st.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
 	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH 0/2] memory: stm32_omm: Fix error handling bugs
-Message-ID: <cover.1746781081.git.dan.carpenter@linaro.org>
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Christophe Kerello <christophe.kerello@foss.st.com>,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/2] memory: stm32_omm: Fix error handling in
+ stm32_omm_configure()
+Message-ID: <a69ce0445324e994ea2ed7493bda1f6046c7ff69.1746781081.git.dan.carpenter@linaro.org>
+References: <cover.1746781081.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,17 +79,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1746781081.git.dan.carpenter@linaro.org>
 
-These are a couple bugs which were detected using the Smatch static
-checker.
+There are two error handling bugs in the stm32_omm_configure() function.
+1) The error code needs to be set if clk_get_rate() fails.
+2) If devm_reset_control_get_exclusive() then call
+   pm_runtime_put_sync_suspend() before returning.
 
-Dan Carpenter (2):
-  memory: stm32_omm: Fix error handling in stm32_omm_configure()
-  memory: stm32_omm: Fix NULL vs IS_ERR() check in probe()
+Fixes: 8181d061dcff ("memory: Add STM32 Octo Memory Manager driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/memory/stm32_omm.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
- drivers/memory/stm32_omm.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
+diff --git a/drivers/memory/stm32_omm.c b/drivers/memory/stm32_omm.c
+index 166baed0738a..fa0f75e4a6e8 100644
+--- a/drivers/memory/stm32_omm.c
++++ b/drivers/memory/stm32_omm.c
+@@ -222,6 +222,7 @@ static int stm32_omm_configure(struct device *dev)
+ 		clk_rate = clk_get_rate(omm->clk_bulk[i].clk);
+ 		if (!clk_rate) {
+ 			dev_err(dev, "Invalid clock rate\n");
++			ret = -EINVAL;
+ 			goto error;
+ 		}
+ 
+@@ -230,8 +231,10 @@ static int stm32_omm_configure(struct device *dev)
+ 	}
+ 
+ 	rstc = devm_reset_control_get_exclusive(dev, "omm");
+-	if (IS_ERR(rstc))
+-		return dev_err_probe(dev, PTR_ERR(rstc), "reset get failed\n");
++	if (IS_ERR(rstc)) {
++		ret = dev_err_probe(dev, PTR_ERR(rstc), "reset get failed\n");
++		goto error;
++	}
+ 
+ 	reset_control_assert(rstc);
+ 	udelay(2);
 -- 
 2.47.2
 
