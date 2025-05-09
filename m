@@ -1,433 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2071.outbound.protection.outlook.com [40.107.94.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A1D22D4CE;
-	Fri,  9 May 2025 18:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746816970; cv=none; b=EZ0zM0fGoIqAUJmQtNdjL3tNp7w/qL8ARa61EDjfONzGRreYAuEIHBMPkcBpZoSmDyAHDzw5UVex93AMc8hVaa8j72VUs06ReDiwIktjvZB44oUnGcGqRYmxVDjA4PzGt6RCbStS7YOVkTXa3xylLkag2+96GLfqPkgr5tDaa/U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746816970; c=relaxed/simple;
-	bh=heDsPvF08m+NEMuUVpwBe65zvbdhtx/k4lRSvBkDrfQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X1kgRntYtZaantZsnm5ZQENLQJyP0lVpo/pMwRy0tpCLhLrM8unRwaonBc0Lshu2v4PaAk7lmP+2zF83OCsnLiji87LpqHlAWNHUzRL0Twa9h1V/QwoTMe1rMixy9Zjy6zjgh8YsMglNseyoEp/bedzr6a0CGqFtUi6HKHNA3jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mrq3mndX; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF34524113A;
+	Fri,  9 May 2025 18:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746816984; cv=fail; b=K8ugVmDLF+q3Klnsxejnr3Umx0Tar7LG+YQn5klLX6zkSH7zq4CYPJ0ZOw1V/f5GRLwkvDX2QNkdqehEz4x0RWBrQwv9QZ0pguDTwIxT0M5lj6glV2HALUdxFQAIuH45tSAWVWyM/DekBqu+26WPVNAIml3UwE0EkUEpIxBcA+I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746816984; c=relaxed/simple;
+	bh=FANrQOk2UvaQmmzZ7jQyiAkzBE7qnaxDdzEfLXfwBCA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=NaH+/JTbQiyBX3jACRYfiszne3MQ8eqPiaG6+/pCjMte+oV/q8kALk6QcCFL+SyJGxZ5JS3XK98On6Ri1X/InlLwTV2IiRxnYkxPWzAnAqjpgKkaQtSCo9VXsc64u8GeL8TGyFYUAc46v8K4OT3trBPtDjXJjiAa8/d+XTB67X4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=PTNCq0pA; arc=fail smtp.client-ip=40.107.94.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mrq3mndX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40FABC4CEE4;
-	Fri,  9 May 2025 18:56:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746816969;
-	bh=heDsPvF08m+NEMuUVpwBe65zvbdhtx/k4lRSvBkDrfQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mrq3mndXAyivhDJthv7GNp1II4tF4Sl4pzuSy8hM/22Nd8PsWSESH9TzXgrsTxFGu
-	 Z46ri/Wv/o5USSoF8keSKUXwhoeFly3FGqkeOvEMyxq5nBZ6EllYrMTgbfOaGpAe7z
-	 4CLCe54ZK9LD5/DhtzpmFIC7rDfiWbt/sGxl8rsU/0cl4slrE9VCcL/3B6GSL1zR67
-	 Acxyq/9Mk4A8LnkSZ/IjBXV6m8ykcJ1GwxCInSA2tlIvUEwoFd/uGD0x+zJnwpE+a+
-	 9qcY8AsW3XGMjMQjprHBJU7s6yHZrtcYxu1wUvYawlzZJtBX5po49Dr8aDsHSPygSp
-	 YT5n45u7kiA6A==
-Date: Fri, 9 May 2025 13:56:07 -0500
-From: Rob Herring <robh@kernel.org>
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de,
-	Michael.Hennerich@analog.com, dlechner@baylibre.com,
-	nuno.sa@analog.com, andy@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, marcelo.schmitt1@gmail.com
-Subject: Re: [PATCH v2 1/7] dt-bindings: iio: adc: Add AD4170
-Message-ID: <20250509185607.GA3913574-robh@kernel.org>
-References: <cover.1745841276.git.marcelo.schmitt@analog.com>
- <add7510bd4c9f83011ab949f4fae2c77f57fbc43.1745841276.git.marcelo.schmitt@analog.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="PTNCq0pA"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=S7M4Vu7IJVhBZ9EJErDx14yiJbWwl0LLM16Rpto9uu3+o2J2XcnvFcMHgw0WidqzbI7L/p3Xgzq6CrUsBOEIo7NKGL6g7tiovtfaZcFg5CVyCecJTgPuZOKgLWK9Ttk1cm/fYaCH00qqWZgjNV9WBREAn6+Nn4zArRh0kOO0yeZ9SR10qiwBRVwQWGHR/RLBTIayDGrgEGwBcEBuvq9I3b3a2BZqOdeY27FcKzavfSmeG6JsqqPc6GsqJ6iIW8EmlidIY8IDYhumu3H9aXFbPAqkEsf8mhiVwF0L/okEDeAv1fzJ9LTLZ57yWjt0Fz7STnaamXMCoHBXXJV9iM2Adg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5kIQEqluba1Yh8pCFDKWkOt3xXb77Bbf39/RqARTQ70=;
+ b=oOSpyNVTE3bZqzCVIX+qhFOIpptvhA3xWW1WZYg6bCFK/yeq/Qw7lWgFexszFkEBzH8rWzpEdISg0BUTRQhYYRtPvZ360OVoD9RQG6R224r+a5gWMzhOaQIVTkVgZoU6Rqfv43mZzXI7aIikMUU/8q+R4Dd8ec0KpBr9JJkPJUXvm/6EDHKxqSMZacHCsccxpERM6FYLaFWYLZDnvve6lMWsO6FgUtHQ3mvk9EKdecbIoO+0JXxkNxSfLJjt0EAIcu17vAU/Sh/tiCMG1umWmnLkLACVIlOm9ii7Ow0anlAsgrjie5qQ0Ya5oTvGSoyZYRq4l1eOVHBl0gPCWDhG/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5kIQEqluba1Yh8pCFDKWkOt3xXb77Bbf39/RqARTQ70=;
+ b=PTNCq0pAfNeb7dBDZ3Lf4vxto1GaCaVRFqW12qx1SIBDzjOxVui9XMUtiv+67QygJimLWYPJQ5sGCsYYr2L5lZSotjmllJSJcfki2XZqY77XYgTNIOFRomMZEoLrJKccJvb5eulswgv1BOau1UvzcDLhoB2BWgtqqJKNu91mH5h8u6ZAMLunQLPKMMrSFCeW15DImv/ytHIxX314F5XL2whPoG0D7joh6cAEIyY0j3keOIQsWMMnpfDBoQq7Edo/LhbhOVV3McOLNSNouRzqNlO9P+v/zg4/5kEt9vEKCw7aIYjLrWCJADePpVXxWoK/ov+ufCms5FEnKFThmrv48Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by LV8PR12MB9262.namprd12.prod.outlook.com (2603:10b6:408:1e7::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.37; Fri, 9 May
+ 2025 18:56:18 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8699.035; Fri, 9 May 2025
+ 18:56:18 +0000
+Message-ID: <c40c36b0-d8f3-4012-8e5c-eedc7343c33d@nvidia.com>
+Date: Fri, 9 May 2025 14:56:15 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] rcu/nocb: Add Safe checks for access offloaded rdp
+To: Frederic Weisbecker <frederic@kernel.org>,
+ Z qiang <qiang.zhang1211@gmail.com>
+Cc: paulmck@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
+ urezki@gmail.com, boqun.feng@gmail.com, rcu@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250507112605.20910-1-qiang.zhang1211@gmail.com>
+ <20250507112605.20910-2-qiang.zhang1211@gmail.com>
+ <aBuJi3jhcp4dCbSY@localhost.localdomain>
+ <CALm+0cWyWrEcsYx+6nDT9XjMdLBDwx27SmAXTPUFLB59TbEc3Q@mail.gmail.com>
+ <aB4EKfvicJ558J7A@localhost.localdomain>
+Content-Language: en-US
+From: Joel Fernandes <joelagnelf@nvidia.com>
+In-Reply-To: <aB4EKfvicJ558J7A@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MN2PR16CA0058.namprd16.prod.outlook.com
+ (2603:10b6:208:234::27) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <add7510bd4c9f83011ab949f4fae2c77f57fbc43.1745841276.git.marcelo.schmitt@analog.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|LV8PR12MB9262:EE_
+X-MS-Office365-Filtering-Correlation-Id: 992e4f3b-e69e-4a0e-4aed-08dd8f2b2ea7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dTRXRmJadThXVHRJSjBlWHVBN1R6RU81cUdyQUFtak5NKzY0YmRjcW5hV0R4?=
+ =?utf-8?B?TUFPZUQ0anNaRHJVa29jeCtvcSs5RE9jYmp2NHZWekJpamRWSEtBSjZSdGo4?=
+ =?utf-8?B?dmpseEp5NDJjUjZib294bHBxVzBCMVA5R0ZTVFRVUTFYUklrNWpQWW9iWmdT?=
+ =?utf-8?B?RDh3NUd3ME9UdUtZREpKN3E3UTZ1dU55SVZrcm5iRnhUcGhMQ0FyMEhNdlBQ?=
+ =?utf-8?B?K0hWV1o0WGZ5SisxVnRCNnFYM1h0WUkybnIvY2l1KzhINWtOUldtb0l2RUNP?=
+ =?utf-8?B?bVhhenh0ZG1nLy9yTVduSFl1WmNsdDI0NU9ZT0xvRjZNemorOHNmRjNXNVV5?=
+ =?utf-8?B?VVBlblpoaEhnUW5Gdng0SU5Da2wzZnJ0RUM5LzIvSE8wbExJM0RBbDZwMG9u?=
+ =?utf-8?B?QkZTVXpMNTcxQ05VYjd2ak1RcXNZc1dOZHpjM3lVSjlCLy9FeDNkYU91T1l0?=
+ =?utf-8?B?UXN6YUcxQ1dWU2dxSXZYaUdka2tiYmkwOXh2eVJXY1V2a0FDdXRHL0hBaTRn?=
+ =?utf-8?B?T3VYSDFQYlVmZ1VWNjhqRU9vTlF1NmYwQnhtWVVQbVNpQmtzQkVFeXo3S0t0?=
+ =?utf-8?B?TDhoS1paVjJSMk9ucG1QR0RBVHljd3JTRWFsTGNwdmlvS3BPWVlXY2RZNUZy?=
+ =?utf-8?B?cWQ2ZDgrV1crdFk4U0tEQ1ZzSktVZzVRWlRXc0doMzhacGhwQ3hoRUMzc2gy?=
+ =?utf-8?B?SjY5YnArZmxQZnBORnFKZGVocHJacERaLzY0eHZRV3YyTkY2TVdZSUk5blJO?=
+ =?utf-8?B?cDBIVDlmZDk1NmQwdTlmZktWVWkrRHVyQVZTVUhpdVVYWnE2NnBxdW1Rd2Vz?=
+ =?utf-8?B?NFZySHJ6NjBJdHlHMHo0S01kTnZLd1k3b2s4MTI1M29Oc0VGR3ZLNHovNnFS?=
+ =?utf-8?B?YkRmaitHOStLL1ZnbWZOL01zclcvRS9zdnFHdTBWQTFISk4zT0xkM1F2TEpK?=
+ =?utf-8?B?UytOZDZMWnZBNjUyRTZkbldvK0hZazdoREZyajlIOE1uQkE0cHMyczFqaHpR?=
+ =?utf-8?B?SlFBdGo0Z1hPbFljNGRyeUZ3OSs5dG5xT3lEY0tqWHp5MlAxRzQvclBzTmtl?=
+ =?utf-8?B?WU42eDErYVduU1RGSmlrMjY0QzlWQ2N1SDhrSlpDMi9OMTZpb3lYY09TRFNJ?=
+ =?utf-8?B?ajBwOTVoNVdqZHBpT21NVldVakRUbVc2RjRvWTZjZlRpTk0vVW9sNVRwdUdT?=
+ =?utf-8?B?S0ZVenBqWDgrVE11RWM4ZGwvLzlRQ3oyazVZM0dBajBjWXBMZDRpQ1BGTmVt?=
+ =?utf-8?B?ZHZabUtNcFY3ejBzT09KUDk4RVJTd2NWNW5aaHQ5ditQV2JDRGtod0lRTkFK?=
+ =?utf-8?B?YlB0K2IrT2VudjBkUkZZTkNabDgzZjlndmV0Z2RGNWNvUzIxblRxMVZvZHZX?=
+ =?utf-8?B?RDJXaU8wTCtXS2hENnEvM2NVU3U2S05tRUlyYys4c0wrLzVRbG5oSGcyRmhF?=
+ =?utf-8?B?T25leTdOVExqMS9zWkpZdGxRSUlBQ2pSK1ZwUTBoVmYrdmVjSWNSWHdvVndK?=
+ =?utf-8?B?QmxlV0NsdXp3Wi8xc05vamRReFpQVXVHdERUak80RWNBWE5NTysrYkF5K09R?=
+ =?utf-8?B?bzFhOEI3ZGRtZ01SZ1RZMEREWElmcHNxQkRmT0ozL2FMT2w3cC9GTlFPcDBX?=
+ =?utf-8?B?ZTExb2tVUWhMT0I0Z2htNG9WWmN6VTA4UW9CNTEyYU1Cd2s0Z3ZiS1QwT1px?=
+ =?utf-8?B?WnhJL056cS9qM0ZxVkVFTHlpZjROa3k2bm53MTlwUVVzS1YySWF0Tmt1U3Vq?=
+ =?utf-8?B?UC9UVWVQS3Z1OW96RDQvalFoV2VlTGRGK05hbmE0TTA2YXBpWjB1amJaUVNI?=
+ =?utf-8?B?bFBwOUVtVkkzSnU2TUM3dDhCYnd4VFlXQkV2NXpxSG9PZEZZNXJzcEtqUXV1?=
+ =?utf-8?B?Z2FuT1JoZDFkOERmZ2lZYnllYnpQNGI5dTU2VXkrQnVjY1E9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cEVyMktGa0s1bTA3K3A3clpQMXNpR2JmcUJ3S3ZFMFIzNmNWUHNkN0VPWUtR?=
+ =?utf-8?B?YzUrRWFlZ3N5bW9CdFNXVWs1djZETGNOSmlybk5RWk1wTjc2NDhPOWl5enpu?=
+ =?utf-8?B?M2ZhWEdkQVBsUjBFb1pGRjJ3TDh4OU16dHduR0w3SWZXbjl3ZFJ6eUl6QzVr?=
+ =?utf-8?B?NUswbnN6d2kxRVVWaWg1VVFqRHhPak9hM0xhZTBnRTBXeUZlYzE3RUxEMitW?=
+ =?utf-8?B?cXJpNk9sMkRRajZuN0pmYkdJblJidUNpZllpQjc2Qm00VTNleEN1N2t5Vk5W?=
+ =?utf-8?B?aHlBbW9yRFNabmZoSldZejdBWGdub2IzWEgwMG5uWjRMWmROdlY1MVBVbUdM?=
+ =?utf-8?B?OFNqbGI1Q3RyVGpkanVrVTFoT2xjUjF5VGNFcHVmOEpmN3RUVGtCRmw2NTgy?=
+ =?utf-8?B?aWF3QjNIY1N1ZWx2YWpiaDF5aHJkTGk4VnFpenhHVlJleW5Odk9FekRsYTE2?=
+ =?utf-8?B?NFJaN2ZTQmQwK2hsQWYzT3crbEZJaTBGTjBSdVduZ0ttczVxZ2VlTElmMlZ6?=
+ =?utf-8?B?NktNWGx3a2FDWlk3UVZLMCsrQjRTYjRYQzAyOVdpNFBhTHZNWjJKOTAycVNo?=
+ =?utf-8?B?T1BQdFNqNXpReFZEL0tXRGhaMmxuL0FsTmtrSTdJem9LZExVMXhTUGE2RmtY?=
+ =?utf-8?B?bDVjZWVRZC80TGVwMEpSOWZKRXF4cnVKYmwwaDdXY2NrMzVGUjl1OVpoM2Zm?=
+ =?utf-8?B?dm1lMnJ6dysvd3lSdkRoSWVySTBlYWtSQ0o2a2dhTk1rNnRMTDExWEs2MVp2?=
+ =?utf-8?B?MHl6bkw1T2VwZFk0aS9FQVhvcC9TYjEvRnUwdzI1SWJxME8vZTd5U2NwSTU1?=
+ =?utf-8?B?c1M0bnZ0aHY0L2VwdDhCM3pQdVdEZm5RdzdGcmNhVEVDWGgyNWRNc2dZUUtH?=
+ =?utf-8?B?NHdjTXRVdWZtckUwY3pUTFlQVEh0QU1TL0NNV2V1YlpqNXZiWCtlbDlNZm43?=
+ =?utf-8?B?SUgxNkZFOFFQbk9oQWR6M2RuWmVaMmIrV1dwOHdDQTh6b3RaaGNEeFdIYzVH?=
+ =?utf-8?B?RTZxUGFtbnArcHprQU5LNzBZOG5oNjFTSEtiQ1RSbVFtcVF1dmJVK2Z0K0s0?=
+ =?utf-8?B?aEFJbnRNcXhvakw3MjFWVnBFSDJ6bEVIaXZnSnlIbWNCYkZRd2ZSYUtmQm5P?=
+ =?utf-8?B?VnIwS2RCV09sUFpxNWRJNlFheGV6WUJYOHRrNmZ4RXJXNW1lTSswMm9ZbUNl?=
+ =?utf-8?B?RHE5WDZoTkFhcXQ2OEJIS2ZrbmlqVlpFT0RDYzZMemVjSENCRFFJZmw0ZHFo?=
+ =?utf-8?B?R0pZNXJ6ZE9iekFkNmdqMTVRcjlTckI1dURtK0NqTjYwN1p3V25HYm45Rm5x?=
+ =?utf-8?B?V0V2Nks3TlozYyt6R1J0djRkZmNsZHZLT0Y2bXBiLy9PSGU3VkxrOHYwMi9L?=
+ =?utf-8?B?aGJpdjE0TTIrYmgxQzlEVmR1ZDRqUmNmV0xWQ2lYOW5pcERIQ1VZV2R3YkJa?=
+ =?utf-8?B?dWlVelhHMTYrZWtiOUVQa3B6QlZDVy9iRUlyQUR3UzZGaTJDUlRybFBLMjBO?=
+ =?utf-8?B?eWFkSDVwYUNpWUJ3T3JKdEExRmVYZmU1NjRNZDFQYWtTM0t2TzY5RlJmY0o4?=
+ =?utf-8?B?MlAwMkRLbU5iSUdUMzRpVEFrNzk4VGdQN2pJdlhiNHRyOXVpMDE2ZmNERXM3?=
+ =?utf-8?B?dFNtY1Y1VldqamlidjRLbGc2em84UlFvb29BVkt6S25WaTVhcVRqa1RxN3NH?=
+ =?utf-8?B?Uk9DcFZOZW84b0RET1Z1SmpNektBTk5tOXo1Uk5CUGZpOVVGalpTazdqaWNi?=
+ =?utf-8?B?Qkk4WXVHSnpGWklBdlVTZnRwMEtNbmhJZ2lqQ2hLZHFyY2dPZHRLWVQyT0NQ?=
+ =?utf-8?B?NHhtcERxTno3cEh3STZZbkxGOW90aW5WMkxyYjdidUVwaWt1Z3hRUi9NNC9I?=
+ =?utf-8?B?TXBoMWR5WmZZYS9hUzQrdFMzOGdINlM0L3I1aFljWjltSjFwMDcwWGdERTRj?=
+ =?utf-8?B?SFIwZHNlVUJaR3BSVENTdzE3Nit5UHUyeGxvVU1SOHFRYzkzVGFzRUYxdFE3?=
+ =?utf-8?B?TTRlWDQ0YmV4ZUk5WHFjNVQ5WDR5Z2gremE3Rm5VbWJiRHZZejdvaEg4Y1JF?=
+ =?utf-8?B?aWxXWmw1MnFNQldJVmhJMVViV3pkQWtkdXdseE11RVk3T3hSRktZOUptanYx?=
+ =?utf-8?B?dXA4ODVpam9SV1BNUklzMWp4ZFZuV3B0Yk9HY0tlckgvUUdXR1VqZzczMER1?=
+ =?utf-8?B?c3c9PQ==?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 992e4f3b-e69e-4a0e-4aed-08dd8f2b2ea7
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 18:56:18.7251
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VXlDLsuYz6uBOzl5C+Zn7r3Pdi+jofgOy685xI/GEvFiBTsaknmfST34OmKfZMzUBXlzGHksrcnGPSg40Pa8rA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9262
 
-On Mon, Apr 28, 2025 at 09:27:46AM -0300, Marcelo Schmitt wrote:
-> Add device tree documentation for AD4170 and similar sigma-delta ADCs.
-> The AD4170 is a 24-bit, multichannel, sigma-delta ADC.
+
+
+On 5/9/2025 9:33 AM, Frederic Weisbecker wrote:
+> Le Thu, May 08, 2025 at 02:43:11PM +0800, Z qiang a écrit :
+>> On Thu, May 8, 2025 at 12:25 AM Frederic Weisbecker <frederic@kernel.org> wrote:
+>>> On a second thought, isn't "rdp == this_cpu_ptr(&rcu_data)" enough?
+>>
+>> If the CONFIG_DEBUG_PREEMPT=y, the following code will cause
+>> a warning in rcuop kthreads:
+>>
+>> WARN_ON_ONCE(!rcu_rdp_is_offloaded(rdp))
 > 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> ---
-> [device tree changes]
-> - Referenced adc.yaml from sensor-node.
-> - Merged property descriptions to reduce doc duplication.
-> - Every child node type is now in the example.
-> - Better described sensor-type property with a list of possible types.
-> - Updated adi,excitation-pins description to cover a use case I had overlooked.
-> - Added default to interrupt-names and to clock-names.
-> - Added support for clock-output-names
-> - Dropped '|' from descriptions when not needed.
-> - Added extra example
-> - 
+> I keep forgetting that, indeed!
 > 
->  .../bindings/iio/adc/adi,ad4170.yaml          | 554 ++++++++++++++++++
->  MAINTAINERS                                   |   7 +
->  2 files changed, 561 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+> Looks good then, thanks.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
-> new file mode 100644
-> index 000000000000..679825be1f15
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
-> @@ -0,0 +1,554 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4170.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD4170 and similar Analog to Digital Converters
-> +
-> +maintainers:
-> +  - Marcelo Schmitt <marcelo.schmitt@analog.com>
-> +
-> +description: |
-> +  Analog Devices AD4170 series of Sigma-delta Analog to Digital Converters.
-> +  Specifications can be found at:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4170-4.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4190-4.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4195-4.pdf
-> +
-> +$ref: /schemas/spi/spi-peripheral-props.yaml#
-> +
-> +$defs:
-> +  sensor-node:
-> +    type: object
-> +    $ref: /schemas/iio/adc/adc.yaml#
-> +    description:
-> +      The AD4170 and similar designs have features to aid interfacing with weigh
-> +      scale, RTD, and thermocouple sensors. Each of those sensor types requires
-> +      either distinct wiring configuration or external circuitry for proper
-> +      sensor operation and can use different AD4170 functionality on their
-> +      setups. A key characteristic of those external sensors is that they must
-> +      be excited either by voltage supply or by AD4170 excitation signals. The
-> +      sensor can then be read through a pair of analog inputs. These properties
-> +      describe external sensor circuitry connected to the ADC.
-> +
-> +    properties:
-> +      reg:
-> +        description:
-> +          Channel number. Connects the sensor to the channel with this number
-> +          of the device.
-> +        minimum: 1
-> +        maximum: 16
-> +
-> +      diff-channels:
-> +        description:
-> +          Defines the ADC input pins used to read sensor data. Only regular
-> +          analog input pins can be used.
-> +        items:
-> +          enum: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-> +
-> +      bipolar: true
-> +
-> +      adi,sensor-type:
-> +        description: |
-> +          Type of sensor connected to the device. Depending on the sensor type
-> +          (weigh scale, RTD, or thermocouple) the values of sensor-node
-> +          properties have slightly different constraints. This property
-> +          specifies which particular external sensor is connected to the ADC so
-> +          the sensor-node properties can be properly parsed and verified. The
-> +          possible sensor types are:
-> +          0: weigh scale;
-> +          1: RTD;
-> +          2: thermocouple.
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-> +
-> +      adi,reference-select:
-> +        description: |
-> +          Selects the reference source to use when converting on the specific
-> +          channel. Valid values are:
-> +          0: Differential reference voltage REFIN+ - REFIN−.
-> +          1: Differential reference voltage REFIN2+ - REFIN2−.
-> +          2: Internal 2.5V referece (REFOUT) relative to AVSS.
-> +          3: Analog supply voltage (AVDD) relative AVSS.
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-> +        enum: [0, 1, 2, 3]
-> +
-> +      adi,excitation-ac:
-> +        type: boolean
-> +        description:
-> +          Whether the external sensor has to be AC or DC excited.
-> +
-> +      adi,excitation-pins:
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        description:
-> +          Pins used to excite the sensor or external circuit that contains the
-> +          sensor. Thermocouples and RTD sensors are excited either with one
-> +          current source or with a pair of current sources to minimize the
-> +          excitation current mismatch and the excitation current drift matching
-> +          on the ADC. E.g. <0>; <1>; <0 1>. Load cell weigh scales may be
-> +          excited with one current source, a pair of excitation currents, or two
-> +          pairs of excitation currents. When four pins are defined, the first
-> +          two values specify the first pair and the last ones specify the second
-> +          pair of excitation currents. E.g. <0>; <0 1>; <0 1 2 3>.
-> +        items:
-> +          minimum: 0
-> +          maximum: 20
-> +
-> +      adi,excitation-current-microamp:
-> +        description:
-> +          Excitation current in microamperes to be output to each excitation pin
-> +          specified by adi,excitation-pins property. If not provided and
-> +          adi,excitation-ac is true, use predefined ACX1, ACX1 negated, ACX2,
-> +          and ACX2 negated signals to AC excite the bridge circuit. Those
-> +          singals are output on GPIO2, GPIO0, GPIO3, and GPIO1, respectively.
-> +        enum: [0, 10, 50, 100, 250, 500, 1000, 1500]
-> +        default: 0
-> +
-> +      adi,power-down-switch-pin:
-> +        description:
-> +          Number of the GPIO used as power-down switch for the bridge circuit.
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-> +        enum: [0, 1]
-> +
-> +      adi,vbias:
-> +        type: boolean
-> +        description:
-> +          For unbiased thermocouple applications, the voltage generated by the
-> +          thermocouple must be biased around some DC voltage. When present, this
-> +          property specifies a bias voltage of (AVDD + AVSS)/2 to be applied as
-> +          common-mode voltage for the sensor.
-> +
-> +    required:
-> +      - reg
-> +      - diff-channels
-> +      - bipolar
-> +      - adi,sensor-type
-> +      - adi,reference-select
-> +
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad4170
-> +      - adi,ad4190
-> +      - adi,ad4195
-> +
-> +  avss-supply:
-> +    description:
-> +      Referece voltage supply for AVSS. If provided, describes the magnitude
-> +      (absolute value) of the negative voltage supplied to the AVSS pin. Since
-> +      AVSS must be −2.625V minimum and 0V maximum, the declared supply voltage
-> +      must be between 0 and 2.65V. If not provided, AVSS is assumed to be at
-> +      system ground (0V).
-> +
-> +  avdd-supply:
-> +    description:
-> +      A supply of 4.75V to 5.25V relative to AVSS that powers the chip (AVDD).
-> +
-> +  iovdd-supply:
-> +    description: 1.7V to 5.25V reference supply to the serial interface (IOVDD).
-> +
-> +  refin1p-supply:
-> +    description: REFIN+ supply that can be used as reference for conversion.
-> +
-> +  refin1n-supply:
-> +    description: REFIN- supply that can be used as reference for conversion. If
-> +      provided, describes the magnitude (absolute value) of the negative voltage
-> +      supplied to the REFIN- pin.
-> +
-> +  refin2p-supply:
-> +    description: REFIN2+ supply that can be used as reference for conversion.
-> +
-> +  refin2n-supply:
-> +    description: REFIN2- supply that can be used as reference for conversion. If
-> +      provided, describes the magnitude (absolute value) of the negative voltage
-> +      supplied to the REFIN2- pin.
-> +
-> +  spi-cpol: true
-> +
-> +  spi-cpha: true
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-names:
-> +    description:
-> +      Specify which pin should be configured as Data Ready interrupt.
-> +    enum:
-> +      - sdo
-> +      - dig_aux1
-> +    default: sdo
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description:
-> +      Optional external clock source. Can specify either an external clock or
-> +      external crystal.
-> +
-> +  clock-names:
-> +    enum:
-> +      - ext-clk
-> +      - xtal
-> +    default: ext-clk
-> +
-> +  '#clock-cells':
-> +    const: 0
-> +
-> +  clock-output-names:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +    description: |
-> +      The first cell is for the GPIO number: 0 to 3.
-> +      The second cell takes standard GPIO flags.
-> +
-> +  ldac-gpios:
-> +    description:
-> +      GPIO connected to DIG_AUX2 pin to be used as LDAC toggle to control the
-> +      transfer of data from the DAC_INPUT_A register to the DAC.
-> +    maxItems: 1
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^channel@[0-9a-f]$":
-> +    $ref: adc.yaml
-> +    type: object
-> +    unevaluatedProperties: false
-> +    description:
-> +      Represents the external channels which are connected to the ADC.
-> +
-> +    properties:
-> +      reg:
-> +        description:
-> +          The channel number.
-> +        minimum: 0
-> +        maximum: 15
-> +
-> +      diff-channels:
-> +        description: |
-> +          This property is used for defining the inputs of a differential
-> +          voltage channel. The first value is the positive input and the second
-> +          value is the negative input of the channel.
-> +
-> +          Besides the analog input pins AIN0 to AIN8, there are special inputs
-> +          that can be selected with the following values:
-> +          17: Internal temperature sensor
-> +          18: (AVDD-AVSS)/5
-> +          19: (IOVDD-DGND)/5
-> +          20: DAC output
-> +          21: ALDO
-> +          22: DLDO
-> +          23: AVSS
-> +          24: DGND
-> +          25: REFIN+
-> +          26: REFIN-
-> +          27: REFIN2+
-> +          28: REFIN2-
-> +          29: REFOUT
-> +          For the internal temperature sensor, use the input number for both
-> +          inputs (i.e. diff-channels = <17 17>).
-> +        items:
-> +          enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-> +                 26, 27, 28, 29]
-> +
-> +      single-channel: true
-> +
-> +      common-mode-channel: true
-> +
-> +      bipolar: true
-> +
-> +      adi,buffered-positive:
-> +        description: |
-> +          Enable precharge buffer, full buffer, or skip reference buffering of
-> +          the positive voltage reference. Because the output impedance of the
-> +          source driving the voltage reference inputs may be dynamic, RC
-> +          combinations of those inputs can cause DC gain errors if the reference
-> +          inputs go unbuffered into the ADC. Enable reference buffering if the
-> +          provided reference source has dynamic high impedance output. Note the
-> +          absolute voltage allowed on positive reference inputs (REFIN+,
-> +          REFIN2+) is from AVSS − 50 mV to AVDD + 50 mV when the reference
-> +          buffers are disabled but narrows to AVSS to AVDD when reference
-> +          buffering is enabled or in precharge mode.
-> +          0: Reference precharge buffer.
-> +          1: Full Buffer.
-> +          2: Bypass reference buffers (buffering disabled).
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-> +        enum: [0, 1, 2]
-> +        default: 1
-> +
-> +      adi,buffered-negative:
-> +        description: |
-> +          Enable precharge buffer, full buffer, or skip reference buffering of
-> +          the negative voltage reference. Because the output impedance of the
-> +          source driving the voltage reference inputs may be dynamic, RC
-> +          combinations of those inputs can cause DC gain errors if the reference
-> +          inputs go unbuffered into the ADC. Enable reference buffering if the
-> +          provided reference source has dynamic high impedance output. Note the
-> +          absolute voltage allowed on negative reference inputs (REFIN-,
-> +          REFIN2-) is from AVSS − 50 mV to AVDD + 50 mV when the reference
-> +          buffers are disabled but narrows to AVSS to AVDD when reference
-> +          buffering is enabled or in precharge mode.
-> +          0: Reference precharge buffer.
-> +          1: Full Buffer.
-> +          2: Bypass reference buffers (buffering disabled).
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-> +        enum: [0, 1, 2]
-> +        default: 1
-> +
-> +      adi,reference-select:
-> +        description: |
-> +          Select the reference source to use when converting on the specific
-> +          channel. Valid values are:
-> +          0: Differential reference voltage REFIN+ - REFIN−.
-> +          1: Differential reference voltage REFIN2+ - REFIN2−.
-> +          2: Internal 2.5V referece (REFOUT) relative to AVSS.
-> +          3: Analog supply voltage (AVDD) relative AVSS.
-> +          If this field is left empty, the internal reference is selected.
-> +        $ref: /schemas/types.yaml#/definitions/uint8
+> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+> 
 
-You already defined the type in the $defs, so no need to do it again.
+Applying for v6.16 with the tag.
 
-> +        enum: [0, 1, 2, 3]
-> +        default: 2
-> +
-> +    required:
-> +      - reg
-> +
-> +    allOf:
+thanks,
 
-Don't need allOf.
+ - Joel
 
-> +      - oneOf:
-> +          - required: [single-channel]
-> +            properties:
-> +              diff-channels: false
-> +          - required: [diff-channels]
-> +            properties:
-> +              single-channel: false
-> +              common-mode-channel: false
-> +
-> +  "^weighscale@":
-> +    $ref: '#/$defs/sensor-node'
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      diff-channels: true
-> +      bipolar: true
-> +
-> +      adi,sensor-type:
-> +        description: Weigh scale sensor.
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-
-Already defined the type. And for the rest...
-
-
-Rob
