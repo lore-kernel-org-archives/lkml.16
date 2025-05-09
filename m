@@ -1,146 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D13A25D1FC;
-	Fri,  9 May 2025 21:58:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBEC73B2A0;
+	Fri,  9 May 2025 22:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746827935; cv=none; b=P7CNXpS8DFzGJ+gDy3ooI2HDKVaMDnmrFsfRe/sBGlRv/4DUyRiKv2YuR5TiqjeHzLPs5aPiRt7LYRqK3ybFRnbJtNlG6i0A1VyFKfPKzX2BydZPQRzcyXLwOKR5hPyo+TpKTd1BU6rnBKBtRyIIuAiuTHruwFHeGlHyT1LmcaM=
+	t=1746828120; cv=none; b=UmvVbbwCXZ1VbfHsiCaOA6/kH417TysGk9zVGRUhAZIyhQnQi7WmAhXeI+5wraUJDNS55Ki3xr9hcvbY1XtCbCiBjYkiM0zkjKty9T1q8eu9H2jOM0DkVZqwwUCq14jajAYy+h3Baqwb8NiQQ7eP8sjlYfIqAUR+/Th1I2Ax3nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746827935; c=relaxed/simple;
-	bh=bod7OgH9FMLNk7FKdLh8z63aV2T+h8TH6ReCA7jp2gc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nT1nuZqvHX1aDgo1g+u7tnHQDC/bZuE3ObN/LGk5AV6V4WAIR++jwPqKnhYpqv+IYW5wONUCFoHW9GAr748wC/unRJ2RfwgxEw4Je4tPJerSUt0vovfxd4eMqdTAndJnHuNTOoUOXDYff1ci+4RdcH6w4B49D6kNYKVo9e714Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wj/Ji3eS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746828120; c=relaxed/simple;
+	bh=gNZ3Syvjxa7YmkuREENTU9TsK6j8EtpbYbPGp0Oz+iM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D8tP9N/Jmuf5liCSHpP9v5oylx1l5GVNR0/PHBd5YZSYN2ZJiL6ZaFpeHKLfnDFwJ+RGHTmQ+Gvcq+HPv0gQqc19qbpYQAZu+NL81hWwSUZVtIl/cOnbvY+lAkGam7k4mBw7SgS5MfSyXvBelinYiOUVvoIBsuWwcWnbJbfBovs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SIzYbLGd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wj/Ji3eS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E579DC4CEF0;
-	Fri,  9 May 2025 21:58:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SIzYbLGd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA2B5C4CEE4;
+	Fri,  9 May 2025 22:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746827934;
-	bh=bod7OgH9FMLNk7FKdLh8z63aV2T+h8TH6ReCA7jp2gc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Wj/Ji3eSP+f9K5/OX8IPyTGVC+hKeww3Yl6QUod6tkbAtAu7U0Wz1PbqtNRVOjwFv
-	 9ihr6xIkNld8R2eg3D/qwKFTzKCB44sM/wo7FZxVdNmFG35vJbswp9WpRB4g9YpQkp
-	 559m5BktWJFZGo4x7zXB4pbEKV/NEhnPJI2p03xGmYJoo/0q9PeX5NKUMQ1D2NrYUd
-	 hD6VA7olwNYII6sChdMP9QvKoVAyyCPZlZ+LN+HGDbh/0tPkMmT8IK/5JM1F/UfEWO
-	 vBcf7l+pLMpJuVSflbkhtlCrXN+JM03dQsJTV8H4aaugOqzs+a7UvfS5j8IFoiCTa6
-	 oIMMaIkNxRk+A==
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-47692b9d059so41514821cf.3;
-        Fri, 09 May 2025 14:58:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCURDqUH2FtghFfzt3Rf2haB8dz/ZkaS7o1n5bdVx0yGpclf1/jqPgpQYiaiF4wODoS35Q1SCjJV6/a5sdo=@vger.kernel.org, AJvYcCVBpAKD4MoCFRAuOJ8H9Rqi+i7aQHs4hZIzUxJUgPC91+FuFM+ut+VpHw4wrvqHJsP7C4nUkulCiz0wEJXL@vger.kernel.org, AJvYcCVQE25E9K26TKlT2F7rSuTv4qvp/ruijmamJXipLRlJYWt8zIBYTiybocGSWUfVDhX14ag=@vger.kernel.org, AJvYcCXxOgSPrlrOfxuKxLjg6YU3PrRDq/1+QbaNAHHY0BQ02oysOrjoKLhk9Fm5bvB97ovhrJFF2uvqoo0phH8ni8nd@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAMwpQJzUVa+8JfjRvbx3oA+oRMmLf8F2xZKjhiXFWMmj+Ekn8
-	1AzZdS6gt8U0mIVm3pGflVjdqhw/vwDTDhxP9ix4tXaqWOJTCXNFuakiFsNAVLF2BlkADzhrV2L
-	OaflshGsQo1qxBXzXslo9FLuxrgM=
-X-Google-Smtp-Source: AGHT+IEgw/OIWDWXmJWHEkTR/5DcaJ04lcLlTsKykO84AozF3RympSmmA4dzDH25HCRL4W/HlqroK6FilrCD1i+wCWA=
-X-Received: by 2002:ad4:5cc7:0:b0:6d4:238e:35b0 with SMTP id
- 6a1803df08f44-6f6e47bd8a3mr77458376d6.17.1746827933963; Fri, 09 May 2025
- 14:58:53 -0700 (PDT)
+	s=k20201202; t=1746828118;
+	bh=gNZ3Syvjxa7YmkuREENTU9TsK6j8EtpbYbPGp0Oz+iM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SIzYbLGdKoxCOsVq94Z3lV63td2xvY+ylEJqzlgtqKp86q7mcV31BKzACjDfOtw0J
+	 k3uakoWbnAmEQ4CC9N1ER2LtjucJQnhC30Npo6Xko9BgUzLaeLWz1QpzGbiGIsFJ6q
+	 qyXbKgH50PayyUCY6qhovbnsv5MEc/NbUKNlR/u6XrBA2r9UA+UJWT76iMtN8v3FoL
+	 7Ee7VjXWZin5NJ19EFuoxh3P4XX8yusHSgK3p+ZxTdBaLaZjKuHWFxieLlGldgum86
+	 BNoIyDAhyrYRCuzh03K8PPQ0JByfbgA5tKRASU7/XtWHLsKmQHr+u6+kvgreDXSvoM
+	 LBrQ4f+yYMoAA==
+Date: Fri, 9 May 2025 15:01:57 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Sagi Maimon <maimon.sagi@gmail.com>
+Cc: jonathan.lemon@gmail.com, vadim.fedorenko@linux.dev,
+ richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+Subject: Re: [PATCH v2] ptp: ocp: Limit SMA/signal/freq counts in show/store
+ functions
+Message-ID: <20250509150157.6cdf620c@kernel.org>
+In-Reply-To: <20250508071901.135057-1-maimon.sagi@gmail.com>
+References: <20250508071901.135057-1-maimon.sagi@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508182025.2961555-1-tjmercier@google.com>
- <20250508182025.2961555-6-tjmercier@google.com> <CAPhsuW5WOmyfPqBc_Hn7ApGWP_2uz_cJwyaDWF_VwiHJu9s_1A@mail.gmail.com>
- <CABdmKX2h5cGjNbJshGkQ+2XJ7eOnM+VfbmVr5Pj5c0qfxQA-qg@mail.gmail.com>
-In-Reply-To: <CABdmKX2h5cGjNbJshGkQ+2XJ7eOnM+VfbmVr5Pj5c0qfxQA-qg@mail.gmail.com>
-From: Song Liu <song@kernel.org>
-Date: Fri, 9 May 2025 14:58:42 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7BM=X06Tr+HURsCbD8LwAO=Fdu+ZfKDy6RNK=UNNC1Rg@mail.gmail.com>
-X-Gm-Features: ATxdqUHtjHO0cnNYi6P788wo4nENW6QfEqucHX0SCFZlWpdcEK8f_Ki_Hjh7ovQ
-Message-ID: <CAPhsuW7BM=X06Tr+HURsCbD8LwAO=Fdu+ZfKDy6RNK=UNNC1Rg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 5/5] selftests/bpf: Add test for open coded dmabuf_iter
-To: "T.J. Mercier" <tjmercier@google.com>
-Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	skhan@linuxfoundation.org, alexei.starovoitov@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
-	simona@ffwll.ch, eddyz87@gmail.com, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	jolsa@kernel.org, mykolal@fb.com, shuah@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 9, 2025 at 2:43=E2=80=AFPM T.J. Mercier <tjmercier@google.com> =
-wrote:
->
-[...]
-> >
-> > Personally, I would prefer we just merge all the logic of
-> > create_udmabuf() and create_sys_heap_dmabuf()
-> > into create_test_buffers().
->
-> That's a lot of different stuff to put in one place. How about
-> returning file descriptors from the buffer create functions while
-> having them clean up after themselves:
+On Thu,  8 May 2025 10:19:01 +0300 Sagi Maimon wrote:
+> The sysfs show/store operations could access uninitialized elements in
+> the freq_in[], signal_out[], and sma[] arrays, leading to NULL pointer
+> dereferences. This patch introduces u8 fields (nr_freq_in, nr_signal_out,
+> nr_sma) to track the actual number of initialized elements, capping the
+> maximum at 4 for each array. The affected show/store functions are updated to
 
-I do like this version better. Some nitpicks though.
+This line is too long. I think the recommended limit for commit message
+is / was 72 or 74 chars.
 
->
-> -static int memfd, udmabuf;
-> +static int udmabuf;
+> respect these limits, preventing out-of-bounds access and ensuring safe
+> array handling.
 
-About this, and ...
+What do you mean by out-of-bounds access here. Is there any access with
+index > 4 possible? Or just with index > 1 for Adva?
 
->  static const char udmabuf_test_buffer_name[DMA_BUF_NAME_LEN] =3D
-> "udmabuf_test_buffer_for_iter";
->  static size_t udmabuf_test_buffer_size;
->  static int sysheap_dmabuf;
->  static const char sysheap_test_buffer_name[DMA_BUF_NAME_LEN] =3D
-> "sysheap_test_buffer_for_iter";
->  static size_t sysheap_test_buffer_size;
->
-> -static int create_udmabuf(int map_fd)
-> +static int create_udmabuf(void)
->  {
->         struct udmabuf_create create;
-> -       int dev_udmabuf;
-> -       bool f =3D false;
-> +       int dev_udmabuf, memfd, udmabuf;
-.. here.
+We need more precise information about the problem to decide if this is
+a fix or an improvement 
 
-It is not ideal to have a global udmabuf and a local udmabuf.
-If we want the global version, let's rename the local one.
+> +	bp->sma_nr  = 4;
 
-[...]
+nit: double space in all the sma_nr assignments
 
->
->  static int create_test_buffers(int map_fd)
->  {
-> -       int ret;
-> +       bool f =3D false;
-> +
-> +       udmabuf =3D create_udmabuf();
-> +       sysheap_dmabuf =3D create_sys_heap_dmabuf();
->
-> -       ret =3D create_udmabuf(map_fd);
-> -       if (ret)
-> -               return ret;
-> +       if (udmabuf < 0 || sysheap_dmabuf < 0)
-> +               return -1;
+>  
+>  	ptp_ocp_fb_set_version(bp);
+>  
+> @@ -2862,6 +2870,9 @@ ptp_ocp_art_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
+>  	bp->fw_version = ioread32(&bp->reg->version);
+>  	bp->fw_tag = 2;
+>  	bp->sma_op = &ocp_art_sma_op;
+> +	bp->signals_nr = 4;
+> +	bp->freq_in_nr = 4;
+> +	bp->sma_nr  = 4;
+>  
+>  	/* Enable MAC serial port during initialisation */
+>  	iowrite32(1, &bp->board_config->mro50_serial_activate);
+> @@ -2888,6 +2899,9 @@ ptp_ocp_adva_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
+>  	bp->flash_start = 0xA00000;
+>  	bp->eeprom_map = fb_eeprom_map;
+>  	bp->sma_op = &ocp_adva_sma_op;
+> +	bp->signals_nr = 2;
+> +	bp->freq_in_nr = 2;
+> +	bp->sma_nr  = 2;
+>  
+>  	version = ioread32(&bp->image->version);
+>  	/* if lower 16 bits are empty, this is the fw loader. */
+> @@ -3002,6 +3016,9 @@ ptp_ocp_sma_show(struct ptp_ocp *bp, int sma_nr, char *buf,
+>  	const struct ocp_selector * const *tbl;
+>  	u32 val;
+>  
+> +	if (sma_nr > bp->sma_nr)
+> +		return 0;
 
-We also need destroy_test_buffers() on the error path here,
-or at the caller.
+Why are you returning 0 and not an error?
 
->
-> -       return create_sys_heap_dmabuf(map_fd);
-> +       return bpf_map_update_elem(map_fd, udmabuf_test_buffer_name,
-> &f, BPF_ANY) ||
-> +              bpf_map_update_elem(map_fd, sysheap_test_buffer_name,
-> &f, BPF_ANY);
->  }
->
->  static void destroy_test_buffers(void)
->  {
->         close(udmabuf);
-> -       close(memfd);
->         close(sysheap_dmabuf);
-
-For the two global fds, let's reset them to -1 right after close().
-
-Thanks,
-Song
+As a matter of fact why register the sysfs files for things which don't
+exists?
+-- 
+pw-bot: cr
