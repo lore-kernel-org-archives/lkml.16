@@ -1,83 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A9B25D533
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 21:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5689B7F7FC
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 21:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746825052; cv=none; b=kYDL9u53AtX6OjEH+UN/c8VQKsucUlxhE0e+mg9vpUEUM9xNScB4O8Bpmrb3AhDHPiUbIOzLBGURU4CZFihFVm6f2M7h+iFp/TAMj9H17h33KB/sDigHsspPX+se6LLE3bdSH2PhwX63CSzwIGz5KnKNxw96DwppV3ZBUv4ROfY=
+	t=1746825294; cv=none; b=MWLxEHD0woNR1OOhwhUgQ3paXhLk2BnFb+8lPXBWKRGysVqg7EWSEP1so/8RhA901/j3f4/ch8Z5DQAx9UuPqaU9j/AYdDs6nvM1n77LKGUpN1t9Dh65HNauF8bNQEFqPrWfW3y7W7JPKy0U7wBXmSwlQtPpJ8F/sD7kboRreu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746825052; c=relaxed/simple;
-	bh=FQ1HxXVjMIwdWjY48SfA/dMkncnqAPudeIJX1PpcmnU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=UMCbCsZA+vYzp+XSElarKCOJWhi6NPexCz+UwwOx8hpw5bxtPf47RTqMG1XGOJ/6L/i6E6dWAUYy2lSfV/Minb/rWa+Vnb/gFGa7sTU3fNjVqPamSsFa2mCoWpFrO1z1GgKR1bvllEeq7Q3sBkVhUL48rZyqnOSfulSgIDyl+KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MgCaXLm4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746825294; c=relaxed/simple;
+	bh=RKtcKAC4z5Rsnfw8n1F8tu6mdJuJ4qdz+KuTO46HHxs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=RTbFsdSUKB6kqL8Mwf9U0Mpg0yBuGJqSJeJVFdBRHh8/Xi3a+aPXZJfUoKq23Dv9JR/NvNGPY9zuwgWtJO9FMxsTMHWYS7sUIvvpg4nYj5jjvGZxzC54X1GB5WgZmMXCExyOmS53yGh1qp+Yizd0G+Gig/OT/Ueq4qo2Xxj6w6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=aCALKmtz; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gRy+gIoG; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MgCaXLm4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3730BC4CEE4;
-	Fri,  9 May 2025 21:10:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1746825051;
-	bh=FQ1HxXVjMIwdWjY48SfA/dMkncnqAPudeIJX1PpcmnU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MgCaXLm4/2+yUCI20puzl171P3reSCQzAA9h1eYDXirV8Dvw3cNoZO1mLug9oB7yz
-	 mLCcEySCVjsW0uqjO6LhUzlekq6ptsPyHPOVpaSIqS5NB3/zyxu1g+l5CWuroG4hAW
-	 yqK7kz/WQ5zFwsQj9M+8u7nkyHPSTASGvK8DXckk=
-Date: Fri, 9 May 2025 14:10:50 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Donet Tom <donettom@linux.ibm.com>
-Cc: Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>, Zi
- Yan <ziy@nvidia.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- rafael@kernel.org, Danilo Krummrich <dakr@kernel.org>, Ritesh Harjani
- <ritesh.list@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>, Yury Norov
- <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] driver/base: Optimize memory block registration
- to reduce boot time
-Message-Id: <20250509141050.4b19bc796d7edf2eb9027361@linux-foundation.org>
-In-Reply-To: <d19ad41c-069d-436d-8fea-a05188adcb0e@linux.ibm.com>
-References: <b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com>
-	<aBdK2EIMYYRmmEwA@kernel.org>
-	<a1e0cddc-ed38-4f48-b028-f3ab5025c157@linux.ibm.com>
-	<188fbfba-afb4-4db7-bbba-7689a96be931@redhat.com>
-	<aBhoqpC4Jy-c-74p@localhost.localdomain>
-	<74c500dd-8d1c-4177-96c7-ddd51ca77306@redhat.com>
-	<aBhuZWpZ7ltMuOe0@kernel.org>
-	<8180a50d-eebe-4f9b-9ce8-d886654a992d@redhat.com>
-	<aBi8Iqp27jXLUWfs@kernel.org>
-	<78bc6a1b-164e-4925-a624-a271a4499364@redhat.com>
-	<d19ad41c-069d-436d-8fea-a05188adcb0e@linux.ibm.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="aCALKmtz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gRy+gIoG"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 39DF511400D7;
+	Fri,  9 May 2025 17:14:51 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Fri, 09 May 2025 17:14:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1746825291;
+	 x=1746911691; bh=JIq/tNiqavgpIsJww8Tzyl40PQyssbo/EDz4zR0QCJw=; b=
+	aCALKmtzDQpeWVQOLfPbc4gTd5SQUvEPA0vlE6qYwAuGhmtyefYLdlO0CM2Y92gd
+	2ewE7QFwAwyAEmkaP60l6LCYO3mIWlH/cWFJ0qjfuh3O6wPSBbiWr86QFw3HQzvP
+	jp01f+6nrqoV/9Od/mlx7hYrpi15U0oAjS3DGni2vn6L2VW3AFVxXKyFVJ2Z8wnw
+	CAvk7lfrmEE9+ZjzsSw0kIc5o11SdHdF5/cDnbd4QHsWwsHs4ILwhNRSeuFizqwr
+	Bg3rzWNBHNfaRIXF3a+XoRE2gpDV7Z/gtaai5vM4zIkIlnby12dufUL40LMIqQ5s
+	V0Hr67/qgKiWevECA1yM3g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746825291; x=
+	1746911691; bh=JIq/tNiqavgpIsJww8Tzyl40PQyssbo/EDz4zR0QCJw=; b=g
+	Ry+gIoGWYvR3RdoO+0KqBXs4CqMu5XshRKP9qU+2QVopqKAADTA8kp5uGsbig1Ov
+	khWylT1S0sBYkcTvdQknoIdNGqFyrfZ7cb3cXUft0xtSol+poeDY6skmjY/AvOhH
+	kt1/mIiRmmqd27hdwSL/XKC+4Huryp3FSNEiwAEcR8m6nZ7929dXL8IQu8Ib5nUe
+	woda4qz+FFMPv6KjRGaTCYED8Se2UsLdwi4L9EHlZoa7ILFxsCzBiiRHnbxckjUL
+	Vyme8tgYwywS4LYH5nTF/BL6j6VSyh6OviSagsyaIysSWRUt9U6d9x/iX3JUj3Rq
+	SUhtoKbCI6WoIRXkyXjIA==
+X-ME-Sender: <xms:SnAeaNu4URIQKDc92mKJGUTtkiugR5x50SO_dTTsF4CwdjonWQqRJw>
+    <xme:SnAeaGeTutQBSYU9VQgsRend78nIK3fIS-lpXhx71wd_mfITwUsouOc94vW47rop_
+    lMEGYHNQ2yMufaLdxQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleefieejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    iedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhgrnhhnhhesghhoohhglhgvrd
+    gtohhmpdhrtghpthhtoheprghrmheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshho
+    tgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhgvnhhsrdifihhklhgrnhguvghrse
+    hlihhnrghrohdrohhrghdprhgtphhtthhopehophdqthgvvgeslhhishhtshdrthhruhhs
+    thgvughfihhrmhifrghrvgdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlh
+    esvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:SnAeaAylM2DIKs_Nvd3y5E0fot811lzLi-Ltoi3Gw0kZTZ5qylQE1A>
+    <xmx:SnAeaEN6OTDV5jdowTwWuLxKzMx91eO42AB2mNfc6OKvRedNN4XeJQ>
+    <xmx:SnAeaN8EWTiQBIHS3p8u3AdBGTHg-37GAAjRf7VPV_I8roEVIhgbUw>
+    <xmx:SnAeaEUJwlhoOAsJ0ASmWlzylaNKWitUWdxpz4mEnnXLEXkYOYjoSg>
+    <xmx:S3AeaMcH8Xyg4Oy4WZB6Mef70fK8YIQ8iSz0LEss3HXfgzglzQPPjDB8>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C464D1C20067; Fri,  9 May 2025 17:14:50 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+X-ThreadId: T91d942121878fe31
+Date: Fri, 09 May 2025 23:14:30 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Jens Wiklander" <jens.wiklander@linaro.org>, arm <arm@kernel.org>,
+ soc@kernel.org
+Cc: "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+ op-tee@lists.trustedfirmware.org, "Jann Horn" <jannh@google.com>
+Message-Id: <e5bfb069-6adb-4757-a52c-bb3635990686@app.fastmail.com>
+In-Reply-To: <20250509065114.GA4188600@rayden>
+References: <20250509065114.GA4188600@rayden>
+Subject: Re: [GIT PULL] TEE updates for 6.16
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Fri, 9 May 2025 21:10:34 +0530 Donet Tom <donettom@linux.ibm.com> wrote:
+On Fri, May 9, 2025, at 08:51, Jens Wiklander wrote:
+> ----------------------------------------------------------------
+> Small TEE updates for v6.16
+>
+> - Remove an unnecessary NULL check before release_firmware() in the
+>   OP-TEE driver
+> - Prevent a size wrap in the TEE subsystem. The wrap would have been caught
+>   later in the code so no security consequences.
+>
+> ----------------------------------------------------------------
+> Chen Ni (1):
+>       tee: optee: smc: remove unnecessary NULL check before release_firmware()
+>
+> Jann Horn (1):
+>       tee: Prevent size calculation wraparound on 32-bit kernels
+>
 
-> >> Then we can drop the call to register_memory_blocks_under_node() from
-> >> register_one_node() and add creation of memory blocks to 
-> >> node_dev_init(),
-> >> i.e.
-> >>
-> >> node_dev_init()
-> >>    for_each_node(nid)
-> >>      __register_one_node(nid)
-> >>        for_each_mem_region()
-> >>          /* create memory block if node matches */
-> >
-> > Yes exactly, that makes sense.
-> 
-> Hi Andrew and Mike
-> 
-> Based on the discussion so far, it is clear that the patch will work in all cases,
-> including when CONFIG_ARCH_KEEP_MEMBLOCK  is disabled. Just checking —
-> would you prefer to take this version, or should I send a v4?
+The second patch looks like it should be a bugfix for 6.15 instead,
+any reason to have it only in 6.16?
 
-My mind is a blank and perhaps some alterations were picked up along
-the way so I think a full resend would be safer, please.
+      Arnd
