@@ -1,195 +1,271 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7324827A93F;
-	Fri,  9 May 2025 09:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B526288C8C
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 09:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746782975; cv=none; b=NHXF4BzNUYCNOUS/4zP/W9PxerwXikq5C9WdCq6B70g0XePt/uUKEbZyoppKRSTTLB+rNw/0I9O6eHtMkcdL1+SgECK4WZpLy3rtPxlLngNIKUrDe0d1iMbw6XY1L5sVlsGndTtTZLyISERs2RAlNp3ou69gI5liyqW9ZlY7LqE=
+	t=1746783059; cv=none; b=cF8D0x5k9E8mMRszfoQCaENafLLg4MJXDJTBNH/wcO0rEaagY95HX+93mLWUb+D161pLhyNCwjNKdhm/hRB7UirDLlyPp+8ha7Iz0kjtuNEfRHpcF1I1GUH62yBWgCsW/v5Ta7I6YDmLP3cn8PenZxnH/9d5H5/TsynEXaIVlVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746782975; c=relaxed/simple;
-	bh=cvqgy5NGuSugRzqTgF55BNFhvdBlFAHNd3zF6Sg7cks=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jZPEC100LltirGYsnVr1nx4wFSJZAh+y1EbcdSbEGrJZen6nVjEbThAhEkR/yO4tLHuaOoTfySZBTnEOztFJV16jKs+/Qk70R/tPUwSwV+hdwRw1VKlPvCBQ58K2DJtL5BjD/kgYz+VKf7VSyX2ktArSwp706P+Qk5Q66Uimh54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2da73158006so1584973fac.0;
-        Fri, 09 May 2025 02:29:33 -0700 (PDT)
+	s=arc-20240116; t=1746783059; c=relaxed/simple;
+	bh=+Sk0k1BVeNlv2PIjgUyRQYRkj9/oczau68YH3ulpCPU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bBbE3wIndgozJqlZshm+KhCmR6vPznky4AUW9ClnFoxPcCDkEJfyPw1YFgW0XeOX7g81MtAyC5Oi25iFGRVj2TV6dh2MfKrmp3Z0YzW56kK4tGqJ5v1DWaaaQnLfSY7cTCyBW+wbAlqY1gGZfzJrQdhrcaK/nf64n1Lo+QjhucQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XfdsPMfn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XfdsPMfn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746783052;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fJTe7zx49p8XhhSnwqeof7XTnYdwUd1CTPxhRVyNyY4=;
+	b=XfdsPMfnERH5kY6EwjuHoh4PQiy6dAJd3HZvCtNRfO4vozCyRxVakbgzuaXdxNFPqbqFqQ
+	7tJYAPNyM3qfp+bLvdcdUqIWRKkX6oYNKUreMpalK8bEcjPUMZb9Vc+d0TFANeztgwfaOz
+	YOnlb3gBzLGSvVZBML7DYDmtGr1gPmw=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-148-7EOFEbbgOEG8WPm4ftDUzw-1; Fri, 09 May 2025 05:30:50 -0400
+X-MC-Unique: 7EOFEbbgOEG8WPm4ftDUzw-1
+X-Mimecast-MFC-AGG-ID: 7EOFEbbgOEG8WPm4ftDUzw_1746783049
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a0b7cd223fso982520f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 02:30:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746782971; x=1747387771;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T6MrurKt6p8Jdz3Ys8oNQeTJe6coyy6feKWGCiny67g=;
-        b=Vet6OWZGeMTinnYBHmyOfVhDxsh07SV+Lb5Du+QMpb7utHW/tnOLMfOHMI8A17mpLm
-         IW87xPvC42RsR1SdDfrAzEOjdrgIt+cKzmZEy81x3fTXzjA/ZSZ+NnkVLjg9CZgGtSvm
-         TUjq5RZvyZvpt6kz6r3WYcDE6h+gFAX9gcscWhobz0laCySMrTg924demuvaIu/PQZ3s
-         /LGwdh12WseEt6auPv1ntNQCe+EcVH5XHNRLA9hi5CH2ABmKG1HwnmbEeIKEdYLPJnkT
-         azW1cnoIPQqp/ADJrAfAuhXLRJGMasmguHKzzNOLaGvWZrvoIKMdNOWveIxhWGUNiAU3
-         bdsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ7UElBhFOc6qo71bs0XakK/Zg/e73+eeVbgmm3Jxd7GCtREsneNP9wP7jfKXZr9IaSfSgrVVSVUsi@vger.kernel.org, AJvYcCUgxUIRB5fH+nL9zNRur7hRbxsnrGJpA2GBsiVSlrcB9bRSxJ79H6cxg+hcTZs2WHD3wkFCuP5cuxlAt0P7@vger.kernel.org, AJvYcCVt47O+31+wWA7TpZ9a4t5Dh4SomR+vPvUItseskwvmtaw5SvvYQeL+kOwEeOhDjiur6T5TzqkUgGEmYcI8kDxZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0oXvQTNDRbj/Juh8aSQpCqN3CjZPdsPJ18bS6S/AMUVaE1jdB
-	5ua79oyezTqTIJvAR4dLfwY7jOk2FVewNUN7iHZQ8KbIH1K+rLDdy0edz2Aa
-X-Gm-Gg: ASbGnctEAWSBkHAHLEEsZ+DSCzRztSXdMdg88R5JDEqfEke3WpDhsSS84RerBU96Pwi
-	VSwEQ5MVWV6uVJpiDjX3VVok1DF8EZhejDllqdoPb4MiELrlF0f3t57wZjPbLKgbSlUpGK8gqdq
-	wNdTmdiYM+Tl+WwdI0YCS7hDPvYcXIukopDhGjP1zXNa9PZkI7JSAJfIRzTnc9K+rblxqDmauSu
-	N+RrPEGpbFwxODSUpQy2jJj5VGpMdeFaD1GXARm//kCGGuBaJ3WN+yHSmIz4pXQfv9P0tdxEZQh
-	gS/GJkViqrU8WRaqJ/uVz+Mv8BoRWwV82jJb6eLuRpOvWunubvA8owr9pj6Hp2CDtcRPzWs+0hv
-	mwNw=
-X-Google-Smtp-Source: AGHT+IH2ygKIfNKkz/3tfHQpPyCb06RUJNHTW8kvlXB72RMCgIJNog2tgnkeS8EQjIInMlhaTmCrvA==
-X-Received: by 2002:a05:6870:d14d:b0:2bc:9787:affe with SMTP id 586e51a60fabf-2dba42a3b74mr1561262fac.10.1746782970861;
-        Fri, 09 May 2025 02:29:30 -0700 (PDT)
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com. [209.85.160.45])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2dba0afde8fsm538288fac.33.2025.05.09.02.29.29
+        d=1e100.net; s=20230601; t=1746783049; x=1747387849;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fJTe7zx49p8XhhSnwqeof7XTnYdwUd1CTPxhRVyNyY4=;
+        b=kCs+0utO4tkJ4hb3OFKyJSJx21WklnNZ8pcb55l2qABhoZy0qZReaD5/UNhgT6CEwx
+         3fLW3rIgeLoL7GT9Xr2w+ydZlhMqV2DdMwEvPmT5Ydk/uc4npEHlChAkc+U5hFZQS5A6
+         Y71KBy43S0DTyQpUOy6522keOhb03W5eGUXCTd2cDOncAXkf6v0YWis8UuSv/u0QF685
+         HMm5Z4tvJXjorc/QHDKyKAxpfIT6UB7Pu4256bP0RXVswfetHcqwAsDFQXA1N0TqY1gn
+         hpCIVSxm01wlZZ9CafHvrsgzuv/MoYxev8iss2OLtAlaEnu6+tsR1I7cPpimXgKYEA8a
+         /bVg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3WKAb8bwYKqR52oWOokrTN/GtIRTi/4z7uv2BGyKG++9EGybNh25hZ2NGOApnVL1Pl7R5XxfpgC37mSE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEb3zZ8Hp5vY/Jxr9Y/NMQuB7umquG2biXCHxMHrcqpW6hc3iF
+	3wDyHKeGwW+6AzFy2C28bkCZO9DNKfQRo/VZV3RcaxlgKL3UgKHoDus42T38u8eQd+BRnwe4Ae4
+	rc3r/CKAzvW3G532KjS3sJv1wE+esbv/M8ErPfPDOd6iiD5Xha2HSJ9F2gKSKlKwLtB0Z0Q==
+X-Gm-Gg: ASbGncvYTM9WAuYB3WtZ+/FOmYOSaZ82yHGDXTM61/E6brpJK0g7X9MCdYN+RKdENZX
+	X2WJkAitXZd4n2jrqzX9sbPynkNwtZ3KB6okbWJ5lJwVjIDkJ+dqBMbBZf5QGV3Q8J/eZBiHdqm
+	JfrrpOEaRu6RWAO+eiHOAwid9nxvT+EkEqdmtnXbE+Lwh2mUDex2yjqT6Zf1wwuQpVDW3eRBZsM
+	Z9D0plGRkUSyj6cjgaactiBskgqL7w1eICwmkVlggB0XvT+1gFk0BGaMUmbidnCHMGxuZYL9uWX
+	0SpJMrh17/mgFv+YLPgCZjpkMhuXVUP0Zz/jfid/IYDwqBrJZ+lS6QxzH9NR0LQhMag/Tj3OiT2
+	Stwyk7Y22kAyqVRbz2bOdWpitk/r3oF1bMKAh92I=
+X-Received: by 2002:a05:6000:2483:b0:39c:1257:cc26 with SMTP id ffacd0b85a97d-3a1f64c19fdmr2308304f8f.57.1746783049367;
+        Fri, 09 May 2025 02:30:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGqDDx3sCyY4RXYfNzz6lgOUetMX7HgJt/IhtPkcX/drggF/w3IlcrNtcW3uC+gC1ZD9uRlcQ==
+X-Received: by 2002:a05:6000:2483:b0:39c:1257:cc26 with SMTP id ffacd0b85a97d-3a1f64c19fdmr2308259f8f.57.1746783048896;
+        Fri, 09 May 2025 02:30:48 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f45:5500:8267:647f:4209:dedd? (p200300d82f4555008267647f4209dedd.dip0.t-ipconnect.de. [2003:d8:2f45:5500:8267:647f:4209:dedd])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2af7sm2712615f8f.52.2025.05.09.02.30.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 02:29:30 -0700 (PDT)
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2da73158006so1584931fac.0;
-        Fri, 09 May 2025 02:29:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUDkSZtOUoqdhiAYrumNR9ltcGZL/4WCNsb5X9Mh8MozaKCrmxSZXD3eI1Bl4TwOX87lZyL7ZzYCb32EMmwK+no@vger.kernel.org, AJvYcCUURjsU1iAk43CNyVWcETZnjPNneC1x5THnshi2GM+1k27T9B/8YCUQj0Wy8Lzd6ONglX272uIqp6L7@vger.kernel.org, AJvYcCXYfXvuzNGTK8tASLuxAR7KsBvSiDxWTc6+d9lJDDoVaaRMJUc1RaDzlurARAufwDUPLnoiFMJ10gEp0ZbJ@vger.kernel.org
-X-Received: by 2002:a05:6102:1502:b0:4bb:c24b:b658 with SMTP id
- ada2fe7eead31-4deed3cf84emr1821937137.18.1746782958339; Fri, 09 May 2025
- 02:29:18 -0700 (PDT)
+        Fri, 09 May 2025 02:30:48 -0700 (PDT)
+Message-ID: <41e60fa0-2943-4b3f-ba92-9f02838c881b@redhat.com>
+Date: Fri, 9 May 2025 11:30:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-9-3906529757d2@bootlin.com>
-In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-9-3906529757d2@bootlin.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 9 May 2025 11:29:06 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXQm9FGt8dZ0y_916od1rep2A3QNm8iS0Pm+jr0uKPD9Q@mail.gmail.com>
-X-Gm-Features: AX0GCFtyAkzk5YAh6Lsu_6rhoQgJRbc7WgiP4n_2WLUJ4s6yYIUa4Q3Q5gZOHWg
-Message-ID: <CAMuHMdXQm9FGt8dZ0y_916od1rep2A3QNm8iS0Pm+jr0uKPD9Q@mail.gmail.com>
-Subject: Re: [PATCH v5 09/12] gpio: aggregator: handle runtime registration of
- gpio_desc in gpiochip_fwd
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, 
-	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/1] prctl: allow overriding system THP policy to always
+To: Yafang Shao <laoar.shao@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>
+Cc: Usama Arif <usamaarif642@gmail.com>, Zi Yan <ziy@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ shakeel.butt@linux.dev, riel@surriel.com, baolin.wang@linux.alibaba.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, linux-kernel@vger.kernel.org, kernel-team@meta.com
+References: <20250507141132.2773275-1-usamaarif642@gmail.com>
+ <293530AA-1AB7-4FA0-AF40-3A8464DC0198@nvidia.com>
+ <96eccc48-b632-40b7-9797-1b0780ea59cd@gmail.com>
+ <8E3EC5A4-4387-4839-926F-3655188C20F4@nvidia.com>
+ <279d29ad-cbd6-4a0e-b904-0a19326334d1@gmail.com>
+ <CALOAHbCxhL=VM=E5UzNvQYZsrF4zdcQ1-49iEJ1UYvLsurtxCw@mail.gmail.com>
+ <ebfca8f2-40e5-485a-a060-621aa3a22376@gmail.com>
+ <CALOAHbDesDGyokKFSSr3hA1_WnFciQPXe_nboPq9v8OUPLv47g@mail.gmail.com>
+ <20250509051328.GF323143@cmpxchg.org>
+ <CALOAHbA617417UtcwMBJ9Zm_8BbAth57=ngN=tknw8h7nvCwNw@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CALOAHbA617417UtcwMBJ9Zm_8BbAth57=ngN=tknw8h7nvCwNw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Thomas,
+On 09.05.25 11:24, Yafang Shao wrote:
+> On Fri, May 9, 2025 at 1:13 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>>
+>> On Fri, May 09, 2025 at 10:15:08AM +0800, Yafang Shao wrote:
+>>> On Fri, May 9, 2025 at 12:04 AM Usama Arif <usamaarif642@gmail.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 08/05/2025 06:41, Yafang Shao wrote:
+>>>>> On Thu, May 8, 2025 at 12:09 AM Usama Arif <usamaarif642@gmail.com> wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 07/05/2025 16:57, Zi Yan wrote:
+>>>>>>> On 7 May 2025, at 11:12, Usama Arif wrote:
+>>>>>>>
+>>>>>>>> On 07/05/2025 15:57, Zi Yan wrote:
+>>>>>>>>> +Yafang, who is also looking at changing THP config at cgroup/container level.
+>>>>>
+>>>>> Thanks
+>>>>>
+>>>>>>>>>
+>>>>>>>>> On 7 May 2025, at 10:00, Usama Arif wrote:
+>>>>>>>>>
+>>>>>>>>>> Allowing override of global THP policy per process allows workloads
+>>>>>>>>>> that have shown to benefit from hugepages to do so, without regressing
+>>>>>>>>>> workloads that wouldn't benefit. This will allow such types of
+>>>>>>>>>> workloads to be run/stacked on the same machine.
+>>>>>>>>>>
+>>>>>>>>>> It also helps in rolling out hugepages in hyperscaler configurations
+>>>>>>>>>> for workloads that benefit from them, where a single THP policy is
+>>>>>>>>>> likely to be used across the entire fleet, and prctl will help override it.
+>>>>>>>>>>
+>>>>>>>>>> An advantage of doing it via prctl vs creating a cgroup specific
+>>>>>>>>>> option (like /sys/fs/cgroup/test/memory.transparent_hugepage.enabled) is
+>>>>>>>>>> that this will work even when there are no cgroups present, and my
+>>>>>>>>>> understanding is there is a strong preference of cgroups controls being
+>>>>>>>>>> hierarchical which usually means them having a numerical value.
+>>>>>>>>>
+>>>>>>>>> Hi Usama,
+>>>>>>>>>
+>>>>>>>>> Do you mind giving an example on how to change THP policy for a set of
+>>>>>>>>> processes running in a container (under a cgroup)?
+>>>>>>>>
+>>>>>>>> Hi Zi,
+>>>>>>>>
+>>>>>>>> In our case, we create the processes in the cgroup via systemd. The way we will enable THP=always
+>>>>>>>> for processes in a cgroup is in the same way we enable KSM for the cgroup.
+>>>>>>>> The change in systemd would be very similar to the line in [1], where we would set prctl PR_SET_THP_ALWAYS
+>>>>>>>> in exec-invoke.
+>>>>>>>> This is at the start of the process, but you would already know at the start of the process
+>>>>>>>> whether you want THP=always for it or not.
+>>>>>>>>
+>>>>>>>> [1] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b28dd4ade7c6ab7be29a/src/core/exec-invoke.c#L5045
+>>>>>>>
+>>>>>>> You also need to add a new systemd.directives, e.g., MemoryTHP, to
+>>>>>>> pass the THP enablement or disablement info from a systemd config file.
+>>>>>>> And if you find those processes do not benefit from using THPs,
+>>>>>>> you can just change the new "MemoryTHP" config and restart the processes.
+>>>>>>>
+>>>>>>> Am I getting it? Thanks.
+>>>>>>>
+>>>>>>
+>>>>>> Yes, thats right. They would exactly the same as what we (Meta) do
+>>>>>> for KSM. So have MemoryTHP similar to MemroryKSM [1] and if MemoryTHP is set,
+>>>>>> the ExecContext->memory_thp would be set similar to memory_ksm [2], and when
+>>>>>> that is set, the prctl will be called at exec_invoke of the process [3].
+>>>>>>
+>>>>>> The systemd changes should be quite simple to do.
+>>>>>>
+>>>>>> [1] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b28dd4ade7c6ab7be29a/man/systemd.exec.xml#L1978
+>>>>>> [2] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b28dd4ade7c6ab7be29a/src/core/dbus-execute.c#L2151
+>>>>>> [3] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b28dd4ade7c6ab7be29a/src/core/exec-invoke.c#L5045
+>>>>>
+>>>>> This solution carries a risk: since prctl() does not require any
+>>>>> capabilities, the task itself could call it and override your memory
+>>>>> policy. While we could enforce CAP_SYS_RESOURCE to restrict this, that
+>>>>> capability is typically enabled by default in containers, leaving them
+>>>>> still vulnerable.
+>>>>>
+>>>>> This approach might work for Kubernetes/container environments, but it
+>>>>> would require substantial code changes to implement securely.
+>>>>>
+>>>>
+>>>> You can already change the memory policy with prctl, for e.g. PR_SET_THP_DISABLE
+>>>> already exists and the someone could use this to slow the process down. So the
+>>>> approach this patch takes shouldn't be anymore of a security fix then what is already
+>>>> exposed by the kernel. I think as you mentioned, if prctl is an issue CAP_SYS_RESOURCE
+>>>> should be used to restrict this.
+>>>
+>>> I believe we should at least require CAP_SYS_RESOURCE to enable THP,
+>>> since it overrides global system settings. Alternatively,
+>>> CAP_SYS_ADMIN might be even more appropriate, though I'm not entirely
+>>> certain.
+>>
+>> Hm, could you verbalize a concrete security concern?
+>>
+>> I've never really looked at the global settings as a hard policy, more
+>> as picking a default for the workloads in the system. It's usually
+>> `madvise' or `always', and MADV_HUGEPAGE and MADV_NOHUGEPAGE have long
+>> existed to give applications the ability to refine the global choice.
+>>
+>> The prctl should probably respect `never' for consistency, but beyond
+>> that I don't really see the concern, or how this would allow something
+>> that isn't already possible.
+> 
+> I would interpret the always, madvise, and never options as follows:
+> - always
+>    The sysadmin strongly recommends using THP. If a user does not
+> want to use it, they must explicitly disable it.
+> - madvise
+>   The sysadmin gently encourages the use of THP, but it is only
+> enabled when explicitly requested by the application.
+> - never
+>    The sysadmin discourages the use of THP, and "its use is only permitted
+> with explicit approval" .
 
-On Tue, 6 May 2025 at 17:21, Thomas Richard <thomas.richard@bootlin.com> wrote:
-> Add request() callback to check if the GPIO descriptor was well registered
-> in the gpiochip_fwd before using it. This is done to handle the case where
-> GPIO descriptor is added at runtime in the forwarder.
->
-> If at least one GPIO descriptor was not added before the forwarder
-> registration, we assume the forwarder can sleep as if a GPIO is added at
-> runtime it may sleep.
->
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
-
-Thanks for your patch!
-
-> --- a/drivers/gpio/gpio-aggregator.c
-> +++ b/drivers/gpio/gpio-aggregator.c
-
-> @@ -288,6 +289,21 @@ struct gpio_chip *gpio_fwd_get_gpiochip(struct gpiochip_fwd *fwd)
->  }
->  EXPORT_SYMBOL_NS_GPL(gpio_fwd_get_gpiochip, "GPIO_FORWARDER");
->
-> +/**
-> + * gpio_fwd_request - Request a line of the GPIO forwarder
-> + * @chip: GPIO chip in the forwarder
-> + * @offset: the offset of the line to request
-> + *
-> + * Returns: 0 on success, or negative errno on failure.
-> + */
-> +int gpio_fwd_request(struct gpio_chip *chip, unsigned int offset)
-
-This function should take a gpiochip_fwd pointer instead.
-
-> +{
-> +       struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-> +
-> +       return test_bit(offset, fwd->valid_mask) ? 0 : -ENODEV;
-> +}
-
-Not related to this patch, but just a random note:
-
-     * struct gpio_chip - abstract a GPIO controller
-     [...[
-     * @request: optional hook for chip-specific activation, such as
-     *      enabling module power and clock; may sleep; must return 0 on success
-     *      or negative error number on failure
-     * @free: optional hook for chip-specific deactivation, such as
-     *      disabling module power and clock; may sleep
-
-Currently all GPIOs are requested when the aggregator is created,
-which means they are always powered and clocked, irrespective of a
-user of the aggregator has requested them or not.
-I don't see how this can be improve, except by adding suspend/resume
-callbacks to gpio_chip, which could be called from the aggegator's
-.free() and .request() callbacks?
-
-> +EXPORT_SYMBOL_NS_GPL(gpio_fwd_request, "GPIO_FORWARDER");
-> +
->  /**
->   * gpio_fwd_get_direction - Return the current direction of a GPIO forwarder line
->   * @chip: GPIO chip in the forwarder
-
-> @@ -675,6 +700,18 @@ int gpio_fwd_gpio_add(struct gpiochip_fwd *fwd, struct gpio_desc *desc,
->  }
->  EXPORT_SYMBOL_NS_GPL(gpio_fwd_gpio_add, "GPIO_FORWARDER");
->
-> +/**
-> + * gpio_fwd_gpio_free - Remove a GPIO from the forwarder
-> + * @fwd: GPIO forwarder
-> + * @offset: offset of GPIO to remove
-> + */
-> +void gpio_fwd_gpio_free(struct gpiochip_fwd *fwd, unsigned int offset)
-> +{
-> +       if (test_and_clear_bit(offset, fwd->valid_mask))
-> +               gpiod_put(fwd->descs[offset]);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(gpio_fwd_gpio_free, "GPIO_FORWARDER");
-
-So this is _not_ the inverse of gpio_fwd_request()
-(it has an extra "_gpio" in the name).
-
-Naming is indeed tricky.
-I was also wondering about gpio_fwd_get(), which does not get the
-forwarder, but gets a GPIO of the forwarder...
-
-> +
->  /**
->   * gpio_fwd_register - Register a GPIO forwarder
->   * @fwd: GPIO forwarder
-
-> --- a/include/linux/gpio/forwarder.h
-> +++ b/include/linux/gpio/forwarder.h
-> @@ -9,6 +9,8 @@ struct gpiochip_fwd;
->
->  struct gpio_chip *gpio_fwd_get_gpiochip(struct gpiochip_fwd *fwd);
->
-> +int gpio_fwd_request(struct gpio_chip *chip, unsigned int offset);
-> +
->  int gpio_fwd_get_direction(struct gpio_chip *chip, unsigned int offset);
->
->  int gpio_fwd_direction_input(struct gpio_chip *chip, unsigned int offset);
-> @@ -37,6 +39,8 @@ struct gpiochip_fwd *devm_gpio_fwd_alloc(struct device *dev,
->  int gpio_fwd_gpio_add(struct gpiochip_fwd *fwd,
->                       struct gpio_desc *desc, unsigned int offset);
->
-> +void gpio_fwd_gpio_free(struct gpiochip_fwd *fwd, unsigned int offset);
-> +
->  int gpio_fwd_register(struct gpiochip_fwd *fwd);
-
-Gr{oetje,eeting}s,
-
-                        Geert
+"never" so far means "no thps, no exceptions". We've had serious THP 
+issues in the past, where our workaround until we sorted out the issue 
+for affected customers was to force-disable THPs on that system during boot.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Cheers,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+David / dhildenb
+
