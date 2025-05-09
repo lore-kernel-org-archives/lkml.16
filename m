@@ -1,97 +1,112 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C66828F942
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70271270EB1
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 11:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746790201; cv=none; b=aYnO548mNAWZSlDfTTdSLrJuDHy51gvjmzaNhOntQk4kfPxZKC6bIkjzAGKvnGSIL0s/bHTixw8XQo4c0ga7pDWEIWVxdXkTQcp1Hwc1rhpwPcjnUt0wA1kEbbbWWNiCiFIJ/+a1NBdBHEy+e5Vf/M3SSXuEZXo6Cy8B3wLptgE=
+	t=1746790223; cv=none; b=BYLgqNtjAYKPGr2FSYAnb97grmy1R7h7U0bWMxBopyTG0WBELpEfhrj2yTpeTlgdHG+QYZGMGFOAQE06mCYUpuORX6x5LSMQ0cH6NESHziOBOTbJOrC7cAyfq0P/dD2S8N1S2P5aOHEr5RzJE71SY4yWlmtoZXoflouRKf6uc14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746790201; c=relaxed/simple;
-	bh=fzs4MBOvD+LF7kzFPGxEsVFsEfSDbIKVc/1rCNfRN5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MkiRcexLVty5X6iNi8tXjtm663VflFqZdziNQxHBPCF6x59B+zzAhztFDMBkP7wWSB72Bj1zwMIJAnpHcpxdQu5mMwKTM0yNvx7gfsk/8gwfB8hTJ4df9OmqOrt99fxMRsYcP65yPTVxHPpYgyToGtpzHkZjqmwvb4juZ/76+aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=jJRn4jiu; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1746790223; c=relaxed/simple;
+	bh=VdV008tfzG6KNU0S5Gsb+VG889BxfzCXyOCm56rnkUQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CrPd8CcqHQqo8JPJosArrGlvxtW+vMS7X6OW8k+fLuIgiqIz95DuspMwEQk3gpo6Pz7TtCH2+4Nmex1lSNaboM8Ej7udiUST+zXg50SiYhirCv+rasZoMqd6EkctZWvhD3+Tg4s5Lb7K6jVO0eUi5Nwu4HBWWAfFkvN75COz+xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dL5sXA/+; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="jJRn4jiu"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a0ac853894so1702623f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:29:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dL5sXA/+"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so19824955e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 04:30:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1746790198; x=1747394998; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PS161WiIseqQMvNduUZogtk3N3mmBOCWz6m7XRDgGoE=;
-        b=jJRn4jiu8D89meBWhVKaKxXTJxO0mIREa4bVYTi307NVfp72tQvcylqqqZX7Ur92Gs
-         8xj3aJPEIFkvh3CTfa+b6V/7GYu36VfDkhBfDKA1fy6ea6d/XrI7ouXsKv1bM/03Gkii
-         xQ/NP1zpg3f5UXK7H3pnSgOdXm2/SeqjNItf8miX/2StDX5/l4JjWMrcI8Jpja8zwBX/
-         kfHUmIxrIT3u6ZeHb7zlyio2At+oWsKpp8Jb/a0aFbD31xbB+ZkaStja9Yed0ygEmKGf
-         gBMqI3x9i9FvPk4Mp7q4IxygRetqy0Mb3zrbBKA2gm3oLEX6jXmQG3CMMMKoVwIHqmj5
-         bIoQ==
+        d=gmail.com; s=20230601; t=1746790220; x=1747395020; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LmILc32KRA1sm99pcoMQ3XSkwuHQfRNl6IZq9ElsNb8=;
+        b=dL5sXA/+BxNCbrkwoUZcaEYRPenoWsCS1jz3yGseh9AqEa7bRJ1boiuk3qumIZJr37
+         w59gArdPKP3rCf6dnWGTKfiALWDTcqGq5GiLxpdkTgH6Jr7VrTDg8Lz+4QZ07xRYfjYc
+         PS7kj2aSxopLmU7uMLUmjQSNh4+3N1hnNWHwqU8XJTs5Bq2iUvTsFXqnWHfvyisknYEq
+         YcpOr8pK84JU59MiWkQiS465J+aMviitf0OOm2kA4fM7s3O+eiaQiqnvA+aAal5Ymmrf
+         VW5Q6jNWU3s7thrIel3Jsy4lbkcDfzewGxEeoeLIVB+vEPrWlnulnKIZ+LQoMMS/lSAH
+         JwAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746790198; x=1747394998;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PS161WiIseqQMvNduUZogtk3N3mmBOCWz6m7XRDgGoE=;
-        b=l89zodOqZOGTXpjEq3cOFHdfLmWASNORzpSPa9jMlwdUcmmxZb6QDiGN7No+D79s6C
-         j/6oTBZf1KG3GgwHhm8ZCVy4XlbitP3eEg0flyhl09U76ePVnTlcd1Sythfpu2eKp/rl
-         dwspvfY4A6aw/yV6gEQ5A+vKwJOSrA1DmBh3EKuHT5kKwyDNFc8dF4400Jf3nml7AglE
-         PFArt4bOjTf6bjJHWTftN9YphwSfwX/b/s7GdskNVunULJMkHm3tKumnL9HXEAD5tgV5
-         kvpS0NdwYmJuHvbzn9EYIc4s4BCsUof0ecER9H2NuVMuG4j8b2PgHXTK+oRiVT68VEhv
-         MsMg==
-X-Forwarded-Encrypted: i=1; AJvYcCXbaRUEdKSMIkDLsCYK01mjFqmFs/kIo9gSZz9zr+fPMosik0JLHuCbVZ2ysWBaOiBtIBh+b/satEBdTl4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzB2UBM7HjMXeeNOjOlpTvBt/eDWPLGZDZ2MAKLiDkCtirKjElT
-	tzak9cK8xHA91Qif4XHGQJMWGbWhxHugNg2Ni+QPFCzfh3Mm+Fz4O4M4QeY7i04=
-X-Gm-Gg: ASbGncvYKTnbEsvHLllTpZ+Y9q3jh6Q2oTidiewpF8zF7rmJ2pLlyxrimZyiyR3ARLV
-	RSMi77Voy6+Uwn5BZgKBeorTa1qnjwoT6VCikLd0XfDWIR1Ea46P6HG1qeDOnrk5q3KSVQvIZ0K
-	734vezC6jLr3Vh7Puq9IKVaIBDlC5smPSAl/Zgq3GmlucsJtkYnnoLJ9Q8eMehWUAzFdgybUv6O
-	63l/VkSjDjrg87BIlPaNOnZbBiZHaP9//vLKbFlo40miB7wjKJdEpn3rkrD/eXT0l7fJs5gcSUD
-	a/1KTzP6zBC3NQkrNUGAFO9Q0+ZA
-X-Google-Smtp-Source: AGHT+IFyD+sjIl6oyk+GUqpe3q06X8ef9h4zpi/ejp13lhZHBDbgLcyRC1n+m1ZiSGeYARfIOQsk7g==
-X-Received: by 2002:adf:e78b:0:b0:3a1:f70c:19bc with SMTP id ffacd0b85a97d-3a1f70c19d8mr1667927f8f.48.1746790197611;
-        Fri, 09 May 2025 04:29:57 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::ce80])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2d2c8sm2977553f8f.61.2025.05.09.04.29.56
+        d=1e100.net; s=20230601; t=1746790220; x=1747395020;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LmILc32KRA1sm99pcoMQ3XSkwuHQfRNl6IZq9ElsNb8=;
+        b=a1NmrBrFHdZ2PD+YVUdeHZisyZ0Be/Q/cty2hICFzTumbikkSKAOofXxmjAXnaUfW/
+         UVly0Jth/Y52yvxUikDvZ1Uv44WDFX6yLADqBXOPuKxn0h7sniT838XKdl9RP6wt/6lJ
+         ypvXhaPq0OG63aBZUQw+hGYAaUqMQ49y/I+3aO8WkNPaQrPtExpxLwaerGSF/kpee8Yr
+         aRrkgqtQrHU/D+4MTlACxGN0TcWaNKz82ow91CFHr+DMcijk4JBYMVwbw8svAI72Ubz9
+         DqLfMyePCqulic8Gj5pnPzBkvJXDEhGTMb1lLum1J1jEYeis8l2GOUUyYZq9MF6sHAfJ
+         eRQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGXkNy7M1tCzEITcTbYcdpD26A/zPwLu0ltv/wZTfyclYd/hgSMS4mdFH5aDUpoKbGkKKunEe49sBhhHY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLAzNFLhQTjiheMyMR+1sztYWex5IGlFuL7gCV8Vc1mvPcE4Zm
+	XBQPEv56vFqCP4a7JqLviRvh5/0XrEv9BrTzOFyDwQfaNdTLSqZ0
+X-Gm-Gg: ASbGnctvrpPFyxY9LH9kn8ALXfWdd+anBP9K1jut4YZlGgOLvxZyYZ5xhyT40unsnaB
+	rk59lRbNRg2CGLL7m6oXtD7ALou7KoZLQAbchhJ8dQ+ll5AzTR0cJiF91yq3nR2+YygGun0b2XU
+	xpGqs0uASiClb8Z0pnTx/4Avend+BLLWtZuOCCD8UQ0qqBvwekNVey4G7BOA1rvFoznRxaRsYvu
+	jytHGOf0MjqM+zbyQ4hzBJVy+a0+zWo8s4DrmU1Qz3sX46QoXrA431fCXdwiaZEmJC6Mr8sY55S
+	dGj3G7Tc/t5FdCayVrQbpLXTfJIISMUByY66LXnOfXoiVM0Trh4ESw==
+X-Google-Smtp-Source: AGHT+IEX3C473GG3Hwd+yaU0Wn+5NbsMlHdYzeasNLDJog+d2QxZs0QLEGr1LwYpGrbvvMKhFO5ZZg==
+X-Received: by 2002:a05:600c:1c8f:b0:440:6a1a:d89f with SMTP id 5b1f17b1804b1-442d6d1844amr24734045e9.4.1746790219313;
+        Fri, 09 May 2025 04:30:19 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:9ad:d3b0:ec4c:9f30:1dfe:440a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d596a5e4sm35805465e9.31.2025.05.09.04.30.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 04:29:57 -0700 (PDT)
-Date: Fri, 9 May 2025 13:29:56 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org
-Subject: Re: [PATCH v3 2/3] riscv: Strengthen duplicate and inconsistent
- definition of RV_X()
-Message-ID: <20250509-1b7cbe3ce1c23a20c571d3c6@orel>
-References: <20250508125202.108613-1-alexghiti@rivosinc.com>
- <20250508125202.108613-3-alexghiti@rivosinc.com>
+        Fri, 09 May 2025 04:30:18 -0700 (PDT)
+From: Dave Penkler <dpenkler@gmail.com>
+To: gregkh@linuxfoundation.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Dave Penkler <dpenkler@gmail.com>
+Subject: [PATCH] staging: gpib: Fix uapi include header guard name
+Date: Fri,  9 May 2025 13:30:14 +0200
+Message-ID: <20250509113014.9105-1-dpenkler@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250508125202.108613-3-alexghiti@rivosinc.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 08, 2025 at 02:52:01PM +0200, Alexandre Ghiti wrote:
-> RV_X() macro is defined in two different ways which is error prone.
-> 
-> So harmonize its first definition and add another macro RV_X_mask() for
-> the second one.
-> 
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ---
->  arch/riscv/include/asm/insn.h        | 39 ++++++++++++++--------------
->  arch/riscv/kernel/elf_kexec.c        |  2 +-
->  arch/riscv/kernel/traps_misaligned.c |  2 +-
->  arch/riscv/kvm/vcpu_insn.c           |  2 +-
->  4 files changed, 23 insertions(+), 22 deletions(-)
->
+When gpib_user.h was renamed to gpio.h the include guard name was
+not changed accordingly.
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Change the include guard name to correspond with the file name
+and cleanup the comments after the #endif.
+
+Fixes: c7184cbf5530 ("staging: gpib: Rename common include file")
+Signed-off-by: Dave Penkler <dpenkler@gmail.com>
+---
+ drivers/staging/gpib/uapi/gpib.h | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/gpib/uapi/gpib.h b/drivers/staging/gpib/uapi/gpib.h
+index 4ca3cc9e0cd7..667e2fcc9130 100644
+--- a/drivers/staging/gpib/uapi/gpib.h
++++ b/drivers/staging/gpib/uapi/gpib.h
+@@ -4,8 +4,8 @@
+  *    copyright		   : (C) 2002 by Frank Mori Hess
+  ***************************************************************************/
+ 
+-#ifndef _GPIB_USER_H
+-#define _GPIB_USER_H
++#ifndef _GPIB_H
++#define _GPIB_H
+ 
+ #define GPIB_MAX_NUM_BOARDS 16
+ #define GPIB_MAX_NUM_DESCRIPTORS 0x1000
+@@ -298,6 +298,5 @@ enum gpib_stb {
+ 	IB_STB_MAV = 0x10	 /* IEEE 488.2 only */
+ };
+ 
+-#endif	/* _GPIB_USER_H */
++#endif	/* _GPIB_H */
+ 
+-/* Check for errors */
+-- 
+2.49.0
+
