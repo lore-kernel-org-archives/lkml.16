@@ -1,128 +1,182 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C156120C030;
-	Fri,  9 May 2025 16:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8616238D49
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 16:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746809857; cv=none; b=kyonxcCjdmwdDxrcIgcl/zNOtZTf0qoTZE2t1jEJQI8FIs7U/QUHDCXihbEyTstF3vheo2/4Ma5kOtCwzUZdsg1V+pxJIY0nJfJ66O8D7YnJNCQSKScGw1CYs1eY+G8dYx4pl4n1EflXhI1r6DxvOl/k4oc1qbC0lNYkT1/xzhQ=
+	t=1746809861; cv=none; b=eQ+baMeSlU28p/Y+CC6GHUfmOjNptU3M/Tj5sxLNjimKZqJoJv+y5dRmTjoSkl6bSKxgl8kZ1qOQKZQ2tsNhtGTwRBVxkiJyd3Nl2R0fg80uOW0LqIS8nGJg9pJ0zZv0X9vvoDRYBlivIhWXg9dF0+c0RzGwFxi1fzVhCo9Ohxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746809857; c=relaxed/simple;
-	bh=f+HzxQPWwken1azUW8kFJMFBZlKUu3T4KQof9pysA/8=;
+	s=arc-20240116; t=1746809861; c=relaxed/simple;
+	bh=NO0nXmAnQ7j5tXqaFGEn07F6EM8NTqg7hgWX7A3fDLE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DaQGLdkBOLjznH/c215g9lCwtlzXmsHiBMgZ+MimkVNzAKY71aisvr8pczA7mOE3W4DmBiqX+USl7a0iybqR5j1IboAhXq1NvNgy8skau50/HHsGWfMB/j06LbQlOsIYMMMlOfXlfRReJzXalyaFW9dmRK5j5LhFs3qtt6VJAv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Np91o4oi; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=rp6WuJ+Sf/mt+BjsgalTpxtZeIfaPSbMfyC8AImKNdH2c1+oWx+l1lZFwwF5FeiwcKmsxNGJ3OcFj4hK/idN90kUMRK/4tzCTiVx1x6os5gOwGJcS8zrMFCkGHsjZgOyX3m107sKRgJGBuy70mgaVFAQK3pCQs6jNANFMPb5EaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jEzR0BAW; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Np91o4oi"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-326b9930730so12700821fa.0;
-        Fri, 09 May 2025 09:57:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jEzR0BAW"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-48b7747f881so8111cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 09:57:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746809854; x=1747414654; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746809858; x=1747414658; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HG/qN/B1wwOujzXnr45jOXtdzYz6t+IOg1u2LQ5o1Xs=;
-        b=Np91o4oiUXIEBSIlVkzhgGN7TVH2L6yGhMKE+P0uv5gP0OMLmx3z3subOW663c/PmJ
-         WAYuc4r5g88Rf5eHqnNkZS9ddG7fnZjx0whNBpO+H2oJRU2brptQaJfAqN5ho0sMsy9n
-         +zA9VfELxl7d0Df+xzQJ2h1ZHkqI+ui+bATDAthbl8SrsTK7vmJ44VoY9JYARxGWucz+
-         enr+GZNuiXuPszqwAosf52TzIPFsJBWK/iGXgcqZNRQLnq9XDuLWNwA+8HMF8nx73UU2
-         /0Kxup4QecXG4HFSUet0Di931mmRfKAKutBaITbiZ02kYy6+BtpeEZkJYtwmaZsn0ajz
-         fEYw==
+        bh=F24KyM+dHHK/8s58wGurnqx6fLbmKft8hdksqto3gWs=;
+        b=jEzR0BAWM3rnXF9PuCcuG4PBD28+vBKhXsmxgEvquhWclKHkkJJ9/pPeItdeeky2GE
+         MLZ5itZcUq/3pZU1HrGEkqtvq2GxGEC00BAenExSe+uYgeEcILCRBFh7WjWKi5MygNgi
+         CAuGQxw0DFmxTaddc4SYbyzNHKjfj9KsoyD+bSEpfUdyP8Qa+Uy9HQA1GIg9mPL9w8kx
+         Hl6uLdc3RQf8wJg0ARvfB16X6ShG7/t8mtSAEwTX4WKZflNONTkBUZo9Z50HTVzWNsx7
+         cfShVzoK3HL+DbvHXeyHQcQ98UaisBujRGsiGf0kyL4F5NCxFOIdZY5C9yMe4ExDThHl
+         q3rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746809854; x=1747414654;
+        d=1e100.net; s=20230601; t=1746809858; x=1747414658;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HG/qN/B1wwOujzXnr45jOXtdzYz6t+IOg1u2LQ5o1Xs=;
-        b=Pm+9kg0ChOjEF6iKkr4Ao3Bh2XBpbWiwC+D3ALf1w1PYJ1Tnilk341WsW3ZLhNdMh/
-         2nsOp6cFwXrCN+YS3HOT7W7IfGFj9AweT5RsWdtXzaEfNHThRuTnukOaFt3PeLhlvo0e
-         c4OiaDUwl/zRaAWtwglr/xF7/RD6Kmi7e6Mc/+EYsuTfp83zkcc2aAQlNl7wvsWHGHBE
-         PJm9xlnkZWhW0LlP4Vo/zmyVesluMO3AJQB5/1HO4hFN/Yc0SEdOFMu1WfhfqTfVKQ5z
-         QXm0LOxm82/naJlEJYzq7nTRKxlQTzjNRHL3pjLaMsuiGKwFgzSLeIqlunNhTpgzLLh+
-         DfKA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXSHIFg7Mmepl6yY9zUQxaI2FITEBpRax2/BXp10pbr+seU2Y4xNjHgGJ4+qzPZxqWOckewvoqQyGzB8I=@vger.kernel.org, AJvYcCWcoQ8/tLscqAUhWpcajSQ1CqfEFo909Og2Dgw41UqTk0lxXflljhABmdI+Jo8OJhBVxrJIdG6+Rh/he6k=@vger.kernel.org, AJvYcCXkL64f+Gq15dGD/IGm9QMm7pGSM/xkpFEcbz3m7h6GuTkS0R5m/izv0aVvPD7/ZuLplfXYj52sQPo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5B3exjUsCsZGh1vMurSa+ikfpHdbh6l7t0iibhhKVuUhnGV26
-	Kqz/FGm1r08fzrmCPEjWK3jn98wBbSswuT1aFGiB0J3Qx0eBozMse8Q0s7rNJWwajs+Ci21y4fI
-	0GGXPtaDEXcxmUHGdaTxLC3a9XRw=
-X-Gm-Gg: ASbGncsg7ACsaYj0XE3kClrdId6pZX8jxLxJSu9B4ioHqSzXklrpKD0pf7FwYkLX3fX
-	SC188S1gfpR7O5w+rKyjyA4SgknZ4BXa+cvuQYOvUji0pt9+CVMJqq5zJMA3XO46DsVpRnuElkH
-	gbO+YXP56wuHxcwiRRnpgd23c=
-X-Google-Smtp-Source: AGHT+IFi0cF1V2iQpXTJCR3ehLfO/KkBUNbi40rI+b+xnbSC/u9nzRUrq6I2aH8N0QpOvZtq/8HaO2OBzNmgALN9d6c=
-X-Received: by 2002:a05:651c:146a:b0:30b:c22d:83b3 with SMTP id
- 38308e7fff4ca-326c45d5a16mr15986021fa.15.1746809853513; Fri, 09 May 2025
- 09:57:33 -0700 (PDT)
+        bh=F24KyM+dHHK/8s58wGurnqx6fLbmKft8hdksqto3gWs=;
+        b=BbW1TTWNxNUAFdt1jFt39BzzBUfOkMgJzbAoCDV7nFoBmIDdpBY4UOGkeKRvfHEmAL
+         GouRTa1PCswPWLqLyBoB0rJ2IGJeVSBUpGQYWcXtyo5Q1PjbC7x0AWZDvYvWJK1+k5c3
+         Tb6+PaojRCylv0/L7zMNCdI2KVpKFUgZBvJPQINOn+6iAxOXAaM2UCZqf0pl8//dF2Cz
+         /q6Uw1T8omeBtWY/5BwT+3NkSmF7Zsw9wgUj+7RLg5ApfzZ6zL2ie29kRra+rtBB4q4m
+         Y6DYHM6NuspMS4VKDcHSdiPTSZo52eLl5IZSnFaHuagsLeLUg16ctn7yWjmmW6MuTDvT
+         G1Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCVDyFdN5gBgI7tn/LEjmr7b6ldhQwMOcglsD4Dp/26fZVZf1pXMeTzJRyjGDfyMqhVGa8n0jV0nwjLA54w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwB5lJVn0lm4Onm4JXg1HEJv6QxjeAxBtitg2FRg6cxH7FWIOMM
+	vxzkuRTM/MTjU4qveGjeOKjMVJNdQFfmVZIs5axQIp9vdRHYWYdJtL1f9afqIxi8MNcphnzT/ij
+	GiopctVVBZ5H7Ozq0gyIfdiLESfBvS2h0+cXf
+X-Gm-Gg: ASbGnct6jW8Vaobmf2umahJtwgYg1tkIzLwmB9DQTmxuNRvmQQ3qV/qSEM/Wq9s3NO+
+	Z0jQo2HUhpP6D71Nxr+ZDXea6YWIw2kUzKmhPR5rMGno2MWH8dv6t9TnElHQAzQ4atnKKIZIO3A
+	KlIbLTiwO2+mDrvSBsTQNA1G3F9hu50s4=
+X-Google-Smtp-Source: AGHT+IHHBbsmJ0bmeCCrkQJfIZZAurxuGxUrt4S1p/lpkCoKnn9OdxpzRAmNFP54h0k6EN8iq2GxI499tAqeBJVrPCg=
+X-Received: by 2002:ac8:5748:0:b0:477:8686:901d with SMTP id
+ d75a77b69052e-49453c274f1mr4781501cf.1.1746809858305; Fri, 09 May 2025
+ 09:57:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508-tegra124-cpufreq-v4-0-d142bcbd0234@gmail.com>
- <20250508-tegra124-cpufreq-v4-1-d142bcbd0234@gmail.com> <040b0d8b-e862-48dd-9b77-9266a5194f99@nvidia.com>
-In-Reply-To: <040b0d8b-e862-48dd-9b77-9266a5194f99@nvidia.com>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Fri, 9 May 2025 11:57:20 -0500
-X-Gm-Features: AX0GCFuVMPqFC7B8B51EiIFyIqN0yLO5E4GUOE7AbDBM_ioXLvtK80spl4zANbI
-Message-ID: <CALHNRZ_AH-OkDak_RDoA3FB6EVO78r5G=5zosiJEXk4UGLH=fQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] cpufreq: tegra124: Remove use of disable_cpufreq
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <20250509061013.922944-1-00107082@163.com> <CAJuCfpH4eiSgZqdMTCUOU2VfYezZuLoJefc0wuOWor9eeNzNTA@mail.gmail.com>
+ <152dd526.b05a.196b5e7b738.Coremail.00107082@163.com>
+In-Reply-To: <152dd526.b05a.196b5e7b738.Coremail.00107082@163.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Fri, 9 May 2025 09:57:27 -0700
+X-Gm-Features: AX0GCFvN6Os18FiJrCf9mnRsrDppqo2EjOlCjvvWSFSYDIoKEap76hfWqF2eGMw
+Message-ID: <CAJuCfpHi1nAQ5FbPECE12j2-m7ndYQ739rY=RuNCB6AxeJM=3w@mail.gmail.com>
+Subject: Re: [BUG?]Data key in /proc/allocinfo is a multiset
+To: David Wang <00107082@163.com>
+Cc: kent.overstreet@linux.dev, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 9, 2025 at 6:04=E2=80=AFAM Jon Hunter <jonathanh@nvidia.com> wr=
+On Fri, May 9, 2025 at 9:36=E2=80=AFAM David Wang <00107082@163.com> wrote:
+>
+>
+> At 2025-05-09 23:56:32, "Suren Baghdasaryan" <surenb@google.com> wrote:
+> >On Thu, May 8, 2025 at 11:10=E2=80=AFPM David Wang <00107082@163.com> wr=
 ote:
->
->
->
-> On 09/05/2025 01:04, Aaron Kling via B4 Relay wrote:
-> > From: Aaron Kling <webgeek1234@gmail.com>
+> >>
+> >> Just start a new thread for this[1].
+> >> There are duplications in /proc/allocinfo where same [file:line]
+> >> shows up several times:
+> >>
+> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>            0        0 ./include/crypto/kpp.h:185 func:kpp_request_allo=
+c
+> >>            0        0 ./include/crypto/kpp.h:185 func:kpp_request_allo=
+c
+> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>            0        0 ./include/net/tcp.h:2548 func:tcp_v4_save_option=
+s
+> >>            0        0 ./include/net/tcp.h:2548 func:tcp_v4_save_option=
+s
+> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>            0        0 drivers/iommu/amd/../iommu-pages.h:94 func:iommu=
+_alloc_pages_node
+> >>            0        0 drivers/iommu/amd/../iommu-pages.h:94 func:iommu=
+_alloc_pages_node
+> >>            0        0 drivers/iommu/amd/../iommu-pages.h:94 func:iommu=
+_alloc_pages_node
+> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>            0        0 drivers/iommu/intel/../iommu-pages.h:94 func:iom=
+mu_alloc_pages_node
+> >>            0        0 drivers/iommu/intel/../iommu-pages.h:94 func:iom=
+mu_alloc_pages_node
+> >>            0        0 drivers/iommu/intel/../iommu-pages.h:94 func:iom=
+mu_alloc_pages_node
+> >>            0        0 drivers/iommu/intel/../iommu-pages.h:94 func:iom=
+mu_alloc_pages_node
+> >>            0        0 drivers/iommu/intel/../iommu-pages.h:94 func:iom=
+mu_alloc_pages_node
 > >
-> > Instead, unregister the cpufreq device for this fatal fail case.
->
-> This is not a complete sentence. Seems to be a continuation of the
-> subject which is not clear to the reader (at least not to me). No
-> mention of why or what this is fixing, if anything?
-
-I can clean up the subject and message in a new revision. More on the
-reasoning below.
-
+> >Yep, that happens when an inlined function allocates memory. It ends
+> >up inlined in different locations. Usually that's done by allocation
+> >helper functions.
+> >To fix this we need to wrap these allocator helpers with alloc_hooks:
 > >
-> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> > ---
-> >   drivers/cpufreq/tegra124-cpufreq.c | 5 ++++-
-> >   1 file changed, 4 insertions(+), 1 deletion(-)
+> >-static inline void *iommu_alloc_pages_node(int nid, gfp_t gfp, int orde=
+r)
+> >+static inline void *iommu_alloc_pages_node_noprof(int nid, gfp_t gfp,
+> >int order)
+> >{
+> >-        struct page *page =3D alloc_pages_node(nid, gfp | __GFP_ZERO,
+> >order);  struct skcipher_request *req;
+> >+        struct page *page =3D alloc_pages_node_noprof(nid, gfp |
+> >__GFP_ZERO, order);  struct skcipher_request *req;
+> >...
+> >}
+> >+#define iommu_alloc_pages_node(...)
+> >alloc_hooks(iommu_alloc_pages_node_noprof(__VA_ARGS__))
 > >
-> > diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra=
-124-cpufreq.c
-> > index 514146d98bca2d8aa59980a14dff3487cd8045f6..bc0691e8971f9454def37f4=
-89e4a3e244100b9f4 100644
-> > --- a/drivers/cpufreq/tegra124-cpufreq.c
-> > +++ b/drivers/cpufreq/tegra124-cpufreq.c
-> > @@ -168,7 +168,10 @@ static int __maybe_unused tegra124_cpufreq_resume(=
-struct device *dev)
-> >   disable_dfll:
-> >       clk_disable_unprepare(priv->dfll_clk);
-> >   disable_cpufreq:
-> > -     disable_cpufreq();
-> > +     if (!IS_ERR(priv->cpufreq_dt_pdev)) {
-> > +             platform_device_unregister(priv->cpufreq_dt_pdev);
-> > +             priv->cpufreq_dt_pdev =3D ERR_PTR(-ENODEV);
-> > +     }
+> >See 2c321f3f70bc "mm: change inlined allocation helpers to account at
+> >the call site" for examples of how this was done before.
+> >Thanks,
+> >Suren.
 >
-> So you are proposing to unregister the device in resume? That seems odd.
-> I see there is no remove for this driver, but I really don't see the
-> value in this.
+> Thanks for clarifying this, seems like a never-ending work...... >_<|||
 
-This was suggested by Viresh in v1 [0] to replace the call to
-disable_cpufreq, which is not currently an exported function. I'm open
-to other suggestions.
+Like anything else in the kernel :)
 
-Sincerely,
-Aaron
-
-[0] https://lore.kernel.org/all/20250421054452.fdlrrhtsimyucbup@vireshk-i7/
+>
+> >
+> >> ...
+> >>
+> >> The duplication make parsing tools a little bit more complicated:
+> >> the numbers need to be added up, group by key
+> >>        81920       20 drivers/iommu/amd/../iommu-pages.h:94 func:iommu=
+_alloc_pages_node 20
+> >>      1441792      352 drivers/iommu/amd/../iommu-pages.h:94 func:iommu=
+_alloc_pages_node 352
+> >>
+> >> The script for checking:
+> >> ```
+> >> #!/bin/env python
+> >> def fetch():
+> >>     r =3D {}
+> >>     with open("/proc/allocinfo") as f:
+> >>         for l in f:
+> >>             f =3D l.strip().split()[2]
+> >>             if f not in r: r[f]=3D[]
+> >>             r[f].append(l)
+> >>     keys =3D []
+> >>     for f, ls in r.items():
+> >>         if len(ls) > 1: keys.append(f)
+> >>     keys.sort()
+> >>     for f in keys:
+> >>         print "=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D"
+> >>         for l in r[f]: print l,
+> >>
+> >> fetch()
+> >> ```
+> >>
+> >> Thanks
+> >> David
+> >>
+> >> [1]. https://lore.kernel.org/lkml/531adbba.b537.196b0868a8c.Coremail.0=
+0107082@163.com/
+> >>
