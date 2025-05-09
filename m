@@ -1,75 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E88420C030
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 17:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023D820C030;
+	Fri,  9 May 2025 17:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746810396; cv=none; b=Jpeogg/nyfJBcStNvOQxkInWdLyCnMm+QKKfTRkQWTYoK+5P5aATTAKRWQU9SjLCrowgbHbwhVgJ9Mo+XUDV6FDTEcD1hdSzutjWXnLDVv77CrlVdxLbYLXaSDXVVKvaR7kob0lIzjhIRrj3sVCrXkKsy+fiQlqRVU49Wvl18Iw=
+	t=1746810417; cv=none; b=ofXN6vXdP4+mLmYdAtoFiPVGiILjIeSGK59Xgw4sBmLcGgtP9odhbBSj5zN0oHFppHkcyTpHkgTDVpvZ5lVaS97Qi5tAzg0nRlNQkq+f2MFGFnmA/8ZKIWgaWN0hmu6dhvD7J6v0OD9lWiphOcFUejjGH4J/2mqpaTvUtmgqM20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746810396; c=relaxed/simple;
-	bh=bLrG4AeCKcaCZecQ3OBE7o5nVNNOZXHqtgg2+3E4HV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=rSqAU3g9oJq33SUX+OwhbP4Plru2orI5+Gn//Kjqwh4lWJ8wDsegTPkk9WdOox3t2/at6+CAbj8gn++S39dWFxOMgSz4S9gxw3/uj4JUhHUs4BRQfwuzqpKXCXpFChVqeQrwhY0EXbm+rSruw9A46gfGdE4mf0JOPqOv+y5kakQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M4Z87hja; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746810417; c=relaxed/simple;
+	bh=nrh242XAYGJ4BUggQHAKhdHYKrqxRWsUk/neqm6hKew=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bPp4x6pb/PSR6PGiPXXQLJ7mUjxrnVHsbsZDvHadpfxbWVay3v8TO46/sQwz4ZKyW9xwLLwjl1lioEdeu5IwjvASDPNNocfnVYrbt1Vldxe38lDFFShowJy1V39aeCLu7u85Pvem/wZo/uQkfLgaeCBVcw8CRWvzYyFe6qTcTuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bjp5HcYi; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M4Z87hja"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B5FC4CEE4;
-	Fri,  9 May 2025 17:06:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746810396;
-	bh=bLrG4AeCKcaCZecQ3OBE7o5nVNNOZXHqtgg2+3E4HV0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=M4Z87hjapxMsxwQN5+tN7SFmT+BSolRWLPpHPkxTCYYqJdJj0YZ8OLr/9hah/T+/T
-	 qYmpwEiqTyuMPwXDpOSuSO20hz1aS0LD5R0KCxYvGpIN+3IWPnScjDtft3lrmsZ2+P
-	 91Ex18SojWYhgxx9r/g/7FuIngP6XcvyH/Y+48px4wQVPtKhSaoNQQiVStEs8rGelf
-	 JLfDRuXB4dExsJm7hjSv/OD3V4uPOnMOa8BaQebqxo18kS8NYLT/YWywBIwX5+kAjM
-	 GVIb8lWbl6qkl2uzqYzhSIfSdX64a16KkFNnAQbvhlgFnrBL/ilr6/SWfibVGWruZM
-	 bOk7u935yI9ZQ==
-Date: Fri, 9 May 2025 18:06:32 +0100
-From: Catalin Marinas <cmarinas@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bjp5HcYi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746810416; x=1778346416;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nrh242XAYGJ4BUggQHAKhdHYKrqxRWsUk/neqm6hKew=;
+  b=Bjp5HcYi2xiOl7c8smzF3cURF/jQLb9viW8NOgI0EGcBNGYoPyoL8siz
+   QetMMUer/+IStBB3rK7a0VzvJpb08n3D6/ebY0T3ZpIpP7tkSj6eP1WLQ
+   plbTmkUF3wC5NDQ66XMzGpq1bDx/1QuUS88sQtho2Uyptv+2NPrc8YpdG
+   vH32fslu0H/UK+0tErKpS1pROmraO/eRNqzWVPoVHMneg3eko4NqIaM/s
+   nj75JPpKc9F+Nl9Rb7m1TuVs4im0JsDUDTs9DafGXhD29u57UZOJNgrf9
+   cO9xiPSIR3IMRpcDCDm9kChGak7l2AcN9idsK5DSwPKgDnfi8qnhg+pAp
+   Q==;
+X-CSE-ConnectionGUID: qpglH75OTh+bGG5TacPXkg==
+X-CSE-MsgGUID: B8UCwfELRw+u3AsGYL5nsw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="52455779"
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="52455779"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 10:06:55 -0700
+X-CSE-ConnectionGUID: WaT8JMCHQjqZstX/dzgNuA==
+X-CSE-MsgGUID: 5/SnilGKTbK9uA6bdOAFMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="141450336"
+Received: from unknown (HELO jiaqingz-acrn-container.sh.intel.com) ([10.239.43.235])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 10:06:52 -0700
+From: Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Bernhard Kaindl <bk@suse.de>,
+	Andi Kleen <ak@linux.intel.com>
+Cc: Li Fei <fei1.li@intel.com>,
+	Jiaqing Zhao <jiaqing.zhao@linux.intel.com>,
+	stable@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] arm64 fixes for 6.15-rc6
-Message-ID: <aB42GJfIypFqk9aC@arm.com>
+Subject: [PATCH v2] x86/mtrr: Check if fixed-range MTRR exists in mtrr_save_fixed_ranges()
+Date: Fri,  9 May 2025 17:06:33 +0000
+Message-ID: <20250509170633.3411169-2-jiaqing.zhao@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+When suspending, save_processor_state() calls mtrr_save_fixed_ranges()
+to save fixed-range MTRRs. On platforms without fixed-range MTRRs,
+accessing these MSRs will trigger unchecked MSR access error. Make
+sure fixed-range MTRRs are supported before access to prevent such
+error.
 
-Please pull the arm64 fix below. Thanks.
+Since mtrr_state.have_fixed is only set when MTRRs are present and
+enabled, checking the CPU feature flag in mtrr_save_fixed_ranges()
+is unnecessary.
 
-The following changes since commit fee4d171451c1ad9e8aaf65fc0ab7d143a33bd72:
+Fixes: 3ebad5905609 ("[PATCH] x86: Save and restore the fixed-range MTRRs of the BSP when suspending")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
+---
+v2:
+* Removed unnecessary boot_cpu_has(X86_FEATURE_MTRR) check.
+* Updated commit message.
+Link: https://lore.kernel.org/all/20250509085612.2236222-2-jiaqing.zhao@linux.intel.com
 
-  arm64: errata: Add missing sentinels to Spectre-BHB MIDR arrays (2025-05-01 17:44:18 +0100)
+ arch/x86/kernel/cpu/mtrr/generic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
-
-for you to fetch changes up to 363cd2b81cfdf706bbfc9ec78db000c9b1ecc552:
-
-  arm64: cpufeature: Move arm64_use_ng_mappings to the .data section to prevent wrong idmap generation (2025-05-06 11:43:44 +0100)
-
-----------------------------------------------------------------
-Move the arm64_use_ng_mappings variable from the .bss to the .data
-section as it is accessed very early during boot with the MMU off and
-before the .bss has been initialised. This can lead to incorrect idmap
-page table.
-
-----------------------------------------------------------------
-Yeoreum Yun (1):
-      arm64: cpufeature: Move arm64_use_ng_mappings to the .data section to prevent wrong idmap generation
-
- arch/arm64/kernel/cpufeature.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
+diff --git a/arch/x86/kernel/cpu/mtrr/generic.c b/arch/x86/kernel/cpu/mtrr/generic.c
+index e2c6b471d230..8c18327eb10b 100644
+--- a/arch/x86/kernel/cpu/mtrr/generic.c
++++ b/arch/x86/kernel/cpu/mtrr/generic.c
+@@ -593,7 +593,7 @@ static void get_fixed_ranges(mtrr_type *frs)
+ 
+ void mtrr_save_fixed_ranges(void *info)
+ {
+-	if (boot_cpu_has(X86_FEATURE_MTRR))
++	if (mtrr_state.have_fixed)
+ 		get_fixed_ranges(mtrr_state.fixed_ranges);
+ }
+ 
 -- 
-Catalin
+2.43.0
+
