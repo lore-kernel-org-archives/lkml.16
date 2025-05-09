@@ -1,87 +1,187 @@
-Received: from out28-97.mail.aliyun.com (out28-97.mail.aliyun.com [115.124.28.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605B3270579;
-	Fri,  9 May 2025 09:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECA373477;
+	Fri,  9 May 2025 09:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746781969; cv=none; b=AmFWV1zkG6qeyA5YW4WLgsnabQ8n7CY+sRMTzQDLetDt/iV482jQ0tu9GeavXUfVFzN5x3KbE4HzGWsPcC2glaJVpC0+/ePu61wiQlK13zly64DasAe3oHC7xUjILf3zRI4/o1wJLV7f02R1GqbuIMRPMYwcFWt+EsOt34v47Dg=
+	t=1746782055; cv=none; b=nm2iFZBzPapEpejsshRlt6EHr/u3Hr+xVnaAemc+5fBYl/JNSrT/vO1IRmsA5WEdB6LysKbmzgMzugO3rCYcp5qnDvFjBElPeDLIo3EV8skGYR5HrqGNZpgGRzL+HTw/HzX8GHBIxF4GMAqMk9/ZPnd20vDk2iGCIx46w2JBPcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746781969; c=relaxed/simple;
-	bh=7COBxy7a+Hsq1ru8BBCuFdsudwT7UH8NdBwk9+qR+2E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NypWw/wotB9u657c0Fh9WVEkHgaVIlecpdK6xL2CDr9gyClKFe77rSc+Vld8NWHbd8kGoPxeDb4sSN9coeNwTYCM0+wafpQEmjjv/jO1QpZp7Nx9Kq1RaZmItu1ac9FeBmOY7PBlnkvA+lzciEBXspefy0BBwk9R4HFbja7AHyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coolkit.cn; spf=pass smtp.mailfrom=coolkit.cn; dkim=pass (1024-bit key) header.d=coolkit.cn header.i=@coolkit.cn header.b=TzJfddtL; arc=none smtp.client-ip=115.124.28.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coolkit.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coolkit.cn
+	s=arc-20240116; t=1746782055; c=relaxed/simple;
+	bh=vItGlJMuzbxOXtTTMJsjkJgBtkKmyb4sB1UNIvljBeE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MZOZWLrlYcUvxlzRAADsidzDYRjvaAgvueop4kUm+ba6EonFwDxJMjporUFQVpIAQFlEYgcv5XzuHS+XbQhxB/YeTAPy/3K9I4s5Mh/+g5abRwblsPy8LCdgm6iKCCtFd5DYGNhyPtTFLuanm9cNW60NXN0oHsthUB94k9KSuh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aiEFRVrW; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=coolkit.cn header.i=@coolkit.cn header.b="TzJfddtL"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=coolkit.cn; s=default;
-	t=1746781962; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=ciWbwyTmOlnq2cLpie/tgwrHFKelOt2C5BCRX15iCf4=;
-	b=TzJfddtLOniFwc1o1mGz88vhmiPXWB2x8Bti52JMzGVsVEE7PFk8OiaLAY0tuaLZAnatXcyXsvO93m0WviqCqauR0JlDY4vpahQitwK6g2y5kIfHLgkKVTM0GJ4O4TgJcbLnqjGYNN4lW4vpd7SrFm79zrNDqSfXE3JeFTuiKY4=
-Received: from ubuntu-z.lan(mailfrom:hao.zhang@coolkit.cn fp:SMTPD_---.cjnlki._1746781023 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Fri, 09 May 2025 16:57:05 +0800
-From: Hao Zhang <hao.zhang@coolkit.cn>
-To: heiko@sntech.de
-Cc: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	tim@feathertop.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"hao.zhang" <hao.zhang@coolkit.cn>
-Subject: [PATCH 1/2] ARM: dts: rockchip: Sonoff-iHost: adjust SDIO for stability
-Date: Fri,  9 May 2025 16:56:56 +0800
-Message-Id: <20250509085657.309934-2-hao.zhang@coolkit.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250509085657.309934-1-hao.zhang@coolkit.cn>
-References: <20250509085657.309934-1-hao.zhang@coolkit.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aiEFRVrW"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so3417986a12.0;
+        Fri, 09 May 2025 02:14:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746782052; x=1747386852; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fhO0hsCpCTctc/RhbxA8mBatB8tQsLopxXqBz5ibW5U=;
+        b=aiEFRVrWezfAnJphKVwc4oNrmx2dmK9wd/NWSX6VE2SR6SX256niI8cgCC3V0Sa3EM
+         h8cmVOD/8STLarZ4wDnKGH19Ftba0Yl7ZcwpOBbDdjUFvrwtNW8RSyPttwSCYgPKUU56
+         y9dC4r+VH0sPsAsD7pfcIFdzrHTA9jWr9RSfwzY86tAKcWbyLJ1/NwE/h+mIPxLnerwP
+         dYUkI6wBgDUUKCN3eH6V5ZlvVeXOXtZq77UOpWbUVZeE2UQdfZXLddt5KISO/O1GD1Mt
+         PiIyFhOsOr+06Co5TWhnExzAswE/fxrg0wrsmlXHsoRccFcDYpxlzP8T6RSdD0XEGTOD
+         VtHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746782052; x=1747386852;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fhO0hsCpCTctc/RhbxA8mBatB8tQsLopxXqBz5ibW5U=;
+        b=cU244V7LaqXPFOgUJtBvtdYF5A/mJwO1u+V+LRnnnvHB6Ns6M165osefvkSI8AxOu2
+         MNrtBcOm1yfrVYjrAY2k74YBOaZemSXferYK57Yrv5OLhMqVyS9Tv+RdoTIa7lTTAQFy
+         NdEcJSb58UDMtXaAFRSajpbN1g1NESLzGdV7Bt9H6o6XOyeAPImW+XFLsbjI3qoDRrc+
+         UHIwtVLO/pQr1qrkDNglsa2kENjyBu06gWiVM2dB2Ao3U7aIB7R15cmovYo+kDTAUPVY
+         sCFUakEHRJnRycJNce1Pf5oREmjOGRStGb9sfb/QtnN9Z7O6Gcd5h0+Ks8H4Fgsrf8BT
+         Z3eQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/r1ys8RP8dUmFVzlfNNsOlBFEwKC1inxvVkl+gL31D1TJv8RbcKIXa3Juwa1q4ktVr/7pRKOnXPbK979p@vger.kernel.org, AJvYcCXPepLjniQ8uTobVgA1X3whHZtNhmH9e/t/5hBJEArJq+USzpVvV+//7np8uMJsb4LTPUu2ak+x+A+hxeJe@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFT0JPeoqwy5y9B2tUtv0G6krostQ6KbQsgqJtghdHIkGxklcI
+	NxeTXL5hLZfqwBUoZOb512y3yYgr4w4AyAv4rUqB43bny4sDUJap+5xtyuCgwSssOgZZgUAyDR+
+	wXVacJQAY/BvylXs8e7YWufxkrPA=
+X-Gm-Gg: ASbGncsX/Vl0NmwyvsfEXwa4JcS7HHje9RNyasxPwJeWrfWL6HuRSeTNLaldLhgUw6H
+	WRnpMKCzGcK24UMjhBr6EMsOysNP64LFszEYIBSY/Q+a0CB9+/9isdZcDTYfIblJITXAAQ3jAHR
+	c2ik4MbFAF+iaopriQAG1JQg==
+X-Google-Smtp-Source: AGHT+IEVbDuDWTg+KNmf0HXjPEqDqTURkxFsPGThz0tbkN8+U9Hl7RtJUiTPZCOnSqF7ZOlEXdgCzgBUS6IW29pI/JE=
+X-Received: by 2002:a17:907:940f:b0:acb:107c:7aed with SMTP id
+ a640c23a62f3a-ad219291ef8mr278897066b.55.1746782051711; Fri, 09 May 2025
+ 02:14:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com>
+ <20250509-fusectl-backing-files-v3-2-393761f9b683@uniontech.com> <CAC1kPDM5cN9p-Ri1WUEWt6JNiTZukekJyihYRT=qTwawVT3bFA@mail.gmail.com>
+In-Reply-To: <CAC1kPDM5cN9p-Ri1WUEWt6JNiTZukekJyihYRT=qTwawVT3bFA@mail.gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 9 May 2025 11:14:00 +0200
+X-Gm-Features: AX0GCFsZkfwnPNQXlghJCMRfEEC4aqhJqH0caqzt3Q4NG2pzyaumtwa_HZiA0XI
+Message-ID: <CAOQ4uxhQu+Gr8Sn5HbZRyOhDd3MBqN5xKFxZru39LGgk5K-ACw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] fs: fuse: add backing_files control file
+To: Chen Linxuan <chenlinxuan@uniontech.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "hao.zhang" <hao.zhang@coolkit.cn>
+On Fri, May 9, 2025 at 9:39=E2=80=AFAM Chen Linxuan <chenlinxuan@uniontech.=
+com> wrote:
+>
+> On Fri, May 9, 2025 at 2:34=E2=80=AFPM Chen Linxuan via B4 Relay
+> <devnull+chenlinxuan.uniontech.com@kernel.org> wrote:
+> >
+> > From: Chen Linxuan <chenlinxuan@uniontech.com>
+> >
+> > Add a new FUSE control file "/sys/fs/fuse/connections/*/backing_files"
+> > that exposes the paths of all backing files currently being used in
+> > FUSE mount points. This is particularly valuable for tracking and
+> > debugging files used in FUSE passthrough mode.
+> >
+> > This approach is similar to how fixed files in io_uring expose their
+> > status through fdinfo, providing administrators with visibility into
+> > backing file usage. By making backing files visible through the FUSE
+> > control filesystem, administrators can monitor which files are being
+> > used for passthrough operations and can force-close them if needed by
+> > aborting the connection.
+> >
+> > This exposure of backing files information is an important step towards
+> > potentially relaxing CAP_SYS_ADMIN requirements for certain passthrough
+> > operations in the future, allowing for better security analysis of
+> > passthrough usage patterns.
+> >
+> > The control file is implemented using the seq_file interface for
+> > efficient handling of potentially large numbers of backing files.
+> > Access permissions are set to read-only (0400) as this is an
+> > informational interface.
+> >
+> > FUSE_CTL_NUM_DENTRIES has been increased from 5 to 6 to accommodate the
+> > additional control file.
+> >
+> > Some related discussions can be found at links below.
+> >
+> > Link: https://lore.kernel.org/all/4b64a41c-6167-4c02-8bae-3021270ca519@=
+fastmail.fm/T/#mc73e04df56b8830b1d7b06b5d9f22e594fba423e
+> > Link: https://lore.kernel.org/linux-fsdevel/CAOQ4uxhAY1m7ubJ3p-A3rSufw_=
+53WuDRMT1Zqe_OC0bP_Fb3Zw@mail.gmail.com/
+> > Cc: Amir Goldstein <amir73il@gmail.com>
+> > Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+> > ---
+> >  fs/fuse/control.c | 155 ++++++++++++++++++++++++++++++++++++++++++++++=
++++-----
+> >  fs/fuse/fuse_i.h  |   2 +-
+> >  2 files changed, 144 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/fs/fuse/control.c b/fs/fuse/control.c
+> > index f0874403b1f7c91571f38e4ae9f8cebe259f7dd1..6333fffec85bd562dc9e86b=
+a7cbf88b8bc2d68ce 100644
+> > --- a/fs/fuse/control.c
+> > +++ b/fs/fuse/control.c
+> > @@ -11,6 +11,7 @@
+> >  #include <linux/init.h>
+> >  #include <linux/module.h>
+> >  #include <linux/fs_context.h>
+> > +#include <linux/seq_file.h>
+> >
+> >  #define FUSE_CTL_SUPER_MAGIC 0x65735543
+> >
+> > @@ -180,6 +181,135 @@ static ssize_t fuse_conn_congestion_threshold_wri=
+te(struct file *file,
+> >         return ret;
+> >  }
+> >
+> > +struct fuse_backing_files_seq_state {
+> > +       struct fuse_conn *fc;
+> > +       int backing_id;
+> > +};
+>
+> As mentioned in the previous v2 related discussion
+> backing_id is maintained in state because
+> show() of seq_file doesn't accept the pos parameter.
+> But actually we can get the pos in the show() function
+> via the index field of struct seq_file.
+> The softnet_seq_show() function in net-procfs.c are doing this.
+> I'm not really sure if it would be better to implement it this way.
+>
 
-Reduce max-frequency from 50MHz to 25MHz to improve WiFi module stability
-on some Sonoff iHost units. Remove unsupported or redundant properties,
-and keep only minimal, validated configuration.
+For better clarity of the code and maintainability,
+I think that storing backing_id in the state as you did is better.
 
-Signed-off-by: hao.zhang <hao.zhang@coolkit.cn>
----
- arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> > +
+> > +static void fuse_backing_files_seq_state_free(struct fuse_backing_file=
+s_seq_state *state)
+> > +{
+> > +       fuse_conn_put(state->fc);
+> > +       kvfree(state);
+> > +}
+> > +
+> > +static void *fuse_backing_files_seq_start(struct seq_file *seq, loff_t=
+ *pos)
+> > +{
+> > +       struct fuse_backing *fb;
+> > +       struct fuse_backing_files_seq_state *state;
+> > +       struct fuse_conn *fc;
+> > +       int backing_id;
+> > +       void *ret;
+> > +
+> > +       fc =3D fuse_ctl_file_conn_get(seq->file);
+>
+> I'm not sure if I should get fc in fuse_backing_files_seq_start here
+> and handle fc as (part of) the seq_file iterator.
+> Or should I get the fc in fuse_backing_files_seq_open
+> and store the fc in the private field of the seq_file more appropriately.
+> I guess the difference isn't that big?
 
-diff --git a/arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi b/arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi
-index 9a87dc0d5f66..088a069bb1a8 100644
---- a/arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi
-+++ b/arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi
-@@ -342,16 +342,14 @@ &saradc {
- 
- &sdio {
- 	bus-width = <4>;
--	cap-sd-highspeed;
- 	cap-sdio-irq;
- 	keep-power-in-suspend;
--	max-frequency = <50000000>;
-+	max-frequency = <25000000>;
- 	mmc-pwrseq = <&sdio_pwrseq>;
- 	non-removable;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc1_clk &sdmmc1_cmd &sdmmc1_bus4>;
- 	rockchip,default-sample-phase = <90>;
--	sd-uhs-sdr50;
- 	vmmc-supply = <&vcc3v3_sd>;
- 	vqmmc-supply = <&vcc_1v8>;
- 	status = "okay";
--- 
-2.34.1
+The simpler the better.
+I think what you did is fine. I see no reason to change it.
 
+Thanks,
+Amir.
