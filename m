@@ -1,96 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE88226CF4;
-	Fri,  9 May 2025 21:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C8825FA24;
+	Fri,  9 May 2025 21:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746827383; cv=none; b=RForPRk/UVY42WK3FP9PZZejo/pEJ+u66fP5VKO2GErsEh2w/p+PCRwGke2iWyHC4e1AMY+lyvIf7tchDhh32a9YBuJPA2R0ERQGLllA+QfFTy9MzKr6FxmZjg3JDTHosJHkslvnCvhMZolTtS9Pv3cZzhBINvTi6oIfwk+qBfQ=
+	t=1746827392; cv=none; b=lFMFZx5lZbl7LtUgm5GFngyBM2TGq34iYrFy8QjCXis5sk5CIj6CRjUovG6Ve7z6iHw9MIy5QYXCKC6kcfQTy8pSjsz9vlWWddxC+e+1plF/N151UhAg3LGOWAeg67wr4M8R/lCtQD+0pGU9/hb00PnU0vGmBRb02Idb7hJW3U0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746827383; c=relaxed/simple;
-	bh=SiJ264L76W+iNGxah+QR+bqOGeUBSZ7lji/MNG6Rk4w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ze/NDB7OKPt5z6kGPUeBiwbQdyhpg20xi0k4z7N88p2o9lSMWxeojCjn72vGJKzOOxZphONEM7Mp6Qg30x/G2zlDtlF89sRlGOlzUvVFcDmFMY+i3bin8qhoPYp5erAh1k/6AXU7SIKdkekTFSG68dd0ZI57r/F3LaPP/JsFJvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uYAhK1H/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746827392; c=relaxed/simple;
+	bh=ZinlNdkiyCNzwk3CZlDqG9cAdnhvkAgo9icgRAJn/rU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S+urO5OB2IN4cYa4I4F1FId25DUnpn5mrmTDgOrmhjHZ1xLqNgnTdObotKyPngjXX3AOI+A72fRxK88QMuUL/6siwjvIM4QsfzWVO2kUz9LnrNubMhDAY5UpihPkrWFeY/JcraeBdamFsUT/5dVj5nWDaLNYYIJpippMTbDLXDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L9gLSumS; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uYAhK1H/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02004C4CEE4;
-	Fri,  9 May 2025 21:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746827381;
-	bh=SiJ264L76W+iNGxah+QR+bqOGeUBSZ7lji/MNG6Rk4w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uYAhK1H/3ajc/630iBxlSZwFpfs7YQjH28MoAy/PNXdDe5ceNI2Ycnxt1dn+GTZ7d
-	 Q3lsLH2TxYfYHz+IrJ3qB14PQJo3sJspgtFfVNbI8W2CuG4oyBhBZo1LP2UragiUPj
-	 05tToUJo/K4GRvFE3hrbtcl3cCcwJhJZC4jMwKYPF//w+q7XKUk9iIZy2B6/5BbqAG
-	 M+Q4oMqDgbf7hrL7a1JZuLFLOXpo9VdqQytFBt5g+A+xD4/yEJFMVJhJlxUAT4iNI7
-	 afH+/8ACTMWKfAKZI6z5+xaLPzbvrXLxWPccl6Lm0FzuU4aNnm+LbWIiQpfIhxEwsf
-	 i5CWn2npgfs4Q==
-Date: Fri, 9 May 2025 21:49:39 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Juergen Gross <jgross@suse.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-hyperv@vger.kernel.org, kvm@vger.kernel.org, xin@zytor.com,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH 3/6] x86/msr: minimize usage of native_*() msr access
- functions
-Message-ID: <aB54c5ajYkGZ1sPi@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250506092015.1849-1-jgross@suse.com>
- <20250506092015.1849-4-jgross@suse.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L9gLSumS"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso3733933b3a.2;
+        Fri, 09 May 2025 14:49:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746827390; x=1747432190; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/U9lcKW0lXABVXy+mgpMzNoe/NTD2evxfu2sRExNzas=;
+        b=L9gLSumSx0yIxUYbgEy1stex4IDy6WP+DJVbK/+vJ+R16cxCA/gC86FHIz+/ocy3wW
+         WRL6lfia1kWLvI4ZDVDZMCNGhlfpveRJezzEMOdSbLEeixbAFijAB8jSV0gxcA63ZLMc
+         rz3eK2howQtwj6o1+bYDdtXHNdj4bvnCvaeUR5sphp0reZErAHwm21jtu9q9hTE3izqY
+         2nZoMyeVk3Jslh1jICwDZWlpmUELz/nsIV66tr45ogFdTaKl68qmL8Sh3A0pQCRHkUCn
+         W9If5YXJJogYEdN2Q7UWHSOK5B9nrsBTiOtGTqngqPCKC3qwkV7mtF2Tc/K6gUrLn8E0
+         MdgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746827390; x=1747432190;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/U9lcKW0lXABVXy+mgpMzNoe/NTD2evxfu2sRExNzas=;
+        b=BRJ2SWI6Qlr/eljl0TLC2Lo93rafNwqaY1bYhljGCMo2u/gh5/fU5ij26WBjj34PUv
+         OAP5J31Bu/8RI54doMk0juTgkJOWhGAXIX9pvd1JMjVolGeTjdVVslqA0KJ38OKR+gjw
+         qYF3Ix2plsIlGU2+JC3Iw0YqOCIF8SPPQr28tdGcAgJ5eJzfzebqlVXeP+dkCS3XcKlD
+         FLwE0G7HE0WmE2nEVx6kyvsEBmDbXMPmY83+us7tU5wSPk8odV0BgJUF+8ve392mZKqO
+         rVe44eXXw0n83Y27q9J4vR6oZiKacVdazI/Bt/1dkZbyZqT97xjEsWzlY+YghZP4MlSj
+         uP8A==
+X-Forwarded-Encrypted: i=1; AJvYcCV0DEgm8962/El4StREmG/7F28b/vg8wN+bPkBlUyrzB6nqJMcfIubj/ck/pivKLlSrYeQ=@vger.kernel.org, AJvYcCVtBn9NbUeyg/t/LfyNyRW9OebKddzRzqW+sAX7WDkLkWmzNjOutgNb67QJBf06Ds2QZ+ml9VeycihbeAmuf80BMTVS@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAN5urKOOHG8EXGXTk32b0MaWjpxZZfT1mFywDd0oiFXzBmJrs
+	ILPPA40svyNgwEXFiDHiKj53F4H6s4KjOx+iFTXTU+731AvPew8OErPr22wcW83tCU1pMapjITR
+	MLgKOzynqpP17ontc2xF0DsUSYK/NqhDx
+X-Gm-Gg: ASbGncsxzrLSK/s3+ckxG9TcigRsPouIgLmvGc6KxnYFtr6gvJ7/YDxrR9aToqPdMNm
+	5tXOwF0OB9mh0Y6dAb3M+IJy9ffoAz9WkHE7jC6nKwM6vQtnz6oaqY0SeXczUiirmgjmtwPj7Xp
+	EMFOpFoYW3Ch/oXHsRYjH28If1+x53SxMrCCKSrBfPNBenOeOBNvE5k6Rk2x0=
+X-Google-Smtp-Source: AGHT+IHPkwZR/8rn5sjyBGB0IOcQSZZ0Evw9rc/ZNuaIe7vZL0Xarx0Fw1QKpg7ximsYUdfxO7khqTgJocYUArU4xsI=
+X-Received: by 2002:a05:6a21:3182:b0:1f5:8a1d:3904 with SMTP id
+ adf61e73a8af0-215abace343mr8147447637.7.1746827389935; Fri, 09 May 2025
+ 14:49:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506092015.1849-4-jgross@suse.com>
+References: <20250509164524.448387100@goodmis.org> <20250509165155.628873521@goodmis.org>
+In-Reply-To: <20250509165155.628873521@goodmis.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 9 May 2025 14:49:37 -0700
+X-Gm-Features: ATxdqUEPWK1bzutKtWy6yxNmKdLWMZCU9skVB9Dn5IFiwho3pByZS297XPGSPQI
+Message-ID: <CAEf4Bzb7MCv87ZEPXvH7APk9yvmtCWvuUO5ShEaLvz_DLfNqpw@mail.gmail.com>
+Subject: Re: [PATCH v8 12/18] unwind deferred: Use SRCU unwind_deferred_task_work()
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06, 2025 at 11:20:12AM +0200, Juergen Gross wrote:
-> In order to prepare for some MSR access function reorg work, switch
-> most users of native_{read|write}_msr[_safe]() to the more generic
-> rdmsr*()/wrmsr*() variants.
-> 
-> For now this will have some intermediate performance impact with
-> paravirtualization configured when running on bare metal, but this
-> is a prereq change for the planned direct inlining of the rdmsr/wrmsr
-> instructions with this configuration.
-> 
-> The main reason for this switch is the planned move of the MSR trace
-> function invocation from the native_*() functions to the generic
-> rdmsr*()/wrmsr*() variants. Without this switch the users of the
-> native_*() functions would lose the related tracing entries.
-> 
-> Note that the Xen related MSR access functions will not be switched,
-> as these will be handled after the move of the trace hooks.
-> 
-> Signed-off-by: Juergen Gross <jgross@suse.com>
+On Fri, May 9, 2025 at 9:54=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> From: Steven Rostedt <rostedt@goodmis.org>
+>
+> Instead of using the callback_mutex to protect the link list of callbacks
+> in unwind_deferred_task_work(), use SRCU instead. This gets called every
+> time a task exits that has to record a stack trace that was requested.
+> This can happen for many tasks on several CPUs at the same time. A mutex
+> is a bottleneck and can cause a bit of contention and slow down performan=
+ce.
+>
+> As the callbacks themselves are allowed to sleep, regular RCU can not be
+> used to protect the list. Instead use SRCU, as that still allows the
+> callbacks to sleep and the list can be read without needing to hold the
+> callback_mutex.
+>
+> Link: https://lore.kernel.org/all/ca9bd83a-6c80-4ee0-a83c-224b9d60b755@ef=
+ficios.com/
+>
+> Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  arch/x86/hyperv/ivm.c      |  2 +-
+>  kernel/unwind/deferred.c | 33 +++++++++++++++++++++++++--------
+>  1 file changed, 25 insertions(+), 8 deletions(-)
+>
+> diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+> index 7ae0bec5b36a..5d6976ee648f 100644
+> --- a/kernel/unwind/deferred.c
+> +++ b/kernel/unwind/deferred.c
+> @@ -13,10 +13,11 @@
+>
+>  #define UNWIND_MAX_ENTRIES 512
+>
+> -/* Guards adding to and reading the list of callbacks */
+> +/* Guards adding to or removing from the list of callbacks */
+>  static DEFINE_MUTEX(callback_mutex);
+>  static LIST_HEAD(callbacks);
+>  static unsigned long unwind_mask;
+> +DEFINE_STATIC_SRCU(unwind_srcu);
+>
+>  /*
+>   * Read the task context timestamp, if this is the first caller then
+> @@ -108,6 +109,7 @@ static void unwind_deferred_task_work(struct callback=
+_head *head)
+>         struct unwind_work *work;
+>         u64 timestamp;
+>         struct task_struct *task =3D current;
+> +       int idx;
+>
+>         if (WARN_ON_ONCE(!info->pending))
+>                 return;
+> @@ -133,13 +135,15 @@ static void unwind_deferred_task_work(struct callba=
+ck_head *head)
+>
+>         timestamp =3D info->timestamp;
+>
+> -       guard(mutex)(&callback_mutex);
+> -       list_for_each_entry(work, &callbacks, list) {
+> +       idx =3D srcu_read_lock(&unwind_srcu);
 
-Acked-by: Wei Liu <wei.liu@kernel.org>
+nit: you could have used guard(srcu)(&unwind_srcu) ?
 
-> 
-> diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-> index 09a165a3c41e..fe177a6be581 100644
-> --- a/arch/x86/hyperv/ivm.c
-> +++ b/arch/x86/hyperv/ivm.c
-> @@ -319,7 +319,7 @@ int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
->  	asm volatile("movl %%ds, %%eax;" : "=a" (vmsa->ds.selector));
->  	hv_populate_vmcb_seg(vmsa->ds, vmsa->gdtr.base);
->  
-> -	vmsa->efer = native_read_msr(MSR_EFER);
-> +	rdmsrq(MSR_EFER, vmsa->efer);
->  
+> +       list_for_each_entry_srcu(work, &callbacks, list,
+> +                                srcu_read_lock_held(&unwind_srcu)) {
+>                 if (task->unwind_mask & (1UL << work->bit)) {
+>                         work->func(work, &trace, timestamp);
+>                         clear_bit(work->bit, &current->unwind_mask);
+>                 }
+>         }
+> +       srcu_read_unlock(&unwind_srcu, idx);
+>  }
+>
+>  static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *ti=
+mestamp)
+
+[...]
