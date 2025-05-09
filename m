@@ -1,484 +1,151 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9855322E;
-	Fri,  9 May 2025 02:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746758730; cv=fail; b=Fk+8OcjaJfBLl5ne+PNsLPCcYDRVLBMzs+6F+pAZVaApI6HepGjTEVoyIMNJSR2qFJ/j5kmUpsFxUMJcWbI9WvvqR8o6i+tRjzw2zg9Ld3Qfl+qD1qQOXOgxKlzwrzqab5kp93qmmhKOCHzhzzdbrIS+5chl41sZeYUGEn7kbVI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746758730; c=relaxed/simple;
-	bh=C7XcyB/TrMh9qv9dj8tXVNUPDnLA2SFCFBDGxnzUmKI=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=dvxWlEIM76/atSNI1El+UUhXbjoBci572f9OSMuZKhIPczladTKEVDAU9eoyRJxLbFh6+OT9217mJwc4BAdXwuN7Al9jVkei4NVsJ+noIcYOYlsjAZFD9iM6TWBcc+himJ5TN3EtvSg72JJ7ljI+9w+Xog9bvvMm3VHr9g1NNbE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=eng.windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=fail smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=eng.windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5491K4NP005031;
-	Fri, 9 May 2025 02:45:12 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2041.outbound.protection.outlook.com [104.47.55.41])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46d8c16v68-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 May 2025 02:45:11 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=n7mwD5mDb/mLKsOdw5RKg/GzTv3wGigUKaidtva8pvswwEUbkHawmX7wkrFR82Xru0dE9L2sDIdeqWSo/vDCtUqpiqucKqpIfEfFKzSkOPF33XUwSnytyhjCoZGnmWL00kCoHi4lKhHgeLEREQmcy2I/laVG8Dyj2Icco1He8OG9LpRzleXdW5T8n1DjGhHCogt27r8uGN8QfuBILo+2RqbbuytZKQC+DztpALyKvDSeomEr42K1le3CLssF1o1taJVBN3jPyZ3al09lTQsQwhWlpE1lwuN+awb3VwFhZStLxnJi5HZwiOQHOCxkkqGfej9Xj/3u96RX1vXGJm+a9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U69U1L7czVM8YzwmkfR71svQXO1x00okCAsuZ4Uoacc=;
- b=Q/1x/ZI18IVqncNZlo+Vv3MMB9T5XOiHs7qjTIA/EwML/Yu1QxE/LPRvmoJkrPP6Az1+hudo1ikpELOdPhQFlVumZ51IKQhMuJo4SSaXG2Sjqd6SOoJlHUBLDj82xLoLldZ29N7tG5iDiko7I239u4HeKNIgqGCPDPAM2HJ7XwuwqVhiI3tEmQGgcG0gD07E0Q6M8YAEaK9f5J/FC4rxzJnxvvszrg3Phueq2SPGDxgXPUxBxtWbu4/gBUkYB4RNke/3A5390B/UDvB195WK/l/Dv4LAcQucxLZakZKWUSrvBfUv7+KSsCeRBvO3WrETkQ4Ky5YYi5Ki/jp2oZ20zw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=eng.windriver.com; dkim=pass header.d=eng.windriver.com; arc=none
-Received: from BYAPR11MB3832.namprd11.prod.outlook.com (2603:10b6:a03:ff::18)
- by CO1PR11MB4945.namprd11.prod.outlook.com (2603:10b6:303:9c::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Fri, 9 May
- 2025 02:45:01 +0000
-Received: from BYAPR11MB3832.namprd11.prod.outlook.com
- ([fe80::83ab:15a8:cce6:b531]) by BYAPR11MB3832.namprd11.prod.outlook.com
- ([fe80::83ab:15a8:cce6:b531%7]) with mapi id 15.20.8722.020; Fri, 9 May 2025
- 02:45:01 +0000
-From: Zhi Yang <Zhi.Yang@eng.windriver.com>
-To: stable@vger.kernel.org, phaddad@nvidia.com
-Cc: xiangyu.chen@windriver.com, zhe.he@windriver.com, harperchen1110@gmail.com,
-        markzhang@nvidia.com, leon@kernel.org, dledford@redhat.com,
-        jgg@ziepe.ca, linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5.15.y] RDMA/core: Refactor rdma_bind_addr
-Date: Fri,  9 May 2025 10:44:47 +0800
-Message-Id: <20250509024447.3959342-1-Zhi.Yang@eng.windriver.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYCPR01CA0142.jpnprd01.prod.outlook.com
- (2603:1096:400:2b7::11) To BYAPR11MB3832.namprd11.prod.outlook.com
- (2603:10b6:a03:ff::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5413133EC;
+	Fri,  9 May 2025 02:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746758749; cv=none; b=iXv0vfMymAt4DPpSXgcPUX7LBpHezrKGfEf0rOkFi6KUp/nTpG5t3lsyWtMgeg60x3DDNph8+7TsIjJXHNsrgthk+5syolI2bvqCq9OX7jacQxF0SPwZBU95/9JHafMD01/brFkAPUzpmKHuTFALXmWywupW+uWdmNK+863KLJc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746758749; c=relaxed/simple;
+	bh=QCt7W9cQubdkOh1wzz0DSW4wGR4LXBXeyzwonSK7vwE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BT/kGKZi7mNYGcQcKJtnacYV9Pc6zpZsjFQkvOJxmRMH/uY1rYnohqlAxHeQGbiizMHZ26wnHuoIKEV1NdXRKRwkYR8+2RDqkVOGbkrSXT1EaCNXHFh5OkmXJz7Xje0eTLLXBdWkz6IKyS/G+7elCkBYqwKuEOuruDUsIG/NGGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QfTjq4zK; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QfTjq4zK"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-74019695377so1298437b3a.3;
+        Thu, 08 May 2025 19:45:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746758748; x=1747363548; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mFS6mbwVeD+XxwjTe2L6G5xAyvfPHlOmCcGIREdnkRY=;
+        b=QfTjq4zKyBqeIIyvd/EaUuKlcSjsbB7mji2XCZYzX84nL2Vx5YDZzWz/K8MU7Uf5WJ
+         xKEXJWZzIgGSxkbnWfUJ8d/2eN5ijONlYPududbp76hMZUTugMW7Zs6L+odgjkqnRdCk
+         BGcH6cPJYQCnAl8v+a8cuMAttr55tPw8av1p3rxca4EWVriI0leec2UzxTRZxKoLsFU1
+         KUgm77cM/m6pyfXNfIs0g2j9srRbB5fL5F4z/3vyLhduR/lIGTITcGbJ4s8PTuJuX6bt
+         sPyhziOEcIs6i5obNOuWrTsqZZTEodmtDevb1A7AqMOfbDmR69WSwT9GW+dL28SoAGqm
+         /Vgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746758748; x=1747363548;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mFS6mbwVeD+XxwjTe2L6G5xAyvfPHlOmCcGIREdnkRY=;
+        b=bv1K7LQw5maonWyJNWSZNys0kKa2kinTtQ3/hAOxF4DlcGHS6Hfxq7jIjDTh1Jmx31
+         7mkEc3KzfPC3hx5fZvEhJAaJAtMxuZS3C19w0FrB8ruMtmBdSBg0oE9YxlDOpuJuJ2Kc
+         suGL0WHu57UPfOVSW2v6KznNjq0qmSKlfPVY3WbgbmRlSBg8CKPcVF2wgn6VHtVgU65b
+         vu4OTPlG/uQFc6qMSbtirYjw28hUBaxnn05qx9OqVgYq6hGFkCqJBitB4j3SS4YwQRsq
+         1UgvHIwCUrydXoJ74FLWBJeiXAFaLK13BHKbIWl/ltEwsAru2UMOd4Y8T7+RU5Eg2dzo
+         BeBA==
+X-Forwarded-Encrypted: i=1; AJvYcCVIPmi4wxBcQtJTf7EwEQOXEDdLkWtoTHTmZOXqlORulXIoCDhhg09PGJ49xvYH+EmngA7Q0Zyb7BxJgARp@vger.kernel.org, AJvYcCVWg3NL9zA7mvHeiHp+JXEbJigcxE5+UJ1OiR/mjhZp0lMnPfD9IMYvCnAbqQfvKazhrQBH+s5oMTV9ZO8HvG+Ysdn8x+cj@vger.kernel.org, AJvYcCVxNbK7PqPjrym+0wzSTfbdH/t5ISStVKhTrHpRov5bPKJ2nmwUo6bw/U9h3uxJBH8Keu4Ikk89yE4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyLtoX3TCPNjOJvwj+uUbAk3BuY/vmEn+G3A96n0YVKRj2ED1U
+	RRj+4y3rVXiUoDVhmxheeLz1JGGcD3fkA418geb0KvSuCJDAfOtQ
+X-Gm-Gg: ASbGncs8AA8AAyV42F8ZIozCjp7ms41yRHUr9D/J7rp824IQmKcCrbFFpHgTrwfv6vm
+	Hcr6xfx2zcZFP7qC4gjw3TyjE8jjuaEX+798mvk5uSTXWBxE2JmJ73viHN7NIFEp1jmomwJ5fGg
+	6ZIBW5S8Ocoq5OAQji3EAh06z5AltV0XA7xwaUFe/DucRhTCpaiqAlIKgUZKEREge8YPbMIpdgp
+	fPpVqeDnq8PdOWdfMPIZTfrNjSq9lCFV4M+vvtqAM/RR86lytOq1Cz5A1CSJd2OdlgesgG2okP3
+	Xw9P492gIdvB26jTZMmsSGQi4RlGqnwpRtcd+6ooHR/PA8Cyht1kkYoa5h+MC7aAoZ9JQsFSqPz
+	Ou0E=
+X-Google-Smtp-Source: AGHT+IEUVrYysCgJR3AWSOW4YGeY4h7f7UFx3jN2Vg1lkgbAWVswe0YqJKwqbpPKq8gyz9rTI69HwQ==
+X-Received: by 2002:a05:6a20:438f:b0:1f5:619a:8f75 with SMTP id adf61e73a8af0-215ababd87amr2530322637.2.1746758747592;
+        Thu, 08 May 2025 19:45:47 -0700 (PDT)
+Received: from localhost.localdomain ([14.22.11.165])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a0d007sm786835b3a.96.2025.05.08.19.45.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 19:45:47 -0700 (PDT)
+From: Jinliang Zheng <alexjlzheng@gmail.com>
+X-Google-Original-From: Jinliang Zheng <alexjlzheng@tencent.com>
+To: wufan@kernel.org
+Cc: alexjlzheng@gmail.com,
+	alexjlzheng@tencent.com,
+	chrisw@osdl.org,
+	greg@kroah.com,
+	jmorris@namei.org,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	paul@paul-moore.com,
+	serge@hallyn.com,
+	viro@zeniv.linux.org.uk,
+	linux-efi@vger.kernel.org
+Subject: Re: [PATCH v3] securityfs: fix missing of d_delete() in securityfs_remove()
+Date: Fri,  9 May 2025 10:45:39 +0800
+Message-Id: <20250509024539.364945-1-alexjlzheng@tencent.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <CAKtyLkGK3JH7amgskrjMyUz1KZeVtAO_4bA_8iuBYvykgHRsRQ@mail.gmail.com>
+References: <CAKtyLkGK3JH7amgskrjMyUz1KZeVtAO_4bA_8iuBYvykgHRsRQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3832:EE_|CO1PR11MB4945:EE_
-X-MS-Office365-Filtering-Correlation-Id: b02a9876-0941-47e9-424a-08dd8ea37e47
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|376014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?t8M5qaev8jYRr9n4SJ/Kgo7iowSwvHEzGCFo8M+ORcY7a1XZbfwTCAMsQOU3?=
- =?us-ascii?Q?OUaC56Zrn/ruisc4ClPvVsj396nMNIj5jSkZ7+Zn28H64kC59eO4dzB1X4ZJ?=
- =?us-ascii?Q?jP5gvZ5NgSpLtF/tAkVlGDHhg8UKb19/zR4M9P1oD4E7A1e++RVGTrj06jq/?=
- =?us-ascii?Q?kU6SZRq+iQrzuLpr3EYBF2KXOjI84S3j7Kur5yax0oE5hGtkz80T5v+dc9yG?=
- =?us-ascii?Q?ajhHbKYnmIhMPThsDPFb3O+/WGcJfnJ7uNcyQik68MyaObEnjeT8TkGywiLk?=
- =?us-ascii?Q?aOSr/VcF8jH7K1zhRWAGNeDezekNAV6lXDB6FtT3F+2aK6kxsyrSXmUoT0e0?=
- =?us-ascii?Q?99ELeDJVnZYQHRZl4x4tE7d2ZrsultT1p08q0wZeulEAgGyeOqTr19ljXSik?=
- =?us-ascii?Q?AH9123WM2/Yafq77Bb3MJqGPeNpWNpsaHAI8vZ6HcvsWoyUFOchSACyOWpHd?=
- =?us-ascii?Q?Bw1vJuIAJ5d/Ppk5uAXptn0T2Nxa00jmzMs5G2AHM3J92hebQQiOjamayG8k?=
- =?us-ascii?Q?KUAzkwm2xuh4kqlmIdOG089IGzOQSE/rYA4LS1BB/PML26kNB2fiBfn/Tvkl?=
- =?us-ascii?Q?kwYqDFwHL41FPgl9Neb/tKwEyAAcF1oPNlGNJ7V3tFr0al+CGYFvoSSPrgF+?=
- =?us-ascii?Q?K5QkCBUdjS1tlGcl+QNhJnPDObc9u7Jrr7W2708D3cd6YcgJf/LiYaFHYdEd?=
- =?us-ascii?Q?bGnpJgqDCS04bJ53t5Ky/84mhRTygfVLM5BCz/iINqAFJI8L/rP4lvH6UnHF?=
- =?us-ascii?Q?qoNimg4qDmhn1dutJeV6cS9rSD0BHgTO5GCEwaqA08grijAeIUpi7eA3NxIW?=
- =?us-ascii?Q?iCvRNnmZFSCGNNDfjq54yY+brEnOBmdHapSgHtNuXgc876N1D+97qJb/KH0O?=
- =?us-ascii?Q?qXNmeEV3GYzsk46zy4kNNwgSRPph0ipYpR0uWv1nqwGFIUAYOG1BzKt5sSlL?=
- =?us-ascii?Q?KuPmmGN7fFxOh0EuZdJxrkkcyQ3riB1uDF5p4p98wBCp4BhKNfnTObMG6eWB?=
- =?us-ascii?Q?6Y0mD1JnExWuEADzGX6ZoFbyqXxa9eBVgdJs3aE6f3ZHk3EqAiPS0HeZZbIr?=
- =?us-ascii?Q?A+wqL742Fz+AdROGlD7JlydehtOoEC9pqqlFzoOBggI3Z942xezRrcnXaPT5?=
- =?us-ascii?Q?3ZNx4/fGQh2eHvEzBz3b3H4A7r0n4WWiaQvKaR3DYbm7au59tDWtPvQ1E0A0?=
- =?us-ascii?Q?/j3TLIN94E/JyYXI7relhow7otvt2R7DMcSFKEX7aTLtw8JsTJMERW1LcAsw?=
- =?us-ascii?Q?XfSW4prpvTC71FbxeZJxIR8Xrh8i/2mS+u8R2Jk5NBA3h7IxTMu3EK11ztpb?=
- =?us-ascii?Q?ktHiILTv0XCBQ3XUyMuE9iE7wTmJl+I9A6piSQH46o4jOzFzpEBtQk5mPl5y?=
- =?us-ascii?Q?BS+JIrq+mfc03EPyk5dnw3oY1XFSzG1SENaQ3SOU7me5oGHMDCSG87dpkkoU?=
- =?us-ascii?Q?cEc0vGY296uOeQAZftkt8tfLqU5xvvLCnY6wc8rI561yuwz0H0A+pR0PQjXD?=
- =?us-ascii?Q?7x9tzipZ1R+8Cfw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3832.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ks7kFUwlux+TuNn4GWFScRPzfvRSH35jEmrhkd1SE3c1bFjuq2p62AqmBncY?=
- =?us-ascii?Q?XfW/bIT+rl358eYxy1NVaGaioHvHxRCBMm3yye4udtaYSjLSx/9eNeXsc0qI?=
- =?us-ascii?Q?xaiyFSWQE2uBw62XlOJK2/ypRNjUMxwG6IJuUkrdkvNEr01t5rAXQD5dOTrZ?=
- =?us-ascii?Q?vvXHE8LXcUELJMm2Z8VjEcykbHZ53RQBVsYXUkabSBa24z0/LkXprpDay0OA?=
- =?us-ascii?Q?kibnRw5r04WgFJMnSzNfC0WEp4EYLtAyVC+qAhhowcI9Wzc5uNqwHvdbWX8C?=
- =?us-ascii?Q?QB8KyXLYS27SCUDe+AUMUHIvC+1tzOwbM4YMZfajrZOF1bt7ceSIiTlhQHH5?=
- =?us-ascii?Q?aOFmklBk2GRmiYRihmlpOIDF+fKL8NxwHLRSsuNwNi0yWP6Qvawyb95znipO?=
- =?us-ascii?Q?vlx/LeINXy/1AUAW2YGV7pmNl58MPgK0q5s6t5LNoeWFcdPwjVLsX8JasOze?=
- =?us-ascii?Q?ETTaScQ51hGb8o/b103m3sT9YVSM9wfPjcqrJK+YwAbjgEcmvHte8wh/Gk2E?=
- =?us-ascii?Q?tUwpMMmqMR9t1dvMyfkQBJWiePjgzmG/o239T0rLtUEo31V5UZrsgOZg0DEx?=
- =?us-ascii?Q?fJ9CK7rr7LY4aK4IsDbjUsmhipEsAfFbaj4FOunjWSSnDkWdAeoAqukZYW6m?=
- =?us-ascii?Q?uC5MXUwrXg6o4oWpQKI4P/8EzJFnGzt2LrHQPp12bTWGvEktDYvnpZ1Mk96P?=
- =?us-ascii?Q?5zn5priZeb90vEPy/vOfNVvFnVYCfvGVeaDz8uAiLMsQxbbhRyE9QpLeAqOn?=
- =?us-ascii?Q?edz3KK4d9PkNpmlPGloWWxrIUYmNou5NLt3ADfE9xRzFVPt1uTStZM4ZdP8E?=
- =?us-ascii?Q?ZKYmYsAxwTJqWk4saIrEAQhHxkDYYRQmTelnIyIEIk9W/ZJuivzgw5rUexki?=
- =?us-ascii?Q?vqolQl7s+ZBWyJ/x8rxro4Op7A9NxNqhjhWDuRJdU9lBsagELNAOR1/+WTQM?=
- =?us-ascii?Q?dpyScuEVddH01tnM+HkFv19dKhK7eFfdXe5cLK5Z/YtWIfImjbQOYshAIr8D?=
- =?us-ascii?Q?3L0LKWvAGMB7jOO377EbE78PRujzAxT4ci3bLXT4FmY1Qh7fg4YVFjYWwZBH?=
- =?us-ascii?Q?GmMO5Qhzjvacs4U6KpOSW37EYqtLlMFJljBs/5YVttQVO+HQpAGVarjs9w8A?=
- =?us-ascii?Q?BRyCgrw2oa9D+K7a3aB2VB3auYuWNdwnzM9K89jAV7LLizeBrymLKYc48n0V?=
- =?us-ascii?Q?BcWvy/+SSu4zn4MYT6XUaRq95MwFIAd0Z0pfsUqUpiiLvJWdqrpwc/LfEoN7?=
- =?us-ascii?Q?/8rtgsBt8coffXWdsX7znO/1G+z2D8cJT2dOpFjA7Du+XyifBkCyminVDxLF?=
- =?us-ascii?Q?SCbZkM4OSICDoILYUPMSP45nKFTHVWYtPqbgMr6E3EICI3WpL3mTUkm2jrf1?=
- =?us-ascii?Q?/kc9Nfq3DjsAzlFOtNxix6xVwAJePCp7f98EA1AEgZWf5b3//XzNs4XdIwqt?=
- =?us-ascii?Q?dSzqe/hl6rXAHNB62tLtjEktiqVpsBc6bH7mzAw/AwavytI8ol8GfilimrPE?=
- =?us-ascii?Q?m0rMObqrI3apU3AuWjypzWMSyA/MJLS6867ijIx24iMw5zpc/vmU5M7y2mhR?=
- =?us-ascii?Q?XziJqzNhH4zdAogqVdokxnokn0BCJMKYBcBlvnJh?=
-X-OriginatorOrg: eng.windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b02a9876-0941-47e9-424a-08dd8ea37e47
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3832.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 02:45:00.9290
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: db4B/uei7o+9nYLz1SyiGCY8PxSQQ5Uf57dE6R3j0OYUwwe1ai+4uGljxGpTwDwvQP5J2xHpkLimVHKPwY9nPA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4945
-X-Authority-Analysis: v=2.4 cv=NIjV+16g c=1 sm=1 tr=0 ts=681d6c37 cx=c_pps a=O5U4z+bWMBJw47+h9fOlNw==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=dt9VzEwgFbYA:10
- a=VwQbUJbxAAAA:8 a=Ikd4Dj_1AAAA:8 a=pGLkceISAAAA:8 a=t7CeM3EgAAAA:8 a=LYueSWIluiJ2wQmGpWgA:9 a=FdTzh2GWekK77mhwV6Dw:22 a=Omh45SbU8xzqK50xPoZQ:22
-X-Proofpoint-GUID: wS2kOKKt-Rmz3QQkcue4P1SnM5T9U1yH
-X-Proofpoint-ORIG-GUID: wS2kOKKt-Rmz3QQkcue4P1SnM5T9U1yH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDAyNSBTYWx0ZWRfX8XohCODCv/Mn Gr2SY6Bdol4b31GBlb7XBtIXl8jOY9whHGKtru7915QNN1iIufF5qhMFWHo3G2lw6p9EvZDGP9r NCzkAYU8s6OWvTwiALc4fsFhAvIu9cinKXlaqJvCUu6EKEnHTyurTRHSYEacBnkS3FllpOwkBAB
- nQkZ6zMoehgLDuwznGCOV7Sl0lkIJQ+dM1I2f/oxs2dRvLMGAzM3+jY/g657Kbp1iJe3vwlS6Yy 5Msx/aX0MvZ1UVInQDPBSAsgLWdwINDSjmVmIAZC6nDADk053qqa7/uFZWq0wo1X57hiFCFtju0 Awg5dzKFx743Ms+dnPqfDDih4woN5Hk0MrOYvsIMYl2sUtL3IvyS39itT2N5vRvjziyUUGYI76p
- c4sCC+jus07lWXK4XJ7gzGFoNXF+PLNXn2VRiLw9rQEw0hXXwO0iAHpM5nDQYnZMDs16ipKJ
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_01,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 bulkscore=0 mlxscore=0 spamscore=0 malwarescore=0
- clxscore=1011 adultscore=0 impostorscore=0 mlxlogscore=999 phishscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
- definitions=main-2505090025
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Patrisious Haddad <phaddad@nvidia.com>
+On Thu, 8 May 2025 18:55:30 -0700, Fan Wu <wufan@kernel.org> wrote:
+> On Thu, May 8, 2025 at 7:11 AM <alexjlzheng@gmail.com> wrote:
+> >
+> > From: Jinliang Zheng <alexjlzheng@tencent.com>
+> >
+> > Consider the following execution flow:
+> >
+> >   Thread 0: securityfs_create_dir("A")
+> >   Thread 1: cd /sys/kernel/security/A           <- we hold 'A'
+> >   Thread 0: securityfs_remove(dentry)           <- 'A' don't go away
+> >   Thread 0: securityfs_create_dir("A")          <- Failed: File exists!
+> >
+> > Although the LSM module will not be dynamically added or deleted after
+> > the kernel is started, it may dynamically add or delete pseudo files
+> > for status export or function configuration in userspace according to
+> > different status, which we are not prohibited from doing so.
+> >
+> > In addition, securityfs_recursive_remove() avoids this problem by calling
+> > __d_drop() directly. As a non-recursive version, it is somewhat strange
+> > that securityfs_remove() does not clean up the deleted dentry.
+> >
+> > Fix this by adding d_delete() in securityfs_remove().
+> >
+> > Fixes: b67dbf9d4c198 ("[PATCH] add securityfs for all LSMs to use")
+> > Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
+> > ---
+> > changelog:
+> > v3: Modify the commit message to avoid readers mistakenly thinking that the LSM is being dynamically loaded
+> > v2: https://lore.kernel.org/all/20250507111204.2585739-1-alexjlzheng@tencent.com/
+> > v1: https://lore.kernel.org/all/20250425092548.6828-1-alexjlzheng@tencent.com/
+> > ---
+> >  security/inode.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/security/inode.c b/security/inode.c
+> > index da3ab44c8e57..d99baf26350a 100644
+> > --- a/security/inode.c
+> > +++ b/security/inode.c
+> > @@ -306,6 +306,7 @@ void securityfs_remove(struct dentry *dentry)
+> >                         simple_rmdir(dir, dentry);
+> >                 else
+> >                         simple_unlink(dir, dentry);
+> > +               d_delete(dentry);
+> >                 dput(dentry);
+> >         }
+> >         inode_unlock(dir);
+> > --
+> > 2.49.0
+> >
+> >
+> 
+> Since this could impact efi_secret_unlink(), I would suggest adding linux-efi.
 
-commit 8d037973d48c026224ab285e6a06985ccac6f7bf upstream.
+Thank you for your reply. :)
 
-Refactor rdma_bind_addr function so that it doesn't require that the
-cma destination address be changed before calling it.
+Did you mean cc to linux-efi?
 
-So now it will update the destination address internally only when it is
-really needed and after passing all the required checks.
+thanks,
+Jinliang Zheng.
 
-Which in turn results in a cleaner and more sensible call and error
-handling flows for the functions that call it directly or indirectly.
-
-Signed-off-by: Patrisious Haddad <phaddad@nvidia.com>
-Reported-by: Wei Chen <harperchen1110@gmail.com>
-Reviewed-by: Mark Zhang <markzhang@nvidia.com>
-Link: https://lore.kernel.org/r/3d0e9a2fd62bc10ba02fed1c7c48a48638952320.1672819273.git.leonro@nvidia.com
-Signed-off-by: Leon Romanovsky <leon@kernel.org>
-Signed-off-by: Zhi Yang <Zhi.Yang@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
-Build test passed.
----
- drivers/infiniband/core/cma.c | 253 +++++++++++++++++-----------------
- 1 file changed, 130 insertions(+), 123 deletions(-)
-
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index a204c738e9cf..e8dfce17a5e5 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -3364,121 +3364,6 @@ static int cma_resolve_ib_addr(struct rdma_id_private *id_priv)
- 	return ret;
- }
- 
--static int cma_bind_addr(struct rdma_cm_id *id, struct sockaddr *src_addr,
--			 const struct sockaddr *dst_addr)
--{
--	struct sockaddr_storage zero_sock = {};
--
--	if (src_addr && src_addr->sa_family)
--		return rdma_bind_addr(id, src_addr);
--
--	/*
--	 * When the src_addr is not specified, automatically supply an any addr
--	 */
--	zero_sock.ss_family = dst_addr->sa_family;
--	if (IS_ENABLED(CONFIG_IPV6) && dst_addr->sa_family == AF_INET6) {
--		struct sockaddr_in6 *src_addr6 =
--			(struct sockaddr_in6 *)&zero_sock;
--		struct sockaddr_in6 *dst_addr6 =
--			(struct sockaddr_in6 *)dst_addr;
--
--		src_addr6->sin6_scope_id = dst_addr6->sin6_scope_id;
--		if (ipv6_addr_type(&dst_addr6->sin6_addr) & IPV6_ADDR_LINKLOCAL)
--			id->route.addr.dev_addr.bound_dev_if =
--				dst_addr6->sin6_scope_id;
--	} else if (dst_addr->sa_family == AF_IB) {
--		((struct sockaddr_ib *)&zero_sock)->sib_pkey =
--			((struct sockaddr_ib *)dst_addr)->sib_pkey;
--	}
--	return rdma_bind_addr(id, (struct sockaddr *)&zero_sock);
--}
--
--/*
-- * If required, resolve the source address for bind and leave the id_priv in
-- * state RDMA_CM_ADDR_BOUND. This oddly uses the state to determine the prior
-- * calls made by ULP, a previously bound ID will not be re-bound and src_addr is
-- * ignored.
-- */
--static int resolve_prepare_src(struct rdma_id_private *id_priv,
--			       struct sockaddr *src_addr,
--			       const struct sockaddr *dst_addr)
--{
--	int ret;
--
--	memcpy(cma_dst_addr(id_priv), dst_addr, rdma_addr_size(dst_addr));
--	if (!cma_comp_exch(id_priv, RDMA_CM_ADDR_BOUND, RDMA_CM_ADDR_QUERY)) {
--		/* For a well behaved ULP state will be RDMA_CM_IDLE */
--		ret = cma_bind_addr(&id_priv->id, src_addr, dst_addr);
--		if (ret)
--			goto err_dst;
--		if (WARN_ON(!cma_comp_exch(id_priv, RDMA_CM_ADDR_BOUND,
--					   RDMA_CM_ADDR_QUERY))) {
--			ret = -EINVAL;
--			goto err_dst;
--		}
--	}
--
--	if (cma_family(id_priv) != dst_addr->sa_family) {
--		ret = -EINVAL;
--		goto err_state;
--	}
--	return 0;
--
--err_state:
--	cma_comp_exch(id_priv, RDMA_CM_ADDR_QUERY, RDMA_CM_ADDR_BOUND);
--err_dst:
--	memset(cma_dst_addr(id_priv), 0, rdma_addr_size(dst_addr));
--	return ret;
--}
--
--int rdma_resolve_addr(struct rdma_cm_id *id, struct sockaddr *src_addr,
--		      const struct sockaddr *dst_addr, unsigned long timeout_ms)
--{
--	struct rdma_id_private *id_priv =
--		container_of(id, struct rdma_id_private, id);
--	int ret;
--
--	ret = resolve_prepare_src(id_priv, src_addr, dst_addr);
--	if (ret)
--		return ret;
--
--	if (cma_any_addr(dst_addr)) {
--		ret = cma_resolve_loopback(id_priv);
--	} else {
--		if (dst_addr->sa_family == AF_IB) {
--			ret = cma_resolve_ib_addr(id_priv);
--		} else {
--			/*
--			 * The FSM can return back to RDMA_CM_ADDR_BOUND after
--			 * rdma_resolve_ip() is called, eg through the error
--			 * path in addr_handler(). If this happens the existing
--			 * request must be canceled before issuing a new one.
--			 * Since canceling a request is a bit slow and this
--			 * oddball path is rare, keep track once a request has
--			 * been issued. The track turns out to be a permanent
--			 * state since this is the only cancel as it is
--			 * immediately before rdma_resolve_ip().
--			 */
--			if (id_priv->used_resolve_ip)
--				rdma_addr_cancel(&id->route.addr.dev_addr);
--			else
--				id_priv->used_resolve_ip = 1;
--			ret = rdma_resolve_ip(cma_src_addr(id_priv), dst_addr,
--					      &id->route.addr.dev_addr,
--					      timeout_ms, addr_handler,
--					      false, id_priv);
--		}
--	}
--	if (ret)
--		goto err;
--
--	return 0;
--err:
--	cma_comp_exch(id_priv, RDMA_CM_ADDR_QUERY, RDMA_CM_ADDR_BOUND);
--	return ret;
--}
--EXPORT_SYMBOL(rdma_resolve_addr);
--
- int rdma_set_reuseaddr(struct rdma_cm_id *id, int reuse)
- {
- 	struct rdma_id_private *id_priv;
-@@ -3881,27 +3766,26 @@ int rdma_listen(struct rdma_cm_id *id, int backlog)
- }
- EXPORT_SYMBOL(rdma_listen);
- 
--int rdma_bind_addr(struct rdma_cm_id *id, struct sockaddr *addr)
-+static int rdma_bind_addr_dst(struct rdma_id_private *id_priv,
-+			      struct sockaddr *addr, const struct sockaddr *daddr)
- {
--	struct rdma_id_private *id_priv;
-+	struct sockaddr *id_daddr;
- 	int ret;
--	struct sockaddr  *daddr;
- 
- 	if (addr->sa_family != AF_INET && addr->sa_family != AF_INET6 &&
- 	    addr->sa_family != AF_IB)
- 		return -EAFNOSUPPORT;
- 
--	id_priv = container_of(id, struct rdma_id_private, id);
- 	if (!cma_comp_exch(id_priv, RDMA_CM_IDLE, RDMA_CM_ADDR_BOUND))
- 		return -EINVAL;
- 
--	ret = cma_check_linklocal(&id->route.addr.dev_addr, addr);
-+	ret = cma_check_linklocal(&id_priv->id.route.addr.dev_addr, addr);
- 	if (ret)
- 		goto err1;
- 
- 	memcpy(cma_src_addr(id_priv), addr, rdma_addr_size(addr));
- 	if (!cma_any_addr(addr)) {
--		ret = cma_translate_addr(addr, &id->route.addr.dev_addr);
-+		ret = cma_translate_addr(addr, &id_priv->id.route.addr.dev_addr);
- 		if (ret)
- 			goto err1;
- 
-@@ -3921,8 +3805,10 @@ int rdma_bind_addr(struct rdma_cm_id *id, struct sockaddr *addr)
- 		}
- #endif
- 	}
--	daddr = cma_dst_addr(id_priv);
--	daddr->sa_family = addr->sa_family;
-+	id_daddr = cma_dst_addr(id_priv);
-+	if (daddr != id_daddr)
-+		memcpy(id_daddr, daddr, rdma_addr_size(addr));
-+	id_daddr->sa_family = addr->sa_family;
- 
- 	ret = cma_get_port(id_priv);
- 	if (ret)
-@@ -3938,6 +3824,127 @@ int rdma_bind_addr(struct rdma_cm_id *id, struct sockaddr *addr)
- 	cma_comp_exch(id_priv, RDMA_CM_ADDR_BOUND, RDMA_CM_IDLE);
- 	return ret;
- }
-+
-+static int cma_bind_addr(struct rdma_cm_id *id, struct sockaddr *src_addr,
-+			 const struct sockaddr *dst_addr)
-+{
-+	struct rdma_id_private *id_priv =
-+		container_of(id, struct rdma_id_private, id);
-+	struct sockaddr_storage zero_sock = {};
-+
-+	if (src_addr && src_addr->sa_family)
-+		return rdma_bind_addr_dst(id_priv, src_addr, dst_addr);
-+
-+	/*
-+	 * When the src_addr is not specified, automatically supply an any addr
-+	 */
-+	zero_sock.ss_family = dst_addr->sa_family;
-+	if (IS_ENABLED(CONFIG_IPV6) && dst_addr->sa_family == AF_INET6) {
-+		struct sockaddr_in6 *src_addr6 =
-+			(struct sockaddr_in6 *)&zero_sock;
-+		struct sockaddr_in6 *dst_addr6 =
-+			(struct sockaddr_in6 *)dst_addr;
-+
-+		src_addr6->sin6_scope_id = dst_addr6->sin6_scope_id;
-+		if (ipv6_addr_type(&dst_addr6->sin6_addr) & IPV6_ADDR_LINKLOCAL)
-+			id->route.addr.dev_addr.bound_dev_if =
-+				dst_addr6->sin6_scope_id;
-+	} else if (dst_addr->sa_family == AF_IB) {
-+		((struct sockaddr_ib *)&zero_sock)->sib_pkey =
-+			((struct sockaddr_ib *)dst_addr)->sib_pkey;
-+	}
-+	return rdma_bind_addr_dst(id_priv, (struct sockaddr *)&zero_sock, dst_addr);
-+}
-+
-+/*
-+ * If required, resolve the source address for bind and leave the id_priv in
-+ * state RDMA_CM_ADDR_BOUND. This oddly uses the state to determine the prior
-+ * calls made by ULP, a previously bound ID will not be re-bound and src_addr is
-+ * ignored.
-+ */
-+static int resolve_prepare_src(struct rdma_id_private *id_priv,
-+			       struct sockaddr *src_addr,
-+			       const struct sockaddr *dst_addr)
-+{
-+	int ret;
-+
-+	if (!cma_comp_exch(id_priv, RDMA_CM_ADDR_BOUND, RDMA_CM_ADDR_QUERY)) {
-+		/* For a well behaved ULP state will be RDMA_CM_IDLE */
-+		ret = cma_bind_addr(&id_priv->id, src_addr, dst_addr);
-+		if (ret)
-+			return ret;
-+		if (WARN_ON(!cma_comp_exch(id_priv, RDMA_CM_ADDR_BOUND,
-+					   RDMA_CM_ADDR_QUERY)))
-+			return -EINVAL;
-+
-+	}
-+
-+	if (cma_family(id_priv) != dst_addr->sa_family) {
-+		ret = -EINVAL;
-+		goto err_state;
-+	}
-+	return 0;
-+
-+err_state:
-+	cma_comp_exch(id_priv, RDMA_CM_ADDR_QUERY, RDMA_CM_ADDR_BOUND);
-+	return ret;
-+}
-+
-+int rdma_resolve_addr(struct rdma_cm_id *id, struct sockaddr *src_addr,
-+		      const struct sockaddr *dst_addr, unsigned long timeout_ms)
-+{
-+	struct rdma_id_private *id_priv =
-+		container_of(id, struct rdma_id_private, id);
-+	int ret;
-+
-+	ret = resolve_prepare_src(id_priv, src_addr, dst_addr);
-+	if (ret)
-+		return ret;
-+
-+	if (cma_any_addr(dst_addr)) {
-+		ret = cma_resolve_loopback(id_priv);
-+	} else {
-+		if (dst_addr->sa_family == AF_IB) {
-+			ret = cma_resolve_ib_addr(id_priv);
-+		} else {
-+			/*
-+			 * The FSM can return back to RDMA_CM_ADDR_BOUND after
-+			 * rdma_resolve_ip() is called, eg through the error
-+			 * path in addr_handler(). If this happens the existing
-+			 * request must be canceled before issuing a new one.
-+			 * Since canceling a request is a bit slow and this
-+			 * oddball path is rare, keep track once a request has
-+			 * been issued. The track turns out to be a permanent
-+			 * state since this is the only cancel as it is
-+			 * immediately before rdma_resolve_ip().
-+			 */
-+			if (id_priv->used_resolve_ip)
-+				rdma_addr_cancel(&id->route.addr.dev_addr);
-+			else
-+				id_priv->used_resolve_ip = 1;
-+			ret = rdma_resolve_ip(cma_src_addr(id_priv), dst_addr,
-+					      &id->route.addr.dev_addr,
-+					      timeout_ms, addr_handler,
-+					      false, id_priv);
-+		}
-+	}
-+	if (ret)
-+		goto err;
-+
-+	return 0;
-+err:
-+	cma_comp_exch(id_priv, RDMA_CM_ADDR_QUERY, RDMA_CM_ADDR_BOUND);
-+	return ret;
-+}
-+EXPORT_SYMBOL(rdma_resolve_addr);
-+
-+int rdma_bind_addr(struct rdma_cm_id *id, struct sockaddr *addr)
-+{
-+	struct rdma_id_private *id_priv =
-+		container_of(id, struct rdma_id_private, id);
-+
-+	return rdma_bind_addr_dst(id_priv, addr, cma_dst_addr(id_priv));
-+}
- EXPORT_SYMBOL(rdma_bind_addr);
- 
- static int cma_format_hdr(void *hdr, struct rdma_id_private *id_priv)
--- 
-2.34.1
-
+> 
+> -Fan
