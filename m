@@ -1,106 +1,125 @@
-Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E82F1FF5E3
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 05:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BFC255F4B;
+	Fri,  9 May 2025 05:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746768781; cv=none; b=QTF87CYho6JjTYy7vdyNxUnHM9zT4+lY2ImeYvBVAjSWjFYJ+SFCyQPMIhgjFwrZQukdlF9sPWD0mzLHfMLEUVfTPQc/1d6AvSoNLKaoABZMF8jV06RRS//en1ArzbfYUfVIlc11SQArqGGDX6Mf9Iv4s2HGCZ/bAnfyFi0juBo=
+	t=1746768802; cv=none; b=jZFw/B4fYPRS7+9Cn+hXAm2O31kYRxRiOpWKFcjY5UCe98p7dhm/Oir2U8KrzTDOTZarUm90/Cw62vwCbWgtJKuYHDfT28RWYI/tmh9Y2yQpfk8JJSLe0XyC7LxZ3GNLhykzZ/vBxWF0OqJiZFqNkfettjZMvUdHNQErZmHGBjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746768781; c=relaxed/simple;
-	bh=ZUFSePVyuwdotfq7VANW0TUfxn/fCucz8B+J1njN1q8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LTYxperv/Q0qTnRcZ+mSeIQG4Vu1fNZdBKot3VcTEWtWixCRYZhvA4PVzdo4VAlvBiKJYej7BBoVFmd/F692MM/RCI/mjzfXhPy45pzqhfbMyb0D9uTAXA/cy/5qPpqEbmmPqcg5LTY7FuagDbZRcKix0zOiX7/+OZs/fC4tRSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=E1qhu1Ci; arc=none smtp.client-ip=209.85.160.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1746768802; c=relaxed/simple;
+	bh=lBRFBwR/1VtW0uBXyryFcybhU0Cc0BFhJXuoEgbaaZ4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=iPjsFdnQN3GLUs+ddbpniZOsCh8F+2jPh80kEUmsaPqTphq2b86SfltHLIk1SNfAai3XtcuEJok8hb2f+O0fo0Q91O6HKUQMxf9EYrbxDdmxxLyo4lzmi1onWiW/dpiwWDZGAHeuiYZxfw3qxWf4Ga7vbU45/cpzYEiRd4LopO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=R6sjU6tF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YXvGc1pL; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="E1qhu1Ci"
-Received: by mail-qt1-f193.google.com with SMTP id d75a77b69052e-476b4c9faa2so23112171cf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 May 2025 22:32:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1746768778; x=1747373578; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=feKbP8aErbrH7jN/K2XTKYfx7P/IHEPUq/2+MdM9hjM=;
-        b=E1qhu1CiTfgkjG0YvfgJEV2W/76+qQiaRL1Go8l3Av8Oh499jFDHihLbAmxVyMcEZh
-         9eh0YoD3CPbGcWXFbTy3dihEbVS4+R9dPPpfrKtULYnh1nlpbqKI8FKaVQ8X1WbgxHJj
-         HNY4gbu6sSzXqHMQz0ZonMJ/lHIGe9RUF8ir6OTaHo6UTSBiJsoKyASg0PNErZcARnBo
-         4h6UwXAlsoePShfMhvKyRM7X/J+bHRDR9vvhZKHAlYX9PSOReYmh9OjJ0QLjiaJoNUoP
-         AJZ5QHsL2jnicybi9OfhR4RYbEYuDm6K2en3PS3PRYRRI2JlLXUfrQeyYpmpggtHvRYu
-         3kXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746768778; x=1747373578;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=feKbP8aErbrH7jN/K2XTKYfx7P/IHEPUq/2+MdM9hjM=;
-        b=o0sLdcEkNpkLmqM6T5ZqgDZJUDrqpNsUbC1eMTOdvXt19xeReqiuoou/fKuOr4PWfh
-         1G2b/WLHsJAHhB05izZMo1LZBuB9xyMXupnLoM0IQobv7U5bBy7KH5cX4BaevkcIan7U
-         gBHf7MzHR/0X8SeyecfLsBN9g+yrlBthMv1EZKl6FLOgZl5f9xNNCnAQtpTBwShkPlUK
-         57zukbV6bHoBaEoRiN084Aj/8F/QphCZs0dQaEOwk54q0BGjoPsZuU86MuyECafWarPb
-         Uw4Uv1+gLeshcWXxWU7b7qaIG7kY4oa7yBj7uxphvyOnQr3vSaWETo/D7Slag3RCdHY3
-         sn6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWQB7dzQzrltXTzXMXInj8rzmbFxOmdFkMWK6s2SbWV3W727MWKpDTOUVpITret3kggavB6KQKfnk5HBGo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yymhpm7pA8BlhmWDdySdFFL9UMWGRbhJ+cViGkwweUsJjmC6UNs
-	IPE8JHGtlRQ3tbGpbM2rMsGHuGnJqW5EbS75YbEkHCh+zVBcYQuZsoUh7fJ2sto=
-X-Gm-Gg: ASbGncvg7BFcpcUB4w0LYsg6mc4TNR6Mgxp0JfbB9bbLpplghKFm+NTbpdVHrN5ipGQ
-	ZXUTVNeQUalyuscp3k7zZ+zz1YBMLhS40hwc8HNXI7B8HGMZ+Ejm0ZvgrrQ4o3Jtw9RZtOtZLgA
-	49X/lwCQfWEaKiPSxLNJ0SrVpylAqQWUIYGGmICniiJR5nqOPVu+A5GuOd+STkid6Huo/4Pu85q
-	0Zfpjt9fQo0LM9MoI2+7qIg0+wwi8WLP7ciEIFFCKydiZ8Zcv3E2w0qEuDIqUAwOZpL1P3IWGBT
-	njzN7qb/yqpD9O5UYupjLN5CB1TTFQqS4GXpDjw=
-X-Google-Smtp-Source: AGHT+IFgsSVlpT6UPcXtr93l/60HISYB878/SWkwE6utdKEcy6nslIq9Me1Yp82Eezu0HXCwSbRLtw==
-X-Received: by 2002:a05:622a:56:b0:491:1874:bd9d with SMTP id d75a77b69052e-4945275e65dmr31161201cf.28.1746768777757;
-        Thu, 08 May 2025 22:32:57 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4945259e88esm7919651cf.74.2025.05.08.22.32.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 22:32:56 -0700 (PDT)
-Date: Fri, 9 May 2025 01:32:48 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Hocko <mhocko@kernel.org>, Yu Zhao <yuzhao@google.com>,
-	Qi Zheng <zhengqi.arch@bytedance.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] MAINTAINERS: add mm reclaim section
-Message-ID: <20250509053248.GA606476@cmpxchg.org>
-References: <20250508173735.173502-1-lorenzo.stoakes@oracle.com>
- <mhnz33dwwd3npj2re7dn7invntzk6dk7u75ue2pzg35vdappjd@tgqlccmoydar>
- <7d214c08-56ef-45c7-9ba3-18d7e4691efd@redhat.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="R6sjU6tF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YXvGc1pL"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 68F9513801A1;
+	Fri,  9 May 2025 01:33:17 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Fri, 09 May 2025 01:33:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1746768797;
+	 x=1746855197; bh=t2YxXFKHFDywTnpUVPJ2WSZTl8hvqzllpyuVsk0jAuc=; b=
+	R6sjU6tFTpOfJG4k3gLp1wcTPGbj18BrjUfj1fIabbdxBRuO0oX+dTTGeJv6IVir
+	jZEk9BeeqVnaE80M69zNZRKn+mxIIEU1gxFxax3mxf7slPp78Q9cDrBLwyfL/JC9
+	IfCF54uYZaXdZ2dRvz9/I7APa5SDxrqbatSqO0GdbEdIlDi/kCQQBt/fRedjpfvh
+	BfY9vmVBoEPi9kS4OVZXqwgSaMLQjQ+C7BnbLP2bbLpLNSW7pI0c/TTZ1ZF9OOGP
+	IEnWhLNpAxdwBcDtbkTcEcL+6VJXU8AlDdePk3syNygKpJZymoJMq64mfFqGI+Lu
+	fWbZ8SrGFNJv0LfH/pPgXQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746768797; x=
+	1746855197; bh=t2YxXFKHFDywTnpUVPJ2WSZTl8hvqzllpyuVsk0jAuc=; b=Y
+	XvGc1pLR5fFzN8xpl6qJ+RnAjHdnDrP8wQ+PQqfndcSLU2NYgrqTA1/IUQlkCZ/g
+	jB1bkLooScSswalrESzZsF72oiB+0tzePI2FyeUnkSyp3SSxtNGCd6OWVr8srVVg
+	LWT0Ek/OANNUXNOO26ArfOempMkSOWye2TOrcNJjTolyADzlcU6tkwvyB3PEz5bn
+	QX/bC7aubZdPvFOp9lWf5Jd4EOnrMwD5IxFoc/eQfOmWI/c1AgR+XIBwTnvdakyA
+	ylri/rV6xpx8dzy1HgSwBUmn4gn54NTkhDuKwUwqtMF4Ej8WcP2s5kczQUMjrQDc
+	pNRPp+isGW8u8ySCGTeuA==
+X-ME-Sender: <xms:nJMdaN1nkBySxnjS6RmPn6nI4BgVcb6BfVZ5L-EcWRPnJ4htar8D0Q>
+    <xme:nJMdaEHjfpS9fdjaxFH4wxOosm6W3uzJs9LQSlQ5RdtRw3iRhWrTEVq0JQRA3s0w1
+    zAeGImK1pbFegibzzA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledujeelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    vdekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegurghnihgvlhdrrghlmhgvih
+    gurgestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihl
+    lhdrtghhpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtoh
+    eprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopegrlhgvgidrghgrhihn
+    ohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrvgifjhgsrghllhgrnhgtvg
+    esghhmrghilhdrtghomhdprhgtphhtthhopegsohhquhhnrdhfvghnghesghhmrghilhdr
+    tghomhdprhgtphhtthhopehfuhhjihhtrgdrthhomhhonhhorhhisehgmhgrihhlrdgtoh
+    hmpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:nJMdaN6Afw_HKylIEZOLZXbXPZ73KMByF2kl6GM4PRgSP-Y5JVyQEg>
+    <xmx:nJMdaK2-nLwcpQYJoqLRN0mRVbxfbdQcp5INSrjavKi5cK22h9KZIw>
+    <xmx:nJMdaAFizCudYEYizsO_kAUifwWFZTj9cZ_YoHuCS263Tva0GUvUNQ>
+    <xmx:nJMdaL885f0IlJ_fIQgdr5wlXv-wnGAryqZ57BTtW2T4QIdzy_0lGg>
+    <xmx:nZMdaJEQnTgiXXTlR7IQZhL5iujo-h3-3TICG1ZaLIUMVjtBky07ppv0>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 256701C20068; Fri,  9 May 2025 01:33:16 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7d214c08-56ef-45c7-9ba3-18d7e4691efd@redhat.com>
+X-ThreadId: T9369d7ce4b07c959
+Date: Fri, 09 May 2025 07:32:55 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Andrew Ballance" <andrewjballance@gmail.com>,
+ "Danilo Krummrich" <dakr@kernel.org>, "Dave Airlie" <airlied@gmail.com>,
+ "Simona Vetter" <simona@ffwll.ch>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
+ "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, bhelgaas@google.com,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ "Raag Jadav" <raag.jadav@intel.com>,
+ "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>, me@kloenk.dev,
+ "FUJITA Tomonori" <fujita.tomonori@gmail.com>, daniel.almeida@collabora.com
+Cc: "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
+Message-Id: <99c535a7-a9fc-41a3-8cca-0a329fc68b8f@app.fastmail.com>
+In-Reply-To: <20250509031524.2604087-2-andrewjballance@gmail.com>
+References: <20250509031524.2604087-1-andrewjballance@gmail.com>
+ <20250509031524.2604087-2-andrewjballance@gmail.com>
+Subject: Re: [PATCH 01/11] rust: helpers: io: use macro to generate io accessor
+ functions
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 08, 2025 at 08:31:28PM +0200, David Hildenbrand wrote:
-> On 08.05.25 20:30, Shakeel Butt wrote:
-> > On Thu, May 08, 2025 at 06:37:35PM +0100, Lorenzo Stoakes wrote:
-> >> In furtherance of ongoing efforts to ensure people are aware of who
-> >> de-facto maintains/has an interest in specific parts of mm, as well trying
-> >> to avoid get_maintainers.pl listing only Andrew and the mailing list for mm
-> >> files - establish a reclaim memory management section and add relevant
-> >> maintainers/reviewers.
-> >>
-> >> This is a key part of memory management so sensibly deserves its own
-> >> section.
-> >>
-> >> This encompasses both 'classical' reclaim and MGLRU and thus reflects this
-> >> in the reviewers from both, as well as those who have contributed
-> >> specifically on the memcg side of things.
-> >>
-> >> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > 
-> > Seems fine to me, though I would put Johannes as M (if he is fine with
-> > it).
-> 
-> That would be lovely.
+On Fri, May 9, 2025, at 05:15, Andrew Ballance wrote:
+> +
+> +define_rust_mmio_read_helper(readb, u8);
+> +define_rust_mmio_read_helper(readw, u16);
+> +define_rust_mmio_read_helper(readl, u32);
 
-Thanks for the votes of confidence, I'd be happy to do that as well.
+This makes it harder to grep for the definitions when trying
+to follow the code flow. Can you find a way to have keep the actual
+function body in source form, using the name of the generated
+symbol?
+
+     Arnd
