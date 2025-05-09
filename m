@@ -1,55 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BB22918CF
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 13:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9F729186F;
+	Fri,  9 May 2025 13:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746798931; cv=none; b=KuF/FVjyaeqlDB1+mANahPw7FdXGJlhIuoTrQhgWB0h6NLFxgFKOwSZK+jkyiTszdrpu4G3vMwomDX5K8v4xuxDra8ejPr8i9xoMcs1uYC7q0NN8dNGsAIVIYMxHkJfr3H0lZrjwK0mw+vzT2+EiJJzV6wqSsJPN7Q+xIi333q4=
+	t=1746798980; cv=none; b=RjvMJ3JjROaiNjW75rlVMZnlE0gfgO5SQ6I7eitjDquBdeAlcGwP00z1gJlCJLM2jSxf1pjzaJVzoH81w9TF3TTtW7w8pCUOowMHVKYaWDczj7UlYtujOx30jzLZ6sXG8pzzk6HxbtHhJ0PNyRvo4UwKSgcGqyeXBzZ05Nea1mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746798931; c=relaxed/simple;
-	bh=fdEgs25vEPwqIgDrnCoFiHh3llkQsPglOvG51YbtKXY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fPKOXQC48UlOwbu0sxWn3mdbZh2ZVMKS2ihfW5WcmMQ8yeLx52mHSo6b0k1A4jLVZjMWc6wGSzP2PwwkKVVpnXgZppWfl+QMW03ePX+hlxL4BbN44fnbJYPGjL5z8zO+vlsdoeVEf2W/U5n8CHGgFeyIzfOL01DCy41iYFfNRqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXblmqsk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746798980; c=relaxed/simple;
+	bh=hIMRzoRgFA1ncjMEAInvuRl7VSB4VOXt18Z7eSkdTmE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=bElT5eH35ILh9AeP5GKGCu///fT0H1GRaq6TNxa6ZJC6JNXpIqvBQDDQkhwIccEMUWKhCYR4M4g+41QKq6mCcyjBTxkZQm8oyQwQ5UfRjblPsuCPgNZOSKuiWXRbj7UqxMsE+niSpa1VNPtJPx0Dbqc8c5+HZpRUr4nSBx0ulOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XJP79Ooa; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXblmqsk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E1F8C4CEE4;
-	Fri,  9 May 2025 13:55:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746798930;
-	bh=fdEgs25vEPwqIgDrnCoFiHh3llkQsPglOvG51YbtKXY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cXblmqskyFblffDqIbr+/c6MBW892Zb3wPl5bxT6As7LwCZajZNFcmDdRX6AHytbV
-	 9vSSZfFgRIncwSDa5ENlP0wUWnr6jeitGiM+cdStS8i4FeYEIkdumqDNadGj2jAvQi
-	 FiCz1fNrF8nj76CWna5vtebZntOjf9UvNF2A9XlkHiVXbYMF5Gb/cBOnGsZwnN23an
-	 ZVR8fF/T8Q3p612Q764Ux0CGVM1TeoVomSSmBboUmsRzjhlFWils6LnmXgXYEqEvId
-	 bY3sMHh6PwC5xvt00rjmMAmb5Ul1KI5TFvsLCNKWCu3tDUPP4dqEjgsb6RbsVp9VoV
-	 wepWy+8oo9MDw==
-From: Will Deacon <will@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	Ryan Roberts <ryan.roberts@arm.com>
-Cc: kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/11] Perf improvements for hugetlb and vmalloc on arm64
-Date: Fri,  9 May 2025 14:55:18 +0100
-Message-Id: <174679458910.1792901.13579160002600202326.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250422081822.1836315-1-ryan.roberts@arm.com>
-References: <20250422081822.1836315-1-ryan.roberts@arm.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XJP79Ooa"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A2B9043B6E;
+	Fri,  9 May 2025 13:56:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746798974;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/G3KqtxlSXfSfW8B3iRGOBOyEpiUlfaOey/qzmU2GWI=;
+	b=XJP79OoaYtWGeYCyQq8UQuCZNTeQVX73vAADasA41VYbHigaxR7osMt3JNRxwwdwd5Exvl
+	q140n8gI2lB5q1mxnUYzO0IO0cCsKzca2bWVDMYLgihiIb+cUitG6cxcLOQgMu/0hqUERA
+	ohl8Cond/+oHox8WV8gt6qq/eXi9YloPZFN3FWIsq5/ByiRQB5FO6l7cx/Xy9KBOCSvttl
+	rv3C29x//yLkKJrSFdVjfTqFP69z0JzkkcTZXYwWmAMaKsk+oOAV93YOEcRWSNXp/7ag4C
+	f8aj6fWKsFedKDSPWG33g3qEso6JGn4/KEmsOkvEpIV2GcA0O7637ejQ9xMgCA==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Date: Fri, 09 May 2025 15:53:27 +0200
+Subject: [PATCH v3 01/22] Revert "drm/exynos: mic: convert to
+ devm_drm_bridge_alloc() API"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,53 +41,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250509-drm-bridge-convert-to-alloc-api-v3-1-b8bc1f16d7aa@bootlin.com>
+References: <20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com>
+In-Reply-To: <20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Douglas Anderson <dianders@chromium.org>, 
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, 
+ Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
+ Hui Pu <Hui.Pu@gehealthcare.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+ Louis Chauvet <louis.chauvet@bootlin.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, Inki Dae <inki.dae@samsung.com>, 
+ Kyungmin Park <kyungmin.park@samsung.com>, 
+ Seung-Woo Kim <sw0312.kim@samsung.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvjeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdduudekngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeggedprhgtphhtthhopehjohhnrghssehkfihisghoohdrshgvpdhrtghpthhtohepkhihuhhnghhmihhnrdhprghrkhesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhto
+ hepihhmgieslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhmshhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtoheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Tue, 22 Apr 2025 09:18:08 +0100, Ryan Roberts wrote:
-> This is v4 of a series to improve performance for hugetlb and vmalloc on arm64.
-> Although some of these patches are core-mm, advice from Andrew was to go via the
-> arm64 tree. All patches are now acked/reviewed by relevant maintainers so I
-> believe this should be good-to-go.
-> 
-> The 2 key performance improvements are 1) enabling the use of contpte-mapped
-> blocks in the vmalloc space when appropriate (which reduces TLB pressure). There
-> were already hooks for this (used by powerpc) but they required some tidying and
-> extending for arm64. And 2) batching up barriers when modifying the vmalloc
-> address space for upto 30% reduction in time taken in vmalloc().
-> 
-> [...]
+This reverts commit 3be618fab0e31b086cd6456280293119bb20fd41.
 
-Sorry for the delay in getting to this series, it all looks good.
+This patch has been applied by mistake without needed review/ack by
+maintainers.
 
-Applied to arm64 (for-next/mm), thanks!
+---
 
-[01/11] arm64: hugetlb: Cleanup huge_pte size discovery mechanisms
-        https://git.kernel.org/arm64/c/29cb80519689
-[02/11] arm64: hugetlb: Refine tlb maintenance scope
-        https://git.kernel.org/arm64/c/5b3f8917644e
-[03/11] mm/page_table_check: Batch-check pmds/puds just like ptes
-        https://git.kernel.org/arm64/c/91e40668e70a
-[04/11] arm64/mm: Refactor __set_ptes() and __ptep_get_and_clear()
-        https://git.kernel.org/arm64/c/ef493d234362
-[05/11] arm64: hugetlb: Use __set_ptes_anysz() and __ptep_get_and_clear_anysz()
-        https://git.kernel.org/arm64/c/a899b7d0673c
-[06/11] arm64/mm: Hoist barriers out of set_ptes_anysz() loop
-        https://git.kernel.org/arm64/c/f89b399e8d6e
-[07/11] mm/vmalloc: Warn on improper use of vunmap_range()
-        https://git.kernel.org/arm64/c/61ef8ddaa35e
-[08/11] mm/vmalloc: Gracefully unmap huge ptes
-        https://git.kernel.org/arm64/c/2fba13371fe8
-[09/11] arm64/mm: Support huge pte-mapped pages in vmap
-        https://git.kernel.org/arm64/c/06fc959fcff7
-[10/11] mm/vmalloc: Enter lazy mmu mode while manipulating vmalloc ptes
-        https://git.kernel.org/arm64/c/44562c71e2cf
-[11/11] arm64/mm: Batch barriers when updating kernel mappings
-        https://git.kernel.org/arm64/c/5fdd05efa1cd
+Cc: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Inki Dae <inki.dae@samsung.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Seung-Woo Kim <sw0312.kim@samsung.com>
+---
+ drivers/gpu/drm/exynos/exynos_drm_mic.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Cheers,
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_mic.c b/drivers/gpu/drm/exynos/exynos_drm_mic.c
+index 29a8366513fa70655c6ceec9a09db0158e7bb169..b34ec67283370e3fa836c7df06e12e2fba524622 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_mic.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_mic.c
+@@ -379,11 +379,11 @@ static int exynos_mic_probe(struct platform_device *pdev)
+ 	struct resource res;
+ 	int ret, i;
+ 
+-	mic = devm_drm_bridge_alloc(dev, struct exynos_mic, bridge, &mic_bridge_funcs);
+-	if (IS_ERR(mic)) {
++	mic = devm_kzalloc(dev, sizeof(*mic), GFP_KERNEL);
++	if (!mic) {
+ 		DRM_DEV_ERROR(dev,
+ 			      "mic: Failed to allocate memory for MIC object\n");
+-		ret = PTR_ERR(mic);
++		ret = -ENOMEM;
+ 		goto err;
+ 	}
+ 
+@@ -421,6 +421,7 @@ static int exynos_mic_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, mic);
+ 
++	mic->bridge.funcs = &mic_bridge_funcs;
+ 	mic->bridge.of_node = dev->of_node;
+ 
+ 	drm_bridge_add(&mic->bridge);
+
 -- 
-Will
+2.49.0
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
