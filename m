@@ -1,84 +1,115 @@
-Received: from mail.actia.se (mail.actia.se [212.181.117.226])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF14D27055D
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 07:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3621327055D;
+	Fri,  9 May 2025 07:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746776895; cv=none; b=lVQI4tfpSMxnBy9byi0OhgqGA7LEtYvXJsJykqGjG6WKEE3dW4y+Dv73p299eRPDU/F5P+LTokpzdNuXukaO/QJggfPZ5VxuuZUn2sLDfT4nWsBLnXcgT+KWjddlHc2Wxw/DGd4wMEe6yNFhDJqimvoHYLZFhwvigU+m++clrHI=
+	t=1746776925; cv=none; b=dkgrSc1xPSc8tnxtnrEs5kzOIIqdOqX+INFSQiNiyXvf6uTZKm0lZmS7hCh4h0Qf3cTlNWYkTBMhK9xQUxmm2bhkZfcB2hH0C63wkdL8t1D4gLtjyKJCGi71GymCFK8iQdA6BpiwJbkaUNoToWKfuEdBQ30otoFAj3XBziXua0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746776895; c=relaxed/simple;
-	bh=6Bb1bCIHUhcZpksKyLvuXWjp5mJsajaLw4Ijf+x0huU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=McOTW9vynJRsdXQZp+P1s9DIudtaRgHIw4cgIIjPNlXyuuA3uDyKJLi7214su2gqzDzw00KEFt/51skoXsMSUz0KAiCFw4lf6v5OBbsCKXERCml2h9zQFQfd/OlZzQBZTD61be3v6NvRRH5w/BktICD3UAcFYGMPi5bTmyp9JRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
-Received: from S036ANL.actianordic.se (10.12.31.117) by S036ANL.actianordic.se
- (10.12.31.117) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 9 May
- 2025 09:48:04 +0200
-Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
- S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%3]) with mapi id
- 15.01.2507.039; Fri, 9 May 2025 09:48:04 +0200
-From: John Ernberg <john.ernberg@actia.se>
-To: Stefano Stabellini <sstabellini@kernel.org>, Christoph Hellwig
-	<hch@infradead.org>
-CC: Juergen Gross <jgross@suse.com>, Oleksandr Tyshchenko
-	<oleksandr_tyshchenko@epam.com>, Catalin Marinas <catalin.marinas@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>, "xen-devel@lists.xenproject.org"
-	<xen-devel@lists.xenproject.org>, "iommu@lists.linux.dev"
-	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [PATCH 2/2] xen: swiotlb: Implement map_resource callback
-Thread-Topic: [PATCH 2/2] xen: swiotlb: Implement map_resource callback
-Thread-Index: AQHbu1cR+sKkXAZoXEOAUfrcrER157O/dMAAgAX2O4CAAkbqgIAAVVAAgAE+k4CAAI9lgA==
-Date: Fri, 9 May 2025 07:48:03 +0000
-Message-ID: <df9da8af-3a10-4f8b-8e4a-63e4ba473e17@actia.se>
-References: <20250502114043.1968976-1-john.ernberg@actia.se>
- <20250502114043.1968976-3-john.ernberg@actia.se>
- <alpine.DEB.2.22.394.2505021007460.3879245@ubuntu-linux-20-04-desktop>
- <75266eb7-66a4-4477-ae8a-cbd1ebbee8db@actia.se>
- <alpine.DEB.2.22.394.2505071602570.3879245@ubuntu-linux-20-04-desktop>
- <aBwvrLKD_VJapYkB@infradead.org>
- <alpine.DEB.2.22.394.2505081614450.3879245@ubuntu-linux-20-04-desktop>
-In-Reply-To: <alpine.DEB.2.22.394.2505081614450.3879245@ubuntu-linux-20-04-desktop>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-esetresult: clean, is OK
-x-esetid: 37303A2955B14453667D66
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EDE583C0E761E94898DF9F230B77BD62@actia.se>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1746776925; c=relaxed/simple;
+	bh=vWmlIJ/bfhkqfGW/df/LkQdIFbwYFHZ3jlpCzpw/fpo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=L5pFjXiQ1YfvO4QQYxgmTMVf8Ij1d30BPNN1WpiLd+TmeIjhR0wSat2C5KDMN09nMTHLAghdpmoJHrab3dPTdtHJtDKoZhE6rKW5mUJ84sXuj9y5PhASoLNaSWTAy3cylfylRu+tMSWEMc+iFa+nPBE32S1GCF/nlvHiDA7+3EE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=LsNxdgh3; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LsNxdgh3"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5497mYic1338029
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 9 May 2025 02:48:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746776914;
+	bh=4e3+vQC7jXYNsVDluYv45Cizxg84x2l6/EsV/UN5RrA=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=LsNxdgh3gojJqGeRhZ57VCZixcngOvhwEVRwU4kGNf66o8780ILuReluAeb4hJpvj
+	 3So/V3RiXReOHTZbWod4SReP02ZLxnrQQD7FJcD4wHegNapOQwdwgOvNrg2xEAqvR5
+	 bNvGyVou+rMVmz+aFXGt0w92DkRrKBGC/jVLwJcE=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5497mYPV112184
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 9 May 2025 02:48:34 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 9
+ May 2025 02:48:33 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 9 May 2025 02:48:33 -0500
+Received: from [172.24.19.187] (lt5cd2489kgj.dhcp.ti.com [172.24.19.187])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5497mTof084167;
+	Fri, 9 May 2025 02:48:30 -0500
+Message-ID: <fed0d761-2793-4204-aff5-f65ba7dbc4bd@ti.com>
+Date: Fri, 9 May 2025 13:18:29 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] arm64: dts: ti: j722s-evm: Add MUX to control
+ CSI2RX
+To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, <nm@ti.com>,
+        <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <vaishnav.a@ti.com>, <r-donadkar@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <jai.luthra@linux.dev>,
+        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>
+References: <20250508155134.2026300-1-y-abhilashchandra@ti.com>
+ <20250508155134.2026300-3-y-abhilashchandra@ti.com>
+Content-Language: en-US
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <20250508155134.2026300-3-y-abhilashchandra@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-SGkgU3RlZmFubywNCg0KT24gNS85LzI1IDE6MTQgQU0sIFN0ZWZhbm8gU3RhYmVsbGluaSB3cm90
-ZToNCj4gT24gV2VkLCA3IE1heSAyMDI1LCBDaHJpc3RvcGggSGVsbHdpZyB3cm90ZToNCj4+IE9u
-IFdlZCwgTWF5IDA3LCAyMDI1IGF0IDA0OjA5OjE1UE0gLTA3MDAsIFN0ZWZhbm8gU3RhYmVsbGlu
-aSB3cm90ZToNCj4+Pj4gVGhpcyBtYXBwaW5nIGlzIG5vdCBmb3IgYSBSQU0gYmFja2VkIGFkZHJl
-c3MuIEluIHRoZSBlRE1BIGNhc2UgZm9yIHRoZQ0KPj4+PiBpTVg4UVhQIHRoZSBgcGh5c2AgY29t
-aW5nIGluIGhlcmUgaXMgdGhlIGFkZHJlc3Mgb2YgYSByZWdpc3Rlci4NCj4+Pg0KPj4+IE9rLCB0
-aGlzIGluZm9ybWF0aW9uIGlzIGltcG9ydGFudCA6LSkNCj4+Pg0KPj4+IEkgYW0gbm90IGNlcnRh
-aW4gd2hldGhlciB0aGUgbWFwX3Jlc291cmNlIGludGVyZmFjZSBjYW4gb25seSBiZSBjYWxsZWQN
-Cj4+PiBmb3IgTU1JTyBhZGRyZXNzZXMgb3IgaWYgaXQgY2FuIGFsc28gYmUgY2FsbGVkIGZvciBS
-QU0tYmFja2VkIGFkZHJlc3Nlcw0KPj4+IHdpdGggYSBzaXplID4gUEFHRV9TSVpFLiBJbiB0aGUg
-bGF0dGVyIGNhc2UsIHdlIGNvdWxkIHJ1biBpbnRvIHRoZSBpc3N1ZQ0KPj4+IEkgd2FzIGRlc2Ny
-aWJpbmcuDQo+Pg0KPj4gbWFwX3Jlc291cmNlIGlzIGludGVuZGVkIGZvciBNTUlPIHJlZ2lvbnMs
-IGFsdGhvdWdoIHRob3NlIGNvdWxkIGJlID4NCj4+IFBBR0VfU0laRS4gIEl0IG11c3Qgbm90IGJl
-IGNhbGxlZCBvbiBSQU0uDQo+IA0KPiBJbiB0aGF0IGNhc2UsIEpvaG4sIHlvdSBjYW4ganVzdCB1
-c2UgZG1hX2RpcmVjdF9tYXBfcmVzb3VyY2UoKS4NCj4gDQo+IFRoYXQncyBiZWNhdXNlIE1NSU8g
-cmVnaW9uczoNCj4gLSBhcmUgMToxIG1hcHBlZCBvbiBBUk0NCj4gLSBhcmUgMToxIG1hcHBlZCBv
-biB4ODYgZm9yIFBWIERvbTANCj4gLSBtaWdodCBub3QgYmUgMToxIG1hcHBlZCBvbiB4ODYgZm9y
-IFBWSCBEb20wLCBidXQgaW4gdGhpcyBjYXNlIHdlIHJlbHkNCj4gICAgb24gdGhlIElPTU1VIHRv
-IGRvIGFkZHJlc3MgdHJhbnNsYXRpb24NCj4gDQo+IEluIG5vbmUgb2YgdGhlc2UgY2FzZXMgeGVu
-X3BoeXNfdG9fZG1hIHdvdWxkIGdpdmUgdXMgYW55IGludGVyZXN0aW5nDQo+IHJlc3VsdHMuICBJ
-dCB3b3VsZCBiZSB0aGUgc2FtZSBhcyBjYWxsaW5nIHBoeXNfdG9fZG1hLg0KDQpUaGFuayB5b3Ug
-Zm9yIGV4cGxhaW5pbmcuIEkgd2lsbCBzcGluIGEgVjIgaW5jb3Jwb3JhdGluZyB0aGlzLg0KVGhh
-bmtzISAvLyBKb2huIEVybmJlcmcNCg==
+
+On 5/8/2025 9:21 PM, Yemike Abhilash Chandra wrote:
+> J722S EVM has the CSI2RX routed to a MIPI CSI connector and to 22-pin RPi
+> camera connector through an analog mux with GPIO control, model that so
+> that an overlay can control the mux state according to connected cameras.
+
+In case you are another version,
+
+consider to change in commit message "model that so that" to "model mux 
+so that".
+
+Reviewed-by: Udit Kumar <u-kumar1@ti.com>
+
+
+>
+> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+> ---
+>   arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 14 ++++++++++++++
+>   1 file changed, 14 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+> index 0f18fe710929..43256c71a19c 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+> @@ -266,6 +266,20 @@ transceiver2: can-phy2 {
+>   		max-bitrate = <5000000>;
+>   		standby-gpios = <&exp1 17 GPIO_ACTIVE_HIGH>;
+>   	};
+> +
+> +	csi01_mux: mux-controller-0 {
+> +		compatible = "gpio-mux";
+> +		#mux-state-cells = <1>;
+> +		mux-gpios = <&exp1 6 GPIO_ACTIVE_HIGH>;
+> +		idle-state = <0>;
+> +	};
+> +
+> +	csi23_mux: mux-controller-1 {
+> +		compatible = "gpio-mux";
+> +		#mux-state-cells = <1>;
+> +		mux-gpios = <&exp1 7 GPIO_ACTIVE_HIGH>;
+> +		idle-state = <0>;
+> +	};
+>   };
+>   
+>   &main_pmx0 {
