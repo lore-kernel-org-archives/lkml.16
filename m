@@ -1,73 +1,64 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346BF20F097
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4760224882
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 15:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746803983; cv=none; b=FArl4+w6Yn2HPKNNkGpgPtEZOnu8YNq/FF0vabvLaczLOkx8Kc+R1be4MV0USqT9R57ArG6KDac9/9xyOVGRpPPdvqEduSu+DGQDZNegi9Mr7cqhwAZQJRkifFy3OCqJtaJkja+E+1ThhltaJ6HjTkUJTGne1LLBMbzjQxBlqwU=
+	t=1746803986; cv=none; b=bweTFP9s2/fZH5h29iMAgoxgEscWgevFteOXV5VppqtW2z36Hm0Yel0yTlAbl4ag3NTg4lcpcj53XCA1PylbK86ZmsuXRKXNCn1qfTCnJMHaM9FitOpQ1ODmCJSqQSwtLuwkQZ14PzhwgNggQ2b+1WYTLn+NDB8rvx76evMMMqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746803983; c=relaxed/simple;
-	bh=+QfR8Np8mmi9dnZBXYk5XMcsA9L4g7b0+Z1hkFIgtLI=;
+	s=arc-20240116; t=1746803986; c=relaxed/simple;
+	bh=m8aROJFjpKUVyoRqALJjh1WRQTPMz0f/huyI4HbWrnE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZN1zbPxoqMX+5zTqutGXSQk0XGl3M0Us3LxbniBbFOWBiFxwwSWHC8LCEwqwWKsagd5uEsVGpohZ6oxYk1XzyHl1ZxgDv8XeblnmuoMUL7YuePH8CGvm3Rhrpm61Yth2bK1ie+B6ZTY7QU4o2JThL8E4CMvDWshobMBn9r0mzZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GVudo9SM; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=MN/07BlLMppWf1a+ZVjnavqYXVm2Fo0VShhx0TLY8RtlvYrUv4XjA+YouA9xBUPmql4WSfzfpCnYPIyzFCb4bLUlPjy2FlAqyFU+5opVOGPJHRYzKgAo+kVti2Jgl21mm612nQ+7c8NU2nlKRsdPhWjWFESLaa0T89DplLkaTpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dNiRD6Ga; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GVudo9SM"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549C6BJ3022773
-	for <linux-kernel@vger.kernel.org>; Fri, 9 May 2025 15:19:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	DTdhhYB6FCC5ZtrJ/082OOPt7NU3J5IYSW/Bpjk2brs=; b=GVudo9SMBROW5p8m
-	HdJcRSKDOb8lNKAXW7PcwYnh6TA3a1JEWL/K9noFutY54pjNHHBgXFB+Dj1tNXje
-	8VXChvnEYop18fYt4XmxSHbGXBzYKQJSGV2Fm4PtvdlzJ/2j562Yuxv+M98Vcr88
-	gyc9WpZB5Ld8mSSKJxeFqIeWmFkDB3nDyGHryE13DfwEJF6Lms0rzo2uD9/NQ+ND
-	YRUWJ9E0ZW+y0kgJwy2vKLDYRlYk0muv2unr/Cr14ozmaMUXy/DKvExiTE9G/b65
-	TkXLheoaLz9xsb764K4kWi5WkhrkKyPUGGf+DonBXWsT5XPQvd8DJXwt7TP2Wdcm
-	tpSI/A==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp8550m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 15:19:41 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7caef20a527so550484785a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 08:19:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dNiRD6Ga"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso366450366b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 08:19:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746803982; x=1747408782; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=piveaIt51APJH/cy/5pKer1njMs8SNMZ9Efypy4VJ1I=;
+        b=dNiRD6GaI77D5dW6OOZQ4/6JdA7T9ukKMjthTX0yONwvPcRqTCnkz9DgmE8funeHNk
+         elFJBjzITJsuXnqUddYp3esGhRKDDiJfTlVLiswUR1oz4KYO0imArHdy69twLlYJSuae
+         P8x/dSVTNjFObmRURW0sknerC7BK2cb+USvos4DHX49RWex5wfwpjaRuCLnYH9tt1nxY
+         fpnYwYvMUpfs2QjKamYzbfDqDs7k4bZZR8JW4iWyuqmrMXUPh+0WWrAJNfw0FfICGDBY
+         ARrEUpLNbeZuyoFok1YOSq4jvwYnJeMK6nacKci/IAoI96EcSw/b4G38SJQMcMYBV81y
+         uA5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746803977; x=1747408777;
-        h=content-transfer-encoding:in-reply-to:from:content-language
+        d=1e100.net; s=20230601; t=1746803982; x=1747408782;
+        h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DTdhhYB6FCC5ZtrJ/082OOPt7NU3J5IYSW/Bpjk2brs=;
-        b=ki9JqHat1PANwBTZ2lslH1ikiqNg2kgSktazpy4pEbG/tmjPbLsZg4fqCEiB3wbHDI
-         eqrqbNE7fjlGPzkN2d7etIkyPP5jkse84jTKVKtxpLZ4tmRvSDWzo18mRKy7evf2oZu0
-         +nWD1/+kEcOQSAtoCXmZsDMvLbEzVUOEIP9/TBzkCEeBh+AesxTLh3sxU+EIbYkY5dL5
-         ui4utfT7diLeLYhK/4WdQnSx/f+jBxS+Nsn9WE7tVmqy6tFBcD61IIoNOxFS9+D7uYoo
-         R9BVHXhXpBMK6GXupM6pUPeYzBN2zTQYZgHWV4F2Rbh/TUWjV1k+fIBqm1KKf58tJG9w
-         56sw==
-X-Forwarded-Encrypted: i=1; AJvYcCWtKTFOhG3jKjdqeiimc4/NtKQ1yFa9t+V/Eb7RJ0xws20wJ3DwjSjbJZ/RT/YgwczGiCV2/FhVymNPGGw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxk92B35qUhuM8kZZDc47+4OWFeSJwMAkVkeHQQ5ZgO9d1k/Ptr
-	DbvtAe1BWlX/6cpiQQbka3Vp6aIQX59P1CRW3+IwvwHw/XqTgxe5yqK8BF50ygkcGHkHQR75W4B
-	I7ldxPhrIMBn5VY8V+TWOxLyIbpLWFjyoFSQtYtgWawZuE46ROA6zPQBFpNonMUPk8sSR8Mo=
-X-Gm-Gg: ASbGncuNgKvKCW57EJueoBTyaLquMX2L2ukAMXNHnrShUlvVOLaoACEBMkIbDOdSpgg
-	YYwqOC+YicMzi705glnk8eQZIL3yNR4FlgpTOt9FT1PXIIW972z4SQ2AN5J/cazfNuaHz/u6HnM
-	p8aFW1Pg9YIcZBtbGNM/jwJ/4s4Ub9P8homI4ul9DARoHQt9gsV64l0fDhQ+68t8iQ3up06oIc3
-	dJf/lf9fiCjToHrGMsfzTuoscw4vl7/7tp2+o0TBGWSa7sHoHEQNMM6pUSrMVaqYD1oRUv21BPI
-	HATp0RPFuy4bkasDSgczzMrNiT3PqjNdG+Je1AR5cPStyEm7QSvtQPiYKyPcxhKQKktzIALd9Ml
-	E5Sndtr2VO1lTTNLXAXmzt+7k+m0iA9qNR/kqE4ON95qzbcCmN/6Kb2u/AWGcNwHi
-X-Received: by 2002:a05:620a:2615:b0:7ca:da49:192c with SMTP id af79cd13be357-7cd01060842mr549977085a.0.1746803977461;
-        Fri, 09 May 2025 08:19:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGxxH7nrk/AqG3hrr28OmJOlY7nRUo0lL9q5nufep0/yH/q/o1vYXrEJA392S7p+PHBN12kSQ==
-X-Received: by 2002:ad4:5dcf:0:b0:6f6:33aa:258b with SMTP id 6a1803df08f44-6f6e48222e6mr62260126d6.45.1746803965858;
-        Fri, 09 May 2025 08:19:25 -0700 (PDT)
-Received: from ?IPV6:2001:14bb:a6:738a:e519:cad2:e720:53eb? (2001-14bb-a6-738a-e519-cad2-e720-53eb.rev.dnainternet.fi. [2001:14bb:a6:738a:e519:cad2:e720:53eb])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc645d03asm306482e87.95.2025.05.09.08.19.24
+        bh=piveaIt51APJH/cy/5pKer1njMs8SNMZ9Efypy4VJ1I=;
+        b=ne3TMpY1qWrj1NxxjP8H1EfT6VPZzGbzk5Ejtc8M4L6YgI2P3is5vy0mN7BgSkUPfn
+         9YsXK2hJsLj7XDyt9QviJoHITB1iGYxtEn1NXQUmhtmNzqP7RLx79+YX5GjTYSkGsJsw
+         tf2m18G4p23yan42/sKFk/7IqlF9vdK4r0ybAtfezScW+vENrbXKBWe+RwkmibQ2QWjI
+         ZmW6MBX/pgrwPC94MxJoI7eQ3UxMJoRX9H4KommNC9XzX46mIvCAQRnh3vxnCdRd+2WB
+         Mg3Ypbbxc8SNWiy+yeWpWP8/y+lyWgXiSFfyYLEeWwMQRxeqXXvH9sLfJ6wJT5gscilv
+         bYkw==
+X-Gm-Message-State: AOJu0YywAcyhDI1nOUjqCGjTnkn2tANoLC/axeAliG1zt+BRmQM7oh9w
+	z8f1Hu5dZtTUtxTPvIsmlv79GVhsoZnw/DuPvIOgr45Z3Gz6rG/7hgRkAAnMCxJYtY0084uuDkS
+	3
+X-Gm-Gg: ASbGncsvwPxzYb4U7qegh0f3RglP+wOwCYdGv+5Tb9P/LjYZ/esZKp5zXSb3w66E0Jl
+	jEt62BkX/u6vaEhlcKUP+SDDQfE0HfSDfVdJ+20BbLJwVQCFqH4FNCYafh+5BnJFknO8IfEuwTz
+	SEFuA8f4EiPmxPYWs+kMVM8oQkAHV7oS0UUY33l+3i7mcgkudikwGnTj420XmIxGPjJ3DY00lWQ
+	2W6c86yZxY43U3vw9MPLCdv0uEqoji0GLYrQpp1i2AyA+bhVQFJf+7SP/gAyTN5nX7/IE0LRga+
+	EvjJxhExS02bG+SUkTBTBe29pxfQWneGiOaoNmbjgDaqGs6S
+X-Google-Smtp-Source: AGHT+IHT7wYtfS2u3TlvINr8fJyTrH7JNqE175qLt+rBrEgAFEQwhYwKbs1ehus30wxqNmhfrYAvHA==
+X-Received: by 2002:a17:907:a2cd:b0:ace:caff:675a with SMTP id a640c23a62f3a-ad218e47c9bmr314645166b.10.1746803981845;
+        Fri, 09 May 2025 08:19:41 -0700 (PDT)
+Received: from [192.168.0.32] ([82.76.24.202])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197bd4d3sm164125066b.132.2025.05.09.08.19.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 08:19:25 -0700 (PDT)
-Message-ID: <83ba11db-9a9e-48b7-afe0-9df7b5de3e85@oss.qualcomm.com>
-Date: Fri, 9 May 2025 18:19:23 +0300
+        Fri, 09 May 2025 08:19:41 -0700 (PDT)
+Message-ID: <26cc3478-8f65-44bb-8ebe-24a28a858dab@linaro.org>
+Date: Fri, 9 May 2025 18:19:40 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,122 +66,152 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/7] Convert inno hdmi to drm bridge
-To: Andy Yan <andyshrk@163.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, conor+dt@kernel.org,
-        krzk+dt@kernel.org, robh@kernel.org, hjc@rock-chips.com,
-        mripard@kernel.org, neil.armstrong@linaro.org, knaerzche@gmail.com,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>
-References: <20250422070455.432666-1-andyshrk@163.com>
- <9503607.rMLUfLXkoz@diego>
- <nco27hnwykffzgirhocskltrkcds32tefkix23nfknf3e5m3zd@mkrrbw6kogsi>
- <1a07d69.1e47.196b2c3aa12.Coremail.andyshrk@163.com>
+Subject: Re: [RFC][PATCH 00/14] introduce kmemdump
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-doc@vger.kernel.org, corbet@lwn.net, tglx@linutronix.de,
+ mingo@redhat.com, rostedt@goodmis.org, john.ogness@linutronix.de,
+ senozhatsky@chromium.org, pmladek@suse.com, peterz@infradead.org,
+ mojha@qti.qualcomm.com, linux-arm-kernel@lists.infradead.org,
+ vincent.guittot@linaro.org, konradybcio@kernel.org,
+ dietmar.eggemann@arm.com, juri.lelli@redhat.com
+References: <20250422113156.575971-1-eugen.hristev@linaro.org>
+ <mtetvagzj2xltczutahqj7ijgpr3fy7ppbp5w6rmn2w2zmukux@tawhrkyoqjli>
+From: Eugen Hristev <eugen.hristev@linaro.org>
 Content-Language: en-US
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <1a07d69.1e47.196b2c3aa12.Coremail.andyshrk@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=M7xNKzws c=1 sm=1 tr=0 ts=681e1d0d cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=s8YR1HE3AAAA:8 a=U4mCzpOltDhEmR4TI6sA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
- a=jGH_LyMDp9YhSvY-UuyI:22
-X-Proofpoint-ORIG-GUID: WtMHLGkUUVrJjM144xSxVrI5T9FlSHo1
-X-Proofpoint-GUID: WtMHLGkUUVrJjM144xSxVrI5T9FlSHo1
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDE1MSBTYWx0ZWRfX9h3pOfuXYRP/
- A8i9PauO0efAqB6Fm3kPpsPm1ZqA4vXj++YrnorF9lmoFrKuFfaTIxUyQipOXjxeUr4ymSOWSUW
- vfAFzYmTUz9aop081dmWz9w7DawVD4D8YS0tcZCa6uw5oT7Va5n0EDDXIX4uFFIrLBq1xnPD1tW
- sOn9N1TDykVk0aZPf9LtSKfdl8nSZ875vJsSohwyiHn7opnnvb63VCn/4DUThKFrkUmVL+/hZzO
- Y54guJ9EkByZxbe1DSCEZFL2zxzqwSHF5eaIzpeyp+9bP7MOQY17AvFt8AJjU6K67oz/qHWFGU1
- w5PE4sGUHusIwb7BKV9pcnTVhNOS0DWbDCxM17Qw27X1c35khpvedEMp/Ab49eEV3cC6Rtgn/Nw
- K+Q54JuuBGmd/5qEFRtoXsVan8wV0DWxh3cD0jifL69Oj5Eic64GrepPLOkM0qqANe93D+H4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_06,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
- spamscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1015
- suspectscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505090151
+In-Reply-To: <mtetvagzj2xltczutahqj7ijgpr3fy7ppbp5w6rmn2w2zmukux@tawhrkyoqjli>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 09/05/2025 04:58, Andy Yan wrote:
-> 
-> Hi Dmitry,
-> 
->   Thanks for you review.
-> 
-> 在 2025-05-05 00:16:35，"Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com> 写道：
->> On Sat, May 03, 2025 at 04:42:04PM +0200, Heiko Stübner wrote:
->>> Am Dienstag, 22. April 2025, 09:04:39 Mitteleuropäische Sommerzeit schrieb Andy Yan:
->>>> From: Andy Yan <andy.yan@rock-chips.com>
->>>>
->>>> When preparing to convert the current inno hdmi driver into a
->>>> bridge driver, I found that there are several issues currently
->>>> existing with it:
->>>>
->>>> 1. When the system starts up, the first time it reads the EDID, it
->>>>     will fail. This is because RK3036 HDMI DDC bus requires it's PHY's
->>>>     reference clock to be enabled first before normal DDC communication
->>>>     can be carried out.
->>>>
->>>> 2. The signal is unstable. When running the glmark2 test on the screen,
->>>>     there is a small probability of seeing some screen flickering.
->>>>     This is because The HSYNC/VSYNC polarity of rk3036 HDMI are controlled
->>>>     by GRF. This part is missing in the current driver.
->>>>
->>>> PATCH 1~6 are try to Fix Document in the dt-binding, then add the
->>>> missing part in driver and dts.
->>>> PATCH 7 converts the curren driver to drm bridge mode.
->>>
->>> After resurrecting my rk3036-kylin which hasn't sucessfully booted in a
->>> while, I could veryify this series, so on a rk3036-kylin
->>>
->>> Tested-by: Heiko Stuebner <heiko@sntech.de>
->>>
->>>
->>> I'll probably apply patches 1-4 to drm-misc later today, as that solely
->>> touches the Rockchip (and only rk3036-)side and patches 5+6 to the
->>> rockchip tree.
->>>
->>> Patch 7 should probably get some attention by people more familiar with
->>> drm-bridges, so I'll let that sit for a bit longer.
+Hello Bjorn,
+
+On 5/7/25 19:54, Bjorn Andersson wrote:
+> On Tue, Apr 22, 2025 at 02:31:42PM +0300, Eugen Hristev wrote:
+>> kmemdump is a mechanism which allows the kernel to mark specific memory
+>> areas for dumping or specific backend usage.
+>> Once regions are marked, kmemdump keeps an internal list with the regions
+>> and registers them in the backend.
+>> Further, depending on the backend driver, these regions can be dumped using
+>> firmware or different hardware block.
+>> Regions being marked beforehand, when the system is up and running, there
+>> is no need nor dependency on a panic handler, or a working kernel that can
+>> dump the debug information.
+>> The kmemdump approach works when pstore, kdump, or another mechanism do not.
+>> Pstore relies on persistent storage, a dedicated RAM area or flash, which
+>> has the disadvantage of having the memory reserved all the time, or another
+>> specific non volatile memory. Some devices cannot keep the RAM contents on
+>> reboot so ramoops does not work. Some devices do not allow kexec to run
+>> another kernel to debug the crashed one.
+>> For such devices, that have another mechanism to help debugging, like
+>> firmware, kmemdump is a viable solution.
 >>
->> I will take a look later, but on the first glance it looks like there
->> are too many things going on in that patch, including some unnecessary
->> fnction movements and define movements, etc. I would kindly ask to split
-> 
-> These registers were initially defined in a separate header file(inno_hdmi.h),
-> but they were only used by a single C file, so I think it's not necessary to put
-> them in a separate header file. I decided to simply merge them into the inno_hdmi.c file.
-> If I first create a patch and separately carry out the merging of this register definition, would that be possible?
-
-Yes, just create a separate commit, folding the header into the source file.
-
-> 
-> And I will try to avoid function movements in next version.
-> 
-> 
->> the non-functional refactorings and the functional ones (splitting to a
->> library, etc).
-> 
-> Will do in next version.
-> 
+>> kmemdump can create a core image, similar with /proc/vmcore, with only
+>> the registered regions included. This can be loaded into crash tool/gdb and
+>> analyzed.
+>> To have this working, specific information from the kernel is registered,
+>> and this is done at kmemdump init time, no need for the kmemdump user to
+>> do anything.
 >>
->>>
->>>
->>> Thanks a lot for working on all this
->>> Heiko
->>>
->>>
+>> The implementation is based on the initial Pstore/directly mapped zones
+>> published as an RFC here:
+>> https://lore.kernel.org/all/20250217101706.2104498-1-eugen.hristev@linaro.org/
+>>
+>> The back-end implementation for qcom_smem is based on the minidump
+>> patch series and driver written by Mukesh Ojha, thanks:
+>> https://lore.kernel.org/lkml/20240131110837.14218-1-quic_mojha@quicinc.com/
+>>
+>> I appreciate the feedback on this series, I know it is a longshot, and there
+>> is a lot to improve, but I hope I am on the right track.
+>>
+>> Thanks,
+>> Eugen
+>>
+>> PS. Here is how crash tool reports the dump:
+>>
+>>      KERNEL: /home/eugen/linux-minidump/vmlinux  [TAINTED]
+>>     DUMPFILE: /home/eugen/eee
+> 
+> Can you please describe the steps taken to get acquire/generate this
+> file and how to invoke crash?
+> 
+
+Thank you for looking into this.
+
+Next week, on 16th of May, on Friday, there will be a talk related to
+this patch series at Linaro Connect in Lisbon. In that talk I will also
+show a demo in which all the process of acquiring the core dump and
+crash will be covered.
+I will be traveling the following days, if I get the time I will submit
+the steps as a reply to this email, if not, then for sure I will submit
+them after the talk in Lisbon.
+
+Eugen
+
+> Regards,
+> Bjorn
+> 
+>>         CPUS: 8 [OFFLINE: 7]
+>>         DATE: Thu Jan  1 02:00:00 EET 1970
+>>       UPTIME: 00:00:28
+>>     NODENAME: qemuarm64
+>>      RELEASE: 6.14.0-rc5-next-20250303-00014-g011eb2aaf7b6-dirty
+>>      VERSION: #169 SMP PREEMPT Thu Apr 17 14:12:21 EEST 2025
+>>      MACHINE: aarch64  (unknown Mhz)
+>>       MEMORY: 0
+>>        PANIC: ""
+>>
+>> crash> log
+>> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd4b2]
+>> [    0.000000] Linux version 6.14.0-rc5-next-20250303-00014-g011eb2aaf7b6-dirty (eugen@eugen-station) (aarch64-none-linux-gnu-gcc (Arm GNU Toolchain 13.3.Rel1 (Build arm-13.24)) 13.3.1 20240614, GNU ld (Arm GNU Toolchain 13.3.Rel1 (Build arm-13.24)) 2.42.0.20240614) #169 SMP PREEMPT Thu Apr 17 14:12:21 EEST 2025
+>> [    0.000000] KASLR enabled
+>> [...]
+>>
+>> Eugen Hristev (14):
+>>   Documentation: add kmemdump
+>>   kmemdump: introduce kmemdump
+>>   kmemdump: introduce qcom-md backend driver
+>>   soc: qcom: smem: add minidump device
+>>   Documentation: kmemdump: add section for coreimage ELF
+>>   kmemdump: add coreimage ELF layer
+>>   printk: add kmsg_kmemdump_register
+>>   kmemdump: coreimage: add kmsg registration
+>>   genirq: add irq_kmemdump_register
+>>   kmemdump: coreimage: add irq registration
+>>   panic: add panic_kmemdump_register
+>>   kmemdump: coreimage: add panic registration
+>>   sched: add sched_kmemdump_register
+>>   kmemdump: coreimage: add sched registration
+>>
+>>  Documentation/debug/index.rst      |  17 ++
+>>  Documentation/debug/kmemdump.rst   |  83 +++++
+>>  drivers/Kconfig                    |   2 +
+>>  drivers/Makefile                   |   2 +
+>>  drivers/debug/Kconfig              |  39 +++
+>>  drivers/debug/Makefile             |   5 +
+>>  drivers/debug/kmemdump.c           | 197 ++++++++++++
+>>  drivers/debug/kmemdump_coreimage.c | 293 ++++++++++++++++++
+>>  drivers/debug/qcom_md.c            | 467 +++++++++++++++++++++++++++++
+>>  drivers/soc/qcom/smem.c            |  10 +
+>>  include/linux/irqnr.h              |   1 +
+>>  include/linux/kmemdump.h           |  77 +++++
+>>  include/linux/kmsg_dump.h          |   6 +
+>>  include/linux/panic.h              |   1 +
+>>  include/linux/sched.h              |   1 +
+>>  kernel/irq/irqdesc.c               |   7 +
+>>  kernel/panic.c                     |   8 +
+>>  kernel/printk/printk.c             |  13 +
+>>  kernel/sched/core.c                |   7 +
+>>  19 files changed, 1236 insertions(+)
+>>  create mode 100644 Documentation/debug/index.rst
+>>  create mode 100644 Documentation/debug/kmemdump.rst
+>>  create mode 100644 drivers/debug/Kconfig
+>>  create mode 100644 drivers/debug/Makefile
+>>  create mode 100644 drivers/debug/kmemdump.c
+>>  create mode 100644 drivers/debug/kmemdump_coreimage.c
+>>  create mode 100644 drivers/debug/qcom_md.c
+>>  create mode 100644 include/linux/kmemdump.h
 >>
 >> -- 
->> With best wishes
->> Dmitry
+>> 2.43.0
+>>
 
-
--- 
-With best wishes
-Dmitry
