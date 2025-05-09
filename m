@@ -1,139 +1,102 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B53262815
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 20:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F418122D9E3;
+	Fri,  9 May 2025 20:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746822263; cv=none; b=XB1NQH/vY2e+lGPDKC5ilX5kGdQnezesmmuaDcLEB23CG/bVAo4wIUBVKcfRRSeZ2OnS71ddzjkOO8C5CcDYIUPPDIg1B/HP33aUJBKW2BZGyR/F330QpvcaIlCpbe48YF4TyEvij/m7Uuh4vyHZMBF6Gv9tjzC5vMVGTB0+rFc=
+	t=1746822627; cv=none; b=ljaDinbpZT9Xs6J2UBxkxiYVRtj2RMTwy3SeFU7MevxHdvNkYns/C+sKZ4LUKPGY9aJK1g6YYPkgbXAEiemFGEIioEjiAT8cBQxcy9ThHf8lkMHHwaIbOP/cUEc4zVWKeJ6DjhR55SautjsQDM1++aRNyU8uqdmVy2rNU2uDMP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746822263; c=relaxed/simple;
-	bh=sLj//1AcXpvIwBqzWW3CI6S+W+1lUK/SIwxIUMmLcqM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ba+zrciI6urCW/ik6ncspk8fCO2lpTS6TNYSlFY+OHFKVgh15F2mIxkSX7icBLuHN0c3fwGg7gPKC5Qobmf04D4jBDYuzr+1YJ+m1/eM/d9hr1duCRZUqWtfVgTkgfVzA230fxftxGmT21MQf/u4vvCp4kLBN5WtPLKAaMpSea0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=EcZgoLEn; arc=none smtp.client-ip=121.127.44.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1746822627; c=relaxed/simple;
+	bh=jMwohjVVGQqtvJZ1usYIncXOugAXv27ycTElX0R2Djg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hXMrco0rzBz7CaCLMPmtLJ+B0xvCkSDSKS/whK39Qznmue3KmbprQX7j8pyQRvk+gSEWLi1G00jj7L2dzn7EUhsqme7HuLXXmS/qOeoW+s+NeIoMmSD6MnI4gdOtIOt/Akt0r9/qLO4Rsoa+k4LyHrfrhxynk+U0bvm+kHqEK9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J7hnUgHj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="EcZgoLEn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
- Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
- t=1746822260; bh=ehstcimJR9z+3Rt/ETv7WL7WqYg2RyHiNK4ycKLwqgc=;
- b=EcZgoLEnz7ewv6ZRBdjX+KGGQuc/XP86n3R48eMgXo3sk8HIJTPUUBeBDW1VVMXzcfpFAZpNd
- GwuSLWAbt2QnpEjkgDlUdjNJ5DFQsXlR0I9PUVN+pAbJoDN7jVCmbgSU8rOOLINCnSqwb0uhs9E
- gdsuhMCICRiQ/UohvqrkdGuImbhsPWqXt0W2wu00KtWEjugIpCAuelod7sbQlMENUwi7y3R9pmB
- XfKZMT2nu4s+0lFmJ32lhehrEKJvMmb6fBjNlaCcGhKZuGdSetDUaX9ahgFozmWDMSJ7SV+Ji+s
- qUAR3Pk8fGquT6CHNX4vx9/Rd5Vw7G1PFFqIvfYIvoRQ==
-X-Forward-Email-ID: 681e6470b323f1ffafd05da1
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 121.127.44.73
-X-Forward-Email-Version: 1.0.2
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-From: Jonas Karlman <jonas@kwiboo.se>
-To: Heiko Stuebner <heiko@sntech.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Yao Zi <ziyao@disroot.org>,
-	Chukun Pan <amadeus@jmu.edu.cn>,
-	linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH v3 2/2] arm64: dts: rockchip: Enable Ethernet controller on Radxa E20C
-Date: Fri,  9 May 2025 20:23:58 +0000
-Message-ID: <20250509202402.260038-3-jonas@kwiboo.se>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250509202402.260038-1-jonas@kwiboo.se>
-References: <20250509202402.260038-1-jonas@kwiboo.se>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J7hnUgHj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51F93C4CEE4;
+	Fri,  9 May 2025 20:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746822626;
+	bh=jMwohjVVGQqtvJZ1usYIncXOugAXv27ycTElX0R2Djg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J7hnUgHjbSM4KYKxaAbLHSxWJLQ693XYhDEfraUrkO26jKr4/OUrC5CaD+hy6xyZw
+	 rLjcqCdkRvvnHLhMLj3UX/3RDO87PJ8heHU4bYqFLgwiRer/bAfIBGUdbPl8+RJ1v3
+	 QEkKu5W+LvDbdD07ti63/rOddOABTUpBhhZf8cOFDMsjX13N+N+FNAIrmqP5AoosNj
+	 Hwv0efOetSQZnEmulF35ym9ge29isEnEU5BWW5o5mF0weZFsFJCdWt7KhK2cVop8A7
+	 WwEioB0E1+DvR0q1uxLQV9eBQ821Dm0xDqRD2IAPqdVOQiUA6BkxhTtRPFj1TEV1c6
+	 SCaOB+gGzQwgQ==
+Date: Fri, 9 May 2025 21:30:21 +0100
+From: Simon Horman <horms@kernel.org>
+To: Abhijit Gangurde <abhijit.gangurde@amd.com>
+Cc: shannon.nelson@amd.com, brett.creeley@amd.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	corbet@lwn.net, jgg@ziepe.ca, leon@kernel.org,
+	andrew+netdev@lunn.ch, allen.hubbe@amd.com, nikhil.agarwal@amd.com,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/14] net: ionic: Create an auxiliary device for rdma
+ driver
+Message-ID: <20250509203021.GR3339421@horms.kernel.org>
+References: <20250508045957.2823318-1-abhijit.gangurde@amd.com>
+ <20250508045957.2823318-2-abhijit.gangurde@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508045957.2823318-2-abhijit.gangurde@amd.com>
 
-The Radxa E20C has two GbE ports, LAN and WAN. The LAN port is provided
-using a GMAC controller and a YT8531C PHY and the WAN port is provided
-by an RTL8111H PCIe Ethernet controller.
+On Thu, May 08, 2025 at 10:29:44AM +0530, Abhijit Gangurde wrote:
+> To support RDMA capable ethernet device, create an auxiliary device in
+> the ionic Ethernet driver. The RDMA device is modeled as an auxiliary
+> device to the Ethernet device.
+> 
+> Reviewed-by: Shannon Nelson <shannon.nelson@amd.com>
+> Signed-off-by: Abhijit Gangurde <abhijit.gangurde@amd.com>
 
-Enable support for the LAN port on Radxa E20C.
+...
 
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
----
-Changes in v3:
-- Rebase on top of latest mmind/for-next
+> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_aux.c b/drivers/net/ethernet/pensando/ionic/ionic_aux.c
+> new file mode 100644
+> index 000000000000..ba29c456de00
+> --- /dev/null
+> +++ b/drivers/net/ethernet/pensando/ionic/ionic_aux.c
+> @@ -0,0 +1,95 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (C) 2018-2025, Advanced Micro Devices, Inc. */
+> +
+> +#include <linux/kernel.h>
+> +#include "ionic.h"
+> +#include "ionic_lif.h"
+> +#include "ionic_aux.h"
+> +
+> +static DEFINE_IDA(aux_ida);
+> +
+> +static void ionic_auxbus_release(struct device *dev)
+> +{
+> +	struct ionic_aux_dev *ionic_adev;
+> +
+> +	ionic_adev = container_of(dev, struct ionic_aux_dev, adev.dev);
+> +	kfree(ionic_adev);
+> +}
+> +
+> +int ionic_auxbus_register(struct ionic_lif *lif)
+> +{
+> +	struct ionic_aux_dev *ionic_adev;
+> +	struct auxiliary_device *aux_dev;
+> +	int err, id;
+> +
+> +	if (!(lif->ionic->ident.lif.capabilities & IONIC_LIF_CAP_RDMA))
 
-Changes in v2:
-- Rebase on top of the "Support I2C controllers in RK3528" series [1]
+Hi Abhijit,
 
-[1] https://lore.kernel.org/r/20250309070603.35254-1-ziyao@disroot.org
----
- .../boot/dts/rockchip/rk3528-radxa-e20c.dts   | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
+There is an endian mismatch here: .capabilities is a __le64,
+whereas IONIC_LIF_CAP_RDMA is host byte order.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-index d45b6594b2de..506d54337ece 100644
---- a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-@@ -17,6 +17,7 @@ / {
- 	compatible = "radxa,e20c", "rockchip,rk3528";
- 
- 	aliases {
-+		ethernet0 = &gmac1;
- 		mmc0 = &sdhci;
- 		mmc1 = &sdmmc;
- 	};
-@@ -184,6 +185,17 @@ &cpu3 {
- 	cpu-supply = <&vdd_arm>;
- };
- 
-+&gmac1 {
-+	clock_in_out = "output";
-+	phy-handle = <&rgmii_phy>;
-+	phy-mode = "rgmii-id";
-+	phy-supply = <&vcc_3v3>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_miim>, <&rgmii_tx_bus2>, <&rgmii_rx_bus2>,
-+		    <&rgmii_rgmii_clk>, <&rgmii_rgmii_bus>;
-+	status = "okay";
-+};
-+
- &i2c1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c1m0_xfer>;
-@@ -198,7 +210,25 @@ eeprom@50 {
- 	};
- };
- 
-+&mdio1 {
-+	rgmii_phy: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <0x1>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gmac1_rstn_l>;
-+		reset-assert-us = <20000>;
-+		reset-deassert-us = <100000>;
-+		reset-gpios = <&gpio4 RK_PC2 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
- &pinctrl {
-+	ethernet {
-+		gmac1_rstn_l: gmac1-rstn-l {
-+			rockchip,pins = <4 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	gpio-keys {
- 		user_key: user-key {
- 			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_up>;
--- 
-2.49.0
+Flagged by Sparse
 
+...
