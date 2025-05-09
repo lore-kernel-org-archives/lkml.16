@@ -1,136 +1,200 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC2E20458A
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 19:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96307221293;
+	Fri,  9 May 2025 19:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746817278; cv=none; b=Drbw33F7eski9/kn01CPZDZzIV4y9P/dThsijjckf/l82qWQ0PDo3vZDcdhktiq5Op281hkr6N5O/CvjHTW7WE3WV7GNKxdPKItvveKricPCBCzKsrAw2dHoJkDet66dLNcD4UlqY7/ZiBnLjVco+UuSa0sfpPwNcM5+2vPK4dE=
+	t=1746817286; cv=none; b=IRH/Xe2qn2jNIaCVnwljCaJtGh3OH7oAQznyxWqgrA7Svk7zfFWmCkvrbZ/xWHQFKdjzoX37UmzKGefsZdVbL+c+4Qk8SsXlca820b5CgYiACUPjAf4ncq3oz6ICHEDI2fMdI3CLXF2dSCV0xB1Nj03q6MhPvxpCV2SVPUOqBj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746817278; c=relaxed/simple;
-	bh=wdfsqsckqhMGnjMh738/zfexAs8ObzwNX0Y2Uh4s3xw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=YLPcweh+6BiMXnREpWBPD6E7xQcylqWOoXrAtonkh08vF0U15zuKzsmOMFt2FMe1cJdSuDtxs2MQ+bac+C75hBvsKZqxfC11ABt9oJGIA2f/wFMfqbOLRCPmTHMgiFdIyBm37+87Lop5wSUrZHbEmcQJvE3JoN6hlqkrpKzDA0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ey8F0b1i; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746817286; c=relaxed/simple;
+	bh=akbEbL1UVIv55uwYZyCLqwKBc4CH9+Dt5Oh8Z2+LGg4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TeJRuNJNcyWBDgXOvLwwAZVV5AJKUMl6CnT+HXLuQEY45gbK+iA3GsZT6P8FZ/O0BqoJIXPqk9/P2oXTFUjNsUAJaC1mSFeN0oFW55cRv4pBhQT/R2OFCkjlk4gxAW5CsGopoxv41lRMimkXWZkrB3VhKyAi21rrVkafQTOtEmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ASCU+MKM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ey8F0b1i"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ac618952eso2042616a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 12:01:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746817276; x=1747422076; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZOp4IXBb/syBVOduCVpjLE8qaedTDykguJc6N1WRR7Y=;
-        b=Ey8F0b1iaZqtVbczn/dnA5cWYeAgY0KTwJSS+V1jB8FVpA97xcUFBGlHZLyiwtcOYX
-         rVVSR/ScqmKXMD1AWjCGc2FWAs3a4NoTJQSmtSOmHOZ7zZHYbIkbnLhgfeflzHxP/6/J
-         2v04LT0I1BC5fgKTyhbN8145qU1nxM3yv8hLKYyGcKranAA2LgLrh51dtguySqXUvUac
-         d3cJci6j+qKx9e6O7muGVAKtQN+uzj8Y0B1xwgKB0Jur6ZXFJE4QmPepFgHi4bXLyg1h
-         oL/DhDKaJ2DnXR3NofsvMrvvOM70tDnMYtvrk84HUnbpEA09WB0QWTdUQL04UiONRc3c
-         YopQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746817276; x=1747422076;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZOp4IXBb/syBVOduCVpjLE8qaedTDykguJc6N1WRR7Y=;
-        b=Ot9SD2ZxkaPF6y2BmUPRh1RoKrlDBELT7dHg4mcD95s5/lX6VGTTb/v07vyHCZfFsW
-         nUFbxm2KjGSNvEYylXY9tYT+sFhhs4r8QdmyOSNoI0QLK9X7oOBLtAJvCnuFOo5ovING
-         UqO0z/5xoWhIa1QpqDDQBua/Aiag8riuSvC5XjdpQCAhUrHWN/EsZVAFQcjbX7GhuBvf
-         gDer+BcmKrGOuZdKGAaSs0vrwgbjyLmyh3J6TFihLH7TIqLjOvF/X762civelMKY3brr
-         d3sts6L5+GWQGkm8GayPFCaH/iEff3hXAU02TPMb0MdcY0Ls5AiBkqkghL9QVi8/bo9r
-         JQxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdM30oHZEighTEhFix95ZSfcmhK5MAj5kB2sqmedq6uc2XX58rf6C8mJX/H7hpBLU8xpeWWTLxHP6XR6M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmOoTLZCOItl5bE3G+wDcy7NUv1GlXEeNokBaAMdpqToYPsAxa
-	o0eWL/cXCNGcZUzneQzUjRE1zmg1zsXZwu8orbUmmBwoMOVWYMunwcLroykDd+2E86mOWy6/Fwc
-	p8w==
-X-Google-Smtp-Source: AGHT+IHCrDyEz8O6bZis7LOBWSaBNV9yXvdcRsP9akFy28mpxZXtdyL2qSdZfjeySCSUfDuZJgBWCfKjjOY=
-X-Received: from pjbee7.prod.google.com ([2002:a17:90a:fc47:b0:2f8:49ad:406c])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d2cc:b0:2fe:b937:2a51
- with SMTP id 98e67ed59e1d1-30c3d653adbmr6222867a91.33.1746817276439; Fri, 09
- May 2025 12:01:16 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri,  9 May 2025 12:01:08 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ASCU+MKM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3397C4CEE9;
+	Fri,  9 May 2025 19:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746817286;
+	bh=akbEbL1UVIv55uwYZyCLqwKBc4CH9+Dt5Oh8Z2+LGg4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ASCU+MKMY+5fj8xnGHpAf+qHr+WP+BQJimdKR2SUdXCZprN/m18ScjHOTwr+Kv2ms
+	 vU4Cr4UtBLeL/IizRm/1tvQzf8fdKn+XCXZ/Tm3cUaY823LAJ6u8rb79eJEmrSZvdG
+	 6SxD677NiUuRZzQQJxTVf2BT7ii0Aa6OiMOokKJ0L2M/pHglOcqCfTJntdkim8rzew
+	 kuuexECDIzoD8MEF9aPuzhEjSwJUWDkMDy1R+0+7jawNqWQ+u8MeLePmbhevoIBHSX
+	 Gkx9rxQC9jFKY9d3UvCu3W323e8viGtRWCf/Nn7L0+bLhRkH/qyT86s50EwWZZoLJz
+	 xNDlsfUB9m7HQ==
+Date: Fri, 9 May 2025 12:01:24 -0700
+From: Kees Cook <kees@kernel.org>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	rcu@vger.kernel.org, linux-mm@kvack.org,
+	linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH 09/12] sysctl: move cad_pid into kernel/pid.c
+Message-ID: <202505091200.FC2683DD@keescook>
+References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
+ <20250509-jag-mv_ctltables_iter2-v1-9-d0ad83f5f4c3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.1015.ga840276032-goog
-Message-ID: <20250509190108.1582362-1-seanjc@google.com>
-Subject: [GIT PULL] KVM: x86: Fixes for 6.15-rcN
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Sean Christopherson <seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509-jag-mv_ctltables_iter2-v1-9-d0ad83f5f4c3@kernel.org>
 
-Please pull a random variety of fixes for 6.15.  The SRSO change is the
-most urgent fix, everything else has either existed for some time, or isn't
-actively causing problems.
+On Fri, May 09, 2025 at 02:54:13PM +0200, Joel Granados wrote:
+> Move cad_pid as well as supporting function proc_do_cad_pid into
+> kernel/pic.c. Replaced call to __do_proc_dointvec with proc_dointvec
+> inside proc_do_cad_pid which requires the copy of the ctl_table to
+> handle the temp value.
+> 
+> This is part of a greater effort to move ctl tables into their
+> respective subsystems which will reduce the merge conflicts in
+> kernel/sysctl.c.
+> 
+> Signed-off-by: Joel Granados <joel.granados@kernel.org>
+> ---
+>  kernel/pid.c    | 32 ++++++++++++++++++++++++++++++++
+>  kernel/sysctl.c | 31 -------------------------------
+>  2 files changed, 32 insertions(+), 31 deletions(-)
+> 
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index 4ac2ce46817fdefff8888681bb5ca3f2676e8add..bc87ba08ae8b7c67f3457b31309b56b5d90f8c52 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -717,6 +717,29 @@ static struct ctl_table_root pid_table_root = {
+>  	.set_ownership	= pid_table_root_set_ownership,
+>  };
+>  
+> +static int proc_do_cad_pid(const struct ctl_table *table, int write, void *buffer,
+> +		size_t *lenp, loff_t *ppos)
+> +{
+> +	struct pid *new_pid;
+> +	pid_t tmp_pid;
+> +	int r;
+> +	struct ctl_table tmp_table = *table;
+> +
+> +	tmp_pid = pid_vnr(cad_pid);
+> +	tmp_table.data = &tmp_pid;
+> +
+> +	r = proc_dointvec(&tmp_table, write, buffer, lenp, ppos);
+> +	if (r || !write)
+> +		return r;
+> +
+> +	new_pid = find_get_pid(tmp_pid);
+> +	if (!new_pid)
+> +		return -ESRCH;
+> +
+> +	put_pid(xchg(&cad_pid, new_pid));
+> +	return 0;
+> +}
+> +
+>  static const struct ctl_table pid_table[] = {
+>  	{
+>  		.procname	= "pid_max",
+> @@ -727,6 +750,15 @@ static const struct ctl_table pid_table[] = {
+>  		.extra1		= &pid_max_min,
+>  		.extra2		= &pid_max_max,
+>  	},
+> +#ifdef CONFIG_PROC_SYSCTL
+> +	{
+> +		.procname	= "cad_pid",
+> +		.data		= NULL,
 
-The following changes since commit 2d7124941a273c7233849a7a2bbfbeb7e28f1caa:
+nit: this is redundant, any unspecified member will be zero-initialized.
 
-  Merge tag 'kvmarm-fixes-6.15-2' of https://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD (2025-04-24 13:28:53 -0400)
+Regardless:
 
-are available in the Git repository at:
+Reviewed-by: Kees Cook <kees@kernel.org>
 
-  https://github.com/kvm-x86/linux.git tags/kvm-x86-fixes-6.15-rcN
 
-for you to fetch changes up to e3417ab75ab2e7dca6372a1bfa26b1be3ac5889e:
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0600,
+> +		.proc_handler	= proc_do_cad_pid,
+> +	},
+> +#endif
+>  };
+>  #endif
+>  
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 9d8db9cef11122993d850ab5c753e3da1cbfb5cc..d5bebdd02cd4f1def7d9dd2b85454a9022b600b7 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -1224,28 +1224,6 @@ int proc_dointvec_ms_jiffies(const struct ctl_table *table, int write, void *buf
+>  				do_proc_dointvec_ms_jiffies_conv, NULL);
+>  }
+>  
+> -static int proc_do_cad_pid(const struct ctl_table *table, int write, void *buffer,
+> -		size_t *lenp, loff_t *ppos)
+> -{
+> -	struct pid *new_pid;
+> -	pid_t tmp;
+> -	int r;
+> -
+> -	tmp = pid_vnr(cad_pid);
+> -
+> -	r = __do_proc_dointvec(&tmp, table, write, buffer,
+> -			       lenp, ppos, NULL, NULL);
+> -	if (r || !write)
+> -		return r;
+> -
+> -	new_pid = find_get_pid(tmp);
+> -	if (!new_pid)
+> -		return -ESRCH;
+> -
+> -	put_pid(xchg(&cad_pid, new_pid));
+> -	return 0;
+> -}
+> -
+>  /**
+>   * proc_do_large_bitmap - read/write from/to a large bitmap
+>   * @table: the sysctl table
+> @@ -1541,15 +1519,6 @@ static const struct ctl_table kern_table[] = {
+>  		.mode		= 0644,
+>  		.proc_handler	= proc_dostring,
+>  	},
+> -#endif
+> -#ifdef CONFIG_PROC_SYSCTL
+> -	{
+> -		.procname	= "cad_pid",
+> -		.data		= NULL,
+> -		.maxlen		= sizeof (int),
+> -		.mode		= 0600,
+> -		.proc_handler	= proc_do_cad_pid,
+> -	},
+>  #endif
+>  	{
+>  		.procname	= "overflowuid",
+> 
+> -- 
+> 2.47.2
+> 
+> 
 
-  KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1 VM count transitions (2025-05-08 07:17:10 -0700)
-
-----------------------------------------------------------------
-KVM x86 fixes for 6.15-rcN
-
- - Forcibly leave SMM on SHUTDOWN interception on AMD CPUs to avoid causing
-   problems due to KVM stuffing INIT on SHUTDOWN (KVM needs to sanitize the
-   VMCB as its state is undefined after SHUTDOWN, emulating INIT is the
-   least awful choice).
-
- - Track the valid sync/dirty fields in kvm_run as a u64 to ensure KVM
-   KVM doesn't goof a sanity check in the future.
-
- - Free obsolete roots when (re)loading the MMU to fix a bug where
-   pre-faulting memory can get stuck due to always encountering a stale
-   root.
-
- - When dumping GHCB state, use KVM's snapshot instead of the raw GHCB page
-   to print state, so that KVM doesn't print stale/wrong information.
-
- - When changing memory attributes (e.g. shared <=> private), add potential
-   hugepage ranges to the mmu_invalidate_range_{start,end} set so that KVM
-   doesn't create a shared/private hugepage when the the corresponding
-   attributes will become mixed (the attributes are commited *after* KVM
-   finishes the invalidation).
-
- - Rework the SRSO mitigation to enable BP_SPEC_REDUCE only when KVM has at
-   least one active VM.  Effectively BP_SPEC_REDUCE when KVM is loaded led
-   to very measurable performance regressions for non-KVM workloads.
-
-----------------------------------------------------------------
-Dan Carpenter (1):
-      KVM: x86: Check that the high 32bits are clear in kvm_arch_vcpu_ioctl_run()
-
-Mikhail Lobanov (1):
-      KVM: SVM: Forcibly leave SMM mode on SHUTDOWN interception
-
-Sean Christopherson (2):
-      KVM: x86/mmu: Prevent installing hugepages when mem attributes are changing
-      KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1 VM count transitions
-
-Tom Lendacky (1):
-      KVM: SVM: Update dump_ghcb() to use the GHCB snapshot fields
-
-Yan Zhao (1):
-      KVM: x86/mmu: Check and free obsolete roots in kvm_mmu_reload()
-
- arch/x86/kvm/mmu.h     |  3 ++
- arch/x86/kvm/mmu/mmu.c | 70 +++++++++++++++++++++++++++++++++++-----------
- arch/x86/kvm/smm.c     |  1 +
- arch/x86/kvm/svm/sev.c | 32 ++++++++++++---------
- arch/x86/kvm/svm/svm.c | 75 ++++++++++++++++++++++++++++++++++++++++++++++----
- arch/x86/kvm/svm/svm.h |  2 ++
- arch/x86/kvm/x86.c     |  4 +--
- 7 files changed, 150 insertions(+), 37 deletions(-)
+-- 
+Kees Cook
