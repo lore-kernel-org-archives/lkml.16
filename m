@@ -1,141 +1,100 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0609291157;
-	Fri,  9 May 2025 12:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2F8291176
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 12:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746795382; cv=none; b=TJ5qHZ955toVvEbr3JNjHAmKVvjghiWQVPbu2eg88J1TY3hvFx3WhXUb2crXue1jHiNgcPgj8bG2UpJHCXIbrwAslumjCvtbLzYSRWIl5+QuM+dQs3JF2Cg061saW7alBE0rtETcGId8FMdIJzITq9r92xEMZAJ5MOkHxi0Zokw=
+	t=1746795383; cv=none; b=JNrmzoN74cCfrpSyvqdViRbcEXJyPDmbwiPewZoqivUnsFc9qUtOLhJKGCQIS+kMfJ8qpVS9C/XXCR87P5KVipmrsGP5PZarK/v5Y7qxpWmPkqiIrw84xpmD/rgrf1knX3NI+ji2zXtkm3KJO0CkKuFyP23msql1PvMN7Zkm/6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746795382; c=relaxed/simple;
-	bh=kENEwiubITe2MKY6fiVD4dUfKgaM/qvrW81svErkk3g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gjmj+IityCuGXrqVOZvi4JSBCg42QySsI51p7kzCbsKN1rzEYGjCwfOvYrdiCEBS85OoGt+vVHvUzRKrXcMmQFHeMbxN3tjHHgxerLvaYd8EhKBTE/yXJNiihBL2aCwrVv9vlSFHoU6ctWm+XWZPoc9RcOnraZ97QO54p2w81Hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97DFF175D;
-	Fri,  9 May 2025 05:56:07 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1EF403F58B;
-	Fri,  9 May 2025 05:56:05 -0700 (PDT)
-Date: Fri, 9 May 2025 13:56:01 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Eder Zulian <ezulian@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
-	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jann Horn <jannh@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Casey Chen <cachen@purestorage.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Li Huafei <lihuafei1@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Andrew Kreimer <algonell@gmail.com>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Xu Yang <xu.yang_2@nxp.com>,
-	Steve Clevenger <scclevenger@os.amperecomputing.com>,
-	Zixian Cai <fzczx123@gmail.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 05/47] arm64: cputype: Silence -Wshorten-64-to-32
- warnings
-Message-ID: <aB37YWcT5l7AfVVA@J2N7QTR9R3>
-References: <20250430175036.184610-1-irogers@google.com>
- <20250430175036.184610-6-irogers@google.com>
+	s=arc-20240116; t=1746795383; c=relaxed/simple;
+	bh=IhVt1QCCLBwbJW2kxZXLV7OpWziutg/GuXr0dlismgA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bAnb6miXTQ0QNx26ZLCjQ2eRnr2vc/U8hAC/DzLw81cnuqzQjjKLAYf3T9vhcf29sII+ylC7OzKDjIJuIDcW6HPRUdW2L3vOQyWHanZFyavTdjbdXBaG3YE2Pa5kPebb12ZZbXuUIiukyv071DAJfQe/oz6BXwSt9seWVWIWgeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XkdnqvVR; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XkdnqvVR"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-227b828de00so20597745ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 05:56:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746795380; x=1747400180; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IhVt1QCCLBwbJW2kxZXLV7OpWziutg/GuXr0dlismgA=;
+        b=XkdnqvVREQFwYARIPlsNWzmRqfq/CVgU1MRPn1nWFRMnZbc7zVBb5FZBH2+hn4wh4d
+         3ToUF9/BtS16SvbHx/n4sX7JhX+t6kemnyDg8S6c4VkHQwPmiDefKezDgOzJg8Yf2GTD
+         KWw4bXcFTY3Hf33rPsCSWc3YeY43UtlBOHca5spDMq8ftDZI3S1EOweJu4mEytUGZKlZ
+         9JixGlHk4tMISp7gJwgu6824doRj5qk9YqBPIAhFq0rtu0GOgdcMjMTKRhPvMdUnRVw1
+         6r5gYWfvF8Ao7CqljDdEvaOyB0A+BEbL6u/6OoChubYjuS7aiG68PiFcCubOrEy9zabI
+         kKKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746795380; x=1747400180;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IhVt1QCCLBwbJW2kxZXLV7OpWziutg/GuXr0dlismgA=;
+        b=eqa5lo/QdsDMG3+R57cV0XhLtI323YS9N2x2WTiP9s+AX81JyMqmKheN80H0GNm4jx
+         mM1M7trJIcieV2rEnSPcrPqcfyUZlweuXcL6os73DyqKhUbKnIjQEh3dARoD7Vv2GsU8
+         cIAguxj0/feDvE4nTqIAHB1wa3R70hVs+EulO+wsCaKZp2CCKh9uuRNhWIoHPioRWhTI
+         Nw038ntl85wxei9pYNR2H+dmk0rJeP60mfz0GBvQzUYa+Nb2Q//juwYLb3aBWXx2TrEI
+         jp3FrQMyzMBBtQScA8FT4VHuHVyYBgkJc0SNDdnmJ1DL9D15gGd4PCaRUHsoucw7gDcP
+         nHwA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbhB5+0aYLkXMyRwUFszcYYFXgfrJueKvK3tEVJPBoxpqWBdoOsRvyLfEpg9ys8JQi8yJhxEecTI34TZg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+BBuUgLgVPz2vGF+EQF8ugsSrvQMZOd99LYBiPigTl5iyEjRx
+	mwM72AjL7P1eZeqXftT7iihpzVNfiIBOyTaelNfYng9ziVHHvm3+r0HyegmT5hFC61SFaOJL/iH
+	hhtJHfJBVvL44ixyPtSOFy3Y6H+3wKLJ+YbrJ
+X-Gm-Gg: ASbGncthkqRcb+mH6HELlxBCcmZ/iKnH4/0vyZ8vajHuIggf4Mb0F/ao+JdwyqSozgV
+	LumNQRBupSv3qqvSdFBh2q1myTa6E/r44LqYWhlDGALex0t5I2UVUc3079ttUGV6rLRAmMJSk/B
+	YvoScWXvXIyHagmmotViRUtTv+Gekt8oB+n6lVEPtd4EnLvBvO0AQ=
+X-Google-Smtp-Source: AGHT+IEF3voQQuq3aFOECMAygtEf3hwl6YY0yhW1fQO8wOseEwkI/Dd+gAS06Wo/TKctdBMdVYmR1NU47eAo9Xfgt0M=
+X-Received: by 2002:a17:903:182:b0:22e:6cc6:cf77 with SMTP id
+ d9443c01a7336-22fc91cec2bmr56558115ad.53.1746795379720; Fri, 09 May 2025
+ 05:56:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430175036.184610-6-irogers@google.com>
+References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com> <20250505-debugfs-rust-v5-2-3e93ce7bb76e@google.com>
+In-Reply-To: <20250505-debugfs-rust-v5-2-3e93ce7bb76e@google.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 9 May 2025 14:56:05 +0200
+X-Gm-Features: AX0GCFsiweMfJW577uoe_PGY4lTxO5mFT6enSbv3HTbSwAWbXXWKv-S99GFfYLs
+Message-ID: <CAH5fLggovWEOctW2rYnAszSzpUMCammvH2+8-sQ0eypEbhSa3A@mail.gmail.com>
+Subject: Re: [PATCH v5 2/4] rust: debugfs: Bind file creation for long-lived Display
+To: Matthew Maurer <mmaurer@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Sami Tolvanen <samitolvanen@google.com>, Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 10:49:53AM -0700, Ian Rogers wrote:
-> The clang warning -Wshorten-64-to-32 can be useful to catch
-> inadvertent truncation. In some instances this truncation can lead to
-> changing the sign of a result, for example, truncation to return an
-> int to fit a sort routine. Silence the warning by making the implicit
-> truncation explicit.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/arch/arm64/include/asm/cputype.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/arch/arm64/include/asm/cputype.h b/tools/arch/arm64/include/asm/cputype.h
-> index 488f8e751349..d7289b9d2758 100644
-> --- a/tools/arch/arm64/include/asm/cputype.h
-> +++ b/tools/arch/arm64/include/asm/cputype.h
-> @@ -227,7 +227,7 @@
->  
->  #include <asm/sysreg.h>
->  
-> -#define read_cpuid(reg)			read_sysreg_s(SYS_ ## reg)
-> +#define read_cpuid(reg)			((u32)read_sysreg_s(SYS_ ## reg))
+On Tue, May 6, 2025 at 1:51=E2=80=AFAM Matthew Maurer <mmaurer@google.com> =
+wrote:
+>
+> Allows creation of files for references that live forever and lack
+> metadata through the `Display` implementation.
+>
+> The reference must live forever because we do not have a maximum
+> lifetime for the file we are creating.
+>
+> The `Display` implementation is used because `seq_printf` needs to route
+> through `%pA`, which in turn routes through Arguments. A more generic
+> API is provided later in the series, implemented in terms of this one.
+>
+> Signed-off-by: Matthew Maurer <mmaurer@google.com>
 
-This isn't right.
+I believe it should be possible to bind owned data to a `File` using a
+signature like this:
 
-Architecturally, system registers are 64-bit wide, and some of the ID
-registers have allocated fields in the upper 32 bits, e.g. in MPIDR,
-where we this will silently discard those when accessed via read_cpuid_mpidr():
-
-static inline u64 __attribute_const__ read_cpuid_mpidr(void)
-{
-        return read_cpuid(MPIDR_EL1);
-}
-
-Mark.
+fn create_file<T>(&self, name: &CStr, data: impl PinInit<T>) -> impl
+PinInit<FileWithData<T>>
