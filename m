@@ -1,137 +1,200 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DDD153BD9
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 19:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7663025D1E2
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 19:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746819432; cv=none; b=m5dY9/jgHM+tWk+Hd2GSFb8JT3IvA51+SHNfqf7EQ1Ox4Ya2Pxpxw7y6IaoiFpjQWlS/yDTRdwZxV2k1NXVThOcPh3HquN1asvDf/v5/UxksJNBWsa7XrQHgrS2o7bEVaJnLf0Y1xygEaQzMBJlhyKjeiU6tfTe9KiiUuvHxixA=
+	t=1746819452; cv=none; b=eVbpKRcUiSySxNM/fC64nj1vqK9Uz2pTYDANqkKQeeF6dhnzzkwjaQgsu7SkW8Mkpn53QuyJGsDAyPpmvXDHXkTVW8xX6m7yCgzey49upFFkdHVyl7ltBgIe7NITIlqUUmlmgYLJS0n/SmS5RuirTsjXyO7p96GZRPnv1hW+RRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746819432; c=relaxed/simple;
-	bh=Qvzebave4bb87r54HVfRq1tPLeB+K+3lDpKsRKaaZ3k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z24eeo6lR7PxS7CRogK0lVHoQ4zIfzBgJuTjUus92aXb0rtUtX8gT5Nz5rQBwW7h9i0dl+qLSs4+rwfNuBE7v3FuhVLNGLTBXzucvkyiggzsByc5bI/2m4+uY+Juce9CNi2IeMdzd0/egvzeDnETaNflmydEJegumW60ZSMVcq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I+cqH6DS; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746819452; c=relaxed/simple;
+	bh=83FRY+Vnw9dJkqYlgDfGaSE9Kj39v0Para6kPePwCfY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W+GMwqscPxGf1D8CZUMaZfwtzhx0ot3VNotNu/pfbtTkGRHvpoPH4EYlnH9MLHieFSlAN28v3P9y2pw8/81d6yBxQYE1XVVKBnGjxayAT3bqskVVT4r8ErDZzKOmJqj18lTIBa3dEStR6QGEPuoOf25yBISgFFhRB//t0Wb7oOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sj1SJoyC; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I+cqH6DS"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-47e9fea29easo3271cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 12:37:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sj1SJoyC"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a1d8c09683so1136596f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 May 2025 12:37:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746819429; x=1747424229; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3vTa7RtCHjxieC6hTOF42B8Cm9AsQcKEy9wOP2glWys=;
-        b=I+cqH6DS5PiTP+N2pFBa/YdTBkKW5ryrmlKK0vTaV9GFz4YRCUQnKuGNdNfZXoKDLC
-         CaA+VvsNE0rZsRmQp4xVQy4oN7+P0qfWiRUczbQn0HxZnJQdgteDJYEnaeqmXzpujWNv
-         s33/3c8XDZyEWJp0kw8RysD2IwYxQt45/SCpsMXQLqQF3e0s71Ht5sHhd4e6HdSLuUd5
-         I6tl/gS6+h6PcmItxST/fNOyjzxgaOc2AJ37muc0iKtW9cSUh6kQTfehPybWp81GF4w/
-         tocUMN6XvBZuyVREOhfpih67jcEq6ptP4LsTS2nQcxxDdc7O9oeeoGqvY+08ixZDxJIV
-         X28g==
+        d=linaro.org; s=google; t=1746819449; x=1747424249; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3oAZerdoqNvoXq669EYro8m/ZBQ7UghYajG9A/pxU8g=;
+        b=sj1SJoyCn4CW3AOEPW9sZxaCUUwASKRm1y7R1m08uNBzkIhMCnTMdFgYZ58bB0JybV
+         QdDbZKzkb3V5QSVgvy7qaDs033977bnqzR/GGNBis8Y8VyGrpT93zwpW+sNSVJSop/hh
+         J9bY/XWd9Y7zY3V1VN6yOnBy2RASdanigNIkLM50YZV4aEa94cw5kZXG3jHxdDunjb9U
+         eU9/vo96UP0QLlHcaiqBF5e/ZmHxs4yrILK7U6oc/VYBcG5OpkmUfqPJdDGqBcW8qr3e
+         njX0//EBDYLVpcYAe6EfWZpkYCKM1CToLD2nGS1bhpaQ9nJj1RqhONB/HOGslLOD8NGH
+         E3Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746819429; x=1747424229;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3vTa7RtCHjxieC6hTOF42B8Cm9AsQcKEy9wOP2glWys=;
-        b=nNV2X+vDwcJe9OhhvWyTE12TxUt65BQrsp27tcFXgADG8sx7sNQzOjVqepMyyq+2M7
-         GnmUAvJCGn5YRMDw5DLkPURG4D8KIJ/W9X+zLVVRlGgSp4oewVgikboSO9McFtat1IwD
-         LA7hSxWU/KQzeelB341oeN0+4n8IpyIx6tSnuTZeBR3sO4jNCNBMaIOVFOojnyyfHWek
-         6Qsjh+ldAh+7qXroCMdHBrHlJHmQp66TAUJ2oqkfOFcvZu1IOkkcAAvTTu9TGzACIcQQ
-         cs30/64MV+iHIyTTyboGwDq6hPR4JkqkrQbEPnVelfV2hCc890qpjYimoxoqpzEKuwyp
-         onMA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4OhsxocyjjXHXaYfx4O/jePxspbCTlaQIO9Ol7IoYvsPARl98drGanSnSToE5wpzPJlMl8OPdE3EXx38=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZq9XYM7720GIi8WYKEf8+5OmQ6KPXt6hWP3ahT5cKCTAhDmDX
-	L4z3J+jg/RU7W8jlZo2g88Z1z3wVc+2+Kn64XCPRc1n/8Qb65SO9DtlwbEZbJv+M2fpa+gN/JJh
-	5kDFkc39ZXMgDQIawTi5SUEovu3lCyl74ymOS
-X-Gm-Gg: ASbGncv1LRjF8cj6yJIL2B9GllrNVBGuN8M+7tavjQF7av1LmXBryK5q+wL/8pZeMiZ
-	H++fKu8VgdfEjX8yfidwCu6D9fSr6kXgzZbQbCzXvRxFcfSiYRf6ZBmwqgdtNngVoo2SZAEmqmK
-	43C4bZB7oo1e6F2QsBEeeLMhdZMvkEj5g=
-X-Google-Smtp-Source: AGHT+IHxwdhepzhm9r4/VsjN1+OHVF5JZWVhbaKD3NJOFLFfHNJGUKeQRwNxPIm5hEZATtnjyhd24FOFu+BCJTxlq7k=
-X-Received: by 2002:ac8:5f85:0:b0:47d:cd93:5991 with SMTP id
- d75a77b69052e-494612f9bdemr576991cf.21.1746819429277; Fri, 09 May 2025
- 12:37:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746819449; x=1747424249;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3oAZerdoqNvoXq669EYro8m/ZBQ7UghYajG9A/pxU8g=;
+        b=vXl9FudH5+ArPwKX2pKFugV/ZdPpeD3eUTxSv53HiqeTQTeRJlxtS9qkXonyHC+1CM
+         jyI/UYIPti5UnLfqYamUgvza4wE11W5ccPK31aZR2Qx5AyDbW3zHjYr/ohHZ7v6L9Dr1
+         htj3iHMRBJ+JU6RMulz3BEiSSekVJWv/aOGqPMD3b/PjlT20cjTVR8Y64tPbZiIc41L9
+         WNI5pnH0lydnpuMPYqNWP/e8OhLLrE5qePi/oDIjX7uKGoU76loa2UWXEdigHNQk99U+
+         YGQ8JiVg+694+14SzUSMjZO+G8ML2PLF8c5wwkTaXnIQfKCPfL73k+4qE6s2Fv8qwh9K
+         T+SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXOwCn6L+HDsV+f8nPTOE1KRVuvcBTwxH2XDf1ByrpUPTB46lHHxhjYLqojqkwwsMObm75+DQwEBiy5IAI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxho2K7Qk1NG9l28BM/554tB+MUDbHpRUYX2qaTCBeFQAheeisl
+	zwp/vf0Ov6gdvMT8AOpDhNZh2Paef2S/iu2S6h2T3x2E9ETqiM8vNnWvhhG73Q==
+X-Gm-Gg: ASbGncv61w0UtVnjaoiiS3hGq7KM3PFG8yrIcruvCJPIihTQ+r2zEmIy2a38D1feLi5
+	wd6Qtv1LH0Z4WIrUz9vNZy290yyfOoCIOW0d5p8Tt1wW31v6W4Su/qkWAj8faa8VnoD5H2+GVPN
+	YYVhKxCj1M9A3j8q6UvxdVA1SlVI4ydsxgfxvx36vn0pIs4ZLXG5YkYi9FgYqvfH1+w4aENXU6J
+	ydLpVPCFhWZNTFMGrnbPy5oycndEtId3A0zdZ3D7OxM8JYcq3n+ViRddXoW7Cbee5yzWLNDAVuT
+	06ja1DMO1tHSqgOQ6g8W7H8GRW+LRbqSbm8qT0geTeysXBxvkeloeTChcvAdW3OSu525Eaj7/99
+	dC1Ecec4Zz4eUCgpJK2C4BY+rqRdqfvLS9rh4sZd8E1rM
+X-Google-Smtp-Source: AGHT+IHZrI/GvToEb7dCPGeWvlRmWso5d9JAzN2/1ym+EDk2TzhgDNhcO92+4YHwNzODFUBXeeEH/A==
+X-Received: by 2002:a05:6000:18a9:b0:39e:cbca:7156 with SMTP id ffacd0b85a97d-3a1f6422625mr4225502f8f.1.1746819448739;
+        Fri, 09 May 2025 12:37:28 -0700 (PDT)
+Received: from thinkpad (cust-east-par-46-193-69-61.cust.wifirst.net. [46.193.69.61])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f33b5sm4223527f8f.54.2025.05.09.12.37.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 12:37:28 -0700 (PDT)
+Date: Sat, 10 May 2025 01:07:27 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-arm-kernel@lists.infradead.org, 
+	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Aradhya Bhatia <a-bhatia1@ti.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Heiko Stuebner <heiko@sntech.de>, 
+	Junhao Xie <bigfoot@classfun.cn>, Kever Yang <kever.yang@rock-chips.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: PCI: rcar-gen4-pci-host: Document
+ optional aux clock
+Message-ID: <2ny7jhcp2g5ixo75donutncxnjdawzev3mw7cytvhbk6szl3ue@vixax5lwpycw>
+References: <20250406144822.21784-1-marek.vasut+renesas@mailbox.org>
+ <20250406144822.21784-2-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507175500.204569-1-00107082@163.com> <20250509173929.42508-1-00107082@163.com>
- <7f237574d9f08a9fa8dcaa60d2edf8d8e91441d4.camel@linux.intel.com>
-In-Reply-To: <7f237574d9f08a9fa8dcaa60d2edf8d8e91441d4.camel@linux.intel.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Fri, 9 May 2025 12:36:47 -0700
-X-Gm-Features: AX0GCFti7bNqGFrfEJY-DR9yB3WqRlM7xrBhfUKajVDVf17WhbO-8Pm_9O-kOeM
-Message-ID: <CAJuCfpHB8T8daanvE_wowRD9-sAo30rtCcFfMPZL_751+KSs5w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] alloc_tag: keep codetag iterator active between
- read() calls
-To: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: David Wang <00107082@163.com>, kent.overstreet@linux.dev, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250406144822.21784-2-marek.vasut+renesas@mailbox.org>
 
-On Fri, May 9, 2025 at 11:33=E2=80=AFAM Tim Chen <tim.c.chen@linux.intel.co=
-m> wrote:
->
-> On Sat, 2025-05-10 at 01:39 +0800, David Wang wrote:
-> >
-> >
-> > Signed-off-by: David Wang <00107082@163.com>
+On Sun, Apr 06, 2025 at 04:45:21PM +0200, Marek Vasut wrote:
+> Document 'aux' clock which are used to supply the PCIe bus. This
+> is useful in case of a hardware setup, where the PCIe controller
+> input clock and the PCIe bus clock are supplied from the same
+> clock synthesiser, but from different differential clock outputs:
 
-Acked-by: Suren Baghdasaryan <surenb@google.com>
+How different is this clock from the 'reference clock'? I'm not sure what you
+mean by 'PCIe bus clock' here. AFAIK, endpoint only takes the reference clock
+and the binding already has 'ref' clock for that purpose. So I don't understand
+how this new clock is connected to the endpoint device.
 
-> > ---
-> >  lib/alloc_tag.c | 29 ++++++++++-------------------
-> >  1 file changed, 10 insertions(+), 19 deletions(-)
-> >
-> > diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
-> > index 25ecc1334b67..fdd5887769a6 100644
-> > --- a/lib/alloc_tag.c
-> > +++ b/lib/alloc_tag.c
-> > @@ -45,21 +45,16 @@ struct allocinfo_private {
-> >  static void *allocinfo_start(struct seq_file *m, loff_t *pos)
-> >  {
-> >       struct allocinfo_private *priv;
-> > -     struct codetag *ct;
-> >       loff_t node =3D *pos;
-> >
-> > -     priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
-> > -     m->private =3D priv;
-> > -     if (!priv)
-> > -             return NULL;
-> > -
-> > -     priv->print_header =3D (node =3D=3D 0);
-> > +     priv =3D (struct allocinfo_private *)m->private;
-> >       codetag_lock_module_list(alloc_tag_cttype, true);
-> > -     priv->iter =3D codetag_get_ct_iter(alloc_tag_cttype);
-> > -     while ((ct =3D codetag_next_ct(&priv->iter)) !=3D NULL && node)
-> > -             node--;
-> > -
-> > -     return ct ? priv : NULL;
-> > +     if (node =3D=3D 0) {
-> > +             priv->print_header =3D true;
-> > +             priv->iter =3D codetag_get_ct_iter(alloc_tag_cttype);
-> > +             codetag_next_ct(&priv->iter);
-> > +     }
->
-> Do you need to skip print header when *pos !=3D 0? i.e add
+- Mani
 
-Technically not needed since proc_create_seq_private() allocates
-seq->private using kzalloc(), so the initial value of
-priv->print_header is always false.
+> 
+>  ____________                    _____________
+> | R-Car PCIe |                  | PCIe device |
+> |            |                  |             |
+> |    PCIe RX<|==================|>PCIe TX     |
+> |    PCIe TX<|==================|>PCIe RX     |
+> |            |                  |             |
+> |   PCIe CLK<|======..  ..======|>PCIe CLK    |
+> '------------'      ||  ||      '-------------'
+>                     ||  ||
+>  ____________       ||  ||
+> |  9FGV0441  |      ||  ||
+> |            |      ||  ||
+> |   CLK DIF0<|======''  ||
+> |   CLK DIF1<|==========''
+> |   CLK DIF2<|
+> |   CLK DIF3<|
+> '------------'
+> 
+> The clock are named 'aux' because those are one of the clock listed in
+> Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml which
+> fit closest to the PCIe bus clock. According to that binding document,
+> the 'aux' clock describe clock which supply the PMC domain, which is
+> likely PCIe Mezzanine Card domain.
+> 
+> Tested-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+> ---
+> NOTE: Shall we patch Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+>       instead and add 'bus' clock outright ?
+> ---
+> Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> Cc: "Rafał Miłecki" <rafal@milecki.pl>
+> Cc: Aradhya Bhatia <a-bhatia1@ti.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Junhao Xie <bigfoot@classfun.cn>
+> Cc: Kever Yang <kever.yang@rock-chips.com>
+> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Magnus Damm <magnus.damm@gmail.com>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Neil Armstrong <neil.armstrong@linaro.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-renesas-soc@vger.kernel.org
+> ---
+> V2: - Add TB from Niklas
+>     - Document minItems in clock-names
+> ---
+>  .../devicetree/bindings/pci/rcar-gen4-pci-host.yaml      | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+> index bb3f843c59d91..528b916fdb99b 100644
+> --- a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+> +++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+> @@ -46,12 +46,15 @@ properties:
+>        - const: app
+>  
+>    clocks:
+> -    maxItems: 2
+> +    minItems: 2
+> +    maxItems: 3
+>  
+>    clock-names:
+> +    minItems: 2
+>      items:
+>        - const: core
+>        - const: ref
+> +      - const: aux
+>  
+>    power-domains:
+>      maxItems: 1
+> @@ -105,8 +108,8 @@ examples:
+>                           <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
+>                           <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>;
+>              interrupt-names = "msi", "dma", "sft_ce", "app";
+> -            clocks = <&cpg CPG_MOD 624>, <&pcie0_clkref>;
+> -            clock-names = "core", "ref";
+> +            clocks = <&cpg CPG_MOD 624>, <&pcie0_clkref>, <&pcie0_clkgen>;
+> +            clock-names = "core", "ref", "aux";
+>              power-domains = <&sysc R8A779F0_PD_ALWAYS_ON>;
+>              resets = <&cpg 624>;
+>              reset-names = "pwr";
+> -- 
+> 2.47.2
+> 
 
->
->         } else {
->                 priv->print_header =3D false;
->         }
->
-> Tim
->
-> > +     return priv->iter.ct ? priv : NULL;
-> >  }
-> >
->
+-- 
+மணிவண்ணன் சதாசிவம்
