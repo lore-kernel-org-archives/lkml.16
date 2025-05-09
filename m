@@ -1,266 +1,140 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53C326C386
-	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 06:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0A626C3AE
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 06:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746773164; cv=none; b=azPHyDzm3XNuZEOtPfGBEucsB9b06k+i4Kdh/9t8zBWgCC2xMsZmrrGODAJ04J7CSiIoNcB2SXVm3AZlX9wrdixNFpGQPbC5u6eiibq+bqwapO5kVnKPoY3eS/WTBhISSibh/Dbw0UPiv0v7WVtGcPuIxiAbDpxte1gXijjP4/k=
+	t=1746773192; cv=none; b=McNJMiSiPCC/zNyBG+NpJ2fHAjCHw8BShh8F7RAsbUlIRuRi+npij8A1xeTUFLhl340r29dqzI5Z9yT7FBcrxzVdRe9HEGuLnVUgyDfyv6GEDeakChtHbGaOyzXRg8eugD+jSDTJLKolocJyIR4C8mk88zztM/KkpGXj2jaBb7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746773164; c=relaxed/simple;
-	bh=jRKNlJ4pLnA96VZ2LhySf/5BWbaAQltQg52oYYi6DEM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=L5hdXDSlLnjz3JjxiWh1KQjVKrVsOrQwph5zfq8RU3pQ9BvPOgbHfJdnypKCZzEQeJb5XSc2hoo/hZRdMmQ14sfd7y5Cd2FHzpWpcIDlDNvpPY+YuWCl07RbszJP5gOIcIzNKBB46C1QFDmF9MiriKap8Ra9tq5bf1HJX8qeaaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Ztzxv66tcznfY6;
-	Fri,  9 May 2025 14:44:35 +0800 (CST)
-Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id C8286180488;
-	Fri,  9 May 2025 14:45:53 +0800 (CST)
-Received: from [10.67.120.170] (10.67.120.170) by
- kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
+	s=arc-20240116; t=1746773192; c=relaxed/simple;
+	bh=s3rmVS6OnadtDqTQZU80WSi4FtJqy6TB5OYSr0ofiDI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FvGVKp4xOKSSl4uLzPNXb3NEaw+mGQbYe2yzyj6vjK9SjZlmYL4SSvtEc4ytU8ucppB6KsAYBy3WfCPMHV6/k4voz8ifj0pZ850rx++Elr93S9Kn+P7hKQXKfnuzfmVlz8LE1UOcyoi2cLcxhXe2ToLvBcUbbdr6oujptXXZ8Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ns8cNkG0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ns8cNkG0"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5492HLgZ023383;
+	Fri, 9 May 2025 06:46:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=iUi86ZpuqrYLmDZVh7MKw9
+	JIS0afXPNB4K1CF7NR0P8=; b=ns8cNkG0WGicGZB9WQj83yYNog6akqx9uAt5Zt
+	09/K/vZID8ivzatlkqvL0DH8zjoGeG5+0vCjgyc/2gsgpc6n7wAbPBNqjfGfTKVF
+	o3+BOorT9y3P2bjF2AFmQGnD87wM+Qc41/p4TlkpaWeUGCRxyBliij/or+wZIGZA
+	FkUydGS5S7IpOraPJxmwB7rabenr+NxiTW9BzOt13U6hTi0tHrC1sZLCg50GbPJ5
+	bJs1c+XXOauMPzRYwNtbCJMayRZx2qmYm+cTmvcjRe3ci43u3Pn1a4yDEqUVO5LJ
+	Dvi1Zy3t4N02QhGvabNTOEluJvNaAVGoZGVlLDToshUIGX0Q==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46gnp83pxs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 May 2025 06:46:24 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5496kNK0023854
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 9 May 2025 06:46:23 GMT
+Received: from hyiwei-gv.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 9 May 2025 14:45:53 +0800
-Message-ID: <252f3931-57ba-424a-a7b3-73235afd2539@huawei.com>
+ 15.2.1544.9; Thu, 8 May 2025 23:46:17 -0700
+From: Huang Yiwei <quic_hyiwei@quicinc.com>
+To: <james.morse@arm.com>, <linux-arm-kernel@lists.infradead.org>
+CC: Huang Yiwei <quic_hyiwei@quicinc.com>, <linux-kernel@vger.kernel.org>,
+        <quic_aiquny@quicinc.com>, <kernel@quicinc.com>,
+        <kernel@oss.qualcomm.com>
+Subject: [PATCH] firmware: arm_sdei: Add EVENT_SIGNAL for ARM SDEI
 Date: Fri, 9 May 2025 14:45:52 +0800
+Message-ID: <20250509064552.3330202-1-quic_hyiwei@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] dma-mapping: benchmark: add support for dma_map_sg
-To: Barry Song <21cnbao@gmail.com>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>
-CC: <yangyicong@huawei.com>, <hch@lst.de>, <iommu@lists.linux.dev>,
-	<jonathan.cameron@huawei.com>, <prime.zeng@huawei.com>,
-	<fanghao11@huawei.com>, <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-References: <20250509020238.3378396-1-xiaqinxin@huawei.com>
- <20250509020238.3378396-4-xiaqinxin@huawei.com>
- <CAGsJ_4xOX6Rnz7nrd3ZRCzjaTzqmvWoWQNq4JzfXRhwRKkPJjw@mail.gmail.com>
-From: Qinxin Xia <xiaqinxin@huawei.com>
-In-Reply-To: <CAGsJ_4xOX6Rnz7nrd3ZRCzjaTzqmvWoWQNq4JzfXRhwRKkPJjw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemj200003.china.huawei.com (7.202.194.15)
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=M7xNKzws c=1 sm=1 tr=0 ts=681da4c0 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=VzfuvANLIRT1E9q52_AA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: P4IilRsj_1CdUCQ3Rgu9tmwXhP4Whn79
+X-Proofpoint-GUID: P4IilRsj_1CdUCQ3Rgu9tmwXhP4Whn79
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA2MyBTYWx0ZWRfX8GQ3I69q1xug
+ pz6maFohElt3CllP0F7lgXLyweRfutx6TMAbB/YNz96TD2bP/SnIPxkP70dpRf+VUJnErzRUE5j
+ hPYStfhvhidm0GYrXkOlebxHRuv6bia7sxQRbACgj9m/zlubL/GrOkOl1+RazwwxJKtxUwVEqB8
+ PrH0NnDqptC2meO7dULnNKUtt8EJin9bdGwwby2zoWfsPl5wPZy3ptEKdakbFlpH/Up8OPUxUDQ
+ Ncfa2FazXJAjPZ89mekS1FHy2OnPwmz7juvOv218XQP2OuafaIV7T2+R2vhkgEdPP6Ex1qpl4bT
+ 5+Co4tiQ/qaGvA784m/9GoiekGWfQ58k+MeWMTprfLZWp6ffOydVYBmE2Z+3gsR5fM+pTNaFDqR
+ FpXiepyp1Upp9mLfJE0KP9r8M5oBDLB9Y8hIvV53Rvdpz95KLyUwMO7niWlPVebQkZxRu/AE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_02,2025-05-08_04,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
+ spamscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1015
+ suspectscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505090063
 
+SDEI_EVENT_SIGNAL is a standard interface for SDEI feature and useful
+for customized firmware calls. Therefore, adding this missing interface
+to SDEI driver.
 
-On 2025/5/9 11:51:22, Barry Song <21cnbao@gmail.com> wrote:
-> On Fri, May 9, 2025 at 2:02 PM Qinxin Xia <xiaqinxin@huawei.com> wrote:
->> Support for dma scatter-gather mapping and is intended for testing
->> mapping performance. It achieves by introducing the dma_sg_map_param
->> structure and related functions, which enable the implementation of
->> scatter-gather mapping preparation, mapping, and unmapping operations.
->> Additionally, the dma_map_benchmark_ops array is updated to include
->> operations for scatter-gather mapping. This commit aims to provide
->> a wider range of mapping performance test to cater to different scenarios.
->>
->> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
-> - stable@vger.kernel.org
-> + Marek
-> + Robin,
->
-> Once the minor issues below are addressed, feel free to add:
->
-> Reviewed-by: Barry Song <baohua@kernel.org>
-OK
->> ---
->>   include/linux/map_benchmark.h |  43 ++++++++++----
->>   kernel/dma/map_benchmark.c    | 103 ++++++++++++++++++++++++++++++++++
->>   2 files changed, 134 insertions(+), 12 deletions(-)
->>
->> diff --git a/include/linux/map_benchmark.h b/include/linux/map_benchmark.h
->> index 5294dfd1870f..bf8c9ade43fd 100644
->> --- a/include/linux/map_benchmark.h
->> +++ b/include/linux/map_benchmark.h
->> @@ -17,22 +17,41 @@
->>
->>   enum {
->>          DMA_MAP_SINGLE_MODE,
->> +       DMA_MAP_SG_MODE,
->>          DMA_MAP_MODE_MAX
-> DMA_MAP_BENCH_ ...
-OK, I will fix it in the next version.
->>   };
->>
->> +/**
->> + * struct map_benchmark - Benchmarking data for DMA mapping operations.
->> + * @avg_map_100ns: Average map latency in 100ns.
->> + * @map_stddev: Standard deviation of map latency.
->> + * @avg_unmap_100ns: Average unmap latency in 100ns.
->> + * @unmap_stddev: Standard deviation of unmap latency.
->> + * @threads: Number of threads performing map/unmap operations in parallel.
->> + * @seconds: Duration of the test in seconds.
->> + * @node: NUMA node on which this benchmark will run.
->> + * @dma_bits: DMA addressing capability.
->> + * @dma_dir: DMA data direction.
->> + * @dma_trans_ns: Time for DMA transmission in ns.
->> + * @granule: Number of PAGE_SIZE units to map/unmap at once.
->> +            In SG mode, this represents the number of scatterlist entries.
->> +            In single mode, this represents the total size of the mapping.
->> + * @map_mode: Mode of DMA mapping.
->> + * @expansion: Reserved for future use.
->> + */
->>   struct map_benchmark {
->> -       __u64 avg_map_100ns; /* average map latency in 100ns */
->> -       __u64 map_stddev; /* standard deviation of map latency */
->> -       __u64 avg_unmap_100ns; /* as above */
->> +       __u64 avg_map_100ns;
->> +       __u64 map_stddev;
->> +       __u64 avg_unmap_100ns;
->>          __u64 unmap_stddev;
->> -       __u32 threads; /* how many threads will do map/unmap in parallel */
->> -       __u32 seconds; /* how long the test will last */
->> -       __s32 node; /* which numa node this benchmark will run on */
->> -       __u32 dma_bits; /* DMA addressing capability */
->> -       __u32 dma_dir; /* DMA data direction */
->> -       __u32 dma_trans_ns; /* time for DMA transmission in ns */
->> -       __u32 granule;  /* how many PAGE_SIZE will do map/unmap once a time */
->> -       __u8  map_mode; /* the mode of dma map */
->> -       __u8 expansion[75];     /* For future use */
->> +       __u32 threads;
->> +       __u32 seconds;
->> +       __s32 node;
->> +       __u32 dma_bits;
->> +       __u32 dma_dir;
->> +       __u32 dma_trans_ns;
->> +       __u32 granule;
->> +       __u8  map_mode;
->> +       __u8 expansion[75];
->>   };
->>   #endif /* _KERNEL_DMA_BENCHMARK_H */
->> diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
->> index 47a06b891db8..3a996be9fb22 100644
->> --- a/kernel/dma/map_benchmark.c
->> +++ b/kernel/dma/map_benchmark.c
->> @@ -17,6 +17,7 @@
->>   #include <linux/module.h>
->>   #include <linux/pci.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/scatterlist.h>
->>   #include <linux/slab.h>
->>   #include <linux/timekeeping.h>
->>
->> @@ -111,8 +112,110 @@ static struct map_benchmark_ops dma_single_map_benchmark_ops = {
->>          .do_unmap = dma_single_map_benchmark_do_unmap,
->>   };
->>
->> +struct dma_sg_map_param {
->> +       struct sg_table sgt;
->> +       struct device *dev;
->> +       void **buf;
->> +       u32 npages;
->> +       u32 dma_dir;
->> +};
->> +
->> +static void *dma_sg_map_benchmark_prepare(struct map_benchmark_data *map)
->> +{
->> +       struct scatterlist *sg;
->> +       int i;
->> +
->> +       struct dma_sg_map_param *params __free(kfree) = kzalloc(sizeof(*params), GFP_KERNEL);
->> +       if (!params)
->> +               return NULL;
->> +
->> +       /*
->> +        * Set the number of scatterlist entries based on the granule.
->> +        * In SG mode, 'granule' represents the number of scatterlist entries.
->> +        * Each scatterlist entry corresponds to a single page.
->> +        */
->> +       params->npages = map->bparam.granule;
->> +       params->dma_dir = map->bparam.dma_dir;
->> +       params->dev = map->dev;
->> +       params->buf = kmalloc_array(params->npages, sizeof(*params->buf),
->> +                                   GFP_KERNEL);
->> +       if (!params->buf)
->> +               goto out;
->> +
->> +       if (sg_alloc_table(&params->sgt, params->npages, GFP_KERNEL))
->> +               goto free_buf;
->> +
->> +       for_each_sgtable_sg(&params->sgt, sg, i) {
->> +               params->buf[i] = (void *)__get_free_page(GFP_KERNEL);
->> +               if (!params->buf[i])
->> +                       goto free_page;
->> +
->> +               if (params->dma_dir != DMA_FROM_DEVICE)
->> +                       memset(params->buf[i], 0x66, PAGE_SIZE);
->> +
->> +               sg_set_buf(sg, params->buf[i], PAGE_SIZE);
->> +       }
->> +
->> +       return_ptr(params);
->> +
->> +free_page:
->> +       while (i-- > 0)
->> +               free_page((unsigned long)params->buf[i]);
->> +
->> +       sg_free_table(&params->sgt);
->> +free_buf:
->> +       kfree(params->buf);
->> +out:
->> +       return NULL;
->> +}
->> +
->> +static void dma_sg_map_benchmark_unprepare(void *mparam)
->> +{
->> +       struct dma_sg_map_param *params = mparam;
->> +       int i;
->> +
->> +       for (i = 0; i < params->npages; i++)
->> +               free_page((unsigned long)params->buf[i]);
->> +
->> +       sg_free_table(&params->sgt);
->> +
->> +       kfree(params->buf);
->> +       kfree(params);
->> +}
->> +
->> +static int dma_sg_map_benchmark_do_map(void *mparam)
->> +{
->> +       struct dma_sg_map_param *params = mparam;
->> +       int ret = 0;
->> +
->> +       int sg_mapped = dma_map_sg(params->dev, params->sgt.sgl,
->> +                                  params->npages, params->dma_dir);
->> +       if (!sg_mapped) {
->> +               pr_err("dma_map_sg failed on %s\n", dev_name(params->dev));
->> +               ret = -ENOMEM;
->> +       }
->> +
->> +       return ret;
->> +}
->> +
->> +static void dma_sg_map_benchmark_do_unmap(void *mparam)
->> +{
->> +       struct dma_sg_map_param *params = mparam;
->> +
->> +       dma_unmap_sg(params->dev, params->sgt.sgl, params->npages,
->> +                    params->dma_dir);
->> +}
->> +
->> +static struct map_benchmark_ops dma_sg_map_benchmark_ops = {
->> +       .prepare = dma_sg_map_benchmark_prepare,
->> +       .unprepare = dma_sg_map_benchmark_unprepare,
->> +       .do_map = dma_sg_map_benchmark_do_map,
->> +       .do_unmap = dma_sg_map_benchmark_do_unmap,
->> +};
->> +
->>   static struct map_benchmark_ops *dma_map_benchmark_ops[DMA_MAP_MODE_MAX] = {
->>          [DMA_MAP_SINGLE_MODE] = &dma_single_map_benchmark_ops,
->> +       [DMA_MAP_SG_MODE] = &dma_sg_map_benchmark_ops,
->>   };
->>
->>   static int map_benchmark_thread(void *data)
->> --
->> 2.33.0
+Signed-off-by: Huang Yiwei <quic_hyiwei@quicinc.com>
+---
+ drivers/firmware/arm_sdei.c   | 6 ++++++
+ include/linux/arm_sdei.h      | 1 +
+ include/uapi/linux/arm_sdei.h | 1 +
+ 3 files changed, 8 insertions(+)
 
-Thanks
-
-Qinxin
+diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+index 3e8051fe8296..3140bb505f06 100644
+--- a/drivers/firmware/arm_sdei.c
++++ b/drivers/firmware/arm_sdei.c
+@@ -299,6 +299,12 @@ static int sdei_api_get_version(u64 *version)
+ 	return invoke_sdei_fn(SDEI_1_0_FN_SDEI_VERSION, 0, 0, 0, 0, 0, version);
+ }
+ 
++int sdei_event_signal(u32 event_num)
++{
++	return invoke_sdei_fn(SDEI_1_0_FN_SDEI_EVENT_SIGNAL, event_num, 0, 0, 0,
++			      0, NULL);
++}
++
+ int sdei_mask_local_cpu(void)
+ {
+ 	int err;
+diff --git a/include/linux/arm_sdei.h b/include/linux/arm_sdei.h
+index 255701e1251b..3c0862a03d09 100644
+--- a/include/linux/arm_sdei.h
++++ b/include/linux/arm_sdei.h
+@@ -36,6 +36,7 @@ int sdei_event_unregister(u32 event_num);
+ 
+ int sdei_event_enable(u32 event_num);
+ int sdei_event_disable(u32 event_num);
++int sdei_event_signal(u32 event_num);
+ 
+ /* GHES register/unregister helpers */
+ int sdei_register_ghes(struct ghes *ghes, sdei_event_callback *normal_cb,
+diff --git a/include/uapi/linux/arm_sdei.h b/include/uapi/linux/arm_sdei.h
+index af0630ba5437..247b5d035864 100644
+--- a/include/uapi/linux/arm_sdei.h
++++ b/include/uapi/linux/arm_sdei.h
+@@ -17,6 +17,7 @@
+ #define SDEI_1_0_FN_SDEI_EVENT_UNREGISTER		SDEI_1_0_FN(0x07)
+ #define SDEI_1_0_FN_SDEI_EVENT_STATUS			SDEI_1_0_FN(0x08)
+ #define SDEI_1_0_FN_SDEI_EVENT_GET_INFO			SDEI_1_0_FN(0x09)
++#define SDEI_1_0_FN_SDEI_EVENT_SIGNAL			SDEI_1_0_FN(0x0F)
+ #define SDEI_1_0_FN_SDEI_EVENT_ROUTING_SET		SDEI_1_0_FN(0x0A)
+ #define SDEI_1_0_FN_SDEI_PE_MASK			SDEI_1_0_FN(0x0B)
+ #define SDEI_1_0_FN_SDEI_PE_UNMASK			SDEI_1_0_FN(0x0C)
+-- 
+2.25.1
 
