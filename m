@@ -1,40 +1,48 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mail-m49251.qiye.163.com (mail-m49251.qiye.163.com [45.254.49.251])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D88728E57A;
-	Fri,  9 May 2025 10:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8109C38FA3;
+	Fri,  9 May 2025 10:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.251
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746786161; cv=none; b=FQbuVGrRrrDmuEwhs2fO7Yn58V9yXZBNzMeSeVHWhZfOe2s2tMnK6RMIolQt3A+0WLBgSzJb4UkkVNhCPDZQ3ll/H4yIt9fo+vM93c/r1Bkcghl3eHa6gyxZHnZI9GTmOp8aD3eRcj/garI598X7u9Qf8FzvCGYSJvbgMdBOhmM=
+	t=1746786209; cv=none; b=NsyDPYAjIewqPn9a6e4MACPsFy6qe/mgIuUOw30kDocC5HMW004ln79Cc+w6Dl8IF4v0oJf75xOTt+rcL5QKa+fJ/W7ilqDdajeiLCZW2+n3S9CPGTyrzGWTXm6IGFXDnIz+xaH2ErQ5Ax+Nu/mCnx4qFVagjNS2HfzmHIJtUSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746786161; c=relaxed/simple;
-	bh=/WP4DrNHI624YiUw9Qrw3Ri2OKUhK+p/AT6nU4QBfuw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HEz4aERXSjG60PdfwrYGKo+v1aYnfbl6dhBoWS0SQHlsGIq2+qArHXvWYM0VIliWE6CS/XRGL6RH2WyO+59YEufBmN96Xs4XJFaROZ8jLdbZopYeLXgVatCEtVklhHYVsS65zNVGPXcvd0JwNaG4AHdudHHflRgrtFSpcj9UiNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zv4n30Lwcz4f3jt8;
-	Fri,  9 May 2025 18:22:15 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 68C1F1A07C0;
-	Fri,  9 May 2025 18:22:34 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDHKl9o1x1onzmRLw--.15694S4;
-	Fri, 09 May 2025 18:22:34 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: mtkaczyk@kernel.org,
-	linux-raid@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	johnny.chenyi@huawei.com
-Subject: [PATCH RFC v3] mdadm: add support for new lockless bitmap
-Date: Fri,  9 May 2025 18:14:11 +0800
-Message-Id: <20250509101411.2093911-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1746786209; c=relaxed/simple;
+	bh=Pog2x3TEZlmipR0kH/GHedjQmTP1UcDkYMjKqethLW0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=jtrLLuLB36NZ7bRqkfsEq6lxKf7IMWJuuWOH26azhj0UNlZISpt261NjykxSA/z6eOPiDpbJzkw88DqpfT2Q/dKzp/oyzzo9ICj4VPoG/x4h9ENIB5QdyJjVFqjudBM8fQjm0BsOeEGGh+sbYjLfsS4WEg5m7CMMGq5FanNaFiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=RQg1lHXV; arc=none smtp.client-ip=45.254.49.251
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="RQg1lHXV"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1483147fc;
+	Fri, 9 May 2025 18:23:20 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Finley Xiao <finley.xiao@rock-chips.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	linux-kernel@vger.kernel.org,
+	Diederik de Haas <didi.debian@cknow.org>,
+	Quentin Schulz <quentin.schulz@cherry.de>,
+	Chukun Pan <amadeus@jmu.edu.cn>,
+	Johan Jonker <jbx6244@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v7 5/5] arm64: dts: rockchip: Add RK3562 evb2 devicetree
+Date: Fri,  9 May 2025 18:23:08 +0800
+Message-Id: <20250509102308.761424-6-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250509102308.761424-1-kever.yang@rock-chips.com>
+References: <20250509102308.761424-1-kever.yang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,331 +50,533 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHKl9o1x1onzmRLw--.15694S4
-X-Coremail-Antispam: 1UD129KBjvJXoW3Jr18Aw45WryDZr1kGFykKrg_yoWfKry8pF
-	4jvr95Cr4rGr4fWw17t3y8ZF1rtw1vyFn2krZ7Zw1akF1YqrnIqF18GFyUA34fWr4kJFy2
-	9rs8Kw18u3yxXrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVbkUUU
-	UU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGhofT1ZIQk1NGkMdGRkaHRhWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEtNT0
+	1VSktLVUpCWQY+
+X-HM-Tid: 0a96b4922b3b03afkunm1483147fc
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6K006Aww4ATJLHQEXI05RMCkZ
+	NClPFFFVSlVKTE9NTENNSUtKQk9CVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFKT0lOTTcG
+DKIM-Signature:a=rsa-sha256;
+	b=RQg1lHXVrdd3+suH5FrjaBqFh4ja+6TESpSi5ofJ9t+w3QpLXHKTtUUw1B4kzvFD0J7t8ZbwIWWNwhJAXNAvmKrlhe2zCLhUwI2ail9LonMD2g6EPCRMi2e/QthOIkqSLh+/ud8D3EsPwXtAQqXKgxed+28aJNfhmapwmhcb5Sk=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=Ar4HsNC33psEFRzVLDPDhHv3WZuWc5811F666bFXMoc=;
+	h=date:mime-version:subject:message-id:from;
 
-From: Yu Kuai <yukuai3@huawei.com>
+From: Finley Xiao <finley.xiao@rock-chips.com>
 
-A new major number 6 is used for the new bitmap.
+DRAM: DDR4
+Storage: eMMC
+PMIC: RK809
+Audio: Headphone and speaker
+Interface:
+- USB3.0 HOST
+- USB2.0 HOST
+- PCIe x4 slot(pcie2x1 available)
+- SD card slot
+- GMAC
+- debug UART0
 
-Noted that for the kernel that doesn't support lockless bitmap, create
-such array will fail:
+NOTE: the USB3.0 and the PCIe reuse the comboPHY, so the USB3.0 work in
+USB2 only mode.
 
-md0: invalid bitmap file superblock: unrecognized superblock version.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
 ---
-Changes in v3:
- - add support for --assume-clean
-Changes in v2:
- - add support for Incremental mode;
- - use sysfs API bitmap_version to notify kernel to use llbitmap;
 
- Assemble.c    |  5 +++++
- Create.c      | 10 ++++++++--
- Grow.c        |  5 +++--
- Incremental.c | 34 ++++++++++++++++++++++++++++++++++
- bitmap.h      | 14 ++++++++++++--
- mdadm.c       |  9 ++++++++-
- mdadm.h       |  5 ++++-
- super-intel.c |  2 +-
- super0.c      |  2 +-
- super1.c      | 18 +++++++++++++++++-
- 10 files changed, 93 insertions(+), 11 deletions(-)
+Changes in v7:
+- update regulator names, and re-order some properties in dts node.
 
-diff --git a/Assemble.c b/Assemble.c
-index f8099cd3..3af36260 100644
---- a/Assemble.c
-+++ b/Assemble.c
-@@ -1029,6 +1029,11 @@ static int start_array(int mdfd,
- 	int i;
- 	unsigned int req_cnt;
- 
-+	if (st->ss->get_bitmap_version &&
-+	    st->ss->get_bitmap_version(st) == BITMAP_MAJOR_LOCKLESS &&
-+	    sysfs_set_str(content, NULL, "bitmap_version", "llbitmap"))
-+		return 1;
+Changes in v6:
+- Remove USB relate nodes
+
+Changes in v5: None
+Changes in v4:
+- remove gmac nodes
+
+Changes in v3: None
+Changes in v2: None
+
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../boot/dts/rockchip/rk3562-evb2-v10.dts     | 456 ++++++++++++++++++
+ 2 files changed, 457 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3562-evb2-v10.dts
+
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index 7948522cb225..faf6264a772c 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -81,6 +81,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire-excavator.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399pro-rock-pi-n10.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3528-radxa-e20c.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3562-evb2-v10.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-anbernic-rg-arc-d.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-anbernic-rg-arc-s.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-anbernic-rg353p.dtb
+diff --git a/arch/arm64/boot/dts/rockchip/rk3562-evb2-v10.dts b/arch/arm64/boot/dts/rockchip/rk3562-evb2-v10.dts
+new file mode 100644
+index 000000000000..c310a0b86575
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3562-evb2-v10.dts
+@@ -0,0 +1,456 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2024-2025 Rockchip Electronics Co., Ltd.
++ *
++ */
 +
- 	if (content->journal_device_required && (content->journal_clean == 0)) {
- 		if (!c->force) {
- 			pr_err("Not safe to assemble with missing or stale journal device, consider --force.\n");
-diff --git a/Create.c b/Create.c
-index fd6c9215..1537526a 100644
---- a/Create.c
-+++ b/Create.c
-@@ -541,6 +541,8 @@ int Create(struct supertype *st, struct mddev_ident *ident, int subdevs,
- 			pr_err("At least 2 nodes are needed for cluster-md\n");
- 			return 1;
- 		}
-+	} else if (s->btype == BitmapLockless) {
-+		major_num = BITMAP_MAJOR_LOCKLESS;
- 	}
- 
- 	memset(&info, 0, sizeof(info));
-@@ -1182,7 +1184,8 @@ int Create(struct supertype *st, struct mddev_ident *ident, int subdevs,
- 	 * to stop another mdadm from finding and using those devices.
- 	 */
- 
--	if (s->btype == BitmapInternal || s->btype == BitmapCluster) {
-+	if (s->btype == BitmapInternal || s->btype == BitmapCluster ||
-+	    s->btype == BitmapLockless) {
- 		if (!st->ss->add_internal_bitmap) {
- 			pr_err("internal bitmaps not supported with %s metadata\n",
- 				st->ss->name);
-@@ -1190,10 +1193,13 @@ int Create(struct supertype *st, struct mddev_ident *ident, int subdevs,
- 		}
- 		if (st->ss->add_internal_bitmap(st, &s->bitmap_chunk,
- 						c->delay, s->write_behind,
--						bitmapsize, 1, major_num)) {
-+						bitmapsize, 1, major_num, s->assume_clean)) {
- 			pr_err("Given bitmap chunk size not supported.\n");
- 			goto abort_locked;
- 		}
-+		if (s->btype == BitmapLockless &&
-+		    sysfs_set_str(&info, NULL, "bitmap_version", "llbitmap") < 0)
-+			goto abort_locked;
- 	}
- 
- 	if (sysfs_init(&info, mdfd, NULL)) {
-diff --git a/Grow.c b/Grow.c
-index cc1be6cc..4422fa09 100644
---- a/Grow.c
-+++ b/Grow.c
-@@ -383,7 +383,8 @@ int Grow_addbitmap(char *devname, int fd, struct context *c, struct shape *s)
- 		free(mdi);
- 	}
- 
--	if (s->btype == BitmapInternal || s->btype == BitmapCluster) {
-+	if (s->btype == BitmapInternal || s->btype == BitmapCluster ||
-+	    s->btype == BitmapLockless) {
- 		int rv;
- 		int d;
- 		int offset_setable = 0;
-@@ -425,7 +426,7 @@ int Grow_addbitmap(char *devname, int fd, struct context *c, struct shape *s)
- 				rv = st->ss->add_internal_bitmap(
- 					st, &s->bitmap_chunk, c->delay,
- 					s->write_behind, bitmapsize,
--					offset_setable, major);
-+					offset_setable, major, 0);
- 				if (!rv) {
- 					st->ss->write_bitmap(st, fd2,
- 							     NodeNumUpdate);
-diff --git a/Incremental.c b/Incremental.c
-index 228d2bdd..de2edecb 100644
---- a/Incremental.c
-+++ b/Incremental.c
-@@ -552,6 +552,40 @@ int Incremental(struct mddev_dev *devlist, struct context *c,
- 			if (d->disk.state & (1<<MD_DISK_REMOVED))
- 				remove_disk(mdfd, st, sra, d);
- 
-+		if (st->ss->get_bitmap_version) {
-+			if (st->sb == NULL) {
-+				dfd = dev_open(devname, O_RDONLY);
-+				if (dfd < 0) {
-+					rv = 1;
-+					goto out;
-+				}
++/dts-v1/;
 +
-+				rv = st->ss->load_super(st, dfd, NULL);
-+				close(dfd);
-+				dfd = -1;
-+				if (rv) {
-+					pr_err("load super failed %d\n", rv);
-+					goto out;
-+				}
-+			}
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/leds/common.h>
++#include <dt-bindings/pinctrl/rockchip.h>
++#include "rk3562.dtsi"
 +
-+			if (st->ss->get_bitmap_version(st) == BITMAP_MAJOR_LOCKLESS) {
-+				if (sra == NULL) {
-+					sra = sysfs_read(mdfd, NULL, (GET_DEVS | GET_STATE |
-+								    GET_OFFSET | GET_SIZE));
-+					if (!sra) {
-+						pr_err("can't read mdinfo\n");
-+						rv = 1;
-+						goto out;
-+					}
-+				}
++/ {
++	model = "Rockchip RK3562 EVB V20 Board";
++	compatible = "rockchip,rk3562-evb2-v10", "rockchip,rk3562";
 +
-+				rv = sysfs_set_str(sra, NULL, "bitmap_version", "llbitmap");
-+				if (rv)
-+					goto out;
-+			}
-+		}
++	chosen: chosen {
++		stdout-path = "serial0:1500000n8";
++	};
 +
- 		if ((sra == NULL || active_disks >= info.array.working_disks) &&
- 		    trustworthy != FOREIGN)
- 			rv = ioctl(mdfd, RUN_ARRAY, NULL);
-diff --git a/bitmap.h b/bitmap.h
-index 7b1f80f2..cefad194 100644
---- a/bitmap.h
-+++ b/bitmap.h
-@@ -13,6 +13,7 @@
- #define BITMAP_MAJOR_HI 4
- #define	BITMAP_MAJOR_HOSTENDIAN 3
- #define	BITMAP_MAJOR_CLUSTERED 5
-+#define	BITMAP_MAJOR_LOCKLESS 6
- 
- #define BITMAP_MINOR 39
- 
-@@ -139,8 +140,17 @@ typedef __u16 bitmap_counter_t;
- 
- /* use these for bitmap->flags and bitmap->sb->state bit-fields */
- enum bitmap_state {
--	BITMAP_ACTIVE = 0x001, /* the bitmap is in use */
--	BITMAP_STALE  = 0x002  /* the bitmap file is out of date or had -EIO */
-+	/* the bitmap file is out of date or had -EIO */
-+	BITMAP_STALE		= 1,
-+	/* A write error has occurred */
-+	BITMAP_WRITE_ERROR	= 2,
-+	/* llbitmap is just created */
-+	BITMAP_FIRST_USE	= 3,
-+	/* assume-clean is set while creating new llbitmap */
-+	BITMAP_CLEAN		= 4,
-+	/* used by kernel */
-+	BITMAP_DAEMON_BUSY	= 5,
-+	BITMAP_HOSTENDIAN	= 15,
- };
- 
- /* the superblock at the front of the bitmap file -- little endian */
-diff --git a/mdadm.c b/mdadm.c
-index 1fd4dcba..7a64fba2 100644
---- a/mdadm.c
-+++ b/mdadm.c
-@@ -56,6 +56,12 @@ static mdadm_status_t set_bitmap_value(struct shape *s, struct context *c, char
- 		return MDADM_STATUS_SUCCESS;
- 	}
- 
-+	if (strcmp(val, "lockless") == 0) {
-+		s->btype = BitmapLockless;
-+		pr_info("Experimental lockless bitmap, use at your own disk!\n");
-+		return MDADM_STATUS_SUCCESS;
-+	}
++	adc_keys: adc-keys {
++		compatible = "adc-keys";
++		io-channels = <&saradc0 1>;
++		io-channel-names = "buttons";
++		keyup-threshold-microvolt = <1800000>;
++		poll-interval = <100>;
 +
- 	if (strcmp(val, "clustered") == 0) {
- 		s->btype = BitmapCluster;
- 		/* Set the default number of cluster nodes
-@@ -1251,7 +1257,8 @@ int main(int argc, char *argv[])
- 			pr_err("--bitmap is required for consistency policy: %s\n",
- 			       map_num_s(consistency_policies, s.consistency_policy));
- 			exit(2);
--		} else if ((s.btype == BitmapInternal || s.btype == BitmapCluster) &&
-+		} else if ((s.btype == BitmapInternal || s.btype == BitmapCluster ||
-+			    s.btype == BitmapLockless) &&
- 			   s.consistency_policy != CONSISTENCY_POLICY_BITMAP &&
- 			   s.consistency_policy != CONSISTENCY_POLICY_JOURNAL) {
- 			pr_err("--bitmap is not compatible with consistency policy: %s\n",
-diff --git a/mdadm.h b/mdadm.h
-index 77705b11..af97481b 100644
---- a/mdadm.h
-+++ b/mdadm.h
-@@ -607,6 +607,7 @@ enum bitmap_type {
- 	BitmapNone,
- 	BitmapInternal,
- 	BitmapCluster,
-+	BitmapLockless,
- 	BitmapUnknown,
- };
- 
-@@ -1201,7 +1202,9 @@ extern struct superswitch {
- 	 */
- 	int (*add_internal_bitmap)(struct supertype *st, int *chunkp,
- 				   int delay, int write_behind,
--				   unsigned long long size, int may_change, int major);
-+				   unsigned long long size, int may_change,
-+				   int major, bool assume_clean);
-+	int (*get_bitmap_version)(struct supertype *st);
- 	/* Perform additional setup required to activate a bitmap.
- 	 */
- 	int (*set_bitmap)(struct supertype *st, struct mdinfo *info);
-diff --git a/super-intel.c b/super-intel.c
-index 7e3c5f2b..08215271 100644
---- a/super-intel.c
-+++ b/super-intel.c
-@@ -12977,7 +12977,7 @@ static int validate_internal_bitmap_imsm(struct supertype *st)
- static int add_internal_bitmap_imsm(struct supertype *st, int *chunkp,
- 				    int delay, int write_behind,
- 				    unsigned long long size, int may_change,
--				    int amajor)
-+				    int amajor, bool assume_clean)
- {
- 	struct intel_super *super = st->sb;
- 	int vol_idx = super->current_vol;
-diff --git a/super0.c b/super0.c
-index ff4905b9..07723658 100644
---- a/super0.c
-+++ b/super0.c
-@@ -1153,7 +1153,7 @@ static __u64 avail_size0(struct supertype *st, __u64 devsize,
- static int add_internal_bitmap0(struct supertype *st, int *chunkp,
- 				int delay, int write_behind,
- 				unsigned long long size, int may_change,
--				int major)
-+				int major, bool assume_clean)
- {
- 	/*
- 	 * The bitmap comes immediately after the superblock and must be 60K in size
-diff --git a/super1.c b/super1.c
-index fe3c4c64..22659e50 100644
---- a/super1.c
-+++ b/super1.c
-@@ -2487,11 +2487,19 @@ static __u64 avail_size1(struct supertype *st, __u64 devsize,
- 	return 0;
- }
- 
-+static int get_bitmap_version1(struct supertype *st)
-+{
-+	struct mdp_superblock_1 *sb = st->sb;
-+	bitmap_super_t *bms = (bitmap_super_t *)(((char *)sb) + MAX_SB_SIZE);
++		button-vol-up {
++			linux,code = <KEY_VOLUMEUP>;
++			label = "volume up";
++			press-threshold-microvolt = <17000>;
++		};
 +
-+	return __le32_to_cpu(bms->version);
-+}
++		button-vol-down {
++			linux,code = <KEY_VOLUMEDOWN>;
++			label = "volume down";
++			press-threshold-microvolt = <414000>;
++		};
 +
- static int
- add_internal_bitmap1(struct supertype *st,
- 		     int *chunkp, int delay, int write_behind,
- 		     unsigned long long size,
--		     int may_change, int major)
-+		     int may_change, int major, bool assume_clean)
- {
- 	/*
- 	 * If not may_change, then this is a 'Grow' without sysfs support for
-@@ -2650,6 +2658,13 @@ add_internal_bitmap1(struct supertype *st,
- 		bms->cluster_name[len - 1] = '\0';
- 	}
- 
-+	/* kernel will initialize bitmap */
-+	if (major == BITMAP_MAJOR_LOCKLESS) {
-+		bms->state = __cpu_to_le32(1 << BITMAP_FIRST_USE);
-+		if (assume_clean)
-+			bms->state |= __cpu_to_le32(1 << BITMAP_CLEAN);
-+		bms->sectors_reserved = __le32_to_cpu(room);
-+	}
- 	*chunkp = chunk;
- 	return 0;
- }
-@@ -3025,6 +3040,7 @@ struct superswitch super1 = {
- 	.avail_size = avail_size1,
- 	.add_internal_bitmap = add_internal_bitmap1,
- 	.locate_bitmap = locate_bitmap1,
-+	.get_bitmap_version = get_bitmap_version1,
- 	.write_bitmap = write_bitmap1,
- 	.free_super = free_super1,
- #if __BYTE_ORDER == BIG_ENDIAN
++		button-menu {
++			linux,code = <KEY_MENU>;
++			label = "menu";
++			press-threshold-microvolt = <800000>;
++		};
++
++		button-back {
++			linux,code = <KEY_BACK>;
++			label = "back";
++			press-threshold-microvolt = <1200000>;
++		};
++	};
++
++	leds: leds {
++		compatible = "gpio-leds";
++
++		work_led: led-0 {
++			gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++	};
++
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		clocks = <&rk809 1>;
++		clock-names = "ext_clock";
++		pinctrl-names = "default";
++		pinctrl-0 = <&wifi_enable_h>;
++
++		/*
++		 * On the module itself this is one of these (depending
++		 * on the actual card populated):
++		 * - SDIO_RESET_L_WL_REG_ON
++		 * - PDN (power down when low)
++		 */
++		post-power-on-delay-ms = <200>;
++		reset-gpios = <&gpio0 RK_PB3 GPIO_ACTIVE_LOW>;
++	};
++
++	vcc12v_dcin: regulator-vcc12v-dcin {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc12v_dcin";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++	};
++
++	vcc3v3_pcie20: regulator-vcc3v3-pcie20 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3_pcie20";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		enable-active-high;
++		gpios = <&gpio0 RK_PB7 GPIO_ACTIVE_HIGH>;
++		startup-delay-us = <5000>;
++		vin-supply = <&vcc12v_dcin>;
++	};
++
++	vcc5v0_sys: regulator-vcc5v0-sys {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v0_sys";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&vcc12v_dcin>;
++	};
++
++	vcc5v0_usb: regulator-vcc5v0-usb {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v0_usb";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&vcc12v_dcin>;
++	};
++
++	vcc5v0_usb_host: regulator-vcc5v0-usb-host {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v0_usb_host";
++		regulator-boot-on;
++		regulator-always-on;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		enable-active-high;
++		gpio = <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
++		vin-supply = <&vcc5v0_usb>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb_host_pwren>;
++	};
++
++	vcc5v0_usb_otg: regulator-vcc5v0-usb-otg {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v0_usb_otg";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		enable-active-high;
++		gpio = <&gpio0 RK_PC0 GPIO_ACTIVE_HIGH>;
++		vin-supply = <&vcc5v0_usb>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb_otg_pwren>;
++	};
++
++	vcc3v3_clk: regulator-vcc3v3-clk {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3_clk";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vcc5v0_sys>;
++	};
++
++	vcc3v3_sys: regulator-vcc-sys {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3_sys";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vcc12v_dcin>;
++	};
++};
++
++&combphy_pu {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++
++	rk809: pmic@20 {
++		compatible = "rockchip,rk809";
++		reg = <0x20>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-names = "default", "pmic-sleep",
++			"pmic-power-off", "pmic-reset";
++		pinctrl-0 = <&pmic_int>;
++		rockchip,system-power-controller;
++		wakeup-source;
++		#clock-cells = <1>;
++		clock-output-names = "rk808-clkout1", "rk808-clkout2";
++
++		vcc1-supply = <&vcc3v3_sys>;
++		vcc2-supply = <&vcc3v3_sys>;
++		vcc3-supply = <&vcc3v3_sys>;
++		vcc4-supply = <&vcc3v3_sys>;
++		vcc5-supply = <&vcc3v3_sys>;
++		vcc6-supply = <&vcc3v3_sys>;
++		vcc7-supply = <&vcc3v3_sys>;
++		vcc8-supply = <&vcc3v3_sys>;
++		vcc9-supply = <&vcc3v3_sys>;
++
++		regulators {
++			vdd_logic: DCDC_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-ramp-delay = <6001>;
++				regulator-initial-mode = <0x2>;
++				regulator-name = "vdd_logic";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdd_cpu: DCDC_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-ramp-delay = <6001>;
++				regulator-initial-mode = <0x2>;
++				regulator-name = "vdd_cpu";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc_ddr: DCDC_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-initial-mode = <0x2>;
++				regulator-name = "vcc_ddr";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++				};
++			};
++
++			vdd_gpu: DCDC_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-ramp-delay = <6001>;
++				regulator-initial-mode = <0x2>;
++				regulator-name = "vdd_gpu";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc2v8_dvp: LDO_REG1 {
++				regulator-min-microvolt = <2800000>;
++				regulator-max-microvolt = <2800000>;
++				regulator-name = "vcc2v8_dvp";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdda_0v9: LDO_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <900000>;
++				regulator-name = "vdda_0v9";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdda0v9_pmu: LDO_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <900000>;
++				regulator-name = "vdda0v9_pmu";
++				regulator-state-mem {
++				regulator-on-in-suspend;
++					regulator-suspend-microvolt = <900000>;
++				};
++			};
++
++			vccio_acodec: LDO_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-name = "vccio_acodec";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vccio_sd: LDO_REG5 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vccio_sd";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc3v3_pmu: LDO_REG6 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vcc3v3_pmu";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vcca_1v8: LDO_REG7 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcca_1v8";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcca1v8_pmu: LDO_REG8 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcca1v8_pmu";
++				regulator-state-mem {
++				regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			vcc1v8_dvp: LDO_REG9 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcc1v8_dvp";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc_1v8: DCDC_REG5 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcc_1v8";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc_3v3: SWITCH_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vcc_3v3";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc3v3_sd: SWITCH_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vcc3v3_sd";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++		};
++	};
++};
++
++&pcie2x1 {
++	reset-gpios = <&gpio3 RK_PB0 GPIO_ACTIVE_HIGH>;
++	vpcie3v3-supply = <&vcc3v3_pcie20>;
++	status = "okay";
++};
++
++&pinctrl {
++	sdio-pwrseq {
++		wifi_enable_h: wifi-enable-h {
++			rockchip,pins = <0 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	usb {
++		usb_host_pwren: usb-host-pwren {
++			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		usb_otg_pwren: usb-otg-pwren {
++			rockchip,pins = <0 RK_PC0 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++};
++
++&saradc0 {
++	vref-supply = <&vcc_1v8>;
++	status = "okay";
++};
++
++&sdhci {
++	bus-width = <8>;
++	no-sdio;
++	no-sd;
++	non-removable;
++	mmc-hs400-1_8v;
++	mmc-hs400-enhanced-strobe;
++	full-pwr-cycle-in-suspend;
++	status = "okay";
++};
++
++&sdmmc0 {
++	no-sdio;
++	no-mmc;
++	bus-width = <4>;
++	cap-mmc-highspeed;
++	cap-sd-highspeed;
++	disable-wp;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc0_bus4 &sdmmc0_clk &sdmmc0_cmd &sdmmc0_det>;
++	sd-uhs-sdr104;
++	vmmc-supply = <&vcc3v3_sd>;
++	vqmmc-supply = <&vccio_sd>;
++	status = "okay";
++};
++
++&sdmmc1 {
++	no-sd;
++	no-mmc;
++	bus-width = <4>;
++	disable-wp;
++	cap-sd-highspeed;
++	cap-sdio-irq;
++	keep-power-in-suspend;
++	mmc-pwrseq = <&sdio_pwrseq>;
++	non-removable;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc1_bus4 &sdmmc1_cmd &sdmmc1_clk>;
++	sd-uhs-sdr104;
++	status = "okay";
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1m0_xfer &uart1m0_ctsn>;
++	status = "okay";
++};
 -- 
-2.39.2
+2.25.1
 
