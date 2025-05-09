@@ -1,87 +1,228 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE927238C23;
-	Fri,  9 May 2025 15:56:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F562235354;
+	Fri,  9 May 2025 15:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746806221; cv=none; b=OpqFm63dszWuS46a5fus9PfXBx69GgnRvDHT35kcT9QScQHDtC1GeiGuucVTMsEu7BQr2f72HBba4C0D8hE1KFVQJftRoPeYVfSZ8F7hANK0RLFAPAjeKgg+xDo7vMjKHdaWpJJgSm4uhU4QCcHPmaVvWrPWAivAaxa1zPpTlco=
+	t=1746806245; cv=none; b=XDkWsVLBlVR5RKA15mZC1QmIFVbNfeepif07Co3AnasX5iCobS7vlW6kICvqwPhSkwbh4GCb712DmjM19qpDnBXP4f1dBLdGkw3OYLgvSsctObyigiQ74xPE3TIz8oDBeYdcT7mAKul9qmmQtvUEYmq9r/fKiOTYOil50HcA6/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746806221; c=relaxed/simple;
-	bh=4mMQi+ar9Y/XRchAO1PB++JgRz1WqhE7rHNK/vjvPhw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hY6SOkfXYAWau5dLsyhbAABMH8KMbreUIeRw6l994v6u2UobOOVeX3prHpXhm3sn1o78cbwLZHkNvWy0yfzd9YXzV6p+GIY85HwtE1OtD6QlBFC9fMH4s7jFzx1A/okqaAwi6WLoG1lJrNIoL+wc70mx8d+gq248uRH79/sIIn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M4coL7tC; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746806245; c=relaxed/simple;
+	bh=irAiBJ4YJtMSN3/kNYx23255IfNemC062kdIkHNceA0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SE5hg5QZ+9IVdFiQBbnsYqfTwdJXWBzUBB2ixhp7m4UsKbCTE6DhHnWOuLXI/k7lABBH58nMruWgVvN8oADRU9W+sgyV+OgHAquwlMBFaFsd/vxrGBWmSZFzrMPlnczfxfNx9h58iycdWYmEhD6y1ppjNpzFEQ1ARH2KkSzM6Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YrcOu981; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M4coL7tC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746806220; x=1778342220;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=4mMQi+ar9Y/XRchAO1PB++JgRz1WqhE7rHNK/vjvPhw=;
-  b=M4coL7tCGevKOTAQgjPEl7xjBS8ecWSlKTJLc1fg6Ee2PWNUHCp4eB77
-   5mh8EnGGdTD6xIUZdFui36xx4ZdjLE5pCMrrxJkb1VReaGyS+yhQW1QDK
-   p8+xSCVMJm2h5zz9wQ9Ce/mnKVesDALS784J+se14tN2MbJkTJda+ieCa
-   qD49LSunF8R6kvskGZlbjWvXnQvA2oM1SqhE87KdcMXemuvry8Ago/2bx
-   6g1LMZ4TxRJWgFXI6Bw74dwG443Dk5zm+qVOXYbUCeFw7CuKaogJesHOZ
-   dLfxsoodl9PM4yVir2mbzdL/TO754NeCWTSctDAZFmIPN/D7EvjrPTNrM
-   w==;
-X-CSE-ConnectionGUID: L9T1+ZiJRPqrhDZRgPA7lg==
-X-CSE-MsgGUID: cCa+x9UyQqWMgmn6ZQxXgA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="47895757"
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="47895757"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 08:57:00 -0700
-X-CSE-ConnectionGUID: ikP0s5dKQR2cjqsQJ53lHw==
-X-CSE-MsgGUID: lQ1Qrnz6SpuURTaGT2JcMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
-   d="scan'208";a="136531157"
-Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO [10.245.244.219]) ([10.245.244.219])
-  by orviesa010.jf.intel.com with ESMTP; 09 May 2025 08:56:58 -0700
-Message-ID: <fb21da77-e27a-4a33-935a-d8a89ad398ce@intel.com>
-Date: Fri, 9 May 2025 18:56:57 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YrcOu981"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D72ABC4CEE4;
+	Fri,  9 May 2025 15:57:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746806245;
+	bh=irAiBJ4YJtMSN3/kNYx23255IfNemC062kdIkHNceA0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YrcOu981Eb/JXWzNyJzuWf+rXY5JofO8oM07PIfEvNclk54RAnBV7ydFojLR9fhiS
+	 EErehOIrszMyu+nHhIMkdj4y+ioLuye3amVISPqasL0N5sIePwU4CcUlNaB5XPrYTl
+	 fm+lC3ZR/Ue5e6liQz7mOwtBCQATbQ0OGLQqC9IuBUsL9Kq2vkvgYyApfA7/esOx3W
+	 yAMSAPkFjl4UV+8SmyDjkM30VfARhfGat65dxHb0eAua+eaWMEXkvo5VYighC7f22t
+	 UQsQMa5XM9pAFDOhi5leKbM0aavrjtZneyCu/CLq7xMSHcT4z3003GSLwuJviL+iI3
+	 1+dkcNuznBH8w==
+Date: Fri, 9 May 2025 16:57:20 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Nick Hu <nick.hu@sifive.com>, Cyan Yang <cyan.yang@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH] dt-bindings: power: Add SiFive Domain Management
+ controllers
+Message-ID: <20250509-subtract-caramel-08d47ed3281c@spud>
+References: <20250509021605.26764-1-nick.hu@sifive.com>
+ <20250509-small-graceful-limpet-d0ea41@kuoka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH V6] usb:xhci: Add debugfs support for xHCI port
- bandwidth
-To: raoxu <raoxu@uniontech.com>, gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250509070712.276578-1-raoxu@uniontech.com>
-Content-Language: en-US
-From: Mathias Nyman <mathias.nyman@intel.com>
-In-Reply-To: <20250509070712.276578-1-raoxu@uniontech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="YcA62LszQ5ASIZ/7"
+Content-Disposition: inline
+In-Reply-To: <20250509-small-graceful-limpet-d0ea41@kuoka>
 
-Hi Raoxu
 
-On 9.5.2025 10.07, raoxu wrote:
-> Hi
-> 
-> On 2025/4/2 20:31, Mathias Nyman  wrote:
->> We are currently in the middle of the merge window.
->> I'll try this series out on top of 6.15-rc1 once its released, and
->> then send it forward if everything works as expected
-> 
-> thanks Mathias Nyman,
-> Is there any problems with the patch? If you find any problems
-> during testing,please let me know so I can optimize and update
-> the patch.
+--YcA62LszQ5ASIZ/7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Patch is in my for-usb-next branch and will be sent forward upstream
-with the rest of the features to the next kernel.
+On Fri, May 09, 2025 at 08:40:28AM +0200, Krzysztof Kozlowski wrote:
+> On Fri, May 09, 2025 at 10:16:04AM GMT, Nick Hu wrote:
+> > SiFive Domain Management controller includes the following components
+> > - SiFive Tile Management Controller
+> > - SiFive Cluster Management Controller
+> > - SiFive Core Complex Management Controller
+> >=20
+> > These controllers control the clock and power domain of the
+> > corresponding domain.
+> >=20
+> > Signed-off-by: Nick Hu <nick.hu@sifive.com>
+> > Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+> > ---
+> >  .../devicetree/bindings/power/sifive,tmc.yaml | 89 +++++++++++++++++++
+>=20
+> Where is a patch with the driver (user of the binding)?
+>=20
+> >  1 file changed, 89 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/power/sifive,tmc.=
+yaml
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/power/sifive,tmc.yaml b/=
+Documentation/devicetree/bindings/power/sifive,tmc.yaml
+> > new file mode 100644
+> > index 000000000000..7ed4f290b94b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/sifive,tmc.yaml
+> > @@ -0,0 +1,89 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/power/sifive,tmc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: SiFive Domain Management Controller
+> > +
+> > +maintainers:
+> > +  - Cyan Yang <cyan.yang@sifive.com>
+> > +  - Nick Hu <nick.hu@sifive.com>
+> > +  - Samuel Holland <samuel.holland@sifive.com>
+> > +
+> > +description: |
+> > +  This is the device tree binding for the following SiFive Domain Mana=
+gement Controllers.
+>=20
+> Explain the hardware, not that "binding is a binding for ...".
+>=20
+> Also, wrap according to Linux coding style.
+>=20
+>=20
+> > +  - Tile Management Controller
+> > +      - TMC0
+> > +      - TMC1
+> > +      - TMC2
+> > +      - TMC3
+> > +  - Subsystem Management Controller
+> > +      - SMC0
+> > +      - SMC1
+> > +      - SMC2
+> > +      - SMC3
+> > +  - Cluster Management Controller
+> > +      - CMC2
+> > +      - CMC3
+> > +  SiFive Domain Management Controllers support the SiFive Quiet Interf=
+ace
+> > +  Protocol (SQIP) starting from the Version 1. The control method is
+> > +  different from the Version 0, making them incompatible.
+> > +
+> > +allOf:
+> > +  - $ref: power-domain.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - {}
+> > +          - pattern: "^sifive,[ts]mc0$"
+> > +      - items:
+> > +          - {}
+> > +          - pattern: "^sifive,[ts]mc3$"
+> > +          - pattern: "^sifive,[ts]mc2$"
+> > +          - pattern: "^sifive,[ts]mc1$"
+> > +      - items:
+> > +          - {}
+> > +          - pattern: "^sifive,[ts]mc2$"
+> > +          - pattern: "^sifive,[ts]mc1$"
+> > +      - items:
+> > +          - {}
+> > +          - pattern: "^sifive,[ts]mc1$"
+> > +      - items:
+> > +          - {}
+> > +          - const: sifive,cmc3
+> > +          - const: sifive,cmc2
+> > +      - items:
+> > +          - {}
+> > +          - const: sifive,cmc2
+>=20
+> All of this is just unexpected. Why any compatible should come with
+> these?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/mnyman/xhci.git/commit/?h=for-usb-next&id=466b2e856fa25f517c37549fbbcea8b32fea57fd
+It's also not quite correct either, right? Or may not be correct at
+least. It permits "xxx", "tmc2", "smc1" and "xxx", "smc2", "tmc1"
+which mean that the smc and tmc must be identical in terms of
+programming model.
 
-Thanks
-Mathias
+> You need to use SoC specific compatibles.
+
+I think there's some slack to provide here, sifive are upstreaming it in
+advance of there being customers (or customers ready to upstream) and this
+format allows us to accept bindings/drivers and the customer will have
+to add a soc-specific compatible in order to actually use these in a
+dts. I think it's better to accept something along these lines than
+stall out until a customer decides to upstream their user. That said, I
+would expect this to come (as you mentioned above) with the driver.
+
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  sifive,feature-level:
+> > +    description: |
+> > +      Supported power features. This property is absent if the full se=
+t of features
+> > +      is supported
+>=20
+> Compatible defines this. Drop.
+>=20
+>=20
+> > +    $ref: /schemas/types.yaml#/definitions/string
+> > +    enum: ["nopg", "ceasepg", "runonlypg"]
+> > +
+> > +  "#power-domain-cells":
+> > +    const: 0
+> > +
+> > +if:
+> > +  not:
+> > +    properties:
+> > +      compatible:
+> > +        contains:
+> > +          pattern: "^sifive,[tsc]mc3$"
+> > +then:
+> > +  properties:
+> > +    sifive,feature-level: false
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +additionalProperties: false
+>=20
+> Missing example.
+
+You can't actually make an example that passes validation when the
+soc-specific compatibles are not added, so this would require adding
+some.
+
+--YcA62LszQ5ASIZ/7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaB4l4AAKCRB4tDGHoIJi
+0u/WAQDc8Go2RA4WT2oOaA7PTcJU45RCSHFNuTC+pBcuZzUMKQD/Z+mLnHBPJzDI
+IByAjSLLyqcA/arq1lsOjTdZr80OvAY=
+=uK2r
+-----END PGP SIGNATURE-----
+
+--YcA62LszQ5ASIZ/7--
