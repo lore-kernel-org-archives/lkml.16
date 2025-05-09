@@ -1,196 +1,121 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2079.outbound.protection.outlook.com [40.107.94.79])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B5323C384;
-	Fri,  9 May 2025 15:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746803316; cv=fail; b=WzfL5bDhalFfQKK1CtbUCCKjyompzjWUd48raqobt4zlpS4JZnqUj+VMC/HQPqTo45aECtHcSlQWvUZHf/4jrHNIYEUhlcB2cWICbzs6j07LjdY1iVgw+WaL7jqA3gUrwl0Okv37bdopch2+x+idT62HDUuz0pxjDeOyFizW798=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746803316; c=relaxed/simple;
-	bh=Hk6Rzs9bsj0Xb6iJO+CzutYyfbPbYyDlx66+OL2Ye1Q=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kQqQQpWAmM+mDXSQKackzxYhOVnlBSSsZTNuHFXPRp6hFouBuNpX5Wm0mLHtcKzU0ye+r6tAhMNK2DGo79vR6qBzj1qkWfyJvh+vw0/X/oqCa/pK8N3+r5lwF3sjMnUMmlXjWBja5rWqyE2j5jtEvXBA1BGYXAhLn1zFDPQJC9Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LVGTOTtg; arc=fail smtp.client-ip=40.107.94.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B2D231A24;
+	Fri,  9 May 2025 15:09:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746803362; cv=none; b=WEUKXcAvPCLqxHqzYmdepyHb/w37l7idRTHjMOumwyLBmst4WpzFaQ25Kkz6Ulqk9Zf7WYCGLE4OPImMyNZDZ4tlTAjBP9KP7YTUTvfQEDhhQEgtPj9HAhq/3VQkfhKJZpTbvWGBPG+agWuX3u+QZYnc5c8qhEIpc0LZJ9Snfus=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746803362; c=relaxed/simple;
+	bh=I9V/dhjsNxfWC46Xl6Mbu18eDiGWVHBlGkQ7AoGmqJk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ecXM4pP65DJU42cG/jiVQskQl6b6cr6fbPORqDDoTkNZ2PgXxZOdL/HM+hlyV+Ojg1xDLcA1CiRbtb1yw7iFgLrMMFnU8rh/Ft3qJu8iLdkTYHpeyJYRDnHXhxSzzhHMhN4t4XFIXLx/WQFiu7XAFU7mCghQiMdPp0fF6Y7inUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=erbcXESn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LVGTOTtg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=a5RznZKuBD5rleqBpvISGIGD/utcC2So3KoRw6qd67ZQHVWbDlDRr0BeLV2Ec6Pzjl99hOXoLNYoIkGvVaMhzjx64rmu/08E+VbzCDTQLdRyFc7B0Z7CBoKLNr0wkDvO9/G7KO+jg64H6lY8maGkx3JNYKk3wHqHG3F2HORxzpfcD/XA3CMpM/wQAqw+ssP0IJQ8gQBRBPStgTeIkXq1okplTIsRAljjirPY7a/VIEqHg27eCyIcu5ZzEJZT6KC8vmEEtPKuMYzIe+6n2ky/A04ZkLhV7n09EaJMRlaQ60KhYys+vTQotwQodEC0du6rcGLOC41CLGXh/qiLjUjOwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LeOk1dh3gae3ohCB7ddWkVbGzizQQUG3MQcfl4XOMxE=;
- b=LiitjevoOTPd+rmW0ALNO4E9ba3I11n3dUkAWziuZ7phDzpNg5IHNC7E43tb39oz14yWLOprqUSvbZ0BlAE7+XJY2YxNVN1lMV3wZ3haGQJqXbV48x8ctclMsJqNXGQanfdNJdm0WdEYlki8R93Tz910zbOt4JgcIMJCA4tJoeXne5C1QiRO2RGazU+yG/GcHEwBQ9hvk+EEukBh9RZ6vDlVdDhpqCStJyzuwPsVyRftAjRrGmUlzCK0mV9OlhbR9uOQFCPOS5ND7Xh01DDv+bzAA4SbVZeJeLEPcmL6P5HYx0qZA8a9X7panjUniN00mcWCcTSAK73o7hRpFAI/ng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LeOk1dh3gae3ohCB7ddWkVbGzizQQUG3MQcfl4XOMxE=;
- b=LVGTOTtgEnzzyQKsqeMKh3LOAZnHvlTuktwkN/vL/TWEV0rtmAaiYZnH0IDvYHKEQ+1Prae9chz3qGuU5l/fA38HCM+xk91RAG7MDEls3p76s0vogoxH+tS/piZ63YQ/Z3diuUGdfVYGpkmPzWd4+fS99GiLCAs/qOzp6mxH7a4=
-Received: from BN0PR04CA0188.namprd04.prod.outlook.com (2603:10b6:408:e9::13)
- by SA3PR12MB7808.namprd12.prod.outlook.com (2603:10b6:806:31b::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.23; Fri, 9 May
- 2025 15:08:31 +0000
-Received: from BL6PEPF0001AB4A.namprd04.prod.outlook.com
- (2603:10b6:408:e9:cafe::1a) by BN0PR04CA0188.outlook.office365.com
- (2603:10b6:408:e9::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.31 via Frontend Transport; Fri,
- 9 May 2025 15:08:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB4A.mail.protection.outlook.com (10.167.242.68) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Fri, 9 May 2025 15:08:30 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 9 May
- 2025 10:08:27 -0500
-From: Robert Richter <rrichter@amd.com>
-To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
-	<gourry@gourry.net>, "Fabio M. De Francesco"
-	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
-	Robert Richter <rrichter@amd.com>
-Subject: [PATCH v6 14/14] cxl: Add a dev_dbg() when a decoder was added to a port
-Date: Fri, 9 May 2025 17:06:59 +0200
-Message-ID: <20250509150700.2817697-15-rrichter@amd.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250509150700.2817697-1-rrichter@amd.com>
-References: <20250509150700.2817697-1-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="erbcXESn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70797C4CEE4;
+	Fri,  9 May 2025 15:09:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746803361;
+	bh=I9V/dhjsNxfWC46Xl6Mbu18eDiGWVHBlGkQ7AoGmqJk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=erbcXESnJQ4KYhWJZEW0TclCNDB0atvxUxn3nm+isz/e5jXDtYK658N8XAWB3uanK
+	 rqXXC9L1QzZVV7Th6bYPYVjnyEVDX1dDQ+7wxtVoXUTI6BhOlSMc15wJKh4iVI5NUS
+	 y/7oRq8sU5DlpPUnklXtIvtHlUSkgZ5sGWPTFNpuCy7vaUjm1Vbc98MU8sI+rV+Iv0
+	 oCb/Fs2pt9e7ATjFJ0vcAW4W82wJ1mpcX0rT9YKeqX7frJB41d4b8F0BfSvPmGF9pZ
+	 Am2Chj4MQhy1p99rMZ0xgqsxq4sapP3I/jHU3+3x4sfCEindpBklERPuQHvbTutwKd
+	 aNfi1Pfdb+0+g==
+Message-ID: <d746c1b4-4794-498d-9a6c-a1ac1c58357c@kernel.org>
+Date: Fri, 9 May 2025 17:09:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4A:EE_|SA3PR12MB7808:EE_
-X-MS-Office365-Filtering-Correlation-Id: c9ee568c-4a1d-4fe9-d148-08dd8f0b5c2c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|82310400026|36860700013|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?3Mm7UyNpYXVqfHb/k4GpAWPsS+GOIBHPfh3jcoxqv561W9/U/5arZvv/UWcE?=
- =?us-ascii?Q?Nr2U0wjJ002cXk8XumW6mJZ1YTULF23KK+rb4ESHIDzgKFgspfTcfG21uCgR?=
- =?us-ascii?Q?EmbpFIQYBD3zMQ+7/YWTYtqhWw20A7xp7byV30B1mj+yBhBQ5ycWJtGy6n6i?=
- =?us-ascii?Q?268TJqUIMDMWH9BXVM50CmZ15w7uzFgPdMM0SDpP41K2kcp9HAoAjgJxE0hx?=
- =?us-ascii?Q?M0FRSeVQlGpyytGIjBiHxJYU2iBBtOID/vVTYlMgHIabTSCZQ6H6saD5+nqr?=
- =?us-ascii?Q?eLrVZUSHu/oIsBTHPWApkH3qHh5I54/1csFwltO4g81zXymx8V3IazJn63jx?=
- =?us-ascii?Q?dPVAzrLXuYeRgCOzI6QlXvLodigzgQF7eTiJpK3qqgxyjD+1Nla40WgHqD5N?=
- =?us-ascii?Q?wJ/PRQbBzEp0pujvb7+4TTvIBLmsvdIbSJ7M3mvlyG41sTh6XcN1aEqhv4SM?=
- =?us-ascii?Q?g39sKExlaNavOKhqCTM44dmejTcf81kSreqM+8AMORwOINEKTsGiMEc+If3Q?=
- =?us-ascii?Q?eVJ2yaoDxPrlr+58zqvBpgNhdYzBrLBGJWie6xLFcfB/d8xlJNGvHW4enKyx?=
- =?us-ascii?Q?NsW6ilp5+heOgzRibgUiBnsFZW3lJn25YMJ3GLbVG8YQAnfYDjXQlivFXMY4?=
- =?us-ascii?Q?bQpjY9n0ParmxAky+WkoQxTIA83jibKRKrmkbYWwZyQ5XRmHT8FjfzKQ4llU?=
- =?us-ascii?Q?hCe7m1moOCqKb/OxbcM3fjsWCSVZxYUeOW4ehLiWah+YRkH0lWgrm4xbWr3C?=
- =?us-ascii?Q?ZBou/PAlqY0n5t4wby6o1TMwA5WI0ONM8RWmWLwTkautv2NcgcIfrujVjBPg?=
- =?us-ascii?Q?Zz4AJwvXWx+X6uBFyXPrfa/dxxBk8eYcS5j38QMtWd5/NZ6+Axlyhrg8p4ez?=
- =?us-ascii?Q?pB03d6dxxy5IJpyGg6cKhcgFsDB++JH7xDDeEkhfqMTi/sy3vJdaSsnpj0mw?=
- =?us-ascii?Q?uHpZHzT32C+gXoSb9Tytan87h4G3lMRrCyuhqfkOmLmmTmB8YIWn4Y3OBgie?=
- =?us-ascii?Q?538qUghA4HHg7g+YeRcNIymKk5bB54hBZrIt5LuXSgwETukEtXlzU8571dme?=
- =?us-ascii?Q?V/qM1etCWXXqHy5hhfMnk4gPOMeS5JfT429yTfIeO6nHZ6TgIj5gZoDXXzKw?=
- =?us-ascii?Q?2AN0OqFKmnsm/8VgGOyTbouBSeXkBM7kvFSX/sUdv+ZVfY0XrI0K0v2V9MAc?=
- =?us-ascii?Q?C4C/+QxbI/aLN7mKSG0Q9XyOsYMuS1T9jtGWhOJEM3i/GBFVgnvw8HpjV1iN?=
- =?us-ascii?Q?zYzDR3PDQKrbWbdPe5YmBt1lpZsasFermX28WXr5ajEjJIAHIJXRnbhPkpVD?=
- =?us-ascii?Q?gC6OyRJOgfTSvDVDtJ5DIo3PYvrhVbcjbKfC5d4hje0ujjta0zaiMhrYYgiP?=
- =?us-ascii?Q?BvY18Nctpy86hKz/gillPJveERi8tvLpmuYi/tgIvm2jP+33S1Tn8Es3KONt?=
- =?us-ascii?Q?tPX7a4UZTtO6Mxnmqe6Cj9SrRl9maKfJMTTRcH1IxgOu9FctV/dKCasQp1lU?=
- =?us-ascii?Q?+pGwB17wX7kOLox5rg99Q8Be2eoMJk0KLMb3?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(82310400026)(36860700013)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 15:08:30.9875
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9ee568c-4a1d-4fe9-d148-08dd8f0b5c2c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB4A.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7808
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] Add driver for Nicera D3-323-AA PIR sensor
+To: Waqar Hameed <waqar.hameed@axis.com>, Jonathan Cameron
+ <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: kernel@axis.com, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <cover.1746802541.git.waqar.hameed@axis.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <cover.1746802541.git.waqar.hameed@axis.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Improve debugging by adding and unifying messages whenever a decoder
-was added to a port. It is especially useful to get the decoder
-mapping of the involved CXL host bridge or PCI device. This avoids a
-complex lookup of the decoder/port/device mappings in sysfs.
+On 09/05/2025 17:03, Waqar Hameed wrote:
+> Nicera D3-323-AA is a PIR sensor for human detection. It has support for
+> raw data measurements and detection notification. The communication
+> protocol is custom made and therefore needs to be GPIO bit banged.
+> 
+> Previously, there has been an attempt to add a driver for this device
+> [1]. However, that driver was written for the wrong sub-system. `hwmon`
 
-Example log messages:
+So that's a v2. Mark your patches correctly.
 
-  cxl_acpi ACPI0017:00: decoder0.0 added to root0
-  cxl_acpi ACPI0017:00: decoder0.1 added to root0
-  ...
-   pci0000:e0: decoder1.0 added to port1
-   pci0000:e0: decoder1.1 added to port1
-  ...
-  cxl_mem mem0: decoder5.0 added to endpoint5
-  cxl_mem mem0: decoder5.1 added to endpoint5
+> is clearly not a suitable framework for a proximity device.
+> 
+> In this series, we add a driver for support for event notification for
+> detections through IIO (the more appropriate sub-system!). The various
+> settings have been mapped to existing `sysfs` ABIs in the IIO framework.
+> 
+> The public datasheet [2] is quite sparse. A more detailed version can be
+> obtained through the company.
+> 
+> [1] https://lore.kernel.org/lkml/20241212042412.702044-2-Hermes.Zhang@axis.com/
+Read the comments given in that review:
+https://lore.kernel.org/lkml/wy7nyg3cztixe5y5rg4kbsbbly32h547hwumwwvrfme4fdgsj5@znfpypleebrb/
 
-Signed-off-by: Robert Richter <rrichter@amd.com>
-Reviewed-by: Gregory Price <gourry@gourry.net>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Tested-by: Gregory Price <gourry@gourry.net>
----
- drivers/cxl/acpi.c     | 10 +++++++++-
- drivers/cxl/core/hdm.c |  3 ++-
- 2 files changed, 11 insertions(+), 2 deletions(-)
+You repeated same mistakes, which means I did same review second time
+which is waste of my time.
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 4eac068a1803..587ad5289f7e 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -419,7 +419,15 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
- 	rc = cxl_decoder_add(cxld, target_map);
- 	if (rc)
- 		return rc;
--	return cxl_root_decoder_autoremove(dev, no_free_ptr(cxlrd));
-+
-+	rc = cxl_root_decoder_autoremove(dev, no_free_ptr(cxlrd));
-+	if (rc)
-+		return rc;
-+
-+	dev_dbg(root_port->dev.parent, "%s added to %s\n",
-+		dev_name(&cxld->dev), dev_name(&root_port->dev));
-+
-+	return 0;
- }
- 
- static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 70cae4ebf8a4..00c2de629a34 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -34,7 +34,8 @@ static int add_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 	if (rc)
- 		return rc;
- 
--	dev_dbg(&cxld->dev, "Added to port %s\n", dev_name(&port->dev));
-+	dev_dbg(port->uport_dev, "%s added to %s\n",
-+		dev_name(&cxld->dev), dev_name(&port->dev));
- 
- 	return 0;
- }
--- 
-2.39.5
-
+Best regards,
+Krzysztof
