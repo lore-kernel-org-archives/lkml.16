@@ -1,101 +1,118 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4635C280A57;
-	Fri,  9 May 2025 09:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621BA283FF8
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 09:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746782903; cv=none; b=Qq6BrpXTBOxHREcYnFAeRSEkFYd2Ewo3Tw0PZBY8lYaalrUWj0gv4wBTFNd2oeg37cu9ALqBwQGThkF4hn/JvuPFHiG+3ant//AxbZuM3gcNONqCAsewqOvGMCMqO07eF3HMZK2C2A5P26IkvBcg5zPACnd9IkC+TOubq8SUf2U=
+	t=1746782919; cv=none; b=LS5BZy3yFNPOwCg29qjghTwJ4BoS47OS7M7OJImXrNkhiTQr5wCmLeMVo/ORhuIw3JLsYdRxtGtrxi3Y7T2YvBhdIbaAlQEciIEfL16cbhU+v1aSqZBYbWAlqvVC7MezVYJ5UjveVX7e/5pGN6UhxmOADWPjoqVi6zJI5aGD5F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746782903; c=relaxed/simple;
-	bh=dCsXi84UhimhrxsYV/BtTeEkqT1oQoKtLpb60nGAJws=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=euTTO+eA2QKDbhRJykDdlStUlAe+Urf6ChzYnTGMhf6Ec2HH2Oubuhi8A+8SJLmBEogrbfd6I61UvaKexHqfsb0+XWAqGbmRoG6UHIgGk4U0Yv/rGyIe7UGhYfwD9cMa2XAb0fXfeVYWeKhWU0L/NK9CPe9+vAAy6bDRlZDZQdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5498UaT2012563;
-	Fri, 9 May 2025 02:28:09 -0700
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46dee3f05g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 09 May 2025 02:28:09 -0700 (PDT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Fri, 9 May 2025 02:28:09 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Fri, 9 May 2025 02:28:05 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <jianqi.ren.cn@windriver.com>, <fullwaywang@outlook.com>,
-        <tiffany.lin@mediatek.com>, <andrew-ct.chen@mediatek.com>,
-        <mchehab@kernel.org>, <matthias.bgg@gmail.com>,
-        <linux-media@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH 5.15.y] media: mtk-vcodec: potential null pointer deference in SCP
-Date: Fri, 9 May 2025 17:28:05 +0800
-Message-ID: <20250509092805.3242802-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1746782919; c=relaxed/simple;
+	bh=z15afqnSZ3avseRb+hX3bOV+QNP5+3t8At9bgSSKGro=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=fij3zH/SzBEJVgiWVQvZmu0W/ArhqHotNGzEhGmVgmK/UK41bbjxGin3QePu4xFogwNloHdZqbVFKpB+jxuuKq0DVUicP91tL62GTxhMPOXd7VXwm26gaN7qxoqD/RZTdaV8k3n9GmMD8hBZafgJ29JNKZgGcvKzQjjr2pj8kSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cacheline.de; spf=pass smtp.mailfrom=cacheline.de; dkim=pass (2048-bit key) header.d=cacheline.de header.i=@cacheline.de header.b=FkKZQHDx; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A5NLLivB; arc=none smtp.client-ip=103.168.172.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cacheline.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cacheline.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cacheline.de header.i=@cacheline.de header.b="FkKZQHDx";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A5NLLivB"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.phl.internal (Postfix) with ESMTP id 8BA351380193;
+	Fri,  9 May 2025 05:28:36 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Fri, 09 May 2025 05:28:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cacheline.de; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm3; t=1746782916; x=1746869316; bh=dIWWiS5nyaNIyDc7xgCSC
+	GutcHi9+SeN0U3LvBIU+fI=; b=FkKZQHDxBesZOi30ZGZduC7+QMwxaBLVifIP3
+	SqvTdMxz0HcOc8d0DGZdwfktW3zhBBQ8+TQaf6Gry9zIw9PvxPOWWTkq9p8ITj2E
+	dRFkXT93kcvczxzXY0AQgBNecouNqtx3q78Xi5tPKtPuJwMtkGu0t7DoEW4Gjh0u
+	njm9AFPGYwTvqHWEv5upetg3jyOY1RiBCbnLOFvXh4VIwZ5XNDCeEjz3K0xWBP87
+	sqKoyqncDcCKWZhmQTGNQ09yX3iCyWD7d0mVZqkfUS7NawkUi9qr/CsLVvTO5Jhm
+	wC/Bg8HiJ8LpJAR3xHz6bnBDhd3mtUyUu+gaD/dCdqSHOlleQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1746782916; x=1746869316; bh=dIWWiS5nyaNIyDc7xgCSCGutcHi9+SeN0U3
+	LvBIU+fI=; b=A5NLLivB+rEI8f1qIWrO6qt/Y5sMNBdVOq4hrQVRYL5krlww7jd
+	9L+6hg82T2SHhp+afeWac7ypr4NIan/sAzQb+ACsjpSi+TTGj/ZzMay5aj3BqeYA
+	xs39rDleTy/ZAVYD6z/6b3txVtu3wXpZ7gRoSWTkxuf0ZZmcBk1EqkySpLotzCe5
+	g340LUGFgby2N1QIA4+8QTXWitzssddvzsayimkL4dE5QcOeImfarDcmM30H2Tlq
+	nO6wfc4Wf4mVx8lDs7d+p8Hcdf9bC2Fo64Zc3P4xnBJOzcCDMhR9qKdaihISWgGM
+	gDD6EjCsiVB/2FitA/g0thgsBu8UU60Do0A==
+X-ME-Sender: <xms:xModaK-eL-K39NxfSS4ipyQDKeMvRaDz7sRF_1IUfq1XJx6FPRuciQ>
+    <xme:xModaKvmIWrb1CKc7leCFBCPDl452jQAK4oy3FqfbjgZXn0TXli7iR72t7cXyZS0I
+    FmmfK77gJSgAtEc3fQ>
+X-ME-Received: <xmr:xModaAAxsYzbnfksQDP4VtqKA7FxP_LfdAlbpRtX3mkqeJr2n66ww7IR5NOHuBKBlWEg_MbhRVJ_bIpgGVCq0SyKoeo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvvdeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkgggtuggjfgesthdtredttder
+    vdenucfhrhhomhepfdethhhmvgguucfurdcuffgrrhifihhshhculdguvghvmddfuceoug
+    grrhifihdruggvvhestggrtghhvghlihhnvgdruggvqeenucggtffrrghtthgvrhhnpedt
+    ledtkeekffekleefudekgeeukeejhefffeeuteeujeeuvdetvdfhhedvudevueenucffoh
+    hmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
+    rghmpehmrghilhhfrhhomhepuggrrhifihdruggvvhestggrtghhvghlihhnvgdruggvpd
+    hnsggprhgtphhtthhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuggr
+    rhifiheslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehmihhnghhosehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehmihhnghhosehrvgguhhgrthdrtghomhdprhgtphht
+    thhopegsphesrghlihgvnhekrdguvgdprhgtphhtthhopegurghvvgdrhhgrnhhsvghnse
+    hlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepthhglhigsehlihhnuhhtrhho
+    nhhigidruggvpdhrtghpthhtoheprghnughrvgifrdgtohhophgvrhefsegtihhtrhhigi
+    drtghomhdprhgtphhtthhopehhphgrseiihihtohhrrdgtohhmpdhrtghpthhtohepjhho
+    hhhnrdhoghhnvghssheslhhinhhuthhrohhnihigrdguvg
+X-ME-Proxy: <xmx:xModaCdJW4oDYsvTxPK9lt5hR7jVmlIlU9esWhN21Q07V7uobIsSHA>
+    <xmx:xModaPPzzmraYTqPkM3J-RWyXdDAKe52Y1jFkl6tr4iS7IcT32aOJg>
+    <xmx:xModaMnMNIj5x6mtRVXPjtoID25j7Txvr2UwCrMEPlvWZlYnp7-VzA>
+    <xmx:xModaBtZYfiEMHc6TNllwj6oPA82rK6hoqrVmeIRtgIZ3VJbZxL2vA>
+    <xmx:xModaM9ZBZ46VW8xghtdbFyfa9NnUs4-onxW2_taQTCaEzLv65-rapKd>
+Feedback-ID: i7c5149e1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 9 May 2025 05:28:33 -0400 (EDT)
+Date: Fri, 9 May 2025 11:28:31 +0200
+From: "Ahmed S. Darwish (dev)" <darwi.dev@cacheline.de>
+To: "Ahmed S. Darwish" <darwi@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
+	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 00/26] x86: Introduce centralized CPUID model
+Message-ID: <aB3Kvx1lC93972Q9@lx-t490>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: JPDXlUU78oy8GWbRgHEFoe2a2inWsnIL
-X-Authority-Analysis: v=2.4 cv=Pd3/hjhd c=1 sm=1 tr=0 ts=681dcaa9 cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=UqCG9HQmAAAA:8 a=t7CeM3EgAAAA:8 a=7f2alXSBUxmpNkzq_swA:9 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-GUID: JPDXlUU78oy8GWbRgHEFoe2a2inWsnIL
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA5MCBTYWx0ZWRfX0AUpPuVIhF8K 1HdCfPaiGDVHFj2cglJ38I3OcM4xeqGSTn07eE5r9XdZqr6686sT7Gg1PwGY3+c6FBMyYLo3tSM lUzAWuEHXkuNnNONvOwjcC7+HKBL07n3GWpoEMw02jmt2plgGBbUmXoBUkuZO968snYCbtbXf2f
- UhQvsrKK8Dhw6MKafkZhZ8231h6r1hkB5w0y+q9KHuGTVCVRpGvSawD0M81bKs0zLQrZKnncuxe 9YvtzfM5n8dPlMWubMACAR3Jp1Bl2JtF7kEPONa45/hjQ5uWh3YIFvSubthdqNS2idNz8hzDAgK Y+W1sjAK0uOpPe/BP8155ZLPaAoSFyEkMN1TDIbiBDLXKqsD/cc5TuXxiXOWS2CW6YOQ1P+wDSr
- 6NFwhCsQjomRz1HIQFuthMPdWD5He75UHnOsan+RZcNj5+bHzaKi0ytoZuBQHCw53rwQjsH/
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_03,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 mlxscore=0 suspectscore=0 spamscore=0 malwarescore=0
- impostorscore=0 clxscore=1015 mlxlogscore=999 phishscore=0 bulkscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
- definitions=main-2505090090
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBsor3iOb0SJsLSQ@lx-t490>
+User-Agent: Mutt/2.2.14 (516568dc) (2025-02-20)
 
-From: Fullway Wang <fullwaywang@outlook.com>
+On Wed, 07 May 2025, Ahmed S. Darwish wrote:
+>
+> On Tue, 06 May, Ingo Molnar wrote:
+> >
+> > Wrt. <asm/cpuid/api.h>, we'll need a few followup cleanups there too
+> > I think, such as migrating to the cpuid_*() namespace:
+> >
+>
+> Perfect, then I'll move ahead and do a "CPUID headers cleanup" patch
+> queue /before/ moving into a v2 of this series.
+>
 
-[ Upstream commit 53dbe08504442dc7ba4865c09b3bbf5fe849681b ]
+Sent at:
 
-The return value of devm_kzalloc() needs to be checked to avoid
-NULL pointer deference. This is similar to CVE-2022-3113.
+    [PATCH v1 0/9] x86/cpuid: Headers cleanup
+    https://lore.kernel.org/lkml/20250508150240.172915-1-darwi@linutronix.de
 
-Link: https://lore.kernel.org/linux-media/PH7PR20MB5925094DAE3FD750C7E39E01BF712@PH7PR20MB5925.namprd20.prod.outlook.com
-Signed-off-by: Fullway Wang <fullwaywang@outlook.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-[Minor conflict resolved due to code context change.]
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
-Verified the build test
----
- drivers/media/platform/mtk-vcodec/mtk_vcodec_fw_scp.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw_scp.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw_scp.c
-index d8e66b645bd8..27f08b1d34d1 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw_scp.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw_scp.c
-@@ -65,6 +65,8 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_scp_init(struct mtk_vcodec_dev *dev)
- 	}
- 
- 	fw = devm_kzalloc(&dev->plat_dev->dev, sizeof(*fw), GFP_KERNEL);
-+	if (!fw)
-+		return ERR_PTR(-ENOMEM);
- 	fw->type = SCP;
- 	fw->ops = &mtk_vcodec_rproc_msg;
- 	fw->scp = scp;
--- 
-2.34.1
-
+Thanks!
+~ Ahmed
