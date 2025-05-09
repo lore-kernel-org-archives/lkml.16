@@ -1,70 +1,70 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1CC25F7BD;
-	Fri,  9 May 2025 20:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B32925F99E;
+	Fri,  9 May 2025 20:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746822890; cv=none; b=WheB47OEqYCOinMmg0DnSDKNMHMosU26beF6R6Ff0rXj7Atlb1ZNZlbELDVtgR0jGKMqOOYwBkJe3tJVv989MHuB1Yyr1ZzFLGeB9gofZlDF7S6ZYmSgaKFewkUhjy6kVlstYMS2Uxjz/6V0UmZNHbQBxBYCVC0xGwOqSsNRbK0=
+	t=1746822891; cv=none; b=uUXIqgVb9AbLBkcBZ9sCFBWsLk9ztOuqdTGKVHpXCZBPuHemzBSTnkH2RkxsQuWt/+qVk/wsnXs7GCz4Oz2Qz8F0RVtpAYnG6jKhxRG9QuXWU7YP0Ums7NxmMUGFQk3k5ESyFSiRW4JGsnKrAMJl3uVuNuNJOjEMPfxSixJpP1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746822890; c=relaxed/simple;
-	bh=p0N1JkT2/xLLLi8cugDEWXwuM7uwy0AJmnt0uKprhmQ=;
+	s=arc-20240116; t=1746822891; c=relaxed/simple;
+	bh=K7QBPYmB6+EbJVMyvMl1640LEwKYDegVA1qPrX+sRYM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zt7+3N6TLAv/X4iydy6yQCzU8xl1kT8e4WU4v3oxeRa1R2q9NRic+zV/yAK5hiBibM/9NRq1UkcPiLzzNJNa7KVwvn2viX0g8X9jNVTXL1rmP5f9Y3uDNNSVtgHaFSZcJua9TOybvUujp8HMAHwu9l5a60zlNwc8RX/phw/EWfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kq2tEt8/; arc=none smtp.client-ip=209.85.218.54
+	 MIME-Version; b=hQACpA0KTExnwapUqYLHNvd9rpVMLx/pVQHvbm0gjIeV2oKQrAWphl5m3Tf5CSL7o6NXPg/hVxANI8OabIT+5fe9weeeZo4BmQvfuVAoIOIoPOn6IRN4BjBuiLGum3ze1L0QIlXAiQ9OHjZP9Q67f7GCyQ0YEExCZ7Hs1HcBVWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HDXLC33m; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kq2tEt8/"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad21c5d9db2so231652666b.3;
-        Fri, 09 May 2025 13:34:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HDXLC33m"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad1f6aa2f84so540456666b.0;
+        Fri, 09 May 2025 13:34:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746822886; x=1747427686; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746822887; x=1747427687; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gTQz1qp+LCvTxWsAMMO3CfVyc44sS81nVli0WMqNCPI=;
-        b=kq2tEt8/uX1FRqCFSXRXq7T4VlUFfa7c6797SpUUSigSyR+JPYczPi3RWyEQ0eIfqx
-         MxRHy1wD4CuakPrd2D6fOjK6uvXQmmyUqKJDz8LGjG0pXVsE88Bo9y0krHz2EE/gMt8Z
-         5jFDQa6/kOFGR2K1L7eXeQbf2gsFRAS734S5jSTLt7YKN5da9Cr5VSW5TTsfp/oKyEIA
-         a8uyEPp66ft0cyXHF3uomjBjSFN4MRFJ4MvSteOzzwkylYE6KUUh/J2nw0Iuw1pQlOGl
-         ePLupgaJJEPIgsKLmX7wjF+2TgXa9TsTnVmbrwWAQ8lFhM/Pf8cFOK4oiNTwUTDOP4ty
-         KOHw==
+        bh=QseTgvZE/lbbP5A3w+jo9a6ipC4Dy60OVzZjutbgQf0=;
+        b=HDXLC33miOSc6qKfjUjHmypBDko/jopXWDgSeDWN32gBA1n5u6ovtthEBY3tud4QIX
+         EKI313GW6uQQFRWcwCo74O6+0ylhpaEIbkuv80cUXckGErw9t3GK1YxIfKR/0REe+zQJ
+         WNxHeRQheLOeEJ18sxqDAMA/7VEBFHEF49KpNqamtKwz3F4EAjSeke9VdPAh0FTcmMbP
+         fgArDp/UI8w6HyNSepkPWPLZrNpRwU+DK3FuNuS0cVDBniRjanL5MW++kdwe5wXin/Ue
+         jyo8zLoPeppR4vM4Gxjl6qr6wsmkotS+npOnUhQShtG78m10mInNG6GbG2phkAxxB1gh
+         HptA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746822886; x=1747427686;
+        d=1e100.net; s=20230601; t=1746822887; x=1747427687;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gTQz1qp+LCvTxWsAMMO3CfVyc44sS81nVli0WMqNCPI=;
-        b=fCRB71iU6NGYqWkLfP64Xm419Ce61nWLJQ7zAj457jetkDpel0Lm/ub7Fs8BH1lExf
-         2fJXC80JeKR6+XVR+gJlVSrvR5pndtejNnZcq8W7gQT7hq/QJ+EpBbSlx79vA+KFEjx9
-         6RfFSkAv7CEYfFGhj7HLFT8qoitgd/SL2N0WDeBVCcWng9tk0VMBcVNN5taKLJAFG84I
-         tKpdAQkVxqtm3kTKwIRtRd5ca0JWFu06QwdhxVUEWp4+D/n1p5R6UHImhXFdyQhg8PJB
-         mmafv+iCqvem49x4t3mtFyjC+vVMGUMHjRfFGi1J7UmgOqatYyzMvDzWQ4UGyWM4B51q
-         V01w==
-X-Forwarded-Encrypted: i=1; AJvYcCVawKPABsaQjGPQvdadVs3EDL57sEoEEPlK/UxBQsn3OW68gTnhQ6RVRHX4js9KYb/TgY5pkQViCcXbMLo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWFFbxm7DJZjOyqCSMmK0MW1Ve8blHwN03mox7Phfapkx42I1C
-	boS/lU50N0UP21qRWP/fa+pVL4GNvtsqoM8i7zN8jpCKglViOavVoTw/
-X-Gm-Gg: ASbGncva8a+YSfsmOf8PH/SIE3qrla45B+tPoWr/Q7q6Ffej9ZPwmjaMtI+iZVfEszf
-	L7xLmRPL83YAXtz1yDl3zl1bnKOsTF18jZd45YYgDnYidG+ZQE7lqNitlupZ0LlcBMcAcTtoyOl
-	nV08o42llYASl7GkF5gLRkh+nuxoc2Yll9YDKf2z+/fmw8oN0fOFoyjpwMxJGVyYbLHYGhLGqOP
-	OvfKfJankiDroQEiqbu6yxNSUufPFFgvl94C5/uzHw7njxsJEnqK90INXjyQLGXt2SRGjgz7KOS
-	dXRMUmtuY0YoZa3e7myIBWKZs8v6rlCZU5DAwKS5AK0npgF4FFkP0vEXbfEUinxmpLy3Hew=
-X-Google-Smtp-Source: AGHT+IE5zcH6g670goLcEybs0egiuk2RibDUz7ViDwJg1oceGAy80dAUzGHMwJsjnex3zruRHF2+Lw==
-X-Received: by 2002:a17:907:a646:b0:ace:d3f0:e51d with SMTP id a640c23a62f3a-ad2192d52demr475689766b.54.1746822886056;
-        Fri, 09 May 2025 13:34:46 -0700 (PDT)
+        bh=QseTgvZE/lbbP5A3w+jo9a6ipC4Dy60OVzZjutbgQf0=;
+        b=XCRKF113IQ250TnzuXWX4OqhmLwEYvUwuA59XbGwjYzhgE+xYrfh/deIP+QVZKpZxl
+         /y64A+eXTFysl+CnbTnFASM7LzVU53n34MgdUDN8wt2b0zpOg+Kk5UI0IarSKgysaUSo
+         GjRmQijSPIQ21FxLWJU1tvGzKEI6ymhiO16Dh0iaqo+6Sl9l7MEjzDxvmSTNyKk1CkOR
+         yBhnBbM+KnjhB+qevhESpUC+SfQtbCLYZ9JjABXMlVXABPXuhrd7mswUFvRH47bVVGKg
+         40muYTNl/3/AdyRxriGjCMyVHIdsZa3WT5GNP93uDVJwIFVHgtV2CpRnwuxZ1EkslsOx
+         Z3Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUP2JLyKfIYCQyFS1XjsBKA2jvDcQiFqHZsaJk/5y1c91vMCG3Szvxdu+M9fGz/4SwUeWsC38QQD3qbJo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwN6ZxER9RqVqfecvF6CJsTKtC9R7XycsyTQM1/FvShYij6VUut
+	VqcX5g+hZkjevufigGGx55hFLXMF/+ZK5yFeZhpv3M/OS8EriMQ=
+X-Gm-Gg: ASbGncsAoTPD0ev6RK9zxndXRvNuO/h346R5K2iOwsSdtCN4pv1I3qi0oXuw/TQYF6b
+	y6khdpcLVQShhHbxsh2Xnlu7WbLI1R7hUqqYt+ZupIJm44+YIZcnOnlqPpgWl4eQUCYA7Tpzi+i
+	9qIvDvp3XeqxGdYy/gNIMSu2HYWOf4h7JjsXZfKwfvzZ2iOHibylJQJZgLD+fPZdlihrkFeXlWt
+	8IySbJkrLQOIW6oIlpQuknSHM6pYTClBkDht4MD6HvpbQ7BzAoHt0apAjxnBp/lzqFtBqqF4RLZ
+	vkjY5+yMOn1/JmSW01qnwYSWPjlMAWKnY5LOPUVBsM0lYZxQRvi+KThqAKhyqfnL4tgIDnA=
+X-Google-Smtp-Source: AGHT+IE+KkRZI0IG0hdj0VgiW+dAtVoIaJen/kaHtZsl1gsuQxJ9ijZRKJV3LchmaZZdtrbt7/Wlpg==
+X-Received: by 2002:a17:907:3dab:b0:ace:d50f:8ee3 with SMTP id a640c23a62f3a-ad1fcc9885fmr796696866b.19.1746822887456;
+        Fri, 09 May 2025 13:34:47 -0700 (PDT)
 Received: from localhost.localdomain ([46.53.251.33])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197bd219sm202255066b.141.2025.05.09.13.34.45
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2197bd219sm202255066b.141.2025.05.09.13.34.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 13:34:45 -0700 (PDT)
+        Fri, 09 May 2025 13:34:47 -0700 (PDT)
 From: Alexey Dobriyan <adobriyan@gmail.com>
 To: corbet@lwn.net
 Cc: workflows@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Alexey Dobriyan <adobriyan@gmail.com>
-Subject: [PATCH 6/9] CodingStyle: recommend static_assert/_Static_assert
-Date: Fri,  9 May 2025 23:34:27 +0300
-Message-ID: <20250509203430.3448-6-adobriyan@gmail.com>
+Subject: [PATCH 8/9] CodingStyle: tell people how to split long "for" loops
+Date: Fri,  9 May 2025 23:34:29 +0300
+Message-ID: <20250509203430.3448-8-adobriyan@gmail.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250509203430.3448-1-adobriyan@gmail.com>
 References: <20250509203430.3448-1-adobriyan@gmail.com>
@@ -76,55 +76,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Linux's BUG_ON is done backwards (condition is inverted).
-But it is a long story.
-
-However C11/C23 allow to partially transition to what all normal
-programmers are used to, namely assert().
-
-Deprecate BUILD_BUG_ON, recommend static_assert/_Static_assert.
-And then some day BUG_ON will be flipped as well.
-
 Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
 ---
- Documentation/process/coding-style.rst | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ Documentation/process/coding-style.rst | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
-index 63c41125e713..f8d5151eb0d2 100644
+index e17de69845ff..494ab3201112 100644
 --- a/Documentation/process/coding-style.rst
 +++ b/Documentation/process/coding-style.rst
-@@ -1302,11 +1302,26 @@ asked the kernel to crash if a WARN*() fires, and such users must be
- prepared to deal with the consequences of a system that is somewhat more
- likely to crash.
+@@ -183,7 +183,21 @@ Descendants are always substantially shorter than the parent and
+ are placed substantially to the right.  A very commonly used style
+ is to align descendants to a function open parenthesis.
  
--Use BUILD_BUG_ON() for compile-time assertions
--**********************************************
-+Use ``_Static_assert``/``static_assert`` to test things at compile time
-+***********************************************************************
- 
--The use of BUILD_BUG_ON() is acceptable and encouraged, because it is a
--compile-time assertion that has no effect at runtime.
-+C99 has standardized ``_Static_assert`` keyword and C23 added ``static_assert``
-+later making Linux specific ``BUILD_BUG_ON`` macro obsolete.
+-These same rules are applied to function headers with a long argument list.
++These same rules are applied to function prototypes with a long argument list.
 +
-+Note that both forms of static assertions are classified as declaration and
-+thus can be used (almost) anywhere in the code including top-level.
-+Don't introduce fake functions to test things at compile time:
++Very long ``for`` loops are split at the ``;`` characters making it easier
++to see which code goes to which clause:
 +
 +.. code-block:: c
 +
-+	_Static_assert(sizeof(u32) == 4);
-+	static_assert(sizeof(struct S) == 8);
++	for (int i = 0;
++	     i < N;
++	     i += 1)
++	{
++	}
 +
-+Also note that the second argument to ``static_assert`` can be omitted as an
-+extension. Sometimes filename and line number of a compile error is all you
-+need.
-+
-+See https://en.cppreference.com/w/c/language/_Static_assert for more information.
++Opening curly is placed on a separate line then to make it easier to tell
++loop body from iteration clause.
  
- References
- ----------
+ However, never break user-visible strings such as printk messages because
+ that breaks the ability to grep for them.
 -- 
 2.49.0
 
