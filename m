@@ -1,99 +1,145 @@
-Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99354233736;
-	Fri,  9 May 2025 15:11:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69754226CF8;
+	Fri,  9 May 2025 15:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746803481; cv=none; b=fQMWBX9P5CaSSom0VpJy6FrH/V7J9NEJJs5IUic9oe65Im07BQCq0n8dyxX3CeqoWehDliErX8/GkoInmK7xHNkX948ojcMxlqJGt4TJKrhn7tfWRTy2q007Flf3o3bfrC/EkaH4ZKkVaaE9ebWwrcjdasCwfQ8swRUao47txVg=
+	t=1746803555; cv=none; b=AUl5O6157yCGJZDbeTgfJSreVnqrjYOd4g60G+UoeADtCh+UigwRHGeSHZps2aSkUv05Sk+ksX4UwXm7VXmFi4XF1YuOFCfKBbbymL4VjK/EZ6MmlrE0N/xyNDpcLEHBt1xRhA9HBrBr7V9OGi7bYV2KC31SqN8O5KzLZuNImSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746803481; c=relaxed/simple;
-	bh=wVbUZiJAxeDC/B1GW4wWjjz3I64q+hCyr2e5P1x2TMk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pGF2DkSw+ISMNxCNKGW5EKM3p5586U8Vy7715lPRTEGF8VFzngH9p3fvcY7cv+DlbTBJHwjZjEtsAJvvXi5tvKFCQpAHRCNb/viWfL/aUVNYE0qjMRmk+fqy2VxM++hITP4G7cECkRMgucDAdAUh+mBSJX1NQAcxYu2yWr6N2NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=mePIzA6+; arc=none smtp.client-ip=54.204.34.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1746803555; c=relaxed/simple;
+	bh=J+mhORO04a0IKQVCAqhH6DWfdwrC86bRiVuc5Rjobf8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DPyor9obRkFql3yMDxGgV3Hz2Fs1XE/fEkiVbsuzeHPMedLDx2YJeOvD1Md4WYnQOngYciUU1jffEIKnW+3anjbIr74NjEjBuZ8k7o/pmQB/ngh4P5Y9QgTorj7EkdAXXCRSuCQt5Dh1TWRzkbuvAnBrxaZThLcuXZh2keDwXtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Xrnt6M6Z; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="mePIzA6+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1746803459;
-	bh=EwvPymuHFztd0+nGFButAnqaFfGdcLMgfM3pGmY+mRc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To;
-	b=mePIzA6+iAJOVfZmBPVtAbAUotQnwXoPlDbv+Nnkk/gt320R6+sROT37nM5A7zzGu
-	 sbNJojTDhQDG4799WyMgWu/H5Zr7cwrpSDbMkeNyUuIgv+edt5ldLN1+1rfN2fwSiq
-	 2Uh56oBVO1/7e/bt80tmka/EQqeNnHk3OHIqVEjk=
-X-QQ-mid: zesmtpgz3t1746803457t69466426
-X-QQ-Originating-IP: RgQoCLH0gPJM8iS09BOsduU3Kcz3Kmtz/ogGb/fxMXA=
-Received: from mail-yb1-f181.google.com ( [209.85.219.181])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 09 May 2025 23:10:55 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 16312323404495128176
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e73e9e18556so2221473276.0;
-        Fri, 09 May 2025 08:10:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUK2PbbtX2DI40LthO/h7TBUEFrShloVH08I60hisE1XV/nqjM93dpmwxMZjpg8HHqg9r8Y5wwsfIa8Pq8d@vger.kernel.org, AJvYcCXMu312M0fyxgSyAp29GN+Si9SfCcDkKYC4xlZ4oKY9xJD6xr4dNg8JsDmIPRFaxxsI4XX8b/7z0V93I71k@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGNH+PRuPrekxfSj8X96O/HcHqIToW96gWVoS5r+7RdhYHJHXI
-	ssNmjgt/cTG+IiOO5mDpHSKS2kKtEn6WZkUsTVLOftxHddRu1Z//gjmrm0pgFyGj7J3CMOflVYa
-	/nyjU9mfmy2wRLnCI6uszPDgJR9g=
-X-Google-Smtp-Source: AGHT+IGxjJFvLSFrjsRKXRvh4VuMV45vppGwGleT2kXSaVpYif5t84ll8QrWO2n6mpu1nZtqjidpdzxWhuazXN8Ds6g=
-X-Received: by 2002:a05:6902:2846:b0:e5b:4651:b5c6 with SMTP id
- 3f1490d57ef6-e78fe0d9882mr5087468276.23.1746803454684; Fri, 09 May 2025
- 08:10:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Xrnt6M6Z"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=b08n98Unj3RXD1x5xIwGhemBZssytc919TmwiiYZy+s=; b=Xrnt6M6Za2VeS267+y4ojCxHxr
+	py/RBMo7NCKATjxxO1eXfWb94Kpe/E1n04rJA2Hs1riZZxCKRs/9SNSMMwwoX5yaxBu+TXZb2mSTH
+	sXn13t/GOhZ7shQSdeodBbM6xf6wbNlOm5xzj8s6YtE6AXn34OMO87iavQoF/467zcoSFbJTib3oE
+	LMbhHpUGNY/ezfXd7uD5KB/SsGM7QzRGkTwLAJeXVs2z/3vsoMXmDxP6iaSd+Vk0oqNV/faZo0lsP
+	70RQllGYrQIyTVFqHm5bLHssTK7NSe+W+P4isdalSXoU40PPseF7S0DiFHu3hzU/ilXG9lIS53EcD
+	FcEaycog==;
+Received: from i53875a1d.versanet.de ([83.135.90.29] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uDPOh-0007hm-QA; Fri, 09 May 2025 17:12:23 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Sebastian Reichel <sebastian.reichel@collabora.com>,
+ "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ Conor Dooley <conor+dt@kernel.org>, kernel@collabora.com,
+ FUKAUMI Naoki <naoki@radxa.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: Re: [PATCH v2 0/5] arm64: dts: rockchip: add ROCK 5B+ support
+Date: Fri, 09 May 2025 17:12:22 +0200
+Message-ID: <1893373.atdPhlSkOF@diego>
+In-Reply-To: <174679985287.3369051.14227124355079340433.robh@kernel.org>
+References:
+ <20250508-rock5bp-for-upstream-v2-0-677033cc1ac2@kernel.org>
+ <174679985287.3369051.14227124355079340433.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com>
- <20250509-fusectl-backing-files-v3-2-393761f9b683@uniontech.com>
- <CAJfpegvhZ8Pts5EJDU0efcdHRZk39mcHxmVCNGvKXTZBG63k6g@mail.gmail.com>
- <CAC1kPDPeQbvnZnsqeYc5igT3cX=CjLGFCda1VJE2DYPaTULMFg@mail.gmail.com> <CAJfpegsTfUQ53hmnm7192-4ywLmXDLLwjV01tjCK7PVEqtE=yw@mail.gmail.com>
-In-Reply-To: <CAJfpegsTfUQ53hmnm7192-4ywLmXDLLwjV01tjCK7PVEqtE=yw@mail.gmail.com>
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-Date: Fri, 9 May 2025 23:10:43 +0800
-X-Gmail-Original-Message-ID: <B876C9239B0EFB0D+CAC1kPDMweHDtktTt=aSFamPNUWjt8nKw09U_2EqyDNu28H6WWg@mail.gmail.com>
-X-Gm-Features: ATxdqUGOm0hFg70ZmDrG1cg3KWtHrUA1YP0QsfD7GpyT5NSHmAdCwARBM67uKMw
-Message-ID: <CAC1kPDMweHDtktTt=aSFamPNUWjt8nKw09U_2EqyDNu28H6WWg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] fs: fuse: add backing_files control file
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Amir Goldstein <amir73il@gmail.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: M4KjHSRLf+eQEsLAW0W2N4DCm7Y6OTFxwVc6lRmHcNiefodcYfpxFK+k
-	NRWH7tRVag4nR7RkkY9zAdoLUd4707qPQR9JG9yzo0MlRSJGSc0I/YfPUAvk4NSROluYDB6
-	idEtEyczxHgIFiW/UHDCQ3Bcl872BjVpD6PVzFPZ6mSd1mqCufNHzvfUKPe1EGDcGGACA45
-	r8DvsCXyVtlyBQ+B+/Uqg9kI2glh3OrJyDEvV9c3+NSL8VJQJyoNheysDnxGN77SxxgMO4p
-	APGv4LXAS2fhde9jRvRY0RvBiRi3kVrLqXWGp0gB2SIvT5igPFpRvHiaRt9szh8u3n+Adq3
-	2K179/VVuh8scwcMG3BFDaKNMMScZFz8o68f0E48nc7euavXxqLnmtDkdTWRP9BsINYQxNP
-	lhlR8AQ6h4Ql4rBWeYMJZCvBfnJ7adOoT49k00iwPo68bCmzqgPfip5WvgGOQF/qhTxbXnv
-	HsIJI62Df08oqB4qJIniO2oLOAyq5Xm1qPeeb8/CePdIQdcFhdZa/LuDRZxk7zluzs8haf8
-	c2K6ugQrbxCTqrEfHIOHUtkm314D4wBxOenYRUofZzsnvCVFjKTPY0Pyq0nW3B7eebjpLam
-	YDFcjsW5IrQ69Tk37sMjur85/QCn0RFBtFHYISciOxtuo9iKGt8aERgt9PfxAUuq0JaVcgL
-	1fVpwhkeUopb/JERo0RXmOLvap5Yhd/dG1SiO5Q7ecUpJ8CWUVxStHx8IbZqgL+k6Z85o7c
-	NrVn4CQcy4Hv8fm4BNEQKMVrOVj7KMpSBalcUnrhs/vOLV9WPutNHoa9zGVjypxVEJwZere
-	CXGMyzdIciGNuquiN5TYKWEO1Y9OXNQ1BHZFBBw4zUfGF/7elvXtkZeW4JGEv08h60mHIGL
-	4/fjw/G7iOEZtgtJZisO00V8OaellLeL255BMRayv6S0sMdTyVykVCviZ6CD39Aq54m/gcN
-	8+fnyzmX5O7M7IgcEX5oaNZMOUh7+/FfFpcSg7eYAgjvnDhrxg4BBkrMWDHd3d6qT5DtOrF
-	uAKCcDI/rWKmMJS0+HdO2+ixHlAovW6J0xvK93Yvjt6HZvrCIq
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, May 9, 2025 at 10:59=E2=80=AFPM Miklos Szeredi <miklos@szeredi.hu> =
-wrote:
+Am Freitag, 9. Mai 2025, 16:17:02 Mitteleurop=C3=A4ische Sommerzeit schrieb=
+ Rob Herring (Arm):
+>=20
+> On Thu, 08 May 2025 19:48:49 +0200, Sebastian Reichel wrote:
+> > This series adds support for the ROCK 5B+, which (as the name suggests)
+> > is an improved version of the ROCK 5B. It also adds initial USB-C
+> > support for both the ROCK 5B and the 5B+.
+> >=20
+> > Changes in PATCHv2:
+> >  - Link to v1: https://lore.kernel.org/r/20250324-rock5bp-for-upstream-=
+v1-0-6217edf15b19@kernel.org
+> >  - Replaced DT binding patch with the version from NAOKI
+> >  - Dropped unused pinctrl for vcc5v0_host_en from the shared DT
+> >  - Moved USB-C SBU DC pins to board specific files, since they differ
+> >    between Rock 5B and Rock 5B+
+> >  - Added pinmux for SBU DC pins
+> >  - Rebased to latest version of Heiko's for-next branch
+> >  - Disable USB-C on Rock 5B for now
+> >=20
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> > ---
+> > FUKAUMI Naoki (1):
+> >       dt-bindings: arm: rockchip: Add Radxa ROCK 5B+
+> >=20
+> > Sebastian Reichel (4):
+> >       arm64: dts: rockchip: move rock 5b to include file
+> >       arm64: dts: rockchip: move rock 5b to include file
+> >       arm64: dts: rockchip: add Rock 5B+
+> >       arm64: dts: rockchip: add USB-C support for ROCK 5B+
+> >=20
+> >  .../devicetree/bindings/arm/rockchip.yaml          |    5 +
+> >  arch/arm64/boot/dts/rockchip/Makefile              |    1 +
+> >  .../boot/dts/rockchip/rk3588-rock-5b-plus.dts      |  129 +++
+> >  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts    |  970 +-----------=
+=2D-----
+> >  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi   | 1082 ++++++++++++=
+++++++++
+> >  5 files changed, 1247 insertions(+), 940 deletions(-)
+> > ---
+> > base-commit: b7caeb9545db25649eda36ce593b70cc2aa804ab
+> > change-id: 20250324-rock5bp-for-upstream-fd85b00b593b
+> >=20
+> > Best regards,
+> > --
+> > Sebastian Reichel <sre@kernel.org>
+> >=20
+> >=20
+> >=20
+>=20
+>=20
+> My bot found new DTB warnings on the .dts files added or changed in this
+> series.
+>=20
+> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+> are fixed by another series. Ultimately, it is up to the platform
+> maintainer whether these warnings are acceptable or not. No need to reply
+> unless the platform maintainer has comments.
+>=20
+> If you already ran DT checks and didn't see these error(s), then
+> make sure dt-schema is up to date:
+>=20
+>   pip3 install dtschema --upgrade
+>=20
+>=20
+> This patch series was applied (using b4) to base:
+>  Base: base-commit b7caeb9545db25649eda36ce593b70cc2aa804ab not known, ig=
+noring
+>  Base: attempting to guess base-commit...
+>  Base: tags/v6.15-rc1-40-g425af91c5802 (best guess, 2/3 blobs matched)
+>=20
+> If this is not the correct base, please add 'base-commit' tag
+> (or use b4 which does this automatically)
+>=20
+> New warnings running 'make CHECK_DTBS=3Dy for arch/arm64/boot/dts/rockchi=
+p/' for 20250508-rock5bp-for-upstream-v2-0-677033cc1ac2@kernel.org:
+>=20
+> arch/arm64/boot/dts/rockchip/rk3588-rock-5b-plus.dtb: /edp@fdec0000: fail=
+ed to match any schema with compatible: ['rockchip,rk3588-edp']
+> arch/arm64/boot/dts/rockchip/rk3588-rock-5b-plus.dtb: /edp@fded0000: fail=
+ed to match any schema with compatible: ['rockchip,rk3588-edp']
 
-> And that has limitations, since fdinfo lacks a hierarchy.  E.g.
-> recursively retrieving "hidden files" info is impractical.
+This should be already fixed by the rk3588-edp addition in linux-next:
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/=
+?id=3Df855146263b14abadd8d5bd0e280e54fbab3bd18
 
-What does "recursively" refer to in this context?
-I am not entirely sure what kind of situation it implies.
-Do you mean, for example, when a fixed file is a FUSE fd and it has a
-backing file?
 
-Thanks,
-Chen Linxuan
