@@ -1,78 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E660A23504F;
-	Fri,  9 May 2025 15:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99354233736;
+	Fri,  9 May 2025 15:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746803415; cv=none; b=VvUt54RzHkj202UjlCgCSOeTTCMOqFJbfGvuKekgAQiRT/YBjaSwnt8mS+zbzZIyINqoqA5iUnZnEIazuTKxFYPEV2N/Try+2k2PKdocfF+K3j/DTFhImscRftTGG665MTTLJFrVQNDCBZ4yagPGapg0u6lCzhFwEgYVYpH/YFo=
+	t=1746803481; cv=none; b=fQMWBX9P5CaSSom0VpJy6FrH/V7J9NEJJs5IUic9oe65Im07BQCq0n8dyxX3CeqoWehDliErX8/GkoInmK7xHNkX948ojcMxlqJGt4TJKrhn7tfWRTy2q007Flf3o3bfrC/EkaH4ZKkVaaE9ebWwrcjdasCwfQ8swRUao47txVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746803415; c=relaxed/simple;
-	bh=qkjHOlLmyt6yQtAnTPCkxud4dJDEGgNNDold91+8/NE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C/Ov6GYuf1zS8JaRkMGRhybeYxjpun36qW1q9n/UkvHYB1z0O520BCwyiqiH8BXEyJgt9K/vniEcnNoL1RBPEtJwAip8uIyABIYnBlmyQxTnyq1kDD3Zyo9A3YyWwajDmbuM4Em63M3ns6r/dzp5FjO57L1k0/Z+As96Y/7sm68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/+LFOLQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746803481; c=relaxed/simple;
+	bh=wVbUZiJAxeDC/B1GW4wWjjz3I64q+hCyr2e5P1x2TMk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pGF2DkSw+ISMNxCNKGW5EKM3p5586U8Vy7715lPRTEGF8VFzngH9p3fvcY7cv+DlbTBJHwjZjEtsAJvvXi5tvKFCQpAHRCNb/viWfL/aUVNYE0qjMRmk+fqy2VxM++hITP4G7cECkRMgucDAdAUh+mBSJX1NQAcxYu2yWr6N2NU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=mePIzA6+; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/+LFOLQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98DF5C4CEE4;
-	Fri,  9 May 2025 15:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746803414;
-	bh=qkjHOlLmyt6yQtAnTPCkxud4dJDEGgNNDold91+8/NE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=s/+LFOLQYyMMzpL8QB4L4Z1c4DdIEh5iNYcdwCFnGNkumZFKyISrIU5j0ib+FzaSc
-	 1ve1P1m8M2YRTlKE3MCCH+3aua+jtixqXcx9gf0j6CY5PUKN42ZEqyrzvxbtGWa1If
-	 UW3gnDQel3KRfiUPPnPOKUv2VGbbxu2Ge7ekBJ18Qup/iu8ld0anXlDaj3p65bRJBG
-	 raSZlxi5C5+M/NUqCVlz6wT67cPoR6asVXy1wwcAHRNPvTVge6PpYYujB/2NAoABTH
-	 Hz+XSGOA+Ac09PwGyC0amGYzOHSHohGj8se+7m87efpLW5OoVYQNKUQNpX9ZvigvUJ
-	 bUWhV1n7amE6A==
-Date: Fri, 9 May 2025 08:10:12 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "David S. Miller"	
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni	
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Maarten Lankhorst	
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Jani Nikula	
- <jani.nikula@linux.intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, Kuniyuki Iwashima	
- <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, Nathan Chancellor	
- <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v8 10/10] ref_tracker: eliminate the ref_tracker_dir
- name field
-Message-ID: <20250509081012.31e55987@kernel.org>
-In-Reply-To: <950c901d046b5fc806ba61cd96f2d774de3f9c7f.camel@kernel.org>
-References: <20250507-reftrack-dbgfs-v8-0-607717d3bb98@kernel.org>
-	<20250507-reftrack-dbgfs-v8-10-607717d3bb98@kernel.org>
-	<20250507200129.677dc67a@kernel.org>
-	<950c901d046b5fc806ba61cd96f2d774de3f9c7f.camel@kernel.org>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="mePIzA6+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1746803459;
+	bh=EwvPymuHFztd0+nGFButAnqaFfGdcLMgfM3pGmY+mRc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=mePIzA6+iAJOVfZmBPVtAbAUotQnwXoPlDbv+Nnkk/gt320R6+sROT37nM5A7zzGu
+	 sbNJojTDhQDG4799WyMgWu/H5Zr7cwrpSDbMkeNyUuIgv+edt5ldLN1+1rfN2fwSiq
+	 2Uh56oBVO1/7e/bt80tmka/EQqeNnHk3OHIqVEjk=
+X-QQ-mid: zesmtpgz3t1746803457t69466426
+X-QQ-Originating-IP: RgQoCLH0gPJM8iS09BOsduU3Kcz3Kmtz/ogGb/fxMXA=
+Received: from mail-yb1-f181.google.com ( [209.85.219.181])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 09 May 2025 23:10:55 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 16312323404495128176
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e73e9e18556so2221473276.0;
+        Fri, 09 May 2025 08:10:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUK2PbbtX2DI40LthO/h7TBUEFrShloVH08I60hisE1XV/nqjM93dpmwxMZjpg8HHqg9r8Y5wwsfIa8Pq8d@vger.kernel.org, AJvYcCXMu312M0fyxgSyAp29GN+Si9SfCcDkKYC4xlZ4oKY9xJD6xr4dNg8JsDmIPRFaxxsI4XX8b/7z0V93I71k@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGNH+PRuPrekxfSj8X96O/HcHqIToW96gWVoS5r+7RdhYHJHXI
+	ssNmjgt/cTG+IiOO5mDpHSKS2kKtEn6WZkUsTVLOftxHddRu1Z//gjmrm0pgFyGj7J3CMOflVYa
+	/nyjU9mfmy2wRLnCI6uszPDgJR9g=
+X-Google-Smtp-Source: AGHT+IGxjJFvLSFrjsRKXRvh4VuMV45vppGwGleT2kXSaVpYif5t84ll8QrWO2n6mpu1nZtqjidpdzxWhuazXN8Ds6g=
+X-Received: by 2002:a05:6902:2846:b0:e5b:4651:b5c6 with SMTP id
+ 3f1490d57ef6-e78fe0d9882mr5087468276.23.1746803454684; Fri, 09 May 2025
+ 08:10:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com>
+ <20250509-fusectl-backing-files-v3-2-393761f9b683@uniontech.com>
+ <CAJfpegvhZ8Pts5EJDU0efcdHRZk39mcHxmVCNGvKXTZBG63k6g@mail.gmail.com>
+ <CAC1kPDPeQbvnZnsqeYc5igT3cX=CjLGFCda1VJE2DYPaTULMFg@mail.gmail.com> <CAJfpegsTfUQ53hmnm7192-4ywLmXDLLwjV01tjCK7PVEqtE=yw@mail.gmail.com>
+In-Reply-To: <CAJfpegsTfUQ53hmnm7192-4ywLmXDLLwjV01tjCK7PVEqtE=yw@mail.gmail.com>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Fri, 9 May 2025 23:10:43 +0800
+X-Gmail-Original-Message-ID: <B876C9239B0EFB0D+CAC1kPDMweHDtktTt=aSFamPNUWjt8nKw09U_2EqyDNu28H6WWg@mail.gmail.com>
+X-Gm-Features: ATxdqUGOm0hFg70ZmDrG1cg3KWtHrUA1YP0QsfD7GpyT5NSHmAdCwARBM67uKMw
+Message-ID: <CAC1kPDMweHDtktTt=aSFamPNUWjt8nKw09U_2EqyDNu28H6WWg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] fs: fuse: add backing_files control file
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Amir Goldstein <amir73il@gmail.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: M4KjHSRLf+eQEsLAW0W2N4DCm7Y6OTFxwVc6lRmHcNiefodcYfpxFK+k
+	NRWH7tRVag4nR7RkkY9zAdoLUd4707qPQR9JG9yzo0MlRSJGSc0I/YfPUAvk4NSROluYDB6
+	idEtEyczxHgIFiW/UHDCQ3Bcl872BjVpD6PVzFPZ6mSd1mqCufNHzvfUKPe1EGDcGGACA45
+	r8DvsCXyVtlyBQ+B+/Uqg9kI2glh3OrJyDEvV9c3+NSL8VJQJyoNheysDnxGN77SxxgMO4p
+	APGv4LXAS2fhde9jRvRY0RvBiRi3kVrLqXWGp0gB2SIvT5igPFpRvHiaRt9szh8u3n+Adq3
+	2K179/VVuh8scwcMG3BFDaKNMMScZFz8o68f0E48nc7euavXxqLnmtDkdTWRP9BsINYQxNP
+	lhlR8AQ6h4Ql4rBWeYMJZCvBfnJ7adOoT49k00iwPo68bCmzqgPfip5WvgGOQF/qhTxbXnv
+	HsIJI62Df08oqB4qJIniO2oLOAyq5Xm1qPeeb8/CePdIQdcFhdZa/LuDRZxk7zluzs8haf8
+	c2K6ugQrbxCTqrEfHIOHUtkm314D4wBxOenYRUofZzsnvCVFjKTPY0Pyq0nW3B7eebjpLam
+	YDFcjsW5IrQ69Tk37sMjur85/QCn0RFBtFHYISciOxtuo9iKGt8aERgt9PfxAUuq0JaVcgL
+	1fVpwhkeUopb/JERo0RXmOLvap5Yhd/dG1SiO5Q7ecUpJ8CWUVxStHx8IbZqgL+k6Z85o7c
+	NrVn4CQcy4Hv8fm4BNEQKMVrOVj7KMpSBalcUnrhs/vOLV9WPutNHoa9zGVjypxVEJwZere
+	CXGMyzdIciGNuquiN5TYKWEO1Y9OXNQ1BHZFBBw4zUfGF/7elvXtkZeW4JGEv08h60mHIGL
+	4/fjw/G7iOEZtgtJZisO00V8OaellLeL255BMRayv6S0sMdTyVykVCviZ6CD39Aq54m/gcN
+	8+fnyzmX5O7M7IgcEX5oaNZMOUh7+/FfFpcSg7eYAgjvnDhrxg4BBkrMWDHd3d6qT5DtOrF
+	uAKCcDI/rWKmMJS0+HdO2+ixHlAovW6J0xvK93Yvjt6HZvrCIq
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-RECHKSPAM: 0
 
-On Fri, 09 May 2025 09:36:57 -0400 Jeff Layton wrote:
-> On Wed, 2025-05-07 at 20:01 -0700, Jakub Kicinski wrote:
-> > On Wed, 07 May 2025 09:06:35 -0400 Jeff Layton wrote:  
-> > > + * @quarantime_count: max number of entries to be tracked  
-> > 
-> > quarantime
-> >         ^
-> > :(  
-> 
-> Sorry, I thought I had fixed that. Do you need me to resend? The pile
-> with that fixed is also in my "reftrack-dbgfs" branch:
-> 
->     https://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git/
+On Fri, May 9, 2025 at 10:59=E2=80=AFPM Miklos Szeredi <miklos@szeredi.hu> =
+wrote:
 
-If you don't mind, a resend would be good.
-Our CI stops if it sees a build warning, so it didn't get
-to the selftest stage with this patchset.
+> And that has limitations, since fdinfo lacks a hierarchy.  E.g.
+> recursively retrieving "hidden files" info is impractical.
+
+What does "recursively" refer to in this context?
+I am not entirely sure what kind of situation it implies.
+Do you mean, for example, when a fixed file is a FUSE fd and it has a
+backing file?
+
+Thanks,
+Chen Linxuan
