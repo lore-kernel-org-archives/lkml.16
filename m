@@ -1,97 +1,52 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+Received: from so254-54.mailgun.net (so254-54.mailgun.net [198.61.254.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042BA2609EB;
-	Fri,  9 May 2025 21:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD9178F40
+	for <linux-kernel@vger.kernel.org>; Fri,  9 May 2025 21:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.61.254.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746826740; cv=none; b=EqKRE9MS3sCYt3pfwjGTF9GGOByE/gZUBlQi5qVJlO+bAEVHY4Ci1sSdxqRcYAXRkT0VSNPbYBBPakstRdfExbGKmRsZpinAiKnOAWRjOer4bIg1SaPL4ruR/E4KVLE+WPa95Y/VYHEK8R3IIm9vms+WpZwrHH/Uv7I2IG9klwE=
+	t=1746826852; cv=none; b=Bz1QZljxuQiTiygnLhOyuEsHy3Uyp1B2WGuaE69wdekE1AW5fffGuPzNmymqHju8mUUwEgBaYLT/ZCbnscYi9rsUdyQjfMl1VYa8d0YofYYTUB9vOglb4MsjWTxKNJPpdoBTxyzlwFZa7KrkqdevfcGznhFDK/XEHCx9HIl+UPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746826740; c=relaxed/simple;
-	bh=Asc0Up5ZKgwcmRN9Oak/nj2zL5A20LLaT+qVCQk+8rc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hfSShCVa/Zp2eWavZ5dcYUSpZj1/8VlIz5cOd0ZbT3dVS3V3m5fZROSPJcERUhuf5bLn6ARcYJ+ekwGOe6HExvK4H47DkJi7DZ9ypyskjVhC082GRcbghkPbMGALu4O6KuoAemfZMvtCJSbfwxT0F297HZ+3jvq1fahLuL+hnCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=rQFCly7o; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1746826852; c=relaxed/simple;
+	bh=k5myEa1ADK5GWemaehwJSNJabbqTadbWxBF7NDRtz+8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=cK9RLuq9trEsvl7QaOdlCvzHIwbpWUfVe6vFmZU+c7kcjv4XEBuKL7eWU0abfXD1qLq161WbNLCZR15AD5lkrK7foyNM7QgAbrru64tvtf+9vJV/XUNkEn6DQUl0JWjc0LvhQLqEMKtartl64Cd9T7M8Yz/j8ZNbfjzij69YlmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rarity.fan; spf=pass smtp.mailfrom=mail.rarity.fan; dkim=pass (2048-bit key) header.d=mail.rarity.fan header.i=@mail.rarity.fan header.b=Ms7nytIo; arc=none smtp.client-ip=198.61.254.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rarity.fan
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.rarity.fan
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="rQFCly7o"
-Received: from [192.168.42.27] (pd9e59308.dip0.t-ipconnect.de [217.229.147.8])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id A9B512FC0052;
-	Fri,  9 May 2025 23:38:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1746826734;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O5ltLD/6kQgNgYKcZFivhTH/Sq58kWeiIH+3zDPgGvI=;
-	b=rQFCly7o/m2VnE5eXS3vTOCVyytAXvcYElxQ8rD/Aevf97ae64yX/ezWWmq9uDUNldxgAF
-	euv/Fn9Cz8ZBRkYmo8qh2zP8ZzsfLP6K/mCtm5cqNdvjyo2OTNl2kqDOgQiQ/E1n3yCP7w
-	xdaUy7ZDkm8lskup2PjtyC6XVibnKPg=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <421e737a-bb7c-4d80-bead-407e756bba68@tuxedocomputers.com>
-Date: Fri, 9 May 2025 23:38:54 +0200
+	dkim=pass (2048-bit key) header.d=mail.rarity.fan header.i=@mail.rarity.fan header.b="Ms7nytIo"
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mail.rarity.fan; q=dns/txt; s=pic; t=1746826849; x=1746834049;
+ h=Content-Type: MIME-Version: References: Message-ID: In-Reply-To: Subject: Subject: cc: To: To: From: From: Date: Sender: Sender;
+ bh=k5myEa1ADK5GWemaehwJSNJabbqTadbWxBF7NDRtz+8=;
+ b=Ms7nytIom7DfoaQX5bWcwwCdlsMGhGsErymAyb420coI1ygUdzyLYd7SycWonqGBUlvnpyeFfSIYA/lKZNEqT4IQZEgCDGQsoi2SQltQz6JgtO99iYDRAscugiHSedD+MslPrbHUxIOdKWJTxbw+XWZ6U0eCKg4xUHzfRQ3c0BNRCOPxbToY2QYoQr23HNN3JJ2E1Zs8JW2pP2UakqqVzcQ8Ci+FitIgPR+HajosrnvBuGKIcaXSR1/j9NGvNIOhL7Od5EjV9SwlIB4WqDIRgnHOss8WgLO5En2ABI0Q55pJI8ZjfNBv3M6hVT847W4AJhNbi+e01kJaRt7U62BDMw==
+X-Mailgun-Sending-Ip: 198.61.254.54
+X-Mailgun-Sending-Ip-Pool-Name: 
+X-Mailgun-Sending-Ip-Pool: 
+X-Mailgun-Sid: WyI4MmIyMCIsImxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmciLCI4NmFiY2IiXQ==
+Received: from 95-37-246-49.dynamic.mts-nn.ru (95-37-246-49.dynamic.mts-nn.ru
+ [95.37.246.49]) by 4fb5f6173a4f with SMTP id 681e7661f526e7728ef879e1
+ (version=TLS1.3, cipher=TLS_AES_128_GCM_SHA256); Fri, 09 May 2025 21:40:49
+ GMT
+Sender: me=rarity.fan@mail.rarity.fan
+Date: Sat, 10 May 2025 00:41:47 +0300
+From: gldrk <me@rarity.fan>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+cc: Linux ACPI <linux-acpi@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, Bob Moore <robert.moore@intel.com>, 
+    Saket Dumbre <saket.dumbre@intel.com>
+Subject: Re: [PATCH v1 03/19] ACPICA: utilities: Fix overflow check in
+ vsnprintf()
+In-Reply-To: <4994935.GXAFRqVoOG@rjwysocki.net>
+Message-ID: <28f7e0-e373-8f25-e691-a1988852d8b@rarity.fan>
+References: <12671029.O9o76ZdvQC@rjwysocki.net> <4994935.GXAFRqVoOG@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] acpi/ec: Add device to acpi_ec_no_wakeup qurik
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250508111625.12149-1-wse@tuxedocomputers.com>
- <CAJZ5v0g+_8LT6YKSuOXHtxE-HLCZ2hxKuT2514HgQ45xyWy76A@mail.gmail.com>
- <994476b8-fdc8-4123-ab39-de8f1629c27b@tuxedocomputers.com>
- <CAJZ5v0hSvd1RhZRx9iZs=zNaiUcxEhz+41285iecMBRjeHV0tw@mail.gmail.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <CAJZ5v0hSvd1RhZRx9iZs=zNaiUcxEhz+41285iecMBRjeHV0tw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
+Signed-off-by: gldrk <me@rarity.fan>
 
-Am 09.05.25 um 22:23 schrieb Rafael J. Wysocki:
-> On Fri, May 9, 2025 at 9:49 PM Werner Sembach <wse@tuxedocomputers.com> wrote:
->>
->> Am 09.05.25 um 21:21 schrieb Rafael J. Wysocki:
->>> On Thu, May 8, 2025 at 1:16 PM Werner Sembach <wse@tuxedocomputers.com> wrote:
->>>> Add the TUXEDO InfinityBook Pro AMD Gen9 to the acpi_ec_no_wakeup quirk
->>>> list to prevent spurious wakeups.
->>>>
->>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->>>> ---
->>>>    drivers/acpi/ec.c | 6 ++++++
->>>>    1 file changed, 6 insertions(+)
->>>>
->>>> diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
->>>> index 8db09d81918fb..de45a5b59effd 100644
->>>> --- a/drivers/acpi/ec.c
->>>> +++ b/drivers/acpi/ec.c
->>>> @@ -2301,6 +2301,12 @@ static const struct dmi_system_id acpi_ec_no_wakeup[] = {
->>>>                           DMI_MATCH(DMI_PRODUCT_FAMILY, "103C_5336AN HP ZHAN 66 Pro"),
->>>>                   },
->>>>           },
->>>> +       {
->>>> +               // TUXEDO InfinityBook Pro AMD Gen9
->>>> +               .matches = {
->>>> +                       DMI_MATCH(DMI_BOARD_NAME, "GXxHRXx"),
->>>> +               },
->>>> +       },
->>>>           { },
->>>>    };
->>>>
->>>> --
->>> Applied as 6.16 material, thanks!
->> Forgot to add cc stable but i guess i will just wait till it reaches mainline
->> and then send it manually?
-> I can add a "stable" tag to it, but it won't apply to older kernels
-> anyway because the table has grown recently.
->
-> It's better to send manually when it gets merged I think.
-ok
